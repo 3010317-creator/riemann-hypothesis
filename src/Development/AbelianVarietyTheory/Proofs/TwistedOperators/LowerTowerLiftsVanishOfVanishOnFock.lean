@@ -103,14 +103,12 @@ theorem liftInt_span_zero {ψ : AddChar (AF D.host.F) ℂ} {V W : HSp D}
     refine ⟨GlobalTheory.OrientedHeis.theta_add ha.1 hb.1, funext fun x => ?_⟩
     have e : Lift.liftInt ν 𝓕 (thetaKO ω) (a + b) Φ x =
         Lift.liftInt ν 𝓕 (thetaKO ω) a Φ x + Lift.liftInt ν 𝓕 (thetaKO ω) b Φ x := by
-      simp only [Lift.liftInt, kernel_add, add_mul]
-      exact integral_add (hI a ha.1 x) (hI b hb.1 x)
+      simpa only [Lift.liftInt, kernel_add, add_mul] using integral_add (hI a ha.1 x) (hI b hb.1 x)
     simp [e, congrFun ha.2 x, congrFun hb.2 x]
   | smul c a _ ha =>
     refine ⟨GlobalTheory.OrientedHeis.theta_smul c ha.1, funext fun x => ?_⟩
     have e : Lift.liftInt ν 𝓕 (thetaKO ω) (c • a) Φ x = c * Lift.liftInt ν 𝓕 (thetaKO ω) a Φ x := by
-      simp only [Lift.liftInt, kernel_smul, mul_assoc]
-      exact integral_const_mul c _
+      simpa only [Lift.liftInt, kernel_smul, mul_assoc] using integral_const_mul c _
     simp [e, congrFun ha.2 x]
 
 theorem eq_zero_of_le_mul_all {a K : ℝ≥0∞} (hK : K ≠ ∞) (h : ∀ δ : ℝ≥0∞, 0 < δ → a ≤ K * δ) : a = 0 := by
@@ -147,8 +145,7 @@ theorem liftInt_zero_of_approx {θ : InfFam D} {ψ : AddChar (AF D.host.F) ℂ} 
     have e : Lift.liftInt ν 𝓕 (thetaKO ω) f Φ x = Lift.liftInt ν 𝓕 (thetaKO ω) (f - g) Φ x := by
       have e' : Lift.liftInt ν 𝓕 (thetaKO ω) (f - g) Φ x =
           Lift.liftInt ν 𝓕 (thetaKO ω) f Φ x - Lift.liftInt ν 𝓕 (thetaKO ω) g Φ x := by
-        simp only [Lift.liftInt, kernel_sub, sub_mul]
-        exact integral_sub (hI f hf.1) (hI g hgU.1)
+        simpa only [Lift.liftInt, kernel_sub, sub_mul] using integral_sub (hI f hf.1) (hI g hgU.1)
       rw [e', congrFun hg0 x, Pi.zero_apply, sub_zero]
     have h2 : ENNReal.ofReal (‖Lift.liftInt ν 𝓕 (thetaKO ω) (f - g) Φ x‖ / height V x ^ A) ≤
         growthSob θ V 0 A (lift ω ν 𝓕 (f - g) Φ) := by

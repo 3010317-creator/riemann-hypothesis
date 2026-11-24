@@ -61,8 +61,7 @@ theorem eisG_map (Λ : AddSubgroup ℂ) (δ : ℂ) (hδ : δ ≠ 0) (k : ℕ) :
     fun w => ⟨δ * w.1, ⟨w.1, w.2.1, rfl⟩, mul_ne_zero hδ w.2.2⟩
   have hf : Function.Bijective f := by
     constructor
-    · intro a b h
-      exact Subtype.ext (mul_left_cancel₀ hδ (congrArg Subtype.val h))
+    · exact fun a b h => Subtype.ext (mul_left_cancel₀ hδ (congrArg Subtype.val h))
     · rintro ⟨w, ⟨v, hv, rfl⟩, h0⟩
       refine ⟨⟨v, hv, ?_⟩, rfl⟩
       rintro rfl
@@ -99,8 +98,7 @@ theorem ellLat_ne_bot (embE : H.E →+* LL) (g : R.GG) : ellLat H embE g ≠ ⊥
     intro h0
     apply hd
     have := H.𝔟_spec.1
-    rw [h0, Ideal.bot_mul] at this
-    exact this
+    rwa [h0, Ideal.bot_mul] at this
   have hA : H.AA0 ≠ 0 := by
     unfold Host.AA0
     exact inv_ne_zero (FractionalIdeal.coeIdeal_ne_zero.2 hb)

@@ -152,8 +152,7 @@ theorem IsTriangular.mem_sub_iff (H : IsTriangular v rk e g) (hv : ∀ j, IsFram
   · intro hx
     have := hx j V le_rfl h
     rwa [resM_self] at this
-  · intro hx j' W h₁ h₂
-    exact H.spn_le hS j' j h₂ (h₁.trans h) (res_mem_spn hv h h₁ hx)
+  · exact fun hx j' W h₁ h₂ => H.spn_le hS j' j h₂ (h₁.trans h) (res_mem_spn hv h h₁ hx)
 
 theorem IsTriangular.repr_eq (H : IsTriangular v rk e g) (hv : ∀ j, IsFrame (v j))
     {S : Finset α} {a : α} (ha : ∀ b ∈ S, rk b ≤ rk a) (j j' : J) {V : C.Opens}
@@ -240,8 +239,7 @@ theorem IsTriangular.isVB (H : IsTriangular v rk e g) (hT : ⨆ j, T j = ⊤)
     conv_rhs => rw [← ((hv j).basis h).sum_repr ((sub hv e S).incl.app V t)]
     refine Fintype.sum_of_injective ι' hι' _ _ (fun i hi => ?_) (fun k => rfl)
     rw [(mem_spn_iff hv h).1 ht i ?_, zero_smul]
-    intro b hb hbi
-    exact hi ⟨S.equivFin ⟨b, hb⟩, by simp [ι', σ, hbi]⟩
+    exact fun b hb hbi => hi ⟨S.equivFin ⟨b, hb⟩, by simp [ι', σ, hbi]⟩
 
 def refine (M : LB C) (idx : J → M.ι) (hle : ∀ j, T j ≤ M.U (idx j)) : LB C where
   ι := J
@@ -408,8 +406,7 @@ theorem IsTriangular.deg_insert [DecidableEq α] {k : Type} [Field k] [Algebra k
     change LB.coord (φ.app V (f.app V s)) j = LB.coord (0 : Γ(toMod (⟨J, T, u⟩ : LB C), V)) j
     rw [hcoord, hfs, GlobalTheory.LB.coord_zero]
     have hx := (sub hv e S).incl_app_mem s j (V ⊓ T j) inf_le_left inf_le_right
-    refine (mem_spn_iff hv _).1 hx (e j a) fun b hb hba => ?_
-    exact haS ((e j).injective hba ▸ hb)
+    exact (mem_spn_iff hv _).1 hx (e j a) fun b hb hba => haS ((e j).injective hba ▸ hb)
   have hmono : Mono f := mono_of_mono_fac hf
   have hepi : Epi φ := by
     rw [GlobalTheory.QCoh.epi_iff_stalkLinear_surjective]

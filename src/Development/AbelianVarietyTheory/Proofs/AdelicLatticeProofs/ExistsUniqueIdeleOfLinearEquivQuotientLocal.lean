@@ -74,8 +74,7 @@ theorem valuation_algebraMap_eq_count {r : R} (hr : r ≠ 0) :
     v.valuation K (algebraMap R K r) =
       WithZero.exp (-FractionalIdeal.count K v (spanSingleton R⁰ (algebraMap R K r))) := by
   have hJ : Ideal.span {r} ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact hr
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   rw [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_if_neg v hr,
     ← coeIdeal_span_singleton, count_coe K v hJ]
 
@@ -212,8 +211,7 @@ theorem mem_localIdeal_iff {I : FractionalIdeal R⁰ K} (hI : I ≠ 0) (v : Heig
     have hy1 : algebraMap K (v.adicCompletion K) y ≠ 0 := by
       intro h; rw [h] at hy0; simp at hy0
     have hm : x / algebraMap K (v.adicCompletion K) y ∈ v.adicCompletionIntegers K := by
-      rw [mem_adicCompletionIntegers, map_div₀, div_le_one₀ (zero_lt_iff.2 hy0), hvy]
-      exact hx
+      rwa [mem_adicCompletionIntegers, map_div₀, div_le_one₀ (zero_lt_iff.2 hy0), hvy]
     have : x = (⟨_, hm⟩ : v.adicCompletionIntegers K) • algebraMap K (v.adicCompletion K) y := by
       change x = x / _ * _
       rw [div_mul_cancel₀ _ hy1]

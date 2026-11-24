@@ -87,8 +87,7 @@ theorem mirSet_true_conj {r : ℕ} (a : Fin r → ZMod g) (y z : Gn g r) :
     refine ⟨c, ?_⟩
     have := congrArg (fun v => (↑y⁻¹ : Mt g r) *ᵥ v) hc
     simp only [mulVec_sub, mulVec_smul, mulVec_mulVec, ← Matrix.mul_assoc, hBA, Matrix.one_mul] at this
-    rw [Matrix.mul_assoc, hBA, Matrix.mul_one, one_mulVec] at this
-    exact this
+    rwa [Matrix.mul_assoc, hBA, Matrix.mul_one, one_mulVec] at this
   · intro h x
     obtain ⟨c, hc⟩ := h ((↑y⁻¹ : Mt g r) *ᵥ x)
     refine ⟨c, ?_⟩
@@ -107,8 +106,7 @@ theorem mirSet_false_conj {r : ℕ} (a : Fin r → ZMod g) (y z : Gn g r) :
     have := h _ hx
     have := congrArg (fun v => (↑y⁻¹ : Mt g r) *ᵥ v) this
     simp only [mulVec_mulVec, ← Matrix.mul_assoc, hBA, Matrix.one_mul] at this
-    rw [Matrix.mul_assoc, hBA, Matrix.mul_one, one_mulVec] at this
-    exact this
+    rwa [Matrix.mul_assoc, hBA, Matrix.mul_one, one_mulVec] at this
   · intro h x hx
     have h2 : (a ᵥ* (y : Mt g r)) ⬝ᵥ ((↑y⁻¹ : Mt g r) *ᵥ x) = 0 := by
       rw [← dotProduct_mulVec, mulVec_mulVec, hAB, one_mulVec]; exact hx

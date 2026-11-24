@@ -269,8 +269,7 @@ theorem inner_mid (v u : EuclideanSpace ℂ (Fin (2 * r + k + 1))) (hu : inWb k 
 
 theorem exists_mid (p : Fin (k + 1) → ℂ) : ∃ u, inWb k r u ∧ mid k r u = p := by
   refine ⟨fun i => if h : r ≤ i.val ∧ i.val ≤ r + k then p ⟨i.val - r, by omega⟩ else 0, ?_, ?_⟩
-  · intro i hi
-    exact dite_eq_right (by omega)
+  · exact fun i hi => dite_eq_right (by omega)
   · funext b
     have := b.2
     have e : (wI k r b).val = r + b.val := rfl
@@ -1451,8 +1450,7 @@ theorem torus_le {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {n n' : Mat
   rw [Matrix.mul_one] at e1 e2
   have e3 := hl.2.1 a ha m hm b
   have h2 := ((Finset.fold_max_le _).1 h).2 b.castSucc (Finset.mem_univ _)
-  rw [Matrix.mul_assoc, e2, e1, e3, inv_inv, max_le_iff] at h2
-  exact h2
+  rwa [Matrix.mul_assoc, e2, e1, e3, inv_inv, max_le_iff] at h2
 
 theorem section_coord_le (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1) → ℂ)) (g₀ : Mat k r) (β : Fin r → ℕ) (c : ℂ)
     (hz : inWb k r z) (hz' : inWb k r z') (hT : 0 < Tz k r z) (hN : IsNormal0 k r hj β c z z' g₀) (De R₀ : ℝ)
@@ -1497,8 +1495,7 @@ theorem section_coord_le (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 
       have hlt' : p.1.1.1.val < p.1.1.2.val := hlt
       exact p.2 ((hN.2.2.2.2.1 _ _ (by omega)).2 (by omega))
     have := k1 _ hb p.1.1.2
-    rw [hudef, upperOff, upper, dite_eq_left hlt, dite_eq_left p.2] at this
-    exact this
+    rwa [hudef, upperOff, upper, dite_eq_left hlt, dite_eq_left p.2] at this
   have k1' : ∀ b d, ‖u b d‖ ≤ M := by
     intro b d
     rw [hudef, upperOff, upper]
@@ -1788,8 +1785,7 @@ theorem fibre_volume : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k 
       rw [Set.mem_ofPred_eq, hassoc]; exact hmul _ hρ.1.1 _ (hst q)
     have h2 : Set.indicator {x : Mt k r | Matrix.of x ∈ GG k r}
       (fun x => Yj k r hj z z' g₀ (Matrix.of x)) (rmulM t (rmulM (sEl k r j β q) ρ)) = 0 := hmem
-    rw [Set.indicator_of_mem hG, hassoc, hYρ q ρ hρ] at h2
-    exact h2
+    rwa [Set.indicator_of_mem hG, hassoc, hYρ q ρ hρ] at h2
   · intro φ hφ R₀ y hR₀ hy
     have hM : 1 ≤ R₀ ^ (2 * r) * De := one_le_mul_of_one_le_of_one_le (one_le_pow₀ hR₀) hDe.1
     have hB' := hB R₀ hR₀

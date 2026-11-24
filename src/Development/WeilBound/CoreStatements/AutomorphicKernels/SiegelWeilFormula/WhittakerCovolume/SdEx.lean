@@ -164,8 +164,7 @@ theorem rc_mk (a c : R) : rc R b (mk R b a c) = ![a, c] := by
 theorem mk_rc (y : R ⊗[F] E) : mk R b (rc R b y 0) (rc R b y 1) = y := by
   have := (Algebra.TensorProduct.basis R b).sum_repr y
   rw [Fin.sum_univ_two] at this
-  rw [mk, tmul_eq, tmul_eq]
-  exact this
+  rwa [mk, tmul_eq, tmul_eq]
 
 theorem rc_add (y z : R ⊗[F] E) (k : Fin 2) : rc R b (y + z) k = rc R b y k + rc R b z k := by
   simp [rc, map_add (f := _)]
@@ -266,8 +265,7 @@ theorem herm_diag (h2 : (2 : F) ≠ 0) (hb0 : b 0 = 1) (hσ : σ (b 1) = - b 1)
     rw [two_smul]
     nth_rw 1 [h]
     simp
-  have h4 := congrArg (fun x => (2 : F)⁻¹ • x) h3
-  simpa [smul_smul, inv_mul_cancel₀ h2] using h4
+  simpa [smul_smul, inv_mul_cancel₀ h2] using congrArg (fun x => (2 : F)⁻¹ • x) h3
 
 theorem ofX_toX (h2 : (2 : F) ≠ 0) (hb0 : b 0 = 1) (hσ : σ (b 1) = - b 1)
     {S : Matrix (Fin n) (Fin n) (R ⊗[F] E)} (hS : S ∈ HermR R σ n) : ofX R b (toX R b S) = S := by
@@ -440,8 +438,7 @@ theorem exists_sdHerm : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     refine Finset.sum_congr rfl fun p _ => ?_
     rw [Matrix.mulVec_diagonal]
     rfl
-  rw [hf]
-  exact hμ
+  rwa [hf]
 
 end GlobalTheory.CompanionTheory.SW.HermCoord
 end -- clump:auto
@@ -487,8 +484,7 @@ theorem exists_sdW_tuples : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
         (GlobalTheory.CompanionTheory.SW.SdTuples.tupE hc n M Y))) := by
     funext X Y
     rw [← GlobalTheory.CompanionTheory.SW.SdTuples.BR_eq hc J B (hR' (AF F)).1 X Y]
-  rw [hf]
-  exact hμ
+  rwa [hf]
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.SdExistN
 end -- clump:auto

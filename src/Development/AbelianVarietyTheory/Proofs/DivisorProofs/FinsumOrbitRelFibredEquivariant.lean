@@ -87,8 +87,7 @@ theorem finsum_orbitRel_fibred : ∀ {H X B E : Type} [Group H] [MulAction H X] 
         apply hinj b
         rw [hjeq b h hmem, hh]
       rw [← Quotient.out_eq o₁, ← Quotient.out_eq o₂]
-      apply Quotient.sound
-      exact orbitRel_apply.mpr (mem_orbit_iff.mpr ⟨⟨h, hmem⟩, he⟩)
+      exact Quotient.sound (orbitRel_apply.mpr (mem_orbit_iff.mpr ⟨⟨h, hmem⟩, he⟩))
     · rintro ⟨o, ho⟩
       have hx : Quotient.mk (orbitRel H B) (π (Quotient.out o)) = Quotient.mk (orbitRel H B) b := by
         rw [← hρ, Quotient.out_eq, ho, hb, hs]
@@ -98,8 +97,7 @@ theorem finsum_orbitRel_fibred : ∀ {H X B E : Type} [Group H] [MulAction H X] 
       show Quotient.mk (orbitRel H X) (j b (Quotient.out (Quotient.mk (orbitRel (S b) E) e))) = o
       rw [key _ e (Quotient.exact (Quotient.out_eq _)), he]
       conv_rhs => rw [← Quotient.out_eq o]
-      apply Quotient.sound
-      exact orbitRel_apply.mpr (mem_orbit_iff.mpr ⟨h⁻¹, rfl⟩)
+      exact Quotient.sound (orbitRel_apply.mpr (mem_orbit_iff.mpr ⟨h⁻¹, rfl⟩))
   exact (finsum_comp_equiv (Equiv.ofBijective φ hφ) (f := fun o : {o // ρ o = q} => g o.1)).symm
 
 end GlobalTheory

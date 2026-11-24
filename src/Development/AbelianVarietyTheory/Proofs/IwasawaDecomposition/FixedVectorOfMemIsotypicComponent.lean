@@ -75,8 +75,7 @@ theorem iSup_finset_stable (s : Finset (Submodule ℂ (GAf L n → W)))
     ∀ f ∈ (⨆ i ∈ s, i), NG.rt L n h f ∈ (⨆ i ∈ s, i) := by
   have hle : (⨆ i ∈ s, i) ≤ (⨆ i ∈ s, i).comap (NG.rt L n h) := by
     refine iSup₂_le fun i hi => ?_
-    intro f hf
-    exact (le_iSup₂ (f := fun i (_ : i ∈ s) => i) i hi) (hs i hi h f hf)
+    exact fun f hf => (le_iSup₂ (f := fun i (_ : i ∈ s) => i) i hi) (hs i hi h f hf)
   exact fun f hf => hle hf
 
 theorem fixed_of_mem_finset_sum (ρ : Representation ℂ (GQ L n) W) (S : Submodule ℂ (GAf L n → W))
@@ -112,8 +111,7 @@ theorem fixed_of_mem_finset_sum (ρ : Representation ℂ (GQ L n) W) (S : Submod
             exact add_comm _ _
           rw [h4]
           exact Submodule.sub_mem _ hz (hMst κ z hz)
-        rw [h0, Submodule.mem_bot, sub_eq_zero] at hd
-        exact hd
+        rwa [h0, Submodule.mem_bot, sub_eq_zero] at hd
       by_cases hy0 : y = 0
       · subst hy0
         simp only [zero_add] at hf0 hfix

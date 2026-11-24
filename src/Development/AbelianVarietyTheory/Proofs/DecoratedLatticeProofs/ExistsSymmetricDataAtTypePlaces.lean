@@ -71,8 +71,7 @@ theorem tame_step {D : D7} {T : Type} (L : LevCh D T) {μ0 : T} (hL : L.Is μ0) 
     unfold Lift.chrStep
     split_ifs
     · change L.mu0 (i + 1) (idl q x) * (L.eta (idl q x))⁻¹ = 1
-      rw [e2, inv_one, mul_one]
-      exact e1
+      rwa [e2, inv_one, mul_one]
     · exact e1
   refine Units.ext ((hμ x (idl q x) rfl).trans ?_)
   rw [MonoidHom.inv_apply, e3]
@@ -122,8 +121,7 @@ theorem exists_symRead : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi :
     · split_ifs with h
       · exact tame_step (pk W).toLevCh hlev (l PP).q PP.2 (l PP).idem h.1 h.2 (hμ j)
       · exact fun _ _ => rfl
-    · simp only [ite_eq_left (And.intro h1 h2)]
-      exact hμ j
+    · simpa only [ite_eq_left (And.intro h1 h2)] using hμ j
   choose S h1 h2 h3 using loc
   refine ⟨S, h1, h2, fun x => (hH x).trans ?_, fun x hx y hxy => ?_⟩
   · exact ⟨fun h PP => (red_sym (l PP) (S PP) hπ (x PP) (reord π x PP) fun _ _ => rfl).1.2 (h PP (Set.mem_univ _)),

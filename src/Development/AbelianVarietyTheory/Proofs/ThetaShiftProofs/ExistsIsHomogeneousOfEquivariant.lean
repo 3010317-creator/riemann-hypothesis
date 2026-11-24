@@ -84,8 +84,7 @@ theorem notMem_vars_det {R σ : Type*} [CommRing R] {m : Type*} [Fintype m] [Dec
     rw [Set.mem_singleton_iff] at hba
     exact h i j (hba ▸ hb)
   rw [mem_supported] at this
-  intro ha
-  exact this ha rfl
+  exact fun ha => this ha rfl
 
 theorem det_updateRow_single {A : Type*} [CommRing A] {n : ℕ}
     (M : Matrix (Fin (n + 1)) (Fin (n + 1)) A) :
@@ -161,8 +160,7 @@ theorem irreducible_det_of_isRelPrime {R σ : Type*} [CommRing R] [IsDomain R] {
       · simp [r, hj]
       · simp [r, hj, A, vars_X, he.eq_iff, Ne.symm hj]
     · simp [Matrix.updateRow_ne hi, A, vars_X, he.eq_iff, Ne.symm hi]
-  · intro c hc1 hc2
-    exact h hc1 (dvd_add (hc1.mul_right _) hc2)
+  · exact fun c hc1 hc2 => h hc1 (dvd_add (hc1.mul_right _) hc2)
 
 theorem irreducible_det {R σ : Type*} [CommRing R] [IsDomain R] (n : ℕ) :
     ∀ (e : Fin (n + 1) × Fin (n + 1) → σ), Function.Injective e →
@@ -464,8 +462,7 @@ theorem Equivariant.isHomogeneous {a : ι × ℕ → ℕ} {Q : MvPolynomial (Lt 
         (fun i => Polynomial.X * Polynomial.C (X i)) Q =
       Polynomial.C Q * Polynomial.X ^ (∑ τ, ∑ i : Fin (m τ), a (τ, (i : ℕ))) := by
     apply hg
-    rw [map_mul, map_pow, mul_comm]
-    exact key
+    rwa [map_mul, map_pow, mul_comm]
   have k3 := coeff_scale Q (∑ τ, ∑ i : Fin (m τ), a (τ, (i : ℕ)))
   rw [k2, Polynomial.coeff_C_mul_X_pow, ite_eq_left rfl] at k3
   rw [k3]

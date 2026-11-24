@@ -441,8 +441,7 @@ theorem act_eq_one_of_gen (t : SAB H S) (hK : KTriv t.G t.PP.L) (π : 𝓞 E) (a
       (fun i => by fin_cases i <;> simp)
     have h₂ := pull_cubeCls (lift x y) ![fst t.G t.G, snd t.G t.G ≫ t.act.act (H.bar π)] c
       ![x, y ≫ t.act.act (H.bar π)] (fun i => by fin_cases i <;> simp)
-    rw [h, ← h₂, cubeCls_pair, cubeCls_pair, q1, add_zero, add_zero] at h₁
-    exact h₁
+    rwa [h, ← h₂, cubeCls_pair, cubeCls_pair, q1, add_zero, add_zero] at h₁
   have hab : ∀ {T : Over S} (x : T ⟶ t.G), a • pull x.left c = b • pull (x ≫ t.act.act π).left c := fun x => by
     have h := (cls_eq_zero_iff (LB.isLB_linComb hL _ _)).2 ⟨α₀, hα⟩
     rw [cls_linComb hL, Fin.sum_univ_two] at h
@@ -466,8 +465,7 @@ theorem act_eq_one_of_gen (t : SAB H S) (hK : KTriv t.G t.PP.L) (π : 𝓞 E) (a
   refine GlobalTheory.PowBalanceProbe.eq_one_of_cls hL hK (t.act.act d) (pull (t.act.act d).left c) ?_
   have h := key (snd t.G t.G) (fst t.G t.G)
   simp only [B] at h
-  rw [← pull_comp, ← Over.comp_left, _root_.mul_comm, ← sub_eq_zero]
-  exact h
+  rwa [← pull_comp, ← Over.comp_left, _root_.mul_comm, ← sub_eq_zero]
 
 end Classes
 
@@ -691,8 +689,7 @@ theorem norm_or_trivial [CharZero V] (w : LB.Iso tK.PP.L (t.PP.L.pull m.φ)) (hw
   right
   set d : 𝓞 E := (a : 𝓞 E) - b * (π * H.bar π)
   have hM : Ideal.absNorm (Ideal.span {d}) ≠ 0 := by
-    rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact hd
+    rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   obtain ⟨d', hd'⟩ := Ideal.mem_span_singleton.1 (Ideal.absNorm_mem (Ideal.span {d}))
   have := tK.act.hom d'
   have h₁ : mulA tK.G (Ideal.absNorm (Ideal.span {d})) = 1 := by
@@ -1040,8 +1037,7 @@ theorem exists_agree {X X' Y Y' : Scheme.{0}} {L : LB X} {L' : LB X'} (hL : L.Is
   rintro Z _ zp rfl z J J' hJ hJ'
   have := hs.sval hψ zp hJ hJ'
   rw [Fin.prod_univ_one, zpow_natCast, Units.val_pow_eq_pow_val, ← Category.assoc] at this
-  rw [Category.comp_id]
-  exact this
+  rwa [Category.comp_id]
 
 
 open scoped CategoryTheory.Obj in

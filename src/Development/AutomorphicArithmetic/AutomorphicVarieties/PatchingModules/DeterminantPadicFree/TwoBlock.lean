@@ -113,8 +113,7 @@ private theorem pivot {R : Type} [CommRing R] [IsLocalRing R] {ι : Type} [Finty
     ∃ Q : Matrix ι ι R, IsUnit Q.det ∧ IsUnit ((Qᵀ * H * Q) i i) := by
   classical
   obtain ⟨j, hj⟩ : ∃ j, IsUnit (H i j) := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have key : ∑ j, H i j * adjugate H j i = H.det := by
       have := congrFun (congrFun (mul_adjugate H) i) i
       simpa [Matrix.mul_apply] using this
@@ -205,8 +204,7 @@ private theorem dgood_fin {R : Type} [CommRing R] [IsLocalRing R] (h2 : IsUnit (
     ∀ H : Matrix (Fin n) (Fin n) R, Hᵀ = H → IsUnit H.det → DGood H := by
   induction n with
   | zero =>
-    intro H _ _
-    exact ⟨1, by simp, fun i => Fin.elim0 i⟩
+    exact fun H _ _ => ⟨1, by simp, fun i => Fin.elim0 i⟩
   | succ n ih =>
     intro H hs hd
     have e : Unit ⊕ Fin n ≃ Fin (n + 1) := Fintype.equivFinOfCardEq (by simp [add_comm])
@@ -353,8 +351,7 @@ private theorem UpperTheory.V.AlgebraTools.almost_selfdual_move {A : Type} [Comm
     have e2 : Bf (a • x) n = algebraMap A F a * Bf x n := by
       rw [← algebraMap_smul F a x, map_smul, LinearMap.smul_apply, smul_eq_mul]
     show Bf x (a • n) ∈ (1 : Submodule A F)
-    rw [e1, ← e2]
-    exact h1
+    rwa [e1, ← e2]
   · intro y z hy hz
     show Bf x (y + z) ∈ (1 : Submodule A F)
     rw [map_add (f := _)]
@@ -526,9 +523,7 @@ theorem UpperTheory.V.AlgebraTools.smith_zero_one :
     apply le_antisymm (Submodule.finrank_le N)
     let g : Z →ₗ[A] N := (ϖ • LinearMap.id : Z →ₗ[A] Z).codRestrict N (fun z => hN z)
     apply LinearMap.finrank_le_finrank_of_injective (f := g)
-    intro x y h
-    apply smul_right_injective Z hϖ.ne_zero
-    exact congrArg Subtype.val h
+    exact fun x y h => smul_right_injective Z hϖ.ne_zero (congrArg Subtype.val h)
   obtain ⟨b', a, ab', hab⟩ := Submodule.exists_smith_normal_form_of_rank_eq b0 hrk
   have hdiv : ∀ i, a i ∣ ϖ := by
     intro i
@@ -1064,8 +1059,7 @@ theorem UpperTheory.V.Pa.Det.oneBlock :
       have fe2 : (⇑(algebraMap (PowerSeries K') (FractionRing (PowerSeries K'))) ∘ ⇑j₂) =
           (⇑f₂ ∘ ⇑(algebraMap (PowerSeries K) (FractionRing (PowerSeries K)))) :=
         funext fun a => by simp [hf₂]
-      rw [fe1, fe2]
-      exact t2m
+      rwa [fe1, fe2]
     simp only [pushRep, MonoidHom.comp_apply, MulEquiv.coe_toMonoidHom, MulAut.conj_inv_apply, map_mul, map_inv] at t1 ⊢
     calc _ = (GeneralLinearGroup.map (f₂.comp f₁) (r g) * GeneralLinearGroup.map (f₂.comp f₁) Q₀) *
           GeneralLinearGroup.map f₂ P *

@@ -130,8 +130,7 @@ theorem psTrunc_expand {σ : Type} [Fintype σ] [DecidableEq σ] (p : ℕ) (hp :
       rw [this, MvPowerSeries.coeff_expand_smul]
     · intro b _ hb
       rw [ite_eq_right]
-      intro h
-      exact hb ((Finsupp.single_left_inj hp).1 h)
+      exact fun h => hb ((Finsupp.single_left_inj hp).1 h)
     · simp
   · rw [Finset.sum_eq_zero fun j _ => ite_eq_right fun h => hs ⟨j, h⟩]
     by_cases hd : e.degree ≤ p
@@ -309,8 +308,7 @@ theorem comb_iff {V : Type} [AddCommGroup V] [Module S V] (M : GlobalTheory.Comp
   have hs : M.pt (∑ i, a i • b i) = (List.ofFn fun i => M.pt (a i • b i)).prod := by
     have := map_prod φ (fun i => Multiplicative.ofAdd (a i • b i)) Finset.univ
     rw [List.prod_ofFn]
-    rw [← ofAdd_sum] at this
-    exact this
+    rwa [← ofAdd_sum] at this
   constructor
   · rintro ⟨u, hu, rfl⟩
     have : u = fun i => M.pt (a i • b i) := funext fun i => Over.OverMorphism.ext ((hu i).trans (M.smul _ _).symm)
@@ -477,8 +475,7 @@ theorem chart_bc {F : Fin d → MvPowerSeries (Fin 2 × Fin d) S} {act : 𝓞 E 
         · ext <;> simp [GlobalTheory.CompanionTheory.Ar.dualMap]
         · simp
     · split_ifs <;> simp
-  · intro v
-    exact ⟨v, fun j => by simp, fun a ha => funext fun j => by simpa using ha j⟩
+  · exact fun v => ⟨v, fun j => by simp, fun a ha => funext fun j => by simpa using ha j⟩
 
 end
 
@@ -855,8 +852,7 @@ theorem torus_tan : ∀ (k : Type) [Field k] (p : ℕ) [Fact p.Prime] [CharP k p
     have : Nontrivial (Jet k Unit p) := (jetAug : Jet k Unit p →ₐ[k] k).toRingHom.domain_nontrivial
     have : CharP (Jet k Unit p) p := charP_of_injective_algebraMap (algebraMap k _).injective p
     have h2 := first_eq_zero p hp (charVal y χ - 1) (by rw [sub_pow_char, h1, one_pow, sub_self])
-    rw [map_sub, map_one, sub_eq_zero] at h2
-    exact h2
+    rwa [map_sub, map_one, sub_eq_zero] at h2
 
 end PositivityTheory.HtPt.Ce
 
@@ -980,8 +976,7 @@ theorem desc_unit [QuasiCompact Q] (U : Y.Opens) (s : Γ(X, Q ⁻¹ᵁ U)ˣ)
   have hm : ∀ (Z : Scheme.{0}) (r r' : Z ⟶ X), r ≫ Q = r' ≫ Q → ∀ z, r z ∈ Q ⁻¹ᵁ U → r' z ∈ Q ⁻¹ᵁ U := by
     intro Z r r' e z hz
     change (r' ≫ Q) z ∈ U
-    rw [← e]
-    exact hz
+    rwa [← e]
   obtain ⟨v, hv⟩ := desc_sec Q U s.val fun Z r r' e z hz => by
     rw [gs_unit _ _ _ hz, gs_unit _ _ _ (hm Z r r' e z hz), h Z r r' e z hz]
   obtain ⟨w, hw⟩ := desc_sec Q U (s⁻¹).val fun Z r r' e z hz => by
@@ -1010,8 +1005,7 @@ theorem desc_gen (Q : X ⟶ Y) [Flat Q] [Surjective Q] [QuasiCompact Q] {M : LB 
   have := fun j => desc_unit Q (LB.wchart M ψ j) (res (le j) (c.s j)) fun Z r r' e z hz => by
     have hz' : r' z ∈ Q ⁻¹ᵁ LB.wchart M ψ j := by
       change (r' ≫ Q) z ∈ LB.wchart M ψ j
-      rw [← e]
-      exact hz
+      rwa [← e]
     obtain ⟨J, hJ⟩ := _root_.GlobalTheory.TorusCoord.exists_good' hM z
     refine (gm_res r z (le j) hz _).trans (Eq.trans ?_ (gm_res r' z (le j) hz' _).symm)
     refine (gen_trans hc r z (le j hz) (hJ.mem _ r)).trans
@@ -1065,8 +1059,7 @@ theorem gen_of_lbIso {A B : LB Y} (hA : A.IsLB) (hB : B.IsLB) (w : LB.Iso A B) (
     have hm : y ∈ B.U p ⊓ A.U q ⊓ (B.U p' ⊓ A.U q') := ⟨⟨hp, hq⟩, hp', hq'⟩
     have e1 := (gm_gen hw y (p, q) (p', q') ⟨hp, hq⟩ ⟨hp', hq'⟩).trans (congrArg (· * _) ((map_mul _ _ _).trans
       (congrArg₂ (· * ·) (gm_res _ y _ hm _) ((map_inv _ _).trans (congrArg (·⁻¹) (gm_res _ y _ hm _))))))
-    refine (congrArg₂ (· * ·) e1 (gm_gen ha y q q' hq hq')).trans ?_
-    exact alg_iso _ _ _ _
+    exact (congrArg₂ (· * ·) e1 (gm_gen ha y q q' hq hq')).trans (alg_iso _ _ _ _)
   have := fun p => glue_unit (B.U p) (fun q => B.U p ⊓ A.U q) (fun _ => inf_le_left) (fun y hy => by
       obtain ⟨q, hq⟩ := exists_chart hA y
       exact TopologicalSpace.Opens.mem_iSup.2 ⟨q, hy, hq⟩)

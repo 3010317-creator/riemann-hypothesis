@@ -153,8 +153,7 @@ theorem exists_localization : ∀ (R : Type) [CommRing R] (I : Ideal R) (κ : Di
     obtain ⟨n, hn⟩ := m.2
     refine ⟨n, a, ?_⟩
     change y * algebraMap T.B (Localization.Away b) b ^ n = algebraMap T.B (Localization.Away b) a
-    rw [← map_pow, show b ^ n = ↑m from hn]
-    exact hm
+    rwa [← map_pow, show b ^ n = ↑m from hn]
   · intro x hx
     change algebraMap T.B (Localization.Away b) x = 0 at hx
     obtain ⟨⟨_, n, rfl⟩, hm⟩ :=
@@ -244,8 +243,7 @@ theorem _root_.GlobalTheory.Cris.exists_finite_small_cover (R : Type) [CommRing 
       · rintro ⟨_, ⟨i, rfl⟩, rfl⟩
         rw [hb]
         exact (e.symm i).2
-      · intro hf
-        exact ⟨b (e ⟨f, hf⟩), ⟨_, rfl⟩, by rw [hb, Equiv.symm_apply_apply]⟩
+      · exact fun hf => ⟨b (e ⟨f, hf⟩), ⟨_, rfl⟩, by rw [hb, Equiv.symm_apply_apply]⟩
     obtain ⟨y, hy, hy1⟩ := (Ideal.mem_map_iff_of_surjective _ T.surj).1
       (hmap ▸ Submodule.mem_top : (1 : T.B₀) ∈ _)
     have hJ : 1 - y ∈ T.J := by

@@ -100,8 +100,7 @@ theorem comap_map_baseChange {R R' : Type} [CommRing R] [CommRing R'] (N : ℕ) 
     (U := ⟨_, (isAffineOpen_chart R N i).preimage (baseChange N φ)⟩)
     (V := ⟨_, isAffineOpen_chart R' N i⟩) (baseChange_preimage_chart N φ i).le h0
   rw [Ideal.mem_comap, ← CommRingCat.comp_apply, Scheme.Hom.appLE_map] at h1
-  rw [Scheme.Hom.app_eq_appLE]
-  exact h1
+  rwa [Scheme.Hom.app_eq_appLE]
 
 end GlobalTheory.ProjSpace
 
@@ -127,8 +126,7 @@ theorem exists_finset_isProjOver_descends : ∀ (K : Type) [Field K] (K₀ : Sub
     apply MvPolynomial.mem_range_map_iff_coeffs_subset.2
     intro c hc
     refine ⟨⟨c, hs ?_⟩, rfl⟩
-    simp only [Finset.coe_biUnion, Set.mem_iUnion]
-    exact ⟨i, Finset.mem_univ i, t, ht, hc⟩
+    simpa only [Finset.coe_biUnion, Set.mem_iUnion] using ⟨i, Finset.mem_univ i, t, ht, hc⟩
   rw [Scheme.IdealSheafData.map_ker] at key
   refine ⟨(e ≫ baseChange N K₁.subtype).image, (e ≫ baseChange N K₁.subtype).imageι ≫ PSpace.str K₁ N,
     (e ≫ baseChange N K₁.subtype).toImage, ⟨N, _, inferInstance, rfl⟩, ?_⟩

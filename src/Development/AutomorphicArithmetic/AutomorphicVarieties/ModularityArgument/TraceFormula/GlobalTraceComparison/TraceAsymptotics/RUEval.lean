@@ -140,8 +140,7 @@ private theorem levOp_comp (e : G ≃* H) (ρ : Representation ℂ H V) (K : Sub
       refine QuotientGroup.eq.2 ?_
       have h1 : (e.symm q.out)⁻¹ * (Quotient.out (QuotientGroup.mk (e.symm q.out) : G ⧸ K₁)) ∈ K₁ :=
         QuotientGroup.eq.1 (QuotientGroup.out_eq' _).symm
-      have h2 := (hK _).1 (K₁.inv_mem h1)
-      simpa [φ] using h2
+      simpa [φ] using (hK _).1 (K₁.inv_mem h1)
   have hrep : ∀ q : G ⧸ K₁, ∃ k ∈ K, (φ q).out = e q.out * k := fun q => by
     refine ⟨(e q.out)⁻¹ * (φ q).out, QuotientGroup.eq.1 (QuotientGroup.out_eq' _).symm, by group⟩
   have hval : ∀ q : G ⧸ K₁, F q.out = f (φ q).out := fun q => by
@@ -163,8 +162,7 @@ private theorem levOp_comp (e : G ≃* H) (ρ : Representation ℂ H V) (K : Sub
 private theorem fixed_comp (e : G ≃* H) (ρ : Representation ℂ H V) (K : Subgroup H) (K₁ : Subgroup G)
     (hK : ∀ g, g ∈ K₁ ↔ e g ∈ K) : fixed (ρ.comp e.toMonoidHom) K₁ = fixed ρ K := by
   refine Submodule.ext fun x => ⟨fun h => GlobalTheory.LGrp.mem_fixed.2 fun k hk => ?_, fun h => GlobalTheory.LGrp.mem_fixed.2 fun k hk => ?_⟩
-  · have h1 := GlobalTheory.LGrp.mem_fixed.1 h (e.symm k) ((hK _).2 (by simpa using hk))
-    simpa using h1
+  · simpa using GlobalTheory.LGrp.mem_fixed.1 h (e.symm k) ((hK _).2 (by simpa using hk))
   · exact GlobalTheory.LGrp.mem_fixed.1 h (e k) ((hK k).1 hk)
 
 end Generic
@@ -281,8 +279,7 @@ theorem rUEval : RUEval := by
     by_cases hs : IsSplitAt w
     · obtain ⟨h1, B, hB⟩ := hSL E n w (toGL hs (σ i w)) (by rw [fixed_toGL]; exact hne)
       refine ⟨hne, ?_, B, fun _ => hB⟩
-      rw [fixed_toGL] at h1
-      exact h1
+      rwa [fixed_toGL] at h1
     · exact ⟨hne, hIL E hU n w hs (σ i w) hne (hfd _ (GlobalTheory.BCT.LocCompU.isOpen_isCompact_KL hU n w).1),
         0, fun h => absurd h hs⟩
   let B₀ : ι → Pl E → Multiset ℂˣ := fun i w => Classical.epsilon fun B => ∀ hs : IsSplitAt w, HasSatGL w (toGL hs (σ i w)).ρ B
@@ -307,8 +304,7 @@ theorem rUEval : RUEval := by
     refine ⟨φ, hφ, h0, fun x hx hk => hfix w hw x hx ⟨p ⟨x, hx⟩, ?_, hp ⟨x, hx⟩⟩⟩
     rw [hKL w hz]
     change (p ⟨x, hx⟩).1 ∈ KGL w (n := n)
-    rw [hp ⟨x, hx⟩]
-    exact hk
+    rwa [hp ⟨x, hx⟩]
   ·
     by_cases hw : w ∈ S
     · rw [hBS i w hw]
@@ -318,8 +314,7 @@ theorem rUEval : RUEval := by
       have hu := hUC E n (π i) (cPl w) hsc (toGL hsc (σ i (cPl w))) (B₀ i (cPl w))
         (comp_toGL hsc ((hσ i).2.2.2 _ hcw).1) (hB₀ i _ hcw hoff.2 hsc)
       rw [(hcc w).1] at hu
-      rw [hBN i w hw]
-      exact hu
+      rwa [hBN i w hw]
   ·
     have hTs : ∀ w ∈ T, w ∈ S ∧ IsSplitAt w ∧ w ∉ Z := fun w hw =>
       ⟨(hT w hw).1, (hT w hw).2, Finset.disjoint_left.1 hd hw⟩

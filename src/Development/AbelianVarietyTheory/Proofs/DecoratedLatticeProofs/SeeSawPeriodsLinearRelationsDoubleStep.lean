@@ -132,11 +132,9 @@ theorem doubleStep_tuple : ∀ (D : D7) (c : Comm D) (t : Tup c), DoubleStep D �
     refine ⟨f₁, ?_, fun h₁ => ?_⟩
     · have h1' := h1
       unfold Step.lift at h1'
-      rw [hom₁, hvW₁, hom₂, hvW₂] at h1'
-      exact h1'
+      rwa [hom₁, hvW₁, hom₂, hvW₂] at h1'
     · have h2' := h2 h₁
-      rw [hvW₂] at h2'
-      exact h2'
+      rwa [hvW₂] at h2'
   choose f₁ hf₁ using hstep
 
   have hw := (t.sBF j (σ + 1) h).weil
@@ -304,8 +302,7 @@ theorem vanish : ∀ (G₁ G₂ : Type) [Group G₁] [TopologicalSpace G₁] [Is
     (fun g hg => cell a ha g (fun h0 => hg ((GlobalTheory.QuotZero.left_and_zero hR₂B ρ₂ μ₂ (hf₁q g)).2
       (by funext q₂; simp [h0]))))
   have hz := IsQuotIntL1.unique hR₁B hf₁ hf₁0
-  rw [hz] at hs
-  exact hs
+  rwa [hz] at hs
 
 end GlobalTheory.VanCore
 end -- clump:auto
@@ -358,8 +355,7 @@ theorem quot_lin {G : Type} [Group G] [MeasurableSpace G] {R : Subgroup G} {μR 
       have e : (fun x => ∑ j ∈ insert i S, α j * f j x) = α i • f i + (fun x => ∑ j ∈ S, α j * f j x) := by
         funext x
         simp [Finset.sum_insert hi]
-      rw [e, Finset.sum_insert hi]
-      exact this
+      rwa [e, Finset.sum_insert hi]
   exact key Finset.univ
 
 theorem iteratedQuotientIntegral_finite_linearCombination {G₁ G₂ : Type} [Group G₁] [MeasurableSpace G₁] [TopologicalSpace G₁] [Group G₂] [MeasurableSpace G₂]
@@ -395,8 +391,7 @@ theorem invsupp : ∀ (D : D7) (c : Comm D) (t : Tup c), t.Is → ∀ j σ (h : 
       rw [m1, m2, (HH (φ α)).1, inv_mul_cancel₀ ha, one_smul]
     funext h₂
     simp only [Tup.integrand, key]
-  · by_contra hno
-    push Not at hno
+  · by_contra! hno
     apply hne
     funext h₂
     simp only [Tup.integrand, Pi.zero_apply]
@@ -460,8 +455,7 @@ theorem vanMany : ∀ (D : D7) (c : Comm D) (𝒯 : Type) (t : 𝒯 → Tup c), 
     rw [(hIS i).1 h₁ k (Subgroup.mem_iInf.1 hk i)]
   · intro h₁ hne
     have : ∃ i, (t (s i)).integrand j σ h P₁ P₂ (φ i) (f i) h₁ ≠ 0 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       apply hne
       funext h₂
       simp [hcon]
@@ -471,8 +465,7 @@ theorem vanMany : ∀ (D : D7) (c : Comm D) (𝒯 : Type) (t : 𝒯 → Tup c), 
   · intro a ha a' ha'
     obtain ⟨v, hv, hsum⟩ := hV a ha a' ha'
     have := iteratedQuotientIntegral_finite_linearCombination (c.ρJ j (σ + 1) h) (c.μf (j + 1)) (c.ρB (j + 1 + 1) σ (idx_step h)) (c.μf (j + 1 + 1)) α _ v hv
-    rw [hsum] at this
-    exact this
+    rwa [hsum] at this
 
 end GlobalTheory.SeeSaw.VanMany
 end -- clump:auto

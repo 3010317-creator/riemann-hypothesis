@@ -201,8 +201,7 @@ theorem card_nrm_eq_mul_card_commute (s : F' ≃ₐ[F] F') (hs : ∀ t : F' ≃�
   have hYcomm : ∀ δ : GL (Fin n) F', nrm s δ = c → Commute δ c := by
     intro δ h
     have := hcomm δ
-    rw [h, hcfix] at this
-    exact this
+    rwa [h, hcfix] at this
   have eY : {δ : GL (Fin n) F' // nrm s δ = c} ≃
       {ε : GL (Fin n) F' // (ε : Matrix (Fin n) (Fin n) F') ∈ B ∧ nrm s ε = 1} :=
     { toFun := fun δ => ⟨δ₀⁻¹ * δ.1, (memB _).2 (hδ₀c.inv_left.mul_left (hYcomm _ δ.2)), by

@@ -104,9 +104,7 @@ theorem isCoLat_ratV (ι : Type) [Finite ι] : IsCoLat (ratV E ι) := by
     convert hW.preimage (continuous_subtype_val (p := fun x => x ∈ ratV E ι)) using 1
     ext ⟨_, x, rfl⟩
     constructor
-    · intro h p _
-      have h1 := congrFun (congrArg Subtype.val (Set.mem_singleton_iff.1 h)) p
-      exact h1.symm ▸ hV0
+    · exact fun h p _ => (congrFun (congrArg Subtype.val (Set.mem_singleton_iff.1 h)) p).symm ▸ hV0
     · intro h
       have hx : x = 0 := funext fun p => h0 (x p) (hVU (h p trivial))
       subst hx

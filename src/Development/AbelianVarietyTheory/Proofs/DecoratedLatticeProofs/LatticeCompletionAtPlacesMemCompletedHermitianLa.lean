@@ -60,9 +60,7 @@ theorem gen_mem (D : D7) (S : HSp D) (L : Lat S) (α : Af D.host.F) (hα : α �
   have hint : (1 : D.host.E) ⊗ₜ[D.host.F] α ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := by
     apply Subring.subset_closure
     right
-    refine ⟨⟨α, ?_⟩, rfl⟩
-    intro v
-    exact hα v
+    exact ⟨⟨α, fun v => hα v⟩, rfl⟩
   have hgen : (fun i => Formalism.UG.inclE (F := D.host.F) (Af D.host.F) (x i)) ∈ Formalism.L2.Herm.hatL (F := D.host.F) L :=
     Submodule.subset_span ⟨x, hx, rfl⟩
   have := Submodule.smul_mem _ (⟨_, hint⟩ : Formalism.L2.Herm.intAf D.host.F D.host.E) hgen

@@ -226,8 +226,7 @@ theorem od_unit (i) {X : Scheme.{0}} (b : Sp (Pl.O i) ⟶ X) (x : Sp K ⟶ X)
     od Pl i (gm x (closedPoint K) U f) = 0 := by
   have hx : x (closedPoint K) ∈ U := hb ▸ (integral_value _ b U h).1
   refine (od_section Pl i b x hb U h f.val _ (gs_unit x _ U hx f)).2.2 ?_
-  rw [X.basicOpen_of_isUnit f.isUnit]
-  exact h
+  rwa [X.basicOpen_of_isUnit f.isUnit]
 
 theorem gs_pw {X Y : Scheme.{0}} {L : LB X} {N : ℤ} (s : LB.Sec (GlobalTheory.AbLaw.pw L N)) (x : Y ⟶ X) (y : Y)
     {i j : L.ι} (hi : x y ∈ L.U i) (hj : x y ∈ L.U j) :
@@ -272,8 +271,7 @@ theorem exists_height : ∀ (k K : Type) [Field k] [Field K] [Algebra k K] (Pl :
           have := hch (b (z ≫ φ m) i (closedPoint (Pl.O i)))
           rw [e m] at this
           simp only [j]
-          rw [e m]
-          exact this
+          rwa [e m]
       have m₂ : z.left (closedPoint K) ∈ LB.wchart L (fun m => (φ m).left) (fun m => j (z ≫ φ m) i) :=
         Set.mem_iInter.2 fun m => hj (z ≫ φ m) i
       have h1 := ((od_unit Pl i c z.left hc _ m₁ _).symm.trans
@@ -442,8 +440,7 @@ theorem exists_local (i : Pl.I) [IsDiscreteValuationRing (Pl.O i)] :
     have : Units.map (Algebra.norm F) y = Units.mk0 _ hϖ0 ^ (∑ᶠ P : HeightOneSpectrum (integralClosure (Pl.O i) L),
         ((P.asIdeal.inertiaDeg (Pl.O i) : ℤ) * -WithZero.log (P.valuation L y))) * Units.mk0 _ hu0 := by
       apply Units.ext
-      rw [Units.val_mul, Units.val_zpow_eq_zpow_val]
-      exact hN
+      rwa [Units.val_mul, Units.val_zpow_eq_zpow_val]
     rw [this, Pl.v_mul, v_zpow, v_unit Pl i hu (Units.mk0 _ hu0) rfl, add_zero, finsum_mul' _ _ (Set.toFinite _)]
 
 
@@ -755,15 +752,13 @@ theorem factor_of_const {k K : Type} [Field k] [Field K] [Algebra k K] (B : Over
   let ψ : Γ(B.left, D) ⟶ CommRingCat.of K :=
     Spec.preimage (IsOpenImmersion.lift hD.fromSpec x.left (by rw [hD.range_fromSpec]; exact hx))
   have hψ : Spec.map ψ ≫ hD.fromSpec = x.left := by
-    simp only [ψ, Spec.map_preimage]
-    exact IsOpenImmersion.lift_fac _ _ _
+    simpa only [ψ, Spec.map_preimage] using IsOpenImmersion.lift_fac _ _ _
   have hmem : ∀ a, ψ.hom a ∈ Set.range (algebraMap k K) := fun a => hO _ fun i => by
     obtain ⟨b, hb1, hb2⟩ := hb i
     let χ : Γ(B.left, D) ⟶ CommRingCat.of (O i) :=
       Spec.preimage (IsOpenImmersion.lift hD.fromSpec b (by rw [hD.range_fromSpec]; exact hb2))
     have hχ : Spec.map χ ≫ hD.fromSpec = b := by
-      simp only [χ, Spec.map_preimage]
-      exact IsOpenImmersion.lift_fac _ _ _
+      simpa only [χ, Spec.map_preimage] using IsOpenImmersion.lift_fac _ _ _
     have : ψ = χ ≫ CommRingCat.ofHom (O i).subtype := by
       apply Spec.map_injective
       rw [← cancel_mono hD.fromSpec, hψ, Spec.map_comp, Category.assoc, hχ, hb1]
@@ -850,8 +845,7 @@ theorem exists_quadraticForm_end : ∀ (k : Type) [Field k] [IsAlgClosed k] (B :
   have h1 : h 1 = 0 := by
     have := hrel (𝟙_ _) (by show IsProper (𝟙 _); infer_instance) 1 (fun _ => η[B]) (fun _ => 1)
       (gen_field (k := k) _ (LB.isLB_linComb hL _ _)) (toUnit _)
-    rw [Fin.sum_univ_one, _root_.one_mul] at this
-    exact this
+    rwa [Fin.sum_univ_one, _root_.one_mul] at this
   have hpull : ∀ (F : B ⟶ B) (q : ℤ), PullPow F.left L q → ∀ x, h (x ≫ F) = q * h x := by
     intro F q hF x
     have e : (fun i => ((![F, 𝟙 B] : Fin 2 → (B ⟶ B)) i).left) = ![F.left, 𝟙 B.left] := by
@@ -861,8 +855,7 @@ theorem exists_quadraticForm_end : ∀ (k : Type) [Field k] [IsAlgClosed k] (B :
     linarith
   have hinv : ∀ x, h x⁻¹ = h x := fun x => by
     have := hpull ι[B] 1 hsym x
-    rw [_root_.one_mul] at this
-    exact this
+    rwa [_root_.one_mul] at this
   have hpar : ∀ x y, h (x * y) + h (x * y⁻¹) = 2 * h x + 2 * h y := by
     intro x y
     have hp3 : IsProper (G3 B).hom := by
@@ -899,11 +892,9 @@ theorem exists_quadraticForm_end : ∀ (k : Type) [Field k] [IsAlgClosed k] (B :
     refine ⟨s, ?_, ha⟩
     rintro _ ⟨p, rfl⟩
     have : p = IsLocalRing.closedPoint K := Subsingleton.elim (α := PrimeSpectrum K) _ _
-    rw [this]
-    exact hs
+    rwa [this]
   refine ⟨fun f => h (P ≫ f), fun f g => ?_, fun f => ?_, fun f hf h0 => ?_, fun F q hF f => ?_⟩
-  · simp only [MonObj.comp_mul, GrpObj.comp_inv]
-    exact hpar _ _
+  · simpa only [MonObj.comp_mul, GrpObj.comp_inv] using hpar _ _
   · obtain ⟨s, hs, -⟩ := hchart (P ≫ f)
     exact (hpos N s _ hN hs).1
   · obtain ⟨s, hs, ha⟩ := hchart (P ≫ f)
@@ -914,8 +905,7 @@ theorem exists_quadraticForm_end : ∀ (k : Type) [Field k] [IsAlgClosed k] (B :
       rw [← Over.comp_left, ← Over.comp_left, hc, ← Category.assoc, toUnit_unique (P ≫ toUnit B) (toUnit _)]
     have hc' : c = η[B] := by
       have := IsMonHom.one_hom f
-      rw [hf', ← Category.assoc, toUnit_unique (η[B] ≫ toUnit B) (𝟙 _), Category.id_comp] at this
-      exact this
+      rwa [hf', ← Category.assoc, toUnit_unique (η[B] ≫ toUnit B) (𝟙 _), Category.id_comp] at this
     rw [hf', hc']
     rfl
   · show h (P ≫ f ≫ F) = q * h (P ≫ f)

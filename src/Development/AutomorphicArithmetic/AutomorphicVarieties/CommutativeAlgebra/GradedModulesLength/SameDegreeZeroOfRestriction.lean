@@ -143,8 +143,7 @@ private theorem exists_not_inP (h : ¬ Irr (reesGr N) ≤ p) (i : Fin k) : ∃ f
     split_ifs with hm
     · rw [hm]
     · exact hq m fun h2 => hm (toDeg_injective (he.symm.trans h2.symm))
-  rw [this]
-  exact hq'
+  rwa [this]
 
 end
 
@@ -192,8 +191,7 @@ private theorem inP_neg (hpos : ∀ n : ℕ, oz 𝒜 (2 * n) = N i ^ n) (hneg : 
       have h1 := h0.mul hv
       rw [zero_add] at h1
       have e1 : c * (v * w) = c * w * v := by ring
-      rw [e1]
-      exact h1
+      rwa [e1]
     · rw [mul_add]; exact hv.add hw
   rw [← mem_oz, hneg, pow_succ, ← hneg] at ha
   refine Submodule.mul_induction_on ha (fun v hv w hw => ?_) (fun v w hv hw => ?_)
@@ -291,8 +289,7 @@ theorem UpperTheory.V.Alg.M.zp_holds :
     exact Or.inr (Or.inl (Or.inl (Or.inr ⟨i, rfl⟩)))
   · refine hJ _ (two_mem_idJ hpos (Q.hE' i)
       ⟨sec _ 1 (Q.E' i) (Q.hE' i), hs (Ideal.subset_span ⟨e 1, ?_⟩), rfl⟩)
-    simp only [ts, tsR, List.mem_append, List.mem_ofFn]
-    exact Or.inr (Or.inl (Or.inr ⟨i, rfl⟩))
+    simpa only [ts, tsR, List.mem_append, List.mem_ofFn] using Or.inr (Or.inl (Or.inr ⟨i, rfl⟩))
   · exact hJ _ (zero_mem_idJ hpos (hZ i))
 end -- clump:auto
 end -- clump:auto
@@ -321,8 +318,7 @@ theorem UpperTheory.V.Alg.M.fix_holds :
     have h := DirectSum.coe_decompose_mul_add_of_left_mem 𝒜 (j := -i) hz (b := b)
     rwa [add_neg_cancel] at h
   have kill : ∀ c : 𝒜 0, ∀ f ∈ 𝒜 (-2), ∀ g ∈ 𝒜 2, (c : A) = f * g → σ c = 0 := by
-    intro c f hf g hg h
-    exact (RingHom.mem_ker).1 (hid (Ideal.subset_span ⟨f, hf, g, hg, h⟩))
+    exact fun c f hf g hg h => (RingHom.mem_ker).1 (hid (Ideal.subset_span ⟨f, hf, g, hg, h⟩))
   have kill1 : ∀ c : 𝒜 0, ∀ f ∈ 𝒜 (-1), ∀ g ∈ 𝒜 1, (c : A) = f * g → σ c = 0 := by
     intro c f hf g hg h
     have hff : f * f ∈ 𝒜 (-2) := by
@@ -355,8 +351,7 @@ theorem UpperTheory.V.Alg.M.fix_holds :
       apply Subtype.ext
       rw [SetLike.GradeZero.coe_mul]
       have h := DirectSum.coe_decompose_mul_add_of_left_mem 𝒜 (j := 0) hz (b := b)
-      rw [add_zero] at h
-      exact h
+      rwa [add_zero] at h
     rw [h1, hcoe z hz, map_mul]
   have hmul : ∀ a b : A, σ (DirectSum.decompose 𝒜 (a * b) 0) =
       σ (DirectSum.decompose 𝒜 a 0) * σ (DirectSum.decompose 𝒜 b 0) := by
@@ -421,10 +416,8 @@ theorem UpperTheory.V.Alg.M.fix_holds :
       · rw [hξ, hcoe _ (Q.hZ i).1]
         exact hQ ⟨Q.Z i, (Q.hZ i).1⟩ (Ideal.subset_span (Set.mem_union_right _ ⟨i, rfl⟩))
     exact (RingHom.mem_ker).1 (hle hf)
-  · intro j hj f hf
-    exact hne j (by omega) f hf
-  · intro j hj f hf
-    exact hne j (by omega) f hf
+  · exact fun j hj f hf => hne j (by omega) f hf
+  · exact fun j hj f hf => hne j (by omega) f hf
   · refine AlgHom.ext fun b => ?_
     show σ (DirectSum.decompose 𝒜 ((b : 𝒜 0) : A) 0) = σ b
     rw [DirectSum.decompose_coe, DirectSum.of_eq_same]
@@ -654,8 +647,7 @@ private theorem zm_iota {O A : Type} [CommRing O] [CommRing A] [Algebra O A] (�
   classical
   have hmem : ∀ (n : ℕ) (b : A), b ∈ 𝒜 (-(2 * (n : ℤ))) → b ∈ lat (mN 𝒜 F) (Finsupp.single 0 n) := by
     intro n b hb
-    rw [zm_lat, show mN 𝒜 F 0 = oz 𝒜 (-2) from rfl, ← hpow, mem_oz]
-    exact hb
+    rwa [zm_lat, show mN 𝒜 F 0 = oz 𝒜 (-2) from rfl, ← hpow, mem_oz]
   let ι : ℕ → A →+ rees (mN 𝒜 F) := fun n =>
     { toFun := fun a => mono (mN 𝒜 F) (Finsupp.single 0 n) (DirectSum.decompose 𝒜 a (-(2 * (n : ℤ))) : A)
         (hmem n _ (SetLike.coe_mem _))
@@ -745,8 +737,7 @@ theorem UpperTheory.V.Alg.M.zm_holds :
       apply Subtype.ext
       rw [h1 1 f hf1]
       rfl
-    rw [e]
-    exact hfp
+    rwa [e]
   obtain ⟨A1, A2, A3, A4, A5⟩ := zm_abs 𝒜 ι p hp h0 hm hf hfp'
   have hι0 : ∀ b : 𝒜 0, ι 0 (b : A) = algebraMap (𝒜 0) (mR Q) b := by
     intro b
@@ -758,8 +749,7 @@ theorem UpperTheory.V.Alg.M.zm_holds :
   have hJ0 : ∀ b : 𝒜 0, algebraMap (𝒜 0) (mR Q) b ∈ p → (b : A) ∈ zmJ ι p := by
     intro b hb
     apply A3 b b.2
-    rw [hι0]
-    exact hb
+    rwa [hι0]
   have h2 : ∀ g ∈ 𝒜 2, g ∈ zmJ ι p := by
     intro g hg
     apply A2 2 g hg
@@ -778,8 +768,7 @@ theorem UpperTheory.V.Alg.M.zm_holds :
       convert this using 2
     have hle : oz 𝒜 2 ^ (n + 1) ≤ (zmJ ι p).restrictScalars (𝒜 0) := by
       rw [pow_succ, Submodule.mul_le]
-      intro a _ b hb
-      exact (zmJ ι p).mul_mem_left a (h2 b ((mem_oz 𝒜).1 hb))
+      exact fun a _ b hb => (zmJ ι p).mul_mem_left a (h2 b ((mem_oz 𝒜).1 hb))
     exact hle hg2
   have hF : ∀ i, Q.F i ∈ zmJ ι p := by
     intro i
@@ -819,8 +808,7 @@ theorem UpperTheory.V.Alg.M.zm_holds :
   have ha : ∀ b : 𝒜 0, σ b = 0 → algebraMap (𝒜 0) A b ∈ zmJ ι p := by
     intro b hb
     have hk : b ∈ RingHom.ker σ := by
-      rw [RingHom.mem_ker]
-      exact hb
+      rwa [RingHom.mem_ker]
     rw [hσ, Ideal.mem_comap] at hk
     exact hJ0 b hk
   have hb' : ∀ (b : 𝒜 0) (n : ℕ), σ b ≠ 0 → algebraMap (𝒜 0) A b * f ^ n ∉ zmJ ι p := by
@@ -829,24 +817,15 @@ theorem UpperTheory.V.Alg.M.zm_holds :
     intro hmem
     apply hb
     have hk : b ∈ RingHom.ker σ := by
-      rw [hσ, Ideal.mem_comap, ← hι0]
-      exact hmem
-    rw [RingHom.mem_ker] at hk
-    exact hk
+      rwa [hσ, Ideal.mem_comap, ← hι0]
+    rwa [RingHom.mem_ker] at hk
   haveI := (ft_holds O A 𝒜 x hW).1
   obtain ⟨ξ, hξ1, hξ2, hξ3⟩ := ns_holds O (𝒜 0) A K σ (zmJ ι p) f ha hb'
   refine ⟨ξ, ?_, ?_, ?_, ?_⟩
-  · show ∀ g ∈ Q.ideal, ξ g = 0
-    intro g hg
-    exact hξ2 g (hI hg)
-  · show ∀ j > 0, ∀ g ∈ 𝒜 j, ξ g = 0
-    intro j hj g hg
-    exact hξ2 g (hpos j hj g hg)
-  · intro hneg
-    exact hξ3 (hneg (-2) (by norm_num) f hf)
-  · apply AlgHom.ext
-    intro b
-    exact hξ1 b
+  · exact fun g hg => hξ2 g (hI hg)
+  · exact fun j hj g hg => hξ2 g (hpos j hj g hg)
+  · exact fun hneg => hξ3 (hneg (-2) (by norm_num) f hf)
+  · exact AlgHom.ext (fun b => hξ1 b)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.GradedModulesLength.ZmOfHom =====

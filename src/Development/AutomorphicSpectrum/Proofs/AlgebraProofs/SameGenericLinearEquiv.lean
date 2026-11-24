@@ -65,8 +65,7 @@ theorem mseg_restrict {K K' : Type} [Fintype K] [Fintype K'] {ι : K → Type} {
     mseg x (GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.NumbersDVR.Bundles.restrictChart s) ≠ 0 := by
   unfold mseg at hs ⊢
   rw [Finset.prod_ne_zero_iff] at hs ⊢
-  intro k _
-  exact hs (Sum.inl k) (Finset.mem_univ _)
+  exact fun k _ => hs (Sum.inl k) (Finset.mem_univ _)
 
 theorem pull_transport (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     {Ω : Type} [Field Ω] [Algebra O Ω]
@@ -96,8 +95,7 @@ theorem pull_transport (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuation
   · rintro ⟨u, hu, huv⟩
     have : u = v := e.injective huv
     exact this ▸ hu
-  · intro hv
-    exact ⟨v, hv, rfl⟩
+  · exact fun hv => ⟨v, hv, rfl⟩
 
 theorem frame_transport {O : Type} [CommRing O] {Ω : Type} [Field Ω] [Algebra O Ω]
     {K : Type} [Fintype K] {ι : K → Type} (y : (Σ k, ι k) → Ω) {N : ℕ}

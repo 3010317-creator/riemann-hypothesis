@@ -130,8 +130,7 @@ theorem holoOn_minor' {N : ℕ} {V : Set X} {m : X → Matrix (Fin N) (Fin N) �
   by_cases e : I.card = J.card
   · simp only [dite_eq_left e, Matrix.det_apply']
     exact holoOn_sum' _ fun s => holoOn_mul' (holoOn_const' _ _) (holoOn_prod' _ fun a => h _ _)
-  · simp only [dite_eq_right e]
-    exact holoOn_const' _ _
+  · simpa only [dite_eq_right e] using holoOn_const' _ _
 
 theorem holoOn_of_chart {ψ : OpenPartialHomeomorph X (Fin e → ℂ)} (hψ : IsCompatChart A ψ)
     {g : (Fin e → ℂ) → ℂ} (hg : AnalyticOnNhd ℂ g ψ.target) : A.HoloOn ψ.source fun w => g (ψ w) :=
@@ -185,8 +184,7 @@ theorem eq_of_orbit_normal {κ : Type} {ρ : κ → Type} {z z' : (Σ k, ρ k) �
   obtain ⟨c, hc, rfl⟩ := h
   have hc1 : ∀ k, c k = 1 := fun k => by
     have := h₁ k
-    simp only [h₂ k, mul_one] at this
-    exact this
+    simpa only [h₂ k, mul_one] using this
   funext q
   simp only [hc1, one_mul]
 
@@ -287,8 +285,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
       (fun r s => holoOn_transv (fun r s => holoOn_mono' (hHH τ r s) hV₁S) (holoOn_mono' hti hV₁S) cb ca r s)
       fun w hwV => ?_
     have h1 := ((hz w (hV₁S hwV)).2.2 τ a).2.2 k₀ hk m
-    rw [ite_eq_left rfl, hbeq w (hV₁S hwV)] at h1
-    exact h1
+    rwa [ite_eq_left rfl, hbeq w (hV₁S hwV)] at h1
   choose mk hmk using (hpb x hx).2.2.1
   obtain ⟨m₁, hm₁⟩ := (hpb x hx).2.2.2 k₀
   obtain ⟨V, hVdef⟩ : ∃ V, V = (⋂ k, (V₁ ∩ {w | z₀ w ⟨k, mk k⟩ ≠ 0})) ∩ (V₁ ∩ {w | z₁ w ⟨k₀, m₁⟩ ≠ 0}) :=
@@ -316,8 +313,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
   have hcs' : ∀ w ∈ V, ∀ (d : K → ℂ), (∀ q : Σ k, ι k, RW.lift x w ⟨some q.1, q.2⟩ = d q.1 * z₀ w q) →
       ∀ k, c (some k) w = d k := fun w hwV d hq k => by
     rw [hcs]
-    have h1 := hq ⟨k, mk k⟩
-    exact h1 ▸ mul_div_cancel_right₀ _ (hV0 w hwV k)
+    exact (hq ⟨k, mk k⟩) ▸ mul_div_cancel_right₀ _ (hV0 w hwV k)
   have hcn' : ∀ w ∈ V, ∀ d : ℂ, (∀ m : ι k₀, RW.lift x w ⟨none, m⟩ = d * z₁ w ⟨k₀, m⟩) → c none w = d :=
     fun w hwV d hq => by
       rw [hcn, hq m₁]
@@ -330,8 +326,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
         (holoOn_mono' (hzH ⟨k, mk k⟩) hVV₁) (fun w hwV => hV0 w hwV k) fun w _ => hcs k w
   · rintro (_ | k) w hwV
     · obtain ⟨d, hd, hq⟩ := hb₁ w (hVW hwV)
-      rw [hcn' w hwV d hq]
-      exact hd
+      rwa [hcn' w hwV d hq]
     · obtain ⟨d, hd, hq⟩ := hb₀ w (hVW hwV)
       rw [hcs' w hwV d hq k]
       exact hd k
@@ -424,10 +419,8 @@ theorem holoOn_minor (A : FinHolAtlas e S) {U : Set S} {N : ℕ} {H : S → Matr
       ext r s
       simp [f]
     have := minorIJ_map f (Matrix.of fun r s => (MvPolynomial.X (r, s) : MvPolynomial (Fin N × Fin N) ℤ)) I J
-    rw [hm] at this
-    exact this
-  rw [e]
-  exact h
+    rwa [hm] at this
+  rwa [e]
 
 theorem prod_local (A : FinHolAtlas e S) {V : Set S} {y₀ : S} {N : ℕ} (hV : IsOpen V) (hy : y₀ ∈ V)
     (g : Fin N → S → ℂ) (n : Fin N → ℤ)
@@ -471,10 +464,8 @@ theorem improper_factor : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, F
       else minorIJ (Hm w) (omIdx N j) (omIdx N j))) (fun i => xiCoef τ a (τ, i)) fun i => ?_
   by_cases hp : IsProperStep N j i
   · refine ⟨V, hV, hy, subset_rfl, ?_, fun w _ => ?_⟩
-    · simp only [ite_eq_left hp]
-      exact holoOn_const A V 1
-    · simp only [ite_eq_left hp]
-      exact one_ne_zero
+    · simpa only [ite_eq_left hp] using holoOn_const A V 1
+    · simpa only [ite_eq_left hp] using one_ne_zero
   · have hnone : M.blk (τ, i) = none := (M.blk_none (τ, i)).2 hp
     obtain ⟨W, hW, hyW, hWV, hval⟩ := StepW.ValHolo.holoOn_valAt _ _ M.Ω M.x (F.υ (τ, i)) e X A V zb y₀ hV hy hzb hpt
       ((hgood y₀ hy).2.2 _ hnone).2.1
@@ -483,15 +474,11 @@ theorem improper_factor : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, F
       have hH : ∀ r s, A.HoloOn W fun w => Hm w r s := fun r s => holoOn_mono A (hHm r s) hWV
       by_cases h1 : (i : ℕ) + 1 = j
       · by_cases h2 : (a : ℕ) < j
-        · simp only [ite_eq_left h1, ite_eq_left h2]
-          exact holoOn_minor A hH _ _
-        · simp only [ite_eq_left h1, ite_eq_right h2]
-          exact holoOn_const A W 1
-      · simp only [ite_eq_right h1]
-        exact holoOn_minor A hH _ _
+        · simpa only [ite_eq_left h1, ite_eq_left h2] using holoOn_minor A hH _ _
+        · simpa only [ite_eq_left h1, ite_eq_right h2] using holoOn_const A W 1
+      · simpa only [ite_eq_right h1] using holoOn_minor A hH _ _
     refine ⟨W, hW, hyW, hWV, ?_, fun w hw => ?_⟩
-    · simp only [ite_eq_right hp]
-      exact holoOn_mul A hval hm
+    · simpa only [ite_eq_right hp] using holoOn_mul A hval hm
     · simp only [ite_eq_right hp]
       have hwV := hWV hw
       have hv : valAt M.x (F.υ (τ, i)) (zb w) ≠ 0 :=
@@ -502,8 +489,7 @@ theorem improper_factor : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, F
       · by_cases h2 : (a : ℕ) < j
         · simp only [ite_eq_left h1, ite_eq_left h2]
           exact minor_w_ne M.j_le i h1 (hdiag w hwV).1 (hdiag w hwV).2
-        · simp only [ite_eq_left h1, ite_eq_right h2]
-          exact one_ne_zero
+        · simpa only [ite_eq_left h1, ite_eq_right h2] using one_ne_zero
       · simp only [ite_eq_right h1]
         have h3 : (i : ℕ) + 1 = N := by
           by_contra h3
@@ -822,12 +808,10 @@ theorem chart_swap_keep :
   intro e n X Z _ _ A Ab pr ψ kb σ ψb hψ hb hpr
   have h₁ : AnalyticOnNhd ℂ ((Ab.chart kb).symm.trans ψb)
       ((Ab.chart kb).symm.trans ψb).source := by
-    intro y hy
-    exact (hb kb).1 y hy
+    exact fun y hy => (hb kb).1 y hy
   have h₂ : AnalyticOnNhd ℂ ((Ab.chart kb).symm.trans ψb).symm
       ((Ab.chart kb).symm.trans ψb).target := by
-    intro y hy
-    exact (hb kb).2 y hy
+    exact fun y hy => (hb kb).2 y hy
   have hcomp : ∀ y ∈ ψ.source, ψ y ∘ σ = Ab.chart kb (pr y) := fun y hy =>
     funext fun i => ((hpr y hy).2 i).symm
   let T := extendHomeo σ ((Ab.chart kb).symm.trans ψb) h₁ h₂
@@ -870,9 +854,7 @@ theorem chart_swap_keep :
     rw [σ.injective.extend_apply, hcomp y hy.1]
     show ψb ((Ab.chart kb).symm (Ab.chart kb (pr y))) i = ψb (pr y) i
     rw [(Ab.chart kb).left_inv (hpr y hy.1).1]
-  · intro y _ i hi
-    show Function.extend σ (((Ab.chart kb).symm.trans ψb) (ψ y ∘ σ)) (ψ y) i = ψ y i
-    exact Function.extend_apply' _ _ _ (fun ⟨l, hl⟩ => hi l hl)
+  · exact fun y _ i hi => Function.extend_apply' _ _ _ (fun ⟨l, hl⟩ => hi l hl)
 
 end GlobalTheory.CompanionTheory.Ar.PB.ChartSwap
 end -- clump:auto
@@ -981,8 +963,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
       · rintro ⟨hy, h0⟩
         obtain ⟨hy', hyV, -⟩ := hmem y hy
         refine ⟨(hdiag y hyV).1 ?_, hy⟩
-        rw [hcoe, hk2 y hy' _ hne] at h0
-        exact h0
+        rwa [hcoe, hk2 y hy' _ hne] at h0
     | cast k =>
       ext y
       simp only [Fin.snoc_castSucc, Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_preimage]
@@ -992,8 +973,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
         obtain ⟨hy', -, hyb⟩ := hmem y hy
         obtain ⟨-, i, hi, h0⟩ := hWk.1 ⟨hw, hyb⟩
         refine ⟨hy, σ x i, by rw [hi]; rfl, ?_⟩
-        rw [hcoe, hk1 y hy']
-        exact h0
+        rwa [hcoe, hk1 y hy']
       · rintro ⟨hy, i', hi', h0⟩
         obtain ⟨hy', -, hyb⟩ := hmem y hy
         obtain ⟨i, hi, rfl⟩ := Option.map_eq_some_iff.1 hi'
@@ -1001,8 +981,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
         exact ⟨(hWk.2 ⟨hyb, i, hi, h0⟩).1, hy⟩
   · intro l z hz
     have h1 := holoOn_comp RW.A BM.Rb.A pr hp ψb.source ub hubh l z ⟨hz.1, (hmem _ hz.2).2.2⟩
-    have h2 := huh l z ⟨hz.1, (hmem _ hz.2).2.1⟩
-    exact h1.mul h2
+    exact h1.mul (huh l z ⟨hz.1, (hmem _ hz.2).2.1⟩)
   · intro y hy
     obtain ⟨-, hyV, hyb⟩ := hmem y hy
     exact mul_ne_zero (hub0 _ hyb) (hu0 _ hyV)
@@ -1041,8 +1020,7 @@ theorem GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.diagSec_isSNC_diagSet : ∀ (
   refine ⟨(ψ x).restrOpen (V x) hVo, pa_compat_restr RW.A (ψ x) hW.1 (V x) hVo, by rw [hsrc]; exact hxV, ?_,
     fun _ => some (i₀ x), ?_, ?_, u x, ?_, ?_, ?_⟩
   · rw [hsrc]; exact subset_rfl
-  · intro k k' _ _ _
-    exact Subsingleton.elim k k'
+  · exact fun k k' _ _ _ => Subsingleton.elim k k'
   · intro k
     obtain rfl : k = 0 := Subsingleton.elim k 0
     rw [hsrc]

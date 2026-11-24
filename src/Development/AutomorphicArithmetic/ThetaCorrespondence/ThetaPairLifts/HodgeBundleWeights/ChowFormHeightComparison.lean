@@ -233,8 +233,7 @@ theorem surj_desc (M : RatModel o Ω) (q : Sp Ω ⟶ M.Z) (hq : q = M.pt) :
   have hc : M.pt (IsLocalRing.closedPoint (CommRingCat.of Ω)) ∈ U := by
     have hr : M.pt (IsLocalRing.closedPoint (CommRingCat.of Ω)) ∈ Set.range M.pt := ⟨_, rfl⟩
     rw [M.gen] at hr
-    rw [hr]
-    exact hgen
+    rwa [hr]
   refine ⟨(M.Z.residue _).hom (M.Z.presheaf.germ U _ hc f), ?_⟩
   rw [← CommRingCat.comp_apply, Scheme.residue_descResidueField, ← CommRingCat.comp_apply,
     Scheme.germ_stalkClosedPointTo, ← hf]
@@ -255,8 +254,7 @@ theorem map_generic {Z M : RatModel o Ω} {π : M.Z ⟶ Z.Z} (h : Z.IsHom M (Alg
   obtain ⟨p, hp⟩ := hg
   have h2 : Z.pt p ∈ Set.range Z.pt := ⟨p, rfl⟩
   rw [Z.gen] at h2
-  rw [← hp, ← Scheme.Hom.comp_apply, pt_comp h]
-  exact h2
+  rwa [← hp, ← Scheme.Hom.comp_apply, pt_comp h]
 
 theorem residueDegree_eq_one {Z M : RatModel o Ω} {π : M.Z ⟶ Z.Z} (h : Z.IsHom M (AlgHom.id o Ω) π) :
     π.residueDegree (genericPoint M.Z) = 1 := by
@@ -297,8 +295,7 @@ private theorem valF_pt_mul' (M : RatModel o Ω) {V : M.Z.Opens} (hV : (V : Set 
     have hw : M.pt w ∈ Set.range M.pt := ⟨w, rfl⟩
     rw [M.gen] at hw
     show M.pt w ∈ V
-    rw [hw]
-    exact hgen
+    rwa [hw]
   unfold valF
   rw [dite_eq_left htop, dite_eq_left htop, dite_eq_left htop]
   simp only [map_mul]
@@ -312,8 +309,7 @@ private theorem valF_pt_one' (M : RatModel o Ω) {V : M.Z.Opens} (hV : (V : Set 
     have hw : M.pt w ∈ Set.range M.pt := ⟨w, rfl⟩
     rw [M.gen] at hw
     show M.pt w ∈ V
-    rw [hw]
-    exact hgen
+    rwa [hw]
   unfold valF
   rw [dite_eq_left htop]
   simp only [map_one]
@@ -559,8 +555,7 @@ theorem isometric_pull_fs {Z M : RatModel o Ω} {π : M.Z ⟶ Z.Z} (hπ : Z.IsHo
     · rw [h1]; exact mul_mem hZ1' hM2
     · rw [h2]; exact mul_mem hM1 hZ2'
   refine isometric_of_genTriv M _ _ (fun k => e' (k PUnit.unit)) e (he'.pull hπ) he ?_ ?_ ?_
-  · intro a b z hz
-    exact (hunit a (b PUnit.unit) z hz.1 (Set.mem_iInter.1 hz.2 PUnit.unit)).1
+  · exact fun a b z hz => (hunit a (b PUnit.unit) z hz.1 (Set.mem_iInter.1 hz.2 PUnit.unit)).1
   · intro a b z hz
     rw [inv_div]
     exact (hunit a (b PUnit.unit) z hz.1 (Set.mem_iInter.1 hz.2 PUnit.unit)).2
@@ -623,8 +618,7 @@ theorem isometric_pull_fs {Z M : RatModel o Ω} {π : M.Z ⟶ Z.Z} (hπ : Z.IsHo
       rw [← Matrix.exists_vecMul_eq_zero_iff]
       refine ⟨fun j => M.val y.1 (t j / e' (b default)), ?_, ?_⟩
       · obtain ⟨k, hk⟩ := hWne
-        intro h
-        exact hk (congrFun h k)
+        exact fun h => hk (congrFun h k)
       · funext x
         have hx := h0 x (Finset.mem_univ x)
         have hx' := (pow_eq_zero_iff (n := 2) (by norm_num)).1 hx
@@ -976,11 +970,9 @@ theorem valF_fromSpecStalk (X : Scheme.{0}) [IsIntegral X] (U : X.Opens) (h : ge
   have hsp : ∀ w, (X.fromSpecStalk (genericPoint X)).base w ⤳ genericPoint X := by
     intro w
     have hw : (X.fromSpecStalk (genericPoint X)).base w ∈ Set.range (X.fromSpecStalk (genericPoint X)).base := ⟨w, rfl⟩
-    rw [Scheme.range_fromSpecStalk] at hw
-    exact hw
+    rwa [Scheme.range_fromSpecStalk] at hw
   have hU : ⊤ ≤ (Opens.map (X.fromSpecStalk (genericPoint X)).base).obj U := by
-    intro w _
-    exact (hsp w).mem_open U.isOpen h
+    exact fun w _ => (hsp w).mem_open U.isOpen h
   have key : Scheme.Hom.appLE (X.fromSpecStalk (genericPoint X)) U ⊤ hU ≫
       (Scheme.ΓSpecIso (X.presheaf.stalk (genericPoint X))).hom = X.presheaf.germ U (genericPoint X) h := by
     rw [Scheme.Hom.appLE, Scheme.fromSpecStalk_app h]
@@ -1060,8 +1052,7 @@ theorem exists_pt {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {X : Sche
   · intro x
     obtain ⟨V, hV, s, hs⟩ := X.presheaf.exists_germ_eq (ψ x)
     refine ⟨V, s, ⟨_, hV⟩, hψ.1 ?_⟩
-    rw [H4 V hV s]
-    exact hs
+    rwa [H4 V hV s]
 
 end PositivityTheory.UnitarySelfGeneration.UnitProductCombination
 end -- clump:auto
@@ -1139,8 +1130,7 @@ theorem exists_P {K : Type} [Field K] {N m : ℕ} (g : Matrix (Fin N) (Fin m) K)
   set r := Module.finrank K (LinearMap.ker g.mulVecLin) with hr
   have hdim : N + r = m := by
     have := LinearMap.finrank_range_add_finrank_ker g.mulVecLin
-    rw [hs, finrank_top, Module.finrank_fin_fun, Module.finrank_fin_fun] at this
-    exact this
+    rwa [hs, finrank_top, Module.finrank_fin_fun, Module.finrank_fin_fun] at this
   let e : Fin m ≃ Fin N ⊕ Fin r := (finCongr hdim.symm).trans finSumFinEquiv.symm
   let c : (Fin r → K) ≃ₗ[K] LinearMap.ker g.mulVecLin := (Module.finBasis K _).equivFun.symm
   let φ : (Fin m → K) →ₗ[K] (Fin m → K) :=

@@ -70,9 +70,7 @@ theorem mob_im_pos {h : GL (Fin 2) (InfinitePlace F → ℝ)} (hh : Pos h) {z} (
   exact div_pos (mul_pos hd hzv) (normSq_denom_pos _ hzv.ne')
 
 theorem mob_mapsTo {h : GL (Fin 2) (InfinitePlace F → ℝ)} (hh : Pos h) : Set.MapsTo (mob h) (U F) (U F) := by
-  intro z hz
-  show ∀ v, 0 < (mob h z v).im
-  exact fun v => mob_im_pos hh hz v
+  exact fun z hz => fun v => mob_im_pos hh hz v
 
 theorem mob_diff (h : GL (Fin 2) (InfinitePlace F → ℝ)) : DifferentiableOn ℂ (mob h) (U F) := by
   rw [differentiableOn_pi]

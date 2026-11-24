@@ -123,8 +123,7 @@ theorem mem_range_algebraMap_of_isNilpotent_tmul_sub (K A : Type) [Field K] [Cha
   · exact ⟨0, Subsingleton.elim _ _⟩
   have h1 : ∀ φ ψ : A →ₐ[K] AlgebraicClosure K, φ f = ψ f := by
     intro φ ψ
-    have h := (hf.map (Algebra.TensorProduct.productMap φ ψ)).eq_zero
-    simpa [sub_eq_zero] using h
+    simpa [sub_eq_zero] using (hf.map (Algebra.TensorProduct.productMap φ ψ)).eq_zero
   obtain ⟨m₀, hm₀⟩ := Ideal.exists_maximal A
   obtain ⟨φ₀, -⟩ := exists_algHom_algebraicClosure_ker_le K A m₀
   have h2 : φ₀ f ∈ Set.range (algebraMap K (AlgebraicClosure K)) := by
@@ -275,8 +274,7 @@ theorem isNilpotent_tmul_sub_tmul_of_const_on_fibres :
       AlgHom.restrictScalars_apply, Algebra.TensorProduct.includeRight_apply]
     congr 1
     rw [Algebra.algebraMap_eq_smul_one, TensorProduct.smul_tmul])
-  rw [map_sub, sub_eq_zero]
-  exact this
+  rwa [map_sub, sub_eq_zero]
 
 end GlobalTheory.ClassFin
 end -- clump:auto
@@ -341,8 +339,7 @@ theorem exists_multiplier_descend_of_closed {σ X : Type} [Fintype σ] [Nonempty
   obtain ⟨b, hb, hbs⟩ := _root_.GlobalTheory.exists_common_denominator_of_isNilpotent B A Subtype.val_injective (s.image π) hnil
   obtain ⟨b, c, rfl⟩ := b
   refine ⟨c, ?_, fun f hf => ?_⟩
-  · by_contra hc
-    push Not at hc
+  · by_contra! hc
     exact hb (Subtype.ext (Subtype.ext (funext fun x => hc x)))
   · obtain ⟨⟨b', c', rfl⟩, hb'⟩ := hbs (π f) (Finset.mem_image_of_mem _ hf)
     exact ⟨c', fun x => congrFun (congrArg Subtype.val hb') x⟩
@@ -395,8 +392,7 @@ theorem exists_multiplier_descend_blk :
   obtain ⟨b', hb'⟩ := hb f hf
   refine ⟨b', fun x hx => ?_⟩
   have := hb' ⟨x, hx⟩
-  rw [hcomp, hcomp] at this
-  exact this
+  rwa [hcomp, hcomp] at this
 
 end GlobalTheory.ClassFin
 end -- clump:auto
@@ -782,8 +778,7 @@ theorem exists_rat_projector : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (E 
       have h1 : p (Matrix.of fun i j => q (i, j)) = Matrix.of fun i j => q (i, j) :=
         congrArg Subtype.val (hπ ⟨_, hmem⟩)
       have h2 := linExt_cast p (Matrix.of fun i j => q (i, j))
-      rw [h1, ← hwq] at h2
-      exact h2
+      rwa [h1, ← hwq] at h2
     exact LinearMap.eqOn_span key hd
 
 end GlobalTheory.ClassFin.RatProj
@@ -909,11 +904,9 @@ theorem exists_linExt_corner_proj : ∀ (ι : Type) [Fintype ι] [DecidableEq ι
     refine ⟨?_, ?_⟩
     · have h1 := hΓ.aut_mem σ _ hx1
       have h2 : (1 + x).map σ = (σ : ℂ →+* ℂ).mapMatrix (1 + x) := rfl
-      rw [h2, map_add (f := _), map_one] at h1
-      exact h1
+      rwa [h2, map_add (f := _), map_one] at h1
     · have h3 := congrArg (σ : ℂ →+* ℂ).mapMatrix hx2
-      rw [map_mul, map_mul, map_sub, map_one, hEσ] at h3
-      exact h3
+      rwa [map_mul, map_mul, map_sub, map_one, hEσ] at h3
   obtain ⟨c, hc1, hc2⟩ := _root_.GlobalTheory.ClassFin.RatProj.exists_rat_projector ι S hS
   exact ⟨c, fun X => hc1 X, fun ε h1 h2 => hc2 ε ⟨h1, h2⟩⟩
 
@@ -1173,8 +1166,7 @@ theorem transfer_mem {F : ∀ (R : Type) [CommRing R] [Algebra ℚ R], Matrix ι
       ev (ev f (F _ (Matrix.mvPolynomialX ι ι ℚ))) z = ev f (F S z) := by
     intro S _ _ z
     have := map_ev (evHom z) f (F _ (Matrix.mvPolynomialX ι ι ℚ))
-    rw [hF, evHom_generic] at this
-    exact this
+    rwa [hF, evHom_generic] at this
   rw [← key]
   apply hy
   intro g hg
@@ -1206,8 +1198,7 @@ theorem mem_pts_univ {R : Type} [CommRing R] [Algebra ℚ R] (y : Matrix ι ι R
     apply MvPolynomial.funext
     intro x
     have := hf (Matrix.of fun i j => x (i, j)) (Set.mem_univ _)
-    rw [map_zero, MvPolynomial.eval_map, ← MvPolynomial.aeval_def]
-    exact this
+    rwa [map_zero, MvPolynomial.eval_map, ← MvPolynomial.aeval_def]
   have : f = 0 := MvPolynomial.map_injective _ (algebraMap ℚ ℂ).injective (by rw [h0, map_zero])
   subst this
   simp [ev]
@@ -1242,8 +1233,7 @@ theorem exists_section : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (Γ : Set
         ext i j
         apply (algebraMap ℚ ℂ).injective
         have h2 := congrFun (congrFun this i) j
-        rw [← map_one (Algebra.ofId ℚ ℂ).mapMatrix] at h2
-        exact h2
+        rwa [← map_one (Algebra.ofId ℚ ℂ).mapMatrix] at h2
       have := map_poly (Algebra.ofId ℚ R) b 1
       rw [hq, map_one] at this
       exact this.symm
@@ -1458,8 +1448,7 @@ private lemma exists_finset_integral_classes {R : Type} [CommRing R] [Algebra �
     choose D hDm hDeq using hD
     have hw' : w = t + (N : R) ^ d • Matrix.of D := by
       ext i j
-      simp only [Matrix.add_apply, Matrix.smul_apply, Matrix.of_apply, smul_eq_mul]
-      exact hDeq i j
+      simpa only [Matrix.add_apply, Matrix.smul_apply, Matrix.of_apply, smul_eq_mul] using hDeq i j
     have htN : ∀ i j, ((N : R) • t) i j ∈ R₀ := fun i j => by
       obtain ⟨z', a', ha', -, hza'⟩ := ht i j
       rw [Matrix.smul_apply, smul_eq_mul, hza']
@@ -1634,8 +1623,7 @@ theorem _root_.GlobalTheory.ClassFin.cf_of_cf_blk_image : ∀ (ι : Type) [Finty
   have hnb : _root_.GlobalTheory.ClassFin.blk e n = 1 := by
     have h := hbinv' _ huP
     rw [hub] at h
-    rw [hndef, hbm _ hrP _ (hadj _ huP), hrb]
-    exact h
+    rwa [hndef, hbm _ hrP _ (hadj _ huP), hrb]
   obtain ⟨m, hmdef⟩ : ∃ m, m = σ s * n * (σ s).adjugate := ⟨_, rfl⟩
   have hmP : m ∈ _root_.GlobalTheory.ClassFin.pts Γ R := hmdef ▸ hmul _ (hmul _ hsP _ hnP) _ (hadj _ hsP)
   have hmb : _root_.GlobalTheory.ClassFin.blk e m = 1 := by

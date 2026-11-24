@@ -113,8 +113,7 @@ theorem UpperTheory.V.X.h1cZero :
   rw [eq_bot_iff]
   rintro ⟨c, b⟩ ⟨h1, h2, h3, h4, h5⟩
   have h3' : ∀ q : Q, ∀ g ∈ Ine (F := ℚ) (pl q), g ∈ K → c (toGS Ω SP g) = 0 := by
-    intro q g hg hgK
-    exact h3 q ⟨g, Ine_le_Dec _ hg⟩ (Subgroup.mem_subgroupOf.2 ⟨hg, hgK⟩)
+    exact fun q g hg hgK => h3 q ⟨g, Ine_le_Dec _ hg⟩ (Subgroup.mem_subgroupOf.2 ⟨hg, hgK⟩)
   have h4' : ∀ v : T, ∀ g ∈ Dec (F := ℚ) (pl v), c (toGS Ω SP g) = (γ g : k) • b v - b v := by
     intro v g hg
     rw [← hρ]
@@ -183,8 +182,7 @@ private theorem ker_open {k Γ M : Type} [Field k] [Group Γ] [TopologicalSpace 
     · intro hg i
       rw [hg]
       rfl
-    · intro hg
-      exact b.ext fun i => by simpa using hg i
+    · exact fun hg => b.ext fun i => by simpa using hg i
   rw [hset]
   apply isOpen_iInter_of_finite
   intro i
@@ -206,8 +204,7 @@ private theorem finite_compactly_supported_H1 {k Γ M : Type} [Field k] [Group �
   have hZ : (⊤ : Submodule k ↥(Z1 ρ)).FG := by
     apply Submodule.fg_of_fg_map_of_fg_inf_ker (Submodule.mkQ (Submodule.comap (Z1 ρ).subtype (B1 ρ)))
     · exact IsNoetherian.noetherian _
-    · rw [top_inf_eq, Submodule.ker_mkQ]
-      exact hK
+    · rwa [top_inf_eq, Submodule.ker_mkQ]
   haveI : Module.Finite k ↥(Z1 ρ) := ⟨hZ⟩
   have hZ1 : (Z1 ρ).FG := Module.Finite.iff_fg.mp inferInstance
   have hP : ((Z1 ρ).prod (⊤ : Submodule k (F.T → M))).FG := hZ1.prod Module.Finite.fg_top
@@ -268,8 +265,7 @@ theorem UpperTheory.Reformulated.B.Qk11.dz_exists_prime :
   induction n using Nat.recOnMul with
   | zero => intro h; exact absurd rfl h
   | one =>
-    intro _ h
-    exact absurd ((Ideal.eq_top_iff_one _).2 (by simpa using h)) v.isPrime.ne_top
+    exact fun _ h => absurd ((Ideal.eq_top_iff_one _).2 (by simpa using h)) v.isPrime.ne_top
   | prime p hp => intro _ h; exact ⟨p, hp, dvd_rfl, h⟩
   | mul a b iha ihb =>
     intro hab h
@@ -443,8 +439,7 @@ private theorem ker_fL : LinearMap.ker (fL F ρ) = selF F ρ := by
   ext x
   simp only [selF, LinearMap.mem_ker, Submodule.mem_inf, Submodule.mem_iInf, Submodule.mem_comap, Prod.ext_iff,
     funext_iff]
-  refine and_congr Iff.rfl (forall_congr' fun q => ?_)
-  exact Submodule.Quotient.mk_eq_zero _
+  exact and_congr Iff.rfl (forall_congr' fun q => (Submodule.Quotient.mk_eq_zero _))
 
 private theorem range_hO : LinearMap.range (hO F ρ) = shaF F ρ := by
   ext x
@@ -613,10 +608,8 @@ theorem UpperTheory.V.X.galTail :
   have hsha : Sha2 ρ (fun v => locHom (S : Set (HeightOneSpectrum (𝓞 ℚ))) (B (e.symm v)))
       (fun v => continuous_locHom _ (B (e.symm v))) = shaF (galFrame (S : Set (HeightOneSpectrum (𝓞 ℚ))) T Q v0 pl K) ρ := by
     have h1 := e.symm.iInf_comp (g := fun x => LinearMap.ker (resH2 ρ (locHom (S : Set (HeightOneSpectrum (𝓞 ℚ))) (B x)) (continuous_locHom _ (B x))))
-    rw [iInf_sum] at h1
-    exact h1
-  rw [hsum, hsha, ← add_assoc] at h
-  exact h
+    rwa [iInf_sum] at h1
+  rwa [hsum, hsha, ← add_assoc] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LevelCohomology.HcGalTail =====
@@ -724,8 +717,7 @@ theorem UpperTheory.V.X.galCount :
     congr 1
     rw [Finset.sum_eq_single ⟨l, hD.l_mem⟩]
     · simp
-    · intro b _ hb
-      exact ite_eq_right fun h => hb (Subtype.ext h)
+    · exact fun b _ hb => ite_eq_right fun h => hb (Subtype.ext h)
     · simp
   have hQ : ∑ q : Q, finrank k (H1 (ρ.comp (locHom SP (pl q)))) =
       ∑ q : Q, finrank k (H1ur (ρ.comp (locHom SP (pl q))) ((Ine (F := ℚ) (pl q) ⊓ K).subgroupOf (Dec (F := ℚ) (pl q)))) +
@@ -772,8 +764,7 @@ theorem UpperTheory.V.X.scalDim :
       · exact (finrank_zero_iff_forall_zero.mp h0) m
       · have h1 : ((γ σ : k) - 1) • m = 0 := by
           rw [LinearMap.mem_ker, LinearMap.sub_apply, h] at hm
-          rw [sub_smul, one_smul]
-          exact hm
+          rwa [sub_smul, one_smul]
         rcases smul_eq_zero.mp h1 with h2 | h2
         · exact absurd (Units.ext (sub_eq_zero.mp h2)) h0
         · exact h2

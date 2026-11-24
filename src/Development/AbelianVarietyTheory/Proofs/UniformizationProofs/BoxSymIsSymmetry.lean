@@ -72,8 +72,7 @@ private theorem gm_res_eq_gm {X Z : Scheme.{0}} (r : Z ⟶ X) (z : Z) {U V : X.O
   unfold pullU
   ext
   simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe]
-  have e := congrArg (fun f => CommRingCat.Hom.hom f (x : Γ(X, V))) key
-  simpa using e
+  simpa using congrArg (fun f => CommRingCat.Hom.hom f (x : Γ(X, V))) key
 
 theorem gm_boxGen (F : J → (X' ⟶ X)) (φ : K → (Y ⟶ X')) (ε : K → ℤ)
     (t : ∀ i, LB.Gen (LB.LinComb (L.pull (F i)) φ ε)) (r : Z ⟶ Y) (z : Z)
@@ -83,8 +82,7 @@ theorem gm_boxGen (F : J → (X' ⟶ X)) (φ : K → (Y ⟶ X')) (ε : K → ℤ
       ∏ i, gm r z (LB.wchart (L.pull (F i)) φ (fun k _ => jj k i)) ((t i).s (fun k _ => jj k i)) := by
   unfold GeneratorPullback.boxGen
   dsimp only
-  refine (map_prod (gm r z _) _ _).trans (Finset.prod_congr rfl fun i _ => ?_)
-  exact gm_res_eq_gm r z _ h _
+  exact (map_prod (gm r z _) _ _).trans (Finset.prod_congr rfl fun i _ => (gm_res_eq_gm r z _ h _))
 
 private theorem gm_lin_lemma_2 {X X' Z : Scheme.{0}} (L : LB X) {J : Type} [Fintype J]
     (F : J → (X' ⟶ X)) (y : Z ⟶ X') (z : Z) (j j' : J → L.ι) (e : ℤ)
@@ -134,8 +132,7 @@ private theorem units_ext_of_gm_id_eq_on_open {Y : Scheme.{0}} {W : Y.Opens} (s 
   intro y hy
   have e := congrArg Units.val (h y hy)
   unfold gm pullU at e
-  rw [dite_eq_left (by simpa using hy)] at e
-  exact e
+  rwa [dite_eq_left (by simpa using hy)] at e
 
 private theorem gm_linComb_transition_eq {X' Y Z : Scheme.{0}} (M : LB X') {K : Type} [Fintype K] (φ : K → (Y ⟶ X'))
     (ε : K → ℤ) (r : Z ⟶ Y) (z : Z) (a b : K → M.ι)
@@ -218,11 +215,8 @@ theorem GlobalTheory.boxSym_isSymmetry : ∀ S : Scheme.{0}, BoxSymSt (S := S) :
         rw [Category.id_comp, c k, ha k]
         exact hy)
     have e := val_corr hJ hc (𝟙 _)
-    rw [val_pull hJ, val_one, val_of sy _ y J a hJa, Category.id_comp] at e
-    exact e
-  have hm : ∀ i, IsMonHom (p.pr i) := by
-    intro i
-    exact p.hom i
+    rwa [val_pull hJ, val_one, val_of sy _ y J a hJa, Category.id_comp] at e
+  have hm : ∀ i, IsMonHom (p.pr i) := fun i => p.hom i
   refine ⟨?_, ?_⟩
   · unfold boxSym boxLB
     exact isGen_boxGen L _ _ _ _ fun i => LBxP.isGen_pullAlong L _ _ _ _ _ _ _ hsy
@@ -247,7 +241,6 @@ theorem GlobalTheory.boxSym_isSymmetry : ∀ S : Scheme.{0}, BoxSymSt (S := S) :
         exact Set.mem_iInter.1 g1 i
       have e : (((𝟙 _ ≫ eSec G') ≫ ![(ι[G']).left, 𝟙 G'.left] 0) ≫ (p.pr i).left) y = eSec G y := by
         rw [Category.id_comp, c' 0, eSec_comp_hom]
-      rw [← e]
-      exact g2
+      rwa [← e]
 
 end

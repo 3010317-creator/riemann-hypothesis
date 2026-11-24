@@ -67,8 +67,7 @@ theorem isUnit_of_not_dvd {ϖ b : O} (hϖ : Irreducible ϖ) (h : ¬ ϖ ∣ b) : 
   exact h hm
 
 theorem alg_ne_zero {ϖ : O} (hϖ : Irreducible ϖ) : algebraMap O K ϖ ≠ 0 := by
-  intro h
-  exact hϖ.ne_zero (IsFractionRing.injective O K (by simpa using h))
+  exact fun h => hϖ.ne_zero (IsFractionRing.injective O K (by simpa using h))
 
 theorem exists_unit_conj (c : O ≃+* O) (cK : K ≃+* K)
     (hcK : ∀ x, cK (algebraMap O K x) = algebraMap O K (c x)) {ϖ : O} (hϖ : Irreducible ϖ) :
@@ -151,15 +150,12 @@ theorem perp_relIndex (c : O ≃+* O) (cK : K ≃+* K)
       Nat.card (IsLocalRing.ResidueField O) := by
   classical
   obtain ⟨l0, hl0, hβ⟩ : ∃ l0 ∈ L, hf cK J v l0 ∉ (algebraMap O K).range := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hv ((hSD v).2 hcon)
   set β := hf cK J v l0 with hβdef
   have hβ' : algebraMap O K ϖ * β ∈ (algebraMap O K).range :=
     mul_pair_mem c cK hcK hϖ hSD hw hl0
-  have hβ0 : β ≠ 0 := by
-    intro h0
-    exact hβ (h0 ▸ zero_mem _)
+  have hβ0 : β ≠ 0 := fun h0 => hβ (h0 ▸ zero_mem _)
   have hex : ∀ l : L.toAddSubgroup, ∃ a : O, hf cK J v (l : Fin r → K) = algebraMap O K a * β :=
     fun l => exists_ratio hϖ hβ hβ' (mul_pair_mem c cK hcK hϖ hSD hw l.2)
   choose a ha using hex

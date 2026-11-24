@@ -140,8 +140,7 @@ theorem sum_fibre_two_index_bound : ∀ (α Θ : Type) (S : Finset α) (xf yf : 
         obtain ⟨a, ha, rfl⟩ := Finset.mem_image.1 (Finset.mem_coe.1 ht)
         obtain ⟨haS, hxa, hya⟩ := hmem a ha
         have h := (hR a haS).2.2
-        rw [hxa, hya] at h
-        exact h
+        rwa [hxa, hya] at h
       have hc := Set.encard_le_encard hsubT
       rw [Set.encard_coe_eq_coe_finsetCard] at hc
       rw [← ENat.toENNReal_coe]
@@ -176,8 +175,7 @@ theorem fix_X (u : D.what₂.Word) {a : (VS D).V ≃ₗ[D.host.E] (VS D).V}
     rintro _ ⟨i, rfl⟩
     have h' : (F0 X u).e i.castSucc = (X.Fu u).e i := fv_cast (lf D (X.Fu u)).fl i
     have := hfix i.castSucc
-    rw [h'] at this
-    exact this
+    rwa [h'] at this
   simpa using LinearMap.eqOn_span h hx
 
 theorem perp_pres (u : D.what₂.Word) {a : (VS D).V ≃ₗ[D.host.E] (VS D).V} (hi : a ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT)
@@ -888,8 +886,7 @@ theorem geom [FiniteDimensional K V] (hK : Formalism.HermitianLatticesTheory.IsC
     rwa [x_eq h'] at this
   · have k : N.F.e a - F.e a ∈ F.X := xa_mono F (Nat.le_of_lt_succ a.2) (h a)
     have := orth_of_mem_X F (fun b => hw b.castSucc) k
-    rw [map_sub, LinearMap.sub_apply, hw a, sub_zero] at this
-    exact this
+    rwa [map_sub, LinearMap.sub_apply, hw a, sub_zero] at this
 
 end GlobalTheory.DegAsm.TermPair
 

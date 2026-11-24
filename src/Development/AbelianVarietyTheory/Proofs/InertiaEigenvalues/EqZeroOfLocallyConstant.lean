@@ -89,8 +89,7 @@ theorem isLocallyConstant_mkQ {X : Type} [TopologicalSpace X] {O V : Type} [Comm
   refine ⟨(fun y => f y + (-f x)) ⁻¹' (T : Set V),
     hT.preimage (hf.add continuous_const), by simp, fun y hy => ?_⟩
   simp only [Submodule.mkQ_apply]
-  rw [Submodule.Quotient.eq, sub_eq_add_neg]
-  exact hy
+  rwa [Submodule.Quotient.eq, sub_eq_add_neg]
 
 theorem exists_not_mem_range {O LL : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     [Field LL] [Algebra O LL] [IsFractionRing O LL] :
@@ -142,8 +141,7 @@ theorem HfD_eq_unramified : ∀ {G : Type} [Group G] [TopologicalSpace G] {Qp K�
     refine ⟨⟨hc₀c, fun g h => by simp only [hδadd, map_add (f := _), hρ]⟩, m x₀, fun g => ?_⟩
     have := congrArg m (hx₀ g)
     simp only [m, AlgebraTensorModule.map_tmul, LinearMap.id_apply, map_sub] at this
-    rw [← hm]
-    exact this
+    rwa [← hm]
   obtain ⟨g₀, hg₀⟩ : ∃ g, δ g ≠ 0 := Function.ne_iff.mp hδ0
   have hdim : Module.finrank LL ↥(finiteCocycles PD T.ρ) = 1 := by
     rw [← hH]

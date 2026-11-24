@@ -173,8 +173,7 @@ theorem exists_finset {T : Type} (z : T → (Σ k, J k) → ℂ) (f : T → MRin
   obtain ⟨s, hs⟩ := IsCompactElement.exists_finset_of_le_iSup hc
     (fun t => Ideal.span {f t}) le_rfl
   refine ⟨s, fun t => ?_⟩
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   let φ : MRing J →+* ℂ := (MvPolynomial.eval (z t)).comp (MvPolynomial.map (Int.castRingHom ℂ))
   have hle : (⨆ t' ∈ s, Ideal.span {f t'}) ≤ RingHom.ker φ :=
     iSup₂_le fun t' ht' => (Ideal.span_singleton_le_iff_mem _).2 (RingHom.mem_ker.2 (hno t' ht'))
@@ -350,8 +349,7 @@ theorem exists_unit_metric (y : (Σ k, J k) → Ω) (a : K → ℤ) (c₀ : Ω)
     field_simp
   have hND : N w * Zp w = (‖evC w g0‖ / ‖evC w h0‖) ^ 2 * Zm w * D w := by
     subst hN hD
-    simp only [Finset.sum_mul, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun t _ => hterm t
+    simpa only [Finset.sum_mul, Finset.mul_sum] using Finset.sum_congr rfl fun t _ => hterm t
   rw [hND, show (‖evC w g0‖ / ‖evC w h0‖) ^ 2 * Zm w * D w / (D w * Zm w) =
       (‖evC w g0‖ / ‖evC w h0‖) ^ 2 by field_simp [hpw.2.1.ne', hpw.2.2.2.ne'],
     Real.sqrt_sq (div_nonneg (norm_nonneg _) (norm_nonneg _)), div_mul_cancel₀ _ hh0]
@@ -361,19 +359,16 @@ theorem pres_off {y : (Σ k, J k) → Ω} (hP : IsMultiHomogIdeal (mCoordIdeal y
     ∃ g h dg dh, Pres y a c₀ g h dg dh ∧ evC w g ≠ 0 ∧ evC w h ≠ 0 := by
   classical
   have hne : ∃ f ∈ mCoordIdeal y, evC w f ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hn ⟨hw, fun f hf => hc f hf⟩
   obtain ⟨S, hS, hPS⟩ := hP
   have hgen : ∃ s0 ∈ S, evC w s0 ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     obtain ⟨f, hf, hfw⟩ := hne
     let φ : MRing J →+* ℂ := (MvPolynomial.eval w).comp (MvPolynomial.map (Int.castRingHom ℂ))
     have hle : mCoordIdeal y ≤ RingHom.ker φ := by
       rw [hPS, Ideal.span_le]
-      intro s hs
-      exact RingHom.mem_ker.2 (hc s hs)
+      exact fun s hs => RingHom.mem_ker.2 (hc s hs)
     exact hfw (RingHom.mem_ker.1 (hle hf))
   obtain ⟨s0, hs0S, hs0⟩ := hgen
   obtain ⟨e, he⟩ := hS s0 hs0S

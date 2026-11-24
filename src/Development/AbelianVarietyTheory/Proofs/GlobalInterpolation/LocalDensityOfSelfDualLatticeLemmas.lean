@@ -109,8 +109,7 @@ theorem algebraMap_mem_iff (a : Fv F v) :
     obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 h
     rw [← hy]
     exact y.2
-  · intro h
-    exact isIntegral_algebraMap (x := (⟨a, h⟩ : v.adicCompletionIntegers F))
+  · exact fun h => isIntegral_algebraMap (x := (⟨a, h⟩ : v.adicCompletionIntegers F))
 
 theorem trace_mem (hσ : IsCMExt F E σ) {z : Fv F v ⊗[F] E} (hz : z ∈ SelfDualLatticeActions.OEv E v) :
     Algebra.trace (Fv F v) (Fv F v ⊗[F] E) z ∈ v.adicCompletionIntegers F := by
@@ -196,8 +195,7 @@ theorem exists_frame {L : Submodule (SelfDualLatticeActions.OEv E v) (SelfDualLa
   obtain ⟨e, he⟩ := hb
   have hon : ∀ i j, hR (Fv F v) σ J (e i) (e j) = if i = j then 1 else 0 := fun i j => by
     have := congrFun (congrFun he i) j
-    rw [Matrix.one_apply] at this
-    exact this
+    rwa [Matrix.one_apply] at this
   have hco : ∀ (z : Fin M → Fv F v ⊗[F] E) i,
       hR (Fv F v) σ J (e i) (∑ j, z j • (e j : SelfDualLatticeActions.Wv E v M)) = z i := fun z i => by
     simp [hR_sum_right, hon]
@@ -209,8 +207,7 @@ theorem exists_frame {L : Submodule (SelfDualLatticeActions.OEv E v) (SelfDualLa
     refine ⟨fun i => e.repr ⟨y, hy⟩ i, ?_⟩
     have := congrArg Subtype.val (e.sum_repr ⟨y, hy⟩)
     rw [hf]
-    rw [Submodule.coe_sum] at this
-    exact this
+    rwa [Submodule.coe_sum] at this
   have hbij : Function.Bijective f := by
     constructor
     · intro z z' h
@@ -337,8 +334,7 @@ theorem exists_coords (hσ : IsCMExt F E σ) (hJ : IsHermND σ J)
     fun X => ?_, fun X => ?_, fun Y => ?_⟩
   · rw [hg]
     constructor
-    · intro h p
-      exact trace_mem v hσ (mul_mem (hc _) (h _))
+    · exact fun h p => trace_mem v hσ (mul_mem (hc _) (h _))
     · intro h i
       rw [hg']
       exact add_mem ((algebraMap_mem_iff v _).2 (h _))
@@ -497,8 +493,7 @@ theorem fibre_mass_const_of_norm_eq_one {K : Type} [NormedField K] [ProperSpace 
       intro b
       have hae : ∀ᵐ v ∂(fib b), q v = b := by
         have := h1 b
-        rw [Set.inter_univ] at this
-        exact this
+        rwa [Set.inter_univ] at this
       by_cases hb : b ∈ S
       · rw [Set.indicator_of_mem hb]
         refine measure_congr ?_
@@ -557,8 +552,7 @@ theorem fibre_mass_const_of_norm_eq_one {K : Type} [NormedField K] [ProperSpace 
       have hSU' : M '' S ⊆ U := by
         rintro _ ⟨x, hx, rfl⟩
         have := hSU hx
-        rw [← hMU] at this
-        exact this
+        rwa [← hMU] at this
       have e1 := hMe.setIntegral_map (μ := ν) (fun b => (fib b L).toReal) (M '' S)
       rw [hMν, Set.preimage_image_eq _ M.injective] at e1
       rw [← e1, hR _ hS' hSU', hR _ hSm hSU]

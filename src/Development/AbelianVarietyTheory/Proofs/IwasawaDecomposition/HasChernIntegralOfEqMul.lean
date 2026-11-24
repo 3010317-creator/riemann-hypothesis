@@ -76,11 +76,9 @@ theorem smul_iSup_eq (ν : κ → Measure α) {c : ℝ≥0∞} (hc : c ≠ ⊤) 
     c • (⨆ i, ν i) = ⨆ i, c • ν i := by
   have mono : ∀ (d : ℝ≥0∞) {μ μ' : Measure α}, μ ≤ μ' → d • μ ≤ d • μ' := fun d μ μ' h =>
     Measure.le_iff.2 fun s _ => by
-      simp only [Measure.smul_apply, smul_eq_mul]
-      exact mul_le_mul' le_rfl <| Measure.le_iff'.1 h s
+      simpa only [Measure.smul_apply, smul_eq_mul] using mul_le_mul' le_rfl <| Measure.le_iff'.1 h s
   rcases eq_or_ne c 0 with rfl | h0
-  · simp only [zero_smul]
-    exact (le_antisymm (iSup_le fun _ => le_rfl) (Measure.zero_le _)).symm
+  · simpa only [zero_smul] using (le_antisymm (iSup_le fun _ => le_rfl) (Measure.zero_le _)).symm
   refine le_antisymm ?_ (iSup_le fun i => mono c (le_iSup ν i))
   have key : (⨆ i, ν i) ≤ c⁻¹ • ⨆ i, c • ν i := iSup_le fun i => by
     calc ν i = c⁻¹ • c • ν i := by rw [smul_smul, ENNReal.inv_mul_cancel h0 hc, one_smul]

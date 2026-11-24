@@ -232,8 +232,7 @@ theorem UpperTheory.trForm_definite_on_archSkew_archHerm :
   · rw [mem_archHerm] at hX
     have hX0 : mat (X : ArchMatrix K n) ≠ 0 := fun e => h0 (Subtype.ext (mat_injective e))
     have h := trace_conjTranspose_mul_pos hX0
-    rw [hX] at h
-    exact h
+    rwa [hX] at h
   · rw [mem_archSkew] at hX
     rw [mem_archHerm] at hY
     have h2 : trForm K n X Y = Algebra.trace ℝ (NumberField.mixedEmbedding.mixedSpace K)

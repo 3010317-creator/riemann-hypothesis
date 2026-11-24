@@ -64,12 +64,9 @@ theorem generalized_verma_module_polynomial : Verma2 := by
     · intro i j
       refine LinearMap.ext fun f => ?_
       simp [yy, mul_left_comm]
-    · intro a b c d
-      exact (hδ _ _ _).sub_left ((hδ _ _ _).symm.sub_right (dd_comm _ _ _ _))
-    · intro a b c d
-      exact (hδ _ _ _).sub_left ((hδ _ _ _).symm.add_right (dd_comm _ _ _ _))
-    · intro a b c d
-      exact (hδ _ _ _).add_left ((hδ _ _ _).symm.add_right (dd_comm _ _ _ _))
+    · exact fun a b c d => (hδ _ _ _).sub_left ((hδ _ _ _).symm.sub_right (dd_comm _ _ _ _))
+    · exact fun a b c d => (hδ _ _ _).sub_left ((hδ _ _ _).symm.add_right (dd_comm _ _ _ _))
+    · exact fun a b c d => (hδ _ _ _).add_left ((hδ _ _ _).symm.add_right (dd_comm _ _ _ _))
     · intro a c j
       rw [← dd_yy]
       simp only [u, sub_mul, mul_sub, (hδ a c (yy j)).eq]

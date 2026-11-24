@@ -235,8 +235,7 @@ theorem stab_fwd {n c : ℕ} {Λ : Submodule (𝓞 E) (Sp E (n + c))} {m : ℕ}
   have h1 := smul_mem_of_pow (A := Module.End E (Sp E (n + c))) Λ.toAddSubgroup (T (k := E) _ g - 1) (unipotent_level_nilpotent hg) m hdiv
     (fun y hy => ?_) x hx
   · have h2 : (T (k := E) _ g - 1) x ∈ Λ := h1
-    have h3 := Λ.add_mem h2 hx
-    simpa using h3
+    simpa using Λ.add_mem h2 hx
   · have h2 : (g ^ m) y ∈ Λ := (hm y).2 hy
     have h3 : (1 + (T (k := E) _ g - 1)) ^ m = T (k := E) _ (g ^ m) := by
       rw [add_sub_cancel, map_pow]
@@ -287,9 +286,7 @@ theorem natCast_notMem {P : HeightOneSpectrum (𝓞 E)} {p m : ℕ} (hpP : (p : 
 theorem intOff_volN_inv {K : Type} [Field K] (σ : K →+* ℂ) {S : Finset ℕ} {P : HeightOneSpectrum (𝓞 E)} (hq : SNum S (qOf P))
     {n c : ℕ} (e : ℕ → ℤ) (q : ℕ) (C : Subgroup (Sp E (n + c) ≃ₗ[E] Sp E (n + c))) :
     IntOff S (σ (Loc.volN K C (Loc.N1 E n c ⊓ stabL E _ (LocE.sclLat P q (n + c) e)))⁻¹) := by
-  have hq1 : qOf P ≠ 1 := by
-    intro h
-    exact P.isPrime.ne_top (Ideal.absNorm_eq_one_iff.1 h)
+  have hq1 : qOf P ≠ 1 := fun h => P.isPrime.ne_top (Ideal.absNorm_eq_one_iff.1 h)
   have hp : (qOf P).minFac.Prime := Nat.minFac_prime hq1
   have hdvd := Nat.minFac_dvd (qOf P)
   have hpP := GlobalTheory.KerTie.natCast_mem_of_prime_dvd_absNorm P hp hdvd

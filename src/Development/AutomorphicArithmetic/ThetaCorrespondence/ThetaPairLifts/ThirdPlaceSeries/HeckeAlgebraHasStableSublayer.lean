@@ -95,8 +95,7 @@ theorem exists_sb_raw (Rl : RealDat3 D A3 Ks) (cG : G0 Rl.Pg D.R.r ≃* G0g D.nd
     exact Finset.mem_filter.2 ⟨hall i₀, hall⟩
   · intro j k P α Rr h1 h2 hd x
     have hi' : ∃ i', P ∉ D.ntw.S0 i' := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hd.offS (Finset.mem_filter.2 ⟨hc i₀, hc⟩)
     obtain ⟨i', hi'⟩ := hi'
     obtain ⟨-, -, -, -, hso, -, -, -⟩ :=
@@ -111,8 +110,7 @@ theorem exists_sb_raw (Rl : RealDat3 D A3 Ks) (cG : G0 Rl.Pg D.R.r ≃* G0g D.nd
     have h3 : HEq ((YS.fi (idxOf D j)).e (H.hL ((idxOf D j : ℕ) + 1) k P y)) (H.hL j k P x) :=
       (hfi _ _).trans (key _ hj y ((hy ▸ hfi _ y).symm))
     have ht := hX.tie (idxOf D j) k P hd.split hso ⟨i', hi'⟩ hd.odd hd.le α Rr hd.elt hd.reps y rfl
-    rw [eq_of_heq h3, hy] at ht
-    exact ht
+    rwa [eq_of_heq h3, hy] at ht
 
 end Raw
 

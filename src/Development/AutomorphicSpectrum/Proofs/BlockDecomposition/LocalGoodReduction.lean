@@ -152,8 +152,7 @@ theorem good_pair (hU : Unr E) (a b : ℕ) (w : Pl E) (y : GLw a w × GLw b w)
     ho₁ hc₁ ho₂ hc₂ y (twCent_comm hU a w y.1 h₁) (twCent_comm hU b w y.2 h₂) H₁ H₂ hH₁ hH₂ hP₁ hP₂
 
 theorem locGood : PositivityTheory.Rg.BcB.G8.Fin.LocGood := by
-  intro E _ _ _ hU a b w y h₁ h₂
-  exact good_pair hU a b w y h₁ h₂
+  exact fun E _ _ _ hU a b w y h₁ h₂ => good_pair hU a b w y h₁ h₂
 
 end GlobalTheory.CompanionTheory.LocGoodProof
 

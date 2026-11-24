@@ -90,8 +90,7 @@ theorem li_basis (c' : VV K lam →ₛₗ[σ] W)
     LinearIndependent ℂ fun j => c' (bVV K lam j) := by
   let e := Fintype.equivFin (VVIdx lam)
   have h1 := h _ (bVV K lam ∘ e.symm) ((bVV K lam).linearIndependent.comp _ e.symm.injective)
-  have h2 := h1.comp e e.injective
-  simpa [Function.comp_def] using h2
+  simpa [Function.comp_def] using h1.comp e e.injective
 
 end General
 
@@ -109,8 +108,7 @@ theorem exists_extC_bijective_unique : ∀ (D : D7) (G : Type) [Group G] [Fintyp
   have hE : ∀ v, O.c0' (GlobalTheory.AdTh.CoefExt.up O.jL (lamV D i) v) = c0L i v := by
     intro v
     obtain ⟨w, hw, h⟩ := hc v
-    rw [show GlobalTheory.AdTh.CoefExt.up O.jL (lamV D i) v = w from Subtype.ext hw.symm]
-    exact h
+    rwa [show GlobalTheory.AdTh.CoefExt.up O.jL (lamV D i) v = w from Subtype.ext hw.symm]
   obtain ⟨-, h2, h3⟩ := hT.mapL i
   obtain ⟨c, h4, h5, h6⟩ := exists_ext (W := (R.cV i).W) O.c0' (GlobalTheory.AdTh.CoefExt.span_top (W := (R.cV i).W) hE h3)
     (li_basis (W := (R.cV i).W) O.c0' fun m b hb => GlobalTheory.AdTh.CoefExt.linearIndependent (W := (R.cV i).W) hE h2 b hb)

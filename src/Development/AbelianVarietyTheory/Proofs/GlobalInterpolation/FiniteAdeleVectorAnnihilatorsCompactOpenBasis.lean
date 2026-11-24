@@ -142,8 +142,7 @@ theorem scaled_eq_image (n : ℕ) (hn : 0 < n) :
     rw [← mul_assoc, natCast_mul_inv n hn, one_mul]
   · rintro ⟨o, ho, rfl⟩
     show algebraMap F (Af F) ((n : F)⁻¹) * ((n : Af F) * o) ∈ Formalism.UG.intAd F
-    rw [← mul_assoc, mul_comm (algebraMap F (Af F) _), natCast_mul_inv n hn, one_mul]
-    exact ho
+    rwa [← mul_assoc, mul_comm (algebraMap F (Af F) _), natCast_mul_inv n hn, one_mul]
 
 theorem isCompact_scaled (n : ℕ) (hn : 0 < n) : IsCompact (scaled (F := F) n : Set (Af F)) := by
   rw [scaled_eq_image n hn]
@@ -215,8 +214,7 @@ variable {F : Type} [Field F] [NumberField F]
 
 theorem local_bound (ψ : AddChar (AF F) ℂ) (v : HeightOneSpectrum (𝓞 F)) (hv : ∃ y, psiV F ψ v y ≠ 1) :
     ∃ R : ℝ, ∀ y : Fv F v, (∀ t ∈ v.adicCompletionIntegers F, psiV F ψ v (y * t) = 1) → ‖y‖ ≤ R := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   obtain ⟨z, hz⟩ := hv
   obtain ⟨y, hy, hyz⟩ := hcon ‖z‖
   have hy0 : y ≠ 0 := by
@@ -224,8 +222,7 @@ theorem local_bound (ψ : AddChar (AF F) ℂ) (v : HeightOneSpectrum (𝓞 F)) (
     simp only [norm_zero] at hyz
     exact absurd hyz (not_lt.2 (norm_nonneg z))
   have ht : z * y⁻¹ ∈ v.adicCompletionIntegers F := by
-    rw [← norm_le_one_iff, norm_mul, norm_inv]
-    rw [mul_inv_le_iff₀ (norm_pos_iff.2 hy0), one_mul]
+    rw [← norm_le_one_iff, norm_mul, norm_inv, mul_inv_le_iff₀ (norm_pos_iff.2 hy0), one_mul]
     exact hyz.le
   apply hz
   have := hy _ ht
@@ -325,8 +322,7 @@ theorem isCompact_annihilator {N : ℕ} (ψ : AddChar (AF F) ℂ) [IsTotallyReal
       rw [Bd_single, ← mul_singleV, hxdef, e2]
       ring
     have := hu _ hy
-    rw [hB] at this
-    exact this
+    rwa [hB] at this
   refine ⟨_, hdD x hx, ?_⟩
   show algebraMap F (Af F) ((2 * a l * n * d)⁻¹) * ((d : Af F) * x) = u l
   have h2 : (2 : F) ≠ 0 := two_ne_zero

@@ -394,8 +394,7 @@ theorem exists_ratios : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (�
   refine ⟨fun s => if 1 ≤ s then zψ s / zT s else Ep s * (zψ (1 - s) / zT (1 - s)), ?_, ?_, ?_⟩
   · intro s h1 h2
     by_cases hs : 1 ≤ s
-    · simp only [hs, ite_true]
-      exact (key s hs h2).2
+    · simpa only [hs, ite_true] using (key s hs h2).2
     · simp only [hs, ite_false]
       obtain ⟨hu, hrel⟩ := hneg s h1 (by omega)
       obtain ⟨-, hne, hk⟩ := key (1 - s) (by omega) (by omega)
@@ -761,8 +760,7 @@ theorem oneSqSt_of_claims' : (∀ D, GlobalTheory.NormSum.Inp D) → LNe → Tor
       rw [map_prod]
       refine prod_congr rfl fun k hk => ?_
       rw [mem_range] at hk
-      rw [hrat _ (by omega) (by omega)]
-      rw [Nat.cast_sub (by omega)]
+      rw [hrat _ (by omega) (by omega), Nat.cast_sub (by omega)]
       push_cast; rfl
     have hc0 : cf μ₀ ≠ 0 := hcf0
     have e1 : cf t / cf μ₀ = D.what₂.embLL (rq t ij) := by rw [← hrq, mul_div_cancel_right₀ _ hc0]
@@ -773,8 +771,7 @@ theorem oneSqSt_of_claims' : (∀ D, GlobalTheory.NormSum.Inp D) → LNe → Tor
     have heqLL : rq t ij * ∏ k ∈ range (qq D ij.2), rr ((eTop D ij.1 ij.2 : ℤ) + k + 1) =
         ζ * (∏ k, tk k) * γ * ∏ k ∈ range (pp D ij.2), rr ((eTop D ij.1 ij.2 : ℤ) + qq D ij.2 - k) := by
       apply D.what₂.embLL.injective
-      simp only [map_mul]
-      exact hT
+      simpa only [map_mul] using hT
     have key := vw_ratio_le w (eTop D ij.1 ij.2) (pp D ij.2) (qq D ij.2) (e0 D ij.1 ij.2) (h0 D ij.1 ij.2) n1 n5.le
       (rq t ij) ζ γ (zA ij) (zA' ij) tk rr
       (fun s => |((vw w (zT ij s) + gT ij s w : ℤ) : ℝ)| + |((vw w (zTd ij (ch w) s) + gT ij s w : ℤ) : ℝ)|)
@@ -787,8 +784,7 @@ theorem oneSqSt_of_claims' : (∀ D, GlobalTheory.NormSum.Inp D) → LNe → Tor
         refine ⟨by positivity, wt_nonneg w (hN0 s h1' h2''), b1, ?_⟩
         have := abs_nonneg ((vw w (zTd ij (ch w) s) + gT ij s w : ℤ) : ℝ)
         linarith) hr3
-    rw [n2, ← n3]
-    exact key
+    rwa [n2, ← n3]
 
 end GlobalTheory.SqTop.OneSqNoSmall
 

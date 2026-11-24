@@ -197,8 +197,7 @@ theorem comp_agree : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (s :
       simp only [Set.mem_setOf_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hy
       rw [← hvz]; exact hy
     have := Units.continuous_val.continuousAt (x := (1 : (s.v.adicCompletion (maximalRealSubfield L))ˣ)) hS
-    refine Filter.mem_of_superset this fun u hu => ?_
-    exact hN u (le_of_lt hu)
+    exact Filter.mem_of_superset this fun u hu => hN u (le_of_lt hu)
 
   have hkψ : IsOpen (ψ.ker : Set (s.v.adicCompletion (maximalRealSubfield L))ˣ) := by
     have : (ψ.ker : Set (s.v.adicCompletion (maximalRealSubfield L))ˣ) =

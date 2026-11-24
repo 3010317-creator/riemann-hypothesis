@@ -115,38 +115,22 @@ theorem local_cong (ϖ : v.adicCompletion F) (k N : ℕ) (hϖ : Valued.v ϖ ≤ 
   have hD' : IntM D' := IntM.diagonal fun i => by
     show Valued.v (if (i : ℕ) < k then 1 else ϖ) ≤ 1
     split_ifs <;> simp [hϖ]
-  have haa : ((a⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) * a = 1 := by
-    rw [← Units.val_mul, inv_mul_cancel, Units.val_one]
-  have hbb : ((b⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) * b = 1 := by
-    rw [← Units.val_mul, inv_mul_cancel, Units.val_one]
-  have hgg : (g : Matrix (Fin n) (Fin n) (v.adicCompletion F)) * ((g⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) = 1 := by
-    rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
-  have haa' : ∀ Y : Matrix (Fin n) (Fin n) (v.adicCompletion F),
-      ((a⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) * ((a : Matrix (Fin n) (Fin n) (v.adicCompletion F)) * Y) = Y := by
-    intro Y; rw [← mul_assoc, haa, one_mul]
-  have hbb' : ∀ Y : Matrix (Fin n) (Fin n) (v.adicCompletion F),
-      ((b⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) * ((b : Matrix (Fin n) (Fin n) (v.adicCompletion F)) * Y) = Y := by
-    intro Y; rw [← mul_assoc, hbb, one_mul]
   have hDD' : ∀ Y : Matrix (Fin n) (Fin n) (v.adicCompletion F), D' * (D * Y) = ϖ • Y := by
     intro Y; rw [← mul_assoc, hDD, Matrix.smul_mul, one_mul]
-  have hgi : ϖ • ((g⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) =
-      ((b⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) * D' *
-        ((a⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) := by
-    have h1 : ((b⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) * D' *
-        ((a⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) * g = ϖ • 1 := by
-      rw [hg]; simp only [mul_assoc, haa', hDD', Matrix.mul_smul, hbb]
-    calc ϖ • ((g⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F))
-        = (ϖ • 1) * ((g⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) := by
+  have hgi : ϖ • (↑g⁻¹ : Matrix (Fin n) (Fin n) (v.adicCompletion F)) = b⁻¹ * D' * a⁻¹ := by
+    have h1 : b⁻¹ * D' * a⁻¹ * g = ϖ • 1 := by
+      rw [hg]
+      simp only [mul_assoc, Units.inv_mul_cancel_left, hDD', Matrix.mul_smul, Units.inv_mul]
+    calc ϖ • (↑g⁻¹ : Matrix (Fin n) (Fin n) (v.adicCompletion F)) = (ϖ • 1) * g⁻¹ := by
           rw [Matrix.smul_mul, one_mul]
-      _ = _ := by rw [← h1, mul_assoc _ (g : Matrix (Fin n) (Fin n) (v.adicCompletion F)), hgg, mul_one]
-  refine ⟨((b⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) * D' *
-      ((a⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) * E * D * b' +
-      ϖ • (((b⁻¹ : GL (Fin n) (v.adicCompletion F)) : Matrix (Fin n) (Fin n) (v.adicCompletion F)) * F'), ?_, ?_⟩
+      _ = _ := by rw [← h1, Units.mul_inv_cancel_right]
+  refine ⟨b⁻¹ * D' * a⁻¹ * E * D * b' + ϖ • (b⁻¹ * F'), ?_, ?_⟩
   · exact ((((hbi.mul hD').mul hai).mul hE).mul hD |>.mul hb').add (hbi.mul hF |>.smul hϖ)
   · apply smul_right_injective _ hϖ0
     simp only
     rw [Units.val_mul, ← Matrix.smul_mul, hgi, hg', ha, hb]
-    simp only [add_mul, mul_add, Matrix.mul_smul, Matrix.smul_mul, smul_add, mul_assoc, haa', hDD', hbb]
+    simp only [add_mul, mul_add, Matrix.mul_smul, Matrix.smul_mul, smul_add, mul_assoc,
+      Units.inv_mul_cancel_left, hDD', Units.inv_mul]
     module
 end Loc
 

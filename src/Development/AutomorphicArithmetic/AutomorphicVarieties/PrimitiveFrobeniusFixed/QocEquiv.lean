@@ -98,15 +98,13 @@ private theorem qoc_ann (w : QO l O) : ∃ a : O, a ≠ 0 ∧ ∀ y : O, y • w
   refine ⟨Submodule.IsPrincipal.generator I, ?_, key⟩
   intro h0
   have h1 : ((l : O) ^ n) • w = 0 := by
-    rw [← Nat.cast_pow, Nat.cast_smul_eq_nsmul]
-    exact hn
+    rwa [← Nat.cast_pow, Nat.cast_smul_eq_nsmul]
   rw [key, h0, zero_dvd_iff] at h1
   have hl : (l : O) ≠ 0 := by
     intro h
     apply (Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero : (l : ℤ_[l]) ≠ 0)
     apply qoc_inj l O
-    rw [map_natCast, map_zero]
-    exact h
+    rwa [map_natCast, map_zero]
   exact hl ((pow_eq_zero_iff' (M₀ := O)).mp h1).1
 
 private theorem qoc_ex (a : O) (ha : a ≠ 0) : ∃ w : QO l O, ∀ y : O, y • w = 0 ↔ a ∣ y := by
@@ -155,8 +153,7 @@ private theorem qoc_gen (a : O) (w : QO l O) (ha : a ≠ 0) (h : ∀ y : O, y �
   have hTlen : Module.length O T = IsDiscreteValuationRing.addVal O a :=
     (UpperTheory.V.Base.qoFacts l O).2.2.2 a
   have hfin : Module.length O T ≠ ⊤ := by
-    rw [hTlen, Ne, IsDiscreteValuationRing.addVal_eq_top_iff]
-    exact ha
+    rwa [hTlen, Ne, IsDiscreteValuationRing.addVal_eq_top_iff]
   have hwT : w ∈ T := by simp [hT, (h a).mpr dvd_rfl]
   let g : O →ₗ[O] T := LinearMap.toSpanSingleton O T ⟨w, hwT⟩
   have hker : LinearMap.ker g = Ideal.span {a} := by

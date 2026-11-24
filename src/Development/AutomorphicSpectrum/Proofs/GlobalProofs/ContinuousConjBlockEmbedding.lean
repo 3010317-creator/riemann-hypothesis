@@ -201,8 +201,7 @@ theorem frame_proj (hCM : IsCMExt D.host.F D.host.E D.sp.cm.sig) (hJ : IsHermND 
   have hA : M * Matrix.of (fun b j => V'.frame.repr (u j) b) = 1 - Q := by
     refine Matrix.ext fun a j => ?_
     have e := congrFun (LinearMap.toMatrix_mulVec_repr V'.frame V.frame ι (u j)) a
-    rw [hu j, repr_symm] at e
-    exact e
+    rwa [hu j, repr_symm] at e
   have e1 : M * Pr * (1 - Q) = 1 - Q := by
     rw [← hA, Matrix.mul_assoc M Pr, ← Matrix.mul_assoc Pr, hPM, Matrix.one_mul]
   have e2 : M * Pr * Q = 0 := by

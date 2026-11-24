@@ -135,8 +135,7 @@ theorem hasDerivAt_iter {u : E → ℂ} (hu : ContDiff ℝ ∞ u) (k : ℕ) (y x
   have h1 := hd.comp_hasDerivAt t hl
   have h2 := (ContinuousMultilinearMap.apply ℝ (fun _ : Fin k => E) ℂ
     (fun _ => x)).hasFDerivAt.comp_hasDerivAt t h1
-  rw [iteratedFDeriv_succ_apply_left]
-  exact h2
+  rwa [iteratedFDeriv_succ_apply_left]
 
 theorem foldr_replicate {u : E → ℂ} (hu : ContDiff ℝ ∞ u) (x : E) (k : ℕ) :
     (List.replicate k x).foldr
@@ -265,8 +264,7 @@ theorem foldr_dirD_eq_zero {T : Type} [Fintype T] [DecidableEq T] {W : Type} [No
       (List.ofFn fun i => (r i, L.get i (r i))).map (fun q => (Pi.single q.1 q.2 : T → W)) := by
     rw [List.map_ofFn]; rfl
   have h2 := congrFun (h (List.ofFn fun i => (r i, L.get i (r i))) (by simp [hL])) x
-  rw [← List.foldr_map, ← e1, foldr_ofFn_dirD hu] at h2
-  exact h2
+  rwa [← List.foldr_map, ← e1, foldr_ofFn_dirD hu] at h2
 
 end Generic
 
@@ -411,8 +409,7 @@ theorem exists_poly_mul_gauss_of_annC : ∀ (D : D7) (V : HSp D) (n : ℕ) (l : 
     have h0 := hL (L.map fun q => (q.1, Matrix.of q.2)) (by simp [hlen])
     rw [← hfu, (foldr_annC V l s hM hu _).2, List.foldr_map] at h0
     funext z
-    have h := congrFun h0 z
-    exact (mul_eq_zero.1 h).resolve_left (Complex.exp_ne_zero _)
+    exact (mul_eq_zero.1 (congrFun h0 z)).resolve_left (Complex.exp_ne_zero _)
   have hall := foldr_dirD_eq_zero hu N hU
   let eL : (D.what₂.Tau × Fin V.rank × Fin n × Bool → ℝ) →ₗ[ℝ] (D.what₂.Tau → Fin V.rank → Fin n → ℂ) :=
     { toFun := fun x τ i j => (x (τ, i, j, false) : ℂ) + (x (τ, i, j, true) : ℂ) * Complex.I

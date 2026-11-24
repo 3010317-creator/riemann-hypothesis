@@ -627,8 +627,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.torsion_points_homomorphism_co
     · rintro ⟨χ, hχ⟩ a ha
       have e : χ.comp (Ideal.Quotient.mkₐ R (vanIdeal T pt (K : Set N))) = φ x := by
         apply hφu
-        rw [← Chart.spMap_comp, Category.assoc]
-        exact hχ
+        rwa [← Chart.spMap_comp, Category.assoc]
       rw [← e, AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk, Ideal.Quotient.eq_zero_iff_mem.mpr ha, map_zero]
     · intro h
       refine ⟨Ideal.Quotient.liftₐ _ (φ x) h, ?_⟩
@@ -642,8 +641,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.torsion_points_homomorphism_co
       by_contra hx
       have hne : ∀ k ∈ K, ∃ c : T.A, φ k c ≠ φ x c := by
         intro k hk
-        by_contra hall
-        push Not at hall
+        by_contra! hall
         have e1 : φ k = φ x := AlgHom.ext hall
         have e2 : pt k = pt x := by rw [← hφ k, ← hφ x, e1]
         exact hx (hpt.inj e2 ▸ hk)
@@ -663,8 +661,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.torsion_points_homomorphism_co
       obtain ⟨k, hk, hk0⟩ := h1
       rw [sub_eq_zero] at hk0
       exact hc k (by simpa using hk) (hinj (by simpa using hk0)).symm
-    · intro hx a ha
-      exact (PositivityTheory.HtPt.Rf.mem_vanIdeal T hφ _ a).1 ha x hx
+    · exact fun hx a ha => (PositivityTheory.HtPt.Rf.mem_vanIdeal T hφ _ a).1 ha x hx
   refine ⟨hK1, ?_⟩
   intro g hg hgK
   rw [PositivityTheory.HtPt.Rf.mem_torsFun T hφ] at hg
@@ -700,8 +697,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.torsion_points_homomorphism_co
     have e : χ.comp (Ideal.Quotient.mkₐ R (vanIdeal T pt (K : Set N))) = Ideal.Quotient.mkₐ R J := by
       rw [hu _ rfl]
       apply hu
-      rw [← Chart.spMap_comp, Category.assoc]
-      exact hχ
+      rwa [← Chart.spMap_comp, Category.assoc]
     intro b hb
     have h2 := AlgHom.congr_fun e b
     simp only [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk] at h2

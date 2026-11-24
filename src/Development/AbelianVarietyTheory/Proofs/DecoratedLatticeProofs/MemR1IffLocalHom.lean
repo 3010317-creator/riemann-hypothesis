@@ -106,8 +106,7 @@ theorem colCond_of_R1cond {x : Sp E (M + c) ≃ₗ[E] Sp E (M + c)} (h : Loc.R1c
         simp only [stepAt, hl, hm, ite_false] at hlm
         omega
       have h3 := (mem_Ufl.1 (h.2.2 j)) l hjl
-      rw [Pi.sub_apply, sub_eq_zero, ← hsingle] at h3
-      exact h3
+      rwa [Pi.sub_apply, sub_eq_zero, ← hsingle] at h3
 
 theorem R1cond_of_colCond {x : Sp E (M + c) ≃ₗ[E] Sp E (M + c)} (h : ColCond x) : Loc.R1cond E M c x := by
   refine ⟨fun i v hv => ?_, ?_, fun i => ?_⟩
@@ -158,8 +157,7 @@ include he in
 theorem isRight_iff (r : A ⊕ Fin c) : r.isRight ↔ M ≤ (e r).val := by
   rcases r with a | i
   · have := eX_lt e rfl he a
-    simp only [Sum.isRight_inl, Bool.false_eq_true, false_iff, not_le]
-    exact this
+    simpa only [Sum.isRight_inl, Bool.false_eq_true, false_iff, not_le] using this
   · simp [he i]
 
 

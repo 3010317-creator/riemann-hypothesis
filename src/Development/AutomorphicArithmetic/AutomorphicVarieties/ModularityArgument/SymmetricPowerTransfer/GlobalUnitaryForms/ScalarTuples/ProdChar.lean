@@ -127,8 +127,7 @@ private theorem int_case {F : Type} [Field F] [NumberField F] {Δ : F} {D : Dat 
     have e := Function.mulSupport_comp_eq (Nat.cast : ℕ → ℂ) (fun {n} => Nat.cast_eq_one)
       (fun v : Pl F => Nat.card (Ov v ⧸ Ideal.span {algebraMap (𝓞 F) (Ov v) a}))
     rw [Function.comp_def] at e
-    rw [e]
-    exact cfin
+    rwa [e]
   rw [funext hval]
   refine ⟨(hfin.union cfinC).subset (Function.mulSupport_div _ _), ?_⟩
   rw [finprod_div_distrib hfin cfinC, hrec]
@@ -227,8 +226,7 @@ private theorem ext_char {A G C : Type} [Group A] [Group G] [CommGroup C] (σ : 
     refine sup_le ?_ ?_
     · rintro _ ⟨z, rfl⟩
       exact ⟨z, by simp⟩
-    · intro j hj
-      exact ⟨1, by simpa using hj⟩
+    · exact fun j hj => ⟨1, by simpa using hj⟩
   have hS : ∀ u ∈ σ.range ⊔ J, ∃ z, (σ z)⁻¹ * u ∈ J := fun u hu => hsup hu
   have hwd : ∀ z z' x, (σ z)⁻¹ * x ∈ J → (σ z')⁻¹ * x ∈ J → χ z = χ z' := by
     intro z z' x h h'
@@ -237,8 +235,7 @@ private theorem ext_char {A G C : Type} [Group A] [Group G] [CommGroup C] (σ : 
       rw [map_mul, map_inv]; group
     rw [e] at hm
     have h2 := hχ _ (hJ hm)
-    rw [map_mul, map_inv, inv_mul_eq_one] at h2
-    exact h2
+    rwa [map_mul, map_inv, inv_mul_eq_one] at h2
   let f : ↥(σ.range ⊔ J) → C := fun u => χ (Classical.choose (hS u.1 u.2))
   have hf : ∀ (u : ↥(σ.range ⊔ J)) z, (σ z)⁻¹ * u.1 ∈ J → f u = χ z :=
     fun u z h => hwd _ _ _ (Classical.choose_spec (hS u.1 u.2)) h
@@ -322,10 +319,7 @@ private theorem scal_ex : ∃ σ : Kˣ →* DX Δ, (∀ z s, IsScal z s ↔ s = 
     have e : (((f.codRestrict (DX Δ) hmem z : DX Δ) : GL (Fin 2) (Lsq K Δ)) :
         Matrix (Fin 2) (Fin 2) (Lsq K Δ)) = Matrix.scalar (Fin 2) (algebraMap K (Lsq K Δ) z) := hfm z
     constructor
-    · intro h
-      apply Subtype.ext
-      apply Units.ext
-      exact (show mt s = _ from h).trans e.symm
+    · exact fun h => Subtype.ext (Units.ext ((show mt s = _ from h).trans e.symm))
     · rintro rfl
       exact e
   · ext s
@@ -333,10 +327,7 @@ private theorem scal_ex : ∃ σ : Kˣ →* DX Δ, (∀ z s, IsScal z s ↔ s = 
     refine exists_congr fun z => ⟨fun h => Subtype.ext h, fun h => congrArg Subtype.val h⟩
   · intro z
     rw [Subgroup.mem_center_iff]
-    intro g
-    apply Subtype.ext
-    show (g : GL (Fin 2) (Lsq K Δ)) * f z = f z * g
-    exact (hcomm z g).symm
+    exact fun g => Subtype.ext (hcomm z g).symm
 
 variable {Δ} {O : Type} [CommRing O] [Algebra O K]
 
@@ -425,9 +416,7 @@ theorem baseK : BaseK := by
   have hmemU : ∀ z ∈ ZD Δ, ιD z ∈ D.UZ := by
     intro z hz
     obtain ⟨z0, h0⟩ := hZs z hz
-    refine Subgroup.mem_iInf.mpr fun v => ?_
-    show (ιD z : DA Δ).1 v ∈ ZD (cv v Δ) ⊔ D.J2v v
-    exact Subgroup.mem_sup_left (hlocZ v _ _ (hsc z0 z h0 v)).1
+    exact Subgroup.mem_iInf.mpr fun v => Subgroup.mem_sup_left (hlocZ v _ _ (hsc z0 z h0 v)).1
   have hωs : ∀ (z0 : Fˣ) (s : DX Δ) (h : IsScal z0 s) (hm : ιD s ∈ D.UZ),
       ((ω ⟨ιD s, hm⟩ : ℂˣ) : ℂ) = ((Algebra.norm ℚ (z0 : F) : ℚ) : ℂ)⁻¹ := by
     intro z0 s h hm

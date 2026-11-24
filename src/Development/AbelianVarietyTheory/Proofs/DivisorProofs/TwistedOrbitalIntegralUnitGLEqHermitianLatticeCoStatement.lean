@@ -166,8 +166,7 @@ theorem isCompact_boundedGL (R : ℝ) :
         (Set.pi Set.univ fun _ : Fin a => Set.pi Set.univ fun _ : Fin a =>
           Metric.closedBall (0 : w.adicCompletion E) R) :=
       Set.ext fun A => ⟨fun hA i _ j _ => by simpa using hA i j, fun hA i j => by simpa using hA i trivial j trivial⟩
-    rw [e]
-    exact h
+    rwa [e]
   have h := (Units.isClosedEmbedding_embedProduct (α := Matrix (Fin a) (Fin a) (w.adicCompletion E))).isCompact_preimage
     (hK.prod (hK.image MulOpposite.continuous_op))
   convert h using 1
@@ -227,8 +226,7 @@ theorem exists_norm_ge (he : ∀ x, x ∈ (algebraMap K.O K.E).range ↔ Valued.
     have h : π * o = 1 := IsFractionRing.injective K.O K.E (by rw [map_mul, ho, mul_inv_cancel₀ hπ0, map_one])
     exact isUnit_iff_exists_inv.2 ⟨o, h⟩
   have h1 : 1 < ‖e (algebraMap K.O K.E π)⁻¹‖ := by
-    rw [← not_le, norm_le_one_iff_mem e he]
-    exact hn
+    rwa [← not_le, norm_le_one_iff_mem e he]
   obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt R h1
   refine ⟨((algebraMap K.O K.E π)⁻¹) ^ n, pow_ne_zero _ (inv_ne_zero hπ0), ?_⟩
   rw [map_pow, norm_pow]
@@ -417,8 +415,7 @@ theorem lat_le_iff (he : ∀ x, x ∈ (algebraMap K.O K.E).range ↔ Valued.v (e
     have hm : ofCrd e b (fun i => q.val i j) ∈ GlobalTheory.TwLat.lat e b q := by
       rw [latOf_eq]; exact Submodule.subset_span ⟨j, rfl⟩
     have := (mem_lat_iff e b he q' _).1 (hle hm) i
-    rw [crd_ofCrd, ← col_mul, ← Units.val_mul] at this
-    exact this
+    rwa [crd_ofCrd, ← col_mul, ← Units.val_mul] at this
   · intro h
     conv_lhs => rw [latOf_eq]
     rw [Submodule.span_le]
@@ -543,8 +540,7 @@ theorem mem_twCent_iff (c : R →+* R) (δ t : GL (Fin a) R) :
       rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, ← Matrix.transpose_mul, Units.mul_inv, Matrix.transpose_one,
         Matrix.one_mul]
   rw [hA1, hA2, hB, hC]
-  simp only [sf_mulVec]
-  exact ⟨fun h u v => by rw [h], fun h => ext_sf c _ _ h⟩
+  simpa only [sf_mulVec] using ⟨fun h u v => by rw [h], fun h => ext_sf c _ _ h⟩
 
 end Mat
 
@@ -796,8 +792,7 @@ theorem mem_GLint_iff_dual {S : Subring L} (c : L →+* L) (hc : ∀ x, c (c x) 
   constructor
   · rintro ⟨h1, h2⟩ u
     constructor
-    · intro hu i
-      exact mulVec_mem h1 (fun j => (hS _).2 (hu j)) i
+    · exact fun hu i => mulVec_mem h1 (fun j => (hS _).2 (hu j)) i
     · intro hY j
       have e1 : (c ∘ u) = (Y⁻¹).1 *ᵥ (Y.1 *ᵥ (c ∘ u)) := by
         rw [Matrix.mulVec_mulVec, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.one_mulVec]
@@ -1054,8 +1049,7 @@ theorem mulLat_mem_iff (t : B.Aˣ) (L : Submodule K.O B.A) (y : B.A) :
   · intro h
     obtain ⟨x, hx, rfl⟩ := Submodule.mem_map.1 h
     simpa [← mul_assoc] using hx
-  · intro h
-    exact Submodule.mem_map.2 ⟨_, h, by simp [← mul_assoc]⟩
+  · exact fun h => Submodule.mem_map.2 ⟨_, h, by simp [← mul_assoc]⟩
 
 theorem mem_stabLat_iff (t : B.Aˣ) (L : Submodule K.O B.A) :
     t ∈ stabLat K.O L ↔ mulLat K.O (t : B.A) L = L := by
@@ -1156,8 +1150,7 @@ theorem GlobalTheory.TwOrbLat.twOrb_unit_eq_orbSum : ∀ (E : Type) [Field E] [N
     · intro h
       have := Kg.mul_mem (Kg.mul_mem hk h) (Kg.inv_mem (hθK k hk))
       simpa [mul_assoc] using this
-    · intro h
-      exact Kg.mul_mem (Kg.mul_mem (Kg.inv_mem hk) h) (hθK k hk)
+    · exact fun h => Kg.mul_mem (Kg.mul_mem (Kg.inv_mem hk) h) (hθK k hk)
 
   have hsum : ∀ y : GLw a w, GlobalTheory.TwOrbConj.summand θ Kg δ ((Kg : Set (GLw a w)).indicator 1) y =
       if P y then ((((stabLat K.O (GlobalTheory.TwLat.lat e b y) ⊓ B.T).relIndex (intUnits K.O B.A ⊓ B.T) : ℕ) : ℂ)) else 0 := by

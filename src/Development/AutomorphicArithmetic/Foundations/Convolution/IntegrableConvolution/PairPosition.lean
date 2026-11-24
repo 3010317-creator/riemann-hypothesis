@@ -95,8 +95,7 @@ private theorem UpperTheory.ConvolutionTheory.L1.matchInf_tens (R S : Type) [Com
     by_contra hne
     apply hx
     refine ⟨fun i => D.comp n i x, fun i _ => subset_tsupport _ ?_, h2 x⟩
-    intro h0
-    exact hne (Finset.prod_eq_zero (Finset.mem_univ i) h0)
+    exact fun h0 => hne (Finset.prod_eq_zero (Finset.mem_univ i) h0)
   · rw [← UpperTheory.ConvolutionTheory.L1.pushTens (GL (Fin n) R) μ m φ (fun i => (hφ i).1) (fun i => (hφ i).2)]
     unfold UpperTheory.ConvolutionTheory.L1.Split.transfer UpperTheory.ConvolutionTheory.L1.Split.tens
     simp only [h1]
@@ -420,8 +419,7 @@ private theorem zc_eq {K : Type} [Field K] [NumberField K] {n : ℕ} {τ : K →
     z = j ((HarishChandra.harishChandraEquiv (n := n)).symm
       ⟨MvPolynomial.esymm (Fin n) ℂ (i + 1), MvPolynomial.esymm_isSymmetric (Fin n) ℂ (i + 1)⟩ :
         Subalgebra.center ℂ (HarishChandra.U n))) ⟨_, j, hj, rfl⟩
-  rw [hu j' hj'] at h
-  exact h
+  rwa [hu j' hj'] at h
 
 end UpperTheory.ConvolutionTheory.L1
 
@@ -473,8 +471,7 @@ theorem UpperTheory.ConvolutionTheory.L1.lactTens :
         · rw [Function.update_of_ne h]; exact hs i
       have := ha _ _ hs' (hb φ β hs ht)
       rw [Function.update_self, Function.update_idem] at this
-      rw [map_mul, map_mul, hm, hm']
-      exact this
+      rwa [map_mul, map_mul, hm, hm']
     have hgen : ∀ (p : Fin n × Fin n) (φ : Fin (m + 1) → TI F n) (β : TI E n), (∀ i, SmoothT (φ i)) → IsTens D φ β →
         IsTens D (Function.update φ k (lact (jF (HarishChandra.e p)) (φ k))) (lact (jE (HarishChandra.e p)) β) := by
       rintro ⟨a, b⟩ φ β hs ht
@@ -673,8 +670,7 @@ private theorem word_main (hs : ArchSlot D νE νF b a aE aF) (w : List (Option 
   | nil =>
     refine ⟨1, fun g => ?_, ?_⟩
     · simp only [Pi.one_apply, OneMemClass.coe_one, List.length_nil, List.replicate_zero]
-      simp only [GM.word, (lactLaws F n a ha).2.1]
-      exact hs.tens g
+      simpa only [GM.word, (lactLaws F n a ha).2.1] using hs.tens g
     · simp only [Pi.one_apply, Finset.prod_const_one, OneMemClass.coe_one, List.length_nil, List.replicate_zero,
         List.map_nil, GM.word, (lactLaws F n aF hA).2.1]
   | cons x w ih =>

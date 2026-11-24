@@ -233,8 +233,7 @@ theorem rootOfUnity_eq_one_of_sub_one_mem_span : ∀ (E : Type) [Field E] [Numbe
   have hzE : (z : E) ^ n = 1 := by
     have h := congrArg (algebraMap (𝓞 E) E) hz
     rw [map_pow, map_one] at h
-    rw [NumberField.RingOfIntegers.coe_eq_algebraMap]
-    exact h
+    rwa [NumberField.RingOfIntegers.coe_eq_algebraMap]
   have hwE : (w : E) * (M : E) = (z : E) - 1 := by
     have h := congrArg (algebraMap (𝓞 E) E) hw
     rw [map_mul, RingHom.map_sub, map_natCast, map_one] at h
@@ -248,8 +247,7 @@ theorem rootOfUnity_eq_one_of_sub_one_mem_span : ∀ (E : Type) [Field E] [Numbe
       exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) hn.ne').mp h1
     have h2 : σ (w : E) * (M : ℂ) = σ (z : E) - 1 := by
       have h := congrArg σ hwE
-      rw [map_mul, map_sub, map_natCast, map_one] at h
-      exact h
+      rwa [map_mul, map_sub, map_natCast, map_one] at h
     have h3 : ‖σ (w : E)‖ * (M : ℝ) ≤ 2 := by
       have h4 : ‖σ (w : E) * (M : ℂ)‖ = ‖σ (w : E)‖ * (M : ℝ) := by
         rw [norm_mul, Complex.norm_natCast]
@@ -394,8 +392,7 @@ theorem neat_of_split (E : Type) [Field E] [NumberField E] [IsCMField E] (bar : 
   refine neat_of_le E M _ hM le_rfl z hz ?_
   have hzz : z * bar z = 1 := by
     apply RingOfIntegers.ext
-    rw [← hbar] at hz
-    exact hz
+    rwa [← hbar] at hz
   have h3 : z - 1 ∈ Mb.map (bar : 𝓞 E →+* 𝓞 E) := by
     have h4 : bar (z - 1) ∈ Mb.map (bar : 𝓞 E →+* 𝓞 E) := Ideal.mem_map_of_mem (bar : 𝓞 E →+* 𝓞 E) hz1
     have e : z - 1 = -z * bar (z - 1) := by

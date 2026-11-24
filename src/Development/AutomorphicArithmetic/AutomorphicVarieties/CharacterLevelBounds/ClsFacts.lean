@@ -158,8 +158,7 @@ theorem UpperTheory.V.Chr.clsFacts :
     have hξ1 : ξ ≠ 1 := by
       intro h
       apply hne
-      rw [hξdef, mul_inv_eq_one₀ h0] at h
-      exact h
+      rwa [hξdef, mul_inv_eq_one₀ h0] at h
     have hv1 : ∀ x : Ω, x ^ N = 1 → A.valuation x = 1 := by
       intro x hx
       have hp : A.valuation x ^ N = 1 := by rw [← map_pow, hx, map_one]
@@ -184,8 +183,7 @@ theorem UpperTheory.V.Chr.clsFacts :
       ring
     have hlt : A.valuation (1 - ξ) < 1 := by
       have := hin ζ (hv1 ζ hζ.pow_eq_one).le
-      rw [hdiff, Valuation.map_neg, map_mul, hv1 ζ hζ.pow_eq_one, one_mul] at this
-      exact this
+      rwa [hdiff, Valuation.map_neg, map_mul, hv1 ζ hζ.pow_eq_one, one_mul] at this
     apply hA
     rw [hNeq, map_mul]
     exact lt_of_le_of_lt (mul_le_of_le_one_right' hS) hlt

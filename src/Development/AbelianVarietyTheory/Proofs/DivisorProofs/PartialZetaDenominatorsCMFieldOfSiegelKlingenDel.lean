@@ -272,8 +272,7 @@ namespace GlobalTheory
 theorem inZl_of_twisted_difference {G : Type} [CommGroup G] [Finite G] (l : ℕ) [Fact l.Prime]
     (g : G) (q : ℕ) (hq : l ∣ q) (x : G → ℚ)
     (hx : ∀ C, InZl l (x C - (q : ℚ) * x (C * g))) : ∀ C, InZl l (x C) := by
-  by_contra h
-  push Not at h
+  by_contra! h
   obtain ⟨C0, hC0⟩ := h
   obtain ⟨C, hC⟩ := Finite.exists_max (fun C => ‖((x C : ℚ) : ℚ_[l])‖)
   have h0 : 1 < ‖((x C0 : ℚ) : ℚ_[l])‖ := by
@@ -462,8 +461,7 @@ theorem cE_le_of_inZl : ∀ {F : Type} [Field F] [NumberField F] (z : ClassGroup
   have hA : (a ^ n - 1 : ℕ) ≠ 0 := by omega
   have hAq : ((a ^ n - 1 : ℕ) : ℚ) ≠ 0 := by exact_mod_cast hA
   have h1 := h C
-  rw [inZl_iff, padicValRat.mul hAq hz, padicValRat.of_nat] at h1
-  rw [← Nat.padicValNat_def] at h1
+  rw [inZl_iff, padicValRat.mul hAq hz, padicValRat.of_nat, ← Nat.padicValNat_def] at h1
   have h2 : (2 : ℚ) ^ finrank ℚ F ≠ 0 := pow_ne_zero _ two_ne_zero
   have h3 : padicValRat l (z C / 2 ^ finrank ℚ F) = padicValRat l (z C) - (finrank ℚ F : ℤ) * (padicValNat l 2 : ℤ) := by
     rw [padicValRat.div hz h2, padicValRat.pow (q := (2:ℚ))]
@@ -565,8 +563,7 @@ theorem ceSum_term_le (f X l : ℕ) (hX : X ≠ 0) (hp : l.Prime) :
     have hv2 : padicValNat l 2 = 0 := by
       rw [Nat.padicValNat_def]
       apply multiplicity_eq_zero_of_not_dvd
-      intro h
-      exact h2 ((Nat.prime_dvd_prime_iff_eq hp Nat.prime_two).1 h)
+      exact fun h => h2 ((Nat.prime_dvd_prime_iff_eq hp Nat.prime_two).1 h)
     rw [hA, hv2]
     by_cases hd : (l - 1) ∣ X
     · have hm : mE l X = 1 + padicValNat l X := by simp [mE, h2, hd]
@@ -666,8 +663,7 @@ theorem exists_pow_ne_one_mod (l n : ℕ) (hl : l.Prime) (hn : ¬ (l - 1) ∣ n)
     rw [orderOf_eq_card_of_forall_mem_zpowers hg, Nat.card_eq_fintype_card, ZMod.card_units_eq_totient,
       Nat.totient_prime hl]
   refine ⟨(g : ZMod l).val, ?_, ZMod.val_coe_unit_coprime g, ?_⟩
-  · by_contra h
-    push Not at h
+  · by_contra! h
     interval_cases hv : (g : ZMod l).val
     · have : (g : ZMod l) = 0 := (ZMod.val_eq_zero _).mp hv
       exact (Units.ne_zero g) this

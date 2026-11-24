@@ -103,8 +103,7 @@ theorem finite_quot_prime (l : ℕ) [Fact l.Prime] (ι : Type) (N : ℕ) (F : Fr
   haveI := hL
   have hmem : ∀ x : F.O, F.emb x ∈ L ∧ ‖F.emb x‖ ≤ 1 := fun x => by
     have hx : F.emb x ∈ Set.range F.emb := ⟨x, rfl⟩
-    rw [hrange] at hx
-    exact hx
+    rwa [hrange] at hx
   let f : F.O →+* integralClosure ℤ_[l] L :=
     { toFun := fun x => ⟨⟨F.emb x, (hmem x).1⟩,
         (GlobalTheory.mem_integralClosure_padicInt_iff L ⟨F.emb x, (hmem x).1⟩).2 (hmem x).2⟩
@@ -234,8 +233,7 @@ theorem mem_iSup_filter (T : J → End L V) (p : (J → L) → Submodule L V) (h
       rw [hbe]
       exact Submodule.sub_mem _ hfθ (hA ha)
     exact (Submodule.disjoint_def.1 ((Module.End.independent_maxGenEigenspace (T j)) (θ j))) b hb1 (hB hb)
-  rw [← hab, hb0, add_zero]
-  exact ha
+  rwa [← hab, hb0, add_zero]
 
 theorem mem_of_mem_iSup_finset (T : J → End L V) (p : (J → L) → Submodule L V) (hp : ∀ y, p y ≤ _root_.Formalism.L2.Col.eigAt T y)
     {θ : J → L} {f : V} (hf : ∀ j, T j f = θ j • f) (Y : Finset (J → L)) (hY : f ∈ ⨆ y ∈ Y, p y) : f ∈ p θ := by
@@ -346,8 +344,7 @@ theorem norm_eigenvalue_le_one_of_integral_matrix (O K : Type) [CommRing O] [Nor
     (M : Matrix (Fin n) (Fin n) O) (μ : K) (c : Fin n → K) (hc : c ≠ 0)
     (hM : (M.map emb).mulVec c = μ • c) : ‖μ‖ ≤ 1 := by
   obtain ⟨j₀, hj₀⟩ : ∃ j, c j ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hc (funext h)
   obtain ⟨k, -, hk⟩ := Finset.exists_max_image Finset.univ (fun j => ‖c j‖) ⟨j₀, Finset.mem_univ _⟩
   have hpos : 0 < ‖c k‖ :=
@@ -512,8 +509,7 @@ theorem maximal_ideal_eq_joint_eigen : ∀ (l : ℕ) [Fact l.Prime] (O : Type) [
     · intro a b hab
       rw [hJmem θ hθ, eval₂_mul, norm_mul] at hab
       rw [hJmem θ hθ, hJmem θ hθ]
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       have := mul_le_mul hc.1 hc.2 zero_le_one (norm_nonneg _)
       linarith
   by_cases hex : ∃ θ ∈ Θ, m ≤ J θ
@@ -554,8 +550,7 @@ theorem maximal_ideal_eq_joint_eigen : ∀ (l : ℕ) [Fact l.Prime] (O : Type) [
       have hW0 : W ≠ ⊥ := by
         rw [Submodule.ne_bot_iff]
         refine ⟨v, ?_, hv0⟩
-        rw [Module.End.mem_eigenspace_iff, Matrix.toLin'_apply]
-        exact hBv
+        rwa [Module.End.mem_eigenspace_iff, Matrix.toLin'_apply]
       have hWs : ∀ i, ∀ w ∈ W, Matrix.toLin' (T i) w ∈ W := by
         intro i w hw
         rw [Module.End.mem_eigenspace_iff, Matrix.toLin'_apply] at hw ⊢
@@ -591,8 +586,7 @@ theorem maximal_ideal_eq_joint_eigen : ∀ (l : ℕ) [Fact l.Prime] (O : Type) [
     set P := (ρ q).charpoly with hPdef
     have hP : Polynomial.aeval q P ∈ m := by
       apply hker
-      rw [RingHom.mem_ker]
-      rw [← Polynomial.aeval_algHom_apply, Matrix.aeval_self_charpoly]
+      rw [RingHom.mem_ker, ← Polynomial.aeval_algHom_apply, Matrix.aeval_self_charpoly]
     have hC : MvPolynomial.C (P.coeff 0) ∈ m := by
       rw [← Ideal.Quotient.eq_zero_iff_mem] at hP ⊢
       have hq0 : Ideal.Quotient.mkₐ O m q = 0 := by
@@ -644,8 +638,7 @@ private lemma coeffs_eq_zero_of_linearIndependent_of_injective {O K X : Type} [C
     intro α hα c hc
     have h0 : α 0 ≠ 0 := hα.ne_zero 0
     obtain ⟨x0, hx0⟩ : ∃ x0, α 0 x0 ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact h0 (funext h)
     have hea : emb (α 0 x0) ≠ 0 := fun h => hx0 (hemb (by rw [h, map_zero]))
     let β : Fin n → X → O := fun j x => α 0 x0 * α j.succ x - α j.succ x0 * α 0 x
@@ -837,16 +830,14 @@ theorem _root_.GlobalTheory.ExpCover.values_mem_of_local {l : ℕ} [Fact l.Prime
         have hg : ∑ j, c' j • f j p.1 = 0 := by simpa [Finset.sum_apply] using congrFun hc' p.1
         have hsum : ∑ k, (∑ j, c' j * emb ((L ∘ B) j (p.1, k))) • b (w k) = 0 := by
           have e : ∑ k, (∑ j, c' j * emb ((L ∘ B) j (p.1, k))) • b (w k) = ∑ j, c' j • f j p.1 := by
-            simp only [hfk, Finset.smul_sum, Finset.sum_smul, smul_smul]
-            exact Finset.sum_comm
+            simpa only [hfk, Finset.smul_sum, Finset.sum_smul, smul_smul] using Finset.sum_comm
           rw [e, hg]
         exact (Fintype.linearIndependent_iff.1 hw) _ hsum p.2
       exact fun j => congrFun hzero j
     let v : G → W := ∑ j, c j • f j
     have hv_apply : ∀ h, v h = ∑ j, c j • f j h := by intro h; simp [v, Finset.sum_apply]
     refine ⟨θ, hθ1, hθm, v, S.sum_mem fun j _ => S.smul_mem _ (hZS _ (B j).2), ?_, ?_⟩
-    · intro hv0
-      exact hc0 (funext (Fintype.linearIndependent_iff.1 hind c hv0))
+    · exact fun hv0 => hc0 (funext (Fintype.linearIndependent_iff.1 hind c hv0))
     · intro i g
       have hXB : ∀ j, emb (cst i) • ∑ s ∈ tr i, f j (g * s) = ∑ k, emb (ρ (X i) k j) • f k g := by
         intro j
@@ -1023,8 +1014,7 @@ private theorem emb_norm : ∀ (l : ℕ) [Fact l.Prime] (ι : Type) (N : ℕ) (F
   have hmem : ∀ c, F.emb c ∈ L ∧ ‖F.emb c‖ ≤ 1 := by
     intro c
     have : F.emb c ∈ Set.range F.emb := ⟨c, rfl⟩
-    rw [hL] at this
-    exact this
+    rwa [hL] at this
   refine ⟨fun c => (hmem c).2, fun c hc => ?_⟩
   have hne : F.emb c ≠ 0 := by
     intro h; rw [h, norm_zero] at hc; exact zero_ne_one hc

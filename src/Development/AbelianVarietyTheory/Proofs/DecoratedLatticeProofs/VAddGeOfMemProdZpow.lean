@@ -63,8 +63,7 @@ theorem vAdd_eq_count {K : Type} [Field K] [NumberField K] (v : HeightOneSpectru
     intro r hr
     rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K v (by simpa using hr)]
     have := v.valuation_of_algebraMap (K := K) r
-    rw [HeightOneSpectrum.intValuation_if_neg _ hr] at this
-    exact this
+    rwa [HeightOneSpectrum.intValuation_if_neg _ hr] at this
   have hv : v.valuation K x =
       WithZero.exp (-FractionalIdeal.count K v (FractionalIdeal.spanSingleton (𝓞 K)⁰ x)) := by
     obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 K) x
@@ -107,7 +106,6 @@ theorem vAdd_ge_of_mem_prod_zpow :
     · rw [ite_eq_right hwi, FractionalIdeal.count_zpow,
         FractionalIdeal.count_maximal_coprime K (e w) (fun h => hwi (e.injective h).symm), mul_zero]
   rw [Finset.sum_congr rfl hterm, Finset.sum_ite_eq] at hmono
-  rw [vAdd_eq_count (e w) ha0]
-  exact hmono
+  rwa [vAdd_eq_count (e w) ha0]
 
 end GlobalTheory.Core.Int.ProdPrimePow

@@ -238,8 +238,7 @@ theorem isGLSubmodule_of_stable (k : Type) [Field k] [Infinite k] (N : ℕ) (lam
       have : (MvPolynomial.eval y).comp (algebraMap k S) = RingHom.id k := by
         ext a; simp [S]
       rw [this, MvPolynomial.map_id, Matrix.transpose_map, hm0]
-    rw [e1]
-    exact h1
+    rwa [e1]
   let ψ : S →+* A := MvPolynomial.eval₂Hom (algebraMap k A) fun v => (g : Matrix (Fin N) (Fin N) A) v.1 v.2
   have e2 : MvPolynomial.map ψ P =
       rowAct A (n := N) (g : Matrix (Fin N) (Fin N) A).transpose (MvPolynomial.map (algebraMap k A) f) := by
@@ -315,13 +314,11 @@ theorem nablaSq_simple_charZero : ∀ (k : Type) [Field k] [CharZero k] (N : ℕ
   intro k _ _ N lam M hM hG
   haveI : Infinite k := Infinite.of_injective _ Nat.cast_injective
   have hN := factNatW N lam
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have hMg : Good M := good_of_isGLSubmodule k N lam M (isGLSubmodule_of_stable k N lam M hG)
   have key := hw_mem_of_lt_charZero k N lam.natW hN.1 hN.2.2
   have h1 := (key ⊥ M (good_top_bot k N N).2 hMg (bot_lt_iff_ne_bot.2 hc.1) hM).1
-  have h2 := (key M (nablaSq k N lam) hMg (good_nablaSq k N lam) (lt_of_le_of_ne hM hc.2) le_rfl).2
-  exact h2 h1
+  exact ((key M (nablaSq k N lam) hMg (good_nablaSq k N lam) (lt_of_le_of_ne hM hc.2) le_rfl).2) h1
 
 end GlobalTheory.AlcZero
 end -- clump:auto

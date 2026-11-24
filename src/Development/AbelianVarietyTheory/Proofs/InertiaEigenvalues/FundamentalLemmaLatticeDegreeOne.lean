@@ -303,8 +303,7 @@ private lemma exists_orthogonal_family_in_span (l : ℕ) [Fact l.Prime] :
           rw [this]; exact mul_le_mul_of_nonneg_left h2 (norm_nonneg _)
       refine Fin.lastCases ?_ (fun k => ?_) j
       · simpa using key.1
-      · simp only [Fin.snoc_castSucc]
-        exact (horth (fun i => c i.castSucc) k).trans key.2
+      · simpa only [Fin.snoc_castSucc] using (horth (fun i => c i.castSucc) k).trans key.2
 
 private lemma exists_rescale_norm_mem_Ioc (l : ℕ) [Fact l.Prime] (x : ℂ_[l]) (hx : x ≠ 0) :
     ∃ t : ℚ_[l], t ≠ 0 ∧ (l : ℝ)⁻¹ < ‖algebraMap ℚ_[l] ℂ_[l] t * x‖ ∧
@@ -319,8 +318,7 @@ private lemma exists_rescale_norm_mem_Ioc (l : ℕ) [Fact l.Prime] (x : ℂ_[l])
   · rw [hN, lt_div_iff₀ (zpow_pos hlpos _), zpow_add_one₀ hlpos.ne', mul_comm _ (l : ℝ), ← mul_assoc,
       inv_mul_cancel₀ hlpos.ne', one_mul]
     exact h1
-  · rw [hN, div_le_one (zpow_pos hlpos _)]
-    exact h2
+  · rwa [hN, div_le_one (zpow_pos hlpos _)]
 
 private lemma exists_sorted_orthogonal_family_in_span (l : ℕ) [Fact l.Prime] (h : ℕ) (μ : Fin h → ℂ_[l])
     (hμ : LinearIndependent ℚ_[l] μ) :
@@ -348,8 +346,7 @@ private lemma exists_sorted_orthogonal_family_in_span (l : ℕ) [Fact l.Prime] (
     rw [norm_zero] at this
     exact (lt_irrefl (0 : ℝ)) ((inv_pos.2 (by exact_mod_cast (Fact.out : l.Prime).pos)).trans
       (this ▸ htlo (σ i)))
-  · intro a b hab
-    exact neg_le_neg_iff.1 (Tuple.monotone_sort (fun i => -‖w i‖) hab)
+  · exact fun a b hab => neg_le_neg_iff.1 (Tuple.monotone_sort (fun i => -‖w i‖) hab)
   · have := hworth (fun k => c (σ.symm k)) (σ j)
     rw [← Equiv.sum_comp σ] at this
     simpa using this
@@ -532,8 +529,7 @@ theorem exII : ExII := by
     rw [he]
 
     simp only [map_sum, map_mul, hθq, hθb]
-    rw [Finset.sum_comm]
-    rw [← hzero i]
+    rw [Finset.sum_comm, ← hzero i]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [hμ' k, Finset.sum_mul]
     refine Finset.sum_congr rfl fun j _ => ?_
@@ -626,8 +622,7 @@ theorem ev_add (n : ℕ) (x y : P.R.B) : ev P n (x + y) = ev P n x + ev P n y :=
 
 theorem crisFrobenius_cyclotomicPeriod : P.φB P.tB = (l : P.R.B) * P.tB := by
   have h := (P.PD (botExt l)).t_φ
-  rw [P.PD_φ, P.period_datum_t_eq, P.PD_p, Algebra.smul_def, map_natCast] at h
-  exact h
+  rwa [P.PD_φ, P.period_datum_t_eq, P.PD_p, Algebra.smul_def, map_natCast] at h
 
 theorem crisFrobenius_iterate_cyclotomicPeriod (n : ℕ) : P.φB^[n] P.tB = (l : P.R.B) ^ n * P.tB := by
   induction n with
@@ -808,8 +803,7 @@ theorem dep_false {AI : LocAinf l P} (T : LocTied l P AI) (h : ℕ) (hh : 2 ≤ 
       have hbot : V = ⊥ := Submodule.finrank_eq_zero.mp h0
       funext j
       have : a j ∈ V := Submodule.subset_span ⟨j, rfl⟩
-      rw [hbot, Submodule.mem_bot] at this
-      exact this
+      rwa [hbot, Submodule.mem_bot] at this
     · exact h0
   let c : Fin h → Fin k → ℚ_[l] := fun j m => bas.repr ⟨a j, Submodule.subset_span ⟨j, rfl⟩⟩ m
   have hac : ∀ j, a j = ∑ m, c j m • b m := by
@@ -1057,7 +1051,6 @@ theorem det_mem_one {AI : LocAinf l P} (T : LocTied l P AI) (M : Matrix n n P.R.
     rw [Matrix.mulVec_mulVec, Matrix.adjugate_mul]
     simp [Matrix.smul_mulVec]
   have h3 : (M.adjugate *ᵥ (M *ᵥ v)) k ∈ Fil P 1 := by
-    show ∑ j, M.adjugate k j * (M *ᵥ v) j ∈ Fil P 1
     exact Fil_sum fun j _ => Fil_mul_left (adj_mem M hM k j) (h j)
   have e2 : M.det = M.det * v k * y := by rw [mul_assoc, hky, mul_one]
   rw [e2, ← e]
@@ -1180,8 +1173,7 @@ theorem flAt_one : FLAt 1 := by
     have := congrFun hc' (e.symm k)
     simpa using this
   have hunit : ∃ k, lam k ∉ Fil P 1 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have := hind (Pi.single ⟨0, by omega⟩ 1) (Fil_sum fun j _ => by
       rw [Algebra.smul_def]; exact Fil_mul_left (q_mem_Fil P _) (hne j))
     simpa using congrFun this ⟨0, by omega⟩
@@ -1237,8 +1229,7 @@ theorem flAt_one : FLAt 1 := by
   let μ : Fin h → P.R.BdR := fun k => V y2 (e.symm k)
   have hμ0 : ∀ k, μ k ∈ Fil P 0 := fun k => hU'u.2 _ _
   have hμu : ∃ k, μ k ∉ Fil P 1 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have h1 : (V * Um) y2 y2 ∈ Fil P 1 := by
       rw [Matrix.mul_apply]
       exact Fil_sum fun j _ => Fil_mul_right (by simpa [μ] using hne (e j)) (hUm0 j y2)
@@ -1309,8 +1300,7 @@ theorem flAt_one : FLAt 1 := by
     have hev : ev P ((0 : Fin 1) : ℕ) = P.ιB := funext fun _ => rfl
     have hιAu : IsUnit (A.map P.ιB).det := by
       have h := hAu.map (P.ιB : P.R.B →+* P.R.BdR)
-      rw [RingHom.map_det] at h
-      exact h
+      rwa [RingHom.map_det] at h
     have hDε : diagonal (fun j => tz P (eps ((0 : Fin 1), x2) ((0 : Fin 1), y2) ((0 : Fin 1), j))) * Dy = Dx := by
       rw [hDy, hDx, diagonal_mul_diagonal]
       congr 1

@@ -231,10 +231,8 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
     rcases o with _ | k
     · exact one_ne_zero
     · by_cases h : ∀ p, M.blk p ≠ some k
-      · simp only [c, Option.elim_some, dite_eq_left h]
-        exact hc₀ _
-      · simp only [c, Option.elim_some, dite_eq_right h]
-        exact one_ne_zero
+      · simpa only [c, Option.elim_some, dite_eq_left h] using hc₀ _
+      · simpa only [c, Option.elim_some, dite_eq_right h] using one_ne_zero
   let z' : (Σ o : Option K, ι (o.getD k₀)) → ℂ := fun p => c p.1 * z p
   have hz' : z' ∈ mcPts (wP M τ a k₀ ca cb) := mcPts_smul hW.2.1.2.1 c hc hz
   have hbp : basePart M.blk (fstPt k₀ z') = zc := by
@@ -260,8 +258,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
   · intro p k hp
     obtain ⟨A, hA0, hA'⟩ := H1.2.2 p k hp
     have hk : c (some k) = 1 := by
-      simp only [c, Option.elim_some]
-      exact dite_eq_right fun e => e p hp
+      simpa only [c, Option.elim_some] using dite_eq_right fun e => e p hp
     have hw : ∀ m : ι k, fstPt k₀ z ⟨k, m⟩ =
         A * ∑ I, valAt M.x (F.u ⟨k, m⟩ I) (baseOf M k₀ z) * minorIJ (h p.1) I (stepCols N j p.2) := fun m => by
       have e : fstPt k₀ z' ⟨k, m⟩ = fstPt k₀ z ⟨k, m⟩ := by

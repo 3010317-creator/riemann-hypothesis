@@ -692,8 +692,7 @@ theorem split_two (V : HSp D) (A B : Finset (Pl D)) {x : GA D V} (hx : x ∈ GfC
   obtain ⟨⟨a, b⟩, hab⟩ := e.surjective ⟨x, hx⟩
   have h1 : x = a.1 * b.1 := by
     have := he (a, b)
-    rw [hab] at this
-    exact this
+    rwa [hab] at this
   refine ⟨a.1, a.2, b.1, ?_, b.2, h1⟩
   rw [at_eq]
   refine ⟨_root_.GlobalTheory.FinPl.SetCut.grpAt_le_GfC V _ b.2, ?_⟩
@@ -790,8 +789,7 @@ theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), 
     apply hflat
     have := ((_root_.GlobalTheory.FlatRInv.vanish_invariant D c.ψ (offP v w)).1 _ _ _ (t.sBF j (σ + 1) h) _ th r hr hrP).2 h0
     rw [hom] at this
-    rw [e₃]
-    exact this
+    rwa [e₃]
   obtain ⟨r', hr', hr'P, k, hk, hsk⟩ := (hG j σ h _ _ (vac_om hW vG hgo hyo) (k₂ _)).1 s hs hfl
   refine ⟨r * r', mul_mem hr hr', mul_mem (_root_.GlobalTheory.FinPl.SetCut.grpAt_le_GfC _ _ hrP) (_root_.GlobalTheory.FinPl.SetCut.grpAt_le_GfC _ _ hr'P), y, hy, κ, hκ, k, hk, ?_⟩
   have hkP : k ∈ grpAt (c.V (j + 1)) (· ∈ v.gP) := (hv.JG (j + 1) (by omega)).1 hk
@@ -918,8 +916,7 @@ theorem cell_collapse : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : 
     have e2 : {g : (besGrp (c.bes (j + 1 + 1) σ (idx_step h)).d (c.bes (j + 1 + 1) σ (idx_step h)).o).subgroupOf
         (GfC (c.V (j + 1 + 1))) | ∃ a ∈ K₁', ∃ b ∈ K₂', ((g : GfC (c.V (j + 1 + 1))) : GA D (c.V (j + 1 + 1))) = a * b} =
         {g | g.1.1 ∈ v.K (j + 1 + 1)} := Set.ext fun g => hKK' g.1.1
-    rw [e1, e2] at H
-    exact H
+    rwa [e1, e2] at H
 
   haveI : LocallyCompactSpace (GfC (c.V (j + 1 + 1))) := hfc₂.locallyCompactSpace
   haveI := hc.μf (j + 1 + 1)
@@ -969,8 +966,7 @@ theorem cell_collapse : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : 
       ∃ y ∈ grpAt (c.V (j + 1)) (· ∈ w.Q), ∃ k ∈ K₂, g = r * y * k := by
     intro g hg hne
     have hq : ∃ q₂, F g q₂ ≠ 0 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       apply hne
       have e : (fun g' : GfC (c.V (j + 1 + 1)) => F g g'.1) = 0 := funext fun g' => hcon g'.1
       have h0 := hfo_spec g hg
@@ -999,8 +995,7 @@ theorem cell_collapse : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : 
   refine ⟨fun q => fo q.1, ?_, fun q => hfo_spec q.1 q.2⟩
   have ek : v.kap j σ h * z = v.vr (j + 1) _ (c.ρJ j (σ + 1) h) * (v.vr (j + 1 + 1) _ (c.ρB (j + 1 + 1) σ (idx_step h)) * z) := by
     unfold VCom.kap; ring
-  rw [ek]
-  exact Hout
+  rwa [ek]
 
 end GlobalTheory.DStepCell
 
@@ -1182,8 +1177,7 @@ theorem isReal_zero (c : Comm D) (j : ℕ) : c.IsReal j 0 := by
   refine ⟨⟨continuous_const, fun v => ⟨_root_.Formalism.IndefR.Fock.CCR.theta_zero _ _ _, isLatVac_zero _ _ _ _⟩,
     fun u => ⟨_root_.Formalism.IndefR.Fock.CCR.theta_zero _ _ _, isLatVac_zero _ _ _ _⟩⟩, ?_⟩
   intro n L L' _ _ _ _ u v
-  simp only [Pi.zero_apply]
-  exact contDiff_const
+  simpa only [Pi.zero_apply] using contDiff_const
 
 theorem isAutFun_rTrans {V : HSp D} (x : GA D V) {φ : GA D V → ℂ} (h : IsAutFun V φ) :
     IsAutFun V (rTrans x φ) := by

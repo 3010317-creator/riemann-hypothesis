@@ -195,8 +195,7 @@ private theorem cont_lev {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuati
     intro x hx
     rw [(IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).1 hϖ, Ideal.span_singleton_pow,
       Ideal.mem_span_singleton] at hx
-    rw [hu, Units.mul_left_dvd]
-    exact hx
+    rwa [hu, Units.mul_left_dvd]
   have hlc := (IsLocallyConstant.iff_eventually_eq _).1 (hz n)
   refine ((IsLocallyConstant.iff_eventually_eq _).2 fun x => ?_).continuous
   filter_upwards [hlc x] with y hy
@@ -221,8 +220,7 @@ private theorem lev_kill {O : Type} [CommRing O] {Γ : Type} [Group Γ] [Topolog
     obtain ⟨k, hk⟩ := Nat.dvd_factorial hpos hB
     rw [hk, mul_comm, mul_nsmul, card_nsmul_eq_zero']
   have hq2 : (Submodule.Quotient.mk (B.factorial • ζ) : H1 ρ) = 0 := by
-    rw [Submodule.Quotient.mk_smul]
-    exact hq
+    rwa [Submodule.Quotient.mk_smul]
   rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap] at hq2
   obtain ⟨mb, hmb⟩ := (mem_coboundaries1 ρ _).1 hq2
   obtain ⟨m, rfl⟩ := Lev.mk_surjective a mb
@@ -296,8 +294,7 @@ private theorem dvd_pow_l (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDo
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   obtain ⟨N, hN⟩ := IsDiscreteValuationRing.associated_pow_irreducible ha hϖ
   have hl : ϖ ∣ (l : O) := by
-    rw [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
-    exact h0
+    rwa [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
   exact ⟨N, hN.dvd.trans (pow_dvd_pow_of_dvd hl N)⟩
 
 private theorem locConst_smul (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [Algebra ℤ_[l] O] (M : Type)
@@ -365,8 +362,7 @@ theorem UpperTheory.V.X.So.locKill :
     have hk : (ψ⁻¹).ker = ψ.ker := by
       ext g
       simp [MonoidHom.mem_ker]
-    rw [hk]
-    exact hψ
+    rwa [hk]
   obtain ⟨g₂, hg₂D, hg₂⟩ :=
     So.decNe k Ω l O ψ⁻¹ hψ' (1 - n) (sub_ne_zero.mpr (Ne.symm hn1)) v A hA
   set d₁ : O := (((ψ * chiO k Ω l O ^ n) g₁ : Oˣ) : O) - 1 with hd₁
@@ -441,12 +437,10 @@ theorem UpperTheory.V.X.So.locKill :
       intro x
       have hx := (Representation.mem_invariants ρZ (x : M)).mp x.2 ⟨g₁, hg₁D⟩
       rw [hρZapp, hρ.act] at hx
-      rw [hd₁, sub_smul, one_smul, sub_eq_zero]
-      exact hx
+      rwa [hd₁, sub_smul, one_smul, sub_eq_zero]
     refine le_trans ?_ (hMt d₁ hd₁0)
     refine Nat.card_le_card_of_injective (fun x => ⟨(x : M), hmem x⟩) ?_
-    intro x y h
-    exact Subtype.ext (congrArg (fun z : {m : M // d₁ • m = 0} => (z : M)) h)
+    exact fun x y h => Subtype.ext (congrArg (fun z : {m : M // d₁ • m = 0} => (z : M)) h)
   have hB2 : Nat.card (H0 τ) ≤ Nat.card (TDual (ZMod (l ^ r₀)) (O ⧸ Ideal.span {d₂})) := by
     obtain ⟨ι, hιinj, -, hιact⟩ := So.dualEmb l O a hρ.ne r M hρ.cyc
     have hu : (algebraMap ℤ_[l] O) ((cycZ k Ω l g₂ : ℤ_[l]ˣ) : ℤ_[l]) *
@@ -669,8 +663,7 @@ theorem UpperTheory.V.X.So.lineZero :
       intro v t g h ht
       have hηt : F.η (F.loc v t) = 1 := by
         have h' := MonoidHom.mem_ker.mp h
-        rw [map_mul, map_mul, map_inv, mul_comm (F.η g), mul_assoc, mul_inv_cancel, mul_one] at h'
-        exact h'
+        rwa [map_mul, map_mul, map_inv, mul_comm (F.η g), mul_assoc, mul_inv_cancel, mul_one] at h'
       have hz0 := hvan v t ht hηt
       have e1 := hz (g * F.loc v t) g⁻¹
       have e2 := hz g (F.loc v t)

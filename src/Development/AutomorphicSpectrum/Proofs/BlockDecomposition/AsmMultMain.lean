@@ -141,8 +141,7 @@ private theorem gelfVal_two_eq_sum_sq_sub_sq {n : ℕ} (c : Fin n → ℂ) :
           (∑ b, Formalism.REAL.Amat (fun i => c i + ((n : ℂ) - 1) / 2) j b) := by
         simp only [GlobalTheory.Dec.gelfVal, sq, Matrix.mul_apply, Finset.sum_mul_sum]
         conv_rhs => rw [Finset.sum_comm]
-        refine Finset.sum_congr rfl fun a _ => ?_
-        exact Finset.sum_comm
+        exact Finset.sum_congr rfl fun a _ => Finset.sum_comm
     _ = _ := Finset.sum_congr rfl fun j _ => key j
 
 theorem conj_cas_of_isHerm {n : ℕ} {χ : Inf n} (h : IsHerm χ) : conj (cas χ) = cas χ := by
@@ -174,8 +173,7 @@ theorem conj_cas_of_isHerm {n : ℕ} {χ : Inf n} (h : IsHerm χ) : conj (cas χ
 theorem conj_cosh_mul_sqrt {c : ℂ} (hc : conj c = c) (t : ℝ) :
     conj (Complex.cosh (t * c ^ (1 / 2 : ℂ))) = Complex.cosh (t * c ^ (1 / 2 : ℂ)) := by
   have hw2 : (c ^ (1 / 2 : ℂ)) ^ 2 = c := by
-    have h := Complex.cpow_nat_inv_pow c (n := 2) two_ne_zero
-    simpa [one_div] using h
+    simpa [one_div] using Complex.cpow_nat_inv_pow c (n := 2) two_ne_zero
   have hsq : conj (c ^ (1 / 2 : ℂ)) ^ 2 = (c ^ (1 / 2 : ℂ)) ^ 2 := by
     rw [← map_pow, hw2, hc]
   rw [← Complex.cosh_conj, map_mul, Complex.conj_ofReal]
@@ -575,10 +573,8 @@ theorem act_of_isKer {w : List (Bool × ℕ)} {g : ℝ → ℝ} {ks : Mat n → 
   have h1 : (fun x' => ∫ t : ℝ, (g t : ℂ) • (fun t' x'' => Complex.cosh ((t' : ℂ) * (cas χ) ^ (1 / 2 : ℂ)) • f x'') t x') =
       coshT g (cas χ) • f := by
     funext x'
-    simp only [smul_smul, Pi.smul_apply, coshT]
-    exact integral_smul_const _ _
-  rw [h0, h1, zOp_smul, Pi.smul_apply, zOp_eig he w x hx, smul_smul, mul_comm] at hw
-  exact hw
+    simpa only [smul_smul, Pi.smul_apply, coshT] using integral_smul_const _ _
+  rwa [h0, h1, zOp_smul, Pi.smul_apply, zOp_eig he w x hx, smul_smul, mul_comm] at hw
 
 end Ker
 
@@ -729,8 +725,7 @@ theorem KReg.continuous_val {n : ℕ} {V : Type} [NormedAddCommGroup V] {k : Mat
 theorem KReg.hasCompactSupport_val (hL : LgFacts) {n : ℕ} {V : Type} [NormedAddCommGroup V] {k : Mat n → V}
     (hk : KReg k) : HasCompactSupport fun y : G n => k y.val := by
   obtain ⟨R, hR⟩ := hk.2
-  refine HasCompactSupport.intro ((hL n).2.2.2.2.1 R) fun y hy => ?_
-  exact hR _ (val_mem_GLs y) (not_le.1 hy)
+  exact HasCompactSupport.intro ((hL n).2.2.2.2.1 R) fun y hy => hR _ (val_mem_GLs y) (not_le.1 hy)
 
 theorem act_conv : LgFacts → ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)) [μ.IsHaarMeasure]
     (E : KMod n) (k k' : Mat n → (E.V →L[ℂ] E.V)) (f : Mat n → E.V), KReg k → KReg k' →
@@ -869,8 +864,7 @@ theorem integral_smul_integral_shift {V : Type} [NormedAddCommGroup V] [NormedSp
     intro r
     simp only [F, gconv]
     rw [integral_smul_const, integral_complex_ofReal]
-  simp only [hL, hR]
-  exact integral_integral_swap hFi
+  simpa only [hL, hR] using integral_integral_swap hFi
 
 theorem wave_compose : RCalc → WaveSpeed → ∀ (n : ℕ) (E : KMod n) (u : ℝ → Mat n → E.V)
     (w w' : List (Bool × ℕ)) (g g' : ℝ → ℝ) (T T' : ℝ), IsWave E u → IsBump g T → IsBump g' T' →
@@ -885,8 +879,7 @@ theorem wave_compose : RCalc → WaveSpeed → ∀ (n : ℕ) (E : KMod n) (u : �
   refine ⟨_, hv, ?_, ?_⟩
   · intro x hx
     have h := ZOpAvg.zOp_avg n u g' T' w' hu.1 hg' x hx
-    simp only [zero_add]
-    exact h.symm
+    simpa only [zero_add] using h.symm
   · intro x hx
     have hb := isBump_gconv g g' T T' hg hg'
     have hφ : ∀ x' ∈ GLs n, Continuous fun r => zOp w' (u r) x' := fun x' hx' =>

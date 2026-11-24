@@ -97,8 +97,7 @@ theorem contDiff_prodExp (y : Lie E d) {k : ℕ} (X : Fin k → Matrix (Fin d) (
     | zero => intro g _; simpa using contDiff_const
     | succ n ih =>
       intro g hg
-      simp only [List.ofFn_succ, List.prod_cons]
-      exact (hg 0).mul (ih _ fun i => hg _)
+      simpa only [List.ofFn_succ, List.prod_cons] using (hg 0).mul (ih _ fun i => hg _)
   have h := hprod k (fun i t => NormedSpace.exp (t i • X i))
     fun i => hexp.comp ((contDiff_apply ℝ (fun _ => ℝ) i).smul contDiff_const)
   exact T.contDiff.comp (contDiff_const.mul h)
@@ -217,8 +216,7 @@ theorem contDiffOn_of_prodExp : ∀ (E : Type) [Field E] [NumberField E] (d : �
       rw [Finset.sum_eq_single i (fun j _ hj => by simp [Pi.single_eq_of_ne hj]) (by simp)]
       simp only [Pi.single_eq_same, Matrix.mul_smul]
       rfl
-    rw [ContinuousLinearMap.coe_injective hE]
-    exact h
+    rwa [ContinuousLinearMap.coe_injective hE]
   have hn : (∞ : ℕ∞ω) ≠ 0 := by simp
   have hΨ := hΘ.contDiffAt.to_localInverse hD hn
   have hinv := (hΘ.contDiffAt.hasStrictFDerivAt' hD hn).eventually_right_inverse

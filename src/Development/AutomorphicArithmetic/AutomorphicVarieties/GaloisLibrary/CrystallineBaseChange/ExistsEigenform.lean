@@ -231,8 +231,7 @@ private theorem exists_eigenform (N k : ℕ) [NeZero N] (hk : 1 ≤ k) (χ : Dir
   have hg1 : coef g 1 ≠ 0 := by
     intro h0
     apply hne
-    apply Subtype.ext
-    exact eq_zero_of_eig e b _ (by simp [Phi_apply]) (by simp [Phi_apply, h0]) heig'
+    exact Subtype.ext (eq_zero_of_eig e b _ (by simp [Phi_apply]) (by simp [Phi_apply, h0]) heig')
   have hE : ∀ p : Nat.Primes, IsEigAt k χ g p.1 (b p) := fun p => (eig_iff N k χ g p.2 _).1 (heig' p)
   have hp : ∀ p : Nat.Primes, coef ((coef g 1)⁻¹ • g : CuspForm (Gamma1 N) (k : ℤ)) p.1 = b p := by
     intro p
@@ -251,8 +250,7 @@ private theorem exists_eigenform (N k : ℕ) [NeZero N] (hk : 1 ≤ k) (χ : Dir
       linear_combination (coef g 1)⁻¹ * this
     · rw [ite_eq_right hd] at this
       linear_combination (coef g 1)⁻¹ * this
-  · intro p hpp h
-    exact (hp ⟨p, hpp⟩).trans (hab ⟨p, hpp⟩ h)
+  · exact fun p hpp h => (hp ⟨p, hpp⟩).trans (hab ⟨p, hpp⟩ h)
 end UpperTheory.V.Br.EigenformExistence
 
 theorem UpperTheory.V.Br.eigEx :

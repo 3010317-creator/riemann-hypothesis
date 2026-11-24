@@ -65,15 +65,13 @@ theorem isFCoc_iff {r : ℕ} {ρ : GE N →* GL (Fin r) (X.O0 i)} {y : ↥(DecV 
     IsFCoc bkP i v hv ρ y ↔ ∃ c ∈ Formalism.WeaklyAdmissibleFiltrations.finiteCocycles (PDv bkP i v hv) (repV bkP i v hv ρ),
       ∀ g a, c ((bkP.br i v hv).e g) a = (bkP.br i v hv).toLL (y g a) := by
   constructor
-  · intro h
-    exact ⟨_, h, fun g a => by simp only [MulEquiv.symm_apply_apply]⟩
+  · exact fun h => ⟨_, h, fun g a => by simp only [MulEquiv.symm_apply_apply]⟩
   · rintro ⟨c, hc, h⟩
     have : (fun g a => (bkP.br i v hv).toLL (y ((bkP.br i v hv).e.symm g) a)) = c := by
       funext g a
       rw [← h, MulEquiv.apply_symm_apply]
     unfold IsFCoc
-    rw [this]
-    exact hc
+    rwa [this]
 
 theorem IsFCoc.continuous {r : ℕ} {ρ : GE N →* GL (Fin r) (X.O0 i)} {y : ↥(DecV N v) → Fin r → X.O0 i}
     (h : IsFCoc bkP i v hv ρ y) : Continuous y := by

@@ -65,8 +65,7 @@ theorem epow_succ_left {A : Type} [Ring A] {n : ℕ} (E : Fin n → Fin n → A)
       _ = ∑ c, (∑ d, E a d * epow E k d c) * E c b :=
           Finset.sum_congr rfl fun c _ => by rw [ih a c]
       _ = ∑ d, E a d * ∑ c, epow E k d c * E c b := by
-          simp only [Finset.sum_mul, Finset.mul_sum, mul_assoc]
-          exact Finset.sum_comm
+          simpa only [Finset.sum_mul, Finset.mul_sum, mul_assoc] using Finset.sum_comm
       _ = ∑ d, E a d * epow E (k + 1) d b := rfl
 
 theorem key {A : Type} [Ring A] [Algebra ℂ A] {n : ℕ} (E : Fin n → Fin n → A) (x : ℂ) (N : ℕ)
@@ -113,8 +112,7 @@ theorem traced_comatrix : ∀ (A : Type) [Ring A] [Algebra ℂ A] (m : ℕ) (E :
     simp only [hC, hQ, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [← Finset.mul_sum]
     congr 1
-    simp only [hP, etr, Finset.mul_sum]
-    exact Finset.sum_comm
+    simpa only [hP, etr, Finset.mul_sum] using Finset.sum_comm
   have S2 : ∑ i, ∑ l, (∑ j, C i j * Tm E (u - (m : ℂ)) j l) * P l i =
       algebraMap ℂ A ((u - m) ^ (N + 1)) * ∑ i : Fin (m + 1), qminor E (Fin.succAbove i) (Fin.succAbove i) u + algebraMap ℂ A ((-1) ^ N) * ∑ i : Fin (m + 1), ∑ j : Fin (m + 1), (((-1 : ℤ) ^ ((i : ℕ) + (j : ℕ)) : ℤ) : A) * qminor E (Fin.succAbove j) (Fin.succAbove i) u * epow E (N + 1) j i := by
     have h : ∀ i, ∑ l, (∑ j, C i j * Tm E (u - (m : ℂ)) j l) * P l i =
@@ -123,8 +121,7 @@ theorem traced_comatrix : ∀ (A : Type) [Ring A] [Algebra ℂ A] (m : ℕ) (E :
       intro i
       calc ∑ l, (∑ j, C i j * Tm E (u - (m : ℂ)) j l) * P l i
           = ∑ j, C i j * ∑ l, Tm E (u - (m : ℂ)) j l * P l i := by
-            simp only [Finset.sum_mul, Finset.mul_sum, mul_assoc]
-            exact Finset.sum_comm
+            simpa only [Finset.sum_mul, Finset.mul_sum, mul_assoc] using Finset.sum_comm
         _ = _ := Finset.sum_congr rfl fun j _ => congrArg (C i j * ·) (key E (u - (m : ℂ)) N j i)
     simp only [h, mul_add, Finset.sum_add_distrib, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
       Finset.mem_univ, ite_true, Finset.mul_sum]

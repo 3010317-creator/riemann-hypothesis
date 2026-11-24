@@ -122,8 +122,7 @@ private theorem one_mem_map_colon_of_mem_map {R S : Type u} [CommRing R] [CommRi
         rw [map_add (f := _), map_add (f := _)]
         exact Submodule.add_mem _ h₁ h₂
   have hfin := hrange v
-  rw [hv, TensorProduct.rid_tmul, one_smul] at hfin
-  exact hfin
+  rwa [hv, TensorProduct.rid_tmul, one_smul] at hfin
 
 private theorem exists_not_mem_basicOpen_of_ne_top {X : Scheme.{u}} {U : X.Opens} (hU : IsAffineOpen U)
     (C : Ideal Γ(X, U)) (hC : C ≠ ⊤) :
@@ -132,8 +131,7 @@ private theorem exists_not_mem_basicOpen_of_ne_top {X : Scheme.{u}} {U : X.Opens
   let p : PrimeSpectrum Γ(X, U) := ⟨m, hm.isPrime⟩
   refine ⟨hU.fromSpec.base p, ?_, ?_⟩
   · have hr : hU.fromSpec.base p ∈ Set.range hU.fromSpec.base := ⟨p, rfl⟩
-    rw [hU.range_fromSpec] at hr
-    exact hr
+    rwa [hU.range_fromSpec] at hr
   · intro c hc hmem
     have h1 : p ∈ hU.fromSpec ⁻¹ᵁ X.basicOpen c := hmem
     rw [hU.fromSpec_preimage_basicOpen] at h1
@@ -197,8 +195,7 @@ private theorem colon_eq_top_of_comap_le (g : W ⟶ Y) [AlgebraicGeometry.Flat g
     (Ideal.eq_top_iff_one _).mpr hone
   have hspan : Ideal.span (((g.appLE (U : Y.Opens) V hVU).hom) ''
       (C : Set Γ(Y, (U : Y.Opens)))) = ⊤ := by
-    rw [← Ideal.map_span, Ideal.span_eq]
-    exact htop
+    rwa [← Ideal.map_span, Ideal.span_eq]
   obtain ⟨f, hf, hwf⟩ := exists_mem_basicOpen_of_span_eq_top hV' _ hspan w hwV
   obtain ⟨c, hc, hcf⟩ := hf
   have hwb : w ∈ W.basicOpen ((g.appLE (U : Y.Opens) V hVU).hom c) := by
@@ -405,8 +402,7 @@ private theorem exists_compatible_isos_of_le {g : W ⟶ Y} {t₁ t₂ : Sequence
       (s₁.isoZero ≪≫ s₂.isoZero.symm), ?_, ?_, ?_⟩
     · rw [isoFamilyOfZero_zero]
       simp
-    · intro i hi
-      exact absurd hi (Nat.not_lt_zero i)
+    · exact fun i hi => absurd hi (Nat.not_lt_zero i)
     · intro i hi
       obtain rfl : i = 0 := Nat.le_zero.mp hi
       rw [isoFamilyOfZero_zero]
@@ -425,15 +421,13 @@ private theorem exists_compatible_isos_of_le {g : W ⟶ Y} {t₁ t₂ : Sequence
       CompatibleBaseIsoAt.blowupMorphism_square_comm st x hx
     refine ⟨extendIsoFamilySucc (A := fun i : ℕ => s₁.schemeAt i) (B := fun i : ℕ => s₂.schemeAt i) N e x,
       ?_, ?_, ?_⟩
-    · rw [extendIsoFamilySucc_of_le N e x (Nat.zero_le N)]
-      exact h0
+    · rwa [extendIsoFamilySucc_of_le N e x (Nat.zero_le N)]
     · intro i hi
       rcases Nat.lt_or_ge i N with h | h
       · rw [extendIsoFamilySucc_of_le N e x (Nat.succ_le_of_lt h), extendIsoFamilySucc_of_le N e x h.le]
         exact hsqe i h
       · obtain rfl : i = N := Nat.le_antisymm (Nat.lt_succ_iff.mp hi) h
-        rw [extendIsoFamilySucc_self, extendIsoFamilySucc_of_le _ _ _ (Nat.le_refl _)]
-        exact hxsq
+        rwa [extendIsoFamilySucc_self, extendIsoFamilySucc_of_le _ _ _ (Nat.le_refl _)]
     · intro i hi
       rcases Nat.lt_or_ge i (N + 1) with h | h
       · have hiN : i ≤ N := Nat.lt_succ_iff.mp h
@@ -478,8 +472,7 @@ theorem IsStrictPullbackBlowupSeq.isomorphic_of_isomorphic {g : W ⟶ Y} [Algebr
       fun i hi => t₁.isBlowupAlongIdealSheaf_blowupMorphism i hi, hφc, hφ0, hφstep⟩
   obtain ⟨e, h0, hsqe, hc⟩ := exists_compatible_isos_of_le hd t₁.length (Nat.le_refl _)
   refine ⟨by omega, fun i hi => e i (by omega), h0, ?_, ?_⟩
-  · intro i hi
-    exact hsqe i (by omega)
+  · exact fun i hi => hsqe i (by omega)
   · intro i hi
     have hiT : i < t₁.length := by omega
     exact CompatibleBaseIsoAt.center_comap_eq hd hiT

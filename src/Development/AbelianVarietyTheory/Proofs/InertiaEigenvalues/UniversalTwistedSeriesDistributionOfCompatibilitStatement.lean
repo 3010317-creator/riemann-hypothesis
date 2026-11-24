@@ -396,8 +396,7 @@ theorem sum_univCoef_eq_prim : ∀ (k C : Type) [Field k] [Finite k] [AddCommGro
   set R := Submodule.span k (Set.range y.row) with hR
   have hRle : Module.finrank k R ≤ r := by
     have := finrank_range_le_card (R := k) y.row
-    rw [Fintype.card_fin] at this
-    exact this
+    rwa [Fintype.card_fin] at this
   have hcard : Nat.card {U : Planes k r (r + t) // Compl U.1 y} =
       Nat.card {U : Submodule k (Fin (r + t) → k) // Module.finrank k U = t ∧ R ⊔ U = ⊤} := by
     refine Nat.card_congr ((Equiv.subtypeSubtypeEquivSubtypeInter _ (fun U => Compl U y)).trans
@@ -666,8 +665,7 @@ theorem xi_rel (B : Base S T) (hB : B.Good) (hbT : Lev.IsBaseFrame T B.F.βT B.F
         have hw : w.1 ≠ P := (hQQ w.1 (hQ' w.2)).1 w.2
         have := hc ⟨w.1, hQ' w.2⟩ hw
         simp only [hb0, dite_eq_left w.2, hres] at this
-        rw [sub_left_inj] at this
-        exact this
+        rwa [sub_left_inj] at this
     · rw [Base.xiCoef_apply]
       rfl
 

@@ -99,8 +99,7 @@ theorem isDomain_and_isIntegrallyClosed : ∀ (D E : Type) [CommRing D] [IsDomai
   haveI : Module.Finite A (E ⧸ (maximalIdeal A).map (algebraMap A E)) := by
     rw [← RingHom.finite_algebraMap]
     show ((Ideal.Quotient.mk _).comp (algebraMap A E)).Finite
-    rw [hmA]
-    exact hres
+    rwa [hmA]
   haveI : IsHausdorff ((maximalIdeal A).map (algebraMap A E)) E := by rw [hmA]; infer_instance
   haveI : Module.Finite A E := FormalIsogeny.finite_of_finite_quotient_map (maximalIdeal A)
 
@@ -142,8 +141,7 @@ theorem isDomain_and_isIntegrallyClosed : ∀ (D E : Type) [CommRing D] [IsDomai
           (map_sub g _ _).symm]
         exact Ideal.mem_map_of_mem _ hx
       simp only [RingHom.comp_apply, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, ← ha]
-      rw [Ideal.Quotient.algebraMap_quotient_map_quotient, eq_comm, Ideal.Quotient.eq]
-      exact hx'
+      rwa [Ideal.Quotient.algebraMap_quotient_map_quotient, eq_comm, Ideal.Quotient.eq]
     · rw [RingHom.flat_algebraMap_iff]
       exact Module.Flat.of_linearEquiv
         (Algebra.TensorProduct.quotIdealMapEquivQuotTensor E (maximalIdeal D ^ n)).toLinearEquiv

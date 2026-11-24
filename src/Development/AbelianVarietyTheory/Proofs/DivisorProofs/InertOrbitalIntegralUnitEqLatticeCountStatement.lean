@@ -185,8 +185,7 @@ theorem cptPart_iff_intUnits_of_model : ∀ (E : Type) [Field E] [NumberField E]
     have : t₀ = t := Subtype.ext he₀
     subst this
     exact ht₀
-  · intro ht
-    exact Subgroup.subset_closure ⟨t.2, (key t).2 ht⟩
+  · exact fun ht => Subgroup.subset_closure ⟨t.2, (key t).2 ht⟩
 
 end GlobalTheory.InertUnitOrb
 end -- clump:auto
@@ -356,8 +355,7 @@ theorem cent_equiv_torus : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     intro u hu
     rw [hUL]
     show cT (cj w) (((Units.map ρ u : GLw n w)) : Matrix (Fin n) (Fin n) _) * 1 * _ = 1
-    rw [Units.coe_map, hρa, unitary_map e he, ← stdH_mulVec_iff, isom_iff B ψ hm]
-    exact hu
+    rwa [Units.coe_map, hρa, unitary_map e he, ← stdH_mulVec_iff, isom_iff B ψ hm]
   have hcent : ∀ (u : B.Aˣ) (hu : u ∈ B.T),
       (⟨Units.map ρ u, hmem u hu⟩ : UL n w) ∈ twCent (MonoidHom.id (UL n w)) γ := by
     intro u hu
@@ -412,8 +410,7 @@ theorem cent_equiv_torus : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       have hULmem : ∀ g : GLw n w, g ∈ UL n w → g ∈ UJ (cj w) 1 := fun g hg => by rwa [hUL] at hg
       exact hULmem _ (t : UL n w).2
     have hu : f 1 * B.σ (f 1) = 1 := by
-      rw [← isom_iff B ψ hm, stdH_mulVec_iff, ← hM, ← unitary_map e he, hT', map_symm_map]
-      exact hTu
+      rwa [← isom_iff B ψ hm, stdH_mulVec_iff, ← hM, ← unitary_map e he, hT', map_symm_map]
     let u : B.Aˣ := ⟨f 1, B.σ (f 1), hu, by rw [mul_comm]; exact hu⟩
     refine ⟨⟨u, hu⟩, ?_⟩
     apply Subtype.ext; apply Subtype.ext; apply Units.ext
@@ -581,8 +578,7 @@ variable {O : Type} [CommRing O] [IsDomain O] [IsLocalRing O]
 theorem mem_of_invol (s : O →+* O) (hs : ∀ x, s (s x) = x) {a : O} (ha : a ∈ maximalIdeal O) :
     s a ∈ maximalIdeal O := by
   rw [mem_maximalIdeal, mem_nonunits_iff] at ha ⊢
-  intro h
-  exact ha (hs a ▸ h.map s)
+  exact fun h => ha (hs a ▸ h.map s)
 
 theorem unit_of_not_mem {a : O} (ha : a ∉ maximalIdeal O) : IsUnit a := by
   rw [mem_maximalIdeal, mem_nonunits_iff] at ha
@@ -595,10 +591,7 @@ theorem not_mem_of_unit {a : O} (ha : IsUnit a) : a ∉ maximalIdeal O := by
 theorem exists_trace_unit (s : O →+* O) (hs : ∀ x, s (s x) = x) (θ : O)
     (hθ : θ - s θ ∉ maximalIdeal O) : ∃ t : O, IsUnit (t + s t) ∧ IsUnit (t * s t) := by
   by_cases h2 : (2 : O) ∈ maximalIdeal O
-  · have hu : IsUnit θ := by
-      apply unit_of_not_mem
-      intro h
-      exact hθ (sub_mem h (mem_of_invol s hs h))
+  · have hu : IsUnit θ := unit_of_not_mem (fun h => hθ (sub_mem h (mem_of_invol s hs h)))
     refine ⟨θ, unit_of_not_mem fun h => hθ ?_, hu.mul (hu.map s)⟩
     have : θ - s θ = (θ + s θ) - 2 * s θ := by ring
     rw [this]
@@ -969,9 +962,7 @@ theorem exists_unitLat_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   refine ⟨⟨qG, hqU⟩, ?_⟩
   have hinv : ((((⟨qG, hqU⟩ : UL n w)⁻¹ : UL n w) : GLw n w) : Matrix (Fin n) (Fin n) (w.adicCompletion E)).map
       e.symm = Pc := by
-    refine Matrix.ext fun i j => ?_
-    show e.symm (e (Pc i j)) = Pc i j
-    exact e.symm_apply_apply _
+    exact Matrix.ext fun i j => e.symm_apply_apply _
   have hcoef : ∀ y i, (Pc *ᵥ ψ y) i = B.herm x y (v i) := by
     intro y i
     rw [← hH]
@@ -1003,8 +994,7 @@ theorem exists_unitLat_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       rw [← hexp, ← ha, algebraMap_smul, hb]
     rw [hy]
     exact Submodule.sum_mem _ fun i _ => L.smul_mem _ (hvL i)
-  · intro hy i
-    exact (hdual y).1 hy (v i) (hvL i)
+  · exact fun hy i => (hdual y).1 hy (v i) (hvL i)
 
 end GlobalTheory.InertUnitOrb.LatOnto
 end -- clump:auto
@@ -1070,8 +1060,7 @@ theorem mem_KGL_of_int {E : Type} [Field E] [NumberField E] {n : ℕ} (w : Pl E)
   let N' : Matrix (Fin n) (Fin n) (Formalism.UG.Ov E w) := fun i j => ⟨_, (hmem _).1 (h2 i j)⟩
   have hinj : Function.Injective ((Formalism.UG.Ov E w).subtype.mapMatrix :
       Matrix (Fin n) (Fin n) (Formalism.UG.Ov E w) →+* Matrix (Fin n) (Fin n) (w.adicCompletion E)) := by
-    intro a b hab
-    exact Matrix.ext fun i j => Subtype.ext (congrFun (congrFun hab i) j)
+    exact fun a b hab => Matrix.ext fun i j => Subtype.ext (congrFun (congrFun hab i) j)
   have hN : (Formalism.UG.Ov E w).subtype.mapMatrix N = (M : Matrix (Fin n) (Fin n) (w.adicCompletion E)) := by
     ext i j; rfl
   have hN' : (Formalism.UG.Ov E w).subtype.mapMatrix N' = ((M⁻¹ : GLw n w) : Matrix (Fin n) (Fin n) (w.adicCompletion E)) := by
@@ -1155,8 +1144,7 @@ theorem unitLat_stable_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       exact h _ hy
   rw [hstab, mulVec_int_iff, KL, Subgroup.mem_subgroupOf]
   constructor
-  · intro h
-    exact mem_KGL_of_unitary hU w hw _ (q⁻¹ * γ * q).2 h
+  · exact fun h => mem_KGL_of_unitary hU w hw _ (q⁻¹ * γ * q).2 h
   · rintro ⟨N, hN⟩ i j
     have hmem : ∀ x : w.adicCompletion E, Valued.v x ≤ 1 ↔ x ∈ Formalism.UG.Ov E w := fun x =>
       (HeightOneSpectrum.mem_adicCompletionIntegers (R := 𝓞 E) (K := E) (v := w)).symm
@@ -1265,10 +1253,8 @@ theorem unitLat_eq_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E],
   have hinv : ((q : GLw n w)⁻¹ * q')⁻¹ = (q' : GLw n w)⁻¹ * q := by group
   rw [hinv, ← half, ← half]
   constructor
-  · intro h
-    exact ⟨fun v hv => (h v).2 hv, fun v hv => (h v).1 hv⟩
-  · intro h v
-    exact ⟨h.2 v, h.1 v⟩
+  · exact fun h => ⟨fun v hv => (h v).2 hv, fun v hv => (h v).1 hv⟩
+  · exact fun h v => ⟨h.2 v, h.1 v⟩
 
 end GlobalTheory.InertUnitLat
 end -- clump:auto
@@ -1359,8 +1345,7 @@ theorem unitLat_isLat_selfDual : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     simpa using h3
   have hPR : P * (P.map K.c)ᵀ = 1 := mul_eq_one_comm.mp hP1
   have hPT : Pᵀ * P.map K.c = 1 := by
-    have h4 := congrArg Matrix.transpose hP1
-    simpa [Matrix.transpose_mul] using h4
+    simpa [Matrix.transpose_mul] using congrArg Matrix.transpose hP1
   let G : (Fin n → K.E) →ₗ[K.E] B.A := ψ.symm.toLinearMap ∘ₗ Matrix.toLin' (P.map K.c)ᵀ
   have hGP : ∀ y, G (P *ᵥ ψ y) = y := by
     intro y
@@ -1373,11 +1358,9 @@ theorem unitLat_isLat_selfDual : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     ext y
     rw [hmemL]
     constructor
-    · intro hy
-      exact ⟨P *ᵥ ψ y, hy, hGP y⟩
+    · exact fun hy => ⟨P *ᵥ ψ y, hy, hGP y⟩
     · rintro ⟨a, ha, rfl⟩
-      rw [LinearMap.restrictScalars_apply, hPG]
-      exact ha
+      rwa [LinearMap.restrictScalars_apply, hPG]
   refine ⟨⟨?_, ?_⟩, ?_⟩
   · rw [hmap]
     exact (intVec_fg K n).map _
@@ -1466,8 +1449,7 @@ theorem mem_mulLat_unit {O A : Type} [CommRing O] [CommRing A] [Algebra O A] (L 
   constructor
   · rintro ⟨z, hz, rfl⟩
     simpa [← mul_assoc] using hz
-  · intro h
-    exact ⟨((a⁻¹ : Aˣ) : A) * y, h, by simp [← mul_assoc]⟩
+  · exact fun h => ⟨((a⁻¹ : Aˣ) : A) * y, h, by simp [← mul_assoc]⟩
 
 theorem mem_stabLat_iff : ∀ (O : Type) [CommRing O] (A : Type) [CommRing A] [Algebra O A] (L : Submodule O A) (u : Aˣ), u ∈ stabLat O L ↔ mulLat O (u : A) L = L := by
   intro O _ A _ _ L u
@@ -1520,8 +1502,7 @@ theorem orbRel_equivalence {O A : Type} [CommRing O] [CommRing A] [Algebra O A] 
     (X : Set (Submodule O A)) :
     Equivalence (fun L M : X => ∃ t ∈ G, (M : Submodule O A) = mulLat O (t : A) (L : Submodule O A)) := by
   constructor
-  · intro L
-    exact ⟨1, G.one_mem, by simp [mulLat_one']⟩
+  · exact fun L => ⟨1, G.one_mem, by simp [mulLat_one']⟩
   · rintro L M ⟨t, ht, h⟩
     refine ⟨t⁻¹, G.inv_mem ht, ?_⟩
     rw [h, ← mulLat_mul', Units.inv_mul, mulLat_one']
@@ -1572,8 +1553,7 @@ theorem orb_eq_N : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E
     rw [Subgroup.mem_map_equiv, MulAut.conj_symm_apply]
   rw [_root_.GlobalTheory.OrbIndUnit.twOrb_id_indicator]
   unfold InvAlg.N orbSum
-  rw [ratCast_finsum']
-  rw [finsum_ite_subtype']
+  rw [ratCast_finsum', finsum_ite_subtype']
   let φ : {q : DoubleCoset.Quotient (twCent (MonoidHom.id (UL n w)) γ : Set (UL n w)) (KL n w : Set (UL n w)) //
       (Quotient.out q)⁻¹ * γ * Quotient.out q ∈ KL n w} → Orb K.O B.T (B.X x) :=
     fun q => Quot.mk _ ⟨unitLat e B ψ (Quotient.out q.1), hX _ q.2⟩

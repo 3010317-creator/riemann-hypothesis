@@ -106,8 +106,7 @@ private theorem frobIn_isFrob_pow {K Ω : Type} [Field K] [NumberField K] [Field
       (by rw [map_pow]; exact pow_le_one' hx _) (ih.2 x hx) q
     have h3 := Valuation.map_add_lt A.valuation h1 h2
     rw [sub_add_sub_cancel, ← pow_mul, ← pow_succ] at h3
-    rw [pow_succ' g, AlgEquiv.mul_apply]
-    exact h3
+    rwa [pow_succ' g, AlgEquiv.mul_apply]
 
 theorem UpperTheory.V.Ws.frobIn :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (U : Subgroup (G ℚ Ω)) (M : ℕ),
@@ -127,8 +126,7 @@ theorem UpperTheory.V.Ws.frobIn :
     refine hco _ p l ((Nat.coprime_primes hp hl.out).2 hlp) hA ?_
     have h1 := (hw ((l : ℕ) : 𝓞 ℚ)).2 h
     have e : algebraMap ℚ Ω (((l : ℕ) : 𝓞 ℚ) : ℚ) = (l : Ω) := by simp
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
   have h : ((cycZ ℚ Ω l φ : ℤ_[l]ˣ) : ℤ_[l]) = (p : ℤ_[l]) := by
     refine PadicInt.ext_of_toZModPow.1 fun n => ?_
     rw [cycZ_toZModPow_eq hlw hw (q := p) hφ.2 n]

@@ -471,8 +471,7 @@ theorem LimVal.map {g : Spec (CommRingCat.of A) ⟶ G.left} {k : A} (h : LimVal 
     [Algebra O B] (θ : A →ₐ[O] B) : LimVal x u p (Spec.map (CommRingCat.ofHom θ.toRingHom) ≫ g) (θ k) := by
   intro R _ _ θ' hp
   have := h R (θ'.comp θ) hp
-  rw [← Category.assoc, ← Spec.map_comp]
-  exact this
+  rwa [← Category.assoc, ← Spec.map_comp]
 
 theorem limVal_one (hx : IsUnivChart G d x) (hu : MvPowerSeries.constantCoeff u = 1) :
     LimVal x u p (1 : specV (algebraMap V O) A ⟶ G).left (1 : A) := by
@@ -481,8 +480,7 @@ theorem limVal_one (hx : IsUnivChart G d x) (hu : MvPowerSeries.constantCoeff u 
     rw [MonObj.comp_one]
   rw [map_one]
   have h := hasVal_one (A := R) hx hu
-  rw [← e] at h
-  exact h
+  rwa [← e] at h
 
 theorem LimVal.mul (hx : IsUnivChart G d x) {L : Fin d → PS V 2 d} (hL : IsLawOf x L)
     (hu : ev (n := 2) ![fun i => MvPowerSeries.map (algebraMap V O) (L i)] u =
@@ -491,8 +489,7 @@ theorem LimVal.mul (hx : IsUnivChart G d x) {L : Fin d → PS V 2 d} (hL : IsLaw
     (h : LimVal x u p g.left k) (h' : LimVal x u p g'.left k') : LimVal x u p (g * g').left (k * k') := by
   intro R _ _ θ hp
   have := HasVal.mul hx hL hu (g := res V θ ≫ g) (g' := res V θ ≫ g') (h R θ hp) (h' R θ hp)
-  rw [← MonObj.comp_mul, ← map_mul] at this
-  exact this
+  rwa [← MonObj.comp_mul, ← map_mul] at this
 
 theorem nilpotent_quot (p : O) (n : ℕ) :
     IsNilpotent (algebraMap O (A ⧸ Ideal.span {algebraMap O A p} ^ n) p) :=
@@ -539,8 +536,7 @@ theorem exists_limVal [IsLocalRing V] (hx : IsUnivChart G d x) (u : PS O 1 d) (p
     obtain ⟨b, rfl⟩ := ha
     rw [map_mul, map_pow, θ.commutes, pow_succ, hn, zero_mul, mul_zero]
   have := (hk n).map θ'
-  rw [← Category.assoc, ← Spec.map_comp, ← hk₀] at this
-  exact this
+  rwa [← Category.assoc, ← Spec.map_comp, ← hk₀] at this
 
 end GlobalTheory.SeriesValue
 end -- clump:auto

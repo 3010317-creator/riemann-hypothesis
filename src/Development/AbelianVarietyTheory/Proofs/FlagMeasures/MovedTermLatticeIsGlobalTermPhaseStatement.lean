@@ -105,9 +105,7 @@ namespace GlobalTheory.HL
 
 theorem GCoord.c_mul_gS_eq_delta_theta : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), Formalism.MainNotions.S.Cnt.Stand D u u' → 4 * D.R.rS + 7 ≤ D.R.k → ∀ (w : Point D.host.E (D.R.rS + 1)) (F00 : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F'0 : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (FP : ∀ p : PlF D, LocNG.FPair (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) D.R.rS), ZhatOM (ZhatL F00 F'0) = ptMat w → Gval F00 F'0 ≠ 0 → (∀ p, AtBase (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p F00 F'0 (Tu D u) (Tu D u') (FP p) ∧ (FP p).RelG (LocNG.theta (Y.M p))) → ∀ (G : GFrames (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)) D.R.rS D.R.k) (c : GCoord (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) F00 F'0 FP G), ∀ (t₀ : TauC Y u u') (ρ : ((VS D).V ≃ₗ[D.host.E] (VS D).V)) (U U' : Formalism.L2.SG.PairVal.MatR D), MovesTo F00 F'0 (lf D (X.Fu u)) t₀.frame ρ U U' → gS D ≠ 0 ∧ ∀ p, (G.c p : ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).Fp) * (gS D : ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).Fp) = (show ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).Fp from Y.δ p) * (G.S p).th := by
   intro D X Y u u' _ _ w F00 F'0 FP _ _ _ G c t₀ ρ U U' _
-  have hg : gS D ≠ 0 := by
-    show D.host.g 0 * D.host.g 1 ≠ 0
-    exact Nat.mul_ne_zero (D.host.g_prime 0).ne_zero (D.host.g_prime 1).ne_zero
+  have hg : gS D ≠ 0 := Nat.mul_ne_zero (D.host.g_prime 0).ne_zero (D.host.g_prime 1).ne_zero
   refine ⟨hg, fun p => ?_⟩
 
   have hE : ((gS D : ℕ) : D.host.E) ≠ 0 := Nat.cast_ne_zero.mpr hg
@@ -477,8 +475,7 @@ theorem tendsto_pow_zero (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace
   intro γ _
   obtain ⟨n, hn⟩ := exists_pow_lt₀ hz γ
   filter_upwards [eventually_ge_atTop n] with m hm
-  simp only [map_pow]
-  exact lt_of_le_of_lt (pow_le_pow_right_of_le_one' hz.le hm) hn
+  simpa only [map_pow] using lt_of_le_of_lt (pow_le_pow_right_of_le_one' hz.le hm) hn
 
 theorem norm_le_one_of_isIntegral {Ω : Type} [NormedField Ω] [IsUltrametricDist Ω] {x : Ω}
     (hx : IsIntegral ℤ x) : ‖x‖ ≤ 1 := by
@@ -761,8 +758,7 @@ theorem psi_eq {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] 
   have : Module.Finite A.Fp A.Ep := Module.finite_of_finrank_pos (by rw [A.rank]; omega)
   letI := ((algebraMap A.Fp A.Ep).comp (algebraMap ℚ_[resChar p] A.Fp)).toAlgebra
   have : IsScalarTower ℚ_[resChar p] A.Fp A.Ep := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  rw [← trace_base_change hE A.rank A.ιF A.ιE A.compat A.span x, Algebra.trace_trace]
-  exact h2
+  rwa [← trace_base_change hE A.rank A.ιF A.ιE A.compat A.span x, Algebra.trace_trace]
 
 theorem exp_int (c : ℤ) : Complex.exp (2 * Real.pi * Complex.I * ((c : ℚ) : ℂ)) = 1 := by
   rw [← Complex.exp_int_mul_two_pi_mul_I c]
@@ -955,8 +951,7 @@ theorem finprod_psiE_eq_exp_trace : ∀ {F E : Type} [Field F] [NumberField F] [
       rw [← Int.cast_natCast, Int.natAbs_of_nonneg (mul_self_nonneg n)]
     have h0 : ((n * n : ℤ) : E) ≠ 0 := by exact_mod_cast mul_ne_zero hn hn
     rw [h1, zsmul_eq_mul, mul_div_cancel_left₀ _ h0]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 end GlobalTheory.AddCharProduct
 end -- clump:auto
@@ -1408,8 +1403,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.HL.MovedTermPhase
 
 theorem exists_termFrame_admissibilityWitness : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word) (t : TauC Y u u'), ∃ ξ : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) (𝓞 D.host.E), AdmWit t.lam (gS D) (lf D (X.Fu u)) t.frame ξ := by
-  intro D X Y u u' t
-  exact t.rep.2.2.2.2.2.1
+  exact fun D X Y u u' t => t.rep.2.2.2.2.2.1
 
 theorem psiInf_exp : ∀ {E : Type} [Field E] [NumberField E] (g : ℕ) (x y : E), Complex.exp (-(2 * Real.pi * Complex.I * ((Algebra.trace ℚ E (x / g) : ℚ) : ℂ))) = (Formalism.L2.SG.PairVal.psiInf g x)⁻¹ ∧ Formalism.L2.SG.PairVal.psiInf g (x - y) = Formalism.L2.SG.PairVal.psiInf g x * (Formalism.L2.SG.PairVal.psiInf g y)⁻¹ := by
   intro E _ _ g x y

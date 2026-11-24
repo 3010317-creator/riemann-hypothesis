@@ -64,16 +64,14 @@ theorem pullback_eq_chart : ∀ (M M' : Type) [TopologicalSpace M] [TopologicalS
       x.ch.isOpen_inter_preimage_symm ((A.e j).open_source.preimage hf.1)
     have hmem : x.crd ∈ x.ch.target ∩ x.ch.symm ⁻¹' (f ⁻¹' (A.e j).source) := by
       refine ⟨hxt, ?_⟩
-      simp only [Set.mem_preimage, hx]
-      exact hj
+      simpa only [Set.mem_preimage, hx] using hj
     have hd1 : DifferentiableAt ℂ (A.e j ∘ f ∘ x.ch.symm) x.crd :=
       (hf.2 x.1.1 j).differentiableAt (hopen.mem_nhds hmem)
     have hopen2 : IsOpen ((A.e j).target ∩ (A.e j).symm ⁻¹' (A.e i).source) :=
       (A.e j).isOpen_inter_preimage_symm (A.e i).open_source
     have hmem2 : A.e j (f x.pt) ∈ (A.e j).target ∩ (A.e j).symm ⁻¹' (A.e i).source := by
       refine ⟨(A.e j).map_source hj, ?_⟩
-      simp only [Set.mem_preimage, (A.e j).left_inv hj]
-      exact h
+      simpa only [Set.mem_preimage, (A.e j).left_inv hj] using h
     have hd2 : DifferentiableAt ℂ (A.e i ∘ (A.e j).symm) (A.e j (f x.pt)) :=
       (A.holo j i).differentiableAt (hopen2.mem_nhds hmem2)
     have hpt : (A.e j ∘ f ∘ x.ch.symm) x.crd = A.e j (f x.pt) := by

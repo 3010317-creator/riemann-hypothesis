@@ -160,16 +160,14 @@ private theorem iterate_derivation_mem_pow_sub (J : Ideal R) (D : Derivation k R
   induction m with
   | zero =>
       intro n f hf
-      rw [Function.iterate_zero_apply, Nat.sub_zero]
-      exact hf
+      rwa [Function.iterate_zero_apply, Nat.sub_zero]
   | succ m ih =>
       intro n f hf
       rw [Function.iterate_succ_apply]
       have h1 : D f ∈ J ^ (n - 1) := derivation_mem_pow_sub_one J D n f hf
       have h2 := ih (n - 1) (D f) h1
       have h3 : n - 1 - m = n - (m + 1) := by omega
-      rw [h3] at h2
-      exact h2
+      rwa [h3] at h2
 
 private theorem foldr_iterate_mem_pow_sub (J : Ideal R) :
     ∀ (h : ℕ) (D : Fin h → Derivation k R R) (α : Fin h → ℕ) (n : ℕ) (f : R), f ∈ J ^ n →
@@ -179,8 +177,7 @@ private theorem foldr_iterate_mem_pow_sub (J : Ideal R) :
   | zero =>
       intro D α n f hf
       have hz : ∑ i : Fin 0, α i = 0 := by simp
-      rw [Fin.foldr_zero, hz, Nat.sub_zero]
-      exact hf
+      rwa [Fin.foldr_zero, hz, Nat.sub_zero]
   | succ h ih =>
       intro D α n f hf
       have hinner : Fin.foldr h (fun i y => (⇑(D i.succ))^[α i.succ] y) f
@@ -191,13 +188,11 @@ private theorem foldr_iterate_mem_pow_sub (J : Ideal R) :
       have hs0 : ∑ i, α i = α 0 + ∑ i : Fin h, α i.succ := Fin.sum_univ_succ α
       have hs : n - ∑ i, α i = n - (∑ i : Fin h, α i.succ) - α 0 := by
         rw [hs0]; omega
-      rw [Fin.foldr_succ, hs]
-      exact h2
+      rwa [Fin.foldr_succ, hs]
 
 theorem multiIndexDeriv_mem_pow_sub {h : ℕ} (D : Fin h → Derivation k R R) (J : Ideal R) (n : ℕ)
     {f : R} (hf : f ∈ J ^ n) (α : Fin h → ℕ) :
-    multiIndexDeriv D α f ∈ J ^ (n - ∑ i, α i) := by
-  exact foldr_iterate_mem_pow_sub J h D α n f hf
+    multiIndexDeriv D α f ∈ J ^ (n - ∑ i, α i) := foldr_iterate_mem_pow_sub J h D α n f hf
 
 private theorem derivation_natCast_mul {B S : Type*} [CommRing B] [CommRing S] [Algebra B S]
     (D : Derivation B S S) (m : ℕ) (x : S) : D ((m : S) * x) = (m : S) * D x := by
@@ -328,8 +323,7 @@ private theorem sum_piFinset_succ {M : Type*} [AddCommMonoid M] {m : ℕ}
       refine Fintype.mem_piFinset.2 (fun i => ?_)
       refine Fin.cases ?_ ?_ i
       · exact h1.1
-      · intro j
-        exact Fintype.mem_piFinset.1 h1.2 j
+      · exact fun j => Fintype.mem_piFinset.1 h1.2 j
   · intro β _
     exact congrArg F (fin_cons_self_tail β).symm
 
@@ -505,8 +499,7 @@ private theorem foldr_eq_of_eq_id_of_ne {A : Type*} :
   intro n
   induction n with
   | zero =>
-      intro F i
-      exact i.elim0
+      exact fun F i => i.elim0
   | succ m ih =>
       intro F i
       induction i using Fin.cases with
@@ -610,8 +603,7 @@ private theorem mem_maximalIdeal_pow_succ_of_multiIndexDeriv_mem {k R : Type*} [
     have hdx : ∀ i, D i f ∈ Ideal.span (Set.range x) ^ (r + 1) := by
       intro i; rw [hx]; exact key i
     have hres := mem_pow_succ_of_deriv_mem_pow k x D hD (hunit (r + 1) (by omega)) hfx hdx
-    rw [hx] at hres
-    exact hres
+    rwa [hx] at hres
 
 theorem mem_maximalIdeal_pow_succ_iff_multiIndexDeriv_mem {k R : Type*} [CommRing k] [CommRing R]
     [IsLocalRing R] [Algebra k R] {h : ℕ} (x : Fin h → R) (D : Fin h → Derivation k R R)
@@ -628,8 +620,7 @@ theorem mem_maximalIdeal_pow_succ_iff_multiIndexDeriv_mem {k R : Type*} [CommRin
     have hm := multiIndexDeriv_mem_pow_sub D (IsLocalRing.maximalIdeal R) (r + 1) hfs β
     rw [hβ'] at hm
     have hr1 : r + 1 - r = 1 := by omega
-    rw [hr1, pow_one] at hm
-    exact hm
+    rwa [hr1, pow_one] at hm
   · intro hall
     exact mem_maximalIdeal_pow_succ_of_multiIndexDeriv_mem x D hx hD hDD hunit r f hf
       (fun β hb => hall β ((mem_multiIndicesOfDegree β).mpr hb))
@@ -687,8 +678,7 @@ private theorem ofDigits_injective_of_lt (N : ℕ) (hN : 0 < N) : ∀ (h : ℕ) 
     funext i
     refine Fin.cases ?_ ?_ i
     · exact h0
-    · intro j
-      exact congrFun h2 j
+    · exact fun j => congrFun h2 j
 
 private theorem exists_ofDigits_le_of_sum_eq {h : ℕ} (P : (Fin h → ℕ) → Prop) (r N : ℕ)
     (hex : ∃ β : Fin h → ℕ, (∑ i, β i = r) ∧ P β) :
@@ -712,8 +702,7 @@ private theorem sum_notMem_of_unique_notMem {R : Type*} [CommRing R] {I : Ideal 
     Ideal.sum_mem _ fun b hb => hrest b (Finset.mem_of_mem_erase hb) (Finset.ne_of_mem_erase hb)
   have h2 : F a + ∑ b ∈ t.erase a, F b = ∑ b ∈ t, F b := Finset.add_sum_erase t F ha
   have h3 := sub_mem hsum h1
-  rw [← h2, add_sub_cancel_right] at h3
-  exact h3
+  rwa [← h2, add_sub_cancel_right] at h3
 
 private theorem mul_notMem_maximalIdeal_pow_add_succ {k R : Type*} [CommRing k] [CommRing R]
     [IsLocalRing R] [Algebra k R] {h : ℕ} (x : Fin h → R) (D : Fin h → Derivation k R R)
@@ -965,11 +954,9 @@ private theorem exists_section_mod_maximalIdeal_sq (k : Type*) [CommRing k] (A :
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective u
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective v
     have ha : a ∈ IsLocalRing.maximalIdeal A := by
-      rw [← IsLocalRing.residue_eq_zero_iff, ← hρmk a]
-      exact hu'
+      rwa [← IsLocalRing.residue_eq_zero_iff, ← hρmk a]
     have hb : b ∈ IsLocalRing.maximalIdeal A := by
-      rw [← IsLocalRing.residue_eq_zero_iff, ← hρmk b]
-      exact hv'
+      rwa [← IsLocalRing.residue_eq_zero_iff, ← hρmk b]
     refine (Submodule.mem_bot _).mpr ?_
     rw [← map_mul, Ideal.Quotient.eq_zero_iff_mem, pow_two]
     exact Ideal.mul_mem_mul ha hb
@@ -979,8 +966,7 @@ private theorem exists_section_mod_maximalIdeal_sq (k : Type*) [CommRing k] (A :
       (AlgHom.id k (IsLocalRing.ResidueField A)) ρ hρsurj ⟨2, hker2⟩, fun c => ?_⟩
     have h := Algebra.FormallySmooth.comp_liftOfSurjective
       (AlgHom.id k (IsLocalRing.ResidueField A)) ρ hρsurj ⟨2, hker2⟩
-    have h2 := DFunLike.congr_fun h c
-    simpa using h2
+    simpa using DFunLike.congr_fun h c
   obtain ⟨w, hw⟩ : ∃ w : A → A, ∀ a : A,
       Ideal.Quotient.mk (IsLocalRing.maximalIdeal A ^ 2) (w a)
         = σ (IsLocalRing.residue A a) := by
@@ -1010,8 +996,7 @@ private theorem exists_section_mod_maximalIdeal_sq (k : Type*) [CommRing k] (A :
       map_mul, sub_self]
   · intro a ha
     have hres : IsLocalRing.residue A a = 0 := by
-      rw [IsLocalRing.residue_eq_zero_iff]
-      exact ha
+      rwa [IsLocalRing.residue_eq_zero_iff]
     rw [← Ideal.Quotient.eq_zero_iff_mem, hw a, hres, map_zero]
 
 private theorem mem_maximalIdeal_sq_of_tmul_D_eq_zero (k : Type*) [CommRing k] (A : Type*)
@@ -1028,8 +1013,7 @@ private theorem mem_maximalIdeal_sq_of_tmul_D_eq_zero (k : Type*) [CommRing k] (
       a - b ∈ IsLocalRing.maximalIdeal A ^ 2 →
       Ideal.toCotangent (IsLocalRing.maximalIdeal A) ⟨a, ha⟩
         = Ideal.toCotangent (IsLocalRing.maximalIdeal A) ⟨b, hb⟩ := by
-    intro a b ha hb hab
-    exact (Ideal.toCotangent_eq _).mpr hab
+    exact fun a b ha hb hab => (Ideal.toCotangent_eq _).mpr hab
   have hadd : ∀ a b : A,
       Ideal.toCotangent (IsLocalRing.maximalIdeal A) ⟨a + b - w (a + b), h1 (a + b)⟩
         = Ideal.toCotangent (IsLocalRing.maximalIdeal A) ⟨a - w a, h1 a⟩
@@ -1100,8 +1084,7 @@ private theorem mem_maximalIdeal_sq_of_tmul_D_eq_zero (k : Type*) [CommRing k] (
   have hDx0 : Dder x = 0 := by
     simpa [LinearMap.liftBaseChange_tmul, Derivation.liftKaehlerDifferential_comp_D] using hlin
   have hz : Ideal.toCotangent (IsLocalRing.maximalIdeal A) ⟨x, hx⟩ = 0 := by
-    rw [← hDx]
-    exact hDx0
+    rwa [← hDx]
   exact (Ideal.toCotangent_eq_zero _ ⟨x, hx⟩).mp hz
 
 private theorem exists_fun_sum_smul_eq_of_mem_span {K M : Type*} [CommRing K] [AddCommGroup M]
@@ -1179,8 +1162,7 @@ private theorem exists_local_parameters (k : Type*) [CommRing k] (A : Type*) [Co
     constructor
     · rintro ⟨i, rfl⟩
       exact ((Fintype.equivFin b).symm i).2
-    · intro hv
-      exact ⟨(Fintype.equivFin b) ⟨v, hv⟩, by simp⟩
+    · exact fun hv => ⟨(Fintype.equivFin b) ⟨v, hv⟩, by simp⟩
   have hymem : ∀ i, y i ∈ IsLocalRing.maximalIdeal A := by
     intro i
     rw [← hsF, hy i]
@@ -1474,8 +1456,7 @@ private theorem exists_commuting_dual_derivations (k : Type*) [CommRing k] (ι :
   · intro i j
     rw [← hcoord j]
     exact EtaleCoordinates.partialDeriv_coord k ι A i j
-  · intro i j a
-    exact EtaleCoordinates.partialDeriv_comm k ι A i j a
+  · exact fun i j a => EtaleCoordinates.partialDeriv_comm k ι A i j a
 
 theorem exists_regularParameters_of_formallyEtale (k : Type*) [CommRing k] (ι : Type*) [Fintype ι]
     [DecidableEq ι] (S : Type*) [CommRing S] [Algebra k S] [Algebra (MvPolynomial ι k) S]
@@ -1514,15 +1495,13 @@ theorem exists_regularParameters_of_formallyEtale (k : Type*) [CommRing k] (ι :
   obtain ⟨h, ix, hix, hrange⟩ :
       ∃ (h : ℕ) (ix : Fin h → ι), Function.Injective ix ∧ Set.range ix = (↑J : Set ι) := by
     refine ⟨J.card, fun i => ((J.equivFin.symm i : {a : ι // a ∈ J}) : ι), ?_, ?_⟩
-    · intro a b hab
-      exact J.equivFin.symm.injective (Subtype.ext hab)
+    · exact fun a b hab => J.equivFin.symm.injective (Subtype.ext hab)
     · ext l
       simp only [Set.mem_range, Finset.mem_coe]
       constructor
       · rintro ⟨i, rfl⟩
         exact (J.equivFin.symm i).2
-      · intro hl
-        exact ⟨J.equivFin ⟨l, hl⟩, by simp⟩
+      · exact fun hl => ⟨J.equivFin ⟨l, hl⟩, by simp⟩
   have hset : (algebraMap S A) '' (w '' (↑J : Set ι))
       = Set.range fun i => algebraMap S A (w (ix i)) := by
     rw [← hrange]
@@ -1537,8 +1516,7 @@ theorem exists_regularParameters_of_formallyEtale (k : Type*) [CommRing k] (ι :
   · intro i j
     rw [hD]
     simp only [show (ix i = ix j) ↔ (i = j) from ⟨fun hc => hix hc, fun hc => by rw [hc]⟩]
-  · intro i j a
-    exact hDD (ix i) (ix j) a
+  · exact fun i j a => hDD (ix i) (ix j) a
 
 theorem exists_regularParameters_stalk_of_smooth (k : Type u) [Field k] [CharZero k] {X : Scheme.{u}}
     (p : X ⟶ Spec (CommRingCat.of k)) [AlgebraicGeometry.Smooth p] (x : X) :

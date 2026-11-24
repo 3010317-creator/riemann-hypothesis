@@ -553,8 +553,7 @@ theorem mmap_eq_zero (M : DSModel V S) (hv : ¬ ∃ v : M.Vec, ∏ τ, ⟪(v τ 
     T = 0 := by
   classical
   have : ∃ τ, ∀ w : M.sm τ, w = 0 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     choose w hw using hne
     refine hv ⟨w, Finset.prod_ne_zero_iff.2 fun τ _ => ?_⟩
     rw [inner_self_ne_zero]
@@ -588,8 +587,7 @@ theorem range_eE_and_norm : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I
       rw [Y.eE_read, hEEc] at hm
       obtain ⟨u, hu, he⟩ := hm
       have : u = R.HE.e (Y.eE x) := hlift he
-      rw [Submodule.mem_comap, ← this]
-      exact hu
+      rwa [Submodule.mem_comap, ← this]
     · intro hh
       rw [Submodule.mem_comap] at hh
       have hm : (PiTensorProduct.lift : Mult.MMap (R.MY 0) ≃ₗ[ℂ] _) (R.HE.e h) ∈
@@ -614,8 +612,7 @@ theorem range_eE_and_norm : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I
       rw [inner_self_eq_norm_sq_to_K, inner_self_eq_norm_sq_to_K] at e
       have e' : ‖x‖ ^ 2 = (RealDat.nP F.lv2 true)⁻¹ * ‖Y.eE x‖ ^ 2 := by
         apply Complex.ofReal_injective
-        rw [Complex.ofReal_mul, Complex.ofReal_pow, Complex.ofReal_pow]
-        exact e
+        rwa [Complex.ofReal_mul, Complex.ofReal_pow, Complex.ofReal_pow]
       rw [e', ← mul_assoc, mul_inv_cancel₀ hnP.ne', one_mul]
     · have h0 : Y.eE x = 0 :=
         hE.1 (by rw [mmap_eq_zero _ hv (R.HE.e (Y.eE x)), mmap_eq_zero _ hv (R.HE.e 0)])

@@ -71,8 +71,7 @@ theorem image_sq_Ioi : (fun r : ℝ => r ^ 2) '' Set.Ioi (0 : ℝ) = Set.Ioi (0 
   constructor
   · rintro ⟨r, hr, rfl⟩
     exact pow_pos (Set.mem_Ioi.1 hr) 2
-  · intro hy
-    exact ⟨√y, Real.sqrt_pos.2 hy, Real.sq_sqrt (le_of_lt hy)⟩
+  · exact fun hy => ⟨√y, Real.sqrt_pos.2 hy, Real.sq_sqrt (le_of_lt hy)⟩
 
 theorem main : ∀ (G : ℝ → ENNReal), ∫⁻ (r : ℝ) in Set.Ioi (0 : ℝ), ENNReal.ofReal r * G r
     = ∫⁻ (u : ℝ) in Set.Ioi (0 : ℝ), (2 : ENNReal)⁻¹ * G √u := by
@@ -151,8 +150,7 @@ theorem lintegral_complex_eq_lintegral_sqrt_mul_exp (ε c : ℝ) (hε : ε = 1 �
     rw [lintegral_sub_right_eq_self (fun u => F (ε * u)) c]
     rcases hε with rfl | rfl
     · simp
-    · simp only [neg_mul, one_mul]
-      exact (lintegral_neg_eq_self F).symm
+    · simpa only [neg_mul, one_mul] using (lintegral_neg_eq_self F).symm
   rw [h1, _root_.GlobalTheory.SquareImageInterval.main, h2, h3]
   refine lintegral_congr fun t => ?_
   simp only [hG]

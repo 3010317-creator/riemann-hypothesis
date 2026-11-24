@@ -406,8 +406,7 @@ theorem Dw_comb (hσ : IsURepOn (UJset ε) σ) {l : List (Mx n)} (hl : ∀ X ∈
   induction L with
   | nil =>
     refine ⟨(smooth (Jm ε) σ).zero_mem, ?_⟩
-    have h := Dw_smul hσ hl (0 : ℂ) hv
-    simpa using h
+    simpa using Dw_smul hσ hl (0 : ℂ) hv
   | cons u L ih =>
     have hu : Sm ε σ (Dw σ u.2 v) := hv.word hσ (hL u List.mem_cons_self)
     obtain ⟨ih1, ih2⟩ := ih fun w hw => hL w (List.mem_cons_of_mem _ hw)
@@ -965,8 +964,7 @@ theorem exists_rewrite : GlobalTheory.Published.HarishChandraModules → GlobalT
       conv_lhs => rw [hexp j]
 
       simp only [map_sum, map_smul, smul_eq_mul]
-    simp only [h1, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul]
-    exact Finset.sum_comm
+    simpa only [h1, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul] using Finset.sum_comm
 
 end GlobalTheory.TypeSum.CoefRep
 
@@ -1126,8 +1124,7 @@ theorem hasTypeAll_of_kTypes : GlobalTheory.Published.HarishChandraModules → G
     rw [e1]
     refine pad_summable q _ (fun i r => mul_nonneg (mul_nonneg hA₀ (hc i r)) (sobNorm_nonneg _ _ _))
       (fun i => A₀ * A S' * B i (m S')) ((hBs (m S')).mul_left (A₀ * A S')) fun i => ?_
-    simp only [mul_assoc, ← Finset.mul_sum]
-    exact mul_le_mul_of_nonneg_left (hsumS i S' hS') hA₀
+    simpa only [mul_assoc, ← Finset.mul_sum] using mul_le_mul_of_nonneg_left (hsumS i S' hS') hA₀
   have hnorm : ∀ g ∈ UJset ε, ∀ a, ‖pad q (fun i r => ℓ' i r (σ g (x' i r))) a‖ ≤
       Bc g * (pad q (fun i r => A₀ * c i r) a * sobNorm σ S₁ (pad q x' a)) := by
     intro g hg a
@@ -1521,8 +1518,7 @@ private theorem deriv_continuousLinearMap_comp_zero {E E' : Type} [NormedAddComm
       have heq : f = (B.restrictScalars ℝ) ∘ fun t => A (f t) := by
         funext t
         simp [hBA]
-      rw [heq]
-      exact h2
+      rwa [heq]
     rw [deriv_zero_of_not_differentiableAt hf, deriv_zero_of_not_differentiableAt hg, map_zero]
 
 theorem dRep_map (U : H' ≃ₗᵢ[ℂ] H) (hU : ∀ g ∈ UJset ε, ∀ w, U (σ' g w) = σ g (U w)) {X : Mx n}
@@ -1562,8 +1558,7 @@ theorem sobCont_map (U : H' ≃ₗᵢ[ℂ] H) (hU : ∀ g ∈ UJset ε, ∀ w, U
   have e := sobNorm_map U hU hS (U.symm w)
   rw [LinearIsometryEquiv.apply_symm_apply] at e
   show ‖ℓ (U.symm w)‖ ≤ _
-  rw [e]
-  exact h1
+  rwa [e]
 
 private theorem mul_inv_mem_UJset_of_conjTranspose_Jm_eq {P P' G : Matrix (Fin n) (Fin n) ℂ} (hP : IsUnit P)
     (hG : Pᴴ * Formalism.REAL.Jm ε * P = G) (hG' : P'ᴴ * Formalism.REAL.Jm ε * P' = G) : P' * P⁻¹ ∈ UJset ε := by
@@ -1696,8 +1691,7 @@ private theorem sobCont_comp_translate_of_sobCont (hσ : IsURepOn (UJset ε) σ)
       simp only [Function.comp_apply]
       rw [foldr_dRep_translate_eq_translate_foldr_conj hσ hQ hR hQR hRQ l (hS l hl), hσ.2.1 Q hQ]
     show ‖ℓ (σ Q w)‖ ≤ _
-    rw [← e]
-    exact h1
+    rwa [← e]
 
 theorem coef_frame_change : GlobalTheory.Published.DiscreteSeriesUpqUnique → ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ),
     Formalism.QuantumDeterminants.IsHCParam lam →
@@ -1816,8 +1810,7 @@ alias isClosed_UJset := _root_.GlobalTheory.AvgCont.isClosed_UJset
 theorem continuous_mul_left_GA {D : D7} (V : HSp D) (x : GA D V) : Continuous fun y : GA D V => x * y := by
   haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   haveI : IsTopologicalRing (AE D) := inferInstance
-  refine continuous_induced_rng.2 ?_
-  exact (continuous_const_mul _).comp continuous_induced_dom
+  exact continuous_induced_rng.2 ((continuous_const_mul _).comp continuous_induced_dom)
 
 theorem closure_to_series : ∀ {D : D7} (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)) (V : HSp D)
     (τ : D.what₂.Tau) (S : SPar) (φ : GA D V → ℂ),
@@ -1865,8 +1858,7 @@ theorem closure_to_series : ∀ {D : D7} (θ : D.what₂.Tau → (Ainf D.host.F 
     refine (continuous_mul_left_GA V x).comp_continuousOn ?_
     refine (GlobalTheory.PointAtPlaceHom.continuousOn_atTau hθ V τ).comp
       ((continuous_const.matrix_mul continuous_id).matrix_mul continuous_const).continuousOn ?_
-    intro y hy
-    exact GlobalTheory.LowTypeDetermined.conj_inv_mem hPu hPG hy
+    exact fun y hy => GlobalTheory.LowTypeDetermined.conj_inv_mem hPu hPG hy
   have hfc : ContinuousOn f (UJset ε₀) := hφ.cont.comp_continuousOn hcont
   have hB := closure_model hHC hCW _ ε₀ lam₀ hP₀ H σ hσ f hfc
     (GlobalTheory.TypeSum.GrowthAtPlace.umg_atTau D θ hθ V τ φ hφ ε₀ P hPu hPG x) (by

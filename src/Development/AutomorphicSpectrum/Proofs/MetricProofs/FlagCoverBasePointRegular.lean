@@ -155,8 +155,7 @@ theorem comp_mem_mcPts {Ω Ω' : Type} [Field Ω] [Field Ω'] {κ : K → K'} {v
     subst hk0
     refine ⟨i, ?_⟩
     show z (v ⟨k0, i⟩) ≠ 0
-    rw [hp]
-    exact hi'
+    rwa [hp]
   · rw [← eval_rename_block v z f]
     apply hz2
     rw [mCoordIdeal, RingHom.mem_ker] at hf ⊢
@@ -202,8 +201,7 @@ theorem regAt_φ_valAt : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fi
     refine ⟨_, _, _, hg', hh', ?_, he', ?_, ?_⟩
     · rw [hae]
       exact (map_ne_zero Cv.φ).2 hax
-    · rw [eval_rename_block]
-      exact hev
+    · rwa [eval_rename_block]
     · rw [eval_rename_block, eval_rename_block]
   have hex1 : ∃ v, IsValueAt M.x s (zb ∘ Cv.v) v := ⟨_, hv1⟩
   have hex2 : ∃ v, IsValueAt M'.x (Cv.φ s) zb v := ⟨_, hv2⟩

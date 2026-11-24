@@ -143,13 +143,11 @@ theorem eventually_mem_intPts (G : HTGroup p) (Ω : Set G.GAf) (hΩ : IsCompact 
   refine ⟨fun i => ?_, fun i => ?_, ?_, ?_⟩
   · have e := repr_map_eval G w (((h : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).1 : AfP p ⊗[ℚ] G.C)) i
     have := hw1 i h hh
-    rw [← e] at this
-    exact this
+    rwa [← e] at this
   · have e := repr_map_eval G w ((((h : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).1)⁻¹ : (AfP p ⊗[ℚ] G.C)ˣ) :
       AfP p ⊗[ℚ] G.C) i
     have := hw2 i h hh
-    rw [← e] at this
-    exact this
+    rwa [← e] at this
   · exact hw3 _ (Set.mem_image_of_mem _ hh)
   · exact hw4 _ (Set.mem_image_of_mem _ hh)
 

@@ -71,8 +71,7 @@ private theorem exists_ab (k Ω : Type) [Field k] [NumberField k] [Field Ω] [Al
   have hfix : K.fixingSubgroup = θ.ker :=
     InfiniteGalois.fixingSubgroup_fixedField ⟨θ.ker, Subgroup.isClosed_of_isOpen _ hθ⟩
   have hfin : FiniteDimensional k K := by
-    rw [← InfiniteGalois.isOpen_iff_finite, hfix]
-    exact hθ
+    rwa [← InfiniteGalois.isOpen_iff_finite, hfix]
   have hgal : IsGalois k K := by
     rw [← InfiniteGalois.normal_iff_isGalois, hfix]
     exact θ.normal_ker
@@ -85,8 +84,7 @@ private theorem exists_ab (k Ω : Type) [Field k] [NumberField k] [Field Ω] [Al
   · ext σ
     rw [UpperTheory.V.Base.mem_galOf, ← hfix, IntermediateField.mem_fixingSubgroup_iff]
     exact ⟨fun h x hx => h ⟨x, hx⟩, fun h x => h x.1 x.2⟩
-  · intro x hx
-    exact (IntermediateField.mem_fixedField_iff _ _).2 hx
+  · exact fun x hx => (IntermediateField.mem_fixedField_iff _ _).2 hx
 
 private theorem len_fin {R M : Type} [Ring R] [AddCommGroup M] [Module R M] (h : Finite M) :
     Module.length R M ≠ ⊤ := Module.length_ne_top

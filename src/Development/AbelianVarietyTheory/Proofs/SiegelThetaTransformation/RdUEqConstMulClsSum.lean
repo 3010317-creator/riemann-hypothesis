@@ -117,8 +117,7 @@ theorem comp_eq_of_marked {Xo : Moduli Dw l₂} {c : Coeff l₂} [inst : Algebra
     have h1 : fnAt (basePt z) g₀ = fnAt (basePt z ≫ pullback.fst _ _ ≫ t) (toΓ (KA l) u) := rfl
     have h2 : fnAt (𝟙 (Sp (KA l))) (toΓ (KA l) u) = u := by
       simp [fnAt, toΓ]
-    rw [evR_fnRule, h1, ← Category.assoc]
-    rw [basePt, pullback.lift_fst]
+    rw [evR_fnRule, h1, ← Category.assoc, basePt, pullback.lift_fst]
     rw [hβ, ← Category.comp_id (Geo.Tor.spMap β), fnAt_comp, h2]
     simp [u]
   have h1 : ∀ z : FrPt Xo c (CAt σ), ‖Formalism.L2.PjFree.toC (evR Xo c (fnRule g₀) z)‖ = 1 := fun z => by
@@ -178,8 +177,7 @@ theorem exists_lift_of_reached {Xo : Moduli Dw l} {c : Coeff l} {n : ℕ} (d : D
     have hδ : liftLa k (liftLa k.symm a') - a' ∈ d.l₂.Mb • (⊤ : Submodule (𝓞 E) Dw.La) := by
       rw [← Submodule.Quotient.eq]
       have h1 := liftLa_spec k (liftLa k.symm a')
-      rw [liftLa_spec k.symm a', k.apply_symm_apply] at h1
-      exact h1
+      rwa [liftLa_spec k.symm a', k.apply_symm_apply] at h1
     obtain ⟨u, hu, v, hv, huv⟩ := LevelFibre.level_split d.l₂
     obtain ⟨b, -, hb⟩ := MarkLift.modN_of_mem_half d.l₂ hu (Submodule.sub_mem _ (hpres (liftLa k) _ ha) ha')
     obtain ⟨b', hb'⟩ := MarkLift.modN_of_mem_bar d.l₂ hv hδ
@@ -337,8 +335,7 @@ theorem GlobalTheory.ClsVal.rdU_eq_const_mul_clsSum : Formalism.MainNotions.Modu
           have h1 : d.eF (IntermediateField.inclusion c.le (baseKA l).ρ) =
               IntermediateField.inclusion d.c₂.le (baseKA d.l₂).ρ := Subtype.ext rfl
           change algebraMap d.c₂.F ℂ (IntermediateField.inclusion d.c₂.le (baseKA d.l₂).ρ) = _
-          rw [← h1, halg]
-          exact hσ
+          rwa [← h1, halg]
         exact Reach.exists_lift_of_reached d halg hσ₂ hlev hA1 hA2 hr1 A Dc.sympl hx hL hmk hA hmk₂ hover x₀.2 A₀ h₀ hA₀
     have hval := _root_.GlobalTheory.ClsVal.evR_eq_clsSum hCI E H Dw l Xo c n d halg hnab r _ _ Dc.bas Dc.idx W.e x _ _ y₂ A₂ hy₂ Dc.sympl hx hL
       _ Dc.hr Dc.eL hU.1 hn (hDe ▸ Dc.dir_eq) θ v _ (hrd θ hθ) hv hprod mk₂ hmk₂ hA₂ Cl w La Nc gam vol ep Vs io xs a

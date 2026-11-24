@@ -131,8 +131,7 @@ theorem _root_.GlobalTheory.exists_level_mul_split : ∀ (E : Type) [Field E] [N
   refine ⟨fun pd I hodd hcop hI hprod hsup => ?_, fun pd hp hp2 hJ => ?_⟩
   · have hMp : IsCoprime (Ideal.span {((l.M : ℕ) : 𝓞 E)}) (Ideal.span {((pd : ℕ) : 𝓞 E)}) := by
       rw [Ideal.isCoprime_span_singleton_iff]
-      have h := (Nat.isCoprime_iff_coprime.2 hcop.symm).map (Int.castRingHom (𝓞 E))
-      simpa using h
+      simpa using (Nat.isCoprime_iff_coprime.2 hcop.symm).map (Int.castRingHom (𝓞 E))
     have hM1 : Ideal.span {((l.M : ℕ) : 𝓞 E)} ≤ l.Mb := by
       rw [← l.prod]; exact Ideal.mul_le_left
     have hM2 : Ideal.span {((l.M : ℕ) : 𝓞 E)} ≤ l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E) := by
@@ -246,8 +245,7 @@ theorem _root_.GlobalTheory.exists_level_mul_split : ∀ (E : Type) [Field E] [N
           (Ideal.mul_mem_mul hp_mem hp_mem'))
           (Ideal.mul_mem_left _ (v : 𝓞 E) (Ideal.mul_mem_mul hp_mem hq_mem')))
           (Ideal.mul_mem_left _ (v : 𝓞 E) (Ideal.mul_mem_mul hq_mem hp_mem'))
-        rw [← heq] at key
-        exact key
+        rwa [← heq] at key
     · rw [hmap, Ideal.eq_top_iff_one]
       have heq : (1 : 𝓞 E) = u * pd - v * (H.w0 - r) - v * (1 - H.w0 - r) := by
         linear_combination (-1 : 𝓞 E) * huv'
@@ -260,7 +258,6 @@ theorem _root_.GlobalTheory.exists_level_mul_split : ∀ (E : Type) [Field E] [N
             (Ideal.subset_span (Set.mem_insert_of_mem _ rfl)))))
           (Ideal.mul_mem_left _ _ (Ideal.mem_sup_right
             (Ideal.subset_span (Set.mem_insert_of_mem _ rfl))))
-      rw [← heq] at key
-      exact key
+      rwa [← heq] at key
 
 end GlobalTheory

@@ -363,8 +363,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.rig_loc :
   let s : Γ →* GG (m := 3) (R := ↥L.1) := (GG.map (TrivSqZeroExt.fstHom ↥L.1 ↥L.1 ↥L.1).toRingHom).comp s'
   have hsr : ∀ g, (s g).right = (r g).right := fun g => by
     have := (hdef g).1
-    rw [← he] at this
-    exact this
+    rwa [← he] at this
   have hsm : ∀ g, (s g).mat.map ι = (r g).mat := fun g => by
     ext a b
     rw [← hfst, ← hem, (hf _).1]; rfl
@@ -382,8 +381,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.rig_loc :
     exact (Units.mul_left_inj (r g).left).1 h1
   have had : ∀ g X, (adRep s g X).map ι = adRep r g (X.map ι) := fun g X => by
     have := rigloc_adFun ι (s g) X
-    rw [hs] at this
-    exact this
+    rwa [hs] at this
   have hcj : ∀ g a b, f ((conjBy h₁⁻¹ s' g).mat a b) = (conjBy h⁻¹ r' g).mat a b := fun g a b => by
     have := rigloc_conj f h₁⁻¹ s' g
     rw [map_inv, hh, hs'] at this
@@ -423,13 +421,11 @@ theorem UpperTheory.V.UnitaryThreeInertia.rig_loc :
       rw [map_mul] at e2
       have e3 : ι ((UpperTheory.V.Loc.cycA l l ↥L.1 (φ g) : (↥L.1)ˣ) : ↥L.1) =
           ((UpperTheory.V.Loc.cycA l l (PadicAlgCl l) (φ g) : (PadicAlgCl l)ˣ) : PadicAlgCl l) := rfl
-      rw [e3] at e2
-      exact e2
+      rwa [e3] at e2
   have := UpperTheory.V.Loc.z1fCoef φ (adRep s) (adRep r) (L.1.val.toLinearMap.mapMatrix)
     (continuous_matrix fun a b => continuous_subtype_val.comp (continuous_id.matrix_elem a b)) had z key
   have e : y = fun g => (z g).map ι := funext fun g => (hz g).symm
-  rw [e]
-  exact this
+  rwa [e]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.RigLoc =====

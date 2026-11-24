@@ -207,8 +207,7 @@ theorem fjN_unfold : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D.host.F)
       fun h => G h * tFlat s vL (Y h₀) (s.om (J.d.emb0 h₀, h) Φ) := by
     funext h
     rw [weilRepresentationOnFunctions_embed_mul, one_mul, hx₀, (GlobalTheory.T.unfoldedTerm_basePoint_eq_flatMap_pairing D ψ σ J B s vb vL (Y h₀) _ hq (s.weil.om_pres _ _ hΦ)).1]
-  rw [hL, ← hR']
-  exact key
+  rwa [hL, ← hR']
 
 end GlobalTheory.Unf.FB
 
@@ -360,8 +359,7 @@ theorem per_lift_eq_integral_unfF : ∀ (D : D7), Descent D → ∀ (ψ : AddCha
     rw [unfF, hc h, integral_const_mul]
   constructor
   · have := hI.integral_prod_right
-    refine this.congr ?_
-    exact Filter.Eventually.of_forall fun h => (hU h).symm
+    exact this.congr (Filter.Eventually.of_forall fun h => (hU h).symm)
   · calc J.per ψ B.ζ Y (s.lift G Φ)
         = ∫ h₀ in J.v0.𝓕, ∫ h in 𝓑, G h * tFlat s vL (Y h₀) (s.om (J.d.emb0 h₀, h) Φ) ∂s.vW.μ ∂J.v0.μ := by
           unfold JacLev.per fjSrcKer

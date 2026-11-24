@@ -92,8 +92,7 @@ theorem UpperTheory.ConvolutionTheory.Loc.ballSub :
       rw [mul_sub, Units.inv_mul]; simp
     have h := bd_mul (bd_inv h1 (mb hg) e) (mb hg) i j
     rw [one_mul] at h
-    rw [e, Matrix.sub_apply, sub_sub_cancel_left, Valuation.map_neg]
-    exact h
+    rwa [e, Matrix.sub_apply, sub_sub_cancel_left, Valuation.map_neg]
   let K : Subgroup (GL (Fin n) E) :=
     { carrier := ball n r
       one_mem' := fun i j => by simp
@@ -125,8 +124,7 @@ theorem UpperTheory.ConvolutionTheory.Loc.ballSub :
     convert h using 1
     ext g
     constructor
-    · intro hg
-      exact ⟨⟨_, mb hg, sub_add_cancel _ _⟩, ⟨_, mb (hinv g hg), sub_add_cancel _ _⟩⟩
+    · exact fun hg => ⟨⟨_, mb hg, sub_add_cancel _ _⟩, ⟨_, mb (hinv g hg), sub_add_cancel _ _⟩⟩
     · rintro ⟨⟨M, hM, e⟩, -⟩ i j
       rw [← e]
       simpa using hM i j

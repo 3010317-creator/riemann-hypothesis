@@ -321,8 +321,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.locCondQ :
       refine (DFunLike.congr_fun e2 n).trans ?_
       show Matrix.diagonal (fun i => (D.ps i n : c.O)) = 1
       simp [h1])
-  rw [← e3] at key
-  exact key
+  rwa [← e3] at key
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.SymplecticGSp4.LocCondQ =====

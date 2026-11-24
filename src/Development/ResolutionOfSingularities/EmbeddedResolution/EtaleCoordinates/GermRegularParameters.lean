@@ -89,9 +89,7 @@ theorem exists_sections_span_eq_maximalIdeal_with_coords (hU : IsAffineOpen U)
   have halg : ∀ t : Γ(X, U),
       algebraMap Γ(X, U) (X.presheaf.stalk x) t = X.presheaf.germ U x hx t := fun _ => rfl
   have hcoord : ∀ j : Fin m, etaleChartCoord k m Γ(X, U) j = c.coord j := by
-    intro j
-    show c.coordRingHom (MvPolynomial.X (ULift.up j : ULift.{u} (Fin m))) = c.coord j
-    exact c.coordRingHom_X j
+    exact fun j => c.coordRingHom_X j
   have hq : ∀ j ∈ J₀, etaleChartCoord k m Γ(X, U) j ∈ (hU.primeIdealOf ⟨x, hx⟩).asIdeal := by
     intro j hj
     rw [hcoord j]
@@ -100,8 +98,7 @@ theorem exists_sections_span_eq_maximalIdeal_with_coords (hU : IsAffineOpen U)
     exists_regularSystemOfParameters_containing_etaleChartCoords k m Γ(X, U)
       (hU.primeIdealOf ⟨x, hx⟩).asIdeal (X.presheaf.stalk x) J₀ hq
   refine ⟨d, f, ?_, ?_, ?_, hf4⟩
-  · intro i
-    exact (germ_mem_maximalIdeal_iff hU x hx (f i)).mpr (hf1 i)
+  · exact fun i => (germ_mem_maximalIdeal_iff hU x hx (f i)).mpr (hf1 i)
   · intro j hj
     obtain ⟨i, hi⟩ := hf2 j hj
     exact ⟨i, by rw [hi, hcoord j]⟩

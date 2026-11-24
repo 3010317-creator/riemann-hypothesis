@@ -92,8 +92,7 @@ theorem locUnif {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X) 
   have hz : c x ∈ c.target ∩ c.symm ⁻¹' (bdry s)ᶜ := by
     refine ⟨c.map_source hj, ?_⟩
     show c.symm (c x) ∈ (bdry s)ᶜ
-    rw [c.left_inv hj]
-    exact hx
+    rwa [c.left_inv hj]
   obtain ⟨r, hr, hball⟩ := Metric.isOpen_iff.mp hO' (c x) hz
   have hsub : Metric.closedBall (c x) (r / 2) ⊆ c.target ∩ c.symm ⁻¹' (bdry s)ᶜ :=
     (Metric.closedBall_subset_ball (half_lt_self hr)).trans hball
@@ -106,8 +105,7 @@ theorem locUnif {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X) 
     have e : c.symm (c y) = y := c.left_inv hy.1
     have := ht (c y) (Metric.ball_subset_closedBall hy.2)
     simp only [Function.comp] at this
-    rw [← hc, e] at this
-    exact this
+    rwa [← hc, e] at this
 
 theorem mInt_zero {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X) (Φ : Fin e → LocPot X) :
     mInt A Φ (fun _ => 0) = 0 := by
@@ -164,8 +162,7 @@ theorem PositivityTheory.Xgp.t_an_two : ConvergenceSignedStatement → ∀ (e : 
       rw [e1]
       have c1 := projLine_continuous_of_smooth S.A ((S.reg (Sum.inl a)).2.2 t hp.1 hp.2).1
       have c2 := projLine_continuous_of_smooth S.A ((S.reg (Sum.inr a)).2.2 t hp.1 hp.2).1
-      have c3 := projLine_continuous_of_smooth S.A (hd a)
-      exact ((c1.sub c2).sub c3).continuousOn
+      exact ((c1.sub c2).sub (projLine_continuous_of_smooth S.A (hd a))).continuousOn
     · have e1 : gT t = 0 := ite_eq_right hp
       rw [e1]
       exact continuousOn_const
@@ -303,8 +300,7 @@ theorem samePot_line {D : ℕ} {σ : Type} {S : AnSys D σ} {P : Ideal (MRing ι
   intro x _
   obtain ⟨V, hV, hxV, G, hG, hVG⟩ := Re.ref_pot c x (Set.mem_univ x)
   refine ⟨V ∩ Re.R.U x, hV.inter (Re.R.isOpen_U x), ⟨hxV, Re.R.mem_U x⟩, G, ?_, ?_⟩
-  · intro j
-    exact (hG j).mono fun y hy => ⟨hy.1, hy.2.1⟩
+  · exact fun j => (hG j).mono fun y hy => ⟨hy.1, hy.2.1⟩
   · rintro y ⟨hyV, hyU⟩
     have hm := Re.R.mem x y hyU
     have ho : SameOrbit (Re.R.lift y y) (Re.R.lift x y) := Re.R.compat y x y ⟨Re.R.mem_U y, hyU⟩
@@ -358,8 +354,7 @@ theorem step_eq (hR : RatRStatement) (hB : ResBridgeStatement) (hG : GoodProjExi
   have hl₁ := Re.line_smooth a₁ t h0 h1
   have hl₂ := Re.line_smooth a₂ t h0 h1
   have hIso : IsLineIso P (Re.line a₁ t).a (Re.line a₂ t).a f g := by
-    rw [Re.line_deg, Re.line_deg]
-    exact hiso
+    rwa [Re.line_deg, Re.line_deg]
   obtain ⟨w, hw, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.defect_exists_smooth K ι P Re.J D Re.R (Re.line a₁ t) (Re.line a₂ t) f g Re.arith.2.1 hIso hl₁ hl₂
   have h := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.OneSlot.inter_sub_eq_neg_mInt hR hB hG hA K ι (II K ι) hI P Re.J D Re.R (fun j => Re.line (u j) t) (Re.line a₁ t)
     (Re.line a₂ t) f g w Re.arith (fun j => Re.line_smooth _ t h0 h1) hl₁ hl₂ hIso hw

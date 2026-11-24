@@ -307,8 +307,7 @@ theorem end_calc : ∀ (C : Type) [Field C] [CharZero C] (V : VF C) (d : ℕ) (I
       (fun j => by fin_cases j <;> exact hc _) (fun j => by fin_cases j; exacts [hA, hA', hB]),
       add_right_log H (P := ![endP X B MvPowerSeries.X, endP X A MvPowerSeries.X, endP X A' MvPowerSeries.X])
       (fun j => by fin_cases j <;> exact hc _) (fun j => by fin_cases j; exacts [hB, hA, hA'])⟩
-  · intro A B hA hB
-    exact symm_log H (hc A) (hc B) hA hB
+  · exact fun A B hA hB => symm_log H (hc A) (hc B) hA hB
   · intro M M' A B hM hA hB
     unfold hEnd
     rw [← expMulLog_expMulLog H hX, ← expMulLog_expMulLog H hX]

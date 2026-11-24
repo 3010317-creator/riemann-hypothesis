@@ -160,8 +160,7 @@ private theorem UpperTheory.Reformulated.B.Gc5.nonempty_normalModel_of_extension
     obtain ⟨a, rfl⟩ := hπ a
     obtain ⟨b, rfl⟩ := hπ b
     refine ⟨a, b, ?_, ?_⟩
-    · rw [← hJ, RingHom.mem_ker]
-      exact hb
+    · rwa [← hJ, RingHom.mem_ker]
     · rw [RingHom.mem_ker, map_sub, map_mul, hren, hren, hY, hab, sub_self]
 
 theorem UpperTheory.Reformulated.B.Gc5.nonempty_normalModel_of_presentation :
@@ -180,13 +179,11 @@ theorem UpperTheory.Reformulated.B.Gc5.nonempty_normalModel_of_presentation :
     integralClosure.isIntegrallyClosedOfFiniteExtension (FractionRing R)
   refine UpperTheory.Reformulated.B.Gc5.nonempty_normalModel_of_extension J R
     (integralClosure R (FractionRing R)) π hπ hJ ?_ ?_
-  · intro x y hxy
-    exact IsFractionRing.injective R (FractionRing R) (congrArg Subtype.val hxy)
+  · exact fun x y hxy => IsFractionRing.injective R (FractionRing R) (congrArg Subtype.val hxy)
   · intro s
     obtain ⟨⟨a, b⟩, hab⟩ := IsLocalization.surj (nonZeroDivisors R) (s : FractionRing R)
     refine ⟨a, b, nonZeroDivisors.coe_ne_zero b, Subtype.ext ?_⟩
-    rw [mul_comm] at hab
-    exact hab
+    rwa [mul_comm] at hab
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.NonemptyNormalModelOfPresentation =====

@@ -253,5 +253,4 @@ end UpperTheory.ConvolutionTheory.L1
 
 theorem UpperTheory.ConvolutionTheory.L1.splitLoc :
     UpperTheory.ConvolutionTheory.L1.SplitLoc := by
-  intro F E _ _ _ _ _ v w hs n
-  exact UpperTheory.ConvolutionTheory.L1.main v w.1 n hs
+  exact fun F E _ _ _ _ _ v w hs n => UpperTheory.ConvolutionTheory.L1.main v w.1 n hs

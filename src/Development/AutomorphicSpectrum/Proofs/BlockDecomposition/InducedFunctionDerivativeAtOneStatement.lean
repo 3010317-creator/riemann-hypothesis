@@ -223,8 +223,7 @@ theorem fRaw_diag (lam : Fin n → ℤ) (lev : Fin n → ℕ) (a : Fin n) {z : �
     fRaw lam lev (1 + single a a z) = (1 + z) ^ lam a * (1 + conj z) ^ yZ lam lev a := by
   have hdet : (1 + single a a z : Mat n) ∈ GLs n := by
     show (1 + single a a z : Mat n).det ≠ 0
-    rw [det_one_add_single_diag]
-    exact hz
+    rwa [det_one_add_single_diag]
   have hw : 1 + conj z ≠ 0 := by
     intro h
     apply hz

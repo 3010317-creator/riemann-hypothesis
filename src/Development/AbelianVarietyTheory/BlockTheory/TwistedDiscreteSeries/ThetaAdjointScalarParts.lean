@@ -67,8 +67,7 @@ theorem gap {Rk : Ranks} (h : HCParam Rk) (j : Fin Rk.m) {n : ℕ} (hn : n < Rk.
     induction d with
     | zero => intro _; exact le_rfl
     | succ d ih =>
-      intro hd
-      exact (Formalism.L2.NTheta.lamAt_lt h (a + d) hd).le.trans (ih (by omega))
+      exact fun hd => (Formalism.L2.NTheta.lamAt_lt h (a + d) hd).le.trans (ih (by omega))
   have val : ∀ (c : ℕ) (hc : c < Rk.m), Formalism.L2.NTheta.lamAt h (Rk.k - 1 + c) = -h.b ⟨c, hc⟩ := by
     intro c hc
     unfold Formalism.L2.NTheta.lamAt
@@ -93,8 +92,7 @@ theorem offS_iff (S : Finset (HeightOneSpectrum (𝓞 D.host.F))) (P : HeightOne
     obtain ⟨x, hx, hy⟩ := h _ hP
     exact hy (algebraMap _ _ x) rfl hx
   · intro h v hv
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     apply h
     have hle : v.asIdeal ≤ (P.under (𝓞 D.host.F)).asIdeal := by
       intro x hx

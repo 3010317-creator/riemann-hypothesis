@@ -193,8 +193,7 @@ private theorem repr_mem_maximalIdeal_of_tmul_eq_zero {A : Type*} [CommRing A] [
     rw [h]
     simp
   rw [hxsum, Module.Basis.repr_sum_self] at h2
-  rw [← IsLocalRing.residue_eq_zero_iff]
-  exact h2
+  rwa [← IsLocalRing.residue_eq_zero_iff]
 
 private theorem residue_det_ne_zero_of_tmul_eq_basis {A : Type*} [CommRing A] [IsLocalRing A]
     {M : Type*} [AddCommGroup M] [Module A M] {ι : Type*} [Fintype ι] [DecidableEq ι]
@@ -259,9 +258,7 @@ private theorem mem_maximalIdeal_mul_of_tmul_D_eq_zero (k : Type*) [CommRing k] 
     intro c u
     rw [hsmulg, ← map_mul]
   have hρ0 : ∀ a ∈ Jm, (Ideal.Quotient.mkₐ A J) a = 0 := by
-    intro a ha
-    show Ideal.Quotient.mk J a = 0
-    exact Ideal.Quotient.eq_zero_iff_mem.mpr (hJmle ha)
+    exact fun a ha => Ideal.Quotient.eq_zero_iff_mem.mpr (hJmle ha)
   let ρA : (A ⧸ Jm) →ₐ[A] (A ⧸ J) :=
     Ideal.Quotient.liftₐ Jm (Ideal.Quotient.mkₐ A J) hρ0
   let ρ : (A ⧸ Jm) →ₐ[k] (A ⧸ J) := ρA.restrictScalars k
@@ -302,8 +299,7 @@ private theorem mem_maximalIdeal_mul_of_tmul_D_eq_zero (k : Type*) [CommRing k] 
       (AlgHom.id k (A ⧸ J)) ρ hρsurj ⟨2, hker2⟩, fun c => ?_⟩
     have h := Algebra.FormallySmooth.comp_liftOfSurjective
       (AlgHom.id k (A ⧸ J)) ρ hρsurj ⟨2, hker2⟩
-    have h2 := DFunLike.congr_fun h c
-    simpa using h2
+    simpa using DFunLike.congr_fun h c
   have hρσ : ∀ c : A ⧸ J, ρA (σ c) = c := fun c => hσ c
   have hkerel : ∀ a : A,
       ρA (Ideal.Quotient.mk Jm a - σ (Ideal.Quotient.mk J a)) = 0 := by
@@ -365,8 +361,7 @@ private theorem mem_maximalIdeal_mul_of_tmul_D_eq_zero (k : Type*) [CommRing k] 
       exact hkerel a
     intro ω
     have h2 := hker (Submodule.mem_top : ω ∈ ⊤)
-    rw [LinearMap.mem_ker, LinearMap.comp_apply] at h2
-    exact h2
+    rwa [LinearMap.mem_ker, LinearMap.comp_apply] at h2
   have hcoef : ∀ i : n,
       bb.repr (KaehlerDifferential.D k A z) i ∈ IsLocalRing.maximalIdeal A :=
     fun i => repr_mem_maximalIdeal_of_tmul_eq_zero bb (KaehlerDifferential.D k A z) h0 i
@@ -512,8 +507,7 @@ private theorem formallyEtale_away_of_isUnit_det (k : Type*) [CommRing k] (ι : 
     Algebra.FormallySmooth.comp k (MvPolynomial ι k) T
   have hdet' : IsUnit ((basisKaehler k ι T).det
       fun i : ι => KaehlerDifferential.D k T (algebraMap S T (w i))) := by
-    rw [← algebraMap_det_basisKaehler k ι S T w]
-    exact hdet
+    rwa [← algebraMap_det_basisKaehler k ι S T w]
   have h := formallyEtale_aeval_of_isUnit_det (basisKaehler k ι T)
     (fun i : ι => algebraMap S T (w i)) hdet'
   exact h
@@ -605,8 +599,7 @@ theorem exists_away_ideal_eq_span_and_isUnit_det
     constructor
     · rintro ⟨i, rfl⟩
       exact ((Fintype.equivFin bset).symm i).2
-    · intro hv
-      exact ⟨(Fintype.equivFin bset) ⟨v, hv⟩, by simp⟩
+    · exact fun hv => ⟨(Fintype.equivFin bset) ⟨v, hv⟩, by simp⟩
   have hxJ : ∀ i, algebraMap S A (s i) ∈ Ideal.map (algebraMap S A) I := fun i =>
     Ideal.mem_map_of_mem _ (hsI i)
   have hgen : ∀ y ∈ Ideal.map (algebraMap S A) I,
@@ -822,14 +815,12 @@ private theorem map_algebraMap_eq_map_map_of_algEquiv {R L M : Type u} [CommRing
     Ideal.map (algebraMap R M) J
       = Ideal.map e.toAlgHom.toRingHom (Ideal.map (algebraMap R L) J) := by
   rw [Ideal.map_map]
-  refine congrArg (fun φ : R →+* M => Ideal.map φ J) ?_
-  exact RingHom.ext fun r => (e.commutes r).symm
+  exact congrArg (fun φ : R →+* M => Ideal.map φ J) (RingHom.ext fun r => (e.commutes r).symm)
 
 private theorem ι_appLE_eq_topIso_inv {X : Scheme.{u}} (U : X.Opens)
     (e : (⊤ : U.toScheme.Opens) ≤ U.ι ⁻¹ᵁ U) : U.ι.appLE U ⊤ e = U.topIso.inv := by
   rw [Scheme.Opens.ι_appLE U U ⊤ e, Scheme.Opens.topIso_inv]
-  refine congrArg (fun h => X.presheaf.map h) ?_
-  exact Quiver.Hom.unop_inj (Subsingleton.elim _ _)
+  exact congrArg (fun h => X.presheaf.map h) (Quiver.Hom.unop_inj (Subsingleton.elim _ _))
 
 private theorem ofIdealTop_ideal_top {Y : Scheme.{u}} (J : Ideal Γ(Y, ⊤))
     (hY : IsAffineOpen (⊤ : Y.Opens)) :

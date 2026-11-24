@@ -79,12 +79,8 @@ theorem Lv_eq (D : D7) : (Formalism.L2.SG.InstExistsPf.instOf D).L = Formalism.L
   show Formalism.L2.SG.InstExistsPf.Lv D = _
   ext x
   constructor
-  · intro hx
-    refine ⟨(Formalism.L2.SG.InstExistsPf.crdE D) x, hx, ?_⟩
-    show (VS D).frame.equivFun ((VS D).frame.equivFun.symm x) = x
-    exact LinearEquiv.apply_symm_apply _ _
+  · exact fun hx => ⟨(Formalism.L2.SG.InstExistsPf.crdE D) x, hx, LinearEquiv.apply_symm_apply _ _⟩
   · rintro ⟨y, hy, rfl⟩
-    show (VS D).frame.equivFun.symm ((VS D).frame.equivFun y) ∈ (VS D).L0
     exact (congrArg (· ∈ (VS D).L0) (LinearEquiv.symm_apply_apply (VS D).frame.equivFun y)).mpr hy
 
 

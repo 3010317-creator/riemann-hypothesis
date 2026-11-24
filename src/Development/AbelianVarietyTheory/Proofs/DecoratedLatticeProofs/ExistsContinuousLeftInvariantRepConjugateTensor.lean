@@ -157,8 +157,7 @@ theorem exists_contRep : GlobalTheory.Published.DiscreteSeriesClassification →
       ContinuousLinearMap.comp_assoc]
   have hlev : ∀ k ∈ X.B.I.Kg g, ∀ w, X.B.R (1, k) (Φ w) = Φ w := by
     obtain ⟨A, -, rfl⟩ := hΦ
-    intro k hk w
-    exact congrArg (fun C : L2X X →L[ℂ] L2X X => C (A w)) (hfix k hk)
+    exact fun k hk w => congrArg (fun C : L2X X →L[ℂ] L2X X => C (A w)) (hfix k hk)
   obtain ⟨m, hm, -⟩ := GlobalTheory.exists_continuousMultilinearMap_of_inner_prod (H := X.B.H) X.B.tens
     X.B.tens_spec.1 X.B.tens_spec.2.2
   let C : (∀ τ, M.H τ) → ∀ v, X.B.H v := fun y => Equiv.piCongrLeft X.B.H X.pl.symm (fun τ => c τ (y τ))

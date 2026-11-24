@@ -290,8 +290,7 @@ theorem UpperTheory.V.Pa.Det.w1sAct :
       simp
     · intro c
       simp only [matrix_map_dd_a_mul, matrix_map_dd_ep'_mul, hCa, hCe', hCa2, hCe'2, hPa, hPe', hMa, hMe', hZa]
-      simp
-      exact (ev_od_graded_mul_mem _ _).2.2.1 ((ev_od_graded_mul_mem _ _).2.1 hρ (hY c)) hρ'
+      simpa using (ev_od_graded_mul_mem _ _).2.2.1 ((ev_od_graded_mul_mem _ _).2.1 hρ (hY c)) hρ'
     · simp only [matrix_map_dd_a_mul, matrix_map_dd_ep_mul, matrix_map_dd_ep'_mul, matrix_map_dd_eta_mul, hCa, hCe, hCe', hCt, hCa2, hCe2, hCe'2, hCt2, hPa, hPe, hPe', hPt, hMa, hMe, hMe', hMt, hZa, hZe]
       simp
       exact add_mem
@@ -343,8 +342,7 @@ private theorem evP_mul {a : ℕ} {N N' : Matrix (Fin n) (Fin n) F} (h : N ∈ E
 private theorem evP_tr {a : ℕ} {N : Matrix (Fin n) (Fin n) F} (h : N ∈ Ev F F n a) :
     Nᵀ ∈ Ev F F n a := by
   rw [evP_iff] at *
-  intro i j e
-  exact h j i (by tauto)
+  exact fun i j e => h j i (by tauto)
 
 private theorem evP_inv (D : DetFr F G n) (g : G) : D.r g⁻¹ * D.r g = 1 := by
   rw [← map_mul]; simp
@@ -464,9 +462,7 @@ private theorem evP_sah (D : DetFr F G n) (z : G → Matrix (Fin n) (Fin n) F)
     rw [hcomm, mul_assoc, evP_inv', mul_one]
   have hmul : ∀ g k, z (g * k) = z g + D.χF g • z k := fun g k => by
     rw [hz g trivial k trivial, hconj]
-  have hne : D.χF D.g₀ - 1 ≠ 0 := by
-    intro h
-    exact D.χ_ne (Units.ext (sub_eq_zero.1 h))
+  have hne : D.χF D.g₀ - 1 ≠ 0 := fun h => D.χ_ne (Units.ext (sub_eq_zero.1 h))
   refine ⟨(D.χF D.g₀ - 1)⁻¹ • z D.g₀, Submodule.smul_mem _ _ (hev _), fun g => ?_⟩
   have e1 : z (D.g₀ * g) = z (g * D.g₀) := by
     have hm := D.comm D.g₀ g
@@ -474,8 +470,7 @@ private theorem evP_sah (D : DetFr F G n) (z : G → Matrix (Fin n) (Fin n) F)
       h0 _ hm, hχ _ hm, zero_add, one_smul]
   rw [hmul, hmul] at e1
   have e2 : (D.χF D.g₀ - 1) • z g = (D.χF g - 1) • z D.g₀ := by
-    rw [sub_smul, sub_smul, one_smul, one_smul]
-    rw [sub_eq_sub_iff_add_eq_add, add_comm, e1, add_comm]
+    rw [sub_smul, sub_smul, one_smul, one_smul, sub_eq_sub_iff_add_eq_add, add_comm, e1, add_comm]
   unfold dTw
   rw [mul_smul_comm, smul_mul_assoc, hconj, smul_comm, ← smul_sub,
     show D.χF g • z D.g₀ - z D.g₀ = (D.χF g - 1) • z D.g₀ by rw [sub_smul, one_smul], ← e2,
@@ -716,8 +711,7 @@ theorem UpperTheory.V.Pa.Det.infres :
     have hcomm : ∀ h ∈ D.G', D.r h * w g = w g * D.r h := by
       intro h hh
       have hh' : g⁻¹ * h * g ∈ D.G' := by
-        have hm := D.G'.mul_mem (D.comm g⁻¹ h) hh
-        simpa [mul_assoc] using hm
+        simpa [mul_assoc] using D.G'.mul_mem (D.comm g⁻¹ h) hh
       have e1 := hwc g (g⁻¹ * h * g)
       have e2 := hwc h g
       rw [hw0 _ hh', Matrix.mul_zero, Matrix.zero_mul, smul_zero, add_zero] at e1
@@ -796,8 +790,7 @@ private theorem move_one {F G : Type} [Field F] [Group G] {n : ℕ} (D : DetFr F
       z u * D.r u * (c.sum fun g x => x • D.r g) * D.r v + D.r u * (c.sum fun g x => x • (z g * D.r g)) * D.r v
         + D.r u * (c.sum fun g x => x • D.r g) * (z v * D.r v) := by
     rw [hr, hr, hr]
-    simp only [Finsupp.sum, ← Finset.sum_add_distrib]
-    exact Finset.sum_congr rfl expand
+    simpa only [Finsupp.sum, ← Finset.sum_add_distrib] using Finset.sum_congr rfl expand
   rw [eq, h0] at key
   simpa using key
 
@@ -953,8 +946,7 @@ private theorem kills_cut {F G : Type} [Field F] [Group G] {n : ℕ} (D : DetFr 
     D.KillsRel (fun g => Matrix.of fun i j => if p i ∧ q j then z g i j else 0) i j := by
   intro c hc hs
   have hev : ∀ g k l, ¬ (q k ↔ q l) → D.r g k l = 0 := by
-    intro g k l h
-    exact (Submodule.mem_bot F).1 (((D.ev g) k l).2 (hq k l h))
+    exact fun g k l h => (Submodule.mem_bot F).1 (((D.ev g) k l).2 (hq k l h))
   have e : ∀ g, ((Matrix.of fun i j => if p i ∧ q j then z g i j else 0) * D.r g) i j
       = if p i ∧ q j then (z g * D.r g) i j else 0 := fun g => cut_mul p q (z g) (D.r g) (hev g) i j
   simp only [Finsupp.sum, Matrix.sum_apply, Matrix.smul_apply, e]
@@ -1067,8 +1059,7 @@ theorem UpperTheory.V.Pa.Det.ann :
     exact h.symm
   have hα : α = 0 := hκ.indep α YK hYKo hT fun g => by
     have := hYK g
-    rw [hKe] at this
-    exact this
+    rwa [hKe] at this
   exact ⟨hα, YL, hYLo, hYLs, fun g => by
     have := hYL g
     rw [hLe] at this
@@ -1106,12 +1097,10 @@ theorem UpperTheory.V.Pa.Det.relPair :
     rw [← mul_assoc, ← map_mul, inv_mul_cancel, map_one, one_mul]
   have hχ : ∀ g ∈ D.G', D.χF g = 1 := fun g hg => by simp [DetFr.χF, D.χ_triv g hg]
   have eK : ∀ k g h, κ k (g * h) = κ k g + D.r g * κ k h * D.r g⁻¹ := fun k g h => by
-    have e := (hK.coc k) g (Set.mem_univ g) h (Set.mem_univ h)
-    simpa using e
+    simpa using (hK.coc k) g (Set.mem_univ g) h (Set.mem_univ h)
   have eL : ∀ g ∈ D.G', ∀ k h, la k (g * h) = la k g + D.r g * la k h * D.r g⁻¹ := fun g hg k h => by
     have e := (hT.coc k) g (Set.mem_univ g) h (Set.mem_univ h)
-    rw [hχ g hg, one_smul] at e
-    exact e
+    rwa [hχ g hg, one_smul] at e
   have pK : ∀ k g h, κ k (g * h) * D.r (g * h) = κ k g * D.r g * D.r h + D.r g * (κ k h * D.r h) := by
     intro k g h
     rw [eK, map_mul]
@@ -1282,8 +1271,7 @@ theorem UpperTheory.V.Pa.Det.oddPart :
     let i : Fin n := ⟨0, by omega⟩
     let j : Fin n := ⟨D.a, ha⟩
     have hij : ¬((i : ℕ) < D.a ↔ (j : ℕ) < D.a) := by
-      intro h
-      exact lt_irrefl D.a (h.mp (show (0 : ℕ) < D.a by omega))
+      exact fun h => lt_irrefl D.a (h.mp (show (0 : ℕ) < D.a by omega))
     have hji : ¬((j : ℕ) < D.a ↔ (i : ℕ) < D.a) := fun h => hij h.symm
     have step1 : ∀ c' : G →₀ F, (∀ g ∈ c'.support, g ∈ D.G') → (c'.sum fun g x => x • D.r g) = 0 →
         ∀ k', (c'.sum fun g x => x • (la k' g * D.r g)) j i = 0 := by
@@ -1295,9 +1283,7 @@ theorem UpperTheory.V.Pa.Det.oddPart :
           + ∑ q, (fun q => (c'.sum fun g x => x • (κ q g * D.r g)) j i) q • la q g) * D.r g)) i j = 0
         rw [comb_entry]
         exact Det.relPair D κ la s ph hK hT c c' hc hc' hr hr' i j hij
-      have h := (Det.ann D κ la s ph hK hT _ _ i j hij hkill).1
-      intro k'
-      exact congrFun h k'
+      exact fun k' => congrFun ((Det.ann D κ la s ph hK hT _ _ i j hij hkill).1) k'
     have hkill2 : D.KillsRel (fun g => ∑ q, (0 : Fin m → F) q • κ q g
         + ∑ q, (Pi.single k (1 : F) : Fin m → F) q • la q g) j i := by
       intro c hc hr
@@ -1428,8 +1414,7 @@ theorem UpperTheory.V.Pa.Det.detAlg :
   have hRσ : ∀ k g, D.r (D.σ g) * Y k * D.r (D.σ g)⁻¹ = s • (D.r g * Y k * D.r g⁻¹)ᵀ := fun k g => by
     have := Det.dSigma D (fun _ => 1) (Y k) g (fun _ => rfl)
     simp only [dTw, one_smul] at this
-    rw [hYT k] at this
-    rw [sub_eq_iff_eq_add] at this
+    rw [hYT k, sub_eq_iff_eq_add] at this
     rw [this, Matrix.transpose_sub, Matrix.transpose_smul, hYs, sub_add_cancel, mul_smul_comm,
       smul_mul_assoc, Matrix.transpose_smul]
   have hχσ : ∀ g, D.χF (D.σ g) = D.χF g := fun g => by simp [DetFr.χF, D.χσ]
@@ -1476,8 +1461,7 @@ private theorem mem_ev_iff_apply_eq_zero_off_diagonal_blocks {A R : Type} [CommR
     (Z : Matrix (Fin n) (Fin n) R) :
     Z ∈ Ev A R n a ↔ ∀ i j : Fin n, ¬((i : ℕ) < a ↔ (j : ℕ) < a) → Z i j = 0 := by
   constructor
-  · intro h i j hij
-    exact (Submodule.mem_bot A).1 ((h i j).2 hij)
+  · exact fun h i j hij => (Submodule.mem_bot A).1 ((h i j).2 hij)
   · intro h i j
     exact ⟨fun _ => Submodule.mem_top, fun hij => by rw [h i j hij]; exact Submodule.zero_mem _⟩
 
@@ -1580,8 +1564,7 @@ theorem UpperTheory.V.Pa.Det.detFr :
     (fun g => Units.map (algebraMap x.A (FractionRing x.A)).toMonoidHom
       ((F.eps ℤ_[l] x.A g) ^ (1 - (n : ℤ)))) ?_, rfl, rfl, fun g => rfl, rfl, fun g => rfl⟩
   · have h6 := (h2.map ((algebraMap x.A (FractionRing x.A)).comp (algebraMap ℤ_[l] x.A))).ne_zero
-    rw [RingHom.comp_apply, map_ofNat, map_ofNat] at h6
-    exact h6
+    rwa [RingHom.comp_apply, map_ofNat, map_ofNat] at h6
   · intro g h
     rw [GFrame.G', MonoidHom.mem_ker, map_mul, map_mul, map_mul, map_inv, map_inv, mul_inv_eq_one,
       mul_inv_eq_iff_eq_mul, mul_comm]
@@ -1597,8 +1580,7 @@ theorem UpperTheory.V.Pa.Det.detFr :
         RingHom.ker ((algebraMap x.A (FractionRing x.A)).comp (algebraMap ℤ_[l] x.A)) := by
       rw [RingHom.mem_ker, map_sub, RingHom.comp_apply, h7, map_one, sub_self]
     have h9 := IsLocalRing.le_maximalIdeal (RingHom.ker_ne_top _) h8
-    rw [← PadicInt.ker_toZMod, RingHom.mem_ker, map_sub, map_one, sub_eq_zero] at h9
-    exact h9
+    rwa [← PadicInt.ker_toZMod, RingHom.mem_ker, map_sub, map_one, sub_eq_zero] at h9
   · intro g
     apply Subtype.ext
     show F.c * (F.c * (g : F.Γ) * F.c⁻¹) * F.c⁻¹ = (g : F.Γ)
@@ -1723,10 +1705,8 @@ private theorem transpose_mem_symmetric_deformation (h : P ∈ pairedDualFirstOr
   intro i j
   have hji := h j i
   constructor
-  · intro hij
-    exact hji.1 hij.symm
-  · intro hij
-    exact hji.2 (fun e => hij e.symm)
+  · exact fun hij => hji.1 hij.symm
+  · exact fun hij => hji.2 (fun e => hij e.symm)
 
 end Mp
 

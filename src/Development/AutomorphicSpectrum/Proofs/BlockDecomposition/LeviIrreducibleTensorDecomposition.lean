@@ -244,8 +244,7 @@ theorem fixed_sup_eq_zero [TopologicalSpace G] [IsTopologicalGroup G] {π : Repr
   obtain ⟨v, hvK, hv⟩ := GlobalTheory.SmGL.IwahoriOnto.exists_fixed_map_eq hS hK ((A.mkQ).comp B.subtype) ⟨b, hb⟩ hinv
   have hvK' : (v : V) ∈ fixed π K := by
     rw [mem_fixed_iff_forall] at hvK ⊢
-    intro k hk
-    exact congrArg Subtype.val (hvK k hk)
+    exact fun k hk => congrArg Subtype.val (hvK k hk)
   have hv0 : (v : V) = 0 := hB0 v v.2 hvK'
   have hbA : b ∈ A := by
     have h1 : A.mkQ (v : V) = A.mkQ b := hv
@@ -336,16 +335,14 @@ theorem exists_irreducible_of_fixed {π : Representation ℂ G V} {K : Subgroup 
         intro y _
         obtain ⟨y', hy', hyy'⟩ := hST y.2
         have hyy : y' = y := Subtype.ext hyy'
-        rw [← hyy]
-        exact hy'
+        rwa [← hyy]
   · have hle : (fixed S.toRepresentation K).map S1.subtype ≤ W ⊓ fixed π K := by
       rintro _ ⟨y, hy0, rfl⟩
       have hy : y ∈ fixed S.toRepresentation K := hy0
       refine ⟨hM0W (hS1M0 y.2), ?_⟩
       show (y : V) ∈ fixed π K
       rw [mem_fixed_iff_forall] at hy ⊢
-      intro k hk
-      exact congrArg Subtype.val (hy k hk)
+      exact fun k hk => congrArg Subtype.val (hy k hk)
     haveI : FiniteDimensional ℂ ↥((fixed S.toRepresentation K).map S1.subtype) :=
       Submodule.finiteDimensional_of_le hle
     exact LinearEquiv.finiteDimensional
@@ -414,8 +411,7 @@ theorem exists_fixed_of_ne_bot (ρ : Representation ℂ (G × H) V) (hi : ρ.IsI
         obtain ⟨y, hy, z, hz, rfl⟩ := Submodule.mem_sup.mp hx
         rw [map_add (f := _)]
         exact Submodule.add_mem_sup (hTinv a g hy) (ih.1 g hz)
-      · intro x hx hxK
-        exact fixed_sup_eq_zero hs hK (hTinv a) ih.1 (hT0 a) ih.2 hx hxK
+      · exact fun x hx hxK => fixed_sup_eq_zero hs hK (hTinv a) ih.1 (hT0 a) ih.2 hx hxK
   let B : Submodule ℂ V := ⨆ h, T h
   have hBinv : ∀ (gh : G × H) ⦃x : V⦄, x ∈ B → ρ gh x ∈ B := by
     intro gh x hx
@@ -455,8 +451,7 @@ theorem exists_irreducible_sub_inl : ∀ {G H V : Type} [Group G] [TopologicalSp
   intro G H V _ _ _ _ _ _ _ _ hG hH ρ hadm hi
   haveI : IsSimpleOrder (Subrepresentation ρ) := hi
   obtain ⟨v, hv0⟩ : ∃ v : V, v ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply (bot_ne_top : (⊥ : Subrepresentation ρ) ≠ ⊤)
     apply Subrepresentation.ext
     ext x
@@ -484,8 +479,7 @@ theorem exists_irreducible_sub_inl : ∀ {G H V : Type} [Group G] [TopologicalSp
   have hvW : v ∈ W := by
     show v ∈ fixed (ρ.comp (MonoidHom.inr G H)) K2
     rw [mem_fixed_iff_forall]
-    intro k hk
-    exact hfix 1 (one_mem K1) k hk
+    exact fun k hk => hfix 1 (one_mem K1) k hk
   have hW0 : W ≠ ⊥ := by
     intro h
     apply hv0
@@ -494,8 +488,7 @@ theorem exists_irreducible_sub_inl : ∀ {G H V : Type} [Group G] [TopologicalSp
     exact (Submodule.mem_bot ℂ).mp hvW'
   have hvK : v ∈ fixed (ρ.comp (MonoidHom.inl G H)) K1 := by
     rw [mem_fixed_iff_forall]
-    intro k hk
-    exact hfix k hk 1 (one_mem K2)
+    exact fun k hk => hfix k hk 1 (one_mem K2)
   have hprodO : IsOpen ((K1.prod K2 : Subgroup (G × H)) : Set (G × H)) := by
     rw [Subgroup.coe_prod]
     exact hK1o.prod hK2o
@@ -560,8 +553,7 @@ theorem finiteDimensional_of_smInd_fixed {G W : Type} [Group G] [TopologicalSpac
   let pick : G → H := fun x => if h : S x then h.choose else 1
   have pick_spec : ∀ x, S x → ((pick x : H) : G)⁻¹ * x ∈ K := by
     intro x h
-    simp only [pick, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [pick, dite_eq_left h] using h.choose_spec
   let F : A →ₗ[ℂ] (G → W) := LinearMap.pi fun x =>
     if S x then (σ (pick x)).comp A.subtype else 0
   have F_pos : ∀ (w : A) x, S x → F w x = σ (pick x) w := by
@@ -621,8 +613,7 @@ theorem finiteDimensional_of_smInd_fixed {G W : Type} [Group G] [TopologicalSpac
     intro w
     rw [F_pos w 1 hS1]
     refine (key 1 _ ?_ w w.2).trans (by simp)
-    have h3 := K.inv_mem (pick_spec 1 hS1)
-    simpa using h3
+    simpa using K.inv_mem (pick_spec 1 hS1)
   have hinj : Function.Injective T := by
     intro a b hab
     have h4 : F a = F b := congrArg (fun t : fixed (smInd H σ) K => t.1.1.1) hab
@@ -656,15 +647,13 @@ theorem isAdmissible_of_parInd : ∀ {k : Type} [Field k] [ValuativeRel k] [Topo
   intro c hc w hw
   have hcL : leviProj k (GlobalTheory.CompanionTheory.BZInd.stdE d) c ∈ L' := by
     have h2 : c ∈ Subtype.val ⁻¹' U := hm hc
-    rw [hUe] at h2
-    exact h2
+    rwa [hUe] at h2
   have hδ : δ (leviProj k (GlobalTheory.CompanionTheory.BZInd.stdE d) c) = 1 := MonoidHom.mem_ker.1 hcL.2
   have hw' := hw ⟨_, hcL.1⟩
   rw [MonoidHom.one_apply, Units.val_one, one_smul] at hw'
   show ((δ (leviProj k (GlobalTheory.CompanionTheory.BZInd.stdE d) c) : ℂˣ) : ℂ) •
     ρ (leviProj k (GlobalTheory.CompanionTheory.BZInd.stdE d) c) w = w
-  rw [hδ, Units.val_one, one_smul]
-  exact hw'
+  rwa [hδ, Units.val_one, one_smul]
 
 end GlobalTheory.CompanionTheory.LeviAdm
 end -- clump:auto
@@ -807,8 +796,7 @@ theorem homRep_irreducible {ρ : Representation ℂ (G × H) V} {σ : Representa
     have h1 := congrArg Subrepresentation.toSubmodule h
     have h2 : (⟨i, hm⟩ : homSp ρ σ) ∈ (⊥ : Submodule ℂ (homSp ρ σ)) := by
       have : (⟨i, hm⟩ : homSp ρ σ) ∈ (⊤ : Subrepresentation (homRep ρ σ)).toSubmodule := Submodule.mem_top
-      rw [← h1] at this
-      exact this
+      rwa [← h1] at this
     rw [Submodule.mem_bot] at h2
     exact h0 (congrArg Subtype.val h2)⟩
   refine ⟨fun Q => ?_⟩

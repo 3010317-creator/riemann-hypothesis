@@ -57,8 +57,7 @@ private theorem eq_one_of_odd {Γ : Type} [Monoid Γ] {x : Γ} {k m : ℕ} (h1 :
     (hm : Odd m) : x = 1 := by
   have hc : Nat.Coprime (2 ^ k) m := Nat.Coprime.pow_left _ (Nat.coprime_two_left.mpr hm)
   have h3 : orderOf x ∣ Nat.gcd (2 ^ k) m := Nat.dvd_gcd h1 h2
-  rw [hc.gcd_eq_one, Nat.dvd_one, orderOf_eq_one_iff] at h3
-  exact h3
+  rwa [hc.gcd_eq_one, Nat.dvd_one, orderOf_eq_one_iff] at h3
 
 private theorem cond_dvd (h : Host) (O : Type) [CommRing O] [IsDomain O] (ψ : DirichletCharacter O h.N) (hψ : h.IsChar ψ)
     (h2 : comp 2 ψ = 1) (ho : ∀ p, p.Prime → p = h.q1 ∨ p = h.d → ∃ m, Odd m ∧ orderOf (comp p ψ) ∣ m) :
@@ -151,5 +150,4 @@ theorem UpperTheory.V.HV.hostOdd :
     · rw [← hcomp_eq p hp hpl]
       exact ((compAlg O h.N p hp).2.2.2.2.2.1 _).2.1
     · have hk := ((compAlg O h.N p hp).2.2.2.2.2.1 (kap l ψ)).2.1
-      rw [show kap l ψ = lPart l ψ from rfl, hkap] at hk
-      exact hk
+      rwa [show kap l ψ = lPart l ψ from rfl, hkap] at hk

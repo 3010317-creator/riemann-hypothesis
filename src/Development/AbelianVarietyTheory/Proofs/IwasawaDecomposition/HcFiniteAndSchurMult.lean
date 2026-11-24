@@ -328,8 +328,7 @@ theorem continuous_inner_l2_translate :
       = fun g => ∫ x, ⟪f x, a u (act g x)⟫_ℂ ∂ν := by
     funext g
     rw [L2.inner_def]
-    have hm : σ (umat g) u ∈ smSub G (trRep σ P) := by
-      exact sigma_mem hP hG hσ hu g.2
+    have hm : σ (umat g) u ∈ smSub G (trRep σ P) := sigma_mem hP hG hσ hu g.2
     refine integral_congr_ae ?_
     filter_upwards [hA _ hm] with x hx
     rw [hx, heq]
@@ -432,8 +431,7 @@ theorem inner_l2_gard : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAd
     rw [hx]
   have h1 : ∀ x, a (gard ε σ φ w) x = ∫ g : Formalism.REAL.UJ ε, φ (umat g) • a w (act g x) ∂(Formalism.REAL.muG ε) := fun x => by
     have := ((GlobalTheory.T.sobolevContinuous_form_gardingVector n ε H σ P G hP hG hσ _ (hsob x)).2 w hw).2 φ hφ
-    simp only [LinearMap.comp_apply, LinearMap.proj_apply, hact'] at this
-    exact this
+    simpa only [LinearMap.comp_apply, LinearMap.proj_apply, hact'] using this
   have hφi : Integrable (fun g : Formalism.REAL.UJ ε => φ (umat g)) (Formalism.REAL.muG ε) := by
     simpa using hφ.integrable (ε := ε) (F := fun _ => (1 : ℝ)) continuous_const
   have hf1 : Integrable (f : X → ℂ) ν := (Lp.memLp f).integrable (by norm_num)
@@ -749,8 +747,7 @@ theorem exists_continuousLinearMap_tens_update {T : MMap M} (hT : IsMultMap θ M
   · obtain ⟨ℓ, ⟨L, C, h1, h2⟩, e⟩ := hT.cont τ v x
     refine ⟨L, C, h1, fun w hw => ?_⟩
     have := h2 w hw
-    rw [e ⟨w, mem_sm.2 hw⟩, ← ha'] at this
-    exact this
+    rwa [e ⟨w, mem_sm.2 hw⟩, ← ha'] at this
   · rw [ha' ⟨w, mem_sm.2 hw⟩, ← map_sigma hT τ v _ hg, ← ha']
 
 theorem eq_zero_of_apply {T : MMap M} (hT : IsMultMap θ M J χ T) (v₀ : M.Vec) (h₀ : ∀ τ, v₀ τ ≠ 0) (h : T v₀ = 0) :

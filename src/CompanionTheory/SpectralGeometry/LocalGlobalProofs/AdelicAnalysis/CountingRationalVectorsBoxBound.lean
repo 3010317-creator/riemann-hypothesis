@@ -371,8 +371,7 @@ theorem hE_conj (hσ : ∀ a, σ (σ a) = a) (hJ : ∀ i j, σ (J j i) = J i j) 
 
 theorem exists_hE_ne_zero (hdet : J.det ≠ 0) {x : Fin M → E} (hx : x ≠ 0) :
     ∃ w, hE σ J x w ≠ 0 := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hu : (fun i => σ (x i)) ᵥ* J = 0 := by
     funext j
     have h := hcon (Pi.single j 1)
@@ -739,8 +738,7 @@ theorem exists_partner (hσ : ∀ a, σ (σ a) = a) (hJ : IsHermND σ J) (h2 : (
     have h1 := Matrix.eq_zero_of_vecMul_eq_zero hJ.2 h0
     apply hx
     funext i
-    have h3 := congrFun h1 i
-    simpa using h3
+    simpa using congrFun h1 i
   obtain ⟨j, hj⟩ := Function.ne_iff.mp hr
   have hj' : Matrix.vecMul (fun i => σ (x i)) J j ≠ 0 := hj
   obtain ⟨y₀, h1⟩ : ∃ y₀, hE σ J x y₀ = 1 := by

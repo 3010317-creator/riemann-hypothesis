@@ -137,8 +137,7 @@ theorem move_term : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace 
     fun al al' ex ex' => ?_⟩
   · ext v
     change eich L S.Hm x (-u) (L.cj s) v ∈ (n₀⁻¹ • Λ : Submodule L.O S.V) ↔ v ∈ Λ
-    rw [hmem, ← e₀, ← e₀i]
-    rw [show n₀ (n₀⁻¹ v) = v from n₀.apply_symm_apply v]
+    rw [hmem, ← e₀, ← e₀i, show n₀ (n₀⁻¹ v) = v from n₀.apply_symm_apply v]
   · obtain ⟨y, hy, e⟩ := hth
     refine ⟨y, (hY y ?_).1 hy, e⟩
     have : y = algebraMap F E S.th⁻¹ • (x + x') := by
@@ -155,8 +154,7 @@ theorem move_term : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace 
     rw [this]
     exact Λ.add_mem (Λ.add_mem hu t1) t2
   · exact ⟨L.cj c, cj_mem_O hc, by rw [hsc, map_mul, AlgEquiv.commutes]⟩
-  · rw [L.cj_cj, Frames.h, hf_neg_l, hf_neg_r, neg_neg, add_comm]
-    exact hs
+  · rwa [L.cj_cj, Frames.h, hf_neg_l, hf_neg_r, neg_neg, add_comm]
   · have K := (TermBasic.term_basic L r k S d Λ hT).2.1
     have hw := K.2.2.1
     have hw' := K.2.2.2.1

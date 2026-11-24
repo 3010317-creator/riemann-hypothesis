@@ -107,8 +107,7 @@ theorem frame_rat : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a =>
       rw [dite_eq_left hP]
       rfl
     have key := GlobalTheory.FrameRat.nearAt_liftFr_smul t.seam p.deco ⟨P.1, hP⟩ g hq _ h1
-    rw [e2, hD]
-    exact key
+    rwa [e2, hD]
   · have e : frsF t.sel (t.tup μ) (((g, 1, 1) : UF t.X.E (D.R.N i) × GLG (E := t.X.E) (n := D.R.N i) (SG := t.Pr.vGs) ×
         GLQ t.X.E (D.R.N i) (QE t.sel (t.tup μ : Chr t.X.F t.X.E t.X.K))) • p) P = g.1 * frsF t.sel (t.tup μ) p P := by
       unfold frsF
@@ -116,8 +115,7 @@ theorem frame_rat : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a =>
       show g.1 * _ * _ = _
       simp
       rfl
-    rw [e, map_mul, nearAt_rat_mul]
-    exact h0
+    rwa [e, map_mul, nearAt_rat_mul]
 
 end GlobalTheory.RatFrame
 
@@ -470,8 +468,7 @@ theorem frsF_rat_G (hq : ∀ P : rowSG Pr sel mu, P.1 ∈ Pr.vGs → ((qOf P.1 :
   obtain ⟨κ, he, hr⟩ := liftFr_smul p.deco (g, (1 : GLG (E := X.E) (n := R.N j) (SG := Pr.vGs))) ⟨P.1, hP⟩
   refine ⟨κ, ?_, fun x hx => ?_⟩
   · unfold frsF
-    rw [dite_eq_left hP, dite_eq_left hP]
-    exact he
+    rwa [dite_eq_left hP, dite_eq_left hP]
   · rw [GlobalTheory.TopStep.mem_stdAt]
     intro i
     have hkx := GlobalTheory.TopStep.mem_stdAt.1 ((κ.2 x).2 hx) i
@@ -485,8 +482,7 @@ theorem frsF_rat_G (hq : ∀ P : rowSG Pr sel mu, P.1 ∈ Pr.vGs → ((qOf P.1 :
     have h := GlobalTheory.TopStep.intAt_div_of_redP (hq P hP) (GlobalTheory.TopStep.intAt_sub hkx hxi) hred
     have e : (((qOf P.1 : X.E) ^ 1)⁻¹ • (κ.1 x - x)) i = (κ.1 x i - x i) / (qOf P.1 : X.E) := by
       simp [div_eq_inv_mul]
-    rw [e]
-    exact h
+    rwa [e]
 
 end Frames
 
@@ -534,8 +530,7 @@ theorem xiPt_top_smul : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU 
         rw [hD1]; exact hκc'
       have hy0P : ∀ l, IntAt P.1 ((qOf P.1 : t.X.E) * A.y0 β P l) := by
         intro l
-        have h := hy0 P l
-        simpa only [hP, ite_true, pow_one] using h
+        simpa only [hP, ite_true, pow_one] using hy0 P l
       have key1 : ∀ (F1 : Sp t.X.E (D.R.N (t.m2 + 1)) ≃ₗ[t.X.E] Sp t.X.E (D.R.N (t.m2 + 1))) (u1 u0 : Sp t.X.E (D.R.N (t.m2 + 1))),
           F1 = g.1 * frsF t.sel (t.tup μ) p P * κ.1 →
           SameCoset t.sel (t.tup μ) (t.cst μ) P (F1.symm u1) (y0At A (t.m2 + 1) (Nat.le_of_succ_le hi) β P) →
@@ -593,8 +588,7 @@ theorem xiPt_top_smul : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU 
       exact key1 _ _ _ hF (hrep _ P) (hrep _ P)
     · have hy0P : ∀ l, IntAt P.1 ((qOf P.1 : t.X.E) ^ (t.cst μ).M * A.y0 β P l) := by
         intro l
-        have h := hy0 P l
-        simpa only [hP, ite_false] using h
+        simpa only [hP, ite_false] using hy0 P l
       have hqM : (qOf P.1 : t.X.E) ^ (t.cst μ).M ≠ 0 := pow_ne_zero _ hq0
       have key2 : ∀ (F1 : Sp t.X.E (D.R.N (t.m2 + 1)) ≃ₗ[t.X.E] Sp t.X.E (D.R.N (t.m2 + 1))) (u1 u0 : Sp t.X.E (D.R.N (t.m2 + 1))),
           F1 = g.1 * frsF t.sel (t.tup μ) p P →
@@ -670,8 +664,7 @@ theorem funMoved_ptAd_rat : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A 
   have H := funMoved_ratA_act t.seam _ P v h _ _ _ g.1 1 (hp.fnl P v h hv)
   have e : ratA D.host.F (A.crd i hi) * x₁.1 = ratA D.host.F (seamGL t.seam g.1) * (ratA D.host.F (A.crd i hi) * x.1) := by
     rw [hx, hg, map_mul, map_mul, map_inv]; group
-  rw [e]
-  exact H
+  rwa [e]
 
 end GlobalTheory.TwV
 end -- clump:auto

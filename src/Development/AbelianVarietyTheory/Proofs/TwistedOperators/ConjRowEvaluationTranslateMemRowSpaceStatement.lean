@@ -138,8 +138,7 @@ theorem rightReg_ae (B : RowsAut) (f : B.I.GA → ℂ) (hf : ∀ γ ∈ B.I.GFse
 theorem memLp_mul_right (B : RowsAut) (f : B.I.GA → ℂ) (hf : ∀ γ ∈ B.I.GFset, ∀ y, f (γ * y) = f y)
     (hm : MemLp f 2 ((B.I.muA B.μf).restrict B.fund)) (g : B.I.GA) :
     MemLp (fun x => f (x * g)) 2 ((B.I.muA B.μf).restrict B.fund) := by
-  have h := rightReg_ae B f hf (hm.toLp f) hm.coeFn_toLp g
-  exact (Lp.memLp (B.R g (hm.toLp f))).ae_eq h
+  exact (Lp.memLp (B.R g (hm.toLp f))).ae_eq (rightReg_ae B f hf (hm.toLp f) hm.coeFn_toLp g)
 
 
 open Classical in
@@ -225,8 +224,7 @@ private lemma rep_mem_sm_of_mem_UH {D : D7} {V : HSp D} {S : D.what₂.Tau → S
   have hu := isUnit_of_mem_UH' M τ hg
   have hmem : hu.unit ∈ Formalism.IndefR.SchurOrthogonalityAlt.Gt V τ := by
     show ((hu.unit : GL (Fin V.rank) ℂ) : Matrix (Fin V.rank) (Fin V.rank) ℂ) ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ)
-    rw [IsUnit.unit_spec]
-    exact hg
+    rwa [IsUnit.unit_spec]
   have h := Formalism.IndefR.SchurOrthogonalityAlt.sm_stable M τ ⟨hu.unit, hmem⟩ hw
   simpa [Formalism.IndefR.SchurOrthogonalityAlt.gm, IsUnit.unit_spec] using h
 
@@ -288,8 +286,7 @@ theorem evF_equiv : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type}
       intro z
       have hw : ((w' τ : (MP R).sm τ) : (MP R).H τ) = (MP R).rep τ (g' τ)
           (((fun τ' => if τ' ∈ s then w' τ' else vecOf R X c y τ') τ : (MP R).sm τ) : (MP R).H τ) := by
-        simp only [ite_eq_right hτ]
-        exact hw' τ
+        simpa only [ite_eq_right hτ] using hw' τ
       have e := hS'.2 τ (g' τ) (hg' τ) (fun τ' => if τ' ∈ s then w' τ' else vecOf R X c y τ') (w' τ) hw z
       refine Eq.trans (congrArg (fun v => S v z) ?_) (e.trans ?_)
       · funext τ'
@@ -300,16 +297,14 @@ theorem evF_equiv : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type}
       · rw [ih, mul_assoc, hstep τ s hτ]
   have hclaim' : ∀ z, S w' z = S (vecOf R X c y) (z * a Finset.univ) := by
     intro z
-    have e := hclaim Finset.univ z
-    simpa using e
+    simpa using hclaim Finset.univ z
   refine ⟨y', ?_, ?_⟩
   · unfold tensT
     rw [X.B.tens_spec.2.1 g]
     congr 1
     funext v
     obtain ⟨τ, rfl⟩ := X.pl.symm.surjective v
-    simp only [Equiv.piCongrLeft_apply_apply]
-    exact hyσ τ
+    simpa only [Equiv.piCongrLeft_apply_apply] using hyσ τ
   · have hvec : vecOf R X c y' = w' := by
       funext τ
       apply Subtype.ext
@@ -449,8 +444,7 @@ theorem GlobalTheory.RowEvalHH.Re_evF : ∀ {D : D7} {G : Type} [Group G] [Finty
       have h1 : f (x * (1, k)) = star (X.chi2 k) * f x := by
         have hl := hlev _ (hLM k hk).1 (ιY x * t)
         rw [(hLM k hk).2] at hl
-        rw [hfY, hfY, e2]
-        exact hl
+        rwa [hfY, hfY, e2]
       rw [h1, star_mul', star_star, mul_comm]
     have hK := _root_.Formalism.L2.SG.Pf.level_subgroup_character_unitary X
     have hKL := Formalism.L2.SG.Closed.level_subgroup_properties X
@@ -736,12 +730,9 @@ theorem dense_span_tensor_of_dense_subspaces {ι : Type} [Fintype ι] {H : ι �
   have hsub : Set.range u ⊆ closure (S : Set Hs) := by
     rintro _ ⟨x, rfl⟩
     refine map_mem_closure hcont (hpi x) ?_
-    intro y hy
-    apply Submodule.subset_span
-    exact ⟨fun i => ⟨y i, hy i (Set.mem_univ i)⟩, rfl⟩
+    exact fun y hy => Submodule.subset_span ⟨fun i => ⟨y i, hy i (Set.mem_univ i)⟩, rfl⟩
   have hle : Submodule.span ℂ (Set.range u) ≤ S.topologicalClosure := by
-    rw [Submodule.span_le, Submodule.topologicalClosure_coe]
-    exact hsub
+    rwa [Submodule.span_le, Submodule.topologicalClosure_coe]
   have h2 : Dense (S.topologicalClosure : Set Hs) := hd.mono hle
   rwa [Submodule.topologicalClosure_coe, dense_closure] at h2
 
@@ -798,8 +789,7 @@ theorem exists_clm_of_gram_eq_smul {α Hs E : Type} [NormedAddCommGroup Hs] [Inn
     have hr : Set.range Φ = (Submodule.span ℂ (Set.range u) : Set Hs) := by
       rw [← LinearMap.coe_range]
       exact congrArg _ (Finsupp.range_linearCombination ℂ)
-    rw [DenseRange, hr]
-    exact hd
+    rwa [DenseRange, hr]
   refine ⟨Ψ.extendOfNorm Φ, fun a => ?_⟩
   have h := LinearMap.extendOfNorm_eq hdense ⟨_, hbound⟩ (Finsupp.single a 1)
   simpa [Φ, Ψ, Finsupp.linearCombination_single] using h
@@ -883,8 +873,7 @@ theorem MultilinearMap.inner_map_eq_const_mul_prod_inner
       simp only [Function.update_eq_self] at this
       rw [this, ← hprod x y j (x j) (y j)]
       simp only [Function.update_eq_self]
-  intro x y
-  exact key Finset.univ x y (fun i hi => absurd (Finset.mem_univ i) hi)
+  exact fun x y => key Finset.univ x y (fun i hi => absurd (Finset.mem_univ i) hi)
 
 end GlobalTheory
 end -- clump:auto
@@ -947,8 +936,7 @@ theorem GlobalTheory.RowEvalHH.conj_eval_mem_HH : ∀ {D : D7} {G : Type} [Group
     rw [this, tensT_w]
   have hvec : vecOf R X c y₀ = v₀ := by
     funext τ
-    apply Subtype.ext
-    exact (c τ).symm_apply_apply (v₀ τ)
+    exact Subtype.ext ((c τ).symm_apply_apply (v₀ τ))
   obtain ⟨c', -, hnorm⟩ := GlobalTheory.T.translatedRowEvaluation_squareIntegrable_norm R F X h hLev hGrp hMod t ht
   have hunit : ∀ τ, ‖((v₀ τ : (MP R).H τ))‖ = 1 := by
     intro τ

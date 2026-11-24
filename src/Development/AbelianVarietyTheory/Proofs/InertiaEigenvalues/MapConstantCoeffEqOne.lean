@@ -91,8 +91,7 @@ theorem X_pow_dvd_of_rescale (u : L) (hu0 : u ≠ 0) (hu : ∀ n : ℕ, n ≠ 0 
       have hBu : B.map (rescale u) = ((C u) ^ k * (X : L⟦X⟧) ^ k) • (Matrix.of B').map (rescale u) := by
         ext1 i j
         rw [Matrix.map_apply, hB', map_mul, map_pow, rescale_X, mul_pow]; rfl
-      rw [hBu] at h
-      rw [hB] at h
+      rw [hBu, hB] at h
       simp only [Matrix.mul_smul, Matrix.smul_mul, smul_smul, map_mul, rescale_X] at h
       have h1 := congrFun (congrFun h i) j
       simp only [Matrix.smul_apply, smul_eq_mul] at h1

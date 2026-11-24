@@ -429,13 +429,10 @@ theorem actsBy_of_detCond {k : Type} [Field k] [CharZero k] [IsAlgClosed k] {S :
         let p := EigenSplit.proj hs (TanMod.TanSp.act t a) τ z
         let w : Lie G t := ⟨p.pt, Over.OverMorphism.ext (TanMod.unit_of_smT_zero t _ p.tan)⟩
         have hw : w ∈ eigenspace a t τ := by
-          intro b
-          apply Subtype.ext
-          exact congrArg TanMod.TanSp.pt ((EigenSplit.mem_eigenSub.1 hz) b)
+          exact fun b => Subtype.ext (congrArg TanMod.TanSp.pt ((EigenSplit.mem_eigenSub.1 hz) b))
         obtain ⟨c, _, hc⟩ := hsurj hw
         have hc' : w = 1 := by simpa [comb] using hc.symm
-        apply TanMod.TanSp.ext
-        exact congrArg (fun x : Lie G t => x.val) hc'
+        exact TanMod.TanSp.ext (congrArg (fun x : Lie G t => x.val) hc')
       rw [hzero, map_zero, smul_zero]
   intro v hv h0
   have h1 : (1 : Over.mk t ⟶ G).left = t ≫ η[G].left := by

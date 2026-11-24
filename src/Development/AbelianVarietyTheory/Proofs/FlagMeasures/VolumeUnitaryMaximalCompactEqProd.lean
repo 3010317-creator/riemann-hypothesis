@@ -94,8 +94,7 @@ theorem prod_le_right (ν : Measure X) (μ : Measure Y) (lam : Measure Z) [SFini
     ext y; simp only [mem_preimage, mem_setOf_eq]; constructor <;> intro <;> linarith
   have e2 : Prod.mk x ⁻¹' {z : X × Z | f z.1 + h z.2 ≤ t} = {y | h y ≤ t - f x} := by
     ext y; simp only [mem_preimage, mem_setOf_eq]; constructor <;> intro <;> linarith
-  simp only [e1, e2]
-  exact H _ (by linarith [h0 x])
+  simpa only [e1, e2] using H _ (by linarith [h0 x])
 
 theorem prod_swap_set (ν : Measure X) (μ : Measure Y) [SFinite ν] [SFinite μ]
     {f : X → ℝ} {g : Y → ℝ} (hf : Measurable f) (hg : Measurable g) (t : ℝ) :
@@ -394,8 +393,7 @@ theorem exists_allPos {N : ℕ} (g : Matrix (Fin N) (Fin N) ℂ) (hg : gᴴ * g 
 
 private theorem eq_of_submatrix_equiv_symm_eq (e : Fin p ⊕ Fin q ≃ Fin n) {X Y : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ}
     (h : X.submatrix e.symm e.symm = Y.submatrix e.symm e.symm) : X = Y := by
-  have h' := congrArg (fun Z => Z.submatrix e e) h
-  simpa [submatrix_submatrix] using h'
+  simpa [submatrix_submatrix] using congrArg (fun Z => Z.submatrix e e) h
 
 theorem emb_surj {ε : Fin n → Bool} (e : Fin p ⊕ Fin q ≃ Fin n) (hJ : Jm ε = blk e 1 (-1))
     (k : UJ ε) (hk : k ∈ maxK ε) : ∃ x, emb e hJ x = k := by

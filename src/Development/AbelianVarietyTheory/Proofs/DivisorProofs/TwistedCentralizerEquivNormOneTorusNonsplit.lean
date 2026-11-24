@@ -116,8 +116,7 @@ theorem isIntegral_of_isIntegral_mulMat
         (algebraMap (w.adicCompletion E) (Matrix (Fin m) (Fin m) (w.adicCompletion E))).comp
           (e : K.E →+* w.adicCompletion E) := by
       ext x; simp [mulMatHom_algebraMap]
-    rw [hc, ← Polynomial.eval₂_map, hQQ, mulMatHom_apply, ← aeval_def]
-    exact hQ
+    rwa [hc, ← Polynomial.eval₂_map, hQQ, mulMatHom_apply, ← aeval_def]
   have hlift : Q' ∈ Polynomial.lifts (algebraMap K.O K.E) := by
     rw [Polynomial.lifts_iff_coeff_lifts]
     intro i
@@ -128,8 +127,7 @@ theorem isIntegral_of_isIntegral_mulMat
     simpa using this
   obtain ⟨P, hPm, -, hPmon⟩ := Polynomial.lifts_and_degree_eq_and_monic hlift (by rw [hQ'def]; exact (hpm.map _).map _)
   refine ⟨P, hPmon, ?_⟩
-  rw [← Polynomial.aeval_def, ← Polynomial.aeval_map_algebraMap K.E, hPm]
-  exact hu
+  rwa [← Polynomial.aeval_def, ← Polynomial.aeval_map_algebraMap K.E, hPm]
 
 theorem mem_intUnits_of_isCompact_closure_zpowers : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (w : Pl E), ¬ IsSplitAt w → ∀ (K : GlobalTheory.UnitLemma.UQ) (e : K.E ≃+* w.adicCompletion E), (∀ x, e (K.c x) = cj w (e x)) → (∀ x, x ∈ (algebraMap K.O K.E).range ↔ Valued.v (e x) ≤ 1) → (∀ x, GlobalTheory.UnitLemma.val K.O x = ordL (e x)) → ∀ (B : GlobalTheory.UnitLemma.InvAlg K) (m : ℕ) (b : Module.Basis (Fin m) K.E B.A) (a : B.Aˣ), IsCompact (closure (Subgroup.zpowers (GlobalTheory.TwLat.mulU e b a) : Set (GLw m w))) → a ∈ GlobalTheory.UnitLemma.intUnits K.O B.A := by
   intro E _ _ _ _ w _ K e _ hint _ B m b a hc
@@ -202,8 +200,7 @@ theorem entries_le_one (hint : ∀ x, x ∈ (algebraMap K.O K.E).range ↔ Value
     exact Finset.sum_congr rfl fun l _ => algebraMap_smul K.E (o l) _
   have := congrFun (Lv.sum_smul_col_inj e b g _ _ ho') i
   have hi := (hint (algebraMap K.O K.E (o i))).mp ⟨o i, rfl⟩
-  rw [this, RingEquiv.apply_symm_apply] at hi
-  exact hi
+  rwa [this, RingEquiv.apply_symm_apply] at hi
 
 theorem isCompact_intGL :
     IsCompact {h : GLw m w | (∀ i j, Valued.v (h.val i j) ≤ 1) ∧ ∀ i j, Valued.v ((h⁻¹).val i j) ≤ 1} := by
@@ -251,8 +248,7 @@ theorem isCompact_closure_zpowers_mulU : ∀ (E : Type) [Field E] [NumberField E
     rintro _ ⟨i, rfl⟩
     exact Submodule.subset_span (hbL i)
   have hLst : ∀ x ∈ R, ∀ y ∈ L, x * y ∈ L := by
-    intro x hx y hy
-    exact (Submodule.span R (Set.range b)).smul_mem (⟨x, hx⟩ : R) hy
+    exact fun x hx y hy => (Submodule.span R (Set.range b)).smul_mem (⟨x, hx⟩ : R) hy
   obtain ⟨g, hg⟩ := GlobalTheory.TwLat.exists_GLw_lat_eq E hU w hw K e hc hint hval B m b L ⟨hLfg, hLsp⟩
   have haH : a ∈ IntCpt.unitsIn R :=
     ⟨Algebra.subset_adjoin (Set.mem_insert _ _), Algebra.subset_adjoin (Set.mem_insert_of_mem _ rfl)⟩
@@ -265,8 +261,7 @@ theorem isCompact_closure_zpowers_mulU : ∀ (E : Type) [Field E] [NumberField E
     refine ⟨g⁻¹ * mulU e b (a ^ k) * g, ⟨?_, ?_⟩, ?_⟩
     · intro i j
       have := IntCpt.entries_le_one e b hint g _ (hg ▸ hLst _ hu.1) i j
-      rw [Units.val_mul, Units.val_mul, mulU_val]
-      exact this
+      rwa [Units.val_mul, Units.val_mul, mulU_val]
     · intro i j
       have := IntCpt.entries_le_one e b hint g _ (hg ▸ hLst _ hu.2) i j
       rw [_root_.mul_inv_rev, _root_.mul_inv_rev, inv_inv, ← map_inv (mulU e b), ← mul_assoc, Units.val_mul,
@@ -458,8 +453,7 @@ theorem gram_isometry_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   set M := LinearMap.toMatrix b b f with hM
   have hf : ∀ i, f (b i) = ∑ k, M k i • b k := by
     intro i
-    simp only [hM, LinearMap.toMatrix_apply]
-    exact (b.sum_repr (f (b i))).symm
+    simpa only [hM, LinearMap.toMatrix_apply] using (b.sum_repr (f (b i))).symm
   have hent : ∀ i j, ((M.map e)ᵀ * gram e b β * (M.map e).map (cj w)) i j = e (B.herm β (f (b i)) (f (b j))) := by
     intro i j
     rw [hf i, hf j, herm_finsum_left]
@@ -571,8 +565,7 @@ theorem twCent_equiv_torus : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   constructor
   · rintro ⟨a, ⟨hai, -⟩, ha⟩
     rwa [← mulU_injective e b ha]
-  · intro h
-    exact ⟨_, ⟨h, (φ t).2⟩, rfl⟩
+  · exact fun h => ⟨_, ⟨h, (φ t).2⟩, rfl⟩
 
 end GlobalTheory.TwLat
 end -- clump:auto

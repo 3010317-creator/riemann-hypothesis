@@ -80,8 +80,7 @@ theorem fixed_KL_ne_bot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   have hfixx : ∀ x : locU n w, p x ∈ KL n w → RU E n (x : UA E n) φ = φ := by
     intro x hx
     refine hφfix x x.2 ?_
-    rw [← hp x]
-    exact hx
+    rwa [← hp x]
   have hmem : (⟨φ, hφπ⟩ : π) ∈ ⨆ F : Representation.IntertwiningMap (σ.ρ.comp p) (π'.rep.comp (locU n w).subtype),
       LinearMap.range F.toLinearMap := by
     rw [htop]; trivial
@@ -97,8 +96,7 @@ theorem fixed_KL_ne_bot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       have h1 := LinearMap.congr_fun (i.isIntertwining' (e.symm g)) (u i)
       simp only [LinearMap.comp_apply, MonoidHom.comp_apply, Subgroup.coe_subtype] at h1
       rw [hpx] at h1
-      rw [← hu i]
-      exact h1
+      rwa [← hu i]
 
     rw [Finset.sum_congr rfl hterm, ← map_sum]
     have hs : ∑ i ∈ c.support, c i = (⟨φ, hφπ⟩ : π) := hsum

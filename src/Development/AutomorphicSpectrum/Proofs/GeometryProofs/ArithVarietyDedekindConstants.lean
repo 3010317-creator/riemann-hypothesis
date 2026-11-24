@@ -142,15 +142,13 @@ theorem exists_cover
       constructor
       · rintro ⟨l, rfl⟩
         exact (e.symm l).2
-      · intro hy
-        exact ⟨e ⟨y, hy⟩, by simp⟩
+      · exact fun hy => ⟨e ⟨y, hy⟩, by simp⟩
     rw [hr, hs]
     trivial
   obtain ⟨g, hg⟩ := Ideal.mem_span_range_iff_exists_fun.1 h1
   refine ⟨s.card, fun l => (((e.symm l : s) : R) : Ω), fun l => (g l : Ω), fun l => ((e.symm l : s) : R).2,
     fun l => (g l).2, ?_, fun l => hsT (e.symm l).2⟩
-  have h2 := congrArg (Subtype.val) hg
-  simpa using h2
+  simpa using congrArg (Subtype.val) hg
 
 theorem exists_unitAt (hgen : IsCptGen ξ) (hle : ∀ q ∈ T, R ≤ regAt ξ q)
     {k : ℕ} {f g : Fin k → Ω} (hf : ∀ l, f l ∈ R)
@@ -354,8 +352,7 @@ theorem gr_le_of_frame (w β : Module.Basis (Fin r) Ω E) {L : Lat ξ E} {q : Cp
       simpa [sub_eq_zero] using hc1
     have hcq : c ∈ regAt ξ q := by
       have h3 : ∑ j, β.repr e j • β j ∈ Submodule.span (regAt ξ q) (Set.range β) := by
-        rw [β.sum_repr e, ← hfr.2]
-        exact he
+        rwa [β.sum_repr e, ← hfr.2]
       rw [← hc2]
       exact coord_mem hfr.1 h3 i
     have h4 := repr_eq_zero_of_mem w hd i le_rfl
@@ -1064,8 +1061,7 @@ theorem isMultiHomog_coord (c : (k : K) → J k) (b : K → ℕ) :
   have e : ∑ k, b k • blockWeight J ⟨k, c k⟩ = b := by
     funext k'
     simp [blockWeight, Finset.sum_apply, Pi.single_apply]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem Y_add (c : (k : K) → J k) (a b : K → ℕ) :
     ∏ k, y ⟨k, c k⟩ ^ (a + b) k = (∏ k, y ⟨k, c k⟩ ^ a k) * ∏ k, y ⟨k, c k⟩ ^ b k := by
@@ -1309,8 +1305,7 @@ theorem flag_pair_of_lat : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spe
     apply hF
     obtain ⟨n, u, hu', hpu⟩ := exists_natCast_eq A m O hinj p hp ϖ hϖ
     have h1 := unitAt_mul (unitAt_algebraMap hO hu') (unitAt_pow hu n)
-    rw [← map_pow, ← map_mul, ← hpu, map_natCast] at h1
-    exact h1
+    rwa [← map_pow, ← map_mul, ← hpu, map_natCast] at h1
   have hLL : ∀ q : Cpt ξ, (∀ o : O, algebraMap O Ω o ∈ regAt ξ q) → unitAt ξ q (algebraMap O Ω ϖ) → L q = L' q :=
     fun q hO hu => hoff q (hover q hO) (hnf q hO hu)
   let ue : Fin r → Ωˣ := fun i => Units.mk0 (e i) (he0 i)
@@ -1360,8 +1355,7 @@ theorem flag_pair_of_lat : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spe
     have hv := vertical_of_local K J Ω y O ϖ (MvPolynomial.map (Int.castRingHom O) (Q.f i))
       (MvPolynomial.map (Int.castRingHom O) (Q.g i)) bf bg (isMultiHomog_map _ hbf) (isMultiHomog_map _ hbg)
       (by rw [hev]; exact hf0) (by rw [hev]; exact hg0 i) ?_
-    · rw [hb] at hv
-      exact hv
+    · rwa [hb] at hv
     intro c hc P hP hϖP
     have hyc : ∀ k, y ⟨k, c k⟩ ≠ 0 := fun k => Finset.prod_ne_zero_iff.1 hc k (Finset.mem_univ k)
     obtain ⟨q, hq, hO, hu, hreg⟩ := chart_point X Ω ξ _ (segreVec y) A m O hT' c hc (hconst c hc) P hP

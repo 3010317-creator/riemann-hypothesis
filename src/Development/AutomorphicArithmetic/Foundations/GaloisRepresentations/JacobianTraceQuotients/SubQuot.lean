@@ -107,8 +107,7 @@ private theorem jointEig {ι V : Type} [AddCommGroup V] [Module ℂ V] [FiniteDi
       refine (Submodule.ne_bot_iff K).mpr ⟨((f i - c i • (1 : Module.End ℂ V)) ^ m) u,
         ⟨hNU m u huU, ?_⟩, hkmin m (Nat.lt_succ_self m)⟩
       show (f i - c i • (1 : Module.End ℂ V)) (((f i - c i • (1 : Module.End ℂ V)) ^ m) u) = 0
-      rw [← Module.End.mul_apply, ← pow_succ']
-      exact hk
+      rwa [← Module.End.mul_apply, ← pow_succ']
     have hle : Nat.find hex ≤ Module.finrank ℂ K :=
       Nat.find_min' hex ⟨K, hK0, le_trans inf_le_left hUW, hKinv, rfl⟩
     have hKU : K = U := Submodule.eq_of_le_of_finrank_eq inf_le_left
@@ -135,8 +134,7 @@ theorem UpperTheory.Gal.Join.subQuot :
       intro t
       refine ⟨1, ?_⟩
       simp [hy t]
-    · intro h
-      exact jointEig (fun t => ρ t) (fun t => (μ t : ℂ)) hc h
+    · exact fun h => jointEig (fun t => ρ t) (fun t => (μ t : ℂ)) hc h
   refine ⟨iff1, fun hy => ?_⟩
   have hWne := iff1.mp hy
   let c : T → ℂ := fun t => (μ t : ℂ)
@@ -158,8 +156,7 @@ theorem UpperTheory.Gal.Join.subQuot :
   have hWinv : ∀ χ t, ∀ x ∈ Wχ χ, ρ t x ∈ Wχ χ := by
     intro χ t x hx
     simp only [Wχ, Submodule.mem_iInf] at hx ⊢
-    intro s
-    exact Module.End.mapsTo_maxGenEigenspace_of_comm (hc s t) (χ s) (hx s)
+    exact fun s => Module.End.mapsTo_maxGenEigenspace_of_comm (hc s t) (χ s) (hx s)
   have hSinv : ∀ t, ∀ x ∈ S, ρ t x ∈ S := by
     intro t
     have : S ≤ S.comap (ρ t) := iSup₂_le fun χ hχ x hx =>

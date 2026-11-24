@@ -82,8 +82,7 @@ lemma det_exp_sq {n : ℕ} {ε : Fin n → Bool} {Y : Matrix (Fin n) (Fin n) ℂ
   have h2 : (NormedSpace.exp (-Y)).det = (NormedSpace.exp Y).det := by
     rw [hconj, Matrix.det_mul, Matrix.det_mul]
     linear_combination (NormedSpace.exp Y).det * hdetJ
-  rw [h2] at h1
-  exact h1
+  rwa [h2] at h1
 
 lemma muInt_cast {n : ℕ} {lam : Fin n → ℝ} (hlam : IsHCParam lam) (a : Fin n) :
     (muInt lam a : ℝ) = lam a + Formalism.QuantumDeterminants.rhoStd n a := by
@@ -261,8 +260,7 @@ lemma dec_exp (hF : FormulaGap) (n : ℕ) (ε : Fin n → Bool) (lam : Fin n →
     (decHS h (rkR ε) (Real.sqrt (hs X))) ‖u‖ ‖v‖ hM (norm_nonneg u) (norm_nonneg v)
     (fun k => norm_Phi_le hlam hgap hX (hK k)) (hint v) (by rw [hsym]; exact hint u)
     (horth v hv) (by rw [hsym]; exact horth u hu)
-  rw [hform X hX u hu v hv]
-  exact hmain
+  rwa [hform X hX u hu v hv]
 
 lemma decHS_le_decE {h d t : ℝ} (q : ℕ) (hh : 0 ≤ h) (hd : 0 ≤ d) (hdt : Real.sqrt 2 * d ≤ t) :
     decHS h q t ≤ decE q h d := by

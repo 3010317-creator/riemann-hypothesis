@@ -77,8 +77,7 @@ theorem splits_mul {G : Type} [Mul G] (A : Subalgebra ℂ (G → ℂ)) {p q : G 
   let e : Fin m × Fin n ≃ Fin (m * n) := finProdFinEquiv
   refine ⟨m * n, fun j => a (e.symm j).1 * c (e.symm j).2,
     fun j => b (e.symm j).1 * d (e.symm j).2, ?_, ?_⟩
-  · intro j
-    exact ⟨A.mul_mem (hab _).1 (hcd _).1, A.mul_mem (hab _).2 (hcd _).2⟩
+  · exact fun j => ⟨A.mul_mem (hab _).1 (hcd _).1, A.mul_mem (hab _).2 (hcd _).2⟩
   · intro x k
     have key : ∀ f : Fin m × Fin n → ℂ, ∑ j : Fin (m * n), f (e.symm j) = ∑ q, f q :=
       fun f => Equiv.sum_comp e.symm f
@@ -91,8 +90,7 @@ theorem splits_mul {G : Type} [Mul G] (A : Subalgebra ℂ (G → ℂ)) {p q : G 
 theorem splits_algebraMap {G : Type} [Mul G] (A : Subalgebra ℂ (G → ℂ)) (r : ℂ) :
     Splits A (algebraMap ℂ (G → ℂ) r) := by
   refine ⟨1, fun _ => algebraMap ℂ (G → ℂ) r, fun _ => 1, ?_, ?_⟩
-  · intro _
-    exact ⟨A.algebraMap_mem r, A.one_mem⟩
+  · exact fun _ => ⟨A.algebraMap_mem r, A.one_mem⟩
   · intro x k
     simp
 

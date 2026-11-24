@@ -79,8 +79,7 @@ theorem exists_inverse_block {T : Type} {m : T → ℕ} {g : ℕ} (e : Fin g ≃
       rw [← Matrix.mulVec_mulVec, hV, ← ha j]
       simp only [cv, Matrix.mulVec_sum, Matrix.mulVec_smul, hW]
     ext i j
-    have h1 := congrFun (this j) i
-    simpa [Matrix.one_apply, Pi.single_apply] using h1
+    simpa [Matrix.one_apply, Pi.single_apply] using congrFun (this j) i
   have hVW : V * Wm = 1 := mul_eq_one_comm.mp hWV
   refine ⟨V, Matrix.isUnit_det_of_left_inverse hWV, fun j j' hj => ?_, fun j => ?_⟩
   · by_contra hne
@@ -106,8 +105,7 @@ theorem coverTri : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : R
   have hw' : ∀ τ (i : Fin (Dw.mult τ)),
       IsDerivAt0 (fun z => (F.ex k P z).left) (w (e.symm ⟨τ, i⟩)) (y.u τ i) := fun τ i => by
     have := hw (e.symm ⟨τ, i⟩)
-    rw [Equiv.apply_symm_apply] at this
-    exact this
+    rwa [Equiv.apply_symm_apply] at this
   have hsp : ∀ j, ∃ a : Fin (Dw.mult (e j).1) → ℂ, ∑ i, a i • w (e.symm ⟨(e j).1, i⟩) = Pi.single j 1 := by
     intro j
     obtain ⟨v, hv⟩ := (ht2 (Pi.single j 1)).exists
@@ -136,8 +134,7 @@ theorem coverTri : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : R
   have hyu : IsDerivAt0 (fun z => (F.ex k P' z).left) (Pi.single (e.symm ⟨τ, i⟩) 1) (y.u τ i) := by
     have := (GlobalTheory.ExpChain.isDerivAt0_ex_iff E H Dw l Xo _ g _ F k P hP k P' (Matrix.mulVecLin V) hP' hex
       _ _).1 (hw' τ i)
-    rw [Matrix.mulVecLin_apply, hVw] at this
-    exact this
+    rwa [Matrix.mulVecLin_apply, hVw] at this
   have hc := (GlobalTheory.DerLin.isCombAt_iff_isDerivAt0 E H Dw l Xo _ g _ F k P' hP' _ (v τ)
     (fun i => Pi.single (e.symm ⟨τ, i⟩) 1) (hv τ) (Pi.single i 1) (y.u τ i)).2 (by
       rw [Finset.sum_eq_single i (fun b _ hb => by rw [Pi.single_eq_of_ne hb, zero_smul]) (by simp),

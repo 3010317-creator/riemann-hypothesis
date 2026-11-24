@@ -214,8 +214,7 @@ theorem unif_right : ∀ (D : D7) (V : HSp D) (φ : GA D V → ℂ), RapidDec V 
                          linarith
   have hT : ∀ y, T ≤ quotHeight V y → ‖φ y‖ < δ / 2 := by
     intro y hy
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have h1 := hC y
     simp only [pow_one] at h1
     have h2 : δ / 2 * T = |C| + δ / 2 := by rw [hTdef]; field_simp
@@ -287,8 +286,7 @@ theorem famSpan_sm' : ∀ F ∈ famSpan θ V τ κ 𝒟, ∀ k, F k ∈ SmFun θ
   induction hF using Submodule.span_induction with
   | mem x hx =>
     obtain ⟨c, hc, ψ, hψ, rfl⟩ := hx
-    intro k
-    exact (SmFun θ V).smul_mem (c k) (rTr_mem hθ (isRealPt_atTau hθ τ (hU k)) (h𝒟 ψ hψ).2)
+    exact fun k => (SmFun θ V).smul_mem (c k) (rTr_mem hθ (isRealPt_atTau hθ τ (hU k)) (h𝒟 ψ hψ).2)
   | zero => exact fun _ => zero_mem _
   | add x y _ _ hx hy => exact fun k => add_mem (hx k) (hy k)
   | smul a x _ hx => exact fun k => (SmFun θ V).smul_mem a (hx k)
@@ -541,8 +539,7 @@ theorem famSpan_glWord {F : KG ε → GA D V → ℂ} (hF : F ∈ famSpan θ V �
     obtain ⟨m, e⟩ := ih
     have := famSpan_glDer hθ hκ hU h𝒟 hR m a
     simp only [GlobalTheory.Size.wordAct_cons]
-    rw [e]
-    exact this
+    rwa [e]
 
 end FamGl
 

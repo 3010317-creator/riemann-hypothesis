@@ -66,10 +66,8 @@ theorem chart_iff {R : Type} [CommRing R] (x : Sp R ⟶ Xo.X) (q : Sp ℂ ⟶ Gx
     ⊤ ≤ q ⁻¹ᵁ (PPx x).U (fun _ => j) ↔ ⊤ ≤ (q ≫ gxFst x) ⁻¹ᵁ Xo.univ.t.PP.L.U j := by
   rw [top_le_preimage_iff_mem, top_le_preimage_iff_mem]
   constructor
-  · intro hp
-    exact Set.mem_iInter.1 hp (0 : Fin 1)
-  · intro hp
-    exact Set.mem_iInter.2 fun _ => hp
+  · exact fun hp => Set.mem_iInter.1 hp (0 : Fin 1)
+  · exact fun hp => Set.mem_iInter.2 fun _ => hp
 
 theorem exists_pt {R : Type} [CommRing R] (x : Sp R ⟶ Xo.X) (s : Sp ℂ ⟶ Sp R) (p : Sp ℂ ⟶ Xo.univ.t.G.left)
     (h : s ≫ x = p ≫ Xo.univ.t.G.hom) : ∃ q : Sp ℂ ⟶ Gx x, q ≫ gxFst x = p ∧ q ≫ gxSnd x = s :=

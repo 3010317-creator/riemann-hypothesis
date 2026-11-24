@@ -55,8 +55,7 @@ theorem ringOfIntegers_equiv_bar_comm : ∀ (E : Type) [Field E] [NumberField E]
     exact MulEquivClass.map_nonZeroDivisors τ
   let τE : E ≃+* E := IsLocalization.ringEquivOfRingEquiv E E τ hM
   have hτE : ∀ x : 𝓞 E, τE (x : E) = ((τ x : 𝓞 E) : E) := by
-    intro x
-    exact IsLocalization.ringEquivOfRingEquiv_eq hM x
+    exact fun x => IsLocalization.ringEquivOfRingEquiv_eq hM x
   obtain ⟨ψ⟩ : Nonempty (E →+* ℂ) := inferInstance
   apply RingOfIntegers.ext
   rw [← hτE, H.bar_eq, H.bar_eq, ← hτE]

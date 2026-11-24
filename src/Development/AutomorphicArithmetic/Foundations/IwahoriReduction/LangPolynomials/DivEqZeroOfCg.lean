@@ -68,8 +68,7 @@ private theorem mem_zpowers_un_of_primitive_root_mod_sq {l : ℕ} [Fact (Nat.Pri
     (r : ℕ) (x : (ZMod (l ^ r))ˣ) : x ∈ Subgroup.zpowers (un g hg r) := by
   have hp : l.Prime := Fact.out
   have hgl : (g : ZMod l) ≠ 0 := by
-    rw [Ne, ZMod.natCast_eq_zero_iff]
-    exact hg
+    rwa [Ne, ZMod.natCast_eq_zero_iff]
   have hf : (l : ℤ) ∣ (g : ℤ) ^ (l - 1) - 1 := by
     rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]
     push_cast
@@ -140,11 +139,9 @@ theorem pGenEx : SGenEx := by
     push_cast
     rw [ZMod.natCast_self, zero_mul, add_zero, hc0, orderOf_units, hc]
   have hndk : ∀ k : ℕ, ¬ l ∣ c0 + l * k := by
-    intro k h
-    exact hnd0 ((Nat.dvd_add_left (dvd_mul_right l k)).mp h)
+    exact fun k h => hnd0 ((Nat.dvd_add_left (dvd_mul_right l k)).mp h)
   have hc2 : 2 ≤ c0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have h01 : c0 = 0 ∨ c0 = 1 := by omega
     rcases h01 with h0 | h1
     · exact hnd0 (h0 ▸ dvd_zero l)
@@ -173,8 +170,7 @@ theorem pGenEx : SGenEx := by
         rw [← mul_dvd_mul_iff_left hl0]
         have e2 : (l : ℤ) * ((c0 : ℤ) ^ (l - 1 - 1) * ((l - 1 : ℕ) : ℤ))
             = (c0 : ℤ) ^ (l - 1 - 1) * l * ((l - 1 : ℕ) : ℤ) := by ring
-        rw [e2, ← sq]
-        exact hsum
+        rwa [e2, ← sq]
       have h7 : l ∣ c0 ^ (l - 1 - 1) * (l - 1) := by exact_mod_cast h6
       rcases (Nat.Prime.dvd_mul hp).mp h7 with h8 | h8
       · exact hnd0 (hp.dvd_of_dvd_pow h8)
@@ -401,8 +397,7 @@ private theorem logfun {Γ : Type} [Group Γ] [Fintype Γ] (γ : Γ) (τ : Qbar 
       intro h
       rw [pow_inj_mod, Nat.mod_eq_of_lt (Finset.mem_range.1 hi)] at h
       exact hne h
-    · intro h
-      exact absurd (Finset.mem_range.2 (Nat.mod_lt _ (orderOf_pos γ))) h
+    · exact fun h => absurd (Finset.mem_range.2 (Nat.mod_lt _ (orderOf_pos γ))) h
   · simp only [Finset.sum_mul]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => ?_
@@ -623,8 +618,7 @@ private theorem eta_mul (φ : DirichletCharacter (Qbar l) l) (k : ℕ) {r : ℕ}
   have h := E_cong φ k hr (ndv hr (y * x)) (b := (y : ZMod (l ^ r)).val * (x : ZMod (l ^ r)).val)
     (fun h => ((Fact.out : l.Prime).dvd_mul.1 h).elim (ndv hr y) (ndv hr x))
     (by rw [Units.val_mul, ZMod.val_mul]; exact Nat.mod_modEq _ _)
-  rw [E_mul] at h
-  exact h
+  rwa [E_mul] at h
 
 private theorem eta_red (φ : DirichletCharacter (Qbar l) l) (k : ℕ) {r : ℕ} (hr : 1 ≤ r) (y : (ZMod (l ^ (r + 1)))ˣ) :
     ‖eta φ k (r + 1) y - eta φ k r (red l r y)‖ ≤ ‖((l : ℕ) : Qbar l) ^ r‖ := by
@@ -870,8 +864,7 @@ theorem UpperTheory.Kd.C7.pDiv :
       simp only [sp]
       ring
     rw [cg_iff_norm_sub_le_norm_pow, sub_zero, e]
-    rw [cg_iff_norm_sub_le_norm_pow] at h
-    exact h
+    rwa [cg_iff_norm_sub_le_norm_pow] at h
   have hex : ∀ s ∈ Ine A, ∀ r, ∃ q : (ZMod (l ^ r))ˣ → Qbar l, (∀ x, q x ∈ c.O) ∧
       ∀ x, μ s r x = q (x * un g hg r) - φ ↑g * ↑g ^ k * q x :=
     fun s hs => hdiv.2 (μ s) (hμint s hs) (hμnrm s hs) (heta s hs)
@@ -879,8 +872,7 @@ theorem UpperTheory.Kd.C7.pDiv :
       ∀ x, μ s r x = Z' r s (x * un g hg r) - φ ↑g * ↑g ^ k * Z' r s x := by
     refine ⟨fun r s => @dite _ (s ∈ Ine A) (Classical.dec _) (fun h => Classical.choose (hex s h r)) (fun _ => fun _ => 0), ?_⟩
     intro r s hs
-    simp only [dite_eq_left hs]
-    exact Classical.choose_spec (hex s hs r)
+    simpa only [dite_eq_left hs] using Classical.choose_spec (hex s hs r)
   have inj : ∀ r (q : (ZMod (l ^ r))ˣ → Qbar l),
       (∀ x, q (x * un g hg r) - φ ↑g * ↑g ^ k * q x = 0) → ∀ x, q x = 0 := by
     intro r q hq x
@@ -970,8 +962,7 @@ theorem UpperTheory.Kd.C7.pDiv :
   obtain ⟨hsI, hsK⟩ := hs
   have hc1 : cycMod ℚ Ω l m s = 1 := hsK
   have e := (hZ' m s hsI).2 x
-  rw [hμ, hc1, sub_self, mul_zero, sub_zero] at e
-  exact e
+  rwa [hμ, hc1, sub_self, mul_zero, sub_zero] at e
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.DivEqZeroOfCg =====

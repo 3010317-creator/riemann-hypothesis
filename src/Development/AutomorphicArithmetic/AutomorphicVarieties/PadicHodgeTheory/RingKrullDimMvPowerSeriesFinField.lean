@@ -123,15 +123,13 @@ theorem UpperTheory.ringKrullDim_mvPowerSeries_fin_field :
         refine Submodule.mem_sup_right ?_
         rw [smul_eq_mul, ← pow_two]; exact ht i
       have h3 := Ideal.mul_mem_left _ (MvPowerSeries.C (algebraMap O E c)⁻¹) (Submodule.sub_mem _ h1 h2)
-      rw [sub_sub_cancel, hsm, ← mul_assoc, ← map_mul, inv_mul_cancel₀ hc', map_one, one_mul] at h3
-      exact h3
+      rwa [sub_sub_cancel, hsm, ← mul_assoc, ← map_mul, inv_mul_cancel₀ hc', map_one, one_mul] at h3
   have h := Ideal.height_le_height_add_of_liesOver (RingHom.ker x) m
   have h0 : m.map (Ideal.Quotient.mk J) = ⊥ := by
     rw [Ideal.map_eq_bot_iff_le_ker, Ideal.mk_ker]; exact hle
   have hJm : J ≤ m := by
     rw [hJ, Ideal.map_le_iff_le_comap]
-    intro a ha
-    exact (hker a).1 ha
+    exact fun a ha => (hker a).1 ha
   haveI : Nontrivial (MvPowerSeries (Fin n) E ⧸ J) :=
     Ideal.Quotient.nontrivial_iff.2 (ne_top_of_le_ne_top (maximalIdeal.isMaximal _).ne_top hJm)
   rw [← hJ, h0, Ideal.height_bot, add_zero] at h

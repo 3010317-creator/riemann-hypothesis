@@ -530,8 +530,7 @@ private theorem ord_iff {H : Type} [Group H] (I : Subgroup H) (s₀ : H) (hs : s
       rw [hc'] at h0
       simpa [hp a s₀] using congrArg TrivSqZeroExt.snd h0
     exact (main hd).1 hO
-  · intro hR
-    exact (main (fun a => hR.2 s₀ hs a)).2 hR
+  · exact fun hR => (main (fun a => hR.2 s₀ hs a)).2 hR
 
 private theorem main {H : Type} [Group H] (I : Subgroup H) (s₀ : H) (hs : s₀ ∈ I) (p : Fin 4 → H → E) (ν : H → E)
     (hp : ∀ a g, p a g ≠ 0) (hν : ∀ a g, p a.rev g * p a g = ν g) (hc : Function.Injective fun a => p a s₀)
@@ -544,10 +543,7 @@ private theorem main {H : Type} [Group H] (I : Subgroup H) (s₀ : H) (hs : s₀
     intro g a b
     rw [div_eq_div_iff (hp _ _) (hp _ _), hν b g, mul_comm (p a g), hν a g]
   have hne : ∀ a b, a ≠ b → (1 - p a s₀ / p b s₀) ≠ 0 := by
-    intro a b hab h
-    apply hab
-    apply hc
-    exact (div_eq_one_iff_eq (hp b s₀)).1 (sub_eq_zero.1 h).symm
+    exact fun a b hab h => hab (hc ((div_eq_one_iff_eq (hp b s₀)).1 (sub_eq_zero.1 h).symm))
   have hsp : ∀ M : M4 E, M ∈ sp4 E ↔ ∀ i j, (sgn i * sgn j) • M j.rev i.rev = -M i j := by
     intro M
     show adj M = -M ↔ _
@@ -590,8 +586,7 @@ private theorem main {H : Type} [Group H] (I : Subgroup H) (s₀ : H) (hs : s₀
       · rw [mul_div_assoc', eq_div_iff (hne a b hab), mul_comm]
     refine ⟨hsp4, (ord_iff I s₀ hs p hp hc γ r hr Y hY).2 ⟨?_, hin⟩⟩
     intro g a b hba
-    simp only [hYdef, Matrix.of_apply, ite_eq_left hba]
-    exact hlow g a b hba
+    simpa only [hYdef, Matrix.of_apply, ite_eq_left hba] using hlow g a b hba
 
 end UpperTheory.V.Loc.SymplecticTangentProjection
 

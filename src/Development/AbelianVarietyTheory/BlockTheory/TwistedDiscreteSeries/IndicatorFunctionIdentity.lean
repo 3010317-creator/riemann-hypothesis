@@ -85,13 +85,11 @@ theorem maps_std_iff (x : Matrix n n' k) :
       split_ifs
       · exact one_mem _
       · exact zero_mem _
-    have h2 := mem_stdLat.1 (H _ h1) i
-    simpa [Matrix.mulVec_single_one] using h2
+    simpa [Matrix.mulVec_single_one] using mem_stdLat.1 (H _ h1) i
   · intro H y hy
     rw [mem_stdLat] at hy ⊢
     intro i
-    simp only [Matrix.mulVec, dotProduct]
-    exact sum_mem fun j _ => mul_mem (H i j) (hy j)
+    simpa only [Matrix.mulVec, dotProduct] using sum_mem fun j _ => mul_mem (H i j) (hy j)
 
 theorem maps_smul_iff (g : GL n' k) (h : GL n k) (S : Submodule 𝒪[k] (n' → k)) (L : Submodule 𝒪[k] (n → k))
     (x : Matrix n n' k) :
@@ -106,8 +104,7 @@ theorem maps_smul_iff (g : GL n' k) (h : GL n k) (S : Submodule 𝒪[k] (n' → 
   · intro H y hy
     rw [mem_smul_iff] at hy ⊢
     have h1 := H _ hy
-    rw [key, smul_inv_smul] at h1
-    exact h1
+    rwa [key, smul_inv_smul] at h1
 
 private lemma isCompact_isOpen_isClosed_integral_matrices : IsCompact {x : Matrix n n' k | ∀ i j, x i j ∈ 𝒪[k]} ∧
     IsOpen {x : Matrix n n' k | ∀ i j, x i j ∈ 𝒪[k]} ∧ IsClosed {x : Matrix n n' k | ∀ i j, x i j ∈ 𝒪[k]} := by
@@ -202,8 +199,7 @@ theorem valuation_det_of_fix (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice 
     refine (maps_std_iff w.val).1 ?_
     intro y hy
     have h1 : w • y ∈ w • stdLat k n := Submodule.smul_mem_pointwise_smul y w _ hy
-    rw [hw] at h1
-    exact h1
+    rwa [hw] at h1
   have h1 := det_mem_of_integral_entries (hint u hfix)
   have h2 := det_mem_of_integral_entries (hint u⁻¹ (by rw [inv_smul_eq_iff, hfix]))
   have hdet : Matrix.GeneralLinearGroup.det u = Matrix.GeneralLinearGroup.det h := by

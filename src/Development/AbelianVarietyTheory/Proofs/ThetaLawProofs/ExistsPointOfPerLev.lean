@@ -101,8 +101,7 @@ theorem exists_point_of_perLev : Out.Laws → ∀ (h k : ℕ) (K : Type) [Field 
   have hprim : IsPrimitiveRoot ze k := by
     rw [← IsPrimitiveRoot.coe_units_iff]
     have := (Complex.isPrimitiveRoot_exp k hk₀).inv
-    rw [← Complex.exp_neg, ← neg_div] at this
-    exact this
+    rwa [← Complex.exp_neg, ← neg_div] at this
   have add : ∀ x y, lev (x + y) = lev x * lev y := fun x y => by
     rw [hlev, hlev, hlev, per_add, smul_add, u.ex_add]
   have ex0 : u.ex 0 = 1 := (u.ker 0).2 u.Λ.zero_mem

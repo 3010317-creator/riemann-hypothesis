@@ -169,8 +169,7 @@ theorem exists_continuous_section (n d m : ℕ) (ε : Fin n → Bool)
       ∀ i, (((uMat (σ x) - 1) * (E i)ᴴ).trace).re = x i := by
   let Y : (Fin d → ℝ) → Matrix (Fin n) (Fin n) ℂ := fun x => ∑ i, x i • E i
   have hYc : Continuous Y := by
-    refine continuous_finsetSum _ fun i _ => ?_
-    exact (continuous_apply i).smul continuous_const
+    exact continuous_finsetSum _ fun i _ => (continuous_apply i).smul continuous_const
   have hY0 : ∀ x, Y x ∈ A 0 := fun x =>
     Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (hG i).1
   have hYθ : ∀ x, jInv ε (Y x) = -Y x := fun x => by
@@ -545,8 +544,7 @@ theorem pres_layers (ι : Type) [Fintype ι] (d m : ℕ) (deg : Fin d → ℕ) (
       simp only at hi
       subst hi
       exact H v i
-    · intro H v i
-      exact H ⟨deg i, h v i⟩ v ⟨i, rfl⟩
+    · exact fun H v i => H ⟨deg i, h v i⟩ v ⟨i, rfl⟩
   rw [this, volume_pi_pi, Fintype.prod_prod_type]
   simp only [volume_pi_pi]
   rw [Finset.prod_comm]
@@ -567,8 +565,7 @@ theorem volume_layer_box : ∀ (ι : Type) [Fintype ι] (d m : ℕ) (deg : Fin d
         (fun (z : ι × Fin d → ℝ) v (i : {i : Fin d // deg i = c}) => z (v, i.1)) ⁻¹' D c := by
       ext z; simp [F]
     rw [this]
-    refine MeasurableSet.iInter fun c => MeasurableSet.iInter fun _ => ?_
-    exact (hD c).preimage (by fun_prop)
+    exact MeasurableSet.iInter fun c => MeasurableSet.iInter fun _ => (hD c).preimage (by fun_prop)
   have h1 := (pres_uncurry ι (Fin d)).measure_preimage hF.nullMeasurableSet
   have h2 := (pres_layers ι d m deg h).measure_preimage hF.nullMeasurableSet
   have key : ∀ (y : ∀ c : Fin m, ι → {i : Fin d // deg i = c} → ℝ) (c : ℕ) (hc : c < m),

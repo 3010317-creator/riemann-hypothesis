@@ -212,8 +212,7 @@ private theorem locTri_adelicR (a : ℕ) (w : HeightOneSpectrum (𝓞 F)) (u : G
   refine ⟨?_, ?_, ?_⟩
   · intro i j h
     rw [hoff i j (ne_of_gt h), hlow i j h, map_zero, map_zero]
-  · intro j
-    exact cornerGL_apply_diag_loctri _ _ (cornerGL_apply_diag_loctri _ _ (hdiag j))
+  · exact fun j => cornerGL_apply_diag_loctri _ _ (cornerGL_apply_diag_loctri _ _ (hdiag j))
 
   · rw [map_sum, map_sum]
     refine Finset.sum_congr rfl fun p hp => ?_
@@ -251,8 +250,7 @@ theorem isGeneric_of_isLocCompR (a : ℕ) (P : TR.CuspSub F a) (w : HeightOneSpe
         exact congrFun (whit_smul (a - 1) c (f v).1.1) h }
   have hl : ∀ v, l v = whit ψ (a - 1) (f v).1.1 h := fun _ => rfl
   have hne : l (σ.ρ gw v₀) ≠ 0 := by
-    rw [hl, hrt, ← e]
-    exact hg₀
+    rwa [hl, hrt, ← e]
   have hlaw : ∀ (u : GlobalTheory.SmGL.unipB (w.adicCompletion F) (Fin a)) v,
       l (σ.ρ u v) = (locPsi hψ w (∑ p : Fin a × Fin a with (p.2 : ℕ) = p.1 + 1, (u : GL (Fin a) (w.adicCompletion F)).val p.1 p.2) : ℂ) * l v := by
     intro u v
@@ -593,8 +591,7 @@ theorem UpperTheory.V.Z.Win.Birth.prTw :
       rintro _ ⟨hk, k, rfl⟩
       have h1 := hχ k fun φ => by
         have h2 := hk (InfinitePlace.mk (Complex.ofRealHom.comp φ))
-        have h3 := diagR_mk (Complex.ofRealHom.comp φ) (k : F)
-        exact h2.trans_eq (Complex.ofReal_injective h3)
+        exact h2.trans_eq (Complex.ofReal_injective (diagR_mk (Complex.ofRealHom.comp φ) (k : F)))
       rw [HChar.inf, MonoidHom.comp_apply, infDiag_eqR] at h1
       refine h1.trans (Finset.prod_congr rfl fun φ _ => ?_)
       exact congrArg (· ^ a φ) (diagR_mk φ (k : F)).symm

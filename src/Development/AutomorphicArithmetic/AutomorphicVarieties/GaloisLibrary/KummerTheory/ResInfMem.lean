@@ -81,8 +81,7 @@ theorem UpperTheory.V.Kum.resInfMem :
     obtain ⟨v, hv⟩ := p2 A (p3 A l (Fact.out : l.Prime).ne_zero hA)
     have hvS : v ∈ D.S := by
       have := (p4 A v l hv).1 hA
-      rw [← D.hS] at this
-      exact this
+      rwa [← D.hS] at this
     obtain ⟨g, rfl⟩ := exists_smul_eq_of_isPlaceOver (F := F) (D.hA ⟨v, hvS⟩) hv
     obtain ⟨m, hm⟩ := (res_mk_eq_zero_iff D e ⟨v, hvS⟩ z).1 ((mem_Sha_iff D e _).1 hx ⟨v, hvS⟩)
     have hc : g⁻¹ * u.1 * g ∈ Dec (F := F) (D.A ⟨v, hvS⟩) := by
@@ -111,8 +110,7 @@ theorem UpperTheory.V.Kum.resInfMem :
     have hn : u.1 ∈ NS Ω (D.S : Set (HeightOneSpectrum (𝓞 F))) := by
       apply Subgroup.le_topologicalClosure
       apply Subgroup.subset_normalClosure
-      simp only [Set.mem_iUnion]
-      exact ⟨v, hvS, A, hv, hu⟩
+      simpa only [Set.mem_iUnion] using ⟨v, hvS, A, hv, hu⟩
     have : toGS Ω (D.S : Set (HeightOneSpectrum (𝓞 F))) u.1 = 1 := (QuotientGroup.eq_one_iff _).2 hn
     rw [this, h1]
   · rw [resInf_mk, resInf_mk, hconj g u.1 u'.1 (AlgEquiv.ext h) u'.2.2, qzTw_apply, hchi]

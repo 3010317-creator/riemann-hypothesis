@@ -122,9 +122,7 @@ theorem natCast_le_encard_ptsOver_iff (S : Set (EuclideanSpace ℂ (Fin n))) (π
     let e : Fin N ≃ {x // x ∈ htf.toFinset} := (htf.toFinset.equivFinOfCardEq hcard).symm
     let g : Fin N → EuclideanSpace ℂ (Fin n) := fun i => (e i : EuclideanSpace ℂ (Fin n))
     have hg_mem : ∀ i, g i ∈ t := fun i => htf.mem_toFinset.mp (e i).2
-    have hg_inj : Function.Injective g := by
-      intro i j hij
-      exact e.injective (Subtype.ext hij)
+    have hg_inj : Function.Injective g := fun i j hij => e.injective (Subtype.ext hij)
     obtain ⟨V, hV, hVd⟩ := (Set.finite_range g).t2_separation
     have hB : ∀ i, ∃ v ∈ countableBasis (EuclideanSpace ℂ (Fin n)), g i ∈ v ∧ v ⊆ V (g i) := fun i =>
       (isBasis_countableBasis (EuclideanSpace ℂ (Fin n))).exists_subset_of_mem_open (hV (g i)).1 (hV (g i)).2
@@ -141,8 +139,7 @@ theorem natCast_le_encard_ptsOver_iff (S : Set (EuclideanSpace ℂ (Fin n))) (π
     have hinj : Function.Injective y := by
       intro i j hij
       by_contra hne
-      have hd := hfd i j hne
-      exact Set.disjoint_left.mp hd (hy i).2 (hij ▸ (hy j).2)
+      exact Set.disjoint_left.mp (hfd i j hne) (hy i).2 (hij ▸ (hy j).2)
     have hsub : Set.range y ⊆ ptsOver S π w := by
       rintro _ ⟨i, rfl⟩
       exact ⟨(hy i).1, hyw i⟩

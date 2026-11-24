@@ -220,8 +220,7 @@ theorem UpperTheory.exists_level_indicator_unipotent_invariant :
   have hL : ∀ (h₀ h : FA K (2 + 2)) X, fin1 h₀ = nn X → (P (h₀ * h) ↔ P h) := by
     refine fun h₀ h X e => ⟨fun hp => ?_, hL1 h₀ h X e⟩
     have e' : fin1 h₀⁻¹ = nn (-X) := by
-      rw [fi, e, inv_eq_iff_mul_eq_one]
-      rw [← unipOne_add, add_neg_cancel, unipOne_zero]
+      rw [fi, e, inv_eq_iff_mul_eq_one, ← unipOne_add, add_neg_cancel, unipOne_zero]
     simpa using hL1 _ _ _ e' hp
   let χ : AdelicGLn.integralFiniteGL K (2 + 2) → ℂ := fun h => if P h then 1 else 0
   have hχR : ∀ h u : AdelicGLn.integralFiniteGL K (2 + 2), (u : FA K (2 + 2)) ∈ levOn S U → χ (h * u) = χ h := by
@@ -519,8 +518,7 @@ private theorem lv_fin (d₁ d₂ : AdelicGLn.integralFiniteGL K 2) :
     have := congrArg (archEquiv K (2 + 2)) e2
     simpa using this.symm
   refine ⟨β ⟨_, hmem⟩, ?_⟩
-  rw [e3, archimedean_projection_one, one_mul] at e
-  exact e
+  rwa [e3, archimedean_projection_one, one_mul] at e
 
 end SlopeTestRemainingChoices
 
@@ -561,8 +559,7 @@ private theorem fixInv {n : ℕ} (κ : Measure (archCompact K n)) (hinv : Measur
     ∫ a, conj (p a) * φ (m * arc1 a⁻¹) ∂κ = φ m := by
   rw [← h m]
   have := hinv.integral_comp (Homeomorph.inv (archCompact K n)).measurableEmbedding (fun k => p k * φ (m * arc1 k))
-  simp only [hs] at this
-  exact this
+  simpa only [hs] using this
 
 private theorem κInv {ι : Type} [Fintype ι] (C : Co K ι) : MeasurePreserving (·⁻¹) C.κ₂ C.κ₂ := by
   have hm : Measurable (C.Φ 2).symm := (C.Φ 2).symm.continuous.measurable
@@ -825,8 +822,7 @@ theorem UpperTheory.exists_level_and_KTypeVector_for_leviInduction :
       fun g => (C.Φ (2 + 2)).symm.toHomeomorph.measurableEmbedding.integral_map g
     have e2 : ∫ a, C.e e a * ψ (C.Φ (2 + 2) (a₀ * a)) ∂C.κ₄ μ = ψ (C.Φ (2 + 2) a₀) := by
       rw [hi]
-      simp only [Co.e, map_mul, ContinuousMulEquiv.apply_symm_apply]
-      exact hψfix _
+      simpa only [Co.e, map_mul, ContinuousMulEquiv.apply_symm_apply] using hψfix _
     simp only [e1, ← mul_assoc]
     rw [integral_mul_const, e2, hat]
   · intro k hk u hu

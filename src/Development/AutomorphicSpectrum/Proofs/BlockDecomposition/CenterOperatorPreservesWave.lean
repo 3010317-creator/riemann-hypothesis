@@ -279,10 +279,8 @@ theorem good_Rd (X : Mat n) : Good (V := V) (Rd X) := by
 
 theorem good_id : Good (V := V) (n := n) (fun f => f) := by
   refine ⟨?_, ?_, ?_⟩
-  · intro U hU
-    exact hU
-  · intro F F' h x hx
-    exact h x hx
+  · exact fun U hU => hU
+  · exact fun F F' h x hx => h x hx
   · intro U _ t g _
     rfl
 
@@ -300,8 +298,7 @@ theorem Good.add {Φ Ψ : (Mat n → V) → (Mat n → V)} (h : Good Φ) (k : Go
   obtain ⟨s₁, c₁, d₁⟩ := h
   obtain ⟨s₂, c₂, d₂⟩ := k
   refine ⟨?_, ?_, ?_⟩
-  · intro U hU
-    exact (s₁ U hU).add (s₂ U hU)
+  · exact fun U hU => (s₁ U hU).add (s₂ U hU)
   · intro F F' hF x hx
     show Φ F x + Ψ F x = Φ F' x + Ψ F' x
     rw [c₁ F F' hF x hx, c₂ F F' hF x hx]
@@ -315,8 +312,7 @@ theorem Good.smul {Φ : (Mat n → V) → (Mat n → V)} (c : ℂ) (h : Good Φ)
     Good (fun f => c • Φ f) := by
   obtain ⟨s₁, c₁, d₁⟩ := h
   refine ⟨?_, ?_, ?_⟩
-  · intro U hU
-    exact (s₁ U hU).const_smul c
+  · exact fun U hU => (s₁ U hU).const_smul c
   · intro F F' hF x hx
     show c • Φ F x = c • Φ F' x
     rw [c₁ F F' hF x hx]
@@ -329,10 +325,8 @@ theorem Good.comp {Φ Ψ : (Mat n → V) → (Mat n → V)} (h : Good Φ) (k : G
   obtain ⟨s₁, c₁, d₁⟩ := h
   obtain ⟨s₂, c₂, d₂⟩ := k
   refine ⟨?_, ?_, ?_⟩
-  · intro U hU
-    exact s₁ _ (s₂ U hU)
-  · intro F F' hF x hx
-    exact c₁ (Ψ F) (Ψ F') (fun y hy => c₂ F F' hF y hy) x hx
+  · exact fun U hU => s₁ _ (s₂ U hU)
+  · exact fun F F' hF x hx => c₁ (Ψ F) (Ψ F') (fun y hy => c₂ F F' hF y hy) x hx
   · intro U hU t g hg
     exact (d₁ (fun s => Ψ (U s)) (s₂ U hU) t g hg).trans
       (c₁ (GlobalTheory.CompanionTheory.WaveMult.WaveZ.Dt (fun s => Ψ (U s)) t) (Ψ (GlobalTheory.CompanionTheory.WaveMult.WaveZ.Dt U t))
@@ -342,8 +336,7 @@ theorem good_sum {ι : Type} (S : Finset ι) (Φ : ι → (Mat n → V) → (Mat
     Good (fun f => ∑ i ∈ S, Φ i f) := by
   classical
   refine Finset.induction_on S ?_ ?_
-  · simp only [Finset.sum_empty]
-    exact GlobalTheory.CompanionTheory.WaveMult.WaveZ.good_zero
+  · simpa only [Finset.sum_empty] using GlobalTheory.CompanionTheory.WaveMult.WaveZ.good_zero
   · intro a S ha ih
     simp only [Finset.sum_insert ha]
     exact GlobalTheory.CompanionTheory.WaveMult.WaveZ.Good.add (h a) ih
@@ -362,10 +355,8 @@ theorem good_Epow (s : Bool) (m : ℕ) : ∀ a b : Fin n, Good (V := V) (Epow s 
     intro a b
     show GlobalTheory.CompanionTheory.WaveMult.WaveZ.Good (fun f : PositivityTheory.RgTw.Mat n → V => if a = b then f else 0)
     by_cases hab : a = b
-    · simp only [ite_eq_left hab]
-      exact GlobalTheory.CompanionTheory.WaveMult.WaveZ.good_id
-    · simp only [ite_eq_right hab]
-      exact GlobalTheory.CompanionTheory.WaveMult.WaveZ.good_zero
+    · simpa only [ite_eq_left hab] using GlobalTheory.CompanionTheory.WaveMult.WaveZ.good_id
+    · simpa only [ite_eq_right hab] using GlobalTheory.CompanionTheory.WaveMult.WaveZ.good_zero
   | succ m ih =>
     intro a b
     show GlobalTheory.CompanionTheory.WaveMult.WaveZ.Good (fun f : PositivityTheory.RgTw.Mat n → V =>
@@ -381,7 +372,6 @@ theorem good_gel (s : Bool) (m : ℕ) : Good (V := V) (gel (n := n) s m) := by
 theorem good_zOp (w : List (Bool × ℕ)) : Good (V := V) (zOp (n := n) w) := by
   induction w with
   | nil =>
-    show GlobalTheory.CompanionTheory.WaveMult.WaveZ.Good (fun f : PositivityTheory.RgTw.Mat n → V => f)
     exact GlobalTheory.CompanionTheory.WaveMult.WaveZ.good_id
   | cons p w ih =>
     obtain ⟨s, m⟩ := p

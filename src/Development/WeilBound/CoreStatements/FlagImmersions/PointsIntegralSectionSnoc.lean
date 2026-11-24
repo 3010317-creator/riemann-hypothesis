@@ -130,9 +130,7 @@ theorem points_integral_section_snoc : ∀ II : IntersectionSystem, IsFullInters
   obtain ⟨hIS, -, -, -⟩ := hII
   obtain ⟨hperm, -, hrec⟩ := hIS K ι
   set O : HermLine ι := HermLine.ofWeight (K := K) (ι := ι) (fun _ => (-1 : ℝ)) (fun _ _ _ => rfl) with hO
-  have hOs : IsSmoothHerm O := by
-    show ContDiffOn ℝ _ (fun _ => Real.exp (-(-1 : ℝ))) _
-    exact contDiffOn_const
+  have hOs : IsSmoothHerm O := contDiffOn_const
   have hsnL := smooth_snoc hL hA
   have hsnO := smooth_snoc hL hOs
   obtain ⟨a, ha, hsa, hsP⟩ := hs

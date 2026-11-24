@@ -126,12 +126,10 @@ theorem atU_mul_pow {g : GL3Theta.G1 p} {F G : ℂ → ℂ} (hF : AlgEnt F) (hG 
     induction k with
     | zero =>
       obtain ⟨ha, he⟩ := (GlobalTheory.SerTransport.transport p g).2.1 1 (one_mem _)
-      simp only [pow_zero]
-      exact ⟨ha, by rw [he, lamC_one, map_one]⟩
+      simpa only [pow_zero] using ⟨ha, by rw [he, lamC_one, map_one]⟩
     | succ k ih =>
       obtain ⟨ha, he⟩ := ((GlobalTheory.SerTransport.transport p g).1 _ H ih.1 hH).1
-      simp only [pow_succ]
-      exact ⟨ha, by rw [he, ih.2]⟩
+      simpa only [pow_succ] using ⟨ha, by rw [he, ih.2]⟩
   obtain ⟨h1, e1⟩ := hpow hF m
   obtain ⟨h2, e2⟩ := hpow hG n
   obtain ⟨ha, he⟩ := ((GlobalTheory.SerTransport.transport p g).1 _ _ h1 h2).1
@@ -217,7 +215,6 @@ theorem tau_pow_bdd : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (cc : Ideal (𝓞 D.
   have h1 := congrArg (PowerSeries.coeff (n + K)) key2
   rw [PowerSeries.coeff_C_mul, PowerSeries.coeff_X_pow_mul', ite_eq_left (by omega), Nat.add_sub_cancel] at h1
   have h2 := hC0 (n + K)
-  rw [← h1, norm_mul, norm_pow, hu1, one_pow, one_mul] at h2
-  exact h2
+  rwa [← h1, norm_mul, norm_pow, hu1, one_pow, one_mul] at h2
 
 end GlobalTheory.ThetaTransl

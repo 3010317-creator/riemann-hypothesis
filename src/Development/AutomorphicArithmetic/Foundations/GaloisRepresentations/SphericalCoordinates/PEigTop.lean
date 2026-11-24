@@ -58,8 +58,7 @@ theorem UpperTheory.Gal.W2.eigTop_of :
   have hmk := hMk F O bar g ρ a n t₀ ε hSig H Sb ty ev hD
   refine ⟨?_, ?_⟩
   · have h1 : (evAt ty ev t₀).card = 1 := by
-      have h := (hcnt t₀).1
-      simpa [typeMult] using h
+      simpa [typeMult] using (hcnt t₀).1
     obtain ⟨m, hm⟩ := Multiset.card_eq_one.1 h1
     exact ⟨m, (hmk m).2 hm⟩
   intro mu hmu
@@ -67,8 +66,7 @@ theorem UpperTheory.Gal.W2.eigTop_of :
   have hev0 : ∀ i, ev i ≠ 0 := by
     intro i h0
     have hdet : H.det * Sb.det = Sb.det * ∏ j, ev j := by
-      have h := congrArg Matrix.det hD.2.2
-      simpa [Matrix.det_mul, Matrix.det_diagonal] using h
+      simpa [Matrix.det_mul, Matrix.det_diagonal] using congrArg Matrix.det hD.2.2
     rw [Finset.prod_eq_zero (Finset.mem_univ i) h0, mul_zero] at hdet
     exact mul_ne_zero hH hD.1 hdet
   have hr0 : rts χ t₀ = mu ::ₘ (evAt ty ev (ComplexEmbedding.conjugate t₀)).map (starRingEnd ℂ) := by
@@ -78,8 +76,7 @@ theorem UpperTheory.Gal.W2.eigTop_of :
   have hnd : (rts χ t₀).Nodup := Polynomial.nodup_roots hsep.map
   rw [hr0, Multiset.nodup_cons] at hnd
   have hne : ∀ r ∈ evAt ty ev (ComplexEmbedding.conjugate t₀), (starRingEnd ℂ) r ≠ mu := by
-    intro r hr h
-    exact hnd.1 (h ▸ Multiset.mem_map_of_mem _ hr)
+    exact fun r hr h => hnd.1 (h ▸ Multiset.mem_map_of_mem _ hr)
   have hnz : ∀ r ∈ evAt ty ev (ComplexEmbedding.conjugate t₀), (starRingEnd ℂ) r ≠ 0 := by
     intro r hr
     obtain ⟨i, -, rfl⟩ := Multiset.mem_map.1 hr

@@ -260,8 +260,7 @@ theorem bcEps_combT {A K : Type} [CommRing A] [CommRing K] (ρ : A →+* K) (x :
       map_one' := MonObj.comp_one _
       map_mul' := fun u w => MonObj.comp_mul _ _ _ }
   have h := map_prod f (fun j => smT x (a j) (v j)) Finset.univ
-  refine h.trans ?_
-  exact Finset.prod_congr rfl fun i _ => bcEps_smT t ρ x (a i) (v i)
+  exact h.trans (Finset.prod_congr rfl fun i _ => bcEps_smT t ρ x (a i) (v i))
 
 theorem coeff_unique {A K : Type} [CommRing A] [Field K] (ρ : A →+* K) (hinj : Function.Injective ρ)
     (hfr : ∀ x : K, ∃ a b : A, ρ b ≠ 0 ∧ x * ρ b = ρ a) (x : Sp A ⟶ X) {n : ℕ}
@@ -476,15 +475,13 @@ theorem blockRow_eq_sum {ι R : Type} [CommRing R] {m : ι → ℕ} {n n' : ℕ}
     · simp
     · intro j _ hj
       rw [ite_eq_right, mul_zero]
-      intro h
-      exact hj (eq_of_heq (Sigma.mk.inj (e'.injective h)).2).symm
+      exact fun h => hj (eq_of_heq (Sigma.mk.inj (e'.injective h)).2).symm
     · simp
   · rw [hB _ _ _ _ h]
     symm
     refine Finset.sum_eq_zero fun j _ => ?_
     rw [ite_eq_right, mul_zero]
-    intro h'
-    exact h (Sigma.mk.inj (e'.injective h')).1.symm
+    exact fun h' => h (Sigma.mk.inj (e'.injective h')).1.symm
 
 theorem transpose_mul_symm_mul_apply {R : Type} [CommRing R] {n n' : ℕ} (B : Matrix (Fin n) (Fin n') R) (a b : Fin n)
     (c d : Fin n') :
@@ -563,8 +560,7 @@ theorem exists_rho {X : Scheme.{0}} (W : X.affineOpens) {K : Type} [Field K] (y 
     exact this ▸ hz
   have : IsOpenImmersion (GlobalTheory.LogKS.chart W) := W.2.isOpenImmersion_fromSpec
   refine ⟨(Spec.preimage (IsOpenImmersion.lift (GlobalTheory.LogKS.chart W) y hr)).hom, ?_⟩
-  simp only [spMap, CommRingCat.ofHom_hom, Spec.map_preimage]
-  exact IsOpenImmersion.lift_fac _ _ _
+  simpa only [spMap, CommRingCat.ofHom_hom, Spec.map_preimage] using IsOpenImmersion.lift_fac _ _ _
 
 theorem rho_fac {X : Scheme.{0}} (U W : X.affineOpens) (h : W.1 ≤ U.1) {K : Type} [CommRing K]
     (ρ : Γ(X, U.1) →+* K) (ρW : Γ(X, W.1) →+* K)

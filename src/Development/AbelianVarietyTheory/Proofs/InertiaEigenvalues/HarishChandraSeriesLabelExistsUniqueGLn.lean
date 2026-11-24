@@ -133,8 +133,7 @@ theorem cusp_snd (L : LabelDatum g) (Q : List ((ZMod g)[X] × Pc g))
 
 theorem char_snd (L : LabelDatum g) (Q : List ((ZMod g)[X] × Pc g))
     (hQ : ∀ p ∈ Q, IsCuspOf L p.1 p.2.2) : ∀ c ∈ Q.map Prod.snd, IsChar c.2 := by
-  intro c hc
-  exact isChar_of_isIrr (cusp_snd L Q hQ c hc).2.1
+  exact fun c hc => isChar_of_isIrr (cusp_snd L Q hQ c hc).2.1
 
 theorem prod_props (L : LabelDatum g) (Q : List ((ZMod g)[X] × Pc g))
     (hQ : ∀ p ∈ Q, IsCuspOf L p.1 p.2.2) : (Q.map Prod.fst).prod.Monic ∧
@@ -198,10 +197,8 @@ theorem label_exists (L : LabelDatum g) (hg : 5 ≤ g) (hG : Green) {n : ℕ} (�
     unfold lab
     rw [dite_eq_left hc']
     exact hc'.choose_spec
-  · rw [hmap]
-    exact hdC
-  · rw [hmap]
-    exact hip
+  · rwa [hmap]
+  · rwa [hmap]
 
 theorem exists_section (L : LabelDatum g) (hG : Green) : ∃ t : (P : (ZMod g)[X]) → Gn g P.natDegree → ℂ,
     ∀ P, IsPrimeLab P.natDegree P →
@@ -210,8 +207,7 @@ theorem exists_section (L : LabelDatum g) (hG : Green) : ∃ t : (P : (ZMod g)[X
   intro P hP
   have hpos : 0 < P.natDegree :=
     Polynomial.natDegree_pos_iff_degree_pos.2 (Polynomial.degree_pos_of_irreducible hP.2.1)
-  simp only [dite_eq_left hpos]
-  exact (hG g L P.natDegree hpos).choose_spec.1 P hP
+  simpa only [dite_eq_left hpos] using (hG g L P.natDegree hpos).choose_spec.1 P hP
 
 theorem squarefree_series (L : LabelDatum g) (hg : 5 ≤ g) (hG : Green) (n : ℕ) (f : (ZMod g)[X])
     (hm : f.Monic) (hn : f.natDegree = n) (h0 : f.coeff 0 ≠ 0) (hs : Squarefree f) :

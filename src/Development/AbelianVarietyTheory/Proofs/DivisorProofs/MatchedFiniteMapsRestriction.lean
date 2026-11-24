@@ -108,8 +108,7 @@ theorem rank_SB_le (X : Type) [TopologicalSpace X] [SecondCountableTopology X] :
         · simp [Set.indicator]
         · intro c _ hcx
           simp [Set.indicator, Ne.symm hcx]
-        · intro h
-          exact absurd (Finset.mem_filter.2 ⟨hfin.mem_toFinset.2 ⟨x, rfl⟩, hx⟩) h
+        · exact fun h => absurd (Finset.mem_filter.2 ⟨hfin.mem_toFinset.2 ⟨x, rfl⟩, hx⟩) h
     rw [heq]
     refine Submodule.sum_mem _ fun c hc => Submodule.smul_mem _ _ (Submodule.subset_span (hco _ ?_ ?_))
     · exact hlc.isOpen_fiber c
@@ -131,8 +130,7 @@ theorem scalar_of_irred {V : Type} [AddCommGroup V] [Module ℂ V] (P : Submodul
     (hrank : Module.rank ℂ V ≤ Cardinal.aleph0) (hirr : ∀ N, P N → N = ⊥ ∨ N = ⊤) (T : Module.End ℂ V)
     (hker : ∀ c : ℂ, P (LinearMap.ker (T - c • 1))) (hran : ∀ c : ℂ, P (LinearMap.range (T - c • 1))) :
     ∃ c : ℂ, T = c • 1 := by
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have hinj : ∀ c : ℂ, Function.Injective ⇑(T - c • (1 : Module.End ℂ V)) := by
     intro c
     rw [← LinearMap.ker_eq_bot]
@@ -269,8 +267,7 @@ theorem ker_maximal {n d : ℕ} {Y : Spc F E n} {Z : Spc F E d} (om : Rep σ Y Z
     · intro x hx
       refine ⟨?_, hQ hx⟩
       have : p x ∈ Q.map p := ⟨x, hx, rfl⟩
-      rw [h0, Submodule.mem_bot] at this
-      exact this
+      rwa [h0, Submodule.mem_bot] at this
     · exfalso
       refine hQne (le_antisymm hQ fun φ hφ => ?_)
       have : p φ ∈ Q.map p := by rw [h1]; trivial

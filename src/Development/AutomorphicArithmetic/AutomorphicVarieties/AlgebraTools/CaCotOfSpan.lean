@@ -59,11 +59,9 @@ theorem UpperTheory.V.AlgebraTools.cotInd_of_span :
   let g : κ → maximalIdeal R := fun k => ⟨x k, hm k⟩
   have hg : Submodule.span R (Set.range g) = ⊤ := by
     apply Submodule.map_injective_of_injective (maximalIdeal R).injective_subtype
-    rw [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp]
-    exact hx
+    rwa [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp]
   have hV : Submodule.span (ResidueField R) (Set.range ((maximalIdeal R).toCotangent ∘ g)) = ⊤ := by
-    rw [Set.range_comp, CotangentSpace.span_image_eq_top_iff]
-    exact hg
+    rwa [Set.range_comp, CotangentSpace.span_image_eq_top_iff]
   have hfg : (maximalIdeal R).FG := IsNoetherian.noetherian _
   have hle := finrank_range_le_card (R := ResidueField R) ((maximalIdeal R).toCotangent ∘ g)
   rw [Set.finrank, hV, finrank_top] at hle

@@ -137,8 +137,7 @@ theorem continuousAt_scalar : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     obtain ⟨pt, e₁, e₂⟩ := exists_pt (R := ℂ) (y b).x (𝟙 _) (F.ex k (P b) w₀).left
       (((Category.id_comp _).trans (hxu b h.1)).trans (Over.w (F.ex k (P b) w₀)).symm)
     have e₁' : pt ≫ Formalism.L2.PjFree.gxFst (y b).x = (F.ex k (T.Pf (T.co (x b))) w₀).left := by
-      rw [(hx b h.1).2.1]
-      exact e₁
+      rwa [(hx b h.1).2.1]
     rw [← mul_assoc]
     refine Eq.trans ?_ ((hx b h.1).2.2.2.2 j w₀ pt e₁' e₂ (m₃ b h))
     refine (val_pull (φ b) yA.x (y b).x yA.s (y b).s pm p₁ p₂ p₃ _ pt (q b)
@@ -256,8 +255,7 @@ theorem kch_eq_one_of_wchar {E : Type} [Field E] [NumberField E] [IsCMField E] {
   apply Units.ext
   simp only [wchar, Fintype.prod_option, Formalism.L2.Pj.ex, pow_zero, pow_one, one_mul, Finset.prod_const_one,
     mul_one] at h
-  rw [Units.coe_prod, Units.val_pow_eq_pow_val]
-  exact h
+  rwa [Units.coe_prod, Units.val_pow_eq_pow_val]
 
 theorem rootVal_unique : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (σ : c.F →+* ℂ) (g : ℕ) (e : Fin g ≃ Σ τ : E →+* ℂ, Fin (Dw.mult τ)) (F : FamilyUnif Xo (σ.comp (IntermediateField.inclusion c.le).toRingHom) (fun j => Formalism.L2.PjFree.relab c σ (e j).1)) (r : ℕ) (M : ModelsOf F r) (un : ∀ k, (M.X k).dom → FrPt Xo c (CAt σ)), Formalism.L2.PjFree.GoodEmb c σ → ModelBase M → NegXi M → FramesOK e F M un → ∀ (y : FrPt Xo c (CAt σ)) (v v' : ℂ), RootVal (unfOf e F M un) y v → RootVal (unfOf e F M un) y v' → v = v' := by
   intro E _ _ _ H Dw l Xo c σ g e F r M un hσ hM hN hun y v v' hv hv'
@@ -273,8 +271,7 @@ theorem rootVal_unique : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   obtain ⟨t1, ht1, hw1⟩ := hun.2.2.1 k' γ hγ x hxg
   have hxb : rmul (⟨lact γ x.1, hxg⟩ : (M.X k').dom).1 b ∈ (M.X k').dom := by
     have hx2 := x'.2
-    rw [h3] at hx2
-    exact hx2
+    rwa [h3] at hx2
   obtain ⟨t2, ht2, hw2⟩ := hun.2.1 k' ⟨lact γ x.1, hxg⟩ b hb hxb
   have hx' : (⟨rmul (lact γ x.1) b, hxb⟩ : (M.X k').dom) = x' := Subtype.ext h3.symm
   rw [hx'] at ht2

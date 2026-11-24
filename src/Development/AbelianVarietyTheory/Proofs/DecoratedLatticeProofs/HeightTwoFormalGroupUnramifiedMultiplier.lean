@@ -119,11 +119,9 @@ theorem twistLog_additive_mod : ∀ (K : Type) [NormedField K] [IsUltrametricDis
     refine ⟨hg0, ?_, he0, ?_, ?_⟩
     · rw [hg, PowerSeries.coeff_map, h1, map_one]
     · have := congrArg (MvPowerSeries.map (σ ^ i)) hfe
-      rw [PowerSeries.map_subst (PowerSeries.HasSubst.of_constantCoeff_zero' h0), hXm] at this
-      exact this
+      rwa [PowerSeries.map_subst (PowerSeries.HasSubst.of_constantCoeff_zero' h0), hXm] at this
     · have := congrArg (MvPowerSeries.map (σ ^ i)) hef
-      rw [PowerSeries.map_subst (PowerSeries.HasSubst.of_constantCoeff_zero' h0'), hXm] at this
-      exact this
+      rwa [PowerSeries.map_subst (PowerSeries.HasSubst.of_constantCoeff_zero' h0'), hXm] at this
   have hd' : CoefLe 1 (d⁄dX g) := by
     intro k
     rw [PowerSeries.coeff_derivative, hg, PowerSeries.coeff_map]
@@ -192,8 +190,7 @@ theorem twistLog_additive_mod : ∀ (K : Type) [NormedField K] [IsUltrametricDis
     unfold be0
     rw [← hF, hsX F hF0, hsX X0 hX00, hsX X1 hX10, hBeq]
     abel
-  rw [hbe]
-  exact key
+  rwa [hbe]
 
 end GlobalTheory.Honda
 end -- clump:auto
@@ -266,8 +263,7 @@ theorem frobLog_eigen : ∀ (K : Type) [NormedField K] [IsUltrametricDist K] [Ch
       PowerSeries.coeff_zero_eq_constantCoeff_apply, h0', map_zero]
   have hef' : PowerSeries.subst e' g = PowerSeries.X := by
     have := congrArg (MvPowerSeries.map (σ ^ i)) hef
-    rw [PowerSeries.map_subst (PowerSeries.HasSubst.of_constantCoeff_zero' h0'), hXm] at this
-    exact this
+    rwa [PowerSeries.map_subst (PowerSeries.HasSubst.of_constantCoeff_zero' h0'), hXm] at this
   have hd' : CoefLe 1 (d⁄dX g) := by
     intro k
     rw [PowerSeries.coeff_derivative, hg, PowerSeries.coeff_map]
@@ -323,8 +319,7 @@ theorem frobLog_eigen : ∀ (K : Type) [NormedField K] [IsUltrametricDist K] [Ch
       PowerSeries.subst_C]
     rfl
   have hexp0 : MvPowerSeries.constantCoeff (MvPowerSeries.expand (l ^ i) hn (PowerSeries.C c * g)) = 0 := by
-    rw [MvPowerSeries.constantCoeff_expand]
-    exact hq0
+    rwa [MvPowerSeries.constantCoeff_expand]
   have hBg : PowerSeries.subst B g = PowerSeries.C c * frobOp σ l i f := by
     rw [hB, hmapM, PowerSeries.expand_subst (l ^ i) hn (PowerSeries.HasSubst.of_constantCoeff_zero hq0),
       ← PowerSeries.subst_comp_subst_apply (PowerSeries.HasSubst.of_constantCoeff_zero' he0)
@@ -1249,8 +1244,7 @@ theorem funEqType_of_unit {p q : ℕ} (hq : q ≠ 0) {σ : K →+* K} {g : K⟦X
     rfl
   intro n
   have := hg (Finsupp.single () n)
-  rw [← hx] at this
-  exact this
+  rwa [← hx] at this
 
 theorem honda_funEq : ∀ (K : Type) [NormedField K] [IsUltrametricDist K] [CharZero K] (l : ℕ) (σ : K →+* K),
     Unr K l σ → ∀ (f e : K⟦X⟧), Formalism.L2.Th1.C.IsLogPair f e → ∀ c ε : K, ‖ε‖ = 1 → ε = c * (σ ^ 2) ε →
@@ -1436,8 +1430,7 @@ theorem exists_twisted_division : ∀ (K : Type) [NormedField K] [IsUltrametricD
     | succ k ih =>
       intro j
       have := TwistedDivision.step_diff τ hτ π c hc0 hc (T (k + 1)) (T k) _ (pow_nonneg (norm_nonneg _) _) ih j
-      rw [← hTs (k + 1), ← hTs k, ← pow_succ'] at this
-      exact this
+      rwa [← hTs (k + 1), ← hTs k, ← pow_succ'] at this
   have hC : ∀ j, ∃ x, Tendsto (fun k => T k j) atTop (𝓝 x) := fun j =>
     cauchySeq_tendsto_of_complete (cauchySeq_of_le_geometric ‖π‖ 1 hπ fun k => by
       rw [dist_eq_norm, norm_sub_rev, one_mul]; exact hD k j)
@@ -1449,8 +1442,7 @@ theorem exists_twisted_division : ∀ (K : Type) [NormedField K] [IsUltrametricD
       | succ k => rw [hTs]; exact TwistedDivision.step_zero _ _ _ _
     have : Tendsto (fun k => T k 0) atTop (𝓝 1) := by simp only [h0]; exact tendsto_const_nhds
     exact tendsto_nhds_unique (ht 0) this
-  · intro j
-    exact le_of_tendsto' (ht j).norm fun k => hB k j
+  · exact fun j => le_of_tendsto' (ht j).norm fun k => hB k j
   · intro n hn
     obtain ⟨m, rfl⟩ : ∃ m, n = m + 2 := ⟨n - 2, by omega⟩
     have hL : Tendsto (fun k => π * T k (m + 2)) atTop (𝓝 (π * t (m + 2))) := (ht _).const_mul π

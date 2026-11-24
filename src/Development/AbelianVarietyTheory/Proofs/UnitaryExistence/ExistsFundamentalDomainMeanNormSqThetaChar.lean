@@ -113,8 +113,7 @@ theorem periodMap_bijective {g : ℕ} {τ : Matrix (Fin g) (Fin g) ℂ}
       have h2' : (fun i => (p (.inr i) : ℂ)) = 0 := by
         funext i
         simp [show p (.inr i) = 0 from congrFun h2 i]
-      rw [h2', mulVec_zero, add_zero] at this
-      exact this
+      rwa [h2', mulVec_zero, add_zero] at this
     funext x
     rcases x with i | i
     · simpa using congrFun h1 i

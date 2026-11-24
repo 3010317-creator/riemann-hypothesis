@@ -170,8 +170,7 @@ theorem theta_frob_xi (hv : v.Integers O) (hε : IsPrimitiveSystem ε) :
     WittVector.fontaineTheta O p (WittVector.frobenius (xi ε)) = p := by
   have h1 : WittVector.fontaineTheta O p (WittVector.teichmuller p ε) = 1 := by
     have := theta_mu hv hε
-    rw [Sandwich.mu, map_sub, map_one, sub_eq_zero] at this
-    exact this
+    rwa [Sandwich.mu, map_sub, map_one, sub_eq_zero] at this
 
   rw [frob_xi, map_sum]
   simp [h1]
@@ -188,8 +187,7 @@ theorem tf (b : F.B) (h : (p : F.B) * b = 0) : b = 0 := by
 theorem theta_tau (hv : v.Integers O) (hε : IsPrimitiveSystem ε) : F.θ F.τ = 0 := by
   apply F.frame.sat
   have h := congrArg F.θ F.p_τ
-  rw [map_mul, map_natCast, F.θ_a, theta_mu hv hε] at h
-  exact h
+  rwa [map_mul, map_natCast, F.θ_a, theta_mu hv hε] at h
 
 theorem sigma_tau : F.σ F.τ = F.a (WittVector.frobenius (xi ε)) * F.τ := by
   apply sub_eq_zero.1

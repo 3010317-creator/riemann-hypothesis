@@ -228,8 +228,7 @@ theorem re_trace_nonneg {M : Matrix (Fin m) (Fin m) ℂ} (hM : M.PosDef) (Z : Ma
 theorem re_trace_pos {M : Matrix (Fin m) (Fin m) ℂ} (hM : M.PosDef) {Z : Matrix (Fin m) (Fin n) ℂ} (hZ : Z ≠ 0) :
     0 < (Matrix.trace (Zᴴ * M * Z)).re := by
   obtain ⟨j, hj⟩ : ∃ j, (fun a => Z a j) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hZ
     ext a j
     exact congrFun (h j) a
@@ -244,8 +243,7 @@ theorem trForm_self_neg (w : ι → ℝ) (hw : ∀ i, 0 < w i) (M : ι → Matri
   have hpos : 0 < ∑ i, w i * (Matrix.trace ((Matrix.of (x i))ᴴ * M i * Matrix.of (x i))).re := by
     refine Finset.sum_pos' (fun k _ => mul_nonneg (hw k).le (re_trace_nonneg (hM k) _))
       ⟨i, Finset.mem_univ _, mul_pos (hw i) (re_trace_pos (hM i) ?_)⟩
-    intro h
-    exact hi h
+    exact fun h => hi h
   unfold trForm
   have := Real.pi_pos
   nlinarith

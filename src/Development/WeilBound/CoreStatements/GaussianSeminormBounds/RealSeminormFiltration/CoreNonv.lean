@@ -592,8 +592,7 @@ theorem graph_sub {p q : ℕ} {A : Type} [NormedAddCommGroup A] [InnerProductSpa
         linear_combination c * hn m hm }
   have hRS : R ≤ S := by
     apply hR_ind
-    · intro m hm
-      exact hRQ hm
+    · exact fun m hm => hRQ hm
     · intro i j n hn m hm
       have key := hn (P (Eab (.inr j) (.inl i)) m) (hall _ m hm)
       rw [hP] at key
@@ -633,12 +632,10 @@ theorem graph_map {p q : ℕ} {A : Type} [NormedAddCommGroup A] [InnerProductSpa
   have huniq : ∀ (u : A) (b b' : B), (u, b) ∈ N → (u, b') ∈ N → b = b' := by
     intro u b b' h h'
     have hd : ((0 : A), b - b') ∈ N := by
-      have h2 := N.sub_mem h h'
-      simpa using h2
+      simpa using N.sub_mem h h'
     exact sub_eq_zero.1 (hN0 _ hd)
   have hGinv : ∀ W, ∀ u ∈ genG ρA (Submodule.span ℂ {x}), ρA W u ∈ genG ρA (Submodule.span ℂ {x}) := by
-    intro W u hu
-    exact Submodule.mem_sInf.2 fun M hM => hM.2 W u (Submodule.mem_sInf.1 hu M hM)
+    exact fun W u hu => Submodule.mem_sInf.2 fun M hM => hM.2 W u (Submodule.mem_sInf.1 hu M hM)
   have hxG : x ∈ genG ρA (Submodule.span ℂ {x}) :=
     Submodule.mem_sInf.2 fun M hM => hM.1 (Submodule.mem_span_singleton_self x)
   have hGdom : genG ρA (Submodule.span ℂ {x}) ≤ N.map (LinearMap.fst ℂ A B) := by
@@ -780,8 +777,7 @@ theorem proj_gen {p q r : ℕ} (x : FV p q r 0) (dx : ℕ) (hx : (x : Pol p q r 
   have h1 : y' ∈ genG (fvAct1 p q r 0) (Submodule.span ℂ {x}) := hy
   have h2 : u - y' ∈ (genG (fvAct1 p q r 0) (Submodule.span ℂ {x}))ᗮ := by
     rw [Submodule.mem_orthogonal]
-    intro z hz
-    exact h z hz
+    exact fun z hz => h z hz
   have := Submodule.add_mem_sup h1 h2
   rwa [add_sub_cancel] at this
 
@@ -1002,8 +998,7 @@ theorem nontrivial_of_pair {p q r s : ℕ} (c : ℂ) (c0 : ℚ) (hc : c = c0) (h
       Ψ x = cjP y := by
     refine ⟨Φ, fun Z u => ?_, hΦx⟩
     have h1 := hΦ Z u
-    rw [hρB, dualAct_eq, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply] at h1
-    exact h1
+    rwa [hρB, dualAct_eq, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply] at h1
   let b : Pol p q r 0 →ₗ[ℂ] Pol p q 0 s →ₗ[ℂ] ℂ :=
     LinearMap.mk₂ ℂ (fun u v => fockInner (cjP (Ψ u)) v)
       (by

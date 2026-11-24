@@ -75,8 +75,7 @@ theorem lev_datY_zero {D : D7} (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (L
     constructor
     · rintro ⟨⟨-, hS, -, -⟩, hH⟩
       refine ⟨hS, ?_⟩
-      rw [hP] at hH
-      exact hH
+      rwa [hP] at hH
     · rintro ⟨hS, hH⟩
       refine ⟨⟨hU, hS, fun PP _ => ?_, fun PP hPP => absurd hPP (Finset.notMem_empty _)⟩, ?_⟩
       · rw [mem_blockTri]
@@ -86,8 +85,7 @@ theorem lev_datY_zero {D : D7} (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (L
         have hj : (j : ℕ) < r := hn ▸ j.2
         simp [datY, blkOf, hi, hj] at hij
       · show rTup β _ g ∈ _
-        rw [hP]
-        exact hH
+        rwa [hP]
   · intro h
     unfold levFn
     change ext1 P.H P.chi (fun PP : Pg => upperLeftBlock hr (redFn β PP.1 g)) * _ * _ = _

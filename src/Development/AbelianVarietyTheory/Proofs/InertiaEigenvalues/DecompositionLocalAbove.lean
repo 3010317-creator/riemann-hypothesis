@@ -53,8 +53,7 @@ theorem finset_of_rat (F : Finset ℚ) (n N : ℕ) (P : ℤ → Prop) (hF : F.ca
   classical
   refine ⟨(F.image fun q => ⌊q⌋).filter (fun u => -(N : ℤ) ≤ u ∧ u ≤ N), ?_, ?_, ?_⟩
   · exact (Finset.card_filter_le _ _).trans (Finset.card_image_le.trans hF)
-  · intro u hu
-    exact (Finset.mem_filter.1 hu).2
+  · exact fun u hu => (Finset.mem_filter.1 hu).2
   · intro a ha
     obtain ⟨h1, h2⟩ := hP a ha
     refine Finset.mem_filter.2 ⟨Finset.mem_image.2 ⟨(a : ℚ), h1, Int.floor_intCast a⟩, h2⟩
@@ -94,8 +93,7 @@ theorem exists_finset_JW (up : Bool) (j : ℕ) (ρ : D.what₂.Tau) :
     refine Finset.mem_image.2 ⟨AdmissibleParameterJ.refl D q, hmem _ hq', ?_⟩
     simp only [AdmissibleParameterJ.refl]; ring
   · refine ⟨cl ∪ lw, hcard, ?_⟩
-    intro q hq
-    exact hmem q (by simpa only [JW, cloudT, lowT, ite_true] using hq)
+    exact fun q hq => hmem q (by simpa only [JW, cloudT, lowT, ite_true] using hq)
 
 theorem zero_not_mem_JW (L : SizeData₂ D) (hc : jcCondition L) (up : Bool) (j : ℕ) (hj1 : 1 ≤ j) (hj2 : j ≤ D.R.m)
     (ρ : D.what₂.Tau) : (0 : ℚ) ∉ JW D up j ρ := by

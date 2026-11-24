@@ -64,9 +64,7 @@ theorem frac_ext_clo_inj : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClo
   · intro L _ φ ψ h
     ext f
     obtain ⟨a, b, hb, hf⟩ := T.io_surj f
-    have hb' : T.io b ≠ 0 := by
-      intro h0
-      exact hb (T.io_inj (by rw [h0, map_zero]))
+    have hb' : T.io b ≠ 0 := fun h0 => hb (T.io_inj (by rw [h0, map_zero]))
     have hu : IsUnit (φ (T.io b)) := (IsUnit.mk0 _ hb').map φ
     have h1 : φ f * φ (T.io b) = ψ f * φ (T.io b) := by
       rw [← map_mul, hf, h a, h b, ← map_mul, hf]
@@ -76,8 +74,7 @@ theorem frac_ext_clo_inj : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClo
     have hm := (_root_.GlobalTheory.FN.mem_ring_iff_inR ε.range).1
     have ha : InR ε.range (a : ℍ → ℂ) := (hm _).1 a.2
     have hc : InR ε.range (GlobalTheory.FN.cmp g a) := _root_.GlobalTheory.FN.inR_cmp ε.range g _ hE ha
-    refine ⟨⟨GlobalTheory.FN.cmp g a, (hm _).2 hc⟩, rfl, ?_⟩
-    exact T.sl_io g a _ rfl
+    exact ⟨⟨GlobalTheory.FN.cmp g a, (hm _).2 hc⟩, rfl, T.sl_io g a _ rfl⟩
   · exact T.exp.toRingHom.injective
   · haveI : Nontrivial Mero := (_root_.GlobalTheory.FN.germ_main).1
     exact T.an.injective

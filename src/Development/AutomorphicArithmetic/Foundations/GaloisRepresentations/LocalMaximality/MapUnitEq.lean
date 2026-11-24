@@ -172,8 +172,7 @@ theorem UpperTheory.Gal.productCup_of_system.locD_of :
       simp [z, u, mul_assoc]
     have hmap : ∀ L : Finset κ, M'.map (act ((∏ l ∈ L, u l : Sˣ) : S)) = M' := by
       intro L
-      simp only [u, Finset.prod_const]
-      exact map_unit_eq act M' v hv _
+      simpa only [u, Finset.prod_const] using map_unit_eq act M' v hv _
     have hT : kosT act M' u z = kos act M' z := by
       unfold kosT kos
       simp only [hmap]
@@ -223,8 +222,7 @@ theorem UpperTheory.Gal.productCup_of_system.locD_of :
           rw [this, map_zero]
       · have e := wd_pw act r (a ^ N) y
         change wd (fun l => act (r l)) (pwR act _ (a ^ N) y) = pwR act _ (a ^ N) c
-        rw [e]
-        rw [← hyc]
+        rw [e, ← hyc]
         rfl
   · let T : Set S := Set.range r
     let Pn : Submodule ℂ E :=

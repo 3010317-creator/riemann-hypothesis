@@ -86,8 +86,7 @@ theorem rootDiscr_isHomogeneous_sum {ι : Type} [Fintype ι] (m : ι → ℕ) :
     unfold GlobalTheory.GoodMetric.rootDiscr
     refine IsHomogeneous.prod _ _ _ fun τ _ => ?_
     refine IsHomogeneous.prod _ _ _ fun j _ => ?_
-    refine IsHomogeneous.prod _ _ _ fun i _ => ?_
-    exact (isHomogeneous_X _ _).sub (isHomogeneous_X _ _)
+    exact IsHomogeneous.prod _ _ _ fun i _ => (isHomogeneous_X _ _).sub (isHomogeneous_X _ _)
   convert h using 1
   refine Finset.sum_congr rfl fun τ _ => ?_
   simp only [Finset.sum_const, smul_eq_mul, mul_one, Fin.card_Iio]
@@ -447,8 +446,7 @@ theorem degFl_schubPoint (ι : Type) [Fintype ι] [DecidableEq ι] (p q : ℕ) :
     exact e _ _ _
   · intro σ _ hσ
     rw [coeff_C_mul, coeff_monomial, ite_eq_right, mul_zero, mul_zero]
-    intro h
-    exact hσ (Formalism.DegreeFormula.PermutationPointDegree.permExp_inj _ _ h).symm
+    exact fun h => hσ (Formalism.DegreeFormula.PermutationPointDegree.permExp_inj _ _ h).symm
   · simp
 
 section Host
@@ -605,8 +603,7 @@ theorem intGr_pointPoly : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E]
       omega
     rw [← h1, ← Matrix.det_submatrix_equiv_self Fin.revPerm, h2, Matrix.det_vandermonde,
       GlobalTheory.GoodMetric.RootDiscrPerm.prod_Iio_eq_det, Matrix.det_vandermonde]
-    simp only [neg_sub_neg]
-    exact prod_Ioi_rev v
+    simpa only [neg_sub_neg] using prod_Ioi_rev v
 
   have antisymm_fibrePoint (ι : Type) [Fintype ι] (m : ι → ℕ) : antisymm (fibrePoint m) = rootDiscr m := by
     have hw : ∀ w : ∀ τ, Equiv.Perm (Fin (m τ)),
@@ -734,8 +731,7 @@ theorem adm_apply_prod_ren_eq_ite_mul_pointPoly : ∀ (E : Type) [Field E] [Numb
     have h2 : GlobalTheory.LieBase.pointPoly H Dw = C ((-1 : ℝ) ^ (Dw.p * Dw.q * Fintype.card (GlobalTheory.AllWt.Psi H))) *
         ∏ τ : GlobalTheory.AllWt.Psi H, X (τ.1, Dw.p) ^ Dw.q := by
       unfold GlobalTheory.LieBase.pointPoly
-      rw [Finset.prod_congr rfl (fun τ _ => by rw [hm τ])]
-      rw [show Dw.p + Dw.q - Dw.p = Dw.q by omega]
+      rw [Finset.prod_congr rfl (fun τ _ => by rw [hm τ]), show Dw.p + Dw.q - Dw.p = Dw.q by omega]
       simp only [mul_pow, Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, ← C_pow, ← pow_mul]
     rw [h1, h2, ← smul_eq_C_mul, LinearMap.map_smul, smul_eq_mul, ← mul_assoc, ← mul_pow]
     norm_num
@@ -1385,12 +1381,10 @@ theorem blockEsymm_injective (n : ℕ) : ∀ (ι : Type) [Fintype ι], Fintype.c
       intro p q hpq
       apply esymmAlgHom_fin_injective R' (m := m τ₀) (n := m τ₀) le_rfl
       apply Subtype.ext
-      rw [esymmAlgHom_apply, esymmAlgHom_apply]
-      exact hpq
+      rwa [esymmAlgHom_apply, esymmAlgHom_apply]
     have h2 : Function.Injective (mapAlgHom (R := R) (σ := Fin (m τ₀))
         (blockEsymm R (fun τ : {τ // τ ≠ τ₀} => m τ.1))) := by
-      intro p q hpq
-      exact map_injective _ (ih _ hc' R _) hpq
+      exact fun p q hpq => map_injective _ (ih _ hc' R _) hpq
     have key := split_blockEsymm R m τ₀
     intro p q hpq
     apply (GlobalTheory.BlockSymm.splitEquiv R τ₀).injective
@@ -1431,8 +1425,7 @@ theorem mk_liftChern_truncChern :
   simp only [AlgHom.comp_apply, truncChern, aeval_X, Ideal.Quotient.mkₐ_eq_mk]
   rcases k with _ | j
   · simp only [ite_true, map_one]
-    rw [← map_one (Ideal.Quotient.mk (rankIdeal m)), Ideal.Quotient.eq]
-    rw [← neg_mem_iff, neg_sub]
+    rw [← map_one (Ideal.Quotient.mk (rankIdeal m)), Ideal.Quotient.eq, ← neg_mem_iff, neg_sub]
     exact Ideal.subset_span (Or.inl ⟨τ, rfl⟩)
   · by_cases h : j < m τ
     · simp [h, liftChern]
@@ -1565,12 +1558,10 @@ theorem grass_top : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     exact Finset.sum_eq_zero fun d _ => hc d
   have hLR : L R = L Re := by
     have := hker _ hrest
-    rw [map_sub, sub_eq_zero] at this
-    exact this
+    rwa [map_sub, sub_eq_zero] at this
   have hIR : intGr H Dw R = intGr H Dw Re := by
     have := intGr_of_chernRoots_eq_zero H Dw _ hrest
-    rw [intGr_sub, sub_eq_zero] at this
-    exact this
+    rwa [intGr_sub, sub_eq_zero] at this
   by_cases hn : n = e
   · obtain ⟨c, hc⟩ := _root_.GlobalTheory.GrassTopDim.top_eq_smul_point H Dw Re hReW
     have h1 := hL _ hc

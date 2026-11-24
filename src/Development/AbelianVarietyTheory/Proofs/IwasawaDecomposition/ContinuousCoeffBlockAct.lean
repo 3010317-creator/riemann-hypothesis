@@ -81,8 +81,7 @@ theorem eq_bot_or_top_of_conj {Γ W : Type} [Group Γ] [AddCommGroup W] [Module 
     rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply]
   have h := hS (U.comap (ρ B)) fun g hg x hx => by
     have h1 := hU _ (hT g hg) _ hx
-    rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel_right, map_mul] at h1
-    exact h1
+    rwa [← Module.End.mul_apply, ← map_mul, inv_mul_cancel_right, map_mul] at h1
   rcases h with h | h
   · left
     rw [eq_bot_iff]
@@ -201,8 +200,7 @@ theorem pairK_pos (lam : ι → DomWeight n) {G : ι → Matrix (Fin n) (Fin n) 
     ring
   have h3 := h2 (pairK lam G) (fun i => (bVV ℂ lam).repr x i) (bVV ℂ lam)
   rw [(bVV ℂ lam).sum_repr x] at h3
-  rw [h3]
-  exact h1
+  rwa [h3]
 
 def Hilb (lam : ι → DomWeight n) {G : ι → Matrix (Fin n) (Fin n) ℂ} (_hG : ∀ τ, (G τ).PosDef) : Type := VV ℂ lam
 
@@ -295,8 +293,7 @@ theorem invTr_unitary {G : Matrix (Fin n) (Fin n) ℂ} {g : GL (Fin n) ℂ}
   simp only [Matrix.mul_inv_rev, Matrix.transpose_mul] at h
   show (((g⁻¹ : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ)ᵀ)ᴴ * (G⁻¹)ᵀ *
     ((g⁻¹ : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ)ᵀ = (G⁻¹)ᵀ
-  rw [conjTranspose_transpose', Matrix.coe_units_inv, Matrix.conjTranspose_nonsing_inv]
-  exact h
+  rwa [conjTranspose_transpose', Matrix.coe_units_inv, Matrix.conjTranspose_nonsing_inv]
 
 theorem invTr_invTr (g : GL (Fin n) ℂ) : inside₂ ℂ n (inside₂ ℂ n g) = g := Units.ext (Matrix.transpose_transpose _)
 

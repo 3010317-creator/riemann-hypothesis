@@ -61,8 +61,7 @@ namespace GlobalTheory.WeylCell.WeylUnipotentShell.ShellGroup
 section Order
 
 theorem le_max_one_of_mul_self_le {x e : WithZero (Multiplicative ℤ)} (h : x * x ≤ e) : x ≤ max 1 e := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have h1 : 1 ≤ x := le_of_lt (lt_of_le_of_lt (le_max_left _ _) hc)
   have h2 : x ≤ x * x := le_mul_of_one_le_right' h1
   exact absurd (lt_of_lt_of_le (lt_of_le_of_lt (le_max_right _ _) hc) (h2.trans h)) (lt_irrefl _)
@@ -107,8 +106,7 @@ theorem isCompact_ball [CompleteSpace L] {ϖ : L} {σ : L →+* L} {q : ℕ} (h 
   have hc := GlobalTheory.LFun.IntPtsUnitary.isCompact_intL h
   have e : (fun x => ϖ ^ j * x) ⁻¹' (intL L : Set L) = (Homeomorph.mulLeft₀ (ϖ ^ j)
       (zpow_ne_zero j (ne_zero_of_unramInv h))) ⁻¹' (intL L : Set L) := rfl
-  rw [e, Homeomorph.isCompact_preimage]
-  exact hc
+  rwa [e, Homeomorph.isCompact_preimage]
 
 section Block
 
@@ -304,8 +302,7 @@ theorem shellU_open_compact_subgroup : ∀ (L : Type) [Field L] [Valued L (WithZ
     intro j u hu
     rw [hcorner] at hu ⊢
     show Valued.v ((((((u : GU σ n) : GL (Fin n) L))⁻¹ : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) (lo k) (lo k).rev) ≤ _
-    rw [inv_corner harev ha'rev (hG u), hσv]
-    exact hu
+    rwa [inv_corner harev ha'rev (hG u), hσv]
   have hent : ∀ (j : ℤ) (u : cellU y), u ∈ shellU k y j → ∀ i l,
       Valued.v ((((u : GU σ n) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) i l) ≤ max 1 (WithZero.exp j) :=
     fun j u hu i l => entry_le ham hma harev ha'rev hmrev hσv (hG u) (hblk u) (hblki u) hu i l

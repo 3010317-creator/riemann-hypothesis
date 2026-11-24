@@ -194,8 +194,7 @@ theorem idem_mul_mem_iff (w : Pl D.host.E) (a : EAf D) : idem w * a ∈ OA D ↔
     · rw [cpt_idem_ne hQ, zero_mul, Valuation.map_zero]; exact zero_le'
 
 theorem mem_OA_iff_idem (a : EAf D) : a ∈ OA D ↔ ∀ w : Pl D.host.E, idem w * a ∈ OA D := by
-  simp only [idem_mul_mem_iff]
-  exact mem_OA a
+  simpa only [idem_mul_mem_iff] using mem_OA a
 
 theorem idem_mul_ne {w w' : Pl D.host.E} (h : w ≠ w') : idem w * idem w' = 0 := by
   rw [← mul_zero (idem w), idem_mul_eq_iff, cpt_idem_ne h, RingHom.map_zero]
@@ -297,8 +296,7 @@ theorem mem_hat_lat (β : GL (Fin n) (EAf D)) (y : Fin n → EAf D) :
     y ∈ hat (lat β) ↔ ∀ i, ((β⁻¹).val *ᵥ y) i ∈ OA D := isFrame_lat β y
 
 theorem selfDual_isFullLattice {V : HSp D} {Λ : Lat V} (hΛ : IsSelfDualC V Λ) :
-    Submodule.IsFullLattice D.host.E Λ := by
-  exact Formalism.IndefR.Datum.IsSelfDualC.isFullLattice V Λ hΛ
+    Submodule.IsFullLattice D.host.E Λ := Formalism.IndefR.Datum.IsSelfDualC.isFullLattice V Λ hΛ
 
 theorem exists_eq_lat (h : Submodule.IsFullLattice D.host.E Λ) : ∃ β : GL (Fin n) (EAf D), Λ = lat β := by
   obtain ⟨β, hβ⟩ := GlobalTheory.AdelicFrame.exists_isFrame D.host.F _ h.fg (Submodule.IsFullLattice.span_eq_top (self := h))
@@ -438,8 +436,7 @@ theorem vA_smul (a : D.host.E) (x : V.V) : vA V (a • x) = inc D a • vA V x :
 theorem mA_mulVec_vA (X : HSp D) (ι : X.V →ₗ[D.host.E] V.V) (x : X.V) : mA V X ι *ᵥ vA X x = vA V (ι x) := by
   funext i
   have := congrArg (inc D) (congrFun (LinearMap.toMatrix_mulVec_repr X.frame V.frame ι x) i)
-  rw [RingHom.map_mulVec] at this
-  exact this
+  rwa [RingHom.map_mulVec] at this
 
 theorem exists_dual_frame (β : GL (Fin V.rank) (EAf D)) : ∃ β' : GL (Fin V.rank) (EAf D),
     Formalism.UG.cT (cjA D) β.val * V.gram.map (inc D) * β'.val = 1 ∧

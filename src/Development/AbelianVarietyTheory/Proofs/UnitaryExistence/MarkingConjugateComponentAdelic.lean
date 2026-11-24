@@ -142,8 +142,7 @@ theorem det_sub_one_mem_of_half {n : ℕ} (L : Submodule (𝓞 E) (Fin n → E))
   have hPQ : P * Q = 1 := mul_eq_one_comm.1 hQP
   have key' : ∀ w ∈ hat F (L : Set (Fin n → E)), ∀ a, (Q *ᵥ w) a ∈ hat1 F (cI a : Set E) := by
     intro w hw
-    rw [← key, ← hP, Matrix.mulVec_mulVec, hPQ, Matrix.one_mulVec]
-    exact hw
+    rwa [← key, ← hP, Matrix.mulVec_mulVec, hPQ, Matrix.one_mulVec]
   have hkdet : (Q * G * P).det = G.det := by
     have : Q.det * P.det = 1 := by rw [← Matrix.det_mul, hQP, Matrix.det_one]
     simp only [Matrix.det_mul]
@@ -416,7 +415,6 @@ theorem marking_of_conjugate : ∀ (D : D7) (H : ReciprocityTheory.ChartRestrict
       rw [hz, ← e, hS a ha a' ha', map_add (f := _), map_nsmul, hδ2])
   refine ⟨δ, (r1 δ).2 ⟨δ', hδ⟩, u, h1, h2, ?_⟩
   rw [hdet] at h3
-  rw [RingOfIntegers.coe_eq_algebraMap, map_mul, map_pow, map_pow]
-  exact h3
+  rwa [RingOfIntegers.coe_eq_algebraMap, map_mul, map_pow, map_pow]
 
 end GlobalTheory.ConjMark

@@ -92,8 +92,7 @@ private theorem isoCopy_struct {H T M : Type} [Group H] [AddCommGroup T] [Module
     · rintro f _ ⟨t, rfl⟩
       exact hle f ⟨t, rfl⟩
     · exact Submodule.zero_mem _
-    · intro a b ha hb
-      exact Submodule.add_mem _ ha hb
+    · exact fun a b ha hb => Submodule.add_mem _ ha hb
   have hss : IsSemisimpleModule (MonoidAlgebra ℂ H) (isotypicComponent (MonoidAlgebra ℂ H) μ.asModule τ.asModule) :=
     inferInstance
   rw [htop] at hss

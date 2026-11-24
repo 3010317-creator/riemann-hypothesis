@@ -110,8 +110,7 @@ theorem diag_unitary_exp_sym {L : Type} [Field L] [Valued L (WithZero (Multiplic
     simp only [Matrix.diagonal_mul, Matrix.mul_diagonal] at e
     have hJ : Formalism.UG.antiJ L r i (Fin.rev i) = 1 := by
       simp only [Formalism.UG.antiJ, Fin.val_rev]; rw [ite_eq_left]; omega
-    rw [hJ, mul_one] at e
-    rw [← zpow_add₀ hϖ] at e
+    rw [hJ, mul_one, ← zpow_add₀ hϖ] at e
     have e2 := congrArg (fun x => Valued.v x) e
     simp only [map_zpow₀, map_one, hv] at e2
     rw [← WithZero.coe_zpow, ← ofAdd_zsmul] at e2
@@ -251,8 +250,7 @@ theorem map_diag_eq_pi (ϖ : L) (h0 : ϖ ≠ 0) (r n : ℕ) (d : Fin r → ℤ) 
     · obtain ⟨x, hx, hxe⟩ := hY i j
       change ϖ ^ d i * x = Y i j at hxe
       change (ϖ ^ d i)⁻¹ * Y i j ∈ Formalism.UG.intL L
-      rw [← hxe, ← mul_assoc, inv_mul_cancel₀ (zpow_ne_zero _ h0), one_mul]
-      exact hx
+      rwa [← hxe, ← mul_assoc, inv_mul_cancel₀ (zpow_ne_zero _ h0), one_mul]
     · ext i j
       change (Matrix.diagonal (fun i => ϖ ^ d i) * Matrix.of fun i j => (ϖ ^ d i)⁻¹ * Y i j) i j = Y i j
       rw [Matrix.diagonal_mul, Matrix.of_apply, ← mul_assoc, mul_inv_cancel₀ (zpow_ne_zero _ h0), one_mul]
@@ -261,8 +259,7 @@ theorem sum_toNat {r : ℕ} (d : Fin r → ℤ) :
     ∑ i, (max (-d i) 0).toNat = (∑ i, max (-d i) 0).toNat := by
   have h : ((∑ i, (max (-d i) 0).toNat : ℕ) : ℤ) = ∑ i, max (-d i) 0 := by
     push_cast
-    refine Finset.sum_congr rfl fun i _ => ?_
-    exact Int.toNat_of_nonneg (le_max_right _ _)
+    exact Finset.sum_congr rfl fun i _ => Int.toNat_of_nonneg (le_max_right _ _)
   rw [← h, Int.toNat_natCast]
 
 theorem relIndex_intMat_diag : ∀ {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] (ϖ : L) (Q : ℕ), ϖ ≠ 0 → Valued.v ϖ ≤ 1 → (∀ e : ℕ, ((Formalism.UG.intL L).toAddSubgroup.map (AddMonoidHom.mulLeft (ϖ ^ e))).relIndex (Formalism.UG.intL L).toAddSubgroup = Q ^ e) → ∀ (r n : ℕ) (d : Fin r → ℤ), (GlobalTheory.InertHomIdx.intMat L r n).relIndex ((GlobalTheory.InertHomIdx.intMat L r n).map (GlobalTheory.InertHomIdx.lmul (Matrix.diagonal (fun i => ϖ ^ d i)))) = Q ^ (n * (∑ i, max (-d i) 0).toNat) := by
@@ -454,8 +451,7 @@ theorem relIndex_mul_uniformizer (ϖ : L) (c : L →+* L) (q : ℕ) (h : IsUnram
       have hle := _root_.Formalism.UG.P.satake_lt_one_le hy'
       refine ⟨ϖ⁻¹ * (y : L), ?_, ?_⟩
       · show Valued.v (ϖ⁻¹ * (y : L)) ≤ 1
-        rw [map_mul, map_inv₀, inv_mul_le_iff₀ (zero_lt_iff.mpr (by simpa using h0)), mul_one, h4]
-        exact hle
+        rwa [map_mul, map_inv₀, inv_mul_le_iff₀ (zero_lt_iff.mpr (by simpa using h0)), mul_one, h4]
       · show ϖ * (ϖ⁻¹ * (y : L)) = (y : L)
         field_simp
     · rintro ⟨o, ho, rfl⟩
@@ -470,10 +466,8 @@ theorem relIndex_mul_uniformizer (ϖ : L) (c : L →+* L) (q : ℕ) (h : IsUnram
     constructor
     · rintro ⟨y, rfl⟩
       exact y.2
-    · intro hx
-      exact ⟨⟨x, hx⟩, rfl⟩
-  rw [← e1, ← e2, AddSubgroup.relIndex_map_map_of_injective _ _ hf, AddSubgroup.relIndex_top_right]
-  exact hI
+    · exact fun hx => ⟨⟨x, hx⟩, rfl⟩
+  rwa [← e1, ← e2, AddSubgroup.relIndex_map_map_of_injective _ _ hf, AddSubgroup.relIndex_top_right]
 
 theorem relIndex_mul_uniformizer_pow {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))]
     (ϖ : L) (c : L →+* L) (q : ℕ) (h : IsUnramInv ϖ c q) (e : ℕ) :
@@ -515,8 +509,7 @@ theorem relIndex_mul_uniformizer_pow {L : Type} [Field L] [Valued L (WithZero (M
         exact ⟨o, ho, by rw [pow_succ, mul_assoc]⟩
     have hstep : (O.map (AddMonoidHom.mulLeft (ϖ ^ (e + 1)))).relIndex
         (O.map (AddMonoidHom.mulLeft (ϖ ^ e))) = q ^ 2 := by
-      rw [hcomp, AddSubgroup.relIndex_map_map_of_injective _ _ hinj]
-      exact hbase
+      rwa [hcomp, AddSubgroup.relIndex_map_map_of_injective _ _ hinj]
     have hle1 : O.map (AddMonoidHom.mulLeft (ϖ ^ (e + 1))) ≤ O.map (AddMonoidHom.mulLeft (ϖ ^ e)) := by
       rw [hcomp]
       exact AddSubgroup.map_mono (hmulle ϖ hϖ)

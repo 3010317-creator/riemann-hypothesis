@@ -75,8 +75,7 @@ private theorem sum_map_apply {ι σ : Type} [Fintype ι] (m : ι → σ →₀ 
     apply Finsupp.mapDomain_notin_range
     rintro ⟨y, hy⟩
     exact hj (Prod.mk.inj hy).1
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 private theorem coeff_prod' {ι σ C : Type} [DecidableEq ι] [DecidableEq σ] [CommRing C] (f : ι → MvPolynomial σ C)
     (d : σ →₀ ℕ) (s : Finset ι) :
@@ -97,15 +96,13 @@ private theorem coeff_prod_ren {ι σ C : Type} [Fintype ι] [CommRing C] (m : �
   have inj : ∀ j : ι, Function.Injective (fun v : σ => (j, v)) := fun j a b h => (Prod.mk.inj h).2
   rw [coeff_prod', Finset.sum_eq_single
     (Finsupp.equivFunOnFinite.symm fun j => Finsupp.mapDomain (fun v : σ => (j, v)) (m j))]
-  · refine Finset.prod_congr rfl fun j _ => ?_
-    exact MvPolynomial.coeff_rename_mapDomain _ (inj j) _ _
+  · exact Finset.prod_congr rfl fun j _ => MvPolynomial.coeff_rename_mapDomain _ (inj j) _ _
   · intro l hl hne
     by_contra hprod
     apply hne
     have hu : ∀ k, ∃ u : σ →₀ ℕ, Finsupp.mapDomain (fun v : σ => (k, v)) u = l k := by
       intro k
-      by_contra hk
-      push Not at hk
+      by_contra! hk
       apply hprod
       apply Finset.prod_eq_zero (Finset.mem_univ k)
       apply MvPolynomial.coeff_rename_eq_zero
@@ -114,14 +111,11 @@ private theorem coeff_prod_ren {ι σ C : Type} [Fintype ι] [CommRing C] (m : �
     choose u hu using hu
     have hsum : ∑ k, Finsupp.mapDomain (fun v : σ => (k, v)) (u k) = D := by
       rw [Finset.mem_finsuppAntidiag] at hl
-      simp only [hu]
-      exact hl.1
+      simpa only [hu] using hl.1
     have hum : u = m := by
       funext k
       ext x
-      have hx := congrArg (fun F => F (k, x)) hsum
-      simp only [hD, sum_map_apply] at hx
-      exact hx
+      simpa only [hD, sum_map_apply] using congrArg (fun F => F (k, x)) hsum
     ext1 k
     show l k = Finsupp.mapDomain (fun v : σ => (k, v)) (m k)
     rw [← hu k, hum]
@@ -160,8 +154,7 @@ private theorem unitri {I P C : Type} [Fintype I] [PartialOrder P] [CommRing C] 
       · simp
   have hsum := hc j
   rw [← Finset.add_sum_erase _ _ (Finset.mem_univ j), h1, mul_one] at hsum
-  have hfin := S.sub_mem hsum (sum_mem hrest)
-  simpa using hfin
+  simpa using S.sub_mem hsum (sum_mem hrest)
 
 theorem UpperTheory.WildA.bvvInt :
     ∀ {ι : Type} [Fintype ι] {b : ℕ} (lam : ι → DomWeight b) (v : VV ℂ lam),
@@ -214,17 +207,14 @@ theorem UpperTheory.WildA.bvvInt :
       refine RingHom.mem_range.mpr ⟨AddMonoidAlgebra.coeff P (L y.1), ?_⟩
       show _ = AddMonoidAlgebra.coeff (bVVfun ℂ lam x.1) (L y.1)
       rw [hP, MvPolynomial.coeff_map]
-    · intro x
-      exact hdiag x.1
+    · exact fun x => hdiag x.1
     · intro x y hxy τ
       have hne : ∀ τ ∈ Finset.univ,
           AddMonoidAlgebra.coeff (ssB ℂ (lam τ).natW (x.1 τ)) (y.1 τ : Fin b × Fin b →₀ ℕ) ≠ 0 := by
-        rw [← Finset.prod_ne_zero_iff, ← hAprod]
-        exact hxy
+        rwa [← Finset.prod_ne_zero_iff, ← hAprod]
       have hd := (Formalism.GradedWeylDivisibility.colLex b b).le_degree
         (MvPolynomial.mem_support_iff.mpr (hne τ (Finset.mem_univ τ)))
-      rw [(hspec (lam τ).natW (x.1 τ)).1] at hd
-      exact hd
+      rwa [(hspec (lam τ).natW (x.1 τ)).1] at hd
     · intro j
       have hcoef : AddMonoidAlgebra.coeff (v : Pol ℂ ι b) (L j.1) =
           ∑ x : {x // x ∈ ((bVV ℂ lam).repr v).support}, (bVV ℂ lam).repr v x.1 * A x.1 j.1 := by

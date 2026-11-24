@@ -153,11 +153,9 @@ theorem combLine_equiv {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype 
     (ℓ : J → HermLine ι) (n : J → ℤ) (e : J ≃ J) :
     Top.combLine (ℓ ∘ e) (n ∘ e) = Top.combLine ℓ n := by
   apply hermLine_ext
-  · simp only [Top.combLine, Function.comp]
-    exact Equiv.sum_comp e (fun j => n j • (ℓ j).a)
+  · simpa only [Top.combLine, Function.comp] using Equiv.sum_comp e (fun j => n j • (ℓ j).a)
   · funext z
-    simp only [Top.combLine, Function.comp]
-    exact Equiv.prod_comp e (fun j => (ℓ j).h z ^ n j)
+    simpa only [Top.combLine, Function.comp] using Equiv.prod_comp e (fun j => (ℓ j).h z ^ n j)
 
 def relab {Ψ : Type} (π : Ψ ≃ Ψ) (N : ℕ) : Ψ × Fin N ≃ Ψ × Fin N := Equiv.prodCongr π (Equiv.refl _)
 

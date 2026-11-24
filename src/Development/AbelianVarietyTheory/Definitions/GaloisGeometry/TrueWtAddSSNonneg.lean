@@ -353,8 +353,7 @@ theorem chain_emb (hc : X.Tau → HCParam R) (φ : (A.F 0).Forms) (j : ℕ) (hj 
   | zero => rfl
   | succ j ih =>
     have := A.K_emb σ hc j (by omega) (A.kk.colTo A.ok j φ)
-    rw [← ih (by omega)] at this
-    exact this
+    rwa [← ih (by omega)] at this
 
 theorem col_emb (hc : X.Tau → HCParam R) (φ : (A.F 0).Forms) :
     (A.chain σ hc).col (A.emb σ 0 φ) = A.emb σ R.m (A.kk.colTo A.ok R.m φ) := A.chain_emb σ hc φ R.m le_rfl
@@ -373,8 +372,7 @@ theorem trueWt_old (hc : X.Tau → HCParam R) {i : ℕ} (hi : i < R.m) (τ : X.T
     rw [sD, dite_eq_left hi]; exact zOf_spec R _ ((hc τ).e_int _) _
   apply Int.cast_injective (α := ℚ)
   push_cast
-  rw [h1, h2]
-  exact h0
+  rwa [h1, h2]
 
 theorem trueWt_new (hc : X.Tau → HCParam R) {i : ℕ} (hi : i < R.m) (τ : X.Tau) (a : Fin (R.N (i + 1))) (h : ¬ a.1 < R.N i) :
     (trueWt hc (i + 1) τ).w a = -sD hc i τ := by
@@ -383,8 +381,7 @@ theorem trueWt_new (hc : X.Tau → HCParam R) {i : ℕ} (hi : i < R.m) (τ : X.T
     rw [sD, dite_eq_left hi]; exact zOf_spec R _ ((hc τ).e_int _) _
   apply Int.cast_injective (α := ℚ)
   push_cast
-  rw [h2]
-  exact h0
+  rwa [h2]
 
 theorem trueWt_add_sS_nonneg (hc : X.Tau → HCParam R) {i : ℕ} (hi : i < R.m) (τ : X.Tau) (a : Fin (R.N i)) :
     0 ≤ (trueWt hc i τ).w a + sS hc i τ := by
@@ -491,8 +488,7 @@ theorem exampleChain_col_apply (hc : X.Tau → HCParam R) :
     | zero => rw [pow_zero, one_smul]; rfl
     | succ j ih =>
       have := exampleChain_K_apply σ hc j (by omega) ((1 / 2 : ℂ) ^ j)
-      rw [← ih (by omega), div_eq_mul_one_div, ← pow_succ] at this
-      exact this
+      rwa [← ih (by omega), div_eq_mul_one_div, ← pow_succ] at this
   exact h R.m le_rfl
 
 def exampleCpl (X : Fields) {n : ℕ} (lam : X.Tau → DomWeight n) : Cpl (exampleGSD X lam) where
@@ -527,8 +523,7 @@ def fnPol (X : Fields) (σ : X.K →+* ℂ) (n : ℕ) : (Fr X σ n → ℂ) →�
 theorem fnPol_polFn {n : ℕ} (Q : Formalism.L2.DIV.Pol ℂ X.Tau n) : fnPol X σ n (polFn X σ n Q) = Q := by
   have h := polOf_fnOf (gramC (1 : Matrix (Fin n) (Fin n) X.E) (embAt σ X.emb)) 0 (stdFrC _) Q
   have e : (fun τ => ((stdFrC (n := n) (embAt σ X.emb)).1 τ)⁻¹) = 1 := funext fun τ => by simp [stdFrC]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 abbrev JetFam : Type :=
   ∀ i, (A.F i).Cl → (A.F (i + 1)).Cl → (Formalism.L2.DIV.Pol ℂ X.Tau (R.N i) →ₗ[ℂ] Formalism.L2.DIV.Pol ℂ X.Tau (R.N (i + 1)))

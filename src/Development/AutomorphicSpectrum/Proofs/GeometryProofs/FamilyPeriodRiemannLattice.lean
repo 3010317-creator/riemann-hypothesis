@@ -79,8 +79,7 @@ theorem exists_reparam_isAH {g g' : ℕ} (u : HolUnif A L g') (X : (Fin g → �
     have h := hAH.2.1 (X z) ((LinearEquiv.map_ne_zero_iff X).2 hz)
     have e := hf z z
     unfold hermForm at e
-    rw [e]
-    exact h
+    rwa [e]
   · intro l i z hz
     have h := hAH.2.2.2 ⟨X l, l.2⟩ i (X z) hz
     have e1 := hf z l
@@ -103,7 +102,6 @@ theorem fibreLatVec_of_period : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   intro E _ _ _ H D l Xo σ g ty FU i R P h hP hRf hdet hPh A₀ x v hd
   let hl : (Fin g → ℂ) ≃ₗ[ℂ] (Fin g → ℂ) := h.toLinearEquiv' (h.invertibleOfIsUnitDet hdet)
   have hla : ∀ z, hl z = h *ᵥ z := fun z => by
-    show Matrix.toLin' h z = h *ᵥ z
     exact Matrix.toLin'_apply h z
   have hlP : ∀ a, hl (R.P a) = P a := fun a => by rw [hla, hPh]
   have hlP' : ∀ a, hl.symm (P a) = R.P a := fun a => by rw [← hlP, hl.symm_apply_apply]

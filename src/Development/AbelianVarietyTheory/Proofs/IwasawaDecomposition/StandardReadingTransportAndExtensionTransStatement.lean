@@ -366,9 +366,7 @@ theorem ext_trans {B₁ B₂ B₃ : Base} {f₁ f₂ f₃ T₁ T₂ T₃} {w₁ 
   · intro i i'' h ok ok'' φ φ'' C
     refine Exists.elim (hm i) fun i' hi' => ?_
     have hv : HEq (B₂.primes w₂.px).vGs (B₁.primes w₁.px).vGs := by
-      have a := heq_of_eq z₂.lev.Pg.symm
-      have b := heq_of_eq z₁.lev.Pg
-      exact HEq.trans (HEq.trans a x.Pg) b
+      exact HEq.trans (HEq.trans (heq_of_eq z₂.lev.Pg.symm) x.Pg) (heq_of_eq z₁.lev.Pg)
     have L := GlobalTheory.T.referenceTupleLiftForms_pass_to_coeffEnlargement w₁ w₂ W₁ W₂ e₁₂ hv (GlobalTheory.T.tameCharacters_typePrimes_eq_of_extension z₁ z₂ e₁₂ x) ((i : ℕ) + 1) ((i' : ℕ) + 1) (congrArg (· + 1) hi')
     refine Exists.elim (L.2 φ) fun φ' C' => ?_
     have ok' : (Formalism.L2.Col.mtKGSD (Pr := B₂.primes w₂.px) B₂.wts w₂.I.Ch w₂.I.sel (mu0F (X := B₂.fields) (tuOf w₂.I (usedOf w₂.I T₂ W₂))).1 ((i' : ℕ) + 1)).Ok := Formalism.L2.Col.mtKOk _ _ _ _ h₂ _

@@ -133,9 +133,7 @@ theorem quot_of_local {J M T T' : Type} [AddCommGroup M] [Module ℂ M] [AddComm
       have : m ∈ N.comap Rm.mkQ := hc ▸ Submodule.mem_top
       exact this
     · left
-      have hst : ∀ W, ∀ x ∈ N.comap Rm.mkQ, actM W x ∈ N.comap Rm.mkQ := by
-        intro W x hx
-        exact hN W _ hx
+      have hst : ∀ W, ∀ x ∈ N.comap Rm.mkQ, actM W x ∈ N.comap Rm.mkQ := fun W x hx => hN W _ hx
       have hle : N.comap Rm.mkQ ≤ Rm := le_sSup ⟨hst, hc⟩
       rw [eq_bot_iff]
       intro y hy
@@ -158,8 +156,7 @@ theorem genG_stable' (act : Mat r s →ₗ[ℂ] Module.End ℂ M) (S : Submodule
     ∀ W, ∀ x ∈ genG act S, act W x ∈ genG act S := by
   intro W x hx
   simp only [genG, Submodule.mem_sInf, Set.mem_setOf_eq] at hx ⊢
-  intro N hN
-  exact hN.2 W x (hx N hN)
+  exact fun N hN => hN.2 W x (hx N hN)
 
 theorem sameBlock_symm' {a b : Ix r s} (h : sameBlock a b) : sameBlock b a := by
   exact (CasGl.sb_iff _ _).2 ((CasGl.sb_iff _ _).1 h).symm
@@ -204,8 +201,7 @@ theorem local_of (act : Mat r s →ₗ[ℂ] Module.End ℂ M) (hL : IsLie act) (
   have hsym : ∀ {a b : Ix r s}, sameBlock a b → sameBlock b a := fun h => sameBlock_symm' h
   set B : Submodule ℂ A := sInf {W | f ∈ W ∧ ∀ a b, posC b a → ∀ x ∈ W, ρ a b x ∈ W} with hB
   have hfB : f ∈ B := by
-    simp only [hB, Submodule.mem_sInf, Set.mem_setOf_eq]
-    exact fun W hW => hW.1
+    simpa only [hB, Submodule.mem_sInf, Set.mem_setOf_eq] using fun W hW => hW.1
   have hBlow : ∀ a b, posC b a → ∀ x ∈ B, ρ a b x ∈ B := by
     intro a b hab x hx
     simp only [hB, Submodule.mem_sInf, Set.mem_setOf_eq] at hx ⊢
@@ -248,14 +244,12 @@ theorem local_of (act : Mat r s →ₗ[ℂ] Module.End ℂ M) (hL : IsLie act) (
           · subst h1
             exact hx.2 a d (_root_.PositivityTheory.KReal.sb_trans hab' hcd)
           · simp
-    intro a b hab x hx
-    exact ((mem' x).1 (hle hx)).2 a b hab
+    exact fun a b hab x hx => ((mem' x).1 (hle hx)).2 a b hab
   have hkill : ∀ g ∈ B, (∀ a b, posC a b → ρ a b g = 0) → ⟪g, f⟫_ℂ = 0 → g = 0 := by
     intro g hg hgk hgf
     have hZ : B ≤ (ℂ ∙ g)ᗮ := by
       refine hBmin _ ?_ ?_
-      · rw [Submodule.mem_orthogonal_singleton_iff_inner_right]
-        exact hgf
+      · rwa [Submodule.mem_orthogonal_singleton_iff_inner_right]
       · intro a b hab x _
         rw [Submodule.mem_orthogonal_singleton_iff_inner_right]
         have hsb : sameBlock b a := (posC_props_and_sameBlock_trichotomy b a).1 hab
@@ -286,8 +280,7 @@ theorem local_of (act : Mat r s →ₗ[ℂ] Module.End ℂ M) (hL : IsLie act) (
         rw [eq_neg_iff_add_eq_zero, ← map_add (f := _), hfwv, hw.2 a b hab]
       have h4 : ρ a b w0 = 0 := by
         have : ρ a b w0 ∈ W ⊓ Wᗮ := ⟨h1, by rw [h3]; exact Wᗮ.neg_mem h2⟩
-        rw [Submodule.inf_orthogonal_eq_bot] at this
-        exact this
+        rwa [Submodule.inf_orthogonal_eq_bot] at this
       refine ⟨h4, ?_⟩
       rw [h4] at h3
       exact neg_eq_zero.mp h3.symm
@@ -521,8 +514,7 @@ theorem local_of (act : Mat r s →ₗ[ℂ] Module.End ℂ M) (hL : IsLie act) (
         exact Submodule.sub_mem _ (hCst _ (genG_stable' act L) y hy) (Submodule.smul_mem _ _ hy)
       have := ih _ hz (by rw [← Module.End.mul_apply, ← pow_succ]; exact h)
       refine hi y hy ?_
-      rw [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply] at this
-      exact this
+      rwa [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply] at this
   let R : Submodule ℂ M :=
     { carrier := {x | ∃ q : Polynomial ℂ, q.eval ((c0 : ℝ) : ℂ) ≠ 0 ∧ Polynomial.aeval C q x = 0}
       add_mem' := by
@@ -713,8 +705,7 @@ theorem common_quot {r s : ℕ} (La : Ix r s → ℚ) (T T' : Type) [AddCommGrou
     · exact hs t ht x.1 (m1 (Submodule.mem_map_of_mem hx)) (by simpa using congrArg Prod.fst hC)
     · exact hs' t ht x.2 (m2 (Submodule.mem_map_of_mem hx)) (by simpa using congrArg Prod.snd hC)
   have h0 : ι₂ f₂ ≠ 0 := by
-    intro h0
-    exact ne_zero_of_gen act (ι f) hgen (by simpa [hι₂, f₂] using congrArg Prod.fst h0)
+    exact fun h0 => ne_zero_of_gen act (ι f) hgen (by simpa [hι₂, f₂] using congrArg Prod.fst h0)
   obtain ⟨R, hfR, hR⟩ := local_of P hLP La ρ₂ ι₂ f₂ hadj₂ hgl₂ hw₂ hιP hs₂ h0
   haveI := hT
   haveI := hT'
@@ -740,8 +731,7 @@ theorem common_quot {r s : ℕ} (La : Ix r s → ℚ) (T T' : Type) [AddCommGrou
       exact ⟨actM W g, rfl⟩
   refine quot_of_local actM (fun W => act W) (fun W => act' W) (R.comap G.subtype) ?_ ?_ φ φ' hφ hφ'
     (fun W x => rfl) (fun W x => rfl)
-  · intro htop
-    exact hfR (show (⟨_, hfG⟩ : G) ∈ R.comap G.subtype from htop ▸ Submodule.mem_top)
+  · exact fun htop => hfR (show (⟨_, hfG⟩ : G) ∈ R.comap G.subtype from htop ▸ Submodule.mem_top)
   · intro N hNst hNtop
     have hle : N.map G.subtype ≤ G := by
       rintro _ ⟨y, _, rfl⟩
@@ -758,10 +748,8 @@ theorem common_quot {r s : ℕ} (La : Ix r s → ℚ) (T T' : Type) [AddCommGrou
         rw [hEq]
         exact y.2
       obtain ⟨z, hz, hzy⟩ := this
-      rw [Subtype.ext hzy] at hz
-      exact hz
-    intro y hy
-    exact hR _ hle hst hne ⟨y, hy, rfl⟩
+      rwa [Subtype.ext hzy] at hz
+    exact fun y hy => hR _ hle hst hne ⟨y, hy, rfl⟩
 
 end PositivityTheory.KReal
 

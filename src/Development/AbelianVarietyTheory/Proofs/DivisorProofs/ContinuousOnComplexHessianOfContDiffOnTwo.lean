@@ -66,8 +66,7 @@ theorem contDiffOn_one_wdb_of_contDiffOn_two_isOpen {n : ℕ} {U : Set (V n)} {g
   have e : wdb n l g = fun y =>
       (fderiv ℝ g y (bas n l) + Complex.I * fderiv ℝ g y (Complex.I • bas n l)) / 2 :=
     funext fun y => rfl
-  rw [e]
-  exact h3
+  rwa [e]
 
 theorem continuousOn_wd_of_contDiffOn_one_isOpen {n : ℕ} {U : Set (V n)} {g : V n → ℂ}
     (hU : IsOpen U) (hg : ContDiffOn ℝ 1 g U) (j : Fin n) :
@@ -84,8 +83,7 @@ theorem continuousOn_wd_of_contDiffOn_one_isOpen {n : ℕ} {U : Set (V n)} {g : 
   have e : wd n j g = fun y =>
       (fderiv ℝ g y (bas n j) - Complex.I * fderiv ℝ g y (Complex.I • bas n j)) / 2 :=
     funext fun y => rfl
-  rw [e]
-  exact h3
+  rwa [e]
 
 theorem continuousOn_cHess_of_contDiffOn_two :
     ∀ (n : ℕ) (U : Set (V n)) (φ : V n → ℝ), IsOpen U → ContDiffOn ℝ 2 φ U → ∀ j l,

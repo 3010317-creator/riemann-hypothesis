@@ -171,8 +171,7 @@ private theorem eq_zero_of_eig {K : Type} [Field K] (e b : Nat.Primes → K) (c 
         · exact ih' _ (lt_of_le_of_lt (Nat.div_le_self _ _) hm_lt)
         · rfl
       rw [ih' m hm_lt, hz, mul_zero, add_zero, mul_zero] at key
-      rw [hm]
-      exact key
+      rwa [hm]
 
 private def Phi {l : ℕ} [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (N : ℕ) (k : ℤ) :
     CuspForm (Gamma1 N) k →ₛₗ[(ι.symm : ℂ →+* Qbar l)] (ℕ → Qbar l) where
@@ -248,7 +247,6 @@ theorem UpperTheory.V.Sd.eigLift :
     by_cases hij : i = j
     · rw [hij]
     · refine LinearMap.ext fun v => Subtype.ext ?_
-      show fT i.1 _ (fT j.1 _ (v : ℕ → Qbar l)) = fT j.1 _ (fT i.1 _ (v : ℕ → Qbar l))
       exact fT_comm i.2 j.2 (fun h => hij (Subtype.ext h)) _ _ _
   have hbd : ∀ j (v : V), (∀ n, ‖(v : ℕ → Qbar l) n‖ ≤ 1) → ∀ n, ‖((T j v : V) : ℕ → Qbar l) n‖ ≤ 1 := by
     intro j v hv n
@@ -292,8 +290,7 @@ theorem UpperTheory.V.Sd.eigLift :
     intro p
     have := congr_arg Subtype.val (heig p)
     rw [hT, Submodule.coe_smul] at this
-    rw [hPg]
-    exact this
+    rwa [hPg]
   have hc1 : coef g0 1 ≠ 0 := by
     intro hz
     apply hne
@@ -472,8 +469,7 @@ private theorem chi_neg_one {l M w : ℕ} (hl : l.Prime) {φ θ χ} (h : EDat l 
     have hθl : θ (-1) ^ l = 1 := by
       rw [← MulChar.pow_apply' θ hl.ne_zero, h.θpow, MulChar.one_apply isUnit_one.neg]
     obtain ⟨m, hm⟩ := Nat.Prime.odd_of_ne_two hl h.odd
-    rw [hm, pow_succ, pow_mul, hsq, one_pow, one_mul] at hθl
-    exact hθl
+    rwa [hm, pow_succ, pow_mul, hsq, one_pow, one_mul] at hθl
   rw [key, hθ, mul_one]
 
 private theorem coef_comb {N k : ℕ} [NeZero N] (E G : ModularForm (Gamma1 N) (k : ℤ)) (c : ℂ) (n : ℕ) :
@@ -526,8 +522,7 @@ theorem UpperTheory.V.Sd.propE :
     intro γ hγ
     rw [ModularForm.coe_sub, ModularForm.coe_smul, slash_comb]
     have ht := (hEv γ hγ).sub ((hGv γ hγ).smul c)
-    rw [sub_zero] at ht
-    exact ht
+    rwa [sub_zero] at ht
   obtain ⟨f, hf⟩ := cuspOf (M * w) k χ (E - c • G) hFc hFv hF0
   have hcf : ∀ m, 1 ≤ m → coef (⇑f) m = sigChi k χ m - c * coef (⇑G) m := by
     intro m hm

@@ -82,8 +82,7 @@ theorem norm_curryFirst_le {g : ℕ} (F : C(Fin (g + 1) → ℤ_[q], ℂ_[q])) :
   rw [ContinuousMap.norm_le _ (norm_nonneg _)]
   intro t
   rw [ContinuousMap.norm_le _ (norm_nonneg _)]
-  intro a
-  exact F.norm_coe_le_norm _
+  exact fun a => F.norm_coe_le_norm _
 
 noncomputable def diffFirst {g : ℕ} (m : ℕ) :
     C(Fin (g + 1) → ℤ_[q], ℂ_[q]) →ₗ[ℂ_[q]] C(Fin g → ℤ_[q], ℂ_[q]) where
@@ -183,8 +182,7 @@ theorem exists_measure_of_bounded_moments :
   let L : C(Fin g → ℤ_[q], ℂ_[q]) →ₗ[ℂ_[q]] ℂ_[q] :=
     { toFun := fun F => ∑' n, c n * D n F
       map_add' := fun F G => by
-        simp only [map_add (f := _), mul_add]
-        exact (hs F).tsum_add (hs G)
+        simpa only [map_add (f := _), mul_add] using (hs F).tsum_add (hs G)
       map_smul' := fun r F => by
         simp only [map_smul, smul_eq_mul, RingHom.id_apply]
         rw [← tsum_mul_left]

@@ -223,8 +223,7 @@ theorem cuspidal_frame : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (h 
         (f := (ContinuousLinearMap.apply ℂ (B.I.L2 B.μf B.fund) (B.tens B.w)).toLinearMap) hA
       rw [Submodule.map_span, ← Set.range_comp] at this
       show Rφ z ∈ _
-      rw [← hAw]
-      exact this
+      rwa [← hAw]
 
 end GlobalTheory.Dec.CuspFrameOneType
 end -- clump:auto
@@ -374,9 +373,7 @@ open MeasureTheory NumberField Formalism.MainNotions.S GlobalTheory.Count
 
 namespace GlobalTheory.DeepRegion
 
-theorem one_le_f (I : AutInst) : 1 ≤ I.f := by
-  show 0 < Module.finrank ℚ I.F
-  exact Module.finrank_pos
+theorem one_le_f (I : AutInst) : 1 ≤ I.f := Module.finrank_pos
 
 theorem one_le_rd (I : AutInst) : 1 ≤ I.rd := by
   have hd : (1 : ℝ) ≤ |(discr I.E : ℝ)| := by
@@ -490,8 +487,7 @@ theorem deepBound (hV : GlobalTheory.FlagMeas.AbsoluteVolume) (hK : GlobalTheory
     have hpos : 0 < (B.g : ℝ) ^ (2 * N) * ((B.I.n : ℝ) * B.I.f * B.I.rd * B.g * b) ^ N := by
       rw [← hX]; positivity
     gcongr
-    rw [le_div_iff₀ hpos]
-    exact hA
+    rwa [le_div_iff₀ hpos]
   calc ∫⁻ x in GlobalTheory.IndefiniteRowSideFullHecke.DeepSet.deepSet B q b, ENNReal.ofReal (kern B.I (phe B d) x x).re ∂(B.I.muA B.μf)
       ≤ ∫⁻ _ in GlobalTheory.IndefiniteRowSideFullHecke.DeepSet.deepSet B q b, ENNReal.ofReal Kc ∂(B.I.muA B.μf) := by
         first
@@ -1340,8 +1336,7 @@ theorem nonzeroFlagBound : VolumeStep → NonzeroFlagBound := by
         typeSet I c.blocksFun (simplexH c.length) ∩ fund := by
     rintro x ⟨hx, hxf⟩
     obtain ⟨J, hJ, c, hc⟩ := mem_typeSet I p q hs x hx
-    simp only [Set.mem_iUnion]
-    exact ⟨J, hJ, c, mem_univ _, hc, hxf⟩
+    simpa only [Set.mem_iUnion] using ⟨J, hJ, c, mem_univ _, hc, hxf⟩
   have hμ : I.muA μf ({x | stepLt I x (1 / 2) ≠ ⊥} ∩ fund) ≤
       ∑ J ∈ Finset.Icc 1 q, ∑ c : Composition J,
         I.muA μf (typeSet I c.blocksFun (simplexH c.length) ∩ fund) :=
@@ -1456,8 +1451,7 @@ theorem exists_type (B : RowsAut) (p q : ℕ) (hs : SigIs B p q) (hn : 1 ≤ B.I
       | rw [List.get_ofFn]
   obtain ⟨τ', h'⟩ := GlobalTheory.TypeDecomp.hasType_cast B.I x hlen j τ hT
   refine ⟨∑ i, j i, Finset.mem_Icc.mpr ⟨h1, h2⟩, c, τ', ?_⟩
-  rw [hc]
-  exact h'
+  rwa [hc]
 
 theorem lintegral_le_sum_types : ∀ (B : RowsAut) (p q : ℕ), SigIs B p q → 1 ≤ B.I.n → ∀ Φ : B.I.GA → ENNReal, (∀ x, 1 / 2 ≤ least B.I x → Φ x = 0) → ∫⁻ x in B.fund, Φ x ∂(B.I.muA B.μf) ≤ ∑ J ∈ Finset.Icc 1 q, ∑ c : Composition J, ∫⁻ x in {x | ∃ τ, HasType B.I x c.blocksFun τ} ∩ B.fund, Φ x ∂(B.I.muA B.μf) := by
   intro B p q hs hn Φ hΦ
@@ -1483,12 +1477,10 @@ theorem lintegral_le_sum_types : ∀ (B : RowsAut) (p q : ℕ), SigIs B p q → 
     have hae : ∀ᵐ x ∂((B.I.muA B.μf).restrict Pᶜ), Φ x = 0 := by
       rw [ae_restrict_iff' hPm.compl]
       refine ae_of_all _ fun x hx => hΦ x ?_
-      by_contra hlt
-      push Not at hlt
+      by_contra! hlt
       obtain ⟨J, hJ, c, τ, hτ⟩ := GlobalTheory.TypeDecomp.exists_type B p q hs hn x hlt
       apply hx
-      simp only [hP, Set.mem_iUnion, Set.mem_setOf_eq]
-      exact ⟨J, hJ, c, Finset.mem_univ c, τ, hτ⟩
+      simpa only [hP, Set.mem_iUnion, Set.mem_setOf_eq] using ⟨J, hJ, c, Finset.mem_univ c, τ, hτ⟩
     rw [lintegral_congr_ae hae, lintegral_zero]
   calc ∫⁻ x in B.fund, Φ x ∂(B.I.muA B.μf)
       ≤ ∫⁻ x in U ∪ Pᶜ, Φ x ∂(B.I.muA B.μf) := lintegral_mono_set hcover
@@ -1657,9 +1649,7 @@ theorem nearModerate : GlobalTheory.FlagMeas.FlagMeasureBound → GlobalTheory.F
   obtain ⟨hDS, hSig, hn₀, hq2, hlrd, hlf, hb, hlb, -, hg1, hgb, -⟩ := id hC
 
   have hPt := hPB B d p q h hDS hSig hgap (by rw [hmin]; exact h120)
-  have hm : 0 ≤ mainTerm B d := by
-    show 0 ≤ (∏ v, d v) * B.I.vol B.μf B.fund * (B.e 1).re
-    exact mul_nonneg (mul_nonneg hd.le ENNReal.toReal_nonneg) hPt.2.2.2.2.1
+  have hm : 0 ≤ mainTerm B d := mul_nonneg (mul_nonneg hd.le ENNReal.toReal_nonneg) hPt.2.2.2.2.1
 
   have hn3 : 3 ^ 15 ≤ B.I.n := (le_max_right _ _).trans hn₀
   have hn1 : 1 ≤ B.I.n := le_trans (by norm_num) hn3
@@ -1830,8 +1820,7 @@ theorem count_unbundled : GlobalTheory.IndefiniteRowSideFullHecke.LatticeCountin
     intro v
     obtain ⟨_, hnt, hU, hirr, hsq, -⟩ := hDS v
     obtain ⟨d, hd⟩ := GlobalTheory.schur_orthogonality_unitary I.n (I.ε v) (H v) (σ v) hU hirr hsq
-    rw [fdegOf_eq_of_isFdeg _ _ d hd _ (hlow v).1]
-    exact hd
+    rwa [fdegOf_eq_of_isFdeg _ _ d hd _ (hlow v).1]
   have hlog : 0 ≤ Real.log (b * I.rd) := by
     apply Real.log_nonneg
     have := one_le_rd I
@@ -1848,8 +1837,7 @@ theorem count_unbundled : GlobalTheory.IndefiniteRowSideFullHecke.LatticeCountin
   have hres := (hn₀ B _ p q b hH).2
   have he : -(1 / 16) * (I.n : ℝ) * (I.f : ℝ) * Real.log (I.n : ℝ) =
       -(1 / 16 * (I.n : ℝ) * (I.f : ℝ) * Real.log (I.n : ℝ)) := by ring
-  rw [he]
-  exact hres
+  rwa [he]
 
 end GlobalTheory.CountBridge
 end -- clump:auto

@@ -427,10 +427,8 @@ theorem unit_eq_char {K : Type} [Field K] [IsAlgClosed K] {X : Type} [AddCommGro
       p.left.appTop.hom (ρ * (chV (fst T G) χ)⁻¹).val = 1 := fun p hp => by
     rw [Units.val_mul, map_mul, hp, ← appTop_chV, ← map_mul, Units.mul_inv, map_one]
   refine unit_prod_eq_one η[T] b _ (Units.isUnit _) (inv _ ?_) (inv _ ?_)
-  · rw [lift_fst]
-    exact hc
-  · rw [lift_fst, ← Hom.one_def, chV_one]
-    exact h
+  · rwa [lift_fst]
+  · rwa [lift_fst, ← Hom.one_def, chV_one]
 
 theorem weight : ∀ (k : Type) [Field k] [IsAlgClosed k] (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (G : Over (Sp k)) [GrpObj G] [IsCommMonObj G] (T : GlobalTheory.UU.TQ G X) (N : LB T.B.left), N.IsLB → ∀ t : LB.Gen (N.pull T.q.left), t.IsGen → ∃ (χ : X) (t' : LB.Gen (N.pull T.q.left)), T.GenWt N t' χ := by
   intro k _ _ X _ _ _ G _ _ T N hN t ht
@@ -476,8 +474,7 @@ theorem weight : ∀ (k : Type) [Field k] [IsAlgClosed k] (X : Type) [AddCommGro
   rw [val_of _ _ _ _ j (fun u => (congrArg J (hq Z s g)).trans (hj u)), val_of _ _ _ _ j hj] at e
   refine e.trans (congrArg (· * _) ?_)
   rw [gm_charUnit, gm_top, hχ]
-  refine congrArg _ (Units.ext ?_)
-  exact (appTop_chV _ _ _).trans (by rw [lift_fst])
+  exact congrArg _ (Units.ext ((appTop_chV _ _ _).trans (by rw [lift_fst])))
 
 end PositivityTheory.HtPt.Ppic
 end -- clump:auto
@@ -530,8 +527,7 @@ theorem exists_tq_baseChange_over : ∀ (S S' : Scheme.{0}) (f : S' ⟶ S) (X : 
   have ker : IsPullback i' (toUnit _) q' (η[B']) := by
     have k₀ : IsPullback Q.i.left (splitTorus S X).hom Q.q.left (η[Q.B]).left := by
       have := Q.isKernel.map (Over.forget S)
-      rw [← Rosenlicht.toUnit_left]
-      exact this
+      rwa [← Rosenlicht.toUnit_left]
     have k₁ := (SplitTorus.isPullback_bcMap f X).paste_horiz k₀
     have e₁ : SplitTorus.bcMap f X ≫ Q.i.left = i'.left ≫ F := torusCompat_iff.1 hi
     have e₂ := eSec_comp_of_isGrpPullback hB

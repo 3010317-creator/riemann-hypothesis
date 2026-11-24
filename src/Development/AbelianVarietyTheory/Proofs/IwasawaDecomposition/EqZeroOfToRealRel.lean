@@ -79,8 +79,7 @@ theorem inRCone_trans {m n : ℕ} {γ : Fin m → LinearMap.BilinForm ℤ X} {δ
   obtain ⟨b, hb, hβe⟩ := hβ
   refine ⟨fun i => ∑ j, b j * a j i, fun i => Finset.sum_nonneg fun j _ => mul_nonneg (hb j) (ha j i), ?_⟩
   rw [hβe]
-  simp only [hδe, Finset.smul_sum, smul_smul, Finset.sum_smul]
-  exact Finset.sum_comm
+  simpa only [hδe, Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
 
 theorem eq_zero_of_toReal_rel {a b : ℕ} {u : Fin a → LinearMap.BilinForm ℤ X} {v : Fin b → LinearMap.BilinForm ℤ X}
     (hind : ∀ (d : Fin b → ℤ) (c : Fin a → ℤ), ∑ j, c j • u j = ∑ k, d k • v k → c = 0)
@@ -88,8 +87,7 @@ theorem eq_zero_of_toReal_rel {a b : ℕ} {u : Fin a → LinearMap.BilinForm ℤ
 
   have hpt : ∀ x y : X, ∑ j, r j * (u j x y : ℝ) = ∑ k, s k * (v k x y : ℝ) := by
     intro x y
-    have hxy := congrArg (fun B : X →ₗ[ℤ] X →ₗ[ℤ] ℝ => B x y) h
-    simpa [LinearMap.sum_apply, toReal_apply] using hxy
+    simpa [LinearMap.sum_apply, toReal_apply] using congrArg (fun B : X →ₗ[ℤ] X →ₗ[ℤ] ℝ => B x y) h
 
   suffices hf : ∀ (f : Module.Dual ℚ ℝ) (j : Fin a), f (r j) = 0 by
     funext j

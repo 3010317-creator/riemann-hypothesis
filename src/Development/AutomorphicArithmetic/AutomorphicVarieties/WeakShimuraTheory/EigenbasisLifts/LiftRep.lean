@@ -559,8 +559,7 @@ private lemma phi_mul (hc : ∀ (B : Type) [CommRing B] [Algebra A B] (y : Monoi
       (fun α => z.coeff (Function.invFun typ α)) (typ g)
     rw [MvPolynomial.coe_basisMonomials] at this
     obtain ⟨σ, hσ⟩ := typ_perm (g := g) (g' := Function.invFun typ (typ g)) (Function.invFun_eq ⟨g, rfl⟩).symm
-    rw [← hz σ g, hσ]
-    exact this
+    rwa [← hz σ g, hσ]
   have e : MonoidAlgebra.map (l : _ →+ B) (tens fun _ => gam B S) = z := by
     ext g
     rw [coeff_map, Finsupp.mapRange_apply, coeff_tens_gam]
@@ -1029,8 +1028,7 @@ private lemma exists_iso [IsLocalHom (algebraMap A k)] (hf : Function.Surjective
     fun s => Matrix.ext fun i j => ?_⟩
   · have : s = ∑ i, ∑ j, b i * (c i * s * b j) * c j := by
       conv_lhs => rw [← one_mul s, ← mul_one (1 * s), ← h4]
-      simp only [Finset.sum_mul, Finset.mul_sum, mul_assoc]
-      exact Finset.sum_comm
+      simpa only [Finset.sum_mul, Finset.mul_sum, mul_assoc] using Finset.sum_comm
     rw [this]
     simp [← hρ, hs]
   · refine Matrix.ext fun p q => inj _ _ ?_
@@ -1188,8 +1186,7 @@ private lemma eq_ofRep [Field k] [Algebra A k] [IsLocalHom (algebraMap A k)] (D 
     intro B _ _ M
     have : ∀ i j, GDet.repAlg ρ B (mapRingHom G (algebraMap A B) (ε i j)) = Matrix.single i j 1 := fun i j => by
       have := rep_map ρ (Algebra.ofId A B) (ε i j)
-      rw [hε, Matrix.map_single, map_one] at this
-      exact this
+      rwa [hε, Matrix.map_single, map_one] at this
 
     simp only [hσ, map_sum, map_smul, this, Matrix.smul_single, smul_eq_mul, mul_one]
     exact (Matrix.matrix_eq_sum_single M).symm
@@ -1457,8 +1454,7 @@ theorem UpperTheory.V.Ws.Eb.tanOf :
         (↑(ρ g) : Matrix (Fin n) (Fin n) K) * (ebS (↑(ρ' h) : Matrix (Fin n) (Fin n) (DualNumber K)) *
           (↑((ρ h)⁻¹) : Matrix (Fin n) (Fin n) K)) * (↑((ρ g)⁻¹) : Matrix (Fin n) (Fin n) K)
     rw [map_mul, map_mul, Units.val_mul, ebS_mul, e, e, _root_.mul_inv_rev, Units.val_mul, add_mul]
-    simp only [Matrix.mul_assoc, Units.mul_inv_cancel_left]
-    exact add_comm _ _
+    simpa only [Matrix.mul_assoc, Units.mul_inv_cancel_left] using add_comm _ _
   · intro g i j
     show _ = (_, (ebS (↑(ρ' g) : Matrix (Fin n) (Fin n) (DualNumber K)) * (↑((ρ g)⁻¹) : Matrix (Fin n) (Fin n) K) *
       (↑(ρ g) : Matrix (Fin n) (Fin n) K)) i j)

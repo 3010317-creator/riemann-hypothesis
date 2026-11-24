@@ -312,8 +312,7 @@ theorem mem_Minf_iff (P : principalLevelFrame.RowPsi V n) (T : MMap M) :
     exact ⟨N + 1, Nat.succ_pos N, hN⟩
   · rintro ⟨N, hN, hT⟩
     refine ⟨N - 1, ?_⟩
-    rw [Nat.sub_add_cancel hN]
-    exact hT
+    rwa [Nat.sub_add_cancel hN]
 
 theorem mem_Minf_of (P : principalLevelFrame.RowPsi V n) {N : ℕ} (hN : 0 < N) {T : MMap M}
     (hT : T ∈ Mult θ M (principalLevelFrame.levN P N) (fun _ => 1)) : T ∈ principalLevelFrame.Minf θ P M :=
@@ -547,16 +546,13 @@ theorem isotL_span_orth : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) 
         simp [postOn_apply, LinearMap.sum_apply]
       rw [this]
       exact Submodule.sum_mem _ fun g hg => Submodule.smul_mem _ _ (hrt π g (hs g hg) x hx)
-    · show postOn M (principalLevelFrame.rtA k.1) x - levChi V β L k.1 • x ∈ _
-      exact Submodule.sub_mem _ (hrt π k.1 (hJf k.1 k.2) x hx) (Submodule.smul_mem _ _ hx)
+    · exact Submodule.sub_mem _ (hrt π k.1 (hJf k.1 k.2) x hx) (Submodule.smul_mem _ _ hx)
   have hTO : ∀ i, O i T = 0 := by
     intro i
     rcases i with _ | k
     · show postOn M (∑ g ∈ s, c g • principalLevelFrame.rtA g) T - T = 0
       rw [sub_eq_zero]
-      apply MultilinearMap.ext
-      intro v
-      exact hTm.2 v
+      exact MultilinearMap.ext (fun v => hTm.2 v)
     · show postOn M (principalLevelFrame.rtA k.1) T - levChi V β L k.1 • T = 0
       rw [sub_eq_zero]
       apply MultilinearMap.ext

@@ -141,8 +141,7 @@ theorem exists_regAt_centre : ∀ {X Y : Scheme.{0}} [IsIntegral X] [IsIntegral 
     have := (IsLocalRing.specializes_closedPoint (R := X.presheaf.stalk x)
       (Spec.map (CommRingCat.ofHom ψ) (IsLocalRing.closedPoint V))).map
       (X.fromSpecStalk x).continuous
-    rw [Scheme.fromSpecStalk_closedPoint] at this
-    exact this
+    rwa [Scheme.fromSpecStalk_closedPoint] at this
   · have hd : GlobalTheory.DominatesStalk V (GlobalTheory.valCentre s r (GlobalTheory.genericFieldPoint Y) hc) :=
       GlobalTheory.dominatesStalk_iff_exists_hom.mpr
         ⟨_, GlobalTheory.specAlgebraMap_valExt s r (GlobalTheory.genericFieldPoint Y) hc, rfl⟩
@@ -350,8 +349,7 @@ theorem exists_resolution_supp : GlobalTheory.Published.Principalisation → ∀
   · intro h
     exact hη ((ratPull_bijective_of_birational ℂ X Y p (s₂ ≫ s₁) hbij n).1
       (h.trans (map_zero _).symm))
-  · intro y
-    exact _root_.GlobalTheory.Discrepancy.exists_isSncChart ℂ Y ((s₂ ≫ s₁) ≫ p) n B hsnc y
+  · exact fun y => _root_.GlobalTheory.Discrepancy.exists_isSncChart ℂ Y ((s₂ ≫ s₁) ≫ p) n B hsnc y
   · intro y v g hvy _ hvB hg
     exact ord_fnPull_eq_zero s₁ s₂ G y v g hvy (fun h => hvB ((hB v).2 (Or.inl (Or.inl h)))) hg
   · intro y v g hvy _ hvB hg
@@ -421,8 +419,7 @@ theorem schOrd_inv [IsLocallyNoetherian Y] (g : Y.functionFieldˣ) (v : Y) :
     Scheme.ord ((g⁻¹ : Y.functionFieldˣ) : Y.functionField) v =
       - Scheme.ord (g : Y.functionField) v := by
   have h := congrArg Multiplicative.toAdd (map_inv (schOrdHom v) g)
-  rw [toAdd_inv] at h
-  exact h
+  rwa [toAdd_inv] at h
 
 variable {k : Type} [Field k] {q : Y ⟶ Sp k}
 
@@ -466,8 +463,7 @@ theorem GlobalTheory.Discrepancy.MonoOrd.ord_eq_sum_of_monomial : ∀ {k : Type}
         ring
       · intro j _ hji
         rw [hother j (w i) hv h1 (fun e => hji (hw e.symm)), mul_zero]
-      · intro hi
-        exact absurd (Finset.mem_univ i) hi
+      · exact fun hi => absurd (Finset.mem_univ i) hi
     · push Not at h
       rw [Finset.sum_eq_zero fun j _ => by rw [hother j v hv h1 (h j), mul_zero],
         hφ v hv h1 h, add_zero]

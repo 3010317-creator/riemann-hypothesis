@@ -292,8 +292,7 @@ theorem hom_eq_zero {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω
     apply hN
     apply Subgroup.le_topologicalClosure
     apply Subgroup.subset_normalClosure
-    simp only [Set.mem_iUnion]
-    exact ⟨w, by simpa using hwS, B, hw, hx⟩
+    simpa only [Set.mem_iUnion] using ⟨w, by simpa using hwS, B, hw, hx⟩
 
 end GlobalTheory.Ord2.TwistTriv
 
@@ -468,8 +467,7 @@ theorem coboundary_of_locTriv : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → �
       exact h1.symm
     have e := (red_eq_iff c n _ _).1 key
     show Cg n (ξ s t) (eps l s * (U t : Qbar l) - U (s * t) + U s)
-    rw [← heps]
-    exact e
+    rwa [← heps]
 
 end GlobalTheory.Ord2.TwistTriv
 end -- clump:auto

@@ -533,8 +533,7 @@ theorem cubic_comm (a b : ι → R) (haa : ∀ i j, a i * a j + a j * a i = 0)
   have S1 : ∑ i, ∑ j, ∑ k, t i j k • (∑ k', c k k' • F i j k') =
       ∑ i, ∑ j, ∑ k, (∑ k', t i j k' * c k' k) • F i j k := by
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-    simp only [Finset.smul_sum, smul_smul, Finset.sum_smul]
-    exact Finset.sum_comm
+    simpa only [Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
   have S2 : ∑ i, ∑ j, ∑ k, t i j k • (∑ l, c l j • F i l k) =
       ∑ i, ∑ j, ∑ k, (∑ j', t i j' k * c j j') • F i j k := by
     refine Finset.sum_congr rfl fun i _ => ?_
@@ -906,8 +905,7 @@ theorem genCOU : GenCOU := by
       exact hi (ite_eq_right fun h => hc ⟨i, h⟩)
     have hw1 : SuppIn (inU lev) w' := fun A hA l hl => by
       obtain ⟨i, h1, rfl⟩ := key A hA
-      rw [mem_singleton.1 hl]
-      exact h1
+      rwa [mem_singleton.1 hl]
     have hw2 : CompanionTheory.RgExh.U.Deg (0 + 1) w' := fun A hA => by
       obtain ⟨i, h1, rfl⟩ := key A hA
       simp
@@ -968,13 +966,11 @@ theorem genCOU : GenCOU := by
       funext A
       by_cases hA : x A = 0
       · simp [x', hA]
-      · simp only [lift_apply, x', ite_eq_right hA]
-        exact (hsurj (x A)).choose_spec
+      · simpa only [lift_apply, x', ite_eq_right hA] using (hsurj (x A)).choose_spec
     have hy : ∀ A, bd (allT n) EY x' A ∈ LinearMap.ker π := by
       intro A
       have := congrFun (lift_bd (ε := allT n) π EY E (fun i _ => hπ _ _) x') A
-      rw [hπx, hc] at this
-      exact this
+      rwa [hπx, hc] at this
     let y : Cn n (LinearMap.ker π) := fun A => ⟨_, hy A⟩
     have hιy : lift n (LinearMap.ker π).subtype y = bd (allT n) EY x' := rfl
     have hys : SuppIn (inU lev) y := supp_of (bd_supp lev EY hx's) fun A hA => Subtype.ext hA

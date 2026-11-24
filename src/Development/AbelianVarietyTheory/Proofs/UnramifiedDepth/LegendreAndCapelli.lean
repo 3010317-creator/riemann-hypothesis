@@ -64,8 +64,7 @@ theorem capNat_mul (n0 x : ℕ) :
   unfold capNat
   rw [← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl ?_
-  intro c _
-  exact Nat.div_mul_cancel (Nat.factorial_dvd_factorial (Nat.le_add_left c x))
+  exact fun c _ => Nat.div_mul_cancel (Nat.factorial_dvd_factorial (Nat.le_add_left c x))
 
 theorem capelli_bound : F3 := by
   intro l hl n0 n x hn hn0
@@ -89,8 +88,7 @@ theorem capelli_bound : F3 := by
       push_cast
       ring
     have h := ((legendre_bounds l hl).2.2) n0 x
-    rw [hvR]
-    exact h
+    rwa [hvR]
   · have hlogn : 0 ≤ Real.logb l n := Real.logb_nonneg hl1 (by exact_mod_cast hn)
     have hnn : (n0 : ℝ) ≤ n := by exact_mod_cast hn0
     rcases Nat.eq_zero_or_pos n0 with h0 | hpos

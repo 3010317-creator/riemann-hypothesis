@@ -230,8 +230,7 @@ private theorem commAlgFunctorCoboundaryZero_mem_cocyclesOne (hF : F.Ok) (j : �
   have hloc : Continuous (F.loc v) := hF.π_cont.comp continuous_subtype_val
   refine ⟨⟨hlc.continuous.comp hloc, fun g h => ?_⟩, fun _ s hs => ?_, fun _ _ => ⟨Y, rfl⟩, fun e e' s hs => ?_⟩
   · have := hcoc (F.loc v g) (F.loc v h)
-    rw [← map_mul] at this
-    exact this
+    rwa [← map_mul] at this
   · show d0 (F.gbar j) Y (F.loc v s) = 0
     rw [amitsur_d0_apply, gbar_congr F j (h := 1) (hs.1.2.trans (map_one _).symm) (hs.2.trans (map_one _).symm)]
     simp
@@ -261,8 +260,7 @@ private theorem psi_dual (g : Γ) (n : ℤ) :
       TrivSqZeroExt.inl ((F.Ψbar g ^ n : (ResidueField O)ˣ) : ResidueField O) := by
   have e1 := congrArg Units.val (map_zpow (Units.map (algebraMap O (DualNumber (ResidueField O))).toMonoidHom) (F.Ψ g) n)
   have e2 := congrArg Units.val (map_zpow (Units.map (residue O).toMonoidHom) (F.Ψ g) n)
-  refine e1.symm.trans ?_
-  exact congrArg TrivSqZeroExt.inl e2
+  exact e1.symm.trans (congrArg TrivSqZeroExt.inl e2)
 
 private theorem coc_dual (j : ℤ) (y : Γ → Gb (k := ResidueField O) j) (hy : y ∈ F.selmerCocycles j) :
     IsCoc (F.rz (DualNumber (ResidueField O))) fun g => (y g).val.map TrivSqZeroExt.inr := by
@@ -510,8 +508,7 @@ private theorem eq_zero_of_coord (hF : F.Ok) (hV : F.LocVan) (g₁ : Γ) {R : Ty
   have := hm s a b
   rw [hrr, left_eq_add] at this
   have h3 := congrArg TrivSqZeroExt.snd this
-  rw [TrivSqZeroExt.snd_inr, TrivSqZeroExt.snd_zero, Units.mul_left_eq_zero] at h3
-  exact h3
+  rwa [TrivSqZeroExt.snd_inr, TrivSqZeroExt.snd_zero, Units.mul_left_eq_zero] at h3
 
 end Main
 

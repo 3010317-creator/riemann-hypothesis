@@ -238,8 +238,7 @@ theorem LineDeg.eq_zero {r : ℕ} {i : Fin r} {g : (Fin r → ℕ) → ℂ}
     have : q.natDegree < 0 := by exact_mod_cast hq
     omega
   have := hg 0
-  simp only [zero_smul, add_zero, hq0, Polynomial.eval_zero] at this
-  exact this
+  simpa only [zero_smul, add_zero, hq0, Polynomial.eval_zero] using this
 
 theorem LineDeg.DL {r : ℕ} {i : Fin r} {d : ℕ} {g : (Fin r → ℕ) → ℂ} (h : LineDeg i d g)
     (cs : List (Fin r)) : LineDeg i (d - cs.count i) (DL cs g) := by
@@ -444,8 +443,7 @@ theorem stage (ι : Type) [Fintype ι] (r l : ℕ) (a : ι → Fin r → ℝ) (b
         ∑ q, fun s : ℂ => ∑' m, (u q m : ℂ) * DL (cs q) (coneTerm a b s) m := by
       funext s
       simp [Finset.sum_apply]
-    rw [h3]
-    exact h2
+    rwa [h3]
   · intro s hs
     exact (hsum (coneTerm a b s) (_root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Abel.coneTerm_summable ι r a b hr ha hb s hs)).symm
   · intro p hp hrat
@@ -454,8 +452,7 @@ theorem stage (ι : Type) [Fintype ι] (r l : ℕ) (a : ι → Fin r → ℝ) (b
       omega
     choose q hq using fun t => _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Abel.series_value_rational ι r a b (u t) (cs t) (Fintype.card ι * k + 2) p hN (hcs t) hrat
     refine ⟨∑ t, q t, ?_⟩
-    simp only [Rat.cast_sum]
-    exact Finset.sum_congr rfl fun t _ => hq t
+    simpa only [Rat.cast_sum] using Finset.sum_congr rfl fun t _ => hq t
 
 theorem abelContinuation : AbelContinuation := by
   intro ι _ r l a b w hr hl ha hb hw

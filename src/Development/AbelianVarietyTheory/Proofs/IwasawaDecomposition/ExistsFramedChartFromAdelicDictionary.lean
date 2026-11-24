@@ -266,15 +266,13 @@ theorem isCompact_of_isOpen_subgroupOf {G : Type} [Group G] [TopologicalSpace G]
     constructor
     · rintro ⟨y, hy, rfl⟩
       exact hy
-    · intro hx
-      exact ⟨⟨x, hUH hx⟩, hx, rfl⟩
+    · exact fun hx => ⟨⟨x, hUH hx⟩, hx, rfl⟩
   have h2 := hU'.inter_right hcl
   rw [Subtype.isCompact_iff] at h2
   convert h2 using 1
   ext x
   constructor
-  · intro hx
-    exact ⟨⟨x, hUH (hAU hx)⟩, ⟨hAU hx, hx⟩, rfl⟩
+  · exact fun hx => ⟨⟨x, hUH (hAU hx)⟩, ⟨hAU hx, hx⟩, rfl⟩
   · rintro ⟨y, ⟨_, hy⟩, rfl⟩
     exact hy
 
@@ -315,8 +313,7 @@ theorem exists_stepLevel_shrink : ∀ (F E : Type) [Field F] [NumberField F] [Fi
         intro v hv hT
         have hb : v ∉ bad := fun h => hv (Or.inl h)
         have hq : v ∉ Qv := fun h => hv (Or.inr (Finset.mem_coe.2 h))
-        simp only [ite_eq_right hq]
-        exact S.Uloc_hyp v hb hT
+        simpa only [ite_eq_right hq] using S.Uloc_hyp v hb hT
       fM := S.fM
       fM_acg := S.fM_acg
       fM_mod := S.fM_mod
@@ -328,8 +325,7 @@ theorem exists_stepLevel_shrink : ∀ (F E : Type) [Field F] [NumberField F] [Fi
       UlocAlt := by
         intro v h
         have hq : v ∉ Qv := fun hq => hQT v hq h
-        simp only [ite_eq_right hq]
-        exact S.UlocAlt v h
+        simpa only [ite_eq_right hq] using S.UlocAlt v h
       U := A
       U_eq := by
         intro x
@@ -337,10 +333,8 @@ theorem exists_stepLevel_shrink : ∀ (F E : Type) [Field F] [NumberField F] [Fi
         · intro hx
           refine ⟨(hSU x (hAU hx)).1, fun v => ?_⟩
           by_cases hq : v ∈ Qv
-          · simp only [ite_eq_left hq]
-            exact ⟨x, hx, rfl⟩
-          · simp only [ite_eq_right hq]
-            exact (hSU x (hAU hx)).2 v
+          · simpa only [ite_eq_left hq] using ⟨x, hx, rfl⟩
+          · simpa only [ite_eq_right hq] using (hSU x (hAU hx)).2 v
         · rintro ⟨hP, hv⟩
           have hxS : x ∈ S.U := by
             refine (S.U_eq x).2 ⟨hP, fun v => ?_⟩
@@ -350,8 +344,7 @@ theorem exists_stepLevel_shrink : ∀ (F E : Type) [Field F] [NumberField F] [Fi
               obtain ⟨y, hy, hyx⟩ := h1
               rw [← hyx]
               exact (hSU y (hAU hy)).2 v
-            · simp only [ite_eq_right hq] at h1
-              exact h1
+            · simpa only [ite_eq_right hq] using h1
           refine hloc x hxS fun v hq => ?_
           have h1 := hv v
           simp only [ite_eq_left hq] at h1
@@ -500,11 +493,9 @@ theorem eventually_localComponent_mem (P : HeightOneSpectrum (𝓞 E)) {c : E} (
   filter_upwards [h1, h2, h3] with u a1 a2 a3
   refine ⟨int_of_sub fun i j => ?_, int_of_sub fun i j => ?_, fun i j => ?_⟩
   · obtain ⟨z, hz, e⟩ := a2 i j
-    rw [bc_adAt_sub, e, map_one, one_mul]
-    exact hz
+    rwa [bc_adAt_sub, e, map_one, one_mul]
   · obtain ⟨z, hz, e⟩ := a3 i j
-    rw [← map_inv, bc_adAt_sub, e, map_one, one_mul]
-    exact hz
+    rwa [← map_inv, bc_adAt_sub, e, map_one, one_mul]
   · obtain ⟨z, hz, e⟩ := a1 i j
     exact ⟨z, hz, by rw [Matrix.sub_apply, bc_adAt_sub, e]⟩
 
@@ -626,8 +617,7 @@ theorem localComponent_congr {v : HeightOneSpectrum (𝓞 F)} {P : HeightOneSpec
   have h1 : prV (E := E) v ((x : Matrix (Fin n) (Fin n) (AfE F E)) i j - (x' : Matrix (Fin n) (Fin n) (AfE F E)) i j) = 0 := by
     rw [map_sub, h0, sub_self]
   have h2 := (_root_.GlobalTheory.Mem.Col2.AdComp.prV_zero_int_iff F E v _).1.1 h1 P hP
-  rw [map_sub, sub_eq_zero] at h2
-  exact h2
+  rwa [map_sub, sub_eq_zero] at h2
 
 end SlopeTestRemainingChoices
 
@@ -687,8 +677,7 @@ theorem topU_dense {U : Subgroup (GL (Fin n) (AfE F E))} {Λ : LevFam E K n SG} 
     rw [hdq P]
     exact hsm P
   · have e4 : g * ((k * t) * z * (k * t)⁻¹) * (k * t) = g * (k * t) * z := by group
-    rw [e4]
-    exact hp
+    rwa [e4]
 
 end Dense
 
@@ -749,8 +738,7 @@ theorem exists_clsG_top : ∀ (F E K : Type) [Field F] [NumberField F] [Field E]
     refine Iff.trans ?_ ((hgr c _).trans key)
     constructor
     · rintro ⟨a, ha⟩
-      refine ⟨a, Subtype.ext ((toGLm E n).injective ?_)⟩
-      exact (congrArg Subtype.val ha).trans e1.symm
+      exact ⟨a, Subtype.ext ((toGLm E n).injective ((congrArg Subtype.val ha).trans e1.symm))⟩
     · rintro ⟨a, ha⟩
       refine ⟨a, Subtype.ext ?_⟩
       show ufGL E n (gm c a) = γ.1

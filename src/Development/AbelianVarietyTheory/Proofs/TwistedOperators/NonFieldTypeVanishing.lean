@@ -127,8 +127,7 @@ theorem measure_ne_top_of_cover {G : Type} [Group G] [TopologicalSpace G] [IsTop
     intro x hx
     obtain ⟨g, hg, hk⟩ := hcov x
     refine Set.mem_iUnion.2 ⟨(⟨g, hg⟩ : Γ)⁻¹, ?_, hx⟩
-    rw [Set.mem_inv_smul_set_iff]
-    exact hk
+    rwa [Set.mem_inv_smul_set_iff]
   refine ne_of_lt ?_
   calc μ 𝓕 ≤ μ (⋃ g : Γ, ((g • K) ∩ 𝓕)) := measure_mono hsub
     _ ≤ ∑' g : Γ, μ ((g • K) ∩ 𝓕) := measure_iUnion_le _
@@ -236,8 +235,7 @@ theorem centFlip_surjective (γ : GF V) : Function.Surjective (centFlip V γ) :=
     refine Subgroup.mem_centralizer_singleton_iff.2 ?_
     have e := congrArg (Formalism.UG.bc (tensFlip D).symm.toRingHom) hy
     rw [MonoidHom.map_mul, MonoidHom.map_mul, bc_symm_inclR] at e
-    rw [val_uFlipSymm]
-    exact e
+    rwa [val_uFlipSymm]
   refine ⟨⟨_, (uFlipSymm V y.1).2, hx⟩, Subtype.ext (GlobalTheory.AdelicU.matHom_injective (AF D.host.F) D.sp.cm.sig V.gram ?_)⟩
   rw [matHom_centFlip]
   show Formalism.UG.bc (tensFlip D).toRingHom ((uFlipSymm V y.1 : Formalism.UG.UPts D.sp.cm.sig V.gram (AF D.host.F)) :
@@ -334,8 +332,7 @@ theorem covol_lt_top : GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensor
   haveI : Countable ((GQ V).subgroupOf (cent (rat V γ))) :=
     Function.Injective.countable (f := fun x : (GQ V).subgroupOf (cent (rat V γ)) => (⟨x.1.1, x.2⟩ : GQ V))
       fun a b h => by
-        have e := Subtype.mk.inj h
-        exact Subtype.ext (Subtype.ext e)
+        exact Subtype.ext (Subtype.ext (Subtype.mk.inj h))
   exact lt_top_iff_ne_top.2 (measure_ne_top_of_cover _ hK hcov dt h𝓣)
 
 end GlobalTheory.AnisoCovol
@@ -402,8 +399,7 @@ theorem factorIdem_mul (e : plusAlg σ J γ ≃ₐ[F] ∀ i, K i) (i : Fin k) (p
 theorem factorIdem_mul_self (e : plusAlg σ J γ ≃ₐ[F] ∀ i, K i) (i : Fin k) :
     factorIdem e i * factorIdem e i = factorIdem e i := by
   have := factorIdem_mul e i (e.symm (Pi.single i 1))
-  rw [AlgEquiv.apply_symm_apply, Pi.single_eq_same] at this
-  exact this
+  rwa [AlgEquiv.apply_symm_apply, Pi.single_eq_same] at this
 
 theorem factorIdem_ne_zero (e : plusAlg σ J γ ≃ₐ[F] ∀ i, K i) (i : Fin k) : factorIdem e i ≠ 0 := by
   intro h
@@ -743,8 +739,7 @@ theorem exists_weight_nt (T N : Subgroup H) (hT : IsClosed (T : Set H)) (hN : Is
     refine ⟨e ▸ hE.measure_ne_zero _ ⟨p, hp⟩, e ▸ ?_⟩
     refine (measure_mono (μ := dn.prod dt) (s := E) (t := j ⁻¹' ((fun y => y * x) ⁻¹' K (k + 1))) ?_).trans_lt
       (hj.isCompact_preimage (hcpt k x)).measure_lt_top |>.ne
-    intro q hq
-    exact interior_subset (s := K (k + 1)) hq
+    exact fun q hq => interior_subset (s := K (k + 1)) hq
   have hgfin : ∀ x, g x ≠ ∞ := fun x => by
     obtain ⟨k, hk⟩ := hPcov x
     set C : Set N := (↑) ⁻¹' ((fun y => y * x) ⁻¹' K (k + 1))
@@ -1142,8 +1137,7 @@ theorem integral_twist [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLo
     have hu : u ∈ N := (hN u).2 (by simp only [u, add_sub_cancel_left]; exact hX)
     refine ⟨⟨u, hu⟩, Subtype.ext (Units.ext ((sub_left_inj (a := (1 : Matrix (Fin r) (Fin r) k))).1 ?_))⟩
     rw [hψ, twist_val hε hN hγε hu]
-    simp only [u, add_sub_cancel_left]
-    exact hXY
+    simpa only [u, add_sub_cancel_left] using hXY
   have hopen : IsOpenMap ψ := MonoidHom.isOpenMap_of_sigmaCompact ψ hsurj hψc
   let hom := (Equiv.ofBijective ψ ⟨hinj, hsurj⟩).toHomeomorphOfContinuousOpen hψc hopen
   let e : N ≃ₜ* N :=
@@ -1307,8 +1301,7 @@ theorem diag_cond_iff (k : Type) [Field k] (r a : ℕ) (S : Matrix (Fin r) (Fin 
     rw [← h, hent] at hz
     by_cases hi : i.val < a
     · refine ⟨hi, ?_⟩
-      by_contra hj
-      push Not at hj
+      by_contra! hj
       simp [hj] at hz
     · simp [hi] at hz
   · intro h
@@ -1538,20 +1531,17 @@ theorem localClause {T : TypeDataG V} {U : AuxiliaryPlaceHermitianSpace V} {μf 
   have e1 : (fun x => (1 : GLoc D.sp.cm.sig V.gram v → ℂ) x *
       ff v (x⁻¹ * proj D.sp.cm.sig V.gram v (ratEmb D.sp.cm.sig V.gram γ) * x)) = conjFn (proj D.sp.cm.sig V.gram v (ratEmb D.sp.cm.sig V.gram γ)) (ff v) := by
     funext x; exact one_mul _
-  rw [e1] at h
-  exact h
+  rwa [e1] at h
 
 theorem isMulCommutative_cent_ratEmb {γ : GRat D.sp.cm.sig V.gram} (hγ : IsRegSS γ.1.1) :
     IsMulCommutative (cent (ratEmb D.sp.cm.sig V.gram γ)) := by
   refine ⟨⟨fun x y => Subtype.ext (GAd_ext _ _ (fun w => ?_) fun v => ?_)⟩⟩
   · have h := (isMulCommutative_cent_HA (isRegSS_projArch_ratEmb hγ w)).is_comm.comm
       (centMap (projArch D.sp.cm.sig V.gram w) _ x) (centMap (projArch D.sp.cm.sig V.gram w) _ y)
-    have h' := congrArg Subtype.val h
-    simpa [centMap] using h'
+    simpa [centMap] using congrArg Subtype.val h
   · have h := (isMulCommutative_cent_HA (isRegSS_proj_ratEmb hγ v)).is_comm.comm
       (centMap (proj D.sp.cm.sig V.gram v) _ x) (centMap (proj D.sp.cm.sig V.gram v) _ y)
-    have h' := congrArg Subtype.val h
-    simpa [centMap] using h'
+    simpa [centMap] using congrArg Subtype.val h
 
 theorem ratEmb_mem_GQ (γ : GRat D.sp.cm.sig V.gram) : ratEmb D.sp.cm.sig V.gram γ ∈ GQ V := by
   rw [GlobalTheory.AdelicU.GQ_eq, ← GlobalTheory.AdelicU.range_ratEmb]; exact ⟨γ, rfl⟩

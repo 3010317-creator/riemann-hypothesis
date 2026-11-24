@@ -88,8 +88,7 @@ theorem adAt_toEAf_of_isIdemSum {e : AE D} {Ps : Finset (HeightOneSpectrum (𝓞
     adAt D.host.F P (toEAf D e) = 1 := by
   obtain ⟨a, ha, hae⟩ := GlobalTheory.OffIdem.idemSum_mul_idemAt he hP
   have h := congrArg (fun z => adAt D.host.F P (toEAf D z)) hae
-  simp only [map_mul, adAt_toEAf_of_isIdemAt ha, one_mul] at h
-  exact h
+  simpa only [map_mul, adAt_toEAf_of_isIdemAt ha, one_mul] using h
 
 end GlobalTheory.AdForm.CongAtIdem
 
@@ -114,8 +113,7 @@ theorem exists_den_stdHom (S T : HSp D) : ∃ d : ℕ, 0 < d ∧ ∀ v ∈ stdHo
     ((d : EF D) * toEAf D (v r s) : Formalism.L2.DIV.AfE D.host.F D.host.E) ∈ Formalism.L2.DIV.RInt D.host.F D.host.E := by
   obtain ⟨a0, ha0, hfrac⟩ := D.host.AA.isFractional
   have ha0' : ((a0 : 𝓞 D.host.E) : D.host.E) ≠ 0 := by
-    intro h
-    exact nonZeroDivisors.coe_ne_zero ⟨a0, ha0⟩ (RingOfIntegers.coe_eq_zero_iff.1 h)
+    exact fun h => nonZeroDivisors.coe_ne_zero ⟨a0, ha0⟩ (RingOfIntegers.coe_eq_zero_iff.1 h)
   obtain ⟨d, hd, hint⟩ := GlobalTheory.AdeleBaseChange.exists_nat_mul_integral
     (insert ((a0 : D.host.E))⁻¹ (Finset.image (fun p : Fin S.rank × Fin S.rank => S.gram p.1 p.2) Finset.univ))
   have hx0 : IsIntegral ℤ ((d : D.host.E) * ((a0 : D.host.E))⁻¹) := by

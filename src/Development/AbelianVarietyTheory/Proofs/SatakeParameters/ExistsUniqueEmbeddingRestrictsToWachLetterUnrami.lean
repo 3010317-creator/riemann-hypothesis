@@ -50,8 +50,7 @@ theorem existsUnique_over : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (K LL 
   intro l _ P K LL W hK a
   have hle : K.1 ≤ K0 K := le_inf le_rfl hK
   have hsurj : Function.Surjective (IsScalarTower.toAlgHom ℚ_[l] ↥(K0 K) ↥K.1) := by
-    intro x
-    exact ⟨⟨x.1, hle x.2⟩, Subtype.ext rfl⟩
+    exact fun x => ⟨⟨x.1, hle x.2⟩, Subtype.ext rfl⟩
   let e : ↥(K0 K) ≃ₐ[ℚ_[l]] ↥K.1 :=
     AlgEquiv.ofBijective (IsScalarTower.toAlgHom ℚ_[l] ↥(K0 K) ↥K.1)
       ⟨(IsScalarTower.toAlgHom ℚ_[l] ↥(K0 K) ↥K.1).toRingHom.injective, hsurj⟩

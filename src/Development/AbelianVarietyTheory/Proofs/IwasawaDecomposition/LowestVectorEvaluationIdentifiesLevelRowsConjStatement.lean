@@ -314,7 +314,6 @@ theorem exists_conj_intertwiner_of_gap (hUq : GlobalTheory.Published.DiscreteSer
         have e1 : M0.ε τ = fun i => Formalism.MainNotions.S.epsS D.R (Fin.cast n_eq i) := funext fun i => eps_eq (pl.symm τ) i
         have e2 : M0.lam τ = fun i => Formalism.MainNotions.S.lamS D.R (D.hc τ) (Fin.cast n_eq i) :=
           funext fun i => by
-            show lam (pl.symm τ) i = _
             exact (lam_eq (pl.symm τ) i).trans (by rw [Equiv.apply_symm_apply])
         rw [e1, e2]
         exact gap_rows hG n_eq τ
@@ -488,8 +487,7 @@ theorem conjMap_isCuspFun : GlobalTheory.Dec.DSInfChar → GlobalTheory.Publishe
   show ∫ n in 𝓕, star (ψ (iotaX X h ((n : GA D (D.sp.Y 0)) * g * t⁻¹))) ∂μ = 0
   simp only [mul_assoc]
   have := congrArg (starRingEnd ℂ) hz
-  rw [← integral_conj, map_zero] at this
-  exact this
+  rwa [← integral_conj, map_zero] at this
 
 end GlobalTheory.ConjRowCuspGap
 
@@ -620,8 +618,7 @@ theorem cont_gen {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : X
       ContinuousLinearMap.comp_assoc]
   have hlev : ∀ k ∈ X.B.I.Kg g, ∀ w, X.B.R (1, k) (Φ w) = Φ w := by
     obtain ⟨A, -, rfl⟩ := hΦ
-    intro k hk w
-    exact congrArg (fun C : L2X X →L[ℂ] L2X X => C (A w)) (hfix k hk)
+    exact fun k hk w => congrArg (fun C : L2X X →L[ℂ] L2X X => C (A w)) (hfix k hk)
   obtain ⟨Ψ, hΨ⟩ := GlobalTheory.ConjRowCont.exists_conj_multilinear X M c Φ
   obtain ⟨N, hN1, hN2, hN3⟩ := GlobalTheory.TensRep.exists_mmap (ι := fun v x => X.B.I.ext v (T x)) hθ M h1 h2 h5 h6 h7 h8 h9
     (fun γ hγ v => h10 γ ((GlobalTheory.ConjRowCont.iotaX_rat_iff X h γ).1 hγ) v) hU Ψ
@@ -1010,8 +1007,7 @@ theorem exists_contRep_models : GlobalTheory.Dec.DSInfChar → GlobalTheory.Publ
       ContinuousLinearMap.comp_assoc]
   have hlev : ∀ k ∈ X.B.I.Kg g, ∀ w, X.B.R (1, k) (Φ w) = Φ w := by
     obtain ⟨A, -, rfl⟩ := hΦ
-    intro k hk w
-    exact congrArg (fun C : L2X X →L[ℂ] L2X X => C (A w)) (hfix k hk)
+    exact fun k hk w => congrArg (fun C : L2X X →L[ℂ] L2X X => C (A w)) (hfix k hk)
   obtain ⟨m, hm, -⟩ := GlobalTheory.exists_continuousMultilinearMap_of_inner_prod (H := X.B.H) X.B.tens
     X.B.tens_spec.1 X.B.tens_spec.2.2
   let C : (∀ τ, (MP R).H τ) → ∀ v, X.B.H v := fun y => Equiv.piCongrLeft X.B.H X.pl.symm (fun τ => c τ (y τ))
@@ -1272,10 +1268,7 @@ theorem evalOn_all : GlobalTheory.Dec.DSInfChar → GlobalTheory.Published.CuspR
       (fun x => ev (MP R) v₀ (S : MMap (MP R)) ((iotaX X h).symm x * t)) := fun S => (hmem S).coeFn_toLp
   have key : ∀ (S : MultR R F) (Fx : conjRows X), ((Fx : L2X X) =ᵐ[muX X]
       fun x => ev (MP R) v₀ (S : MMap (MP R)) ((iotaX X h).symm x * t)) → Φ S = Fx := by
-    intro S Fx hF
-    apply Subtype.ext
-    apply Lp.ext
-    exact (hΦ S).trans hF.symm
+    exact fun S Fx hF => Subtype.ext (Lp.ext ((hΦ S).trans hF.symm))
   let L : MultR R F →ₗ[ℂ] conjRows X :=
     { toFun := Φ
       map_add' := fun S S' => by
@@ -1308,8 +1301,7 @@ theorem evalOn_all : GlobalTheory.Dec.DSInfChar → GlobalTheory.Published.CuspR
     have h1 := hLn S
     rw [hS] at h1
     simp only [ZeroMemClass.coe_zero, norm_zero, zero_pow two_ne_zero] at h1
-    have h2 := (mul_eq_zero_iff_left hc0.ne').mp h1.symm
-    exact Subtype.ext ((hN v₀ hnorm S S.2).2.2 h2)
+    exact Subtype.ext ((hN v₀ hnorm S S.2).2.2 ((mul_eq_zero_iff_left hc0.ne').mp h1.symm))
   have hsurj : Function.Surjective L := by
     intro Fx
     obtain ⟨S, hS, hF⟩ := hO (Fx : L2X X) Fx.2

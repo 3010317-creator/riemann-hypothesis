@@ -121,8 +121,7 @@ theorem inert_of_isUnramInv : ∀ (L : Type) [Field L] [NumberField L] [IsCMFiel
         rw [map_sub]; ring
       rw [e]
       refine Valuation.map_add_lt _ hb ?_
-      rw [Valuation.map_neg, hval]
-      exact ha
+      rwa [Valuation.map_neg, hval]
     have h2 : s x - x = s (x - z) + -(x - z) := by
       rw [map_sub, hsz]; ring
     have h3 : Valued.v (s x - x) < 1 := by
@@ -200,8 +199,7 @@ theorem inert_of_isUnramInv : ∀ (L : Type) [Field L] [NumberField L] [IsCMFiel
       show Ideal.Quotient.mk _ (g b) = Ideal.Quotient.mk _ y
       rw [Ideal.Quotient.eq, hmax]
       show Valued.v (φ b - (y : w.adicCompletion L)) < 1
-      rw [← Valuation.map_neg, neg_sub]
-      exact hb
+      rwa [← Valuation.map_neg, neg_sub]
     have hker : RingHom.ker G = w.asIdeal := by
       ext b
       rw [RingHom.mem_ker]
@@ -213,7 +211,6 @@ theorem inert_of_isUnramInv : ∀ (L : Type) [Field L] [NumberField L] [IsCMFiel
     have hcard' : Nat.card (O ⧸ IsLocalRing.maximalIdeal O) = q ^ 2 := hcard
     have hn := Ideal.absNorm_pow_inertiaDeg v.asIdeal w.asIdeal
     rw [hf2, Ideal.absNorm_apply w.asIdeal, Submodule.cardQuot_apply, hc, hcard'] at hn
-    show q = Ideal.absNorm v.asIdeal
     exact Nat.pow_left_injective (n := 2) (by norm_num) hn.symm
 
 end GlobalTheory.InertOfUnramInv

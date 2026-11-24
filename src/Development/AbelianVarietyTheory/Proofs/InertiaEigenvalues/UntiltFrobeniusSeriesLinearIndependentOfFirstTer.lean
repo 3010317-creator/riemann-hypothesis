@@ -93,8 +93,7 @@ theorem indep_over_Ql_of_indep_mod_l : ∀ (l : ℕ) [Fact l.Prime] (d : ℕ) (�
   set c' : Fin d → ℚ_[l] := fun a => c a / c a₀ with hc'
   have hc'le : ∀ a, ‖c' a‖ ≤ 1 := by
     intro a
-    simp only [hc', norm_div]
-    exact div_le_one_of_le₀ (ha₀ a (Finset.mem_univ _)) (norm_nonneg _)
+    simpa only [hc', norm_div] using div_le_one_of_le₀ (ha₀ a (Finset.mem_univ _)) (norm_nonneg _)
   have hc'a₀ : c' a₀ = 1 := div_self hc0
   have hsum' : ∀ i, ∑ a, algebraMap ℚ_[l] ℂ_[l] (c' a) * w a i = 0 := by
     intro i
@@ -166,8 +165,7 @@ theorem exists_strict_max (f d : ℤ → ℝ) (hd : ∀ n, f (n + 1) = f n + d n
     ∃ n₀ : ℤ, ∀ n : ℤ, n ≠ n₀ → f n < f n₀ := by
   obtain ⟨m, hm⟩ := hpos
   have hbdd : ∃ b : ℤ, ∀ z : ℤ, d z < 0 → b ≤ z := ⟨m, fun z hz => by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have := hanti hc
     linarith⟩
   obtain ⟨n₀, hn₀, hmin⟩ := Int.exists_least_of_bdd hbdd hneg
@@ -383,8 +381,7 @@ namespace GlobalTheory.PSer
 
 theorem norm_sh_le_of_lam_le : ∀ (l : ℕ) [Fact l.Prime] (h : ℕ) (ρ : ℝ) (x : Fl l), 2 ≤ h → 0 ≤ ρ → ρ < 1 → ‖sh x‖ < 1 → (∀ j : ℕ, j < 2 → ‖lam h j x‖ ≤ gam l h j ρ) → ‖sh x‖ ≤ ρ := by
   intro l _ h ρ x h2 hρ0 hρ1 hs1 hlam
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   set s := ‖sh x‖ with hs
   have hs0 : 0 < s := lt_of_le_of_lt hρ0 hlt
   have h1 : 1 ≤ h := le_trans (by norm_num) h2
@@ -556,8 +553,7 @@ theorem Lam_indep_of_first_terms : ∀ (l : ℕ) [Fact l.Prime] (h d : ℕ) (r :
   intro l _ h d r y hh hr0 hr1 hy hdet c hc
   have h1 : 1 ≤ h := by omega
   refine _root_.GlobalTheory.indep_over_Ql_of_indep_mod_l l d (Fin 2) (fun a i => abelian₂ h i (y a)) (fun i => gam l h i r) ?_ ?_ c ?_
-  · intro a i
-    exact (_root_.GlobalTheory.PSer.Lam_main l h i r (y a) h1 hr1 (hy a)).2.2.1
+  · exact fun a i => (_root_.GlobalTheory.PSer.Lam_main l h i r (y a) h1 hr1 (hy a)).2.2.1
   · intro n hn
     apply hdet n
     have hls := fun j => _root_.GlobalTheory.PSer.lamsum l h j d r (fun a => y a 0) n h1 hr0 hr1 (fun a => hy a 0)
@@ -583,8 +579,7 @@ theorem Lam_indep_of_first_terms : ∀ (l : ℕ) [Fact l.Prime] (h d : ℕ) (r :
     rw [heq]
     refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le hA ?_)
     exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le hB hC)
-  · intro i
-    exact hc i.1 i.2
+  · exact fun i => hc i.1 i.2
 
 end GlobalTheory.PSer
 end -- clump:auto

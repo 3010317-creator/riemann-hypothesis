@@ -118,8 +118,7 @@ theorem map_ev_mul {m n : ℕ} {a : Fin m → Pt k n d} (ha : CZ a) (M N : Matri
     (M * N).map (ev a) = M.map (ev a) * N.map (ev a) := by
   have h : (M * N).map (evHom ha) = M.map (evHom ha) * N.map (evHom ha) := Matrix.map_mul
   have e : (⇑(evHom ha)) = ev a := funext (evHom_apply ha)
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem map_ev_one {m n : ℕ} {a : Fin m → Pt k n d} (ha : CZ a) :
     (1 : Matrix (Fin d) (Fin d) (PS k m d)).map (ev a) = 1 := by
@@ -136,8 +135,7 @@ theorem cc_om : (Om G).map constantCoeff = 1 := by
 theorem om_Q (i b : Fin d) : ∑ j, ev (n := 2) ![G.F] (Om G i j) * Ar G j b = ev (n := 2) ![pt k d 1] (Om G i b) := by
   have hJ : (JM G).map (ev (n := 2) ![G.F]) = Matrix.of (Ar G) * (JM G).map (ev (n := 2) ![pt k d 1]) := by
     refine Matrix.ext fun i b => ?_
-    simp only [Matrix.map_apply, JM, Matrix.of_apply, Matrix.mul_apply]
-    exact jac_F G i b
+    simpa only [Matrix.map_apply, JM, Matrix.of_apply, Matrix.mul_apply] using jac_F G i b
   have hy : (JM G).map (ev (n := 2) ![pt k d 1]) * (Om G).map (ev (n := 2) ![pt k d 1]) = 1 := by
     rw [← map_ev_mul czY, mul_om, map_ev_one czY]
   have hF : (Om G).map (ev (n := 2) ![G.F]) * (JM G).map (ev (n := 2) ![G.F]) = 1 := by
@@ -173,8 +171,7 @@ theorem sw_dF (j b : Fin d) :
     ev (n := 2) ![pt k d 1, pt k d 0] (pderiv (R := k) ((1 : Fin 2), b) (G.F j)) = pderiv (R := k) ((0 : Fin 2), b) (G.F j) := by
   have h := congrArg (pderiv (R := k) ((0 : Fin 2), b)) (G.comm j)
   rw [pderiv_ev czSw, Fintype.sum_prod_type, Fin.sum_univ_two] at h
-  simp [pderiv_pt] at h
-  exact h
+  simpa [pderiv_pt] using h
 
 theorem om_P (i a : Fin d) :
     ∑ j, ev (n := 2) ![G.F] (Om G i j) * pderiv (R := k) ((0 : Fin 2), a) (G.F j) = ev (n := 2) ![pt k d 0] (Om G i a) := by

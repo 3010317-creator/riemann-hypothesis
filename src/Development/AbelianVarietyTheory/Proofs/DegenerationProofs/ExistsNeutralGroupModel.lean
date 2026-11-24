@@ -385,8 +385,7 @@ theorem GlobalTheory.SS.exists_grpObj_of_strict : ∀ (R K : Type) [CommRing R] 
     apply (isPullback_j G).hom_ext
     · rw [h₂, Model.j, ← Category.assoc, ← Over.comp_left, G.e.hom_inv_id, Over.id_left, Category.id_comp]
     · rw [Over.w, Over.w]
-  rw [e₀]
-  exact h₁
+  rwa [e₀]
 end
 end -- clump:auto
 end -- clump:auto
@@ -481,8 +480,7 @@ theorem extends_comp {M : Model R A} {N : Model R A'} {f : A ⟶ A'} {U : M.Y.le
 
 theorem pullback_map_fst {X Y : Over (Sp R)} (g : X ⟶ Y) :
     ((Over.pullback (spMap (algebraMap R K))).map g).left ≫ pullback.fst Y.hom (spMap (algebraMap R K))
-      = pullback.fst X.hom (spMap (algebraMap R K)) ≫ g.left := by
-  exact pullback.lift_fst _ _ _
+      = pullback.fst X.hom (spMap (algebraMap R K)) ≫ g.left := pullback.lift_fst _ _ _
 
 def pr₁ (M : Model R A) (N : Model R A') : (M.prod N).Y ⟶ M.Y := fst M.Y N.Y
 
@@ -568,8 +566,7 @@ theorem isoAt_of_open {M N : Model R A} {M' N' : Model R A'} {f : A ⟶ A'}
     obtain ⟨v, hv', hv⟩ := w.2
     have : U.ι (l w) = U.ι v := by
       rw [← Scheme.Hom.comp_apply, hl]; exact hv.symm
-    rw [Scheme.Hom.comp_apply, U.ι.isOpenEmbedding.injective this]
-    exact hv'
+    rwa [Scheme.Hom.comp_apply, U.ι.isOpenEmbedding.injective this]
   let m := IsOpenImmersion.lift i' (l ≫ g) h2
   have hm : m ≫ i' = l ≫ g := IsOpenImmersion.lift_fac _ _ _
   refine ⟨W, m, ⟨u, hg, hu⟩, ⟨?_, ?_⟩, inferInstance⟩
@@ -697,8 +694,7 @@ theorem snd_case (M : Model R A) (hM : M.Irr) (hMM : (M.prod M).Irr) (f f' : A �
   refine ⟨(pr₂ M M).left '' (U ∩ U'), (pr₂ M M).left.isOpenMap _ hUU,
     ⟨_, ?_, y₀, hy₀U, rfl⟩, ?_⟩
   · show M.Y.hom _ = _
-    rw [← Scheme.Hom.comp_apply, Over.w]
-    exact hy₀
+    rwa [← Scheme.Hom.comp_apply, Over.w]
   rintro V hV x hx ⟨w, hwU, hw⟩ hxV
   have := geomIrr M hM (M.Y.hom x) hx
   have hF := fibre_preirr hp x
@@ -846,12 +842,10 @@ theorem exists_strict_le : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsLocalRi
     obtain ⟨z, hz, hz'⟩ := (key b x hx).1
     refine ⟨z, ?_, hz'⟩
     show (N.prod N).Y.hom z = _
-    rw [← Over.w (pr₁ N N), Scheme.Hom.comp_apply, hz]
-    exact hx
+    rwa [← Over.w (pr₁ N N), Scheme.Hom.comp_apply, hz]
   · have h1 := gLe A N M hN hLe
     have h2 := (gIso A A N M (Iso.refl A)).1 h1
-    have h3 := gComp _ _ _ _ _ _ _ _ hM h1 (gComp _ _ _ _ _ _ _ _ hM hι h2)
-    simpa using h3
+    simpa using gComp _ _ _ _ _ _ _ _ hM h1 (gComp _ _ _ _ _ _ _ _ hM hι h2)
 
 end GlobalTheory.SS
 end
@@ -1045,8 +1039,7 @@ theorem exists_birLaw : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsLocalRing 
       obtain ⟨j, hj, h⟩ := hS1 (transl (a ^ 1)) i i.2
       exact ⟨⟨j, hj⟩, h⟩
     · intro i
-      simp only [pow_zero, transl_one]
-      exact refl (hI i)
+      simpa only [pow_zero, transl_one] using refl (hI i)
     · intro p q i j k h h'
       have := comp (hI _) h h'
       rwa [transl_mul, ← pow_add] at this
@@ -1084,8 +1077,7 @@ theorem exists_neutral_group_model : ∀ (R K : Type) [CommRing R] [IsDomain R] 
   have e1 : GenIso N' N (𝟙 A) := b1 A N' N hN'.1.1 hle
   have e2 : GenIso N N' (𝟙 A) := (b3 A A N' N (Iso.refl A)).1 e1
   have e3 := b2 A A A N' N N _ _ hN.1 e1 (hT a)
-  have e4 := b2 A A A N' N N' _ _ hN.1 e3 e2
-  simpa only [Category.id_comp, Category.comp_id] using e4
+  simpa only [Category.id_comp, Category.comp_id] using b2 A A A N' N N' _ _ hN.1 e3 e2
 
 end GlobalTheory.SS
 end -- clump:auto

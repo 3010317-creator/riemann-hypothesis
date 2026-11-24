@@ -287,8 +287,7 @@ lemma hyp_step (m : ℕ) (G : (Fin (m + 1) → ℝ) → ℝ) (i : Fin m) :
     (fun s => G (i.castSucc.insertNth (1 - ∑ j, s j) s)) (Δ (n + 1))
   rw [preimage_invC] at h
   rw [← h]
-  refine setIntegral_congr_fun (measurableSet_Δ _) fun s _ => ?_
-  exact congrArg G (insertNth_succ_eq i s)
+  exact setIntegral_congr_fun (measurableSet_Δ _) fun s _ => congrArg G (insertNth_succ_eq i s)
 
 end Hyp
 
@@ -383,8 +382,7 @@ theorem asm (hA : StokesSimplexSubdivision) (hH : SubHyp) (hS : SubSlice) (U : S
       refine Fin.cases ?_ (fun k => ?_) j
       · simp only [Fin.cons_zero]
         linarith [ht.2]
-      · simp only [Fin.cons_succ]
-        exact ht.1 k
+      · simpa only [Fin.cons_succ] using ht.1 k
     have hw1 : ∑ j, (Fin.cons (1 - ∑ k, t k) t : Fin (m + 1) → ℝ) j = 1 := by
       rw [Fin.sum_univ_succ]
       simp
@@ -538,8 +536,7 @@ lemma integrableOn_Δ_insertNth {m : ℕ} (i : Fin (m + 1)) (G : (Fin (m + 1) �
   have hcont : Continuous (fun s : Fin m → ℝ => (i.insertNth (c s) s : Fin (m + 1) → ℝ)) :=
     Continuous.finInsertNth i hc continuous_id
   refine hG.comp hcont.continuousOn ?_
-  intro s hs
-  exact hΔW ((mem_Δ_insertNth i _ _).2 ⟨hs, hc0 s hs, hc1 s hs⟩)
+  exact fun s hs => hΔW ((mem_Δ_insertNth i _ _).2 ⟨hs, hc0 s hs, hc1 s hs⟩)
 
 theorem subSlice : SubSlice := by
   intro m i G D W hW hΔW hG hD hderiv

@@ -235,8 +235,7 @@ omit [ValuativeRel k] [IsNonarchimedeanLocalField k] in
 theorem of_eq_of {N : ℕ} {π : Representation ℂ (GL (Fin N) k) V} {hs : IsSmooth π} {hi : π.IsIrreducible}
     {σ : Representation ℂ (GL (Fin N) k) W} {hs' : IsSmooth σ} {hi' : σ.IsIrreducible} :
     of π hs hi = of σ hs' hi' ↔ Nonempty (π.Equiv σ) := by
-  simp only [IrrGL.of, Sigma.mk.inj_iff, heq_eq_eq, true_and]
-  exact IrrRep.cl_eq_iff
+  simpa only [IrrGL.of, Sigma.mk.inj_iff, heq_eq_eq, true_and] using IrrRep.cl_eq_iff
 
 
 omit [ValuativeRel k] [IsNonarchimedeanLocalField k] in
@@ -750,8 +749,7 @@ theorem embeds_detRep_segment {χ : kˣ →* ℂˣ} (hχ : IsSmoothChar χ) {l :
   choose w hw using hw
   have ht0ne : PiTensorProduct.tprod ℂ w ≠ 0 := by
     have hφ : ∀ a, ∃ φ : Module.Dual ℂ (x a).2.rep.V, φ (w a) ≠ 0 := fun a => by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hw a ((Module.forall_dual_apply_eq_zero_iff ℂ (w a)).1 h)
     choose φ hφ using hφ
     intro h0
@@ -863,8 +861,7 @@ theorem single_precedes (χ : kˣ →* ℂˣ) (hχ : IsSmoothChar χ) :
     · rintro (rfl | rfl)
       · exact ⟨0, by norm_num, by simp⟩
       · exact ⟨1, by norm_num, by simp⟩
-  · rw [Segment.carrier_single, Segment.carrier_single, Set.singleton_subset_singleton]
-    exact hne
+  · rwa [Segment.carrier_single, Segment.carrier_single, Set.singleton_subset_singleton]
   · rw [Segment.carrier_single, Segment.carrier_single, Set.singleton_subset_singleton]
     exact fun h => hne h.symm
   · show (IrrGL.ofChar χ hχ).nu 1 = (IrrGL.ofChar χ hχ).nu ((1 : ℕ) : ℂ)

@@ -85,8 +85,7 @@ theorem twGenNZ_of (hAC : TwGenNZAC) : TwGenNZ := by
   have hs : ∀ x : Sec (tw q i) (Spec (CommRingCat.of B)), Sec.res (Spec.map (CommRingCat.ofHom f)) (c.val • x) =
       c.val • Sec.res (Spec.map (CommRingCat.ofHom f)) x := fun x => map_nsmul _ _ x
   have hz : Sec.res (Spec.map (CommRingCat.ofHom f)) (0 : Sec (tw q i) (Spec (CommRingCat.of B))) = 0 := map_zero _
-  rw [hs, hz, twGen_res, ← gam_map] at h2
-  exact h2
+  rwa [hs, hz, twGen_res, ← gam_map] at h2
 
 theorem lcInj (hT : TwGenNZ) (q : ℕ) [NeZero q] (i : ℤ) m (hm : IsLCMap q i m) (B : Type) [CommRing B]
     (ζ : Prim q B) : Function.Injective (m B ζ) := by

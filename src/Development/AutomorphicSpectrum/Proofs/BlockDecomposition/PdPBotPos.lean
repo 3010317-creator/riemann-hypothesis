@@ -482,8 +482,7 @@ theorem dividedPowerFiltration_dividedPowersBot' (O : Type) [CommRing O] {r : �
   refine Ideal.span_le.2 ?_
   rintro _ ⟨l, hl, hs, rfl⟩
   have hq : ∃ q ∈ l, q.1 ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have : (l.map Prod.fst).sum = 0 := List.sum_eq_zero (by
       intro x hx
       obtain ⟨q, hq, rfl⟩ := List.mem_map.1 hx
@@ -538,8 +537,7 @@ theorem theta_ex {G : Type} [CommRing G] [Algebra R G] (a b : IdF F) (T : C) (ht
   · have h1 := congrArg Subtype.val h
     have h2 := Ideal.Quotient.eq.1 h1
     rw [hb, Ideal.mem_bot, ← map_sub, map_eq_zero_iff _ e.injective, ← TensorProduct.tmul_sub] at h2
-    have h3 := congrArg (TensorProduct.lid R G) h2
-    simpa [sub_eq_zero] using h3
+    simpa [sub_eq_zero] using congrArg (TensorProduct.lid R G) h2
   · rintro ⟨y, hy⟩
     obtain ⟨w, rfl⟩ := Ideal.Quotient.mk_surjective y
     refine ⟨TensorProduct.lid R G (e.symm w), Subtype.ext ?_⟩
@@ -555,8 +553,7 @@ theorem crit_of {R : Type} [CommRing R] {C : Type 1} [Category.{0} C] {Φ : PDF 
     (hk : ∀ k : ℕ, a (r - k) = F (r₀ - k)) : P.Crit a r := by
   intro T b
   rw [h0]
-  simp only [hk]
-  exact h T b
+  simpa only [hk] using h T b
 
 theorem chart_tens : ∀ {O A : Type} [CommRing O] [CommRing A] [Algebra O A] {I : Ideal A} (γ : DividedPowers I) (l s m : ℕ)
     (S : GrSplit O γ m) {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of O)) {V : X.Opens} {d : ℕ} (cV : Coord q V d),
@@ -683,8 +680,7 @@ theorem bc_single : KH.LocBc → KH.PolyTf → BcOn True := by
     ⟨fun t T => fil'.anti (by omega) T, fun t ht => crit_of PA (hPA (t - c) (by omega)).1 rfl (fun k => by congr 1; ring),
       fun t ht => (hPA t (by omega)).1⟩
     (fun i n t => lem i _ (S.mem i n) _) (fun i n t => lem i _ (S.mem i n) _) ?_ j
-  intro t _ _
-  exact chart_tens γ l s m S q cV cO cA eO eA hD hD' e hiO hiA he₀ c t hc _ _
+  exact fun t _ _ => chart_tens γ l s m S q cV cO cA eO eA hD hD' e hiO hiA he₀ c t hc _ _
 
 end GlobalTheory.CompanionTheory.BcLoc
 end -- clump:auto

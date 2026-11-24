@@ -67,8 +67,7 @@ private lemma isUnit_iff_isUnit_det_leftMulMatrix {A R : Type} [CommRing A] [Com
   have := Module.Free.of_basis b
   have := Module.Finite.of_basis b
   constructor
-  · intro hx
-    exact (Matrix.isUnit_iff_isUnit_det _).1 (hx.map (Algebra.leftMulMatrix b))
+  · exact fun hx => (Matrix.isUnit_iff_isUnit_det _).1 (hx.map (Algebra.leftMulMatrix b))
   · intro hd
     rw [Algebra.leftMulMatrix_apply, LinearMap.det_toMatrix, ← LinearMap.isUnit_iff_isUnit_det] at hd
     obtain ⟨y, hy⟩ : ∃ y, Algebra.lmul A R x y = 1 := ((Module.End.isUnit_iff _).1 hd).2 1
@@ -509,8 +508,7 @@ theorem dense_inf (F E : Type) [Field F] [NumberField F] [Field E] [NumberField 
     have hg : DenseRange (fun c : Fin (Module.finrank F E) → F => fun i => algebraMap F (Ainf F) (c i)) :=
       DenseRange.piMap fun _ => InfiniteAdeleRing.denseRange_algebraMap F
     have hf : DenseRange (fun c : Fin (Module.finrank F E) → Ainf F => ∑ i, c i • bb i) := by
-      refine Function.Surjective.denseRange fun y => ⟨bb.equivFun y, ?_⟩
-      exact bb.sum_equivFun y
+      exact Function.Surjective.denseRange fun y => ⟨bb.equivFun y, bb.sum_equivFun y⟩
     have hfc : Continuous (fun c : Fin (Module.finrank F E) → Ainf F => ∑ i, c i • bb i) :=
       continuous_finsetSum _ fun i _ => (continuous_apply i).smul continuous_const
     refine (hf.comp hg hfc).mono ?_
@@ -672,10 +670,8 @@ private theorem weak_approx_real_lemma_9 (F E : Type) [Field F] [NumberField F] 
       Formalism.UG.cT (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F) σ) (sec X 1) * Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.JR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F) J * sec X 1 = Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.JR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F) J := by
     intro X hX
     apply hinj
-    · rw [map_mul, map_mul, (hcTI _), hJI, hsecI]
-      exact hX
-    · rw [map_mul, map_mul, (hcTF _), hJF, hsecF]
-      exact hone
+    · rwa [map_mul, map_mul, (hcTI _), hJI, hsecI]
+    · rwa [map_mul, map_mul, (hcTF _), hJF, hsecF]
   have hmemI : ∀ x : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) σ J,
       Formalism.UG.cT (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) σ) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA.mat (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) σ J x : Matrix (Fin n) (Fin n) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F ⊗[F] E)) * Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.JR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) J * (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA.mat (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) σ J x : Matrix (Fin n) (Fin n) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F ⊗[F] E)) = Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.JR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) J :=
     fun x => (sigR_transpose_mul_JR_mul_eq_JR F E (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) σ J _).1 (show (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) σ J) from x).2
@@ -699,8 +695,7 @@ private theorem sig_involutive_and_nontrivial (D : Formalism.BasicNotions.D7) :
     (∀ x, D.sp.cm.sig (D.sp.cm.sig x) = x) ∧ ∃ z, D.sp.cm.sig z ≠ z := by
   letI := D.host.cmStar
   refine ⟨fun x => star_star x, ?_⟩
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have htop : (⊥ : Subalgebra D.host.F D.host.E) = ⊤ := by
     refine eq_top_iff.2 fun a _ => ?_
     obtain ⟨b, hb⟩ := (D.sp.cm.fixed a).1 (hcon a)
@@ -724,8 +719,7 @@ private theorem exists_adelic_point_of_mem_unitaryGroup (F E : Type) [Field F] [
         (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F)).mapMatrix J
     rw [← hc, ← map_mul, ← map_mul, h0]
   refine ⟨(⟨_, hmem⟩ : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F) σ J), ?_, ?_⟩
-  · show Formalism.UG.bc (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F)) γ0 ∈ Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HFin (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F) σ J
-    exact Subgroup.mem_map.2 ⟨γ0, hγ0, rfl⟩
+  · exact Subgroup.mem_map.2 ⟨γ0, hγ0, rfl⟩
   · ext i j
     show (Algebra.TensorProduct.map (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.fstA F) (AlgHom.id F E)) ((1 : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F) ⊗ₜ[F] (γ0 : Matrix (Fin n) (Fin n) E) i j) = _
     simp [Formalism.UG.bc, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR]
@@ -757,11 +751,8 @@ theorem weak_approx_real : ∀ {D : D7} (V : HSp D) (u : GA D V), u ∈ GinfC V 
     show ((Algebra.TensorProduct.map (fstA D.host.F) (AlgHom.id D.host.F D.host.E)).toRingHom).mapMatrix (HA.mat (AF D.host.F) D.sp.cm.sig V.gram γ : Matrix (Fin V.rank) (Fin V.rank) (AF D.host.F ⊗[D.host.F] D.host.E)) =
       ((Algebra.TensorProduct.map (fstA D.host.F) (AlgHom.id D.host.F D.host.E)).toRingHom).mapMatrix (HA.mat (AF D.host.F) D.sp.cm.sig V.gram (S h) : Matrix (Fin V.rank) (Fin V.rank) (AF D.host.F ⊗[D.host.F] D.host.E))
     rw [hγI, hγ0h, (hSI h).1]
+  · rwa [mul_inv_cancel_left]
   · rw [mul_inv_cancel_left]
-    exact hhO
-  · rw [mul_inv_cancel_left]
-    apply MonoidHom.mem_ker.2
-    apply Units.ext
-    exact (hSI h).2
+    exact MonoidHom.mem_ker.2 (Units.ext (hSI h).2)
 
 end GlobalTheory.RealApprox

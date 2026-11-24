@@ -71,8 +71,7 @@ theorem genU_isGenFam (Ω : Type) [Field Ω] {S : Type} (r : S → ℕ) : IsGenF
       genU Ω r q.1 q.2.1.1 q.2.1.2 =
         algebraMap (MvPolynomial (GenIx r) Ω) (GenField Ω r) (MvPolynomial.X (R := Ω) (σ := GenIx r) q) :=
     fun q => by
-      simp only [genU]
-      exact dite_eq_left q.2.2
+      simpa only [genU] using dite_eq_left q.2.2
   refine ⟨hdiag, habove, ?_, ?_⟩
   · have hinj : Function.Injective
         (IsScalarTower.toAlgHom Ω (MvPolynomial (GenIx r) Ω) (GenField Ω r)) := by
@@ -84,8 +83,7 @@ theorem genU_isGenFam (Ω : Type) [Field Ω] {S : Type} (r : S → ℕ) : IsGenF
         (IsScalarTower.toAlgHom Ω (MvPolynomial (GenIx r) Ω) (GenField Ω r)) ∘ MvPolynomial.X := by
       funext q
       exact hbelow q
-    rw [hfun]
-    exact hX
+    rwa [hfun]
   · rw [eq_top_iff]
     intro x _
     have hXmem : ∀ q : Σ σ, {lk : Fin (r σ) × Fin (r σ) // lk.2 < lk.1},

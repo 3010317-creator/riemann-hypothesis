@@ -133,8 +133,7 @@ theorem sum_GL_character_neg_det_addChar_trace (k : Type) [Field k] [Fintype k] 
     (fun x y e => Units.ext (neg_injective e)) _ _ ?_ ?_
   · intro a ha
     rw [dite_eq_right, zero_mul]
-    intro h
-    exact ha ⟨Matrix.GeneralLinearGroup.mkOfDetNeZero (-a) h.ne_zero, by simp⟩
+    exact fun h => ha ⟨Matrix.GeneralLinearGroup.mkOfDetNeZero (-a) h.ne_zero, by simp⟩
   · intro x
     have hx : IsUnit (-(-(x : Matrix (Fin r) (Fin r) k))).det := by
       rw [neg_neg]; exact (Matrix.isUnit_iff_isUnit_det _).mp x.isUnit
@@ -178,8 +177,7 @@ theorem fourier_flatDatum_finite : ∀ (k : Type) [Field k] [Fintype k] (ψ : Ad
   · have : q ^ (r * t + r ^ 2) * (q ^ (r * t) * G)⁻¹ = q ^ (r ^ 2) * G⁻¹ := by
       rw [pow_add, mul_inv]
       field_simp
-    rw [this]
-    exact hGinv
+    rwa [this]
 
   set u₁ := u.submatrix (Fin.castAdd t) id
   set u₂ := u.submatrix (Fin.natAdd r) id

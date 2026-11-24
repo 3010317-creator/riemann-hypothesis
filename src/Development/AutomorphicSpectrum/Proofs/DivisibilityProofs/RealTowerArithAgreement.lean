@@ -89,8 +89,7 @@ theorem sum_rc_smul {N : ℕ} {A : Type} [AddCommGroup A] (a : Fin N → A) (i :
       · simp
       · intro b _ hb
         rw [ite_eq_right]
-        intro h
-        exact hb (Fin.ext (by simpa using h))
+        exact fun h => hb (Fin.ext (by simpa using h))
       · simp
     have h4 : Finset.Iic (⟨j + 1, hi⟩ : Fin N) = insert ⟨j + 1, hi⟩ (Finset.Iic ⟨j, hj⟩) := by
       ext l
@@ -114,13 +113,11 @@ theorem sum_mul_rc {N : ℕ} (l : Fin N → ℝ) (k : Fin N) :
     · simp
     · intro b _ hb
       rw [ite_eq_right]
-      intro e
-      exact hb (Fin.ext e.symm)
+      exact fun e => hb (Fin.ext e.symm)
     · simp
   · refine Finset.sum_eq_zero fun b _ => ?_
     rw [ite_eq_right]
-    intro e
-    exact h (e ▸ b.2)
+    exact fun e => h (e ▸ b.2)
 
 variable {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] {N : ℕ}
 
@@ -140,8 +137,7 @@ theorem sum_rootC_some {A : Type} [AddCommGroup A] (g : Option (Ψ × Fin N) →
   rw [Fintype.sum_option]
   simp only [rootC, zero_smul, zero_add]
   rw [Fintype.sum_prod_type, Finset.sum_eq_single p.1]
-  · simp only [ite_true, hg]
-    exact sum_rc_smul (fun l => a (p.1, l)) p.2
+  · simpa only [ite_true, hg] using sum_rc_smul (fun l => a (p.1, l)) p.2
   · intro b _ hb
     simp [hb]
   · simp
@@ -354,8 +350,7 @@ theorem exists_lim_arMono (hL : ReciprocityTheory.ChartRestriction.G.AI.I2.Metri
         (𝓝 (PB.polar (dimFl Ψ N + 1) (fun v => (R.Re.deg : ℝ) * R.Re.limNum II v)
           (fun r a => (rootC (w r) a : ℝ)) / ((M.δ : ℝ) * (M.kA : ℝ) ^ m none))) := by
       refine Tendsto.div_const ?_ _
-      simp only [PB.polar]
-      exact tendsto_finsetSum _ fun v _ => ((hconv v).const_mul _).const_mul _
+      simpa only [PB.polar] using tendsto_finsetSum _ fun v _ => ((hconv v).const_mul _).const_mul _
     refine ⟨_, h1.congr' ?_⟩
     filter_upwards [Ioc_mem_nhdsGT h0] with t ht
     have e : (fun v => (R.Re.deg : ℝ) * R.Re.num II t v) =
@@ -365,8 +360,7 @@ theorem exists_lim_arMono (hL : ReciprocityTheory.ChartRestriction.G.AI.I2.Metri
       field_simp
     rw [RootModel.arMono, ite_eq_left hm, hw, word_eq hL II hII R t ht.1 ht.2, e]
   · refine ⟨0, ?_⟩
-    simp only [RootModel.arMono, ite_eq_right hm]
-    exact tendsto_const_nhds
+    simpa only [RootModel.arMono, ite_eq_right hm] using tendsto_const_nhds
 
 theorem tendsto_arFun (hC : M.Converges II) (F : RPA Ψ N) :
     Tendsto (fun t => M.arFun II t F) (𝓝[>] 0) (𝓝 (M.PP II F)) := by

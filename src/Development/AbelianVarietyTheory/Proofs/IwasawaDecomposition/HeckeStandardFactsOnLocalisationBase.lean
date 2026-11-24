@@ -113,8 +113,7 @@ theorem mem_range_of_roots {K : Type} [Field K] {O : Type} [CommRing O] [IsDomai
     have hd : df a ∣ c := Finset.dvd_prod_of_mem _ (Multiset.mem_toFinset.2 ha)
     obtain ⟨e, he⟩ := hd
     have h1 : IsIntegral ℤ ((df a : ℂ) * a) := by
-      simp only [df, dite_eq_left hroot]
-      exact (hr a hroot).choose_spec.2
+      simpa only [df, dite_eq_left hroot] using (hr a hroot).choose_spec.2
     have : (c : ℂ) * a = (e : ℂ) * ((df a : ℂ) * a) := by
       rw [show c = df a * e from he]; push_cast; ring
     rw [this]
@@ -176,8 +175,7 @@ theorem exists_complexify {K : Type} [Field K] {E : Type} [AddCommGroup E] [Modu
     have e : (TC.comp j : E →ₛₗ[φ] F) = j.comp T := by
       refine b.ext fun i => ?_
       simp only [LinearMap.comp_apply, TC, ← hb', Module.Basis.constr_basis]
-    intro x
-    exact congrArg (fun f : E →ₛₗ[φ] F => f x) e
+    exact fun x => congrArg (fun f : E →ₛₗ[φ] F => f x) e
   have hrepr : ∀ z i, b'.repr (j z) i = φ (b.repr z i) := by
     intro z i
     have e : j z = ∑ i, φ (b.repr z i) • b' i := by
@@ -298,11 +296,8 @@ theorem root_int (M : MtFam D) (C : NChoice D) (hR : HeckeLift0 (mt0 M) C.Q) (hP
     have hw : ((D.what₂.places.resChar w : ℕ) : 𝓞 D.host.E) ∈ s.w.asIdeal := by
       have := hab
       unfold SplitPlace.Above at this
-      rw [← s.w_under, Ideal.mem_comap, map_natCast] at this
-      exact this
-    apply hg.2.1
-    show ((D.what₂.places.resChar w : ℕ) : 𝓞 D.host.E) ∈ v.asIdeal
-    exact (hcj _ _ (by simp)).2 hw
+      rwa [← s.w_under, Ideal.mem_comap, map_natCast] at this
+    exact hg.2.1 ((hcj _ _ (by simp)).2 hw)
   exact hint _ (hin y) hf0 ρ hfe _ (D.what₂.places.resChar_prime w) hnab
 
 end GlobalTheory.HeckeStdBase

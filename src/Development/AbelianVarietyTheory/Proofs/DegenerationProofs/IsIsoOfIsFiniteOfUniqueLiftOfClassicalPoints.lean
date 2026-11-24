@@ -195,8 +195,7 @@ theorem exists_ne_zero_forall_exists_two_lifts {R A : Type*} [CommRing R] [IsDom
     exact ho ▸ o.2
   let χ' : B →+* O := χ.codRestrict O hmem
   have hcomp (ρ : A →ₐ[R] L) : (χ'.comp (c ρ).toRingHom).comp (algebraMap R A) = φ := by
-    refine RingHom.ext fun s => Subtype.ext ?_
-    exact (congrArg χ ((c ρ).commutes s)).trans (hχ' s)
+    exact RingHom.ext fun s => Subtype.ext ((congrArg χ ((c ρ).commutes s)).trans (hχ' s))
   refine ⟨_, _, hcomp σ, hcomp τ, fun h => hφ (Subtype.ext ?_)⟩
   have h₂ : χ (c σ a) = χ (c τ a) := congr((($h) a).1)
   change (φ r : Ω) = 0
@@ -236,8 +235,7 @@ theorem isIso_of_isFinite_of_unique_lift_of_classical_points :
     ((genericPoint_spec X).mem_open_set_iff V.isOpen).mpr ⟨x, trivial, hxV⟩
   have hgenV : ∀ w ∈ genericPoints W, w ∈ f ⁻¹ᵁ V := fun w hw => by
     change f w ∈ V
-    rw [hgen w hw]
-    exact hηV
+    rwa [hgen w hw]
   obtain ⟨w₁, hw₁, -⟩ := exists_mem_genericPoints_specializes hW.some
   haveI : Nonempty (f ⁻¹ᵁ V) := ⟨⟨w₁, hgenV w₁ hw₁⟩⟩
   letI := (f.app V).hom.toAlgebra
@@ -254,8 +252,7 @@ theorem isIso_of_isFinite_of_unique_lift_of_classical_points :
     intro r hr
     have hb : (X.basicOpen r : Set X).Nonempty := by
       rw [Set.nonempty_iff_ne_empty]
-      intro h
-      exact hr ((basicOpen_eq_bot_iff r).mp (TopologicalSpace.Opens.ext h))
+      exact fun h => hr ((basicOpen_eq_bot_iff r).mp (TopologicalSpace.Opens.ext h))
     obtain ⟨p, hp, y, hy, hyU⟩ := padicAlgCl_integral_points.1 X π x hx (U ⊓ X.basicOpen r)
       (nonempty_preirreducible_inter U.isOpen (X.basicOpen r).isOpen hU hb)
     obtain ⟨φ, rfl⟩ := exists_factor_of_isLocalRing_of_mem_affineOpen

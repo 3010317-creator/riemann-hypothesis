@@ -76,8 +76,7 @@ theorem main : ∀ (k G : Type) [CommRing k] [Group G] (C : ℕ → Rep k G) (d 
     · intro h0
       have h1 : (s p q).hom m = 0 := by
         apply (bij p q (by omega)).1
-        rw [map_zero]
-        exact h0
+        rwa [map_zero]
       have h2 : m = 0 := by
         apply hinj hev
         rw [h1, map_zero]
@@ -87,8 +86,7 @@ theorem main : ∀ (k G : Type) [CommRing k] [Group G] (C : ℕ → Rep k G) (d 
       have hw := rel (p + 1) q (by omega) w
       rw [ite_eq_right hnot] at hw
       have hm : (e (p + 1) q).hom m = 0 := by
-        rw [← hz]
-        exact hw
+        rwa [← hz]
       have hm0 : m = 0 := (bij (p + 1) q (by omega)).1 (by rw [hm, map_zero])
       rw [hm0, map_zero]
   · have hnot : ¬ Even p := Nat.not_even_iff_odd.2 hod

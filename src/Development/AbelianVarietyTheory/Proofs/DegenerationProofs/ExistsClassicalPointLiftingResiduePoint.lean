@@ -69,8 +69,7 @@ theorem natCast_self_residueField_padicAlgCl_eq_zero (p : ℕ) [hp : Fact p.Prim
   have : (((p : ℕ) : OO p) : PadicAlgCl p) = (p : PadicAlgCl p) := rfl
   rw [this, PadicAlgCl.valuation_p]
   have h1 : (1 : NNReal) < p := by exact_mod_cast hp.out.one_lt
-  rw [div_lt_one (lt_trans zero_lt_one h1)]
-  exact h1
+  rwa [div_lt_one (lt_trans zero_lt_one h1)]
 
 theorem ker_isMaximal_of_forall_pow_eq_one {A k : Type*} [CommRing A] [Field k]
     (hk : ∀ x : k, x ≠ 0 → ∃ n : ℕ, 1 ≤ n ∧ x ^ n = 1) (φ : A →+* k) :
@@ -96,8 +95,7 @@ theorem isClosed_image_point_of_forall_pow_eq_one {k : Type} [Field k]
     rw [this]
     exact ker_isMaximal_of_forall_pow_eq_one hk φ.hom
   rw [← h] at hs
-  rw [Scheme.Hom.comp_apply]
-  exact hs
+  rwa [Scheme.Hom.comp_apply]
 
 theorem exists_residueField_factor_of_apply_eq {k : Type} [Field k] {X : Scheme.{0}}
     (x : Sp k ⟶ X) (s : Sp k) (z : X) (hz : x s = z) :
@@ -158,8 +156,7 @@ theorem exists_integral_point_lifting_residue_point :
         rw [Ideal.eq_bot_of_prime (t : PrimeSpectrum (PadicAlgCl q)).asIdeal,
           Ideal.mem_bot] at ha'
         exact Subtype.ext (Subtype.ext ha')
-      rw [Scheme.Hom.comp_apply, key]
-      exact hyU
+      rwa [Scheme.Hom.comp_apply, key]
   obtain ⟨q, hq, y, hy, hyU⟩ := hlift
   have hfz := hfin _ (hcl x s)
   obtain ⟨r', hr'⟩ := exists_residueField_factor_of_apply_eq x s _ rfl

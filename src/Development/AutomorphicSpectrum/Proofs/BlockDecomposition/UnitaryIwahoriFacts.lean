@@ -110,8 +110,7 @@ theorem diagT_mem_UJ_antiJ_iff (σ : L →+* L) (u : Fin n → Lˣ) :
   constructor
   · intro h i
     have := congrFun (congrFun h i) (Fin.rev i)
-    rw [hent, hrev, mul_one] at this
-    exact this
+    rwa [hent, hrev, mul_one] at this
   · intro h
     ext i j
     rw [hent]
@@ -163,13 +162,11 @@ theorem isCompact_iwU {w : Pl E} (hw : ¬ IsSplitAt w) (n : ℕ) (b : GLw n w) (
     ext γ
     simp only [SetLike.mem_coe, mem_iwU_iff, Set.mem_preimage, Set.mem_image]
     constructor
-    · intro h
-      exact ⟨_, h, by group⟩
+    · exact fun h => ⟨_, h, by group⟩
     · rintro ⟨x, hx, e⟩
       rw [← e]
       simpa [mul_assoc] using hx
-  rw [e]
-  exact hP
+  rwa [e]
 
 theorem unitary_hyperbolic_basis : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (w : Pl E), ¬ IsSplitAt w → ∀ (n : ℕ) (b : GLw n w), IsWitt n w b → (∀ g : GLw n w, b * g * b⁻¹ ∈ UL n w ↔ g ∈ UJ (cj w) (antiJ (w.adicCompletion E) n)) ∧ (∀ γ : UL n w, γ ∈ iwU n w b ↔ b⁻¹ * γ.1 * b ∈ iwGL n w) ∧ IsCompact (iwU n w b : Set (UL n w)) ∧ ∀ u : Fin n → (w.adicCompletion E)ˣ, GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin n) u ∈ UJ (cj w) (antiJ (w.adicCompletion E) n) ↔ ∀ i, cj w (u i) * u (Fin.rev i) = 1 := by
   intro E _ _ _ hU w hw n b hb

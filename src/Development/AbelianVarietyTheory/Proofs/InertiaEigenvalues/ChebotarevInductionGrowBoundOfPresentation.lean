@@ -504,8 +504,7 @@ theorem exists_lift {B : Type} [AddCommGroup B] [Module R B]
     ⟨∑ c, (LinearMap.proj c).smulRight (b c), fun y => by simp [LinearMap.sum_apply]⟩
   have key : ∀ j, ∑ c, Φ j c • b c = 0 := fun j => by
     have h := congrFun hb j
-    rw [matAct_apply', Pi.zero_apply] at h
-    exact h
+    rwa [matAct_apply', Pi.zero_apply] at h
   have hle : LinearMap.range Φ.transpose.mulVecLin ≤ LinearMap.ker g := by
     rintro _ ⟨z, rfl⟩
     rw [LinearMap.mem_ker, hg]
@@ -726,8 +725,7 @@ theorem exists_gens (hT : TameQuotient) {k : ℕ} (hk : ((X.l i ^ k : ℕ) : R) 
     refine (hloc j R _ _ k (tk B) (hn j) (tI B j) z).1 (funext fun c => ?_)
     have h1 := congrFun ht (finProdFinEquiv (j, c))
     beta_reduce at h1
-    rw [← hz, val_mk (tI B _ _ (hγ _)), Equiv.symm_apply_apply] at h1
-    exact h1
+    rwa [← hz, val_mk (tI B _ _ (hγ _)), Equiv.symm_apply_apply] at h1
   · obtain ⟨z, hz⟩ := Submodule.Quotient.mk_surjective _ (E' B w)
     rw [← hz, val_mk (tI B _ _ (hγ _))]
     obtain ⟨φ, h1, h2, y, rfl⟩ := hF (finProdFinEquiv.symm j).1

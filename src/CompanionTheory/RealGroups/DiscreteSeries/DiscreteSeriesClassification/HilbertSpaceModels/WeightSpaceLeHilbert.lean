@@ -44,8 +44,7 @@ theorem hilb_of (h1 : StepStable) (h2 : StepDatum) (h0 : StepSig) (h3 : StepMoll
     have hcl : IsClosed ((S.map (Hlam ε Ψ T.w).subtype : Submodule ℂ (L2 ε)) : Set (L2 ε)) := by
       have h := (Submodule.isClosed_topologicalClosure _).isClosedEmbedding_subtypeVal.isClosedMap
         (S : Set (Hlam ε Ψ T.w)) hSc
-      rw [Submodule.map_coe]
-      exact h
+      rwa [Submodule.map_coe]
     have hst' : ∀ g ∈ UJset ε, ∀ x ∈ S.map (Hlam ε Ψ T.w).subtype,
         rreg ε g x ∈ S.map (Hlam ε Ψ T.w).subtype := by
       rintro g hg _ ⟨x, hx, rfl⟩
@@ -57,8 +56,7 @@ theorem hilb_of (h1 : StepStable) (h2 : StepDatum) (h0 : StepSig) (h3 : StepMoll
       apply Submodule.map_injective_of_injective hinj
       rw [h, Submodule.map_top, Submodule.range_subtype]
   refine ⟨⟨inferInstance, hnt, ?_, hirr, h10 h0 n ε lam T Ψ hP hst (h8 h2 n ε lam T Ψ hP hst hlow) hirr, ?_, ?_⟩, hcone⟩
-  · rw [mir_isURepOn_iff, mir_UJset_eq]
-    exact hU
+  · rwa [mir_isURepOn_iff, mir_UJset_eq]
   · refine ⟨(V1 ε Ψ).comap (Hlam ε Ψ T.w).subtype, ?_⟩
     rw [isKTypeOf_map_iff _ hinj hint, Submodule.map_comap_subtype, inf_eq_right.2 (weight_space_le_hilbert Ψ), mir_lowK_eq]
     exact h2 n ε lam T Ψ hP

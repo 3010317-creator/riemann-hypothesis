@@ -122,10 +122,8 @@ private theorem theta_mem {K : Type} [CommRing K] (j : ZMod 2) (X : Matrix (Fin 
     · simp
     · intro c _ hc
       rw [ite_eq_right]
-      intro hb
-      exact hc (by rw [hb, Fin.rev_rev])
-    · intro hn
-      exact absurd (Finset.mem_univ _) hn
+      exact fun hb => hc (by rw [hb, Fin.rev_rev])
+    · exact fun hn => absurd (Finset.mem_univ _) hn
   rw [ht, hX, neg_zero]
 
 private theorem conj_mem {K : Type} [Field K] (h2 : (2 : K) ≠ 0) (g : GL (Fin 3) K)

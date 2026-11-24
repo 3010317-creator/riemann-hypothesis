@@ -371,8 +371,7 @@ theorem term_of_covariance : PositivityTheory.GramSchwartzFunctions.EC.HeisSch �
   have hv : HMul.hMul (HMul.hMul (zy y) (mat γ)) (mat γ⁻¹) = zy y := by
     rw [Matrix.mul_assoc, hinv, Matrix.mul_one]
   rw [hv] at h1
-  rw [h1] at h2
-  exact h2
+  rwa [h1] at h2
 
 end GlobalTheory.CompanionTheory.EisCells
 end -- clump:auto
@@ -470,8 +469,7 @@ theorem rat_form {n : ℕ} (g : Matrix (Fin (n + n)) (Fin (n + n)) D.host.E)
     ∃ a b d : Matrix (Fin n) (Fin n) D.host.E, g = blk4 a b 0 d ∧ aᴴ * d = 1 ∧ dᴴ * a = 1 := by
   have hg := block_matrix_eta g
   set M := g.submatrix finSumFinEquiv finSumFinEquiv
-  have hc : M.toBlocks₂₁ = 0 := by
-    exact Matrix.ext fun i j => hP i j
+  have hc : M.toBlocks₂₁ = 0 := Matrix.ext fun i j => hP i j
   rw [hc] at hg
   refine ⟨M.toBlocks₁₁, M.toBlocks₁₂, M.toBlocks₂₂, hg, ?_⟩
   rw [hg, jst_eq, block_matrix_conj_transpose, block_matrix_mul_comm_ring, block_matrix_mul_comm_ring] at hu
@@ -527,8 +525,7 @@ theorem rat_of_mem {n : ℕ} (p : G D n) (hp : p ∈ P D n ⊓ GF D n) :
     have := congrFun key i
     simp only [LinearMap.funLeft_apply, Pi.zero_apply, Matrix.mulVec_single_one] at this
     change (mat p)ᵀ _ _ = 0 at this
-    rw [hmat] at this
-    exact this
+    rwa [hmat] at this
   · rw [upperHalf, LinearMap.mem_ker]
     funext k
     simp only [LinearMap.funLeft_apply, Pi.zero_apply, finSumFinEquiv_apply_left, finSumFinEquiv_apply_right]
@@ -1217,8 +1214,7 @@ theorem hermitian_unfolding_integral (r : ℕ) (V : HSp D) (ψ : AddChar (AF D.h
       (GlobalTheory.T.theta_integral_locally_summable_bound D r V ψ θ μ _ hr hψ hθ hμ hφ)).1
   obtain ⟨c, hc⟩ := starN_hermE V (r := r) ψ μ hμ.choose_spec.1 dx hdx
   refine integrable_of_hermE lam h𝓖.1 db hdb _ ?_
-  simp only [hc]
-  exact hJ.const_mul c
+  simpa only [hc] using hJ.const_mul c
 
 end PositivityTheory.PfWsf.Hand.TupleUntupling
 end -- clump:auto
@@ -1423,8 +1419,7 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
       rw [norm_mul, norm_mul, show ‖chiT σ ψ T bb‖ = 1 from hψ.2.1 _, mul_one, norm_div]
       exact mul_le_of_le_one_left (norm_nonneg _)
         ((div_le_one (norm_pos_iff.2 (hck k))).2 (hbd k bb))
-    · refine Filter.Eventually.of_forall fun bb => ?_
-      exact (hlim bb).mul_const _
+    · exact Filter.Eventually.of_forall fun bb => (hlim bb).mul_const _
   have lim2 := hInf.2.mul (tendsto_finsetProd S fun v _ =>
     (Complex.continuous_ofReal.tendsto _).comp (hV v).2)
   exact tendsto_nhds_unique lim1 (lim2.congr fun k => by simpa using (key k).symm)
@@ -1512,8 +1507,7 @@ theorem coefN_sum (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Mat
       (Filter.Eventually.of_forall fun y => le_of_eq (hψ.2.1 _))
   show ∫ y, GlobalTheory.CompanionTheory.SiegelND.starN σ J ψ dx (fun X => ∑ i, Φ i X) y * chiT σ ψ T y ∂db =
     ∑ i, ∫ y, GlobalTheory.CompanionTheory.SiegelND.starN σ J ψ dx (Φ i) y * chiT σ ψ T y ∂db
-  simp only [hstar, Finset.sum_mul]
-  exact integral_finsetSum _ fun i _ => hi i
+  simpa only [hstar, Finset.sum_mul] using integral_finsetSum _ fun i _ => hi i
 
 end Pure
 
@@ -1562,8 +1556,7 @@ theorem PositivityTheory.PfWsf.Hand.CoreH.coreH : ∀ (F E : Type) [Field F] [Nu
     T hT hdet hEu S (φ i) (hφ i) (A i) (hA i) (hAl i)
   have e1 : ∫ X, Φ X ∂(GlobalTheory.CompanionTheory.SW.thetaMeas σ J μ 𝓕 {X | HeckeCharacterZeroLocus.SiegelWeilU.gramE σ J X = T}) =
       ∑ i, ∫ X, Coef.pureN (φ i) (A i) X ∂(GlobalTheory.CompanionTheory.SW.thetaMeas σ J μ 𝓕 {X | HeckeCharacterZeroLocus.SiegelWeilU.gramE σ J X = T}) := by
-    simp only [hsum]
-    exact integral_finsetSum _ fun i _ => (hP i).1
+    simpa only [hsum] using integral_finsetSum _ fun i _ => (hP i).1
   rw [e1, hΦe, PositivityTheory.PfWsf.Hand.CoreH.coefN_sum σ hCM J hJ h2n ψ hψ dx hdx db hdb hInt T N _ hSB]
   exact Finset.sum_congr rfl fun i _ => (hP i).2
 

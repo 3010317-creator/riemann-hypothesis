@@ -118,7 +118,6 @@ theorem fieldRange_le (O : OMDat T.toCore R i Tp tup)
     D.what₂.embLL.toRatAlgHom.fieldRange ≤ O.c'.F := by
   rintro _ ⟨a, rfl⟩
   have h : ((O.jL a : O.c'.F) : ℂ) = D.what₂.embLL a := RingHom.congr_fun hP.lift.field a
-  show D.what₂.embLL a ∈ O.c'.F
   exact h ▸ (O.jL a).2
 
 
@@ -178,8 +177,7 @@ theorem exists_scalar_serOf {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : 
   · have h2 := exact_identity_ofPre hC hT O hP (hka Tp tup O hP hbc) hδ
       (covAt_of_xiConst_ofPre D G Pl0 T0 A T R κ v₀ hC hT i Tp tup O hP c0 hxi) hcc t h J' hR y x hx f hf g
     rw [hcm] at h2
-    refine mul_left_cancel₀ hne ((congrArg _ (one_mul _)).trans (h2.trans ?_))
-    exact shape hne
+    exact mul_left_cancel₀ hne ((congrArg _ (one_mul _)).trans (h2.trans (shape hne)))
 
 
 
@@ -363,8 +361,7 @@ theorem lift_of_oneMapOf (O : OMDat T.toCore R i Unit (fun _ => A.μ0)) {κ : We
   have hf' := ((mem_cusp _ _ _ _ _ _).1 hf).1
   refine ⟨x, f, hx, hf', hc, fun q => ?_⟩
   have h3 := h2 f hf' hc q
-  rw [one_mul, hA _ x hx, mul_right_comm ζ (cE _), mul_assoc (ζ * _) (cE _)] at h3
-  exact h3
+  rwa [one_mul, hA _ x hx, mul_right_comm ζ (cE _), mul_assoc (ζ * _) (cE _)] at h3
 
 theorem exists_equiv_lift {V : HSp D} {S S' : D.what₂.Tau → SPar} {M : DSModel V S} {M' : DSModel V S'} (hM : ModelSame M M')
     {Γ W W' : Type} {nW : NormedAddCommGroup W} {nW' : NormedAddCommGroup W'} {iW : InnerProductSpace ℂ W}

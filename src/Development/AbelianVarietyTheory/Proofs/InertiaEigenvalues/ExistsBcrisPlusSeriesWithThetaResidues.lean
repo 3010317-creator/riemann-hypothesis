@@ -89,9 +89,7 @@ theorem abssum_eigen_lim : ∀ (l : ℕ) [Fact l.Prime] (A : Type) [CommRing A] 
     intro m n hmn
     simp only [S]
     rw [← Finset.sum_range_add_sum_Ico _ hmn, add_sub_cancel_left]
-    apply Finset.dvd_sum
-    intro k hk
-    exact Dvd.dvd.mul_right (pow_dvd_pow _ (Finset.mem_Ico.1 hk).1) _
+    exact Finset.dvd_sum (fun k hk => Dvd.dvd.mul_right (pow_dvd_pow _ (Finset.mem_Ico.1 hk).1) _)
   obtain ⟨W, hW⟩ := IsPrecomplete.prec (I := Ideal.span {(l : A)}) (M := A) inferInstance (f := S)
     (fun {m n} hmn => by rw [SModEq.sub_mem, key]; exact dvd_sub_comm.1 (hS m n hmn))
   have hWN : ∀ N, ∃ c : A, W = S N + (l : A) ^ N * c := by
@@ -161,8 +159,7 @@ theorem tm_pow_dvd : ∀ (l : ℕ) [Fact l.Prime] (x : Fl l), ‖sh x‖ ≤ ‖
     (l : Acris l) ∣ algebraMap (Ainf l) (Acris l) (tm x) ^ l := by
   intro l _ x hx
   have hmem : x.untilt ∈ (Ideal.span {(l : OC l)}) ^ 1 := by
-    rw [GlobalTheory.RingBasics.mem_span_pow_OC, pow_one]
-    exact hx
+    rwa [GlobalTheory.RingBasics.mem_span_pow_OC, pow_one]
   rw [pow_one] at hmem
   obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.1 hmem
   obtain ⟨z, hz⟩ := GlobalTheory.MemLoc.FundOnto.untilt_surjective l c

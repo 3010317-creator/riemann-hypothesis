@@ -210,8 +210,7 @@ theorem cmbPiA : UpperTheory.V.Z.Mult.PiTermA → TwTrSum → CmbPiA := by
           funext y
           simp only [Pi.smul_apply, smul_eq_mul]
           rw [inv_mul_cancel_left₀ h0]
-        rw [e]
-        exact h1
+        rwa [e]
       have key : ∀ (s : ℂ) (P : H E n 0 → ℂ) (x : ℂ), IsTestH P → IsTwTr D.μ π P x → IsTwTr D.μ π (s • P) (s * x) := by
         intro s P x h1 h2
         have h := hSum E n D π Unit {()} (fun _ => s) (fun _ => P) (fun _ => x) (fun _ _ => ⟨h1, h2⟩)
@@ -224,7 +223,6 @@ theorem cmbPiA : UpperTheory.V.Z.Mult.PiTermA → TwTrSum → CmbPiA := by
         val T e₁ e₂ B 0) := by
     rw [Cmb.val, Finset.mul_sum, Finset.sum_mul, Finset.sum_mul]
     exact Finset.sum_congr rfl fun j _ => by ring
-  rw [e1, e2]
-  exact hS'
+  rwa [e1, e2]
 
 end UpperTheory.Zero.ConvolutionTheory.EB

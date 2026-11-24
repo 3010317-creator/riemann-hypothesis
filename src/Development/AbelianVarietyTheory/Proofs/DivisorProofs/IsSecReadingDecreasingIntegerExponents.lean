@@ -104,8 +104,7 @@ theorem exists_sec_rdU_ne_zero (U : Formalism.L2.PjFree.Unf Xo c σ r) (k : U.Co
     (hT _ _)).1
   have h0 := hne 0 _ hv
   have e1 : Formalism.L2.PjFree.rdU U f k x₀ = Formalism.L2.PjFree.toC (evR Xo c f (U.un k ⟨x₀, hx₀⟩)) := dite_eq_left hx₀
-  rw [e1]
-  exact h0
+  rwa [e1]
 
 end GlobalTheory.CuspFrom.KeyHol
 end -- clump:auto
@@ -311,15 +310,13 @@ theorem isSec_modelWt_rdU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     intro h0
     apply hne'
     have h6 : rdU U (f₀ * 1) k x₀ = rdU U f₀ k x₀ * rdU U 1 k x₀ := by rw [GlobalTheory.AllWt.rdU_mul]; rfl
-    rw [mul_one, h0, mul_zero] at h6
-    exact h6
+    rwa [mul_one, h0, mul_zero] at h6
   have hρne : rdU U (κ.ρ : Rul Xo c) k x₀ ≠ 0 := by
     intro h0
     apply h1ne
     have h6 : rdU U ((κ.ρ : Rul Xo c) * ((κ.ρ⁻¹ : (Rul Xo c)ˣ) : Rul Xo c)) k x₀ =
         rdU U (κ.ρ : Rul Xo c) k x₀ * rdU U ((κ.ρ⁻¹ : (Rul Xo c)ˣ) : Rul Xo c) k x₀ := by rw [GlobalTheory.AllWt.rdU_mul]; rfl
-    rw [Units.mul_inv, h0, zero_mul] at h6
-    exact h6
+    rwa [Units.mul_inv, h0, zero_mul] at h6
   have hgx : rdU U ((κ.ρ : Rul Xo c) ^ (B + 1) * f₀ ^ (B + 1 + N + 1)) k x₀ =
       rdU U (κ.ρ : Rul Xo c) k x₀ ^ (B + 1) * rdU U f₀ k x₀ ^ (B + 1 + N + 1) := by
     rw [← rdU_pow_succ_apply U (κ.ρ : Rul Xo c) k x₀ B, ← rdU_pow_succ_apply U f₀ k x₀ (B + 1 + N), GlobalTheory.AllWt.rdU_mul]

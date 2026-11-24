@@ -65,8 +65,7 @@ private theorem inf_pow_bot (R : Type) [CommRing R] [IsLocalRing R] [IsNoetheria
   refine ⟨k + 1, fun x hxI hxm => ?_⟩
   have hx : x ∈ maximalIdeal R ^ (k + 1) • (⊤ : Submodule R R) ⊓ (I : Submodule R R) := by
     refine ⟨?_, hxI⟩
-    rw [Ideal.smul_eq_mul, Ideal.mul_top]
-    exact hxm
+    rwa [Ideal.smul_eq_mul, Ideal.mul_top]
   rw [hk (k + 1) (by omega), Nat.add_sub_cancel_left, pow_one] at hx
   have hle : maximalIdeal R • (maximalIdeal R ^ k • (⊤ : Submodule R R) ⊓ (I : Submodule R R))
       ≤ maximalIdeal R • (I : Submodule R R) :=
@@ -84,8 +83,7 @@ theorem UpperTheory.V.Fr.pr_sec :
   have hmap : Ideal.map p (maximalIdeal C') = maximalIdeal C := by
     apply le_antisymm
     · rw [Ideal.map_le_iff_le_comap]
-      intro z hz
-      exact (hmem z).2 hz
+      exact fun z hz => (hmem z).2 hz
     · intro c hc
       obtain ⟨z, rfl⟩ := hp c
       exact Ideal.mem_map_of_mem p ((hmem z).1 hc)
@@ -99,9 +97,7 @@ theorem UpperTheory.V.Fr.pr_sec :
     Ideal.Quotient.mk_surjective.comp hp
   let σ := Function.surjInv hq
   have hσ : ∀ c : C, c - p (σ (Ideal.Quotient.mk _ c)) ∈ maximalIdeal C ^ N₀ := by
-    intro c
-    apply Ideal.Quotient.eq.1
-    exact (Function.surjInv_eq hq (Ideal.Quotient.mk _ c)).symm
+    exact fun c => Ideal.Quotient.eq.1 (Function.surjInv_eq hq (Ideal.Quotient.mk _ c)).symm
   have hw : ∀ c : C, ∃ w ∈ maximalIdeal C' ^ N₀, p w = c - p (σ (Ideal.Quotient.mk _ c)) :=
     fun c => hpow N₀ _ (hσ c)
   choose w hwm hwp using hw
@@ -125,8 +121,7 @@ theorem UpperTheory.V.Fr.pr_sec :
         simp [map_sub, hs, hpz]
       · rw [hdiff]
         exact sub_mem (sub_mem (hwm c₁) (hwm c₂)) (Ideal.pow_le_pow_right hn hz)
-    rw [sub_eq_zero.1 hz0]
-    exact hz
+    rwa [sub_eq_zero.1 hz0]
   refine ⟨fun g => s (x g), ?_, fun g => hs (x g)⟩
   intro n
   rw [IsLocallyConstant.iff_eventually_eq]
@@ -183,11 +178,9 @@ private theorem gl_lift {n : ℕ} (O : Type) [CommRing O] [IsLocalRing O] (C' : 
       rw [map_sub, map_mul, map_one, hb, IsUnit.mul_val_inv, sub_self]
     have hKm : RingHom.ker (p : C' →+* C) ≤ maximalIdeal C' := IsLocalRing.le_maximalIdeal (RingHom.ker_ne_top _)
     have ham : a ∈ maximalIdeal C' := by
-      rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-      exact hna
+      rwa [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
     have h1 : (1 : C') ∈ maximalIdeal C' := by
-      have h2 := sub_mem (Ideal.mul_mem_right b _ ham) (hKm hK)
-      simpa using h2
+      simpa using sub_mem (Ideal.mul_mem_right b _ ham) (hKm hK)
     exact (maximalIdeal.isMaximal C').ne_top ((Ideal.eq_top_iff_one _).2 h1)
   let Y : Fin n → Fin n → Γ → C' := fun i j =>
     if ∀ s, x s i j = 0 then fun _ => 0 else Classical.choose (pr_sec O C' C p hp hk Γ (fun s => x s i j) (hx i j))
@@ -220,8 +213,7 @@ private theorem gl_lift {n : ℕ} (O : Type) [CommRing O] [IsLocalRing O] (C' : 
     rw [e, hMp]
     exact Matrix.isUnits_det_units (x s)
   refine ⟨fun s => Matrix.nonsingInvUnit (M s) (hdet s), fun i j => hYc i j, fun s => ?_, fun i j h s => hY0 i j h s⟩
-  apply Units.ext
-  exact hMp s
+  exact Units.ext (hMp s)
 
 theorem UpperTheory.V.Fr.pr_setlift :
     ∀ {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP k l] {F : Frame l k} {C₀ n : ℕ}, F.Ok C₀ → ∀ (O : Type) [CommRing O] [IsLocalRing O], ∀ (C' : Type) [CommRing C'] [Algebra O C'] [IsCO O C'] (C : Type) [CommRing C] [Algebra O C] [IsCO O C] (p : C' →ₐ[O] C) (B : Box F n C), Function.Surjective p → maximalIdeal C' * RingHom.ker p = ⊥ → B.Cont (maximalIdeal C) → Nonempty (SetLift p B) := by

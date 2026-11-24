@@ -125,8 +125,7 @@ theorem exists_gl_sub {R : Type} [CommRing R] (s : R →+* R) (hs : ∀ y, s (s 
   · have hv : ((bc O.subtype G : GL (Fin m) R) : Matrix (Fin m) (Fin m) R) =
         (G : Matrix (Fin m) (Fin m) O).map O.subtype := rfl
     rw [hv, hcT, hG, Matrix.map_mul, Matrix.map_mul]
-  · intro i j
-    exact (G.val i j).2
+  · exact fun i j => (G.val i j).2
   · intro i j
     rw [← map_inv]
     exact ((G⁻¹).val i j).2
@@ -184,8 +183,7 @@ theorem good_iso : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
       rw [← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.one_mulVec]
     rw [e]
     exact mulVec_mem O _ ig' _ (h a) i
-  · intro h a i
-    exact mulVec_mem O _ ig _ (h a) i
+  · exact fun h a i => mulVec_mem O _ ig _ (h a) i
 
 end GlobalTheory.CompanionTheory.SW.GoodIso
 end -- clump:auto
@@ -227,8 +225,7 @@ theorem lattice_mass_fibre_eq : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
   have hcont : ∀ k : GL (Fin M) (Fv F v ⊗[F] E),
       Continuous (actTup (Fv F v) (n := n) k) := by
     intro k
-    refine continuous_pi fun a => ?_
-    exact Continuous.matrix_mulVec continuous_const ((continuous_apply a))
+    exact continuous_pi fun a => Continuous.matrix_mulVec continuous_const ((continuous_apply a))
   have hinv : ∀ (k l : GL (Fin M) (Fv F v ⊗[F] E)), k * l = 1 → ∀ X : Fin n → Fin M → Fv F v ⊗[F] E,
       actTup (Fv F v) k (actTup (Fv F v) l X) = X := by
     intro k l hkl X

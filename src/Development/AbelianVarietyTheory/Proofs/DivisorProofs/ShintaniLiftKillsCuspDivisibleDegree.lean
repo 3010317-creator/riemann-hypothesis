@@ -102,14 +102,11 @@ theorem finsum_GL_toLin' {F : Type} [Field F] (m : ℕ) (f : Module.End F (Fin m
   refine finsum_mem_eq_of_bijOn
     (fun x : GL (Fin m) F => (Matrix.toLin' (x : Matrix (Fin m) (Fin m) F) : Module.End F (Fin m → F)))
     ⟨?_, ?_, ?_⟩ (fun _ _ => rfl)
-  · intro x _
-    exact (Units.isUnit x).map (Matrix.toLinAlgEquiv' (R := F) (n := Fin m))
-  · intro x _ y _ h
-    exact Units.ext (Matrix.toLin'.injective h)
+  · exact fun x _ => (Units.isUnit x).map (Matrix.toLinAlgEquiv' (R := F) (n := Fin m))
+  · exact fun x _ y _ h => Units.ext (Matrix.toLin'.injective h)
   · intro g hg
     have h : IsUnit ((Matrix.toLinAlgEquiv' (R := F) (n := Fin m)).symm g) := IsUnit.map _ hg
-    refine ⟨h.unit, Set.mem_univ _, ?_⟩
-    exact (Matrix.toLinAlgEquiv' (R := F) (n := Fin m)).apply_symm_apply g
+    exact ⟨h.unit, Set.mem_univ _, (Matrix.toLinAlgEquiv' (R := F) (n := Fin m)).apply_symm_apply g⟩
 
 theorem finsum_cusp_mul_star_chG : ∀ (F : Type) [Field F] [Finite F] (θ : AlgebraicClosure F →* ℂ), (∀ x y : AlgebraicClosure F, x ≠ 0 → y ≠ 0 → θ x = θ y → x = y) → ∀ m k l : ℕ, 0 < m → ∑ᶠ x, cusp θ m k x * star (chG (rootSum θ l) m x) = (-1) ^ (m - 1) * (Nat.card (GL (Fin m) F) : ℂ) * (((Finset.range m).filter (fun i => k * Nat.card F ^ i ≡ l [MOD (Nat.card F ^ m - 1)])).card : ℂ) := by
   intro F _ _ θ hθ m k l hm
@@ -289,8 +286,7 @@ theorem hfree_two_le {F : Type} [Field F] [Finite F] (θ : AlgebraicClosure F �
     simp [dg]
   have hxcols : ∀ x ∈ hSf.toFinset, ∀ i j, j ≠ l →
       (x : Matrix (Fin m) (Fin m) F) i j = (1 : Matrix (Fin m) (Fin m) F) i j := by
-    intro x hx i j hj
-    exact (hSf.mem_toFinset.1 hx) i j ((hjl j).2 hj)
+    exact fun x hx i j hj => (hSf.mem_toFinset.1 hx) i j ((hjl j).2 hj)
   have key : ∑ x ∈ hSf.toFinset, psi (rootSum θ k) (Fin m → F) (Matrix.toLin' (x : Matrix (Fin m) (Fin m) F))
       = ∑ p ∈ (Finset.univ.filter (fun d : F => d ≠ 0)) ×ˢ hN.toFinset,
         psi (rootSum θ k) (Fin m → F) (Matrix.toLin' (dg l p.1) + p.2) := by
@@ -314,9 +310,7 @@ theorem hfree_two_le {F : Type} [Field F] [Finite F] (θ : AlgebraicClosure F �
       · rw [Matrix.sub_apply]; simp [dg]
     · intro p hp
       have hp' := Finset.mem_product.1 hp
-      have h2 := hN.mem_toFinset.1 hp'.2
-      refine hSf.mem_toFinset.2 fun i j hj => ?_
-      exact hNcols _ _ h2 i j ((hjl j).1 hj)
+      exact hSf.mem_toFinset.2 fun i j hj => hNcols _ _ (hN.mem_toFinset.1 hp'.2) i j ((hjl j).1 hj)
     · intro x hx
       refine Matrix.GeneralLinearGroup.ext fun i j => ?_
       change LinearMap.toMatrix' _ i j = _
@@ -709,8 +703,7 @@ theorem coset_zero {m : ℕ} [Finite F] [Fintype (GL (Fin m) F)] (Y : GL (Fin m)
   have h1 : ∑ᶠ u : fixSub f, Y u = 0 := by
     rw [sub_sum]; exact h0
   have h2 := char_coset_sum_eq_zero (GL (Fin m) F) Y hY (fixSub f) h1 c
-  rw [sub_sum (fixSub f) (fun u => Y (c * u))] at h2
-  exact h2
+  rwa [sub_sum (fixSub f) (fun u => Y (c * u))] at h2
 
 theorem core [Finite F] (a b : ℕ) [Fintype (GL (Fin (a + b)) F)] (A : GL (Fin a) F → ℂ) (B : GL (Fin b) F → ℂ)
     (hA : IsChar ℂ ℂ A) (hB : IsChar ℂ ℂ B) (hfA : HFree A) (hfB : HFree B) (f : Fin (a + b) → F) (hf : f ≠ 0) :
@@ -1111,8 +1104,7 @@ theorem hc_one_orth_hfree : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : �
         exact this.symm }
   have hH : ∑ᶠ u : H, Y u = 0 := by
     have := hF hn0
-    rw [← finsum_set_coe_eq_finsum_mem] at this
-    exact this
+    rwa [← finsum_set_coe_eq_finsum_mem] at this
   have hcos := char_coset_sum_eq_zero (GL (Fin n) F) Y hY H hH
   haveI : Fintype H := Fintype.ofFinite _
   let f : GL (Fin n) F → ℂ := fun x => if InPar a x then α (tlG a x) else 0
@@ -1365,8 +1357,7 @@ theorem pairing_pm_one : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [
     have hS : chG (fun P => ∏ t : F' ≃ₐ[F] F', rootSum θ k (P.map (t : F' →+* F'))) n =
         chG (fun P => ∏ j ∈ Finset.range l, rootSum θ (k * q ^ j) P) n := by
       funext x
-      simp only [chG]
-      exact _root_.GlobalTheory.Shin.prod_rootSum_map_algEquiv F F' θ k _
+      simpa only [chG] using _root_.GlobalTheory.Shin.prod_rootSum_map_algEquiv F F' θ k _
     rw [hS]
     have hZ := _root_.GlobalTheory.Shin.pair_J_prod_rootSum F' θ m (fun i => k * q ^ i) ((-1) ^ (m - 1))
       (fun i => sum_cusp_eq_zero θ hθ m _ hm (by
@@ -1744,8 +1735,7 @@ theorem shLift_cusp_kills_J : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F 
   have hK := _root_.GlobalTheory.Shin.kills_of_norm_one_of_pairing_prime (GL (Fin n) F') (F' ≃ₐ[F] F') (galAct F F' n) s (hΓ ▸ hl) hs X' hX'v hnorm'
     (J θ (liftL q l [(n, k)]) n) hYchar hYst _ hpair hndvd
   have hfun : (fun δ => X' (inl δ * inr s)) = shLift s (cusp (pullθ ι θ) n k) := funext hX's
-  rw [hfun] at hK
-  exact hK
+  rwa [hfun] at hK
 
 end GlobalTheory.Shin
 end -- clump:auto

@@ -119,14 +119,12 @@ theorem layerProd_le_exp (n f : ℕ) {a : ℕ} (j : Fin a → ℕ) (τ : Fin a �
           exact mul_le_mul (hb _ (hr i k hik).1 (hr i k hik).2 _).2 (hb _ (hp i k).1 (hp i k).2 _).2
             (hb _ (hp i k).1 (hp i k).2 _).1 (pow_nonneg hex _)
     · apply Finset.prod_le_prod₀
-      · intro i _
-        exact mul_nonneg (hb _ (hpos i) (hlt i) _).1 (hb _ (hs i).1 (hs i).2 _).1
+      · exact fun i _ => mul_nonneg (hb _ (hpos i) (hlt i) _).1 (hb _ (hs i).1 (hs i).2 _).1
       · intro i _
         exact mul_le_mul (hb _ (hpos i) (hlt i) _).2 (hb _ (hs i).1 (hs i).2 _).2
           (hb _ (hs i).1 (hs i).2 _).1 (pow_nonneg hex _)
     · apply Finset.prod_nonneg
-      intro i _
-      exact mul_nonneg (hb _ (hpos i) (hlt i) _).1 (hb _ (hs i).1 (hs i).2 _).1
+      exact fun i _ => mul_nonneg (hb _ (hpos i) (hlt i) _).1 (hb _ (hs i).1 (hs i).2 _).1
     · apply Finset.prod_nonneg
       intro i _
       apply Finset.prod_nonneg

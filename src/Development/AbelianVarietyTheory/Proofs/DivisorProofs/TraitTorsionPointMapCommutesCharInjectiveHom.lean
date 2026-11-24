@@ -130,8 +130,7 @@ theorem crossH_at {R : Type} [CommRing R] [IsDomain R] {A₁ A₂ : PolAV (Sp (F
     fun t => by
       have := GlobalTheory.UU.IntExp.sval_comp (L := A₁.L) (φ := fun _ : Fin 1 => (snd (TFK (R := R) F) A₁.A).left)
         (ε := fun _ => ((j' : ℕ) : ℤ)) t (𝟙 _) r z J₁ hJ₁
-      rw [Category.comp_id] at this
-      exact this
+      rwa [Category.comp_id] at this
   have e' : ∀ t : SecA A₂ F j, sA t (r ≫ (TFK (R := R) F ◁ c).left) z J₂ =
       (r.stalkMap z).hom (sA t (TFK (R := R) F ◁ c).left (r z) (fun ψ => J₂ (r ≫ ψ))) :=
     fun t => GlobalTheory.UU.IntExp.sval_comp (L := A₂.L) (φ := fun _ : Fin 1 => (snd (TFK (R := R) F) A₂.A).left)
@@ -1277,8 +1276,7 @@ theorem sumV_fibre {X X' : Type} [AddCommGroup X] [AddCommGroup X'] (h : X' →+
   have := hS (T.map e.toEmbedding) (fun p hp => by
     rw [Finset.mem_map_equiv]
     exact hT (Finset.mem_map_of_mem _ hp))
-  rw [Finset.sum_map] at this
-  exact this
+  rwa [Finset.sum_map] at this
 
 theorem val_sum_sub_coeff {X X' : Type} [AddCommGroup X] [AddCommGroup X'] (h : X' →+ X)
     {A : X' → F} {C : X → F}

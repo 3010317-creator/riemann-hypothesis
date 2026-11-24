@@ -114,8 +114,7 @@ theorem GlobalTheory.FunObj.SqNum.heckeU_nuInv_eq_one_of_cong : ∀ {D : D7} {T 
         rw [S1_mem_OmF]
         have hk' : ((D.host.g k : ℕ) : 𝓞 D.host.F) ∈ (v.under (𝓞 D.host.F)).asIdeal := by
           show _ ∈ v.asIdeal.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E))
-          rw [Ideal.mem_comap, map_natCast]
-          exact hk
+          rwa [Ideal.mem_comap, map_natCast]
         fin_cases k
         · exact Or.inl hk'
         · exact Or.inr (Or.inl hk')
@@ -146,11 +145,9 @@ theorem GlobalTheory.FunObj.SqNum.heckeU_nuInv_eq_one_of_cong : ∀ {D : D7} {T 
         have e3 : c.toRingEquiv (((D.host.conj⁻¹ • b : 𝓞 D.host.E)) : D.host.E) = (b : D.host.E) := by
           show c _ = _
           rw [hc]
-          show D.host.conj (D.host.conj⁻¹ (b : D.host.E)) = _
           exact AlgEquiv.apply_symm_apply _ _
         rw [e3] at e2
-        rw [e2]
-        exact hb2
+        rwa [e2]
     · rw [hn v, ite_eq_right h, Nat.cast_zero, neg_zero, WithZero.exp_zero]
       exact vl_le (sub_mem hu.1 (one_mem _)) v
   have hU := finIdl_unit hu

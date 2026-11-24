@@ -65,10 +65,8 @@ theorem toSequenceOfBlowups_isomorphic_of_iso {X : Scheme.{u}} (d d' : BlowupSeq
       (d'.center i).comap (e i hi.le).hom = d.center i) :
     d.toSequenceOfBlowups.Isomorphic d'.toSequenceOfBlowups := by
   refine ⟨?_, fun i hi => e i (hi.trans_eq d.toSequenceOfBlowups_length), ?_, ?_, ?_⟩
-  · rw [d.toSequenceOfBlowups_length, d'.toSequenceOfBlowups_length]
-    exact hlen
-  · rw [d'.toSequenceOfBlowups_isoObjZero, d.toSequenceOfBlowups_isoObjZero]
-    exact hzero
+  · rwa [d.toSequenceOfBlowups_length, d'.toSequenceOfBlowups_length]
+  · rwa [d'.toSequenceOfBlowups_isoObjZero, d.toSequenceOfBlowups_isoObjZero]
   · intro i hi
     rw [d'.toSequenceOfBlowups_blowupMorphism, d.toSequenceOfBlowups_blowupMorphism]
     exact hmap i (lt_of_lt_of_eq hi d.toSequenceOfBlowups_length)
@@ -209,8 +207,7 @@ def toSeqComparisonMap {X' X : Scheme.{u}} (d' : BlowupSequenceData X') (d : Blo
 
 private theorem toSequenceOfBlowups_length_eq_of_length_eq {X' X : Scheme.{u}} {d' : BlowupSequenceData X'} {d : BlowupSequenceData X}
     (hlen : d'.length = d.length) : d'.toSequenceOfBlowups.length = d.toSequenceOfBlowups.length := by
-  rw [toSequenceOfBlowups_length, toSequenceOfBlowups_length]
-  exact hlen
+  rwa [toSequenceOfBlowups_length, toSequenceOfBlowups_length]
 
 theorem toSeqComparisonMap_zero_comp_isoObjZero {X' X : Scheme.{u}} {g : X' ⟶ X} {d' : BlowupSequenceData X'}
     {d : BlowupSequenceData X} (c : ∀ i : ℕ, i ≤ d'.length → (d'.obj i ⟶ d.obj i))
@@ -222,8 +219,7 @@ theorem toSeqComparisonMap_zero_comp_isoObjZero {X' X : Scheme.{u}} {g : X' ⟶ 
     congrArg (fun e : d.toSequenceOfBlowups.schemeAt 0 ≅ X => e.hom) (toSequenceOfBlowups_isoObjZero d)
   have hz' : d'.toSequenceOfBlowups.isoZero.hom = d'.isoZero.hom :=
     congrArg (fun e : d'.toSequenceOfBlowups.schemeAt 0 ≅ X' => e.hom) (toSequenceOfBlowups_isoObjZero d')
-  rw [hp, hz, hz']
-  exact hzero
+  rwa [hp, hz, hz']
 
 theorem isPullback_toSeqComparisonMap {X' X : Scheme.{u}} {d' : BlowupSequenceData X'} {d : BlowupSequenceData X}
     (c : ∀ i : ℕ, i ≤ d'.length → (d'.obj i ⟶ d.obj i))
@@ -345,8 +341,7 @@ private theorem eqToHom_conj_comp_eq_comp_of_heq {P Q Q' R R' S X' X : Scheme.{u
   have e2 : izs'T = izs' := eq_of_heq h2
   subst e1
   subst e2
-  simp only [eqToHom_refl, Category.id_comp, Category.comp_id]
-  exact key
+  simpa only [eqToHom_refl, Category.id_comp, Category.comp_id] using key
 
 private theorem concatComparisonMap_zero_comp_isoObjZero {X' X : Scheme.{u}} (g : X' ⟶ X) (s : BlowupSequenceData X)
     (t : BlowupSequenceData (s.obj s.length)) (s' : BlowupSequenceData X')
@@ -915,8 +910,7 @@ theorem append_isomorphic_of_length_eq_zero {k : Type u} [Field k] {X : Scheme.{
     MarkedBlowupSequenceData.toMarkedSequence_toSequenceOfBlowups (S.append T hinv)
   have e2 : S.toMarkedSequenceOfBlowups.toSequenceOfBlowups = S.toBlowupSequenceData.toSequenceOfBlowups :=
     MarkedBlowupSequenceData.toMarkedSequence_toSequenceOfBlowups S
-  rw [e1, e2]
-  exact key
+  rwa [e1, e2]
 
 theorem isStrictPullbackBlowupSeq_append {k : Type u} [Field k] {X' X : Scheme.{u}}
     {p : X ⟶ Spec (CommRingCat.of k)} {p' : X' ⟶ Spec (CommRingCat.of k)}

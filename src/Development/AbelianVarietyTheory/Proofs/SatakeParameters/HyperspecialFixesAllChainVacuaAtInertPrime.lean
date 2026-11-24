@@ -153,14 +153,12 @@ theorem two_not_mem {P : Pl D.host.E} (hc : P = cP P) : (2 : 𝓞 D.host.F) ∉ 
   have h : ((2 : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal := by
     have := Ideal.mem_comap.1 h2
     rw [map_ofNat] at this
-    rw [Nat.cast_ofNat]
-    exact this
+    rwa [Nat.cast_ofNat]
   refine Formalism.MainNotions.KudlaSiegelWeil.InertConditionsOfHost.not_fixed_ram D P 2 (Or.inl rfl) h (Ideal.ext fun x => ?_)
   rw [Ideal.mem_comap]
   have : Formalism.MainNotions.KudlaSiegelWeil.InertConditionsOfHost.sgO D x = cO D x := by
     apply RingOfIntegers.ext
     rw [cO_coe]
-    show D.host.conj (x : D.host.E) = _
     exact (Formalism.BasicNotions.Examples₂.star_eq_conj D.host _).symm
   rw [this, ← mem_cP, ← hc]
 

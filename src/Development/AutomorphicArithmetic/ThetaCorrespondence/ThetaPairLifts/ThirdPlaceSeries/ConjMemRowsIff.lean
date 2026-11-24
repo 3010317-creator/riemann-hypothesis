@@ -110,8 +110,7 @@ theorem mul_moved (p : GlobalTheory.LocMod.Place D k) {π' : EAf D →+* k} (hπ
     have h5 := congrArg (fun g : GL (Fin V.rank) (Lev.EAf D) => g.val.map π') h3
     simp only [Units.val_mul, Matrix.map_mul] at h5
     have h6 : (Lev.finE V (t⁻¹ * x * t)).val.map π' = (mt V (t⁻¹ * x * t)).map p.π := Matrix.ext fun i j => hπ _
-    rw [h6] at h5
-    exact h5
+    rwa [h6] at h5
   have h7 : mt V x * mt V t = mt V t * mt V (t⁻¹ * x * t) := by
     rw [← GlobalTheory.MixModel.mt_mul, ← GlobalTheory.MixModel.mt_mul, mul_assoc, mul_inv_cancel_left]
   rw [← h1, ← Matrix.mul_assoc, ← Matrix.map_mul, h7, Matrix.map_mul, Matrix.mul_assoc, h4, Matrix.mul_assoc]
@@ -282,8 +281,7 @@ theorem moves_of_stab (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (hq 
   have h5 : (mt V (t⁻¹ * x * t)).map q.pr = F'.β * m.val * F'.γ := by
     rw [LevRed.mt_mul', LevRed.mt_mul', Matrix.map_mul, Matrix.map_mul, hm]
     simp only [F', Matrix.mul_assoc]
-  have h6 := (eq_coordHom_iff V q.pr F'.β F'.γ F'.βγ F'.γβ _ _).1 h5
-  exact h6 ▸ LevMoves.smul_latOf hs
+  exact ((eq_coordHom_iff V q.pr F'.β F'.γ F'.βγ F'.γβ _ _).1 h5) ▸ LevMoves.smul_latOf hs
 
 end Gen
 
@@ -356,8 +354,7 @@ theorem red_iff (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (hq : Form
     rw [Formalism.L2.DIV.upper_block_val_submatrix hr htri, Matrix.submatrix_apply] at hc
     have ea : Fin.castLE hr a' = e (.inl i) := Fin.ext (ha.trans (hpos i).symm)
     have eb : Fin.castLE hr b' = e (.inl j) := Fin.ext (hb.trans (hpos j).symm)
-    rw [ea, eb] at hc
-    exact hc
+    rwa [ea, eb] at hc
 
 end Loc
 
@@ -411,8 +408,7 @@ theorem main_alt_alt (W : _root_.GlobalTheory.MiS.RealPackAlt ex) (hW : _root_.G
   have hm : 0 < D.R.m := by have := D.R.two_le_m; omega
   have hb : a.g.b 0 ∈ GfC (Yc D 0) := by
     have h1 := ha.vis.b 0
-    rw [hV.b 0] at h1
-    exact h1
+    rwa [hV.b 0] at h1
   have hsd := hW.bot.hyp.2.2.2.1.lev.βY 0 hm
   have hΛ := GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ hsd
   obtain ⟨c, hβ, -⟩ := hsd

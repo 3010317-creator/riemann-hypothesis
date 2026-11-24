@@ -183,8 +183,7 @@ theorem one_case (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsN
   obtain ⟨ψ₀, -, ⟨e₀⟩⟩ := h0
   obtain ⟨ψ₁, -, ⟨e₁⟩⟩ := h1
   have hψ : ∃ t, ψ₀ t ≠ ψ₁ t := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have hu : unrChar k 1 = 1 := MonoidHom.ext fun x => by simp [unrChar_apply]
     have hdet : detChar (Fin 1) (1 : kˣ →* ℂˣ) = (1 : GL (Fin 1) k →* ℂˣ) :=
       MonoidHom.ext fun x => by simp
@@ -380,8 +379,7 @@ theorem prodScal_ne_zero (c : ℂ) (a : ℕ → ℂ) (M : ℕ) (h : ∀ m < M, a
   induction m with
   | zero => simp [prodScal]
   | succ m ih =>
-    simp only [prodScal]
-    exact mul_ne_zero (ih (by omega)) (sub_ne_zero.2 (h m (by omega)).symm)
+    simpa only [prodScal] using mul_ne_zero (ih (by omega)) (sub_ne_zero.2 (h m (by omega)).symm)
 
 end CentralSplit
 
@@ -416,8 +414,7 @@ theorem exists_intertwining_of_central_step : ∀ {G V Y : Type} [Group G] [AddC
     | zero =>
       intro h v hv
       have e : (⟨t₀.val + 1 + 0, h⟩ : Fin (N + 1)) = t₀.succ := by ext; simp
-      rw [e] at hv
-      exact hv
+      rwa [e] at hv
     | succ m ih =>
       intro h v hv
       let t : Fin N := ⟨t₀.val + 1 + m, by omega⟩
@@ -433,8 +430,7 @@ theorem exists_intertwining_of_central_step : ∀ {G V Y : Type} [Group G] [AddC
         simpa using hq
       rw [prodOp_succ_apply]
       have e3 : a (t₀.val + 1 + m) = c' t := ha m (by omega)
-      simp only [e3]
-      exact ih (by omega) _ hmem
+      simpa only [e3] using ih (by omega) _ hmem
 
   have L2 : ∀ m, ∀ b (hb : b ∈ B.toSubmodule), ∃ h' : prodOp ρ z (fun i => a (t₀.val + 1 + i)) m b ∈ B.toSubmodule,
       (Submodule.Quotient.mk ⟨_, h'⟩ : B.toSubmodule ⧸ A.toSubmodule.comap B.toSubmodule.subtype) =
@@ -572,8 +568,7 @@ theorem nonempty_equiv_of_apply_ne_zero {G V W : Type} [Group G] [AddCommGroup V
   · rcases eq_bot_or_eq_top K with h | h
     · refine (injective_iff_map_eq_zero f.toLinearMap).2 fun x hx => ?_
       have : x ∈ K := hx
-      rw [h] at this
-      exact this
+      rwa [h] at this
     · exact absurd (show v ∈ K from h ▸ trivial) hv
   · rcases eq_bot_or_eq_top R with h | h
     · exact absurd (show f v ∈ R from ⟨v, rfl⟩) (by rw [h]; exact hv)

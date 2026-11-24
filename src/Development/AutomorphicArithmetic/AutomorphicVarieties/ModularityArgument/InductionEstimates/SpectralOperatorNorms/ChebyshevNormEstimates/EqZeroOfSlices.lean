@@ -178,8 +178,7 @@ private theorem locAt_retract (w : Pl E) {n : ℕ} {u : GL (Fin n) (w.adicComple
       exact one_mem _
     · by_cases hv : v = w
       · subst hv
-        rw [h1]
-        exact hu
+        rwa [h1]
       · rw [h2 v hv]
         exact one_mem _
   have hc : ((retractOne (finEmb E n (AdelicGLn.localEmbedding w u)) : G1 E n) : AdelicGLn.AdelicGL E n) =
@@ -187,8 +186,7 @@ private theorem locAt_retract (w : Pl E) {n : ℕ} {u : GL (Fin n) (w.adicComple
     congrArg Subtype.val (retractOne_coe (⟨_, Reduction.maxCompact_le_normOneGL hm⟩ : normOneGL (K := E) (n := n)))
   refine ⟨?_, fun w' => ?_, fun v hv => ?_⟩
   · show ((retractOne (finEmb E n (AdelicGLn.localEmbedding w u)) : G1 E n) : AdelicGLn.AdelicGL E n) ∈ (maxCompact : Subgroup (AdelicGLn.AdelicGL E n))
-    rw [hc]
-    exact hm
+    rwa [hc]
   · rw [hc, infAt_finEmb']
   · rw [hc, h2 v hv]
 
@@ -263,8 +261,7 @@ private theorem blo_of [_root_.NumberField.IsTotallyComplex E] {S : Set (Pl E)} 
     exact ((hB' w hw).2.2 _ hfix fun e => hne (congrArg Subtype.val e)).map π.V.subtype (fun _ _ => rfl) hne
   · obtain ⟨v, hv, hr⟩ := hφ.rep
     refine ⟨v, hv, ?_⟩
-    simp only [UpperTheory.V.Cm.coe_ofCusp, hΦ]
-    exact hr
+    simpa only [UpperTheory.V.Cm.coe_ofCusp, hΦ] using hr
 
 private def GS (S : Set (Pl E)) (F : Submodule ℂ (G1 E 2 → ℂ)) : Submodule ℂ (G1 E 2 → ℂ) where
   carrier := {φ | φ ∈ F ∧ (∀ u : KG E 2, (fun m => φ (m * u)) ∈ F) ∧ ∀ w ∉ S, ∀ x, LocAt w x → ∀ g, φ (g * x) = φ g}
@@ -342,8 +339,7 @@ private theorem core [_root_.NumberField.IsTotallyComplex E] {S : Set (Pl E)} {�
         ∂quotientMeasure (Gam E 2) (BW.mu1 E 2) ∂quotientMeasure (Gam E 2) (BW.mu1 E 2) = 0) :
     ∀ x y, F x y = 0 := by
   classical
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   obtain ⟨x₀, y₀, hne⟩ := hcon
   haveI : FiniteDimensional ℂ (GS S Ea) := Submodule.finiteDimensional_of_le (fun φ (h : φ ∈ GS S Ea) => h.1)
   haveI : FiniteDimensional ℂ (GS S Eb) := Submodule.finiteDimensional_of_le (fun φ (h : φ ∈ GS S Eb) => h.1)

@@ -144,9 +144,7 @@ theorem iso_mem {V ι J : Type} [AddCommGroup V] [Module ℂ V] (A : ι → V �
           simp only [map_smul, hz j (Finset.mem_insert_of_mem hj) i', smul_comm (l j i')])
         (fun j hj j' hj' h => hl j (Finset.mem_insert_of_mem hj) j' (Finset.mem_insert_of_mem hj') h) h1 b hb
       have hc : l b i - l a i ≠ 0 := sub_ne_zero.2 hi
-      have h4 := U.smul_mem (l b i - l a i)⁻¹ h3
-      simp only [smul_smul, inv_mul_cancel₀ hc, one_smul] at h4
-      exact h4
+      simpa only [smul_smul, inv_mul_cancel₀ hc, one_smul] using U.smul_mem (l b i - l a i)⁻¹ h3
     intro j hj
     rcases Finset.mem_insert.1 hj with rfl | hj
     · have : z j = (z j + ∑ j ∈ s, z j) - ∑ j ∈ s, z j := by abel
@@ -264,8 +262,7 @@ theorem vac_eigen (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-1)) (
     rwa [h2] at h1
   refine ⟨fun m => if h : m ∈ H then (hHmem' m h).choose else 0, fun m hm f hf => ?_⟩
   have h := hH m hm
-  simp only [dite_eq_left h]
-  exact (hHmem' m h).choose_spec f hf
+  simpa only [dite_eq_left h] using (hHmem' m h).choose_spec f hf
 
 end GlobalTheory.VacScalar
 
@@ -349,8 +346,7 @@ theorem class_mem (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (Λ : AddSubgro
     Finset.sum_fiberwise_of_maps_to (fun i hi => Finset.mem_image_of_mem _ hi) _
   have key := iso_mem (fun m : Λ => hL ψ S T m) U (fun m x hx => hU m m.2 x hx) l (s.image (fun i => mk (y i))) z
     (fun C _ m => hz C m) hl (hsumJ ▸ hsum)
-  intro i hi
-  exact key _ (Finset.mem_image_of_mem _ hi)
+  exact fun i hi => key _ (Finset.mem_image_of_mem _ hi)
 
 theorem class_line (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (Λ : AddSubgroup (WO S T))
     (f q : WO S T → ℂ) (hq : ∀ m ∈ Λ, heisO ψ S T m f = q m • f)
@@ -433,8 +429,7 @@ theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (M N 
   obtain ⟨i, hi, hne'⟩ : ∃ i ∈ o'.support, (∑ j ∈ o'.support with
       (QuotientAddGroup.mk (id j) : WO S T ⧸ latO S T (M : Set _) (M' : Set _) (· ∈ Q)) = QuotientAddGroup.mk (id i),
       o' j • heisO ψ S T (id j) g₀) ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hne
     show ∑ u ∈ o'.support, o' u • heisO ψ S T u g₀ = 0
     rw [← Finset.sum_fiberwise_of_maps_to
@@ -481,8 +476,7 @@ theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (M N 
   obtain ⟨i, -, hne2⟩ : ∃ i ∈ (Finset.univ : Finset (Fin n)), (∑ j ∈ Finset.univ with
       (QuotientAddGroup.mk (y j) : WO S T ⧸ latO S T (N : Set _) (N' : Set _) (· ∈ Q)) = QuotientAddGroup.mk (y i),
       cf j • heisO ψ S T (y j) F') ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hF0
     rw [← hFsum, ← Finset.sum_fiberwise_of_maps_to
       (g := fun j => (QuotientAddGroup.mk (y j) : WO S T ⧸ latO S T (N : Set _) (N' : Set _) (· ∈ Q)))
@@ -578,8 +572,7 @@ theorem comb_pureTensorO (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (sS sT 
     rw [← Finset.sum_coe_sort e.support]
     exact (Equiv.sum_comp q.symm (fun u : e.support => e u.1 • g u.1)).symm
   simp only [comb]
-  rw [h1, h1]
-  exact key
+  rwa [h1, h1]
 
 theorem fock {χS χT : (AE D)ˣ →* Circle} {om : Om S T} (hθ : IsInfFam θ) (hW : IsWeilDatumO ψ S T χS χT om) (sS sT BS BT)
     {d o e : WO S T →₀ ℂ} {g : WO S T → ℂ} {s : ℂ} (hd : IsFinComb d) (ho : IsFinComb o) (he : IsFinComb e)
@@ -818,8 +811,7 @@ theorem comb_o_ne_zero (hψ : IsStdChar D ψ (-1)) (hM : IsSelfDualC S M) (hM' :
         refine ⟨fun hm => GlobalTheory.PlaceModel.latO_le_top _ hm, fun hm => ?_⟩
         have h2 := (GlobalTheory.PlaceModel.idem_smul_mem hε s1 he1 hm).1
         have h3 : L.q.e • t = t := (GlobalTheory.PlaceModel.mem_half S T).1 ((GlobalTheory.PlaceModel.isHalf_iff S T).1 ht)
-        rw [h3] at h2
-        exact h2
+        rwa [h3] at h2
       · rw [ite_eq_right ht, ite_eq_right fun hh => ht hh.2]
     change T' (GlobalTheory.LocMod.Witness.ext p L.FS L.FT Φ₀) = h
     rw [e1]
@@ -962,8 +954,7 @@ theorem part_int (q : GlobalTheory.FinPl.SplitPt D k) {π' : Datum.EAf D →+* k
   have h1 : q.pr q.e = 1 := by
     have a := (ofSplit q).ι_π 1
     have b := (ofSplit q).π_ι ((ofSplit q).π 1)
-    rw [a, mul_one, map_one] at b
-    exact b
+    rwa [a, mul_one, map_one] at b
   refine (hint _).2 ⟨?_, ?_⟩
   · rw [← mul_assoc, sub_mul, one_mul, ← map_mul, hee, sub_self, zero_mul]
     exact zero_mem _
@@ -1165,8 +1156,7 @@ theorem moved_top_datum_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) 
   subst hee
   refine ⟨_, ?_, hWe.om_pres _ _ hcth, (one_smul _ _).symm⟩
   have hfun : prodDat (_root_.GlobalTheory.TopLocData.localLatticeAtPlace hψ hGP h hM hLT) = _ := funext fun x => (_root_.GlobalTheory.TopDatumTheta.datum_eq_alt hPk hGR h x).symm
-  rw [hfun]
-  exact hmove
+  rwa [hfun]
 end GlobalTheory.TopDatumTheta
 end
 end

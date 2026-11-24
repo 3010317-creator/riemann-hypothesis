@@ -134,8 +134,7 @@ theorem algChar_eq_arg_mul_abs : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     hfib (fun φ => φ k ^ n φ), ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun w _ => ?_
   have hz : w.embedding k ≠ 0 := (map_ne_zero _).2 hk
-  simp only [ComplexEmbedding.conjugate_coe_eq]
-  exact place_factor _ hz _ _ _ (hn _)
+  simpa only [ComplexEmbedding.conjugate_coe_eq] using place_factor _ hz _ _ _ (hn _)
 
 end GlobalTheory.Div.CMAlgChar
 end -- clump:auto
@@ -214,8 +213,7 @@ theorem exists_algChar_unr : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       have hu1 : (u : 𝓞 E) - 1 ∈ 𝔪 := (GlobalTheory.RayChar.mem_iff_at hm _).2 fun v hv => by
         rw [GlobalTheory.RayChar.at'_sub_one]
         have h2 := (GlobalTheory.RayChar.mem_congrIdl hm).1 hk.2 v hv
-        rw [GlobalTheory.RayChar.cmp_diag, ← hu] at h2
-        exact h2
+        rwa [GlobalTheory.RayChar.cmp_diag, ← hu] at h2
       show (1 : ℂˣ) = ψ (Neutral.B1.diagUnits E k)
       rw [hψd, Finset.prod_empty, mul_one]
       refine (Units.ext ?_).symm

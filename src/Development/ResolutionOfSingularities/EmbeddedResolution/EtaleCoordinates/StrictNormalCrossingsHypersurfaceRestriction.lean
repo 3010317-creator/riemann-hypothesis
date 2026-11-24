@@ -295,9 +295,7 @@ private theorem ι_appLE_apply_topIso_hom {X₁ Y₁ : Scheme.{u}} (V : X₁.Ope
     (e2 : W ≤ g ⁻¹ᵁ (⊤ : Y₁.Opens)) (x : Γ(Y₁, ⊤)) :
     (V.ι.appLE V W e1).hom (V.topIso.hom.hom (g.appTop.hom x))
       = (g.appLE ⊤ W e2).hom x := by
-  have htop : (⊤ : V.toScheme.Opens) ≤ V.ι ⁻¹ᵁ V := by
-    intro y _
-    exact y.2
+  have htop : (⊤ : V.toScheme.Opens) ≤ V.ι ⁻¹ᵁ V := fun y _ => y.2
   have ha : V.ι.appLE V W e1
       = V.topIso.inv ≫ V.toScheme.presheaf.map (homOfLE (le_top : W ≤ ⊤)).op := by
     rw [appLE_eq_appLE_comp_presheaf_map V.ι V e1 htop le_top, ι_appLE_self_top_eq_topIso_inv V htop]
@@ -334,9 +332,7 @@ private theorem restrictIdeal_eq_coordIdeal_of_isAffineOpen_ideal_eq_span {X₁ 
     exact _root_.AlgebraicGeometry.Scheme.IdealSheafData.ofIdealTop_ideal_top _
   refine Scheme.IdealSheafData.ext (funext ?_)
   intro W
-  have htop : (⊤ : U.toScheme.Opens) ≤ U.ι ⁻¹ᵁ U := by
-    intro y _
-    exact y.2
+  have htop : (⊤ : U.toScheme.Opens) ≤ U.ι ⁻¹ᵁ U := fun y _ => y.2
   have eW : (W.1 : U.toScheme.Opens) ≤ U.ι ⁻¹ᵁ U := le_trans le_top htop
   have eW' : (W.1 : U.toScheme.Opens) ≤ c.map ⁻¹ᵁ (⊤ : (affineSpaceFin K m).Opens) := by
     intro y _
@@ -346,8 +342,7 @@ private theorem restrictIdeal_eq_coordIdeal_of_isAffineOpen_ideal_eq_span {X₁ 
     (coordSubspaceIdeal K m S).comap_ideal_eq_map_appLE c.map
       ⟨⊤, isAffineOpen_top (affineSpaceFin K m)⟩ W eW',
     h, hcoord, Ideal.map_span, Ideal.map_span, ← Set.image_comp, ← Set.image_comp]
-  refine congrArg Ideal.span (Set.image_congr fun j _ => ?_)
-  exact ι_appLE_coord c eW eW' j
+  exact congrArg Ideal.span (Set.image_congr fun j _ => (ι_appLE_coord c eW eW' j))
 
 private theorem ideal_ne_top_of_mem_support {Y : Scheme.{u}} (I : Y.IdealSheafData) {V : Y.Opens}
     (hV : IsAffineOpen V) {x : Y} (hxV : x ∈ V) (hx : x ∈ I.support) :
@@ -358,8 +353,7 @@ private theorem ideal_ne_top_of_mem_support {Y : Scheme.{u}} (I : Y.IdealSheafDa
     exact hxr
   have hyV : y ∈ I.subschemeι ⁻¹ᵁ V := by
     show I.subschemeι.base y ∈ V
-    rw [hy]
-    exact hxV
+    rwa [hy]
   have hnt : Nontrivial Γ(I.subscheme, I.subschemeι ⁻¹ᵁ V) :=
     RingHom.domain_nontrivial (I.subscheme.presheaf.germ (I.subschemeι ⁻¹ᵁ V) y hyV).hom
   intro htop
@@ -377,9 +371,7 @@ private theorem ideal_eq_top_of_restrictIdeal_eq_top {Y : Scheme.{u}} (I : Y.Ide
     {V : Y.Opens} (hV : IsAffineOpen V) (h : restrictIdeal I V = ⊤) :
     I.ideal ⟨V, hV⟩ = ⊤ := by
   have hVaff : IsAffine V.toScheme := hV
-  have htop : (⊤ : V.toScheme.Opens) ≤ V.ι ⁻¹ᵁ V := by
-    intro y _
-    exact y.2
+  have htop : (⊤ : V.toScheme.Opens) ≤ V.ι ⁻¹ᵁ V := fun y _ => y.2
   have key := I.comap_ideal_eq_map_appLE V.ι ⟨V, hV⟩ ⟨⊤, isAffineOpen_top V.toScheme⟩ htop
   rw [ι_appLE_self_top_eq_topIso_inv V htop] at key
   have h' : I.comap V.ι = ⊤ := h
@@ -493,8 +485,7 @@ private theorem mem_map_of_mul_mem_of_etale {Pr A : Type u} [CommRing Pr] [CommR
   have hregA : IsSMulRegular (A ⧸ Ideal.map f I) ((Ideal.Quotient.mk I) w) := hreg.of_flat
   have hsmul : (Ideal.Quotient.mk I) w • (Ideal.Quotient.mk (Ideal.map f I)) x
       = (Ideal.Quotient.mk I) w • (0 : A ⧸ Ideal.map f I) := by
-    rw [smul_zero]
-    exact hy
+    rwa [smul_zero]
   exact Ideal.Quotient.eq_zero_iff_mem.mp (hregA hsmul)
 
 private theorem span_coord_eq_top_of_mem_span {X₁ : Scheme.{u}} {K : Type u} [Field K]
@@ -507,9 +498,7 @@ private theorem span_coord_eq_top_of_mem_span {X₁ : Scheme.{u}} {K : Type u} [
       (Ideal.span {(MvPolynomial.X (ULift.up j) : MvPolynomial (ULift.{u} (Fin m)) K)})
       = Ideal.span {c.coord j} := by
     rw [Ideal.map_span, Set.image_singleton, c.coordRingHom_X]
-  have hju : (ULift.up j : ULift.{u} (Fin m)) ≠ ULift.up s := by
-    intro h
-    exact hjs (congrArg ULift.down h)
+  have hju : (ULift.up j : ULift.{u} (Fin m)) ≠ ULift.up s := fun h => hjs (congrArg ULift.down h)
   have hu : ∀ a b : MvPolynomial (ULift.{u} (Fin m)) K ⧸
         Ideal.span {(MvPolynomial.X (ULift.up j) : MvPolynomial (ULift.{u} (Fin m)) K)},
       (Ideal.Quotient.mk
@@ -522,8 +511,7 @@ private theorem span_coord_eq_top_of_mem_span {X₁ : Scheme.{u}} {K : Type u} [
   have hx' : c.coordRingHom (MvPolynomial.X (ULift.up s)) * 1
       ∈ Ideal.map c.coordRingHom
         (Ideal.span {(MvPolynomial.X (ULift.up j) : MvPolynomial (ULift.{u} (Fin m)) K)}) := by
-    rw [hmapspan, c.coordRingHom_X, mul_one]
-    exact hmem
+    rwa [hmapspan, c.coordRingHom_X, mul_one]
   have hfin := mem_map_of_mul_mem_of_etale (c.coordRingHom_etale hV)
     (Ideal.span {(MvPolynomial.X (ULift.up j) : MvPolynomial (ULift.{u} (Fin m)) K)})
     (MvPolynomial.X (ULift.up s)) hu 1 hx'
@@ -580,8 +568,7 @@ theorem hasStrictNormalCrossingsWith_ker_cons_of_hasLocalCoordsOnSmoothHypersurf
       | some t₁ =>
         have hne : t₀ ≠ t₁ := by
           intro hteq
-          have h00 := hinj' 0 hlen0 (i + 1) hleni t₀ hop (by rw [hop1, hteq])
-          exact absurd h00 (by omega)
+          exact absurd (hinj' 0 hlen0 (i + 1) hleni t₀ hop (by rw [hop1, hteq])) (by omega)
         have hHU' : restrictIdeal H U' = c'.coordIdeal {t₀} := by
           simpa using hsome' 0 hlen0 t₀ hop
         have hNU' : restrictIdeal (N[i]'hi) U' = c'.coordIdeal {t₁} := by
@@ -614,8 +601,7 @@ theorem hasStrictNormalCrossingsWith_ker_cons_of_hasLocalCoordsOnSmoothHypersurf
         have heq : j₀ = t := by
           rw [ha0] at hti
           exact Option.some.inj hti
-        rw [has j'] at htj
-        rw [← heq] at htj
+        rw [has j', ← heq] at htj
         exact absurd htj (hclash j' (by simpa using hj))
     | succ i' =>
       cases j with
@@ -623,8 +609,7 @@ theorem hasStrictNormalCrossingsWith_ker_cons_of_hasLocalCoordsOnSmoothHypersurf
         have heq : j₀ = t := by
           rw [ha0] at htj
           exact Option.some.inj htj
-        rw [has i'] at hti
-        rw [← heq] at hti
+        rw [has i', ← heq] at hti
         exact absurd hti (hclash i' (by simpa using hi))
       | succ j' =>
         rw [has i'] at hti
@@ -684,8 +669,7 @@ private theorem algebraMap_mem_nonZeroDivisors_of_flat {R A : Type u} [CommRing 
   have key : ∀ x : A, algebraMap R A r * x = 0 → x = 0 := by
     intro x hx
     have hsm : r • x = r • (0 : A) := by
-      rw [smul_zero, Algebra.smul_def]
-      exact hx
+      rwa [smul_zero, Algebra.smul_def]
     exact Module.Flat.isSMulRegular_of_nonZeroDivisors hr hsm
   rw [mem_nonZeroDivisors_iff]
   exact ⟨key, fun x hx => key x (by rw [mul_comm]; exact hx)⟩
@@ -756,8 +740,7 @@ theorem algHom_map_derivation_eq_zero (π : R →ₐ[k] S) (h : R)
     ∀ r : R, π r = 0 → π (D r) = 0 := by
   intro r hr
   have hrk : r ∈ Ideal.span ({h} : Set R) := by
-    rw [← hker]
-    exact hr
+    rwa [← hker]
   have h2 : D r ∈ Ideal.span ({h} : Set R) := derivation_mapsTo_span_self D h hD r hrk
   rw [← hker] at h2
   have h3 : π.toRingHom (D r) = 0 := RingHom.mem_ker.mp h2
@@ -783,13 +766,11 @@ variable {R : Type*} [CommRing R] {ι : Type*} [Fintype ι] [DecidableEq ι] {n 
 private theorem det_eq_det_submatrix_succ (M : Matrix (Fin (n + 1)) (Fin (n + 1)) R)
     (h : ∀ b : Fin (n + 1), M 0 b = if b = 0 then (1 : R) else 0) :
     M.det = (M.submatrix Fin.succ Fin.succ).det := by
-  rw [Matrix.det_succ_row_zero]
-  rw [Finset.sum_eq_single (0 : Fin (n + 1))]
+  rw [Matrix.det_succ_row_zero, Finset.sum_eq_single (0 : Fin (n + 1))]
   · simp [h, Fin.succAbove_zero]
   · intro b _ hb
     simp [h b, hb]
-  · intro hb
-    exact absurd (Finset.mem_univ (0 : Fin (n + 1))) hb
+  · exact fun hb => absurd (Finset.mem_univ (0 : Fin (n + 1))) hb
 
 theorem det_eq_det_submatrix_of_row_eq_single (e : ι ≃ Fin (n + 1)) (M : Matrix ι ι R)
     (h : ∀ b : ι, M (e.symm 0) b = if b = e.symm 0 then (1 : R) else 0) :
@@ -860,8 +841,7 @@ private theorem appLE_preimage_naturality {Y Q : Scheme.{u}} (f : Y ⟶ Q) {A B 
       = f.appLE A (f ⁻¹ᵁ A) le_rfl ≫ Y.presheaf.map (homOfLE h').op := by
     rw [Scheme.Hom.map_appLE, Scheme.Hom.appLE_map]
   have h2 := congrArg (fun φ : Γ(Q, A) ⟶ Γ(Y, f ⁻¹ᵁ B) => CommRingCat.Hom.hom φ z) key
-  simp only [CommRingCat.hom_comp, RingHom.coe_comp, Function.comp_apply] at h2
-  exact h2
+  simpa only [CommRingCat.hom_comp, RingHom.coe_comp, Function.comp_apply] using h2
 
 section
 
@@ -919,8 +899,7 @@ theorem det_derivation_notMem_comap_of_eq_one_or_mem {R S : Type*} [CommRing R] 
     · exact Or.inr hb
   have h3 := det_derivation_mul_sub_mem_of_eq_one_or_mem (k := k) δ' (fun b : ι => ((v b : S))) x m hv1
   have h4 : (Matrix.of fun a b : ι => δ' a (x b)).det * ∏ b : ι, ((v b : S)) ∈ m := by
-    have h5 := Ideal.sub_mem m hcon h3
-    simpa using h5
+    simpa using Ideal.sub_mem m hcon h3
   have hp : IsUnit (∏ b : ι, ((v b : S))) :=
     Finset.prod_induction (fun b : ι => ((v b : S))) IsUnit (fun r s hr hs => hr.mul hs)
       isUnit_one fun b _ => (v b).isUnit
@@ -985,8 +964,7 @@ private theorem exists_basicOpen_subschemeι_preimage_le {Q : Scheme.{u}} (H : Q
     rw [← hf]
     simp
   refine ⟨f, ?_, ?_, Q.basicOpen_le f⟩
-  · rw [hpre]
-    exact hyg
+  · rwa [hpre]
   · rw [hpre]
     exact le_trans hgle inf_le_left
 
@@ -1029,8 +1007,7 @@ private theorem exists_equiv_subtype_ne_compatible {n m : ℕ} (hnm : m + 1 = n)
     refine ⟨b, ?_⟩
     intro i hi hγ
     have : i₀ = i := hinjγ i₀ i hi₀ hi _ hγ₀ hγ
-    rw [← this]
-    exact hb
+    rwa [← this]
   choose g hg using hQ
   have hginj : Function.Injective g := by
     intro j₁ j₂ hgj
@@ -1050,8 +1027,7 @@ private theorem exists_equiv_subtype_ne_compatible {n m : ℕ} (hnm : m + 1 = n)
       ≃ {b : Fin m // ∃ jj, g jj = b}, ∀ jj, ((e1 jj : {b : Fin m // ∃ jj, g jj = b}) : Fin m)
         = g jj := by
     refine ⟨Equiv.ofBijective (fun jj => ⟨g jj, ⟨jj, rfl⟩⟩) ⟨?_, ?_⟩, fun jj => rfl⟩
-    · intro a b hab
-      exact hginj (congrArg Subtype.val hab)
+    · exact fun a b hab => hginj (congrArg Subtype.val hab)
     · rintro ⟨b, jj, rfl⟩
       exact ⟨jj, rfl⟩
   obtain ⟨e1, he1val⟩ := he1
@@ -1096,13 +1072,10 @@ private theorem exists_equiv_subtype_ne_compatible {n m : ℕ} (hnm : m + 1 = n)
       ((e1.sumCongr e2) ((Equiv.sumCompl (fun jj : {j : Fin n // j ≠ j₀} =>
         ∃ i, i < len ∧ γ i = some ((jj : Fin n)))).symm jj)) = g ⟨jj, hQ⟩
     rw [hsymm]
-    show ((e1 ⟨jj, hQ⟩ : {b : Fin m // ∃ jj, g jj = b}) : Fin m) = g ⟨jj, hQ⟩
     exact he1val ⟨jj, hQ⟩
   refine ⟨σ.symm, ?_⟩
   intro i hi j b hγ hb
-  have hjne : j ≠ j₀ := by
-    intro hcon
-    exact hj₀ i hi (by rw [hγ, hcon])
+  have hjne : j ≠ j₀ := fun hcon => hj₀ i hi (by rw [hγ, hcon])
   have hQj : ∃ i', i' < len ∧ γ i' = some (((⟨j, hjne⟩ : {j : Fin n // j ≠ j₀}) : Fin n)) :=
     ⟨i, hi, hγ⟩
   have hgb : g ⟨⟨j, hjne⟩, hQj⟩ = b :=
@@ -1150,8 +1123,7 @@ private theorem appLE_subschemeι_chartPartialDeriv_complOrderEmb {p : X ⟶ Spe
   have hcomm : ∀ a : k,
       (H.subschemeι.appLE U (H.subschemeι ⁻¹ᵁ U) le_rfl).hom (algebraMap k Γ(X, U) a)
         = algebraMap k Γ(H.subscheme, H.subschemeι ⁻¹ᵁ U) a := by
-    intro a
-    exact sectionsAlgebraMap_appLE_apply k p H.subschemeι U (H.subschemeι ⁻¹ᵁ U) le_rfl a
+    exact fun a => sectionsAlgebraMap_appLE_apply k p H.subschemeι U (H.subschemeι ⁻¹ᵁ U) le_rfl a
   let π : Γ(X, U) →ₐ[k] Γ(H.subscheme, H.subschemeι ⁻¹ᵁ U) :=
     { (H.subschemeι.appLE U (H.subschemeι ⁻¹ᵁ U) le_rfl).hom with commutes' := hcomm }
   have hπsurj : Function.Surjective π := by
@@ -1159,8 +1131,7 @@ private theorem appLE_subschemeι_chartPartialDeriv_complOrderEmb {p : X ⟶ Spe
     obtain ⟨w, hw⟩ := Scheme.IdealSheafData.subschemeι_app_surjective H ⟨U, hU⟩ z
     refine ⟨w, ?_⟩
     show (H.subschemeι.appLE U (H.subschemeι ⁻¹ᵁ U) le_rfl).hom w = z
-    rw [Scheme.Hom.appLE_eq_app]
-    exact hw
+    rwa [Scheme.Hom.appLE_eq_app]
   have hker : RingHom.ker π.toRingHom = Ideal.span ({c.coord j₀} : Set Γ(X, U)) := by
     have h1 : RingHom.ker (Scheme.Hom.app H.subschemeι U).hom = H.ideal ⟨U, hU⟩ :=
       Scheme.IdealSheafData.ker_subschemeι_app H ⟨U, hU⟩
@@ -1173,15 +1144,13 @@ private theorem appLE_subschemeι_chartPartialDeriv_complOrderEmb {p : X ⟶ Spe
     show RingHom.ker (H.subschemeι.appLE U (H.subschemeι ⁻¹ᵁ U) le_rfl).hom = _
     rw [Scheme.Hom.appLE_eq_app, h1, h2, h3]
   have hne : complOrderEmb n {j₀} i ≠ j₀ := by
-    have hnm := complOrderEmb_notMem n {j₀} i
-    simpa using hnm
+    simpa using complOrderEmb_notMem n {j₀} i
   have hD0 : (EtaleCoordinates.partialDeriv k (ULift.{u} (Fin n)) Γ(X, U)
       (ULift.up (complOrderEmb n {j₀} i))) (c.coord j₀) = 0 := by
     rw [← c.etaleCoordinates_coord j₀]
     refine EtaleCoordinates.partialDeriv_coord_of_ne k (ULift.{u} (Fin n)) Γ(X, U)
       (ULift.up (complOrderEmb n {j₀} i)) (ULift.up j₀) ?_
-    intro hcon
-    exact hne (congrArg ULift.down hcon)
+    exact fun hcon => hne (congrArg ULift.down hcon)
   set δ := EtaleCoordinates.partialDeriv k (ULift.{u} (Fin n)) Γ(X, U)
       (ULift.up (complOrderEmb n {j₀} i)) with hδdef
   set δ' := liftDerivationOfKerEqSpan π hπsurj (c.coord j₀) hker δ hD0 with hδ'def
@@ -1215,11 +1184,8 @@ private theorem appLE_subschemeι_chartPartialDeriv_complOrderEmb {p : X ⟶ Spe
         rw [hδdef, ← c.etaleCoordinates_coord (complOrderEmb n {j₀} b.down)]
         refine EtaleCoordinates.partialDeriv_coord_of_ne k (ULift.{u} (Fin n)) Γ(X, U)
           (ULift.up (complOrderEmb n {j₀} i)) (ULift.up (complOrderEmb n {j₀} b.down)) ?_
-        intro hcon
-        exact hb ((complOrderEmb n {j₀}).injective (congrArg ULift.down hcon)).symm
-      have h2 : ¬ (b = ULift.up i) := by
-        intro hcon
-        exact hb (congrArg ULift.down hcon)
+        exact fun hcon => hb ((complOrderEmb n {j₀}).injective (congrArg ULift.down hcon)).symm
+      have h2 : ¬ (b = ULift.up i) := fun hcon => hb (congrArg ULift.down hcon)
       rw [h1, ite_eq_right h2]
       simp
   have hδ'eq : δ' = EtaleCoordinates.partialDeriv k

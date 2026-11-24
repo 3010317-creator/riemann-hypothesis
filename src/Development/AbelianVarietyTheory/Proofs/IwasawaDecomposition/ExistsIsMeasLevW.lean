@@ -129,8 +129,7 @@ theorem exists_isMeasLevW (D : D7) (V : HSp D) (hV : V.SigOK) (K : Subgroup (GL 
     convert h1 using 1
     ext k
     constructor
-    · intro hk
-      exact ⟨j k, ⟨hinf k, hk⟩, congrArg Prod.snd (hj0 k)⟩
+    · exact fun hk => ⟨j k, ⟨hinf k, hk⟩, congrArg Prod.snd (hj0 k)⟩
     · rintro ⟨h, hh, rfl⟩
       exact (hK h).2 hh.2
   let e : GA D V ≃ₜ* (∀ i, UpqT (V.sig (tauE D i)).1 (V.sig (tauE D i)).2) ×
@@ -177,10 +176,8 @@ theorem exists_isMeasLevW (D : D7) (V : HSp D) (hV : V.SigOK) (K : Subgroup (GL 
     obtain ⟨C', h3, -⟩ := (hA i).2.2 _ (hA' i)
     have : b = u i * e1 (e0 h).1 i * (u i)⁻¹ := by
       apply hinj
-      have h5 := congrArg (· * C') (hbe.trans h2.symm)
-      simpa only [Matrix.mul_assoc, h3, Matrix.mul_one] using h5
+      simpa only [Matrix.mul_assoc, h3, Matrix.mul_one] using congrArg (· * C') (hbe.trans h2.symm)
     exact this ▸ hb
-  · intro hb
-    exact ⟨_, hb, h2⟩
+  · exact fun hb => ⟨_, hb, h2⟩
 
 end GlobalTheory.LevelMeasure

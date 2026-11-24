@@ -96,8 +96,7 @@ theorem reindex_inv_mul_diag_mem_HK {κ : Type} [CommRing κ] {a n r t m : ℕ} 
     intro i j hij
     apply hy
     have hij' : Formalism.L2.Col.coarse r (List.replicate m t) j.val < Formalism.L2.Col.coarse r (List.replicate m t) i.val := hij
-    rw [coarse_eq_blkOf hn, coarse_eq_blkOf hn] at hij'
-    exact hij'
+    rwa [coarse_eq_blkOf hn, coarse_eq_blkOf hn] at hij'
   have hy2 : y ∈ Formalism.L2.DIV.blockTri (Formalism.L2.DIV.blk2 r) := Formalism.L2.DIV.blockTri_blkOf_le r t hy
   refine Formalism.L2.Col.mem_HK.2 ⟨Subgroup.mul_mem _ (Subgroup.inv_mem _ hy')
     (Formalism.L2.Col.diagEmb_mem_blockUT hrn _ _), fun i j hi hj => ?_⟩
@@ -131,8 +130,7 @@ theorem reindex_inv_mem_HQ {κ : Type} [CommRing κ] {a n r b : ℕ} (h : a = n)
   intro i j hij
   apply hy
   have hij' : Formalism.L2.Col.coarse r [b] j.val < Formalism.L2.Col.coarse r [b] i.val := hij
-  rw [coarseBlockIndex_eq_twoBlock hn, coarseBlockIndex_eq_twoBlock hn] at hij'
-  exact hij'
+  rwa [coarseBlockIndex_eq_twoBlock hn, coarseBlockIndex_eq_twoBlock hn] at hij'
 
 end GlobalTheory.Mem.R3.RowDeco
 
@@ -177,8 +175,7 @@ theorem inv_redG_mul_g0Hat_mem_grp : ∀ (X : Stages) (px : PreX X.B.toPre) (I :
     have e : I.Q (ixOf I U t) = Formalism.L2.Col.QE I.sel (t.1 : Formalism.L2.DIV.Chr _ _ _) := by
       simp only [ColIn.Q, tup_ixOf]
     have hQt : w.1 ∈ L.Q t := by
-      rw [hL.Q t, e]
-      exact hwQ
+      rwa [hL.Q t, e]
     have hQt' : w.1 ∈ (L.datXt t).Q := hQt
     have hy := Formalism.L2.DIV.parLev_q hQ hQt'
     rw [Formalism.L2.Col.rowTyKK, Formalism.L2.Col.LevFam.glue_of_not _ _ w hw]

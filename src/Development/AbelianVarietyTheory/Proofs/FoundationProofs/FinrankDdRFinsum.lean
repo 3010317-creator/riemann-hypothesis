@@ -295,7 +295,6 @@ theorem finrank_DdR_local {l : ℕ} [Fact l.Prime] (P : LocPrime l) (K LL : Loc.
     rw [hρ]
     exact Nat.mul_pos Module.finrank_pos hm
   have hD : FiniteDimensional ↥LL.1 ↥(DdR (P.PD K) ρ) := FiniteDimensional.of_finrank_pos hpos
-  have hc := card_emb _ _ h
-  exact finrank_DdR_finsum (P.PD K) ρ hc a
+  exact finrank_DdR_finsum (P.PD K) ρ (card_emb _ _ h) a
 
 end GlobalTheory.DeRhamSplit

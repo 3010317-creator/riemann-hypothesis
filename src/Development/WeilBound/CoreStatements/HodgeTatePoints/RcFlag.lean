@@ -82,8 +82,7 @@ lemma stepOrder_eq (M : Submodule R (N → C)) (ψ : N →ₗ[F] Q) (hψ : Funct
 
 lemma span_inj {t : Q} (ht : t ≠ 0) :
     Function.Injective (LinearMap.toSpanSingleton F Q t) := by
-  intro a b h
-  exact smul_left_injective F ht (by simpa using h)
+  exact fun a b h => smul_left_injective F ht (by simpa using h)
 
 lemma flagSub_succ {n : ℕ} (b : Module.Basis (Fin n) F N) (i : Fin n) :
     flagSub b ((i : ℕ) + 1) = Submodule.span F {b i} ⊔ flagSub b i := by
@@ -132,8 +131,7 @@ lemma colen_trivial [IsAlgClosed C] [CharZero C] (hv : v.Integers R) {T : Type} 
     rw [← h3]
     exact hv.map_le_one s
   refine le_antisymm hs' ?_
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have h0 : (0 : NNReal) ≤ v (B 0 0) := by positivity
   have := mul_lt_one_of_nonneg_of_lt_one_right hr' h0 hlt
   rw [e2] at this
@@ -190,8 +188,7 @@ lemma flag_ind [IsAlgClosed C] [CharZero C] (hv : v.Integers R) [Fintype F] [Dec
     have hbi : ψ (b ii) ≠ 0 := by
       intro h0
       apply notMem_flagSub b ii
-      rw [hii, ← hker]
-      exact h0
+      rwa [hii, ← hker]
     let L : Submodule F Q := Submodule.span F {ψ (b ii)}
     haveI : Fintype (Q ⧸ L) := Fintype.ofFinite _
     let ψ' : N →ₗ[F] Q ⧸ L := L.mkQ.comp ψ
@@ -310,14 +307,12 @@ theorem flag_colen : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClo
     have he : AA.carrier.comap (LinearMap.funLeft R C (LinearMap.id : N →ₗ[F] N)) = AA.carrier := by
       ext h
       rfl
-    rw [he]
-    exact hN
+    rwa [he]
   have key := flag_ind hv AA b cs hcs n 0 (by omega) N LinearMap.id (fun x => ⟨x, rfl⟩) h0 cN hid
   have hu : Finset.univ.filter (fun j : Fin n => 0 ≤ (j : ℕ)) = Finset.univ := by
     ext j
     simp
   rw [hu] at key
-  rw [← hf]
-  exact key
+  rwa [← hf]
 
 end PositivityTheory.HtPt.Rc

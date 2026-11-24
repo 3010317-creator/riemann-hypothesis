@@ -182,13 +182,11 @@ private theorem umg_uC {φ : Sm E n} (h : Umg φ) (u : UC E n) : Umg (uC E n u �
   · obtain ⟨N, hN⟩ := h.growth
     refine ⟨N, fun v => ?_⟩
     have := hN (v * u)
-    rw [map_mul] at this
-    exact this
+    rwa [map_mul] at this
 
 private theorem umg_smul {φ : Sm E n} (h : Umg φ) (c : ℂ) : Umg (c • φ) := by
   have := umg_uC h (algebraMap ℂ _ c)
-  rw [AlgHom.commutes] at this
-  exact this
+  rwa [AlgHom.commutes] at this
 
 private theorem umg_rt {φ : Sm E n} (h : Umg φ) (x : GA E n) : Umg (rt E n x φ) := by
   refine ⟨fun γ g => ?_, lev_rt x φ h.level, ?_⟩

@@ -206,8 +206,7 @@ theorem exists_auxiliaryWeights_at_runWeights : ∀ (D : D7) (B : WeightFamilies
       (hFP τ) (hgP τ) ?_ ?_
     · intro i hi
       have hl := hLP τ i
-      rw [ite_eq_left hi] at hl
-      exact hl
+      rwa [ite_eq_left hi] at hl
     · intro i hi
       have hn : ¬ (i.1 + 1 < (D.R.sigW j).1) := by omega
       have hl := hLP τ i
@@ -218,8 +217,7 @@ theorem exists_auxiliaryWeights_at_runWeights : ∀ (D : D7) (B : WeightFamilies
         (WeightFamilies.dimY D j) (by positivity) h40z (by exact_mod_cast hcT) (hbigP τ i hi)
       have e : (ka.aP τ i : ℤ) - ((WeightFamilies.dimY D j : ℤ) + 2) * nW - 2 * D.R.r =
           ka.aP τ i - (((WeightFamilies.dimY D j : ℤ) + 2) * nW + 2 * D.R.r) := by ring
-      rw [hl, e, hTp]
-      exact hk
+      rwa [hl, e, hTp]
   have blockM : ∀ τ, ∃ w : Fin (D.R.sigW j).2 → ℕ, Antitone w ∧
       ∀ i, w i + wF.aM τ i = (WeightFamilies.dimY D j + 4) * wL.aM τ i := by
     intro τ
@@ -227,8 +225,7 @@ theorem exists_auxiliaryWeights_at_runWeights : ∀ (D : D7) (B : WeightFamilies
       (hFM τ) (hgM τ) ?_ ?_
     · intro i hi
       have hl := hLM τ i
-      rw [ite_eq_left hi] at hl
-      exact hl
+      rwa [ite_eq_left hi] at hl
     · intro i hi
       have hn : ¬ (i.1 + 1 < (D.R.sigW j).2) := by omega
       have hl := hLM τ i
@@ -238,8 +235,7 @@ theorem exists_auxiliaryWeights_at_runWeights : ∀ (D : D7) (B : WeightFamilies
       have hk := le_mul_fdiv_sub_of_sq_le (ka.aM τ i) 0 Tn (WeightFamilies.dimY D j) (by positivity) h40z
         (by positivity) (hbigM τ i hi)
       rw [sub_zero] at hk
-      rw [hl, hTp]
-      exact hk
+      rwa [hl, hTp]
   choose bP hbPa hbPs using blockP
   choose bM hbMa hbMs using blockM
   have hnW : Even nW := hLn ▸ wL.n_even
@@ -335,8 +331,7 @@ theorem noBase : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2 →
     have e1 : WeightAlgebra.DF w + 2 ≤ D.host.g 1 := le_trans hDF (min_le_right _ _)
     nlinarith [Nat.mul_le_mul e0 e1]
   obtain ⟨f, ⟨x, P, hP, hfP⟩, hf0⟩ := _root_.GlobalTheory.noCommonZero_of_chartIndep hC D T h j hj w hr hlast hM hα σ hσ k x0 hx0
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   obtain ⟨N, cf, g, hsum⟩ := Submodule.mem_span_set'.1 (mem_span_short D T h large₂ j hj w hrows hL hr P hP)
   choose gi hgi using fun i => (existsUnique_thRule _ _ _ hT x (g i).2.1).exists
   have hlin := (_root_.GlobalTheory.ThetaRule.isThRule_linear_and_congr hC D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c (T.nab j) hnab (wtA w) w.n).1
@@ -434,9 +429,7 @@ theorem exists_mem_Mlat_ne_zero {D : D7} {B : WeightFamilies.Prov D} {P : Moduli
   set G : B.Cusp j w := ∑ i, n i • F i with hG
   have hGmem : G ∈ X.thAll w := Submodule.sum_mem _ (fun i _ => nsmul_mem (hF i) _)
   have hsG : s • G = ((s : B.KO)) • G := (algebraMap_smul B.KO s G).symm
-  have hWW : s • G ∈ X.WWc s w := by
-    show s • G ∈ (X.thAll w).map (s • (LinearMap.id : B.Cusp j w →ₗ[𝓞 B.KO] B.Cusp j w))
-    exact Submodule.mem_map.2 ⟨G, hGmem, by simp⟩
+  have hWW : s • G ∈ X.WWc s w := Submodule.mem_map.2 ⟨G, hGmem, by simp⟩
   have hρG : ∀ c, ρ c G = ∑ i, (n i : ℂ) * ρ c (F i) := by
     intro c
     let φ : B.Cusp j w →+ ℂ := AddMonoidHom.mk' (ρ c) (hadd c)

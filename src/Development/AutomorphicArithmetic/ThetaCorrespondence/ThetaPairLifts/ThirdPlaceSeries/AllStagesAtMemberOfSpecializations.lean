@@ -284,8 +284,7 @@ theorem sa_of_prN_alt_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInput
     hA (Dof x) hLoc (cfOf x) jE (repOf x.r.Y) hElem.int hTy (hRw P x) hray
   have hG : GrpTrue (nOfLay x L hZ hη) f := by
     show TypesTrue L.ntypes f.P f.W
-    rw [← e1, ← e2]
-    exact hTT
+    rwa [← e1, ← e2]
   obtain ⟨hGA, hCen⟩ := GlobalTheory.T.heckeGaloisStage_fits_of_same_centre_actions x (nOfLay x L hZ hη) hG hPlG hplGw hcA hcM
   obtain ⟨x', hx', hrep⟩ := GlobalTheory.T.exists_transported_state_heckeGaloisStage x (nOfLay x L hZ hη) hG hGA hCen
   obtain ⟨Pq, hPq1, hPq2⟩ := exists_pq_sel B w.I w.ok
@@ -301,8 +300,7 @@ theorem sa_of_prN_alt_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInput
   obtain ⟨cg⟩ := hcg
   refine ⟨⟨⟨x.o.η, x.o.hη, x.o.V, x.o.S, nOfLay x L hZ hη, x.o.G⟩, fits', G_eq', etaF', bk', m', copy', coh', s', r', pin'⟩, ⟨⟨⟨⟨h.fr, h.jLL, h.embLL⟩, jE, hfr, A', cg, hau, ?_, fr, hfrj, hWd, hRw', hEl'.1, hEl'.2.1, hlab, hζ, hEl'.2.2.1⟩,
     Pq, hPq1, hPq2⟩⟩, ⟨rfl, HEq.rfl, hloc.symm, hO1.symm, hO2.symm, hO3.symm, hO4.symm, heq_of_eq hPlG.symm⟩⟩
-  rw [e]
-  exact hrow
+  rwa [e]
 end GlobalTheory.HeightCounting.Up
 end
 end
@@ -740,8 +738,7 @@ theorem galPol_lpTw_mem_lifts_eventually : ∀ hL : _root_.UpperTheory.Zero.LLC.
     obtain ⟨σ, hσ⟩ := exists_isFrob (D.nd.plOm.2 w)
     have h1 := hρ w hw.1 hw.2 _ σ (D.nd.plOm.2 w) hσ
     have h2 := hρ' w hw.1 hw.2 _ σ (D.nd.plOm.2 w) hσ
-    rw [hmap, ← heq σ, h1] at h2
-    exact h2
+    rwa [hmap, ← heq σ, h1] at h2
   filter_upwards [hU] with w hw
   rw [Polynomial.lifts_iff_coeff_lifts]
   intro n

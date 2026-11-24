@@ -556,8 +556,7 @@ private theorem shaInj_norm {O Γ W : Type} [CommRing O] [Group Γ] [Topological
       have := congrFun h0 g
       rw [hL, Pi.zero_apply, sub_eq_zero] at this
       simp [Formalism.GaloisCohomology.scalRep]
-      rw [smul_comm ((u⁻¹ : Oˣ) : O) (α g : O)]
-      exact this
+      rwa [smul_comm ((u⁻¹ : Oˣ) : O) (α g : O)]
   refine ⟨Submodule.liftQ _ L (fun z hz => LinearMap.mem_ker.2 ((hB z).1 hz)), ?_, fun z => ?_⟩
   · rw [injective_iff_map_eq_zero]
     intro x hx
@@ -911,8 +910,7 @@ private theorem len_of_torsion (O : Type) [CommRing O] [IsDomain O] [IsDiscreteV
   rw [← Module.length_top]
   refine Kum.lenDirected O _ _ (fun k => Submodule.torsionBy O M (ϖ ^ k)) n ?_ ?_
     fun k => ⟨k, le_rfl, hn _ (pow_ne_zero _ hϖ.ne_zero)⟩
-  · intro i j hij
-    exact Submodule.torsionBy_le_torsionBy_of_dvd _ _ (pow_dvd_pow _ hij)
+  · exact fun i j hij => Submodule.torsionBy_le_torsionBy_of_dvd _ _ (pow_dvd_pow _ hij)
   · intro x _
     obtain ⟨a, ha, hx⟩ := h x
     obtain ⟨k, hk⟩ := IsDiscreteValuationRing.associated_pow_irreducible ha hϖ

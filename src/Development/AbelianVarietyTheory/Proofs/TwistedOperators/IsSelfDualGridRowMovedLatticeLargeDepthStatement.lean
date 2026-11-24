@@ -69,8 +69,7 @@ theorem mem_spanSingleton_mul_iff {s x : D.host.E} (hs : s ≠ 0) (I : Fractiona
   constructor
   · rintro ⟨z, hz, rfl⟩
     rwa [mul_comm, ← mul_assoc, inv_mul_cancel₀ hs, one_mul]
-  · intro h
-    exact ⟨x * s⁻¹, h, by rw [mul_comm, mul_assoc, inv_mul_cancel₀ hs, mul_one]⟩
+  · exact fun h => ⟨x * s⁻¹, h, by rw [mul_comm, mul_assoc, inv_mul_cancel₀ hs, mul_one]⟩
 
 theorem tiltSc_ne_zero (j : ℕ) (p : Fin (D.R.m - 1 - j)) : tiltSc D j p ≠ 0 := by
   unfold tiltSc

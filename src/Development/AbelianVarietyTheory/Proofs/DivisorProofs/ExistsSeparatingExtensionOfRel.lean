@@ -72,16 +72,14 @@ theorem exists_separating_extension_of_rel : ∀ {α β L : Type} [Infinite L] (
   · exact ⟨id, fun _ _ _ _ k => isEmptyElim k, fun _ _ _ _ h => h⟩
   have hF : (⋃ e ∈ (S : Set (α → L)), {f | Rel e f}).Finite := by
     refine Set.Finite.biUnion S.finite_toSet fun e he => Set.Subsingleton.finite ?_
-    intro f hf f' hf'
-    exact (H e he e he f f' hf hf').1 rfl
+    exact fun f hf f' hf' => (H e he e he f f' hf hf').1 rfl
   have hinf := hF.infinite_compl
   have hT : ((fun e : α → L => e ∘ r) '' (S : Set (α → L))).Countable :=
     (S.finite_toSet.image _).countable
   obtain ⟨n, hn⟩ := Set.countable_iff_exists_injOn.1 hT
   let j : (β → L) → (β → L) := fun c => (hinf.natEmbedding _ (n c)).1
   have hj : ∀ c, ∀ e ∈ S, ¬ Rel e (j c) := by
-    intro c e he h
-    exact (hinf.natEmbedding _ (n c)).2 (Set.mem_biUnion (Finset.mem_coe.2 he) h)
+    exact fun c e he h => (hinf.natEmbedding _ (n c)).2 (Set.mem_biUnion (Finset.mem_coe.2 he) h)
   have hji : ∀ e ∈ S, ∀ e' ∈ S, j (e ∘ r) = j (e' ∘ r) → e ∘ r = e' ∘ r := by
     intro e he e' he' h
     exact hn ⟨e, he, rfl⟩ ⟨e', he', rfl⟩ ((hinf.natEmbedding _).injective (Subtype.ext h))

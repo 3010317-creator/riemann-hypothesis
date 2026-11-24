@@ -267,9 +267,7 @@ theorem pIdx_pTor_ker_range_ne_zero :
   · set f : A →* A := powMonoidHom p with hf
     have hP : ((⊤ : Subgroup A).map f).relIndex g.ker ≠ 0 :=
       fun h0 => h1 (Subgroup.relIndex_eq_zero_of_le_right le_top h0)
-    have hBD : g.ker ≤ g.ker.comap f := by
-      intro x hx
-      exact g.ker.pow_mem hx p
+    have hBD : g.ker ≤ g.ker.comap f := fun x hx => g.ker.pow_mem hx p
     have hD : g.ker.relIndex (g.ker.comap f) ≠ 0 := by
       rw [Subgroup.relIndex_ker]
       have : Nat.card ((g.ker.comap f).map g) = Nat.card {x : A' // x ∈ g.range ∧ x ^ p = 1} := by
@@ -284,8 +282,7 @@ theorem pIdx_pTor_ker_range_ne_zero :
           refine ⟨a, ?_, rfl⟩
           change g (a ^ p) = 1
           rwa [map_pow]
-      rw [this]
-      exact h3
+      rwa [this]
     have hQ : (g.ker.map f).relIndex ((g.ker.comap f).map f) ≠ 0 := by
       intro h0
       have hd := Subgroup.relIndex_map_map f g.ker (g.ker.comap f)
@@ -303,8 +300,7 @@ theorem pIdx_pTor_ker_range_ne_zero :
     have he : (g.ker.comap f).map f = ((⊤ : Subgroup A).map f) ⊓ g.ker := by
       rw [Subgroup.map_comap_eq, ← MonoidHom.range_eq_map]
     refine Subgroup.relIndex_ne_zero_trans hQ ?_
-    rw [he, Subgroup.inf_relIndex_right]
-    exact hP
+    rwa [he, Subgroup.inf_relIndex_right]
   · have hfin : Finite {x : A // x ∈ (⊤ : Subgroup A) ∧ x ^ p = 1} := Nat.finite_of_card_ne_zero h2
     have : Finite {x : A // x ∈ g.ker ∧ x ^ p = 1} :=
       Finite.of_injective

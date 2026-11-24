@@ -254,8 +254,7 @@ lemma gens_of_len {M : Type} [AddCommGroup M] [Module R M] {m : ℕ} {c : Fin m 
   · rw [← map_smul, single_smul_self, map_zero]
   · apply e.injective
 
-    simp only [map_sum, map_smul, LinearEquiv.apply_symm_apply]
-    exact eq_sum_single c (e x)
+    simpa only [map_sum, map_smul, LinearEquiv.apply_symm_apply] using eq_sum_single c (e x)
 
 lemma len_mul_le (hv : v.Integers R) {A B D : Type} [AddCommGroup A] [Module R A] [AddCommGroup B]
     [Module R B] [AddCommGroup D] [Module R D] (ι : A →ₗ[R] B) (π : B →ₗ[R] D)
@@ -379,8 +378,7 @@ theorem om_step : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
       rw [mem_aug]
       refine ⟨hg, ?_⟩
       have := ((mem_aug _ _).1 (eig_le_aug _ χ hh)).2
-      rw [← hgh] at this
-      exact this
+      rwa [← hgh] at this
     refine ⟨Submodule.Quotient.mk ⟨projL χ g, proj_eig χ hAA hga⟩, ?_⟩
     refine congrArg Submodule.Quotient.mk (Subtype.ext ?_)
     show LinearMap.funLeft R C K.subtype (projL χ g) = h
@@ -396,8 +394,7 @@ theorem om_step : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
     show g - LinearMap.funLeft R C K.mkQ (projL χ q) ∈ sqIdeal (augIdeal AA.carrier)
     have := proj_mem χ _ hsq hgq
     rw [map_sub, projL_self χ hg] at this
-    rw [← projL_funLeft]
-    exact this
+    rwa [← projL_funLeft]
 
 theorem om_split : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (F : Type) [Field F] [Fintype F] [DecidableEq F] [CharP F p] (f : ℕ), Fintype.card F = p ^ f → ∀ (N : Type) [AddCommGroup N] [Module F N] [Fintype N] [DecidableEq N] (AA : HopfOrder (C := C) R N), FStable (F := F) AA.carrier → ∀ σ : MulChar F R, IsFund p σ → (∀ χ : MulChar F R, ∃ r : NNReal, r ≠ 0 ∧ HasLen v R (OmType AA.carrier χ) r) ∧ ∀ r : ℕ → NNReal, (∀ m ∈ Finset.Icc 1 (p ^ f - 1), HasLen v R (OmType AA.carrier (σ ^ m)) (r m)) → HasLen v R (OmAA AA.carrier) (∏ m ∈ Finset.Icc 1 (p ^ f - 1), r m) := by
   intro p _ C _ _ _ v R _ _ hv hvp F _ _ _ _ f hf N _ _ _ _ AA hAA σ hσ
@@ -478,8 +475,7 @@ theorem om_split : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClose
       ext g
       rw [LinearMap.mem_ker, funext_iff]
       constructor
-      · intro hg i
-        exact (Submodule.Quotient.mk_eq_zero _).2 (proj_mem _ _ hsq hg)
+      · exact fun hg i => (Submodule.Quotient.mk_eq_zero _).2 (proj_mem _ _ hsq hg)
       · intro hg
         show (g : N → C) ∈ sqIdeal (augIdeal AA.carrier)
         rw [← hsum g]
@@ -488,8 +484,7 @@ theorem om_split : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClose
             (⟨projL (σ ^ ((i : ℕ) + 1)) (g : N → C), proj_eig _ hAA g.2⟩ :
               eig AA.carrier (σ ^ ((i : ℕ) + 1))) :
             OmType AA.carrier (σ ^ ((i : ℕ) + 1))) = 0 := hg i
-        rw [Submodule.Quotient.mk_eq_zero] at h1
-        exact h1
+        rwa [Submodule.Quotient.mk_eq_zero] at h1
     rw [prod_Icc_fin]
     exact hasLen_of_equiv ((Submodule.quotEquivOfEq _ _ hker).trans
       (Ψ.quotKerEquivOfSurjective hsurj)) (Tot.hasLen_pi _ _ fun i =>

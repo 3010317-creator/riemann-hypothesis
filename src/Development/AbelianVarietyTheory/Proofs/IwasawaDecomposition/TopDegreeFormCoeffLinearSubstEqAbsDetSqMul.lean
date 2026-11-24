@@ -76,13 +76,11 @@ theorem topCoeff_add (P Q : MvPolynomial (Fin n × Fin n) ℂ) :
   simp [topCoeff, mul_add, Finset.sum_add_distrib]
 
 theorem topCoeff_C_mul (a : ℂ) (P : MvPolynomial (Fin n × Fin n) ℂ) : topCoeff (C a * P) = a * topCoeff P := by
-  simp only [topCoeff, coeff_C_mul, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun _ _ => by ring
+  simpa only [topCoeff, coeff_C_mul, Finset.mul_sum] using Finset.sum_congr rfl fun _ _ => by ring
 
 theorem topCoeff_sum {ι : Type} (s : Finset ι) (f : ι → MvPolynomial (Fin n × Fin n) ℂ) :
     topCoeff (∑ i ∈ s, f i) = ∑ i ∈ s, topCoeff (f i) := by
-  simp only [topCoeff, coeff_sum, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [topCoeff, coeff_sum, Finset.mul_sum] using Finset.sum_comm
 
 theorem sum_apply_sum_single {k : ℕ} (f : Fin k → Fin n × Fin n) :
     ∑ x, (∑ i, Finsupp.single (f i) 1 : Fin n × Fin n →₀ ℕ) x = k := by

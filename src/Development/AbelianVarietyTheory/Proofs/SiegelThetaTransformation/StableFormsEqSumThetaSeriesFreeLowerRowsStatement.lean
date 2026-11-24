@@ -927,8 +927,7 @@ theorem sum_classes {w : E} {A A' : AddSubgroup (Matrix (Fin n) (Fin r) E)}
     have := key (δ (QuotientAddGroup.mk ⟨a, ha⟩ + q)) (⟨a, ha⟩ + δ q)
       (by rw [hδ, QuotientAddGroup.mk_add, hδ])
     rw [AddSubgroup.coe_add] at this
-    rw [Equiv.coe_addLeft]
-    exact this
+    rwa [Equiv.coe_addLeft]
 
 theorem heis_heis {M : ℕ} {Λ : Lt E n} (hΛ : Λ ∈ Vset E n M) {L : Lt E r} (hL : SelfD X L)
     {𝔠 : Ideal (𝓞 E)} {y δ : Matrix (Fin n) (Fin r) E}
@@ -1106,8 +1105,7 @@ theorem sum_free : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : �
       obtain ⟨a, rfl⟩ := QuotientAddGroup.mk_surjective q
       obtain ⟨d, hd, hd'⟩ := exists_low hM h𝔪 h0 hα h𝔞 hΛ hΛ' hΛ'' hm h1 a.2
       refine ⟨⟨d, hsh _ hd⟩, QuotientAddGroup.eq.2 ?_, hd⟩
-      rw [neg_add_eq_sub]
-      exact hd'
+      rwa [neg_add_eq_sub]
     choose δ hδ hδ' using this
     exact ⟨δ, hδ, hδ'⟩
   have hlow := fun q => low_laws hM h𝔪 h0 hα h𝔞 hΛ hΛ' hΛ'' hm h1 hL (hδ' q)
@@ -1144,8 +1142,7 @@ theorem sum_free : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : �
     rw [heis_heis idx hs he hΛ' hL.1 (f6 i).1 (hlow q).1 hv'.1, dat_eq, datF_eq hκ h5,
       datF_eq (red_congr (fun a => up _ _ _ a.2) hκ) fun k hk => ?_]
     have := cong_add ((f6 i).2 k hk) ((hlow q).2.2 k)
-    rw [add_zero] at this
-    exact this
+    rwa [add_zero] at this
   · rintro ⟨i, q⟩ ⟨j, q'⟩ h
     obtain rfl : i = j := f2 i j fun k => by
       by_cases hk : (k : ℕ) < r
@@ -1178,11 +1175,9 @@ theorem sum_free : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : �
         change Cong X D.𝔪 (if _ then _ else _) _ at h4
         rw [ite_eq_left hk] at h4
         change Cong X D.𝔪 (x k - (lowD r n (cc (α : E) / (α : E)) * f i) k) 0
-        rw [lowD_row, ite_eq_left hk, one_smul, cong_zero]
-        exact h4
+        rwa [lowD_row, ite_eq_left hk, one_smul, cong_zero]
       · have := cong_sub (h5 k hk) ((f6 i).2 k hk)
-        rw [sub_zero] at this
-        exact this
+        rwa [sub_zero] at this
     refine ⟨(i, QuotientAddGroup.mk ⟨_, h3⟩), fun k => ?_⟩
     have h4 := QuotientAddGroup.eq.1 (hδ (QuotientAddGroup.mk ⟨_, h3⟩))
     rw [neg_add_eq_sub] at h4
@@ -1295,8 +1290,7 @@ theorem thA_sum (idx : Fin g ≃ X.Ψ × Fin r) (hs : IsSympl X bas) {x : Frame 
     thA X bas idx (∑ i ∈ s, f i) x = ∑ i ∈ s, thA X bas idx (f i) x := by
   classical
   refine Finset.induction_on s ?_ ?_
-  · have h0 := GlobalTheory.SW.UnAct.thA_smul (bas := bas) idx x (0 : ℂ) (0 : TF n g)
-    simpa using h0
+  · simpa using GlobalTheory.SW.UnAct.thA_smul (bas := bas) idx x (0 : ℂ) (0 : TF n g)
   · intro a s ha ih
     rw [Finset.sum_insert ha, Finset.sum_insert ha,
       GlobalTheory.SW.UnAct.thA_add idx hs hx (hf a) (GlobalTheory.SW.RecSum.isSB_sum s f hf), ih]

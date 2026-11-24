@@ -94,8 +94,7 @@ theorem eq_zero_of_fixed_twKer {π : Representation ℂ G V} (hπ : IsSmooth π)
     obtain ⟨t, ht, h, rfl⟩ := hx
     exact ⟨t, ht, k * h, by simp [map_mul]⟩
   have hvO : ∀ t ∈ T, v t ∈ O := fun t ht => by
-    simp only [O, Set.mem_iUnion, Set.mem_range]
-    exact ⟨t, ht, 1, by simp⟩
+    simpa only [O, Set.mem_iUnion, Set.mem_range] using ⟨t, ht, 1, by simp⟩
   haveI : Finite O := hOfin
   let φ : K → O → O := fun k x => ⟨π k x.1, hOst k x.1 x.2⟩
   have hφmul : ∀ k k' : K, φ (k * k') = φ k ∘ φ k' := by
@@ -110,8 +109,7 @@ theorem eq_zero_of_fixed_twKer {π : Representation ℂ G V} (hπ : IsSmooth π)
   have hAO : ∀ x (hx : x ∈ O), A x = ∑ f : ι, (f.1 ⟨x, hx⟩).1 := by
     intro x hx
     simp only [A, LinearMap.sum_apply]
-    refine Finset.sum_congr rfl fun f _ => ?_
-    exact congrArg Subtype.val (congrFun (hr f) ⟨x, hx⟩)
+    exact Finset.sum_congr rfl fun f _ => congrArg Subtype.val (congrFun (hr f) ⟨x, hx⟩)
   let e : K → ι ≃ ι := fun k =>
     { toFun := fun f => ⟨f.1 ∘ φ k, r f * k, by rw [hφmul, hr f]⟩
       invFun := fun f => ⟨f.1 ∘ φ k⁻¹, r f * k⁻¹, by rw [hφmul, hr f]⟩
@@ -215,8 +213,7 @@ theorem exists_smooth_form_ne {π : Representation ℂ G V} (hπ : IsSmooth π)
   obtain ⟨K, ho, hc, hKs⟩ := hG _ ((hπ v).mem_nhds (by simp))
   have hvK : v ∈ fixed π K := mem_fix.2 fun h hh => hKs hh
   obtain ⟨m, hm⟩ : ∃ m : Module.Dual ℂ (fixed π K), m ⟨v, hvK⟩ ≠ 0 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     exact hv (congrArg Subtype.val ((Module.forall_dual_apply_eq_zero_iff ℂ _).1 hne))
   obtain ⟨l, -, hl⟩ := exists_fixed_contra hπ ho hc m
   exact ⟨l, by rw [show v = ((⟨v, hvK⟩ : fixed π K) : V) from rfl, hl]; exact hm⟩
@@ -305,8 +302,7 @@ theorem mem_of_annihilator_eq_bot
   · have hmem : res π K ⟨l, hlK⟩ ∈ S := hS ▸ Submodule.mem_top
     obtain ⟨u, hu, he⟩ := hmem
     have := res_injective hπ.1 hc he
-    rw [show l = ((⟨l, hlK⟩ : fixed (contra π) K) : smoothPart π.dual) from rfl, ← this]
-    exact hu
+    rwa [show l = ((⟨l, hlK⟩ : fixed (contra π) K) : smoothPart π.dual) from rfl, ← this]
   · exfalso
     obtain ⟨φ, hφ, hφS⟩ := Submodule.exists_dual_map_eq_bot_of_lt_top (lt_top_iff_ne_top.2 hS)
       inferInstance
@@ -331,16 +327,14 @@ theorem mem_of_annihilator_eq_bot
       rw [hφS] at this
       exact (Submodule.mem_bot ℂ).1 this
     show f ⟨u, hu⟩ = 0
-    rw [← hfy]
-    exact h2
+    rwa [← hfy]
 
 theorem contra_isIrreducible
     (hG : ∀ U ∈ nhds (1 : G), ∃ K : Subgroup G, IsOpen (K : Set G) ∧ IsCompact (K : Set G) ∧ (K : Set G) ⊆ U)
     {π : Representation ℂ G V} (hπ : IsAdmissible π) (hirr : π.IsIrreducible) :
     (contra π).IsIrreducible := by
   obtain ⟨v, hv⟩ : ∃ v : V, v ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply (bot_ne_top : (⊥ : Subrepresentation π) ≠ ⊤)
     apply Subrepresentation.ext
     ext x

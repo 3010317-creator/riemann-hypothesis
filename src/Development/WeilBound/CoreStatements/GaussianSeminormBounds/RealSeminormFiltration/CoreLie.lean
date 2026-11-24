@@ -87,15 +87,13 @@ theorem lie1 (p q r s : ℕ) : IsLie (fockAct1 p q r s) := by
   intro X Y
   have h := omAct_lie (Matrix.kroneckerMap (· * ·) X (1 : Mat r s)) (Matrix.kroneckerMap (· * ·) Y (1 : Mat r s))
   rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul, Matrix.mul_one, map_sub] at h
-  rw [map_sub]
-  exact h
+  rwa [map_sub]
 
 theorem lie2 (p q r s : ℕ) : IsLie (fockAct2 p q r s) := by
   intro X Y
   have h := omAct_lie (Matrix.kroneckerMap (· * ·) (1 : Mat p q) X) (Matrix.kroneckerMap (· * ·) (1 : Mat p q) Y)
   rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul, Matrix.mul_one, map_sub] at h
-  rw [map_sub]
-  exact h
+  rwa [map_sub]
 
 theorem lie_tw (p q r s : ℕ) (τ : ℂ) : IsLie (twAct p q r s τ) := by
   intro X Y
@@ -278,8 +276,7 @@ theorem mem_polChi_iff_hw (c : ℂ) (c0 : ℚ) (hc : c = c0) (x : Pol p q r s) :
     refine (PI.FockOneDegW.Swap.mem_hwSub_iff _ _ _).2 ⟨fun a => ?_, fun a b hab => ?_⟩
     · rw [h a a (by cases a <;> trivial), ite_eq_left rfl]
     · rw [h a b (PI.FockOneDegW.Core.posC_sb a b hab), ite_eq_right (PI.FockOneDegW.Core.posC_ne a b hab), zero_smul]
-  · intro h a b hab
-    exact scalar_of_hw (μ := fun _ => c0) (fun _ _ _ => rfl) h a b hab
+  · exact fun h a b hab => scalar_of_hw (μ := fun _ => c0) (fun _ _ _ => rfl) h a b hab
 
 end PositivityTheory.KReal
 

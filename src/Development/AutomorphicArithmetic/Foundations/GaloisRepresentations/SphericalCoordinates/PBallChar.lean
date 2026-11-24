@@ -96,8 +96,7 @@ private theorem transpose_rho_mul_herm_eq_herm_mul_bar {O : Type} [Ring O] {bar 
     intro p q
     have h1 := hM.2.2 (x • p) q
     have h2 := hM.2.2 p (bar x • q)
-    rw [D.adj x p q] at h1
-    rw [hP.1 x p, hL] at h1
+    rw [D.adj x p q, hP.1 x p, hL] at h1
     rw [hP.1 (bar x) q, hR] at h2
     rw [hA, Matrix.sub_mulVec, dotProduct_sub, Complex.sub_im, h1, h2, sub_self]
   have hspan := hP.2.2.2.1
@@ -131,8 +130,7 @@ private theorem transpose_rho_mul_herm_eq_herm_mul_bar {O : Type} [Ring O] {bar 
     have e2 := step2 (Pi.single k Complex.I) (Pi.single l 1)
     simp [Matrix.mulVec_single] at e1 e2
     exact Complex.ext e2 e1
-  rw [hA, sub_eq_zero] at hA0
-  exact hA0
+  rwa [hA, sub_eq_zero] at hA0
 
 theorem UpperTheory.Gal.W2.ballChar_of :
     UpperTheory.Gal.W2.TypeCount → UpperTheory.Gal.W2.TspDiag → UpperTheory.Gal.W2.BallChar := by
@@ -147,8 +145,7 @@ theorem UpperTheory.Gal.W2.ballChar_of :
   have hcard : ∀ τ : F →+* ℂ, (Finset.univ.filter fun i => ty i = τ).card = typeMult n t₀ ε τ := by
     intro τ
     have := (hcnt τ).1
-    rw [evAt, Multiset.card_map] at this
-    exact this
+    rwa [evAt, Multiset.card_map] at this
   have ht0 : typeMult n t₀ ε t₀ = 1 := by simp [typeMult]
   obtain ⟨i₀, hi₀s⟩ := Finset.card_eq_one.1 ((hcard t₀).trans ht0)
   have hi₀ : ∀ i, ty i = t₀ ↔ i = i₀ := by
@@ -387,8 +384,7 @@ theorem UpperTheory.Gal.W2.ballChar_of :
   have h2 : H.map star * P = P * Eb := by
     have := congrArg (fun M : Matrix (Fin g) (Fin g) ℂ => M.map star) hHS
     simp only [hmapmul, hdiagmap] at this
-    rw [hPdef, hEbdef]
-    exact this
+    rwa [hPdef, hEbdef]
   have h3 : (H.map star)⁻¹ * P = P * Eb⁻¹ := by
     calc (H.map star)⁻¹ * P = (H.map star)⁻¹ * (P * Eb) * Eb⁻¹ := by simp [Matrix.mul_assoc]
       _ = P * Eb⁻¹ := by rw [← h2, ← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hHbu, Matrix.one_mul]
@@ -436,8 +432,7 @@ theorem UpperTheory.Gal.W2.ballChar_of :
     have hC : Cᵀ * M₀ = S := by simp [hCdef, Matrix.mul_assoc]
     have hCm : C ∈ Csp bar ρ M₀ := by
       show Cᵀ * M₀ ∈ PerCoordU.Tsp bar ρ
-      rw [hC]
-      exact hSt
+      rwa [hC]
     rw [← hco.2] at hCm
     obtain ⟨b, hb⟩ := hCm
     refine ⟨b, funext fun j => ?_⟩

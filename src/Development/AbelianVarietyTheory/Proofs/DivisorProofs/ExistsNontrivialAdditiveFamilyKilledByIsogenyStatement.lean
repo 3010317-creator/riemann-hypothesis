@@ -224,11 +224,9 @@ theorem gm_equivGen {S : Scheme.{0}} {A A' N T Z : Over S} [GrpObj A] {i : N ⟶
     rw [← Over.comp_left, hy]
     simp
   have w1 : y.left z ∈ (actMap i T).left ⁻¹ᵁ ((pmap q T).left ⁻¹ᵁ M.U k) := by
-    rw [← e1] at h₁
-    exact h₁
+    rwa [← e1] at h₁
   have w2 : y.left z ∈ (prMap A N T).left ⁻¹ᵁ ((pmap q T).left ⁻¹ᵁ M.U k) := by
-    rw [← e2] at h₂
-    exact h₂
+    rwa [← e2] at h₂
   have key := congrArg (gm y.left z ((actMap i T).left ⁻¹ᵁ ((pmap q T).left ⁻¹ᵁ M.U k) ⊓
     (prMap A N T).left ⁻¹ᵁ ((pmap q T).left ⁻¹ᵁ M.U k))) (he.2 k _ inf_le_left inf_le_right)
   have hw : y.left z ∈ (actMap i T).left ⁻¹ᵁ ((pmap q T).left ⁻¹ᵁ M.U k) ⊓
@@ -238,10 +236,8 @@ theorem gm_equivGen {S : Scheme.{0}} {A A' N T Z : Over S} [GrpObj A] {i : N ⟶
       (prMap A N T).left ⁻¹ᵁ ((pmap q T).left ⁻¹ᵁ M.U k)) (res le_top (pullTop (snd A (N ⊗ T)).left χ)) =
       gm (lift ν t).left z ⊤ χ := by
     have := gm_res_pullU_lemma_2 (snd A (N ⊗ T)).left y.left z ⊤ (V := _) le_top hw χ
-    rw [e3] at this
-    exact this
-  rw [hχ'] at key
-  exact key
+    rwa [e3] at this
+  rwa [hχ'] at key
 
 theorem gm_addGen {S : Scheme.{0}} {A A' T Z : Over S} [GrpObj A] [GrpObj A'] (q : A ⟶ A') [IsMonHom q]
     (M : LB (A' ⊗ T).left) (e : ∀ k, Γ((A ⊗ T).left, (pmap q T).left ⁻¹ᵁ M.U k)ˣ) (a a' : Z ⟶ A) (t : Z ⟶ T)
@@ -270,12 +266,9 @@ theorem gm_addGen {S : Scheme.{0}} {A A' T Z : Over S} [GrpObj A] [GrpObj A'] (q
   have m2 := addGen_le₂ q M k h
   have m3 := addGen_le₃ q M k h
   refine ⟨⟨?_, ?_, ?_⟩, ?_⟩
-  · rw [← eF]
-    exact m1
-  · rw [← eS]
-    exact m2
-  · rw [← eM]
-    exact m3
+  · rwa [← eF]
+  · rwa [← eS]
+  · rwa [← eM]
   · unfold addGen
     rw [map_mul, map_mul, map_inv, gm_res_pullU_lemma_2 _ _ _ _ _ h, gm_res_pullU_lemma_2 _ _ _ _ _ h,
       gm_res_pullU_lemma_2 _ _ _ _ _ h, eF, eS, eM]
@@ -310,17 +303,13 @@ theorem addGen_invariant : ∀ (S : Scheme.{0}) (A A' N T : Over S) [GrpObj A] [
   let Y₂ : Z' ⟶ A ⊗ (A ⊗ T) := Over.homMk y₂ hyS
   have hY : Y₁ ≫ pmap2 q T = Y₂ ≫ pmap2 q T := by
     apply Over.OverMorphism.ext
-    rw [Over.comp_left, Over.comp_left]
-    exact hy
+    rwa [Over.comp_left, Over.comp_left]
   have h_a : Y₁ ≫ fst A (A ⊗ T) ≫ q = Y₂ ≫ fst A (A ⊗ T) ≫ q := by
-    have h := congrArg (· ≫ fst A' (A' ⊗ T)) hY
-    simpa [pmap2] using h
+    simpa [pmap2] using congrArg (· ≫ fst A' (A' ⊗ T)) hY
   have h_b : Y₁ ≫ snd A (A ⊗ T) ≫ fst A T ≫ q = Y₂ ≫ snd A (A ⊗ T) ≫ fst A T ≫ q := by
-    have h := congrArg (· ≫ snd A' (A' ⊗ T) ≫ fst A' T) hY
-    simpa [pmap2, pmap] using h
+    simpa [pmap2, pmap] using congrArg (· ≫ snd A' (A' ⊗ T) ≫ fst A' T) hY
   have h_t : Y₁ ≫ snd A (A ⊗ T) ≫ snd A T = Y₂ ≫ snd A (A ⊗ T) ≫ snd A T := by
-    have h := congrArg (· ≫ snd A' (A' ⊗ T) ≫ snd A' T) hY
-    simpa [pmap2, pmap] using h
+    simpa [pmap2, pmap] using congrArg (· ≫ snd A' (A' ⊗ T) ≫ snd A' T) hY
   have eY₁ : lift (Y₁ ≫ fst A (A ⊗ T)) (lift (Y₁ ≫ snd A (A ⊗ T) ≫ fst A T) (Y₁ ≫ snd A (A ⊗ T) ≫ snd A T)) = Y₁ := by
     apply CartesianMonoidalCategory.hom_ext
     · simp
@@ -540,8 +529,7 @@ theorem exists_app_eq_of_invariant (p : X ⟶ Y) [Flat p] [Surjective p] [IsAffi
       rw [Category.assoc, Category.assoc, ← morphismRestrict_ι, ← Category.assoc, h, Category.assoc])
   obtain ⟨a, rfl⟩ := (opens_toTop_bijective V).2 v
   refine ⟨a, (opens_toTop_bijective (p ⁻¹ᵁ V)).1 ?_⟩
-  rw [← restrict_appTop_toTop]
-  exact hv
+  rwa [← restrict_appTop_toTop]
 
 lemma app_map_homOfLE (p : X ⟶ Y) {U V : Y.Opens} (h : V ≤ U) (a : Γ(Y, U)) :
     p.app V (Y.presheaf.map (homOfLE h).op a) =
@@ -588,8 +576,7 @@ theorem triv_of_isPullGen_of_invariant : ∀ (X Y : Scheme.{0}) (p : X ⟶ Y), F
   rw [eid, CommRingCat.id_apply] at H
   simp only [Units.val_mul, map_mul, eY, app_map_homOfLE]
   show X.presheaf.map _ (p.app _ (f i)) = _ * X.presheaf.map _ (p.app _ (f j))
-  rw [hf, hf]
-  exact H
+  rwa [hf, hf]
 
 end GlobalTheory.CharKer
 end -- clump:auto
@@ -997,8 +984,7 @@ theorem exists_local_tensor [Module.FaithfullyFlat R B] {c : B ⊗[R] B} (hu : I
   have hI := hd.invertible_invariants
   let I := GlobalTheory.FlatDescent.invariants (datum c)
   obtain ⟨φ, m, hm⟩ : ∃ (φ : Module.Dual R I) (m : I), φ m ∉ P := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hP
     rw [Ideal.eq_top_iff_one]
     obtain ⟨z, hz⟩ := hI.bijective.2 1
@@ -1072,8 +1058,7 @@ theorem exists_local (R B C D : CommRingCat.{0}) (f : R ⟶ B) (j₁ j₂ : B �
   refine ⟨s, hs, x, y, hxy, ?_⟩
   apply e.commRingCatIsoToRingEquiv.injective
   change e.hom.hom _ = e.hom.hom _
-  rw [map_mul, e1', e2']
-  exact hx
+  rwa [map_mul, e1', e2']
 
 end UnitCocycle
 
@@ -1171,8 +1156,7 @@ theorem exists_local_charUnit : ∀ (X Y Z W : Scheme.{0}) (p : X ⟶ Y) (a b : 
     simp only [map_mul, Units.val_mul, res, pullTop, Units.coe_map, MonoidHom.coe_coe] at this
     rw [Scheme.Hom.app_eq_appLE m₂₃]
     simp only [c, res, Units.coe_map, MonoidHom.coe_coe]
-    rw [appLE_map_top, appLE_map_top, appLE_map_top]
-    exact this
+    rwa [appLE_map_top, appLE_map_top, appLE_map_top]
   obtain ⟨s, hs, x, x', hxx', hx⟩ := _root_.GlobalTheory.UnitCocycle.exists_local _ _ _ _ (p.app V) _ _ _ _ _ P₁ P₂ E₁ E₂ FF c hc
     (hV.primeIdealOf ⟨y, hyV⟩).asIdeal inferInstance
   have hyS : y ∈ Y.basicOpen s := by
@@ -1189,8 +1173,7 @@ theorem exists_local_charUnit : ∀ (X Y Z W : Scheme.{0}) (p : X ⟶ Y) (a b : 
     rw [← map_mul, hxx']
     have h2 := RingedSpace.isUnit_res_basicOpen X.toRingedSpace ((p.app V).hom s)
     have h3 := h2.map (X.presheaf.map (homOfLE hpre.le).op).hom
-    rw [← map_map_apply (X.basicOpen_le ((p.app V).hom s)) hpre.le hle]
-    exact h3
+    rwa [← map_map_apply (X.basicOpen_le ((p.app V).hom s)) hpre.le hle]
   refine ⟨hu.unit, fun W' h₁ h₂ => ?_⟩
   have hW : W' ≤ a ⁻¹ᵁ (p ⁻¹ᵁ V) := fun z hz => hle (h₁ hz)
   have hWb : W' ≤ b ⁻¹ᵁ (p ⁻¹ᵁ V) := hW.trans hab.le

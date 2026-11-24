@@ -362,8 +362,7 @@ theorem UpperTheory.V.Z.Win.Dn.potTwo_of :
     obtain ⟨h1, h2, h3, -⟩ := UpperTheory.V.Base.places ℚ Ω l B
     obtain ⟨v', hv'⟩ := h1 fun h => (h2 h).2 hB
     have h4 : ((l : ℕ) : 𝓞 ℚ) ∈ v'.asIdeal := (h3 v' hv').1 hB
-    rw [← place_eq h4 hv]
-    exact hv'
+    rwa [← place_eq h4 hv]
   obtain ⟨g, rfl⟩ := exists_smul_eq_of_isPlaceOver (F := ℚ) hBv hA
   have hAl : (g • B).valuation (l : Ω) < 1 := ((UpperTheory.V.Two.ineConj ℚ Ω g).2.1 B l).2 hB
   obtain ⟨s, hs, hinf⟩ := UpperTheory.V.Keep.infCyc ℚ Ω l (g • B) hAl H hHo
@@ -739,8 +738,7 @@ theorem UpperTheory.V.Z.Win.Dn.downCsdK_of_printsH :
   have : IsAlgClosure (maximalRealSubfield K) Ω := algClosure (maximalRealSubfield K)
   let c : G (maximalRealSubfield K) Ω := AlgEquiv.ofRingEquiv (f := σ.toRingEquiv) fun x => by
     apply j.injective
-    refine (hj _).trans ?_
-    exact (mem_maximalRealSubfield_iff x.1).1 x.2 (j.comp (algebraMap K Ω))
+    exact (hj _).trans ((mem_maximalRealSubfield_iff x.1).1 x.2 (j.comp (algebraMap K Ω)))
   have hc : IsConjEl c := ⟨j, hj⟩
   have hpc : IsPairing c r (cycBar K Ω l ^ (1 - (n : ℤ))) P := fun s s' hs =>
     hPr s s' (AlgEquiv.ext fun x => DFunLike.congr_fun hs x)
@@ -792,8 +790,7 @@ theorem UpperTheory.V.Z.Win.Dn.hostEnd_of_loc3_frame_linkedEnd_downCsdK (h3 : Dn
   haveI : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
       mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
-    intro hu
-    exact PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
+    exact fun hu => PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
   obtain ⟨L, _, _, _, _, g₁, Φ, C₀, ⟨k⟩, ok, big, sc⟩ := hF Ω l c N e ψ o₁ hd σ hσ B hB
   have hσ' : IsConjOm σ.toRingEquiv := hσ
   have hsq : σ * σ = 1 := by
@@ -977,8 +974,7 @@ theorem UpperTheory.V.Z.Bc.automorphic_rank_two_of_automorphic_restrict_of_finit
     rcases hc' with ⟨_, P, rfl, rfl⟩ | ⟨hR', -⟩
     · refine hG M Ω l ι _ P ((GlobalTheory.CuspRep.CG.isRegAlg_iff _).2 fun τ => ?_) hatt' (hfin.imp fun N h => ⟨h.1, fun s => h.2 _⟩)
       obtain ⟨m, hm, h⟩ := hreg' τ
-      rw [CG.HasInfChar.infChar_eq (π := CG.mk P) hm]
-      exact h
+      rwa [CG.HasInfChar.infChar_eq (π := CG.mk P) hm]
     · exact (not_both M hR' inferInstance).elim
   obtain ⟨sat, inf, hc, hbc, hinf⟩ := hdown sat' inf' hc' hreg' hgap (UpperTheory.satake_invariant_of_frobConj_of_eigenvalue_basic UpperTheory.frobenius_conj_of_galois_conjugate_places UpperTheory.hecke_eigenvalue_basic_properties ℚ M Ω l ι 2 r sat' hatt')
   have hreg : RegInf 2 inf := fun τ => by
@@ -1074,8 +1070,7 @@ private theorem kills_cc {Ω : Type} [Field Ω] [CharZero Ω] {C : Type} [CommGr
   have := hχ (c⁻¹ * c') fun ζ h => by
     rw [AlgEquiv.mul_apply, cc_mu hc' hM h, ← cc_mu hc hM h]
     exact c.symm_apply_apply ζ
-  rw [map_mul, map_inv, inv_mul_eq_one] at this
-  exact this
+  rwa [map_mul, map_inv, inv_mul_eq_one] at this
 private theorem kills_pow {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {C : Type} [CommGroup C] {M : ℕ} (hM : 1 ≤ M)
     {χ : G ℚ Ω →* C} (hχ : KillsMu M χ) : ∃ k : ℕ, 0 < k ∧ ∀ s, χ s ^ k = 1 := by
   haveI : NeZero M := ⟨by omega⟩
@@ -1185,8 +1180,7 @@ private theorem lie_central {π : CuspSub E a} {ω : HChar E} (hω : π.HasCentr
     have h3 := congrFun (congrArg Subtype.val (hω (infId E (expU (t • z))) ψ hψ)) g
     have h4 := chiInf_expU ω (t • z)
     rw [map_smul, Complex.real_smul] at h4
-    rw [← h4]
-    exact h3
+    rwa [← h4]
   rw [h2] at h1
   have h5 := (((Complex.ofRealCLM.hasDerivAt (x := 0)).mul_const (dchi ω z)).cexp).mul_const (ψ.1 g)
   have h6 := h1.unique h5
@@ -1522,8 +1516,7 @@ private theorem de_core {O R G Γ ι : Type} [CommRing O] [IsLocalRing O] [Finit
         have e3 := sub_mem e1 e2
         rw [Matrix.sub_apply, Matrix.sub_apply, sub_sub_sub_cancel_right] at e3
         have e4 := hu a ⟨_, hη⟩
-        rw [← Ideal.mul_unit_mem_iff_mem _ (hun a ⟨_, hη⟩), sub_mul, e4, one_mul]
-        exact e3
+        rwa [← Ideal.mul_unit_mem_iff_mem _ (hun a ⟨_, hη⟩), sub_mul, e4, one_mul]
       · rw [← map_pow]
         refine h1 _ a ?_
         have e1 := (hr.loc v).2.2 hv _ hmem
@@ -1570,8 +1563,7 @@ private theorem de_core {O R G Γ ι : Type} [CommRing O] [IsLocalRing O] [Finit
             de_c ρ _ _ hρ.norm.atc ((hρ.mult _).trans hF.ηc) ((hρ.mult _).trans hη), e])
         rw [show (⟨_, h⟩ : F.η.ker) = ⟨_, e0 ▸ h⟩ from Subtype.ext e0, this, map_one])
     have := congrArg Units.val (DFunLike.congr_fun hχ g)
-    rw [← Ideal.Quotient.eq]
-    exact this
+    rwa [← Ideal.Quotient.eq]
   rcases hsplit g with hg | ⟨g', hg, rfl⟩
   · exact hker ⟨g, hg⟩
   · rw [de_mul' r _ _ ((hr.mult _).trans hg), de_mul' ρ _ _ ((hρ.mult _).trans hg), hr.norm.atc, hρ.norm.atc,

@@ -107,8 +107,7 @@ theorem bad_prime_to_p : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X
     intro Q hQ hm
     obtain ⟨P, hP, rfl⟩ := Finset.mem_map.1 hQ
     refine key P (hSS ▸ hP) ((GlobalTheory.TwU.mem_seamP t.seam P _).1 ?_)
-    rw [map_natCast]
-    exact hm
+    rwa [map_natCast]
   have keyF : ∀ v ∈ Formalism.L2.Col.plUnder D.host.F (GlobalTheory.TwU.ssRec t u μ),
       (((D.what₂.places.resChar w : ℕ)) : 𝓞 D.host.F) ∉ v.asIdeal := by
     rintro v ⟨Q, hQ, hv⟩ hm
@@ -126,8 +125,7 @@ theorem bad_prime_to_p : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X
   · rintro v ⟨P, hP, hv⟩ hm
     rw [hv, Ideal.mem_comap, map_natCast] at hm
     refine key P (Finset.mem_union_right _ hP) ((GlobalTheory.TwU.mem_seamP t.seam P _).1 ?_)
-    rw [map_natCast]
-    exact hm
+    rwa [map_natCast]
 
 end GlobalTheory.TwV.Xc.SBad
 

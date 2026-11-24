@@ -120,8 +120,7 @@ theorem det_trace_monic {E A : Type} [Field E] [CommRing A] [Algebra E A] {n : �
     · intro i j hij
       simp only [Matrix.of_apply]
       apply coeff_eq_zero_of_natDegree_lt
-      rw [hd i]
-      exact hij
+      rwa [hd i]
   rw [hM, Matrix.det_mul, hC, one_mul]
 
 theorem charpoly_leftMul_basis {E A : Type} [Field E] [CommRing A] [Algebra E A]
@@ -170,10 +169,8 @@ theorem GlobalTheory.det_trace_pow_prod : ∀ (E A₁ A₂ : Type) [Field E] [Co
   have hm : ∀ k, (q k).Monic := by
     intro k
     by_cases hk : (k : ℕ) < a
-    · simp only [q, hk, ite_true]
-      exact monic_X_pow _
-    · simp only [q, hk, ite_false]
-      exact (monic_X_pow _).mul (LinearMap.charpoly_monic _)
+    · simpa only [q, hk, ite_true] using monic_X_pow _
+    · simpa only [q, hk, ite_false] using (monic_X_pow _).mul (LinearMap.charpoly_monic _)
   refine ⟨(-1) ^ (a * b), by rw [← mul_pow, neg_one_mul, neg_neg, one_pow], ?_⟩
   rw [det_trace_monic (g₁, g₂) _ q hd hm]
   let M := Matrix.of fun k l : Fin (a + b) => Algebra.trace E (A₁ × A₂)

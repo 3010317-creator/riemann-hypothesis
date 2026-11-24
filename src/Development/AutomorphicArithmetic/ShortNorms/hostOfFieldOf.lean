@@ -332,9 +332,7 @@ private theorem boxq_of_pair {M : ℕ} {eps Y X : ℝ} {q d : ℕ} (hM : 0 < M) 
     show ((1 : DirichletCharacter ℂ 1) a).im = 0
     rw [Subsingleton.elim (α := ZMod 1) a 1, map_one]
     simp
-  have h81 : PChar.one.N ∣ 8 := by
-    show (1 : ℕ) ∣ 8
-    exact one_dvd 8
+  have h81 : PChar.one.N ∣ 8 := one_dvd 8
   obtain ⟨ρ, hρr, hρN, hρv⟩ := real_character_mod_eight
   have hP : ∀ a : ℕ, a % 2 = 1 → GlobalTheoryTheory.psDir q a = ((jacobiSym (a : ℤ) q : ℤ) : ℂ) :=
     fun a ha => boxes_kron_neg q a hq4 ha
@@ -446,8 +444,7 @@ private theorem qdq_core {M : ℕ} {eps Y x : ℝ} {q d : ℕ} (he : 0 < eps) (h
   refine ⟨?_, hl⟩
   have e : GlobalTheoryTheory.gChi χ x = An.gChi χ x := rfl
   rw [e]
-  refine le_trans hg ?_
-  exact Real.rpow_le_rpow_of_exponent_le hx (by linarith)
+  exact le_trans hg (Real.rpow_le_rpow_of_exponent_le hx (by linarith))
 
 private theorem qdq_of_pair {M : ℕ} {eps Y x : ℝ} {q d : ℕ} (he : 0 < eps) (hx : 1 ≤ x) (hY : Y ≤ x)
     (h : PairGood M eps Y x q d) : QDq x eps 4 q d := by
@@ -515,8 +512,7 @@ theorem UpperTheory.Top.pairRows :
   have hlb : 41000 * C0 / eps ^ 2 ≤ Real.log Y := le_trans (le_max_right _ _) hLl
   have hT : 820 * C0 * Real.log Y ≤ Y ^ (eps / 5) := by
     have := mul_le_exp_of_le_div_sq he hC1 hlb
-    rw [Real.rpow_def_of_pos (by linarith)]
-    exact this
+    rwa [Real.rpow_def_of_pos (by linarith)]
   have hQS0 : (0 : ℝ) < H.QS := by exact_mod_cast H.QS_pos
   have hq0 : (0 : ℝ) < H.q := by exact_mod_cast hw.q_prime.pos
   have hd0 : (0 : ℝ) < H.d := by exact_mod_cast hw.d_prime.pos
@@ -731,8 +727,7 @@ private theorem exists_real_pchar_twist_decomposition (N : ℕ) [NeZero N] (χ :
           have hc2 : p.Coprime (2 ^ S.factorization 2) :=
             ((Nat.coprime_primes hp Nat.prime_two).2 hp2).pow_right _
           refine Nat.Coprime.dvd_of_dvd_mul_left hc2 ?_
-          rw [Nat.ordProj_mul_ordCompl_eq_self]
-          exact h
+          rwa [Nat.ordProj_mul_ordCompl_eq_self]
       · exact Or.inr (Or.inl ((Nat.prime_dvd_prime_iff_eq hp hq).1 h))
     · exact Or.inr (Or.inr ((Nat.prime_dvd_prime_iff_eq hp hd).1 h))
   obtain ⟨ξ, a, b, ha, hb, hξ⟩ :=
@@ -745,9 +740,7 @@ private theorem exists_real_pchar_twist_decomposition (N : ℕ) [NeZero N] (χ :
     intro n hn
     have h := DirichletCharacter.changeLevel_eq_cast_of_dvd' ξ.primitiveCharacter
       ξ.conductor_dvd_level (a := (n : ℤ)) (Nat.isCoprime_iff_coprime.2 hn)
-    rw [DirichletCharacter.changeLevel_primitiveCharacter] at h
-    rw [Int.cast_natCast, Int.cast_natCast] at h
-    exact h
+    rwa [DirichletCharacter.changeLevel_primitiveCharacter, Int.cast_natCast, Int.cast_natCast] at h
   have hcN₀ : ξ.conductor ∣ 8 * ordCompl[2] S := ξ.conductor_dvd_level
   have hqc : ¬ q ∣ ξ.conductor := fun h => hq8 (h.trans hcN₀)
   obtain ⟨M1, ψ1, hM1, hψ1, hψ1eq⟩ := UpperTheory.Top.realSplit_step ξ.conductor q a
@@ -1079,8 +1072,7 @@ theorem UpperTheory.BernoulliSumsFrobeniusOrbits.thickFrame2 :
   have hLw2 : (2:ℝ) ≤ Lw := by exact_mod_cast hLw
   have hLwpos : (0:ℝ) < Lw := by linarith
   have hCL : 0 < CL := by
-    by_contra hneg
-    push Not at hneg
+    by_contra! hneg
     have := mul_le_mul_of_nonneg_right hneg hypos.le
     linarith
   have hb : Real.log Lw ≤ Real.log CL + Real.log (Real.log x) := by
@@ -1156,8 +1148,7 @@ theorem UpperTheory.BernoulliSumsFrobeniusOrbits.thickFrame2 :
   have hE2 : 2 ≤ E := by
     have h1 : Real.log 2 ≤ C * u := by
       have h3 := mul_le_mul_of_nonneg_left hu_low hC.le
-      rw [mul_div_cancel₀ _ hC.ne'] at h3
-      exact h3
+      rwa [mul_div_cancel₀ _ hC.ne'] at h3
     rw [hE']
     calc (2:ℝ) = Real.exp (Real.log 2) := (Real.exp_log (by norm_num)).symm
       _ ≤ Real.exp (C * u) := Real.exp_le_exp.mpr h1
@@ -1180,8 +1171,7 @@ theorem UpperTheory.BernoulliSumsFrobeniusOrbits.thickFrame2 :
   obtain ⟨T, hTs, hTnr, hTc⟩ := hT φ.n0 Lw hLw
   rw [← hu] at hTc
   have hTc' : Q ≤ T.card := by
-    rw [hQ, hE', ← Real.exp_neg, ← neg_mul]
-    exact hTc
+    rwa [hQ, hE', ← Real.exp_neg, ← neg_mul]
   have hcardN : T.card ≤ (T.erase 0).card + 1 := by
     have := Finset.pred_card_le_card_erase (s := T) (a := 0)
     omega
@@ -1230,8 +1220,7 @@ private theorem logb_le' {x eps Co k p : ℝ} (he : 0 < eps) (he' : eps < 1 / 52
     exact Real.log_le_log (by norm_num) hx
   have hlk : Real.log k ≤ Real.log 2 + (9 / 2 + 10 * eps) * Real.log x := by
     have h := Real.log_le_log hk0 hk
-    rw [Real.log_mul (by norm_num) (by positivity), Real.log_rpow hx0] at h
-    exact h
+    rwa [Real.log_mul (by norm_num) (by positivity), Real.log_rpow hx0] at h
   have hCo0 : 0 < Co := by linarith
   have hlp : eps / (5 * Co) * Real.log x < Real.log p := by
     have hp0 : 0 < x ^ (eps / (5 * Co)) := by positivity
@@ -1367,8 +1356,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Fo
 
 private theorem lt_of_classC0' {R : Ranks} (H : Host R) {p : ℕ} {y : ℝ} (hp : p.Prime) (hc : H.cls p = PrimeClass.inertClass)
     (hs : ∀ p : ℕ, p.Prime → (p : ℝ) ≤ y → GlobalTheoryTheory.kronSym (-(H.d : ℤ)) p = 1) : y < p := by
-  by_contra hle
-  push Not at hle
+  by_contra! hle
   have hk := hs p hp hle
   have hc' := hc
   simp only [Host.cls, primeClass] at hc'
@@ -1376,8 +1364,7 @@ private theorem lt_of_classC0' {R : Ranks} (H : Host R) {p : ℕ} {y : ℝ} (hp 
   · subst h2
     have hmem : 2 ∈ H.toHostRaw.small := by
       rw [Formalism.HC.HostRaw.small, Nat.mem_primeFactors]
-      refine ⟨Nat.prime_two, ?_, H.QS_pos.ne'⟩
-      exact dvd_trans (dvd_pow_self 2 (by omega)) H.tower_dvd
+      exact ⟨Nat.prime_two, dvd_trans (dvd_pow_self 2 (by omega)) H.tower_dvd, H.QS_pos.ne'⟩
     rw [ite_eq_left hmem] at hc'
     exact absurd hc' (by decide)
   · have hodd : p.factorization 2 = 0 :=
@@ -1416,8 +1403,7 @@ theorem UpperTheory.BernoulliSumsFrobeniusOrbits.topsChoiceH :
               (one_div_le_one_div_of_le (by linarith) (by linarith))) (by positivity)
       _ ≤ Y ^ (eps / 5) := Real.rpow_le_rpow (Real.rpow_nonneg (by linarith) _) hPW.1 (by positivity)
   have hC0 : ∀ p : ℕ, p.Prime → (baseOf s 0 0 H).IsResidueClassZero p → s.x ^ (eps / (5 * max C8 2)) < p := by
-    intro p hp hc
-    exact lt_of_le_of_lt hsmall (lt_of_classC0' H hp hc hkron)
+    exact fun p hp hc => lt_of_le_of_lt hsmall (lt_of_classC0' H hp hc hkron)
   have hxe : 0 ≤ s.x ^ (2 + 8 * eps) := Real.rpow_nonneg (by linarith) _
   obtain ⟨TT, h1, h2, h3, h4⟩ := hT (baseOf s 0 0 H) (hPH H) hse hx (by
       show s.x ^ (2 + 8 * eps) / 2 ≤ (R.n : ℝ)

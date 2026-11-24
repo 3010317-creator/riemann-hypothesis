@@ -99,8 +99,7 @@ theorem exists_place_valuation_aut (F E : Type) [Field F] [NumberField F] [Field
     ext a
     change e (algebraMap (𝓞 F) (𝓞 E) a) ∈ w.asIdeal ↔ algebraMap (𝓞 F) (𝓞 E) a ∈ w.asIdeal
     rw [hfix]
-  · intro y
-    exact valuation_of_eq_comap σ.toRingEquiv w _ rfl y
+  · exact fun y => valuation_of_eq_comap σ.toRingEquiv w _ rfl y
 
 theorem sUnits_over_and_aut : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsGalois F E] (S : Finset (HeightOneSpectrum (𝓞 F))) (SE : Finset (HeightOneSpectrum (𝓞 E))), (∀ w : HeightOneSpectrum (𝓞 E), w ∈ SE ↔ w.under (𝓞 F) ∈ S) → (∀ x : Fˣ, Units.map (algebraMap F E : F →* E) x ∈ sUnits E SE ↔ x ∈ sUnits F S) ∧ ∀ (τ : E ≃ₐ[F] E) (y : Eˣ), y ∈ sUnits E SE → Units.map (τ : E →* E) y ∈ sUnits E SE := by
   intro F E _ _ _ _ _ _ S SE hS
@@ -169,8 +168,7 @@ theorem IsKum.sum_conj_eq {p : ℕ} {F E : Type} [Field F] [Field E] [Algebra F 
       rw [div_pow, ← pow_mul, ← pow_mul, mul_comm i, mul_comm k, pow_mul, pow_mul,
         h.root.pow_eq_one, one_pow, one_pow, div_one]
     rw [geom_sum_eq hne, hp, sub_self, zero_div, zero_smul]
-  · intro h0
-    exact absurd (Finset.mem_range.2 hk) h0
+  · exact fun h0 => absurd (Finset.mem_range.2 hk) h0
 
 theorem exists_uniformizer_lt_one (E : Type) [Field E] [NumberField E]
     (w : HeightOneSpectrum (𝓞 E)) (T : Finset (HeightOneSpectrum (𝓞 E))) (hw : w ∈ T) :
@@ -285,8 +283,7 @@ theorem hilbert90_sUnits_kummer : ∀ (p : ℕ) (F E : Type) [Field F] [NumberFi
   have hval : ∀ w : HeightOneSpectrum (𝓞 E), w ∉ SE → w.valuation E (σ y) = w.valuation E y := by
     intro w hw
     have h1 := hu w hw
-    rw [hy, map_div₀, div_eq_one_iff_eq (by simpa only [ne_eq, map_eq_zero] using hy0)] at h1
-    exact h1
+    rwa [hy, map_div₀, div_eq_one_iff_eq (by simpa only [ne_eq, map_eq_zero] using hy0)] at h1
   have hpow : ∀ (k : ℕ) (w : HeightOneSpectrum (𝓞 E)), w ∉ SE →
       w.valuation E ((σ ^ k) y) = w.valuation E y := by
     intro k w hw
@@ -562,8 +559,7 @@ private theorem pTor_range_eq (p : ℕ) {U A : Type} [CommGroup U] [CommGroup A]
   symm
   refine Nat.card_eq_of_bijective
     (fun x => ⟨j x.1, ⟨x.1, rfl⟩, by rw [← map_pow, x.2.2, map_one]⟩) ⟨?_, ?_⟩
-  · intro a b h
-    exact Subtype.ext (hj (congrArg Subtype.val h))
+  · exact fun a b h => Subtype.ext (hj (congrArg Subtype.val h))
   · rintro ⟨_, ⟨y, rfl⟩, h⟩
     exact ⟨⟨y, Subgroup.mem_top _, hj (by rw [map_pow, h, map_one])⟩, rfl⟩
 

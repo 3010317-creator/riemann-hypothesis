@@ -241,8 +241,7 @@ theorem UpperTheory.Lit.Mix.comb :
       have h2 : 0 ≤ (E.card : ℤ) * ((E.card : ℤ) - 1) := mul_nonneg (by linarith) (by linarith)
       nlinarith
   have key : ∃ t, J t ∧ ∀ b ∈ L, g b ≠ t + 1 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have hall : ∀ n : ℕ, J (g a0 + n) := by
       intro n
       induction n with
@@ -336,8 +335,7 @@ theorem _root_.GlobalTheory.WordGrowth.exists_average
       rfl
   · intro f hf
 
-    rw [map_smul, map_sum, smul_eq_mul]
-    rw [Finset.sum_congr rfl (g := fun _ => f u) ?_]
+    rw [map_smul, map_sum, smul_eq_mul, Finset.sum_congr rfl (g := fun _ => f u) ?_]
     · rw [Finset.sum_const, nsmul_eq_mul]
       field_simp
     · intro v hv
@@ -697,8 +695,7 @@ theorem UpperTheory.Lit.Mix.nolow :
       push_cast
       ring
     show (IrrGL.ofChar χ hχ).nu (c0 : ℂ) ∈ A
-    rw [e]
-    exact hmem
+    rwa [e]
   obtain ⟨h, x, hxA, -⟩ := id hA
   let P : Fin h → Prop := fun a => ∃ j : ℤ, x a = B (c0 + j)
   let L : Finset (Fin h) := Finset.univ.filter P
@@ -706,8 +703,7 @@ theorem UpperTheory.Lit.Mix.nolow :
   have hg : ∀ a ∈ L, x a = B (c0 + g a) := by
     intro a ha
     have ha' : P a := (Finset.mem_filter.mp ha).2
-    simp only [g, dite_eq_left ha']
-    exact ha'.choose_spec
+    simpa only [g, dite_eq_left ha'] using ha'.choose_spec
   rw [← hxA] at hmem'
   obtain ⟨a₀, -, ha₀⟩ := Multiset.mem_map.mp hmem'
   have ha₀L : a₀ ∈ L := Finset.mem_filter.mpr ⟨Finset.mem_univ _, 0, by rw [ha₀]; simp⟩
@@ -720,8 +716,7 @@ theorem UpperTheory.Lit.Mix.nolow :
   obtain ⟨S, hSL, hSne, hsep, hsum⟩ := UpperTheory.Lit.Mix.comb h L g ⟨a₀, ha₀L, hga₀.le⟩
   have hr : ∑ a, (x a).1 = r := by
     have e := hA.sum_fst
-    rw [← hxA, Multiset.map_map, Fintype.card_fin] at e
-    exact e
+    rwa [← hxA, Multiset.map_map, Fintype.card_fin] at e
   have hS1 : ∀ a ∈ S, (x a).1 = 1 := fun a ha => by rw [hg a (hSL ha)]; rfl
   have hScard : S.card ≤ r := by
     rw [← hr]
@@ -782,8 +777,7 @@ theorem UpperTheory.Lit.Mix.nolow :
   have hE : ∀ e, E (B e) = e := by
     intro e
     have hy : ∃ e' : ℝ, B e = B e' := ⟨e, rfl⟩
-    simp only [E, dite_eq_left hy]
-    exact (hB_inj hy.choose_spec).symm
+    simpa only [E, dite_eq_left hy] using (hB_inj hy.choose_spec).symm
   have hu_form : ∀ a, u a = B (E (u a)) := by
     intro a
     have hmem0 : u a ∈ A₀ := by
@@ -809,8 +803,7 @@ theorem UpperTheory.Lit.Mix.nolow :
     have key := scalarBy_nu χ hχ z (E (u a))
     have e := hu_form a
     simp only [B] at e
-    rw [← e] at key
-    exact key
+    rwa [← e] at key
   have hscal := scalarFull k h₀ S.card u hu z c hsc
   have hadm : IsAdmissible σ := (hBZ k).1 _ V σ hA.isSmooth hA.isIrreducible
   have hnt : Nontrivial V := Model.nontrivial_of_isIrreducible hA.isIrreducible
@@ -825,14 +818,11 @@ theorem UpperTheory.Lit.Mix.nolow :
     simp only [c, norm_mul, hχu z, one_mul, Complex.norm_real, Real.norm_eq_abs]
     rw [Real.rpow_add hzpos, Real.rpow_sum_of_pos hzpos]
     congr 1
-    · apply Finset.prod_congr rfl
-      intro a _
-      exact abs_of_pos (Real.rpow_pos_of_pos hzpos _)
+    · exact Finset.prod_congr rfl (fun a _ => abs_of_pos (Real.rpow_pos_of_pos hzpos _))
     · exact abs_of_pos (Real.rpow_pos_of_pos hzpos _)
   rw [hnorm] at hb
   have hexp : 0 ≤ ∑ a, E (u a) + (S.card * n : ℝ) / 2 := by
-    by_contra hneg
-    push Not at hneg
+    by_contra! hneg
     have h3 := Real.one_lt_rpow_of_pos_of_lt_one_of_neg hzpos hz1 hneg
     linarith
   rw [hEsum, Finset.sum_add_distrib, Finset.sum_const, nsmul_eq_mul] at hexp

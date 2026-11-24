@@ -170,12 +170,10 @@ theorem finCl_mk_eq_iff (V : HSp D) (K : Subgroup (GL (Fin V.rank) (Lev.EAf D)))
     obtain ⟨γ1, hγ1, e1⟩ := GlobalTheory.DefFree.AdelCls.exists_fin V (GlobalTheory.DefFree.finU V γ0)
     obtain ⟨κ, hκ, e2⟩ := GlobalTheory.DefFree.AdelCls.exists_fin V k
     refine ⟨⟨γ1, hγ1⟩, ?_, ⟨κ, hκ⟩, ?_, ?_⟩
-    · refine Subgroup.mem_comap.2 (Subgroup.mem_map.2 ⟨γ0, hγ0, ?_⟩)
-      exact (congrArg Subtype.val e1).symm
+    · exact Subgroup.mem_comap.2 (Subgroup.mem_map.2 ⟨γ0, hγ0, (congrArg Subtype.val e1).symm⟩)
     · refine Subgroup.mem_comap.2 ?_
       have := Subgroup.mem_subgroupOf.1 hk
-      rw [← e2] at this
-      exact this
+      rwa [← e2] at this
     · apply Subtype.ext
       have hx : (b.1)⁻¹ * (γ1 * a.1 * κ) ∈ GinfC V := by
         rw [← GlobalTheory.DefFree.AdelCls.finU_eq_one_iff, MonoidHom.map_mul, MonoidHom.map_inv, MonoidHom.map_mul, MonoidHom.map_mul,
@@ -205,8 +203,7 @@ theorem card_clPlus_le : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (
     (Nat.card G.ClPlus : ℝ) ≤ hBd D (G.V (.top 0)).rank * (Ideal.absNorm G.modul : ℝ) ^ ((G.V (.top 0)).rank ^ 2) := by
   intro D T L sc G U hS
   have h := _root_.GlobalTheory.FrameTransport.finCl_card_le G hS (.top 0) (Nat.zero_le _) G.modul (G.pl.modul_ne_bot sc) G.Kplus le_rfl
-  rw [card_finCl_eq] at h
-  exact h
+  rwa [card_finCl_eq] at h
 
 end GlobalTheory.ClassCount
 
@@ -487,8 +484,7 @@ theorem archimedean_class_count_bound : _root_.GlobalTheory.FunPr.ThetaLocalInpu
     have e1 : hBd D N ≤ Real.exp ((6 * D.R.f * N ^ 2 : ℕ) * (8 * Real.log b)) := by
       rw [Real.exp_nat_mul]
       refine pow_le_pow_left₀ (by positivity) ?_ _
-      rw [← Real.log_le_iff_le_exp (by positivity)]
-      exact hlbase
+      rwa [← Real.log_le_iff_le_exp (by positivity)]
     have e2 : Real.exp (2 * sig ch.G) ^ (N ^ 2) = Real.exp ((N ^ 2 : ℕ) * (2 * sig ch.G)) := (Real.exp_nat_mul _ _).symm
     rw [hM, e2, hK0]
     calc _ ≤ Real.exp ((6 * D.R.f * N ^ 2 : ℕ) * (8 * Real.log b)) * Real.exp ((N ^ 2 : ℕ) * (2 * sig ch.G)) :=

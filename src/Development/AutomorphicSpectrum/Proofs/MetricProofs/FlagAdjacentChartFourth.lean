@@ -92,8 +92,7 @@ theorem minor_insert_of_lowerUni {X : Matrix (Fin N) (Fin N) ℂ} (hX : IsLowerU
       rw [ite_eq_left e]
       exact (h1.trans_le (htop _ (hfm s))).trans hab
     · show _ < ite _ _ _
-      rw [ite_eq_right e]
-      exact h1
+      rwa [ite_eq_right e]
   have hmem : ∀ r, g r ∈ insert a (C.erase b) := fun r => by
     by_cases e : C.orderEmbOfFin rfl r = b
     · show ite _ _ _ ∈ _
@@ -110,8 +109,7 @@ theorem minor_insert_of_lowerUni {X : Matrix (Fin N) (Fin N) ℂ} (hX : IsLowerU
     rw [hgr r s hrs]
     exact hX.2 _ _ ((C.orderEmbOfFin rfl).strictMono hrs)]
   obtain ⟨r₀, hr₀⟩ : b ∈ Set.range (C.orderEmbOfFin rfl) := by
-    rw [Finset.range_orderEmbOfFin]
-    exact hb
+    rwa [Finset.range_orderEmbOfFin]
   rw [Finset.prod_eq_single r₀]
   · show X (ite _ _ _) _ = _
     rw [ite_eq_left hr₀, hr₀]
@@ -341,8 +339,7 @@ theorem chart_reads : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Finty
   refine ⟨⟨Mm, ?_, ?_, ?_, ?_⟩, ?_⟩
   · rw [hbase, hr1]
     exact (Rb.A.chart kb).map_target hV
-  · rw [hbase, hr1, (Rb.A.chart kb).right_inv hV]
-    exact hwV
+  · rwa [hbase, hr1, (Rb.A.chart kb).right_inv hV]
   · intro p k hp
     rw [hbase, twMinor_self M hF hzb hG hp (hh p.1).1 (hh p.1).2 (hL p.1) (hLd p.1) (hz1 p.1 p.2 k hp)]
     exact one_ne_zero

@@ -336,8 +336,7 @@ theorem exists_lamGen_zpow : ∀ {R : Type} [CommRing R] [IsDomain R] (D : DegPr
     have e := val_tau_nsmul (𝟙 (TK R)) hJ hB k b a
     rw [val_tau_symm _ hJ (k • b) a, val_tau_symm _ hJ b a] at e
     simp only [Over.id_left] at e
-    rw [natCast_zsmul, zpow_natCast]
-    exact e
+    rwa [natCast_zsmul, zpow_natCast]
   · obtain ⟨t, ht, hv⟩ := exists_cubN D.cub (snd D.P.A D.P.A ^ (-(k : ℤ))) (snd D.P.A D.P.A) (fst D.P.A D.P.A) k
     have hF : FormEq
         ![(snd D.P.A D.P.A ^ (-(k : ℤ)) * snd D.P.A D.P.A ^ k * fst D.P.A D.P.A).left,

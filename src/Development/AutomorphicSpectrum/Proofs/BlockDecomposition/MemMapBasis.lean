@@ -312,8 +312,7 @@ theorem fl_surj {φ₂ : T₂ ⟶ T₂} {φ₁ : T₁ ⟶ T₁} {c : ι → Λ} 
       apply e.symm.injective
       ext a
       have := hu1 n a
-      rw [map_sub, map_smul, Finsupp.sub_apply, Finsupp.smul_apply, diag e hd, e.symm_apply_apply]
-      exact this
+      rwa [map_sub, map_smul, Finsupp.sub_apply, Finsupp.smul_apply, diag e hd, e.symm_apply_apply]
 
 theorem fl_inj {φ₂ : T₂ ⟶ T₂} {φ₁ : T₁ ⟶ T₁} {c : ι → Λ} {p : ι → Prop}
     (hd : ∀ a m, (F.map φ₂).hom (e (Finsupp.single a m)) = e (Finsupp.single a (c a • (F.map φ₁).hom m)))
@@ -388,10 +387,8 @@ theorem main : ∀ {Λ : Type} [CommRing Λ] {C : Type 1} [Category.{0} C] {F : 
   · intro k k' hkk
     exact NatTrans.ext (funext fun _ => ModuleCat.hom_ext (LinearMap.ext fun x =>
       fl_orth Φ e h4 (fun a ha hb => hkk (by simpa [ha] using hb)) x))
-  · intro k x hx
-    exact fl_surj Φ e h4 (h2 (gen k)) (fun a ha => (hKs a k ha).2) x hx
-  · intro k x hx hg
-    exact fl_inj Φ e h4 (h2 (gen k)) (fun a ha => (hKs a k ha).1) x hx hg
+  · exact fun k x hx => fl_surj Φ e h4 (h2 (gen k)) (fun a ha => (hKs a k ha).2) x hx
+  · exact fun k x hx hg => fl_inj Φ e h4 (h2 (gen k)) (fun a ha => (hKs a k ha).1) x hx hg
 
 end GlobalTheory.CompanionTheory.ReesBasis
 end -- clump:auto
@@ -530,8 +527,7 @@ theorem exists_pow_pow_eq (p : ℕ) {A : Type} [CommRing A] (h : Function.Biject
     obtain ⟨c, hc⟩ := h.2 a
     obtain ⟨b, hb⟩ := ih c
     refine ⟨b, ?_⟩
-    rw [pow_succ, pow_mul, hb]
-    exact hc
+    rwa [pow_succ, pow_mul, hb]
 
 theorem exists_lift (p : ℕ) [Fact p.Prime] {A B : Type} [CommRing A] [CommRing B] [CharP A p]
     [PerfectRing A p] [Fact ¬IsUnit (p : B)] [IsAdicComplete (Ideal.span {(p : B)}) B] (J : Ideal B)
@@ -583,8 +579,7 @@ theorem lift_unique (p : ℕ) [Fact p.Prime] {A B : Type} [CommRing A] [CommRing
     exact hJ _ huv
   have h2 := dvd_sub_pow_of_dvd_sub h1 n
   have h0 : (p : B) ^ (n + 1) = 0 := by rw [pow_succ, hn, zero_mul]
-  rw [h0, zero_dvd_iff, sub_eq_zero, ← pow_mul, ← pow_mul, ← pow_succ'] at h2
-  exact h2
+  rwa [h0, zero_dvd_iff, sub_eq_zero, ← pow_mul, ← pow_mul, ← pow_succ'] at h2
 
 theorem wittVector_lift : ∀ (p : ℕ) [Fact p.Prime] {A B : Type} [CommRing A] [CommRing B] (J : Ideal B) (n : ℕ), D.Pf p A → (p : B) ^ n = 0 → (p : B) ∈ J → (∀ x ∈ J, x ^ p ∈ Ideal.span {(p : B)}) → ∀ g : A →+* B ⧸ J, (∃ f : WittVector p A →+* B, ∀ a, Ideal.Quotient.mk J (f (WittVector.teichmuller p a)) = g a) ∧ ∀ f f' : WittVector p A →+* B, (∀ a, Ideal.Quotient.mk J (f (WittVector.teichmuller p a)) = Ideal.Quotient.mk J (f' (WittVector.teichmuller p a))) → f = f' := by
   intro p _ A B _ _ J n hA hn hpJ hJ g
@@ -688,10 +683,8 @@ theorem tens_desc (m n : ℕ)
   have hf : ∀ z, f (Φ z) = L z := fun z =>
     RingHom.liftOfRightInverse_comp_apply _ _ _ _ z
   refine ⟨f, fun s => ?_, fun t => ?_⟩
-  · have h := hf (s ⊗ₜ 1)
-    simpa [Φ, L, u'] using h
-  · have h := hf (1 ⊗ₜ t)
-    simpa [Φ, L, v'] using h
+  · simpa [Φ, L, u'] using hf (s ⊗ₜ 1)
+  · simpa [Φ, L, v'] using hf (1 ⊗ₜ t)
 
 end Tens
 
@@ -737,8 +730,7 @@ theorem maps_out : ∀ {l : ℕ} [Fact l.Prime] (A : PAlg l) (n : ℕ) (B : Type
       rw [e, hf₀]
   · have hfJ : A.PFil n ≤ (((base l).PFil n).map h).comap f := by
       refine sup_le ?_ ?_
-      · rw [Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, Ideal.mem_comap, map_natCast]
-        exact hlJ
+      · rwa [Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, Ideal.mem_comap, map_natCast]
       · rw [hFil 1, Ideal.map_le_iff_le_comap]
         intro x hx
         rw [Ideal.mem_comap, Ideal.mem_comap, ← RingHom.comp_apply, h1]
@@ -792,8 +784,7 @@ theorem roots_eq {B : Type} [CommRing B] {l n : ℕ} (hl : l.Prime) (hn : n ≠ 
   have hdiv := dvd_sub_pow_of_dvd_sub hd n
   rw [← pow_mul, ← pow_mul, ← pow_succ', key x hx (n + 1), key y hy (n + 1)] at hdiv
   have hz : (l : B) ^ (n + 1) = 0 := by rw [pow_succ, hln, zero_mul]
-  rw [hz, zero_dvd_iff, sub_eq_zero] at hdiv
-  exact hdiv
+  rwa [hz, zero_dvd_iff, sub_eq_zero] at hdiv
 
 theorem pow_mem_map {Λ E : Type} [CommRing Λ] [CommRing E] {l : ℕ} (hl : l.Prime) (h : Λ →+* E) (P : Ideal Λ)
     (hP : ∀ x ∈ P, x ^ l ∈ Ideal.span {(l : Λ)}) : ∀ u ∈ P.map h, u ^ l ∈ Ideal.span {(l : E)} := by
@@ -825,8 +816,7 @@ theorem pow_mem_map {Λ E : Type} [CommRing Λ] [CommRing E] {l : ℕ} (hl : l.P
     rw [Ideal.mem_span_singleton] at hx' ⊢
     obtain ⟨c, hc⟩ := hx'
     exact ⟨h c, by rw [← map_pow, hc, map_mul, map_natCast]⟩
-  intro u hu
-  exact hle hu
+  exact fun u hu => hle hu
 
 theorem nil_of {E : Type} [CommRing E] {l n : ℕ} (hln : (l : E) ^ n = 0) (J : Ideal E)
     (hJ : ∀ u ∈ J, u ^ l ∈ Ideal.span {(l : E)}) : ∀ u ∈ J, IsNilpotent u := by
@@ -857,20 +847,17 @@ theorem finish {O R Λ : Type} [CommRing O] [CommRing R] [CommRing Λ] {a : O �
   have hmod : ∀ z, Ideal.Quotient.mk J (e' (φ z)) = Ideal.Quotient.mk J (algebraMap 𝓛.D X.E z) := by
     have hh : ∀ x ∈ I, ((Ideal.Quotient.mk J).comp ((algebraMap 𝓛.D X.E).comp 𝓛.i)) x = 0 := by
       intro x hx
-      simp only [RingHom.comp_apply]
-      exact Ideal.Quotient.eq_zero_iff_mem.mpr (hIJ x hx)
+      simpa only [RingHom.comp_apply] using Ideal.Quotient.eq_zero_iff_mem.mpr (hIJ x hx)
     have hg : ∀ o x, Ideal.Quotient.mk I x = κ o →
         g' (a o) = ((Ideal.Quotient.mk J).comp ((algebraMap 𝓛.D X.E).comp 𝓛.i)) x := by
       intro o x hx
-      simp only [RingHom.comp_apply]
-      exact (hg' (a o) (𝓛.i x) (𝓛.hj o x hx).symm).symm
+      simpa only [RingHom.comp_apply] using (hg' (a o) (𝓛.i x) (𝓛.hj o x hx).symm).symm
     obtain ⟨f, -, huniq⟩ := 𝓛.univ (X.E ⧸ J) ((Ideal.Quotient.mk J).comp ((algebraMap 𝓛.D X.E).comp 𝓛.i)) g' hh hg
     have e1 := huniq ((Ideal.Quotient.mk J).comp (e'.comp φ))
       ⟨RingHom.ext fun x => by simp only [RingHom.comp_apply]; rw [hi], fun r z hz => hD r z hz⟩
     have e2 := huniq ((Ideal.Quotient.mk J).comp (algebraMap 𝓛.D X.E))
       ⟨RingHom.ext fun x => by simp only [RingHom.comp_apply], fun r z hz => hg' r z hz⟩
-    intro z
-    exact RingHom.congr_fun (e1.trans e2.symm) z
+    exact fun z => RingHom.congr_fun (e1.trans e2.symm) z
   have hφ : e'.comp φ = algebraMap 𝓛.D X.E := by
     letI : Algebra (MvPolynomial (Fin d) Λ) 𝓛.D := (MvPolynomial.eval₂Hom 𝓛.i 𝓛.t).toAlgebra
     haveI : Algebra.Etale (MvPolynomial (Fin d) Λ) 𝓛.D := 𝓛.et
@@ -880,8 +867,7 @@ theorem finish {O R Λ : Type} [CommRing O] [CommRing R] [CommRing Λ] {a : O �
         = (algebraMap 𝓛.D X.E).comp (MvPolynomial.eval₂Hom 𝓛.i 𝓛.t) := by
       apply MvPolynomial.ringHom_ext
       · intro c
-        simp only [RingHom.comp_apply, MvPolynomial.eval₂Hom_C]
-        exact hi c
+        simpa only [RingHom.comp_apply, MvPolynomial.eval₂Hom_C] using hi c
       · intro k
         simp only [RingHom.comp_apply, MvPolynomial.eval₂Hom_X']
         rw [h0, hroot, X.r_zero]
@@ -896,10 +882,8 @@ theorem finish {O R Λ : Type} [CommRing O] [CommRing R] [CommRing Λ] {a : O �
     have e1 := huniq (e'.comp e) ⟨RingHom.ext fun z => by
         simp only [RingHom.comp_apply]; rw [he]; exact RingHom.congr_fun hφ z,
       fun k m => by simp only [RingHom.comp_apply]; rw [her, hroot]⟩
-    have e2 := huniq (RingHom.id X.E) ⟨RingHom.ext fun z => rfl, fun k m => rfl⟩
-    exact e1.trans e2.symm
-  intro x
-  exact RingHom.congr_fun hid x
+    exact e1.trans (huniq (RingHom.id X.E) ⟨RingHom.ext fun z => rfl, fun k m => rfl⟩).symm
+  exact fun x => RingHom.congr_fun hid x
 
 end GlobalTheory.CompanionTheory.TowerAcr
 
@@ -962,9 +946,7 @@ theorem pt_eq {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] {F : Fn O} {κ : 
   obtain ⟨g0, -, huniq⟩ := s.univ (CommRingCat.of (𝒯.A.Acr n ⧸ JJ k 𝒯.A n))
     (F.Pt.map (CommRingCat.ofHom ((uJ k 𝒯.A n).comp 𝒯.g)) s.y₀) _
     (F.ov_map (CommRingCat.ofHom ((uJ k 𝒯.A n).comp 𝒯.g)) s.ov)
-  have e1 := huniq _ h3
-  have e2 := huniq ((uJ k 𝒯.A n).comp 𝒯.g) rfl
-  exact RingHom.congr_fun (e1.trans e2.symm) r
+  exact RingHom.congr_fun ((huniq _ h3).trans (huniq ((uJ k 𝒯.A n).comp 𝒯.g) rfl).symm) r
 
 end GlobalTheory.CompanionTheory.TowerAcr
 

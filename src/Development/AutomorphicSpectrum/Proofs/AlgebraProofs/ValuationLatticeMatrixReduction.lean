@@ -104,8 +104,7 @@ theorem eigenSub_iff_eval (C : Type) [Field C] (w : Valuation C ℝ≥0) (v : Ad
     intro s t
     rw [ev_lin]; rfl
   have hne : ∀ s, s ≠ τ → (a s : C) - a τ ≠ 0 := by
-    intro s hs h
-    exact hs (ha (Subtype.ext (sub_eq_zero.1 h)))
+    exact fun s hs h => hs (ha (Subtype.ext (sub_eq_zero.1 h)))
   have hmem : y ∈ GlobalTheory.IndefiniteRowSideFullHecke.QuotientEigenDifference.eigenSub (W := fun _ => Fin N → C)
       (GlobalTheory.IndefiniteRowSideFullHecke.QuotientEigenDifference.freeLattice a N) τ ↔
       (Pi.single τ y : S → Fin N → C) ∈ GlobalTheory.IndefiniteRowSideFullHecke.QuotientEigenDifference.freeLattice a N := Iff.rfl
@@ -257,12 +256,10 @@ theorem lie_eigenSub_iff_flat : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥
       · rw [hs, sub_self, zero_smul]; exact zero_mem _
       · have h1 : evalVec (liftA hv a) N x s ∈ GlobalTheory.IndefiniteRowSideFullHecke.QuotientEigenDifference.filSpace F s := by
           have := he s
-          rw [Pi.single_eq_of_ne hs, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at this
-          exact this
+          rwa [Pi.single_eq_of_ne hs, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at this
         exact Submodule.smul_mem _ _ h1
     · have := he τ
-      rw [Pi.single_eq_same] at this
-      exact this
+      rwa [Pi.single_eq_same] at this
   · rintro ⟨x, hx, rfl⟩
     refine ⟨evalVec (liftA hv a) N x, (hrange _).2 ⟨x, rfl⟩, fun s => ?_⟩
     by_cases hs : s = τ
@@ -339,8 +336,7 @@ theorem single_mem_of_mem {S : Type} [Fintype S] [DecidableEq S] {r : ℕ}
 theorem diffGen_ne_zero {S : Type} [Fintype S] [DecidableEq S] (a : S → w.valuationSubring)
     (ha : Function.Injective a) (τ : S) : diffGen a τ ≠ 0 := by
   rw [diffGen, Finset.prod_ne_zero_iff]
-  intro s hs e
-  exact (Finset.mem_erase.1 hs).1 (ha (sub_eq_zero.1 e)).symm
+  exact fun s hs e => (Finset.mem_erase.1 hs).1 (ha (sub_eq_zero.1 e)).symm
 
 end GlobalTheory.Div.KerFil
 
@@ -504,8 +500,7 @@ theorem filPre_mem_iff : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥0) (v :
   · intro hx
     have : (Submodule.span (RS (liftA hv a)) {x : Fin _ → RS (liftA hv a) | (fun s i => ↑(ev (liftA hv a) s (x i))) ∈ F}) ≤ T := Submodule.span_le.2 (fun y hy => hy)
     exact this hx
-  · intro hx
-    exact Submodule.subset_span hx
+  · exact fun hx => Submodule.subset_span hx
 
 end GlobalTheory.FilPreMem
 end -- clump:auto
@@ -753,8 +748,7 @@ theorem yExp_eq (w : Valuation C ℝ≥0) (ℓ : C) (h0 : 0 < w ℓ) (h1 : w ℓ
   refine Finset.sum_congr rfl fun s hs => ?_
   rw [hrk s]
   have hne : (a s : C) - (a τ : C) ≠ 0 := by
-    intro h
-    exact (Finset.ne_of_mem_erase hs) (ha (Subtype.ext (sub_eq_zero.1 h)))
+    exact fun h => (Finset.ne_of_mem_erase hs) (ha (Subtype.ext (sub_eq_zero.1 h)))
   change _ • toAddVal w ℓ h0 h1 ((a s : C) - (a τ : C)) = _
   rw [toAddVal_of_ne _ _ _ _ hne, ← WithTop.coe_nsmul, nsmul_eq_mul]
   congr 2
@@ -796,9 +790,7 @@ theorem exForm : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥0) (ℓ : C), 0
     rw [hmem] at hcx ⊢
     have hc' : (c : C) ∈ w.valuationSubring := (hv _).1 c.2
     refine hF.saturated _ ((hrange _).2 ⟨x, rfl⟩) ⟨(c : C), hc'⟩ ?_ ?_
-    · intro h
-      apply hc
-      exact Subtype.ext (congrArg (fun z : w.valuationSubring => (z : C)) h)
+    · exact fun h => hc (Subtype.ext (congrArg (fun z : w.valuationSubring => (z : C)) h))
     · convert hcx using 1
       rw [evalVec_smul]
       rfl
@@ -842,8 +834,7 @@ theorem exForm : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥0) (ℓ : C), 0
     exact WithTop.top_ne_coe hc
   have hAne : (Matrix.of (Fin.append U M)).det ≠ 0 := by
     rw [hAmat, ← RingHom.mapMatrix_apply, ← RingHom.map_det]
-    intro h'
-    exact hne (Subtype.ext h')
+    exact fun h' => hne (Subtype.ext h')
   have hXne : (Matrix.of X).det ≠ 0 := by
     rw [hdet']
     exact mul_ne_zero hc0 hAne
@@ -1152,8 +1143,7 @@ theorem mem_eigenQuot_freeLattice (a : S → w.valuationSubring) (r : ℕ) (τ :
     simp only [LinearMap.proj_apply]
     rw [hf τ]
     exact Subtype.prop _
-  · intro hu
-    exact ⟨fun _ => u, fun i => ⟨Polynomial.C ⟨u i, hu i⟩, fun s => by simp⟩, rfl⟩
+  · exact fun hu => ⟨fun _ => u, fun i => ⟨Polynomial.C ⟨u i, hu i⟩, fun s => by simp⟩, rfl⟩
 
 theorem mem_eigenSub_freeLattice [DecidableEq S] (a : S → w.valuationSubring) (r : ℕ) (τ : S)
     (v : Fin r → C) :
@@ -1249,9 +1239,7 @@ theorem det_append_eq_mul_det : ∀ (C : Type) [Field C] (w : Valuation C NNReal
   obtain ⟨B, hB, hBdet⟩ := GlobalTheory.DetRelCompare.transition m' m _ hm' hm
   have hx'0 : (Matrix.of x').det ≠ 0 :=
     ((Matrix.isUnit_iff_isUnit_det _).mp (Matrix.linearIndependent_row_iff_isUnit.mp hx'.1)).ne_zero
-  have happ0 : (Matrix.of (Fin.append u' m')).det ≠ 0 := by
-    intro h0
-    exact hx'0 (by rw [hdet, h0, mul_zero])
+  have happ0 : (Matrix.of (Fin.append u' m')).det ≠ 0 := fun h0 => hx'0 (by rw [hdet, h0, mul_zero])
   have hrel := GlobalTheory.DetRelCompare.det_append_eq F u u' m m' A B hA hB hu'.1 hmF happ0
   have hxP : (Matrix.of x).det = P.det * (Matrix.of x').det := by
     have hmat : Matrix.of x = P * Matrix.of x' := by
@@ -1461,8 +1449,7 @@ theorem mkQ_mem_eigenSub_iff (a : S → w.valuationSubring) (ha : Function.Injec
       rw [hu, ite_eq_left rfl] at h1
       have h2 : (filSpace (kerFil a N g) s).mkQ (f s - z) = 0 := (hfs s _).2 (by rw [map_sub]; exact h1)
       rw [map_sub, sub_eq_zero] at h2
-      rw [LinearMap.single_apply, Pi.single_eq_same]
-      exact h2
+      rwa [LinearMap.single_apply, Pi.single_eq_same]
     · have h1 := h0 s
       rw [hu, ite_eq_right hs, sub_zero] at h1
       rw [LinearMap.single_apply, Pi.single_eq_of_ne hs]

@@ -128,8 +128,7 @@ theorem hf_pos (X : Data E r) {ξ : Fin r → E} (hξ : ξ ≠ 0) {x : Frame X.�
   intro h0
   apply hξ
   funext a
-  have h1 := congrFun h0 a
-  simpa [Data.emb] using h1
+  simpa [Data.emb] using congrFun h0 a
 
 theorem guard_iff (X : Data E r) {ξ : Fin r → E} (hξ : ξ ≠ 0) {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) :
     hf X ξ x τ ≤ 1 ↔ 1 ≤ X.tt ξ x τ := by
@@ -229,9 +228,7 @@ theorem extraBounds_of_cfwM (X : Data E r) {ps : Frame X.Ψ r → ℝ} {a : ℝ}
   · subst ha0
     obtain ⟨⟨C, A, hC⟩, -⟩ := h
     refine ⟨A, fun η _ => ⟨C, fun x hx ξ _ _ => ?_⟩, C, hC⟩
-    have h1 := hC x hx
-    simp only [mul_zero, zero_mul, sub_zero]
-    exact h1
+    simpa only [mul_zero, zero_mul, sub_zero] using hC x hx
   · obtain ⟨B0, hB0⟩ := bdd_add_log X h hapos 0
     have := nonempty_cmType X
     refine ⟨0, fun η hη => ?_, B0, fun x hx => by linarith [hB0 x hx]⟩
@@ -345,8 +342,7 @@ theorem _root_.GlobalTheory.ThetaRecordCompare.leviRh_nonneg (X : _root_.Recipro
     (ho : _root_.ReciprocityTheory.ChartRestriction.G.AR.Up.IsOrth X x0) {z : _root_.ReciprocityTheory.L2DbarEstimates.V (_root_.ReciprocityTheory.ChartRestriction.G.AR.Inst.nd X)}
     (hz : z ∈ _root_.ReciprocityTheory.ChartRestriction.G.AR.Up.OmF X x0) (ξ : Fin (_root_.ReciprocityTheory.ChartRestriction.G.AR.Inst.nd X) → ℂ) : 0 ≤ _root_.ReciprocityTheory.ChartRestriction.G.AR.Up.leviRh X x0 z ξ := by
   have h0 := _root_.GlobalTheory.FrameThetaCompare.curvDe_nonneg X (x0 := x0) hz ξ
-  rw [_root_.GlobalTheory.FrameThetaCompare.curvDe_eq_omRh X ho hz ξ] at h0
-  exact h0
+  rwa [_root_.GlobalTheory.FrameThetaCompare.curvDe_eq_omRh X ho hz ξ] at h0
 
 open NumberField Topology in
 open scoped ContDiff in
@@ -379,8 +375,7 @@ open NumberField Topology in
 open scoped ContDiff in
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} in
 theorem _root_.GlobalTheory.ThetaRecordCompare.two_le_r {X : _root_.ReciprocityTheory.ChartRestriction.G.FD.Data E r} (hn : 2 ≤ _root_.ReciprocityTheory.ChartRestriction.G.AR.Inst.nd X) : 2 ≤ r := by
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have hempty : IsEmpty (_root_.ReciprocityTheory.ChartRestriction.G.AR.Inst.Ent X) := by
     unfold _root_.ReciprocityTheory.ChartRestriction.G.AR.Inst.Ent
     refine ⟨fun ⟨_, ⟨p, hp⟩⟩ => ?_⟩

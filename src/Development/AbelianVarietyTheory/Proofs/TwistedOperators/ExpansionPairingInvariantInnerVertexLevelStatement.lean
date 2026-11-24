@@ -146,8 +146,7 @@ theorem cutGL_mem_St_of_mem_prodLev : ∀ {D : D7} {n : ℕ} (β : GL (Fin n) (L
     have e : GlobalTheory.FunObj.inBasis rfl β w (GlobalTheory.UnitaryIdemCut.cutGL b hb x) = GlobalTheory.FunObj.inBasis rfl β w x := by
       simp only [GlobalTheory.FunObj.inBasis, MonoidHom.comp_apply]
       rw [hconj, hloc, e1]
-    rw [e]
-    exact hxw
+    rwa [e]
 
 end GlobalTheory.CutProdLev
 end -- clump:auto
@@ -312,8 +311,7 @@ theorem keep_stdLatO : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G 
     unfold locPl at hwl
     rcases Finset.mem_union.1 hwl with h3 | h3
     · obtain ⟨v, hv, rfl⟩ := Finset.mem_image.1 h3
-      have h4 := G.pl.w_over v hv
-      exact h1 ((hw.symm.trans h4) ▸ hv)
+      exact h1 ((hw.symm.trans (G.pl.w_over v hv)) ▸ hv)
     · exact h2 t ht w h3 hw.symm
   have hub : b * toEAf D (eu + cA D eu) = toEAf D (eu + cA D eu) := GlobalTheory.StdFrames.cpt_ext fun w => by
     rw [RingHom.map_mul, hcb]
@@ -380,8 +378,7 @@ theorem keep_stdLatO : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G 
     have h5 := keep _ (inv_mem hX) y hy
     generalize finG (G.V (.top (j + 1))) (S.N.u (.top (j + 1))) = Uu at h5 ⊢
     have e1 : (Uu⁻¹ * X * Uu)⁻¹ = Uu⁻¹ * X⁻¹ * Uu := by group
-    rw [e1]
-    exact h5
+    rwa [e1]
   have hT : Lev.finE (G.V (.top (j + 1))) g ∈ St βT := by
     rw [hcut]
     exact st _ hK
@@ -492,8 +489,7 @@ theorem exists_cut_hom (V : HSp D) (r : AF D.host.F)
   obtain ⟨κ, hκ⟩ := GlobalTheory.UnitaryIdemCut.exists_cutHA (AF D.host.F) D.sp.cm.sig V.gram r hb
   refine ⟨κ, fun g => ?_⟩
   have := congrArg Units.val (hκ g)
-  rw [GlobalTheory.UnitaryIdemCut.cutGL_val] at this
-  exact this
+  rwa [GlobalTheory.UnitaryIdemCut.cutGL_val] at this
 
 theorem actO_cut_half {S T : HSp D} {b e : AE D} (hbe : b * e = 0) {g : GA D T}
     {M : Matrix (Fin T.rank) (Fin T.rank) (AE D)}
@@ -837,15 +833,13 @@ theorem product_invariant : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
     obtain ⟨f, hf⟩ := (hvec d₀ hd₀).1 j'
     obtain ⟨Tm, hTm⟩ := hf.1
     refine ⟨Tm, ?_⟩
-    rw [← ((hsupp d₀ hd₀).1 j').2.1]
-    exact hTm
+    rwa [← ((hsupp d₀ hd₀).1 j').2.1]
   have hmr : ∀ i : Fin D.R.m, ∃ Tm, IsPlaceModel W.ψ (symplO _ _) (heisO W.ψ _ _) e (stdLatO S (.chi i D.R.m)) 1
       (S.Z.vac (.chi i D.R.m)) Tm := fun i => by
     obtain ⟨f, hf⟩ := (hvec d₀ hd₀).2 i
     obtain ⟨Tm, hTm⟩ := hf.1
     refine ⟨Tm, ?_⟩
-    rw [← ((hsupp d₀ hd₀).2 i).2.1]
-    exact hTm
+    rwa [← ((hsupp d₀ hd₀).2 i).2.1]
   choose Tc hTc using hmc
   choose Tr hTr using hmr
   have hvc : ∀ d ∈ τ.support, ∀ j', S.Z.vec (d.1 j') = Tc j' (d.1 j').fn := fun d hd j' =>
@@ -931,8 +925,7 @@ theorem product_invariant : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
       ∑ d ∈ τ.support, τ d * ((∏ j', Tc j' (d.1 j').fn (w j')) * ∏ i, Tr i (d.2 i).fn (z i)) :=
     Finset.sum_congr rfl fun d hd => by simp only [hvc d hd, hvr d hd]; ring
   simp only [Finsupp.sum]
-  rw [hL, hR]
-  exact key
+  rwa [hL, hR]
 
 end GlobalTheory.ExpansionInvariance
 
@@ -1231,8 +1224,7 @@ theorem pairV_eq_of_prodFun_eq : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : C
     rw [Finsupp.sum, Finsupp.sum, LinearMap.sum_apply, LinearMap.sum_apply]
     refine Finset.sum_congr rfl fun d hd => ?_
     rw [LinearMap.smul_apply, LinearMap.smul_apply, smul_eq_mul, pairML_apply, hF d hd, hH d hd]
-  rw [hL c r f g ef eg, hL c' r' f' g' ef' eg']
-  exact key
+  rwa [hL c r f g ef eg, hL c' r' f' g' ef' eg']
 
 end GlobalTheory.ExpansionInvariance
 

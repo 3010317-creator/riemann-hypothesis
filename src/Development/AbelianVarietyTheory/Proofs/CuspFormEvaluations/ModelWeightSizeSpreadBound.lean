@@ -133,8 +133,7 @@ theorem spread_le {r : ℕ} (x b : Fin r → ℝ) (m : ℝ) (hm : 0 ≤ m) (hb :
     have hxi : x i ≤ b i + m := (le_abs_self _).trans (hx i).le
     have hxj : -(b j + m) ≤ x j := by
       have := neg_abs_le (x j)
-      rw [hx j] at this
-      exact this
+      rwa [hx j] at this
     by_cases hij : i = j
     · subst hij
       have : 0 ≤ ∑ k, b k := Finset.sum_nonneg (fun k _ => hb k)
@@ -210,9 +209,7 @@ theorem laU_bounds (U : Unf Xo c σ r) (a : (E →+* ℂ) × ℕ → ℕ) (n : �
   · calc _ = ∑ τ : (U.X k).Ψ, ∑ j : Fin r, ((((if (U.X k).p0 ≤ (j : ℕ) then a (Function.invFun (relab c σ) τ.1, (j : ℕ) - (U.X k).p0) else a (Function.invFun (relab c σ) (conjEmb τ.1), (U.X k).p0 - 1 - (j : ℕ)) : ℕ)) : ℝ) + ((n / 2 : ℕ) : ℝ)) := by
           apply Finset.sum_congr rfl
           intro τ _
-          apply Finset.sum_congr rfl
-          intro j _
-          exact entry_abs _ _ _ _ _
+          exact Finset.sum_congr rfl (fun j _ => entry_abs _ _ _ _ _)
       _ ≤ (B : ℝ) + Fintype.card (U.X k).Ψ * r * n / 2 := by
           have e : ∀ τ : (U.X k).Ψ, ∑ j : Fin r, ((((if (U.X k).p0 ≤ (j : ℕ) then a (Function.invFun (relab c σ) τ.1, (j : ℕ) - (U.X k).p0) else a (Function.invFun (relab c σ) (conjEmb τ.1), (U.X k).p0 - 1 - (j : ℕ)) : ℕ)) : ℝ) + ((n / 2 : ℕ) : ℝ)) = ∑ j : Fin r, (((if (U.X k).p0 ≤ (j : ℕ) then a (Function.invFun (relab c σ) τ.1, (j : ℕ) - (U.X k).p0) else a (Function.invFun (relab c σ) (conjEmb τ.1), (U.X k).p0 - 1 - (j : ℕ)) : ℕ)) : ℝ) + r * ((n / 2 : ℕ) : ℝ) := by
             intro τ
@@ -255,7 +252,6 @@ theorem laU_wtA_size : ∀ (D : D7) (T : Top D) (_h : LawsP T) (j : ℕ) (_hj : 
     have : Fintype.card ((T.U j σ).X k).Ψ = D.R.f := by omega
     exact_mod_cast this
   have hb := laU_bounds (T.U j σ) (wtA w) w.n k (WeightAlgebra.DF w) (sum_wtA_le w _)
-  rw [hc] at hb
-  exact hb
+  rwa [hc] at hb
 
 end GlobalTheory.RunIn.WtSize

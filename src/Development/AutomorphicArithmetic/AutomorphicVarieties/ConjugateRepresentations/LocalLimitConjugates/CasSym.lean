@@ -76,11 +76,9 @@ theorem UpperTheory.V.Cj.H.casSym :
         inner_add_right, inner_smul_left, inner_smul_left, inner_smul_right, inner_smul_right, Complex.conj_ofReal,
         Complex.conj_ofReal, hT.2 φ hφ ψ hψ, hS.2 φ hφ ψ hψ]
   have hP0 : P 0 := by
-    have h := hPc 0 0 1 1 hP1 hP1
-    simpa using h
+    simpa using hPc 0 0 1 1 hP1 hP1
   have hPa : ∀ T S, P T → P S → P (T + S) := fun T S hT hS => by
-    have h := hPc 1 1 T S hT hS
-    simpa using h
+    simpa using hPc 1 1 T S hT hS
   have hPs : ∀ (t : ℝ) T S, P T → P S → P (T - (t : ℂ) • S) := fun t T S hT hS => by
     have h := hPc 1 (-t) T S hT hS
     rwa [Complex.ofReal_one, one_smul, Complex.ofReal_neg, neg_smul, ← sub_eq_add_neg] at h

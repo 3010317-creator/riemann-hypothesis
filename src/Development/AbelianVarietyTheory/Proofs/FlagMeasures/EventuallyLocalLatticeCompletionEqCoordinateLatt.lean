@@ -62,14 +62,11 @@ theorem eventually_mem_intLoc_iff_repr {d : ℕ} (b : Module.Basis (Fin d) F E) 
         z = a ⊗ₜ[F] (x : E)} := fun _ _ => Iff.rfl
   have h1 : ∀ᶠ v : HeightOneSpectrum (𝓞 F) in cofinite, ∀ j k,
       algebraMap F (Fv F v) (b.repr ((ω j : 𝓞 E) : E) k) ∈ v.adicCompletionIntegers F := by
-    simp only [Filter.eventually_all]
-    intro j k
-    exact eventually_algebraMap_mem_integers _
+    simpa only [Filter.eventually_all] using fun j k => eventually_algebraMap_mem_integers _
   have h2 : ∀ᶠ v : HeightOneSpectrum (𝓞 F) in cofinite, ∀ k,
       (1 : Fv F v) ⊗ₜ[F] b k ∈ intLoc F E v := by
     rw [Filter.eventually_all]
-    intro k
-    exact eventually_one_tmul_mem_intLoc _
+    exact fun k => eventually_one_tmul_mem_intLoc _
   filter_upwards [h1, h2] with v h1 h2 y
   have key : ∀ (x : 𝓞 E) (k : Fin d),
       algebraMap F (Fv F v) (b.repr (x : E) k) ∈ v.adicCompletionIntegers F := by

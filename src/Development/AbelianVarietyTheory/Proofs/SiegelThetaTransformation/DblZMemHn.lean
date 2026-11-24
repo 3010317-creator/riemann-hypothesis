@@ -81,16 +81,14 @@ theorem pos_of_upper {x₁ : Frame X.Ψ r} (h₁ : x₁ ∈ X.dom) (x₂ : Frame
     refine Finset.sum_of_injOn (Fin.castLE X.p0_le) (Fin.castLE_injective _).injOn
       (fun _ _ => Finset.mem_univ _) (fun i _ hi => ?_) (fun _ _ => rfl)
     rw [hc0 i, zero_smul]
-    intro hlt
-    exact hi ⟨⟨i, hlt⟩, by simp, rfl⟩
+    exact fun hlt => hi ⟨⟨i, hlt⟩, by simp, rfl⟩
   have hne : (fun a : Fin X.p0 => c (Fin.castLE X.p0_le a)) ≠ 0 := by
     intro h0
     apply hw
     rw [hsum]
     exact Finset.sum_eq_zero fun a _ => by rw [congrFun h0 a, Pi.zero_apply, zero_smul]
   have := quad_re_pos (X.gramPos_posDef h₁ τ) hne
-  rw [hsum, hermC_quad]
-  exact this
+  rwa [hsum, hermC_quad]
 
 theorem neg_of_lower (x₁ : Frame X.Ψ r) {x₂ : Frame X.Ψ r} (h₂ : x₂ ∈ X.dom) (τ : X.Ψ)
     {w : Fin r → ℂ} (hw : w ≠ 0)

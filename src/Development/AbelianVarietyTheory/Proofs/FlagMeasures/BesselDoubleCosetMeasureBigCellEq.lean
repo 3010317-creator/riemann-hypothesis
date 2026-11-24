@@ -176,7 +176,6 @@ theorem pad_cont : Continuous (pad k r) := LinearMap.continuous_of_finiteDimensi
 attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra in
 theorem exp_pad (X : Mb k) : NormedSpace.exp (pad k r X) = embWb k r (NormedSpace.exp X) := by
   have hc : Continuous (blk k r) := by
-    show Continuous fun p : Mb k × ℂ => pad k r p.1 + p.2 • embWb k r 0
     exact (pad_cont.comp continuous_fst).add (continuous_snd.smul continuous_const)
   have h := NormedSpace.map_exp (blk k r) hc (X, 0)
   have h1 : blk k r (X, 0) = pad k r X := by
@@ -396,8 +395,7 @@ theorem exists_prob (j : ℕ) :
     rw [mem_closedBall_zero_iff, pi_norm_le_iff_of_nonneg zero_le_one]
     intro a
     rw [pi_norm_le_iff_of_nonneg zero_le_one]
-    intro b
-    exact entry_norm_bound_of_unitary hx' a b
+    exact fun b => entry_norm_bound_of_unitary hx' a b
   have : CompactSpace (GlobalTheory.MatHaar.Grp _ hG) := isCompact_iff_compactSpace.1 hc
   set ν : Measure (GlobalTheory.MatHaar.Grp _ hG) := Measure.haarMeasure ⊤ with hν
   have h1 : ν Set.univ = 1 := by
@@ -441,14 +439,12 @@ theorem annulus_int (hk : 1 ≤ k) {T T' s : ℝ} (ha : 0 < T * T') (hs : 0 ≤ 
         · simp only [Set.mem_ofPred_eq, hn]
           rw [abs_of_nonneg (by linarith)]; linarith
       · rw [Set.indicator_of_notMem, Set.indicator_of_notMem, mul_zero, mul_zero]
-        · intro hh
-          exact h' ((Real.le_sqrt hx.le (by linarith)).1 hh.2)
+        · exact fun hh => h' ((Real.le_sqrt hx.le (by linarith)).1 hh.2)
         · simp only [Set.mem_ofPred_eq, hn]
           rw [abs_of_nonneg (by linarith)]; intro hh; exact h' (by linarith)
     · rw [ite_eq_right h, Set.indicator_of_notMem (s := Set.Icc _ _)]
       · simp
-      · intro hh
-        exact h (Real.sqrt_le_iff.1 hh.1).2
+      · exact fun hh => h (Real.sqrt_le_iff.1 hh.1).2
   rw [setLIntegral_congr_fun polarCoord.open_target.measurableSet h1, polarCoord_target, Measure.volume_eq_prod,
     ← Measure.prod_restrict, lintegral_prod_mul]
   · have hpos : 0 < Real.sqrt a := Real.sqrt_pos.2 ha
@@ -887,8 +883,7 @@ theorem isDis_bigCell : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (
     have : ρ ((fun q : (Fin r → ℂ) × ℂ => (Matrix.of.symm (bigCell k r q.1 (μsec q.2)) : Mt k r)) ⁻¹'
         {x : Mt k r | Matrix.of x ∉ Greg k r z z'}) = 0 := by
       refine measure_mono_null ?_ (ae_iff.1 hdom)
-      intro q hq h
-      exact hq (bigCell_mem_regular hz hz' hsec h.1 h.2)
+      exact fun q hq h => hq (bigCell_mem_regular hz hz' hsec h.1 h.2)
     rw [this, smul_zero]
   · intro f hf
     have e := In.engine (μG := μG) (μN := μN) (μb := μb) (μW := μW) (μW' := μW') (Tz k r z) (Tz k r z') (In.bc1 k r)

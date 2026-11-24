@@ -105,8 +105,7 @@ theorem mem_of_eigen_mem {A W : Type} [AddCommGroup A] [AddCommGroup W] [Module 
       { toFun := fun ψ => ψ.1 (-q)
         map_zero_eq_one' := by simp
         map_add_eq_mul' := fun a b => by simp }
-    refine (AddChar.sum_eq_zero_iff_ne_zero (ψ := ev)).2 fun h => hne ?_
-    exact DFunLike.congr_fun h ⟨ψ, hψ⟩
+    exact (AddChar.sum_eq_zero_iff_ne_zero (ψ := ev)).2 fun h => hne (DFunLike.congr_fun h ⟨ψ, hψ⟩)
   have h3 : ∑ ψ : H, ∑ q, ψ.1 (-q) • T q = (Fintype.card H : ℂ) • f := by
     rw [Finset.sum_comm]
     simp only [← Finset.sum_smul]

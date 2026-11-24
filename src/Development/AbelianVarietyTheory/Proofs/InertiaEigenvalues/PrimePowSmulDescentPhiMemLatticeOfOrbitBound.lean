@@ -153,8 +153,7 @@ theorem mem_uPow_succ_of_inertia {j : ℕ} {w : Vec K a ι} (hw : w ∈ uPow K a
     ext i
     have h := congrArg constantCoeff (key ζ τ i)
     rw [map_mul, map_pow, constantCoeff_C] at h
-    rw [← Δ.red_act]
-    exact h
+    rwa [← Δ.red_act]
   have hzero : ∀ τ, red w' τ = 0 := by
     intro τ
     by_contra hne
@@ -189,8 +188,7 @@ theorem le_mul_pow_of_frobPeriod_le {j r b : ℕ} (hb : 0 < b) (hlb : (l : ZMod 
   set ρ := frobPeriod l c with hρ
   have hfix' : (l : ZMod e) ^ ρ * c = c := by
     have := hfix.eq
-    rw [mul_left_iterate] at this
-    exact this
+    rwa [mul_left_iterate] at this
   have hlρ : 2 ≤ l ^ ρ := le_trans hl (Nat.le_self_pow (by omega) l)
   have hdvd : e ∣ (l ^ ρ - 1) * j := by
     rw [← ZMod.natCast_eq_zero_iff]
@@ -303,8 +301,7 @@ theorem l_pow_smul_phi_pow_mem_MM {η : ℕ} (hη : ∀ v ∈ P.MM, (l : K) ^ η
   | succ n ih =>
     have := hη _ ih
     rw [map_smul, smul_smul, ← pow_add] at this
-    rw [pow_succ', Module.End.mul_apply, show (n + 1) * η = η + n * η by ring]
-    exact this
+    rwa [pow_succ', Module.End.mul_apply, show (n + 1) * η = η + n * η by ring]
 
 variable [NeZero e]
 

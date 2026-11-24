@@ -141,8 +141,7 @@ theorem heckeVec_eq_of_isCompAlong {L : Type} [Field L] [NumberField L] [IsCMFie
       exact hv x hk
     refine (hZ' _).2 ⟨fun k hk => (hfi i k v).symm.trans (congrArg (fi i) (hv k hk)), ?_⟩
     have e2 := heckeVec_comp_surj p hp hh.1 σ hvK
-    rw [heckeVec_eq_sum _ _ _ _ hS] at e2
-    rw [hsat v hvK hv0] at e2
+    rw [heckeVec_eq_sum _ _ _ _ hS, hsat v hvK hv0] at e2
     rw [← hT (fi i v), heckeVec_eq_sum _ _ _ _ hS]
     calc _ = fi i (∑ c ∈ hfin.toFinset, h (p c.out) • (σ.comp p) c.out v) := by
 
@@ -199,8 +198,7 @@ theorem heckeVec_divInd {D : D7} [IsCMField D.host.E] {V : HSp D}
     have := GlobalTheory.SphGal.hasDiv_mul_mul hx (one_mem _) hk
     rw [one_mul] at this
     change HasDiv _ d (cLoc P (x.val * k.val))
-    rw [map_mul]
-    exact this
+    rwa [map_mul]
   · intro γ hγ
     change HasDiv _ d (cLoc P (g γ).val)
     rw [hg γ hγ]

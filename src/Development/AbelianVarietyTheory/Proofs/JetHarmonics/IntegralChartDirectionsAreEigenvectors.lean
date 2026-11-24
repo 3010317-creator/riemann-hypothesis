@@ -135,14 +135,12 @@ theorem coeff_psTrunc' {ιt : Type} [Fintype ιt] [DecidableEq ιt] (m : ℕ) (f
     refine ⟨⟨fun i => ⟨e i, Nat.lt_succ_of_le ((Finsupp.le_degree i e).trans he)⟩, Finset.mem_univ _, ?_⟩, ?_⟩
     · ext i
       simp
-    · rw [Finsupp.degree_apply] at he
-      exact he
+    · rwa [Finsupp.degree_apply] at he
   rw [psTrunc, MvPolynomial.coeff_sum, Finset.sum_eq_single e]
   · simp [MvPolynomial.coeff_monomial]
   · intro b _ hb
     rw [MvPolynomial.coeff_monomial, ite_eq_right hb]
-  · intro h
-    exact absurd hmem h
+  · exact fun h => absurd hmem h
 
 end Jet
 
@@ -167,8 +165,7 @@ theorem law_coeff (G : Germ.FGLaw S d) (i j : Fin d) (k : Fin 2) :
     by_cases h : p = q
     · simp [h]
     · rw [ite_eq_right, ite_eq_right h]
-      intro h'
-      exact h (Finsupp.single_left_injective one_ne_zero h')
+      exact fun h' => h (Finsupp.single_left_injective one_ne_zero h')
   have hX2 : ∀ (p q : Fin 2 × Fin d), MvPowerSeries.coeff (Finsupp.single p 1)
       (MvPowerSeries.X q : MvPowerSeries (Fin 2 × Fin d) S) = if p = q then 1 else 0 := by
     intro p q
@@ -176,8 +173,7 @@ theorem law_coeff (G : Germ.FGLaw S d) (i j : Fin d) (k : Fin 2) :
     by_cases h : p = q
     · simp [h]
     · rw [ite_eq_right, ite_eq_right h]
-      intro h'
-      exact h (Finsupp.single_left_injective one_ne_zero h')
+      exact fun h' => h (Finsupp.single_left_injective one_ne_zero h')
 
   have h1 : MvPowerSeries.coeff (Finsupp.single ((1 : Fin 2), j) 1) (G.F i) = if j = i then 1 else 0 := by
     have h := congrArg (MvPowerSeries.coeff (Finsupp.single ((0 : Fin 1), j) 1)) (G.unit i)
@@ -438,8 +434,7 @@ theorem localization_quotient_separated_dvd {T A : Type} [DecidableEq T] (φ : A
         show smT x0 (χ τ2 a - χ τ2 a) (W τ2) = 1
         rw [sub_self, hT]
       have hP'' : ∏ τ ∈ s.erase τ2, W' τ = 1 := by
-        rw [← Finset.mul_prod_erase s W' hτ2, hW'2, _root_.one_mul] at hP'
-        exact hP'
+        rwa [← Finset.mul_prod_erase s W' hτ2, hW'2, _root_.one_mul] at hP'
       have hE' : ∀ τ a', W' τ ≫ φ a' = smT x0 (χ τ a') (W' τ) := by
         intro τ a'
         show smT x0 _ (W τ) ≫ φ a' = smT x0 (χ τ a') (smT x0 _ (W τ))
@@ -461,8 +456,7 @@ theorem localization_quotient_separated_dvd {T A : Type} [DecidableEq T] (φ : A
         constructor
         · intro hτ; exact Finset.mem_singleton.2 (hone τ hτ)
         · intro hτ; rw [Finset.mem_singleton.1 hτ]; exact hτ1
-      rw [hs1, Finset.prod_singleton] at hP
-      exact hP
+      rwa [hs1, Finset.prod_singleton] at hP
 
 theorem combT_add {m : ℕ} (D : Fin m → (overAt x0 (DualNumber S) ⟶ G)) (hD : ∀ j, smT x0 0 (D j) = 1)
     (p q : Fin m → S) : combT x0 D (p + q) = combT x0 D p * combT x0 D q := by
@@ -609,13 +603,11 @@ theorem linEig_holds : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
       have h1 : IsCombAt y.x (y.u τ) (fun k => b ⟨τ, k⟩) (W τ).left := by
         have := (isCombAtG_iff Xo.univ.t y.x (fun k : Fin (Dw.mult τ) => Y ⟨τ, k⟩) (fun k => b ⟨τ, k⟩)
           (W τ).left).2 rfl
-        rw [e] at this
-        exact this
+        rwa [e] at this
       have h2 : IsCombAt y.x (y.u τ) 0 (W τ).left := by
         have := (isCombAtG_iff Xo.univ.t y.x (fun k : Fin (Dw.mult τ) => Y ⟨τ, k⟩) 0 (W τ).left).2
           (by rw [combT_zero y.x _ (fun k => hYt _), hW1 τ])
-        rw [e] at this
-        exact this
+        rwa [e] at this
       have htan : IsTanAt y.x (W τ).left := isTanAtG_of (t := Xo.univ.t) (W τ) (hWt τ)
       have heig : IsEigAt c τ (W τ).left := by
         intro b'
@@ -663,5 +655,4 @@ theorem GlobalTheory.PowGerm.eigDirSt : GlobalTheory.PowGerm.EigDirSt := by
   letI := io.toAlgebra
   intro a ℓ
   funext i
-  have h := GlobalTheory.EigDir.linEig_holds E H Dw l Xo c T.Fr y.1 C.ch a ℓ i
-  exact h
+  exact GlobalTheory.EigDir.linEig_holds E H Dw l Xo c T.Fr y.1 C.ch a ℓ i

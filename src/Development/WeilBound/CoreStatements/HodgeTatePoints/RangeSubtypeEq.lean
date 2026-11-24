@@ -215,10 +215,8 @@ theorem om_exact [IsAlgClosed C] [CharZero C] (hv : v.Integers R) [Fintype N] [D
   refine ⟨LinearMap.funLeft R C (e' : Q →+ N ⧸ ι.range) b, aug_pull _ _ _ ?_ hb, ?_⟩
   · intro f hf
     show LinearMap.funLeft R C ψ _ ∈ AA.carrier
-    rw [hp]
-    exact hf
-  · rw [hp, ← huw, add_sub_cancel_left, sq_eq_mul]
-    exact hw
+    rwa [hp]
+  · rwa [hp, ← huw, add_sub_cancel_left, sq_eq_mul]
 
 end Gen
 

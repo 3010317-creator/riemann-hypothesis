@@ -142,15 +142,12 @@ theorem det_gram_frame_generators :
   unfold LocNG.FPair.MMgen HermSp.MMfam LocNG.theta
   cases hs : M.split with
   | none =>
-    simp only [map_one, one_pow, mul_one]
-    exact det_gram_sumElim_frames H P
+    simpa only [map_one, one_pow, mul_one] using det_gram_sumElim_frames H P
   | some g =>
     simp only
     rw [det_gram_sumElim_smul_sub H, det_gram_sumElim_frames H P, mul_comm _ (algebraMap F E _ ^ _),
       ← mul_assoc, ← mul_pow, ← map_mul]
-    have hq : ((g.q : 𝒪[F]) : F) ≠ 0 := by
-      intro h0
-      exact g.q_irr.ne_zero (Subtype.ext h0)
+    have hq : ((g.q : 𝒪[F]) : F) ≠ 0 := fun h0 => g.q_irr.ne_zero (Subtype.ext h0)
     rw [mul_inv_cancel₀ hq, map_one, one_pow, one_mul]
 
 end GlobalTheory

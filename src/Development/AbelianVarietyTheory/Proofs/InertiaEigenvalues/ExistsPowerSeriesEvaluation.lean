@@ -67,8 +67,7 @@ theorem exists_ev {L A : Type*} [Field L] [CommRing A] (t : A)
   haveI : IsLinearTopology A A := Ideal.isLinearTopology (Ideal.span {t})
   have hι : Continuous ι := continuous_of_discreteTopology
   have ht : PowerSeries.HasEval t := by
-    refine (WithIdeal.isTopologicallyNilpotent_of_mem ?_)
-    exact Ideal.mem_span_singleton_self t
+    exact (WithIdeal.isTopologicallyNilpotent_of_mem (Ideal.mem_span_singleton_self t))
   refine ⟨PowerSeries.eval₂Hom hι ht, fun c => ?_, ?_⟩
   · rw [PowerSeries.coe_eval₂Hom]; exact PowerSeries.eval₂_C _ _ _
   · rw [PowerSeries.coe_eval₂Hom]; exact PowerSeries.eval₂_X _ _
@@ -236,8 +235,7 @@ theorem smul_mem (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T
   refine (T.fil K a _).2 ?_
   rw [Algebra.smul_def, map_mul]
   have := Reformulated.AutPerF.BdR.mul_mem_fil (p := l) (R := Per.OC l) h0 ((T.fil K a _).1 hx)
-  rw [zero_add] at this
-  exact this
+  rwa [zero_add] at this
 
 theorem tS_mem_iff (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI)
     (K : FinExt l) (s : ℕ) (a : ℤ) :
@@ -292,8 +290,7 @@ theorem dvd_part_sub (M : ℕ) (f : PowerSeries L) (q : Polynomial L)
     intro k hk
     rw [Polynomial.coeff_sub, PowerSeries.coeff_trunc, ite_eq_left hk, h k hk, sub_self]
   have h2 := map_dvd (Polynomial.eval₂RingHom c t) h1
-  rw [map_sub, map_pow, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X] at h2
-  exact h2
+  rwa [map_sub, map_pow, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X] at h2
 
 theorem mem_iff (n : ℕ) (x : A) : x ∈ (Ideal.span {t} ^ n • ⊤ : Submodule A A) ↔ t ^ n ∣ x := by
   rw [smul_eq_mul, Ideal.mul_top, Ideal.span_singleton_pow, Ideal.mem_span_singleton]

@@ -70,8 +70,7 @@ private theorem exists_prime_index (Γ : Type) [Group Γ] [Finite Γ] [Nontrivia
       exact hp.one_lt.ne hg
   have h2 : Subgroup.zpowers g = ⊤ :=
     Subgroup.comap_injective (QuotientGroup.mk'_surjective M) (h1.trans (Subgroup.comap_top _).symm)
-  rw [Subgroup.index, ← Subgroup.card_top, ← h2, Nat.card_zpowers, hg]
-  exact hp
+  rwa [Subgroup.index, ← Subgroup.card_top, ← h2, Nat.card_zpowers, hg]
 private theorem closure_tower (K E Ω : Type) [Field K] [Field E] [Field Ω] [Algebra K E] [Algebra K Ω] [Algebra E Ω]
     [IsScalarTower K E Ω] [Algebra.IsAlgebraic K E] [IsAlgClosure E Ω] : IsAlgClosure K Ω :=
   { isAlgClosed := IsAlgClosure.isAlgClosed E, isAlgebraic := Algebra.IsAlgebraic.trans K E Ω }

@@ -148,8 +148,7 @@ theorem level_character_matches_witness_alt_bis : ∀ {hL : _root_.UpperTheory.Z
   have e : b.B.Q.Rl.mu0 = x.R.mu0 := congrArg (fun k : _root_.GlobalTheory.Mem.Top.Bl.RealPackage b.R b.S => k.B.Q.Rl.mu0) y.eq
   have e' : a.x.R.mu0 = x.R.mu0 := congrArg (fun z : R3.TwIn q.O.ex => z.R.mu0) hx
   have e2 : (_root_.GlobalTheory.Fam.pk_z (_root_.GlobalTheory.Fam.packB_alt b)).mu0 = a.x.R.mu0 := e.trans e'.symm
-  rw [e2]
-  exact h0
+  rwa [e2]
 end GlobalTheory.Fam
 end
 end -- clump:auto
@@ -249,8 +248,7 @@ theorem mem_Q_packB_iff_mem_QE_of_bWit : ∀ {hL : _root_.UpperTheory.Zero.LLC.R
     exact Iff.of_eq (congrArg (PP ∈ ·) (eq_of_heq h1))
   show (fun k : _root_.GlobalTheory.Mem.Top.Bl.RealPackage b.R b.S => ∀ t PP, PP ∈ (_root_.GlobalTheory.Fam.pk_z (_root_.GlobalTheory.Fam.packK_alt k)).Q t ↔
       PP ∈ Formalism.L2.Col.QE q.w.I.sel (q.w.I.tup (k.P.I.tup t) : Formalism.L2.DIV.Chr q.B.fields.F q.B.fields.E q.B.fields.K)) (_root_.GlobalTheory.Mem.Top.Bl.realPackageOfBundle b)
-  rw [y.eq]
-  exact main
+  rwa [y.eq]
 end GlobalTheory.Fam
 end
 end -- clump:auto
@@ -452,11 +450,9 @@ theorem xi_chrEq_cols_alt : ∀ {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {p
     have h1 := hxi _ hu
     rw [x.Y.tupT_tup] at h1
     have h2 := x.pins.char.base.lev.xi t
-    rw [eq_of_heq h1] at h2
-    exact h2
+    rwa [eq_of_heq h1] at h2
   show (fun k : _root_.GlobalTheory.Mem.Top.Bl.RealPackage b.R b.S => ∀ t : k.P.T, Formalism.IndefR.Links.ChrEq (k.B.Q.Rl.toRealDat.xi t) (q.w.I.xi (k.P.I.tup t))) (_root_.GlobalTheory.Mem.Top.Bl.realPackageOfBundle b)
-  rw [y.eq]
-  exact key
+  rwa [y.eq]
 end GlobalTheory.Fam
 end
 end -- clump:auto

@@ -187,8 +187,7 @@ theorem good_hecke_eq_killed : ∀ {D : D7} {V : HSp D} {S : D.what₂.Tau → S
       rw [gaL_apply hs hQ eG c (hasType_flag1 P (hlev v)) κ hκ x]
       have := (alg_sum M Finset.univ (fun g => (⟨κ g, (hκ g).1⟩ : GfC V)) c 1 T).1
         (hk _ (Or.inl (Or.inr ⟨fun g => ⟨κ g, (hκ g).1⟩, hκ, rfl⟩))) v x
-      rw [one_mul] at this
-      exact this
+      rwa [one_mul] at this
     · intro P0 hP0 k hkr α hα R' hR' v x
       have hαf : α ∈ GfC V := by
         obtain ⟨e, ϖ, -, -, -, h⟩ := hα
@@ -198,8 +197,7 @@ theorem good_hecke_eq_killed : ∀ {D : D7} {V : HSp D} {S : D.what₂.Tau → S
       have := (alg_sum M R (fun γ => γ) (fun _ => 1) _ T).1
         (hk _ (Or.inr ⟨P0, hP0, k, hkr, ⟨α, hαf⟩, R, hα, hR, rfl⟩)) v x
       simp only [one_mul] at this
-      rw [Finset.sum_map]
-      exact this
+      rwa [Finset.sum_map]
 
 end GlobalTheory.CuspMult.EqCut
 

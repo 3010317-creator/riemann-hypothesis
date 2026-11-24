@@ -139,8 +139,7 @@ theorem isClosed_apply_mem {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] [Al
       calc τ x = σ (σ⁻¹ (τ x)) := (hinv _).symm
         _ = σ x := by rw [hfix]
     change σ x ∈ T
-    rw [← he]
-    exact hT
+    rwa [← he]
   · show σ⁻¹ * σ ∈ E.fixingSubgroup
     rw [inv_mul_cancel]
     exact E.fixingSubgroup.one_mem
@@ -173,16 +172,14 @@ theorem exists_conj_of_isGalois {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω
     rw [ValuationSubring.mem_comap, ValuationSubring.mem_comap] at key
     have he : (τ.liftNormal Ω) x = algebraMap L Ω (τ ⟨x, hxL⟩) :=
       AlgEquiv.liftNormal_commutes τ Ω ⟨x, hxL⟩
-    rw [he]
-    exact key
+    rwa [he]
   have hdir : Directed (fun s t => s ⊇ t) C := by
     intro s t
     exact ⟨s ∪ t, fun σ hσ x hx => hσ x (Finset.mem_union_left _ hx),
       fun σ hσ x hx => hσ x (Finset.mem_union_right _ hx)⟩
   obtain ⟨σ, hσ⟩ := IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed C hdir hne
     (fun s => (hclosed s).isCompact) hclosed
-  refine ⟨σ, fun x => ?_⟩
-  exact Set.mem_iInter.mp hσ {x} x (Finset.mem_singleton_self x)
+  exact ⟨σ, fun x => (Set.mem_iInter.mp hσ {x} x (Finset.mem_singleton_self x))⟩
 
 theorem exists_conj_over_prime : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (p : ℕ) [Fact p.Prime] (A B : ValuationSubring Ω), ((p : ℕ) : Ω) ∈ A.nonunits → ((p : ℕ) : Ω) ∈ B.nonunits → ∃ σ : Ω ≃ₐ[ℚ] Ω, ∀ x, σ x ∈ B ↔ x ∈ A := by
   intro Ω _ _ _ p _ A B hA hB

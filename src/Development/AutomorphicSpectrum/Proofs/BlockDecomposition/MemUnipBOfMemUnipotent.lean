@@ -91,15 +91,13 @@ theorem psiOK_of_hasConductor {ψ₁ : AddChar F Circle} (h : GlobalTheory.Split
     · intro hc
       apply hy1
       apply Circle.ext
-      rw [Circle.coe_one]
-      exact hc
+      rwa [Circle.coe_one]
 
 theorem mem_unipB_of_mem_unipotent {n : ℕ} {g : GL (Fin n) F} (hg : g ∈ Iwasawa.unipotent F n) :
     g ∈ GlobalTheory.SmGL.unipB F (Fin n) := by
   obtain ⟨hut, hdiag⟩ := hg
   have hp : g ∈ GlobalTheory.SmGL.parab F (GlobalTheory.SmGL.points (Fin n)) := by
-    intro i j hij
-    exact hut (by simpa [GlobalTheory.SmGL.blk, GlobalTheory.SmGL.points] using hij)
+    exact fun i j hij => hut (by simpa [GlobalTheory.SmGL.blk, GlobalTheory.SmGL.points] using hij)
   refine ⟨⟨g, hp⟩, ?_, rfl⟩
   show GlobalTheory.SmGL.leviProj F (GlobalTheory.SmGL.points (Fin n)) ⟨g, hp⟩ = 1
   refine funext fun a => ?_

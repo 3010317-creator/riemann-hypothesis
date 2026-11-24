@@ -182,8 +182,7 @@ private theorem thP_monomial (a : Fin n → ℤ) : thP μ (monomial a) = th μ a
 private theorem dom_monomial {a : Fin n → ℤ} (ha : Antitone a) : Dom (monomial a) := by
   intro b hb
   rw [AddMonoidAlgebra.coeff_single] at hb
-  rw [Finset.mem_singleton.1 (Finsupp.support_single_subset hb)]
-  exact ha
+  rwa [Finset.mem_singleton.1 (Finsupp.support_single_subset hb)]
 
 end Aux2
 
@@ -312,8 +311,7 @@ private theorem UpperTheory.ConvolutionTheory.H.mem_supp_mono {n : ℕ} {a c : F
   rw [Finsupp.mem_support_iff] at h ⊢
   have e : (monomial a * q).coeff c = 1 * q.coeff (-a + c) :=
     AddMonoidAlgebra.coeff_single_mul_apply q 1 a c
-  rw [e, one_mul] at h
-  exact h
+  rwa [e, one_mul] at h
 
 private theorem UpperTheory.ConvolutionTheory.H.gap_strict {n : ℕ} (B : Finset (Fin n → ℤ)) :
     ∃ m : ℕ, ∀ a : Fin n → ℤ, Gap m a → ∀ b ∈ B, StrictAnti (a + b) := by
@@ -531,8 +529,7 @@ theorem UpperTheory.ConvolutionTheory.H.nonVan :
       ∃ a : Fin n → ℤ, Gap m a ∧ (∀ i, 0 ≤ a i) ∧ evalAt z (symSum (monomial a * dPol n t)) ≠ 0 := by
   classical
   intro n t ht z m
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   let s : Fin n → ℤ := fun i => (m : ℤ) * ((n : ℤ) - ((i : ℕ) : ℤ))
   have hs0 : ∀ i, 0 ≤ s i := fun i => by
     have : ((i : ℕ) : ℤ) ≤ n := by exact_mod_cast i.2.le
@@ -667,8 +664,7 @@ private theorem lin_eq_of_sub {X : Type*} (L C : Submodule ℂ (X → ℂ)) (Λ 
     (hlin : ∀ x ∈ L, ∀ y ∈ L, ∀ c : ℂ, Λ (c • x + y) = c * Λ x + Λ y)
     (hC : ∀ x ∈ C, Λ x = 0) {u v : X → ℂ} (hu : u ∈ L) (hv : v ∈ L) (huv : u - v ∈ C) : Λ u = Λ v := by
   have h := hlin (u - v) (L.sub_mem hu hv) v hv 1
-  rw [one_smul, sub_add_cancel, hC _ huv, one_mul, zero_add] at h
-  exact h
+  rwa [one_smul, sub_add_cancel, hC _ huv, one_mul, zero_add] at h
 
 private theorem th_mem (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] {n : ℕ}
     [MeasurableSpace (GL (Fin n) F)] (μ : Measure (GL (Fin n) F)) {a : Fin n → ℤ} (ha : Antitone a) :
@@ -799,8 +795,7 @@ theorem UpperTheory.ConvolutionTheory.H.deepAbs :
   have hanti : ∀ b ∈ y.coeff.support, Antitone b := fun b hb => (hSD b hb).antitone
   have hantl : ∀ b ∈ y.coeff.support, Antitone ((l : ℤ) • b) := fun b hb i j hij => by
     have := hanti b hb hij
-    simp only [Pi.smul_apply, smul_eq_mul]
-    exact mul_le_mul_of_nonneg_left this (by positivity)
+    simpa only [Pi.smul_apply, smul_eq_mul] using mul_le_mul_of_nonneg_left this (by positivity)
   have hmE : thP μE y ∈ locallyConstantCompactSupport (GL (Fin n) E) ℂ ℂ :=
     Submodule.sum_mem _ fun b hb => Submodule.smul_mem _ _ (th_mem E μE (hanti b hb))
   have hmk : thP μk (bc l y) ∈ locallyConstantCompactSupport (GL (Fin n) k) ℂ ℂ := by
@@ -1530,8 +1525,7 @@ theorem UpperTheory.ConvolutionTheory.Loc.elemMatch :
     exact hγ ⟨δ, hδ⟩
   have hγ : IsRegSemisimple γ := by
     rw [IsTwRegSemisimple, hh, Units.val_mul, Units.val_mul, Matrix.coe_units_inv, Matrix.charpoly_units_conj] at hδ
-    rw [IsRegSemisimple, ← Polynomial.separable_map (algebraMap k E), ← Matrix.charpoly_map]
-    exact hδ
+    rwa [IsRegSemisimple, ← Polynomial.separable_map (algebraMap k E), ← Matrix.charpoly_map]
   by_cases hA : ∃ x, x⁻¹ * δ * sg (σ : E ≃+* E) x ∈ iwahoriCoset tE
   swap
   · rw [zero γ μγ _ fun z hz => ?_]

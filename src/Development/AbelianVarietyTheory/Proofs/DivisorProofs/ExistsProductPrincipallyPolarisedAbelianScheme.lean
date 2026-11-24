@@ -74,12 +74,10 @@ theorem exists_isPullback_restrict {X Y Z S : Scheme.{0}} {p : Z ⟶ X} {q : Z �
   refine ⟨Hf.lift _ _ w₁, Hg.lift _ _ w₂, Hf.lift_snd _ _ _, Hg.lift_snd _ _ _, ?_⟩
   have A : IsPullback (Hf.lift _ _ w₁) (h ⁻¹ᵁ U).ι (f ⁻¹ᵁ U).ι p := by
     refine IsPullback.of_right ?_ (Hf.lift_snd _ _ _) Hf
-    rw [Hf.lift_fst, hh]
-    exact Hh
+    rwa [Hf.lift_fst, hh]
   have B := A.paste_vert P
   refine IsPullback.of_bot ?_ (by rw [Hf.lift_fst, Hg.lift_fst]) Hg
-  rw [Hg.lift_snd, Hf.w]
-  exact B
+  rwa [Hg.lift_snd, Hf.w]
 
 theorem relAmple_prod {S : Scheme.{0}} (A B : Over S) [IsProper A.hom] [IsProper B.hom] [IsProper (A ⊗ B).hom]
     {L : LB A.left} {M : LB B.left} {N : LB (A ⊗ B).left} (hL : L.IsLB) (hM : M.IsLB) (hN : N.IsLB)

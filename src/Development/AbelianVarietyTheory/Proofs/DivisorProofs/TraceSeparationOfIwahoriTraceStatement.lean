@@ -197,8 +197,7 @@ theorem coeff_eq_zero_of_sum_trace_eq_zero : ∀ (G : Type) [Group G] (n : ℕ) 
     (by simp)] at h
   rw [hQx i₀, ite_eq_left rfl, LinearMap.trace_id] at h
   have hpos : 0 < Module.finrank ℂ (LinearMap.range (P i₀)) := by
-    rw [Module.finrank_pos_iff, Submodule.nontrivial_iff_ne_bot, Ne, LinearMap.range_eq_bot]
-    exact hi₀
+    rwa [Module.finrank_pos_iff, Submodule.nontrivial_iff_ne_bot, Ne, LinearMap.range_eq_bot]
   have hne0 : (Module.finrank ℂ (LinearMap.range (P i₀)) : ℂ) ≠ 0 := by exact_mod_cast hpos.ne'
   exact (mul_eq_zero.1 h).resolve_right hne0
 
@@ -437,11 +436,9 @@ theorem exists_intertwining_le (hπ : π.IsIrreducible) (h : IsIsotypicAlg π ρ
       hPr _ (C1.apply_mem_toSubmodule g hb), add_zero, add_zero]
   have hPm : ∀ x, P x ∈ C.toSubmodule := fun x => by simp [P]
   obtain ⟨c, hc0, hcne⟩ : ∃ c ∈ C.toSubmodule, c ≠ 0 := by
-    by_contra hn
-    push Not at hn
+    by_contra! hn
     exact hC (Subrepresentation.toSubmodule_injective (eq_bot_iff.2 fun x hx => hn x hx))
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   have hall : ∀ φ : π.IntertwiningMap ρ, LinearMap.range φ.toLinearMap ≤ LinearMap.ker P := by
     intro φ
     let ψ : π.IntertwiningMap ρ := ⟨P ∘ₗ φ.toLinearMap, fun g => LinearMap.ext fun n => by
@@ -546,8 +543,7 @@ theorem exists_finset_fixed_away : ∀ (D : D7) (V : HSp D) (u : HeightOneSpectr
   intro D V u W _ _ σ hσa N _ _ π hπ hπa hloc K hK
   have hiso : IsIsotypicAlg π (σ.comp (locFin V u)) := hloc
   obtain ⟨v, hv⟩ : ∃ v : N, v ≠ 0 := by
-    by_contra hn
-    push Not at hn
+    by_contra! hn
     haveI : Subsingleton N := ⟨fun a b => (hn a).trans (hn b).symm⟩
     exact (bot_ne_top : (⊥ : Subrepresentation π) ≠ ⊤) (Subrepresentation.toSubmodule_injective (Subsingleton.elim _ _))
   let St : Subgroup (Gv V u) :=
@@ -710,8 +706,7 @@ theorem intertwiner_sum_eq_zero_imp {G : Type} [Group G] {N X : Type} [AddCommGr
       let p : K →ₗ[ℂ] N := LinearMap.proj (Fin.last m) ∘ₗ K.subtype
       have hp : Function.Bijective p := by
         constructor
-        · intro a b hab
-          exact Subtype.ext (huniq a.1 b.1 ((hK _).1 a.2) ((hK _).1 b.2) hab)
+        · exact fun a b hab => Subtype.ext (huniq a.1 b.1 ((hK _).1 a.2) ((hK _).1 b.2) hab)
         · intro n
           obtain ⟨w, hw, hl⟩ := hsurj n
           exact ⟨⟨w, (hK w).2 hw⟩, hl⟩
@@ -787,8 +782,7 @@ theorem intertwiner_mem_iSup_range_eq_sum_smul (G : Type) [Group G] (N X : Type)
     refine iSup_le fun j => ?_
     rintro _ ⟨n, rfl⟩
     refine ⟨Pi.single j n, ?_⟩
-    rw [hΦ]
-    rw [Finset.sum_eq_single j]
+    rw [hΦ, Finset.sum_eq_single j]
     · simp
     · intro b _ hb; simp [hb]
     · simp
@@ -802,8 +796,7 @@ theorem intertwiner_mem_iSup_range_eq_sum_smul (G : Type) [Group G] (N X : Type)
     have h2 : e (e.symm ⟨ψ.toLinearMap n, hmem n⟩) = ⟨ψ.toLinearMap n, hmem n⟩ := e.apply_symm_apply _
     have h3 := congrArg Subtype.val h2
     change Φ (e.symm ⟨ψ.toLinearMap n, hmem n⟩) = ψ n
-    rw [← LinearEquiv.ofInjective_apply Φ (h := hΦinj)]
-    exact h3
+    rwa [← LinearEquiv.ofInjective_apply Φ (h := hΦinj)]
   have hWg : ∀ g n, Wm (π g n) = fun j => π g (Wm n j) := by
     intro g n
     apply hΦinj
@@ -975,8 +968,7 @@ theorem trace_mul_isotypic : ∀ (G : Type) [Group G] (N X : Type) [AddCommGroup
       fun x _ => hrange (LinearMap.mem_range_self _ x)) = (∑ j, hc j j) * b := by
     rw [hconj, LinearMap.trace_conj', _root_.GlobalTheory.trace_matrix_pi_operator R _ h A', ← htr]
     simp [h, Matrix.trace, A', R]
-  rw [← key]
-  exact hT1
+  rwa [← key]
 
 end GlobalTheory.IsoTrace
 end -- clump:auto

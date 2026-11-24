@@ -70,8 +70,7 @@ theorem UpperTheory.V.Chr.levGal :
       rw [IsCyclotomicExtension.Rat.galEquivZMod_apply_of_pow_eq N _ τ hζ.pow_eq_one, hu]
     rw [← hj τ u hτ, IntermediateField.mem_fixingSubgroup_iff]
     constructor
-    · intro h x
-      exact h (j x) ⟨x, rfl⟩
+    · exact fun h x => h (j x) ⟨x, rfl⟩
     · rintro h _ ⟨x, rfl⟩
       exact h x
   have hfr : Module.finrank ℚ j.fieldRange = Module.finrank ℚ E := by
@@ -96,5 +95,4 @@ theorem UpperTheory.V.Chr.levGal :
   obtain ⟨-, hopen, hidx⟩ := galEmbTop ℚ E Ω
   refine ⟨heq, ?_, ?_⟩
   · rw [← heq, hidx, hfin]
-  · rw [← heq]
-    exact hopen
+  · rwa [← heq]

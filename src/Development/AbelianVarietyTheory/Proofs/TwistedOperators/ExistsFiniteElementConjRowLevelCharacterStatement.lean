@@ -365,8 +365,7 @@ theorem v_det_eq_one {n : ℕ} (M : Matrix (Fin n) (Fin n) K) (d : Fin n → K) 
     refine Valuation.map_sum_lt v one_ne_zero fun s hs => ?_
     have hs1 : s ≠ 1 := Finset.ne_of_mem_erase hs
     obtain ⟨i, hi⟩ : ∃ i, s i ≠ i := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hs1 (Equiv.ext hc)
     rw [v_sign_smul, map_prod, ← Finset.mul_prod_erase _ _ (Finset.mem_univ i)]
     have h1 := h (s i) i
@@ -818,8 +817,7 @@ theorem redFn_mul_intGL (β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (y :
       congr 1
       group
     conv_lhs => rw [h1]
-    rw [redFn_frGL, redFn_frGL]
-    rw [map_mul, map_mul, map_inv]
+    rw [redFn_frGL, redFn_frGL, map_mul, map_mul, map_inv]
   · have hx' : x ∉ St (β * intGL F E n y) := by rwa [St_mul_intGL]
     simp only [redFn, ext1, dite_eq_right hx, dite_eq_right hx', mul_one, inv_mul_cancel]
 
@@ -844,10 +842,8 @@ theorem exists_intGL_of_isFrame {β₁ β₂ : GL (Fin n) (E ⊗[F] Formalism.L2
       rw [hv, Matrix.mulVec_mulVec, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.one_mulVec]
       rcases eq_or_ne k j with hk | hk
       · subst hk
-        simp only [Pi.single_eq_same]
-        exact Subring.one_mem _
-      · simp only [Pi.single_eq_of_ne hk]
-        exact Subring.zero_mem _
+        simpa only [Pi.single_eq_same] using Subring.one_mem _
+      · simpa only [Pi.single_eq_of_ne hk] using Subring.zero_mem _
     have hi := (hγ v).1 hvL i
     rw [hv, Matrix.mulVec_mulVec, Matrix.mulVec_single_one, ← Units.val_mul] at hi
     simpa [Matrix.transpose_apply] using hi
@@ -978,8 +974,7 @@ theorem entry_mem {β β' : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)} {Λ : 
     by_cases h : k = j
     · subst h; simp only [Pi.single_eq_same]; exact Subring.one_mem _
     · rw [Pi.single_eq_of_ne h]; exact Subring.zero_mem _)) i
-  rw [Matrix.mulVec_mulVec, ← Units.val_mul, Matrix.mulVec_single_one] at key
-  exact key
+  rwa [Matrix.mulVec_mulVec, ← Units.val_mul, Matrix.mulVec_single_one] at key
 
 theorem exists_int {β β' : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)} {Λ : Submodule (𝓞 E) (Fin n → E)}
     (hβ : IsFrame β Λ) (hβ' : IsFrame β' Λ) : ∃ y : GL (Fin n) (Formalism.L2.Herm.intAf F E), intGL F E n y = β⁻¹ * β' := by
@@ -1127,8 +1122,7 @@ theorem GlobalTheory.SeeConj.exists_conj_level : ∀ {D : D7} {G : Type} [Group 
       (k ∈ levS (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true)) → star (X.chi2 ((iotaX X h).toMulEquiv ((u * t₀) * k * (u * t₀)⁻¹)).2) = levChi (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true)) k) :=
     ⟨hA.1.trans (hC.1.trans (h2.1.trans h1.1.symm)), fun hk => by rw [h1.2 (hm hk), ← h2.2, ← hC.2, hA.2]⟩
   have e : ((u * t₀)⁻¹⁻¹ : GA D (D.sp.Y 0)) = u * t₀ := inv_inv (G := GA D (D.sp.Y 0)) _
-  rw [e]
-  exact key
+  rwa [e]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFiniteElementConjRowLevelCharacter =====

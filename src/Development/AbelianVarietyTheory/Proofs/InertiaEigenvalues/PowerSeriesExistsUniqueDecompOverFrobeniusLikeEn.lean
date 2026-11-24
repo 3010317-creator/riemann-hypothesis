@@ -56,8 +56,7 @@ theorem coeff_term {O : Type} [CommRing O] (l : ℕ) (φ : O⟦X⟧ →ₐ[O] O�
       if j ≤ m ∧ l ∣ (m - j) then PowerSeries.coeff ((m - j) / l) g else 0 := by
   rw [PowerSeries.coeff_X_pow_mul']
   by_cases h : j ≤ m
-  · simp only [h, true_and, ite_true]
-    exact hφ g (m - j)
+  · simpa only [h, true_and, ite_true] using hφ g (m - j)
   · simp [h]
 
 theorem coeff_sum {O : Type} [CommRing O] (l : ℕ) (hl : 2 ≤ l) (φ : O⟦X⟧ →ₐ[O] O⟦X⟧)
@@ -67,8 +66,7 @@ theorem coeff_sum {O : Type} [CommRing O] (l : ℕ) (hl : 2 ≤ l) (φ : O⟦X�
       PowerSeries.coeff (m / l) (g ⟨m % l, Nat.mod_lt _ (by omega)⟩) := by
   have hl0 : 0 < l := by omega
 
-  rw [map_sum]
-  rw [Finset.sum_eq_single (⟨m % l, Nat.mod_lt _ hl0⟩ : Fin l)]
+  rw [map_sum, Finset.sum_eq_single (⟨m % l, Nat.mod_lt _ hl0⟩ : Fin l)]
   · rw [coeff_term l φ hφ]
     have h1 : m % l ≤ m := Nat.mod_le _ _
     have h2 : l ∣ m - m % l := by
@@ -80,8 +78,7 @@ theorem coeff_sum {O : Type} [CommRing O] (l : ℕ) (hl : 2 ≤ l) (φ : O⟦X�
       exact Nat.mul_div_cancel_left _ hl0
     simp only [h1, h2, and_self, ite_true, h3]
   · intro j _ hj
-    rw [coeff_term l φ hφ]
-    rw [ite_eq_right]
+    rw [coeff_term l φ hφ, ite_eq_right]
     rintro ⟨hjm, k, hk⟩
     apply hj
     ext

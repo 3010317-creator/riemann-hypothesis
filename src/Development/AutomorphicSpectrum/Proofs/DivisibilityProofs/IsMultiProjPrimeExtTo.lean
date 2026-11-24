@@ -104,8 +104,7 @@ theorem comap_extTo (hP : P.IsPrime) (hC : P.comap (C : ℤ →+* MRing ι ℤ) 
     (extTo (ZP p) P).comap (MvPolynomial.map (Int.castRingHom (ZP p))) = P := by
   have h := IsLocalization.under_map_of_isPrime_disjoint (consts ι p) (MRing ι (ZP p)) hP
     (disjoint_consts p hC)
-  rw [extTo_eq, ← algebraMap_eq]
-  exact h
+  rwa [extTo_eq, ← algebraMap_eq]
 
 theorem mem_of_map_mem (hP : P.IsPrime) (hC : P.comap (C : ℤ →+* MRing ι ℤ) = ⊥)
     {f : MRing ι ℤ} (h : MvPolynomial.map (Int.castRingHom (ZP p)) f ∈ extTo (ZP p) P) : f ∈ P :=
@@ -327,8 +326,7 @@ theorem isVert_map {σ : Type} {S : Finset Nat.Primes} {T : LocPair ι ℤ σ} (
       have e2 : (((q : ℕ) : ℕ) : ZP p) = (((p : ℕ) : ℕ) : ZP p) :=
         congrArg (fun n : ℕ => (n : ZP p)) hpq.symm
       apply hpW'
-      rw [← e2, ← e1]
-      exact hq'
+      rwa [← e2, ← e1]
     · have hunit : IsUnit (algebraMap ℤ (ZP p) ((q : ℕ) : ℤ)) :=
         IsLocalization.map_units (ZP p) (⟨((q : ℕ) : ℤ), hd⟩ : (Ideal.span {((p : ℕ) : ℤ)}).primeCompl)
       have e : Int.castRingHom (ZP p) ((q : ℕ) : ℤ) = algebraMap ℤ (ZP p) ((q : ℕ) : ℤ) := by simp
@@ -338,8 +336,7 @@ theorem isVert_map {σ : Type} {S : Finset Nat.Primes} {T : LocPair ι ℤ σ} (
   refine ⟨MvPolynomial.map (Int.castRingHom (ZP p)) u, MvPolynomial.map (Int.castRingHom (ZP p)) v,
     huW, hvW, ?_⟩
   have h := Ideal.mem_map_of_mem (MvPolynomial.map (Int.castRingHom (ZP p))) huv
-  rw [map_sub, map_mul, map_mul] at h
-  exact h
+  rwa [map_sub, map_mul, map_mul] at h
 
 end
 

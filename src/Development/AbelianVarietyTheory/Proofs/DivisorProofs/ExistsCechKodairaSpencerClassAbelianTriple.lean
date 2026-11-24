@@ -332,10 +332,7 @@ theorem fst_comp (he : IsField W e) : spMap (TrivSqZeroExt.fstHom S S S).toRingH
     rw [← Category.assoc, fst_comp_proj, Category.id_comp]
   refine Eq.trans (comp_eq_of_app _ _ (proj S ≫ g₀) (epsPoint_base g₀ hg he) fun U => ?_) hb
   erw [eqToHom_refl, op_id, CategoryTheory.Functor.map_id, Category.comp_id]
-  apply CommRingCat.hom_ext
-  apply RingHom.ext
-  intro a
-  exact fst_app_psi g₀ hg he U a
+  exact CommRingCat.hom_ext (RingHom.ext (fun a => fst_app_psi g₀ hg he U a))
 
 end GlobalTheory.EpsPoint
 

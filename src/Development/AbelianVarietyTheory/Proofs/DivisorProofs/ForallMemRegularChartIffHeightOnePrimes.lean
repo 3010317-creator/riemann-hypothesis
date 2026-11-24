@@ -83,15 +83,13 @@ theorem Setup.height_under_vert (σ : Setup) (x : Sp σ.R) (z : (σ.C x).G.left)
   rw [IsLocalization.AtPrime.ringKrullDim_eq_height p.asIdeal] at h1
   refine le_antisymm (by exact_mod_cast h1) ?_
   have hlt : (⊥ : Ideal σ.R) < p.asIdeal := bot_lt_iff_ne_bot.2 fun h => σ.hf (by rwa [h, Ideal.mem_bot] at hf)
-  have h2 := Ideal.height_add_one_le_of_lt_of_isPrime hlt
-  exact le_add_self.trans h2
+  exact le_add_self.trans (Ideal.height_add_one_le_of_lt_of_isPrime hlt)
 
 theorem Setup.forall_mem_W_iff : ∀ (σ : Setup) (u : σ.A.left.functionField),
     (∀ x : Sp σ.R, u ∈ σ.W x) ↔ ∀ p : Sp σ.R, p.asIdeal.height = 1 → σ.f ∈ p.asIdeal → u ∈ σ.W p := by
   intro σ u
   refine ⟨fun h p _ _ => h p, fun h x z hz => ?_⟩
   have h1 := h _ (σ.height_under_vert x z hz) hz.2
-  rw [← (_root_.GlobalTheory.Desc.GaussPt.gaussAt_vert σ x z hz).2] at h1
-  exact h1
+  rwa [← (_root_.GlobalTheory.Desc.GaussPt.gaussAt_vert σ x z hz).2] at h1
 
 end GlobalTheory.Desc

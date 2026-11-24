@@ -238,8 +238,7 @@ theorem exists_fractionRing_map_comp_eq {R W B : Type} [CommRing R] [IsDomain R]
       apply ha
       rw [map_mul, hac', hac', ← h, div_mul_cancel₀ _ h0]
     have h2 : ((algebraMap W (FractionRing W)).comp φ) r' ≠ 0 := by
-      intro h3
-      exact nonZeroDivisors.ne_zero hr' (hinj (h3.trans (map_zero _).symm))
+      exact fun h3 => nonZeroDivisors.ne_zero hr' (hinj (h3.trans (map_zero _).symm))
     rw [RingHom.comp_apply, ← h, map_div₀, IsFractionRing.lift_algebraMap, IsFractionRing.lift_algebraMap,
       div_eq_iff h2, ← hbc', ← hbc', ← map_mul, h1]
 
@@ -347,8 +346,7 @@ namespace GlobalTheory.ConstDescent
 theorem exists_affine_res_ne_zero {X : Scheme.{0}} {U : X.Opens} (f : Γ(X, U)) (hf : f ≠ 0) :
     ∃ (V : X.Opens) (hV : IsAffineOpen V) (hVU : V ≤ U), X.presheaf.map (homOfLE hVU).op f ≠ 0 := by
   have : ∃ (x : X) (hx : x ∈ U), X.presheaf.germ U x hx f ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hf (TopCat.Presheaf.section_ext X.sheaf U f 0 (fun x hx => by rw [map_zero]; exact hc x hx))
   obtain ⟨x, hx, hne⟩ := this
   obtain ⟨V, hV, hxV, hVU⟩ := exists_isAffineOpen_mem_and_subset (x := x) (U := U) hx
@@ -414,17 +412,14 @@ theorem mem_range_of_pullback_eq {K L : Type} [Field K] [Field L] (ψ : K →+* 
     show e z ∈ U
     apply hVU
     have hr : e z ∈ Set.range hV.fromSpec := ⟨z, rfl⟩
-    rw [hV.range_fromSpec] at hr
-    exact hr
+    rwa [hV.range_fromSpec] at hr
   have hk : ⊤ ≤ k ⁻¹ᵁ ((pullback.fst h (spMap ψ)) ⁻¹ᵁ U) := by
     intro z _
     show (pullback.fst h (spMap ψ)) (k z) ∈ U
     rw [← Scheme.Hom.comp_apply, hk1, Scheme.Hom.comp_apply]
     exact heU (show a z ∈ (⊤ : (Spec B).Opens) from trivial)
 
-  have heU' : ⊤ ≤ (a ≫ e) ⁻¹ᵁ U := by
-    intro z _
-    exact heU (show a z ∈ (⊤ : (Spec B).Opens) from trivial)
+  have heU' : ⊤ ≤ (a ≫ e) ⁻¹ᵁ U := fun z _ => heU (show a z ∈ (⊤ : (Spec B).Opens) from trivial)
   have key1m : (pullback.fst h (spMap ψ)).app U ≫ k.appLE _ ⊤ hk =
       e.appLE U ⊤ heU ≫ (Scheme.ΓSpecIso B).hom ≫
         CommRingCat.ofHom Algebra.TensorProduct.includeLeftRingHom ≫ (Scheme.ΓSpecIso Z).inv := by
@@ -459,8 +454,7 @@ theorem mem_range_of_pullback_eq {K L : Type} [Field K] [Field L] (ψ : K →+* 
     simpa using congrArg (Scheme.ΓSpecIso Z).hom.hom hxy
   have h4 := inj h3
   have hb : (Scheme.ΓSpecIso B).hom.hom ((e.appLE U ⊤ heU).hom f₂) ≠ 0 := by
-    rw [fromSpec_appLE_hom hV hVU heU f₂]
-    exact hne
+    rwa [fromSpec_appLE_hom hV hVU heU f₂]
   obtain ⟨c, hc⟩ := mem_range_of_tmul_one_eq _ _ l hb h4
   exact ⟨c, hc⟩
 
@@ -509,8 +503,7 @@ theorem pull_fst_app_injective {K L : Type} [Field K] [Field L] (ψ : K →+* L)
     exact (RingHom.flat_algebraMap_iff).2 inferInstance
   have : Surjective (spMap ψ) := by
     constructor
-    intro x
-    exact ⟨IsLocalRing.closedPoint L, Subsingleton.elim _ _⟩
+    exact fun x => ⟨IsLocalRing.closedPoint L, Subsingleton.elim _ _⟩
   exact app_injective_of_flat_surj _ U
 
 variable {A : Type} [CommRing A] {X Y Z : Scheme.{0}}
@@ -587,8 +580,7 @@ theorem secK_ratio_descends : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
       (fun _ _ _ => rfl) (fun _ => by simpa using Set.mem_iInter.1 hy 0)
     have e := H Y p q hp y J hJ
     have hj : ∀ i : Fin 1, J (q ≫ C.α) = j i := fun i => by rw [Subsingleton.elim i 0]; exact hJj ()
-    rw [hsc, hsc, sval_of s₁ q y J j hj, sval_of s₂ q y J j hj] at e
-    exact e
+    rwa [hsc, hsc, sval_of s₁ q y J j hj, sval_of s₂ q y J j hj] at e
 
   have key : ∃ m₀ : FractionRing R, m₀ ≠ 0 ∧ ∀ (j : Fin 1 → C.P.L.L.ι) (y : Y), q y ∈ Uc j →
       gs q y (Uc j) (s₁.f j) = sg g y (ψ m₀) * gs q y (Uc j) (s₂.f j) := by
@@ -654,8 +646,7 @@ theorem secK_ratio_descends : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
   intro Z p' z J hJ
   have hm' : p' z ∈ Uc (fun _ => J (p' ≫ C.α)) := hJ.mem (fun _ : Fin 1 => C.α) p'
   have e := congrArg (gs p' z (Uc (fun _ => J (p' ≫ C.α)))) (sec (fun _ => J (p' ≫ C.α)))
-  rw [gs_mul p' z _ hm', gs_mul p' z _ hm', gs_res p' z le_top hm', gs_res p' z le_top hm'] at e
-  exact e
+  rwa [gs_mul p' z _ hm', gs_mul p' z _ hm', gs_res p' z le_top hm', gs_res p' z le_top hm'] at e
 
 end GlobalTheory.Mum
 end -- clump:auto
@@ -983,8 +974,7 @@ theorem PullB.unique {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] [IsDo
   refine DVR.SecOps.sec_ext fun q => fn_ext fun y hy => ?_
   choose p hp using fun κ => exists_chart D.P.isLB ((hD.e.hom.left ≫ pullback.fst D.P.A.hom (specOf φ)) (D'.famφB x κ y))
   have e₁ := H₁ _ (𝟙 _) y p q hp (Set.mem_iInter.1 hy)
-  have e₂ := H₂ _ (𝟙 _) y p q hp (Set.mem_iInter.1 hy)
-  exact (Units.mul_right_inj _).1 (e₁.symm.trans e₂)
+  exact (Units.mul_right_inj _).1 (e₁.symm.trans (H₂ _ (𝟙 _) y p q hp (Set.mem_iInter.1 hy)))
 
 theorem PullB.eq_zero {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] [IsDomain R'] {φ : R →+* R'}
     (hφ : Function.Injective φ) {D : DegPre R} {D' : DegPre R'} {hD : IsPullDeg φ D D'} {k : ℕ} {x : D'.X}
@@ -1262,8 +1252,7 @@ theorem cancel (C : LabCover D) {W : Type} [CommRing W] [IsDomain W] [IsLocalRin
       rw [mul_sub, key, sub_self]
     have := GlobalTheory.cst_dvd_of_cst_mul_eq_zero (pullback.fst T.β C.α ≫ T.G.hom) (g z) (a := b) (b := 0)
       (fun c hc => zero_dvd_iff.2 ((mul_eq_zero.1 hc).resolve_left hb)) h0
-    rw [_root_.GlobalTheory.GenSecField.cst_zero', zero_dvd_iff, sub_eq_zero] at this
-    exact this
+    rwa [_root_.GlobalTheory.GenSecField.cst_zero', zero_dvd_iff, sub_eq_zero] at this
   rw [A₁, A₂, hz]
 
 end GlobalTheory.Mum.Rescale

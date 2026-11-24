@@ -85,8 +85,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.wtVanish_of :
     have hz'' : z' ≫ A.r = x1 := hz'
     by_cases hW' : pt z' ∈ W
     · have hr : A.r (pt z') = A.r v := by
-        rw [← pt_comp, hz'']
-        exact hx1
+        rwa [← pt_comp, hz'']
       have hv : pt z' = v := huniq _ hW' hr
       have hwz : w Ω1 (z' ≫ A.v) = w Ω z :=
         hPt p w hw Ω1 Ω (z' ≫ A.v) z (by rw [pt_comp, hv, hvz])
@@ -99,8 +98,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.wtVanish_of :
     have hf := hFin A.r Ω1 x1
     rw [finsum_mem_eq_finite_toFinset_sum _ hf]
     have hmem : z1 ∈ hf.toFinset := by
-      rw [Set.Finite.mem_toFinset]
-      exact hz1
+      rwa [Set.Finite.mem_toFinset]
     calc (0:ℤ) < φ (pt z1) := by simp [φ, hpz1, hvW]
       _ ≤ _ := Finset.single_le_sum (f := fun z' => φ (pt z'))
           (fun i _ => by by_cases hi : pt i ∈ W <;> simp [φ, hi]) hmem
@@ -119,8 +117,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.wtVanish_of :
       apply hzero Ω2
       have hc : (z' ≫ A.v) ≫ p = x2 ≫ A.u := by
         rw [Category.assoc, A.pb.w, ← Category.assoc, hz'']
-      rw [hc, pt_comp, hx2]
-      exact hyD
+      rwa [hc, pt_comp, hx2]
     simp [hw0]
   have hu1' : ψ u1 = ψ (A.r v) := hu1
   have h1 := hsum Ω0 x0 hx0

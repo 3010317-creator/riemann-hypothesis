@@ -84,16 +84,14 @@ theorem finite_torsion_abelian_geomPoint {S : Scheme.{0}} (B : Over S) [GrpObj B
     show x ^ n = 1 ↔ e x ^ n = 1
     rw [← map_pow, MulEquiv.map_eq_one_iff]
   have h3 : (𝟙_ (Over (Sp Ω))).hom ≫ t = t := Category.id_comp t
-  rw [h3] at h2
-  exact h2
+  rwa [h3] at h2
 
 theorem finite_torsion_geomPoint : ∀ (S : Scheme.{0}) (G B : Over S) [GrpObj G] [IsCommMonObj G] [GrpObj B] (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (q : G ⟶ B) (i : splitTorus S X ⟶ G), IsMonHom q → IsMonHom i → IsPullback i (toUnit _) q η[B] → IsAbelianScheme B → ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (t : Sp Ω ⟶ S) (N : ℕ), 1 ≤ N → Finite {x : Over.mk t ⟶ G // x ^ N = 1} := by
   intro S G B _ _ _ X _ _ _ q i hq hi hk hB Ω _ _ t n hn
   refine SemiAbTorsion.finite_pow_eq_one_of_extension (IsMonHom.monoidHom i (Over.mk t))
     (IsMonHom.monoidHom q (Over.mk t)) ?_ ?_ n ?_
     (finite_torsion_abelian_geomPoint B hB Ω t n hn)
-  · intro a b h
-    exact hk.hom_ext h (toUnit_unique _ _)
+  · exact fun a b h => hk.hom_ext h (toUnit_unique _ _)
   · intro x hx
     have hx' : x ≫ q = 1 := hx
     exact ⟨hk.lift x (toUnit _) (by rw [hx', Hom.one_def]), hk.lift_fst _ _ _⟩
@@ -102,7 +100,6 @@ theorem finite_torsion_geomPoint : ∀ (S : Scheme.{0}) (G B : Over S) [GrpObj G
     let e := splitTorusPointsEquiv S X (Over.mk t)
     refine Finite.of_injective (fun s => (⟨e s.1, by rw [← map_pow, s.2, map_one]⟩ :
       {s : Multiplicative X →* Γ((Over.mk t).left, ⊤)ˣ // s ^ n = 1})) ?_
-    intro a b h
-    exact Subtype.ext (e.injective (congrArg Subtype.val h))
+    exact fun a b h => Subtype.ext (e.injective (congrArg Subtype.val h))
 
 end GlobalTheory.TorusExtTorsion

@@ -212,14 +212,12 @@ theorem isQuadOf_normal {H X : Matrix ι ι ℂ} (hH : Hᴴ = H) (hd : H.det ≠
 private theorem sm_add' {B : Type} [NormedAddCommGroup B] [NormedSpace ℂ B]
     {ρ : (ι → ℂ) → B →L[ℂ] B} {f g : B} (hf : Sm ρ f) (hg : Sm ρ g) : Sm ρ (f + g) := by
   unfold Sm at *
-  simp only [map_add (f := _)]
-  exact hf.add hg
+  simpa only [map_add (f := _)] using hf.add hg
 
 private theorem sm_smul' {B : Type} [NormedAddCommGroup B] [NormedSpace ℂ B]
     {ρ : (ι → ℂ) → B →L[ℂ] B} {f : B} (a : ℂ) (hf : Sm ρ f) : Sm ρ (a • f) := by
   unfold Sm at *
-  simp only [map_smul]
-  exact hf.const_smul a
+  simpa only [map_smul] using hf.const_smul a
 
 theorem quad_normal (H X : Matrix ι ι ℂ) {B : Type} [NormedAddCommGroup B] [NormedSpace ℂ B]
     (ρ : (ι → ℂ) → B →L[ℂ] B) (f : B) (hs : ∀ v, Sm ρ (dH ρ v f)) :

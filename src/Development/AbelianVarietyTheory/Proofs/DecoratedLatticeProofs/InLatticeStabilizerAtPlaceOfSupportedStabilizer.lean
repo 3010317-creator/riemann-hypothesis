@@ -267,8 +267,7 @@ theorem inStabAt_of_inK (D : D7) (S : HSp D) (L : Lat S) (v : Pl D) (κ : GA D S
     fun f i j => congrFun (congrFun (Matrix.map_one _ (map_zero f) (map_one f)) i) j
   have hinf : ∀ i j, infPart D (mt S κ i j) = (1 : Matrix (Fin S.rank) (Fin S.rank) _) i j := fun i j => by
     have h := (Ideal.mem_inf.1 (hI i j)).1
-    rw [RingHom.mem_ker, (infPart D).map_sub, sub_eq_zero, hone] at h
-    exact h
+    rwa [RingHom.mem_ker, (infPart D).map_sub, sub_eq_zero, hone] at h
   have hcomp : ∀ w, w ≠ v → ∀ i j,
       compAt D w (mt S κ i j - (1 : Matrix (Fin S.rank) (Fin S.rank) (AE D)) i j) = 0 := fun w hw i j => by
     have h := (Ideal.mem_iInf.1 (Ideal.mem_inf.1 (hI i j)).2) ⟨w, hw⟩
@@ -282,8 +281,7 @@ theorem inStabAt_of_inK (D : D7) (S : HSp D) (L : Lat S) (v : Pl D) (κ : GA D S
   · ext i j
     have h := hcomp w hw i j
     change compFin D w (finPart D _) = 0 at h
-    rw [hfin, (compFin D w).map_sub, sub_eq_zero, hone] at h
-    exact h
+    rwa [hfin, (compFin D w).map_sub, sub_eq_zero, hone] at h
   refine keeps_of_core v _ _ (fun i j => by
     rw [← hfin]; exact e_mul_of_supp v _ fun w hw => hcomp w hw i j) ?_
   intro z hz

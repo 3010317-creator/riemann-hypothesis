@@ -65,13 +65,11 @@ theorem _root_.GlobalTheory.HeckeGal.norm_lt_one_of_contEmb {E : Type} [Field E]
     rw [hx, Valued.toNormedField.norm_lt_one_iff]
     have h := HeightOneSpectrum.valuedAdicCompletion_eq_valuation (K := E) v a
     erw [h]
-    rw [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_lt_one_iff_mem]
-    exact ha
+    rwa [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_lt_one_iff_mem]
   have hlim : Filter.Tendsto (fun n : ℕ => j x ^ n) Filter.atTop (nhds 0) := by
     have h0 := (hj.tendsto 0).comp (tendsto_pow_atTop_nhds_zero_of_norm_lt_one hx1)
     simpa [Function.comp_def, map_pow] using h0
-  by_contra hge
-  push Not at hge
+  by_contra! hge
   have hball : ∀ᶠ n : ℕ in Filter.atTop, ‖j x ^ n‖ < 1 :=
     (tendsto_norm_zero.comp hlim).eventually (gt_mem_nhds zero_lt_one)
   obtain ⟨n, hn⟩ := hball.exists

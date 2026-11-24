@@ -139,8 +139,7 @@ theorem prod_castLE_succ {n : ℕ} (d : Fin n → ℂ) (i : Fin n) :
   refine Finset.prod_of_injOn (Fin.castLE i.isLt) ((Fin.castLE_injective _).injOn) (by simp) ?_ ?_
   · intro k _ hk
     rw [ite_eq_right]
-    intro h
-    exact hk ⟨⟨k.val, Nat.lt_succ_of_le h⟩, by simp, rfl⟩
+    exact fun h => hk ⟨⟨k.val, Nat.lt_succ_of_le h⟩, by simp, rfl⟩
   · intro j _
     rw [ite_eq_left]
     exact Nat.le_of_lt_succ j.isLt

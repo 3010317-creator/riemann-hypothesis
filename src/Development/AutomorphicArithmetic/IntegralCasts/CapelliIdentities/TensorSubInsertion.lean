@@ -130,8 +130,7 @@ private theorem mem_of_unit {F : SubSystem S x Ω} {I J : Chart x} (h : I.1 ⊆ 
   have hJ := F.mono I J h _ hay
   have hinv : ((↑u⁻¹ : chartRing S x J) : Ω) * (a : Ω) = 1 := by
     have := congrArg Subtype.val (Units.inv_mul u)
-    rw [hu] at this
-    exact this
+    rwa [hu] at this
   have hy : y = (↑u⁻¹ : chartRing S x J) • ((a : Ω) • y) := by
     rw [chartRing_smul_def, smul_eq_mul, ← mul_assoc, hinv, one_mul]
   rw [hy]
@@ -277,8 +276,7 @@ private theorem exists_form (Lc : LineBundle k x) (s : Ω) (pp : Ideal (Poly k N
       let y : chartRing k x K := ↑v⁻¹ * chartIncl hCK r'
       have hinv : ((↑v⁻¹ : chartRing k x K) : Ω) * (u : Ω) = 1 := by
         have := congrArg Subtype.val (Units.inv_mul v)
-        rw [hv] at this
-        exact this
+        rwa [hv] at this
       have hy : (y : Ω) = e * δ := by
         change ((↑v⁻¹ : chartRing k x K) : Ω) * (r' : Ω) = e * δ
         rw [hr'']
@@ -311,8 +309,7 @@ private theorem exists_form (Lc : LineBundle k x) (s : Ω) (pp : Ideal (Poly k N
     rw [← hT] at hδ
     refine Submodule.span_induction (p := fun δ _ => x i ^ n * e * δ ∈ twistMod k x (n : ℤ) I)
       ?_ ?_ ?_ ?_ hδ
-    · intro z hz
-      exact hr z hz n ((Finset.le_sup hz).trans hn)
+    · exact fun z hz => hr z hz n ((Finset.le_sup hz).trans hn)
     · rw [mul_zero]; exact Submodule.zero_mem _
     · intro a b _ _ ha hb
       rw [mul_add]; exact add_mem ha hb
@@ -389,10 +386,8 @@ private theorem sum_powerset_map {n : ℕ} (f : Finset (Fin (n + 1)) → ℤ) :
       ∑ T : Finset (Fin n), f (T.map Fin.castSuccEmb) := by
   symm
   refine Finset.sum_bij (fun T _ => T.map Fin.castSuccEmb) ?_ ?_ ?_ ?_
-  · intro T _
-    exact Finset.mem_powerset.mpr (Finset.map_subset_map.mpr (Finset.subset_univ _))
-  · intro a _ b _ h
-    exact Finset.map_injective _ h
+  · exact fun T _ => Finset.mem_powerset.mpr (Finset.map_subset_map.mpr (Finset.subset_univ _))
+  · exact fun a _ b _ h => Finset.map_injective _ h
   · intro t ht
     obtain ⟨u, -, rfl⟩ := Finset.subset_map_iff.mp (Finset.mem_powerset.mp ht)
     exact ⟨u, Finset.mem_univ _, rfl⟩
@@ -510,8 +505,7 @@ private theorem main : CycleSplit.Filt.Statement.{u, w} → CutRestrLenExact.Sta
     (hsub.le.trans hle) (by rw [Ideal.map_bot]; exact bot_le)
   have hdim : ∀ q : Ideal (Poly k N), q.IsPrime → pp ⊔ zeroIdeal Lc.toSubSystem s ≤ q →
       ringKrullDim (Poly k N ⧸ q) ≤ ((n + 1 : ℕ) : WithBot ℕ∞) := by
-    intro q hq hJq
-    exact dim_lt (hle.trans hJq) (hJq hfJ) hfp hsub.dim.le
+    exact fun q hq hJq => dim_lt (hle.trans hJq) (hJq hfJ) hfp hsub.dim.le
   have hmin : ∀ j, IsSubvar x (P j) n → P j ∈ (pp ⊔ zeroIdeal Lc.toSubSystem s).minimalPrimes := by
     intro j hj
     haveI := hj.isPrime

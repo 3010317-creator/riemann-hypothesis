@@ -103,8 +103,7 @@ theorem phi_eq_zero {k : ℕ} (z : KOG O k) (hz : Br.phi Bw k z = 0) : z = 0 := 
   apply (Br.toLLK Bw).injective
   have hbj := congrFun hb j
   simp only [LinearMap.compLeft_apply, Function.comp_apply, Algebra.linearMap_apply] at hbj ⊢
-  rw [Br.toLLK_alg, RingEquiv.apply_symm_apply]
-  exact hbj
+  rwa [Br.toLLK_alg, RingEquiv.apply_symm_apply]
 
 
 
@@ -132,8 +131,7 @@ theorem inv_killed {Γ : Type} [Group Γ] {k : ℕ} (M : Γ →* Matrix (Fin k) 
   have hk := h _ hfix
   apply phi_eq_zero Bw
   rw [LinearMap.map_smulₛₗ]
-  simp only [map_pow, map_natCast]
-  exact hk
+  simpa only [map_pow, map_natCast] using hk
 
 
 include Bw in
@@ -144,8 +142,7 @@ theorem natCast_ne_zero : algebraMap O (FractionRing O) ((l : ℕ) : O) ≠ 0 :=
   have hQ : ((l : ℕ) : ℚ_[l]) ≠ 0 := Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero
   apply hQ
   apply (algebraMap ℚ_[l] (Br.LLw Bw)).injective
-  rw [map_natCast, map_zero]
-  exact h2
+  rwa [map_natCast, map_zero]
 
 end Bridge
 

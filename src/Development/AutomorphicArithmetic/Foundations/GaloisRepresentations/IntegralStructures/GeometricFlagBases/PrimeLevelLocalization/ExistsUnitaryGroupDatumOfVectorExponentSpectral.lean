@@ -183,10 +183,8 @@ private theorem row_near
   · exact Ideal.isCoprime_iff_sup_eq.1 (IsCoprime.mul_left (Ideal.isCoprime_iff_sup_eq.2 hv)
       (Ideal.isCoprime_iff_sup_eq.2 (Ideal.IsMaximal.coprime_of_ne hmax' hmax hne)))
   · rw [pow_succ]; exact Ideal.mul_mono he hu
-  · intro u hu'
-    exact ⟨u, hK ▸ hu', hu', by simpa using one_mem K₁⟩
-  · intro v hv'
-    exact ⟨v, hv', by simp⟩
+  · exact fun u hu' => ⟨u, hK ▸ hu', hu', by simpa using one_mem K₁⟩
+  · exact fun v hv' => ⟨v, hv', by simp⟩
   · intro k hk u hu'
     have := hnorm _ _ (hKN g.M.1) k (g.le_one hk) u hu'
     simpa using this
@@ -218,8 +216,7 @@ theorem UpperTheory.Gal.Int.Geo.Pl.goodOf_of :
       refine ⟨S.L.actG (g j).h⁻¹ v', integ_of_mem (inv_mem hh) v' hv', ?_⟩
       rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one]
       simp
-    · intro u hu
-      exact ⟨1, one_mem _, one_mem _, by simpa using hu⟩
+    · exact fun u hu => ⟨1, one_mem _, one_mem _, by simpa using hu⟩
   · obtain ⟨hI, hTj⟩ := hT E A n p S F x hx N w σ' i hi _ hH
     by_cases hq : σ.q = σ'.q
     · obtain ⟨hr, ha⟩ := hc hq
@@ -235,8 +232,7 @@ theorem UpperTheory.Gal.Int.Geo.Pl.goodOf_of :
         · intro v' hv'
           obtain ⟨y, hy, e⟩ := hTj.back v' hv'
           exact ⟨y, hy, by simpa using e⟩
-        · intro u hu
-          exact ⟨1, one_mem _, one_mem _, by simpa using hu⟩
+        · exact fun u hu => ⟨1, one_mem _, one_mem _, by simpa using hu⟩
       · exact row_near hex hle hKN hnorm σ.lv σ.mem σ.atp.max hat.max
           (fun e => hne (HeightOneSpectrum.ext e)) hat.le hpos hi (g j) hK hM hTj
     · have hat := σ'.atp
@@ -278,8 +274,7 @@ private lemma v_coe_algebraMap {E : Type} [Field E] [NumberField E] (w : Plc E) 
       = algebraMap E (w.adicCompletion E) (algebraMap (𝓞 E) E c) := rfl
   rw [h]
   have := HeightOneSpectrum.valuedAdicCompletion_eq_valuation' (K := E) w (algebraMap (𝓞 E) E c)
-  rw [HeightOneSpectrum.valuation_of_algebraMap] at this
-  exact this
+  rwa [HeightOneSpectrum.valuation_of_algebraMap] at this
 
 private lemma v_le_of_inId {E : Type} [Field E] [NumberField E] (w : Plc E) (e : ℕ)
     (y : w.adicCompletion E) (h : InId w (w.asIdeal ^ e) y) : Valued.v y ≤ WithZero.exp (-(e : ℤ)) := by
@@ -296,8 +291,7 @@ private lemma v_le_of_inId {E : Type} [Field E] [NumberField E] (w : Plc E) (e :
     simpa using this
   · intro a b _ hb
     have ha : Valued.v (a : w.adicCompletion E) ≤ 1 := a.2
-    simp only [smul_eq_mul, MulMemClass.coe_mul, map_mul]
-    exact mul_le_of_le_one_of_le ha hb
+    simpa only [smul_eq_mul, MulMemClass.coe_mul, map_mul] using mul_le_of_le_one_of_le ha hb
 
 private lemma v_inv_sub_one_le {E : Type} [Field E] [NumberField E] {n : ℕ} (w : Plc E) (g : GLw n w)
     (hg : g ∈ KGL w (n := n)) (γ : WithZero (Multiplicative ℤ))
@@ -332,14 +326,12 @@ private lemma tendsto_mat_of_v_le {E : Type} [Field E] [NumberField E] {n : ℕ}
     (M : ℕ → Matrix (Fin n) (Fin n) (w.adicCompletion E))
     (h : ∀ (e : ℕ) i k, Valued.v ((M e - 1) i k) ≤ WithZero.exp (-(e : ℤ))) :
     Filter.Tendsto M Filter.atTop (𝓝 1) := by
-  refine tendsto_pi_nhds.2 fun i => tendsto_pi_nhds.2 fun k => ?_
-  exact tendsto_of_v_le w _ _ fun e => h e i k
+  exact tendsto_pi_nhds.2 fun i => tendsto_pi_nhds.2 fun k => tendsto_of_v_le w _ _ fun e => h e i k
 
 theorem UpperTheory.Gal.Int.Geo.Pl.nearNbhd_holds :
     UpperTheory.Gal.Int.Geo.Pl.NearNbhd := by
   intro E _ _ n w O hO h1
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   choose e' he g hgK hN hgO using hcon
   have hv : ∀ (e : ℕ) i k, Valued.v (((g e).val - 1) i k) ≤ WithZero.exp (-(e : ℤ)) := by
     intro e i k
@@ -525,8 +517,7 @@ theorem UpperTheory.Gal.Int.Geo.Pl.projLev_of :
           Ideal.span {((σ.q ^ N.1.factorization σ.q : ℕ) : 𝓞 E)} := by
         rw [Ideal.span_singleton_mul_span_singleton, ← Nat.cast_mul, Nat.mul_comm,
           Nat.ordProj_mul_ordCompl_eq_self]
-      rw [hspan, hU E w _ _ ⟨_, Ideal.mem_span_singleton_self _, pow_not_mem w hqw _⟩]
-      exact h1
+      rwa [hspan, hU E w _ _ ⟨_, Ideal.mem_span_singleton_self _, pow_not_mem w hqw _⟩]
     · have hc : F.cmp w (π g) = 1 := by
         simp only [Frame.cmp, (hπ g w).2 h, mul_one, mul_inv_cancel, Units.val_one]
       rw [hc, sub_self]

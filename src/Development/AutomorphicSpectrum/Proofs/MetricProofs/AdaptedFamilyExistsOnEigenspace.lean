@@ -112,8 +112,7 @@ theorem exists_append {L V : Type} [Field L] [AddCommGroup V] [Module L V] [Modu
         Sum.elim w (fun c => (a (e.symm c) : V)) ∘ finSumFinEquiv.symm := by
       funext i
       refine Fin.addCases (fun i => ?_) (fun i => ?_) i <;> simp
-    rw [h4]
-    exact h3
+    rwa [h4]
   · have h1 : W.mkQ x ∈ Submodule.span L (Set.range ((fun x : S => W.mkQ (x : V)) ∘ a)) := by
       rw [hsp]
       exact Submodule.subset_span ⟨⟨x, hx⟩, rfl⟩
@@ -121,8 +120,7 @@ theorem exists_append {L V : Type} [Field L] [AddCommGroup V] [Module L V] [Modu
       rw [← Set.range_comp, ← e.symm.surjective.range_comp]
       rfl
     rw [h2, ← Submodule.map_span, ← Submodule.mem_comap, Submodule.comap_map_mkQ] at h1
-    rw [range_append, Submodule.span_union]
-    exact h1
+    rwa [range_append, Submodule.span_union]
 
 theorem orthogonal_family_adapted_basis : ∀ (E L Ψ : Type) [Field E] [NumberField E] [Field L] [NumberField L] [Fintype Ψ] (V : Type) [AddCommGroup V] [Module L V] [Module (𝓞 L) V] [IsScalarTower (𝓞 L) L V] (A : LinPt E L Ψ V), 2 * Fintype.card Ψ = Module.finrank ℚ E → (∃ (r : ℕ) (v : Fin r → V), IsOFamily A.ρ A.I v) ∧ ∀ (r : ℕ) (v : Fin r → V), IsOFamily A.ρ A.I v → ∀ s, ∃ (k : ℕ) (q : Fin k → A.Λ), (∀ c, (q c : V) ∈ A.eig s) ∧ A.IsAdapted s v q ∧ r + k = Module.finrank L (eigSp A.ρ (A.σ s)) ∧ A.Bq.rank (A.img s) = k ∧ ∀ ι, 0 < A.gramDet ι q := by
   intro E L Ψ _ _ _ _ _ V _ _ _ _ A hΨ
@@ -143,8 +141,7 @@ theorem orthogonal_family_adapted_basis : ∀ (E L Ψ : Type) [Field E] [NumberF
       · exact (hq c).2
     · obtain ⟨c, hc, h5⟩ := exists_smul_mem_eig A s hx
       have hcL : algebraMap (𝓞 L) L c ≠ 0 := by
-        rw [map_ne_zero_iff _ (IsFractionRing.injective (𝓞 L) L)]
-        exact hc
+        rwa [map_ne_zero_iff _ (IsFractionRing.injective (𝓞 L) L)]
       have h6 := hsp h5
       rw [← algebraMap_smul L c] at h6
       exact (Submodule.smul_mem_iff _ hcL).1 h6

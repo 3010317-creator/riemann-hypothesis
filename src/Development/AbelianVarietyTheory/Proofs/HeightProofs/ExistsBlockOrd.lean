@@ -106,8 +106,7 @@ theorem exists_blockOrd (ε : Fin n → Bool) (hp : (Finset.univ.filter fun a =>
     have h0 := Finset.card_filter_add_card_filter_not (s := (Finset.univ : Finset (Fin n)))
       (fun a => ε a = true)
     simp only [Bool.not_eq_true, Finset.card_univ, Fintype.card_fin] at h0
-    rw [← hp, ← hq]
-    exact h0
+    rwa [← hp, ← hq]
   let f : Ix p q → Fin n := fun x =>
     match x with
     | Sum.inl i => S.orderEmbOfFin hp i
@@ -138,10 +137,8 @@ theorem exists_blockOrd (ε : Fin n → Bool) (hp : (Finset.univ.filter fun a =>
     refine ⟨hinj, ?_⟩
     simp [hcard]
   refine ⟨Equiv.ofBijective f hbij, ?_, ?_, ?_⟩
-  · intro i
-    exact fS i
-  · intro j
-    exact fT j
+  · exact fun i => fS i
+  · exact fun j => fT j
   · intro a b hab
     simp only [Equiv.ofBijective_apply]
     cases a with
@@ -185,7 +182,6 @@ theorem mem_Upq (g : GL (Ix p q) ℂ) : g ∈ Formalism.UG.Upq p q ↔ (g : Mat 
 
 theorem BlockOrd.cov_mem {e : Ix p q ≃ Fin n} {ε : Fin n → Bool} (h : BlockOrd e ε) (T : GrpData p q) (x : T.G) :
     Matrix.reindex e e ((T.cov x : GL (Ix p q) ℂ) : Mat p q) ∈ UJset ε := by
-  show Formalism.REAL.inUJ ε _
   exact (h.inUJ_iff _).mpr ((mem_Upq _).mp (T.cov_mem x))
 
 theorem BlockOrd.cov_surj {e : Ix p q ≃ Fin n} {ε : Fin n → Bool} (h : BlockOrd e ε) (T : GrpData p q)
@@ -195,8 +191,7 @@ theorem BlockOrd.cov_surj {e : Ix p q ≃ Fin n} {ε : Fin n → Bool} (h : Bloc
   set g' : Mat p q := (Matrix.reindex e e).symm g
   have hre : Matrix.reindex e e g' = g := (Matrix.reindex e e).apply_symm_apply g
   have hU : g'ᴴ * Jm p q * g' = Jm p q := by
-    rw [← h.inUJ_iff, hre]
-    exact hg'
+    rwa [← h.inUJ_iff, hre]
   have hJJ : Jm p q * Jm p q = 1 := by
     simp [Jm, Formalism.UG.Jpq, Matrix.fromBlocks_multiply]
   have hleft : (Jm p q * g'ᴴ * Jm p q) * g' = 1 := by
@@ -213,8 +208,7 @@ theorem BlockOrd.cov_surj {e : Ix p q ≃ Fin n} {ε : Fin n → Bool} (h : Bloc
     exact hdet (by rw [← hz]; simp)
   obtain ⟨x, ⟨hx, -⟩, -⟩ := T.bij u hu (Units.mk0 z hz0) (by simpa using hz)
   refine ⟨x, ?_⟩
-  rw [hx]
-  exact hre
+  rwa [hx]
 
 theorem exists_factors {T : GrpData p q} (U : URep T) (e : Ix p q ≃ Fin n)
     (h : ∀ x, T.cov x = 1 → U.π x = 1) : ∃ σ, Factors U e σ := by

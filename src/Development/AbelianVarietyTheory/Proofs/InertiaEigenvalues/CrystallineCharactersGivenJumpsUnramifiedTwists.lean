@@ -110,8 +110,7 @@ theorem norm_th_le_of_mem_Lat {P : LocPrime l} {AI : LocAinf l P} (Θ : ThetaL P
     (Θ.θ_ker _ hd0).2 (by simpa using ha)
   have h2 : Θ.θ y = Θ.θ (io AI (((l : ℕ) : Ainf l) ^ n * a)) := by
     have := Θ.θ_add _ hd0 _ hi0
-    rw [sub_add_cancel, h1, zero_add] at this
-    exact this
+    rwa [sub_add_cancel, h1, zero_add] at this
   have e : io AI (((l : ℕ) : Ainf l) ^ n * a) = qB P ((l : ℚ_[l]) ^ n) * io AI a := by
     rw [map_mul, map_pow, map_natCast, map_pow, map_natCast]
   rw [h2, e, Θ.θ_mul _ (qB_mem _) _ (io_mem AI a), norm_mul]
@@ -215,8 +214,7 @@ theorem continuous_char_of_act : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (
     rw [mul_one] at this
     refine this.congr fun g => ?_
     have hne : χv g ≠ 0 := by
-      simp only [χv, ne_eq, map_eq_zero]
-      exact Units.ne_zero _
+      simpa only [χv, ne_eq, map_eq_zero] using Units.ne_zero _
     exact inv_mul_cancel_right₀ hne (cv g)
   have hmul : ∀ g h : ↥(GK K), cv (g * h) = cv g * cv h := by
     intro g h
@@ -592,8 +590,7 @@ theorem isCrys_of_letters : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : 
   haveI := Fintype.ofFinite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1)
   have h2 := hli'.fintype_card_le_finrank
   rw [← Nat.card_eq_fintype_card, hcard] at h2
-  rw [Module.finrank_self, mul_one, hfr]
-  exact h2
+  rwa [Module.finrank_self, mul_one, hfr]
 
 end GlobalTheory.LetterCrys
 end -- clump:auto
@@ -626,8 +623,7 @@ theorem charRep_crys_jump_one : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (A
       intro i a
       rw [Function.iterate_succ_apply, ih]
       have h := DFunLike.congr_fun (hemb (i - j - 1)) a
-      rw [sub_add_cancel] at h
-      rw [AlgHom.comp_apply] at h
+      rw [sub_add_cancel, AlgHom.comp_apply] at h
       rw [h]
       congr 1
       push_cast
@@ -705,8 +701,7 @@ theorem norm_le_one (l : ℕ) [Fact l.Prime] (K : FinExt l) (c : ↥(GK K) →* 
     ‖(((c g : (↥(K0 K))ˣ) : ↥(K0 K)) : Om l)‖ ≤ 1 := by
   haveI := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK K
   obtain ⟨B, hB⟩ := (isCompact_univ (X := ↥(GK K))).exists_bound_of_continuousOn hc.continuousOn
-  by_contra h
-  push Not at h
+  by_contra! h
   obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt B h
   have hpow : (((c (g ^ n) : (↥(K0 K))ˣ) : ↥(K0 K)) : Om l) = ((((c g : (↥(K0 K))ˣ) : ↥(K0 K)) : Om l)) ^ n := by
     simp [map_pow]
@@ -930,8 +925,7 @@ theorem galois_periodRatio_mem_unramified : ∀ (l : ℕ) [Fact l.Prime] (P : Lo
       exact (P.PD K).Fil_G g d _ hd1
     have := (P.PD K).Fil_mul d (-d) _ _ hgF hyF
     rw [add_neg_cancel] at this
-    rw [hc, iter_mul, hcommj, map_mul]
-    exact this
+    rwa [hc, iter_mul, hcommj, map_mul]
   obtain ⟨a, ha⟩ := _root_.GlobalTheory.CrisPerFix.mem_unramified_of_frobenius_iterate_fixed_fil_alt l P AI hT K c hφc hF
   exact ⟨a, by rw [hcx, ha]⟩
 
@@ -1001,8 +995,7 @@ theorem isJumpV_of_multV_ne {V : Type} [AddCommGroup V] [Module ↥LL.1 V] [Modu
 
 theorem hasJumps_one (hT : LocTied l P AI) : HasJumps P K LL 1 0 := by
   have hc : Continuous (fun g => ((Formalism.MainNotions.tableLineDegreeTwo.charL (LL := ↥LL.1) (1 : ↥(GK K) →* (↥(OL LL))ˣ) g : (↥LL.1)ˣ) : ↥LL.1)) := by
-    simp only [charL_val, MonoidHom.one_apply, Units.val_one, map_one]
-    exact continuous_const
+    simpa only [charL_val, MonoidHom.one_apply, Units.val_one, map_one] using continuous_const
   obtain ⟨h1, h2⟩ := _root_.GlobalTheory.UnramifiedChar.isCrys_and_multV_eq l P AI hT K LL (Formalism.MainNotions.tableLineDegreeTwo.charL (LL := ↥LL.1) 1) hc
     (fun g _ => by ext; simp [charL_val])
   exact ⟨hc, h1, fun τ b => by rw [h2]; rfl⟩

@@ -202,8 +202,7 @@ theorem fg_of_int {E V : Type} [Field E] [NumberField E] [StarRing E] [AddCommGr
     intro v
     have hv : v ∈ Submodule.span E (s : Set V) := by rw [hs]; trivial
     refine Submodule.span_induction (p := fun v _ => hT v y = 0) ?_ ?_ ?_ ?_ hv
-    · intro l hl
-      exact congrFun hy ⟨l, hl⟩
+    · exact fun l hl => congrFun hy ⟨l, hl⟩
     · simp
     · intro a c _ _ ha hc
       rw [map_add (f := _), LinearMap.add_apply, ha, hc, add_zero]
@@ -337,8 +336,7 @@ theorem stabY_finite : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FP
     obtain ⟨d, hd, hv⟩ := hmul2 v
     refine ⟨d, hd, ?_⟩
     apply (show ΛW ⊔ ΛU ≤ Λ₀ from sup_le ?_ le_sup_right) hv
-    intro w hw
-    exact Submodule.mem_sup_left (Submodule.subset_span (hΛW w hw.1 hw.2))
+    exact fun w hw => Submodule.mem_sup_left (Submodule.subset_span (hΛW w hw.1 hw.2))
   refine (GlobalTheory.StabFin.finite_of_fix (VS D).hT U hpos Λ₀ hΛ₀).subset ?_
   rintro h ⟨hh, hm⟩
 
@@ -362,8 +360,7 @@ theorem stabY_finite : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FP
         simp [hz]
     intro x hx
     have := (sup_le (key F hh.2.1) (key F' hh.2.2)) hx
-    rw [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at this
-    exact this
+    rwa [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at this
   have hWiff : ∀ v, h v ∈ W ↔ v ∈ W := by
     intro v
     rw [memW, memW]
@@ -397,10 +394,8 @@ theorem stabY_finite : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FP
     apply le_antisymm
     · rintro _ ⟨x, hx, rfl⟩
       show h x ∈ ΛU
-      rw [hfixU x hx.2]
-      exact hx
-    · intro x hx
-      exact ⟨x, hx, hfixU x hx.2⟩
+      rwa [hfixU x hx.2]
+    · exact fun x hx => ⟨x, hx, hfixU x hx.2⟩
   refine ⟨hh.1, hfixU, ?_⟩
   show Submodule.map ((h : (VS D).V →ₗ[D.host.E] (VS D).V).restrictScalars (𝓞 D.host.E)) (Θ ⊔ ΛU) = Θ ⊔ ΛU
   rw [Submodule.map_sup, hU', Submodule.map_span]
@@ -712,8 +707,7 @@ theorem localLattice_fg (Z : LocDat D) (Λ : LV D) (h : Submodule.IsLattice D.ho
   have hfg : ((GlobalTheory.HL.placesOf Z).lat p (LatLoc.cL Λ)).FG := by
     rw [← hspan, GlobalTheory.HL.PlacesRec.lat_span]
     exact Submodule.fg_span (hS.image _)
-  rw [LatLoc.localLattice_eq]
-  exact hfg
+  rwa [LatLoc.localLattice_eq]
 
 theorem orbit (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH Z p) D.R.rS) {Tn T'n : ℕ}
     (F G : LFlag (D.sp.Y 0) D.R.rS (Tn : D.host.E)) (F' G' : LFlag (D.sp.Y 0) D.R.rS (T'n : D.host.E))
@@ -1022,8 +1016,7 @@ theorem tsum_inv_stabilizer_eq_tsum_mul_fiber {Γ L Y : Type} [Group Γ] [MulAct
     intro o ho
     obtain ⟨z, hz, hzo⟩ : ({z | z ∈ π ⁻¹' {O.out} ∧ Quotient.mk (orbitRel Γ L) z = o}).Nonempty := by
       rw [← Set.encard_pos, pos_iff_ne_zero]
-      intro h0
-      exact ho (by simp only [h0, ENat.toENNReal_zero])
+      exact fun h0 => ho (by simp only [h0, ENat.toENNReal_zero])
     have hzo' : o.out ∈ orbit Γ z := by
       apply orbitRel_apply.mp
       apply Quotient.exact
@@ -1047,8 +1040,7 @@ theorem tsum_inv_stabilizer_eq_tsum_mul_fiber {Γ L Y : Type} [Group Γ] [MulAct
     refine and_congr Iff.rfl ⟨fun hz => ?_, fun hz => ?_⟩
     · apply orbitRel_apply.mp
       apply Quotient.exact
-      rw [Quotient.out_eq]
-      exact hz
+      rwa [Quotient.out_eq]
     · rw [← Quotient.out_eq o.1]
       exact Quotient.sound (orbitRel_apply.mpr hz)
   have hmul := encard_fiber_orbit_mul_stabilizer π hπ o.1.out O.out h⁻¹ hg
@@ -1308,8 +1300,7 @@ theorem locSet_encard_rel : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, Loc
     rw [inv_mul_cancel] at h2
     have h3 := GlobalTheory.InnerDatumAct.moves_unique (GlobalTheory.InnerDatumAct.inU_of_mem ((FP p).UW0.one_mem))
       (GlobalTheory.InnerDatumAct.moves_one d) h2
-    rw [h3]
-    exact h1
+    rwa [h3]
   rintro d d' ⟨g, hg, hmv⟩
   by_cases hne : (locSet G G' p d).Nonempty
   · rw [aux g hg d d' hmv hne]
@@ -1334,7 +1325,6 @@ theorem glue_count : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPai
   letI actL : MulAction Γ (LV D) :=
     { smul := fun g Λ => Formalism.HermitianLatticesTheory.gmap g.1 Λ
       one_smul := fun Λ => by
-        show Λ.map (((1 : GV D) : (VS D).V →ₗ[D.host.E] (VS D).V).restrictScalars (𝓞 D.host.E)) = Λ
         exact Submodule.map_id Λ
       mul_smul := fun a b Λ => by
         show Λ.map (((a.1 * b.1 : GV D) : (VS D).V →ₗ[D.host.E] (VS D).V).restrictScalars (𝓞 D.host.E)) =
@@ -1442,8 +1432,7 @@ theorem glue_count : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPai
       exact ⟨g.2, congrArg Subtype.val (MulAction.mem_stabilizer_iff.1 hg)⟩
   have hLHS : ENNReal.ofReal (glueSum G G' s) = ∑' a : s, ((MulAction.stabilizer Γ (ι a) : Set Γ).encard : ℝ≥0∞)⁻¹ := by
     unfold glueSum
-    rw [ENNReal.ofReal_sum_of_nonneg (fun _ _ => by positivity)]
-    rw [← Finset.tsum_subtype s]
+    rw [ENNReal.ofReal_sum_of_nonneg (fun _ _ => by positivity), ← Finset.tsum_subtype s]
     congr 1
     funext a
     have hfin' := hs.2.2 a.1 a.2
@@ -1484,8 +1473,7 @@ theorem glue_count : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPai
       have hemp : π ⁻¹' {y} = ∅ := by
         ext x
         simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_empty_iff_false, iff_false]
-        intro hx
-        exact hc ((hGD x.1).2.2.1 y (hx ▸ hπ x))
+        exact fun hx => hc ((hGD x.1).2.2.1 y (hx ▸ hπ x))
       show 0 = _ * _
       rw [hemp, Set.encard_empty, ENat.toENNReal_zero, mul_zero]
   have hcls : ∀ (g : Γ) (y : Dat Z FP), g0 (sm g y) = g0 y := by
@@ -1515,9 +1503,7 @@ theorem glue_count : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPai
     intro p d hd
     have hemp : locSet G G' p d = ∅ := by
       ext Λ
-      simp only [Set.mem_empty_iff_false, iff_false]
-      intro hΛ
-      exact hd ⟨_, hΛ.1⟩
+      simpa only [Set.mem_empty_iff_false, iff_false] using fun hΛ => hd ⟨_, hΛ.1⟩
     show ((locSet G G' p d).encard : ℝ≥0∞) = 0
     rw [hemp, Set.encard_empty, ENat.toENNReal_zero]
   have hreg := _root_.GlobalTheory.GenMass.tsum_classes_eq_prod_locSums D Z FP u u' F F' P d0 R V hV hB hM φ hφrel hφzero

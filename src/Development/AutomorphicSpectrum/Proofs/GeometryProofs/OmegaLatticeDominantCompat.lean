@@ -113,9 +113,7 @@ theorem lieBC {S : Scheme.{0}} {G : Over S} [GrpObj G] {A B : Type} [CommRing A]
     · exact fun m => Submodule.subset_span ⟨m, rfl⟩
     · exact fun s n h => Submodule.smul_mem _ s h
     · exact fun a b ha hb => Submodule.add_mem _ ha hb
-  · intro l
-    refine ⟨hbc.lift ((Algebra.linearMap A B).comp l), fun e => ?_⟩
-    exact hbc.lift_eq _ e
+  · exact fun l => ⟨hbc.lift ((Algebra.linearMap A B).comp l), fun e => (hbc.lift_eq _ e)⟩
 
 section Setup
 

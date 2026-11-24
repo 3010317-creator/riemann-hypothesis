@@ -514,8 +514,7 @@ theorem main : ∀ (C b c : ℝ) (P : M.Par) (l : ℕ) (lam : Fin (2 * P.r + P.k
     obtain ⟨t, rfl⟩ : ∃ t, s = t + 1 := ⟨s - 1, by omega⟩
     have ht : t < n := by omega
     have h := hv ⟨t, ht⟩ hsk
-    rw [← hlamN ⟨t, ht⟩] at h
-    exact h
+    rwa [← hlamN ⟨t, ht⟩] at h
   have hmain := GlobalTheory.two_brackets_le_pow_mul_prod_entries P.k P.r l b c y lamN P.u P.u' hl hlk hc hcb
     hkb hu hu'
     (by
@@ -602,8 +601,7 @@ private theorem exists_qw_eq_mul_pos_real_of_five_le_dist {S : Type} (q : ℂ �
   intro u
   induction u with
   | nil =>
-    intro _
-    exact ⟨1, one_pos, by simp, by simp [_root_.Formalism.FourierDecayAlt.Wd.qw]⟩
+    exact fun _ => ⟨1, one_pos, by simp, by simp [_root_.Formalism.FourierDecayAlt.Wd.qw]⟩
   | cons l w ih =>
     intro h
     obtain ⟨ρ, hρ, hρ1, hρeq⟩ := ih (fun l' hl' => h l' (List.mem_cons_of_mem _ hl'))
@@ -782,12 +780,10 @@ private theorem exists_grid_of_layout_lemma {P : _root_.Formalism.FourierDecayAl
         refine ⟨(w.get a).2, rfl, fun hp => ?_, fun hm => ?_⟩
         · have hp' : (w.get a).1 = true := hp
           have : base (w.get a) = (w.get a).2 := ite_eq_left hp'
-          rw [this] at hfar'
-          exact hfar'
+          rwa [this] at hfar'
         · have hm' : (w.get a).1 = false := hm
           have : base (w.get a) = (w.get a).2 - 1 := ite_eq_right (by rw [hm']; decide)
-          rw [this, abs_sub_comm] at hfar'
-          exact hfar'
+          rwa [this, abs_sub_comm] at hfar'
       obtain ⟨ρ, hρ, hρ1, hρeq⟩ := exists_qw_eq_mul_pos_real_of_five_le_dist (_root_.Formalism.FourierDecayAlt.M.qC P) y (_root_.Formalism.FourierDecayAlt.D.positionted w) hcond
       rw [hposition_len] at hρ1
       have hre : (_root_.Formalism.FourierDecayAlt.Wd.qw (_root_.Formalism.FourierDecayAlt.M.qC P) (_root_.Formalism.FourierDecayAlt.D.positionted w) (y : ℂ)).re = (_root_.Formalism.FourierDecayAlt.M.qC P (y : ℂ)).re * ρ := by
@@ -795,8 +791,7 @@ private theorem exists_grid_of_layout_lemma {P : _root_.Formalism.FourierDecayAl
       have hnum : 0 < nn y * nn (y + 1) := mul_pos (hnn _) (hnn _)
       have hqy := hq y hy
       have hqpos : 0 < (_root_.Formalism.FourierDecayAlt.M.qC P (y : ℂ)).re := by
-        by_contra hle
-        push Not at hle
+        by_contra! hle
         nlinarith [sq_nonneg Λ₀]
       rw [hre]
       have hden : 0 < (_root_.Formalism.FourierDecayAlt.M.qC P (y : ℂ)).re * ρ := mul_pos hqpos hρ

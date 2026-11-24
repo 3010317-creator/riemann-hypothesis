@@ -422,8 +422,7 @@ theorem totalDegree_eq_sum_rows {E : Type} [Field E] [NumberField E] [IsCMField 
   have hr := hP.1.2.2 m hm
   have h1 := hh (MvPolynomial.mem_support_iff.1 hm)
   have h2 : m.degree = P.totalDegree := by rw [Finsupp.degree_eq_weight_one]; exact h1
-  rw [← h2, Finsupp.degree_eq_sum]
-  rw [Fintype.sum_sigma]
+  rw [← h2, Finsupp.degree_eq_sum, Fintype.sum_sigma]
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [Fintype.sum_prod_type]
   exact Finset.sum_congr rfl fun i _ => hr τ i
@@ -503,8 +502,7 @@ theorem i2iAt_of_containsTh : ChartIndepSt2 → ∀ (E : Type) [Field E] [Number
   have hfin := neg_log_sqrt_le_of_jbound E T P₁.totalDegree n Pr _ tableLineDegreeFive cc hkey (by rw [hTr, hPm]; exact hP14)
     (by rw [hPm, hq]; exact hcc)
   rw [hph] at hfin
-  rw [← hphi]
-  exact hfin
+  rwa [← hphi]
 
 end GlobalTheory.AnVal
 end -- clump:auto
@@ -591,8 +589,7 @@ theorem i2iAt_record : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepS
     _ hs N (fun k => ((w k).1 : T.R j)) (fun k => cusp_le_sec _ _ _ _ _ (cutR_le T.C j wL (w k).2)) hC
     (Real.sqrt (90 * (D.R.f * D.R.r + WeightAlgebra.DF wL))) D.R.m (by rw [hdeg, hM]; exact hrun) (Or.inr hq) tableLineDegreeFive
     (cc D large₂ C2 A2 CR wL) hP14 (by rw [hM]; exact hcc)
-  rw [hdeg, hM] at key
-  exact key
+  rwa [hdeg, hM] at key
 
 end GlobalTheory.DegreeInterpolationBounds
 end -- clump:auto
@@ -632,8 +629,7 @@ theorem tiedW_scaledFamily {D : D7} {B : WeightFamilies.Prov D} {P : ModuliInteg
   · intro σ k
     exact hsm σ (S.sW : B.KO) (w0 k) a b (by linarith) (hs σ) (hw k σ) hb ha
   · show (∑ _σ : B.KO →+* ℂ, (a + b)) / (Fintype.card (B.KO →+* ℂ) : ℝ) ≤ G * wL.size
-    rw [hmean]
-    exact hG
+    rwa [hmean]
 
 theorem log_le_of_le_two_mul_pow {N a b d m : ℕ} (hN0 : 0 < N) (hN : N ≤ 2 * (a ^ m * (d * b ^ m))) :
     Real.log N ≤ Real.log 2 + (m : ℝ) * (Real.log a + Real.log b) + Real.log d := by

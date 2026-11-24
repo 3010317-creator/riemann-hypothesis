@@ -88,8 +88,7 @@ private theorem pow_congr {l : ℕ} [Fact (Nat.Prime l)] {x : PadicAlgCl l} (hx 
   have hlt : φ N < φ (N + 1) := hφ (Nat.lt_succ_self N)
   refine ⟨φ (N + 1) - φ N, Nat.sub_pos_of_lt hlt, ?_⟩
   have h2 : ‖x ^ φ (N + 1) - x ^ φ N‖ < 1 := by
-    rw [dist_eq_norm] at h1
-    exact h1
+    rwa [dist_eq_norm] at h1
   have h3 : x ^ φ (N + 1) - x ^ φ N = x ^ φ N * (x ^ (φ (N + 1) - φ N) - 1) := by
     rw [mul_sub, ← pow_add, Nat.add_sub_cancel' hlt.le, mul_one]
   rwa [h3, norm_mul, norm_pow, hx, one_pow, one_mul] at h2
@@ -102,8 +101,7 @@ private theorem descend {l : ℕ} [hl : Fact (Nat.Prime l)] {y : PadicAlgCl l} (
   set z := y - 1 with hz
   have hz1 : ‖z‖ ≤ 1 := by
     have := IsUltrametricDist.norm_add_le_max y (-1)
-    rw [norm_neg, norm_one, hy, max_self, ← sub_eq_add_neg] at this
-    exact this
+    rwa [norm_neg, norm_one, hy, max_self, ← sub_eq_add_neg] at this
   have hyz : y = z + 1 := by rw [hz]; ring
   have e := add_pow_prime_eq' hl.out z 1
   set S := ∑ k ∈ Finset.Ioo 0 l, z ^ k * 1 ^ (l - k) * ((l.choose k / l : ℕ) : PadicAlgCl l)
@@ -245,8 +243,7 @@ private theorem lr_field_pow {k : Type*} [Field k] [CharP k l] (φ : k →+* k) 
       omega
     rw [h2, pow_succ, pow_mul, ha, one_pow, one_mul]
   have h := congrArg Subtype.val (hj ⟨a, haF⟩)
-  rw [Nat.card_zmod] at h
-  exact h
+  rwa [Nat.card_zmod] at h
 
 theorem norm_aut_and_roots :
     (∀ (g : Gal(PadicAlgCl l/ℚ_[l])) (x : PadicAlgCl l), ‖g x‖ = ‖x‖) ∧

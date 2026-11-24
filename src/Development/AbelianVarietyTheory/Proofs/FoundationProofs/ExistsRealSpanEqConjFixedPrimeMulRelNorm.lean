@@ -142,8 +142,7 @@ theorem _root_.GlobalTheory.QNorm.exists_odd_order_at_even_elsewhere : ∀ (F : 
     hS₀.mono (Finset.subset_insert _ _)
   have hδS : δ ∈ _root_.GlobalTheory.QNorm.sUnits F S := by
     rw [_root_.GlobalTheory.QNorm.mem_sUnits] at hδS₀ ⊢
-    intro v hv
-    exact hδS₀ v fun h => hv (Finset.mem_insert_of_mem h)
+    exact fun v hv => hδS₀ v fun h => hv (Finset.mem_insert_of_mem h)
   obtain ⟨T, hST, hcard, hTsq, hpat⟩ :=
     _root_.GlobalTheory.QNorm.exists_auxiliary_places F δ S hS hδS hδ
   have htop := _root_.GlobalTheory.QNorm.sUnits_union_sup_finSq_eq_top F S T hS hST hpat
@@ -187,8 +186,7 @@ theorem _root_.GlobalTheory.QNorm.exists_odd_order_at_even_elsewhere : ∀ (F : 
       omega
     have h : 2 ^ (S.card + T.card + Fintype.card (InfinitePlace F)) * (U ⊔ M).index ≤
         2 ^ (S.card + T.card + Fintype.card (InfinitePlace F)) * 2 := by
-      rw [← hidx, ← h4]
-      exact hMle
+      rwa [← hidx, ← h4]
     exact Nat.le_of_mul_le_mul_left h (by positivity)
   obtain ⟨xs, hxs0, hxsS, hxsσ⟩ := _root_.GlobalTheory.QNorm.exists_approx_mod_squares F S (fun _ => 1)
     (fun σ => if σ = σ₀ then -1 else 1) (fun _ => one_ne_zero)
@@ -223,8 +221,7 @@ theorem _root_.GlobalTheory.QNorm.exists_odd_order_at_even_elsewhere : ∀ (F : 
     linarith
   have hidx2 : (U ⊔ M).index = 2 := by
     have hne1 : (U ⊔ M).index ≠ 1 := by
-      intro h1
-      exact hXnot (Subgroup.index_eq_one.mp h1 ▸ Subgroup.mem_top X)
+      exact fun h1 => hXnot (Subgroup.index_eq_one.mp h1 ▸ Subgroup.mem_top X)
     omega
   obtain ⟨ϖ, hϖ⟩ := HeightOneSpectrum.valuation_exists_uniformizer F v₀
   have hϖ0 : ϖ ≠ 0 := by

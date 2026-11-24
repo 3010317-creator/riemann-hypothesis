@@ -200,8 +200,7 @@ theorem append_isoObjZero_hom :
 theorem append_blowupMorphism_of_lt_length {i : ℕ} (h : i < s.length) :
     (s.append t).map i =
       eqToHom (append_schemeAt_succ_of_lt_length s t h) ≫ s.map i ≫
-        eqToHom (append_schemeAt_of_le_length s t (le_of_lt h)).symm := by
-  exact dite_eq_left h
+        eqToHom (append_schemeAt_of_le_length s t (le_of_lt h)).symm := dite_eq_left h
 
 theorem append_blowupMorphism_of_length_lt {i : ℕ} (h : s.length < i) :
     (s.append t).map i =
@@ -647,8 +646,7 @@ private theorem hasStrictNormalCrossingsWith_comap_iso_inv {K : Type u} [Field K
     (hZ : HasStrictNormalCrossingsWith (e.hom ≫ q) Z (F.map fun D => D.comap e.hom)) :
     HasStrictNormalCrossingsWith q (Z.comap e.inv) F := by
   have h2 := hinv.hasSNCWith_comap (e.hom ≫ q) e.symm Z (F.map fun D => D.comap e.hom) hZ
-  rw [Iso.symm_hom, Iso.inv_hom_id_assoc, map_comap_hom_map_comap_inv e F] at h2
-  exact h2
+  rwa [Iso.symm_hom, Iso.inv_hom_id_assoc, map_comap_hom_map_comap_inv e F] at h2
 
 theorem hasStrictNormalCrossingsWith_appendBoundary (hinv : ComapIsoInvariance.{u}) (i : ℕ)
     (hi : i < (s.appendToBlowupSequenceData t).length) :

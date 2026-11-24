@@ -94,8 +94,7 @@ theorem exists_swap {r : ℕ} (X : Data E r) {b : Frame X.Ψ r} (hb : b ∈ Bor 
   · intro z hzU
     obtain ⟨-, h2, h3⟩ := hsplit _ hzU.1 hzU.2
     refine ⟨h2, rmul_left_cancel (fun τ => (hod τ).1) ?_⟩
-    rw [← ExtFPf.rmul_assoc, ← ExtFPf.rmul_assoc]
-    exact h3
+    rwa [← ExtFPf.rmul_assoc, ← ExtFPf.rmul_assoc]
 
 theorem det_fderiv_ne_zero_orbit : (KapGGStatement (E := E)) → (∀ (r : ℕ) (X : Data E r) (L : Wt X.Ψ r) (w0 : Frame X.Ψ r → ℂ) (s : Fin (nd X) → Frame X.Ψ r → ℂ), X.IsSec L w0 → (∀ k, X.IsSec L (s k)) → ∀ x ∈ X.dom, w0 x ≠ 0 → (fderiv ℂ (fun z : V (nd X) => (WithLp.toLp 2 fun k => s k (cpt X (x) z) / w0 (cpt X (x) z) : V (nd X))) 0).det ≠ 0 → ∀ γ ∈ X.Γ, ∀ b ∈ Bor X.Ψ r, (fderiv ℂ (fun z : V (nd X) => (WithLp.toLp 2 fun k => s k (cpt X (lact γ (rmul x b)) z) / w0 (cpt X (lact γ (rmul x b)) z) : V (nd X))) 0).det ≠ 0) := by
   intro hK r X L w0 s hw0 hs x hx hwx hdet γ hγ b hb

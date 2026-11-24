@@ -845,8 +845,7 @@ theorem exists_glue {X P U Q : Scheme.{0}} [IsLocallyNoetherian X] [GlobalTheory
       exact ⟨π q, by rw [← Scheme.Hom.comp_apply, ← sq.w, Scheme.Hom.comp_apply]⟩
     · intro hx
       obtain ⟨q, rfl⟩ : x ∈ Set.range (pullback.fst p j) := by
-        rw [Scheme.Pullback.range_fst]
-        exact hx
+        rwa [Scheme.Pullback.range_fst]
       exact ⟨sq.isoPullback.inv q, by rw [← Scheme.Hom.comp_apply, sq.isoPullback_inv_fst]⟩
   obtain ⟨L₀, h₀, i₀⟩ := exists_isOn_of_openImmersion P Q a L hL
   rw [hD] at h₀

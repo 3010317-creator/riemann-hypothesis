@@ -195,8 +195,7 @@ theorem UpperTheory.ConvolutionTheory.GM.stepFin :
       by_cases hx : cf w x ∈ (J : Set _)
       · rw [Set.indicator_of_mem hx, Set.indicator_of_mem (J.mul_mem (J.inv_mem hk) hx)]; rfl
       · rw [Set.indicator_of_notMem hx, Set.indicator_of_notMem]
-        intro q
-        exact hx (by simpa using J.mul_mem hk q)
+        exact fun q => hx (by simpa using J.mul_mem hk q)
     have := congrArg (fun A : LL μ →L[ℂ] LL μ => A u) (rhoF_comp_Ofin μ m (AdelicGLn.localEmbedding w k) e₀)
     simpa [e] using this
   · obtain ⟨t, ht⟩ := exists_cover J hJ h hc
@@ -212,8 +211,7 @@ theorem UpperTheory.ConvolutionTheory.GM.stepFin :
       rw [← coset_sum J h hinv t ht (cf w x), Finset.mul_sum]
       refine Finset.sum_congr rfl fun c _ => ?_
       ring
-    rw [hfs, he]
-    rw [Ofin_sum]
+    rw [hfs, he, Ofin_sum]
     refine ContinuousLinearMap.ext fun v => ?_
     simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply]
     refine Finset.sum_congr rfl fun c _ => ?_

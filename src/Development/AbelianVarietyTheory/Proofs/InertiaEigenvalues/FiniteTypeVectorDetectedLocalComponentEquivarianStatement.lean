@@ -80,8 +80,7 @@ theorem main : ∀ (H V W : Type) [Group H] [AddCommGroup V] [Module ℂ V] [Add
       apply hf
       ext w
       have hw : f w ∈ f.range := ⟨w, rfl⟩
-      rw [h] at hw
-      exact hw
+      rwa [h] at hw
     · intro U hU
       let U' : Subrepresentation σ := ⟨U.toSubmodule.comap f.toLinearMap, fun g w hw => by
         show f (σ g w) ∈ U.toSubmodule
@@ -188,8 +187,7 @@ theorem main : ∀ (H V W : Type) [Group H] [AddCommGroup V] [Module ℂ V] [Add
         have hm : (y : V) ∈ U''.toSubmodule := by rw [h]; exact y.2
         obtain ⟨z, hz, hzy⟩ := hm
         have : z = y := Subtype.ext hzy
-        rw [← this]
-        exact hz
+        rwa [← this]
   let f' : τ.IntertwiningMap ρ := ⟨N'.toSubmodule.subtype, fun g => LinearMap.ext fun x => rfl⟩
   have hf' : f' ≠ 0 := by
     intro h
@@ -300,8 +298,7 @@ theorem main : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) 
       · left; apply Subrepresentation.ext; have h' := congrArg Subrepresentation.toSubmodule h; exact h'
       · right; apply Subrepresentation.ext; have h' := congrArg Subrepresentation.toSubmodule h; exact h'
   have hV : ∃ a : τ.V, a ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     obtain ⟨P1, P2, hne⟩ := τ.irr.exists_pair_ne
     apply hne
     apply Subrepresentation.ext

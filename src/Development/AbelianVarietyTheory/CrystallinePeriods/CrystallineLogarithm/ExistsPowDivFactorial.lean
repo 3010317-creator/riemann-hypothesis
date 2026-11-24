@@ -289,8 +289,7 @@ theorem main [IsDomain R] (e : tateModule p R) {m : BcrisPlus p R} (hm : m ∈ B
     obtain ⟨n, hn⟩ := ih (Acris.logTeich ε * x) (by rw [map_mul]; linear_combination hx)
     refine ⟨n + 1, ?_⟩
     have := of_log e (log_change e hε (z := _ ^ n * x) (by rw [mul_left_comm]; exact hn))
-    rw [pow_succ', mul_assoc]
-    exact this
+    rwa [pow_succ', mul_assoc]
 
 end Bridge.CrisLoc.PowMulEqZeroLemmas
 
@@ -392,8 +391,7 @@ theorem exists_congr (η : tateModule p R) : ∃ x c : Ainf p R, Ainf.theta p R 
   have e2 : η.1 - 1 = (tateRoot η - 1) ^ p := by rw [sub_pow_char, tateRoot_pow, one_pow]
   by_cases hη : IsPrimitive η
   · refine ⟨Ainf.omega η, 1, Ainf.theta_omega hη, ?_⟩
-    rw [Ainf.p_dvd_iff]
-    rw [← WittVector.constantCoeff_apply]
+    rw [Ainf.p_dvd_iff, ← WittVector.constantCoeff_apply]
     have h := congrArg (WittVector.constantCoeff (p := p) (R := Tilt p R)) (Ainf.omega_mul η)
     rw [map_mul, map_sub, map_sub, map_one, e1, e1, e2] at h
     have hne : tateRoot η - 1 ≠ 0 := fun h0 => hη (by
@@ -407,8 +405,7 @@ theorem exists_congr (η : tateModule p R) : ∃ x c : Ainf p R, Ainf.theta p R 
   · have h1 : PreTilt.untilt (tateRoot η) = 1 := not_not.1 hη
     refine ⟨Ainf.teich p (tateRoot η) - 1, ((Ainf.teich p (tateRoot η) - 1) ^ p) ^ (p - 2),
       by rw [map_sub, map_one, Ainf.theta_teich, h1, sub_self], ?_⟩
-    rw [Ainf.p_dvd_iff]
-    rw [← WittVector.constantCoeff_apply]
+    rw [Ainf.p_dvd_iff, ← WittVector.constantCoeff_apply]
     rw [← pow_succ', show p - 2 + 1 = p - 1 by have := hp.two_le; omega]
     simp only [map_sub, map_pow, map_one, e1, e2, sub_self]
 
@@ -521,8 +518,7 @@ theorem isUnit_log_iff {B : Type*} [CommRing B] (g : Acris p R →+* B) (hp : Is
   have ha : a ≠ 0 := fun h => hη (by rw [h, tateModule.padicPow_zero])
   have hu : IsUnit (g (algebraMap ℤ_[p] (Acris p R) a)) := by
     rw [PadicInt.unitCoeff_spec ha]
-    simp only [map_mul, map_pow, map_natCast]
-    exact (((Units.isUnit _).map _).map g).mul (hp.pow _)
+    simpa only [map_mul, map_pow, map_natCast] using (((Units.isUnit _).map _).map g).mul (hp.pow _)
   rw [Acris.logTeich_padicPow, map_mul, IsUnit.mul_iff]
   exact and_iff_right hu
 
@@ -588,8 +584,7 @@ variable {A : Type*} [CommRing A]
 theorem mem_jac_of_pow {x : A} {n : ℕ} (h : x ^ n ∈ jacobson (⊥ : Ideal A)) :
     x ∈ jacobson (⊥ : Ideal A) := by
   rw [Ideal.jacobson, Ideal.mem_sInf] at h ⊢
-  intro J hJ
-  exact hJ.2.isPrime.mem_of_pow_mem n (h hJ)
+  exact fun J hJ => hJ.2.isPrime.mem_of_pow_mem n (h hJ)
 
 theorem isUnit_of_sub_one_mem {x : A} (h : x - 1 ∈ jacobson (⊥ : Ideal A)) : IsUnit x := by
   simpa using Ideal.mem_jacobson_bot.1 h 1

@@ -99,9 +99,7 @@ theorem exists_liftC {g : Matrix (Fin (p + q)) (Fin (p + q)) ℂ} (hg : g ∈ Fo
     exact map_one (Matrix.reindexAlgEquiv ℂ ℂ finSumFinEquiv.symm)
   let u : GL (Formalism.BasicNotions.TH.Ix p q) ℂ :=
     ⟨ixC g, Formalism.UG.Jpq p q * (ixC g)ᴴ * Formalism.UG.Jpq p q, mul_eq_one_comm.1 hinv, hinv⟩
-  have hu : u ∈ Formalism.UG.Upq p q := by
-    show (((u : GL _ ℂ) : Formalism.BasicNotions.TH.Mat p q).map (starRingEnd ℂ))ᵀ * Formalism.UG.Jpq p q * (u : Formalism.BasicNotions.TH.Mat p q) = _
-    exact h1
+  have hu : u ∈ Formalism.UG.Upq p q := h1
   have hd : ((w : ℂ)) ^ 2 = ((u : GL _ ℂ) : Formalism.BasicNotions.TH.Mat p q).det := by
     rw [hw, ← det_rxC]; show g.det = (rx (ixC g)).det; rw [rx_ixC]
   obtain ⟨x, ⟨hx1, hx2⟩, -⟩ := T.bij u hu w hd
@@ -173,8 +171,7 @@ theorem sigC_eq {j : ℕ} {z : T.G} (hz : T.cov z = 1 ∧ T.sq z = -1) (hP : πU
   rcases sq_or_negC T hc with h | h
   · rw [eq_of_covC T hc h]
   · have hy : y = z * x := eq_of_covC T (by rw [map_mul, hz.1, one_mul, hc]) (by rw [map_mul, hz.2, h]; simp)
-    rw [h]
-    rw [hy, map_mul πU.π, hP]
+    rw [h, hy, map_mul πU.π, hP]
     ext v
     simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.mul_apply, ContinuousLinearMap.one_apply,
       smul_smul, Units.val_neg]
@@ -400,8 +397,7 @@ theorem harish_chandra_descent : Descend := by
       obtain ⟨⟨k', hk'⟩, rfl⟩ := hy
       refine Submodule.subset_span ⟨⟨k * k', ?_⟩, by simp⟩
       show Formalism.BasicNotions.TH.IsKC (covC T (k * k'))
-      simp only [covC, map_mul, Units.val_mul]
-      exact isKC_mulC hk hk'
+      simpa only [covC, map_mul, Units.val_mul] using isKC_mulC hk hk'
     · rintro ⟨S, hSf, hxS, hSK⟩
       refine Submodule.finiteDimensional_of_le (S₂ := S) (Submodule.span_le.2 ?_)
       rintro _ ⟨⟨k, hk⟩, rfl⟩

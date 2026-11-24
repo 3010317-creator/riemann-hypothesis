@@ -280,8 +280,7 @@ theorem exists_top_embedding_eq_on_countable (M : IntermediateField ℚ ℂ) (ρ
   have h1 : liftM ⊤ x = ⟨x, IntermediateField.mem_top⟩ := dite_eq_left IntermediateField.mem_top
   have h2 : liftM M x = ⟨x, hxM⟩ := dite_eq_left hxM
   unfold cj
-  rw [h1, h2]
-  exact h
+  rwa [h1, h2]
 
 end GlobalTheory.GalTheta
 end -- clump:auto
@@ -426,8 +425,7 @@ theorem exists_theta_of_level : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A : AddSu
     refine ⟨_, fun i => al D T (((e.symm i).out : A) : VC D N N'), fun i => (((e.symm i).out : A) : VC D N N'), 1, one_pos,
       fun i => by simp, ?_⟩
     funext z
-    simp only [hP, comb, one_mul, W]
-    exact (Equiv.sum_comp e.symm _).symm
+    simpa only [hP, comb, one_mul, W] using (Equiv.sum_comp e.symm _).symm
   have hTh : ∀ y ∈ A, P y ∈ ThSp D T A := by
     intro y hy
     refine ⟨?_, fun x hx z => ?_⟩
@@ -437,8 +435,7 @@ theorem exists_theta_of_level : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A : AddSu
         (fun a s hs => by simp only [hcls y hy a s hs]) ⟨x, hx⟩
       simp only [hP]
       rw [← h1, U_sum, Finset.mul_sum]
-      refine Finset.sum_congr rfl fun q _ => ?_
-      exact congrFun (Wm_mul_Wm_comm D T (hal x hx _ (q.out).2) _) z
+      exact Finset.sum_congr rfl fun q _ => congrFun (Wm_mul_Wm_comm D T (hal x hx _ (q.out).2) _) z
   by_contra hcon
   push Not at hcon
   have hP0 : ∀ y ∈ A, P y = 0 := fun y hy => hcon _ (hTr y hy) (hTh y hy)
@@ -851,8 +848,7 @@ theorem translate_level_four : ∀ (D : D7), admG1 D → ∀ (cc : Ideal (𝓞 D
           rw [coordB_nsmul]; push_cast; ring
         rw [this]; exact add_mem hk hk
       have := hU _ h4 (coordB D (tor0 D cc δ) b k z)
-      rw [ite_eq_left h2, one_mul] at this
-      exact this
+      rwa [ite_eq_left h2, one_mul] at this
     obtain ⟨m, hm⟩ := hint ω hω _ h2t
     have ha : (Hf D (tor0 D cc δ) (4 • ω) t).im = 2 * m := by
       rw [Hf_nsmul_right] at hm

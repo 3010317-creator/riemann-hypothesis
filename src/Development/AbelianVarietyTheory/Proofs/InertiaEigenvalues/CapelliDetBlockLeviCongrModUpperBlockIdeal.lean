@@ -181,8 +181,7 @@ theorem two_block {r m : ℕ} (X : Fin (r + m) → Fin (r + m) → A) (hX : GlRe
         qdet (fun p q : Fin r => X (Fin.castAdd m p) (Fin.castAdd m q)) (u - m) := by
     have hinj : Set.InjOn (fun p : Equiv.Perm (Fin m) × Equiv.Perm (Fin r) => Equiv.Perm.sumCongr p.1 p.2)
         (Finset.univ : Finset (Equiv.Perm (Fin m) × Equiv.Perm (Fin r))) := by
-      intro x _ y _ hxy
-      exact Equiv.Perm.sumCongrHom_injective (α := Fin m) (β := Fin r) hxy
+      exact fun x _ y _ hxy => Equiv.Perm.sumCongrHom_injective (α := Fin m) (β := Fin r) hxy
     rw [hS, Finset.sum_image hinj, Fintype.sum_prod_type]
     unfold qdet qminor
     rw [Finset.sum_mul_sum]
@@ -229,13 +228,11 @@ theorem two_block {r m : ℕ} (X : Fin (r + m) → Fin (r + m) → A) (hX : GlRe
     | inl j =>
       left
       intro y hy
-      simp only [finSumFinEquiv_apply_left, finAddFlip_apply_castAdd]
-      exact Tm_levi_mem hX _ _ _ hy
+      simpa only [finSumFinEquiv_apply_left, finAddFlip_apply_castAdd] using Tm_levi_mem hX _ _ _ hy
     | inr l =>
       right
       intro y
-      simp only [finSumFinEquiv_apply_right, finAddFlip_apply_natAdd]
-      exact Tm_upper_mem X _ _ _ y
+      simpa only [finSumFinEquiv_apply_right, finAddFlip_apply_natAdd] using Tm_upper_mem X _ _ _ y
   · intro y
     have e : (Fin.castLE (by omega) i₀ : Fin (m + r)) = Fin.castAdd r i₀ := rfl
     simp only [e, Equiv.permCongr_apply, finSumFinEquiv_symm_apply_castAdd, finAddFlip_apply_castAdd,
@@ -389,5 +386,4 @@ theorem qdet_blocks : ∀ (c : ℕ) {N : ℕ} (n : Fin c → ℕ) (h : ∑ i, n 
 end GlobalTheory.CapHC
 
 theorem GlobalTheory.CapHC.qdet_blocks_congr : ∀ (A : Type) [Ring A] [Algebra ℂ A] {c N : ℕ} (n : Fin c → ℕ) (h : ∑ i, n i = N) (X : Fin N → Fin N → A), Formalism.REAL.GlRel X → ∀ u : ℂ, Formalism.REAL.qdet X (u + ((N : ℂ) - 1) / 2) - (List.ofFn fun i : Fin c => Formalism.REAL.qdet (fun p q : Fin (n i) => X (stdBlocks n h ⟨i, p⟩) (stdBlocks n h ⟨i, q⟩)) (u + ((n i : ℂ) - 1) / 2 - (modExp (fun i => Fin (n i)) i : ℂ) / 2)).prod ∈ Submodule.span ℂ {y : A | ∃ (p q : Fin N) (w : A), blk (stdBlocks n h) p < blk (stdBlocks n h) q ∧ y = X p q * w} := by
-  intro A _ _ c N n h X hX u
-  exact GlobalTheory.CapHC.qdet_blocks c n h X hX u
+  exact fun A _ _ c N n h X hX u => GlobalTheory.CapHC.qdet_blocks c n h X hX u

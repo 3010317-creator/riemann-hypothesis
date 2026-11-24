@@ -140,8 +140,7 @@ theorem conj_finSum {V : HSp D} {S S' : D.what₂.Tau → SPar} {θ : InfFam D} 
     obtain ⟨ℓ, -, hℓ⟩ := GlobalTheory.DefiniteEnd.exists_sobCont M τ T f x
     have hw : c.symm (f τ) ∈ M'.sm τ := (hsm _).2 (by simp)
     have hsv : SmoothVec (lieAt V τ) (fun g => M'.σ τ (M'.fr τ * g * (M'.fr τ)⁻¹)) (c.symm (f τ)) := by
-      rw [GlobalTheory.SmVec.sm_eq M' τ] at hw
-      exact hw
+      rwa [GlobalTheory.SmVec.sm_eq M' τ] at hw
     refine ⟨1, fun _ => star r • conjFun c (LinearMap.toContinuousLinearMap ℓ), fun _ => c.symm (f τ), fun _ => hsv,
       fun g hg => ?_⟩
     have e1 := congrFun (hT.equiv τ g hg f ⟨M.rep τ g (f τ), GlobalTheory.ConjMult.rep_mem_sm M τ hg (f τ).2⟩ rfl) x

@@ -337,8 +337,7 @@ theorem joint_eigen_mem_iSup {ι κ M : Type} [AddCommGroup M] [Module ℂ M]
     (ψ : ι → ℂ) (x : M) (hx0 : x ≠ (0 : M)) (hx : ∀ i, (op i : M → M) x = ψ i • x)
     (hmem : x ∈ ⨆ k, E k) : ∃ k, χ k = ψ := by
   classical
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have hstab : ∀ (s : Finset κ) (i : ι), ∀ z ∈ ⨆ k ∈ s, E k, (op i : M → M) z ∈ ⨆ k ∈ s, E k := by
     intro s i z hz
     have hle : (⨆ k ∈ s, E k) ≤ (⨆ k ∈ s, E k).comap (op i) := by
@@ -356,8 +355,7 @@ theorem joint_eigen_mem_iSup {ι κ M : Type} [AddCommGroup M] [Module ℂ M]
       rw [Finset.iSup_insert, Submodule.mem_sup] at h
       obtain ⟨y, hy, z, hz, rfl⟩ := h
       obtain ⟨i, hi⟩ : ∃ i, χ k0 i ≠ ψ i := by
-        by_contra h'
-        push Not at h'
+        by_contra! h'
         exact hne k0 (funext h')
       have hw : (op i : M → M) z - χ k0 i • z ∈ ⨆ k ∈ s, E k :=
         Submodule.sub_mem _ (hstab s i z hz) (Submodule.smul_mem _ _ hz)
@@ -456,8 +454,7 @@ theorem mem_iSup_eEp3 (R : RealDat3 D A3 Ks) (F : Face3 D A3) (b : Bool) (hP : (
   have h1 : Tw.mk (twAt D.what₂.embLL A3.A.v0) x ∈ (R.toCx3 F).EEl b := hx
   rw [← hP.2] at h1
   have h2 : (⨆ p, (R.toCx3 F).EEp p ⊓ (R.toCx3 F).EEl b) ≤ Tw.sub (twAt D.what₂.embLL A3.A.v0) (⨆ p, R.EEp3 p) := by
-    refine iSup_le fun p => inf_le_left.trans fun y hy => ?_
-    exact (le_iSup (fun p => R.EEp3 p) p) hy
+    exact iSup_le fun p => inf_le_left.trans fun y hy => (le_iSup (fun p => R.EEp3 p) p) hy
   exact h2 h1
 
 theorem carries_of_hasEig : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Type) (A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) (cG : G0 R.Pg D.R.r ≃* G0g D.nd) (X0 : BaseLevelRowSide D) (Y : Read (A3 := A3) R.toRealDat F.lv2 X0), Pins R F cG → Holds R F → HostHyp D → ∀ (π : D.what₂.FT) c, HasEig R F Y π c → ∃ p, R.Carries p c := by
@@ -763,8 +760,7 @@ theorem partsRec_of_eig : GlobalTheory.Published.WeilRepresentationUnitaryPair �
   · intro π
     exact e4 π _ _ (hE π) (hPi _).choose_spec
   · intro i π
-    have h5 := e5 π _ _ (hE π) (hPi (E.cOf π)).choose_spec i
-    exact h5
+    exact e5 π _ _ (hE π) (hPi (E.cOf π)).choose_spec i
 
 end GlobalTheory.Mem.R3
 
@@ -1432,12 +1428,10 @@ theorem de_pin_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {p : _root_.Glo
     unfold OverPF
     have hunder : (q.w.I.sel v').under (𝓞 q.B.host.F) = v' :=
       (Set.Finite.mem_toFinset _).mp (q.x.pin.above v')
-    rw [← hunder, HeightOneSpectrum.under_asIdeal, Ideal.mem_under, map_natCast, hv']
-    exact h
+    rwa [← hunder, HeightOneSpectrum.under_asIdeal, Ideal.mem_under, map_natCast, hv']
   have := (q.x.pin.d3b.P_mem v' hv).2
   rw [← q.x.pin.selectedPlacesAgree.1 v' hv] at this
-  rw [← hv']
-  exact this
+  rwa [← hv']
 theorem under_Pq_eq_pK'_of_pde'_mem {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {p : _root_.GlobalTheory.Mem.Top.Bl.Parameters hL} {K : Ctx} (q : WPt p.s K) (v)
     (h : (((q.w.D q.Z).host.pde' : ℕ) : 𝓞 (q.w.D q.Z).host.E) ∈ (q.core_data_of_point.a.Pq v).asIdeal) :
     (q.core_data_of_point.a.Pq v).under (𝓞 (q.w.D q.Z).host.K) = q.x.pin.d3b.pK' := by
@@ -1447,12 +1441,10 @@ theorem under_Pq_eq_pK'_of_pde'_mem {hL : _root_.UpperTheory.Zero.LLC.RecTExists
     unfold OverPF
     have hunder : (q.w.I.sel v').under (𝓞 q.B.host.F) = v' :=
       (Set.Finite.mem_toFinset _).mp (q.x.pin.above v')
-    rw [← hunder, HeightOneSpectrum.under_asIdeal, Ideal.mem_under, map_natCast, hv']
-    exact h
+    rwa [← hunder, HeightOneSpectrum.under_asIdeal, Ideal.mem_under, map_natCast, hv']
   have := (q.x.pin.d3b.P'_mem v' hv).2
   rw [← q.x.pin.selectedPlacesAgree.2 v' hv] at this
-  rw [← hv']
-  exact this
+  rwa [← hv']
 open Classical in
 
 theorem selected_side_realization_alt : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.NT.RayField → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (p : _root_.GlobalTheory.Mem.Top.Bl.Parameters hL), p = _root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N SExt.none → (∀ K B f T w Z Wt p0 t nch n xd c, N K B f T w Z Wt p0 t nch n xd c → Nonempty (_root_.GlobalTheory.HeightCounting.Up.extensionWithLaw hL K B f T w Z Wt p0 t nch n xd c)) → ∀ (K : Ctx) (q : WPt p.s K), (∀ X : GlobalTheory.Mem.Stages, K.Over X.B.toPre → HostHyp X.toD7 ∧ X.toD7.host.F = maximalRealSubfield X.toD7.host.E ∧ (∀ i, IsFDiag (Wc X.toD7 i) ∧ IsFDiag (Vc X.toD7 i)) ∧ (∀ i, (Vc X.toD7 i).IsPosDef) ∧ (∀ j, Formalism.IndefR.Seed.FrmC.StdLat (X.toD7.sp.Y j) ∧ Formalism.IndefR.Seed.FrmC.StdLat (X.toD7.sp.V j) ∧ (1 ≤ j → j ≤ X.toD7.R.m → Formalism.IndefR.Seed.FrmC.StdLat (X.toD7.sp.W j))) ∧ Formalism.IndefR.Seed.FrmC.StdLat X.toD7.sp.X' ∧ (∀ i, (∀ a b, (Vc X.toD7 i).hT ((Vc X.toD7 i).frame a) ((Vc X.toD7 i).frame b) = if a = b then 1 else 0) ∧ (Vc X.toD7 i).L0 = Submodule.span (𝓞 X.toD7.host.E) (Set.range (Vc X.toD7 i).frame)) ∧ ((∀ a b, X.toD7.sp.X'.hT (X.toD7.sp.X'.frame a) (X.toD7.sp.X'.frame b) = if a = b then 1 else 0) ∧ X.toD7.sp.X'.L0 = Submodule.span (𝓞 X.toD7.host.E) (Set.range X.toD7.sp.X'.frame))) → GlobalTheory.CuspMult.MultEq q.x.what₂.r.z.R.toRealDat → ∀ (R : _root_.Formalism.L2.RecTAlt q.O.ex), _root_.GlobalTheory.Mem.Top.Bl.RecordCompatibleExtended q R → ∀ (sP : GlobalTheory.Mem.SRe.SPack (q.w.D q.Z) fun u => (R.T.cols.forms u).to0) (sS : GlobalTheory.Mem.SRe.SRest sP), HEq sP q.saturationAtWeightedPoint.P → HEq sS q.saturationAtWeightedPoint.S → ∀ (a : TwArgs q.O.ex q.x.what₂) (x : TwIn q.O.ex), HEq a.x x → ∀ (y : _root_.GlobalTheory.Mem.R3.RealInAlt x R (sS.toRealSpectralMatching R)) (r : _root_.GlobalTheory.Mem.R3.RecursiveInput y) (HD : _root_.Formalism.L2.HostDatumWithTies R.T.toTiedDataS), HD.d3b = q.x.pin.d3b → _root_.Formalism.L2.SelectedSideOfRealRecord R (divisionPairOfAdelicFormsFaceColumnsData x) (_root_.GlobalTheory.Mem.R3.realisationOfInput y) (_root_.GlobalTheory.Mem.R3.realisationRecursionOfInput r) HD q.core_data_of_point.a.Pq := by
@@ -1595,8 +1587,7 @@ theorem iota_starProjection_Qsp (D : D7) (μ : D.what₂.Tup) (F : D.what₂.Amb
     exact (Submodule.mem_orthogonal _ _).2 fun q hq => Submodule.inner_left_of_mem_orthogonal haU hq.2
   have e : (D.what₂.Qsp μ).starProjection F = F - a := by
     have h := map_add (D.what₂.Qsp μ).starProjection a (F - a)
-    rw [add_sub_cancel, haQ, zero_add, Submodule.starProjection_eq_self_iff.2 hb] at h
-    exact h
+    rwa [add_sub_cancel, haQ, zero_add, Submodule.starProjection_eq_self_iff.2 hb] at h
   rw [e, map_sub, LinearMap.mem_ker.1 haU.2, sub_zero]
 
 theorem zeTied_of_read : (GlobalTheory.Published.DiscreteSeriesCover ∧ GlobalTheory.Published.HarishChandraModules ∧ GlobalTheory.Published.CasselmanWallach ∧ GlobalTheory.Published.HarishChandraFinite ∧ GlobalTheory.Published.CuspRapidDecay) → ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Type) (A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) (cG : G0 R.Pg D.R.r ≃* G0g D.nd) (X0 : BaseLevelRowSide D) (Y : Read (A3 := A3) R.toRealDat F.lv2 X0) (Z : ReadL R F X0 Y) (C : ReadC R F X0 Y), Pins R F cG → Holds R F → D.BuRational → ZetaCompatible D := by
@@ -1618,12 +1609,10 @@ theorem zeTied_of_read : (GlobalTheory.Published.DiscreteSeriesCover ∧ GlobalT
     have h1 : (rV0 D A3.A F.P1 F.ψ1 t).mulVec f ∈ LinearMap.range (rE D A3.A F.P1 F.ψ1 t).mulVecLin := by
       rw [hR]; exact ⟨f, rfl⟩
     obtain ⟨g, hg⟩ := h1
-    refine ⟨Y.jA t g, ?_⟩
-    exact (hFo.op_eq g).trans (congrArg (Y.jA t) hg)
+    exact ⟨Y.jA t g, (hFo.op_eq g).trans (congrArg (Y.jA t) hg)⟩
   have hQ : ∃ x f, D.what₂.Bu u (D.jN u (C.eNu u x))
       (D.what₂.iota (Y.tup t) (Y.jA t ((rV0 D A3.A F.P1 F.ψ1 t).mulVec f))) ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     obtain ⟨φ0, F0, hF0, hne⟩ := hnz
     apply hne
     rw [hfac φ0 F0 hF0, iota_starProjection_Qsp D _ F0 hF0]
@@ -1647,8 +1636,7 @@ theorem zeTied_of_read : (GlobalTheory.Published.DiscreteSeriesCover ∧ GlobalT
     have hM : M = 0 := by
       refine LinearMap.ext_on_range (D.jN_basis u).2 fun i => ?_
       have h3 := h1 ((C.eNu u).symm ((D.div.Nu u).b i)) F0 hF0
-      rw [LinearEquiv.apply_symm_apply] at h3
-      exact h3
+      rwa [LinearEquiv.apply_symm_apply] at h3
     rw [show D.what₂.Bu u φ0 (D.what₂.iota (Y.tup t) F0) = 0 from LinearMap.congr_fun hM φ0, mul_zero]
   obtain ⟨x, f, hx⟩ := hQ
   have hpt := C.pt u t x f

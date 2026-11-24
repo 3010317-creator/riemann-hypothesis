@@ -320,11 +320,9 @@ private theorem exists_mulEquiv {B B' : Scheme.{0}} {G : Over B} [GrpObj G] {G' 
       · rw [← hm, ← hm, hzw]
       · rw [Over.w z, Over.w w]
     · refine ⟨Over.homMk (h.1.lift y.left t' (Over.w y)) (h.1.lift_snd _ _ _), ?_⟩
-      apply Over.OverMorphism.ext
-      exact h.1.lift_fst _ _ _
+      exact Over.OverMorphism.ext (h.1.lift_fst _ _ _)
   refine ⟨MulEquiv.mk (Equiv.ofBijective m hb) (fun z w => ?_), hm⟩
-  apply Over.OverMorphism.ext
-  exact (h.2 (Over.mk t') z w (m z) (m w) rfl rfl).symm
+  exact Over.OverMorphism.ext (h.2 (Over.mk t') z w (m z) (m w) rfl rfl).symm
 
 private abbrev resAlg {R R' : Type} [CommRing R] [CommRing R'] (β : R →+* R') (S : Type) [CommRing S]
     [Algebra R' S] : Algebra R S := ((algebraMap R' S).comp β).toAlgebra
@@ -437,8 +435,7 @@ theorem exists_htd_characters_base : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Fi
     have h := GlobalTheory.T.exists_hodgeTateDatum_formalGroupCharacters p C v O hv T P io P' φ hφ hL hg' (by omega) g (hg'.trans hg) OE o' F' X'
       hX'' (fun a j => MvPowerSeries.map io (α a j))
       (fun a => hR (o.act a) (o'.act a) (α a) (ho' a) (hα a))
-    rw [hF'] at h
-    exact h
+    rwa [hF'] at h
 
 end GlobalTheory.ChF
 end -- clump:auto

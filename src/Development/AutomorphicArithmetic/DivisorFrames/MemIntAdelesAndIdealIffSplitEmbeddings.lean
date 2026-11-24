@@ -83,10 +83,8 @@ private theorem exists_exact {R : Type} [CommRing R] [IsDedekindDomain R] (Pw : 
     rwa [sub_sub_cancel] at this)
   refine ⟨y, ?_, fun w hw => le_antisymm ((w.intValuation_le_pow_iff_mem _ _).2 (h1 w hw)) ?_⟩
   · rw [Ideal.prod_eq_iInf_of_pairwise_isCoprime]
-    · simp only [Ideal.mem_iInf]
-      exact h1
-    · intro P _ Q _ hPQ
-      exact (HeightOneSpectrum.isCoprime_of_ne P Q hPQ).pow
+    · simpa only [Ideal.mem_iInf] using h1
+    · exact fun P _ Q _ hPQ => (HeightOneSpectrum.isCoprime_of_ne P Q hPQ).pow
   · have h3 := h2 w hw
     rw [← w.intValuation_le_pow_iff_mem, not_le] at h3
     have h0 : w.intValuation y ≠ 0 := (lt_of_le_of_lt zero_le h3).ne'
@@ -194,8 +192,7 @@ theorem UpperTheory.mem_intAdeles_and_ideal_iff_splitEmbeddings :
   have h0 : ∀ Q, Q ∉ Pw → cpt (D := D) Q z = 0 := fun Q hQ => by
 
     rw [← hz, RingHom.map_mul, map_sum, map_sum, Finset.sum_eq_zero, zero_mul]
-    intro P hP
-    exact (cpt_of_isIdemAt (hes P hP)).2 Q fun e => hQ (e ▸ hP)
+    exact fun P hP => (cpt_of_isIdemAt (hes P hP)).2 Q fun e => hQ (e ▸ hP)
   constructor
   · have h1 : ∀ i, GlobalTheory.BotMatch.evW (τ i) z ∈ 𝒪[Fv D.host.F (pl i)] ↔
         cpt (D := D) (splitPrime (τ i)) z ∈ (splitPrime (τ i)).adicCompletionIntegers D.host.E := fun i => by

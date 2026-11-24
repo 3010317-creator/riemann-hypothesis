@@ -81,8 +81,7 @@ variable {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ}
 
 theorem trivOutside_one (T : Set (HeightOneSpectrum (𝓞 (maximalRealSubfield L)))) :
     TrivOutside T (1 : GAf L n) := by
-  intro u _
-  exact Matrix.map_one _ (map_zero _) (map_one _)
+  exact fun u _ => Matrix.map_one _ (map_zero _) (map_one _)
 
 theorem commute_of_trivOutside (v : HeightOneSpectrum (𝓞 (maximalRealSubfield L))) (x y : GAf L n)
     (hx : TrivOutside {v} x) (hy : TrivOutside {v}ᶜ y) : Commute x y := by

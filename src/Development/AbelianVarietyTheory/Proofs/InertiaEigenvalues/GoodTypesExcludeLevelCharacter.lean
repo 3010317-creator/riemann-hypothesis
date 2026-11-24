@@ -799,8 +799,7 @@ def RowsId {n : ℕ} (M : Mt g (n + 1)) : Prop :=
 
 theorem mulVec_of_id {N : ℕ} (M : Mt g N) (x : Fin N → ZMod g) (i : Fin N)
     (h : ∀ j, x j ≠ 0 → M i j = if i = j then 1 else 0) : M.mulVec x i = x i := by
-  rw [Matrix.mulVec, dotProduct]
-  rw [Finset.sum_eq_single i]
+  rw [Matrix.mulVec, dotProduct, Finset.sum_eq_single i]
   · by_cases hx : x i = 0
     · rw [hx, mul_zero]
     · rw [h i hx, ite_eq_left rfl, one_mul]
@@ -897,8 +896,7 @@ theorem det_colsId {n : ℕ} (M : Mt g (n + 1)) (H : ColsId M) : M.det = M (Fin.
       rw [e] at hij; exact absurd hij (not_lt.2 (Fin.le_last i))
     simp only [id] at hij
     rw [H i j hj, ite_eq_right (ne_of_gt hij)]
-  rw [Matrix.det_of_upperTriangular hT, Fin.prod_univ_castSucc]
-  rw [Finset.prod_eq_one, one_mul]
+  rw [Matrix.det_of_upperTriangular hT, Fin.prod_univ_castSucc, Finset.prod_eq_one, one_mul]
   intro i _
   rw [H _ _ (Fin.castSucc_ne_last i), ite_eq_left rfl]
 
@@ -909,8 +907,7 @@ theorem det_rowsId {n : ℕ} (M : Mt g (n + 1)) (H : RowsId M) : M.det = M 0 0 :
       rw [e] at hij; exact absurd hij (not_lt.2 (Fin.zero_le j))
     simp only [id] at hij
     rw [H i j hi, ite_eq_right (ne_of_gt hij)]
-  rw [Matrix.det_of_upperTriangular hT, Fin.prod_univ_succ]
-  rw [Finset.prod_eq_one, mul_one]
+  rw [Matrix.det_of_upperTriangular hT, Fin.prod_univ_succ, Finset.prod_eq_one, mul_one]
   intro i _
   rw [H _ _ (Fin.succ_ne_zero i), ite_eq_left rfl]
 
@@ -1000,8 +997,7 @@ theorem p_comp : ∀ {D : D7} (V : HSp D) (β : GL (Fin V.rank) (Formalism.Indef
     simp only [gaL, LinearMap.sum_apply, LinearMap.smul_apply, Finset.sum_smul]
     exact Finset.sum_comm
   rw [lhs, rhs]
-  refine Finset.sum_congr rfl fun y _ => ?_
-  exact Fintype.sum_equiv (Equiv.mulLeft y) _ _ fun z => by simp
+  exact Finset.sum_congr rfl fun y _ => Fintype.sum_equiv (Equiv.mulLeft y) _ _ fun z => by simp
 
 theorem p_lifts : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (A : FamIn D.what₂.LL G Pl0 T D.R.m) (Ks : Type)
     [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks), R.toLevCh.Is A.μ0 →

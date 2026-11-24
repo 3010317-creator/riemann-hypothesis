@@ -174,8 +174,7 @@ theorem const_eq_zero {V ι : Type} [Fintype V] (μ : ι → V → ℝ) (B : ι 
     (h : ∀ x, HasSum (fun i => B i * chr (μ i) x) d) : d = 0 := by
   classical
   have hB : Summable B := by
-    have h0 := (h 0).summable
-    simpa [chr_zero] using h0
+    simpa [chr_zero] using (h 0).summable
   have hnB : Summable (fun i => ‖B i‖) := summable_norm_iff.mpr hB
   have key : ∀ ε > 0, ‖d‖ ≤ ε := by
     intro ε hε
@@ -387,8 +386,7 @@ theorem genD_eq {y : Af F} {𝔪 𝔫 : Ideal (𝓞 F)} (h : GenD y 𝔪) (h' : 
     rw [WithZero.exp_inj] at this
     omega
   rw [← Ideal.finprod_heightOneSpectrum_factorization h.1, ← Ideal.finprod_heightOneSpectrum_factorization h'.1]
-  refine finprod_congr fun w => ?_
-  exact congrArg (fun n => w.asIdeal ^ n) (hc w)
+  exact finprod_congr fun w => congrArg (fun n => w.asIdeal ^ n) (hc w)
 
 theorem coefAt_of_genD {y : Af F} {𝔪 : Ideal (𝓞 F)} (h : GenD y 𝔪) (a : Ideal (𝓞 F) → ℂ) : coefAt a y = a 𝔪 := by
   have h' : ∃ 𝔪, GenD y 𝔪 := ⟨𝔪, h⟩
@@ -509,8 +507,7 @@ theorem coef_rat (hΨ : Sys k Ψ) (ha : ∀ y, HasQ ((((absF y ^ ((k : ℝ) / 2)
     rw [slash_weight_smul, ← hl, smul_smul, key]
   rw [hf] at hq
   have := congrFun (hasQ_unique F _ _ _ hq (ha y)) (ξ : F)
-  rw [div_self ξ.ne_zero, mul_zero, et_zero, mul_one] at this
-  exact this
+  rwa [div_self ξ.ne_zero, mul_zero, et_zero, mul_one] at this
 
 theorem coef_dual (hΨ : Sys k Ψ) (ha : ∀ y, HasQ ((((absF y ^ ((k : ℝ) / 2) : ℝ) : ℂ))⁻¹ • Ψ (aff y 0)) (a y))
     (y : (Af F)ˣ) (ξ : F) (hξ : ξ ≠ 0) (hne : a y ξ ≠ 0) : ∃ 𝔪, GenD (algebraMap F (Af F) ξ * (y : Af F)) 𝔪 := by
@@ -639,8 +636,7 @@ theorem norm_p (ι : Qbar p ≃+* ℂ) : ‖ι.symm (p : ℂ)‖ = (p : ℝ)⁻�
   rw [map_natCast]
   have h : ‖(algebraMap ℚ_[p] (PadicAlgCl p) (p : ℚ_[p]))‖ = ‖(p : ℚ_[p])‖ :=
     PadicAlgCl.norm_extends p _
-  rw [map_natCast, Padic.norm_p] at h
-  exact h
+  rwa [map_natCast, Padic.norm_p] at h
 
 private theorem hasQ_const (c : ℂ) :
     HasQ (F := F) (fun _ : Hn F => c) (({0} : Set F).indicator fun _ => c) := by
@@ -687,19 +683,15 @@ private theorem hasQ_add {f g : Hn F → ℂ} {a b : F → ℂ} (hf : HasQ f a) 
       have e : ((D * E : ℕ) : F) * ξ = (D : F) * ((E : F) * ξ) := by
         push_cast
         ring
-      rw [e]
-      exact h3
+      rwa [e]
     · obtain ⟨h1, h2⟩ := hDa ξ h0
       refine ⟨h1, ?_⟩
       have h3 := (isIntegral_natCast (R := ℤ) (B := F) E).mul h2
       have e : ((D * E : ℕ) : F) * ξ = (E : F) * ((D : F) * ξ) := by
         push_cast
         ring
-      rw [e]
-      exact h3
-  · have h := (ha z).add (hb z)
-    simp only [Pi.add_apply, add_mul]
-    exact h
+      rwa [e]
+  · simpa only [Pi.add_apply, add_mul] using (ha z).add (hb z)
 
 theorem small_add {r s : ℝ} {f g : Hn F → ℂ} (hf : Small ι r f) (hg : Small ι s g) : Small ι (max r s) (f + g) := by
   obtain ⟨a, ha, ha'⟩ := hf
@@ -792,8 +784,7 @@ theorem main : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (p : �
     | zero => simpa using h
     | succ n ih =>
       have h1 := pow_p ih (pow_le_of_le_one hp0 hp1 (Nat.succ_ne_zero n))
-      rw [← pow_mul, ← pow_succ, ← pow_succ] at h1
-      exact h1
+      rwa [← pow_mul, ← pow_succ, ← pow_succ] at h1
   have h2 := pow_sub_one (step N) (pow_le_one₀ hp0 hp1) m
   rwa [← pow_mul] at h2
 
@@ -1103,8 +1094,7 @@ theorem orbit_seed_finite_congr : ∀ (F : Type) [Field F] [NumberField F] [IsTo
     have hN : |((Algebra.norm ℚ γ₁.val.det : ℚ) : ℝ)| = (r : ℝ) ^ 2 :=
       mul_right_cancel₀ (absF_ne_zero y) hnorm
     have hpow : (|((Algebra.norm ℚ γ₁.val.det : ℚ) : ℝ)| ^ (((p - 1 : ℕ) : ℝ) / 2) : ℝ) = (r : ℝ) ^ (p - 1) := by
-      rw [hN, ← Real.rpow_natCast, ← Real.rpow_mul (by positivity)]
-      rw [← Real.rpow_natCast]
+      rw [hN, ← Real.rpow_natCast, ← Real.rpow_mul (by positivity), ← Real.rpow_natCast]
       congr 1; ring
     have hp1 : Pos (toInf γ₁) := hpos γ₁ hG.2.2.2.2.2
     have hp' : Pos (toInf γ') := hpos γ' hγ'.2.2.2.2.2

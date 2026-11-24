@@ -285,8 +285,7 @@ theorem thetaSpace_std_line {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.O
   have hMz : Bk.thMoved (B.R.N i) (B.R.N (i + 1)) (Formalism.MainNotions.StandardLatticesGL3.stdL (I.rec7 l Z) (B.R.N i)) (Formalism.MainNotions.StandardLatticesGL3.stdL (I.rec7 l Z) (B.R.N (i + 1))) = Bk.thZero (B.R.N i) (B.R.N (i + 1)) := by
     unfold Formalism.L2.Ker.Base.thMoved Formalism.L2.Ker.Base.thHalf
     rw [hIx, hIx, hfix, hfix]
-  rw [hM, hMz]
-  exact hc
+  rwa [hM, hMz]
 
 theorem moveT_one : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)) ψ θ, IsStdChar (I.rec7 l Z) ψ (-1) → IsInfFam θ → ∀ (i : ℕ) (hi : i + 1 ≤ B.R.m) vac, IsVacO ψ θ ((I.rec7 l Z).sp.X i) ((I.rec7 l Z).sp.X (i + 1)) (fun _ => 1) (fun _ => 1) (intVec _ _) (intVec _ _) vac → ∀ (a : I.ι) μ om, ChrEq μ (I.C.mu0 ⟨i, hi⟩ * I.xi a) → IsWeilDatumO ψ _ _ μ μ om → ∃ c₀ : ℂ, c₀ ≠ 0 ∧ GlobalTheory.AdForm.VacAll.MoveT I l Z θ i hi c₀ μ om vac 1 1 := by
   intro B X I hI hP l Z ψ θ hψ hθ i hi vac hvac a μ om _ hom
@@ -304,8 +303,7 @@ theorem moveT_one : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.
     obtain ⟨c, hc⟩ := S3 _ hmem
     refine ⟨c, ?_, ?_⟩
     · rintro rfl
-      apply hne
-      exact hc.trans (zero_smul _ _)
+      exact hne (hc.trans (zero_smul _ _))
     · intro N N' hN hN' x y hx hy
       obtain rfl := S1 _ _ _ _ N hN
       obtain rfl := S1 _ _ _ _ N' hN'
@@ -318,8 +316,7 @@ theorem moveT_one : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.
       simp only [Pi.smul_apply, smul_eq_mul, Circle.coe_one, inv_one, mul_one]
       rfl
   · refine ⟨1, one_ne_zero, ?_⟩
-    intro N N' hN hN'
-    exact absurd ⟨S1 _ _ _ _ N hN ▸ hN, S1 _ _ _ _ N' hN' ▸ hN'⟩ hex
+    exact fun N N' hN hN' => absurd ⟨S1 _ _ _ _ N hN ▸ hN, S1 _ _ _ _ N' hN' ▸ hN'⟩ hex
 
 end GlobalTheory.AdForm.VacAllBase
 end -- clump:auto
@@ -630,12 +627,10 @@ theorem moveT_split : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → T
     rw [← hvacT N₁ N' hN₁sd hN'sd, hMv.2.2.2.2.2.1 N₁ N₁' N' hN₁sd hN₁'sd hN'sd, hvacT N₁ N₁' hN₁sd hN₁'sd, h0, _root_.Formalism.L2.Th1.H.Inv.inter_zero]
   have hrel1 : relIdx (lam I.A (a := B.R.N i) (b := B.R.N (i + 1)) N N') (lam I.A N₁ N') ≠ 0 := by
     apply inter_ne_zero (H := HV I.A.sc) (α := alV I.A.d I.A.sc) (F := vac I.A (a := B.R.N i) (b := B.R.N (i + 1)) N N')
-    rw [← hMv.2.2.2.2.2.2 N N₁ N' hNsd hN₁sd hN'sd, hvacT N₁ N' hN₁sd hN'sd]
-    exact hv1
+    rwa [← hMv.2.2.2.2.2.2 N N₁ N' hNsd hN₁sd hN'sd, hvacT N₁ N' hN₁sd hN'sd]
   have hrel2 : relIdx (lam I.A (a := B.R.N i) (b := B.R.N (i + 1)) N₁ N') (lam I.A N₁ N₁') ≠ 0 := by
     apply inter_ne_zero (H := HV I.A.sc) (α := alV I.A.d I.A.sc) (F := vac I.A (a := B.R.N i) (b := B.R.N (i + 1)) N₁ N')
-    rw [← hMv.2.2.2.2.2.1 N₁ N' N₁' hN₁sd hN'sd hN₁'sd, hvacT N₁ N₁' hN₁sd hN₁'sd]
-    exact hv2
+    rwa [← hMv.2.2.2.2.2.1 N₁ N' N₁' hN₁sd hN'sd hN₁'sd, hvacT N₁ N₁' hN₁sd hN₁'sd]
   rw [hlam N N', hlam N₁ N'] at hrel1
   rw [hlam N₁ N', hlam N₁ N₁'] at hrel2
   have hfacts : ∀ (M : Submodule (𝓞 (I.rec7 l Z).host.E) (Fin (B.R.N i) → (I.rec7 l Z).host.E)) (M' : Submodule (𝓞 (I.rec7 l Z).host.E) (Fin (B.R.N (i + 1)) → (I.rec7 l Z).host.E)), Formalism.L2.Col.IsSdLat M → Formalism.L2.Col.IsSdLat M' →
@@ -644,15 +639,13 @@ theorem moveT_split : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → T
         (alV (I.rec7 l Z).host.d I.A.sc) := by
     intro M M' hM hM'
     have := (hMv.2.2.2.2.1 M M' hM hM').2.2
-    rw [← hlam M M']
-    exact this
+    rwa [← hlam M M']
   haveI : Nonempty (I.rec7 l Z).what₂.Tau := Fintype.card_pos_iff.1 hX.f_pos
   have hinj := GlobalTheory.ThetaMove.embH_injective (a := B.R.N i) (b := B.R.N (i + 1)) (tauE (I.rec7 l Z)) hstd.ne
   have memL : ∀ (M : Submodule (𝓞 (I.rec7 l Z).host.E) (Fin (B.R.N i) → (I.rec7 l Z).host.E)) (M' : Submodule (𝓞 (I.rec7 l Z).host.E) (Fin (B.R.N (i + 1)) → (I.rec7 l Z).host.E)) x, embH (tauE (I.rec7 l Z)) I.A.δ x ∈
       LamC (tauE (I.rec7 l Z)) I.A.δ ((I.rec7 l Z).host.AA0 : Submodule (𝓞 (I.rec7 l Z).host.E) (I.rec7 l Z).host.E) M M' ↔
       x ∈ perO ((I.rec7 l Z).host.AA0 : Submodule (𝓞 (I.rec7 l Z).host.E) (I.rec7 l Z).host.E) M M' := by
-    intro M M' x
-    exact ⟨fun ⟨y, hy, e⟩ => hinj e ▸ hy, fun hx => ⟨x, hx, rfl⟩⟩
+    exact fun M M' x => ⟨fun ⟨y, hy, e⟩ => hinj e ▸ hy, fun hx => ⟨x, hx, rfl⟩⟩
   obtain ⟨x₀, hx₀⟩ := GlobalTheory.AdTh.SplitClass.exists_detAt _ he.1 s
   obtain ⟨y₀, hy₀⟩ := GlobalTheory.AdTh.SplitClass.exists_detAt _ he.1 s'
   have st1 := GlobalTheory.T.splitPlacePair_moves_latticeVacuumReading (I.rec7 l Z) ψ θ _ _ _ _ hSr hTr I.A.δ I.A.sc hstd (μ) (om) hW ΛS ΛS₁ ΛT ΛT hΛS hΛS₁
@@ -898,8 +891,7 @@ theorem vacT_one : GlobalTheory.Published.StrongApproxSU → ∀ {B : Base} {X :
     rwa [one_mul] at this) hs'
   have h5 := GlobalTheory.T.movedVacuum_invariant_rationalFiniteParts I hI hP l Z ψ θ hψ hθ i hi vac hvac a μ om hc hw c₀ _ _ hsk (mul_mem h4.1 hk')
     (h4.2 k' hk' (h3.2 k hk h2)) r r' hr hr'
-  rw [mul_assoc, mul_assoc]
-  exact h5
+  rwa [mul_assoc, mul_assoc]
 
 theorem vacT_all : GlobalTheory.Published.StrongApproxSU → ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ ψ θ, IsStdChar (I.rec7 l Z) ψ (-1) → IsInfFam θ → ∀ (i : ℕ) (hi : i + 1 ≤ B.R.m) vac, IsVacO ψ θ ((I.rec7 l Z).sp.X i) ((I.rec7 l Z).sp.X (i + 1)) (fun _ => 1) (fun _ => 1) (intVec _ _) (intVec _ _) vac → ∃ c₀ : ℂ, c₀ ≠ 0 ∧ ∀ (a : I.ι) μ om, ChrEq μ (I.C.mu0 ⟨i, hi⟩ * I.xi a) → IsWeilDatumO ψ _ _ μ μ om → VacT I l Z θ i hi c₀ μ om vac := by
   intro hSA B X I hI hP l Z ψ θ hψ hθ i hi vac hvac
@@ -1186,8 +1178,7 @@ theorem sec_mem_latV_iff (q : SplitPt D k) (S : HSp D) (L : Lat S)
       induction hz using Submodule.span_induction with
       | mem z hz =>
         obtain ⟨x, hx, rfl⟩ := hz
-        intro i
-        exact FullLatFrame.pr_int_mem q ⟨x i, (hmem x).1 (hGL x hx) i⟩
+        exact fun i => FullLatFrame.pr_int_mem q ⟨x i, (hmem x).1 (hGL x hx) i⟩
       | zero => intro i; exact zero_mem _
       | add x y _ _ hx hy => intro i; exact add_mem (hx i) (hy i)
       | smul a x _ hx => intro i; exact mul_mem a.2 (hx i)
@@ -1392,8 +1383,7 @@ theorem exists_locX_std_alt : ∀ {B : GlobalTheory.Mem.Base} {X : GlobalTheory.
       change (1 : Matrix _ _ k) r (eM (Sum.inr c)) * π =
         ((oTop l Z hI (s + 1 + 1) hs).iB.map (GlobalTheory.LocMod.ofSplit q).pr *ᵥ fun i => (GlobalTheory.LocMod.ofSplit q).pr (GlobalTheory.XGeoStd.zeta I l Z u i)) r
       exact entry_inr _ hpr0 hpr1 _ (oTop_iB l Z hI (s + 1 + 1) hs) _ (GlobalTheory.XGeoStd.piE I l Z u) (fun _ => rfl) r _ eM_r
-  · intro j hj
-    exact intIn_stdFr q _ _ (hLX j) (eX j hj)
+  · exact fun j hj => intIn_stdFr q _ _ (hLX j) (eX j hj)
   · exact intIn_diagFr q _ _ (hLX (s + 1 + 1)) eM dM hd0 hdv
   · exact intIn_stdFr q _ _ hLT eT
   · refine ⟨eT, oT, fun b hb => ?_⟩

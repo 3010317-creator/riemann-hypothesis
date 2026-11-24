@@ -56,12 +56,10 @@ theorem existsUnique_at_map_piInf :
   refine ⟨Matrix.of fun i j => z i j, ⟨?_, ?_⟩, ?_⟩
   · intro a ha
     ext i j
-    simp only [Matrix.smul_apply, Matrix.of_apply, Matrix.zero_apply]
-    exact hzA i j a ha
+    simpa only [Matrix.smul_apply, Matrix.of_apply, Matrix.zero_apply] using hzA i j a ha
   · intro w
     ext i j
-    simp only [Matrix.map_apply, Matrix.of_apply]
-    exact hz i j w
+    simpa only [Matrix.map_apply, Matrix.of_apply] using hz i j w
   · rintro v ⟨hvA, hvM⟩
     ext i j
     simp only [Matrix.of_apply]

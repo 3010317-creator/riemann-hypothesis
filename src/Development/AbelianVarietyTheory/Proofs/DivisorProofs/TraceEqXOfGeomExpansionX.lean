@@ -196,8 +196,7 @@ theorem lamAt_b' {Rk : Ranks} (h : HCParam Rk) (j : Fin Rk.m) :
   have hc : ∀ (x y : ℕ) (hx : x < Rk.m) (hy : y < Rk.m), x = y → h.b ⟨x, hx⟩ = h.b ⟨y, hy⟩ := by
     rintro x _ _ _ rfl; rfl
   unfold Formalism.L2.NTheta.lamAt
-  rw [dite_eq_right (by omega), dite_eq_left (by omega)]
-  rw [hc _ _ _ j.2 (by omega)]
+  rw [dite_eq_right (by omega), dite_eq_left (by omega), hc _ _ _ j.2 (by omega)]
 
 theorem lamAt_v' {Rk : Ranks} (h : HCParam Rk) (j : Fin (Rk.k - 1)) :
     Formalism.L2.NTheta.lamAt h j = h.v j := by
@@ -1125,8 +1124,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem exists_levelOff_subset [Submodule.IsFullLattice E L] (N : Set (GAd σ J)) (hN : IsOpen N)
     (h1 : (1 : GAd σ J) ∈ N) : ∃ S, (levelOff σ J L S : Set (GAd σ J)) ⊆ N := by
   classical
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   obtain ⟨g, hg⟩ := IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed
     (fun S : Finset (HeightOneSpectrum (𝓞 F)) => (levelOff σ J L S : Set (GAd σ J)) \ N)
     (fun S S' => ⟨S ∪ S', Set.diff_subset_diff_left (levelOff_anti σ J L Finset.subset_union_left),
@@ -1180,8 +1178,7 @@ theorem dense_locFin (D : D7) (V : HSp D) :
   refine ⟨y, ?_, hy⟩
   show (y : GA D V) ∈ U
   have : (y : GA D V) = x := hye
-  rw [this, ← hxe]
-  exact hp
+  rwa [this, ← hxe]
 
 theorem finLoc_transport {D : D7} {V V' : HSp D}
     (j : ∀ v, GLoc D.sp.cm.sig V.gram v ≃ₜ* GLoc D.sp.cm.sig V'.gram v) (Φ : GfC V ≃ₜ* GfC V')
@@ -1666,8 +1663,7 @@ theorem geomExpansionX_of_parts : GlobalTheory.TrMult.EllTraceX → GlobalTheory
       fun P => GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialRoots.term V lam μf ff P (dta P) (dtf P) (dt P) := funext heq
   refine ⟨fun P => (hOK P).1, hfun ▸ hfin, ?_⟩
   have h1 := hE D V lam S M T U μa μf μ fa ff hT
-  rw [hint, hfun] at h1
-  exact h1
+  rwa [hint, hfun] at h1
 
 theorem traceEqX_of_geomExpansionX : GeomExpansionX → TraceEqX := by
   intro hG D V lam S M T U μa μf μ _ _ fa ff hTD hO V' hr S' M' hlam' j hj μa' μ' _ _ fa' hR' hA' hO'
@@ -1678,8 +1674,7 @@ theorem traceEqX_of_geomExpansionX : GeomExpansionX → TraceEqX := by
   have hTD' : GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialRoots.IsTestDataX V' lam' M' T' U' μa' (fun v => (μf v).map (j v)) μ' fa' (transfer j ff) := by
     refine ⟨hr ▸ hodd, ?_, hlam', hNF hnf, hR', hA', hTF μf ff hTFin⟩
     intro ρ i k hik
-    have h := hgap ρ (i.cast hr) (k.cast hr) (by simpa using hik)
-    simpa [hr, lam'] using h
+    simpa [hr, lam'] using hgap ρ (i.cast hr) (k.cast hr) (by simpa using hik)
   choose dta dtf dt hdt using fun (r : ℕ) (P : PPol D.sp.cm.sig r) => GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialRoots.exists_isTorusMeas P
   obtain ⟨hFin, -, hTr⟩ := hG D V lam S M T U μa μf μ fa ff ⟨hodd, hgap, hMl, hnf, hRP, hTA, hTFin⟩ hO
     (dta _) (dtf _) (dt _) (hdt _)

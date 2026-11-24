@@ -174,12 +174,10 @@ theorem wittRankZero_mem_completedLattice_iff_proj_mem {D : D7} {S S₀ : HSp D}
     x ∈ Formalism.L2.Herm.hatL (F := D.host.F) Λ ↔
       d.q0.map (Formalism.UG.inclE (F := D.host.F) (Formalism.L2.Herm.Af D.host.F)) *ᵥ x ∈ Formalism.L2.Herm.hatL (F := D.host.F) Λ₀ := by
   refine ⟨fun hx => ?_, fun hx => ?_⟩
-  · have h1 := hatL_mulVec_rect (F := D.host.F) d.q0 Λ Λ₀ hq x hx
-    exact h1
+  · exact hatL_mulVec_rect (F := D.host.F) d.q0 Λ Λ₀ hq x hx
   · have h1 := hatL_mulVec_rect (F := D.host.F) d.i₀ Λ₀ Λ hi
       (d.q0.map (Formalism.UG.inclE (F := D.host.F) (Formalism.L2.Herm.Af D.host.F)) *ᵥ x) hx
-    rw [inclusion_mulVec_projection_mulVec] at h1
-    exact h1
+    rwa [inclusion_mulVec_projection_mulVec] at h1
 
 theorem wittRankZero_finiteAdelic_proj_embedding_mulVec {D : D7} {S S₀ : HSp D} (d : HypDec S S₀ 0) (g : GA D S₀) (x : Fin S.rank → Lev.EAf D) :
     d.q0.map (Formalism.UG.inclE (F := D.host.F) (Formalism.L2.Herm.Af D.host.F)) *ᵥ ((Lev.finE S (d.emb0 g)).1 *ᵥ x) =
@@ -256,8 +254,7 @@ theorem vol_rankZero : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G 
     rw [Subsingleton.elim u 0, Matrix.mulVec_zero, add_zero]
     change d.q0 *ᵥ (d.i₀ *ᵥ y) ∈ _
     have e := wittRankZero_proj_comp_incl_mulVec_eq_self d y
-    rw [e]
-    exact hy
+    rwa [e]
   let e : GA D (G.V (.top (j + 1))) ≃ₜ* GA D (G.V (.grid D.R.m (j + 1))) :=
     { GlobalTheory.FinPl.VLast.Transport.rzEquiv d with
       continuous_toFun := d.continuous_embed
@@ -410,11 +407,9 @@ theorem main : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G : GridDa
       rw [e1]
       simp only [e2]
       rw [← integral_const_mul]
-      refine integral_congr_ae (Filter.Eventually.of_forall fun h₀ => ?_)
-      exact pt h' g₀ h₀
+      exact integral_congr_ae (Filter.Eventually.of_forall fun h₀ => (pt h' g₀ h₀))
   unfold Last.Q
-  refine integral_congr_ae (Filter.Eventually.of_forall fun h' => ?_)
-  exact congrArg (F h' * ·) (inner h')
+  exact integral_congr_ae (Filter.Eventually.of_forall fun h' => (congrArg (F h' * ·) (inner h')))
 
 end GlobalTheory.RowChain.LastSeeSawStep
 end -- clump:auto

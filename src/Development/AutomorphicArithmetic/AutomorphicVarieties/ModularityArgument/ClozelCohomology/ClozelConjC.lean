@@ -355,8 +355,7 @@ theorem UpperTheory.V.Cj.graph :
     have h0 : (-1 : ℂ) • v + v = 0 := by simp
     rw [h0] at h
     have h1 := (hiff 0 _ hm h).1 rfl
-    rw [map_neg, map_one, neg_one_smul, neg_add_eq_zero] at h1
-    exact h1
+    rwa [map_neg, map_one, neg_one_smul, neg_add_eq_zero] at h1
   have hR0 : R 0 0 := by
     obtain ⟨w, hw, hr⟩ := hex 0
     rwa [(hiff 0 w hw hr).1 rfl] at hr
@@ -374,8 +373,7 @@ theorem UpperTheory.V.Cj.graph :
       map_add' := by
         intro a b
         apply huniq (T.symm (a + b)) _ _ (hjM _) (M.add_mem (hjM a) (hjM b)) (hjR _)
-        have h := hlin 1 _ _ _ _ (hjR a) (hjR b)
-        simpa [map_add (f := _)] using h
+        simpa [map_add (f := _)] using hlin 1 _ _ _ _ (hjR a) (hjR b)
       map_smul' := by
         intro c a
         apply huniq (T.symm (c • a)) _ _ (hjM _) (M.smul_mem c (hjM a)) (hjR _)
@@ -574,8 +572,7 @@ private theorem irrAbs_module {R M S W κ ι : Type} [Ring R] [AddCommGroup M] [
   let e : W →ₗ[R] (ι → M) := LinearMap.pi p
   have he : Function.Injective e := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro w hw
-    exact hp w fun i => congrFun hw i
+    exact fun w hw => hp w fun i => congrFun hw i
   haveI : IsSemisimpleModule R W := IsSemisimpleModule.of_injective e he
   haveI : Nontrivial W := ⟨⟨x, 0, hx⟩⟩
   obtain ⟨N, hN⟩ := IsSemisimpleModule.exists_simple_submodule R W
@@ -583,8 +580,7 @@ private theorem irrAbs_module {R M S W κ ι : Type} [Ring R] [AddCommGroup M] [
   haveI := IsSimpleModule.nontrivial R N
   obtain ⟨y, hy⟩ := exists_ne (0 : N)
   have hex : ∃ i, p i (y : W) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hy (Subtype.ext (hp _ h))
   obtain ⟨i, hi⟩ := hex
   let g : N →ₗ[R] M := (p i).comp N.subtype
@@ -603,8 +599,7 @@ private theorem irrAbs_module {R M S W κ ι : Type} [Ring R] [AddCommGroup M] [
     rw [hz] at h1
     rw [← h2, h1]
   have hex2 : ∃ k, (r.comp Φ).comp (Finsupp.lsingle k) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hrΦ
     apply Finsupp.lhom_ext
     intro a b
@@ -806,8 +801,7 @@ theorem UpperTheory.window_linear_entry_estimate :
   refine ⟨fun i j => ?_, ?_⟩
   · have e : (fun y => φ (M y) i j) = ∑ k, ∑ l, (φ (Matrix.single k l 1) i j) • fun y => M y k l := by
       funext y
-      simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
-      exact lin_entry φ (M y) i j
+      simpa only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul] using lin_entry φ (M y) i j
     rw [e]
     exact Subalgebra.sum_mem _ fun l _ => Subalgebra.sum_mem _ fun k _ => Subalgebra.smul_mem _ (h l k) _
   · have hd : ∀ X, dOf (fun y => φ (M y)) X = φ (dOf M X) := by
@@ -950,8 +944,7 @@ private theorem eF_coord (t τ : E →+* ℂ) (k l i j : Fin a) :
     rw [Matrix.single_apply, apply_ite (coord t), map_zero]
   rw [eF, h2, h2]
   by_cases h3 : i = k ∧ j = l
-  · simp only [h3, and_self, and_true, ite_true]
-    exact coord_hol τ t
+  · simpa only [h3, and_self, and_true, ite_true] using coord_hol τ t
   · simp [h3]
 
 open Classical in
@@ -1124,8 +1117,7 @@ theorem conjAlgMat : ConjAlgMat := by
       exact funext fun k => map_zero σ
     · refine Or.inr (eq_top_iff.2 fun v _ => ?_)
       have h6 : σ.symm ∘ v ∈ W' := h ▸ Submodule.mem_top
-      rw [← back v]
-      exact h6
+      rwa [← back v]
   · change (R _).map σ = (Ξ.mat _).map σ
     rw [← hy]
     congr 2
@@ -1168,8 +1160,7 @@ theorem UpperTheory.V.Lit.Bor.count :
     let e := Fintype.equivFin {x : S // deg x = q}
     rw [Cardinal.mk_fintype]
     refine hκ q _ (fun i => ((e.symm i).1 : X)) ?_ (fun i => ⟨(e.symm i).1.2, (e.symm i).2⟩)
-    intro i j hij
-    exact e.symm.injective (Subtype.ext (Subtype.ext hij))
+    exact fun i j hij => e.symm.injective (Subtype.ext (Subtype.ext hij))
   calc (S.card : Cardinal) = Cardinal.mk S := (Cardinal.mk_coe_finset).symm
     _ = Cardinal.mk (Σ q, {x : S // deg x = q}) :=
         (Cardinal.mk_congr (Equiv.sigmaFiberEquiv (fun x : S => deg x))).symm
@@ -1235,8 +1226,7 @@ theorem UpperTheory.V.Lit.Bor.indepAbs :
         exact Subtype.ext h0
       let fj : V j →ₗ[ℂ] W ⧸ S := S.mkQ ∘ₗ (V j).subtype
       have hfj : Function.Injective fj := by
-        intro a b hab
-        exact huniq a b ((Submodule.Quotient.eq S).mp hab)
+        exact fun a b hab => huniq a b ((Submodule.Quotient.eq S).mp hab)
       let ej := LinearEquiv.ofInjective fj hfj
       let fi : V i →ₗ[ℂ] W ⧸ S := S.mkQ ∘ₗ (V i).subtype
       have hrange : ∀ x : V i, fi x ∈ LinearMap.range fj := by
@@ -1297,8 +1287,7 @@ theorem UpperTheory.V.Lit.Bor.indepAbs :
           exact ⟨z, Subtype.ext hz⟩
       exact hn i j hij ⟨LinearEquiv.ofBijective T ⟨hTinj, hTsurj⟩, hTeq⟩
   rw [iSupIndep_iff_supIndep]
-  intro t u _ i _ hiu
-  exact key u i hiu
+  exact fun t u _ i _ hiu => key u i hiu
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.BorelHarmonicForms.IndepAbs =====
@@ -1517,8 +1506,7 @@ theorem shiftUp : ShiftUp := by
     haveI := hΩ n
     exact ModuleCat.isZero_of_subsingleton _
   have hmono := groupCohomology.mono_δ_of_isZero hX (n + 1) hz
-  have hinjδ := (ModuleCat.mono_iff_injective _).1 hmono
-  exact LinearMap.rank_le_of_injective _ hinjδ
+  exact LinearMap.rank_le_of_injective _ ((ModuleCat.mono_iff_injective _).1 hmono)
 
 end UpperTheory.V.Lit.Dr
 end -- clump:auto
@@ -1544,8 +1532,7 @@ theorem shiftZero : ShiftZero := by
     intro g hg
     have h0 : ∑ i, g i • w i = 0 := by
       have := congrArg Subtype.val hg
-      rw [Submodule.coe_sum] at this
-      exact this
+      rwa [Submodule.coe_sum] at this
     rw [hlin g h0]
     intro i
     rfl

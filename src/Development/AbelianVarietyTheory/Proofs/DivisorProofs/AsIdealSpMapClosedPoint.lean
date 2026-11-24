@@ -129,20 +129,17 @@ theorem isGenericPoint_of_lift (h : GenFrEx Xo c) {z : Sp (Om Z) ⟶ M.X} (hz : 
   have hY : toFlag M y ∈ X.π ⁻¹ᵁ barComp Y Z := (M.σ y).2
   have hO' : ⊤ ≤ (resPt y ≫ toFlag M) ⁻¹ᵁ flagOpen X := by
     refine (le_iff_ptOf_mem _ _).2 ?_
-    rw [ptOf_comp, ptOf_resPt]
-    exact hF
+    rwa [ptOf_comp, ptOf_resPt]
   obtain ⟨_, hch⟩ := exists_chartFr _ hO'
   obtain ⟨k, hk⟩ := Opens.mem_iSup.1 (X.F.cover.ge (Set.mem_univ (toFlag M y)))
   have hk' : ⊤ ≤ (resPt y ≫ toFlag M) ⁻¹ᵁ X.F.U k := by
     refine (le_iff_ptOf_mem _ _).2 ?_
-    rw [ptOf_comp, ptOf_resPt]
-    exact hk
+    rwa [ptOf_comp, ptOf_resPt]
   obtain ⟨Q, hQ⟩ := hch k hk'
   have e : resPt y ≫ toFlag M = X.ptY Q := FlagCover.eq_ptY hQ.lies
   have hQZ : LiesOn Z Q := by
     refine (ptY_le_iff X Z Q).1 ((le_iff_ptOf_mem _ _).2 ?_)
-    rw [← e, ptOf_comp, ptOf_resPt]
-    exact hY
+    rwa [← e, ptOf_comp, ptOf_resPt]
   have sp := specializes_ptY_genFr X Z h Q hQZ
   rw [← hz, ← e, ptOf_comp, ptOf_comp, ptOf_resPt] at sp
   have : IsOpenImmersion (M.opn.ι ≫ M.σ) := by
@@ -195,8 +192,7 @@ theorem exists_chart_val (h : GenFrEx Xo c) {P : WtPar Dw} (R : Choice X Z U P) 
   have hU : ⊤ ≤ (z ≫ R.σ) ⁻¹ᵁ U₀ X Z := by
     intro s _
     have := hO (Set.mem_univ s)
-    rw [R.off_eq] at this
-    exact this
+    rwa [R.off_eq] at this
   have hO₂ : ⊤ ≤ ((z ≫ R.σ) ≫ inc₀ X Z) ⁻¹ᵁ flagOpen X := hU
   obtain ⟨n, hn⟩ := exists_chart R.Δ₁.isLB (ptOf z)
   have hz' : ptOf z ∈ R.off := (le_iff_ptOf_mem _ _).1 hO

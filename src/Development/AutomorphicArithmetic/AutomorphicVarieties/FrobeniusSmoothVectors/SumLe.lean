@@ -211,8 +211,7 @@ theorem UpperTheory.V.Fr.ep_cw :
       have e10 : (((v : adp K 0) : Matrix (Fin 3) (Fin 3) K) * (B.r c).mat) 1 0 = 0 := by
         rw [Matrix.mul_apply, Fin.sum_univ_three, hX 1 0 (by decide), hg 1 0 (by decide), hX 1 2 (by decide)]
         ring
-      have h0 := cw_zero h2 (B.r c) hx hr _ (key 0 v) hv e01 e10
-      exact Subtype.ext (Subtype.ext h0)
+      exact Subtype.ext (Subtype.ext (cw_zero h2 (B.r c) hx hr _ (key 0 v) hv e01 e10))
     have := LinearMap.finrank_le_finrank_of_injective hf
     simpa using this
   · let f : LinearMap.ker (h.ad 1 c - 1) →ₗ[K] K × K :=
@@ -229,8 +228,7 @@ theorem UpperTheory.V.Fr.ep_cw :
         rw [Matrix.mul_apply, Fin.sum_univ_three, hX 0 0 (by decide), hg 1 0 (by decide), hX 0 2 (by decide)]
         ring
       have hv' := Prod.mk.inj hv
-      have h0 := cw_zero h2 (B.r c) hx hr _ (key 1 v) e00 hv'.1 hv'.2
-      exact Subtype.ext (Subtype.ext h0)
+      exact Subtype.ext (Subtype.ext (cw_zero h2 (B.r c) hx hr _ (key 1 v) e00 hv'.1 hv'.2))
     have := LinearMap.finrank_le_finrank_of_injective hf
     simpa using this
 end -- clump:auto
@@ -410,8 +408,7 @@ private theorem grM_gl_inv_of_grM {O R : Type} [CommRing O] [CommRing R] [Algebr
       (Matrix.diagonal (fun b => sg R (β b)) * Gi * Matrix.diagonal (fun a => sg R (α a))) = 1 := by
     simp only [Matrix.mul_assoc, diagonal_sg_mul_diagonal_sg_mul_cancel]
     rw [← Matrix.mul_assoc G, hGGi, Matrix.one_mul, Matrix.diagonal_mul_diagonal]
-    simp only [sg_mul_self_eq_one]
-    exact Matrix.diagonal_one
+    simpa only [sg_mul_self_eq_one] using Matrix.diagonal_one
   calc Gi.map σ
       = Gi.map σ * (G.map σ *
         (Matrix.diagonal (fun b => sg R (β b)) * Gi * Matrix.diagonal (fun a => sg R (α a)))) := by
@@ -515,8 +512,7 @@ private theorem exists_gl_eq_av_entries_and_map_eq {O C' C : Type} [CommRing O] 
     apply isUnit_of_isUnit_algHom_map_of_isCO p
     rw [AlgHom.map_det, AlgHom.mapMatrix_apply, hmap, ← AlgHom.mapMatrix_apply, ← AlgHom.map_det]
     exact hXu.map p
-  refine ⟨Matrix.nonsingInvUnit M hdet, rfl, ?_⟩
-  exact Units.ext hmap
+  exact ⟨Matrix.nonsingInvUnit M hdet, rfl, Units.ext hmap⟩
 
 theorem UpperTheory.V.Fr.ep_glift :
     ∀ {l : ℕ} [Fact l.Prime] {k : Type} [Field k] {F : Frame l k} (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O], IsUnit (2 : O) → ∀ (C' : Type) [CommRing C'] [Algebra O C'] [IsCO O C'] (C : Type) [CommRing C] [Algebra O C] [IsCO O C] (p : C' →ₐ[O] C) (σ' : C' →ₐ[O] C') (σ : C →ₐ[O] C), (∀ y, σ' (σ' y) = y) → (∀ y, p (σ' y) = σ (p y)) → ∀ (B : Box F 3 C) (π : F.V → Fin 3 → ZMod 2), B.Gr σ π → SetLift p B → ∃ D : SetLift p B, D.Gr σ' π := by
@@ -657,8 +653,7 @@ theorem UpperTheory.V.Fr.ep_hasobs :
     fun v => (Y v : Matrix (Fin 3) (Fin 3) (ResidueField O)), hβ.comp _, ?_, ?_⟩
   · funext x
     exact congrArg (fun f => (f x : Matrix (Fin 3) (Fin 3) (ResidueField O))) h1
-  · intro v s
-    exact h3 v s
+  · exact fun v s => h3 v s
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.EpHasobs =====
@@ -892,15 +887,13 @@ private theorem small {O : Type} [CommRing O] [IsLocalRing O] (h2 : IsUnit (2 : 
       rfl
     have hqs : Function.Surjective q := Ideal.Quotient.mkₐ_surjective O I
     have hq : ∀ y : ↥(RingHom.ker p), (u : ↥(RingHom.ker p) →ₗ[O] ResidueField O) y = 0 → q y = 0 := by
-      intro y hy
-      exact Ideal.Quotient.eq_zero_iff_mem.2 ⟨y.2, hy⟩
+      exact fun y hy => Ideal.Quotient.eq_zero_iff_mem.2 ⟨y.2, hy⟩
     obtain ⟨s, hs⟩ := hob u hu (C ⧸ I) q p'' hcomp hqs hq
     have hinj' := hno (C ⧸ I) q p'' s hcomp hqs hs
     apply Subtype.ext
     refine LinearMap.ext fun y => ?_
     have hqy : q (y : C) = 0 := hinj' (by rw [map_zero]; exact RingHom.mem_ker.1 y.2)
     obtain ⟨_, h'⟩ := Ideal.Quotient.eq_zero_iff_mem.1 hqy
-    show _ = (0 : ResidueField O)
     exact h'
   let w : {u // wf u = j} → ↥(formp τ (RingHom.ker p) j) := fun u => ⟨co u.1, hform u.1 u.2⟩
   have hli : LinearIndependent (ResidueField O) w := by
@@ -926,8 +919,7 @@ theorem UpperTheory.V.Fr.ep_mazur :
     exact hmem
   have hu2 : IsUnit (2 : MvPowerSeries (Fin P.a ⊕ Fin P.g) O) := by
     have h2' := h2.map (algebraMap O (MvPowerSeries (Fin P.a ⊕ Fin P.g) O))
-    rw [map_ofNat] at h2'
-    exact h2'
+    rwa [map_ofNat] at h2'
   have hpτ0 : ∀ y, P.p (τ0 y) = σ (P.p y) := by
     intro y
     have ha := hdec 0 y
@@ -949,8 +941,7 @@ theorem UpperTheory.V.Fr.ep_mazur :
     intro y hy
     rw [RingHom.mem_ker] at hy ⊢
     show P.p (τ0 y) = 0
-    rw [hpτ0]
-    rw [show P.p y = 0 from hy, map_zero]
+    rw [hpτ0, show P.p y = 0 from hy, map_zero]
   have hτm : ∀ y ∈ maximalIdeal (MvPowerSeries (Fin P.a ⊕ Fin P.g) O), τ0 y ∈ maximalIdeal (MvPowerSeries (Fin P.a ⊕ Fin P.g) O) := by
     intro y hy
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at hy ⊢
@@ -1001,8 +992,7 @@ theorem UpperTheory.V.Fr.ep_mazur :
   · intro u
     have hf : τ0 (P.f u) = sg (MvPowerSeries (Fin P.a ⊕ Fin P.g) O) (P.wf u) * P.f u := by
       have h' := P.hf u
-      rw [← hev] at h'
-      exact h'
+      rwa [← hev] at h'
     show Ideal.Quotient.mkₐ O J (τ0 (P.f u)) = _
     rw [hf, sg_smul (O := O), map_smul, ← sg_smul (O := O)]
   · apply le_antisymm
@@ -1011,8 +1001,7 @@ theorem UpperTheory.V.Fr.ep_mazur :
       have hy' : y' ∈ RingHom.ker P.p := hy
       rw [P.ker] at hy'
       have h' := Ideal.mem_map_of_mem (Ideal.Quotient.mk J) hy'
-      rw [Ideal.map_span, ← Set.range_comp] at h'
-      exact h'
+      rwa [Ideal.map_span, ← Set.range_comp] at h'
     · rw [Ideal.span_le]
       rintro _ ⟨u, rfl⟩
       have h' : P.f u ∈ RingHom.ker P.p := P.ker ▸ Ideal.subset_span ⟨u, rfl⟩
@@ -1022,8 +1011,7 @@ theorem UpperTheory.V.Fr.ep_mazur :
     have h' : Ideal.Quotient.mkₐ O J (∑ u, c u • P.f u) = 0 := by
 
       rw [map_sum]
-      simp only [map_smul]
-      exact hc
+      simpa only [map_smul] using hc
     exact Ideal.Quotient.eq_zero_iff_mem.1 h'
   · intro C' _ _ _ q p' s hcomp hq hs
     have hc2 : p'.comp (q.comp (Ideal.Quotient.mkₐ O J)) = P.p := by
@@ -1122,8 +1110,7 @@ theorem UpperTheory.V.Fr.ep_odd :
       rw [this]
       decide
     have h2 := Ideal.mem_map_of_mem P.p h1
-    rw [Ideal.map_span, ← Set.range_comp] at h2
-    exact h2
+    rwa [Ideal.map_span, ← Set.range_comp] at h2
   · rw [Ideal.span_le]
     rintro _ ⟨i, rfl⟩
     refine Ideal.subset_span ⟨MvPowerSeries.X (.inr i), fun n hn => ?_, rfl⟩
@@ -1231,8 +1218,7 @@ theorem UpperTheory.Reformulated.B.Qf39.ev_decomp :
     by_cases hle : Finsupp.single i 1 ≤ m
     · rw [ite_eq_left hle, hh, tsub_add_cancel_of_le hle]
     · rw [ite_eq_right hle, ite_eq_right]
-      intro hi
-      exact hle (Finsupp.single_le_iff.2 (Nat.one_le_iff_ne_zero.2 (hc₂ m i hi)))
+      exact fun hi => hle (Finsupp.single_le_iff.2 (Nat.one_le_iff_ne_zero.2 (hc₂ m i hi)))
   refine ⟨h, ?_, fun i => ?_⟩
   · ext m
 
@@ -1300,8 +1286,7 @@ theorem UpperTheory.V.Fr.ep_vars :
   have hC : ∀ (H : MvPowerSeries (Fin a ⊕ Fin g) O →ₐ[O] R) (x : O),
       H (MvPowerSeries.C x) = Algebra.ofId O R x := fun H x => by
     have := H.commutes x
-    rw [MvPowerSeries.algebraMap_apply] at this
-    exact this
+    rwa [MvPowerSeries.algebraMap_apply] at this
   have hsurj : Function.Surjective p := by
     refine co_surj O _ R p (hspan.trans (sup_le (le_sup_of_le_left ?_) (sup_le_sup_right ?_ _)))
     · rw [Ideal.span_le]
@@ -1313,8 +1298,7 @@ theorem UpperTheory.V.Fr.ep_vars :
     · rw [Ideal.map_le_iff_le_comap]
       intro c hc
       rw [Ideal.mem_comap, ← p.commutes]
-      refine Ideal.mem_map_of_mem p ?_
-      exact (ev_max (Algebra.ofId O _)).2 hc
+      exact Ideal.mem_map_of_mem p ((ev_max (Algebra.ofId O _)).2 hc)
   have heq : p.comp τ = σ.comp p := by
     refine (co_ev O O R (Fin a ⊕ Fin g) (Algebra.ofId O R) (fun s => σ (z s))
       fun s => (ev_max σ).2 (hz s).1).unique ⟨hC _, fun s => ?_⟩ ⟨hC _, fun s => ?_⟩
@@ -1390,8 +1374,7 @@ private theorem exists_padded_family {κ M : Type} [Finite κ] [Zero M] (q : κ 
   classical
   haveI := Fintype.ofFinite κ
   have hc : Fintype.card {u // q u} ≤ Fintype.card (Fin n) := by
-    rw [Fintype.card_fin, ← Nat.card_eq_fintype_card]
-    exact h
+    rwa [Fintype.card_fin, ← Nat.card_eq_fintype_card]
   obtain ⟨e⟩ := Function.Embedding.nonempty_of_card_le hc
   refine ⟨Function.extend e (fun u => f u.1) 0, ?_, ?_⟩
   · intro i
@@ -1402,8 +1385,7 @@ private theorem exists_padded_family {κ M : Type} [Finite κ] [Zero M] (q : κ 
     · left
       rw [Function.extend_apply' _ _ _ hi]
       rfl
-  · intro u hu
-    exact ⟨e ⟨u, hu⟩, by rw [e.injective.extend_apply]⟩
+  · exact fun u hu => ⟨e ⟨u, hu⟩, by rw [e.injective.extend_apply]⟩
 
 theorem UpperTheory.V.Fr.ep_pad :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocalRing O] {F : Frame l (ResidueField O)} (S : Space O F 3) (x : Ideal S.A) (L : S.Loc x) (σ : L.R →ₐ[L.O'] L.R), L.IsInv σ → ∀ P : GPres L.O' σ, Nat.card {u // P.wf u = 0} + (3 * F.d + 1) ≤ P.a → Nat.card {u // P.wf u = 1} ≤ P.g → L.ρ.ee = Ideal.span (Set.range fun i => P.p (MvPowerSeries.X (.inr i))) → Nonempty L.EPres := by
@@ -1621,8 +1603,7 @@ private theorem tau_B (τ : S.R →ₐ[O] S.R)
   have hloc : (maximalIdeal S.R).map τ ≤ maximalIdeal S.R := by
     rw [Ideal.map_le_iff_le_comap]
     intro y hy
-    rw [Ideal.mem_comap, ← res_eq_zero_iff O, res_map, res_eq_zero_iff]
-    exact hy
+    rwa [Ideal.mem_comap, ← res_eq_zero_iff O, res_map, res_eq_zero_iff]
   intro y hy
   rw [← sub_eq_zero]
   refine IsHausdorff.haus (I := maximalIdeal S.R) inferInstance _ fun N => ?_
@@ -1697,8 +1678,7 @@ theorem UpperTheory.V.Fr.ep_inv :
   obtain ⟨σ, hσ, -⟩ := L.univ L.R (L.ι.comp τ) fun a => by
     rw [← sub_eq_zero, ← map_sub, res_eq_zero_iff, AlgHom.comp_apply, ← map_sub]
     have := hx (h4 a)
-    rw [← L.lies] at this
-    exact this
+    rwa [← L.lies] at this
   obtain ⟨g₀, -, hu⟩ := L.univ L.R L.ι fun _ => rfl
   have hsq : σ.comp σ = AlgHom.id _ _ :=
     (hu (σ.comp σ) fun a => by
@@ -1744,8 +1724,7 @@ theorem UpperTheory.V.Fr.ep_ee :
     · exact hl h1
   have h2 : IsUnit (2 : L.R) := by
     have := h2O.map (algebraMap L.O' L.R)
-    rw [map_ofNat] at this
-    exact this
+    rwa [map_ofNat] at this
   have hpw : ∀ a b : Fin 3, Odd (w 3 a - w 3 b) → pw a b = 1 := by
     intro a b h
     obtain ⟨k, hk⟩ := h
@@ -1763,8 +1742,7 @@ theorem UpperTheory.V.Fr.ep_ee :
     rintro _ ⟨g, i, j, hodd, rfl⟩
     apply Ideal.subset_span
     have he := hσ.ent g i j
-    rw [hpw i j hodd] at he
-    exact he
+    rwa [hpw i j hodd] at he
   · refine Ideal.span_le.mpr ?_
     intro y hy
     have hy' : σ y = sg L.R 1 * y := hy
@@ -1871,8 +1849,7 @@ theorem UpperTheory.V.Fr.epres :
   have h2K : (2 : ResidueField L.O') ≠ 0 := hgood.1.two
   have h2 : IsUnit (2 : L.O') := by
     apply (IsLocalRing.residue_ne_zero_iff_isUnit _).mp
-    rw [map_ofNat]
-    exact h2K
+    rwa [map_ofNat]
   have hloc := loc_rho hok (Or.inr rfl) S x L
   have hU : NRep.Univ L.O' L.ρ := ⟨hloc.1, fun C _ _ _ ρ' hc hb => def_iso hok (Or.inr rfl) S x L C ρ' hc hb⟩
   obtain ⟨B₀, hB₀, hB₀c⟩ := pr_box hok L.R (maximalIdeal L.R) L.ρ hloc.1
@@ -1881,8 +1858,7 @@ theorem UpperTheory.V.Fr.epres :
     (fun v i s => hσ.base (S.ψB v i s))
   have hBc : Box.Cont (maximalIdeal L.R) B := by
     unfold Box.Cont
-    rw [hBr]
-    exact hB₀c
+    rwa [hBr]
   have hEv := ep_ev L.O' h2 L.R σ B π hG
   have htan := ep_tan hok L.O' h2 L.R σ hσ.sq L.ρ B π hU hBo hBc hgood.1 hG hEv hgood.2.1 hgood.2.2
   obtain ⟨a, g, p, hsurj, hvar, hpart, hhom, hmin⟩ := ep_vars L.O' h2 L.R σ hσ.sq

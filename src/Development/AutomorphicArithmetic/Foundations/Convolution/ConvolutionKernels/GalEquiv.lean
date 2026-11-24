@@ -130,8 +130,7 @@ private theorem module_map {K : Type} [Field K] [NumberField K] (σ : K ≃+* K)
 private theorem det_map {K : Type} [Field K] [NumberField K] (n : ℕ) (σ : K ≃+* K) (g : AdelicGLn.AdelicGL K n) :
     AdelicGLn.det K n (Matrix.GeneralLinearGroup.map (CT.adMap σ) g : AdelicGLn.AdelicGL K n) =
       Units.map (CT.adMap σ).toMonoidHom (AdelicGLn.det K n g) := by
-  refine Units.ext ?_
-  exact (RingHom.map_det (CT.adMap σ) (g : AdelicGLn.AdelicMatrix K n)).symm
+  exact Units.ext (RingHom.map_det (CT.adMap σ) (g : AdelicGLn.AdelicMatrix K n)).symm
 
 private theorem map_symm_map {K : Type} [Field K] [NumberField K] (n : ℕ) (σ : K ≃+* K) (g : AdelicGLn.AdelicGL K n) :
     (Matrix.GeneralLinearGroup.map (CT.adMap σ.symm)
@@ -198,15 +197,12 @@ private theorem mapTrans (K : Type) [Field K] [NumberField K] (n : ℕ) (σ τ :
       Matrix.GeneralLinearGroup.map (Formalism.L2.Host.CT.adMap τ)
         (Matrix.GeneralLinearGroup.map (Formalism.L2.Host.CT.adMap σ) g) := by
   apply Matrix.GeneralLinearGroup.ext
-  intro i j
-  exact (UpperTheory.ConvolutionTheory.K.adBasic K).2.2 σ τ _
+  exact fun i j => (UpperTheory.ConvolutionTheory.K.adBasic K).2.2 σ τ _
 
 private theorem mapRefl (K : Type) [Field K] [NumberField K] (n : ℕ)
     (g : AdelicGLn.AdelicGL K n) :
     (Matrix.GeneralLinearGroup.map (Formalism.L2.Host.CT.adMap (RingEquiv.refl K)) g : AdelicGLn.AdelicGL K n) = g := by
-  apply Matrix.GeneralLinearGroup.ext
-  intro i j
-  exact (UpperTheory.ConvolutionTheory.K.adBasic K).2.1 _
+  exact Matrix.GeneralLinearGroup.ext (fun i j => (UpperTheory.ConvolutionTheory.K.adBasic K).2.1 _)
 
 private noncomputable def resMap (K : Type) [Field K] [NumberField K] (n : ℕ) (σ : K ≃+* K) (g : G1 K n) :
     G1 K n :=

@@ -417,8 +417,7 @@ theorem topDat_frames_qM {m2 : ℕ} (hm : R.m = m2 + 2) (hc : cst.Ok) (P : rowSG
         rfl
       have h2 := GlobalTheory.ftY_pert_qM sel mu cst hc P hP hD (atNL X.E (R.N (m2 + 1 + 1)) (R.N (m2 + 1 + 1) - 1) ∘ₗ y)
         _ y'' hδ hy''s
-      rw [add_sub_cancel] at h2
-      exact h2
+      rwa [add_sub_cancel] at h2
   · have h0 : topDat Ch sel mu cst (m2 + 1) P y y'' = 0 := by
       by_contra hne
       exact hg (lam_of_topDat_ne Ch sel mu cst _ P hP y y'' hne)
@@ -498,8 +497,7 @@ theorem br_mul_of_LLz {n r d : ℕ} (hn : n = r + d) (A B : Matrix (Fin n) (Fin 
   rfl
 
 theorem xiZ_one_val (ξ : kˣ →* Kˣ) : xiZ ξ (1 : k) = 1 := by
-  have h := xiZ_unit ξ 1
-  simpa using h
+  simpa using xiZ_unit ξ 1
 
 theorem xiZ_br_inv (ξ : kˣ →* Kˣ) {n r d : ℕ} (hn : n = r + d) (A B : Matrix (Fin n) (Fin n) k) (hA : LLz r A) (h : A * B = 1) :
     xiZ ξ (A.submatrix (brI hn) (brI hn)).det * xiZ ξ (B.submatrix (brI hn) (brI hn)).det = 1 := by
@@ -550,7 +548,6 @@ theorem det_eq_of_blk {N : ℕ} (hN : 1 ≤ N) (G : Sp E N ≃ₗ[E] Sp E N) (J 
     · rw [Pi.single_eq_of_ne (fun h => hl (Fin.castSucc_injective _ h)), Pi.single_eq_of_ne hl]
   have hlast : prXpG E (n + 1) (Pi.single (Fin.last n) 1) = 0 := by
     funext l
-    show (Pi.single (Fin.last n) (1 : E) : Sp E (n + 1)) (Fin.castSucc l) = 0
     exact Pi.single_eq_of_ne (Fin.castSucc_ne_last l) _
   set M := LinearMap.toMatrix' G.toLinearMap with hM
   have hMe : ∀ i k, M i k = G (Pi.single k 1) i := fun i k => by
@@ -655,17 +652,14 @@ theorem topLawQ_midTop : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Char
       (j⁻¹ : Sp X.E (R.N (m2 + 1 + 1) - 1 + 0) ≃ₗ[X.E] Sp X.E (R.N (m2 + 1 + 1) - 1 + 0)).toLinearMap ∘ₗ (prXpG X.E (R.N (m2 + 1 + 1)) ∘ₗ y) ∘ₗ
         g.toLinearMap ∘ₗ LinearMap.funLeft X.E X.E (Fin.castAdd (cOf R (m2 + 1))) := by
     refine LinearMap.ext fun v => ?_
-    simp only [LinearMap.comp_apply, LinearEquiv.coe_coe]
-    exact hpr' _
+    simpa only [LinearMap.comp_apply, LinearEquiv.coe_coe] using hpr' _
   have eT : atNL X.E (R.N (m2 + 1 + 1)) (R.N (m2 + 1 + 1) - 1) ∘ₗ (g'.symm.toLinearMap ∘ₗ y ∘ₗ g.toLinearMap) =
       (atNL X.E (R.N (m2 + 1 + 1)) (R.N (m2 + 1 + 1) - 1) ∘ₗ y) ∘ₗ ((⟨g, hgI⟩ : ↥(GLint X.E (R.N (m2 + 1)) P.1)) : Sp X.E (R.N (m2 + 1)) ≃ₗ[X.E] Sp X.E (R.N (m2 + 1))).toLinearMap := by
     refine LinearMap.ext fun v => ?_
-    simp only [LinearMap.comp_apply, LinearEquiv.coe_coe]
-    exact hat' _
+    simpa only [LinearMap.comp_apply, LinearEquiv.coe_coe] using hat' _
   have hδ' : ((qOf P.1 : X.E) ^ cst.M)⁻¹ • ((⟨g, hgI⟩ : ↥(GLint X.E (R.N (m2 + 1)) P.1)).1 (g.symm y₁) - y₂) ∈ stdAt X.E (R.N (m2 + 1)) P.1 := by
     show ((qOf P.1 : X.E) ^ cst.M)⁻¹ • (g (g.symm y₁) - y₂) ∈ _
-    rw [LinearEquiv.apply_symm_apply]
-    exact hδ
+    rwa [LinearEquiv.apply_symm_apply]
   have hft := ftY_moveQ sel mu cst hcst P hP hD ⟨g, hgI⟩ (atNL X.E (R.N (m2 + 1 + 1)) (R.N (m2 + 1 + 1) - 1) ∘ₗ y) y₂ (g.symm y₁) hδ' hq
   have h1 : redMQ P.1 j.toLinearMap * redMQ P.1 (j⁻¹ : Sp X.E (R.N (m2 + 1 + 1) - 1 + 0) ≃ₗ[X.E] Sp X.E (R.N (m2 + 1 + 1) - 1 + 0)).toLinearMap = 1 := by
     have := redMQ_mul_inv P.1 hjiI
@@ -1082,8 +1076,7 @@ theorem det_inFrame {P : SB} {κ : GL (Fin (D.R.N i)) (D.host.E ⊗[D.host.F] Fi
     rw [map_mul, map_inv, map_mul, map_mul, map_inv, Units.val_mul, det_ratA, det_seamGL]
     congr 2
     rw [mul_comm, mul_inv_cancel_left]
-  rw [← e]
-  exact H
+  rwa [← e]
 
 end Frame
 
@@ -1231,8 +1224,7 @@ theorem locTopG_source : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {Ch : Char
     intro y key
     have := key y (fun _ => hy') (fun h => absurd hP h) (fun _ => hky) (fun h => absurd hP h)
     unfold locTop at this
-    rw [PhiTopG_eq]
-    exact this
+    rwa [PhiTopG_eq]
 
 end GlobalTheory.TopLawG
 end -- clump:auto
@@ -1291,8 +1283,7 @@ theorem rowLevTop_glint {sharp : Bool} {n : ℕ} {P : HeightOneSpectrum (𝓞 X.
     split_ifs at hg
     · exact hg.1
     · exact hg.1
-  rw [_root_.GlobalTheory.LastSteps.lamY_zero] at h
-  exact h
+  rwa [_root_.GlobalTheory.LastSteps.lamY_zero] at h
 
 theorem phiTop_rowLevTop (hm : R.m = m2 + 2) (sharp : Bool) {P : HeightOneSpectrum (𝓞 X.E)} (hP : P ∈ Pr.vGs)
     {g : Sp X.E ((R.N R.m - 1) + 0) ≃ₗ[X.E] Sp X.E ((R.N R.m - 1) + 0)} (hg : g ∈ rowLevTop Pr R sharp (R.N R.m) P)

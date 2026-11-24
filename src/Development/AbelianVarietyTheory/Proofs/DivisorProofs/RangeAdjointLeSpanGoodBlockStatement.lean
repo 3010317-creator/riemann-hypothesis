@@ -141,8 +141,7 @@ theorem eigSum_le_span {K V H I : Type} [Field K] [AddCommGroup V] [Module K V] 
     {C : (I → K) → Prop} {CC : (I → ℂ) → Prop} (hC : ∀ x, CC (fun i => σ (x i)) → C x) :
     Col.eigSum U CC ≤ Submodule.span ℂ (j '' (Col.eigSum op C : Set V)) := by
   have hcU : Col.PairComm U := fun i i' => GlobalTheory.AdjBlock.ext_of_span hsp fun v => by
-    simp only [Module.End.mul_apply, hU]
-    exact congrArg j (LinearMap.congr_fun (hc i i').eq v)
+    simpa only [Module.End.mul_apply, hU] using congrArg j (LinearMap.congr_fun (hc i i').eq v)
   have h1 : ∀ x, Col.eigAt op x ≤ (Col.eigAt U fun i => σ (x i)).comap j := by
     intro x v hv
     rw [Submodule.mem_comap, Col.eigAt, Submodule.mem_iInf]
@@ -190,8 +189,7 @@ theorem eigSum_le_span {K V H I : Type} [Field K] [AddCommGroup V] [Module K V] 
     have : c = (a + c) - a := by abel
     rw [this]
     exact Submodule.sub_mem _ (Submodule.mem_sup_left hw) (Submodule.mem_sup_right (h2 _ ha))
-  rw [h5, add_zero]
-  exact ha
+  rwa [h5, add_zero]
 
 theorem heckePolyOf_congr {L : Type} [Field L] (n q : ℕ) {a b : ℕ → L} (h : ∀ k, k ≤ n → a k = b k) :
     Formalism.L2.Col.heckePolyOf n q a = Formalism.L2.Col.heckePolyOf n q b := by
@@ -228,8 +226,7 @@ theorem range_le_span_blockSum {K V H E Pl ι : Type} [Field K] [AddCommGroup V]
   have hU : ∀ i v, U i (j v) = j (op i v) := by
     rintro ⟨P, k⟩ v
     by_cases hk : k ≤ m
-    · simp only [U, ite_eq_left hk]
-      exact (hT P k hk v).symm
+    · simpa only [U, ite_eq_left hk] using (hT P k hk v).symm
     · simp only [U, ite_eq_right hk]
       rw [hz P k (not_le.1 hk)]
       simp
@@ -245,8 +242,7 @@ theorem range_le_span_blockSum {K V H E Pl ι : Type} [Field K] [AddCommGroup V]
     simp only [Polynomial.map_list_prod, List.map_map, Function.comp_def, Col.map_blockPoly]
   · rintro ⟨P, k⟩
     by_cases hk : k ≤ m
-    · simp only [U, x, ite_eq_left hk]
-      exact hev c w hw P k hk
+    · simpa only [U, x, ite_eq_left hk] using hev c w hw P k hk
     · simp only [U, x, ite_eq_right hk]
       simp
 
@@ -584,8 +580,7 @@ theorem eigSum_le_span_ZH {K G Pl0 : Type} [Field K] [NumberField K] [StarRing K
   refine (eigSum_le_span j hj hsp hOk.comm hOk.split hc _).trans (Submodule.span_mono (Set.image_mono ?_))
   refine eigSum_mono fun x hx P => ?_
   have h1 := hx P
-  rw [← map_heckePolyOf σ _ _ fun k => x (P, k), Polynomial.map_dvd_map', hn] at h1
-  exact h1
+  rwa [← map_heckePolyOf σ _ _ fun k => x (P, k), Polynomial.map_dvd_map', hn] at h1
 
 end Abstract
 

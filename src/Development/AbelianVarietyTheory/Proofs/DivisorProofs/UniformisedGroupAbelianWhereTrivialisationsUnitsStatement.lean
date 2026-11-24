@@ -576,7 +576,6 @@ theorem exists_dominating_dvr : ∀ (F : Type) [Field F] [CharZero F] (T' : Subr
   have hLF : ∀ a : T', ((algebraMap T' L a : L) : F) = a := by
     intro a
     rw [IsScalarTower.algebraMap_apply T' K L]
-    show algebraMap K F (algebraMap T' K a) = a
     exact IsFractionRing.lift_algebraMap (K := K) hι a
   have hcoe : ∀ a : T', (((algebraMap T' C a : C) : L) : F) = a := by
     intro a
@@ -685,8 +684,7 @@ theorem eq_zero_of_sum_eq_zero_of_unit_mul_pow {R : Type*} [CommRing R] [IsDomai
     (hc : ∀ i, c i ≠ 0 → ∃ (n : ℕ) (w : R), IsUnit w ∧ c i = w * ϖ ^ (i.val + e * n))
     (hsum : ∑ i, c i = 0) : ∀ i, c i = 0 := by
   classical
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   choose! n w hw hcw using hc
   set S := Finset.univ.filter (fun i => c i ≠ 0) with hS
   have hSne : S.Nonempty := by
@@ -764,8 +762,7 @@ theorem ramification_le_card_of_span :
         simp only [f, hDdef]
         rw [← Finset.mul_prod_erase Finset.univ d (Finset.mem_univ i)]
         ring
-      rw [heq]
-      exact this
+      rwa [heq]
     have hli : LinearIndependent T' f := by
       rw [Fintype.linearIndependent_iff]
       intro g hg
@@ -802,8 +799,7 @@ theorem ramification_le_card_of_span :
     let f' : Fin e → Submodule.span T' (s : Set F) := fun i => ⟨f i, hfspan i⟩
     have hli' : LinearIndependent T' f' :=
       LinearIndependent.of_comp (Submodule.span T' (s : Set F)).subtype hli
-    have hcard := hli'.cardinal_le_rank.trans (rank_span_finset_le s)
-    simpa using hcard
+    simpa using hli'.cardinal_le_rank.trans (rank_span_finset_le s)
 
 end GlobalTheory
 end -- clump:auto
@@ -1074,8 +1070,7 @@ theorem closedPoint_mem_abLocus_of_fixedTorsion : ∀ (R : Type) [CommRing R] [I
       rfl
     rw [h]
     exact IsLocalRing.comap_closedPoint io
-  rw [← e]
-  exact h₂
+  rwa [← e]
 
 end GlobalTheory.FixedTorsionTrait
 

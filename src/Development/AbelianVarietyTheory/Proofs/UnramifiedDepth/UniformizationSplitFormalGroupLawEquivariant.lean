@@ -83,8 +83,7 @@ private theorem chi_ext {X S : Type} [AddCommGroup X] [CommRing S] {r : ℕ} (β
     (h : ∀ j, (χ (Multiplicative.ofAdd (β j)) : S) = χ' (Multiplicative.ofAdd (β j))) : χ = χ' := by
   have : (MonoidHom.toAdditiveRight χ).toIntLinearMap = (MonoidHom.toAdditiveRight χ').toIntLinearMap :=
     β.ext fun j => congrArg Additive.ofMul (Units.ext (h j))
-  refine MonoidHom.ext fun y => ?_
-  exact congrArg Additive.toMul (LinearMap.congr_fun this y.toAdd)
+  exact MonoidHom.ext fun y => congrArg Additive.toMul (LinearMap.congr_fun this y.toAdd)
 
 private theorem chi_ex {X S : Type} [AddCommGroup X] [CommRing S] {r : ℕ} (β : Module.Basis (Fin r) ℤ X)
     (t : Fin r → S) (ht : ∀ i, IsNilpotent (t i)) :
@@ -996,8 +995,7 @@ private theorem exists_split_thickening {R : Type} [CommRing R] {d : ℕ} (S : T
   have hle : RingHom.ker ρ ≤ J.comap π := fun t ht => by
     have h1 : t.1.1 = 0 := ht
     have h2 : Ideal.Quotient.mk J t.1.1 = Ideal.Quotient.mk J t.1.2 := t.2
-    rw [h1, map_zero, eq_comm, Ideal.Quotient.eq_zero_iff_mem] at h2
-    exact h2
+    rwa [h1, map_zero, eq_comm, Ideal.Quotient.eq_zero_iff_mem] at h2
   refine ⟨N + 1, le_bot_iff.1 fun t ht => ?_⟩
   have h1 : t.1.1 = 0 := (Ideal.pow_le_self (Nat.succ_ne_zero N) ht : t ∈ RingHom.ker ρ)
   have h2 := Ideal.le_comap_pow π N (Ideal.pow_right_mono hle N (Ideal.pow_le_pow_right (Nat.le_succ N) ht))
@@ -1216,8 +1214,7 @@ theorem lin_tangentSeq_equivariant : ∀ (R : Type) [CommRing R] (I : Ideal R) [
     have h1 := hc S h (x S (tv e v))
     rw [hα.2 S _ (tv_nil he v), nv_tv he α hα.1, hq S h _ (tv_nil he _), hq S h _ (tv_nil he _),
       nv_tv he Q hQ, nv_tv he Q hQ, hαB.2 S _ (tv_nil he _), nv_tv he αB hαB.1] at h1
-    rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
-    exact h1
+    rwa [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
   · refine hx.inj S _ _ (tv_nil he _) (tv_nil he _) ?_
     let L : X →ₗ[ℤ] R := β.constr ℤ v
     have hL : ∀ j, L (β j) = v j := fun j => β.constr_basis ℤ v j
@@ -1232,8 +1229,7 @@ theorem lin_tangentSeq_equivariant : ∀ (R : Type) [CommRing R] (I : Ideal R) [
         show 1 + algebraMap R S (L (hm (β j))) * e = _
         rw [hL']; rfl),
       nv_tv he J hJ, nv_tv he J hJ, hα.2 S _ (tv_nil he _), nv_tv he α hα.1] at h1
-    rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
-    exact h1
+    rwa [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
 
 end GlobalTheory.ChF
 end -- clump:auto
@@ -1301,8 +1297,7 @@ private theorem splitEx_of_exact {K : Type} [CommRing K] {d r g : ℕ} (A : Matr
   have hA : A * A' = 1 - B' * B := by
     ext i j
     have := congrFun (ht j) i
-    rw [Matrix.mulVec_single_one] at this
-    exact this
+    rwa [Matrix.mulVec_single_one] at this
   refine ⟨h0, A', B', ?_, hB, by rw [hA]; simp⟩
   have h5 : A * (A' * A - 1) = 0 := by
     rw [Matrix.mul_sub, ← Matrix.mul_assoc, hA, Matrix.sub_mul, Matrix.mul_assoc, h0]; simp
@@ -1434,8 +1429,7 @@ theorem tangent_splitEx : ∀ (R : Type) [CommRing R] (I : Ideal R) [IsAdicCompl
       have h3 := E.i_inj _ _ h2
       have h4 : ∀ j, ((χ (Multiplicative.ofAdd (β j)) : DualNumber K) - 1).fst = 0 := fun j => by
         have := congrArg Units.val (DFunLike.congr_fun h3 (Multiplicative.ofAdd (β j)))
-        rw [TrivSqZeroExt.fst_sub, TrivSqZeroExt.fst_one, sub_eq_zero]
-        exact this
+        rwa [TrivSqZeroExt.fst_sub, TrivSqZeroExt.fst_one, sub_eq_zero]
       have h5 := hi' χ _ (fun j => (sub_eq_iff_eq_add'.1 (congrFun (eq_epsV _ h4) j)))
       rw [hχ] at h5
       exact ⟨_, (epsV_inj (hx.inj _ _ _ (epsV_nil _) (epsV_nil _) h5)).symm⟩

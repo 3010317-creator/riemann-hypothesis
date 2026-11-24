@@ -57,8 +57,7 @@ namespace GlobalTheory.LocGL
 theorem exists_linearEquiv_of_subsingleton {G V : Type} [Group G] [Subsingleton G] [AddCommGroup V] [Module ℂ V]
     {π : Representation ℂ G V} (hi : π.IsIrreducible) : Nonempty (V ≃ₗ[ℂ] ℂ) := by
   have hst : ∀ (U : Submodule ℂ V) (g : G) ⦃v : V⦄, v ∈ U → π g v ∈ U := fun U g v hv => by
-    rw [Subsingleton.elim g 1, map_one]
-    exact hv
+    rwa [Subsingleton.elim g 1, map_one]
   have := hi
   obtain ⟨v, hv⟩ : ∃ v : V, v ≠ 0 := by
     by_contra h

@@ -108,10 +108,8 @@ theorem exists_unique_point_of_local (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ
             X.presheaf.stalkSpecializes (specializes_of_eq hc.symm) = 𝟙 _ := by
           rw [TopCat.Presheaf.stalkSpecializes_comp]
           exact TopCat.Presheaf.stalkSpecializes_refl _ _
-        have h4 := congrArg (fun f => f.hom s) h3
-        exact h4
-      rw [h2, hψ, hsa'] at h1'
-      exact h1'
+        exact congrArg (fun f => f.hom s) h3
+      rwa [h2, hψ, hsa'] at h1'
   · rintro y ⟨hc, hv⟩
     refine key y hc fun s => ?_
     obtain ⟨s0, hs0⟩ : ∃ s0, s0 = (X.presheaf.stalkSpecializes (specializes_of_eq hc.symm)).hom s := ⟨_, rfl⟩

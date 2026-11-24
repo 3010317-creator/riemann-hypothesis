@@ -205,8 +205,7 @@ theorem exists_gen (B : Ideal (𝓞 D.host.E)) (hB : B ≠ ⊥) : ∃ a a' : EAf
       refine int_of_mul Q hn (o := d) ?_
       have hd' := congrArg (algebraMap (𝓞 D.host.E) D.host.E) hd
       rw [map_mul, map_mul] at hd'
-      rw [← mul_assoc, mul_inv_eq_iff_eq_mul₀ hβE, mul_comm (d : D.host.E)]
-      exact hd'
+      rwa [← mul_assoc, mul_inv_eq_iff_eq_mul₀ hβE, mul_comm (d : D.host.E)]
     · rw [c0 _ Q hQ, mul_one]
       exact int_of_eq Q (o := b) rfl
   · have hB' : (B : FI D) ≠ 0 := FractionalIdeal.coeIdeal_ne_zero.2 hB
@@ -625,8 +624,7 @@ theorem cpt_prodId_mem (S : Finset (Pl D.host.E)) (y : ∀ w : S, (Kw w.1)ˣ) (Q
   · intro b _ hb
     rw [cpt_locIdele]
     exact finSingle_ne (fun h => hb (Subtype.ext h.symm)) _
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem cpt_prodId_notMem (S : Finset (Pl D.host.E)) (y : ∀ w : S, (Kw w.1)ˣ) {Q : Pl D.host.E} (hQ : Q ∉ S) :
     cpt (D := D) Q (toEAf D (prodId S y : AE D)) = 1 := by
@@ -715,8 +713,7 @@ theorem inId_iff (S : Finset (Pl D.host.E)) (c : Pl D.host.E → ℕ) {z : EAf D
   constructor
   · rintro ⟨h1, h2⟩ w hw
     exact v_le_of_mem_idS (s := ⟨z, h1⟩) (h.le.trans (Finset.inf_le hw)) h2
-  · intro H
-    exact ⟨hz, mem_idS_of_v_le (w := fun w => w) h0 h (s := ⟨z, hz⟩) H⟩
+  · exact fun H => ⟨hz, mem_idS_of_v_le (w := fun w => w) h0 h (s := ⟨z, hz⟩) H⟩
 
 
 open Classical in
@@ -992,10 +989,8 @@ theorem cpt_prod_locIdele (S : Finset (Pl D.host.E)) (u : ∀ w : S, (Kw (D := D
   refine ⟨fun hQ => ?_, fun hQ => ?_⟩
   · rw [Finset.prod_eq_single ⟨Q, hQ⟩]
     · rw [GlobalTheory.LFun.finSingle_self]
-    · intro b _ hb
-      exact GlobalTheory.LFun.finSingle_ne (fun h => hb (Subtype.ext h.symm)) _
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun b _ hb => GlobalTheory.LFun.finSingle_ne (fun h => hb (Subtype.ext h.symm)) _
+    · exact fun h => absurd (Finset.mem_univ _) h
   · exact Finset.prod_eq_one fun w _ => GlobalTheory.LFun.finSingle_ne (fun h => hQ (by rw [h]; exact w.2)) _
 
 theorem infPart_prod_locIdele (S : Finset (Pl D.host.E)) (u : ∀ w : S, (Kw (D := D) w.1)ˣ) :
@@ -1156,8 +1151,7 @@ theorem std_eq_prod' (ν : (AE D)ˣ →* Circle) {e : AE D} {S : Finset (Pl D.ho
     obtain ⟨r', s', h1, h2, h3⟩ := hZ w r s
     rw [h3, Fin.ext h1, Fin.ext h2]
     rfl
-  simp only [this]
-  exact std_eq_prod ν he c Y hY
+  simpa only [this] using std_eq_prod ν he c Y hY
 
 theorem change_frames {R K : Type} [CommRing R] [Field K] (f : R →+* K) {n d : ℕ} (β β' : GL (Fin n) R) (γ γ' : GL (Fin d) R)
     (M : Matrix (Fin n) (Fin d) R) (ξ : R) (x : K) (hx : f ξ = x) (hξ : x ≠ 0) :

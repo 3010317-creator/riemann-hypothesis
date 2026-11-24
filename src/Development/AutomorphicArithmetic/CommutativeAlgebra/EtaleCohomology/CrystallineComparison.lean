@@ -63,8 +63,7 @@ private theorem mk_eq_iff (he : IsIdempotentElem e) (a b : R) :
   constructor
   · rintro ⟨c, hc⟩
     linear_combination e * hc - c * he.eq
-  · intro h
-    exact ⟨a - b, by linear_combination h⟩
+  · exact fun h => ⟨a - b, by linear_combination h⟩
 
 private theorem mk_self (he : IsIdempotentElem e) : factorMk e e = 1 := by
   rw [← map_one (factorMk e), mk_eq_iff he, mul_one, he.eq]
@@ -130,8 +129,7 @@ private theorem complete_quot (he : IsIdempotentElem e) {π : R} (h : IsAdicComp
     have := hL n
     rw [SModEq.sub_mem, mem_pow_iff] at this ⊢
     have h3 := map_dvd (factorMk e) this
-    rw [map_pow, map_sub, map_mul, mk_self he, one_mul, hg n] at h3
-    exact h3
+    rwa [map_pow, map_sub, map_mul, mk_self he, one_mul, hg n] at h3
 
 private theorem aic_quot (I : Ideal R) (h : ∀ P : R[X], P.Monic → 0 < P.natDegree → ∃ x, P.IsRoot x) :
     ∀ P : (R ⧸ I)[X], P.Monic → 0 < P.natDegree → ∃ x, P.IsRoot x := by

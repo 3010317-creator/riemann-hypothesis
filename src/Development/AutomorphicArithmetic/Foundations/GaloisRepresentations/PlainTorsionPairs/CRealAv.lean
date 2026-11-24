@@ -112,8 +112,7 @@ private theorem cr_set (p₀ : ℕ) (hp₀ : p₀ ≠ 0) [CharP (ResidueField O)
     have h1 : Φ.eps ↑(k.p0 g) = cycZ L Ω l g := by
       rw [k.galois_link_projection_coe, k.eps]
       rfl
-    rw [← h1]
-    exact hg'ε
+    rwa [← h1]
   have hdisc : (discr L).natAbs ≠ 0 := Int.natAbs_ne_zero.2 (NumberField.discr_ne_zero L)
   have hM' : 2 * M * p₀ * (discr L).natAbs ≠ 0 := by simp [hM, hp₀, hdisc]
   obtain ⟨v0, A0, p, hp, hpM', hnorm, hpv, hA0, hsplit0, hΨ0, hω0⟩ :=
@@ -144,14 +143,11 @@ private theorem cr_set (p₀ : ℕ) (hp₀ : p₀ ≠ 0) [CharP (ResidueField O)
   have hA : ∀ v, IsPlaceOver (A v) v := by
     intro v
     by_cases h : (l : 𝓞 (W.Lp L)) ∈ v.asIdeal
-    · simp only [A, dite_eq_left h]
-      exact he ⟨v, h⟩
+    · simpa only [A, dite_eq_left h] using he ⟨v, h⟩
     · by_cases h' : v = v0
       · simp only [A, dite_eq_right h, ite_eq_left h']
-        rw [h']
-        exact hA0
-      · simp only [A, dite_eq_right h, ite_eq_right h']
-        exact isPlaceOver_placeOf Ω v
+        rwa [h']
+      · simpa only [A, dite_eq_right h, ite_eq_right h'] using isPlaceOver_placeOf Ω v
   have hAl : ∀ v : W.Vl l L, A ↑v = k.pl (e v) := fun v => by
     simp only [A, dite_eq_left v.2]
   have hAv0 : A v0 = A0 := by simp [A, hlv0]
@@ -184,8 +180,7 @@ private theorem cr_set (p₀ : ℕ) (hp₀ : p₀ ≠ 0) [CharP (ResidueField O)
       rw [hq, Nat.cast_mul]
       exact v.asIdeal.mul_mem_right _ h
     · exact hsplit_of_valuation v ((natCast_place (hA v) M).2 (hfin.mem_toFinset.1 h).1)
-    · rw [h, hAv0]
-      exact hsplit0
+    · rwa [h, hAv0]
   let s : W.HidaSetting l L Ω :=
     { odd := ok.l_odd
       unr := fun A' v _ t ht => (k.mem_range_resP t).2
@@ -215,16 +210,12 @@ private theorem cr_set (p₀ : ℕ) (hp₀ : p₀ ≠ 0) [CharP (ResidueField O)
     rw [Set.Finite.mem_toFinset]
     rfl
   · show ¬ (A v0).valuation (M : Ω) < 1
-    rw [natCast_place (hA v0)]
-    exact hMv0
+    rwa [natCast_place (hA v0)]
   · show ∀ t ∈ Dec (A v0), _
-    rw [hAv0]
-    exact hΨ0
+    rwa [hAv0]
   · show ∃ t ∈ Dec (A v0), _
-    rw [hAv0]
-    exact hω0
-  · show ¬ p ∣ p₀
-    exact fun h => hpM' (dvd_mul_of_dvd_left (dvd_mul_of_dvd_right h _) _)
+    rwa [hAv0]
+  · exact fun h => hpM' (dvd_mul_of_dvd_left (dvd_mul_of_dvd_right h _) _)
 
 end
 
@@ -266,8 +257,7 @@ theorem UpperTheory.Gal.projectedFormsSystemPart.cRealAv :
         exact_mod_cast (Fact.out : l.Prime).ne_zero
       · intro u hu
         simp only [Set.mem_setOf_eq] at hu ⊢
-        rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-        exact hu
+        rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
     refine (h1.union (s.St.finite_toSet.union (Set.finite_singleton s.v0))).subset ?_
     intro v hv
     have hv' : (l : 𝓞 (W.Lp L)) ∈ v.asIdeal ∨ v ∈ s.St ∨ v = s.v0 := hv
@@ -387,8 +377,7 @@ theorem UpperTheory.Gal.projectedFormsSystemPart.cRealAv :
       exact CharP.cast_eq_zero _ l
     have h1 : y - 1 ∈ RingHom.ker (PadicInt.toZMod (p := l)) := by
       rw [PadicInt.ker_toZMod, ← hker, RingHom.mem_ker, map_sub, hy, map_one, sub_self]
-    rw [RingHom.mem_ker, map_sub, map_one, sub_eq_zero] at h1
-    exact h1
+    rwa [RingHom.mem_ker, map_sub, map_one, sub_eq_zero] at h1
   have hΨ1 : ∀ g ∈ V.frame.D0, ∀ i : Fin n, (r.chib i) g = W.pushCh (residue c₁.O) κ g := by
     intro g hg i
     obtain ⟨h, hh, rfl⟩ := Subgroup.mem_map.1 hg

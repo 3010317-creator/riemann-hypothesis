@@ -206,8 +206,7 @@ private theorem rc_hom (𝔪 : GroundTheory.Global.Modulus K) (f : Ideal (𝓞 K
     rcExt_mul f (FractionalIdeal.spanSingleton_ne_zero_iff.2 a.ne_zero)
       (FractionalIdeal.spanSingleton_ne_zero_iff.2 hcK), key c hc0 hc1, mul_one] at h3
   change rcExt f ((I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) : FractionalIdeal (𝓞 K)⁰ K) = 1
-  rw [← e, coe_toPrincipalIdeal]
-  exact h3
+  rwa [← e, coe_toPrincipalIdeal]
 
 end UpperTheory.V.Ws.Tw
 
@@ -235,8 +234,7 @@ theorem UpperTheory.V.Ws.Tw.rayChar :
       (CompanionTheory.FamInh.inertia_eq_bot_iff w u).2 (M.ramificationIdx_rayClassField_eq_one Ω hw u)
     refine ⟨fun σ hσ => hker ?_, fun σ hσ => ?_⟩
     · have := CompanionTheory.FamInh.res_mem_inertia hu hσ
-      rw [hI] at this
-      exact this
+      rwa [hI] at this
     · haveI : Finite (𝓞 (M.rayClassField Ω) ⧸ u.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ u.ne_bot
       have e : r σ = M.rayClassArtinEquiv Ω (M.primeClass hw) := by
         rw [M.rayClassArtinEquiv_primeClass Ω hw u]

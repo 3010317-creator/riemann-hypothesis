@@ -277,8 +277,7 @@ theorem _root_.GlobalTheory.T.divisible_group_tower_free : ∀ (p : ℕ) [Fact p
   have counit_eq (n : ℕ) (a : G.A n) :
       Bialgebra.counitAlgHom O (G.A n) a = (e n a).1 1 := by
     have h := hre.pt 0 n a
-    rw [map_zero] at h
-    exact h
+    rwa [map_zero] at h
   have mem_sq_iff (n : ℕ) (a : G.A n) :
       a ∈ RingHom.ker (Bialgebra.counitAlgHom O (G.A n)) ^ 2 ↔
         e n a ∈ BT.augIdeal (X.A n) ^ 2 := by
@@ -791,8 +790,7 @@ theorem exists_diag {C : Type} [Field C] {v : Valuation C NNReal} {O : Type} [Co
           rw [hφx, ite_eq_right fun hh => hij (Fin.ext hh.symm), zero_smul]
         · simp
       rwa [hxe]
-    · simp only [ite_eq_right h, zero_smul]
-      exact zero_mem _
+    · simpa only [ite_eq_right h, zero_smul] using zero_mem _
 
 end Diag
 
@@ -932,8 +930,7 @@ theorem dvd_mul_of_dvd_dlog (hv : v.Integers O) (hp : v (p : C) < 1) (G : PDivGr
   have h3 : q ∣ D a - φ w := hz _ (by
     rw [map_sub, hDa, sub_eq_zero, ← hψ]
     exact congrArg ψ ha)
-  have h4 := dvd_sub (key a) (h3.mul_left κ)
-  simpa [mul_sub] using h4
+  simpa [mul_sub] using dvd_sub (key a) (h3.mul_left κ)
 
 end Level
 
@@ -1082,8 +1079,7 @@ theorem finrank_le_add (B : M →ₗ[O] M →ₗ[O] O) (W N : Submodule O M)
       have h1 := h0 _ hay
       simp only [Submodule.coe_smul, map_smul, smul_eq_mul] at h1
       exact (mul_eq_zero.1 h1).resolve_left ha
-    · intro hx
-      exact funext fun j => hx _ (w j).2
+    · exact fun hx => funext fun j => hx _ (w j).2
   have h1 := finrank_range_add_ker Φ
   have h2 : Module.finrank O (LinearMap.range Φ) ≤ Module.finrank O W := by
     have := Submodule.finrank_le (LinearMap.range Φ)
@@ -1254,10 +1250,8 @@ theorem dlog_lagrangian : FarguesHodgeTate → ∀ (p : ℕ) [Fact p.Prime] (C :
   have hWN := le_of_finrank B (LinearMap.ker f) _ hN hNW (h3.trans_eq hM.symm)
   intro x
   constructor
-  · intro hx y hy
-    exact (hN x).1 (hWN hx) y hy
-  · intro hx
-    exact hNW ((hN x).2 hx)
+  · exact fun hx y hy => (hN x).1 (hWN hx) y hy
+  · exact fun hx => hNW ((hN x).2 hx)
 
 end GlobalTheory.CompanionTheory.Ar.HT
 end -- clump:auto
@@ -1413,8 +1407,7 @@ theorem exists_point {c : E ≃+* E} {κ : O} {N : ℕ} {La : Type} [AddCommGrou
   · refine { fg := ?_, linearIndepOn := ?_, span_eq_top := ?_ }
     · rw [LinearMap.range_eq_map]
       exact (Module.Finite.fg_top).map _
-    · intro s _ h
-      exact (LinearIndependent.iff_fractionRing O C).mp h
+    · exact fun s _ h => (LinearIndependent.iff_fractionRing O C).mp h
     · rw [eq_top_iff]
       intro x hx
       clear hx
@@ -1717,8 +1710,7 @@ theorem exists_HTPoint : FarguesHodgeTate → ∀ (p : ℕ) [Fact p.Prime] (C : 
       change pairing G O (τ b) (tateMap G G.dual O lam (τ a)) = Bp (τ a) (τ b) • muTate O ζ' h0 hs
       rw [hBp]
       exact pairing_tau hre hlam h0 hs a b
-    intro x y
-    exact LinearMap.congr_fun (LinearMap.congr_fun hbil x) y
+    exact fun x y => LinearMap.congr_fun (LinearMap.congr_fun hbil x) y
   have hperf := PDivGroup.tate_free_perfect p O C G
   have hbij : Function.Bijective (tateMap G G.dual O lam) :=
     tateMap_bijective lam (muTate O ζ' h0 hs) (hperf.2.2.2.2.2.1 ζ' h0 hs hprim') hperf.2.2.2.2.2.2.2 Bp hBpbij

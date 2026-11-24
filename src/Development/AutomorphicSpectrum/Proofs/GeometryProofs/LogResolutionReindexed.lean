@@ -382,16 +382,13 @@ theorem isDegreeOff_of_block : ∀ (K₀ K : Type) [Fintype K₀] [Fintype K] (J
     exact _root_.GroundTheory.Heights₂.Heights.Inter.PullbackDegreeCount.sameOrbit_flip (hlift x)
   · intro x x₀ hr
     exact R₀.inj x₀ (h x) (not_mem_mcPts_top _) (_root_.GroundTheory.Heights₂.Heights.Inter.PullbackDegreeCount.sameOrbit_comp (_root_.GroundTheory.Heights₂.Heights.Inter.PullbackDegreeCount.sameOrbit_flip hr) (_root_.GroundTheory.Heights₂.Heights.Inter.PullbackDegreeCount.sameOrbit_flip (hlift x)))
-  · intro w hw h0
-    exact hcount w hw (hev w h0).1
-  · intro z hz hzJ
-    exact absurd hzJ (not_mem_mcPts_top z)
+  · exact fun w hw h0 => hcount w hw (hev w h0).1
+  · exact fun z hz hzJ => absurd hzJ (not_mem_mcPts_top z)
   · intro z hz w hw hr h0
     rw [eval_map_rename']
     obtain ⟨c, hc, e⟩ := hr
     rw [e, ReciprocityTheory.ChartRestriction.G.Geo.eval_smul_homog _ _ hGh, h0, mul_zero]
-  · intro z hz w₀ hw₀ hr h0
-    exact hloc z hz w₀ hw₀ hr (hev w₀ h0).2
+  · exact fun z hz w₀ hw₀ hr h0 => hloc z hz w₀ hw₀ hr (hev w₀ h0).2
 
 end GlobalTheory.CompanionTheory.Ar.Chg.DegBlock
 end -- clump:auto

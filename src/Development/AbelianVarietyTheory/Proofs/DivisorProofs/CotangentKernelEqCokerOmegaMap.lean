@@ -91,8 +91,7 @@ theorem cot_kernel_eq_coker_omegaMap : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [
         have hz0 : dUnit (R := k) z = 0 := by
           have hzI : z ∈ augIdeal k (G.A 1) := Ideal.pow_le_self two_ne_zero hz
           have hεz : counitAlgHom k (G.A 1) z = 0 := hzI
-          rw [dUnit, AugCot.d_eq_zero_iff, hεz, map_zero, sub_zero]
-          exact hz
+          rwa [dUnit, AugCot.d_eq_zero_iff, hεz, map_zero, sub_zero]
         obtain ⟨u, hu⟩ := dUnit_mem_range_of_mem_kerIdeal (q.app 1) hy
         obtain ⟨v, rfl⟩ := (H.omegaLevel_one_bijective hp).2 u
         refine ⟨v, (G.omegaLevel_one_bijective hp).1 ?_⟩
@@ -100,8 +99,7 @@ theorem cot_kernel_eq_coker_omegaMap : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [
         rw [hu, ← hx2, ← hyz]
         change dUnit (R := k) y = dUnit (R := k) (y + z)
         rw [show dUnit (R := k) (y + z) = dUnit (R := k) y + dUnit (R := k) z from map_add _ y z, hz0, add_zero]
-      · intro hw
-        exact part1 h2 w hw
+      · exact fun hw => part1 h2 w hw
     rw [← hker]
     exact (Φ.quotKerEquivOfSurjective hΦ).finrank_eq
   · rw [cotMap_comp]

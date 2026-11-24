@@ -113,7 +113,6 @@ theorem map_eq_one_of_finPart_eq_one : ∀ (D : D7) {A : Type} [Group A] (χ : (
   · rw [h] at h0; exact absurd h0 (Set.notMem_empty _)
   · have h1 : (1 : ℝ) ∈ f ⁻¹' (χ.ker : Set (AE D)ˣ) := h ▸ Set.mem_univ _
     have hf1 : f 1 = x := Units.ext hγ1
-    rw [Set.mem_preimage, hf1] at h1
-    exact h1
+    rwa [Set.mem_preimage, hf1] at h1
 
 end GlobalTheory.UnivCover.OpenKerChar

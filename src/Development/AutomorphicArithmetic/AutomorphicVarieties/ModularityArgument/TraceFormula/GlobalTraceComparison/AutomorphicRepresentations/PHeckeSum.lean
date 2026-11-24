@@ -84,8 +84,7 @@ private theorem coset_integral (μ : Measure G) [μ.IsMulLeftInvariant] {K : Sub
     by_cases hy : (QuotientGroup.mk y : G ⧸ K) ∈ T
     · have hyc : y ∈ c (QuotientGroup.mk y) := (hcm _ y).2 rfl
       rw [Finset.sum_eq_single (QuotientGroup.mk y : G ⧸ K), Set.indicator_of_mem hyc, hval _ y hyc]
-      · intro q _ hq
-        exact Set.indicator_of_notMem (fun hyq => hq ((hcm q y).1 hyq).symm) _
+      · exact fun q _ hq => Set.indicator_of_notMem (fun hyq => hq ((hcm q y).1 hyq).symm) _
       · exact fun h' => (h' hy).elim
     · have hy0 : h y = 0 := by
         by_contra h'

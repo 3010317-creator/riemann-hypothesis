@@ -94,11 +94,9 @@ theorem exists_isExpChart_rescale : ∀ (E : Type) [Field E] [NumberField E] [Is
     constructor
     · rintro ⟨h, -⟩
       exact (hnorm z).1 h
-    · intro h
-      exact ⟨(hnorm z).2 h, hball (mem_ball_zero_iff.2 ((hnorm z).2 h))⟩
+    · exact fun h => ⟨(hnorm z).2 h, hball (mem_ball_zero_iff.2 ((hnorm z).2 h))⟩
   have hsrc : ∀ x ∈ e.source, x ∈ e0.source ∧ ‖e0 x‖ < ρ := fun x hx => by
-    rw [he_src] at hx
-    exact hx
+    rwa [he_src] at hx
   refine ⟨e, fun x w => ex x (A (e0 x) *ᵥ w), ⟨he_tgt, ?_, ?_, ?_, ?_, ?_⟩, he_src, fun x _ => he_app x, fun _ _ _ => rfl⟩
   · intro k V _ _ _ B x hB hx hm
     have hd := hhol k V B x hB hx fun b hb => (hsrc _ (hm hb)).1
@@ -108,12 +106,10 @@ theorem exists_isExpChart_rescale : ∀ (E : Type) [Field E] [NumberField E] [Is
     refine GlobalTheory.HolPeriods.isHolTo_congr (GlobalTheory.HolPeriods.isHolTo_comp hsymm Metric.isOpen_ball
       (φ := fun z => ρ • z) ?_ ?_) fun z _ => by rw [he_symm]
     · exact differentiableOn_id.const_smul ρ
-    · intro z hz
-      exact hball (mem_ball_zero_iff.2 ((hnorm z).2 (mem_ball_zero_iff.1 hz)))
+    · exact fun z hz => hball (mem_ball_zero_iff.2 ((hnorm z).2 (mem_ball_zero_iff.1 hz)))
   · intro x hx v w
     obtain ⟨h1, h2⟩ := hsrc x hx
-    simp only [Matrix.mulVec_add]
-    exact (hexp x h1 h2).1 _ _
+    simpa only [Matrix.mulVec_add] using (hexp x h1 h2).1 _ _
   · rw [he_tgt]
     have hmaps : Set.MapsTo (fun zw : (Fin n → ℂ) × (Fin g → ℂ) => (ρ • zw.1, A (ρ • zw.1) *ᵥ zw.2))
         (Metric.ball 0 1 ×ˢ Set.univ) (Metric.ball 0 ρ ×ˢ Set.univ) := fun zw hzw =>
@@ -148,13 +144,11 @@ theorem exists_isExpChart_rescale : ∀ (E : Type) [Field E] [NumberField E] [Is
       simpa only [hk] using GlobalTheory.HolPeriods.isDerivAt0_comp_equiv (fun u => (ex x u).left) k w v
     obtain ⟨-, hT1, hT2⟩ := hexp x h1 h2
     refine ⟨fun w => ?_, fun v hv => ?_⟩
-    · simp only [hD]
-      exact hT1 _
+    · simpa only [hD] using hT1 _
     · obtain ⟨w', hw', hu⟩ := hT2 v hv
       refine ⟨k.symm w', ?_, fun w hw => ?_⟩
       · beta_reduce
-        rw [hD, ← hk, k.apply_symm_apply]
-        exact hw'
+        rwa [hD, ← hk, k.apply_symm_apply]
       · beta_reduce at hw
         rw [hD, ← hk] at hw
         rw [← hu _ hw, k.symm_apply_apply]
@@ -386,10 +380,8 @@ theorem analyticAt_inv_apply {M : V → Matrix (Fin g) (Fin g) ℂ} {z : V}
     refine analyticAt_det fun a b => ?_
     by_cases hj : a = j
     · subst hj
-      simp only [Matrix.updateRow_self]
-      exact analyticAt_const
-    · simp only [Matrix.updateRow_ne hj]
-      exact h a b
+      simpa only [Matrix.updateRow_self] using analyticAt_const
+    · simpa only [Matrix.updateRow_ne hj] using h a b
   simp only [Matrix.inv_def, Ring.inverse_eq_inv', Matrix.smul_apply, smul_eq_mul]
   exact ((analyticAt_det h).inv hd).mul hadj
 
@@ -594,8 +586,7 @@ theorem exists_framed_of_chart {n a : ℕ} (e0 : OpenPartialHomeomorph (CxPts (g
     refine ⟨(colMat κ (ζ 0))⁻¹ *ᵥ w, ?_⟩
     rw [hex' _ hx0, e00, mulVec_mulVec_inv (hdet 0 h0b)]
   · exact (analyticOnNhd_frameSec hρ κ han hdet).mono (ball_subset_ball (by norm_num))
-  · intro z hzb
-    exact linearIndependent_inv_mulVec (hdet _ (hsc z hzb)) (hz _ (hsc z hzb)).2.1
+  · exact fun z hzb => linearIndependent_inv_mulVec (hdet _ (hsc z hzb)) (hz _ (hsc z hzb)).2.1
   · intro z hzb i
     obtain ⟨h1, h2, h3⟩ := key z hzb
     rw [hex' _ h1, h3, frameSec, mulVec_mulVec_inv (hdet _ (hsc z hzb)), h2]

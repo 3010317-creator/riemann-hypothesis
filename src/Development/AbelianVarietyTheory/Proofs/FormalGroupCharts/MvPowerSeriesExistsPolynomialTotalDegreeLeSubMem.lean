@@ -100,15 +100,13 @@ theorem exists_polynomial_totalDegree_le_sub_mem : ∀ (R : Type) [CommRing R] (
     have h2 : G - Φ (fun o => o.elim G c) = b := by
       change G - (((truncTotal N G : MvPolynomial σ O) : MvPowerSeries σ O) + ∑ j, c j * f j) = b
       linear_combination -hab
-    rw [h2, Ideal.smul_top_eq_map]
-    exact hb
+    rwa [h2, Ideal.smul_top_eq_map]
   obtain ⟨x, hx⟩ := hΦ g
   refine ⟨truncTotal N (x none), ?_,
     Ideal.mem_span_range_iff_exists_fun.2 ⟨fun j => x (some j), ?_⟩⟩
   · refine Finset.sup_le fun d hd => ?_
     by_contra hlt
-    refine MvPolynomial.mem_support_iff.1 hd (coeff_truncTotal_eq_zero _ ?_)
-    exact (not_le.1 hlt).le
+    exact MvPolynomial.mem_support_iff.1 hd (coeff_truncTotal_eq_zero _ (not_le.1 hlt).le)
   · rw [← hx]
     exact (add_sub_cancel_left _ _).symm
 

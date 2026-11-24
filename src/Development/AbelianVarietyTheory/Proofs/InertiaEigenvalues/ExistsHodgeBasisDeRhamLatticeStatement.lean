@@ -378,8 +378,7 @@ theorem exists_adapted_family (F : ℤ → Submodule k M) (hF : Antitone F) :
     rw [this, ← Submodule.map_span, bC.span_eq, Submodule.map_top, Submodule.range_subtype]
   have hdeg' : ∀ j, a₀ + 1 ≤ h j := by
     intro j
-    by_contra hj
-    push Not at hj
+    by_contra! hj
     have hvj : v j ∈ D' := hspan ▸ Submodule.subset_span ⟨j, rfl⟩
     exact (hdeg j).2 (hF (show h j + 1 ≤ a₀ + 1 by omega) (Submodule.mem_inf.mp hvj).2)
   refine ⟨ι ⊕ Fin (Module.finrank k C), inferInstance, Sum.elim v c,
@@ -476,8 +475,7 @@ theorem invariant_basis_of_isDR : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
   have hQ' : ∀ g : ↥(GK K), M g * (Q : Matrix (Fin d) (Fin d) P.R.BdR).map (P.actQdR (g : GQ l)) = Q := by
     intro g
     have h := hQ g
-    rw [toMatrix_qRep, Matrix.map_map] at h
-    exact h
+    rwa [toMatrix_qRep, Matrix.map_map] at h
   letI : Field P.R.BdR := (_root_.GlobalTheory.PMon.bdR_tied l P AI T).1.toField
   set Qm : Matrix (Fin d) (Fin d) P.R.BdR := (Q : Matrix (Fin d) (Fin d) P.R.BdR) with hQm
   have hQinj : ∀ v w : Fin d → P.R.BdR, Qm *ᵥ v = Qm *ᵥ w → v = w := by
@@ -496,8 +494,7 @@ theorem invariant_basis_of_isDR : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
       simp only [Finset.sum_apply, Pi.smul_apply, Pi.zero_apply] at this
       simp only [Algebra.smul_def] at this
       rw [Pi.zero_apply, ← this]
-      simp only [Matrix.mulVec, dotProduct]
-      exact Finset.sum_congr rfl fun j _ => mul_comm _ _
+      simpa only [Matrix.mulVec, dotProduct] using Finset.sum_congr rfl fun j _ => mul_comm _ _
     have h0 := hQinj _ _ hv
     intro j
     have := congrFun h0 j
@@ -505,8 +502,7 @@ theorem invariant_basis_of_isDR : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
     exact (FaithfulSMul.algebraMap_injective ↥K.1 P.R.BdR) (by rw [this, map_zero])
   · intro j g
     funext i
-    have h := congrFun (congrFun (hQ' g) i) j
-    simpa [hM, Matrix.mul_apply, Matrix.mulVec, dotProduct] using h
+    simpa [hM, Matrix.mul_apply, Matrix.mulVec, dotProduct] using congrFun (congrFun (hQ' g) i) j
   · intro c hc
     obtain ⟨w, hw⟩ : ∃ w, Qm *ᵥ w = c :=
       ⟨((Q⁻¹ : GL (Fin d) P.R.BdR) : Matrix (Fin d) (Fin d) P.R.BdR) *ᵥ c, by
@@ -532,8 +528,7 @@ theorem invariant_basis_of_isDR : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
     rw [← hw]
     funext i
     simp only [Finset.sum_apply, Pi.smul_apply, Matrix.mulVec, dotProduct]
-    simp only [Algebra.smul_def, hk]
-    exact Finset.sum_congr rfl fun j _ => mul_comm _ _
+    simpa only [Algebra.smul_def, hk] using Finset.sum_congr rfl fun j _ => mul_comm _ _
 
 end GlobalTheory.DRMat
 end -- clump:auto

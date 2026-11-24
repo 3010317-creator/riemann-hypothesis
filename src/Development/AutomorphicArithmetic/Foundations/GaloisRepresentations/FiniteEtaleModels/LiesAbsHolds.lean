@@ -469,9 +469,7 @@ theorem UpperTheory.Gal.FiniteEtaleModels.lPts_holds :
       (ad _ (K₀.mul_mem hg hn0)).2).1 (by
         rw [← trm _ _ hn0 hg]
         simpa only [Category.assoc] using hyy)
-    refine ⟨⟨(c, QuotientGroup.mk ⟨k, hk⟩), hmem⟩, ?_⟩
-    apply Subtype.ext
-    exact Prod.ext rfl hφ
+    exact ⟨⟨(c, QuotientGroup.mk ⟨k, hk⟩), hmem⟩, Subtype.ext (Prod.ext rfl hφ)⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.FiniteEtaleModels.LPtsHolds =====
@@ -550,8 +548,7 @@ theorem liesAbs_of (hP : LPts) (hC : LCount) (hI : LIdx) (hS : SigmaFEt) : LiesA
   let u : (g j).I → G.GAf := fun c => (↑(Quotient.out (cls c)) : G.GAf)⁻¹ * ↑(Quotient.out c)
   have hmem : ∀ c, u c ∈ K₀ := by
     intro c
-    have h := QuotientGroup.eq.1 (QuotientGroup.out_eq' (cls c))
-    simpa [Subgroup.mem_subgroupOf] using h
+    simpa [Subgroup.mem_subgroupOf] using QuotientGroup.eq.1 (QuotientGroup.out_eq' (cls c))
   let kc : (g j).I → (T.X.Z (T.lev (g j).M) ⟶ Y') := fun c =>
     T.X.tr _ _ (u c) (hq0.adm _ (hmem c)).1 (hq0.adm _ (hmem c)).2 ≫ π'
   choose tb0 htb1 htb2 using ht
@@ -559,8 +556,7 @@ theorem liesAbs_of (hP : LPts) (hC : LCount) (hI : LIdx) (hS : SigmaFEt) : LiesA
   have hsq' : ∀ c, T.X.tr (T.lev (g j).M) (T.lev N) 1 a1 b1 ≫ C.π = kc c ≫ s := by
     intro c
     rw [hc]
-    simp only [kc, Category.assoc]
-    exact (hq0.inv _ (hmem c) _ _).symm
+    simpa only [kc, Category.assoc] using (hq0.inv _ (hmem c) _ _).symm
   have hsq : (T.tower N g).s j ≫ C.π =
       (Limits.Sigma.desc fun c => kc c ≫ Limits.Sigma.ι (fun _ : ↥(g j).K ⧸ K₀.subgroupOf (g j).K => Y') (cls c)) ≫
         Limits.Sigma.desc fun _ : ↥(g j).K ⧸ K₀.subgroupOf (g j).K => s :=

@@ -58,8 +58,7 @@ private theorem cmp_eq {w : Plc L} (h : ((l : ℕ) : 𝓞 L) ∉ w.asIdeal) (x :
 private theorem cmp_mem {w : Plc L} (x : UA L n) (P : Subgroup (GLw n w)) (hx : cLoc w x ∈ P) :
     CaseU.cmp n w ((away l L n).rangeRestrict x) ∈ P := by
   by_cases h : ((l : ℕ) : 𝓞 L) ∉ w.asIdeal
-  · rw [cmp_eq h]
-    exact hx
+  · rwa [cmp_eq h]
   · unfold CaseU.cmp
     rw [dite_eq_right h]
     exact P.one_mem

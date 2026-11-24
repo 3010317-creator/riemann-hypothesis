@@ -62,8 +62,7 @@ theorem expNegTop_coe (q : ℚ) : ((expNegTop (q : WithTop ℚ) : ℝ≥0) : ℝ
 
 theorem expNegTop_zero : expNegTop 0 = 1 := by
   apply NNReal.coe_injective
-  have h := expNegTop_coe 0
-  simpa using h
+  simpa using expNegTop_coe 0
 
 theorem expNegTop_add (a b : WithTop ℚ) : expNegTop (a + b) = expNegTop a * expNegTop b := by
   induction a using WithTop.recTopCoe with
@@ -115,9 +114,7 @@ theorem exists_nnreal_valuation_of_addValuation :
   intro F _ v
   refine ⟨expNegValuation v, fun x y => expNegTop_le_iff _ _, ?_, ?_, ?_⟩
   · exact Subtype.val_injective
-  · intro x
-    exact (expNegValuation_le_one_iff v _).mpr x.2
-  · intro r hr
-    exact ⟨⟨r, (expNegValuation_le_one_iff v r).mp hr⟩, rfl⟩
+  · exact fun x => (expNegValuation_le_one_iff v _).mpr x.2
+  · exact fun r hr => ⟨⟨r, (expNegValuation_le_one_iff v r).mp hr⟩, rfl⟩
 
 end GlobalTheory

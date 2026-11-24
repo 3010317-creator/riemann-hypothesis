@@ -503,8 +503,7 @@ theorem mem_smul_iff (X : Data E r) {L : Lt E r} (hL : SelfD X L) {𝔪 : Ideal 
         obtain ⟨t, ht⟩ := Ideal.mem_span_singleton'.1 (h𝔪 ▸ Ideal.mul_mem_mul ha hb')
         have ht' : (t : E) * M = a * cc (b : E) := by
           have h5 := congrArg (algebraMap (𝓞 E) E) ht
-          rw [map_mul, map_mul, map_natCast] at h5
-          exact h5
+          rwa [map_mul, map_mul, map_natCast] at h5
         obtain ⟨k, hk⟩ := (hL.2 _).1 (L.smul_mem t hu) v hv
         refine ⟨k, ?_⟩
         rw [← hk, ← EF_inv_smul]
@@ -533,8 +532,7 @@ theorem mem_smul_iff (X : Data E r) {L : Lt E r} (hL : SelfD X L) {𝔪 : Ideal 
         obtain ⟨k, hk⟩ := h _ (Submodule.smul_mem_smul ha hu)
         refine ⟨k, ?_⟩
         change EF X ((b : E) • (M : E)⁻¹ • x) u = k
-        rw [hb, TensLat.EF_smul, hcc, EF_inv_smul]
-        exact hk
+        rwa [hb, TensLat.EF_smul, hcc, EF_inv_smul]
       | zero => simp
       | add a b _ _ ha hb => rw [add_smul]; exact L.add_mem ha hb
       | smul t a _ ha => rw [smul_eq_mul, mul_smul]; exact L.smul_mem t ha
@@ -564,8 +562,7 @@ theorem span_smul (X : Data E r) {L : Lt E r} (hL : SelfD X L) {𝔪 : Ideal (�
       one_smul]
   have h2 : (M : 𝓞 E) • u ∈ 𝔪 • L := Submodule.smul_mem_smul hMm hu
   have h3 := Submodule.smul_mem _ (M : E)⁻¹ (Submodule.subset_span (R := E) h2)
-  rw [h1] at h3
-  exact h3
+  rwa [h1] at h3
 
 theorem exists_ne_zero_of_scaled {V : Type} [AddCommGroup V] [Module ℚ V] [FiniteDimensional ℚ V]
     {g : ℕ} (B : LinearMap.BilinForm ℚ V) (p : V →ₗ[ℤ] (Fin g → ℂ)) (hp : Function.Injective p)

@@ -60,8 +60,7 @@ theorem eq_mul_of_at {v : Pl (F := F)} {y : _root_.GlobalTheory.IndefiniteRowSid
   have h0 : evFin F v (1 - GlobalTheory.EmbChart.atPlace v 1) = 0 := by
     rw [map_sub, map_one, GlobalTheory.EmbChart.evFin_atPlace, sub_self]
   have h1 : (1 - GlobalTheory.EmbChart.atPlace v 1) • y = 0 := hy _ h0
-  rw [Algebra.smul_def, map_sub, map_one, sub_mul, one_mul, sub_eq_zero] at h1
-  exact h1
+  rwa [Algebra.smul_def, map_sub, map_one, sub_mul, one_mul, sub_eq_zero] at h1
 
 private lemma tensorProduct_map_eq_zero_of_at_of_atPlace_eq_zero {R : Type} [CommRing R] [Algebra F R] {v : Pl (F := F)} (φ : AF F →ₐ[F] R)
     (hφ : φ (GlobalTheory.EmbChart.atPlace v 1) = 0) {y : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)} (hy : At (evFin F v) y) :
@@ -157,8 +156,7 @@ theorem beta_eq_alpha_of_inert : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     apply Circle.ext
     rw [e1, e2, hpow]
   have hnot : ¬ (w.under (𝓞 F) ∈ (X.T : Set (Pl (F := F)))) := by
-    rw [h]
-    exact hv
+    rwa [h]
   rw [eq_ideleAt_of_at z hz, GlobalTheory.LFun.ideleAt_eq_locIdele_of_isInertAt h hw]
   exact locIdele_eq_of_inert hw X.β X.α hres (hT.chars.unrβ w hnot) (hT.chars.unrα w hnot) _
 

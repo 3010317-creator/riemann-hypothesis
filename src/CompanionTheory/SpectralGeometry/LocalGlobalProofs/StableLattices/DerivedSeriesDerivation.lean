@@ -51,8 +51,7 @@ theorem dR_dL {a : E → E} (ha : ContDiff ℝ ∞ a) {b : E' → E'} (hb : Cont
   rw [show dL a Φ = fun y => fderiv ℝ Φ y (a y.1, 0) from rfl,
     show dR b Φ = fun y => fderiv ℝ Φ y (0, b y.2) from rfl,
     (hc.clm_apply hua).fderiv, (hc.clm_apply hub).fderiv]
-  simp
-  exact hsymm _ _
+  simpa using hsymm _ _
 
 end general
 
@@ -179,8 +178,7 @@ private theorem exists_contDiff_eq_on_nhds_of_contDiffOn {F : Mat n → H} {U : 
     by_cases hz : z ∈ Metric.ball p r
     · exact (φ.contDiff.contDiffAt).smul (hF.contDiffAt (hU.mem_nhds (hrU hz)))
     · have hzc : z ∈ (Metric.closedBall p (r / 2))ᶜ := by
-        intro hz'
-        exact hz (Metric.closedBall_subset_ball (by linarith) hz')
+        exact fun hz' => hz (Metric.closedBall_subset_ball (by linarith) hz')
       have hev0 : ∀ᶠ g in nhds z, φ g = 0 := by
         filter_upwards [Metric.isClosed_closedBall.isOpen_compl.mem_nhds hzc] with g hg
         apply φ.zero_of_le_dist

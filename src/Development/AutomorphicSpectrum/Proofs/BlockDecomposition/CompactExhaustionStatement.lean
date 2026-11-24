@@ -88,8 +88,7 @@ theorem actL_eq (hP : IsPsiFor ε lam T Ψ) {m : ℕ} (a : AS T m) :
     funext g
     exact Finset.sum_apply _ _ _
   unfold actL
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem ofW_inj {m : ℕ} {x y : Wd n m} (h : ofW x = ofW y) : x = y := by
   obtain ⟨⟨l, hl⟩, w⟩ := x
@@ -113,8 +112,7 @@ theorem actL_sgl (hP : IsPsiFor ε lam T Ψ) {m : ℕ} {w : List (Fin n × Fin n
     have hne : ofW y ≠ w := fun e => hy (ofW_inj (e.trans hx0.symm))
     simp only [sgl, ite_eq_right hne, cD_zero]
     rfl
-  · intro hn
-    exact absurd (Finset.mem_univ _) hn
+  · exact fun hn => absurd (Finset.mem_univ _) hn
 
 def actLin (hP : IsPsiFor ε lam T Ψ) (m : ℕ) : AS T m →ₗ[ℂ] L2 ε where
   toFun := actL T Ψ

@@ -153,15 +153,13 @@ theorem discr_trace_isUnit :
     have h1 := congrArg (algebraMap K'.O K'.E) hg
     rw [hsum, map_zero] at h1
     simp only [hbv] at h1
-    have h2 := (Fintype.linearIndependent_iff.1 w.linearIndependent) _ h1 k
-    exact hi (by rw [h2, map_zero])
+    exact hi (by rw [((Fintype.linearIndependent_iff.1 w.linearIndependent) _ h1 k), map_zero])
   have hsp : ⊤ ≤ Submodule.span K.O (Set.range bv) := by
     intro y _
     rw [Submodule.mem_span_range_iff_exists_fun]
     refine ⟨c y, hj ?_⟩
     rw [hsum]
-    simp only [hbv, hc]
-    exact w.sum_repr _
+    simpa only [hbv, hc] using w.sum_repr _
   let b : Module.Basis (Fin d) K.O K'.O := Module.Basis.mk hli hsp
   have hb : ∀ k, algebraMap K'.O K'.E (b k) = w k := fun k => by
     rw [Module.Basis.mk_apply]; exact hbv k

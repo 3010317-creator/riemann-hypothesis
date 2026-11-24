@@ -78,8 +78,7 @@ theorem besType_hcParam : ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup Wp] [I
     (by
       refine ⟨⟨?_, ?_⟩, ?_, ?_⟩
       · show π (g * PI.UpqRep.blockW k r 1 * g⁻¹) = 1
-        rw [PI.HwUniqW.blockW_one, Matrix.mul_one, hgg]
-        exact h1
+        rwa [PI.HwUniqW.blockW_one, Matrix.mul_one, hgg]
       · intro x hx y hy
         have e : g * PI.UpqRep.blockW k r (x * y) * g⁻¹ =
             g * PI.UpqRep.blockW k r x * g⁻¹ * (g * PI.UpqRep.blockW k r y * g⁻¹) := by
@@ -91,8 +90,7 @@ theorem besType_hcParam : ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup Wp] [I
         show π (g * PI.UpqRep.blockW k r (x * y) * g⁻¹) = _
         rw [e]
         exact hmul _ (hin x hx) _ (hin y hy)
-      · intro x hx v
-        exact hnorm _ (hin x hx) v
+      · exact fun x hx v => hnorm _ (hin x hx) v
       · intro v
         have h2 : ContinuousOn (fun x : Matrix (Fin k) (Fin k) ℂ => π (g * PI.UpqRep.blockW k r x * g⁻¹))
             (PI.UpqRep.UJset (PI.UpqRep.allPos k)) :=

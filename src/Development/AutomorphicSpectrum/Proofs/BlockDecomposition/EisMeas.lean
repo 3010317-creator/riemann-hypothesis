@@ -169,14 +169,12 @@ theorem stab_entries {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
     · subst e; simpa using (intLoc F E v).one_mem
     · simpa [Pi.single_eq_of_ne e] using (intLoc F E v).zero_mem
   constructor
-  · have h1 := mem_latLoc_stdLattice.1 ((h _).1 hs) i
-    simpa using h1
+  · simpa using mem_latLoc_stdLattice.1 ((h _).1 hs) i
   · have e : m.1 *ᵥ ((m⁻¹).1 *ᵥ (Pi.single j 1 : Fin N → Fv F v ⊗[F] E)) = Pi.single j 1 := by
       rw [Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec]
     have h2 : (m⁻¹).1 *ᵥ (Pi.single j 1 : Fin N → Fv F v ⊗[F] E) ∈ latLoc F (stdLattice E N) v :=
       (h _).2 (by rw [e]; exact hs)
-    have h1 := mem_latLoc_stdLattice.1 h2 i
-    simpa using h1
+    simpa using mem_latLoc_stdLattice.1 h2 i
 
 theorem emb_mem_KOff : ∀ {D : D7} {n r t : ℕ} {hn : r + t = n} (M : Maps D hn) (S : Finset (Pl D)) (u : G D t),
     u ∈ KOff D t S → M.emb u ∈ KOff D n S := by
@@ -310,16 +308,14 @@ theorem good_rows {S : Finset (Pl D)} {e : AE D} {η : Fin a → Mx D 1 b → �
     refine Finset.prod_congr rfl fun i _ => ?_
     have hi : IntOff S (y.submatrix (fun _ : Fin 1 => i) id) := fun v hv _ j => hy v hv i j
     have := h i (y.submatrix (fun _ : Fin 1 => i) id)
-    rw [ite_eq_left hi] at this
-    exact this
+    rwa [ite_eq_left hi] at this
   · rw [ite_eq_right hy]
     simp only [IntOff] at hy
     push Not at hy
     obtain ⟨v, hv, i, j, hij⟩ := hy
     refine Finset.prod_eq_zero (Finset.mem_univ i) ?_
     have := h i (y.submatrix (fun _ : Fin 1 => i) id)
-    rw [ite_eq_right (fun hi => hij (hi v hv 0 j))] at this
-    exact this
+    rwa [ite_eq_right (fun hi => hij (hi v hv 0 j))] at this
 
 theorem prod_nonneg_real {ι : Type} (s : Finset ι) (w : ι → ℂ) (h : ∀ i, 0 ≤ (w i).re ∧ (w i).im = 0) :
     0 ≤ (∏ i ∈ s, w i).re ∧ (∏ i ∈ s, w i).im = 0 := by
@@ -556,8 +552,7 @@ theorem eisMeas : IdemEx → BumpEx → Major → FixW → FixTh → ThProd → 
         obtain ⟨h0, h1, h2⟩ := (hη i).2.2.2.1 (y.submatrix (fun _ => i) id)
         have h3 : η i (y.submatrix (fun _ => i) id) = ((η i (y.submatrix (fun _ => i) id)).re : ℂ) :=
           Complex.ext (by simp) (by simp [h2])
-        rw [h3, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg h0]
-        exact h1
+        rwa [h3, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg h0]
       · intro y hy
         rw [hΩ1 y]
         exact Finset.prod_eq_one fun i _ => (hη i).2.2.2.2 y hy

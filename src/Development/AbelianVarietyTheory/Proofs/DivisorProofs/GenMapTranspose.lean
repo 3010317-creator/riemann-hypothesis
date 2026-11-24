@@ -151,8 +151,7 @@ theorem aMul_selfDual (T : HSp D) {Λ : Submodule (𝓞 D.host.E) (Fin T.rank �
       refine (hT.2 _).2 fun t ht => ?_
       rw [RatDual.form_smul]
       have := FractionalIdeal.mul_mem_mul hb (h5 t ht)
-      rw [inv_mul_cancel₀ hAA, FractionalIdeal.mem_one_iff] at this
-      exact this
+      rwa [inv_mul_cancel₀ hAA, FractionalIdeal.mem_one_iff] at this
     have h7 : ∀ e ∈ D.host.AA * D.host.AA⁻¹, e • x ∈ aMul Λ := by
       intro e he
       refine FractionalIdeal.mul_induction_on (C := fun e => e • x ∈ aMul Λ) he (fun a ha c hc => ?_)
@@ -226,8 +225,7 @@ theorem unimod_of_star (S : HSp D) (hS : S.gram = 1) {Λ Λ' : Submodule (𝓞 D
   · intro H w hw
     have := H _ ((hs w).1 hw)
     rwa [star_star] at this
-  · intro H x hx
-    exact H _ ((hs _).2 (by rwa [star_star]))
+  · exact fun H x hx => H _ ((hs _).2 (by rwa [star_star]))
 
 theorem genMap_transpose (S T : HSp D) (hS : S.gram = 1) (a : D.host.E) (s : Fin S.rank → D.host.E)
     (t : Fin T.rank → D.host.E) : (genMap S T a s t)ᵀ = vecMulVec (star s) (a • t) := by
@@ -311,8 +309,7 @@ theorem isLatOf_tens : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFa
       have h1 : finPart D (u i j - l i j) = 0 := by
         have := congrFun (congrFun h i) j
         rwa [one_smul] at this
-      rw [RingHom.map_sub, sub_eq_zero] at h1
-      exact h1
+      rwa [RingHom.map_sub, sub_eq_zero] at h1
     rwa [this]
   · have : u = finTens 1 γ :=
       eq_of_parts (hu.1.trans (Matrix.ext fun i j => (infPart_pair _ _).symm)) (hu.2.trans rfl)

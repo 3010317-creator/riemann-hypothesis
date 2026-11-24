@@ -125,8 +125,7 @@ theorem eq_smul_of_commute {S : Scheme.{0}} [IsLocallyNoetherian S] (P : PolAV S
     rw [e₄, map_smul, e₅, smul_comm]
   rcases key with h | h
   · exact absurd h (Module.End.hasEigenvalue_iff.1 hc)
-  · intro v
-    exact Module.End.mem_eigenspace_iff.1 (h ▸ Submodule.mem_top)
+  · exact fun v => Module.End.mem_eigenspace_iff.1 (h ▸ Submodule.mem_top)
 
 end GlobalTheory.ThetaCommutant
 end -- clump:auto
@@ -193,8 +192,7 @@ theorem eqv_eq_smul : ∀ (R : Type) [CommRing R] [IsDomain R] [CharZero R] (I :
     have h₁ := hE.act p₀ w θ s (Φ s) hw hθ hPhi
     have h₂ := hE'.act p₀ w θ s (Φ s) hw hθ hPhi
     have e₁ : v' = mkE E hE (Φ s) := huniq θ _ _ _ hvv h₁
-    rw [e₁, hTe, hTe]
-    exact h₂
+    rwa [e₁, hTe, hTe]
   obtain ⟨c, hc⟩ := GlobalTheory.ThetaCommutant.eq_smul_of_commute A F p N hNF T hT
   have hpos : 0 < Module.finrank F (EA A p N) := by
     rw [GlobalTheory.ThetaCommutant.finrank_eq A F p N hNF]; positivity
@@ -208,8 +206,7 @@ theorem eqv_eq_smul : ∀ (R : Type) [CommRing R] [IsDomain R] [CharZero R] (I :
     subst this
     exact hv (map_zero _)
   refine ⟨Units.mk0 c hc0, fun s j => ?_⟩
-  have h := congrArg (fun v : EA A p N => v.sec.f j) ((hTe s).symm.trans (hc _))
-  exact h
+  exact congrArg (fun v : EA A p N => v.sec.f j) ((hTe s).symm.trans (hc _))
 
 end GlobalTheory.Mum
 end -- clump:auto

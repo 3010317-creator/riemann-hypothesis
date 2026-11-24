@@ -102,8 +102,7 @@ private theorem ker_pr_le {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [Numb
     obtain ⟨t, ht⟩ := s.unr _ _ hA' h1
     obtain ⟨w, hw, hwv⟩ := place_between (L := L) hA'
     refine ⟨t, hI w (by rw [hwv]; exact hv) _ hw ?_, ht⟩
-    rw [← ht] at h1
-    exact h1
+    rwa [← ht] at h1
   intro g hg
   have h1 : W.resP L Ω g ∈ NS Ω V.S' := (QuotientGroup.eq_one_iff _).1 (congrArg Subtype.val hg)
   obtain ⟨t, ht, e⟩ := Subgroup.normalCore_le _ (hN h1)
@@ -158,5 +157,4 @@ theorem UpperTheory.exists_descent_to_level_group_of_unramified :
       rfl
     rw [e1, e4]
     show (ρ (V.pr t)).val.transpose * _ * (ρ (V.pr t')).val = _
-    rw [hρ, hρ]
-    exact e2
+    rwa [hρ, hρ]

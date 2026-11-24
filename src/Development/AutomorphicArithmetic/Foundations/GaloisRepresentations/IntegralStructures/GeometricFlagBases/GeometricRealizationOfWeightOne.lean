@@ -296,8 +296,7 @@ theorem finitely_many_marked_classes_degree_one_of_regular (hI : ∀ (p : ℕ) [
       rw [this]
     unfold Pair.term
     split_ifs <;> simp only [key]
-  have hfin := hI p G ha L f₀ hf₀ hreg K' f' hf'
-  simpa only [hterm] using hfin
+  simpa only [hterm] using hI p G ha L f₀ hf₀ hreg K' f' hf'
 
 end GlobalTheory.RootSumWeights.RegularPairCommutatorLemmas
 
@@ -392,8 +391,7 @@ theorem centralizer_eq (P : DPair G) (hm : (P.γ, P.c) ∈ GlobalTheory.LKCx.grp
     simp only [Subgroup.coe_mul, Prod.fst_mul] at h'
     exact ⟨⟨v, h', v.2.1⟩, rfl⟩
   · rintro ⟨w, rfl⟩
-    apply Subtype.ext
-    exact Prod.ext w.2.1 (mul_comm _ _)
+    exact Subtype.ext (Prod.ext w.2.1 (mul_comm _ _))
 
 end GlobalTheory.LKDef.TermPair
 
@@ -646,8 +644,7 @@ theorem finite_supp_cent (ι : Γ →* H) (hι : Function.Injective ι) (K : Sub
       _ = γ₀⁻¹ * w * γw⁻¹ := by rw [e]; group
       _ = y * (γ₀⁻¹ * γw⁻¹) := by rw [e2]; group
   show DoubleCoset.mk _ K (ι (cj w) * Quotient.out d) = q
-  rw [← DoubleCoset.out_eq' q]
-  rw [DoubleCoset.eq]
+  rw [← DoubleCoset.out_eq' q, DoubleCoset.eq]
   refine ⟨ι (γ₀⁻¹ * γw⁻¹), ⟨_, hz, rfl⟩, k⁻¹, K.inv_mem hk, ?_⟩
   show x = _
   rw [hx, hcj]; simp only [map_mul, map_inv]; group
@@ -995,9 +992,7 @@ theorem mark_isRoot_pol : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair
   have hvv : v = v₀ := by
     unfold HTGroup.a at ha
     obtain ⟨w, hw⟩ := Fintype.card_eq_one_iff.1 ha
-    have e1 := hw ⟨v, hv⟩
-    have e2 := hw ⟨v₀, hv₀⟩
-    exact congrArg Subtype.val (e1.trans e2.symm)
+    exact congrArg Subtype.val ((hw ⟨v, hv⟩).trans (hw ⟨v₀, hv₀⟩).symm)
   subst hvv
   have hx0 : x ≠ 0 := by
     rintro rfl
@@ -1012,8 +1007,7 @@ theorem mark_isRoot_pol : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair
       intro a
       simp only [RingHom.comp_apply, G.psi_F, Matrix.algebraMap_eq_diagonal, Matrix.scalar_apply]
       rfl
-    rw [e]
-    exact h0
+    rwa [e]
   have := eval_eq_zero_of_eigenvector _ x μ hx0 hx _ hq
   rwa [Polynomial.eval_map] at this
 

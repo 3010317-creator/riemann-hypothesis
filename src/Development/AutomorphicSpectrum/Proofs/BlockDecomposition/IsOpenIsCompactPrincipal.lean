@@ -61,18 +61,13 @@ theorem inv_congr {n : Type*} [Fintype n] [DecidableEq n] (A B : Matrix n n k)
     (hAB : A * B = 1) {t : k} (ht : valuation k t < 1)
     (hA : ∀ i j, valuation k (A i j - (1 : Matrix n n k) i j) ≤ valuation k t) :
     ∀ i j, valuation k (B i j - (1 : Matrix n n k) i j) ≤ valuation k t := by
-  by_contra h
-  push Not at h
+  by_contra! h
   obtain ⟨i₁, j₁, h₁⟩ := h
   haveI : Nonempty (n × n) := ⟨(i₁, j₁)⟩
   obtain ⟨⟨i₀, j₀⟩, hm⟩ := Finite.exists_max
     (fun p : n × n => valuation k (B p.1 p.2 - (1 : Matrix n n k) p.1 p.2))
-  have hm' : ∀ l j, valuation k (B l j - (1 : Matrix n n k) l j) ≤
-      valuation k (B i₀ j₀ - (1 : Matrix n n k) i₀ j₀) := fun l j => hm (l, j)
   have hM : valuation k t < valuation k (B i₀ j₀ - (1 : Matrix n n k) i₀ j₀) :=
-    h₁.trans_le (hm' i₁ j₁)
-  have hM0 : 0 < valuation k (B i₀ j₀ - (1 : Matrix n n k) i₀ j₀) :=
-    lt_of_le_of_lt zero_le' hM
+    h₁.trans_le (hm (i₁, j₁))
   have hmat : (A - 1) * (B - 1) = -(A - 1) - (B - 1) := by
     simp only [sub_mul, mul_sub, hAB, one_mul, mul_one]
     abel
@@ -80,23 +75,19 @@ theorem inv_congr {n : Type*} [Fintype n] [DecidableEq n] (A B : Matrix n n k)
       ∑ l, (A i₀ l - (1 : Matrix n n k) i₀ l) * (B l j₀ - (1 : Matrix n n k) l j₀) := by
     have := congrFun (congrFun hmat i₀) j₀
     simp only [Matrix.mul_apply, Matrix.sub_apply, Matrix.neg_apply] at this
-    rw [this]
-    ring
+    linear_combination this
   have hsum : valuation k (∑ l, (A i₀ l - (1 : Matrix n n k) i₀ l) *
       (B l j₀ - (1 : Matrix n n k) l j₀)) ≤
       valuation k t * valuation k (B i₀ j₀ - (1 : Matrix n n k) i₀ j₀) := by
     refine Valuation.map_sum_le _ fun l _ => ?_
     rw [map_mul]
-    exact mul_le_mul' (hA i₀ l) (hm' l j₀)
-  have hlt : valuation k t * valuation k (B i₀ j₀ - (1 : Matrix n n k) i₀ j₀) <
-      valuation k (B i₀ j₀ - (1 : Matrix n n k) i₀ j₀) :=
-    mul_lt_of_lt_one_left hM0 ht
+    exact mul_le_mul' (hA i₀ l) (hm (l, j₀))
   have hle := Valuation.map_sub (valuation k) (-(A i₀ j₀ - (1 : Matrix n n k) i₀ j₀))
     (∑ l, (A i₀ l - (1 : Matrix n n k) i₀ l) * (B l j₀ - (1 : Matrix n n k) l j₀))
   rw [← key, Valuation.map_neg] at hle
   rcases le_max_iff.mp hle with h | h
-  · exact absurd ((h.trans (hA i₀ j₀))) (not_le.mpr hM)
-  · exact absurd (h.trans hsum) (not_le.mpr hlt)
+  · exact absurd (h.trans (hA i₀ j₀)) (not_le.mpr hM)
+  · exact absurd (h.trans hsum) (not_le.mpr (mul_lt_of_lt_one_left (zero_le'.trans_lt hM) ht))
 
 variable [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
@@ -120,15 +111,13 @@ theorem isCompact_congSet (n : Type*) [Fintype n] [DecidableEq n] {t : k} (ht : 
       (fun x : k => x + (1 : Matrix n n k) i j) '' GlobalTheory.SplitWeil.cball (Units.mk0 t ht) := by
     ext A
     constructor
-    · intro hA i _ j _
-      exact ⟨A i j - (1 : Matrix n n k) i j, hA i j, by simp⟩
+    · exact fun hA i _ j _ => ⟨A i j - (1 : Matrix n n k) i j, hA i j, by simp⟩
     · intro hA i j
       obtain ⟨x, hx, hxA⟩ := hA i (Set.mem_univ _) j (Set.mem_univ _)
       have hx' : A i j - (1 : Matrix n n k) i j = x := by
         rw [← hxA]
         simp
-      rw [hx']
-      exact hx
+      rwa [hx']
   rw [h]
   exact isCompact_univ_pi fun i => isCompact_univ_pi fun j =>
     (GlobalTheory.SplitWeil.isCompact_cball _).image (continuous_id.add continuous_const)
@@ -159,8 +148,7 @@ theorem isCompact_congGL (n : Type*) [Fintype n] [DecidableEq n] {t : k} (ht : t
   · rintro ⟨g, hg, hgp⟩
     simp only [Units.embedProduct_apply, Prod.mk.injEq] at hgp
     obtain ⟨rfl, rfl⟩ := hgp
-    refine ⟨⟨hg, _, inv_congr (g : Matrix n n k) _ g.mul_inv ht1 hg, rfl⟩, ?_⟩
-    exact ⟨g.mul_inv, g.inv_mul⟩
+    exact ⟨⟨hg, _, inv_congr (g : Matrix n n k) _ g.mul_inv ht1 hg, rfl⟩, ⟨g.mul_inv, g.inv_mul⟩⟩
   · rintro ⟨⟨hA, -⟩, h₁, h₂⟩
     refine ⟨⟨A, B.unop, h₁, h₂⟩, hA, ?_⟩
     simp [Units.embedProduct_apply]

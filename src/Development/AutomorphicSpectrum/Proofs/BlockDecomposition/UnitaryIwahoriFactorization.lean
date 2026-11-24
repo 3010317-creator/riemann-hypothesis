@@ -188,8 +188,7 @@ theorem exists_fact {M : Matrix (Fin n) (Fin n) L} (hM : IwM M) (k : ℕ) (hk : 
     have hcn : n - 1 - k < n := by omega
     obtain ⟨E, E', hE, hEE, hI, hc, hs⟩ := elim_step hN ⟨n - 1 - k, hcn⟩
     refine ⟨W * E, E' * N, hW.mul hE, hI, ?_, fun a b hab hb => ?_⟩
-    · rw [Matrix.mul_assoc, ← Matrix.mul_assoc E, hEE, Matrix.one_mul]
-      exact hMW
+    · rwa [Matrix.mul_assoc, ← Matrix.mul_assoc E, hEE, Matrix.one_mul]
     · by_cases hbc : b.val = n - 1 - k
       · have : b = ⟨n - 1 - k, hcn⟩ := Fin.ext hbc
         rw [this] at hab ⊢
@@ -229,8 +228,7 @@ theorem tau_mul_self {σ : L →+* L} (g : GL (Fin n) L) (hg : g ∈ GU σ n) {W
   have hPQ : (tau σ W * W) * (Y * tau σ Y) = 1 := by
     have h2 : tau σ Y * (tau σ W * W * Y) = 1 := by
       simpa only [Matrix.mul_assoc] using h1
-    have h3 := mul_eq_one_comm.1 h2
-    simpa only [Matrix.mul_assoc] using h3
+    simpa only [Matrix.mul_assoc] using mul_eq_one_comm.1 h2
   have hQ : Matrix.BlockTriangular (Y * tau σ Y) OrderDual.toDual := by
     have hb1 : Matrix.BlockTriangular Y OrderDual.toDual := fun a b h => hY a b h
     have hb2 : Matrix.BlockTriangular (tau σ Y) OrderDual.toDual := fun a b h => hlo a b h
@@ -330,8 +328,7 @@ theorem iwahori_fact : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicat
       (Valuation.ne_zero_iff _).2 (hne a)
     rw [map_mul, map_mul, map_inv₀, mul_comm _ (Valued.v (Y a b)), mul_assoc]
     refine (mul_le_of_le_one_left' (hY.1 a b)).trans_lt ?_
-    rw [inv_mul_lt_iff₀ (zero_lt_iff.2 hva), mul_one]
-    exact hlt
+    rwa [inv_mul_lt_iff₀ (zero_lt_iff.2 hva), mul_one]
   refine ⟨u, (mem_iwU_iff hσv u).2 ⟨hW.2.2, fun a b h => ?_⟩, ⟨hW.1, hW.2.1⟩, y,
     (mem_iwU_iff hσv y).2 ⟨?_, ?_⟩, (mem_iwU_iff hσv _).2 ⟨fun a b => ?_, fun a b h => ?_⟩, ?_⟩
   · show Valued.v (W a b) < 1

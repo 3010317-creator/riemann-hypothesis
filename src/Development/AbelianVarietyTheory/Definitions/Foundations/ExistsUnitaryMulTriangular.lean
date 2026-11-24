@@ -504,8 +504,7 @@ theorem transpose_mem_unitaryGroup {u : Matrix (Fin N) (Fin N) ℂ} (hu : u ∈ 
   rw [Matrix.mem_unitaryGroup_iff] at hu
   rw [Matrix.mem_unitaryGroup_iff']
   have h := congrArg Matrix.transpose hu
-  rw [Matrix.transpose_mul, Matrix.transpose_one] at h
-  exact h
+  rwa [Matrix.transpose_mul, Matrix.transpose_one] at h
 
 theorem form_rhoU (u : UN N) (f f' : nabla la ℂ) :
     form la (rhoU la u f : Pol N ℂ) (rhoU la u f' : Pol N ℂ) = form la f f' :=

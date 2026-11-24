@@ -211,8 +211,7 @@ theorem GlobalTheory.SwapWeil.isWeilDatumO_swap : ∀ (D : D7) (ψ : AddChar (AF
     have hfac : splitFacO χS χT y⁻¹ x⁻¹ = splitFacO χT χS x y := by
       unfold splitFacO
       rw [map_inv, map_inv, inv_inv, mul_comm]
-    rw [e1, hfac] at main
-    exact main
+    rwa [e1, hfac] at main
   · funext u
     show om _ (fun x => f (L (L.symm x))) _ = _
     simp only [LinearEquiv.apply_symm_apply]

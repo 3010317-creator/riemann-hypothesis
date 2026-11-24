@@ -76,8 +76,7 @@ theorem xiOne (L Ω : Type) [Field L] [NumberField L] [Field Ω] [Algebra L Ω] 
     (hξ : IsOpen (ξ.ker : Set (G L Ω))) (h : ∀ g ∉ Ga.Bad r, (ξ g : Qbar l) * (Ga.uf (r g) + 1) = Ga.uf (r g) + 1) : ξ = 1 := by
   by_contra hne
   obtain ⟨g0, hg0⟩ : ∃ g0, ξ g0 ≠ 1 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     exact hne (MonoidHom.ext hall)
   obtain ⟨huf, hep, hbad⟩ := Ga.badClosed L Ω l r hc
   set U : Set (G L Ω) := (fun g => g0⁻¹ * g) ⁻¹' (ξ.ker : Set (G L Ω)) with hU
@@ -124,8 +123,7 @@ theorem xiOne (L Ω : Type) [Field L] [NumberField L] [Field Ω] [Algebra L Ω] 
       simp only [Set.mem_iUnion, Finset.mem_Icc]
       refine ⟨m, ⟨(abs_le.mp hm).1, (abs_le.mp hm).2⟩, ?_⟩
       show _ = _
-      rw [hepz, hepz]
-      exact he
+      rwa [hepz, hepz]
     have claim : ∀ (s : Finset ℤ) (W : Set (G L Ω)), IsOpen W → W.Nonempty → W ⊆ ⋃ m ∈ s, B m →
         ∃ m, ∃ V : Set (G L Ω), IsOpen V ∧ V.Nonempty ∧ V ⊆ B m := by
       intro s

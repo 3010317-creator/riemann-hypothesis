@@ -70,12 +70,10 @@ theorem shift_mult : ∀ (D : D7) (r : ℕ) (Pg Q : Finset (Formalism.L2.DIV.Pl 
   have hex : ∀ PP ∈ Pg ∪ Q, ∃ s : 𝓞 D.host.F,
       algebraMap (𝓞 D.host.F) (𝓞 D.host.E) s ∈ PP.asIdeal ∧ s ∉ w.asIdeal := by
     intro PP hPP
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hne PP hPP
     have hle : (HeightOneSpectrum.under (𝓞 D.host.F) PP).asIdeal ≤ w.asIdeal := by
-      intro s hs
-      exact hcon s hs
+      exact fun s hs => hcon s hs
     exact HeightOneSpectrum.ext
       ((HeightOneSpectrum.isMaximal _).eq_of_le w.isPrime.ne_top hle)
   choose! tf htf1 htf2 using hex
@@ -87,7 +85,6 @@ theorem shift_mult : ∀ (D : D7) (r : ℕ) (Pg Q : Finset (Formalism.L2.DIV.Pl 
         ∈ GlobalTheory.LiftLevel.liftI Pg Q := by
       rw [map_prod]
       exact Ideal.prod_mem_prod (fun PP hPP => algebraMap_mem_conjI (D := D) _ _ (htf1 PP hPP))
-    have h1 := hu _ (algebraMap_mem_conjI (D := D) _ _ hmem)
-    exact Submodule.smul_le_right h1
+    exact Submodule.smul_le_right (hu _ (algebraMap_mem_conjI (D := D) _ _ hmem))
 
 end GlobalTheory.TrOffShift

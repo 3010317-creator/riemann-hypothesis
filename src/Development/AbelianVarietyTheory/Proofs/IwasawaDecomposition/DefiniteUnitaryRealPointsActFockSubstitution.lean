@@ -215,8 +215,7 @@ theorem fock_act : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V W : HSp D) (
       split_ifs
       · exact Matrix.inv_eq_left_inv (Matrix.mem_unitaryGroup_iff'.1 g.2)
       · exact inv_one
-    rw [e] at this
-    exact this
+    rwa [e] at this
   · have := om_ptOf hω hθ kV kW hM hM' hf hv (one_mem _) (GlobalTheory.PointAtPlaceHom.atTau_mem W τ _) (fun _ => 1) _
       (fun ρ => compAt_one _ ρ) (compAt_atTau hθ hM' τ u)
     simp only [inv_one] at this

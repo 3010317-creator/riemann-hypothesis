@@ -464,8 +464,7 @@ theorem map_mem_pow_smul_top {O M N : Type} [CommRing O] [AddCommGroup M] [Modul
   have hle : I ^ n • (⊤ : Submodule O M) ≤ (I ^ n • (⊤ : Submodule O N)).comap f := by
     rw [Submodule.smul_le]
     intro r hr y _
-    simp only [Submodule.mem_comap, map_smul]
-    exact Submodule.smul_mem_smul hr Submodule.mem_top
+    simpa only [Submodule.mem_comap, map_smul] using Submodule.smul_mem_smul hr Submodule.mem_top
   exact hle hx
 
 theorem successive_approximation : ∀ {O Y Z : Type} [CommRing O] [AddCommGroup Y] [Module O Y]
@@ -486,8 +485,7 @@ theorem successive_approximation : ∀ {O Y Z : Type} [CommRing O] [AddCommGroup
   have hPW : ∀ y, P y ∈ W := by
     intro y
     apply hsatn k
-    have h := W.sub_mem (hW y).2 (hW y).1
-    simpa [LinearMap.add_apply, LinearMap.smul_apply] using h
+    simpa [LinearMap.add_apply, LinearMap.smul_apply] using W.sub_mem (hW y).2 (hW y).1
   have hg : ∀ v, ∃ u, Lc u = l ^ c • P v := fun v => by
     obtain ⟨u, hu⟩ := hrange _ (hPW v)
     exact ⟨u, hu⟩
@@ -646,8 +644,7 @@ theorem exists_Mon_eq_Lc_cls : ∀ (O K : Type) [CommRing O] [NormedField K] [Is
   obtain ⟨y₁, hy₁⟩ := GlobalTheory.successive_approximation (l : O) Lc' P W (η + (N + 1) * η) k hc h1 h2 h3 ⟨y, hy⟩
   refine ⟨y₁, y₁.2, ?_⟩
   have := congrArg Subtype.val hy₁
-  rw [hsum] at this
-  exact this
+  rwa [hsum] at this
 
 end GlobalTheory.Proof.exists_monodromy_eq_leadingCoeff_breuilKisinDescent
 end -- clump:auto
@@ -902,8 +899,7 @@ theorem eq_zero_of_mem_pow {O K : Type} [CommRing O] [NormedField K] [Algebra O 
 theorem isHausdorff_ring {O K : Type} [CommRing O] [NormedField K] [Algebra O K]
     [IsUnitBall O K] {l : ℕ} (hl : ‖(l : K)‖ < 1) : IsHausdorff (Ideal.span {(l : O)}) O := by
   refine ⟨fun x hx => eq_zero_of_mem_pow (K := K) hl fun n => ?_⟩
-  have h := SModEq.sub_mem.1 (hx n)
-  simpa [smul_eq_mul, Ideal.mul_top] using h
+  simpa [smul_eq_mul, Ideal.mul_top] using SModEq.sub_mem.1 (hx n)
 
 theorem isHausdorff_of_free {R M : Type} [CommRing R] [AddCommGroup M] [Module R M]
     [Module.Free R M] (I : Ideal R) [h : IsHausdorff I R] : IsHausdorff I M := by

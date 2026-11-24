@@ -112,8 +112,7 @@ theorem hasDerivAt_coord {ε : Fin n → Bool} {X : Matrix (Fin n) (Fin n) ℂ} 
       have hv : (∑ l, X l b • coord ε (a, l, true)) k = ∑ l, toMK k a l * X l b := by
         rw [Finset.sum_apply]
         refine Finset.sum_congr rfl fun l _ => ?_
-        simp only [Pi.smul_apply, smul_eq_mul, coord, ite_true]
-        exact mul_comm _ _
+        simpa only [Pi.smul_apply, smul_eq_mul, coord, ite_true] using mul_comm _ _
       rw [hv]; exact hent k
 
 theorem hasDerivAt_mono {ε : Fin n → Bool} {X : Matrix (Fin n) (Fin n) ℂ} (hX : inK ε X)
@@ -138,8 +137,7 @@ theorem hasDerivAt_mono {ε : Fin n → Bool} {X : Matrix (Fin n) (Fin n) ℂ} (
           fun t => coord ε c (k * expK ε X t) * mono ε s (k * expK ε X t) := by
         funext t; simp [mono]
       rw [e]
-      rw [coord_mul_expK_zero hX, mono_mul_expK_zero hX] at h
-      exact h
+      rwa [coord_mul_expK_zero hX, mono_mul_expK_zero hX] at h
 
 theorem hasDerivAt_of_mem {ε : Fin n → Bool} {X : Matrix (Fin n) (Fin n) ℂ} (hX : inK ε X) {d : ℕ}
     {φ : KG ε → ℂ} (hφ : φ ∈ polyV ε d) : ∃ ψ ∈ polyV ε d, ∀ k : KG ε,

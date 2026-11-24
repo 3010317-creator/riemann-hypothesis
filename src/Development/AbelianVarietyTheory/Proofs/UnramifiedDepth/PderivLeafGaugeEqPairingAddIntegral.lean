@@ -194,8 +194,7 @@ theorem hPullW_toLeaf (G : ∀ g, Cart V d (I g) (J g)) (g : Fin 2) (a a' : ZMod
 
 theorem odd_val_sub {d : ℕ} [NeZero d] (a : ZMod d) {i : ℕ} (hi : Odd i) (hid : i < d) :
     Odd (a + (i : ZMod d) - a).val := by
-  rw [add_sub_cancel_left, ZMod.val_natCast, Nat.mod_eq_of_lt hid]
-  exact hi
+  rwa [add_sub_cancel_left, ZMod.val_natCast, Nat.mod_eq_of_lt hid]
 
 private theorem hPullW_add (H H' : MvPowerSeries (WV I) C) (e : ι → WV I → C)
     (e' : ι' → WV I → C) :
@@ -241,8 +240,7 @@ theorem pderiv_hM : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [NeZero d] (I 
 
     rw [map_sum]
     refine VF.Ge.sum (fun k _ => ?_)
-    simp only [map_smul, smul_eq_mul]
-    exact VF.Ge.mul_int (hvint b k) (hγint k μ)
+    simpa only [map_smul, smul_eq_mul] using VF.Ge.mul_int (hvint b k) (hγint k μ)
   · unfold RowData.hM
     rw [pderiv_hPullW (X.hL g a (a + (i : ZMod d))) (fun c => toW g (e c)) (1 - g) v' b,
       Finset.sum_congr rfl (fun k _ => hγeq k), Finset.sum_add_distrib]
@@ -252,9 +250,7 @@ theorem pderiv_hM : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [NeZero d] (I 
       have hΨ : MvPowerSeries.HasSubst (fun w : WV I =>
           MvPowerSeries.subst (linForm (fun c => toW g (e c)) (fun b => toW (1 - g) (v' b)))
             (upG w.1 (t w.1 w.2))) := by
-        have h := hΦ.comp hLs
-        simp only [MvPowerSeries.substAlgHom_apply] at h
-        exact h
+        simpa only [MvPowerSeries.substAlgHom_apply] using hΦ.comp hLs
       rw [GlobalTheory.FormalCalc.subst_sum' hΨ]
       refine Finset.sum_congr rfl (fun k _ => ?_)
       rw [MvPowerSeries.subst_smul hΨ, MvPowerSeries.subst_comp_subst_apply hΦ hLs]

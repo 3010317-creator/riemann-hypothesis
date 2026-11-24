@@ -129,8 +129,7 @@ theorem hpg_entry {i t : ℕ} (g : Mir k ((i + 1) + t + 1)) (hg : g ∈ HPG k (i
   have e2 : ePG (i + 1) (t + 1) ⟨false, (Fin.castSucc c : Fin (i + 1 + 1))⟩ = Fin.castLE (by omega) c := by
     apply Fin.ext
     simp [ePG, two]
-  rw [e1, e2] at h0
-  exact h0
+  rwa [e1, e2] at h0
 
 theorem Cl_left {i t : ℕ} (h : Mir k ((i + 1) + t + 1)) (hh : h ∈ HPG k (i + 1) (t + 1)) (x : Mir k ((i + 1) + t + 1))
     (hx : x ∈ Cl k i t) : h * x ∈ Cl k i t := by
@@ -237,10 +236,8 @@ theorem main : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [I
   · rintro _ ⟨a, ha, b, hb, rfl⟩
     exact (MirUin k _).mul_mem (h₁ ha) (h₂ hb)
   · exact (c₁.mul c₂ : IsCompact ((L₁ : Set (Mir k ((i + 1) + t + 1))) * (L₂ : Set (Mir k ((i + 1) + t + 1)))))
-  · intro a ha
-    exact ⟨a, ha, 1, L₂.one_mem, mul_one a⟩
-  · intro b hb
-    exact ⟨1, L₁.one_mem, b, hb, one_mul b⟩
+  · exact fun a ha => ⟨a, ha, 1, L₂.one_mem, mul_one a⟩
+  · exact fun b hb => ⟨1, L₁.one_mem, b, hb, one_mul b⟩
 
 end GlobalTheory.CompanionTheory.BZPhiPG.Grp
 

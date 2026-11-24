@@ -94,10 +94,8 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
       by_cases e : p.1 = τ
       · rw [ite_eq_left e] at hm
         rw [e, Function.update_self]
-        rw [e] at hm
-        exact hm
+        rwa [e] at hm
       · rw [ite_eq_right e] at hm
-        rw [Function.update_of_ne e]
-        exact hm
+        rwa [Function.update_of_ne e]
 
 end GlobalTheory.CompanionTheory.Ar.PB.WMan.Mem

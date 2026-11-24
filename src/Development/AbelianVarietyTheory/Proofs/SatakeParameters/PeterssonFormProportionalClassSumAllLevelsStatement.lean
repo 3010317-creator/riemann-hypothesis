@@ -145,11 +145,9 @@ theorem step_hk : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {
       refine hI _ _ R.θ R.ψ _ _ (R.ωY t k) hθ (hC.chain.ωY t k hkk) _ _ hνH hνF _ (rTr _ y (U.1 (PiTensorProduct.tprod ℂ x))) hvac.1
         (GlobalTheory.SphericalOps.isAutFunSm_rTr hy haut) ?_ g
       intro r C hC' μ 𝓕 hμ h𝓕 g'
-      simp only [rTr, mul_assoc]
-      exact hcusp r C hC' μ 𝓕 hμ h𝓕 (g' * y)
+      simpa only [rTr, mul_assoc] using hcusp r C hC' μ 𝓕 hμ h𝓕 (g' * y)
   obtain ⟨φ, x, hx⟩ : ∃ φ x, R.ItY k φ (PiTensorProduct.tprod ℂ x) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     refine (hC.chain.ItY t k hkk).ne (LinearMap.ext fun φ => PiTensorProduct.ext (MultilinearMap.ext fun x => ?_))
     simpa using h φ x
   have h0 := GlobalTheory.multT_eq_zero_of_apply_eq_zero R.θ (R.MY k) _ _ _ _ hθ hμH hμF (hS.1 t k (by omega)) (R.ioY t k U' - w).1 (R.ioY t k U' - w).2 _ hx
@@ -273,8 +271,7 @@ theorem compositeLift_relation_passes_to_rows (F : Face D A) (hl : R.toLevCh.Is 
   have h3 := mult_level _ _ _ _ _ ((mem_multT R.θ (R.MY 0) _ _ _).1 U.2) v
   refine gaL_comm _ _ _ _ _ _ _ fun g0 => h2 c g0 _ fun k hk h => ?_
   have h4 := h3 k (h1 k hk).1 h
-  rw [(h1 k hk).2, one_mul] at h4
-  exact h4
+  rwa [(h1 k hk).2, one_mul] at h4
 
 theorem e_Th_hk (F : Face D A) (hl : R.toLevCh.Is A.μ0) (hT : R.chain_Th) (t : T) (P : Pl D.host.E) (hP : Good R t P)
     (c : List ℤ →₀ ℂ) (y y' : (R.HX t).H) (h : ∀ v, (liftCC t y').1 v = hk _ P c ((liftCC t y).1 v)) :

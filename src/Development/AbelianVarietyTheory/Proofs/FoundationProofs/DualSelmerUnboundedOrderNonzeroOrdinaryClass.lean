@@ -153,8 +153,7 @@ theorem cob_pow_mem (c : Coef l) (W : R2 Ω l) (hint : ∀ s i j, mat W s i j �
     (hk : ∀ i, (l : Qbar l) ^ k * y i ∈ c.O) (s : G ℚ Ω) (i : Fin 2) : (l : Qbar l) ^ k * cob W y s i ∈ c.O := by
   rw [← cob_smul]
   have hk' : ∀ j, ((l : Qbar l) ^ k • y) j ∈ c.O := fun j => by rw [Pi.smul_apply, smul_eq_mul]; exact hk j
-  simp only [cob, Pi.sub_apply]
-  exact sub_mem (CupCob.mulVec_mem c _ _ (hint s) hk' i) (hk' i)
+  simpa only [cob, Pi.sub_apply] using sub_mem (CupCob.mulVec_mem c _ _ (hint s) hk' i) (hk' i)
 
 theorem cob_loc (c : Coef l) (W : R2 Ω l) (hW : Continuous W) (hint : ∀ s i j, mat W s i j ∈ c.O)
     {y : Fin 2 → Qbar l} (hy : VecE c y) (s : G ℚ Ω) : ∀ᶠ t in nhds s, ∀ i, cob W y t i - cob W y s i ∈ c.O := by
@@ -396,8 +395,7 @@ theorem exists_pow_smul_cob1_of_cv_mod_pow : ∀ (l : ℕ) [Fact l.Prime] (Ω : 
     intro j
     have e : (M *ᵥ y) j = a g j - (a g j - (mat W g *ᵥ y - y) j) := by
       simp [M, Matrix.sub_mulVec]
-    rw [e]
-    rw [sub_eq_add_neg]
+    rw [e, sub_eq_add_neg]
     refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (Rec.norm_le_one_of_mem (ha g j)) ?_)
     rw [norm_neg]
     exact (h g j).trans hln1
@@ -500,8 +498,7 @@ theorem inv_mul_sub_mem (c : Coef l) (n : ℕ) {a b : Qbar l} (ha : a ∈ c.O) (
     exact c.O.sub_mem ha hb
   · rw [norm_mul, norm_inv]
     have hp : 0 < ‖((l : ℕ) : Qbar l) ^ n‖ := norm_pos_iff.2 (lpow_ne_zero n)
-    rw [inv_mul_le_iff₀ hp, mul_one]
-    exact h
+    rwa [inv_mul_le_iff₀ hp, mul_one]
 
 end GlobalTheory.Ord2.Unbounded
 
@@ -533,8 +530,7 @@ theorem divSel_unbounded : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [
         (hcoc.2.2 s trivial t trivial i)
     · have hc : Continuous z := by
         have := hcoc.1
-        rw [Subgroup.coe_top, continuousOn_univ] at this
-        exact this
+        rwa [Subgroup.coe_top, continuousOn_univ] at this
       have hp : 0 < ‖L‖ := norm_pos_iff.2 hL0
       filter_upwards [Metric.tendsto_nhds.1 (hc.tendsto s) _ hp] with t ht i
       have e : ζ t i - ζ s i = L⁻¹ * (z t i - z s i) := by
@@ -587,8 +583,7 @@ theorem divSel_unbounded : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [
   have hf : (fun s => ((l : ℕ) : Qbar l) ^ r • (fun s => ((l : ℕ) : Qbar l) ^ m • z s) s) =
       fun s => ((l : ℕ) : Qbar l) ^ (m + r) • z s := by
     funext s; rw [smul_smul, ← pow_add, add_comm]
-  rw [hf] at key
-  exact key
+  rwa [hf] at key
 
 end GlobalTheory.Ord2.Unbounded
 
@@ -632,13 +627,11 @@ lemma exists_preimage {l : ℕ} (hfin : Finite {x : X // l • x = 0}) {y : X} (
   obtain ⟨z0, hz0⟩ := hy 1
   rw [pow_one] at hz0
   haveI := finite_fiber hfin y z0 hz0
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hm : ∀ z : {z : X // l • z = y}, ∃ m : ℕ, ∀ w : X, l ^ m • w ≠ z.1 := by
     intro z
     have := hcon z.1 z.2
-    simp only [DivAll, not_forall, not_exists] at this
-    exact this
+    simpa only [DivAll, not_forall, not_exists] using this
   choose f hf using hm
   obtain ⟨M, hM⟩ := (Set.finite_range f).bddAbove
   obtain ⟨w, hw⟩ := hy (M + 1)
@@ -658,8 +651,7 @@ lemma exists_last {l : ℕ} {z : X} (hz : z ≠ 0) :
 lemma exists_start {l : ℕ} (htors : ∀ x : X, ∃ n : ℕ, l ^ n • x = 0)
     (hfin : Finite {x : X // l • x = 0}) (hunb : ∀ m : ℕ, ∃ x : X, l ^ m • x ≠ 0) :
     ∃ y : X, y ≠ 0 ∧ l • y = 0 ∧ DivAll l y := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hm : ∀ y : {x : X // l • x = 0}, ∃ m : ℕ, y.1 ≠ 0 → ∀ w : X, l ^ m • w ≠ y.1 := by
     intro y
     by_cases hy0 : y.1 = 0
@@ -729,7 +721,6 @@ theorem resRep_contAction : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] 
     intro m
     rw [(QuotientGroup.isQuotientMap_mk (NS Ω (S : Set Pl))).continuous_iff]
     exact hred m
-  show Continuous fun p : GS Ω (S : Set Pl) × ResPlane c => (resRep c W hO S hN p.1) p.2
   exact continuous_prod_of_discrete_right.2 hq
 
 end GlobalTheory.Ord2
@@ -1259,9 +1250,7 @@ theorem limit_nonzero_ordinary_class : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) 
     intro b hb
     funext i
     refine eq_zero_of_forall_norm_le _ fun n => ?_
-    have h := cg_trans (hza n b i) (hker n b hb i)
-    simp only [Cg, Pi.zero_apply, sub_zero] at h
-    exact h
+    simpa only [Cg, Pi.zero_apply, sub_zero] using cg_trans (hza n b i) (hker n b hb i)
   have hexact : ∀ H : Subgroup (G ℚ Ω), (∀ n, ∃ y : Fin 2 → Qbar l, ∀ s ∈ H, Cv n (a n s) (mat W s *ᵥ y - y)) →
       ∃ x : Fin 2 → Qbar l, ∀ s ∈ H, z s = mat W s *ᵥ x - x := by
     intro H hH

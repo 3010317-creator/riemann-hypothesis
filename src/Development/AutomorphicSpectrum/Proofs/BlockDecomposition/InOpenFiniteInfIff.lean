@@ -55,10 +55,8 @@ theorem inU_iInf_finset : ∀ {O : Type} [CommRing O] {R : Type} [CommRing R] {I
   have hinf : ∀ V W : X.Opens, InU (V ⊓ W) T ↔ InU V T ∧ InU W T := by
     intro V W
     constructor
-    · intro h
-      exact ⟨fun x hx => (h hx).1, fun x hx => (h hx).2⟩
-    · intro h x hx
-      exact ⟨h.1 hx, h.2 hx⟩
+    · exact fun h => ⟨fun x hx => (h hx).1, fun x hx => (h hx).2⟩
+    · exact fun h x hx => ⟨h.1 hx, h.2 hx⟩
   induction S using Finset.induction_on with
   | empty => simpa using htop
   | insert a s ha ih =>

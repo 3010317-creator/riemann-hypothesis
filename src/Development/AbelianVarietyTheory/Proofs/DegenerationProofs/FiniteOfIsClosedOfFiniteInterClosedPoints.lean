@@ -71,8 +71,7 @@ theorem finite_of_isClosed_of_finite_inter_closedPoints {T : Type*} [Topological
   have hc : IsClosed (S ∩ closedPoints T) := by
     rw [← Set.biUnion_of_singleton (S ∩ closedPoints T)]
     exact h.isClosed_biUnion fun x hx ↦ hx.2
-  rw [← JacobsonSpace.closure_inter_closedPoints hS, hc.closure_eq]
-  exact h
+  rwa [← JacobsonSpace.closure_inter_closedPoints hS, hc.closure_eq]
 
 theorem finite_pullback_over_closedPoint {X Z P : Scheme.{0}} (π : X ⟶ Sp ℤ)
     [LocallyOfFiniteType π] (s : X ⟶ Z) (t : P ⟶ Z) (σ : X) (hσ : IsClosed ({σ} : Set X))
@@ -97,8 +96,7 @@ theorem finite_pullback_over_closedPoint {X Z P : Scheme.{0}} (π : X ⟶ Sp ℤ
     (pullback.fst (pullback.fst s t) i)).subset ?_
   rintro w ⟨hw, hw'⟩
   have : w ∈ Set.range (pullback.fst (pullback.fst s t) i) := by
-    rw [Scheme.Pullback.range_fst, Scheme.range_fromSpecResidueField]
-    exact hw
+    rwa [Scheme.Pullback.range_fst, Scheme.range_fromSpecResidueField]
   obtain ⟨v, rfl⟩ := this
   exact ⟨v, by simpa using hw', rfl⟩
 

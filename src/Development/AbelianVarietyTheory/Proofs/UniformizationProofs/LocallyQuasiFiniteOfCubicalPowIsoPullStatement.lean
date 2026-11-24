@@ -204,8 +204,7 @@ theorem slice_eq {K : Type} [Field K] [IsAlgClosed K] {F B Z : Over (Spec (CommR
     obtain ⟨a, rfl, -⟩ := Scheme.exists_preimage_of_isPullback (hpb b) w pt hwb
     apply hw
     change g.left ((j b).left a) ∈ W
-    rw [← Scheme.Hom.comp_apply, ← Over.comp_left, hz]
-    exact hzW
+    rwa [← Scheme.Hom.comp_apply, ← Over.comp_left, hz]
   · let p : 𝟙_ (Over (Spec (CommRingCat.of K))) ⟶ B :=
       Over.homMk (pointOfClosedPoint (K := K) B.hom x hx)
         (pointOfClosedPoint_comp (K := K) B.hom x hx)
@@ -213,8 +212,7 @@ theorem slice_eq {K : Type} [Field K] [IsAlgClosed K] {F B Z : Over (Spec (CommR
     have hin (a : F.left) : (j p ≫ g).left a ∈ W := by
       by_contra hn
       refine hxV ⟨(j p).left a, ?_, ?_⟩
-      · rw [Over.comp_left, Scheme.Hom.comp_apply] at hn
-        exact hn
+      · rwa [Over.comp_left, Scheme.Hom.comp_apply] at hn
       · rw [← Scheme.Hom.comp_apply, (hpb p).w, Scheme.Hom.comp_apply, hp]
     have key (u : 𝟙_ _ ⟶ F) :
         (lift (toUnit B ≫ u) (𝟙 B) ≫ g).left x = (j p ≫ g).left (u.left pt) := by
@@ -276,8 +274,7 @@ theorem finite_closedPoints_of_contracted {K : Type} [Field K] [IsAlgClosed K]
   simp only [← Category.assoc, MonObj.comp_mul, lift_fst, lift_snd, hu, Category.comp_id,
     mul_inv_cancel_left, Category.id_comp] at key'
   change (toUnit B ≫ ((u ≫ i) * (u₀ ≫ i)⁻¹) * 𝟙 B) ≫ φ = φ
-  simp only [MonObj.comp_mul, GrpObj.comp_inv, _root_.mul_assoc, ← Category.assoc]
-  exact key'
+  simpa only [MonObj.comp_mul, GrpObj.comp_inv, _root_.mul_assoc, ← Category.assoc] using key'
 
 theorem locallyQuasiFinite_of_finite_stabiliser :
     ∀ (K : Type) [Field K] [IsAlgClosed K] (B : Over (Spec (CommRingCat.of K))) [GrpObj B] [IsCommMonObj B], IsAbelianScheme B → ∀ (Z : Over (Spec (CommRingCat.of K))) [IsSeparated Z.hom] [LocallyOfFiniteType Z.hom] (φ : B ⟶ Z), {x : 𝟙_ _ ⟶ B | ((toUnit B ≫ x) * 𝟙 B) ≫ φ = φ}.Finite → LocallyQuasiFinite φ.left := by

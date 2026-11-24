@@ -108,16 +108,14 @@ theorem _root_.GlobalTheory.AbelianLetters.exists_linear_lift_of_isGrpPullback :
       have hd' := hd.comp (inv φ)
       have hη : (η'.left ≫ φ) ≫ inv φ = η'.left := by simp
       rw [hη] at hd'
-      rw [hfam, _root_.GlobalTheory.HolHom.isDerivAt0_iff]
-      exact hd'
+      rwa [hfam, _root_.GlobalTheory.HolHom.isDerivAt0_iff]
     unfold _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsDerivAt0 at h3
     obtain ⟨hbase, hdF⟩ := h3
     have hF0 : F 0 = 0 := map_zero F
     have htan : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsTangent η' := by
       unfold _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsTangent
       rw [hbase]
-      simp only [hF0]
-      exact _root_.GlobalTheory.TangentOrigin.ex_zero_left u
+      simpa only [hF0] using _root_.GlobalTheory.TangentOrigin.ex_zero_left u
     have hdiffF : u.IsDiff (F z) η' := by
       unfold _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.HolUnif.IsDiff
       intro U hU f

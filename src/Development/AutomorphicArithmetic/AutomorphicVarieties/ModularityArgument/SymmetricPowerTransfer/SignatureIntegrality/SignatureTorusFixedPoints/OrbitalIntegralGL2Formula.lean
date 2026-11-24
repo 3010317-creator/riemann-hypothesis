@@ -114,12 +114,9 @@ private theorem orbit_of {T : Type} [Group T] (V : Lev k) {p q : T →* kˣ}
     ∃ t, ∃ v ∈ V.ZJ 2, g₀ * (dg u * j) = ι t * g₀ * v := by
   obtain ⟨t, ht⟩ := hpq (u 0 / u 1)
   have hz : GeneralLinearGroup.scalar (Fin 2) (u 1 / q t) ∈ V.ZJ 2 := by
-    show _ ∈ (GeneralLinearGroup.scalar (Fin 2)).range ⊔ V.J 2
     exact Subgroup.mem_sup_left (MonoidHom.mem_range.mpr ⟨_, rfl⟩)
   have hzj : GeneralLinearGroup.scalar (Fin 2) (u 1 / q t) * j ∈ V.ZJ 2 := by
-    refine mul_mem hz ?_
-    show _ ∈ (GeneralLinearGroup.scalar (Fin 2)).range ⊔ V.J 2
-    exact Subgroup.mem_sup_right hj
+    exact mul_mem hz (Subgroup.mem_sup_right hj)
   refine ⟨t, _, hzj, ?_⟩
   have h0 : u 0 = p t / q t * u 1 := by rw [ht, div_mul_cancel]
   have hu : u = ![p t, q t] * fun _ => u 1 / q t := by
@@ -203,8 +200,7 @@ theorem UpperTheory.V.Z.Sym.Sig.orbital_integral_degree_one : UpperTheory.V.Z.Sy
             ∃ z : kˣ, (GeneralLinearGroup.scalar (Fin 2) z)⁻¹ *
               (y⁻¹ * (g₀ * dg ![a, a⁻¹] * g₀⁻¹) * MonoidHom.id _ y) ∈ V.DC ![t, t⁻¹] := by
           constructor
-          · intro hm
-            exact ⟨1, by simpa using hm⟩
+          · exact fun hm => ⟨1, by simpa using hm⟩
           · rintro ⟨z, hz⟩
             obtain ⟨u, j, hj, rfl, -, -⟩ := key' V htd haa g₀ y hz
             have hr : dg ![a / t, (a / t)⁻¹] ∈ V.J 2 := by
@@ -215,7 +211,6 @@ theorem UpperTheory.V.Z.Sym.Sig.orbital_integral_degree_one : UpperTheory.V.Z.Sy
                 fin_cases i
                 · exact hat
                 · exact inv_mem hat
-              show _ ∈ (glIwa k 2).N ⊔ V.TH 2 ⊔ (glIwa k 2).Nm V.c
               exact Subgroup.mem_sup_left (Subgroup.mem_sup_right hm)
             refine ⟨j⁻¹, inv_mem hj, dg ![a / t, (a / t)⁻¹] * j, mul_mem hr hj, ?_⟩
             have hD : dg ![a, a⁻¹] = dg u * (dg ![t, t⁻¹] * dg ![a / t, (a / t)⁻¹]) * (dg u)⁻¹ := by
@@ -283,8 +278,7 @@ theorem UpperTheory.V.Z.Sym.Sig.orbital_integral_degree_one : UpperTheory.V.Z.Sy
     · rw [ite_eq_left hat]
       have hvat : valuation k (a : k) = valuation k (t : k) := by
         have h1 : valuation k ((a / t : kˣ) : k) = 1 := V.H_le hat
-        rw [Units.val_div_eq_div_val, map_div₀, div_eq_one_iff_eq (by simp)] at h1
-        exact h1
+        rwa [Units.val_div_eq_div_val, map_div₀, div_eq_one_iff_eq (by simp)] at h1
       have htb : t * b ∈ Uo k := by
         show valuation k ((t * b : kˣ) : k) = 1
         rw [Units.val_mul, map_mul, hvb, ← hvat, Units.val_inv_eq_inv_val, map_inv₀,

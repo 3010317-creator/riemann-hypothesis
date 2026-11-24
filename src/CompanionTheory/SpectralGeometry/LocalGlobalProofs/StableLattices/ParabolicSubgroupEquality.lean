@@ -83,8 +83,7 @@ theorem isoFlag (hA : IsGrad ε A) : IsIsoFlag ε (fun _ : Fin 1 => rk A) (W A) 
     fin_cases i
     show Module.finrank ℂ (Vm A) = Module.finrank ℂ (⊥ : Submodule ℂ (Fin n → ℂ)) + rk A
     simp [rk]
-  · intro x hx y hy
-    exact (mem_Wm_iff hA y).1 (Vm_le_Wm hA hy) x hx
+  · exact fun x hx y hy => (mem_Wm_iff hA y).1 (Vm_le_Wm hA hy) x hx
 
 theorem keeps_of_stable (g : Formalism.REAL.UJ ε) {S : Submodule ℂ (Fin n → ℂ)} (h : ∀ y ∈ S, uMat g *ᵥ y ∈ S) :
     Keeps (uMat g) S :=

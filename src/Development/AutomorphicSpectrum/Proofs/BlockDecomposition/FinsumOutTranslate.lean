@@ -83,9 +83,7 @@ theorem finite_out_mem (K : Subgroup G) (hK : IsOpen (K : Set G)) {C : Set G} (h
   haveI : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK
   have hc : IsCompact ((QuotientGroup.mk : G → G ⧸ K) '' C) :=
     hC.image QuotientGroup.continuous_mk
-  refine hc.finite_of_discrete.subset ?_
-  intro q hq
-  exact ⟨q.out, hq, QuotientGroup.out_eq' q⟩
+  exact hc.finite_of_discrete.subset (fun q hq => ⟨q.out, hq, QuotientGroup.out_eq' q⟩)
 
 end Generic
 
@@ -106,12 +104,10 @@ theorem support_hconv (K : Subgroup (GL ι F)) (e₁ e₂ : GL ι F → ℂ) :
     Function.support (hconv K e₁ e₂) ⊆ tsupport e₁ * tsupport e₂ := by
   intro g hg
   obtain ⟨q, hq⟩ : ∃ q : GL ι F ⧸ K, e₁ q.out * e₂ (q.out⁻¹ * g) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     refine (Function.mem_support.1 hg) ?_
     unfold hconv
-    simp only [h]
-    exact finsum_zero
+    simpa only [h] using finsum_zero
   exact Set.mem_mul.2 ⟨q.out, subset_tsupport _ (left_ne_zero_of_mul hq), q.out⁻¹ * g,
     subset_tsupport _ (right_ne_zero_of_mul hq), mul_inv_cancel_left _ _⟩
 
@@ -166,8 +162,7 @@ theorem hk_hconv {K : Subgroup (GL ι F)} {e₁ e₂ : GL ι F → ℂ} (h₁ : 
   have hc : ∀ g, hconv K e₁ e₂ g = ∑ q ∈ A, e₁ q.out * e₂ (q.out⁻¹ * g) := fun g => by
     unfold hconv
     refine finsum_eq_sum_of_support_subset _ ?_
-    intro q hq
-    exact Finset.mem_coe.2 ((memA q).2 (subset_tsupport _ (left_ne_zero_of_mul hq)))
+    exact fun q hq => Finset.mem_coe.2 ((memA q).2 (subset_tsupport _ (left_ne_zero_of_mul hq)))
   have hL := hk_eq_sum ρ K (hconv K e₁ e₂) v B
     (fun s hs => (memB s).2 (support_hconv K e₁ e₂ hs))
   have hT : ∀ x : GL ι F, ∑ᶠ r : GL ι F ⧸ K, e₂ r.out • ρ (x * r.out) v
@@ -204,8 +199,7 @@ theorem hk_hconv {K : Subgroup (GL ι F)} {e₁ e₂ : GL ι F → ℂ} (h₁ : 
     rw [hk_eq_sum ρ K e₁ _ A (fun q hq => (memA q).2 (subset_tsupport _ hq))]
     exact Finset.sum_congr rfl (fun q hq => by rw [hI q hq])
   rw [hL, hR]
-  simp only [hc, Finset.sum_smul, Finset.smul_sum, mul_smul]
-  exact Finset.sum_comm
+  simpa only [hc, Finset.sum_smul, Finset.smul_sum, mul_smul] using Finset.sum_comm
 
 end Hecke
 

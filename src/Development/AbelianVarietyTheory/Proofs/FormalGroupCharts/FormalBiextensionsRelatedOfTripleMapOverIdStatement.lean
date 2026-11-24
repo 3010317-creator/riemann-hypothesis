@@ -107,8 +107,7 @@ theorem val_carries {g : LB.Gen (LB.LinComb L' φ ε)} {g' : LB.Gen (LB.LinComb 
     (fun j => congrArg (res (wchart_pull_le L F φ j)) (Units.ext rfl)) ).1 h Z r z
     (fun k => J ((r ≫ φ k) ≫ F)) (fun k => J' (r ≫ φ k)) (fun k => hJ ((r ≫ φ k) ≫ F)) (fun k => hJ' (r ≫ φ k))
   rw [Category.comp_id] at H
-  rw [val_of g' r z J (fun k => J ((r ≫ φ k) ≫ F)) (fun k => by rw [Category.assoc])]
-  exact H
+  rwa [val_of g' r z J (fun k => J ((r ≫ φ k) ≫ F)) (fun k => by rw [Category.assoc])]
 
 theorem carried_trans (hw : w.IsGen) {g : LB.Gen (LB.LinComb L' φ ε)} (hg : g.IsGen) {Z : Scheme.{0}} (r : Z ⟶ Y)
     (z : Z) (p p' : K → L.ι) (q q' : K → L'.ι) (hp : r z ∈ LB.wchart L (fun k => φ k ≫ F) p)
@@ -480,8 +479,7 @@ theorem chartTransition_inv (hx : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d
     hφ (chartTransition_coordRel hx hy)
   have eψ := coordRel_unique hy hinv.2.1 (chartTransition_const hy hx)
     hψ (chartTransition_coordRel hy hx)
-  rw [← eφ, ← eψ]
-  exact hinv
+  rwa [← eφ, ← eψ]
 
 @[simp] theorem chartTransition_refl (hx : GlobalTheory.PowGerm.IsUnivJ G (Fin 1 × Fin d) x) :
     chartTransition hx hx = pt V (n := 1) d 0 :=

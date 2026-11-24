@@ -221,8 +221,7 @@ theorem exists_sends_of_rat_mem_minPar : ∀ (F E : Type) [Field F] [NumberField
   have hgX : (g : Matrix (Fin n) (Fin n) E) * X = X * Bq := by
     apply Matrix.map_injective hinc
     dsimp only
-    rw [Matrix.map_mul, Matrix.map_mul, ← hg]
-    exact he
+    rwa [Matrix.map_mul, Matrix.map_mul, ← hg]
   have hlow : ∀ k : Fin (r + 1), k ≠ 0 → Bq k 0 = 0 := fun k hk => by
     apply hinc
     have := hbt (show id (0 : Fin (r + 1)) < id k from Fin.pos_of_ne_zero hk)
@@ -304,8 +303,7 @@ theorem exists_ratPts_sends_isotropic : ∀ (F E : Type) [Field F] [NumberField 
       rw [hg]
       exact fun N hN => hN
     refine ⟨_, h3 _ (unitaryGroupEquivMatrix h (Pi.basisFun E (Fin n)) g).2, ?_⟩
-    rw [unitaryGroupEquivMatrix_apply, LinearMap.toMatrix_eq_toMatrix', LinearMap.toMatrix'_mulVec]
-    exact hgv
+    rwa [unitaryGroupEquivMatrix_apply, LinearMap.toMatrix_eq_toMatrix', LinearMap.toMatrix'_mulVec]
   refine ⟨ratEmb _ J ⟨M, hM⟩, by rw [← range_ratEmb]; exact ⟨_, rfl⟩, ?_⟩
   unfold Sends
   funext i
@@ -442,8 +440,7 @@ theorem isCompact_boxE_one (F E : Type) [Field F] [NumberField F] [Field E] [Num
 
 theorem main : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E],
     IsCompact (boxF F 1) ∧ IsCompact (boxE F E 1) := by
-  intro F E _ _ _ _ _
-  exact ⟨isCompact_boxF_one F, isCompact_boxE_one F E⟩
+  exact fun F E _ _ _ _ _ => ⟨isCompact_boxF_one F, isCompact_boxE_one F E⟩
 
 end GlobalTheory.CompanionTheory.RedCov.Simple.BoxCpt
 
@@ -621,8 +618,7 @@ theorem finprod_le_prod_of_le {α : Type*} {f b : α → ℝ} (S : Finset α) (h
     refine hle.trans (le_of_eq (Finset.prod_congr rfl fun a ha => ?_))
     simp only [hc]
     rw [ite_eq_left ha]
-  · rw [finprod_of_infinite_mulSupport hf]
-    exact hone
+  · rwa [finprod_of_infinite_mulSupport hf]
 
 variable {F : Type} [Field F] [NumberField F] {N : ℕ}
 
@@ -796,8 +792,7 @@ theorem mulVec_col {m : ℕ} {M : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)} {X : M
   have e := congrFun (congrFun hB k) j
   simp only [Matrix.mul_apply] at e
   simp only [mulVec, dotProduct, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
-  refine Eq.trans e (Finset.sum_congr rfl fun i _ => ?_)
-  exact mul_comm _ _
+  exact Eq.trans e (Finset.sum_congr rfl fun i _ => (mul_comm _ _))
 
 theorem adelicNorm_rId [IsTotallyReal F] {N : ℕ} (c : ℝ) (y : Fin N → AF F) :
     GroundTheory.Automorphic.Reduction.adelicNorm (rId F c • y) =
@@ -832,8 +827,7 @@ theorem torus_col (ha : IsTorus σ J X Y a) (t : Fin (r + 1) → ℝ) (i : Fin (
   · rw [Matrix.diagonal_apply_eq]
   · intro k _ hk
     rw [Matrix.diagonal_apply_ne _ hk, zero_smul]
-  · intro hi
-    exact absurd (Finset.mem_univ i) hi
+  · exact fun hi => absurd (Finset.mem_univ i) hi
 
 theorem torus_inv (ha : IsTorus σ J X Y a) (s : Fin (r + 1) → ℝ) : (a s)⁻¹ = a (-s) := by
   have h0 : a 0 = 1 := by
@@ -848,8 +842,7 @@ theorem par_col_zero {M : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)} {B : Matrix (F
   rw [mulVec_col e 0, Finset.sum_eq_single 0]
   · intro k _ hk
     rw [hB (show id (0 : Fin (r + 1)) < id k from Fin.pos_of_ne_zero hk), zero_smul]
-  · intro hi
-    exact absurd (Finset.mem_univ 0) hi
+  · exact fun hi => absurd (Finset.mem_univ 0) hi
 
 theorem par_col_one {M : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)} {B : Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E)}
     (hB : B.BlockTriangular id) (e : M * adMat F X = adMat F X * B) {j : Fin (r + 1)} (hj : j.val = 1) :
@@ -1166,8 +1159,7 @@ theorem mul_mem_one (h : IsCMExt F E σ) (hJ : IsHermND σ J) {X Y : Matrix (Fin
   have e := h2 ⟨p, hp'⟩ ⟨q, hq'⟩
   rw [h4 p hp, h4 q hq, add_zero] at e
   have := h5 (⟨p, hp'⟩ * ⟨q, hq'⟩)
-  rw [e, torus_zero ha, inv_one, mul_one] at this
-  exact this
+  rwa [e, torus_zero ha, inv_one, mul_one] at this
 
 theorem ratV_zero : ratV F (0 : Fin n → E) = 0 := by
   funext i
@@ -1279,9 +1271,7 @@ theorem step {r : ℕ} (h : IsCMExt F E σ) (hJ : IsHermND σ J) {X Y : Matrix (
     · intro _
       have h4 : Real.exp (-S 0) * Real.exp (S 0) = 1 := by rw [← Real.exp_add]; simp
       have h5 : M₁⁻¹ ≤ Real.exp (S 0) := by
-        rw [inv_le_comm₀ hM₁ (Real.exp_pos _)]
-        rw [← Real.exp_neg]
-        exact b1
+        rwa [inv_le_comm₀ hM₁ (Real.exp_pos _), ← Real.exp_neg]
       exact hc2.trans h5
     · intro hi'
       rw [hSs]

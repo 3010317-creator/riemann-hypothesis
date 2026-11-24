@@ -73,8 +73,7 @@ theorem finComp_eq_one {F : Type} [Field F] [NumberField F] {v : Pl (F := F)} {u
   have h2 : GlobalTheory.AdelicU.singleFin w 1 * ((u : AF F).2 - 1) = 0 := congrArg Prod.snd h
   have h' := congrArg (evalV F w) h2
   rw [map_mul, GlobalTheory.AdelicU.evalV_singleFin_self, one_mul, map_sub, map_zero, sub_eq_zero] at h'
-  rw [← (map_one (evalV F w) : evalV F w 1 = 1)]
-  exact h'
+  rwa [← (map_one (evalV F w) : evalV F w 1 = 1)]
 
 end GlobalTheory.ModuLocal
 
@@ -88,8 +87,7 @@ theorem GlobalTheory.ModuLocal.distribHaarChar_eq_nabs_of_at : ∀ (F : Type) [F
     finprod_eq_single _ v fun w hw => by rw [GlobalTheory.ModuLocal.finComp_eq_one hu hw, norm_one]
   have hloc := ((GlobalTheory.CompletionNorm.norm_nabs_valuation F v).1 (Units.map (evFin F v : AF F →* Fv F v) u)).1
   refine (congrArg₂ (· * ·) hinf hfin).trans ?_
-  rw [one_mul]
-  exact hloc
+  rwa [one_mul]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

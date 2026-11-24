@@ -58,8 +58,7 @@ theorem mul_mem_map_of_prod {R : Type} [CommRing R] [IsDedekindDomain R] (f : R 
     ∀ b ∈ A.map f, p * b ∈ (A * I).map f := by
   intro b hb
   have h0 : Ideal.span {m} ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact hm
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   rw [Ideal.map_mul, ← Ideal.span_singleton_mul_span_singleton, mul_mul_mul_comm, h] at h1
   have h2 := mul_left_cancel₀ h0 h1
   have h3 : p ∈ I.map f := by
@@ -97,8 +96,7 @@ theorem congr_of_marked {D : D7} (V : HSp D) {La : Type} [AddCommGroup La] [Modu
   have hH : latGHat V g' = latGHat V g := by
     rw [GlobalTheory.RecDict.coset_latGHat, GlobalTheory.RecDict.coset_latGHat, hL]
   have hv' : v ∈ (J • (⊤ : Submodule (𝓞 D.host.E) La)).map ι := by
-    rw [Submodule.map_smul'', Submodule.map_top, hι.2]
-    exact hv
+    rwa [Submodule.map_smul'', Submodule.map_top, hι.2]
   obtain ⟨a, ha, rfl⟩ := hv'
   have hpa : p • a ∈ J₂ • (⊤ : Submodule (𝓞 D.host.E) La) := by
     refine Submodule.smul_induction_on (p := fun a => p • a ∈ J₂ • (⊤ : Submodule (𝓞 D.host.E) La)) ha

@@ -95,11 +95,9 @@ theorem toM_rInf (t : ℝ) (a : AF F) : toM (rInf F t * a).1 = t • toM a.1 := 
 theorem arch_projection_to_mixed_space {a : AF F} (ha : eInf F * a = a) : GlobalTheory.WeilL2Words.arch1 F (toM a.1) = a := by
   have h2 : a.2 = 0 := by
     rw [← ha]
-    show (0 : FiniteAdeleRing (𝓞 F) F) * a.2 = 0
     exact zero_mul _
   show (((toM).symm (toM a.1), 0) : AF F) = a
   rw [RingEquiv.symm_apply_apply]
-  show ((a.1, 0) : InfiniteAdeleRing F × FiniteAdeleRing (𝓞 F) F) = a
   exact Prod.ext rfl h2.symm
 
 theorem archPair_add (h h' : (κ → mixedEmbedding.mixedSpace F) × (κ → mixedEmbedding.mixedSpace F)) :

@@ -164,8 +164,7 @@ theorem sum_norm_eq_two_mul (X : FD.Data E r) (y : E) :
       (fun σ => ComplexEmbedding.conjugate σ) ?_ ?_ ?_ ?_ ?_
     · intro σ hσ
       simp only [Finset.mem_compl] at hσ ⊢
-      rw [X.cmType, ComplexEmbedding.involutive_conjugate E σ]
-      exact hσ
+      rwa [X.cmType, ComplexEmbedding.involutive_conjugate E σ]
     · intro σ hσ
       simp only [Finset.mem_compl] at hσ ⊢
       exact (X.cmType σ).mp hσ
@@ -237,8 +236,7 @@ theorem finrank_div_rd_le {β : E} (hβ : ∀ a : 𝓞 E, ∃ k : ℤ, Algebra.t
     rw [abs_pos]
     exact_mod_cast NumberField.discr_ne_zero E
   have hdN : |(NumberField.discr E : ℝ)|⁻¹ ≤ |(Algebra.norm ℚ β : ℝ)| := by
-    rw [inv_eq_one_div, div_le_iff₀ hd]
-    exact hN
+    rwa [inv_eq_one_div, div_le_iff₀ hd]
   have hlow : (I2.PT.rd E)⁻¹ ≤ |(Algebra.norm ℚ β : ℝ)| ^ ((n : ℝ)⁻¹) := by
     have hrd : I2.PT.rd E = |(NumberField.discr E : ℝ)| ^ (1 / (n : ℝ)) := rfl
     rw [hrd, ← Real.inv_rpow (abs_nonneg _), one_div]
@@ -267,8 +265,7 @@ theorem two_f_div_rd_le_la1sq (X : FD.Data E r) (hr : 0 < r) (h0 : X.p0 = 0)
     by_cases h : σ0 ∈ X.Ψ
     · exact ⟨σ0, h⟩
     · refine ⟨ComplexEmbedding.conjugate σ0, ?_⟩
-      rw [X.cmType, ComplexEmbedding.involutive_conjugate E σ0]
-      exact h
+      rwa [X.cmType, ComplexEmbedding.involutive_conjugate E σ0]
   have hbound : ∀ v ∈ X.Λ, v ≠ 0 →
       2 * (I2.PT.f E : ℝ) / I2.PT.rd E ≤ ∑ τ, X.c τ * X.maj x τ (FD.Data.emb τ.1 v) := by
     intro v hv hv0

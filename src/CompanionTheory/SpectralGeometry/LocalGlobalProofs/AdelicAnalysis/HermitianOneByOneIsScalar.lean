@@ -16,8 +16,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
   {σ : E →ₐ[F] E}
 
 theorem exists_ne (h : IsCMExt F E σ) : ∃ x : E, σ x ≠ x := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   obtain ⟨w⟩ := (inferInstance : Nonempty (NumberField.InfinitePlace E))
   have hreal : w.IsReal := by
     rw [← NumberField.InfinitePlace.mk_embedding w, NumberField.InfinitePlace.isReal_mk_iff,
@@ -30,8 +29,7 @@ theorem exists_ne (h : IsCMExt F E σ) : ∃ x : E, σ x ≠ x := by
 
 theorem exists_eq_algebraMap (h : IsCMExt F E σ) {x : E} (hx : σ x = x) :
     ∃ β : F, x = algebraMap F E β := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have hli : LinearIndependent F ![(1 : E), x] := by
     rw [LinearIndependent.pair_iff]
     intro s t hst
@@ -63,8 +61,7 @@ theorem hermOne_eq_scal : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   obtain ⟨β, hβ⟩ := HermOne.exists_eq_algebraMap h (hT 0 0)
   have hTβ : T = fun _ _ => algebraMap F E β := by
     funext a b
-    rw [Subsingleton.elim a 0, Subsingleton.elim b 0]
-    exact hβ
+    rwa [Subsingleton.elim a 0, Subsingleton.elim b 0]
   refine ⟨β, hTβ, fun hd hb => hd ?_, fun R _ _ => ?_⟩
   · rw [Matrix.det_fin_one, hβ, hb, map_zero]
   · apply Subtype.ext

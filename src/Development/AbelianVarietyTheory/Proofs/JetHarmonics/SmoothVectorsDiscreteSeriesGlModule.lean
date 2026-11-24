@@ -81,11 +81,9 @@ theorem smooth_gl_module : PI.KFinSmooth → ∀ (k r : ℕ) (ε : Fin (2 * r + 
   obtain ⟨hmem, hlin, hadd, -, hbr, -⟩ := _root_.GlobalTheory.ComplexifiedAction.complexified_action hK k r ε mu R hDS
   have h0 : (0 : R.H) ∈ R.sm := R.smSub.zero_mem
   have hz : ∀ Y, R.dC Y 0 = 0 := fun Y => by
-    have h := hlin Y 1 0 h0 0 h0
-    simpa using h
+    simpa using hlin Y 1 0 h0 0 h0
   have hY0 : ∀ v ∈ R.sm, R.dC 0 v = 0 := fun v hv => by
-    have h := hadd 0 0 1 v hv
-    simpa using h
+    simpa using hadd 0 0 1 v hv
   have hsub : ∀ Y Z, ∀ v ∈ R.sm, R.dC (Y - Z) v = R.dC Y v - R.dC Z v := fun Y Z v hv => by
     have h := hadd Z (Y - Z) 1 v hv
     simp only [one_smul, add_sub_cancel] at h

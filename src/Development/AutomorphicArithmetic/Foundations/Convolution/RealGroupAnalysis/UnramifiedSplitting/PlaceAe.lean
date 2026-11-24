@@ -242,8 +242,7 @@ private theorem inert_of (he : w.asIdeal.ramificationIdx (𝓞 F) = 1) (h2 : Val
     change sg w (ι u + ι t * θw) = _
     rw [hmk, adeleMap_sg v w hu, adeleMap_sg v w hu, hadd, mul_comm (sg w (ι t)), hmul, mul_comm]
     rfl
-  · intro u t
-    exact hval u t
+  · exact fun u t => hval u t
   · intro c u t
     change (ι c + ι 0 * θw) * (ι u + ι t * θw) = ι (c * u) + ι (c * t) * θw
     simp only [map_zero, zero_mul, add_zero, map_mul]
@@ -257,8 +256,7 @@ private theorem inert_of (he : w.asIdeal.ramificationIdx (𝓞 F) = 1) (h2 : Val
       rfl
     refine ⟨ϖ', ?_, ?_, ?_⟩
     · change Valued.v (ι (ϖ : Kv v)) = _
-      rw [hv]
-      exact hϖ
+      rwa [hv]
     · rw [hco, hmk, map_zero, zero_mul, add_zero]
     · have : idl w ϖ' = ideleEmbedding F E (idl v ϖ) := Units.ext hco
       rw [this, ideleNorm_ideleEmbedding, finrank_two D]
@@ -313,8 +311,7 @@ theorem UpperTheory.ConvolutionTheory.R2.H.placeAe :
   have hθ' : Valued.v (algebraMap E (Kv w) D.θ) = 1 := by
     rw [valued_algebraMap_field]; exact hθ
   have h2' : Valued.v (2 : Kv v) = 1 := by
-    rw [← val_iota v w he, map_ofNat, ← map_ofNat (algebraMap E (Kv w)) 2, valued_algebraMap_field]
-    exact h2
+    rwa [← val_iota v w he, map_ofNat, ← map_ofNat (algebraMap E (Kv w)) 2, valued_algebraMap_field]
   have hs := sum_ramificationIdx_mul_inertiaDeg E v
   rw [finrank_two D] at hs
   have hpos : ∀ x : PlacesOver E v, 1 ≤ x.1.asIdeal.ramificationIdx (𝓞 F) * x.1.asIdeal.inertiaDeg (𝓞 F) := fun x =>

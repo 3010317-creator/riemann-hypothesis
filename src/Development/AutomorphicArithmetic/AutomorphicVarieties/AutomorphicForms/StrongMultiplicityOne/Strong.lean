@@ -126,8 +126,7 @@ theorem UpperTheory.V.Af.StrongMultiplicityOne.archKir :
         · rfl
       simp only [this]
       simp [psiR]
-    · simp only [hw p hp, mul_assoc]
-      exact integral_const_mul _ _
+    · simpa only [hw p hp, mul_assoc] using integral_const_mul _ _
   | succ m ih =>
     intro hm
     obtain ⟨H, H1, hH⟩ := ih (by omega)
@@ -372,8 +371,7 @@ theorem UpperTheory.V.Af.StrongMultiplicityOne.cenSame :
     refine ⟨fun x hx => GlobalTheory.CuspRep.pLoc_locGL_of_ne (show x ≠ w from fun e => hw (e ▸ hx)) _, fun x => ?_⟩
     by_cases e : x = w
     · subst e
-      rw [GlobalTheory.CuspRep.pLoc_locGL]
-      exact hkk
+      rwa [GlobalTheory.CuspRep.pLoc_locGL]
     · rw [GlobalTheory.CuspRep.pLoc_locGL_of_ne e]
       exact one_mem _
   have e := hC E n S B φ.1 φ'.1 φ.2.1.continuous φ'.2.1.continuous φ.2.1.isLeftInvariant φ'.2.1.isLeftInvariant
@@ -1530,8 +1528,7 @@ theorem UpperTheory.V.Af.StrongMultiplicityOne.seedConv :
   refine exists_schwartz_integral_eq_one volume (chart W 1) (invSet E n) (toL y.val) ?_ ?_ ?_
   · exact GlobalTheory.CuspRep.isOpen_invSet.mem_nhds (GlobalTheory.CuspRep.val_mem_invSet y)
   · exact (h E n W hW).1.comp (f := fun x => ((1 : GA E n), x)) (by fun_prop) fun x hx => ⟨trivial, hx⟩
-  · rw [GlobalTheory.CuspRep.chart_val, one_mul]
-    exact hy
+  · rwa [GlobalTheory.CuspRep.chart_val, one_mul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.StrongMultiplicityOne.SeedConv =====

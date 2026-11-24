@@ -276,8 +276,7 @@ theorem gl_eq_one_of_pow_prime_pow :
     intro h0
     apply ih
     apply gl_eq_one_of_pow_prime E N p hp h
-    rw [← pow_mul, ← pow_succ]
-    exact h0
+    rwa [← pow_mul, ← pow_succ]
 
 end GlobalTheory.BadShare
 end -- clump:auto
@@ -481,8 +480,7 @@ theorem isGeneric_of_wh (ψ : AddChar (ZMod g) ℂ) (hψ : ψ ≠ 1) {n : ℕ} (
     rw [coeff_eU ψ hψ 0 0 hk, map_smul, smul_eq_mul]
     rfl
   obtain ⟨y, hy⟩ : ∃ y, op V.ρ (levOfChar ψ hψ n false 0 0 hk).e y ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact h1 (LinearMap.ext hc)
   refine ⟨_, hy, fun u hu => ?_⟩
   exact (GlobalTheory.BadShare.EpsProj.mem_range_iff V.ρ (mem_one _) (fun _ _ => mem_mul _) (chi_one _) (fun _ _ => chi_mul _) _).1
@@ -626,8 +624,7 @@ theorem finrank_eq_card_mul_and_trace_eq_zero_of_free_values :
     intro T hT
     refine Subtype.ext (hzero T T.2 (fun x => ?_))
     have hx := congrFun hT x
-    rw [hΦ] at hx
-    exact hx
+    rwa [hΦ] at hx
   have hΦsurj : Function.Surjective Φ := by
     intro g
     choose T hTS hTg hT0 using fun x => hfree (s x) (g x)
@@ -641,8 +638,7 @@ theorem finrank_eq_card_mul_and_trace_eq_zero_of_free_values :
       apply hT0
       rw [hs, hs]
       exact Ne.symm hxy
-    · intro h
-      exact absurd (Finset.mem_univ y) h
+    · exact fun h => absurd (Finset.mem_univ y) h
   let Ψ : S ≃ₗ[ℂ] (X → W) := LinearEquiv.ofBijective Φ ⟨hΦinj, hΦsurj⟩
   have hfd : FiniteDimensional ℂ S := LinearEquiv.finiteDimensional Ψ.symm
   refine ⟨hfd, ?_, ?_⟩
@@ -748,8 +744,7 @@ theorem sum_good {g N m : ℕ} [Fact g.Prime] {ι : Type} [Fintype ι] [Fintype 
       choose a ha using hc
       have hMa : (fun v => Formalism.CyclotomicNorms.monicOf (a v)) = F := funext ha
       refine ⟨a, ?_, hMa⟩
-      rw [hMa]
-      exact hG
+      rwa [hMa]
     · rintro ⟨a, hG, rfl⟩
       exact GlobalTheory.BadShare.mem_goodSet_iff_good.2 hG
   rw [hset, Finset.sum_image (fun a _ b _ e => hinj e), Finset.sum_filter]
@@ -884,8 +879,7 @@ theorem isDefUnimod_of_isBaseFrame : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.ra
       rwa [V.frame.sum_equivFun]
     · intro hv
       refine ⟨V.frame.equivFun.symm v, ?_, V.frame.equivFun.apply_symm_apply v⟩
-      rw [Module.Basis.equivFun_symm_apply]
-      exact hv
+      rwa [Module.Basis.equivFun_symm_apply]
   refine ⟨Matrix.ext fun i j => (hJ V).1 i j, (hJ V).2.isUnit,
     GlobalTheory.Proof.TotallyDefiniteMass.isTotDef_gram D.sp.cm V hs hp,
     isLattice_of_squeeze hL (Nat.cast_ne_zero.2 hN.ne') (fun x hx => h1 x ((hmem x).1 hx))
@@ -987,8 +981,7 @@ theorem isOfFinOrder_of_conjIn_mem_St :
     let f : H → Formalism.UG.stabAt (UQ hc J) ((Formalism.UG.levelAfL hc.sig J L).subgroupOf (UA hc J)) x :=
       fun γ => ⟨ratEl γ.1, (ratEl_mem_stabAt x γ.1).2 γ.2⟩
     refine Finite.of_injective f ?_
-    intro a b hab
-    exact Subtype.ext (ratEl_injective (congrArg Subtype.val hab))
+    exact fun a b hab => Subtype.ext (ratEl_injective (congrArg Subtype.val hab))
   have huH : u ∈ H := by
     show conjIn hc J (x : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) u ∈ Formalism.UG.levelAfL hc.sig J L
     rw [← hb]
@@ -1286,8 +1279,7 @@ theorem real_acts : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau 
     funext τ
     simp
   have := hpart Finset.univ
-  rw [hall, hkL] at this
-  exact this
+  rwa [hall, hkL] at this
 
 end GlobalTheory.RealAct
 
@@ -1695,8 +1687,7 @@ theorem allAt_eq (h : HidaSetting R F) (b : Bool) (i : Fin D.R.m) :
       have : R.eG.symm (R.eG g) ∈ (F.lvl b).P := hp
       rwa [R.eG.symm_apply_apply] at this
     have := congrArg (R.HW i (sg0 D A)).e (mem_eig.1 hx ⟨g, hg⟩)
-    rw [h.models.gW, map_smul, ← hχ ⟨g, hg⟩ hp] at this
-    exact this
+    rwa [h.models.gW, map_smul, ← hχ ⟨g, hg⟩ hp] at this
 
 theorem wat_eq (h : HidaSetting R F) (b : Bool) (i : Fin D.R.m) :
     R.Wat i (sg0 D A) (levB R F b) = ((eig (R.gW i (sg0 D A)) (F.lvl b).P fun g => ((chiB F b g : ℂˣ) : ℂ)) ⊓
@@ -1718,13 +1709,11 @@ theorem wat_eq (h : HidaSetting R F) (b : Bool) (i : Fin D.R.m) :
   constructor
   · rintro ⟨⟨x, hx, rfl⟩, h2⟩
     refine ⟨x, ⟨hx, e1 ?_⟩, rfl⟩
-    rw [LinearMap.sub_apply, map_sub, key, map_zero]
-    exact h2
+    rwa [LinearMap.sub_apply, map_sub, key, map_zero]
   · rintro ⟨x, ⟨hx, h2⟩, rfl⟩
     refine ⟨⟨x, hx, rfl⟩, ?_⟩
     have := congrArg (R.HW i (sg0 D A)).e (LinearMap.mem_ker.1 h2)
-    rw [LinearMap.sub_apply, map_sub, key, map_zero] at this
-    exact this
+    rwa [LinearMap.sub_apply, map_sub, key, map_zero] at this
 
 theorem d0_eq (h : HidaSetting R F) (b : Bool) (i : Fin D.R.m) :
     d0 R F b i = Module.finrank ℂ (eig (R.gW i (sg0 D A)) (F.lvl b).P fun g => ((chiB F b g : ℂˣ) : ℂ)) := by

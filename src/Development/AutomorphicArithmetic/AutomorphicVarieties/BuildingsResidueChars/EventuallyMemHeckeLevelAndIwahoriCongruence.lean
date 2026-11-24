@@ -64,8 +64,7 @@ private theorem cmp_cont (l : ℕ) [Fact l.Prime] {L : Type} [Field L] [NumberFi
   by_cases h : ((l : ℕ) : 𝓞 L) ∉ w.asIdeal
   · simp only [cmp_of h]
     exact ((UpperTheory.unitaryAdelic_localComponents_continuous_levels_open L n).1 w).comp continuous_subtype_val
-  · simp only [cmp_not h]
-    exact continuous_const
+  · simpa only [cmp_not h] using continuous_const
 
 private theorem cmp_ev (l : ℕ) [Fact l.Prime] {L : Type} [Field L] [NumberField L] [IsCMField L] (n : ℕ) (w : Plc L)
     (U : Subgroup (GLw n w)) (hU : IsOpen (U : Set (GLw n w))) :
@@ -103,8 +102,7 @@ theorem UpperTheory.eventually_mem_heckeLevel_and_iwahoriCongruence :
       funext u
       rw [OneMemClass.coe_one, map_one, map_one]
       rfl
-    rw [Set.mem_preimage, e]
-    exact h0
+    rwa [Set.mem_preimage, e]
   have h2 := cmp_ev l n (s.w s.v0) _ (hK (s.w s.v0) 1)
   have h3 : ∀ᶠ k : finU (E := L) (n := n) in nhds 1, ∀ q : Q.Q, cmp n (Q.wq q) ((away l L n).rangeRestrict (k : UA L n)) ∈ K.1 q :=
     Filter.eventually_all.2 fun q => cmp_ev l n (Q.wq q) (K.1 q) (K.2 q).1
@@ -121,7 +119,6 @@ theorem UpperTheory.eventually_mem_heckeLevel_and_iwahoriCongruence :
     Subgroup.mem_inf.2 ⟨Subgroup.mem_iInf.2 fun u => cmp_int _ (k0 _), k2⟩
   refine ⟨⟨⟨_, hu⟩, UpperTheory.mem_heckeLevel_of_local_components_mem l L Ω s n hn V Q c m τ₀ K _ (fun w _ => cmp_int _ (k0 w)) k3, rfl, ?_⟩, ?_⟩
   · have : toKT n s ⟨_, hu⟩ ∈ Subtype.val ⁻¹' U := k1
-    rw [hUe] at this
-    exact this
+    rwa [hUe] at this
   · exact pi_mem_first_iwahori_filtration (fun v : V.frame.Vl => glIwa ((s.w v.1).adicCompletion L) n) b _ fun v =>
       (glBridge ((s.w v.1).adicCompletion L) n ℂ 1).2.2.2.2.1 b (k4 v)

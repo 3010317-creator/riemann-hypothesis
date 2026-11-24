@@ -97,8 +97,7 @@ theorem exists_isometry_comp {W V : Type} [AddCommGroup W] [Module ℂ W] [Norme
         rw [hl, h]; rfl }
   refine ⟨L.extend, fun x => ?_⟩
   have := L.extend_apply ⟨a x, LinearMap.mem_range_self a x⟩
-  rw [← hl]
-  exact this
+  rwa [← hl]
 
 theorem exists_unitary_mul_eq {n : ℕ} {ι : Type} [Fintype ι] [DecidableEq ι]
     (A B : Matrix (Fin n) ι ℂ) (h : Aᴴ * A = Bᴴ * B) :
@@ -296,8 +295,7 @@ theorem exists_isometry_comp {S : Type*} [AddCommGroup S] [Module ℂ S] (f h : 
   have h2 : f (r ⟨f s, LinearMap.mem_range_self f s⟩ - s) = 0 := by
     rw [map_sub, hr', sub_self]
   have h3 := hn (r ⟨f s, LinearMap.mem_range_self f s⟩ - s)
-  rw [h2, norm_zero, eq_comm, norm_eq_zero, map_sub, sub_eq_zero] at h3
-  exact h3
+  rwa [h2, norm_zero, eq_comm, norm_eq_zero, map_sub, sub_eq_zero] at h3
 
 theorem exists_isometry_flag (W W' : ℕ → Submodule ℂ E) (h0 : W 0 = ⊥) (hW : Monotone W) (hW' : Monotone W')
     (hd : ∀ i, Module.finrank ℂ (W i) = Module.finrank ℂ (W' i)) (l : ℕ) :
@@ -600,8 +598,7 @@ theorem proj_mul_eq {W W' : Submodule ℂ (Fin n → ℂ)} {P P' : Matrix (Fin n
     (h2 : ∀ y ∈ W', P' *ᵥ y = y) {g : Matrix (Fin n) (Fin n) ℂ} (hg : ∀ y ∈ W, g *ᵥ y ∈ W') :
     P' * g * P = g * P := by
   refine Matrix.ext_iff_mulVec.2 fun y => ?_
-  simp only [← Matrix.mulVec_mulVec]
-  exact h2 _ (hg _ (h1 y))
+  simpa only [← Matrix.mulVec_mulVec] using h2 _ (hg _ (h1 y))
 
 theorem proj_comm {W : Submodule ℂ (Fin n → ℂ)} {P : Matrix (Fin n) (Fin n) ℂ} (h0 : Pᴴ = P) (h1 : ∀ y, P *ᵥ y ∈ W)
     (h2 : ∀ y ∈ W, P *ᵥ y = y) {g : Matrix (Fin n) (Fin n) ℂ} (hg : ∀ y ∈ W, g *ᵥ y ∈ W)

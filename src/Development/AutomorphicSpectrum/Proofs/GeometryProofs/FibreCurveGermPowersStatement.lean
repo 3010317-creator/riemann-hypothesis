@@ -124,8 +124,7 @@ theorem ae_centre {X : Scheme.{0}} {K O : Type} [Field K] [CommRing O] (s : X �
     rw [hV.range_fromSpec]
     rintro _ ⟨p, rfl⟩
     have : p = IsLocalRing.closedPoint K := Subsingleton.elim (α := PrimeSpectrum K) _ _
-    rw [this]
-    exact hxV
+    rwa [this]
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (IsOpenImmersion.lift hV.fromSpec η hr)
   have hφ' : Spec.map φ ≫ hV.fromSpec = η := by rw [hφ, IsOpenImmersion.lift_fac]
   obtain ⟨g, hg⟩ := Spec.map_surjective (hV.fromSpec ≫ s)
@@ -507,8 +506,7 @@ theorem natCast_residueField (z : Sp R ⟶ X) (p : ℕ) (hp : (p : R) = 0) :
       (map_natCast (Scheme.stalkClosedPointTo z).hom p).trans hp
     exact not_isUnit_zero (M₀ := R) ((congrArg IsUnit e).mp h1)
   have h2 := (IsLocalRing.residue_eq_zero_iff _).2 hnu
-  rw [map_natCast] at h2
-  exact h2
+  rwa [map_natCast] at h2
 
 theorem centre_spMap {S : Type} [CommRing S] [IsLocalRing S] (f : R →+* S) [IsLocalHom f] (z : Sp R ⟶ X) :
     centre (Spec.map (CommRingCat.ofHom f) ≫ z) = centre z := by
@@ -531,8 +529,7 @@ theorem exists_residue_germ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   refine ⟨g₂.B, hm, GlobalTheory.T.fibre_power_free_conj_injective E H hbar X t hpow _ p _ d g₂ ?_⟩
   have e := centre_spMap (IsLocalRing.residue R) x
   change FibPF t (centre (Spec.map (CommRingCat.ofHom (IsLocalRing.residue R)) ≫ x))
-  rw [e]
-  exact hf
+  rwa [e]
 
 end Main
 

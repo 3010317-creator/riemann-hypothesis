@@ -136,8 +136,7 @@ lemma smoothed_eq (μ : Measure V) [IsFiniteMeasure μ] {b : ℝ} (hb : 0 < b) (
       simp [← Complex.ofReal_pow, Complex.mul_re, Complex.add_re]
   simp_rw [h1]
   rw [integral_integral_swap hint, ← integral_complex_ofReal]
-  refine integral_congr_ae (Eventually.of_forall fun z => ?_)
-  exact gauss_inner hb _
+  exact integral_congr_ae (Eventually.of_forall fun z => (gauss_inner hb _))
 
 noncomputable def dens (μ : Measure V) (y : V) : ℂ :=
   ∫ x, phi μ x * Complex.exp (-(2 * (Real.pi : ℂ) * Complex.I) * ((inner ℝ y x : ℝ) : ℂ))
@@ -179,8 +178,7 @@ lemma tendsto_smoothed (μ : Measure V) [IsFiniteMeasure μ] (hφ : Integrable (
       simp only [← Complex.ofReal_pow, ← Complex.ofReal_neg, ← Complex.ofReal_mul,
         Complex.ofReal_re]
       nlinarith [sq_nonneg ‖x‖]
-    rw [h2, mul_one]
-    exact h1
+    rwa [h2, mul_one]
   · have hc : Continuous (fun t : ℝ => phi μ x * (Complex.exp (-(t : ℂ) * (‖x‖ : ℂ) ^ 2) *
         Complex.exp (-(2 * (Real.pi : ℂ) * Complex.I) * ((inner ℝ y x : ℝ) : ℂ)))) := by
       fun_prop

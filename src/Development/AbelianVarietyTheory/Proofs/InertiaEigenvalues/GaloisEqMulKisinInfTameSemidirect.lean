@@ -184,8 +184,7 @@ theorem GlobalTheory.BKGal.covers_action : ∀ (l : ℕ) [Fact l.Prime] (a e : �
     have hr0 : ((r 0 : ↥LL.1) : Om l) = (((γ.left : (↥LL.1)ˣ) : ↥LL.1) : Om l) := by
       simp [r, TameGal.root]
     apply (algebraMap (Om l) ℂ_[l]).injective
-    rw [map_mul (algebraMap (Om l) ℂ_[l]), ← hr0]
-    exact h4
+    rwa [map_mul (algebraMap (Om l) ℂ_[l]), ← hr0]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -364,8 +363,7 @@ theorem ofGQ_apply (g : GQ l) (x : Om l) : Formalism.MainNotions.N.PreambleDegre
 theorem Kur_stable (g : GQ l) {x : Om l} (hx : x ∈ MaximalUnramifiedExtension l) : g x ∈ MaximalUnramifiedExtension l := by
   rw [← Formalism.MainNotions.N.PreambleDegrees.Loc.Kur_eq] at hx ⊢
   have h := ReciprocityTheory.DiscreteGroups.LocalClassField.Kur_stable (p := l) (K := Formalism.MainNotions.N.PreambleDegrees.Loc.Q0 l) (Formalism.MainNotions.N.PreambleDegrees.Loc.ofGQ g) x hx
-  rw [ofGQ_apply] at h
-  exact h
+  rwa [ofGQ_apply] at h
 
 theorem resid_of_fix (n : GQ l) (hn : ∀ x ∈ MaximalUnramifiedExtension l, n x = x) :
     ∀ x : Om l, ‖x‖ ≤ 1 → ‖n x - x‖ < 1 := by
@@ -380,8 +378,7 @@ theorem resid_of_fix (n : GQ l) (hn : ∀ x ∈ MaximalUnramifiedExtension l, n 
   intro x hx
   have h := (ReciprocityTheory.DiscreteGroups.LocalClassField.mem_subG_Kur_iff (p := l) (K := Formalism.MainNotions.N.PreambleDegrees.Loc.Q0 l)
     Formalism.MainNotions.N.PreambleDegrees.Loc.finiteDimensional_Q0_alt _).1 hmem x hx
-  rw [ofGQ_apply] at h
-  exact h
+  rwa [ofGQ_apply] at h
 
 theorem fix_Kur_normal : ((MaximalUnramifiedExtension l).fixingSubgroup : Subgroup (GQ l)).Normal := by
   constructor
@@ -666,8 +663,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (�
   have hkum : ϖ.kummer k = 1 := by
     rw [PiSys.gal_teich, PiSys.mu, add_sub_cancel] at hteich
     have h1 := mul_right_cancel₀ h0 (hteich.trans (one_mul _).symm)
-    have h2 := congrArg (fun w : Ainf l => w.coeff 0) h1
-    simpa using h2
+    simpa using congrArg (fun w : Ainf l => w.coeff 0) h1
   have hseq := seq_fixed ϖ hkum
   have hw : ∀ w, Per.σA k (wA l a w) = wA l a w := fun w => by simpa using hev (C w)
   have hz : ∀ x, k x = x → x ∈ IntermediateField.fixedField (Subgroup.zpowers k) := fun x hx => by
@@ -762,8 +758,7 @@ theorem covers_unique {k : GQ l} {γ γ' : TameGal ↥LL.1 l e a}
     have hu : ((uIn (A ↥(OL LL) ↥LL.1) : A ↥(OL LL) ↥LL.1) : PowerSeries ↥LL.1) = X := rfl
     simp only [hu, ringAct_X, coeff_C_mul, coeff_one_X, mul_one] at h
     simpa [TameGal.root] using h
-  refine SemidirectProduct.ext (Subtype.ext (Units.ext hl)) ?_
-  exact congrArg Multiplicative.ofAdd hs
+  exact SemidirectProduct.ext (Subtype.ext (Units.ext hl)) (congrArg Multiplicative.ofAdd hs)
 
 omit [HasUnr a LL] in
 theorem lift_root (a : ℕ) [TameDescentExponentData ↥LL.1 l e a] (ζ : Om l) (hζ : ζ ^ e = 1) :
@@ -816,12 +811,10 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (�
     · have h1 := hg1 x hx
       have h2 : (x ^ l ^ γ.shift.val) ^ l ^ a = x ^ l ^ γ.shift.val := by
         rw [← pow_mul, mul_comm, pow_mul, hx]
-      rw [hfix h hh _ (hroot_mem _ h2)]
-      exact h1
+      rwa [hfix h hh _ (hroot_mem _ h2)]
     · have hz : (((γ.left : (↥LL.1)ˣ) : ↥LL.1) : Om l) ^ l ^ a = (((γ.left : (↥LL.1)ˣ) : ↥LL.1) : Om l) := by
         rw [← hsucc, pow_succ, hζ, one_mul]
-      rw [hfix h hh _ (mul_mem (hroot_mem _ hz) (ϖ.pi_mem_field a))]
-      exact hg2
+      rwa [hfix h hh _ (mul_mem (hroot_mem _ hz) (ϖ.pi_mem_field a))]
   · intro k ζ hk
     obtain ⟨hr, -⟩ := _root_.GlobalTheory.BKGal.covers_action l a e ϖ LL k _ hk
     have hr' : ∀ x : Om l, x ^ l ^ a = x → k x = x := fun x hx => by

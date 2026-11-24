@@ -94,8 +94,7 @@ theorem exists_approx_at (T : Finset (HeightOneSpectrum (𝓞 E))) {n : ℕ} (g 
     refine ⟨a, fun P => ?_⟩
     have h := ha P.1 P.2
     simp only [dite_eq_left P.2, Subtype.coe_eta] at h
-    rw [← map_sub, PI.FinOrdValD.WA.val_alg] at h
-    exact h
+    rwa [← map_sub, PI.FinOrdValD.WA.val_alg] at h
   choose a ha using hk
   refine ⟨a, fun P l => ?_⟩
   rw [lin_apply_eq_sum, Finset.mul_sum]
@@ -119,8 +118,7 @@ theorem exists_sameCoset_frames {X : Fields} {Pr : Primes X} (sel : HeightOneSpe
   have h := hd P l
   have e : (f P).symm d - y0 P = (f P).symm (d - f P (y0 P)) := by
     rw [map_sub, LinearEquiv.symm_apply_apply]
-  rw [e]
-  exact h
+  rwa [e]
 
 end GlobalTheory.CplCosetPt
 
@@ -184,15 +182,13 @@ theorem mem_prinCong_one_of_redGL {E : Type} [Field E] [NumberField E] [StarRing
   have hxi := mem_stdAt.1 hx i
   have hr : redP P (j.1 x i) = redP P (x i) := by
     have h := congrFun (redV_redGL j hx) i
-    rw [hj, Units.val_one, Matrix.one_mulVec] at h
-    exact h
+    rwa [hj, Units.val_one, Matrix.one_mulVec] at h
   have hred : redP P (j.1 x i - x i) = 0 := by
     rw [reduction_sub hjx hxi, hr, sub_self]
   have h := intAt_div_of_redP hq (intAt_sub hjx hxi) hred
   have e : (((qOf P : E) ^ 1)⁻¹ • (j.1 x - x)) i = (j.1 x i - x i) / (qOf P : E) := by
     simp [div_eq_inv_mul]
-  rw [e]
-  exact h
+  rwa [e]
 
 theorem cosetOf_frames_vG : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a =>
   ∀ (hi : t.m2 + 1 ≤ D.R.m) (β : (St (t.m2 + 1) hi).Ch) (p p₁ : ChPt (R := D.R) t.sel (t.tup μ) (t.word u) (t.m2 + 1))

@@ -99,12 +99,10 @@ theorem isIrr_prod {G₁ G₂ : Type} [Group G₁] [Fintype G₁] [Group G₂] [
   have key : ∀ y, ip (fun x => α x * β y) α = β y := by
     intro y
     have e : ip (fun x => α x * β y) α = β y * ip α α := by
-      simp only [ip, Finset.mul_sum]
-      exact Finset.sum_congr rfl fun x _ => by ring
+      simpa only [ip, Finset.mul_sum] using Finset.sum_congr rfl fun x _ => by ring
     rw [e, h1, mul_one]
   rw [ip_prod]
-  simp only [key]
-  exact h2
+  simpa only [key] using h2
 
 theorem exists_prod_of_isIrr {G₁ G₂ : Type} [Group G₁] [Fintype G₁] [Group G₂] [Fintype G₂]
     {ρ : G₁ × G₂ → ℂ} (hρ : IsIrr ρ) :
@@ -355,8 +353,7 @@ theorem hc_isChar_and_res_decomp : ∀ (g : ℕ) [Fact g.Prime] (a b n : ℕ), n
       π ⟨x, hx⟩ = (h₁, h₂) ↔ (tl a (x : Mt g n) = h₁ ∧ br a b (x : Mt g n) = h₂) := by
     intro x hx h₁ h₂
     have hu := hunit x ((hP x).1 hx)
-    rw [hπv]
-    rw [Prod.mk.injEq, Units.ext_iff, Units.ext_iff, toG_val hu.1, toG_val hu.2]
+    rw [hπv, Prod.mk.injEq, Units.ext_iff, Units.ext_iff, toG_val hu.1, toG_val hu.2]
   have hsum : ∀ (f : Gn g n → ℂ) (h₁ : Gn g a) (h₂ : Gn g b),
       ∑ p : P, (if π p = (h₁, h₂) then f p else 0) =
         ∑ x : Gn g n, if InPar a (x : Mt g n) ∧ tl a (x : Mt g n) = h₁ ∧ br a b (x : Mt g n) = h₂ then f x else 0 := by
@@ -401,8 +398,7 @@ theorem hc_isChar_and_res_decomp : ∀ (g : ℕ) [Fact g.Prime] (a b n : ℕ), n
       obtain ⟨x, hx⟩ := Finset.card_pos.1 hpos
       rw [Finset.mem_filter] at hx
       have hxP := (hP x).2 hx.2.1
-      refine ⟨⟨x, hxP⟩, ?_⟩
-      exact (hπ x hxP h₁ h₂).2 hx.2.2
+      exact ⟨⟨x, hxP⟩, (hπ x hxP h₁ h₂).2 hx.2.2⟩
     have hχP : IsChar (fun p : P => χ p) := GlobalTheory.GLm.isChar_comp_hom_and_mul.1 P _ P.subtype χ hχ
     have hΨ := GlobalTheory.GLm.isChar_fibre_mean P (Gn g a × Gn g b) π _ hsurj hχP
     obtain ⟨L, hL, hLs⟩ := _root_.GlobalTheory.GLm.ProdChar.exists_list_prod (Gn g a) (Gn g b) _ hΨ

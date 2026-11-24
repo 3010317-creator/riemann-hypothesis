@@ -229,10 +229,8 @@ theorem prod_pairs {n : ℕ} (c : Fin n → ℝ≥0) :
       · exact fun h => ⟨by simp [h], h⟩
     · refine Finset.prod_congr (Finset.filter_congr fun x _ => ?_) fun _ _ => rfl
       constructor
-      · intro h
-        exact lt_of_le_of_ne (not_lt.1 h.1) (fun e => h.2 e.symm)
-      · intro h
-        exact ⟨not_lt.2 h.le, h.ne'⟩
+      · exact fun h => lt_of_le_of_ne (not_lt.1 h.1) (fun e => h.2 e.symm)
+      · exact fun h => ⟨not_lt.2 h.le, h.ne'⟩
   have hP : ∏ p : {p : Fin n × Fin n // p.1 < p.2}, (c p.1.1 * c p.1.2) ^ 2 =
       (∏ p : {p : Fin n × Fin n // p.1 < p.2}, g p) ^ 2 := by
     rw [Finset.prod_pow]
@@ -403,8 +401,7 @@ theorem coordW_map_units : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     have hk := coordK_map_unit (Ainf F) σ hσ b lam u _ h
     rw [hu] at hk
     have hk1 := pi_map_scale (ι := Fin M) (GlobalTheory.CompanionTheory.SW.coordK (Ainf F) b lam) _ (hfm a) _ hk
-    simp only [Fintype.card_fin, ← pow_mul] at hk1
-    exact hk1
+    simpa only [Fintype.card_fin, ← pow_mul] using hk1
   have hrm : ∀ a, Measurable (fun (x : Fin M → Ainf F ⊗[F] E) i =>
       algebraMap (Ainf F) (Ainf F ⊗[F] E) (t a) * x i) := fun a =>
     measurable_pi_iff.2 fun i => (hfm a).comp (measurable_pi_apply i)
@@ -415,8 +412,7 @@ theorem coordW_map_units : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     (f := fun a (x : Fin M → Ainf F ⊗[F] E) i => algebraMap (Ainf F) (Ainf F ⊗[F] E) (t a) * x i) (fun a => (hrm a).aemeasurable)
   unfold GlobalTheory.CompanionTheory.SW.coordW
   refine hmap.trans ?_
-  simp only [hrow]
-  exact pi_smul_nnreal _ _
+  simpa only [hrow] using pi_smul_nnreal _ _
 
 end GlobalTheory.CompanionTheory.SW.Dil
 end -- clump:auto
@@ -475,8 +471,7 @@ lemma isOpen_nearK (κ : K ≃+* (W → ℂ)) (hκ : IsHomeomorph κ) {n M : ℕ
   refine isOpen_iInter_of_finite fun i => ?_
   refine isOpen_lt ?_ continuous_const
   refine Continuous.norm ?_
-  refine continuous_finsetSum _ fun b _ => ?_
-  exact continuous_const.mul (cont_coord κ hκ b i w)
+  exact continuous_finsetSum _ fun b _ => continuous_const.mul (cont_coord κ hκ b i w)
 
 lemma isCompact_boxK (κ : K ≃+* (W → ℂ)) (hκ : IsHomeomorph κ) {n M : ℕ} (r : Fin n → W → ℝ) :
     IsCompact (boxK (M := M) κ r) := by
@@ -581,8 +576,7 @@ lemma goodK_subset (κ : K ≃+* (W → ℂ)) {n M : ℕ} (R ε : ℝ) (hε : 0 
       rw [Finset.mul_sum]
       refine Finset.sum_congr rfl fun b _ => ?_
       ring
-    rw [this, hsum i, mul_zero, norm_zero]
-    exact hε
+    rwa [this, hsum i, mul_zero, norm_zero]
 
 theorem boxK_goodK_topology : ∀ (K W : Type) [CommRing K] [TopologicalSpace K] [Fintype W] (κ : K ≃+* (W → ℂ)), IsHomeomorph κ → ∀ n M : ℕ, (∀ r : Fin n → W → ℝ, IsCompact (GlobalTheory.CompanionTheory.WhitFree.AvgInf.boxK (M := M) κ r)) ∧ IsOpen {X : Fin n → Fin M → K | LinearIndependent K X} ∧ ∀ R ε : ℝ, 0 < ε → IsCompact (GlobalTheory.CompanionTheory.WhitFree.AvgInf.goodK (n := n) (M := M) κ R ε) ∧ GlobalTheory.CompanionTheory.WhitFree.AvgInf.goodK (n := n) (M := M) κ R ε ⊆ {X : Fin n → Fin M → K | LinearIndependent K X} := by
   intro K W _ _ _ κ hκ n M
@@ -713,8 +707,7 @@ theorem tail_small_of_density :
     obtain ⟨j, hj⟩ := Nat.exists_eq_succ_of_ne_zero hne
     refine Set.mem_iUnion.2 ⟨j, ⟨?_, ?_⟩, hXY⟩
     · have := Nat.find_spec hex
-      rw [hj] at this
-      exact this
+      rwa [hj] at this
     · exact Nat.find_min hex (by omega)
   have hshell : ∀ j, ∫⁻ X in S j, ‖φ X‖ₑ ∂μ
       ≤ ENNReal.ofReal (|C| * 2 ^ e / R) * (2⁻¹ : ℝ≥0∞) ^ j * (C₀ * ν Y) := by
@@ -1211,8 +1204,7 @@ theorem coordHerm_map_shear : ∀ (F E : Type) [Field F] [NumberField F] [Field 
         (HeckeCharacterZeroLocus.SiegelWeilU.cT (HeckeCharacterZeroLocus.SiegelWeilU.sigR (Ainf F) σ) g * S * g)
         = HeckeCharacterZeroLocus.SiegelWeilU.cT (HeckeCharacterZeroLocus.SiegelWeilU.sigR (Ainf F) σ) g * S * g := by
       rw [HeckeCharacterZeroLocus.SiegelWeilU.cT_mul, HeckeCharacterZeroLocus.SiegelWeilU.cT_mul, GlobalTheory.CompanionTheory.SW.GramAlg.cT_cT _ hinv, hS', Matrix.mul_assoc]
-    intro i j
-    exact congrFun (congrFun key i) j
+    exact fun i j => congrFun (congrFun key i) j
   have h2 : IsUnit (2 : Ainf F ⊗[F] E) := by
     have : IsUnit (algebraMap F (Ainf F ⊗[F] E) 2) := (IsUnit.mk0 (2 : F) two_ne_zero).map _
     rwa [map_ofNat] at this
@@ -1407,8 +1399,7 @@ theorem avgInf_tendsto : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     have : Q = G := by
       funext X
       exact Subtype.ext (hGe X)
-    rw [this]
-    exact hGc
+    rwa [this]
   have hQv : ∀ X, (Q X : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) = gramR (Ainf F) σ J X := fun _ => rfl
   obtain ⟨hbc, hUo, hgood⟩ := _root_.GlobalTheory.CompanionTheory.WhitFree.AvgInf.Topo.boxK_goodK_topology (Ainf F ⊗[F] E) (NumberField.InfinitePlace F) κ hκ n M
   have hd : d = 2 := by
@@ -1460,8 +1451,7 @@ theorem avgInf_tendsto : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       exact GlobalTheory.T.shear_pushforward_hermitian_measure F E σ hCM n 2 b lam hlam a s hs _ (hτm _) fun S => rfl
     have := denLE_image hT (hτm (shearM a s)) (fun X => by rw [shearK_eq_rmul]; exact hτq _ X) one_ne_zero hμ' hν' hS
     have e1 : (((1 : ℝ≥0)⁻¹ * 1 : ℝ≥0) : ℝ≥0∞) * C = C := by simp
-    rw [e1] at this
-    exact this
+    rwa [e1] at this
   have hbox : ∀ r : Fin n → NumberField.InfinitePlace F → ℝ, (∀ a w, 0 < r a w) →
       DenLE μ ν Q (boxK κ r) (C₀ * ∏ a, ∏ w, ENNReal.ofReal (r a w) ^ (2 * (M - n))) := by
     intro r hr
@@ -1554,8 +1544,7 @@ theorem avgInf_tendsto : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
         change ‖κ (al (t a) * (eT.symm X) a i) w‖ ≤ r a w at h3
         rw [hκn] at h3
         have := hr a w
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         nlinarith
     rw [himg] at h1
     have hconst : (((∏ a, ((P a)⁻¹) ^ (2 * M))⁻¹ * ∏ a, ((P a)⁻¹) ^ (2 * n) : ℝ≥0) : ℝ≥0∞) * C₀ =
@@ -1583,8 +1572,7 @@ theorem avgInf_tendsto : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       congr 1
       ext
       simp [abs_of_pos (hr a w)]
-    rw [hconst] at h1
-    exact h1
+    rwa [hconst] at h1
   have hbm : ∀ r : Fin n → NumberField.InfinitePlace F → ℝ, MeasurableSet (boxK (M := M) κ r) :=
     fun r => (hbc r).measurableSet
   obtain ⟨hφc, hφi, ⟨B, hB⟩, hdec⟩ := GlobalTheory.T.schwartz_arch_continuous_integrable F E σ hCM κ hκ n M 2 b lam hlam φ hφ

@@ -101,8 +101,7 @@ theorem isZLattice_latOf : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyRe
   rw [eq_top_iff, ← span_range_remb F, Submodule.span_le]
   rintro _ ⟨a, rfl⟩
   have hc : ∃ c ∈ N, c ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hN
     ext x
     rw [FractionalIdeal.mem_zero_iff]
@@ -117,8 +116,7 @@ theorem isZLattice_latOf : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyRe
       show (y • (a / c)) * c = (y : F) * a
       rw [zsmul_eq_mul]
       field_simp
-    rw [he] at h
-    exact h
+    rwa [he] at h
   have hy : (y : ℝ) ≠ 0 := by exact_mod_cast hy0
   have heq : remb F a = (y : ℝ)⁻¹ • remb F ((y : F) * a) := by
     ext τ

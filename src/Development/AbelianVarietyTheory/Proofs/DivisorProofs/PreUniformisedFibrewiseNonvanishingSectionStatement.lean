@@ -466,8 +466,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R 
   choose J' hJ' using fun χ : G'.left ⟶ G'.left => exists_chart U'.P.L.isLB (χ y)
   have e₁ := H _ (λ_ G').inv.left (F ≫ (λ_ G).inv.left)
     (by rw [Category.assoc, e, ← Category.assoc, e, Category.id_comp, Category.comp_id]) y J J' hJ hJ'
-  rw [_root_.GlobalTheory.ThetaScalar.sval_eq_zero σ' h0 _ y hJ', MulZeroClass.mul_zero] at e₁
-  exact e₁
+  rwa [_root_.GlobalTheory.ThetaScalar.sval_eq_zero σ' h0 _ y hJ', MulZeroClass.mul_zero] at e₁
 
 end GlobalTheory.PullNonzero
 end
@@ -683,8 +682,7 @@ theorem exists_coefData_of_ne_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [I
     linear_combination (-(algebraMap R (FractionRing R) q * ((a χ : (FractionRing R)ˣ) : FractionRing R) ^ (n ^ 2))) * hu1
   choose c hc using hint
   have hbc : ∀ χ, b χ = q * c χ := fun χ => by
-    apply IsFractionRing.injective R (FractionRing R)
-    exact (hab χ).symm.trans (by rw [map_mul, ← hc χ])
+    exact IsFractionRing.injective R (FractionRing R) ((hab χ).symm.trans (by rw [map_mul, ← hc χ]))
   have hcm : ∀ χ : D.X, χ ≠ 0 → c χ ∈ maximalIdeal R := fun χ hχ => by
     obtain ⟨x, rfl⟩ := C.xe.surjective χ
     obtain ⟨m, hm₁, hm₂⟩ := _root_.GlobalTheory.PsiRing.scalar_mem_of_psiIn R V φ E D'.toPre C.β C.v C.xe C.pbB C.v_gen C.c_pr gam hgam hpsi ga a hS x _
@@ -705,8 +703,7 @@ theorem exists_coefData_of_ne_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [I
       exact GlobalTheory.T.secIsMul_of_baseMultiple_thetaSection R D th (f 0) q hq
     · simp only [g, dite_eq_right h0]
       exact _root_.GlobalTheory.PsiRing.secIsMul_of_coef R D α (ga α) th (f α) (G₁ α) (b α) (c α) q (hb α) (hG₁ α) (hbc α)
-  · simp only [g, dite_eq_left rfl]
-    exact hth
+  · simpa only [g, dite_eq_left rfl] using hth
   · simp only [g, dite_eq_right hα]
     exact _root_.GlobalTheory.PsiRing.secIsMul_of_coef R D α (ga α) th (G₁ α) (H₁ α) (c α) 1 (c α) (hG₁ α) (hH₁ α) (_root_.mul_one _).symm
 
@@ -1254,8 +1251,7 @@ theorem secIsMul_cancel : ∀ (R : Type) [CommRing R] [IsDomain R] (X : Scheme.{
         · rw [h1]) h0
     have hz : cst p x (0 : R) = 0 := by
       rw [cst, map_zero, gs_eq _ _ ⊤ trivial, map_zero, map_zero]
-    rw [hz, zero_mul, sub_eq_zero] at hu
-    exact hu
+    rwa [hz, zero_mul, sub_eq_zero] at hu
   cases t; cases t'
   congr 1
   exact funext key
@@ -1403,8 +1399,7 @@ theorem mem_of_not_isUnit_cst {X : Scheme.{0}} {R : Type} [CommRing R] (p : X �
   refine (X.mem_basicOpen _ y hy).1 ?_
   rw [← Scheme.preimage_basicOpen]
   show p y ∈ (Spec (CommRingCat.of R)).basicOpen ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom a)
-  rw [basicOpen_eq_of_affine]
-  exact ha
+  rwa [basicOpen_eq_of_affine]
 
 theorem specializes_of_mem_fibre {X S : Scheme.{0}} (p : X ⟶ S) [GeometricallyIrreducible p] {y : X}
     (hmax : ∀ w, w ⤳ y → p w = p y → w = y) {z : X} (hz : p z = p y) : y ⤳ z := by
@@ -1413,8 +1408,7 @@ theorem specializes_of_mem_fibre {X S : Scheme.{0}} (p : X ⟶ S) [Geometrically
   have hg : ∀ t, genericPoint (p.fiber (p y)) ⤳ t := fun t => (genericPoint_spec _).specializes trivial
   have hgm : p (p.fiberι (p y) (genericPoint (p.fiber (p y)))) = p y := by
     have : p.fiberι (p y) (genericPoint (p.fiber (p y))) ∈ Set.range (p.fiberι (p y)) := ⟨_, rfl⟩
-    rw [Scheme.Hom.range_fiberι] at this
-    exact this
+    rwa [Scheme.Hom.range_fiberι] at this
   have h1 : p.fiberι (p y) (genericPoint (p.fiber (p y))) = y :=
     hmax _ (by have := (hg y').map (p.fiberι (p y)).continuous; rwa [hy'] at this) hgm
   rw [← h1, ← hz']
@@ -1597,8 +1591,7 @@ theorem exists_expT_of_dvd : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
     rw [hff'] at hfa
     exact GlobalTheory.T.lineBundleSection_baseMul_cancel_flat_domain R _ _ hflatD _ q hq (f α) (h α) (g α) hfa (hfg α)
   refine ⟨τ, ?_⟩
-  rw [← hhg]
-  exact hh
+  rwa [← hhg]
 
 end GlobalTheory.SecDiv
 end -- clump:auto

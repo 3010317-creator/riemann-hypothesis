@@ -425,8 +425,7 @@ theorem cLoc_mem_UL : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Un
     have key : cT (cj w) ((GeneralLinearGroup.map (pFin E) (y : GA E n)).val.map (pLoc E w)) =
         (cT (conjFin (GlobalTheory.DefU.ClassFin.cc E)) (GeneralLinearGroup.map (pFin E) (y : GA E n)).val).map (pLoc E w) := by
       refine Matrix.ext fun i j => ?_
-      simp only [cT, Matrix.map_apply, Matrix.transpose_apply]
-      exact (hloc _).symm
+      simpa only [cT, Matrix.map_apply, Matrix.transpose_apply] using (hloc _).symm
     calc cT (cj w) (cLoc w y).val * (cLoc w y).val =
         (cT (conjFin (GlobalTheory.DefU.ClassFin.cc E)) (GeneralLinearGroup.map (pFin E) (y : GA E n)).val *
           (GeneralLinearGroup.map (pFin E) (y : GA E n)).val).map (pLoc E w) := by
@@ -443,8 +442,7 @@ theorem valuation_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     fun v b => HeightOneSpectrum.valuedAdicCompletion_eq_valuation' v b
   have e := h2 (algebraMap E _ a)
   rw [h1] at e
-  rw [← hv, ← hv]
-  exact e
+  rwa [← hv, ← hv]
 
 theorem section_conjSrc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (S : Set (Pl E)), IsSection S → (∀ w, w ∉ S → conjSrc (GlobalTheory.SplitPts.conjE E) w ∈ S) ∧ Function.Injective (conjSrc (GlobalTheory.SplitPts.conjE E)) := by
   intro E _ _ _ S hS
@@ -497,8 +495,7 @@ theorem cLoc_finPt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
   rw [e1]
   have h2 := GlobalTheory.CuspRep.pFin_finGL (E := E) (a := n) (ratF E n γ.1)
   apply Units.ext
-  refine Matrix.ext fun i j => ?_
-  exact congrArg (fun g : GL (Fin n) (Af E) => pLoc E w (g.val i j)) h2
+  exact Matrix.ext fun i j => congrArg (fun g : GL (Fin n) (Af E) => pLoc E w (g.val i j)) h2
 
 end GlobalTheory.BCT.SuppFin
 
@@ -564,8 +561,7 @@ theorem finite_of_bounds (S : Set (Pl E)) (hS : IsSection S) (Γs : Set (UE E n)
   have hM : (Set.pi Set.univ fun _ : Fin n => Set.pi Set.univ fun _ : Fin n => X).Finite :=
     Set.Finite.pi fun _ => Set.Finite.pi fun _ => hX
   refine (hM.preimage (f := fun γ : UE E n => (γ.1.val : Fin n → Fin n → E)) ?_).subset ?_
-  · intro a _ b _ h
-    exact Subtype.ext (Units.ext h)
+  · exact fun a _ b _ h => Subtype.ext (Units.ext h)
   · intro γ hγ i _ j _
     exact ⟨γ, hγ, i, j, Or.inl rfl⟩
 

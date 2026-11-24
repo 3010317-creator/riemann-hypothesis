@@ -113,8 +113,7 @@ theorem UpperTheory.V.AlgebraTools.topNil_free :
   intro R _ _ _ _ κ M _ _ _ T hT
   obtain ⟨e, he, hid, hr⟩ := UpperTheory.V.AlgebraTools.exists_idem_topNil R κ M T hT
   have hee : ∀ x, e (e x) = e x := fun x => by
-    have h := congrArg (fun f : Module.End R M => f x) hid.eq
-    simpa using h
+    simpa using congrArg (fun f : Module.End R M => f x) hid.eq
   have hfix : ∀ x ∈ topNil (IsLocalRing.maximalIdeal R) T, e x = x := by
     rw [← hr]
     rintro _ ⟨y, rfl⟩
@@ -127,8 +126,7 @@ theorem UpperTheory.V.AlgebraTools.topNil_free :
       refine Algebra.commute_of_mem_adjoin_of_forall_mem_commute he ?_
       rintro _ ⟨i, rfl⟩
       exact hφ i
-    have h2 := congrArg (fun f : Module.End R M => f x) h.eq
-    simpa using h2
+    simpa using congrArg (fun f : Module.End R M => f x) h.eq
   have hstab : ∀ φ : Module.End R M, (∀ i, Commute φ (T i)) →
       ∀ x ∈ topNil (IsLocalRing.maximalIdeal R) T, φ x ∈ topNil (IsLocalRing.maximalIdeal R) T := by
     intro φ hφ x hx
@@ -140,14 +138,12 @@ theorem UpperTheory.V.AlgebraTools.topNil_free :
     refine le_antisymm ?_ (le_inf (Submodule.smul_mono le_rfl le_top) Submodule.smul_le_right)
     rintro x ⟨hx1, hx2⟩
     have h1 : e x ∈ Submodule.map e (I • ⊤ : Submodule R M) := ⟨x, hx1, rfl⟩
-    rw [Submodule.map_smul'', Submodule.map_top, hr, hfix x hx2] at h1
-    exact h1
+    rwa [Submodule.map_smul'', Submodule.map_top, hr, hfix x hx2] at h1
   refine ⟨⟨LinearMap.ker e, ?_, fun φ hφ => ⟨hstab φ hφ, ?_⟩⟩, hI, ?_, ?_⟩
   · refine ⟨?_, ?_⟩
     · rw [Submodule.disjoint_def]
       intro x hx hk
-      rw [← hfix x hx]
-      exact hk
+      rwa [← hfix x hx]
     · rw [codisjoint_iff, eq_top_iff]
       intro x _
       refine Submodule.mem_sup.2 ⟨e x, hmem x, x - e x, ?_, by abel⟩
@@ -172,8 +168,7 @@ theorem UpperTheory.V.AlgebraTools.topNil_free :
       rw [Submodule.span_le]
       intro y hy
       have h := hr' y hy
-      rw [pow_one] at h
-      exact h
+      rwa [pow_one] at h
     rw [hS] at hle
     exact hle hx
   · intro hF
@@ -224,8 +219,7 @@ theorem UpperTheory.V.AlgebraTools.topNil_map :
   have hsmul := (topNil_free R κ M T hT).2.1
   refine ⟨le_antisymm ?_ ?_, fun I hI => by rw [hI]; exact hsmul I⟩
   · rw [Submodule.map_le_iff_le_comap]
-    intro x hx
-    exact ⟨topNil_map_mem _ T T' f hf hx, x, rfl⟩
+    exact fun x hx => ⟨topNil_map_mem _ T T' f hf hx, x, rfl⟩
   · rintro y ⟨hy, x, rfl⟩
     have hTx : ∀ i j x, T i (T j x) = T j (T i x) := fun i j x => by
       rw [← Module.End.mul_apply, (hT i j).eq, Module.End.mul_apply]
@@ -574,8 +568,7 @@ private theorem spLoc_pow {Λ B M : Type} [CommRing Λ] [IsLocalRing Λ] [CommRi
       have hmem : Polynomial.aeval b f ∈ Module.annihilator B M := by
         rw [Module.mem_annihilator]
         intro m
-        have hm := congrArg (fun φ : Module.End Λ M => φ m) hf0
-        simpa [Polynomial.aeval_algHom_apply] using hm
+        simpa [Polynomial.aeval_algHom_apply] using congrArg (fun φ : Module.End Λ M => φ m) hf0
       refine ⟨f, hf, ?_⟩
       have hq := Polynomial.aeval_algHom_apply (Ideal.Quotient.mkₐ Λ p) b f
       rw [Ideal.Quotient.mkₐ_eq_mk] at hq
@@ -645,8 +638,7 @@ private theorem spLoc_idem {A : Type} [CommRing A] {e e' : A} (he : IsIdempotent
       obtain ⟨m, hm, hle⟩ := Ideal.exists_le_maximal (Ideal.span {1 - a * (1 - b)})
         (by rwa [Ne, Ideal.span_singleton_eq_top])
       have h1 : 1 - a * (1 - b) ∈ m := hle (Ideal.subset_span rfl)
-      have h2 := hmem m hm
-      exact hm.ne_top ((Ideal.eq_top_iff_one m).2 (by simpa using m.add_mem h1 h2))
+      exact hm.ne_top ((Ideal.eq_top_iff_one m).2 (by simpa using m.add_mem h1 (hmem m hm)))
     have hz : (1 - a * (1 - b)) * (a * (1 - b)) = 0 := by
       rw [sub_mul, one_mul, hx.eq, sub_self]
     exact (hu.mul_right_eq_zero).1 hz
@@ -720,15 +712,13 @@ private theorem spLoc_le {R : Type} [CommRing R] [IsLocalRing R] {q n : ℕ}
   intro x hx
   obtain ⟨r, hr⟩ := spLoc_res P ut (m ⊓ m') (fun j i => ⟨h j i, h' j i⟩) x
   have hrm : algebraMap R _ r ∈ m := by
-    have h1 := m.sub_mem hx hr.1
-    simpa using h1
+    simpa using m.sub_mem hx hr.1
   have hrR : r ∈ maximalIdeal R := by
     by_contra hr'
     have hu : IsUnit r := by
       rwa [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, not_not] at hr'
     exact hm (Ideal.eq_top_of_isUnit_mem m hrm (hu.map _))
-  have h2 := m'.add_mem hr.2 (hR r hrR)
-  simpa using h2
+  simpa using m'.add_mem hr.2 (hR r hrR)
 
 private theorem spLoc_co (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
     [IsAdicComplete (maximalIdeal R) R] : IsCO R R := by
@@ -946,8 +936,7 @@ theorem nilPart {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ]
   classical
   let T' : τ → Module.End Λ M := fun s => (T s).restrictScalars Λ
   have hT' : ∀ i j, Commute (T' i) (T' j) := by
-    intro i j
-    exact LinearMap.ext fun m => congrArg (fun g : Module.End R M => g m) (hT i j).eq
+    exact fun i j => LinearMap.ext fun m => congrArg (fun g : Module.End R M => g m) (hT i j).eq
   obtain ⟨e, he, hidem, hrange⟩ := exists_idem_topNil Λ τ M T' hT'
   have hcomm : ∀ ψ : Module.End Λ M, (∀ s, Commute (T' s) ψ) → Commute e ψ := by
     intro ψ hψ
@@ -968,8 +957,7 @@ theorem nilPart {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ]
       exact map_smul _ _ _)
     exact congrArg (fun g : Module.End Λ M => g m) h.eq
   have heT : ∀ s m, e (T s m) = T s (e m) := by
-    intro s m
-    exact congrArg (fun g : Module.End Λ M => g m) (hcomm (T' s) (fun s' => hT' s' s)).eq
+    exact fun s m => congrArg (fun g : Module.End Λ M => g m) (hcomm (T' s) (fun s' => hT' s' s)).eq
   have hee : ∀ m, e (e m) = e m := fun m => congrArg (fun g : Module.End Λ M => g m) hidem.eq
   let Ns : Submodule R M :=
     { carrier := {m | e m = m}
@@ -978,7 +966,6 @@ theorem nilPart {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ]
         show e (a + b) = a + b
         rw [map_add (f := _), show e a = a from ha, show e b = b from hb]
       zero_mem' := by
-        show e 0 = 0
         exact map_zero e
       smul_mem' := by
         intro r m hm
@@ -1030,8 +1017,7 @@ theorem nilPart {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ]
       show e ((T' s ^ r) (x : M)) = _
       rw [← hpowN]
       exact (((Tn s).restrictScalars Λ ^ r) x).2
-    rw [heq] at hin
-    exact hin
+    rwa [heq] at hin
   obtain ⟨act, hact⟩ := psModule Λ R Ns τ Tn hTn htop
   letI modP : Module (MvPowerSeries τ R) Ns := Module.compHom Ns act.toRingHom
   haveI tow : IsScalarTower Λ (MvPowerSeries τ R) Ns := by
@@ -1039,8 +1025,7 @@ theorem nilPart {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ]
     show act (c • f) x = c • act f x
     rw [← algebraMap_smul R c f, map_smul, LinearMap.smul_apply, algebraMap_smul]
   refine ⟨Ns, inferInstance, modP, inferInstance, tow, i, pr, ?_, ?_, ?_, ?_, ?_⟩
-  · intro x
-    exact Subtype.ext x.2
+  · exact fun x => Subtype.ext x.2
   · intro a x
     show ((act (MvPowerSeries.C a) x : Ns) : M) = a • (x : M)
     have hCa : (MvPowerSeries.C a : MvPowerSeries τ R) = algebraMap R (MvPowerSeries τ R) a := by
@@ -1103,8 +1088,7 @@ theorem psLin' {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] 
   have hΛ : ∀ (c : Λ) (x : X), f (c • x) = c • f x := by
     intro c x
     have hc := hC (algebraMap Λ R c) x
-    rw [h, h', algebraMap_smul, algebraMap_smul] at hc
-    exact hc
+    rwa [h, h', algebraMap_smul, algebraMap_smul] at hc
   let φ : X →ₗ[Λ] X' := { toFun := f, map_add' := f.map_add, map_smul' := hΛ }
   exact psLin Λ R X X' τ ((Module.toModuleEnd Λ (S := S) X).comp θ)
     ((Module.toModuleEnd Λ (S := S') X').comp θ') φ (topNil_toModuleEnd_X_eq_top_of_pow_smul_mem _ θ hn) (topNil_toModuleEnd_X_eq_top_of_pow_smul_mem _ θ' hn')
@@ -1132,8 +1116,7 @@ theorem freePart {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ
     constructor
     · intro h0
       apply hinj
-      have h1 := congrArg Subtype.val h0
-      simpa [f] using h1
+      simpa [f] using congrArg Subtype.val h0
     · intro h0
       show i.rangeRestrict (pr m) = 0
       rw [h0, map_zero]
@@ -1335,8 +1318,7 @@ theorem quotPart {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ
           show ((0 : Module.End Λ W) ^ (1 + r')) v ∈ _
           rw [zero_pow (by omega), LinearMap.zero_apply]
           exact Submodule.zero_mem _
-      · intro hv p k
-        exact hv (Sum.inl p) k
+      · exact fun hv p k => hv (Sum.inl p) k
     rw [hTW, ← hmap, hT]
     constructor
     · rintro ⟨m, ⟨n, rfl⟩, rfl⟩
@@ -1548,8 +1530,7 @@ theorem spPart {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] 
     refine ⟨d, ?_⟩
     have h6 := nilMap _ Pt.toAddMonoidHom (fun c w => LinearMap.map_smul_of_tower Pt c w)
       ((mem_map_algebraMap_smul_top_iff_mem_smul_top _ _).mp hd)
-    rw [LinearMap.toAddMonoidHom_coe, hPt, hPt, hπe, one_smul, map_pow, hu] at h6
-    exact h6
+    rwa [LinearMap.toAddMonoidHom_coe, hPt, hPt, hπe, one_smul, map_pow, hu] at h6
   · intro a
     rw [hη, MvPolynomial.map_C]
     exact π.commutes (β a)

@@ -110,8 +110,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Cusp.FamEx.point_eq_of_coordsAt : ∀ (X
     intro t ht k i
     obtain ⟨-, h2⟩ := ht.2 k (c k) (hc k)
     obtain ⟨r, hr, e⟩ := h2 i
-    rw [e, mul_div_assoc, div_self (hc0 k), _root_.mul_one]
-    exact hr
+    rwa [e, mul_div_assoc, div_self (hc0 k), _root_.mul_one]
   have hrat : ∀ j : (k : K) → J k, x j / x c = ∏ k, y ⟨k, j k⟩ / y ⟨k, c k⟩ := fun j => by
     rw [hx]
     exact (Finset.prod_div_distrib _ _).symm
@@ -122,10 +121,8 @@ theorem GlobalTheory.CompanionTheory.Ar.Cusp.FamEx.point_eq_of_coordsAt : ∀ (X
     | mem a ha =>
       obtain ⟨j, rfl⟩ := ha
       refine ⟨∏ k, w ⟨k, j k⟩ / w ⟨k, c k⟩, ?_, ?_⟩
-      · simp only [hrat]
-        exact val_prod h _ _ _ fun k _ => hval z hz k (j k)
-      · simp only [hrat]
-        exact val_prod h' _ _ _ fun k _ => hval z' hz' k (j k)
+      · simpa only [hrat] using val_prod h _ _ _ fun k _ => hval z hz k (j k)
+      · simpa only [hrat] using val_prod h' _ _ _ fun k _ => hval z' hz' k (j k)
     | algebraMap n =>
       refine ⟨(n : ℂ), ?_, ?_⟩
       · simpa using val_int h n

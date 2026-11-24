@@ -660,8 +660,7 @@ theorem lang_span [FiniteDimensional k V] (q : ℕ) (hq : 1 < q) (F : V →+ V)
     have hzU : z ∈ U := by
       have h5 : F (z - u') = z - u' := by
         rw [map_sub, sub_eq_sub_iff_sub_eq_sub, hFz, e']
-      have h6 := U.add_mem (hfix _ h5) hu'
-      simpa using h6
+      simpa using U.add_mem (hfix _ h5) hu'
     apply hmin s (by omega)
     refine ⟨y⁻¹ • z, U.smul_mem _ hzU, fun i => - (y⁻¹ * x i), ?_⟩
     rw [hz, Finset.sum_range_succ, hxy, smul_add, smul_smul, inv_mul_cancel₀ hy0, one_smul,
@@ -709,8 +708,7 @@ theorem langCount_card_fixed (F : Type) [Field F] [IsAlgClosed F] (p : ℕ) [Fac
   have hcard := Polynomial.card_rootSet_eq_natDegree (K := F) hsep (IsAlgClosed.splits_domain _)
   rw [hdeg] at hcard
   have h2 : Nat.card ((X ^ p ^ e - X : F[X]).rootSet F) = p ^ e := by
-    rw [Nat.card_eq_fintype_card]
-    exact hcard
+    rwa [Nat.card_eq_fintype_card]
   refine (Nat.card_congr (Equiv.subtypeEquivRight fun c => ?_)).trans h2
   rw [Polynomial.mem_rootSet_of_ne hne]
   simp [sub_eq_zero]
@@ -1185,8 +1183,7 @@ theorem glOnto_succ (K : ℕ) (H : GLOnto (K + 1)) : GLOnto (K + 2) := by
     simp only [Sum.elim_inl, Pi.zero_apply] at h0
     have hqK : (p ^ e) ^ K = p ^ (e * K) := (pow_mul p e K).symm
     have h1 : (z (Sum.inl i) ^ p ^ e - z (Sum.inr i)) ^ p ^ (e * K) = 0 := by
-      rw [sub_pow_char_pow, ← hqK, ← pow_mul, ← pow_succ']
-      exact h0
+      rwa [sub_pow_char_pow, ← hqK, ← pow_mul, ← pow_succ']
     exact (sub_eq_zero.mp (pow_eq_zero_iff (pow_ne_zero _ (Fact.out : p.Prime).ne_zero) |>.mp h1)).symm
   refine ⟨fun j => z (Sum.inl j), fun j => hzI (Sum.inl j), ?_⟩
   funext i

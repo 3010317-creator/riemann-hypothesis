@@ -148,7 +148,6 @@ theorem unramAt_of_unrAt : ∀ (D : D7) (c : (AE D)ˣ →* Circle) (χ : Formali
       · rw [Units.val_one, Valuation.map_one, map_one]
       · rw [Units.val_one, map_one, sub_self, Valuation.map_zero]
         exact zero_le'
-  · intro P hPS
-    exact hS'2 P hPS
+  · exact fun P hPS => hS'2 P hPS
 
 end GlobalTheory.UnramOver

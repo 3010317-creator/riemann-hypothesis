@@ -102,8 +102,7 @@ private theorem exists_intertwiningMap_bound (π : Representation ℂ G W) (ρ :
   let L : V →ₗ[ℂ] W :=
     { toFun := fun v => ∑ᶠ q, Fq v q
       map_add' := fun v v' => by
-        simp only [hadd']
-        exact finsum_add_distrib (hsupp v) (hsupp v')
+        simpa only [hadd'] using finsum_add_distrib (hsupp v) (hsupp v')
       map_smul' := fun a v => by
         simp only [hsmul', RingHom.id_apply]
         exact (smul_finsum' a (hsupp v)).symm }
@@ -128,8 +127,7 @@ theorem exists_back : ∀ (G W V : Type) [Group G] [TopologicalSpace G] [IsTopol
   obtain ⟨B, hB1, hB2, hB3⟩ := hu
   obtain ⟨hρs, hρc⟩ := hρ
   obtain ⟨w, hw⟩ : ∃ w, p w ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hp (Representation.IntertwiningMap.ext (LinearMap.ext fun x => h x))
 
   let K : Subgroup G :=
@@ -222,14 +220,8 @@ theorem exists_back : ∀ (G W V : Type) [Group G] [TopologicalSpace G] [IsTopol
         rw [← ha' v (g * a⁻¹), inv_mul_cancel_right] }
   have hHS : Subgroup.center G ⊔ K ≤ S := by
     refine sup_le ?_ ?_
-    · intro z hz
-      show ∀ v g, F v (g * z) = F v g
-      intro v g
-      exact hZ v g z hz
-    · intro k hk
-      show ∀ v g, F v (g * k) = F v g
-      intro v g
-      exact hK v g k hk
+    · exact fun z hz => fun v g => hZ v g z hz
+    · exact fun k hk => fun v g => hK v g k hk
   have hH : ∀ v g h, h ∈ Subgroup.center G ⊔ K → F v (g * h) = F v g := by
     intro v g h hh
     have := hHS hh

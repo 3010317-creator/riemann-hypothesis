@@ -105,14 +105,12 @@ private theorem representation_exp_eq_exp_derivative {E : Type} [Field E] [Numbe
       Matrix.exp_add_of_commute _ _ (((Commute.refl X).smul_left s).smul_right t)])
   have h1 : HasDerivAt (fun t => (c t).val) X 0 := by
     have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) X 0
-    rw [zero_smul, NormedSpace.exp_zero, one_mul] at h
-    exact h
+    rwa [zero_smul, NormedSpace.exp_zero, one_mul] at h
   have h2 := GlobalTheory.AlgInfChar.hasDerivAt_mat Ξ c (toL X) h0 h1
   have h3 := oneParam_eq_exp (fun t => Ξ.mat (c t)) _ (by simp only [h0, map_one])
     (fun s t => by simp only [hadd, map_mul]) h2
   have e : (Matrix.isUnit_exp X).unit = c 1 := Units.ext (by rw [hc, one_smul]; rfl)
-  rw [e]
-  exact h3
+  rwa [e]
 
 theorem UpperTheory.V.AlgRepEndIrreducible.expMat :
     ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (Ξ : AlgRep E a) (X : Matrix (Fin a) (Fin a) (Cinf E)) (y : GL (Fin a) (Cinf E)),
@@ -146,8 +144,7 @@ theorem UpperTheory.V.AlgRepEndIrreducible.expSub :
     open scoped Matrix.Norms.Operator in
     exact NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) B
   refine hc.mem_of_tendsto (hA.prodMk hB) (Filter.Eventually.of_forall fun s => ?_)
-  refine S.sum_mem fun n _ => ?_
-  exact S.smul_mem (S.pow_mem h n) ((n.factorial : ℂ)⁻¹)
+  exact S.sum_mem fun n _ => S.smul_mem (S.pow_mem h n) ((n.factorial : ℂ)⁻¹)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.WignerHighestWeights.ExpSub =====

@@ -467,8 +467,7 @@ theorem subset_closure_forall_ne_zero {E : Type*} [NormedAddCommGroup E] [Normed
     rw [Set.not_nonempty_iff_eq_empty] at hemp
     have hnot : ∀ y ∈ O, y ∉ W j := fun y hy hyW => by
       have : y ∈ O ∩ W j := ⟨hy, hyW⟩
-      rw [hemp] at this
-      exact this
+      rwa [hemp] at this
     obtain ⟨y, hy⟩ := hOne
     have hyc : y ∈ closure U := by
       by_contra h

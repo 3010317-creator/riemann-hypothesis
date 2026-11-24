@@ -81,12 +81,10 @@ theorem admissibleBasePoint_chart_mul_twist : ∀ {B : Base} {X : PreX B.toPre} 
       · rw [h0 rfl β, map_one]
       · exact hoff β v (Or.inr hd)
     have hm := map_mul (bc (prV (E := B.host.E) v)) (k0 (g β)) (t β)
-    rw [hk, ht, one_mul] at hm
-    exact hm
+    rwa [hk, ht, one_mul] at hm
   · have hv : (B.T u : 𝓞 B.host.F) ∈ (P.1.under (𝓞 B.host.F)).asIdeal := by
       have := T_mem_vT (GlobalTheory.BasePrimes.primes_ok B X).1 u P
-      rw [HeightOneSpectrum.under, Ideal.mem_comap, map_natCast]
-      exact this
+      rwa [HeightOneSpectrum.under, Ideal.mem_comap, map_natCast]
     have ht := hoff β _ (Or.inl hv)
     have ht' := (map_inv (bc (prV (E := B.host.E) (P.1.under (𝓞 B.host.F)))) (t β)).trans (by rw [ht, inv_one])
     have hent : ∀ r l, adAt B.host.F P.1 (((t β)⁻¹ : GA B (B.R.N i)).1 r l) = if r = l then 1 else 0 := by

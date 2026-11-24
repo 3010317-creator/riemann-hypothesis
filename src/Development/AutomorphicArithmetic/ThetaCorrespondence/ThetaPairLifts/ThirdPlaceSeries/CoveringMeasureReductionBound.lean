@@ -310,8 +310,7 @@ theorem exact_covolume_ratio : ∀ (hP : _root_.GlobalTheory.CovTop.PublishedHod
         exact h3.symm
       rw [e]
       exact haut.cont.measurable
-    refine Measurable.aestronglyMeasurable ?_
-    exact Complex.measurable_ofReal.comp ((hm.norm).div_const c)
+    exact Measurable.aestronglyMeasurable (Complex.measurable_ofReal.comp ((hm.norm).div_const c))
   have hE : eLpNorm ψ 2 (muQ1 (Wc D i)) = petE (T.V ((i : ℕ) + 1) (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.gd T σ))
       (T.dict ((i : ℕ) + 1) (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.gd T σ)) (muQ1 (T.V ((i : ℕ) + 1) (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.gd T σ)))
       (modelWt (T.U ((i : ℕ) + 1) (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.gd T σ)) (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.expW D i)) f := by
@@ -529,8 +528,7 @@ theorem one_le_abs_weylDimU_mul {p : ℕ} (lam : Fin p → ℤ) (h : Formalism.I
     have hn1 : (1 : ℚ) ≤ |(n : ℚ)| := by
       have : (1 : ℤ) ≤ |n| := Int.one_le_abs hn0
       exact_mod_cast this
-    rw [abs_div, abs_of_pos hd, hc]
-    rw [le_div_iff₀ hd]
+    rw [abs_div, abs_of_pos hd, hc, le_div_iff₀ hd]
     calc ((p : ℚ) + 1)⁻¹ * (((j : ℕ) : ℚ) - ((i : ℕ) : ℚ)) ≤ ((p : ℚ) + 1)⁻¹ * ((p : ℚ) + 1) :=
           mul_le_mul_of_nonneg_left hdle (by positivity)
       _ = 1 := inv_mul_cancel₀ hp1.ne'
@@ -552,8 +550,7 @@ theorem one_le_abs_weylDimU_mul {p : ℕ} (lam : Fin p → ℤ) (h : Formalism.I
       _ = ∏ j ∈ Finset.univ.filter (fun j : Fin p => i < j), c := by rw [Finset.prod_const]
       _ ≤ _ := by
         apply Finset.prod_le_prod₀ (fun _ _ => c0)
-        intro j hj
-        exact key i j hj (fun hz => h0 (Finset.prod_eq_zero hj hz))
+        exact fun j hj => key i j hj (fun hz => h0 (Finset.prod_eq_zero hj hz))
   have outer : c ^ (p * p) ≤ |∏ i : Fin p, ∏ j ∈ Finset.univ.filter (fun j : Fin p => i < j),
       (((lam i - lam j : ℤ) : ℚ) + ((j : ℕ) : ℚ) - ((i : ℕ) : ℚ)) / (((j : ℕ) : ℚ) - ((i : ℕ) : ℚ))| := by
     rw [Finset.abs_prod]
@@ -921,8 +918,7 @@ theorem exactAt_of_rows_alt {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : 
   have hf' : f' ∈ scalarForms p.T i (gd p.T s) := by
     have := ((mem_cusp _ _ _ _ _ _).1 f.2).2 _ hgood
     show f' ∈ holSub _ (modelWt _ (wtZ (wtA (kapTop D i)) (kapTop D i).n))
-    rw [modelWt_wtZ, ← ha, ← hn]
-    exact this
+    rwa [modelWt_wtZ, ← ha, ← hn]
   have hc : Corr p.T i s hV ((p.R.toRealDat.HW i s).e x) f' := by
     by_cases hgs : GoodEmb p.T.Q.c (res p.T s)
     · have hgd' : gd p.T s = res p.T s := by show goodOf _ _ = _; rw [goodOf, ite_eq_left hgs]

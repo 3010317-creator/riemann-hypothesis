@@ -175,8 +175,7 @@ private theorem exists_inv_sim_nu_mod {E : Type} [Field E] [NumberField E] [IsCM
   rw [hab] at hs
   refine ⟨Dw.EF (g a) (g b), ?_⟩
   have h3 := dvd_sub hs hm
-  rw [sub_sub_sub_cancel_left, mul_comm] at h3
-  exact h3
+  rwa [sub_sub_sub_cancel_left, mul_comm] at h3
 
 private theorem zetaM_pow_M {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
     {l : Geo.Tor.Level H} (c : Coeff l) : (zetaM c) ^ l.M = 1 := by
@@ -188,8 +187,7 @@ private theorem zetaM_pow_M {E : Type} [Field E] [NumberField E] [IsCMField E] {
     exact (Complex.isPrimitiveRoot_exp l.M' hM').pow_eq_one
   have hd : l.M ∣ l.M' := Nat.dvd_lcm_left l.M l.A
   unfold zetaM
-  rw [← pow_mul, Nat.div_mul_cancel hd]
-  exact hz
+  rwa [← pow_mul, Nat.div_mul_cancel hd]
 
 private theorem zpow_eq_zpow_of_dvd_sub_of_pow_eq_one {K : Type} [Field K] (z : K) (M : ℕ) (hM : 0 < M) (hz : z ^ M = 1)
     {a b : ℤ} (h : (M : ℤ) ∣ a - b) : z ^ a = z ^ b := by
@@ -333,8 +331,7 @@ theorem datEq_of_phiHat : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     rw [← Finset.sum_sub_distrib]
     refine Finset.dvd_sum fun b _ => ?_
     have h := H2 (σc.symm (y b)) (σL.symm (q b))
-    rw [LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply] at h
-    exact h
+    rwa [LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply] at h
   have hζ := zetaM_pow_M d.c₂
   apply d.eF.injective
   rw [map_mul, hw, hw]

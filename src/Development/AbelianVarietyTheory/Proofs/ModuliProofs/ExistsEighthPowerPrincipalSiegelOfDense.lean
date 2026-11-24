@@ -247,8 +247,7 @@ theorem exists_power [HasEqualizers C] {n : Type*} [Fintype n] [DecidableEq n] (
           rw [← Category.assoc, hc, h5, h0, MonObj.one_comp]
         simp only [Category.assoc]
         rw [h3, MonObj.comp_one, MonObj.comp_one]
-      · intro h
-        exact absurd (Finset.mem_univ u) h
+      · exact fun h => absurd (Finset.mem_univ u) h
     · dsimp only at hx
       have h1 : (1 : Matrix n n ℤ) = ∑ v, Matrix.single v v 1 := by
         ext a b
@@ -399,8 +398,7 @@ theorem rel_biprod {R : G → G → C → Prop} (hex : ∀ x y, x ^ k = 1 → y 
     congr 1
     refine Finset.sum_congr rfl fun j _ => ?_
     ring
-  rw [e]
-  exact H
+  rwa [e]
 
 end Abstract
 
@@ -716,8 +714,7 @@ theorem ext_of_dense {S : Scheme.{0}} {T G : Over S} [IsReduced T.left] (hT : Is
   let inc : (∐ fun p : D => Z p.1 p.2) ⟶ T.left := Sigma.desc fun p => ψ p.1 p.2
   have hinc : inc ≫ f.left = inc ≫ g.left := by
     refine Sigma.hom_ext _ _ fun p => ?_
-    simp only [inc, Sigma.ι_desc_assoc]
-    exact hψ p.1 p.2
+    simpa only [inc, Sigma.ι_desc_assoc] using hψ p.1 p.2
   have hsub : T.hom.base ⁻¹' D ⊆ Set.range inc.base := by
     intro a ha
     obtain ⟨y, hy⟩ := hx _ ha
@@ -725,8 +722,7 @@ theorem ext_of_dense {S : Scheme.{0}} {T G : Over S} [IsReduced T.left] (hT : Is
     refine ⟨(Sigma.ι (fun p : D => Z p.1 p.2) ⟨_, ha⟩).base ((hpb _ ha).isoPullback.inv.base z), ?_⟩
     rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, Sigma.ι_desc]
     show ((hpb _ ha).isoPullback.inv ≫ ψ _ ha) z = a
-    rw [IsPullback.isoPullback_inv_fst]
-    exact hz₁
+    rwa [IsPullback.isoPullback_inv_fst]
   have : IsDominant inc := ⟨((hD.preimage hT).mono hsub)⟩
   exact Over.OverMorphism.ext (ext_of_isDominant_of_isSeparated G.hom (by rw [Over.w f, Over.w g]) inc hinc)
 
@@ -1082,8 +1078,7 @@ theorem main : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ) (S : Scheme.{0}) (G A : Over
       (LB.isLB_linComb hL _ _)).symm.trans h₀
     have h₂ := congrArg (pull (lift x (lift y z)).left) h₁
     simp only [map_sub, map_zero, pull_lam, MonObj.comp_mul, lift_fst, lift_snd_assoc, lift_snd] at h₂
-    rw [sub_sub, sub_eq_zero] at h₂
-    exact h₂
+    rwa [sub_sub, sub_eq_zero] at h₂
   obtain ⟨l, hl⟩ : ∃ l, l = cls L hL := ⟨_, rfl⟩
   rw [← hl] at lamL
   have lamR : ∀ {T : Over S} (x y z : T ⟶ G), lam l z (x * y) = lam l z x + lam l z y := fun x y z => by

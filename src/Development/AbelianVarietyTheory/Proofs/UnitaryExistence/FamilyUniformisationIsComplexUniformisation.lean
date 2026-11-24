@@ -92,8 +92,7 @@ theorem fibre_unfOf {g : ℕ} (e : Fin g ≃ Σ τ : E →+* ℂ, Fin (Dw.mult �
       fun τ i => ?_
     obtain ⟨cf, hcf, htri, hcomb⟩ := hu τ i
     refine ⟨cf, by rw [hcf]; exact Units.isUnit _, htri, ?_⟩
-    rw [hxP] at hcomb
-    exact hcomb
+    rwa [hxP] at hcomb
   · rintro ⟨γ, hγ, b, hb, heq⟩
     obtain ⟨rfl, h2⟩ := Sigma.mk.inj_iff.1 heq
     have h3 : x'.1 = rmul (lact γ x.1) b := eq_of_heq h2
@@ -101,8 +100,7 @@ theorem fibre_unfOf {g : ℕ} (e : Fin g ≃ Σ τ : E →+* ℂ, Fin (Dw.mult �
     obtain ⟨t1, ht1, -⟩ := hun.2.2.1 k' γ hγ x hxg
     have hxb : rmul (⟨lact γ x.1, hxg⟩ : (M.X k').dom).1 b ∈ (M.X k').dom := by
       have hx2 := x'.2
-      rw [h3] at hx2
-      exact hx2
+      rwa [h3] at hx2
     obtain ⟨t2, ht2, -⟩ := hun.2.1 k' ⟨lact γ x.1, hxg⟩ b hb hxb
     have hx' : (⟨rmul (lact γ x.1) b, hxb⟩ : (M.X k').dom) = x' := Subtype.ext h3.symm
     rw [hx'] at ht2

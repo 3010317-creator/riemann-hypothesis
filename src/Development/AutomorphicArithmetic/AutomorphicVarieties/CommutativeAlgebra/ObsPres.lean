@@ -356,7 +356,6 @@ private theorem op_count (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRi
         rw [map_add (f := _), h1, add_zero]
         exact h2 hy
       refine ⟨AlgHom.liftOfSurjective π hπ F hle, funext fun s => ?_⟩
-      show (AlgHom.liftOfSurjective π hπ F hle (π (X s))).snd = v s
       exact congrArg TrivSqZeroExt.snd ((AlgHom.liftOfSurjective_apply π hπ F hle _).trans (hF s))
   rw [Nat.card_eq_of_bijective _ hb, Nat.card_fun]
   simp

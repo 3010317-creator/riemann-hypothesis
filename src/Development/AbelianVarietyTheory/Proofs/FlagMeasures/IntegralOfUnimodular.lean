@@ -106,8 +106,7 @@ theorem smul_mem_of {Λ : Submodule (𝓞 E) S.V} {c : E} (hc : ∃ o : 𝓞 E, 
     (hx : x ∈ Λ) : c • x ∈ Λ := by
   obtain ⟨o, rfl⟩ := hc
   have h := Λ.smul_mem o hx
-  rw [← algebraMap_smul E o x] at h
-  exact h
+  rwa [← algebraMap_smul E o x] at h
 
 theorem eich_mem {Λ : Submodule (𝓞 E) S.V} (hΛ : Formalism.HermitianLatticesTheory.IsUnimodular S.hT Λ) {σ w : S.V} {t : E}
     (hσ : σ ∈ Λ) (hw : w ∈ Λ) (ht : ∃ o : 𝓞 E, (o : E) = t) {x : S.V} (hx : x ∈ Λ) :
@@ -189,7 +188,6 @@ theorem eichler_mem_unipotent : ∀ (D : D7) (T : D.host.E) (F : Fg D T) (Λ : L
   refine exists_eichler (hS D) θ ?_ F Λ hΛ σ hσ w hw
   have h := congrArg (fun z : 𝓞 D.host.E => (z : D.host.E)) hθ
   simp only [map_add (f := _), map_one, GlobalTheory.InertSign.sgO_coe] at h
-  rw [GlobalTheory.NormSum.AdLattice.star_eq_conj D]
-  exact h
+  rwa [GlobalTheory.NormSum.AdLattice.star_eq_conj D]
 
 end GlobalTheory.EichlerUnip

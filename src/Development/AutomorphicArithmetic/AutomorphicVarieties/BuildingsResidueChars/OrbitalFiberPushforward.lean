@@ -78,11 +78,8 @@ theorem UpperTheory.orbitalFiber_pushforward_eq_zero :
     unfold UpperTheory.V.Z.Sym.gq
     apply finsum_eq_sum_of_support_subset
     intro o ho
-    have hne : k o.out ≠ 0 := by
-      intro h0
-      exact ho (by simp [h0])
-    simp only [Finset.coe_image]
-    exact ⟨o.out, by simpa [hmem] using hne, Quotient.out_eq o⟩
+    have hne : k o.out ≠ 0 := fun h0 => ho (by simp [h0])
+    simpa only [Finset.coe_image] using ⟨o.out, by simpa [hmem] using hne, Quotient.out_eq o⟩
   rw [h1, h2, ← Finset.sum_fiberwise_of_maps_to (s := S) (t := S.image q) (g := q)
     (fun y hy => Finset.mem_image_of_mem q hy), Finset.sum_div]
   refine Finset.sum_congr rfl fun o ho => ?_
@@ -103,8 +100,7 @@ theorem UpperTheory.orbitalFiber_pushforward_eq_zero :
   have hmul := Subgroup.relIndex_mul_index hle
   have hsum : ∑ y ∈ S with q y = o, k y = ((stabilizer H o.out).index : ℂ) * k o.out := by
     rw [Finset.sum_congr rfl (g := fun _ => k o.out), Finset.sum_const, hcard, nsmul_eq_mul]
-    intro y hy
-    exact hkeq _ _ ((hout o y).mp (Finset.mem_filter.mp hy).2)
+    exact fun y hy => hkeq _ _ ((hout o y).mp (Finset.mem_filter.mp hy).2)
   rw [← hmul] at hidx
   have ha : ((H₀.relIndex (stabilizer H o.out) : ℕ) : ℂ) ≠ 0 :=
     Nat.cast_ne_zero.mpr (left_ne_zero_of_mul hidx)
@@ -173,8 +169,7 @@ theorem UpperTheory.orbitalFiber_pushforward :
   · obtain ⟨y₀, hy₀, hk₀⟩ := hz
     have hind : (Subgroup.comap (stabilizer H (Quotient.out i)).subtype H₀).index ≠ 0 := by
       have := hidx y₀ hk₀
-      rw [hy₀] at this
-      exact this
+      rwa [hy₀] at this
     rw [UpperTheory.orbitalFiber_pushforward_eq_zero _ (F i) _ _ hind
       (fun z hz y => Subtype.ext (hH₀ (z : H) (Subgroup.mem_comap.mp hz) (y : X')))
       (fun h y => hk (h : H) (y : X'))

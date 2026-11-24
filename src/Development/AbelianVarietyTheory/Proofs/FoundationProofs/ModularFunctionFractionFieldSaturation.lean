@@ -245,8 +245,7 @@ theorem coeff_mem_range_of_isRoot : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] 
       exact g.commutes ⟨_, ⟨y, rfl⟩⟩
     have h2 := Polynomial.eval_map_apply (PowerSeries.map (g : ℂ →+* ℂ)) (p := Q) b
     show Q.eval _ = 0
-    rw [hfix, hb, map_zero] at h2
-    exact h2
+    rwa [hfix, hb, map_zero] at h2
   have hfin : (Set.range fun g : ℂ ≃ₐ[E] ℂ => g (PowerSeries.coeff k b)).Finite := by
     refine ((Polynomial.finite_setOf_isRoot hQ).image (PowerSeries.coeff k)).subset ?_
     rintro _ ⟨g, rfl⟩
@@ -336,8 +335,7 @@ theorem qAll_range_of_monic_root : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (
         split_ifs
         · exact ⟨1, map_one ε⟩
         · exact ⟨0, map_zero ε⟩
-    · simp only [map_zero]
-      exact ⟨0, map_zero ε⟩
+    · simpa only [map_zero] using ⟨0, map_zero ε⟩
   have key := _root_.GlobalTheory.PsRoot.coeff_mem_range_of_isRoot Ω ε (PowerSeries.mk b) Q hQ0 hcr hQ
   exact ⟨b, hb, fun k => by simpa using key k⟩
 
@@ -616,8 +614,7 @@ theorem fn_sat : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ �
       _ = 0 := by rw [hsum, mul_zero]
   have hFD : DifferentiableOn ℂ F Hs := by
     rw [e2]
-    refine DifferentiableOn.sum fun i _ => ?_
-    exact ((hpD i).mul (ha.pow i)).mul (hb.pow (n - i))
+    exact DifferentiableOn.sum fun i _ => ((hpD i).mul (ha.pow i)).mul (hb.pow (n - i))
   have hF0 : ∀ z ∈ Hs, F z = 0 := by
     have := hid F (fun _ => 0) hFD (differentiableOn_const 0) (by rw [hFg]; rfl)
     exact this
@@ -669,8 +666,7 @@ theorem fn_sat : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ �
   have hf : T.an (T.io hr / T.io (p n)) * (up (p n : ℍ → ℂ) : Mero) = (up h : Mero) := by
     have : T.io hr / T.io (p n) * T.io (p n) = T.io hr := div_mul_cancel₀ _ hio0
     have := congrArg T.an this
-    rw [map_mul, T.an_io, T.an_io] at this
-    exact this
+    rwa [map_mul, T.an_io, T.an_io] at this
   apply hU.mul_left_cancel
   rw [hrel, ← hf]; ring
 

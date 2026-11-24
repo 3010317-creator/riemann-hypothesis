@@ -327,8 +327,7 @@ theorem exists_eigen_local_sum : ∀ (L : Type) [Field L] [NumberField L] [IsCMF
 
       rw [Finset.sum_congr rfl fun j _ => hint j x hx (y j.1), ← map_sum, hsum, hfx])
   rw [hsum] at hus
-  by_contra hall
-  push Not at hall
+  by_contra! hall
   apply hz
   have key : ∀ j, ∑ m, z m • σ.ρ (Matrix.GeneralLinearGroup.map c.toRingHom (s.loc n (xs m))) (u j) = 0 := by
     intro j
@@ -345,8 +344,7 @@ theorem exists_eigen_local_sum : ∀ (L : Type) [Field L] [NumberField L] [IsCMF
     _ = ∑ j : F.support, (j.1.1 : σ.V →ₗ[ℂ] (GAf L n → a.W))
           (∑ m, z m • σ.ρ (Matrix.GeneralLinearGroup.map c.toRingHom (s.loc n (xs m))) (u j)) := by
 
-        simp only [map_sum, map_smul, Finset.smul_sum]
-        exact Finset.sum_comm
+        simpa only [map_sum, map_smul, Finset.smul_sum] using Finset.sum_comm
     _ = 0 := Finset.sum_eq_zero fun j _ => by rw [key j, map_zero]
 
 end GlobalTheory.EigLocalSum
@@ -526,8 +524,7 @@ theorem vector_at_split_place (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D :
     (fun g hg _ => hθU g hg) _ hFS (_root_.GlobalTheory.TypeVecEig.main_alt_alt hL D P S hT i PI k v s hw hs c hc hcs F hF) _ xs (fun h => z.coeff h)
     (fun h => (hxs h).1) hne''
   refine ⟨y, GlobalTheory.BlockType.isBlockVec_of _ _ _ hy, fun h => Matrix.GeneralLinearGroup.map c.toRingHom (s.loc D.R.nV (xs h)), fun h => (hxs h).2.1, ?_⟩
-  rw [Finsupp.sum_fintype _ _ (by simp)]
-  exact hyz
+  rwa [Finsupp.sum_fintype _ _ (by simp)]
 end GlobalTheory.DzVecLoc
 end
 end -- clump:auto
@@ -851,8 +848,7 @@ theorem exists_fixed_blockVec : ∀ (F : Type) [Field F] [ValuativeRel F] [Topol
     exact Finset.sum_induction _ _ (fun a b => isBlockVec_add) isBlockVec_zero
       (fun g _ => isBlockVec_smul _ (dg_isBlockVec hx ((hℓ2 g).mem_KO hp)))
   · have := conv_sum (fun g => π (dg F r t (ℓ g))) (fun h => π (dg F r t (ℓ h)) x) hT z z
-    rw [hz] at this
-    exact this
+    rwa [hz] at this
 
 end GlobalTheory.BlockIdem
 end -- clump:auto
@@ -918,8 +914,7 @@ theorem exists_parVec_of_map : ∀ (F : Type) [Field F] [ValuativeRel F] [Topolo
     intro x hx
     refine ⟨x, ?_, rfl⟩
     rw [SetLike.mem_coe, Subgroup.mem_iInf]
-    intro b
-    exact MonoidHom.mem_ker.2 (hx b.1 b.2)
+    exact fun b => MonoidHom.mem_ker.2 (hx b.1 b.2)
   have hH' : ∀ y ∈ H, ∃ x : parab (ZMod p) e, (x : GL n (ZMod p)) = y ∧
       ∀ b, b ≠ a → leviProj (ZMod p) e x b = 1 := by
     rintro y ⟨x, hx, rfl⟩
@@ -1134,8 +1129,7 @@ theorem factor_eq_det_of_isSubquotient_jac : ∀ (F : Type) [Field F] [Valuative
     exact hxφ b
   have hyj : y j = v := Function.update_self _ _ _
   have key := contract_piTensor (fun b => (s b).ρ) φ j g (PiTensorProduct.tprod ℂ y)
-  rw [hT, map_smul, contract_tprod, hyj, map_smul] at key
-  rw [smul_comm] at key
+  rw [hT, map_smul, contract_tprod, hyj, map_smul, smul_comm] at key
   exact (smul_right_injective _ hc key).symm
 
 end GlobalTheory.LevelType
@@ -1242,8 +1236,7 @@ theorem isSubquotient_of_empty_second_block : ∀ (F : Type) [Field F] [Valuativ
   haveI := nontrivial_of_irreducible (s true).irr
   obtain ⟨w0, hw0⟩ := exists_ne (0 : (s true).V)
   obtain ⟨ψ0, hψ0⟩ : ∃ ψ0 : Module.Dual ℂ (s true).V, ψ0 w0 ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hw0 ((Module.forall_dual_apply_eq_zero_iff ℂ w0).1 h)
   let ψ : ∀ j, (s j).V →ₗ[ℂ] ℂ := fun j => Bool.rec (motive := fun j => (s j).V →ₗ[ℂ] ℂ) 0 ((ψ0 w0)⁻¹ • ψ0) j
   let K : Representation.IntertwiningMap ((piTensor fun j => (s j).ρ).comp ι : Representation ℂ (GL (Fin r) F) _)
@@ -1413,8 +1406,7 @@ theorem tensorMap_surjective (f : (Σ j, Fin (c j)) ≃ Fin r) (hc : c true = 0)
     (s : ∀ j, IrrRep (GL (Fin (c j)) F)) (x₀ : ∀ j, (s j).V) (hx : x₀ true ≠ 0) :
     Function.Surjective (tensorMap f hc s x₀) := by
   show Function.Surjective (tensorMap f hc s x₀).toLinearMap
-  rw [← LinearMap.range_eq_top]
-  rw [eq_top_iff, ← PiTensorProduct.span_tprod_eq_top, Submodule.span_le]
+  rw [← LinearMap.range_eq_top, eq_top_iff, ← PiTensorProduct.span_tprod_eq_top, Submodule.span_le]
   rintro _ ⟨y, rfl⟩
   obtain ⟨a, ha⟩ := exists_smul_eq hc (s true) hx (y true)
   refine ⟨a • y false, ?_⟩
@@ -1563,8 +1555,7 @@ theorem exists_irreducible_subquotient (G V : Type) [Group G] [AddCommGroup V] [
     fun h => hM.1 ((Submodule.Quotient.mk_eq_zero _).1 h), fun ι s f c b h => ?_⟩
   have h' : ∑ i ∈ s, c i • (gen ρ x).toRepresentation (f i) x' = b • x' := by
     apply Subtype.ext
-    rw [AddSubmonoidClass.coe_finsetSum]
-    exact h
+    rwa [AddSubmonoidClass.coe_finsetSum]
   have h2 := congrArg M.toSubmodule.mkQ h'
 
   rw [map_sum, map_smul] at h2

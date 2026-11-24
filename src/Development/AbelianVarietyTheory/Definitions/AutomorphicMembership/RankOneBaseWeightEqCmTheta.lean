@@ -204,15 +204,13 @@ theorem toStk_valR {U : (Sp V).Opens} (h : ⊤ ≤ U) (a : Γ(Sp V, U)) :
 
 theorem isUnit_toStk {v : V} (hv : v ≠ 0) : IsUnit (toStk V v) := by
   have hm : gen V ∈ (Sp V).basicOpen ((Scheme.ΓSpecIso (CommRingCat.of V)).inv.hom v) := by
-    rw [basicOpen_eq_of_affine]
-    exact hv
+    rwa [basicOpen_eq_of_affine]
   exact ((Sp V).mem_basicOpen_top _ _).1 hm
 
 theorem Rel.elt {r : R} (hr : g r ≠ 0) {x y} (hx : x.val = gs (jK R) (gen _) ⊤ (DegPre.toOpen (R := R) ⊤ r))
     (hy : y.val = toStk V (g r)) : Rel g x y := by
   have hm : spMap g (gen V) ∈ (Sp R).basicOpen (DegPre.toOpen (R := R) ⊤ r) := by
-    rw [BetaAdd.toOpen_top, basicOpen_eq_of_affine]
-    exact hr
+    rwa [BetaAdd.toOpen_top, basicOpen_eq_of_affine]
   rw [toStk_map] at hy
   generalize DegPre.toOpen (R := R) ⊤ r = s at hm hx hy
   obtain ⟨a, ha⟩ : IsUnit (((Sp R).presheaf.map (homOfLE ((Sp R).basicOpen_le s)).op).hom s) :=
@@ -403,8 +401,7 @@ theorem exists_isBiTriv {O : Type} [Ring O] [StarRing O] [Module O D.X] (oa : D.
       change κ _ * κ (t a b) * _ * _ * _ = _
       simp only [← map_mul]
       rw [hu]
-      refine congrArg κ ?_
-      exact key _ _ _ _ _ (t a b).ne_zero (hC a) (hC b) hρ0
+      exact congrArg κ (key _ _ _ _ _ (t a b).ne_zero (hC a) (hC b) hρ0)
     refine (congrArg (· * k (t a b)) (hev a b (gen _) j hj)).trans ?_
     have e0 : trF (L := D.P.L) (biφ D (Over.mk (spMap g)) a b) Oinvε (𝟙 (Sp (intO C))) (gen _) j
         ![i₀ (a + b), i₀ a, i₀ b, i] = trV D (spMap g ≫ (D.c (a + b)).left) (j 0) (i₀ (a + b)) ^ (-1 : ℤ) *
@@ -709,8 +706,7 @@ theorem mulConst_eq (a b : ct.Ylat y) : ct.mulConst y a b = ct.tauVal y a (ct.ph
 
 theorem abDim_add : ct.abDim y + Module.finrank ℤ (ct.Ylat y) = D.R.f * N := by
   have h := dim_add_rank (ct.dat y)
-  rw [finrank_host_eq, S.rank_eq, Nat.mul_div_cancel_left _ two_pos] at h
-  exact h
+  rwa [finrank_host_eq, S.rank_eq, Nat.mul_div_cancel_left _ two_pos] at h
 
 end At
 

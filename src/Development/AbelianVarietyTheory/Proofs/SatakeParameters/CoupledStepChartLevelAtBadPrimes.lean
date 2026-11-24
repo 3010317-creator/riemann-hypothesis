@@ -78,8 +78,7 @@ theorem qOf_seamP {D : D7} {X : Fields} (s : Seam D X) (P : HeightOneSpectrum (�
     constructor
     · intro hy; exact ⟨_, hy, rfl⟩
     · rintro ⟨z, hz, e⟩
-      rw [(RingOfIntegers.mapRingEquiv s.iE).injective e] at hz
-      exact hz
+      rwa [(RingOfIntegers.mapRingEquiv s.iE).injective e] at hz
   unfold qOf
   rw [Ideal.absNorm_apply, Ideal.absNorm_apply, Submodule.cardQuot_apply, Submodule.cardQuot_apply]
   exact (Nat.card_congr (Ideal.quotientEquiv P.asIdeal (seamP s P).asIdeal (RingOfIntegers.mapRingEquiv s.iE) hI).toEquiv).symm
@@ -93,8 +92,7 @@ theorem intAt_seamP_iff {D : D7} {X : Fields} (s : Seam D X) (P : HeightOneSpect
     refine ⟨(RingOfIntegers.mapRingEquiv s.iE).symm r, (RingOfIntegers.mapRingEquiv s.iE).symm c, ?_, ?_⟩
     · rw [← mem_seamP s, RingEquiv.apply_symm_apply]; exact hc'
     · apply s.iE.injective
-      rw [map_mul, ← hc, ← hc, RingEquiv.apply_symm_apply, RingEquiv.apply_symm_apply]
-      exact h
+      rwa [map_mul, ← hc, ← hc, RingEquiv.apply_symm_apply, RingEquiv.apply_symm_apply]
   · rintro ⟨r, c, hc', h⟩
     refine ⟨RingOfIntegers.mapRingEquiv s.iE r, RingOfIntegers.mapRingEquiv s.iE c, ?_, ?_⟩
     · rw [mem_seamP s]; exact hc'
@@ -116,8 +114,7 @@ theorem cong_seam {D : D7} {X : Fields} (s : Seam D X) {N : ℕ} (P : HeightOneS
     rw [hM, qOf_seamP, Matrix.sub_apply, Matrix.map_apply, LinearMap.toMatrix'_apply, map_mul, map_inv₀, map_pow,
       map_natCast, map_sub, Matrix.one_apply, Pi.single_apply]
     split_ifs <;> simp
-  rw [e]
-  exact h1
+  rwa [e]
 
 end GlobalTheory.SeamCong
 end -- clump:auto
@@ -247,12 +244,10 @@ theorem intAt_inv_mul_of_nearAt {F E : Type} [Field F] [NumberField F] [Field E]
         c⁻¹ * ((((x⁻¹ * ratA F g : GL (Fin N) (AfE F E)) : Matrix (Fin N) (Fin N) (AfE F E)).map φ) - 1) k l := by
       show φ _ = _
       rw [map_mul, hφ, map_inv₀, Matrix.sub_apply, Matrix.sub_apply, map_sub, h1apply, Matrix.map_apply]
-    rw [e] at h
-    exact h
+    rwa [e] at h
   have hrat : ∀ g : GL (Fin N) E, ((ratA F g : GL (Fin N) (AfE F E)) : Matrix (Fin N) (Fin N) (AfE F E)).map φ =
       (g : Matrix (Fin N) (Fin N) E).map (algebraMap E (P.adicCompletion E)) := by
-    intro g
-    exact Matrix.ext fun k l => hφ _
+    exact fun g => Matrix.ext fun k l => hφ _
   have hmul : (((x⁻¹ * ratA F g₁ : GL (Fin N) (AfE F E)) : Matrix (Fin N) (Fin N) (AfE F E)).map φ) *
       ((g₁⁻¹ * g₂ : GL (Fin N) E) : Matrix (Fin N) (Fin N) E).map (algebraMap E (P.adicCompletion E)) =
       (((x⁻¹ * ratA F g₂ : GL (Fin N) (AfE F E)) : Matrix (Fin N) (Fin N) (AfE F E)).map φ) := by
@@ -269,9 +264,7 @@ theorem intAt_inv_mul_of_nearAt {F E : Type} [Field F] [NumberField F] [Field E]
     split_ifs <;> simp
   rw [e2] at key
   letI : StarRing E := starRingOfComm
-  rw [qth_intAt_iff]
-  rw [← HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
-  exact key
+  rwa [qth_intAt_iff, ← HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
 
 end GlobalTheory.TwU.CongTwo
 end -- clump:auto
@@ -325,8 +318,7 @@ theorem cong_mem_level_chr_one : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (C
       have h1 := GlobalTheory.TopStep.redGL_of_prinCong (by omega : 0 < cst.D P) hkC
       intro x hx
       have h2 := GlobalTheory.TopStep.redV_redGL κ hx
-      rw [h1, Units.val_one, Matrix.one_mulVec] at h2
-      exact h2
+      rwa [h1, Units.val_one, Matrix.one_mulVec] at h2
     have hh := hL.stabG j b P hP
     refine ⟨GlobalTheory.CongLevel.extE (cOf R j) k, GlobalTheory.Mem.Col2.LevMod.extE_mem_Cbe cst.sharp j P.1 hP hd (L.h j b P) hh k hkG hred, GlobalTheory.CongLevel.extE_inX _ k, ?_⟩
     have hh' := hh
@@ -341,8 +333,7 @@ theorem cong_mem_level_chr_one : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (C
         unfold lamYat at hx' ⊢
         rw [ite_eq_left hP] at hx' ⊢
         have h2 := hcong x hx'
-        rw [LinearMap.smul_apply, LinearMap.sub_apply, LinearMap.id_apply, LinearEquiv.coe_coe]
-        exact h2
+        rwa [LinearMap.smul_apply, LinearMap.sub_apply, LinearMap.id_apply, LinearEquiv.coe_coe]
     rw [smul_inv_smul₀ hq, add_sub_cancel] at h1
     unfold chiInv
     rw [h1, hψ, inv_one, one_mul]
@@ -376,8 +367,7 @@ theorem cong_mem_level_chr_one : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (C
       unfold Jat
       rw [ite_eq_right hP]
       refine _root_.GlobalTheory.ParahoricOfCong.mem_JQ_of_cong P.1 (R.k + j) (R.N j) (cOf R j) _ hg ?_
-      rw [einv]
-      exact hginv
+      rwa [einv]
     · unfold chiInv
       rw [hψ, inv_one, one_mul]
       unfold lamRow

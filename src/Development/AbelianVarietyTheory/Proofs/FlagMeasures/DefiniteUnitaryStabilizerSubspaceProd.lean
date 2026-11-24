@@ -275,10 +275,8 @@ theorem _root_.GlobalTheory.Mass.StabSplit.main : ∀ (K V : Type) [Field K] [Nu
       simp only [e, Submodule.coe_prodEquivOfIsCompl']
       rw [gsum, gsum, apply_add_add_of_mem_perp hs (a.1 u').2 (a.1 u).2 (c.1 w).2 (c.1 w').2,
         apply_add_add_of_mem_perp hs u'.2 u.2 w.2 w'.2]
-      have ha : h (a.1 u : V) (a.1 u' : V) = h u u' := by
-        exact a.2 u u'
-      have hc' : h (c.1 w : V) (c.1 w' : V) = h w w' := by
-        exact c.2 w w'
+      have ha : h (a.1 u : V) (a.1 u' : V) = h u u' := a.2 u u'
+      have hc' : h (c.1 w : V) (c.1 w' : V) = h w w' := c.2 w w'
       rw [ha, hc']
     have hstab : (⟨g, hiso⟩ : _root_.Formalism.HermitianLatticesTheory.isom h) • U = U := by
       rw [_root_.GlobalTheory.Mass.StabSplit.smul_eq_map]

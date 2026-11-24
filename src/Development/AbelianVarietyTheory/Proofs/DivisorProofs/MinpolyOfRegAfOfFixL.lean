@@ -364,11 +364,9 @@ theorem finrank_le_natDegree_minpoly (K V : Type) [Field K] [IsAlgClosed K] [Add
   have hcard : f.roots.toFinset.card = f.natDegree := by
     rw [Multiset.toFinset_card_of_nodup (Polynomial.nodup_roots hs)]
     exact ((IsAlgClosed.splits f).natDegree_eq_card_roots).symm
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   obtain ⟨μ, hμ, h2⟩ : ∃ μ ∈ f.roots.toFinset, 2 ≤ Module.finrank K (T.eigenspace μ) := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     have : ∑ z ∈ f.roots.toFinset, Module.finrank K (T.eigenspace z) ≤
         ∑ z ∈ f.roots.toFinset, 1 :=
       Finset.sum_le_sum fun z hz => Nat.lt_succ_iff.mp (hno z hz)
@@ -542,8 +540,7 @@ theorem natDegree_minpoly_eq : ∀ (F C : Type) [Field F] [Ring C] [Algebra F C]
       exact hB.eq
     have h := GlobalTheory.LKCentAf.commute_of_centralizer F K C S c S.val hcent _ _ hA' hB'
     have h2 := congrArg e h
-    rw [map_mul, map_mul, e.apply_symm_apply, e.apply_symm_apply] at h2
-    exact h2
+    rwa [map_mul, map_mul, e.apply_symm_apply, e.apply_symm_apply] at h2
   have hdegN := _root_.GlobalTheory.RegCommutant.natDegree_minpoly_eq_of_commutant_comm K k N (by rw [hmN]; exact hxsep) hNcomm
   have hxk : (minpoly K x).natDegree = k := by rw [← hmN]; exact hdegN
   rw [← hxk]
@@ -657,8 +654,7 @@ theorem form_expand {n : ℕ} {Q : Matrix (Fin n) (Fin n) ℂ} (hQ : Q.IsHermiti
 
 theorem form_self_ofReal {n : ℕ} {Q : Matrix (Fin n) (Fin n) ℂ} (hQ : Q.IsHermitian) (x : Fin n → ℂ) :
     ((star x ⬝ᵥ Q *ᵥ x).re : ℂ) = star x ⬝ᵥ Q *ᵥ x := by
-  have h := form_swap hQ x x
-  exact Complex.conj_eq_iff_re.mp h.symm
+  exact Complex.conj_eq_iff_re.mp (form_swap hQ x x).symm
 
 end GlobalTheory.PositiveDefiniteFormIdentities
 

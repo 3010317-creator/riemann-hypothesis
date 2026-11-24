@@ -133,8 +133,7 @@ theorem gs_ne [IsIntegral Y] (r : Y ⟶ X) [IsIso r] (y : Y) {U : X.Opens} (hy :
   apply ha
   apply h₁
   apply germ_injective_of_isIntegral Y y (show y ∈ r ⁻¹ᵁ U from hy)
-  rw [map_zero, map_zero]
-  exact h
+  rwa [map_zero, map_zero]
 
 theorem sec_ne [IsIntegral X] {N : LB X} (s : LB.Sec N) (hs : ∃ j, s.f j ≠ 0) {i : N.ι} {x : X} (hx : x ∈ N.U i) :
     s.f i ≠ 0 := by
@@ -494,8 +493,7 @@ theorem exists_sec_of_lbIso {Y : Scheme.{0}} {A B : LB Y} (hA : A.IsLB) (hB : B.
   obtain ⟨u, hu⟩ := h
   obtain ⟨t, b, hb⟩ := hs
   refine ⟨DVR.secOfIso t hu hA hB, ?_⟩
-  by_contra hn
-  push Not at hn
+  by_contra! hn
   refine hb (fn_ext fun y hy => ?_)
   obtain ⟨a, ha⟩ := exists_chart hA y
   have e := (DVR.secOfIso_spec t hu hA hB a b).symm
@@ -520,8 +518,7 @@ theorem ne_zero_of_mem {Y : Scheme.{0}} {M : LB Y} (s : LB.Sec M) {y : Y} (hy : 
     ∃ j, s.f j ≠ 0 := by
   obtain ⟨j, hj⟩ := TopologicalSpace.Opens.mem_iSup.1 hy
   refine ⟨j, fun e => ?_⟩
-  rw [e, Scheme.basicOpen_zero] at hj
-  exact hj
+  rwa [e, Scheme.basicOpen_zero] at hj
 
 theorem isIntegral_special {V : Type} [CommRing V] [IsLocalRing V]
     (B : Over (Spec (CommRingCat.of (V ⧸ IsLocalRing.maximalIdeal V ^ (0 + 1))))) [GrpObj B]

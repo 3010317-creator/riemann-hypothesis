@@ -85,8 +85,7 @@ theorem Pair.div_pow_mem_H_of_mul_pow_sub : ∀ (k : Type) [CommRing k] (X : Sch
   have hs : P.loc 0 1 s i j ∈ O := (hO _).1 (hG.s_mem.1 x i j hi hj)
   have ht : P.loc (-1) b t i j ∈ O := (hO _).1 (hG.t_mem.1 x i j hi hj)
   have hs0 : P.loc 0 1 s i j ≠ 0 := by
-    simp only [Pair.loc, zpow_zero, zpow_one, mul_one]
-    exact mul_ne_zero hG.s_ne hrj
+    simpa only [Pair.loc, zpow_zero, zpow_one, mul_one] using mul_ne_zero hG.s_ne hrj
   have hreg : ∀ g ∈ O, g * P.loc (-1) b t i j / P.loc 0 1 s i j ∈ O → g / P.loc 0 1 s i j ∈ O :=
     fun g hg h => (hO _).1 (hG.reg x i j hi hj g ((hO _).2 hg) ((hO _).2 h))
   have hg : P.loc N ((m : ℤ) - c) u i j ∈ O := (hO _).1 (hu x i j hi hj)
@@ -169,9 +168,7 @@ theorem encard_mul_le_at_level_twist : ∀ (k : Type) [CommRing k] (X : Scheme.{
     have hdiv : u * t ^ N / s ^ m ∈ P.H 0 ((b : ℤ) * N - c) := by
       rw [← hgu', mul_div_assoc, div_self hsm, mul_one]; exact hg
     have := hreg u hu hdiv
-    refine AddSubgroup.mem_map.mpr ⟨u / s ^ m, this, ?_⟩
-    show u / s ^ m * s ^ m = u
-    exact div_mul_cancel₀ u hsm
+    exact AddSubgroup.mem_map.mpr ⟨u / s ^ m, this, div_mul_cancel₀ u hsm⟩
   have key := GlobalTheory.VolBr.encard_mul_le_of_quot_embed X.functionField (P.H N ((m : ℤ) - c))
     (P.H 0 ((b : ℤ) * N + m - c)) Λ₀ Λ₀' (P.Bl N ((m : ℤ) - c)) (P.Bl 0 ((b : ℤ) * N + m - c)) Tt (bf _ _) (bf _ _)
     hT hpull hfin
@@ -188,8 +185,7 @@ theorem encard_mul_le_at_level_twist : ∀ (k : Type) [CommRing k] (X : Scheme.{
       rw [hν]
       have := mul_le_mul (hf.2 σ y) (hsν1 σ y) (nu_nn _ _ _ _ _) zero_le_one
       simpa using this
-    · intro f _ g _ h
-      exact mul_right_cancel₀ hsm h
+    · exact fun f _ g _ h => mul_right_cancel₀ hsm h
 
   have hB : (P.Bl N ((m : ℤ) - c) 2 ∩ (Λ₀ : Set X.functionField)).encard ≤
       {f | f ∈ P.H N (-(c : ℤ)) ∧ f * s ^ m ∈ P.Bl N ((m : ℤ) - c) 2}.encard := by

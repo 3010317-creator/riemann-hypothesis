@@ -71,13 +71,11 @@ theorem continuous_of_decomp {Γ X : Type*} [Group Γ] [TopologicalSpace Γ] [Is
       refine Set.mem_image2.mpr ⟨p, ⟨⟨p, hp⟩, ?_, rfl⟩, k, hk, rfl⟩
       have h1 := hH ⟨p, hp⟩ k hk
       simp only [Set.mem_preimage] at hg ⊢
-      rw [← h1]
-      exact hg
+      rwa [← h1]
     · intro hg
       obtain ⟨x, ⟨q, hq, rfl⟩, k, hk, rfl⟩ := Set.mem_image2.mp hg
       simp only [Set.mem_preimage] at hq ⊢
-      rw [hH q k hk]
-      exact hq
+      rwa [hH q k hk]
   rw [heq]
   exact hQF.mul_right_of_isCompact hC
 

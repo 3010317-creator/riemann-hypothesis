@@ -61,8 +61,7 @@ theorem cA_eq_sigR (D : D7) (z : AE D) :
 
 theorem triple_sum_comm_reverse {ι κ μ M : Type} [Fintype ι] [Fintype κ] [Fintype μ] [AddCommMonoid M] (f : ι → κ → μ → M) :
     ∑ i, ∑ k, ∑ l, f i k l = ∑ l, ∑ k, ∑ i, f i k l := by
-  rw [Finset.sum_comm]
-  rw [Finset.sum_congr rfl fun k _ => Finset.sum_comm]
+  rw [Finset.sum_comm, Finset.sum_congr rfl fun k _ => Finset.sum_comm]
   exact Finset.sum_comm
 
 theorem symp_eq_symplO : ∀ (D : D7) (S T : HSp D) (JA : Matrix (Fin T.rank) (Fin T.rank) D.host.E) (JB : Matrix (Fin S.rank) (Fin S.rank) D.host.E)

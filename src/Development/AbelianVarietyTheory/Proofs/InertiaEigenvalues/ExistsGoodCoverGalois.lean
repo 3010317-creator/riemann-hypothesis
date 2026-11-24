@@ -121,8 +121,7 @@ theorem exists_unf_dict : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formali
   have hpos : 1 ≤ (T.Q.Dw j).p + (T.Q.Dw j).q := by omega
   have hg₂ : GoodEmb d.c₂ σ₂ := by
     have h1 := hσ
-    rw [← hinc] at h1
-    exact h1
+    rwa [← hinc] at h1
   obtain ⟨C, hC, hCι, hCx⟩ := (exists_ctx D T.Q.H (T.Q.Dw j) d.l₂ d.Xo₂ d.c₂ σ₂ (T.V j σ) D.R.r hr _ hio hpos hA
     hg₂).2.2 (T.x₀ j σ) hx₀
   obtain ⟨Kf, hKf⟩ := (PrincLevel.exists_levelK_and_nhds D (T.V j σ) d.l₂.M).1
@@ -131,8 +130,7 @@ theorem exists_unf_dict : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formali
   obtain ⟨g, e, F, ik, φ, th, hth, -, hdl⟩ := hP.dictLaws
   have hdom := (dict_invariant D _ _ _ _ _ _ _ _ C hC dict hdict Kf hKf).2.2.1
   refine ⟨C.unf un, dict, fun cc₂ => ⟨hlev, hA, hinc, hP.unf, hdom, hr, g, e, F, ik, φ, th, hP.modelW, hth, ?_⟩⟩
-  rw [← hCι, ← hCx]
-  exact hdl
+  rwa [← hCι, ← hCx]
 
 end GlobalTheory.CoverUnif
 end -- clump:auto
@@ -660,8 +658,7 @@ theorem exists_goodCover_galois (D : D7) {G : Type} [Group G] [Fintype G] {Pl0 T
     constructor
     · rintro ⟨z, rfl⟩
       have : σ' (d.eF.symm z) ∈ (σ'.toRatAlgHom).fieldRange := AlgHom.mem_fieldRange.2 ⟨_, rfl⟩
-      rw [hrange] at this
-      exact this
+      rwa [hrange] at this
     · intro hx
       obtain ⟨z, hz'⟩ := hsurj ⟨x, hx⟩
       exact ⟨z, hz'⟩

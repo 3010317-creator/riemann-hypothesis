@@ -114,8 +114,7 @@ theorem mem_img' (g : GL (Fin n) ℂ) (W : Submodule ℂ (Fin n → ℂ)) (y : F
   constructor
   · rintro ⟨x, hx, rfl⟩
     rw [Matrix.toLin'_apply, e1]; exact hx
-  · intro h
-    exact ⟨_, h, by rw [Matrix.toLin'_apply, e2]⟩
+  · exact fun h => ⟨_, h, by rw [Matrix.toLin'_apply, e2]⟩
 
 theorem img_mul (a b : GL (Fin n) ℂ) (W : Submodule ℂ (Fin n → ℂ)) :
     img (a * b) W = img a (img b W) := by
@@ -141,8 +140,7 @@ theorem perp_img (q : GL (Fin n) ℂ) (W : Submodule ℂ (Fin n → ℂ)) :
   constructor
   · intro h x hx
     have := h (q.val *ᵥ x) ⟨x, hx, by rw [Matrix.toLin'_apply]⟩
-    rw [Matrix.star_mulVec, ← Matrix.dotProduct_mulVec] at this
-    exact this
+    rwa [Matrix.star_mulVec, ← Matrix.dotProduct_mulVec] at this
   · rintro h _ ⟨x, hx, rfl⟩
     rw [Matrix.toLin'_apply, Matrix.star_mulVec, ← Matrix.dotProduct_mulVec]
     exact h x hx

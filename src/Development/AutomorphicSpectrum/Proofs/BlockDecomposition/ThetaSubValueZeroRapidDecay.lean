@@ -122,8 +122,7 @@ theorem exists_ideal_of_isCompact {S : Set 𝔸ᶠ[K]} (hS : IsCompact S) :
     have h1 := hd _ hmem
     rw [← map_mul] at h1
     have h2 : dK * ξ ∈ ((1 : (FractionalIdeal (𝓞 K)⁰ K)ˣ) : FractionalIdeal (𝓞 K)⁰ K) := by
-      rw [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
-      exact h1
+      rwa [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
     rw [Units.val_one] at h2
     obtain ⟨r, hr⟩ := (FractionalIdeal.mem_one_iff _).mp h2
     refine (FractionalIdeal.mem_spanSingleton _).mpr ⟨r, ?_⟩
@@ -165,8 +164,7 @@ theorem norm_le_norm_infC_moduleSection_mul (w : InfinitePlace K) {t : {x : ℝ 
 theorem norm_infC_moduleSection (w : InfinitePlace K) (t : {x : ℝ // 0 < x}) :
     mixedEmbedding.norm (infC ((moduleSection w t : NumberField.IdeleGroup (𝓞 K) K) : 𝔸[K])) = t := by
   have h := mixedEmbedding_norm_toInfinite (moduleSection w t)
-  rw [infiniteModule_moduleSection] at h
-  exact h
+  rwa [infiniteModule_moduleSection] at h
 
 end
 
@@ -190,8 +188,7 @@ private lemma key {α ι : Type} [Fintype ι] [DecidableEq ι] [DecidableEq α] 
     apply Finset.sum_le_sum_of_subset_of_nonneg
     · intro ξ hξ
       rw [Fintype.mem_piFinset]
-      intro i
-      exact Finset.mem_image_of_mem _ hξ
+      exact fun i => Finset.mem_image_of_mem _ hξ
     · intro ξ _ _
       exact Finset.prod_nonneg fun i _ => h0 (ξ i)
   have h2 : ∑ ξ ∈ Fintype.piFinset (fun i => u.image (fun η => η i)), ∏ i, f (ξ i)
@@ -199,10 +196,8 @@ private lemma key {α ι : Type} [Fintype ι] [DecidableEq ι] [DecidableEq α] 
     by rw [Finset.prod_univ_sum]
   have h3 : ∏ i, ∑ x ∈ u.image (fun η => η i), f x ≤ ∏ _i : ι, ∑' x, f x := by
     apply Finset.prod_le_prod₀
-    · intro i _
-      exact Finset.sum_nonneg fun x _ => h0 x
-    · intro i _
-      exact hf.sum_le_tsum _ (fun x _ => h0 x)
+    · exact fun i _ => Finset.sum_nonneg fun x _ => h0 x
+    · exact fun i _ => hf.sum_le_tsum _ (fun x _ => h0 x)
   exact h1.trans (h2.le.trans h3)
 
 private lemma summ {α ι : Type} [Fintype ι] {f : α → ℝ}
@@ -287,8 +282,7 @@ theorem decay_real_bound {A B Z t κ : ℝ} {X : ι → ℝ} {m n r : ℕ} (hA :
       = A * ((Z ^ (Fintype.card ι * m))⁻¹ * ((Z ^ n) ^ r)⁻¹) := by
         rw [pow_add, pow_mul Z n r, mul_inv]
     _ ≤ A * ((B ^ (Fintype.card ι * m) * ∏ j, ((X j) ^ m)⁻¹) * ((t * κ) ^ r)⁻¹) := by
-        refine mul_le_mul_of_nonneg_left ?_ hA
-        exact mul_le_mul g₁ g₂ (by positivity) (by positivity)
+        exact mul_le_mul_of_nonneg_left (mul_le_mul g₁ g₂ (by positivity) (by positivity)) hA
     _ = (t ^ r)⁻¹ * (A * B ^ (Fintype.card ι * m) * (κ ^ r)⁻¹ * ∏ j, ((X j) ^ m)⁻¹) := by
         rw [mul_pow, mul_inv]
         ring
@@ -428,8 +422,7 @@ theorem exists_decay_boundC_tensor (w : InfinitePlace k) (φ : 𝓢(ι → mixed
 
     have hnorm : (t : ℝ) * κ ≤ (1 + ‖z‖) ^ n := by
       obtain ⟨j, hj⟩ : ∃ j, ξ j ≠ 0 := by
-        by_contra hcon
-        push Not at hcon
+        by_contra! hcon
         exact hξ0 (funext hcon)
       have h1 : (t : ℝ) * κ₀ ≤ mixedEmbedding.norm (e * mixedEmbedding k (ξ j)) := by
         rw [map_mul, norm_infC_moduleSection]
@@ -464,8 +457,7 @@ theorem exists_decay_boundC_tensor (w : InfinitePlace k) (φ : 𝓢(ι → mixed
       Finset.prod_eq_zero (Finset.mem_univ i) (by
         rw [cosetIndicator]
         exact Set.indicator_of_notMem hi' _)
-    rw [hprod, mul_zero, norm_zero]
-    exact hnn
+    rwa [hprod, mul_zero, norm_zero]
 
 theorem exists_decay_boundC (w : InfinitePlace k) {F : (ι → 𝔸[k]) → ℂ}
     (hF : F ∈ schwartzBruhatPi (K := k) (ι := ι)) {C : Set (GL ι 𝔸[k])} (hC : IsCompact C) (r : ℕ) :

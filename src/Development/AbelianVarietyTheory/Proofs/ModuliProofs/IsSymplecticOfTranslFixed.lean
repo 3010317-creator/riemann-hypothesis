@@ -202,8 +202,7 @@ theorem relDim {ζ : Bˣ} (hM : 2 ≤ M) (hu : IsUnit (M : B)) (o : SiegPre h M 
   have := c.ab.geomConnected
   have : ConnectedSpace c.A.left := GeometricallyConnected.connectedSpace c.A.hom c.A.hom.isOpenMap
   obtain ⟨y, hy⟩ : x ∈ Set.range (pullback.fst o.A.hom t) := by
-    rw [Scheme.Pullback.range_fst]
-    exact ht
+    rwa [Scheme.Pullback.range_fst]
   obtain ⟨g, hg⟩ := exists_dim_of_preconnected c.A.hom (pb.1.isoPullback.inv y)
   have e₁ : n x = g := H1.dim_base pb.1 (hd x) hg (pb.1.isoPullback.inv y) (by
     rw [← Scheme.Hom.comp_apply, pb.1.isoPullback_inv_fst, hy]; exact hW x)
@@ -360,8 +359,7 @@ theorem isSymplectic_of_translFixed {ζ : Bˣ} (hM : M ≠ 0) (hζ : ζ ^ M = 1)
       rw [Over.toUnit_left] at q
       refine q.trans ?_
       rw [map_unitS hβ, ← map_zpow, ← pow_form hM hζ, red_lft, red_lft]
-  rw [unit_eq, ← e]
-  exact hc
+  rwa [unit_eq, ← e]
 
 end Symplectic
 

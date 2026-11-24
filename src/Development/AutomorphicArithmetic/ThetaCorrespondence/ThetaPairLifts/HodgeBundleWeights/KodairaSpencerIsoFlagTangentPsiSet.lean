@@ -67,10 +67,7 @@ theorem eq_of_kodaira_spencer_eq : _root_.GlobalTheory.CovTop.Hypotheses'' → G
     refine ⟨?_, ?_⟩
     · rw [Category.assoc, hX, sOf, sOf, ← Spec.map_comp]
       congr 1
-      apply CommRingCat.hom_ext
-      apply RingHom.ext
-      intro a
-      exact (GlobalTheory.FlagTan.dir c N).commutes _
+      exact CommRingCat.hom_ext (RingHom.ext (fun a => (GlobalTheory.FlagTan.dir c N).commutes _))
     · rw [← Category.assoc, ← Spec.map_comp, ← hXy]
       congr 2
       ext z

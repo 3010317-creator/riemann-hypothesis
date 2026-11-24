@@ -124,8 +124,7 @@ theorem mem_YYl_skew_iff (𝔪 : Ideal (𝓞 D.host.E)) (a d : ℕ) (x : Matrix 
             by_cases hk : k = j
             · subst hk; simp [Submodule.one_eq_range]
             · simp [hk]
-          have h := (mem_skewLat_iff D 𝔪 d _).1 (hA _ hj) i
-          simpa [Matrix.mulVec_single] using h
+          simpa [Matrix.mulVec_single] using (mem_skewLat_iff D 𝔪 d _).1 (hA _ hj) i
         | zero => intro i j; simp
         | add A B _ _ h1 h2 => intro i j; simpa using add_mem (h1 i j) (h2 i j)
         | smul r A _ h => intro i j; simpa using Submodule.smul_mem _ r (h i j)

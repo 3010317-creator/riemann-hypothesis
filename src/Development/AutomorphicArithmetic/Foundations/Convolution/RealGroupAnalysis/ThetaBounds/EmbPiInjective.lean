@@ -90,8 +90,7 @@ private theorem mem_lat (J : (FractionalIdeal (𝓞 F)⁰ F)ˣ) (ξ : Fin 4 → 
     (h : ∀ i, ξ i ∈ (J : FractionalIdeal (𝓞 F)⁰ F)) :
     embPi F ξ ∈ idealLatticePi (K := F) (fun _ : Fin 4 => J) := by
   rw [mem_idealLatticePi]
-  intro i
-  exact (mixedEmbedding.mem_idealLattice F J).2 ⟨_, h i, rfl⟩
+  exact fun i => (mixedEmbedding.mem_idealLattice F J).2 ⟨_, h i, rfl⟩
 
 private theorem embPi_injective : Function.Injective (embPi F : (Fin 4 → F) → _) := fun _ _ h =>
   funext fun i => (mixedEmbedding F).injective (congrFun h i)
@@ -113,8 +112,7 @@ private theorem summable_lw (J : (FractionalIdeal (𝓞 F)⁰ F)ˣ) {N : ℕ}
     by_cases h : ∀ i, ξ i ∈ (J : FractionalIdeal (𝓞 F)⁰ F)
     · rw [ite_eq_left h, Set.indicator_of_mem (show ξ ∈ {ξ : Fin 4 → F | ∀ i, ξ i ∈ (J : FractionalIdeal (𝓞 F)⁰ F)} from h)]
     · rw [ite_eq_right h, Set.indicator_of_notMem (show ξ ∉ {ξ : Fin 4 → F | ∀ i, ξ i ∈ (J : FractionalIdeal (𝓞 F)⁰ F)} from h)]
-  rw [heq, ← summable_subtype_iff_indicator]
-  exact hsT
+  rwa [heq, ← summable_subtype_iff_indicator]
 
 private theorem mixed_le {S : Set (IdeleGroup F)} (hS : IsCompact S) :
     ∃ B : ℝ, 1 ≤ B ∧ ∀ (s : ℝ) (hs : 0 < s), 1 ≤ s → ∀ u ∈ S, ∀ η : F,
@@ -150,8 +148,7 @@ private theorem mixed_le {S : Set (IdeleGroup F)} (hS : IsCompact S) :
       (by linarith)
   have h1 : ‖mixedEmbedding F η‖ ≤ ∑ w : InfinitePlace F, ‖(rt η : A F).1 w‖ := by
     have := GJGlobal.norm_homeomorphMixedSpace_le_sum (algebraMap F (InfiniteAdeleRing F) η)
-    rw [homeomorphMixedSpace_algebraMap] at this
-    exact this
+    rwa [homeomorphMixedSpace_algebraMap] at this
   have h2 : ∑ w : InfinitePlace F, ‖(rt η : A F).1 w‖ ≤ n * (b * ‖homeomorphMixedSpace F y‖) := by
     refine (Finset.sum_le_sum fun w _ => hw w).trans_eq ?_
     simp [n, Finset.card_univ]
@@ -194,8 +191,7 @@ private theorem fin_mem {K : Set (Fin 4 → FiniteAdeleRing (𝓞 F) F)} (hK : I
   have h1 := hd _ hmem
   rw [← map_mul] at h1
   have h2 : dK * η i ∈ ((1 : (FractionalIdeal (𝓞 F)⁰ F)ˣ) : FractionalIdeal (𝓞 F)⁰ F) := by
-    rw [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
-    exact h1
+    rwa [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
   rw [Units.val_one] at h2
   obtain ⟨r, hr⟩ := (FractionalIdeal.mem_one_iff _).mp h2
   refine (FractionalIdeal.mem_spanSingleton _).mpr ⟨r, ?_⟩

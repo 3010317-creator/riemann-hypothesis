@@ -85,10 +85,7 @@ theorem selfDualVol : PositivityTheory.SiegelWeilFormula.Gunr.SelfDualVol := by
       intro a ha
       rw [(IsClopen.frontier_eq ⟨hLcl, hLo⟩)] at ha
       exact absurd ha (Set.notMem_empty a))
-  have hΦs : HasCompactSupport Φ := by
-    refine HasCompactSupport.intro hLc ?_
-    intro x hx
-    exact hΦout x hx
+  have hΦs : HasCompactSupport Φ := HasCompactSupport.intro hLc (fun x hx => hΦout x hx)
   obtain ⟨m, hm⟩ : ∃ m : ℝ, m = μ.real (L : Set V) := ⟨_, rfl⟩
   have hI : ∀ y, ∫ x, Φ x * χ x y ∂μ = (L : Set V).indicator (fun _ => (m : ℂ)) y := by
     intro y
@@ -133,13 +130,11 @@ theorem selfDualVol : PositivityTheory.SiegelWeilFormula.Gunr.SelfDualVol := by
   rw [hout, integral_indicator hLm, neg_zero, hΦin 0 L.zero_mem] at h0
   have h5 : (m : ℂ) * m = 1 := by
     have := h0
-    simp only [setIntegral_const, ← hm, Complex.real_smul] at this
-    exact this
+    simpa only [setIntegral_const, ← hm, Complex.real_smul] using this
   have h6 : m * m = 1 := by exact_mod_cast h5
   have hm0 : 0 ≤ m := by rw [hm]; exact measureReal_nonneg
   have h7 : m = 1 := by nlinarith
-  rw [hm, measureReal_def, ENNReal.toReal_eq_one_iff] at h7
-  exact h7
+  rwa [hm, measureReal_def, ENNReal.toReal_eq_one_iff] at h7
 
 end GlobalTheory.CompanionTheory.GunrVol
 end -- clump:auto
@@ -370,8 +365,7 @@ theorem entry_mem (hG : GoodLoc σ J T bs v ψv S σS ϖ ε) {Y : Fin n → Fin 
   have e : s * β * w = b • (w * s) := by
     rw [Algebra.smul_def, ← hβ]
     ring
-  rw [e, LinearMap.map_smul, smul_eq_mul, mul_comm] at h1
-  exact h1
+  rwa [e, LinearMap.map_smul, smul_eq_mul, mul_comm] at h1
 
 theorem mem_of_dual (hG : GoodLoc σ J T bs v ψv S σS ϖ ε) {Y : Fin n → Fin M → Fv F v ⊗[F] E}
     (h : ∀ X ∈ latV (M := M) (n := n) bs v, ψv (BR (Fv F v) σ J X Y) = 1) :
@@ -415,8 +409,7 @@ theorem volLat : VolLat := by
     (isCompact_lat bs v n M) ?_ ?_ hdual
   · intro X X' Y
     simp only [BR_add, hG.psi_add]
-  · intro Y
-    exact hG.psi_cont.comp (continuous_BR v σ J Y)
+  · exact fun Y => hG.psi_cont.comp (continuous_BR v σ J Y)
 
 end GlobalTheory.CompanionTheory.GunrVol
 
@@ -626,8 +619,7 @@ theorem trace_red (hG : GoodLoc σ J T bs v ψv S σS ϖ ε) (k : ℕ) (X : Matr
     rfl
   have hm : ∀ {a b c : ℕ} (A : Matrix (Fin a) (Fin b) S) (B : Matrix (Fin b) (Fin c) S),
       red hG.pS k A * red hG.pS k B = red hG.pS k (A * B) := fun A B => by
-    simp only [red]
-    exact (Matrix.map_mul (f := Ideal.Quotient.mk (lev hG.pS k))).symm
+    simpa only [red] using (Matrix.map_mul (f := Ideal.Quotient.mk (lev hG.pS k))).symm
   rw [e, hm, hm, hm]
 
   simp only [Matrix.trace, Matrix.diag_apply, red, Matrix.map_apply, map_sum]

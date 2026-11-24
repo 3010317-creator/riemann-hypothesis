@@ -284,8 +284,7 @@ theorem isRed_of_red : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Num
     rw [adAt_inclE]
     rfl
   show HasRes P _ _
-  rw [hm r s, ← e]
-  exact h
+  rwa [hm r s, ← e]
 
 theorem adAt_of_off {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [StarRing E] {n : ℕ}
     {u : GL (Fin n) (AfE F E)} {v : HeightOneSpectrum (𝓞 F)} (hoff : ∀ v', v' ≠ v → bc (prV (E := E) v') u = 1)
@@ -326,8 +325,7 @@ theorem core {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [A
   have e : g0 * m = g0 * m⁻¹⁻¹ := by rw [inv_inv]
   rw [e]
   refine isPtOf_mul_fr hp (inv_mem hmU) (fun r s => (hInt r s).2) (fun r s => by rw [inv_inv]; exact (hInt r s).1) ?_ ?_ c ?_
-  · intro P' hP' r s
-    exact adAt_of_off hmioff (hST P' hP') r s
+  · exact fun P' hP' r s => adAt_of_off hmioff (hST P' hP') r s
   · intro w
     by_cases hw : w.1 = P
     · obtain ⟨w, hwm⟩ := w
@@ -342,8 +340,7 @@ theorem core {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [A
       have h2 := h1.unique LevRead.isRed_one
       have h3 : (h ⟨w, hwm⟩)⁻¹ * Bm = 1 := Units.ext (by rw [Units.val_mul]; exact h2)
       rw [inv_mul_eq_one] at h3
-      rw [h3]
-      exact hB
+      rwa [h3]
     · have hwnot : ¬ Formalism.L2.Col.IsOver v w.1 := fun h' => hw (hover w.1 (Or.inl w.2) h')
       have hC1 := isRed_of_red (F := F) w.1 1 (one_mem _) _ (hGo w hw) (1 : GL (Fin n) (AfE F E)) (fun r s => by
         rw [show LinearMap.toMatrix' (1 : Sp E n ≃ₗ[E] Sp E n).toLinearMap = 1 from LinearMap.toMatrix'_id]
@@ -426,8 +423,7 @@ theorem pt_of_lift : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC
   have hS : ∀ w, w ∈ (B.primes X).vGs ∨ w ∈ I.Q a → w ∈ SBof I a := by
     intro w hw
     show w ∈ uSG _ _
-    simp only [uSG, Finset.mem_union]
-    exact hw
+    simpa only [uSG, Finset.mem_union] using hw
   have key := core B.sp.cm hp hxU hk v P.1 hv hxoff g' hg' hpt (vT_notOver I hOk a P v hv u) (fun w hw hwv => by
       have hw' : w ∈ uSG (B.primes X).vGs I.SQ := by
         simp only [uSG, Finset.mem_union]

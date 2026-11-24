@@ -207,8 +207,7 @@ theorem prod_X_of_map (s : Segment k →₀ ℕ) {h : ℕ} (Γ : Fin h → Segme
       (Finset.univ.val.map Γ).map MvPolynomial.X := by
     rw [Multiset.map_map]; rfl
   rw [Finset.prod_eq_multiset_prod, h1, hΓ, Finset.prod_multiset_map_count, Finsupp.toFinset_toMultiset]
-  simp only [Finsupp.count_toMultiset]
-  exact MvPolynomial.prod_X_pow_eq_monomial
+  simpa only [Finsupp.count_toMultiset] using MvPolynomial.prod_X_pow_eq_monomial
 
 theorem exists_enum (s : Segment k →₀ ℕ) :
     ∃ (h : ℕ) (Γ : Fin h → Segment k), Finset.univ.val.map Γ = Finsupp.toMultiset s :=
@@ -765,8 +764,7 @@ theorem annMap_surjective
     intro h hh w
     have h1 : contra (subQuot S T) h⁻¹ f = f := hKs (inv_mem hh)
     have h2 := LinearMap.congr_fun (congrArg Subtype.val h1) (Submodule.Quotient.mk w)
-    rw [contra_apply, inv_inv] at h2
-    exact h2
+    rwa [contra_apply, inv_inv] at h2
   let j : fixed S.toRepresentation K →ₗ[ℂ] fixed π K :=
     { toFun := fun w => ⟨w.1.1, GlobalTheory.ContraRefl.mem_fix.2 fun h hh =>
         congrArg Subtype.val (GlobalTheory.ContraRefl.mem_fix.1 w.2 h hh)⟩
@@ -782,8 +780,7 @@ theorem annMap_surjective
   have hlS : (l : Module.Dual ℂ V) ∘ₗ S.toSubmodule.subtype = m₀ := by
     refine GlobalTheory.ContraRefl.form_ext hSs hc (fun h hh w => ?_) hm (fun w hw => ?_)
     · have h1 := LinearMap.congr_fun (congrArg Subtype.val (hlK h⁻¹ (inv_mem hh))) (w : V)
-      rw [contra_apply, inv_inv] at h1
-      exact h1
+      rwa [contra_apply, inv_inv] at h1
     · have e1 := hl (j ⟨w, hw⟩)
       have e2 := LinearMap.congr_fun hj' ⟨w, hw⟩
       simp only [LinearMap.comp_apply, LinearMap.id_apply] at e2
@@ -856,8 +853,7 @@ theorem class_congr_equiv {N : ℕ} {V W : Type} [AddCommGroup V] [Module ℂ V]
     cl0 π = cl0 τ := by
   by_cases hπ : HasFiniteLength π
   · have hτ := hπ.of_equiv φ
-    simp only [cl0, dite_eq_left hπ, dite_eq_left hτ]
-    exact clsGL_congr φ hπ hτ
+    simpa only [cl0, dite_eq_left hπ, dite_eq_left hτ] using clsGL_congr φ hπ hτ
   · have hτ : ¬ HasFiniteLength τ := fun h => hπ (h.of_equiv φ.symm)
     simp only [cl0, dite_eq_right hπ, dite_eq_right hτ]
 
@@ -1103,8 +1099,7 @@ theorem induction_length (P : ∀ (Y : Type) [AddCommGroup Y] [Module ℂ Y], Re
     { toLinearMap := 0, isIntertwining' := fun _ => by ext }
   refine hses _ _ _ _ ρ _ (topEquiv ρ).toIntertwiningMap z (topEquiv ρ).injective
     (fun _ => ⟨0, Subsingleton.elim _ _⟩) ?_ hs hf (key ⊤) (hzero _ _)
-  intro y
-  exact ⟨fun _ => (topEquiv ρ).surjective y, fun _ => Subsingleton.elim _ _⟩
+  exact fun y => ⟨fun _ => (topEquiv ρ).surjective y, fun _ => Subsingleton.elim _ _⟩
 
 end Induction
 
@@ -1659,8 +1654,7 @@ theorem jhMult_mul_jm_le {g N : ℕ} (z : Fin g → IrrGL (k := k)) (hz : ∑ b,
   rwa [_root_.GlobalTheory.CompanionTheory.JacquetCongr.jm_congr_of_equiv z hz _ _ ⟨topEquiv π⟩] at h
 
 theorem ofFn_perm {α : Type*} {h : ℕ} (x : Fin h → α) (σ : Equiv.Perm (Fin h)) :
-    (List.ofFn (x ∘ σ)).Perm (List.ofFn x) := by
-  exact Equiv.Perm.ofFn_comp_perm σ x
+    (List.ofFn (x ∘ σ)).Perm (List.ofFn x) := Equiv.Perm.ofFn_comp_perm σ x
 
 theorem jhMult_le_one_of_equiv (y : IrrGL (k := k)) {V : Type} [AddCommGroup V] [Module ℂ V]
     {π : Representation ℂ (GL (Fin y.1) k) V} {g : ℕ} {z : Fin g → IrrGL (k := k)} {hz : ∑ b, (z b).1 = y.1}
@@ -1786,13 +1780,11 @@ theorem tri (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarc
   have hL := GlobalTheory.CompanionTheory.ZcWords.coe_map_ofFn hΓ
   have hne : 𝔪.map toA ≠ (((List.ofFn Γ).map toA : List _) : Multiset _) := by
     rw [hL]
-    intro e
-    exact he (Multiset.map_injective GlobalTheory.CompanionTheory.ZcWords.toA_injective e)
+    exact fun e => he (Multiset.map_injective GlobalTheory.CompanionTheory.ZcWords.toA_injective e)
   have key := _root_.GlobalTheory.CompanionTheory.MultiSeg.Rank.sqLen_lt_of_inSh sNu GlobalTheory.CompanionTheory.ZcWords.sNu_injective GlobalTheory.CompanionTheory.ZcWords.sNu_aperiodic
     ((List.ofFn Γ).map toA) (𝔪.map toA) (GlobalTheory.CompanionTheory.ZcWords.aOrdered_of_isOrderedForm hΓ)
     (GlobalTheory.CompanionTheory.ZcWords.inSh_of_inShW sh) hne
-  rw [hL, tri_sqLen_map_toA, tri_sqLen_map_toA] at key
-  exact key
+  rwa [hL, tri_sqLen_map_toA, tri_sqLen_map_toA] at key
 
 end CompanionTheory.Groth
 

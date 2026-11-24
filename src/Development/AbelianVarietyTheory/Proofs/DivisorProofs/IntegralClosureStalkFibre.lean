@@ -103,9 +103,7 @@ theorem prime_eq_nonunits_at_point : ∀ (o Ω : Type) [CommRing o] [Field Ω] [
   let P' : Ideal Γ(M.Z, U) := P.comap (e : Γ(M.Z, U) →+* M.ringOn (U : Set M.Z))
   have hP' : P'.IsPrime := Ideal.comap_isPrime _ _
   let x : Spec Γ(M.Z, U) := (⟨P', hP'⟩ : PrimeSpectrum Γ(M.Z, U))
-  have hz : hU.fromSpec x ∈ U := by
-    have h := hU.range_fromSpec
-    exact h.subset ⟨x, rfl⟩
+  have hz : hU.fromSpec x ∈ U := (hU.range_fromSpec).subset ⟨x, rfl⟩
   refine ⟨hU.fromSpec x, hz, fun a => ?_⟩
   obtain ⟨f, rfl⟩ := e.surjective a
   have key : hU.fromSpec x ∈ M.Z.basicOpen f ↔ f ∉ P' := by
@@ -177,8 +175,7 @@ theorem GlobalTheory.Poinc.finite_preimage_integral : ∀ (o₁ Ω₁ o₂ Ω₂
     exact (RatModel.mem_ringOn_iff_exists hU).2 ⟨P.coeff i, (M₁.res_apply U hU _).symm⟩
   · have hc : (algebraMap Ω₁ Ω₂).comp (M₁.res U hU) = (M₂.res (q ⁻¹ᵁ U) hV).comp (q.app U).hom := by
       ext a
-      simp only [RingHom.comp_apply, RatModel.res_apply]
-      exact (h1 a).symm
+      simpa only [RingHom.comp_apply, RatModel.res_apply] using (h1 a).symm
     rw [Polynomial.eval₂_map, hc, ← RatModel.res_apply _ _ hV, ← Polynomial.hom_eval₂, hP, map_zero]
 end -- clump:auto
 end -- clump:auto
@@ -360,8 +357,7 @@ theorem isIntegral_of_mem_O (hF : IsFinite q) (hg : M₂.pt ≫ q = spMap (algeb
         simp only [Set.mem_setOf_eq, Subalgebra.coe_add, add_mul] at *
         exact add_mem hc hd
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, ZeroMemClass.coe_zero, zero_mul]
-        exact zero_mem _
+        simpa only [Set.mem_setOf_eq, ZeroMemClass.coe_zero, zero_mul] using zero_mem _
       smul_mem' := fun c d hd => by
         simp only [Set.mem_setOf_eq, smul_eq_mul, Subalgebra.coe_mul, mul_assoc] at *
         exact mul_mem c.2 hd }
@@ -438,8 +434,7 @@ theorem maximal_point (hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNorma
   have fwd : ∀ b : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂, b ∈ 𝔷 →
       ((b : Ω₂) = 0 ∨ (b : Ω₂)⁻¹ ∉ M₂.O z₂) := by
     intro b hb
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     obtain ⟨hb0, hbinv⟩ := hcon
     obtain ⟨c, hc, d, hd, hd0, hdinv, hcd⟩ := GlobalTheory.T.exists_fraction_ringOn_of_mem_modelLocalRing _ _ M₂ _ hU₂ z₂ hz₂U _ hbinv
     have e : ψ ⟨d, hd⟩ = ψ ⟨c, hc⟩ * b := by
@@ -613,9 +608,7 @@ theorem lift_point (hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalSc
   have he1 : e (ψ ⟨c, hc⟩) = e b * e (ψ ⟨d, hd⟩) := by
     rw [← map_mul]
     congr 1
-    apply Subtype.ext
-    show c = (b : Ω₂) * d
-    exact hbd.symm
+    exact Subtype.ext hbd.symm
   rw [hval c hc, hval d hd] at hv1
   exact mul_right_cancel₀ (by rw [← hval d hd]; exact hv2) (he1.symm.trans hv1)
 

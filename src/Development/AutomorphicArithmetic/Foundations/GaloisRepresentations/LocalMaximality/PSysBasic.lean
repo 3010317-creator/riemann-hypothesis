@@ -54,12 +54,10 @@ open KaehlerDifferential GlobalTheory.CechDR GlobalTheory.PD GlobalTheory.WH Glo
 open scoped TensorProduct
 
 private lemma lft_uni' (hU : WdUni) {β κ : Type} [LinearOrder β] [LinearOrder κ] (b : Finset β)
-    (L : Finset κ) : lft (uni b L) = b := by
-  exact (hU β κ ℂ (fun _ => 0) (fun _ => 0) b L).2.1
+    (L : Finset κ) : lft (uni b L) = b := (hU β κ ℂ (fun _ => 0) (fun _ => 0) b L).2.1
 
 private lemma rgt_uni' (hU : WdUni) {β κ : Type} [LinearOrder β] [LinearOrder κ] (b : Finset β)
-    (L : Finset κ) : rgt (uni b L) = L := by
-  exact (hU β κ ℂ (fun _ => 0) (fun _ => 0) b L).2.2.1
+    (L : Finset κ) : rgt (uni b L) = L := (hU β κ ℂ (fun _ => 0) (fun _ => 0) b L).2.2.1
 
 private lemma card_uni' (hU : WdUni) {β κ : Type} [LinearOrder β] [LinearOrder κ] (b : Finset β)
     (L : Finset κ) : (uni b L).card = b.card + L.card := by
@@ -253,7 +251,6 @@ theorem UpperTheory.Gal.productCup_of_system.sysBasic_of :
       intro I J L
       have := (cx_iff T hU n z N c).mp hC I J (L.map e.toEmbedding)
       simp only [resK, lft_uni' hU, rgt_uni' hU]
-      rw [Finset.card_map, Finset.prod_map] at this
-      exact this
+      rwa [Finset.card_map, Finset.prod_map] at this
     · rw [LinearMap.mem_ker] at hD ⊢
       exact wd_wt_resK_eq_zero_of_wd_eq_zero hU hB T z e c hD

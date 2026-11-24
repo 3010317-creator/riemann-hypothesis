@@ -144,8 +144,7 @@ theorem gaG_eq (D : D7) : gaG D = Sz.colIdx D.R.k (D.host.g 0) ^ D.R.f * Sz.colI
     unfold Sz.colIdx Sz.glCard
     rw [GlobalTheory.prod_pow_sub_pow_eq_mul_prod_Icc]
     field_simp
-  rw [e, e]
-  exact hp
+  rwa [e, e]
 
 theorem idxRows_eq (D : D7) : LocalBesselAndTopKernel.idxRows D =
     Sz.rowIdx D.R.k D.R.rS (D.host.g 0) ^ D.R.f * Sz.rowIdx D.R.k D.R.rS (D.host.g 1) ^ D.R.f := by
@@ -155,8 +154,7 @@ theorem idxRows_eq (D : D7) : LocalBesselAndTopKernel.idxRows D =
     (fun x => LocalBesselAndTopKernel.cardGL x D.R.r / (x ^ LocalBesselAndTopKernel.dimNS D * x ^ (D.R.k * (D.R.k - 1) / 2))) hS
   have hr : D.R.k + 2 * D.R.rS + 1 = D.R.r := by have := dimS_eq D.R; omega
   unfold Sz.rowIdx
-  rw [hr]
-  exact hp
+  rwa [hr]
 
 theorem ratio_ranks (D : D7) (hM : UnitaryVolumeMass.stMassRatio D) (hR : LocalBesselAndTopKernel.FamilyMidVolume D) (hv : 0 < D.host.v)
     (hg0 : 4 ≤ D.host.g 0) (hg1 : 4 ≤ D.host.g 1) : UnitaryVolumeMass.cTvA D := by
@@ -194,8 +192,7 @@ theorem ratio_ranks (D : D7) (hM : UnitaryVolumeMass.stMassRatio D) (hR : LocalB
     have h := (hR _ _ _ (hst D.R.k).1).1 (hst D.R.k).2.1 u
     rw [gaG_eq, ← sfac_cast] at h
     unfold Sz.SizeData.ColumnCount Sz.SizeData.idxCol
-    rw [hf]
-    exact h
+    rwa [hf]
   have hD : S.Dstar = D.what₂.Dstar := by
     have h := (hR _ _ _ (hst D.R.r).1).2 (hst D.R.r).2.1
     rw [idxRows_eq] at h
@@ -554,8 +551,7 @@ theorem tcrit_low (D : D7) (large₂ : SizeData₂ D) (C' Cl Cg cb Cu cT CT C0 :
   have hP : B ^ D.R.m ≤ c.prodb := by
     have := prod_le_prod₀ (s := Icc 1 D.R.m) (f := fun _ => B) (g := bOne D τ) (fun _ _ => by linarith)
       fun j hj => hmono j (mem_Icc.1 hj).1 (mem_Icc.1 hj).2
-    rw [prod_const, Nat.card_Icc, Nat.add_sub_cancel] at this
-    exact this
+    rwa [prod_const, Nat.card_Icc, Nat.add_sub_cancel] at this
   have hka0 : 0 < D.host.ka := div_pos hpi (by linarith)
   have hka : D.host.ka ≤ 4 := (div_le_self hpi.le hv).trans hpi4
   have hnum := num_bound D.R.k D.R.m D.R.rS B c.prodb c.aeff _ _ hm (by exact_mod_cast hmR) (by omega) hB hP

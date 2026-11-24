@@ -113,8 +113,7 @@ theorem no_map_smaller_source :
     obtain ⟨-, -, hlam', -, hs'⟩ := _root_.GlobalTheory.LowestTypes.lowest_types t al be ga de hA
     have hno := ((_root_.GlobalTheory.LowestTypeDrop.lowestType_not_jointShape t al be ga de hA i hi1).2.2 hne hip hiq).1
     refine intw_eq_zero X h2 hD h5 (by omega) (lamA' t al be ga de) hlam' ((t : ℚ) / 2) ?_ hno MM f hf
-    rw [cPair_sub hip hiq]
-    exact hs'
+    rwa [cPair_sub hip hiq]
   ·
     intro t al be ga de hd hne i hi1 hip hiq MM f hf
     have hA := hd.1
@@ -124,7 +123,6 @@ theorem no_map_smaller_source :
     obtain ⟨-, hlam', -, hs'⟩ := _root_.GlobalTheory.TypesMirror.types_mirror t al be ga de hA
     have hno := ((_root_.GlobalTheory.LowestTypeDrop.lowestType_not_jointShape t al be ga de hA i hi1).2.2 hne hip hiq).2
     refine intw_eq_zero X h2 hD h5 (by omega) (lamM' t al be ga de) hlam' ((t : ℚ) / 2) ?_ hno MM f hf
-    rw [cPair_sub hip hiq]
-    exact hs'
+    rwa [cPair_sub hip hiq]
 
 end GlobalTheory.SmallerSource

@@ -139,8 +139,7 @@ theorem isUnit_diag_of_lower {O : Type} [CommRing O] [IsLocalRing O] {n : ℕ} (
     (i : Fin n) : IsUnit ((x : Matrix (Fin n) (Fin n) O) i i) := by
   have h1 : ((x : Matrix (Fin n) (Fin n) O).map (IsLocalRing.residue O)).BlockTriangular id := by
     intro a b hab
-    simp only [Matrix.map_apply]
-    exact (IsLocalRing.residue_eq_zero_iff _).2 (hx a b hab)
+    simpa only [Matrix.map_apply] using (IsLocalRing.residue_eq_zero_iff _).2 (hx a b hab)
   have h2 : IsUnit ((x : Matrix (Fin n) (Fin n) O).map (IsLocalRing.residue O)).det := by
     have e : ((x : Matrix (Fin n) (Fin n) O).map (IsLocalRing.residue O)).det =
         IsLocalRing.residue O (x : Matrix (Fin n) (Fin n) O).det := (RingHom.map_det _ _).symm
@@ -381,8 +380,7 @@ theorem exists_equiv_doubleCoset (k : Type) [Field k] [ValuativeRel k] [Topologi
   refine ⟨fun m => finite_cosets _, ?_⟩
   have hd := dom_of_antitone hϖ hν
   have hq : IsUnit ((GlobalTheory.SplitWeil.resCard k : ℕ) : E) := by
-    refine IsUnit.mk0 _ (Nat.cast_ne_zero.2 ?_)
-    exact Nat.card_pos.ne'
+    exact IsUnit.mk0 _ (Nat.cast_ne_zero.2 Nat.card_pos.ne')
   obtain ⟨hmul, hunit, -⟩ := UpperTheory.V.AlgebraTools.domMul k N ⊤ E V π
   rw [(UpperTheory.V.AlgebraTools.memIwC k N ⊤).2.1] at hmul hunit
   rw [fixed_eq_fixd]
@@ -654,8 +652,7 @@ namespace UpperTheory.Gal.W2.Seed
 
 theorem pConvSupp : ConvSupp := by
   intro X _ K f f' g h
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   apply h
   unfold conv
   apply finsum_eq_zero_of_forall_eq_zero
@@ -846,8 +843,7 @@ theorem UpperTheory.exists_primePow_scalar_integral_of_good_prime :
     rw [Filter.eventually_all]
     intro i
     rw [Filter.eventually_all]
-    intro k
-    exact eventually_integral u r hu _
+    exact fun k => eventually_integral u r hu _
   obtain ⟨M, hM⟩ := hev.exists
   refine ⟨M, fun d hd => (integ_iff F _).2 fun w _ i k => ?_⟩
   have e : F.cmp w (g * d) = ((r ^ M : ℕ) : w.adicCompletion E) • F.cmp w g := by
@@ -888,8 +884,7 @@ theorem UpperTheory.isCommensurated_iwahori_gl :
     constructor
     · rintro ⟨y, hy, rfl⟩
       simpa [mul_assoc] using hy
-    · intro hx
-      exact ⟨_, hx, by simp [mul_assoc]⟩
+    · exact fun hx => ⟨_, hx, by simp [mul_assoc]⟩
   have hOc : IsOpen (((iwahori k n).map (MulAut.conj g).toMonoidHom : Subgroup (GL (Fin n) k)) :
       Set (GL (Fin n) k)) := by
     rw [hset]
@@ -933,8 +928,7 @@ theorem UpperTheory.isCommensurated_iwahoriSubgroup_gl_fin :
       · rw [SetLike.mem_coe, Subgroup.mem_comap, GlobalTheory.SmGL.mem_borel]
         intro i j hij
         have h := hu i j hij
-        rw [GroundTheory.Automorphic.GLnLocal.residueReduction_apply] at h
-        exact h
+        rwa [GroundTheory.Automorphic.GLnLocal.residueReduction_apply] at h
       · ext i j
         rfl
   rw [h]
@@ -1024,8 +1018,7 @@ private theorem lower_conj_mem {ϖ : kˣ} (hϖ : ord k ϖ = 1) {ν : Fin n → �
   · simpa using hl.1
   · rw [GlobalTheory.TorusElementPower.torusElt_pow_eq]
     have hν' : StrictAnti (fun i : Fin n => (m : ℤ) * ν i) := by
-      intro i j hij
-      exact mul_lt_mul_of_pos_left (hν hij) (by exact_mod_cast hm)
+      exact fun i j hij => mul_lt_mul_of_pos_left (hν hij) (by exact_mod_cast hm)
     exact DCoset.conj_mem_iwahori hϖ hν' hl
 
 end UpperTheory.IwMul
@@ -1265,8 +1258,7 @@ theorem auxFn : ExistsIdempotentHeckeOperatorWithRegularSupport := by
       intro g hg
       simp only [zero_add, pow_one]
       refine hsupp g ?_
-      rw [← hue]
-      exact hg
+      rwa [← hue]
     | succ m ih =>
       intro g hg
       unfold powFn at hg

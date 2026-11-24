@@ -401,8 +401,7 @@ theorem exists_cell_algebra (K O A T : Type) [Field K] [CommRing O] [IsDomain O]
         ext a b
         have := congrFun (congrFun (hu2 τ) a) b
         simp only [Matrix.mul_apply, Matrix.smul_apply, smul_eq_mul] at this ⊢
-        rw [AddSubmonoidClass.coe_finsetSum]
-        exact this
+        rwa [AddSubmonoidClass.coe_finsetSum]
       refine ⟨fe, ue, fun _ => rfl, fun _ _ _ => rfl, RingHom.ext fun o => Subtype.ext (hgα' o),
         ⟨e, he, isUnit_of_mul_isUnit_left hun⟩, hpu, fun τ y hy => ?_⟩
       have hmap : ((p τ).map fe).map R.val = (p τ).map g := by
@@ -420,8 +419,7 @@ theorem exists_cell_algebra (K O A T : Type) [Field K] [CommRing O] [IsDomain O]
       exact (map_ne_zero _).mpr ((map_ne_zero_iff _ (IsFractionRing.injective O K)).mpr (hN τ))
     choose κ hκL using fun τ => exists_minor _ _ (hfN τ) (ix τ) (u' τ) (hu' τ) (hc' τ)
     have hfd : f (d κ) ≠ 0 := by
-      simp only [hdd, map_prod, Finset.prod_ne_zero_iff]
-      exact fun τ _ => hdet f τ (κ τ) ▸ hκL τ
+      simpa only [hdd, map_prod, Finset.prod_ne_zero_iff] using fun τ _ => hdet f τ (κ τ) ▸ hκL τ
     have hκ : d κ ≠ 0 := fun h => hfd (by rw [h, map_zero])
     have hed := mul_ne_zero (hes e he) hκ
     obtain ⟨ψ₀, hψ₀⟩ := loc_lift α i hi hiα (e * d κ) (hi0 _ hed) f hf (by rw [map_mul]; exact mul_ne_zero hfe hfd)
@@ -438,8 +436,7 @@ theorem exists_cell_algebra (K O A T : Type) [Field K] [CommRing O] [IsDomain O]
       simp only [Matrix.mul_apply, Matrix.smul_apply, smul_eq_mul] at h0 ⊢
       have h1 : ∑ j, (⟨g (p τ a j), hAR _ _⟩ : R) * ue j b = (⟨g (α (N τ)), hAR _ _⟩ : R) * ue a b := by
         apply Subtype.ext
-        rw [AddSubmonoidClass.coe_finsetSum]
-        exact h0
+        rwa [AddSubmonoidClass.coe_finsetSum]
       have h2 := congrArg ψ h1
 
       rw [map_sum ψ, map_mul ψ ⟨g (α (N τ)), _⟩, hψA] at h2
@@ -639,8 +636,7 @@ theorem exists_pChart_of_cell : ReciprocityTheory.ChartRestriction.G.Out.SecTwis
     { Ω := Ω, gens := gens, frac := h1, es := es', es_ne := h2, es_mem := h3, sm := hsm, yg := yg, y := yy
       gen := fun e he => by
         obtain ⟨z, hz⟩ := hbc _ _ (Algebra.adjoin c.F (insert e⁻¹ (gens : Set Ω))).val (yy e he)
-        rw [tie_unique (hgen _ _ _ hyg) (hgen _ _ _ hz)]
-        exact hz
+        rwa [tie_unique (hgen _ _ _ hyg) (hgen _ _ _ hz)]
       int := hint }
   refine ⟨Unit, inferInstance, fun _ => P, fun L _ _ W f y Λ u' b hW hW' hc hb ht => ⟨(), ?_⟩⟩
   obtain ⟨hf, ⟨e₀, he₀, hfe⟩, hu⟩ := hpoint L f y Λ u' b hb ht

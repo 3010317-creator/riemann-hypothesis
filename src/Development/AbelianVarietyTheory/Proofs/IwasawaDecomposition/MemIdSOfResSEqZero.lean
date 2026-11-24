@@ -119,8 +119,7 @@ theorem exists_residue_equiv : ∀ (F E : Type) [Field F] [NumberField F] [Field
   have hg0 : ∀ b : 𝓞 E, Valued.v (φ (inclE (F := F) (v.adicCompletion F) (b : E))) < 1 → g b = 0 := by
     intro b hb
     show IsLocalRing.residue _ (ρ (oToS F E b)) = 0
-    rw [IsLocalRing.residue_eq_zero_iff, mem_maximalIdeal_iff, hρ]
-    exact hb
+    rwa [IsLocalRing.residue_eq_zero_iff, mem_maximalIdeal_iff, hρ]
   have hv : ∀ x ∈ v.asIdeal, g (algebraMap (𝓞 F) (𝓞 E) x) = 0 := by
     intro x hx
     refine hg0 _ ?_
@@ -143,13 +142,11 @@ theorem exists_residue_equiv : ∀ (F E : Type) [Field F] [NumberField F] [Field
   let P : HeightOneSpectrum (𝓞 E) := ⟨RingHom.ker g, RingHom.ker_isPrime g, hne⟩
   have hunder : P.under (𝓞 F) = v := by
     refine HeightOneSpectrum.ext (v.isMaximal.eq_of_le (P.under (𝓞 F)).isPrime.ne_top ?_).symm
-    intro x hx
-    exact hv x hx
+    exact fun x hx => hv x hx
   have hk : RingHom.ker g = w.asIdeal := congrArg HeightOneSpectrum.asIdeal (hw P hunder (hg0 p hp))
   have hz : idS F w.asIdeal ≤ RingHom.ker r := by
     refine Ideal.map_le_iff_le_comap.2 fun a ha => ?_
-    rw [← hk] at ha
-    exact ha
+    rwa [← hk] at ha
   have hfac : ∀ s (b : 𝓞 E), resS F w s = Ideal.Quotient.mk w.asIdeal b → r s = g b := by
     intro s b h
     have h0 : resS F w (s - oToS F E b) = 0 := by rw [map_sub, resS_oToS, h, sub_self]

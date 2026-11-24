@@ -98,8 +98,7 @@ theorem _root_.GlobalTheory.T.freeSheafHomValueAt_cechNerveSimplex_bijective : �
     apply ModuleCat.free_hom_ext
     rintro ⟨v⟩
     have hv := hs U.unop v
-    rw [evaluate, evaluate] at hv
-    exact hv
+    rwa [evaluate, evaluate] at hv
   have hex (φ : ∀ U : Scheme.{0}, P.obj (op U) → Sec F U)
       (hφ : ∀ (V U : Scheme.{0}) (g : V ⟶ U) (v : P.obj (op U)),
         φ V (P.map g.op v) = Sec.res g (φ U v)) :
@@ -113,8 +112,7 @@ theorem _root_.GlobalTheory.T.freeSheafHomValueAt_cechNerveSimplex_bijective : �
       have h := ((sheafificationAdjunction Scheme.etaleTopology.{0}
         (ModuleCat.{1} (ULift.{1} R))).homEquiv _ _).apply_symm_apply
           (GlobalTheory.EtC.FreeHom.descP P F φ hφ)
-      rw [Adjunction.homEquiv_unit] at h
-      exact h
+      rwa [Adjunction.homEquiv_unit] at h
     rw [hdesc]
     change (ModuleCat.freeDesc _).hom (ModuleCat.freeMk (ULift.up v)) = _
     erw [ModuleCat.freeDesc_apply]
@@ -512,8 +510,7 @@ theorem cech1 : ∀ (R : Type) [CommRing R] (F : Shv R) (A : Type) [CommRing A],
       rw [map_zero]
       obtain ⟨x, hx⟩ := (_root_.GlobalTheory.EtC.isCls_basic R F _ 1).1 (cobd t) hc
       have h4 := (_root_.GlobalTheory.EtC.isCls_basic R F _ 0).2.2.2.1 t x hx
-      rw [h4] at hx
-      exact hx
+      rwa [h4] at hx
   · intro x hx
     obtain ⟨s, hs, hcls⟩ := _root_.GlobalTheory.EtC.LerayOne.cech_cocycle_of_pull_eq_zero R F _ _ (fB A B) x hx
     exact ⟨⟨val s (Spec (CommRingCat.of (B ⊗[A] B))) (P1 A B), (mem_Z1_iff_cocycle A B R F _).2 ((cobd_eq_zero_iff A B R F s).1 hs)⟩, (gam_eq A B R F _ x).2 ⟨s, rfl, hcls⟩⟩
@@ -527,8 +524,7 @@ theorem cech1 : ∀ (R : Type) [CommRing R] (F : Shv R) (A : Type) [CommRing A],
     refine ⟨(free R).map ((cechMap (fB A B) (fB A B') _ (spec_algHom φ)).app (op ⦋1⦌)) ≫ s, ?_, ?_⟩
     · rw [val_cech_map_first_level, hs, hu]
     · have := (_root_.GlobalTheory.EtC.isCls_basic R F _ 1).2.2.2.2 _ (cechMap (fB A B) (fB A B') _ (spec_algHom φ)) s _ hcls
-      rw [← pull_comp, cechMap_aug] at this
-      exact this
+      rwa [← pull_comp, cechMap_aug] at this
 
 end GlobalTheory.CechOne
 end -- clump:auto

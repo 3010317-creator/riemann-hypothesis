@@ -98,8 +98,7 @@ theorem fibre_exists_finite_generizing {Y Z : Type} [TopologicalSpace Y] [Topolo
         have := h1.map hq
         rwa [hcz] at this
       exact (h5.antisymm h4).eq
-    · intro c hc
-      exact hgen.specializes (subset_closure ⟨c, hc, rfl⟩)
+    · exact fun c hc => hgen.specializes (subset_closure ⟨c, hc, rfl⟩)
   choose f hf using key
   haveI : Finite (irreducibleComponents (q ⁻¹' {z})) := hfin.to_subtype
   refine ⟨Set.range f, Set.finite_range f, ?_, ?_⟩
@@ -118,8 +117,7 @@ theorem fibre_const_of_specializes_invariant : ∀ (Y Z : Type) [TopologicalSpac
     fun R => (hTf.subset (show {e ∈ T | R e} ⊆ T from fun _ h => h.1)).isClosed_biUnion (fun _ _ => isClosed_closure)
   have mem : ∀ (R : Y → Prop) (e w : Y), e ∈ T → R e → e ⤳ w →
       w ∈ ⋃ e ∈ {e ∈ T | R e}, closure ({e} : Set Y) := by
-    intro R e w he hR hs
-    exact Set.mem_biUnion ⟨he, hR⟩ (specializes_iff_mem_closure.1 hs)
+    exact fun R e w he hR hs => Set.mem_biUnion ⟨he, hR⟩ (specializes_iff_mem_closure.1 hs)
   have mem' : ∀ (R : Y → Prop) (w : Y), w ∈ ⋃ e ∈ {e ∈ T | R e}, closure ({e} : Set Y) →
       ∃ e, e ∈ T ∧ R e ∧ e ⤳ w := by
     intro R w hw

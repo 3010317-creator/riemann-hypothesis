@@ -314,8 +314,7 @@ theorem w1_of_inW1_split_part (C CH : ℝ) (w : HeightOneSpectrum (𝓞 D.what�
 theorem tupTw_of_w1Row : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : Formalism.MainNotions.G.Inst D L) (Gl : Formalism.MainNotions.G.LatInst D)
     (Kc : Formalism.MainNotions.G.Consts) (Y : DivX D) (cX : ExtraC) (ex : Extra D L hT Gi Gl Kc Y cX) (Csz : ℝ) (p : PtAt ex Csz),
     SingleIndexPlacesAreTwisted p → p.R.toRealDat.tup_tw (F2 p) := by
-  intro D L hT Gi Gl Kc Y cX ex Csz p h w hw
-  exact h w (w1_of_inW1_split_part p 0 0 w hw)
+  exact fun D L hT Gi Gl Kc Y cX ex Csz p h w hw => h w (w1_of_inW1_split_part p 0 0 w hw)
 
 end GlobalTheory.BigOn
 
@@ -409,8 +408,7 @@ theorem phaseCompatible_splitPart_of_liftUniformisation (hU : p.R.toRealDat.LUni
     PhaseTie p.T (R2 p) p.κ p.v₀ (om2 p) (fun _ => 1) i := by
   have h := p.phase i hU
   have he : phEff p.R = fun _ => 1 := funext fun j => p.phEff_one j
-  rw [he] at h
-  exact h
+  rwa [he] at h
 
 end
 
@@ -492,18 +490,15 @@ theorem lUnif_of_rows_alt (p : PtAt ex Csz) (h : p.PointConditions') : (R2 p).LU
 theorem split_lifts_bijective_of_split_data (p : PtAt ex Csz) (h : p.PointConditions') : ((R2 p).toCx (F2 p)).H5 (F2 p).cr false := by
   have hR := complex_data_conditions_base_level_of_primitive_links h.ok h.sep p.charW h.prim
   have h5 := hR.lifts0.1
-  rw [GlobalTheory.CharRealise.toCx3_eq_one p.R p.F p.phsOne] at h5
-  exact h5
+  rwa [GlobalTheory.CharRealise.toCx3_eq_one p.R p.F p.phsOne] at h5
 theorem rat_theta_of_split_data (p : PtAt ex Csz) (h : p.PointConditions') : ((R2 p).toCx (F2 p)).RATth (F2 p).cr false := by
   have hR := complex_data_conditions_base_level_of_primitive_links h.ok h.sep p.charW h.prim
   have hr := hR.ratTh
-  rw [GlobalTheory.CharRealise.toCx3_eq_one p.R p.F p.phsOne] at hr
-  exact hr
+  rwa [GlobalTheory.CharRealise.toCx3_eq_one p.R p.F p.phsOne] at hr
 theorem level_proviso_of_split_data (p : PtAt ex Csz) (h : p.PointConditions') : (lv ((F2 p).fc ((R2 p).toCx (F2 p)).zs) false).Proviso := by
   have hR := complex_data_conditions_base_level_of_primitive_links h.ok h.sep p.charW h.prim
   have hv := hR.proviso0
-  rw [GlobalTheory.CharRealise.toCx3_eq_one p.R p.F p.phsOne] at hv
-  exact hv
+  rwa [GlobalTheory.CharRealise.toCx3_eq_one p.R p.F p.phsOne] at hv
 theorem base_links_of_split_data (p : PtAt ex Csz) (h : p.PointConditions') : BaseLinks (R2 p) (F2 p) :=
   ⟨_root_.GlobalTheory.BigOn.SplitRows.split_lifts_bijective_of_split_data p h, _root_.GlobalTheory.BigOn.SplitRows.rat_theta_of_split_data p h, _root_.GlobalTheory.BigOn.SplitRows.level_proviso_of_split_data p h⟩
 theorem rank_conditions_of_split_data (p : PtAt ex Csz) (h : p.PointConditions') : RankRows (S2 p) := by

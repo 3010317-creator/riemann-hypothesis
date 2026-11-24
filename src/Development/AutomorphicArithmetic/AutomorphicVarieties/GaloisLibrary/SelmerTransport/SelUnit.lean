@@ -112,8 +112,7 @@ theorem UpperTheory.V.Base.corInv :
     intro q
     rw [← hmq q u, add_sub_cancel]
     have hmem : (((q.out)⁻¹ * ⟨(u : G), h u.2⟩ * q.out : U) : G) ∈ U' := by
-      have e := ‹U'.Normal›.conj_mem u u.2 ((q.out : G)⁻¹)
-      simpa [mul_assoc] using e
+      simpa [mul_assoc] using ‹U'.Normal›.conj_mem u u.2 ((q.out : G)⁻¹)
     simp only [f, dite_eq_left hmem]
     rfl
   have hcard : Fintype.card (U ⧸ U'.subgroupOf U) = U'.relIndex U := by
@@ -145,8 +144,7 @@ private theorem relIndex_inf_dvd {G : Type} [Group G] (U' U D : Subgroup G) [U'.
     unfold Subgroup.relIndex
     congr 1
     ext x
-    simp only [Subgroup.mem_subgroupOf, Subgroup.mem_inf]
-    exact ⟨fun h => h.1, fun h => ⟨h, x.2.2⟩⟩
+    simpa only [Subgroup.mem_subgroupOf, Subgroup.mem_inf] using ⟨fun h => h.1, fun h => ⟨h, x.2.2⟩⟩
   rw [e]
   have k : ∀ K : Subgroup G, U'.relIndex K = Nat.card (K.map (QuotientGroup.mk' U')) := fun K => by
     rw [← Subgroup.relIndex_ker, QuotientGroup.ker_mk']

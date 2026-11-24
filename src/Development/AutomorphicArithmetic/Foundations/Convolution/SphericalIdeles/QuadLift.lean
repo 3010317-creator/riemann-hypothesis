@@ -1092,8 +1092,7 @@ private theorem indep {T : Type} [CommGroup T] (M : Submonoid T) (hM : ∀ t : T
       intro m hm
       apply Units.ext
       have := DFunLike.congr_fun hμν ⟨m, hm⟩
-      rw [hρm, hρm] at this
-      exact this
+      rwa [hρm, hρm] at this
     refine MonoidHom.ext fun t => ?_
     obtain ⟨s, hs, hst⟩ := hM t
     have e : t = s⁻¹ * (s * t) := by rw [inv_mul_cancel_left]
@@ -1154,10 +1153,7 @@ private def domM (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsN
 private theorem dom_translate (t : Fin n → kˣ) : ∃ s ∈ domM k n, s * t ∈ domM k n := by
   rcases Nat.eq_zero_or_pos n with hn | hn
   · subst hn
-    refine ⟨1, (domM k 0).one_mem, ?_⟩
-    show Dom _
-    intro i
-    exact i.elim0
+    exact ⟨1, (domM k 0).one_mem, fun i => i.elim0⟩
   · obtain ⟨p, -, hp⟩ := Finset.exists_max_image (Finset.univ : Finset (Fin n × Fin n))
       (fun p => valuation k ((t p.1 / t p.2 : kˣ) : k)) ⟨(⟨0, hn⟩, ⟨0, hn⟩), Finset.mem_univ _⟩
     have hx1 : 1 ≤ valuation k ((t p.1 / t p.2 : kˣ) : k) := by
@@ -1173,8 +1169,7 @@ private theorem dom_translate (t : Fin n → kˣ) : ∃ s ∈ domM k n, s * t �
     refine ⟨fun i => (t p.1 / t p.2) ^ (i : ℕ), ?_, ?_⟩
     · show Dom _
       intro i j hij
-      simp only [Units.val_pow_eq_pow_val, map_pow]
-      exact pow_le_pow_right₀ hx1 (le_of_lt hij)
+      simpa only [Units.val_pow_eq_pow_val, map_pow] using pow_le_pow_right₀ hx1 (le_of_lt hij)
     · show Dom _
       intro i j hij
       simp only [Pi.mul_apply, Units.val_mul, Units.val_pow_eq_pow_val, map_mul, map_pow]
@@ -1194,8 +1189,7 @@ theorem charDom : CharDom := by
   intro k _ _ _ _ n t₀ E E' c c' hc h
   have hind := indep (domM k n) (fun t => dom_translate t) t₀ E E' c c' hc h
   refine ⟨hind, fun hE => ?_⟩
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   obtain ⟨μ, hμ⟩ := Multiset.exists_mem_of_ne_zero hE
   have := indep (domM k n) (fun t => dom_translate t) t₀ E 0 1 0 one_ne_zero
     (fun t ht => by rw [one_mul, hne t ht]; simp) μ hμ
@@ -1230,8 +1224,7 @@ theorem UpperTheory.Reformulated.B.CommonEigenvectorInInvariantComplexSubspace.e
   obtain ⟨c, hcv⟩ := Module.End.exists_eigenvalue ((f i).restrict (hVinv i) : Module.End ℂ V)
   obtain ⟨v, hv⟩ := hcv.exists_hasEigenvector
   have hv1 : f i (v : M) = c • (v : M) := by
-    have h := congrArg Subtype.val hv.apply_eq_smul
-    simpa using h
+    simpa using congrArg Subtype.val hv.apply_eq_smul
   have hv0 : (v : M) ≠ 0 := fun h => hv.2 (Subtype.ext h)
   refine ⟨c, ?_⟩
   by_contra hne
@@ -1311,8 +1304,7 @@ theorem UpperTheory.Gal.Join.twExp :
     exact hmaps t₁ t _ key
 
   have hex : ∃ χ : T → ℂ, χ ∘ s = χ ∧ N χ ≠ ⊥ := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     let J := {χ : T → ℂ // χ ∘ s ≠ χ}
     let N' : J → Submodule ℂ P := fun j => N j.1
     have hind' : iSupIndep N' := hind.comp Subtype.val_injective
@@ -1480,11 +1472,9 @@ theorem UpperTheory.Gal.Join.expSub :
     refine Filter.mem_of_superset ((hJs y).mem_nhds (by simp)) ?_
     intro t ht
     have h1 : ((μ t : ℂˣ) : ℂ) • y = (1 : ℂ) • y := by
-      rw [one_smul, ← hy t]
-      exact ht
+      rwa [one_smul, ← hy t]
     have h2 : ((μ t : ℂˣ) : ℂ) = 1 := smul_left_injective ℂ hy0 h1
-    simp only [SetLike.mem_coe, MonoidHom.mem_ker]
-    exact Units.ext h2
+    simpa only [SetLike.mem_coe, MonoidHom.mem_ker] using Units.ext h2
   set ω : Fin n → kˣ →* ℂˣ := fun i => μ.comp (MonoidHom.mulSingle (fun _ : Fin n => kˣ) i) with hωdef
   have hωμ : torusChar ω = μ := by
     refine MonoidHom.ext fun t => ?_
@@ -1543,8 +1533,7 @@ theorem UpperTheory.Gal.Join.subPerm :
   have e : (Finset.univ.val.map fun i => IrrGL.ofChar ((ω ∘ w) i) (hw i)) =
       Finset.univ.val.map fun i => IrrGL.ofChar (ω i) (hω i) := by
     have e' := congrArg (Multiset.map fun i => IrrGL.ofChar (ω i) (hω i)) (Multiset.map_univ_val_equiv w)
-    rw [Multiset.map_map] at e'
-    exact e'
+    rwa [Multiset.map_map] at e'
   rw [← e] at h1
   exact ((UpperTheory.Gal.LocD.ofSupport k n V π (ω ∘ w) hw).1 h1).2
 end -- clump:auto
@@ -1630,8 +1619,7 @@ private theorem exists_eigenchars {T : Type} [CommGroup T] (d : ℕ) : ∀ (V : 
       obtain ⟨q, hq0, hq⟩ := (h2 μ).1 ((Multiset.mem_cons.1 hμ).resolve_left hne)
       obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ q
       refine _root_.UpperTheory.Reformulated.B.R4.lift_eigen ρ hψ hne (fun hy => hq0 ((Submodule.Quotient.mk_eq_zero _).2 hy)) (fun t => ?_) hv
-      refine (Submodule.Quotient.eq _).1 ?_
-      exact hq t
+      exact (Submodule.Quotient.eq _).1 (hq t)
     · rintro ⟨y, hy, hμ⟩
       by_cases hne : μ = ψ
       · exact hne ▸ Multiset.mem_cons_self _ _

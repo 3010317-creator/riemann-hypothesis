@@ -168,8 +168,7 @@ private theorem exists_lift_of_range_subset_closure_image_finite {W U S : Scheme
     have h2 : x pt ∈ closure (q '' C) := by
       rw [f.isOpenEmbedding.isInducing.closure_eq_preimage_closure_image]
       simpa [Scheme.Hom.comp_apply] using h1
-    rw [(q.isClosedMap C hC).closure_eq] at h2
-    exact h2
+    rwa [(q.isClosedMap C hC).closure_eq] at h2
   obtain ⟨z, hz1, -⟩ := Scheme.Pullback.exists_preimage_pullback c pt hc
   have := QuasiCompact.compactSpace_of_compactSpace (pullback.snd q x)
   have hS : IsClosed ((pullback.fst q x) ⁻¹' C) := hC.preimage (pullback.fst q x).continuous
@@ -228,8 +227,7 @@ private theorem main_lemma_3 : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsC
     have hW2 : hW ≫ pullback.snd _ _ = spMap β := pullback.lift_snd _ _ _
     refine ⟨Over.homMk hW ?_, ?_, ?_⟩
     · show hW ≫ (pullback.fst _ _ ≫ Z₀.hom) ≫ _ = x
-      rw [← Category.assoc, ← Category.assoc, hW1, Over.w h₀]
-      exact hxU
+      rwa [← Category.assoc, ← Category.assoc, hW1, Over.w h₀]
     · intro a
       apply Over.OverMorphism.ext
       have h1 := GlobalTheory.ObjPull.pushEquiv_symm_left hP _ (e ≫ et' a)

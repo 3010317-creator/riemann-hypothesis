@@ -125,8 +125,7 @@ theorem UpperTheory.V.Pa.Det.latInt :
     have e := congrArg (fun x : L => (x : Fin m → F) i) (bL.sum_repr ⟨_, hst g _ (bL j).2⟩)
     simp only [Submodule.coe_sum, Submodule.coe_smul, Finset.sum_apply, Algebra.smul_def] at e
     simp only [Matrix.mul_apply, hQa, Matrix.map_apply]
-    refine Eq.trans e.symm ?_
-    exact Finset.sum_congr rfl fun k _ => mul_comm _ _
+    exact Eq.trans e.symm (Finset.sum_congr rfl fun k _ => mul_comm _ _)
   have inj : ∀ X Y : Matrix (Fin m) (Fin m) A,
       Q₀ * X.map (algebraMap A F) = Q₀ * Y.map (algebraMap A F) → X = Y := fun X Y hXY =>
     Matrix.map_injective (IsFractionRing.injective A F) (hQ.mul_left_cancel hXY)
@@ -136,5 +135,4 @@ theorem UpperTheory.V.Pa.Det.latInt :
       map_mul' := fun g g' => inj _ _ (by
         rw [← hM, Matrix.map_mul, ← mul_assoc, ← hM, mul_assoc, ← hM, map_mul, Units.val_mul,
           mul_assoc]) }
-  refine ⟨hQ.unit, M'.toHomUnits, fun g => Units.ext ?_⟩
-  exact hM g
+  exact ⟨hQ.unit, M'.toHomUnits, fun g => Units.ext (hM g)⟩

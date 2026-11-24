@@ -167,8 +167,7 @@ theorem exists_netData_of_readings_on_half :
     obtain ⟨y, hy⟩ := (H _ (gg σ)).1 F
     refine ⟨y, ?_⟩
     show _ ≤ ‖ev' σ y F‖
-    rw [en, ← gs]
-    exact hy
+    rwa [en, ← gs]
   · intro σ y F
     show ‖ev' σ y F‖ ≤ _
     rw [en, ← gs]
@@ -181,10 +180,8 @@ theorem exists_netData_of_readings_on_half :
     have hI := (H _ (gg σ)).2.2.2 m F hF
     show LinearIndependent ℂ (fun i => fun y : Fin (n (g σ)) => ev' σ y (F i))
     by_cases h : good σ
-    · simp only [e1 σ _ _ h]
-      exact hI
-    · simp only [e2 σ _ _ h]
-      exact linearIndependent_conj_coords _ hI
+    · simpa only [e1 σ _ _ h] using hI
+    · simpa only [e2 σ _ _ h] using linearIndependent_conj_coords _ hI
 
 end GlobalTheory
 end -- clump:auto
@@ -446,8 +443,7 @@ theorem net_count_dim {D : D7} {B : WeightFamilies.Prov D} {j : ℕ} {ka : Weigh
 
   have hdim : Module.finrank B.KO (B.Cusp j ka) ≤ Fintype.card (Nt.NN σ) := by
     have hli := hI _ (Module.finBasis B.KO (B.Cusp j ka)) (Module.finBasis B.KO (B.Cusp j ka)).linearIndependent
-    have hle := hli.fintype_card_le_finrank
-    simpa [Module.finrank_fintype_fun_eq_card] using hle
+    simpa [Module.finrank_fintype_fun_eq_card] using hli.fintype_card_le_finrank
   rcases Nat.eq_zero_or_pos n with hn0 | hnpos
   · subst hn0
     have hc : 0 ≤ Real.log (16 * (Fintype.card (Nt.NN σ) : ℝ)) := by
@@ -508,8 +504,7 @@ theorem net_at_run : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR 
   have hpg := GlobalTheory.page_relation_deg_three D large₂ j ka 1041 3 le_rfl le_rfl hZ
   refine ⟨Nt, σ₀, hM, hLe, fun σ => (hS σ).trans hpg, hI σ₀, hcnt.trans hpg,
     (GlobalTheory.deepSubMul_rec_all D T h j hj).1, hdim _ le_rfl, ?_⟩
-  intro del _hLat hR
-  exact hdim _ (le_finrank_of_shareRd (recPJ h j hj) ka _ Tn del (by omega) hR)
+  exact fun del _hLat hR => hdim _ (le_finrank_of_shareRd (recPJ h j hj) ka _ Tn del (by omega) hR)
 
 end GlobalTheory.RunJoin
 end -- clump:auto

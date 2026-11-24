@@ -104,8 +104,7 @@ private theorem norm_det_eq_pow_of_aeval_minpoly_eq_zero {l : ℕ} [Fact l.Prime
     exact RingHom.map_det (algebraMap ↥L (Om l)) A
   have hMp : Polynomial.aeval M (minpoly L a) = 0 := by
     have e := Polynomial.aeval_algHom_apply ((Algebra.ofId ↥L (Om l)).mapMatrix (m := Fin r)) A (minpoly L a)
-    rw [hA, map_zero] at e
-    exact e
+    rwa [hA, map_zero] at e
   have hroot : ∀ μ ∈ M.charpoly.roots, ‖μ‖ = ‖a‖ := by
     intro μ hμ
     have hr : Polynomial.IsRoot M.charpoly μ := (Polynomial.mem_roots M.charpoly_monic.ne_zero).mp hμ
@@ -134,8 +133,7 @@ private theorem exists_invariant_subspace_in_ker_of_det_zero {K : Type} [Field K
     obtain ⟨v, hv0, hv⟩ := Matrix.exists_mulVec_eq_zero_iff.mpr hP
     intro h
     have hvW : v ∈ W := by
-      rw [hWdef, LinearMap.mem_ker, Matrix.toLin'_apply]
-      exact hv
+      rwa [hWdef, LinearMap.mem_ker, Matrix.toLin'_apply]
     rw [h, Submodule.mem_bot] at hvW
     exact hv0 hvW
   have hr : 0 < Module.finrank K W := Nat.pos_of_ne_zero (fun h => hW (Submodule.finrank_eq_zero.mp h))
@@ -184,8 +182,7 @@ theorem UpperTheory.exists_invariant_block_det_norm_eq_pow_of_mem_spectrum :
     rw [show ((Algebra.ofId ↥L (Om l)).mapMatrix (m := Fin d)) F = F.map (algebraMap ↥L (Om l)) from rfl] at e
     rw [e, spectrum.zero_mem_iff, Matrix.isUnit_iff_isUnit_det, isUnit_iff_ne_zero, not_not] at hs2
     have h3 : algebraMap ↥L (Om l) (Polynomial.aeval F (minpoly (↥L) a)).det = 0 := by
-      rw [RingHom.map_det]
-      exact hs2
+      rwa [RingHom.map_det]
     exact (map_eq_zero_iff _ (algebraMap ↥L (Om l)).injective).mp h3
   have hcomm : F * Polynomial.aeval F p = Polynomial.aeval F p * F := (aeval_mul_eq_mul_aeval_of_semiconj F F F rfl p).symm
   obtain ⟨r, Y, Z, F', hr, hZY, hFY, hPY⟩ := exists_invariant_subspace_in_ker_of_det_zero F (Polynomial.aeval F p) hPdet hcomm
@@ -211,8 +208,7 @@ theorem UpperTheory.exists_square_submatrix_det_ne_zero_of_left_inverse :
     ∀ {B : Type} [CommRing B] [IsDomain B] {d r : ℕ} (X : Matrix (Fin d) (Fin r) B) (Z : Matrix (Fin r) (Fin d) B), Z * X = 1 → ∃ s : Fin r → Fin d, (X.submatrix s id).det ≠ 0 := by
   intro B _ _ d r X Z hZX
   classical
-  by_contra h
-  push Not at h
+  by_contra! h
   have hM : (Z * X) = fun a => ∑ k, Z a k • X k := by
     funext a b
     simp [Matrix.mul_apply, Finset.sum_apply, smul_eq_mul]
@@ -273,8 +269,7 @@ theorem UpperTheory.norm_le_one_of_frobenius_eigenvector_mem_fil_zero :
     simpa [Matrix.mul_apply] using this
   have h2 : P.φB (N 0 0) = algebraMap ℚ_[l] (Bcr l) (δ * (l : ℚ_[l]) ^ (a + 1)) * N 0 0 := by
     have := congrFun (congrFun hφN 0) 0
-    rw [Matrix.mul_apply, Fin.sum_univ_one] at this
-    exact this
+    rwa [Matrix.mul_apply, Fin.sum_univ_one] at this
   set w := N 0 0
   set w' := N' 0 0 with hw'
   have h3 : algebraMap ℚ_[l] (Bcr l) (δ * (l : ℚ_[l]) ^ (a + 1)) * P.φB w' = w' := by
@@ -283,8 +278,7 @@ theorem UpperTheory.norm_le_one_of_frobenius_eigenvector_mem_fil_zero :
     linear_combination w' * h - (algebraMap ℚ_[l] (Bcr l) (δ * (l : ℚ_[l]) ^ (a + 1)) * P.φB w') * h1
   have ht : P.φB D.t = algebraMap ℚ_[l] (Bcr l) (l : ℚ_[l]) * D.t := by
     have := D.t_φ
-    rw [P.PD_φ, P.PD_p, Algebra.smul_def] at this
-    exact this
+    rwa [P.PD_φ, P.PD_p, Algebra.smul_def] at this
   have hb : D.φ (c * D.t ^ (a + 1) * w') = c * D.t ^ (a + 1) * w' := by
     rw [P.PD_φ, map_mul, map_mul, map_pow, hφ, ht, mul_pow]
     rw [map_mul, map_pow] at h3
@@ -370,8 +364,7 @@ private theorem descend {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Fiel
     apply mul_right_cancel₀ hδ
     have h := shift_prod (fun i => (PD.σ ^ i) δ) f
     simp only [pow_succ', AlgHom.mul_apply, pow_zero, AlgHom.one_apply] at h
-    rw [← map_prod, ← hN, hσ] at h
-    exact h
+    rwa [← map_prod, ← hN, hσ] at h
   obtain ⟨x, hx⟩ := PD.fund (algebraMap K₀ B N) (by rw [PD.φ_K₀, hσN]) (by
     rw [AlgHom.commutes, IsScalarTower.algebraMap_apply K₀ K BdR, Algebra.algebraMap_eq_smul_one]
     exact (PD.Fil 0).smul_mem _ PD.one_mem)
@@ -391,8 +384,7 @@ private theorem norm_algHom' {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ
     (f : ↥K →ₐ[ℚ_[l]] Om l) (x : ↥K) : ‖f x‖ = ‖(x : Om l)‖ := by
   rw [← PadicAlgCl.spectralNorm_eq, ← PadicAlgCl.spectralNorm_eq, spectralNorm, spectralNorm]
   have h1 := minpoly.algHom_eq f f.toRingHom.injective x
-  have h2 := minpoly.algHom_eq K.val K.val.toRingHom.injective x
-  exact congrArg spectralValue (h1.trans h2.symm)
+  exact congrArg spectralValue (h1.trans (minpoly.algHom_eq K.val K.val.toRingHom.injective x).symm)
 
 theorem UpperTheory.norm_le_one_of_frobenius_pow_eigenvector_mem_fil_zero :
     ∀ {l : ℕ} [Fact l.Prime] (K : FinExt l) (f : ℕ), 0 < f → (∀ x : ↥(K0 K), (((PP l).PD K).σ)^[f] x = x) → ∀ (b : Bcr l) (δ : ↥(K0 K)), b ≠ 0 → ((PP l).φB)^[f] b = algebraMap ↥(K0 K) (Bcr l) δ * b → (∀ i : ℕ, (PP l).ιB (((PP l).φB)^[i] b) ∈ ((PP l).PD (botExt l)).Fil 0) → ‖(δ : Om l)‖ ≤ 1 := by

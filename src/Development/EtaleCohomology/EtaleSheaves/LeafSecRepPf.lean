@@ -83,8 +83,7 @@ theorem nat_gen {G : Cᵒᵖ ⥤ ModuleCat.{1} R} {U V : C} (η : (FP R).obj U �
     η.app (op V) (gen R a) = G.map a.op (η.app (op U) (gen R (𝟙 U))) := by
   have h := ConcreteCategory.congr_hom (η.naturality a.op) (gen R (𝟙 U))
   simp only [ConcreteCategory.comp_apply] at h
-  rw [map_gen, Category.comp_id] at h
-  exact h
+  rwa [map_gen, Category.comp_id] at h
 
 def yE (G : Cᵒᵖ ⥤ ModuleCat.{1} R) (U : C) : ((FP R).obj U ⟶ G) ≃ G.obj (op U) where
   toFun η := η.app (op U) (gen R (𝟙 U))

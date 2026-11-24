@@ -55,13 +55,11 @@ theorem inU_of_adC {lev : Fin n → ℕ} {p q : Fin n} (hpq : lev p = lev q) {i 
   by_cases h1 : q = (i : Fin n × Fin n).1 ∧ (k : Fin n × Fin n) = (p, (i : Fin n × Fin n).2)
   · rw [h1.2]
     show lev p < lev (i : Fin n × Fin n).2
-    rw [hpq, h1.1]
-    exact hi
+    rwa [hpq, h1.1]
   · by_cases h2 : (i : Fin n × Fin n).2 = p ∧ (k : Fin n × Fin n) = ((i : Fin n × Fin n).1, q)
     · rw [h2.2]
       show lev (i : Fin n × Fin n).1 < lev q
-      rw [← hpq, ← h2.1]
-      exact hi
+      rwa [← hpq, ← h2.1]
     · rw [ite_eq_right h1, ite_eq_right h2, sub_zero] at h
       exact absurd rfl h
 

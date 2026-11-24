@@ -148,8 +148,7 @@ theorem fderiv_valAt_eq_der (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj G]
   have hT := tr_top v₀ hv₀ _ V hw
   have hU : ⊤ ≤ v'.left ⁻¹ᵁ ((t.left ≫ φ) ⁻¹ᵁ V) := by
     have h2 := hT
-    rw [htr] at h2
-    exact h2
+    rwa [htr] at h2
   have key := hd ((t.left ≫ φ) ⁻¹ᵁ V) hU ((t.left ≫ φ).app V f)
   have hF : (fun x => valAt' (u.ex x).left ((t.left ≫ φ) ⁻¹ᵁ V) ((t.left ≫ φ).app V f)) =
       fun x => (fun x => valAt' ((u.ex x).left ≫ φ) V f) (w + x) := by
@@ -163,8 +162,7 @@ theorem fderiv_valAt_eq_der (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj G]
   have hT' : ⊤ ≤ (v'.left ≫ t.left ≫ φ) ⁻¹ᵁ V := hU
   have e2 : ev (v'.left ≫ t.left ≫ φ) V hT' f = ev (tr v₀ ((u.ex w).left ≫ φ)) V hT f :=
     congrArg (fun m => m f) (ev_congr htr.symm V hT' hT)
-  have e3 := ev_pull v'.left (t.left ≫ φ) V hT' hU f
-  exact (congrArg TrivSqZeroExt.snd (e3.trans e2)).trans e1
+  exact (congrArg TrivSqZeroExt.snd ((ev_pull v'.left (t.left ≫ φ) V hT' hU f).trans e2)).trans e1
 
 end GlobalTheory.CompanionTheory.Ar.InvDer
 end -- clump:auto
@@ -300,8 +298,7 @@ theorem jet_cmp_ring {B K : Type} [CommRing B] [Field K] (D : B →+ B)
     rw [← hΦ, hval]; exact h k hk
   have h2 := jet_vanish_of_mul D hD e u _ hu i h1
   have h3 := jet_mul_of_vanish D hD e i u _ h2
-  rw [← hΦ, hval, hval] at h3
-  exact h3
+  rwa [← hΦ, hval, hval] at h3
 
 theorem iter_der_res {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G] (v : epsAt (𝟙 (Sp R)) ⟶ G)
     (hv : IsTanAt G (𝟙 (Sp R)) v) {V V' : G.left.Opens} (hV : IsAffineOpen V) (hV' : IsAffineOpen V')
@@ -327,8 +324,7 @@ theorem jet_cmp : ∀ (R K : Type) [CommRing R] [Field K] (G : Over (Sp R)) [Grp
   have hWle : W ≤ V₀ ⊓ V₁ := hWle'
   have tW : ⊤ ≤ y ⁻¹ᵁ W := by
     intro p _
-    rw [Subsingleton.elim p (default : PrimeSpectrum K)]
-    exact hWy
+    rwa [Subsingleton.elim p (default : PrimeSpectrum K)]
   have l0 : W ≤ V₀ := hWle.trans inf_le_left
   have l1 : W ≤ V₁ := hWle.trans inf_le_right
   have key := jet_cmp_ring (der v₀ hv₀ hWa) (der_mul v₀ hv₀ hWa) (ev y W tW) r
@@ -521,8 +517,7 @@ theorem L_int : ∀ (R K A : Type) [CommRing R] [Field K] [CommRing A] [IsLocalR
         ev (spMap (algebraMap R K)) _ hr1 (P.rig.s fun _ => i₁).val := by
     refine (ev_resU _ inf_le_left hr hover _).symm.trans ?_
     refine (congrArg (ev _ _ hover) hgen).trans ?_
-    refine (map_mul (ev _ _ hover) _ _).trans ?_
-    exact congrArg (_ * ·) (ev_resU _ inf_le_right hr1 hover _)
+    exact (map_mul (ev _ _ hover) _ _).trans (congrArg (_ * ·) (ev_resU _ inf_le_right hr1 hover _))
   simp only [Fintype.prod_unique, zpow_one, zpow_natCast, Units.val_pow_eq_pow_val] at hγ hu
   have hγ' : ev (spMap (algebraMap R K)) _ hover ((P.L.pull (eSec G)).g (fun _ => i₀) (fun _ => i₁)).val =
       ev y _ hU (P.L.g i₀ i₁).val := hγ
@@ -695,9 +690,7 @@ theorem jets : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
           LB.wchart D.t.PP.L (fun _ : Fin 1 => 𝟙 D.t.G.left) (fun _ => i₀) := fun p hp => hle (hτ' hp)
       have hU : ⊤ ≤ a.pt (τ • v) ⁻¹ᵁ D.t.PP.L.U i₀ := fun p hp => Set.mem_iInter.1 (hW hp) 0
       rw [valAt'_eq _ _ hτ']
-      refine (ev_res _ hle hW hτ' _).trans ?_
-      refine (valF_eq _ _ hW _).symm.trans ?_
-      exact hf j i₀ (τ • v) hU
+      exact (ev_res _ hle hW hτ' _).trans ((valF_eq _ _ hW _).symm.trans (hf j i₀ (τ • v) hU))
     have key := _root_.GlobalTheory.CompanionTheory.Ar.JetLeib.jet_first_nonzero r _ c _ _ (fun j => (AN j).1) hFan (by rw [hF0]; exact hσr) hev i
     have hJ : ∀ k : ℕ, ∑ j, c j * σ (ev (spMap (algebraMap (𝓞 L) L) ≫ (eSec D.t.G : Sp (𝓞 L) ⟶ D.t.G.left)) V h₀
         ((der (D.MB.pt x) hv₀ hV)^[k] ((D.t.G.left.presheaf.map (homOfLE hle).op).hom ((s j).f fun _ => i₀))) /

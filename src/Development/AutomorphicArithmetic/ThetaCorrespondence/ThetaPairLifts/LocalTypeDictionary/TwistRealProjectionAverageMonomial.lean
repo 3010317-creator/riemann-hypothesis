@@ -154,9 +154,7 @@ theorem fockS_map (f g : MvPolynomial σ ℚ) :
 theorem eq_zero_of_fockQ_self {f : MvPolynomial σ ℚ} (h : fockQ f f = 0) : f = 0 := by
   by_contra hf
   have hf' : map (algebraMap ℚ ℂ) f ≠ 0 := by
-    intro h0
-    apply hf
-    exact map_injective _ (algebraMap ℚ ℂ).injective (by rw [h0, map_zero])
+    exact fun h0 => hf (map_injective _ (algebraMap ℚ ℂ).injective (by rw [h0, map_zero]))
   have := GlobalTheory.MinorFrame.fockS_self_re_pos hf'
   rw [fockS_map, h] at this
   simp at this
@@ -314,8 +312,7 @@ theorem coeff_colSub_good (ρ : K →* (ι → Matrix.unitaryGroup (Fin a) ℂ))
   intro m
   induction P using MvPolynomial.induction_on generalizing m with
   | C c =>
-    simp only [algHom_C, algebraMap_eq]
-    exact ⟨measurable_const, _, fun _ => le_rfl⟩
+    simpa only [algHom_C, algebraMap_eq] using ⟨measurable_const, _, fun _ => le_rfl⟩
   | add p q hp hq =>
     simp only [map_add (f := _), AddMonoidAlgebra.coeff_add]
     obtain ⟨hpm, Cp, hCp⟩ := hp m
@@ -570,8 +567,7 @@ theorem integrable_avg {K : Type} [Group K] [MeasurableSpace K] (ν : Measure K)
   · refine Measurable.aestronglyMeasurable ?_
     simp only [hFe, hdete]
     refine Measurable.mul ?_ (hF.measurable.comp he)
-    refine Finset.measurable_prod _ fun τ _ => ?_
-    exact Measurable.pow_const ((hdetc τ).measurable.comp he) _
+    exact Finset.measurable_prod _ fun τ _ => Measurable.pow_const ((hdetc τ).measurable.comp he) _
   · rw [norm_mul, norm_prod]
     simp only [norm_zpow, _root_.GlobalTheory.UnitaryAvg.det_unitary_norm, one_zpow, Finset.prod_const_one, one_mul, hFe]
     exact hC _ (hball g)
@@ -837,8 +833,7 @@ theorem boundary_real_group_action : ∀ {D : D7} {T : Type} [Finite T] {L : Lev
       (L.mu μ₀ (↑j + 1) * L.eta ^ (rankV D ↑i ↑j % 2)) / (G.ch.chi (D.R.m - ↑i) * L.eta ^ (rankV D ↑i ↑j % 2)) *
         (L.xi t * (L.xi μ₀)⁻¹) := by
     intro t
-    simp only [LevCh.mu, Lift.tup]
-    exact rightRegularAction_list_dLR_eq_append _ _ _ _ _
+    simpa only [LevCh.mu, Lift.tup] using rightRegularAction_list_dLR_eq_append _ _ _ _ _
   have hbt : ∀ t τ, HasInfExp D ((L.mu t (↑j + 1) * L.eta ^ (rankV D ↑i ↑j % 2)) /
       (G.ch.chi (D.R.m - ↑i) * L.eta ^ (rankV D ↑i ↑j % 2))) τ (b τ) := by
     intro t τ

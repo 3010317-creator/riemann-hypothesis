@@ -177,8 +177,7 @@ theorem exists_orthogonalSum_testGrid_of_levelChoiceGrid {D : D7} (A B : GlobalT
       · show A.V.frame.equivFun (A.V.frame.equivFun.symm z) ∈ A.Λ
         rwa [LinearEquiv.apply_symm_apply]
       · apply B.V.frame.equivFun.injective
-        rw [key, LinearEquiv.apply_symm_apply]
-        exact hy
+        rwa [key, LinearEquiv.apply_symm_apply]
     · rintro ⟨x, hx, t, ht, rfl⟩
       exact ⟨A.V.frame.equivFun x, hx, t, ht, key x t⟩
 
@@ -298,10 +297,8 @@ theorem heckeCharacterGrid_isAuxiliaryCharacter_testGrid_alt : ∀ {D : D7} {Γ 
   · intro w hw
     rw [hS0] at hw
     exact G'.ch.unr i hi1 hi2 w hw
-  · intro w hw
-    exact G'.ch.lev1 i hi1 hi2 w (hS1 w hw)
-  · intro w hw x hx
-    exact G'.ch.wild i hi1 hi2 w (hwd w hw) x hx
+  · exact fun w hw => G'.ch.lev1 i hi1 hi2 w (hS1 w hw)
+  · exact fun w hw x hx => G'.ch.wild i hi1 hi2 w (hwd w hw) x hx
   · have hu : Z.w0.under (𝓞 D.host.F) = G'.pl.v0 := by
       rw [hw0]; exact G'.pl.under_w (G'.pl.mem_S0_of_sum_eq.2 (Or.inl rfl))
     exact G'.ch.lev0 i hi1 hi2 Z.w0 hu
@@ -586,8 +583,7 @@ theorem placeDat_of_grid : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0
     constructor
     · rintro ⟨_, ⟨v', hv', rfl⟩, rfl⟩
       rwa [P.under_w hv']
-    · intro hv
-      exact ⟨_, ⟨v, hv, rfl⟩, P.under_w hv⟩
+    · exact fun hv => ⟨_, ⟨v, hv, rfl⟩, P.under_w hv⟩
 
   have hWdS1 : ∀ w ∈ Wd, w.under (𝓞 D.host.F) ∈ S1 D := by
     intro w hw
@@ -875,24 +871,20 @@ theorem exists_gridPre_spaces : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ]
       rw [node_pos (.top (j + 1)) (gX (j + 1) (by omega) hj)]
       exact mk_is _ _
     · dsimp only [G]
-      rw [gridDecompositionCast_is_iff, ← joinGram_one]
-      exact hdP
+      rwa [gridDecompositionCast_is_iff, ← joinGram_one]
     · intro i hi1 hi2
       dsimp only [G]
       rw [dite_eq_left ⟨hi1, hi2⟩, gridDecompositionCast_is_iff]
       have hl' : Z.ideal R.Pg = G'.pl.modul sc := hlvl
       have := hdV i ⟨hi1, hi2⟩
-      rw [joinGram_neg, joinStair, ← hl'] at this
-      exact this
+      rwa [joinGram_neg, joinStair, ← hl'] at this
     · intro j hj
       dsimp only [G]
       rw [dite_eq_left hj, gridDecompositionCast_is_iff]
       have := hdX j hj
-      rw [joinGram_neg, joinStair_top] at this
-      exact this
+      rwa [joinGram_neg, joinStair_top] at this
     · dsimp only [G]
-      rw [gridDecompositionCast_is_iff, ← joinGram_one]
-      exact hdZ
+      rwa [gridDecompositionCast_is_iff, ← joinGram_one]
   · exact ⟨hZ, fun i h1 h2 => GlobalTheory.T.heckeCharacterGrid_isAuxiliaryCharacter_testGrid (GlobalTheory.T.gridMinimalGap_eq_chiGridGapGamma_one D) hsc Z hS0 hS1 hZ.Wd_over hw0 i h1 h2, fun i h1 h2 => G'.ch.chi_eq i h1 h2⟩
   · refine ⟨?_, ?_, ?_, hq0, hw0, he0, hWZ, hlvl, fun _ _ _ => rfl, fun _ _ _ => rfl⟩
     · intro i j hi hj
@@ -1074,11 +1066,9 @@ theorem exists_isMeas (G : GlobalTheory.Grid.GridPre R) (hS : G.IsSpaces) :
     | zero => exact h00
     | succ i =>
       have := hmV i 0 hi (Nat.zero_le _)
-      rw [ite_eq_left rfl, ite_eq_left rfl] at this
-      exact this
+      rwa [ite_eq_left rfl, ite_eq_left rfl] at this
   · have := hmV i (j + 1) hi hj
-    rw [ite_eq_right (Nat.succ_ne_zero j), ite_eq_right (Nat.succ_ne_zero j)] at this
-    exact this
+    rwa [ite_eq_right (Nat.succ_ne_zero j), ite_eq_right (Nat.succ_ne_zero j)] at this
 
 end GlobalTheory.GridJoin
 end -- clump:auto
@@ -1165,8 +1155,7 @@ theorem auxiliaryPrime_splitsCompletely {L : LevCh D T} (P : Places L) : Formali
   have hq : ((q0 D : ℕ) : 𝓞 D.host.E) ∈ (P.w P.v0).asIdeal := by
     have h := P.basePlace_over_qZero
     rw [← P.under_w (P.mem_S0_of_sum_eq.2 (Or.inl rfl))] at h
-    rw [← map_natCast (algebraMap (𝓞 D.host.F) (𝓞 D.host.E))]
-    exact h
+    rwa [← map_natCast (algebraMap (𝓞 D.host.F) (𝓞 D.host.E))]
   obtain rfl : p = q0 D := GlobalTheory.GridPlaces.prime_eq_of_mem _ hp h1 hpv hq
   exact (GlobalTheory.SplitChoice.splitsCompletely_of_modEq_one D h1 hm).2
 

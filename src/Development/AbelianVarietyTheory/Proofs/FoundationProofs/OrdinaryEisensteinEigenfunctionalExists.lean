@@ -124,8 +124,7 @@ theorem depleted_newform_prim : ∀ (k r : ℕ) (g : Newform k), 1 ≤ k → 2 �
       exact Nat.Coprime.mul_right (h.coprime_dvd_right (dvd_mul_right _ _)) (Nat.Coprime.pow_right 2 h)
   set χ : DirichletCharacter ℂ (g.M * (g.M * r) ^ 2) := DirichletCharacter.changeLevel hdvd g.χ with hχdef
   have hχZ : ∀ d : ℤ, IsCoprime d ((g.M * (g.M * r) ^ 2 : ℕ) : ℤ) → ch χ d = g.χ (d : ZMod g.M) := by
-    intro d hd
-    exact DirichletCharacter.changeLevel_eq_cast_of_dvd' g.χ hdvd hd
+    exact fun d hd => DirichletCharacter.changeLevel_eq_cast_of_dvd' g.χ hdvd hd
   have hχN : ∀ d : ℕ, d.Coprime (g.M * (g.M * r) ^ 2) → χ d = g.χ d := by
     intro d hd
     have := hχZ d (Nat.isCoprime_iff_coprime.2 hd)
@@ -175,11 +174,9 @@ theorem depleted_newform_prim : ∀ (k r : ℕ) (g : Newform k), 1 ≤ k → 2 �
       by_cases hd : q ∣ n
       · have hnq : (n / q).Coprime (g.M * r) := hn.coprime_dvd_left (Nat.div_dvd_of_dvd hd)
         rw [ite_eq_left hd, ite_eq_left hnq]
-        rw [ite_eq_left hd] at e
-        exact e
+        rwa [ite_eq_left hd] at e
       · rw [ite_eq_right hd]
-        rw [ite_eq_right hd] at e
-        exact e
+        rwa [ite_eq_right hd] at e
     · have hqn : ¬ (q * n).Coprime (g.M * r) := fun h => hn (Nat.Coprime.coprime_mul_left h)
       rw [ite_eq_right hqn, ite_eq_right hn, mul_zero]
       by_cases hd : q ∣ n
@@ -433,8 +430,7 @@ theorem weight_alConj (χ : DirichletCharacter ℂ N) (h : (N : ℤ) * a * d - l
     have e3 : ((δ.det : ℤ) : ZMod N) = (m : ZMod N) := by rw [hdet]; simp
     rw [Matrix.det_fin_two] at e3
     push_cast at e3
-    rw [(ZMod.intCast_zmod_eq_zero_iff_dvd _ _).2 hN10, mul_zero, sub_zero] at e3
-    exact e3
+    rwa [(ZMod.intCast_zmod_eq_zero_iff_dvd _ _).2 hN10, mul_zero, sub_zero] at e3
   have hu : IsUnit (m : ZMod N) := (ZMod.unitOfCoprime m hm).isUnit
   have hv : IsUnit ((δ 1 1 : ℤ) : ZMod N) := isUnit_of_mul_isUnit_right (e2 ▸ hu)
   have hχv : χ ((δ 1 1 : ℤ) : ZMod N) ≠ 0 := (hv.map χ).ne_zero
@@ -444,8 +440,7 @@ theorem weight_alConj (χ : DirichletCharacter ℂ N) (h : (N : ℤ) * a * d - l
 
 theorem slz_fsum (k : ℕ) (δ : M2) {ι : Type} [Fintype ι] (w : ι → ℂ) (g : ι → ℍ → ℂ) (τ : ℍ) :
     slz k δ (fun σ => ∑ i, w i * g i σ) τ = ∑ i, w i * slz k δ (g i) τ := by
-  simp only [slz, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun i _ => by ring
+  simpa only [slz, Finset.mul_sum] using Finset.sum_congr rfl fun i _ => by ring
 
 theorem slz_alQ_hsum (k : ℕ) (χ : DirichletCharacter ℂ N) (h : (N : ℤ) * a * d - l * b * c = 1) (hk : 1 ≤ k)
     (hN : 0 < N) (hl : 0 < l) (Δ : Set M2) (m : ℕ) (hm0 : 0 < m) (hm : m.Coprime N)
@@ -821,8 +816,7 @@ theorem forms_of_characters_independent : ∀ (k L N : ℕ) (a : DirichletCharac
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl (fun ε _ => Finset.sum_congr rfl (fun b _ => ?_))
       rw [MulChar.coeToFun_mul, Pi.mul_apply]; ring
-    rw [hT'] at hT
-    rw [Finset.sum_eq_single ε₀] at hT
+    rw [hT', Finset.sum_eq_single ε₀] at hT
     · rw [inv_mul_cancel, MulChar.sum_one_eq_card_units] at hT
       have hc : ((Fintype.card (ZMod N)ˣ : ℕ) : ℂ) ≠ 0 := by
         exact_mod_cast Fintype.card_ne_zero
@@ -879,8 +873,7 @@ theorem sturm_sum_coef_zero : ∀ (k L N : ℕ), 0 < L → N ∣ L → ∃ B : �
     simpa [Finset.sum_apply] using hz n hn
   funext n
   have := hsum Finset.univ n
-  rw [h0] at this
-  rw [ModularForm.coe_zero, qExpansion_zero, map_zero] at this
+  rw [h0, ModularForm.coe_zero, qExpansion_zero, map_zero] at this
   rw [Finset.sum_apply, ← this]
   rfl
 
@@ -1173,8 +1166,7 @@ theorem exists_char_parity_mul_ne_one_mul_inv_ne_one : ∀ (N r : ℕ) (χ : Dir
       right
       have := eq_inv_of_mul_eq_one_left h2
       rwa [inv_inv] at this
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   have ha := key θ₀ (fun h => by have := hno θ₀ hθ₀ h.1; exact h.2 this)
   have hb := key (θ₀ * η) (fun h => by
     have := hno (θ₀ * η) (by rw [MulChar.mul_apply, hθ₀, hη2, mul_one]) h.1; exact h.2 this)
@@ -1309,8 +1301,7 @@ theorem unitRoot_split : ∀ (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* �
     have hmulN : ‖ι.symm a‖ * ‖ι.symm b‖ = ‖ι.symm D‖ := by
       rw [← norm_mul, ← map_mul, hmul]
     have hb : ‖ι.symm b‖ < 1 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       have : 1 ≤ ‖ι.symm a‖ * ‖ι.symm b‖ := by nlinarith
       linarith
     have hta : ι.symm a = ι.symm t + (-ι.symm b) := by
@@ -1323,8 +1314,7 @@ theorem unitRoot_split : ∀ (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* �
     rw [← hmulN, ha1, one_mul]
   have hmax : 1 ≤ max ‖ι.symm ((t + s) / 2)‖ ‖ι.symm ((t - s) / 2)‖ := by
     have := IsUltrametricDist.norm_add_le_max (ι.symm ((t + s) / 2)) (ι.symm ((t - s) / 2))
-    rw [← map_add (f := _), hsum, ht] at this
-    exact this
+    rwa [← map_add (f := _), hsum, ht] at this
   rcases le_max_iff.mp hmax with h | h
   · obtain ⟨h1, h2⟩ := key _ _ hsum hprod h
     exact ⟨_, _, hsum, hprod, h1, h2⟩

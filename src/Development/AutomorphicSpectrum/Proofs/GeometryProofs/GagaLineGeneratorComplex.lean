@@ -213,9 +213,7 @@ theorem over_iff (s : X ⟶ Sp ℂ) {V : X.Opens} (hV : IsAffineOpen V) (ψ : Γ
   · intro h
     have e : spMap (ψ.comp (cst s V)) = spMap (RingHom.id ℂ) := (Spec.map_comp _ _).trans (h.trans (Spec.map_id _).symm)
     exact congrArg CommRingCat.Hom.hom (Spec.map_injective e)
-  · intro h
-    refine (Spec.map_comp _ _).symm.trans ?_
-    exact (congrArg spMap h).trans (Spec.map_id _)
+  · exact fun h => (Spec.map_comp _ _).symm.trans ((congrArg spMap h).trans (Spec.map_id _))
 
 theorem comp_cst (s : X ⟶ Sp ℂ) {V : X.Opens} (hV : IsAffineOpen V) (y : Sp ℂ ⟶ X) (h : ⊤ ≤ y ⁻¹ᵁ V)
     (hy : y ≫ s = 𝟙 _) : (valHom y V h).comp (cst s V) = RingHom.id ℂ :=
@@ -332,8 +330,7 @@ theorem exists_chart : (∀ (A : Type) [CommRing A] [IsDomain A] [Algebra ℂ A]
   have a0 : a ≠ 0 := by
     rintro rfl
     simp at haξ
-  by_contra hc'
-  push Not at hc'
+  by_contra! hc'
   refine a0 (hring Γ(X, V) D O Ψ f a oO nO (fun b hb => a₁ b (sO hb).1) fun b hb => ?_)
   by_contra hne
   refine hc' b hb (haW ?_)
@@ -435,8 +432,7 @@ theorem isUnit_of_forall_complexPoint (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (U : X
   have hu := isUnit_res_of_forall_point s hV hVU a h
   have e := TopCat.Presheaf.germ_res_apply X.presheaf (homOfLE hVU) p hpV a
   have := hu.map (X.presheaf.germ V p hpV).hom
-  rw [e] at this
-  exact this
+  rwa [e] at this
 
 end GlobalTheory.CompanionTheory.Ar.Flat.GagaC
 end -- clump:auto
@@ -563,14 +559,12 @@ theorem eq_val_mul : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (Ω : Type) [Field 
   obtain ⟨N, hqN, v, -, hv⟩ := GlobalTheory.CompanionTheory.Ar.Flat.GagaC.exists_section hsp hreg ⊤ (by simp)
   have hgN : GlobalTheory.CompanionTheory.Ar.genPt ξ ∈ N := GlobalTheory.CompanionTheory.Ar.Flat.GagaC.genPt_mem hsp hqN
   have hvg : GlobalTheory.CompanionTheory.Ar.Flat.GagaC.genV ξ N hgN v = T' / T := by
-    rw [← GlobalTheory.CompanionTheory.Ar.Flat.GagaC.genMap_germ N hsp hqN hgN v]
-    exact hv
+    rwa [← GlobalTheory.CompanionTheory.Ar.Flat.GagaC.genMap_germ N hsp hqN hgN v]
   have hvalg : ∀ b ∈ B, ∀ hbN : GlobalTheory.CompanionTheory.Ar.centre (Y b) ∈ N,
       GlobalTheory.CompanionTheory.Ar.ValAt ξ (Y b) (T' / T) (ReciprocityTheory.ChartRestriction.G.Geo.Tor.valAt' (Y b) N v) := by
     intro b hb hbN
     apply GlobalTheory.CompanionTheory.Ar.Flat.GagaC.ValAt.of_section hbN (hC.cpt b hb)
-    rw [GlobalTheory.CompanionTheory.Ar.Flat.GagaC.genMap_germ N (hC.cpt b hb) hbN hgN v]
-    exact hvg
+    rwa [GlobalTheory.CompanionTheory.Ar.Flat.GagaC.genMap_germ N (hC.cpt b hb) hbN hgN v]
   have hr : ReciprocityTheory.ChartRestriction.G.Geo.Tor.valAt' (Y b₁) N v = r :=
     GlobalTheory.CompanionTheory.Ar.Flat.GagaC.ValAt.unique hξ (hvalg b₁ hb₁ hqN) hval
   obtain ⟨ε, κ, hε, -, hκd, hκ1, hκ⟩ :=
@@ -582,11 +576,9 @@ theorem eq_val_mul : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (Ω : Type) [Field 
     intro b
     rw [hSdef, Set.mem_ofPred_eq, GlobalTheory.CompanionTheory.Ar.Flat.GagaC.top_le_iff_centre]
   have hSo : IsOpen S := by
-    rw [hSdef]
-    exact hOopen
+    rwa [hSdef]
   have hSg : DifferentiableOn ℂ (fun b => ReciprocityTheory.ChartRestriction.G.Geo.Tor.valAt' (Y b) N v) S := by
-    rw [hSdef]
-    exact hgd
+    rwa [hSdef]
   have hOo : IsOpen (S ∩ Metric.ball b₁ ε) := hSo.inter Metric.isOpen_ball
   have h1 : ContinuousOn H (S ∩ Metric.ball b₁ ε) :=
     (hC.hol.mono fun b (hb : b ∈ S ∩ Metric.ball b₁ ε) => ((hmemS b).mp hb.1).1).continuousOn
@@ -608,8 +600,7 @@ theorem eq_val_mul : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (Ω : Type) [Field 
     obtain ⟨r₁, hr₁, e₁⟩ := GlobalTheory.CompanionTheory.Ar.Flat.GagaC.ValAt.exists_ne_zero hξ hcb hTu
     have hcb' := hC'.cpt (κ b) hκB
     have hW' : GlobalTheory.CompanionTheory.Ar.centre (Y' (κ b)) ∈ W := by
-      rw [← hYκ]
-      exact hbW
+      rwa [← hYκ]
     have hT'u := hT' (GlobalTheory.CompanionTheory.Ar.centre (Y' (κ b))) hcb' (hC'.inU (κ b) hκB) hW'
     obtain ⟨r₂, -, e₂⟩ := GlobalTheory.CompanionTheory.Ar.Flat.GagaC.ValAt.exists_ne_zero hξ hcb' hT'u
     have f₁ := hC.rel b hbB hbW r₁ e₁
@@ -619,8 +610,7 @@ theorem eq_val_mul : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (Ω : Type) [Field 
       rw [div_mul_eq_mul_div, mul_div_assoc, div_self hTu.1, _root_.mul_one]
     rw [hTT] at hm
     have e₂' : GlobalTheory.CompanionTheory.Ar.ValAt ξ (Y b) T' r₂ := by
-      rw [hYκ]
-      exact e₂
+      rwa [hYκ]
     have hu := GlobalTheory.CompanionTheory.Ar.Flat.GagaC.ValAt.unique hξ hm e₂'
     rw [hYκ] at f₁
     rw [f₁, ← hu] at f₂
@@ -678,8 +668,7 @@ theorem eq_zero_of_forall_points_eq_zero :
     have h1 : φ.comp (MvPolynomial.aeval f) = MvPolynomial.aeval b := by
       ext i
       simpa [φ] using (hΨ b hb).2 i
-    have h2 := DFunLike.congr_fun h1 p
-    exact h2.trans (DFunLike.congr_fun (MvPolynomial.coe_aeval_eq_eval b) p)
+    exact (DFunLike.congr_fun h1 p).trans (DFunLike.congr_fun (MvPolynomial.coe_aeval_eq_eval b) p)
   have hind : AlgebraicIndependent ℂ f := by
     rw [algebraicIndependent_iff]
     intro p hp
@@ -819,8 +808,7 @@ theorem gaga_rat_C : GagaSections → ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (�
   let h0 : Cpt ξ → (Sp ℂ ⟶ X) → ℂ := fun p x => if hh : ∃ c, Rel p x c then hh.choose else 0
   have h0s : ∀ p x c, Rel p x c → h0 p x = c := fun p x c hc => by
     have hh : ∃ c, Rel p x c := ⟨c, hc⟩
-    simp only [h0, dite_eq_left hh]
-    exact relU p x _ _ hh.choose_spec hc
+    simpa only [h0, dite_eq_left hh] using relU p x _ _ hh.choose_spec hc
   let h : Option (Cpt ξ) → (Sp ℂ ⟶ X) → ℂ := fun o => o.elim (fun _ => 0) h0
   let LL : LB X := LB.mk (Option (Cpt ξ)) V g
   have hhol : ∀ (i : LL.ι) (m : ℕ) (B : Set (Fin m → ℂ)) (y : (Fin m → ℂ) → (Sp ℂ ⟶ X)), IsOpen B → IsHolTo B y →
@@ -877,8 +865,7 @@ theorem gaga_rat_C : GagaSections → ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (�
       (hg p p' _ specializes_rfl gI)
     have e₄ : c p = T p' / T p * c p' := by
       show genV ξ (Uc p) (gU p) (σ.f (some p)) = _ * genV ξ (Uc p') (gU p') (σ.f (some p'))
-      rw [← e₁, ← e₂, ← e₃]
-      exact e
+      rwa [← e₁, ← e₂, ← e₃]
     have n₁ := (gen p p (memU p)).1
     rw [e₄]
     field_simp
@@ -901,8 +888,7 @@ theorem gaga_rat_C : GagaSections → ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (�
       rw [h0s _ _ _ hcc]
       obtain ⟨d, B, Y, H, b₁, hH, m₁, rfl, rfl⟩ := hcc
       exact hH.rel b₁ m₁ hyW r hr
-    rw [_root_.one_mul, e, hf p]
-    exact v2
+    rwa [_root_.one_mul, e, hf p]
 
 end GlobalTheory.CompanionTheory.Ar.Flat
 end -- clump:auto

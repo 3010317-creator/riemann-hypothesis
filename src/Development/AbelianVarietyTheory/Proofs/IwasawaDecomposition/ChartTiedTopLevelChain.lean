@@ -92,10 +92,8 @@ theorem sum_sd {κ : Type} [AddCommMonoid κ] {n a k : ℕ} (hk : 1 ≤ k) (hka 
     intro x
     by_cases hx : (x : ℕ) + 1 < a ∧ (x : ℕ) + 1 ≠ k
     · rw [ite_eq_left hx, Finset.sum_eq_single (⟨x.1 + 1, by omega⟩ : Fin n), ite_eq_left ⟨rfl, hx.1, hx.2⟩, hf]
-      · intro y _ hy
-        exact ite_eq_right fun h => hy (Fin.ext h.1.symm)
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun y _ hy => ite_eq_right fun h => hy (Fin.ext h.1.symm)
+      · exact fun h => absurd (Finset.mem_univ _) h
     · rw [ite_eq_right hx]
       refine Finset.sum_eq_zero fun y _ => ite_eq_right fun h => hx ?_
       obtain ⟨h1, h2, h3⟩ := h
@@ -711,8 +709,7 @@ theorem exists_gLevH (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) (hL : L.Ok C
       obtain ⟨n, hn⟩ := (hwP a v h).2.2 c
       rw [hn, map_natCast]
       exact hchi a v h _ (hwP a v h).2.1 s n c hn) (back a v h M)
-  refine this.trans (congrArg _ ?_)
-  exact congrArg Units.val (hback a v h M.1)
+  exact this.trans (congrArg _ (congrArg Units.val (hback a v h M.1)))
 
 end Level
 
@@ -756,8 +753,7 @@ theorem stepBefore_oneLevel : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.
   have hcrd := GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hOk hPins l Z
   have hUA : ∀ β, ∀ x ∈ (K β).lev.U, x ∈ UAd B.sp.cm (B.R.N (B.R.m - 1)) := fun β x hx => by
     have := (((K β).lev.U_eq x).1 hx).1
-    rw [(hcrd.2.2.2 (B.R.m - 1) (Nat.sub_le _ _)).1] at this
-    exact this
+    rwa [(hcrd.2.2.2 (B.R.m - 1) (Nat.sub_le _ _)).1] at this
   have hcos : ∀ (p q : PtAt B.R I.sel (I.tup I.mu0) (I.cst I.mu0) u (B.R.m - 1)), (0 : Sp B.fields.E (B.R.N (B.R.m - 1))) ∈ p.1.2 →
       (0 : Sp B.fields.E (B.R.N (B.R.m - 1))) ∈ q.1.2 → cosetIn p = cosetIn q := fun p q hp hq => by
     rw [cosetIn_of_zero_mem hmj p hp, cosetIn_of_zero_mem hmj q hq]

@@ -245,8 +245,7 @@ theorem exists_isSphSec {F E : Type} [Field F] [NumberField F] [Field E] [Number
       (congrArg _ (Subtype.ext (f.apply_symm_apply _).symm)).trans (ha ⟨_, hp⟩ ((hP _).1 hp))
     rw [mul_one, h3, mul_one, _root_.GlobalTheory.LFun.charAt_eq_locChar_of_isInertAt F E μ v w h hw, npow_zpow hq _ _ (GlobalTheory.AbsInert.absEv_inert F E σ hc v w h hw _)] at e1
     show φ (f.symm (p * k)) = _
-    rw [map_mul, h2 _ hk', e3]
-    exact e1
+    rwa [map_mul, h2 _ hk', e3]
   · show _ = φ (f.symm _)
     rw [← hio y, f.symm_apply_apply]
 
@@ -291,8 +290,7 @@ theorem hasSum_doubling_inert : GlobalTheory.IndefiniteRowSideFullHecke.Spherica
   refine ⟨hright, ?_⟩
   obtain ⟨h0, h1⟩ := _root_.GlobalTheory.ZonalCoeff.coeff_zero_or_zonal L ϖ σ q n hU V ρ x α hx ℓ hℓ
   by_cases hx0 : ℓ x = 0
-  · simp only [h0 hx0, hx0, mul_zero]
-    exact hasSum_zero
+  · simpa only [h0 hx0, hx0, mul_zero] using hasSum_zero
   · have hw := h1 hx0
     letI : MeasurableSpace (GU σ n) := borel _
     haveI : BorelSpace (GU σ n) := ⟨rfl⟩
@@ -310,8 +308,7 @@ theorem hasSum_doubling_inert : GlobalTheory.IndefiniteRowSideFullHecke.Spherica
       (fun g => Φ (GlobalTheory.IndefiniteRowSideFullHecke.SphericalSectionVariables.io1 σ n g) * (ℓ (ρ g x) / ℓ x)) _ hF hs.hasSum).2
     have hS := hs.hasSum
     rw [← hci, hval'] at hS
-    have h3 := hS.mul_right (ℓ x)
-    simpa only [mul_assoc, div_mul_cancel₀ _ hx0] using h3
+    simpa only [mul_assoc, div_mul_cancel₀ _ hx0] using hS.mul_right (ℓ x)
 
 end GlobalTheory.DoublingSumU
 end -- clump:auto
@@ -459,8 +456,7 @@ theorem localZetaOn_inert : GlobalTheory.IndefiniteRowSideFullHecke.SphericalSec
     · have hfun : ∀ a : Formalism.UG.GU c' A.rank ⧸ Formalism.UG.KU c' A.rank, φ (ioAt A v (e.symm a.out)) * c (e.symm a.out) =
           Φ (GlobalTheory.IndefiniteRowSideFullHecke.SphericalSectionVariables.io1 c' A.rank a.out) * ℓ (ρ' a.out x) := fun a => by
         rw [hφΦ, hcx, MulEquiv.apply_symm_apply]; rfl
-      simp only [hfun]
-      exact hsum
+      simpa only [hfun] using hsum
   have : Submodule.IsFullLattice D.host.E L := GlobalTheory.ProjXCols.selfDual_isFullLattice A L hL
   obtain ⟨hint, hval⟩ := GlobalTheory.T.integral_right_invariant_eq_sum_open_subgroup_cosets (Gv A v) μ (stabLoc D.sp.cm.sig A.gram L v) (isOpen_stabLoc _ _ _ v) hμK
     (fun g => φ (ioAt A v g) * c g) _ (fun g k hk => by

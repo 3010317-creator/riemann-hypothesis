@@ -672,8 +672,7 @@ theorem mem_hilbertSubgroup (ha : IsGlobalArtin art) (σ : G E Ω) (x : Ideles E
   have h := art_mem_of_class ha (V.map (GlobalTheory.HeckeGal.toAb E Ω)) (QuotientGroup.isOpenMap_coe _ hV)
     (fun A τ hτ => ⟨τ, hgen τ (Or.inl (Or.inr ⟨A, (mem_ine_iff A τ).2 hτ⟩)), rfl⟩)
     (fun c hc => ⟨c, hgen c (Or.inr hc), rfl⟩) x hx
-  rw [hσ, ← Subgroup.mem_comap, Subgroup.comap_map_eq_self hker] at h
-  exact h
+  rwa [hσ, ← Subgroup.mem_comap, Subgroup.comap_map_eq_self hker] at h
 
 end GlobalTheory.HilbertFromArtin
 
@@ -711,8 +710,7 @@ theorem GlobalTheory.Published.GlobalArtinReciprocity.hilbertClassField :
     rw [MonoidHom.inv_apply, inv_eq_iff_eq_inv, ← hx, MonoidHom.comp_apply, hσ, hρ]
   · obtain ⟨x, hx⟩ := ha.quot.surjective (GlobalTheory.HeckeGal.toAb E Ω σ)
     refine mem_hilbertSubgroup ha σ x hx ?_
-    rw [hk, ← hx, hρ] at hσ
-    exact hσ
+    rwa [hk, ← hx, hρ] at hσ
   · have ho : IsOpen ((ψ⁻¹).ker : Set (Ω ≃ₐ[E] Ω)) := by
       convert hρo.preimage (QuotientGroup.continuous_mk (N := (commutator (G E Ω)).topologicalClosure)) using 1
       exact Set.ext hk

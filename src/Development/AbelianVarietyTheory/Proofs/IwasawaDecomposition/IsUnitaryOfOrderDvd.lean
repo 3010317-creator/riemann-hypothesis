@@ -83,8 +83,7 @@ theorem mem_crdLat (V : HSp D) (x : Fin V.rank → D.host.E) : x ∈ crdLat V V.
   · rintro ⟨y, hy, rfl⟩
     show (crd V).symm (crd V y) ∈ V.L0
     rwa [LinearEquiv.symm_apply_apply]
-  · intro h
-    exact ⟨_, h, (crd V).apply_symm_apply x⟩
+  · exact fun h => ⟨_, h, (crd V).apply_symm_apply x⟩
 
 theorem coe_crdLat (V : HSp D) : (crdLat V V.L0 : Set (Fin V.rank → D.host.E)) = L0c D V := by
   ext x
@@ -105,12 +104,10 @@ theorem dualL_crdLat (V : HSp D) : dualL D.sp.cm V (crdLat V V.L0) = crdLat V V.
   constructor
   · intro h y hy
     have := h (crd V y) ⟨y, hy, rfl⟩
-    rw [hT_crd D.sp.cm, LinearEquiv.apply_symm_apply]
-    exact this
+    rwa [hT_crd D.sp.cm, LinearEquiv.apply_symm_apply]
   · rintro h _ ⟨y, hy, rfl⟩
     have := h y hy
-    rw [hT_crd D.sp.cm, LinearEquiv.apply_symm_apply] at this
-    exact this
+    rwa [hT_crd D.sp.cm, LinearEquiv.apply_symm_apply] at this
 
 theorem isSDFrame_of_one {V : HSp D} {β : GL (Fin V.rank) (Lev.EAf D)}
     {Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)} (h : IsSDFrame V β Λ 1) (N : ℕ) : IsSDFrame V β Λ N := by

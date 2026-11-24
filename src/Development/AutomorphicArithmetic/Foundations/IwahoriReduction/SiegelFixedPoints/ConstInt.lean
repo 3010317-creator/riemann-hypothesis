@@ -346,8 +346,7 @@ private theorem int_of_hol [IsAlgClosure ℚ Ω] (X : Tower Ω ε) (f : X.K)
     rintro _ ⟨γ, rfl⟩
     refine ⟨red γ, ?_⟩
     have h : ∃ γ', red γ' = red γ := ⟨γ, rfl⟩
-    simp only [g, dite_eq_left h]
-    exact hfac _ _ h.choose_spec
+    simpa only [g, dite_eq_left h] using hfac _ _ h.choose_spec
   have hhol : ∀ h ∈ S, h ∈ JInt.holR X := by
     rintro _ ⟨γ, rfl⟩
     change ∃ ψ : ℂ → ℂ, DifferentiableOn ℂ ψ Hs ∧ X.an (X.sl (ofSL γ) f) = (ψ : Mero)
@@ -430,8 +429,7 @@ private theorem val_sl [IsAlgClosure ℚ Ω] (X : Tower Ω ε) {c : ℕ} {x : Fi
   have h2 := mem_of_int X _ hY (int_of_hol X _ (siegel_inv_hol X hx))
   rw [ValuationSubring.mem_comap] at h1 h2
   refine val_one W ((_root_.map_ne_zero _).2 (_root_.GlobalTheory.KZ.siegel_ne_zero Ω ε X c x hx)) h1 ?_
-  rw [← map_inv₀]
-  exact h2
+  rwa [← map_inv₀]
 
 end UpperTheory.V.L.SiegelUnitIntegral
 

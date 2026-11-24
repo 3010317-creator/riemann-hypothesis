@@ -71,8 +71,7 @@ theorem exists_rest_arch : ∀ {F : Type} [Field F] [NumberField F] (κ : Type) 
     · exact ⟨Sᶜ, hSc.isOpen_compl, hx, fun y hy => by simp only [g, Set.indicator_of_notMem hy, Set.indicator_of_notMem hx]⟩
   refine ⟨fun x => g fun i => (x i).2, ?_, fun f => ⟨?_, ?_⟩⟩
   · have h0 : (fun i => ((0 : κ → AF F) i).2) ∈ S := fun i _ => (GroundTheory.Global.integralFiniteAdeles (𝓞 F) F).zero_mem
-    simp only [g, Set.indicator_of_mem h0, Pi.one_apply]
-    exact one_ne_zero
+    simpa only [g, Set.indicator_of_mem h0, Pi.one_apply] using one_ne_zero
   · intro x z hz
     have hz2 : ∀ i, (z i).2 = 0 := by
       let u : AF F := ((0 : InfiniteAdeleRing F), (1 : FiniteAdeleRing (𝓞 F) F))
@@ -85,8 +84,7 @@ theorem exists_rest_arch : ∀ {F : Type} [Field F] [NumberField F] (κ : Type) 
       rw [h1] at e'
       have h2 : (u * z i).2 = 1 * (z i).2 := rfl
       have := congrArg Prod.snd e'
-      rw [h2, one_mul] at this
-      exact this
+      rwa [h2, one_mul] at this
     show g (fun i => ((x + z) i).2) = g (fun i => (x i).2)
     congr 1
     funext i

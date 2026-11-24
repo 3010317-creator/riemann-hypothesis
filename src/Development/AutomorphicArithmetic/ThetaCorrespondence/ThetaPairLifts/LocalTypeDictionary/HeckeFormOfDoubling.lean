@@ -285,8 +285,7 @@ theorem normSq_theta_modGrowth_nc : GlobalTheory.Published.WeilRepresentationUni
       exact (hcont g).aestronglyMeasurable
     refine (memLp_two_iff_integrable_sq_norm hm).2 ?_
     refine (hint (io A (g, g))).norm.congr (Filter.Eventually.of_forall fun q => ?_)
-    simp only [GlobalTheory.AutomorphicL2Unitary.descend]
-    exact (knorm g _).symm
+    simpa only [GlobalTheory.AutomorphicL2Unitary.descend] using (knorm g _).symm
   refine ⟨hL2, ?_⟩
 
   have hI : HasIwasawa D.sp.cm.sig (dblSp A).gram (Khat A a) :=
@@ -305,8 +304,7 @@ theorem normSq_theta_modGrowth_nc : GlobalTheory.Published.WeilRepresentationUni
     intro x
     have e := (hEV.2 x).valueAt.cont_eq
     have := hC₁ (sZero A B) (Metric.mem_ball_self hr) x
-    rw [GlobalTheory.Eis.eisCont, e] at this
-    exact this
+    rwa [GlobalTheory.Eis.eisCont, e] at this
   have hC₁0 : 0 ≤ C₁ := by
     have h1 := (norm_nonneg _).trans (hE 1)
     exact nonneg_of_mul_nonneg_left h1 (pow_pos (GlobalTheory.Grow.height_pos _ _) _)
@@ -426,8 +424,7 @@ theorem globalFormAt_frameLat_nc : GlobalTheory.Published.WeilRepresentationUnit
           flat A a (swSec A B omh ν 𝓕 (delta A B Φ₁ Φ₂)) (sZero A B) s (io A (g, 1)) *
             starRingEnd ℂ (GlobalTheory.Eis.petCoef A m (fun x => conj (u₁ x)) (fun x => conj (u₂ x)) g) :=
         funext fun g => (hpt s g).symm
-      rw [e]
-      exact hconv
+      rwa [e]
     · rw [GlobalTheory.Eis.zeta, heq]
       unfold zetaH pairInt
       exact integral_congr_ae (.of_forall fun g => hpt s g)

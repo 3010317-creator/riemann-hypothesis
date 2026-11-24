@@ -97,14 +97,12 @@ private theorem cocycle_extends_to_conj_group {l : ℕ} [Fact l.Prime] (F : W.GF
       rw [continuousOn_iff_continuous_restrict]
       have hm : Continuous fun p : (F.η.ker : Set F.Γ) => (⟨p.1, p.2⟩ : F.G₀) :=
         continuous_subtype_val.subtype_mk fun p => p.2
-      refine (hy.comp hm).congr fun p => ?_
-      exact (zin p.1 p.2).symm
+      exact (hy.comp hm).congr fun p => (zin p.1 p.2).symm
     · apply ContinuousOn.continuousAt _ (hkerc.mem_nhds hx)
       rw [continuousOn_iff_continuous_restrict]
       have hm : Continuous fun p : ((F.η.ker : Set F.Γ)ᶜ : Set F.Γ) => (⟨p.1 * F.c, cocExt_mem F p.2⟩ : F.G₀) :=
         (continuous_subtype_val.mul continuous_const).subtype_mk _
-      refine ((hy.comp hm).add (hw.comp hm)).congr fun p => ?_
-      exact (zout p.1 p.2).symm
+      exact ((hy.comp hm).add (hw.comp hm)).congr fun p => (zout p.1 p.2).symm
   · intro g h
     by_cases hg : g ∈ F.η.ker <;> by_cases hh : h ∈ F.η.ker
     · rw [zin _ (mul_mem hg hh), zin _ hg, zin _ hh]

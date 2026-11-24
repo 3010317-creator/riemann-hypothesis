@@ -103,11 +103,9 @@ theorem exists_nat_smul_maps {E : Type} [Field E] [NumberField E] {N N' : ℕ}
   rw [← hs] at hx
   induction hx using Submodule.span_induction with
   | mem g hg =>
-    rw [Matrix.smul_mulVec]
-    rw [← Finset.mul_prod_erase s kf hg]
+    rw [Matrix.smul_mulVec, ← Finset.mul_prod_erase s kf hg]
     push_cast
-    rw [mul_comm, ← smul_smul]
-    rw [← Nat.cast_prod, Nat.cast_smul_eq_nsmul]
+    rw [mul_comm, ← smul_smul, ← Nat.cast_prod, Nat.cast_smul_eq_nsmul]
     exact L'.toAddSubmonoid.nsmul_mem (hkmem g hg) _
   | zero => simp
   | add x y _ _ hx hy => rw [Matrix.mulVec_add]; exact L'.add_mem hx hy

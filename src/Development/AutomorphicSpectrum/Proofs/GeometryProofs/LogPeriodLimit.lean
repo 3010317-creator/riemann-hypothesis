@@ -213,8 +213,7 @@ theorem unim : ∀ (g : ℕ) (Bs : Matrix (Fin g) (Fin g) ℤ), Bsᵀ = Bs → �
   refine ⟨p, q, ?_, hp, fun k => ?_⟩
   · funext i
     have h1 : φ₁ (Bs i) = 0 := h _ fun v hv => congrFun hv i
-    rw [hp] at h1
-    exact h1
+    rwa [hp] at h1
   · have h1 := hq (k : Fin g → ℤ)
     have h2 : π (k : Fin g → ℤ) = k := Submodule.linearProjOfIsCompl_apply_left hM.symm k
     simp only [AddMonoidHom.comp_apply, LinearMap.toAddMonoidHom_coe, h2] at h1
@@ -330,8 +329,7 @@ theorem at_point {n a g : ℕ} {Λ : Type} [AddCommGroup Λ] (L : Flat.LogPeriod
       · simp only [h0, ite_false, Complex.log_re]
         exact Real.log_neg (norm_pos_iff.2 h0) ((hzk _).trans_le hρ)
     · have hk' : ¬ k.val < a := not_lt.2 hk
-      simp only [hws, hk', ite_false]
-      exact (hzk k).trans_le hρ
+      simpa only [hws, hk', ite_false] using (hzk k).trans_le hρ
   set zs : ℕ → Fin n → ℂ := fun m => expCover a (ws m) with hzs
   have hzs_k : ∀ m k, zs m k = if k.val < a ∧ z k = 0 then ((Real.exp (-(r m)) : ℝ) : ℂ) else z k := by
     intro m k
@@ -361,12 +359,10 @@ theorem at_point {n a g : ℕ} {Λ : Type} [AddCommGroup Λ] (L : Flat.LogPeriod
         Real.tendsto_exp_atBot.comp (tendsto_neg_atTop_atBot.comp hrtop)
       have h2 := (Complex.continuous_ofReal.tendsto 0).comp h1
       simpa only [Function.comp_def, Complex.ofReal_zero] using h2
-    · simp only [h, ite_false]
-      exact tendsto_const_nhds
+    · simpa only [h, ite_false] using tendsto_const_nhds
   have hlexp : ∀ j, z (cj j) ≠ 0 → Complex.exp (l j) = z (cj j) := by
     intro j hj
-    simp only [hl, hj, ite_false]
-    exact Complex.exp_log hj
+    simpa only [hl, hj, ite_false] using Complex.exp_log hj
   have hl0 : ∀ j, z (cj j) = 0 → l j = 0 := by
     intro j hj
     simp only [hl, hj, ite_true]
@@ -509,8 +505,7 @@ theorem at_point {n a g : ℕ} {Λ : Type} [AddCommGroup Λ] (L : Flat.LogPeriod
         atTop (𝓝 (((A z)ᵀ)⁻¹ *ᵥ p)) := hy.congr fun m => hyeq m
     have him : Tendsto (fun m => (t m).im) atTop atTop := by
       have h1 : ∀ m, (t m).im = r m / (2 * Real.pi) := fun m => by simp only [ht, Complex.mul_I_im, Complex.ofReal_re]
-      simp only [h1]
-      exact hrtop.atTop_div_const (by positivity)
+      simpa only [h1] using hrtop.atTop_div_const (by positivity)
     have hYm : ∀ m, ((σf (zs m) + t m • Bs.map (fun x : ℤ => (x : ℂ))).map Complex.im -
         c • (1 : Matrix (Fin g) (Fin g) ℝ)).PosSemidef := by
       intro m
@@ -668,12 +663,10 @@ theorem bounded_on_limit_lattice : ∀ (n a g : ℕ) (Λ : Type) [AddCommGroup �
         rw [Complex.norm_exp] at h1
         exact Real.exp_lt_one_iff.1 h1
       · have hk' : ¬ k.val < a := not_lt.2 hk
-        simp only [w, hk', dite_eq_right, not_false_eq_true]
-        exact hz1 k
+        simpa only [w, hk', dite_eq_right, not_false_eq_true] using hz1 k
     have h1 := (hb w hw (by rw [hexp]; exact Metric.ball_subset_closedBall (Metric.ball_subset_ball hρρ₁ hz))).1
     rw [hτ w hw, hexp] at h1
-    simp only [hwj] at h1
-    exact h1
+    simpa only [hwj] using h1
   · intro w hw
     rw [← hτ w hw]
     exact Q.symm w hw

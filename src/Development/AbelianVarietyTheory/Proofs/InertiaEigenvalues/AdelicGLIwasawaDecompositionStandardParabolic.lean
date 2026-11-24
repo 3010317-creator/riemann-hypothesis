@@ -97,8 +97,7 @@ theorem _root_.GlobalTheory.QRDecomp.exists_qr (n m : ℕ) (A : Matrix (Fin n) (
     exact ⟨Complex.ext (by simp) (by simp [h.2]), h.1⟩
   let r : Fin m → ℂ := fun i => ((Real.sqrt (d i).re : ℝ) : ℂ)
   have hr0 : ∀ i, r i ≠ 0 := fun i => by
-    simp only [r, ne_eq, Complex.ofReal_eq_zero]
-    exact (Real.sqrt_pos.mpr (hdre i).2).ne'
+    simpa only [r, ne_eq, Complex.ofReal_eq_zero] using (Real.sqrt_pos.mpr (hdre i).2).ne'
   have hrr : ∀ i, star (r i) * r i = d i := fun i => by
     simp only [r, Complex.star_def, Complex.conj_ofReal]
     rw [← Complex.ofReal_mul, Real.mul_self_sqrt (hdre i).2.le, ← (hdre i).1]
@@ -183,8 +182,7 @@ theorem mem_parab_of_upper {R : Type} [CommRing R] {c N : ℕ} (n : Fin c → �
     (b : GL (Fin N) R) (hb : (b : Matrix (Fin N) (Fin N) R).BlockTriangular id) :
     b ∈ parab R (stdBlocks n h) := by
   rw [mem_parab_iff]
-  intro a a' i j hlt
-  exact hb (stdBlocks_lt_of_lt n h i j hlt)
+  exact fun a a' i j hlt => hb (stdBlocks_lt_of_lt n h i j hlt)
 
 theorem exists_upper_mul_unitary (N : ℕ) (y : GL (Fin N) ℂ) :
     ∃ b : GL (Fin N) ℂ, (b : Matrix (Fin N) (Fin N) ℂ).BlockTriangular id ∧
@@ -199,8 +197,7 @@ theorem exists_upper_mul_unitary (N : ℕ) (y : GL (Fin N) ℂ) :
   obtain ⟨Q, u, hQ, hu, hudet, hA⟩ := GlobalTheory.QRDecomp.exists_qr N N A hdet
   letI := u.invertibleOfIsUnitDet hudet
   refine ⟨(Matrix.nonsingInvUnit u hudet)⁻¹, ?_, Qᴴ, ?_, ?_⟩
-  · show (u⁻¹).BlockTriangular id
-    exact Matrix.blockTriangular_inv_of_blockTriangular hu
+  · exact Matrix.blockTriangular_inv_of_blockTriangular hu
   · rw [Matrix.mem_unitaryGroup_iff', star_eq_conjTranspose, conjTranspose_conjTranspose]
     exact mul_eq_one_comm.1 hQ
   · show (y : Matrix (Fin N) (Fin N) ℂ) = u⁻¹ * Qᴴ

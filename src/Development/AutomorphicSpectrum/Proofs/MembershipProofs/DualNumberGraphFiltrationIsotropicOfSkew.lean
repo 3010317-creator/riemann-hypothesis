@@ -58,12 +58,10 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem goodChar_of_hasConductor (χ : AddChar k Circle) (c : kˣ) (hχ : HasConductor χ c) :
     GoodChar (Circle.coeHom.compAddChar χ) 𝒪[k] c := by
   have hcoe : ∀ z, (Circle.coeHom.compAddChar χ) z = 1 ↔ χ z = 1 := fun z => by
-    show ((χ z : Circle) : ℂ) = 1 ↔ _
     exact Circle.coe_eq_one
   refine ⟨fun x => ?_, IsNonarchimedeanLocalField.isCompact_closedBall k 1, Valuation.isOpen_integer,
     fun x => ?_, fun U hU => ?_, fun x => ?_⟩
-  · show ‖((χ x : Circle) : ℂ)‖ = 1
-    exact Circle.norm_coe _
+  · exact Circle.norm_coe _
   · have key : (∀ y ∈ 𝒪[k], (Circle.coeHom.compAddChar χ) (x * y) = 1) ↔
         ∀ y, ValuativeRel.valuation k y ≤ ValuativeRel.valuation k x → χ y = 1 := by
       simp only [hcoe]

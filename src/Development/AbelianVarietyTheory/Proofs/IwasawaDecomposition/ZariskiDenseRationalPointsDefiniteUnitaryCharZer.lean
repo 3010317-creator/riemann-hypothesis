@@ -162,8 +162,7 @@ theorem exists_unit_norm_one_det_ne_zero (L : Type) [Field L] [NumberField L] [I
   set c : L →+* L := (IsCMField.complexConj L : L →+* L) with hc
   have hcc : ∀ x, c (c x) = x := fun x => IsCMField.complexConj_apply_apply L x
   obtain ⟨y, hy⟩ : ∃ y : L, c y ≠ y := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply IsCMField.complexConj_ne_one L
     ext x
     exact h x
@@ -217,8 +216,7 @@ theorem exists_unit_norm_one_det_ne_zero (L : Type) [Field L] [NumberField L] [I
   simp only [Set.mem_preimage, B, Set.mem_iUnion]
   refine ⟨σ, ?_⟩
   simp only [Finset.mem_coe, Multiset.mem_toFinset]
-  rw [Polynomial.mem_roots (hp σ), Polynomial.IsRoot, eval_charpolyRev_neg]
-  exact hσ
+  rwa [Polynomial.mem_roots (hp σ), Polynomial.IsRoot, eval_charpolyRev_neg]
 
 end GlobalTheory.CMScalar
 end -- clump:auto
@@ -494,8 +492,7 @@ theorem generic_vanish [Nonempty (L →+* K)] (P : MvPolynomial ((L →+* K) × 
   have hfun : (fun w => MvPolynomial.eval x (f w) / MvPolynomial.eval x g) =
       fun p : (L →+* K) × Fin n × Fin n => cayMat ((skewPoly L K n p.1).map (MvPolynomial.eval x)) p.2.1 p.2.2 :=
     funext (hev x hxd)
-  rw [hfun] at h2
-  exact h2
+  rwa [hfun] at h2
 
 theorem vanish_good [Nonempty (L →+* K)] (P : MvPolynomial ((L →+* K) × Fin n × Fin n) K)
     (hP : ∀ γ₀ : GL (Fin n) L, γ₀ ∈ GQ0 L n →
@@ -514,8 +511,7 @@ theorem vanish_good [Nonempty (L →+* K)] (P : MvPolynomial ((L →+* K) × Fin
     funext p
     rw [hx p.1]
     exact congrFun (congrFun (cay_invol (B p.1) (hB1 p.1)).2 _) _
-  rw [hfun] at h
-  exact h
+  rwa [hfun] at h
 
 end
 

@@ -75,8 +75,7 @@ theorem _root_.GlobalTheory.CongruenceDet.isIntegral_root {R E K : Type} [CommRi
     IsIntegral R ((μ - 1) / M) := by
   classical
   have hdet : (scalar (Fin r) μ - g.map (algebraMap E K)).det = 0 := by
-    rw [← Matrix.eval_charpoly]
-    exact hμ
+    rwa [← Matrix.eval_charpoly]
   obtain ⟨u, hu0, hu⟩ := Matrix.exists_vecMul_eq_zero_iff.2 hdet
   have hug : u ᵥ* g.map (algebraMap E K) = μ • u := by
     rw [Matrix.vecMul_sub, sub_eq_zero] at hu
@@ -111,8 +110,7 @@ theorem _root_.GlobalTheory.CongruenceDet.isIntegral_root {R E K : Type} [CommRi
       rw [Submodule.span_le]
       intro v hv
       have : ℓ v ∈ N := Submodule.mem_map_of_mem hv
-      rw [hbot, Submodule.mem_bot] at this
-      exact this
+      rwa [hbot, Submodule.mem_bot] at this
     rw [hspan] at hker
     apply hu0
     funext j
@@ -242,8 +240,7 @@ theorem _root_.GlobalTheory.CongruenceDet.det_eq_one : ∀ (E : Type) [Field E] 
   have hn0 : n ≠ 0 := by
     rintro rfl
     apply hx
-    rw [map_zero, eq_comm, Algebra.norm_eq_zero_iff] at hn
-    exact hn
+    rwa [map_zero, eq_comm, Algebra.norm_eq_zero_iff] at hn
   have hprod := Algebra.norm_eq_prod_embeddings ℚ ℂ ((d - 1) / M)
   rw [← hn] at hprod
   have hle : ‖∏ σ : E →ₐ[ℚ] ℂ, σ ((d - 1) / M)‖ ≤ (2 / 3 : ℝ) ^ Fintype.card (E →ₐ[ℚ] ℂ) := by

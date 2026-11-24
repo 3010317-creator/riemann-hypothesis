@@ -84,8 +84,7 @@ theorem evFin_one_sub (v : Pl (F := F)) : evFin F v (1 - GlobalTheory.LatVac.lif
 theorem eq_liftV_of_at (v : Pl (F := F)) {a : AF F} (ha : At (evFin F v) a) :
     a = GlobalTheory.LatVac.liftV v (evFin F v a) := by
   have h := ha _ (evFin_one_sub v)
-  rw [smul_eq_mul, sub_mul, one_mul, sub_eq_zero, liftV_one_mul] at h
-  exact h
+  rwa [smul_eq_mul, sub_mul, one_mul, sub_eq_zero, liftV_one_mul] at h
 
 
 variable (E) in
@@ -318,15 +317,13 @@ theorem field_data : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
       rw [map_inv₀, inv_le_one₀ (zero_lt_iff.2 hne)] at h1
       exact absurd hlt (not_lt.2 h1)
     obtain ⟨y, hyO, hyψ⟩ : ∃ y ∈ v.adicCompletionIntegers F, psiLoc B.ψ v (ϖv⁻¹ * y) ≠ 1 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       exact hnot ((hψ _).1 hcon)
     refine ⟨complMap h y, complMap_mem h hyO, ?_, ?_⟩
     · rw [← hsymm (complMap h y), hcompl, hc]
       show toCompl h (y ⊗ₜ[F] σ 1) = _
       rw [map_one]
-    · rw [hϖ, ← map_inv₀, ← map_mul, hψc]
-      exact hyψ
+    · rwa [hϖ, ← map_inv₀, ← map_mul, hψc]
   · exact (liftT_injective v).comp e.symm.injective
   · intro z
     rw [at_iff]

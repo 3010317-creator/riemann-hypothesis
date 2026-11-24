@@ -155,8 +155,7 @@ private theorem adelstabT_inclE_of_forall_divisible (a : E ⊗[F] Ad F)
     adelstabT F E (inclE (F := F) (Ad F) e * a) = 0 := by
   obtain ⟨d, hd0, hd⟩ := levelaf_denom (E := E) (inclE (F := F) (Ad F) e)
   have hxS : inclE (F := F) (Ad F) (algebraMap (𝓞 F) E d * e) ∈ OAd F E := by
-    rw [map_mul, adelstab_incl_C]
-    exact hd
+    rwa [map_mul, adelstab_incl_C]
   have hzero : adelstabT F E (inclE (F := F) (Ad F) (algebraMap (𝓞 F) E d * e) * a) = 0 := by
     refine GlobalTheory.IntegralFinAdele.eq_zero_of_forall_mul F _ (fun M hM => ?_)
     obtain ⟨t, ht, hat⟩ := h M hM
@@ -187,8 +186,7 @@ theorem exists_nat_denom (a : E ⊗[F] Ad F) :
   obtain ⟨d, hd0, hd⟩ := levelaf_denom (E := E) a
   obtain ⟨q, hq⟩ := Ideal.mem_span_singleton.mp (Ideal.absNorm_mem (Ideal.span {d}))
   refine ⟨Ideal.absNorm (Ideal.span {d}), Nat.pos_of_ne_zero ?_, ?_⟩
-  · rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact hd0
+  · rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   · rw [← levelafC_natCast, hq, levelafC_mul, mul_comm (levelafC E d), mul_assoc]
     exact mul_mem (levelafC_mem q) hd
 
@@ -201,8 +199,7 @@ theorem integral_adeles_properties : ∀ (F E : Type) [Field F] [NumberField F] 
     obtain ⟨b, t, ht, hab⟩ := csGlob_approx (E := E) csGlob_intAdApprox (m : 𝓞 F) hm' a ha
     refine ⟨b, t, ht, ?_⟩
     rw [hab, levelafC_natCast]
-  · intro hx
-    exact ⟨⟨x, csGlob_int x hx⟩, rfl⟩
+  · exact fun hx => ⟨⟨x, csGlob_int x hx⟩, rfl⟩
   · rintro ⟨b, rfl⟩
     exact adelstab_incl_int b
 

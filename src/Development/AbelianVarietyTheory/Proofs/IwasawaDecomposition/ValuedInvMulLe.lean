@@ -72,8 +72,7 @@ theorem hasRes_of_mul {P : HeightOneSpectrum (𝓞 E)} {s : 𝓞 E} (hs : s ∉ 
         (algebraMap E _ (algebraMap (𝓞 E) E s) * z - algebraMap E (P.adicCompletion E) (algebraMap (𝓞 E) E r)) +
           algebraMap E (P.adicCompletion E) (algebraMap (𝓞 E) E r) := by ring
     have h3 := Valuation.map_add_le Valued.v hv.le hR
-    rw [← e4, map_mul, hS, one_mul] at h3
-    exact h3
+    rwa [← e4, map_mul, hS, one_mul] at h3
   have h1 : Ideal.Quotient.mk P.asIdeal (t * s) = 1 := by
     have e2 : t * s = 1 - a := by rw [← e]; ring
     rw [e2, map_sub, map_one, Ideal.Quotient.eq_zero_iff_mem.2 ha, sub_zero]
@@ -159,8 +158,7 @@ theorem valued_inv_mul_le {n : ℕ} {w : HeightOneSpectrum (𝓞 E)} {a b : GL (
     split_ifs
     exacts [one_mem _, zero_mem _]
   have := key _ hu i
-  rw [Units.val_mul, Matrix.mul_apply]
-  exact this
+  rwa [Units.val_mul, Matrix.mul_apply]
 
 section Splice
 
@@ -231,8 +229,7 @@ theorem exists_splice : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
       rw [Units.val_mul, Matrix.map_mul, hGw, ite_eq_right (hnear w hw hw'), ← Matrix.map_mul, ← Units.val_mul, inv_mul_cancel,
         Units.val_one, Matrix.map_one _ (map_zero _) (map_one _)]
     have := congrFun (congrFun e i) j
-    rw [Matrix.map_apply, Matrix.one_apply] at this
-    exact this
+    rwa [Matrix.map_apply, Matrix.one_apply] at this
   rw [mul_inv_cancel_left]
 
   have k1 : ∀ i j, ((g⁻¹ * h0 : GL (Fin n) (AfE F E)) : Matrix (Fin n) (Fin n) (AfE F E)) i j ∈ RInt F E := by

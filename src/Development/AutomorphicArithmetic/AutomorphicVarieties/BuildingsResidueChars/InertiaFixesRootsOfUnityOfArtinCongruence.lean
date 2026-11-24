@@ -127,8 +127,7 @@ theorem UpperTheory.fixes_roots_of_unity_of_cyclotomicChar_near_one :
     simp
   rw [e1, e2, hn, hn] at h
   have h' : ‖j - 1‖ ≤ (p : ℝ) ^ (-(b : ℤ)) := by
-    rw [← PadicInt.norm_p_pow]
-    exact h
+    rwa [← PadicInt.norm_p_pow]
   have hmem := (PadicInt.norm_le_pow_iff_mem_span_pow (j - 1) b).mp h'
   rw [← PadicInt.ker_toZModPow, RingHom.mem_ker, map_sub, map_one, sub_eq_zero] at hmem
   have hspec := cyclotomicCharacter.spec (L := Ω) p (MulSemiringAction.toRingAut (G F Ω) Ω s) ζ hζ
@@ -139,8 +138,7 @@ theorem UpperTheory.fixes_roots_of_unity_of_cyclotomicChar_near_one :
     have hj' : (cyclotomicCharacter Ω p (MulSemiringAction.toRingAut (G F Ω) Ω s)).val = j := rfl
     rw [hj', hmem]
     exact ZMod.val_one'' hone
-  rw [hval, pow_one] at hspec
-  exact hspec
+  rwa [hval, pow_one] at hspec
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.FixesRootsOfUnityOfCyclotomicCharNearOne =====
@@ -267,8 +265,7 @@ private theorem UpperTheory.algEquiv_fixes_root_of_fixes_prime_power_roots {F K 
     intro _ H ζ hζ
     exact H p n hp dvd_rfl ζ hζ
   | zero =>
-    intro h
-    exact absurd rfl h
+    exact fun h => absurd rfl h
   | one =>
     intro _ _ ζ hζ
     rw [pow_one] at hζ

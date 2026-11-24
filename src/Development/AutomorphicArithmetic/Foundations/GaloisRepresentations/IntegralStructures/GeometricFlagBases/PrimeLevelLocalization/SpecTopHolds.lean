@@ -145,8 +145,7 @@ theorem wtOf_of (h0 : WtCore) : WtOf := by
       simp only [Matrix.mul_assoc, Units.inv_mul_cancel_left, Matrix.mul_nonsing_inv_cancel_left _ _ hu] at h2
       rw [← Algebra.smul_def, Matrix.mul_smul, Matrix.mul_smul, Matrix.mul_smul] at h2
       simp only [Matrix.mul_assoc]
-      rw [Rat.cast_smul_eq_qsmul]
-      exact h2
+      rwa [Rat.cast_smul_eq_qsmul]
     rw [e1]
     simp only [smul_mul_assoc, Matrix.mul_assoc, Units.mul_inv_cancel_left, Units.inv_mul, Matrix.mul_one]
   have hsep' : y₀.1.val.charpoly.Separable := hmin ▸ hsep
@@ -158,8 +157,7 @@ theorem wtOf_of (h0 : WtCore) : WtOf := by
     rw [hmin]
     refine congrArg LocalSmoothExtension.invPol (Polynomial.ext fun i => ?_)
     exact (Polynomial.coeff_map _ _).trans (hc _)
-  rw [← V.jz_eq, ← e2, ← e3] at key
-  exact key
+  rwa [← V.jz_eq, ← e2, ← e3] at key
 
 theorem expOf_of (h0 : ExpCore) (h1 : AutEx) (h2 : WtAt) (h3 : EpsIff) : ExpOf := by
   intro E _ _ _ A n p _ S x U w₀ Up V d hd hx hG
@@ -315,8 +313,7 @@ theorem UpperTheory.Reformulated.B.Qk58.agree_of_adjoin :
   intro E _ _ φ ψ a b ha hb
   induction hb using IntermediateField.adjoin_induction with
   | mem x hx =>
-    rw [Set.mem_singleton_iff.mp hx]
-    exact ha
+    rwa [Set.mem_singleton_iff.mp hx]
   | algebraMap q => simp
   | add x y _ _ hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
   | inv x _ hx => rw [map_inv₀, map_inv₀, hx]
@@ -373,8 +370,7 @@ theorem pEpsIff_of : EpsIff := by
   constructor
   · intro h
     have h' : φ ω = ComplexEmbedding.conjugate τ ω := by
-      rw [ComplexEmbedding.conjugate_coe_eq]
-      exact h
+      rwa [ComplexEmbedding.conjugate_coe_eq]
     rw [_root_.UpperTheory.Reformulated.B.Qk58.agree_of_adjoin φ _ h' hx', hc]
   · intro h
     have h' : φ x = ComplexEmbedding.conjugate τ x := by rw [h, hc]
@@ -1133,8 +1129,7 @@ theorem UpperTheory.Gal.Spc.auxiliary_prime_holds :
     rcases UpperTheory.Gal.Spc.EntrywiseClass.eq_or_cj A w.1 w'.1 heq with h | h
     · exact hne (Subtype.ext h.symm)
     · refine (SD w.1 m.1).1 (((SD w.1 m.1).2.2.2.2.2.2 ρ m.2 _).2 ?_)
-      rw [← h]
-      exact m'
+      rwa [← h]
   · obtain ⟨w, hw, -⟩ := hmk w₁ hw₁ hρ
     exact ⟨w, hw⟩
 end -- clump:auto
@@ -1309,8 +1304,7 @@ private theorem isCompact_comap_th (F : Frame S) {K : Subgroup (GUf E n)} (hK : 
   have hImage : (K.comap F.th : Set (GUf E n)) = CertificateRingHomMap.th '' (K : Set (GUf E n)) := by
     ext g
     constructor
-    · intro h
-      exact ⟨F.th g, h, by rw [th_eq F, CertificateRingHomMap.th_th]⟩
+    · exact fun h => ⟨F.th g, h, by rw [th_eq F, CertificateRingHomMap.th_th]⟩
     · rintro ⟨y, hy, rfl⟩
       change F.th (CertificateRingHomMap.th y) ∈ K
       rwa [th_eq F, CertificateRingHomMap.th_th]
@@ -1415,8 +1409,7 @@ theorem UpperTheory.Gal.Spc.tyEx :
       · rw [hcomp]
         by_cases h1 : u = w₀
         · subst h1
-          rw [UpperTheory.Gal.CertificateRingHomMap.comp_loc, V.Kw0]
-          exact hy
+          rwa [UpperTheory.Gal.CertificateRingHomMap.comp_loc, V.Kw0]
         · have h2 : u ≠ cj w₀ := fun h => (V.shape.up w₀ hS0 V.split).2 (h ▸ hu)
           rw [UpperTheory.Gal.CertificateRingHomMap.comp_loc_of_apart hw.1 ((hap u).2 ⟨h1, h2⟩), map_one]
           exact one_mem _
@@ -1431,8 +1424,7 @@ theorem UpperTheory.Gal.Spc.tyEx :
       have e : (L ⟨w₀, hw⟩).pr (F.j k') = comp w₀ k' := (hL ⟨w₀, hw⟩).1 k'
       have h := (UpperTheory.Gal.CertificateRingHomMap.mem_lev.1 hk').2.1 w₀ hS0
       rw [hcomp, V.Kw0] at h
-      rw [e]
-      exact h
+      rwa [e]
   have hle : S.L.KN N.1 ≤ K := by
     intro k hk
     obtain ⟨k', rfl, hk', -⟩ := hSt k hk
@@ -1707,7 +1699,6 @@ private theorem secAdd_eval {p : ℕ} (v₀ : AwayP p) (r a : AfP p) (h1 : AfP.e
   · subst hv
     rw [eval_secAdd, h1, one_mul]
   · rw [h0 v hv, zero_mul]
-    show (Pi.single v₀ _ : ∀ v : AwayP p, v.1.adicCompletion ℚ) v = 0
     exact Pi.single_eq_of_ne hv _
 
 private theorem core {E R : Type} [Field E] [NumberField E] [CommRing R] [Algebra ℚ R] {n p : ℕ}
@@ -1742,15 +1733,13 @@ private theorem core {E R : Type} [Field E] [NumberField E] [CommRing R] [Algebr
       have h1 := congrFun (congrFun h i) k
       simp only [smul_mul_assoc, one_mul, RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.smul_apply, smul_eq_mul,
         Matrix.zero_apply] at h1
-      have h2 := (Φ_ker _).1 h1 w hw
-      simpa [map_mul] using h2
+      simpa [map_mul] using (Φ_ker _).1 h1 w hw
     · intro h
       refine Matrix.ext fun i k => ?_
       simp only [smul_mul_assoc, one_mul, RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.smul_apply, smul_eq_mul,
         Matrix.zero_apply]
       refine (Φ_ker _).2 fun w hw => ?_
-      have h1 := congrFun (congrFun (h w hw) i) k
-      simpa [map_mul] using h1
+      simpa [map_mul] using congrFun (congrFun (h w hw) i) k
   have hd : ∀ (u v : R ⊗[ℚ] Matrix (Fin n) (Fin n) E) (U V : Matrix (Fin n) (Fin n) (Af E)), Φ.mapMatrix U = μ u →
       Φ.mapMatrix V = μ v → μ ((r ⊗ₜ[ℚ] (1 : Matrix (Fin n) (Fin n) E)) * (u * v - v * u)) =
         Φ.mapMatrix ((c • (1 : Matrix (Fin n) (Fin n) (Af E))) * (U * V - V * U)) := by

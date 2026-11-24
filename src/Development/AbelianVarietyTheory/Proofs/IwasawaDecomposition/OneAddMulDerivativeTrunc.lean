@@ -78,8 +78,7 @@ theorem one_add_mul_derivative_trunc {R : Type} [CommRing R] (n : ℕ) (u : R[X]
     ring
   have h2 : (1 + u) * ∑ k ∈ Finset.range n, (-u) ^ k = 1 := by
     have := mul_neg_geom_sum (-u) n
-    rw [sub_neg_eq_add, neg_pow u, hu, mul_zero, sub_zero] at this
-    exact this
+    rwa [sub_neg_eq_add, neg_pow u, hu, mul_zero, sub_zero] at this
   rw [h1, ← mul_assoc, h2, one_mul]
 
 theorem trunc_add {R : Type} [CommRing R] (hR : ∀ m : ℕ, m ≠ 0 → IsUnit (m : R)) (n : ℕ)
@@ -170,7 +169,6 @@ theorem log_add : ∀ (l : ℕ) [Fact l.Prime], ∀ (e e' : Per.Fl l) (y y' z : 
   generalize algebraMap (Per.Ainf l) (Per.AinfP l) (Per.tm e' - 1) = b at key ⊢
   change q _ = q _ + q _
 
-  simp only [map_sum, map_mul, map_pow, map_neg, map_one, map_natCast, map_add (f := _)]
-  exact key
+  simpa only [map_sum, map_mul, map_pow, map_neg, map_one, map_natCast, map_add (f := _)] using key
 
 end GlobalTheory.MemLoc.LogAdd

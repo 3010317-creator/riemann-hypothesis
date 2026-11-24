@@ -98,8 +98,7 @@ theorem integral_twisted_periodise {F : Type} [Field F] [NumberField F] {N : ℕ
     refine hsum.congr fun ξ => ?_
     simp_rw [hnorm]
     simp [Measure.real, h1]
-  rw [← integral_tsum_of_summable_integral_norm hint hsum']
-  rw [tsum_eq_single 0]
+  rw [← integral_tsum_of_summable_integral_norm hint hsum', tsum_eq_single 0]
   · have hr : (rat (0 : Fin N → F) : Fin N → AF F) = 0 := by
       funext l
       simp [rat]

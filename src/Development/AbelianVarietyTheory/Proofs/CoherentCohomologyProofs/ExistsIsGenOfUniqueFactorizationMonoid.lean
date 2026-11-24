@@ -300,8 +300,7 @@ theorem bijective_toFramesLinear (he : ∀ i, IsFrame (e i)) (hU : ⨆ i, U i = 
         have hij : V ⊓ U i ⊓ (V ⊓ U j) ≤ U i ⊓ U j := inf_le_inf inf_le_right inf_le_right
         have h₁ := coord_rel t i j inf_le_left inf_le_right hij
         rw [resG_ofFrames_g] at h₁
-        rw [map_smul_resG, map_smul_resG, QCoh.res_res, QCoh.res_res]
-        rw [h₁]
+        rw [map_smul_resG, map_smul_resG, QCoh.res_res, QCoh.res_res, h₁]
         rw [mul_comm, mul_smul, IsFrame.repr_smul]
     refine ⟨s, sec_ext fun i => ?_⟩
     rw [coord_toFramesLinear, hs]

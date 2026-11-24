@@ -334,8 +334,7 @@ theorem ktype_transfer (he : ∀ a, ε' a = ε a.rev) (T : H' ≃ₗᵢ⋆[ℂ] 
       apply le_antisymm hle
       intro w hw
       have hw' : T.symm w ∈ S'.comap (T.toLinearEquiv : H' →ₗ⋆[ℂ] H) := by
-        rw [h0]
-        exact hw
+        rwa [h0]
       have : T (T.symm w) ∈ S' := hw'
       simpa using this
   · refine ⟨T v, ?_, ?_, wt_transfer he T h hvw⟩
@@ -417,15 +416,13 @@ theorem isDS_transfer (he : ∀ a, ε' a = ε a.rev) (T : H' ≃ₗᵢ⋆[ℂ] H
   · intro μ S' hS'
     have hK := ktype_transfer he T h hS'
     have hle := hmin _ _ hK
-    rw [lowK_rev he, vNormSq_rev he, ← nr_nr μ, vNormSq_rev he]
-    exact hle
+    rwa [lowK_rev he, vNormSq_rev he, ← nr_nr μ, vNormSq_rev he]
 
 theorem isEnum_dual {S : SPar} {lam : Fin n → ℝ} (h : IsEnum S lam ε) :
     IsEnum (dualPar S) (nr lam) (fun a => ε a.rev) := by
   obtain ⟨hanti, q, hq, hS⟩ := h
   refine ⟨fun a b hab => ?_, fun a => -q a.rev, fun a => ?_, ?_⟩
-  · simp only [nr]
-    exact neg_lt_neg (hanti (Fin.rev_lt_rev.mpr hab))
+  · simpa only [nr] using neg_lt_neg (hanti (Fin.rev_lt_rev.mpr hab))
   · simp [nr, hq]
   · rw [hS, dualPar, Finset.image_image]
     ext x

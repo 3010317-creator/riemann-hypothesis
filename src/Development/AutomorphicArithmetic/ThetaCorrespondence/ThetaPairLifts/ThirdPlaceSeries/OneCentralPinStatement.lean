@@ -224,8 +224,7 @@ theorem commute_of_skew {R : Type} [CommRing R] (ψ : E →+* R) (σ : E →+* E
     (Z : Matrix n n R) (hZ : ∀ g ∈ UJ σ J, Commute Z ((g : Matrix n n E).map ψ))
     (A : Matrix n n E) (hA : cT σ A * J + J * A = 0) : Commute Z (A.map ψ) := by
   obtain ⟨k, hk⟩ : ∃ k : ℕ, (A.charpoly).eval (((k + 1 : ℕ) : E)) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have hfin : {x : E | A.charpoly.IsRoot x}.Finite :=
       Polynomial.finite_setOf_isRoot A.charpoly_monic.ne_zero
     have hsub : Set.range (fun k : ℕ => (((k + 1 : ℕ) : E))) ⊆ {x | A.charpoly.IsRoot x} := by
@@ -270,9 +269,7 @@ theorem commute_of_skew {R : Type} [CommRing R] (ψ : E →+* R) (σ : E →+* E
     rw [det_mul, det_mul, h0, mul_zero] at this
     exact hJ this.symm
   let g' : GL n E := Matrix.GeneralLinearGroup.mkOfDetNeZero g hgdet
-  have hg'm : g' ∈ UJ σ J := by
-    show cT σ (g' : Matrix n n E) * J * (g' : Matrix n n E) = J
-    exact hg
+  have hg'm : g' ∈ UJ σ J := hg
   have hZg : Commute Z (g.map ψ) := hZ g' hg'm
 
   have hgB : g * B = P := by rw [hgdef, Matrix.mul_assoc, hBiB, Matrix.mul_one]
@@ -429,8 +426,7 @@ theorem finE_center_scalar : ∀ {D : D7} (V : Formalism.BasicNotions.TH.HSp D) 
   set σ : D.host.E →+* D.host.E := (D.sp.cm.sig : D.host.E →+* D.host.E) with hσdef
   have hσσ : ∀ x, σ (σ x) = x := fun x => star_star x
   obtain ⟨x, hx⟩ : ∃ x, σ x ≠ x := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have htop : (⊥ : Subalgebra D.host.F D.host.E) = ⊤ := by
       rw [eq_top_iff]
       intro y _
@@ -589,8 +585,7 @@ theorem e_mul_sec (q : SplitPt D k) (x : k) : q.e * q.sec x = q.sec x := by
 
 theorem sec_mul_sec (q : SplitPt D k) (x y : k) : q.sec (x * y) = q.sec x * q.sec y := by
   have h := q.sec_pr (q.sec x * q.sec y)
-  rw [map_mul, q.pr_sec, q.pr_sec, ← mul_assoc, e_mul_sec] at h
-  exact h
+  rwa [map_mul, q.pr_sec, q.pr_sec, ← mul_assoc, e_mul_sec] at h
 
 def chg (q : SplitPt D k) (q' : SplitPt D k') (h : q.e = q'.e) : k' →+* k where
   toFun x := q.pr (q'.sec x)
@@ -613,8 +608,7 @@ theorem chg_pr (q : SplitPt D k) (q' : SplitPt D k') (h : q.e = q'.e) (a : AE D)
 theorem chg_le (q : SplitPt D k) (q' : SplitPt D k') (h : q.e = q'.e) (x : k') :
     valuation k (chg q q' h x) ≤ 1 ↔ valuation k' x ≤ 1 := by
   have h1 := q.int_iff (chg q q' h x)
-  rw [sec_chg, ← q'.int_iff] at h1
-  exact h1
+  rwa [sec_chg, ← q'.int_iff] at h1
 
 theorem chg_lt (q : SplitPt D k) (q' : SplitPt D k') (h : q.e = q'.e) (x : k') (hx : valuation k (chg q q' h x) < 1) :
     valuation k' x < 1 := by
@@ -788,8 +782,7 @@ theorem sc_mul_mu {c : Comm D} {v : VCom c} (G : GLoc v) (μ lam : D.host.E) (h�
     rw [hτ] at b
     exact ((map_mul π _ _).symm.trans b).trans a
   have h3 : ∃ i, (c.bes G.s 0 h).ζ i ≠ 0 := by
-    by_contra hn
-    push Not at hn
+    by_contra! hn
     have a := G.hz_unit G.s 0 h
     have b : (c.B G.s 0 h).ζ = 0 := funext hn
     rw [Place.hz, b, hπ] at a
@@ -1051,8 +1044,7 @@ theorem core (I : AutInst) (g : ℕ) {r : ℕ} (e0 : Fin r → VA I) (z0 : VA I)
 
   have key : ε * (c * hA I z0 (I.fmat x *ᵥ v')) = ε * (c₂ * hA I z0 v) := by
     have := congrArg (fun w => hA I z0 w) hyp
-    simp only [hA_smul_right] at this
-    exact this
+    simpa only [hA_smul_right] using this
   have := Z_sub I g (Z_smul I g (mul_mem hε hc) hA1) (Z_smul I g (mul_mem hε hc₂) hA2)
   convert this using 1
   linear_combination (-((n * n' : ℕ) : I.E ⊗[I.F] Af I.F)) * key
@@ -1077,9 +1069,7 @@ theorem res_eq {D : D7} (PP : Formalism.L2.DIV.Pl D.host.E) (g : ℕ) (hg : ((g 
     exact he)
   have hr := congrArg (Formalism.L2.DIV.resS D.host.F PP) hs
   simp only [map_mul, map_sub, map_natCast, hε1, one_mul] at hr
-  have hg0 : ((g : ℕ) : Formalism.L2.DIV.kP PP) = 0 := by
-    show ((g : 𝓞 D.host.E) : 𝓞 D.host.E ⧸ PP.asIdeal) = 0
-    exact Ideal.Quotient.eq_zero_iff_mem.2 hg
+  have hg0 : ((g : ℕ) : Formalism.L2.DIV.kP PP) = 0 := Ideal.Quotient.eq_zero_iff_mem.2 hg
   have hN0 : ((N : ℕ) : Formalism.L2.DIV.kP PP) ≠ 0 := by
     intro h0
     have hNm : ((N : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal := by
@@ -1306,8 +1296,7 @@ theorem centralRatio_red_eq_one_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : Gat
     rw [← hκE] at key
     exact key)
   have e1 : (⟨θ * c, Subring.mul_mem _ hθ hci⟩ : Formalism.L2.Herm.intAf D.host.F D.host.E) = ⟨θ, hθ⟩ * ⟨c, hci⟩ := rfl
-  rw [e1, map_mul, hθ1, hθ1', one_mul] at hcong
-  exact hcong
+  rwa [e1, map_mul, hθ1, hθ1', one_mul] at hcong
 end GlobalTheory.MiTop
 end
 end

@@ -144,8 +144,7 @@ theorem evVal_bilinear (ν : Measure k) [ν.IsAddHaarMeasure] (ψ : AddChar k Ci
   · obtain ⟨t₀, ht₀⟩ := h
     refine ⟨t₀, fun t ht => ?_⟩
     rw [← ht₀ t ht]
-    simp only [JJ, coef_smul_left, mul_left_comm _ z]
-    exact integral_const_mul z _
+    simpa only [JJ, coef_smul_left, mul_left_comm _ z] using integral_const_mul z _
   · obtain ⟨t₀, ht₀⟩ := exists_common_threshold h₁ h₂
     refine ⟨t₀, fun t ht => ?_⟩
     obtain ⟨e₁, e₂⟩ := ht₀ t ht
@@ -155,8 +154,7 @@ theorem evVal_bilinear (ν : Measure k) [ν.IsAddHaarMeasure] (ψ : AddChar k Ci
   · obtain ⟨t₀, ht₀⟩ := h
     refine ⟨t₀, fun t ht => ?_⟩
     rw [← ht₀ t ht]
-    simp only [JJ, coef_smul_right, mul_left_comm _ z]
-    exact integral_const_mul z _
+    simpa only [JJ, coef_smul_right, mul_left_comm _ z] using integral_const_mul z _
 
 theorem evVal_additive_homogeneous : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ν : Measure k) [ν.IsAddHaarMeasure] (ψ : AddChar k Circle) {n : ℕ} {V V' : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup V'] [Module ℂ V'] (T : Representation ℂ (Mir k (n + 1)) V) (B : V →ₗ[ℂ] V' →ₗ[ℂ] ℂ), Continuous ψ → IsSmooth T → (∀ (v₁ v₂ : V) (v' : V') (A₁ A₂ : ℂ), EvVal ν ψ T B v₁ v' A₁ → EvVal ν ψ T B v₂ v' A₂ → EvVal ν ψ T B (v₁ + v₂) v' (A₁ + A₂)) ∧ (∀ (z : ℂ) (v : V) (v' : V') (A : ℂ), EvVal ν ψ T B v v' A → EvVal ν ψ T B (z • v) v' (z * A)) ∧ (∀ (v : V) (v₁ v₂ : V') (A₁ A₂ : ℂ), EvVal ν ψ T B v v₁ A₁ → EvVal ν ψ T B v v₂ A₂ → EvVal ν ψ T B v (v₁ + v₂) (A₁ + A₂)) ∧ (∀ (z : ℂ) (v : V) (v' : V') (A : ℂ), EvVal ν ψ T B v v' A → EvVal ν ψ T B v (z • v') (z * A)) := by
   intro k _ _ _ _ _ _ ν _ ψ n V V' _ _ _ _ T B hψ hT

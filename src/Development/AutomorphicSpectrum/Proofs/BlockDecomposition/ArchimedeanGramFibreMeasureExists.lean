@@ -112,8 +112,7 @@ theorem measurable_fibre_lintegral [LocallyCompactSpace V] [SecondCountableTopol
         refine le_iSup_of_le (K.find ⟨X, hX⟩) ?_
         rw [hf1 _ hm]
         simp
-      · refine iSup_le fun n => ENNReal.ofReal_le_ofReal ?_
-        exact mul_le_of_le_one_right (h0 X) (hf01 n X).2
+      · exact iSup_le fun n => ENNReal.ofReal_le_ofReal (mul_le_of_le_one_right (h0 X) (hf01 n X).2)
     · intro a b hab X
       exact ENNReal.ofReal_le_ofReal (mul_le_mul_of_nonneg_left (hmono' X hab) (h0 X))
   have hn : ∀ n, Measurable (B.indicator fun s => ∫⁻ X, ENNReal.ofReal (h X * f n X) ∂(m s)) := by

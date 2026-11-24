@@ -104,8 +104,7 @@ theorem qdet_polyMap_monic (A : Type) [Ring A] [Algebra ℂ A] (n : ℕ) (E : Fi
     intro σ hσ
     rw [hct σ]
     obtain ⟨k, hk⟩ : ∃ k, σ k ≠ k := by
-      by_contra hne
-      push Not at hne
+      by_contra! hne
       exact hσ (Equiv.ext hne)
     apply List.prod_eq_zero
     rw [List.mem_ofFn]
@@ -117,10 +116,8 @@ theorem qdet_polyMap_monic (A : Type) [Ring A] [Algebra ℂ A] (n : ℕ) (E : Fi
       simp
     · intro σ _ hσ
       rw [htop σ hσ, mul_zero]
-    · intro h1
-      exact absurd (Finset.mem_univ _) h1
+    · exact fun h1 => absurd (Finset.mem_univ _) h1
   · unfold qdet qminor
-    simp only [hc, mul_sum, smul_sum, mul_smul_comm]
-    exact sum_comm
+    simpa only [hc, mul_sum, smul_sum, mul_smul_comm] using sum_comm
 
 end GlobalTheory

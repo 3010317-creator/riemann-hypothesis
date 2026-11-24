@@ -57,12 +57,10 @@ theorem exists_coord {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k 
     ∃ i : Fin (2 * r + k + 1), a.val ≤ i.val ∧ fvec k r z a i ≠ 0 := by
   by_cases ha : a.val < r
   · refine ⟨eI k r ⟨a.val, ha⟩, le_of_eq rfl, ?_⟩
-    simp only [fvec, dite_eq_left ha, bvec, Pi.single_eq_same]
-    exact one_ne_zero
+    simpa only [fvec, dite_eq_left ha, bvec, Pi.single_eq_same] using one_ne_zero
   ·
     have hz0 : ∃ i, z i ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       have : z = 0 := funext h
       subst this
       simp [Tz, herm] at hT
@@ -71,8 +69,7 @@ theorem exists_coord {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k 
       by_contra h
       exact hi (hz i (Or.inl (Nat.lt_of_not_le h)))
     refine ⟨i, le_trans (Nat.le_of_lt_succ a.isLt) hri, ?_⟩
-    simp only [fvec, dite_eq_right ha]
-    exact hi
+    simpa only [fvec, dite_eq_right ha] using hi
 
 theorem lA_pos {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < Tz k r z)
     {x : Mat k r} (hx : x ∈ GG k r) (a : Fin (r + 1)) : 0 < lA k r z x a := by
@@ -141,8 +138,7 @@ theorem Sg2_invariant_continuousOn_one_le_bounds : ∀ (k r : ℕ) (z : (Fin (2 
           rcases max_choice (max (lA k r z x a) (lA k r z x a)⁻¹)
               (s.fold max 1 (fun a => max (lA k r z x a) (lA k r z x a)⁻¹)) with h | h
           · exact Or.inr ⟨a, h⟩
-          · rw [h]
-            exact ih
+          · rwa [h]
       exact key Finset.univ
 
 end GlobalTheory.Amp.TwoSided

@@ -122,8 +122,7 @@ theorem transfer (R : Type) [CommRing R] (F : Shv R) {P Q P' Q' : PSh} (f : P �
     (Function.Injective (pull R (disc.map g) F n) → Function.Injective (pull R (disc.map f) F n)) := by
   let αl : P ≅ P' := Arrow.leftFunc.mapIso α
   let αr : Q ≅ Q' := Arrow.rightFunc.mapIso α
-  have hw : f ≫ αr.hom = αl.hom ≫ g := by
-    exact (Arrow.w α.hom).symm
+  have hw : f ≫ αr.hom = αl.hom ≫ g := (Arrow.w α.hom).symm
   have hf : f = αl.hom ≫ g ≫ αr.inv := by
     rw [← Category.assoc, Iso.eq_comp_inv]; exact hw
   have he : ⇑(pull R (disc.map f) F n) =
@@ -406,15 +405,13 @@ theorem CechLevelIso_of : LateralTheory.E.LevelsPf.Tp.CechLevelIso := by
           y (pushout.inr φ' (tp e p).2) ≫ R.hom ≫ WidePullback.π (fun _ : Fin (p+1) => y e) j := by
         exact (congrArg (· ≫ y φ'') (hL j)).trans ((hgi hpo p j).trans
           (congrArg (y (pushout.inr φ' (tp e p).2) ≫ ·) (hR j).symm))
-      rw [← Category.assoc]
-      exact key
+      rwa [← Category.assoc]
     · simp only [Arrow.mapCechNerve_app, Category.assoc, WidePullback.lift_base]
       have key : (L.hom ≫ WidePullback.base (fun _ : Fin (p+1) => y u)) ≫ y φ' =
           y (pushout.inr φ' (tp e p).2) ≫ R.hom ≫ WidePullback.base (fun _ : Fin (p+1) => y e) := by
         exact (congrArg (· ≫ y φ') hLb).trans (((ypb (IsPushout.of_hasPushout φ' (tp e p).2)).w).trans
           (congrArg (y (pushout.inr φ' (tp e p).2) ≫ ·) hRb.symm))
-      rw [← Category.assoc]
-      exact key
+      rwa [← Category.assoc]
   exact ⟨(Arrow.isoMk (f := Arrow.mk (y (pushout.inr φ' (tp e p).2)))
     (g := Arrow.mk ((Arrow.mapCechNerve (sq e φ' u φ'' hpo.w)).app (op (SimplexCategory.mk p)))) L R hw).symm⟩
 

@@ -311,8 +311,7 @@ theorem UpperTheory.V.Z.Sym.Loc.dIso :
       mem_range_iff _ (IsFractionRing.injective O K), ← map_inv (Matrix.GeneralLinearGroup.map (algebraMap K (Lsq K Δ)))]
     simp only [← hr']
     rfl
-  · rw [Units.ext_iff, ← minj.eq_iff]
-    rw [hm, Units.mul_inv_eq_iff_eq_mul]
+  · rw [Units.ext_iff, ← minj.eq_iff, hm, Units.mul_inv_eq_iff_eq_mul]
     have e : ((Matrix.GeneralLinearGroup.scalar (Fin 2) z : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K).map (algebraMap K (Lsq K Δ)) =
         Matrix.scalar (Fin 2) (algebraMap K (Lsq K Δ) z) := by
       ext i j : 1

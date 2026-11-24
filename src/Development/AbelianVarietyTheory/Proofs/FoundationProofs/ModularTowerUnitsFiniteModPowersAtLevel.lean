@@ -200,12 +200,8 @@ theorem discRoot : ∀ (h : ℂ → ℂ) (m : ℕ), 0 < m → DifferentiableOn �
   · refine ⟨fun _ => 0, differentiableOn_const 0, fun z hz => ?_⟩
     rw [Metric.ball_eq_empty.mpr hr] at hz
     exact absurd hz (Set.notMem_empty z)
-  have hHsOpen : IsOpen Hs := by
-    show IsOpen {z : ℂ | 0 < z.im}
-    exact isOpen_lt continuous_const Complex.continuous_im
-  have hHsConn : IsPreconnected Hs := by
-    show IsPreconnected {z : ℂ | 0 < z.im}
-    exact (convex_halfSpace_im_gt (r := 0)).isPreconnected
+  have hHsOpen : IsOpen Hs := isOpen_lt continuous_const Complex.continuous_im
+  have hHsConn : IsPreconnected Hs := (convex_halfSpace_im_gt (r := 0)).isPreconnected
   have han : AnalyticOnNhd ℂ h Hs := hh.analyticOnNhd hHsOpen
   refine GlobalTheory.KZ.RootDisc.exists_root_disc h m c r hm hr (han.mono hsub) ?_
   intro τ hτ
@@ -260,9 +256,7 @@ theorem rootHs : ∀ (h : ℂ → ℂ) (m : ℕ), 0 < m → DifferentiableOn ℂ
   have hw₀ne : w₀ ≠ 0 := by
     rintro rfl
     exact hne (by rw [← hw₀, zero_pow hm.ne'])
-  have hHsOpen : IsOpen Hs := by
-    show IsOpen {z : ℂ | 0 < z.im}
-    exact isOpen_lt continuous_const Complex.continuous_im
+  have hHsOpen : IsOpen Hs := isOpen_lt continuous_const Complex.continuous_im
   have key : ∀ z ∈ Hs, ∃ (c : ℂ) (r : ℝ), z₀ ∈ ball c r ∧ z ∈ ball c r ∧ ∃ g : ℂ → ℂ,
       DifferentiableOn ℂ g (ball c r) ∧ (∀ y ∈ ball c r, g y ^ m = h y) ∧ g z₀ = w₀ := by
     intro z hz
@@ -417,8 +411,7 @@ private theorem exists_differentiableOn_rep_eventuallyEq_div (X : _root_.GlobalT
   rw [_root_.GlobalTheory.KZ.ValAt.rep_spec, ← Filter.Germ.coe_mul] at hab
   filter_upwards [eventuallyEq_nhdsNE_of_mero_coe_eq hab hτ, eventually_ne_zero_nhdsNE_of_mero_coe_ne_zero hb hb0 hτ]
     with z h1 h2
-  rw [Pi.div_apply, eq_div_iff h2]
-  exact h1
+  rwa [Pi.div_apply, eq_div_iff h2]
 
 open Matrix in
 open Filter Topology in
@@ -694,13 +687,10 @@ theorem eqOn_of_eventually {a b : ℂ → ℂ} (ha : DifferentiableOn ℂ a Hs) 
   eqOn_of_germ ha hb (Filter.Germ.coe_eq.2 h)
 
 theorem germ_ne_zero {a : ℂ → ℂ} (ha : DifferentiableOn ℂ a Hs) {z₀ : ℂ} (hz₀ : z₀ ∈ Hs) (h : a z₀ ≠ 0) :
-    (a : Mero) ≠ 0 := by
-  intro h0
-  exact h (eqOn_of_germ ha (differentiableOn_const 0) h0 z₀ hz₀)
+    (a : Mero) ≠ 0 := fun h0 => h (eqOn_of_germ ha (differentiableOn_const 0) h0 z₀ hz₀)
 
 theorem exists_ne_zero {a : ℂ → ℂ} (h : (a : Mero) ≠ 0) : ∃ z ∈ Hs, a z ≠ 0 := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   exact h (germ_eq_of_eqOn (ψ := fun _ => 0) hc)
 
 theorem eventually_ne_zero {a : ℂ → ℂ} (ha : DifferentiableOn ℂ a Hs) {z₀ : ℂ} (hz₀ : z₀ ∈ Hs) (h : a z₀ ≠ 0) :
@@ -964,7 +954,6 @@ theorem finite_mod_powers : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
       intro s hs
       have h := hZrel r ⟨s, hs⟩
       rw [hsame] at h
-      show ∃ ζ : ℂ, ζ ^ m = 1 ∧ RootRel (A f') (B f') s ζ ∧ RootRel (A r) (B r) s ζ
       exact ⟨Z f' ⟨s, hs⟩, hZ f' ⟨s, hs⟩, hZrel f' ⟨s, hs⟩, h⟩
     intro γ hγ
     exact htop (x := ⟨γ, hγ⟩) trivial
@@ -974,8 +963,7 @@ theorem finite_mod_powers : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
       obtain ⟨ζ, -, h1, h2⟩ := h
       exact ⟨ζ, h1, h2⟩)
   refine ⟨r.1, Finset.mem_image.2 ⟨sig f', Finset.mem_univ _, hrep⟩, g, hg, 1, one_ne_zero, ?_⟩
-  rw [map_one, mul_one]
-  exact hfg
+  rwa [map_one, mul_one]
 
 end GlobalTheory.KZ.FinLev
 end -- clump:auto

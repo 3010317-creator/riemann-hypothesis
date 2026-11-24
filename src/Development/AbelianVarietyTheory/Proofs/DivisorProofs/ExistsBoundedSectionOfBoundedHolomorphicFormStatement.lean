@@ -146,8 +146,7 @@ theorem exists_twist (Hm : ι → Mt n) (q : ι → ℕ) (x₀ : ι → Mt n) (h
     · refine diffOn_prod _ _ _ fun τ => ?_
       refine DifferentiableOn.zpow ?_ (Or.inl fun y hy => div_ne_zero (hy τ).1 (mul_ne_zero (hAd τ) (hx τ)))
       have hd := det_diff (fun y : ι → Fin n → Fin n → ℂ => y τ) fun a b => by fun_prop
-      simp only [div_eq_mul_inv]
-      exact (hd.mul_const _).differentiableOn
+      simpa only [div_eq_mul_inv] using (hd.mul_const _).differentiableOn
     · have hd : Differentiable ℂ (fun (y : ι → Fin n → Fin n → ℂ) (τ : ι) (a b : Fin n) =>
           ∑ j, (A τ)⁻¹ a j * y τ j b) := by fun_prop
       exact hP.1.comp hd.differentiableOn hmap
@@ -348,16 +347,14 @@ theorem exists_sec (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau → S
     · rw [hT]
       have := hst _ (hΓ δ hδ) (fun _ => 1) (fun _ => upT_one) _ hx'
       simp only [Matrix.mul_one] at this
-      rw [show T (lact δ x) = _ from funext (hTl δ x)]
-      exact this
+      rwa [show T (lact δ x) = _ from funext (hTl δ x)]
   refine ⟨fun x => if x ∈ (X (dict h).1).dom then (c (dict h).1 * mu h)⁻¹ * Q (T x) else 0,
     fun x hx => ite_eq_right hx, ⟨?_, ?_, ?_⟩, ?_⟩
   · have hd : Differentiable ℂ T := by
       simp only [T]
       fun_prop
     refine ((hQ.1.comp hd.differentiableOn fun x hx => (hT x).1 hx).const_mul (c (dict h).1 * mu h)⁻¹).congr ?_
-    intro x hx
-    exact ite_eq_left hx
+    exact fun x hx => ite_eq_left hx
   · intro x hx b hb
     obtain ⟨h1, h2⟩ := hweight x hx b hb
     simp only [ite_eq_left hx, ite_eq_left h2, h1]

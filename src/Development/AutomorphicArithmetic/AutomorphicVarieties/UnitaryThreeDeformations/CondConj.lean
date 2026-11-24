@@ -55,18 +55,15 @@ private theorem entIn_sub_iff {C : Type} [CommRing C] (I : Ideal C) (X Y : Matri
   · intro h
     ext a b
     exact Ideal.Quotient.eq.2 (h a b)
-  · intro h a b
-    exact Ideal.Quotient.eq.1 (congrFun (congrFun h a) b)
+  · exact fun h a b => Ideal.Quotient.eq.1 (congrFun (congrFun h a) b)
 
 private theorem congOne_iff {C : Type} [CommRing C] (I : Ideal C) (h : GL (Fin 3) C) :
     CongOne I h ↔ GeneralLinearGroup.map (Ideal.Quotient.mk I) h = 1 := by
   unfold CongOne
   rw [entIn_sub_iff, Matrix.map_one _ (map_zero _) (map_one _)]
   constructor
-  · intro e
-    exact Units.ext e
-  · intro e
-    exact congrArg Units.val e
+  · exact fun e => Units.ext e
+  · exact fun e => congrArg Units.val e
 
 private theorem conjBy_app {C D : Type} [CommRing C] [Group D] (h : GL (Fin 3) C)
     (r : D →* GG (m := 3) (R := C)) (g : D) :

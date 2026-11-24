@@ -171,8 +171,7 @@ theorem tensor_le_span {A R T : Type} [CommRing A] [CommRing R] [Algebra A R] [A
     | zero => simp
     | tmul a t => simp
     | add x y hx hy => simp only [map_add (f := _), hx, hy]
-  · intro x hx
-    exact (b.baseChange R).ext_elem fun i => by simpa using hx i
+  · exact fun x hx => (b.baseChange R).ext_elem fun i => by simpa using hx i
 
 theorem ideal_le_span {A W O : Type} [CommRing A] [CommRing W] [Algebra A W] [CommRing O]
     [Algebra A O] [Module.Free A O] [Module.Finite A O] (φ : W →ₐ[A] W)
@@ -339,8 +338,7 @@ theorem powerSeries_cases {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuat
   have hk : IsUnit (PowerSeries.coeff (Nat.find h) g) := by
     by_contra hn
     apply Nat.find_spec h
-    rw [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
-    exact hn
+    rwa [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
   obtain ⟨w, hw⟩ := key (PowerSeries.trunc (Nat.find h) g : Polynomial O) fun i => by
     rw [Polynomial.coeff_coe, PowerSeries.coeff_trunc]
     split_ifs with hi
@@ -499,8 +497,7 @@ theorem exists_subLat [IsDomain O] [IsPrincipalIdealRing O] (T : LocLat G Qp LL 
   constructor
   · rintro ⟨y, rfl⟩
     exact (e y).2
-  · intro hx
-    exact ⟨e.symm ⟨x, hx⟩, rfl⟩
+  · exact fun hx => ⟨e.symm ⟨x, hx⟩, rfl⟩
 
 end Sub
 
@@ -634,8 +631,7 @@ theorem exists_sub_of_tie [IsDomain O] [IsPrincipalIdealRing O]
       | zero => simp
       | tmul r t =>
         have h1 : latMap ι t ∈ S := hr ▸ LinearMap.mem_range_self _ t
-        have h2 := U.smul_mem r ((hSm _).1 h1)
-        simpa [TensorProduct.smul_tmul'] using h2
+        simpa [TensorProduct.smul_tmul'] using U.smul_mem r ((hSm _).1 h1)
       | add x y hx hy => rw [map_add (f := _)]; exact U.add_mem hx hy
     · refine (tensor_le_span φR hs hI U hUφ).trans (Submodule.span_le.2 ?_)
       rintro x ⟨hx, hx'⟩

@@ -68,14 +68,12 @@ theorem norm_scalarBy_eq_nabs_rpow : ∀ (k : Type) [Field k] [ValuativeRel k] [
   intro k _ _ _ _ x hx
   have hirr := x.2.rep.irr
   obtain ⟨v, hv⟩ : ∃ v : x.2.rep.V, v ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     haveI : Subsingleton x.2.rep.V := ⟨fun a b => by rw [hcon a, hcon b]⟩
     obtain ⟨a, b, hab⟩ := exists_pair_ne (Subrepresentation x.rep)
     exact hab (Subrepresentation.toSubmodule_injective (Subsingleton.elim _ _))
   have huniq : ∀ (t : kˣ) (c c' : ℂ), Zl.ScalarBy x t c → Zl.ScalarBy x t c' → c = c' := by
-    intro t c c' h h'
-    exact smul_left_injective ℂ hv ((h v).symm.trans (h' v))
+    exact fun t c c' h h' => smul_left_injective ℂ hv ((h v).symm.trans (h' v))
   choose f hf using _root_.GlobalTheory.CompanionTheory.ScalarEx.exists_scalarBy k x
   have hmul : ∀ a b : kˣ, f (a * b) = f a * f b := by
     intro a b

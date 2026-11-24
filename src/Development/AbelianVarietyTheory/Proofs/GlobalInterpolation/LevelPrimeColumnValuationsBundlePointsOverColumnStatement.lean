@@ -216,8 +216,7 @@ theorem bijOn_dn (b : β) (p : PtY ST SG Q y) : Set.BijOn (fun q : PtY ST SG Q y
   · have hs := fun w h1 h2 => (Deco.IsUp.sameAt d.2 hP hd (Q := w) h1 h2).localization_eq.symm
     have h := p.mv_spec d (fun w => hs w.1 (hQ w).1 (hQ w).2) (hy _ _ hs)
     refine ⟨p.mv d, (above_iff hP hT hQ hy b _ p).2 ⟨?_, h.2.1.symm, h.2.2.symm⟩, h.1⟩
-    rw [h.1]
-    exact hd
+    rwa [h.1]
 
 theorem same_of_above (b : β) {p q : PtY ST SG Q y} (h : Above (tdatY ST T y β Λ Θ pref) b P p q) :
     SameOff ST p.1.1.deco.1.N q.1.1.deco.1.N ∧ p.1.1.deco.1.be = q.1.1.deco.1.be ∧ p.1.1.fr = q.1.1.fr ∧ p.1.2 = q.1.2 := by
@@ -596,8 +595,7 @@ theorem exists_basis_ker {d : Deco E n ST SG} (hd : d.Ok) (P : ST) (hs : d.at P.
 
       simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, map_sum, map_mul] at h4
       rw [mul_smul, e]
-      simp only [Finset.sum_apply, Pi.smul_apply, Algebra.smul_def]
-      exact h4
+      simpa only [Finset.sum_apply, Pi.smul_apply, Algebra.smul_def] using h4
     rw [h3]
     exact Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, rfl⟩)
   · refine localization_le_of_le_localization P.1 (Submodule.span_le.2 ?_)
@@ -715,8 +713,7 @@ theorem pTerm_std : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMomen
       (Z.Pr.T u : Z.X.K) ^ ∑ τ, (Z.W.lamTrue u (i + 1) τ).detShift := by
     have h1 : ∀ τ, ((Matrix.GeneralLinearGroup.map (Z.X.emb τ) (BE τ)).val).det = Z.Pr.T u := fun τ => by
       have h2 := congrArg (Z.X.emb τ) (hBE τ)
-      rw [RingHom.map_det, map_natCast, map_natCast] at h2
-      exact h2
+      rwa [RingHom.map_det, map_natCast, map_natCast] at h2
     simp only [detFac, h1, Pi.one_apply, Units.val_one, Matrix.det_one, one_zpow, one_mul, GlobalTheory.JetPoint.detShift_eq hwt]
     induction (Finset.univ : Finset Z.X.Tau) using Finset.induction_on with
     | empty => simp
@@ -895,8 +892,7 @@ theorem kerP : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMoments �
   have hT : (((B.primes X).T u : ℕ) : 𝓞 B.fields.K) ∈ ((I.rec7 l Z).plEq w).asIdeal := by
     have e := hw
     unfold OverT at e
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
   letI : StarRing B.fields.E := B.fields.starE
   have key := hPT d.1.1.deco _ d'.1.1.deco _ Ξ₀ hfr hfr' hbox (hint _ hT) F hF
   rw [ColIn.A, eA]
@@ -910,8 +906,7 @@ theorem kerP : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMoments �
       ((B.fields.f * B.R.N i : ℕ) : ℤ) - ∑ τ, (B.wts.lamTrue u (i + 1) τ).detShift := by
     rw [Finset.sum_congr rfl (fun τ _ => eS τ), Finset.sum_neg_distrib, B.fields_f, sub_eq_add_neg]
     rfl
-  rw [eE]
-  exact key
+  rwa [eE]
 
 end GlobalTheory.LvT.Built.TrueLaws
 end -- clump:auto
@@ -1545,8 +1540,7 @@ theorem moveStep_fam (h : I.Ok) (hJ : I.JetsIn) (l : I.Laws) (Z : TC.Later B (I.
   have hM := GlobalTheory.ThetaMove.moveStep_of_family I.dat _ (seamOf B (I.cols l) Z.W Z.V Z.S Z.N Z.G) ⊤ I.J.δ
     (I.J.toRec B (I.cols l) Z.W Z.V Z.S Z.N Z.G) I.chi I.J.cD I.sel I.S (I.tup a) (I.cst a) u i hi hH hEq hLat
     (fun a b _ _ => hTh a b) hJa
-  rw [← AmbIn.amb_eq_ambOf] at hM
-  exact hM
+  rwa [← AmbIn.amb_eq_ambOf] at hM
 
 theorem kernelCondition_at_row_family (h : I.Ok) (hJ : I.JetsIn) (l : I.Laws) (Z : TC.Later B (I.cols l)) (u : B.Word)
     (a : I.ι) {i : ℕ} (hi : i < B.R.m) :

@@ -83,8 +83,7 @@ lemma det_block_ne {n : ℕ} (B : Matrix (Fin n) (Fin n) ℂ)
       (Subtype.val : {c : Fin n // c < j} → Fin n)).submatrix e e =
       B.submatrix (Fin.castLE (Nat.le_of_lt_succ (Fin.castSucc j).isLt))
         (Fin.castLE (Nat.le_of_lt_succ (Fin.castSucc j).isLt)) := rfl
-  rw [← Matrix.det_submatrix_equiv_self e, e2]
-  exact h
+  rwa [← Matrix.det_submatrix_equiv_self e, e2]
 
 lemma exists_col {n : ℕ} (B : Matrix (Fin n) (Fin n) ℂ)
     (hB : ∀ i : Fin (n + 1), ReciprocityTheory.ChartRestriction.G.FD.lminor B i ≠ 0) (j : Fin n) :
@@ -335,8 +334,7 @@ theorem isOfFinOrder_of_bounded (Ψ : Finset (E →+* ℂ))
     refine ⟨?_, fun τ => hR τ n a b⟩
     have := hi _ (hpow n _ (hm b)) a
     rw [Matrix.mulVec_smul, Matrix.mulVec_single_one] at this
-    rw [Int.cast_mul, mul_assoc, ← zsmul_eq_mul _ (l b)]
-    exact this
+    rwa [Int.cast_mul, mul_assoc, ← zsmul_eq_mul _ (l b)]
 
 
 omit [IsCMField E] in

@@ -63,8 +63,7 @@ theorem aff (hB5 : B5) (q : ℕ) (Z : Scheme.{0}) [IsAffine Z] (hZ : AICSch Z) (
     Acyc q (sch.obj Z) := by
   have : IsIntegral Z := hZ.1
   have hA : AIC Γ(Z, ⊤) := hZ.2 ⊤ (isAffineOpen_top Z) ⟨Nonempty.some inferInstance, by simp⟩
-  have h5 := hB5 q Γ(Z, ⊤) hA hq
-  exact acyc_of_iso q Z.isoSpec h5
+  exact acyc_of_iso q Z.isoSpec (hB5 q Γ(Z, ⊤) hA hq)
 
 def Step : Prop := Hyp → MV → HZero → ∀ (q : ℕ) {U V X : Scheme.{0}} (f : U ⟶ X) (g : V ⟶ X) [IsOpenImmersion f]
   [IsOpenImmersion g], Set.range f ∪ Set.range g = Set.univ → AICSch X → AICSch U → AICSch V → IsUnit (q : Γ(X, ⊤)) →

@@ -324,8 +324,7 @@ theorem secComb_iff (w : IndefiniteRowSideFullHecke.BaseChangeCharts.Ident U) {n
     have e := k₁.symm.trans ((congrArg (gs (U.genF F).left y _) (H a b)).trans k₂)
     rw [genF_toGK, genF_base] at e
     refine (powVal_comb U F c σ (𝟙 _ ≫ 𝟙 _) y (a := a) ha).trans ?_
-    simp only [Category.id_comp]
-    exact e.symm
+    simpa only [Category.id_comp] using e.symm
   · intro H a b
     refine fn_ext fun y hy => ?_
     obtain ⟨k₁, k₂⟩ := secComb_germ U F w c σ t (𝟙 _) y a b hy

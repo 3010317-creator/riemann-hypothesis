@@ -119,8 +119,7 @@ private theorem ker_trM (D : Dom E n 0) {Φ : Matrix ι ι (H E n 0 → ℂ)} (h
     funext z
     simp only [trM, Fintype.sum_prod_type]
   rw [e]
-  refine Eq.trans h ?_
-  exact Fintype.sum_prod_type _
+  exact Eq.trans h (Fintype.sum_prod_type _)
 
 private theorem part_eq {D : Dom E n 0} {π : CuspSub E n} {U Uπ : Hs (ι := ι) D →L[ℂ] Hs (ι := ι) D}
     (h : IsPiPart D π U Uπ) (f : Hs (ι := ι) D) : Uπ f = U ((piSp D π ι).starProjection f) := by
@@ -169,8 +168,7 @@ theorem ker_pf :
       (vecM w fun l => s.M l i) rfl x i]
     exact Finset.sum_congr rfl fun j _ => vec_int w _ j (m.t i j) x
   refine ⟨?_, ?_⟩
-  · simp only [hG]
-    exact integrable_finsetSum _ fun i _ => hI i
+  · simpa only [hG] using integrable_finsetSum _ fun i _ => hI i
   · simp only [hG]
     rw [integral_finsetSum _ fun i _ => hI i]
     simp only [hterm]

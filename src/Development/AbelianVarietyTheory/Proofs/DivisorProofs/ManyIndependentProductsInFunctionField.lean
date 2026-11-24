@@ -166,10 +166,8 @@ theorem adjoinRoot_map_complex_linearIndependent :
   have := hli.map' E.toLinearMap E.ker
   have h2 : (fun j => τ (e j)) = E.toLinearMap ∘ (fun j => (1 : ℂ) ⊗ₜ[ℚ] e j) := by
     funext j
-    simp only [Function.comp_apply, LinearEquiv.coe_coe]
-    exact (hkey (e j)).symm
-  rw [h2]
-  exact this
+    simpa only [Function.comp_apply, LinearEquiv.coe_coe] using (hkey (e j)).symm
+  rwa [h2]
 
 end GlobalTheory
 end -- clump:auto
@@ -254,8 +252,7 @@ theorem C_mem_pow {σ : Type} (n : ℕ) (c : O) (hc : c ∈ (maximalIdeal O) ^ n
   refine Ideal.pow_right_mono ?_ n h1
   rw [Ideal.map_le_iff_le_comap]
   intro x hx
-  rw [Ideal.mem_comap, mem_max_iff, constantCoeff_C]
-  exact hx
+  rwa [Ideal.mem_comap, mem_max_iff, constantCoeff_C]
 
 theorem X_mem_max {σ : Type} (i : σ) : (X i : MvPowerSeries σ O) ∈ maximalIdeal (MvPowerSeries σ O) := by
   rw [mem_max_iff, constantCoeff_X]; exact zero_mem _
@@ -335,8 +332,7 @@ theorem main : ∀ {O : Type} [inst : CommRing O] [inst_1 : IsLocalRing O]
   by_cases hd : d.degree ≤ n
   · have h := hL d (n - d.degree)
     rw [SModEq.sub_mem, mem_smul_top_iff] at h
-    simp only [s, Nat.sub_add_cancel hd] at h
-    exact h
+    simpa only [s, Nat.sub_add_cancel hd] using h
   · rw [show n - d.degree = 0 by omega]; simp
 end GlobalTheory.PowerSeriesIdealPowers
 end -- clump:auto
@@ -358,8 +354,7 @@ theorem noeth_local_hausdorff : ∀ (B : Type) [inst : CommRing B] [inst_1 : IsL
     rw [Ideal.mem_iInf]
     intro n
     have := hx n
-    rw [SModEq.zero, smul_eq_mul, Ideal.mul_top] at this
-    exact this
+    rwa [SModEq.zero, smul_eq_mul, Ideal.mul_top] at this
   rw [Ideal.iInf_pow_eq_bot_of_isLocalRing _ (IsLocalRing.maximalIdeal.isMaximal B).ne_top] at h
   exact (Submodule.mem_bot B).1 h
 
@@ -537,8 +532,7 @@ theorem branches_of_unramified_point : ∀ (D : ℕ) (P : Polynomial (MvPolynomi
   have hroot : ∀ j, P.eval₂ ψ.toRingHom (θ j) = 0 := by
     intro j
     have := hθr j
-    rw [Polynomial.IsRoot.def, hQ, Polynomial.eval_map] at this
-    exact this
+    rwa [Polynomial.IsRoot.def, hQ, Polynomial.eval_map] at this
   refine ⟨Q.natDegree, fun j => AdjoinRoot.liftAlgHom P ψ (θ j) (hroot j), ?_, ?_⟩
   · intro u hu
     obtain ⟨R, rfl⟩ := AdjoinRoot.mk_surjective u
@@ -634,8 +628,7 @@ theorem exists_separable_specialization {D : ℕ} (P : (MvPolynomial (Fin D) ℚ
     linear_combination (C (algebraMap R F da) * C (algebraMap R F db)) * hab
   have hδ : da * db ≠ 0 := mul_ne_zero (nonZeroDivisors.ne_zero hda) (nonZeroDivisors.ne_zero hdb)
   obtain ⟨c, hc⟩ : ∃ c : Fin D → ℚ, MvPolynomial.eval c (da * db) ≠ 0 := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     exact hδ (MvPolynomial.funext fun c => by simpa using hno c)
   refine ⟨c, ?_⟩
   have key' := congrArg (Polynomial.map (MvPolynomial.eval c)) key
@@ -800,14 +793,11 @@ theorem finrank_le_card_values : ∀ (C V Γ : Type) [Field C] [AddCommGroup V] 
     let emb : Fin (Module.finrank C F) ↪ hfin.toFinset :=
       (Fin.castLEEmb hdim).trans hfin.toFinset.equivFin.symm.toEmbedding
     refine ⟨fun i => (emb i : Γ), ?_, ?_⟩
-    · intro i j hij
-      exact emb.injective (Subtype.ext hij)
-    · intro i
-      exact (Set.Finite.mem_toFinset hfin).1 (emb i).2
+    · exact fun i j hij => emb.injective (Subtype.ext hij)
+    · exact fun i => (Set.Finite.mem_toFinset hfin).1 (emb i).2
   · let emb : ℕ ↪ S := Set.Infinite.natEmbedding S hfin
     refine ⟨fun i => (emb i : Γ), ?_, fun i => (emb i).2⟩
-    intro i j hij
-    exact Fin.ext (emb.injective (Subtype.ext hij))
+    exact fun i j hij => Fin.ext (emb.injective (Subtype.ext hij))
 
 end GlobalTheory
 end -- clump:auto
@@ -844,8 +834,7 @@ theorem linearIndependent_of_distinct_valuationLike :
       rw [Finset.sum_insert ha]
       rcases s.eq_empty_or_nonempty with hs | hs
       · subst hs
-        simp only [Finset.sum_empty, add_zero]
-        exact ⟨hx, a, Finset.mem_insert_self a _, hνx⟩
+        simpa only [Finset.sum_empty, add_zero] using ⟨hx, a, Finset.mem_insert_self a _, hνx⟩
       · obtain ⟨hy, j, hj, hνy⟩ := ih hs (fun i hi => hg i (Finset.mem_insert_of_mem hi))
         have hne : ν (f a) ≠ ν (f j) := by
           intro h
@@ -1023,8 +1012,7 @@ variable {φ}
 
 theorem exists_evalAt_ne_zero (hinj : ∀ u : A, (∀ j, φ j u = 0) → u = 0) {u : A} (hu : u ≠ 0) :
     ∃ k, evalAt φ k u ≠ 0 := by
-  by_contra h
-  push Not at h
+  by_contra! h
   exact hu (hinj u fun j => by simpa [evalAt_of_lt φ j.2] using h j)
 
 theorem val_smul (c : ℂ) (u : A) (hc : c ≠ 0) : val φ (c • u) = val φ u := by
@@ -1274,8 +1262,7 @@ theorem many_independent_products_in_function_field : ∀ (K : Type) [Field K] [
   choose e' he' using fun j => (AlgHom.mem_range ψ).1 (hge j)
   have he'Q : LinearIndependent ℚ e' := by
     have h1 : LinearIndependent ℚ (fun j => g * e j) := by
-      refine heQ.map' (LinearMap.mulLeft ℚ g) (LinearMap.ker_eq_bot.2 ?_)
-      exact mul_right_injective₀ hg
+      exact heQ.map' (LinearMap.mulLeft ℚ g) (LinearMap.ker_eq_bot.2 (mul_right_injective₀ hg))
     have h2 : (ψ.toLinearMap ∘ e') = fun j => g * e j := funext he'
     exact LinearIndependent.of_comp ψ.toLinearMap (h2 ▸ h1)
   obtain ⟨τ, hτX, hτq, hτind⟩ := _root_.GlobalTheory.adjoinRoot_map_complex_linearIndependent D P hPm
@@ -1320,9 +1307,7 @@ theorem many_independent_products_in_function_field : ∀ (K : Type) [Field K] [
   have hGr : Module.finrank ℂ G ≤ Fintype.card κ := finrank_range_le_card _
   let L : AdjoinRoot P →ₗ[ℚ] K := (LinearMap.mulLeft ℚ ((g ^ m)⁻¹)).comp ψ.toLinearMap
   have hL : LinearMap.ker L = ⊥ := by
-    refine LinearMap.ker_eq_bot.2 ?_
-    show Function.Injective (fun u => (g ^ m)⁻¹ * ψ u)
-    exact (mul_right_injective₀ (inv_ne_zero (pow_ne_zero _ hg))).comp hψ
+    exact LinearMap.ker_eq_bot.2 ((mul_right_injective₀ (inv_ne_zero (pow_ne_zero _ hg))).comp hψ)
   have hindK : LinearIndependent ℚ (L ∘ (w ∘ a)) := hind.map' L hL
   have hcard : Fintype.card J * m ^ D ≤ Fintype.card κ := hFr ▸ (key.trans hGr)
   let emb : Fin (Fintype.card J * m ^ D) ↪ κ :=

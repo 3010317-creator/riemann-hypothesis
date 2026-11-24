@@ -69,8 +69,7 @@ theorem injective_of_maximal_point {X : Scheme.{0}} {Ω : Type} [Field Ω] (p : 
     change φ.hom a ∈ (IsLocalRing.closedPoint Ω).asIdeal
     rw [ha]
     exact Ideal.zero_mem _
-  rw [← h2] at h3
-  exact h3
+  rwa [← h2] at h3
 
 theorem isCptGen_of_maximal_of_surjective {X : Scheme.{0}} {Ω : Type} [Field Ω]
     (hX : ∀ x : X, IsDomain (X.presheaf.stalk x)) (ξ : Spec (CommRingCat.of Ω) ⟶ X)
@@ -79,8 +78,7 @@ theorem isCptGen_of_maximal_of_surjective {X : Scheme.{0}} {Ω : Type} [Field Ω
   refine ⟨⟨?_, hs⟩, fun p => ?_⟩
   · have := hX (ξ (IsLocalRing.closedPoint Ω))
     refine injective_of_maximal_point _ (Scheme.stalkClosedPointTo ξ) ?_
-    rw [Scheme.Spec_stalkClosedPointTo_fromSpecStalk]
-    exact h
+    rwa [Scheme.Spec_stalkClosedPointTo_fromSpecStalk]
   · obtain ⟨p, hp⟩ := p
     have := hX p
     have hp' : ξ (IsLocalRing.closedPoint Ω) ⤳ p := hp
@@ -90,8 +88,7 @@ theorem isCptGen_of_maximal_of_surjective {X : Scheme.{0}} {Ω : Type} [Field Ω
         X.fromSpecStalk p = ξ := by
       rw [Spec.map_comp, Category.assoc, Scheme.SpecMap_stalkSpecializes_fromSpecStalk]
       exact Scheme.Spec_stalkClosedPointTo_fromSpecStalk ξ
-    rw [e]
-    exact h
+    rwa [e]
 
 theorem isCptGen_of_maximal : ∀ (X : Scheme.{0}), (∀ x : X, IsDomain (X.presheaf.stalk x)) → ∀ x : X,
     (∀ y : X, y ⤳ x → y = x) → IsCptGen (Ω := X.residueField x) (X.fromSpecResidueField x) := by

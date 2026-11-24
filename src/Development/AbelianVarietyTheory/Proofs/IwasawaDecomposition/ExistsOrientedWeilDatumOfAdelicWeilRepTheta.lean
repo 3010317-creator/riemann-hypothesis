@@ -89,8 +89,7 @@ theorem norm_periodic {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar
     {f : WO V W → ℂ} (hf : IsThetaFunO ψ V W f) : ∀ γ ∈ ratL W V, ∀ w, ‖f (γ + w)‖ = ‖f w‖ := by
   rintro _ ⟨γ, rfl⟩ w
   have := congrArg norm (hf.quasi γ w)
-  rw [norm_mul, hψ.1.2.1, one_mul] at this
-  exact this
+  rwa [norm_mul, hψ.1.2.1, one_mul] at this
 
 theorem exists_isWeilDatumO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (V W : HSp D) (χ χ' : IdC D) (om : GA D V × GA D W →* Module.End ℂ (ThS ψ V W)), admitted V W χ χ' → V.rank < W.rank → IsWeilOn ψ V W χ χ' om → ∃ omO : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ), IsWeilDatumO ψ V W χ χ' omO ∧ ∀ (p : GA D V × GA D W) (Φ : ThS ψ V W), omO p (fun x => Φ.1 (toTWsmall V W x)) = fun x => (om p Φ).1 (toTWsmall V W x) := by
   intro D ψ hψ V W χ χ' om ha hr hw
@@ -117,11 +116,9 @@ theorem exists_isWeilDatumO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsS
     exact hom' _ Φ'
   · obtain ⟨Φ, rfl⟩ := hsurj f hf
     rw [hom']
-    simp only [map_zero]
-    exact hw.aut γ hγ γ' hγ' Φ
+    simpa only [map_zero] using hw.aut γ hγ γ' hγ' Φ
   · obtain ⟨Φ, rfl⟩ := hsurj f hf
-    simp only [hom']
-    exact hw.cont Φ (e w)
+    simpa only [hom'] using hw.cont Φ (e w)
   · obtain ⟨Φ, rfl⟩ := hsurj f hf
     rw [hom']
     obtain ⟨i1, i2, i3, i4, i5, K, hK, hcov⟩ := GlobalTheory.AdelicMatrixLattice.lattice D W V
@@ -133,24 +130,20 @@ theorem exists_isWeilDatumO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsS
     refine lintegral_eq_of_integral_eq (ratL W V) hK hcov (hTh _).cont (hTh _).cont (norm_periodic hψ (hTh _))
       (norm_periodic hψ (hTh _)) hμ h𝓕 ?_
     rw [← hint, ← hint]
-    simp only [e.apply_symm_apply]
-    exact hw.unit ν _ hν hF p Φ
+    simpa only [e.apply_symm_apply] using hw.unit ν _ hν hF p Φ
   · obtain ⟨r, hr0, hℓ⟩ := hw.split ε hε g h hg hh x y hx hy
     refine ⟨r, hr0, fun ℓ hinv f hf => ?_⟩
     obtain ⟨Φ, rfl⟩ := hsurj f hf
     have := hℓ (ℓ ∘ₗ E.toLinearMap ∘ₗ (ThS ψ V W).subtype) (fun u hu Ψ Ψ' hΨ => ?_) Φ
     · rw [hom']
       unfold splitFac at this
-      rw [ite_eq_left hr.le] at this
-      exact this
+      rwa [ite_eq_left hr.le] at this
     · have hu' : cA D ε • e.symm u = e.symm u := by
         apply e.injective
         rw [hsm, e.apply_symm_apply]
         exact Matrix.ext hu
       have := hinv (e.symm u) (fun i j => congrFun (congrFun hu' i) j) _ (hTh Ψ)
-      rw [hheis, e.apply_symm_apply, ← hΨ] at this
-      exact this
-  · simp only [← he]
-    exact hom' p Φ
+      rwa [hheis, e.apply_symm_apply, ← hΨ] at this
+  · simpa only [← he] using hom' p Φ
 
 end GlobalTheory.Mem.WeilOriented

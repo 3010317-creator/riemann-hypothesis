@@ -92,8 +92,7 @@ private theorem gdChart_e_swap (P : HTPoint C O c κ N V Ω) (x y : V) :
 
 omit [IsAlgClosed C] [CharZero C] in
 theorem proj_ht_mem (P : HTPoint C O c κ N V Ω) (τ : E →+* C) {y : V} (hy : y ∈ P.T) :
-    eigProj P.ρΩ τ (P.ht y) ∈ P.omHT τ := by
-  exact ⟨P.ht y, ⟨y, hy, rfl⟩, rfl⟩
+    eigProj P.ρΩ τ (P.ht y) ∈ P.omHT τ := ⟨P.ht y, ⟨y, hy, rfl⟩, rfl⟩
 
 omit [IsAlgClosed C] [CharZero C] in
 private theorem htPoint_eq_zero_of_e_left_eq_zero (P : HTPoint C O c κ N V Ω) {x : V} (h : ∀ y, P.e x y = 0) : x = 0 :=
@@ -233,8 +232,7 @@ private theorem htPoint_rho_mem_T (P : HTPoint C O c κ N V Ω) (a : 𝓞 E) {z 
       rw [map_add (f := _), LinearMap.add_apply]
       exact S.add_mem hx hz
     | smul n x _ hx =>
-      simp only [map_zsmul, LinearMap.smul_apply]
-      exact zsmul_mem hx n
+      simpa only [map_zsmul, LinearMap.smul_apply] using zsmul_mem hx n
   induction hz using Submodule.span_induction with
   | mem x hx =>
     obtain ⟨q, rfl⟩ := hx
@@ -281,8 +279,7 @@ theorem exists_alt_bis (hv : v.Integers O) (hc : ∀ x, c (c x) = x) (P : HTPoin
   have hσu : ∀ a : 𝓞 E, ∃ u : O, algebraMap O C u = σ (a : E) := by
     intro a
     have hint : IsIntegral O (σ (a : E)) := by
-      have h := (NumberField.RingOfIntegers.isIntegral_coe a).map σ.toIntAlgHom
-      exact h.tower_top
+      exact ((NumberField.RingOfIntegers.isIntegral_coe a).map σ.toIntAlgHom).tower_top
     exact hv.exists_of_le_one (hv.mem_of_integral hint)
   have hρ : ∀ (a : 𝓞 E) (y : V),
       ℓ (P.ρ (RingOfIntegers.mapRingEquiv c a) y) = σ (a : E) * ℓ y := by

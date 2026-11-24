@@ -265,13 +265,11 @@ theorem fixingSubgroup_le_NS : ∀ (F Ω : Type) [Field F] [NumberField F] [Fiel
     have hAv : IsPlaceOver A v := by
       intro a
       have h1 := hA (algebraMap (𝓞 F) (𝓞 M.toIntermediateField) a)
-      refine Iff.trans (by exact h1) ?_
-      exact (Ideal.mem_of_liesOver Q v.asIdeal a).symm
+      exact Iff.trans (by exact h1) (Ideal.mem_of_liesOver Q v.asIdeal a).symm
     have hNS : σ ∈ NS Ω S := by
       apply Subgroup.le_topologicalClosure
       apply Subgroup.subset_normalClosure
-      simp only [Set.mem_iUnion]
-      exact ⟨v, hv, A, hAv, hσ⟩
+      simpa only [Set.mem_iUnion] using ⟨v, hv, A, hAv, hσ⟩
     have hfix : σ y = y :=
       (IntermediateField.mem_fixedField_iff (NS Ω S) y).1 (hEK hy) σ hNS
     apply Subtype.ext
@@ -279,7 +277,6 @@ theorem fixingSubgroup_le_NS : ∀ (F Ω : Type) [Field F] [NumberField F] [Fiel
     exact (this.symm.trans hfix)
   have hc := InfiniteGalois.fixingSubgroup_fixedField (⟨NS Ω S, isClosed_NS Ω S⟩ : ClosedSubgroup (Ω ≃ₐ[F] Ω))
   have := IntermediateField.fixingSubgroup_antitone key
-  rw [show (IntermediateField.fixedField (NS Ω S)).fixingSubgroup = NS Ω S from hc] at this
-  exact this
+  rwa [show (IntermediateField.fixedField (NS Ω S)).fixingSubgroup = NS Ω S from hc] at this
 
 end GlobalTheory.CompanionTheory.Glob.InertiaLift

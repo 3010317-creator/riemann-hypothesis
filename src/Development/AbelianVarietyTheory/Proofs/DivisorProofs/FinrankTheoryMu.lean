@@ -440,8 +440,7 @@ theorem isTr_ofHom : ∀ (p : ℕ) [Fact p.Prime] (B : Base p (fun _ _ G => G.Is
   have hφ : ∀ x, B.smap hd hb (SemiHom.ofHom φ) (B.smap hb hd (H.dual.toBase k) x) = x := by
     intro x
     rw [← B.smap_comp hd hb hd (H.dual.toBase k) (SemiHom.ofHom φ) (SemiHom.ofHom (𝟙 _)), B.smap_id]
-    intro n a
-    exact ((SemiHom.lift_app _ n 1 a).trans (one_smul _ _)).symm
+    exact fun n a => ((SemiHom.lift_app _ n 1 a).trans (one_smul _ _)).symm
   refine ⟨hb, l ∘ₗ B.map hd hb φ, fun x => ?_, fun y => ?_⟩
   · change l (B.smap hd hb (SemiHom.ofHom φ) (B.smap hb hd (H.dual.toBase k) x)) = _
     rw [hφ, WittVector.map_id, RingHom.id_apply]
@@ -628,8 +627,7 @@ theorem exists_etDual_of_conn : ∀ (p : ℕ) [Fact p.Prime] (B : Base p (fun _ 
   refine ⟨EtFromConn.etBase B, fun G h hd hG => LinearEquiv.refl _ _, fun G h hd hG => ⟨?_, ?_⟩⟩
   · intro x y
     exact _root_.GlobalTheory.Dieu.EtFromConn.isTr_absFrob_F p B _ G h x _ (EtFromConn.isTr_tr B h h _ x) y
-  · intro H h' hd' hH f x y
-    exact LinearMap.congr_fun (EtFromConn.tr_ofHom B h h' f x) y
+  · exact fun H h' hd' hH f x y => LinearMap.congr_fun (EtFromConn.tr_ofHom B h h' f x) y
 
 end GlobalTheory.Dieu
 end -- clump:auto
@@ -786,8 +784,7 @@ theorem katz_etDual_of_iso : ∀ (p : ℕ) [Fact p.Prime] (B : Base p (fun _ _ G
   · intro k _ _ _ G _ _ hG
     obtain ⟨h1, h2⟩ := hδ G hG (PDivGroup.dual_isConn_of_isEt p _ G hG) hG
     refine ⟨fun x y => ?_, fun H _ _ hH f x y => ?_⟩
-    · simp only [LinearEquiv.trans_apply, LinearEquiv.dualMap_apply, FB, FC]
-      exact h1 _ _
+    · simpa only [LinearEquiv.trans_apply, LinearEquiv.dualMap_apply, FB, FC] using h1 _ _
     · obtain ⟨-, h3⟩ := hδ H hH (PDivGroup.dual_isConn_of_isEt p _ H hH) hH
       simp only [LinearEquiv.trans_apply, LinearEquiv.dualMap_apply]
       rw [MC G H hG hH f, MB H.dual G.dual (PDivGroup.dual_isConn_of_isEt p _ H hH)
@@ -832,16 +829,13 @@ theorem PDivGroup.semiHom_app_eq_conn_part :
         RingHom.id_apply, sub_self]
     have h := (((hConn n _ hmem).map (x.app n).toRingHom).map (i₁.app n)).eq_zero
     change i₁.app n (x.app n (c - _)) = 0 at h
-    rw [map_sub, SemiBialgHom.map_algebraMap, map_sub, AlgHomClass.commutes, sub_eq_zero] at h
-    exact h
+    rwa [map_sub, SemiBialgHom.map_algebraMap, map_sub, AlgHomClass.commutes, sub_eq_zero] at h
   have hP₁ : ∀ c : C.A n, (q₁ ≫ i₁).app n (x.app n c) =
       algebraMap k' (G'.A n) (σ (counit (R := k) c)) := by
     intro c
     rw [comp_app, BialgHom.comp_apply, h1, AlgHomClass.commutes]
   have hid : ∀ b : G'.A n, ((q₀ ≫ i₀).conv n * (q₁ ≫ i₁).conv n).ofConv b = b := by
-    intro b
-    have h := congrArg (fun f : G' ⟶ G' => f.app n b) hsplit
-    exact h
+    exact fun b => congrArg (fun f : G' ⟶ G' => f.app n b) hsplit
   have key : ∀ c : C.A n ⊗[k] C.A n,
       Algebra.TensorProduct.lift ((q₀ ≫ i₀).app n : G'.A n →ₐ[k'] G'.A n)
         ((q₁ ≫ i₁).app n : G'.A n →ₐ[k'] G'.A n) (fun _ _ => .all _ _) ((x.app n).two c) =
@@ -917,8 +911,7 @@ theorem add_app_eq_lift_comul {p : ℕ} {k : Type} [CommRing k] {G H : PDivGroup
     Hom.app (f + g) n c = Algebra.TensorProduct.lift (f.app n : H.A n →ₐ[k] G.A n)
       (g.app n : H.A n →ₐ[k] G.A n) (fun _ _ => .all _ _) (comul c) := by
   have h := DFunLike.congr_fun (congrArg ofConv (map_mul toPts (f.conv n) (g.conv n))) c
-  rw [AlgHom.convMul_apply] at h
-  exact h
+  rwa [AlgHom.convMul_apply] at h
 
 end GlobalTheory.PDivGroup
 
@@ -994,8 +987,7 @@ theorem eq_zero_of_id_eq_zero {G : PDivGroup p k} (hG : P k G) (h0 : 𝟙 G = 0)
   have h := B.smap_add hG hG 0 0 m
   rw [add_zero] at h
   have h2 : B.smap hG hG (SemiHom.ofHom 0) m = 0 := by simpa using h
-  rw [← B.smap_id G hG m, h0]
-  exact h2
+  rwa [← B.smap_id G hG m, h0]
 
 theorem rigExtMap_rigExtMap {k : Type} [CommRing k] {X Y Z : PDivGroup p k} (f : X ⟶ Y) (g : Y ⟶ Z)
     (x : ((Z.cocycles × Z.omega) ⧸ _root_.LinearMap.range (Z.cob.prod (_root_.LinearMap.codRestrict Z.omegaSub ((_root_.LinearMap.piMap fun i => _root_.GlobalTheory.AugCot.d (_root_.Bialgebra.counitAlgHom _ (Z.A i))).domRestrict Z.funs) (fun b n => (_root_.GlobalTheory.PDiv.cotMap_d _ _).trans (_root_.congrArg _ (b.2 n))))))) : rigExtMap f (rigExtMap g x) = rigExtMap (f ≫ g) x := by

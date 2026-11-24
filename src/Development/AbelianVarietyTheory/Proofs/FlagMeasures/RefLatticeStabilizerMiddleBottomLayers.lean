@@ -509,8 +509,7 @@ theorem gen_ref (hz : N.F.z ∈ L) (hzW : N.F.z ∈ N.Wn) (hL : ∀ x ∈ L, ∀
       · have := ipow_mul_mem N.𝔡_ne (hcI a' b ((mem_JJ N a').mp ha') hb') ht
         unfold NF.aa; convert this using 2; ring
     · simp
-  · intro w hw
-    exact (hQ _).mpr (hW w hw)
+  · exact fun w hw => (hQ _).mpr (hW w hw)
 
 end NFg
 
@@ -587,8 +586,7 @@ theorem exists_stab (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (N : NF
     apply le_antisymm
     · rw [Submodule.map_le_iff_le_comap]
       intro v hv; exact href v hv
-    · intro v hv
-      exact Submodule.mem_map.mpr ⟨_, href' v hv, comp1 v⟩
+    · exact fun v hv => Submodule.mem_map.mpr ⟨_, href' v hv, comp1 v⟩
 
 end GlobalTheory.RowStab
 

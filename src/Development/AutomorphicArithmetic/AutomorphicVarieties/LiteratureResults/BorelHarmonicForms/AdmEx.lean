@@ -84,8 +84,7 @@ theorem UpperTheory.V.Lit.Bor.avgPos :
       · congr 1
         refine Finset.sum_congr rfl fun a _ => ?_
         rw [integral_const_mul]
-      · intro a _
-        exact hint _ (continuous_const.mul (hFc a b))
+      · exact fun a _ => hint _ (continuous_const.mul (hFc a b))
     · intro b _
       exact hint _ ((continuous_finsetSum _ fun a _ => continuous_const.mul (hFc a b)).mul
         continuous_const)
@@ -110,8 +109,7 @@ theorem UpperTheory.V.Lit.Bor.avgPos :
           rw [integral_finsetSum]
           · refine Finset.sum_congr rfl fun j _ => ?_
             rw [integral_const_mul, integral_mul_const]
-          · intro j _
-            exact hint _ (continuous_const.mul ((hFc i j).mul continuous_const))
+          · exact fun j _ => hint _ (continuous_const.mul ((hFc i j).mul continuous_const))
         · intro i _
           exact hint _ (continuous_finsetSum _ fun j _ =>
             continuous_const.mul ((hFc i j).mul continuous_const))

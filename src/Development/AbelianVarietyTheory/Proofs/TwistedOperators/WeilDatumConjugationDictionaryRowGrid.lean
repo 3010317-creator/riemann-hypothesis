@@ -134,9 +134,7 @@ theorem weil_cjOm (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS χT : (AE 
         rw [← e1, hℓ u hu (cj id f') ((thS' f').1 hf')]) (cj id f) ((thS f).1 hf)
     rw [cj_id_cj_id, ← cjOm_apply om (g, h) f] at h1
     rw [splitFacO_inv]
-    have h2 := congrArg (starRingEnd ℂ) h1
-    simp only [map_mul, Complex.conj_conj, Complex.conj_ofReal] at h2
-    exact h2
+    simpa only [map_mul, Complex.conj_conj, Complex.conj_ofReal] using congrArg (starRingEnd ℂ) h1
 
 theorem vac_star {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) (S T : HSp D) (Γ : AddSubgroup (WO S T)) (f : WO S T → ℂ) :
     VacG ψ (negSp S) T Γ f ↔ VacG ψ S T Γ (star f) := by

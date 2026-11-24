@@ -88,8 +88,7 @@ theorem cavg_mul_core (K K' : Subgroup G) (f : G → ℂ) (hf : ∀ k ∈ K', �
 
 theorem exists_of_cavg_ne_zero (K : Subgroup G) (f : G → ℂ) (x : G) (h : cavg K f x ≠ 0) :
     ∃ k ∈ K, f (k⁻¹ * x * k) ≠ 0 := by
-  by_contra hn
-  push Not at hn
+  by_contra! hn
   apply h
   unfold cavg avg
   have : (fun k : K => f ((k : G)⁻¹ * x * k)) = fun _ => 0 := funext fun k => hn k k.2
@@ -170,8 +169,7 @@ theorem cavg_blk_locConst_compactSupport : ∀ (E : Type) [Field E] [NumberField
   let U : AddSubgroup (Matrix (Fin a) (Fin b) (w.adicCompletion E)) :=
     { carrier := {y | blk h w 1 y ∈ core (GlobalTheory.LFun.KGL w (n := n)) K'}
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, blk_one_zero]
-        exact Subgroup.one_mem _
+        simpa only [Set.mem_setOf_eq, blk_one_zero] using Subgroup.one_mem _
       add_mem' := by
         intro x y hx hy
         simp only [Set.mem_setOf_eq] at *

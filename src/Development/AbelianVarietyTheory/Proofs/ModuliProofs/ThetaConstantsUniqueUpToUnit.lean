@@ -137,14 +137,12 @@ theorem exists_unit_over (hG : GlobalFnsSt) (P : PolAV S) [IsLocalRing Γ(T.left
     have a₁ : bval (b := 1) α' (lift (𝟙 T) (x i)).left z J =
         bval (b := 1) α (lift (𝟙 T) (x i)).left z J * gm (𝟙 T.left) z ⊤ c := by
       have := hc _ (lift (𝟙 T) (x i)).left z J hJ
-      rw [lift_fst_left] at this
-      exact this
+      rwa [lift_fst_left] at this
     have a₂ := hd _ (𝟙 _) z J hJ
     have a₃ : sv P.A th' (lift (𝟙 T) (x i ^ k)).left z J =
         gs (𝟙 T.left) z ⊤ ρ * sv P.A th (lift (𝟙 T) (x i ^ k)).left z J := by
       have := ThetaAct.sv_smul (ρ : Γ(T.left, ⊤)) (SecM.ofSec P.A th) (lift (𝟙 T) (x i ^ k)).left z hJ
-      rw [← hρ, lift_fst_left] at this
-      exact this
+      rwa [← hρ, lift_fst_left] at this
     have b₁ := sv_act (hU i).pt_eq (hs₂ i) (𝟙 T) hJ 1
     have b₂ := sv_mulPull hs₁ (𝟙 T) hJ (x i)
     have b₃ := sv_of_isValueAt (hw i) (𝟙 T) hJ

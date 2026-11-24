@@ -96,8 +96,7 @@ private lemma lk_hasSum_succ (m : ℕ) : ∀ x : ℂ, ‖x‖ < 1 →
     have hf : (fun e : ℕ => ((e : ℂ) + 1) ^ 0 * x ^ (e + 1)) = fun i => x * x ^ i := by
       funext e
       ring
-    rw [hf]
-    exact hg
+    rwa [hf]
   | succ m ih =>
     intro x hx
     have h1 : x ≠ 1 := by
@@ -119,8 +118,7 @@ private lemma lk_hasSum_succ (m : ℕ) : ∀ x : ℂ, ‖x‖ < 1 →
     let g : ℕ → ℂ → ℂ := fun e y => ((e : ℂ) + 1) ^ m * y ^ (e + 1)
     let g' : ℕ → ℂ → ℂ := fun e y => ((e : ℂ) + 1) ^ m * (((e + 1 : ℕ) : ℂ) * y ^ (e + 1 - 1))
     have hgd : ∀ (e : ℕ), ∀ y ∈ Metric.ball (0 : ℂ) r, HasDerivAt (g e) (g' e y) y := by
-      intro e y _
-      exact (hasDerivAt_pow (e + 1) y).const_mul _
+      exact fun e y _ => (hasDerivAt_pow (e + 1) y).const_mul _
     have hbd : ∀ (e : ℕ), ∀ y ∈ Metric.ball (0 : ℂ) r, ‖g' e y‖ ≤ ((e : ℝ) + 1) ^ (m + 1) * r ^ e := by
       intro e y hy
       rw [Metric.mem_ball, dist_zero_right] at hy
@@ -140,8 +138,7 @@ private lemma lk_hasSum_succ (m : ℕ) : ∀ x : ℂ, ‖x‖ < 1 →
           ≤ ((e : ℝ) + 1) ^ m * (((e : ℝ) + 1) * r ^ e) := by gcongr
         _ = ((e : ℝ) + 1) ^ (m + 1) * r ^ e := by ring
     have hxb : x ∈ Metric.ball (0 : ℂ) r := by
-      rw [Metric.mem_ball, dist_zero_right]
-      exact hxr
+      rwa [Metric.mem_ball, dist_zero_right]
     have hD := hasDerivAt_tsum_of_isPreconnected hu Metric.isOpen_ball (convex_ball (0 : ℂ) r).isPreconnected
       hgd hbd hxb (ih x hx).summable hxb
     have heq : (fun z => Lk (m + 1) z) =ᶠ[𝓝 x] (fun z => ∑' e, g e z) := by
@@ -160,8 +157,7 @@ private lemma lk_hasSum_succ (m : ℕ) : ∀ x : ℂ, ‖x‖ < 1 →
       simp only [g', Nat.add_sub_cancel]
       push_cast
       ring
-    rw [hf]
-    exact hfin
+    rwa [hf]
 
 private lemma lk_hasSum (k : ℕ) (hk : 2 ≤ k) (x : ℂ) (hx : ‖x‖ < 1) :
     HasSum (fun e : ℕ => (e : ℂ) ^ (k - 1) * x ^ e) (Lk k x) := by
@@ -357,8 +353,7 @@ private lemma reindex (N k : ℕ) [NeZero N] (hk : 3 ≤ k) (b : ℤ) (z : ℍ) 
   have hN : (N : ℤ) ≠ 0 := Nat.cast_ne_zero.2 (NeZero.ne N)
   have hs : Summable fun v : ℤ × ℤ => ((v.1 : ℂ) * (z : ℂ) + (v.2 : ℂ)) ^ (-(k : ℤ)) := by
     have := (EisensteinSeries.summable_norm_eisSummand (k := k) (by exact_mod_cast hk) z).of_norm
-    rw [← (finTwoArrowEquiv ℤ).symm.summable_iff] at this
-    exact this
+    rwa [← (finTwoArrowEquiv ℤ).symm.summable_iff] at this
   let g : ℤ × ℤ → {v : ℤ × ℤ // (v.1 : ZMod N) = 0 ∧ (v.2 : ZMod N) = (b : ZMod N)} :=
     fun c => ⟨(N * c.1, b + N * c.2), by simp⟩
   have hg : Function.Bijective g := by

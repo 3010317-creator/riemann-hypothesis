@@ -167,9 +167,7 @@ theorem qB_padicInt (C : GlobalTheory.MemLoc.Core l) (a : ℤ_[l]) :
 theorem exists_padicInt_of_norm_le (q : ℚ_[l]) (N : ℕ) (h : ‖q‖ ≤ (l : ℝ) ^ N) :
     ‖(l : ℚ_[l]) ^ N * q‖ ≤ 1 := by
   have hl : (0 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).pos
-  rw [norm_mul, norm_pow, Padic.norm_p, inv_pow]
-  rw [inv_mul_le_iff₀ (pow_pos hl N), mul_one]
-  exact h
+  rwa [norm_mul, norm_pow, Padic.norm_p, inv_pow, inv_mul_le_iff₀ (pow_pos hl N), mul_one]
 
 end GlobalTheory.CrisFixedLattice
 
@@ -475,8 +473,7 @@ theorem GlobalTheory.BKGal.value_hat_mem_filZero : ∀ (l : ℕ) [Fact l.Prime] 
       exact ((GlobalTheory.MemLoc.thetaD_props l).2.2.1 _ (by
         rw [(GlobalTheory.MemLoc.thetaD_props l).2.2.2.1]; exact hθν)).pow η
     have := h1.map (Algebra.TensorProduct.includeRight : Per.BdRp l →ₐ[ℤ_[l]] OD l O)
-    rw [Algebra.TensorProduct.includeRight_apply] at this
-    exact this
+    rwa [Algebra.TensorProduct.includeRight_apply] at this
 
   have hED : IsUnit (dRO l O (toOD l O ((1 : O) ⊗ₜ[ℤ_[l]] ϖ.ev a (eis l a e)))) := by
     have hxi : GlobalTheory.MemLoc.xi ε ∈ Ideal.span {ϖ.ev a (eis l a e)} := by
@@ -487,8 +484,7 @@ theorem GlobalTheory.BKGal.value_hat_mem_filZero : ∀ (l : ℕ) [Fact l.Prime] 
     rw [← hw, map_mul, map_mul] at hu
     have h1 := isUnit_of_mul_isUnit_right hu
     have := h1.map (Algebra.TensorProduct.includeRight : Per.BdR l →ₐ[ℤ_[l]] OdR l O)
-    rw [Algebra.TensorProduct.includeRight_apply] at this
-    exact this
+    rwa [Algebra.TensorProduct.includeRight_apply] at this
 
   choose c hc z hz using _root_.GlobalTheory.BKGal.HatVal.coord_E_pow_basis l a e O K t ϖ ι η H D T R ε δ hEps hδl
 
@@ -765,8 +761,7 @@ theorem main : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltrametricDist 
   have e1 : v₂ - D.xiExt g = E K l e ^ (m + 1) • (E K l e ^ η • D.xiExt r) := by
     rw [smul_smul, ← pow_add]
     have := D.xiExt_smul_tot (fun _ : ZMod a => E K l e ^ (m + 1 + η)) r
-    rw [← e0, map_sub, LinearEquiv.apply_symm_apply] at this
-    exact this
+    rwa [← e0, map_sub, LinearEquiv.apply_symm_apply] at this
   have e2 : v - D.xiExt g = (v - v₁) + (v₁ - v₂) + (v₂ - D.xiExt g) := by abel
   rw [e2, e1]
   exact add_mem (add_mem h1 h4) (D.smul_mem_Man (pow_mem (E_mem l e _) _) (fin D r hr))
@@ -1100,8 +1095,7 @@ theorem gal_iB_sub_mem_filO : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a
     (galOB_toOB _ (idem (constC t) τ)).trans (congrArg _ (galOCr_idem t ϖ ⟨sQ l g, hg⟩ τ))
   rw [map_mul, hid, ← mul_sub]
   have h6 := mul_mem_filO (toOB_mem_filO_zero C (idem (constC t) τ)) (key τ)
-  rw [zero_add] at h6
-  exact h6
+  rwa [zero_add] at h6
 
 end GlobalTheory.BKGal.TaylorFil
 end -- clump:auto
@@ -1611,8 +1605,7 @@ theorem small_of_coord_small (y : O) (k : ℕ) (h : ‖b.equivFun y‖ ≤ ‖(l
     intro i
     rw [← Ideal.mem_span_singleton, ← PadicInt.norm_le_pow_iff_mem_span_pow]
     have := (pi_norm_le_iff_of_nonneg (by positivity)).1 h i
-    rw [PadicInt.norm_p, inv_pow, ← zpow_natCast, ← zpow_neg] at this
-    exact this
+    rwa [PadicInt.norm_p, inv_pow, ← zpow_natCast, ← zpow_neg] at this
   choose e he using hd
   have hy : y = (l : O) ^ k * b.equivFun.symm e := by
     rw [← natCast_smul_pow_eq, ← map_smul, ← b.equivFun.symm_apply_apply y]

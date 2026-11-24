@@ -110,9 +110,7 @@ theorem eq_of_apply_eq (Φ : FlagTor Z e U)
   obtain ⟨g', hg'⟩ := hB' i' p' w hw' hχ
   obtain ⟨p'', hp'', hc''⟩ := hA i K χ w hχ g g' p rfl hg
   obtain ⟨_, -, huniq⟩ := Φ.lifts K χ w hχ g'
-  have h1 := huniq ⟨i, p''⟩ ⟨hp'', hc''⟩
-  have h2 := huniq ⟨i', p'⟩ ⟨hw', hg'⟩
-  exact congrArg Sigma.fst (h1.trans h2.symm)
+  exact congrArg Sigma.fst ((huniq ⟨i, p''⟩ ⟨hp'', hc''⟩).trans (huniq ⟨i', p'⟩ ⟨hw', hg'⟩).symm)
 
 end GlobalTheory.FlagCptBase
 
@@ -152,5 +150,4 @@ theorem GlobalTheory.FlagCptBase.exists_pt_over_base : ∀ (E : Type) [Field E] 
     exact hdis _ _ _ h1 h2
   subst hi
   refine ⟨p, ?_⟩
-  rw [← cancel_mono j, Category.assoc, hf]
-  exact hp
+  rwa [← cancel_mono j, Category.assoc, hf]

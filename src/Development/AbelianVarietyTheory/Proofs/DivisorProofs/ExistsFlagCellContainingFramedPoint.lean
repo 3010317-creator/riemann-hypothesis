@@ -229,8 +229,7 @@ theorem frVec_eq_eigFrame_mul : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     ext i j
     have := congrFun (hcv j) i
     simp only [Matrix.mulVec, dotProduct] at this
-    simp only [Matrix.mul_apply, C, Matrix.of_apply]
-    exact this
+    simpa only [Matrix.mul_apply, C, Matrix.of_apply] using this
   refine ⟨W * C, ?_, ?_⟩
   · have hcol : ∀ r, vec (A.k b).M.toMChart _ hM (U *ᵥ Pi.single r 1) ∈ eigLie c (frX P₀ ≫ Y.j) σ := fun r =>
       (vec_mem_eigLie _ _ hM σ _).2 (((LowRank.pm_gen p (A.k b).M.toMChart σ (frX_snd P₀) hM).1 _).2
@@ -350,8 +349,7 @@ theorem exists_cell_lies : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     have e : (((T σ).map φ').submatrix (w σ) id).submatrix (Fin.castLE hk) (Fin.castLE hk) =
         (φ : Localization.Away f₀ →+* Localization.Away f).mapMatrix
           (((T σ).submatrix (w σ) id).submatrix (Fin.castLE hk) (Fin.castLE hk)) := rfl
-    rw [e, ← RingHom.map_det]
-    exact h
+    rwa [e, ← RingHom.map_det]
   choose L U hL0 hL1 hU hUu hLU using fun σ => _root_.GlobalTheory.lowerUnitriangular_mul_upperTriangular_of_isUnit_leadingMinors (Localization.Away f) (Dw.mult σ)
     (((T σ).map φ').submatrix (w σ) id) (hminor σ)
   let ψ₀ : Γ(Y.X, (A.V b).1) →+* Localization.Away f := ev (frX P₁ ≫ Y.j) _ h₁
@@ -382,8 +380,7 @@ theorem exists_cell_lies : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   change (((A.k b).u σ).map ψ₀ * (T σ).map φ') r i = _
   rw [key, Matrix.mul_apply]
   erw [Finset.sum_apply]
-  refine Finset.sum_congr rfl fun j _ => ?_
-  exact _root_.mul_comm _ _
+  exact Finset.sum_congr rfl fun j _ => _root_.mul_comm _ _
 
 end GlobalTheory.FlagMod.FieldFlag
 end -- clump:auto

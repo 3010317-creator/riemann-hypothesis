@@ -92,8 +92,7 @@ theorem fix_of_pow_eq_one {R V : Type} [CommRing R] [IsDomain R] [AddCommGroup V
   have hr0 : r ≠ 0 := by
     rintro rfl
     exact h𝔭.ne_top ((Ideal.eq_top_iff_one _).2 (by simpa using hr))
-  intro x hx
-  exact sub_eq_zero.1 ((smul_eq_zero.1 (h0 _ ⟨x, hx, rfl⟩)).resolve_left hr0)
+  exact fun x hx => sub_eq_zero.1 ((smul_eq_zero.1 (h0 _ ⟨x, hx, rfl⟩)).resolve_left hr0)
 
 section Cong
 
@@ -171,14 +170,12 @@ theorem cong_of_conj_mem (hΛ : Submodule.IsFullLattice E Λ) (h𝔪 : 𝔪 ≠ 
     rw [mulVec_mulVec, ← Units.val_mul, mul_inv_cancel_right, Units.val_mul, ← mulVec_mulVec, P.csEquiv_bc_mulVec]
   refine ⟨fun y => ?_, fun y hy => globLat_smul_le hΛ h𝔪 g ?_⟩
   · have := h.2.1 ((g⁻¹).1 *ᵥ fun i => ιA (y i))
-    rw [e] at this
-    exact this
+    rwa [e] at this
   · have := h.2.2 _ hy
     rw [e, ← mulVec_sub] at this
     have e2 : ((fun i => ιA ((γ.1 *ᵥ y) i)) - fun i => ιA (y i)) = fun i => ιA ((γ.1 *ᵥ y - y) i) := by
       funext i; simp
-    rw [e2] at this
-    exact this
+    rwa [e2] at this
 
 theorem eq_one_of_conj_mem_of_pow (hΛ : Submodule.IsFullLattice E Λ) (h𝔪 : 𝔪 ≠ ⊥) {g : GL (Fin n) 𝒜} {γ : GL (Fin n) E}
     (h : g⁻¹ * bc ιA γ * g ∈ congLev hc J Λ 𝔪) (w : HeightOneSpectrum (𝓞 E)) (hw : 𝔪 ≤ w.asIdeal) {m : ℕ}

@@ -98,8 +98,7 @@ theorem IsGenericFlag.indep_twist_mul_genUp : ∀ (Ω Φ : Type) [Field Ω] [Fie
         show ((1 : Matrix (Fin N) (Fin N) Ω).map (algebraMap Ω (MvPolynomial (inertBlockIndex Ψ N j) Ω))) = 1 from
           (algebraMap Ω (MvPolynomial (inertBlockIndex Ψ N j) Ω)).mapMatrix.map_one,
         Matrix.one_mul, generic_block_matrix_apply]
-    intro p
-    exact DFunLike.congr_fun hc p
+    exact fun p => DFunLike.congr_fun hc p
   have hx := IsGenericFlag.indep_mul_genUp hg hgen
   have hxg := key _ (MvPolynomial.aeval (fun q : inertBlockIndex Ψ N j =>
       ((g q.1.1).map (C : Φ →+* MvPolynomial (UpIdx Ψ N j) Φ) * genUp Φ N j q.1.1) q.1.2.1 q.1.2.2)) _ hM
@@ -119,8 +118,7 @@ theorem IsGenericFlag.indep_twist_mul_genUp : ∀ (Ω Φ : Type) [Field Ω] [Fie
       apply MvPolynomial.algHom_ext
       intro q
       rw [AlgHom.comp_apply, MvPolynomial.aeval_X, hφ, hlin, hGx]
-    intro r
-    exact DFunLike.congr_fun hc r
+    exact fun r => DFunLike.congr_fun hc r
   rw [algebraicIndependent_iff_injective_aeval] at hx ⊢
   intro p p' hpp
   have h2 : φ p = φ p' := hx (by rw [← h1, ← h1]; exact hpp)

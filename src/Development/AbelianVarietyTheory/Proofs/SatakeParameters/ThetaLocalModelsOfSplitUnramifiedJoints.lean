@@ -381,8 +381,7 @@ theorem nonempty_cEmb_of_pos_nV : ∀ (p : ℕ) [Fact p.Prime] (G : Formalism.Ma
   have hpp : p' = p := by
     have h1 : e₀ (p : G.O) ∈ maximalIdeal (integralClosure ℤ_[p'] K₀) := by
       rw [mem_maximalIdeal, mem_nonunits_iff]
-      intro hu
-      exact (mem_maximalIdeal _).1 hpO (by simpa using hu.map e₀.symm)
+      exact fun hu => (mem_maximalIdeal _).1 hpO (by simpa using hu.map e₀.symm)
     rw [mem_maximalIdeal_integralClosure_iff, map_natCast] at h1
     have h2 : (((p : integralClosure ℤ_[p'] K₀) : K₀) : PadicAlgCl p') =
         algebraMap ℚ_[p'] (PadicAlgCl p') p := by simp
@@ -1066,8 +1065,7 @@ theorem kernelSite_seriesData_below_lastStep : AllSites (fun {D L hT Gi Gl Kc Dx
     J.Dict std → S.Pair → S.Pos → S.Scal → S.K1) := by
   intro D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X _ std t J S _hD hP hPos hSc
   refine ⟨?_, ?_, ?_, hSc, J.rho std, ?_, ?_, ?_⟩
-  · intro j hj L0 hL0 La' hLa'
-    exact (hP j hj L0 La' (repOf_lat _ _ j L0 hL0) hLa').1
+  · exact fun j hj L0 hL0 La' hLa' => (hP j hj L0 La' (repOf_lat _ _ j L0 hL0) hLa').1
   · obtain ⟨hpos, hS⟩ := GlobalTheory.T.site_finite_data_level_pos_bad_prime_factors t std J
     exact ⟨hpos, fun hd => GlobalTheory.T.site_residue_char_not_mem_bad_primes t std J (hS _ Fact.out hd)⟩
   · exact ⟨(t.O u μ).S, GlobalTheory.T.site_residue_char_not_mem_bad_primes t std J, fun j _ L0 _ La' _ y => GlobalTheory.T.intOff_xi0_of_joint t std J S j L0 La' y⟩
@@ -1383,8 +1381,7 @@ theorem latK_of_renamed {R : Ranks} {F E : Type} [Field F] [NumberField F] [Fiel
   have h1 := (GlobalTheory.reindex_rename_point_det_latK sp hr J' a y Lb').1
   have h3 := (GlobalTheory.reindex_rename_point_det_latK sp h J a x Lb).2.2
   have hy' : y = Formalism.L2.PairingIndexBounds.F.reGL (finCongr h) x := by rw [hy]; exact h1.symm
-  rw [hJ, hLb, h₁, hy']
-  exact h3
+  rwa [hJ, hLb, h₁, hy']
 
 section Unfold
 
@@ -1477,8 +1474,7 @@ theorem GlobalTheory.TwV.Joint.pt_succ_coset : ∀ {D : D7} {L : SizeData₂ D} 
   have e2 : ((I.at' j hj).st.K ((I.at' j hj).st.eC.symm La.1).1).y ⟨_, hc⟩ =
       ((I.at' j hj).st.K ((I.at' j hj).st.eC.symm La.1).1).y ⟨_, hc'⟩ :=
     congrArg _ (Subtype.ext (congrArg (fun a => clsOf (S := (I.at' j hj).st) (H.core j hj) a La.2) ea))
-  rw [← e2]
-  exact e
+  rwa [← e2]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.SuccStepPointMemDoubleCosetClassRep =====
@@ -1586,8 +1582,7 @@ private theorem admissible_at_each_site : Lt.AdmAtEnt2 → AllSites (fun {D L hT
   refine k2 ⟨ι.toRingHom, Formalism.L2.KerInert.SecondKernelProjection.rdJ I X.onCh ι.toRingHom, Formalism.L2.KerInert.SecondKernelSeries.srOf S.Y, fun j hj => ⟨J.sharp j hj, ?_, ?_, ?_, ?_⟩⟩
   · have h1 := tieStab_kaAtAny X H hT (chainAt H hT) (chainMu_cmp_K _) std (vpOf (D.gat u w hg)) (vpOf_irreducible (D.gat u w hg)) (eOOf (D.gat u w hg) (p_ne_zero_of_place (D.gat u w hg) (Gl.vOf u w hg 0))) (eOOf_spec (D.gat u w hg) (p_ne_zero_of_place (D.gat u w hg) (Gl.vOf u w hg 0))) (Lt.dGT D u (D.what₂.places.resChar w)) (Lt.dGT_spec (kaAt X H hT)) (fun v => omOf (D.what₂.places.resChar w) ((D.gat u w hg).P.n' v) (std v).even (std v).two_le) S.Y hU hS0 j hj.le
     rw [kaAtAny_cls] at h1
-    rw [kaAt_cls]
-    exact h1
+    rwa [kaAt_cls]
   · refine Formalism.L2.KerInert.SecondKernelProjection.series_reading_entries D L hT Gi Gl Kc Dx cX ex u μ w hg (Gl.Fl u w hg) Lv (chainAt H hT) (labAt X H) I H Formalism.L2.G.RelativeIndexFlags.blockRationality_holds hT (chainMu_cmp_K _) X.onCh std (vpOf (D.gat u w hg)) (vpOf_irreducible (D.gat u w hg)) (eOOf (D.gat u w hg) (p_ne_zero_of_place (D.gat u w hg) (Gl.vOf u w hg 0))) (eOOf_spec (D.gat u w hg) (p_ne_zero_of_place (D.gat u w hg) (Gl.vOf u w hg 0))) (Lt.dGT D u (D.what₂.places.resChar w)) (Lt.dGT_spec (kaAt X H hT)) (fun v => omOf (D.what₂.places.resChar w) ((D.gat u w hg).P.n' v) (std v).even (std v).two_le) S.Y ι.toRingHom ?_ j
     intro r
     have hz : D.what₂.embLL r ∈ algebraicClosure ℚ ℂ := by

@@ -153,8 +153,7 @@ theorem exists_frame (R : Subring Ω) [IsLocalRing R] {V W : Submodule Ω E} (hV
   have hcompl : IsCompl (N.comap P.subtype) (Q.comap P.subtype) := by
     constructor
     · rw [Submodule.disjoint_def]
-      intro x h1 h2
-      exact Subtype.ext (hdisj _ h2 h1)
+      exact fun x h1 h2 => Subtype.ext (hdisj _ h2 h1)
     · rw [codisjoint_iff, eq_top_iff]
       intro x _
       obtain ⟨y, hy, z, hz, e⟩ := hdec x x.2
@@ -187,8 +186,7 @@ theorem exists_frame (R : Subring Ω) [IsLocalRing R] {V W : Submodule Ω E} (hV
     have h : LinearIndependent R ((V.mkQ.restrictScalars R) ∘ e) := hc'.restrict_scalars hinj
     exact h.of_comp _
   have hdisj' : Disjoint (span R (Set.range e)) (span R (Set.range n)) := by
-    rw [hnN, Submodule.disjoint_def]
-    exact hdisj
+    rwa [hnN, Submodule.disjoint_def]
   have hsumR : LinearIndependent R (Sum.elim e n) := heR.sum_type hnR hdisj'
   have hcatR : LinearIndependent R (cat e n) := hsumR.comp _ (Equiv.injective _)
   have hspan : span R (Set.range (cat e n)) = P := by rw [span_cat, hPsup, hnN]
@@ -220,8 +218,7 @@ theorem exists_frame (R : Subring Ω) [IsLocalRing R] {V W : Submodule Ω E} (hV
     rw [linearIndependent_iff_card_eq_finrank_span, Set.finrank, hW, ← hbW, finrank_span_eq_card hb]
     simp [hcard]
   have hsumΩ : LinearIndependent Ω (Sum.elim e n) := by
-    have h := hcatΩ.comp _ (finSumFinEquiv (m := s) (n := k)).injective
-    simpa [cat, Function.comp_def] using h
+    simpa [cat, Function.comp_def] using hcatΩ.comp _ (finSumFinEquiv (m := s) (n := k)).injective
   refine ⟨k, e, n, hcatΩ, hPsup, hc', hnV, le_antisymm (span_le.2 ?_) fun v hv => ?_⟩
   · rintro _ ⟨j, rfl⟩; exact hnV j
   · have hvW := hVW hv

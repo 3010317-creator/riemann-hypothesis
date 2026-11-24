@@ -150,8 +150,7 @@ theorem mem_realLevSet_iff {D : D7} {W : HSp D} {K : Subgroup (GA D W)} (hK : K 
   · rintro ⟨u, hu, k, hk, rfl⟩
     have h1 : toFin W u = 1 := toFin_coe_inf (V := W) ⟨u, hu⟩
     have h2 : toFin W k = ⟨k, hK hk⟩ := toFin_coe (V := W) ⟨k, hK hk⟩
-    rw [map_mul, h1, h2, one_mul, Subgroup.mem_subgroupOf]
-    exact hk
+    rwa [map_mul, h1, h2, one_mul, Subgroup.mem_subgroupOf]
   · intro h'
     exact ⟨toInf W h, (toInf W h).2, toFin W h, (Subgroup.mem_subgroupOf).1 h', (toInf_mul_toFin h).symm⟩
 
@@ -258,8 +257,7 @@ theorem integral_lowCoefSq_pos : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (
         continuous_const) hmem
   have hc : Continuous (lowCoefSq R i v) := by
     unfold lowCoefSq
-    refine (continuous_finsetProd _ fun ρ _ => ?_).norm.pow 2
-    exact continuous_const.inner (hrep ρ _)
+    exact (continuous_finsetProd _ fun ρ _ => (continuous_const.inner (hrep ρ _))).norm.pow 2
 
   have h0 : ∀ h, 0 ≤ lowCoefSq R i v h := fun h => by unfold lowCoefSq; positivity
 
@@ -729,8 +727,7 @@ theorem finSumAt_core (hC : GlobalTheory.Published.CuspRapidDecay) (R : RealDat 
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [(hR k x y).2]
     ring
-  rw [hfun, hval]
-  exact h2
+  rwa [hfun, hval]
 
 theorem finSumAt_of (hC : GlobalTheory.Published.CuspRapidDecay) (R : RealDat D A Ks) (F : Face D A) (hL : Laws R F)
     (hRal : RallisConv D) (i : Fin D.R.m) (t : T) (hAdj : AdjFormula R i t) (hLF : LevFix R i t)
@@ -750,8 +747,7 @@ theorem finSumAt_of (hC : GlobalTheory.Published.CuspRapidDecay) (R : RealDat D 
         trPair R i (q.out : GfC (Wc D i)) x y = 0 := fun q => by
       obtain ⟨B, -, hB⟩ := tC _ (q.out).2
       rw [hB, hx x, inner_zero_left]
-    simp only [ex, inner_zero_left, hterm, mul_zero]
-    exact hasSum_zero
+    simpa only [ex, inner_zero_left, hterm, mul_zero] using hasSum_zero
 
 theorem finSum_of_rallis : GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (A : FamIn D.what₂.LL G Pl0 T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), Laws R F → R.FullP → RallisConv D → ∀ i t, AdjFormula R i t → LevFix R i t → FactInf R i t → RealLow R i t → VecNe R i t → LevProd R i → TransLaws R i → FinSum R i t :=
   fun hC _ _ _ _ _ _ _ _ _ _ _ R F hL _ hRal i t hAdj hLF hFI hRL hVN hLP hTL th hth μ 𝓕 hμ =>

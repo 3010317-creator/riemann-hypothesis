@@ -288,8 +288,7 @@ theorem w_mem (hz : zb ∈ mcPts (mCoordIdeal M.x)) (h₁ : M.IsFrame F₁) (h�
         simp only [omIdx, Finset.mem_filter, Finset.mem_univ, true_and, Finset.notMem_empty, iff_false]
         simp only [i] at h2
         omega
-      rw [hO, MinorCalc.minorIJ_eq_det _ _ _ 0 rfl rfl, Matrix.det_isEmpty, mul_one] at this
-      exact this
+      rwa [hO, MinorCalc.minorIJ_eq_det _ _ _ 0 rfl rfl, Matrix.det_isEmpty, mul_one] at this
     · rwa [mul_one] at this
   · have hrow : ∀ c ∈ wIdx N j, IsStepRows N j i {c} := by
       intro c hc
@@ -607,8 +606,7 @@ theorem PositivityTheory.Xgp.t_c_cov_self : ∀ (K : Type) [Fintype K] (ι : K �
   · intro z hz z₀ _ F' F h' h g' g ho p H hH _ e' e
     have := PositivityTheory.Xgp.c_cov_self.metric_self M z hz z₀ F' F h' h g' g ho p H hH e' e
     rw [← FA.ref_some p] at this
-    rw [← FA.ref_some p]
-    exact this
+    rwa [← FA.ref_some p]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PluriharmonicCharts.XCCovSelf =====

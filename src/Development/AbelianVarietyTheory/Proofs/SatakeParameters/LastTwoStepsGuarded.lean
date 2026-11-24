@@ -239,8 +239,7 @@ theorem good_PsiAt {m2 : ℕ} (hm : R.m = m2 + 2) (P : rowSG Pr sel mu) (hP : P.
   have h := good_omPhi Ch sel mu cst hm P hP hh
   refine ⟨fun x hx => ((joinCol_mem (cOf_pen hm) (cOf_top hm) _ _).1 (h.1 _ hx)).1, fun x z hz => ?_, fun x => h.2.2 _⟩
   have := h.2.1 (joinCol x y) (joinCol z 0) ((joinCol_mem (cOf_pen hm) (cOf_top hm) _ _).2 ⟨hz, by simp⟩)
-  rw [← joinCol_add, smul_zero, add_zero] at this
-  exact this
+  rwa [← joinCol_add, smul_zero, add_zero] at this
 
 theorem splitAt {m2 : ℕ} (hm : R.m = m2 + 2) (P : rowSG Pr sel mu) (hP : P.1 ∈ Pr.vGs) {hal : AutY X R m2}
     (hh : hal ∈ stabL X.E _ (lamYat (Pr := Pr) (R := R) m2 P.1)) : SplitAt Ch sel mu cst m2 P hal := by
@@ -251,8 +250,7 @@ theorem splitAt {m2 : ℕ} (hm : R.m = m2 + 2) (P : rowSG Pr sel mu) (hP : P.1 �
     (fun x y hx => ((joinCol_mem (cOf_pen hm) (cOf_top hm) _ _).1 (h.1 _ hx)).2) fun x y z hz => by
       have := h.2.1 (joinCol x y) (joinCol 0 ((qOf P.1 : X.E)⁻¹ • z)) ((joinCol_mem (cOf_pen hm) (cOf_top hm) _ _).2
         ⟨fun _ _ => zero_mem _, by rwa [smul_inv_smul₀ hq]⟩)
-      rw [← joinCol_add, smul_zero, add_zero, smul_inv_smul₀ hq] at this
-      exact this
+      rwa [← joinCol_add, smul_zero, add_zero, smul_inv_smul₀ hq] at this
   exact ⟨ι, inferInstance, fun i x₀ => PsiAt Ch sel mu cst m2 P hal x₀ (a i), f,
     fun i => (fnModAt_iff _ _ _).2 (good_PsiAt Ch sel mu cst hm P hP hh _), hf, hs⟩
 

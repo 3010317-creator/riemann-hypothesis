@@ -114,8 +114,7 @@ theorem wtA_eq {ε : Fin n → Bool} (A : Finset (NC ε)) (c : Fin n) :
     · rintro ⟨⟨a, b⟩, h⟩ hi
       simp only [mem_filter] at hi
       obtain ⟨hi, rfl⟩ := hi
-      simp only [mem_filter, mem_univ, true_and]
-      exact ⟨h, hi⟩
+      simpa only [mem_filter, mem_univ, true_and] using ⟨h, hi⟩
     · rintro ⟨⟨a, b⟩, h⟩ hi ⟨⟨a', b'⟩, h'⟩ hi' e
       simp only [mem_filter] at hi hi' e
       obtain ⟨_, rfl⟩ := hi
@@ -130,8 +129,7 @@ theorem wtA_eq {ε : Fin n → Bool} (A : Finset (NC ε)) (c : Fin n) :
     · rintro ⟨⟨a, b⟩, h⟩ hi
       simp only [mem_filter] at hi
       obtain ⟨hi, rfl⟩ := hi
-      simp only [mem_filter, mem_univ, true_and]
-      exact ⟨h, hi⟩
+      simpa only [mem_filter, mem_univ, true_and] using ⟨h, hi⟩
     · rintro ⟨⟨a, b⟩, h⟩ hi ⟨⟨a', b'⟩, h'⟩ hi' e
       simp only [mem_filter] at hi hi' e
       obtain ⟨_, rfl⟩ := hi

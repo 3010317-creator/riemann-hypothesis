@@ -176,8 +176,7 @@ theorem theta_one (φ : HahnSeries ℚ Ω) : theta 1 φ = qD φ := by
 
 theorem mem_of_pow_eq_one (A : ValuationSubring Ω) {y : Ω} {k : ℕ} (hk : k ≠ 0) (hy : y ^ k = 1) : y ∈ A := by
   rw [← A.valuation_le_one_iff]
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have h := one_lt_pow' hlt hk
   rw [← map_pow, hy, map_one] at h
   exact lt_irrefl _ h
@@ -1424,8 +1423,7 @@ theorem isThB_zero {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} (
   · obtain ⟨y, hy⟩ := Submodule.Quotient.mk_surjective _ (AdicCompletion.eval (idl l) (X.Kl l) 0 (b ![1, 0]))
     rw [← hy, Tower.cls, Submodule.Quotient.eq]
     simp
-  · simp only [map_one, mul_one, one_mul, sub_self, HahnSeries.coeff_zero, sub_zero]
-    exact hψ r
+  · simpa only [map_one, mul_one, one_mul, sub_self, HahnSeries.coeff_zero, sub_zero] using hψ r
 
 theorem isThB_act_heckeU_same : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosed Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε)
     (A : ValuationSubring Ω) (N l : ℕ) [Fact l.Prime] (n w d : ℕ), d.Coprime N → ¬ l ∣ N → ∀ b : X.Fn l,
@@ -1806,8 +1804,7 @@ theorem UpperTheory.V.Z.Kato.Joint.thOp :
       ite_true] at h2
     have h3 := cg_j hj (_root_.GlobalTheory.ThBCompat.isThB_succ_coeff_cong Ω ε X A N l hl2 hlN (by omega) hl n _ _ _ (hψ (n + 1)).1 (hψ n).1
       ((l : ℚ) * i))
-    simp only [Nat.cast_one, div_one, Nat.cast_mul]
-    exact cg_trans h2 h3
+    simpa only [Nat.cast_one, div_one, Nat.cast_mul] using cg_trans h2 h3
   | D d =>
     simp only [th, seqN, fop, Tower.op, LinearMap.smul_apply, Module.End.one_apply, Pi.smul_apply,
       smul_eq_mul]

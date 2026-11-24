@@ -94,8 +94,7 @@ theorem UpperTheory.V.CF.grMaxOf :
       rw [hcomap]; exact hpm
     simpa using h0
   haveI : CharP (MonoidAlgebra R G ⧸ M) p := by
-    have h := CharP.ringChar_of_prime_eq_zero (Fact.out : p.Prime) hpQ
-    exact h ▸ ringChar.charP _
+    exact (CharP.ringChar_of_prime_eq_zero (Fact.out : p.Prime) hpQ) ▸ ringChar.charP _
   have hg : ∀ g : G, Ideal.Quotient.mk M (MonoidAlgebra.single g 1) = 1 := by
     intro g
     obtain ⟨k, hk⟩ := hG g
@@ -165,8 +164,7 @@ theorem UpperTheory.V.CF.grLocal :
       · rw [Ideal.map_le_iff_le_comap]
         intro r hr
         show aug R G (algebraMap R (MonoidAlgebra R G) r) ∈ IsLocalRing.maximalIdeal R
-        rw [hsec]
-        exact hr
+        rwa [hsec]
       · intro x hx
         rw [← (UpperTheory.V.CF.augKer R G).1, RingHom.mem_ker] at hx
         show aug R G x ∈ IsLocalRing.maximalIdeal R
@@ -174,8 +172,7 @@ theorem UpperTheory.V.CF.grLocal :
         exact zero_mem _
   · intro x
     constructor
-    · intro hx
-      exact hx.map (aug R G)
+    · exact fun hx => hx.map (aug R G)
     · intro hx
       by_contra hnx
       have hxm : x ∈ IsLocalRing.maximalIdeal (MonoidAlgebra R G) := hnx
@@ -373,8 +370,7 @@ private theorem grSpan_small {Λ : Type} [CommRing Λ] {σ : Type} [Fintype σ] 
     apply hβ
     funext s
     exact Fin.ext (by have := DFunLike.congr_fun h s; simpa using this.symm)
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem UpperTheory.V.AlgebraTools.mvPowerSeries_span_monomials :
     ∀ (Λ : Type) [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] [IsAdicComplete (IsLocalRing.maximalIdeal Λ) Λ] (σ : Type) [Fintype σ] (d : σ → ℕ) (w : σ → MvPowerSeries σ Λ),
@@ -521,8 +517,7 @@ theorem UpperTheory.V.AlgebraTools.groupRing_ker :
     exact ⟨Ideal.Quotient.mk I x, rfl⟩
   let v := fun α : ((s : σ) → Fin (l ^ e s)) => Ideal.Quotient.mk I (∏ s, MvPowerSeries.X s ^ (α s : ℕ))
   have hg : Function.Surjective (Fintype.linearCombination Λ v) := by
-    rw [← LinearMap.range_eq_top, Fintype.range_linearCombination]
-    exact hspan
+    rwa [← LinearMap.range_eq_top, Fintype.range_linearCombination]
   let eqv : ((s : σ) → Fin (l ^ e s)) ≃ (∀ s, Multiplicative (ZMod (l ^ e s))) :=
     Equiv.piCongrRight fun s => (ZMod.finEquiv (l ^ e s)).toEquiv.trans Multiplicative.ofAdd
   let E : MonoidAlgebra Λ (∀ s, Multiplicative (ZMod (l ^ e s))) ≃ₗ[Λ] (((s : σ) → Fin (l ^ e s)) → Λ) :=
@@ -668,8 +663,7 @@ theorem UpperTheory.V.Pa.Lev.freeSummand :
           obtain ⟨w', hw', hwy⟩ := hy
           exact ⟨w * w', A.mul_mem hw hw', by rw [map_mul, hwx, hwy, map_mul]⟩
         one_mem' := ⟨1, A.one_mem, by rw [map_one, map_one]⟩ }
-    intro g
-    exact fs_gen (fun p : Fin q × Fin n => l ^ a p.1) T (fun p => ⟨_, hgen p, hφX p⟩) g
+    exact fun g => fs_gen (fun p : Fin q × Fin n => l ^ a p.1) T (fun p => ⟨_, hgen p, hφX p⟩) g
   have hsurjA : ∀ y, ∃ w ∈ A, φ w = y := by
     intro y
     induction y using MonoidAlgebra.induction_on with

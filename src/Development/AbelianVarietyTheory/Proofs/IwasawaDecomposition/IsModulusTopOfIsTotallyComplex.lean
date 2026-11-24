@@ -63,8 +63,7 @@ theorem inInertia_restrict {K Ω : Type} [Field K] [NumberField K] [Field Ω] [A
     rfl
   · rw [hf]
     have := hσ.2 _ (valuation_int_le_one A x)
-    rw [← σ.restrictNormal_commutes L, ← map_sub] at this
-    exact this
+    rwa [← σ.restrictNormal_commutes L, ← map_sub] at this
 
 theorem rayIdl_le {K : Type} [Field K] [NumberField K] (𝔪 : Ideal (𝓞 K)) {U : Subgroup (Ideles K)}
     (ho : IsOpen (U : Set (Ideles K))) (hi : infConn K ≤ U)
@@ -97,8 +96,7 @@ theorem isModulus_top (H : GlobalTheory.Published.GlobalArtinReciprocity) (K M :
     have : FiniteDimensional K j.fieldRange := j.equivFieldRange.toLinearEquiv.finiteDimensional
     refine Subgroup.isOpen_mono (fun σ hσ => ?_) j.fieldRange.fixingSubgroup_isOpen
     ext x
-    apply (algebraMap M Ω).injective
-    exact (σ.restrictNormal_commutes M x).trans (hσ ⟨_, x, rfl⟩)
+    exact (algebraMap M Ω).injective ((σ.restrictNormal_commutes M x).trans (hσ ⟨_, x, rfl⟩))
   let θ : Ideles K →* (M ≃ₐ[K] M) := (liftAb φ hφ).comp art
   have hθ : Continuous θ := (continuous_liftAb φ hφ).comp ha.quot.continuous
   have ho : IsOpen (θ.ker : Set (Ideles K)) := (isOpen_discrete {1}).preimage hθ

@@ -121,8 +121,7 @@ theorem UpperTheory.V.AlgebraTools.Det.flagRel :
     have key := UpperTheory.V.AlgebraTools.Det.flagKill n W
       (fun j => Matrix.toLinAlgEquiv' (mat r (g j) - (κ j (g j) : k) • (1 : Matrix (Fin n) (Fin n) k))) ?_ ?_ ?_
     · apply (Matrix.toLinAlgEquiv' (R := k) (n := Fin n)).injective
-      rw [map_list_prod, map_zero, List.map_ofFn]
-      exact key
+      rwa [map_list_prod, map_zero, List.map_ofFn]
     · rw [eq_bot_iff]
       intro v hv
       have h0 : (P : Matrix (Fin n) (Fin n) k) *ᵥ v = 0 := funext fun i => (hW 0 v).1 hv i (Nat.zero_le _)
@@ -130,8 +129,7 @@ theorem UpperTheory.V.AlgebraTools.Det.flagRel :
         rw [Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec]
       rw [Submodule.mem_bot, this, h0, Matrix.mulVec_zero]
     · rw [eq_top_iff]
-      intro v _
-      exact (hW n v).2 fun i hi => absurd i.2 (not_lt.2 hi)
+      exact fun v _ => (hW n v).2 fun i hi => absurd i.2 (not_lt.2 hi)
     · intro j v hv
       rw [hW] at hv ⊢
       intro i hi

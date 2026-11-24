@@ -101,8 +101,7 @@ theorem isCompact_of_fg {O LL V : Type} [CommRing O] [Field LL] [Algebra O LL] [
       rw [SetLike.mem_coe, ← hs] at hx
       obtain ⟨a, ha⟩ := (Submodule.mem_span_range_iff_exists_fun O).1 hx
       refine ⟨fun i => algebraMap O LL (a i), fun i _ => ⟨a i, rfl⟩, ?_⟩
-      simp only [algebraMap_smul]
-      exact ha
+      simpa only [algebraMap_smul] using ha
     · rintro ⟨c, hc', rfl⟩
       have : ∀ i, ∃ a : O, algebraMap O LL a = c i := fun i => hc' i (Set.mem_univ i)
       choose a ha using this
@@ -251,8 +250,7 @@ theorem limit_cocycle : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (LL : Type) 
     rw [← Submodule.Quotient.mk_add, Submodule.Quotient.eq] at h1
     have := (hmem n _).1 h1
     simp only [Submodule.coe_sub, Submodule.coe_add] at this
-    rw [sub_sub]
-    exact this
+    rwa [sub_sub]
   have hcoc : ∀ g h, d (g * h) = d g + A.ρ g (d h) := by
     intro g h
     have : d (g * h) - d g - A.ρ g (d h) = 0 := by
@@ -509,8 +507,7 @@ theorem mem_BD_of_orthogonal : Formalism.GaloisCohomology.LocalTateDualityK → 
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   set π := algebraMap O LL ϖ with hπdef
   have hπ : π ≠ 0 := by
-    intro h
-    exact hϖ.ne_zero (IsFractionRing.injective O LL (by rw [← hπdef, h, map_zero]))
+    exact fun h => hϖ.ne_zero (IsFractionRing.injective O LL (by rw [← hπdef, h, map_zero]))
   by_contra hcB
   obtain ⟨r, hr⟩ := _root_.GlobalTheory.TorsCoc.cocycle_pow_smul_mem l K LL O hO A' LA' ϖ hϖ c hc
   let I : ℕ → Submodule O ↥LA.T := fun k => Ideal.span {ϖ ^ (r + k)} • ⊤

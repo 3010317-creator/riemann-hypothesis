@@ -88,8 +88,7 @@ private theorem isHalf_mul {c : AE D} {m n : ℕ} (P : Matrix (Fin m) (Fin m) (A
   have : c • (HMul.hMul (HMul.hMul P u : Matrix (Fin m) (Fin n) (AE D)) Q : Matrix (Fin m) (Fin n) (AE D)) =
       (HMul.hMul (HMul.hMul P u : Matrix (Fin m) (Fin n) (AE D)) Q : Matrix (Fin m) (Fin n) (AE D)) := by
     rw [← Matrix.smul_mul, ← Matrix.mul_smul, hu]
-  intro i j
-  exact congrFun (congrFun this i) j
+  exact fun i j => congrFun (congrFun this i) j
 
 private alias mt_one := _root_.GlobalTheory.BesselCompare.mt_one
 
@@ -120,8 +119,7 @@ private theorem isIntM_frames {n : ℕ} {β β' : GL (Fin n) (EAf D)} {Λ : Subm
     · exact one_mem _
     · exact zero_mem _)
   have := (h _).1 hx i
-  rw [Matrix.mulVec_mulVec, ← Units.val_mul, Matrix.mulVec_single_one] at this
-  exact this
+  rwa [Matrix.mulVec_mulVec, ← Units.val_mul, Matrix.mulVec_single_one] at this
 
 private theorem isIntM_mul {m n p : ℕ} {K : Matrix (Fin m) (Fin n) (EAf D)} {Z : Matrix (Fin n) (Fin p) (EAf D)}
     (hK : IsIntM K) (hZ : IsIntM Z) : IsIntM (K * Z) := fun i j => by
@@ -182,14 +180,12 @@ private theorem unitChar_mul (ν : (AE D)ˣ →* Circle) {e : AE D} (hE : toEAf 
     rintro u ⟨a1, a2, a3⟩
     refine ⟨?_, ?_, ?_⟩
     · rw [Units.val_mul, map_mul, a1, h1, one_mul]
-    · rw [Units.val_mul, map_mul, a2, h2, Matrix.det_mul]
-      rw [idem_mul hE, mul_comm R.det]
+    · rw [Units.val_mul, map_mul, a2, h2, Matrix.det_mul, idem_mul hE, mul_comm R.det]
     · rw [mul_inv_rev, Units.val_mul, map_mul]
       exact mul_mem hxI' a3
   have hinf : infPart D ((x⁻¹ : (AE D)ˣ) : AE D) = 1 := by
     have := congrArg (infPart D) (Units.mul_inv x)
-    rw [map_mul, h1, one_mul, map_one] at this
-    exact this
+    rwa [map_mul, h1, one_mul, map_one] at this
   have bwd : ∀ u, IsUnitDet e (κ.1 * R) u → IsUnitDet e R (u * x⁻¹) := by
     rintro u ⟨a1, a2, a3⟩
     refine ⟨?_, ?_, ?_⟩

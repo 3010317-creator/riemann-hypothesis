@@ -475,8 +475,7 @@ theorem isOpen_of_stableUnderGeneralization_of_locally_open_in_closure :
   classical
   set I := PrimeSpectrum.vanishingIdeal (Uᶜ) with hI
   have hIle : ∀ q : PrimeSpectrum B, q ∈ Uᶜ → I ≤ q.asIdeal := by
-    intro q hq f hf
-    exact (PrimeSpectrum.mem_vanishingIdeal _ f).1 hf q hq
+    exact fun q hq f hf => (PrimeSpectrum.mem_vanishingIdeal _ f).1 hf q hq
   have key : ∀ x : PrimeSpectrum B, x.asIdeal ∈ I.minimalPrimes → x ∉ U := by
     intro x hx hxU
     obtain ⟨g, hg, hgU⟩ := hloc x hxU
@@ -508,8 +507,7 @@ theorem isOpen_of_stableUnderGeneralization_of_locally_open_in_closure :
     intro q hq
     have hIq : I ≤ q.asIdeal := (PrimeSpectrum.mem_zeroLocus _ _).1 hq
     obtain ⟨P, hPm, hPq⟩ := Ideal.exists_minimalPrimes_le hIq
-    intro hqU
-    exact key ⟨P, hPm.1.1⟩ hPm (hgen _ _ hPq hqU)
+    exact fun hqU => key ⟨P, hPm.1.1⟩ hPm (hgen _ _ hPq hqU)
   exact isClosed_compl_iff.1 hcl
 
 end GlobalTheory
@@ -531,8 +529,7 @@ theorem isRegularLocalRing_atPrime_of_le {B : Type} [CommRing B] (p q : Ideal B)
     IsRegularLocalRing (Localization.AtPrime p) := by
   have hd : Disjoint (q.primeCompl : Set B) (p : Set B) := by
     rw [Set.disjoint_left]
-    intro x hx hxp
-    exact hx (hpq hxp)
+    exact fun x hx hxp => hx (hpq hxp)
   let P' : Ideal (Localization.AtPrime q) := p.map (algebraMap B _)
   haveI hP' : P'.IsPrime := IsLocalization.isPrime_of_isPrime_disjoint q.primeCompl _ p ‹_› hd
   have hc : P'.comap (algebraMap B (Localization.AtPrime q)) = p :=
@@ -553,8 +550,7 @@ theorem isRegularLocalRing_atPrime_of_le {B : Type} [CommRing B] (p q : Ideal B)
 theorem isOpen_regularLocus_of_nagata : ∀ (B : Type) [CommRing B] [IsNoetherianRing B], (∀ (p : Ideal B) [p.IsPrime], ∃ g, g ∉ p ∧ ∀ (q : Ideal B) [q.IsPrime], p ≤ q → g ∉ q → IsRegularLocalRing (Localization.AtPrime q ⧸ p.map (algebraMap B (Localization.AtPrime q)))) → IsOpen {Q : PrimeSpectrum B | IsRegularLocalRing (Localization.AtPrime Q.asIdeal)} := by
   intro B _ _ hyp
   apply _root_.GlobalTheory.isOpen_of_stableUnderGeneralization_of_locally_open_in_closure B
-  · intro p q hpq hq
-    exact isRegularLocalRing_atPrime_of_le p.asIdeal q.asIdeal hpq hq
+  · exact fun p q hpq hq => isRegularLocalRing_atPrime_of_le p.asIdeal q.asIdeal hpq hq
   · intro p hp
     obtain ⟨g₁, hg₁p, hg₁⟩ := hyp p.asIdeal
     obtain ⟨g₂, hg₂p, hg₂⟩ := _root_.GlobalTheory.RegularAscent.exists_regular_near_of_regular_quotient B p.asIdeal hp
@@ -634,8 +630,7 @@ theorem exists_etale_of_isEtaleCompletion (A R : Type) [CommRing A] [IsLocalRing
   haveI : Module.Finite D (R ⧸ (maximalIdeal D).map (algebraMap D R)) := by
     rw [← RingHom.finite_algebraMap]
     show ((Ideal.Quotient.mk _).comp (algebraMap D R)).Finite
-    rw [hmA]
-    exact hres
+    rwa [hmA]
   haveI : IsHausdorff ((maximalIdeal D).map (algebraMap D R)) R := by rw [hmA]; infer_instance
   haveI : Module.Finite D R := FormalIsogeny.finite_of_finite_quotient_map (maximalIdeal D)
   haveI : Module.Flat D R := by
@@ -674,8 +669,7 @@ theorem exists_etale_of_isEtaleCompletion (A R : Type) [CommRing A] [IsLocalRing
           (map_sub g _ _).symm]
         exact Ideal.mem_map_of_mem _ hx
       simp only [RingHom.comp_apply, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, ← ha]
-      rw [Ideal.Quotient.algebraMap_quotient_map_quotient, eq_comm, Ideal.Quotient.eq]
-      exact hx'
+      rwa [Ideal.Quotient.algebraMap_quotient_map_quotient, eq_comm, Ideal.Quotient.eq]
     · rw [RingHom.flat_algebraMap_iff]
       exact Module.Flat.of_linearEquiv
         (Algebra.TensorProduct.quotIdealMapEquivQuotTensor R (maximalIdeal A ^ n)).toLinearEquiv
@@ -805,12 +799,10 @@ theorem compl_equiv (R S : Type) [CommRing R] [CommRing S] (e : R ≃+* S) (I : 
     ?_ ?_, complMap_algebraMap _ I J h1⟩
   · refine RingHom.ext fun x => ?_
     rw [RingHom.comp_apply, complMap_comp]
-    simp only [RingEquiv.comp_symm, RingHom.id_apply]
-    exact complMap_id J _ x
+    simpa only [RingEquiv.comp_symm, RingHom.id_apply] using complMap_id J _ x
   · refine RingHom.ext fun x => ?_
     rw [RingHom.comp_apply, complMap_comp]
-    simp only [RingEquiv.symm_comp, RingHom.id_apply]
-    exact complMap_id I _ x
+    simpa only [RingEquiv.symm_comp, RingHom.id_apply] using complMap_id I _ x
 
 theorem fg_top_transfer {F F' K : Type} [Field F] [Field F'] [Field K] [Algebra F K] [Algebra F' K]
     (φ : F ≃+* F') (hφ : ∀ x, algebraMap F K x = algebraMap F' K (φ x))
@@ -825,8 +817,7 @@ theorem fg_top_transfer {F F' K : Type} [Field F] [Field F'] [Field K] [Algebra 
     · rintro ⟨x, rfl⟩; exact ⟨φ.symm x, by rw [hφ, RingEquiv.apply_symm_apply]⟩
   have h2 := congrArg IntermediateField.toSubfield hS
   rw [IntermediateField.adjoin_toSubfield, IntermediateField.top_toSubfield] at h2 ⊢
-  rw [hr]
-  exact h2
+  rwa [hr]
 
 noncomputable def tensorHom {A A' B B' K : Type} [CommRing A] [CommRing A'] [CommRing B]
     [CommRing B'] [CommRing K] [Algebra A B] [Algebra A' B'] [Algebra A K] [Algebra A' K]

@@ -116,8 +116,7 @@ theorem analyticAt_of_immersion {e e' : ℕ} {N : Type} [Fintype N] {f : (Fin e 
   let L : (N → ℂ) →L[ℂ] (Fin e → ℂ) := LinearMap.toContinuousLinearMap l
   have hLe : L.comp (fderiv ℂ f (h y)) =
       ((ContinuousLinearEquiv.refl ℂ (Fin e → ℂ) : (Fin e → ℂ) ≃L[ℂ] (Fin e → ℂ)) : (Fin e → ℂ) →L[ℂ] (Fin e → ℂ)) := by
-    refine ContinuousLinearMap.ext fun v => ?_
-    exact LinearMap.congr_fun hl v
+    exact ContinuousLinearMap.ext fun v => LinearMap.congr_fun hl v
   have hφ : HasStrictFDerivAt (fun x => L (f x))
       ((ContinuousLinearEquiv.refl ℂ (Fin e → ℂ) : (Fin e → ℂ) ≃L[ℂ] (Fin e → ℂ)) : (Fin e → ℂ) →L[ℂ] (Fin e → ℂ))
       (h y) := by
@@ -238,8 +237,7 @@ theorem analyticAt_factor {e e' : ℕ} {X Y : Type} [TopologicalSpace X] [Topolo
   · rw [e1]
     refine AnalyticAt.comp (g := affCoord p) (f := fun w => lam ((A.chart k).symm w))
       (analyticAt_affCoord p ?_) (analyticAt_pi_iff.mpr fun q => holo_analyticAt (hl q) k hk hU)
-    rw [(A.chart k).left_inv hk]
-    exact hp
+    rwa [(A.chart k).left_inv hk]
   · rw [e1]
     exact himm p hp k hk
   · rw [ContinuousAt, e1]

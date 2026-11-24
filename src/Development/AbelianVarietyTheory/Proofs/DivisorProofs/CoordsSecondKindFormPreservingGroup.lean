@@ -152,12 +152,10 @@ theorem exists_coords_second_kind [FiniteDimensional ℝ 𝔸] {S : Set 𝔸} (h
   let Ψ := h4.localInverse Φ _ 0
   have hΨ : Tendsto Ψ (𝓝 1) (𝓝 0) := by
     have h := h4.localInverse_tendsto
-    rw [hΦ0] at h
-    exact h
+    rwa [hΦ0] at h
   have hR : ∀ᶠ X in 𝓝 (1 : 𝔸), Φ (Ψ X) = X := by
     have h := h4.eventually_right_inverse
-    rw [hΦ0] at h
-    exact h
+    rwa [hΦ0] at h
   have hp0 : Tendsto p (𝓝 0) (𝓝 0) := by simpa using p.continuous.tendsto 0
   have hq0 : Tendsto (fun z => z - p z) (𝓝 0) (𝓝 (0 : 𝔸)) := by
     simpa using (tendsto_id (x := 𝓝 (0 : 𝔸))).sub hp0

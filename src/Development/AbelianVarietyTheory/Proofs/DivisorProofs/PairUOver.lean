@@ -136,8 +136,7 @@ theorem abP_sum (N : Near π G) (p : pullback π π ⟶ S) (hp : p ≫ π = pull
   have e4 : cdP N p hp ≫ Desc.sum N p hp = (cP N p hp ≫ Desc.emb N p hp) * (dP N p hp ≫ Desc.emb N p hp) := by
     rw [cdP, Desc.sum, comp_mul, ← Category.assoc, lift_fst, ← Category.assoc, lift_snd]
   rw [e4, dP_emb, trip, comp_mul, GrpObj.comp_inv, indicatorIdempotent_eq_add_sum, abP_eq]
-  simp only [Category.assoc]
-  exact (mul_inv_cancel_left _ _).symm
+  simpa only [Category.assoc] using (mul_inv_cancel_left _ _).symm
 
 theorem exists_lift (N : Near π G) (p : pullback π π ⟶ S) (hp : p ≫ π = pullback.fst π π ≫ π) (Z : Scheme.{0})
     (g g' : Z ⟶ (Desc.UT N ⊗ Desc.UT N).left) (h : g ≫ (Desc.sum N p hp).left = g' ≫ (Desc.sum N p hp).left) :
@@ -152,8 +151,7 @@ theorem exists_lift (N : Near π G) (p : pullback π π ⟶ S) (hp : p ≫ π = 
   have ht : (b ≫ snd _ _) ≫ Desc.emb N p hp = t ≫ trip N p hp := by
     rw [trip, comp_mul, GrpObj.comp_inv, ← Category.assoc, lift_snd, ← Category.assoc t, lift_fst, hab, Desc.sum,
       comp_mul]
-    simp only [Category.assoc]
-    exact (inv_mul_cancel_left _ _).symm
+    simpa only [Category.assoc] using (inv_mul_cancel_left _ _).symm
   let zo : FinalForm ⟶ Pk N p hp := Over.homMk (pullback.lift (b ≫ snd _ _).left t.left (congrArg Over.Hom.left ht))
     (by show pullback.lift _ _ _ ≫ pullback.snd _ _ ≫ _ = _
         rw [← Category.assoc, pullback.lift_snd]; exact Over.w t)

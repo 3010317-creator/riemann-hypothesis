@@ -158,8 +158,7 @@ theorem inSpan_add {a b : X' → MatN D.nd i} (ha : InSpan D.nd i T' rep a) (hb 
   obtain ⟨m, f, g, hf, rfl⟩ := ha
   obtain ⟨m', f', g', hf', rfl⟩ := hb
   have := inSpan_of_fintype (T' := T') (rep := rep) (Sum.elim f f') (Sum.elim g g') (by rintro (k | k); exacts [hf k, hf' k])
-  rw [Fintype.sum_sum_type] at this
-  exact this
+  rwa [Fintype.sum_sum_type] at this
 
 theorem inSpan_mul {a b : X' → MatN D.nd i} (ha : InSpan D.nd i T' rep a) (hb : InSpan D.nd i T' rep b) :
     InSpan D.nd i T' rep (a * b) := by
@@ -326,16 +325,14 @@ theorem sum_blocks (hS : GoodCongruenceObjects D.nd r ρ π S)
   refine ⟨mat_ext fun v => ?_, fun c => ?_⟩
   · rw [Matrix.map_zero _ (map_zero _), Matrix.zero_mulVec, hsum]
     have := congrArg Prod.fst (h (v, 0))
-    rw [Prod.fst_sum] at this
-    exact this
+    rwa [Prod.fst_sum] at this
   · have := congrFun (congrArg Prod.snd (h (0, fun _ => 1))) c
     rw [Prod.snd_sum, Finset.sum_apply] at this
     simp only [Prod.smul_snd, Pi.smul_apply, smul_eq_mul, mul_one] at this
     apply IsFractionRing.injective (D.nd.O i) (KK D.nd i)
 
     rw [apply_ite (algebraMap (D.nd.O i) (KK D.nd i)), map_zero, map_sum]
-    simp only [map_mul]
-    exact this
+    simpa only [map_mul] using this
 
 theorem matKO_sum {O : Type} [CommRing O] [IsDomain O] {k m : ℕ} (a : Fin m → O)
     (A : Fin m → Matrix (Fin k) (Fin k) O) (x : KOG O k) :

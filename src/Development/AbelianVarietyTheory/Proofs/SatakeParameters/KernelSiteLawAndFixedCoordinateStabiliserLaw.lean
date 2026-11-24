@@ -286,8 +286,7 @@ theorem perO_scale : ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (a b 
       have h3 := h1 _ (hy _ (h2 v hv))
       have e : ((w * w) • y) v = w • y (w • v) := by
         rw [LinearMap.smul_apply, mul_smul, LinearMap.map_smul_of_tower]
-      rw [e]
-      exact h3
+      rwa [e]
     · rw [smul_comm]
   | zero => rw [smul_zero]; exact zero_mem _
   | add _ _ _ _ ha hb => rw [smul_add]; exact add_mem ha hb
@@ -378,8 +377,7 @@ theorem eNat_fixed_of_vec {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (B : 
     rw [KS.Lat.al_eq_La B hcc hδ hA x hx']
     unfold alK alV
     rw [HV_eq_formV]
-  rw [hal]
-  exact h1
+  rwa [hal]
 
 theorem locP_eq_of_scale {E : Type} [Field E] [NumberField E] {W : Type} [AddCommGroup W] [Module (𝓞 E) W]
     (M M₀ : Submodule (𝓞 E) W) (g : 𝓞 E) (Q : HeightOneSpectrum (𝓞 E)) (hg : g ∉ Q.asIdeal)

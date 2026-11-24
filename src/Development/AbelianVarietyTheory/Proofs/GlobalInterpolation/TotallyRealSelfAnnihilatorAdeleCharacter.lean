@@ -66,14 +66,12 @@ private theorem mul_pairA_zero (x : AF F) (z : Ainf F) :
   · rw [map_mul]
     rfl
   · rw [map_mul]
-    show sndA F x * 0 = 0
     exact mul_zero _
 
 private theorem mul_pairA_singleV (x : AF F) (v : HeightOneSpectrum (𝓞 F)) (t : Fv F v) :
     x * pairA F 0 (singleV F v t) = pairA F 0 (singleV F v (sndA F x v * t)) := by
   apply ext_lemma
   · rw [map_mul]
-    show fstA F x * 0 = 0
     exact mul_zero _
   · rw [map_mul]
     show sndA F x * singleV F v t = singleV F v (sndA F x v * t)
@@ -88,8 +86,7 @@ theorem eq_zero_of_forall [IsTotallyReal F] {ψ : AddChar (AF F) ℂ} (hψ : IsC
   ·
     have h0 : fstA F x = 0 := hinf _ fun y => by
       have h := hx (pairA F y 0)
-      rw [mul_pairA_zero] at h
-      exact h
+      rwa [mul_pairA_zero] at h
     rw [h0, map_zero]
   ·
     have key : ∀ v, sndA F x v = 0 := by
@@ -98,8 +95,7 @@ theorem eq_zero_of_forall [IsTotallyReal F] {ψ : AddChar (AF F) ℂ} (hψ : IsC
       obtain ⟨s, hs⟩ := hloc v
       apply hs
       have h := hx (pairA F 0 (singleV F v ((sndA F x v)⁻¹ * s)))
-      rw [mul_pairA_singleV, mul_inv_cancel_left₀ hne] at h
-      exact h
+      rwa [mul_pairA_singleV, mul_inv_cancel_left₀ hne] at h
     rw [map_zero]
     exact DFunLike.ext _ _ fun v => (key v).trans rfl
 

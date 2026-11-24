@@ -150,8 +150,7 @@ private lemma exists_homogeneous_mem_of_X_pow_mul_mem_of_homogeneous {K : Type} 
     intro g hgG e he a
     have hgQ : g ∈ Q := hG ▸ Submodule.subset_span hgG
     have hj : ∃ j, M ≤ e j := by
-      by_contra hne
-      push Not at hne
+      by_contra! hne
       have hsum : (e.sum fun _ k => k) ≤ N * M := by
         rw [Finsupp.sum_fintype _ _ (fun _ => rfl)]
         calc ∑ j, e j ≤ ∑ _j : Fin N, M := Finset.sum_le_sum fun j _ => (hne j).le
@@ -162,8 +161,7 @@ private lemma exists_homogeneous_mem_of_X_pow_mul_mem_of_homogeneous {K : Type} 
       le_trans (le_trans (Finset.le_sup (f := mexp g) (Finset.mem_univ j))
         (Finset.le_sup (f := fun g => Finset.univ.sup (mexp g)) hgG)) hjM
     have hsingle : Finsupp.single j (mexp g j) ≤ e := by
-      rw [Finsupp.single_le_iff]
-      exact hle
+      rwa [Finsupp.single_le_iff]
     have hsplit : monomial e a =
         monomial (e - Finsupp.single j (mexp g j)) a * X j ^ mexp g j := by
       rw [X_pow_eq_monomial, monomial_mul, mul_one, tsub_add_cancel_of_le hsingle]
@@ -200,8 +198,7 @@ private lemma coe_decompose_homogeneousSubmodule_eq_homogeneousComponent {K : Ty
   rw [DirectSum.decompose_sum, DFinsupp.finsetSum_apply, AddSubmonoidClass.coe_finsetSum,
     Finset.sum_eq_single n]
   · exact DirectSum.decompose_of_mem_same _ (homogeneousComponent_mem n g)
-  · intro i _ hi
-    exact DirectSum.decompose_of_mem_ne _ (homogeneousComponent_mem i g) hi
+  · exact fun i _ hi => DirectSum.decompose_of_mem_ne _ (homogeneousComponent_mem i g) hi
   · intro hn
     rw [Finset.mem_range, not_lt] at hn
     rw [DirectSum.decompose_of_mem_same _ (homogeneousComponent_mem n g),

@@ -165,8 +165,7 @@ private theorem UpperTheory.V.Pa.dual_functionals_finite_separating_surjective {
     have hm : f (ev y) ∈ W.map f := Submodule.mem_map_of_mem ⟨y, fun _ => rfl⟩
     rw [hfW, Submodule.mem_bot] at hm
     have := Module.apply_evalEquiv_symm_apply F L (ev y) f
-    rw [← hμdef, hm] at this
-    exact this
+    rwa [← hμdef, hm] at this
   have hfe : f = Module.evalEquiv F L μ := ((Module.evalEquiv F L).apply_symm_apply f).symm
   rw [hfe, hμ0, map_zero] at hf
   exact hf rfl
@@ -247,9 +246,7 @@ theorem UpperTheory.V.Pa.laInj :
       rw [a0, a1, h, Matrix.smul_mul, Matrix.mul_smul, smul_sub]
   ext y
   rcases S.x.a_le.eq_or_lt with ha | ha
-  · have hy : y = 0 := by
-      apply Subtype.ext
-      exact (S.U.typeI ha).le y.2
+  · have hy : y = 0 := Subtype.ext ((S.U.typeI ha).le y.2)
     rw [hy, map_zero, map_zero]
   · have hp := S.x.a_pos
     let i : Fin S.n := ⟨0, by omega⟩
@@ -271,8 +268,7 @@ theorem UpperTheory.V.Pa.laInj :
       · simp [Matrix.single_apply_of_ne _ _ _ _ _ e, h0.1]
     have k := key _ hm
     rw [a0] at k
-    have k' := congrFun (congrFun k i) j
-    simpa [(hN y).2] using k'
+    simpa [(hN y).2] using congrFun (congrFun k i) j
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.LaInj =====
@@ -337,8 +333,7 @@ private theorem UpperTheory.V.Pa.exists_dual_functional_complement {R F N V : Ty
   choose m hm using hCj
   refine ⟨m, fun μ hμ => ?_, ?_⟩
   · have e : ∀ j, μ (m j) = c μ hμ j := fun j => hm j ⟨μ, hμ⟩
-    simp only [e]
-    exact hc μ hμ
+    simpa only [e] using hc μ hμ
   · apply top_unique
     apply Submodule.le_of_le_smul_of_le_jacobson_bot Module.Finite.fg_top (maximalIdeal_le_jacobson ⊥)
     intro y _
@@ -397,8 +392,7 @@ theorem UpperTheory.V.Pa.dualEx :
   let T : (S.U.N →+ S.F) →ₗ[S.F] (S.G.G₀ → Matrix (Fin S.n) (Fin S.n) S.F) :=
     { toFun := S.laC
       map_add' := fun μ ν => by
-        have h := (alSel l S).2.2.2 (Fin 2) ![1, 1] ![μ, ν]
-        simpa [Fin.sum_univ_two] using h
+        simpa [Fin.sum_univ_two] using (alSel l S).2.2.2 (Fin 2) ![1, 1] ![μ, ν]
       map_smul' := fun a μ => by
         have h := (alSel l S).2.2.2 Unit (fun _ => a) (fun _ => μ)
         simpa using h }
@@ -442,8 +436,7 @@ private theorem exists_semilinear_functional_nonzero {O B F M : Type} [CommRing 
   · show e (Ψ (φ o • m)) = f o * e (Ψ m)
     have hs : (φ o • m : M) = (Ideal.Quotient.mk (RingHom.ker f) o) • m := (hT.mk_smul o m).symm
     rw [hs, map_smul, smul_eq_mul, map_mul, RingHom.quotientKerEquivOfSurjective_apply_mk]
-  · show e (Ψ q) ≠ 0
-    exact fun h => hΨ (e.injective (h.trans (map_zero e).symm))
+  · exact fun h => hΨ (e.injective (h.trans (map_zero e).symm))
 
 theorem UpperTheory.V.Pa.phSep :
     ∀ (l : ℕ) [Fact l.Prime] (S : Ctx l), ∀ y : S.U.N, (∀ Φ ∈ S.Ph, Φ y = 0) → y ∈ S.J2 • (⊤ : Submodule S.Bh S.U.N) := by
@@ -451,8 +444,7 @@ theorem UpperTheory.V.Pa.phSep :
   by_contra hne
   let P := S.J2 • (⊤ : Submodule S.Bh S.U.N)
   have hq : (Submodule.Quotient.mk y : S.U.N ⧸ P) ≠ 0 := by
-    rw [Ne, Submodule.Quotient.mk_eq_zero]
-    exact hne
+    rwa [Ne, Submodule.Quotient.mk_eq_zero]
   have hJ : ∀ b ∈ S.J2, ∀ z : S.U.N, b • z ∈ P := fun b hb z => Submodule.smul_mem_smul hb trivial
   have hM : ∀ o ∈ maximalIdeal S.OO, ∀ m : S.U.N ⧸ P, algebraMap S.OO S.Bh o • m = 0 := by
     intro o ho m
@@ -639,8 +631,7 @@ private theorem finrank_quotient_le_of_forall_dependent_mod {F V : Type} [Field 
     (g : ℕ) (U : Submodule F V)
     (h : ∀ z : Fin (g + 1) → V, ∃ c : Fin (g + 1) → F, c ≠ 0 ∧ ∑ i, c i • z i ∈ U) :
     Module.finrank F (V ⧸ U) ≤ g := by
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   let b := Module.finBasis F (V ⧸ U)
   let y : Fin (g + 1) → V ⧸ U := fun i => b (Fin.castLE hlt i)
   have hli : LinearIndependent F y := b.linearIndependent.comp _ (Fin.castLE_injective hlt)
@@ -648,8 +639,7 @@ private theorem finrank_quotient_le_of_forall_dependent_mod {F V : Type} [Field 
   obtain ⟨c, hc0, hc⟩ := h z
   have hsum : ∑ i, c i • y i = 0 := by
     have : U.mkQ (∑ i, c i • z i) = 0 := by
-      rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-      exact hc
+      rwa [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
 
     simpa [map_sum, map_smul, hz] using this
   exact hc0 (funext fun i => Fintype.linearIndependent_iff.1 hli c hsum i)
@@ -831,8 +821,7 @@ theorem UpperTheory.V.Pa.pres :
   obtain ⟨m, hmD, hmspan⟩ := dualEx l S h3
   have hrF : ∀ b ∈ maximalIdeal S.Bh, S.rF b = 0 := by
     intro b hb
-    rw [← RingHom.mem_ker, S.rF_ker]
-    exact hb
+    rwa [← RingHom.mem_ker, S.rF_ker]
   have hmulT : ∀ α : S.Bh →+ S.F, α ∈ S.Tp → ∀ (o : S.OO) (b : S.Bh), b ∈ maximalIdeal S.Bh →
       α (algebraMap S.OO S.Bh o * b) = S.rF (algebraMap S.OO S.Bh o) * α b := by
     intro α hα o b hb
@@ -908,8 +897,7 @@ theorem UpperTheory.V.Pa.pres :
       rfl
 
     rw [map_sum]
-    simp only [e3]
-    exact hrelα
+    simpa only [e3] using hrelα
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.AlCSmul =====

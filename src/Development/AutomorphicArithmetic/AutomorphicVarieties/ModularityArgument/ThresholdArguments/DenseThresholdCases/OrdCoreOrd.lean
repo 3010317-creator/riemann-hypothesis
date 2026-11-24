@@ -209,8 +209,7 @@ theorem UpperTheory.V.Z.Ord.ordinary_jacquet_of_literal_automorphy_n :
         exact N.toSubmodule.neg_mem (hm _ n hn)
       have h3 : u ∈ (M (2 * J + 2)).toSubmodule := by
         show (E ^ (2 * J + 2)) u ∈ N.toSubmodule
-        rw [show 2 * J + 2 = (J + 1) + (J + 1) by omega, pow_add, mul_apply_eq_comp]
-        exact h2
+        rwa [show 2 * J + 2 = (J + 1) + (J + 1) by omega, pow_add, mul_apply_eq_comp]
       rw [← hJ (2 * J + 2) (by omega)] at h3
       change (E ^ J) u ∈ N.toSubmodule at h3
       have h4 : (E ^ (J + 1)) u ∈ N.toSubmodule := by
@@ -237,7 +236,6 @@ theorem UpperTheory.V.Z.Ord.ordinary_jacquet_of_literal_automorphy_n :
       rw [← hμ]
       rfl
     have hz : ∀ v, π0 v = 0 ↔ v ∈ P.toSubmodule := fun v => by
-      show Submodule.Quotient.mk (⟨v, Submodule.mem_top⟩ : ↥(⊤ : Subrepresentation ρ).toSubmodule) = 0 ↔ _
       exact Submodule.Quotient.mk_eq_zero _
     obtain ⟨v0, hv0⟩ : ∃ v, v ∉ P.toSubmodule := by
       by_contra hall
@@ -338,8 +336,7 @@ theorem UpperTheory.V.Z.Ord.ordinary_jacquet_of_literal_automorphy_n :
       split_ifs <;> simp
     have hdet : ∀ (t : Fin n → kˣ) (i : Fin n),
         Matrix.GeneralLinearGroup.det ((leviTorus k (Fin n) t) i) = t i := fun t i => by
-      have h := congrFun ((leviTorus k (Fin n)).symm_apply_apply t) i
-      exact h
+      exact congrFun ((leviTorus k (Fin n)).symm_apply_apply t) i
     have alg : ∀ (a b w : ℂ) (i : ℕ), i < n → a + b = (n : ℂ) - 1 - (i : ℂ) →
         ((Nat.card 𝓀[k] : ℂ) ^ a)⁻¹ * (w * ((Nat.card 𝓀[k] : ℂ) ^ b)⁻¹)
           = w * ((Nat.card 𝓀[k] : ℂ) ^ i / (Nat.card 𝓀[k] : ℂ) ^ (n - 1)) := by
@@ -583,8 +580,7 @@ private theorem ord_parts {L Ω : Type} [Field L] [NumberField L] [Field Ω] [Al
       have hm : ∀ y ∈ Y i ⊓ W, T y ∈ Y i ⊓ W := fun y hy => ⟨hY i y hy.1, hW y hy.2⟩
       have h0 := congrArg (Submodule.map (Y i ⊓ W).subtype) (Module.End.iSup_maxGenEigenspace_eq_top (T.restrict hm))
       rw [Submodule.map_iSup, Submodule.map_subtype_top] at h0
-      refine h0.ge.trans (iSup_mono fun ν => ?_)
-      exact (Submodule.inf_genEigenspace T (Y i ⊓ W) hm).ge
+      exact h0.ge.trans (iSup_mono fun ν => (Submodule.inf_genEigenspace T (Y i ⊓ W) hm).ge)
     have h2 : W ≤ (⨆ i, Y i ⊓ (W ⊓ T.maxGenEigenspace μ)) ⊔ ⨆ ν ≠ μ, T.maxGenEigenspace ν := by
       refine h.trans (iSup_le fun i => (h1 i).trans (iSup_le fun ν => ?_))
       by_cases hν : ν = μ
@@ -632,8 +628,7 @@ private theorem ord_parts {L Ω : Type} [Field L] [NumberField L] [Field Ω] [Al
       ∀ F ∈ H.Big ι ξ, H.X.rpF ℂ d H.m b F ∈ H.Big ι ξ := fun F hF => by
     refine ⟨fun i hi γ g => ?_, preserveFixed _ b F hF.2⟩
     have := hF.1 i hi γ (g * (1, b))
-    rw [← mul_assoc] at this
-    exact this
+    rwa [← mul_assoc] at this
 
   have memClassical (F : Fin H.m → H.X.Fn ℂ d) : F ∈ H.ClAt θ ι x.toRingHom lam ξ K c0 ↔
       F ∈ H.Big ι ξ ∧ F ∈ fixd (H.X.raF d (H.τC ι)) (H.lev K) ∧ F ∈ fixd (H.X.rpF ℂ d H.m) H.X.I.N ∧
@@ -658,8 +653,7 @@ private theorem ord_parts {L Ω : Type} [Field L] [NumberField L] [Field Ω] [Al
     refine Subgroup.list_prod_mem _ fun g hg => ?_
     obtain ⟨i, rfl⟩ := List.mem_ofFn.1 hg
     have := h3 v i (y i)
-    rw [hs.triv v i (y i) (hy' c0 htv i), map_one, inv_one, one_smul] at this
-    exact this
+    rwa [hs.triv v i (y i) (hy' c0 htv i), map_one, inv_one, one_smul] at this
 
   have preserveClassical (F : Fin H.m → H.X.Fn ℂ d) (hF : F ∈ H.ClAt θ ι x.toRingHom lam ξ K c0) :
       H.uzC ι lam d F ∈ H.ClAt θ ι x.toRingHom lam ξ K c0 := by

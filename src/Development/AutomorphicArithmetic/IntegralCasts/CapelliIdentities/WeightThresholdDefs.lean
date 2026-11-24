@@ -50,8 +50,7 @@ private theorem UpperTheory.Reformulated.B.WeightThresholdDefs.core {K : Type*} 
   rw [Submodule.span_eq, Submonoid.smul_def] at ht
   have : ((t : NumberField.RingOfIntegers K) : K) • x = (t : NumberField.RingOfIntegers K) • x :=
     algebraMap_smul K (t : NumberField.RingOfIntegers K) x
-  rw [this]
-  exact ht
+  rwa [this]
 
 theorem UpperTheory.Reformulated.B.WeightThresholdDefs.exists_smul_mem :
     ∀ {D : Formalism.L2.Ker.Car} {N : ℕ}

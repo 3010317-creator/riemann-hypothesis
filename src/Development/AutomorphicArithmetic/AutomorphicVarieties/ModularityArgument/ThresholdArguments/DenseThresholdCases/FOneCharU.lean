@@ -161,8 +161,7 @@ theorem UpperTheory.GalN.V.adm2B_rhoK_of_typeII_of_modular_extensions :
     obtain ⟨hnorm, hID, -⟩ := Chr.decCyc Ω l A hl.out hAl
     have hs₀' : (D.ΨQ s₀ : Qbar l) ^ 2 ≠ 1 := by
       have := (hu.map (algebraMap c.O (PadicAlgCl l))).ne_zero
-      rw [map_sub, map_pow, map_one, sub_ne_zero] at this
-      exact this
+      rwa [map_sub, map_pow, map_one, sub_ne_zero] at this
     set v : Fin 3 → Qbar l := (M⁻¹ : GL (Fin 3) (Qbar l)).val *ᵥ Pi.single 0 1 with hv
     have hv0 : v ≠ 0 := fun h0 => by
       have := congrArg (fun x => (M.val *ᵥ x) 0) (hv.symm.trans h0)
@@ -389,8 +388,7 @@ theorem UpperTheory.V.Z.Kato.used_of_alt :
       ring
     rw [e1]
     refine lt_of_le_of_lt (IsUltrametricDist.norm_add_le_max _ _) (max_lt ?_ a2)
-    rw [norm_mul, hn, one_mul]
-    exact a0
+    rwa [norm_mul, hn, one_mul]
   · let χ : G ℚ Ω →* (Qbar l)ˣ :=
       (Units.map (algebraMap c.O (PadicAlgCl l)).toMonoidHom).comp (Chr.dirG ℚ Ω (HV.comp l ψ))
     have hχ2 (g : G ℚ Ω) : χ g * χ g = 1 := by
@@ -914,8 +912,7 @@ theorem UpperTheory.V.Z.Kato.WeilSphericalRecords.bloch_kato_selmer_vanishes_of_
     intro g hg
     refine ⟨(r g).mat 0 0, (r g).mat 0 2, (r g).mat 2 0, (r g).mat 2 2, ?_, ?_⟩
     · have := hdet g hg
-      rw [Matrix.det_fin_two] at this
-      exact this
+      rwa [Matrix.det_fin_two] at this
     · ext i j
       fin_cases i <;> fin_cases j <;> first
         | rfl

@@ -525,8 +525,7 @@ theorem _root_.GlobalTheory.DegCnt.NFGeom.mem_perp_sup (S T : Submodule K V) (y 
   simp only [_root_.GlobalTheory.DegCnt.NFGeom.mem_perp']
   refine ⟨fun h => ⟨fun x hx => h x (Submodule.mem_sup_left hx),
     fun x hx => h x (Submodule.mem_sup_right hx)⟩, fun h => ?_⟩
-  intro x hx
-  exact _root_.Formalism.HermitianLatticeCounting.P.perp_sup H h.1 h.2 x hx
+  exact fun x hx => _root_.Formalism.HermitianLatticeCounting.P.perp_sup H h.1 h.2 x hx
 
 
 open NumberField in
@@ -891,8 +890,7 @@ theorem _root_.GlobalTheory.DegCnt.NFGeom.finrank_Wt [FiniteDimensional K V] :
     · intro a _ hai
       rw [map_smulₛₗ, N.ist_e _ _ a.2,
         ite_eq_right (fun h => hai (Subtype.ext h).symm), smul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ i) h
   have hIst : N.Ist = Submodule.span K (Set.range
       (fun a : {b : Fin r // N.j ≤ b.val} => N.ist a.1)) := by
     unfold _root_.GlobalTheory.DegCnt.NF.Ist
@@ -994,8 +992,7 @@ theorem _root_.GlobalTheory.DegCnt.NF.geometry : ∀ (K V : Type) [Field K]
     intro τ x hx
     have hx' : (x : V) ≠ 0 := fun h => hx (Subtype.ext h)
     exact _root_.GlobalTheory.DegCnt.NFGeom.Wt_pos N τ x.2 hx'
-  · by_contra h
-    push Not at h
+  · by_contra! h
     have hT0 : N.T = 0 := by omega
     apply N.F.hT
     rw [N.hT, hT0, Nat.cast_zero]

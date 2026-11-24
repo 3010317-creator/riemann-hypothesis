@@ -211,8 +211,7 @@ theorem apply_mem_locP {AA : Submodule (𝓞 E) E} {N : Submodule (𝓞 E) (Sp E
         smul_smul, smul_smul, map_mul, Algebra.smul_def t r]
       congr 1
       ring
-    rw [e]
-    exact h1
+    rwa [e]
   | zero => exact zero_mem _
   | add x x' _ _ h h' => exact add_mem h h'
   | smul c x _ h => exact Submodule.smul_mem _ c h
@@ -270,8 +269,7 @@ theorem exists_reps_sup_of_finite_quot (E : Type) [Field E] (H : Type) [AddCommG
     exact ⟨s z, (s z).2, rfl⟩
   obtain ⟨R, hR, hinj, him⟩ := Finset.exists_subset_injOn_image_eq_of_surjOn _ _ hsurj
   refine ⟨R, fun x hx => hR hx, ?_, ?_⟩
-  · intro x hx y hy hxy
-    exact hinj hx hy (QuotientAddGroup.eq_iff_sub_mem.2 hxy)
+  · exact fun x hx y hy hxy => hinj hx hy (QuotientAddGroup.eq_iff_sub_mem.2 hxy)
   · intro y hy
     have h1 : (⟨y, hy⟩ : ↥Z₁) - s (Submodule.Quotient.mk ⟨y, hy⟩) ∈ Z₀.comap Z₁.subtype :=
       (Submodule.Quotient.eq _).1 (hs _).symm
@@ -313,8 +311,7 @@ theorem latSum_eq_sum_sum_reps : ∀ (E : Type) [Field E] [NumberField E] [StarR
     have h3 : j = j' := by
       refine hJinj j hj j' hj' ?_
       have : j - j' = x + j - (x + j') := by abel
-      rw [this]
-      exact h1
+      rwa [this]
     rw [h3]
   · intro z _
     obtain ⟨⟨y, hy⟩, rfl⟩ := Submodule.Quotient.mk_surjective _ z
@@ -946,8 +943,7 @@ theorem ker_of_mulLat {d : Deco E a ST SG} {d' : Deco E b ST SG'} (hd' : d'.Ok) 
   have h1 : y v ∈ d'.at P.1 := hy P.1 (hS P.2) v hv
   refine ⟨Submodule.smul_mem _ (c : 𝓞 E) h1, ?_⟩
   have := hd'.f_smul P (c : 𝓞 E) _ h1
-  rw [Ideal.Quotient.eq_zero_iff_mem.2 (hc P.1 P.2), zero_mul] at this
-  exact this
+  rwa [Ideal.Quotient.eq_zero_iff_mem.2 (hc P.1 P.2), zero_mul] at this
 
 theorem homAt_mono {S S' : Finset (HeightOneSpectrum (𝓞 E))} (h : S ⊆ S') (N : Submodule (𝓞 E) (Sp E a))
     (N' : Submodule (𝓞 E) (Sp E b)) : homAt S' N N' ≤ homAt S N N' := fun _ hx P hP => hx P (h hP)
@@ -1180,8 +1176,7 @@ theorem companion_gen {E : Type} [Field E] [NumberField E] [StarRing E] {b : ℕ
     rw [← algebraMap_smul E ϖ y] at this
     exact Submodule.mem_sup_left this
   · have := hd.L_le_N (hbar y hy)
-    rw [← algebraMap_smul E (cO E ϖ) y, algebraMap_cO] at this
-    exact this
+    rwa [← algebraMap_smul E (cO E ϖ) y, algebraMap_cO] at this
   · have hn : cO E ϖ ∉ P.1.asIdeal := by
       intro h
       obtain ⟨u, v, huv⟩ := hcop
@@ -1522,8 +1517,7 @@ theorem val_det_ker {P : HeightOneSpectrum (𝓞 E)} {N N'' : Submodule (𝓞 E)
     exact val_det_eq_one (P := P) (LinearMap.equivOfDetNeZero _ h0) fun x => by
       rw [← hf'' x]
       have := key (f.symm (f'' x))
-      rw [LinearEquiv.apply_symm_apply] at this
-      exact this
+      rwa [LinearEquiv.apply_symm_apply] at this
   rw [map_mul, map_div₀ _ _ π, hv, hπ, one_div, inv_mul_eq_one₀ WithZero.exp_ne_zero] at h1
   exact h1.symm
 
@@ -1766,8 +1760,7 @@ theorem jetMoments_of_unitPeriod
       (_root_.GlobalTheory.MomT.PtMoments.ptMom H D.X s cc δ B χ cD _ lam ι Ω (D.Pr.piT u) (D.R.N i) b hD.fields hs hcc hT2 hcop
         (fun k => (hlam k).2) hcQ (hP.piT_Kq u) hn (hP.piT_cop u) (fun τ => (hw _).1 (hseen τ)) ha hb' hla hsm hmom)
       (hP.vT_norm u) N'' hN'' hc (s.σ₀ (k ^ (D.R.N i / 2))) (hlam _).1 ?_ ?_
-    · rw [hcard] at key
-      exact key
+    · rwa [hcard] at key
     · rw [(hlam _).2, map_pow, norm_pow, ← pow_mul, Nat.div_two_mul_two_of_even ha, hcard, pow_mul]
       exact pow_le_pow_left₀ (norm_nonneg _) hkn _
     · intro R hR z

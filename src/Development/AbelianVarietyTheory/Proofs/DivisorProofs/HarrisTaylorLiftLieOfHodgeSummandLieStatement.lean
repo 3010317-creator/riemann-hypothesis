@@ -151,8 +151,7 @@ theorem overId_comp_left {T P S : Scheme.{0}} (q q' : P ⟶ S) (h : q' = q) {A :
     (f : Over.mk q' ⟶ A) (a : T ⟶ P) (b : T ⟶ A.left) (e : a ≫ f.left = b) :
     a ≫ (overId q q' h ≫ f).left = b := by
   subst h
-  rw [overId_rfl, Category.id_comp]
-  exact e
+  rwa [overId_rfl, Category.id_comp]
 
 theorem overId_scal {P S : Scheme.{0}} (q q' : P ⟶ S) (h : q' = q) {A : Over S}
     (f : Over.mk q' ⟶ A) (g : A ⟶ A) (a : P ⟶ P) (e : Over.mk q ⟶ Over.mk q) (he : e.left = a)
@@ -273,8 +272,7 @@ theorem eigen_decomp_base_change :
 
   have hΩΩ : Ω * Ω = (tr : Matrix (Fin n) (Fin n) C) * Ω - (nm : Matrix (Fin n) (Fin n) C) := by
     have h1 : ω * ω = (tr : K) * ω - (nm : K) := by linear_combination hω
-    have h2 := congrArg f h1
-    simpa [map_mul, map_sub, map_intCast] using h2
+    simpa [map_mul, map_sub, map_intCast] using congrArg f h1
   have key : ∀ x : Fin n → C, Ω *ᵥ (Ω *ᵥ x) = (tr : C) • (Ω *ᵥ x) - (nm : C) • x := by
     intro x
     rw [mulVec_mulVec, hΩΩ, sub_mulVec, ← mulVec_mulVec, intCast_mulVec, intCast_mulVec]
@@ -373,8 +371,7 @@ theorem isUnit_two_rho_sub {p : ℕ} [Fact p.Prime] {D : GlobalTheory.UPel.HT.Da
     rw [Nat.coprime_comm, Nat.Prime.coprime_iff_not_dvd (Fact.out)]
     intro h; exact D.disc_p (Int.natCast_dvd.mpr h)
   have hu := b.unit _ hcop
-  rw [← isUnit_pow_iff (n := 2) two_ne_zero, hsq, hd]
-  rw [Int.cast_neg, Int.cast_natCast]
+  rw [← isUnit_pow_iff (n := 2) two_ne_zero, hsq, hd, Int.cast_neg, Int.cast_natCast]
   exact hu.neg
 
 def TangentCoordinatesSmoothCommGroupLocalRing : Prop :=
@@ -448,8 +445,7 @@ theorem spread_of_coord (hcoord : TangentCoordinatesSmoothCommGroupLocalRing) : 
     rw [← keyg, T0sm, hgapp]
     exact hv.2))
   refine ⟨fun i => T0 (w i), fun i c => ⟨(T0rng _).2 ⟨_, rfl⟩, ?_⟩, ?_⟩
-  · rw [keyg, hw i c, T0sm]
-    rw [show g0 (t i c) = β (b.t i c) from hgapp _]
+  · rw [keyg, hw i c, T0sm, show g0 (t i c) = β (b.t i c) from hgapp _]
   · rw [hvw, prod_ofFn_eq T0 T0zero T0add]
 
 theorem lieAt_spread : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (R : Type) [CommRing R] (b : GlobalTheory.UPel.HT.Base D R) (C : Type) [CommRing C] [IsLocalRing C] (tR : R →+* C) (A : Over (Sp C)) [GrpObj A] [IsCommMonObj A], Smooth A.hom → ∀ (act : GlobalTheory.UPel.HT.OActN D.O A), GlobalTheory.UPel.HT.LieAt b act tR (spMap (RingHom.id C)) → ∀ (R' : Type) [CommRing R'] (β : R →+* R') (x : Sp R' ⟶ Sp C), x ≫ spMap tR = spMap β → GlobalTheory.UPel.HT.LieAt b act β x :=

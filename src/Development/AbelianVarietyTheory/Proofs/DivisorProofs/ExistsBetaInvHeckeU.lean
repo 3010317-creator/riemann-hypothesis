@@ -209,8 +209,7 @@ theorem eq_one_of_cong : ∀ (D : D7) (χ : HChar D.host.E) (S : Finset ℕ) (k 
   · have hU : Valued.v ((finIdl D u : AdeleRing (𝓞 D.host.E) D.host.E).2 v) = 1 := finIdl_unit hu v
     have hxU : IsUnitAt v x := by
       show Valued.v (x : v.adicCompletion D.host.E) = 1
-      rw [hx]
-      exact hU
+      rwa [hx]
     rcases hv v with hunr | ⟨q, hq, hov, hlev⟩
     · exact hunr x hxU
     · refine hlev x hxU ?_
@@ -396,8 +395,7 @@ theorem chi_norm_global (χ : HChar D.host.E) {n : D.what₂.Tau → ℤ} (hi : 
   have h1 := χ.2.2 (upF D.host.F k')
   rw [← GlobalTheory.Mem.ChiLaws.infDiag_mul_finPart, map_mul] at h1
   have h2 : χ.1 (infDiag (upF D.host.F k')) = 1 := hinf
-  rw [h2, one_mul] at h1
-  exact h1
+  rwa [h2, one_mul] at h1
 
 theorem chi_norm_cong (χ : HChar D.host.E) (S : Finset ℕ) (k : ℕ) (ht : χ.TrivOn D.host.F)
     (hl : ∀ v, χ.UnrAt v ∨ ∃ q ∈ S, Formalism.L2.Host.OverP D.host q v ∧ χ.LevelLe v k) (z : (AE D)ˣ)
@@ -589,8 +587,7 @@ theorem eq_one (D : D7) (χ : HChar D.host.E) (hχ : IsEtaT D.host χ) (x : (AE 
     by_cases hw : w.under (𝓞 D.host.F) ∈ T
     · rw [Finset.prod_eq_single_of_mem _ hw (fun v _ hv => h1 v hv), map_zpow, valAt_locF, ite_eq_left rfl, hu,
         ordF_unif_self, ← WithZero.exp_zsmul, hm]
-      simp only [smul_eq_mul, mul_neg, neg_neg, mul_one]
-      exact WithZero.exp_log (valAt_ne_zero w a)
+      simpa only [smul_eq_mul, mul_neg, neg_neg, mul_one] using WithZero.exp_log (valAt_ne_zero w a)
     · rw [Finset.prod_eq_one (fun v hv => h1 v (fun e => hw (e ▸ hv)))]
       by_contra hne
       exact hw (Finset.mem_image_of_mem _ (by simpa using fun e => hne e.symm))

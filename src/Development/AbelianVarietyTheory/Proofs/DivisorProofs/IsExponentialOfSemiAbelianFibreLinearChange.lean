@@ -62,15 +62,13 @@ theorem isExpAt_mulVec {E : Type} [Field E] [NumberField E] [IsCMField E] (H : R
   have hMi : M * M⁻¹ = 1 := Matrix.mul_nonsing_inv M hM
   have hiM : M⁻¹ * M = 1 := Matrix.nonsing_inv_mul M hM
   refine ⟨fun v w => ?_, fun w => ?_, fun v hv => ?_⟩
-  · simp only [Matrix.mulVec_add]
-    exact he.1 _ _
+  · simpa only [Matrix.mulVec_add] using he.1 _ _
   · simp_rw [hchain]
     exact he.2.1 (M *ᵥ w)
   · obtain ⟨w', hw', huniq⟩ := he.2.2 v hv
     refine ⟨M⁻¹ *ᵥ w', ?_, fun w₂ hw₂ => ?_⟩
     · show IsDerivAt0 (fun u => (e (M *ᵥ u)).left) (M⁻¹ *ᵥ w') v
-      rw [hchain, Matrix.mulVec_mulVec, hMi, Matrix.one_mulVec]
-      exact hw'
+      rwa [hchain, Matrix.mulVec_mulVec, hMi, Matrix.one_mulVec]
     · have h2 : M *ᵥ w₂ = w' := huniq _ ((hchain w₂ v).1 hw₂)
       rw [← h2, Matrix.mulVec_mulVec, hiM, Matrix.one_mulVec]
 

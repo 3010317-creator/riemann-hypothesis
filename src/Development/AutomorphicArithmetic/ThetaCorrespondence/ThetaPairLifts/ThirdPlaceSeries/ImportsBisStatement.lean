@@ -582,8 +582,7 @@ theorem main_alt_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : F
     refine ⟨dQ, hdQ, (hiff _).1 ?_⟩
     have hvt := (hR.row t).vT j h
     have e : (_root_.GlobalTheory.Fam.pk_z W).chi D.R.m = (_root_.GlobalTheory.Fam.pk_z W).chi (j + 1 + 1) := congrArg _ hm
-    rw [e] at hvt
-    exact hvt
+    rwa [e] at hvt
 end GlobalTheory.StepSplit
 end
 end -- clump:auto
@@ -651,8 +650,7 @@ theorem main_alt_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : F
         refine e1.trans ?_
         rw [mul_comm, mul_smul]
         exact congrArg _ e2
-    rw [← hvP] at key
-    exact key
+    rwa [← hvP] at key
   · obtain ⟨dG, hdG, hall⟩ := hSt j h
     obtain ⟨dQ, hdQ, hvT⟩ := hall t
     have hvac := hdG.2.1.2
@@ -668,8 +666,7 @@ theorem main_alt_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : F
         refine e1.trans ?_
         rw [mul_comm, mul_smul]
         exact congrArg _ e2
-    rw [← hvT, one_mul, one_mul] at key
-    exact key
+    rwa [← hvT, one_mul, one_mul] at key
 end GlobalTheory.StepVacForm
 end
 end

@@ -174,8 +174,7 @@ theorem exists_angles_of_prod_eq_one : ∀ (r : ℕ) (z : Fin r → ℂ), (∀ a
     · have ha : a = Fin.last n := by ext; simp at h ⊢; omega
       subst ha
       rw [Fin.prod_univ_castSucc] at hp
-      have hlast : z (Fin.last n) = (∏ k : Fin n, z k.castSucc)⁻¹ := by
-        exact eq_inv_of_mul_eq_one_right hp
+      have hlast : z (Fin.last n) = (∏ k : Fin n, z k.castSucc)⁻¹ := eq_inv_of_mul_eq_one_right hp
       rw [hlast, Complex.ofReal_neg, Complex.ofReal_sum, mul_neg, Finset.mul_sum, ← Finset.sum_neg_distrib,
         Complex.exp_sum, ← Finset.prod_inv_distrib]
       show ∏ k : Fin n, Complex.exp (-(Complex.I * (Complex.arg (z ⟨k, _⟩) : ℂ))) = _
@@ -342,8 +341,7 @@ theorem torusDer_sum_angles (φ : Fin (r - 1) → ℝ) : ∑ a : Fin r, angles �
       intro i; unfold angles; rw [dite_eq_left (by simp)]; rfl
     have h2 : angles φ (Fin.last n) = -∑ k, φ k := by
       unfold angles; rw [dite_eq_right (by simp)]
-    rw [h2, Finset.sum_congr rfl fun i _ => h1 i]
-    rw [add_neg_eq_zero]
+    rw [h2, Finset.sum_congr rfl fun i _ => h1 i, add_neg_eq_zero]
     exact Fintype.sum_equiv (finCongr (by simp)) _ _ (fun i => rfl)
 
 theorem torusDer_hermC_dot (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (u w : Fin r → ℂ) :
@@ -657,8 +655,7 @@ theorem haar_map_mul_right_of_compact {G : Type} [Group G] [TopologicalSpace G] 
   have hCc : IsCompact C := hK.mul hT
   have hCm : MeasurableSet C := hCc.isClosed.measurableSet
   have hC1 : C ∈ 𝓝 (1 : G) := by
-    refine Filter.mem_of_superset hK1 fun k hk => ?_
-    exact ⟨k, hk, 1, T.one_mem, mul_one k⟩
+    exact Filter.mem_of_superset hK1 fun k hk => ⟨k, hk, 1, T.one_mem, mul_one k⟩
   have hpos : ν C ≠ 0 := (ν.measure_pos_of_mem_nhds hC1).ne'
   have hfin : ν C ≠ ⊤ := hCc.measure_lt_top.ne
   have hpre : (fun h => h * g) ⁻¹' C = C := by
@@ -796,8 +793,7 @@ theorem haar_chart_formula : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     · show (Matrix.diagonal fun a => Complex.exp (Complex.I * (angles (θ τ) a : ℂ))).det ≠ 0
       rw [Matrix.det_diagonal]
       exact Finset.prod_ne_zero_iff.mpr fun a _ => Complex.exp_ne_zero _
-    · show (Matrix.diagonal fun a => Complex.exp (Complex.I * (angles (θ τ) a : ℂ))) a c = 0
-      exact Matrix.diagonal_apply_ne _ (ne_of_gt hca)
+    · exact Matrix.diagonal_apply_ne _ (ne_of_gt hca)
   have hang : ∀ (θ θ' : X.Ψ → Fin (r - 1) → ℝ), (∀ i k, ∃ n : ℤ, θ' i k = θ i k + 2 * Real.pi * n) →
       ∀ τ a, ∃ m : ℤ, angles (θ' τ) a = angles (θ τ) a + 2 * Real.pi * m := by
     intro θ θ' hn τ a

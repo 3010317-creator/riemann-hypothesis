@@ -62,10 +62,8 @@ theorem main : ∀ (N : ℕ) [NeZero N] (D : GL (Fin 2) (ZMod N)) (e : Fin 2 →
   obtain ⟨h2, h3⟩ := _root_.GlobalTheory.WpFam.isFam_wp_wpd N
   refine ⟨fun α γ => ?_, fun α γ => ?_⟩
   · have h := h2 (vmul e (α * D)) γ
-    rw [vact_vmul] at h
-    exact h
+    rwa [vact_vmul] at h
   · have h := h3 (vmul e (α * D)) γ
-    rw [vact_vmul] at h
-    exact h
+    rwa [vact_vmul] at h
 
 end GlobalTheory.WpFamGL

@@ -83,8 +83,7 @@ theorem hasDerivAt_invV_heisV : ∀ (F : Type) [Field F] [NumberField F] (N : �
   have hnorm : ∀ (u : VA F N) (g : VA F N → ℂ), (∀ w, ‖g w‖ ≤ C) → ∀ y : Fin N → AF F,
       ‖heisV ψ u g (x, y) * ψ (-(⅟(2 : AF F) * (x ⬝ᵥ y)))‖ ≤ C := by
     intro u g hg y
-    simp only [heisV, norm_mul, hψ.2.1, one_mul, mul_one]
-    exact hg _
+    simpa only [heisV, norm_mul, hψ.2.1, one_mul, mul_one] using hg _
   have key := hasDerivAt_integral_of_dominated_loc_of_deriv_le (μ := (muV N ν).restrict 𝓓)
     (F := fun t y => heisV ψ (M t) f (x, y) * ψ (-(⅟(2 : AF F) * (x ⬝ᵥ y))))
     (F' := fun t y => heisV ψ (M t) f' (x, y) * ψ (-(⅟(2 : AF F) * (x ⬝ᵥ y))))

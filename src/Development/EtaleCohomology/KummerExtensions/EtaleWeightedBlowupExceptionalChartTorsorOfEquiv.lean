@@ -69,9 +69,7 @@ theorem ringOf_ptOf {A : Type} [CommRing A] {U : Scheme.{0}} (E : A →+* Γ(U, 
   rw [ringOf, this]; rfl
 
 theorem point_ext {A : Type} [CommRing A] {U : Scheme.{0}} {h h' : U ⟶ Spec (CommRingCat.of A)}
-    (e : ringOf h = ringOf h') : h = h' := by
-  apply ext_to_Spec
-  exact CommRingCat.hom_ext e
+    (e : ringOf h = ringOf h') : h = h' := ext_to_Spec (CommRingCat.hom_ext e)
 
 theorem ptOf_ringOf {A : Type} [CommRing A] {U : Scheme.{0}} (h : U ⟶ Spec (CommRingCat.of A)) :
     ptOf (ringOf h) = h := point_ext (ringOf_ptOf _)
@@ -423,8 +421,7 @@ theorem xa_inj (hm : Mono (pr d R).hom) {n : SimplexCategoryᵒᵖ} {T : Scheme.
     (h : xa x = xa x') : x = x' := by
   have h1 : Mono (pullback.fst (wb d R) (pr d R).hom) := (IsPullback.of_hasPullback (wb d R) (pr d R).hom).mono_fst_of_mono hm
   have h2 := (NatTrans.mono_iff_mono_app _).1 h1 n
-  have h3 := (NatTrans.mono_iff_mono_app _).1 h2 T
-  exact (mono_iff_injective _).1 h3 h
+  exact (mono_iff_injective _).1 ((NatTrans.mono_iff_mono_app _).1 h2 T) h
 
 def wv {U : Scheme.{0}} (τ : (Γ(U, ⊤))ˣ) (x : Fin d → Γ(U, ⊤)) : WVec d U :=
   ⟨⟨Fin.cons (τ : Γ(U, ⊤)) (fun k => (τ : Γ(U, ⊤)) * x k), fun p => ⟨0, Nat.zero_le _, by

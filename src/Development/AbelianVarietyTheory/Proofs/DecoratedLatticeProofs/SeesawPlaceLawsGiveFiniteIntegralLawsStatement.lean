@@ -131,8 +131,7 @@ theorem finite_res (v : HeightOneSpectrum (𝓞 F)) :
       exact (sub_add_sub_cancel _ _ _).symm
     rw [this]
     refine Valuation.map_add_lt _ ?_ hk'
-    rw [hv]
-    exact ha
+    rwa [hv]
   have : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
   exact Finite.of_surjective (Ideal.Quotient.lift v.asIdeal f hk) (Ideal.Quotient.lift_surjective_of_surjective _ hk hs)
 
@@ -432,8 +431,7 @@ theorem span_lattice {n : ℕ} {N : Submodule (𝓞 E) (Fin n → E)} (hN : Subm
     Submodule.span_le_restrictScalars ℤ F _ (hz y hy)
   refine ⟨m, x, fun k => ?_, hz, ?_⟩
   · have : x k ∈ Submodule.span ℤ (Set.range x) := Submodule.subset_span ⟨k, rfl⟩
-    rw [hx] at this
-    exact this
+    rwa [hx] at this
   · have key : ∀ y ∈ Submodule.span E (N : Set (Fin n → E)), ∀ a : E, a • y ∈ Submodule.span F (Set.range x) := by
       intro y hy
       induction hy using Submodule.span_induction with
@@ -1069,8 +1067,7 @@ theorem locFin : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t)
           t.om j (1, r) (t.om j (ε, z) (comb c.ψ _ _ (v.eG j) (comb c.ψ _ _ (w.eQ j) Ψ))) := by
         conv_rhs => rw [← hfix]
         rw [omm, omm, one_mul, mul_one]
-      rw [e']
-      exact e
+      rwa [e']
     obtain ⟨a, ha, xG, hxG, xQ, hxQ, rfl⟩ := split_off D _ v.gP w.Q hF.disjG z hz
     have cQG : ∀ {x y}, x ∈ grpAt (c.V (j + 1)) (· ∈ v.gP) → y ∈ grpAt (c.V (j + 1)) (· ∈ w.Q) → y * x = x * y :=
       fun hx hy => comm_at D _ v.gP w.Q hF.disjG hx hy
@@ -1094,8 +1091,7 @@ theorem locFin : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t)
       have e : (v.b (j + 1))⁻¹ * (kG * kQ * κ) * v.b (j + 1) = (v.b (j + 1))⁻¹ * (1 * kG * kQ) * v.b (j + 1) *
           ((v.b (j + 1))⁻¹ * (κ * 1 * 1) * v.b (j + 1)) := by
         simp only [mul_assoc, mul_inv_cancel_left, one_mul, mul_one]
-      rw [e]
-      exact m3
+      rwa [e]
     · have c1 : a * (rQ * q * kQ) * (rG * kG) = rG * rQ * a * q * (kG * kQ) := by
         rw [← hxQ', mul_assoc a xQ, ← mul_assoc xQ, cQG hrGa hxQ, ← mul_assoc a, ← mul_assoc a, hrf a ha rG (hGf hrGa), hxQ',
           ← cQG (hJG hkG) (hKQ hkQ), mul_assoc rG rQ a, ← hrf a ha rQ (hQf hrQa)]

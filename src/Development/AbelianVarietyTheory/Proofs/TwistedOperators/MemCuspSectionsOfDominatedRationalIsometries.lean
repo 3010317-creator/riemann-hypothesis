@@ -117,8 +117,7 @@ theorem bddSec_tendsto_constTerm : ∀ (E : Type) [Field E] [NumberField E] [IsC
     refine h.congr fun ν => ?_
     have := hF' 0 ν
     rw [hF] at this
-    simp only [mul_zero, neg_zero, Real.exp_zero, Complex.ofReal_one, _root_.mul_one] at this
-    exact this
+    simpa only [mul_zero, neg_zero, Real.exp_zero, Complex.ofReal_one, _root_.mul_one] using this
   have hbound : Summable fun ν : X.Ψ → ℝ => ‖X.fj la ξ ν P x‖ := summable_norm_iff.mpr hsum0
   have hsign : ∀ ν : X.Ψ → ℝ, X.fj la ξ ν P x ≠ 0 → ∀ τ, 0 ≤ ν τ := fun ν h =>
     BoundedSectionAlgebra.sign_of_bdd X moderateCoefficientPositivity_holds hP hξ ν hx h
@@ -233,8 +232,7 @@ theorem inL_transfer (hN : 0 < N) {a a' : GL (Fin r) E} (h' : QMatch X X' N a')
   have h1 := hP _ (h'.lat' w hw) (by unfold InL; rw [key, mulVec_mulVec_inv]; exact hw)
   unfold InL at h1
   rw [key] at h1
-  rw [mulVec_mul]
-  exact h1
+  rwa [mulVec_mul]
 
 theorem isUStab_of_inL (hN : 0 < N) {a a' : GL (Fin r) E} (h : QMatch X X' N a) (h' : QMatch X X' N a')
     (hP : ∀ v ∈ X.Λ, InL X' N a v ↔ InL X' N a' v) : IsUStab X'.Gm X'.Λ (a * a'⁻¹) := by
@@ -279,8 +277,7 @@ theorem finite_reps (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ)
       rw [hv, Matrix.mulVec_add, Matrix.mulVec_smul, smul_add, smul_smul, ← _root_.mul_assoc,
         inv_mul_cancel₀ hN0, _root_.one_mul]
       exact X'.Λ.add_mem hv'' (ha.lat _ u.2)
-    · intro h
-      exact ⟨v, h, rfl⟩
+    · exact fun h => ⟨v, h, rfl⟩
   let rep : Set (A ⧸ K) → GL (Fin r) E := fun T =>
     if h : ∃ a, QMatch X X' N a ∧ f a = T then h.choose else 1
   obtain ⟨S0, hS0⟩ := X'.Γ_index

@@ -77,8 +77,7 @@ theorem nonneg_of_tendsto {X : Type} [AddCommGroup X] (q : QuadraticMap ℤ X �
     have e2 := mul_right_cancel₀ h.ne e'
     have e3 := (pow_left_inj₀ (by positivity) (by positivity) two_ne_zero).1 e2
     exact_mod_cast add_right_cancel e3
-  · simp only [Set.mem_setOf_eq, hv, not_le]
-    exact mul_neg_of_pos_of_neg (by positivity) h
+  · simpa only [Set.mem_setOf_eq, hv, not_le] using mul_neg_of_pos_of_neg (by positivity) h
 
 variable {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {S : ThetaSys o Ω} {M : RatModel o Ω}
 
@@ -186,8 +185,7 @@ theorem exists_mem_maximalIdeal_exp_le_norm_val :
     exact Real.exp_lt_one_iff.2 (neg_neg_of_pos (div_pos hpos hN))
   have hnu := (RatModel.norm_val_lt_one_iff hc hreg).1 hlt
   refine ⟨(M.stalkEquiv z).symm ⟨_, hreg⟩, ?_, ?_⟩
-  · rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, MulEquiv.isUnit_map]
-    exact hnu
+  · rwa [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, MulEquiv.isUnit_map]
   · rw [← RatModel.coe_stalkEquiv, RingEquiv.apply_symm_apply]
     exact he'.ge
 

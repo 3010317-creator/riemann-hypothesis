@@ -434,8 +434,7 @@ theorem exists_sum_evW (hti : TieIn T Rl.toRealDat κ v₀) (hnV : 8 * D.R.f * D
     rw [(hti.kap j τ).1 i]
     exact GlobalTheory.LiftWeight.kapTop_lastPos D j τ i hi
   have hn : 8 * D.R.f * D.R.r + 4 ≤ (κ j).n := by
-    rw [(hti.kap j (D.eTau.symm 1)).2.2]
-    exact hnV
+    rwa [(hti.kap j (D.eTau.symm 1)).2.2]
   obtain ⟨φ', hφ'm, rfl⟩ := hφ
   have hspan : Formalism.L2.Pj.holSub0 (T.U ((j : ℕ) + 1) T.σ₀).X (laU (T.U ((j : ℕ) + 1) T.σ₀) (wtA (κ j)) (κ j).n) ≤
       Submodule.span ℂ (rdU (T.U ((j : ℕ) + 1) T.σ₀) '' {f | f ∈ sec (T.Q.Xo ((j : ℕ) + 1)) T.Q.c (wtA (κ j)) (κ j).n ∧
@@ -568,8 +567,7 @@ theorem isLevDatum_vecBase {F : Face D A3.A} (hT : LawsJ T) (hcore : GlobalTheor
     · obtain ⟨x, hx⟩ := exists_isLocUnit (hB.de.split.isIdemAt hPP) h.unit
       have e := hx.eq (hB.de.res PP hPP)
       have := hδ x
-      rw [e] at this
-      exact this
+      rwa [e] at this
     · exact zero_mem _
 
 theorem ratBase_of_readsAs (hRF : GlobalTheory.NT.RayField) {F : Face D A3.A} (hti : TieIn T Rl.toRealDat κ v₀)
@@ -611,8 +609,7 @@ theorem ratBase_of_readsAs (hRF : GlobalTheory.NT.RayField) {F : Face D A3.A} (h
   have hω' : IsWeilDatumO Rl.ψ (Vc D j) (Wc D j) (Lift.chrTh (Lift.tup Rl.mu0 (ρ.B i j b).de.chi) Rl.eta ((j : ℕ) + 1)).1
       (Lift.chrTh (Lift.tup Rl.mu0 (ρ.B i j b).de.chi) Rl.eta ((j : ℕ) + 1)).2 (ρ.om i j b 1) := by
     have h1 := hω
-    rw [Base.IsWeil, mul_one, Base.mu, hBo.ψ, hBo.mu0, hBo.eta] at h1
-    exact h1
+    rwa [Base.IsWeil, mul_one, Base.mu, hBo.ψ, hBo.mu0, hBo.eta] at h1
 
   have hm : ∀ τ, (ρ.B i j b).w.p τ + (ρ.B i j b).w.q τ ≤ (Wc D j).rank := fun τ => by
     have h2 := Formalism.BasicNotions.sig_sum _ hB.sigOK (tauE D τ)

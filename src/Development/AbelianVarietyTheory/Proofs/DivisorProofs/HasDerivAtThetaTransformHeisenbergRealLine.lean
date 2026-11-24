@@ -153,8 +153,7 @@ theorem hasDerivAt_schr (ψ : AddChar (AF F) ℂ) (v : (κ → AF F) × (κ → 
       rfl
     rw [e, sub_self]
     exact (hd _).const_mul _
-  have h2 := h1.comp_sub_const t t
-  simpa only [add_sub_cancel] using h2
+  simpa only [add_sub_cancel] using h1.comp_sub_const t t
 
 theorem hasDerivAt_thetaSum_schr (ψ : AddChar (AF F) ℂ) (hF : IsTotallyReal F) (hψ : IsCharAF F ψ)
     (v : (κ → AF F) × (κ → AF F)) {Φ Φ' : (κ → AF F) → ℂ} (hΦ : Φ ∈ schA F κ) (hΦ' : Φ' ∈ schA F κ)
@@ -184,12 +183,10 @@ theorem hasDerivAt_thetaSum_schr (ψ : AddChar (AF F) ℂ) (hF : IsTotallyReal F
     (fun ξ t _ => (hasDerivAt_schr ψ v hd (r ξ + w.1) t).const_mul (ph ξ)) (fun ξ t ht => ?_) hmem ?_ hmem
   · have hy : w.1 + (realAd F t • v).1 ∈ ω := ⟨t, ⟨ht.1.le, ht.2.le⟩, rfl⟩
     have := hcb ξ _ hy
-    simp only [ph, schr, norm_mul, hnorm, one_mul, add_assoc]
-    exact this
+    simpa only [ph, schr, norm_mul, hnorm, one_mul, add_assoc] using this
   · refine Summable.of_norm_bounded hcs₀ fun ξ => ?_
     have := hcb₀ ξ w.1 rfl
-    simp only [h0, ph, norm_mul, hnorm, one_mul]
-    exact this
+    simpa only [h0, ph, norm_mul, hnorm, one_mul] using this
 
 end SlopeTestRemainingChoices
 

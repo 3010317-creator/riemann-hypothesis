@@ -129,8 +129,7 @@ theorem mem_span_of_twistedDualGens (E : ChartBundle O (mseg x) N V) {M : ℕ} {
   classical
   obtain ⟨k, f, c, hf, hc, hsum, hb⟩ := E.frame s₀ hs
   have hne : ∃ l, f l ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     simp [h] at hsum
   obtain ⟨l, hl⟩ := hne
   obtain ⟨b, hli, hsp, hiff⟩ := hb l
@@ -164,8 +163,7 @@ theorem mem_span_of_twistedDualGens (E : ChartBundle O (mseg x) N V) {M : ℕ} {
       obtain ⟨β, hβ, rfl⟩ := hgen v hv
 
       simp only [LinearMap.smul_apply, map_sum, map_smul, smul_eq_mul]
-      refine sum_mem fun g _ => ?_
-      exact mul_mem (hβ g) (h2 g)
+      exact sum_mem fun g _ => mul_mem (hβ g) (h2 g)
     obtain ⟨u, -, hu⟩ := hg.generate s₀ hs _ h3
     have h4 : f l ^ n₀ • bas.coord q ∈ Submodule.span Ω (Set.range φ) := by
       rw [hu]
@@ -188,8 +186,7 @@ theorem exists_flagMinor_ne_zero {M : ℕ} {φ : Fin M → Module.Dual Ω V}
     funext b
     simp [L, ψ, Module.Dual.eval_apply, Finsupp.single_apply, Fin.castLE_inj]
   have h := Submodule.mem_map_of_mem (f := L) (hφ ψ)
-  rw [Submodule.map_span, ← Set.range_comp, hL] at h
-  exact h
+  rwa [Submodule.map_span, ← Set.range_comp, hL] at h
 
 theorem flagMinor_div_mem (E : ChartBundle O (mseg x) N V) {M : ℕ} {a : K → ℤ}
     {φ : Fin M → Module.Dual Ω V} (hg : IsTwistedDualGens x E a φ) {s₀ : ∀ k, ι k}
@@ -451,8 +448,7 @@ private theorem combo_lemma_5 {Ω : Type} [Field Ω] {E : Type} [AddCommGroup E]
       have := congrArg Fin.val heq
       simp only [Fin.coe_castLE] at this
       simp [this]
-    · intro hh
-      exact absurd (Finset.mem_univ _) hh
+    · exact fun hh => absurd (Finset.mem_univ _) hh
 
 open PositivityTheory.Xgn.A_minor_graded in
 theorem PositivityTheory.Xgn.t_minor_graded : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R : Subalgebra o Ω) {E : Type} [AddCommGroup E] [Module Ω E] (N M : ℕ) (L : AddSubgroup E), LocFree R N L → ∀ (φ : Fin M → Module.Dual Ω E), GenDual R L φ → ∀ (w : Module.Basis (Fin N) Ω E) (i : Fin N) (I : Fin (i : ℕ) → Fin M) (J : Fin ((i : ℕ) + 1) → Fin M), flagMinor φ w i i.2.le I ≠ 0 → (∀ I', flagMinor φ w i i.2.le I' / flagMinor φ w i i.2.le I ∈ R) → flagMinor φ w ((i : ℕ) + 1) i.2 J ≠ 0 → (∀ J', flagMinor φ w ((i : ℕ) + 1) i.2 J' / flagMinor φ w ((i : ℕ) + 1) i.2 J ∈ R) → {s : Ω | ∃ v ∈ L, (∀ j, i < j → w.repr v j = 0) ∧ w.repr v i = s} = {s : Ω | ∃ a ∈ R, s = a * (flagMinor φ w i i.2.le I / flagMinor φ w ((i : ℕ) + 1) i.2 J)} := by
@@ -681,8 +677,7 @@ theorem genDual_span {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R₀ 
       set B := Module.Basis.mk (hbli l) (hbsp l).ge with hBdef
       have hB : ∀ q, B q = b l q := fun q => Module.Basis.mk_apply _ _ _
       have hχ : ∀ q, ∃ u : Fin M → Ω, (∀ m', u m' ∈ R₀) ∧ f l ^ m • B.coord q = ∑ m', u m' • φ m' := by
-        intro q
-        exact hφ.2 _ (fun v hv => by simpa [Module.Basis.coord_apply] using hm v hv q)
+        exact fun q => hφ.2 _ (fun v hv => by simpa [Module.Basis.coord_apply] using hm v hv q)
       choose u hu hχeq using hχ
       have hgen : ∀ q, ∃ n, f l ^ n • b l q ∈ L₀ := by
         intro q
@@ -771,8 +766,7 @@ theorem prod_zpow_single {Ω : Type} [Field Ω] {K : Type} [Fintype K] [Decidabl
   · simp
   · intro b _ hb
     simp [hb]
-  · intro h
-    exact absurd (Finset.mem_univ p) h
+  · exact fun h => absurd (Finset.mem_univ p) h
 
 theorem prod_zpow_sub {Ω : Type} [Field Ω] {K : Type} [Fintype K] [DecidableEq K] (z : K → Ω)
     (hz : ∀ k, z k ≠ 0) (p q : K) :
@@ -828,8 +822,7 @@ theorem PositivityTheory.Xgn.t_plucker_frame : ∀ (O : Type) [CommRing O] [IsDo
     · obtain ⟨r, hr, hrv⟩ := (hE j).sections c0 hc0 l v hv
       rw [LinearMap.smul_apply, hrv, smul_eq_mul]
       show t * (r * P) ∈ _
-      rw [mul_left_comm, htP, mul_one]
-      exact hr
+      rwa [mul_left_comm, htP, mul_one]
     · obtain ⟨u, hu, hψeq⟩ := (hE j).generate c0 hc0 ψ hψ
       refine ⟨u, hu, ?_⟩
       rw [hψeq]

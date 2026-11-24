@@ -82,8 +82,7 @@ theorem exists_etale_model_of_isColimit :
     have h1 := hx y
     have h2 := congr(($(c.w f)).hom (x y))
     simp only [CommRingCat.hom_comp, RingHom.coe_comp, Function.comp_apply] at h2
-    rw [h2]
-    exact h1
+    rwa [h2]
   letI : Algebra (D.obj j) c.pt := (c.ι.app j).hom.toAlgebra
   letI : Algebra (D.obj j) A := ((algebraMap c.pt A).comp (c.ι.app j).hom).toAlgebra
   haveI : IsScalarTower (D.obj j) c.pt A := IsScalarTower.of_algebraMap_eq (fun _ ↦ rfl)

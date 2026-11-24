@@ -430,14 +430,12 @@ theorem inUU_of_adCL {lev : Fin n → ℕ} {p q : Fin n} (hpq : lev p = lev q) {
   · show lev k.2.1.1 < lev k.2.1.2
     rw [c1.2.2]
     show lev p < lev l.2.1.2
-    rw [hpq, c1.1]
-    exact hl
+    rwa [hpq, c1.1]
   by_cases c2 : l.2.1.2 = p ∧ k.1 = (false ^^ l.1) ∧ k.2.1 = (l.2.1.1, q)
   · show lev k.2.1.1 < lev k.2.1.2
     rw [c2.2.2]
     show lev l.2.1.1 < lev q
-    rw [← hpq, ← c2.1]
-    exact hl
+    rwa [← hpq, ← c2.1]
   · exact absurd (by rw [adCL, ite_eq_right c1, ite_eq_right c2, sub_zero]) h
 
 theorem Lv_ne {lev : Fin n → ℕ} {E1 E2 : Fin n → Fin n → Module.End ℂ V} {p q : Fin n} {x : Cq n V}
@@ -919,8 +917,7 @@ theorem glRel_LT {E : Fin n → Fin n → Module.End ℂ V} (hE : GlRel E) (p q 
 
 theorem LT_LT {E E' : Fin n → Fin n → Module.End ℂ V} (h : ∀ a b c d, E a b * E' c d = E' c d * E a b)
     (a b c d : Fin n) : Commute (LT E a b) (LT E' c d) := by
-  refine LinearMap.ext fun y => funext fun A => ?_
-  exact LinearMap.congr_fun (h a b c d) (y A)
+  exact LinearMap.ext fun y => funext fun A => LinearMap.congr_fun (h a b c d) (y A)
 
 theorem tau_left (hm : Monotone lev) {p q : Fin n} (hpq : lev p = lev q) (b : Fin n) :
     tau lev p b ↔ tau lev q b :=
@@ -1154,15 +1151,13 @@ theorem Lv_eq (hm : Monotone lev) (E1 E2 : Fin n → Fin n → Module.End ℂ V)
       = ∑ r, dT lev true p r * cT lev true q r + ∑ r, dT lev false p r * cT lev false q r := by
     simp only [← sum_add_distrib]
     refine sum_congr rfl fun r _ => ?_
-    simp only [dE, cE]
-    exact half_two _ _ _ _
+    simpa only [dE, cE] using half_two _ _ _ _
   have s2 : (∑ r, dE lev 1 r q * cE lev 1 r p + ∑ r, dE lev (-1) r q * cE lev (-1) r p
       : Module.End ℂ (Cq n V))
       = ∑ r, dT lev true r q * cT lev true r p + ∑ r, dT lev false r q * cT lev false r p := by
     simp only [← sum_add_distrib]
     refine sum_congr rfl fun r _ => ?_
-    simp only [dE, cE]
-    exact half_two _ _ _ _
+    simpa only [dE, cE] using half_two _ _ _ _
   unfold Lv Aa
   rw [adLL_eq hm hpq, lift_k, Fintype.sum_bool]
   have e : ∀ L1 L2 X1 X2 Y1 Y2 : Module.End ℂ (Cq n V),

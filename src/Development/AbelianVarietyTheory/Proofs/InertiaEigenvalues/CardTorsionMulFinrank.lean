@@ -113,8 +113,7 @@ theorem exists_lift (h2 : l ≠ 2) (u : (ZMod l)ˣ) :
   let x : ℤ_[l]ˣ := ⟨z, z ^ (l - 2), by rw [← pow_succ', ← e, hz1], by rw [← pow_succ, ← e, hz1]⟩
   refine ⟨x, ?_, ?_⟩
   · refine isOfFinOrder_iff_pow_eq_one.mpr ⟨l - 1, by omega, Units.ext ?_⟩
-    rw [Units.val_pow_eq_pow_val]
-    exact hz1
+    rwa [Units.val_pow_eq_pow_val]
   · apply Units.ext
     rw [red_val, ← hred_a, ← sub_eq_zero, ← map_sub]
     by_contra hne
@@ -172,8 +171,7 @@ theorem finrank_eq_relIndex (K : FinExt l) :
   have h4 := Module.finrank_mul_finrank ℚ_[l] (K0 K) K.1
   have hpos : 0 < Module.finrank ℚ_[l] (K0 K) := Module.finrank_pos
   unfold GK
-  rw [← h1, ← h2] at h3
-  rw [← h4, mul_comm] at h3
+  rw [← h1, ← h2, ← h4, mul_comm] at h3
   exact (Nat.eq_of_mul_eq_mul_left hpos h3).symm
 
 
@@ -289,7 +287,6 @@ theorem card_torsion_mul_finrank : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l)
   rw [Nat.card_eq_fintype_card (α := (ZMod l)ˣ), ZMod.card_units] at hcard
   rw [finrank_eq_relIndex, hdel, hct, ← hmap]
   change _ * H0.index = _
-  rw [hidx]
-  exact hcard
+  rwa [hidx]
 
 end GlobalTheory.TorsionCard

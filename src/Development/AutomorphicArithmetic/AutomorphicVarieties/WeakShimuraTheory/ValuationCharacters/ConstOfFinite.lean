@@ -158,8 +158,7 @@ private theorem UpperTheory.V.Ws.red_eii {Γ K : Type} [Group Γ] [Field K] (r :
     intro s
     refine Finset.induction_on s ?_ ?_
     · intro _
-      simp only [Finset.prod_empty, Matrix.diagonal_one]
-      exact hone
+      simpa only [Finset.prod_empty, Matrix.diagonal_one] using hone
     · intro j s hjs ih hi
       have hs : i ∉ s := fun h => hi (Finset.mem_insert_of_mem h)
       have hfac : (d i - d j)⁻¹ • (r g0 - d j • (1 : M4 K)) =
@@ -189,8 +188,7 @@ private theorem UpperTheory.V.Ws.red_eii {Γ K : Type} [Group Γ] [Field K] (r :
     · subst hai
       simp only [and_self, ite_true]
       rw [Finset.prod_eq_one]
-      intro j hj
-      exact div_self (sub_ne_zero.2 (hne _ _ (Finset.ne_of_mem_erase hj).symm))
+      exact fun j hj => div_self (sub_ne_zero.2 (hne _ _ (Finset.ne_of_mem_erase hj).symm))
     · simp only [hai, and_self, ite_false, ite_true]
       exact (Finset.prod_eq_zero (Finset.mem_erase.2 ⟨Ne.symm hai, Finset.mem_univ a⟩) (by simp)).symm
   · simp only [hab, ite_false]
@@ -311,8 +309,7 @@ theorem chain (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [
     conv_lhs => rw [← Ideal.map_comap_of_surjective _ hp x', ← Ideal.map_comap_of_surjective _ hp y',
       ← Ideal.map_sup, Ideal.comap_map_of_surjective _ hp]
     exact sup_eq_left.mpr (le_trans (Ideal.comap_mono bot_le) le_sup_left)
-  rw [ringKrullDim_quotient_eq_quotient_comap_of_surjective _ hp, hsup]
-  exact hd
+  rwa [ringKrullDim_quotient_eq_quotient_comap_of_surjective _ hp, hsup]
 
 theorem nice {R : Type} [CommRing R] [IsNoetherianRing R] [IsLocalRing R] (ϖ : R) (hϖ : ϖ ∈ maximalIdeal R) (N : ℕ)
     (hN : 1 ≤ N) {ι κ : Type} [Finite ι] [Finite κ] (a : ι → Ideal R) (b : κ → Ideal R)
@@ -383,8 +380,7 @@ theorem curve (l : ℕ) [Fact l.Prime] (O R : Type) [CommRing O] [IsLocalRing O]
       exact CharP.cast_eq_zero _ l
     have h2 := hm _ h1
     rw [map_natCast] at h2
-    rw [← map_natCast (Ideal.Quotient.mk p), Ideal.Quotient.eq_zero_iff_mem]
-    exact h2
+    rwa [← map_natCast (Ideal.Quotient.mk p), Ideal.Quotient.eq_zero_iff_mem]
   haveI : CharP (R ⧸ p) l := (CharP.charP_iff_prime_eq_zero Fact.out).mpr hl
   haveI : Finite (ResidueField (R ⧸ p)) := by
     haveI : IsLocalHom (algebraMap O (R ⧸ p)) := IsCO.isLocalHom
@@ -393,8 +389,7 @@ theorem curve (l : ℕ) [Fact l.Prime] (O R : Type) [CommRing O] [IsLocalRing O]
     obtain ⟨x, rfl⟩ := residue_surjective y
     obtain ⟨a, ha⟩ := IsCO.res_surj (O := O) x
     refine ⟨residue O a, ?_⟩
-    rw [ResidueField.map_residue, eq_comm, ← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
-    exact ha
+    rwa [ResidueField.map_residue, eq_comm, ← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
   obtain ⟨k, _, hk, f, hinj, hloc, -⟩ := UpperTheory.V.Pr.T.curveNorm (R := R ⧸ p) l hd
   haveI : CharP (PowerSeries k) l :=
     (CharP.charP_iff_prime_eq_zero Fact.out).mpr (by rw [← map_natCast f, hl, map_zero])
@@ -430,8 +425,7 @@ theorem curve (l : ℕ) [Fact l.Prime] (O R : Type) [CommRing O] [IsLocalRing O]
         simpa using this
       exact (maximalIdeal.isMaximal R).ne_top ((Ideal.eq_top_iff_one _).mpr h5)
     have hfu : ¬ IsUnit (f (Ideal.Quotient.mk p x)) := fun h => hxu (hloc.map_nonunit _ h)
-    rw [PowerSeries.isUnit_iff_constantCoeff, isUnit_iff_ne_zero, not_not] at hfu
-    exact hfu
+    rwa [PowerSeries.isUnit_iff_constantCoeff, isUnit_iff_ne_zero, not_not] at hfu
 
 theorem irr {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSpace Γ] {Φ : Fr O Γ} {Λ : Type} [CommRing Λ] [IsLocalRing Λ]
     {a : O →+* Λ} (hok : Φ.Ok ((residue Λ).comp a)) {c : PD Φ.ι Γ (ResidueField Λ)} (hc : Φ.IsRes ((residue Λ).comp a) c)

@@ -183,8 +183,7 @@ theorem exists_poly_approx_PPSet : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZ
     intro x
     by_cases h : (l : Wq l a) ^ r ∣ w x
     · have hx : x ∉ s := fun hx => (mem_s x).1 hx h
-      simp only [w₁, c, hx, ite_false, dite_eq_left h, zero_add]
-      exact h.choose_spec
+      simpa only [w₁, c, hx, ite_false, dite_eq_left h, zero_add] using h.choose_spec
     · have hx : x ∈ s := (mem_s x).2 h
       simp [w₁, c, hx, h]
   have hw₁ : LTo0 l w₁ := by
@@ -505,8 +504,7 @@ theorem φ₂_X : φ₂ X = (C X + X) ^ l - C (X ^ l) := by
   have := charZero_K (l := l) (K := K)
   have h : (X : K⟦X⟧⟦X⟧) = sh X - C X := by rw [sh_X sh hsh]; ring
   conv_lhs => rw [h]
-  rw [map_sub, hφsh, hφC, frob_X, map_pow]
-  rw [sh_X sh hsh]
+  rw [map_sub, hφsh, hφC, frob_X, map_pow, sh_X sh hsh]
 
 omit [NeZero e] in
 theorem bivariateFrobenius_bivariateEmbedding_CC (w : Wq l a) :
@@ -604,8 +602,7 @@ theorem taylor_term (b : Bp l a) (p : ZMod a → K⟦X⟧⟦X⟧) (N : ℕ) (hpb
     rfl
   have h3 : (i.factorial : OCr l O) * ϖ.muDiv a O g i = j (ainfToAcris l (ϖ.mu g)) ^ i := by
     have h4 := congrArg j (factorial_mul_dpow (ϖ.mu g) (ϖ.theta_mu (ϖ.gal_pi a g)) i)
-    rw [map_mul, map_natCast, map_pow] at h4
-    exact h4
+    rwa [map_mul, map_natCast, map_pow] at h4
   rw [mul_left_comm, hA]
   change _ = j _
   rw [map_mul, map_pow, map_mul, map_mul]
@@ -840,9 +837,7 @@ theorem sdSet_eq_sum_add_mul (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [Ne
       F = ∑ n ∈ Finset.range N, cstS t K (v n) * dpS a e n + (l : ZMod a → K⟦X⟧) * y := by
   rintro F ⟨w, hw, hF⟩
   haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
-  have hl0 : (l : Wq l a) ≠ 0 := by
-    have h := WittVector.p_nonzero l (Fq l a)
-    exact h
+  have hl0 : (l : Wq l a) ≠ 0 := WittVector.p_nonzero l (Fq l a)
   have h1 := hw 1
   rw [Nat.cofinite_eq_atTop, Filter.eventually_atTop] at h1
   obtain ⟨N, hN⟩ := h1
@@ -1096,8 +1091,7 @@ theorem frobS_eis_mem : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZ
     by_contra h
     simp only [Set.mem_setOf_eq, not_le] at h
     apply hn
-    simp only [show n ≠ 0 by omega, show n ≠ l * e by omega, ite_false]
-    exact dvd_zero _
+    simpa only [show n ≠ 0 by omega, show n ≠ l * e by omega, ite_false] using dvd_zero _
   · intro τ n
     rw [map_add (f := _), coeff_one, coeff_C_mul, coeff_X_pow]
     by_cases h0 : n = 0
@@ -1396,8 +1390,7 @@ def mkF (v : ℕ × ℕ → Wq l a) : ZMod a → K⟦X⟧⟦X⟧ := fun τ =>
 omit [Module.Free ℤ_[l] O] in
 theorem wit_mk [CharZero K] (v : ℕ × ℕ → Wq l a) : Wit t e (mkF K t e v) v := by
   intro τ i n
-  simp only [mkF, coeff_mk]
-  exact mul_div_cancel₀ _ (Nat.cast_ne_zero.2 (by positivity))
+  simpa only [mkF, coeff_mk] using mul_div_cancel₀ _ (Nat.cast_ne_zero.2 (by positivity))
 
 end GlobalTheory.CrysPrism.CompPP
 

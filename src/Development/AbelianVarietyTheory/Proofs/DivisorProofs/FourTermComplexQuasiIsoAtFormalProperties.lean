@@ -108,14 +108,12 @@ theorem qAt_of_comp_retract {T T' T'' : C} (a : T ⟶ T') (b : T' ⟶ T'') (c : 
   · obtain ⟨x, w, hx, hw⟩ := h.surj1 (K.M1.map b y) (by rw [K.diffOne_natural, hy, map_zero])
     refine ⟨x, K.M0.map c w, hx, ?_⟩
     have := congrArg (K.M1.map c) hw
-    rw [map_add (f := _), K.M1.map_comp, e1, e1, ← K.diffZero_natural] at this
-    exact this
+    rwa [map_add (f := _), K.M1.map_comp, e1, e1, ← K.diffZero_natural] at this
   · exact h.inj2 x (K.M1.map b y) hx (by rw [K.M2.map_comp, hxy, K.diffOne_natural])
   · obtain ⟨x, w, hx, hw⟩ := h.surj2 (K.M2.map b y) (by rw [K.diffTwo_natural, hy, map_zero])
     refine ⟨x, K.M1.map c w, hx, ?_⟩
     have := congrArg (K.M2.map c) hw
-    rw [map_add (f := _), K.M2.map_comp, e2, e2, ← K.diffOne_natural] at this
-    exact this
+    rwa [map_add (f := _), K.M2.map_comp, e2, e2, ← K.diffOne_natural] at this
 
 theorem qAt_of_isIso {T T' : C} (a : T ⟶ T') [IsIso a] : K.QAt a :=
   qAt_of_comp_retract K a (inv a) a (IsIso.inv_hom_id a) (by rw [IsIso.hom_inv_id]; exact qAt_ident K T)

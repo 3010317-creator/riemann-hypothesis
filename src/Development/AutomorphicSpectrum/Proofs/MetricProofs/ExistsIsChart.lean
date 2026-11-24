@@ -127,12 +127,10 @@ theorem exists_isChart (L : Flat.LogPeriods n a g Λ) : ∃ bas A T0 B c ρ, IsC
         rw [Complex.norm_exp] at h1
         exact Real.exp_lt_one_iff.1 h1
       · have hk' : ¬ k.val < a := not_lt.2 hk
-        simp only [w, hk', dite_eq_right, not_false_eq_true]
-        exact hz1 k
+        simpa only [w, hk', dite_eq_right, not_false_eq_true] using hz1 k
     have h1 := (hb w hw (by rw [hexp]; exact Metric.ball_subset_closedBall hz)).1
     rw [hτ w hw] at h1
-    simp only [tauAt, hexp, hwj] at h1
-    exact h1
+    simpa only [tauAt, hexp, hwj] using h1
   · intro w hw
     rw [← hτ w hw]
     exact Q.symm w hw

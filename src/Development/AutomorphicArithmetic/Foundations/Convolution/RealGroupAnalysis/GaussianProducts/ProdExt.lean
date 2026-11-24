@@ -127,8 +127,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.prodExt :
     have h1 : ‹MeasurableSpace Z› = MeasurableSpace.generateFrom {T : Set Z | IsCompact T ∧ IsOpen T} :=
       (BorelSpace.measurable_eq).trans hB.borel_eq_generateFrom
     have := generateFrom_prod_eq (isCountablySpanning_measurableSet (α := X)) hD
-    rw [MeasurableSpace.generateFrom_measurableSet, ← h1] at this
-    exact this
+    rwa [MeasurableSpace.generateFrom_measurableSet, ← h1] at this
   have hpi : IsPiSystem (Set.image2 (· ×ˢ ·) {S : Set X | MeasurableSet S}
       {T : Set Z | IsCompact T ∧ IsOpen T}) :=
     MeasurableSpace.isPiSystem_measurableSet.prod
@@ -181,8 +180,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.prodExt :
   have hlim : Tendsto (fun n => ∫ ω, hSM.approxBounded 1 n (r ω, s ω) * ρ ω ∂ν) atTop
       (𝓝 (∫ ω, Q (r ω, s ω) * ρ ω ∂ν)) := by
     refine tendsto_integral_of_dominated_convergence (fun ω => ‖ρ ω‖) ?_ hρ.norm ?_ ?_
-    · intro n
-      exact (((hSM.approxBounded 1 n).measurable.comp hφ).aestronglyMeasurable).mul hρ.1
+    · exact fun n => (((hSM.approxBounded 1 n).measurable.comp hφ).aestronglyMeasurable).mul hρ.1
     · intro n
       refine Eventually.of_forall (fun ω => ?_)
       rw [norm_mul]

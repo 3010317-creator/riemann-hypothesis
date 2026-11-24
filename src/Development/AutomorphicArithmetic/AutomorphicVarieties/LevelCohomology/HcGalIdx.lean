@@ -57,8 +57,7 @@ namespace UpperTheory.V.X.GaloisIndexPlaces
 
 private theorem prime_p {l : ℕ} (hl : l.Prime) : Prime ((l : ℕ) : 𝓞 ℚ) := by
   have h : Prime (l : ℤ) := Nat.prime_iff_prime_int.mp hl
-  rw [← MulEquiv.prime_iff Rat.ringOfIntegersEquiv, map_natCast]
-  exact h
+  rwa [← MulEquiv.prime_iff Rat.ringOfIntegersEquiv, map_natCast]
 
 private noncomputable def vQ (l : ℕ) (hl : l.Prime) : HeightOneSpectrum (𝓞 ℚ) where
   asIdeal := Ideal.span {((l : ℕ) : 𝓞 ℚ)}
@@ -73,8 +72,7 @@ private theorem eq_vQ (l : ℕ) (hl : l.Prime) (v : HeightOneSpectrum (𝓞 ℚ)
   apply HeightOneSpectrum.ext
   have hle : (vQ l hl).asIdeal ≤ v.asIdeal := by
     show Ideal.span {((l : ℕ) : 𝓞 ℚ)} ≤ v.asIdeal
-    rw [Ideal.span_le, Set.singleton_subset_iff]
-    exact h
+    rwa [Ideal.span_le, Set.singleton_subset_iff]
   exact (vQ l hl).isMaximal.eq_of_le v.isPrime.ne_top hle
 
 private theorem vQ_inj {p q : ℕ} (hp : p.Prime) (hq : q.Prime) (h : vQ p hp = vQ q hq) : p = q := by
@@ -88,13 +86,10 @@ private theorem isPlaceOver_vQ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClo
     (A : ValuationSubring Ω) (hA : A.valuation ((l : ℕ) : Ω) < 1) : IsPlaceOver (F := ℚ) A (vQ l hl) := by
   haveI : Fact l.Prime := ⟨hl⟩
   obtain ⟨hne, htop, hab, -⟩ := UpperTheory.V.Base.places ℚ Ω l A
-  have hAT : A ≠ ⊤ := by
-    intro hT
-    exact (htop hT).2 hA
+  have hAT : A ≠ ⊤ := fun hT => (htop hT).2 hA
   obtain ⟨v, hv⟩ := hne hAT
   have hlv : ((l : ℕ) : 𝓞 ℚ) ∈ v.asIdeal := (hab v hv).mp hA
-  rw [eq_vQ l hl v hlv]
-  exact hv
+  rwa [eq_vQ l hl v hlv]
 
 end UpperTheory.V.X.GaloisIndexPlaces
 
@@ -108,8 +103,7 @@ theorem UpperTheory.V.X.galIdx :
   obtain ⟨f, hf⟩ := hex
   have hpr : ∀ p, p ∈ T ∨ p ∈ Q → p.Prime := hD.prime
   have hmemS : ∀ p, p ∈ T ∨ p ∈ Q → f p ∈ (T ∪ Q).image f := by
-    intro p hp
-    exact Finset.mem_image_of_mem f (Finset.mem_union.mpr hp)
+    exact fun p hp => Finset.mem_image_of_mem f (Finset.mem_union.mpr hp)
   have hfinj : ∀ p q, (p ∈ T ∨ p ∈ Q) → (q ∈ T ∨ q ∈ Q) → f p = f q → p = q := by
     intro p q hp hq he
     rw [hf p (hpr p hp), hf q (hpr q hq)] at he

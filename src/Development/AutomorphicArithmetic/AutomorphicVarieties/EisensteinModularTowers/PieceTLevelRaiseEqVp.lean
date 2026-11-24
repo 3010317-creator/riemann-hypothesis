@@ -146,8 +146,7 @@ theorem dist_raabe (p : ℕ) (hp : 0 < p) (j : ℕ) (y : ℚ) :
     field_simp
   apply Rat.cast_injective (α := ℝ)
   rw [Rat.cast_sum, Rat.cast_mul, Rat.cast_zpow, Rat.cast_natCast]
-  simp only [← hcast]
-  exact h2
+  simpa only [← hcast] using h2
 
 theorem dist_shift {α : Type} [AddCommMonoid α] (p : ℕ) (hp : 0 < p) (q : ℤ) (g : ℤ → α) :
     ∑ i ∈ range p, g ((q + i) % p) = ∑ k ∈ range p, g k := by
@@ -171,13 +170,11 @@ theorem dist_shift {α : Type} [AddCommMonoid α] (p : ℕ) (hp : 0 < p) (q : �
     intro q
     refine Int.induction_on q rfl ?_ ?_
     · intro i ih
-      rw [step]
-      exact ih
+      rwa [step]
     · intro i ih
       have h := step (-(i : ℤ) - 1)
       rw [sub_add_cancel] at h
-      rw [← h]
-      exact ih
+      rwa [← h]
   rw [key q]
   apply Finset.sum_congr rfl
   intro i hi
@@ -261,9 +258,7 @@ theorem dist_sel {α : Type} [AddCommMonoid α] (p M : ℕ) (hp : 0 < p) (hM : 0
       push_cast at hc
       exact hc
     have h1 : A ≡ a + M * i [ZMOD M] := Int.ModEq.of_mul_left _ hc'
-    have h2 : a + M * i ≡ a [ZMOD M] := by
-      show (a + M * i) % M = a % M
-      exact Int.add_mul_emod_self_left _ _ _
+    have h2 : a + M * i ≡ a [ZMOD M] := Int.add_mul_emod_self_left _ _ _
     exact h1.trans h2
 
 open scoped Classical in
@@ -311,8 +306,7 @@ theorem dist_roots (p M : ℕ) {K : Type} [Field K] [CharZero K] (ζ : K) (hζ :
     intro h
     apply ha
     have h' : ζ ^ ((p : ℤ) * a) = 1 := by
-      rw [zpow_mul, zpow_natCast, ← hwdef]
-      exact h
+      rwa [zpow_mul, zpow_natCast, ← hwdef]
     rw [hζ.zpow_eq_one_iff_dvd] at h'
     push_cast at h'
     exact (mul_dvd_mul_iff_left (by exact_mod_cast hp.ne' : (p : ℤ) ≠ 0)).mp h'
@@ -384,8 +378,7 @@ theorem dist_reindex (p M j : ℕ) (hp : 0 < p) {K : Type} [Field K] [CharZero K
       simp only [Finset.mem_filter, Nat.mem_divisors, Int.natCast_dvd_natCast] at hd
       obtain ⟨⟨hdn, -⟩, e, rfl⟩ := hd
       rw [Nat.mul_div_cancel_left e hp]
-      simp only [Nat.mem_divisors]
-      exact ⟨Nat.dvd_of_mul_dvd_mul_left hp hdn, hm⟩
+      simpa only [Nat.mem_divisors] using ⟨Nat.dvd_of_mul_dvd_mul_left hp hdn, hm⟩
     · intro e he
       simp only [Nat.mem_divisors] at he
       simp only [Finset.mem_filter, Nat.mem_divisors, Int.natCast_dvd_natCast]
@@ -393,8 +386,7 @@ theorem dist_reindex (p M j : ℕ) (hp : 0 < p) {K : Type} [Field K] [CharZero K
     · intro d hd
       simp only [Finset.mem_filter, Nat.mem_divisors, Int.natCast_dvd_natCast] at hd
       exact Nat.mul_div_cancel' hd.2
-    · intro e _
-      exact Nat.mul_div_cancel_left e hp
+    · exact fun e _ => Nat.mul_div_cancel_left e hp
     · intro d hd
       simp only [Finset.mem_filter, Nat.mem_divisors, Int.natCast_dvd_natCast] at hd
       obtain ⟨-, e, rfl⟩ := hd
@@ -824,8 +816,7 @@ theorem sum_unitSet_succ_fibre : ∀ (p : ℕ) [Fact p.Prime] (n : ℕ) (K : Typ
   have hmaps : ∀ γ ∈ unitSet p (n + 1), Matrix.GeneralLinearGroup.map ρ γ ∈ unitSet p n := by
     intro γ hγ
     simp only [unitSet, mem_filter, mem_univ, true_and] at hγ ⊢
-    rw [hent, hent, hρ, glFibre_dvd_map_iff hn, glFibre_dvd_map_iff hn]
-    exact hγ
+    rwa [hent, hent, hρ, glFibre_dvd_map_iff hn, glFibre_dvd_map_iff hn]
   rw [← Finset.sum_fiberwise_of_maps_to hmaps]
   refine Finset.sum_congr rfl (fun g hg => ?_)
   rw [Finset.sum_congr rfl (fun γ hγ => by rw [(mem_filter.mp hγ).2]), ← Finset.mul_sum]
@@ -864,8 +855,7 @@ theorem sum_unitSet_succ_fibre : ∀ (p : ℕ) [Fact p.Prime] (n : ℕ) (K : Typ
     refine ⟨γ, ?_, ?_⟩
     · refine mem_filter.mpr ⟨?_, hmap⟩
       simp only [unitSet, mem_filter, mem_univ, true_and] at hg ⊢
-      rw [← glFibre_dvd_map_iff hn, ← glFibre_dvd_map_iff hn, ← hρ, ← hent, ← hent, hmap]
-      exact hg
+      rwa [← glFibre_dvd_map_iff hn, ← glFibre_dvd_map_iff hn, ← hρ, ← hent, ← hent, hmap]
     · simp only [hγ, B]
       rfl
   · intro γ _
@@ -948,8 +938,7 @@ theorem sum_preimage_fibre (p : ℕ) [Fact p.Prime] (n : ℕ) (hn : 1 ≤ n) (K 
     · exact fun h => h.2
   have hX' : (unitSet p n).filter (fun γ => γ ∈ X) = X := by
     ext γ
-    simp only [mem_filter, unitSet, mem_univ, true_and]
-    exact ⟨fun h => h.2, fun h => ⟨hX γ h, h⟩⟩
+    simpa only [mem_filter, unitSet, mem_univ, true_and] using ⟨fun h => h.2, fun h => ⟨hX γ h, h⟩⟩
   rw [hS, Finset.sum_filter]
   have h1 := _root_.GlobalTheory.KummerEisensteinGalois.sum_unitSet_succ_fibre p n K (fun g => if g ∈ X then G g else 0) Φ hn
   simp only [ite_mul, zero_mul] at h1

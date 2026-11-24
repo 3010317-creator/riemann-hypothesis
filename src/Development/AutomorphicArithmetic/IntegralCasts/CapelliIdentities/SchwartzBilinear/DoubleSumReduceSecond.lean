@@ -100,8 +100,7 @@ theorem double_sum_reduce_first {V : Type} [AddCommGroup V] [_root_.Module ℂ V
     apply Finset.sum_eq_zero
     intro b _
     simp [Ne.symm had]
-  · intro h
-    exact absurd (Finset.mem_univ d) h
+  · exact fun h => absurd (Finset.mem_univ d) h
 
 theorem double_sum_reduce_fourth {V : Type} [AddCommGroup V] [_root_.Module ℂ V] {n : ℕ} (ε : Fin n → Bool)
     (E : Fin n → Fin n → Module.End ℂ V) (c d : Fin n) :
@@ -115,8 +114,7 @@ theorem double_sum_reduce_fourth {V : Type} [AddCommGroup V] [_root_.Module ℂ 
     apply Finset.sum_eq_zero
     intro b _
     simp [hac]
-  · intro h
-    exact absurd (Finset.mem_univ c) h
+  · exact fun h => absurd (Finset.mem_univ c) h
 
 theorem double_sum_reduce_third {V : Type} [AddCommGroup V] [_root_.Module ℂ V] {n : ℕ} (ε : Fin n → Bool)
     (E : Fin n → Fin n → Module.End ℂ V) (c d : Fin n) :
@@ -128,8 +126,7 @@ theorem double_sum_reduce_third {V : Type} [AddCommGroup V] [_root_.Module ℂ V
   · simp
   · intro b _ hbd
     simp [Ne.symm hbd]
-  · intro h
-    exact absurd (Finset.mem_univ d) h
+  · exact fun h => absurd (Finset.mem_univ d) h
 
 theorem double_sum_reduce_second {V : Type} [AddCommGroup V] [_root_.Module ℂ V] {n : ℕ} (ε : Fin n → Bool)
     (E : Fin n → Fin n → Module.End ℂ V) (c d : Fin n) :
@@ -141,8 +138,7 @@ theorem double_sum_reduce_second {V : Type} [AddCommGroup V] [_root_.Module ℂ 
   · simp
   · intro b _ hbc
     simp [hbc]
-  · intro h
-    exact absurd (Finset.mem_univ c) h
+  · exact fun h => absurd (Finset.mem_univ c) h
 
 theorem PositivityTheory.D.LK.casK_comm :
     ∀ {n : ℕ} {ε_h0 : Fin n → Bool} {V : Type} [inst_h2 : AddCommGroup V] [inst_h3 : _root_.Module ℂ V] {E : Fin n → Fin n → Module.End ℂ V}, PositivityTheory.D.DSIC.KRel ε_h0 E → ∀ {c d : Fin n}, ε_h0 c = ε_h0 d → Commute (E c d) (Formalism.REAL.CasK ε_h0 E) := by

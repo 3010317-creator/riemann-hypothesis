@@ -51,8 +51,7 @@ theorem strictAnti_of_step {N : ℕ} {α : Type} [Preorder α] (f : Fin N → α
   | zero => intro a; exact a.elim0
   | succ n =>
     rw [Fin.strictAnti_iff_succ_lt]
-    intro i
-    exact h _ _ (by simp)
+    exact fun i => h _ _ (by simp)
 
 theorem divided_strictAnti : ∀ (ι : Type) [Fintype ι] (N : ℕ) (W : Wts ι N), W.Hyp → W.IsDiv → ∀ τ,
     StrictAnti (W.u1 τ) ∧ StrictAnti (W.u' τ) ∧ StrictAnti (fun i => (W.u1 τ i : ℝ)) := by
@@ -70,12 +69,10 @@ theorem divided_strictAnti : ∀ (ι : Type) [Fintype ι] (N : ℕ) (W : Wts ι 
       have ha : ¬ ((b : ℕ) < W.p) := by omega
       have ha' : (a : ℕ) < W.p := by omega
       have p1 : 0 < W.u1 τ a - W.u1 τ b := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         nlinarith
       have p2 : 0 < W.u1 τ a - W.u1 τ b - 3 * N := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         nlinarith
       refine ⟨by omega, ?_⟩
       simp only [Wts.u', ite_eq_left ha', ite_eq_right ha]

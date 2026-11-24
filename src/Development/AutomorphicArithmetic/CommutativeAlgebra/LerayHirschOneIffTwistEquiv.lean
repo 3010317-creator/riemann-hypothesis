@@ -83,7 +83,5 @@ theorem UpperTheory.lerayHirsch_one_iff_twist_equiv :
         (LH q π (fun _ : Fin 1 => (0 : ℤ)) (fun _ : Fin 1 => (0 : ℤ)) (fun _ => one q X) ↔ ∀ i, Eqv _ π (tw q i)) := by
   intro q _ X E π hX
   constructor
-  · intro h i n
-    exact (UpperTheory.LHOne.bij_iff π hX (sub_zero n) (sub_zero i) _ _).1 (h n i)
-  · intro h n i
-    exact (UpperTheory.LHOne.bij_iff π hX (sub_zero n) (sub_zero i) _ _).2 (h i n)
+  · exact fun h i n => (UpperTheory.LHOne.bij_iff π hX (sub_zero n) (sub_zero i) _ _).1 (h n i)
+  · exact fun h n i => (UpperTheory.LHOne.bij_iff π hX (sub_zero n) (sub_zero i) _ _).2 (h i n)

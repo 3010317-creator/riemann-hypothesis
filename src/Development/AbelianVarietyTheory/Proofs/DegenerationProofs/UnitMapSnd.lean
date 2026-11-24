@@ -151,13 +151,11 @@ theorem expT_cmp : ∀ (R V : Type) [CommRing R] [IsDomain R] [CommRing V] [IsDo
   have Hf : ∀ (α : D'.X) (Z : Scheme.{0}) (r' : Z ⟶ (𝟙_ _ ⊗ D'.P.A).left) (r : Z ⟶ (𝟙_ _ ⊗ D.P.A).left), r ≫ (snd _ D.P.A).left = r' ≫ (snd _ D'.P.A).left ≫ C.β → ∀ z J J', Good D.P.L z J → Good D'.P.L z J' → sval (f (C.xe α)) r z J = (∏ i : Fin 4, om C.v z J J' (r' ≫ famφT D' (𝟙_ _) α i) ^ DegPre.famε k i).val * sval (f' α) r' z J' := by
     intro α Z r' r hr z J J' hJ hJ'
     have := sec_val C.v _ _ _ (unitMap C.β) (hcB α) (f (C.xe α)) (f' α) r' z (hf α Z r' z) hJ hJ'
-    rw [← eq_unitMap C.β hr] at this
-    exact this
+    rwa [← eq_unitMap C.β hr] at this
   refine ⟨σ', f', fun e => ?_, Hσ, fun α Z r' r hr z J J' hJ hJ' => ?_⟩
   swap
   · have := Hf α Z r' r hr z J J' hJ hJ'
-    simp only [om, Category.assoc] at this
-    exact this
+    simpa only [om, Category.assoc] using this
   obtain ⟨S, hS⟩ := hE e
   obtain ⟨m, hm⟩ := exists_level hI C.pb.1.w e
   refine ⟨S.map C.xe.symm.toEquiv.toEmbedding, fun Z x' rG' rB' hG' hB' _ z JG' J' hJG' hJ' => ?_⟩

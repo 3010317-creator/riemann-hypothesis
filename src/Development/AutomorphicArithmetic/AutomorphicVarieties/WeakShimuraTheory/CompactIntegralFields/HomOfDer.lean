@@ -443,8 +443,7 @@ private theorem lifts_map {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSpac
   · have h1 := h.pair.map (f : R →+* R')
     rwa [← RingHom.comp_assoc, AlgHom.comp_algebraMap] at h1
   · show f y ∈ maximalIdeal R'
-    rw [← res_eq_zero_iff Λ, res_map, res_eq_zero_iff]
-    exact hy
+    rwa [← res_eq_zero_iff Λ, res_map, res_eq_zero_iff]
   · rw [PD.map_map, ← h.red]
     congr 1
     exact RingHom.ext fun x => res_map f x
@@ -462,13 +461,11 @@ private theorem lc_dual {Γ k : Type} [TopologicalSpace Γ] [Field k] {f : Γ �
     · intro x hx y hy
       rw [Ideal.mem_bot]
       ext <;> simp [hm x hx, hm y hy]
-    · intro a b ha hb
-      exact add_mem ha hb
+    · exact fun a b ha hb => add_mem ha hb
   refine IsLocallyConstant.desc f (Ideal.Quotient.mk _) (h 2) ?_
   intro u v huv
   have := Ideal.Quotient.eq.mp huv
-  rw [h2, Ideal.mem_bot, sub_eq_zero] at this
-  exact this
+  rwa [h2, Ideal.mem_bot, sub_eq_zero] at this
 
 private theorem hom_of_der {O A k : Type} [CommRing O] [CommRing A] [Algebra O A] [CommRing k] [Algebra O k]
     (x : A →ₐ[O] k) (D : A →ₗ[O] k) (hD : D ∈ PtDer x k) :
@@ -577,8 +574,7 @@ theorem UpperTheory.V.Ws.red :
       (Γ → M4 (ResidueField Λ)) × (Φ.ι → M4 (ResidueField Λ)) :=
     { toFun := fun D => tv D
       map_add' := fun D1 D2 => by
-        simp only [Submodule.coe_add]
-        exact tv_add _ _
+        simpa only [Submodule.coe_add] using tv_add _ _
       map_smul' := fun t D => by
         simp only [Submodule.coe_smul, RingHom.id_apply]
         exact tv_smul _ _ }

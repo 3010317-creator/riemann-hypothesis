@@ -103,8 +103,7 @@ theorem covolOne_integral_ratMul {m n : ℕ} {μ : Measure (Mx D m n)} {𝓕 : S
       exact hr _
     · rw [e.map_apply, e.preimage_image]; exact hμ.2.2
   have h := GlobalTheory.MixModel.covolOne_integral_eq hμ hcov φ hφ
-  rw [setIntegral_map_equiv, e.preimage_image] at h
-  exact h
+  rwa [setIntegral_map_equiv, e.preimage_image] at h
 
 theorem exists_frame_change {W : HSp D} {Y : Lag W}
     {C C' : Matrix (Fin W.rank) (Fin W.rank) D.host.E × Matrix (Fin W.rank) (Fin W.rank) D.host.E}
@@ -118,8 +117,7 @@ theorem exists_frame_change {W : HSp D} {Y : Lag W}
   have sp : ∀ C (h : IsLagFrame W Y C), ⊤ ≤ Submodule.span D.host.E (Set.range (v C h)) := by
     intro C h
     refine le_of_eq (Submodule.map_injective_of_injective Y.1.injective_subtype ?_).symm
-    rw [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp]
-    exact h
+    rwa [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp]
   have li : ∀ C (h : IsLagFrame W Y C), LinearIndependent D.host.E (v C h) := fun C h =>
     linearIndependent_of_top_le_span_of_card_eq_finrank (sp C h) (by rw [Fintype.card_fin, Y.2.1])
   let b := Module.Basis.mk (li C hC) (sp C hC)
@@ -132,8 +130,7 @@ theorem exists_frame_change {W : HSp D} {Y : Lag W}
       ∑ i, b.toMatrix b' i j • (b i : (Fin W.rank → D.host.E) × (Fin W.rank → D.host.E)) := fun j => by
     have := congrArg Subtype.val (b.sum_repr (b' j))
     simp only [Submodule.coe_sum, Submodule.coe_smul] at this
-    simp only [Module.Basis.toMatrix_apply]
-    exact this.symm
+    simpa only [Module.Basis.toMatrix_apply] using this.symm
   refine ⟨b.toMatrix b', b'.toMatrix b, ?_, ?_, Module.Basis.toMatrix_mul_toMatrix_flip b b', Module.Basis.toMatrix_mul_toMatrix_flip b' b⟩
   · refine Matrix.ext fun a j => ?_
     have := congrArg (fun y : (Fin W.rank → D.host.E) × (Fin W.rank → D.host.E) => y.1 a) (key j)

@@ -60,9 +60,7 @@ theorem algKL (K L Ω : Type) [Field K] [NumberField K] [Field L] [NumberField L
       rw [IntermediateField.mem_fixedField_iff]
       intro σ hσ
       have hL : σ ∈ galOf ℚ L Ω := by
-        show ∀ y : L, σ (algebraMap L Ω y) = algebraMap L Ω y
-        intro y
-        exact (IntermediateField.mem_fixingSubgroup_iff _ _).1 hσ (g y) ⟨y, rfl⟩
+        exact fun y => (IntermediateField.mem_fixingSubgroup_iff _ _).1 hσ (g y) ⟨y, rfl⟩
       exact (show ∀ z : K, σ (algebraMap K Ω z) = algebraMap K Ω z from h hL) x
     rw [InfiniteGalois.fixedField_fixingSubgroup] at hfix
     obtain ⟨y, hy⟩ := hfix
@@ -70,8 +68,7 @@ theorem algKL (K L Ω : Type) [Field K] [NumberField K] [Field L] [NumberField L
   let e := AlgEquiv.ofInjectiveField g
   let φ : K →+* L := e.symm.toRingHom.comp (f.codRestrict g.range hmem).toRingHom
   have key : ∀ x, algebraMap L Ω (φ x) = algebraMap K Ω x := by
-    intro x
-    exact congrArg Subtype.val (e.apply_symm_apply ⟨f x, hmem x⟩)
+    exact fun x => congrArg Subtype.val (e.apply_symm_apply ⟨f x, hmem x⟩)
   letI : Algebra K L := φ.toAlgebra
   exact ⟨this, IsScalarTower.of_algebraMap_eq fun x => (key x).symm⟩
 

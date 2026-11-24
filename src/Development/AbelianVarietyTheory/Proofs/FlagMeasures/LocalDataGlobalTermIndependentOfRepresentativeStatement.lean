@@ -97,8 +97,7 @@ theorem iota_of_dc {F : LFlag S r T} {F₁ F₂ : LFlag S r T'} {n m : S.V ≃�
   refine Submodule.sub_mem _ ?_ ?_
   · refine Submodule.mem_sup_left (Submodule.mem_sup_right ⟨?_, hi.2.2 l hl.2⟩)
     exact Λ.sub_mem ((aut_mem_iff hi.1 l).2 hl.1) hl.1
-  · refine Submodule.mem_sup_right ⟨?_, hm.2.2 x' hx'.2⟩
-    exact Λ.sub_mem ((aut_mem_iff hm.1 x').2 hx'.1) hx'.1
+  · exact Submodule.mem_sup_right ⟨Λ.sub_mem ((aut_mem_iff hm.1 x').2 hx'.1) hx'.1, hm.2.2 x' hx'.2⟩
 
 end Gen
 
@@ -114,8 +113,7 @@ theorem rep_indep : ∀ (D : D7) (Z : LocDat D), ∀ (u u' : D.what₂.Word) (F0
     exact GlobalTheory.T.global_terms_same_doubleCoset_same_local_data D Z u u' F0 Λ hΛ A B hA hB hGA n ⟨hn.1.1, hn.2.1, hn.2.2⟩ m ⟨hm.1.1, hm.2.1, hm.2.2⟩
       (Formalism.L2.SG.Pf.isAutLam_mul hn.1 hm.1).2 (fun a => hfr a) (iota_of_dc (gS D) hn hm (fun a => hfr a)) p P hP d
   refine ⟨key F₁ F₂ h1 h2 hG hdc, key F₂ F₁ h2 h1 ?_ (Formalism.L2.SG.Pf.dcrel_symm _ _ hdc)⟩
-  rw [Formalism.L2.SG.Pf.gval_rel (h := hdc)]
-  exact hG
+  rwa [Formalism.L2.SG.Pf.gval_rel (h := hdc)]
 
 end GlobalTheory.LocOver.RepIndep
 end -- clump:auto

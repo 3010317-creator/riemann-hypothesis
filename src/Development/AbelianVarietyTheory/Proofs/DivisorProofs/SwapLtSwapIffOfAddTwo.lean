@@ -105,8 +105,7 @@ theorem mem_cellU_last_iff : ∀ (L : Type) [Field L] [Valued L (WithZero (Multi
     have hne : (M x) a (w⁻¹ a) ≠ 0 := by
       intro h0
       have := weylRep_mul_inv_diag hx (w⁻¹ a)
-      rw [show w (w⁻¹ a) = a by simp] at this
-      rw [h0, zero_mul] at this
+      rw [show w (w⁻¹ a) = a by simp, h0, zero_mul] at this
       exact zero_ne_one this
     have h : (M (x⁻¹ * x)) p (w⁻¹ a) = (M (1 : GL (Fin n) L)) p (w⁻¹ a) := by rw [inv_mul_cancel]
     dsimp only [M] at h
@@ -155,10 +154,8 @@ theorem mem_cellU_last_iff : ∀ (L : Type) [Field L] [Valued L (WithZero (Multi
   unfold IsUnipU IsBorelU
   refine and_congr_right fun _ => forall₂_congr fun a b => ?_
   constructor
-  · intro h hab hor
-    exact h hab ((swap_lt_swap_iff_of_add_two _ _ a b hA hab).2 hor)
-  · intro h hab hs
-    exact h hab ((swap_lt_swap_iff_of_add_two _ _ a b hA hab).1 hs)
+  · exact fun h hab hor => h hab ((swap_lt_swap_iff_of_add_two _ _ a b hA hab).2 hor)
+  · exact fun h hab hs => h hab ((swap_lt_swap_iff_of_add_two _ _ a b hA hab).1 hs)
 
 end WeylUnipotentShell
 

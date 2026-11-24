@@ -126,8 +126,7 @@ theorem spinM_vacuum_lowest : ∀ {n : ℕ} {ι : Type} [Fintype ι] [DecidableE
         nth_rewrite 1 [h2]
         rw [two_smul]
         abel
-      have h4 := smul_right_injective (ι → ℂ) (two_ne_zero : (2 : ℂ) ≠ 0) h3
-      simpa using h4
+      simpa using smul_right_injective (ι → ℂ) (two_ne_zero : (2 : ℂ) ≠ 0) h3
     · rw [ite_eq_right (not_lt.mpr h.le), ite_eq_right h.ne', hq a e h]
       simp
   have hs : ∀ a : Fin n, ∑ e : Fin n, (if e < a then (2 : ℂ) else if e = a then 1 else 0) =
@@ -404,8 +403,7 @@ theorem exists_cliff_model : ∀ n : ℕ, ∃ (ι : Type) (_ : Fintype ι) (_ : 
       star_coefC hs', modeOf_comm a b]
     rw [add_comm]
   · obtain ⟨i, j, hij⟩ : ∃ i j, Q i j ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hQ (by ext i j; exact h i j)
     refine ⟨fun i => Q i j, fun h => hij (congrFun h i), ?_⟩
     intro a b hab
@@ -634,16 +632,13 @@ theorem sl2_square_kills : ∀ {n : ℕ} {Z : Type} [NormedAddCommGroup Z] [Inne
   have hji : j ≠ i := hij.symm
   have c1 : ∀ v, E i j (E j i v) - E j i (E i j v) = E i i v - E j j v := by
     intro v
-    have h := LinearMap.congr_fun (hG i j j i) v
-    simpa [Module.End.mul_apply] using h
+    simpa [Module.End.mul_apply] using LinearMap.congr_fun (hG i j j i) v
   have c2 : ∀ v, E i i (E i j v) - E i j (E i i v) = E i j v := by
     intro v
-    have h := LinearMap.congr_fun (hG i i i j) v
-    simpa [Module.End.mul_apply, hji] using h
+    simpa [Module.End.mul_apply, hji] using LinearMap.congr_fun (hG i i i j) v
   have c3 : ∀ v, E j j (E i j v) - E i j (E j j v) = - E i j v := by
     intro v
-    have h := LinearMap.congr_fun (hG j j i j) v
-    simpa [Module.End.mul_apply, hji] using h
+    simpa [Module.End.mul_apply, hji] using LinearMap.congr_fun (hG j j i j) v
   have hsq : ((E i j) ^ 2) a = E i j (E i j a) := by
     simp [pow_two]
   rw [hsq]

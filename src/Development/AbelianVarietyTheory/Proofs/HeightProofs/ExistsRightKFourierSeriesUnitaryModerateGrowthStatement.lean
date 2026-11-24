@@ -602,8 +602,7 @@ theorem polyAlg_separatesPoints (ε : Fin n → Bool) : (polyAlg ε).SeparatesPo
   intro x y hxy
   have hne : toMK x ≠ toMK y := fun h => hxy (toMK_injective ε h)
   obtain ⟨i, j, hij⟩ : ∃ i j, toMK x i j ≠ toMK y i j := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hne (Matrix.ext hc)
   refine ⟨_, ⟨⟨coord ε (i, j, true), continuous_coord ε _⟩, ⟨1, show coord ε (i, j, true) ∈ polyV ε 1 from coord_mem ε _⟩, rfl⟩, ?_⟩
   simpa [coord] using hij
@@ -978,8 +977,7 @@ theorem hasSum_kFourier (ε : Fin n → Bool) (e : ℕ → KG ε → ℂ) (he : 
       rw [e1, tsum_congr e2, tsum_eq_sum hr0, ← integral_finsetSum]
       · congr 1; funext y
         rw [← Finset.mul_sum, hrs y, mul_comm]
-      · intro i _
-        exact integrable_of_cont ε (hg.mul (hrc i))
+      · exact fun i _ => integrable_of_cont ε (hg.mul (hrc i))
     have hsub : (fun k => star (q k) * (u k - g k)) = fun k => star (q k) * u k - star (q k) * g k := by
       funext k; ring
     rw [hsub, integral_sub (integrable_of_cont ε (f := fun k => star (q k) * u k) ((continuous_star.comp hcq).mul hu))
@@ -1480,8 +1478,7 @@ theorem exists_rightKFourier : ∀ (n : ℕ) (ε : Fin n → Bool), ∃ e : ℕ 
       (rder ε [X] (rder ε l (avgK ε (kerE ε i) f y)) 1) 0
     rw [e1]
     exact (_root_.GlobalTheory.KFourier.rder_mem_and_hasDerivAt ε i _ hR X hK).2 1
-  · intro m
-    exact (summable_listSum (U m) b fun u _ => hbs u).mul_left (C m)
+  · exact fun m => (summable_listSum (U m) b fun u _ => hbs u).mul_left (C m)
   · intro y hy
     have key := _root_.GlobalTheory.KFourier.hasSum_kFourier ε (kerE ε) hker (fun k => f (y * toMK k)) ?_ (fun i => C 0 * ((U 0).map fun u => b u i).sum * (1 + hs y) ^ N)
       (((summable_listSum (U 0) b fun u _ => hbs u).mul_left (C 0)).mul_right _) ?_

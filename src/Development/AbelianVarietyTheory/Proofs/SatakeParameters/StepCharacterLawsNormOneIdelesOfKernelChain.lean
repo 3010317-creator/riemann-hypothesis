@@ -160,8 +160,7 @@ theorem mt_ratId : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => 
     have hka : Formalism.L2.Col.Fields.embC t.X t.seam.σ₀ τ (k' : t.X.E) = TaylorLogMetric.embT D (t.seam.iT τ) (k : D.host.E) := by
       rw [← hik]; exact t.seam_ok.1 τ _
     have h1 := congrArg (TaylorLogMetric.embT D (t.seam.iT τ)) hk
-    rw [map_mul] at h1
-    rw [GlobalTheory.Mem.Chr.DetGroupModel.emb_conj] at h1
+    rw [map_mul, GlobalTheory.Mem.Chr.DetGroupModel.emb_conj] at h1
     rw [hka]
     have h0 : TaylorLogMetric.embT D (t.seam.iT τ) (k : D.host.E) ≠ 0 := by simp
     generalize TaylorLogMetric.embT D (t.seam.iT τ) (k : D.host.E) = a at *
@@ -179,8 +178,7 @@ theorem mt_ratId : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => 
     · obtain ⟨ξ, hξ, hmt⟩ := hP.tw μ h0 rfl
       rw [hmt u, twMt, ite_eq_left ⟨by omega, by omega⟩, MonoidHom.mul_apply, hξ]
       have h1 : ((t.tup μ : Chr t.X.F t.X.E t.X.K)) (ratId t.X.F t.X.E k') = 1 := by
-        have hm := (t.tup μ).2
-        exact hm.1.1.1.1.1 ⟨k', rfl⟩
+        exact ((t.tup μ).2).1.1.1.1.1 ⟨k', rfl⟩
       rw [h1, map_one, mul_one]
   rw [← hq, htw, hmu]
 
@@ -315,9 +313,7 @@ theorem fin_mem_Qbar {L : Type} [Field L] [NumberField L] (χ : HChar L) (htame 
     rw [hwy, hsplit, map_mul, map_mul, hrest, mul_one, hp, map_prod, map_prod, Units.coe_prod]
     refine prod_mem fun v _ => ?_
     rw [Phi_single]
-    refine loc_mem_Qbar χ v (htame v) _ ?_
-    show Valued.v (((y v : v.adicCompletionIntegers L) : v.adicCompletion L)) = 1
-    exact hwFin v
+    exact loc_mem_Qbar χ v (htame v) _ (hwFin v)
   have hue : u = infDiag k * w := by rw [hw, mul_inv_cancel_left]
   have hχu : χ.1 u = χ.1 b ^ h := by rw [hu, map_mul, χ.2.2 k, mul_one, map_pow]
   refine mem_Qbar_of_pow hh ?_
@@ -346,8 +342,7 @@ theorem mt_mem_Qbar : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a 
     obtain ⟨n, -, hn⟩ := (hP.mu0 ⟨i, hi⟩).inf
     exact fin_mem_Qbar _ (hP.mu0 ⟨i, hi⟩).tame (inf_mem_Qbar hn) b hb
   by_cases hμ : μ = D.what₂.mu0
-  · rw [(hP.ref hμ).2, ← hx]
-    exact key
+  · rwa [(hP.ref hμ).2, ← hx]
   · obtain ⟨ξ, hξ, hmt⟩ := hP.tw μ hμ rfl
     have e : (t.O u μ).mt (i + 1) = D.muTil (i + 1) * ξ := by
       rw [hmt u]
@@ -498,8 +493,7 @@ theorem afIso_eq_zero_iff : ∀ (F E F' E' : Type) [Field F] [NumberField F] [Fi
     rwa [RingEquiv.symm_apply_apply] at this
   · intro h0
     refine transport_zero s Φ hΦ hI P Q (fun a ha => ?_) (ι y) hz h0
-    rw [hQ, RingEquiv.symm_apply_apply]
-    exact ha
+    rwa [hQ, RingEquiv.symm_apply_apply]
 
 end GlobalTheory.AfeLocTr
 end -- clump:auto
@@ -569,8 +563,7 @@ theorem seamP_under_eq : ∀ (D : D7) (X : Fields) (s : Seam D X), s.Ok → X.Ok
   have hPQ : r ∈ Ideal.under (𝓞 X.F) P.asIdeal ↔ r ∈ Ideal.under (𝓞 X.F) Q.asIdeal := by
     rw [← HeightOneSpectrum.under_asIdeal, ← HeightOneSpectrum.under_asIdeal, h]
   simp only [Ideal.under, Ideal.mem_comap] at hPQ ⊢
-  rw [hr, mem_seamP, mem_seamP]
-  exact hPQ
+  rwa [hr, mem_seamP, mem_seamP]
 
 end GlobalTheory.TwU
 end -- clump:auto
@@ -588,9 +581,7 @@ noncomputable section
 namespace GlobalTheory.GprimUnder
 
 theorem conjO_conjO (X : Fields) (a : 𝓞 X.E) : X.conjO (X.conjO a) = a := by
-  apply RingOfIntegers.ext
-  show star (star (a : X.E)) = (a : X.E)
-  exact star_star _
+  exact RingOfIntegers.ext (star_star _)
 
 theorem conjO_algebraMap (X : Fields) (hX : X.Ok) (x : 𝓞 X.F) :
     X.conjO (algebraMap (𝓞 X.F) (𝓞 X.E) x) = algebraMap (𝓞 X.F) (𝓞 X.E) x := by
@@ -636,8 +627,7 @@ theorem exists_vG_under : ∀ (X : Fields) (Pr : Primes X), X.Ok → Pr.Ok → �
   rw [← hPr.piG_norm i] at hP
   rcases P.isPrime.mem_or_mem hP with h | h
   · refine ⟨conjPrime X P, (hvG _).2 ?_, under_conjPrime X hX P⟩
-    rw [mem_conjPrime, _root_.Formalism.L2.Col.Fields.conjO_invol]
-    exact h
+    rwa [mem_conjPrime, _root_.Formalism.L2.Col.Fields.conjO_invol]
   · exact ⟨P, (hvG P).2 h, rfl⟩
 
 end GlobalTheory.GprimUnder
@@ -955,8 +945,7 @@ theorem mt_eq_one_of_intUnit : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St}
     have h1 := GlobalTheory.Mem.ReadEx.map_toIdl_eq_one (H.mu0 j).tame hxint (fun P hP => ?_)
     · rw [h1]
     · have hg : ∃ k, ((t.Pr.g k : ℕ) : 𝓞 t.X.E) ∈ P.asIdeal := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         exact hP ((H.mu0 j).unr P hc)
       have h2 := hvG P hg
       show Valued.v (GlobalTheory.Mem.Col2.afIso t.X.F t.X.E ((x : AfE t.X.F t.X.E) - 1) P) ≤ _
@@ -1091,8 +1080,7 @@ theorem muLaw_underTie : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU
   intro i hi
   refine ⟨fun y => muOf_det dtU (i + 1) y, ⟨?_, ?_⟩, ?_, ?_, ?_⟩
   · have h1 := muOf_det (t := t) (u := u) (μ := μ) dtU (i + 1) 1
-    simp only [OneMemClass.coe_one, map_one, Units.val_one] at h1
-    exact h1
+    simpa only [OneMemClass.coe_one, map_one, Units.val_one] using h1
   · intro x hx y hy
     obtain ⟨x', rfl⟩ := exists_unitaryOne_det_eq_normOneIdele hx
     obtain ⟨y', rfl⟩ := exists_unitaryOne_det_eq_normOneIdele hy

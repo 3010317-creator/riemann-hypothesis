@@ -277,8 +277,7 @@ theorem exists_graded_presentation_saturating : ∀ (ι : Type) [LinearOrder ι]
   refine ⟨a, b, d, e, Φ, Submodule.liftQ _ φ hle, fun l j => ?_, hφ.liftQ _ hle,
     fun i => ⟨fun y hy => ?_, fun z => ?_⟩⟩
   · have := mem_grPi.1 (mem_grSub.1 (hκ j)) l
-    rw [sub_eq_add_neg]
-    exact this
+    rwa [sub_eq_add_neg]
   · obtain ⟨x, rfl⟩ := Submodule.mkQ_surjective _ y
     obtain ⟨k, hk⟩ := hksat i ⟨x, hy⟩
     refine ⟨k, ?_⟩
@@ -536,8 +535,7 @@ private theorem chart_witnesses_lemma {ι : Type} [Fintype ι] {R : Type} [CommR
       Ideal.quotientKerAlgEquivOfSurjective hπ
     have : Algebra.FormallySmooth R (MvPolynomial ι R ⧸ RingHom.ker (π : MvPolynomial ι R →+* B)) :=
       Algebra.FormallySmooth.of_equiv e.symm
-    rw [hker] at this
-    exact this
+    rwa [hker] at this
   · have hmem : (X i - 1 : MvPolynomial ι R) ∈ Ideal.span (Set.range g) := by
       rw [← hker, RingHom.mem_ker]; exact hu
     obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun (MvPolynomial ι R)).1 hmem
@@ -633,8 +631,7 @@ theorem _root_.GlobalTheory.exists_noetherian_subring_homogeneous_matrix_flat_ch
     intro j
     have : pols j ∈ Set.range φ := by
       rw [MvPolynomial.mem_range_map_iff_coeffs_subset]
-      intro x hx
-      exact ⟨⟨x, Subring.subset_closure (Set.mem_iUnion.2 ⟨j, hx⟩)⟩, rfl⟩
+      exact fun x hx => ⟨⟨x, Subring.subset_closure (Set.mem_iUnion.2 ⟨j, hx⟩)⟩, rfl⟩
     exact this
   choose L hL using hlift
   let Φ₀ : Matrix (Fin a) (Fin b) (MvPolynomial ι R₀) := Matrix.of fun l j => L (Sum.inl (l, j))
@@ -670,8 +667,7 @@ theorem _root_.GlobalTheory.exists_noetherian_subring_homogeneous_matrix_flat_ch
     intro α hα
     refine (_root_.GlobalTheory.mem_polyGrading_iff.1 (hΦ l j)) α ?_
     rw [← hΦ₀ l j, MvPolynomial.coeff_map]
-    intro h0
-    exact hα (Subtype.val_injective (by simpa using h0))
+    exact fun h0 => hα (Subtype.val_injective (by simpa using h0))
   · intro i
     have hwit₀ : ∀ j, aeval (fun v => X v + ∑ k, wa₀ i v k * g₀ i k) (g₀ i j) =
         ∑ k, ∑ l, wb₀ i j k l * (g₀ i k * g₀ i l) := by
@@ -693,8 +689,7 @@ theorem _root_.GlobalTheory.exists_noetherian_subring_homogeneous_matrix_flat_ch
       (X i - 1) Φ₀ inferInstance ⟨c₀ i, ?_⟩ (fun k => ⟨C₀ i k, C'₀ i k, ?_⟩) ⟨Ψ₀ i, E₀ i, ?_⟩
     · apply hφinj
 
-      simp only [map_sub, map_one, map_sum, map_mul, hc₀, hg₀, hφX]
-      exact hc' i
+      simpa only [map_sub, map_one, map_sum, map_mul, hc₀, hg₀, hφX] using hc' i
     · refine Matrix.ext fun l m => ?_
       apply hφinj
       have h1 := congr_fun (congr_fun (hCC i k) l) m
@@ -710,8 +705,7 @@ theorem _root_.GlobalTheory.exists_noetherian_subring_homogeneous_matrix_flat_ch
       simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.sum_apply, Matrix.smul_apply,
         smul_eq_mul] at h1 ⊢
 
-      simp only [map_add (f := _), map_mul, map_sum, hΦ₀, hΨ₀, hE₀, hg₀]
-      exact h1
+      simpa only [map_add (f := _), map_mul, map_sum, hΦ₀, hΨ₀, hE₀, hg₀] using h1
 
 end GlobalTheory
 end -- clump:auto
@@ -735,8 +729,7 @@ private theorem flat_loc_over_algebra {A S M N : Type} [CommRing A] [CommRing S]
   intro P _ _ Q
   have := IsLocalizedModule.map_injective T (AlgebraTensorModule.rTensor A Q f)
     (AlgebraTensorModule.rTensor A P f) (AlgebraTensorModule.lTensor S M Q.subtype) (h Q)
-  rw [IsLocalizedModule.map_lTensor] at this
-  exact this
+  rwa [IsLocalizedModule.map_lTensor] at this
 
 private theorem flat_iff_forall_piece {R M : Type} [CommRing R] [AddCommGroup M] [Module R M]
     (ℳ : ℤ → Submodule R M) [Decomposition ℳ] :

@@ -139,8 +139,7 @@ theorem exists_open_fix_vacO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ
   obtain ⟨n₁, hn₁⟩ : ∃ n : ℕ, ∀ x ∈ GfC S, GlobalTheory.Member.FinCong S n.factorial x →
       ∀ u ∈ (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True),
         actO S T x 1 u ∈ (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True) := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     choose k hk hkc u hu hu' using hne
     have ht := GlobalTheory.SplitCharTrivial.tendsto_one_of_finCong hk hkc
     obtain ⟨n, hn⟩ := (ht.eventually hev').exists
@@ -167,8 +166,7 @@ theorem exists_open_fix_vacO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ
   have hcont : Continuous fun k : GA D S => om (k, 1) f₀ w₀ :=
     (hW.om_cont _ hvac.2.theta w₀).comp (continuous_id.prodMk continuous_const)
   have key : ∃ n : ℕ, ∀ k ∈ GfC S, GlobalTheory.Member.FinCong S (n₁.factorial * n.factorial) k → om (k, 1) f₀ = f₀ := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     choose k hk hkc hkne using hne
     have hpow : ∀ n, ∃ m : ℕ, ∃ c : ℂ, om (k n ^ m, 1) f₀ = c • f₀ ∧ ¬ ‖c - 1‖ ≤ 1 / 2 := by
       intro n
@@ -176,8 +174,7 @@ theorem exists_open_fix_vacO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ
       have hc1 : c ≠ 1 := by
         rintro rfl
         exact hkne n (by rw [hc, one_smul])
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hc1 (GlobalTheory.Doubling.eq_one_of_forall_norm_pow_sub_one_le (A := ℂ) fun m =>
         h m (c ^ m) (GlobalTheory.SmoothVac.om_pow_eq om (k n) _ c hc m))
     choose m c hmc hc using hpow
@@ -206,8 +203,7 @@ theorem exists_open_fix_vacO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ
   refine hn k hk ?_
   have hc := hk'.2
   unfold GlobalTheory.Member.FinCong at hc ⊢
-  rw [← e']
-  exact hc
+  rwa [← e']
 
 end GlobalTheory.VacFixOpen
 end -- clump:auto
@@ -331,8 +327,7 @@ theorem exists_open_keep_cong : ∀ (D : D7) (S T : HSp D) (ΛS : Submodule (�
   have hc : GlobalTheory.Member.FinCong S n.factorial x := by
     have := hk'.2
     unfold GlobalTheory.Member.FinCong at this ⊢
-    rw [← e']
-    exact this
+    rwa [← e']
   obtain ⟨⟨h1, h2⟩, h3, -⟩ := hn x hxf hc
   refine ⟨fun u => ⟨h1 u, fun hu => ?_⟩, h2⟩
   have e2 := GlobalTheory.WeilVacMove.actO_inv_actO x (1 : GA D T) u
@@ -817,8 +812,7 @@ theorem oneAt_fin_eq_one : ∀ (D : D7) (ι : (Af D.host.F ⊗[D.host.F] D.host.
     ⟨α, rfl, GlobalTheory.PlaceIdem.single_same _, fun v' h => GlobalTheory.PlaceIdem.single_ne h⟩
   have hlv : ((l : ℕ) : 𝓞 D.host.F) ∈ (Q.under (𝓞 D.host.F)).asIdeal := by
     show _ ∈ Ideal.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) Q.asIdeal
-    rw [Ideal.mem_comap, map_natCast]
-    exact hlQ
+    rwa [Ideal.mem_comap, map_natCast]
   have h0 := hz _ _ hε hlv i j
   have hα : ι (finPart D (algebraMap (AF D.host.F) (AE D) (pairA D.host.F 0 α))) Q = 1 := by
     change ι (α ⊗ₜ[D.host.F] (1 : D.host.E)) Q = 1
@@ -830,8 +824,7 @@ theorem oneAt_fin_eq_one : ∀ (D : D7) (ι : (Af D.host.F ⊗[D.host.F] D.host.
   have h1 : ι (finPart D ((Formalism.L2.Theta.mt V z - 1) i j)) Q = 0 := by
     have := congrArg (fun x => ι (finPart D x) Q) h0
     simp only [map_mul, map_zero] at this
-    rw [GlobalTheory.PlaceIdem.mul_ap, hα, one_mul] at this
-    exact this
+    rwa [GlobalTheory.PlaceIdem.mul_ap, hα, one_mul] at this
   have hm : ((Matrix.GeneralLinearGroup.map ι.toRingHom (fin V z).1).1 i j) = ι (finPart D (Formalism.L2.Theta.mt V z i j)) := rfl
   rw [hm]
   rw [Matrix.sub_apply, map_sub, map_sub] at h1
@@ -1007,8 +1000,7 @@ theorem bnd_inv_of_hLat_std (D : D7) (ι : (Af D.host.F ⊗[D.host.F] D.host.E) 
     · subst h; simp
     · simp [Pi.single_eq_of_ne h]
   rw [e, Matrix.mulVec_single_one] at this
-  rw [Nat.cast_one, one_mul]
-  exact this
+  rwa [Nat.cast_one, one_mul]
 
 
 end GlobalTheory.StdAtPrime
@@ -1258,8 +1250,7 @@ theorem exists_move_denomAt : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ 
   have hk1 : om (k', 1) (stdF ψ θ V W sW BW f Q) = stdF ψ θ V W sW BW f Q := by
     have := GlobalTheory.FiniteFock.om_pureTensorO_of_finite ψ θ V W χV χW om hθ hω (fun _ => 1) sW (fun _ => 1) BW f hT k' hk' 1
       (one_mem _) 1 (by rw [one_smul]; exact hfix) Q
-    rw [one_smul] at this
-    exact this
+    rwa [one_smul] at this
   have hp : ((s * z, g) : GA D V × GA D W) = ((γ : GA D V), 1) * ((h, g) * (a, 1)) * (k', 1) := by
     rw [hs']; simp [Prod.mk_mul_mk]
   have e1 : om (s * z, g) = om ((γ : GA D V), 1) * (om (h, g) * om (a, 1)) * om (k', 1) := by

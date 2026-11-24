@@ -60,12 +60,10 @@ theorem supply_extend :
   · intro o ho g s
     have e := h2 (q o) (Finset.mem_univ _) g s
     have e' : (q o).1 = o := congrArg Subtype.val (hq ⟨o, ho⟩)
-    simp only [e'] at e
-    exact e
+    simpa only [e'] using e
   · intro L hA hR hW
     have key := h3 (fun o => L o.1) ?_ ?_ ?_
-    · rw [← Finset.sum_coe_sort Z]
-      exact key
+    · rwa [← Finset.sum_coe_sort Z]
     · intro o _ p hp
       have e := hA o.1 o.2 p hp
       have gen : ∀ o' : Z, o' = o → p.1.Attains (X o') (F o') p.2 → p.1.Attains (X o) (F o) p.2 := by

@@ -88,14 +88,12 @@ theorem exists_grpObj_of_mono {H G : C} [GrpObj G] (j : H ⟶ G) [Mono j]
     change (lift n (𝟙 H) ≫ m) ≫ j = (toUnit H ≫ o) ≫ j
     rw [Category.assoc, hm, lift_map_assoc, hn, Category.assoc, ho, Category.id_comp]
     have := j ≫= GrpObj.left_inv G
-    rw [comp_lift_assoc, Category.comp_id, comp_toUnit_assoc] at this
-    exact this
+    rwa [comp_lift_assoc, Category.comp_id, comp_toUnit_assoc] at this
   · rw [← cancel_mono j]
     change (lift (𝟙 H) n ≫ m) ≫ j = (toUnit H ≫ o) ≫ j
     rw [Category.assoc, hm, lift_map_assoc, hn, Category.assoc, ho, Category.id_comp]
     have := j ≫= GrpObj.right_inv G
-    rw [comp_lift_assoc, Category.comp_id, comp_toUnit_assoc] at this
-    exact this
+    rwa [comp_lift_assoc, Category.comp_id, comp_toUnit_assoc] at this
 
 theorem isMonHom_of_comp_mono {A B D : C} [MonObj A] [MonObj B] [MonObj D] (e : A ⟶ B) (i : B ⟶ D)
     [Mono i] [IsMonHom i] [h : IsMonHom (e ≫ i)] : IsMonHom e := by

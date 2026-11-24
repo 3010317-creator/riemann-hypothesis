@@ -278,8 +278,7 @@ theorem rel_unique : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
   have hr : Set.range (p ≫ C.π) ⊆ Set.range Y.jQ := by
     rintro _ ⟨a, rfl⟩
     have := hp a
-    rw [Scheme.Hom.comp_apply]
-    exact this
+    rwa [Scheme.Hom.comp_apply]
   have := Y.jQ_open
   let y := IsOpenImmersion.lift Y.jQ (p ≫ C.π) hr
   have hy0 : y ≫ Y.jQ = p ≫ C.π := IsOpenImmersion.lift_fac _ _ _
@@ -291,8 +290,7 @@ theorem rel_unique : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
   have hy : y ≫ pullback.snd _ _ = spMap (algebraMap c.F K) := by
     rw [← Y.jQ_over, ← Category.assoc, hy0]
     show (p ≫ C.π) ≫ genStr Y = _
-    rw [hstr, ← Category.assoc, hxg, Category.assoc]
-    exact hφ
+    rwa [hstr, ← Category.assoc, hxg, Category.assoc]
   obtain ⟨Q, hQ⟩ := X.top.exists_chartFr hy hyj k hk
   obtain ⟨Q', hQ'⟩ := X.top.exists_chartFr hy (hπ.trans hyj) k' hk'
   have hx : frX Q ≫ Y.j = z ≫ X.π := hQ.over
@@ -316,8 +314,7 @@ theorem rel_unique : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
     simp only [h1, Category.id_comp] at h3
     rw [hg0 σ i, hg' σ i, ← tv_vecAt_congr X.F k' z' hk' hπ σ i] at h3
     have e : (fun j => g.v σ j) = fun j => (tv (X.F.vecAt k z hk rfl σ j)).left := funext (hg σ)
-    rw [e] at h3
-    exact h3
+    rwa [e] at h3
   exact (X.rep K Q').unique (hQ.lies.frBor hB) hQ'.lies
 
 end GlobalTheory.VarFlag

@@ -183,10 +183,7 @@ private theorem jv_model {l : ℕ} [hl : Fact l.Prime] {G : Type} [Group G] [Top
   have hlO : ((l : PadicAlgCl l)) ∈ c.O := Subalgebra.natCast_mem _ _
   have hl0 : ((l : PadicAlgCl l)) ≠ 0 := by exact_mod_cast (Fact.out : l.Prime).ne_zero
   let d : c.O := ⟨(l : PadicAlgCl l) ^ N, c.O.pow_mem hlO N⟩
-  have hd : d ≠ 0 := by
-    intro h
-    apply pow_ne_zero N hl0
-    exact congrArg Subtype.val h
+  have hd : d ≠ 0 := fun h => pow_ne_zero N hl0 (congrArg Subtype.val h)
   have hint : ∀ g i j, ∃ a : c.O, algebraMap c.O E d * (rE g : Matrix (Fin n) (Fin n) E) i j = algebraMap c.O E a := by
     intro g i j
     have hmem : (l : PadicAlgCl l) ^ N * (r g : Matrix (Fin n) (Fin n) (PadicAlgCl l)) i j ∈ c.O := by
@@ -206,8 +203,7 @@ private theorem jv_model {l : ℕ} [hl : Fact l.Prime] {G : Type} [Group G] [Top
       pushRep (algebraMap c.O (PadicAlgCl l)) r₀ g := by
     ext i j
     rfl
-  rw [h1, h2] at key
-  exact key
+  rwa [h1, h2] at key
 
 private theorem jv_cont {l : ℕ} [hl : Fact l.Prime] {G : Type} [TopologicalSpace G]
     (E : IntermediateField ℚ_[l] (PadicAlgCl l)) (c : Coef l) (hc : ∀ x, x ∈ c.O ↔ x ∈ E ∧ ‖x‖ ≤ 1)
@@ -229,9 +225,7 @@ private theorem jv_cont {l : ℕ} [hl : Fact l.Prime] {G : Type} [TopologicalSpa
       refine ⟨E.div_mem ((hc _).1 z.2).1 ((hc _).1 (ϖ ^ N).2).1, ?_⟩
       rw [norm_div, div_le_one hδ]
       exact hz.le
-    refine ⟨⟨_, hq⟩, Subtype.ext ?_⟩
-    show (z : PadicAlgCl l) / ((ϖ ^ N : c.O) : PadicAlgCl l) * ((ϖ ^ N : c.O) : PadicAlgCl l) = z
-    exact div_mul_cancel₀ _ hne
+    exact ⟨⟨_, hq⟩, Subtype.ext (div_mul_cancel₀ _ hne)⟩
   rw [IsLocallyConstant.iff_exists_open]
   intro g0
   refine ⟨(fun g => (f g : PadicAlgCl l)) ⁻¹' Metric.ball (f g0 : PadicAlgCl l) ‖((ϖ ^ N : c.O) : PadicAlgCl l)‖,
@@ -269,8 +263,7 @@ private theorem norm_coe_coef_integer_le_one {l : ℕ} [Fact l.Prime] (c : Coef 
     | smul a z _ hz =>
       rw [Subalgebra.coe_smul, Algebra.smul_def, norm_mul]
       exact (mul_le_of_le_one_left (norm_nonneg _) (norm_algebraMap_padicInt_padicAlgCl_le_one' a)).trans hz
-  by_contra h
-  push Not at h
+  by_contra! h
   obtain ⟨k, hk⟩ := pow_unbounded_of_one_lt (1 + ∑ t ∈ s, ‖(t : PadicAlgCl l)‖) h
   have := hM (x ^ k)
   rw [SubmonoidClass.coe_pow, norm_pow] at this
@@ -459,8 +452,7 @@ theorem UpperTheory.V.Hi.point_rep_unramified_at_auxiliary_place {l : ℕ} [Fact
     obtain ⟨e, he⟩ := hDr x.2
     refine ⟨e, ?_, he, ?_⟩
     · have hx := x.2
-      rw [← he, hj] at hx
-      exact hx
+      rwa [← he, hj] at hx
     · apply Subtype.ext
       rw [hψ0, ← he]
       rfl
@@ -480,8 +472,7 @@ theorem UpperTheory.V.Hi.point_rep_unramified_at_auxiliary_place {l : ℕ} [Fact
     rw [hte]
     refine Subgroup.mem_map_of_mem _ ?_
     have h1 := (hIne t).1 ht
-    rw [← he, hj] at h1
-    exact h1
+    rwa [← he, hj] at h1
   delta Resid.V0ok at h
   obtain ⟨hI0, hDeq, g1, hg1, hg1e⟩ := h
   have i0 : Fin n := ⟨0, hn⟩
@@ -499,8 +490,7 @@ theorem UpperTheory.V.Hi.point_rep_unramified_at_auxiliary_place {l : ℕ} [Fact
       DFunLike.congr_fun V.hε (resP L Ω e1)
     simp only [pushCh, Units.val_one, IsLocalRing.ResidueField.algebraMap_eq]
     change ((residue c.O).comp (algebraMap ℤ_[l] c.O)) ((V.frame.ε (V.pr e1).1 : ℤ_[l]ˣ) : ℤ_[l]) = 1
-    rw [hε1, RingHom.comp_apply]
-    exact hcon
+    rwa [hε1, RingHom.comp_apply]
   have hs : ∀ (A' : Type) [CommRing A'] (f : B.B →+* A') (t : ↥(Dec (Loc.placeJ j))),
       MonoidAlgebra.mapRingHom V.frame.G₀ f (MonoidAlgebra.single (ψ0 t) 1) = MonoidAlgebra.single (ψ0 t) 1 := by
     intro A' _ f t
@@ -513,15 +503,13 @@ theorem UpperTheory.V.Hi.point_rep_unramified_at_auxiliary_place {l : ℕ} [Fact
     have hφt : φ ⟨resP L Ω d, hdD⟩ ∈ Loc.Iq s.p := by
       rw [hIne]
       show resP L Ω d ∈ Ine (Loc.placeJ j)
-      rw [hj]
-      exact hd
+      rwa [hj]
     have h0 := key _ hφt
     have hψt : ψ0 ⟨resP L Ω d, hdD⟩ = V.pr d := by
       apply Subtype.ext
       rw [hψ0]
       rfl
-    rw [MonoidHom.comp_apply, hψt] at h0
-    exact h0
+    rwa [MonoidHom.comp_apply, hψt] at h0
   · intro t
     have e := (AlgebraTools.Det.mapApi B.u.D (x : B.B →+* PadicAlgCl l)).1 (MonoidAlgebra.single (ψ0 t) 1)
     rw [hs, hx] at e
@@ -577,8 +565,7 @@ private theorem jr_isTeich {l : ℕ} [hl : Fact l.Prime] {F : GFrame l} (c : Coe
   haveI : Finite (ResidueField c.O) := hfin
   haveI : CharP (ResidueField c.O) l := by
     refine (CharP.charP_iff_prime_eq_zero hl.out).2 ?_
-    rw [← map_natCast (residue c.O), residue_eq_zero_iff]
-    exact hlm
+    rwa [← map_natCast (residue c.O), residue_eq_zero_iff]
   obtain ⟨τ, hτ⟩ := jr_teich_ex l c.O
   refine ⟨fun i => (Units.map τ).comp (r.chib i), fun i g => ⟨hτ _, ?_⟩, fun i g h => ?_⟩
   · rw [MonoidHom.comp_apply, ← map_pow, ← Nat.card_units, pow_card_eq_one', map_one]
@@ -635,8 +622,7 @@ private theorem jr_abs {l : ℕ} [Fact l.Prime] {F : GFrame l} {O : Type} [CommR
       simp
     have h5 := congrArg (fun p => p.coeff k) (h2.trans h4.symm)
     simp only [Polynomial.coeff_map] at h5
-    rw [map_sub, sub_eq_zero]
-    exact h5
+    rwa [map_sub, sub_eq_zero]
   · have hk : (B.DD J).Kills (F.oEl v (B.psiT J v) g) := by
       refine UpperTheory.V.AlgebraTools.Det.kerTest (fun _ => K) (fun i => (f i : B.B ⧸ J →+* K)) (fun i => mat (ρ i)) _ hinj hD' _ fun i => ?_
       have h1 : MonoidAlgebra.mapRingHom F.G₀ (f i : B.B ⧸ J →+* K) (F.oEl v (B.psiT J v) g) =
@@ -705,8 +691,7 @@ private theorem jr_surj {l : ℕ} [Fact l.Prime] {F : GFrame l} {O : Type} [Comm
     exact (RingHom.Finite.of_surjective _ e.symm.surjective).comp hfin
   · intro a ha b hb
     refine htf a ha (f b) ?_
-    rw [← hlam, ← map_mul]
-    exact hb
+    rwa [← hlam, ← map_mul]
 end Abstract
 theorem UpperTheory.V.Hi.ring_props_of_is_j_unitary_hecke_data :
     _root_.UpperTheory.V.Af.HypothesesH' → ∀ (l : ℕ) [Fact l.Prime] (L Ω : Type) [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] (s : HidaSetting l L Ω) (n : ℕ), 1 ≤ n →

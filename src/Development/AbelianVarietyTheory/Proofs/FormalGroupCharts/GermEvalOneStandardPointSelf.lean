@@ -114,15 +114,12 @@ theorem push_surjective (y : sp (R₀ := R) A ⟶ G) : ∃ z : sp (R₀ := R') A
   have w : y.left ≫ G.hom = (sp (R₀ := R') A).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap R R')) :=
     (Over.w y).trans (sp_tower (R := R) (R' := R') (A := A)).symm
   refine ⟨Over.homMk (hπ.1.lift y.left (sp (R₀ := R') A).hom w) (hπ.1.lift_snd _ _ _), ?_⟩
-  apply Over.OverMorphism.ext
-  exact hπ.1.lift_fst _ _ _
+  exact Over.OverMorphism.ext (hπ.1.lift_fst _ _ _)
 
 theorem push_eq (y : sp (R₀ := R') A ⟶ G') :
     push hπ y = (Over.homMk (𝟙 _) ((Category.id_comp _).trans sp_tower) :
       sp (R₀ := R) A ⟶ Over.mk ((sp (R₀ := R') A).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap R R')))) ≫
-      pushHom hπ (sp (R₀ := R') A) y := by
-  apply Over.OverMorphism.ext
-  exact (Category.id_comp _).symm
+      pushHom hπ (sp (R₀ := R') A) y := Over.OverMorphism.ext (Category.id_comp _).symm
 
 theorem push_mul (y z : sp (R₀ := R') A ⟶ G') : push hπ (y * z) = push hπ y * push hπ z := by
   rw [push_eq, push_eq, push_eq, map_mul, MonObj.comp_mul]
@@ -132,8 +129,7 @@ theorem push_one : push hπ (1 : sp (R₀ := R') A ⟶ G') = 1 := by
 
 theorem push_spMap {B : Type} [CommRing B] [Algebra R B] [Algebra R' B] [IsScalarTower R R' B] (ψ : A →ₐ[R'] B)
     (y : sp (R₀ := R') A ⟶ G') : push hπ (spMap ψ ≫ y) = spMap (ψ.restrictScalars R) ≫ push hπ y := by
-  apply Over.OverMorphism.ext
-  exact Category.assoc _ _ _
+  exact Over.OverMorphism.ext (Category.assoc _ _ _)
 
 end Push
 

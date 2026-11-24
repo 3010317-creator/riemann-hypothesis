@@ -95,8 +95,7 @@ private theorem wd_irr (R : Type) [CommRing R] [IsDomain R] (l : ℕ) [hl : Fact
         rw [mul_one]
         calc (l : R) = (l : R) ^ 2 * a := ha
           _ = (l : R) * ((l : R) * a) := by ring
-      have h2 := mul_left_cancel₀ hp.ne_zero h1
-      exact isUnit_iff_exists_inv.2 ⟨a, h2.symm⟩
+      exact isUnit_iff_exists_inv.2 ⟨a, (mul_left_cancel₀ hp.ne_zero h1).symm⟩
     · exact hmon.isPrimitive
   have ht : (Polynomial.taylorEquiv (1 : R)) (Polynomial.cyclotomic (l ^ (n + 1)) R) = g := by
     rw [hg, ← Polynomial.taylor_apply]
@@ -158,8 +157,7 @@ private theorem wd_res {Ω : Type} [Field Ω] (A : ValuationSubring Ω) (l : ℕ
     rw [sub_pow_char_pow, one_pow, ← map_pow, hzN, map_one, sub_self]
   have h0 := (pow_eq_zero_iff hN).1 hres
   have hmem : zA - 1 ∈ IsLocalRing.maximalIdeal A := by
-    rw [← IsLocalRing.residue_eq_zero_iff, map_sub, map_one]
-    exact h0
+    rwa [← IsLocalRing.residue_eq_zero_iff, map_sub, map_one]
   have := (A.valuation_lt_one_iff (zA - 1)).1 hmem
   simpa using this
 

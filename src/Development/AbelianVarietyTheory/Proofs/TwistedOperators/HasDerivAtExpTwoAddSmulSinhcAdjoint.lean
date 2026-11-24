@@ -272,12 +272,10 @@ def kronRightHom (m n : Type) [Fintype m] [Fintype n] [DecidableEq m] [Decidable
 
 theorem continuous_kronLeftHom : Continuous (kronLeftHom m n) := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
-  show Continuous fun Y : Matrix m m ℂ => Y i.1 j.1 * (1 : Matrix n n ℂ) i.2 j.2
   exact (continuous_apply_apply i.1 j.1).mul continuous_const
 
 theorem continuous_kronRightHom : Continuous (kronRightHom m n) := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
-  show Continuous fun Z : Matrix n n ℂ => (1 : Matrix m m ℂ) i.1 j.1 * Z i.2 j.2
   exact continuous_const.mul (continuous_apply_apply i.2 j.2)
 
 theorem exp_kronecker_one (Y : Matrix m m ℂ) :
@@ -413,8 +411,7 @@ theorem hasDerivAt_exp_two_add_smul (p q : ℕ) (Y V : Mat p q) (a b : Ix p q) :
   have hD0 := GlobalTheory.hasDerivAt_exp_add_smul_duhamel (Mat p q) (Y + Y) V
   have hD : HasDerivAt (fun t : ℝ => NormedSpace.exp (Y + Y + t • V))
       (NormedSpace.exp Y * sAd Y V * NormedSpace.exp Y) 0 := by
-    rw [← integral_duhamel_eq_sAd Y V]
-    exact hD0
+    rwa [← integral_duhamel_eq_sAd Y V]
   let e : Mat p q →ₗ[ℝ] ℂ :=
     { toFun := fun M => M a b
       map_add' := fun _ _ => rfl

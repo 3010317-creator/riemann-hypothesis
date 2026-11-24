@@ -112,13 +112,11 @@ theorem exists_mem_schA_ne_zero : ∀ (F : Type) [Field F] [NumberField F] (κ :
   obtain ⟨f, hf⟩ := exists_schwartz_one (κ → mixedEmbedding.mixedSpace F)
   refine ⟨pureA F f ((intPts F κ).indicator 1), Submodule.subset_span ⟨f, _, indicator_intPts_mem_SB F κ, rfl⟩, ?_⟩
   have h0 : (fun i : κ => ((0 : κ → AdeleRing (𝓞 F) F) i).2) ∈ intPts F κ := fun i _ v => by
-    show (0 : FiniteAdeleRing (𝓞 F) F) v ∈ v.adicCompletionIntegers F
     exact zero_mem (v.adicCompletionIntegers F)
   simp only [pureA]
   rw [Set.indicator_of_mem h0]
   have hz : (fun i : κ => InfiniteAdeleRing.ringEquiv_mixedSpace F ((0 : κ → AdeleRing (𝓞 F) F) i).1) = 0 := by
     funext i
-    show InfiniteAdeleRing.ringEquiv_mixedSpace F 0 = 0
     exact map_zero _
   rw [hz, hf]
   simp

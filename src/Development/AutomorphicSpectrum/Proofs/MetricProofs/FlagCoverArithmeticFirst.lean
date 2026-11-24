@@ -84,12 +84,9 @@ theorem exists_flags_good : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k,
     refine ⟨fun k => if hk : ∀ p, M.blk p ≠ some k then (basePart M.blk z ⟨⟨k, hk⟩, F.c ⟨k, hk⟩⟩)⁻¹ else 1,
       fun k => ?_, fun k => ?_, fun p k hp => ?_⟩
     · by_cases hk : ∀ p, M.blk p ≠ some k
-      · simp only [dite_eq_left hk]
-        exact inv_ne_zero (hch ⟨k, hk⟩)
-      · simp only [dite_eq_right hk]
-        exact one_ne_zero
-    · simp only [dite_eq_left k.2]
-      exact inv_mul_cancel₀ (hch k)
+      · simpa only [dite_eq_left hk] using inv_ne_zero (hch ⟨k, hk⟩)
+      · simpa only [dite_eq_right hk] using one_ne_zero
+    · simpa only [dite_eq_left k.2] using inv_mul_cancel₀ (hch k)
     · have hk : ¬ ∀ p, M.blk p ≠ some k := fun h => h p hp
       simp only [dite_eq_right hk]
   let z₁ : (Σ k, ι k) → ℂ := fun q => c q.1 * z q
@@ -115,8 +112,7 @@ theorem exists_flags_good : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k,
   have e' : z₁ ⟨k, m⟩ = z ⟨k, m⟩ := by
     show c k * z ⟨k, m⟩ = z ⟨k, m⟩
     rw [hc1 p k hp, one_mul]
-  rw [e'] at e
-  exact e
+  rwa [e'] at e
 
 end GlobalTheory.CompanionTheory.Ar.PB.CovMap.LocImg
 end -- clump:auto
@@ -224,8 +220,7 @@ theorem img_spec (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)
       rw [e₁ m, hwb, e₂ m]
       field_simp)
   refine ⟨z₀, o1, Cj.sameOrbit_trans (hwb ▸ o2) (Cj.sameOrbit_symm hbov), ?_⟩
-  simp only [htrans]
-  exact fl
+  simpa only [htrans] using fl
 
 theorem local_img : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (Φ : Type) [Field Φ] (y : (Σ k, ι k) → Φ) (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N j : ℕ) (M : FlagModel y Ψ N j) (K' : Type) [Fintype K'] (ι' : K' → Type) [∀ k, Fintype (ι' k)] (Φ' : Type) [Field Φ'] (y' : (Σ k, ι' k) → Φ') (M' : FlagModel y' Ψ N j) (Cv : FlagCover M' M) (d : ℕ), IsArithVar (mCoordIdeal y) (d + 2) → IsArithVar (mCoordIdeal y') (d + 2) → ∀ z ∈ mcPts (mCoordIdeal y'), ∃ (V : Set ((Σ k, ι' k) → ℂ)) (f : ((Σ k, ι' k) → ℂ) → (Σ k, ι k) → ℂ), IsOpen V ∧ z ∈ V ∧ AnalyticOnNhd ℂ f V ∧ ∀ z' ∈ V ∩ mcPts (mCoordIdeal y'), f z' ∈ mcPts (mCoordIdeal y) ∧ CovMap.IsImg Cv z' (f z') := by
   intro K _ ι _ Φ _ y Ψ _ _ N j M K' _ ι' _ Φ' _ y' M' Cv d _ _ z hz

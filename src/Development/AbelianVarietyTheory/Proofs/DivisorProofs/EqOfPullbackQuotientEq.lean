@@ -59,8 +59,7 @@ theorem exists_preimage_quotient {R : Type} [CommRing R] (I : Ideal R) (hI : I �
   have hsurj : Function.Surjective (Ideal.Quotient.mk I) := Ideal.Quotient.mk_surjective
   have hmem : t ∈ PrimeSpectrum.zeroLocus (RingHom.ker (Ideal.Quotient.mk I) : Set R) := by
     rw [Ideal.mk_ker]
-    intro x hx
-    exact (@nilradical_le_prime _ _ t.asIdeal t.isPrime) (hI hx)
+    exact fun x hx => (@nilradical_le_prime _ _ t.asIdeal t.isPrime) (hI hx)
   rw [← range_comap_of_surjective _ _ hsurj] at hmem
   obtain ⟨t₀, ht₀⟩ := hmem
   exact ⟨t₀, ht₀⟩
@@ -111,7 +110,6 @@ theorem eq_of_pullback_quotient_eq {R : Type} [CommRing R] (I : Ideal R) (hI : I
       simpa using this⟩
   refine eq_of_eq_on_quotient I hI' B B' hB f g ?_ (by rw [IsMonHom.one_hom, IsMonHom.one_hom])
   have e := congrArg (fun k ↦ k.left ≫ pullback.fst B'.hom (spMap (Ideal.Quotient.mk I))) h
-  simp only [Over.pullback_map_left, pullback.lift_fst] at e
-  exact e
+  simpa only [Over.pullback_map_left, pullback.lift_fst] using e
 
 end GlobalTheory.NilRigidity

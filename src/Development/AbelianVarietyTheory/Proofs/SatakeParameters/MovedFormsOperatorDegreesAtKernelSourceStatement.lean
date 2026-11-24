@@ -204,8 +204,7 @@ theorem GlobalTheory.TwV.DelA.cmp_valsAt : AllSites (fun {D L hT Gi Gl Kc Dx cX 
     show MvPolynomial.map _ (cmpC _ _ _ _ _ _ _ _ _ _ _ _) = _
     simp only [cmpC, hLa, ite_true]
     rw [MvPolynomial.map_map, MvPolynomial.map_map]
-    refine congrArg (fun f => MvPolynomial.map f _) ?_
-    exact RingHom.ext fun r => (hr r).symm
+    exact congrArg (fun f => MvPolynomial.map f _) (RingHom.ext fun r => (hr r).symm)
   · rw [hiff]
     intro z z' hz
     have h2 : trC (X.onCh j hj) (j + 1) ((ex.tw.fm u μ).emb (j + 1) x) =
@@ -219,8 +218,7 @@ theorem GlobalTheory.TwV.DelA.cmp_valsAt : AllSites (fun {D L hT Gi Gl Kc Dx cX 
       (GlobalTheory.TwU.ratA D.host.F (d.gam (j + 1) hj La) * (((I.at' j hj).st.K ((I.at' j hj).st.eC.symm La.1).1).y c).1 * k)) hκ
     have hp2 := hk.mpr hp1
     have hv2 := hv.2 g hgb c (d.gam (j + 1) hj La) (d.mem (j + 1) hj La) κ hp2 z z' hz
-    rw [h2, ← embN_eq_nrmR]
-    exact hv2
+    rwa [h2, ← embN_eq_nrmR]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ComparedFormNormalisedValuesLatticeTuple =====
@@ -264,8 +262,7 @@ theorem blk_frame_eq {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos : (Σ v 
     have hdet : IsUnit (fd.frM 0 La v).det := by
       rw [hF v, Matrix.det_submatrix_equiv_self]
       have hu := ((Matrix.isUnit_iff_isUnit_det _).1 M.isUnit).map (ρ v)
-      rw [RingHom.map_det] at hu
-      exact hu
+      rwa [RingHom.map_det] at hu
     have hv : (SecondKernelHermitian.frGL fd 0 La v : Matrix _ _ _) = fd.frM 0 La v := by
       unfold SecondKernelHermitian.frGL
       rw [dite_eq_left hdet]
@@ -296,8 +293,7 @@ theorem blk_frame_eq {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos : (Σ v 
     have hdet : IsUnit (fd.frM (j + 1) La v).det := by
       rw [hF v, Matrix.det_submatrix_equiv_self]
       have hu := ((Matrix.isUnit_iff_isUnit_det _).1 M.isUnit).map (ρ v)
-      rw [RingHom.map_det] at hu
-      exact hu
+      rwa [RingHom.map_det] at hu
     have hv : (SecondKernelHermitian.frGL fd (j + 1) La v : Matrix _ _ _) = fd.frM (j + 1) La v := by
       unfold SecondKernelHermitian.frGL
       rw [dite_eq_left hdet]
@@ -614,8 +610,7 @@ theorem evD_subD : ∀ {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos : (Σ 
   have key := ringHom_scale φ ψ
     (fun x => if IsOddPos (blkJ X j x).2 then ι (kOdd X D pos hN d f' (pos (blkJ X j x))) else 1) hC hX
     (ι (∏ τ, if IsOddPos (pos.symm τ).2 then ((zT X D pos f' τ).det ^ ((D.R.N j : ℤ) - 1) * sgRev (D.R.N j) * (dfr X D hN d f' τ).det) ^ ((D.R.N j : ℤ) * cT1 X D pos j τ - szT X D pos j τ) else 1)) G ?_
-  · rw [map_mul, hR]
-    exact key
+  · rwa [map_mul, hR]
   · intro m hm
     let H : (Σ v : X.Pl, Fin (X.G.P.n' v)) → ℂ := fun b =>
       if IsOddPos b.2 then kOdd X D pos hN d f' (pos b) ^ ((D.R.N j : ℤ) * cMu X j b.1 b.2 - szMu X j b.1 b.2) else 1
@@ -951,8 +946,7 @@ theorem GlobalTheory.TwV.DelA.eq_zero_of_evD_generic : ∀ {p : ℕ} [Fact p.Pri
           (Fin.cast hN.2.symm z.2.2.2))) = ι ∘ x := by
         funext z
         simp only [Function.comp_apply, dOf_read]
-      rw [hxv] at h
-      exact h
+      rwa [hxv] at h
   ext m : 1
   rw [MvPolynomial.coeff_zero]
   refine eq_zero_of_vanish_off ι _ (hY X D pos hN)
@@ -972,8 +966,7 @@ theorem GlobalTheory.TwV.DelA.eq_zero_of_evD_generic : ∀ {p : ℕ} [Fact p.Pri
       funext y
       simp only [yv, zT_fOf X D pos _ hg, Function.comp_apply, blkOf_read]
     have h3 := congrArg (AddMonoidAlgebra.coeff · m) h1
-    rw [MvPolynomial.coeff_map, h2, MvPolynomial.coeff_zero] at h3
-    exact h3
+    rwa [MvPolynomial.coeff_map, h2, MvPolynomial.coeff_zero] at h3
 
 end
 end -- clump:auto
@@ -1092,8 +1085,7 @@ theorem evD_trDY_polDY : ∀ {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos 
       (∏ τ, (f' τ).det ^ (-(wT X D pos j τ))) * GL3Theta.evFr D (AddMonoidAlgebra.coeff (polDY D s Q (N' := D.R.N (j + 1))) α) f' := by
     intro α
     have := hreal α F
-    rw [ev1_eq_prod_det_pow_mul_valZ] at this
-    exact this
+    rwa [ev1_eq_prod_det_pow_mul_valZ] at this
   have hD : evD X D pos ι hN d f' (trDY X Kc j D (eIdx X D pos j hN) (phi0 X D pos ι j) (polDY D s Q (N' := D.R.N (j + 1)))) =
       ι (∑ α ∈ (polDY D s Q (N' := D.R.N (j + 1))).support,
         valZ X D pos (j + 1) h' (phiC X D pos (j + 1) h' (wT X D pos j) (AddMonoidAlgebra.coeff (polDY D s Q (N' := D.R.N (j + 1))) α)) f' *

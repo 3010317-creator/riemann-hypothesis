@@ -69,8 +69,7 @@ theorem matched_commute : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T :
 
   have part1 : ∀ h, IsOpsE R h → ∀ y, R.Th t (hX P cX y) = h P c0 (R.Th t y) := by
     intro h hh y
-    apply injE
-    exact (hM y (hX P cX y) (hXo P hg cX y)).trans (hh P hg0 c0 (R.Th t y)).symm
+    exact injE ((hM y (hX P cX y) (hXo P hg cX y)).trans (hh P hg0 c0 (R.Th t y)).symm)
   refine ⟨part1, ?_⟩
   intro c w hw
   have h01 := GlobalTheory.T.exists_sphericalOperators_rows_normal_eigenspaces R F hC hS SF hSF
@@ -79,8 +78,7 @@ theorem matched_commute : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T :
   rcases hX01 with ⟨hX0, hX0o, hX0n⟩
   have eqX : hX P cX = hX0 P cX := by
     ext x
-    apply injX
-    exact (hXo P hg cX x).trans (hX0o P hg cX x).symm
+    exact injX ((hXo P hg cX x).trans (hX0o P hg cX x).symm)
   have eX : LinearMap.adjoint (hX0 P cX) = hX0 P (dualC (Finsupp.mapRange star (star_zero ℂ) cX)) := hX0n.2 P hg cX
   have cX' : Commute (hX0 P cX) (hX0 P (dualC (Finsupp.mapRange star (star_zero ℂ) cX))) := hX0n.1 P P hg hg _ _
   have nX0 : Commute (hX0 P cX) (LinearMap.adjoint (hX0 P cX)) :=

@@ -63,11 +63,9 @@ theorem invariants_finExt : ∀ (l : ℕ) [Fact l.Prime], ∀ (K : FinExt l) (x 
     constructor
     · intro hy
       have : y ∈ IntermediateField.fixedField K.1.fixingSubgroup := by
-        rw [IntermediateField.mem_fixedField_iff]
-        exact hy
+        rwa [IntermediateField.mem_fixedField_iff]
       rwa [h1] at this
-    · intro hy g hg
-      exact (IntermediateField.mem_fixingSubgroup_iff K.1 g).1 hg y hy
+    · exact fun hy g hg => (IntermediateField.mem_fixingSubgroup_iff K.1 g).1 hg y hy
   rw [hset] at h
   haveI : FiniteDimensional ℚ_[l] K.1 := K.2
   haveI : FiniteDimensional ℚ_[l] K.1.toSubalgebra.toSubmodule := K.2

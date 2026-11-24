@@ -59,8 +59,7 @@ private theorem lc_of_cont {Γ R : Type} [TopologicalSpace Γ] [CommRing R] {f :
     IsLocallyConstant f := by
   refine IsLocallyConstant.desc _ _ (h 1) ?_
   intro x y hxy
-  rw [Ideal.Quotient.eq, pow_one, Ideal.mem_bot, sub_eq_zero] at hxy
-  exact hxy
+  rwa [Ideal.Quotient.eq, pow_one, Ideal.mem_bot, sub_eq_zero] at hxy
 
 theorem UpperTheory.V.Ws.Gys.dataPs :
     ∀ {O Γ R : Type} [CommRing O] [Group Γ] [TopologicalSpace Γ] [CommRing R] (Φ : Fr O Γ) (a : O →+* R) (p : PD Φ.ι Γ R), Φ.IsRes a p → Supp nP p.r →
@@ -99,8 +98,7 @@ theorem UpperTheory.V.Ws.Gys.dataPs :
   · intro v s hs
     have hn := hR.pair.low v
     have hna0 : adj (p.n v) * p.n v = 1 := by
-      have h1 := hn.1
-      simpa [IsGSp] using h1
+      simpa [IsGSp] using hn.1
     have hna : p.n v * adj (p.n v) = 1 := mul_eq_one_comm.mp hna0
     have hX := hR.pair.flag v s hs
     have hch : (adj (p.n v) * p.r s * p.n v) 0 0 = a ↑(Φ.χ 0 s) := hR.res.char v s hs 0

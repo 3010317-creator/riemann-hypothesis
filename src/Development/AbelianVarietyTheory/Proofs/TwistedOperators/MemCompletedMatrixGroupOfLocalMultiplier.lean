@@ -72,8 +72,7 @@ theorem coe_ne_zero (t : 𝓞 F) (v : HeightOneSpectrum (𝓞 F)) (ht : t ∉ v.
 theorem div_int {v : HeightOneSpectrum (𝓞 F)} {x : v.adicCompletion F} (hx : x ∈ v.adicCompletionIntegers F)
     (t : 𝓞 F) (ht : t ∉ v.asIdeal) : x * (algebraMap F (Af F) (t : F) v)⁻¹ ∈ v.adicCompletionIntegers F := by
   rw [HeightOneSpectrum.mem_adicCompletionIntegers] at hx ⊢
-  rw [map_mul, map_inv₀, val_coe_one t v ht, inv_one, mul_one]
-  exact hx
+  rwa [map_mul, map_inv₀, val_coe_one t v ht, inv_one, mul_one]
 
 def mulG (I : Ideal (𝓞 F)) : AddSubgroup (Af F) :=
   AddSubgroup.closure {x | ∃ t ∈ I, ∃ β ∈ intAf F, x = algebraMap F (Af F) (t : F) * β}
@@ -83,14 +82,12 @@ theorem mem_mulG (I : Ideal (𝓞 F)) {γ : Af F} (hγ : γ ∈ intAf F)
   by_cases h0 : γ = 0
   · rw [h0]; exact zero_mem _
   obtain ⟨w₀, hw₀⟩ : ∃ w, γ w ≠ 0 := by
-    by_contra H
-    push Not at H
+    by_contra! H
     exact h0 (FiniteAdeleRing.ext F fun v => H v)
   obtain ⟨t₁, ht₁I, ht₁w⟩ := (h w₀).resolve_left hw₀
   have ht₁0 : t₁ ≠ 0 := fun e => ht₁w (e ▸ w₀.asIdeal.zero_mem)
   have hspan : Ideal.span {t₁} ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact ht₁0
+    rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   set Z := (Ideal.finite_factors hspan).toFinset with hZdef
   have hZ : ∀ v, v ∈ Z ↔ t₁ ∈ v.asIdeal := fun v => by
     rw [hZdef, Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]

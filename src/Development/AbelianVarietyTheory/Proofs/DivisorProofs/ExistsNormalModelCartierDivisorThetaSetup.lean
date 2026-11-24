@@ -236,8 +236,7 @@ theorem main : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F : SFam g n ζ
     obtain ⟨m', hm'⟩ := endChar_exists_of_isMonHom T.V hBV G' hG D' A' U' f' hfm
     obtain ⟨f₁, hf₁, hgen⟩ := hmat a b (f a b) f' (hf a b) hf'
     have := he2 a b f' f₁ m' hfm hf₁ hgen hm' (ι y)
-    rw [← hmm m' hm' y] at this
-    exact this
+    rwa [← hmm m' hm' y] at this
 
 end GlobalTheory.Poinc.Eq8.PeriodsEighth
 end -- clump:auto
@@ -397,7 +396,6 @@ theorem main : ∀ (Z : Scheme.{0}) (G₀ : Over Z) [GrpObj G₀] [IsCommMonObj 
   have hz : (jK V).base (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum (FractionRing V)) = genericPoint (Sp V) := by
     rw [genericPoint_eq_bot_of_affine]
     apply PrimeSpectrum.ext
-    show Ideal.comap (algebraMap V (FractionRing V)) ⊥ = ⊥
     exact Ideal.comap_bot_of_injective _ (IsFractionRing.injective V (FractionRing V))
   have hW : spMap ψ (genericPoint (Sp V)) ∈ W := by
     show ξ (spMap ψ (genericPoint (Sp V))) ∈ abLocus G₀
@@ -423,7 +421,6 @@ theorem main : ∀ (Z : Scheme.{0}) (G₀ : Over Z) [GrpObj G₀] [IsCommMonObj 
     haveI := hf
     have e1 : ((Over.pullback (specOf ψ)).map ((Over.pullback ξ).map f)).left ≫ β =
         β ≫ ((Over.pullback ξ).map f).left := by
-      show _ ≫ 𝟙 _ ≫ _ = (𝟙 _ ≫ _) ≫ _
       exact pullback.lift_fst _ _ _
     have e2 : ((Over.pullback ξ).map f).left ≫ pullback.fst G₀.hom ξ = pullback.fst G₀.hom ξ ≫ f.left :=
       pullback.lift_fst _ _ _
@@ -435,8 +432,7 @@ theorem main : ∀ (Z : Scheme.{0}) (G₀ : Over Z) [GrpObj G₀] [IsCommMonObj 
         _ = β ≫ (((Over.pullback ξ).map f).left ≫ pullback.fst G₀.hom ξ) := Category.assoc _ _ _
         _ = β ≫ (pullback.fst G₀.hom ξ ≫ f.left) := by rw [e2]
         _ = _ := (Category.assoc _ _ _).symm
-    · intro m m' hm hm' y
-      exact hE _ _ inferInstance inferInstance e1 m m' hm hm' y
+    · exact fun m m' hm hm' y => hE _ _ inferInstance inferInstance e1 m m' hm hm' y
 
 end GlobalTheory.Poinc.Eq8.PullComplete
 end -- clump:auto
@@ -595,8 +591,7 @@ theorem GlobalTheory.Poinc.Periods.main : ∀ (g n : ℕ) (o : Type) [CommRing o
       exact bot_le)
     have hsp : ξ w ⤳ genericPoint M.Z := by
       have := hpq.map (M.Z.fromSpecStalk x).continuous
-      rw [hq] at this
-      exact this
+      rwa [hq] at this
     refine ⟨w, ?_⟩
     show ξ w ∈ abLocus FinalForm.G
     rw [FinalForm.ab]
@@ -1007,8 +1002,7 @@ theorem glue : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F : SFam g n ζ
       have e := val_jK ξ specializes_rfl b
       rw [TopCat.Presheaf.stalkSpecializes_refl, h₁, val_generic] at e
       simp only [CommRingCat.hom_id, RingHom.id_apply] at e
-      rw [hb, map_zero, map_eq_zero, map_eq_zero_iff _ (M.stalkHom_injective _)] at e
-      exact e
+      rwa [hb, map_zero, map_eq_zero, map_eq_zero_iff _ (M.stalkHom_injective _)] at e
     have hne : (maximalIdeal (M.Z.presheaf.stalk (ξ (closedPoint T.V)))).map (Scheme.stalkClosedPointTo ξ).hom ≠ ⊥ := by
       rw [Ne, Ideal.map_eq_bot_iff_of_injective hinj]
       intro hb
@@ -1026,8 +1020,7 @@ theorem glue : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F : SFam g n ζ
     refine ⟨toA T ξ, a, e, ⟨rfl, hinj, he1, specializes_rfl, ?_⟩, hgen T ξ γ h₁, T, ξ, γ, rfl, h₁, h₂, ha⟩
     change Ideal.map ((Scheme.stalkClosedPointTo ξ).hom.comp
       (M.Z.presheaf.stalkSpecializes (specializes_refl (ξ (closedPoint T.V)))).hom) _ = _
-    rw [TopCat.Presheaf.stalkSpecializes_refl]
-    exact he
+    rwa [TopCat.Presheaf.stalkSpecializes_refl]
   · intro x
     obtain ⟨k, hk⟩ := hloc x
     obtain ⟨T₀, ξ₀, γ₀, h₀, h₁, h₂⟩ := exists_trait_centre (M := M) y₀ x

@@ -177,8 +177,7 @@ theorem om_dLine_right : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A S A' :
     rw [e, map_smul]
     rfl
   have hoFc : Continuous fun q : ℝ × WO A S => oma p (F q.1) q.2 := by
-    simp only [hoF]
-    exact hoF0
+    simpa only [hoF] using hoF0
   obtain ⟨B2, hB2⟩ := exists_biBound hψ hH'
   have hoFb : ∃ C : ℝ, ∀ a x, ‖oma p (F a) x‖ ≤ C := ⟨B2, fun a x => by
     rw [hoF, norm_mul, hc1, one_mul]; exact hB2 _ _⟩
@@ -425,8 +424,7 @@ theorem exists_bound_fam (hψ : IsStdChar D ψ (-1)) {S T : HSp D} {F : K → WO
   have h1 := hψ.1.2.1 (-(symplOH S T (ratW T S γ') x))
   have := hC (k, _) ⟨Set.mem_univ _, hx⟩
   simp only at this
-  rw [hq, norm_mul, h1, one_mul] at this
-  exact this
+  rwa [hq, norm_mul, h1, one_mul] at this
 
 variable [MeasurableSpace K] [BorelSpace K] [SecondCountableTopology K] (μ : Measure K)
 

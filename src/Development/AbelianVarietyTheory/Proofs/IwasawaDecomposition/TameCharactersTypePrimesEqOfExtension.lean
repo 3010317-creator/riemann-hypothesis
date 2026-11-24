@@ -51,8 +51,7 @@ theorem coreCharacter_fieldInclusion_eq_columnHeckeChar {B : Base} {f : Fr B.toP
   have e := Formalism.IndefR.FWT.chiTie_of_chiR z.core z.R.toRealDat z.geo.fw.alg_eq z.geo.fw.laws.pins.2.2.1 z.geo.fw.chiR j
   rw [e]
   have h1 := z.lev.is.mu0 j
-  rw [z.lev.C] at h1
-  exact h1
+  rwa [z.lev.C] at h1
 
 theorem embLL_chi {B : Base} {f : Fr B.toPre} {T : TwDat B} (w : ColW B f T) (j : Fin B.R.m)
     (p : {p // p ∈ (B.primes w.px).vGs}) (c : (𝓞 B.fields.E ⧸ p.1.asIdeal)ˣ) (y : 𝓞 B.fields.E) (x : B.fields.Eˣ)
@@ -90,8 +89,7 @@ theorem embLL_chi_ext : ∀ {B₁ B₂ : Base} {f₁ : Fr B₁.toPre} {f₂ : Fr
   have ec₀ := app_chiW eH el ec eχ ((j₁ : ℕ) + 1)
   rw [← hj] at A₂
   have A₂' : ChrEq (D := (w₁.st Z₁).toD7) (z₁.core.chiW ((j₁ : ℕ) + 1) z₁.core.Q.c.F.val.toRingHom) (w₂.I.C.mu0 j₂) := by
-    rw [← ec₀]
-    exact A₂
+    rwa [← ec₀]
   have hχ : w₁.I.C.mu0 j₁ = w₂.I.C.mu0 j₂ := (GlobalTheory.ChrEqUnique.chrEq_unique _).1 _ _ _ A₁ A₂'
   rcases p₂ with ⟨q₂, hq₂⟩
   have eq : q₂ = p₁.1 := eq_of_heq hp

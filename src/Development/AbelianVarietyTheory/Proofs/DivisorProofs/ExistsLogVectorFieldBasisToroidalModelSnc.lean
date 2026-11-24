@@ -359,8 +359,7 @@ theorem exists_coords {k : Type} [Field k] [CharZero k] {X : Scheme.{0}} [IsLoca
       rw [KaehlerDifferential.map_D, ← algebraMap_smul (X.presheaf.stalk y) (a j l),
         TensorProduct.tmul_smul, ← algebraMap_smul (IsLocalRing.ResidueField (X.presheaf.stalk y))]
       rfl
-    rw [key]
-    exact hw
+    rwa [key]
   obtain ⟨e, he, hdet⟩ := GlobalTheory.extend_linearIndependent_rows_by_standard_basis ab hab
   let z : Fin n → Γ(X, U) := Function.extend e z₀ x
   let c : Matrix (Fin n) (Fin n) Γ(X, U) :=
@@ -368,8 +367,7 @@ theorem exists_coords {k : Type} [Field k] [CharZero k] {X : Scheme.{0}} [IsLoca
   have hdz (i : Fin n) : dFun (algX p U) (z i) = ∑ l, c i l • dFun (algX p U) (x l) := by
     by_cases hi : ∃ j, e j = i
     · obtain ⟨j, rfl⟩ := hi
-      simp only [z, c, Matrix.of_apply, he.extend_apply]
-      exact ha j
+      simpa only [z, c, Matrix.of_apply, he.extend_apply] using ha j
     · simp only [z, c, Matrix.of_apply, Function.extend_apply' _ _ _ hi]
       simp [Pi.single_apply]
   have hρ : ρ c.det ≠ 0 := by
@@ -408,8 +406,7 @@ theorem exists_coords {k : Type} [Field k] [CharZero k] {X : Scheme.{0}} [IsLoca
     exact (resG_resG _ _ _).symm ▸ this
   obtain ⟨b', hb'⟩ := exists_basis_map (k := k) (B := Γ(X, W)) b z c (fun i => by simpa only [hb] using hdz i) hu
   refine ⟨fun i => resG X hWU (z i), b', fun j => ?_, hb'⟩
-  simp only [z, z₀, he.extend_apply]
-  exact resG_resG _ _ _
+  simpa only [z, z₀, he.extend_apply] using resG_resG _ _ _
 
 theorem exists_logDer_basis_of_snc {k : Type} [Field k] [CharZero k] {X : Scheme.{0}} (p : X ⟶ Sp k) (n : ℕ)
     [SmoothOfRelativeDimension n p] (I : X.IdealSheafData) (hI : FinalTheorems.Snc I) (U : X.affineOpens) (x : X) (hx : x ∈ U.1) :

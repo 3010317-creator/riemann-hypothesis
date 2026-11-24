@@ -140,10 +140,8 @@ theorem UpperTheory.V.FW.gamGen :
       ← sub_eq_zero, ← Int.cast_one, ← Int.cast_sub, ZMod.intCast_zmod_eq_zero_iff_dvd]
     push_cast
     constructor
-    · intro hd
-      exact dvd_trans (dvd_mul_left _ _) hd
-    · intro hd
-      exact hcop.mul_dvd hfdvd hd
+    · exact fun hd => dvd_trans (dvd_mul_left _ _) hd
+    · exact fun hd => hcop.mul_dvd hfdvd hd
   have hord : orderOf γ = l ^ d := by
     rcases d with _ | d
     · rw [pow_zero, orderOf_eq_one_iff]

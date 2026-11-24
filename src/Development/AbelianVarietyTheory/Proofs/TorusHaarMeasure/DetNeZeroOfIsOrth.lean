@@ -164,8 +164,7 @@ lemma quotient_unitary {r : ℕ} (X : Data E r) {x y : Frame X.Ψ r} (hx : IsOrt
     ((((toGL X hy τ)⁻¹ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) *ᵥ w)
   rw [← val_toGL X hx, ← val_toGL X hy] at h
   simp only [Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec] at h
-  simp only [Pi.mul_apply, Pi.inv_apply, Units.val_mul]
-  exact h
+  simpa only [Pi.mul_apply, Pi.inv_apply, Units.val_mul] using h
 
 lemma continuous_toGL {r : ℕ} (X : Data E r) :
     Continuous fun x : {x : Frame X.Ψ r | IsOrth X x} => toGL X x.2 := by

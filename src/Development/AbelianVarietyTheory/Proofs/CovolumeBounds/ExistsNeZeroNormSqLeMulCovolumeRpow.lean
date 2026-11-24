@@ -103,8 +103,7 @@ theorem exists_linearMap_det_eq_prod_inv_succMin (L : Submodule ℤ E) [Discrete
     intro x i
     have := Matrix.repr_toLin o.toBasis o.toBasis (Matrix.diagonal fun i ↦ (l i)⁻¹) x
     have h2 := congrFun this i
-    rw [Matrix.mulVec_diagonal] at h2
-    exact h2
+    rwa [Matrix.mulVec_diagonal] at h2
   refine ⟨T, ?_, fun x hx h0 ↦ ?_⟩
   · rw [LinearMap.det_toLin, Matrix.det_diagonal, Finset.prod_inv_distrib]
   · have hne : (Finset.univ.filter fun i ↦ o.repr x i ≠ 0).Nonempty := by
@@ -142,8 +141,7 @@ theorem exists_linearMap_det_eq_prod_inv_succMin (L : Submodule ℤ E) [Discrete
         have := hl k
         gcongr
     refine le_trans ?_ (le_of_pow_le_pow_left₀ two_ne_zero (norm_nonneg _) hcmp)
-    rw [norm_smul, Real.norm_of_nonneg (inv_pos.2 (hl k)).le, le_inv_mul_iff₀ (hl k), mul_one]
-    exact hx1
+    rwa [norm_smul, Real.norm_of_nonneg (inv_pos.2 (hl k)).le, le_inv_mul_iff₀ (hl k), mul_one]
 
 variable [MeasurableSpace E] [BorelSpace E]
 
@@ -248,8 +246,7 @@ theorem prod_succMin_le_rpow_mul_spanCovol :
   borelize E
   have h := prod_succMin_le_rpow_mul_covolume (inSpan L)
   simp only [succMin_inSpan] at h
-  rw [spanCovol_eq_covolume_comap_span, ← finrank_span_eq_finrank_int]
-  exact h
+  rwa [spanCovol_eq_covolume_comap_span, ← finrank_span_eq_finrank_int]
 
 end Discrete
 

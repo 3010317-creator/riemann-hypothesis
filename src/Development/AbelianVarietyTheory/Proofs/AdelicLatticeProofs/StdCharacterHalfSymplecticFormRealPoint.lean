@@ -126,8 +126,7 @@ theorem sndA_symplO (S T : HSp D) {x y : WO S T} (h : x.map (finPart D) = 0 ∨ 
   have hinj := Algebra.TensorProduct.includeLeft_injective (R := D.host.F) (S := D.host.F) (A := Af D.host.F)
     (B := D.host.E) (algebraMap D.host.F D.host.E).injective
   apply hinj
-  rw [map_zero]
-  exact h1
+  rwa [map_zero]
 
 theorem char_symplOH : ∀ (D : D7) (θ : InfFam D) (ψ : AddChar (AF D.host.F) ℂ), IsInfFam θ → IsStdChar D ψ (-1) →
     ∀ (S T : HSp D) (x y : WO S T), (x.map (finPart D) = 0 ∨ y.map (finPart D) = 0) →
@@ -136,7 +135,6 @@ theorem char_symplOH : ∀ (D : D7) (θ : InfFam D) (ψ : AddChar (AF D.host.F) 
   intro D θ ψ hθ hψ S T x y h
   obtain ⟨σ, hσ⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
   have e := (real_adele_ext_and_char D θ σ hσ _ (sndA_symplO S T h)).2 ψ hψ
-  rw [Finset.sum_congr rfl fun τ _ => valTau_symplO hθ S T τ x y] at e
-  exact e
+  rwa [Finset.sum_congr rfl fun τ _ => valTau_symplO hθ S T τ x y] at e
 
 end GlobalTheory.OrientedChar

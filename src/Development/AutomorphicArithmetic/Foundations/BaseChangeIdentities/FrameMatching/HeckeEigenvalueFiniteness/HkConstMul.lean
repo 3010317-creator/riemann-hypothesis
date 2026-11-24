@@ -329,8 +329,7 @@ theorem isHk_cosetFn {K L : Subgroup (GL ι F)} [Fintype (K ⧸ L.subgroupOf K)]
     refine HasCompactSupport.of_support_subset_isCompact hC fun x hx => ?_
     obtain ⟨q, hq⟩ : ∃ q : K ⧸ L.subgroupOf K,
         (QuotientGroup.mk x : GL ι F ⧸ K) = QuotientGroup.mk (((q.out : K) : GL ι F) * g) := by
-      by_contra h
-      push Not at h
+      by_contra! h
       refine (Function.mem_support.1 hx) ?_
       unfold cosetFn
       exact Finset.sum_eq_zero fun q _ => ite_eq_right (h q)
@@ -360,8 +359,7 @@ theorem hk_cosetFn {K L : Subgroup (GL ι F)} [Fintype (K ⧸ L.subgroupOf K)] (
     refine Finset.sum_congr rfl fun q _ => ?_
     rw [finsum_eq_single _ (QuotientGroup.mk (((q.out : K) : GL ι F) * g))]
     · simp [map_mul]
-    · intro p hp
-      exact ite_eq_right hp
+    · exact fun p hp => ite_eq_right hp
   · intro q _
     refine (Set.finite_singleton (QuotientGroup.mk (((q.out : K) : GL ι F) * g) : GL ι F ⧸ K)).subset ?_
     intro p hp
@@ -455,8 +453,7 @@ theorem hecke_determines : ∀ (F : Type) [Field F] [ValuativeRel F] [Topologica
   have hS : ∀ x, S (a x) = b x := by
     intro x
     have h0 : b (s (a x) - x) = 0 := hker _ (by rw [map_sub, has, sub_self])
-    rw [map_sub, sub_eq_zero] at h0
-    exact h0
+    rwa [map_sub, sub_eq_zero] at h0
   have hint : ∀ g u, S (π g u) = τ g (S u) := by
     intro g u
     obtain ⟨x, rfl⟩ := hsurj u
@@ -714,8 +711,7 @@ theorem exists_hk_avg {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F))
       rw [← QuotientGroup.out_eq' p]
       exact (QuotientGroup.eq.2 h).symm
     rw [h1, zero_smul]
-  · intro h
-    exact absurd (Finset.mem_image_of_mem _ (Finset.mem_univ q)) h
+  · exact fun h => absurd (Finset.mem_image_of_mem _ (Finset.mem_univ q)) h
 
 theorem stable_top {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F))) (hKc : IsCompact (K : Set (GL ι F)))
     {V : Type} [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL ι F) V)
@@ -745,8 +741,7 @@ theorem stable_top {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F))) (
   have hall : ∀ w : V, w ∈ Submodule.span ℂ gen := by
     intro w
     have h1 : w ∈ (⊤ : Subrepresentation π).toSubmodule := Submodule.mem_top
-    rw [← hU] at h1
-    exact h1
+    rwa [← hU] at h1
   have hQ : ∀ w : V, ∃ L₀ : Subgroup K, IsOpen (L₀ : Set K) ∧ ∀ L : Subgroup K, IsOpen (L : Set K) → L ≤ L₀ →
       ∀ [Fintype (K ⧸ L)], ∑ q : K ⧸ L, π ((q.out : K) : GL ι F) w ∈ S := by
     intro w
@@ -776,8 +771,7 @@ theorem stable_top {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F))) (
     | smul c x _ hx =>
       obtain ⟨L₁, h₁, hx⟩ := hx
       refine ⟨L₁, h₁, fun L hLo hL _ => ?_⟩
-      simp only [map_smul, ← Finset.smul_sum]
-      exact S.smul_mem c (hx L hLo hL)
+      simpa only [map_smul, ← Finset.smul_sum] using S.smul_mem c (hx L hLo hL)
   intro w hw
   have hwk : ∀ k ∈ K, π k w = w := fun k hk' => by
     have := hw ⟨k, hk'⟩
@@ -905,8 +899,7 @@ theorem density_core {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F)))
     · intro v hv h
       rw [hTv v hv] at h
       have h2 : φ ⟨v, hv⟩ = 0 := Subtype.ext h
-      have h3 := φ.map_eq_zero_iff.1 h2
-      exact congrArg Subtype.val h3
+      exact congrArg Subtype.val (φ.map_eq_zero_iff.1 h2)
     · intro e he v hv
       have hm := (GlobalTheory.CompanionTheory.HeckeFix.hk_mem_fixed F ι K e he (Y i) (ρ i) v hv).1
       rw [hTv _ hm, hTv v hv]
@@ -966,8 +959,7 @@ theorem isolateAt : ∀ (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace 
         rw [this])
     f
   refine ⟨e, he, v₀, hv₀, l, hl, ?_, ?_⟩
-  · intro v hv
-    exact hh none ⟨v, hv⟩
+  · exact fun v hv => hh none ⟨v, hv⟩
   · intro j w hw
     by_cases hw0 : w = 0
     · rw [hw0]

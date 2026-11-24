@@ -144,8 +144,7 @@ theorem mat_mul (b c : UpqT P Q) : UpqT.mat (b * c) = UpqT.mat b * UpqT.mat c :=
 theorem mat_one : UpqT.mat (1 : UpqT P Q) = 1 := rfl
 
 theorem mat_unitary (b : UpqT P Q) : (UpqT.mat b)ᴴ * Formalism.UG.Jpq P Q * UpqT.mat b = Formalism.UG.Jpq P Q := by
-  have hb := (b : Formalism.UG.Upq P Q).2
-  exact hb
+  exact (b : Formalism.UG.Upq P Q).2
 
 theorem continuous_mat : Continuous (UpqT.mat (P := P) (Q := Q)) := by
   exact Units.continuous_val.comp continuous_subtype_val
@@ -260,7 +259,6 @@ theorem read_iff (hl : L * A = 1) (hr : A * L = 1) (u : UpqT P Q) (hu : UpqT.mat
   constructor
   · rintro ⟨b, hb, h⟩
     rwa [(key b).1 h] at hb
-  · intro h
-    exact ⟨_, h, (key _).2 rfl⟩
+  · exact fun h => ⟨_, h, (key _).2 rfl⟩
 
 end GlobalTheory.VolPairExists

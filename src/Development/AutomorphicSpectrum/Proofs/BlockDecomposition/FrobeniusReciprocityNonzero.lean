@@ -131,8 +131,7 @@ theorem frobFun_smooth (e : (Σ a, m a) ≃ n) {τ : Representation ℂ (GL n k)
       | (rw [map_mul]; rfl)
     rw [mul_inv_cancel_left] at h1
     show R g F = F
-    rw [h1, hstab _ hg]
-    exact hg0
+    rwa [h1, hstab _ hg]
   · show τ (g0⁻¹ * g0) v = v
     rw [inv_mul_cancel, map_one]
     rfl

@@ -143,8 +143,7 @@ theorem reindex {M : Type*} [AddCommGroup M] [Module ℂ M] (c : Pos n → Pos n
   simp only [smul_sub, sub_smul, Finset.sum_sub_distrib]
   have t1 : ∑ i, ∑ j, ∑ k, c i j k • ∑ m, d k m • w i j m = ∑ a, ∑ b, ∑ m, (∑ k, c a b k * d k m) • w a b m := by
     refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
-    simp only [Finset.smul_sum, Finset.sum_smul, smul_smul]
-    exact Finset.sum_comm
+    simpa only [Finset.smul_sum, Finset.sum_smul, smul_smul] using Finset.sum_comm
   have t2 : ∑ i, ∑ j, ∑ k, c i j k • ∑ l, d l j • w i l k = ∑ a, ∑ b, ∑ m, (∑ j, c a j m * d b j) • w a b m := by
     refine Finset.sum_congr rfl fun a _ => ?_
     simp only [Finset.smul_sum, Finset.sum_smul, smul_smul]
@@ -266,12 +265,10 @@ theorem levi_bracket_sum_second (hm : Monotone lev) (hpq : lev p = lev q) {a b :
     · rw [hz, cZ, cY, ite_eq_right, ite_eq_right, sub_zero]
       · rintro ⟨e1, e2, -, e3⟩
         refine hlt (lt_of_lev hm ?_)
-        rw [e1, e3, ← hpq, ← e2]
-        exact hb
+        rwa [e1, e3, ← hpq, ← e2]
       · rintro ⟨e1, e2, -, e3⟩
         refine hlt (lt_of_lev hm ?_)
-        rw [e1, hpq, e2, e3]
-        exact hb
+        rwa [e1, hpq, e2, e3]
       · intro j
         rw [tc, ite_eq_right]
         rintro ⟨e1, -, e2⟩
@@ -314,12 +311,10 @@ theorem levi_bracket_sum_third (hm : Monotone lev) (hpq : lev p = lev q) {a b : 
     · rw [hz, cX, cZ, ite_eq_right, ite_eq_right, sub_zero]
       · rintro ⟨e1, e2, e3, -⟩
         refine hlt (lt_of_lev hm ?_)
-        rw [e3, ← e2, ← hpq, ← e1]
-        exact ha
+        rwa [e3, ← e2, ← hpq, ← e1]
       · rintro ⟨e1, e2, e3, -⟩
         refine hlt (lt_of_lev hm ?_)
-        rw [e3, hpq, e2, ← e1]
-        exact ha
+        rwa [e3, hpq, e2, ← e1]
       · intro i
         rw [tc, ite_eq_right]
         rintro ⟨e1, e2, -⟩
@@ -353,15 +348,13 @@ theorem lin_zero (hm : Monotone lev) (hpq : lev p = lev q) {E : Fin n → Fin n 
       if q = l.1.1 then E p l.1.2 else 0 := by
     by_cases h : q = l.1.1
     · have hlt : p < l.1.2 := lt_of_lev hm (by rw [hpq, h]; exact hl)
-      simp only [h, true_and, ite_true]
-      exact sum_ind hlt fun k => E k.1.1 k.1.2
+      simpa only [h, true_and, ite_true] using sum_ind hlt fun k => E k.1.1 k.1.2
     · simp [h]
   have h2 : ∑ k : Pos n, (if l.1.2 = p ∧ k.1.1 = l.1.1 ∧ k.1.2 = q then (1 : ℂ) else 0) • E k.1.1 k.1.2 =
       if l.1.2 = p then E l.1.1 q else 0 := by
     by_cases h : l.1.2 = p
     · have hlt : l.1.1 < q := lt_of_lev hm (by rw [← hpq, ← h]; exact hl)
-      simp only [h, true_and, ite_true]
-      exact sum_ind hlt fun k => E k.1.1 k.1.2
+      simpa only [h, true_and, ite_true] using sum_ind hlt fun k => E k.1.1 k.1.2
     · simp [h]
   simp only [adC_eq, sub_smul, Finset.sum_sub_distrib]
   rw [h1, h2, hE p q l.1.1 l.1.2, sub_self]
@@ -374,8 +367,7 @@ theorem ann_eq_zero {P : Pos n → Prop} {x : Cn n V} (hx : SuppIn P x) {i : Pos
   exact hi (hx _ (CompanionTheory.D.LK.ann_ne h).2 i (mem_insert_self _ _))
 
 theorem ann_supp {P : Pos n → Prop} {x : Cn n V} (hx : SuppIn P x) (i : Pos n) : SuppIn P (ann i x) := by
-  intro A h j hj
-  exact hx _ (CompanionTheory.D.LK.ann_ne h).2 j (mem_insert_of_mem hj)
+  exact fun A h j hj => hx _ (CompanionTheory.D.LK.ann_ne h).2 j (mem_insert_of_mem hj)
 
 theorem lF_bd : ∀ (n : ℕ) (lev : Fin n → ℕ) (V : Type) [AddCommGroup V] [Module ℂ V]
     (E : Fin n → Fin n → Module.End ℂ V), Monotone lev → GlRel E → ∀ (x : Cn n V), SuppIn (inU lev) x →

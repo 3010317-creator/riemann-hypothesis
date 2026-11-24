@@ -231,9 +231,7 @@ theorem _root_.GlobalTheory.DetInv.datum_scalar_intertwine : ∀ (p : ℕ) [Fact
     rw [hφ, _root_.GlobalTheory.Sandwich.phiInv_mu]
     exact (_root_.GlobalTheory.DetInv.mu_coeff_zero_ne_zero p C v O hv ε hε).2.2
   have hξ : _root_.GlobalTheory.Sandwich.xi ε ≠ 0 := by
-    intro h0
-    have h1 := _root_.GlobalTheory.AinfXi.xi_nzd hv ε hε 1 (by rw [h0, mul_zero])
-    exact one_ne_zero h1
+    exact fun h0 => one_ne_zero (_root_.GlobalTheory.AinfXi.xi_nzd hv ε hε 1 (by rw [h0, mul_zero]))
   have hGF : G * F = _root_.GlobalTheory.Sandwich.mu ε • 1 := D.G_mul_F
   have hFΨ : F = Ψ * F.map φ := D.F_eq
   have hΨΨ' : Ψ * Ψ' = _root_.GlobalTheory.Sandwich.xi ε • 1 := D.Ψ_mul

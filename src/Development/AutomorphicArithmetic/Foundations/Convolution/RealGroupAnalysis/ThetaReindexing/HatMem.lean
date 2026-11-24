@@ -112,8 +112,7 @@ private theorem FF_mem {φ : V4 F → ℂ} (hφ : φ ∈ schwartzBruhatPi (K := 
   have he : FF φ = fun x => φ fun k => rt ((fun _ => 1 : Fin 4 → F) k) * x (eS.symm k) := by
     funext x
     simp [FF]
-  rw [he]
-  exact h
+  rwa [he]
 
 private theorem hat_eq (φ : V4 F → ℂ) (x : V4 F) :
     hat φ x = GroundTheory.Heights₂.Theta.partialFourierPi (FF φ) fun k => rt (sg k) * x (eS k) := by
@@ -154,8 +153,7 @@ theorem UpperTheory.ConvolutionTheory.R2.D.hatMem :
   · have h := comp_signed_mem (F := F) eS sg sg_mul (GroundTheory.Heights₂.Theta.partialFourierPi_mem hF)
     have he : hat φ.1 = fun x => GroundTheory.Heights₂.Theta.partialFourierPi (FF φ.1) fun k => rt (sg k) * x (eS k) :=
       funext (hat_eq φ.1)
-    rw [he]
-    exact h
+    rwa [he]
   · have hP := GroundTheory.Heights₂.Theta.tsum_partialFourierPi hF
     have h1 : Th φ.1 = ∑' ξ : Fin 3 ⊕ Unit → F, FF φ.1 fun s => algebraMap F (A F) (ξ s) := by
       rw [Th, ← (tE (F := F) eS (fun _ => 1) (fun _ => by simp)).tsum_eq]

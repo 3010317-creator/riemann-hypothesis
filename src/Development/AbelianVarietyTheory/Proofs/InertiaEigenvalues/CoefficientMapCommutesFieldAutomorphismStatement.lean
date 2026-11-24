@@ -474,8 +474,7 @@ theorem rename_letRep (g : GL (Fin n) E) (P : MvPolynomial (LtN Dw n) c.F) :
 theorem letRep_unitary (γ : Matrix (Fin n) (Fin n) E) (h : γᴴ * γ = 1) (P : MvPolynomial (LtN Dw n) c.F) :
     letRep n Dw c (uGL γ h) P = gaStar c (γ.map (IsCMField.complexConj E)) P := by
   apply rename_injective _ (Harm.thetaLetterEquiv Dw n).injective
-  rw [rename_letRep, Harm.colAct_apply]
-  rw [← AlgHom.comp_apply, ← AlgHom.comp_apply]
+  rw [rename_letRep, Harm.colAct_apply, ← AlgHom.comp_apply, ← AlgHom.comp_apply]
   refine DFunLike.congr_fun ?_ P
   refine MvPolynomial.algHom_ext fun ⟨τ, i, b⟩ => ?_
   rw [AlgHom.comp_apply, AlgHom.comp_apply, rename_X, Formalism.L2.Pj.gaStar, aeval_X]
@@ -989,8 +988,7 @@ theorem rhoM_map (hj : ∀ σ x, j (embF c σ x) = embF c σ x) {Ix : Type} [Fin
   · show actP lam _ (v' : Pol c.F Ix n) = map _ (actP lam _ (v : Pol c.F Ix n))
     rw [h]
     refine GlobalTheory.IoExtend.polyAction_map _ lam _ _ (fun t => ?_) _
-    refine Matrix.ext fun a b => ?_
-    exact (hj (pl t) _).symm
+    exact Matrix.ext fun a b => (hj (pl t) _).symm
   · simp
 
 theorem exists_stable (hj : ∀ σ x, j (embF c σ x) = embF c σ x) {Ix : Type} [Fintype Ix] (pl : Ix → (E →+* ℂ))

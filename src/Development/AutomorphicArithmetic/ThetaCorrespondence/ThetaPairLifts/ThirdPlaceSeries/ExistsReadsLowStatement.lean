@@ -200,8 +200,7 @@ theorem exists_mv {I : TC B X} (hI : I.Ok) (hP : TC.Pins B X) {l : I.Laws} {Z : 
     exact R.k_T β P r j hr
   obtain ⟨hkU, hkV, -, -⟩ := _root_.GlobalTheory.Mem.Col2.ChEx.basePt_facts B.sp.cm (B.R.N i) hB (A.kb i β) (diaT (Pr := B.primes X) u) (R.k_std β) k3
   refine exists_basePt_on (A.K i hi β).lev (A.kb i β) ?_ (fun v => ?_) S hSf hST
-  · rw [hgr]
-    exact hkU
+  · rwa [hgr]
   · rw [hLb, hgr]
     exact hkV v
 
@@ -220,8 +219,7 @@ theorem rInt_of_stab {m : GL (Fin n) (AfE F E)}
     · exact one_mem _
     · exact zero_mem _
   have h2 := (Formalism.L2.Col.mem_latS_std _).1 ((h _).1 h1) i
-  rw [Matrix.mulVec_single_one] at h2
-  exact h2
+  rwa [Matrix.mulVec_single_one] at h2
 
 end Pt
 
@@ -280,8 +278,7 @@ theorem isPtOf_move (S : Set (HeightOneSpectrum (𝓞 F))) {g k k₁ : GL (Fin n
   have H := LevLiftPt.isPtOf_mul_fr hp hmU h1 h2 hT hh 1 hfr
   have e1 : g * k * m⁻¹ = g * k₁ := by rw [hm]; group
   have e2 : ((1, 1, 1) : UF E n × GLG (E := E) (n := n) (SG := SG) × GLQ E n Q) • p = p := one_smul _ p
-  rw [e1, e2] at H
-  exact H
+  rwa [e1, e2] at H
 
 theorem std_move' (k w : GL (Fin n) (AfE F E)) (hwU : w ∈ Formalism.L2.Herm.UstdAf hc n)
     (hloc : ∀ v : HeightOneSpectrum (𝓞 F),
@@ -330,8 +327,7 @@ theorem isRed_one_of_inv {P : HeightOneSpectrum (𝓞 E)} {k : GL (Fin n) (AfE F
     (fun i j => (val_le_one_of_carries hkl P i j).2)
   have h1 := hA.mul h
   rw [mul_inv_cancel, mul_one] at h1
-  rw [h1.unique LevRead.isRed_one] at hA
-  exact hA
+  rwa [h1.unique LevRead.isRed_one] at hA
 
 end Red
 
@@ -369,8 +365,7 @@ theorem isRed_one_of_topPt (I : TC B X) (hI : I.Ok) (hP : TC.Pins B X) (l : I.La
     obtain ⟨i, hi⟩ := hgw
     have h1 : ((B.primes X).T u : 𝓞 B.fields.E) ∈ w.asIdeal := by
       have h2 : algebraMap (𝓞 B.host.F) (𝓞 B.host.E) (B.T u : 𝓞 B.host.F) ∈ w.asIdeal := hT
-      rw [map_natCast] at h2
-      exact h2
+      rwa [map_natCast] at h2
     have hc : Nat.Coprime ((B.primes X).T u) ((B.primes X).g i) :=
       (Nat.coprime_primes (hPr.T_prime u) (hPr.g_prime i)).2 (hPr.T_ne_g u i)
     have h3 : ((1 : ℕ) : 𝓞 B.fields.E) ∈ w.asIdeal := by
@@ -521,8 +516,7 @@ theorem T_mem_of_vT (hPr : (B.primes X).Ok) (u : B.Word) {P : HeightOneSpectrum 
     rw [← hPr.piT_norm u]
     exact P.asIdeal.mul_mem_right _ h1
   show algebraMap (𝓞 B.host.F) (𝓞 B.host.E) (B.T u : 𝓞 B.host.F) ∈ P.asIdeal
-  rw [map_natCast]
-  exact h2
+  rwa [map_natCast]
 
 theorem not_offPl_SQ (hI : I.Ok) {P : HeightOneSpectrum (𝓞 B.fields.E)} (hP : P ∈ I.SQ) : P.under (𝓞 B.host.F) ∉ offPl I u a := by
   rintro ⟨⟨j, hj⟩, -, -⟩
@@ -622,8 +616,7 @@ theorem moved_is (hI : I.Ok) (hP : TC.Pins B X) (A : TwDat I l Z u a Ch) (hA : A
         (fun P hP' hv => hv.2.1 (T_mem_of_vT hPr u hP')) (fun P hP' => not_offPl_SQ hI hP')
         (fun w hw _ => isRed_one_of_topPt I hI hP l Z u a _ hkl (hA.top β) w hw)
       rwa [one_mul] at this
-    · rw [hs.2.2.2 hm, inv_one, one_mul]
-      exact hb1
+    · rwa [hs.2.2.2 hm, inv_one, one_mul]
   ·
     have hW := mvW_spec hI hP A hA i hi β
     show (MulAut.conj (mvW hI hP A hA i β)).toMonoidHom g ∈ A.U i β ↔ _

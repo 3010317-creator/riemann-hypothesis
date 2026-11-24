@@ -274,13 +274,11 @@ theorem act_zero_eq (B : FB R d O) : B.A.act 0 = 0 := by
     have h := rho_add B 0 0
     rw [add_zero] at h
     have h0 : rho B 0 = 0 := by simpa using h
-    intro i j
-    exact congrFun (congrFun h0 i) j
+    exact fun i j => congrFun (congrFun h0 i) j
   have hdeg1 : ∀ e : Fin 1 × Fin d →₀ ℕ, Finsupp.degree e = 1 → ∃ t, e = Finsupp.single t 1 := by
     intro e he
     obtain ⟨t, ht⟩ : ∃ t, e t ≠ 0 := by
-      by_contra hne
-      push Not at hne
+      by_contra! hne
       have : e = 0 := Finsupp.ext hne
       simp [this] at he
     refine ⟨t, ?_⟩
@@ -420,8 +418,7 @@ theorem comp1_identity_left {n : ℕ} (j : Fin n) : comp1 (pt R d 0) (pt R d j) 
 theorem axOne_prod {ι : Type} (s : Finset ι) (f : ι → PS R 2 d) (h : ∀ i, AxOne (f i)) : AxOne (∏ i ∈ s, f i) := by
   classical
   refine Finset.induction_on s ?_ ?_
-  · simp only [Finset.prod_empty]
-    exact ⟨ev_one _, ev_one _⟩
+  · simpa only [Finset.prod_empty] using ⟨ev_one _, ev_one _⟩
   · intro a s ha ih
     rw [Finset.prod_insert ha]
     exact axOne_mul (h a) ih

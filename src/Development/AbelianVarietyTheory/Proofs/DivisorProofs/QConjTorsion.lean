@@ -102,8 +102,7 @@ theorem _root_.GlobalTheory.WpFam.CoeffConj.main : ∀ (N : ℕ) [NeZero N] (g :
       split_ifs
       · simp only [map_div₀, map_pow, map_sub, map_one, hζ]
       · exact map_zero g
-    · simp only [hk, ite_false]
-      exact ringEquiv_cSum_eq_cSum_vmul_dg N g a hg 1 1 (map_one g) x k
+    · simpa only [hk, ite_false] using ringEquiv_cSum_eq_cSum_vmul_dg N g a hg 1 1 (map_one g) x k
   have hD : g (_root_.GlobalTheory.WpFam.cD N x k) =
       _root_.GlobalTheory.WpFam.cD N (_root_.GlobalTheory.WpFam.vmul x (_root_.GlobalTheory.WpFam.dg a)) k := by
     unfold _root_.GlobalTheory.WpFam.cD
@@ -112,8 +111,7 @@ theorem _root_.GlobalTheory.WpFam.CoeffConj.main : ∀ (N : ℕ) [NeZero N] (g :
       split_ifs
       · simp only [map_div₀, map_pow, map_sub, map_add (f := _), map_mul, map_one, hζ]
       · exact map_zero g
-    · simp only [hk, ite_false]
-      exact ringEquiv_cSum_eq_cSum_vmul_dg N g a hg 2 (-1) (by simp) x k
+    · simpa only [hk, ite_false] using ringEquiv_cSum_eq_cSum_vmul_dg N g a hg 2 (-1) (by simp) x k
   refine ⟨hB, hD, hG, ?_⟩
   have hzero := (_root_.GlobalTheory.WpFam.Act.rightActions N).2.2.2.2.1 x (_root_.GlobalTheory.WpFam.dg a)
   unfold _root_.GlobalTheory.WpFam.cP

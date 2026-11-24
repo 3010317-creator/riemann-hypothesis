@@ -60,14 +60,12 @@ theorem hkSmooth : HkSmooth := by
     have hd : DifferentiableAt ℝ W p := (hWat p hp).differentiableAt (by simp)
     exact ((hasFDerivAt_id p).add (hd.hasFDerivAt.const_smul t)).fderiv
   have hflowc : ∀ z : V × ℝ, z.1 ∈ Y → ContDiffAt ℝ ∞ (fun y : V × ℝ => flow W y.2 y.1) z := by
-    intro z hz
-    exact contDiffAt_fst.add (contDiffAt_snd.smul ((hWat z.1 hz).comp z contDiffAt_fst))
+    exact fun z hz => contDiffAt_fst.add (contDiffAt_snd.smul ((hWat z.1 hz).comp z contDiffAt_fst))
   have hSo : IsOpen {z : V × ℝ | z.1 ∈ Y ∧ flow W z.2 z.1 ∈ Y} := by
     have h := ContinuousOn.isOpen_inter_preimage (f := fun y : V × ℝ => flow W y.2 y.1)
       (s := Prod.fst ⁻¹' Y) (t := Y) ?_ (hY.preimage continuous_fst) hY
     · exact h
-    · intro z hz
-      exact (hflowc z hz).continuousAt.continuousWithinAt
+    · exact fun z hz => (hflowc z hz).continuousAt.continuousWithinAt
   have hsm : ContDiffOn ℝ ∞ (fun z : V × ℝ => hk W z.2 w z.1) {z : V × ℝ | z.1 ∈ Y ∧ flow W z.2 z.1 ∈ Y} := by
     intro z hz
     apply ContDiffAt.contDiffWithinAt

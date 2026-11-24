@@ -331,8 +331,7 @@ theorem supI_closedPoint_eq : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra
     have hunit : IsUnit (RatModel.valLoc ξ z hs ⟨_, hx₀.2 a⟩) := by
       refine IsUnit.of_mul_eq_one v (IsFractionRing.injective V (FractionRing V) ?_)
       have hv0 : algebraMap V (FractionRing V) v ≠ 0 := by
-        intro h0
-        exact (map_ne_zero emb).2 hx₀.1 (by rw [hv, h0, zero_mul])
+        exact fun h0 => (map_ne_zero emb).2 hx₀.1 (by rw [hv, h0, zero_mul])
       rw [map_mul, map_one, ← hw, map_div₀, hv]
       field_simp
     have hu : IsUnit (⟨S.th a / S.th x₀, hx₀.2 a⟩ : M.O z) :=

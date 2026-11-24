@@ -405,8 +405,7 @@ theorem actp_at_point {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Ho
   have e' : ψ (Ideal.Quotient.mk _ (X ((0 : Fin 1), j))) = Ideal.Quotient.mk _ (psTrunc p (g.B.A.act (p : 𝓞 E) j)) := by
     rw [hψ, CIndFrExp2.jetSubstP_mk, aeval_X, cc, map_zero, sub_zero]
   have e2 := DFunLike.congr_fun c (Ideal.Quotient.mk _ (X ((0 : Fin 1), j)))
-  rw [AlgHom.comp_apply, e', hχ₀, AlgHom.comp_apply, Actp.aug_X, map_zero] at e2
-  exact e2
+  rwa [AlgHom.comp_apply, e', hχ₀, AlgHom.comp_apply, Actp.aug_X, map_zero] at e2
 
 theorem actp_vanish : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (X0 : Scheme.{0}) (t : SAB H X0) (k : Type) [Field k] (p : ℕ) [Fact p.Prime] [CharP k p] (x : Sp k ⟶ X0) (d : ℕ) (g : GermAt t x d) (w : Fin d → k) (m : ℕ), (homAt x (jetSubstP p fun q : Fin 1 × Fin d => MvPolynomial.C (w q.2) * MvPolynomial.X ()) ≫ g.x p : overAt x (Jet k Unit p) ⟶ t.G) ^ p = 1 → ∀ j, jq w p m (Ideal.Quotient.mk _ (psIn d (p + m + 1) (![0] : Fin 1 → Fin 2) (g.B.A.act (p : 𝓞 E) j))) = 0 := by
   intro E _ _ _ H _ hst X0 t k _ p _ _ x d g w m hy j
@@ -504,8 +503,7 @@ theorem peG_act_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   simp only [homAt_comp', Over.comp_left] at hcomp
   refine (val_pull hJ _ _ _).trans ?_
   rw [hcomp]
-  refine (val_pull hJ _ _ _).symm.trans ?_
-  exact (val_corr hJ (g.axes _).1 _).trans (val_one _)
+  exact (val_pull hJ _ _ _).symm.trans ((val_corr hJ (g.axes _).1 _).trans (val_one _))
 
 end GlobalTheory.CompanionTheory.Ar.Coc.Pf
 end -- clump:auto

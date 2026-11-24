@@ -188,8 +188,7 @@ theorem iop_pair : ∀ (D : D7) (T T' : Tor D) (N N' : ℕ) (A₁ A₂ A₁' A�
       obtain ⟨b, rfl⟩ := QuotientAddGroup.mk_surjective q
       obtain ⟨a, ha, hab⟩ := h2 b b.2
       obtain ⟨i, hi⟩ := hx.2 (QuotientAddGroup.mk ⟨a, ha⟩)
-      refine ⟨i, (mk_eq_iff _ _ _ _).2 ?_⟩
-      exact (h3 _ _ _ _ (hR i) hab).1 ((mk_eq_iff _ _ _ _).1 hi)
+      exact ⟨i, (mk_eq_iff _ _ _ _).2 ((h3 _ _ _ _ (hR i) hab).1 ((mk_eq_iff _ _ _ _).1 hi))⟩
   exact ⟨n, fun i => x i, y, fun i => ⟨(x i).2, hy i, hR i⟩,
     iop_eq_sum D T A₁ A₂ F hF x hx, iop_eq_sum D T' A₁' A₂' F' hF' x' hx'⟩
 
@@ -237,8 +236,7 @@ theorem Good.embV_sum {D : D7} {T : Tor D} (h : Good D T) {N N' r : ℕ} (a : Fi
     (b : Fin r → Matrix (Fin N') (Fin N) D.host.E) :
     embV D T (∑ j, a j • b j) = ∑ j, D.host.φ₀ (a j : D.host.E) • embV D T (b j) := by
   have := map_sum (h.embHom N N') (fun j => a j • b j) Finset.univ
-  refine this.trans (Finset.sum_congr rfl fun j _ => ?_)
-  exact h.embV_smul _ _
+  exact this.trans (Finset.sum_congr rfl fun j _ => (h.embV_smul _ _))
 
 theorem Good.smul_embV_mem {D : D7} {T : Tor D} (h : Good D T) {N N' : ℕ}
     {Y : Set (Matrix (Fin N') (Fin N) D.host.E)} {w : ℂ} (hw : w ∈ T.abelian₂)
@@ -496,8 +494,7 @@ theorem CjF.eq_zero {M : IntermediateField ℚ ℂ} {ρ : M →ₐ[ℚ] ℂ} {F 
   have : ∀ α, TaylorLogMetric.taylor D F α = 0 := fun α => by
     have h1 := (h.2.2 α).2
     rw [taylor_zero, cj_mem ρ (h.2.2 α).1] at h1
-    have h2 := (map_eq_zero ρ).1 h1.symm
-    exact congrArg Subtype.val h2
+    exact congrArg Subtype.val ((map_eq_zero ρ).1 h1.symm)
   simp [this]
 
 theorem cjF_of {M : IntermediateField ℚ ℂ} {ρ : M →ₐ[ℚ] ℂ} {F F' : VC D N N' → ℂ}
@@ -553,8 +550,7 @@ theorem nsmul_mem_LaB {T : Tor D} (hT : Good D T)
       have h2 := congrArg (hT.embHom N N') ha
 
       rw [map_nsmul, map_sum] at h2
-      refine h2.trans (Finset.sum_congr rfl fun j _ => ?_)
-      exact hT.embV_smul _ _
+      exact h2.trans (Finset.sum_congr rfl fun j _ => (hT.embV_smul _ _))
     rw [smul_comm, h1, Finset.smul_sum]
     refine sum_mem fun j _ => AddSubgroup.subset_closure ⟨_, hst (a j) w hw, j, ?_⟩
     rw [smul_smul, mul_comm]
@@ -577,8 +573,7 @@ theorem nsmul_mem_LaS {T : Tor D} (hT : Good D T)
   | mem z hz =>
     obtain ⟨w, hw, j, rfl⟩ := hz
     have := key w hw _ (hC.2 j)
-    rw [map_nsmul, smul_comm] at this
-    exact this
+    rwa [map_nsmul, smul_comm] at this
   | zero => rw [smul_zero]; exact zero_mem _
   | add y z _ _ hy hz => rw [smul_add]; exact add_mem hy hz
   | neg y _ hy => rw [smul_neg]; exact neg_mem hy
@@ -883,8 +878,7 @@ theorem conj_iop {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hc : Crv D cc δ) (ρ 
     intro x' hx' y' hy' hd
     obtain ⟨x, hx, rx⟩ := b2 x' hx'
     obtain ⟨y, hy, ry⟩ := b2 y' hy'
-    have e := hri x hx y hy ((hiff _ _ _ _ rx ry).2 hd)
-    exact (b4 _ _ rx hx).unique (e ▸ b4 _ _ ry hy)
+    exact (b4 _ _ rx hx).unique ((hri x hx y hy ((hiff _ _ _ _ rx ry).2 hd)) ▸ b4 _ _ ry hy)
   obtain ⟨n, x, x', hx, e1, e2⟩ := _root_.GlobalTheory.ThetaConj.IopRepr.iop_pair D _ _ N N' _ _ _ _ F F' R hfin hri hri' b1 b2 hiff
   have hsq : ((Real.sqrt (n : ℝ) : ℝ) : ℂ) * ((Real.sqrt (n : ℝ) : ℝ) : ℂ) = n := by
     rw [← Complex.ofReal_mul, Real.mul_self_sqrt (Nat.cast_nonneg n)]; simp

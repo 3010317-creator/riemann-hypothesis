@@ -229,8 +229,7 @@ theorem deriv_mul {e : (Fin g → ℂ) → (Sp ℂ ⟶ G.left)} {w w' : Fin g �
     let q : (epsPt y).left := spMap fstC (default : PrimeSpectrum ℂ)
     have hq : v.left q ∈ U := hU1 (Set.mem_univ q)
     rw [← h1] at hq
-    rw [hsub p ((ofTwo y (LinearMap.fst ℂ ℂ ℂ)).left q)]
-    exact hq
+    rwa [hsub p ((ofTwo y (LinearMap.fst ℂ ℂ ℂ)).left q)]
   have key : ∀ (l : ℂ × ℂ →ₗ[ℂ] ℂ) (x : epsPt y ⟶ G) (hx : ⊤ ≤ x.left ⁻¹ᵁ U), ofTwo y l ≫ u = x →
       (evalPt (R := DualNumber ℂ) x.left U hx f).snd =
         l (evalPt (R := TrivSqZeroExt ℂ (ℂ × ℂ)) u.left U hUu f).snd := by

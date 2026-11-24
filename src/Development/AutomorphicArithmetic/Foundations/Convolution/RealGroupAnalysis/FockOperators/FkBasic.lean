@@ -65,9 +65,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.fkBasic :
   · intro N m w i φ hφ
     rw [hs]
     refine Submodule.mem_sup_right ?_
-    refine Submodule.mem_iSup_of_mem w ?_
-    refine Submodule.mem_iSup_of_mem i ?_
-    exact Submodule.mem_map_of_mem hφ
+    exact Submodule.mem_iSup_of_mem w (Submodule.mem_iSup_of_mem i (Submodule.mem_map_of_mem hφ))
   · intro N hN m
     induction m with
     | zero => exact hN

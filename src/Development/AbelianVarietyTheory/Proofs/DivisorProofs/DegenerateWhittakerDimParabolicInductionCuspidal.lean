@@ -75,16 +75,14 @@ theorem eig_eq_bot_of_cut : ∀ (F : Type) [Field F] (ψ : AddChar F ℂ) (r : �
     intro y hy p hp
     unfold eig at hy
     simp only [Submodule.mem_iInf, LinearMap.mem_ker] at hy
-    have h := hy p hp
-    simpa [sub_eq_zero] using h
+    simpa [sub_eq_zero] using hy p hp
   rw [eq_bot_iff]
   intro y hy
   rw [Submodule.mem_bot]
 
   let S : Finset (Fin r) := Finset.univ.filter (fun i => (w.symm i).val < j)
   refine hcusp S ⟨w a, w c, hb, ?_, ?_⟩ y ?_
-  · simp only [S, Finset.mem_filter, Finset.mem_univ, true_and, Equiv.symm_apply_apply]
-    exact haj
+  · simpa only [S, Finset.mem_filter, Finset.mem_univ, true_and, Equiv.symm_apply_apply] using haj
   · simp only [S, Finset.mem_filter, Finset.mem_univ, true_and, Equiv.symm_apply_apply, not_lt]
     exact hjc
   · intro u hu
@@ -379,8 +377,7 @@ theorem eig_conj_eq_leviWh : ∀ (F : Type) [Field F] (ψ : AddChar F ℂ) (r : 
         · rfl
       · rw [hx, levi_apply, ite_eq_left rfl, unip_diag hp']
     have := H (levi b p) hm
-    rw [sigma_levi hσ, hsum, edgeSum_levi] at this
-    exact this
+    rwa [sigma_levi hσ, hsum, edgeSum_levi] at this
   · intro H p hp
     have hp' : x⁻¹ * (p : GL (Fin r) F) * x ∈ unip F r := hp
     have hm : (levi b p : GL (Fin r) F) ∈ unip F r := by
@@ -396,8 +393,7 @@ theorem eig_conj_eq_leviWh : ∀ (F : Type) [Field F] (ψ : AddChar F ℂ) (r : 
         rw [levi_apply, ite_eq_left rfl, ← hx, unip_diag hp']
     have := H (levi b p) hm
     rw [sigma_levi hσ, edgeSum_levi] at this
-    rw [hsum]
-    exact this
+    rwa [hsum]
 
 end GlobalTheory.FinGL.SortWh
 end -- clump:auto
@@ -481,8 +477,7 @@ theorem surj (h1 : χ 1 = 1) (hχ : ∀ u ∈ U, ∀ u' ∈ U, χ (u * u') = χ 
   have hf : ∀ g w, R g w → f g = w := by
     intro g w hw
     have h : ∃ w, R g w := ⟨w, hw⟩
-    simp only [f, dite_eq_left h]
-    exact huniq g _ _ h.choose_spec hw
+    simpa only [f, dite_eq_left h] using huniq g _ _ h.choose_spec hw
   have hf0 : ∀ g, (¬ ∃ w, R g w) → f g = 0 := by
     intro g h
     simp only [f, dite_eq_right h]
@@ -516,8 +511,7 @@ theorem surj (h1 : χ 1 = 1) (hχ : ∀ u ∈ U, ∀ u' ∈ U, χ (u * u') = χ 
   · ext g
     exact fR t ht g
   · funext i
-    apply Subtype.ext
-    exact hf _ _ ⟨i, 1, 1, U.one_mem, by simp, by simp [h1]⟩
+    exact Subtype.ext (hf _ _ ⟨i, 1, 1, U.one_mem, by simp, by simp [h1]⟩)
 
 theorem finrank_eig_coind : ∀ (G : Type) [Group G] (P U : Subgroup G) (V : Type) [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V] (σ : Representation ℂ P V) (χ : G → ℂ), χ 1 = 1 → (∀ u ∈ U, ∀ u' ∈ U, χ (u * u') = χ u * χ u') → ∀ (ι : Type) [Fintype ι] (x : ι → G), (∀ i i' : ι, ∀ p ∈ P, ∀ u ∈ U, p * x i = x i' * u → i = i') → (∀ g : G, (∃ i : ι, ∃ p ∈ P, ∃ u ∈ U, g = p * x i * u) ∨ ∃ y : G, (∃ p ∈ P, ∃ u ∈ U, g = p * y * u) ∧ eig σ {p | y⁻¹ * (p : G) * y ∈ U} (fun p => χ (y⁻¹ * (p : G) * y)) = ⊥) → finrank ℂ (eig (Representation.coind P.subtype σ) (U : Set G) χ) = ∑ i : ι, finrank ℂ (eig σ {p | (x i)⁻¹ * (p : G) * x i ∈ U} (fun p => χ ((x i)⁻¹ * (p : G) * x i))) := by
   intro G _ P U V _ _ _ σ χ h1 hχ ι _ x hx hcov
@@ -604,8 +598,7 @@ theorem pm_mul_inv_mem {b : Fin r → ℕ} {w w' : Equiv.Perm (Fin r)} (h : ∀ 
 theorem unip_le {b : Fin r → ℕ} (hb : Monotone b) : unip F r ≤ blockTri (κ := F) b := by
   intro u hu
   rw [mem_blockTri]
-  intro i k hik
-  exact unip_lower hu (hb.reflect_lt hik)
+  exact fun i k hik => unip_lower hu (hb.reflect_lt hik)
 
 theorem exists_pm {b : Fin r → ℕ} (hb : Monotone b) (g : GL (Fin r) F) :
     ∃ w : Equiv.Perm (Fin r), ∃ p ∈ blockTri (κ := F) b, ∃ u ∈ unip F r, g = p * pm F w * u := by
@@ -648,8 +641,7 @@ theorem key_le_iff (b : Fin r → ℕ) (J : Finset ℕ) (i k : Fin r) :
 
 theorem key_eq_iff (b : Fin r → ℕ) (J : Finset ℕ) (i k : Fin r) : key b J i = key b J k ↔ b i = b k := by
   constructor
-  · intro h
-    exact congrArg (fun z => OrderDual.ofDual (ofLex z).2) h
+  · exact fun h => congrArg (fun z => OrderDual.ofDual (ofLex z).2) h
   · intro h
     unfold key
     rw [h]
@@ -738,8 +730,7 @@ theorem degenerateWhittakerDim_parabolicInduction (F : Type) [Field F] [Fintype 
     intro J J' h z hz
     obtain ⟨i, -, rfl⟩ := Finset.mem_image.1 (Finset.mem_powerset.1 (Finset.mem_filter.1 J.2).1 hz)
     obtain ⟨a, rfl⟩ := (Tuple.sort (key b J.1)).surjective i
-    rw [h, hmem, ← hmem J]
-    exact hz
+    rwa [h, hmem, ← hmem J]
   unfold whCut
   rw [_root_.GlobalTheory.FinGL.MackeyCosets.finrank_eig_coind (GL (Fin r) F) (blockTri b) (unip F r) V σ (fun g => ψ (edgeSum (cutEdge j) g))
     (by simp only [edgeSum_cut_one, AddChar.map_zero_eq_one])

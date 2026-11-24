@@ -158,8 +158,7 @@ private theorem framed_map (hL : ∀ q, Φ.IsLocCond (r0.comp (F.ψ q)) (F.N q) 
     have e : ((r0 s⁻¹).map (algebraMap O R)).map f = (r0 s⁻¹).map (algebraMap O R') := by
       ext a b
       simp
-    rw [map_mul_alg, e] at this
-    exact this
+    rwa [map_mul_alg, e] at this
   · obtain ⟨I, hI⟩ := (hL q).closed R _ (inH_comap h1 (F.ψ q) (F.hψ q))
     have h0 := (hI R (AlgHom.id O R)).1 (h2 q)
     exact (hI R' f).2 fun x hx => by rw [show x = 0 from h0 x hx, map_zero]
@@ -178,8 +177,7 @@ private theorem framed_torus (hL : ∀ q, Φ.IsLocCond (r0.comp (F.ψ q)) (F.N q
   have hm : ∀ h, Φ.HH h → Φ.HH (tc w t h) := (hh_group O ι X w Φ R).2.2.2.2.2 t
   refine ⟨fun s => ?_, fun q => ?_, fun v => hm _ (h3 v), ?_, fun v s => ?_⟩
   · have := hm _ (h1 s)
-    rw [map_mul, tc_fix w t ((r0 s⁻¹).map _) fun a b hab => by simp [h0 _ a b hab]] at this
-    exact this
+    rwa [map_mul, tc_fix w t ((r0 s⁻¹).map _) fun a b hab => by simp [h0 _ a b hab]] at this
   · exact (hL q).torus R _ _ t (inH_comap h1 (F.ψ q) (F.hψ q)) ht (fun g a b => rfl) (h2 q)
   · simp [h4]
   · have := congrArg (tc w t) (h5 v s)
@@ -187,8 +185,7 @@ private theorem framed_torus (hL : ∀ q, Φ.IsLocCond (r0.comp (F.ψ q)) (F.N q
     have e : ((ρ v).hom s).map i' = tc w t (((ρ v).hom s).map i) := by
       ext a b
       exact hi v s a b
-    rw [e]
-    exact this
+    rwa [e]
 
 end
 
@@ -198,8 +195,7 @@ private theorem algHom_ext_on_generators {O X : Type} [CommRing O] [IsLocalRing 
     [IsCO O R'] (f g : B →ₐ[O] R') (h : ∀ s, f (W.z s) = g (W.z s)) : f = g := by
   have hC : ∀ (H : MvPowerSeries W.σ O →ₐ[O] R') (x : O), H (C x) = Algebra.ofId O R' x := fun H x => by
     have := H.commutes x
-    rw [MvPowerSeries.algebraMap_apply] at this
-    exact this
+    rwa [MvPowerSeries.algebraMap_apply] at this
   have hm : ∀ s, f (W.z s) ∈ maximalIdeal R' := fun s => by
     rw [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
     exact hz s
@@ -723,8 +719,7 @@ private theorem loc_iff {N : Subgroup Γ} {L : Cond O rbar} (hL : Φ.IsLocCond r
     have hy' : y.fst = 0 := hy
     rw [Ideal.mem_bot]
     ext <;> simp [hx, hy']
-  · refine Lift.ext (MonoidHom.ext fun s => ?_)
-    exact (lift_fst _ s).trans (lift_fst r s).symm
+  · exact Lift.ext (MonoidHom.ext fun s => ((lift_fst _ s).trans (lift_fst r s).symm))
 
 end Dual
 
@@ -1257,8 +1252,7 @@ theorem UpperTheory.V.Alg.framed_univ :
     filter_upwards [this] with y hy
     refine Matrix.ext fun a b => ?_
     have h := Ideal.Quotient.eq.1 (hy a b)
-    rw [pow_one, ← res_eq_zero_iff O, map_sub, sub_eq_zero, r0.red, r0.red] at h
-    exact h
+    rwa [pow_one, ← res_eq_zero_iff O, map_sub, sub_eq_zero, r0.red, r0.red] at h
   obtain ⟨R0, _, _, _, u, hu⟩ := univ_lift l O Γ ι rbar hΦ hc
   exact framed_of_univ Φ u hu r0 F L hL hL0 B ρ
 end -- clump:auto
@@ -1428,8 +1422,7 @@ private theorem lp_wcomp_mul {O σ X : Type} [CommRing O] [AddCommGroup X] (wt :
     have hp' := Finset.HasAntidiagonal.mem_antidiagonal.1 hp
     by_cases h2 : Finsupp.weight wt p.2 = c
     · rw [coeff_wcomp, ite_eq_right, zero_mul]
-      intro h1
-      exact h (by rw [← hp', map_add (f := _), h1, h2, sub_add_cancel])
+      exact fun h1 => h (by rw [← hp', map_add (f := _), h1, h2, sub_add_cancel])
     · rw [ha _ h2, mul_zero]
 
 private theorem lp_homog_mul {O σ X κ : Type} [CommRing O] [AddCommGroup X] [Fintype κ] (wt : σ → X)
@@ -1800,8 +1793,7 @@ theorem UpperTheory.V.Alg.lemmaP :
       intro u
       have h4 := h3 u
       rw [dite_eq_left u.2] at h4
-      rw [← hc, residue_eq_zero_iff]
-      exact h4
+      rwa [← hc, residue_eq_zero_iff]
     rw [Nat.card_eq_fintype_card]
     exact hli.fintype_card_le_finrank
   obtain ⟨κ', _, wf', hpad⟩ := lp_pad wf (fun j => Module.finrank (ResidueField O) (F.Ob (FormData.adRep hbar j)))
@@ -1823,8 +1815,7 @@ theorem UpperTheory.V.Alg.lemmaP :
       · exact zero_mem _
   · rw [(p1 t).1, (p1 t).2]
     exact t1 t
-  · simp only [(p1 _).2]
-    exact t4 j
+  · simpa only [(p1 _).2] using t4 j
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.LemmaP =====

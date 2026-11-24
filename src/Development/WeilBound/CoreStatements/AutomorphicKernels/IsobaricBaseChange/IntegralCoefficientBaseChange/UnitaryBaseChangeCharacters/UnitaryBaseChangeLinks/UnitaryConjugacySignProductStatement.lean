@@ -743,8 +743,7 @@ theorem exists_norm_of_factors : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have hP0 : P ≠ 0 := hP.1.ne_zero
   have hXP : IsCoprime X P := by
     rw [Polynomial.irreducible_X.coprime_iff_not_dvd]
-    intro hX
-    exact (hself X monic_X irreducible_X hX).2.2.2.1 (by simp)
+    exact fun hX => (hself X monic_X irreducible_X hX).2.2.2.1 (by simp)
   obtain ⟨a, b, hab⟩ := hXP
   have hCH : aeval γ.val P = 0 := Matrix.aeval_self_charpoly _
   have haγ : aeval γ.val a * γ.val = 1 := by
@@ -793,8 +792,7 @@ theorem exists_norm_of_factors : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have hf : ∀ Q : S, AdjoinRoot.mk Q.1 f = AdjoinRoot.mk Q.1 (fQ Q) := by
     intro Q
     have := congrFun hq Q
-    rw [Ideal.quotientInfToPiQuotient_mk] at this
-    exact this
+    rwa [Ideal.quotientInfToPiQuotient_mk] at this
   set g := (f.map σ).comp a * f - m with hg
   have hdiv : ∀ Q ∈ S, Q ∣ g := by
     intro Q hQ
@@ -902,8 +900,7 @@ theorem hasse_norm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r :
   · exact ⟨0, by simp [hx]⟩
   obtain ⟨θ, h0, hθ⟩ : ∃ θ : E, θ ≠ 0 ∧ IsCMField.complexConj E θ = -θ := by
     obtain ⟨w, hw⟩ : ∃ w : E, IsCMField.complexConj E w ≠ w := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact IsCMField.complexConj_ne_one E (AlgEquiv.ext h)
     exact ⟨w - IsCMField.complexConj E w, sub_ne_zero.mpr hw.symm, by simp⟩
   let x' : plus Q := ⟨x, hxx⟩
@@ -993,8 +990,7 @@ theorem aeval_inv_map_eq {E : Type} [Field E] (σ : E →+* E) {n : ℕ} (γ : G
     {L : Type} [Field L] [Algebra E L] (α : L) (hα0 : α ≠ 0) (hroot : aeval α γ.val.charpoly = 0) :
     aeval α⁻¹ (m.map σ) = aeval α m := by
   have hU' : cT σ γ.val = (γ⁻¹).val := by
-    have h := congrArg (· * (γ⁻¹).val) hγ
-    simpa [Matrix.mul_assoc] using h
+    simpa [Matrix.mul_assoc] using congrArg (· * (γ⁻¹).val) hγ
   rw [aeval_def, ← eval_map, ← Matrix.charpoly_map, Matrix.eval_charpoly] at hroot
   obtain ⟨v, hv0, hv⟩ := Matrix.exists_mulVec_eq_zero_iff.2 hroot
   have hAv : (γ.val.map (algebraMap E L)) *ᵥ v = α • v := by
@@ -1078,8 +1074,7 @@ theorem exists_sq_of_split (E : Type) [Field E] [NumberField E] [IsCMField E]
     ∃ s : v.adicCompletion (maximalRealSubfield E),
       s * s = algebraMap (maximalRealSubfield E) (v.adicCompletion (maximalRealSubfield E)) d := by
   classical
-  by_contra hns
-  push Not at hns
+  by_contra! hns
   obtain ⟨w, w', hne, hw, hw'⟩ := hv
   obtain ⟨ψ, -, hb, -⟩ := GlobalTheory.TraceClasses.exists_finite_decomp (maximalRealSubfield E) E
   have hθF : ∀ a : maximalRealSubfield E, (a : E) ≠ θ := by

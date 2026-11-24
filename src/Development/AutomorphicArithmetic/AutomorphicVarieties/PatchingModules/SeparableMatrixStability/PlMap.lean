@@ -76,9 +76,7 @@ theorem UpperTheory.V.Pa.pl_map :
     let top : OpenNormalSubgroup Γ :=
       { toOpenSubgroup := ⊤
         isNormal' := Subgroup.normal_top }
-    have htop : ∀ h ∈ H.comap f, ∃ e : ℕ, h ^ l ^ e ∈ top := by
-      intro h _
-      exact ⟨0, Subgroup.mem_top _⟩
+    have htop : ∀ h ∈ H.comap f, ∃ e : ℕ, h ^ l ^ e ∈ top := fun h _ => ⟨0, Subgroup.mem_top _⟩
     have : Nonempty ι := ⟨⟨top, htop⟩⟩
     let t (i : ι) : Set Γ := f ⁻¹' {y} ∩ (i.1 : Set Γ)
     have hclosed (i : ι) : IsClosed (t i) :=

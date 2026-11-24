@@ -111,8 +111,7 @@ private theorem exists_open_avoid (w : Plc E) (x : GLw n w) (hx : x ≠ 1) :
   swap
   · exact ⟨_, hKo, le_rfl, hxK⟩
   have hne : ∃ i j, x.val i j ≠ (1 : Matrix (Fin n) (Fin n) (w.adicCompletion E)) i j := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hx (Units.ext (Matrix.ext h))
   obtain ⟨i, j, hij⟩ := hne
   haveI : CompactSpace ↥(GlobalTheory.LFun.KGL w (n := n)) := isCompact_iff_compactSpace.1 hKc
@@ -158,8 +157,7 @@ private theorem exists_Kw
       · rw [Function.update_of_ne h]
         exact (h1 w).1
     · rcases Finset.mem_insert.1 hj with rfl | hj
-      · simp only [Function.update_self]
-        exact inf_le_right
+      · simpa only [Function.update_self] using inf_le_right
       · exact (hle j.1).trans (h2 j hj)
 
 end UpperTheory.Gal.CertificateRingHomMap.PNbhd2
@@ -310,8 +308,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pCentralEig2_of :
     rw [← hcg (a * b) g0, map_mul, ← mul_assoc, hcg b, hcg a, smul_smul, mul_comm]
   let χ : Z →* ℂ := { toFun := c, map_one' := h1, map_mul' := hmul }
   refine ⟨Φ, hΦM, hΦ0, χ.toHomUnits, ?_, ?_, ?_⟩
-  · intro z g
-    exact hcg z g
+  · exact fun z g => hcg z g
   · intro z hz
     apply Units.ext
     show c z = 1
@@ -402,8 +399,7 @@ theorem pClassFin_of : ClassFin := by
   have hsel : ∀ y, ψ (sel (ψ y)) = ψ y := by
     intro y
     have h : ∃ z, ψ z = ψ y := ⟨y, rfl⟩
-    simp only [sel, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [sel, dite_eq_left h] using h.choose_spec
   refine ⟨(Finset.univ.image sel ×ˢ F).image (fun p => p.1 * p.2), fun y => ?_⟩
   have hk : ψ ((sel (ψ y))⁻¹ * y) = 1 := by rw [map_mul, map_inv, hsel, inv_mul_cancel]
   obtain ⟨k, u, hu, he⟩ := GlobalTheory.ClassCover.eq_diag_mul_of_classOf _ hk
@@ -618,8 +614,7 @@ private theorem key (hφ : KerForm ι K ξ c φ) {γ γ' : Γ} {u u' k k' : H} (
     apply h1 δ⁻¹ _ hκ
     rw [map_inv, map_inv, eq_inv_of_mul_eq_one_right hc]
   have hcδ : c (ι δ) = 1 := by
-    rw [hcκ, mul_one] at hc
-    exact hc
+    rwa [hcκ, mul_one] at hc
   rw [hu'eq, h3 _ hκ _ hcκ (by rw [map_mul, hcδ, hu, one_mul]), h2 δ u hcδ hu]
   rw [← Module.End.mul_apply, ← map_mul, hδ, mul_inv_cancel_left]
 
@@ -934,9 +929,7 @@ private theorem hecke_eq_sum {G : Type} [Group G] (K : Subgroup G) (h : G → �
   rw [Finset.sum_image (fun a _ b _ e => Quotient.out_injective e)]
   have hsupp : (Function.support fun q : G ⧸ K => h q.out • ρ q.out x) ⊆ hfin.toFinset := by
     intro q hq
-    simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-    intro h0
-    exact hq (by simp [h0])
+    simpa only [Set.Finite.coe_toFinset, Set.mem_setOf_eq] using fun h0 => hq (by simp [h0])
   have hsum : heckeVec ρ K h x = ∑ q ∈ hfin.toFinset, h q.out • ρ q.out x :=
     finsum_eq_sum_of_support_subset _ hsupp
   rw [hsum]
@@ -973,8 +966,7 @@ private theorem sum_mem_forms (hC : LocComm) (hM : LocMem) {w : Plc E} (hw : IsS
     rfl
   refine ⟨fun γ g => ?_, fun k hk g => ?_⟩
 
-  · simp only [map_sum, mul_assoc]
-    exact Finset.sum_congr rfl fun y _ => hΦ.1 γ _
+  · simpa only [map_sum, mul_assoc] using Finset.sum_congr rfl fun y _ => hΦ.1 γ _
   · have hx : comp w k ∈ KGL w (n := n) := (mem_lev.1 hk).2.2 w hS hcS
     set x := comp w k with hxdef
     set k' := (loc hw x)⁻¹ * k with hk'def
@@ -1026,9 +1018,7 @@ private theorem isCompact_ZU : IsCompact (ZU : Set AfQˣ) := by
     simp only [SetLike.mem_coe, Set.mem_preimage, Set.mem_prod, Units.embedProduct_apply, MulOpposite.unop_op,
       GroundTheory.Global.mem_integralFiniteAdeles]
     constructor
-    · intro h
-      have h2 := (ZU.inv_mem h)
-      exact ⟨fun v => (h v).le, fun v => (h2 v).le⟩
+    · exact fun h => ⟨fun v => (h v).le, fun v => ((ZU.inv_mem h) v).le⟩
     · rintro ⟨h1, h2⟩ v
       have h3 : Valued.v ((s : AfQ) v) * Valued.v ((↑s⁻¹ : AfQ) v) = 1 := by
         rw [← map_mul]
@@ -1116,8 +1106,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pKapOf_of :
     UpperTheory.Gal.CertificateRingHomMap.FinToHecke → UpperTheory.Gal.CertificateRingHomMap.XiZeta → UpperTheory.Gal.CertificateRingHomMap.IntSim → UpperTheory.Gal.CertificateRingHomMap.LevOpen → UpperTheory.Gal.CertificateRingHomMap.KapOf := by
   intro hFH hXi hIS hLO E _ _ _ n hn x ζ hζ U W j Up w₀ S Kw hS χ hχ Φ ψ hΦ hψ
   obtain ⟨g₀, hg₀⟩ : ∃ g₀, Φ g₀ ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hΦ.ne (funext h)
   have cancel : ∀ a b : ℂ, a • Φ g₀ = b • Φ g₀ → a = b := fun a b h => smul_left_injective ℂ hg₀ h
   have A : ∀ k ∈ lev S Kw, ∀ h : comp w₀ k ∈ Kw w₀, χ ⟨comp w₀ k, h⟩ = 1 → ∀ g, Φ (g * k) = Φ g := by
@@ -1170,8 +1159,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pKapOf_of :
     have h1 : ψ y = 1 := by
       refine B y fun g => A _ hl (by rw [← hae]; exact a.2) ?_ g
       have e : (⟨comp w₀ (ζ y), by rw [← hae]; exact a.2⟩ : Kw w₀) = a := Subtype.ext hae.symm
-      rw [e]
-      exact ha
+      rwa [e]
     rw [MonoidHom.mem_ker, MonoidHom.inv_apply, h1, inv_one]
   have hprin : ∀ k : Eˣ, (((ψ⁻¹) (diagF E k) : ℂˣ) : ℂ) = (∏ φ : E →+* ℂ, φ (k : E) ^ mOf x W j φ)⁻¹ := by
     intro k
@@ -1555,8 +1543,7 @@ private theorem top_or {lt : Plc E → Plc E → Prop} (h1 : ∀ a b, a ≠ b �
           · exact Or.inl ⟨ha, fun _ => Or.inr ⟨e', h⟩⟩
           · exact Or.inr ⟨hb, fun _ => Or.inr ⟨by rwa [cj_cj], by rwa [cj_cj]⟩⟩
     · exact Or.inl ⟨ha, fun h => absurd h hb⟩
-  · have hb := hup.resolve_left ha
-    exact Or.inr ⟨hb, fun h => absurd (by rwa [cj_cj] at h) ha⟩
+  · exact Or.inr ⟨(hup.resolve_left ha), fun h => absurd (by rwa [cj_cj] at h) ha⟩
 
 private theorem not_both {lt : Plc E → Plc E → Prop} (h2 : ∀ a b, lt a b → ¬ lt b a) {Up : Plc E → Prop} {w₀ w : Plc E}
     (hne : cj w ≠ w) (ha : Top lt Up w₀ w) (hb : Top lt Up w₀ (cj w)) : False := by
@@ -1659,8 +1646,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pRootsAlg_of :
     UpperTheory.Gal.CertificateRingHomMap.RootsAlg := by
   intro q n hq B hB a c ϑ h
   refine ⟨?_, ?_⟩
-  · have h0 := h 0 (Nat.zero_le n)
-    simpa [GlobalTheory.LFun.satEig, Multiset.esymm] using h0
+  · simpa [GlobalTheory.LFun.satEig, Multiset.esymm] using h 0 (Nat.zero_le n)
   · set ρ : ℂ := (((q : ℝ) ^ (((n : ℝ) - 1) / 2) : ℝ) : ℂ) with hρ
     set s : Multiset ℂ := B.map (fun b : ℂˣ => (b : ℂ)) with hs
     have hcard : Multiset.card s = n := by simp [hs, hB]

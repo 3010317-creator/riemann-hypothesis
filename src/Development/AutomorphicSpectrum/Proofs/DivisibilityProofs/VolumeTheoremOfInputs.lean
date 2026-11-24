@@ -464,8 +464,7 @@ theorem tower_I1_of_reference_linked : PB.Coefficients → PB.AgreementPos → P
             Finset.single_le_sum (f := fun m => |(Pfix c).coeff m|) (fun _ _ => abs_nonneg _) hm
         _ ≤ A := Finset.single_le_sum (f := fun c => ∑ m ∈ (Pfix c).support, |(Pfix c).coeff m|)
             (fun _ _ => Finset.sum_nonneg fun _ _ => abs_nonneg _) (Finset.mem_univ c)
-    · rw [notMem_support_iff.1 hm, abs_zero]
-      exact hA0
+    · rwa [notMem_support_iff.1 hm, abs_zero]
   have hl2 : 0 < Real.log 2 := Real.log_pos one_lt_two
   have hS0 : 0 ≤ ∑ c, |C₂ c| * |Cl| := Finset.sum_nonneg fun _ _ => by positivity
   unfold RootTower.I1
@@ -624,8 +623,7 @@ theorem slX_lower_of_stokesAt (hZ : ZhangLowerX.Statement) {II : IntersectionSys
           geomDeg (mCoordIdeal D.y) (MUc X.H X.S' B p q t') D.n := by
       rw [pow_succ]
       field_simp
-    rw [e]
-    exact hz
+    rwa [e]
   have h6 := hS a hyp
   have hj' : 1 ≤ D.j' := by
     have := D.j_le
@@ -719,8 +717,7 @@ private theorem cross_ne_zero_of_linearIndependent (a b : Fin 2 → ℤ) (h : Li
 private theorem card_le_one_of_linearIndependent_cross_zero (I : Submodule ℤ (Fin 2 → ℤ))
     (hI : ∀ v ∈ I, ∀ w ∈ I, v 0 * w 1 - v 1 * w 0 = 0) (ρ : ℕ) (v : Fin ρ → (Fin 2 → ℤ))
     (hv : ∀ a, v a ∈ I) (hli : LinearIndependent ℤ v) : ρ ≤ 1 := by
-  by_contra h
-  push Not at h
+  by_contra! h
   have hli2 : LinearIndependent ℤ ![v ⟨0, by omega⟩, v ⟨1, h⟩] := by
     have h3 := hli.comp (fun i : Fin 2 => (⟨i.1, Nat.lt_of_lt_of_le i.2 h⟩ : Fin ρ))
       (fun i j hij => Fin.ext (by simpa using congrArg Fin.val hij))
@@ -863,8 +860,7 @@ private theorem corrected_weight_regularization_lemma_5 {K : Type} [Fintype K] {
             have h7 : w 0 • e0 = w := by
               funext i
               fin_cases i <;> simp [e0, hw1]
-            rw [h7]
-            exact hwI
+            rwa [h7]
         have hr := relIndex_span_le_natAbs_of_cross_zero I (fun a ha b hb => by rw [← hform]; exact hiso a ha b hb) w hwI hw1
         have hrpos : (0 : ℝ) < ((Submodule.span ℤ {w}).toAddSubgroup.relIndex I.toAddSubgroup : ℝ) := by
           exact_mod_cast Nat.pos_of_ne_zero hrel
@@ -890,8 +886,7 @@ private theorem corrected_weight_regularization_lemma_5 {K : Type} [Fintype K] {
         have h10 := Real.log_le_log (Real.exp_pos _) hkey
         rw [Real.log_exp] at h10
         linarith
-      · rw [Real.log_one, neg_zero]
-        exact hu
+      · rwa [Real.log_one, neg_zero]
   unfold CuspData.cuspWeight
   rw [IsGreatest.csSup_eq ⟨hmem, hub⟩, max_eq_right hu]
 
@@ -1032,8 +1027,7 @@ private theorem exists_cuspData_cuspWeight_eq_of_torus_invariant (K : Type) [Fin
           have := hC z
           positivity
         apply mul_pos hC1
-        by_contra hle
-        push Not at hle
+        by_contra! hle
         have h1 : ((v 0 : ℤ) : ℝ) ^ 2 = 0 := by nlinarith [sq_nonneg ((v 0 : ℤ) : ℝ), sq_nonneg ((v 1 : ℤ) : ℝ)]
         have h2 : ((v 1 : ℤ) : ℝ) ^ 2 = 0 := by nlinarith [sq_nonneg ((v 0 : ℤ) : ℝ), sq_nonneg ((v 1 : ℤ) : ℝ)]
         have e0' : v 0 = 0 := by exact_mod_cast (pow_eq_zero_iff two_ne_zero).mp h1
@@ -1564,8 +1558,7 @@ theorem samePot_congr {P J : Ideal (MRing ι)} {D : ℕ} (R : AnLogRes P J D) {Y
   refine ⟨V, o, m, G, h, fun y hy => ?_⟩
   have := e y hy
   simp only [LocPot.pullback] at this ⊢
-  rw [hW]
-  exact this
+  rwa [hW]
 
 variable {D : ℕ} {σ : Type}
 

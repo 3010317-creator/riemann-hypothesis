@@ -72,13 +72,11 @@ theorem tateWit_of : TateWit := by
   let nu : ℕ → ℤ := fun n => if hn : 0 < n ∧ n.Coprime p then Classical.choose (hroot n hn.1 hn.2) else 0
   have hf : ∀ (n : ℕ) (hn : 0 < n) (hnp : n.Coprime p) a, I.ev n a = e ((n : ℂ)⁻¹ • P (f n a)) := by
     intro n hn hnp a
-    simp only [f, dite_eq_left (And.intro hn hnp)]
-    exact Classical.choose_spec (hlift n hn hnp) a
+    simpa only [f, dite_eq_left (And.intro hn hnp)] using Classical.choose_spec (hlift n hn hnp) a
   have hnu : ∀ (n : ℕ) (hn : 0 < n) (hnp : n.Coprime p), IsCoprime (nu n) n ∧
       ((I.ζ n : ℂˣ) : ℂ) = Complex.exp (-(2 * Real.pi * Complex.I) * (nu n : ℂ) / n) := by
     intro n hn hnp
-    simp only [nu, dite_eq_left (And.intro hn hnp)]
-    exact Classical.choose_spec (hroot n hn hnp)
+    simpa only [nu, dite_eq_left (And.intro hn hnp)] using Classical.choose_spec (hroot n hn hnp)
   have heq : ∀ {n : ℕ}, 0 < n → ∀ v v' : D'.La,
       e ((n : ℂ)⁻¹ • P v) = e ((n : ℂ)⁻¹ • P v') ↔ ∃ w, v = v' + n • w :=
     fun hn v v' => unifCls_eq_iff e P hadd hker hinj hn v v'
@@ -139,7 +137,6 @@ theorem tateWit_of : TateWit := by
     rw [hf N hN hNp a] at h3
     obtain ⟨w, hw⟩ := (heq hN _ _).1 h3
     exact ⟨w, hw⟩
-  · intro n hn hnp a
-    exact hf n hn hnp a
+  · exact fun n hn hnp a => hf n hn hnp a
 
 end UpperTheory.Gal.W2

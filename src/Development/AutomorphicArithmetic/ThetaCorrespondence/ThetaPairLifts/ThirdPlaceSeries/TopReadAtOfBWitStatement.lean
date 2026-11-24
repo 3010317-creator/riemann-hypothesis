@@ -150,11 +150,9 @@ theorem hasRes_red {P : HeightOneSpectrum (𝓞 E)} {a : E} (ha : IntAt P a) :
     le_antisymm (HeightOneSpectrum.valuation_le_one (K := E) P s)
       (not_lt.1 fun hl => hs ((HeightOneSpectrum.valuation_lt_one_iff_mem (K := E) P _).1 hl))
   have h4 : P.valuation E (algebraMap (𝓞 E) E s * (a - algebraMap (𝓞 E) E t)) < 1 := by
-    rw [mul_sub, h, ← map_mul, ← map_sub]
-    exact h2
+    rwa [mul_sub, h, ← map_mul, ← map_sub]
   rw [map_mul, h3, one_mul] at h4
-  rw [← map_sub, valued_algebraMap]
-  exact h4
+  rwa [← map_sub, valued_algebraMap]
 
 variable [StarRing E] {hc : CMData F E} {ST SG Q : Finset (HeightOneSpectrum (𝓞 E))} {g : GL (Fin n) (AfE F E)}
 
@@ -240,8 +238,7 @@ theorem isJ_smul {D : D7} {u : D.what₂.Word} {S : D.what₂.Tau → SPar} {M :
     {j : SmT M →ₗ[ℂ] (Formalism.L2.Forms.FrP D → ℂ)} (h : GlobalTheory.Core.Rk.Top.IsJ u M j) {a : ℂ} (ha : a ≠ 0) :
     GlobalTheory.Core.Rk.Top.IsJ u M (a • j) := by
   constructor
-  · intro x y e
-    exact h.inj (smul_right_injective (Formalism.L2.Forms.FrP D → ℂ) ha e)
+  · exact fun x y e => h.inj (smul_right_injective (Formalism.L2.Forms.FrP D → ℂ) ha e)
   · exact (LinearMap.range_smul j a ha).trans h.range
   · intro τ g hg v w hw y y' hy
     exact congrArg (a * ·) (h.eqv τ g hg v w hw y y' hy)
@@ -250,8 +247,7 @@ theorem levG_one {D : D7} {u : D.what₂.Word} {C : ColumnChain D.R D.what₂.Ta
     {M : MemberForms D.what₂.LL D.what₂.embLL D.what₂.places D.what₂.Tau (D.hcW u) C A Pm} {bad} (K : Formalism.L2.Forms.ClassesAtPrimes M bad)
     {J : Set (GA D D.sp.X')} {χ : GA D D.sp.X' → ℂ} (h1 : ∀ g, g ∈ J ↔ ∃ κ : K.lev.U, GlobalTheory.Core.Rk.Top.HasMat g κ.1)
     (h2 : ∀ g (κ : K.lev.U), GlobalTheory.Core.Rk.Top.HasMat g κ.1 → χ g = star ((K.lev.chi κ : ℂˣ) : ℂ)) : LevG K 1 J χ := by
-  simp only [LevG, inv_one, one_mul, mul_one]
-  exact ⟨h1, h2⟩
+  simpa only [LevG, inv_one, one_mul, mul_one] using ⟨h1, h2⟩
 
 
 end GlobalTheory.TopVal
@@ -306,8 +302,7 @@ theorem card_Dset_le (R : Ranks) (h : HCParam R) : (Dset R h).card ≤ R.N R.m -
           · exact Finset.card_image_le.trans (by simp)
           · exact Finset.card_image_le.trans (by simp)
         · refine (Finset.card_biUnion_le_card_mul _ _ R.t ?_).trans (by simp)
-          intro j _
-          exact Finset.card_image_le.trans (by simp)
+          exact fun j _ => Finset.card_image_le.trans (by simp)
     _ = R.N R.m - 1 := by
         unfold Ranks.N
         have : R.m * (R.t + 1) = R.m + R.m * R.t := by ring
@@ -455,8 +450,7 @@ theorem exists_isJ : ∀ (D : D7) (u : D.what₂.Word) (M : DSModel D.sp.X' (par
     fun A => A.reindex (finCongr h) (finCongr h)
   let fr' : D.what₂.Tau → Matrix (Fin (D.R.N D.R.m - 1)) (Fin (D.R.N D.R.m - 1)) ℂ := fun τ => rd (M.fr τ)
   have hfr' : ∀ τ, IsUnit (fr' τ).det := fun τ => by
-    simp only [fr', rd, Matrix.det_reindex_self]
-    exact GlobalTheory.DefLift.fr_det M τ
+    simpa only [fr', rd, Matrix.det_reindex_self] using GlobalTheory.DefLift.fr_det M τ
   refine ⟨(fnOf (gramC (gramP D) (embT D)) (shiftOf (sgT u)) fr') ∘ₗ Jt, fun _ => ⟨?_, ?_, ?_⟩⟩
   · exact (Formalism.L2.Forms.fnOf_injective _ _ _ hfr').comp hJi
   · rw [LinearMap.range_comp, hJr]
@@ -505,8 +499,7 @@ theorem exists_isJ : ∀ (D : D7) (u : D.what₂.Word) (M : DSModel D.sp.X' (par
         simp only [Matrix.mul_assoc]
         rw [Matrix.nonsing_inv_mul_cancel_left _ _ (hfr' ρ), Matrix.nonsing_inv_mul_cancel_left _ _ (hfr' ρ)]
       have hfe := GlobalTheory.TenTypes.factor_eq (rd mk) (fr' ρ)⁻¹ (y.1 ρ) (y'.1 ρ) hgn_u hoU (shiftOf (sgT u) ρ) (jH ρ (v ρ)) hab
-      rw [Matrix.nonsing_inv_nonsing_inv _ (hfr' ρ)] at hfe
-      exact hfe
+      rwa [Matrix.nonsing_inv_nonsing_inv _ (hfr' ρ)] at hfe
     · have hyρ : y.1 ρ = y'.1 ρ := by rw [hy ρ, Function.update_of_ne hρ, Matrix.one_mul]
       rw [hyρ]
       simp only [Submodule.coe_subtype, Function.update_of_ne hρ]
@@ -582,8 +575,7 @@ theorem lev_set {F E K : Type} [Field F] [NumberField F] [Field E] [NumberField 
     obtain ⟨h1, h2⟩ := (S.U_eq g).1 hy
     refine ⟨h1, rll_St_of_loc n' g fun v => ⟨_, rll_put_mem_St n' v ?_, rll_put_self n' v _⟩⟩
     have := (S.Uloc_lev v (h2 v)).2
-    rw [hL] at this
-    exact this
+    rwa [hL] at this
   have e0 : g ∈ lev hc 1 1 ⟨r, h', t, s, SG, Q, P', cg, xq⟩ ↔
       g ∈ lev hc 1 1 (parDat h t s P χ) ∧ ∀ PP ∈ Q, redFn 1 PP g ∈ blockTri (blk2 r) := by
     rw [mem_lev, mem_lev, mem_parLev, mem_parLev]
@@ -705,8 +697,7 @@ theorem lev_twArgs {K : Ctx} {B : GlobalTheory.Mem.Base} {f : Fr B.toPre} {T : T
         have := t.r.z.lev.Pg
         exact (congrArg (PP.1 ∈ ·) this).mpr PP.2
       have := hg PP.1 PP.2 h'
-      rw [e PP.1 PP.2 h'] at this
-      exact this
+      rwa [e PP.1 PP.2 h'] at this
   run_tac Lean.Elab.Tactic.withMainContext do
     let e ← Lean.Elab.Term.elabTerm (← `($(Lean.mkIdent `key) $(Lean.mkIdent `g))) none
     (← Lean.Elab.Tactic.getMainGoal).assign e
@@ -769,8 +760,7 @@ theorem data_of_bWit_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {p : _roo
     letI := a.x.fin
     letI := a.x.alg
     refine ⟨a.x.pins.keep.beta.2, fun t => ?_, fun g => ?_⟩
-    · have h1 := eq_of_heq (hl _ (hu t)).1
-      exact (congrArg a.x.R.Q (a.x.Y.tupT_tup t)).symm.trans h1
+    · exact (congrArg a.x.R.Q (a.x.Y.tupT_tup t)).symm.trans (eq_of_heq (hl _ (hu t)).1)
     · exact (by with_unfolding_all exact (lev_twArgs a g :))
   exact key (_root_.GlobalTheory.Mem.Top.Bl.realPackageOfBundle b) y.eq hu
 
@@ -1094,8 +1084,7 @@ theorem exists_scalar (hθ : IsInfFam θ) (hp : AllPlus M) (hc : c.Is) (hpr : Is
   have hpol : ∀ v, Formalism.L2.Col.polOf G' (shiftOf lam) o (j v) = (φ v).1 := fun v => by
     have h := Formalism.L2.Col.polOf_fnOf G' (shiftOf lam) o (φ v).1
     rw [ho] at h
-    rw [hφ]
-    exact h
+    rwa [hφ]
   haveI : FiniteDimensional ℂ (VV ℂ lam) := Module.Finite.of_basis (bVV ℂ lam)
   have hB : (pairBK (K := ℂ) lam).flip.Nondegenerate := LinearMap.flip_nondegenerate.mpr (pairingBNondegenerate_holds ℂ _ _ lam)
   let e := LinearEquiv.ofBijective pr (pair_bijective hθ hp hc hpr)
@@ -1125,8 +1114,7 @@ theorem exists_scalar (hθ : IsInfFam θ) (hp : AllPlus M) (hc : c.Is) (hpr : Is
       rw [e1]
       show y.1 ρ = (A ρ).1 * (((A ρ)⁻¹ : GL (Fin V.rank) ℂ).1 * y.1 ρ)
       rw [← Matrix.mul_assoc, Units.mul_inv, Matrix.one_mul]
-    rw [hφ, hφ] at this
-    exact this
+    rwa [hφ, hφ] at this
   obtain ⟨c', hc'⟩ := exists_ext σ lam cv
   have h1 : ∀ u ∈ GinfC V, ∀ x, c' (rhoK lam (infGL θ V u) x) = c.ρ u (c' x) := fun u hu x => by
     refine eqv_real hθ hc lam c' (fun γ hγ x => ?_) hu x
@@ -1386,8 +1374,7 @@ theorem topLev_of_btw_alt {D : D7} {O : Obj D} {c : ℝ} (b : _root_.GlobalTheor
       let d := datXP R P s
       GlobalTheory.Core.Rk.Top.TopLev K₀ (levS D.sp.X' R.βX d) (levChi D.sp.X' R.βX d)
   have hInput : readLevel (_root_.GlobalTheory.Mem.Top.Bl.realPackageOfRealInput y.y) := by
-    intro s hs
-    exact h s hs
+    exact fun s hs => h s hs
   have hBundle : readLevel (_root_.GlobalTheory.Mem.Top.Bl.realPackageOfBundle b) :=
     (congrArg readLevel y.eq).mpr hInput
   exact hBundle t ht
@@ -1503,8 +1490,7 @@ theorem datVal_rows (K : Ctx) (B : GlobalTheory.Mem.Base) (f : Top.Fr B.toPre) (
     subst ha
     rintro φ x ⟨ok, hx⟩ h y hm hu
     have hx' : ((by with_unfolding_all exact ((mtildeKGSD (Pr := B.primes w.px) B.wts w.I.Ch w.I.sel (w.I.tup a)).res ok φ :)) : (R3.famT t).A.fam.amb.FR ⟨w.I.tup a, hs'⟩) = x := by
-      apply eq_of_heq
-      exact (by with_unfolding_all exact (hx :))
+      exact eq_of_heq (by with_unfolding_all exact (hx :))
     have hM := matEq_of_hasMat hm
     have e := h2 B.sp.cm ⟨w.I.tup a, hs'⟩ ⟨⟨ok⟩, φ⟩ ((finHom (w.D Z).sp.X').rangeRestrict h) ⟨y, hu⟩ (by rw [h4]; exact hM)
     have e2 := decoPt_mk B.sp.cm (B.R.N B.R.m - 1) ∅ (rowSG (B.primes w.px) w.I.sel (w.I.tup a)) ⟨y, hu⟩
@@ -1560,8 +1546,7 @@ theorem pkVal_of_bWit_alt : ∀ {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {p
     rw [← hx]
     exact datVal_twArgs K _ _ _ q.w q.Z _ _ _ _ _ _ _ _ _ _ hw.a hs
   have h2 : (fun k : _root_.GlobalTheory.Mem.Top.Bl.RealPackage b.R b.S => DatVal q.w.I q.w.l q.Z (aK := k.B.alg) k.B.Q.Rl.toRealDat k.P.I.tup) (_root_.GlobalTheory.Mem.Top.Bl.realPackageOfBundle b) := by
-    rw [hw.y.eq]
-    exact h1
+    rwa [hw.y.eq]
   obtain ⟨cv, h3, h4⟩ := h2
   exact ⟨cv, h3, h4⟩
 end GlobalTheory.TopVal

@@ -208,8 +208,7 @@ theorem lineDeg_descent : ∀ (k k' : Type) [Field k] [NumberField k] [Field k']
     obtain ⟨𝔓, h𝔓⟩ := hne 𝔭
     have he : π 𝔓 = 𝔭 := (hs 𝔭 𝔓).1 h𝔓
     refine ⟨𝔓, ?_, he⟩
-    simp only [Function.mem_support, he]
-    exact mul_ne_zero (by exact_mod_cast hε 𝔓) h𝔭
+    simpa only [Function.mem_support, he] using mul_ne_zero (by exact_mod_cast hε 𝔓) h𝔭
   refine ⟨hρ, ?_⟩
 
   have harch := GlobalTheory.finrank_mul_sum_embeddings_comp k k' (algebraMap k k') (fun σ => Real.log (r σ))
@@ -373,9 +372,7 @@ theorem GlobalTheory.det_gram_lowerTriangular_coordVec_re : ∀ (g m : ℕ) (f :
       rw [Matrix.mul_apply]; simp only [dotProduct, Matrix.conjTranspose_apply, Pi.star_apply]
     rw [this, Matrix.conjTranspose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc P, hPP, Matrix.one_mul]
     rw [Matrix.smul_apply, Matrix.transpose_apply, smul_eq_mul]; ring
-  have hlow : A.BlockTriangular OrderDual.toDual := by
-    intro i j hij
-    exact hC i j hij
+  have hlow : A.BlockTriangular OrderDual.toDual := fun i j hij => hC i j hij
   rw [hE, Matrix.det_smul, Matrix.det_transpose, Matrix.det_mul, Matrix.det_conjTranspose, Matrix.det_of_lowerTriangular A hlow]
   have : (∏ i, A i i) * star (∏ i, A i i) = ((∏ i, ‖C i i‖ ^ 2 : ℝ) : ℂ) := by
     rw [Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq]
@@ -914,8 +911,7 @@ theorem good_case (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Recipr
   have h1 : homN (U σ₀) x (wtOf Dw (flatWt Dw τ) 0) s.sig ⟨k, w.1⟩ = s.cInf σ₀ := by
     have : homN (U σ₀) x (wtOf Dw (flatWt Dw τ) 0) s.sig ⟨k, w.1⟩ ∈
         homN (U σ₀) x (wtOf Dw (flatWt Dw τ) 0) s.sig '' framesOn (U σ₀) Z := ⟨_, hon, rfl⟩
-    rw [hinf] at this
-    exact this
+    rwa [hinf] at this
   rw [GlobalTheory.CompHS.homN_eq_homFac] at h1
   have h2 := GlobalTheory.evR_frBor_of_mem_secZ GlobalTheory.lawsFieldsSeparately.2.1 Xo c _ s.sig_mem (CAt σ₀) t _ _ hb
   have h3 := GlobalTheory.FrameEval.evR_frMap_of_isReduced E H Dw l Xo c s.sig s.sig_mem.1 φ y z hz
@@ -1089,8 +1085,7 @@ theorem GlobalTheory.PtDeg.FrameExact.comb_comp_eq_of_isDiffOf : ∀ (K : Type) 
         rw [map_smul, ← epsScale_comb, ← epsScale_comb, ← ha, Category.assoc] }
   have hspan : Submodule.span K {c | ∃ u, F.IsCoord u c} = ⊤ := by
     have := (GlobalTheory.CM.LieLattice.lieLat_fg_and_span_eq_top K P F).2
-    rw [GlobalTheory.CM.GenFib.lieLat, Submodule.span_span_of_tower] at this
-    exact this
+    rwa [GlobalTheory.CM.GenFib.lieLat, Submodule.span_span_of_tower] at this
   have hpb : IsPullback F.φ F.P₀.A.hom P.A.hom (spMap (algebraMap (𝓞 K) K)) := F.fib.2.1.1
   have hsub : {c | ∃ u, F.IsCoord u c} ⊆ (Sg : Set _) := by
     rintro c ⟨u, hut, w, hwv, hwc⟩

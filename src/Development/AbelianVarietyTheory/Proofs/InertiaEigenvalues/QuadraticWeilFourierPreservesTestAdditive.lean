@@ -161,8 +161,6 @@ theorem GlobalTheory.JR.WeilQuad.fOp_isTest_add : ∀ (F E : Type) [Nontrivially
   · have := (GlobalTheory.JR.SelfDualUniq.selfDual_exists_unique_isTest F E ψ hψ A.L (beta A x)
       (beta_isSymm A hK hL x) (beta_nondeg A hK hL x)).2 μ hsd.1 φ hφ
     unfold fOp
-    rw [hker]
-    exact this
+    rwa [hker]
   · funext y
-    simp only [fOp, fourB, Pi.add_apply, add_mul]
-    exact integral_add (hint φ hφ y) (hint φ' hφ' y)
+    simpa only [fOp, fourB, Pi.add_apply, add_mul] using integral_add (hint φ hφ y) (hint φ' hφ' y)

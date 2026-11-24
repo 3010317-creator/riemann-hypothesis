@@ -150,8 +150,7 @@ theorem mk_mem_connectedComponent_iff {art : Ideles K →* GlobalTheory.HeckeGal
       beta_reduce at this
       have h1 : (QuotientGroup.mk (Units.map (MonoidHom.inl (InfiniteAdeleRing K) (FiniteAdeleRing (𝓞 K) K)) 1) :
           IdeleClassGroup K) = 1 := by rw [map_one]; rfl
-      rw [h1] at this
-      exact this
+      rwa [h1] at this
     have hcl := closure_minimal hsub hC
     rw [← Subgroup.topologicalClosure_coe] at hcl
     exact hcl hs'
@@ -370,10 +369,7 @@ theorem isUnit_iff_v_eq_one (a : v.adicCompletionIntegers K) :
     have hmem : (a : v.adicCompletion K)⁻¹ ∈ v.adicCompletionIntegers K := by
       show Valued.v ((a : v.adicCompletion K)⁻¹) ≤ 1
       rw [map_inv₀, h, inv_one]
-    refine isUnit_iff_exists_inv.2 ⟨⟨_, hmem⟩, ?_⟩
-    apply Subtype.ext
-    show (a : v.adicCompletion K) * (a : v.adicCompletion K)⁻¹ = 1
-    exact mul_inv_cancel₀ ha0
+    exact isUnit_iff_exists_inv.2 ⟨⟨_, hmem⟩, Subtype.ext (mul_inv_cancel₀ ha0)⟩
 
 theorem isUniformiserAt_iff_isUnifAt (x : (v.adicCompletion K)ˣ) :
     IsUniformiserAt K v (x : v.adicCompletion K) ↔ Formalism.L2.Host.IsUnifAt v x := by
@@ -545,8 +541,7 @@ theorem exists_globalArtinMap {K : Type} [Field K] [NumberField K] [_root_.Numbe
       Art (QuotientGroup.mk s) = Neutral.B1.toAb K ((e.symm.trans σ).trans e) := fun s σ h => by
     rw [hArt, h, hφ]
   refine ⟨Art, ⟨?_, ?_, ?_, ?_, ?_⟩, hArtσ⟩
-  · refine (QuotientGroup.isQuotientMap_mk _).continuous_iff.mpr ?_
-    exact hφc.comp (ha.quot.continuous.inv)
+  · exact (QuotientGroup.isQuotientMap_mk _).continuous_iff.mpr (hφc.comp (ha.quot.continuous.inv))
   · intro c
     obtain ⟨y, rfl⟩ := hφb.2 c
     obtain ⟨x, rfl⟩ := ha.quot.surjective y

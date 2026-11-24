@@ -77,8 +77,7 @@ theorem exists_ne_zero_of_pCrd {o K : Type} [CommRing o] [Field K] {n : ℕ} {x 
     {v : Fin (n + 1) → K} (h : PCrd x v) : ∃ k, v k ≠ 0 := by
   obtain ⟨c, hc⟩ := _root_.GlobalTheory.ZM.DenseFib.exists_spMap (x ≫ PSpace.str o n)
   obtain ⟨hv, -⟩ := (pCrd_iff x c hc.symm v).1 h
-  by_contra hn
-  push Not at hn
+  by_contra! hn
   have : Set.range v ⊆ {0} := by rintro _ ⟨k, rfl⟩; exact hn k
   have h0 : Ideal.span (Set.range v) = ⊥ := by
     rw [Ideal.span_eq_bot]; intro y hy; exact this hy
@@ -107,8 +106,7 @@ theorem pCrd_of_map {o K K' : Type} [CommRing o] [Field K] [Field K'] {n : ℕ} 
     (Units.mk0 (v k / w k) (div_ne_zero hvk hwk))
   have e : (fun j => ((Units.mk0 (v k / w k) (div_ne_zero hvk hwk) : Kˣ) : K) * w j) = v :=
     funext fun j => (hvj j).symm
-  rw [e] at hs
-  exact hs
+  rwa [e] at hs
 
 theorem main : (∀ (o K : Type) [CommRing o] [Field K] (n : ℕ) (x x' : Sp K ⟶ PSpace o n) (v : Fin (n + 1) → K), x ≫ PSpace.str o n = x' ≫ PSpace.str o n → PCrd x v → PCrd x' v → x = x') ∧ (∀ (o K : Type) [CommRing o] [Field K] (n : ℕ) (x : Sp K ⟶ PSpace o n) (v w : Fin (n + 1) → K), PCrd x v → PCrd x w → ∃ a : K, a ≠ 0 ∧ ∀ j, w j = a * v j) ∧ ∀ (o K K' : Type) [CommRing o] [Field K] [Field K'] (n : ℕ) (x : Sp K ⟶ PSpace o n) (v : Fin (n + 1) → K) (i : K →+* K'), PCrd (spMap i ≫ x) (fun j => i (v j)) → PCrd x v :=
   ⟨fun _ _ _ _ _ _ _ _ hs h h' => eq_of_pCrd hs h h',

@@ -404,7 +404,6 @@ private theorem continuous_ph' (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (
 theorem continuous_phe (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (h : IsDSData B d) :
     Continuous (phe B d) := by
   obtain ⟨hlc, -⟩ := B.e_adm
-  show Continuous fun x : B.I.GA => ph B d x.1 * B.e x.2
   exact ((continuous_ph' B d h).comp continuous_fst).mul (hlc.continuous.comp continuous_snd)
 
 private theorem continuous_conj_by_inv (B : RowsAut) (γ : B.I.GA) :

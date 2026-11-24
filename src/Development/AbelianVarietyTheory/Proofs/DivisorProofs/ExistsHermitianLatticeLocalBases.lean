@@ -165,8 +165,7 @@ theorem conjSub_isFullLattice {Λ : Submodule (𝓞 E) (Fin n → E)} (h : Λ.Is
     · rintro ⟨x, hx, rfl⟩
       change star (star x) ∈ Λ
       simpa only [star_star, SetLike.mem_coe] using hx
-    · intro hz
-      exact ⟨star z, mem_conjSub.mp hz, star_star z⟩
+    · exact fun hz => ⟨star z, mem_conjSub.mp hz, star_star z⟩
   simpa only [star_star, heq] using hy' 
 
 theorem exists_coe_iff (z : E) : (∃ b : 𝓞 E, (b : E) = z) ↔ IsIntegral ℤ (star z) := by
@@ -236,8 +235,7 @@ theorem isHerm_spaceW : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G
       exact h _ hx
     · intro h x' hx'
       have := h (star x') (by rw [GlobalTheory.TripleSpaceW.mem_conjSub, star_star]; exact hx')
-      rw [key, ← GlobalTheory.TripleSpaceW.exists_coe_iff, star_star] at this
-      exact this
+      rwa [key, ← GlobalTheory.TripleSpaceW.exists_coe_iff, star_star] at this
   · have e : ((1 : D.host.E) • (spW G i j).gram).map (B.emb w).1 =
         (gramAt D (spW G i j) (τf w)).map (starRingEnd ℂ) := by
       ext a b

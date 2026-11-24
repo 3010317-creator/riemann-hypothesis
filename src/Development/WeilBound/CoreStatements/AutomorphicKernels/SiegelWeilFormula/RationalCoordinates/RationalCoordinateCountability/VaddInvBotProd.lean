@@ -71,8 +71,7 @@ theorem fd_prod' {X Y : Type} [AddCommGroup X] [AddCommGroup Y] [MeasurableSpace
     exact ⟨⟨(g, d), AddSubgroup.mem_prod.2 ⟨hg, hd⟩⟩, hgs, hdt⟩
   · intro g h hgh
     have key : (g : X × Y).1 ≠ (h : X × Y).1 ∨ (g : X × Y).2 ≠ (h : X × Y).2 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hgh (Subtype.ext (Prod.ext hc.1 hc.2))
     rcases key with h1 | h2
     · have hg : (g : X × Y).1 ∈ Γ := (AddSubgroup.mem_prod.1 g.2).1
@@ -108,9 +107,7 @@ theorem vaddInv_bot_prod {X Y : Type} [AddCommGroup X] [AddCommGroup Y] [Measura
   have hfun : (fun x : X × Y => (⟨(0, d), hc⟩ : ((⊥ : AddSubgroup X).prod Δ)) +ᵥ x) =
       Prod.map id (fun z => d + z) := by
     funext x
-    refine Prod.ext ?_ rfl
-    show (0 : X) + x.1 = x.1
-    exact zero_add _
+    exact Prod.ext (zero_add _) rfl
   rw [hfun]
   exact hmp.measure_preimage hu.nullMeasurableSet
 

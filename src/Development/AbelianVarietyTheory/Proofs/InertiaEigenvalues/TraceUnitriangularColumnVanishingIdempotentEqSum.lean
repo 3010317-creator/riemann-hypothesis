@@ -158,14 +158,12 @@ theorem val_diag1 {k : ℕ} (n : ℕ) (u : Gn g k) (hu : IsUniUp (u : Mt g k)) :
   refine val_toG (isUnit_of_isUniUp fun a b => ⟨fun hab => ?_, fun hab => ?_⟩)
   · show (if (a : ℕ) < k ∧ (b : ℕ) < k then entN (u : Mt g k) a b else (1 : Mt g n) a b) = 0
     split_ifs with h
-    · simp only [entN, h, and_self, dite_eq_left]
-      exact (hu _ _).1 hab
+    · simpa only [entN, h, and_self, dite_eq_left] using (hu _ _).1 hab
     · exact Matrix.one_apply_ne hab.ne'
   · subst hab
     show (if (a : ℕ) < k ∧ (a : ℕ) < k then entN (u : Mt g k) a a else (1 : Mt g n) a a) = 1
     split_ifs with h
-    · simp only [entN, h, and_self, dite_eq_left]
-      exact (hu _ _).2 rfl
+    · simpa only [entN, h, and_self, dite_eq_left] using (hu _ _).2 rfl
     · exact Matrix.one_apply_eq _
 
 theorem isUniUp_iff {n : ℕ} (M : Mt g n) : IsUniUp M ↔
@@ -329,8 +327,7 @@ theorem tr_eJ'_eq_wh_tail (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g) ℂ) (
     rw [Finset.sum_eq_single (toG (tl k (x : Mt g (k + 1 + r))))]
     · rw [ite_eq_left ⟨hx, val_toG hU⟩, val_toG hU, sup_split hk _ hx.2, AddChar.map_add_eq_mul, mul_inv]
       ring
-    · intro u _ hu
-      exact ite_eq_right fun h => hu (Units.ext (h.2.trans (val_toG hU).symm))
+    · exact fun u _ hu => ite_eq_right fun h => hu (Units.ext (h.2.trans (val_toG hU).symm))
     · simp
   · simp [hx]
 
@@ -357,8 +354,7 @@ variable {g : ℕ} [Fact g.Prime]
 theorem wh_sum (ψ : AddChar (ZMod g) ℂ) {n : ℕ} {ι : Type} (s : Finset ι) (f : ι → Gn g n → ℂ) :
     wh ψ (fun h => ∑ i ∈ s, f i h) = ∑ i ∈ s, wh ψ (f i) := by
   unfold wh tr
-  simp only [Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [Finset.mul_sum] using Finset.sum_comm
 
 theorem wh_gg_zero (ψ : AddChar (ZMod g) ℂ) : wh ψ (gg ψ 0) = 1 := by
   have hU : ∀ M : Mt g 0, IsUniUp M := fun M a => a.elim0

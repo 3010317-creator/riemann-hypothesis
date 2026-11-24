@@ -94,10 +94,8 @@ theorem shLift_isometry : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] 
     intro δ γ h γ'
     unfold IsNorm at *
     constructor
-    · intro h'
-      exact hnd γ γ' (IsConj.trans h (IsConj.symm h'))
-    · intro h'
-      exact IsConj.trans (IsConj.symm (MonoidHom.map_isConj (incl F F' n) h')) h
+    · exact fun h' => hnd γ γ' (IsConj.trans h (IsConj.symm h'))
+    · exact fun h' => IsConj.trans (IsConj.symm (MonoidHom.map_isConj (incl F F' n) h')) h
   have hcard : ∀ (δ : GL (Fin n) F') (γ : GL (Fin n) F), IsNorm s δ γ → c γ = ((Finset.univ.filter fun γ' => IsNorm s δ γ').card : ℂ) := by
     intro δ γ h
     rw [hc, Nat.card_eq_fintype_card, Fintype.card_subtype]

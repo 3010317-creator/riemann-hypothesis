@@ -157,8 +157,7 @@ theorem finsum_finprod_local_sums_expand : ∀ (ι : Type) (S : Set ι) (Cl : ι
       (hB w (fun hS => h ((hF w).2 ⟨hS, hw⟩))).some else (hTA w hw).1.exists.choose,
       fun x w => dite_eq_left w.2, fun x w hw => ?_⟩
     have hwF : w ∉ F := fun h => hw ((hF w).1 h).2
-    simp only [dite_eq_right hwF, dite_eq_right hw]
-    exact (hTA w hw).1.exists.choose_spec
+    simpa only [dite_eq_right hwF, dite_eq_right hw] using (hTA w hw).1.exists.choose_spec
   obtain ⟨ρ, hρdef⟩ : ∃ ρ : R → ∀ w : F, Cl w, ∀ r (w : F), ρ r w = loc r w :=
     ⟨fun r w => loc r w, fun _ _ => rfl⟩
   obtain ⟨G, hG⟩ : ∃ G : Set R, ∀ r, r ∈ G ↔ ∀ w ∈ S, w ∉ T → good w (loc r w) :=
@@ -184,14 +183,12 @@ theorem finsum_finprod_local_sums_expand : ∀ (ι : Type) (S : Set ι) (Cl : ι
       · rw [hO w hw c0, ite_eq_left hc0, hs1 w hw c0 hc0 d, mul_one]
       · intro c _ hc
         rw [hO w hw c, ite_eq_right (fun hg => hc (huniq w hw c c0 hg hc0)), mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ c0) h
+      · exact fun h => absurd (Finset.mem_univ c0) h
   have hs_ext : ∀ d x, ∏ᶠ w ∈ S, s d w (ext x w) = ∏ w : F, s d w (x w) := by
     intro d x
     rw [prodS]
     · exact Finset.prod_congr rfl fun w _ => by rw [ext_F]
-    · intro w _ hw
-      exact hs1 w hw _ (ext_good x w hw) d
+    · exact fun w _ hw => hs1 w hw _ (ext_good x w hw) d
   have hEx : ∀ x, ∑ d, ∏ w : F, s d w (x w) = if ∃ r, ∀ w ∈ S, loc r w = ext x w then N else 0 := by
     intro x
     rw [← hE (ext x) ?_, finsum_eq_sum_of_fintype]
@@ -248,10 +245,8 @@ theorem finsum_finprod_local_sums_expand : ∀ (ι : Type) (S : Set ι) (Cl : ι
           apply finsum_congr
           intro r
           by_cases hr : r ∈ G
-          · simp only [Set.indicator_apply, hr, ite_true]
-            exact hP1 r hr
-          · simp only [Set.indicator_apply, hr, ite_false]
-            exact hP0 r hr
+          · simpa only [Set.indicator_apply, hr, ite_true] using hP1 r hr
+          · simpa only [Set.indicator_apply, hr, ite_false] using hP0 r hr
       _ = ∑ᶠ x ∈ ρ '' G, ∏ w : F, O w (x w) :=
           (finsum_mem_image (f := fun x : (∀ w : F, Cl w) => ∏ w : F, O w (x w)) hρinj).symm
       _ = _ := by
@@ -352,8 +347,7 @@ theorem goodPlaces (E : Type) [Field E] [NumberField E] (P : E[X]) (hP : P.Separ
     have hl : p.map (algebraMap E (w.adicCompletion E)) ∈
         Polynomial.lifts (intL (w.adicCompletion E)).subtype := by
       rw [Polynomial.lifts_iff_coeffs_subset_range]
-      intro c hc
-      exact ⟨⟨c, hp hc⟩, rfl⟩
+      exact fun c hc => ⟨⟨c, hp hc⟩, rfl⟩
     exact (Polynomial.mem_lifts _).1 hl
   obtain ⟨Q, hQ⟩ := lift P hPw
   obtain ⟨A, hA⟩ := lift a haw
@@ -363,8 +357,7 @@ theorem goodPlaces (E : Type) [Field E] [NumberField E] (P : E[X]) (hP : P.Separ
   have h2 := congrArg (Polynomial.map (algebraMap E (w.adicCompletion E))) hab
   simp only [Polynomial.map_add (f := _), Polynomial.map_mul, Polynomial.map_one] at h2 ⊢
   rw [← Polynomial.derivative_map] at h2 ⊢
-  rw [hQ, hA, hB]
-  exact h2
+  rwa [hQ, hA, hB]
 
 end GlobalTheory.GoodPlaces
 end -- clump:auto
@@ -526,8 +519,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
       (hYc ▸ hQs)
     refine ⟨⟨g, by simpa [UL, hsp] using hgU⟩, Subtype.ext ?_⟩
     show y'.1 = g⁻¹ * y.1 * g
-    rw [← hY, ← hY']
-    exact hgeq
+    rwa [← hY, ← hY']
 
 end GlobalTheory.IntUniq
 end -- clump:auto
@@ -638,8 +630,7 @@ theorem isCoprime_of_sub {P q : k[X]} (t : Finset k[X]) (ht : t ⊆ (normalizedF
   have hqP := Multiset.mem_toFinset.1 hq
   have hrP := Multiset.mem_toFinset.1 (ht hr)
   rw [(irreducible_of_normalized_factor q hqP).coprime_iff_not_dvd]
-  intro hd
-  exact hqt (normalizedFactors_eq_of_dvd P q hqP r hrP hd ▸ hr)
+  exact fun hd => hqt (normalizedFactors_eq_of_dvd P q hqP r hrP hd ▸ hr)
 
 theorem s_prod_sub {P : k[X]} (hP : P ≠ 0) (s : k[X] → ℂ)
     (hmul : ∀ Q₁ Q₂ : k[X], Q₁.Monic → Q₂.Monic → Q₁ * Q₂ ∣ P → IsCoprime Q₁ Q₂ → s (Q₁ * Q₂) = s Q₁ * s Q₂)
@@ -701,8 +692,7 @@ theorem finsum_monic_divisors_sign : ∀ (k : Type) [Field k] (P : k[X]), P.Moni
   · rw [← finsum_comp_equiv (Equiv.ofBijective φ ⟨hinj, hsurj⟩), finsum_eq_sum_of_fintype]
     have hsum : ∑ t : {t // t ∈ F.powerset}, s (Equiv.ofBijective φ ⟨hinj, hsurj⟩ t).1 = ∏ q ∈ F, (1 + s q) := by
       rw [Finset.prod_one_add, ← Finset.sum_coe_sort F.powerset]
-      refine Finset.sum_congr rfl fun t _ => ?_
-      exact s_prod_sub hP s hmul h1 t.1 (Finset.mem_powerset.1 t.2)
+      exact Finset.sum_congr rfl fun t _ => s_prod_sub hP s hmul h1 t.1 (Finset.mem_powerset.1 t.2)
     rw [hsum]
     split_ifs with hall
     · rw [Finset.prod_congr rfl fun q hq => show 1 + s q = 2 by
@@ -1289,8 +1279,7 @@ theorem sign_mul (hU : Unr E) (hn : 1 ≤ n) {P Q₁ Q₂ : E[X]} (hP : P ∈ El
   have key := (_root_.GlobalTheory.KapSignMul.main E hU n hn w (atPl w Q₁) (atPl w Q₂) 1 γ 1 hs hd hcw (csr_at hU hP h1 d1 w)
     (csr_at hU hP h2 d2 w)).1
   have e : atPl w (Q₁ * Q₂) = atPl w Q₁ * atPl w Q₂ := Polynomial.map_mul _
-  rw [e]
-  exact key
+  rwa [e]
 
 def locCl (hU : Unr E) {P : E[X]} (r : {c : TwCl (MonoidHom.id (UE E n)) // c.rep.1.val.charpoly = P}) (w : Pl E) :
     LocCl n P w :=
@@ -1318,8 +1307,7 @@ theorem signs (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSection S) {P
     have d2 : Q₂ ∣ P := dvd_trans (dvd_mul_left _ _) h12
     show ∏ᶠ w ∈ S, _ = (∏ᶠ w ∈ S, _) * ∏ᶠ w ∈ S, _
     rw [← finprod_mem_mul_distrib' (hmfin Q₁ d1) (hmfin Q₂ d2)]
-    refine finprod_mem_congr rfl fun w _ => ?_
-    exact sign_mul hU hn hP h1 h2 h12 hc w _ (x w).2
+    exact finprod_mem_congr rfl fun w _ => sign_mul hU hn hP h1 h2 h12 hc w _ (x w).2
   have hpm : ∀ Q : E[X], Q.Monic → Q ∣ P → σ Q = 1 ∨ σ Q = -1 := by
     intro Q _ _
     refine finprod_mem_induction (fun z : ℂ => z = 1 ∨ z = -1) (Or.inl rfl) ?_ ?_
@@ -1438,8 +1426,7 @@ theorem fixedP (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSection S) {
   case h4 =>
     intro r r' h
     have := (_root_.GlobalTheory.UnitaryClasses.main E hU n hn S hS P hP).1 r.1.rep r'.1.rep r.2 r'.2 fun w hw => by
-      have e := congrArg Subtype.val (h w hw)
-      exact (cls_eq_iff _ _).1 e
+      exact (cls_eq_iff _ _).1 (congrArg Subtype.val (h w hw))
     obtain ⟨g, hg⟩ := this
     apply Subtype.ext
     rw [← cls_rep r.1, ← cls_rep r'.1]

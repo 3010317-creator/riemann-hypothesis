@@ -114,8 +114,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pThLoc_of :
     have hu' : u = locF hw (invT n _ y) := by
       have h2 : (⟨u.1, hmem⟩ : locU n w) = (locE hw).symm (invT n _ y) := by
         apply (locE hw).injective
-        rw [locE_apply, (locE hw).apply_symm_apply]
-        exact hw'
+        rwa [locE_apply, (locE hw).apply_symm_apply]
       exact Subtype.ext (congrArg (fun t : locU n w => t.1) h2)
     show _ = ofU (locF hw _)
     rw [← hu, hu']
@@ -343,8 +342,7 @@ theorem UpperTheory.Gal.W2.Seed.pCenFacts :
     have h' := h4 _ h
     have e : (UpperTheory.Gal.CertificateRingHomMap.cj u).asIdeal = _ :=
       (GlobalTheory.Mem.Chr.conjPl_iff_comap _ _ _).1 (conjPl_conjSrc (GlobalTheory.SplitPts.conjE E) u)
-    rw [e, Ideal.mem_comap, map_natCast] at h'
-    exact h'
+    rwa [e, Ideal.mem_comap, map_natCast] at h'
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PCenFacts =====
@@ -681,8 +679,7 @@ theorem UpperTheory.Gal.W2.Seed.pMemDeck :
     SetLike.coe_mem _
   rw [_root_.mul_inv_rev, ← mul_assoc, hΦ k⁻¹ (hT.1 (K.inv_mem hk)) _,
     hT.2 k⁻¹ (K.inv_mem hk) _]
-  simp only [Units.val_one, one_smul]
-  exact hinv0 _ (T.K₀.inv_mem hx) g
+  simpa only [Units.val_one, one_smul] using hinv0 _ (T.K₀.inv_mem hx) g
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PMemDeck =====
@@ -790,8 +787,7 @@ theorem UpperTheory.Gal.W2.Seed.pMemSum :
     have hcls := memSum_cls hc (q.out * a) (q * (QuotientGroup.mk a : K ⧸ KM.subgroupOf K)).out e y
     have e2 : h * (q.out : X) * ((a : X) * y) = h * ((q.out * a : K) : X) * y := by
       simp only [Subgroup.coe_mul, mul_assoc]
-    rw [e2]
-    exact hcls
+    rwa [e2]
   refine ⟨?_, ?_, ?_⟩
   · show IsBiInv K₀ (memFn K KM K₀ h) ∧ FinDosetSupp K₀ (memFn K KM K₀ h)
     refine ⟨?_, ?_⟩
@@ -865,8 +861,7 @@ theorem UpperTheory.Gal.W2.Seed.pPhiEx :
   refine ⟨fun h => V.Φ (CertificateRingHomMap.th (F.tr.sec h)), h0, h1, ?_, ?_⟩
   · intro g hg
     have := h2 g hg
-    rw [th_eq F]
-    exact this
+    rwa [th_eq F]
   · intro g θ hs
     obtain ⟨-, hcase⟩ := hShape E A n p S F x U w₀ Up V hodd hsc hgen hoff hq r W haux N hrN hst L hw Ty hok g θ hs
     have hA := hActs E A n p S F x U w₀ Up V hodd hsc hgen hoff hq r W haux N hrN hst L hw Ty hok g θ hs
@@ -1010,8 +1005,7 @@ theorem UpperTheory.Gal.W2.Seed.pSeenActs :
     rw [e]; exact this
   · have := hA _ _ _ Ty L' Kw hf hap g.K (S.L.KN g.M.1) (Ty.triv_of_le hK) hf' (hK₀ ▸ g.le)
       (hK₀ ▸ KN_anti g.dvd) hidx hnormK t z g.h hz he (hK₀ ▸ g.adm)
-    rw [hK₀, ← he] at this
-    exact this
+    rwa [hK₀, ← he] at this
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PSeenActs =====
@@ -1039,8 +1033,7 @@ private theorem seenShape_not_both {E : Type} [Field E] [NumberField E] {u : Plc
 private theorem seenShape_nat_mem_cj {E : Type} [Field E] [NumberField E] [IsCMField E] {u : Plc E} {m : ℕ}
     (h : (m : 𝓞 E) ∈ u.asIdeal) : (m : 𝓞 E) ∈ (UpperTheory.Gal.CertificateRingHomMap.cj u).asIdeal := by
   have e := (GlobalTheory.Mem.Chr.conjPl_iff_comap _ _ _).1 (conjPl_conjSrc (GlobalTheory.SplitPts.conjE E) u)
-  rw [e, Ideal.mem_comap, map_natCast]
-  exact h
+  rwa [e, Ideal.mem_comap, map_natCast]
 
 theorem UpperTheory.Gal.W2.Seed.pSeenShape :
     StabKer → SiteFact → CenFacts → LevBasic → UpperTheory.Gal.CertificateRingHomMap.LocComm → SeenShape := by
@@ -1168,8 +1161,7 @@ theorem inId_iff_le (𝔟 : Ideal (𝓞 E)) (y : w.adicCompletion E) : InId w �
         rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, ha]
         exact div_le_one_of_le₀ hle zero_le'
       refine ⟨⟨_, hq⟩ * a, Ideal.mul_mem_left _ _ (Ideal.mem_map_of_mem _ hx), ?_⟩
-      simp only [MulMemClass.coe_mul]
-      exact div_mul_cancel₀ y ha0
+      simpa only [MulMemClass.coe_mul] using div_mul_cancel₀ y ha0
 
 end
 
@@ -1223,8 +1215,7 @@ private lemma inId_of_int {E : Type} [Field E] [NumberField E] (u : Plc E) {𝔟
   refine (inId_iff_le u 𝔟 y).2 ⟨s, hs, ?_⟩
   have h1 : u.intValuation s = 1 :=
     le_antisymm (u.intValuation_le_one s) (not_lt.1 fun h => hu ((u.intValuation_lt_one_iff_mem s).1 h))
-  rw [h1]
-  exact hy
+  rwa [h1]
 
 private lemma q_in_uId {p : ℕ} [Fact p.Prime] (D : Datum p) (q : ℕ) (r : ℤ) : (q : 𝓞 D.F) ∈ uId D q r :=
   Ideal.subset_span (by simp)
@@ -1234,8 +1225,7 @@ private lemma ω_in_uId {p : ℕ} [Fact p.Prime] (D : Datum p) (q : ℕ) (r : �
 
 private lemma exists_not_mem_of_sup {E : Type} [Field E] [NumberField E] (w : Plc E) {𝔞 : Ideal (𝓞 E)} (h : 𝔞 ⊔ w.asIdeal = ⊤) :
     ∃ t ∈ 𝔞, t ∉ w.asIdeal := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have h1 : 𝔞 ≤ w.asIdeal := hc
   rw [sup_eq_right.2 h1] at h
   exact w.isPrime.ne_top h
@@ -1377,12 +1367,10 @@ private theorem card_fibre {G : Type} [Group G] (N P : Subgroup G) [N.Normal] (h
     rw [QuotientGroup.mk_mul, QuotientGroup.out_eq']
   rw [hq]
   constructor
-  · intro hp
-    exact ⟨_, hp, rfl⟩
+  · exact fun hp => ⟨_, hp, rfl⟩
   · rintro ⟨p, hp, e⟩
     rw [QuotientGroup.mk'_apply, QuotientGroup.eq] at e
-    have hm := P.mul_mem hp (hNP e)
-    simpa using hm
+    simpa using P.mul_mem hp (hNP e)
 
 theorem UpperTheory.Gal.W2.Seed.pSumDoset :
     SumDoset := by
@@ -1504,8 +1492,7 @@ theorem UpperTheory.Gal.W2.Seed.pTyFact :
       exact (hS E A n p S F.tr V.S _ hOff.1).1 k' h
     · intro h
       refine ⟨F.tr.sec k, by rw [hj]; exact F.tr.j_sec k, ?_⟩
-      rw [th_eq, CertificateRingHomMap.th_mem_lev]
-      exact h
+      rwa [th_eq, CertificateRingHomMap.th_mem_lev]
   have hKiff : ∀ k, k ∈ Ty.K ↔ k ∈ F.tr.lv (lev V.S (CertificateRingHomMap.levT V.Kw)) ∧ ∀ w ∈ W, (L w).pr k ∈ Iw n w.1 :=
     fun k => (hTy.K_iff k).trans (and_congr_left' (hK1 k))
   have hIK : ∀ w : Plc E, Iw n w ≤ GlobalTheory.LFun.KGL w (n := n) := fun w => by
@@ -1533,8 +1520,7 @@ theorem UpperTheory.Gal.W2.Seed.pTyFact :
   · refine (hKiff _).2 ⟨(hLF' w (hnS w hw').1 (hnS w hw').2).1 y (hIK w.1 hy), fun w' hw'' => ?_⟩
     by_cases e : w = w'
     · subst e
-      rw [(L w).pr_loc]
-      exact hy
+      rwa [(L w).pr_loc]
     · rw [(hAp w' w (hAux.half.apart w' hw'' w hw' (Ne.symm e))).1 y]
       exact one_mem _
   · rw [(hAp w u (h3 u hu)).2 y]

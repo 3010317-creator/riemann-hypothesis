@@ -255,8 +255,7 @@ theorem exists_basis_of_lattice (O E V : Type) [CommRing O] [IsDomain O] [IsPrin
     rw [this, Submodule.span_image, bL.span_eq, Submodule.map_top, Submodule.range_subtype]
   have htop : ⊤ ≤ Submodule.span E (Set.range v) := by
     rw [← hspan, Submodule.span_le]
-    intro x hx
-    exact Submodule.span_subset_span O E _ (hL.ge hx)
+    exact fun x hx => Submodule.span_subset_span O E _ (hL.ge hx)
   let b0 := Module.Basis.mk hliE htop
   have hb0 : ∀ j, b0 j = v j := fun j => Module.Basis.mk_apply hliE htop j
   have hcard := Module.finrank_eq_card_basis b0
@@ -497,8 +496,7 @@ theorem exists_unitary_pullLat_eq : ∀ (E : Type) [Field E] [NumberField E] [Is
     apply e.injective
     rw [hc, ← hψh, ← hψh]
 
-    simp only [stdH, map_sum, map_mul, hcc]
-    exact Finset.sum_congr rfl fun k _ => mul_comm _ _
+    simpa only [stdH, map_sum, map_mul, hcc] using Finset.sum_congr rfl fun k _ => mul_comm _ _
   have hnd : ∀ y, (∀ z, B.herm x y z = 0) → y = 0 := by
     intro y hy
     apply ψ.injective
@@ -732,8 +730,7 @@ theorem mem_cptPart_iff_torusOf_mem_intUnits : ∀ (E : Type) [Field E] [NumberF
       rintro s ⟨hs, hsc⟩
       exact ⟨hs, (key s hs).1 hsc⟩
     exact (hle hc).2
-  · intro hi
-    exact Subgroup.subset_closure ⟨hh, (key h hh).2 hi⟩
+  · exact fun hi => Subgroup.subset_closure ⟨hh, (key h hh).2 hi⟩
 
 end GlobalTheory.KapOrb.CptInt
 end -- clump:auto
@@ -759,8 +756,7 @@ theorem mem_mulLat_unit {O A : Type} [CommRing O] [CommRing A] [Algebra O A] (t 
   constructor
   · rintro ⟨x, hx, rfl⟩
     simpa [LinearMap.mulLeft_apply, Units.inv_mul_cancel_left] using hx
-  · intro h
-    exact ⟨_, h, by simp [LinearMap.mulLeft_apply, Units.mul_inv_cancel_left]⟩
+  · exact fun h => ⟨_, h, by simp [LinearMap.mulLeft_apply, Units.mul_inv_cancel_left]⟩
 
 theorem stabLat_mulLat_unit {O A : Type} [CommRing O] [CommRing A] [Algebra O A] (t : Aˣ)
     (L : Submodule O A) :
@@ -850,8 +846,7 @@ theorem twOrb_eq_orbSum : ∀ {G : Type} [Group G] [TopologicalSpace G] (Kg : Su
     have hM : M (Quotient.out (DoubleCoset.mk (twCent (MonoidHom.id G) δ) Kg g)) = mulLat O (τ h : A) (M g) := by
       rw [hout, hK _ _ hk, (hT h hh).2]
     have hmem : M (Quotient.out (DoubleCoset.mk (twCent (MonoidHom.id G) δ) Kg g)) ∈ X := by
-      rw [hout, hK _ _ hk, hX h hh]
-      exact hL
+      rwa [hout, hK _ _ hk, hX h hh]
     refine ⟨⟨DoubleCoset.mk (twCent (MonoidHom.id G) δ) Kg g, hmem⟩, ?_⟩
     exact (Quot.sound ⟨τ h, (hT h hh).1, hM⟩).symm
   let e : {q : DoubleCoset.Quotient (twCent (MonoidHom.id G) δ : Set G) (Kg : Set G) // M (Quotient.out q) ∈ X} ≃ Orb O Tb X := Equiv.ofBijective φ ⟨hinjφ, hsurjφ⟩
@@ -864,8 +859,7 @@ theorem twOrb_eq_orbSum : ∀ {G : Type} [Group G] [TopologicalSpace G] (Kg : Su
   simp only [havg, hidx]
   rw [_root_.GlobalTheory.KapLat.cast_finsum, ← finsum_comp_equiv e]
   simp only [hwt, one_mul, mul_ite, mul_one, mul_zero]
-  simp only [Rat.cast_natCast]
-  exact finsum_ite_subtype _ _
+  simpa only [Rat.cast_natCast] using finsum_ite_subtype _ _
 
 end GlobalTheory.OrbReindex
 end -- clump:auto
@@ -991,8 +985,7 @@ theorem pullLat_mul_eq_mulLat : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   · rintro ⟨z, hz, rfl⟩
     rw [key]
     show ((a⁻¹ : B.Aˣ) : B.A) * ((a : B.A) * z) ∈ pullLat w B ψ g
-    rw [← mul_assoc, Units.inv_mul, one_mul]
-    exact hz
+    rwa [← mul_assoc, Units.inv_mul, one_mul]
 
 end GlobalTheory.KapOrb
 end -- clump:auto
@@ -1038,8 +1031,7 @@ theorem stdH_unitary {w : Pl E} {K : GlobalTheory.UnitLemma.UQ} {e : K.E ≃+* w
     simp only [Formalism.UG.cT, Matrix.mul_one] at h
     rw [Matrix.map_mul, Matrix.transpose_map, Matrix.map_map] at h
     have hid : (cj w) ∘ (cj w) = id := funext (cj_cj hB)
-    rw [hid, Matrix.map_id, Matrix.map_one _ (map_zero _) (map_one _)] at h
-    exact h
+    rwa [hid, Matrix.map_id, Matrix.map_one _ (map_zero _) (map_one _)] at h
   have hc : ∀ u : Fin n → w.adicCompletion E, (fun k => cj w ((M *ᵥ u) k)) = M.map (cj w) *ᵥ (fun k => cj w (u k)) := by
     intro u; funext k
     exact RingHom.map_mulVec (cj w) M u k
@@ -1053,8 +1045,7 @@ theorem pullLat_selfDual : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   have hMu : Formalism.UG.cT (cj w) M * 1 * M = 1 := by
     have h := hgi
     unfold UL at h
-    rw [ite_eq_right hw] at h
-    exact h
+    rwa [ite_eq_right hw] at h
   have hMg : M * g.val = 1 := by rw [hMdef]; exact Units.inv_mul g
   have hgM : g.val * M = 1 := by rw [hMdef]; exact Units.mul_inv g
   have hint : ∀ a : K.E, a ∈ (algebraMap K.O K.E).range ↔ e a ∈ w.adicCompletionIntegers E := by
@@ -1338,8 +1329,7 @@ theorem pullLat_mul_of_mem_KGL : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
       rw [Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.one_mulVec]
     rw [e]
     exact mulVec_mem_of_mem_GLint hk (fun j => h c j) i
-  · intro h c i
-    exact mulVec_mem_of_mem_GLint hk' (fun j => h c j) i
+  · exact fun h c i => mulVec_mem_of_mem_GLint hk' (fun j => h c j) i
 
 end GlobalTheory.KapOrb
 end -- clump:auto
@@ -1366,9 +1356,7 @@ theorem mem_stabLat_iff_mulLat_eq {O A : Type} [CommRing O] [CommRing A] [Algebr
       exact (ht y).1 hy
     · intro y hy
       have h1 : ((t⁻¹ : Aˣ) : A) * y ∈ L := by
-        rw [ht]
-        rw [← mul_assoc, Units.mul_inv, one_mul]
-        exact hy
+        rwa [ht, ← mul_assoc, Units.mul_inv, one_mul]
       refine ⟨((t⁻¹ : Aˣ) : A) * y, h1, ?_⟩
       change (t : A) * (((t⁻¹ : Aˣ) : A) * y) = y
       rw [← mul_assoc, Units.mul_inv, one_mul]
@@ -1384,8 +1372,7 @@ theorem mem_stabLat_iff_mulLat_eq {O A : Type} [CommRing O] [CommRing A] [Algebr
       have : z = y := by
         have := congrArg (fun w => ((t⁻¹ : Aˣ) : A) * w) hzy
         simpa [← mul_assoc] using this
-      rw [← this]
-      exact hz
+      rwa [← this]
 
 theorem relIndex_stab_eq_relIndex_stabLat : ∀ {G : Type} [Group G] [TopologicalSpace G] (Kg : Subgroup G) (δ : G) {O A : Type} [CommRing O] [CommRing A] [Algebra O A] (Tb : Subgroup Aˣ) (M : G → Submodule O A) (τ : G → Aˣ), (∀ g k : G, k ∈ Kg → M (g * k) = M g) → (∀ g g' : G, M g = M g' → g⁻¹ * g' ∈ Kg) → (∀ h ∈ twCent (MonoidHom.id G) δ, τ h ∈ Tb ∧ ∀ g : G, M (h * g) = GlobalTheory.UnitLemma.mulLat O (τ h : A) (M g)) → (∀ s ∈ Tb, ∃ h ∈ twCent (MonoidHom.id G) δ, τ h = s) → (∀ h ∈ twCent (MonoidHom.id G) δ, ∀ h' ∈ twCent (MonoidHom.id G) δ, τ (h * h') = τ h * τ h') → (∀ h ∈ twCent (MonoidHom.id G) δ, ∀ h' ∈ twCent (MonoidHom.id G) δ, τ h = τ h' → h = h') → (∀ h ∈ twCent (MonoidHom.id G) δ, h ∈ cptPart (twCent (MonoidHom.id G) δ) ↔ τ h ∈ GlobalTheory.UnitLemma.intUnits O A) → ∀ g : G, (twCent (MonoidHom.id G) δ ⊓ Kg.map (MulAut.conj g).toMonoidHom).relIndex (cptPart (twCent (MonoidHom.id G) δ)) = (GlobalTheory.UnitLemma.stabLat O (M g) ⊓ Tb).relIndex (GlobalTheory.UnitLemma.intUnits O A ⊓ Tb) := by
   intro G _ _ Kg δ O A _ _ _ Tb M τ hK hM hτ hsurj hmul hinj hcpt g
@@ -1403,8 +1390,7 @@ theorem relIndex_stab_eq_relIndex_stabLat : ∀ {G : Type} [Group G] [Topologica
   have hCT : cptPart T ≤ T := by
     unfold cptPart
     rw [Subgroup.closure_le]
-    intro x hx
-    exact hx.1
+    exact fun x hx => hx.1
   rw [← Subgroup.relIndex_subgroupOf (H := T ⊓ Kg.map (MulAut.conj g).toMonoidHom) hCT,
     ← Subgroup.relIndex_map_map_of_injective _ _ hinjφ]
   congr 1
@@ -1478,9 +1464,7 @@ theorem twOrb_congruence_eq_N : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have h5 : ∀ s ∈ B.T, ∃ h ∈ twCent (MonoidHom.id (UL n w)) δ, τ h = s := by
     intro s hs
     obtain ⟨h, hU, hc, hspec⟩ := _root_.GlobalTheory.KapOrb.exists_unitary_of_torus E w K e B u x n γ ψ hψ s hs
-    refine ⟨⟨h, hU⟩, ?_, torusOf_spec w B ψ h s hspec⟩
-    show (⟨h, hU⟩ : UL n w) * δ = δ * (MonoidHom.id (UL n w)) ⟨h, hU⟩
-    exact Subtype.ext hc
+    exact ⟨⟨h, hU⟩, Subtype.ext hc, torusOf_spec w B ψ h s hspec⟩
   have hiff : ∀ g : UL n w, M g ∈ B.X x ↔ g.1⁻¹ * γ * g.1 ∈ congSet w n k := by
     intro g
     obtain ⟨hlat, hsd⟩ := _root_.GlobalTheory.KapOrb.SDual.pullLat_selfDual E w hw K e hBr B x n ψ hψ1 hψ3 g.1 g.2

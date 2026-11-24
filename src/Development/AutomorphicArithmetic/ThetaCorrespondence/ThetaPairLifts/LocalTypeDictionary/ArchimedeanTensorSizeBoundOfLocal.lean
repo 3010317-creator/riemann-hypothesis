@@ -354,8 +354,7 @@ theorem exists_box {G : Grid k} (hs : 1 ≤ G.s) (ψ : AddChar k Circle) {ϖ : k
     have := ϖ.ne_zero
     field_simp
     ring
-  rw [cball_eq_smul, Set.mem_smul_set_iff_inv_smul_mem, inv_inv]
-  exact h2
+  rwa [cball_eq_smul, Set.mem_smul_set_iff_inv_smul_mem, inv_inv]
 
 theorem card_vars_le {G : Grid k} (hs : 1 ≤ G.s) {N : ℕ} (hN : ∀ i j, i ≤ G.m → j ≤ G.m → G.rank (i, j) ≤ N) :
     ∑ j : Fin (G.m - 1), Nat.card (StepVar (Fin (topRank G (j + 1))) (G.m - 2 - j) (Fin (topRank G j))) ≤ G.m * N ^ 2 := by
@@ -436,10 +435,8 @@ theorem isDiag_stair {G : Grid k} (hs : 1 ≤ G.s) (J : G.Level) (ϖ : kˣ) (e :
     | zero => exact exists_diag_stair hs ϖ e 0
     | succ j =>
       by_cases hj : j < G.m - 2
-      · simp only [Reps.through, dite_eq_left hj, ite_true]
-        exact exists_diag_stair hs ϖ e (j + 1)
-      · simp only [dite_eq_right hj]
-        exact exists_diag_one _ _ _
+      · simpa only [Reps.through, dite_eq_left hj, ite_true] using exists_diag_stair hs ϖ e (j + 1)
+      · simpa only [dite_eq_right hj] using exists_diag_one _ _ _
   · have : (Reps.through hs J (stair G ϖ e)).elt (fun i => DoubleCoset.mk _ _ (stair G ϖ e (i + 1))) (i, j) = 1 := by
       simp [Reps.elt, onColumn, hi]
     rw [this]
@@ -497,8 +494,7 @@ theorem absLe_datum {μ₀ μ₁ : T} (hL : L.Is μ₀) (S : GridChoice W Set.un
   have hb' : β ⟨P, hl⟩ ∈ unfSupport (psiAt W P) (unitVol P) false
       (Reps.through hs (givenLevel G t P) (stair (locGrid G t P) (unifAt P) (cosExp G P))) (Tflip W S.B t Φ P) := by
     have : keepAt G (⟨P, hl⟩ : locPl G t).1 = false := hkeep
-    rw [this] at hb
-    exact hb
+    rwa [this] at hb
   have hβ' := funext (hO _ hb')
   have hg : IsDiag (locGrid G t P) (unifAt P) (cosExp G P * D.R.m) ((repsAt G t P).elt (β ⟨P, hl⟩)) := by
     rw [hβ']

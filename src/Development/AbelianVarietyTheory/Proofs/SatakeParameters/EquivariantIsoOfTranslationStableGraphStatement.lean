@@ -67,13 +67,11 @@ theorem isoRep_of_stable_graph : ∀ (L : Type) [Field L] [NumberField L] [IsCMF
   have inj1 : ∀ w ∈ W, w.1 = 0 → w = 0 := by
     intro w hw e
     have : w = (0, w.2) := Prod.ext e rfl
-    have h2 := h0 w.2 (this ▸ hw)
-    exact Prod.ext e h2
+    exact Prod.ext e (h0 w.2 (this ▸ hw))
   have inj2 : ∀ w ∈ W, w.2 = 0 → w = 0 := by
     intro w hw e
     have : w = (w.1, 0) := Prod.ext rfl e
-    have h2 := h0' w.1 (this ▸ hw)
-    exact Prod.ext h2 e
+    exact Prod.ext (h0' w.1 (this ▸ hw)) e
   obtain ⟨w₀, hw₀, hw₀ne⟩ := (Submodule.ne_bot_iff W).1 hne
   have le1 : W.map (LinearMap.fst ℂ _ _) ≤ S₁ := by
     rintro _ ⟨w, hw, rfl⟩; exact (hW w hw).1

@@ -63,9 +63,7 @@ private theorem norm_unit (c : Coef l) (u : c.Oˣ) : ‖((u : c.O) : PadicAlgCl 
 private theorem norm_pos_and_lt_one_of_irreducible (c : Coef l) (ϖ : c.O) (hϖ : Irreducible ϖ) :
     0 < ‖(ϖ : PadicAlgCl l)‖ ∧ ‖(ϖ : PadicAlgCl l)‖ < 1 := by
   haveI := c.dvr
-  have hne : (ϖ : PadicAlgCl l) ≠ 0 := by
-    intro h
-    exact hϖ.ne_zero (Subtype.ext h)
+  have hne : (ϖ : PadicAlgCl l) ≠ 0 := fun h => hϖ.ne_zero (Subtype.ext h)
   refine ⟨norm_pos_iff.2 hne, ?_⟩
   have hl : (l : c.O) ≠ 0 := by
     intro h

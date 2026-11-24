@@ -113,13 +113,10 @@ theorem eq_zero_of_piInf : ∀ {F E : Type} [Field F] [NumberField F] [Field E] 
     have inj := (InfinitePlace.Completion.extensionEmbedding w).injective
     intro i
     fin_cases i
-    · show (C.repr x 0).1 w = 0
-      exact inj (e.trans (map_zero _).symm)
-    · show (C.repr x 1).1 w = 0
-      exact inj (hq1.trans (map_zero _).symm)
+    · exact inj (e.trans (map_zero _).symm)
+    · exact inj (hq1.trans (map_zero _).symm)
   have hz : C.repr x = 0 := by
     ext i
-    show C.repr x i = 0
     exact Prod.ext (funext fun w => hre w i) (hfin i)
   simpa using hz
 

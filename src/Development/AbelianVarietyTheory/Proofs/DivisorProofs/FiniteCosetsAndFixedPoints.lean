@@ -457,10 +457,7 @@ theorem t2Space_kq {p : ℕ} [Fact p.Prime] (K : IntermediateField ℚ_[p] (Padi
   let b := Module.Free.chooseBasis ℚ_[p] (KQ p K r)
   let φ : KQ p K r →ₗ[ℚ_[p]] (Module.Free.ChooseBasisIndex ℚ_[p] (KQ p K r) → ℚ_[p]) :=
     Finsupp.lcoeFun ∘ₗ b.repr.toLinearMap
-  have hinj : Function.Injective φ := by
-    intro x y h
-    apply b.repr.injective
-    exact DFunLike.coe_injective h
+  have hinj : Function.Injective φ := fun x y h => b.repr.injective (DFunLike.coe_injective h)
   exact T2Space.of_injective_continuous hinj (IsModuleTopology.continuous_of_linearMap φ)
 
 end GlobalTheory.LKMid
@@ -574,8 +571,7 @@ theorem rho_charpoly_sep (G : HTGroup p) (w : Fin G.m) (y : G.C) (hdeg : (minpol
   set M := G.rho w y with hM
   have hliF : LinearIndependent G.F (fun i : Fin G.n => y ^ (i : ℕ)) := by
     have h := linearIndependent_pow (K := G.F) y
-    rw [hdeg] at h
-    exact h
+    rwa [hdeg] at h
   letI : Module.Free G.F (G.Fw w) := Module.Free.of_divisionRing _ _
   letI : Module.Flat G.F (G.Fw w) := Module.Flat.of_free
   have hliC : LinearIndependent (G.Fw w) (fun i : Fin G.n => z ^ (i : ℕ)) := by
@@ -589,8 +585,7 @@ theorem rho_charpoly_sep (G : HTGroup p) (w : Fin G.m) (y : G.C) (hdeg : (minpol
     apply hΦinj
     rw [map_zero, ← Polynomial.aeval_algHom_apply, hΦz, minpoly.aeval]
   have hdegQ : G.n ≤ (minpoly (G.Fw w) M).natDegree := by
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     rw [Polynomial.aeval_eq_sum_range' hlt, Finset.sum_range] at hzQ
     have hc := Fintype.linearIndependent_iff.1 hliC (fun i => (minpoly (G.Fw w) M).coeff i) hzQ
     apply hQ0
@@ -836,8 +831,7 @@ theorem eventually_rat_mem (p : ℕ) [Fact p.Prime] (q : ℚ) :
     algebraMap ℚ (AfP p) q).2
   filter_upwards [h] with v hv
   have e : (AfP.eval v) (algebraMap ℚ (AfP p) q) = algebraMap ℚ (Qv v) q := (AfP.eval v).commutes q
-  rw [← e]
-  exact hv
+  rwa [← e]
 
 theorem mul_mem_IntV_eventually : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p),
     ∀ᶠ v in (Filter.cofinite : Filter (AwayP p)), ∀ a ∈ IntV G v, ∀ b ∈ IntV G v, a * b ∈ IntV G v := by
@@ -845,9 +839,7 @@ theorem mul_mem_IntV_eventually : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p),
   have hall : ∀ᶠ v in (Filter.cofinite : Filter (AwayP p)), ∀ i j k,
       algebraMap ℚ (Qv v) ((Module.finBasis ℚ G.C).repr
         (Module.finBasis ℚ G.C i * Module.finBasis ℚ G.C j) k) ∈ v.1.adicCompletionIntegers ℚ := by
-    simp only [Filter.eventually_all]
-    intro i j k
-    exact eventually_rat_mem p _
+    simpa only [Filter.eventually_all] using fun i j k => eventually_rat_mem p _
   filter_upwards [hall] with v hv
   intro a ha a' ha'
   obtain ⟨h1, h2, h3, h4⟩ := ha
@@ -972,10 +964,8 @@ theorem exists_glue : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (h : ∀ v : 
   refine ⟨⟨(U, c), hmem⟩, fun v => ?_⟩
   apply Subtype.ext
   apply Prod.ext
-  · apply Units.ext
-    exact hX v
-  · apply Units.ext
-    exact hs v
+  · exact Units.ext (hX v)
+  · exact Units.ext (hs v)
 
 end GlobalTheory.OrbFinAf
 end -- clump:auto
@@ -1118,8 +1108,7 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L : G.Level) (K' : 
       ((gOf w : G.GAf) : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ) = w := by
     intro w g hg
     have h : ∃ g : G.GAf, (g : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ) = w := ⟨g, hg⟩
-    simp only [gOf, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [gOf, dite_eq_left h] using h.choose_spec
   refine ⟨(S' ×ˢ F₂).image (fun q => (gOf (psiAway G x q.1.1) * r₁, psiP G q.1.2 * r₂ * q.2)), ?_⟩
   intro c hc
   obtain ⟨c₁, c₂⟩ := c
@@ -1176,8 +1165,7 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L : G.Level) (K' : 
     apply Subtype.ext
     show (c₁ : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ) = ((toAfF G β x t hx y : G.GAf) : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ) *
       ((gOf (psiAway G x s'.1) : G.GAf) : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ) * ι g
-    rw [hs1]
-    exact hc₁
+    rwa [hs1]
   have e2 : psiP G (dg G.C p γ').2 = toP1 G β y := (formGroupToPadicPointsDegreeOne_eq_unitaryPoints G β y).symm
   have hc₂' : c₂ = toP1 G β y * psiP G s'.2 * (r₂ * k₂ * r₂⁻¹) := by
     rw [← hz₂c, hz2, map_mul, map_mul, e2, ← hk₂e]
@@ -1362,8 +1350,7 @@ theorem ext_of_piV : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (g g' : G.GAf)
     apply finiteAdeleRingAway_eq_of_forall_eval_eq
     intro v
     rw [← basV_repr_map, ← basV_repr_map, h1 v]
-  · apply Units.ext
-    exact finiteAdeleRingAway_eq_of_forall_eval_eq h2
+  · exact Units.ext (finiteAdeleRingAway_eq_of_forall_eval_eq h2)
 
 end GlobalTheory.OrbFinAf
 end -- clump:auto
@@ -1554,8 +1541,7 @@ theorem finite_pts_conj_fixL_sep : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p),
     have h := hsees (γ₀ * y₀ * γ₀⁻¹) b₀.1.1 (left_ne_zero_of_mul hne₀) ⟨b₀.2.1, b₀.2.2, hfix₀⟩
     have e : (((γ₀ * y₀ * γ₀⁻¹ : grp G β) : G.Cˣ × ℚˣ).1 : G.Cˣ) =
         ((γ₀ : G.Cˣ × ℚˣ).1) * ((y₀ : G.Cˣ × ℚˣ).1) * ((γ₀ : G.Cˣ × ℚˣ).1)⁻¹ := by simp
-    rw [e, minpoly_conjC] at h
-    exact h
+    rwa [e, minpoly_conjC] at h
   let z₀ : PosV G v β := mapPosV G v β γ₀⁻¹ b₀.2
   have hz₀ : FixL G v β y₀ z₀.1 := fixL_conj G v β γ₀ y₀ _ hfix₀
   obtain ⟨R1, hR1⟩ := fin_cosets_away_sep p G L f hf β x t hx y₀ hsd.2 hsd.1

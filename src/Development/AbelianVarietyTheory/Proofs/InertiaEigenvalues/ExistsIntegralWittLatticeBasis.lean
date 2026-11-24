@@ -183,8 +183,7 @@ theorem lattice_abstract [IsPrincipalIdealRing O] (hπ : π ≠ 0) (hO : π ∈ 
       have h := congrArg (fun t => ((u⁻¹ : Rˣ) : R) • (Y.adjugate *ᵥ t)) hz'
       simp only [Matrix.mulVec_mulVec, Matrix.adjugate_mul, Matrix.mulVec_smul, Matrix.smul_mulVec,
         Matrix.one_mulVec, hdet] at h
-      rw [smul_smul, mul_left_comm, Units.inv_mul, mul_one, smul_comm] at h
-      exact h
+      rwa [smul_smul, mul_left_comm, Units.inv_mul, mul_one, smul_comm] at h
     have hYx : Y *ᵥ x = π ^ c • z := by
       simp only [x, Matrix.mulVec_mulVec, Matrix.mul_adjugate, Matrix.mulVec_smul, Matrix.smul_mulVec,
         Matrix.one_mulVec, hdet]
@@ -209,9 +208,7 @@ theorem lattice_abstract [IsPrincipalIdealRing O] (hπ : π ≠ 0) (hO : π ∈ 
     simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply]
     refine mul_left_cancel₀ (pow_ne_zero c hπ) ?_
     linear_combination this
-  have h3 := Matrix.eq_zero_of_mulVec_eq_zero hP h2
-  intro i
-  exact ⟨w' i, sub_eq_zero.1 (congrFun h3 i)⟩
+  exact fun i => ⟨w' i, sub_eq_zero.1 (congrFun (Matrix.eq_zero_of_mulVec_eq_zero hP h2) i)⟩
 
 end abstract
 

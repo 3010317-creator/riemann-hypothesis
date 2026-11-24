@@ -88,8 +88,7 @@ lemma dotProduct_padZero {m N : ℕ} (h : m ≤ N) (F : Fin N → R) (v : Fin m 
   · intro i hi
     simp only [padZero]
     rw [dite_eq_right, mul_zero]
-    intro hlt
-    exact hi ⟨⟨i, hlt⟩, Fin.ext rfl⟩
+    exact fun hlt => hi ⟨⟨i, hlt⟩, Fin.ext rfl⟩
   · intro i
     simp [restrFirst, padZero]
 
@@ -128,8 +127,7 @@ lemma map_mem_uniSeq {m N : ℕ} (e : (Fin m → R) → (Fin N → R)) (A : (Fin
   · rintro ⟨f, hf⟩
     refine ⟨fun i => A (f i), fun i j hi hj => ?_⟩
     have := hf i j (by simpa using hi) (by simpa using hj)
-    rw [List.getElem_map, hA] at this
-    exact this
+    rwa [List.getElem_map, hA] at this
   · rintro ⟨f, hf⟩
     refine ⟨fun i => B (f i), fun i j hi hj => ?_⟩
     rw [List.getElem_map, hB]
@@ -203,15 +201,12 @@ theorem GlobalTheory.SeqCx.exactAt_uniSeq_killed_by_split : ∀ (R : Type) [Comm
     · rintro ⟨hw, h⟩
       have hw' : w.map (fun u => e (restrFirst hmN (G *ᵥ u))) = w := by
         conv_rhs => rw [← List.map_id w]
-        apply List.map_congr_left
-        intro u hu
-        exact (hkey u).mp (fun y hy => h y hy u hu)
+        exact List.map_congr_left (fun u hu => (hkey u).mp (fun y hy => h y hy u hu))
       refine ⟨w.map (fun u => restrFirst hmN (G *ᵥ u)), ?_, ?_⟩
       · rw [← map_mem_uniSeq e _ _ hA hB, List.map_map]
         convert hw using 1
         exact hw'
-      · rw [List.map_map]
-        exact hw'
+      · rwa [List.map_map]
     · rintro ⟨vs, hvs, rfl⟩
       refine ⟨(map_mem_uniSeq e _ _ hA hB vs).mpr hvs, ?_⟩
       intro y hy u hu
@@ -810,8 +805,7 @@ open GlobalTheory.SeqCx
 namespace GlobalTheory.SeqCx.ColDecomp
 
 lemma inj_pair {V W : Type} (l : List V) : Function.Injective (fun w : List W => (l, w)) := by
-  intro u v h
-  exact (Prod.mk.inj h).2
+  exact fun u v h => (Prod.mk.inj h).2
 
 open Classical in
 lemma sum_apply_pair {V W : Type} (T : Finset (List V)) (g : List V → List W →₀ ℤ) (l : List V) (w : List W) :
@@ -824,8 +818,7 @@ lemma sum_apply_pair {V W : Type} (T : Finset (List V)) (g : List V → List W �
       apply Finsupp.mapDomain_notin_range
       rintro ⟨w', hw'⟩
       exact hne (congrArg Prod.fst hw')
-    · intro hl
-      exact absurd h hl
+    · exact fun hl => absurd h hl
   · apply Finset.sum_eq_zero
     intro l' hl'
     apply Finsupp.mapDomain_notin_range
@@ -886,8 +879,7 @@ theorem GlobalTheory.SeqCx.vertical_exact_of_columns : ∀ (V W : Type) (D : Set
     have := hsupp z hz
     exact ⟨this.2.1, z.2, this.1⟩
   have hy : ∀ l ∈ T, ∃ y ∈ chains {w | (l, w) ∈ D} (b + 1), bd W y = g l := by
-    intro l hl
-    exact hex l (hpre l hl).1 (hpre l hl).2 (g l) (hchain l hl) (hcyc l hl)
+    exact fun l hl => hex l (hpre l hl).1 (hpre l hl).2 (g l) (hchain l hl) (hcyc l hl)
   choose! y hymem hybd using hy
   refine ⟨∑ l ∈ T, Finsupp.mapDomain (fun w => (l, w)) (y l), ?_, ?_⟩
   · refine Submodule.sum_mem _ (fun l hl => ?_)
@@ -939,8 +931,7 @@ theorem exactAt_split_kill_uni : ∀ (R : Type) [CommRing R] (s : ℕ), StableRa
       exact h2 y hy z hz
   rw [hF]
   refine _root_.GlobalTheory.SeqCx.exactAt_of_links _ _ {y : (Fin n → R) × (Fin n → R) | ∀ z ∈ γ, z.2 ⬝ᵥ y.1 = 0} ?_ a ?_
-  · intro l hl l' hl'
-    exact ⟨hsubS l hl.1 l' hl', fun y hy z hz => hl.2 y (hl'.subset hy) z hz⟩
+  · exact fun l hl l' hl' => ⟨hsubS l hl.1 l' hl', fun y hy z hz => hl.2 y (hl'.subset hy) z hz⟩
   · intro σ hσ hσlen
     obtain ⟨ρ, hρ, hρlen, hlink⟩ := T.exists_splitSeq_linkIn_orthogonal_eq_linkIn R n γ σ hγ hσ.1 hσ.2
     rw [hlink]
@@ -975,8 +966,7 @@ theorem splitPairs_subClosed2 : ∀ (R : Type) [CommRing R] (n : ℕ), SubClosed
     refine ⟨fun i => F (g i), fun i j => ?_⟩
     rw [hg j, hF]
     simp only [g.eq_iff_eq]
-  · intro y hy u hu
-    exact h3 y (hx.subset hy) u (hw.subset hu)
+  · exact fun y hy u hu => h3 y (hx.subset hy) u (hw.subset hu)
 
 end GlobalTheory.SeqCx
 
@@ -1014,8 +1004,7 @@ theorem zigzag_double_complex : ∀ (A : Type) [AddCommGroup A] (C : ℕ → ℕ
       refine ⟨y - v u, Submodule.sub_mem _ hy (hC2 (a + 1) (b + 1) u hu), ?_, ?_⟩
       · rw [map_sub, hhv u, hu', hvz', sub_self]
       · rw [map_sub, hvv u, sub_zero, hyc]
-  intro c hc hhc hvc
-  exact key p 0 (by simp) c hc hhc hvc
+  exact fun c hc hhc hvc => key p 0 (by simp) c hc hhc hvc
 
 end GlobalTheory
 end -- clump:auto

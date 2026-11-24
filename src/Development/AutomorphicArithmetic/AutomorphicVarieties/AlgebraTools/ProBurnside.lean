@@ -188,8 +188,7 @@ private theorem count_step (l : ℕ) [hl : Fact l.Prime] (G : Type) [Group G] :
     intro S _ hS
     refine ⟨Fin.elim0, fun f hf _ => ?_⟩
     have hbot : S = ⊥ := Subgroup.eq_bot_of_card_le S (by simpa using hS)
-    rw [hbot, Subgroup.mem_bot] at hf
-    exact hf
+    rwa [hbot, Subgroup.mem_bot] at hf
   | succ h ih =>
     intro S hfin hS
     by_cases htriv : ∀ f ∈ S, f = 1
@@ -197,8 +196,7 @@ private theorem count_step (l : ℕ) [hl : Fact l.Prime] (G : Type) [Group G] :
     push Not at htriv
     obtain ⟨f₀, hf₀, hne⟩ := htriv
     obtain ⟨g, hg⟩ : ∃ g, f₀ g ≠ 1 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hne (MonoidHom.ext hc)
     let ev : S →* Multiplicative (ZMod l) :=
       { toFun := fun f => (f : G →* Multiplicative (ZMod l)) g
@@ -217,8 +215,7 @@ private theorem count_step (l : ℕ) [hl : Fact l.Prime] (G : Type) [Group G] :
       · exact h1
     have hcardS : Nat.card ev.ker * l = Nat.card S := by
       have := Subgroup.card_mul_index ev.ker
-      rw [Subgroup.index_ker, hrange] at this
-      exact this
+      rwa [Subgroup.index_ker, hrange] at this
     let S' : Subgroup (G →* Multiplicative (ZMod l)) := ev.ker.map S.subtype
     have hS' : Nat.card S' = Nat.card ev.ker := Subgroup.card_map_of_injective S.subtype_injective
     have hfin' : Finite S' := Nat.finite_of_card_ne_zero (by
@@ -230,8 +227,7 @@ private theorem count_step (l : ℕ) [hl : Fact l.Prime] (G : Type) [Group G] :
       rw [hS']
       have hlpos : 0 < l := hl.out.pos
       have : Nat.card ev.ker * l ≤ l ^ h * l := by
-        rw [hcardS, ← pow_succ]
-        exact hS
+        rwa [hcardS, ← pow_succ]
       exact Nat.le_of_mul_le_mul_right this hlpos
     obtain ⟨x', hx'⟩ := ih S' hfin' hle
     refine ⟨Fin.cons g x', fun f hf hall => ?_⟩

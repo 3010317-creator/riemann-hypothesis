@@ -158,8 +158,7 @@ def lb : LB X where
 
 theorem isLB_lb : D.lb.IsLB := by
   refine { cover := D.cover, g_self := ?_, cocycle := ?_ }
-  · intro i
-    exact Units.ext (D.eq_trans_on i i le_rfl le_rfl (c := 1) (one_mul _).symm).symm
+  · exact fun i => Units.ext (D.eq_trans_on i i le_rfl le_rfl (c := 1) (one_mul _).symm).symm
   · intro i j k
     have hi : D.U i ⊓ D.U j ⊓ D.U k ≤ D.U i := inf_le_left.trans inf_le_left
     have hj : D.U i ⊓ D.U j ⊓ D.U k ≤ D.U j := inf_le_left.trans inf_le_right
@@ -411,8 +410,7 @@ theorem keepsRegular_of_notMem_support [IsIntegral Y] (φ : Y ⟶ X) {y : Y}
     (nonzeroLocus_secPull D.canonical φ).ge h1
   have h3 := (mem_nonzeroLocus_iff (secPull D.canonical φ) (fun _ => i)
     ((pull_U D.lb φ fun _ => i).ge hi)).1 h2
-  rw [h0, Scheme.basicOpen_zero] at h3
-  exact h3
+  rwa [h0, Scheme.basicOpen_zero] at h3
 
 def pull (φ : Y ⟶ X) (h : D.KeepsRegular φ) : EffCartierData Y where
   ι := D.ι

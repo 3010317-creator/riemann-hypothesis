@@ -83,8 +83,7 @@ theorem ray_formula {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
   have hK : ∀ s : ℝ, HasDerivAt (fun s : ℝ => k (s • w)) (fderiv ℝ k (s • w) w) s := by
     intro s
     have := (hk (s • w)).hasFDerivAt.comp_hasDerivAt s ((hasDerivAt_id s).smul_const w)
-    rw [one_smul] at this
-    exact this
+    rwa [one_smul] at this
   have hφ : ∀ s : ℝ, HasDerivAt (fun s : ℝ => k (s • w) * E s) 0 s := by
     intro s
     have := (hK s).mul (hE s)
@@ -184,12 +183,10 @@ theorem schwartz_vacuum_eq_smul : ∀ {V : Type} [NormedAddCommGroup V] [NormedS
       have h2 : g x * (2 * Real.pi * (B x y.2 : ℂ) + 2 * Real.pi * Complex.I * (B x (J y).2 : ℂ)) = 0 := by
         linear_combination (-1 : ℂ) * h + (2 * Real.pi * (B x y.2 : ℂ) * g x) * Complex.I_sq
       have h3 := (mul_eq_zero.mp h2).resolve_left hx
-      have h4 := congrArg Complex.re h3
-      simpa [Real.pi_ne_zero] using h4
+      simpa [Real.pi_ne_zero] using congrArg Complex.re h3
     have hy2 : y.2 = 0 := by
       apply hB
-      by_contra hne
-      push Not at hne
+      by_contra! hne
       obtain ⟨x₀, hx₀⟩ := hne
       apply hg0
       ext x
@@ -217,8 +214,7 @@ theorem schwartz_vacuum_eq_smul : ∀ {V : Type} [NormedAddCommGroup V] [NormedS
   let T : (V × V) →ₗ[ℝ] (V × V) := (LinearMap.fst ℝ V V ∘ₗ J).prod (LinearMap.fst ℝ V V)
   have hTi : Function.Injective T := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro y hy
-    exact hinj y (congrArg Prod.fst hy) (congrArg Prod.snd hy)
+    exact fun y hy => hinj y (congrArg Prod.fst hy) (congrArg Prod.snd hy)
   have hTs : Function.Surjective T := LinearMap.injective_iff_surjective.mp hTi
 
   choose yx hyx using fun x : V => hTs (x, 0)

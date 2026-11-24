@@ -89,9 +89,7 @@ private theorem pi_iff {n ι : Type} [Fintype n] [DecidableEq n] (M : Matrix n n
     simp [Matrix.mul_apply, Finset.sum_apply]
 
 theorem conePos : ConePos := by
-  intro E _ _ a p
-  refine Iff.trans ?_ (pi_iff (Matrix.of p.1))
-  exact exists_congr fun g => Subtype.ext_iff
+  exact fun E _ _ a p => Iff.trans (exists_congr fun g => Subtype.ext_iff) (pi_iff (Matrix.of p.1))
 
 end UpperTheory.V.Lit.Dr
 end -- clump:auto
@@ -131,8 +129,7 @@ theorem coneConvex : ConeConvex := by
     rfl
   refine ⟨?_, hs⟩
   rw [convex_iff_forall_pos]
-  intro x hx y hy s t hs' ht _
-  exact hadd _ (hs s hs' x hx) _ (hs t ht y hy)
+  exact fun x hx y hy s t hs' ht _ => hadd _ (hs s hs' x hx) _ (hs t ht y hy)
 
 end UpperTheory.V.Lit.Dr
 end -- clump:auto

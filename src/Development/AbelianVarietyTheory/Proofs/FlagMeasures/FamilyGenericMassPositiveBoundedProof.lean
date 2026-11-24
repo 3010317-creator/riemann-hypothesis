@@ -203,8 +203,7 @@ theorem sq_dvd_at (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH
     simp
   · apply Subtype.ext
     push_cast
-    rw [← hA, ← hB']
-    exact hc
+    rwa [← hA, ← hB']
 
 end GlobalTheory.NormCong
 
@@ -219,8 +218,7 @@ theorem GlobalTheory.NormCong.norms_congr : ∀ (D : D7) (Z : LocDat D) (FP : �
   have h := dvd_sub_comm.1 (hcop.mul_dvd h0 h1)
   rw [Nat.modEq_iff_dvd, show gS D = D.host.g 0 * D.host.g 1 from rfl]
   push_cast
-  rw [mul_pow]
-  exact h
+  rwa [mul_pow]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagNormsCongrModLevelSq =====
@@ -338,8 +336,7 @@ theorem glueSum_le : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.wha
     exact lt_irrefl _ hpos
   have hrow : ∃ Λ₁ ∈ Y.what₂ u,
       (Formalism.L2.SG.CntLocal.EZ (Formalism.L2.SG.CntLocal.Tn u') (X.Fu u) Λ₁ (ZhatL (lf D (X.Fu u)) G')).Nonempty := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     apply hnu
     unfold Formalism.L2.SG.CntLocal.nu
     rw [Finset.sum_eq_zero (fun Λ₁ h1 => by simp [Formalism.L2.SG.CntLocal.cntE, hno Λ₁ h1]), zero_div]
@@ -487,8 +484,7 @@ theorem one_le_partial {p : ℕ} (T : Fin p → ℝ) (m : Fin p → ℕ) (M : �
   have e2 : (∏ a : Fin p, T a ^ m a) = ∏ a ∈ range p, T' a ^ m' a := by
     rw [← Fin.prod_univ_eq_prod_range (fun i => T' i ^ m' i) p]
     exact Finset.prod_congr rfl fun a _ => by rw [hTT, hmm]
-  rw [e1, e2]
-  exact key
+  rwa [e1, e2]
 
 theorem sum_exponent {r : ℕ} (c : Composition (r + 1)) : ∀ n, n ≤ c.length →
     ∑ b ∈ univ.filter (fun b : Fin c.length => b.1 < n),
@@ -1038,8 +1034,7 @@ theorem rd_pow_f (D : D7) : D.host.rdE ^ D.R.f = |(NumberField.discr D.host.F : 
 
 theorem one_le_tprod_real {ι : Type} (a : ι → ℝ) (ha : ∀ i, 1 ≤ a i) : 1 ≤ ∏' i, a i := by
   by_cases h : Multipliable a
-  · refine ge_of_tendsto' h.hasProd fun s => ?_
-    exact Finset.one_le_prod₀ (fun i _ => ha i)
+  · exact ge_of_tendsto' h.hasProd fun s => Finset.one_le_prod₀ (fun i _ => ha i)
   · rw [tprod_eq_one_of_not_multipliable h]
 
 theorem one_le_nM {K V : Type} [Field K] [NumberField K] [StarRing K] (F : Type) [Field F] [NumberField F]

@@ -522,8 +522,7 @@ theorem exists_theta (hG : GlobalFnsSt) {k : ℕ} (p : QkPt D F k) (hy : p.y = 0
       simp only [Matrix.cons_val_zero, Matrix.cons_val_one, zpow_neg, zpow_natCast, Over.comp_left]) u hu
   refine ⟨⟨p.g.b, v, hvg⟩, rfl, fun s t H ρ z J hJ => ?_⟩
   have e := (phiRel_iff hG p w hw s t).1 H 0 0 (by rw [hy, add_zero]) _ ρ z J hJ
-  rw [← hv u hu hc _ ρ z J hJ, ← hvv _ _ z J hJ] at e
-  exact e
+  rwa [← hv u hu hc _ ρ z J hJ, ← hvv _ _ z J hJ] at e
 
 theorem eq_of_sval {k : ℕ} (s : Fam D F k) (hs : ¬ ∀ j, (s.s 0).f j = 0) {c c' : F}
     (h : ∀ y J, Good D.P.L y J → sval ((c • s).s 0) (𝟙 _) y J = sval ((c' • s).s 0) (𝟙 _) y J) : c = c' := by
@@ -650,14 +649,10 @@ theorem exists_tateIso_of_perp {E : Type} [Field E] [NumberField E] [IsCMField E
   · split_ifs with hn
     · rw [map_smul, hlin n hn]
     · exact (hact c).symm
-  · simp only [ite_eq_left hn]
-    exact (hko n hn).1
-  · simp only [ite_eq_left hn]
-    exact (hko n hn).2
-  · simp only [ite_eq_left hn, ite_eq_left (Nat.mul_pos hn hm)]
-    exact htow n m hn hm _
-  · simp only [ite_eq_left hn]
-    exact hiso'' n hn w w'
+  · simpa only [ite_eq_left hn] using (hko n hn).1
+  · simpa only [ite_eq_left hn] using (hko n hn).2
+  · simpa only [ite_eq_left hn, ite_eq_left (Nat.mul_pos hn hm)] using htow n m hn hm _
+  · simpa only [ite_eq_left hn] using hiso'' n hn w w'
   · show _ = if 0 < n then b n (s (f a)) else 1
     rw [ite_eq_left hn]
     obtain ⟨w, hw⟩ := ((hko n hn).2 _).1 (hpow n hn a)
@@ -871,8 +866,7 @@ theorem exists_tateIso_toA : ∀ {E : Type} [Field E] [NumberField E] [IsCMField
       (I.ev (n * m) a) _).2 q₁ q₂ ((f₁ _ hN _ _).2 rfl)
     rw [evp _ hN, evp n hn, (f₁ n hn _ _).1 h, (f₃ n hn _ _).2 q₃]
   · have h := (f₆ n hn _ _ _).1 (I.isom n hn a b)
-    rw [← evp, ← evp] at h
-    exact h
+    rwa [← evp, ← evp] at h
 
 end GlobalTheory.LowDat
 end -- clump:auto
@@ -922,8 +916,7 @@ theorem ev_zsmul {D : Datum H} {k : Type} [Field k] {Q : Type} [Group Q] {act : 
   let f : Multiplicative D.La →* Q :=
     MonoidHom.mk' (fun y => J.ev n (Multiplicative.toAdd y)) (fun a b => J.add n _ _)
   have h := map_zpow f (Multiplicative.ofAdd x) m
-  rw [← ofAdd_zsmul] at h
-  exact h
+  rwa [← ofAdd_zsmul] at h
 
 theorem mul_mem_M (l : Level H) {x y : 𝓞 E} (hx : x ∈ l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E)) (hy : y ∈ l.Mb) :
     ∃ r : 𝓞 E, x * y = r * (l.M : 𝓞 E) := by
@@ -1166,8 +1159,7 @@ theorem left_eq_of_section (C : UChart.Fam Xo c R) (tK : SAB H (Sp (FractionRing
       rw [w0, w, w', spMap_comp_jFK]
   have hi : C.P.U.gen.inv.left ≫ C.P.U.gen.hom.left = 𝟙 _ := by
     rw [← Over.comp_left, Iso.inv_hom_id, Over.id_left]
-  have e3 := congrArg (· ≫ C.P.U.gen.hom.left) e2
-  simpa only [Category.assoc, hi, Category.comp_id] using e3
+  simpa only [Category.assoc, hi, Category.comp_id] using congrArg (· ≫ C.P.U.gen.hom.left) e2
 
 theorem exists_tateIso_ext (D : Datum H) {S : Scheme.{0}} (P : Out.PolAV S) (act : 𝓞 E → (P.A ⟶ P.A))
     {K Ω : Type} [Field K] [Field Ω] [IsAlgClosed K] [IsAlgClosed Ω] [CharZero K] (i : K →+* Ω)
@@ -1366,8 +1358,7 @@ theorem abPartAct_isAdj (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     have h : RosatiAdj U.D.toPre.P.A U.D.toPre.P.L ((abPartAct U).act c) ((abPartAct U).act (H.bar c)) := by
       letI := H.starRing
       exact U.oD.onB.rosati c
-    rw [← bar_eq_star H]
-    exact h
+    rwa [← bar_eq_star H]
   obtain ⟨V, hV, g, hg⟩ := hr (IsLocalRing.closedPoint R)
   obtain rfl : V = ⊤ := (IsLocalRing.closedPoint_mem_iff V).1 hV
   have hL : U.D.toPre.P.L.IsLB := U.D.toPre.P.isLB
@@ -1698,8 +1689,7 @@ theorem detCond_generic (hR : GlobalTheory.Mum.Base R) (C : UChart.Fam Xo c R) (
     have h₂ := (lieMult_iff_of_isGrpPullback m1.cart tK.act C.t.act m1.act (jFK (R := R) F) τ n).1 h₁
     rw [jFR_eq] at h₂ ⊢
     obtain ⟨m, hm, rfl⟩ := GlobalTheory.CharRank.lieMult_unif_loc H R C.t C.P F _ (inj_jFR R F) τ n h₂
-    rw [Nat.add_sub_cancel]
-    exact hm
+    rwa [Nat.add_sub_cancel]
   intro τ
   have hρ : lowF C F (baseKA (lowLevel l)).ρ = β (baseKA l).ρ := congrArg (toF C F) (rho_eq l c)
   rw [hρ, hp, hq]

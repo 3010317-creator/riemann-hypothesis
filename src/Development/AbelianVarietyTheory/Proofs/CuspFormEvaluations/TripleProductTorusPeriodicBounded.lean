@@ -251,8 +251,7 @@ theorem gen_linComb_in_frame (hL : L.IsLB) {Hm : Matrix (Fin g) (Fin g) ℂ} {χ
       refine ⟨∏ k, χ ⟨lam k l, hΛ k⟩ ^ ε k, by simp [norm_prod, norm_zpow, hu.2.2.1], fun z => ?_⟩
       obtain ⟨j, hj⟩ := hcov z
       have hj' : z + l ∈ D j := by
-        simp only [D, Set.mem_setOf_eq, hl z]
-        exact hj
+        simpa only [D, Set.mem_setOf_eq, hl z] using hj
       have eT : T j (z + l) = T j z := by simp only [T, hl z]
       have c1 : F j z = (∏ k, χ ⟨lam k l, hΛ k⟩ ^ ε k) *
           cexp (π * ∑ k, (ε k : ℂ) * hermForm Hm (lam k z) (lam k l) +
@@ -292,8 +291,7 @@ theorem val_eq_one_of_corr {X Y Z : Scheme.{0}} (L : LB X) {K : Type} [Fintype K
   have h3 := (le_preimage_inf x _ _).2 ⟨h1, h2⟩
   have e' := (val_res x hv inf_le_left h3 _).symm.trans
     ((congrArg (fun f : Γ(Z, _)ˣ => valAt' x _ f.val) e).trans (val_res x hv inf_le_right h3 _))
-  refine ((val_res x hv _ h1 _).trans (val_pullU x hv h _ _)).symm.trans (e'.trans ?_)
-  exact valAt'_one x h2
+  exact ((val_res x hv _ h1 _).trans (val_pullU x hv h _ _)).symm.trans (e'.trans (valAt'_one x h2))
 
 theorem prod_zpow_eq_zpow_sum {K : Type} (s : Finset K) {a : ℂ} (ha : a ≠ 0) (ε : K → ℤ) :
     ∏ k ∈ s, a ^ ε k = a ^ ∑ k ∈ s, ε k := by

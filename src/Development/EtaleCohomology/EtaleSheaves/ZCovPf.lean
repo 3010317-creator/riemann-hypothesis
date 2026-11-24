@@ -94,8 +94,7 @@ theorem D_inf : IsAffineOpen (D 0 ⊓ D 1) := by
   have h := Proj.isAffineOpen_basicOpen (MvPolynomial.homogeneousSubmodule (Fin 2) ℤ)
     (MvPolynomial.X 0 * MvPolynomial.X 1) (f_deg := (MvPolynomial.mem_homogeneousSubmodule _ _).mpr
     ((MvPolynomial.isHomogeneous_X ℤ 0).mul (MvPolynomial.isHomogeneous_X ℤ 1))) (hm := Nat.two_pos)
-  rw [Proj.basicOpen_mul] at h
-  exact h
+  rwa [Proj.basicOpen_mul] at h
 
 theorem D_cover : D 0 ⊔ D 1 = ⊤ := by
   have h := Proj.iSup_basicOpen_eq_top (MvPolynomial.homogeneousSubmodule (Fin 2) ℤ)
@@ -139,8 +138,7 @@ theorem projectiveLine_integers_affine_cover_absolutely_integrally_closed : ZCov
   haveI : IsAffine (pullback U.ι V.ι) := IsAffine.of_isIso (isPullback_opens_inf U V).isoPullback.inv
   refine ⟨U, V, U.ι, V.ι, inferInstance, inferInstance, ?_, good_of_affine hZ U.ι _, good_of_affine hZ V.ι _, ?_⟩
   · rw [Scheme.Opens.range_ι, Scheme.Opens.range_ι]
-    have h := congrArg (fun O : P1.Opens => ((φ ⁻¹ᵁ O : Z.Opens) : Set Z)) D_cover
-    simpa [U, V] using h
+    simpa [U, V] using congrArg (fun O : P1.Opens => ((φ ⁻¹ᵁ O : Z.Opens) : Set Z)) D_cover
   · rw [← Category.assoc]
     exact good_of_affine hZ (pullback.fst U.ι V.ι ≫ U.ι) _
 

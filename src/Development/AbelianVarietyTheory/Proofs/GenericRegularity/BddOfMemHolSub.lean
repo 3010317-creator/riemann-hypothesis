@@ -97,15 +97,13 @@ theorem _root_.GlobalTheory.IntegralCusp.exists_root_bound (N k m : ℕ) (cf : �
           g * ∑ i ∈ Finset.range m, MvPolynomial.eval w (cf i) * g ^ i := by
         rw [Finset.mul_sum]
         exact Finset.sum_congr rfl fun i _ => mul_assoc _ _ _
-      rw [mul_add, ← hs]
-      exact hg
+      rwa [mul_add, ← hs]
     exact eq_neg_of_add_eq_zero_left ((mul_eq_zero.mp h1).resolve_left hg0)
   set x := ‖g‖ with hx
   set t := ‖w‖ ^ k with ht
   have hx0 : 0 < x := norm_pos_iff.mpr hg0
   have ht0 : 0 ≤ t := by positivity
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have htx : t ≤ x / B := by rw [le_div_iff₀ hB0]; linarith
   have hterm : ∀ i ∈ Finset.range m,
       ‖MvPolynomial.eval w (cf i) * g ^ i‖ ≤ A i * (x ^ m / B) := by
@@ -123,8 +121,7 @@ theorem _root_.GlobalTheory.IntegralCusp.exists_root_bound (N k m : ℕ) (cf : �
         _ ≤ x ^ m / B := div_le_div_of_nonneg_left (by positivity) hB0 h2
     calc ‖MvPolynomial.eval w (cf i)‖ * x ^ i ≤ A i * t ^ (m - i) * x ^ i := by
           gcongr
-          rw [← hpow]
-          exact hci
+          rwa [← hpow]
       _ = A i * (t ^ (m - i) * x ^ i) := by ring
       _ ≤ A i * (x ^ m / B) := mul_le_mul_of_nonneg_left hkey (hA0 i)
   have hbound : x ^ m ≤ (∑ i ∈ Finset.range m, A i) * (x ^ m / B) := by

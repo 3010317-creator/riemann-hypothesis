@@ -143,8 +143,7 @@ theorem GlobalTheory.Cusp.WeightCommute.commute_of_weights : ∀ (D : D7) (V : H
       rintro _ (⟨i, hi, rfl⟩ | ⟨i, hi, rfl⟩)
       · have hiS : i ∈ S := (hS i).2 (by rw [show u i = 1 from hi]; decide)
         have := hz i hiS
-        rw [hxv, ite_eq_left (show u i = 1 from hi)] at this
-        exact this
+        rwa [hxv, ite_eq_left (show u i = 1 from hi)] at this
       · have hiS : i ∈ S := (hS i).2 (by rw [show u i = -1 from hi]; decide)
         have := hz i hiS
         rw [hxv, ite_eq_right (by rw [show u i = -1 from hi]; exact hne)] at this
@@ -165,8 +164,7 @@ theorem GlobalTheory.Cusp.WeightCommute.commute_of_weights : ∀ (D : D7) (V : H
           simpa using h'
         have hiS : i ∈ S := (hS i).2 (by rw [a]; decide)
         have := hz i hiS
-        rw [hyv, ite_eq_left a] at this
-        exact this
+        rwa [hyv, ite_eq_left a] at this
     exact hle hw
 
   have pxx : ∀ i ∈ S, ∀ j ∈ S, V.hT (xv j) (xv i) = 0 := by

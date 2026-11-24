@@ -151,8 +151,7 @@ theorem UpperTheory.bideterminant_antidiag_eval_weight_unit_support :
           ext
           simp only
           omega
-        · intro h'
-          exact absurd (Finset.mem_univ _) h'
+        · exact fun h' => absurd (Finset.mem_univ _) h'
     have hreg : ∀ k, ∏ q : Fin (sz k), x (Fin.rev (Fin.castLE (hsz k) q)) (Fin.rev (Fin.castLE (hsz k) q))
         = ∏ i : Fin n, if ((Fin.rev i : Fin n) : ℕ) < sz k then x i i else 1 := by
       intro k
@@ -207,8 +206,7 @@ theorem UpperTheory.bideterminant_antidiag_eval_weight_unit_support :
       fun h0 => hne (Finset.prod_eq_zero (Finset.mem_univ k) h0)
     have hlow : ∀ p : Fin (sz k), n ≤ (I k p : ℕ) + sz k := by
       intro p
-      by_contra hlt
-      push Not at hlt
+      by_contra! hlt
       apply hdet
       apply Matrix.det_eq_zero_of_row_eq_zero p
       intro q
@@ -271,8 +269,7 @@ private theorem sum_ite_eq_of_shifted_index {n m : ℕ} (g : Fin m → Fin n) (h
       rw [he] at this
       show (p : ℕ) = (i : ℕ) - (n - m)
       omega
-    · intro hn
-      exact absurd (Finset.mem_univ _) hn
+    · exact fun hn => absurd (Finset.mem_univ _) hn
   · rw [ite_eq_right h]
     apply Finset.sum_eq_zero
     intro p _
@@ -302,11 +299,8 @@ private theorem sum_ite_pair_castLE_eq_of_shifted_index {n m : ℕ} (hm : m ≤ 
       apply hp
       ext
       have := congrArg (fun x => (x.2 : ℕ)) he
-      simp only [Fin.coe_castLE] at this
-      show (p : ℕ) = (j : ℕ)
-      exact this
-    · intro hn
-      exact absurd (Finset.mem_univ _) hn
+      simpa only [Fin.coe_castLE] using this
+    · exact fun hn => absurd (Finset.mem_univ _) hn
   · rw [ite_eq_right h]
     apply Finset.sum_eq_zero
     intro p _
@@ -396,13 +390,11 @@ theorem UpperTheory.bideterminant_row_weight_dominance :
   have hle : ∀ k p, (I k p : ℕ) + sz k ≤ n + p := fun k p => strictMono_apply_add_le (I k) (hI k) p
   have hws : ∀ a : Fin n → ℤ, ∑ i, a i * (shapeDeg sz (Fin.rev i) : ℤ) = ∑ k, ∑ p, a (J k p) := by
     intro a
-    simp only [hsh]
-    exact sum_mul_count_eq_sum_sum_apply sz J a
+    simpa only [hsh] using sum_mul_count_eq_sum_sum_apply sz J a
   have hwr : ∀ a : Fin n → ℤ,
       ∑ i, a i * (rowWt (bidetExp sz hsz I) i : ℤ) = ∑ k, ∑ p, a (I k p) := by
     intro a
-    simp only [hrow]
-    exact sum_mul_count_eq_sum_sum_apply sz I a
+    simpa only [hrow] using sum_mul_count_eq_sum_sum_apply sz I a
   refine ⟨?_, ?_, ?_⟩
   · intro a ha
     rw [hws, hwr]
@@ -570,8 +562,7 @@ theorem sqBasis (O K : Type) [CommRing O] [IsDomain O] [Field K] [Algebra O K] (
     rw [← hb.2.1, Set.range_eq_empty, Submodule.span_empty] at h1
     exact hwNe O n n le_rfl _ h1
   obtain ⟨k0, hk0⟩ : ∃ k0, ℓ (b k0) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     obtain ⟨m⟩ := hne
     let I' : ∀ k, Fin (sz m k) → Fin n := fun k p => ⟨n - sz m k + p, by have := hsz m k; have := p.2; omega⟩
     have h0 : ℓ = 0 := b.ext h
@@ -634,8 +625,7 @@ theorem sqBasis (O K : Type) [CommRing O] [IsDomain O] [Field K] [Algebra O K] (
     rw [sqRep_coe, sqAct, hg, diagonal_transpose, rowActDiagWeight K n n t _ _ hwt, smul_smul, hd.1, prod_wt _ hd.2]
     rfl
   · intro i
-    simp only [hw0]
-    exact (factNatW n lam).2.1 _
+    simpa only [hw0] using (factNatW n lam).2.1 _
   · intro j a ha
     have := (hW j).1 a ha
     rw [hexp, hsh] at this

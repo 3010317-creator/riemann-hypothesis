@@ -102,10 +102,8 @@ theorem vacData_of {G : Type} [TopologicalSpace G] (h : ℂ → G → ℂ) (s₀
 
   set F : ℂ → G → ℂ := fun z g => Function.update (fun w => Q w g) s₀ (v g) z with hF
   have hFQ : ∀ g z, z ≠ s₀ → F z g = Q z g := fun g z hne => by
-    show Function.update (fun w => Q w g) s₀ (v g) z = Q z g
     exact Function.update_of_ne hne _ _
   have hFs : ∀ g, F s₀ g = v g := fun g => by
-    show Function.update (fun w => Q w g) s₀ (v g) s₀ = v g
     exact Function.update_self _ _ _
   have hFd : ∀ g, DifferentiableOn ℂ (F · g) (Metric.ball s₀ r₁) := by
     intro g
@@ -115,8 +113,7 @@ theorem vacData_of {G : Type} [TopologicalSpace G] (h : ℂ → G → ℂ) (s₀
       refine ((hQd g z hz.1 hne).congr_of_eventuallyEq ?_).differentiableWithinAt
       filter_upwards [isOpen_ne.mem_nhds hne] with w hw
       exact hFQ g w hw
-    · show ContinuousAt (Function.update (fun w => Q w g) s₀ (v g)) s₀
-      exact continuousAt_update_same.2 (htend g)
+    · exact continuousAt_update_same.2 (htend g)
   have hHol : ∀ g, ∀ z ∈ Metric.ball s₀ r₁, HolValueAt (h · g) z (F z g) := by
     intro g z hz
     by_cases hne : z = s₀

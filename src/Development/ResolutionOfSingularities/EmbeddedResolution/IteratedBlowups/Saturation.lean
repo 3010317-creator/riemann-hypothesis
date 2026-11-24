@@ -103,8 +103,7 @@ private theorem range_saturationι {Y : Scheme.{u}} (F T : Y.IdealSheafData) :
     rw [← Scheme.IdealSheafData.range_subschemeι] at hy1
     obtain ⟨q, rfl⟩ := hy1
     have hq : q ∈ ((saturationOpens F T : (T.subscheme).Opens) : Set ↥(T.subscheme)) := by
-      rw [coe_saturationOpens]
-      exact hy2
+      rwa [coe_saturationOpens]
     rw [← Scheme.Opens.range_ι] at hq
     obtain ⟨p, hp⟩ := hq
     refine ⟨p, ?_⟩
@@ -140,13 +139,11 @@ theorem quasiCompact_saturationι_restrictIdeal {Y : Scheme.{u}} (F T : Y.IdealS
   rw [Set.image_preimage_eq_inter_range, range_saturationι] at himg
   have h2 : IsCompact (⇑(Scheme.Opens.ι V) '' (U ∩ ⇑(Scheme.Opens.ι V) ⁻¹'
       ((T.support : Set ↥Y) \ (F.support : Set ↥Y)))) := by
-    rw [Set.image_inter_preimage]
-    exact himg
+    rwa [Set.image_inter_preimage]
   have h3 := hV.toIsInducing.isCompact_iff.mpr h2
   have hfinal : IsCompact (⇑(saturationι (restrictIdeal F V) (restrictIdeal T V)) ''
       (⇑(saturationι (restrictIdeal F V) (restrictIdeal T V)) ⁻¹' U)) := by
-    rw [Set.image_preimage_eq_inter_range, hrange']
-    exact h3
+    rwa [Set.image_preimage_eq_inter_range, hrange']
   exact hg'.toIsInducing.isCompact_iff.mpr hfinal
 
 private theorem isCompact_of_subset_affineOpen {Y : Scheme.{u}} [IsLocallyNoetherian Y]
@@ -292,22 +289,12 @@ private theorem exists_comp_morphismRestrict_eq_saturationι {Y : Scheme.{u}}
     refine (mem_saturationOpens (F.comap V.ι) (T.comap V.ι) _).mp hx ?_
     rw [SetLike.mem_coe, Scheme.IdealSheafData.mem_support_comap]
     exact SetLike.mem_coe.mp hcon
-  obtain ⟨c, hc⟩ : ∃ c : (saturationOpens (F.comap V.ι) (T.comap V.ι)).toScheme ⟶
-      (saturationOpens F T).toScheme,
-      c ≫ Scheme.Opens.ι (saturationOpens F T)
-        = Scheme.Opens.ι (saturationOpens (F.comap V.ι) (T.comap V.ι)) ≫ p ≫
-            Scheme.Opens.ι (T.subschemeι ⁻¹ᵁ V) :=
-    ⟨IsOpenImmersion.lift (Scheme.Opens.ι (saturationOpens F T))
+  obtain ⟨c, hc⟩ : ∃ c, c ≫ Scheme.Opens.ι (saturationOpens F T) = _ :=
+    ⟨_, IsOpenImmersion.lift_fac (Scheme.Opens.ι (saturationOpens F T))
       (Scheme.Opens.ι (saturationOpens (F.comap V.ι) (T.comap V.ι)) ≫ p ≫
-        Scheme.Opens.ι (T.subschemeι ⁻¹ᵁ V)) hrangeD, by simp⟩
-  have hc' : c ≫ saturationι F T
-      = saturationι (F.comap V.ι) (T.comap V.ι) ≫ V.ι := by
-    have h0 : (c ≫ Scheme.Opens.ι (saturationOpens F T)) ≫ T.subschemeι
-        = saturationι (F.comap V.ι) (T.comap V.ι) ≫ V.ι := by
-      rw [hc]
-      exact hdT
-    rw [saturationι_eq_ι_comp_subschemeι F T, ← Category.assoc]
-    exact h0
+        Scheme.Opens.ι (T.subschemeι ⁻¹ᵁ V)) hrangeD⟩
+  have hc' : c ≫ saturationι F T = saturationι (F.comap V.ι) (T.comap V.ι) ≫ V.ι := by
+    rwa [saturationι_eq_ι_comp_subschemeι F T, ← Category.assoc, hc]
   have hrangeC : Set.range ⇑c
       ⊆ Set.range ⇑(Scheme.Opens.ι (saturationι F T ⁻¹ᵁ V)) := by
     rintro _ ⟨x, rfl⟩
@@ -317,13 +304,10 @@ private theorem exists_comp_morphismRestrict_eq_saturationι {Y : Scheme.{u}}
         = V.ι (saturationι (F.comap V.ι) (T.comap V.ι) x) := base_apply_congr hc' x
     rw [key, ← Scheme.Opens.range_ι]
     exact Set.mem_range_self _
-  obtain ⟨a, ha⟩ : ∃ a : (saturationOpens (F.comap V.ι) (T.comap V.ι)).toScheme ⟶
-      (saturationι F T ⁻¹ᵁ V).toScheme,
-      a ≫ Scheme.Opens.ι (saturationι F T ⁻¹ᵁ V) = c :=
-    ⟨IsOpenImmersion.lift (Scheme.Opens.ι (saturationι F T ⁻¹ᵁ V)) c hrangeC, by simp⟩
+  obtain ⟨a, ha⟩ : ∃ a, a ≫ Scheme.Opens.ι (saturationι F T ⁻¹ᵁ V) = c :=
+    ⟨_, IsOpenImmersion.lift_fac (Scheme.Opens.ι (saturationι F T ⁻¹ᵁ V)) c hrangeC⟩
   refine ⟨a, ?_⟩
-  rw [← cancel_mono V.ι, Category.assoc, morphismRestrict_ι, ← Category.assoc, ha]
-  exact hc'
+  rwa [← cancel_mono V.ι, Category.assoc, morphismRestrict_ι, ← Category.assoc, ha]
 
 private theorem exists_comp_saturationι_eq_morphismRestrict {Y : Scheme.{u}}
     (F T : Y.IdealSheafData) (V : Y.Opens) :
@@ -436,15 +420,12 @@ private theorem map_basicOpen_eq_zero_iff {S : Scheme.{u}} {P : S.Opens} (hP : I
   · intro hy
     have h0 : algebraMap Γ(S, P) Γ(S, S.basicOpen s) y
         = algebraMap Γ(S, P) Γ(S, S.basicOpen s) 0 := by
-      rw [map_zero]
-      exact hy
+      rwa [map_zero]
     obtain ⟨c, hc⟩ := (IsLocalization.eq_iff_exists (Submonoid.powers s)
       Γ(S, S.basicOpen s)).mp h0
     obtain ⟨n, hn⟩ := c.2
     refine ⟨n, ?_⟩
-    rw [mul_zero] at hc
-    rw [← hn] at hc
-    exact hc
+    rwa [mul_zero, ← hn] at hc
   · rintro ⟨n, hn⟩
     have hu : IsUnit (algebraMap Γ(S, P) Γ(S, S.basicOpen s) s) :=
       IsLocalization.map_units (M := Submonoid.powers s) Γ(S, S.basicOpen s)
@@ -453,8 +434,7 @@ private theorem map_basicOpen_eq_zero_iff {S : Scheme.{u}} {P : S.Opens} (hP : I
     rw [map_mul, map_pow, map_zero] at h2
     obtain ⟨v, hv⟩ := hu.pow n
     have h4 : (v : Γ(S, S.basicOpen s)) * algebraMap Γ(S, P) Γ(S, S.basicOpen s) y = 0 := by
-      rw [hv]
-      exact h2
+      rwa [hv]
     have h5 := congrArg
       (fun z => ((v⁻¹ : (Γ(S, S.basicOpen s))ˣ) : Γ(S, S.basicOpen s)) * z) h4
     simpa using h5
@@ -502,8 +482,7 @@ theorem mem_saturation_ideal_iff {Y : Scheme.{u}} (F T : Y.IdealSheafData)
     constructor
     · rintro ⟨n, hn⟩
       refine ⟨n, (hT _).mpr ?_⟩
-      rw [hmul]
-      exact hn
+      rwa [hmul]
     · rintro ⟨n, hn⟩
       have h := (hT _).mp hn
       rw [hmul] at h
@@ -528,8 +507,7 @@ theorem saturation_ideal_eq_of_eq_mul {Y : Scheme.{u}} (F T : Y.IdealSheafData)
         intro g hg
         refine hJ g (ih (t * g) ?_)
         have hrw : t ^ m * (t * g) = t ^ (m + 1) * g := by ring
-        rw [hrw]
-        exact hg
+        rwa [hrw]
   ext f
   rw [mem_saturation_ideal_iff F T V t ht f]
   constructor
@@ -559,8 +537,7 @@ theorem saturation_ideal_eq_of_isUnit {Y : Scheme.{u}} (F T : Y.IdealSheafData)
   constructor
   · rintro ⟨n, hn⟩
     exact ((T.ideal V).unit_mul_mem_iff_mem (hu.pow n)).mp hn
-  · intro hf
-    exact ⟨0, by simpa using hf⟩
+  · exact fun hf => ⟨0, by simpa using hf⟩
 
 theorem strictTransform_eq_of_comap_eq {X X' X₁ : Scheme.{u}} (π : X₁ ⟶ X) (π' : X₁ ⟶ X')
     (Z D : X.IdealSheafData) (Z' D' : X'.IdealSheafData)
@@ -605,7 +582,6 @@ theorem quasiCompact_strictTransformι_comp_ι {X X₁ : Scheme.{u}} (π : X₁ 
     rw [restrictIdeal_eq_comap_ι, Scheme.IdealSheafData.comap_comp]
   have hD : restrictIdeal (D.comap π) V = D.comap (V.ι ≫ π) := by
     rw [restrictIdeal_eq_comap_ι, Scheme.IdealSheafData.comap_comp]
-  show QuasiCompact (saturationι (Z.comap (V.ι ≫ π)) (D.comap (V.ι ≫ π)))
   exact quasiCompact_saturationι_congr hZ hD h2
 
 theorem mem_strictTransform_ideal_iff {X X₁ : Scheme.{u}} (π : X₁ ⟶ X) (Z D : X.IdealSheafData)
@@ -630,7 +606,6 @@ theorem strictTransform_ideal_eq_comap_of_isUnit {X X₁ : Scheme.{u}} (π : X�
 theorem quasiCompact_strictTransformι_of_noetherianSpace {X X₁ : Scheme.{u}}
     [NoetherianSpace X₁] (π : X₁ ⟶ X) (Z D : X.IdealSheafData) :
     QuasiCompact (strictTransformι π Z D) := by
-  show QuasiCompact (saturationι (Z.comap π) (D.comap π))
   exact quasiCompact_saturationι_of_noetherianSpace (Z.comap π) (D.comap π)
 
 end FunctorialResolution.EmbeddedResolution

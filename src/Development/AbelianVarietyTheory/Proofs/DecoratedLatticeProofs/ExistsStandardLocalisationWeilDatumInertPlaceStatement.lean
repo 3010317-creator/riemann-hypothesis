@@ -144,13 +144,11 @@ theorem pair_mem_intL (S : HSp D) {s : Fin S.rank → D.host.E} (hs : s ∈ L0c 
       refine Finset.sum_congr rfl fun m _ => Finset.sum_congr rfl fun k _ => ?_
       simp only [starRingEnd_apply, RingHom.id_apply]
       ring
-    rw [e]
-    rw [GlobalTheory.InertLoc.mem_intL, GlobalTheory.Idele.valued_algebraMap]
+    rw [e, GlobalTheory.InertLoc.mem_intL, GlobalTheory.Idele.valued_algebraMap]
     exact HeightOneSpectrum.valuation_le_one w o
   | zero => simp
   | add x y _ _ hx hy =>
-    simp only [Pi.add_apply, mul_add, Finset.sum_add_distrib]
-    exact add_mem hx hy
+    simpa only [Pi.add_apply, mul_add, Finset.sum_add_distrib] using add_mem hx hy
   | smul c x _ hx =>
     have e : ∑ m, algebraMap D.host.E (w.adicCompletion D.host.E) (∑ k, star (s k) * S.gram k m) * (c • x) m =
         (c : w.adicCompletion D.host.E) * ∑ m, algebraMap D.host.E (w.adicCompletion D.host.E) (∑ k, star (s k) * S.gram k m) * x m := by
@@ -222,7 +220,6 @@ theorem latO_frame_int (hw : IsInertAt D.host.F D.host.E v w) (h : w.under (𝓞
           · subst e; simp
           · simp [e]
         rwa [Matrix.mulVec_single_one] at this
-      show ∑ m, r m * aS.1 m j ∈ _
       exact pair_mem_intL S hs hcol
     have e2 : k⁻¹ * (c0 * algebraMap D.host.E (w.adicCompletion D.host.E) a) * (((aT⁻¹).1 *ᵥ t') i * (r ᵥ* aS.1) j) =
         c0 * (k⁻¹ * algebraMap D.host.E _ a) * (((aT⁻¹).1 *ᵥ t') i * (r ᵥ* aS.1) j) := by ring
@@ -668,20 +665,17 @@ theorem GlobalTheory.InertFrameAct.actO_uPt : ∀ (D : D7) (v : HeightOneSpectru
   intro D v w hw h S T k aS aT gS gT x
   have hT : (mt T (embV T v gT)).map (GlobalTheory.InertHomIdx.compW D w) = (locMat D.sp.cm.sig T.gram h gT).1 := by
     have e := finMat_map_compAt D.sp.cm.sig T.gram h (embV T v gT)
-    rw [proj_emb_self] at e
-    exact e
+    rwa [proj_emb_self] at e
   have hS : (mt S (embV S v gS⁻¹)).map (GlobalTheory.InertHomIdx.compW D w) = (locMat D.sp.cm.sig S.gram h gS⁻¹).1 := by
     have e := finMat_map_compAt D.sp.cm.sig S.gram h (embV S v gS⁻¹)
-    rw [proj_emb_self] at e
-    exact e
+    rwa [proj_emb_self] at e
   have hinv : (embV S v gS)⁻¹ = embV S v gS⁻¹ := (map_inv _ _).symm
   rw [actO, uPt, uPt, hinv, mul_map_secW, map_secW_mul, hT, hS]
   congr 1
   have h1 : aT.1 * (aT⁻¹).1 = 1 := by rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
   have h2 : aS.1 * (aS⁻¹).1 = 1 := by rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
   simp only [Units.val_mul, Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_assoc]
-  rw [h2, Matrix.mul_one]
-  rw [← Matrix.mul_assoc aT.1 (aT⁻¹).1, h1, Matrix.one_mul]
+  rw [h2, Matrix.mul_one, ← Matrix.mul_assoc aT.1 (aT⁻¹).1, h1, Matrix.one_mul]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

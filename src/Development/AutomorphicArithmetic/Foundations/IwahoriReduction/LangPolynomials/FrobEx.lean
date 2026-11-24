@@ -48,9 +48,7 @@ private theorem frobEx_norm {l : ℕ} (hl : l.Prime) {v : Pl} (hv : ((l : ℕ) :
     have hmax : (Ideal.span {((l : ℕ) : ℤ)}).IsMaximal :=
       PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hl).irreducible
     apply hmax.eq_of_le
-    · intro htop
-      apply v.isPrime.ne_top
-      exact (Ideal.map_eq_top_of_bijective _ e.bijective).1 htop
+    · exact fun htop => v.isPrime.ne_top ((Ideal.map_eq_top_of_bijective _ e.bijective).1 htop)
     · rw [Ideal.span_le, Set.singleton_subset_iff]
       have := Ideal.mem_map_of_mem (e : 𝓞 ℚ →+* ℤ) hv
       simpa using this

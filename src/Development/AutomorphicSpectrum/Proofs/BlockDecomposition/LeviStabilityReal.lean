@@ -76,11 +76,9 @@ theorem sum_sum_ite_unique {M : Type*} [AddCommMonoid M] (P : Bool → ι → Pr
     (g : Bool → ι → M) (u : Bool) (c : ι) (h : ∀ t b, P t b → t = u ∧ b = c) :
     (∑ t, ∑ b, if P t b then g t b else 0) = if P u c then g u c else 0 := by
   rw [Finset.sum_eq_single u, Finset.sum_eq_single c]
-  · intro b _ hb
-    exact ite_eq_right fun hP => hb (h _ _ hP).2
+  · exact fun b _ hb => ite_eq_right fun hP => hb (h _ _ hP).2
   · simp
-  · intro t _ ht
-    exact Finset.sum_eq_zero fun b _ => ite_eq_right fun hP => ht (h _ _ hP).1
+  · exact fun t _ ht => Finset.sum_eq_zero fun b _ => ite_eq_right fun hP => ht (h _ _ hP).1
   · simp
 
 def adA (A C : Bool → ι → ι → R) (r : Bool) (p q : ι) : R :=
@@ -263,9 +261,7 @@ theorem sum_k {M : Type*} [AddCommMonoid M] (u : Bool) {a c : Fin n} (h : a < c)
     (∑ k : Lt n, if k.1 = u ∧ k.2.1 = (a, c) then g k else 0) = g (u, ⟨(a, c), h⟩) := by
   rw [Finset.sum_eq_single (u, ⟨(a, c), h⟩)]
   · simp
-  · intro k _ hk
-    refine ite_eq_right fun hc => hk ?_
-    exact Prod.ext hc.1 (Subtype.ext hc.2)
+  · exact fun k _ hk => ite_eq_right fun hc => hk (Prod.ext hc.1 (Subtype.ext hc.2))
   · simp
 
 variable {V : Type} [AddCommGroup V] [Module ℂ V]

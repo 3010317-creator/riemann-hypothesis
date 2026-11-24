@@ -105,8 +105,7 @@ theorem baseLevelCharacter_map_coefficientRingHom {E : Type} [Field E] [NumberFi
   letI : IsOneApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* LL'ˣ) := ⟨fun _ => rfl⟩
   letI : IsMulApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* LL'ˣ) := ⟨fun _ _ _ => rfl⟩
   rw [prod_apply, prod_apply, Units.coe_prod, Units.coe_prod, map_prod]
-  refine Finset.prod_congr rfl fun PP _ => ?_
-  exact h PP.1 PP.2 _
+  exact Finset.prod_congr rfl fun PP _ => h PP.1 PP.2 _
 
 theorem lev_bc (B B' : Base) (h : B'.toPre = B.toPre) (px : PreX B.toPre) (px' : PreX B'.toPre) (hp : HEq px' px)
     (I : ColIn B px) (I' : ColIn B' px') (hI : I.Ok) (hI' : I'.Ok) (φ : B.LL →+* B'.LL) (hφ : ∀ x, B'.embLL (φ x) = B.embLL x)

@@ -83,8 +83,7 @@ theorem ofS_cont : Continuous (ofS L N) := by
     intro A
     rw [← map_inv]
     exact Matrix.SpecialLinearGroup.coe_inv A
-  simp only [hi]
-  exact hv.matrix_adjugate
+  simpa only [hi] using hv.matrix_adjugate
 
 theorem fr_comp_cont {q : ℕ} {ω : Form (HS L N) q} (hω : ContinuousOn ω (Pos L N)) (u : Fin q → HS L N) :
     Continuous fun x => fr ω x u := by

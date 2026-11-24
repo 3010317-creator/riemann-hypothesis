@@ -103,8 +103,7 @@ theorem exists_eq_of_isAlgClosed (Xo : Moduli Dw l) {K : Type} [Field K] [IsAlgC
     intro u u' h
     have h1 : I.ev (N ^ 2) (u - u') = 1 := (I.ker _ hM _).2 h
     have h2 := I.add (N ^ 2) (u - u') u'
-    rw [sub_add_cancel, h1, _root_.one_mul] at h2
-    exact h2
+    rwa [sub_add_cancel, h1, _root_.one_mul] at h2
 
   have key : ∀ c : Fin n → (ptO Xo x ⟶ Xo.univ.t.G), InZh Xo Λ N c →
       ∃ y : Fin n → Dw.La, (∀ (mu : Matrix (Fin n) (Fin n) E), (∀ v ∈ Λ.La, mu.mulVec v ∈ stdLat E n) →
@@ -119,8 +118,7 @@ theorem exists_eq_of_isAlgClosed (Xo : Moduli Dw l) {K : Type} [Field K] [IsAlgC
     have hfun : (fun j => I.ev (N ^ 2) (cm i j • y j)) = fun j => c j ≫ Xo.univ.t.act.act (cm i j) := by
       funext j
       simp only [I.lin, hy]
-    rw [ev_sum I hM, hfun]
-    exact h1
+    rwa [ev_sum I hM, hfun]
   obtain ⟨zz, -, -, hcover⟩ := ZCount.exists_class_representatives E H Dw n Λ N hΛ hN hle
   have hf : ∀ i, ∃ j, w i = fun b => I.ev (N ^ 2) (zz j b) := by
     intro i

@@ -58,8 +58,7 @@ theorem inv_neg' {n : ℕ} (A : Matrix (Fin n) (Fin n) D.host.E) : (-A)⁻¹ = -
   · exact Matrix.inv_eq_left_inv (by rw [neg_mul_neg, Matrix.nonsing_inv_mul A h])
   · have h' : ¬ IsUnit (-A).det := by
       rw [Matrix.det_neg]
-      intro hu
-      exact h (isUnit_of_mul_isUnit_right hu)
+      exact fun hu => h (isUnit_of_mul_isUnit_right hu)
     rw [Matrix.nonsing_inv_apply_not_isUnit _ h, Matrix.nonsing_inv_apply_not_isUnit _ h', neg_zero]
 
 theorem star_char' {R : Type} [CommRing R] (ψ : AddChar R ℂ) (h : ∀ x, ‖ψ x‖ = 1) (x : R) :
@@ -151,8 +150,7 @@ theorem isVacO_conj_negSp {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam
   · obtain ⟨U, hU, hUf⟩ := hv.theta.level
     exact ⟨U, hU, fun u hu hu' => by rw [heisO_conj ψ hn, hUf u hu hu']⟩
   · exact Complex.continuous_conj.comp hv.theta.cont
-  · intro k L hL hL' w
-    exact (Complex.conjCLE.contDiff.comp (hv.theta.smooth k L hL hL' w) :)
+  · exact fun k L hL hL' w => (Complex.conjCLE.contDiff.comp (hv.theta.smooth k L hL hL' w) :)
   · rw [heisO_conj ψ hn, hv.lat.1 u (latO_le S T LS LT _ hu)]
   · rw [heisO_conj ψ hn, hv.lat.2 e he u (latO_le S T LS LT _ hu) hh]
   · funext x
@@ -167,7 +165,6 @@ theorem isVacO_conj_negSp {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam
     refine ⟨h1, fun p hp => ?_⟩
     have := h2 p hp
     unfold nrm2 at this ⊢
-    simp only [Complex.norm_conj]
-    exact this
+    simpa only [Complex.norm_conj] using this
 
 end GlobalTheory.VacConj

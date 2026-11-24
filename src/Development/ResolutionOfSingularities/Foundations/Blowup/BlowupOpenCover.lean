@@ -121,8 +121,7 @@ theorem IsLocallyGeneratedByNonZeroDivisor.comap_of_isOpenImmersion {X U : Schem
     exact IsLocalization.nonZeroDivisors_le_comap (Submonoid.powers r) Γ(X, X.basicOpen r) hg
   · have hmap := I.comap_ideal_eq_map_appLE f ⟨X.basicOpen r, hVa.basicOpen r⟩
       ⟨f ⁻¹ᵁ (X.basicOpen r), hW'aff⟩ le_rfl
-    rw [← e1, Ideal.map_span, Set.image_singleton] at hmap
-    exact hmap
+    rwa [← e1, Ideal.map_span, Set.image_singleton] at hmap
 
 theorem IsLocallyGeneratedByNonZeroDivisor.of_isOpenImmersion_cover {X : Scheme.{u}} (I : X.IdealSheafData)
     {ι : Type v} (U : ι → Scheme.{u}) (f : ∀ i, U i ⟶ X) [∀ i, IsOpenImmersion (f i)]
@@ -214,8 +213,7 @@ private theorem hom_ext_of_isOpenImmersion_cover {X W T : Scheme.{u}} {ι : Type
     (U : ι → Scheme.{u}) (f : ∀ i, U i ⟶ X) [∀ i, IsOpenImmersion (f i)]
     (hcover : ∀ x : X, ∃ i, x ∈ Set.range ⇑(f i).base) (g : W ⟶ X) {a b : W ⟶ T}
     (h : ∀ i, pullback.fst g (f i) ≫ a = pullback.fst g (f i) ≫ b) : a = b := by
-  refine Scheme.Cover.hom_ext (pullbackOpenCoverOfCovers U f hcover g) a b (fun i => ?_)
-  exact h i
+  exact Scheme.Cover.hom_ext (pullbackOpenCoverOfCovers U f hcover g) a b (fun i => (h i))
 
 private theorem exists_hom_of_isOpenImmersion_cover {X W T : Scheme.{u}} {ι : Type v}
     (U : ι → Scheme.{u}) (f : ∀ i, U i ⟶ X) [∀ i, IsOpenImmersion (f i)]
@@ -312,7 +310,6 @@ theorem IsBlowupAlongIdealSheaf.of_comap_of_isOpenImmersion_cover {X X' : Scheme
     refine ⟨φ, hφπ, fun y hy => ?_⟩
     have hy' : y ≫ π = g := hy
     refine eq_of_comp_eq_of_isBlowupAlongIdealSheaf_openCover π I U f hcover h (by rw [hy', hφπ]) ?_
-    rw [hy']
-    exact hg
+    rwa [hy']
 
 end FunctorialResolution.Blowup

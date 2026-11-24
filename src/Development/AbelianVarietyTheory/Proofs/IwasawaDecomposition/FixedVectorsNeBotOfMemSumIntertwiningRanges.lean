@@ -81,8 +81,7 @@ theorem fixed_ne_bot_of_mem_iSup_range :
     intro t
     induction t using Finset.induction_on with
     | empty =>
-      intro x hx hx0 _
-      exact absurd (by simpa [Y] using hx) hx0
+      exact fun x hx hx0 _ => absurd (by simpa [Y] using hx) hx0
     | insert j t hjt ih =>
       intro x hx hx0 hxfix
       have hx' : x ∈ LinearMap.range (T j).toLinearMap ⊔ Y t := by
@@ -123,8 +122,7 @@ theorem fixed_ne_bot_of_mem_iSup_range :
           simp [hvfix _ h.2]
       · have hv : (T j).toLinearMap v ∈ Y t := by
           have : v ∈ (⊤ : Subrepresentation σ).toSubmodule := Submodule.mem_top
-          rw [← hU] at this
-          exact this
+          rwa [← hU] at this
         exact ih _ (add_mem hv hz) hx0 hxfix
   refine key Finset.univ f ?_ hf0 hfix
   simpa [Y] using hf

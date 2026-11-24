@@ -156,9 +156,7 @@ theorem _root_.GlobalTheory.HostModel.exists_roots (L : IntermediateField ℚ �
     ext
     simp only [Units.val_pow_eq_pow_val, Units.val_mk0, ← map_pow]
     congr 1
-    apply Subtype.ext
-    show _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta (n * m) ^ m = _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta n
-    exact _root_.GlobalTheory.HostModel.zeta_mul_pow hn hm
+    exact Subtype.ext (_root_.GlobalTheory.HostModel.zeta_mul_pow hn hm)
   · intro n hn z hz
     rw [Units.val_mk0, ← hg z]
     congr 1

@@ -153,16 +153,14 @@ theorem integrality_baseChange [Module.Free R O] [Module.Finite R O] (f : W →�
   have key := congrArg (blow c) h
   rw [blow_map, blow_add, blow_mul, blow_mul, blow_map, blow_map, blow_map] at key
   apply mem_range_of_regRep c f (Z x y)
-  intro i j
-  exact H _ _ (blow c Z) (blow c S) (blow c S') (blow c Y) key (x, i) (y, j)
+  exact fun i j => H _ _ (blow c Z) (blow c S) (blow c S') (blow c Y) key (x, i) (y, j)
 
 private theorem module_free_zpadic_OL (l : ℕ) [Fact l.Prime] (LL : FinExt l) :
     Module.Free ℤ_[l] ↥(OL LL) := by
   obtain ⟨K, hK⟩ := LL
   delta OL
   have : Module.IsTorsionFree ℤ_[l] K := by
-    rw [Module.isTorsionFree_iff_algebraMap_injective]
-    rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] K]
+    rw [Module.isTorsionFree_iff_algebraMap_injective, IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] K]
     exact (algebraMap ℚ_[l] K).injective.comp (IsFractionRing.injective ℤ_[l] ℚ_[l])
   exact IsIntegralClosure.module_free ℤ_[l] ℚ_[l] K _
 

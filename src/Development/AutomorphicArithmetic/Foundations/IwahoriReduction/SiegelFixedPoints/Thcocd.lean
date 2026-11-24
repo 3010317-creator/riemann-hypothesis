@@ -137,8 +137,7 @@ private theorem eval_eq_zero_of_mem (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (
 private theorem lnFn_le_evF (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (n : ℕ) : lnFn X l n ≤ evF X l n := by
   intro b hb
   rw [mem_evF]
-  intro u
-  exact eval_eq_zero_of_mem X l n ((Submodule.mem_pi.mp hb) u (Set.mem_univ u))
+  exact fun u => eval_eq_zero_of_mem X l n ((Submodule.mem_pi.mp hb) u (Set.mem_univ u))
 
 private theorem eval_kmap_zero (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (n : ℕ) (φ : X.K ≃+* X.K) {y : X.Khat l}
     (h : AdicCompletion.eval (idl l) (X.Kl l) n y = 0) :
@@ -150,8 +149,7 @@ private theorem act_mem_evF (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (n : ℕ)
     (hb : b ∈ evF X l n) : X.act l m b ∈ evF X l n := by
   rw [mem_evF] at hb ⊢
   intro u
-  simp only [Tower.act, LinearMap.coe_mk, AddHom.coe_mk]
-  exact eval_kmap_zero X l n _ (hb _)
+  simpa only [Tower.act, LinearMap.coe_mk, AddHom.coe_mk] using eval_kmap_zero X l n _ (hb _)
 
 private noncomputable def sf (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (n w : ℕ) (a : X.K) : X.Fn l :=
   fun u => (u 0) ^ w • clsK X l n a
@@ -255,8 +253,7 @@ private theorem par_mul {l : ℕ} [Fact l.Prime] {N c d : ℕ} {gm : (ZMod l)ˣ 
     have hx : ((g₀.1 1 0 : ℤ) : ZMod N) = 0 := hN
     simp only [en, Matrix.SpecialLinearGroup.coe_mul, Matrix.mul_apply, Fin.sum_univ_two] at h ⊢
     push_cast
-    simp only [hx, mul_zero, add_zero]
-    exact congrArg (· * _) h
+    simpa only [hx, mul_zero, add_zero] using congrArg (· * _) h
   · have h := hP.col r
     simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.mul_apply, Fin.sum_univ_two]
     push_cast
@@ -278,8 +275,7 @@ theorem UpperTheory.Kd.L.actcls :
   have hdet : ((g₀ 0 0 : ℤ) : ZMod N) * ((g₀ 1 1 : ℤ) : ZMod N) = 1 := by
     have h1 := congrArg (fun z : ℤ => (z : ZMod N)) g₀.2
     simp only [Matrix.det_fin_two, Int.cast_sub, Int.cast_mul, Int.cast_one] at h1
-    rw [CongruenceSubgroup.Gamma0_mem.mp h0N, mul_zero, sub_zero] at h1
-    exact h1
+    rwa [CongruenceSubgroup.Gamma0_mem.mp h0N, mul_zero, sub_zero] at h1
   have hu : IsUnit ((g₀ 1 1 : ℤ) : ZMod N) := ⟨⟨_, _, by rw [mul_comm]; exact hdet, hdet⟩, rfl⟩
   have hdiam : IsDiam N l (((g₀ 1 1 : ℤ) : ZMod N).val) g₀ := by
     refine ⟨h₀, ?_⟩
@@ -312,8 +308,7 @@ theorem UpperTheory.Kd.L.actcls :
       exact sum_congr_conj X l _ (fun γ => by simp only [Finset.mem_filter, Finset.mem_univ, true_and]) hf (gm r₀) h₀
     clear_value A A'
     have hA : b - (l : ℤ_[l]) ^ c₀ • A ∈ evF X l n := by
-      rw [mem_evF]
-      exact hbe
+      rwa [mem_evF]
     have h1 := act_mem_evF X l n (g₀ : Matrix (Fin 2) (Fin 2) ℤ) hA
     have h2 := Submodule.smul_mem (evF X l n) ((l : ℤ_[l]) ^ c₀) hkey
     have h3 := Submodule.add_mem _ h1 h2
@@ -407,8 +402,7 @@ theorem lam_eq : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ �
     have := hlam
     unfold IsLamG at this
     change (s ^ (p ^ (n - m))) (zt ε p (2 * n)) = zt ε p n ^ tt.val * zt ε p (2 * n) at this
-    rw [h2n, hn, map_pow, hs, ← pow_mul, ← pow_mul, ← pow_add] at this
-    exact this
+    rwa [h2n, hn, map_pow, hs, ← pow_mul, ← pow_mul, ← pow_add] at this
   have E2 : z ^ (c ^ (p ^ (n + e - m))) = z ^ (p ^ (n + e) * tt'.val + 1) := by
     rw [← hs, hL, hn, ← pow_mul, pow_succ]
   have hfin : IsOfFinOrder z := isOfFinOrder_iff_pow_eq_one.2 ⟨_, pow_pos hp.pos _, hz.pow_eq_one⟩
@@ -462,8 +456,7 @@ theorem exists_pow_eq {p : ℕ} [Fact p.Prime] (hp2 : p ≠ 2) {m n i : ℕ} (hm
   have hi0 : i ≠ 0 := by rintro rfl; exact hi (dvd_zero _)
   obtain ⟨v, u, hu, rfl⟩ := Nat.exists_eq_pow_mul_and_not_dvd hi0 p hp.ne_one
   have hv : v < n - m := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hi (Dvd.dvd.mul_right (pow_dvd_pow p h) _)
   refine ⟨by omega, ?_⟩
   have hodd : Odd p := hp.odd_of_ne_two hp2
@@ -804,8 +797,7 @@ theorem mem_of_inZl {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω
   have e : (u : Ω) * D + v * p = 1 := by exact_mod_cast congrArg (fun x : ℤ => (x : Ω)) huv
   have hv : A.valuation (D : Ω) = 1 := by
     refine le_antisymm ((A.valuation_le_one_iff _).2 (nat_mem D)) ?_
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have hp1 : A.valuation (p : Ω) < 1 := A.mem_nonunits_iff.1 hp
     have hu1 : A.valuation (u : Ω) ≤ 1 := (A.valuation_le_one_iff _).2 (int_mem u)
     have hv1 : A.valuation (v : Ω) ≤ 1 := (A.valuation_le_one_iff _).2 (int_mem v)
@@ -881,8 +873,7 @@ theorem pows_eq (p : ℕ) [Fact p.Prime] (hp2 : p ≠ 2) (L m : ℕ) (hm : 1 ≤
     rw [← orderOf_units, hu]
     have h := ZMod.orderOf_one_add_mul_prime_pow hpp m (by nlinarith) 1
       (by exact_mod_cast hpp.not_dvd_one) (L - m)
-    rw [Nat.sub_add_cancel hmL, Int.cast_one, mul_one] at h
-    exact h
+    rwa [Nat.sub_add_cancel hmL, Int.cast_one, mul_one] at h
   refine ⟨hord, ?_⟩
   apply Finset.eq_of_subset_of_card_le
   · intro x hx
@@ -1120,8 +1111,7 @@ theorem cores_law : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∃ c : ℕ, ∀ {
   have hcop : Nat.Coprime (1 + p ^ m) (p ^ L) := by
     apply Nat.Coprime.pow_right
     rw [Nat.coprime_comm, Nat.Prime.coprime_iff_not_dvd hpp]
-    intro h
-    exact hpp.not_dvd_one ((Nat.dvd_add_left (dvd_pow_self p (by omega))).1 h)
+    exact fun h => hpp.not_dvd_one ((Nat.dvd_add_left (dvd_pow_self p (by omega))).1 h)
   obtain ⟨g, hgI, hg⟩ := exists_ine_pow ε p A hpA L (ZMod.unitOfCoprime (1 + p ^ m) hcop)
   have hgA : Stab A g := (mem_ine_iff.1 hgI).1
   have hχg : χ g = ZMod.unitOfCoprime (1 + p ^ m) hcop :=
@@ -1246,8 +1236,7 @@ private theorem galB_col (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (s : Ω ≃�
     funext i; fin_cases i <;> simp
   have hg : X.galB l s b ![1, 0] = X.kmap l (X.gal s) (b ![(![1, 0] : Fin 2 → ℤ_[l]) 0,
       (cyclotomicCharacter Ω l s.toRingEquiv : ℤ_[l]) * (![1, 0] : Fin 2 → ℤ_[l]) 1]) := rfl
-  rw [hu] at hg
-  exact hg
+  rwa [hu] at hg
 
 private theorem E1.gal {X : Tower Ω ε} {l n : ℕ} [Fact l.Prime] {a b : X.Fn l} (h : E1 X l n a b) (s : Ω ≃ₐ[ℚ] Ω) :
     E1 X l n (X.galB l s a) (X.galB l s b) := by
@@ -1338,8 +1327,7 @@ private theorem redTop_cycM [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (n m 
   haveI : NeZero l := ⟨hl0⟩
   have hζ : IsPrimitiveRoot (zt ε l (m + n)) (l ^ (m + n)) := by
     have h0 := isPrimitiveRoot_eOm ε (pow_ne_zero (m + n) hl0)
-    rw [Nat.cast_pow] at h0
-    exact h0
+    rwa [Nat.cast_pow] at h0
   have hz : zt ε l (m + n) ^ topM l n m (N * N) = 1 := (hζ.pow_eq_one_iff_dvd _).2 (Dvd.intro _ rfl)
   have h1 := cycM_apply (topM l n m (N * N)) s hz
   rw [h] at h1
@@ -1374,8 +1362,7 @@ private theorem bTop_coc [IsAlgClosure ℚ Ω] [CharZero Ω] (ε : Ω →+* ℂ)
       s * repM (topM l n m (N * N)) (y * (cycM (topM l n m (N * N)) s)⁻¹) := by
     unfold shArg
     simp only [mul_assoc, mul_inv_cancel_left]
-  rw [← e, map_add (f := _), ← h2, e2, h2] at hc
-  exact hc
+  rwa [← e, map_add (f := _), ← h2, e2, h2] at hc
 
 private theorem bMid_coc [IsAlgClosure ℚ Ω] [CharZero Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (N : ℕ) [NeZero N]
     (c d : ℕ) (gm : (ZMod l)ˣ → SL(2, ℤ)) (hp : Par l N c d gm) (x : ZMod N) (w m n c₀ : ℕ) (hw : Odd w) (hm : 1 ≤ m)
@@ -1559,8 +1546,7 @@ private theorem redZ_coe (l n m : ℕ) [Fact l.Prime] (x : (ZMod (l ^ (m + n)))�
 private theorem val_iff (l n m : ℕ) [Fact l.Prime] (x : (ZMod (l ^ (m + n)))ˣ) :
     (x : ZMod (l ^ (m + n))).val ≡ 1 [MOD l ^ m] ↔ redZ l n m x = 1 := by
   haveI : NeZero (l ^ (m + n)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  rw [Units.ext_iff, ← ZMod.natCast_eq_natCast_iff]
-  rw [redZ_coe]
+  rw [Units.ext_iff, ← ZMod.natCast_eq_natCast_iff, redZ_coe]
   simp
 
 private theorem sum_fib {M : Type*} [AddCommMonoid M] (l n m N : ℕ) [Fact l.Prime] [NeZero (topM l n m (N * N))]
@@ -1754,8 +1740,7 @@ theorem UpperTheory.Kd.L.law :
     (fun u => Φ s (u * zh)) (fun u => hB s _) (fun u => (hΦ s _).1)
   have hpush : ∑ u ∈ Finset.univ.filter (fun u : (ZMod (l ^ (m + n)))ˣ => (u : ZMod (l ^ (m + n))).val ≡ 1 [MOD l ^ m]),
       bMid X l n m N bB s (u * zh) = GlobalTheory.KA.push (redM l n m (N * N)) (bTop X l n m N bB) s y := by
-    simp only [bMid, GlobalTheory.KA.push]
-    exact sum_fib l n m N (bTop X l n m N bB s) zh y hzh
+    simpa only [bMid, GlobalTheory.KA.push] using sum_fib l n m N (bTop X l n m N bB s) zh y hzh
   rw [hpush] at hthb
   have hmem : GlobalTheory.KA.push (redM l n m (N * N)) (bTop X l n m N bB) s y ∈ X.B N l w := by
     rw [← hpush]
@@ -1773,8 +1758,7 @@ theorem UpperTheory.Kd.L.law :
   have hfin := final_step (e := L₀ + c₂ + v) (c₀ := c₀) h0 h1 hFE (inZl_mem ε hp hl hE) (natCast_mem A tt.val)
   have eg : s (g.coeff (i : ℚ)) - g.coeff (i : ℚ) = (l : Ω) ^ (L₀ + c₂ + v) * (s (ξ' (i : ℚ)) - ξ' (i : ℚ)) := by
     rw [hg i, map_mul, map_pow, map_natCast, mul_sub]
-  rw [eg]
-  exact hfin
+  rwa [eg]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.IwahoriReduction.SiegelFixedPoints.ExistsSeries =====
@@ -1822,8 +1806,7 @@ theorem UpperTheory.Kd.L.twist :
       simp only [bTop]
       exact _root_.GlobalTheory.KZ.GammaZeroComm.galB_act_comm ε X ε.injective ⟨ψ, hψ2, hψ1⟩ N l w hP.odd hP.five hcop hw _ hD.1 _ _
         (hB _ (shArg_mem_fixMu _ s y')).1
-    rw [hpush]
-    exact hφ
+    rwa [hpush]
   · have h1 := (CongruenceSubgroup.Gamma1_mem N (gm 1)).mp (hG1 1)
     have h2 := CongruenceSubgroup.Gamma0_mem.mp hD.1.1
     have h3 := hD.2

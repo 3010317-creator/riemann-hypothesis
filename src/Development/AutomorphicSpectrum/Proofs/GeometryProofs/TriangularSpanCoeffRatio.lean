@@ -76,11 +76,9 @@ theorem diag_compare_of_triIn : ∀ (V F EC : Type) [CommRing V] [Field F] [Alge
     have h1 : ∑ m, (algebraMap V F d * cv m - ∑ j, algebraMap V F (e j) * cw j m) • u m = 0 := by
       simp_rw [sub_smul]
       rw [Finset.sum_sub_distrib, ← hL, ← hR, he, sub_self]
-    intro m
-    exact sub_eq_zero.1 (Fintype.linearIndependent_iff.1 hu _ h1 m)
+    exact fun m => sub_eq_zero.1 (Fintype.linearIndependent_iff.1 hu _ h1 m)
   have hzero : ∀ j, i < j → algebraMap V F (e j) = 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     set S := Finset.univ.filter (fun j => i < j ∧ algebraMap V F (e j) ≠ 0) with hSdef
     have hS : S.Nonempty := by
       obtain ⟨j, hj⟩ := hcon
@@ -100,8 +98,7 @@ theorem diag_compare_of_triIn : ∀ (V F EC : Type) [CommRing V] [Field F] [Alge
       rcases lt_or_gt_of_ne hjJ with h | h
       · rw [hcw0 j J h, mul_zero]
       · rw [hmax j h, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ J) h
+    · exact fun h => absurd (Finset.mem_univ J) h
   refine ⟨e i, ?_⟩
   have hk := key i
   rw [hcvi, Finset.sum_eq_single i, hcwd i] at hk
@@ -110,7 +107,6 @@ theorem diag_compare_of_triIn : ∀ (V F EC : Type) [CommRing V] [Field F] [Alge
     rcases lt_or_gt_of_ne hji with h | h
     · rw [hcw0 j i h, mul_zero]
     · rw [hzero j h, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 end GlobalTheory.CompanionTheory.Ar.Rec.FinRd.Roots

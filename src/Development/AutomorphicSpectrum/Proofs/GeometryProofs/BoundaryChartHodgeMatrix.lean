@@ -121,8 +121,7 @@ theorem linearLift_bijective_of_discrete_kernels : ∀ (M : Type) [Group M] (g g
         field_simp
       rw [this]
       linarith
-    have h3 := hsep _ h2 h1
-    exact hne ((smul_eq_zero.mp h3).resolve_left ht)
+    exact hne ((smul_eq_zero.mp (hsep _ h2 h1)).resolve_left ht)
   · intro v
     by_contra hv
     have hsub : ∀ a b, ex a = 1 → ex b = 1 → a ≠ b → ε ≤ ‖a - b‖ := by
@@ -221,8 +220,7 @@ theorem exists_fibre_equiv : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   refine ⟨(e₂.trans e₁.symm).toEquiv, fun q q' => map_mul (e₂.trans e₁.symm) q q', fun q =>
     ⟨(e₂ q).left, Over.w (e₂ q), he₂ q, ?_⟩, fun N q q' ζ h => ?_⟩
   · have := he₁ ((e₂.trans e₁.symm) q)
-    rw [key] at this
-    exact this
+    rwa [key] at this
   · have ha : e₂ q ^ N = 1 := by
       rw [← key, ← map_pow]
       exact (congrArg e₁ h.1).trans (map_one e₁)
@@ -283,8 +281,7 @@ theorem punct_eq_pi (n a : ℕ) (ρ : ℝ) (hρ : 0 < ρ) :
   constructor
   · rintro ⟨h1, h2⟩ i
     exact ⟨h1 i, h2 i⟩
-  · intro h
-    exact ⟨fun i => (h i).1, fun i => (h i).2⟩
+  · exact fun h => ⟨fun i => (h i).1, fun i => (h i).2⟩
 
 theorem isOpen_factor (n a : ℕ) (ρ : ℝ) (i : Fin n) : IsOpen (factor a ρ n i) := by
   by_cases h : i.val < a

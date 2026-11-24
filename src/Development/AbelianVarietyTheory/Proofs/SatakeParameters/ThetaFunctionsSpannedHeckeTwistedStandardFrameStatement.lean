@@ -339,8 +339,7 @@ theorem Place.isComp_of_chrEq : ∀ (D : D7) (s : SplitPlace D.host.E) (p : Glob
     have : (fun _ => (1 : ℂˣ)) =ᶠ[nhds 1] μw := Filter.mem_of_superset hker fun x hx => (MonoidHom.mem_ker.1 hx).symm
     have h2 := (continuousAt_const.congr this).tendsto
     rw [map_one] at h2
-    rw [ContinuousAt, map_one]
-    exact h2
+    rwa [ContinuousAt, map_one]
   have hF1 : Continuous fun u => ((μw u : ℂˣ) : ℂ) := Units.continuous_val.comp hμc
   have hd : Dense (Set.range (Units.map (algebraMap D.host.E (s.w.adicCompletion D.host.E) : D.host.E →* s.w.adicCompletion D.host.E))) := by
     rw [dense_iff_inter_open]
@@ -464,8 +463,7 @@ theorem side_loc (D : D7) (s : SplitPlace D.host.E) (hF : D.host.F = maximalReal
     have e5 : (Formalism.L2.Theta.mt V (PV.ψ h)).map (Formalism.L2.Theta.finPart D) = _ := hm h
     have hK : ((h.1 : Matrix (Fin n) (Fin n) (ReciprocityTheory.Aut.AL D.host.E)).map (GlobalTheory.NJoin.tensCast hF).symm).map Φ =
         (Matrix.GeneralLinearGroup.map c.toRingHom (s.loc n h)).val := by
-      refine Matrix.ext fun a b => ?_
-      exact congrArg (fun y => c (s.proj y)) (RingEquiv.apply_symm_apply _ _)
+      exact Matrix.ext fun a b => congrArg (fun y => c (s.proj y)) (RingEquiv.apply_symm_apply _ _)
     rw [e7, e5, ← hK]
     exact (Matrix.map_mul).trans (congrArg (· * β'.map Φ) Matrix.map_mul)
 
@@ -637,8 +635,7 @@ theorem exists_split_lattices : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel 
       change upH p FS FT (N • p.down FS FT t) ∈ Λ₀
       rw [map_nsmul]
       change N • p.up FS FT (p.down FS FT t) ∈ Λ₀
-      rw [up_down p FS FT h1]
-      exact h2
+      rwa [up_down p FS FT h1]
     have hmB : p.down FS FT t ∈ (fun m => (N : k)⁻¹ • m) '' ((Λ₀.comap (upH p FS FT) : AddSubgroup _) : Set (Matrix Y Y' k)) :=
       ⟨_, hm, by simp only; rw [← Nat.cast_smul_eq_nsmul k, smul_smul, inv_mul_cancel₀ hNk, one_smul]⟩
     have hG' := hG hmB
@@ -846,8 +843,7 @@ theorem mem_span_translates_of_fixed {G V : Type} [AddCommGroup G] [AddCommGroup
 
   have finS : ({z : ℂ | z ^ n = 1} : Set ℂ).Finite :=
     (Polynomial.nthRoots n (1 : ℂ)).toFinset.finite_toSet.subset fun z hz => by
-      simp only [Finset.mem_coe, Multiset.mem_toFinset]
-      exact (Polynomial.mem_nthRoots hn).2 hz
+      simpa only [Finset.mem_coe, Multiset.mem_toFinset] using (Polynomial.mem_nthRoots hn).2 hz
   haveI := finS.to_subtype
   have finQ' : Finite (P ⧸ K.addSubgroupOf P) := by
     let Φ : (P ⧸ K.addSubgroupOf P) → ((L' ⧸ L.addSubgroupOf L') → ({z : ℂ | z ^ n = 1} : Set ℂ)) :=
@@ -912,8 +908,7 @@ theorem mem_span_translates_of_fixed {G V : Type} [AddCommGroup G] [AddCommGroup
     rw [Finset.sum_eq_single (0 : P ⧸ K.addSubgroupOf P)]
     · have h0K : (((0 : P ⧸ K.addSubgroupOf P).out : P) : G) ∈ K := by
         have := QuotientAddGroup.out_eq' (0 : P ⧸ K.addSubgroupOf P)
-        rw [QuotientAddGroup.eq_zero_iff, AddSubgroup.mem_addSubgroupOf] at this
-        exact this
+        rwa [QuotientAddGroup.eq_zero_iff, AddSubgroup.mem_addSubgroupOf] at this
       have h1 : ∀ q : L' ⧸ L.addSubgroupOf L',
           χ ((q.out : L') : G) (((0 : P ⧸ K.addSubgroupOf P).out : P) : G) = 1 :=
         fun q => hLK _ (q.out).2 _ h0K
@@ -926,8 +921,7 @@ theorem mem_span_translates_of_fixed {G V : Type} [AddCommGroup G] [AddCommGroup
         rw [← QuotientAddGroup.out_eq' q', QuotientAddGroup.eq_zero_iff, AddSubgroup.mem_addSubgroupOf]
         exact hK
       obtain ⟨x, hx, hxy⟩ : ∃ x ∈ L', χ x ((q'.out : P) : G) ≠ 1 := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         exact hnK (hsep _ (hPY _ (q'.out).2) hc)
       have hyP := (q'.out).2
       have shift : ∀ q : L' ⧸ L.addSubgroupOf L',

@@ -244,8 +244,7 @@ theorem exists_isUnitDet {e : AE D} {S : Finset (Pl D.host.E)} (he : IsIdemSum e
   obtain ⟨hd, hd', z, hz⟩ := det_cong_int hN hZ h
   have hzv : N'.det = N.det + (c : EAf D) * (z : EAf D) := by
     have := congrArg Subtype.val hz
-    rw [← coe_nat (OO) c]
-    exact this
+    rwa [← coe_nat (OO) c]
   have hu : toEAf D (x : AE D) ∈ OO := by
     rw [h2]
     exact add_mem (sub_mem (one_mem _) hE) (mul_mem hE hd)
@@ -275,8 +274,7 @@ theorem nu_eq {ν : (AE D)ˣ →* Circle} {e : AE D} {S : Finset (Pl D.host.E)} 
   obtain ⟨hd, hd', z, hz⟩ := det_cong_int hN hZ h
   have hzv : N'.det = N.det + (n : EAf D) * (c : EAf D) * (z : EAf D) := by
     have := congrArg Subtype.val hz
-    rw [← Nat.cast_mul, ← coe_nat (OO) (n * c)]
-    exact this
+    rwa [← Nat.cast_mul, ← coe_nat (OO) (n * c)]
   have hX : toEAf D (x : AE D) ∈ OO := by
     rw [a2]
     exact add_mem (sub_mem (one_mem _) hE) (mul_mem hE hd)
@@ -308,8 +306,7 @@ theorem nu_eq {ν : (AE D)ˣ →* Circle} {e : AE D} {S : Finset (Pl D.host.E)} 
       finPart_eq_of_toEAf (by
         rw [RingHom.map_sub, RingHom.map_one, hinv', RingHom.map_mul, hom_nsmul, hw, nsmul_eq_mul]
         exact ring_id a2 b2 hzv hm)
-    rw [RingHom.map_sub, RingHom.map_one, hom_nsmul] at e1
-    exact e1
+    rwa [RingHom.map_sub, RingHom.map_one, hom_nsmul] at e1
   have h1 := hl _ hr ⟨_, GlobalTheory.PlaceDatum.finPart_mem_of_toEAf hwI, key⟩
   rw [map_mul, map_inv] at h1
   exact (mul_inv_eq_one.1 h1).symm

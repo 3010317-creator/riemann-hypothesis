@@ -398,8 +398,7 @@ lemma _root_.GlobalTheory.PeriodicWeierstrass.tendsto_leading (W : WeierstrassCu
     simpa [ht0] using this
   have hv : Tendsto (fun z => c / (z⁻¹ * t z)) (𝓝[≠] 0) (𝓝 1) := by
     have := (tendsto_const_nhds (x := c)).div hu hc
-    rw [div_self hc] at this
-    exact this
+    rwa [div_self hc] at this
   have htz0 : ∀ᶠ z in 𝓝[≠] 0, t z ≠ 0 :=
     (hu.eventually_ne hc).mono fun z hz => right_ne_zero_of_mul hz
   have ht' : Tendsto t (𝓝[≠] 0) (𝓝 0) := by
@@ -521,8 +520,7 @@ theorem _root_.GlobalTheory.invariants_eq_of_periodic_solution :
   have hp : (C (2 * b + 2 * W.a₁ * c) * X + C (2 * k' + 2 * W.a₁ * c * k + 2 * W.a₃ * c ^ 3)) ^ 2
       * (C 4 * X ^ 3 - C L.g₂ * X - C L.g₃) = 0 := by
     refine Polynomial.funext fun X => ?_
-    simp only [eval_mul, eval_pow, eval_add, eval_sub, eval_C, eval_X, eval_zero]
-    exact (hAB X).2
+    simpa only [eval_mul, eval_pow, eval_add, eval_sub, eval_C, eval_X, eval_zero] using (hAB X).2
   open Polynomial in
   have hcub : (C 4 * X ^ 3 - C L.g₂ * X - C L.g₃ : ℂ[X]) ≠ 0 := by
     intro h

@@ -119,10 +119,8 @@ theorem ind_trans (Q : Subgroup G) (π : G → L) (hmul : ∀ a ∈ Q, ∀ b ∈
     congr 2
     symm
     refine Finset.card_bij (fun q _ => (q : G)) ?_ ?_ ?_
-    · intro q hq
-      exact Finset.mem_filter.2 ⟨Finset.mem_univ _, q.2, (Finset.mem_filter.1 hq).2⟩
-    · intro a _ b _ h
-      exact Subtype.ext h
+    · exact fun q hq => Finset.mem_filter.2 ⟨Finset.mem_univ _, q.2, (Finset.mem_filter.1 hq).2⟩
+    · exact fun a _ b _ h => Subtype.ext h
     · intro g hg
       simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hg
       exact ⟨⟨g, hg.1⟩, Finset.mem_filter.2 ⟨Finset.mem_univ _, hg.2⟩, rfl⟩
@@ -139,8 +137,7 @@ theorem ind_trans (Q : Subgroup G) (π : G → L) (hmul : ∀ a ∈ Q, ∀ b ∈
         have hm : (q : G)⁻¹ * z * q ∈ Q := Q.mul_mem (Q.mul_mem (Q.inv_mem q.2) hz) q.2
         have e : π ((q : G)⁻¹ * z * q) = (φ q)⁻¹ * π z * φ q := by
           have := map_mul φ (q⁻¹ * ⟨z, hz⟩) q
-          rw [map_mul φ q⁻¹, map_inv] at this
-          exact this
+          rwa [map_mul φ q⁻¹, map_inv] at this
         simp only [hF, hm, true_and, e, hA z hz q q.2, mul_ite, mul_zero]
       simp only [h2, ← Finset.mul_sum]
       unfold ind
@@ -231,8 +228,7 @@ theorem hcL_eq_ind (L : List (Pc p)) (hL : ∀ q ∈ L, IsClass q.2) :
       have h := map_mul φ (⟨y, hy⟩⁻¹ * ⟨z, hz⟩) ⟨y, hy⟩
       rw [map_mul φ _ ⟨z, hz⟩, map_inv] at h
       have h2 := hL q List.mem_cons_self (φ ⟨z, hz⟩) (φ ⟨y, hy⟩)⁻¹
-      rw [inv_inv, ← h] at h2
-      exact h2
+      rwa [inv_inv, ← h] at h2
     have h := ind_trans (G := Gn p (degL (q :: L))) (L := Gn p (degL L)) Q
       (fun g : Gn p (degL (q :: L)) => toG (br q.1 (degL L) g.val)) hbr hsurj
       (fun g : Gn p (degL (q :: L)) => q.2 (toG (tl q.1 g.val))) hA

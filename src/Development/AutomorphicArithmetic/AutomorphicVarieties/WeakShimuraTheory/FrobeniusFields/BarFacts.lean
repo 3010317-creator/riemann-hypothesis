@@ -106,8 +106,7 @@ theorem UpperTheory.V.Ws.barFacts :
   haveI := Fintype.ofFinite (ResidueField c.O)
   have hneg : (-1 : ResidueField c.O) ≠ 1 := by
     apply Ring.neg_one_ne_one_of_char_ne_two
-    rw [ringChar.eq (ResidueField c.O) l]
-    exact hl2
+    rwa [ringChar.eq (ResidueField c.O) l]
   have hfrob : ∀ (x : ResidueField c.O) (j : ℕ), x ^ l ^ j = 1 → x = 1 := by
     intro x j hx
     have h0 : (x - 1) ^ l ^ j = 0 := by
@@ -175,6 +174,5 @@ theorem UpperTheory.V.Ws.barFacts :
       rw [hPsi]
       unfold Raw.bar
       rw [h1, h2, Units.val_one, map_one, one_pow, one_mul]
-    rw [← SetLike.mem_coe, ← hset]
-    exact this
+    rwa [← SetLike.mem_coe, ← hset]
   exact ⟨hneg, hfrob, hal, hth, hPsi, hr, hrb, hm, hopen⟩

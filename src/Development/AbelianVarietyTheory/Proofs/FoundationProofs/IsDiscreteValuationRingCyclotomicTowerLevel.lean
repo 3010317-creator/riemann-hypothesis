@@ -76,8 +76,7 @@ theorem dvr_of_span_maximal {S : Type*} [CommRing S] [IsNoetherianRing S] (π : 
     intro a ha
     classical
     have hex : ∃ k : ℕ, ¬ π ^ k ∣ a := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       have hb := Ideal.iInf_pow_eq_bot_of_isLocalRing (Ideal.span {π}) hmax.ne_top
       have : a ∈ (⨅ i : ℕ, (Ideal.span {π}) ^ i) := by
         rw [Ideal.mem_iInf]
@@ -106,8 +105,7 @@ theorem dvr_of_span_maximal {S : Type*} [CommRing S] [IsNoetherianRing S] (π : 
     rw [hm, Ideal.mem_span_singleton] at this
     exact h2 (by rw [pow_succ]; exact mul_dvd_mul_left _ this)
   haveI : NoZeroDivisors S := ⟨fun {a b} hab => by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     obtain ⟨k, u, hu, rfl⟩ := hfac a hcon.1
     obtain ⟨l, v, hv, rfl⟩ := hfac b hcon.2
     apply hnil
@@ -117,8 +115,7 @@ theorem dvr_of_span_maximal {S : Type*} [CommRing S] [IsNoetherianRing S] (π : 
   haveI : IsDomain S := NoZeroDivisors.to_isDomain S
   have hπ0 : π ≠ 0 := fun h => hnil (h ▸ IsNilpotent.zero)
   have hnf : ¬ IsField S := by
-    rw [IsLocalRing.isField_iff_maximalIdeal_eq, hm, Ideal.span_singleton_eq_bot]
-    exact hπ0
+    rwa [IsLocalRing.isField_iff_maximalIdeal_eq, hm, Ideal.span_singleton_eq_bot]
   have hp : (IsLocalRing.maximalIdeal S).IsPrincipal := ⟨⟨π, hm⟩⟩
   haveI : IsDiscreteValuationRing S := ((IsDiscreteValuationRing.TFAE S hnf).out 1 5).2 hp
   exact ⟨inferInstance, inferInstance, (IsDiscreteValuationRing.irreducible_iff_uniformizer π).2 hm⟩
@@ -213,8 +210,7 @@ theorem dvr_of_generators {R S F : Type*} [CommRing R] [IsDomain R] [IsDiscreteV
     haveI : IsDomain (S ⧸ M) := Ideal.Quotient.isDomain M
     haveI : CharP (S ⧸ M) ℓ := by
       refine (CharP.charP_iff_prime_eq_zero Fact.out).2 ?_
-      rw [← map_natCast (Ideal.Quotient.mk M), Ideal.Quotient.eq_zero_iff_mem]
-      exact hpM
+      rwa [← map_natCast (Ideal.Quotient.mk M), Ideal.Quotient.eq_zero_iff_mem]
     rw [← Ideal.Quotient.eq_zero_iff_mem]
     apply eq_zero_of_pow_eq_zero (n := ℓ ^ (m + 1))
     rw [map_sub, map_one, sub_pow_char_pow, ← map_pow, hx1, map_one, one_pow, sub_self]

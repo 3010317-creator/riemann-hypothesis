@@ -89,8 +89,7 @@ theorem rank_killed_le (f : M →ₗ[Rg] N) (hf : Function.Injective f) :
   refine LinearMap.rank_le_of_injective
     ((f.restrictScalars ℂ).restrict (p := killed I M) (q := killed I N)
       (fun m hm => map_mem_killed I f hm)) ?_
-  intro a b hab
-  exact Subtype.ext (hf (congrArg Subtype.val hab))
+  exact fun a b hab => Subtype.ext (hf (congrArg Subtype.val hab))
 
 theorem rank_killed_congr (e : M ≃ₗ[Rg] N) :
     Module.rank ℂ (killed I M) = Module.rank ℂ (killed I N) :=
@@ -172,8 +171,7 @@ theorem rank_hom_le_killed [IsSimpleModule Rg S] {s : S} (hs : s ≠ 0) (hI : �
 theorem exists_ne_zero_of_rank_eq {A B : Type} [AddCommGroup A] [Module ℂ A] [AddCommGroup B]
     [Module ℂ B] (h : Module.rank ℂ A = Module.rank ℂ B) {a : A} (ha : a ≠ 0) :
     ∃ b : B, b ≠ 0 := by
-  by_contra hb
-  push Not at hb
+  by_contra! hb
   exact ha (rank_zero_iff_forall_zero.1 (h.trans (rank_zero_iff_forall_zero.2 hb)) a)
 
 theorem exists_simple {A : Type} [AddCommGroup A] [Module Rg A] [IsSemisimpleModule Rg A]
@@ -322,8 +320,7 @@ theorem isAdmissible_of_injective {σ : Representation ℂ H W} {ρ : Representa
     refine FiniteDimensional.of_injective
       (f.restrict (p := GlobalTheory.PRep.fixed σ K) (q := GlobalTheory.PRep.fixed ρ K) (fun v hv k => ?_)) ?_
     · rw [← hf, hv k, map_smul]
-    · intro a b hab
-      exact Subtype.ext (hi (congrArg Subtype.val hab))
+    · exact fun a b hab => Subtype.ext (hi (congrArg Subtype.val hab))
 
 def pieces (ρ : Representation ℂ H X) (C : Submodule ℂ X) :
     Set (Submodule (MonoidAlgebra ℂ H) ρ.asModule) :=
@@ -340,8 +337,7 @@ theorem mem_sSup_pieces_of_mem {ρ : Representation ℂ H X} {C : Submodule ℂ 
     (hx : x ∈ irrSum ρ C) : ρ.asModuleEquiv.symm x ∈ sSup (pieces ρ C) := by
   have : irrSum ρ C ≤ ((sSup (pieces ρ C)).restrictScalars ℂ).comap
       ρ.asModuleEquiv.symm.toLinearMap := by
-    refine iSup₂_le fun U hU y hy => ?_
-    exact (le_sSup (s := pieces ρ C) ⟨U, hU, rfl⟩ : U.asSubmodule ≤ _) hy
+    exact iSup₂_le fun U hU y hy => (le_sSup (s := pieces ρ C) ⟨U, hU, rfl⟩ : U.asSubmodule ≤ _) hy
   exact this hx
 
 theorem mem_of_mem_sSup_pieces {ρ : Representation ℂ H X} {C : Submodule ℂ X} {x : ρ.asModule}

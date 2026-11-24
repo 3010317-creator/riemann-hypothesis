@@ -267,9 +267,7 @@ theorem exists_finite_field_of_points (K : Type) [Field K] (C : Type) [CommRing 
   | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
   | smul a x _ hx =>
     rw [Algebra.smul_def, map_mul]
-    refine mul_mem ?_ hx
-    refine ⟨e (algebraMap K E a), ?_⟩
-    exact (RingHom.congr_fun hc a).symm
+    exact mul_mem ⟨e (algebraMap K E a), (RingHom.congr_fun hc a).symm⟩ hx
 
 end GlobalTheory.FiniteFieldOfPoints
 end -- clump:auto
@@ -366,8 +364,7 @@ theorem torsion_rational : ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁] [Is
   have hψ₀φ : ψ₀.comp φ = ga := by
     refine RingHom.ext fun r => j.injective ?_
     have := RingHom.congr_fun hψφ r
-    rw [← hψ₀] at this
-    exact this
+    rwa [← hψ₀] at this
   let y₀ : Sp (FractionRing R₂) ⟶ A.A.left := spMap ψ₀ ≫ p
   have hy₀ : y₀ ≫ A.A.hom = 𝟙 _ ≫ spMap ga := by
     change (spMap ψ₀ ≫ p) ≫ _ = _
@@ -1507,8 +1504,7 @@ theorem qkExt_nsmul {R : Type} [CommRing R] [IsDomain R] (D : DegPre R) (hB : D.
     (hg : l • q.g = p.g) : ∃ q' : QkPt D F' N, QkExt σ.toRingHom q q' ∧ q'.y = p'.y ∧ l • q'.g = p'.g := by
   have hσ : σ.toRingHom.comp (algebraMap (FractionRing R) F) = algebraMap (FractionRing R) F' := RingHom.ext σ.commutes
   refine ⟨GlobalTheory.TorusExt.qkExt hB σ.toRingHom hσ q, (GlobalTheory.TorusExt.qkExt_iff hB _ hσ _ _).2 rfl, ?_, ?_⟩
-  · rw [(GlobalTheory.TorusExt.qkExt_iff hB _ hσ _ _).1 hp]
-    exact hy
+  · rwa [(GlobalTheory.TorusExt.qkExt_iff hB _ hσ _ _).1 hp]
   · rw [(GlobalTheory.TorusExt.qkExt_iff hB _ hσ _ _).1 hp]
     show l • GlobalTheory.TorusExt.gtExt D σ.toRingHom hσ q.g = GlobalTheory.TorusExt.gtExt D σ.toRingHom hσ p.g
     rw [← map_nsmul, hg]

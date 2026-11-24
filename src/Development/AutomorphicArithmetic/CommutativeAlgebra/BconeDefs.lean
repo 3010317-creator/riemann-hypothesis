@@ -79,11 +79,9 @@ theorem prodW_compatible (W : Scheme.{0}) :
   constructor
   intro ℱ Z T x hx Y₁ Y₂ X f₁ f₂ g₁ g₂ hg₁ hg₂ e
   have hfst : f₁ ≫ prod.fst = f₂ ≫ prod.fst := by
-    have h := congrArg (· ≫ (prod.fst : W ⨯ Z ⟶ W)) e
-    simpa using h
+    simpa using congrArg (· ≫ (prod.fst : W ⨯ Z ⟶ W)) e
   have hsnd : (f₁ ≫ prod.snd) ≫ g₁ = (f₂ ≫ prod.snd) ≫ g₂ := by
-    have h := congrArg (· ≫ (prod.snd : W ⨯ Z ⟶ Z)) e
-    simpa using h
+    simpa using congrArg (· ≫ (prod.snd : W ⨯ Z ⟶ Z)) e
   let u : X ⟶ (prodW W).obj X := prod.lift (f₁ ≫ prod.fst) (𝟙 X)
   have k₁ : f₁ = u ≫ (prodW W).map (f₁ ≫ prod.snd) := by
     apply prod.hom_ext <;> simp [u]

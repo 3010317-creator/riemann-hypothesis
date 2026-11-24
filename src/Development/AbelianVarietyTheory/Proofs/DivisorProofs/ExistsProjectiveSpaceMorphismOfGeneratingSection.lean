@@ -460,8 +460,7 @@ theorem map_genericPoint_eq : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIn
     have h1 : genericPoint X ∈ X.basicOpen ((π.appLE (ProjSpace.chart k D 0) W le_rfl).hom a) := by
       rw [Scheme.mem_basicOpen X _ _ h]
       exact (key a ha).isUnit
-    have h2 := (Scheme.basicOpen_appLE π W _ le_rfl a).le h1
-    exact h2.2
+    exact ((Scheme.basicOpen_appLE π W _ le_rfl a).le h1).2
   refine IsGenericPoint.eq ?_ (genericPoint_spec _)
   refine Dense.closure_eq (dense_iff_inter_open.2 fun U hU hne => ?_)
   obtain ⟨y, -, hyU, hyc⟩ := (IrreducibleSpace.isIrreducible_univ (PSpace k D)).2 U
@@ -471,8 +470,7 @@ theorem map_genericPoint_eq : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIn
     (V := ⟨U, hU⟩) ⟨y, hyU⟩ hyc
   have hf0 : f ≠ 0 := by
     rintro rfl
-    rw [Scheme.basicOpen_zero] at hyf
-    exact hyf
+    rwa [Scheme.basicOpen_zero] at hyf
   exact ⟨_, hf (hmem f hf0), rfl⟩
 
 end GlobalTheory.GenericImage

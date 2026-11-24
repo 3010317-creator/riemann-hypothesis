@@ -115,9 +115,7 @@ private theorem isAffineOpen_image {W Z : Scheme.{u}} (g : W ⟶ Z) [IsOpenImmer
 
 private theorem preimage_image_opens {W Z : Scheme.{u}} (g : W ⟶ Z) [IsOpenImmersion g]
     (V : W.Opens) : g ⁻¹ᵁ (g ''ᵁ V) = V := by
-  refine TopologicalSpace.Opens.ext ?_
-  show ⇑g.base ⁻¹' (⇑g.base '' (V : Set ↥W)) = (V : Set ↥W)
-  exact Set.preimage_image_eq _ g.isOpenEmbedding.injective
+  exact TopologicalSpace.Opens.ext (Set.preimage_image_eq _ g.isOpenEmbedding.injective)
 
 private theorem ker_ideal_eq_ker_app {T W : Scheme.{u}} (f : T ⟶ W) [QuasiCompact f]
     (U : W.affineOpens) :
@@ -149,8 +147,7 @@ private theorem bijective_of_isIso {A B : CommRingCat.{u}} (φ : A ⟶ B) [IsIso
   · intro a a' h
     have h2 : CommRingCat.Hom.hom (inv φ) (CommRingCat.Hom.hom φ a)
         = CommRingCat.Hom.hom (inv φ) (CommRingCat.Hom.hom φ a') := by rw [h]
-    simp only [h3] at h2
-    exact h2
+    simpa only [h3] using h2
   · intro b
     exact ⟨CommRingCat.Hom.hom (inv φ) b,
       congrArg (fun ψ : B ⟶ B => CommRingCat.Hom.hom ψ b) (IsIso.inv_hom_id φ)⟩
@@ -209,8 +206,7 @@ theorem idealSheafData_ext_coprod {X Y : Scheme.{u}} (I J : (X ⨿ Y).IdealSheaf
       refine TopologicalSpace.Opens.mem_iSup.mpr ⟨Sum.inl V, ?_⟩
       exact SetLike.mem_coe.mp (Set.mem_image_of_mem _ hV)
     · have hz' : z ∈ Set.range ⇑(coprod.inr : Y ⟶ X ⨿ Y).base := by
-        rw [range_coprod_inr_eq_compl X Y]
-        exact hz
+        rwa [range_coprod_inr_eq_compl X Y]
       obtain ⟨y, rfl⟩ := hz'
       obtain ⟨V, hV⟩ := exists_affineOpen_mem Y y
       refine TopologicalSpace.Opens.mem_iSup.mpr ⟨Sum.inr V, ?_⟩
@@ -228,13 +224,11 @@ private theorem range_fst_subset_range_inl {A B A' B' : Scheme.{u}} (p : A' ⟶ 
   rintro _ ⟨t, rfl⟩
   by_contra hmem
   have hy : (PullbackCone.fst s).base t ∈ Set.range ⇑(coprod.inr : B' ⟶ A' ⨿ B').base := by
-    rw [range_coprod_inr_eq_compl A' B', Set.mem_compl_iff]
-    exact hmem
+    rwa [range_coprod_inr_eq_compl A' B', Set.mem_compl_iff]
   obtain ⟨b, hb⟩ := hy
   have e1 : (coprod.map p q).base ((PullbackCone.fst s).base t)
       = (coprod.inl : A ⟶ A ⨿ B).base ((PullbackCone.snd s).base t) := by
-    have h := congrArg (fun m : s.pt ⟶ A ⨿ B => m.base t) s.condition
-    simpa using h
+    simpa using congrArg (fun m : s.pt ⟶ A ⨿ B => m.base t) s.condition
   have hmapr : ((coprod.inr : B' ⟶ A' ⨿ B') ≫ coprod.map p q)
       = q ≫ (coprod.inr : B ⟶ A ⨿ B) := by simp
   have e2 : (coprod.map p q).base ((coprod.inr : B' ⟶ A' ⨿ B').base b)
@@ -258,8 +252,7 @@ private theorem range_fst_subset_range_inr {A B A' B' : Scheme.{u}} (p : A' ⟶ 
   obtain ⟨a, ha⟩ := hy
   have e1 : (coprod.map p q).base ((PullbackCone.fst s).base t)
       = (coprod.inr : B ⟶ A ⨿ B).base ((PullbackCone.snd s).base t) := by
-    have h := congrArg (fun m : s.pt ⟶ A ⨿ B => m.base t) s.condition
-    simpa using h
+    simpa using congrArg (fun m : s.pt ⟶ A ⨿ B => m.base t) s.condition
   have hmapl : ((coprod.inl : A' ⟶ A' ⨿ B') ≫ coprod.map p q)
       = p ≫ (coprod.inl : A ⟶ A ⨿ B) := by simp
   have e2 : (coprod.map p q).base ((coprod.inl : A' ⟶ A' ⨿ B').base a)
@@ -375,8 +368,7 @@ theorem IsBlowupAlongIdealSheaf.coprod {X₁ X₂ X₁' X₂' : Scheme.{u}} {π�
     · exact ⟨true, hx⟩
     · refine ⟨false, ?_⟩
       have hx' : x ∈ Set.range ⇑(coprod.inr : X₂ ⟶ X₁ ⨿ X₂).base := by
-        rw [range_coprod_inr_eq_compl X₁ X₂]
-        exact hx
+        rwa [range_coprod_inr_eq_compl X₁ X₂]
       exact hx'
   · intro b
     cases b
@@ -389,8 +381,7 @@ private theorem range_ι_disjoint {X : Scheme.{u}} {U V : X.Opens} (h : IsCompl 
   rw [Scheme.Opens.range_ι] at hV
   have h1 : U ⊓ V = ⊥ := h.inf_eq_bot
   have h2 : x ∈ ((U ⊓ V : X.Opens) : Set ↥X) := by
-    simp only [TopologicalSpace.Opens.coe_inf, Set.mem_inter_iff]
-    exact ⟨hU, hV⟩
+    simpa only [TopologicalSpace.Opens.coe_inf, Set.mem_inter_iff] using ⟨hU, hV⟩
   rw [h1] at h2
   simp at h2
 
@@ -402,18 +393,15 @@ private theorem range_fst_subset_range_inl_of_isCompl {X A F : Scheme.{u}} (f : 
   rintro _ ⟨t, rfl⟩
   by_contra hmem
   have hy : (PullbackCone.fst s).base t ∈ Set.range ⇑(coprod.inr : F ⟶ A ⨿ F).base := by
-    rw [range_coprod_inr_eq_compl A F, Set.mem_compl_iff]
-    exact hmem
+    rwa [range_coprod_inr_eq_compl A F, Set.mem_compl_iff]
   obtain ⟨b, hb⟩ := hy
   have e1 : (coprod.desc f g).base ((PullbackCone.fst s).base t)
       = U.ι.base ((PullbackCone.snd s).base t) := by
-    have hc := congrArg (fun m : s.pt ⟶ X => m.base t) s.condition
-    simpa using hc
+    simpa using congrArg (fun m : s.pt ⟶ X => m.base t) s.condition
   have e2 : (coprod.desc f g).base ((coprod.inr : F ⟶ A ⨿ F).base b) = g.base b := by
     rw [← base_comp_apply, coprod.inr_desc]
   have hfin : U.ι.base ((PullbackCone.snd s).base t) = g.base b := by
-    rw [← e1, ← hb]
-    exact e2
+    rwa [← e1, ← hb]
   have hmemV : U.ι.base ((PullbackCone.snd s).base t) ∈ Set.range ⇑V.ι.base := by
     rw [hfin]
     exact hg (Set.mem_range_self b)
@@ -435,27 +423,12 @@ private theorem isPullback_inl_coprod_desc {X A F : Scheme.{u}} (f : A ⟶ X) (g
   · intro s
     simp [IsOpenImmersion.lift_fac]
   · intro s
-    have hl : IsOpenImmersion.lift (coprod.inl : A ⟶ A ⨿ F) (PullbackCone.fst s)
-        (range_fst_subset_range_inl_of_isCompl f g h hg s) ≫ (coprod.inl : A ⟶ A ⨿ F)
-        = PullbackCone.fst s := by
-      simp [IsOpenImmersion.lift_fac]
-    have h2 : (IsOpenImmersion.lift (coprod.inl : A ⟶ A ⨿ F) (PullbackCone.fst s)
-          (range_fst_subset_range_inl_of_isCompl f g h hg s) ≫
-            IsOpenImmersion.lift U.ι f hf) ≫ U.ι
-        = PullbackCone.snd s ≫ U.ι := by
-      rw [Category.assoc, ← hw, ← Category.assoc, hl]
-      exact s.condition
-    exact (cancel_mono _).mp h2
+    refine (cancel_mono U.ι).mp ?_
+    rw [Category.assoc, ← hw, ← Category.assoc, IsOpenImmersion.lift_fac]
+    exact s.condition
   · intro s m hm _
-    have hl : IsOpenImmersion.lift (coprod.inl : A ⟶ A ⨿ F) (PullbackCone.fst s)
-        (range_fst_subset_range_inl_of_isCompl f g h hg s) ≫ (coprod.inl : A ⟶ A ⨿ F)
-        = PullbackCone.fst s := by
-      simp [IsOpenImmersion.lift_fac]
-    have h2 : m ≫ (coprod.inl : A ⟶ A ⨿ F)
-        = IsOpenImmersion.lift (coprod.inl : A ⟶ A ⨿ F) (PullbackCone.fst s)
-            (range_fst_subset_range_inl_of_isCompl f g h hg s) ≫ (coprod.inl : A ⟶ A ⨿ F) := by
-      rw [hm, hl]
-    exact (cancel_mono _).mp h2
+    refine (cancel_mono (coprod.inl : A ⟶ A ⨿ F)).mp ?_
+    rw [hm, IsOpenImmersion.lift_fac]
 
 theorem exists_iso_pullback_coprod_desc_left {X A F : Scheme.{u}} (f : A ⟶ X) (g : F ⟶ X)
     {U V : X.Opens} (h : IsCompl U V)
@@ -497,8 +470,7 @@ private theorem range_fst_subset_range_inr_of_isCompl {X A F : Scheme.{u}} (f : 
   have hc := congrArg (fun m : s.pt ⟶ X => m.base t) s.condition
   have e1 : (coprod.desc f g).base ((PullbackCone.fst s).base t)
       = V.ι.base ((PullbackCone.snd s).base t) := by
-    rw [← base_comp_apply, ← base_comp_apply]
-    exact hc
+    rwa [← base_comp_apply, ← base_comp_apply]
   have hd : (coprod.inl : A ⟶ A ⨿ F) ≫ coprod.desc f g = f := coprod.inl_desc f g
   have e2 : (coprod.desc f g).base ((coprod.inl : A ⟶ A ⨿ F).base a) = f.base a := by
     rw [← base_comp_apply, hd]
@@ -574,12 +546,10 @@ theorem smooth_coprod_desc {X A B : Scheme.{u}} (f : A ⟶ X) (g : B ⟶ X)
   cases i with
   | inl _ =>
       show Smooth ((coprod.inl : A ⟶ A ⨿ B) ≫ coprod.desc f g)
-      rw [coprod.inl_desc]
-      exact hf
+      rwa [coprod.inl_desc]
   | inr _ =>
       show Smooth ((coprod.inr : B ⟶ A ⨿ B) ≫ coprod.desc f g)
-      rw [coprod.inr_desc]
-      exact hg
+      rwa [coprod.inr_desc]
 
 private theorem subsingleton_presheaf_of_isEmpty {X : Scheme.{u}} [IsEmpty ↥X] {V : X.Opens}
     (hV : IsAffineOpen V) : Subsingleton ↥(X.presheaf.obj (Opposite.op V)) := by

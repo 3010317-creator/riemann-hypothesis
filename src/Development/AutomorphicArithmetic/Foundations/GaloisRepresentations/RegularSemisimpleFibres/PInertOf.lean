@@ -127,8 +127,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.inertOf :
     obtain ⟨γ, hγ⟩ := map_surj r (δ : GL (Fin m) (ZMod g))
     subst hγ
     have e1 := hTC E v g i hi r ⟨m, x⟩ τx hτx hinfx γ
-    have e2 := hTC E v g i hi r ⟨m, y⟩ τy hτy hinfy γ
-    exact e1.trans ((htr γ).trans e2.symm)
+    exact e1.trans ((htr γ).trans (hTC E v g i hi r ⟨m, y⟩ τy hτy hinfy γ).symm)
   obtain ⟨ωx, -, hωx, -⟩ := (UpperTheory.Zero.LLC.clBasic (v.adicCompletion E) ⟨m, x⟩).1
   obtain ⟨ωy, -, hωy, -⟩ := (UpperTheory.Zero.LLC.clBasic (v.adicCompletion E) ⟨m, y⟩).1
   have hT : LinearMap.trace ℂ _ (levelZero x.rep.ρ 1) ≠ 0 := by
@@ -162,8 +161,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.inertOf :
     inflates_twist i hi x.rep.ρ τx hμ hinfx
   have hωσ : HasCentralChar σ'.ρ ωy := by
     have := hasCentralChar_twist hωx μ
-    rw [Fintype.card_fin, hμω] at this
-    exact this
+    rwa [Fintype.card_fin, hμω] at this
   have hcl := UpperTheory.Zero.LLC.detByType E Ω A v hv g i hi m hm y.rep σ' τy τx ωy hτy hch hinfy hinfσ hωy hωσ
   unfold IrrGL.Inert
   refine ⟨μ, hμ, ?_⟩

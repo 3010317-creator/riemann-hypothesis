@@ -69,8 +69,7 @@ theorem logA_mul {j : Per.Acris l →+* Per.BdRp l} (hj : IsCrisP j) {e e' : Per
     ((_root_.GlobalTheory.MemLoc.LogFun.log_fun l e y he hy).2.2.2 j hj) ((_root_.GlobalTheory.MemLoc.LogFun.log_fun l e' y' he' hy').2.2.2 j hj)
     ((_root_.GlobalTheory.MemLoc.LogFun.log_fun l _ z hee hz).2.2.2 j hj)
   rw [← map_add (f := _)] at h
-  rw [← _root_.GlobalTheory.MemLoc.crisP_injective l j hj h]
-  exact hz
+  rwa [← _root_.GlobalTheory.MemLoc.crisP_injective l j hj h]
 
 theorem logA_pow {j : Per.Acris l →+* Per.BdRp l} (hj : IsCrisP j) {e : Per.Fl l} {y : Per.Acris l}
     (he : e.untilt = 1) (hy : IsLogA e y) (n : ℕ) : IsLogA (e ^ n) ((n : Per.Acris l) * y) := by

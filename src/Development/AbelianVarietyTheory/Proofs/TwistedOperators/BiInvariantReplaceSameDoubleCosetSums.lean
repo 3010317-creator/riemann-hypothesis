@@ -65,8 +65,7 @@ def dosetOf (K : Subgroup G) (x : G ⧸ K) : Set G :=
 theorem mem_dosetOf_iff {x y : G ⧸ K} :
     y.out ∈ DoubleCoset.doubleCoset x.out (K : Set G) (K : Set G) ↔ dosetOf K y = dosetOf K x := by
   constructor
-  · intro h
-    exact DoubleCoset.doubleCoset_eq_of_mem h
+  · exact fun h => DoubleCoset.doubleCoset_eq_of_mem h
   · intro h
     unfold dosetOf at h
     rw [← h]
@@ -161,11 +160,9 @@ theorem dosetSwap : DosetSwap := by
     refine A.unique ?_
     have : (fun S => ∑' c : {x : G ⧸ K // dosetOf K x = S}, (f₂ ∘ e) ⟨S, c⟩) =
         fun S => ∑' c : {x : G ⧸ K // dosetOf K x = S}, (f₁ ∘ e) ⟨S, c⟩ := funext hs
-    rw [this]
-    exact B
+    rwa [this]
   have := h₂.hasSum
-  rw [hZ', e.hasSum_iff] at this
-  exact this
+  rwa [hZ', e.hasSum_iff] at this
 
 end GlobalTheory.InertZeta
 

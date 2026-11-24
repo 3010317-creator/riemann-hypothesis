@@ -172,10 +172,8 @@ theorem mem_stab_iff (A C : Subgroup H) (g : H) (a : A) :
   change (((a : H) * g : H) : H ⧸ C) = g ↔ _
   rw [QuotientGroup.eq, Subgroup.mem_map_equiv, MulAut.conj_symm_apply]
   constructor <;> intro h
-  · have h' := C.inv_mem h
-    simpa [mul_assoc] using h'
-  · have h' := C.inv_mem h
-    simpa [mul_assoc] using h'
+  · simpa [mul_assoc] using C.inv_mem h
+  · simpa [mul_assoc] using C.inv_mem h
 
 def stabEquivInf (A C : Subgroup H) (g : H) :
     MulAction.stabilizer A ((g : H ⧸ C)) ≃ (A ⊓ C.map (MulAut.conj g).toMonoidHom : Subgroup H) where

@@ -127,8 +127,7 @@ theorem UpperTheory.isIntegral_eval_of_monic_mul_isIntegral :
   have hcoeff : ∀ j, (P * Q).coeff j ∈ integralClosure ℂ R := coeff_mem_subalgebra_of_eval_mem _ (P * Q) h
   have hlift : P * Q ∈ Polynomial.lifts (algebraMap (integralClosure ℂ R) R) := by
     rw [Polynomial.lifts_iff_coeff_lifts]
-    intro n
-    exact ⟨⟨_, hcoeff n⟩, rfl⟩
+    exact fun n => ⟨⟨_, hcoeff n⟩, rfl⟩
   obtain ⟨q, hq, -, hqm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hlift (hP.mul hQ)
   have hPc : ∀ i, P.coeff i ∈ integralClosure ℂ R := by
     intro i
@@ -342,8 +341,7 @@ private theorem block_congr {V : Type} [AddCommGroup V] [Module ℂ V] {r m : �
     | add a b _ _ ha hb => rw [map_add (f := _)]; exact Submodule.add_mem _ ha hb
     | smul c a _ ha => rw [map_smul]; exact Submodule.smul_mem _ c ha
   have h3 := h2 _ h1
-  rw [map_sub, map_mul, map_qdet, map_qdet, map_qdet] at h3
-  exact h3
+  rwa [map_sub, map_mul, map_qdet, map_qdet, map_qdet] at h3
 
 private theorem span_stable {V : Type} [AddCommGroup V] [Module ℂ V] {r m : ℕ}
     (X : Fin (r + m) → Fin (r + m) → Module.End ℂ V) (hX : GlRel X) (W : Submodule ℂ V)
@@ -585,8 +583,7 @@ theorem UpperTheory.archExp_single_unipotent_embedding :
     show ψ.1 (blk m₁ m₂ * unipGL P) = ψ.1 (blk m₁ m₂)
     rw [h1, hψ']
   rw [hconst] at hd
-  have h2 := hd.unique (hasDerivAt_const (0 : ℝ) (ψ.1 g))
-  exact h2
+  exact hd.unique (hasDerivAt_const (0 : ℝ) (ψ.1 g))
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.ArchExpSingleUnipotentEmbedding =====

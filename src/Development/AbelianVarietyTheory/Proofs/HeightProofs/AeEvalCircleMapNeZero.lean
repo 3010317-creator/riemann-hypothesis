@@ -184,9 +184,7 @@ theorem ae_eval_circleMap_ne_zero : ∀ (m : ℕ) (f : MvPolynomial (Fin m) ℂ)
     intro f hf
     set P := MvPolynomial.finSuccEquiv ℂ m f with hPdef
     have hP : P ≠ 0 := by
-      intro h
-      apply hf
-      exact (MvPolynomial.finSuccEquiv ℂ m).injective (by rw [← hPdef, h, map_zero])
+      exact fun h => hf ((MvPolynomial.finSuccEquiv ℂ m).injective (by rw [← hPdef, h, map_zero]))
     obtain ⟨k, hk⟩ : ∃ k, P.coeff k ≠ 0 := by
       by_contra h
       push Not at h
@@ -226,8 +224,7 @@ theorem ae_eval_circleMap_ne_zero : ∀ (m : ℕ) (f : MvPolynomial (Fin m) ℂ)
         rw [this]
         funext i
         cases i using Fin.cases <;> simp [hw]
-      rw [hc, MvPolynomial.eval_eq_eval_mv_eval']
-      exact hy
+      rwa [hc, MvPolynomial.eval_eq_eval_mv_eval']
     have := he.quasiMeasurePreserving.ae key
     filter_upwards [this] with x hx
     simpa using hx

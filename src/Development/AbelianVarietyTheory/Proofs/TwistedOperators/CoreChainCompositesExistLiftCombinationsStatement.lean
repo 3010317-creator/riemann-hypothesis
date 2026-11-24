@@ -716,8 +716,7 @@ theorem _root_.GlobalTheory.T.exists_representatives_half_quotient_pairing_trivi
     obtain ⟨U, hU, h0, hUK⟩ := finKΛ.opn
     refine AddSubgroup.isOpen_of_mem_nhds N (g := 0) ?_
     refine Filter.mem_of_superset ((hU.preimage continuous_subtype_val).mem_nhds (by simpa using h0)) ?_
-    intro a ha
-    exact AddSubgroup.mem_addSubgroupOf.2 (hUK _ ha (finΛ.fin _ a.2))
+    exact fun a ha => AddSubgroup.mem_addSubgroupOf.2 (hUK _ ha (finΛ.fin _ a.2))
   haveI : Finite (↥Λ ⧸ N) := AddSubgroup.quotient_finite_of_isOpen N hNopen
   let f : ↥A →+ ↥Λ :=
     { toFun := fun y => ⟨K • (y : WO (G.pS (.core i)) (G.pT (.core i))), hKy _ y.2.1 y.2.2⟩
@@ -734,8 +733,7 @@ theorem _root_.GlobalTheory.T.exists_representatives_half_quotient_pairing_trivi
     · rintro ⟨w, hw, hwe⟩
       have : w = (y : WO (G.pS (.core i)) (G.pT (.core i))) := nsmul_inj hK (by simpa using hwe)
       exact this ▸ hw
-    · intro hy
-      exact ⟨_, hy, by simp⟩
+    · exact fun hy => ⟨_, hy, by simp⟩
   haveI : Finite (↥A ⧸ g.ker) := Finite.of_injective _ (QuotientAddGroup.kerLift_injective g)
   haveI : Fintype (↥A ⧸ g.ker) := Fintype.ofFinite _
   let sec : ↥A ⧸ g.ker → ↥A := Function.surjInv QuotientAddGroup.mk_surjective
@@ -772,8 +770,7 @@ theorem _root_.GlobalTheory.T.exists_representatives_half_quotient_pairing_trivi
       exact isHalf_add (hR y hy).1 (isHalf_neg (hR y' hy').1)
     obtain ⟨l, hl, hle, hne1⟩ : ∃ l ∈ Λ, IsHalf e l ∧
         W.ψ (symplO (G.pS (.core i)) (G.pT (.core i)) l (y - y')) ≠ 1 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hnot ((hdual _ hhalf).2 hc)
     refine ⟨l, hl, hle, fun h => hne1 ?_⟩
     have hsplit : symplO (G.pS (.core i)) (G.pT (.core i)) l y =
@@ -815,8 +812,7 @@ theorem orthOff : All fun {D} _ _ _ {G} _ _ => ∀ e : AE D, IsIdemSum e G.pl.W0
     have hin : HeightOneSpectrum.under (𝓞 D.host.F) PP ∈ G.pl.S0 := by
       unfold Places.W0 at hPP
       obtain ⟨v, hv, rfl⟩ := Finset.mem_image.1 hPP
-      rw [G.pl.under_w hv]
-      exact hv
+      rwa [G.pl.under_w hv]
     have h := hu' i j
     rw [FinPl.idAt, Ideal.mem_inf, Ideal.mem_iInf] at h
     exact h.2 ⟨_, fun h' => h' hin⟩
@@ -1191,8 +1187,7 @@ theorem sum_heisO_ne_zero : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T :
     have h1 := congrArg (fun L => L g) (Formalism.IndefR.Fin.heisL_comm ψ S T u z)
     simp only [Module.End.mul_apply, LinearMap.smul_apply, Formalism.IndefR.Fin.heisL_apply] at h1
     rw [hfix] at h1
-    rw [Formalism.IndefR.Fin.heisL_apply]
-    exact h1
+    rwa [Formalism.IndefR.Fin.heisL_apply]
 
 end GlobalTheory.HeisJointEigen
 end -- clump:auto
@@ -1371,8 +1366,7 @@ theorem datumEx : DatumEx := by
     have h2 : exch (G.V (.core i)) (G.V (.core (i + 1))) f = 0 := by rw [h0]; rfl
     refine GlobalTheory.T.sum_heisenbergTranslates_latticeVacuum_ne_zero W.ψ (G.pS (.core i)) (G.pT (.core i)) (G.latS (.core i)) (G.latT (.core i)) G.pl.W0 e he R hR4
       _ (GlobalTheory.T.adjointExchange_isLatticeVacuum_coreChain D hq T L μ0 hL sc G W M hM hEx hLE i hi r r' hr hr' f₀ hf₀.2.lat) hex0 c hRne ?_
-    rw [← hexs f₀]
-    exact h2
+    rwa [← hexs f₀]
   · show IsLatVac _ _ _
     refine GlobalTheory.T.isLatticeVacuum_sum_heisenbergTranslates W.ψ r.sp r'.sp _ f₀ (isLatVac_mono (latO_le_true _ _ _ _ _) hf₀.2.lat) R c _ ?_
     intro z hz u hu
@@ -1487,8 +1481,7 @@ theorem preOK (hDF : DepFixed) : PreOK := by
           (GlobalTheory.Chain.ptOf (V := r.sp) (W := r'.sp) W.ψ W.θ (r.mod M) (r'.mod M') f φ) w) ∂m') ≠ 0 := by
       have h1 := hωx _ hthF g 1
       rw [map_one] at h1
-      rw [h1, ← heq]
-      exact hne
+      rwa [h1, ← heq]
     have hsd := (G.sp.P_is i (by omega)).sd
     have hstab : ∀ w ∉ G.pl.S0, GlobalTheory.AdelicU.proj D.sp.cm.sig (G.V (.core i)).gram w g ∈
         GlobalTheory.AdelicU.stabLoc D.sp.cm.sig (G.V (.core i)).gram (G.Λ (.core i)) w := by
@@ -1507,8 +1500,7 @@ theorem preOK (hDF : DepFixed) : PreOK := by
       show Formalism.UG.bc (Lev.swapAE D) (finHom (G.V (.core i)) a) = 1
       rw [h, map_one]
     show Lev.finE (G.V (.core i)) k ∈ G.levCong (.core i)
-    rw [map_mul, ha', one_mul] at hfin
-    exact hfin
+    rwa [map_mul, ha', one_mul] at hfin
 
 end GlobalTheory.CoreOnto.PreSteps
 end -- clump:auto
@@ -1670,8 +1662,7 @@ theorem chainEx (hDS : GlobalTheory.Published.DiscreteSeriesCover) (hHC : Global
       GlobalTheory.Grow.RapidDec (G.V (.core i)) (GlobalTheory.EvenOnto.PiLocalization₂.val y w) := by
     intro i hi r hr M y w
     have hs := (hStage i hi).2 r hr v M
-    have h1 := (hConj (gridCom W) hCom i hi _ hs).1 y w
-    exact ((hRL.2.1 _ r W.θ _ M ∅).2.2.2.2 _).1 h1.2.2.2.2
+    exact ((hRL.2.1 _ r W.θ _ M ∅).2.2.2.2 _).1 ((hConj (gridCom W) hCom i hi _ hs).1 y w).2.2.2.2
 
   have ext : ∀ k (F₀ : Fn G (.core 0)) (F : Fn G (.core (k + 1))) (f : Sch G (.coreDown k)), Dep W (.core k) f →
       GlobalTheory.Grow.RapidDec (G.V (.core (k + 1))) F → F₀ ∈ Below W v k (dn W v k f F) → F₀ ∈ Below W v (k + 1) F := by
@@ -1685,12 +1676,10 @@ theorem chainEx (hDS : GlobalTheory.Published.DiscreteSeriesCover) (hHC : Global
       rcases Nat.lt_or_ge i k with hik | hik
       · obtain ⟨f', hf', e⟩ := h2 i hik
         refine ⟨f', hf', ?_⟩
-        rw [Function.update_of_ne (by omega), Function.update_of_ne (by omega)]
-        exact e
+        rwa [Function.update_of_ne (by omega), Function.update_of_ne (by omega)]
       · obtain rfl : i = k := by omega
         refine ⟨f, hf, ?_⟩
-        rw [Function.update_of_ne (by omega), Function.update_self]
-        exact h4
+        rwa [Function.update_of_ne (by omega), Function.update_self]
     · rw [Function.update_of_ne (by omega)]; exact h3
     · exact Function.update_self _ _ _
   have key : ∀ k, k ≤ D.R.m → ∃ r M, IsCoreLat G k r ∧ ∃ Θ, GlobalTheory.EvenOnto.Reach (gridCom W) (gridStage G v 0 r₀ M₀) k
@@ -1706,13 +1695,11 @@ theorem chainEx (hDS : GlobalTheory.Published.DiscreteSeriesCover) (hHC : Global
         refine ⟨Function.update (fun i => (0 : Fn G (.core i))) 0 (GlobalTheory.EvenOnto.PiLocalization₂.val y w), ?_, ?_, ?_, ?_⟩
         · intro i hi
           obtain rfl : i = 0 := by omega
-          show GlobalTheory.Grow.RapidDec _ (GlobalTheory.EvenOnto.PiLocalization₂.val y w)
           exact rapid 0 (Nat.zero_le _) r₀ hr₀ M₀ y w
         · intro i hi; omega
         · exact Function.update_self _ _ _
         · exact Function.update_self _ _ _
-      · intro x hx
-        exact Submodule.subset_span ⟨PUnit.unit, x, hx, rfl⟩
+      · exact fun x hx => Submodule.subset_span ⟨PUnit.unit, x, hx, rfl⟩
     | succ k ih =>
       intro hk
       obtain ⟨r, M, hr, Θ, hΘ, I, N, ha, hb⟩ := ih (by omega)

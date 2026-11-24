@@ -126,8 +126,7 @@ theorem det_ne_zero_of_near_one {j : ℕ} (A : Matrix (Fin j) (Fin j) k)
     apply Subtype.ext
     have := congrArg (fun M => M.det) hy
     rw [← RingHom.map_det] at this
-    rw [← this] at h0
-    exact h0
+    rwa [← this] at h0
   rw [this, map_zero] at hdet
   exact zero_ne_one hdet
 
@@ -260,8 +259,7 @@ theorem frob : FrobSt := by
   rw [map_one, Module.End.one_apply] at h1
   have h2 := congrArg (TensorProduct.rid ℂ V) h1
   rw [TensorProduct.rid_tmul, one_smul, map_zero] at h2
-  rw [LinearMap.zero_apply]
-  exact h2
+  rwa [LinearMap.zero_apply]
 
 end PositivityTheory.Tls2.Ming3
 end -- clump:auto
@@ -583,8 +581,7 @@ theorem E_mul {R : Type*} [Semiring R] {a b c j : ℕ} (hb : j ≤ b) :
     · intro m _ hm
       have hne : ¬ ((i : ℕ) = m ∧ (m : ℕ) < j) := fun e => hm (Fin.ext e.1.symm)
       rw [ite_eq_right hne, zero_mul]
-    · intro h'
-      exact absurd (Finset.mem_univ _) h'
+    · exact fun h' => absurd (Finset.mem_univ _) h'
   · rw [ite_eq_right h]
     refine Finset.sum_eq_zero fun m _ => ?_
     by_cases h1 : (i : ℕ) = m ∧ (m : ℕ) < j
@@ -663,8 +660,7 @@ theorem ext_basis {k : Type*} [Field k] {a j : ℕ} (hj : j ≤ a) (v : Fin j �
     ext m i
     simp [hM, Matrix.col]
   have hMu : IsUnit M := by
-    rw [← linearIndependent_cols_iff_isUnit, hcolM]
-    exact hf
+    rwa [← linearIndependent_cols_iff_isUnit, hcolM]
   refine ⟨hMu.unit, fun i l => ?_⟩
   have hel : e (Fin.castLE hj l) = Sum.inl l := by
     rw [he, Equiv.trans_apply, Equiv.symm_apply_eq]
@@ -685,8 +681,7 @@ private theorem E_mul_apply_eq_dite_lt {R : Type*} [Semiring R] {a b c j : ℕ} 
     · intro t _ ht
       have hne : ¬ ((i : ℕ) = t ∧ (t : ℕ) < j) := fun e => ht (Fin.ext e.1.symm)
       rw [ite_eq_right hne, zero_mul]
-    · intro h'
-      exact absurd (Finset.mem_univ _) h'
+    · exact fun h' => absurd (Finset.mem_univ _) h'
   · refine Finset.sum_eq_zero fun t _ => ?_
     have hne : ¬ ((i : ℕ) = t ∧ (t : ℕ) < j) := fun e => h (by rw [e.1]; exact e.2)
     rw [ite_eq_right hne, zero_mul]
@@ -748,8 +743,7 @@ theorem nf1 {k : Type*} [Field k] {n r j : ℕ} (x : Matrix (Fin n) (Fin r) k) (
           exact zero_mem _
       have h2 := Submodule.finrank_mono h1
       have h3 : y.rank = Module.finrank k (Submodule.span k (Set.range y)) := rank_eq_finrank_span_row y
-      rw [← h3, hyr] at h2
-      exact h2
+      rwa [← h3, hyr] at h2
     · simpa using finrank_range_le_card (R := k) (b := z)
   obtain ⟨G', hG'⟩ := ext_basis hr z hz
   have hT : IsUnit (G'.val)ᵀ := by
@@ -761,8 +755,7 @@ theorem nf1 {k : Type*} [Field k] {n r j : ℕ} (x : Matrix (Fin n) (Fin r) k) (
     rw [E_mul_apply_eq_dite_lt hr]
     split_ifs with hi
     · have := hG' m ⟨i, hi⟩
-      rw [hzd] at this
-      exact this
+      rwa [hzd] at this
     · rw [hzero i hi]
       rfl
   rw [Matrix.mul_assoc, hEG, hy, ← Matrix.mul_assoc, Units.mul_inv, Matrix.one_mul]
@@ -793,9 +786,7 @@ theorem bd_one {a : ℕ} : Bd (1 : ValueGroupWithZero k) (1 : Matrix (Fin a) (Fi
 
 theorem bd_KO {a : ℕ} {H : GL (Fin a) k} (hH : H ∈ KO k (Fin a)) : Bd (1 : ValueGroupWithZero k) H.val := by
   obtain ⟨u, rfl⟩ := hH
-  intro i l
-  show valuation k (algebraMap 𝒪[k] k (u.val i l)) ≤ 1
-  exact (u.val i l).2
+  exact fun i l => (u.val i l).2
 
 theorem mem_KO {a : ℕ} {γ : ValueGroupWithZero k} (hc : γ < 1) (A : Matrix (Fin a) (Fin a) k)
     (hA : Bd γ (A - 1)) : ∃ H ∈ KO k (Fin a), H.val = A := by
@@ -955,10 +946,8 @@ theorem ballM_eq_pi (c : kˣ) (x₀ : Matrix (Fin n) (Fin r) k) :
   ext x
   simp only [ballM, Set.mem_setOf_eq]
   constructor
-  · intro h i _ l _
-    exact h i l
-  · intro h i l
-    exact h i (Set.mem_univ _) l (Set.mem_univ _)
+  · exact fun h i _ l _ => h i l
+  · exact fun h i l => h i (Set.mem_univ _) l (Set.mem_univ _)
 
 theorem measurableSet_ballM [MeasurableSpace k] [BorelSpace k] (c : kˣ) (x₀ : Matrix (Fin n) (Fin r) k) :
     MeasurableSet (ballM c x₀) := by
@@ -1066,8 +1055,7 @@ theorem uniq : BallSt → UniqSt := by
     exact germ_unique hb ν hν B x₀ (hf (a • w)) h
   refine ⟨{ toFun := f, map_add' := hadd, map_smul' := hsmul }, fun w v => ?_⟩
   constructor
-  · intro h
-    exact germ_unique hb ν hν B x₀ h (hf w)
+  · exact fun h => germ_unique hb ν hν B x₀ h (hf w)
   · rintro rfl
     exact hf w
 
@@ -1110,12 +1098,10 @@ theorem isCompact_cb (a : k) (γ : ValueGroupWithZero k) :
   convert h using 1
   ext y
   constructor
-  · intro hy
-    exact ⟨y - a, hy, sub_add_cancel y a⟩
+  · exact fun hy => ⟨y - a, hy, sub_add_cancel y a⟩
   · rintro ⟨x, hx, rfl⟩
     show valuation k (x + a - a) ≤ γ
-    rw [add_sub_cancel_right]
-    exact hx
+    rwa [add_sub_cancel_right]
 
 theorem ballM_eq_pi (c : kˣ) (x₀ : Matrix (Fin n) (Fin r) k) :
     (ballM c x₀ : Set (Matrix (Fin n) (Fin r) k)) =
@@ -1165,8 +1151,7 @@ theorem disj {c : kˣ} {x x₀ : Matrix (Fin n) (Fin r) k} (hx : x ∉ ballM c x
 
 theorem isClosed_ballM (c : kˣ) (x₀ : Matrix (Fin n) (Fin r) k) : IsClosed (ballM c x₀) := by
   rw [← isOpen_compl_iff, isOpen_iff_forall_mem_open]
-  intro x hx
-  exact ⟨ballM c x, fun y hy => disj hx y hy, isOpen_ballM c x, mem_ballM_self c x⟩
+  exact fun x hx => ⟨ballM c x, fun y hy => disj hx y hy, isOpen_ballM c x, mem_ballM_self c x⟩
 
 theorem indicator_mem_SB (c : kˣ) (x₀ : Matrix (Fin n) (Fin r) k) :
     (ballM c x₀).indicator (fun _ => (1 : ℂ)) ∈ SB (Matrix (Fin n) (Fin r) k) := by
@@ -1240,8 +1225,7 @@ theorem exists_small (a : k) {t : Set k} (ht : t ∈ nhds a) :
       rw [hρ] at hv0 ⊢
       simpa [hv0] using h1
     refine ⟨Units.mk0 (ρ ^ 2) (pow_ne_zero 2 hρ0), ?_, fun y hy => hγ ?_⟩
-    · simp only [Units.val_mk0, pow_two, map_mul]
-      exact hlt.trans (hρ ▸ h1)
+    · simpa only [Units.val_mk0, pow_two, map_mul] using hlt.trans (hρ ▸ h1)
     · simp only [Set.mem_ofPred_eq, Units.val_mk0, pow_two, map_mul] at hy ⊢
       rw [← hρ]
       exact hy.trans_lt hlt
@@ -1586,8 +1570,7 @@ theorem key (hball : BallSt) (hnf : NfSt) (hcore : CoreSt) {j : ℕ} (hj : j < r
       have hiff : (h⁻¹ : GL (Fin n) k).val * z * (g⁻¹ : GL (Fin r) k).val ∈ ballM c' (idem k r n j) ↔
           z ∈ ballM c' x := by
         have h4 := (hB1 c' y).2.2.2.2 h⁻¹ (inv_mem hh) g⁻¹ (inv_mem hg) z
-        rw [hball_eq, hye, conj_cancel] at h4
-        exact h4
+        rwa [hball_eq, hye, conj_cancel] at h4
       by_cases hz : z ∈ ballM c' x
       · rw [Set.indicator_of_mem hz, Set.indicator_of_mem (hiff.mpr hz)]
       · rw [Set.indicator_of_notMem hz, Set.indicator_of_notMem (fun h' => hz (hiff.mp h'))]
@@ -1608,8 +1591,7 @@ theorem key (hball : BallSt) (hnf : NfSt) (hcore : CoreSt) {j : ℕ} (hj : j < r
   have hΨeq : Ψ = ∑ x ∈ S, Ψ.1 x • (⟨_, hind x⟩ : SB (Matrix (Fin n) (Fin r) k)) := by
     apply Subtype.ext
     rw [Submodule.coe_sum]
-    simp only [Submodule.coe_smul]
-    exact hsum
+    simpa only [Submodule.coe_smul] using hsum
 
   rw [hΨeq, map_sum]
   apply Finset.sum_eq_zero
@@ -1660,16 +1642,14 @@ theorem step : BallSt → LocSt → NfSt → RkSt → CoreSt → StepSt := by
           intro y hy
           have hmem := (hΨ _ hy).1
           simp only [Set.mem_setOf_eq] at hmem
-          rw [conj_cancel] at hmem
-          exact hmem
+          rwa [conj_cancel] at hmem
         have hvan : ∀ y : Matrix (Fin n) (Fin r) k, y.rank < j → Ψ'.1 y = 0 := by
           intro y hy
           by_contra hne
           have h2 := (hΨ _ hne).2
           apply h2
           apply hΦ
-          rw [rank_conj]
-          exact hy
+          rwa [rank_conj]
         have hB' : B Ψ' = 0 := key hBall hNf hCore hj hjn hμ hσ hE hV c hc Ψ' hsupp hvan
         refine kill hE h⁻¹ g⁻¹ Ψ' Ψ (fun y => ?_) hB'
         show Ψ.1 y = Ψ.1 (h.val * ((h⁻¹ : GL (Fin n) k).val * y * (g⁻¹ : GL (Fin r) k).val) * g.val)

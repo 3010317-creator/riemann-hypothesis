@@ -101,8 +101,7 @@ theorem exists_ne_zero_common_zero_of_constantCoeff_eq_zero :
     intro h
     rw [h, hmh] at hht
     exact absurd (by exact_mod_cast hht : n ≤ r) (not_le.mpr hrn)
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   apply hPne
   have hsub : MvPolynomial.zeroLocus k P ⊆ {0} := by
     intro x hx
@@ -115,8 +114,7 @@ theorem exists_ne_zero_common_zero_of_constantCoeff_eq_zero :
     intro p hp
     have h2 : p ∈ MvPolynomial.vanishingIdeal k (MvPolynomial.zeroLocus k P) := by
       intro x hx
-      rw [Set.mem_singleton_iff.mp (hsub hx)]
-      exact hp
+      rwa [Set.mem_singleton_iff.mp (hsub hx)]
     rwa [MvPolynomial.vanishingIdeal_zeroLocus_eq_radical, hPp.radical] at h2
   exact (hmax.eq_of_le hPp.ne_top hle).symm
 
@@ -158,8 +156,7 @@ theorem map_genEval (n s : ℕ) (φ : MvPolynomial (Fin n × Fin (s + 1)) k →+
 theorem natDegree_genSub_le (n s : ℕ) (j : Fin n) : (genSub (k := k) n s j).natDegree ≤ s := by
   unfold genSub
   refine Polynomial.natDegree_sum_le_of_forall_le _ _ ?_
-  intro t _
-  exact (Polynomial.natDegree_monomial_le _).trans (Nat.lt_succ_iff.mp t.2)
+  exact fun t _ => (Polynomial.natDegree_monomial_le _).trans (Nat.lt_succ_iff.mp t.2)
 
 theorem natDegree_genEval_le (n s d m : ℕ) (g : MvPolynomial (Fin n) k[X])
     (hg : ∀ μ, g.coeff μ ≠ 0 → μ.degree = d ∧ (g.coeff μ).natDegree ≤ m) :
@@ -268,8 +265,7 @@ theorem tsenLang_ratFunc :
   have hnumer : ∀ a ∈ S, algebraMap k[X] (RatFunc k) (numer a) = b • a := by
     intro a ha
     have h := hbS a ha
-    simp only [numer, dite_eq_left h]
-    exact (RingHom.mem_rangeS.mp h).choose_spec
+    simpa only [numer, dite_eq_left h] using (RingHom.mem_rangeS.mp h).choose_spec
   let g : Fin r → MvPolynomial (Fin n) k[X] := fun i =>
     ∑ μ ∈ (f i).support, MvPolynomial.monomial μ (numer ((f i).coeff μ))
   have hgc : ∀ i μ, (g i).coeff μ = if μ ∈ (f i).support then numer ((f i).coeff μ) else 0 := by

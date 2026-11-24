@@ -328,8 +328,7 @@ theorem dFam_mem_goodSet : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [
     congr 3; ring
   refine ⟨?_, ?_, _, intCast_div_factorial_mem_QSet t K e D (l * q), ?_⟩
   · have := intCast_div_factorial_mem_QSet t K e 1 q
-    rw [Int.cast_one, one_div] at this
-    exact this
+    rwa [Int.cast_one, one_div] at this
   · rw [hf]; exact intCast_div_factorial_mem_QSet t K e _ _
   · rw [hf]
     funext τ
@@ -698,8 +697,7 @@ theorem Bd.eq_sum {M : ℕ} {F : K⟦X⟧⟦X⟧} (h : Bd M F) :
     split_ifs with hn
     · rfl
     · exact h i n (by omega)
-  · simp only [ite_eq_right hi, map_zero]
-    exact h i n (by omega)
+  · simpa only [ite_eq_right hi, map_zero] using h i n (by omega)
 
 theorem map_mem (φ : K⟦X⟧⟦X⟧ →+* K⟦X⟧⟦X⟧) (h1 : ∀ c : K, φ (C (C c)) ∈ fin K)
     (h2 : φ (C X) ∈ fin K) (h3 : φ X ∈ fin K) {F : K⟦X⟧⟦X⟧} (hF : F ∈ fin K) : φ F ∈ fin K := by
@@ -981,8 +979,7 @@ theorem uPow_mem_QSet_goodU [CharZero K] (m : ℕ) :
   by_cases h : (i, n) = (0, m)
   · obtain ⟨rfl, rfl⟩ := Prod.mk.inj h
     have : (dpDen e 0 n : K) ≠ 0 := Nat.cast_ne_zero.mpr (dpDen_pos e 0 n).ne'
-    simp only [ite_true, map_natCast, coeff_X_pow_self]
-    exact div_self this
+    simpa only [ite_true, map_natCast, coeff_X_pow_self] using div_self this
   · rw [ite_eq_right h]
     simp only [map_zero, zero_div]
     by_cases hi : i = 0
@@ -1002,8 +999,7 @@ theorem uFam_mem_GoodSet : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [
     rw [hC, frob_X]
   refine ⟨?_, ?_, 0, zero_mem_QSet_goodU t K e, ?_⟩
   · have := uPow_mem_QSet_goodU t K e 1
-    rw [pow_one] at this
-    exact this
+    rwa [pow_one] at this
   · rw [hf]; exact uPow_mem_QSet_goodU t K e l
   · rw [hf, mul_zero, add_zero]
     funext τ

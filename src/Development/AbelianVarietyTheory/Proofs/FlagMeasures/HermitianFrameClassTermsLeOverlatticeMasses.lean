@@ -104,8 +104,7 @@ theorem Mof_le_swap (h0 : S.th ≠ 0) (hO : algebraMap F E S.th ∈ L.O) (g g' :
     have h3 := (S.Mof g g').add_mem h1 (left_mem S g g' b)
     rwa [sub_add_cancel] at h3
   · have h1 := (S.Mof g g').neg_mem (diff_mem S g g' b)
-    rw [← smul_neg, neg_sub] at h1
-    exact h1
+    rwa [← smul_neg, neg_sub] at h1
 
 theorem Mof_swap (h0 : S.th ≠ 0) (hO : algebraMap F E S.th ∈ L.O) (g g' : Fin (r + 1) → S.V) :
     S.Mof g' g = S.Mof g g' :=
@@ -294,8 +293,7 @@ theorem class_mass : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
       obtain ⟨-, -, -, hM', hsat', -⟩ := GlobalTheory.HL.ComplAct.main L r k S d Λ hT h hh
       show Q (S.be (h • d) (h • Λ))
       unfold Frames.be
-      rw [hM', hsat']
-      exact hQ
+      rwa [hM', hsat']
     · unfold Frames.massSig
       rw [ENNReal.tsum_comm]
       refine ENNReal.tsum_le_tsum fun o => ?_
@@ -308,8 +306,7 @@ theorem class_mass : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
         have hQ' : Q ((S.Mof p.1 p.2).toAddSubgroup.relIndex (S.sat o.out).toAddSubgroup) := by
           have h := hQ
           unfold Frames.be at h
-          rw [hM d o.out hF] at h
-          exact h
+          rwa [hM d o.out hF] at h
         refine le_trans (le_of_eq ?_) (ENNReal.le_tsum ⟨S.sat o.out, hle,
           fun x hx => (Submodule.mem_inf.mp hx).2,
           fun x hx y hy => (hSD.2 y).mpr (Submodule.mem_inf.mp hy).1 x (Submodule.mem_inf.mp hx).1, hQ'⟩)
@@ -329,8 +326,7 @@ theorem class_mass : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
     · intro h hh d Λ hT hB
       obtain ⟨-, -, -, hM', hsat', -⟩ := GlobalTheory.HL.ComplAct.main L r k S d Λ hT h hh
       show S.M (h • d) (h • Λ) = S.sat (h • Λ)
-      rw [hM', hsat']
-      exact hB
+      rwa [hM', hsat']
     · unfold Frames.massSig
       exact tsum_congr fun o => if_congr (hb o.out) rfl rfl
 

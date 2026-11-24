@@ -356,8 +356,7 @@ theorem GlobalTheory.Cyc.integers_level_one_eq_sum_zeta_pow : ∀ (l : ℕ) [Fac
   obtain ⟨p, hpdeg, hp⟩ := GlobalTheory.Cyc.FirstLevel.exists_poly K ζ hζ α hα
   set q := Polynomial.taylor (1 : ↥(K0 K)) p with hq
   have hqdeg : q.natDegree < l - 1 := by
-    rw [hq, Polynomial.natDegree_taylor]
-    exact hpdeg
+    rwa [hq, Polynomial.natDegree_taylor]
   let z : ℕ → Om l := fun b => ((q.coeff b : ↥(K0 K)) : Om l)
   have hzK : ∀ b, z b ∈ K0 K := fun b => (q.coeff b).2
   have hsum : α = ∑ b ∈ Finset.range (l - 1), z b * (ζ - 1) ^ b := by
@@ -438,8 +437,7 @@ theorem chain_primitive {l : ℕ} [Fact l.Prime] {M : Type} [CommMonoid M] (ζ :
   have hnot : ¬ ζ (j + 1) ^ l ^ j = 1 := by
     have := chain_pow ζ h 1 j
     rw [add_comm 1 j] at this
-    rw [this]
-    exact h1
+    rwa [this]
   rw [← orderOf_eq_prime_pow hnot hfin]
   exact IsPrimitiveRoot.orderOf _
 
@@ -555,8 +553,7 @@ theorem sum_class {R : Type*} [CommRing R] (x : R) (m k n : ℕ) (hm : 0 < m) :
       rw [ite_eq_right]
       rw [Nat.mul_add_mod, Nat.mod_eq_of_lt (Finset.mem_range.1 hb)]
       exact hne
-    · intro h
-      exact absurd (Finset.mem_range.2 (Nat.mod_lt _ hm)) h
+    · exact fun h => absurd (Finset.mem_range.2 (Nat.mod_lt _ hm)) h
 
 
 open Classical in
@@ -694,8 +691,7 @@ theorem cycVal_single {s e j : ℕ} (hj : 1 ≤ j) (hjs : j ≤ s) (μ : ℕ →
     have hi' := Finset.mem_range.mp hi
     rw [ite_eq_right (by omega)]
     simp
-  · intro h
-    exact absurd (Finset.mem_range.mpr (by omega)) h
+  · exact fun h => absurd (Finset.mem_range.mpr (by omega)) h
 
 theorem cycVal_add (s e : ℕ) (f g : ℕ → ↥(K0 K)) (d : ↥(K0 K)) :
     cycVal P K s e (fun a => f a + g a) d =

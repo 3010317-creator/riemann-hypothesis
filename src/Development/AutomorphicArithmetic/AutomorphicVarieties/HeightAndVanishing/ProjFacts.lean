@@ -115,15 +115,13 @@ theorem UpperTheory.V.HV.projFacts :
     constructor
     · rintro ⟨v, rfl⟩
       exact hB v
-    · intro hu
-      exact ⟨u, crtExt r (hA u) ((hB u).trans (MonoidHom.mem_ker.1 hu).symm)⟩
+    · exact fun hu => ⟨u, crtExt r (hA u) ((hB u).trans (MonoidHom.mem_ker.1 hu).symm)⟩
   · ext u
     rw [MonoidHom.mem_ker, MonoidHom.mem_ker]
     constructor
     · intro hu
       rw [← hA, hu, map_one]
-    · intro hu
-      exact crtExt r (by rw [hA, hu, map_one]) (by rw [hB, map_one])
+    · exact fun hu => crtExt r (by rw [hA, hu, map_one]) (by rw [hB, map_one])
   · haveI : NeZero M := ⟨ne_zero_of_dvd_ne_zero (NeZero.ne N) h⟩
     refine crtExt r ?_ ?_
     · rw [projA r _ _ dvd_rfl, mapMap, mapMap]

@@ -91,10 +91,8 @@ theorem GlobalTheory.EvenOnto.fock_sph_vac : ∀ D : D7, ForStep D fun c _ s s' 
     ⟨fun u hu => fix (2 • u) (AddSubgroup.nsmul_mem _ hu 2) (hsph.1 u hu),
       fun e he u hu hh => fix u hu (hsph.2 e he u hu hh)⟩
   refine ⟨hF.1, hF, hS, fun v hv => ⟨hF.1, ?_, ?_⟩⟩
-  · intro u hu
-    exact hS.1 u (latO_le _ _ _ _ (fun w hw => hw ▸ hv) hu)
-  · intro e he u hu hh
-    exact hS.2 e he u (latO_le _ _ _ _ (fun w hw => hw ▸ hv) hu) hh
+  · exact fun u hu => hS.1 u (latO_le _ _ _ _ (fun w hw => hw ▸ hv) hu)
+  · exact fun e he u hu hh => hS.2 e he u (latO_le _ _ _ _ (fun w hw => hw ▸ hv) hu) hh
 
 end
 end -- clump:auto

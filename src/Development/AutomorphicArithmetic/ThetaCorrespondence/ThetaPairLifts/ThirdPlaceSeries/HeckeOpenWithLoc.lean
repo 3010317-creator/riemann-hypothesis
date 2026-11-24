@@ -109,11 +109,9 @@ theorem heckeOpen_withLoc_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E �
       refine ⟨w', hov, ?_⟩
       rcases hw' with hQ | hp
       · left
-        rw [hQe] at hQ
-        exact hQ
+        rwa [hQe] at hQ
       · right; right
-        rw [L.X.w_l i] at hp
-        exact hp
+        rwa [L.X.w_l i] at hp
   · refine { prod := ?_, para := ?_, uni := ?_, wt := ?_, hyp := ?_ }
     · exact fun i => mt_transport M (fun μ j m => NG.IsProdLevel m.J) (L.X.mu_w i).symm (hjf i) _ _ _ _
         (hMt.prod (L.X.w i) (jf i))

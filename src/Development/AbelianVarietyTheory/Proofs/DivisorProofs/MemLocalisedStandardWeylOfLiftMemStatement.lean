@@ -112,8 +112,7 @@ theorem exists_weyl_basis : ∀ (n : ℕ) (ν : Fin n → ℕ), Antitone ν → 
   let B := Module.Free.chooseBasis ℤ (weyl ℤ n n le_rfl ν)
   have hspan : Submodule.span ℤ (Set.range fun i => (B i : MvPolynomial (Fin n × Fin n) ℤ)) = weyl ℤ n n le_rfl ν := by
     have h := congrArg (Submodule.map (weyl ℤ n n le_rfl ν).subtype) B.span_eq
-    rw [Submodule.map_span, ← Set.range_comp, Submodule.map_subtype_top] at h
-    exact h
+    rwa [Submodule.map_span, ← Set.range_comp, Submodule.map_subtype_top] at h
   have hR : ∀ (R : Type) [CommRing R], weyl R n n le_rfl ν =
       Submodule.span R (Set.range fun i => MvPolynomial.map (Int.castRingHom R) (B i : MvPolynomial (Fin n × Fin n) ℤ)) := by
     intro R _
@@ -124,8 +123,7 @@ theorem exists_weyl_basis : ∀ (n : ℕ) (ν : Fin n → ℕ), Antitone ν → 
       have hw' : applyWord ℤ w (hw ℤ le_rfl ν) ∈ weyl ℤ n n le_rfl ν := Submodule.subset_span ⟨w, rfl⟩
       rw [← hspan] at hw'
       have h := map_mem_span R _ hw'
-      rw [← lclosedeq_applyWord_map, lclosedeq_hw_map] at h
-      exact h
+      rwa [← lclosedeq_applyWord_map, lclosedeq_hw_map] at h
     · rw [Submodule.span_le]
       rintro _ ⟨i, rfl⟩
       have h := map_mem_span R (fun w : List (Fin n × Fin n × ℕ) => applyWord ℤ w (hw ℤ le_rfl ν)) (B i).2
@@ -509,8 +507,7 @@ theorem mem_localization_standardWeylLattice : ∀ (K : Type) [Field K] [NumberF
     Submodule.subset_span ⟨_, fun τ => hbK τ (i τ), rfl⟩
   have hv0 : (v : Pol K ι n) ∈ Submodule.span K (Set.range fun i : ∀ τ, P τ => ten fun τ => bK τ (i τ)) := by
     have h2 : (v : Pol K ι n) ∈ tensorLat K K fun τ => nablaSq K n (lam τ) := v.2
-    rw [← hKspan] at h2
-    exact h2
+    rwa [← hKspan] at h2
   obtain ⟨a, ha⟩ := (Submodule.mem_span_range_iff_exists_fun K).1 hv0
   have hveq : v = ∑ i, a i • (⟨_, hmem i⟩ : VV K lam) := by
     apply Subtype.ext

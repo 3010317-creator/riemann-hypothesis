@@ -93,8 +93,7 @@ theorem largestSize_eq (hz : ∀ N, zl (Formalism.HermitianLatticesTheory.realiz
   constructor
   · rintro ⟨S, hS, hne, rfl⟩
     refine ⟨Φ.symm S, ?_, fun h => hne ?_, ?_⟩
-    · rw [← hsat, Φ.apply_symm_apply]
-      exact hS
+    · rwa [← hsat, Φ.apply_symm_apply]
     · rw [← h, Φ.apply_symm_apply]
     · rw [← sizeQ_eq b X X' Φ hz hr, Φ.apply_symm_apply]
   · rintro ⟨S, hS, hne, rfl⟩
@@ -111,8 +110,7 @@ theorem sSup_eq (A : Submodule (𝓞 K) V) (p p' : Submodule (𝓞 K) V → Prop
   · rintro ⟨hN, h0, hpN⟩
     refine ⟨Φ.symm N, ⟨Φ.symm_apply_le.2 hN, fun h => h0 ?_, ?_⟩, Φ.apply_symm_apply N⟩
     · rw [← Φ.apply_symm_apply N, h, Φ.map_bot]
-    · rw [← hp, Φ.apply_symm_apply]
-      exact hpN
+    · rwa [← hp, Φ.apply_symm_apply]
   · rintro ⟨M, ⟨hM, h0, hpM⟩, rfl⟩
     refine ⟨Φ.le_iff_le.2 hM, fun h => h0 ?_, (hp M).2 hpM⟩
     rw [← Φ.map_bot] at h
@@ -155,8 +153,7 @@ theorem hasType_of (hl : lamX I x' = Φ (lamX I x))
     · dsimp only
       rw [h3, (hst _).1]
     · dsimp only
-      rw [sizeQ_eq (bas I) (frm I x) (frm I x') Φ hz hr]
-      exact h4
+      rwa [sizeQ_eq (bas I) (frm I x) (frm I x') Φ hz hr]
   · obtain ⟨k, hk⟩ := hall t ht
     exact ⟨k, by dsimp only; rw [hk, (hst t).1]⟩
   · dsimp only
@@ -432,8 +429,7 @@ theorem lamX_mul_eq_iff (k : I.GA) : k.2 ∈ I.Kset ↔ lamX I (x * k) = lamX I 
           (u : Matrix (Fin I.n) (Fin I.n) (TensorProduct I.F I.E (Af I.F))) *ᵥ v := by
       rw [Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec]
     rw [e1, e2] at h3
-    rw [hL]
-    exact h3
+    rwa [hL]
 
 end Rational
 

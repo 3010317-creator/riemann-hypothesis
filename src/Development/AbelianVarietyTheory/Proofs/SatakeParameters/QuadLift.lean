@@ -111,8 +111,7 @@ theorem not_unrAt_of_ramified : ∀ (K M : Type) [Field K] [NumberField K] [Fiel
     exact hA (algebraMap (𝓞 F) (𝓞 E) x)
 
   have hmove : ∃ s ∈ Ine (F := F) A, ∃ e : E, s (algebraMap E Ω e) ≠ algebraMap E Ω e := by
-    by_contra hfix
-    push Not at hfix
+    by_contra! hfix
     have he : w.asIdeal.ramificationIdx (𝓞 F) = 1 := by
       let K := F
       let L := E
@@ -133,8 +132,7 @@ theorem not_unrAt_of_ramified : ∀ (K M : Type) [Field K] [NumberField K] [Fiel
           have h₁ : ∀ x : M, σ₁ (algebraMap M Ω x) = algebraMap M Ω (τ x) := fun x => τ.liftNormal_commutes Ω x
           obtain ⟨g, hg⟩ := GlobalTheory.InertiaLift.exists_smul_eq (F := M) (A := A) (A' := σ₁⁻¹ • A) (by
             intro x
-            rw [smul_valuation_lt_one_iff, inv_inv]
-            rw [h₁]
+            rw [smul_valuation_lt_one_iff, inv_inv, h₁]
             have hx := h x
             constructor
             · intro hl
@@ -212,18 +210,14 @@ theorem not_unrAt_of_ramified : ∀ (K M : Type) [Field K] [NumberField K] [Fiel
         obtain ⟨σ, hσ, hστ⟩ := exists_mem_Ine_lift_int A M τ fun y => by
           have := (mem_primeUnder A M _).1 (hτ y)
           have e : ((τ • y - y : 𝓞 M) : M) = τ (y : M) - (y : M) := rfl
-          rw [← map_sub, ← e]
-          exact this
+          rwa [← map_sub, ← e]
         apply (algebraMap M Ω).injective
         rw [← hστ, ← IsScalarTower.algebraMap_apply, hI σ hσ x]
       let f : P.toAddSubgroup.inertia (M ≃ₐ[F] M) → P.toAddSubgroup.inertia (M ≃ₐ[E] M) := fun τ =>
         ⟨{ (τ : M ≃ₐ[F] M).toRingEquiv with commutes' := hfix τ τ.2 }, fun y => τ.2 y⟩
       have hf : Function.Injective f := by
         intro a b hab
-        apply Subtype.ext
-        apply AlgEquiv.ext
-        intro y
-        exact DFunLike.congr_fun (congrArg Subtype.val hab) y
+        exact Subtype.ext (AlgEquiv.ext (fun y => DFunLike.congr_fun (congrArg Subtype.val hab) y))
       have h4 := Nat.card_le_card_of_injective f hf
       rw [h1, h2, h3] at h4
       have hpos : 0 < P.ramificationIdx (𝓞 F) := h1 ▸ Nat.card_pos
@@ -237,8 +231,7 @@ theorem not_unrAt_of_ramified : ∀ (K M : Type) [Field K] [NumberField K] [Fiel
         rw [h0] at hpos
         simp at hpos
       have hle : w.asIdeal.ramificationIdx (𝓞 F) ≤ 1 := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         have : 2 * P.ramificationIdx (𝓞 E) ≤ w.asIdeal.ramificationIdx (𝓞 F) * P.ramificationIdx (𝓞 E) :=
           Nat.mul_le_mul_right _ hc
         omega
@@ -274,8 +267,7 @@ theorem not_unrAt_of_ramified : ∀ (K M : Type) [Field K] [NumberField K] [Fiel
     rcases fixes_or s hsm τ with ⟨τ', rfl⟩ | ⟨τ', hτ'⟩
     · exact DFunLike.congr_fun hres τ'
     · have := DFunLike.congr_fun hres τ'
-      rw [MonoidHom.comp_apply, hτ', map_mul, map_inv, hδs, inv_one, one_mul] at this
-      exact this
+      rwa [MonoidHom.comp_apply, hτ', map_mul, map_inv, hδs, inv_one, one_mul] at this
   apply hne
   apply Subtype.ext
   refine MonoidHom.ext fun x => Units.ext ?_

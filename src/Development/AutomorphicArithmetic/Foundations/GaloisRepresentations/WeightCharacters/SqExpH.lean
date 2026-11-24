@@ -58,8 +58,7 @@ private theorem coeff_diag {a : ℕ} (t : Fin a → ℂ) (f : MvPolynomial (Fin 
     · simp
     · intro b _ hb
       rw [Matrix.diagonal_apply_ne t (Ne.symm hb), map_zero, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   show AddMonoidAlgebra.coeff (MvPolynomial.aeval
       (fun v : Fin a × Fin a => ∑ b, MvPolynomial.C (Matrix.diagonal t v.1 b) * MvPolynomial.X (b, v.2)) f) m = _
   rw [hg]
@@ -162,8 +161,7 @@ theorem UpperTheory.Gal.Wt.sqExp_h : ExpBasic → EvLem → Dom → SqExp := by
           + ((∑ i ∈ Finset.univ.filter (fun i : Fin a => (i : ℕ) < k), κ.natW i : ℕ) : ℤ) = psum κ k := by
         rw [Nat.cast_sum]
         simp only [hnat]
-        rw [Finset.sum_sub_distrib, hD, psum]
-        rw [Finset.sum_const, nsmul_eq_mul]
+        rw [Finset.sum_sub_distrib, hD, psum, Finset.sum_const, nsmul_eq_mul]
         ring
       linarith
     exact (hle _ _ hup).1 (hmon _ _).1

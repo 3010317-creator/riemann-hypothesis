@@ -222,8 +222,7 @@ theorem classSum_traceForm [CharZero C] (hfin : ∀ x, Finite (stab ι J x)) {θ
       simp only [map_inv, Subgroup.coe_inv]
       group
     rw [traceForm_eq_zero ι J lam ρ h p hx, map_zero, smul_zero]
-  · intro hi
-    exact absurd (Finset.mem_univ i₀) hi
+  · exact fun hi => absurd (Finset.mem_univ i₀) hi
 
 theorem finite_stab_of_reps {I : Type} {y : I → Hf} (hy : IsReps ι J y) (hfin : ∀ i, Finite (stab ι J (y i)))
     (x : Hf) : Finite (stab ι J x) := by
@@ -303,8 +302,7 @@ theorem eq_of_finPt (V : HSp D) {a b : GA D V} (ha : a ∈ GfC V) (hb : b ∈ Gf
     show finHom V (a⁻¹ * b) = 1
     rw [map_mul, map_inv, h1, inv_mul_cancel]
   have h3 := (GlobalTheory.UnitarySplit.real_finite_split D V).2.2.1 _ h2 ((GfC V).mul_mem ((GfC V).inv_mem ha) hb)
-  rw [inv_mul_eq_one] at h3
-  exact h3
+  rwa [inv_mul_eq_one] at h3
 
 theorem lift_finPt (V : HSp D) {a : GA D V} (ha : a ∈ GfC V) : lift V (finPt V a) = a :=
   eq_of_finPt V (lift_mem V _) ha (finPt_lift V _)

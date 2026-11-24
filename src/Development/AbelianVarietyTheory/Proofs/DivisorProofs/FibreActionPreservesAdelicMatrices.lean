@@ -131,8 +131,7 @@ theorem valuation_repr_le_one (w : HeightOneSpectrum (𝓞 K)) {n : ℕ} {la : F
   simp only [Module.Basis.repr_sum_self, map_smul, Finsupp.smul_apply, smul_eq_mul] at h1
   have h2 : w.valuation K (algebraMap (𝓞 K) K s) = 1 := (w.valuation_eq_one_iff_notMem).2 hs
   have h3 : w.valuation K (algebraMap (𝓞 K) K (c i)) ≤ 1 := w.valuation_le_one (c i)
-  rw [h1, map_mul, h2, one_mul] at h3
-  exact h3
+  rwa [h1, map_mul, h2, one_mul] at h3
 
 theorem intAt_rhoMat (w : HeightOneSpectrum (𝓞 K)) {n : ℕ} (la : Fin n → ℕ) {g : Matrix (Fin n) (Fin n) K}
     (hg : IntAt w g) : IntAt w (rhoMat la g) := by
@@ -168,8 +167,7 @@ theorem fibA_isAdelic : ∀ (K : Type) [Field K] [NumberField K] (T : Type) [Fin
     have e : ∀ t, rhoMat (la t) (B w t)⁻¹ * rhoMat (la t) (B w t) = 1 := fun t => by
       rw [rhoMat_mul, Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr ((hB t).1 w)), rhoMat_one]
     rw [fibA, Matrix.smul_mul, Matrix.mul_smul, kron_mul, smul_smul, inv_mul_cancel₀ (ha w), one_smul]
-    simp only [e]
-    exact _root_.GlobalTheory.KroneckerIdentity.kron_identity
+    simpa only [e] using _root_.GlobalTheory.KroneckerIdentity.kron_identity
   have hinv' : ∀ w, (fibA la (a w) (B w))⁻¹ = (a w)⁻¹ • kron (fun t => rhoMat (la t) (B w t)⁻¹) :=
     fun w => Matrix.inv_eq_left_inv (hinv w)
   refine ⟨fun w h => ?_, ?_⟩

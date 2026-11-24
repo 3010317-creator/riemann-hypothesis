@@ -200,8 +200,7 @@ private theorem mem_PsiA_iff (φ : Frame) (ψ : AddChar (E0 × φ.A) ℂ) : ψ �
     exact h s hs
   · intro h s hs
     have h2 := congrArg Units.val (h s hs)
-    rw [key, Units.val_one] at h2
-    exact h2
+    rwa [key, Units.val_one] at h2
 
 private theorem mem_keptA (Λ : Level) (φ : Frame) (H : HostRaw φ) (ψ : AddChar (E0 × φ.A) ℂ) :
     ψ ∈ keptA Λ H ↔ H.Kept Λ.KEPT (chr φ ψ) := by
@@ -260,15 +259,13 @@ theorem UpperTheory.Comparison₂.charsA :
     have e1 := (H.toHostRaw.isPrimOf_iff _ _).1 hpp
     have e2 := (H.toHostRaw.isPrimOf_iff _ _).1 hθp
     have hq : chr φ ψ = θ := eq_of_prim_eq φ H _ _ (e1.symm.trans e2)
-    rw [hq]
-    exact hθ
+    rwa [hq]
   refine ⟨zero_kept Λ φ H.toHostRaw, ?_, ?_, ?_, ?_, ?_⟩
   · intro ψ hψ
     have hX := kept_xp ψ hψ
     refine ⟨(mem_PsiA_iff φ ψ).2 hX.1, ?_⟩
     have h2 := congrArg Units.val hX.2
-    rw [chr_coe_eq_addChar_toE, toE_iod, Units.val_one] at h2
-    exact h2
+    rwa [chr_coe_eq_addChar_toE, toE_iod, Units.val_one] at h2
   · rw [card_PsiA, ho]
     push_cast
     exact le_refl _

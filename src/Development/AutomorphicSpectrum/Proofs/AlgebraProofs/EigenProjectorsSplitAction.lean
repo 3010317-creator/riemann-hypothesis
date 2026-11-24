@@ -157,8 +157,7 @@ theorem split_proj : ∀ (K : Type) [Field K] (C : ACurve K) (V : Type) [AddComm
   · intro s x
     simp only [eig, Submodule.mem_iInf, LinearMap.mem_ker]
     intro b
-    have h := congrArg (fun f : Module.End K V => f x) (hmul s b)
-    simpa [sub_eq_zero] using h
+    simpa [sub_eq_zero] using congrArg (fun f : Module.End K V => f x) (hmul s b)
   · intro s x hx
     simp only [eig, Submodule.mem_iInf, LinearMap.mem_ker] at hx
     have hx' : ∀ b, ρ b x = algebraMap k K (χ s b) • x := fun b => by
@@ -173,9 +172,7 @@ theorem split_proj : ∀ (K : Type) [Field K] (C : ACurve K) (V : Type) [AddComm
     rw [← Finset.sum_smul, ← map_sum, hcoef s s]
     simp
   · intro x
-    have h := congrArg (fun f : Module.End K V => f x) hsum
-    simpa [LinearMap.sum_apply] using h
-  · intro s
-    exact ⟨m s, c s, a s, hcoef s, he s⟩
+    simpa [LinearMap.sum_apply] using congrArg (fun f : Module.End K V => f x) hsum
+  · exact fun s => ⟨m s, c s, a s, hcoef s, he s⟩
 
 end GlobalTheory.CompanionTheory.Ar.Crv.SplitProj

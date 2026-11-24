@@ -65,8 +65,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.rankN_of :
       have hqK : ((ringChar (FractionRing V) : ℕ) : FractionRing V) = 0 := ringChar.Nat.cast_ringChar
       have hqV : ((ringChar (FractionRing V) : ℕ) : V) = 0 := by
         apply IsFractionRing.injective V (FractionRing V)
-        rw [map_natCast, map_zero]
-        exact hqK
+        rwa [map_natCast, map_zero]
       by_cases hpq : ringChar (FractionRing V) = p
       · exact hp (hpq ▸ hqV)
       · have hcop : Nat.Coprime p (ringChar (FractionRing V)) :=
@@ -102,14 +101,12 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.rankN_of :
     · rintro ⟨g₁, hg₁⟩ ⟨g₂, hg₂⟩ he
       exact Subtype.ext (ρ.injective (congrArg Subtype.val he))
     · rintro ⟨h, hh⟩
-      refine ⟨⟨ρ.symm h, (hρ3 _).2 (by simpa using hh)⟩, ?_⟩
-      exact Subtype.ext (by simp [Φ])
+      exact ⟨⟨ρ.symm h, (hρ3 _).2 (by simpa using hh)⟩, Subtype.ext (by simp [Φ])⟩
   let Ψ : W.H → {g : Over.mk x ⟶ M.univ.A // KilledBy M.univ w g} :=
     fun h => ⟨W.pt h, (W.range _).1 ⟨h, rfl⟩⟩
   have hΨ : Function.Bijective Ψ := by
     constructor
-    · intro a c hac
-      exact W.inj (congrArg Subtype.val hac)
+    · exact fun a c hac => W.inj (congrArg Subtype.val hac)
     · rintro ⟨g, hg⟩
       obtain ⟨h, rfl⟩ := (W.range g).2 hg
       exact ⟨h, rfl⟩

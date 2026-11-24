@@ -189,8 +189,7 @@ theorem idem_mul_loc_mem (h : Comparison₂ P e) {t : Formalism.MainNotions.Glob
   have h4 : finPart D (incA D ((s : D.host.E)⁻¹)) =
     (1 : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F) ⊗ₜ[D.host.F] ((s : D.host.E)⁻¹) := rfl
   rw [RingHom.map_mul, h4, mul_assoc, Algebra.TensorProduct.tmul_mul_tmul, one_mul, mul_comm _ (a : D.host.E)] at h3
-  rw [hc]
-  exact h3
+  rwa [hc]
 
 theorem idem_mul_span_mem (V : HSp D) (he : e * e = e) (h : Comparison₂ P e) {x : Fin V.rank → D.host.E}
     (hx : x ∈ Submodule.span (locRing P) (GlobalTheory.Member.latC V : Set (Fin V.rank → D.host.E))) :
@@ -358,8 +357,7 @@ theorem divAt_one (V : HSp D) (he : e * e = e) (h : Comparison₂ P e) (ϖ : D.h
       rw [List.getD_replicate _ i.2, zpow_zero, map_one, map_one, one_mul]
   have e2 : finMat D.sp.cm.sig V.gram (1 : GA D V) = 1 := GlobalTheory.SplitPlace.fm_one V
   refine ⟨List.length_replicate, B, b1, b2, fun y hy => ?_, fun z hz => ⟨_, b1 z hz, ?_⟩⟩
-  · simp only [e1, e2, Matrix.one_mulVec]
-    exact b2 y hy
+  · simpa only [e1, e2, Matrix.one_mulVec] using b2 y hy
   · simp only [e1, e2, Matrix.one_mulVec, ← mul_assoc, hee]
 
 end Divisors

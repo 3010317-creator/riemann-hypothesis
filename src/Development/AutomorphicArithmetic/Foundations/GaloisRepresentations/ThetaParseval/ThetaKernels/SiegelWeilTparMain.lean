@@ -91,8 +91,7 @@ theorem tPar_k : _root_.PositivityTheory.SiegelWeilFormula.TPar_k := by
         rw [h1.1]; simp)
       rw [Matrix.mul_one, hT] at e
       unfold IsPar
-      rw [Units.val_one]
-      exact e
+      rwa [Units.val_one]
     have key : X * (incM F d.b.1.toCols₂)ᵀ * (mat2 x⁻¹)ᵀ = -(X * βᵀ * (incM F t0.1)ᵀ) *
         (diagCols (Fin d.n) : Matrix (Fin d.n ⊕ Fin d.n) (Fin d.n) (AE F E))ᵀ + X * (incM F d.b.1.toCols₂)ᵀ := by
       rw [Matrix.mul_assoc, ← Matrix.transpose_mul, h2.2]
@@ -122,8 +121,7 @@ theorem tPar_k : _root_.PositivityTheory.SiegelWeilFormula.TPar_k := by
           incM F t0.1) = (diagCols (Fin d.n) : Matrix (Fin d.n ⊕ Fin d.n) (Fin d.n) (AE F E)) * incM F t0.1 * t.1 by
         rw [h1.1]; simp)
       unfold IsPar
-      rw [Units.val_mul, Units.val_mul, g1, g2]
-      exact e
+      rwa [Units.val_mul, Units.val_mul, g1, g2]
     have hdet : Matrix.GeneralLinearGroup.det (G0 * t * G0⁻¹) = Matrix.GeneralLinearGroup.det t := by
       rw [map_mul, map_mul, map_inv]
       exact mul_inv_cancel_comm _ _

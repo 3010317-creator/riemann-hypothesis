@@ -233,8 +233,7 @@ theorem twKer_reflect : ∀ {G V W : Type} [Group G] [TopologicalSpace G] [IsTop
     exact n.2)
   haveI : CompactSpace L := isCompact_iff_compactSpace.1 hLc
   let ι : L →* N := Subgroup.inclusion hLN
-  have hι : Continuous ι := by
-    exact Continuous.subtype_mk continuous_subtype_val _
+  have hι : Continuous ι := Continuous.subtype_mk continuous_subtype_val _
   let χ : L →* ℂˣ := θ.comp ι
   have hχ : IsOpen (χ.ker : Set L) := by
     have : (χ.ker : Set L) = ι ⁻¹' (θ.ker : Set N) := by

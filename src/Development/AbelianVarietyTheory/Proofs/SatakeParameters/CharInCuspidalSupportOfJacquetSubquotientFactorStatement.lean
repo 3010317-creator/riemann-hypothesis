@@ -262,8 +262,7 @@ theorem val_blockScalar (e : (Σ a, m a) ≃ n) (a : α) (z : kˣ) :
       simp [GeneralLinearGroup.scalar, diagonal_apply]
     · simp [diagonal_apply, hb, Matrix.one_apply]
   · rw [blockScalar, leviEmb_apply_ne k e _ h, diagonal_apply_ne]
-    intro h'
-    exact h (congrArg Sigma.fst (e.injective h'))
+    exact fun h' => h (congrArg Sigma.fst (e.injective h'))
 
 
 omit [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
@@ -435,8 +434,7 @@ theorem inSupport_of_flag_jac (π : Representation ℂ (GL n k) V) (f : (Σ j, c
     replace hu := CuspMax.mem_unipRad_iff_entries.1 hu
     have hp : u ∈ parab k f := mem_parab_iff.2 fun b b' y y' hb => by
       rw [hu _ _ (by simp [hE, hlt, hb.le, hb.ne']), one_apply_ne]
-      intro h'
-      exact hb.ne' (congrArg Sigma.fst (f.injective h'))
+      exact fun h' => hb.ne' (congrArg Sigma.fst (f.injective h'))
     obtain ⟨v, hv, hdec⟩ := exists_levi_mul_unip k f ⟨u, hp⟩
     have hdec' : u = leviEmb k f (leviProj k f ⟨u, hp⟩) * v := hdec
     have h0 : leviProj k f ⟨u, hp⟩ j₀ ∈ unipRad k e :=
@@ -472,8 +470,7 @@ theorem inSupport_of_flag_jac (π : Representation ℂ (GL n k) V) (f : (Σ j, c
           simp [val_blockScalar, diagonal_apply, hE, heq, ht0]
         · simp [diagonal_apply, hE, heq, hj, Matrix.one_apply]
       · rw [leviEmb_apply_ne k f _ hb, diagonal_apply_ne]
-        intro h'
-        exact hb (congrArg Sigma.fst (f.injective h'))
+        exact fun h' => hb (congrArg Sigma.fst (f.injective h'))
     rw [h1, hjac, deltaHalf_mulSingle, blockScalar, det_leviEmb_mulSingle, ProdSupport.det_scalar_one ha]
 
 theorem inSupport_of_factor {π : Representation ℂ (GL n k) V} (hπ : IsSmooth π) (f : (Σ j, c j) ≃ n)

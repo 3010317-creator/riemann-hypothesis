@@ -70,13 +70,11 @@ theorem hom_ext_of_geometric {Z P S : Scheme.{0}} [IsReduced Z] (q : P ⟶ S) [I
     intro z
     refine ⟨(Sigma.ι T z).base default, ?_⟩
     rw [← Scheme.Hom.comp_apply, Sigma.ι_desc]
-    simp only [pt, Scheme.Hom.comp_apply]
-    exact Scheme.fromSpecResidueField_apply _ _
+    simpa only [pt, Scheme.Hom.comp_apply] using Scheme.fromSpecResidueField_apply _ _
   have : IsDominant m := ⟨hs.denseRange⟩
   refine ext_of_isDominant_of_isSeparated q hq m ?_
   refine Sigma.hom_ext _ _ fun z => ?_
-  simp only [m, Sigma.ι_desc_assoc]
-  exact h _ (pt z)
+  simpa only [m, Sigma.ι_desc_assoc] using h _ (pt z)
 
 theorem glue_geom : ∀ (o : Type) [CommRing o] (n : ℕ) (X : Scheme.{0}) [IsReduced X] (s : X ⟶ Sp o) (I : Type)
     (W : I → X.Opens) (f : ∀ i, (W i).toScheme ⟶ PSpace o n), (⨆ i, W i) = ⊤ →

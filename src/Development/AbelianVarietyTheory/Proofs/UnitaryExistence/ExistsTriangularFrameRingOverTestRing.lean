@@ -76,15 +76,13 @@ theorem exists_testRing_universal_partially_invertible (K : Type) [Field K] (σ 
   · intro i hi
     refine IsUnit.map e.symm ?_
     have hf : IsUnit (emb f) := IsLocalization.Away.algebraMap_isUnit f
-    refine isUnit_of_dvd_unit (map_dvd emb ?_) hf
-    exact Finset.dvd_prod_of_mem _ (by simp [hi])
+    exact isUnit_of_dvd_unit (map_dvd emb (Finset.dvd_prod_of_mem _ (by simp [hi]))) hf
   · intro T _ _ ψ t ht
     let φ : P →ₐ[K] T := MvPolynomial.aevalTower ψ t
     have hφ : IsUnit (φ f) := by
       simp only [f, map_prod]
       refine IsUnit.prod_iff.2 fun i hi => ?_
-      simp only [φ, P, MvPolynomial.aevalTower_X]
-      exact ht i (by simpa using hi)
+      simpa only [φ, P, MvPolynomial.aevalTower_X] using ht i (by simpa using hi)
     have hφ' : ∀ y : Submonoid.powers f, IsUnit (φ y) := by
       rintro ⟨_, n, rfl⟩
       simpa using hφ.pow n

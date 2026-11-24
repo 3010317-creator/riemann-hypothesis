@@ -125,8 +125,7 @@ theorem UpperTheory.ConvolutionTheory.T.pullBack :
     refine hasTrace_map e mF mE _ hc0 hscal τ'.ρ ψ s ?_
     have hfun : (fun g => ψ (e g)) = fun g => ψ (mapGL n (completionMap v w.1) g) :=
       funext fun g => by rw [he g]
-    rw [hfun]
-    exact h
+    rwa [hfun]
   · intro J U hJ hU
     have hU' : ∀ g, g ∈ U ↔ e g ∈ J := fun g => by rw [he g]; exact hU g
     have hset : (U : Set (Gw n v)) = e ⁻¹' (J : Set (Gw n w.1)) := Set.ext hU'
@@ -138,8 +137,7 @@ theorem UpperTheory.ConvolutionTheory.T.pullBack :
     · intro h h0
       refine h (eq_bot_iff.2 fun x hx => ?_)
       have hx' : x ∈ fixedVectors (pull e τ').ρ U := fun u hu => hx _ ((hU' u).1 hu)
-      rw [h0] at hx'
-      exact hx'
+      rwa [h0] at hx'
     · intro φ hφ hinv
       refine ⟨fun y => φ (e.symm y), ⟨hφ.1.comp_continuous e.symm.continuous,
         hφ.2.comp_homeomorph e.symm.toHomeomorph⟩, fun u hu g => ?_, ?_⟩

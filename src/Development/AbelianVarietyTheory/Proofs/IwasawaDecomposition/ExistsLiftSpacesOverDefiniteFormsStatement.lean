@@ -152,8 +152,7 @@ theorem exists_oLat_good : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0
       have h := congrArg (R.toRealDat.WL F.lv2 false i).subtype
         ((Module.finBasis D.what₂.LL (R.toRealDat.WL F.lv2 false i)).sum_repr ⟨y, hyW⟩)
 
-      rw [map_sum] at h
-      exact h
+      rwa [map_sum] at h
 
     rw [← hs, map_sum]
     refine Submodule.sum_mem _ fun k _ => ?_
@@ -432,8 +431,7 @@ theorem lift_forms_embed : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0
   · intro c x
     simp only [DatApi.liftForm_smul]
     exact (congrArg _ (map_smulₛₗ (R.toRealDat.jV i t) _ _)).trans (map_smul (R.toRealDat.extV i t) _ _)
-  · intro x x'
-    exact (hip x x').trans (h2 x x').symm
+  · exact fun x x' => (hip x x').trans (h2 x x').symm
 
 end GlobalTheory.Mem.R3.Rw.LiftForms
 end -- clump:auto
@@ -670,8 +668,7 @@ theorem GlobalTheory.LiftSpaces.exists_thetaMap {D : D7} {C : ChainReal D} (L : 
   let res : W2 →ₗ[ℂ] (L.TK i →ₗ[ℂ] (GA D (L.W i) → ℂ)) := LinearMap.lcomp ℂ _ (L.embK i) ∘ₗ W2.subtype
   have hker : LinearMap.ker res = ⊥ := by
     rw [LinearMap.ker_eq_bot']
-    intro w hw
-    exact Subtype.ext (hres w.1 w.2.1 hw)
+    exact fun w hw => Subtype.ext (hres w.1 w.2.1 hw)
   obtain ⟨ψ, hψ⟩ := res.exists_leftInverse_of_injective hker
   let ev : W2 →ₗ[ℂ] L.Wc i :=
     ((LinearMap.llcomp ℂ _ _ _ (L.eW i)) ∘ₗ W2.subtype).codRestrict (L.Wc i) (fun w => w.2.2)
@@ -684,8 +681,7 @@ theorem GlobalTheory.LiftSpaces.exists_thetaMap {D : D7} {C : ChainReal D} (L : 
     exact LinearMap.congr_fun hψ ⟨w, hw, hg⟩
   have h2 : (ψ ∘ₗ L.thC μ i ∘ₗ J.codRestrict (L.Amt μ i) hJ) x = ⟨w, hw, hg⟩ := h1
   show jM ((LinearEquiv.ofInjective jM hinj).symm ((LinearEquiv.ofEq _ _ hrange.symm) (ev ((ψ ∘ₗ L.thC μ i ∘ₗ J.codRestrict (L.Amt μ i) hJ) x)))) = _
-  rw [h2]
-  rw [← LinearEquiv.ofInjective_apply (f := jM) (h := hinj), LinearEquiv.apply_symm_apply]
+  rw [h2, ← LinearEquiv.ofInjective_apply (f := jM) (h := hinj), LinearEquiv.apply_symm_apply]
   rfl
 
 
@@ -722,8 +718,7 @@ theorem GlobalTheory.LiftSpaces.exists_lift_spaces : ∀ (D : D7) (G : Type) [Gr
     obtain ⟨h1, h2, h3⟩ := GlobalTheory.T.liftHilbertModel_injective_contains_goodForms D G Pl0 I0 T A3 Ks R F cG hO hI hP hH y ⟨j - 1, Nat.lt_of_lt_of_le (Nat.sub_lt hj.1 Nat.one_pos) hj.2⟩
     obtain ⟨e1, e2, -, e4⟩ := hEJ j hj
     refine ⟨?_, ?_, ?_⟩
-    · intro x x' hx
-      exact e1 (h1 (PiTensorProduct.lift.injective hx))
+    · exact fun x x' hx => e1 (h1 (PiTensorProduct.lift.injective hx))
     · ext z
       constructor
       · rintro ⟨x, rfl⟩

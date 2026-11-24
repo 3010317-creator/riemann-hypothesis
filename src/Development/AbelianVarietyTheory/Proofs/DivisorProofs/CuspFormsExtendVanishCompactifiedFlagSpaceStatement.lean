@@ -462,8 +462,7 @@ theorem exists_complexPoint_of_notMem {F A : Type} [Field F] [CommRing A] [Algeb
   · show κ (Ideal.Quotient.mk M x) = 0
     rw [Ideal.Quotient.eq_zero_iff_mem.2 (hle hx), map_zero]
   · show κ (Ideal.Quotient.mk M s) ≠ 0
-    rw [map_ne_zero, Ne, Ideal.Quotient.eq_zero_iff_mem]
-    exact hsM
+    rwa [map_ne_zero, Ne, Ideal.Quotient.eq_zero_iff_mem]
 
 theorem dvd_or_dvd_of_height_eq_one {A : Type} [CommRing A] [IsDomain A] [IsNoetherianRing A] [IsIntegrallyClosed A]
     (P : Ideal A) [P.IsPrime] (hP : P.height = 1) (a b : A) :
@@ -790,8 +789,7 @@ theorem exists_ext_of_dense_local : ∀ {k : Type} [CommRing k] {Y : Scheme.{0}}
       rw [hz z hzV, key t z (l₁ hzV) hzO, key t' z (l₂ hzV) hzO, sub_eq_zero]
       exact H0.germ_change _ _ z hzO _ _ m
     have e' := congrArg (ger y (memInf h h')) e
-    rw [hz y (memInf h h'), map_zero, sub_eq_zero] at e'
-    exact e'
+    rwa [hz y (memInf h h'), map_zero, sub_eq_zero] at e'
   obtain ⟨f, hf⟩ := H0.exists_of_germs (p := p) (O := ⊤) hB V c (fun _ => le_top) hc cover u rule
   refine ⟨f, ?_, ?_⟩
   · refine H0.ext_germ fun y hy => ?_

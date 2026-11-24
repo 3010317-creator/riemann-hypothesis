@@ -310,8 +310,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.hermite1 :
       rw [h]
       simp only [Polynomial.eval_mul, Polynomial.eval_add, Polynomial.eval_C, Polynomial.eval_X]
       field_simp
-  intro n
-  exact ⟨hermite1_integrable n, (two n).1⟩
+  exact fun n => ⟨hermite1_integrable n, (two n).1⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.GaussianProducts.Hermite1Integrable =====
@@ -369,8 +368,7 @@ private lemma split_int {F : Type} [Field F] [NumberField F] [IsTotallyReal F] {
   refine ⟨fun hG => hi.mul_prod hG, ?_⟩
   have h2 := integral_prod_mul (μ := infiniteAdeleMeasure F) (ν := finiteAdeleMeasure F)
     (fun z : InfiniteAdeleRing F => ∏ w, f w ((hJ F).symm z w)) G
-  rw [hint] at h2
-  exact h2
+  rwa [hint] at h2
 
 private lemma gauss_prod {ι : Type} [Fintype ι] (y : ι → ℝ) :
     Complex.exp (-(Real.pi : ℂ) * ((∑ w, y w ^ 2 : ℝ) : ℂ)) =
@@ -560,8 +558,7 @@ private theorem good_add {δ : F} {χ₁ χ₂ : V4 F → ℂ} (h₁ : Good δ �
     simp only [Pi.add_apply, add_mul]
   · have : hat (χ₁ + χ₂) = hat χ₁ + hat χ₂ := by
       funext v
-      simp only [hat, Pi.add_apply, add_mul]
-      exact integral_add (h₁.1 v) (h₂.1 v)
+      simpa only [hat, Pi.add_apply, add_mul] using integral_add (h₁.1 v) (h₂.1 v)
     rw [this]
     exact add_mem h₁.2 h₂.2
 
@@ -570,8 +567,7 @@ private theorem good_smul {δ : F} (c : ℂ) {χ : V4 F → ℂ} (h : Good δ χ
   · simpa only [Pi.smul_apply, smul_eq_mul, mul_assoc] using (h.1 v).const_mul c
   · have : hat (c • χ) = c • hat χ := by
       funext v
-      simp only [hat, Pi.smul_apply, smul_eq_mul, mul_assoc]
-      exact integral_const_mul _ _
+      simpa only [hat, Pi.smul_apply, smul_eq_mul, mul_assoc] using integral_const_mul _ _
     rw [this]
     exact Submodule.smul_mem _ c h.2
 

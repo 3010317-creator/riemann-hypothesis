@@ -60,8 +60,7 @@ theorem mul_eq_of_map_eq {I : Ideal R} (hI : I ^ 2 = 0) {π : R →+* R₀} (hk 
   have h1 : a - b ∈ I := hk ▸ (RingHom.mem_ker.2 (by rw [map_sub, h, sub_self]))
   have h2 : (a - b) * (i : R) ∈ I ^ 2 := by
     rw [pow_two]; exact Ideal.mul_mem_mul h1 i.2
-  rw [hI, Ideal.zero_eq_bot, Ideal.mem_bot, sub_mul, sub_eq_zero] at h2
-  exact h2
+  rwa [hI, Ideal.zero_eq_bot, Ideal.mem_bot, sub_mul, sub_eq_zero] at h2
 
 def smulI (I : Ideal R) {π : R →+* R₀} (hπ : Function.Surjective π) : SMul R₀ I :=
   ⟨fun r i => ⟨Function.surjInv hπ r * i, I.mul_mem_left _ i.2⟩⟩
@@ -102,7 +101,6 @@ theorem GlobalTheory.Obs.exists_aug : ∀ (R R₀ : Type) [CommRing R] [CommRing
     k := { toFun := fun y => (y.snd : R), map_zero' := rfl, map_add' := fun _ _ => rfl }
     mem := fun y => y.snd.2
     smul := fun r y => by
-      show Function.surjInv hπ (π r) * (y.snd : R) = r * y.snd
       exact mul_eq_of_map_eq hI hk (Function.surjInv_eq hπ (π r)) _
     one := rfl
     sq := fun y y' h h' => by

@@ -120,8 +120,7 @@ private theorem CCle_sum_smul_Rw {k r : ℕ} {E : Type} [NormedAddCommGroup E] [
     have h1 : _root_.Formalism.FourierDecayAlt.B.CCle A m (_root_.Formalism.FourierDecayAlt.B.Rw cw.2 F) c :=
       _root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.CCle_Rw hcw.1 (_root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.CCle_mono_m (by omega) hF)
     have h2 := _root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.CCle_add (_root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.CCle_smul cw.1 h1) (ih fun cw' h => hL cw' (List.mem_cons_of_mem _ h))
-    simp only [List.map_cons, List.sum_cons, add_mul]
-    exact h2
+    simpa only [List.map_cons, List.sum_cons, add_mul] using h2
 
 open Filter Topology MeasureTheory in
 private theorem norm_sign_perm_complex_eq_one {n : ℕ} (σ : Equiv.Perm (Fin n)) :
@@ -194,7 +193,6 @@ theorem _root_.GlobalTheory.capelli_fold_ccle : ∀ (k r : ℕ) (Wp Wq : Type) [
     have h2 := hy A m _ (K * c) (hsmooth w X hX) h1
     have h3 := _root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.CCle_smul s h2
     simp only [List.foldr_cons]
-    rw [show ‖s‖ * (Ky * K) * c = ‖s‖ * (Ky * (K * c)) by ring]
-    exact h3
+    rwa [show ‖s‖ * (Ky * K) * c = ‖s‖ * (Ky * (K * c)) by ring]
 
 end GlobalTheory

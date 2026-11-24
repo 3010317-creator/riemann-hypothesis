@@ -136,8 +136,7 @@ theorem isVLam_of_wtPol {ι : Type} [Fintype ι] {a : ℕ} {Y : Type} (fr g : Y 
       have h := hy τ
       rw [hfr, hfr, Matrix.mul_assoc] at h
       have h2 := congrArg (fun M => (B τ)⁻¹ * M) h
-      simp only [← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ (hBu τ), Matrix.one_mul] at h2
-      exact h2
+      simpa only [← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ (hBu τ), Matrix.one_mul] using h2
     have hdβ : ∀ τ, (β τ).det = ∏ r, β τ r r := fun τ =>
       Matrix.det_of_upperTriangular (fun r s h => (hβ τ).1 r s h)
     have hev : MvPolynomial.eval (fun x : ι × Fin a × Fin a => g y₂ x.1 x.2.1 x.2.2) P =
@@ -255,8 +254,7 @@ theorem formsSharpAt_of_valTied (t : KerEntTied ex) (u : D.what₂.Word) (μ : D
       funext y
       rw [hE c y]
       simp [fnOf]
-    rw [hw, hf]
-    exact h1
+    rwa [hw, hf]
   have := fun c => forms_sharp_description Formalism.L2.KerInert.SharpPolyP.sharp_polynomial_frames D u (D.chTw u μ) (t.O u μ) j hj.le
     (nuT D u j) _ (key c)
   choose Q hQ hQE using this

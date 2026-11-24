@@ -97,10 +97,8 @@ theorem exists_poly_div_det_of_natural (E : Type) [Field E] [NumberField E] [IsC
     refine (GlobalTheory.Frames.ChgBC.frChg_baseChange E H Dw l Xo c A S k u₀ u w z' _ _ hu hw).2 ?_
     have e : (fun τ => ((X τ).transpose).map k) = fun b => (Y b).transpose :=
       funext fun b => by rw [Matrix.transpose_map, hkX]
-    rw [e, Units.val_one, map_one]
-    exact hz'
-  rw [GlobalTheory.FrameEval.evR_frMap_of_isReduced E H Dw l Xo c F hF k u z' hm]
-  exact hk
+    rwa [e, Units.val_one, map_one]
+  rwa [GlobalTheory.FrameEval.evR_frMap_of_isReduced E H Dw l Xo c F hF k u z' hm]
 
 theorem exists_isHomogeneous_secZ : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H)
     (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [Algebra c.F K] (y₀ : FrPt Xo c K) (e : Formalism.L2.Pj.Ix Dw → ℤ)
@@ -166,8 +164,7 @@ theorem exists_isHomogeneous_secZ : ∀ (E : Type) [Field E] [NumberField E] [Is
       rw [← Finset.prod_mul_distrib]
       refine Finset.prod_congr rfl fun b _ => ?_
       rw [← Finset.prod_mul_distrib]
-      refine Finset.prod_congr rfl fun i _ => ?_
-      exact key b i
+      exact Finset.prod_congr rfl fun i _ => key b i
     rw [hw, ← _root_.mul_assoc, hc]
 
   have hP'tr : ∀ (X : ∀ b : E →+* ℂ, Matrix (Fin (Dw.mult b)) (Fin (Dw.mult b)) K) (b : E →+* ℂ)

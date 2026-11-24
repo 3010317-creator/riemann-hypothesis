@@ -372,8 +372,7 @@ theorem isNegSq_curv_of_changeFrame_comp {n m r : ℕ} (G : V n → Matrix (Fin 
   have hK2 : MContDiffAt 2 (fun u => (W u)ᵀ * domGram m r (Z u) * (W u)ᴴᵀ) v :=
     (hW2.transpose.mul hH2).mul hW2.conjTranspose.transpose
   have hKu : IsUnit ((W v)ᵀ * domGram m r (Z v) * (W v)ᴴᵀ).det := by
-    simp only [det_mul, det_transpose, det_conjTranspose]
-    exact (hWu.mul hDu).mul hWu.star
+    simpa only [det_mul, det_transpose, det_conjTranspose] using (hWu.mul hDu).mul hWu.star
   refine ⟨S * W v, T ∘ₗ (fderiv ℂ Z v).toLinearMap, by rw [det_mul]; exact hS.mul hWu, fun ξ η => ?_⟩
   rw [curv_congr hG, curv_smul (f := fun _ => κ) contDiffAt_const hκ.ne' hK2 hKu, leviForm_const,
     curv_changeFrame (H := fun x => domGram m r (Z x)) hH2 hDu hW2 hWu hW0,
@@ -624,8 +623,7 @@ theorem coords_holomorphic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hBo : IsOpen B := hB₀o.preimage L.symm.continuous
   have hb₀ : L u₀ ∈ B := by
     show L.symm (L u₀) ∈ B₀
-    rw [ContinuousLinearEquiv.symm_apply_apply]
-    exact hu₀
+    rwa [ContinuousLinearEquiv.symm_apply_apply]
   have hPd : ∀ a, DifferentiableOn ℂ (fun b => P b a) B := fun a => differentiableOn_pi.2 fun j =>
     (TrueCx.TorHolo.differentiableOn_perFr (U.X k) (x := fun b => G (L.symm b)) (fun b hb => (hB₀ _ hb).1)
       (fun τ' a' c' b hb => (((hB₀ _ hb).2 τ' a' c').comp b L.symm.differentiableAt).differentiableWithinAt)
@@ -678,8 +676,7 @@ theorem coords_holomorphic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       rw [hwa]
       have hi : ∀ j j' : Fin (Dw.mult τ), e.symm ⟨τ, j⟩ = e.symm ⟨τ, j'⟩ ↔ j = j' := fun j j' => by simp
       simp [Finset.sum_apply, Pi.single_apply, hi]
-    rw [hfa, ← hgF τ i]
-    exact ha
+    rwa [hfa, ← hgF τ i]
   have ht : Tendsto L.symm (𝓝 (L u₀)) (𝓝 u₀) := by
     simpa using L.symm.continuous.tendsto (L u₀)
   refine ⟨fun u a i => Wd i (L u) (e.symm ⟨τ, a⟩), fun a i => ?_, ?_⟩
@@ -1413,8 +1410,7 @@ theorem exists_un : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   have hxF : xF ≫ T.Z.jQ = y.1 := IsOpenImmersion.lift_fac _ _ _
   have hs : xF ≫ Limits.pullback.snd _ _ = spMap (algebraMap c.F (CAt σ)) := by
     have h2 := y.2
-    rw [← hxF, Category.assoc, T.Z.jQ_over] at h2
-    exact h2
+    rwa [← hxF, Category.assoc, T.Z.jQ_over] at h2
   have hover : (xF ≫ Limits.pullback.fst _ _) ≫ Xo.s = sOf c (CAt σ) := by
     rw [Category.assoc, Limits.pullback.condition, ← Category.assoc, hs]
     exact GlobalTheory.ShFam.OpenReg.spMap_comp _ _
@@ -1449,9 +1445,7 @@ theorem exists_holo_frame_chart : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       (cancel_mono T.Z.jQ).1 (congrArg Subtype.val h)
     rw [← ptF_fst z, h1, ptF_fst]
   have hcxinj : Function.Injective (cxOf e σ hj) := by
-    intro y1 y2 h
-    apply Subtype.ext
-    exact (cancel_mono j).1 (congrArg Subtype.val h)
+    exact fun y1 y2 h => Subtype.ext ((cancel_mono j).1 (congrArg Subtype.val h))
   have hya : cxOf e σ hj y = cxPt T.Z (U.un k ⟨ψ a, hψd a haW⟩) := hx₀.symm.trans (cxPt_congr (hψa _).symm)
   have haO : a ∈ {w | w ∈ W ∧ ∃ h : ψ w ∈ (U.X k).dom, ∃ y' ∈ c'.e.source, cxOf e σ hj y' = cxPt T.Z (U.un k ⟨ψ w, h⟩)} := ⟨haW, hψd a haW, y, hyc, hya⟩
   have hqa : q a = y := hcxinj ((hq a haW _ ⟨y, hyc, hya⟩).2.trans hya.symm)

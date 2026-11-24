@@ -193,14 +193,12 @@ theorem pullC_delta (τ : κ → ι) (φ : E →ₗ[k] E') (c : Finset ι → E)
       ← image_erase_of_injOn h hi, smul_smul, smul_smul, sign_inj h hi]
   · rw [ite_eq_right h]
     have h' : ∃ a ∈ t, ∃ b ∈ t, τ a = τ b ∧ a ≠ b := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact h (by intro x hx y hy hxy; exact hc x hx y hy hxy)
     obtain ⟨a, ha, b, hb, he, hab⟩ := h'
     have zero_of : ∀ s : Finset κ, a ∈ s → b ∈ s → pullC τ φ c s = 0 := fun s has hbs => by
       rw [pullC_apply, ite_eq_right]
-      intro hs
-      exact hab (hs has hbs he)
+      exact fun hs => hab (hs has hbs he)
     rw [Finset.sum_eq_add_of_mem a b ha hb hab (fun x _ hne => by
       rw [zero_of _ (Finset.mem_erase.2 ⟨hne.1.symm, ha⟩) (Finset.mem_erase.2 ⟨hne.2.symm, hb⟩), smul_zero])]
     by_cases hia : Set.InjOn τ (t.erase a)

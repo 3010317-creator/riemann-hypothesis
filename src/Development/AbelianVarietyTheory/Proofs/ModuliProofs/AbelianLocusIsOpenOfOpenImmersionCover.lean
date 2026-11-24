@@ -83,8 +83,7 @@ theorem isProper_restrict_of_cover {X Z : Scheme.{0}} (p : X ⟶ Z) {I : Type} {
     have hr : Set.range (W.ι ≫ U.ι) ⊆ Set.range ((V i).ι ≫ f i) := by
       rintro _ ⟨x, rfl⟩
       have hx : U.ι x.val ∈ ((V i).ι ≫ f i).opensRange := x.2
-      rw [← SetLike.mem_coe, Scheme.Hom.coe_opensRange] at hx
-      exact hx
+      rwa [← SetLike.mem_coe, Scheme.Hom.coe_opensRange] at hx
     let e := IsOpenImmersion.lift ((V i).ι ≫ f i) (W.ι ≫ U.ι) hr
     have he : e ≫ ((V i).ι ≫ f i) = W.ι ≫ U.ι := IsOpenImmersion.lift_fac _ _ _
     have big := (isPullback_morphismRestrict (p ∣_ U) W).flip.paste_horiz (isPullback_morphismRestrict p U).flip
@@ -93,8 +92,7 @@ theorem isProper_restrict_of_cover {X Z : Scheme.{0}} (p : X ⟶ Z) {I : Type} {
       rw [big.w, Category.assoc]
     have sq : IsPullback ((hsq i).lift _ _ hw) ((p ∣_ U) ∣_ W) (p' i ∣_ V i) e := by
       refine IsPullback.of_right ?_ ((hsq i).lift_snd _ _ hw) (hsq i)
-      rw [(hsq i).lift_fst]
-      exact big
+      rwa [(hsq i).lift_fst]
     exact isProper_snd_of_isPullback_of_isProper sq (hV i)
 
 private theorem mem_abLocus_of_map_mem_of_isPullback {Y Z : Scheme.{0}} {A : Over Y} {B : Over Z} {g : Y ⟶ Z}

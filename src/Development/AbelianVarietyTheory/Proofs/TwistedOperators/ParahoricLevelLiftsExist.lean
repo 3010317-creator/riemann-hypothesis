@@ -154,8 +154,7 @@ theorem redFn_of_smul_eq (β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (PP
   ext i j
   have h3 : φ * y.1 i j = φ * Y i j := Subtype.ext (congrFun (congrFun h2 i) j)
   have h4 := congrArg (resS F PP) h3
-  rw [map_mul, map_mul, hφ, one_mul, one_mul] at h4
-  exact h4
+  rwa [map_mul, map_mul, hφ, one_mul, one_mul] at h4
 
 theorem idem_dvd (PP : Pl E) (φ : Formalism.L2.Herm.intAf F E) (hφ : φ * φ = φ) (h0 : resS F PP φ = 0) :
     ∃ x ∈ PP.asIdeal, x ≠ 0 ∧ ∃ s, s * oToS F E x = φ := by
@@ -209,8 +208,7 @@ theorem stab_of_part {S : Subring A} (σ : A →+* A) (J : Matrix (Fin n) (Fin n
       show p • y = p • g.1 *ᵥ (m' *ᵥ y)
       rw [e, Matrix.mulVec_mulVec, ← Matrix.smul_mulVec, hmm, Matrix.smul_mulVec, Matrix.one_mulVec]⟩)
   refine ⟨fun y hy => (key y).1 hy, fun y hy => (key _).2 ?_⟩
-  rw [Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec]
-  exact hy
+  rwa [Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec]
 
 theorem conj_inv_part {S : Subring A} (β : GL (Fin n) A) (p u : S) (Y : Matrix (Fin n) (Fin n) S) (h : u * Y.det = p)
     (hp : p * p = p) :
@@ -299,8 +297,7 @@ theorem hatL_selfDual_gen (c : E ≃ₐ[F] E) (σ : E →ₐ[F] E) (hσ : ∀ x,
       have e : s • a = fun i => s.1 * a i := rfl
       rw [e, this]
       exact mul_mem (hint _ s.2) ha
-  · intro h
-    exact k2.1 fun x hx => h _ (Submodule.subset_span ⟨x, hx, rfl⟩)
+  · exact fun h => k2.1 fun x hx => h _ (Submodule.subset_span ⟨x, hx, rfl⟩)
 
 theorem mem_St_of_part (σ : E →ₐ[F] E) (J : Matrix (Fin n) (Fin n) E) (Λ : Submodule (𝓞 E) (Fin n → E))
     (β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (hβ : IsFrame β Λ) (hΛ : HatSelfDual σ J Λ)
@@ -541,8 +538,7 @@ theorem exists_local_lift {V : HSp D} {β : GL (Fin V.rank) (Lev.EAf D)}
     · rw [RingHom.map_mul, resS_oToS, Ideal.Quotient.eq_zero_iff_mem.2 hy, mul_zero]
     · have e1 : ((w * oToS D.host.F D.host.E y : Formalism.L2.Herm.intAf D.host.F D.host.E) : Lev.EAf D) =
           finSw D (e + cA D e) := hw
-      rw [e1]
-      exact hsf
+      rwa [e1]
 
 theorem prod_map_single {ι M : Type} [Monoid M] {l : List ι} (hl : l.Nodup) {a : ι} (ha : a ∈ l) (f : ι → M)
     (h : ∀ b, b ≠ a → f b = 1) : (l.map f).prod = f a := by

@@ -99,12 +99,10 @@ private theorem ann_of_flat {A R : Type} [CommRing A] [CommRing R] [IsLocalRing 
     {a : A} (ha : f a = 0) : ∃ s, s ∉ (maximalIdeal R).comap f ∧ s * a = 0 := by
   algebraize [f]
   have h0 : ∑ i : Fin 1, (fun _ : Fin 1 => a) i • (fun _ : Fin 1 => (1 : R)) i = 0 := by
-    rw [Fin.sum_univ_one, Algebra.smul_def, mul_one]
-    exact ha
+    rwa [Fin.sum_univ_one, Algebra.smul_def, mul_one]
   obtain ⟨k, c, y, hy, hc⟩ := Module.Flat.isTrivialRelation_of_sum_smul_eq_zero
     (R := A) (M := R) (f := fun _ : Fin 1 => a) (x := fun _ : Fin 1 => (1 : R)) h0
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have h1 : (1 : R) = ∑ j, c 0 j • y j := hy 0
   have hone : (1 : R) ∈ maximalIdeal R := by
     rw [h1]
@@ -326,8 +324,7 @@ theorem UpperTheory.V.CA.g_detrad :
         exact MvPolynomial.IsHomogeneous.prod _ _ (fun _ => 1) (fun b _ => MvPolynomial.isHomogeneous_X _ _)
     intro f hf d
     have := hI.radical d hf
-    rw [← MvPolynomial.decomposition.decompose'_apply]
-    exact this
+    rwa [← MvPolynomial.decomposition.decompose'_apply]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.GDetrad =====
@@ -553,9 +550,7 @@ private theorem UpperTheory.V.CA.homprime_mul (R σ : Type) [CommRing R]
     · simp
     · intro q _ hq
       by_cases h1 : x.1.degree = q.1
-      · have h2 : x.2.degree ≠ q.2 := by
-          intro h2
-          exact hq (Prod.ext h1.symm h2.symm)
+      · have h2 : x.2.degree ≠ q.2 := fun h2 => hq (Prod.ext h1.symm h2.symm)
         simp [h2]
       · simp [h1]
     · intro hq
@@ -590,8 +585,7 @@ theorem UpperTheory.V.CA.g_homprime :
     intro F
     rw [UpperTheory.V.CA.g_hommem R σ P hhom F]
     constructor
-    · intro h d
-      exact h d (p F d) (hp F d)
+    · exact fun h d => h d (p F d) (hp F d)
     · intro h d g hg
       have hg' : g = p F d := by
         ext m
@@ -620,8 +614,7 @@ theorem UpperTheory.V.CA.g_homprime :
     apply hP.ne_top
     rw [← hcomap, htop, Ideal.comap_top]
   · intro F G hFG
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     obtain ⟨hF, hG⟩ := hne
     rw [key] at hF hG hFG
     push Not at hF hG
@@ -698,8 +691,7 @@ private theorem UpperTheory.V.CA.detps_height {A : Type} [CommRing A] [IsNoether
     rw [hI, Ideal.span_le]
     rintro x (⟨a, rfl⟩ | hx)
     · exact hQ.1.2 (Ideal.subset_span ⟨a, rfl⟩)
-    · rw [Set.mem_singleton_iff.mp hx]
-      exact hdet
+    · rwa [Set.mem_singleton_iff.mp hx]
   have hPQ : I.radical = Q :=
     le_antisymm (by rw [← hQprime.radical]; exact Ideal.radical_mono hIQ) hQP
   rw [hPQ]
@@ -745,8 +737,7 @@ theorem UpperTheory.V.CA.g_detps :
     · rw [← hmap]
       exact Ideal.map_radical_le φ
   have hIprime : I.radical.IsPrime := by
-    rw [hrad]
-    exact hmp
+    rwa [hrad]
   refine ⟨hIprime, ?_⟩
   refine UpperTheory.V.CA.detps_height n (fun a b => (MvPowerSeries.X (Sum.inl (a, b)) : A))
     (fun b => (MvPowerSeries.X (Sum.inr b) : A)) I rfl hIprime ?_
@@ -800,8 +791,7 @@ private theorem UpperTheory.V.Fr.detsec_comap {R S : Type} [CommRing R] [CommRin
       refine Relation.ReflTransGen.lift (fun I : Ideal S => I.comap p) ?_ _ _ (h2 P hP Q hQ)
       rintro P Q ⟨hP, hQ, h⟩
       refine ⟨⟨P, hP, rfl⟩, ⟨Q, hQ, rfl⟩, ?_⟩
-      rw [hs, detsec_dim p hp]
-      exact h
+      rwa [hs, detsec_dim p hp]
 
 private theorem UpperTheory.V.Fr.detsec_ker (O : Type) [CommRing O] [IsLocalRing O] (R : Type) [CommRing R] [Algebra O R]
     [IsCO O R] (σ : Type) [Finite σ] (a : σ → R) (ha : ∀ s, a s ∈ maximalIdeal R)
@@ -1009,8 +999,7 @@ theorem UpperTheory.V.Fr.oddm :
           simp [Finsupp.tsub_apply, Ne.symm (ne_of_lt hlt)] at this
           exact hj0 this
         · rw [ite_eq_right hjl]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     · push Not at hex
       have hz : ∀ j : Fin g, ¬ Finsupp.single (Sum.inr j : Fin a ⊕ Fin g) 1 ≤ n := by
         intro j hj
@@ -1460,8 +1449,7 @@ theorem UpperTheory.V.Fr.sharp3 :
             Nat.card_eq_fintype_card, Fintype.card_fin, hN]
           norm_cast
           omega)
-      rw [← hk] at h1
-      exact h1
+      rwa [← hk] at h1
     refine ⟨⊥, fun _ => rfl, fun _ _ _ => bot_le, hch, fun P hP => Or.inl ⟨hoff _ hch P hP, fun _ h => hee ?_⟩⟩
     exact ((hcmp P).2.2.1 h).trans ((Ideal.comap_mono (le_maximalIdeal hP.1.1.ne_top)).trans L.lies.le)
 end -- clump:auto

@@ -155,8 +155,7 @@ theorem lieBasis_card (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsCommMonObj G] 
       have := GlobalTheory.UnifCompare.isDerivAt0_smul (hD w) c
       rw [← hTDl w, hT] at this
       show IsDerivAt0 _ _ ((spMap (epsScaleR c) ≫ (Dl w).left) ≫ pullback.fst G.hom y)
-      rw [Category.assoc]
-      exact this
+      rwa [Category.assoc]
     have : a = Dl (c • w) := by
       apply Te.injective
       rw [hTe, hTe, ha, hTDl]
@@ -226,8 +225,7 @@ theorem GlobalTheory.exists_toric_torsion_cubWeil_one_of_exp : ∀ (E : Type) [F
     rw [h0]
   have h2 : ∀ v : epsPt y ⟶ t.G, spMap (TrivSqZeroExt.fstHom ℂ ℂ ℂ).toRingHom ≫ v.left = (e 0).left →
       ∃! w, IsDerivAt0 (fun z => (e z).left) w v.left := by
-    intro v hv
-    exact hd2 v.left ⟨Over.w v, by rw [hv, h0]⟩
+    exact fun v hv => hd2 v.left ⟨Over.w v, by rw [hv, h0]⟩
   obtain ⟨n, hn⟩ := exists_relDim_fibre X t.G t.semi y
   obtain ⟨v, hv⟩ := GlobalTheory.KeyPow.exists_isLieBasis _ hn
   have hng := lieBasis_card X t.G y g n e hadd h1 h2 v hv
@@ -275,8 +273,7 @@ theorem GlobalTheory.exists_toric_torsion_cubWeil_one_of_exp : ∀ (E : Type) [F
       (by rw [MonObj.pow_comp, ha, MonObj.one_comp]) (toUnit_unique _ _)
     have h1 := σ.cubWeil ht ((he b).1 hy)
     have h2 := (GlobalTheory.UU.cubWeil_of_isPullCubical _ _ x G G' (cubeMapOf hp) hw (toBase_mul_pullback G x) t.PP _ t.cub c' hc' N U _ _ _ h1).comp ρ
-    rw [map_one] at h2
-    exact h2
+    rwa [map_one] at h2
   · rw [← hcount]
     congr 1
     · exact (Nat.card_congr (e'.toEquiv.subtypeEquiv fun a => (he a).symm)).symm

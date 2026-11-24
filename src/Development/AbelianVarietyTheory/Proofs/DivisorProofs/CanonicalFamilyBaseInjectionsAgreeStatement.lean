@@ -239,8 +239,7 @@ theorem cls_eq_lam_pull {V : Type} [CommRing V] [IsDomain V] {f : R →+* V} {D 
     rw [← Category.assoc, ← Over.comp_left, ha, Over.comp_left, Category.assoc, a₂, Category.assoc])
   have k := congrArg (CechPic.pull (pushHom gp _ (𝟙 D'.P.A)).left) h
   rw [pull_lam, Category.comp_id, ← q, p1] at k
-  rw [e, lam_pull_of_isGrpPullback gp]
-  exact k
+  rwa [e, lam_pull_of_isGrpPullback gp]
 
 theorem lbIso_of_match : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (C : MonoFam Xo c φ R) (Cn : Canon C) (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V], IsAdicComplete (maximalIdeal V) V → ∀ f₁ f₂ : R →+* V, Function.Injective f₁ → Function.Injective f₂ → IsLocalHom f₁ → IsLocalHom f₂ → ∀ (D₁ D₂ : DegData V (maximalIdeal V)) (hD₁ : IsPullDeg f₁ C.P.D.toPre D₁.toPre) (hD₂ : IsPullDeg f₂ C.P.D.toPre D₂.toPre) (j₁ j₂ : (AlgebraicClosure (FractionRing R)) →+* (AlgebraicClosure (FractionRing V))) (b : D₁.toPre.P.A ⟶ D₂.toPre.P.A) (φ' : D₁.toPre.X ≃+ D₂.toPre.X), GlobalTheory.TInj.Ext f₁ j₁ → GlobalTheory.TInj.Ext f₂ j₂ → GlobalTheory.TInj.Match D₁.toPre D₂.toPre b φ' (AlgebraicClosure (FractionRing V)) → (letI := H.starRing; ∀ x : 𝓞 E, ∃ (a₁ : D₁.toPre.P.A ⟶ D₁.toPre.P.A) (a₂ : D₂.toPre.P.A ⟶ D₂.toPre.P.A), a₁ ≫ hD₁.e.hom = hD₁.e.hom ≫ (Over.pullback (specOf f₁)).map (C.P.oD.onB.act x) ∧ a₂ ≫ hD₂.e.hom = hD₂.e.hom ≫ (Over.pullback (specOf f₂)).map (C.P.oD.onB.act x) ∧ a₁ ≫ b = b ≫ a₂) → LBIso D₁.toPre.P.L (D₂.toPre.P.L.pull b.left) := by
   intro E _ _ _ H Dw l Xo c φ R _ _ _ _ C _ V _ _ _ _ _ f₁ f₂ _ _ _ _ D₁ D₂ hD₁ hD₂ _ _ b φ' _ _ hM hact
@@ -846,8 +845,7 @@ theorem GlobalTheory.UCanon.eq_self_of_cone_congMod : ∀ {E : Type} [Field E] [
   have he := GlobalTheory.Poinc.eq_refl_of_isometry_congMod X (∑ i, δ i)
     (fun y hy => by simpa [LinearMap.sum_apply] using hdef y hy) (u.restrictScalars ℤ) (fun y z => hβ y z) N hN
     (fun y => hcong y)
-  intro y
-  exact LinearEquiv.congr_fun he y
+  exact fun y => LinearEquiv.congr_fun he y
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSelfOfConeCongMod =====
@@ -964,8 +962,7 @@ theorem lattice_eq_id : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {
     intro y z
     have h := LinearMap.congr_fun₂ hsum (e y) (e z)
     simp only [LinearMap.sum_apply, LinearMap.smul_apply, pull_apply, LinearEquiv.coe_coe, hgz, nsmul_eq_mul] at h
-    simp only [hδ]
-    exact h.symm
+    simpa only [hδ] using h.symm
   have hpos : ∀ y, y ≠ 0 → 0 < ∑ i, C.δ i y y := by
     intro y hy
     obtain ⟨i, hi⟩ := C.mono.exists_pos (maximalIdeal.isMaximal _).ne_top hy
@@ -974,8 +971,7 @@ theorem lattice_eq_id : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {
     exact Finset.sum_pos' (fun j _ => C.cone.nonneg j y) ⟨i, Finset.mem_univ _, hi'⟩
   have hid := GlobalTheory.UCanon.eq_self_of_cone_congMod H φ (min Dw.p Dw.q) hφ hns C.P.D.toPre.X C.rank C.m C.δ C.cone hpos ga
     d₂ d₁ hd₂ hd₁ hform l.M' hn hcong
-  intro y
-  exact hid y
+  exact fun y => hid y
 
 end GlobalTheory.UCanon.LatId
 end -- clump:auto

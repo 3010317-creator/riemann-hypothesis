@@ -66,8 +66,7 @@ theorem sum_fundOnRoot {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] {N : ℕ} {A : 
     simp
   · intro x _ hx
     simp [hx]
-  · intro hx
-    exact absurd (Finset.mem_univ x0) hx
+  · exact fun hx => absurd (Finset.mem_univ x0) hx
 
 theorem log_combLine {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] {J : Type} [Fintype J] (ℓ : J → HermLine ι)
     (n : J → ℤ) {z : (Σ k, ι k) → ℂ} (hz : ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0) :
@@ -85,8 +84,7 @@ theorem sum_root_fund {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] {N : ℕ} (r : �
   · intro x _ hx
     refine Finset.sum_eq_zero fun j _ => ?_
     simp [rootOnFund, hx]
-  · intro h
-    exact absurd (Finset.mem_univ x0) h
+  · exact fun h => absurd (Finset.mem_univ x0) h
   have hterm : ∀ j : Fin N, rootOnFund (x0, k0) (x0, j) • -∑ k ∈ Finset.Iic j, f (x0, k) =
       (if j = k0 then ∑ k ∈ Finset.Iic j, f (x0, k) else 0) -
         (if (j : ℕ) + 1 = k0 then ∑ k ∈ Finset.Iic j, f (x0, k) else 0) := by
@@ -118,8 +116,7 @@ theorem sum_root_fund {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] {N : ℕ} (r : �
         ext
         simp only
         omega
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     have hI : Finset.Iic (⟨k' + 1, hk⟩ : Fin N) = insert ⟨k' + 1, hk⟩ (Finset.Iic ⟨k', hk'⟩) := by
       ext j
       simp only [Finset.mem_Iic, Finset.mem_insert, Fin.le_def, Fin.ext_iff]

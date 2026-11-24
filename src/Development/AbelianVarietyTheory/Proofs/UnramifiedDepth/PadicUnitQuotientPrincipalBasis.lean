@@ -79,8 +79,7 @@ private lemma eq_zero_of_natCast_mul_eq_zero_op (p : ℕ) [Fact p.Prime] (R : Ty
   have hp := (Fact.out : p.Prime)
   have : Module.Free ℤ R := Module.free_of_finite_type_torsion_free'
   have hsmul : (p : ℤ_[p]) • z = 0 := by
-    rw [Nat.cast_smul_eq_nsmul, nsmul_eq_mul]
-    exact hz
+    rwa [Nat.cast_smul_eq_nsmul, nsmul_eq_mul]
   rcases smul_eq_zero.mp hsmul with h | h
   · exact absurd h (Nat.cast_ne_zero.mpr hp.ne_zero)
   · exact h
@@ -89,8 +88,7 @@ theorem ow_p_torsionFree (p : ℕ) [Fact p.Prime] (R : Type) [CommRing R] [IsDom
     [Module.Finite ℤ R] (w : Place p R) (x : w.Ow) (hx : (p : w.Ow) * x = 0) : x = 0 := by
   obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective x
   have hy : (p : Op p R) * y ∈ Ideal.span {1 - w.e} := by
-    rw [← Ideal.Quotient.eq_zero_iff_mem, map_mul, map_natCast]
-    exact hx
+    rwa [← Ideal.Quotient.eq_zero_iff_mem, map_mul, map_natCast]
   obtain ⟨a, ha⟩ := Ideal.mem_span_singleton'.mp hy
   have hey : w.e * y = 0 := by
     apply eq_zero_of_natCast_mul_eq_zero_op p R
@@ -152,8 +150,7 @@ private theorem isDomain_of_span {A : Type} [CommRing A] [IsNoetherianRing A] [I
   have hfac : ∀ a : A, a ≠ 0 → ∃ (k : ℕ) (u : A), IsUnit u ∧ a = π ^ k * u := by
     intro a ha
     have hex : ∃ n : ℕ, a ∉ (IsLocalRing.maximalIdeal A) ^ n := by
-      by_contra h
-      push Not at h
+      by_contra! h
       apply ha
       have hmem : a ∈ ⨅ i : ℕ, (IsLocalRing.maximalIdeal A) ^ i := Submodule.mem_iInf _ |>.2 h
       rwa [hkrull, Ideal.mem_bot] at hmem
@@ -177,8 +174,7 @@ private theorem isDomain_of_span {A : Type} [CommRing A] [IsNoetherianRing A] [I
     exact ⟨c, by rw [← hu, ← hc, pow_succ]; ring⟩
   have hnzd : NoZeroDivisors A := by
     refine ⟨fun {a b} hab => ?_⟩
-    by_contra h
-    push Not at h
+    by_contra! h
     obtain ⟨k, u, hu, rfl⟩ := hfac a h.1
     obtain ⟨l, v, hv, rfl⟩ := hfac b h.2
     have h1 : (u * v) * π ^ (k + l) = 0 := by rw [← hab]; ring

@@ -385,8 +385,7 @@ theorem exists_trivial_stabiliser : ∀ (D : D7) (k : Fin 2) (s : SplitPlace D.h
     have hsq : Squarefree (Ideal.span {((D.host.g k : ℕ) : 𝓞 D.host.E)}) :=
       (UniqueFactorizationMonoid.squarefree_iff_nodup_normalizedFactors h0).2 (Formalism.MainNotions.ModuliIntegralCharts.H1.GSplit.g_splits D k).2
     have hd : s.ideal * s.ideal ∣ Ideal.span {((D.host.g k : ℕ) : 𝓞 D.host.E)} := by
-      rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem, ← sq]
-      exact hmem
+      rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem, ← sq]
     exact s.ideal_isPrime.ne_top (Ideal.isUnit_iff.1 (hsq _ hd))
   obtain ⟨m, hm⟩ : ∃ m, D.R.nV = m + 2 := ⟨D.R.nV - 2, by unfold Ranks.nV; omega⟩
   rw [hm] at h2n ⊢
@@ -601,8 +600,7 @@ theorem bound : ∀ (D : D7) (η : HChar D.host.E) (J : Subgroup (GAf D.host.E D
     · by_cases hq : w ∈ qPl D η
       · obtain ⟨s, hsv, hs⟩ := hpara w hq
         subst hsv
-        have hp := (hs κ' htr).1 hκ'
-        exact (GlobalTheory.HeckeStdFacts.loc_mem_GLint_iff s htr).1 hp.1
+        exact (GlobalTheory.HeckeStdFacts.loc_mem_GLint_iff s htr).1 ((hs κ' htr).1 hκ').1
       · refine (hhyp κ' ?_).1 hκ'
         intro u hu
         apply htr u
@@ -1055,8 +1053,7 @@ theorem mem_para_of_eig : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
     rw [hO, ValuationSubring.mem_toSubring, IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers]
   have hint := (GlobalTheory.HeckeScalarSph.loc_mem_GLint_iff s hκT).2 hκU
   refine ⟨hint, ?_⟩
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   obtain ⟨i0, j0, hi0, hj0, hv⟩ := hcon
   set h := s.loc n κ with hh
   have hent : ∀ i j, Valued.v (h.val i j) ≤ 1 := fun i j =>
@@ -1257,9 +1254,7 @@ theorem mem_of_agree {J J' : Subgroup (GAf L n)} {χ : J →* ℂˣ} {χ' : J' �
     induction T using Finset.induction_on with
     | empty =>
       intro κ hκ ht
-      have ht' : TrivOutside Sᶜ κ := by
-        intro v hv
-        exact ht v (by simpa using hv)
+      have ht' : TrivOutside Sᶜ κ := fun v hv => ht v (by simpa using hv)
       obtain ⟨a1, a2⟩ := hO κ ht'
       obtain ⟨b1, b2⟩ := hO' κ ht'
       have h' : κ ∈ J' := b1.mpr (a1.mp hκ)
@@ -1454,8 +1449,7 @@ namespace GlobalTheory.LevCmp
 
 theorem overPl_subsingleton {L : Type} [Field L] (w : HeightOneSpectrum (𝓞 L)) :
     {v : HeightOneSpectrum (𝓞 (maximalRealSubfield L)) | NG.OverPl w v}.Subsingleton := by
-  intro v hv v' hv'
-  exact HeightOneSpectrum.ext (hv.symm.trans hv')
+  exact fun v hv v' hv' => HeightOneSpectrum.ext (hv.symm.trans hv')
 
 theorem gPl_union_qPl_finite : ∀ (D : D7) (η : HChar D.host.E), (gPl D ∪ qPl D η).Finite := by
   intro D η
@@ -1558,8 +1552,7 @@ theorem val_det_block {K Γ ι : Type*} [Field K] [LinearOrderedCommGroupWithZer
     exact this
   rw [← h3]
   refine le_antisymm A₁.det.2 (not_lt.1 fun hlt => h2 ?_)
-  rw [IsLocalRing.residue_eq_zero_iff, Valuation.mem_maximalIdeal_iff]
-  exact hlt
+  rwa [IsLocalRing.residue_eq_zero_iff, Valuation.mem_maximalIdeal_iff]
 
 theorem detDD_unit_supDiag_int : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) (r : ℕ) (s : SplitPlace L) (h : GL (Fin n) (s.v.adicCompletion (maximalRealSubfield L))), NG.ParaRT s r h → Valued.v (NG.detDD s r h) = 1 ∧ Valued.v (NG.supDiag s r h) ≤ 1 := by
   intro L _ _ _ n r s h hp

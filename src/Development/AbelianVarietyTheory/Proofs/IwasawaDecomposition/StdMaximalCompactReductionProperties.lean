@@ -86,8 +86,7 @@ theorem psiR_surj : Function.Surjective (psiR s) := by
       s.v.adicCompletion (maximalRealSubfield E)) = algebraMap (𝓞 (maximalRealSubfield E)) (s.v.adicCompletion (maximalRealSubfield E)) a := by
     show s.i (((algebraMap (𝓞 (maximalRealSubfield E)) (𝓞 E) a : 𝓞 E)) : E) = _
     rw [split_coe_algebraMap, AlgHom.commutes]; rfl
-  rw [AddSubgroupClass.coe_sub, e, Valuation.map_sub_swap]
-  exact ha
+  rwa [AddSubgroupClass.coe_sub, e, Valuation.map_sub_swap]
 
 def kEqv : kP s.w ≃+* IsLocalRing.ResidueField (s.v.adicCompletionIntegers (maximalRealSubfield E)) :=
   RingEquiv.ofBijective (Ideal.Quotient.lift s.w.asIdeal (psiR s) fun a ha => (psiR_eq_zero s a).2 ha)
@@ -196,8 +195,7 @@ theorem red_eq_one (κ : Formalism.AUTREP.GAf D.host.E n) (hκ : κ ∈ Reciproc
   apply Units.ext
   ext i j
   have e := congrFun (congrFun h i) j
-  rw [Matrix.map_apply] at e
-  exact e
+  rwa [Matrix.map_apply] at e
 
 end GlobalTheory.MtRed
 

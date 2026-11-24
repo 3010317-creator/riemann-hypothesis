@@ -89,8 +89,7 @@ theorem JJ_mul (N : Submodule ℂ V) {T : Module.End ℂ V} (h : T ∈ JJ N) (S 
 
 theorem adZ_JJ {Z : Module.End ℂ V} {N : Submodule ℂ V} (hZ : ∀ y ∈ N, Z y ∈ N) :
     JJ N ≤ (JJ N).comap (adZ Z) := by
-  intro T hT x
-  exact N.sub_mem (hZ _ (hT x)) (hT _)
+  exact fun T hT x => N.sub_mem (hZ _ (hT x)) (hT _)
 
 def PP (Z : Module.End ℂ V) : Submodule ℂ (Module.End ℂ V) :=
   Submodule.span ℂ {T | ∃ k : ℕ, adZ Z T = ((k : ℂ) + 1) • T}
@@ -345,8 +344,7 @@ theorem Low.levi {lev : Fin n → ℕ} {u : FreeAlgebra ℂ (Bool × Fin n × Fi
     rcases eq_or_lt_of_le hp with h | h
     · refine ⟨b * FreeAlgebra.ι ℂ p, fun V _ _ E1 E2 hE => ?_⟩
       have := congruenceCondition_mul (hb V E1 E2 hE) (key V E1 E2 hE)
-      rw [map_mul, map_mul, evaluation_generator, evB_ι_of_eq lev E1 E2 h.symm, ← sub_mul]
-      exact this
+      rwa [map_mul, map_mul, evaluation_generator, evB_ι_of_eq lev E1 E2 h.symm, ← sub_mul]
     · refine ⟨0, fun V _ _ E1 E2 hE => ?_⟩
       have h1 := congruenceCondition_mul (hb V E1 E2 hE) (key V E1 E2 hE)
       have h2 : evB lev E1 E2 b * op E1 E2 p ∈ PP (ZZ lev E1 E2) := by
@@ -472,8 +470,7 @@ theorem hcDec2 : HCDec2 := by
   have h0 : adZ (ZZ lev E1 E2) (ev2 E1 E2 a - evB lev E1 E2 b) = 0 := by
     rw [map_sub, adZ_evB hE, sub_zero, adZ_apply, sub_eq_zero]
     exact (Commute.sum_left _ _ _ fun c _ => (ha V E1 E2 hE c c).smul_left _).eq
-  have h1 := mem_JJ_of (ZZ_NV hE) h0 (hb V E1 E2 hE) (by simpa using h V E1 E2 hE)
-  exact sum_of_mem_NV (h1 x)
+  exact sum_of_mem_NV ((mem_JJ_of (ZZ_NV hE) h0 (hb V E1 E2 hE) (by simpa using h V E1 E2 hE)) x)
 
 end GlobalTheory.CompanionTheory.PairMult.HCD
 end -- clump:auto
@@ -960,8 +957,7 @@ theorem RU_le_range {lev : Fin n → ℕ} (hm : Monotone lev) (E1 E2 : Fin n →
     simp only [xL, kA, pA, Bool.false_eq_true, ite_false, ite_true, map_smul, LinearMap.add_apply,
       LinearMap.sub_apply] at this
     have e : E1 a b v = (1 / 2 : ℂ) • (E1 a b v + E2 a b v) + (1 / 2 : ℂ) • (E1 a b v - E2 a b v) := by module
-    rw [SetLike.mem_coe, e]
-    exact this
+    rwa [SetLike.mem_coe, e]
   · have hlt : a < b := hm.reflect_lt hab
     have hK := xL_mem_range lev E1 E2 (l := (false, ⟨(a, b), hlt⟩)) hab ((1 / 2 : ℂ) • v)
     have hP := xL_mem_range lev E1 E2 (l := (true, ⟨(a, b), hlt⟩)) hab ((1 / 2 : ℂ) • v)
@@ -969,8 +965,7 @@ theorem RU_le_range {lev : Fin n → ℕ} (hm : Monotone lev) (E1 E2 : Fin n →
     simp only [xL, kA, pA, Bool.false_eq_true, ite_false, ite_true, map_smul, LinearMap.add_apply,
       LinearMap.sub_apply] at this
     have e : E2 a b v = (1 / 2 : ℂ) • (E1 a b v + E2 a b v) - (1 / 2 : ℂ) • (E1 a b v - E2 a b v) := by module
-    rw [SetLike.mem_coe, e]
-    exact this
+    rwa [SetLike.mem_coe, e]
 
 theorem sum_Tl_mem (lev : Fin n → ℕ) (E1 E2 : Fin n → Fin n → Module.End ℂ V) (w : GlobalTheory.CompanionTheory.PairMult.Lt n → V) :
     (∑ l : GlobalTheory.CompanionTheory.PairMult.Lt n, if GlobalTheory.CompanionTheory.PairMult.inUL lev l then GlobalTheory.CompanionTheory.PairMult.Tl E1 E2 l (w l) else 0) ∈
@@ -1063,8 +1058,7 @@ theorem hcdecLv : HCdecLv := by
         (fun p q _ v => piV_false hE x p q v) b 1, piV_one]
     have h3 : GlobalTheory.CompanionTheory.PairMult.evB lev E1 E2 b' x - GlobalTheory.CompanionTheory.PairMult.evB lev E1 E2 b0 x ∈ RU lev E1 E2 := by
       have := h2
-      simp only [Submodule.mem_comap, map_sub, hpi] at this
-      exact this
+      simpa only [Submodule.mem_comap, map_sub, hpi] using this
     have h4 : evKP E1 E2 a x - GlobalTheory.CompanionTheory.PairMult.evB lev E1 E2 b' x ∈ RU lev E1 E2 := by
       have := sub_mem (hmem V E1 E2 hE x) h3
       convert this using 1

@@ -105,13 +105,11 @@ theorem mem_span_iff {A : Subring Ω} {t : Ω} (ht : t ≠ 0) {y : Ω} :
   · rintro ⟨c, rfl⟩
     rw [show c • t = (c : Ω) * t from rfl, mul_div_cancel_right₀ _ ht]
     exact c.2
-  · intro h
-    exact ⟨⟨_, h⟩, div_mul_cancel₀ _ ht⟩
+  · exact fun h => ⟨⟨_, h⟩, div_mul_cancel₀ _ ht⟩
 
 theorem sum_smul_sum (C A : Matrix (Fin r) (Fin r) Ω) (u : Fin r → F) (i : Fin r) :
     ∑ j, C i j • ∑ k, A j k • u k = ∑ k, (C * A) i k • u k := by
-  simp only [Finset.smul_sum, smul_smul, Matrix.mul_apply, Finset.sum_smul]
-  exact Finset.sum_comm
+  simpa only [Finset.smul_sum, smul_smul, Matrix.mul_apply, Finset.sum_smul] using Finset.sum_comm
 
 theorem det_ne_zero {A : Matrix (Fin r) (Fin r) Ω} {u : Fin r → F}
     (h : LinearIndependent Ω fun i => ∑ j, A i j • u j) : A.det ≠ 0 := by

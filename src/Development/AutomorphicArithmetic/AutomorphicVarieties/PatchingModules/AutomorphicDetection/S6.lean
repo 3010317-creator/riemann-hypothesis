@@ -263,8 +263,7 @@ theorem UpperTheory.V.AlgebraTools.vr_hom :
         _ = _ := by simp only [Finset.mul_sum, Finset.sum_mul, mul_assoc]
 
     rw [hs, map_sum]
-    refine Finset.sum_congr rfl fun k _ => ?_
-    exact theta_mul U hpq (ho i) (ho k) (ho j) (hG i k y) (hG k j z)
+    exact Finset.sum_congr rfl fun k _ => theta_mul U hpq (ho i) (ho k) (ho j) (hG i k y) (hG k j z)
   have hone : U.vr p q 1 = 1 := by
     refine Matrix.ext fun i j => ?_
     rw [hvr, mul_one, Matrix.one_apply]
@@ -498,8 +497,7 @@ theorem UpperTheory.V.AlgebraTools.vr_reduction :
       simp [Matrix.smul_apply, Algebra.smul_def]
     · rw [hr w i j hij, ← h7 i j w, h3 _ _ _ hij, map_zero]
   refine ⟨fun y i j => ?_, ?_⟩
-  · show algebraMap B F (T.tr (U.x i * y * T.st (U.x j))) = _
-    exact key y i j
+  · exact key y i j
   · intro hp hq hpq
     refine Ideal.span_le.mpr ?_
     rintro c ⟨b, b', rfl⟩
@@ -699,8 +697,7 @@ theorem UpperTheory.V.AlgebraTools.units_one_block :
 
           simp only [Finset.mul_sum, Finset.sum_mul, map_sum, mul_assoc]
       _ = _ := by
-          refine Finset.sum_congr rfl fun k _ => ?_
-          exact hpair _ _ (hE' i k y) (hE' k j z)
+          exact Finset.sum_congr rfl fun k _ => hpair _ _ (hE' i k y) (hE' k j z)
   have hfadd : ∀ y z, f (y + z) = f y + f z := by
     intro y z
     ext i j
@@ -737,8 +734,7 @@ theorem UpperTheory.V.AlgebraTools.units_one_block :
     rw [← T.tr_st (U.x j * y * T.st (U.x i)), T.st_mul, T.st_mul, T.st_st, mul_assoc]
   have hftr : ∀ y, (f y).trace = T.tr y := by
     intro y
-    simp only [Matrix.trace, Matrix.diag, f, Matrix.of_apply]
-    exact (hD y).symm
+    simpa only [Matrix.trace, Matrix.diag, f, Matrix.of_apply] using (hD y).symm
   have hcomm : ∀ r : B, f (algebraMap B E r) = algebraMap B (Matrix ι ι B) r := by
     intro r
     rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one, hfsmul, hf1]
@@ -784,8 +780,7 @@ theorem UpperTheory.V.Pa.gr_I :
     · intro _
       intro i j
       refine ⟨fun _ => by rw [hone]; trivial, fun h => absurd ⟨fun _ => j.isLt, fun _ => i.isLt⟩ h⟩
-    · intro _
-      exact φ.surjective Y
+    · exact fun _ => φ.surjective Y
   · intro i
     show φ (U.ep i) = _
     ext i' j'
@@ -975,8 +970,7 @@ theorem UpperTheory.V.Pa.hat_st :
       have hu : Units.map (P.f : B →* x.A) ((G.frame.eps O B) g) =
           (G0.frame.eps ℤ_[l] x.A) (h.p₀ g) := by
         apply Units.ext
-        rw [Units.coe_map]
-        exact he
+        rwa [Units.coe_map]
       rw [← hu, ← map_zpow (Units.map (P.f : B →* x.A)), Units.coe_map]
       rfl
     have hinvM : (mat x.ρ) (h.p₀ (G.frame.conj g)) * (mat x.ρ) (h.p₀ (G.frame.conj g)⁻¹) = 1 := by
@@ -1283,8 +1277,7 @@ theorem UpperTheory.V.AlgebraTools.alghom_of_units :
       simp only [Finset.sum_mul, key]
     rw [this]
     simp only [f, Pi.mul_apply, Matrix.mul_apply, Finset.sum_smul]
-    refine Finset.sum_congr rfl fun s _ => Finset.sum_congr rfl fun i _ => ?_
-    exact Finset.sum_comm
+    exact Finset.sum_congr rfl fun s _ => Finset.sum_congr rfl fun i _ => Finset.sum_comm
   have h1 : f 1 = 1 := by
     simp only [f, Pi.one_apply, Matrix.one_apply, ite_smul, one_smul, zero_smul,
       Finset.sum_ite_eq, Finset.mem_univ, ite_true]
@@ -1651,8 +1644,7 @@ theorem UpperTheory.V.Pa.urep_of :
     rfl
   · intro γ i j b hb
     have := g.red (H.ι (MonoidAlgebra.single γ 1)) i j b hb
-    rw [H.r_ι, Matrix.map_apply] at this
-    exact this
+    rwa [H.r_ι, Matrix.map_apply] at this
   · intro z hz
     rw [key, (H.ker _).mpr (TwoSidedIdeal.subset_span ⟨z, hz, rfl⟩), map_zero]
   · intro j
@@ -1660,8 +1652,7 @@ theorem UpperTheory.V.Pa.urep_of :
     refine ⟨V, fun γ v hv => ?_⟩
     rw [← Submodule.map_smul'']
     have hm := Submodule.mem_map_of_mem (f := f) (hV γ v hv)
-    rw [map_sub] at hm
-    exact hm
+    rwa [map_sub] at hm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.ClosureConjugation.UrepOf =====
@@ -1710,8 +1701,7 @@ theorem s6 : S6 := by
     · have hn : 1 ≤ n := ha ▸ x.a_pos
       revert U
       rw [ha]
-      intro U hx _
-      exact gr_I H.T H.r U hn hst hx
+      exact fun U hx _ => gr_I H.T H.r U hn hst hx
   obtain ⟨g⟩ := hg
   exact urep_of H g U.coi hrk
 

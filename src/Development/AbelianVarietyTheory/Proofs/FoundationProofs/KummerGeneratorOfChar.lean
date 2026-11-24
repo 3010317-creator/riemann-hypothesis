@@ -98,8 +98,7 @@ theorem kummer_generator_of_char : ∀ (K Ω : Type) [Field K] [CharZero K] [Fie
       simp [AlgEquiv.mul_apply, this]
     have h0 : χ (h⁻¹ * g) = 0 := hFV hF
     have := hadd h hh (h⁻¹ * g) hm
-    rw [mul_inv_cancel_left, h0, add_zero] at this
-    exact this
+    rwa [mul_inv_cancel_left, h0, add_zero] at this
   haveI : FiniteDimensional K F := hFfin
   let ι := {φ : F →ₐ[K] Ω // ∃ g ∈ H, r g = φ}
   haveI : Finite (F →ₐ[K] Ω) := inferInstance
@@ -118,15 +117,10 @@ theorem kummer_generator_of_char : ∀ (K Ω : Type) [Field K] [CharZero K] [Fie
 
   let v : ι → (F →* Ω) := fun i => (i.1 : F →+* Ω).toMonoidHom
   have hv : Function.Injective v := by
-    intro i j hij
-    apply Subtype.ext
-    apply AlgHom.ext
-    intro x
-    exact DFunLike.congr_fun hij x
+    exact fun i j hij => Subtype.ext (AlgHom.ext (fun x => DFunLike.congr_fun hij x))
   have hli := (linearIndependent_monoidHom F Ω).comp v hv
   obtain ⟨c, hc⟩ : ∃ c : F, ∑ i, w i * i.1 c ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hz : ∑ i, w i • ((v i : F →* Ω) : F → Ω) = 0 := by
       funext x
       simpa [Finset.sum_apply, v] using hcon x

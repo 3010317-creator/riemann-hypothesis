@@ -495,8 +495,7 @@ variable {V V₀ W W₀ : HSp D} {ρ σ : ℕ} (dV : HypDec V V₀ ρ) (dW : Hyp
 theorem isHalf_xiPt : IsHalf (cA D p.e) (dV.ext0 W (dW.incX V₀ (xiPt p V₀ K))) := by
   have h : cA D p.e • (dW.jX ⬝ xiPt p V₀ K ⬝ dV.p0) = dW.jX ⬝ xiPt p V₀ K ⬝ dV.p0 := by
     rw [← Matrix.smul_mul, ← Matrix.mul_smul, smul_xiPt]
-  intro i j
-  exact congrFun (congrFun h i) j
+  exact fun i j => congrFun (congrFun h i) j
 
 theorem hO_xiPt (x : WO V W) :
     hO V W x (dV.ext0 W (dW.incX V₀ (xiPt p V₀ K))) = (dV.j0 ⬝ (K.map p.ι ⬝ (dW.pY ⬝ x))).trace := by
@@ -844,8 +843,7 @@ theorem model_modul : ∀ (D : D7), FlatLaw D → GlobalTheory.FinPl.FlatLaws D 
     have h4 := (_root_.GlobalTheory.LocSympl.halves_at_split D k p _ _ B.V J.W FV FW ψ ψk hψk).2.2.2.1
     have h5 : (fun t => ψ (symplO B.V J.W (p.up FV FW t) (B.d.ext0 J.W (J.d.inc0 B.V₀ y)))) = _ :=
       funext fun t => h4 t _ hy'
-    rw [h5]
-    exact h
+    rwa [h5]
   let Φ₁ : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k) := ⟨Φ, hΦSB⟩
   let Φ₂ : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k) :=
     ⟨fun t => ψ (symplO B.V J.W (p.up FV FW t) (B.d.ext0 J.W (J.d.inc0 B.V₀ y))) * Φ t,
@@ -1145,8 +1143,7 @@ theorem ch_single_succ (l : Fin c) (a : k) :
     ch (Matrix.single (Sum.inr l : n ⊕ Fin c) (Sum.inr l.succ : n' ⊕ Fin (c + 1)) a) = a := by
   rw [ch, Finset.sum_eq_single l]
   · simp
-  · intro b _ hb
-    exact Matrix.single_apply_of_row_ne (fun h => hb (Sum.inr.inj h).symm) _ _ _
+  · exact fun b _ hb => Matrix.single_apply_of_row_ne (fun h => hb (Sum.inr.inj h).symm) _ _ _
   · simp
 
 theorem ch_single_ne (r : n ⊕ Fin c) (q : n' ⊕ Fin (c + 1)) (a : k) (h : ∀ l, r = Sum.inr l → q ≠ Sum.inr l.succ) :

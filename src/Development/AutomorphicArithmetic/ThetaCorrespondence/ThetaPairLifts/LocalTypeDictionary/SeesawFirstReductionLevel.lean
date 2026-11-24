@@ -162,8 +162,7 @@ theorem idealVal_mul (χ : Chr F E) {𝔟 𝔠 : FractionalIdeal (𝓞 E)⁰ E} 
 
 theorem idealVal_inv (χ : Chr F E) (𝔟 : FractionalIdeal (𝓞 E)⁰ E) : idealVal χ 𝔟⁻¹ = (idealVal χ 𝔟)⁻¹ := by
   unfold idealVal
-  simp only [FractionalIdeal.count_inv, zpow_neg]
-  exact finprod_inv_distrib _
+  simpa only [FractionalIdeal.count_inv, zpow_neg] using finprod_inv_distrib _
 
 section Constants
 
@@ -384,8 +383,7 @@ theorem exists_idealVal_eq {ξ : Chr F E} (hξ : IsHecke F E ξ) (hu : ∀ᶠ w 
     have := congrArg Subtype.val (pow_card_eq_one' (x := (⟨z, hz⟩ : H)))
     rwa [SubmonoidClass.coe_pow] at this
   have h3 : H = rootsOfUnity (Nat.card H) ℂ := by
-    refine Subgroup.eq_of_le_of_card_ge h2 ?_
-    exact card_rootsOfUnity ℂ (Nat.card H)
+    exact Subgroup.eq_of_le_of_card_ge h2 (card_rootsOfUnity ℂ (Nat.card H))
   have h4 : ξ ^ Nat.card H = 1 := by
     refine GlobalTheory.HeckeUnifApprox.eq_one_of_unif_cofinite _ ⟨?_, fun x => ?_⟩ (hu.mono fun w hw ϖ hϖ => ?_)
     · exact hξ.1.pow _
@@ -879,8 +877,7 @@ theorem exists_compl : ∀ (D : D7) (S : HSp D) (Λ : Submodule (𝓞 D.host.E) 
     exact ⟨h2, h1⟩
   have hrk : 2 + Module.finrank D.host.E W = S.rank := by
     have := GlobalTheory.WittLow.finrank_orth S.herm S.nondeg ![x, y] hind
-    rw [S.rank_eq] at this
-    exact this
+    rwa [S.rank_eq] at this
 
   have hrad : ∀ v : W, (∀ w : W, S.hT w v = 0) → v = 0 := by
     intro v hv
@@ -923,8 +920,7 @@ theorem exists_compl : ∀ (D : D7) (S : HSp D) (Λ : Submodule (𝓞 D.host.E) 
     have hu := (hW u).1 u.2
     rw [hL0m, hΛ'd]
     constructor
-    · intro h u' hu'
-      exact h _ hu'
+    · exact fun h u' hu' => h _ hu'
     · intro h z hz
       obtain ⟨b, hb⟩ := h ⟨_, hdec z⟩ (hwz z hz)
       refine ⟨b, ?_⟩
@@ -964,8 +960,7 @@ theorem exists_compl : ∀ (D : D7) (S : HSp D) (Λ : Submodule (𝓞 D.host.E) 
     simp only [gram_sum]
     rw [hΛ₁m, hL0d]
     constructor
-    · intro h a ha
-      exact h _ ha
+    · exact fun h a ha => h _ ha
     · intro h u' hu'
       have := h (e₁.symm u') (by rw [hΛ₁m, LinearEquiv.apply_symm_apply]; exact hu')
       obtain ⟨b, hb⟩ := this
@@ -1049,8 +1044,7 @@ theorem sig : ∀ (D : D7) (S S₁ : HSp D) (ι : S₁.V →ₗ[D.host.E] S.V) (
       simpa [gramAt] using hneg ρ
     · subst hσ
       have h1 := GlobalTheory.BottomIsom.hasSignature_map_star (by simpa [gramAt] using hneg ρ)
-      rw [Matrix.map_map] at h1
-      exact h1
+      rwa [Matrix.map_map] at h1
   obtain ⟨⟨a, b⟩, h₁⟩ := GlobalTheory.WittLow.exists_sig S₁ τ
   have c₁ := (Formalism.UG.P.sig_data _ _ _ h₁).1
   have cS := (Formalism.UG.P.sig_data _ _ _ hS).1

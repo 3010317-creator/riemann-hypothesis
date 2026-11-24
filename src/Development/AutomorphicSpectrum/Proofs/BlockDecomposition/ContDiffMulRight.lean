@@ -248,8 +248,7 @@ theorem word_Pw (comm : ∀ a b c d, T a b * T c d - T c d * T a b =
     · subst hab
       simp only [Pw, ite_true, Module.End.one_apply]
       exact word_mem T blk F Z comm stab pos lev hf hz p (by omega)
-    · simp only [Pw, ite_eq_right hab, LinearMap.zero_apply, map_zero]
-      exact Z.zero_mem
+    · simpa only [Pw, ite_eq_right hab, LinearMap.zero_apply, map_zero] using Z.zero_mem
   | succ m ih =>
     intro a b p hp
 
@@ -546,8 +545,7 @@ theorem exists_adapted (W₁ W₂ : Submodule ℂ (Fin n → ℂ)) (hle : W₁ �
     constructor
     · rintro ⟨a, ha, rfl⟩
       rw [hb]; exact ha
-    · intro hv
-      exact ⟨e ⟨v, hS hv⟩, by simpa using hv, by simp [hb]⟩
+    · exact fun hv => ⟨e ⟨v, hS hv⟩, by simpa using hv, by simp [hb]⟩
   let blk : Fin n → ℕ := fun a =>
     if (e.symm a : Fin n → ℂ) ∈ S₁ then 0 else if (e.symm a : Fin n → ℂ) ∈ S₂ then 1 else 2
   let P : Mat n := (Pi.basisFun ℂ (Fin n)).toMatrix b
@@ -561,8 +559,7 @@ theorem exists_adapted (W₁ W₂ : Submodule ℂ (Fin n → ℂ)) (hle : W₁ �
     have h : b.toMatrix (Pi.basisFun ℂ (Fin n)) *ᵥ ((Pi.basisFun ℂ (Fin n)).repr v) = b.repr v :=
       Module.Basis.toMatrix_mulVec_repr _ _ v
     have e : ⇑((Pi.basisFun ℂ (Fin n)).repr v) = v := by ext i; simp
-    rw [e] at h
-    exact h
+    rwa [e] at h
   have hW₁ : W₁ = Submodule.span ℂ (b '' {a | (e.symm a : Fin n → ℂ) ∈ S₁}) := by
     rw [himg S₁ (h12.trans h23)]
     exact le_antisymm hWS₁ (Submodule.span_le.2 hS₁W)
@@ -603,8 +600,7 @@ theorem map_eq {W : Submodule ℂ (Fin n → ℂ)} {blk : Fin n → ℕ} {k : �
     have hd : IsUnit (P * g * P⁻¹).det := (Matrix.isUnit_iff_isUnit_det _).1 hM
     have h' : (P * g * P⁻¹) *ᵥ v = (P * g * P⁻¹) *ᵥ w := by simpa only [Matrix.mulVecLin_apply] using h
     have := congrArg (fun z => (P * g * P⁻¹)⁻¹ *ᵥ z) h'
-    simp only [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hd, Matrix.one_mulVec] at this
-    exact this
+    simpa only [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hd, Matrix.one_mulVec] using this
   have hle : W.map (Matrix.mulVecLin (P * g * P⁻¹)) ≤ W := by
     rintro _ ⟨v, hv, rfl⟩
     rw [hW]
@@ -774,8 +770,7 @@ theorem gelFlag_of (hC : GelComm) (hN : GelN) : GelFlag := by
       show A _ (f _) - A x (f _) = 0
       rw [hAq _ hq (map_eq hP hgu h1 hbl) (map_eq hP hgu h2 hbl) x hx]
       exact sub_self _
-    · intro a b hab
-      exact Matrix.one_apply_ne (fun h => hab (by rw [h]))
+    · exact fun a b hab => Matrix.one_apply_ne (fun h => hab (by rw [h]))
   have e7 : gel s m D x = 0 := by
     rw [← hPr, ← e6]
     rw [Matrix.one_mul] at e5

@@ -92,8 +92,7 @@ theorem co_series_three_step : (∀ (Sg : Type) [Fintype Sg] [DecidableEq Sg] (�
       · rw [hterm, ite_eq_left rfl]
       · intro b _ hb
         rw [hterm, ite_eq_right (Ne.symm hb), zero_mul]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     have hswap : ∑ σ, (∑' n, returnTerm φ p k τ σ n) * La σ =
         ∑' n : ℕ, r ^ (n + 1) * La ((φ ^ (n + 1)) τ) := by
       simp_rw [← tsum_mul_right]
@@ -104,8 +103,7 @@ theorem co_series_three_step : (∀ (Sg : Type) [Fintype Sg] [DecidableEq Sg] (�
       · rw [ite_eq_left rfl]; ring
       · intro b _ hb
         rw [ite_eq_right hb, zero_mul]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
     simp only [co, sub_mul]
     rw [Finset.sum_sub_distrib, hswap, hlast]
   · intro Sg φ p k hp La q h1 h2 τ

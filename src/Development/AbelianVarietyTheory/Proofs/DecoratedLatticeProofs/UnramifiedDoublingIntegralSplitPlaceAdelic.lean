@@ -214,8 +214,7 @@ theorem exists_dbl_chart : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     apply (ConjPlace.isFrameAt_iff hc h hτ β).1
     have heq : Formalism.UG.bc (φ : Fv F v →+* w.adicCompletion E) β =
         blkGL finSumFinEquiv (a, a) := by
-      apply Units.ext
-      exact Matrix.ext fun i j => φ.apply_symm_apply _
+      exact Units.ext (Matrix.ext fun i j => φ.apply_symm_apply _)
     rw [heq]
     exact _root_.GlobalTheory.LFun.isFrameAt_sumLat_blkGL E w n L a ha
   obtain ⟨f₀, ⟨⟨b, hb, e0⟩, hK⟩⟩ :=
@@ -385,8 +384,7 @@ theorem exists_kappa {L : Type} [Field L] {O : Subring L} {n : ℕ} {ϖ : L} (h0
       by rw [Matrix.submatrix_mul_equiv, hUU', Matrix.submatrix_one_equiv]⟩
   have hU : U ∈ Formalism.UG.GLint (Fin (n + n)) O := by
     apply mem_GLint_of_entries
-    · intro i j
-      exact hfb 1 B C 1 hone hBO hCO hone (e.symm i) (e.symm j)
+    · exact fun i j => hfb 1 B C 1 hone hBO hCO hone (e.symm i) (e.symm j)
     · intro i j
       exact hfb 1 (-B) (-C) 1 hone (fun a b => O.neg_mem (hBO a b)) (fun a b => O.neg_mem (hCO a b)) hone
         (e.symm i) (e.symm j)
@@ -905,8 +903,7 @@ theorem zeta_sum_GL_complex : GlobalTheory.Published.UnramifiedDoublingGL → �
       (∏ i ∈ Finset.range r, (1 - (qV E w : ℂ) ^ (-(2 * s + r - i)))) * ℓ x := by
     simp only [P]
     rw [hcX, hprod]
-  rw [hval] at hfin
-  exact hfin
+  rwa [hval] at hfin
 
 end GlobalTheory.ZetaGL
 end -- clump:auto

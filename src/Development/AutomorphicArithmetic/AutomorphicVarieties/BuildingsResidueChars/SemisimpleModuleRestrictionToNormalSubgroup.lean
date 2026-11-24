@@ -115,14 +115,12 @@ private theorem UpperTheory.semisimple_restriction_normal_subgroup {K G V : Type
         rw [hmul] at h2 ⊢
         have : g * n * g⁻¹ * g = g * n := by group
         rwa [this] at h2
-      intro s hs
-      exact (hle hs).2
+      exact fun s hs => (hle hs).2
   apply hS0
   rw [eq_bot_iff, ← hUC.inf_eq_bot]
   intro s hs
   refine ⟨?_, hSC hs⟩
-  simp only [SetLike.mem_coe, Submodule.mem_iInf, Submodule.mem_comap]
-  exact fun g => key g s hs
+  simpa only [SetLike.mem_coe, Submodule.mem_iInf, Submodule.mem_comap] using fun g => key g s hs
 
 theorem UpperTheory.semisimpleModule_restriction_to_normal_subgroup :
     UpperTheory.V.Af.Sol.SsRes := by

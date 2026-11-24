@@ -774,8 +774,7 @@ theorem detPow_content_const : ∀ (p : ℕ), p.Prime → ∀ i k : ℕ, ∃ κ 
   set S := (detZ i ^ k).support with hS
   have hne : S.Nonempty := by
     refine ⟨∑ a : Fin i, Finsupp.single ⟨a, a⟩ k, ?_⟩
-    rw [← mem_support_iff' ℚ]
-    rw [MvPolynomial.mem_support_iff, (detPow_shape ℚ i k).2.2.1]
+    rw [← mem_support_iff' ℚ, MvPolynomial.mem_support_iff, (detPow_shape ℚ i k).2.2.1]
     exact one_ne_zero
   let f : ((Σ _ : Fin i, Fin i) →₀ ℕ) → ℕ := fun α => padicValNat p (intCoeff i k α).natAbs
   obtain ⟨α0, hα0, hmin⟩ := S.exists_min_image f hne
@@ -1097,8 +1096,7 @@ theorem two_mul_card_psi_le :
     · intro τ hτ
       simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hτ ⊢
       unfold InPsi at hτ ⊢
-      simp only [RingHom.coe_comp, Function.comp_apply, hτ]
-      exact hne
+      simpa only [RingHom.coe_comp, Function.comp_apply, hτ] using hne
     · intro τ _ σ _ h
       ext x
       have := congrArg (fun g : E →+* ℂ => starRingEnd ℂ (g x)) h
@@ -1539,8 +1537,7 @@ theorem oscLe_split : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     by_cases hf : IsBig k f
     · simp only [B, ite_eq_left hf]
       exact (_root_.GlobalTheory.FacUpOdd.nuFac_le_odd_unram E H Dw l Xo c p T io y (not_isUnit_of_overLa la ho) ha h2 hd f (cx f) hf.1).1 hs
-    · simp only [B, ite_eq_right hf]
-      exact (hall f).2 ha
+    · simpa only [B, ite_eq_right hf] using (hall f).2 ha
 
 end GlobalTheory.OscSplit
 
@@ -1645,8 +1642,7 @@ theorem oscLe_zero_above_and_degree : ∀ (E : Type) [Field E] [NumberField E] [
     intro T io e ho y
     obtain ⟨h1, h2⟩ := h T io e ho y
     refine ⟨by simpa using h1, fun ha => (h2 ha).trans ?_⟩
-    simp only [Nat.cast_zero, zero_add]
-    exact EReal.coe_le_coe_iff.2 hsum
+    simpa only [Nat.cast_zero, zero_add] using EReal.coe_le_coe_iff.2 hsum
 
 end GlobalTheory.RefSum
 end -- clump:auto

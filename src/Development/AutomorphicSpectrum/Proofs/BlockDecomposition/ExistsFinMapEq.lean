@@ -72,9 +72,7 @@ theorem charInt_at {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTo
   have hcap := (GlobalTheory.capelli_cuspSub E a π τ χ hinf).2
   rw [← hχ] at hnd hint
   have hχinj : Function.Injective χ := by
-    have h := Multiset.inj_on_of_nodup_map hnd
-    intro s t hst
-    exact h s (by simp) t (by simp) hst
+    exact fun s t hst => (Multiset.inj_on_of_nodup_map hnd) s (by simp) t (by simp) hst
   have hn : ∀ s, ∃ n : ℤ, χ s = (n : ℂ) + ((a : ℂ) - 1) / 2 := fun s =>
     hint _ (Multiset.mem_map_of_mem χ (by simp))
   choose l hl using hn

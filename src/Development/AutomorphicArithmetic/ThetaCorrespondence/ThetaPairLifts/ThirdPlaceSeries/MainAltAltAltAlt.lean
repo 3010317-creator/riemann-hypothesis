@@ -104,12 +104,10 @@ theorem main : ∀ (D : D7) (i : D.nd.Loc) (k : Fin 2) (v : D.nd.PlG k), D.nd.l 
   have hcop : (D.nd.l i).Coprime (D.host.g k) :=
     (Nat.coprime_primes (D.nd.lPrime i).out (D.host.g_prime k)).2 hne
   have hgv : (D.nd.plOm.1 (D.naut.plGw k v)).valuation ((D.host.g k : ℕ) : D.nd.Om) < 1 := by
-    have h2 := (hpl _).2 hwg
-    simpa using h2
+    simpa using (hpl _).2 hwg
   have hvl : D.naut.plGw k v ∉ placesOver D.host.E (D.nd.l i) := by
     intro hl
-    have h2 := (hpl _).2 hl
-    exact GlobalTheory.WildKill.not_lt_one_of_coprime _ hcop hgv (by simpa using h2)
+    exact GlobalTheory.WildKill.not_lt_one_of_coprime _ hcop hgv (by simpa using ((hpl _).2 hl))
   have hl : D.ntw.l (D.ntw.twOf i) = D.nd.l i := D.ntw.twOf_l i
   have ht := D.ntw.twistCharacterFamily_tame (D.ntw.twOf i) (D.nd.j i) (D.ntw.twSide i) k _ hwg (by rw [hl]; exact hvl)
     _ hpl s hI
@@ -275,8 +273,7 @@ theorem exists_exponents (M n : ℕ) (hM : 0 < M) (hn : n.Coprime M) :
     obtain ⟨b, hb, hb'⟩ := exists_coprime_lift (M * j.factorial) (j + 1) a.1
       (Nat.mul_pos hM j.factorial_pos) j.succ_pos a.2
     refine ⟨⟨b, ?_⟩, hb'⟩
-    rw [Nat.factorial_succ, mul_comm (j + 1), ← mul_assoc]
-    exact hb
+    rwa [Nat.factorial_succ, mul_comm (j + 1), ← mul_assoc]
   choose f hf using step
   let s : ∀ j : ℕ, {a : ℕ // a.Coprime (M * j.factorial)} := fun j =>
     Nat.rec (motive := fun j => {a : ℕ // a.Coprime (M * j.factorial)})
@@ -354,8 +351,7 @@ theorem exists_powHom {K : Type*} [Field K] (hK : ∀ x : K, x ≠ 0 → 0 < ord
       rw [← map_mul, inv_mul_cancel_right₀ hy, one_mul, hxy]
     have h2 := mul_right_cancel₀ (hne y hy) h1
     have h3 : orderOf (x * y⁻¹) = 1 := by rw [← hord, h2, orderOf_one]
-    rw [orderOf_eq_one_iff, mul_inv_eq_one₀ hy] at h3
-    exact h3
+    rwa [orderOf_eq_one_iff, mul_inv_eq_one₀ hy] at h3
   · intro x hxM
     have hx : x ≠ 0 := by
       rintro rfl
@@ -584,8 +580,7 @@ theorem injPrimeTo_comp {K : Type} [Field K] {l : ℕ} {ι : Formalism.Cyclotomi
     (hι : InjPrimeTo l ι) {θ : Formalism.CyclotomicNorms.Fbar g →* Formalism.CyclotomicNorms.Fbar g} (hθ : Function.Injective θ)
     (ho : ∀ x, orderOf (θ x) = orderOf x) : InjPrimeTo l (ι.comp θ) := by
   have hne : ∀ x, x ≠ 0 → θ x ≠ 0 := fun x hx h => hx (hθ (h.trans (map_zero_of_injective hθ).symm))
-  intro x y hx hy cx cy h
-  exact hθ (hι _ _ (hne x hx) (hne y hy) (by rwa [ho]) (by rwa [ho]) h)
+  exact fun x y hx hy cx cy h => hθ (hι _ _ (hne x hx) (hne y hy) (by rwa [ho]) (by rwa [ho]) h)
 
 end Alg
 

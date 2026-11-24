@@ -90,9 +90,7 @@ theorem paramDeriv : ParamDeriv := by
   have hcont1 : ContinuousOn (fun t : ℝ => G (p, t)) (Icc 0 1) :=
     hGc.comp (hline p).continuousOn (fun t ht => hpW t ht)
   refine ⟨?_, ?_⟩
-  · refine hcont1.congr ?_
-    intro t ht
-    exact (hpart (p, t) (hpW t ht)).fderiv
+  · exact hcont1.congr (fun t ht => (hpart (p, t) (hpW t ht)).fderiv)
   · have hxW : ∀ x ∈ Metric.closedBall p (ε / 2), ∀ t ∈ Set.uIoc (0 : ℝ) 1, (x, t) ∈ W :=
       fun x hx t ht => hKW ⟨hx, hI t ht⟩
     have main := intervalIntegral.hasFDerivAt_integral_of_dominated_of_fderiv_le

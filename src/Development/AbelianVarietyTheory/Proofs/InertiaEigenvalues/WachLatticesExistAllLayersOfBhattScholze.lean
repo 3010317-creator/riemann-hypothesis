@@ -693,8 +693,7 @@ theorem build (E : WEt I) [Nontrivial R.EE] {Zl S W : Type} [CommRing Zl] [CommR
     by_cases hT : IsCrys PD T.ρ
     · obtain ⟨k, hk⟩ := hφ T hT _ ((hN T hT y).1 hy)
       refine ⟨k, (hN T hT _).2 ?_⟩
-      rw [← E.jD_φ, ← hQk] at hk
-      exact hk
+      rwa [← E.jD_φ, ← hQk] at hk
     · rw [hN0 T hT] at hy ⊢
       rw [Submodule.mem_bot] at hy
       exact ⟨0, by simp [hy]⟩
@@ -1163,15 +1162,13 @@ theorem mem_range (E : WEt I) (T : LocLat G Qp LL O) (H : G → Prop) (hH : ∀ 
     apply hu
     have h1 := isUnit_det e φR (TWmap φR T).toAddMonoidHom hsφ (span_fixed φR)
     rw [← hF] at h1
-    rw [AlgHom.map_det]
-    exact h1
+    rwa [AlgHom.map_det]
   have hU := hrat _ F (Matrix.of fun k j => e.repr (x j) k) hFu ?_ ?_
   · choose u hu' using hU
     refine ⟨∑ k, u k i₀ • b k, ?_⟩
 
     rw [map_sum]
-    simp only [E.jD_smul, ← he', hu', Matrix.of_apply]
-    exact e.sum_repr _
+    simpa only [E.jD_smul, ← he', hu', Matrix.of_apply] using e.sum_repr _
   · intro i j g hg
     have hs : ∀ (c : RW) (m : TW RW T), (TWact (gR g) T g).toAddMonoidHom (c • m) =
       gR g c • (TWact (gR g) T g).toAddMonoidHom m := fun c m => map_smul_semi (gR g) _ c m

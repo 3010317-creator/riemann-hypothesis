@@ -108,8 +108,7 @@ private theorem zt_eq (t : ℝ) :
     zt E r t = GlobalTheory.UnitaryBC.splitCentre E r (t * ((r * Module.finrank ℚ E : ℝ))⁻¹) := by
   have h := GlobalTheory.CuspBoundSiegel.diagUnits_posIdele (E := E) r
     (Real.rpow_pos_of_pos (Real.exp_pos t) ((r * Module.finrank ℚ E : ℝ))⁻¹)
-  rw [Real.log_rpow (Real.exp_pos t), Real.log_exp, mul_comm _ t] at h
-  exact h
+  rwa [Real.log_rpow (Real.exp_pos t), Real.log_exp, mul_comm _ t] at h
 
 private theorem aV_eq (v : ℝ) :
     aV E r s v = PositivityTheory.Rg.Rs.aT E (r + s) r (v * ((r * Module.finrank ℚ E : ℝ))⁻¹) := by
@@ -127,8 +126,7 @@ private theorem hasDeriv_aV (F : Sm E (r + s)) (g : GA E (r + s)) (v : ℝ) :
     rw [Complex.real_smul, hc, Complex.ofReal_inv, Complex.ofReal_mul, Complex.ofReal_natCast, Complex.ofReal_natCast,
       Nat.cast_mul]
   simp only [aV_eq, ← hc]
-  rw [ej]
-  exact h2
+  rwa [ej]
 
 private theorem lev_diag {R : Type} [CommRing R] (x : Fin (r + s) → Rˣ) :
     diagUnits (r + s) x = lev R r s (diagUnits r fun i => x (Fin.castAdd s i), diagUnits s fun i => x (Fin.natAdd r i)) := by
@@ -323,8 +321,7 @@ private theorem taylor2 {f f' f'' : ℝ → ℂ} (h1 : ∀ v, HasDerivAt f (f' v
       simpa using this) a
     (Metric.mem_closedBall_self (abs_nonneg x)) (y := t + x) (by simp)
   have e : f (t + x) - ((t + x : ℝ) : ℂ) * f' t - (f t - t * f' t) = f (t + x) - f t - x * f' t := by push_cast; ring
-  rw [e, add_sub_cancel_left, Real.norm_eq_abs, mul_assoc, abs_mul_abs_self, ← sq] at b
-  exact b
+  rwa [e, add_sub_cancel_left, Real.norm_eq_abs, mul_assoc, abs_mul_abs_self, ← sq] at b
 
 private theorem comp_sub (d : Dat S n) {φ ψ χ : Sm E n} (c : ℂ) (h1 : Umg φ) (h2 : Umg ψ) (h3 : Umg χ) (t : Fin d.len → ℝ) :
     d.comp (φ - ψ - c • χ).1 t = d.comp φ.1 t - d.comp ψ.1 t - c * d.comp χ.1 t := by
@@ -352,8 +349,7 @@ private theorem deriv0 (b : Blo S r) (d : Dat S s) {φ : Sm E (r + s)} (hφ : Um
           linarith
         exact mul_le_mul (le_abs_self _) (Real.exp_le_exp.2 (mul_le_mul (le_abs_self R) hv' (abs_nonneg _) (abs_nonneg _)))
           (Real.exp_pos _).le (abs_nonneg _)) hx
-    rw [← hψ, ← hψ, ← hχ, mul_right_comm] at this
-    exact this
+    rwa [← hψ, ← hψ, ← hχ, mul_right_comm] at this
   rw [hasDerivAt_iff_isLittleO_nhds_zero]
   refine Asymptotics.IsBigO.trans_isLittleO (g := fun x : ℝ => x ^ 2)
     (Asymptotics.IsBigO.of_bound (C' * K * Real.exp (R' * ‖t‖)) ?_) (Asymptotics.isLittleO_pow_id one_lt_two)

@@ -129,14 +129,12 @@ theorem coset_of_comp_eq {V : HSp D} {X : Comp → Data E r} {dict : GA D V → 
       Matrix.reindex (finCongr hr) (finCongr hr) (archM V (th c τ) p) * x₀ τ.1 := by
     intro g c x hg
     have := hf g
-    rw [hg] at this
-    exact this
+    rwa [hg] at this
   have h6' : ∀ g g' c x, dict g = ⟨c, x⟩ → (∃ γ' ∈ (X c).Γ, dict g' = ⟨c, lact γ' x⟩) →
       ∃ γ ∈ GQ V, ∃ k ∈ Kf, g' = γ * g * k := by
     intro g g' c x hg hh
     refine h6 g g' ?_
-    rw [hg]
-    exact hh
+    rwa [hg]
   obtain ⟨x', hx'⟩ : ∃ x' : Frame (X (dict h).1).Ψ r, dict h' = ⟨(dict h).1, x'⟩ := by
     generalize (dict h).1 = c at e
     subst e
@@ -316,8 +314,7 @@ theorem unitary_cocycle_coboundary_of_trivial_on_stabilisers :
     have e1 : mv b (h * h'⁻¹) = b := by
       rw [hmul, e, ← hmul, mul_inv_cancel, h1]
     have e2 := hz b (h * h'⁻¹) h'
-    rw [hs b _ e1, e1, one_mul, inv_mul_cancel_right] at e2
-    exact e2
+    rwa [hs b _ e1, e1, one_mul, inv_mul_cancel_right] at e2
   let s : Setoid X :=
     { r := fun x y => ∃ g, mv x g = y
       iseqv :=
@@ -536,8 +533,7 @@ theorem exists_equivariant_constants : ∀ {D : D7} {G : Type} [Group G] [Fintyp
   · rw [hy, chiC, Units.coe_prod]
   · have := hc g k hk ⟨f, hf⟩ h
     rw [hρ] at this
-    rw [phiAt_apply, phiAt_apply]
-    exact this
+    rwa [phiAt_apply, phiAt_apply]
 
 end GlobalTheory.EquivConst
 end -- clump:auto

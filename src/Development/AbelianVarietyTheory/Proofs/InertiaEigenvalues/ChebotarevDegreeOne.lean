@@ -141,10 +141,8 @@ theorem exists_fixing [CharZero Ω] [IsAlgClosure F Ω] (L : IntermediateField F
   obtain ⟨u, hu⟩ := (Normal.minpoly_eq_iff_mem_orbit (F := L) Ω).1 h1
   refine ⟨u.restrictScalars F, ?_, ?_⟩
   · rw [IntermediateField.mem_fixingSubgroup_iff]
-    intro x hx
-    exact u.commutes ⟨x, hx⟩
-  · rw [autToPow_eq_iff]
-    exact hu
+    exact fun x hx => u.commutes ⟨x, hx⟩
+  · rwa [autToPow_eq_iff]
 
 theorem irreducible_of_onto [CharZero Ω] (Z : IntermediateField F Ω) {m : ℕ}
     [NeZero m] {ζ : Ω} (hζ : IsPrimitiveRoot ζ m)
@@ -172,8 +170,7 @@ theorem irreducible_of_onto [CharZero Ω] (Z : IntermediateField F Ω) {m : ℕ}
   have hdeg : (cyclotomic m Z).natDegree ≤ (minpoly Z ζ).natDegree := by
     rw [natDegree_cyclotomic, ← hζ.card_primitiveRoots]
     refine (Finset.card_le_card hsub).trans ((Multiset.toFinset_card_le _).trans ?_)
-    refine (card_roots' _).trans ?_
-    exact natDegree_map_le
+    exact (card_roots' _).trans natDegree_map_le
   have := eq_of_monic_of_dvd_of_natDegree_le (minpoly.monic hint) (cyclotomic.monic m Z) hdvd hdeg
   rw [this]
   exact minpoly.irreducible hint
@@ -235,8 +232,7 @@ theorem cross : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra 
     obtain ⟨n, rfl⟩ := hτ j
     refine ⟨h ^ n, ?_, by simp [hχ]⟩
     rw [IntermediateField.mem_fixingSubgroup_iff]
-    intro x hx
-    exact (IntermediateField.mem_fixedField_iff _ _).1 hx.2 _ ⟨n, rfl⟩
+    exact fun x hx => (IntermediateField.mem_fixedField_iff _ _).1 hx.2 _ ⟨n, rfl⟩
   · intro σ hσ hσζ
     obtain ⟨k, hk⟩ := exists_pow_eq_on M h σ hσ
     have h1 : hζ.autToPow F (h ^ k) = τ := by
@@ -261,8 +257,7 @@ theorem cross : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra 
       rw [← IsGalois.card_aut_eq_finrank]
       exact orderOf_dvd_natCard _
     have h4 : ρ u = 1 := by
-      rw [← IntermediateField.restrictNormalHom_ker] at hu
-      exact hu
+      rwa [← IntermediateField.restrictNormalHom_ker] at hu
     rw [← IntermediateField.restrictNormalHom_ker]
     change ρ (σ * g⁻¹) = 1
     rw [map_mul, h2, map_pow, h3, hh, map_mul, h4, map_inv]
@@ -647,8 +642,7 @@ theorem exists_continuous_ne_zero_one :
   have hXnorm : ∀ I, I ≠ ⊥ → I ⊔ M = ⊤ → ‖X I‖ = 1 := by
     intro I _ hI
     have hne := (hcop I).1 hI
-    simp only [X, ψ, dite_eq_right hne]
-    exact GlobalTheory.Mem.RayPrimes.norm_char χ _
+    simpa only [X, ψ, dite_eq_right hne] using GlobalTheory.Mem.RayPrimes.norm_char χ _
   have hXzero : ∀ I, I ⊔ M ≠ ⊤ → X I = 0 := by
     intro I hI
     have : (Ideal.absNorm I : ZMod m) = 0 := by
@@ -665,8 +659,7 @@ theorem exists_continuous_ne_zero_one :
     rw [hφβ β hβ0]
     have h1 := GlobalTheory.NormCharL.norm_cast_eq_one K m β hβ1
     have hN0 : Algebra.norm ℤ β ≠ 0 := by
-      rw [Ne, Algebra.norm_eq_zero_iff]
-      exact hβ0
+      rwa [Ne, Algebra.norm_eq_zero_iff]
     simp only [X, Ideal.absNorm_span_singleton]
     split_ifs with hpos
     · have : (((Algebra.norm ℤ β).natAbs : ℕ) : ZMod m) = 1 := by
@@ -687,17 +680,14 @@ theorem exists_continuous_ne_zero_one :
   have hnt : ∃ J, J ≠ ⊥ ∧ J ⊔ M = ⊤ ∧ X J ≠ 1 := by
     refine ⟨P.asIdeal, P.ne_bot, hPtop, ?_⟩
     rw [hclX P hPm]
-    intro h
-    exact hPχ (Units.val_eq_one.1 h)
+    exact fun h => hPχ (Units.val_eq_one.1 h)
   let c : HeightOneSpectrum (𝓞 K) → ℂ := fun Q => ((χ (cl Q) : ℂˣ) : ℂ)
   have hc : ∀ Q, ‖c Q‖ ≤ 1 := fun Q => (GlobalTheory.Mem.RayPrimes.norm_char χ (cl Q)).le
   have hcX : ∀ Q : HeightOneSpectrum (𝓞 K), ¬ M ≤ Q.asIdeal → c Q = X Q.asIdeal := by
     intro Q hQ
     have hmax : Q.asIdeal.IsMaximal := Q.isMaximal
     have htop : Q.asIdeal ⊔ M = ⊤ := by
-      refine hmax.1.2 _ (lt_of_le_of_ne le_sup_left ?_)
-      intro h
-      exact hQ (h ▸ le_sup_right)
+      exact hmax.1.2 _ (lt_of_le_of_ne le_sup_left (fun h => hQ (h ▸ le_sup_right)))
     rw [hclX Q ((GlobalTheory.NormCharL.sup_eq_top_iff K m hm Q.asIdeal).1 htop)]
   obtain ⟨L, hLd, hLe, hL1⟩ := GlobalTheory.idealCharacterL_continuation_ne_zero_one K M X φ hM0 hX0 hXmul
     hXnorm hXzero hφmul hφhom hφsm hφnorm hXφ hnt c hc hcX
@@ -711,8 +701,7 @@ theorem exists_continuous_ne_zero_one :
     have hmax : max (s : ℂ).re 1 = s := by
       rw [Complex.ofReal_re]
       exact max_eq_left hs.le
-    simp only [hmax]
-    exact (hLe s (by rwa [Complex.ofReal_re])).symm
+    simpa only [hmax] using (hLe s (by rwa [Complex.ofReal_re])).symm
 
 end NormCharL
 end GlobalTheory
@@ -928,11 +917,9 @@ theorem eq_top_of_frob (K L : Type) [Field K] [NumberField K] [Field L] [NumberF
     have h6 := hσ (algebraMap (𝓞 M) (𝓞 L) x)
     rw [h5] at h6
     have h7 : (MulSemiringAction.toAlgHom (𝓞 K) (𝓞 L) σ) (algebraMap (𝓞 M) (𝓞 L) x) = algebraMap (𝓞 M) (𝓞 L) x := by
-      apply RingOfIntegers.ext
-      exact (x : M).2 ⟨σ, hH⟩
+      exact RingOfIntegers.ext ((x : M).2 ⟨σ, hH⟩)
     rw [h7] at h6
-    rw [hQ'.over, Ideal.mem_comap, map_sub, map_pow, ← neg_mem_iff, neg_sub]
-    exact h6
+    rwa [hQ'.over, Ideal.mem_comap, map_sub, map_pow, ← neg_mem_iff, neg_sub]
   have h2 : M = ⊥ := IntermediateField.finrank_eq_one_iff.1 h1
   rw [← IntermediateField.fixingSubgroup_fixedField H, ← hM, h2, IntermediateField.fixingSubgroup_bot]
 
@@ -954,8 +941,7 @@ theorem exists_prime_norm_char_ne_one : ∀ (K : Type) [Field K] [NumberField K]
       have hmQ : (m : 𝓞 L) ∉ Q := by
         intro hmQ
         apply hv
-        rw [Set.mem_ofPred_eq, Ideal.dvd_span_singleton, hQv.over, Ideal.mem_comap, map_natCast]
-        exact hmQ
+        rwa [Set.mem_ofPred_eq, Ideal.dvd_span_singleton, hQv.over, Ideal.mem_comap, map_natCast]
       have h3 := AlgHom.IsArithFrobAt.apply_of_pow_eq_one hσ hζ.pow_eq_one hmQ
       have h5 : Nat.card (𝓞 K ⧸ Q.under (𝓞 K)) = Ideal.absNorm v.asIdeal := by
         rw [← hQv.over, Ideal.absNorm_apply, Submodule.cardQuot_apply]
@@ -1057,8 +1043,7 @@ private lemma natAbs_eq_one_of_dvd_prime_pow_not_dvd {d : ℤ} {m k : ℕ} (hm :
     simpa [Int.natAbs_pow] using this
   have hc : Nat.Coprime m d.natAbs := by
     rw [hm.coprime_iff_not_dvd]
-    intro h
-    exact h2 (Int.natCast_dvd.mpr h)
+    exact fun h => h2 (Int.natCast_dvd.mpr h)
   exact Nat.Coprime.eq_one_of_dvd (Nat.Coprime.pow_left k hc).symm h1'
 
 theorem irreducible_cyclotomic_of_not_dvd_discr (K : Type) [Field K] [NumberField K] (m : ℕ)
@@ -1104,12 +1089,10 @@ theorem isFrob_restrictScalars_of_prime_absNorm :
   have hn : Ideal.absNorm v.asIdeal = Ideal.absNorm w.asIdeal := by
     have h := Ideal.absNorm_pow_inertiaDeg v.asIdeal w.asIdeal
     have h1 := Nat.Prime.eq_one_of_pow (h ▸ hp)
-    rw [h1, pow_one] at h
-    exact h
+    rwa [h1, pow_one] at h
   refine ⟨hn, fun x => ?_, ?_, fun x hx => ?_⟩
   · have h := hB (algebraMap (𝓞 F) (𝓞 Z) x)
-    rw [← Ideal.mem_of_liesOver w.asIdeal v.asIdeal x] at h
-    exact h
+    rwa [← Ideal.mem_of_liesOver w.asIdeal v.asIdeal x] at h
   · have h : σ • B = B := hσ.1
     show (σ.restrictScalars F) • B = B
     ext x

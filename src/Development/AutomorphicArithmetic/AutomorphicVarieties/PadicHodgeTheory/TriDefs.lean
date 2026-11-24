@@ -102,8 +102,7 @@ namespace Tor
 variable {η : G →* ℤˣ} (T : Tor η B)
 
 theorem t_one (i : Fin 3) : T.t 1 i = 1 := by
-  have h := T.mul 1 1 i
-  simpa using h
+  simpa using T.mul 1 1 i
 
 def M1 : Representation B G (B × B) where
   toFun g :=
@@ -246,8 +245,7 @@ theorem crOn_top {G A V : Type} [Group G] [CommRing A] [Algebra ℚ_[l] A] [AddC
       (resCoef ℚ_[l] (ρ.comp (⊤ : Subgroup G).subtype : Representation A (⊤ : Subgroup G) V)) =
       Dcr φ (resCoef ℚ_[l] ρ) := by
     ext x
-    simp only [Dcr, Submodule.mem_iInf]
-    exact ⟨fun h g => h ⟨g, trivial⟩, fun h g => h g⟩
+    simpa only [Dcr, Submodule.mem_iInf] using ⟨fun h g => h ⟨g, trivial⟩, fun h g => h g⟩
   unfold CrOn IsCr
   rw [h1, h2]
 

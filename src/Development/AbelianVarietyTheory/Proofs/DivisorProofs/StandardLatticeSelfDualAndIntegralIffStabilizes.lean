@@ -108,8 +108,7 @@ theorem mem_intAE_iff_swap (z : Af D.host.F ⊗[D.host.F] D.host.E) :
       | tmul a b => rfl
       | add a b ha hb => rw [RingHom.map_add (f := _), RingHom.map_add (f := _), ha, hb]
     have h : c (Lev.swapAE D z) ∈ intSub D := key hz
-    rw [e] at h
-    exact h
+    rwa [e] at h
 
 theorem preserves_iff {R : Type} [CommRing R] (S : Subring R) {n : ℕ} (M M' : Matrix (Fin n) (Fin n) R)
     (h1 : M * M' = 1) (h2 : M' * M = 1) :
@@ -170,8 +169,7 @@ theorem stdLat_eq (V : HSp D) : stdLat V = GlobalTheory.SW.stdL D.host.E V.rank 
   ext x
   rw [GlobalTheory.SW.Base.mem_stdL]
   simp only [stdLat, Formalism.MainNotions.StandardLatticesGL3.stdL, Submodule.mem_pi, Set.mem_univ, true_imp_iff, Submodule.mem_one]
-  refine forall_congr' fun i => ?_
-  exact ⟨fun ⟨y, hy⟩ => hy ▸ y.2, fun h => ⟨⟨x i, h⟩, rfl⟩⟩
+  exact forall_congr' fun i => ⟨fun ⟨y, hy⟩ => hy ▸ y.2, fun h => ⟨⟨x i, h⟩, rfl⟩⟩
 
 end GlobalTheory.NormRatio.StdLevel
 

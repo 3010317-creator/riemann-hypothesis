@@ -68,8 +68,7 @@ theorem pull_inv_cls {K : Type} [Field K] {A : Over (Sp K)} [GrpObj A] {L : LB A
   obtain ⟨U, hU, t, ht⟩ := hs s
   have hV : ∀ z : A.left, z ∈ A.hom ⁻¹ᵁ U := fun z => by
     show A.hom.base z ∈ U
-    rw [Subsingleton.elim (A.hom.base z) s]
-    exact hU
+    rwa [Subsingleton.elim (A.hom.base z) s]
   have hι : IsIso (A.hom ⁻¹ᵁ U).ι := by
     rw [isIso_iff_isOpenImmersion_and_surjective]
     refine ⟨inferInstance, ⟨fun z => ?_⟩⟩
@@ -115,8 +114,7 @@ theorem exists_two_torsion_translate : Out.Laws → ∀ (K : Type) [Field K] [Is
     rw [pull_lam, pull_lam] at h1
     simp only [lift_fst_assoc, lift_snd_assoc, lift_fst, lift_snd, Category.assoc, Iso.inv_hom_id,
       Category.comp_id] at h1
-    rw [lam_pull e.inv]
-    exact h1
+    rwa [lam_pull e.inv]
   have hO : (GlobalTheory.CechPic.tens (P'.L.pull e.inv.left) (GlobalTheory.CechPic.dual P.L)).IsLB :=
     isLB_tens (pull_isLB P'.isLB _) (isLB_dual P.isLB)
   have hOc : cls _ hO = pull e.inv.left (cls P'.L P'.isLB) + -cls P.L P.isLB := by

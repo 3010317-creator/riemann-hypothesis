@@ -160,8 +160,7 @@ theorem main : ∀ {l : ℕ} [Fact l.Prime] {K : FinExt l} {χ : ↥(GK K) →* 
       rw [← PowerSeries.coeff_zero_eq_constantCoeff_apply, PowerSeries.coeff_map,
         PowerSeries.coeff_zero_eq_constantCoeff_apply, hΦ0, map_zero]
     have hψ1 : ((PowerSeries.coeff 1 ψ : ↥(OL K)) : ↥K.1) = ((χ h : (↥K.1)ˣ) : ↥K.1) := by
-      rw [PowerSeries.coeff_map, coeff_one_lubinTateHom]
-      exact ha
+      rwa [PowerSeries.coeff_map, coeff_one_lubinTateHom]
     have hF0 : PowerSeries.constantCoeff (ltPoly π : PowerSeries 𝒪[F]) = 0 :=
       hf.constantCoeff_eq_zero
     have hsub : PowerSeries.subst ψ (ltSeries πK) = PowerSeries.subst (ltSeries πK) ψ := by
@@ -238,8 +237,7 @@ theorem main : ∀ {l : ℕ} [Fact l.Prime] {K : FinExt l} {χ : ↥(GK K) →* 
   have hZt : Z (n + 1) ∈ lubinTateTorsion (Om l) (hπ := hπ) hf (n + 1) :=
     CharEx.mem_torsion hπ h0 hs' (n + 1) _ rfl
   have hZn : Z (n + 1) ∉ lubinTateTorsion (Om l) (hπ := hπ) hf (n + 1 - 1) := by
-    rw [Nat.add_sub_cancel, mem_lubinTateTorsion, hpow]
-    exact hZ1
+    rwa [Nat.add_sub_cancel, mem_lubinTateTorsion, hpow]
   obtain ⟨-, hgen⟩ := primitive_spec hπ hf hZt hZn
   obtain ⟨a, rfl⟩ := hgen x (lubinTateTorsion_mono hπ hf n.le_succ hx)
   rw [map_smul, hgZ, smul_smul, smul_smul, mul_comm]

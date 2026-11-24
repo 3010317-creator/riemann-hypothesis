@@ -315,8 +315,7 @@ theorem omB_comap_loc : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Fiel
     induction hw using Submodule.span_induction with
     | mem z hz =>
       refine (hloc _).2 ⟨0, ?_⟩
-      rw [pow_zero, one_smul]
-      exact hz
+      rwa [pow_zero, one_smul]
     | zero => rw [map_zero]; exact Submodule.zero_mem _
     | add a b _ _ ha hb => rw [map_add (f := _)]; exact Submodule.add_mem _ ha hb
     | smul r a _ ha =>
@@ -371,8 +370,7 @@ theorem _root_.GlobalTheory.span_eq_top_of_stable_of_isFractionRing :
     | add v w _ _ hv hw => rw [smul_add]; exact M.add_mem hv hw
     | smul f v _ hv => rw [smul_comm]; exact M.smul_mem f hv
   have hinv : ∀ y : K, y ∈ T → y⁻¹ ∈ T := by
-    intro y hy
-    exact T.inv_mem_of_algebraic (x := ⟨y, hy⟩) (Algebra.IsAlgebraic.isAlgebraic y)
+    exact fun y hy => T.inv_mem_of_algebraic (x := ⟨y, hy⟩) (Algebra.IsAlgebraic.isAlgebraic y)
   have hall : ∀ y : K, y ∈ T := by
     intro y
     obtain ⟨a, b, _, rfl⟩ := IsFractionRing.div_surjective (A := B) y
@@ -677,8 +675,7 @@ private theorem lat_of_isBundle {F : Type} [Field F] [Algebra ℂ F] {d : ℕ} {
   have hLI := hL.loc I i hi
   have hLii := hL.loc {i} i (Finset.mem_singleton_self i)
   have hPL : ∀ p ∈ P, p ∈ L {i} := fun p hp => by
-    rw [hLii]
-    exact hp
+    rwa [hLii]
   have hLsub : ∀ w ∈ L {i}, w ∈ L I := fun w hw => by
     rw [hLI]
     exact Submodule.subset_span hw
@@ -715,8 +712,7 @@ private theorem lat_of_isBundle {F : Type} [Field F] [Algebra ℂ F] {d : ℕ} {
     simpa [hre] using hval k w ((hML w).2 hm)
   · obtain ⟨w, rfl⟩ := hM m hm
 
-    simp only [LinearMap.comp_apply, hre, ← map_smul, ← map_sum]
-    exact congrArg e (hid w)
+    simpa only [LinearMap.comp_apply, hre, ← map_smul, ← map_sum] using congrArg e (hid w)
   · have hw : w ∈ Submodule.span F (s : Set W) := hsF ▸ Submodule.mem_top
     have hsL : ∀ z ∈ s, e z ∈ M := fun z hz => (hML z).1 (hLsub z (hPL z (by rw [hPs]; exact Submodule.subset_span hz)))
     have hmap : (Submodule.span F (s : Set W)).map e ≤ Submodule.span F (M : Set V) := by

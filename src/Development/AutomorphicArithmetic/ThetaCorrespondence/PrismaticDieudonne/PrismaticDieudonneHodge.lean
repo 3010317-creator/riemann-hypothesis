@@ -549,8 +549,7 @@ theorem torsion_free (hv : v.Integers O) (hε : IsPrimitiveSystem ε) (b : BR ε
   refine eq_zero_of_dvd hv hε x y (mu_sq_dvd hv hε _ ?_)
   have := dvd_of_eq_zero (ε := ε) (p * x) (p * y) (by
     rw [map_mul, map_mul, a_natCast]; linear_combination h)
-  rw [show (p : Ainf p O) * (p * x + mu ε * y) = p * (p * x) + mu ε * (p * y) by ring]
-  exact this
+  rwa [show (p : Ainf p O) * (p * x + mu ε * y) = p * (p * x) + mu ε * (p * y) by ring]
 
 end Faithful
 
@@ -1025,8 +1024,7 @@ theorem iota_exists : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgCl
     have := hext (π (Φ (fun i => WittVector.fontaineTheta O p (s i))))
       (dotL (fun i => WittVector.fontaineTheta O p (s i)) ∘ₗ D.Fil.subtype ∘ₗ fil.toLinearMap)
       (fun t => by rw [hΦ, hπHT]; rfl)
-    intro x
-    exact LinearMap.congr_fun this x
+    exact fun x => LinearMap.congr_fun this x
   let κ : G.omega →ₗ[O] (Fin G.height → O) :=
     LinearMap.pi fun i => lie (D.Fil.mkQ (Pi.single i 1))
   have hκ : ∀ w i, κ w i = lie (D.Fil.mkQ (Pi.single i 1)) w := fun w i => rfl
@@ -1036,8 +1034,7 @@ theorem iota_exists : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgCl
         lie.toLinearMap ∘ₗ D.Fil.mkQ := by
       refine LinearMap.pi_ext' fun i => LinearMap.ext_ring ?_
       simp [dotL, hκ]
-    intro m
-    exact LinearMap.congr_fun this m
+    exact fun m => LinearMap.congr_fun this m
   have hκi : Function.Injective κ := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro w hw
@@ -1050,8 +1047,7 @@ theorem iota_exists : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgCl
     have hρ : D.Fil ≤ LinearMap.ker (dotL ρ) := fun f hf => by
       obtain ⟨x, hx⟩ := fil.surjective ⟨f, hf⟩
       have := LinearMap.congr_fun h0 x
-      rw [hπΦ, hx] at this
-      exact this
+      rwa [hπΦ, hx] at this
     let ψ : ((Fin G.height → O) ⧸ D.Fil) →ₗ[O] O := D.Fil.liftQ (dotL ρ) hρ
     let w := (Module.evalEquiv O G.omega).symm (ψ ∘ₗ lie.symm.toLinearMap)
     have hw : ∀ φ : G.Lie, φ w = ψ (lie.symm φ) := fun φ => by
@@ -1088,8 +1084,7 @@ theorem iota_exists : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgCl
         smul_eq_mul]
 
       rw [hlin, map_sum]
-      simp only [dotProduct, sχ, map_mul]
-      exact Finset.sum_congr rfl fun i _ => mul_comm _ _
+      simpa only [dotProduct, sχ, map_mul] using Finset.sum_congr rfl fun i _ => mul_comm _ _
     have hyL : y = L (sχ ᵥ* D.G) := by
       apply Subtype.ext
       refine LinearMap.ext fun t => ?_
@@ -1323,8 +1318,7 @@ theorem exists_smul_mem_span_dlog : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Fie
     exact LinearMap.congr_fun (hcoord i) w
   have htor : Module.IsTorsion O (G.omega ⧸ S) := fun q => by
     have := hzero (T.mkQ q)
-    rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, Submodule.mem_torsion_iff] at this
-    exact this
+    rwa [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, Submodule.mem_torsion_iff] at this
   obtain ⟨c, hc, hc0⟩ := Submodule.annihilator_top_inter_nonZeroDivisors htor
   refine ⟨c, nonZeroDivisors.ne_zero hc0, fun w => ?_⟩
   have := Submodule.mem_annihilator.1 hc (S.mkQ w) Submodule.mem_top
@@ -1519,8 +1513,7 @@ theorem exists_reduction (A O : Type) [CommRing A] [CommRing O] (θ : A →+* O)
       · rintro ⟨b, rfl⟩
         exact ⟨b, mul_comm _ _⟩
     · have e : g 1 = one := one_smul A one
-      rw [e]
-      exact h
+      rwa [e]
   · rintro ⟨n, rfl⟩
     have : θ ξ = 0 := by
       rw [← RingHom.mem_ker, hker]
@@ -1803,8 +1796,7 @@ theorem primitive {p : ℕ} [Fact p.Prime] {O : Type} [CommRing O] {ζ : ℕ →
     have hnot : ¬ ζ (m + 1) ^ p ^ m = 1 := by
       have := key m 1
       rw [show 1 + m = m + 1 by omega] at this
-      rw [this]
-      exact h1
+      rwa [this]
     have ho := orderOf_eq_prime_pow hnot hfin
     rw [← ho]
     exact IsPrimitiveRoot.orderOf _

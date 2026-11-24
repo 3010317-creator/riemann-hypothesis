@@ -558,8 +558,7 @@ theorem det_unitary_prod {E : Type} [CommRing E] (σ : E →+* E) {N : ℕ} (J c
           simp only [Matrix.mul_assoc]
       _ = 1 := by rw [hc, hB]
   have hd := congrArg Matrix.det h
-  rw [Matrix.det_mul, det_map_transpose, Matrix.det_one, Matrix.det_mul] at hd
-  exact hd
+  rwa [Matrix.det_mul, det_map_transpose, Matrix.det_one, Matrix.det_mul] at hd
 
 end GlobalTheory.TwV.DelB.UnitB
 
@@ -571,8 +570,7 @@ theorem GlobalTheory.TwV.DelB.detCrdB_unit : AllSites (fun {D L hT Gi Gl Kc Dx c
   have hc := J.pins.crd_orth j hj
   have h1 := det_unitary_prod (sigD D : D.host.E →+* D.host.E) (gramN D j hj) (J.A.crd j hj).1 B.1 hc hB
   have hconj : ∀ y : D.host.E, D.host.conj y = (sigD D : D.host.E →+* D.host.E) y := fun y => (bridge_star_holds D.R D.host y).symm
-  rw [hconj, mul_comm]
-  exact h1
+  rwa [hconj, mul_comm]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalSpaceGramTransform =====
@@ -626,8 +624,7 @@ theorem uB_det_unit : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X
     refine hU β (bAt J (j + 1) hj a) hO (fun v => ?_) τ
     rw [hβ]
     have h1 := J.lbB j hj ((I.at' j hj).st.eC.symm a).1 v
-    rw [J.iw j hj _ v] at h1
-    exact h1
+    rwa [J.iw j hj _ v] at h1
 
 end GlobalTheory.TwV.DelA
 end -- clump:auto

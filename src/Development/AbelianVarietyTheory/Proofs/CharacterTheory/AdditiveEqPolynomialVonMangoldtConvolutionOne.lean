@@ -130,14 +130,12 @@ theorem mangoldt_divisorSum_mul (s : F[X] → ℂ) (f Q : F[X]) (hf : f.Monic) (
       · exfalso
         have h2 : g ^ (n + 1) * g ∣ g ^ (n + 1) * R := by
           have h3 : g ^ (n + 1 + 1) ∣ g * Q := (pow_dvd_pow g (by omega)).trans hd
-          rw [hQR, ← mul_assoc, ← pow_succ', pow_succ g (n + 1)] at h3
-          exact h3
+          rwa [hQR, ← mul_assoc, ← pow_succ', pow_succ g (n + 1)] at h3
         exact hR ((mul_dvd_mul_iff_left (pow_ne_zero _ hf.ne_zero)).mp h2)
     · refine Or.inr ⟨hDm, ?_⟩
       have hc : IsCoprime g f := by
         rw [hg'.coprime_iff_not_dvd]
-        intro h
-        exact hgf (mangoldtConv_eq_of_dvd_pow hf hf' hg hg' (n := 1) (by simpa using h))
+        exact fun h => hgf (mangoldtConv_eq_of_dvd_pow hf hf' hg hg' (n := 1) (by simpa using h))
       exact (hc.pow_left (m := m)).dvd_of_dvd_mul_left hd
   · rintro (rfl | ⟨hDm, hd⟩)
     · refine ⟨hf.pow _, ?_⟩

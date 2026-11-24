@@ -61,8 +61,7 @@ private theorem iso_hom_comp_projectionToBase {X' : Scheme.{u}} {s' s'' : Sequen
   induction i with
   | zero =>
     intro hi
-    rw [s''.projectionToBase_zero, s'.projectionToBase_zero]
-    exact h0
+    rwa [s''.projectionToBase_zero, s'.projectionToBase_zero]
   | succ n ih =>
     intro hi
     rw [s''.projectionToBase_succ n, s'.projectionToBase_succ n, ← Category.assoc,
@@ -125,8 +124,7 @@ private theorem strictMono_enumeration_le {n m L : ℕ} {r q : ℕ → ℕ} {P :
       have h1 : r j ≤ q j := ih j (by omega) (by omega) (by omega)
       have h2 : q j < q i := hq2 j i him.le hji
       omega
-  intro i hin him
-  exact main (i + 1) i (Nat.lt_succ_self i) hin him
+  exact fun i hin him => main (i + 1) i (Nat.lt_succ_self i) hin him
 
 private theorem strictMono_enumeration_unique {n m L : ℕ} {r q : ℕ → ℕ} {P : ℕ → Prop}
     (hr1 : ∀ i, i < n → r i < L)

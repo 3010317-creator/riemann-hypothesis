@@ -101,8 +101,7 @@ theorem exists_trace_dual_system (K L : Type) [Field K] [NumberField K] [Field L
         rw [map_sum]
         refine Finset.sum_congr rfl fun i _ => ?_
         exact (IsScalarTower.toAlgHom (𝓞 K) (𝓞 L) L).toLinearMap.map_smul _ _)
-    have h2 := LinearMap.congr_fun h t
-    simpa [LinearMap.sum_apply, Algebra.smul_def] using h2
+    simpa [LinearMap.sum_apply, Algebra.smul_def] using LinearMap.congr_fun h t
 
 open NumberField in
 private theorem exists_integral_traceDual_expansion (K L : Type) [Field K] [NumberField K] [Field L]
@@ -208,8 +207,7 @@ theorem _root_.GlobalTheory.differentIdeal_smul_mem_span_rational :
     funext i
     simp only [Finset.sum_apply, Pi.smul_apply, ht, Algebra.smul_def, hr]
     conv_lhs => rw [hswap (x i)]
-    simp only [Finset.mul_sum, Algebra.smul_def]
-    exact Finset.sum_congr rfl fun k _ => by ring
+    simpa only [Finset.mul_sum, Algebra.smul_def] using Finset.sum_congr rfl fun k _ => by ring
   rw [hdx]
   exact Submodule.sum_mem _ fun k _ => Submodule.smul_mem _ _
     (Submodule.subset_span ⟨htM k, fun i => Algebra.trace K L (algebraMap (𝓞 L) L (e k) * x i), rfl⟩)

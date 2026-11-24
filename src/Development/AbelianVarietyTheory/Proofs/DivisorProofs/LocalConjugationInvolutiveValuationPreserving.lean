@@ -63,8 +63,7 @@ theorem valuation_equiv :
   exact isEquiv _ _
 
 theorem lt_one_iff (x : w.adicCompletion E) : valuation (w.adicCompletion E) x < 1 ↔ Valued.v x < 1 := by
-  simp only [← not_le]
-  exact not_congr valuation_equiv.one_le_iff_one_le
+  simpa only [← not_le] using not_congr valuation_equiv.one_le_iff_one_le
 
 theorem tendsto_pow_zero {x : w.adicCompletion E} (h : Valued.v x < 1) :
     Tendsto (fun n : ℕ => x ^ n) atTop (𝓝 0) := by
@@ -89,8 +88,7 @@ theorem lt_one_of_map (s : w.adicCompletion E →+* w.adicCompletion E) (hs : Co
     have := (hs.tendsto 0).comp (tendsto_pow_zero h)
     simpa [Function.comp_def, map_pow] using this
   obtain ⟨N, hN⟩ := (h1.eventually lt_one_mem_nhds).exists
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have : 1 ≤ Valued.v (s x ^ N) := by rw [map_pow]; exact one_le_pow₀ hc
   exact absurd hN (not_lt.2 this)
 
@@ -107,8 +105,7 @@ theorem valued_map_eq (s : w.adicCompletion E →+* w.adicCompletion E) (hs : Co
 
   have hle : ∀ y : w.adicCompletion E, Valued.v y ≤ 1 → Valued.v (s y) ≤ 1 := by
     intro y hy
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have hy0 : s y ≠ 0 := by
       intro h0; rw [h0, map_zero] at hc; exact absurd hc (not_lt.2 zero_le')
     have h1 : Valued.v (s y)⁻¹ < 1 := by rw [map_inv₀]; exact inv_lt_one_of_one_lt₀ hc
@@ -134,8 +131,7 @@ theorem valued_map_eq (s : w.adicCompletion E →+* w.adicCompletion E) (hs : Co
   set p : w.adicCompletion E := algebraMap E (w.adicCompletion E) π with hp
   have hvp : Valued.v p = WithZero.exp (-1) := by
     have := HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w π
-    rw [hπ] at this
-    exact this
+    rwa [hπ] at this
   have hp0 : p ≠ 0 := by
     intro h; rw [h, map_zero] at hvp; exact WithZero.exp_ne_zero hvp.symm
   have hsp0 : s p ≠ 0 := (map_ne_zero s).2 hp0

@@ -123,8 +123,7 @@ theorem GlobalTheory.BSP.approxRoot_sub_mem_fil : ∀ (l : ℕ) [Fact l.Prime] (
     exact (hth _).trans (hθ s)
   have hl : IsUnit ((l : Per.BdRp l) ^ m) := (isUnit_l_BdRp l).pow m
   have hr : (bk.Ep.map f).eval (g X) = 0 := by
-    rw [Polynomial.eval_map, ← hgf, ← Polynomial.hom_eval₂, Polynomial.eval₂_C_X_eq_coe]
-    exact hgE
+    rwa [Polynomial.eval_map, ← hgf, ← Polynomial.hom_eval₂, Polynomial.eval₂_C_X_eq_coe]
   have hd : IsUnit ((Polynomial.derivative (bk.Ep.map f)).eval (g X)) := by
     obtain ⟨c, a, b, hab⟩ := _root_.GlobalTheory.BSP.bezout_Ep_derivative l K bk
     have h := congrArg (fun t => (Polynomial.map f t).eval (g X)) hab
@@ -151,8 +150,7 @@ theorem GlobalTheory.BSP.approxRoot_sub_mem_fil : ∀ (l : ℕ) [Fact l.Prime] (
     rwa [hfil, pow_one] at h1
   have h := sub_mem_pow _ _ _ _ _ n hl hr hd hx hxy
   rw [Ideal.span_singleton_pow] at h
-  rw [hfil]
-  exact h
+  rwa [hfil]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ApproxRootSubUniformizerMemFilP =====
@@ -277,8 +275,7 @@ theorem exists_lift : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (C
   intro l _ K bk C n x
   obtain ⟨P, hP⟩ := exists_poly bk (bk.str x)
   have h := good_poly (bk := bk) (C := C) (n := n) P
-  rw [hP, bk.str.symm_apply_apply] at h
-  exact h
+  rwa [hP, bk.str.symm_apply_apply] at h
 
 end GlobalTheory.BSP.RingHomLiftCongruence
 end -- clump:auto

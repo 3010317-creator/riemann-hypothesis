@@ -574,9 +574,7 @@ theorem step_basis (β : Module.Basis (Fin n) K V) {s : ℕ} (hs : s ≤ n) {W :
     apply Submodule.span_mono
     intro y hy
     obtain ⟨k, hk, hky⟩ := hy
-    refine ⟨⟨k, hk⟩, Subtype.ext ?_⟩
-    show β (Fin.castLE hs ⟨k, hk⟩) = y
-    exact hky
+    exact ⟨⟨k, hk⟩, Subtype.ext hky⟩
   let γ := Module.Basis.mk hli hsp
   have hγ : ∀ k, (γ k : V) = β (Fin.castLE hs k) := fun k => by simp [γ, f]
   have key : ∀ (x : Submodule.span K (β '' {k | (k : ℕ) < s})) (l : Fin n),
@@ -1944,8 +1942,7 @@ theorem m2Model_of_m2Curve : CurveSemiAbelianConjecture → RootLineDeRhamModel 
     unfold RootModel.curveDeg
     rw [Fintype.sum_option]
     simp only [RootModel.coef, RootModel.line, M.x_deg, zero_div, zero_mul, zero_add, x]
-  rw [hcd]
-  exact hfin'
+  rwa [hcd]
 
 end GlobalTheory.CompanionTheory.Ar.Conj
 end -- clump:auto

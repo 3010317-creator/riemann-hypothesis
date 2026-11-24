@@ -328,8 +328,7 @@ theorem UpperTheory.isAffCover_prod_cechOpen :
       simp only at hs
       subst hs
       exact dite_eq_left hinj
-    · intro t hinj
-      exact dite_eq_right hinj
+    · exact fun t hinj => dite_eq_right hinj
     · rw [hz]
       rfl
   rw [← hR, cmp_class d' p' hinst' hU' a b ⟨x', hker⟩ w' hgm, ← hz, cmp_class d p hinst hU a b x w hw]
@@ -742,8 +741,7 @@ theorem cmp_trace (d : ℕ) (Z : Scheme.{0}) [IsIntegral Z] (p : Z ⟶ Sp ℂ) [
         rw [← GlobalTheory.CechFam.famMap_d hs.2.2, LinearMap.mem_ker.1 z1.2, map_zero]⟩
   have hw : ∀ t : {s : Finset ι // s.card = b + 1},
       (w : Finset ι → DR ℂ Y.functionField) t.1 = gp p' hc hinst' hU' a t.1 (z1.1 t) := by
-    intro t
-    exact GlobalTheory.CechFam.famMap_of_eq _ _ t.2
+    exact fun t => GlobalTheory.CechFam.famMap_of_eq _ _ t.2
   have hle : ∀ s : Finset ι, cechOpen ⊤ (fun i => c ⁻¹ᵁ U i) s ≤ c ⁻¹ᵁ cechOpen ⊤ U s :=
     fun s => (preimage_cech s).ge
   have hne : ∀ t : {s : Finset ι // s.card = b + 1}, t.1.Nonempty := fun t =>
@@ -851,8 +849,7 @@ open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.T
 
 theorem UpperTheory.complexPoint_eval_pullback_section :
     ∀ (Z Y : Scheme.{0}) (s : Z ⟶ Sp ℂ) (s' : Y ⟶ Sp ℂ) (c : Y ⟶ Z) (h : c ≫ s = s') (V : Z.Opens) (f : Γ(Z, V)) (y : CxPts s' (RingHom.id ℂ)), y ∈ CxPts.ptsIn s' (RingHom.id ℂ) (c ⁻¹ᵁ V) → CxPts.ev s' (RingHom.id ℂ) (c ⁻¹ᵁ V) ((c.app V).hom f) y = CxPts.ev s (RingHom.id ℂ) V f (UpperTheory.A.zpt c h y) := by
-  intro Z Y s s' c h V f y _
-  exact (GlobalTheory.Points.valR_comp y.1 c V f).symm
+  exact fun Z Y s s' c h V f y _ => (GlobalTheory.Points.valR_comp y.1 c V f).symm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.ComplexPointEvalPullbackSection =====
@@ -1111,8 +1108,7 @@ theorem UpperTheory.etaleCorrespondence_complexPoints_statement :
     have hVf := hF _ ((ringZ i _).2 ⟨f, rfl⟩) hf1
     rw [g2 _ (hgZ i) (hg2 i) f] at hVf
     have := val_unique hB hM _ hyi (hg2 i) hVf
-    rw [hval1 f hf1, hev2] at this
-    exact this
+    rwa [hval1 f hf1, hev2] at this
   · intro hfix b hb hb1
     obtain ⟨f, rfl⟩ := (ringZ i b).1 hb
     have hzz : UpperTheory.A.zpt c1 h1 y = UpperTheory.A.zpt c2 h2 y := Subtype.ext hfix
@@ -1316,8 +1312,7 @@ private theorem upB_fu {d : ℕ} {Z Y : Scheme.{0}} [IsIntegral Z] [IsIntegral Y
   have hV : genericPoint Z ∈ V := hVdef ▸ hU.ne {0}
   have hV' : genericPoint Y ∈ c ⁻¹ᵁ V := by
     change c (genericPoint Y) ∈ V
-    rw [UpperTheory.A.generic_map c]
-    exact hV
+    rwa [UpperTheory.A.generic_map c]
   have hVa : IsAffineOpen V := hVdef ▸ hU.affine {0} hne
   have hVa' : IsAffineOpen (c ⁻¹ᵁ V) := hVa.preimage c
   have het : (c.app V).hom.Etale := by
@@ -1438,8 +1433,7 @@ theorem UpperTheory.etaleCorrespondence_sections_statement :
   obtain ⟨y, hy, -⟩ := (UpperTheory.complexPoints_bijective_algHom_affineOpen Y s' hL _ hA (gen c1 i) _ hB).1 e
   obtain ⟨j, hj⟩ := CxPts.exists_mem_ptsIn hU.cover (UpperTheory.A.zpt c2 h2 y)
   have hyW : y ∈ CxPts.ptsIn s' (RingHom.id ℂ) (c2 ⁻¹ᵁ U j) := by
-    refine CxPts.mem_ptsIn.2 ?_
-    exact CxPts.mem_ptsIn.1 hj
+    exact CxPts.mem_ptsIn.2 (CxPts.mem_ptsIn.1 hj)
   refine ⟨j, fun v hv => ?_⟩
   obtain ⟨f, rfl⟩ := (ring_single hU2 j (gen c2 j) v).1 hv
   exact clear_denom s' hA (gen c1 i) (gen c2 j) _ hB e y hy hyW f
@@ -1687,8 +1681,7 @@ theorem UpperTheory.Cb.holomorphic_lefschetz_finiteEtale_integral :
     have hm : (Y.presheaf.germ (c1 ⁻¹ᵁ U 0) (genericPoint Y) (hgen 0)).hom ((c1.app (U 0)).hom f) ∈
         rB ℂ Y.functionField x {0} := hgerm ▸ tco_mem ℂ Y.functionField x j
     have h3 := he.2 _ hm
-    rw [UpperTheory.complexPoint_eval_pullback_section Z Y s s' c1 h1 _ f y he.1] at h3
-    rw [hev] at h3
+    rw [UpperTheory.complexPoint_eval_pullback_section Z Y s s' c1 h1 _ f y he.1, hev] at h3
     rw [← h3]
     exact congrArg e (Subtype.ext hgerm.symm)
   have hex : ∀ y : {y // y ∈ Fx}, ∃ e : fib ℂ Y.functionField x, UpperTheory.A.Mt s' (c1 ⁻¹ᵁ U 0) (hgen 0) _ e.1 y.1 := by

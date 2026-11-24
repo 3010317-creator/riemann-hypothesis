@@ -139,8 +139,7 @@ theorem eta_sq (h2 : Module.finrank F E = 2) {η : (AF F)ˣ →* Circle} (hη : 
     show Algebra.norm (AF F) (algebraMap (AF F) (AF F ⊗[F] E) (a : AF F)) = ((a ^ 2 : (AF F)ˣ) : AF F)
     rw [Units.val_pow_eq_pow_val,
       Algebra.norm_algebraMap_of_basis (Algebra.TensorProduct.basis (AF F) (Module.finBasis F E)), Fintype.card_fin, h2]
-  rw [hnorm, map_pow] at hn
-  exact hn
+  rwa [hnorm, map_pow] at hn
 
 end InertValue
 
@@ -156,8 +155,7 @@ theorem val_sq_eq_one_of_isInertAt (F E : Type) [Field F] [NumberField F] [Field
   have hv : w.under (𝓞 F) = v := by
     ext1
     symm
-    refine v.isMaximal.eq_of_le (w.under (𝓞 F)).isPrime.ne_top ?_
-    exact Ideal.map_le_iff_le_comap.1 hw'.le
+    exact v.isMaximal.eq_of_le (w.under (𝓞 F)).isPrime.ne_top (Ideal.map_le_iff_le_comap.1 hw'.le)
   obtain ⟨a, ha⟩ := exists_isUnifAt hw hv
   rw [← UnrAt.locChar_eq_val hu ha]
   simp only [locChar, MonoidHom.comp_apply]

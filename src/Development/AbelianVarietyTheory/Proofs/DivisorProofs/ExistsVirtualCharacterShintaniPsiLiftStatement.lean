@@ -558,8 +558,7 @@ theorem tensorInd_virt_prime : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ]
   intro G Γ _ _ _ _ φ s hp hs χ hχ
   have hgen : ∀ t : Γ, t ∈ Subgroup.zpowers s := by
     haveI : Fact (Nat.card Γ).Prime := ⟨hp⟩
-    intro t
-    exact mem_zpowers_of_prime_card rfl hs
+    exact fun t => mem_zpowers_of_prime_card rfl hs
   obtain ⟨a, b, ha, hb, rfl⟩ := (mem_virt_iff_sub ℂ ℂ G χ).1 hχ
   obtain ⟨A, hA, hA1, hA2⟩ := _root_.GlobalTheory.Shin.TensorInd.exists_tensorInduction_char G Γ φ s hgen a ha
   obtain ⟨B, hB, hB1, hB2⟩ := _root_.GlobalTheory.Shin.TensorInd.exists_tensorInduction_char G Γ φ s hgen b hb
@@ -621,8 +620,7 @@ theorem par_facts {F' : Type} [Field F'] (a b n : ℕ) (h : n = a + b) :
     rw [hπ, hπ, hπ] at this
     exact congrArg Prod.fst this
   · have := (hmat ⟨x, (hH x).2 hx⟩).1
-    rw [hπ] at this
-    exact this
+    rwa [hπ] at this
 
 theorem tlG_gal {F' : Type} [Field F'] (u : F' →+* F') (a b n : ℕ) (h : n = a + b) (x : GL (Fin n) F')
     (hx : InPar a x) : tlG a (gal u n x) = gal u a (tlG a x) := by
@@ -848,8 +846,7 @@ theorem exists_virt_psi_lift : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F
   intro F F' _ _ _ _ s hp hs ι θ hθ k
   haveI : Finite F := Finite.of_injective (algebraMap F F') (algebraMap F F').injective
   haveI : FiniteDimensional F F' := Module.Finite.of_finite
-  have hcard : Nat.card (F' ≃ₐ[F] F') = Module.finrank F F' := by
-    exact IsGalois.card_aut_eq_finrank F F'
+  have hcard : Nat.card (F' ≃ₐ[F] F') = Module.finrank F F' := IsGalois.card_aut_eq_finrank F F'
   have hgen : ∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s := by
     haveI : Fact (Module.finrank F F').Prime := ⟨hp⟩
     rw [zpowers_eq_top_of_prime_card hcard hs]; intro t; trivial
@@ -872,8 +869,7 @@ theorem exists_virt_psi_lift : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F
       simp only [map_one, mul_one] at e
       have e2 : (fun d => Xa (inl d)) = psiG (fun P => ∏ t : F' ≃ₐ[F] F', rootSum θ k (P.map (t : F' →+* F'))) a :=
         funext h1
-      rw [e2] at e
-      exact e
+      rwa [e2] at e
     · rw [hZe s δ]
       have e2 : (fun d => Xa (inl d * inr s)) = shLift s (psiG (rootSum (pullθ ι θ) k) a) := funext h2
       rw [e2]

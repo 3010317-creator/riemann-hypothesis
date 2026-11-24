@@ -201,8 +201,7 @@ theorem ger_jacLoc (y : X) (t t' : (LB.div K'.bundle (K.bundle.pull σ)).ι)
     rw [Units.coe_map, val_tr K.bundle (σ y) hσy]; rfl
   rw [e1, e2, e3, hg, map_mul, map_mul, ger_resG]
   have e4 := ger_appLE σ hV y hy (K.bundle.g (t.2 PUnit.unit) (t'.2 PUnit.unit)).val
-  rw [e4, tr_div _ _ y h h', tr_pull _ σ y h.2 h'.2, Units.val_mul, mul_assoc]
-  rw [← u2]
+  rw [e4, tr_div _ _ y h h', tr_pull _ σ y h.2 h'.2, Units.val_mul, mul_assoc, ← u2]
   rw [Units.inv_mul_cancel_left]
   congr 1
   exact (val_tr K'.bundle y _).symm
@@ -299,7 +298,6 @@ theorem exists_jacobian_section_isUnit_germ : ∀ (F : Type) [Field F] (Y X : Sc
     (fun t => (LB.div K'.bundle (K.bundle.pull σ)).U t) (fun t => t) (fun _ => le_top)
     (fun _ => le_rfl) (fun y _ => Opens.mem_iSup.1 (hB.cover.ge (Opens.mem_top y)))
     (jacLoc K K') (fun y t t' h h' => ger_jacLoc K K' y t t' h h')
-  refine ⟨J, fun x hx a ha => ?_⟩
-  exact (congrArg IsUnit (hJ a x ha)).mpr (isUnit_ger_jacLoc K K' x hx a ha)
+  exact ⟨J, fun x hx a ha => ((congrArg IsUnit (hJ a x ha)).mpr (isUnit_ger_jacLoc K K' x hx a ha))⟩
 
 end GlobalTheory

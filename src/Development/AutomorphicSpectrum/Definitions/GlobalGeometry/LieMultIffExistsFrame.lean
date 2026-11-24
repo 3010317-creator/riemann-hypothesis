@@ -92,8 +92,7 @@ theorem isEigVec_iff (M : LieModel G x V) (act : OAct O G) (ρ : O →+* Module.
   refine forall_congr' fun a => ?_
   rw [← h a e]
   constructor
-  · intro H
-    exact M.inj (Over.OverMorphism.ext (H.trans (M.smul _ _).symm))
+  · exact fun H => M.inj (Over.OverMorphism.ext (H.trans (M.smul _ _).symm))
   · intro H
     rw [H]; exact M.smul _ _
 

@@ -121,8 +121,7 @@ theorem eq_one_at_rational_points : ∀ (K : Type) [Field K] (G : Over (Sp K)) [
     have e : ev (lift t (lift x y)) (ev m v) =
         chV t χ * ev (lift (1 : Z ⟶ splitTorus (Sp K) τ.X) (lift x y)) (ev m v) :=
       Units.ext (hχ Z t (lift x y))
-    rw [ev_comp, ev_comp, hm, hm, MonObj.one_comp, _root_.one_mul] at e
-    exact e
+    rwa [ev_comp, ev_comp, hm, hm, MonObj.one_comp, _root_.one_mul] at e
   have h2 : ∀ (Z : Over (Sp K)) (t : Z ⟶ splitTorus (Sp K) τ.X), chV t χ = 1 := fun Z t => by
     have e := h1 Z t 1 1
     rw [hf2, hf2, _root_.mul_one] at e
@@ -331,8 +330,7 @@ theorem cubWeil_of_lbIso : ∀ (G : Over (Sp ℂ)) [GrpObj G] [IsCommMonObj G], 
     rw [gm_top]
     have : Units.map (lift a (lift b d)).left.appTop.hom.toMonoidHom v = 1 := Units.ext (hone a b d)
     rw [this, map_one]
-  rw [g, _root_.one_mul] at e
-  exact e
+  rwa [g, _root_.one_mul] at e
 
 end GlobalTheory.CompanionTheory.Ar.CubIso
 end -- clump:auto
@@ -502,8 +500,7 @@ theorem cubWeil_eq_exp_riemann : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have := P.τ.q_hom
   have := P.e_hom
   have tors : ∀ w : Fin g → ℂ, w ∈ e.per b → e.ex b ((N : ℂ)⁻¹ • w) ^ N = 1 := fun w hw => by
-    rw [← ex_nsmul e hb, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, mul_inv_cancel₀ hN0, one_smul]
-    exact hw
+    rwa [← ex_nsmul e hb, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, mul_inv_cancel₀ hN0, one_smul]
   let s : 𝟙_ (Over (Sp ℂ)) ⟶ P.tK.G := ρ.symm (e.ex b ((N : ℂ)⁻¹ • y))
   let s' : 𝟙_ (Over (Sp ℂ)) ⟶ P.tK.G := ρ.symm (e.ex b ((N : ℂ)⁻¹ • y'))
   have hs : s.left ≫ P.m.φ = (e.ex b ((N : ℂ)⁻¹ • y)).left :=

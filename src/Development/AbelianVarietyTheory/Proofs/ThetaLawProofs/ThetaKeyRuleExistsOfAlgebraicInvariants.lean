@@ -438,8 +438,7 @@ theorem isKeyPow_change : ∀ (K : Type) [Field K] (P : Out.PolAV (Sp K)) (hg ri
     rintro rfl
     obtain ⟨x, -, hx⟩ := hth' (default : PrimeSpectrum K)
     obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 hx
-    rw [ha i, constFn, map_zero, map_zero, zero_mul, Scheme.basicOpen_zero] at hi
-    exact hi
+    rwa [ha i, constFn, map_zero, map_zero, zero_mul, Scheme.basicOpen_zero] at hi
   haveI := y.P.isAb.comm
   haveI := P.isAb.comm
   obtain ⟨w, M', hw, hw', hM', hdet⟩ := exists_block_basis p.toIsPowGrp hj hv hv' M hM y.v h₃
@@ -524,8 +523,7 @@ theorem exists_rule_sq (hinv : Key.Chi.InversionStatement) {g c M : ℕ}
       rw [h] at hq'
       exact pow_ne_zero 2 (div_ne_zero (pow_ne_zero 4 hM) (pow_ne_zero 8 hc)) (by rw [← hq']; simp)
     have := ha (sq ℂ x) _ M'' c' (hdim hx hy) hc' hM'' (by simpa [Pi.zero_def] using hn')
-    rw [hq', ← pow_mul] at this
-    exact this
+    rwa [hq', ← pow_mul] at this
   refine ⟨fun K _ _ x => ka K (sq K x), ⟨?_, ?_, ?_, hval.holo⟩, hval⟩
   · intro K _ _ P hg rig hr th hth v hv th' hth' v' hv' a Mx hP h₁ h₂
     have hy := hsq K ⟨P, hg, rig, hr, th, hth, v, hv⟩
@@ -537,8 +535,7 @@ theorem exists_rule_sq (hinv : Key.Chi.InversionStatement) {g c M : ℕ}
     dsimp only
     rw [indep K ⟨P, hg, rig, hr, th', hth', v', hv'⟩ _ hP hp]
     rw [hd, ← pow_mul, ← pow_mul] at key
-    rw [show 8 * (2 * c) = 2 * (8 * c) by ring, show 4 * (2 * c) = 2 * (4 * c) by ring]
-    exact key
+    rwa [show 8 * (2 * c) = 2 * (8 * c) by ring, show 4 * (2 * c) = 2 * (4 * c) by ring]
   · intro K K' _ _ _ _ f x x' hx h
     exact hF K K' f _ _ (hdim hx (hsq K x)) (keyPB_of_isKeyPow K K' f x _ x' _ 2 h (hsq K x) (hsq K' x'))
   · intro R K _ _ _ _ _ _ _ x xK hx hM h

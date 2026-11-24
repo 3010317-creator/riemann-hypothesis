@@ -98,8 +98,7 @@ theorem ratGen_of_birOn : ∀ {Y : Model Xo c (RingHom.id c.F)} (X : FlagCover Y
   have hU : ⊤ ≤ (z ≫ M.σ) ⁻¹ᵁ U₀ X Z := by
     intro s _
     have := hO (Set.mem_univ s)
-    rw [M.off_eq] at this
-    exact this
+    rwa [M.off_eq] at this
   have hη : ptOf (z ≫ M.σ) ∈ U₀ X Z := (le_iff_ptOf_mem _ _).1 hU
   have hdense : closure (M.σ '' Set.univ) = Set.univ := by
     refine Set.eq_univ_of_univ_subset ?_
@@ -145,8 +144,7 @@ theorem ratGen_of_birOn : ∀ {Y : Model Xo c (RingHom.id c.F)} (X : FlagCover Y
     refine (map_div₀ ψ _ _).trans ?_
     rw [hv, hv, mul_div_mul_left _ _ hT]
   obtain ⟨v₀, hv₀⟩ : ∃ v₀ : Cusp Z U la, genVal Z v₀.1 ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hB.1 (LinearMap.ext fun v => hc v)
   have hsub : (⊤ : IntermediateField c.F (Om Z)).toSubfield ≤
       (ratField (Set.range (cuspSec X Z U la)) (ptOf (z ≫ M.σ)) hη).map ψ := by

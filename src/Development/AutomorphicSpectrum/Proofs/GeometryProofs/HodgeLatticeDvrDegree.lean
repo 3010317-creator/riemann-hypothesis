@@ -76,8 +76,7 @@ theorem toH_rhoH {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
   simp only [LinearMap.comp_apply] at h3
   have h4 := vmap_rhoH (S.mapK p) a y
   refine (congrArg (fun z => toVec Ω d (transH (S.φ p) (S.ψ p) (S.lam p) z)) h4).trans ?_
-  refine (congrArg (toVec Ω d) h3.symm).trans ?_
-  exact h2.symm
+  exact (congrArg (toVec Ω d) h3.symm).trans h2.symm
 
 
 open GlobalTheory.CompanionTheory.Ar.Flat.DegZ in
@@ -103,8 +102,7 @@ theorem eigProj_toH_eq_zero {E : Type} [Field E] [NumberField E] [IsCMField E] {
     rw [map_sub, map_smul, hc, hm, sub_self]
   · exact (congrArg _ (toH_zero S p)).trans (map_zero _)
   · intro y y' h1 h2
-    refine (congrArg _ (toH_add S p y y')).trans ?_
-    exact (map_add _ _ _).trans (by rw [h1, h2, add_zero])
+    exact (congrArg _ (toH_add S p y y')).trans ((map_add _ _ _).trans (by rw [h1, h2, add_zero]))
 
 end GlobalTheory.CompanionTheory.Ar.Flat
 

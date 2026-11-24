@@ -82,12 +82,10 @@ theorem forms_equiv (S S' : GStep E K n) (hS : S.Free) (hS' : S'.Free) (hF : (S.
       have h2 := hL (e0.symm c)
       rw [Equiv.apply_symm_apply] at h2
       show x.1 (e0.symm c) ∈ delAtr emb lam (S'.Lsh c.1 (S'.rep c))
-      rw [h2]
-      exact h1
+      rwa [h2]
     · intro hx c
       have h1 : x.1 (e0.symm (e0 c)) ∈ delAtr emb lam (S'.Lsh (e0 c).1 (S'.rep (e0 c))) := hx (e0 c)
-      rw [hL c, Equiv.symm_apply_apply] at h1
-      exact h1
+      rwa [hL c, Equiv.symm_apply_apply] at h1
   · intro x
     rfl
 end Gen

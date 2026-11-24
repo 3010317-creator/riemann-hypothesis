@@ -97,8 +97,7 @@ theorem exists_two_points {K : Type} [Field K] [IsAlgClosed K] (t : Spec (CommRi
     obtain ⟨d, hd⟩ := hD
     refine ⟨w.left d, ?_⟩
     show u.left (w.left d) ∈ D
-    rw [← Scheme.Hom.comp_apply, ← Over.comp_left, e]
-    exact hd
+    rwa [← Scheme.Hom.comp_apply, ← Over.comp_left, e]
   have hne : ((u₁.left ⁻¹ᵁ D ⊓ u₂.left ⁻¹ᵁ D : (T ⊗ A).left.Opens) : Set (T ⊗ A).left).Nonempty :=
     nonempty_preirreducible_inter (u₁.left ⁻¹ᵁ D).isOpen (u₂.left ⁻¹ᵁ D).isOpen (ne _ _ e₁) (ne _ _ e₂)
   have : LocallyOfFiniteType (X := (T ⊗ A).left) (Y := Spec (CommRingCat.of K)) (fst T A).left :=
@@ -197,8 +196,7 @@ theorem exists_sec_value_isUnit :
   have hD : (((Over.mk t ⊗ P.A).left.basicOpen (θ.f k) : (Over.mk t ⊗ P.A).left.Opens) :
       Set (Over.mk t ⊗ P.A).left).Nonempty := by
     rw [Set.nonempty_iff_ne_empty]
-    intro h
-    exact hk ((basicOpen_eq_bot_iff _).1 (SetLike.coe_injective h))
+    exact fun h => hk ((basicOpen_eq_bot_iff _).1 (SetLike.coe_injective h))
   let p : (Over.mk t).left := IsLocalRing.closedPoint K
   let y := (ptSecT P.A x).left p
   have good : ∀ a : Over.mk t ⟶ P.A, (ptSecT P.A (a * x)).left p ∈ (Over.mk t ⊗ P.A).left.basicOpen (θ.f k) →

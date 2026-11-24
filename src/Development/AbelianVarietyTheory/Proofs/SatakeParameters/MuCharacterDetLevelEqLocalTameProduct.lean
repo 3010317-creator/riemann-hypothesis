@@ -259,8 +259,7 @@ theorem loc_eq_locK {χ : HChar E} {P : HeightOneSpectrum (𝓞 E)} (h : χ.Tame
   refine h _ ?_ (le_exp_neg_one ?_)
   · unfold IsUnitAt
     rw [e, map_div₀, h1, hk', div_one]
-  · rw [e, div_sub_one h0, map_div₀, hk', div_one]
-    exact hx
+  · rwa [e, div_sub_one h0, map_div₀, hk', div_one]
 
 theorem sigR_mem_rInt (σ : E →ₐ[F] E) {y : AfE F E} (hy : y ∈ RInt F E) :
     Formalism.UG.sigR σ (FiniteAdeleRing (𝓞 F) F) y ∈ RInt F E := by
@@ -550,8 +549,7 @@ theorem GlobalTheory.LevMuDet.muOf_det_lev : UnderTie (fun {D L hT Gi Gl Kc Y cX
   have hdI : d ∈ intU D.host.F D.host.E := by
     refine ⟨GlobalTheory.Port.det_int_of_level _ κ.1 κ.2, ?_⟩
     have h := GlobalTheory.Port.det_int_of_level _ κ.1⁻¹ (inv_mem κ.2)
-    rw [← Matrix.GeneralLinearGroup.val_det_apply, map_inv] at h
-    exact h
+    rwa [← Matrix.GeneralLinearGroup.val_det_apply, map_inv] at h
   obtain ⟨y, hy⟩ : ∃ y : (AfE t.X.F t.X.E)ˣ, Units.map A.iA.toRingHom.toMonoidHom y = d :=
     ⟨Units.map A.iA.symm.toRingHom.toMonoidHom d, Units.ext (A.iA.apply_symm_apply _)⟩
   have hmap : ∀ z : (AfE t.X.F t.X.E)ˣ, Units.map A.iA.toRingHom.toMonoidHom z ∈ intU D.host.F D.host.E ↔ z ∈ intU t.X.F t.X.E := fun z =>

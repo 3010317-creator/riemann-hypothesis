@@ -631,15 +631,13 @@ theorem one_eq_zeroUnit : η[schemeOver W] = zeroUnit W := by
   refine Over.OverMorphism.ext ((isPullback_universalCurve W).hom_ext ?_
     ((Over.w _).trans (Over.w _).symm))
   refine ((isPullback_universalCurve W).lift_fst ..).trans ?_
-  refine Eq.trans ?_ (zero_mapHom ..).symm
-  exact congrArg (· ≫ zero universalCurve) (Category.id_comp _)
+  exact Eq.trans (congrArg (· ≫ zero universalCurve) (Category.id_comp _)) (zero_mapHom ..).symm
 
 theorem inv_eq_negOver : ι[schemeOver W] = negOver W := by
   refine Over.OverMorphism.ext ((isPullback_universalCurve W).hom_ext ?_
     ((Over.w _).trans (Over.w _).symm))
   refine ((isPullback_universalCurve W).lift_fst ..).trans ?_
-  refine Eq.trans ?_ (negHom_mapHom ..).symm
-  exact congrArg (· ≫ negHom universalCurve) (Category.id_comp _)
+  exact Eq.trans (congrArg (· ≫ negHom universalCurve) (Category.id_comp _)) (negHom_mapHom ..).symm
 
 @[simp] theorem one_left : η[schemeOver W].left = zero W := congrArg (·.left) (one_eq_zeroUnit W)
 
@@ -769,8 +767,7 @@ theorem IsSumTriple.equation {V : WeierstrassCurve A} [V.IsElliptic] (h : IsSumT
       hS.equation
     have h₂ := eval₂_smul_of_isHomogeneous (RingHom.id _) (isHomogeneous_polynomial (V.map g))
       ((g ∘ T) i * (v⁻¹ : (Localization.AtPrime p)ˣ)) S
-    rw [← e, h₁, mul_zero] at h₂
-    exact h₂
+    rwa [← e, h₁, mul_zero] at h₂
   rwa [WeierstrassCurve.Projective.Equation, WeierstrassCurve.Projective.map_polynomial,
     MvPolynomial.eval_map, ← MvPolynomial.eval₂_comp] at h₀
 

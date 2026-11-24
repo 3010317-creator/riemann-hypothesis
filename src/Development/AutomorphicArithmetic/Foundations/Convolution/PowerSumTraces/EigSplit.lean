@@ -148,8 +148,7 @@ theorem UpperTheory.eigIn_finite_above_of_isCompactOperator :
     change inner ℂ (A (prj W u)) v = inner ℂ u (A (prj W v))
     have h1 : inner ℂ (A (prj W u)) v = inner ℂ (A (prj W u)) (prj W v) := by
       have := hperp v _ (hAW _ (hPW u))
-      rw [inner_sub_right, sub_eq_zero] at this
-      exact this
+      rwa [inner_sub_right, sub_eq_zero] at this
     have h2 : inner ℂ u (A (prj W v)) = inner ℂ (prj W u) (A (prj W v)) := by
       have := hperp u _ (hAW _ (hPW v))
       rw [inner_sub_right, sub_eq_zero] at this
@@ -251,8 +250,7 @@ theorem UpperTheory.norm_trace_comp_le_mul_traceNorm :
   have h3 : ∑' i, ‖inner ℂ (b i) (T (b i))‖ ≤ (traceNorm T).toReal := by
     rw [← ENNReal.ofReal_le_iff_le_toReal (show traceNorm T < ⊤ from hT).ne,
       ENNReal.ofReal_tsum_of_nonneg (fun _ => norm_nonneg _) hs]
-    simp only [ofReal_norm]
-    exact tsum_enorm_inner_self_le b T
+    simpa only [ofReal_norm] using tsum_enorm_inner_self_le b T
   rw [tsum_mul_left] at h2
   exact h2.trans (mul_le_mul_of_nonneg_left h3 hc)
 end -- clump:auto
@@ -301,8 +299,7 @@ theorem UpperTheory.prj_eigIn_of_eigenvector_prj :
       exact hx (by exact_mod_cast mul_right_cancel₀ h0 h1)
     have h3 := hperp w hwW
     rw [inner_sub_right, h2] at h3
-    rw [inner_sub_right, inner_zero_right]
-    exact h3
+    rwa [inner_sub_right, inner_zero_right]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.TwistedTraces.PrjEigInOfEigenvectorPrj =====

@@ -65,8 +65,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.indMap :
     have hK : leviProj k e p ∈ leviK k (fun a : Fin s => Fin (d a)) := by
       rw [leviK, Subgroup.mem_pi]
       rw [leviKOne, Subgroup.mem_pi] at hl
-      intro a ha
-      exact GlobalTheory.StepData.KOne_le_KO (hl a ha)
+      exact fun a ha => GlobalTheory.StepData.KOne_le_KO (hl a ha)
     have h1 := (redLevi_eq_one_iff ⟨_, hK⟩).2 hl
     have h2 := hjκ ⟨_, hK⟩ z
     rw [h1, map_one] at h2
@@ -203,5 +202,4 @@ theorem UpperTheory.Gal.InertialTypesAlt.indMap :
     simp [this]
   · intro z hz
     apply hj
-    rw [map_zero, ← hev z]
-    exact hz
+    rwa [map_zero, ← hev z]

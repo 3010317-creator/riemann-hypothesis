@@ -123,12 +123,10 @@ theorem latAt_rat : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : G
   constructor
   · intro hz
     refine ⟨star U.1 *ᵥ z, ?_, ?_⟩
-    · rw [← mem_globLat_rat _ _ _ hfr, hmv, hzz]
-      exact hz
+    · rwa [← mem_globLat_rat _ _ _ hfr, hmv, hzz]
     · exact hzz z
   · rintro ⟨w, hw, rfl⟩
-    rw [← hmv, mem_globLat_rat _ _ _ hfr]
-    exact hw
+    rwa [← hmv, mem_globLat_rat _ _ _ hfr]
 
 end GlobalTheory.RatMoveLat
 end -- clump:auto

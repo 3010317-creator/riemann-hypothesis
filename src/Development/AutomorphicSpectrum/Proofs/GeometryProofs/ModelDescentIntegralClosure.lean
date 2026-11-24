@@ -184,8 +184,7 @@ theorem NN_nzd (hϖ : Irreducible ϖ) {d : ℕ} {J : Ideal (MRing ι O)} (hJ : I
     ((dim_mono hW.1.2).trans_lt hd) hn).1
   obtain ⟨y, hy, hxy⟩ := Ideal.exists_mul_mem_of_mem_minimalPrimes hW (hx W h1)
   apply hy
-  rw [← hc, Submodule.mem_colon_singleton, smul_eq_mul, mul_comm]
-  exact hxy
+  rwa [← hc, Submodule.mem_colon_singleton, smul_eq_mul, mul_comm]
 
 omit [Fintype K] [DecidableEq K] [∀ k, Fintype (ι k)] in
 theorem multAt_zero {R : Type} [CommRing R] {I W : Ideal (MRing ι R)} [W.IsPrime] (h : ¬ I ≤ W) :
@@ -272,8 +271,7 @@ theorem NN_pow (hϖ : Irreducible ϖ) {d : ℕ} {J : Ideal (MRing ι O)} (hJ : I
       push_cast
       ring
   have h1 : J.colon {C ϖ ^ e} = ⊤ := by
-    rw [Ideal.eq_top_iff_one, Submodule.mem_colon_singleton, one_smul]
-    exact he
+    rwa [Ideal.eq_top_iff_one, Submodule.mem_colon_singleton, one_smul]
   have h2 : NN (⊤ : Ideal (MRing ι O)) bs = 0 :=
     cycEval_eq_zero fun W hW => absurd (top_le_iff.1 hW.1.2) hW.1.1.ne_top
   rw [h e le_rfl, h1, h2, add_zero]
@@ -350,8 +348,7 @@ theorem ram_colon {O O' σ : Type} [CommRing O] [CommRing O'] [IsDomain O'] [Alg
   set m : Ideal O := Ideal.span {ϖ} with hmdef
   letI : Field (O ⧸ m) := Ideal.Quotient.field m
   have hle : m ≤ J.comap (algebraMap O (MvPolynomial σ O)) := by
-    rw [hmdef, Ideal.span_le, Set.singleton_subset_iff]
-    exact hJ
+    rwa [hmdef, Ideal.span_le, Set.singleton_subset_iff]
   letI : Algebra (O ⧸ m) (MvPolynomial σ O ⧸ J) := Ideal.Quotient.algebraQuotientOfLEComap hle
   haveI : IsScalarTower O (O ⧸ m) (MvPolynomial σ O ⧸ J) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
@@ -587,8 +584,7 @@ theorem bc_div (hϖ : Irreducible ϖ) (hϖ' : Irreducible ϖ') (he : 0 < e)
   have hfP' : MvPolynomial.map (algebraMap O O') f ∉ P.map (MvPolynomial.map (algebraMap O O')) := by
     intro h0
     apply hP'.multiProj.isPrime.ne_top
-    rw [← hcol, Ideal.eq_top_iff_one, Submodule.mem_colon_singleton, one_smul]
-    exact h0
+    rwa [← hcol, Ideal.eq_top_iff_one, Submodule.mem_colon_singleton, one_smul]
   have hsup : (P ⊔ Ideal.span {f}).map (MvPolynomial.map (algebraMap O O')) =
       P.map (MvPolynomial.map (algebraMap O O')) ⊔
         Ideal.span {MvPolynomial.map (algebraMap O O') f} := by

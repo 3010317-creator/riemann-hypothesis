@@ -686,8 +686,7 @@ theorem isLocOp_integral (h : Chart θ σ) (hψ : IsStdChar D ψ (-1)) {μ : Mea
     fun f hf => ⟨toB hψ f hf, coe_toB hψ f hf⟩
   obtain ⟨om, hom, e⟩ := exists_om S T
   have hρ : IsHeis (fun x y => om x y) (rhoV hψ σ S T) := by
-    simp only [e]
-    exact isHeis_rhoB h hψ
+    simpa only [e] using isHeis_rhoB h hψ
   have hint : ∀ F : BB ψ S T, Integrable (fun u => c u • rhoV hψ σ S T (E u) F) ν := fun F => by
     refine Integrable.mono' ((hci 0).mul_const ‖F‖)
       (hc.smul ((hρ.2.2.2 F).comp E.continuous)).aestronglyMeasurable (Filter.Eventually.of_forall fun u => ?_)
@@ -726,8 +725,7 @@ theorem isLocOp_coord (h : Chart θ σ) (hψ : IsStdChar D ψ (-1)) {μ : Measur
     IsLocOp ψ S T μ 𝓕 F₀.1 (.inr τ) X.1 := by
   obtain ⟨om, hom, e⟩ := exists_om S T
   have hρ : IsHeis (fun x y => om x y) (rhoV hψ σ S T) := by
-    simp only [e]
-    exact isHeis_rhoB h hψ
+    simpa only [e] using isHeis_rhoB h hψ
   borelize V
   have h0 : F₀ ≠ 0 := fun h0 => base_ne_zero hb (by rw [h0]; rfl)
   obtain ⟨c, hc, hci, hX⟩ := exists_superpos om hom hρ hJ E (fun x y => (e _ _).trans (hE x y))
@@ -828,8 +826,7 @@ theorem change_factor : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
     · exact Or.inr hpq
     · left
       have hp' : x' p ≠ f₀ := hp
-      rw [hx' p hpq] at hp'
-      exact hp'
+      rwa [hx' p hpq] at hp'
   · intro w
     have hfin := (hprod w).1
     have hsupp : (Function.mulSupport fun p => ipO μ 𝓕 (x' p) (heisO ψ S T (wAt p w) f₀)).Finite := by
@@ -839,8 +836,7 @@ theorem change_factor : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
       · exact Or.inr hpq
       · left
         rw [Function.mem_mulSupport] at hp ⊢
-        rw [hx' p hpq] at hp
-        exact hp
+        rwa [hx' p hpq] at hp
     refine ⟨hsupp, ?_⟩
 
     have hrest : (∏ᶠ (p) (_ : p ≠ q), ipO μ 𝓕 (x' p) (heisO ψ S T (wAt p w) f₀)) =

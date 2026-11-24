@@ -77,8 +77,7 @@ private theorem nsa_lte (s n : ℕ) (hs : s ≠ 0) (hn : Odd n) :
   have hxy : (l : ℤ) ∣ (1 + (l : ℤ) ^ s) - 1 := by
     simpa using dvd_pow_self (l : ℤ) hs
   have hx : ¬ (l : ℤ) ∣ 1 + (l : ℤ) ^ s := by
-    intro h
-    exact hpz.not_dvd_one ((dvd_add_left (dvd_pow_self (l : ℤ) hs)).1 h)
+    exact fun h => hpz.not_dvd_one ((dvd_add_left (dvd_pow_self (l : ℤ) hs)).1 h)
   have hs' : emultiplicity (l : ℤ) ((1 + (l : ℤ) ^ s) - 1) = s := by
     rw [add_sub_cancel_left]
     exact emultiplicity_pow_self_of_prime hpz s
@@ -119,8 +118,7 @@ theorem exists_unit_not_dvd (C n : ℕ) (hC : C ≠ 0) (h2 : 2 ∣ C) (hn : Odd 
     generalize C.factorization l = s at hs ⊢
     have hU : IsUnit (1 + (l : ℤ_[l]) ^ s) := by
       apply nsa_isUnit
-      intro h
-      exact PadicInt.prime_p.not_dvd_one ((dvd_add_left (dvd_pow_self (l : ℤ_[l]) hs)).1 h)
+      exact fun h => PadicInt.prime_p.not_dvd_one ((dvd_add_left (dvd_pow_self (l : ℤ_[l]) hs)).1 h)
     refine ⟨hU.unit, by simp, fun h => nsa_lte l s n hs hn ?_⟩
     rw [← PadicInt.pow_p_dvd_int_iff]
     simpa using h

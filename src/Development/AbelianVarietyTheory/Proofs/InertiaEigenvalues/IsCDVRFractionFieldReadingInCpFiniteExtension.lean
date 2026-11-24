@@ -169,8 +169,7 @@ theorem isReading_ext : ∀ (p : ℕ) [Fact p.Prime] (F : Type) [Field F] [Numbe
   set ρ := ‖k (algebraMap T.V T.Fr π)‖ with hρ
   have hρ0 : 0 < ρ := norm_pos_iff.2 ((map_ne_zero k).2 hπ0)
   have hρ1 : ρ < 1 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have h1 : ‖k (algebraMap T.V T.Fr π)⁻¹‖ ≤ 1 := by
       rw [map_inv₀, norm_inv]
       exact inv_le_one_of_one_le₀ hc
@@ -214,18 +213,15 @@ theorem isReading_ext : ∀ (p : ℕ) [Fact p.Prime] (F : Type) [Field F] [Numbe
   rw [hx]
   by_cases hx0 : x = 0
   · subst hx0
-    simp only [map_zero, zero_le_one, true_iff]
-    exact ⟨0, map_zero _⟩
+    simpa only [map_zero, zero_le_one, true_iff] using ⟨0, map_zero _⟩
   rw [absOfVal_of_ne _ _ _ hx0]
   change _ ↔ ∃ a : T'.V, algebraMap T'.V T'.Fr a = x
   rw [GlobalTheory.CompleteValExt.exists_algebraMap_eq_iff]
   constructor
   · intro h
-    by_contra hn
-    push Not at hn
+    by_contra! hn
     have := one_lt_zpow_of_neg₀ hc0 hc1 hn
     linarith
-  · intro h
-    exact zpow_le_one₀ hc0 hc1.le h
+  · exact fun h => zpow_le_one₀ hc0 hc1.le h
 
 end GlobalTheory.GeoTie.ReadExt

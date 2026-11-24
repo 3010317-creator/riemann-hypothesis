@@ -64,10 +64,7 @@ namespace FunctorialResolution.EmbeddedResolution
 
 private theorem comap_comp_eq_top_of_le_preimage_compl {X X₁ : Scheme.{u}} (π : X₁ ⟶ X)
     (Z : X.IdealSheafData) (V : X₁.Opens) (hV : V ≤ π ⁻¹ᵁ Z.support.compl) :
-    Z.comap (V.ι ≫ π) = ⊤ := by
-  refine Blowup.comap_eq_top_of_notMem_support _ Z fun x => ?_
-  show π.base x.1 ∉ Z.support
-  exact hV x.2
+    Z.comap (V.ι ≫ π) = ⊤ := Blowup.comap_eq_top_of_notMem_support _ Z fun x => hV x.2
 
 private theorem restrictIdeal_comap_preimage {X X₁ : Scheme.{u}} (π : X₁ ⟶ X)
     (D : X.IdealSheafData) (W : X.Opens) :
@@ -102,9 +99,7 @@ theorem isIso_morphismRestrict_of_isBlowupAlongIdealSheaf {X X₁ : Scheme.{u}} 
     IsIso (π ∣_ W) := by
   have h1 := hπ.restrict W
   have h2 : Z.comap (Scheme.Opens.ι W) = ⊤ := by
-    refine Blowup.comap_eq_top_of_notMem_support _ Z fun x => ?_
-    show x.1 ∉ Z.support
-    exact hW x.1 x.2
+    exact Blowup.comap_eq_top_of_notMem_support _ Z fun x => hW x.1 x.2
   rw [h2] at h1
   exact h1.isIso_of_top
 
@@ -123,9 +118,7 @@ theorem restrictIdeal_strictTransform_eq_comap_of_notMem_support {X X₁ : Schem
     (Z D : X.IdealSheafData) [QuasiCompact (strictTransformι π Z D)]
     (V : X₁.Opens) (hV : ∀ x : X₁, x ∈ V → π.base x ∉ Z.support) :
     restrictIdeal (Blowup.strictTransform π Z D) V = restrictIdeal (D.comap π) V := by
-  refine restrictIdeal_strictTransform_eq_comap_of_le_compl π Z D V ?_
-  intro x hx
-  exact hV x hx
+  exact restrictIdeal_strictTransform_eq_comap_of_le_compl π Z D V (fun x hx => hV x hx)
 
 theorem restrictIdeal_exceptionalIdeal_eq_top_of_le_compl {X X₁ : Scheme.{u}} (π : X₁ ⟶ X)
     (Z : X.IdealSheafData) (V : X₁.Opens) (hV : V ≤ π ⁻¹ᵁ Z.support.compl) :
@@ -137,9 +130,7 @@ theorem restrictIdeal_exceptionalIdeal_eq_top_of_notMem_support {X X₁ : Scheme
     (Z : X.IdealSheafData) (V : X₁.Opens)
     (hV : ∀ x : X₁, x ∈ V → π.base x ∉ Z.support) :
     restrictIdeal (Blowup.exceptionalIdeal π Z) V = ⊤ := by
-  refine restrictIdeal_exceptionalIdeal_eq_top_of_le_compl π Z V ?_
-  intro x hx
-  exact hV x hx
+  exact restrictIdeal_exceptionalIdeal_eq_top_of_le_compl π Z V (fun x hx => hV x hx)
 
 theorem inStrictNormalCrossingPositionAt_strictTransform_of_mem_support {X X₁ : Scheme.{u}} {k : Type u}
     [Field k] [NoetherianSpace X₁] (p : X ⟶ Spec (CommRingCat.of k)) (π : X₁ ⟶ X)
@@ -151,92 +142,49 @@ theorem inStrictNormalCrossingPositionAt_strictTransform_of_mem_support {X X₁ 
     fun D => quasiCompact_strictTransformι_of_noetherianSpace π Z D
   unfold HasStrictNormalCrossingsWith at hZE
   obtain ⟨U, hxU, m, c, a, S, ha1, ha2, ha3, hZU⟩ := hZE _ hx₁
-  have hxmem : x₁ ∈ π ⁻¹ᵁ U := hxU
-  obtain ⟨s, hs, hx₁B⟩ := exists_mem_domain_blowupChart_of_isBlowupAlongIdealSheaf π c S hπ hZU x₁ hxmem
+  obtain ⟨s, hs, hx₁B⟩ :=
+    exists_mem_domain_blowupChart_of_isBlowupAlongIdealSheaf π c S hπ hZU x₁ hxU
   set B := blowupChartOfIsBlowup π c S hπ hZU s hs with hBdef
   have hlen : (E.map (Blowup.strictTransform π Z) ++ [Blowup.exceptionalIdeal π Z]).length = E.length + 1 :=
     length_strictTransform_append_exceptionalIdeal π Z E
+  have hf : ∀ i t, (if i = E.length then some s else if a i = some s then none else a i) = some t →
+      (i = E.length ∧ t = s) ∨ (i ≠ E.length ∧ a i = some t ∧ t ≠ s) := by
+    intro i t h
+    split_ifs at h with h1 h2
+    · exact .inl ⟨h1, (Option.some.inj h).symm⟩
+    · exact .inr ⟨h1, h, fun e => h2 (by rw [h, e])⟩
   unfold InStrictNormalCrossingPositionAt
   refine ⟨B.domain, hx₁B, m, B.chart,
     fun i => if i = E.length then some s else if a i = some s then none else a i, ?_, ?_, ?_⟩
   · intro i hi j hj t hti htj
-    have hti' : (if i = E.length then some s else if a i = some s then none else a i) = some t :=
-      hti
-    have htj' : (if j = E.length then some s else if a j = some s then none else a j) = some t :=
-      htj
     rw [hlen] at hi hj
-    by_cases hiE : i = E.length
-    · by_cases hjE : j = E.length
-      · rw [hiE, hjE]
-      · exfalso
-        rw [ite_eq_left hiE] at hti'
-        rw [ite_eq_right hjE] at htj'
-        have hts : s = t := Option.some.inj hti'
-        by_cases haj : a j = some s
-        · rw [ite_eq_left haj] at htj'
-          simp at htj'
-        · rw [ite_eq_right haj] at htj'
-          exact haj (by rw [htj', ← hts])
-    · by_cases hjE : j = E.length
-      · exfalso
-        rw [ite_eq_left hjE] at htj'
-        rw [ite_eq_right hiE] at hti'
-        have hts : s = t := Option.some.inj htj'
-        by_cases hai : a i = some s
-        · rw [ite_eq_left hai] at hti'
-          simp at hti'
-        · rw [ite_eq_right hai] at hti'
-          exact hai (by rw [hti', ← hts])
-      · rw [ite_eq_right hiE] at hti'
-        rw [ite_eq_right hjE] at htj'
-        by_cases hai : a i = some s
-        · rw [ite_eq_left hai] at hti'
-          simp at hti'
-        · rw [ite_eq_right hai] at hti'
-          by_cases haj : a j = some s
-          · rw [ite_eq_left haj] at htj'
-            simp at htj'
-          · rw [ite_eq_right haj] at htj'
-            exact ha1 i (by omega) j (by omega) t hti' htj'
+    rcases hf i t hti with ⟨hiE, hts⟩ | ⟨hiE, hai, hne⟩ <;>
+      rcases hf j t htj with ⟨hjE, hts'⟩ | ⟨hjE, haj, hne'⟩
+    · rw [hiE, hjE]
+    · exact absurd hts hne'
+    · exact absurd hts' hne
+    · exact ha1 i (by omega) j (by omega) t hai haj
   · intro i h hnone
-    have hnone' : (if i = E.length then some s else if a i = some s then none else a i) = none :=
-      hnone
-    have hcount : i < E.length + 1 := by rw [hlen] at h; exact h
+    rw [hlen] at h
     by_cases hiE : i = E.length
-    · rw [ite_eq_left hiE] at hnone'
-      simp at hnone'
+    · simp [hiE] at hnone
     · have hi : i < E.length := by omega
       rw [getElem_strictTransform_append_exceptionalIdeal_of_lt π Z E i hi]
-      rw [ite_eq_right hiE] at hnone'
       by_cases hai : a i = some s
-      · have hD := ha3 i hi s hai
-        have hres := BlowupChart.restrictIdeal_strictTransform_coordIdeal B Z (E[i]'hi) hs hZU s hD
-        simpa using hres
-      · rw [ite_eq_right hai] at hnone'
-        exact BlowupChart.restrictIdeal_strictTransform_of_eq_top B Z (E[i]'hi) (ha2 i hi hnone')
+      · simpa using BlowupChart.restrictIdeal_strictTransform_coordIdeal B Z (E[i]'hi) hs hZU s
+          (ha3 i hi s hai)
+      · simp [hiE, hai] at hnone
+        exact BlowupChart.restrictIdeal_strictTransform_of_eq_top B Z (E[i]'hi) (ha2 i hi hnone)
   · intro i h t hti
-    have hti' : (if i = E.length then some s else if a i = some s then none else a i) = some t :=
-      hti
-    have hcount : i < E.length + 1 := by rw [hlen] at h; exact h
-    by_cases hiE : i = E.length
-    · subst hiE
-      rw [getElem_length_strictTransform_append_exceptionalIdeal π Z E]
-      have hts : s = t := by simpa using hti'
-      rw [← hts]
+    rw [hlen] at h
+    rcases hf i t hti with ⟨rfl, hts⟩ | ⟨hiE, hai, hts⟩
+    · rw [getElem_length_strictTransform_append_exceptionalIdeal π Z E, hts]
       exact BlowupChart.restrictIdeal_exceptionalIdeal B Z hs hZU
     · have hi : i < E.length := by omega
-      rw [getElem_strictTransform_append_exceptionalIdeal_of_lt π Z E i hi]
-      rw [ite_eq_right hiE] at hti'
-      by_cases hai : a i = some s
-      · rw [ite_eq_left hai] at hti'
-        simp at hti'
-      · rw [ite_eq_right hai] at hti'
-        have hD := ha3 i hi t hti'
-        have hts : t ≠ s := by
-          intro hh
-          exact hai (by rw [hti', hh])
-        rw [BlowupChart.restrictIdeal_strictTransform_coordIdeal B Z (E[i]'hi) hs hZU t hD,
-          ite_eq_right hts]
+      rw [getElem_strictTransform_append_exceptionalIdeal_of_lt π Z E i hi,
+        BlowupChart.restrictIdeal_strictTransform_coordIdeal B Z (E[i]'hi) hs hZU t
+          (ha3 i hi t hai),
+        ite_eq_right hts]
 
 theorem inStrictNormalCrossingPositionAt_strictTransform_of_notMem_support {X X₁ : Scheme.{u}} {k : Type u}
     [Field k] [NoetherianSpace X₁] (p : X ⟶ Spec (CommRingCat.of k)) (π : X₁ ⟶ X)

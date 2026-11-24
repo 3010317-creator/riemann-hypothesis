@@ -161,8 +161,7 @@ theorem exists_countable_atlas : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     · exact (h0 τ i k (lt_of_le_of_ne (not_lt.mp h₁) (Ne.symm h₂))).symm
   refine ⟨(⟨p, hpT⟩, σ), hC p σ L f z₀ y x b hz₀ hb ?_⟩
   have : (fun τ => (lowM x τ).submatrix (σ τ).symm id * b τ) = g := funext fun τ => by rw [hu τ, ← e τ]
-  rw [this]
-  exact hg
+  rwa [this]
 
 end GlobalTheory.Reg
 end -- clump:auto
@@ -313,10 +312,8 @@ theorem isMeagre_translates {s : Set (Frame X.Ψ r)} (hs : IsSigmaCompact s) (hi
       have := congrArg (lact γ⁻¹) e
       rw [AR.Up.PairUnfoldPf.lact_inv_lact, AR.Up.PairUnfoldPf.lact_inv_lact] at this
       exact this ▸ hz
-    · rw [Set.mem_preimage, AR.Up.PairUnfoldPf.lact_lact_inv]
-      exact hx
-  rw [hi] at h1
-  exact h1
+    · rwa [Set.mem_preimage, AR.Up.PairUnfoldPf.lact_lact_inv]
+  rwa [hi] at h1
 
 end Frames
 
@@ -409,8 +406,7 @@ theorem dictionary {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Recip
       constructor
       · rintro ⟨a, rfl⟩
         exact (φ a).2
-      · intro hy
-        exact ⟨φ.symm ⟨y, hy⟩, by simp [φ']⟩
+      · exact fun hy => ⟨φ.symm ⟨y, hy⟩, by simp [φ']⟩
     obtain ⟨x, hx, hPx⟩ := GlobalTheory.exists_frame_of_isPeriod E H D r (-X.ξ0) X.Gm φ' X.Ψ hty g idx _ hty' hξ hpos
       ⟨fun a b hab => φ.injective (Subtype.ext hab), by rw [hrange]; exact X.Λ_span, X.Gm_herm, X.Gm_det, hef⟩
       (by rw [hp, hq, hr]) P hP
@@ -539,15 +535,13 @@ theorem isMeagre_chart (U : Formalism.L2.PjFree.Unf Xo c σ r) (hσ : Formalism.
   obtain ⟨i, b, hb, e⟩ := hcov (ψ.toRingHom : C.R →+* ℂ) (RingHom.ext fun a => ψ.commutes a)
   have e' : φ' i b = ψ := AlgHom.ext fun a => by
     have := hφ' i b hb a
-    rw [e] at this
-    exact this
+    rwa [e] at this
   obtain rfl : w = z i b := (GlobalTheory.Frames.frMap_unique_refl_iff E H Dw l Xo c _ _ ψ C.y).1 _ _ hw (e' ▸ hz i b)
   rw [injective_iff_map_eq_zero] at hni
   push Not at hni
   obtain ⟨a, ha0, ha⟩ := hni
   refine Set.mem_iUnion.2 ⟨i, Set.mem_iUnion.2 ⟨⟨a, ha⟩, hx, b, hb, ?_, _, hinv _ _ _ ht⟩⟩
-  rw [e']
-  exact ha0
+  rwa [e']
 
 attribute [local instance 1100] Subalgebra.algebra in
 attribute [local instance 100] IntermediateField.instAlgebraSubtypeMem in

@@ -115,8 +115,7 @@ lemma minor_ne_zero {r l : ℕ} (hl : l ≤ r) (Z : Matrix (Fin r) (Fin r) ℂ) 
   have h1 := left_ne_zero_of_mul hZ
   let e : Fin l ≃ {i : Fin r // i.val < l} :=
     ⟨fun i => ⟨Fin.castLE hl i, i.2⟩, fun i => ⟨i.1.val, i.2⟩, fun _ => rfl, fun _ => rfl⟩
-  rw [← Matrix.det_submatrix_equiv_self e] at h1
-  exact h1
+  rwa [← Matrix.det_submatrix_equiv_self e] at h1
 
 lemma Zr_mul_uEmb {k r : ℕ} (g : Mat k r) (u : Matrix (Fin r) (Fin r) ℂ) (hu : IsUnit u.det) :
     Zr k r (g * uEmb k r u) = Zr k r g * u := by
@@ -679,8 +678,7 @@ theorem radical_coords_le : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ
   · have e : skewM q.2.1 q.2.2 b b = (q.2.2 b : ℂ) * Complex.I := by
       simp [skewM]
     have := hskew b b
-    rw [e, norm_mul, Complex.norm_I, mul_one, Complex.norm_real, Real.norm_eq_abs] at this
-    exact this
+    rwa [e, norm_mul, Complex.norm_I, mul_one, Complex.norm_real, Real.norm_eq_abs] at this
 
 end GlobalTheory.Amp.RadBound
 end -- clump:auto
@@ -929,13 +927,11 @@ theorem gramProj_mid (P : Submodule ℂ (EuclideanSpace ℂ (Fin (2 * r + k + 1)
     intro x
     apply Submodule.eq_starProjection_of_mem_of_inner_eq_zero
     · rw [hP]; refine ⟨hE _, hS _, ?_⟩
-      simp only [hW]
-      exact Submodule.starProjection_apply_mem _ _
+      simpa only [hW] using Submodule.starProjection_apply_mem _ _
     · intro w hw
       obtain ⟨h1, h2, h3⟩ := (hP w).1 hw
       rw [inner_sub_left, hin _ _ h1 h2, hin _ _ h1 h2, ← inner_sub_left]
-      simp only [hW]
-      exact Submodule.starProjection_inner_eq_zero _ _ h3
+      simpa only [hW] using Submodule.starProjection_inner_eq_zero _ _ h3
   unfold gramProj
   congr 3
   ext a b
@@ -1357,8 +1353,7 @@ theorem cut_le {k r : ℕ} {β : Fin r → ℕ} (φ : Mt k r → ℝ≥0∞) (h�
       · exact continuous_const
     exact Continuous.measurable (γ := Mt k r) this
   unfold lebR at h1
-  rw [lintegral_map hl hi] at h1
-  exact h1
+  rwa [lintegral_map hl hi] at h1
 
 theorem lintegral_le {k r : ℕ} {β : Fin r → ℕ} (hβ : Monotone β) (φ : Mt k r → ℝ≥0∞)
     (hφ : SubCut (Nset k r) (lebR k r β) φ) (E : Set (Mt k r)) (hE : MeasurableSet E)

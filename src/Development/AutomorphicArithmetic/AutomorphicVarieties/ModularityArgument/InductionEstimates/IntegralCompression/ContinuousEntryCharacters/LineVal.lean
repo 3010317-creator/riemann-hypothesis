@@ -79,13 +79,11 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.lineVal :
   · exact hE.idem.cont.comp (C.Φ (2 + 2)).continuous
   · intro k
     have := hE.idem.star (C.Φ (2 + 2) k)
-    simp only [Co.e, map_inv]
-    exact this
+    simpa only [Co.e, map_inv] using this
   · intro k
     have := hE.idem.idem (C.Φ (2 + 2) k)
     rw [Co.κ₄, int_map]
-    simp only [Co.e, map_mul, map_inv, ContinuousMulEquiv.apply_symm_apply]
-    exact this
+    simpa only [Co.e, map_mul, map_inv, ContinuousMulEquiv.apply_symm_apply] using this
   · intro f hf hfix h
     have hc : ∀ L : G1 K (2 + 2), Continuous fun k : ι → U4 => f (L * fin1 h * arc1 ((C.Φ (2 + 2)).symm k)) := by
       intro L
@@ -97,8 +95,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.lineVal :
       have := hfix (L * fin1 h * arc1 ((C.Φ (2 + 2)).symm g))
       rw [Co.κ₄, int_map] at this
       simp only [he] at this
-      simp only [ha, ← mul_assoc]
-      exact this
+      simpa only [ha, ← mul_assoc] using this
     refine ⟨fun m₂ g => ?_, fun m₁ g => ?_⟩
     · have := (hE.fix _ (hc (lv g m₂ 0)) (hr (lv g m₂ 0)) 1).1
       simp only [one_mul] at this

@@ -60,8 +60,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.avSpec :
   have hadj : ∀ t x y, ⟪F.U t x, y⟫_ℂ = ⟪x, F.U (-t) y⟫_ℂ := fun t x y => by
     rw [← hin t x, ← F.add, add_neg_cancel, F.zero]
   have hw : Integrable wR := by
-    refine (integrable_indicator_iff measurableSet_Iic).2 ?_
-    exact (integrableOn_exp_Iic 0).ofReal
+    exact (integrable_indicator_iff measurableSet_Iic).2 (integrableOn_exp_Iic 0).ofReal
   have spec : ∀ {G : Type} [NormedAddCommGroup G] [InnerProductSpace ℂ G] [CompleteSpace G] (F : Flow G) (ψ : ℝ → ℂ), Integrable ψ →
       ∀ h, Integrable (fun t => ψ t • F.U t h) ∧ F.av ψ h = ∫ t, ψ t • F.U t h := by
     intro G _ _ _ F ψ hψ
@@ -73,8 +72,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.avSpec :
         map_smul' := fun c x => by simp only [map_smul, RingHom.id_apply, smul_comm _ c]; exact integral_smul c _ }
     have hb : ∀ h, ‖A h‖ ≤ (∫ t, ‖ψ t‖) * ‖h‖ := fun h => by
       refine (norm_integral_le_integral_norm _).trans_eq ?_
-      simp only [norm_smul, F.norm]
-      exact integral_mul_const _ _
+      simpa only [norm_smul, F.norm] using integral_mul_const _ _
     exact fun h => ⟨hi h, Classical.epsilon_spec (p := fun A : G →L[ℂ] G => ∀ h, A h = ∫ t, ψ t • F.U t h)
       ⟨A.mkContinuous _ hb, fun _ => rfl⟩ h⟩
   refine ⟨fun t => ?_, hw, ?_, fun ψ hψ => ⟨spec F ψ hψ, ?_, ?_, ?_, ?_⟩⟩
@@ -86,8 +84,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.avSpec :
   · refine ContinuousLinearMap.opNorm_le_bound _ (integral_nonneg fun _ => norm_nonneg _) fun h => ?_
     rw [(spec F ψ hψ h).2]
     refine (norm_integral_le_integral_norm _).trans_eq ?_
-    simp only [norm_smul, F.norm]
-    exact integral_mul_const _ _
+    simpa only [norm_smul, F.norm] using integral_mul_const _ _
   · have hψ' : Integrable fun t => conj (ψ (-t)) := (Complex.conjCLE : ℂ →L[ℝ] ℂ).integrable_comp hψ.comp_neg
     refine ((ContinuousLinearMap.eq_adjoint_iff _ _).2 fun x y => ?_).symm
     rw [(spec F ψ hψ y).2, (spec F _ hψ' x).2, ← integral_inner (spec F ψ hψ y).1, ← inner_conj_symm,

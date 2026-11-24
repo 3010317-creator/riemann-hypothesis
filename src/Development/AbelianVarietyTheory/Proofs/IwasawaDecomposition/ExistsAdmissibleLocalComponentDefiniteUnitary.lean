@@ -89,8 +89,7 @@ theorem isClosed_of_retract (w : HeightOneSpectrum (𝓞 E)) (r : UA E n →* lo
   have e : ((locU n w : Subgroup (UA E n)) : Set (UA E n)) = {x | ((r x : locU n w) : UA E n) = x} := by
     ext x
     constructor
-    · intro h
-      exact congrArg Subtype.val (hx ⟨x, h⟩)
+    · exact fun h => congrArg Subtype.val (hx ⟨x, h⟩)
     · intro h
       change x ∈ locU n w
       rw [← show ((r x : locU n w) : UA E n) = x from h]
@@ -155,8 +154,7 @@ theorem exists_admissible_comp : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have e : π.rep x y = ρ (r x) (π.rep ((r x : UA E n)⁻¹ * x) y) := by
       change _ = π.rep (r x : UA E n) _
       rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel_left]
-    rw [e]
-    exact h1
+    rwa [e]
   have hφK : v0 ∈ fixed ρ K := LocEx.mem_fix.2 fun k hk => hKL hk
   have h2 : ∀ W : Submodule ℂ π.V, (∀ g, ∀ v ∈ W, ρ g v ∈ W) → W ⊓ fixed ρ K = ⊥ → W = ⊥ := by
     intro W hW h

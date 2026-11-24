@@ -187,8 +187,7 @@ theorem exists_cleared (M : Matrix (Fin p) (Fin p) K) (hM : ∀ i, leadMinor i M
           exact Fin.val_lt_last hj
     obtain ⟨M₁, h₁, a₁, b₁, c₁⟩ := exists_clear_col N M₀ hpiv
     have hpiv₁ : M₁ᵀ N N ≠ 0 := by
-      rw [transpose_apply, b₁ N N le_rfl]
-      exact hpiv
+      rwa [transpose_apply, b₁ N N le_rfl]
     obtain ⟨M₂, h₂, a₂, b₂, c₂⟩ := exists_clear_col N M₁ᵀ hpiv₁
     have hz₁ : ∀ i j : Fin p, i ≠ j → (i.val < n ∨ j.val < n) → M₁ i j = 0 := by
       intro i j hij h
@@ -252,8 +251,7 @@ theorem leadMinor_diagonal (i : Fin p) (d : Fin p → K) :
   · intro a _
     simp only [Finset.mem_Iic, Fin.le_def, Fin.val_castLE]
     omega
-  · intro a _ b _ h
-    exact Fin.castLE_injective _ h
+  · exact fun a _ b _ h => Fin.castLE_injective _ h
   · intro b hb
     simp only [Finset.mem_Iic, Fin.le_def] at hb
     exact ⟨⟨b.val, by omega⟩, Finset.mem_univ _, rfl⟩

@@ -133,8 +133,7 @@ theorem UpperTheory.Gal.G1.pAdFour :
     rw [Ideal.zero_eq_bot, Ne, Ideal.span_singleton_eq_bot]
     exact mul_ne_zero hD hc
   have hfin : {v : HeightOneSpectrum (𝓞 F) | ((2 * (tr ^ 2 - 4 * nm) : ℤ) : 𝓞 F) * c ∈ v.asIdeal}.Finite := by
-    refine (Ideal.finite_factors hI).subset fun v hv => ?_
-    exact Ideal.dvd_span_singleton.2 hv
+    exact (Ideal.finite_factors hI).subset fun v hv => Ideal.dvd_span_singleton.2 hv
   have hev : ∀ i, ∀ᶠ v : HeightOneSpectrum (𝓞 F) in Filter.cofinite, f v i ∈ v.adicCompletionIntegers F := by
     intro i
     refine Filter.eventually_cofinite.2 (hfin.subset fun v hv => ?_)
@@ -162,8 +161,7 @@ theorem UpperTheory.Gal.G1.pAdFour :
       simp only [hA]
       simpa only [qf] using this
     exact key
-  · intro v q hq hqv hqd hr hcv i
-    exact hf2 v hcv (Or.inr ⟨q, hq, hqv, hqd, hr⟩) i
+  · exact fun v q hq hqv hqd hr hcv i => hf2 v hcv (Or.inr ⟨q, hq, hqv, hqd, hr⟩) i
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicHensel.PAdFour =====
@@ -224,9 +222,7 @@ theorem UpperTheory.Gal.G1.pBlockMat :
     rcases p with p | p
     · have hp : p = 0 := Subsingleton.elim _ _
       subst hp
-      simp [e]
-      intro hne
-      exact (hne (Fin.ext (by simp))).elim
+      simpa [e] using fun hne => (hne (Fin.ext (by simp))).elim
     · simp [e]
   have hd2 : (diagonal fun _ : Fin 2 × Fin m => c) =
       blockDiagonal fun _ : Fin m => diagonal fun _ : Fin 2 => c := by
@@ -260,10 +256,8 @@ theorem UpperTheory.Gal.G1.pBlockMat :
       split_ifs
       · exact S.one_mem
       · exact S.zero_mem
-    · simp only [fromBlocks_apply₁₂, Matrix.zero_apply]
-      exact S.zero_mem
-    · simp only [fromBlocks_apply₂₁, Matrix.zero_apply]
-      exact S.zero_mem
+    · simpa only [fromBlocks_apply₁₂, Matrix.zero_apply] using S.zero_mem
+    · simpa only [fromBlocks_apply₂₁, Matrix.zero_apply] using S.zero_mem
     · simp only [fromBlocks_apply₂₂, blockDiagonal_apply]
       split_ifs
       · exact hN _ _
@@ -385,10 +379,8 @@ theorem pCongrScale : CongrScale := by
   refine ⟨P, hP, ?_⟩
   have hN : ((s : E) • N).map (fun x => (1 : K) ⊗ₜ[F] x) = inE K (s : E) • N.map (inE K) := by
     ext i j
-    simp only [Matrix.map_apply, Matrix.smul_apply, smul_eq_mul]
-    exact hmul _ _
-  rw [hN]
-  exact hE
+    simpa only [Matrix.map_apply, Matrix.smul_apply, smul_eq_mul] using hmul _ _
+  rwa [hN]
 
 end UpperTheory.Gal.G1
 end -- clump:auto
@@ -452,8 +444,7 @@ private theorem herm_N {E : Type} [Field E] [NumberField E] [IsCMField E] {n : �
     conv_rhs => rw [← hs]
     rw [Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr hd), Matrix.mul_one]
   have := congrFun (congrFun key b) a
-  rw [Matrix.transpose_apply, Matrix.map_apply] at this
-  exact this
+  rwa [Matrix.transpose_apply, Matrix.map_apply] at this
 
 theorem UpperTheory.Gal.G1.pDefSign :
     DefSign := by
@@ -463,8 +454,7 @@ theorem UpperTheory.Gal.G1.pDefSign :
   have hH' : (A.H n).map (cj E) = A.H n := by
     have h := congrArg Matrix.transpose (A.herm n)
     rw [Matrix.transpose_transpose] at h
-    rw [h]
-    exact hT
+    rwa [h]
   have hsym : (A.H n)⁻¹ * ((mat S ↑B.β).map (cj E))ᵀ * A.H n = mat S ↑B.β := by
     have h := B.sym
     change MulOpposite.unop (hermStar (A.H n) (A.det_ne n) (mat S ↑B.β)) = mat S ↑B.β at h
@@ -683,8 +673,7 @@ theorem UpperTheory.Gal.G1.pHenselV :
     (by rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]; exact h0)
     (h1.map (Ideal.Quotient.mk _))
   refine ⟨a, ha, ?_⟩
-  rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at hm
-  exact hm
+  rwa [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at hm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicHensel.PHenselV =====
@@ -733,8 +722,7 @@ theorem UpperTheory.Gal.G1.pInfCongr :
   intro n G G' hG hG' ε h h'
   rcases Nat.eq_zero_or_pos n with hn | hn
   · subst hn
-    refine ⟨1, by simp, ?_⟩
-    exact Subsingleton.elim _ _
+    exact ⟨1, by simp, Subsingleton.elim _ _⟩
   have hε : (ε : ℂ) ≠ 0 := by
     intro h0
     have hx : (fun i : Fin n => if i = ⟨0, hn⟩ then (1 : ℂ) else 0) ≠ 0 := by
@@ -771,8 +759,7 @@ theorem UpperTheory.Gal.G1.pInfCongr :
     have e2 : (P.map (starRingEnd ℂ)).map (starRingEnd ℂ) = P := by
       ext i j
       simp
-    rw [e1, e2]
-    exact hG'P
+    rwa [e1, e2]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicHensel.PInfCongr =====
@@ -807,8 +794,7 @@ theorem UpperTheory.Gal.G1.pIsoEx :
       funext i
       simp only [Arith.dg]
       split_ifs <;> simp
-    rw [hd]
-    exact ha
+    rwa [hd]
   · intro w q hq hg hqw
     obtain ⟨h1, h2, h3, h4⟩ := hint w q hq hg hqw
     have hc : algebraMap E (FiniteAdeleRing (𝓞 E) E) (A.c : E) ∈
@@ -949,14 +935,12 @@ theorem UpperTheory.Gal.G1.pLocRoot :
     exact this
   obtain ⟨ρ, hρ, hρr⟩ := hH F v f r hmon h0 h1
   refine ⟨ρ, ?_, ?_⟩
-  · rw [hev] at hρ
-    exact hρ
+  · rwa [hev] at hρ
   · have h2 : ¬ IsUnit (2 * (ρ - (r : v.adicCompletionIntegers F))) :=
       fun h => hρr (isUnit_of_mul_isUnit_right h)
     have h3 := unit_add_nonunit ((hdev _) ▸ h1) h2
     have e : 2 * (r : v.adicCompletionIntegers F) - tr + 2 * (ρ - r) = 2 * ρ - tr := by ring
-    rw [e] at h3
-    exact h3
+    rwa [e] at h3
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicHensel.PLocRoot =====
@@ -1009,8 +993,7 @@ private theorem local_rep (R : Type) [CommRing R] [IsLocalRing R]
   have hres : IsLocalRing.residue R (a ^ 2 - D * b ^ 2 - u) = 0 := by
     simp only [map_sub, map_mul, map_pow, hab', sub_self]
   have hnu : ¬ IsUnit (a ^ 2 - D * b ^ 2 - u) := by
-    rw [← IsLocalRing.residue_ne_zero_iff_isUnit, not_not]
-    exact hres
+    rwa [← IsLocalRing.residue_ne_zero_iff_isUnit, not_not]
   by_cases ha : IsUnit a
   · obtain ⟨X, hX⟩ := hens (Polynomial.X ^ 2 - Polynomial.C (u + D * b ^ 2)) a
       (Polynomial.monic_X_pow_sub_C _ (by norm_num))
@@ -1151,8 +1134,7 @@ theorem UpperTheory.Gal.G1.pNormTwo :
     let v : HeightOneSpectrum (𝓞 F) := w.under (𝓞 F)
     have hqv : (q : 𝓞 F) ∈ v.asIdeal := by
       show algebraMap (𝓞 F) (𝓞 E) (q : 𝓞 F) ∈ w.asIdeal
-      rw [map_natCast]
-      exact hqw
+      rwa [map_natCast]
     have hcv : c0 ∉ v.asIdeal := by
       intro hc
       have hcw : A.c ∈ w.asIdeal := hc
@@ -1216,8 +1198,7 @@ theorem UpperTheory.Gal.G1.pPadMap :
     have hmem : q ∈ v.asIdeal.map (Rat.IsIntegralClosure.intEquiv ℤ) := by
       rw [← hfix]
       exact (Ideal.apply_mem_of_equiv_iff).2 hq
-    rw [← Rat.HeightOneSpectrum.span_natGenerator, Ideal.mem_span_singleton, hgen] at hmem
-    exact hmem
+    rwa [← Rat.HeightOneSpectrum.span_natGenerator, Ideal.mem_span_singleton, hgen] at hmem
   have hpu : ((p : ℕ) : 𝓞 ℚ) ∈ u.asIdeal := by
     have h := (Rat.HeightOneSpectrum.natGenerator_dvd_iff u (n := p)).1 dvd_rfl
     rw [← map_natCast (Rat.IsIntegralClosure.intEquiv (𝓞 ℚ)) p] at h
@@ -1252,8 +1233,7 @@ private lemma pow_neg_three_lt_two_norm_sq (q : ℕ) [hq : Fact q.Prime] :
     norm_num
   · have h1 : ‖(2 : ℤ_[q])‖ = 1 := by
       apply le_antisymm (PadicInt.norm_le_one _)
-      by_contra hlt
-      push Not at hlt
+      by_contra! hlt
       have hd := (PadicInt.norm_int_lt_one_iff_dvd (p := q) 2).1 (by exact_mod_cast hlt)
       have hd' : q ∣ 2 := by exact_mod_cast hd
       exact h ((Nat.prime_dvd_prime_iff_eq hq.out Nat.prime_two).1 hd')
@@ -1350,8 +1330,7 @@ private lemma UpperTheory.Gal.G1.hens {q : ℕ} [Fact q.Prime] (c d a : ℤ_[q])
     intro t; simp [F]
   have hF' : ∀ t, Polynomial.aeval t (Polynomial.derivative F) = c * (2 * t) := by
     intro t
-    simp [F]
-    exact Or.inl (Or.inl one_add_one_eq_two)
+    simpa [F] using Or.inl (Or.inl one_add_one_eq_two)
   have hn : ‖Polynomial.aeval a (Polynomial.derivative F)‖ = 1 := by
     rw [hF', norm_mul, norm_mul, hc, h2, ha]; simp
   obtain ⟨z, hz, -⟩ := hensels_lemma (F := F) (a := a) (by rw [hn, hF]; simpa using h)
@@ -1393,11 +1372,9 @@ theorem UpperTheory.Gal.G1.pPadicUnitNorm :
   have hDz : PadicInt.toZMod (D : ℤ_[q]) = (D : ZMod q) := by simp
   have key : ‖x0 ^ 2 - (D : ℤ_[q]) * y0 ^ 2 - U‖ < 1 := by
     rw [UpperTheory.Gal.G1.norm_lt_one_iff_toZMod]
-    simp only [map_sub, map_mul, map_pow, hx, hy, hDz]
-    exact hab'
+    simpa only [map_sub, map_mul, map_pow, hx, hy, hDz] using hab'
   have hor : a ≠ 0 ∨ b ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     obtain ⟨ha0, hb0⟩ := hcon
     apply hub
     rw [ha0, hb0] at hab'
@@ -1691,9 +1668,7 @@ theorem UpperTheory.Gal.G1.pUnitCls :
     have h0 : Ideal.span {(2 * D : ℤ)} ≠ 0 := by
       rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
       omega
-    refine (Ideal.finite_factors h0).subset ?_
-    intro v hv
-    exact Ideal.dvd_span_singleton.2 hv
+    exact (Ideal.finite_factors h0).subset (fun v hv => Ideal.dvd_span_singleton.2 hv)
   haveI : Finite {v : HeightOneSpectrum ℤ | (2 * D : ℤ) ∈ v.asIdeal} := hfin.to_subtype
   refine ⟨(v : {v : HeightOneSpectrum ℤ | (2 * D : ℤ) ∈ v.asIdeal}) → Option (Fin (m v.1)),
     inferInstance, fun t v => if h : (v.1 : HeightOneSpectrum ℤ).asIdeal ≠ Ideal.span {(p : ℤ)}
@@ -1769,8 +1744,7 @@ private theorem norm_padicEquiv_of_valued_eq_one (v : HeightOneSpectrum ℤ) (u 
       ‖Rat.HeightOneSpectrum.adicCompletion.padicEquiv v w‖ ≤ 1 := by
     intro w hw
     have hw' : w ∈ (v.adicCompletionIntegers ℚ : Set (v.adicCompletion ℚ)) := by
-      rw [SetLike.mem_coe, HeightOneSpectrum.mem_adicCompletionIntegers]
-      exact hw
+      rwa [SetLike.mem_coe, HeightOneSpectrum.mem_adicCompletionIntegers]
     have := (Rat.HeightOneSpectrum.adicCompletion.padicEquiv_bijOn v).mapsTo hw'
     simpa using this
   have h1 := hmem u hu.le
@@ -1838,13 +1812,11 @@ theorem UpperTheory.Gal.G1.pZUnitNorm :
     have hid : Rat.IsIntegralClosure.intEquiv ℤ x = x := by
       simpa using eq_intCast (Rat.IsIntegralClosure.intEquiv ℤ : ℤ →+* ℤ) x
     rw [hid] at hxe
-    rw [← hxe]
-    exact hx
+    rwa [← hxe]
   obtain ⟨x, y, hxy⟩ := hP _ D hdiv _ hn
   refine ⟨(Rat.HeightOneSpectrum.adicCompletion.padicEquiv v).symm x,
     (Rat.HeightOneSpectrum.adicCompletion.padicEquiv v).symm y, ?_⟩
-  have h2 := congrArg (Rat.HeightOneSpectrum.adicCompletion.padicEquiv v).symm hxy
-  simpa using h2
+  simpa using congrArg (Rat.HeightOneSpectrum.adicCompletion.padicEquiv v).symm hxy
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicHensel.PZUnitNorm =====

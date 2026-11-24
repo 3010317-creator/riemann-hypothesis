@@ -133,8 +133,7 @@ lemma exists_N (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z)
         have h1 := congrArg Fin.val he
         simp [eI] at h1
         omega
-      · simp only [fvec, dite_eq_right har]
-        exact hz i (Or.inl (by omega))
+      · simpa only [fvec, dite_eq_right har] using hz i (Or.inl (by omega))
     · rw [ite_eq_right hia, add_zero]
       by_cases har : a.val < r
       · simp only [fvec, dite_eq_left har, bvec]
@@ -191,8 +190,7 @@ lemma exists_N (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z)
         have hne : i ≠ eI k r ⟨b.val, hbr⟩ := by
           intro he
           apply hia
-          rw [he]
-          exact hba
+          rwa [he]
         simp [fvec, hbr, bvec, hne]
       · simp
 

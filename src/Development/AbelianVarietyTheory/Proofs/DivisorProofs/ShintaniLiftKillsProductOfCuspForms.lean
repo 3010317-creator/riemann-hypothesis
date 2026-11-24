@@ -433,8 +433,7 @@ theorem count_one_mod : ∀ q l m k : ℕ, 2 ≤ q → l.Prime → 0 < m → ¬ 
   have hfp : Fintype.card (Function.fixedPoints σ) = 1 := by
     rw [Fintype.card_eq_one_iff]
     refine ⟨⟨⟨gs, hgsP⟩, ?_⟩, ?_⟩
-    · show σ ⟨gs, hgsP⟩ = ⟨gs, hgsP⟩
-      exact Subtype.ext (funext hgs_fix)
+    · exact Subtype.ext (funext hgs_fix)
     · rintro ⟨⟨g, hg⟩, hfx⟩
       have hfx' : σ ⟨g, hg⟩ = ⟨g, hg⟩ := hfx
       have hfix : ∀ r, g (r - m) + m = g r := fun r => congrFun (congrArg Subtype.val hfx') r
@@ -855,8 +854,7 @@ theorem psiG_rootSum_pair_prod_rootSum : ∀ (F : Type) [Field F] [Finite F] (θ
   have hTfin : T.Finite := by
     apply (Polynomial.nthRoots N (1 : AlgebraicClosure F)).toFinset.finite_toSet.subset
     intro α hα
-    simp only [Finset.mem_coe, Multiset.mem_toFinset]
-    exact (Polynomial.mem_nthRoots hN0).2 hα
+    simpa only [Finset.mem_coe, Multiset.mem_toFinset] using (Polynomial.mem_nthRoots hN0).2 hα
   have key : ∀ α ∈ T, θ α ^ k * star (∏ j, rootSum θ (e j) (minpoly F α ^ (m / (minpoly F α).natDegree)))
       = ∑ a : Fin l → Fin m, θ α ^ k * star (θ α ^ (∑ j, e j * q ^ (a j : ℕ))) := by
     intro α hα
@@ -1015,8 +1013,7 @@ theorem isUnit_add_iff {a n : ℕ} (M H : Matrix (Fin n) (Fin n) F)
     have := injective_add (headSub a n) (Matrix.toLin' M + Matrix.toLin' H) (-Matrix.toLin' H)
       (by rw [← map_add (f := _)]; exact mapsTo_headSub _ hM') (neg_mem_nilRad hH) h
     simpa using this
-  · intro h
-    exact injective_add (headSub a n) _ _ (mapsTo_headSub M hM) hH h
+  · exact fun h => injective_add (headSub a n) _ _ (mapsTo_headSub M hM) hH h
 
 theorem unitPar_add_iff {a n : ℕ} (M H : Matrix (Fin n) (Fin n) F)
     (hH : Matrix.toLin' H ∈ nilRad (headSub a n)) :
@@ -1335,8 +1332,7 @@ theorem shLift_cusp_kills_of_not_dvd : ∀ (F F' : Type) [Field F] [Field F'] [A
     exact zero_ne_one h1
   have key := _root_.GlobalTheory.Shin.kills_of_norm_one_of_pairing_prime (GL (Fin n) F') (F' ≃ₐ[F] F') (galAct F F' n) s (hΓ ▸ hl) hs X hX hnorm (cusp θ n K)
     hYchar hYs (cnt : ℤ) hz hndvd
-  rw [hfun] at key
-  exact key
+  rwa [hfun] at key
 
 end GlobalTheory.Shin
 end -- clump:auto
@@ -1456,8 +1452,7 @@ theorem kills_liftAll : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [F
             cusp θ p.1 (p.2 * ∑ i ∈ Finset.range l, q ^ (p.1 * i)) := by
           rw [J_cons]
           exact (_root_.GlobalTheory.Shin.HcUnit.main F' p.1 _ (isCl_cusp F' θ _ _)).2
-        rw [hJ]
-        exact hu
+        rwa [hJ]
     have hRA' : ∀ x ∈ A, 0 < x.1 ∧ Reg (Nat.card F') x.1 x.2 := by rw [hcard']; exact hRA
     have hRB' : ∀ x ∈ liftAll q l L, 0 < x.1 ∧ Reg (Nat.card F') x.1 x.2 := by rw [hcard']; exact hRB
     have hcharA := _root_.GlobalTheory.Shin.isChar_J_of_reg F' θ hθ A hRA' p.1 hdA'.symm

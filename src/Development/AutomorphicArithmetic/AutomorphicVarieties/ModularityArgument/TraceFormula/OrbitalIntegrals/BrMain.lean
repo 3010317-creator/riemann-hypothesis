@@ -245,8 +245,7 @@ theorem UpperTheory.V.Z.Tf.Orb.geoTransport :
     constructor
     · rintro ⟨h1, h2⟩
       refine ⟨h1.comp hm, fun x => ?_⟩
-      simp only [id, hε, map_mul, hi]
-      exact h2 _
+      simpa only [id, hε, map_mul, hi] using h2 _
     · rintro ⟨h1, h2⟩
       refine ⟨?_, fun x => ?_⟩
       · have := h1.comp hm'
@@ -254,8 +253,7 @@ theorem UpperTheory.V.Z.Tf.Orb.geoTransport :
         funext x
         simp [hε]
       · have := h2 (ε.symm x)
-        simp only [id, hε, map_mul, hi, ContinuousMulEquiv.apply_symm_apply] at this
-        exact this
+        simpa only [id, hε, map_mul, hi, ContinuousMulEquiv.apply_symm_apply] using this
   · exact (ε.toHomeomorph.measurableEmbedding).integral_map _
 end -- clump:auto
 end -- clump:auto
@@ -371,8 +369,7 @@ theorem UpperTheory.V.Z.Tf.Orb.placeUnit :
     (by rw [Measure.map_apply hc.measurable (hU _ n).1.measurableSet, ← hI.2 F E v w hw n, vE])
     (by rw [hI.1 F v n, vF])
   have := hP _ (hU _ n).2.2 _ (hU _ n).2.2 hm
-  rw [hI.2 F E v w hw n, ← hI.1 F v n]
-  exact this
+  rwa [hI.2 F E v w hw n, ← hI.1 F v n]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.OrbitalIntegrals.TwistedOrbitalIntegrals.PlaceUnit =====
@@ -442,8 +439,7 @@ private theorem UpperTheory.V.Z.Tf.Orb.quotReal_ae_fin {G : Type} [Group G] [Mea
     exact zero_ne_one this
   haveI : (ae μ).NeBot := ae_neBot.2 hne
   obtain ⟨h, hh⟩ := h2.exists
-  have h3 := (measurePreserving_mul_left μG ((h : G)⁻¹)).quasiMeasurePreserving.ae hh
-  simpa using h3
+  simpa using (measurePreserving_mul_left μG ((h : G)⁻¹)).quasiMeasurePreserving.ae hh
 
 theorem UpperTheory.V.Z.Tf.Orb.quotReal :
     UpperTheory.V.Z.Tf.Orb.QuotReal := by

@@ -264,8 +264,7 @@ theorem IsReps.sum_eq_zero {Γ : Subgroup SL(2, ℤ)} {r : ℕ} {s : Fin r → S
   obtain ⟨i, γ, hγ, hx | hx⟩ := hs.1 x
   · have e : ∀ j, (F j ∣[w j] x) τ = (F j ∣[w j] s i) τ := fun j => by
       rw [hx, (hF j).2.slash_mul hγ]
-    simp only [e]
-    exact h i
+    simpa only [e] using h i
   · have e : ∀ j, (F j ∣[w j] x) τ = -(F j ∣[w j] s i) τ := fun j => by
       rw [hx, slash_neg_of_odd (hF j).1, (hF j).2.slash_mul hγ]
       rfl

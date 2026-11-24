@@ -89,12 +89,10 @@ theorem rel_on (ψW : PsiOn D W) (hW : (W : Set (Spec (CommRingCat.of R))).Nonem
   · have h₁ : jK R z ∈ W.ι ''ᵁ V := jK_mem z _ (hV.image _)
     obtain ⟨y, hy, e⟩ := h₁
     have e' : W.ι y = W.ι (κ.left z) := e.trans (congrArg (fun q => q z) hκ).symm
-    rw [← W.ι.isOpenEmbedding.injective e']
-    exact hy
+    rwa [← W.ι.isOpenEmbedding.injective e']
   · have vψ : ∀ χ, val (ψW.psi χ) κ.left z J = val (D.psi χ) (𝟙 _) z J := fun χ => by
       have := (val_pull hJ _ _ _).symm.trans ((val_corr hJ (ψW.psi_eq χ) lam).trans (val_pull hJ _ _ _))
-      rw [hl] at this
-      exact this
+      rwa [hl] at this
     have vρ : val (D.rigW W) κ.left z J = val D.rigK (𝟙 _) z J := by
       refine (val_pull hJ _ _ _).trans (Eq.trans ?_ (val_pull hJ _ _ _).symm)
       rw [Category.id_comp]

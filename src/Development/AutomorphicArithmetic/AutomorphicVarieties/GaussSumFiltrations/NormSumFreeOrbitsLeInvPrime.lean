@@ -101,10 +101,8 @@ theorem norm_sum_free_orbits_le : ∀ (p : ℕ) [Fact p.Prime] (ι : Qbar p ≃+
       · intro x hx
         rw [Finset.mem_filter] at hx ⊢
         exact ⟨hs x hx.1, (hinv x hx.1).trans hx.2⟩
-      · intro x hx
-        exact hp x (Finset.mem_filter.1 hx).1
-      · intro x hx
-        exact hfree x (Finset.mem_filter.1 hx).1
+      · exact fun x hx => hp x (Finset.mem_filter.1 hx).1
+      · exact fun x hx => hfree x (Finset.mem_filter.1 hx).1
     obtain ⟨k, hk⟩ := hd
     rw [map_nsmul, nsmul_eq_mul, norm_mul, hk, Nat.cast_mul, norm_mul, norm_prime_Qbar_eq]
     have h1 : ‖((k : ℕ) : Qbar p)‖ ≤ 1 := IsUltrametricDist.norm_natCast_le_one _ k

@@ -53,8 +53,7 @@ private theorem mem_asIdeal_iff_mem_span_of_above (l : ℕ) [hl : Fact l.Prime] 
     refine hmax.eq_of_le (Ideal.comap_ne_top _ u.isPrime.ne_top) ?_
     rw [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap]
     have : (Rat.ringOfIntegersEquiv.symm : ℤ →+* 𝓞 ℚ) (l : ℤ) = (l : 𝓞 ℚ) := map_natCast _ l
-    rw [this]
-    exact hu
+    rwa [this]
   rw [hP, Ideal.mem_comap]
   have hx : (Rat.ringOfIntegersEquiv.symm : ℤ →+* 𝓞 ℚ) (Rat.ringOfIntegersEquiv x) = x :=
     RingEquiv.symm_apply_apply _ x
@@ -80,8 +79,7 @@ private theorem mt_conj {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
   show _ ↔ x ∈ Subring.map (MulSemiringAction.toRingHom (G ℚ Ω) Ω σ) A.toSubring
   rw [Subring.mem_map]
   constructor
-  · intro hx
-    exact ⟨σ.symm x, hx, by simp [MulSemiringAction.toRingHom_apply, AlgEquiv.smul_def]⟩
+  · exact fun hx => ⟨σ.symm x, hx, by simp [MulSemiringAction.toRingHom_apply, AlgEquiv.smul_def]⟩
   · rintro ⟨a, ha, rfl⟩
     simpa [MulSemiringAction.toRingHom_apply, AlgEquiv.smul_def] using ha
 
@@ -109,8 +107,7 @@ private theorem mt_cm {Ω : Type} [Field Ω] [CharZero Ω] (K F : IntermediateFi
   haveI : Algebra.IsQuadraticExtension F ↥(F ⊔ K) := ⟨by
     rw [hK] at hle
     have : Module.finrank F ↥(F ⊔ K) ≤ 2 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       have := Nat.mul_lt_mul_of_pos_left hc hpos
       omega
     omega⟩
@@ -118,8 +115,7 @@ private theorem mt_cm {Ω : Type} [Field Ω] [CharZero Ω] (K F : IntermediateFi
 
 private theorem mt_out {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (K F : IntermediateField ℚ Ω) [NumberField K]
     [NumberField F] [IsCMField K] [IsTotallyReal F] : ∃ h ∈ F.fixingSubgroup, h ∉ K.fixingSubgroup := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hle : F.fixingSubgroup ≤ K.fixingSubgroup := hcon
   have hKF : K ≤ F := by
     have h := IntermediateField.fixedField_le hle
@@ -155,8 +151,7 @@ private theorem mem_or_mul_mem_fixing_of_quadratic {Ω : Type} [Field Ω] [CharZ
     by_contra hm
     have e1 := hu _ hh
     have e2 := hu _ ht
-    have e3 := hu _ hm
-    exact ht (mul_eq_left.mp (e3.trans e1.symm))
+    exact ht (mul_eq_left.mp ((hu _ hm).trans e1.symm))
 
 private theorem exists_conj_between_valuationSubrings_of_common {Ω : Type} [Field Ω] [CharZero Ω] (F : IntermediateField ℚ Ω) (A B C : ValuationSubring Ω)
     (g g' : G F Ω) (h1 : ∀ x, g x ∈ A ↔ x ∈ B) (h2 : ∀ x, g' x ∈ C ↔ x ∈ B) :
@@ -199,8 +194,7 @@ private theorem exists_over_l_place_conj_agreeing_on_field {Ω : Type} [Field Ω
   refine ⟨A.comap (gm : Ω →+* Ω), ?_, ?_, gm, fun x => ?_⟩
   · have key := UpperTheory.V.val_lt_one (σ := gm.toRingEquiv) (A := A.comap (gm : Ω →+* Ω)) (A' := A)
       (fun x => by rw [ValuationSubring.mem_comap]; rfl) (l : Ω)
-    rw [← key, map_natCast]
-    exact hA
+    rwa [← key, map_natCast]
   · intro x hx
     rw [ValuationSubring.mem_comap, ← hσ, ← hmK x hx]
     rfl
@@ -238,8 +232,7 @@ theorem UpperTheory.V.Ws.mkTower :
       intro τ
       have key := UpperTheory.V.val_lt_one (σ := τ.toRingEquiv) (A := (D.pl l).comap (τ : Ω →+* Ω)) (A' := D.pl l)
         (fun x => by rw [ValuationSubring.mem_comap]; rfl) (l : Ω)
-      rw [← key, map_natCast]
-      exact hP
+      rwa [← key, map_natCast]
     choose f hf using fun ρ : F ≃ₐ[ℚ] F => hex _ (hA (hsurj ρ).choose)
     refine Finite.of_surjective f (fun q => ?_)
     obtain ⟨τ, hτ⟩ := mt_conj l (D.pl l) q.out.1 hP q.out.2.1

@@ -107,8 +107,7 @@ theorem exists_siegel_coordinates :
     rw [Matrix.transpose_apply, hτ, hτ, Sym2.eq_swap]
   refine ⟨{b | ((τ b).map Complex.im).PosDef}, τ, ?_, ?_, ?_, ?_, ?_⟩
   · apply isOpen_posDef_of_continuous (fun b => (τ b).map Complex.im)
-    · refine continuous_matrix fun i j => ?_
-      exact Complex.continuous_im.comp (continuous_apply (e s(i, j)))
+    · exact continuous_matrix fun i j => Complex.continuous_im.comp (continuous_apply (e s(i, j)))
     · intro b
       ext i j
       simp only [Matrix.conjTranspose_apply, star_trivial, Matrix.map_apply, hτ]
@@ -126,10 +125,8 @@ theorem exists_siegel_coordinates :
       simpa using hy
     · exact (Matrix.PosDef.smul hx ha').add_posSemidef
         (Matrix.PosSemidef.smul (Matrix.PosDef.posSemidef hy) hb)
-  · intro i j
-    exact differentiable_apply (𝕜 := ℂ) (e s(i, j))
-  · intro b hb
-    exact ⟨hsymm b, hb⟩
+  · exact fun i j => differentiable_apply (𝕜 := ℂ) (e s(i, j))
+  · exact fun b hb => ⟨hsymm b, hb⟩
   · intro t ht hp
     let f : Sym2 (Fin h) → ℂ := Sym2.lift ⟨fun i j => t i j, fun i j => (ht.apply i j).symm⟩
     have hf : τ (fun k => f (e.symm k)) = t := by

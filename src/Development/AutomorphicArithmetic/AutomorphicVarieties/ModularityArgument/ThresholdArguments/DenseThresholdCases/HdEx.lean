@@ -140,8 +140,7 @@ private theorem re_art {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algeb
     simp only [MonoidHom.comp_apply, this, map_one])
   apply hφ
   have h3 := DFunLike.congr_fun hχ (x * y⁻¹)
-  rw [MonoidHom.comp_apply χ, map_mul a, map_inv a, hxy, mul_inv_cancel, map_one] at h3
-  exact h3
+  rwa [MonoidHom.comp_apply χ, map_mul a, map_inv a, hxy, mul_inv_cancel, map_one] at h3
 private theorem re_eps {l : ℕ} [Fact l.Prime] (c : Coef l) {H : Type} [Group H] [TopologicalSpace H] [IsTopologicalGroup H]
     (ε : H →* ℤ_[l]ˣ) (hε : Continuous ε) :
     IsOpen (((Units.map ((algebraMap c.O (ResidueField c.O)).comp (algebraMap ℤ_[l] c.O)).toMonoidHom).comp ε).ker : Set H) := by
@@ -401,8 +400,7 @@ theorem UpperTheory.V.Hi.exists_theta_is_weight_of_lam_obj :
   refine ⟨θ, fun v i x g hg y e1 e2 => ?_, h2, fun K => th_free _ _ _ (neatU l L Ω s n hn V Q c m τ₀ K)⟩
   have e3 := hχ v i x g e1
   rw [e2, ← h1] at e3
-  rw [hκ]
-  exact e3
+  rwa [hκ]
 end
 end -- clump:auto
 end -- clump:auto

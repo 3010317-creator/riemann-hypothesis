@@ -123,8 +123,7 @@ theorem flagCoord_div_eq {Ω : Type} [Field Ω] {E : Type} [AddCommGroup E] [Mod
   rw [flagCoord_eq x h k J', flagCoord_eq x h c₀ J, map_div₀, mul_div_mul_comm,
     ← Finset.prod_div_distrib]
   congr 1
-  refine Finset.prod_congr rfl fun q _ => ?_
-  exact mul_div_mul_left _ _ (pow_ne_zero _ (pow_ne_zero _ hi))
+  exact Finset.prod_congr rfl fun q _ => mul_div_mul_left _ _ (pow_ne_zero _ (pow_ne_zero _ hi))
 
 theorem chartRing_eq_ratioRing : ∀ (Ω : Type) [Field Ω] (E : Type) [AddCommGroup E] [Module Ω E] (κ : Type)
     (x : κ → Ω) (S : Type) [Fintype S] (r n m : S → ℕ) (φ : ∀ s, Fin (n s) → Module.Dual Ω E)
@@ -337,8 +336,7 @@ theorem algebraicIndependent_of_mem_adjoin_range :
   subst heq
   have hinj : Function.Injective v' := by
     have hbij := (Set.rangeFactorization_surjective (f := v')).bijective_of_nat_card_le hcard
-    intro a b hab
-    exact hbij.1 (Subtype.ext hab)
+    exact fun a b hab => hbij.1 (Subtype.ext hab)
   have hv' : AlgebraicIndependent Ω v' := (algebraicIndependent_subtype_range hinj).mp htb.1
   exact hv'.map' (f := L.val) Subtype.val_injective
 
@@ -452,8 +450,7 @@ theorem perm_step {F : Type} [Field F] (O : Subring F) {r : ℕ} (Y : Matrix (Fi
       simp only [Function.comp_apply, Equiv.Perm.mul_apply]
       rw [e1, Equiv.Perm.viaFintypeEmbedding_apply_image, hg]
       rfl
-    rw [e]
-    exact hn
+    rwa [e]
   · obtain ⟨σ, hσ⟩ := exists_perm_restrict (m := k + 1) (j := j) hlt hj hk g
     have e : (⇑(w * g.viaFintypeEmbedding (castEmb hk)) ∘ Fin.castLE hj) =
         (w ∘ Fin.castLE hj) ∘ σ := by
@@ -484,8 +481,7 @@ theorem exists_perm_normAt {F : Type} [Field F] (O : Subring F) {r : ℕ} (Y : M
       have e : (⇑w ∘ Fin.castLE hj) = I := by
         funext a
         simp [hw]
-      rw [e]
-      exact hI
+      rwa [e]
     | succ d ih =>
       intro hd
       obtain ⟨w, hw⟩ := ih (by omega)
@@ -719,12 +715,10 @@ theorem exists_lu_of_leading_minors {F : Type} [Field F] {r : ℕ} (Y : Matrix (
       have h2 : (l : ℕ) = k := by simpa using Fin.ext_iff.1 hh
       have : (l : ℕ) < k := hlk
       omega
-    rw [e, Pi.single_eq_of_ne hne] at h1
-    exact h1
+    rwa [e, Pi.single_eq_of_ne hne] at h1
   · have h1 := hV l (Fin.last (l : ℕ))
     have e : Fin.castLE l.2 (Fin.last (l : ℕ)) = l := by ext; simp
-    rw [e, Pi.single_eq_same] at h1
-    exact h1
+    rwa [e, Pi.single_eq_same] at h1
 
 end GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.Cell
 end -- clump:auto

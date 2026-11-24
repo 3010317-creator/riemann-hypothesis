@@ -693,8 +693,7 @@ theorem pcFc : PcFc := by
         show (bl hn (0 : Mx D ρ ρ) 0 (adj (0 : Mx D ρ p)) 0 : Mx D n n) = 0
         rw [adj_zero, bl, Matrix.fromBlocks_zero]
         rfl
-      rw [hz, GlobalTheory.CompanionTheory.FourierN.nb_zero hC.1, one_mul] at this
-      exact this
+      rwa [hz, GlobalTheory.CompanionTheory.FourierN.nb_zero hC.1, one_mul] at this
     rw [e1, e2]
     simp only [chn_zero, mul_one]
     rw [show (fun y => pm hn m ψ b₀ (fun b => F (nb b * g)) y) = fun _ => pm hn m ψ b₀ (fun b => F (nb b * g)) 0 from funext key]

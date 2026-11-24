@@ -206,8 +206,7 @@ section Tensor
 theorem tprod_ne_zero {ι : Type} [Fintype ι] {X : ι → Type} [∀ i, AddCommGroup (X i)]
     [∀ i, Module ℂ (X i)] (x : ∀ i, X i) (hx : ∀ i, x i ≠ 0) : PiTensorProduct.tprod ℂ x ≠ 0 := by
   have : ∀ i, ∃ φ : Module.Dual ℂ (X i), φ (x i) ≠ 0 := fun i => by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hx i ((Module.forall_dual_apply_eq_zero_iff ℂ (x i)).1 h)
   choose φ hφ using this
   intro h0
@@ -251,8 +250,7 @@ theorem isSpherical_twist_of_empty_block : ∀ (k : Type) [Field k] [ValuativeRe
     refine (injective_iff_map_eq_zero G).2 fun y hy => ?_
     rcases subrep_dichotomy f hc hπ G.ker with h | h
     · have : y ∈ G.ker := hy
-      rw [h] at this
-      exact this
+      rwa [h] at this
     · exfalso
       obtain ⟨u, hu⟩ := hG (PiTensorProduct.tprod ℂ x)
       have : u ∈ G.ker := by rw [h]; trivial

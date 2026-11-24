@@ -140,8 +140,7 @@ theorem trace_dual_min {n : ℕ} (Λ : Submodule (𝓞 E) (Fin n → E))
     simp only [cc, map_mul]
     ring
   have h4 : herm 1 u u ∈ D⁻¹ * D⁻¹ := by
-    rw [← div_eq_mul_inv, FractionalIdeal.mem_div_iff_of_ne_zero hD0]
-    exact h3
+    rwa [← div_eq_mul_inv, FractionalIdeal.mem_div_iff_of_ne_zero hD0]
   have hnorm : ∀ σ : E →+* ℂ, ‖σ (herm 1 u u)‖ = ∑ k, ‖σ (u k)‖ ^ 2 := by
     intro σ
     rw [embedding_herm_self, Complex.norm_real, Real.norm_of_nonneg (by positivity)]
@@ -157,8 +156,7 @@ theorem trace_dual_min {n : ℕ} (Λ : Submodule (𝓞 E) (Fin n → E))
   have h5 := absNorm_le_abs_norm_of_mem h4 h0
   rw [map_mul, hD, absNorm_inv_differentIdeal] at h5
   have h6 : (dE E)⁻¹ * (dE E)⁻¹ ≤ |((Algebra.norm ℚ (herm 1 u u) : ℚ) : ℝ)| := by
-    have h := (Rat.cast_le (K := ℝ)).mpr h5
-    simpa [dE] using h
+    simpa [dE] using (Rat.cast_le (K := ℝ)).mpr h5
   have h7 := finrank_mul_abs_norm_rpow_le_sum (herm 1 u u)
   simp only [hnorm] at h7
   refine le_trans ?_ h7

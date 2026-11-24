@@ -128,12 +128,10 @@ theorem UpperTheory.V.X.Kato.resAway :
     intro y
     have key := hB (algebraMap (𝓞 ℚ) (𝓞 K) y)
     have hcoe : ((algebraMap (𝓞 ℚ) (𝓞 K) y : 𝓞 K) : K) = algebraMap ℚ K (y : ℚ) := rfl
-    rw [hcoe, ← IsScalarTower.algebraMap_apply] at key
-    exact key
+    rwa [hcoe, ← IsScalarTower.algebraMap_apply] at key
   have hlp : ((l : ℕ) : 𝓞 ℚ) ∉ p.asIdeal := by
     show _ ∉ Ideal.comap _ _
-    rw [Ideal.mem_comap, map_natCast]
-    exact hw
+    rwa [Ideal.mem_comap, map_natCast]
   obtain ⟨A, hA, x, hx⟩ := hyp p hlp
   obtain ⟨σ, hσ⟩ := exists_smul_eq_of_isPlaceOver hA hBp
   refine ⟨B, hB, ρ σ x - c σ, ?_⟩
@@ -182,8 +180,7 @@ theorem UpperTheory.V.X.Kato.bkRes :
     intro y
     have h := hs (g⁻¹ y)
     change σ (j₀ (g (g.symm y))) = j₀ (g (s (g.symm y))) at h
-    rw [AlgEquiv.apply_symm_apply] at h
-    exact h
+    rwa [AlgEquiv.apply_symm_apply] at h
   have h1 := hx ⟨_, ht⟩
   change c (s.restrictScalars ℚ) ⊗ₜ[ℚ_[l]] (1 : UpperTheory.V.Loc.Bcr l) =
     TensorProduct.AlgebraTensorModule.map (ρ (s.restrictScalars ℚ)) ((UpperTheory.V.Loc.PP l).actQ σ).toLinearMap _ - _
@@ -290,8 +287,7 @@ private theorem zero_NS {l : ℕ} [Fact l.Prime] {F Ω : Type} [Field F] [Number
   have hin : ∀ w, w ∉ S → ∀ A : ValuationSubring Ω, IsPlaceOver A w → ∀ s ∈ Ine (F := F) A, s ∈ NS Ω S := by
     intro w hw A hA s hs
     refine Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure ?_)
-    simp only [Set.mem_iUnion]
-    exact ⟨w, hw, A, hA, hs⟩
+    simpa only [Set.mem_iUnion] using ⟨w, hw, A, hA, hs⟩
   have hN : NS Ω S ≤ N := by
     refine Subgroup.topologicalClosure_minimal _ (Subgroup.normalClosure_le_normal fun s hs => ?_) hcl
     simp only [Set.mem_iUnion] at hs

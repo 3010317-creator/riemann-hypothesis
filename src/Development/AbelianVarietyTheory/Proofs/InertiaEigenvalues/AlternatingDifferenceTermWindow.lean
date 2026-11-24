@@ -92,8 +92,7 @@ theorem exists_scale {a : K.O} (ha : K.Small a) (y : B.A) :
   obtain ⟨m, hm⟩ := IsDiscreteValuationRing.associated_pow_irreducible hy0 hϖ
   have hdvd : ϖ ∣ a := by
     have := ha.2.1
-    rw [hϖ.maximalIdeal_eq, Ideal.mem_span_singleton] at this
-    exact this
+    rwa [hϖ.maximalIdeal_eq, Ideal.mem_span_singleton] at this
   obtain ⟨w, hw⟩ : y0 ∣ a ^ m := hm.dvd.trans (pow_dvd_pow_of_dvd hdvd m)
   refine ⟨m, fun n hn => isIntegral_zpow_smul_of_le B ha hn ?_⟩
   rw [zpow_natCast]
@@ -111,8 +110,7 @@ theorem exists_bound {a : K.O} (ha : K.Small a) {t : K.E} (ht : t ≠ 0) :
   have hnu : ¬ IsUnit a := fun hu => (IsLocalRing.mem_maximalIdeal a).1 ha.2.1 hu
   obtain ⟨C, hC⟩ := FiniteMultiplicity.of_not_isUnit hnu hn0
   refine ⟨C, fun m hm => ?_⟩
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   obtain ⟨b, hb⟩ := hm
   obtain ⟨j, hj⟩ : ∃ j : ℕ, m = -(j : ℤ) := ⟨(-m).toNat, by omega⟩
   apply hC
@@ -142,8 +140,7 @@ theorem trace_ne_zero_of_idem {f : B.A} (hf : IsIdempotentElem f) (h0 : f ≠ 0)
   have hmem : f ∈ LinearMap.range g := ⟨1, by change f * 1 = f; rw [mul_one]⟩
   have hpos : LinearMap.range g ≠ ⊥ := by
     intro hb; rw [hb, Submodule.mem_bot] at hmem; exact h0 hmem
-  rw [Ne, Nat.cast_eq_zero, Submodule.finrank_eq_zero]
-  exact hpos
+  rwa [Ne, Nat.cast_eq_zero, Submodule.finrank_eq_zero]
 
 theorem not_isIntegral_inv_smul_idem {a : K.O} (ha : K.Small a) {f : B.A} (hf : IsIdempotentElem f)
     (h0 : f ≠ 0) : ¬ IsIntegral K.O (al K a ^ (-1 : ℤ) • f) := by
@@ -297,8 +294,7 @@ theorem GlobalTheory.UnitLemma.Desc.term_window : ∀ (K : UQ) (B : InvAlg K) (�
     rw [prod_mul_eq]
     exact mem_of_pos B ha hP i (hc _ (memT J hJ _ (by simp))) k hi
   have dualS : ∀ J ⊆ S, ∀ i, (c : ℤ) ≤ p i → InDual B (e i * ((∏ j ∈ J, π j) * s)) M := by
-    intro J hJ i hi
-    exact inDual_of_pos B ha hP i (hc _ (memT J hJ _ (by simp))) hi
+    exact fun J hJ i hi => inDual_of_pos B ha hP i (hc _ (memT J hJ _ (by simp))) hi
   constructor
   · intro hne
     unfold term at hne
@@ -323,8 +319,7 @@ theorem GlobalTheory.UnitLemma.Desc.term_window : ∀ (K : UQ) (B : InvAlg K) (�
       rw [heq, LinearMap.map_smul, smul_eq_mul] at ht
       have := hCt i _ ht
       omega
-    · by_contra hb
-      push Not at hb
+    · by_contra! hb
       set w := (∏ j ∈ J, π j) * x
       have hw : IsUnit w := (hPu J (hJ.trans hIS)).mul hx
       have h1 := (hP i).2 _ hJM
@@ -340,15 +335,13 @@ theorem GlobalTheory.UnitLemma.Desc.term_window : ∀ (K : UQ) (B : InvAlg K) (�
       apply not_isIntegral_inv_smul_idem B ha (hF.1.1.idem i) (ne_zero_of_isPre B hF.1 i)
       exact isIntegral_zpow_smul_of_le B ha (by push_cast; omega) h3
     · intro hiI
-      by_contra hc'
-      push Not at hc'
+      by_contra! hc'
       apply hne1
       rw [indM_eq]
       refine dlt_ind_eq_zero B _ hiI (hπ i (hIS hiI)) _ fun J hJ => ?_
       exact memU J (hJ.trans hIS) i (by omega)
     · intro hiI'
-      by_contra hd
-      push Not at hd
+      by_contra! hd
       apply hne2
       rw [indD_eq]
       refine dlt_ind_eq_zero B _ hiI' (hπ i (hI'S hiI')) _ fun J hJ => ?_

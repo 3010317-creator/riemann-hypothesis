@@ -240,8 +240,7 @@ theorem UpperTheory.exists_power_decomposition_of_root_of_unity :
     have e : T.s ^ (2 * m) * (ω * T.t ^ m) = ω * T.s ^ m := by
       rw [two_mul, pow_add]
       linear_combination ω * T.s ^ m * hts
-    rw [e]
-    exact hC
+    rwa [e]
   refine ⟨hu, fun σ hσ => ?_⟩
   rw [memS] at hσ
   obtain ⟨b₁, hb₁, c₁, hc₁, p₁, hy, hp1, hp2⟩ :=
@@ -267,8 +266,7 @@ theorem UpperTheory.exists_power_decomposition_of_root_of_unity :
         (T.B.mul_mem (T.B.pow_mem hB _) hp1)
     · have ec : T.s ^ (q * m) * (T.t ^ (q * m) * c₁) = c₁ := by
         linear_combination c₁ * hqm
-      rw [ec]
-      exact hc₁
+      rwa [ec]
   have hb : b₁ ∈ T.S (q * m) := by
     rw [memS]
     refine ⟨hb₁, ?_⟩
@@ -285,8 +283,7 @@ theorem UpperTheory.exists_power_decomposition_of_root_of_unity :
     have e : T.s ^ (2 * m) * (ω * T.t ^ m * p₁) = ω * T.s ^ m * p₁ := by
       rw [two_mul, pow_add]
       linear_combination (ω * T.s ^ m * p₁) * hts
-    rw [e]
-    exact hp2
+    rwa [e]
   refine ⟨T.t ^ (q * m) * c₁, ha, b₁, hb, -(r • (ω * T.t ^ m * p₁)),
     Submodule.neg_mem _ (Submodule.smul_mem _ r hpS), ?_⟩
   have hrq : algebraMap A D r * (q : D) = 1 := by
@@ -312,8 +309,7 @@ private theorem coord_mem_of_mem {A D ι : Type} [CommRing A] [CommRing D] [Alge
     (β : Module.Basis ι A D) (I : Ideal A) {x : D} (hx : x ∈ I.map (algebraMap A D)) (i : ι) :
     β.repr x i ∈ I := by
   have hx' : x ∈ I • (⊤ : Submodule A D) := by
-    rw [Ideal.smul_top_eq_map]
-    exact hx
+    rwa [Ideal.smul_top_eq_map]
   refine Submodule.smul_induction_on (p := fun y => β.repr y i ∈ I) hx' ?_ ?_
   · intro a ha n _
     rw [map_smul, Finsupp.smul_apply, smul_eq_mul]
@@ -464,8 +460,7 @@ theorem UpperTheory.exists_section_lift_of_etale_of_henselian :
   obtain ⟨P⟩ := hstd.nonempty_standardEtalePresentation
   have hunit : ∀ y : Submonoid.powers f, IsUnit (π y) := by
     rintro ⟨_, n, rfl⟩
-    simp only [map_pow]
-    exact (isUnit_iff_ne_zero.mpr fun h => hfQ (RingHom.mem_ker.mpr h)).pow n
+    simpa only [map_pow] using (isUnit_iff_ne_zero.mpr fun h => hfQ (RingHom.mem_ker.mpr h)).pow n
   let πf : Localization.Away f →ₐ[A] ResidueField A := IsLocalization.liftAlgHom (M := Submonoid.powers f) hunit
   let ι : E →ₐ[A] Localization.Away f := IsScalarTower.toAlgHom A E _
   have hπ : ∀ x, πf (ι x) = π x := fun x => by
@@ -789,8 +784,7 @@ private lemma coord_setup (T : TC A D) (hC : T.Coord) (j : ℕ) :
     by_cases h : i = k
     · subst h; simp
     · rw [ite_eq_right, ite_eq_right h]
-      intro h'
-      exact h (F.equivFin.symm.injective (Subtype.ext h'.symm))
+      exact fun h' => h (F.equivFin.symm.injective (Subtype.ext h'.symm))
   · intro x hx hL
     rw [mem_S, hSB, hSC] at hx
     have h0 : β.repr x = 0 := by
@@ -866,8 +860,7 @@ theorem UpperTheory.exists_factorization_near_root_of_unity_henselian :
     · exact h
   obtain ⟨T', hT'F, hT't, -, hlift, hproj, -, -⟩ := exists_twoChart_quotient_of_finite_coord A D T hF hC M
   have hω' : (Ideal.Quotient.mk J ω) ^ q = 1 := by
-    rw [← map_pow, ← map_one (Ideal.Quotient.mk J), Ideal.Quotient.eq]
-    exact hωJ
+    rwa [← map_pow, ← map_one (Ideal.Quotient.mk J), Ideal.Quotient.eq]
   obtain ⟨m₀, hm₀⟩ := exists_power_decomposition_of_root_of_unity A (D ⧸ J) T' hT'F q hq hq0 (Ideal.Quotient.mk J ω) hω'
   obtain ⟨k₁, hk₁⟩ := T.locB ω
   obtain ⟨k₂, hk₂⟩ := T.locC ω
@@ -926,8 +919,7 @@ theorem UpperTheory.exists_factorization_near_root_of_unity_henselian :
     intro i j
     have h1 := L_mem M L _ (hkey j) i
     rw [map_sub, Pi.sub_apply, hLe i j] at h1
-    rw [hd0]
-    exact h1
+    rwa [hd0]
   obtain ⟨x, hxM, hΦx⟩ := exists_zero_of_linear_form_jacobian_henselian A D n Φ L h0 hd
   set y : Fin n → D := fun j => algebraMap A D (x j) with hy
   have hsum : ∀ (j : ℕ) (v : Fin n → D), (∀ k, v k ∈ T.S j) → ∑ k, v k * y k ∈ T.S j := by
@@ -1053,8 +1045,7 @@ theorem UpperTheory.exists_monic_laurent_polynomial_near_root_of_unity :
         exact (hcomm a).symm
       rw [this]
       exact Ideal.mem_map_of_mem _ (Ideal.mem_map_of_mem _ ha)
-    · intro x y hx hy
-      exact Ideal.add_mem _ hx hy
+    · exact fun x y hx hy => Ideal.add_mem _ hx hy
   obtain ⟨Q, hQm, hQ0, hQc⟩ := Polynomial.exists_monic_aeval_eq_zero_forall_mem_of_mem_map hu
   set I := (maximalIdeal A).map (algebraMap A (LaurentPolynomial A)) with hIdef
   have hmon : (Polynomial.X ^ q - 1 : Polynomial (LaurentPolynomial A)).Monic := by
@@ -1184,8 +1175,7 @@ private theorem chart_eq {e : ℤ → D} (e0 : e 0 = 1) (ea : ∀ a b, e (a + b)
       | mem x hx =>
         rcases hx with rfl | hx
         · exact ht
-        · rw [Set.mem_singleton_iff.1 hx]
-          exact hy
+        · rwa [Set.mem_singleton_iff.1 hx]
       | algebraMap c =>
         intro m hm
         rw [← Algebra.smul_def]
@@ -1332,16 +1322,14 @@ private theorem assemble {e : ℤ → D} (e0 : e 0 = 1) (ea : ∀ a b, e (a + b)
         · intro hx
           refine ⟨e (-(j : ℤ)) * x, ?_, ?_⟩
           · have h : T.s ^ j * x ∈ Subalgebra.toSubmodule T.C := hx
-            rw [show T.s ^ j = e (-(j : ℤ)) from hsj] at h
-            exact h
+            rwa [show T.s ^ j = e (-(j : ℤ)) from hsj] at h
           · simp only [LinearMap.mulLeft_apply]
             rw [← mul_assoc, mul_comm (e j), hjj, one_mul]
         · rintro ⟨m, hm, rfl⟩
           have h : T.s ^ j * (e j * m) = m := by
             rw [show T.s ^ j = e (-(j : ℤ)) from hsj, ← mul_assoc, hjj, one_mul]
           show T.s ^ j * (e j * m) ∈ Subalgebra.toSubmodule T.C
-          rw [h]
-          exact hm
+          rwa [h]
       have hC2 : Subalgebra.toSubmodule T.C = Submodule.span A
           {x | ∃ (a : ℤ) (i : ℕ), i < N ∧ (k : ℤ) * i ≤ a ∧
             x = (fun a => e (-a)) a * r ^ i} := hC
@@ -1454,8 +1442,7 @@ private theorem isUnit_aeval_derivative {S : Type} [CommRing S] {q : ℕ} (hq : 
     {x : S} (hx : IsNilpotent (x ^ q - 1)) :
     IsUnit (Polynomial.aeval x (Polynomial.derivative (Polynomial.X ^ q - 1 : Polynomial ℤ))) := by
   have hxq : IsUnit (x ^ q) := by
-    have h := IsNilpotent.isUnit_add_one hx
-    simpa using h
+    simpa using IsNilpotent.isUnit_add_one hx
   have hxu : IsUnit x := (isUnit_pow_iff hq0).1 hxq
   have h2 : Polynomial.aeval x (Polynomial.derivative (Polynomial.X ^ q - 1 : Polynomial ℤ))
       = (q : S) * x ^ (q - 1) := by
@@ -1516,8 +1503,7 @@ private lemma mm_map {A E D : Type} [CommRing A] [IsLocalRing A] [CommRing E] [A
 private lemma adjoin_map {A E D : Type} [CommRing A] [CommRing E] [Algebra A E] [CommRing D] [Algebra A D]
     (ψ : E →ₐ[A] D) (S : Set E) (B : Subalgebra A D) (h : ∀ x ∈ S, ψ x ∈ B) :
     ∀ x ∈ Algebra.adjoin A S, ψ x ∈ B := by
-  intro x hx
-  exact (Algebra.adjoin_le (S := B.comap ψ) h) hx
+  exact fun x hx => (Algebra.adjoin_le (S := B.comap ψ) h) hx
 
 private lemma root_mem {S K : Type} [CommRing S] [Nontrivial S] [CommRing K] [IsDomain K] (f : S →+* K)
     (h : ∀ p : Polynomial S, p.Monic → 0 < p.natDegree → ∃ a, p.eval a = 0) (x : K) :
@@ -1534,8 +1520,7 @@ private lemma root_mem {S K : Type} [CommRing S] [Nontrivial S] [CommRing K] [Is
     have hfac := (Polynomial.mul_divByMonic_eq_iff_isRoot (p := p) (a := a)).mpr ha
     have hmX : (Polynomial.X - Polynomial.C a).Monic := Polynomial.monic_X_sub_C a
     have hp' : ((Polynomial.X - Polynomial.C a) * (p /ₘ (Polynomial.X - Polynomial.C a))).Monic := by
-      rw [hfac]
-      exact hp
+      rwa [hfac]
     have hmq : (p /ₘ (Polynomial.X - Polynomial.C a)).Monic := hmX.of_mul_monic_left hp'
     have hdq : (p /ₘ (Polynomial.X - Polynomial.C a)).natDegree = n := by
       have := hmX.natDegree_mul hmq
@@ -1681,10 +1666,8 @@ theorem UpperTheory.exists_near_root_of_unity_product_decomposition :
   obtain ⟨η, hη, hηq, hηe⟩ := unity_ratio T.C hC q hq0 (ψ μ) (u * v)
     (by rw [mul_pow, huq, hvq, ← hGG, mul_comm])
   refine ⟨u, hu, η * v, mul_mem hη hv, ?_, ?_, ?_⟩
-  · rw [huq]
-    exact hG'1
-  · rw [mul_pow, hηq, one_mul, hvq]
-    exact hG1
+  · rwa [huq]
+  · rwa [mul_pow, hηq, one_mul, hvq]
   have hμe : u * (η * v) = ψ μ := by
     rw [hηe]
     ring
@@ -1695,8 +1678,7 @@ theorem UpperTheory.exists_near_root_of_unity_product_decomposition :
   have toQ : ∀ x : D, x ∈ mm (⊤ : Subalgebra A D) →
       Ideal.Quotient.mk ((maximalIdeal A).map (algebraMap A D)) x = 0 := by
     intro x hx
-    rw [Ideal.Quotient.eq_zero_iff_mem, ← mem_mm_top_iff]
-    exact hx
+    rwa [Ideal.Quotient.eq_zero_iff_mem, ← mem_mm_top_iff]
   rw [mem_mm_top_iff, ← Ideal.Quotient.eq_zero_iff_mem, map_sub, sub_eq_zero]
   apply (UpperTheory.roots_of_unity_lift_mod_nilpotent_unique _ q hqD).2
   · have := toQ _ hw
@@ -1708,8 +1690,7 @@ theorem UpperTheory.exists_near_root_of_unity_product_decomposition :
   · obtain ⟨N, hN⟩ := hynil
     refine ⟨N, ?_⟩
     have h1 : (AdjoinRoot.root P - ω) ^ N ∈ (maximalIdeal A).map (algebraMap A (AdjoinRoot P)) := by
-      rw [← Ideal.Quotient.eq_zero_iff_mem, map_pow, map_sub]
-      exact hN
+      rwa [← Ideal.Quotient.eq_zero_iff_mem, map_pow, map_sub]
     have h2 : ψ ((AdjoinRoot.root P - ω) ^ N) ∈ (maximalIdeal A).map (algebraMap A D) := by
       have := Ideal.mem_map_of_mem (ψ : AdjoinRoot P →+* D) h1
       rwa [Ideal.map_map, AlgHom.comp_algebraMap] at this
@@ -1717,8 +1698,7 @@ theorem UpperTheory.exists_near_root_of_unity_product_decomposition :
         Ideal.Quotient.mk ((maximalIdeal A).map (algebraMap A D)) (ψ ω) := by
       rw [← sub_eq_zero, ← map_sub]
       exact toQ _ hM
-    rw [h3, ← map_sub, ← map_pow, Ideal.Quotient.eq_zero_iff_mem, ← hψr, ← map_sub, ← map_pow]
-    exact h2
+    rwa [h3, ← map_sub, ← map_pow, Ideal.Quotient.eq_zero_iff_mem, ← hψr, ← map_sub, ← map_pow]
 
 end
 end -- clump:auto

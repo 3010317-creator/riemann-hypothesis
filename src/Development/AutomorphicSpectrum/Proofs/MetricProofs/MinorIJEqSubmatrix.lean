@@ -185,10 +185,8 @@ theorem schurPlane_posDef {H : Matrix (Fin N) (Fin N) ℂ} (hH : H.PosDef) (C : 
   have := ReciprocityTheory.MultiplicativeHeights.sc_schur_posDef _ _ hA hM
   have e2 : (H.submatrix (C.orderEmbOfFin rfl) ![ca, cb])ᴴ = H.submatrix ![ca, cb] (C.orderEmbOfFin rfl) := by
     ext x y
-    simp only [submatrix_apply, conjTranspose_apply]
-    exact hH.1.apply _ _
-  rw [e2] at this
-  exact this
+    simpa only [submatrix_apply, conjTranspose_apply] using hH.1.apply _ _
+  rwa [e2] at this
 
 theorem minor_block (H U U' : Matrix (Fin N) (Fin N) ℂ) (C : Finset (Fin N)) (ca cb : Fin N) {m : ℕ}
     (hA : IsUnit (H.submatrix (C.orderEmbOfFin rfl) (C.orderEmbOfFin rfl)).det)
@@ -292,8 +290,7 @@ theorem core (H : Matrix (Fin N) (Fin N) ℂ) (hH : H.PosDef) (C : Finset (Fin N
     Finset.card_insert_of_notMem (hnot r)
   have hca : ca ∉ C := hnot 0
   have hcb' : cb ∉ insert ca C := by
-    simp only [Finset.mem_insert, not_or]
-    exact ⟨hab.ne', hnot 1⟩
+    simpa only [Finset.mem_insert, not_or] using ⟨hab.ne', hnot 1⟩
   constructor
   · intro r s
     have h := minor_block H 1 1 C ca cb hA (fun _ : Fin 1 => ![ca, cb] r) (fun _ => ![ca, cb] s)

@@ -181,8 +181,7 @@ theorem subset_closure_ne {e : ℕ} (ψ : OpenPartialHomeomorph X (Fin e → ℂ
   refine closure_mono ?_ h1
   rintro _ ⟨z, ⟨⟨hz1, hz2⟩, hz3⟩, rfl⟩
   refine ⟨hz2, ?_⟩
-  rw [ψ.right_inv hz1]
-  exact hz3
+  rwa [ψ.right_inv hz1]
 
 theorem exists_quot {e : ℕ} (A : FinHolAtlas e X) {ψ φ : OpenPartialHomeomorph X (Fin e → ℂ)}
     (hψ : IsCompatChart A ψ) (hφ : IsCompatChart A φ) {i j : Fin e}
@@ -251,8 +250,7 @@ theorem exists_sliceAtlas {e : ℕ} (A : FinHolAtlas (e + 1) X) (S : Set X) [Com
     obtain ⟨p, hpt, hw⟩ := mem_iUnion₂.1 (ht (mem_univ w))
     refine ⟨t.equivFin ⟨p, hpt⟩, ?_⟩
     simpa [f] using hw
-  · intro j j'
-    exact slice_trans A S (hS (f j)) (hS (f j')) (f j) (f j') (hc (f j)) (hc (f j'))
+  · exact fun j j' => slice_trans A S (hS (f j)) (hS (f j')) (f j) (f j') (hc (f j)) (hc (f j'))
 
 theorem compat_restrOpen {e : ℕ} {A : FinHolAtlas e X}
     {ψ : OpenPartialHomeomorph X (Fin e → ℂ)} (hc : IsCompatChart A ψ) {V : Set X}
@@ -385,8 +383,7 @@ theorem local_div {e : ℕ} (A : FinHolAtlas e X) {ψ φ : OpenPartialHomeomorph
   · have h1 : u₂ y * h y ≠ 0 := mul_ne_zero (hu₂0 _ hy.2) (hh0 _ hy)
     have h2 := key hy
     show a y = u y / (u₂ y * h y) * P y
-    rw [div_mul_eq_mul_div, eq_div_iff h1]
-    exact h2
+    rwa [div_mul_eq_mul_div, eq_div_iff h1]
 
 theorem slice_snc {e : ℕ} (A : FinHolAtlas (e + 1) X) (L L' : LocPot X) (s v : X → X → ℂ)
     {n : ℕ} (m : Fin n → ℕ) (W : Fin n → Set X) (Dg : Set X) (B : FinHolAtlas e Dg)
@@ -553,8 +550,7 @@ theorem levi_rsmul_eq (A : FinHolAtlas e X) (Θ : LocPot X) (hΘ : IsPotential A
     (j : Fin A.n) {y : Fin e → ℂ} (hy : y ∈ (A.chart j).target)
     (h : (A.chart j).symm y ∈ Θ.U x) (w : Fin e → ℂ) :
     levi ((Θ.rsmul c).φ x ∘ (A.chart j).symm) y w = c * levi (Θ.φ x ∘ (A.chart j).symm) y w := by
-  have hC := potential_contDiffAt_chart hΘ x j hy h
-  exact TailChernBound.levi_smul' c hC w
+  exact TailChernBound.levi_smul' c (potential_contDiffAt_chart hΘ x j hy h) w
 
 theorem isPosPot_rsmul (A : FinHolAtlas e X) (Θ : LocPot X) (hΘ : IsPotential A Θ)
     (hpos : IsPosPot A Θ) {c : ℝ} (hc : 0 < c) : IsPosPot A (Θ.rsmul c) := by
@@ -613,8 +609,7 @@ theorem locDens_sub_const (A : FinHolAtlas e X) (Φ Φ' : Fin e → LocPot X) (c
   have : (fun k => hessC (fun y' => (Φ' k).φ ((A.chart j).symm y) ((A.chart j).symm y')) y) =
       fun k => hessC (fun y' => (Φ k).φ ((A.chart j).symm y) ((A.chart j).symm y')) y := by
     funext k
-    simp only [h]
-    exact hessC_sub_const _ _ _
+    simpa only [h] using hessC_sub_const _ _ _
   rw [this]
 
 theorem mInt_sub_const (A : FinHolAtlas e X) (Φ Φ' : Fin e → LocPot X) (c : Fin e → ℝ)
@@ -698,10 +693,8 @@ theorem tail_mixed (hTB : TailBoundStatement) {n : ℕ} {Y : Type} [TopologicalS
       exact ⟨this, le_rfl⟩
   · intro i x y
     by_cases hi : (i : ℕ) < b
-    · simp only [hi, ite_true]
-      exact h1 i hi x y
-    · simp only [hi, ite_false, add_zero]
-      exact h2 i hi x y
+    · simpa only [hi, ite_true] using h1 i hi x y
+    · simpa only [hi, ite_false, add_zero] using h2 i hi x y
 
 end Tail
 
@@ -757,8 +750,7 @@ theorem isPosPot_pull_of_half {e e' : ℕ} {X X' : Type} [TopologicalSpace X] [T
       (fun x z hz => hz.1.1) (fun x z => ?_) hQpsh
     show _ + 0 + 0 * _ = _
     ring
-  · intro x z hz
-    exact ⟨⟨hz, hsub _ hz⟩, hsub _ hz⟩
+  · exact fun x z hz => ⟨⟨hz, hsub _ hz⟩, hsub _ hz⟩
   · intro x z
     show P.φ (h x) (h z) = (P.φ (h x) (h z) + -(1 / 2) * Θ.φ (h x) (h z)) + 0 +
       1 / 2 * Θ.φ (h x) (h z)
@@ -827,8 +819,7 @@ theorem green_small_core (hUI : GroundTheory.Heights₂.Heights.AnalyticLimit.Un
       funext k
       fin_cases k
       rfl
-    rw [e1, e2]
-    exact hsncv
+    rwa [e1, e2]
   have e3 : (Subtype.val ⁻¹' (bdry s)ᶜ : Set Dg)ᶜ = bdry (fun x y : Dg => s x.1 y.1) := by
     ext y
     simp [bdry]
@@ -1126,8 +1117,7 @@ theorem limit_bound (μ : Measure X) (μT : ℝ → Measure X) (N : X → ℝ) [
     ⟨(green_measurable hN ε).aestronglyMeasurable,
       (hasFiniteIntegral_iff_ofReal hnn).2 (lt_of_le_of_lt hbound ENNReal.ofReal_lt_top)⟩
   refine ⟨hG, ?_⟩
-  rw [← ENNReal.ofReal_le_ofReal_iff hη, ofReal_integral_eq_lintegral_ofReal hG hnn]
-  exact hbound
+  rwa [← ENNReal.ofReal_le_ofReal_iff hη, ofReal_integral_eq_lintegral_ofReal hG hnn]
 
 theorem neg_log_split {a ε : ℝ} (hε : 0 < ε) (ha : 0 < a) :
     -Real.log a = (1 / 2) * Real.log (1 + ε / a ^ 2) + -Real.log (a ^ 2 + ε) / 2 := by
@@ -1331,8 +1321,7 @@ theorem unifInt_holds : UnifIntStatement := by
       congrArg _ (Subsingleton.elim _ _)
     have hint : Integrable (fun y => -logNormSec L' v y)
         (maMeasure A (fun i => th i + LocPot.ofFun (ph i) + Θ)) := Integrable.of_finite
-    simp only [hμeq]
-    exact ⟨hint, Filter.Eventually.of_forall fun _ => hint, tendsto_const_nhds⟩
+    simpa only [hμeq] using ⟨hint, Filter.Eventually.of_forall fun _ => hint, tendsto_const_nhds⟩
   | succ e =>
     have hsmall := _root_.GlobalTheory.CompanionTheory.Ar.Giv.green_small_uniform GroundTheory.Heights₂.Heights.AnalyticLimit.UniformIntegrability.full
       GlobalTheory.CompanionTheory.Ar.Giv.tailBound_holds A Θ L s m W hΘ hΘpos hL hs hsnc hsle L' v Dg hL' hv hvsnc

@@ -143,8 +143,7 @@ theorem linear_eq_zero_of_discrete {g g' : ℕ} (Λ : Submodule ℤ (Fin g' → 
     (F : (Fin g → ℂ) →ₗ[ℂ] (Fin g' → ℂ)) (h : ∀ z, F z ∈ Λ) : F = 0 := by
   have hc : Continuous fun z => (⟨F z, h z⟩ : Λ) := F.continuous_of_finiteDimensional.subtype_mk _
   refine LinearMap.ext fun z => ?_
-  have e := congrArg Subtype.val (PreconnectedSpace.constant inferInstance hc (x := z) (y := 0))
-  simpa using e
+  simpa using congrArg Subtype.val (PreconnectedSpace.constant inferInstance hc (x := z) (y := 0))
 
 end Linear
 
@@ -177,8 +176,7 @@ theorem IsExp.comp_equiv (he : IsExp e) (h : (Fin g' → ℂ) ≃ₗ[ℂ] (Fin g
     fun w v => deriv_linear he.2.2.1 h.toLinearMap
   refine ⟨fun z w => by simp only [map_add (f := _), he.1 _ _], he.2.1.comp h.surjective, isHolTo_linear he.2.2.1 h.toLinearMap,
     fun w => ?_, fun v hv => ?_⟩
-  · simp only [hd]
-    exact he.2.2.2.1 (h w)
+  · simpa only [hd] using he.2.2.2.1 (h w)
   · simp only [hd]
     simp only [map_zero] at hv
     exact (h.toEquiv.existsUnique_congr_left (p := fun w => IsDerivAt0 (fun z => (e z).left) (h w) v.left)).2
@@ -248,14 +246,12 @@ theorem isExp_push {G' : Over (Sp ℂ)} [GrpObj G'] {φ : G'.left ⟶ G.left} (h
     (hΦ : ∀ x, (Φ x).left = x.left ≫ φ) : IsExp fun z => Φ (u.ex z) := by
   have hd : ∀ w (v : epsR ℂ ⟶ G'), IsTangent v → u.IsDiff w v →
       IsDerivAt0 (fun z => (Φ (u.ex z)).left) w (v.left ≫ φ) := fun w v hv hw => by
-    simp only [hΦ]
-    exact deriv_comp (e := fun z => (u.ex z).left) ⟨tangent_comp hv, hw⟩ φ
+    simpa only [hΦ] using deriv_comp (e := fun z => (u.ex z).left) ⟨tangent_comp hv, hw⟩ φ
   let Ψ : (epsR ℂ ⟶ G') ≃* (epsPt y ⟶ G) := ObjPull.pushEquiv hφ (epsR ℂ)
   refine ⟨fun z w => by simp only [u.ex_add, map_mul], Φ.surjective.comp u.ex_onto, ?_, fun w => ?_, fun v hv => ?_⟩
   · simp only [hΦ]
     refine isHolTo_comp (e := fun z => (u.ex z).left) (fun U f => ?_) φ
-    simp only [Set.mem_univ, true_and]
-    exact u.hol U f
+    simpa only [Set.mem_univ, true_and] using u.hol U f
   · obtain ⟨v, ⟨hv, hw⟩, -⟩ := h2 w
     exact ⟨Ψ v, hd w v hv hw, fun v' hv' => Over.OverMorphism.ext (deriv_unique hv' (hd w v hv hw))⟩
   · obtain ⟨v, rfl⟩ := Ψ.surjective v

@@ -117,11 +117,9 @@ theorem eq_smul_of_commute_of_ev : ∀ (n : ℕ) (V : Type) [NormedAddCommGroup 
       intro w hw
       simpa [Module.algebraMap_end_apply] using S₁.smul_mem r hw
     | add S T _ _ hS' hT' =>
-      intro w hw
-      exact S₁.add_mem (hS' w hw) (hT' w hw)
+      exact fun w hw => S₁.add_mem (hS' w hw) (hT' w hw)
     | mul S T _ _ hS' hT' =>
-      intro w hw
-      exact hS' _ (hT' w hw)
+      exact fun w hw => hS' _ (hT' w hw)
   have hcomm : ∀ T ∈ A, z * T = T * z := by
     intro T hT
     induction hT using Algebra.adjoin_induction with
@@ -667,8 +665,7 @@ variable {n : ℕ}
 theorem contDiff_det_of_entries {ι : Type} [Fintype ι] [DecidableEq ι] {M : Mat n → Matrix ι ι ℂ}
     (h : ∀ a b, ContDiff ℝ ∞ fun g => M g a b) : ContDiff ℝ ∞ fun g => (M g).det := by
   simp only [Matrix.det_apply']
-  refine ContDiff.sum fun σ _ => contDiff_const.mul ?_
-  exact contDiff_prod fun i _ => h _ _
+  exact ContDiff.sum fun σ _ => contDiff_const.mul (contDiff_prod fun i _ => h _ _)
 
 theorem contDiff_lm (j : Fin n) : ContDiff ℝ ∞ (lm j) :=
   contDiff_det_of_entries fun _ _ => _root_.GlobalTheory.CompanionTheory.LengthGL.contDiff_ent _ _
@@ -736,8 +733,7 @@ theorem lm_ne_zero (j : Fin n) (hj : ¬ (j : ℕ) + 1 < n) {g : Mat n} (hg : g �
       simp only [Fintype.card_fin]
       omega⟩
   have e : lm j g = g.det := Matrix.det_submatrix_equiv_self (Equiv.ofBijective _ hb) g
-  rw [e]
-  exact hg
+  rwa [e]
 
 end GlobalTheory.CompanionTheory.ModelS.FMem
 
@@ -755,8 +751,7 @@ theorem fRaw_mem_SmF : ∀ (n : ℕ) (lam : Fin n → ℤ), Antitone lam → ∀
       (zpow_contDiffOn (contDiff_gm j).contDiffOn (fun g hg => gm_ne_zero j hg) _)
     by_cases hj : (j : ℕ) + 1 < n
     · obtain ⟨k, hk⟩ := Int.eq_ofNat_of_zero_le (dif_nonneg_of_antitone (muZ_antitone hlam hlev.1) j hj)
-      simp only [hk, zpow_natCast]
-      exact ((contDiff_lm j).pow k).contDiffOn
+      simpa only [hk, zpow_natCast] using ((contDiff_lm j).pow k).contDiffOn
     · exact zpow_contDiffOn (contDiff_lm j).contDiffOn (fun g hg => lm_ne_zero j hj hg) _
   exact key.congr fun g hg => Set.indicator_of_mem hg _
 
@@ -814,8 +809,7 @@ theorem exp_hasDerivAt {n : ℕ} (X : Mat n) (t : ℝ) :
     rw [hasDerivAt_pi]
     intro i
     rw [hasDerivAt_pi]
-    intro j
-    exact exp_entry_hasDerivAt X t i j
+    exact fun j => exp_entry_hasDerivAt X t i j
   exact this
 
 theorem curve_hasDerivAt {n : ℕ} (k X : Mat n) (t : ℝ) :
@@ -1139,8 +1133,7 @@ theorem isCompact_unitary_set (n : ℕ) :
   refine hK.of_isClosed_subset hC ?_
   intro x hx
   simp only [Set.mem_pi, Set.mem_univ, true_implies, Metric.mem_closedBall, dist_zero_right]
-  intro i j
-  exact entry_norm_bound_of_unitary hx i j
+  exact fun i j => entry_norm_bound_of_unitary hx i j
 
 theorem compactSpace_unitary (n : ℕ) : CompactSpace (Matrix.unitaryGroup (Fin n) ℂ) :=
   isCompact_iff_compactSpace.mp (isCompact_unitary_set n)
@@ -1456,8 +1449,7 @@ theorem DR_one_of_eqv (n : ℕ) (lev : Fin n → ℕ) (f h : SmF n) (_hf : f ∈
   have key := (Dh.congr_of_eventuallyEq heq.symm).unique Df
   rw [DR_apply _ _ h1, DR_apply _ _ h1]
   show fderiv ℝ h.1 1 (1 * X) = fderiv ℝ f.1 1 (1 * X) * h.1 1
-  rw [one_mul]
-  exact key
+  rwa [one_mul]
 
 end GlobalTheory.CompanionTheory.ModelS
 end -- clump:auto
@@ -1513,8 +1505,7 @@ theorem DR_mem_Eqv (n : ℕ) (lev : Fin n → ℕ) (φ : Mat n → ℂ) (X : Mat
   rw [ev.fderiv_eq] at e1'
   have e2' := GlobalTheory.CompanionTheory.RCalc.fderiv_csmul_apply dg (φ p) (g * X)
   simp only [Rd]
-  rw [Matrix.mul_assoc, ← e1']
-  exact e2'
+  rwa [Matrix.mul_assoc, ← e1']
 
 end GlobalTheory.CompanionTheory.ModelS
 end -- clump:auto
@@ -1723,8 +1714,7 @@ theorem model_of_ops (lam : Fin n → ℤ) (lev : Fin n → ℕ) (hlev : IsLev l
         simp [yZ]
       simp only [kF, LinearMap.add_apply, map_add (f := _), h1, hm]
       linear_combination -h2
-    · by_contra hcon
-      push Not at hcon
+    · by_contra! hcon
       obtain ⟨S₁, fd₁, hx₁, st₁⟩ := lf x
       have hstab : ∀ T ∈ A, ∀ w ∈ S₁, T w ∈ S₁ := by
         intro T hT
@@ -1859,9 +1849,7 @@ theorem modelEx_main : ModelEx := by
   have hder := GlobalTheory.T.inducedFunction_derivative_at_one n lam hlam lev hlev F hF
   refine model_of_ops lam lev hlev F1 F2 f ev (res_gl _ _ st1 g1) (res_gl _ _ st2 g2) ?_ ?_ ?_
     (S₁.comap (cyc F).subtype) ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_
-  · intro a b c d
-    refine LinearMap.ext fun w => Subtype.ext ?_
-    exact congrArg (fun T => T w.1) (cm a b c d)
+  · exact fun a b c d => LinearMap.ext fun w => Subtype.ext (congrArg (fun T => T w.1) (cm a b c d))
   · intro a b x y
     exact GlobalTheory.T.k_action_skew_adjoint_l2 n κ (GlobalTheory.T.integral_right_derivative_eq_zero n κ) a b x.1 y.1
   · intro x
@@ -1889,8 +1877,7 @@ theorem modelEx_main : ModelEx := by
       ((cyc F).subtype ∘ₗ (S₁.comap (cyc F).subtype).subtype).codRestrict S₁ (fun x => x.2)
     exact Module.Finite.of_injective φ (fun x y h => Subtype.ext (Subtype.ext (congrArg (fun t : ↥S₁ => (t : SmF n)) h)))
   · exact hf₁
-  · intro a b w hw
-    exact st₁ a b w.1 hw
+  · exact fun a b w hw => st₁ a b w.1 hw
   · refine ⟨fun a => ?_, fun a b hab _ => ?_⟩
     · apply Subtype.ext
       rw [hKc]

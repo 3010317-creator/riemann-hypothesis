@@ -207,10 +207,7 @@ theorem range_idempotent_equiv_sum_eigDim : ∀ (p : ℕ) [Fact p.Prime] (C : Ty
       rw [h4, h1, map_mul, Module.End.mul_apply, h3, hy', smul_smul, map_mul]
   have hinj : Function.Injective
       (fun j : Fin n => (algebraMap O C).comp ((t j : Emb (O := O) e) : OE →+* O)) := by
-    intro i j hij
-    apply t.injective
-    apply Subtype.ext
-    exact (hex _).unique hij rfl
+    exact fun i j hij => t.injective (Subtype.ext ((hex _).unique hij rfl))
   have hrange : LinearMap.range (σ e) =
       ⨆ j : Fin n, E ((algebraMap O C).comp ((t j : Emb (O := O) e) : OE →+* O)) := by
     apply le_antisymm
@@ -223,8 +220,7 @@ theorem range_idempotent_equiv_sum_eigDim : ∀ (p : ℕ) [Fact p.Prime] (C : Ty
       · rw [h]; simp
       · rw [h, map_one, one_smul]
         refine Submodule.mem_iSup_of_mem (t.symm ⟨τ', h⟩) ?_
-        rw [Equiv.apply_symm_apply]
-        exact hy
+        rwa [Equiv.apply_symm_apply]
     · refine iSup_le fun j => fun y hy => ⟨y, ?_⟩
       have h : tauExt ((t j : Emb (O := O) e) : OE →+* O) e = 1 := (t j).2
       rw [hact _ y hy e, h, map_one, one_smul]
@@ -232,10 +228,8 @@ theorem range_idempotent_equiv_sum_eigDim : ∀ (p : ℕ) [Fact p.Prime] (C : Ty
   have hfin : r' = ∑ j, eigDim C (fun a : OE => ρ (1 ⊗ₜ[ℤ] a))
       ((algebraMap O C).comp ((t j : Emb (O := O) e) : OE →+* O)) := by
     have h1 : Module.finrank C (LinearMap.range (σ e)) = r' := hrk
-    rw [← h1, hrange]
-    exact hsum
-  rw [← hfin, ← hrr]
-  exact hne
+    rwa [← h1, hrange]
+  rwa [← hfin, ← hrr]
 
 end GlobalTheory.ChF
 end -- clump:auto
@@ -620,16 +614,14 @@ private theorem quot_onto {O M P Q : Type} [CommRing O] [AddCommGroup M] [Module
     ∃ f : (L ⧸ U.comap L.subtype) →ₗ[O] (LinearMap.range K ⧸ S.comap (LinearMap.range K).subtype),
       Function.Surjective f := by
   refine ⟨Submodule.mapQ _ _ (K.rangeRestrict.comp (β.comp L.subtype)) ?_, ?_⟩
-  · intro x hx
-    exact h1 _ hx
+  · exact fun x hx => h1 _ hx
   · intro q
     obtain ⟨⟨_, f, rfl⟩, rfl⟩ := Submodule.Quotient.mk_surjective _ q
     obtain ⟨l, hl, h⟩ := h2 f
     refine ⟨Submodule.Quotient.mk ⟨l, hl⟩, ?_⟩
     refine (Submodule.mapQ_apply _ _ _ _).trans ((Submodule.Quotient.eq _).2 ?_)
     have := S.neg_mem h
-    rw [neg_sub] at this
-    exact this
+    rwa [neg_sub] at this
 
 private theorem res_eig {O OE : Type} [CommRing O] [CommRing OE] {d s : ℕ} (ρ : OE → Matrix (Fin d) (Fin d) O)
     (τ : OE →+* O) (W : Fin s → Fin d → O) (h : EigB ρ τ W) (a : OE) (f : Fin d → O) :
@@ -749,8 +741,7 @@ private theorem core {R O Λ I J Y : Type} [CommRing R] [CommRing O] [Algebra R 
       rw [Matrix.add_mulVec, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hAu', Matrix.mulVec_zero, zero_add]
     refine ⟨(L e)ᵀ *ᵥ (B'ᵀ *ᵥ ((G e)ᵀ *ᵥ f - u)), ⟨_, rfl⟩, ?_⟩
     show K f - K (Bᵀ *ᵥ _) ∈ S
-    rw [hBt, h4, hK, map_sub, hK, he, _root_.one_mul, _root_.one_mul, sub_sub_cancel]
-    exact hu
+    rwa [hBt, h4, hK, map_sub, hK, he, _root_.one_mul, _root_.one_mul, sub_sub_cancel]
 
 theorem exists_generators : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C], v.Integers O → ∀ [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [Algebra ℤ_[p] O] (OE : Type) [CommRing OE] [IsDedekindDomain OE] [CharZero OE] [Module.Free ℤ OE] [Module.Finite ℤ OE] [StarRing OE] (cp : O), HodgeTateSetting p v O (ℤ_[p] ⊗[ℤ] OE) (sigE p OE) cp → ∀ (g : ℕ) (H : HodgeTateDatum p g v O (ℤ_[p] ⊗[ℤ] OE) (sigE p OE) cp) (d r m : ℕ) (A : Matrix (Fin d) (Fin r) O) (B : Matrix (Fin g) (Fin d) O) (ρG : OE →+* Matrix (Fin d) (Fin d) O) (N : OE →+* Matrix (Fin r) (Fin r) ℤ) (s : Fin m → Fin d → O), LinDat H A B ρG N s → ∀ (w : Place p OE) (t : Fin w.n ≃ Emb (O := O) w.e) (α : ℤ_[p] ⊗[ℤ] OE) (b : Module.Basis (Fin w.n) ℤ_[p] w.Ow), (∀ k, (b k : ℤ_[p] ⊗[ℤ] OE) = w.e * α ^ (k : ℕ)) → ∀ (rp rm : ℕ) (W : Fin w.n → Fin rp → Fin d → O), (∀ j, EigB ρG ((t j : Emb (O := O) w.e) : OE →+* O) (W j)) → (∀ τ ∈ Emb (O := O) w.bar, eigDim C (fun a : OE => H.ρL (1 ⊗ₜ[ℤ] a)) ((algebraMap O C).comp τ) ≤ rm) → ∃ (h : ℕ) (ψ : Fin h → Fin d → O), h ≤ rp + rm ∧ (∀ l j, Pdiv.ChartF.res (W j) (ψ l) ∈ Submodule.span O (Set.range fun k => Pdiv.ChartF.res (W j) (s k))) ∧ ∃ f : htCoker H w.e w.bar →ₗ[O] ((LinearMap.range (LinearMap.pi fun y : Fin w.n × Fin rp => (LinearMap.proj y.2).comp (Pdiv.ChartF.res (W y.1))) : Submodule O (Fin w.n × Fin rp → O)) ⧸ (Submodule.span O (Set.range fun q : Fin w.n × Fin h => fun y : Fin w.n × Fin rp => tauExt ((t y.1 : Emb (O := O) w.e) : OE →+* O) α ^ (q.1 : ℕ) * Pdiv.ChartF.res (W y.1) (ψ q.2) y.2)).comap (Submodule.subtype _)), Function.Surjective f := by
   intro p _ C _ _ _ v O _ _ hv _ _ _ OE _ _ _ _ _ _ cp hU g H d r m A B ρG N s hL w t α b hb rp rm W hW hrm
@@ -898,8 +889,7 @@ theorem exists_generators : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [I
         simp only [Fin.append_right, Pi.mul_apply, hTb]
         rfl⟩)
     refine quot_onto _ _ (lieDPart H w.e) _ (Matrix.mulVecLin Bᵀ) ?_ c2
-    rw [hbar (t j₀ : Emb (O := O) w.e)]
-    exact c1
+    rwa [hbar (t j₀ : Emb (O := O) w.e)]
 
 end GlobalTheory.ChF.GenAtPlace
 end -- clump:auto
@@ -1045,8 +1035,7 @@ private theorem len_eq (hv : v.Integers O) {κ : Type} [Fintype κ] [DecidableEq
     · rintro ⟨w, hw⟩
       refine ⟨_, ⟨w, rfl⟩, Subtype.ext ?_⟩
       show B *ᵥ ((Matrix.of X)ᵀ *ᵥ w) = _
-      rw [Matrix.mulVec_mulVec, hBX]
-      exact hw
+      rwa [Matrix.mulVec_mulVec, hBX]
   have h1 := hasLen_of_equiv (Submodule.Quotient.equiv _ _ e hmap) hc
   have h2 := hasLen_unique hv h1 (hasLen_coker_det' v O hv κ _)
   have h3 : v (B.map (algebraMap O C)).det ≠ 0 := (Valuation.ne_zero_iff v).2 (det_map_ne hv hB)
@@ -1156,8 +1145,7 @@ theorem lattice_ineq_integers : ∀ (C : Type) [Field C] [IsAlgClosed C] (v : Va
     intro z
     have h1 := hdM (Submodule.Quotient.mk ⟨D • z, hDM z⟩)
     rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at h1
-    rw [mul_smul]
-    exact h1
+    rwa [mul_smul]
   have hDτ : ∀ τ z, (d * D) • z ∈ Submodule.span O (Set.range fun l => fun i => φ l (τ, i)) :=
     fun τ z => (proj_span a φ τ _).2 ⟨_, hDM' (fun y => z y.2), rfl⟩
   obtain ⟨B, hB, hBM⟩ := exists_basisMat hv M hM D hD hDM
@@ -1310,8 +1298,7 @@ private theorem lav_fp {O : Type} [CommRing O] {J : Type} [Fintype J]
       rw [LinearEquiv.submoduleMap_symm_apply, ← hzy]
       exact e.symm_apply_apply z
     exact this ▸ hz
-  · intro hx
-    exact ⟨e.submoduleMap M x, ⟨x, hx, rfl⟩, (e.submoduleMap M).symm_apply_apply x⟩
+  · exact fun hx => ⟨e.submoduleMap M x, ⟨x, hx, rfl⟩, (e.submoduleMap M).symm_apply_apply x⟩
 
 private theorem lav_num (P D c cw X : ℝ) (n rm vd q : ℝ) (rp rm' h : ℕ) (hrm : rm = rm')
     (hP0 : 0 < P) (hP1 : P ≤ 1) (hvd : 0 ≤ n * vd) (hD : D = P ^ (n * vd)) (hh : h ≤ rp + rm')

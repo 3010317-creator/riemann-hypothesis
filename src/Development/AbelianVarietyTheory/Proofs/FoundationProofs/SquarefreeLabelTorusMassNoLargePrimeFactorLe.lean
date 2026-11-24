@@ -190,8 +190,7 @@ theorem _root_.GlobalTheory.BadShare.inv_log_le_sum_inv_primes_between :
               _ = 3 := by rw [Nat.card_Icc]; omega
     · calc _ ≤ ∏ x ∈ S, x := by
             apply Finset.prod_le_prod_of_subset_of_one_le'
-            · intro x hx
-              exact (Finset.mem_filter.mp hx).2
+            · exact fun x hx => (Finset.mem_filter.mp hx).2
             · intro x hx _
               rw [hS] at hx
               exact (Finset.mem_filter.mp hx).2.1.one_lt.le

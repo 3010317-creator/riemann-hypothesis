@@ -198,8 +198,7 @@ theorem isCols_map {io₀ : c.F →+* T₀.Fr} {p n : ℕ} {cx : Lt1 Dw → ℕ}
   obtain ⟨h1, ⟨r, h2⟩, h3⟩ := hb f
   refine ⟨fun b j hj => (congrArg g (h1 b j hj)).trans (map_zero g), ⟨r, ?_⟩, fun N => ?_⟩
   · have := h2.map g
-    rw [RingHom.map_det] at this
-    exact this
+    rwa [RingHom.map_det] at this
   · obtain ⟨x, hx1, hx2, hx3⟩ := h3 N
     refine ⟨x, hx1, fun b j => ?_, hx3⟩
     obtain ⟨z, hz⟩ := hx2 b j
@@ -378,8 +377,7 @@ theorem vLa_pos_of_mem {K : Type} [Field K] [NumberField K] (v : HeightOneSpectr
     (hp : (p : 𝓞 K) ∈ v.asIdeal) : 0 < vLa v (p : K) := by
   have hne : (p : K) ≠ 0 := by exact_mod_cast hp0
   have hlt : v.valuation K (p : K) < 1 := by
-    rw [← map_natCast (algebraMap (𝓞 K) K) p, HeightOneSpectrum.valuation_lt_one_iff_mem]
-    exact hp
+    rwa [← map_natCast (algebraMap (𝓞 K) K) p, HeightOneSpectrum.valuation_lt_one_iff_mem]
   have h0 : v.valuation K (p : K) ≠ 0 := by simpa using hne
   have := (WithZero.log_lt_log h0 one_ne_zero).2 hlt
   simp only [WithZero.log_one] at this

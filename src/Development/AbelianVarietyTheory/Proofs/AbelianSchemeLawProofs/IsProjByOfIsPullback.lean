@@ -117,15 +117,13 @@ theorem ap_ratio {U V : X.Opens} {x y : Γ(X, V)} {r : Γ(X, U)}
       rs X (inf_le_left : U ⊓ V ≤ U) r * rs X (inf_le_right : U ⊓ V ≤ V) y)
     {W : P.Opens} (h₁ : W ≤ p ⁻¹ᵁ U) (h₂ : W ≤ p ⁻¹ᵁ V) :
     ap p h₂ x = ap p h₁ r * ap p h₂ y := by
-  have e' := congrArg (ap p (le_pre p h₁ h₂)) e
-  simpa only [ap_rs, map_mul] using e'
+  simpa only [ap_rs, map_mul] using congrArg (ap p (le_pre p h₁ h₂)) e
 
 theorem ap_compat (s : LB.Sec H) (i j : H.ι) {W : P.Opens} (h₁ : W ≤ p ⁻¹ᵁ H.U i) (h₂ : W ≤ p ⁻¹ᵁ H.U j)
     (h : W ≤ p ⁻¹ᵁ (H.U i ⊓ H.U j)) :
     ap p h₁ (s.f i) = ap p h (H.g i j).val * ap p h₂ (s.f j) := by
   have e : rs X inf_le_left (s.f i) = (H.g i j).val * rs X inf_le_right (s.f j) := s.compat i j
-  have e' := congrArg (ap p h) e
-  simpa only [ap_rs, map_mul] using e'
+  simpa only [ap_rs, map_mul] using congrArg (ap p h) e
 
 theorem isLB_box (hH : H.IsLB) (hK : K.IsLB) : (box p q H K).IsLB := by
   refine ⟨?_, ?_, ?_⟩

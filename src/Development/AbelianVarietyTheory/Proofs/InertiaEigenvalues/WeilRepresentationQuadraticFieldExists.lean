@@ -229,9 +229,7 @@ theorem fOp_nOp_fOp (F E : Type) [NontriviallyNormedField F] [NontriviallyNormed
   have htrKc : Continuous (Algebra.trace F A.K) := IsModuleTopology.continuous_of_linearMap _
   have htrLc : Continuous (Algebra.trace A.K A.L) :=
     IsModuleTopology.continuous_of_linearMap ((Algebra.trace A.K A.L).restrictScalars F)
-  have hec : Continuous (A.psiK ψ) := by
-    show Continuous fun t => ψ (Algebra.trace F A.K t)
-    exact hψc.comp htrKc
+  have hec : Continuous (A.psiK ψ) := hψc.comp htrKc
   have hNc := EtMeas.continuous_NL A
   have hk2 : Continuous (fun p : A.L × A.L => A.kerL ψ x p.1 p.2) := by
     show Continuous fun p : A.L × A.L => A.psiK ψ ((x : A.K) * Algebra.trace A.K A.L (star p.1 * p.2))
@@ -706,15 +704,12 @@ theorem exists_hom_of_bruhat : ∀ (K : Type) [CommRing K], IsField K → ∀ (M
   refine ⟨ρ, ?_, ?_, ?_⟩
   · intro z
     have := rho_n n m t hn 1 z
-    rw [one_mul, rho_one n m t hn0 hm1, one_mul] at this
-    exact this
+    rwa [one_mul, rho_one n m t hn0 hm1, one_mul] at this
   · intro s
     have := rho_m n m t hm hmn htm 1 s
-    rw [one_mul, rho_one n m t hn0 hm1, one_mul] at this
-    exact this
+    rwa [one_mul, rho_one n m t hn0 hm1, one_mul] at this
   · have := rho_w n m t hn0 hn hm hmn htt htnt 1
-    rw [one_mul, rho_one n m t hn0 hm1, one_mul] at this
-    exact this
+    rwa [one_mul, rho_one n m t hn0 hm1, one_mul] at this
 
 end GlobalTheory.BruhatRep
 end -- clump:auto
@@ -734,8 +729,7 @@ variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [N
 
 theorem finite_E_L [Unram F E] (A : Et F E) : Module.Finite E A.L := by
   have hE : Module.Finite F E := Module.finite_of_finrank_pos (by rw [Unram.finrank_eq (F := F) (E := E)]; norm_num)
-  have h := A.push.out
-  exact Module.Finite.equiv h.equiv
+  exact Module.Finite.equiv (A.push.out).equiv
 
 theorem finite_F_L [Unram F E] (A : Et F E) : Module.Finite F A.L := by
   have hE : Module.Finite F E := Module.finite_of_finrank_pos (by rw [Unram.finrank_eq (F := F) (E := E)]; norm_num)
@@ -874,8 +868,7 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
         calc ‖e'‖ * ‖t‖ * ‖Φ (e i) j‖ ≤ 1 * ‖t‖ * Km := by gcongr; exact hKm i j
           _ ≤ R := by rw [one_mul]; exact hRt
       have := hy _ hw
-      rw [hker, map_smul, LinearMap.smul_apply, smul_eq_mul] at this
-      rw [← hΦ] at this
+      rw [hker, map_smul, LinearMap.smul_apply, smul_eq_mul, ← hΦ] at this
       rwa [← mul_assoc]
     rw [norm_mul] at h1
     have h2 : ‖Φ y i‖ ≤ 1 / ‖t‖ := by rw [le_div_iff₀ ht0]; linarith
@@ -906,12 +899,10 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
     exact (isCompact_closedBall 0 R).image hΨc
   · intro y hy
     rw [SetLike.mem_coe, hmem]
-    intro i
-    exact ((norm_le_pi_norm (Φ y) i).trans (hb y hy)).trans hRb
+    exact fun i => ((norm_le_pi_norm (Φ y) i).trans (hb y hy)).trans hRb
   · intro y hy
     rw [SetLike.mem_coe, hmem]
-    intro i
-    exact (hperp y hy i).le.trans hRε
+    exact fun i => (hperp y hy i).le.trans hRε
   · intro y hy
     have hb' : Φe y ∈ Metric.ball (0 : Fin (Module.finrank F A.L) → F) ε := by
       rw [mem_ball_zero_iff, pi_norm_lt_iff hε0, hΦe]; exact hperp y hy

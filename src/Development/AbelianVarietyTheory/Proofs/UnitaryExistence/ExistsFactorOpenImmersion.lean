@@ -59,8 +59,7 @@ theorem exists_factor_openImmersion {X : Scheme.{0}} {R S : Type} [CommRing R] [
   have hr : Set.range (spMap lam ≫ x) ⊆ Set.range j := by
     rintro _ ⟨q, rfl⟩
     have hq : PrimeSpectrum.comap lam q ∈ (PrimeSpectrum.basicOpen g : Set (PrimeSpectrum S)) := by
-      intro h
-      exact q.isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _ h hu)
+      exact fun h => q.isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _ h hu)
     exact hsub hq
   refine ⟨(Spec.preimage (IsOpenImmersion.lift j (spMap lam ≫ x) hr)).hom, ?_⟩
   simp only [spMap, CommRingCat.ofHom_hom, Spec.map_preimage, IsOpenImmersion.lift_fac]
@@ -77,7 +76,6 @@ theorem openChart_factor_near_prime :
   rw [hx, hj.2.2, ← Spec.map_comp, ← Spec.map_comp] at h2
   have h3 := congrArg CommRingCat.Hom.hom (Spec.map_injective h2)
   refine ⟨{ ψ with commutes' := fun a => ?_ }, hψ⟩
-  have h4 := RingHom.congr_fun h3 a
-  exact h4.symm.trans (lam.commutes a)
+  exact (RingHom.congr_fun h3 a).symm.trans (lam.commutes a)
 
 end GlobalTheory.Frames

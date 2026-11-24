@@ -676,8 +676,7 @@ theorem exists_finite_index_of_adm_cosets : ∀ (X : Fields) (Pr : Primes X) (R 
   have h1 := hf h h' (hb h hh) (hb h' hh') e
   have h2 := hf h' h (hb h' hh') (hb h hh) e.symm
   refine mem_Jat _ _ _ _ (stab_of_cong hq _ _ h1 ?_) h1
-  rw [mul_inv_rev, inv_inv]
-  exact h2
+  rwa [mul_inv_rev, inv_inv]
 
 end GlobalTheory.Mem.Col2.IdxFin
 
@@ -730,8 +729,7 @@ theorem eigen_eq_one_of_reps {V K : Type} [AddCommGroup V] [Field K] [CharZero K
     constructor
     · rintro ⟨u, hu, rfl⟩
       exact (hTM u).2 hu
-    · intro hv
-      exact ⟨T.symm v, (hTM _).1 (by simpa using hv), by simp⟩
+    · exact fun hv => ⟨T.symm v, (hTM _).1 (by simpa using hv), by simp⟩
   have hout : ∀ v : V, f (QuotientAddGroup.mk v : V ⧸ M).out = f v := fun v => by
     have h : -v + (QuotientAddGroup.mk v : V ⧸ M).out ∈ M := by
       rw [← QuotientAddGroup.eq]; simp
@@ -848,10 +846,8 @@ theorem supSum_range {κ : Type} [CommRing κ] {n a k : ℕ} (hn : k ≤ n) (ha 
     · have hi' := Finset.mem_range.1 hi
       rw [ite_eq_left hi, Finset.sum_eq_single (⟨i.val + 1, by omega⟩ : Fin n), ite_eq_left ⟨rfl, by dsimp only; omega, hi⟩,
         hf _ (by omega)]
-      · intro j _ hj
-        exact ite_eq_right fun h => hj (Fin.ext h.1.symm)
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun j _ hj => ite_eq_right fun h => hj (Fin.ext h.1.symm)
+      · exact fun h => absurd (Finset.mem_univ _) h
     · simp [hi]
   rw [Finset.sum_congr rfl fun i _ => h1 i, Fin.sum_univ_eq_sum_range (fun i => if i ∈ Finset.range (k - 1) then f i else 0) n,
     ← Finset.sum_filter]
@@ -908,8 +904,7 @@ theorem chrG_zero {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X Pr R.m)
   have hJ := hr.2
   simp only [Jat, hP, hs, ite_true] at hJ
   have hst : r ∈ stabL X.E _ (LocE.lamY P.1 (qOf P.1) (R.N 0) (cOf R 0) fun i => i + 1) := by
-    have h1 := hJ.1
-    simpa using h1
+    simpa using hJ.1
   have hint := fun p p' => GlobalTheory.LastSteps.entB_int (P := P.1) R.k (x := r.toLinearMap) (fun y hy => (hst y).2 hy) p p'
   have ha := GlobalTheory.Mem.LevFin.intAt_n1Arg_G hq r hst
   have h2 : ∑ i ∈ Finset.range (R.r - R.k - 1), LocE.entB (qOf P.1) R.k (cOf R 0) (R.N 0) (cOf R 0) (R.N 0)
@@ -1179,8 +1174,7 @@ theorem block_mul' (P : HeightOneSpectrum (𝓞 E)) (q : ℕ) (hq0 : q ≠ 0) (h
     have : redP P (q : E) = 0 := by
       have h := reduction_coe P (q : 𝓞 E)
       rw [map_natCast] at h
-      rw [h, Ideal.Quotient.eq_zero_iff_mem]
-      exact hq
+      rwa [h, Ideal.Quotient.eq_zero_iff_mem]
     rw [this, zero_mul]
   have key : (⟨g w ⟨kj + s.1, hs⟩, hgwi⟩ : intSub P) + (blockD P kj n hg * blockD P kj n hg') s t =
       blockD P kj n (mul_mem hg hg') s t := by
@@ -1681,8 +1675,7 @@ theorem psiAt_add {m2 : ℕ} {P : rowSG Pr sel mu} {hal : AutY X R m2} {N B : �
     PsiAt Ch sel mu cst m2 P hal (x₀ + z) (y + l) = PsiAt Ch sel mu cst m2 P hal x₀ y := by
   have hq := pow_ne_zero B (qOf_ne_zero P.1)
   have := (homBdd_mono hB H).2 (joinCol x₀ y) _ (intHom_joinCol hz hl)
-  rw [← LastSteps.joinCol_add, smul_inv_smul₀ hq, smul_inv_smul₀ hq] at this
-  exact this
+  rwa [← LastSteps.joinCol_add, smul_inv_smul₀ hq, smul_inv_smul₀ hq] at this
 
 
 open Classical in
@@ -1714,8 +1707,7 @@ theorem exists_chIdx_of_cst {G : ChGlob X R.m} (hd : ∀ P : rowSG Pr sel mu, De
       exact Units.ne_zero _
   have hle : ∀ P j, ∀ h ∈ F P j, j ≤ m2 + 1 := fun P j h hh => by
     by_contra e
-    rw [hbig P j (by omega)] at hh
-    exact hh
+    rwa [hbig P j (by omega)] at hh
   have hmul : ∀ P j, ∀ h ∈ F P j, ChiMul Ch sel mu cst j P h := fun P j h hh =>
     chiMul hc hs (hD P) (by have := hle P j h hh; omega) ((hR P j).2 h hh).1
   have htriv : ∀ P i, ∀ h ∈ F P (i + 1), ChiTriv Ch sel mu cst (i + 1) P h := fun P i h hh => by
@@ -1823,8 +1815,7 @@ theorem exists_chIdx_of_cst {G : ChGlob X R.m} (hd : ∀ P : rowSG Pr sel mu, De
           have := (LastSteps.good_omPhi Ch sel mu cst hm2 P hP ((rep _ al P).1.1 hP)).2.1 (joinCol x₀ y')
             (joinCol 0 ((qOf P.1 : X.E)⁻¹ • z)) ((LastSteps.joinCol_mem (LastSteps.cOf_pen hm2) (LastSteps.cOf_top hm2) _ _).2
               ⟨fun _ _ => zero_mem _, by rw [smul_inv_smul₀ hq]; exact (mem_stdAt_iff _).2 hz⟩)
-          rw [← LastSteps.joinCol_add, smul_zero, add_zero, smul_inv_smul₀ hq] at this
-          exact this
+          rwa [← LastSteps.joinCol_add, smul_zero, add_zero, smul_inv_smul₀ hq] at this
         · rw [ite_eq_right hP] at hz
           have := psiAt_add hM (bl al P) x₀ 0 y' z (fun _ _ => by simpa using IntV.zero P.1) hz
           rwa [add_zero] at this

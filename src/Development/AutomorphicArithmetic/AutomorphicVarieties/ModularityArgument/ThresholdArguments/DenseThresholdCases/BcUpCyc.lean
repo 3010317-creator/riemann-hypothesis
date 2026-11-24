@@ -83,14 +83,12 @@ theorem UpperTheory.V.Z.Bc.upCyc_of_alt (hA : _root_.UpperTheory.V.Af.Hypotheses
     · have h := hreg (τ.comp (algebraMap F E))
       have hm : π.HasInfChar (τ.comp (algebraMap F E)) ((CG.mk π).infChar (τ.comp (algebraMap F E))) :=
         ParLaws.hasInfChar_infChar (CG.mk π) _
-      rw [CG.HasInfChar.infChar_eq (π := CG.mk P) (hinf τ _ hm)]
-      exact h
+      rwa [CG.HasInfChar.infChar_eq (π := CG.mk P) (hinf τ _ hm)]
     · filter_upwards [hbc, (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.tendsto_under F E).eventually hatt.2] with w h1 h2
       obtain ⟨B, hB, hPw⟩ := h1 _ (_root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow (K := F) w)
       obtain ⟨B', hB', hF⟩ := h2
       obtain rfl := hB.unique hB'
       refine ⟨_, hPw, ?_⟩
       have h3 := (UpperTheory.frobenius_power_compatibility F E Ω l ι w _ (_root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow (K := F) w)).1 n r _ hF
-      rw [← algSat_pow, ← _root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow] at h3
-      exact h3
+      rwa [← algSat_pow, ← _root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow] at h3
 end

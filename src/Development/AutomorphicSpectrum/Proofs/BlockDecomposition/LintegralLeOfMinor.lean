@@ -106,8 +106,7 @@ theorem sw_bump {X : Type} [TopologicalSpace X] [T2Space X] (A : Submodule ℂ (
   by_cases hz : z ∈ tsupport b
   · have h1 : ‖f z - (a z + c)‖ ≤ ε := by
       have := (ContinuousMap.dist_apply_le_dist (f := fK) (g := u) ⟨z, hz⟩).trans hfu.le
-      rw [dist_eq_norm, hu] at this
-      exact this
+      rwa [dist_eq_norm, hu] at this
     have h2 : ‖b z‖ = (b z).re := by
       rw [hbr, Complex.norm_real, Real.norm_of_nonneg (hb0 z).1]
       simp
@@ -382,8 +381,7 @@ theorem vague_all (σ ν : Measure X) [IsFiniteMeasureOnCompacts σ] [IsFiniteMe
     (fun j => hmi j f (hf.integrable_of_hasCompactSupport hc))
     hbm ?_ (hf.integrable_of_hasCompactSupport hc) hbν.re ?_
   · have := (Complex.continuous_re.tendsto _).comp (hνA b hbA)
-    refine this.congr fun j => ?_
-    exact (integral_re (hmi j b hbσ)).symm
+    exact this.congr fun j => (integral_re (hmi j b hbσ)).symm
   · intro ε hε
     obtain ⟨h, hhA, hh⟩ := hb ε hε
     have hhc := hA.cc h hhA
@@ -442,8 +440,7 @@ theorem nu_support (σ ν : Measure X) [IsFiniteMeasureOnCompacts σ] [IsFiniteM
       by_contra hne
       exact hzC ⟨subset_tsupport _ hne, hzY⟩
     refine le_antisymm ?_ hν0
-    by_contra hpos
-    push Not at hpos
+    by_contra! hpos
     set a := ∫ z, c z ∂ν with ha
     have hε : 0 < a / (2 * (I + 1)) := by positivity
     have h1 := hle _ hε

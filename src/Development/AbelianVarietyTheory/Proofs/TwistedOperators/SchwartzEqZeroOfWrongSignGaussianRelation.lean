@@ -110,12 +110,10 @@ variable [MeasurableSpace V] [BorelSpace V] (μ : Measure V) [μ.IsAddHaarMeasur
 def ip (u w : 𝓢(V, ℂ)) : ℂ := ∫ x, u x * conj (w x) ∂μ
 
 theorem integrable_ip (u w : 𝓢(V, ℂ)) : Integrable (fun x => u x * conj (w x)) μ := by
-  have h := (pairing sesq u w).integrable (μ := μ)
-  simpa [pairing_apply] using h
+  simpa [pairing_apply] using (pairing sesq u w).integrable (μ := μ)
 
 theorem ip_smul_left (c : ℂ) (u w : 𝓢(V, ℂ)) : ip μ (c • u) w = c * ip μ u w := by
-  simp only [ip, SchwartzMap.smul_apply, smul_eq_mul, mul_assoc]
-  exact integral_const_mul c _
+  simpa only [ip, SchwartzMap.smul_apply, smul_eq_mul, mul_assoc] using integral_const_mul c _
 
 theorem ip_smul_right (c : ℂ) (u w : 𝓢(V, ℂ)) : ip μ u (c • w) = conj c * ip μ u w := by
   simp only [ip, SchwartzMap.smul_apply, smul_eq_mul, map_mul]
@@ -219,7 +217,6 @@ theorem vanish : ∀ {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [Fini
   have hcont : Continuous (fun x => ‖f x‖ ^ 2) := f.continuous.norm.pow 2
   have h0 := (Continuous.ae_eq_iff_eq μ hcont continuous_zero).1 hF0
   ext x
-  have hx := congrFun h0 x
-  simpa using hx
+  simpa using congrFun h0 x
 
 end GlobalTheory.WrongSignGauss

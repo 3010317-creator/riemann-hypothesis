@@ -186,16 +186,14 @@ theorem form_translate_vacuum {R X M : Type} [CommRing R] [AddCommGroup X] [Modu
   split_ifs with hx
   · rw [hs x hx]
   · obtain ⟨a, ha, hne⟩ : ∃ a ∈ Λ, γ x a ≠ 1 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hx ((hΛ x).2 hc)
     have h1 : e (W x s) = γ a x * e (W x s) := by
       conv_lhs => rw [← he a ha (W x s)]
       rw [h.comm a x s, hs a ha, map_smul, smul_eq_mul]
     have h2 : γ a x ≠ 1 := by
       rw [h.swap x a]
-      intro h3
-      exact hne (inv_eq_one.1 h3)
+      exact fun h3 => hne (inv_eq_one.1 h3)
     have h3 : (1 - γ a x) * e (W x s) = 0 := by rw [sub_mul, one_mul, ← h1, sub_self]
     exact (mul_eq_zero.1 h3).resolve_left (sub_ne_zero.2 (Ne.symm h2))
 
@@ -237,8 +235,7 @@ theorem sumOp_vacuum_lift : ∀ {R X M : Type} [CommRing R] [AddCommGroup X] [Mo
     · rw [ite_eq_left (by simpa using hi0)]
     · intro j _ hj
       rw [ite_eq_right]
-      intro hjΛ
-      exact hj (huniq j (by simpa using hjΛ))
+      exact fun hjΛ => hj (huniq j (by simpa using hjΛ))
     · simp
   rw [map_smul, hes', smul_eq_mul, mul_one]
 

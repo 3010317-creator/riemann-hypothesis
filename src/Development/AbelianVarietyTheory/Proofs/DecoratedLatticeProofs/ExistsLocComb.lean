@@ -131,10 +131,8 @@ theorem mem_frameSub {G : Type} [Group G] {k : Type} [Field k] {N : ℕ} {Y : Ty
     g ∈ frameSub ρ F J ↔ ∀ x : GL Y k, (ρ g).val = F.β * x.val * F.γ → x ∈ J := by
   constructor
   · intro h x hx
-    rw [(conj_iff F _ x).1 hx]
-    exact h
-  · intro h
-    exact h _ ((conj_iff F _ _).2 rfl)
+    rwa [(conj_iff F _ x).1 hx]
+  · exact fun h => h _ ((conj_iff F _ _).2 rfl)
 
 theorem under_inj {Pg : Finset (Formalism.L2.DIV.Pl D.host.E)} (hT : GlobalTheory.Core.Mi.IsTypePlaces Pg) {PP PP' : Formalism.L2.DIV.Pl D.host.E}
     (h : PP ∈ Pg) (h' : PP' ∈ Pg) (e : (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) = (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP')) : PP = PP' := by

@@ -312,8 +312,7 @@ theorem entry_opp {U : Mx n} (hU : U ∈ lieSet ε) {a b : Fin n} (h : ε a ≠ 
   have h1 := (mem_lieSet_iff_entry.mp hU) a b
   have : star (U b a) = U a b := by
     rcases ha : ε a <;> rcases hb : ε b <;> simp_all <;> first | linear_combination h1 | linear_combination -h1
-  have h3 := congrArg star this
-  simpa using h3
+  simpa using congrArg star this
 
 abbrev tm (U X : Mx n) : Mx n := (trace (U * X)).re • X
 
@@ -731,8 +730,7 @@ theorem casOp_equivariant : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [Norm
     one_smul, Finset.sum_neg_distrib] at this
   rw [casOp_translate h.1 hk hp hg hv]
   congr 1
-  simp only [casOp, sub_eq_neg_add]
-  exact this
+  simpa only [casOp, sub_eq_neg_add] using this
 
 end GlobalTheory.TypeSum.CasEquiv
 
@@ -809,8 +807,7 @@ theorem exists_eigen_casOp : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [Nor
   haveI : Nontrivial V := ⟨⟨⟨Q v₀, v₀, h.2.2.1 _ hv₀K, rfl⟩, 0, fun h0 => hQv₀ (congrArg Subtype.val h0)⟩⟩
   obtain ⟨χ, hχ⟩ := Module.End.exists_eigenvalue F
   obtain ⟨u, hu⟩ := hχ.exists_hasEigenvector
-  refine ⟨u, χ, hVsm _ u.2, fun h0 => hu.2 (Subtype.ext h0), ?_⟩
-  exact congrArg Subtype.val (hu.apply_eq_smul)
+  exact ⟨u, χ, hVsm _ u.2, fun h0 => hu.2 (Subtype.ext h0), congrArg Subtype.val (hu.apply_eq_smul)⟩
 
 end GlobalTheory.TypeSum.CasBasis
 
@@ -1416,8 +1413,7 @@ theorem frame_Dw_sum (hσ : IsURepOn (UJset ε) σ) {l : List (Mx n)} (hl : ∀ 
     Dw σ l (∑ i, c i • x i) = ∑ i, c i • Dw σ l (x i) := by
   obtain ⟨L, hL⟩ := exists_word (isUnit_Jm ε) hσ l hl
   have h := congrArg Subtype.val (map_sum L (fun i => c i • (⟨x i, hx i⟩ : smooth (Jm ε) σ)) Finset.univ)
-  simp only [map_smul, hL, Submodule.coe_sum, Submodule.coe_smul] at h
-  exact h
+  simpa only [map_smul, hL, Submodule.coe_sum, Submodule.coe_smul] using h
 
 theorem frame_sm_sum {q : ℕ} (c : Fin q → ℂ) {x : Fin q → H} (hx : ∀ i, Sm ε σ (x i)) :
     Sm ε σ (∑ i, c i • x i) :=
@@ -1611,8 +1607,7 @@ theorem trace_bound : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddC
     rw [eQ, Complex.norm_real, Real.norm_eq_abs, sq_abs] at hH
     have hQ0 : 0 ≤ ∑ j, ‖x j‖ ^ 2 := Finset.sum_nonneg fun _ _ => by positivity
     have hQ : ∑ j, ‖x j‖ ^ 2 ≤ C0 * C' := by
-      by_contra hne
-      push Not at hne
+      by_contra! hne
       have hK0 : 0 ≤ C0 * C' := mul_nonneg hC0 hC'0
       nlinarith
     refine le_of_eq_of_le (Finset.sum_congr rfl fun j _ => ?_) hQ
@@ -1627,14 +1622,12 @@ theorem trace_bound : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddC
       (f := fun i => ‖Dw σ S[i] (e j)‖)
     rw [Finset.card_univ, Fintype.card_fin] at this
     unfold sobNorm
-    rw [← Fin.sum_univ_fun_getElem]
-    exact this
+    rwa [← Fin.sum_univ_fun_getElem]
   calc ∑ j, sobNorm σ S (e j) ^ 2 / μ j ^ (2 * s)
       ≤ ∑ j, (S.length * ∑ i : Fin S.length, ‖Dw σ S[i] (e j)‖ ^ 2) / μ j ^ (2 * s) :=
         Finset.sum_le_sum fun j _ => div_le_div_of_nonneg_right (hcs j) (pow_nonneg (hμ0 j).le _)
     _ = S.length * ∑ i : Fin S.length, ∑ j, ‖Dw σ S[i] (e j)‖ ^ 2 / μ j ^ (2 * s) := by
-        simp only [Finset.mul_sum, Finset.sum_div, mul_div_assoc]
-        exact Finset.sum_comm
+        simpa only [Finset.mul_sum, Finset.sum_div, mul_div_assoc] using Finset.sum_comm
     _ ≤ S.length * ∑ _i : Fin S.length, C0 * C' := by
         gcongr with i
         exact key _ (List.getElem_mem _)

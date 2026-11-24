@@ -232,7 +232,6 @@ theorem eq_smul_of_unitary_equivariant : ∀ (N n : ℕ) (hN : N = n + 1) (lam :
   let E : (delSq ℂ N lam →ₗ[ℂ] delSq ℂ n sg) → MvPolynomial (Fin N × Fin N) ℂ →ₗ[ℂ] MvPolynomial (Fin n × Fin n) ℂ :=
     fun u => (delSq ℂ n sg).subtype ∘ₗ u ∘ₗ π
   have hE : ∀ u (f : delSq ℂ N lam), E u f.1 = (u f).1 := fun u f => by
-    show (u (π f.1)).1 = (u f).1
     exact congrArg (fun x => (u x).1) (Submodule.linearProjOfIsCompl_apply_left hC f)
   have hN' : Formalism.BasicNotions.nablaSq ℂ N lam = delSq ℂ N lam := Formalism.L2.Col.nablaSq_eq_delSq ℂ lam
   have hn' : Formalism.BasicNotions.nablaSq ℂ n sg = delSq ℂ n sg := Formalism.L2.Col.nablaSq_eq_delSq ℂ sg
@@ -263,8 +262,7 @@ theorem eq_smul_of_unitary_equivariant : ∀ (N n : ℕ) (hN : N = n + 1) (lam :
         Matrix.GeneralLinearGroup.val_det_apply, hdet]
       exact main
   have hne : ∃ f ∈ Formalism.BasicNotions.nablaSq ℂ N lam, E t₀ f ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     apply h0
     refine LinearMap.ext fun f => Subtype.ext ?_
     have := hc f.1 (by rw [hN']; exact f.2)
@@ -463,8 +461,7 @@ theorem emb_update {N : ℕ} (G : ι → Matrix (Fin N) (Fin N) ℂ) (lam : ι �
       intro σ
       by_cases hσ : σ = τ
       · subst hσ
-        simp only [Function.update_self]
-        exact actL_apply _ _ _ hg _
+        simpa only [Function.update_self] using actL_apply _ _ _ hg _
       · simp only [Function.update_of_ne hσ, LinearMap.id_apply]
     simp only [Submodule.subtype_apply, hfun]
     exact fnOf_ten_update G (shiftOf lam) (fun σ => (f σ : MvPolynomial (Fin N × Fin N) ℂ)) τ g y y' hy
@@ -490,8 +487,7 @@ theorem emb_inj {N : ℕ} (G : ι → Matrix (Fin N) (Fin N) ℂ) (lam : ι → 
   apply fnOf_inj G (shiftOf lam)
   intro y
   have := congrFun h y
-  rw [map_sub, Pi.sub_apply, sub_eq_zero]
-  exact this
+  rwa [map_sub, Pi.sub_apply, sub_eq_zero]
 
 theorem isUnit_of_unitary {n : ℕ} {k : Matrix (Fin n) (Fin n) ℂ} (hk : k ∈ Matrix.unitaryGroup (Fin n) ℂ) :
     IsUnit k.det :=
@@ -517,8 +513,7 @@ theorem mult_one_families : ∀ (ι : Type) [Fintype ι] (N n : ℕ) (hN : N = n
     refine ⟨(LinearEquiv.ofInjective _ inj).symm.toLinearMap ∘ₗ (T' ∘ₗ emb G lam eN).codRestrict _ hmem, fun x => ?_⟩
     have h := congrArg Subtype.val ((LinearEquiv.ofInjective _ inj).apply_symm_apply
       ((T' ∘ₗ emb G lam eN).codRestrict _ hmem x))
-    rw [LinearEquiv.ofInjective_apply] at h
-    exact h
+    rwa [LinearEquiv.ofInjective_apply] at h
   let R : ∀ τ, Set ((delSq ℂ N (lam τ) →ₗ[ℂ] delSq ℂ N (lam τ)) × (delSq ℂ n (sg τ) →ₗ[ℂ] delSq ℂ n (sg τ))) :=
     fun τ => {p | ∃ (k : Matrix (Fin n) (Fin n) ℂ) (kt : Matrix (Fin N) (Fin N) ℂ),
       k ∈ Matrix.unitaryGroup (Fin n) ℂ ∧ GlobalTheory.BranchFormula.IsBlock hN kt k 1 ∧
@@ -576,8 +571,7 @@ theorem mult_one_families : ∀ (ι : Type) [Fintype ι] (N n : ℕ) (hN : N = n
       rfl
     rw [h1, map_smul] at h0
     have h2 := congrArg Subtype.val h0
-    rw [Submodule.coe_smul, actL_apply _ _ _ hku] at h2
-    exact h2
+    rwa [Submodule.coe_smul, actL_apply _ _ _ hku] at h2
   obtain ⟨Q, hQ⟩ := mkQ T hT
   obtain ⟨Q₀, hQ₀⟩ := mkQ T₀ hT₀
   have hQ0 : Q₀ ≠ 0 := by

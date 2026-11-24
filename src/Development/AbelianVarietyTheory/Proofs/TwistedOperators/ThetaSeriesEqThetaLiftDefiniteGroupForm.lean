@@ -134,8 +134,7 @@ theorem exists_isReps_through {H Γ I : Type} [Group H] [Group Γ] (ι : Γ →*
       · rintro ⟨δ, k, h⟩
         exact ⟨δ * γ⁻¹, m⁻¹ * k, by rw [h, map_mul, map_inv, Subgroup.coe_mul, Subgroup.coe_inv]; group⟩
     · rw [Function.update_of_ne hj]
-  simp only [hiff]
-  exact hy g
+  simpa only [hiff] using hy g
 
 theorem exists_form_sum {H Hf W : Type} [Group H] [Group Hf] [NormedAddCommGroup W] [InnerProductSpace ℂ W] (p : H →* Hf)
     (hp : Function.Surjective p) (Γ F R : Subgroup H) (ρ : H →* Module.End ℂ W) (J : Subgroup Hf) (χ : J →* ℂˣ)
@@ -160,10 +159,8 @@ theorem exists_form_sum {H Hf W : Type} [Group H] [Group Hf] [NormedAddCommGroup
   have hr : ∀ k, r k ∈ F ∧ p (r k) = y' k := fun k => by
     by_cases hk : k = c₀
     · subst hk
-      simp only [r, Function.update_self]
-      exact ⟨hh₀, e₀.symm⟩
-    · simp only [r, Function.update_of_ne hk]
-      exact ⟨hσ _, hσ' _⟩
+      simpa only [r, Function.update_self] using ⟨hh₀, e₀.symm⟩
+    · simpa only [r, Function.update_of_ne hk] using ⟨hσ _, hσ' _⟩
   have hr0 : r c₀ = h₀ := Function.update_self _ _ _
   have hyr : (fun k => p (r k)) = y' := funext fun k => (hr k).2
   have hf0 := finite_stab _ _ hy hfin (p h₀)
@@ -205,8 +202,7 @@ theorem exists_form_sum {H Hf W : Type} [Group H] [Group Hf] [NormedAddCommGroup
       obtain ⟨j, -, hu⟩ := hy' (y' k)
       refine hk ((hu k ⟨1, 1, by simp⟩).trans (hu c₀ ?_).symm)
       show ∃ (γ : Γ) (m : J), y' k = (p.comp Γ.subtype) γ * y' c₀ * m
-      rw [e₀, ← (hr k).2]
-      exact hex
+      rwa [e₀, ← (hr k).2]
 
 
 

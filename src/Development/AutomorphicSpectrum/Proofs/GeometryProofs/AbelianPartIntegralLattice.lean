@@ -109,10 +109,8 @@ theorem phiNormSq_baseChange : ∀ (E L Ψ : Type) [Field E] [NumberField E] [Fi
   have hOF : IsOFamily ρ' (A.I.map j) (fun i => j (v i)) := by
     unfold GlobalTheory.CompanionTheory.Ar.Cusp.IsOFamily
     refine ⟨fun i => AddSubgroup.mem_map_of_mem j (hvI i), fun a ha => hvind a (hji ?_), ?_⟩
-    · rw [map_zero, ← hsum a]
-      exact ha
-    · rw [hrel]
-      exact hvrel
+    · rwa [map_zero, ← hsum a]
+    · rwa [hrel]
   have hqe : ∀ τ c, j (q τ c) ∈ eigSp ρ' (e.comp (A.σ (lab τ))) := by
     intro τ c
     have hx0 := (hq τ).2 c
@@ -203,8 +201,7 @@ theorem eq_zero_of_mem_finset (ρ : O →+* Module.End k V) (σ : O →+* k)
     rw [Finset.iSup_insert, Submodule.mem_sup] at hxs
     obtain ⟨y, hy, z, hz, hyz⟩ := hxs
     obtain ⟨a, ha⟩ : ∃ a, σ a ≠ τ.1 a := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact τ.2 (RingHom.ext fun a => (h a).symm)
     have hzs : ∀ b : O, ρ b z ∈ ⨆ i ∈ t, eigSp ρ i.1 := by
       intro b
@@ -224,8 +221,7 @@ theorem eq_zero_of_mem_finset (ρ : O →+* Module.End k V) (σ : O →+* k)
     have hmem : (σ a - τ.1 a) • x ∈ ⨆ i ∈ t, eigSp ρ i.1 := by
       rw [hkey]
       exact Submodule.sub_mem _ (hzs a) (Submodule.smul_mem _ _ hz)
-    have h0 := ih _ (Submodule.smul_mem _ _ hx) hmem
-    exact (smul_eq_zero.1 h0).resolve_left (sub_ne_zero.2 ha)
+    exact (smul_eq_zero.1 (ih _ (Submodule.smul_mem _ _ hx) hmem)).resolve_left (sub_ne_zero.2 ha)
 
 theorem eq_zero_of_mem_iSup (ρ : O →+* Module.End k V) (σ : O →+* k) {x : V} (hx : x ∈ eigSp ρ σ)
     (hS : x ∈ ⨆ τ ∈ {τ : O →+* k | τ ≠ σ}, eigSp ρ τ) : x = 0 := by
@@ -410,8 +406,7 @@ theorem eigSp_sum_eq_zero (ρ : O →+* Module.End k V) (s : Finset (O →+* k))
         (fun u hu => Submodule.smul_mem _ _ (hf' u hu)) hz t ht
       exact (smul_eq_zero.1 this).resolve_left (sub_ne_zero.2 ha)
     have h₀ : f t₀ = 0 := by
-      rw [Finset.sum_eq_zero hs, add_zero] at hsum
-      exact hsum
+      rwa [Finset.sum_eq_zero hs, add_zero] at hsum
     intro t ht
     rcases Finset.mem_insert.1 ht with rfl | ht
     · exact h₀
@@ -953,8 +948,7 @@ theorem geo_height_arch : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     simp [Over.comp_left]
   have heig : ∀ τ a, eigComp ρ' (e.comp (A.σ (lab τ))) (j (v a)) = j (eigComp A.ρ (A.σ (lab τ)) (v a)) := fun τ a => by
     refine GlobalTheory.T.eigen_component_map_compat L ℂ V V' (𝓞 E) e j hjs A.ρ ρ' hρ (A.σ (lab τ)) (v a) ?_
-    have h0 := (hq τ).1.1.ne_zero (Fin.castAdd k a)
-    simpa [LinPt.fam] using h0
+    simpa [LinPt.fam] using (hq τ).1.1.ne_zero (Fin.castAdd k a)
   have hpos : 0 < (((oSpan A.ρ v).relIndex A.I : ℕ) : ℝ) *
       ∏ τ, (4 * Real.pi)⁻¹ ^ r * A.gramDet e (q τ) / ‖e (T τ).det‖ ^ 2 := by
     refine mul_pos (Nat.cast_pos.2 (Nat.pos_of_ne_zero hv.2.2)) (Finset.prod_pos fun τ _ => ?_)

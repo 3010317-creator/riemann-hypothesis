@@ -94,9 +94,7 @@ theorem exists_nonneg_test : ∀ (F : Type) [Field F] [NumberField F] (κ : Type
       ((continuous_apply i).comp continuous_snd)
   have he'0 : e' (0, 0) = 0 := by
     funext i
-    refine Prod.ext ?_ rfl
-    show (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm 0 = 0
-    exact map_zero _
+    exact Prod.ext (map_zero _) rfl
   have hpre : e' ⁻¹' U ∈ 𝓝 ((0 : κ → mixedEmbedding.mixedSpace F), (0 : κ → FiniteAdeleRing (𝓞 F) F)) :=
     he'.continuousAt.preimage_mem_nhds (by rw [he'0]; exact hU)
   obtain ⟨V₁, hV₁, V₂, hV₂, hsub⟩ := mem_nhds_prod_iff.mp hpre
@@ -152,10 +150,8 @@ theorem exists_nonneg_test : ∀ (F : Type) [Field F] [NumberField F] (κ : Type
     have hmem := hsub (Set.mk_mem_prod hb (hL _ fun i => hS i (Set.mem_univ i)))
     have hxe : e' ((fun i => InfiniteAdeleRing.ringEquiv_mixedSpace F (x i).1), fun i => (x i).2) = x := by
       funext i
-      refine Prod.ext ?_ rfl
-      exact (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm_apply_apply _
-    rw [← hxe]
-    exact hmem
+      exact Prod.ext ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm_apply_apply _) rfl
+    rwa [← hxe]
   · intro x
     show (f _ * g _).im = 0 ∧ 0 ≤ (f _ * g _).re
     rw [hf]

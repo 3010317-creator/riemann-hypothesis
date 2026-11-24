@@ -59,8 +59,7 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] {s : Set E}
 theorem contDiffOn_det {m : Type} [Fintype m] [DecidableEq m] (f : E → Matrix m m ℂ)
     (hf : ∀ i j, ContDiffOn ℝ ∞ (fun x => f x i j) s) : ContDiffOn ℝ ∞ (fun x => (f x).det) s := by
   simp only [Matrix.det_apply']
-  refine ContDiffOn.sum fun σ _ => contDiffOn_const.mul ?_
-  exact contDiffOn_prod fun i _ => hf _ _
+  exact ContDiffOn.sum fun σ _ => contDiffOn_const.mul (contDiffOn_prod fun i _ => hf _ _)
 
 theorem contDiffOn_minv {m : Type} [Fintype m] [DecidableEq m] (f : E → Matrix m m ℂ)
     (hf : ∀ i j, ContDiffOn ℝ ∞ (fun x => f x i j) s) (hd : ∀ x ∈ s, (f x).det ≠ 0) (i j : m) :
@@ -75,8 +74,7 @@ theorem contDiffOn_minv {m : Type} [Fintype m] [DecidableEq m] (f : E → Matrix
 theorem contDiffOn_mmul {m : Type} [Fintype m] (f g : E → Matrix m m ℂ)
     (hf : ∀ i j, ContDiffOn ℝ ∞ (fun x => f x i j) s) (hg : ∀ i j, ContDiffOn ℝ ∞ (fun x => g x i j) s) (i j : m) :
     ContDiffOn ℝ ∞ (fun x => (f x * g x) i j) s := by
-  simp only [Matrix.mul_apply]
-  exact ContDiffOn.sum fun k _ => (hf _ _).mul (hg _ _)
+  simpa only [Matrix.mul_apply] using ContDiffOn.sum fun k _ => (hf _ _).mul (hg _ _)
 
 theorem contDiffOn_Lm {n : ℕ} (f : E → Matrix (Fin n) (Fin n) ℂ)
     (hf : ∀ i j, ContDiffOn ℝ ∞ (fun x => f x i j) s) (hd : ∀ x ∈ s, ∀ k, lminor (f x) k ≠ 0) (i j : Fin n) :

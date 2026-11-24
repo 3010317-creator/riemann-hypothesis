@@ -183,8 +183,7 @@ theorem io_injective : Function.Injective (io AI) := by
   intro a b h
   apply AI.ιA_inj
   apply (P.PD (botExt l)).ι_inj
-  rw [P.PD_ι, P.PD_ι]
-  exact h
+  rwa [P.PD_ι, P.PD_ι]
 
 theorem ιA_zl (T : LocTied l P AI) (z : ℤ_[l]) :
     AI.ιA (algebraMap ℤ_[l] (Ainf l) z) = algebraMap ℚ_[l] P.R.B (z : ℚ_[l]) := by
@@ -236,8 +235,7 @@ theorem act_mem_Lat {M n : ℕ} (g : GQ l) {b : P.R.BdR} (hb : b ∈ Lat AI M n)
   obtain ⟨a, ha⟩ := hb
   refine ⟨AI.actW g a, ?_⟩
   have := act_mem g ha
-  rw [map_sub, ← io_act, map_mul, map_pow, map_natCast] at this
-  exact this
+  rwa [map_sub, ← io_act, map_mul, map_pow, map_natCast] at this
 
 theorem qB_mul_mem_Lat (T : LocTied l P AI) {M n : ℕ} (z : ℤ_[l]) {b : P.R.BdR}
     (hb : b ∈ Lat AI M n) : qB P (z : ℚ_[l]) * b ∈ Lat AI M n := by

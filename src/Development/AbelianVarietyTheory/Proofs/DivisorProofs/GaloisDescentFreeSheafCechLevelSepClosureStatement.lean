@@ -117,8 +117,7 @@ private lemma prod_X_sub_C_dvd_sum_lagPoly_sub_one :
     simp only [_root_.GlobalTheory.LagIdem.lagPoly, eval_mul, eval_C, eval_prod, eval_sub, eval_X]
     exact mul_eq_zero_of_right _
       (Finset.prod_eq_zero (Finset.mem_erase.mpr ⟨hik.symm, Finset.mem_univ k⟩) (sub_self _))
-  · intro h
-    exact absurd (Finset.mem_univ k) h
+  · exact fun h => absurd (Finset.mem_univ k) h
 
 open TensorProduct Polynomial IsLocalRing in
 variable {R E ι : Type} [CommRing R] [Ring E] [Algebra R E] [Fintype ι] [DecidableEq ι] in
@@ -323,8 +322,7 @@ theorem idem_spec [Algebra.IsAlgebraic K Ω] [Normal K Ω] {B : Type} [CommRing 
   have hP : aeval b (∏ j : conj K Ω θ, (X - C (j : Ω))) = 0 := by
     rw [map_prod]
     simp only [map_sub, aeval_X, aeval_C, RingHom.algebraMap_toAlgebra]
-    rw [Finset.prod_coe_sort (conj K Ω θ) (fun s => b - g₀ s)]
-    exact hb
+    rwa [Finset.prod_coe_sort (conj K Ω θ) (fun s => b - g₀ s)]
   obtain ⟨h1, h2, h3, -⟩ := GlobalTheory.lagIdem_spec Ω B (conj K Ω θ) b _ hu hP
   rw [hid]
   refine ⟨h1, fun s => ?_, ?_⟩
@@ -714,8 +712,7 @@ theorem lcRing_universal : ∀ (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω]
       ext x
       have hdep : DependsOn K Ω k x (legHom K Ω k j.succ x) := by
         intro y y' h
-        simp only [legHom, Fin.cases_succ, coord_apply]
-        exact h j
+        simpa only [legHom, Fin.cases_succ, coord_apply] using h j
       rw [RingHom.comp_apply, hu, ← hwd _ x hdep, (lem_legs K Ω B k g₀ gs hgs).2 j x]
   have hbase : u.comp (baseHom K Ω k) = c := by
     ext a
@@ -910,8 +907,7 @@ theorem gal_sec_of (TopsChoicePartA : ∀ (K Ω : Type) [Field K] [Field Ω] [Al
           (FreeHom.desc P F φ hφ).hom = FreeHom.descP P F φ hφ := by
         have he := ((sheafificationAdjunction Scheme.etaleTopology.{0}
           (ModuleCat.{1} (ULift.{1} R))).homEquiv _ _).apply_symm_apply (FreeHom.descP P F φ hφ)
-        rw [Adjunction.homEquiv_unit] at he
-        exact he
+        rwa [Adjunction.homEquiv_unit] at he
       rw [hdesc]
       change (ModuleCat.freeDesc _).hom (ModuleCat.freeMk (ULift.up p)) = a
       erw [ModuleCat.freeDesc_apply]
@@ -937,8 +933,7 @@ theorem gal_sec_of (TopsChoicePartA : ∀ (K Ω : Type) [Field K] [Field Ω] [Al
         (S3 R F hF K Ω (Sec.res (Spec.map (CommRingCat.ofHom (LocallyConstant.evalRingHom (tailG K Ω k σ)))) (val s (Spec (CommRingCat.of (LCRing K Ω k))) (cechPt (Spec.map (CommRingCat.ofHom (algebraMap K Ω))) k (Spec.map (CommRingCat.ofHom (baseHom K Ω k))) (fun i => Spec.map (CommRingCat.ofHom (legHom K Ω k i))) (fun i => by rw [← Spec.map_comp, ← CommRingCat.ofHom_comp, legHom_comp])))))
         (σ 0))
     filter_upwards [h1, h2] with τ e1 e2
-    rw [gal_sec_of_lemma, gal_sec_of_lemma, e1]
-    exact e2
+    rwa [gal_sec_of_lemma, gal_sec_of_lemma, e1]
   · intro φ hφ heq
     have hψ : IsLocallyConstant (fun g : Fin k → (Ω ≃ₐ[K] Ω) => φ (Fin.cons 1 g)) :=
       hφ.comp_continuous (continuous_const.finCons continuous_id)

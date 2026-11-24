@@ -140,8 +140,7 @@ theorem exists_sub_lt_one (hk : IsAlgClosed (ResidueField O)) {x : AlgebraicClos
   rw [map_sub, hpx, zero_sub, Valuation.map_neg] at hval
   simp only [Q, map_multiset_prod, Multiset.map_map, Function.comp_def, map_sub, Polynomial.aeval_X,
     Polynomial.aeval_C] at hval
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   refine absurd hval (not_lt.2 ?_)
   apply Multiset.one_le_prod_of_one_le
   intro t ht
@@ -153,10 +152,8 @@ theorem apply_mem_intBar (τ : AlgebraicClosure (FractionRing O) ≃ₐ[Fraction
   rw [mem_intBar, mem_intBar]
   constructor
   · intro h
-    have h2 := h.map (τ.symm.toAlgHom.restrictScalars O)
-    simpa using h2
-  · intro h
-    exact h.map (τ.toAlgHom.restrictScalars O)
+    simpa using h.map (τ.symm.toAlgHom.restrictScalars O)
+  · exact fun h => h.map (τ.toAlgHom.restrictScalars O)
 
 theorem val_apply_sub_lt_one (hk : IsAlgClosed (ResidueField O))
     (τ : AlgebraicClosure (FractionRing O) ≃ₐ[FractionRing O] AlgebraicClosure (FractionRing O))
@@ -371,8 +368,7 @@ theorem finPart_mem {I : Type} [Fintype I] {φ : I → E →+* ℂ} {m : I → �
         simp only [Set.mem_setOf_eq, Units.val_mul] at ha hb ⊢
         exact M.mul_mem ha hb
       one_mem' := by
-        simp only [Set.mem_setOf_eq, Units.val_one]
-        exact M.one_mem
+        simpa only [Set.mem_setOf_eq, Units.val_one] using M.one_mem
       inv_mem' := fun {a} ha => by
         simp only [Set.mem_setOf_eq, Units.val_inv_eq_inv_val] at ha ⊢
         exact M.inv_mem ha }
@@ -410,8 +406,7 @@ theorem finPart_mem {I : Type} [Fintype I] {φ : I → E →+* ℂ} {m : I → �
       fun z => Subtype.ext (by rw [MonoidHom.coe_rangeRestrict, hψb])
     have h := GlobalTheory.ToricDistribution.pic_char_eq_finPart hc (r.comp ψb.rangeRestrict) 1 S ?_ y
     · have h1 : finPart (1 : HChar E) y = 1 := by simp [finPart]
-      rw [h1, MonoidHom.comp_apply, hrr] at h
-      exact h
+      rwa [h1, MonoidHom.comp_apply, hrr] at h
     · intro P hP
       refine ⟨?_, ?_⟩
       · intro x _

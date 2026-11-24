@@ -437,8 +437,7 @@ theorem detTwK_inv_invTrK (n : ℕ) (lam : ι → ℕ → ℤ) (lam' : ι → Do
   · subst hn
     simp
   · congr 1
-    simp only [DomWeight.detShift, dite_eq_left hn]
-    exact hl τ _
+    simpa only [DomWeight.detShift, dite_eq_left hn] using hl τ _
 
 end General3
 
@@ -627,8 +626,7 @@ theorem coefPsi (W : G.Weil) (h0 : PosOnb W (.top 0)) :
     show weylRep _ _ (rowComp (rowSizes D) g 0) F = _
     rw [rowComp_zero]
     all_goals rfl
-  rw [e1]
-  exact main
+  rwa [e1]
 
 end Grid2
 

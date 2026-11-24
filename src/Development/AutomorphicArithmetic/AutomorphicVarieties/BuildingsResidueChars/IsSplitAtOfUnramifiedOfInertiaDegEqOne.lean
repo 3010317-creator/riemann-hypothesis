@@ -71,11 +71,9 @@ theorem UpperTheory.isSplitAt_of_unramified_of_inertiaDeg_eq_one :
         rw [Ideal.liesOver_iff, h0] at this
         rw [this]
         exact Ideal.comap_bot_of_injective _ (FaithfulSMul.algebraMap_injective _ _)
-      apply w.ne_bot
-      exact Ideal.eq_bot_of_comap_eq_bot (R := 𝓞 F) hP0
+      exact w.ne_bot (Ideal.eq_bot_of_comap_eq_bot (R := 𝓞 F) hP0)
     refine ⟨⟨q.1, q.2.1, hq0⟩, ?_, ?_⟩
-    · intro h
-      exact hq (congrArg HeightOneSpectrum.asIdeal h)
+    · exact fun h => hq (congrArg HeightOneSpectrum.asIdeal h)
     · ext1
       change Ideal.under (𝓞 F) q.1 = p
       exact (Ideal.liesOver_iff _ _).mp q.2.2 |>.symm
@@ -83,7 +81,6 @@ theorem UpperTheory.isSplitAt_of_unramified_of_inertiaDeg_eq_one :
   have hPmem : P ∈ p.primesOver (𝓞 E) := ⟨w.isPrime, ⟨rfl⟩⟩
   have huniq : (Finset.univ : Finset (p.primesOver (𝓞 E))) = {⟨P, hPmem⟩} := by
     ext q
-    simp only [Finset.mem_univ, Finset.mem_singleton, true_iff]
-    exact Subtype.ext (hone q)
+    simpa only [Finset.mem_univ, Finset.mem_singleton, true_iff] using Subtype.ext (hone q)
   rw [huniq, Finset.sum_singleton, he, hf', hfin] at hsum
   omega

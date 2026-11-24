@@ -67,8 +67,7 @@ theorem exists_coord {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrtho
   classical
 
   have hσ : ∀ x : D.host.E, (D.sp.cm.sig : D.host.E →+* D.host.E) ((D.sp.cm.sig : D.host.E →+* D.host.E) x) = x := by
-    intro x
-    exact star_star x
+    exact fun x => star_star x
   have hG : Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) B.gram = B.gram := by
     ext i j
     exact B.herm.eq (B.frame j) (B.frame i)
@@ -91,8 +90,7 @@ theorem exists_coord {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrtho
     simp [Formalism.UG.cT]
   refine ⟨fun k => (Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) d.a * B.gram) p.rev k, fun i => ?_, fun q => ?_⟩
   · have h := congrFun (congrFun hperp p.rev) i
-    rw [Matrix.mul_apply, Matrix.zero_apply] at h
-    exact h
+    rwa [Matrix.mul_apply, Matrix.zero_apply] at h
   · have h := congrFun (congrFun d.gram p.rev) q
     rw [Matrix.mul_apply] at h
     refine h.trans ?_
@@ -206,8 +204,7 @@ theorem col_mem_of {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrthogo
         refine ⟨0, Λ.zero_mem, Pi.single p ((o : D.host.E) * y), fun q => ?_, ?_⟩
         · by_cases hq : q = p
           · subst hq
-            rw [Pi.single_eq_same]
-            exact hoy
+            rwa [Pi.single_eq_same]
           · rw [Pi.single_eq_of_ne hq]
             exact (𝔟 q).zero_mem
         · rw [Matrix.mulVec_zero, zero_add]
@@ -277,8 +274,7 @@ theorem exists_mem_modulBar {T : Type} {L : LevCh D T} (P : Places L) (sc : Cons
   have hsep : ∀ u ∈ P.S0, ∃ c : 𝓞 D.host.F, c ∈ u.asIdeal ∧ c ∉ v.asIdeal := by
     intro u hu
     have hne : u ≠ v := fun h => hv (h ▸ hu)
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hne
     have hle : u.asIdeal ≤ v.asIdeal := fun c hc => hcon c hc
     exact HeightOneSpectrum.ext (u.isMaximal.eq_of_le v.isPrime.ne_top hle)
@@ -312,8 +308,7 @@ theorem exists_mem_modulBar {T : Type} {L : LevCh D T} (P : Places L) (sc : Cons
       show D.host.conj ((algebraMap (𝓞 D.host.F) (𝓞 D.host.E) x : 𝓞 D.host.E) : D.host.E) = _
       rw [hcoe x]
       exact GlobalTheory.IdeleAA.conj_F x
-    rw [hfix] at hsm
-    exact hsm
+    rwa [hfix] at hsm
 
 theorem wittDecompositionColumns_auxiliaryVectors {A B B₀ : HSp D} {c ρ : ℕ} {a : HermitianOrthogonalExtensionData A B c (-1)} {d : HypDec B B₀ ρ} (h : IsAuxiliaryVectorWittDec a d) (i : Fin ρ) :
     ∃ p : Fin c, p.1 = i.1 ∧ p.rev ≠ p ∧

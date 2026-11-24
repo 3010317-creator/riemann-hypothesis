@@ -176,8 +176,7 @@ theorem norm_le_of_norm_mul_cpow_le (q e : ℕ) (hq : 0 < q) (μ : ℂ)
     rw [this, Complex.ofReal_re]
   rw [norm_mul, Complex.norm_natCast_cpow_of_pos hq, hre] at h
   have hp : 0 < (q : ℝ) ^ ((e : ℝ) / 2) := Real.rpow_pos_of_pos hq' _
-  rw [Real.rpow_neg hq'.le, ← one_div, le_div_iff₀ hp]
-  exact h
+  rwa [Real.rpow_neg hq'.le, ← one_div, le_div_iff₀ hp]
 
 theorem heckeWeak_of_maxExpWeak (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] (N : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V]
@@ -619,8 +618,7 @@ private theorem exists_compl_of_admissible {G V : Type} [Group G] [TopologicalSp
       · rintro ⟨hsW, hsK⟩
         refine ⟨⟨s, hsW⟩, ?_, rfl⟩
         rw [GlobalTheory.CompanionTheory.UnitSemisimple.mem_fixed_iff]
-        intro k hk
-        exact Subtype.ext (hsK k hk)
+        exact fun k hk => Subtype.ext (hsK k hk)
     obtain ⟨w, hw, hperp⟩ := GlobalTheory.CompanionTheory.UnitSemisimple.exists_proj_finset B hpos t v
     refine ⟨w, ((hM w).mp hw).1, ?_⟩
     intro w' hw'
@@ -637,8 +635,7 @@ private theorem isCoatom_of_compl {G V : Type} [Group G] [AddCommGroup V] [Modul
   constructor
   · intro hT
     obtain ⟨s, hsS, hs0⟩ : ∃ s ∈ S.toSubmodule, s ≠ 0 := by
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       apply hS.1
       apply Subrepresentation.ext
       ext v
@@ -658,8 +655,7 @@ private theorem isCoatom_of_compl {G V : Type} [Group G] [AddCommGroup V] [Modul
     have hw0 : w ≠ 0 := by
       rintro rfl
       apply huT
-      rw [sub_zero] at hwT
-      exact hwT
+      rwa [sub_zero] at hwT
     have hSU : S ≤ U := by
       have hinf : S ⊓ U = S := (hS.le_iff.mp inf_le_left).resolve_left (by
         intro h
@@ -674,8 +670,7 @@ private theorem isCoatom_of_compl {G V : Type} [Group G] [AddCommGroup V] [Modul
     show v ∈ U.toSubmodule ↔ v ∈ (⊤ : Submodule ℂ V)
     refine ⟨fun _ => trivial, fun _ => ?_⟩
     obtain ⟨w', hw'S, hw'T⟩ := hsum v
-    have hadd := U.toSubmodule.add_mem (hSU hw'S) (hle hw'T)
-    simpa using hadd
+    simpa using U.toSubmodule.add_mem (hSU hw'S) (hle hw'T)
 
 private theorem equiv_of_isCosocle (hBZ : GlobalTheory.Published.BernsteinZelevinskyFiniteness) {k : Type} [Field k]
     [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {N : ℕ}
@@ -975,8 +970,7 @@ theorem UpperTheory.Lit.Cas.prodExp :
     have hj0 : j = 0 := Fin.ext (by omega)
     subst hj0
     have hf : (Finset.univ.filter fun i : Fin 2 => i ≤ 0) = {0} := by decide
-    rw [hf, Finset.prod_singleton]
-    exact n0
+    rwa [hf, Finset.prod_singleton]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.GeneralLinearGroups.TProdExp =====
@@ -992,8 +986,7 @@ namespace GlobalTheory.CompanionTheory.SqIntUnit
 
 theorem isUnitarisable_of_isSqIntCoeff : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] (x : IrrGL (k := k)), IsSqIntCoeff x.rep → IsUnitarisable x.rep := by
-  intro k _ _ _ _ x h
-  exact GlobalTheory.SqIntUnit.main k x.1 _ x.rep x.2.rep.smooth x.2.rep.irr h
+  exact fun k _ _ _ _ x h => GlobalTheory.SqIntUnit.main k x.1 _ x.rep x.2.rep.smooth x.2.rep.irr h
 
 end GlobalTheory.CompanionTheory.SqIntUnit
 end -- clump:auto

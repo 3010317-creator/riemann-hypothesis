@@ -61,8 +61,7 @@ private theorem der_log {a : ℕ} (M : Matrix (Fin a) (Fin a) ℂ) :
   have h1 := (der_det M).clog (by simp)
   have h2 : HasDerivAt (fun r : ℂ => Complex.log (1 + r • M).det) M.trace ((0 : ℝ) : ℂ) := by
     simpa using h1
-  have h3 := h2.real_of_complex
-  simpa only [Complex.log_re] using h3
+  simpa only [Complex.log_re] using h2.real_of_complex
 
 variable {E : Type} [Field E] [NumberField E] {a : ℕ}
 
@@ -115,8 +114,7 @@ theorem UpperTheory.deriv_similitudeChar_at_one_eq_trace :
     have hd := ((sm_at h1).differentiableAt (by simp)).hasFDerivAt
     have hl : HasDerivAt (fun t : ℝ => oneL E a + t • X) X 0 := by
       simpa using ((hasDerivAt_id (0 : ℝ)).smul_const X).const_add (oneL E a)
-    have h2 := HasFDerivAt.comp_hasDerivAt_of_eq (0 : ℝ) hd hl (by simp)
-    exact h2.unique (der_sc X)
+    exact (HasFDerivAt.comp_hasDerivAt_of_eq (0 : ℝ) hd hl (by simp)).unique (der_sc X)
   · have h : sc k.1 ^ 2 = 1 := by
       rw [← sc_mul_star, Matrix.mem_unitaryGroup_iff.1 k.2, sc_one]
     have hp : 0 < sc k.1 := Real.exp_pos _

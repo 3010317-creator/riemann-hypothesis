@@ -79,8 +79,7 @@ private theorem base_change_residue_surjective (O' R T : Type) [CommRing O'] [Is
     rintro P ⟨-, hP⟩
     have h1 : Ideal.comap (algebraMap R T) P = maximalIdeal R :=
       IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := R) P)
-    rw [← Ideal.mem_comap, h1]
-    exact hr
+    rwa [← Ideal.mem_comap, h1]
   haveI : Nontrivial T := by
     refine ⟨⟨0, 1, fun h => ?_⟩⟩
     have h2 := congrArg φ h

@@ -78,8 +78,7 @@ theorem Tower.val_comp_p {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Matrix (Fi
     X₁.M.val (y ≫ 𝔗.p) x = 𝔗.X₂.M.val y (algebraMap X₁.Ω₁ 𝔗.X₂.Ω₁ x) := by
   obtain ⟨U, a, hz, rfl⟩ := hx
   have h1 : Set.range y ⊆ (𝔗.p ⁻¹ᵁ U : 𝔗.X₂.M.Z.Opens) := by
-    rw [RatModel.range_eq_singleton y w, Set.singleton_subset_iff]
-    exact hz
+    rwa [RatModel.range_eq_singleton y w, Set.singleton_subset_iff]
   rw [← 𝔗.valF_app_p ⟨_, hz⟩ a, RatModel.val_valF h1,
     RatModel.val_valF (U := U) (by rintro _ ⟨w', rfl⟩; exact h1 ⟨w', rfl⟩)]
   exact valR_comp y 𝔗.p U a
@@ -89,8 +88,7 @@ theorem RatModel.val_spMap_comp_field {o Ω : Type} [CommRing o] [Field Ω] [Alg
     M.val (spMap σ ≫ y) x = σ (M.val y x) := by
   obtain ⟨U, g, hz, rfl⟩ := hx
   have h1 : Set.range y ⊆ U := by
-    rw [RatModel.range_eq_singleton y w, Set.singleton_subset_iff]
-    exact hz
+    rwa [RatModel.range_eq_singleton y w, Set.singleton_subset_iff]
   rw [RatModel.val_valF h1, RatModel.val_valF (by rintro _ ⟨w', rfl⟩; exact h1 ⟨_, rfl⟩)]
   exact valR_spMap_comp σ y U ((top_le_preimage_iff _ _).2 h1) g
 

@@ -138,11 +138,8 @@ theorem IsWt.pull {X : Type} [AddCommGroup X] {G : Over S} {G' : Over S'} [GrpOb
     exact hF.2 Z' (t' ≫ i') g' x₀ g rfl rfl
   have h₁' : ⊤ ≤ (t ≫ i * g).left ⁻¹ᵁ V := by
     rw [hmul]
-    intro x _
-    exact hV (h₁ trivial)
-  have h₂' : ⊤ ≤ g.left ⁻¹ᵁ V := by
-    intro x _
-    exact hV (h₂ trivial)
+    exact fun x _ => hV (h₁ trivial)
+  have h₂' : ⊤ ≤ g.left ⁻¹ᵁ V := fun x _ => hV (h₂ trivial)
   have key := hu Z t g h₁' h₂'
   have hcong : ∀ (a b : Z'.left ⟶ G.left) (hab : a = b) (ha : ⊤ ≤ a ⁻¹ᵁ V) (hb : ⊤ ≤ b ⁻¹ᵁ V),
       (a.appLE V ⊤ ha).hom u = (b.appLE V ⊤ hb).hom u := by
@@ -199,8 +196,7 @@ theorem exists_tq_baseChange : ∀ (S S' : Scheme.{0}) (f : S' ⟶ S) (X : Type)
   have hker0 : IsPullback Q.i.left (splitTorus S X).hom Q.q.left (η[Q.B]).left := by
     have h0 : IsPullback Q.i.left (toUnit (splitTorus S X)).left Q.q.left (η[Q.B]).left :=
       Q.isKernel.map (Over.forget S)
-    rw [hT] at h0
-    exact h0
+    rwa [hT] at h0
   have hcomp : IsPullback (i'.left ≫ F) (splitTorus S' X).hom Q.q.left
       ((η[(Over.pullback f).obj Q.B]).left ≫ pullback.fst Q.B.hom f) := by
     rw [← torusCompat_iff.mp hi', hη]
@@ -216,11 +212,9 @@ theorem exists_tq_baseChange : ∀ (S S' : Scheme.{0}) (f : S' ⟶ S) (X : Type)
     apply IsPullback.of_map (Over.forget S')
     · apply Over.OverMorphism.ext
       show i'.left ≫ q'.left = (toUnit (splitTorus S' X)).left ≫ (η[(Over.pullback f).obj Q.B]).left
-      rw [hT']
-      exact hcommA
+      rwa [hT']
     · show IsPullback i'.left (toUnit (splitTorus S' X)).left q'.left (η[(Over.pullback f).obj Q.B]).left
-      rw [hT']
-      exact hA
+      rwa [hT']
   have hloc : ∀ (b : ((Over.pullback f).obj Q.B).left) (χ : X),
       ∃ V, b ∈ V ∧ ∃ u : (Γ(G'.left, q'.left ⁻¹ᵁ V))ˣ, IsWt i' (q'.left ⁻¹ᵁ V) (↑u) χ := by
     intro b χ

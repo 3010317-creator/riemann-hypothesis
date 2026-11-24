@@ -252,8 +252,7 @@ theorem mem_span_of_faithful {rd : Rd ρ Y i j b} (hf : Faithful rd) (S : Set (Y
   have hv : LinearIndependent (FractionRing (X.O i)) v := bW.linearIndependent.map' W.subtype (Submodule.ker_subtype W)
   have hspan : Submodule.span (FractionRing (X.O i)) (Set.range v) = W := by
     have := congrArg (Submodule.map W.subtype) bW.span_eq
-    rw [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp] at this
-    exact this
+    rwa [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp] at this
   have hli : LinearIndependent (FractionRing (X.O i)) (Fin.cons x v : Fin _ → Y.Fm i ((j : ℕ) + 1) b) :=
     linearIndependent_finCons.2 ⟨hv, by rw [hspan]; exact hxW⟩
   have hC := hf _ _ hli
@@ -267,8 +266,7 @@ theorem mem_span_of_faithful {rd : Rd ρ Y i j b} (hf : Faithful rd) (S : Set (Y
   have hsW : s ∈ Submodule.span (FractionRing (X.O i)) (Set.range v) := by
     rw [hspan]; exact Submodule.subset_span hs
   have := rd_mem_span Y rd _ hsW
-  rw [← Set.range_comp] at this
-  exact this
+  rwa [← Set.range_comp] at this
 
 end Descent
 
@@ -475,8 +473,7 @@ theorem dec_le_of_frob_mem {F Ω : Type} [Field F] [NumberField F] [Field Ω] [A
     (Subgroup.zpowers (⟨σ, hσ.1⟩ : Dec (F := F) A) ⊔ (Ine (F := F) A).subgroupOf (Dec (F := F) A))
     (sup_le ((Subgroup.zpowers_le).2 (Subgroup.mem_subgroupOf.2 hm)) (fun x hx => hI hx)) hc
   rw [h] at h2
-  intro g hg
-  exact h2 (Subgroup.mem_top (⟨g, hg⟩ : Dec (F := F) A))
+  exact fun g hg => h2 (Subgroup.mem_top (⟨g, hg⟩ : Dec (F := F) A))
 
 theorem addVal_le_of_notMem {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] {l x : O}
     (hx : x ∉ Ideal.span {l} * IsLocalRing.maximalIdeal O) :
@@ -1394,8 +1391,7 @@ theorem exists_residue_char [IsAlgClosure E Ω] {N : ℕ} {P : HeightOneSpectrum
     constructor
     · intro h
       rw [h] at h3
-      rw [Valuation.map_sub_swap]
-      exact h3
+      rwa [Valuation.map_sub_swap]
     · intro h
       refine Subtype.ext (Units.ext (eq_one_of_pow_eq_one A hNA (hr _) ?_))
       have := Valuation.map_add_lt _ h3 h
@@ -1636,8 +1632,7 @@ theorem dec_le_of_frob_mem {F Ω : Type} [Field F] [NumberField F] [Field Ω] [A
     (Subgroup.zpowers (⟨σ, hσ.1⟩ : Dec (F := F) A) ⊔ (Ine (F := F) A).subgroupOf (Dec (F := F) A))
     (sup_le ((Subgroup.zpowers_le).2 (Subgroup.mem_subgroupOf.2 hm)) (fun x hx => hI hx)) hc
   rw [h] at h2
-  intro g hg
-  exact h2 (Subgroup.mem_top (⟨g, hg⟩ : Dec (F := F) A))
+  exact fun g hg => h2 (Subgroup.mem_top (⟨g, hg⟩ : Dec (F := F) A))
 
 theorem residual_bound_of_parts : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X), (∀ i, StepAB X i) → (∀ i, ChooseH bkP i) → (∀ i s, GalHyp bkP i s → ResBound bkP i s) → ResidualBoundOddPrimes bkP := by
   intro D N X bkP hAB hCh hRB i hl T hT

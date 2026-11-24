@@ -141,10 +141,8 @@ theorem ex_le {c : ∀ k, ι k} {n : ℕ} {d : (Σ k, ι k) →₀ ℕ} (h : ∀
     · exact Nat.zero_le _
   · intro k' _ hk
     rw [Finsupp.single_apply, ite_eq_right]
-    intro h1
-    exact hk (congrArg Sigma.fst h1)
-  · intro h1
-    exact absurd (Finset.mem_univ k) h1
+    exact fun h1 => hk (congrArg Sigma.fst h1)
+  · exact fun h1 => absurd (Finset.mem_univ k) h1
 
 variable [∀ k, Fintype (ι k)]
 
@@ -155,8 +153,7 @@ theorem weight_eq_sum (d : (Σ k, ι k) →₀ ℕ) (k : K) :
   · simp [blockWeight]
   · intro k' _ hk
     simp [blockWeight, hk.symm]
-  · intro h1
-    exact absurd (Finset.mem_univ k) h1
+  · exact fun h1 => absurd (Finset.mem_univ k) h1
 
 theorem exists_chart {n : ℕ} {d : (Σ k, ι k) →₀ ℕ}
     (h : ∀ k, n * Fintype.card (ι k) < Finsupp.weight (blockWeight ι) d k) :
@@ -245,15 +242,13 @@ theorem lift_form [∀ k, Fintype (ι k)] {n : ℕ} (h : ∀ c a, Good (F := F) 
         (isWeightedHomogeneous_monomial (R := F) (blockWeight ι) d' 1 rfl)
       have h2 : (fun _ => n) + Finsupp.weight (blockWeight ι) d' = m := by
         rw [← hw, hd', map_add (f := _), weight_ex]
-      rw [h2] at h1
-      exact h1
+      rwa [h2] at h1
     · have h1 := V'.mul_mem_right (monomial d' 1) hV
       have h2 : (monomial d (AddMonoidAlgebra.coeff q d) : MRing ι F') =
           C (AddMonoidAlgebra.coeff q d) * (∏ k, X ⟨k, c k⟩) ^ n * monomial d' 1 := by
         rw [chart_pow, mul_assoc, monomial_mul, ← hd', C_mul_monomial]
         simp
-      rw [h2, map_mul, map_monomial, (algebraMap F F').map_one, ← sub_mul]
-      exact h1
+      rwa [h2, map_mul, map_monomial, (algebraMap F F').map_one, ← sub_mul]
 
 omit [Fintype K] in
 theorem finrank_piece {m : K → ℕ}
@@ -284,8 +279,7 @@ theorem finrank_piece {m : K → ℕ}
       rw [coeff_map, h0, map_zero]
     · rintro ⟨q, hq, rfl⟩
       obtain ⟨p, hp, hV⟩ := h q hq
-      refine ⟨Ideal.Quotient.mk V p, ⟨p, hp, rfl⟩, ?_⟩
-      exact (hψ p).trans (Ideal.Quotient.eq.2 hV).symm
+      exact ⟨Ideal.Quotient.mk V p, ⟨p, hp, rfl⟩, (hψ p).trans (Ideal.Quotient.eq.2 hV).symm⟩
   rw [(Submodule.equivMapOfInjective _ hinj (gradedPiece V m)).finrank_eq, hmap,
     Module.finrank_mul_finrank]
   exact ((Submodule.restrictScalarsEquiv F F' _ (gradedPiece V' m)).restrictScalars F).finrank_eq
@@ -371,8 +365,7 @@ theorem map_mem_pointIdeal {K : Type} {ι : K → Type} {Ω : Type} [Field Ω]
     MvPolynomial.map (algebraMap A O) f ∈ pointIdeal O y := by
   rw [pointIdeal, RingHom.mem_ker] at hf ⊢
   rw [← hf]
-  simp only [pointConeMap]
-  exact MvPolynomial.aeval_map_algebraMap _ _ _
+  simpa only [pointConeMap] using MvPolynomial.aeval_map_algebraMap _ _ _
 
 theorem isMultiHomog_map {K : Type} [DecidableEq K] {ι : K → Type} {R S : Type} [CommRing R]
     [CommRing S] (φ : R →+* S) {G : MRing ι R} {b : K → ℕ} (hG : IsMultiHomog G b) :
@@ -404,8 +397,7 @@ theorem intNumL_zmod_eq_residueDegree_mul_vNumL : ∀ (K : Type) [Fintype K] [De
   have hp0 : ((p : ℕ) : IsLocalRing.ResidueField O) = 0 := by
     have h1 : algebraMap A O (p : A) ∈ IsLocalRing.maximalIdeal O :=
       (IsLocalization.AtPrime.to_map_mem_maximal_iff O m _).2 hpm
-    have h2 := (IsLocalRing.residue_eq_zero_iff _).2 h1
-    simpa using h2
+    simpa using (IsLocalRing.residue_eq_zero_iff _).2 h1
   haveI hchar : CharP (IsLocalRing.ResidueField O) p := by
     rcases (Nat.dvd_prime (Fact.out : p.Prime)).1 (ringChar.dvd hp0) with h | h
     · exact absurd h CharP.ringChar_ne_one
@@ -467,8 +459,7 @@ theorem intNumL_zmod_eq_residueDegree_mul_vNumL : ∀ (K : Type) [Fintype K] [De
     simpa [hG'] using h2
   have key := _root_.GlobalTheory.CompanionTheory.Ar.Num.intNumL_subfield_constants K ι (ZMod p) (IsLocalRing.ResidueField O) (specialIdeal W')
     (SpecialIdealMultiHomog.full O K ι W' hWh) hsu l
-  rw [hcomap, hfr] at key
-  exact key
+  rwa [hcomap, hfr] at key
 
 end GlobalTheory.CompanionTheory.Ar.Num
 end -- clump:auto

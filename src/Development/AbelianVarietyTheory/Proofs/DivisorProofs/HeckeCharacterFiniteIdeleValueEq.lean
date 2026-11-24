@@ -111,12 +111,10 @@ theorem mem_intAE_iff_finAdEquiv (D : D7) (y : Af D.host.F ⊗[D.host.F] D.host.
   constructor
   · intro hy
     have := GlobalTheory.AdeleBaseChange.map_mem_int hι hy
-    rw [e] at this
-    exact this
+    rwa [e] at this
   · intro hy
     refine GlobalTheory.AdeleBaseChange.mem_int_of_map hι ?_
-    rw [e]
-    exact hy
+    rwa [e]
 
 theorem chr_finIdl : ∀ {D : D7} (ν : (AE D)ˣ →* Circle) (χ : Formalism.L2.Host.HChar D.host.E), ChrEq ν χ → ∀ x y, IsFinIdl x y →
     ((ν x : Circle) : ℂ) = ((χ.1 (GlobalTheory.Mem.Col2.SplitChar.finIdl D y) : ℂˣ) : ℂ) := by

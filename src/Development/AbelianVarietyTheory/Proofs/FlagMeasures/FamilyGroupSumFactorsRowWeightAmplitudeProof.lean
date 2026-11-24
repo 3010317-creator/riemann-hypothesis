@@ -178,8 +178,7 @@ theorem loc_ex (hM : M.OK) (H : Formalism.MainNotions.S.Loc.HermSp M V) (r k : �
     have h2 : H.Dl P.A.f P.B.f r =
         lead (Matrix.of fun a c => H.h (P.B.f c) (P.A.f a)) (Fin.last r).castSucc := by
       unfold Formalism.MainNotions.S.Loc.HermSp.Dl; rw [dite_eq_left (Nat.le_succ r)]; rfl
-    rw [← h1, ← h2]
-    exact hG
+    rwa [← h1, ← h2]
   · obtain ⟨g, hg⟩ := Option.isSome_iff_exists.1 h
     obtain ⟨⟨u, v, hu, hv⟩, -⟩ := hgg g hg
     exact ⟨CoordExist.not_field M.L g, CoordExist.unit_of hTo u hu, CoordExist.unit_of hTo' v hv⟩
@@ -525,8 +524,7 @@ theorem cval_unit_fin (Z : LocDat D) :
   refine ((delta_unit D Z).union (isUnit_unitAt D)).subset ?_
   intro p hp
   simp only [Set.mem_setOf_eq, Set.mem_union] at hp ⊢
-  by_contra h
-  push Not at h
+  by_contra! h
   obtain ⟨⟨u, hu⟩, ⟨v, hv⟩⟩ := h
   refine hp ⟨u * v, ?_⟩
   rw [cval, ← hu, ← hv, Units.val_mul, MulMemClass.coe_mul]
@@ -603,8 +601,7 @@ theorem exists_gen (D : D7) (Z : LocDat D) (N N' : ℕ) (hN : 0 < N) (hN' : 0 < 
   · refine (split_fin D).subset ?_
     intro p hp
     simp only [Set.mem_setOf_eq] at hp ⊢
-    rw [← split_isSome Z p, ← (hS p).2.2.2.1]
-    exact hp
+    rwa [← split_isSome Z p, ← (hS p).2.2.2.1]
   · intro p x
     have h1 := congrArg (fun e : Vp D p ≃ₗ[(D.s.atP p).Ep] (Fin (D.R.k + 2 * D.R.rS + 1) → (D.s.atP p).Ep) =>
       e (baseChange₂ D p x)) ((hW p).trans (heq p))
@@ -679,8 +676,7 @@ theorem finprod_eq_prod_mul_finprod_ite {ι : Type} (S₁ : Finset ι) (f g : ι
     intro p hp
     by_cases h : p ∈ S₁
     · exact absurd (by simp [h]) hp
-    · intro h1
-      exact hp (by simp [h, ← hfg p h, h1])
+    · exact fun h1 => hp (by simp [h, ← hfg p h, h1])
   have h₁ : ∏ᶠ p, (if p ∈ S₁ then f p else (1 : ℂ)) = ∏ p ∈ S₁, f p := by
     rw [finprod_eq_prod_of_mulSupport_subset _ hsub₁]
     exact Finset.prod_congr rfl fun p hp => by simp [hp]
@@ -842,8 +838,7 @@ theorem amp_sum_defect_sets : ∀ {F E : Type} [Field F] [NumberField F] [Field 
           · intro hp
             by_contra hpB
             exact (Finset.mem_filter.1 hp).2 ((cond_neg G d hpB _).1 (hQ p))
-          · intro hp
-            exact Finset.mem_filter.2 ⟨hBS hp, (cond_pos G d hp _).1 (hQ p)⟩
+          · exact fun hp => Finset.mem_filter.2 ⟨hBS hp, (cond_pos G d hp _).1 (hQ p)⟩
         · rintro rfl p
           by_cases hp : p ∈ B₀
           · exact (cond_pos G d hp _).2 (Finset.mem_filter.1 hp).2
@@ -943,8 +938,7 @@ theorem UT.of_matrix (A : Matrix (Fin m) (Fin m) R) (h0 : ∀ a b, b < a → A a
 theorem mem_Fl_map {W : Type} [AddCommGroup W] [Module R W] (e : V ≃ₗ[R] W) {f : Fin m → V} {b : Fin m}
     {x : V} (hx : x ∈ Fl R f b) : e x ∈ Fl R (fun a => e (f a)) b := by
   have h := Submodule.mem_map_of_mem (f := (e : V →ₗ[R] W)) hx
-  rw [Fl, Submodule.map_span, ← Set.image_comp] at h
-  exact h
+  rwa [Fl, Submodule.map_span, ← Set.image_comp] at h
 
 end Gen
 
@@ -1249,8 +1243,7 @@ theorem datum_in_orbit : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D
       UT.of_eq fun b => by
         rw [show frame (Quot.out t₀.toTerm.cls).1 b = n (m (frame t₀.frame b)) from hfr b]; simp
     have s3 : UT D.host.E id (fun a => m (frame t₀.frame a)) (frame t₀.frame) := fun b => ut_nlam hm b
-    have s4 := ut_moves _ _ ρ U' hMv.2.2.1 hMv.2.2.2.2
-    exact UT.comp ρ (UT.trans_id (UT.comp n⁻¹ s1 s2) s3) s4
+    exact UT.comp ρ (UT.trans_id (UT.comp n⁻¹ s1 s2) s3) (ut_moves _ _ ρ U' hMv.2.2.1 hMv.2.2.2.2)
   have hγ : ρ * n⁻¹ ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := Subgroup.mul_mem _ hMv.1 (nlamPf_inv hn).1.1
   obtain ⟨ρp, hρe, hρu, -, -, -⟩ := _root_.GlobalTheory.LocExt.ext_isometry D ⟨Y.δ, Y.M, Y.agree⟩ p (ρ * n⁻¹) hγ
 
@@ -1475,8 +1468,7 @@ theorem term_moves_to_base : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u'
   have hGt : Gval (lf D (X.Fu u)) t₀.frame ≠ 0 := by
     intro h
     apply hGv
-    rw [hGF _ _ hrel]
-    exact h
+    rwa [hGF _ _ hrel]
   have hCt := (hCF _ _ hrel w).1 hCell
   have hTu : ∀ v : D.what₂.Word, ((Tu D v : ℕ) : D.host.E) ≠ 0 := fun v =>
     Nat.cast_ne_zero.mpr (Formalism.L2.SG.GramJoint.Tu_pos D v).ne'
@@ -1602,8 +1594,7 @@ theorem squaredGroupSum_classDoubleCoset_eq_rowWeight : ∀ (D : D7) (X : HidaSe
       have e2 := Formalism.L2.SG.WConst.gPoint_eq_gval (T := Tu D u) (T' := Tu D u') (lf D (X.Fu u)) (Quot.out t0.toTerm.cls).1
         w1 hcell0
       change Gpt (D.mem u).A.T (D.mem u').A.T w1 = _ at e2
-      rw [← e1, e2]
-      exact hg0
+      rwa [← e1, e2]
     have hBase : ∀ p, AtBase (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p F00 F'0 (Tu D u) (Tu D u') (Fm.FP p) ∧
         (Fm.FP p).RelG (LocNG.theta (Y.M p)) := fun p =>
       ⟨hAtB p, (GlobalTheory.T.localisedBaseFrames_relevantPair D (zOf Y) u u' w1 F00 F'0 hZ hGv p).2 _ (hAtB p)⟩
@@ -1634,8 +1625,7 @@ theorem squaredGroupSum_classDoubleCoset_eq_rowWeight : ∀ (D : D7) (X : HidaSe
           exact one_ne_zero
         refine ⟨htS, ((hCR t htS t0 ht0 hnm).2 hr).trans hc0, ?_, hnm.trans hn0⟩
         show toPts (Formalism.L2.SG.PairVal.ptOf t.toTerm) = γ
-        rw [hpteq]
-        exact hp0
+        rwa [hpteq]
     have hrep : ∃ g, Formalism.L2.SG.RealObj.IsPtRep X u u' w1 g :=
       (_root_.GlobalTheory.CosetOrbital.coset_orbital_form D X Y u u' hSt ν hνP t0 hrel0 hG0 w1 hpt0.symm).1
     have hJ : J2of Y u u' (sc s ν) γ = (s (Formalism.L2.SG.RealObj.gamW X u u' w1) : ℝ) ^ 2 *

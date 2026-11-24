@@ -237,11 +237,9 @@ theorem exists_coord_on_line : ∀ (R : Type) [CommRing R] (W : WeierstrassCurve
   · have h1 : ⊤ ≤ ptHom W ((algebraMap ℂ (DualNumber ℂ)).comp f) ![DualNumber.eps, -1, 0] h ⁻¹ᵁ
         coordOpen W 1 := by
       rw [ptHom_preimage_coordOpen]
-      intro p _ hp
-      exact p.isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _ hp isUnit_one.neg)
+      exact fun p _ hp => p.isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _ hp isUnit_one.neg)
     have h2 : ⊤ ≤ v.left ⁻¹ᵁ (φ ⁻¹ᵁ coordOpen W 1) := by
-      rw [← Scheme.Hom.comp_preimage, hv]
-      exact h1
+      rwa [← Scheme.Hom.comp_preimage, hv]
     rw [← hw _ h2]
     have e := hc 1 0 _ _ _ h h1
     have e2 : ∀ (k : Sp (DualNumber ℂ) ⟶ scheme W) (hk : ⊤ ≤ k ⁻¹ᵁ coordOpen W 1),

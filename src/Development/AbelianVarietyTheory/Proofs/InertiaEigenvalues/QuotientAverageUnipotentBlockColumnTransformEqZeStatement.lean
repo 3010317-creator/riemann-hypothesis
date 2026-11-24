@@ -129,8 +129,7 @@ theorem posM_eq_of_support {ι : Type} [Fintype ι] {p : ι → Fin a × Fin a} 
 
 theorem posM_comp_symm {ι κ : Type} [Fintype ι] [Fintype κ] (p : ι → Fin a × Fin a) (τ : κ ≃ ι) (w : κ → R) :
     posM p (w ∘ τ.symm) = posM (p ∘ τ) w := by
-  simp only [posM]
-  exact (Fintype.sum_equiv τ.symm _ _ (fun t => by simp)).trans rfl
+  simpa only [posM] using (Fintype.sum_equiv τ.symm _ _ (fun t => by simp)).trans rfl
 
 theorem posM_sumElim {ι κ : Type} [Fintype ι] [Fintype κ] (p : ι ⊕ κ → Fin a × Fin a) (z : ι → R) (y : κ → R) :
     posM p (Sum.elim z y) = posM (p ∘ Sum.inl) z + posM (p ∘ Sum.inr) y := by
@@ -241,8 +240,7 @@ theorem avg_comm_of_isCoLat {Γ₁ : AddSubgroup G₁} {Γ₂ : AddSubgroup G₂
     (Φ : G₁ × G₂ → ℂ) (hΦ : Per (Γ₁.prod Γ₂) Φ) :
     avg Γ₁ (fun x => avg Γ₂ (fun y => Φ (x, y))) = avg Γ₂ (fun y => avg Γ₁ (fun x => Φ (x, y))) := by
   have hs : Per (Γ₂.prod Γ₁) (fun p : G₂ × G₁ => Φ (p.2, p.1)) := by
-    refine ⟨hΦ.1.comp continuous_swap, fun γ hγ x => ?_⟩
-    exact hΦ.2 (γ.2, γ.1) ⟨hγ.2, hγ.1⟩ (x.2, x.1)
+    exact ⟨hΦ.1.comp continuous_swap, fun γ hγ x => (hΦ.2 (γ.2, γ.1) ⟨hγ.2, hγ.1⟩ (x.2, x.1))⟩
   have a := _root_.GlobalTheory.CuspGeneric.avg_prod G₁ G₂ Γ₁ Γ₂ h₁ h₂ Φ hΦ
   have b := _root_.GlobalTheory.CuspGeneric.avg_prod G₂ G₁ Γ₂ Γ₁ h₂ h₁ _ hs
   have c := _root_.GlobalTheory.CuspGeneric.avg_equiv (G₂ × G₁) (G₁ × G₂) (Γ₂.prod Γ₁) (Γ₁.prod Γ₂) (isCoLat_prod h₂ h₁) (isCoLat_prod h₁ h₂) (swapEquiv G₁ G₂)

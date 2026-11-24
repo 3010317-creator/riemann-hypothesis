@@ -70,8 +70,7 @@ private theorem lv_gen (hP : Loc.LocalPublishedTheorems) {v l : ℕ} [Fact v.Pri
   have hca : ContAction (Loc.chRep κ) := by
     unfold ReciprocityTheory.Gal.ContAction
     rw [continuous_prod_of_discrete_right]
-    intro y
-    exact (hlc.comp fun u : kˣ => (u : k) * y).continuous
+    exact fun y => (hlc.comp fun u : kˣ => (u : k) * y).continuous
   obtain ⟨f1, f2, e1, e2⟩ := Loc.tateFin hP φ hφ k k (Loc.chRep κ) hca
   have z0 : H0 (Loc.chRep κ) = ⊥ := by
     rw [eq_bot_iff]
@@ -94,8 +93,7 @@ private theorem lv_gen (hP : Loc.LocalPublishedTheorems) {v l : ℕ} [Fact v.Pri
   haveI : Subsingleton (H1 (Loc.chRep κ)) := Module.finrank_zero_iff.1 e1
   have hz1 : z ∈ Z1 (Loc.chRep κ) := ⟨hz.continuous, hc⟩
   have : (Submodule.Quotient.mk ⟨z, hz1⟩ : H1 (Loc.chRep κ)) = 0 := Subsingleton.elim _ _
-  rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap, mem_coboundaries1] at this
-  exact this
+  rwa [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap, mem_coboundaries1] at this
 
 private theorem lv_dec (hP : Loc.LocalPublishedTheorems) {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {v l : ℕ} (hv : v.Prime)
     [Fact l.Prime] (hvl : v ≠ l) (A : ValuationSubring Ω) (hA : A.valuation (v : Ω) < 1)
@@ -108,8 +106,7 @@ private theorem lv_dec (hP : Loc.LocalPublishedTheorems) {Ω : Type} [Field Ω] 
   obtain ⟨j, rfl⟩ := (Loc.decEmb (F := ℚ) (Ω := Ω) (v := v)).1 A w hAw hw
   obtain ⟨φ, hφ, -, -, -, hcyc, -⟩ := ((Loc.decEmb (F := ℚ) (Ω := Ω) (v := v)).2 j).2
   refine lv_gen hP hvl φ hφ k κ hκ σ h1 (Units.ext ?_) z hz hc
-  rw [← hcyc l σ] at h2
-  exact h2
+  rwa [← hcyc l σ] at h2
 
 private theorem lv_red {O k : Type} [CommRing O] [IsLocalRing O] [Field k] (red : O →+* k)
     (hred : ∀ a ∈ maximalIdeal O, red a = 0) (a b : O) : red a = red b ↔ residue O a = residue O b := by
@@ -155,8 +152,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.locVanP :
       simpa [Raw.rbar, Raw.r0, diagRep] using this
     refine Units.ext ?_
     have := hγr g
-    rw [h1, h1, mul_one] at this
-    exact this
+    rwa [h1, h1, mul_one] at this
   refine lv_dec hP hpp hpl (D.pl p) (hD.pl_over p hpp) k κ
     (Subgroup.isOpen_mono hker (fo.preimage continuous_subtype_val)) ⟨D.sg p, hσ⟩ (fun h => ?_) ?_ z hz hc
   · have h' : red (γ (D.sg p) : c.O) = 1 := congrArg Units.val h
@@ -166,5 +162,4 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.locVanP :
   · have : red (chiO ℚ Ω l c.O (D.sg p) : c.O) = red 1 := by
       rw [lv_red red hred, map_one]
       exact (hD.om_bar _).symm.trans hom
-    rw [map_one] at this
-    exact this
+    rwa [map_one] at this

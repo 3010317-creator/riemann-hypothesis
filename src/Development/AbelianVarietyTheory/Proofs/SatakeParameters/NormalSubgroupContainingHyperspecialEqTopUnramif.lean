@@ -444,7 +444,6 @@ theorem frame {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] [C
   let B : Matrix (Fin n) (Fin n) (intL L) := U
   have hB : cT c B = B := by
     ext i j
-    show σ ((B j i : intL L) : L) = (B i j : L)
     exact hh j i
   obtain ⟨p, hp⟩ := GlobalTheory.UnitaryDoubleCoset.exists_poly_norm hc (GlobalTheory.UnramDoubleCoset.exists_dvd_norm_sub_X hU) hB U.isUnit
   have hu : IsUnit B := U.isUnit
@@ -500,8 +499,7 @@ theorem normal_closure_hyp : ∀ (L : Type) [Field L] [Valued L (WithZero (Multi
   have e : φ ⟨P⁻¹ * (g : GL (Fin n) L) * P, memψ g⟩ = g := Subtype.ext (by
     show P * (P⁻¹ * (g : GL (Fin n) L) * P) * P⁻¹ = g
     group)
-  rw [← e]
-  exact hm
+  rwa [← e]
 
 end GlobalTheory.NormalHyp
 end -- clump:auto

@@ -65,9 +65,7 @@ theorem galoisRepRankTwoTateDual_matrix_mem_coefRing_of_normalForm : ∀ (l : �
     have : (dt W s)⁻¹ = dt W s := by
       rw [inv_eq_iff_mul_eq_one, ← pow_two, h2]
     rw [this]; rfl
-  have hcyc : ((cycBar ℚ Ω l s : (Qbar l)ˣ) : Qbar l) ∈ c.O := by
-    show ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom) ((cycZ ℚ Ω l s : ℤ_[l]ˣ) : ℤ_[l]) ∈ c.O
-    exact c.O.algebraMap_mem _
+  have hcyc : ((cycBar ℚ Ω l s : (Qbar l)ˣ) : Qbar l) ∈ c.O := c.O.algebraMap_mem _
   have hval : mat (dual1 W) s i j = ((cycBar ℚ Ω l s : (Qbar l)ˣ) : Qbar l) * (((dt W s)⁻¹ : (Qbar l)ˣ) : Qbar l) * mat W s i j := by
     simp only [mat, dual1, tw_val, Matrix.smul_apply, smul_eq_mul, MonoidHom.mul_apply, Units.val_mul, MonoidHom.inv_apply]
   rw [hval, hinv]

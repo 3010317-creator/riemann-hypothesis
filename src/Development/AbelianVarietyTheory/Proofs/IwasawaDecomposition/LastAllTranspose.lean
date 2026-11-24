@@ -109,8 +109,7 @@ theorem branchingProjection_act_last (hN : N = n + 1) (lam : ι → DomWeight N)
     have h2 : detTwK lam (lastAll N a) = ∏ τ, (a τ : ℂ) ^ (lam τ).detShift := by
       simp only [detTwK, detPow, lastAll, det_lastGL' hN, Units.val_zpow_eq_zpow_val]
     rw [h2, ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
-    refine Finset.prod_eq_one fun τ _ => ?_
-    exact scalar_last hN (lam τ) (sg τ) (h τ) (a τ)
+    exact Finset.prod_eq_one fun τ _ => scalar_last hN (lam τ) (sg τ) (h τ) (a τ)
   rw [e, one_smul]
 end Gen
 end GlobalTheory.Mem.Col2.LowerTie
@@ -160,8 +159,7 @@ theorem bZ_std (hO : I.Ok) (hP : TC.Pins B X) (z0 : Fin (B.R.N B.R.m) → B.host
       split_ifs with h2
       · exact Pi.single_eq_of_ne (M := fun _ : Fin (B.R.N B.R.m - 1) => B.host.E) (fun h3 => hab (Fin.ext (Fin.mk.inj_iff.1 h3))) _
       · rfl
-  · have e : bZ (D := I.rec7 l Z) u z0 a b = z0 a / (B.T u : B.host.E) := by
-      exact dite_eq_right h
+  · have e : bZ (D := I.rec7 l Z) u z0 a b = z0 a / (B.T u : B.host.E) := dite_eq_right h
     rw [e, hz, ← hπ]
     by_cases hab : a = b
     · subst hab
@@ -237,8 +235,7 @@ theorem lowerMap_std : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → 
     have h := polOf_fnOf (Col2.Gr B.fields.emb B.embLL (B.R.N B.R.m)) (shiftOf (B.wts.lamTrue u B.R.m)) (Col2.fr0 B.fields.emb B.embLL (B.R.N B.R.m))
       (actP (B.wts.lamTrue u B.R.m) (lastAll (B.R.N B.R.m) (aT I l u)) P)
     rw [e] at h
-    rw [h1]
-    exact h
+    rwa [h1]
   have h4 : Formalism.L2.Ker.brTen (I.rec7 l Z) u P = (Br.brStdP (N_m_succ B.R) (B.wts.lamTrue u B.R.m) B.wts.sgTrue P : Pol ℂ (Tau B.R) (B.R.N B.R.m - 1)) := by
     have h := blk_brOne (ι := Tau B.R) (N_m_succ B.R) (B.wts.lamTrue u B.R.m) B.wts.sgTrue P
     refine Eq.trans ?_ h

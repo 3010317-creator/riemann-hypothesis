@@ -124,15 +124,12 @@ theorem card_finMulAntidiag_eq_zeta_pow (k n : ℕ) :
     · intro f hf
       simp only [mem_coe, Nat.mem_finMulAntidiag, Fin.prod_univ_succ] at hf
       simp only [mem_coe, mem_sigma, Nat.mem_divisorsAntidiagonal, Nat.mem_finMulAntidiag]
-      refine ⟨hf, trivial, ?_⟩
-      intro h
-      exact hf.2 (by rw [← hf.1, h, mul_zero])
+      exact ⟨hf, trivial, (fun h => hf.2 (by rw [← hf.1, h, mul_zero]))⟩
     · rintro ⟨⟨a, b⟩, g⟩ hy
       simp only [mem_coe, mem_sigma, Nat.mem_divisorsAntidiagonal, Nat.mem_finMulAntidiag] at hy
       simp only [mem_coe, Nat.mem_finMulAntidiag, Fin.prod_univ_succ, Fin.cons_zero, Fin.cons_succ]
       rw [hy.2.1]; exact hy.1
-    · intro f _
-      exact Fin.cons_self_tail f
+    · exact fun f _ => Fin.cons_self_tail f
     · rintro ⟨⟨a, b⟩, g⟩ hy
       simp only [mem_coe, mem_sigma, Nat.mem_divisorsAntidiagonal, Nat.mem_finMulAntidiag] at hy
       simp only [Fin.cons_zero, Fin.cons_succ, hy.2.1]

@@ -224,8 +224,7 @@ variable (hs : ∀ z, s (s z) = z) (hR : ∀ r, s (algebraMap R A r) = algebraMa
 include hs ht hfix hθ hsθ h2 in
 theorem exists_value_notMem [Nonempty ι] {S : Matrix ι ι A} (hS : cT s S = S) (hdet : IsUnit S.det)
     (m : MaximalSpectrum R) : ∃ x, t (bf s S x x) ∉ m.asIdeal := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   set I : Ideal A := m.asIdeal.map (algebraMap R A) with hI
   have hv : ∀ x, bf s S x x ∈ I := fun x => by
     rw [← hfix _ (bf_conj hs hS x x)]
@@ -311,8 +310,7 @@ theorem DiagProp.of_equiv {κ : Type} [Fintype κ] [DecidableEq κ] (e : ι ≃ 
   have hS2 : S = (S.submatrix e e).submatrix e.symm e.symm := by
     ext i j
     simp
-  rw [hc]
-  rw [hS2, Matrix.submatrix_mul_equiv, Matrix.submatrix_mul_equiv, h1]
+  rw [hc, hS2, Matrix.submatrix_mul_equiv, Matrix.submatrix_mul_equiv, h1]
   ext i j
   simp [Matrix.diagonal_apply]
 
@@ -413,8 +411,7 @@ theorem diagProp_succ [Finite (MaximalSpectrum R)] [Finite (MaximalSpectrum A)]
     simp only [hcol]
   obtain ⟨g2, D, hg2, h⟩ := split_step hs hR ih (cT_congr hs hS g1) (isUnit_det_congr S g1 hdet hg1) r h00
   refine ⟨g1 * g2, D, by rw [Matrix.det_mul]; exact hg1.mul hg2, ?_⟩
-  rw [congr_mul]
-  exact h
+  rwa [congr_mul]
 
 include hs hR ht hfix hθ hsθ h2 in
 theorem diagProp_fin [Finite (MaximalSpectrum R)] [Finite (MaximalSpectrum A)] (n : ℕ) :

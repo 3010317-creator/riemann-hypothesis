@@ -153,8 +153,7 @@ theorem cg_of_eq {l : ℕ} [Fact l.Prime] (c : Coef l) (n : ℕ) {a b z : Qbar l
 
 theorem mulVec_mem {l : ℕ} [Fact l.Prime] (c : Coef l) {M : Matrix (Fin 2) (Fin 2) (Qbar l)} {x : Fin 2 → Qbar l}
     (hM : ∀ i j, M i j ∈ c.O) (hx : ∀ j, x j ∈ c.O) (i : Fin 2) : (M *ᵥ x) i ∈ c.O := by
-  simp only [Matrix.mulVec, dotProduct]
-  exact sum_mem fun j _ => mul_mem (hM i j) (hx j)
+  simpa only [Matrix.mulVec, dotProduct] using sum_mem fun j _ => mul_mem (hM i j) (hx j)
 
 theorem prime_normV (v : Pl) : (normV v).Prime := by
   haveI := v.isPrime
@@ -168,8 +167,7 @@ theorem prime_normV (v : Pl) : (normV v).Prime := by
     obtain ⟨m, rfl⟩ := Rat.ringOfIntegersEquiv.symm.surjective x
     exact ⟨(m : ZMod _), by simp⟩
   have hb := Nat.card_eq_of_bijective _ ⟨RingHom.injective _, hs⟩
-  rw [normV, ← hb, Nat.card_zmod]
-  exact hp
+  rwa [normV, ← hb, Nat.card_zmod]
 
 theorem isOpen_ker_of_killsMu {Ω C : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] [Monoid C] {M : ℕ} (hM : 1 ≤ M)
     {φ : G ℚ Ω →* C} (hφ : KillsMu M φ) : IsOpen (φ.ker : Set (G ℚ Ω)) := by
@@ -325,8 +323,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ 
       exact sub_mem (mul_mem (natCast_mem c.O _) (mulVec_mem c (hWO s) (mulVec_mem c (hWO t) hbO) i))
         (mulVec_mem c (hWO s) hKO i)
     · have := congrFun key i
-      rw [Pi.sub_apply, Pi.smul_apply, smul_eq_mul] at this
-      exact this
+      rwa [Pi.sub_apply, Pi.smul_apply, smul_eq_mul] at this
   ·
     intro g hg
     rw [toGS, QuotientGroup.ker_mk'] at hg

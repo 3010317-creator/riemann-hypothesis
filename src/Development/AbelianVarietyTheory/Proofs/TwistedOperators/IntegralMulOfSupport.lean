@@ -315,8 +315,7 @@ private theorem exists_open_translations {M : Type*} [AddCommGroup M] [Topologic
             add_mem' := fun hy hz => K.mul_mem hy hz
             zero_mem' := K.one_mem
             neg_mem' := fun hy => K.inv_mem hy }, hKo, ?_⟩
-  intro x y hy
-  exact hK (Multiplicative.ofAdd x) (Multiplicative.ofAdd y) hy
+  exact fun x y hy => hK (Multiplicative.ofAdd x) (Multiplicative.ofAdd y) hy
 
 theorem exists_isQuotInt_unfolding : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (n n' : Type) [Fintype n] [DecidableEq n] [Fintype n'] [DecidableEq n'] (c p : ℕ) (_ : 1 ≤ p) (_ : p ≤ c) (ψ : AddChar k Circle) (_ : Continuous ψ) (_ : ψ ≠ 1) (ν : Measure k) [ν.IsAddHaarMeasure] (μ : kˣ →* ℂˣ) (_ : IsOpen (μ.ker : Set kˣ)) (μX : Measure (GL n k)) [μX.IsHaarMeasure] (μG : Measure (GL (n ⊕ Fin c) k)) [μG.IsHaarMeasure] (A : Type) [AddCommGroup A] [Module ℂ A] (σ : Representation ℂ (GL (n ⊕ Fin c) k) A) (_ : IsSmoothRep σ) (P P' : Type) [AddCommGroup P] [Module ℂ P] [AddCommGroup P'] [Module ℂ P'] (π : Representation ℂ (GL n k) P) (π' : Representation ℂ (GL n' k) P') (θ : P' →ₗ[ℂ] SB (Matrix n n' k) →ₗ[ℂ] P) (_ : ∀ g h φ Ψ Ψ', Ψ'.1 = om μ g h Ψ.1 → θ (π' g φ) Ψ' = π h (θ φ Ψ)) (b : P →ₗ[ℂ] A →ₗ[ℂ] ℂ) (_ : IsPos ψ p π σ b) (φ : P') (F : A) (Φ : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k)) (f : GL (n ⊕ Fin c) k → ℂ) (_ : ∀ h Ψ, Ψ.1 = opE ψ ν p (om μ 1 h Φ.1) → f h = b (θ φ Ψ) (σ h F)), ∃ z, IsQuotInt ν μX μG p f z := by
   intro k _ _ _ _ _ _ n n' _ _ _ _ c p hp1 hpc ψ hψc hψ1 ν _ μ hμ μX _ μG _ A _ _ σ hσ P P' _ _ _ _
@@ -808,8 +807,7 @@ theorem target : Target k := by
       simp only [e]
       exact ⟨fun hz => (W z hz).2, fun hz => _root_.GlobalTheory.QuotIntFJ.quotIntFJ_unique k n c ρ h1 h2 ν μX μG _ _ _ (W z₀ hz₀).2 hz ▸ hz₀⟩
     refine ⟨fun h => ?_, fun z => ⟨i1 z, (i1 z).trans ⟨fun hz => ⟨_, fun h => (val h _).2 rfl, hz⟩, ?_⟩⟩⟩
-    · simp only [e]
-      exact (W z₀ hz₀).1 h
+    · simpa only [e] using (W z₀ hz₀).1 h
     · rintro ⟨f, hf, hz⟩
       rwa [show f = _ from funext fun h => (val h _).1 (hf h)] at hz
   refine ⟨fun Φ => ⟨fun h => (opL hψ ν (ρ + 1) (omR μ (1, h) Φ)).2,
@@ -845,8 +843,7 @@ theorem source : Source k := by
       congr 1
       have := _root_.GlobalTheory.RootEx.RowSign.opE_om_rowE k n n' c ρ (by omega) (by omega) ψ hψ ν μ (omR μ (1, h) Φ) u x₀
       rw [← omR_val, omR_mul, one_mul, mul_one] at this
-      rw [omR_mul, one_mul, mul_one]
-      exact this
+      rwa [omR_mul, one_mul, mul_one]
     · rw [hfj]
       refine Eq.trans ?_ (hw ((b' φ).comp (ϑ F))).symm
       congr 1; funext u
@@ -871,8 +868,7 @@ theorem source : Source k := by
     have e : w = Φ := by
       refine Subtype.ext (e1.symm.trans (funext fun x => ?_))
       rw [avg, h0, integral_mul_of_support (z := Φ.1 x) a, a1, one_mul]
-      intro u hu
-      exact congrArg (fun t : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k) => t.1 x) hu
+      exact fun u hu => congrArg (fun t : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k) => t.1 x) hu
     have := H Φ Φ₀
     simp only [← e2, e3, e] at this
     exact this

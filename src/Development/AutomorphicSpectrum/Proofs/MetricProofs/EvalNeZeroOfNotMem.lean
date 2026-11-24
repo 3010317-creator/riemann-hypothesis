@@ -198,8 +198,7 @@ theorem val_local {n : ℕ} {x : (Σ k, ιb k) → Ω} (Rb : AnLogRes (mCoordIde
     (hC f).isOpen_inter_preimage (Rb.isOpen_U b₀) isOpen_compl_singleton
   refine ⟨(Rb.U b₀ ∩ E h ⁻¹' {0}ᶜ) ∩ (Rb.U b₀ ∩ E h' ⁻¹' {0}ᶜ), fun b => E g b / E h b, (hO h).inter (hO h'),
     ⟨⟨Rb.mem_U b₀, n1⟩, ⟨Rb.mem_U b₀, n2⟩⟩, ?_, ?_, ?_⟩
-  · intro c u hu
-    exact (hE g c u ⟨hu.1, hu.2.1.1⟩).div (hE h c u ⟨hu.1, hu.2.1.1⟩) hu.2.1.2
+  · exact fun c u hu => (hE g c u ⟨hu.1, hu.2.1.1⟩).div (hE h c u ⟨hu.1, hu.2.1.1⟩) hu.2.1.2
   · rintro b ⟨⟨hb, hb1⟩, -, hb2⟩ e
     have hm := Rb.mem b₀ b hb
     have v1 : IsValueAt x s (Rb.lift b₀ b) (E g b / E h b) :=
@@ -270,8 +269,7 @@ theorem base_flat {M : FlagModel y Ψ N j} {n : ℕ} (BM : BaseMetric M n) {p : 
     have hu₁ : (BM.Rb.A.chart c).symm u ∈ V₁ := hu.2.1.1.1
     have hu₂ : (BM.Rb.A.chart c).symm u ∈ V₂ := hu.2.1.1.2
     exact (hdet c u ⟨hu.1, hu₂⟩).div (H₁ c u ⟨hu.1, hu₁⟩) (n₁ _ hu₁)
-  · intro b hb
-    exact div_ne_zero (P₂ p.1 b hb.1.1.2).1.1.ne_zero (n₁ b hb.1.1.1)
+  · exact fun b hb => div_ne_zero (P₂ p.1 b hb.1.1.2).1.1.ne_zero (n₁ b hb.1.1.1)
   · intro b hb z hz
     have hbG := BM.G_pos l p.1 b (hsub hb)
     rw [blockPot_top M.j_le p.2 hN (P₂ p.1 b hb.1.1.2) hbG.1 hbG.2, e₁ b hb.1.1.1 z hz, norm_div,

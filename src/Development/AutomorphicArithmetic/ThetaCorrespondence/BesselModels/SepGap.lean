@@ -141,13 +141,11 @@ theorem vec_resid_map {S : Type} [CommRing S] (f : R →+* S) (L : Matrix (Fin r
 
 theorem cols_of_resid {M : Matrix (Fin n) (Fin n) R} {E : Matrix (Fin n) (Fin r) R} {T : Matrix (Fin r) (Fin r) R}
     (h : (M - 1) * E - E * T = 0) : M * E = E + E * T := by
-  rw [sub_eq_zero, Matrix.sub_mul, Matrix.one_mul, sub_eq_iff_eq_add'] at h
-  exact h
+  rwa [sub_eq_zero, Matrix.sub_mul, Matrix.one_mul, sub_eq_iff_eq_add'] at h
 
 theorem vec_of_resid {M : Matrix (Fin n) (Fin n) R} {E : Matrix (Fin n) (Fin r) R} {z : Fin n → R} {b : Fin r → R}
     (h : (M - 1) *ᵥ z - E *ᵥ b = 0) : M *ᵥ z = z + E *ᵥ b := by
-  rw [sub_eq_zero, Matrix.sub_mulVec, Matrix.one_mulVec, sub_eq_iff_eq_add'] at h
-  exact h
+  rwa [sub_eq_zero, Matrix.sub_mulVec, Matrix.one_mulVec, sub_eq_iff_eq_add'] at h
 
 theorem coordSum_one (c : Fin r → R) (L : Matrix (Fin r) (Fin n) R) (E : Matrix (Fin n) (Fin r) R) (z : Fin n → R) :
     coordSum c L E z 1 = 0 := by
@@ -186,8 +184,7 @@ theorem coordSum_flag {n r : ℕ} (c : Fin r → ℂ) {L : Matrix (Fin r) (Fin n
       · rw [ite_eq_left rfl, hT i ⟨i.1 + 1, h⟩ rfl]
       · intro j _ hj
         rw [ite_eq_right]
-        intro h'
-        exact hj (Fin.ext h')
+        exact fun h' => hj (Fin.ext h')
       · intro h'; exact absurd (Finset.mem_univ _) h'
     · refine Finset.sum_eq_zero fun j _ => ?_
       rw [ite_eq_right]
@@ -359,8 +356,7 @@ theorem factor_multT_le_empty {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} 
     (χ : GA D V → ℂ) : MultT θ M J χ ≤ MultT θ M ∅ 1 := by
 
   refine Submodule.map_mono (Submodule.span_mono ?_)
-  intro T hT
-  exact ⟨hT.aut, hT.cusp, fun v k hk g => by simp at hk, hT.equiv, hT.cont⟩
+  exact fun T hT => ⟨hT.aut, hT.cusp, fun v k hk g => by simp at hk, hT.equiv, hT.cont⟩
 
 end GlobalTheory.SepRows
 end -- clump:auto
@@ -724,8 +720,7 @@ theorem cloud_gt {x : ℚ} (h : x ∈ (num D C τ).cloud) : -((num D C τ).b 1 :
   have a2 := (D.hc τ).v_gt_u ⟨D.R.k - 2, by omega⟩
   have e : (⟨(⟨D.R.k - 2, by omega⟩ : Fin (D.R.k - 1)).1 + 1, by simp only; omega⟩ : Fin D.R.k) = ⟨D.R.k - 1, by omega⟩ :=
     Fin.ext (by simp only; omega)
-  rw [e] at a2
-  rw [v_spec D C τ (by omega)] at a2
+  rw [e, v_spec D C τ (by omega)] at a2
   have e0 : (D.hc τ).b ⟨0, by omega⟩ = ((num D C τ).b 1 : ℚ) := b_spec D C τ (by omega)
   rw [e0] at a1
   have e2 : D.R.k - 2 + 2 = D.R.k := by omega
@@ -848,8 +843,7 @@ theorem gapAtLeast_of_gapOver {n : ℕ} {P : SPar} {lam : Fin n → ℝ} {ε : F
     have e3 : x = (-(q c), ε c) := Prod.ext (by simp [← e1]) e2
     rw [e3] at hx; exact hx
   have h2 : g < |(-(q a)) - (-(q b))| := by
-    have h0 := hG (-(q a), ε a) (mem a) (-(q b), ε b) (mem b) hab
-    simpa only using h0
+    simpa only using hG (-(q a), ε a) (mem a) (-(q b), ε b) (mem b) hab
   have e : (-(q a)) - (-(q b)) = -(q a - q b) := by ring
   rw [e, abs_neg] at h2
   rw [hq, hq]
@@ -960,8 +954,7 @@ theorem fit_gap {D : D7} (large₂ : SizeData₂ D) (hs : SizeRows large₂) {T 
     unfold parV
     exact gapOver_shift _ (gapOver_parD sc.cGap (lowsOver_of_sizeRows large₂ hs) τ 0 le_rfl)
   have hE1 : IsEnum (dualPar (parV D 1 D.R.m 0 τ)) (MB.lam τ) (MB.ε τ) := by
-    rw [← hsc]
-    exact hE
+    rwa [← hsc]
   refine ⟨GlobalTheory.SepRows.isHCParam_dual_parV D D.R.m 0 τ _ _ hr hE1, _, ?_, gapAtLeast_of_gapOver hE hG⟩
   rw [hr]
   push_cast
@@ -1023,8 +1016,7 @@ theorem burGap_model (hB : BurGapPos) {D : D7} {V : HSp D} {S : D.what₂.Tau �
       congr 1
       rw [Matrix.mul_assoc, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hu, Matrix.mul_one,
         ← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hu, Matrix.one_mul]
-    rw [e1]
-    exact hds
+    rwa [e1]
   exact hB _ _ _ _ _ _ _ _ hf hc.1 hc.2.1 hc.2.2 χ hχ _ _ (GlobalTheory.SmVec.isURepOn_trRep (M.fr_unit τ) (M.fr_gram τ) hU)
     (GlobalTheory.SmVec.isIrredOn_trRep (M.fr_unit τ) (M.fr_gram τ) hI) h hh hgap W π₀ hπ
 
@@ -1221,8 +1213,7 @@ theorem separate_of_burGapPos (hB : BurGapPos) (hCT : CoefTensor) (hTS : TopSep)
     obtain ⟨l, hl⟩ := ha _ (hrow t ht) Ψ hΨ Φ
     have hl' : l ≠ 0 := fun h => hf (by rw [hl, h, mul_zero])
     refine ⟨Ψ, hΨ, Φ, hCo _ (hrow t ht) w ρ₀ ξ₀ Ψ hΨ Φ, ?_⟩
-    intro h
-    exact mul_ne_zero ha0 hl' ((hl ρ₀ ξ₀).symm.trans h)
+    exact fun h => mul_ne_zero ha0 hl' ((hl ρ₀ ξ₀).symm.trans h)
   · push Not at h0
     exact ⟨Classical.arbitrary _, 0, fun t ht htne => absurd (h0 t ht) htne⟩
 

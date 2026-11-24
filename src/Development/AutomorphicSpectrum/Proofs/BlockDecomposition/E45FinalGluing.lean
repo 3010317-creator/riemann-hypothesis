@@ -191,8 +191,7 @@ theorem convInf_of_discInf_topInf : DiscInf → TopInf → ConvInf := by
     obtain ⟨b₀, b, hb₀, hb, hbt⟩ := ih₂ hs.2
     refine ⟨a₀ + b₀, fun k => a k + b k, ⟨a₀, b₀, ha₀, hb₀, rfl⟩,
       fun k => ⟨a k, b k, ha k, hb k, rfl⟩, fun u => ?_⟩
-    simp only [Multiset.map_add (f := _), Multiset.prod_add]
-    exact (hat u).mul (hbt u)
+    simpa only [Multiset.map_add (f := _), Multiset.prod_add] using (hat u).mul (hbt u)
 
 end GlobalTheory.CompanionTheory.EGlue.ConvInfProof
 
@@ -854,8 +853,7 @@ theorem limL_lim_one (hS : ConvStrip) (hSh : ConvShift) (hC : ConvComp) (hT : Tw
     exact (tendsto_nhds_unique h1 tendsto_const_nhds)
   have hpos : t₀.AllLeaves (fun M _ => 0 < M) := limL_allLeaves_mono (fun _ _ h => h.1) hL
   have hposk : ∀ k, (tt k).AllLeaves (fun M _ => 0 < M) := fun k => by
-    rw [← limL_allLeaves_strip, hst k, limL_allLeaves_strip]
-    exact hpos
+    rwa [← limL_allLeaves_strip, hst k, limL_allLeaves_strip]
   have hconv : Conv tt t₀ := (hS E M tt t₀).2 ⟨hst, htw⟩
   have hconv' : Conv (fun k => (tt (ψ k)).shift (z (φ (ψ k)))) (t₀.shift z₀) :=
     hSh E M _ t₀ _ z₀ (hC E M tt t₀ ψ hconv hψ) hlim
@@ -928,10 +926,8 @@ theorem limLists : ConvStrip → ConvShift → ConvComp → LimLists := by
   refine ⟨fun k => a (φ k), t, s, ha.comp hφ, hc, hr, hg, limL_allLeaves_mono ?_ hl, hd, he⟩
   rintro M' V' ⟨-, K'', hK'', W'', hW'', h⟩
   refine Or.inr ⟨K'', ?_, W'', ?_, h⟩
-  · simp only [Set.mem_iUnion]
-    exact ⟨M, ⟨hM, hMN⟩, W, hW, K, hK, hK''⟩
-  · simp only [Set.mem_iUnion]
-    exact ⟨M, ⟨hM, hMN⟩, W, hW, hW''⟩
+  · simpa only [Set.mem_iUnion] using ⟨M, ⟨hM, hMN⟩, W, hW, K, hK, hK''⟩
+  · simpa only [Set.mem_iUnion] using ⟨M, ⟨hM, hMN⟩, W, hW, hW''⟩
 
 end GlobalTheory.CompanionTheory.EGlue
 
@@ -1054,17 +1050,14 @@ theorem main (hc : ConvComp) (hs : TrStable) (hg : Graft)
       exact h.2.1
     have hG : ∀ k, (a k).Good ∧ (b k).Good := fun k => by
       have h := hgood (φ₀ k)
-      rw [hab' k] at h
-      exact h
+      rwa [hab' k] at h
     have hT : ∀ k, (a k).AllLeaves (ListLeaf Θs Ωs) ∧ (b k).AllLeaves (ListLeaf Θs Ωs) := fun k => by
       have h := hlist (φ₀ k)
-      rw [hab' k] at h
-      exact h
+      rwa [hab' k] at h
     have hB : ∀ k, LeafZ (fun M V z => 0 < M → InfBdd R V ∧ ‖z‖ ≤ R) (a k) ∧
         LeafZ (fun M V z => 0 < M → InfBdd R V ∧ ‖z‖ ≤ R) (b k) := fun k => by
       have h := hz (φ₀ k)
-      rw [hab' k] at h
-      exact h
+      rwa [hab' k] at h
     obtain ⟨φ₁, a', sa, hφ₁, hca, hra, hga, hla, hda, hea⟩ := ih r (by omega) (by omega) a R ha
       (fun k => (hG k).1) (fun k => (hT k).1) (fun k => (hB k).1)
     obtain ⟨φ₂, b', sb, hφ₂, hcb, hrb, hgb, hlb, hdb, heb⟩ := ih s (by omega) (by omega) (fun k => b (φ₁ k)) R
@@ -1645,8 +1638,7 @@ theorem oneStep_of_parts : PairSlices → PairRestrict → PairFD → SliceType 
     obtain ⟨x, hx⟩ := Function.ne_iff.1 hi
     obtain ⟨φ, hφ⟩ := hs₁ i x.2
     refine hull_ne_bot (φ := φ) ⟨i, x.2, hφ⟩ (sm_ne_zero (x := x.1) ?_)
-    rw [hφ]
-    exact hx
+    rwa [hφ]
   obtain ⟨t₁, T₁, r₁, g₁, l₁, e₁, i₁, ψ, hψ, hTψ⟩ :=
     hF₁ _ st₁ hA₁ fg₁ hN₁ hC₁ (fun τ => ⟨m₁ τ, hI₁ τ, hD₁ τ⟩) hU₁
   obtain ⟨φ, ⟨i₀, y, hφ⟩, hTφ⟩ := exists_ne_of_hull st₁ T₁ e₁ hψ hTψ
@@ -1672,8 +1664,7 @@ theorem oneStep_of_parts : PairSlices → PairRestrict → PairFD → SliceType 
     obtain ⟨i, hi⟩ := Function.ne_iff.1 G₁ne
     obtain ⟨x, hx⟩ := Function.ne_iff.1 hi
     refine hull_ne_bot (φ := sl₂ (ap₁ T₁ (f i)) x.1) ⟨i, x.1, (hsl i x.1).2⟩ (sm_ne_zero (x := x.2) ?_)
-    rw [(hsl i x.1).2]
-    exact hx
+    rwa [(hsl i x.1).2]
 
   obtain ⟨t₂, T₂, r₂, g₂, l₂, e₂, i₂, ψ', hψ', hTψ'⟩ :=
     hF₂ _ st₂' (fun χ hχ => hA₂ χ (hle hχ)) fg₂' (fun χ hχ => hN₂ χ (hle hχ))
@@ -1860,12 +1851,10 @@ theorem eFinalGlue_of (hCS : ConvStrip) (hCC : ConvComp) (hFS : FactorStep) (hLL
     hG'0 hG'm hG't (fun k h hh => hG'e k h _ (hGe _ h _ (heig _ h hh)))
     (fun h hh => (hlam h hh).comp ((tendsto_add_atTop_nat k₀).comp (hφ₁.comp hφ₂).tendsto_atTop))
   obtain ⟨i, hi⟩ : ∃ i, F i ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hF0 (funext hcon)
   obtain ⟨x, hx⟩ : ∃ x, F i x ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hi (funext hcon)
   have hsl := hPS E a b _ _ (F i) (hFm i)
   have hn₁ : sl₁ (F i) x.2 ≠ 0 := fun h => hx (by

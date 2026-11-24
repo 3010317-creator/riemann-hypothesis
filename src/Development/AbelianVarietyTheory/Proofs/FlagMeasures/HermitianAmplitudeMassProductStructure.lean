@@ -99,20 +99,17 @@ theorem GlobalTheory.HL.Frames.amp_mass_eq_one_of_one_orbit : ∀ {F : Type} [Fi
     obtain ⟨h, hh, e⟩ := huniq Λ o.out hΛ ht
     apply ho
     rw [← Quotient.out_eq' o]
-    apply Quotient.sound'
-    exact MulAction.orbitRel_apply.2 ⟨⟨h, hh⟩, e.symm⟩
+    exact Quotient.sound' (MulAction.orbitRel_apply.2 ⟨⟨h, hh⟩, e.symm⟩)
   obtain ⟨hP, hmu, hom⟩ := hall _ hout
   constructor
   · unfold GlobalTheory.HL.Frames.amp
     rw [tsum_eq_single o₀]
     · rw [ite_eq_left ⟨hout, hP⟩, hmu, hom]; simp
-    · intro o ho
-      exact ite_eq_right fun hc => hother o ho hc.1
+    · exact fun o ho => ite_eq_right fun hc => hother o ho hc.1
   · unfold GlobalTheory.HL.Frames.mass
     rw [tsum_eq_single o₀]
     · rw [ite_eq_left ⟨hout, hP⟩, hmu]; simp
-    · intro o ho
-      exact ite_eq_right fun hc => hother o ho hc.1
+    · exact fun o ho => ite_eq_right fun hc => hother o ho hc.1
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeMassEqOneOfSingleOrbit =====
@@ -341,8 +338,7 @@ theorem inv_apply (h : S.GLV) (v : S.V) : h⁻¹ v = h.symm v := rfl
 
 theorem fix {h : S.GLV} (hh : h ∈ S.H0) {v : S.V} (hv : v ∈ S.ME) : h v = v := by
   have := hh.2.2 v hv
-  rw [Submodule.mem_bot, sub_eq_zero] at this
-  exact this
+  rwa [Submodule.mem_bot, sub_eq_zero] at this
 
 theorem spanTo_le (g : Fin (r + 1) → S.V) (j : ℕ) : S.spanTo g j ≤ S.spanTo g (r + 1) :=
   Submodule.span_mono (Set.image_mono fun i _ => i.2)
@@ -577,8 +573,7 @@ theorem inner_transport (g : Fin (r + 1) → S.V) (gs : Fin r → S.V) (t : E)
   · rw [← hfix (Fin.last r)]
     exact (mem_smul_iff S h A _).2 a5
   · show hf L S.Hm (g (Fin.last r)) (h y) = 1
-    rw [← hfix (Fin.last r), hI']
-    exact a6
+    rwa [← hfix (Fin.last r), hI']
   · have s1 : h • Submodule.span L.O (Set.range fun j : Fin r => g j.castSucc) =
         Submodule.span L.O (Set.range fun j : Fin r => g j.castSucc) := by
       rw [smul_span, ← Set.range_comp]
@@ -755,8 +750,7 @@ theorem prod_sum_of_local_choices {ι Q R : Type} {O : ι → Type} [CommSemirin
     refine Set.Finite.of_finite_image (f := e) (hfin.subset ?_) ?_
     · rintro _ ⟨c, hc, rfl⟩ p _
       exact hmem c hc p p.2
-    · intro c hc c' hc' h
-      exact hinj c hc c' hc' (fun p hp => congrFun h ⟨p, hp⟩)
+    · exact fun c hc c' hc' h => hinj c hc c' hc' (fun p hp => congrFun h ⟨p, hp⟩)
   refine ⟨hT, ?_⟩
   let t : ∀ p, Finset (O p) := fun p => if h : p ∈ s then (hU p h).toFinset else ∅
   have ht : ∀ p ∈ s, ∀ o, o ∈ t p ↔ o ∈ U p := by
@@ -777,8 +771,7 @@ theorem prod_sum_of_local_choices {ι Q R : Type} {O : ι → Type} [CommSemirin
   · intro c hc
     rw [Set.Finite.mem_toFinset] at hc
     rw [Finset.mem_pi]
-    intro p hp
-    exact (ht p hp _).2 (hmem c hc p hp)
+    exact fun p hp => (ht p hp _).2 (hmem c hc p hp)
   · intro c hc c' hc' h
     rw [Set.Finite.mem_toFinset] at hc hc'
     exact hinj c hc c' hc' (fun p hp => congrFun (congrFun h p) hp)
@@ -790,8 +783,7 @@ theorem prod_sum_of_local_choices {ι Q R : Type} {O : ι → Type} [CommSemirin
     refine ⟨c, (Set.Finite.mem_toFinset hT).2 hc, ?_⟩
     funext p hp
     rw [hcy p hp]; simp [y, hp]
-  · intro c _
-    exact (Finset.prod_attach s (fun p => g p (Φ c p))).symm
+  · exact fun c _ => (Finset.prod_attach s (fun p => g p (Φ c p))).symm
 
 end GlobalTheory
 end -- clump:auto

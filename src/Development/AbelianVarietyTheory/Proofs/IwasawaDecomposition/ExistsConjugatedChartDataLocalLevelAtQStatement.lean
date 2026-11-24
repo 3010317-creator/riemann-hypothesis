@@ -76,8 +76,7 @@ theorem exists_stepLevel_conj : ∀ {F E : Type} [Field F] [NumberField F] [Fiel
       have e2 : b * (b⁻¹ * x * b) * b⁻¹ = x := by group
       rw [← e2]
       exact Subgroup.mul_mem _ (Subgroup.mul_mem _ hb h) (Subgroup.inv_mem _ hb)
-    · intro h
-      exact Subgroup.mul_mem _ (Subgroup.mul_mem _ (Subgroup.inv_mem _ hb) h) hb
+    · exact fun h => Subgroup.mul_mem _ (Subgroup.mul_mem _ (Subgroup.inv_mem _ hb) h) hb
   let S' : StepLevel F E σ J T f bad :=
     { Lb := S.Lb
       Lb_fin := S.Lb_fin
@@ -222,8 +221,7 @@ theorem dc_mul_inv_bij {G : Type} [Group G] (Γ K K' : Subgroup G) (b : G) (hK :
       obtain ⟨h, hh, k, hk, e⟩ := (@DoubleCoset.eq _ _ Γ K _ _).1 hi
       refine ⟨i, (@DoubleCoset.eq _ _ Γ K' _ _).2 ⟨h, hh, b * k * b⁻¹, (hK _).2 ?_, ?_⟩⟩
       · have : b⁻¹ * (b * k * b⁻¹) * b = k := by group
-        rw [this]
-        exact hk
+        rwa [this]
       · calc x = (x * b) * b⁻¹ := by group
           _ = (h * z i * k) * b⁻¹ := by rw [e]
           _ = h * (z i * b⁻¹) * (b * k * b⁻¹) := by group
@@ -314,8 +312,7 @@ theorem chartQ_exists : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Nu
   ·
     refine ⟨m, hm, fun κ => ?_⟩
     have h1 : ∀ x, x ∈ S'.U → b⁻¹ * x * b ∈ S.U := fun x hx => by
-      rw [hU, mem_map_conj] at hx
-      exact hx
+      rwa [hU, mem_map_conj] at hx
     have hk : b⁻¹ * κ.1 * b ∈ S.U := h1 κ.1 κ.2
     rw [hchi κ ⟨_, hk⟩ (by show κ.1 = b * (b⁻¹ * κ.1 * b) * b⁻¹; group), hM]
 

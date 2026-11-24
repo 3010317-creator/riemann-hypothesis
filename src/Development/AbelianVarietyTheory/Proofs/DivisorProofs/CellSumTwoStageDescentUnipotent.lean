@@ -62,9 +62,7 @@ theorem finsum_partition {X Y : Type} (f : X → ℂ) (Q : X → Prop) (R : Y �
       (∑ᶠ x, if T x then f x else 0) = ∑ x ∈ hf.toFinset, if T x then f x else 0 := by
     intro T _
     refine finsum_eq_sum_of_support_subset _ fun x hx => ?_
-    simp only [Set.Finite.coe_toFinset, Function.mem_support]
-    intro h0
-    exact hx (by simp [h0])
+    simpa only [Set.Finite.coe_toFinset, Function.mem_support] using fun h0 => hx (by simp [h0])
   have hfin : ∀ x, (Function.support fun y => if R y x then f x else 0).Finite := by
     intro x
     refine Set.Subsingleton.finite fun y hy y' hy' => hu x y y' ?_ ?_
@@ -80,8 +78,7 @@ theorem finsum_partition {X Y : Type} (f : X → ℂ) (Q : X → Prop) (R : Y �
     by_cases hx : Q x
     · obtain ⟨y, hy⟩ := (hQ x).1 hx
       rw [finsum_eq_single _ y, ite_eq_left hx, ite_eq_left hy]
-      intro y' hy'
-      exact ite_eq_right fun h => hy' (hu x y' y h hy)
+      exact fun y' hy' => ite_eq_right fun h => hy' (hu x y' y h hy)
     · rw [ite_eq_right hx]
       symm
       exact finsum_eq_zero_of_forall_eq_zero fun y => ite_eq_right fun h => hx ((hQ x).2 ⟨y, h⟩)

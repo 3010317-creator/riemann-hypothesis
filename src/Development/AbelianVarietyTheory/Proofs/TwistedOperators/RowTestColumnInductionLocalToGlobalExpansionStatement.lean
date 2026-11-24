@@ -752,8 +752,7 @@ theorem subset_of_isIdemSum {D : D7} {e : Formalism.L2.Theta.AE D} {P P' : Finse
     · exact hw'.1.1
     · intro v hv hvw
       exact (GlobalTheory.PlaceIdemUniq.idemAt_unique_orth D _ _ w v hw' (hes v hv)).2 (Ne.symm hvw)
-    · intro hn
-      exact absurd hw hn
+    · exact fun hn => absurd hw hn
 
   by_contra hout
   apply GlobalTheory.LevelPlaces.ne_zero_of_isIdemAt hw'
@@ -1433,13 +1432,11 @@ theorem columnInduction : Big fun {D} _ _ _ _ {T} _ _ _ _ _ _ ch => ∀ (s : ℤ
   have hidem1 : ∀ w : locPl ch.G t, eL w * eL w = eL w := by
     intro w
     have h := hmul {w} {w}
-    rw [Finset.inter_self, Finset.sum_singleton] at h
-    exact h
+    rwa [Finset.inter_self, Finset.sum_singleton] at h
   have hsubmul : ∀ (S' : Finset (locPl ch.G t)) (w : locPl ch.G t), w ∈ S' → (∑ w ∈ S', eL w) * eL w = eL w := by
     intro S' w hw
     have h := hmul S' {w}
-    rw [Finset.inter_singleton_of_mem hw, Finset.sum_singleton] at h
-    exact h
+    rwa [Finset.inter_singleton_of_mem hw, Finset.sum_singleton] at h
   have hhalf : ∀ (a : AE D), a * a = a → ∀ {m n : ℕ} (y : Mx D m n), IsHalf a (a • y) := by
     intro a ha m n y i j
     simp only [Matrix.smul_apply, smul_eq_mul, ← mul_assoc, ha]
@@ -1498,8 +1495,7 @@ theorem columnInduction : Big fun {D} _ _ _ _ {T} _ _ _ _ _ _ ch => ∀ (s : ℤ
         intro k j
         by_cases hk : k.1 ∈ S w ∧ k.2 ∈ SJ
         · have hId : IsIdemSum ((d w k.1 j).e + (dJ k.2 j).e) ((d w k.1 j).P ∪ (dJ k.2 j).P) := by
-            rw [(hdc w k.1 hk.1 j).1, (h1 k.2 hk.2 j).2.1, hPw k.1 hk.1 j, (h1 k.2 hk.2 j).1]
-            exact hs
+            rwa [(hdc w k.1 hk.1 j).1, (h1 k.2 hk.2 j).2.1, hPw k.1 hk.1 j, (h1 k.2 hk.2 j).1]
           obtain ⟨dd, cc, hh⟩ := hF t j (d w k.1 j) (dJ k.2 j) ((c w k.1).1 j) (cJ k.2 j) hId
             (hdc w k.1 hk.1 j).2 (h1 k.2 hk.2 j).2.2
           exact ⟨dd, cc, fun _ _ => hh⟩
@@ -1514,8 +1510,7 @@ theorem columnInduction : Big fun {D} _ _ _ _ {T} _ _ _ _ _ _ ch => ∀ (s : ℤ
         · rw [hP, hPw k.1 hk1 j, (h1 k.2 hk2 j).1, hmap]
         · rw [he', (hdc w k.1 hk1 j).1, (h1 k.2 hk2 j).2.1, hsum]
         · dsimp only
-          rw [dite_eq_left j.2]
-          exact hc
+          rwa [dite_eq_left j.2]
       · intro u hu
         have hu' : ∀ j, IsHalf (eL w + ∑ w' ∈ S₀, eL w') (u j) := fun j => by rw [← hsum]; exact hu j
         have hfn : ∀ k ∈ S w ×ˢ SJ, ∀ j, (dF k j).fn (u j) =

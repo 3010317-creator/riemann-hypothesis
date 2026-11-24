@@ -212,8 +212,7 @@ theorem NormalIn.push {x x' : KeyIn ℂ} (H : KeyPB x' x (RingHom.id ℂ)) {g : 
     obtain ⟨k, hk⟩ := exists_chart x'.P.isLB (eSec x'.P.A pt)
     have hj' : φ (eSec x'.P.A pt) ∈ x.P.L.U (j PUnit.unit) := by
       have := mem_pull.1 (hj (Set.mem_univ pt))
-      rw [← he] at this
-      exact this
+      rwa [← he] at this
     have hk' : (𝟙 (Sp ℂ) : Sp ℂ ⟶ Sp ℂ) pt ∈ (x'.P.L.pull (eSec x'.P.A)).U (fun _ => k) := mem_pull.2 hk
     have e := congrArg Units.val (r _ (𝟙 (Sp ℂ)) pt j (fun _ => k) (fun _ => hj') (fun _ => hk))
     rw [Fintype.prod_unique, zpow_one, Category.id_comp, Category.id_comp, Units.val_mul] at e

@@ -77,8 +77,7 @@ theorem det_mul_sub_adjugate_mul_mem (I : Ideal R) (M : Matrix n n R) (x : n →
 theorem det_mul_mem (I : Ideal R) (M : Matrix n n R) (x : n → R) (l : n)
     (h : ∀ r, (M *ᵥ x) r ∈ I) : M.det * x l ∈ I := by
   have := det_mul_sub_adjugate_mul_mem I M x l l fun r _ => h r
-  have h2 := I.add_mem this (I.mul_mem_left (M.adjugate l l) (h l))
-  simpa using h2
+  simpa using I.add_mem this (I.mul_mem_left (M.adjugate l l) (h l))
 
 theorem adjugate_updateRow (M : Matrix n n R) (i l : n) (v : n → R) :
     (M.updateRow i v).adjugate l i = M.adjugate l i := by
@@ -181,8 +180,7 @@ theorem coeff_eq_zero_of_mem_span_pow (N : ℕ) (S : Set σ) (p : MvPowerSeries 
   obtain ⟨t, ht, c, rfl⟩ := (Submodule.mem_span_image_iff_exists_fun _).1 hp
 
   rw [map_sum]
-  refine Finset.sum_eq_zero fun j _ => ?_
-  exact X_pow_dvd_iff.1 (Dvd.intro_left _ rfl) m (hm j (ht j.2))
+  exact Finset.sum_eq_zero fun j _ => X_pow_dvd_iff.1 (Dvd.intro_left _ rfl) m (hm j (ht j.2))
 
 theorem mem_span_X_of_coeff (S : Finset σ) : ∀ p : MvPowerSeries σ k,
     (∀ m : σ →₀ ℕ, (∀ j ∈ S, m j = 0) → coeff m p = 0) →

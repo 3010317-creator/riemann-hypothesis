@@ -196,9 +196,7 @@ theorem tailBd_of_moments : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] 
       rcases le_max_iff.1 ha with h | h
       · exact Or.inl ⟨hx, h⟩
       · have hpos : 0 < lA k r z (Matrix.of x) a := inv_pos.1 (lt_of_lt_of_le hT h)
-        refine Or.inr ⟨⟨hx, hpos⟩, hx, ?_⟩
-        show lA k r z (Matrix.of x) a ≤ T⁻¹
-        exact (le_inv_comm₀ hT hpos).1 h
+        exact Or.inr ⟨⟨hx, hpos⟩, hx, (le_inv_comm₀ hT hpos).1 h⟩
     · exact Or.inl hx
   have hc : ∀ a, ∫⁻ x in A a ∪ B a, f x ∂νS ≤ 2 * (ENNReal.ofReal (la ^ (-(2 * (q : ℝ)))) * l2SG νS Φ) := by
     intro a
@@ -224,8 +222,7 @@ theorem tailBd_of_moments : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] 
       · rw [← key]
         gcongr
         exact hI a
-    refine (lintegral_union_le _ _ _).trans ?_
-    exact (add_le_add hA' hB').trans (le_of_eq (two_mul _).symm)
+    exact (lintegral_union_le _ _ _).trans ((add_le_add hA' hB').trans (le_of_eq (two_mul _).symm))
   calc ∫⁻ x, Set.indicator {x : Mt k r | ∃ a : Fin (r + 1), la * H₁ ≤ max (lA k r z (Matrix.of x) a) (lA k r z (Matrix.of x) a)⁻¹}
           (fun x => (‖Φ (Matrix.of x)‖₊ : ℝ≥0∞) ^ 2) x ∂νS
         ≤ ∫⁻ x, U.indicator f x ∂νS := lintegral_mono fun x => Set.indicator_le_indicator_of_subset hsub (fun _ => by simp) x
@@ -405,7 +402,6 @@ theorem rd_le_b (D : D7) (large₂ : SizeData₂ D) (C' Cl Cg cb Cu cT CT C0 : �
   have hrd : D.host.rdE = 2 * D.host.v := by unfold Host.v; ring
   have h0 : 0 < D.host.rdE := by rw [hrd]; linarith
   have h1 : large₂.sc.L / Cl ≤ large₂.sc.L := div_le_self (by linarith) (by linarith)
-  show D.host.rdE ≤ Real.exp large₂.sc.L
   exact (Real.log_le_iff_le_exp h0).1 (hrdL.trans h1)
 
 end GlobalTheory.TwoSidedMoments
@@ -591,8 +587,7 @@ theorem lintegral_prod_pow_le_of_moments : ∀ (Ω : Type) [MeasurableSpace Ω] 
         have e2 : ∀ a, (u a x ^ (2 * q)) ^ r = u a x ^ N := fun a => by
           rw [← pow_mul, hN]; congr 1; ring
         simp only [e1] at key
-        simp only [e2] at key
-        exact key
+        simpa only [e2] using key
       have hP : 0 ≤ Ph x := hP0 x
       have h3 : (∏ a ∈ s, ρ a x) ^ (2 * q) * Ph x
           ≤ ∑ a : Fin r, (r:ℝ)⁻¹ * (u a x ^ N * Ph x) := by
@@ -632,8 +627,7 @@ theorem lintegral_prod_pow_le_of_moments : ∀ (Ω : Type) [MeasurableSpace Ω] 
           rw [lintegral_finsetSum']
           · congr 1; ext a
             rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
-          · intro a _
-            exact (((hum a).pow_const N).mul hPm).ennreal_ofReal.const_mul _
+          · exact fun a _ => (((hum a).pow_const N).mul hPm).ennreal_ofReal.const_mul _
       _ ≤ ∑ _a : Fin r, ENNReal.ofReal ((r:ℝ)⁻¹) * ENNReal.ofReal (Rr ^ N) := by
           gcongr with a
           exact hint a
@@ -1420,8 +1414,7 @@ theorem tailP_of_gap : GlobalTheory.GapIn.Hyp → TailP := by
   have hTrpos : ∀ w, 0 < Tr D w := by
     intro w
     have hk : 0 ≤ Formalism.MainNotions.S.Bridge.kaS D ^ (2 * D.R.rS) := (even_two_mul _).pow_nonneg _
-    by_contra hneg
-    push Not at hneg
+    by_contra! hneg
     have h0 : Tr D w * Formalism.MainNotions.S.Bridge.kaS D ^ (2 * D.R.rS) ≤ 0 :=
       mul_nonpos_of_nonpos_of_nonneg hneg hk
     linarith [hTr w]

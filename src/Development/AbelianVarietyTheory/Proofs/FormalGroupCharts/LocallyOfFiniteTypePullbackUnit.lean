@@ -143,8 +143,7 @@ theorem exists_thickening {k B : Type} [Field k] [CommRing B] [Algebra k B] [IsA
         rw [Ideal.map_le_iff_le_comap]
         intro c hc
         change augQ (z c) = 0
-        rw [← AlgHom.comp_apply, hz]
-        exact hc
+        rwa [← AlgHom.comp_apply, hz]
       have h2 := Ideal.mem_map_of_mem z (hM j hb)
       rw [Ideal.map_pow] at h2
       have h3 := Ideal.pow_right_mono h _ h2
@@ -195,8 +194,7 @@ theorem exists_universal_thickening : ∀ (k : Type) [Field k] (K : Over (Spec (
   haveI : Mono v := Over.mono_of_mono_left v
   have hinj : ∀ (Q : Type) [CommRing Q] [Algebra k Q],
       Function.Injective fun f : Γ(K.left, U) →ₐ[k] Q => Chart.spMap f ≫ v := by
-    intro Q _ _ f g h
-    exact spMap_injective ((cancel_mono v).1 h)
+    exact fun Q _ _ f g h => spMap_injective ((cancel_mono v).1 h)
   have hft : Algebra.FiniteType k Γ(K.left, U) := by
     have h : LocallyOfFiniteType (v.left ≫ K.hom) := inferInstance
     rw [Over.w v] at h
@@ -282,8 +280,7 @@ theorem locallyOfFiniteType_pullback_unit {S : Scheme.{0}} (G : Over S) [GrpObj 
   have h5 : (pullback f η[G]).hom = (pullback.snd f η[G]).left := by
     rw [← Over.w (pullback.snd f η[G])]
     exact Category.comp_id _
-  rw [h5]
-  exact h4
+  rwa [h5]
 
 theorem exists_pow_le_span_sup_pow_succ : ∀ (k : Type) [Field k] (G : Over (Spec (CommRingCat.of k))) [GrpObj G] [LocallyOfFiniteType G.hom] (f : G ⟶ G), η[G] ≫ f = η[G] → (∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (t : Sp Ω ⟶ Spec (CommRingCat.of k)), Finite {x : Over.mk t ⟶ G // x ≫ f = 1}) → ∀ (d : ℕ) (x : GlobalTheory.JetSer.Fam G (Fin d)), Chart.IsUnivChart G d x → ∀ φ : Pt k 1 d, GlobalTheory.JetSer.IsMapOf x x f φ → ∃ M : ℕ, Ideal.span (Set.range (MvPowerSeries.X : Fin 1 × Fin d → PS k 1 d)) ^ M ≤ Ideal.span (Set.range φ) ⊔ Ideal.span (Set.range (MvPowerSeries.X : Fin 1 × Fin d → PS k 1 d)) ^ (M + 1) := by
   intro k _ G _ _ f hf hfin d x hx φ hφ

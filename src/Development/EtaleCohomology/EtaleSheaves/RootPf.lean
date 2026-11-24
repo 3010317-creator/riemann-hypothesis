@@ -124,15 +124,13 @@ theorem Root_of : LateralTheory.E.ChartSurjCut.Root := by
     have h2 := hsf ⟨U₀, hU₀, inferInstance⟩
     rw [← h1] at h2
     change Z.presheaf.germ _ _ _ (Z.presheaf.map _ s) = ζ at h2
-    rw [TopCat.Presheaf.germ_res_apply] at h2
-    exact h2
+    rwa [TopCat.Presheaf.germ_res_apply] at h2
   have hps : IsPrimitiveRoot s q := by
     have h' : IsPrimitiveRoot ((Z.germToFunctionField ⊤).hom s) q := by rw [hgs]; exact hζ
     exact IsPrimitiveRoot.of_map_of_injective h' (Z.germToFunctionField_injective ⊤)
   have : NeZero (q : Γ(Z, ⊤)) := ⟨(hqU ⊤).ne_zero⟩
   refine ⟨⟨s, hqU ⊤, ?_⟩⟩
   have hr := (Polynomial.isRoot_cyclotomic_iff (n := q) (μ := s)).2 hps
-  rw [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic]
-  exact hr
+  rwa [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic]
 
 end LateralTheory.E.RootPf

@@ -265,8 +265,7 @@ theorem UpperTheory.exists_dual_vector_of_integral_functional :
     (LinearMap.IsRefl.nondegenerate_iff_separatingLeft (LinearMap.IsAlt.isRefl X.alt)).mpr X.nondeg
   let w0 := (X.B.toDual hnd).symm g
   have hB : ∀ u, X.B w0 u = g u := by
-    intro u
-    exact LinearMap.BilinForm.apply_toDual_symm_apply (hB := hnd) g u
+    exact fun u => LinearMap.BilinForm.apply_toDual_symm_apply (hB := hnd) g u
   have hw : ∀ u, X.s * X.B (X.s⁻¹ • w0) u = g u := by
     intro u
     rw [map_smul, LinearMap.smul_apply, hB, smul_eq_mul, ← mul_assoc,
@@ -795,8 +794,7 @@ private theorem valuation_generator_other_eq_one (v w : HeightOneSpectrum ℤ) (
   intro hmem
   apply hvw
   have hle : v.asIdeal ≤ w.asIdeal := by
-    rw [hspan, Ideal.span_le, Set.singleton_subset_iff]
-    exact hmem
+    rwa [hspan, Ideal.span_le, Set.singleton_subset_iff]
   exact HeightOneSpectrum.ext (v.isMaximal.eq_of_le w.isPrime.ne_top hle)
 
 open IsDedekindDomain IsDedekindDomain.HeightOneSpectrum in
@@ -863,8 +861,7 @@ private theorem exists_pos_rat_valuation_one_away {p : ℕ} [Fact p.Prime] (K : 
       rw [hinv]
       push_cast
       ring
-    rw [e]
-    exact hKy
+    rwa [e]
   obtain ⟨s', hs', hval⟩ := ih K' hK'lt (y * hlu.unit) hK' hy' hKy'
   refine ⟨s' / l, div_pos hs' (by positivity), fun w => ?_⟩
   have e : algebraMap ℚ (AfP p) (s' / l) * (y : AfP p) =
@@ -886,8 +883,7 @@ private theorem scale {p : ℕ} [Fact p.Prime] (c : (AfP p)ˣ) :
       algebraMap ℚ (AfP p) N * ((c⁻¹ : (AfP p)ˣ) : AfP p) := by
     rw [Units.val_mul, IsUnit.unit_spec]
   have hy : IsIntAf ((hu.unit * c⁻¹ : (AfP p)ˣ) : AfP p) := by
-    rw [hyv, map_natCast]
-    exact hNc
+    rwa [hyv, map_natCast]
   have hyinv : (((hu.unit * c⁻¹)⁻¹ : (AfP p)ˣ) : AfP p) =
       algebraMap ℚ (AfP p) (N : ℚ)⁻¹ * c := by
     apply Units.inv_eq_of_mul_eq_one_right
@@ -902,8 +898,7 @@ private theorem scale {p : ℕ} [Fact p.Prime] (c : (AfP p)ˣ) :
         (M : AfP p) * c := by
       rw [hyinv, ← mul_assoc, ← map_mul,
         show ((N * M : ℕ) : ℚ) * (N : ℚ)⁻¹ = ((M : ℕ) : ℚ) by push_cast; field_simp, map_natCast]
-    rw [e]
-    exact hMc
+    rwa [e]
   obtain ⟨s, hs, hval⟩ := exists_pos_rat_valuation_one_away (N * M) (hu.unit * c⁻¹) (Nat.mul_pos hN hM) hy hKy
   refine ⟨s * N, mul_pos hs (by exact_mod_cast hN), fun v => ?_⟩
   have e : algebraMap ℚ (AfP p) (s * N) * ((c⁻¹ : (AfP p)ˣ) : AfP p) =
@@ -934,8 +929,7 @@ theorem UpperTheory.exists_rat_unit_factorization_finiteAdelesAwayP :
     rw [hεv, map_mul, Valuation.map_mul, hpv v, hval v, one_mul]
   refine ⟨s₀ * (p : ℚ) ^ n, hu.unit * c⁻¹, a, b, hs₁, ?_, ?_, ?_, ha, hb, hap, hbp, ?_⟩
   · rw [isIntAf_iff_val]
-    intro v
-    exact (h1 v).le
+    exact fun v => (h1 v).le
   · rw [isIntAf_iff_val]
     intro v
     have hm : Valued.v (AfP.eval v ((hu.unit * c⁻¹ : (AfP p)ˣ) : AfP p)) *
@@ -1030,8 +1024,7 @@ theorem UpperTheory.Gal.W2.witOfAd_of :
     intro u
     have h1 : Bq u u = D.EF.baseChange ℚ u (L.rep ((B.β⁻¹ : G.Cˣ) : G.C) u) := by
       have := L.adj ((B.β⁻¹ : G.Cˣ) : G.C) u u
-      rw [hsh] at this
-      exact this
+      rwa [hsh] at this
     have h2 : D.EF.baseChange ℚ u (L.rep ((B.β⁻¹ : G.Cˣ) : G.C) u) = - Bq u u :=
       D.EFQ_swap (L.rep ((B.β⁻¹ : G.Cˣ) : G.C) u) u
     linarith

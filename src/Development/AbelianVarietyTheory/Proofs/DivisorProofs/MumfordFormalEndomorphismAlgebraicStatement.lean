@@ -195,8 +195,7 @@ theorem eq_of_expandsAt_of_chartExpOn : ∀ (R : Type) [CommRing R] [IsDomain R]
   choose V hVW hyV hEq using key
   refine TopCat.Sheaf.eq_of_locally_eq' (thickObj R I e G).left.sheaf (fun y : W => V y.1 y.2) W
     (fun y => homOfLE (hVW y.1 y.2)) ?_ _ _ fun y => hEq y.1 y.2
-  intro y hy
-  exact TopologicalSpace.Opens.mem_iSup.2 ⟨⟨y, hy⟩, hyV y hy⟩
+  exact fun y hy => TopologicalSpace.Opens.mem_iSup.2 ⟨⟨y, hy⟩, hyV y hy⟩
 
 end GlobalTheory.MumMult
 end -- clump:auto
@@ -275,8 +274,7 @@ theorem GlobalTheory.MumMult.exists_pt_chart_of_leadPt : ∀ (R : Type) [CommRin
   · intro i i' hy'
     refine H y ?_ i i' hy'
     show (D.toPre.prBe (maximalIdeal R) 0).left ((U.gt 0).q.left y) = x
-    rw [hy]
-    exact hz
+    rwa [hy]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsClosedFibreChartPointMumfordMultiplierNonz =====
@@ -333,8 +331,7 @@ theorem exists_intFam : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
   rw [map_zero]
   have h' := hS α h j
   have e' : (U.gt e).pG.left = (U.gt e).q.left ≫ pullback.fst D.toPre.P.A.hom (thick R (maximalIdeal R) e) := rfl
-  rw [e', Scheme.Hom.comp_app] at h'
-  exact h'
+  rwa [e', Scheme.Hom.comp_app] at h'
 
 end GlobalTheory.Mum.SecExp
 end -- clump:auto
@@ -458,20 +455,17 @@ theorem int_cauchy_schwarz {X : Type} [AddCommGroup X] (F : X →+ X →+ ℤ)
       simp only [map_add (f := _), map_zsmul, AddMonoidHom.add_apply, AddMonoidHom.smul_apply, smul_eq_mul]
       rw [hsym v u]
       ring
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
   rcases (hpos u).lt_or_eq with ht | ht
   · have h2 := key (-(F u v)) (F u u)
     have h3 : 0 ≤ F u u * (F u u * F v v - F u v ^ 2) := by linarith [h2]
     have h4 : 0 ≤ F u u * F v v - F u v ^ 2 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       linarith [mul_neg_of_pos_of_neg ht hc]
     linarith
   · rw [← ht]
     simp only [zero_mul]
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have hs : (1 : ℤ) ≤ F u v ^ 2 := hc
     have h2 := key (-(F v v + 1) * F u v) 1
     rw [← ht] at h2
@@ -488,8 +482,7 @@ theorem seq_bound (a c : ℕ → ℤ) (n : ℕ) (hpos : ∀ k, 0 ≤ a k)
     simp [hS]
   rw [hcast]
   have hS0 : 0 ≤ S := Finset.sum_nonneg (fun i _ => abs_nonneg _)
-  by_contra H
-  push Not at H
+  by_contra! H
   have ha0 : 0 < a 0 := by
     rcases (hpos 0).lt_or_eq with h | h
     · exact h
@@ -506,8 +499,7 @@ theorem seq_bound (a c : ℕ → ℤ) (n : ℕ) (hpos : ∀ k, 0 ≤ a k)
     | succ k ih =>
       obtain ⟨hk, hk'⟩ := ih
       have hk1 : 0 < a (k + 1) := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         linarith [mul_pos (by linarith : (0:ℤ) < a 1) hk, mul_le_mul_of_nonneg_right hc ha0.le]
       refine ⟨hk1, ?_⟩
       have h2 := hlc k
@@ -754,8 +746,7 @@ theorem exists_N_sec : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R],
     ring
   · obtain ⟨x, hx⟩ := exists_closedFibre_pt R D
     obtain ⟨σ₀, hσ⟩ := hGen.exists_mem x
-    refine ⟨σ₀, x, hx, fun j hj => ?_⟩
-    exact (mem_nonzeroLocus_iff_basicOpen σ₀ hj).1 hσ
+    exact ⟨σ₀, x, hx, fun j hj => ((mem_nonzeroLocus_iff_basicOpen σ₀ hj).1 hσ)⟩
 
 end GlobalTheory.MumMult
 end -- clump:auto
@@ -920,8 +911,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R 
         ((((b 0).left ≫ (fstG (maximalIdeal R) 0 G).left).app (secChart U.LG.L i)).hom (s₀.f i)) := by
       have h1 : y ∈ (b 0).left ⁻¹ᵁ (thickObj R (maximalIdeal R) 0 G).left.basicOpen
           (((fstG (maximalIdeal R) 0 G).left.app (secChart U.LG.L i)).hom (s₀.f i)) := hs
-      rw [Scheme.preimage_basicOpen] at h1
-      exact h1
+      rwa [Scheme.preimage_basicOpen] at h1
     have hyW : y ∈ ((b 0).left ≫ (fstG (maximalIdeal R) 0 G).left) ⁻¹ᵁ secChart U.LG.L i ⊓
         (fstG (maximalIdeal R) 0 G).left ⁻¹ᵁ secChart U.LG.L i' :=
       ⟨Scheme.basicOpen_le _ _ hu, hi'⟩
@@ -1033,8 +1023,7 @@ theorem formalEnd_secCoNonzero_lift : ∀ (R : Type) [CommRing R] [IsDomain R] [
     apply secCoNonzero_of_comp U.LG.L (thickMap R (maximalIdeal R) e G)
     have hf : thickMap R (maximalIdeal R) e G ≫ (fstG (maximalIdeal R) (e + 1) G).left =
         (fstG (maximalIdeal R) e G).left := (pullback.lift_fst _ _ _).trans (Category.comp_id _)
-    rw [hf, ← Category.assoc, hb.2.1 e, Category.assoc, hf]
-    exact ih
+    rwa [hf, ← Category.assoc, hb.2.1 e, Category.assoc, hf]
 
 end GlobalTheory.Mum
 end -- clump:auto
@@ -1099,8 +1088,7 @@ theorem mem_basicOpen_of_secRatioEq : ∀ (R : Type) [CommRing R] [IsDomain R] [
       (((x.left ≫ (fstG (maximalIdeal R) e G).left).app (secChart U.LG.L j)).hom (s₁.f j)) := by
     refine (Scheme.preimage_basicOpen (x.left ≫ (fstG (maximalIdeal R) e G).left) (s₁.f j)).le ?_
     show (x.left ≫ (fstG (maximalIdeal R) e G).left) y ∈ G.left.basicOpen (s₁.f j)
-    rw [Scheme.Hom.comp_apply, ← hy₀]
-    exact hs₁'
+    rwa [Scheme.Hom.comp_apply, ← hy₀]
   by_contra hn
   have hE := congrArg (thickObj R (maximalIdeal R) e G).left.basicOpen (hT s₁ s₀ j i')
   simp only [Scheme.basicOpen_mul, Scheme.basicOpen_res] at hE

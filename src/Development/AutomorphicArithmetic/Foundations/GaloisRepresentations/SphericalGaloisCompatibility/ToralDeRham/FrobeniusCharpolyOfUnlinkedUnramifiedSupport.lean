@@ -466,8 +466,7 @@ theorem exists_isUnitarisable_twist {a : ℕ} (ha : 1 ≤ a) (π : CuspSub E a) 
   refine ⟨-t, ?_⟩
   have hl := GlobalTheory.HeightCounting.Blocks.loc_of_isAbsPow (Model.absPow_isAbsPow E (-t)) w
   change IsUnitarisable (twRep σ.ρ ((GlobalTheory.HeckeGal.Model.absPow E (-t)).loc w |>.comp Matrix.GeneralLinearGroup.det)) at hU
-  rw [hl] at hU
-  exact hU
+  rwa [hl] at hU
 
 end Glob
 
@@ -493,8 +492,7 @@ theorem hasSat_of_unlinked_unr : UpperTheory.Gal.ToralGalois.Inq → ∀ (E : Ty
     rw [hc]
     exact hsup.tw χ hχ
   have hun' : Unlinked (chars (fun j => ξ j * χ) fun j => (hξ j).mul hχ) := by
-    rw [hc, TwistSupp.unlinked_map_nu]
-    exact hun
+    rwa [hc, TwistSupp.unlinked_map_nu]
   obtain ⟨h, τ, hd, hφ, hmap⟩ := equiv_prodIrr_chars hI.gen _ (isSmooth_twist σ.smooth hχ.detChar)
     (isIrreducible_twist σ.irred _) hU ((isGeneric_twist_iff χ).2 hg) _ _ hsup' hun'
   have hφ' := equiv_prodIrr_untwist σ.ρ χ hχ _ hd hφ
@@ -728,8 +726,7 @@ theorem GlobalTheory.RoadU.window : UpperTheory.Gal.ToralGalois.Inq → ∀ (E :
   simp only [ξ', MonoidHom.mul_apply, Units.val_mul, norm_mul, hc, norm_absPow_ofReal] at h1
   rw [norm_absPow_ofReal]
   have hp : 0 < nabs (w.adicCompletion E) x := GlobalTheory.SmGL.nabs_pos' _ x
-  rw [Real.rpow_sub hp, eq_div_iff (Real.rpow_pos_of_pos hp _).ne']
-  exact h1
+  rwa [Real.rpow_sub hp, eq_div_iff (Real.rpow_pos_of_pos hp _).ne']
 
 end
 

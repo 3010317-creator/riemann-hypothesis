@@ -267,8 +267,7 @@ theorem fpair_charInd_dualInd_add_cosets : ∀ (k : Type) [Field k] [ValuativeRe
   · exact (_root_.GlobalTheory.FinPl.CosetPairing.fpair_charInd_cosetInd k n q χ hχ e ε hε μ Q (ε • Q) (Pair.dia_lat ε Q)).1 rfl
   · intro Q'' hQ'' hne
     exact (_root_.GlobalTheory.FinPl.CosetPairing.fpair_charInd_cosetInd k n q χ hχ e ε hε μ Q Q'' (mem_withLat.1 hQ'')).2 hne
-  · intro h
-    exact absurd (mem_withLat.2 (Pair.dia_lat ε Q)) h
+  · exact fun h => absurd (mem_withLat.2 (Pair.dia_lat ε Q)) h
 
 end GlobalTheory.FinPl.Comm.DualCosets
 end -- clump:auto
@@ -546,8 +545,7 @@ theorem vertexGlued (D : D7) : VertexGlued D := by
     have h2 : (fun a => ((χ a : Circle) : ℂ)) = fun a => psiE ψ (p.sec a) := funext hIs
     refine continuous_induced_rng.2 ?_
     change Continuous (fun a => ((χ a : Circle) : ℂ))
-    rw [h2]
-    exact h1
+    rwa [h2]
   obtain ⟨lS₁, lT₁, uS₁, uT₁, lin₁⟩ := _root_.GlobalTheory.SplitLinAt.linModelAt D k p ψ _ _ _ _ _ s₁.weil₀
   obtain ⟨lS₂, lT₂, uS₂, uT₂, lin₂⟩ := _root_.GlobalTheory.SplitLinAt.linModelAt D k p ψ _ _ _ _ _ s₂.weil₀
   have vS₁ := uS₁ hu₁.2
@@ -605,8 +603,7 @@ theorem vertexGlued (D : D7) : VertexGlued D := by
       rw [b₂ ⟨_, o₂.2.2.2.1⟩ Ξ₂ o₂]
       congr 1
       apply Subtype.ext
-      simp only [Submodule.coe_add, Submodule.coe_sum]
-      exact D2 R
+      simpa only [Submodule.coe_add, Submodule.coe_sum] using D2 R
 
     have t0 : ∀ Q' ∈ withLat Q.lat, (Θ v' (x Q') y₀).1 = 0 := fun Q' hQ' => by
       have := key v' (phiOne P₁ Q') (GlobalTheory.IndefiniteRowSideFullHecke.IndicatorFunctionIdentity.phiOne_mem P₁ Q') (latInd Q.lat R.ker) (latInd_mem_SB _ _)
@@ -692,11 +689,9 @@ theorem vertexGlued (D : D7) : VertexGlued D := by
       obtain ⟨g, hg⟩ := MulAction.exists_smul_eq (GL n k) (ε⁻¹ • Q) Q'
       have hgL : g • Q.lat = Q.lat := by
         have := congrArg Pair.lat hg
-        rw [Pair.smul_lat, Pair.dia_lat, mem_withLat.1 hQ'] at this
-        exact this
+        rwa [Pair.smul_lat, Pair.dia_lat, mem_withLat.1 hQ'] at this
       have := hmove (ε⁻¹ • Q) g hgL
-      rw [hg, smul_comm g ε (ε⁻¹ • Q), hg] at this
-      exact this
+      rwa [hg, smul_comm g ε (ε⁻¹ • Q), hg] at this
 
     have hid : ∀ Y', s₂.om₀ (1, 1) Y' = Y' := fun Y' => by
       rw [show ((1 : GA D J.W₀), (1 : GA D B'.V₀)) = 1 from rfl, map_one]

@@ -260,8 +260,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
       finrank k (LinearMap.ker (gRep η Ψ j c - LinearMap.id)) = 0 := by
     intro hz
     rw [Submodule.finrank_eq_zero, Submodule.eq_bot_iff]
-    intro X hX
-    exact hz X ((hK X).1 hX)
+    exact fun X hX => hz X ((hK X).1 hX)
   rcases (show j ≤ -3 ∨ j = -2 ∨ j = -1 ∨ j = 0 ∨ j = 1 ∨ j = 2 ∨ 3 ≤ j by omega)
     with h | rfl | rfl | rfl | rfl | rfl | h
   · rw [ite_eq_right (by rw [abs_le]; omega)]
@@ -418,8 +417,7 @@ private theorem zhat_lift :
     exact this (Subgroup.mem_top x)
   · show f (d φ) = e
     rw [hdφ, hf1]
-  · intro g
-    exact Subgroup.npow_mem_zpowers e _
+  · exact fun g => Subgroup.npow_mem_zpowers e _
 
 theorem UpperTheory.finrank_unramified_cocycles_eq_finrank_invariants :
     ∀ {k D M : Type} [Field k] [Group D] [TopologicalSpace D] [IsTopologicalGroup D] [AddCommGroup M] [Module k M] [Finite M] [TopologicalSpace M] [DiscreteTopology M] (ρ : Representation k D M) (I : Subgroup D) (W : Submodule k (D → M)), ContAction ρ → I.Normal → (∃ φ : D, (I ⊔ Subgroup.zpowers φ).topologicalClosure = ⊤ ∧ ∀ n : ℕ, 0 < n → ∃ d : D →* Multiplicative (ZMod n), IsLocallyConstant d ∧ (∀ s ∈ I, d s = 1) ∧ d φ = Multiplicative.ofAdd 1) →
@@ -708,8 +706,7 @@ private theorem cone {k ι A1 A2 : Type} [Field k] [Fintype ι] {L1 L2 : ι → 
   · rw [Module.finrank_prod, Module.finrank_pi_fintype, Module.finrank_pi_fintype,
       Module.finrank_pi_fintype] at key
     exact key
-  · intro x y hxy
-    exact Subtype.ext (congrArg (fun t => t.1.1) hxy)
+  · exact fun x y hxy => Subtype.ext (congrArg (fun t => t.1.1) hxy)
   · intro x
     constructor
     · intro hx
@@ -1062,8 +1059,7 @@ private theorem exists_scalar_action_nontrivial (hF : F.Ok) {j : ℤ} (hj : j �
   by_cases h : |j| ≤ 2
   · refine ⟨_, hc_scal _ _ j h1, hc_pow ?_ hj h⟩
     have := (h2.map (residue O)).ne_zero
-    rw [map_sub, map_pow, map_one] at this
-    exact this
+    rwa [map_sub, map_pow, map_one] at this
   · obtain ⟨f, e, -⟩ := UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants F.η F.Ψbar F.c (hc_two hF) hF.ηc (hc_c hF) j
     have : Subsingleton (Gb (k := ResidueField O) j) := by
       rw [← Module.finrank_zero_iff (R := ResidueField O), e]; omega

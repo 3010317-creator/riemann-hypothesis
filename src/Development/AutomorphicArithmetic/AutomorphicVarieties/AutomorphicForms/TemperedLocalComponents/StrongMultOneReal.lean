@@ -128,8 +128,7 @@ theorem UpperTheory.V.Af.Smo.archKir :
         · rfl
       simp only [this]
       simp [psiR]
-    · simp only [hw p hp, mul_assoc]
-      exact integral_const_mul _ _
+    · simpa only [hw p hp, mul_assoc] using integral_const_mul _ _
   | succ m ih =>
     intro hm
     obtain ⟨H, H1, hH⟩ := ih (by omega)
@@ -380,8 +379,7 @@ theorem UpperTheory.V.Af.Smo.cenSame :
     refine ⟨fun x hx => GlobalTheory.CuspRep.pLoc_locGL_of_ne (show x ≠ w from fun e => hw (e ▸ hx)) _, fun x => ?_⟩
     by_cases e : x = w
     · subst e
-      rw [GlobalTheory.CuspRep.pLoc_locGL]
-      exact hkk
+      rwa [GlobalTheory.CuspRep.pLoc_locGL]
     · rw [GlobalTheory.CuspRep.pLoc_locGL_of_ne e]
       exact one_mem _
   have e := hC E n S B φ.1 φ'.1 (key _ (π.cusp _ hφ)).1 (key _ (π'.cusp _ hφ')).1 (key _ (π.cusp _ hφ)).2
@@ -946,8 +944,7 @@ private theorem iso_of_compl {E : Type} [Field E] [NumberField E] [IsTotallyReal
       rw [h0, Submodule.mem_bot] at hu'
       rw [← h']
       refine ⟨hx, ?_⟩
-      rw [hu', zero_add]
-      exact hd
+      rwa [hu', zero_add]
     · exact inf_eq_left.1 h0
   obtain ⟨T, hT⟩ := exists_equiv_mod π.V π'.V D h h'
     (le_antisymm (sup_le hge le_sup_right) (sup_le hle le_sup_right))
@@ -955,8 +952,7 @@ private theorem iso_of_compl {E : Type} [Field E] [NumberField E] [IsTotallyReal
   rw [← Submodule.mem_bot ℂ, ← h']
   refine ⟨π'.V.sub_mem (T _).2 (π'.op o _).2, ?_⟩
   have h1 := D.sub_mem (hT (π.op o φ)) (hD o _ (hT φ))
-  rw [map_sub, TR.CuspSub.op_val, sub_sub_sub_cancel_right] at h1
-  exact h1
+  rwa [map_sub, TR.CuspSub.op_val, sub_sub_sub_cancel_right] at h1
 
 private theorem stab_orthRel {E : Type} [Field E] [NumberField E] {n : ℕ} {H : Type*} [NormedAddCommGroup H]
     [InnerProductSpace ℂ H] (ι : cuspForms E n →ₗ[ℂ] H)
@@ -1104,8 +1100,7 @@ private theorem zero_of_sq {E : Type} [Field E] [NumberField E] {n : ℕ} (μ : 
   have h3 := QuasiMeasurePreserving.ae_eq_comp (RightCosetSpace.quasiMeasurePreserving_mk (Reduction.rationalGLOne (K := E) (n := n)) μ) h2
   have h4 := (Continuous.ae_eq_iff_eq μ (f := fun y : Reduction.normOneGL (K := E) (n := n) => ‖F y‖ ^ 2)
     ((hc.comp continuous_subtype_val).norm.pow 2) continuous_const).1 h3
-  intro y hy
-  exact norm_eq_zero.1 (pow_eq_zero_iff two_ne_zero |>.1 (congrFun h4 ⟨y, hy⟩))
+  exact fun y hy => norm_eq_zero.1 (pow_eq_zero_iff two_ne_zero |>.1 (congrFun h4 ⟨y, hy⟩))
 
 theorem UpperTheory.V.Af.Smo.orthConv :
     UpperTheory.V.Af.Smo.OrthStep → UpperTheory.V.Af.Smo.ConvCont → UpperTheory.V.Af.Smo.OrthConv := by
@@ -1533,8 +1528,7 @@ theorem UpperTheory.V.Af.Smo.seedConv :
   refine exists_schwartz_integral_eq_one volume (chart W 1) (invSet E n) (toL y.val) ?_ ?_ ?_
   · exact TR.isOpen_invSet.mem_nhds (TR.val_mem_invSet y)
   · exact (h E n W hW).1.comp (f := fun x => ((1 : GA E n), x)) (by fun_prop) fun x hx => ⟨trivial, hx⟩
-  · rw [TR.chart_val, one_mul]
-    exact hy
+  · rwa [TR.chart_val, one_mul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.SmoothRepresentationsGL.SeedConv =====

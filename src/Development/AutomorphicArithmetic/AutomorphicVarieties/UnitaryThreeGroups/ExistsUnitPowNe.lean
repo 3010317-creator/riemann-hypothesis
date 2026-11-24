@@ -136,8 +136,7 @@ theorem UpperTheory.V.U3.typeII_irr_cyc :
   have h11 := (typeII_facts hC D hM h hII).1
   have hmem : ∀ s, galEmb ℚ K Ω s ∈ D.η.ker := fun s => D.η_ker ▸ galEmb_mem ℚ K Ω s
   have hlift : ∀ g ∈ D.η.ker, ∃ s, galEmb ℚ K Ω s = g := fun g hg => by
-    rw [D.η_ker, ← range_galEmb] at hg
-    exact hg
+    rwa [D.η_ker, ← range_galEmb] at hg
   have hsur : ∀ v : ℤ_[l]ˣ, ∃ s : G K Ω, galEmb ℚ K Ω s ∈ Ine (F := ℚ) A ∧ cycZ K Ω l s = v := fun v => by
     obtain ⟨σ, hσ, hv⟩ := GlobalTheory.CycInertia.cycZ_Ine_surjective Ω l A hA v
     obtain ⟨s, rfl⟩ := hlift σ (hIK hσ)
@@ -193,5 +192,4 @@ theorem UpperTheory.V.U3.typeII_irr_cyc :
   · refine hII.2 X fun g hg v hv => ?_
     obtain ⟨s, rfl⟩ := hlift g hg
     have := hX s trivial v hv
-    simp only [MonoidHom.comp_apply, hW.1 _ hg] at this
-    exact this
+    simpa only [MonoidHom.comp_apply, hW.1 _ hg] using this

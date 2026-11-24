@@ -70,8 +70,7 @@ theorem conj_apply_conj_of_entire (Z : ℂ → ℂ) (hZ : Differentiable ℂ Z)
   have hZ' : Differentiable ℂ (fun s => starRingEnd ℂ (Z (starRingEnd ℂ s))) := by
     intro s
     have := (hZ (starRingEnd ℂ s)).conj_conj
-    rw [Complex.conj_conj] at this
-    exact this
+    rwa [Complex.conj_conj] at this
   have hev : (fun s => starRingEnd ℂ (Z (starRingEnd ℂ s))) =ᶠ[nhds (2 : ℂ)] Z := by
     have ho : IsOpen {s : ℂ | 1 < s.re} := isOpen_lt continuous_const Complex.continuous_re
     filter_upwards [ho.mem_nhds (show (2 : ℂ) ∈ {s : ℂ | 1 < s.re} by simp)] with s hs
@@ -105,8 +104,7 @@ theorem zetaEulerProduct_ne_zero_one_add_mul_I : ∀ (ι : Type) (N : ι → ℕ
   have hmul : ∀ (f : ℂ → ℂ) (a : ℂ), f a = 0 → ∀ s, (s - a) * dslope f a s = f s := by
     intro f a h0 s
     have := sub_smul_dslope f a s
-    rw [smul_eq_mul, h0, sub_zero] at this
-    exact this
+    rwa [smul_eq_mul, h0, sub_zero] at this
   have hD1 := hds Z (1 + u) hZ
   have hD2 := hds Z (1 - u) hZ
   have hG := hds _ (1 - u) hD1

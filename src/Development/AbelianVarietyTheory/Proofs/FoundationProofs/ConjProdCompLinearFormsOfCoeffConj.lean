@@ -163,8 +163,7 @@ theorem Rel.prod {ι : Type} (s : Finset ι) {F F' : ι → E → ℂ} (h : ∀ 
     have := Rel.const (v := v) _ _ (CjN.rat M ρ 1)
     simpa using this
   | insert i s hi ih =>
-    simp only [Finset.prod_insert hi]
-    exact Rel.mul _ _ _ _ (h i) ih
+    simpa only [Finset.prod_insert hi] using Rel.mul _ _ _ _ (h i) ih
 
 theorem Rel.cjF {D : D7} {N N' : ℕ} {F F' : VC D N N' → ℂ} (h : Rel (coordV D) M ρ F F') :
     CjF D M ρ F F' := by

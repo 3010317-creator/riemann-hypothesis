@@ -108,8 +108,7 @@ theorem apply_apply (i j k l : ι) (x : N) : U.E i j (U.E k l x) = if j = k then
   rw [h]; split_ifs <;> simp
 
 theorem sum_apply (x : N) : ∑ i, U.E i i x = x := by
-  have h := LinearMap.congr_fun U.sum_diag x
-  simpa [LinearMap.sum_apply] using h
+  simpa [LinearMap.sum_apply] using LinearMap.congr_fun U.sum_diag x
 
 def corner (a : ι) : Submodule R N := LinearMap.range (U.E a a)
 
@@ -251,8 +250,7 @@ theorem corner_equiv {R : Type} [CommRing R] (I : Ideal R) (hI : IsLocalRing (R 
     Nonempty (C ≃ₗ[R] (Fin k → R ⧸ I)) := by
   have hC : Module.IsTorsionBySet R C I := by
     intro x a
-    have h := congrFun (smul_eq_zero_of_equiv I e a.2 (Pi.single (⟨0, hm⟩ : Fin m) x)) ⟨0, hm⟩
-    simpa using h
+    simpa using congrFun (smul_eq_zero_of_equiv I e a.2 (Pi.single (⟨0, hm⟩ : Fin m) x)) ⟨0, hm⟩
   letI : Module (R ⧸ I) C := hC.module
   haveI : IsScalarTower R (R ⧸ I) C := hC.isScalarTower
   let e' : (Fin m → C) ≃ₗ[R ⧸ I] (Fin (m * k) → R ⧸ I) :=
@@ -459,8 +457,7 @@ theorem exists_matRed : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.D
   obtain ⟨e⟩ := D.splitP
   have hpr : (p : 𝓞 D.F) ^ r ∈ w0 ^ r := Ideal.pow_mem_pow hp r
   have hA : ((p ^ r : ℕ) : 𝓞 D.F ⧸ w0 ^ r) = 0 := by
-    have h := Ideal.Quotient.eq_zero_iff_mem.2 hpr
-    simpa using h
+    simpa using Ideal.Quotient.eq_zero_iff_mem.2 hpr
   let ψ₀ : ℤ_[p] →+* 𝓞 D.F ⧸ w0 ^ r :=
     (ZMod.castHom (ringChar.dvd hA) (𝓞 D.F ⧸ w0 ^ r)).comp (PadicInt.toZModPow r)
   let ψ : 𝓞 D.F ⊗[ℤ] ℤ_[p] →ₐ[𝓞 D.F] 𝓞 D.F ⧸ w0 ^ r :=
@@ -495,15 +492,13 @@ theorem exists_matRed : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.D
     simp [AlgHom.mapMatrix_apply, hψ, hc]
   · intro b hb
     have hb' : ∀ i j, ψ (e (incl b) i j) = 0 := fun i j => by
-      have h := congrFun (congrFun hb i) j
-      simpa [AlgHom.mapMatrix_apply] using h
+      simpa [AlgHom.mapMatrix_apply] using congrFun (congrFun hb i) j
     have hM : e (incl b) ∈ (w0 ^ r) • (⊤ : Submodule (𝓞 D.F) (Matrix (Fin D.m) (Fin D.m) (𝓞 D.F ⊗[ℤ] ℤ_[p]))) := by
       rw [Matrix.matrix_eq_sum_single (e (incl b))]
       refine Submodule.sum_mem _ fun i _ => Submodule.sum_mem _ fun j _ => ?_
       exact mem_smul_top_map _ (Matrix.singleLinearMap (𝓞 D.F) i j) (hψk _ (hb' i j))
     have hO : incl b ∈ (w0 ^ r) • (⊤ : Submodule (𝓞 D.F) (D.O ⊗[ℤ] ℤ_[p])) := by
-      have h := mem_smul_top_map _ e.symm.toLinearEquiv.toLinearMap hM
-      simpa using h
+      simpa using mem_smul_top_map _ e.symm.toLinearEquiv.toLinearMap hM
     have claim : ∀ x ∈ (w0 ^ r) • (⊤ : Submodule (𝓞 D.F) (D.O ⊗[ℤ] ℤ_[p])),
         ∃ b' ∈ (w0 ^ r) • (⊤ : Submodule (𝓞 D.F) D.O), ∃ z : D.O ⊗[ℤ] ℤ_[p],
           x = b' ⊗ₜ (1 : ℤ_[p]) + (p ^ r) • z := by

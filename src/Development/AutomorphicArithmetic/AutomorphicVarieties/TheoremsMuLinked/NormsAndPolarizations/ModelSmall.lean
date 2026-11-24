@@ -102,8 +102,7 @@ private theorem spanO_gen {O K : Type} [CommRing O] [Field K] (f : O →+* K) {n
       have heq : (f.mapMatrix M).col = (LinearEquiv.curry K K (Fin n) (Fin n)).symm.toLinearMap ∘ ((fun i => (r i).map f) ∘ g) ∘ e := by
         funext q p
         rfl
-      rw [heq]
-      exact hl
+      rwa [heq]
     exact ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_cols_iff_isUnit.1 hli2)).ne_zero
   refine ⟨M.det, fun h0 => hM (by rw [h0, map_zero]), fun Z => ?_⟩
   let v : Fin n × Fin n → O := fun p => Z p.1 p.2
@@ -171,15 +170,13 @@ private theorem liftG {A K : Type} [CommRing A] [CommRing K] {n : ℕ} (f : A �
   obtain ⟨a, ha⟩ := liftMx f _ h
   obtain ⟨b, hb⟩ := liftMx f _ h'
   obtain ⟨u, hu⟩ := liftU f.mapMatrix.toMonoidHom (injM f hf) g ⟨a, ha⟩ ⟨b, hb⟩
-  refine ⟨u, Units.ext ?_⟩
-  exact congrArg Units.val hu
+  exact ⟨u, Units.ext (congrArg Units.val hu)⟩
 
 private theorem liftH {H A B : Type} [Group H] [Group A] [Group B] (j : A →* B) (hj : Function.Injective j) (ρ : H →* B)
     (h : ∀ g, ∃ a, j a = ρ g) : ∃ ρ₀ : H →* A, j.comp ρ₀ = ρ := by
   choose k hk using h
   refine ⟨MonoidHom.mk' k (fun a b => hj (by rw [hk, map_mul, map_mul, hk, hk])), ?_⟩
   ext g
-  show j (k g) = ρ g
   exact hk g
 
 private theorem coeG {A K : Type} [CommRing A] [CommRing K] {n : ℕ} (f : A →+* K) (g : GL (Fin n) A) :
@@ -411,21 +408,17 @@ private theorem iw_step (Y : Matrix (Fin n) (Fin n) K) (c : Fin n)
     · rw [Equiv.swap_apply_left]
       exact lt_of_lt_of_le hjc hp
     rcases eq_or_ne i p with rfl | hip
-    · rw [Equiv.swap_apply_right]
-      exact hjc
-    · rw [Equiv.swap_apply_of_ne_of_ne hic hip]
-      exact hji
+    · rwa [Equiv.swap_apply_right]
+    · rwa [Equiv.swap_apply_of_ne_of_ne hic hip]
   have hmax1 : ∀ i, c ≤ i → V.valuation (Y1 i c) ≤ V.valuation (Y1 c c) := by
     intro i hi
     simp only [hY1, Matrix.submatrix_apply, id, Equiv.swap_apply_left]
     apply hpmax
     rcases eq_or_ne i c with rfl | hic
-    · rw [Equiv.swap_apply_left]
-      exact hp
+    · rwa [Equiv.swap_apply_left]
     rcases eq_or_ne i p with rfl | hip
     · rw [Equiv.swap_apply_right]
-    · rw [Equiv.swap_apply_of_ne_of_ne hic hip]
-      exact hi
+    · rwa [Equiv.swap_apply_of_ne_of_ne hic hip]
   by_cases h0 : Y1 c c = 0
   · refine ⟨Y1, r1, fun i j hjc hji => ?_⟩
     rcases lt_or_eq_of_le hjc with hlt | heq
@@ -471,8 +464,7 @@ theorem UpperTheory.V.Pr.T.iwasawaVal :
   obtain ⟨Z, ⟨k, hk⟩, hZ⟩ := iw_ind V Y n
   refine ⟨k, ?_⟩
   rw [hk]
-  intro i j hij
-  exact hZ i j j.isLt hij
+  exact fun i j hij => hZ i j j.isLt hij
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.CurveDVRSpecialization.SelfTwistEigenvalues.IwasawaVal =====
@@ -600,12 +592,10 @@ private theorem ri_entries {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [Topolo
     fun i j => hb.matrix_elem (finSumFinEquiv.symm i) (finSumFinEquiv.symm j)
   have hA : ∀ g i j, s g i j ∈ E := fun g i j => by
     have h : r g (finSumFinEquiv (Sum.inl i)) (finSumFinEquiv (Sum.inl j)) ∈ E := mE g _ _
-    rw [hr, Equiv.symm_apply_apply, Equiv.symm_apply_apply] at h
-    exact h
+    rwa [hr, Equiv.symm_apply_apply, Equiv.symm_apply_apply] at h
   have hB : ∀ g i j, (z g * s g) i j ∈ E := fun g i j => by
     have h : r g (finSumFinEquiv (Sum.inl i)) (finSumFinEquiv (Sum.inr j)) ∈ E := mE g _ _
-    rw [hr, Equiv.symm_apply_apply, Equiv.symm_apply_apply] at h
-    exact h
+    rwa [hr, Equiv.symm_apply_apply, Equiv.symm_apply_apply] at h
   refine ⟨E, fE, hA, fun g i j => ?_⟩
   have e : z g = z g * s g * s g⁻¹ := by
     rw [Matrix.mul_assoc, ← map_mul, mul_inv_cancel, map_one, Matrix.mul_one]
@@ -650,8 +640,7 @@ private theorem UpperTheory.V.Th.Nm.roots_norm_le {l : ℕ} [Fact l.Prime] {n : 
     ‖a‖ ≤ 1 := by
   classical
   have hdet : (Matrix.scalar (Fin n) a - Z).det = 0 := by
-    rw [← Matrix.eval_charpoly]
-    exact ha
+    rwa [← Matrix.eval_charpoly]
   obtain ⟨v, hv0, hv⟩ := Matrix.exists_mulVec_eq_zero_iff.2 hdet
   have hne : (Finset.univ : Finset (Fin n)).Nonempty := by
     by_contra hc
@@ -694,8 +683,7 @@ theorem UpperTheory.V.Th.Nm.roots :
       Fintype.card_fin]
   let e : Fin n ≃ s := (finCongr hcard.symm).trans s.equivFin.symm
   refine ⟨fun i => (e i : Qbar l), ?_, ?_, ?_⟩
-  · intro i j hij
-    exact e.injective (Subtype.ext hij)
+  · exact fun i j hij => e.injective (Subtype.ext hij)
   · intro i
     have hmem : (e i : Qbar l) ∈ p.roots := by
       rw [← hval]

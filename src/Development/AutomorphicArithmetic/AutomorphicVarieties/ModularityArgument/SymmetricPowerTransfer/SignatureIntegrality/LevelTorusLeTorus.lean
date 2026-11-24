@@ -60,15 +60,13 @@ theorem mem_Uc {c : ℕ} {u : kˣ} : u ∈ Uc k c ↔ valuation k (u : k) = 1 �
     refine ⟨Uc_le_Uo k c h, ?_⟩
     obtain ⟨v, hv, rfl⟩ := h
     have h1 : Ideal.Quotient.mk _ (v : 𝒪[k]) = 1 := congrArg Units.val hv
-    rw [← map_one (Ideal.Quotient.mk _), Ideal.Quotient.eq, GlAx.mem_pow] at h1
-    exact h1
+    rwa [← map_one (Ideal.Quotient.mk _), Ideal.Quotient.eq, GlAx.mem_pow] at h1
   · rintro ⟨h1, h2⟩
     obtain ⟨v, hv⟩ := (Valuation.Integers.isUnit_iff_valuation_eq_one (Valuation.integer.integers (valuation k))
       (x := (⟨u, h1.le⟩ : 𝒪[k]))).2 h1
     refine ⟨v, Units.ext ?_, Units.ext (congrArg Subtype.val hv)⟩
     change Ideal.Quotient.mk _ (v : 𝒪[k]) = Ideal.Quotient.mk _ 1
-    rw [Ideal.Quotient.eq, GlAx.mem_pow, hv]
-    exact h2
+    rwa [Ideal.Quotient.eq, GlAx.mem_pow, hv]
 
 theorem mem_Kc_of {c : ℕ} {g : GL (Fin n) k} (h : g ∈ KO k (Fin n)) (h' : GlAx.Bd c g) : g ∈ Kc k n c := by
   obtain ⟨y, rfl⟩ := h

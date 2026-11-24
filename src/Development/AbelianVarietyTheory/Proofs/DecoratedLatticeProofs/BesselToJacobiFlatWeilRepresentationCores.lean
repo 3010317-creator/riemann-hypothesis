@@ -123,8 +123,7 @@ theorem flatBF_om : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ : ℕ) (B 
       (xZero J.d ⬝ u.1.1) (yZero B.V₀ ρ (vecB B.o B.ζ))) := by
     intro u
     have h := hev.1 u 1 n hn h'
-    rw [map_one, ← Prod.one_eq_mk, map_one, ← Prod.one_eq_mk, map_one] at h
-    exact h
+    rwa [map_one, ← Prod.one_eq_mk, map_one, ← Prod.one_eq_mk, map_one] at h
 
   have hmix := GlobalTheory.MixValues.mixed_values D ψ hstd
   have thev : ∀ Φ, IsThetaFunO ψ B.V J.W Φ → ∀ u : UX D ρ, IsThetaFunO ψ B.V₀ J.W₀
@@ -136,8 +135,7 @@ theorem flatBF_om : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ : ℕ) (B 
     (yZero B.V₀ ρ (vecB B.o B.ζ))
   have thflat : ∀ p, IsThetaFunO ψ B.V₀ J.W₀ (flatBF s (s.om p Ψ)) := fun p => by
     have h := (hFL _ (thom p)).2
-    rw [← hx0] at h
-    exact h
+    rwa [← hx0] at h
   obtain ⟨M, hMi, hM⟩ := GlobalTheory.Unf.flatFun_majorant D ψ B.V B.V₀ J.W J.W₀ ρ ρ B.d J.d s.vS s.vT s.χV s.χW s.om s.weil s.vU J.d.e hlin
     Ψ hΨ {1, (1, J.d.emb0 h'), (1, n * J.d.emb0 h'), (embA B.d B.o h₀, n * J.d.emb0 h')} (Set.toFinite _).isCompact
   simp only [← hx0] at hM

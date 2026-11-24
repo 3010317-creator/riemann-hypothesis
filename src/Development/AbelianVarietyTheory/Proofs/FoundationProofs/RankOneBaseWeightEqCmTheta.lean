@@ -75,10 +75,8 @@ theorem levelPb_iff (D : D7) (pb : Fin 2 → HeightOneSpectrum (𝓞 D.host.K)) 
   constructor
   · rintro ⟨l, hl, hb⟩
     have h := isHalf_of_level D l hl
-    rw [hb] at h
-    exact h
-  · intro h
-    exact ⟨HalfLevelCoefficients.levelAt D _ h, levelAt_spec D _ h, rfl⟩
+    rwa [hb] at h
+  · exact fun h => ⟨HalfLevelCoefficients.levelAt D _ h, levelAt_spec D _ h, rfl⟩
 
 end GlobalTheory.ParAtCompare
 end -- clump:auto

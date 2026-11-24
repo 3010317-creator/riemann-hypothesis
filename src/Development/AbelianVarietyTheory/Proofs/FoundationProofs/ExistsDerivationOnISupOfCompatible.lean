@@ -64,13 +64,11 @@ theorem isDerOn_iSup_glue (A S M : Type) [CommRing A] [CommRing S] [Algebra A S]
   have hD' : ∀ m, ∀ x ∈ B m, D' x = D m x := by
     intro m x hx
     have h : ∃ m, x ∈ B m := ⟨m, hx⟩
-    simp only [D', dite_eq_left h]
-    exact (hD _ m (Nat.find_min' h hx) x (Nat.find_spec h)).symm
+    simpa only [D', dite_eq_left h] using (hD _ m (Nat.find_min' h hx) x (Nat.find_spec h)).symm
   have hmem : ∀ x ∈ (⨆ m, B m), ∃ m, x ∈ B m := fun x hx =>
     by
     have := hx
-    rw [← SetLike.mem_coe, Subalgebra.coe_iSup_of_directed hB.directed_le, Set.mem_iUnion] at this
-    exact this
+    rwa [← SetLike.mem_coe, Subalgebra.coe_iSup_of_directed hB.directed_le, Set.mem_iUnion] at this
   refine ⟨D', ⟨?_, ?_, ?_⟩, hD'⟩
   · intro x hx y hy
     obtain ⟨m, hm⟩ := hmem x hx

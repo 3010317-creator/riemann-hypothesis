@@ -102,7 +102,6 @@ theorem evI_mul' (a b : AF F) : evI F (a * b) = evI F a * evI F b := by
   rw [map_mul]
 
 theorem evI_realAd' (r : ℝ) : evI F (realAd F r) = algebraMap ℝ _ r := by
-  show InfiniteAdeleRing.ringEquiv_mixedSpace F ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (algebraMap ℝ _ r)) = _
   exact RingEquiv.apply_symm_apply _ _
 
 theorem smul_ptAt (u : AF F) (x : κ → mixedEmbedding.mixedSpace F) :
@@ -112,8 +111,7 @@ theorem smul_ptAt (u : AF F) (x : κ → mixedEmbedding.mixedSpace F) :
   · show u.1 * (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (x i) =
       (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (InfiniteAdeleRing.ringEquiv_mixedSpace F u.1 * x i)
     rw [map_mul, RingEquiv.symm_apply_apply]
-  · show u.2 * 0 = 0
-    exact mul_zero _
+  · exact mul_zero _
 
 theorem ptAt_add (x y : κ → mixedEmbedding.mixedSpace F) :
     GlobalTheory.RealLift.ptAt (x + y) 0 = GlobalTheory.RealLift.ptAt x 0 + GlobalTheory.RealLift.ptAt y 0 := by
@@ -128,8 +126,7 @@ theorem ptAt_add (x y : κ → mixedEmbedding.mixedSpace F) :
 theorem ptAt_zero : GlobalTheory.RealLift.ptAt (0 : κ → mixedEmbedding.mixedSpace F) 0 = 0 := by
   funext i
   refine Prod.ext ?_ ?_
-  · show (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm 0 = 0
-    exact map_zero _
+  · exact map_zero _
   · rfl
 
 end Coords
@@ -232,8 +229,7 @@ theorem sgnAd_mul_self (ε ε' : InfinitePlace F → ℤˣ) : sgnAd ε ε' * sgn
   refine Prod.ext (funext fun w => ?_) ?_
   · show (if ε w = ε' w then (0 : w.Completion) else 1) * (if ε w = ε' w then 0 else 1) = if ε w = ε' w then 0 else 1
     split_ifs <;> simp
-  · show (0 : IsDedekindDomain.FiniteAdeleRing (𝓞 F) F) * 0 = 0
-    exact mul_zero _
+  · exact mul_zero _
 
 theorem ext_sgnAd (ε ε' : InfinitePlace F → ℤˣ) (w : InfinitePlace F) :
     InfinitePlace.Completion.extensionEmbedding w ((sgnAd ε ε').1 w) = if ε w = ε' w then 0 else 1 := by

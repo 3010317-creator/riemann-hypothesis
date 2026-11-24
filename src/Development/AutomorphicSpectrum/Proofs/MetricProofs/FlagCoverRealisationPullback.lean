@@ -738,8 +738,7 @@ theorem PositivityTheory.Xgp.t_c_swap : ∀ (K : Type) [Fintype K] (ι : K → T
     · subst hp
       simp [hk₀]
     · rw [ite_eq_right hp, ite_eq_right]
-      intro h
-      exact hp (M.blk_inj p (τ, a) k₀ h hk₀)
+      exact fun h => hp (M.blk_inj p (τ, a) k₀ h hk₀)
   have hlast : lastCol N j a < N ∧ lastCol N j a + 1 < N ∧
       (lastCol N j a < N - j ↔ lastCol N j a + 1 < N - j) := by
     unfold lastCol
@@ -851,8 +850,7 @@ theorem isMultiHomog_monoX (c : ∀ k, ι k) (d : K → ℕ) : IsMultiHomog (mon
   have e : ∑ k, d k • NumbersDVR.blockWeight ι ⟨k, c k⟩ = d := by
     funext k
     simp [NumbersDVR.blockWeight, Finset.sum_apply, Pi.single_apply]
-  rw [e] at this
-  exact this
+  rwa [e] at this
 
 theorem aeval_monoX (z : (Σ k, ι k) → L) (c : ∀ k, ι k) (d : K → ℕ) :
     aeval z (monoX c d) = ∏ k, z ⟨k, c k⟩ ^ d k := by
@@ -1257,8 +1255,7 @@ theorem PositivityTheory.Xgp.t_c_w_sec : ∀ (K : Type) [Fintype K] (ι : K → 
           (PositivityTheory.Xgp.W.penCo y k₀ (fun m => y ⟨k₀, m⟩) (PositivityTheory.Xgp.W.vecB M τ a k₀ ca cb) RatFunc.X) f := by
       intro f
       rw [hI]
-    rw [key g, key h] at haev
-    exact haev
+    rwa [key g, key h] at haev
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PluriharmonicCharts.XCWSec =====
@@ -1324,8 +1321,7 @@ theorem pot_pull (CR : CovReal FA Cv) (hy : IsArithVar (mCoordIdeal y) (d + 2))
   have L2 : LocRe FA.Re.R.A (g₀ x) fun u => Real.log ((fsHerm ι (M.dy p)).h (FA.Re.R.lift (g₀ x) u)) -
       (FA.S.th (some p)).φ (FA.Re.π (g₀ x)) (FA.Re.π u) := by
     have := FA.Re.ref_pot (some p) (g₀ x) trivial
-    rw [FA.ref_some] at this
-    exact this
+    rwa [FA.ref_some] at this
   exact (L1.add (L2.comp hg₀)).congr isOpen_univ trivial fun u _ => by ring
 
 theorem log_comb {σ : Type} [Fintype σ] (A : σ → HermLine ι) (ε : σ → ℤ) {z : (Σ k, ι k) → ℂ}
@@ -1412,14 +1408,12 @@ theorem PositivityTheory.Xgp.t_c_sqsys : Inputs → ∀ (K : Type) [Fintype K] (
           have L2 := LocRe.comp hπ (show LocRe Q.SW.A ((e ∘ γ) x) _ from Q.th1 _ trivial)
           simp only [hg₁] at L1
           exact (L1.sub L2).congr isOpen_univ trivial fun u _ => by
-            show _ - _ = _ - _ - (_ - _)
             exact (sub_sub_sub_cancel_right _ _ _).symm
         | some p =>
           have L1 := pot_pull CR hy hy' R' hv₀ (fun z hz => fst_mem hz) g₀ i₀ p x
           have L2 := LocRe.comp hπ (show LocRe Q.SW.A ((e ∘ γ) x) _ from Q.th0 p _ trivial)
           simp only [hg₀] at L1
           exact (L1.sub L2).congr isOpen_univ trivial fun u _ => by
-            show _ - _ = _ - _ - (_ - _)
             exact (sub_sub_sub_cancel_right _ _ _).symm
       line := fun o t => o.elim (pullHerm hv₁ (CR.Re.line (τ, a) t)) fun p => pullHerm hv₀ (CR.Re.line p t)
       line_deg := fun o t => by
@@ -1439,8 +1433,7 @@ theorem PositivityTheory.Xgp.t_c_sqsys : Inputs → ∀ (K : Type) [Fintype K] (
         | none =>
           have := CR.line_pt (τ, a) t h0 (h1.trans Q.t₀_le) _ (m₁ x)
           rw [w₁] at this
-          rw [Q.phase_none_eq_comp_second_projection]
-          exact this
+          rwa [Q.phase_none_eq_comp_second_projection]
         | some p =>
           have := CR.line_pt p t h0 (h1.trans Q.t₀_le) _ (m₀ x)
           rw [w₀] at this

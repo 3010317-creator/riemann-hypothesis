@@ -56,8 +56,7 @@ abbrev lg (g : GA E n) : ℝ := logAbs g.val.det
 
 theorem lg_eq (g : GA E n) : lg g = Real.log (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.ideleNorm (Matrix.GeneralLinearGroup.det g)) := by
   have h := logAbs_eq_log_ideleNorm (Matrix.GeneralLinearGroup.det g)
-  rw [Matrix.GeneralLinearGroup.val_det_apply] at h
-  exact h
+  rwa [Matrix.GeneralLinearGroup.val_det_apply] at h
 
 theorem lg_mul (g h : GA E n) : lg (g * h) = lg g + lg h := by
   rw [lg_eq, lg_eq, lg_eq, map_mul, map_mul,
@@ -135,12 +134,10 @@ theorem tsum_indicator (hn : 1 ≤ n) (h : GA E n → ℝ≥0∞) (hh : LeftInv 
     refine ⟨m, Subtype.ext ?_⟩
     have h3 : ((⟨ratGL E n γ₁, γ₁, rfl⟩ : Γ₀) : GA E n) * (e ^ m * y) ∈ stdDom Γ₀ := by
       change ratGL E n γ₁ * (e ^ m * y) ∈ stdDom Γ₀
-      rw [← mul_assoc, hγe]
-      exact hin
+      rwa [← mul_assoc, hγe]
     have hu := (existsUnique_stdDom Γ₀ (e ^ m * y)).unique (hr m) h3
     change ((r m : Γ₀) : GA E n) * e ^ m = γ
-    rw [hu]
-    exact hγe
+    rwa [hu]
 
 theorem lintegral_unfold (μ : Measure (GA E n)) [μ.IsMulLeftInvariant] (hn : 1 ≤ n) (h : GA E n → ℝ≥0∞)
     (hh : LeftInv (latticeGL E n) h) (hm : AEMeasurable h μ) (v : ℝ → ℝ≥0∞) (hv : Measurable v) :

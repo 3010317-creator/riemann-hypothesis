@@ -91,8 +91,7 @@ theorem pairK_re {ι : Type} [Fintype ι] {n : ℕ} (lam : ι → DomWeight n) (
 
 private theorem sum_support_eq_degree_of_isHomogeneous {σ : Type} {P : MvPolynomial σ ℂ} {d : ℕ} (h : P.IsHomogeneous d)
     {α : σ →₀ ℕ} (hα : α ∈ P.support) : ∑ i ∈ α.support, α i = d := by
-  have hw := h (mem_support_iff.mp hα)
-  simpa [Finsupp.weight_apply, Finsupp.sum] using hw
+  simpa [Finsupp.weight_apply, Finsupp.sum] using h (mem_support_iff.mp hα)
 
 private theorem multiFactorial_le_factorial_of_isHomogeneous {σ : Type} {P : MvPolynomial σ ℂ} {d : ℕ} (h : P.IsHomogeneous d)
     {α : σ →₀ ℕ} (hα : α ∈ P.support) : (multiFactorial α : ℝ) ≤ d.factorial := by
@@ -118,8 +117,7 @@ private theorem card_support_le_of_isHomogeneous {σ : Type} [Fintype σ] {P : M
   have hle : ∀ α ∈ P.support, ∀ i, α i ≤ d := by
     intro α hα i
     have hs : ∑ j ∈ α.support, α j = d := by
-      have hw := h (mem_support_iff.mp hα)
-      simpa [Finsupp.weight_apply, Finsupp.sum] using hw
+      simpa [Finsupp.weight_apply, Finsupp.sum] using h (mem_support_iff.mp hα)
     by_cases hi : i ∈ α.support
     · rw [← hs]; exact Finset.single_le_sum (fun j _ => Nat.zero_le _) hi
     · rw [Finsupp.notMem_support_iff.mp hi]; exact Nat.zero_le _
@@ -133,8 +131,7 @@ private theorem card_support_le_of_isHomogeneous {σ : Type} [Fintype σ] {P : M
   rw [Fintype.card_piFinset, Finset.prod_const, Finset.card_range, Finset.card_univ] at hcard
   have : ((P.support.card : ℕ) : ℝ) ≤ ((d + 1) ^ Fintype.card σ : ℕ) := by exact_mod_cast hcard
   push_cast at this
-  rw [add_comm (1 : ℝ) (d : ℝ)]
-  exact this
+  rwa [add_comm (1 : ℝ) (d : ℝ)]
 
 private theorem one_le_multiFactorial {σ : Type} (α : σ →₀ ℕ) : (1 : ℝ) ≤ multiFactorial α := by
   unfold multiFactorial Finsupp.prod
@@ -208,8 +205,7 @@ theorem eNorm_le {n : ℕ} (l : DomWeight n) :
     eNorm l ≤ (∑ i, l.natW i).factorial * ((n : ℝ) ^ (∑ i, l.natW i)) ^ 2 := by
   have hanti : Antitone l.natW := fun i j hij => by
     have := l.anti hij
-    simp only [DomWeight.natW]
-    exact Int.toNat_le_toNat (by omega)
+    simpa only [DomWeight.natW] using Int.toNat_le_toNat (by omega)
   have hsum := sum_succ_mul_sub_nuNext_eq_sum_of_antitone l.natW hanti
   have hE : extremal ℂ n l = ∏ s : Fin n, (Formalism.GradedWeylDivisibility.lpMinor ℂ (s.val + 1) (by omega) (by omega) :
       MvPolynomial (Fin n × Fin n) ℂ) ^ (l.natW s - Formalism.GradedWeylDivisibility.nuNext l.natW s) := rfl
@@ -350,8 +346,7 @@ private theorem fQ_div_le_of_bounds {M T F E E' fQ lQ lP A B fac c1 : ℝ} {D D'
   have hT0 : (0 : ℝ) ≤ T := le_trans zero_le_one h1
   have hlQ2 : lQ ^ 2 ≤ M * (lP ^ 2 * A ^ 2 * B ^ 2) := by
     have h := pow_le_pow_left₀ hlQ0 hl1 2
-    rw [mul_pow, Real.sq_sqrt hM0, mul_pow, mul_pow] at h
-    exact h
+    rwa [mul_pow, Real.sq_sqrt hM0, mul_pow, mul_pow] at h
   have hin : lP ^ 2 * A ^ 2 * B ^ 2 ≤ c1 * F * A ^ 2 * B ^ 2 := by
     have := mul_le_mul_of_nonneg_right hf2 (sq_nonneg A)
     exact mul_le_mul_of_nonneg_right this (sq_nonneg B)

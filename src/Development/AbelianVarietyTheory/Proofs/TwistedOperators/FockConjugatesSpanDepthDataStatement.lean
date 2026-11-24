@@ -616,8 +616,7 @@ theorem heisO_eigen_of_isThetaAt : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
         rw [hT₀.vac, hk]
     have h2 : f = (k • (heisLin ψ S T w ∘ₗ T₀)) Φ := hall _ hT'
     have h3 : f = T₀ Φ := hall T₀ hT₀
-    rw [show (k • (heisLin ψ S T w ∘ₗ T₀)) Φ = k • heisO ψ S T w (T₀ Φ) from rfl, ← h3] at h2
-    exact h2
+    rwa [show (k • (heisLin ψ S T w ∘ₗ T₀)) Φ = k • heisO ψ S T w (T₀ Φ) from rfl, ← h3] at h2
   by_cases hc0 : c = 0
   · subst hc0
     rw [zero_smul] at hc
@@ -891,8 +890,7 @@ theorem tame_conjFun {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)
       rw [map_mul]
       congr 1
       have := congrFun (cj_heisO (S := S) hψ w f) x
-      simp only [GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj, id] at this
-      exact this
+      simpa only [GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj, id] using this
     have hint : Integrable (fun w => starRingEnd ℂ (α w)) m :=
       (Complex.conjCLE.toContinuousLinearMap).integrable_comp hα
     have hth' : IsThetaFunO ψ S T (fun x => ∫ w, starRingEnd ℂ (α w) * heisO ψ S T w (cj id f) x ∂m) := by
@@ -1018,8 +1016,7 @@ theorem fockTot : FockTot := by
       rw [cj_eq_star, hkill κ P, map_zero]
     have h := GlobalTheory.T.tameFunctional_kills_fockVacuum_realTranslates D W.ψ W.θ hψ W.θ_is _ _ A B (conjFun ℓ) (tame_conjFun hψ hℓ) _ hv hk w hw
     simp only [conjFun] at h
-    rw [cj_heisO (S := G.V (.grid (i.1 + 1) 0)) hψ, map_eq_zero, cj_eq_star] at h
-    exact h
+    rwa [cj_heisO (S := G.V (.grid (i.1 + 1) 0)) hψ, map_eq_zero, cj_eq_star] at h
   obtain ⟨hne₀, -, hVac₀, hspan₀⟩ := cos default
   refine GlobalTheory.T.tame_functional_vacuum_irreducibility D W.ψ hψ _ _ (latRow G i.1) ℓ hℓ (star (W.cosVec i.1 default)) hVac₀ ?_ ?_ f hf
   · intro h0

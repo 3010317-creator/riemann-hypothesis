@@ -116,8 +116,7 @@ theorem levFacts : ∀ D : D7, LevFacts D := by
       refine (GlobalTheory.T.finitePart_mem_frameStabilizer_iff_local_stabilizer D s.V s.β s.Λ hfr _).2 fun w => ?_
       by_cases e : w = v
       · subst e
-        rw [GlobalTheory.AdelicU.proj_emb_self]
-        exact hk
+        rwa [GlobalTheory.AdelicU.proj_emb_self]
       · rw [GlobalTheory.AdelicU.proj_emb_ne _ _ e]
         exact one_mem _
     refine mem_levG_of_red hs (emb_mem_GfC s.V v k) hSt fun PP hPP => ?_
@@ -133,9 +132,7 @@ theorem levFacts : ∀ D : D7, LevFacts D := by
       · rw [h1 v hv]; exact one_mem _
       · exact hint v hv
     exact mem_levG_of_red hs hkf hSt fun PP hPP => GlobalTheory.T.latticeReduction_eq_one_of_local_component_one D s.V s.β k PP hSt (h1 _ (hPS PP hPP))
-  · intro k hk k' hk'
-    exact levChi_mul hk hk'
-  · intro k _
-    exact levChi_norm s.β s.L k
+  · exact fun k hk k' hk' => levChi_mul hk hk'
+  · exact fun k _ => levChi_norm s.β s.L k
 
 end GlobalTheory.ChainOnto.LevelFacts

@@ -242,8 +242,7 @@ theorem root_val {Fr : Small.GenFrame Or} {A : Subring RM.Ω} (hG : GoodRing Fr 
     simp only [norm_zpow]
   · have hI' : Or.𝔐.Interior (HodgeLine.cj zC) := by
       unfold HodgeCpt.Interior
-      rw [HodgeLine.centre_cj]
-      exact hI
+      rwa [HodgeLine.centre_cj]
     have hS' := Or.hodge ρ (HodgeLine.cj zC) _ (HodgeLine.coordsAt_conj hc) hI' _ _
       (HodgeLine.isGrNorm_conj Or.𝔐.t Or.𝔐.M _ hν)
     obtain ⟨u', hu', eu'⟩ := hS'.2.2 ch fun k => (map_ne_zero _).2 (hch k)
@@ -349,15 +348,13 @@ theorem core {r : ℕ} {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} {h : GenFrEx 
           (Finset.prod_congr rfl fun j _ => Units.val_zpow_eq_zpow_val (α := ℂ) (t j) _)
       rw [e1, ← e2]
       rfl
-    rw [hrd, ← h2]
-    exact h1
+    rwa [hrd, ← h2]
   refine ⟨k, ?_, x₁.1, x₁.2, fun a n' hn => ?_⟩
   · obtain ⟨κ, hκ1, hκ2⟩ := GlobalTheory.T.compactification_comp_equiv E H Dw l Xo c r U h e hL σ hσ
     refine (hκ1 Z k).2 (by_contra fun hne => ?_)
     have he0 : e Z ∈ secZ Xo c 0 := by
       have h1 := hL.e_sec Z
-      rw [← secZ_nat] at h1
-      exact h1
+      rwa [← secZ_nat] at h1
     have hex : ∀ i, exZ Dw (0 : WZ E) i = 0 := fun i => by cases i <;> rfl
     have hrd : Fr.rd (e Z) = 1 := by
       rw [Rd.rd_eq 0 (e Z) he0, (hL.e_val Z).1, map_one]
@@ -392,8 +389,7 @@ theorem core {r : ℕ} {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} {h : GenFrEx 
     rw [prod_exZ Dw a fun j => ‖toC (t j : CAt σ)‖, hpn, lieFacZ_eq Dw hx0, prod_root, prod_root]
     exact norm_alg _ _ _ _ _ _ _ (fun _ => htpos t _) (rootSgn_mul_self Dw) hsome
   · rw [hdeg, mul_right_comm]
-    simp only [hev']
-    exact hv_mul (hsec a f hf) (hv_prod Finset.univ hrt)
+    simpa only [hev'] using hv_mul (hsec a f hf) (hv_prod Finset.univ hrt)
 
 end PositivityTheory.UnitarySelfGeneration.RA
 end -- clump:auto
@@ -443,9 +439,7 @@ theorem y_read_arch : (Top.Given → ∀ (E : Type) [Field E] [NumberField E] [I
     refine ⟨starRingEnd ℂ θ, ?_, fun f hf => ⟨fun hn => absurd hn hσ, fun _ => ?_⟩⟩
     · rw [Complex.norm_conj, h1]
       simp only [← hc]
-    · have h3 := RA.hv_conj (h2 f hf)
-      simp only [Complex.conj_conj, map_mul] at h3
-      exact h3
+    · simpa only [Complex.conj_conj, map_mul] using RA.hv_conj (h2 f hf)
 
 end PositivityTheory.UnitarySelfGeneration
 end -- clump:auto

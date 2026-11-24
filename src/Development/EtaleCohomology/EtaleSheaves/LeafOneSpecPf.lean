@@ -77,8 +77,7 @@ theorem ev_nat_pf : EtaleCochainEvaluationNaturalInRestriction := by
   rw [← freeGen_nat]
   have key := congrArg (fun f => f.hom (freeGen R _ U x))
     ((((chainsXIso R E p).inv ≫ α.v _ _ h).hom).naturality g.op)
-  simp only [ModuleCat.hom_comp, LinearMap.coe_comp, Function.comp_apply] at key
-  exact key
+  simpa only [ModuleCat.hom_comp, LinearMap.coe_comp, Function.comp_apply] using key
 
 end LateralTheory.EtaleFoundations
 end -- clump:auto
@@ -117,9 +116,7 @@ theorem free_hom_ext (R : Type) [CommRing R] (P : PSh) (G : Shv R) (f g : (free 
   apply Sheaf.hom_ext
   apply sheafify_hom_ext _ _ _ G.property
   ext U : 2
-  apply ModuleCat.free_hom_ext
-  intro x
-  exact h U.unop x.down
+  exact ModuleCat.free_hom_ext (fun x => h U.unop x.down)
 theorem cochain0_ext (R : Type) [CommRing R] (F : Shv R) (E : Spc)
     (α β : Cochain ((chains R).obj E) (res R F) 0)
     (h : ∀ (U : Scheme.{0}) (x : Sx E 0 U), ev (R := R) α 0 0 (by simp) U x = ev (R := R) β 0 0 (by simp) U x) : α = β := by

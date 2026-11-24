@@ -318,8 +318,7 @@ theorem prod_bound {T : Type} [Fintype T] {s : ℝ} (hs : 0 < s) (S : Finset (T 
   have hsub : S ⊆ Fintype.piFinset (fun _ => I) := by
     intro m hm
     rw [Fintype.mem_piFinset]
-    intro t
-    exact Finset.mem_biUnion.mpr ⟨m, hm, Finset.mem_image_of_mem _ (Finset.mem_univ t)⟩
+    exact fun t => Finset.mem_biUnion.mpr ⟨m, hm, Finset.mem_image_of_mem _ (Finset.mem_univ t)⟩
   calc ∑ m ∈ S, ∏ t, Real.exp (-s * (m t : ℝ) ^ 2)
       ≤ ∑ m ∈ Fintype.piFinset (fun _ => I), ∏ t, Real.exp (-s * (m t : ℝ) ^ 2) :=
         Finset.sum_le_sum_of_subset_of_nonneg hsub (fun _ _ _ => by positivity)
@@ -608,8 +607,7 @@ theorem GlobalTheory.HilbertThetaSeries.th_expansion : ∀ (F : Type) [Field F] 
           rw [h', Int.cast_neg, neg_mul]; exact hy'.neg
       refine ⟨y.natAbs, Int.natAbs_pos.2 hy0, fun ξ hξ => ?_⟩
       obtain ⟨x, ⟨hxa, hxξ⟩, -⟩ : ∃ x ∈ {x : κ → F | x ∈ aL κ a ∧ QF G x = ξ}, Φ x ≠ 0 := by
-        by_contra h
-        push Not at h
+        by_contra! h
         apply hξ
         beta_reduce
         rw [finsum_mem_eq_finite_toFinset_sum _ (hfin a ξ)]
@@ -637,8 +635,7 @@ theorem GlobalTheory.HilbertThetaSeries.th_expansion : ∀ (F : Type) [Field F] 
           refine hasSum_sum_of_ne_finset_zero fun x hx => ?_
           by_cases hq : QF G x = ξ
           · rw [Set.indicator_of_mem (show x ∈ ({x | QF G x = ξ} : Set (κ → F)) from hq)]
-            refine hzero x fun hxa => hx ?_
-            exact (hfin a ξ).mem_toFinset.2 ⟨hxa, hq⟩
+            exact hzero x fun hxa => hx ((hfin a ξ).mem_toFinset.2 ⟨hxa, hq⟩)
           · exact Set.indicator_of_notMem (show x ∉ ({x | QF G x = ξ} : Set (κ → F)) from hq) _
         exact (hasSum_subtype_iff_indicator (f := Φ) (s := {x | QF G x = ξ})).2 h2
       have hall : HasSum (fun x => Φ x * ez (QF G x) z) (th G Φ z) := (hsum z).hasSum

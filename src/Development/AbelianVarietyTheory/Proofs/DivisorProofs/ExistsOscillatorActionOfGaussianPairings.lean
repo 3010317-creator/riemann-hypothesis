@@ -461,8 +461,7 @@ theorem exists_isOsc : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpace 
       rw [← pr_one h hk, ← inv_mul_cancel a, ← osc_pr hJ h hk _ _ hf, hfa']
     have e1 : osc h hk c g (osc h hk c a⁻¹ f) = c g • osc h hk c a⁻¹ f := by
       have := osc_proj (c := c) hJ h hk g s0
-      rw [proj_twist_of_isometry h (k g) (k g⁻¹) (k_inv k g) (hk g) hg, e0, e0] at this
-      exact this
+      rwa [proj_twist_of_isometry h (k g) (k g⁻¹) (k_inv k g) (hk g) hg, e0, e0] at this
     rw [osc_mul hJ h hk hl hm _ _ hf, osc_mul hJ h hk hl hm _ _ s0, e1, osc, intw_smul, ← osc,
       ← osc_mul hJ h hk hl hm _ _ hf, mul_inv_cancel, osc_one hJ h hk hc hf]
 

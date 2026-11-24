@@ -95,8 +95,7 @@ theorem semiMeas_finite_on_compacts_and_open_pos : ∀ {G H : Type} [Group G] [T
         Subtype.ext hk
       rw [hk']
       exact hps h ⟨n, hn⟩
-    rw [hpk, hk, mul_inv_cancel_right]
-    exact hn
+    rwa [hpk, hk, mul_inv_cancel_right]
   let ψ : (N ⊔ s.range : Subgroup G) → H × N := fun k => (p k, ⟨(k : G) * (s (p k))⁻¹, hmemN k⟩)
   have hψc : Continuous ψ :=
     hpc.prodMk ((continuous_subtype_val.mul (hs.comp hpc).inv).subtype_mk _)

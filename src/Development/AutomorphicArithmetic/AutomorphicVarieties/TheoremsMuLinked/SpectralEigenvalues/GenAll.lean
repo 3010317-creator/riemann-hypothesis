@@ -102,8 +102,7 @@ theorem UpperTheory.V.Th.Sp.chi :
   have h0 : (zmultiplesHom (Om O m) 1) ((l ^ a p.1 : ℕ) : ℤ) = 0 := by
     have : ((l : O) ^ a p.1) ∈ maximalIdeal O ^ m :=
       Ideal.pow_le_pow_right (ha _) (Ideal.pow_mem_pow hl _)
-    have h2 := Ideal.Quotient.eq_zero_iff_mem.mpr this
-    simpa using h2
+    simpa using Ideal.Quotient.eq_zero_iff_mem.mpr this
   let f : ZMod (l ^ a p.1) →+ Om O m := ZMod.lift _ ⟨zmultiplesHom (Om O m) 1, h0⟩
   have f1 : f 1 = 1 := by
     have := ZMod.lift_coe (l ^ a p.1) ⟨zmultiplesHom (Om O m) 1, h0⟩ 1
@@ -328,8 +327,7 @@ private theorem core {O Λ R T M Γ X ι : Type} [CommRing O] [CommRing Λ] [Com
     have h11 : d (1 * 1) = th₀ 1 • d 1 + th₀ 1 • d 1 := hd 1 1
     simpa using h11
   have hell1 : ell 1 = 0 := by
-    have h11 := hell 1 1
-    simpa using h11
+    simpa using hell 1 1
   letI : Module T ρ.asModule := Module.compHom M act.toRingHom
   have hsmulT : ∀ (τ : T) (x : ρ.asModule), τ • x = ρ.asModuleEquiv.symm (act τ (ρ.asModuleEquiv x)) :=
     fun _ _ => rfl
@@ -374,8 +372,7 @@ private theorem core {O Λ R T M Γ X ι : Type} [CommRing O] [CommRing Λ] [Com
         simp only [Set.mem_setOf_eq, map_add (f := _)] at *
         exact add_mem ha hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, map_zero]
-        exact zero_mem _
+        simpa only [Set.mem_setOf_eq, map_zero] using zero_mem _
       smul_mem' := by
         intro r w hw
         simp only [Set.mem_setOf_eq] at *
@@ -408,8 +405,7 @@ private theorem core {O Λ R T M Γ X ι : Type} [CommRing O] [CommRing Λ] [Com
             rw [hS1, map_one, Module.End.one_apply, LinearEquiv.apply_symm_apply]
           rw [e2]
           refine Submodule.smul_mem_smul ?_ Submodule.mem_top
-          rw [RingHom.mem_ker, hth, h₀]
-          exact ha
+          rwa [RingHom.mem_ker, hth, h₀]
         | zero =>
           intro w
           rw [zero_smul]
@@ -428,8 +424,7 @@ private theorem core {O Λ R T M Γ X ι : Type} [CommRing O] [CommRing Λ] [Com
       exact Submodule.smul_mem_smul (hker_y p) trivial
   have h5 : ∀ a : T, xT a = 0 → ∀ m : ρ.asModule,
       (t * a) • m ∈ (RingHom.ker th • ⊤ : Submodule (MonoidAlgebra Λ Γ) ρ.asModule) := by
-    intro a ha m
-    exact hN' (ht a ha (ρ.asModuleEquiv m))
+    exact fun a ha m => hN' (ht a ha (ρ.asModuleEquiv m))
   have hOS : ∀ (o : O) (m : ρ.asModule), algebraMap O (MonoidAlgebra Λ Γ) o • m = algebraMap O T o • m := by
     intro o m
     rw [MonoidAlgebra.coe_algebraMap, Function.comp_apply, hS1, map_one, Module.End.one_apply, hsmulT,

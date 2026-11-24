@@ -129,8 +129,7 @@ theorem UpperTheory.orbitalFiber_pair_correspondence :
         show ((j γ0⁻¹ * (j γ0 * s * u) : G) : G ⧸ U) = s
         rw [QuotientGroup.eq, map_inv]
         simpa [mul_assoc] using U.inv_mem hu
-      · rw [hKinv]
-        exact hp
+      · rwa [hKinv]
     · rw [smul_smul, mul_inv_cancel, one_smul]
   have hfixP : ∀ z ∈ H₀, ∀ p : PairSp H G U, z • p = p := by
     intro z hz p
@@ -147,8 +146,7 @@ theorem UpperTheory.orbitalFiber_pair_correspondence :
       intro p
       apply propext
       constructor
-      · intro hp
-        exact ⟨p.1, by rw [← hp]⟩
+      · exact fun hp => ⟨p.1, by rw [← hp]⟩
       · rintro ⟨γ, rfl⟩
         rfl
     simp only [hr]
@@ -179,8 +177,7 @@ theorem UpperTheory.orbitalFiber_pair_correspondence :
       change c (h⁻¹ * γ * h⁻¹⁻¹) * f ((j h⁻¹ • y).out⁻¹ * j (h⁻¹ * γ * h⁻¹⁻¹) * (j h⁻¹ • y).out) =
         K' ⟨γ, y⟩ at h2
       rw [h3] at h2
-      rw [h2]
-      exact hp
+      rwa [h2]
     · show (⟨γ, y⟩ : PairSp H G U) = ⟨h * δ i * h⁻¹, j h • j h⁻¹ • y⟩
       rw [← hγ, smul_smul, ← map_mul, mul_inv_cancel, map_one, one_smul]
   have huniq : ∀ (i i' : I) (y y' : G ⧸ U) (h : H),

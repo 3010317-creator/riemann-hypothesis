@@ -93,8 +93,7 @@ theorem sum_inv_eq_zero_of_unramified_cocycle_pow : PoitouTateTotallyComplex →
     obtain ⟨k, rfl⟩ := QuotientGroup.mk_surjective k
     have e := w.2.2 g h k
     have e2 : μ (g : G F Ω ⧸ _) = cycMod F Ω l n g := DFunLike.congr_fun hμ g
-    rw [← QuotientGroup.mk_mul, ← QuotientGroup.mk_mul, hW, hW, hW, hW, charRep_apply, e2]
-    exact e
+    rwa [← QuotientGroup.mk_mul, ← QuotientGroup.mk_mul, hW, hW, hW, hW, charRep_apply, e2]
   have e := (H S hS (fun v => Av v.1) (fun v => hA v.1) μ hμ).1
     (Submodule.Quotient.mk ⟨W, hmem⟩)
   rw [← Finset.sum_coe_sort]
@@ -694,8 +693,7 @@ theorem reciprocity : PoitouTateTotallyComplex → TameLocal → ∀ (D : Formal
     rw [this, map_zero]
   rw [h0, hAb, hAv p hne] at h1
   simp only [t] at h1
-  rw [e1, e2, ← sub_eq_add_neg, ← mul_sub, eq_comm, Units.mul_right_eq_zero, sub_eq_zero] at h1
-  exact h1
+  rwa [e1, e2, ← sub_eq_add_neg, ← mul_sub, eq_comm, Units.mul_right_eq_zero, sub_eq_zero] at h1
 
 end GlobalTheory.NewRecip
 end -- clump:auto

@@ -120,8 +120,7 @@ private lemma not_mem_basicOpen_of_valAt'_eq_zero {X : Scheme} (q : _root_.Recip
   rw [h0, Scheme.basicOpen_zero] at hres
   have : s ∈ (⊤ ⊓ (Spec (CommRingCat.of ℂ)).basicOpen (q.app U f) :
       (Spec (CommRingCat.of ℂ)).Opens) := ⟨trivial, hmem⟩
-  rw [← hres] at this
-  exact this
+  rwa [← hres] at this
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField in
 open scoped CategoryTheory.Obj TensorProduct ContDiff in
@@ -175,16 +174,14 @@ theorem _root_.GlobalTheory.existsUnique_section_of_locally_regular :
   have hcover : O ≤ iSup W := by
     by_contra hle
     have hZ : ((O : Set P₀.A.left) ∩ ((iSup W : P₀.A.left.Opens) : Set P₀.A.left)ᶜ).Nonempty := by
-      rw [← Set.diff_eq, Set.diff_nonempty]
-      exact hle
+      rwa [← Set.diff_eq, Set.diff_nonempty]
     have hZlc : IsLocallyClosed ((O : Set P₀.A.left) ∩ ((iSup W : P₀.A.left.Opens) : Set P₀.A.left)ᶜ) :=
       ⟨O, ((iSup W : P₀.A.left.Opens) : Set P₀.A.left)ᶜ, O.isOpen, (iSup W).isOpen.isClosed_compl, rfl⟩
     obtain ⟨y, ⟨hyO, hyW⟩, hyc⟩ := nonempty_inter_closedPoints hZ hZlc
     obtain ⟨z, hz⟩ := hpt y (mem_closedPoints_iff.mp hyc)
     have hzO : ⊤ ≤ (u.ex z).left ⁻¹ᵁ O := fun s _ => by
       show (u.ex z).left.base s ∈ O
-      rw [hz]
-      exact hyO
+      rwa [hz]
     have hyz : y ∈ W ⟨z, hzO⟩ := by
       rw [← hz hs₀]
       exact hWz ⟨z, hzO⟩ (show hs₀ ∈ (⊤ : (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp ℂ).Opens) from trivial)

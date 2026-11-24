@@ -100,8 +100,7 @@ theorem exists_section_of_isIntegralElem_of_isOpenImmersion {T Z : Scheme.{0}}
         ext a
         simp [P, Ideal.primeCompl, mem_nonZeroDivisors_iff_ne_zero]
       unfold IsLocalization.AtPrime at h
-      rw [e] at h
-      exact h
+      rwa [e] at h
     · intro w hw
       obtain ⟨q, rfl⟩ : w ∈ Set.range hW.fromSpec := hW.range_fromSpec.ge hw
       exact ((PrimeSpectrum.le_iff_specializes P q).mp bot_le).map hW.fromSpec.continuous
@@ -173,8 +172,7 @@ theorem app_injective_of_dense_range {T Z : Scheme.{0}} [IsReduced Z] (j : T ⟶
   obtain ⟨z, hz⟩ := (Opens.ne_bot_iff_nonempty _).mp hne
   obtain ⟨x, hx1, ⟨y, rfl⟩⟩ := hj.inter_open_nonempty _ (Z.basicOpen (a - b)).isOpen ⟨z, hz⟩
   have : y ∈ j ⁻¹ᵁ Z.basicOpen (a - b) := hx1
-  rw [h0] at this
-  exact this
+  rwa [h0] at this
 
 theorem app_res_eq {T Z : Scheme.{0}} (j : T ⟶ Z) {V W : Z.Opens} (i : V ⟶ W)
     (i' : j ⁻¹ᵁ V ⟶ j ⁻¹ᵁ W) (a : Γ(Z, W)) :
@@ -205,8 +203,7 @@ theorem glue_of_dense_openImmersion : ∀ {T Z : Scheme.{0}} [IsReduced Z] (j : 
   refine ⟨g', ?_⟩
   refine T.sheaf.eq_of_locally_eq' (fun u : U => j ⁻¹ᵁ Wf u) (j ⁻¹ᵁ U)
     (fun u => homOfLE (j.preimage_mono (hWU u.1 u.2))) ?_ _ _ ?_
-  · intro x hx
-    exact Opens.mem_iSup.2 ⟨⟨j x, hx⟩, hmem _ hx⟩
+  · exact fun x hx => Opens.mem_iSup.2 ⟨⟨j x, hx⟩, hmem _ hx⟩
   · intro u
     have key : T.presheaf.map (homOfLE (j.preimage_mono (hWU u.1 u.2))).op (j.app U g') =
         T.presheaf.map (homOfLE (j.preimage_mono (hWU u.1 u.2))).op s := by

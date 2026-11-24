@@ -349,8 +349,7 @@ theorem mem_range_of_int {K : Type} [Field K] (S : Subring K) (g : GL (Fin n) K)
     simp only [Matrix.map_mul, hM, hN, Units.mul_inv, Matrix.map_one _ (map_zero _) (map_one _)])
   have hNM : N * M = 1 := inj (by
     simp only [Matrix.map_mul, hM, hN, Units.inv_mul, Matrix.map_one _ (map_zero _) (map_one _)])
-  refine ⟨⟨M, N, hMN, hNM⟩, Units.ext ?_⟩
-  exact hM
+  exact ⟨⟨M, N, hMN, hNM⟩, Units.ext hM⟩
 
 theorem loc_entries_int (Dv : InertDatum L n v w) {x : GAf L n} (hx : x ∈ Umax L n) (i j : Fin n) :
     ((Dv.loc x : GL (Fin n) (w.adicCompletion L)) : Matrix (Fin n) (Fin n) (w.adicCompletion L)) i j ∈
@@ -378,10 +377,7 @@ theorem GlobalTheory.OneAct.heckeFunI_unit : ∀ (L : Type) [Field L] [NumberFie
   intro L _ _ _ n v w Dv U hU W _ _ f hf
   funext g
   unfold heckeFunI
-  have hone : TrivOutside {v} (1 : GAf L n) := by
-    intro u _
-    show ((1 : Matrix (Fin n) (Fin n) (AL L))).map (compAt L u) = 1
-    exact Matrix.map_one _ (map_zero _) (map_one _)
+  have hone : TrivOutside {v} (1 : GAf L n) := fun u _ => Matrix.map_one _ (map_zero _) (map_one _)
   have hdK : ∀ y : GU Dv.σw n, y ∈ (DoubleCoset.doubleCoset (1 : GU Dv.σw n) (KU Dv.σw n : Set (GU Dv.σw n))
       (KU Dv.σw n : Set (GU Dv.σw n))) ↔ y ∈ KU Dv.σw n := by
     intro y
@@ -389,8 +385,7 @@ theorem GlobalTheory.OneAct.heckeFunI_unit : ∀ (L : Type) [Field L] [NumberFie
     constructor
     · rintro ⟨a, ha, b, hb, rfl⟩
       simpa using (KU Dv.σw n).mul_mem ha hb
-    · intro hy
-      exact ⟨y, hy, 1, (KU Dv.σw n).one_mem, by simp⟩
+    · exact fun hy => ⟨y, hy, 1, (KU Dv.σw n).one_mem, by simp⟩
   rw [finsum_eq_single _ ((1 : GAf L n) : GAf L n ⧸ U)]
   · have hc : ∃ x : GAf L n, (x : GAf L n ⧸ U) = ((1 : GAf L n) : GAf L n ⧸ U) ∧ TrivOutside {v} x :=
       ⟨1, rfl, hone⟩

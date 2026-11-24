@@ -127,8 +127,7 @@ private theorem prod_low (D : Dat ℚ E) (w R : E) :
   fin_cases i <;> fin_cases j <;> simp
 
 private theorem δ_neg (D : Dat ℚ E) : D.δ < 0 := by
-  have h := D.neg (algebraMap ℚ ℝ)
-  simpa using h
+  simpa using D.neg (algebraMap ℚ ℝ)
 
 private theorem rank_one (D : Dat ℚ E) (ξ : Fin 4 → ℚ) (h0 : ξ ≠ 0) (hq : qr D.δ ξ = 0) :
     ∃ (γ : SpecialLinearGroup (Fin 2) E) (r : ℚ), r ≠ 0 ∧ rp ξ = D.act (gl (ratS E γ)) (rp ![0, r, 0, 0]) := by
@@ -182,8 +181,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.orb1 :
     rw [gl_ratS, hN]
     rfl
   · rw [act_iff, hermitianMatrix_basisOne, hermitianMatrix_basisOne, prod_pow_unitVector_val] at h
-    have h11 := congrFun (congrFun h 1) 1
-    simpa [hr] using h11
+    simpa [hr] using congrFun (congrFun h 1) 1
   · set a := D.b.repr (γ.1 0 0) 0
     set t := D.b.repr (γ.1 0 0) 1
     have ha : γ.1 0 0 = mm D a t := by

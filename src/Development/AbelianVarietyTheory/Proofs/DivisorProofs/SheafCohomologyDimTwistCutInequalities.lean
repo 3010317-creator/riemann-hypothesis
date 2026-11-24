@@ -88,15 +88,12 @@ theorem hdim_twist_cut_inequalities :
   refine ⟨fun i => ?_, fun i => ?_, ?_⟩
   · have h : hdim k (twist F M) i ≤ hdim k (twist (twist F (lbZPow B (-1))) M) i +
         hdim k (twist (cut F hB s) M) i := hdim₂_le k hT i (f1 i) (f3 i)
-    rw [he i] at h
-    exact h
+    rwa [he i] at h
   · have h : hdim k (twist (twist F (lbZPow B (-1))) M) (i + 1) ≤ hdim k (twist (cut F hB s) M) i +
         hdim k (twist F M) (i + 1) := hdim₁_le k hT i (f3 i) (f2 (i + 1))
-    rw [he (i + 1)] at h
-    exact h
+    rwa [he (i + 1)] at h
   · have h0 := hdim₁_zero_le k hT (f2 0)
     have h : hdim k (twist (twist F (lbZPow B (-1))) M) 0 ≤ hdim k (twist F M) 0 := h0
-    rw [he 0] at h
-    exact h
+    rwa [he 0] at h
 
 end GlobalTheory

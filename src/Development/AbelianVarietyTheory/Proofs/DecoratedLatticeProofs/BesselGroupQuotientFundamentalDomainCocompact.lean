@@ -77,8 +77,7 @@ theorem besGrp_quotient : ∀ (D : D7) (ρ : ℕ) (B : BesLev D ρ), B.μR.IsHaa
     GlobalTheory.Mem.UnipCocompact.radicals_cocompact D B.V ρ B.d.e (GlobalTheory.MixPer.isIsoSub_e B.d)
   obtain ⟨KA, hKA, hKAcov⟩ := B.cpt
   have hγA : ∀ γ ∈ GQ B.A, embA B.d B.o γ ∈ GQ B.V := fun γ hγ => by
-    have h1 := (hrat 1 (one_mem _) γ).2 ⟨one_mem _, hγ⟩
-    simpa using h1
+    simpa using (hrat 1 (one_mem _) γ).2 ⟨one_mem _, hγ⟩
   set Ω : Set (GA D B.V) := (fun p : GA D B.V × GA D B.A => p.1 * embA B.d B.o p.2) '' ((Subtype.val '' KN) ×ˢ KA) with hΩ
   have hΩc : IsCompact Ω :=
     ((hKN.image continuous_subtype_val).prod hKA).image (continuous_fst.mul (hsc.comp continuous_snd))
@@ -142,10 +141,8 @@ theorem besGrp_quotient : ∀ (D : D7) (ρ : ℕ) (B : BesLev D ρ), B.μR.IsHaa
         fun a => ∫ n in B.vN.𝓝, F (n.1 * embA B.d B.o a) ∂B.vN.ν := funext fun a => by simp only [hpt2]
     refine ⟨?_, ?_⟩
     · have h3 := hi1.2 hAC
-      rw [e1] at h3
-      exact h3
+      rwa [e1] at h3
     · have h3 := hi2 hAC
-      rw [e1, e2] at h3
-      exact h3
+      rwa [e1, e2] at h3
 
 end GlobalTheory.BesselQuot

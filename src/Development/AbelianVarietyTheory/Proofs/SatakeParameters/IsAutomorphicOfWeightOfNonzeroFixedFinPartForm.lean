@@ -60,15 +60,13 @@ theorem ofType_of_finPart_fixed : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       hasWeightAt_of_finPart π W hf hf0 (InfinitePlace.mk τ)
     rcases InfinitePlace.embedding_mk_eq τ with e | e
     · have h' := h
-      rw [← Wt.at_embedding W (InfinitePlace.mk τ), e] at h'
-      exact h'
+      rwa [← Wt.at_embedding W (InfinitePlace.mk τ), e] at h'
     · have h2 := h.conjugate
       rw [← Wt.at_embedding W (InfinitePlace.mk τ), ← Wt.at_conjugate, e, ComplexEmbedding.involutive_conjugate E τ] at h2
       exact h2
   · have hne : f.1 ≠ 0 := fun h => hf0 (Subtype.ext h)
     obtain ⟨v, hv⟩ : ∃ v, f.1 v ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hne (LinearMap.ext hc)
     refine ⟨f.1 v, AutSub.mem_finPart.1 hf v, hv, fun x hx => ?_⟩
     funext g

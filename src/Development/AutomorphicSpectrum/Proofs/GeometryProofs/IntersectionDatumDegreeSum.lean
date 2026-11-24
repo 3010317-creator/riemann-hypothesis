@@ -103,8 +103,7 @@ theorem mat_inv {b₀ b : Fin r → V} {T : Matrix (Fin r) (Fin r) Ω}
   rw [Finset.sum_comm]
   have h1 : ∀ m, ∑ k', T⁻¹ k' k * T m k' = (T * T⁻¹) m k := by
     intro m
-    simp only [Matrix.mul_apply]
-    exact Finset.sum_congr rfl (fun _ _ => mul_comm _ _)
+    simpa only [Matrix.mul_apply] using Finset.sum_congr rfl (fun _ _ => mul_comm _ _)
   simp only [← Finset.sum_smul, h1, Matrix.mul_nonsing_inv T hu, Matrix.one_apply]
   simp
 
@@ -172,8 +171,7 @@ private theorem unitAt_of_isUnit' {p : Cpt ξ} (z : regAt ξ p) (hu : IsUnit z) 
 theorem exists_unit_of_sum {p : Cpt ξ} {m : ℕ} {f cc : Fin m → Ω} (hf : ∀ l, f l ∈ regAt ξ p)
     (hc : ∀ l, cc l ∈ regAt ξ p) (h : ∑ l, cc l * f l = 1) : ∃ l, unitAt ξ p (f l) := by
   haveI := isLocalRing_regAt' (ξ := ξ) (p := p)
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have hnu : ∀ l, ¬ IsUnit (⟨f l, hf l⟩ : regAt ξ p) :=
     fun l hu => hne l (unitAt_of_isUnit' _ hu)
   have hsum : (∑ l, (⟨cc l, hc l⟩ : regAt ξ p) * ⟨f l, hf l⟩) = 1 := by

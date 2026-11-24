@@ -151,8 +151,7 @@ theorem monotone_form_along_segment : ∀ (D : ℕ) (Φ : MvPolynomial (Fin 2) �
     exact mul_nonneg (pow_nonneg (by positivity) _) (hyp _ _)
   have hfpos : ∀ τ ∈ Set.Ioo (0 : ℝ) 1, 0 ≤ f τ := by
     intro τ hτ
-    by_contra hneg
-    push Not at hneg
+    by_contra! hneg
     have hev : ∀ᶠ t in 𝓝 τ, f t < 0 := hfc.continuousAt.eventually (Iio_mem_nhds hneg)
     obtain ⟨ε, hε, hball⟩ := Metric.eventually_nhds_iff.mp hev
     obtain ⟨q, hq1, hq2⟩ := exists_rat_btwn (show max 0 (τ - ε) < τ from
@@ -248,8 +247,7 @@ theorem mixed_diff_nonneg : GlobalTheory.Published.ArCalc → ∀ (k : Type) [Co
     rw [Weight.chernInt, hneg, MeasureTheory.Measure.restrict_zero, MeasureTheory.integral_zero_measure, sub_zero]
     refine MeasureTheory.setIntegral_nonpos (isOpen_offSupp _).measurableSet fun z hz => ?_
     have hz' : z ∈ ptsIn p σ (Out.nonzeroLocus s) := by
-      rw [← offSupp_divOfSec (hL := (A.tens B.dual).isLB)]
-      exact hz
+      rwa [← offSupp_divOfSec (hL := (A.tens B.dual).isLB)]
     rw [logNorm_ratOfSec _ hz']
     have h0 : 0 ≤ ((A.tens B.dual).φ σ).nsq (secVal p σ s) z := by
       unfold Weight.nsq
@@ -287,8 +285,7 @@ theorem selfInter_mono : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommR
   have hd := ((hC.arIso k Y p D hX).2 (Fin 2) _ Φ hΦ).1
   have h0 : Φ (MvPolynomial.X 0 ^ (D + 1)) = α := HermLB.IsSelfInter.unique hX (hd 0) hα
   have h1 : Φ (MvPolynomial.X 1 ^ (D + 1)) = β := HermLB.IsSelfInter.unique hX (hd 1) hβ
-  rw [← h0, ← h1]
-  exact hmono
+  rwa [← h0, ← h1]
 
 end GlobalTheory.HSNef
 end -- clump:auto

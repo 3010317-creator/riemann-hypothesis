@@ -911,8 +911,7 @@ theorem exists_form_one_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   have hx' : castFrame hΨ.symm x ∈ (M.comp c).dom := by
     have := castFrame_mem_GG hΨ M.Gm M.p0 x hx
     show castFrame hΨ.symm x ∈ GG (M.comp c).Ψ (M.comp c).Gm (M.comp c).p0
-    rw [M.comp_Gm c, M.comp_basePoint c]
-    exact this
+    rwa [M.comp_Gm c, M.comp_basePoint c]
   have hsb' : 2 * r + 50 * r ^ 2 * ((M.comp c).Ψ.card * ((M.comp c).p0 * (r - (M.comp c).p0))) + 1 ≤ s := by
     rw [hΨ, M.comp_basePoint c]; exact hsb
   obtain ⟨P, hP, hP0, hPγ⟩ := comp_interp (M.comp c) (M.χ_one c) G g hg hgr hΓG
@@ -925,11 +924,9 @@ theorem exists_form_one_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     · subst hc
       have e : (fun y => u c' (castFrame (M.comp_Ψ c') y)) = P := by
         funext y
-        simp only [u, ite_eq_left rfl]
-        exact congrArg P (castFrame_symm_cast _ y)
+        simpa only [u, ite_eq_left rfl] using congrArg P (castFrame_symm_cast _ y)
       rw [e, castWt_deMul]
-      rw [M.comp_basePoint c'] at hP
-      exact hP
+      rwa [M.comp_basePoint c'] at hP
     · have e : (fun y => u c' (castFrame (M.comp_Ψ c') y)) = 0 := by
         funext y
         simp [u, hc]
@@ -1036,8 +1033,7 @@ variable {U C : Type} [Group U] [MulAction U C] (M : TwoLevels E r U C)
 theorem domOfComp (c : C) {x : Frame (M.comp c).Ψ r} (hx : x ∈ (M.comp c).dom) :
     castFrame (M.comp_Ψ c) x ∈ M.dom := by
   have h := castGG (M.comp_Ψ c) hx
-  rw [M.comp_Gm c, M.comp_basePoint c] at h
-  exact h
+  rwa [M.comp_Gm c, M.comp_basePoint c] at h
 
 theorem domToComp (c : C) {x : Frame M.Ψ r} (hx : x ∈ M.dom) :
     castFrame (M.comp_Ψ c).symm x ∈ (M.comp c).dom := by
@@ -1052,8 +1048,7 @@ theorem ssLact {la : Wt M.Ψ r} {F : C → Frame M.Ψ r → ℂ} (hF : F ∈ M.S
     {γ : GL (Fin r) E} (hγ : γ ∈ (M.comp c).Γ) {x : Frame M.Ψ r} (hx : x ∈ M.dom) :
     F c (lact γ x) = F c x := by
   have h1 := (hF c).1.1.2.2 γ hγ (castFrame (M.comp_Ψ c).symm x) (domToComp M c hx)
-  rw [M.χ_one c _ γ hγ, one_mul] at h1
-  exact h1
+  rwa [M.χ_one c _ γ hγ, one_mul] at h1
 
 theorem ssZero (la : Wt M.Ψ r) : (0 : C → Frame M.Ψ r → ℂ) ∈ M.SS la := by
   intro c
@@ -1097,8 +1092,7 @@ theorem detNeAt [Fintype U] [DecidableEq U] {la : Wt M.Ψ r} {u u0 : C → Frame
     exact inv_mem_iff.mp h
   have ha : M.pull 1 u c0 x0 ≠ 0 := by
     simp only [TwoLevels.pull, one_smul]
-    rw [ssLact M hu c0 ht1 hx0]
-    exact hne
+    rwa [ssLact M hu c0 ht1 hx0]
   have entry : ∀ g : U, M.pull g u0 (k • c0) (lact (M.tr k c0) x0) = M.pull (g * k) u c0 x0 := by
     intro g
     have hzd : lact (M.tr g (k • c0)) (lact (M.tr k c0) x0) ∈ M.dom :=

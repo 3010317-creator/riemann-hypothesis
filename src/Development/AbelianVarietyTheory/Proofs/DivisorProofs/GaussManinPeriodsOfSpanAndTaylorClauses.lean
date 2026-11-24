@@ -246,8 +246,7 @@ theorem pHom_of (hE : PExist) (hU : PUniq) : PHom := by
     obtain ⟨_, ⟨U, hU, rfl⟩, hx, -⟩ := (A.left.isBasis_affineOpens).exists_subset_of_mem_open
       (Set.mem_univ (f pt)) isOpen_univ
     refine ⟨U, hU, fun z _ q _ ↦ ?_⟩
-    rw [Subsingleton.elim q pt]
-    exact hx
+    rwa [Subsingleton.elim q pt]
   choose per hper using fun c : primDR A ↦ hE _ _ _ _ _ _ _ _ (fibUnif u) hB c.1
   have hadd : ∀ c c' : primDR A, per (c + c') = per c + per c' := fun c c' ↦
     hU _ _ _ _ _ _ _ _ (fibUnif u) _ _ _ (hper (c + c')) fun K r hr ↦ by
@@ -386,12 +385,10 @@ theorem exists_core {X : Scheme.{0}} (s : X ⟶ Sp ℂ) (G : Over X) [GrpObj G] 
       have h1 : e b (ζ (b, w)) = e b (ζ (b, w) - ζ (b, 0)) * e b (ζ (b, 0)) := by
         rw [← hadd b hb, sub_add_cancel]
       rw [hζb0, _root_.mul_one] at h1
-      rw [← h1]
-      exact hw
+      rwa [← h1]
     have key := fderiv_lift (x := fun w => e b w ≫ α) (hxadd b hb) (hadd b hb) (hsurj b hb) hr (hrad b hb)
       hder.differentiableAt hev0 z
-    rw [hder.fderiv] at key
-    exact key
+    rwa [hder.fderiv] at key
   have hexM : ∀ b, ∃ M : (Fin g → ℂ) →ₗ[ℂ] (Fin g → ℂ), b ∈ Metric.ball b₀ ε → ∀ w, e b (M w) = e b w ≫ α := by
     intro b
     by_cases hb : b ∈ Metric.ball b₀ ε
@@ -469,8 +466,7 @@ theorem exists_fibre {X : Scheme.{0}} {G : Over X} [GrpObj G] (hG : IsAbelianSch
     refine GlobalTheory.FibreUnif.isHolTo_of_isPullback hφ.1 (fun z => ?_) ?_
     · have := Over.w (ε z)
       simpa using this
-    · simp only [hεleft]
-      exact he.2.2.1
+    · simpa only [hεleft] using he.2.2.1
   obtain ⟨F, hF, -⟩ := GlobalTheory.existsUnique_linear_lift_of_isHolTo A hA L d g u₁ htan.1 htan.2 ε hεadd hεhol
   have hker : ∀ z, ε z = 1 ↔ z ∈ P.range := by
     intro z; rw [← hk z]; simp only [hε]
@@ -514,7 +510,6 @@ theorem exists_fibre {X : Scheme.{0}} {G : Over X} [GrpObj G] (hG : IsAbelianSch
   have hΛ : ∀ z, Lq.toLinearEquiv z ∈ u₁.Λ ↔ z ∈ Λ := by
     intro z
     rw [← u₁.ker, show u₁.ex (Lq.toLinearEquiv z) = ε z from hLq z]
-    show ε z = 1 ↔ z ∈ P.range.toIntSubmodule
     exact hker z
   let u := GlobalTheory.TorusTransfer.reparam u₁ Lq.toLinearEquiv (fun _ => 0) (differentiable_const _) Λ hΛd hΛf hΛ
   have hPΛ : P.range = Λ.toAddSubgroup := by ext; simp [Λ]
@@ -556,7 +551,6 @@ theorem famUnif_holds : FamUnif := by
       (hy a).comp ψ.differentiable.differentiableOn (Set.mapsTo_preimage _ _)
 
   have hs : LocallyOfFiniteType s := by
-    show LocallyOfFiniteType (Spec.map (CommRingCat.ofHom (algebraMap ℂ B)))
     exact HasRingHomProperty.Spec_iff.mpr (RingHom.finiteType_algebraMap.mpr inferInstance)
 
   have : DiscreteTopology u₀.Λ := u₀.discrete
@@ -625,8 +619,7 @@ theorem famUnif_holds : FamUnif := by
       (by rw [Set.mem_preimage, show ψ.symm 0 = 0 from map_zero _]; exact h0O)
     refine ⟨r, W, hr, hWa, fun z hz => (hball hz).1.1, fun b _ hb => ?_⟩
     have := (hball hb).2
-    rw [ContinuousLinearEquiv.symm_apply_apply] at this
-    exact this
+    rwa [ContinuousLinearEquiv.symm_apply_apply] at this
   obtain ⟨r, W, hr, hWa, hrC, hWb⟩ := hW
   have hmem : ∀ z ∈ Metric.ball (0 : I → ℂ) r, ψ.symm z ∈ C := fun z hz => hrC hz
   have hex : ∀ z : I → ℂ, ∃ p : (Σ u : HolUnif (A z) (L z) g, u₀.Λ ≃+ u.Λ), z ∈ Metric.ball (0 : I → ℂ) r →
@@ -964,8 +957,7 @@ theorem glue : ∀ {I : Type} [Fintype I] {g : ℕ} {Λ : Type} [AddCommGroup Λ
   have hG : ∀ k, ∀ p ∈ K.W k, (f k).fn p = G p := by
     intro k p hp
     have h : ∃ k, p ∈ K.W k := ⟨k, hp⟩
-    simp only [G, dite_eq_left h]
-    exact indep _ _ _ hp h.choose_spec
+    simpa only [G, dite_eq_left h] using indep _ _ _ hp h.choose_spec
   have hGev : ∀ k, ∀ p ∈ K.W k, G =ᶠ[𝓝 p] (f k).fn := fun k p hp ↦ by
     filter_upwards [(K.W k).isOpen.mem_nhds hp] with q hq using (hG k q hq).symm
   refine ⟨G, ?_, hG, ?_, ?_⟩
@@ -1003,8 +995,7 @@ theorem glue : ∀ {I : Type} [Fintype I] {g : ℕ} {Λ : Type} [AddCommGroup Λ
           rw [← Pi.single_smul]; simp
         rw [e, map_smul, ContinuousLinearMap.comp_apply, ContinuousLinearMap.inr_apply, hs a, smul_zero]
       have := hGd.comp w' hfd
-      rw [hL] at this
-      exact this
+      rwa [hL] at this
     exact is_const_of_fderiv_eq_zero (fun w' ↦ (hder w').differentiableAt) (fun w' ↦ (hder w').fderiv) w 0
 
 end GlobalTheory.AnPer.Charts
@@ -1198,8 +1189,7 @@ theorem fderiv_zero_eq_of_const_differences :
     hG.sub (fderiv ℂ G 0).differentiable
   have hz : ∀ w, fderiv ℂ (fun w => G w - fderiv ℂ G 0 w) w = 0 := fun w => by
     have := ((hG w).hasFDerivAt.sub (fderiv ℂ G 0).hasFDerivAt).fderiv
-    rw [hk w, sub_self] at this
-    exact this
+    rwa [hk w, sub_self] at this
   have h := is_const_of_fderiv_eq_zero hd hz (l : Fin g → ℂ) 0
   have h2 := hp l 0
   rw [zero_add] at h2
@@ -1252,8 +1242,7 @@ theorem main : ∀ {A : Over (Sp ℂ)} {I : Type} [Fintype I] {g : ℕ} {Λ : Ty
     have : ((0, w) : Tot I g) = ∑ a, w a • ((0, Pi.single a 1) : Tot I g) := by
       refine Prod.ext ?_ ?_
       · simp [Prod.fst_sum]
-      · simp only [Prod.snd_sum, Prod.smul_snd]
-        exact pi_eq_sum_univ' w
+      · simpa only [Prod.snd_sum, Prod.smul_snd] using pi_eq_sum_univ' w
 
     rw [this, map_sum]
     refine Finset.sum_congr rfl fun a _ ↦ ?_

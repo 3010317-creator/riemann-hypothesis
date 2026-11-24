@@ -149,8 +149,7 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem norm_le_one_of_quad {a c m : ℂ_[p]} (ha : ‖a‖ ≤ 1) (hc : ‖c‖ ≤ 1)
     (h : ‖m ^ 2 + a * m - c‖ ≤ 1) : ‖m‖ ≤ 1 := by
-  by_contra hm
-  push Not at hm
+  by_contra! hm
   have e : m ^ 2 = (m ^ 2 + a * m - c) + (-(a * m) + c) := by ring
   have hb : ‖m ^ 2‖ ≤ ‖m‖ := by
     rw [e]
@@ -249,8 +248,7 @@ theorem unit_of_double_integral {p : ℕ} [Fact p.Prime] (W : WeierstrassCurve �
   have n2 : ‖(2 : ℂ_[p])‖ ≤ 1 := by simpa using norm_natCast_le (p := p) 2
 
   have hy : ‖y‖ ≤ 1 := by
-    by_contra hy
-    push Not at hy
+    by_contra! hy
     have hR : ‖x ^ 3 + W.a₂ * x ^ 2 + W.a₄ * x + W.a₆‖ ≤ 1 := by
       refine it_add (it_add (it_add ?_ (it_mul h2 ?_)) (it_mul h4 hx)) h6
       · rw [show x ^ 3 = x * x * x by ring]; exact it_mul (it_mul hx hx) hx
@@ -276,8 +274,7 @@ theorem unit_of_double_integral {p : ℕ} [Fact p.Prime] (W : WeierstrassCurve �
   refine le_antisymm hηle (not_lt.mp fun hlt => ?_)
 
   have hmi : ‖m‖ ≤ 1 := by
-    by_contra hmg
-    push Not at hmg
+    by_contra! hmg
     have hT : ‖W.a₁ * m - W.a₂ - 2 * x‖ ≤ ‖m‖ := by
       have hm1 : (1 : ℝ) ≤ ‖m‖ := hmg.le
       refine le_trans (unit_of_double_integral_sub _ _) (max_le ?_ ?_)
@@ -405,8 +402,7 @@ theorem yAt_neg (g : GL3Theta.G1 p) (h : GlobalTheory.EvenTheta.IsLat g.abelian�
   have e : lamC g.lam (-wpD g.abelian₂ Q) = -lamC g.lam (wpD g.abelian₂ Q) := by
     have e1 := _root_.GlobalTheory.SerTransport.lamC_coe g.lam (-(⟨_, a4⟩ : Qbar))
     have e2 := _root_.GlobalTheory.SerTransport.lamC_coe g.lam (⟨_, a4⟩ : Qbar)
-    rw [map_neg, ← e2] at e1
-    exact e1
+    rwa [map_neg, ← e2] at e1
   have e1 : g.W.toAffine.a₁ = _ := W_a₁ g
   have e3 : g.W.toAffine.a₃ = _ := W_a₃ g
   rw [WeierstrassCurve.Affine.negY, e1, e3]
@@ -914,8 +910,7 @@ theorem intSer_of_pow {N : ℕ} (hN : ‖(N : K)‖ = 1) {s : PowerSeries K}
       rw [hcb, ite_eq_left hj, mul_zero]
     · intro h; exact absurd (by simp) h
   have h1 : ‖(N : K) * PowerSeries.coeff n s‖ ≤ 1 := by
-    rw [← key, hGN, map_sub]
-    rw [sub_eq_add_neg]
+    rw [← key, hGN, map_sub, sub_eq_add_neg]
     refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (hsN n) ?_)
     rw [norm_neg]; exact intSer_pow hai N n
   rwa [norm_mul, hN, one_mul] at h1
@@ -976,8 +971,7 @@ theorem laQ_of_tors {p : ℕ} {Λ : AddSubgroup ℂ} {t : ℂ} (h : GL3Theta.Tor
 
 theorem thetaTranslate_sigmaStar_at_zero_ne_zero_of_not_mem_lattice {Λ : AddSubgroup ℂ} (hlat : IsLat Λ) {t : ℂ} (ht : t ∉ Λ) :
     U1 Λ t (sgStar Λ) 0 ≠ 0 := by
-  simp only [U1, zero_add]
-  exact mul_ne_zero ((hlat.sg_eq_zero t).not.2 ht) (Complex.exp_ne_zero _)
+  simpa only [U1, zero_add] using mul_ne_zero ((hlat.sg_eq_zero t).not.2 ht) (Complex.exp_ne_zero _)
 
 theorem atU_smul' {p : ℕ} [Fact p.Prime] (g : GL3Theta.G1 p) {c : ℂ} (hc : c ∈ Qbar) {F : ℂ → ℂ} (hF : AlgEnt F) :
     AlgEnt (fun z => c * F z) ∧ g.atU (fun z => c * F z) = PowerSeries.C (lamC g.lam c) * g.atU F := by

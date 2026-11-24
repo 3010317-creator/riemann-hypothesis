@@ -85,8 +85,7 @@ theorem sum_eq_zero_of_multilin {ι I : Type} [Fintype ι] [dI : DecidableEq ι]
         obtain rfl : inst = dI := Subsingleton.elim _ _
         simp only [coe_upd, Submodule.coe_add]
         have := hE (fun j => (m j : Y j → ℂ)) (fun j => (m j).2) a p q 1 p.2 q.2
-        rw [one_smul, one_mul] at this
-        exact this
+        rwa [one_smul, one_mul] at this
       map_update_smul' := by
         intro inst m a c p
         obtain rfl : inst = dI := Subsingleton.elim _ _
@@ -102,8 +101,7 @@ theorem sum_eq_zero_of_multilin {ι I : Type} [Fintype ι] [dI : DecidableEq ι]
   let φ : I → ∀ j, V j := fun i j => if hi : i ∈ S then ⟨Φ i j, hΦ i hi j⟩ else 0
   let τ : I →₀ ℂ := Finsupp.onFinset S (fun i => if i ∈ S then x i else 0) (fun i hi => by by_contra h; simp [h] at hi)
   have key := GlobalTheory.finsupp_sum_multilinear_eq_of_prod_eq V Mm τ 0 φ φ (fun z => by
-    rw [Finsupp.sum_zero_index, Finsupp.onFinset_sum _ (fun _ => zero_mul _)]
-    rw [← h0 z]
+    rw [Finsupp.sum_zero_index, Finsupp.onFinset_sum _ (fun _ => zero_mul _), ← h0 z]
     refine Finset.sum_congr rfl fun i hi => ?_
     simp [φ, hi])
   rw [Finsupp.sum_zero_index] at key

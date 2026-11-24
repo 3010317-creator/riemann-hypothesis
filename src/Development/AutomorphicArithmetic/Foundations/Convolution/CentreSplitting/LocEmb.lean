@@ -78,8 +78,7 @@ theorem UpperTheory.ConvolutionTheory.Dp.locEmb :
         simp [hJ0]
     have hc : (v : LL μ) ∈ closure (((formsIn μ V).map (clsL μ) : Submodule ℂ (LL μ)) : Set (LL μ)) :=
       hdense.ge v.2
-    rw [← himg] at hc
-    exact hc
+    rwa [← himg] at hc
   · intro ψ
     simp [hJ0]
   · intro w g φ
@@ -91,5 +90,4 @@ theorem UpperTheory.ConvolutionTheory.Dp.locEmb :
       exact congrArg (fun f : π.V => f.1.1 x) h1
     have h2 := heq ψ.1 (hcen ψ) ψ'.1 (finGL E n (locGL E n w g)) hx
     show clsL μ ψ'.1 = RG μ (finGL E n (locGL E n w g)) (clsL μ ((Cm.carrierEq π).symm (Cm.carrierEq π ψ)).1)
-    rw [LinearEquiv.symm_apply_apply]
-    exact h2
+    rwa [LinearEquiv.symm_apply_apply]

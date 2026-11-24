@@ -292,8 +292,7 @@ theorem lieImg_iff (W : Wit Y a χ) {ν : GtPt a.D₀ (epsR A)} {g : GtPt W.P.D.
     have hr : FormalPoint.reduction I v n = spMap q ≫ xe := by
       rw [← cancel_mono (fstG I n W.t.G).left, FormalPoint.reduction_fstG, Category.assoc, hx, ← Category.assoc, hq]
     have := hc.comp (spMap q)
-    rw [hq, ← hr] at this
-    exact this
+    rwa [hq, ← hr] at this
   · intro hP n ρ κ vn h₁ h₂ h₃ h₄ _ h₆
     have := loc n
     obtain rfl := eq_dualMapR (Ideal.Quotient.mk (I ^ (n + 1))) ρ h₁ h₂
@@ -349,7 +348,6 @@ theorem lieImg_iff_isLieComb : Out.GlobalFnsSt → ∀ (E : Type) [Field E] [Num
   have := isAdicComplete_map_of_finite (Ideal.span {(PowerSeries.X : PowerSeries A)}) (DualNumber (PowerSeries A))
   refine ⟨fun h => ⟨u', fun i => rfl, h.unique hs⟩, fun ⟨u'', h₁, h₂⟩ => ?_⟩
   obtain rfl : u'' = u' := funext fun i => Over.OverMorphism.ext (h₁ i)
-  rw [h₂]
-  exact hs
+  rwa [h₂]
 
 end GlobalTheory.ConstLin

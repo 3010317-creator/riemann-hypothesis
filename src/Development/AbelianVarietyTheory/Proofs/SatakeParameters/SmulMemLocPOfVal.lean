@@ -135,8 +135,7 @@ theorem rename_rowDiv (x y : Fin a) (k : ℕ) (f : MvPolynomial (Fin a × Fin a)
     · simp [rowGen, hv, corner]
     · have hv' : Fin.castLE hab v.1 ≠ Fin.castLE hab y := fun e => hv (Fin.castLE_injective hab e)
       simp [rowGen, hv, corner]
-  have h2 := congrArg (fun φ => (φ f).coeff k) key
-  simpa [rowDiv, Polynomial.coeff_map] using h2
+  simpa [rowDiv, Polynomial.coeff_map] using congrArg (fun φ => (φ f).coeff k) key
 
 theorem rename_applyWord (w : List (Fin a × Fin a × ℕ)) (f : MvPolynomial (Fin a × Fin a) R) :
     rename (corner hab) (applyWord R w f) =
@@ -217,8 +216,7 @@ theorem subGen_isHomogeneous {n : ℕ} {f : MvPolynomial (Fin a × Fin a) ℤ} (
   have := hf.aeval (fun v : Fin a × Fin a => ∑ β : Fin b,
     (C (X (β, Fin.castLE hab v.2)) * X (β, v.1) : MvPolynomial (Fin b × Fin a) (MvPolynomial (Fin b × Fin b) ℤ)))
     (n := 1) (fun v => IsHomogeneous.sum _ _ _ fun β _ => isHomogeneous_C_mul_X _ _)
-  rw [one_mul] at this
-  exact this
+  rwa [one_mul] at this
 
 theorem coeff_subGen_mem {ν : Fin a → ℕ} {ν' : Fin b → ℕ} (hν : Antitone ν')
     (h : ∀ j : Fin b, ν' j = if h : (j : ℕ) < a then ν ⟨j, h⟩ else 0) {f : MvPolynomial (Fin a × Fin a) ℤ}
@@ -500,8 +498,7 @@ theorem jetOpWeyl : GlobalTheory.ColPeriod.JetOpWeyl := by
   obtain ⟨u, hu, h⟩ := key hF
   refine ⟨u * t, mul_mem hu ht, ?_⟩
   rw [map_smul] at h
-  rw [mul_smul]
-  exact h
+  rwa [mul_smul]
 
 end GlobalTheory.JetOpWeylLat
 end -- clump:auto

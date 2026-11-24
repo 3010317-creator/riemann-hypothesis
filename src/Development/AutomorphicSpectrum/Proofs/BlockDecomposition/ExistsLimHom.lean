@@ -121,11 +121,9 @@ theorem exists_lim_hom {S : Type} [CommRing S] [IsAdicComplete (Ideal.span {ϖ})
   choose L hL using fun f => exists_tends (ϖ := ϖ) (fun m => a m f) (h f)
   refine ⟨{ toFun := L, map_one' := ?_, map_mul' := ?_, map_zero' := ?_, map_add' := ?_ }, hL⟩
   · exact (hL 1).unique (by simpa using tends_const (ϖ := ϖ) (1 : T))
-  · intro f g
-    exact (hL (f * g)).unique (by simpa using (hL f).mul (hL g))
+  · exact fun f g => (hL (f * g)).unique (by simpa using (hL f).mul (hL g))
   · exact (hL 0).unique (by simpa using tends_const (ϖ := ϖ) (0 : T))
-  · intro f g
-    exact (hL (f + g)).unique (by simpa using (hL f).add (hL g))
+  · exact fun f g => (hL (f + g)).unique (by simpa using (hL f).add (hL g))
 
 end Lim
 

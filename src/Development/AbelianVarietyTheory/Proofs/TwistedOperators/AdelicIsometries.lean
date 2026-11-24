@@ -626,8 +626,7 @@ theorem glueLat_fg {L₀ : Lat X} (hL : Submodule.IsLattice D.host.E L₀) (x₀
       L₀.map ((Formalism.L2.Herm.crd X).symm.toLinearMap.restrictScalars (𝓞 D.host.E)) := by
     ext x
     constructor
-    · intro hx
-      exact ⟨_, hx, (Formalism.L2.Herm.crd X).symm_apply_apply x⟩
+    · exact fun hx => ⟨_, hx, (Formalism.L2.Herm.crd X).symm_apply_apply x⟩
     · rintro ⟨y, hy, rfl⟩
       change Formalism.L2.Herm.crd X ((Formalism.L2.Herm.crd X).symm y) ∈ L₀
       rwa [LinearEquiv.apply_symm_apply]
@@ -1411,16 +1410,13 @@ theorem isDec_smul (D : D7) (t : D.host.E) :
     ring
   · intro i x
     simp only [HSpace.hD, LinearMap.map_smulₛₗ₂, hsym _ _ (D.sp.zm_orth x), smul_zero]
-  · intro i j
-    exact D.sp.hyp_ee j i
-  · intro i j
-    exact D.sp.hyp_ff j i
+  · exact fun i j => D.sp.hyp_ee j i
+  · exact fun i j => D.sp.hyp_ff j i
   · intro i j
     simp only [HSpace.hD]
     rw [← (D.sp.Y 0).herm.eq (D.sp.hypE i) (D.sp.hypF j), D.sp.hyp_ef]
     split_ifs <;> simp
-  · intro i x
-    exact ⟨hsym _ _ (D.sp.hyp_orthX i x).1, hsym _ _ (D.sp.hyp_orthX i x).2⟩
+  · exact fun i x => ⟨hsym _ _ (D.sp.hyp_orthX i x).1, hsym _ _ (D.sp.hyp_orthX i x).2⟩
   · intro i j
     simp only [HSpace.hD, map_smul, hsym _ _ (D.sp.hyp_orthz i).1, hsym _ _ (D.sp.hyp_orthz i).2, smul_zero,
       and_self]
@@ -1433,8 +1429,7 @@ theorem recordDec (D : D7) : RecordDecSt D := by
     have hs : -((D.cOf u)⁻¹ * star (D.cOf u)⁻¹ * ((D.mem D.u₀).A.T : D.host.E)) = -Tu D u := by
       rw [star_inv₀, star_eq_conj, ← D.cOf_eq u]
       field_simp
-    rw [hs] at h
-    exact h
+    rwa [hs] at h
   · obtain ⟨π, -, hπ, -⟩ := D.T_norm D.u₀
     have hT : ((D.mem D.u₀).A.T : D.host.E) ≠ 0 := by
       rw [← D.sp_T]
@@ -1449,8 +1444,7 @@ theorem recordDec (D : D7) : RecordDecSt D := by
     have hs : -((π : D.host.E)⁻¹ * star (π : D.host.E)⁻¹ * ((D.mem D.u₀).A.T : D.host.E)) = -1 := by
       rw [star_inv₀, star_eq_conj, ← hπ]
       field_simp
-    rw [hs] at h
-    exact h
+    rwa [hs] at h
 
 end GlobalTheory.Proof.normLineDecompositionsOfBaseSpace_proof
 end -- clump:auto

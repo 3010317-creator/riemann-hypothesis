@@ -763,7 +763,6 @@ theorem crd_conj_scalar : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   · have h1 := GlobalTheory.ResidueEisenstein.LeviConj.det_conj_mul_det s δi (adMat F J₀) hK hiu
     have hu : GlobalTheory.Doubling.conjUnit σ (Matrix.GeneralLinearGroup.det δ) * Matrix.GeneralLinearGroup.det δ = 1 := by
       ext
-      show sigR (AF F) σ _ * _ = 1
       exact h1
     have h2 := congrArg (absE F E) hu
     rw [map_mul, GlobalTheory.Doubling.absE_conjUnit, map_one, ← sq] at h2
@@ -1028,8 +1027,7 @@ theorem modulus_conj_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     rintro ⟨x, s⟩
     obtain ⟨u, hu, hcu⟩ := GlobalTheory.SphEis.UnipCrd.exists_unipRad_crd F E σ n J (r + 1) m X Y Z J₀ hF x _ (hcond x s)
     have e := (hlaw (φ (x, s)) u x _ 0 0 (hφ x s)).2.1 hcu
-    rw [e]
-    exact hu
+    rwa [e]
   let βc : GAd σ J → Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E) := fun u =>
     adMat F (cT (σ : E →+* E) Y * J) * ((matHom _ σ J u).1 * adMat F Z)
   let κc : GAd σ J → Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E) := fun u =>
@@ -1187,8 +1185,7 @@ theorem modulus_conj_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
         Matrix.mul_assoc, hδJ']
       rw [mul_comm (sigR (AF F) σ (l : AF F ⊗[F] E))]
     rw [e3, hsC] at h2
-    rw [← hsA] at h1
-    rw [smul_sub, smul_comm ((l : AF F ⊗[F] E) * sigR (AF F) σ (l : AF F ⊗[F] E)) hf2] at h1
+    rw [← hsA, smul_sub, smul_comm ((l : AF F ⊗[F] E) * sigR (AF F) σ (l : AF F ⊗[F] E)) hf2] at h1
     exact (hlaw _ _ _ _ 0 0 h1).2.1 h2
 
   set kA : ℝ≥0 := (absE F E l ^ ((r + 1) * m))⁻¹ with hkA

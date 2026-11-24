@@ -158,8 +158,7 @@ lemma dst_inv_continuousOn [Nonempty n] (x : n → ℂ) (f : ι → n → ℂ) (
     rwa [one_mul] at this
   refine tendsto_of_tendsto_of_tendsto_of_le_of_le' hL hR ?_ (eventually_nhdsWithin_of_forall hup)
   filter_upwards [hpos, eventually_nhdsWithin_of_forall hlow] with g hg1 hg2
-  rw [div_le_iff₀ hg1, mul_comm]
-  exact hg2
+  rwa [div_le_iff₀ hg1, mul_comm]
 
 theorem lenA_continuousOn : ∀ (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ), Formalism.QuantumDeterminants.inWb k r z →
     0 < Formalism.QuantumDeterminants.Tz k r z → ∀ a, ContinuousOn (fun g => lenA k r z g a) (GG k r) := by

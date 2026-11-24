@@ -486,8 +486,7 @@ theorem summable_exp_neg_trace : ∀ (F : Type) [Field F] [NumberField F] [IsTot
     intro x i
     have := integralBasis_repr_apply (K := F) (z x) i
     rw [hz x] at this
-    rw [mul_assoc, ← hrepr]
-    rw [this, eq_intCast]
+    rw [mul_assoc, ← hrepr, this, eq_intCast]
   let Mi : Module.Free.ChooseBasisIndex ℤ (𝓞 F) → ℝ := fun i => ∑ τ : Emb F, |τ (d i * algebraMap (𝓞 F) F a)|
   have hMi : ∀ i, 0 ≤ Mi i := fun i => Finset.sum_nonneg fun τ _ => abs_nonneg _
   let M : ℝ := ∑ i, Mi i + 1
@@ -1185,8 +1184,7 @@ theorem hasFDerivAt_logIm (τ : Φ) {z : Φ → ℂ} (hz : (z τ).im ≠ 0) :
       (ofRealCLM.comp (((z τ).im)⁻¹ • (imCLM.comp (ContinuousLinearMap.proj (R := ℝ) (φ := fun _ : Φ => ℂ) τ)))) z := by
   have h1 : HasFDerivAt (fun z : Φ → ℂ => (z τ).im) (imCLM.comp (ContinuousLinearMap.proj (R := ℝ) (φ := fun _ : Φ => ℂ) τ)) z :=
     (imCLM.comp (ContinuousLinearMap.proj (R := ℝ) (φ := fun _ : Φ => ℂ) τ)).hasFDerivAt
-  have h2 := h1.log hz
-  exact ofRealCLM.hasFDerivAt.comp z h2
+  exact ofRealCLM.hasFDerivAt.comp z (h1.log hz)
 
 theorem hasFDerivAt_expo (A : Φ → ℂ) {z : Φ → ℂ} (hz : ∀ τ, (z τ).im ≠ 0) :
     HasFDerivAt (fun z : Φ → ℂ => ∑ τ, A τ * ((Real.log (z τ).im : ℝ) : ℂ))
@@ -1423,8 +1421,7 @@ theorem exists_ideal (M : FractionalIdeal (𝓞 F)⁰ F) (N : Frac F) (hM : M * 
   refine ⟨⟨⟨I, mem_nonZeroDivisors_of_ne_zero hI0⟩, ?_⟩, hI⟩
   have e : FractionalIdeal.mk0 F ⟨I, mem_nonZeroDivisors_of_ne_zero hI0⟩ = Units.mk0 _ hs * N := by
     ext1
-    rw [FractionalIdeal.coe_mk0]
-    exact hI
+    rwa [FractionalIdeal.coe_mk0]
   rw [← ClassGroup.mk_mk0 F, e, map_mul, ClassGroup.mk_eq_one_iff.2, one_mul]
   rw [FractionalIdeal.isPrincipal_iff]
   exact ⟨a.1, rfl⟩
@@ -1601,8 +1598,7 @@ theorem wirtWord_const_fun {Φ : Type} [Fintype Φ] (ws : List (Φ × Bool)) (d 
   | nil => rfl
   | cons w ws ih =>
     rw [GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.wirtWord_cons, ih]
-    simp only [reduceCtorEq, ite_false]
-    exact wirt_const_fun w.1 w.2 _
+    simpa only [reduceCtorEq, ite_false] using wirt_const_fun w.1 w.2 _
 
 theorem isGood_const (F : Type) [Field F] [NumberField F] (a : ℂ → ℂ)
     (ha : DifferentiableOn ℂ a GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.halfPlane) :
@@ -1642,8 +1638,7 @@ theorem tendsto_pow_mul (F : Type) [Field F] [NumberField F] (C C' : ClassGroup 
   set f := Module.finrank ℚ F
   set d : ℂ := (dF F : ℂ)
   have hd0 : d ≠ 0 := by
-    simp only [d, dF, ne_eq, ofReal_eq_zero, abs_eq_zero, Int.cast_eq_zero]
-    exact discr_ne_zero F
+    simpa only [d, dF, ne_eq, ofReal_eq_zero, abs_eq_zero, Int.cast_eq_zero] using discr_ne_zero F
   have hev : ∀ᶠ s in 𝓝[≠] (1 : ℂ), (s - 1) ^ f * Z s =
       (d ^ ((1 - s) / 2) / d ^ (s / 2)) * ((Complex.Gammaℝ s)⁻¹) ^ f *
         (-((1 - s) * Complex.Gammaℝ (1 - s))) ^ f * Z' (1 - s) := by
@@ -1736,11 +1731,9 @@ theorem norm_le_idealZetaR (F : Type) [Field F] [NumberField F] (C : ClassGroup 
   refine hasSum_le_of_sum_le hre fun T => ?_
   classical
   have hinj : Function.Injective (fun J : {J : (Ideal (𝓞 F))⁰ // ClassGroup.mk0 J = C} => (J.1 : Ideal (𝓞 F))) := by
-    intro a b h
-    exact Subtype.ext (Subtype.ext h)
+    exact fun a b h => Subtype.ext (Subtype.ext h)
   have := ReciprocityTheory.Cheb.sum_le_idealZetaR F hx (T.image fun J => (J.1 : Ideal (𝓞 F)))
-  rw [Finset.sum_image fun a _ b _ h => hinj h] at this
-  exact this
+  rwa [Finset.sum_image fun a _ b _ h => hinj h] at this
 
 theorem bdd_right (F : Type) [Field F] [NumberField F] (C : ClassGroup (𝓞 F)) (Z : ℂ → ℂ)
     (hZ : IsPartialZeta C Z) : ∃ B : ℝ, ∀ᶠ x : ℝ in 𝓝[>] 1, ‖((x : ℂ) - 1) * Z x‖ ≤ B := by

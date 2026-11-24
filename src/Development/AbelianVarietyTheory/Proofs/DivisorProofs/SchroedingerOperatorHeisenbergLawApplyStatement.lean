@@ -94,8 +94,7 @@ theorem norm_le_one (ψ0 : AddChar k ℂ) (hc : Continuous ψ0) (x : k) : ‖ψ0
       simpa using (Subring.natCast_mem (𝒪[k]) m)
     have := hB _ hm
     rwa [show x * (m : k) = m • x by rw [nsmul_eq_mul, mul_comm], AddChar.map_nsmul_eq_pow, norm_pow] at this
-  by_contra h
-  push Not at h
+  by_contra! h
   obtain ⟨m, hm⟩ := (tendsto_pow_atTop_atTop_of_one_lt h).eventually_gt_atTop B |>.exists
   exact absurd (hpow m) (not_le.mpr hm)
 
@@ -136,8 +135,7 @@ theorem unitary_and_separates : ∀ {k : Type} [Field k] [ValuativeRel k] [Topol
   obtain ⟨c₀, hc₀⟩ := SplitWeil.exists_hasConductor_of_continuous ψ hψc hψ1
   have hx : a ∉ SplitWeil.cball (c₀ * c₀⁻¹) := by
     rw [mul_inv_cancel]
-    intro h
-    exact ha ((Valuation.mem_integer_iff _ _).mpr (by simpa [SplitWeil.cball] using h))
+    exact fun h => ha ((Valuation.mem_integer_iff _ _).mpr (by simpa [SplitWeil.cball] using h))
   obtain ⟨t, ht, hne⟩ := hc₀.exists_ne_one c₀ hx
   refine ⟨t, fun y hy => ?_, fun h => hne (Circle.ext (by simpa [ψ, toCircle_apply] using h))⟩
   have hy' : valuation k y ≤ 1 := hy
@@ -740,14 +738,12 @@ theorem GlobalTheory.LinModelLocal.exists_omB_of_linBar : ∀ {F E : Type} [Fiel
     intro g φ hφ
     funext Y
     have := congrFun (hc g φ hφ) (g.valᵀ * Y)
-    simp only [key2, Pi.smul_apply, smul_eq_mul] at this
-    exact this
+    simpa only [key2, Pi.smul_apply, smul_eq_mul] using this
   have hvac := (hTr.geo.hM'.vac Bs.v₁)
   set φv := Γ.M'.vac Bs.v₁
   have hφv : φv ∈ GlobalTheory.WeilM.SB (Fin a' × Fin (a + a') → Fv F Bs.v₁) := hvac.1
   have hιv : ι₀ φv ≠ 0 := by
-    intro h0
-    exact hvac.2.1 (hbij0.injOn hφv (Submodule.zero_mem _) (by rw [h0, map_zero]))
+    exact fun h0 => hvac.2.1 (hbij0.injOn hφv (Submodule.zero_mem _) (by rw [h0, map_zero]))
   obtain ⟨Y₀, hY₀⟩ := Function.ne_iff.mp hιv
   have hmul : ∀ g g', c (g * g') = c g * c g' := by
     intro g g'

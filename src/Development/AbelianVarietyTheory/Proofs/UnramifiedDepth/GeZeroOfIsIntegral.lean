@@ -133,8 +133,7 @@ theorem labGeoSt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : H
     unfold lieBasisVector
     rw [huv]
     exact hval _
-  · intro o g x a
-    exact heig a ⟨lab.tau o g x.1, x.2⟩
+  · exact fun o g x a => heig a ⟨lab.tau o g x.1, x.2⟩
   · intro o g
     have key := GlobalTheory.SatBlocks.saturated_blocks_summand C V.v (𝓞 E) (ZMod d)
       (fun a => Dw.mult (lab.tau o g a)) (chD C3.ch) M (fun a x => emA3 io ι (lab.tau o g a) x)
@@ -174,7 +173,6 @@ theorem labGeoSt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : H
       refine Finset.sum_eq_zero fun i _ => ?_
       dsimp only
       rw [dite_eq_right ha', zero_smul]
-    · intro h
-      exact absurd (Finset.mem_univ a) h
+    · exact fun h => absurd (Finset.mem_univ a) h
 
 end GlobalTheory.LabelledDirections

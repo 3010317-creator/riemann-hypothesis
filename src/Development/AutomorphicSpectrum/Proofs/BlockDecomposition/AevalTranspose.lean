@@ -439,8 +439,7 @@ theorem linInd_basisMat (W : Submodule E (Fin n → E)) : LinearIndependent E (b
   have h1 : (basisMat W)ᵀ = W.subtype ∘ (Module.finBasis E W) := by
     ext j i
     simp [basisMat]
-  rw [h1]
-  exact h
+  rwa [h1]
 
 theorem exists_coord (W : Submodule E (Fin n → E)) (w : Fin n → E) (hw : w ∈ W) :
     ∃ c, basisMat W *ᵥ c = w := by
@@ -491,14 +490,12 @@ theorem deg_lam : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : �
   have ht' : t.val * ((basisMat (LinearMap.range (Matrix.toLin' e))).map (algebraMap E (Ad E)) *
       (L * e).map (algebraMap E (Ad E))) = ((basisMat (LinearMap.range (Matrix.toLin' e))).map (algebraMap E (Ad E)) *
       (L * e).map (algebraMap E (Ad E))) * t.val := by
-    rw [hAB]
-    exact ht
+    rwa [hAB]
   have h := hA E n _ x t (compress _ _ hBA t ht') _ hM (mul_frame _ _ hBA t ht')
   have hd := det_compress _ _ hBA t ht'
   rw [hAB] at hd
   unfold deg lam chi
-  rw [← hd]
-  exact h
+  rwa [← hd]
 
 end GlobalTheory.CompanionTheory.TorusCh.DegLam
 
@@ -534,8 +531,7 @@ theorem UpperTheory.Reformulated.B.ExistsFactor.exists_factor :
     have h : f.rangeRestrict.comp (LinearMap.range f).subtype = LinearMap.id := by
       apply LinearMap.ext
       rintro ⟨x, v, rfl⟩
-      apply Subtype.ext
-      exact hf v
+      exact Subtype.ext (hf v)
     rw [h, LinearMap.toMatrix_id]
   · rw [← LinearMap.toMatrix_comp]
     have h : (LinearMap.range f).subtype.comp f.rangeRestrict = f := by
@@ -682,8 +678,7 @@ theorem eq_zero_of_vecMul (hs : ∀ j, (Pi.single j 1 : Fin n → K) = v ᵥ* ae
   have h1 : (Pi.single i 1 : Fin n → R) ᵥ* X = 0 := by
     rw [← vecMul_map_single hs i, Matrix.vecMul_vecMul, ← comm_aeval γ X hX, ← Matrix.vecMul_vecMul, h0,
       Matrix.zero_vecMul]
-  have h2 := congrFun h1 j
-  simpa using h2
+  simpa using congrFun h1 j
 
 theorem Ph_vecMul (hs : ∀ j, (Pi.single j 1 : Fin n → K) = v ᵥ* aeval γ (h j))
     (A : Matrix (Fin n) (Fin n) R) (hA : A * γ.map (algebraMap K R) = γ.map (algebraMap K R) * A)
@@ -842,8 +837,7 @@ theorem exists_pos_le_height :
     have h3 : c ≤ C * GroundTheory.Automorphic.Reduction.height g x :=
       h2.trans (mul_le_mul_of_nonneg_left hpow hC.le)
     refine (min_le_right _ _).trans ?_
-    rw [div_le_iff₀ hC, mul_comm]
-    exact h3
+    rwa [div_le_iff₀ hC, mul_comm]
 
 end Main
 
@@ -913,12 +907,10 @@ theorem sg_algebraMap (d : GL (Fin n) E) (r : E) :
   rw [sg_eq, bar_algebraMap, ← Algebra.commutes, Matrix.mul_assoc, h, Matrix.mul_one]
 
 theorem sg_one (d : GL (Fin n) E) : sg d 1 = 1 := by
-  have h := sg_algebraMap d 1
-  simpa using h
+  simpa using sg_algebraMap d 1
 
 theorem sg_zero (d : GL (Fin n) E) : sg d 0 = 0 := by
-  have h := sg_algebraMap d 0
-  simpa using h
+  simpa using sg_algebraMap d 0
 
 theorem sg_nrm (d : GL (Fin n) E) : sg d (nrm d).val = ((nrm d)⁻¹ : GL (Fin n) E).val := by
   have h : d.val * (d⁻¹ : GL (Fin n) E).val = 1 := Units.mul_inv d
@@ -1115,8 +1107,7 @@ theorem dvd_of_aeval_eq_zero_of_dvd_charpoly {K : Type} [Field K] {n : ℕ}
   have h3 : aeval (γ.map (algebraMap K (AlgebraicClosure K))) (g.map (algebraMap K (AlgebraicClosure K))) = 0 := by
     have := aeval_algHom_apply ((Algebra.ofId K (AlgebraicClosure K)).mapMatrix (m := Fin n)) γ g
     rw [hg, map_zero] at this
-    rw [aeval_map_algebraMap]
-    exact this
+    rwa [aeval_map_algebraMap]
   rw [h3] at h2
   have h4 : aeval α g = 0 := by
     by_contra hne
@@ -1563,8 +1554,7 @@ theorem iso_range_iff_sg_mul (E : Type) [Field E] [NumberField E] [IsCMField E] 
     rw [hsg]
     constructor
     · intro h
-      have h2 := congrArg (fun X => (d⁻¹ : GL (Fin n) E).val * X) h
-      simpa [← mul_assoc, hd2] using h2
+      simpa [← mul_assoc, hd2] using congrArg (fun X => (d⁻¹ : GL (Fin n) E).val * X) h
     · intro h
       rw [h, mul_zero]
   rw [hM]
@@ -1734,8 +1724,7 @@ theorem torusChar : DegAdelic → TorusChar := by
   have hst : ∀ e, (Wof e).map (Matrix.toLin' γ) ≤ Wof e := fun e => (hIso e).1.le
   choose π hπp hπi hπr using fun e => exists_idem' γ hsep (Wof e) (hst e)
   have hcomm : ∀ x y : Algebra.adjoin E {γ}, x * y = y * x := by
-    intro x y
-    exact Subtype.ext (pol_comm γ _ _ ((isPol_iff _ _).2 x.2) ((isPol_iff _ _).2 y.2))
+    exact fun x y => Subtype.ext (pol_comm γ _ _ ((isPol_iff _ _).2 x.2) ((isPol_iff _ _).2 y.2))
   obtain ⟨σ, hσ1, hσ2⟩ := _root_.GlobalTheory.CompanionTheory.TorusCh.SgRing.exists_sgRing E n d
   let P : (Fin m → SignType) → Algebra.adjoin E {γ} := fun e => ⟨π e, (isPol_iff _ _).1 (hπp e)⟩
   have hPv : ∀ e, (P e : Matrix (Fin n) (Fin n) E) = π e := fun _ => rfl
@@ -1788,19 +1777,16 @@ theorem torusChar : DegAdelic → TorusChar := by
   obtain ⟨hsum, hneg⟩ := hc
   have hsum' : ∀ e, π e = ∑ j, π (Pi.single j (e j)) := fun e => by
     have := congrArg Subtype.val (hsum e)
-    rw [AddSubmonoidClass.coe_finsetSum] at this
-    exact this
+    rwa [AddSubmonoidClass.coe_finsetSum] at this
   have hneg' : ∀ j, π (Pi.single j (-1)) = sg d (π (Pi.single j 1)) := fun j => by
     have := congrArg Subtype.val (hneg j)
-    rw [hσ1] at this
-    exact this
+    rwa [hσ1] at this
   have hcm : ∀ t ∈ adCent d, ∀ e, t.val * rm (π e) = rm (π e) * t.val := fun t ht e =>
     commute_of_mem d t ht _ (hπp e)
   let a : GA E n → (Fin m → ℝ) := fun t j => lam (π (Pi.single j 1)) t
   have hπ0 : π 0 = 0 := by
     have h1 : LinearMap.range (Matrix.toLin' (π 0)) = ⊥ := by rw [hπr 0, h0]
-    have h2 := LinearMap.range_eq_bot.1 h1
-    exact Matrix.toLin'.injective (by rw [h2, map_zero])
+    exact Matrix.toLin'.injective (by rw [(LinearMap.range_eq_bot.1 h1), map_zero])
   have hsign : ∀ t ∈ adCent d, ∀ e, lam (π e) t = sdot e (a t) := by
     intro t ht e
     have horth : ∀ (j k : Fin m) (x y : SignType), j ≠ k → π (Pi.single j x) * π (Pi.single k y) = 0 := by

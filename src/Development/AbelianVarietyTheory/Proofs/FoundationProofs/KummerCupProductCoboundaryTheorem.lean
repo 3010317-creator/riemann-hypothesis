@@ -367,8 +367,7 @@ theorem isLocallyConstant_eval {K Ω : Type} [Field K] [Field Ω] [Algebra K Ω]
     IntermediateField.fixingSubgroup_isOpen _
   refine ⟨(fun g' => g⁻¹ * g') ⁻¹' ((K⟮τ⟯).fixingSubgroup : Set (Ω ≃ₐ[K] Ω)),
     hopen.preimage (continuous_const.mul continuous_id), ?_, ?_⟩
-  · simp only [Set.mem_preimage, inv_mul_cancel, SetLike.mem_coe]
-    exact Subgroup.one_mem _
+  · simpa only [Set.mem_preimage, inv_mul_cancel, SetLike.mem_coe] using Subgroup.one_mem _
   · intro g' hg'
     have hfτ : (g⁻¹ * g') τ = τ :=
       (IntermediateField.mem_fixingSubgroup_iff _ _).1 hg' τ
@@ -429,8 +428,7 @@ theorem zmod_cocycle_eq_coboundary_of_unit_twisted_cocycle : ∀ (K Ω : Type) [
     intro g
     obtain ⟨i, hi, hi'⟩ := hζ.eq_pow_of_pow_eq_one (hw_pow g)
     have hex : ∃ j : ZMod N, ζ ^ j.val = w g := ⟨(i : ZMod N), by rw [ZMod.val_cast_of_lt hi, hi']⟩
-    simp only [η, E, dite_eq_left hex]
-    exact hex.choose_spec
+    simpa only [η, E, dite_eq_left hex] using hex.choose_spec
   refine ⟨η, hw_lc.comp E, ?_⟩
   intro g h
   have key : ζ ^ (η g + η h).val = ζ ^ (c g h + η (g * h)).val := by
@@ -706,9 +704,7 @@ theorem eta_kummer_galoisInvariant : ∀ (K Ω : Type) [Field K] [CharZero K] [F
     have h1 : m θ = ζ ^ (η m).val * θ := hθapp m hm
     have h2 : (s⁻¹ * m * s) θ = ζ ^ (η m).val * θ := by rw [← hηeq]; exact hθapp _ hmem
     have h3 : m (s θ) = ζ ^ (η m).val * s θ := by
-      have : s ((s⁻¹ * m * s) θ) = m (s θ) := by
-        show s (s⁻¹ (m (s θ))) = m (s θ)
-        exact s.apply_symm_apply _
+      have : s ((s⁻¹ * m * s) θ) = m (s θ) := s.apply_symm_apply _
       rw [← this, h2, map_mul, map_pow, hfix s]
     have hz : ζ ^ (η m).val ≠ 0 := pow_ne_zero _ (hζ.ne_zero hN.ne')
     rw [hu, map_div₀, h1, h3, mul_div_mul_left _ _ hz]
@@ -855,9 +851,7 @@ private theorem count_galois_conj_spanSingleton {A₀ R K₀ L : Type} [CommRing
     rintro rfl
     simp at hx
   have hbL : algebraMap R L b ≠ 0 := (IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hb)
-  have haL : algebraMap R L a ≠ 0 := by
-    intro h
-    exact hx (by rw [h, zero_div])
+  have haL : algebraMap R L a ≠ 0 := fun h => hx (by rw [h, zero_div])
   set g := (galRestrict A₀ K₀ L R σ).toRingEquiv
   have hga : g a ≠ 0 := g.map_ne_zero_iff.mpr ha0
   have hgb : g b ≠ 0 := g.map_ne_zero_iff.mpr hb0
@@ -896,17 +890,14 @@ private theorem count_algebraMap_of_unramified_lemma_6 {A₀ R K₀ L : Type} [C
     apply (algebraMap K₀ L).injective
     rw [← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply,
       IsScalarTower.algebraMap_apply A₀ R L, IsScalarTower.algebraMap_apply A₀ R L b, hab]
-  have hfR : algebraMap A₀ R f ≠ 0 := by
-    intro h
-    exact hf (hinj (by rw [h, map_zero]))
+  have hfR : algebraMap A₀ R f ≠ 0 := fun h => hf (hinj (by rw [h, map_zero]))
   haveI : Q.asIdeal.LiesOver P.asIdeal := ⟨hP⟩
   haveI : FaithfulSMul A₀ R := (faithfulSMul_iff_algebraMap_injective A₀ R).mpr hinj
   have he : P.asIdeal.ramificationIdx' Q.asIdeal = 1 := by
     apply Ideal.ramificationIdx_spec
     · rw [pow_one, hP]
       exact Ideal.map_comap_le
-    · rw [hP]
-      exact hQ
+    · rwa [hP]
   have hv := HeightOneSpectrum.intValuation_liesOver P Q f
   rw [← Ideal.ramificationIdx'_eq_ramificationIdx P.asIdeal Q.asIdeal P.ne_bot, he, pow_one,
     HeightOneSpectrum.intValuation_if_neg _ hf,
@@ -967,8 +958,7 @@ theorem _root_.GlobalTheory.DivisorDescent.descent_submodule : ∀ (A₀ R K₀ 
     (FractionalIdeal.finite_factors (K := L) (FractionalIdeal.spanSingleton R⁰ w))
   have hfinr : {P | r P ≠ 0}.Finite := by
     refine (hfinQ.preimage (f := Qof) ?_).subset ?_
-    · intro P _ P' _ hPP'
-      exact HeightOneSpectrum.ext (by rw [hQof P, hQof P', hPP'])
+    · exact fun P _ P' _ hPP' => HeightOneSpectrum.ext (by rw [hQof P, hQof P', hPP'])
     · intro P hP h0
       apply hP
       simp only [hr, h0, Int.zero_emod]
@@ -1245,8 +1235,7 @@ theorem kummer_not_map_comap_le_sq :
     exact (algebraMap K₀ E).injective.comp (IsFractionRing.injective A₀ K₀)
   haveI : FaithfulSMul A₀ (integralClosure A₀ E) := by
     rw [faithfulSMul_iff_algebraMap_injective]
-    intro a b hab
-    exact hinj (congrArg Subtype.val hab)
+    exact fun a b hab => hinj (congrArg Subtype.val hab)
   haveI : Module.IsTorsionFree A₀ (integralClosure A₀ E) := inferInstance
   have hone : Submodule.traceDual A₀ K₀ (1 : Submodule (integralClosure A₀ E) E) = 1 := by
     refine le_antisymm ?_ Submodule.one_le_traceDual_one
@@ -1310,8 +1299,7 @@ theorem descent_abstract (A K E Ω : Type) [CommRing A] [IsDedekindDomain A] [Fi
       refine ⟨p.map φ, hp.map φ, ?_⟩
       rw [Polynomial.eval₂_map]
       have h := congrArg (algebraMap E Ω) hpx
-      rw [Polynomial.hom_eval₂, map_zero] at h
-      exact h
+      rwa [Polynomial.hom_eval₂, map_zero] at h
     obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.mp hint
     rw [← hy]
     exact y.2
@@ -1409,8 +1397,7 @@ theorem divisor_descends : ∀ (k K Ω : Type) [Field k] [IsAlgClosed k] [CharZe
   refine ⟨f, hf, fun B hO => ?_⟩
   obtain ⟨c, hc, hv⟩ := hB B fun x => hO x.1 x.2
   refine ⟨c, c.2, fun h => hc (Subtype.ext h), ?_⟩
-  rw [div_div, map_div₀, map_mul, map_pow] at hv
-  exact hv
+  rwa [div_div, map_div₀, map_mul, map_pow] at hv
 
 end GlobalTheory.KummerCob
 end -- clump:auto

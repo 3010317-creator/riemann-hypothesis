@@ -109,13 +109,11 @@ theorem kTriv_of_lam_iso : ∀ (S : Scheme.{0}) (B : Over S) [GrpObj B] [IsCommM
       pull (1 : G2 B ⟶ B).left c := _root_.GlobalTheory.PowerTangent.cls_cube_two hL (fst B B) (snd B B) hLam
   have e₃ : pull (snd B TW ≫ ιW ≫ x).left c = 0 := by
     rw [Over.comp_left, pull_comp, _root_.GlobalTheory.RigidifyTwist.pull_cls_eq_zero hL (ιW ≫ x).left i ?_, map_zero]
-    intro y
-    exact y.2.1.2
+    exact fun y => y.2.1.2
   have e₄ : pull (1 : B ⊗ TW ⟶ B).left c = 0 := by
     have k : (1 : B ⊗ TW ⟶ B) = snd B TW ≫ ιW ≫ (1 : T₀ ⟶ B) := by rw [MonObj.comp_one, MonObj.comp_one]
     rw [k, Over.comp_left, pull_comp, _root_.GlobalTheory.RigidifyTwist.pull_cls_eq_zero hL (ιW ≫ (1 : T₀ ⟶ B)).left j ?_, map_zero]
-    intro y
-    exact y.2.2
+    exact fun y => y.2.2
   refine (cls_eq_zero_iff (pull_isLB hP _)).1 ?_
   show pull _ (cls _ hP) = 0
   rw [hcP, hC, map_add (f := _), map_sub, map_sub, ← pull_comp, ← pull_comp, ← pull_comp, ← pull_comp, ← Over.comp_left,

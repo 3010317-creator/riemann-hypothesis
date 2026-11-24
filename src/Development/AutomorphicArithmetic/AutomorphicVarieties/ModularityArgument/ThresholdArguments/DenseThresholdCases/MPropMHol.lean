@@ -110,8 +110,7 @@ variable {F : Type} [Field F] [NumberField F]
 
 private theorem norm_one_of_v {w : Pl F} {x : w.adicCompletion F} (h : Valued.v x = 1) : ‖x‖ = 1 := by
   have := (Valued.toNormedField.norm_le_one_iff (x := x)).2 h.le
-  have h2 := (Valued.toNormedField.one_le_norm_iff (x := x)).2 h.ge
-  exact le_antisymm this h2
+  exact le_antisymm this ((Valued.toNormedField.one_le_norm_iff (x := x)).2 h.ge)
 
 private theorem fin_supp (y : (Af F)ˣ) : Function.HasFiniteMulSupport fun w : Pl F => ‖pLoc F w (y : Af F)‖ := by
   have h1 := Filter.eventually_cofinite.1 (y : Af F).2
@@ -420,8 +419,7 @@ private theorem div_mul (a : Ideal (𝓞 F) → ℂ) (w : Pl F) (n : Ideal (𝓞
 
 private theorem div_not (a : Ideal (𝓞 F) → ℂ) (w : Pl F) {m : Ideal (𝓞 F)} (h : ¬ w.asIdeal ∣ m) : coefDiv a w.asIdeal m = 0 := by
   unfold coefDiv
-  rw [dite_eq_right]
-  exact h
+  rwa [dite_eq_right]
 
 private theorem not_dvd_mul {v w : Pl F} (hvw : v ≠ w) {m : Ideal (𝓞 F)} (h : ¬ v.asIdeal ∣ m) : ¬ v.asIdeal ∣ w.asIdeal * m := by
   intro h'
@@ -528,8 +526,7 @@ private theorem sum_step (χ : Ideal (𝓞 F) → ℂ) (hχ : ∀ I J, I ≠ ⊥
       by_cases h1 : w.asIdeal ∣ r
       · obtain ⟨n, rfl⟩ := h1
         exact Or.inl ⟨n, (mul_dvd_mul_iff_left w.ne_bot).1 h, rfl⟩
-      · refine Or.inr ⟨?_, h1⟩
-        exact ((w.irreducible.isRelPrime_iff_not_dvd.2 h1).symm).dvd_of_dvd_mul_left h
+      · exact Or.inr ⟨((w.irreducible.isRelPrime_iff_not_dvd.2 h1).symm).dvd_of_dvd_mul_left h, h1⟩
     · rintro (⟨n, hn, rfl⟩ | ⟨h, -⟩)
       · exact mul_dvd_mul_left _ hn
       · exact h.mul_left _
@@ -816,8 +813,7 @@ private theorem cm_arch {ψ : GA F 2 → ℂ} {k : ℕ} (h : ∀ (u : TR.Rinf F)
     refine h3.congr_of_eventuallyEq (Filter.Eventually.of_forall fun s => ?_)
     beta_reduce
     rw [← mul_assoc, ← map_mul, cm_aff_mul, ← hz]; simp
-  rw [h1, h0, cm_aff_one, map_one, one_mul, hg, mul_zero] at this
-  exact this
+  rwa [h1, h0, cm_aff_one, map_one, one_mul, hg, mul_zero] at this
 
 end UpperTheory.V.Br
 
@@ -1231,8 +1227,7 @@ theorem UpperTheory.V.Br.holCuspFin : UpperTheory.V.Br.HolCuspFin := by
   have hφ' : IsHol k c ω φ := hφ.1
   refine ⟨hφ.2, hlev φ hφ', fun g => hf _ (cont φ g) fun x θ => ?_, (holCap F k c ω hω φ hφ').2⟩
   have := UpperTheory.V.Br.rotEig F φ _ hφ'.wt θ (Unitary.toUnits (rot θ)) rfl (g * TR.infGL F 2 (Unitary.toUnits x))
-  rw [mul_assoc, ← map_mul, ← map_mul] at this
-  exact this
+  rwa [mul_assoc, ← map_mul, ← map_mul] at this
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.CrystallineBaseChange.HolCuspFin =====
@@ -1555,8 +1550,7 @@ private theorem inv_cong {x : Qbar l} (h : ‖x⁻¹ - 1‖ < 1) : ‖x - 1‖ <
   rw [norm_inv, inv_eq_one] at h1
   have h0 : x ≠ 0 := by rintro rfl; simp at h1
   have := sm_mul h1.le h
-  rw [mul_sub, mul_inv_cancel₀ h0, mul_one, norm_sub_rev] at this
-  exact this
+  rwa [mul_sub, mul_inv_cancel₀ h0, mul_one, norm_sub_rev] at this
 private theorem norm_nat_lt {n : ℕ} (h : l ∣ n) : ‖(n : Qbar l)‖ < 1 := by
   obtain ⟨m, rfl⟩ := h
   rw [Nat.cast_mul, mul_comm]
@@ -1721,8 +1715,7 @@ theorem UpperTheory.V.Z.Bc.propMHolZ_alt :
   rw [e₂, map_one] at a₂
   have kk : ‖ι.symm (η₁.val v * η₁.val v' : ℂˣ) - 1‖ < 1 ∨ ‖ι.symm (η₂.val v * η₂.val v' : ℂˣ) - 1‖ < 1 := by
     have := key (localIdele F v (atFin v (unif v)) * localIdele F v' (atFin v' (unif v')))
-    rw [map_mul η₁.1, map_mul η₂.1] at this
-    exact this
+    rwa [map_mul η₁.1, map_mul η₂.1] at this
   simp only [HChar.val_mul, Units.val_mul, map_mul] at kk a₁ hv hv'
   have n₁ := nval f₁ v
   have n₂ := nval f₂ v

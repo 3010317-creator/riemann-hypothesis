@@ -79,8 +79,7 @@ theorem cas_apply_of_scalChar {n : ℕ} (V : Type) [AddCommGroup V] [Module ℂ 
       (fun Y => by
         have := LinearMap.congr_fun (hS Y) u
         simpa using this) 2
-    rw [etr_two_eq_cas, GlobalTheory.CasimirEigen.gelfVal_two_eq] at h
-    exact h
+    rwa [etr_two_eq_cas, GlobalTheory.CasimirEigen.gelfVal_two_eq] at h
 
 theorem re_sum_mul_self {n : ℕ} (χ : Fin n → ℂ) :
     (∑ a, χ a * χ a).re = ∑ a, ((χ a).re ^ 2 - (χ a).im ^ 2) := by
@@ -110,8 +109,7 @@ theorem unitIneq : CompanionTheory.RgExh.U.UnitIneq := by
   have hc : (∑ a, ((χ a).re ^ 2 - (χ a).im ^ 2) - ∑ a, Formalism.QuantumDeterminants.rhoStd n a * Formalism.QuantumDeterminants.rhoStd n a) * ‖u‖ ^ 2 =
       (Formalism.REAL.nsq (γ + Formalism.REAL.rhoC ε) - Formalism.REAL.nsq (Formalism.REAL.rhoC ε)) * ‖u‖ ^ 2 -
         ∑ a, ∑ b, (if ε a = ε b then 0 else ‖E a b u‖ ^ 2) := by
-    rw [Complex.re_mul_ofReal, Complex.ofReal_re, Complex.sub_re, re_sum_mul_self, hrho] at h2
-    exact h2
+    rwa [Complex.re_mul_ofReal, Complex.ofReal_re, Complex.sub_re, re_sum_mul_self, hrho] at h2
   have hnn : 0 ≤ Formalism.REAL.nsq (Formalism.REAL.rhoC ε) := by
     show 0 ≤ ∑ a, Formalism.REAL.rhoC ε a * Formalism.REAL.rhoC ε a
     exact Finset.sum_nonneg fun a _ => mul_self_nonneg _
@@ -272,8 +270,7 @@ theorem inR_closed {ε : Fin n → Bool} {lev : Fin n → ℕ} (hm : Monotone le
   · rcases hj with hj | hj
     · left
       show ε k.1.1 = ε k.1.2
-      rw [e2, e3, hi, e1]
-      exact hj
+      rwa [e2, e3, hi, e1]
     · right
       show lev k.1.1 < lev k.1.2
       rw [e2, e3]
@@ -591,8 +588,7 @@ theorem exists_character_of_smul_ne_zero :
   have hq : Ideal.Quotient.mkₐ ℂ m r = algebraMap ℂ (R ⧸ m) c := by
     have h0 : Ideal.Quotient.mk m (r - algebraMap ℂ R c) = 0 :=
       Ideal.Quotient.eq_zero_iff_mem.2 (hJm hmem)
-    rw [map_sub, sub_eq_zero] at h0
-    exact h0
+    rwa [map_sub, sub_eq_zero] at h0
   have he : e c = algebraMap ℂ (R ⧸ m) c := rfl
   show e.symm (Ideal.Quotient.mkₐ ℂ m r) = c
   rw [hq, ← he, AlgEquiv.symm_apply_apply]
@@ -623,10 +619,7 @@ theorem descends (C : Type) [AddCommGroup C] [Module ℂ C] (L : Type) (l : L �
         ρ y (Submodule.Quotient.mk z) =
           Submodule.Quotient.mk ⟨FreeAlgebra.lift ℂ l y (z : C), hz⟩ := by
   let lZ : L → Module.End ℂ Z := fun k => (l k).restrict (hZ k)
-  have hBl : ∀ k, B.comap Z.subtype ≤ (B.comap Z.subtype).comap (lZ k) := by
-    intro k z hz
-    show Z.subtype (lZ k z) ∈ B
-    exact hB k z hz
+  have hBl : ∀ k, B.comap Z.subtype ≤ (B.comap Z.subtype).comap (lZ k) := fun k z hz => hB k z hz
   let lQ : L → Module.End ℂ (Z ⧸ B.comap Z.subtype) :=
     fun k => (B.comap Z.subtype).mapQ (B.comap Z.subtype) (lZ k) (hBl k)
   have hP : ∀ (y : FreeAlgebra ℂ L) (z : Z),
@@ -986,8 +979,7 @@ theorem L_core : ∀ (W : Type) [AddCommGroup W] [Module ℂ W] (t : W) (M : ℕ
       obtain ⟨i, j, rfl⟩ := hS a ha
       obtain ⟨k, l, rfl⟩ := hS b hb
       exact c4 i k j l)
-    intro x hx y hy
-    exact congrArg Subtype.val (mul_comm' (⟨x, hx⟩ : R) ⟨y, hy⟩)
+    exact fun x hx y hy => congrArg Subtype.val (mul_comm' (⟨x, hx⟩ : R) ⟨y, hy⟩)
   obtain ⟨f, f1, f2, f3, f4⟩ := sub_char R hcomm ⟨S, rfl⟩ t ht
   have fsum : ∀ (A : Finset ℕ) (g : ℕ → Module.End ℂ W), (∀ j ∈ A, g j ∈ R) → (∑ j ∈ A, g j) ∈ R ∧
       f (∑ j ∈ A, g j) = ∑ j ∈ A, f (g j) := by
@@ -1044,9 +1036,7 @@ theorem L_core : ∀ (W : Type) [AddCommGroup W] [Module ℂ W] (t : W) (M : ℕ
       exact ⟨R.mul_mem hx i1, by rw [(f2 _ hx _ i1).2, i2]⟩
   refine ⟨P, fun i => ⟨hmon i, hnd i, ?_⟩, fun Y => ?_⟩
   · by_cases hd : d i = 0
-    · have h0 : (∑ p, B i p p) = 0 := by
-        refine Finset.sum_eq_zero fun p _ => ?_
-        exact absurd p.2 (by omega)
+    · have h0 : (∑ p, B i p p) = 0 := Finset.sum_eq_zero fun p _ => absurd p.2 (by omega)
       have : τ i = 0 := by
         have := htr i
         rw [h0, LinearMap.zero_apply] at this
@@ -1425,8 +1415,7 @@ theorem farNum : FarNum := by
       nlinarith [(abs_le.mp h1).1]
     refine (Finset.sum_le_sum this).trans ?_
     rw [Finset.sum_add_distrib]
-    simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-    exact le_refl _
+    simpa only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] using le_refl _
   have hKK : K ≤ K' := hK' ▸ le_abs_self K
   rw [Finset.sum_sub_distrib] at hineq
   rw [Finset.sum_sub_distrib, Finset.sum_sub_distrib, ← Finset.sum_div] at hlow
@@ -1476,8 +1465,7 @@ variable {n : ℕ}
 theorem glRel_renum {A : Type*} [Ring A] {E : Fin n → Fin n → A} (hE : GlRel E) (s : Equiv.Perm (Fin n)) :
     GlRel (fun a b => E (s a) (s b)) := by
   intro a b c d
-  have h := hE (s a) (s b) (s c) (s d)
-  simpa only [Equiv.apply_eq_iff_eq] using h
+  simpa only [Equiv.apply_eq_iff_eq] using hE (s a) (s b) (s c) (s d)
 
 theorem tm_renum {A : Type*} [Ring A] [Algebra ℂ A] (E : Fin n → Fin n → A) (s : Equiv.Perm (Fin n)) (u : ℂ)
     (a b : Fin n) : Tm (fun a b => E (s a) (s b)) u a b = Tm E u (s a) (s b) := by
@@ -1521,8 +1509,7 @@ theorem kHighest_iff {V : Type} [AddCommGroup V] [Module ℂ V] {ε : Fin n → 
   · rintro ⟨hw, hz⟩
     refine ⟨fun a => ?_, fun a b hab he => ?_⟩
     · simpa using hw (s.symm a)
-    · have h := hz (s.symm a) (s.symm b) (symm_lt hs hab he) (by simpa using he)
-      simpa using h
+    · simpa using hz (s.symm a) (s.symm b) (symm_lt hs hab he) (by simpa using he)
 
 theorem rhoC_renum {ε : Fin n → Bool} {s : Equiv.Perm (Fin n)}
     (hs : ∀ a b, a < b → ε (s a) = ε (s b) → s a < s b) : rhoC (ε ∘ s) = rhoC ε ∘ s := by
@@ -1536,8 +1523,7 @@ theorem rhoC_renum {ε : Fin n → Bool} {s : Equiv.Perm (Fin n)}
     · intro c hc
       simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_coe, Equiv.apply_symm_apply] at hc ⊢
       refine ⟨?_, hc.2⟩
-      have h' := symm_lt hs hc.1 hc.2.symm
-      simpa using h'
+      simpa using symm_lt hs hc.1 hc.2.symm
     · intro b _
       simp
     · intro c _
@@ -1551,8 +1537,7 @@ theorem rhoC_renum {ε : Fin n → Bool} {s : Equiv.Perm (Fin n)}
     · intro c hc
       simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_coe, Equiv.apply_symm_apply] at hc ⊢
       refine ⟨?_, hc.2⟩
-      have h' := symm_lt hs hc.1 hc.2
-      simpa using h'
+      simpa using symm_lt hs hc.1 hc.2
     · intro b _
       simp
     · intro c _

@@ -168,8 +168,7 @@ theorem Epow_gel (hR : RCalc) {f : Mat n → V} (hf : ContDiffOn ℝ ∞ f (GLs 
     intro a b x hx
     by_cases hab : a = b
     · simp [Epow, hab]
-    · simp only [Epow, ite_eq_right hab]
-      exact (gel_zero hR s m hx).symm
+    · simpa only [Epow, ite_eq_right hab] using (gel_zero hR s m hx).symm
   | succ m' ih =>
     intro a b x hx
     have e : Epow s' (m' + 1) a b f = ∑ c, Eu s' a c (Epow s' m' c b f) := rfl
@@ -186,8 +185,7 @@ theorem gel_gel (hR : RCalc) {f : Mat n → V} (hf : ContDiffOn ℝ ∞ f (GLs n
   rw [e, gel_sum hR _ (fun a => Epow_smooth hR hf s' m' a a) s m hx]
   simp only [gel, Finset.sum_apply]
   refine Finset.sum_congr rfl fun a _ => ?_
-  have h := Epow_gel hR hf s' m' s m a a hx
-  simpa only [gel, Finset.sum_apply] using h
+  simpa only [gel, Finset.sum_apply] using Epow_gel hR hf s' m' s m a a hx
 
 theorem zOp_append (w w' : List (Bool × ℕ)) (f : Mat n → V) : zOp (w ++ w') f = zOp w (zOp w' f) := by
   induction w with

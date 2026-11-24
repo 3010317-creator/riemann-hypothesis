@@ -117,8 +117,7 @@ theorem discr_ne_zero_of_etale (K A : Type) [Field K] [CommRing A] [Algebra K A]
     rw [Algebra.discr_eq_discr_of_algEquiv (Algebra.TensorProduct.basis L b) e]
     rfl
   rw [h2, discr_baseChange] at hc
-  intro h
-  exact hc (by rw [h, map_zero])
+  exact fun h => hc (by rw [h, map_zero])
 
 theorem exists_dual (R A : Type) [CommRing R] [CommRing A] [Algebra R A] {ι : Type}
     [Fintype ι] [DecidableEq ι] (b : Module.Basis ι R A) (h : IsUnit (Algebra.discr R b)) :
@@ -252,8 +251,7 @@ theorem etale_of_etale_height_one : ∀ (R A : Type) [CommRing R] [IsDomain R] [
     by_contra hn
     by_cases h0 : Algebra.discr R b = 0
     · obtain ⟨y, hy0, hyu⟩ : ∃ y : R, y ≠ 0 ∧ ¬ IsUnit y := by
-        by_contra H
-        push Not at H
+        by_contra! H
         exact hR ⟨exists_pair_ne R, mul_comm, fun {a} ha => (H a ha).exists_right_inv⟩
       obtain ⟨P, hP, h1, hyP⟩ := exists_height_one_mem R hy0 hyu
       exact key P hP h1 (h0 ▸ P.zero_mem)

@@ -768,8 +768,7 @@ theorem lattice_sum {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
   have he : ∀ ξ : Matrix (Fin n) (Fin 1) E, ξ.map (fun x => (1 : Af F) ⊗ₜ[F] x) ∈ L → ∀ i,
       ((e ξ i : 𝓞 E) : E) = ((d * d : ℕ) : E) * (R * ξ) i 0 := fun ξ hξ i => by
     have h := hint ξ hξ i
-    simp only [e, dite_eq_left h]
-    exact h.choose_spec.symm
+    simpa only [e, dite_eq_left h] using h.choose_spec.symm
   let κ := Module.Free.ChooseBasisIndex ℤ (𝓞 E)
   let m : Matrix (Fin n) (Fin 1) E → ι × κ → ℤ := fun ξ p => (RingOfIntegers.basis E).repr (e ξ p.1) p.2
   let b : ι × κ → ℝ := fun p => K₀ * D₀ * s p.1
@@ -817,8 +816,7 @@ theorem lattice_sum {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
       have h5 : ((1 + U ξ) ^ N)⁻¹ ≤ ∏ _p : ι × κ, ((1 + U ξ) ^ 2)⁻¹ := by
         have hUp := hU ξ
         rw [Finset.prod_const, Finset.card_univ, hcard, inv_pow, ← pow_mul]
-        refine inv_anti₀ (by positivity) (pow_le_pow_right₀ (by linarith) ?_)
-        exact hN
+        exact inv_anti₀ (by positivity) (pow_le_pow_right₀ (by linarith) hN)
       exact h5.trans (Finset.prod_le_prod₀ (fun _ _ => by positivity) fun p _ => h1 p)
     · simp [h, Set.indicator_of_notMem hξ]
   refine (_root_.GlobalTheory.CompanionTheory.Count.tsum_le_prod_of_injOn m b hbp h hinj hh).trans (le_of_eq ?_)
@@ -915,15 +913,13 @@ theorem count_main : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : HSp 
       rw [e3]
       show _ ≤ Cn * (t i)⁻¹ * U ξ
       have := ht0 i
-      rw [mul_comm Cn, mul_assoc, inv_mul_eq_div, le_div_iff₀ this, mul_comm]
-      exact h4
+      rwa [mul_comm Cn, mul_assoc, inv_mul_eq_div, le_div_iff₀ this, mul_comm]
     · have e := congrFun (congrFun h3 i) 0
       have e2 : (R.map (tauE D ρ) * compAt θ ρ (invPt V a ξ)) (Sum.inr (Sum.inr i)) 0 = (Q.map (tauE D ρ) * compAt θ ρ (invPt V a ξ)) i 0 := rfl
       have e3 : (R * ξ) (Sum.inr (Sum.inr i)) 0 = (Q * ξ) i 0 := rfl
       have h4 := hmul ξ ρ (Sum.inr (Sum.inr i))
       rw [e2, e, Matrix.map_apply] at h4
-      rw [e3]
-      exact h4
+      rwa [e3]
   have main := hsum s hs U hU hb N hN
   have hsame : ∀ ξ : Matrix (Fin V.rank) (Fin 1) D.host.E, (invPt V a ξ).map (finPart D) = ξ.map (fun x => (1 : Af D.host.F) ⊗ₜ[D.host.F] x) := fun ξ => (hcoord ξ).1
   simp only [hsame]
@@ -1374,12 +1370,9 @@ theorem length_le_wittIdx (D : D7) (V : HSp D) {r : ℕ} (Xf Yf : Matrix (Fin V.
     exact Matrix.ext fun i j => rfl
   have hxx : Xfᴴ * V.gram * Xf = 0 := by rw [← hc]; exact hW.xx
   have hxy : Xfᴴ * V.gram * Yf = 1 := by rw [← hc]; exact hW.xy
-  have hG : V.gramᴴ = V.gram := by
-    refine Matrix.ext fun a b => ?_
-    exact V.herm.eq _ _
+  have hG : V.gramᴴ = V.gram := Matrix.ext fun a b => V.herm.eq _ _
   have hyx : Yfᴴ * V.gram * Xf = 1 := by
-    have h := congrArg conjTranspose hxy
-    simpa [conjTranspose_mul, hG, Matrix.mul_assoc] using h
+    simpa [conjTranspose_mul, hG, Matrix.mul_assoc] using congrArg conjTranspose hxy
   let f : (Fin r → D.host.E) →ₗ[D.host.E] V.V := V.frame.equivFun.symm.toLinearMap.comp Xf.mulVecLin
   have hf : Function.Injective f := by
     refine V.frame.equivFun.symm.injective.comp (g := V.frame.equivFun.symm) (f := Xf.mulVec) fun v w hvw => ?_
@@ -1441,8 +1434,7 @@ theorem weilThetaConvergence_of_siegelSet (hRT : GlobalTheory.Published.SiegelSe
   have hScov : ∀ g, ∃ γ ∈ GQ V, γ * g ∈ S := fun g => by
     obtain ⟨γ, hγ, s, hs, e⟩ := hcov g
     refine ⟨γ⁻¹, inv_mem hγ, ?_⟩
-    rw [e, inv_mul_cancel_left]
-    exact hs
+    rwa [e, inv_mul_cancel_left]
   have hI : ∫⁻ t in GlobalTheory.SiegelSet.cone r c,
       ENNReal.ofReal (∏ i, t i ^ (Module.finrank ℚ D.host.F * (2 * n))) *
         ENNReal.ofReal ((GlobalTheory.SiegelSet.modulus D.host.F V.rank t * ∏ i, t i)⁻¹) < ⊤ := by

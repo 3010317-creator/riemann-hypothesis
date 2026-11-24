@@ -118,9 +118,7 @@ theorem _root_.GlobalTheory.CNorm.kummer_basic : ∀ (p : ℕ) (F E : Type) [Fie
       obtain ⟨j, -, hj⟩ := hζ.eq_pow_of_pow_eq_one hσy
       have hσy' : σ y = algebraMap F E ζ ^ j * y := by
         rw [hj]; field_simp
-      have hδ : δ ≠ 0 := by
-        intro hδ
-        exact h.nonpow 0 (by rw [hδ, zero_pow hp.ne_zero])
+      have hδ : δ ≠ 0 := fun hδ => h.nonpow 0 (by rw [hδ, zero_pow hp.ne_zero])
       have hθ : θ ≠ 0 := by
         intro hθ
         have := h.pow

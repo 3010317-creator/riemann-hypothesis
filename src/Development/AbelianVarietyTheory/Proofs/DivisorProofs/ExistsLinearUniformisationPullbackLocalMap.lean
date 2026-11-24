@@ -84,8 +84,7 @@ theorem exists_pelUnif_pull : ∀ {E : Type} [Field E] [NumberField E] [IsCMFiel
   have hgen : (specOf θ).base (genericPoint (Sp V)) ∈ W := by
     rw [genericPoint_eq_bot_of_affine]
     show f ∉ Ideal.comap θ ⊥
-    rw [Ideal.mem_comap, Ideal.mem_bot]
-    exact hf
+    rwa [Ideal.mem_comap, Ideal.mem_bot]
 
   let x : Sp (FractionRing V) ⟶ Sp R := jK V ≫ specOf θ
   have hxW : Set.range x ⊆ (W : Set (Sp R)) := by
@@ -98,8 +97,7 @@ theorem exists_pelUnif_pull : ∀ {E : Type} [Field E] [NumberField E] [IsCMFiel
       rw [Ideal.eq_bot_of_prime z.asIdeal]
       exact Ideal.comap_bot_of_injective _ (IsFractionRing.injective V (FractionRing V))
     show (specOf θ).base ((jK V).base z) ∈ W
-    rw [hz]
-    exact hgen
+    rwa [hz]
   obtain ⟨hamp, hkt⟩ := GlobalTheory.Mum.PolFibre.relAmple_kTriv_fibre R hR P.D P.A t.G t.semi P.U W hψW (FractionRing V) x hxW
   obtain ⟨PK, cubK, symK, adjK, primK, mK, hmK⟩ := sabPull CubePf.cubePull x t
   let tK : SAB H (Sp (FractionRing V)) := ⟨(Over.pullback x).obj t.G, IsSemiAbelian.pullback _ t.G t.semi,

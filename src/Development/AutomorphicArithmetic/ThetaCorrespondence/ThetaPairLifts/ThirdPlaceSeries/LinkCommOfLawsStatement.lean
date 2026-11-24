@@ -559,8 +559,7 @@ theorem exists_open {D : D7} (V : HSp D) {n : ℕ} (hn : V.rank = n) {J : Matrix
     exact ⟨⟨φ g, hx⟩, h1, rfl⟩
   · rintro k ⟨κ', h1, e⟩ - κ hκ
     have : κ = κ' := Subtype.ext (Units.ext (by rw [hκ, ← hφ, ← e]; rfl))
-    rw [this]
-    exact h1
+    rwa [this]
 
 
 
@@ -703,8 +702,7 @@ theorem GlobalTheory.StepZeroNorm.integral_rd_eq_inner : ∀ (D : D7) (u : D.wha
     rfl
   · intro o ho P hP Q hQ
     have h2 := F.val0.ipV a o ho P (Formalism.L2.Forms.lamT_zero u ▸ hP) Q (Formalism.L2.Forms.lamT_zero u ▸ hQ)
-    rw [← Formalism.L2.Forms.lamT_zero u] at h2
-    exact h2
+    rwa [← Formalism.L2.Forms.lamT_zero u] at h2
   · intro z f f' g
     have e : (fun x => (z • f + f') (F.val0.eY x)) = z • (fun x => f (F.val0.eY x)) + fun x => f' (F.val0.eY x) := rfl
     simp only [e, map_add (f := _), LinearMap.map_smulₛₗ, LinearMap.add_apply, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply]
@@ -1214,10 +1212,7 @@ theorem exists_finM (V : HSp D) {n : ℕ} (hn : V.rank = n)
     ∃ a : GA D V, GlobalTheory.AdForm.finM V hn a = y.1.1 := by
   subst hn
   obtain ⟨a, -, e⟩ := GlobalTheory.DefFree.AdelCls.exists_fin V ⟨y.1, y.2⟩
-  refine ⟨a, ?_⟩
-  have e2 := congrArg Subtype.val e
-  have e3 := congrArg Units.val e2
-  exact e3
+  exact ⟨a, congrArg Units.val (congrArg Subtype.val e)⟩
 
 
 
@@ -1280,8 +1275,7 @@ theorem chart0_inj {u : D.what₂.Word} (F : Forms0 D u) (θ : InfFam D) (ψ ψ'
       rw [show (GlobalTheory.Core.Mi.chart0 F).eY (F.val0.eY.symm y) = y from F.val0.eY.apply_symm_apply y] at this
       exact this)
   funext c y
-  have h2 := congrFun (congrFun this c) (F.val0.eY y)
-  simpa using h2
+  simpa using congrFun (congrFun this c) (F.val0.eY y)
 
 theorem iter_equiv {M β : Type} [NormedAddCommGroup M] [Module ℂ M] (S : β → M ≃ₗ[ℂ] M) (r : β → ℝ) (hr : ∀ b, 0 < r b)
     (hS : ∀ b φ, ‖S b φ‖ = r b * ‖φ‖) (ε : ℕ → β) (n : ℕ) :
@@ -1353,14 +1347,12 @@ theorem GlobalTheory.MiTop.linkComm_of_laws_alt : ∀ {D : D7} {L : SizeData₂ 
     refine GlobalTheory.T.levelPrime_operators_stepZero_scale_norms D u (_root_.GlobalTheory.MiTop.formsAtZero W u) W.Q.Rl.θ hc.inf hU (hc.x 0 (Nat.zero_le _)).cpt k ι o.p o.I o.q o.χ o.hχ (o.β 0) (o.Q 0)
       hnd hinj (fun φ y i => ?_) η (fun φ => ?_)
     · have := (hR.ram 0 (Nat.zero_le _) _ (h0 _ φ).1 α y).2 i
-      rw [(h0 _ φ).2 α y] at this
-      exact this
+      rwa [(h0 _ φ).2 α y] at this
     · obtain ⟨h1, h2⟩ := hR.S₀ η _ (h0 _ φ).1
       obtain ⟨φ', e⟩ := hsur _ _ h1
       refine ⟨φ', fun y => ?_⟩
       have := h2 α y
-      rw [e, (h0 _ φ').2 α y, (h0 _ φ).2 α y] at this
-      exact this
+      rwa [e, (h0 _ φ').2 α y, (h0 _ φ).2 α y] at this
   choose S r hr hS hrd using hall
   have hS0 : ∀ t η φ, S₀ t η (_root_.GlobalTheory.MiTop.col0_alt f t φ) = _root_.GlobalTheory.MiTop.col0_alt f t (S η φ) := by
     intro t η φ
@@ -1378,8 +1370,7 @@ theorem GlobalTheory.MiTop.linkComm_of_laws_alt : ∀ {D : D7} {L : SizeData₂ 
   obtain ⟨A, a, ha, hA, hA'⟩ := LComm.iter_equiv S r hr hS ε n
   refine ⟨A, a, o.cS n, ha, hA, ?_, fun t φ F => ?_⟩
   · refine Finset.prod_ne_zero_iff.2 fun i _ => Finset.prod_ne_zero_iff.2 fun j _ => pow_ne_zero _ ?_
-    refine Complex.ofReal_ne_zero.2 (Real.rpow_pos_of_pos ?_ _).ne'
-    exact Nat.cast_pos.2 Nat.card_pos
+    exact Complex.ofReal_ne_zero.2 (Real.rpow_pos_of_pos (Nat.cast_pos.2 Nat.card_pos) _).ne'
   · obtain ⟨t1, t2, t3, t4, t5⟩ := ht t
     rw [GlobalTheory.T.seeSawKernelChain_levelPrimeOperator_to_step_zero D f.c k ι o (f.t t) ε (S₀ t) t1 t2 t3 t4 t5 n h _ (h0 t φ).1 F,
       LComm.iterS_comm (fun η φ => S η φ) (S₀ t) (_root_.GlobalTheory.MiTop.col0_alt f t) (hS0 t) ε n φ, hA']

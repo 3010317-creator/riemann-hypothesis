@@ -182,8 +182,7 @@ private theorem val_mul_val_comm_of_fst_eq (hG : Out.GlobalFnsSt) {S S' : Scheme
     rw [val_mul hJ, val_mul hJ, val_pull hJ, val_pull hJ, val_pull hJ, val_pull hJ] at key
     have hρp' : ∀ {W : Scheme.{0}} (h : Z ⟶ W), ρ ≫ p0 ≫ h = h := fun h => by
       rw [← Category.assoc, hρp, Category.id_comp]
-    rw [hρp', hρp', hea', hea, hρa, hρa'] at key
-    exact key
+    rwa [hρp', hρp', hea', hea, hρa, hρa'] at key
   · intro y J' hJ'
     simp only [u, u']
     rw [val_mul hJ', val_mul hJ', val_pull hJ', val_pull hJ', val_pull hJ', val_pull hJ']
@@ -230,7 +229,6 @@ theorem exists_gen_of_rigidified_of_flat_baseChange :
     have key := val_mul_val_comm_of_fst_eq hG π A N hA hN w' hw' e' he'p he'q g₁ g₂ hg z J hJ
     rw [mul_left_comm (val w' g₁ z J), mul_left_comm (val w' g₂ z J)]
     congr 1
-    rw [← div_eq_mul_inv, ← div_eq_mul_inv, div_eq_div_iff_mul_eq_mul]
-    exact key
+    rwa [← div_eq_mul_inv, ← div_eq_mul_inv, div_eq_div_iff_mul_eq_mul]
 
 end GlobalTheory

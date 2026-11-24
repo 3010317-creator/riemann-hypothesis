@@ -151,8 +151,7 @@ theorem pullDeg_nonneg (hκ : Function.Injective κ) {a : K₀ → ℤ} (h : ∀
     0 ≤ pullDeg κ a k := by
   by_cases hk : ∃ k₀, κ k₀ = k
   · obtain ⟨k₀, rfl⟩ := hk
-    simp only [pullDeg, hκ.extend_apply]
-    exact h k₀
+    simpa only [pullDeg, hκ.extend_apply] using h k₀
   · simp [pullDeg, Function.extend_apply' _ _ _ hk]
 
 end Block
@@ -269,12 +268,10 @@ theorem exists_resProj {J₀ : Ideal (MRing ι₀)} (hJ : J₀ = ⊤) (R₀ : An
       obtain rfl : k' = k₀ := hv.1 h1
       refine ⟨j, ?_⟩
       show w (v ⟨k', j⟩) ≠ 0
-      rw [hp]
-      exact hi
+      rwa [hp]
     · have hf' : rename v f ∈ P := hP hf
       have := hw.2 _ hf'
-      rw [map_rename, eval_rename] at this
-      exact this
+      rwa [map_rename, eval_rename] at this
   have hcomp : ∀ y y' u, u ∈ R.U y ∩ R.U y' →
       SameOrbit (fun q => R.lift y u (v q)) (fun q => R.lift y' u (v q)) := by
     intro y y' u hu

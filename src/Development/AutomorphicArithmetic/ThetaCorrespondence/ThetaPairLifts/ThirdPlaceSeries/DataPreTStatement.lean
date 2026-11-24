@@ -367,8 +367,7 @@ theorem ker_stdPair : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolo
       · exact zero_mem _
     have h := hint _ hO
     have e : (⟨_, hO l⟩ : 𝒪[k]) = ⟨_, huO⟩ := Subtype.ext ((hx l).trans (ite_eq_left rfl))
-    rw [e] at h
-    exact h
+    rwa [e] at h
 
 end GlobalTheory.StdPairTop
 
@@ -513,8 +512,7 @@ theorem val_pr_eq_one (p : SplitPt D k) {w : HeightOneSpectrum (𝓞 D.host.E)} 
   have e3 := congrArg (valuation k) hmul
   rw [map_mul, map_one] at e3
   refine le_antisymm e1 ?_
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have : valuation k (p.pr (incA D (y : D.host.E))) * valuation k (p.pr (incA D ((y : D.host.E))⁻¹)) < 1 :=
     mul_lt_one_of_lt_of_le hlt e2
   rw [e3] at this

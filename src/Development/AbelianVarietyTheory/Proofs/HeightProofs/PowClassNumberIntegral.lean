@@ -71,8 +71,7 @@ theorem exists_denom (z : RA F E) : ∃ N : ℕ, 0 < N ∧ (N : RA F E) * z ∈ 
   rw [mul_add]
   refine add_mem ?_ (mul_mem (natCast_mem _ N) hh)
   have := one_tmul_mem_adelicCompletionOfElementSet F hx
-  rw [← diag_apply, map_mul, map_natCast] at this
-  exact this
+  rwa [← diag_apply, map_mul, map_natCast] at this
 
 omit [NumberField E] in
 theorem isUnit_diag {a : E} (ha : a ≠ 0) : IsUnit (diag F E a) := (IsUnit.mk0 a ha).map _

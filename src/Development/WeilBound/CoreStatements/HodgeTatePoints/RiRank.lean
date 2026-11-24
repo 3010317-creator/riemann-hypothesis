@@ -179,8 +179,7 @@ theorem r_dual : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed 
     set G : C := ∑ a, algebraMap R C (χ⁻¹ a) * ψ a with hG
     have hW : ∀ h : F, ∑ a, algebraMap R C (χ⁻¹ a) * ψ (a * h) = algebraMap R C (χ h) * G := by
       intro h
-      have e := wsum_eq χ (fun a => ψ a) (wsum_zero_of_ne hv hχ _) h
-      simpa [wsum, G] using e
+      simpa [wsum, G] using wsum_eq χ (fun a => ψ a) (wsum_zero_of_ne hv hχ _) h
     have hFt : ∀ t : C, fourier (R := R) (fun h a : F => ψ (h * a)) (fun a => t * algebraMap R C (χ⁻¹ a)) = fun h => t * G * algebraMap R C (χ h) := by
       intro t
       funext h
@@ -216,8 +215,7 @@ theorem r_dual : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed 
       obtain ⟨s', hs'⟩ : ∃ s' : R, algebraMap R C s' = t * G * algebraMap R C (χ 1) := AD.le_int hm 1
       rw [map_one, map_one, mul_one] at hs'
       have hx : s' ∈ xIdeal AD.carrier χ := by
-        rw [mem_xIdeal, hs']
-        exact hm
+        rwa [mem_xIdeal, hs']
       rw [hcD] at hx
       obtain ⟨k, rfl⟩ := Ideal.mem_span_singleton'.mp hx
       rw [← map_mul, ← hs', map_mul, map_mul]

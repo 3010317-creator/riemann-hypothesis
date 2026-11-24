@@ -107,16 +107,14 @@ private lemma exists_reduced_iwasawa_decomposition {ι : Type} [Fintype ι] [Dec
   · rw [transpose_submatrix, submatrix_mul_equiv, hk, submatrix_one_equiv]
   · exact fun i => ha _
   · exact fun i => hn1 _
-  · intro i j hij
-    exact hn0 _ _ ((hmono j i).mpr hij)
+  · exact fun i j hij => hn0 _ _ ((hmono j i).mpr hij)
   · intro i j
     show |n (f.symm i) (f.symm j)| ≤ 1
     rcases lt_trichotomy (f.symm i) (f.symm j) with h | h | h
     · exact (hnb _ _ h).trans (by norm_num)
     · rw [h, hn1]; simp
     · rw [hn0 _ _ h]; simp
-  · intro i j hij
-    exact le_two_pow_mul_of_consecutive_le a ha hcons _ _ ((hmono i j).mpr hij)
+  · exact fun i j hij => le_two_pow_mul_of_consecutive_le a ha hcons _ _ ((hmono i j).mpr hij)
   · have hg' : g = (g.submatrix f f).submatrix f.symm f.symm := by ext i j; simp
     rw [hg', ← submatrix_map, submatrix_mul_equiv, hdec, ← submatrix_diagonal_equiv,
       submatrix_mul_equiv, submatrix_mul_equiv]
@@ -153,8 +151,7 @@ private lemma isSiegel_of_reduced {ι : Type} [Fintype ι] [DecidableEq ι]
       rw [h] at hdet
       linarith
   refine ⟨hk, hk1, ha, ?_, hlt, hn1, hn0, fun i j => (hnb i j).trans hC⟩
-  rw [hk1, one_mul] at hdet
-  exact hdet
+  rwa [hk1, one_mul] at hdet
 
 open Matrix in
 open scoped Kronecker ComplexOrder TensorProduct in

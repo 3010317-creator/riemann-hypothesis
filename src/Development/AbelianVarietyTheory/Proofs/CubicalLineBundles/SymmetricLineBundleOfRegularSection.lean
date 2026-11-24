@@ -63,8 +63,7 @@ theorem appLE_mem_nonZeroDivisors {X Y : Scheme.{0}} (f : Y ⟶ X) [IsOpenImmers
     rw [Scheme.Hom.appIso_hom']
     change _ = (X.presheaf.map (homOfLE h').op ≫ f.appLE _ _ _).hom a
     rw [Scheme.Hom.map_appLE]
-  rw [e]
-  rw [← MulEquivClass.map_nonZeroDivisors (f.appIso V).commRingCatIsoToRingEquiv]
+  rw [e, ← MulEquivClass.map_nonZeroDivisors (f.appIso V).commRingCatIsoToRingEquiv]
   exact Submonoid.mem_map_of_mem _ (ha _ h')
 
 theorem inv_eq_zero_iff {S : Scheme.{0}} (A : Over S) [GrpObj A] {T : Scheme.{0}} (t : T ⟶ A.left) :
@@ -77,8 +76,7 @@ theorem inv_eq_zero_iff {S : Scheme.{0}} (A : Over S) [GrpObj A] {T : Scheme.{0}
   have h3 : (t ≫ (GrpObj.inv : A ⟶ A).left) ≫ A.hom ≫ eSec A =
       (t ≫ A.hom ≫ eSec A) ≫ (GrpObj.inv : A ⟶ A).left := by
     rw [Category.assoc, reassoc_of% h1]
-    simp only [Category.assoc]
-    exact congrArg (fun u => t ≫ A.hom ≫ u) h2.symm
+    simpa only [Category.assoc] using congrArg (fun u => t ≫ A.hom ≫ u) h2.symm
   rw [h3]
   exact cancel_mono _
 

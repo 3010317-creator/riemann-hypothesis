@@ -369,8 +369,7 @@ private theorem ev_eq {O R K : Type} [CommRing O] [CommRing R] [Algebra O R] [No
         have he2 : (⟨f, hP hf⟩ : P) = algebraMap O _ (MvPowerSeries.constantCoeff f) +
             ∑ m ∈ μ, (⟨_, hP (hb m)⟩ : P) * ⟨_, hP (mono_mem W.wt m)⟩ := by
           apply Subtype.ext
-          rw [Subalgebra.coe_add, AddSubmonoidClass.coe_finsetSum]
-          exact he'
+          rwa [Subalgebra.coe_add, AddSubmonoidClass.coe_finsetSum]
         have he3 : Φ f - ψ ⟨f, hP hf⟩ =
             ∑ m ∈ μ, (Φ (b m) - ψ ⟨_, hP (hb m)⟩) * Φ (MvPowerSeries.monomial m 1) := by
 
@@ -390,8 +389,7 @@ private theorem ev_eq {O R K : Type} [CommRing O] [CommRing R] [Algebra O R] [No
   obtain ⟨b, hb, he⟩ := hd f hf
   have he2 : (⟨f, hP hf⟩ : P) = ∑ m ∈ μ, (⟨_, hP (hb m)⟩ : P) * ⟨_, hP (mono_mem W.wt m)⟩ := by
     apply Subtype.ext
-    rw [AddSubmonoidClass.coe_finsetSum]
-    exact he
+    rwa [AddSubmonoidClass.coe_finsetSum]
 
   rw [he2, congrArg Φ he, map_sum, map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun m hm => ?_
@@ -483,8 +481,7 @@ private theorem exists_loc {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsL
   refine ⟨B.val.comp Ξ, ⟨fun x hx => ?_⟩, fun j x hx => ?_⟩
   · by_contra hn
     have h1 : Ξ x ∈ maximalIdeal B := by
-      rw [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
-      exact hn
+      rwa [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
     exact h1 (hBl.map_nonunit _ hx)
   · obtain ⟨f, hf, rfl⟩ : x ∈ W.part j := hW j ▸ hx
     exact (congrArg (fun y : B => v y) (hΞ f)).trans (key j f hf)

@@ -66,8 +66,7 @@ theorem mem_stdG_OL (x : Fin k → ↥LL.1) : x ∈ stdG ↥(OL LL) ↥LL.1 k �
   constructor
   · rintro ⟨u, rfl⟩ j
     exact (u j).2
-  · intro h
-    exact ⟨fun j => ⟨x j, h j⟩, rfl⟩
+  · exact fun h => ⟨fun j => ⟨x j, h j⟩, rfl⟩
 
 
 set_option synthInstance.maxHeartbeats 400000 in
@@ -210,8 +209,7 @@ theorem isSubOfSums_T2O (hd : TruncatedSeriesCountingIdentities.SemisimpleDecomp
     have := congrArg (B.transpose.map φ).mulVec huv
     simpa only [Matrix.mulVec_mulVec, h1, Matrix.one_mulVec] using this
   refine ⟨1, fun _ => π, LinearMap.pi fun _ => Matrix.mulVecLin At, ?_, fun g v => ?_⟩
-  · intro u v huv
-    exact hinj (congrFun huv 0)
+  · exact fun u v huv => hinj (congrFun huv 0)
   · funext a
     change At.mulVec ((TruncatedSeriesCountingIdentities.locC Cx (T2O D.nd i ρ π) g).mulVec v) =
       (TruncatedSeriesCountingIdentities.locC Cx (rDuO D.nd i r π) g).mulVec (At.mulVec v)

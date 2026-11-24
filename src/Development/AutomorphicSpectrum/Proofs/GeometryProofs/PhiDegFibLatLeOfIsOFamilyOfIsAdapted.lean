@@ -268,8 +268,7 @@ theorem exists_max_det {n : ℕ} (E : Submodule (𝓞 L) (Fin n → 𝓞 L)) (hD
     norm_pos_iff.2 (fun h => ha0 (hj'inj (by rw [h, map_zero])))
   obtain ⟨v, hvE, hv⟩ : ∃ v : Fin n → Fin n → 𝓞 L, (∀ i, v i ∈ E) ∧
       ‖(j.comp (algebraMap (𝓞 L) L)) a‖ ≤ ‖(j.comp (algebraMap (𝓞 L) L)) (Matrix.of v).det‖ := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hall : ∀ x ∈ detIdeal E, ‖(j.comp (algebraMap (𝓞 L) L)) x‖ < ‖(j.comp (algebraMap (𝓞 L) L)) a‖ := by
       intro x hx
       induction hx using Submodule.span_induction with
@@ -396,8 +395,7 @@ theorem exists_coord_lattice {M : Type} [AddCommGroup M] [Module (𝓞 L) M] [Mo
     rw [Ideal.absNorm_span_singleton]
     have := card_quotient_mulVecLin (K := L) (c • (1 : Matrix (Fin n) (Fin n) (𝓞 L)))
       (by rw [Matrix.det_smul, Matrix.det_one, mul_one, Fintype.card_fin]; exact pow_ne_zero n hc)
-    rw [Matrix.det_smul, Matrix.det_one, mul_one, Fintype.card_fin] at this
-    exact this
+    rwa [Matrix.det_smul, Matrix.det_one, mul_one, Fintype.card_fin] at this
   have iE : E.toAddSubgroup.index = Ideal.absNorm (detIdeal E) := card_quotient_eq_absNorm_detIdeal n E
   have m1 : A.toAddSubgroup.map Φ.toAddMonoidHom =
       (Submodule.span (𝓞 L) (Set.range x)).toAddSubgroup.map ψ.toAddMonoidHom := by
@@ -573,8 +571,7 @@ private theorem exists_logNorms_lemma_2 {L : Type} [Field L] [NumberField L] (B 
   have h1 := key (Submodule.Quotient.mk ⟨z, hz⟩)
   rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at h1
   have h2 := Submodule.mem_map_of_mem (f := F.subtype) h1
-  rw [Submodule.map_span, ← Set.range_comp] at h2
-  exact h2
+  rwa [Submodule.map_span, ← Set.range_comp] at h2
 
 theorem exists_logNorms {L : Type} [Field L] [NumberField L] (B : HermitianBundle.{0} L)
     (F : Submodule (𝓞 L) B.carrier) {n : ℕ} (x : Fin n → B.carrier) (hx : ∀ i, x i ∈ F)
@@ -594,8 +591,7 @@ theorem exists_logNorms {L : Type} [Field L] [NumberField L] (B : HermitianBundl
       logIdeal (j.comp (algebraMap (𝓞 L) L)) (detIdeal E)⟩
   set idx := (Submodule.span (𝓞 L) (Set.range x)).toAddSubgroup.relIndex F.toAddSubgroup with hidx_def
   have hprod : Ideal.absNorm (Ideal.span {c ^ n}) ≠ 0 := by
-    rw [Ne, Ideal.absNorm_eq_zero_iff]
-    exact hcn
+    rwa [Ne, Ideal.absNorm_eq_zero_iff]
   rw [hidx] at hprod
   have hi0 : idx ≠ 0 := left_ne_zero_of_mul hprod
   have hd0 : Ideal.absNorm (detIdeal E) ≠ 0 := right_ne_zero_of_mul hprod
@@ -781,8 +777,7 @@ theorem exists_smul_mem_span {L : Type} [Field L] [NumberField L] (B : Hermitian
   rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at h1
   have h2 := Submodule.mem_map_of_mem (f := F.subtype) h1
   rw [Submodule.map_span, ← Set.range_comp] at h2
-  rw [Nat.cast_smul_eq_nsmul]
-  exact h2
+  rwa [Nat.cast_smul_eq_nsmul]
 
 variable {L : Type} [Field L] [NumberField L] {t' : SAB H (Sp (𝓞 L))} {B : HermitianBundle.{0} L}
   (MB : LieModel t'.G (𝟙 _) B.carrier) {ρM : 𝓞 E →+* Module.End (𝓞 L) B.carrier}
@@ -1189,8 +1184,7 @@ theorem flat_saturation_of_degree (hG : _root_.GlobalTheory.CompanionTheory.Ar.T
   have hsq : τ (H.rt : E) ^ 2 = H.rt0 ^ 2 := by
     rw [← hτ, H.sqrt_neg_disc_sq]
     have := congrArg ((σ.comp (algebraMap (𝓞 L) L)).comp s₁) H.rt_sq
-    rw [map_pow, map_neg, map_natCast] at this
-    exact this
+    rwa [map_pow, map_neg, map_natCast] at this
   have h : |B.normDegree (eigSp ρM s₁) - B.normDegree (eigSp ρM s₂)| ≤
       ((B.rank (eigSp ρM s₁) : ℝ) + B.rank (eigSp ρM s₂)) * |(GlobalTheory.CM.logOm E χ).re| := by
     rcases sq_eq_sq_iff_eq_or_eq_neg.1 hsq with h | h

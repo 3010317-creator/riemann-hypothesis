@@ -154,8 +154,7 @@ theorem pt_tilF_gen : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → P
     obtain ⟨i, hi⟩ := hgw w
     have h1 : ((B.primes X).T u : 𝓞 B.fields.E) ∈ w.1.asIdeal := by
       have h2 : algebraMap (𝓞 B.host.F) (𝓞 B.host.E) (B.T u : 𝓞 B.host.F) ∈ w.1.asIdeal := hT
-      rw [map_natCast] at h2
-      exact h2
+      rwa [map_natCast] at h2
     have hc : Nat.Coprime ((B.primes X).T u) ((B.primes X).g i) :=
       (Nat.coprime_primes (hPr.T_prime u) (hPr.g_prime i)).2 (hPr.T_ne_g u i)
     have h3 : ((1 : ℕ) : 𝓞 B.fields.E) ∈ w.1.asIdeal := by
@@ -191,8 +190,7 @@ theorem pt_tilF_gen : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → P
       (TilX.iXm_apply hiX hN) hext.1 ?_)
     have h2 := hext.2
     have hz : z0 X u = Pi.single (Br.iL (N_m_succ B.R)) ((X.piT u : 𝓞 B.host.E) : B.host.E) := TilX.lastCoordinateUniformizerVector_eq_single u
-    rw [hz] at h2
-    exact h2
+    rwa [hz] at h2
   have hQ := PerLaw.piT_notMem_Q hI u a
   have hQ0 : ∀ P : (∅ : Finset (HeightOneSpectrum (𝓞 B.fields.E))), (B.primes X).piT u ∉ P.1.asIdeal := fun P => isEmptyElim P
   have e : (tilF I.sel (I.tup a) u d).deco =

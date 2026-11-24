@@ -91,23 +91,19 @@ theorem valuation_one₂ : LocE.vP P (qOf P) (1 : E) = 0 := by
   have hq0 := q_ne_zero P
   have hex : ∃ z : ℤ, IsUnit (redP P ((1 : E) / (qOf P : E) ^ z)) :=
     ⟨0, by rw [zpow_zero, div_one, reduction_one']; exact isUnit_one⟩
-  have hspec : IsUnit (redP P ((1 : E) / (qOf P : E) ^ LocE.vP P (qOf P) (1 : E))) := by
-    unfold LocE.vP
-    exact Classical.epsilon_spec hex
+  have hspec : IsUnit (redP P ((1 : E) / (qOf P : E) ^ LocE.vP P (qOf P) (1 : E))) :=
+    Classical.epsilon_spec hex
   by_contra hne
-  obtain ⟨k, hk | hk⟩ := Int.eq_nat_or_neg (LocE.vP P (qOf P) (1 : E))
-  · obtain ⟨k', rfl⟩ : ∃ k', k = k' + 1 := ⟨k - 1, by omega⟩
-    rw [hk, zpow_natCast] at hspec
+  obtain ⟨k, hk | hk⟩ := Int.eq_nat_or_neg (LocE.vP P (qOf P) (1 : E)) <;>
+    obtain ⟨k', rfl⟩ : ∃ k', k = k' + 1 := ⟨k - 1, by omega⟩
+  · rw [hk, zpow_natCast] at hspec
     by_cases hI' : IntAt P ((1 : E) / (qOf P : E) ^ (k' + 1))
-    · have e : (qOf P : E) ^ (k' + 1) * (1 / (qOf P : E) ^ (k' + 1)) = 1 := by field_simp
-      have h0 : redP P ((qOf P : E) ^ (k' + 1) * (1 / (qOf P : E) ^ (k' + 1))) = 0 := by
+    · have h0 : redP P ((qOf P : E) ^ (k' + 1) * (1 / (qOf P : E) ^ (k' + 1))) = 0 := by
         rw [reduction_mul (pow_red P k').1 hI', (pow_red P k').2, zero_mul]
-      rw [e, reduction_one'] at h0
-      exact one_ne_zero h0
+      simp [hq0, reduction_one'] at h0
     · rw [reduction_eq_zero_of_not_integral P hI'] at hspec
       exact not_isUnit_zero hspec
-  · obtain ⟨k', rfl⟩ : ∃ k', k = k' + 1 := ⟨k - 1, by omega⟩
-    rw [hk, _root_.zpow_neg, zpow_natCast, div_inv_eq_mul, one_mul, (pow_red P k').2] at hspec
+  · rw [hk, _root_.zpow_neg, zpow_natCast, div_inv_eq_mul, one_mul, (pow_red P k').2] at hspec
     exact not_isUnit_zero hspec
 
 theorem locChar_one_ne {K : Type} [Field K] (cq : K) (χ : (𝓞 E ⧸ P.asIdeal)ˣ →* Kˣ) :
@@ -180,8 +176,7 @@ theorem withCol_toLoc {E k : Type} [Field E] [NumberField E] [StarRing E]
       rw [dite_eq_left (by omega)]
       simp only [LinearMap.coe_proj, Function.eval, Pi.single_apply, Fin.ext_iff, Fin.val_natAdd]
       rw [ite_eq_left (by omega)]
-    rw [h1, map_zero, Pi.zero_apply, h2, one_mul]
-    rw [zero_add (y' (e r))]
+    rw [h1, map_zero, Pi.zero_apply, h2, one_mul, zero_add (y' (e r))]
     rfl
   · exact r.elim0
   · exact r.elim0
@@ -201,8 +196,7 @@ theorem omPhi_one_one (i : ℕ) (x : HomE X.E (R.N i + cOf R i) (R.N (i + 1) + c
     unfold muAt
     exact locChar_one_ne _ _ _
   unfold omPhi Loc.om
-  rw [map_one, map_one, Units.val_one, valuation_one₂]
-  rw [mul_inv_cancel₀ hm]
+  rw [map_one, map_one, Units.val_one, valuation_one₂, mul_inv_cancel₀ hm]
   simp only [neg_zero, zero_mul, zpow_zero, one_mul]
   rfl
 

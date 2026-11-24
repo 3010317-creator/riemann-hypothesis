@@ -103,8 +103,7 @@ theorem UpperTheory.V.AlgebraTools.lag_coi :
   have hsum : ∑ i, lag a P i = 1 := by
     have h1 : ∏ i, (X - C (a i)) ∣ 1 - ∑ i, L i := by
       apply Finset.prod_dvd_of_coprime
-      · intro i _ j _ hij
-        exact isCoprime_X_sub_C_of_isUnit_sub (ha i j hij)
+      · exact fun i _ j _ hij => isCoprime_X_sub_C_of_isUnit_sub (ha i j hij)
       · intro k _
         rw [dvd_iff_isRoot, IsRoot, eval_sub, eval_one, eval_finsetSum]
         simp only [hLe, Finset.sum_ite_eq', Finset.mem_univ, ite_true, sub_self]
@@ -112,13 +111,10 @@ theorem UpperTheory.V.AlgebraTools.lag_coi :
     have h2 := congrArg (aeval P) hg
 
     rw [map_mul, hm, zero_mul, map_sub, map_one, map_sum, sub_eq_zero] at h2
-    simp only [hL]
-    exact h2.symm
+    simpa only [hL] using h2.symm
   refine ⟨⟨⟨fun i => ?_, fun i j hij => ?_⟩, hsum⟩, hP, hq, hcomm⟩
   · show lag a P i * lag a P i = lag a P i
     have := hq (L i) i
-    rw [← hL, hLe, ite_eq_left rfl, one_smul] at this
-    exact this
+    rwa [← hL, hLe, ite_eq_left rfl, one_smul] at this
   · have := hq (L i) j
-    rw [← hL, hLe, ite_eq_right hij, zero_smul] at this
-    exact this
+    rwa [← hL, hLe, ite_eq_right hij, zero_smul] at this

@@ -177,8 +177,7 @@ theorem ext_of_pure {X I Z₀ : Type} {Z : I → Type} [mX : MeasurableSpace X] 
             (MeasurableSpace.generateFrom {U : Set (Z v) | IsCompact U ∧ IsOpen U}) (q v) :=
           @measurable_generateFrom _ _ (MeasurableSpace.generateFrom G) _ _ fun U hU =>
             MeasurableSpace.measurableSet_generateFrom (Or.inr ⟨v, U, hU, rfl⟩)
-        rw [← hb] at this
-        exact this
+        rwa [← hb] at this
     have := hm.comap_le
     rwa [he.comap_eq] at this
   have hpi : ∀ t, t ∈ generatePiSystem G → ∀ K : ∀ v, Set (Z v),
@@ -253,8 +252,7 @@ theorem ext_of_pure {X I Z₀ : Type} {Z : I → Type} [mX : MeasurableSpace X] 
       simp only
       rw [Measure.restrict_apply htm, Measure.restrict_apply htm, e]
       exact (key K' hK' hKL' A' hA').1
-    · simp only [Measure.restrict_apply_univ]
-      exact k0.1
+    · simpa only [Measure.restrict_apply_univ] using k0.1
 
 theorem isSB_indicator {V : Type} [TopologicalSpace V] [T2Space V] {K : Set V}
     (hK : IsCompact K ∧ IsOpen K) : IsSB (K.indicator (1 : V → ℂ)) := by
@@ -298,8 +296,7 @@ theorem measure_ext_of_pure (F E : Type) [Field F] [NumberField F] [Field E] [Nu
       projV v (projFin X) ∈ latV b' v := fun X => by
     have := Set.mem_range_self (f := fun X : (Fin n → Fin M → AF F ⊗[F] E) =>
       (projInf X, fun v : HeightOneSpectrum (𝓞 F) => projV v (projFin X))) X
-    rw [hrange] at this
-    exact this
+    rwa [hrange] at this
   refine ext_of_pure projInf (fun v X => projV v (projFin X)) (fun v => latV b' v) hL he hr ν ν' ?_
   intro K hK hKL g hg hs
   have hS : MeasurableSet {X : Fin n → Fin M → AF F ⊗[F] E | ∀ v, projV v (projFin X) ∈ K v} := by

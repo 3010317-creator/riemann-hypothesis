@@ -95,8 +95,7 @@ theorem charpoly_psi_eq_map_minpoly {p : ℕ} [Fact p.Prime] (G : HTGroup p) (v 
     rfl
   have hli : LinearIndependent G.F (fun i : Fin G.n => γ ^ (i : ℕ)) := by
     have := linearIndependent_pow (K := G.F) γ
-    rw [hdeg] at this
-    exact this
+    rwa [hdeg] at this
   have hT : LinearIndependent ℂ (fun i : Fin G.n => (1 : ℂ) ⊗ₜ[G.F] (γ ^ (i : ℕ))) :=
     Module.Flat.linearIndependent_one_tmul hli
   have hM : LinearIndependent ℂ (fun i : Fin G.n => (G.psi v γ) ^ (i : ℕ)) := by
@@ -106,14 +105,12 @@ theorem charpoly_psi_eq_map_minpoly {p : ℕ} [Fact p.Prime] (G : HTGroup p) (v 
       funext i
       simp only [Function.comp_apply, AlgHom.toLinearMap_apply]
       rw [hL, map_pow]
-    rw [e]
-    exact this
+    rwa [e]
   have hint : IsIntegral ℂ (G.psi v γ) := Algebra.IsIntegral.isIntegral _
   set q := minpoly ℂ (G.psi v γ) with hq
   have hqm : q.Monic := minpoly.monic hint
   have hqdeg : G.n ≤ q.natDegree := by
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have h0 : aeval (G.psi v γ) q = 0 := minpoly.aeval _ _
     rw [Polynomial.aeval_eq_sum_range' hlt, Finset.sum_range] at h0
     have h1 := Fintype.linearIndependent_iff.1 hM (fun i => q.coeff i) h0 ⟨q.natDegree, hlt⟩
@@ -123,8 +120,7 @@ theorem charpoly_psi_eq_map_minpoly {p : ℕ} [Fact p.Prime] (G : HTGroup p) (v 
   have hpol : aeval (G.psi v γ) ((minpoly G.F γ).map v.embedding) = 0 := by
     have h : aeval (g γ) (minpoly G.F γ) = 0 := by rw [Polynomial.aeval_algHom_apply, minpoly.aeval, map_zero]
     change aeval (G.psi v γ) ((minpoly G.F γ).map (algebraMap G.F ℂ)) = 0
-    rw [Polynomial.aeval_map_algebraMap]
-    exact h
+    rwa [Polynomial.aeval_map_algebraMap]
   have hFint : IsIntegral G.F γ := Algebra.IsIntegral.isIntegral _
   have hm1 : ((minpoly G.F γ).map v.embedding).Monic := (minpoly.monic hFint).map _
   have hn1 : ((minpoly G.F γ).map v.embedding).natDegree = G.n := by
@@ -189,8 +185,7 @@ theorem eigvec_pos_unique_of_similitude : ∀ {n : ℕ} (A : Matrix (Fin n) (Fin
   have Q : ∀ u v : Fin n → ℂ, star (g *ᵥ u) ⬝ᵥ A *ᵥ (g *ᵥ v) = (s : ℂ) * (star u ⬝ᵥ A *ᵥ v) := by
     intro u v
     rw [← form_conjTranspose_mul_mul, hsim]
-    have e : ((s : ℂ) • A) *ᵥ v = (s : ℂ) • (A *ᵥ v) := by
-      exact Matrix.smul_mulVec (s : ℂ) A v
+    have e : ((s : ℂ) • A) *ᵥ v = (s : ℂ) • (A *ᵥ v) := Matrix.smul_mulVec (s : ℂ) A v
     rw [e, dotProduct_smul, smul_eq_mul]
   have scal : ∀ (a b : ℂ) (u v : Fin n → ℂ), star (a • u) ⬝ᵥ A *ᵥ (b • v) = star a * b * (star u ⬝ᵥ A *ᵥ v) := by
     intro a b u v
@@ -275,8 +270,7 @@ theorem fixL_pos_unique_of_sep : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v
     hsim hcp (Zm *ᵥ z) (Zm *ᵥ z') (by rw [hpos]; exact hz) (by rw [hpos]; exact hz') (heig z hf) (heig z' hf')
   refine ⟨c, ?_⟩
   have := congrArg (Zi *ᵥ ·) hc
-  simp only [Matrix.mulVec_mulVec, hZiZ, Matrix.one_mulVec, Matrix.mulVec_smul] at this
-  exact this
+  simpa only [Matrix.mulVec_mulVec, hZiZ, Matrix.one_mulVec, Matrix.mulVec_smul] using this
 
 end GlobalTheory.LKCx
 end -- clump:auto

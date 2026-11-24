@@ -98,8 +98,7 @@ theorem ex_pow_eq (e : FamExp G M B ψ) {b : Fin n → ℂ} (hb : b ∈ B) (z : 
 theorem ex_inv_smul_pow (e : FamExp G M B ψ) {b : Fin n → ℂ} (hb : b ∈ B) {s : Fin g → ℂ} (hs : s ∈ e.per b)
     {N : ℕ} (hN : 0 < N) : e.ex b ((N : ℂ)⁻¹ • s) ^ N = 1 := by
   have hN' : (N : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hN.ne'
-  rw [ex_pow_eq e hb, smul_smul, mul_inv_cancel₀ hN', one_smul]
-  exact hs
+  rwa [ex_pow_eq e hb, smul_smul, mul_inv_cancel₀ hN', one_smul]
 
 theorem hol_ex_comp (e : FamExp G M B ψ) {B' : Set (Fin n → ℂ)} (hB' : IsOpen B') (hsub : B' ⊆ B)
     {s : (Fin n → ℂ) → (Fin g → ℂ)} (hs : DifferentiableOn ℂ s B') :
@@ -271,11 +270,9 @@ theorem limit_core {R : Type} [CommRing R] (t : SAB H (Sp R)) {g n : ℕ} {M : L
     have e2 : s' (bs m) = P m x' := by rw [← hy' m (hr hm), hym']
     have hc : GlobalTheory.UU.CubWeil t.cub N (e.ex (bs m) ((N : ℂ)⁻¹ • P m x)) (e.ex (bs m) ((N : ℂ)⁻¹ • P m x'))
         (unitOn ζ₁) := by
-      rw [← e1, ← e2]
-      exact hm1
+      rwa [← e1, ← e2]
     have hζ₁ : ζ₁ = ζ := Units.ext (((hlink m).2 N ζ₁ x x' hN hc).trans hζ.symm)
-    rw [← hζ₁, ← hs₀, ← hs₀']
-    exact hu
+    rwa [← hζ₁, ← hs₀, ← hs₀']
 
 end Core
 

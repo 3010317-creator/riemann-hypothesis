@@ -297,8 +297,7 @@ theorem diagonal_mul_mem_congruenceSubgroup {n : ℕ} (hn : n ≠ 0) {u : IdeleG
   rw [mem_unitsLevel, hx, map_mul, hE, huv, one_mul]
   refine ⟨rfl, ?_⟩
   have e : E * S - 1 = -S * (S⁻¹ - E) := by field_simp; ring
-  rw [e, map_mul, Valuation.map_neg, huv, one_mul, ← hNv]
-  exact h4
+  rwa [e, map_mul, Valuation.map_neg, huv, one_mul, ← hNv]
 
 theorem isCyclotomic_of_root {k F : Type} [Field k] [Field F] [Algebra k F] (h2 : Module.finrank k F = 2) {n : ℕ}
     [NeZero n] (hirr : Irreducible (Polynomial.cyclotomic n k))
@@ -723,8 +722,7 @@ theorem continuous_comp_toClassGroup (φ : ClassGroup (𝓞 F) →* Circle) :
   filter_upwards [hU.mem_nhds h1] with y hy
   obtain ⟨x, hx, rfl⟩ := hy
   have hx1 : IdeleGroup.toFractionalIdeal x = 1 := by
-    rw [← MonoidHom.mem_ker, IdeleGroup.ker_toFractionalIdeal]
-    exact hx
+    rwa [← MonoidHom.mem_ker, IdeleGroup.ker_toFractionalIdeal]
   rw [MonoidHom.comp_apply, IdeleClassGroup.toClassGroup_mk, IdeleGroup.toClassGroup_apply, hx1,
     map_one, map_one]
 
@@ -740,8 +738,7 @@ theorem standardOpenSubgroup_le_ker (ψ : AddChar (Additive (ClassGroup (𝓞 F)
     standardOpenSubgroup F ≤ (classHecke ψ).toIdele.ker := by
   intro x hx
   have h1 : IdeleGroup.toFractionalIdeal x = 1 := by
-    rw [← MonoidHom.mem_ker, IdeleGroup.ker_toFractionalIdeal]
-    exact hx
+    rwa [← MonoidHom.mem_ker, IdeleGroup.ker_toFractionalIdeal]
   rw [MonoidHom.mem_ker, classHecke_toIdele, IdeleGroup.toClassGroup_apply, h1, map_one, map_one]
 
 theorem idealLevel_top : idealLevel (⊤ : Ideal (𝓞 F)) = finiteLevel 0 := by
@@ -750,8 +747,7 @@ theorem idealLevel_top : idealLevel (⊤ : Ideal (𝓞 F)) = finiteLevel 0 := by
   funext v
   rw [Pi.zero_apply]
   apply multiplicity_eq_zero_of_not_dvd
-  intro h
-  exact v.isPrime.ne_top (top_le_iff.mp (Ideal.le_of_dvd h))
+  exact fun h => v.isPrime.ne_top (top_le_iff.mp (Ideal.le_of_dvd h))
 
 theorem conductor_classHecke (ψ : AddChar (Additive (ClassGroup (𝓞 F))) ℂ) :
     (classHecke ψ).conductor = ⊤ := by
@@ -765,8 +761,7 @@ theorem conductor_classHecke (ψ : AddChar (Additive (ClassGroup (𝓞 F))) ℂ)
     apply ord_eq_zero_of_mem_unitsLevel (n := 0)
     rw [← finiteComponent_toFinite, toFinite_ofFinite]
     exact Subgroup.mem_comap.mp (Subgroup.mem_iInf.mp hz v)
-  have hd := ((classHecke ψ).map_idealLevel_le_ker_iff hne).mp hle
-  exact top_le_iff.mp (Ideal.le_of_dvd hd)
+  exact top_le_iff.mp (Ideal.le_of_dvd (((classHecke ψ).map_idealLevel_le_ker_iff hne).mp hle))
 
 theorem coeff_classHecke (ψ : AddChar (Additive (ClassGroup (𝓞 F))) ℂ)
     (J : Ideal (𝓞 F)) (hJ : J ≠ ⊥) :
@@ -778,8 +773,7 @@ theorem coeff_classHecke (ψ : AddChar (Additive (ClassGroup (𝓞 F))) ℂ)
     intro v
     have hv : ¬ v.asIdeal ∣ (classHecke ψ).conductor := by
       rw [conductor_classHecke]
-      intro h
-      exact v.isPrime.ne_top (top_le_iff.mp (Ideal.le_of_dvd h))
+      exact fun h => v.isPrime.ne_top (top_le_iff.mp (Ideal.le_of_dvd h))
     rw [HeckeCharacter.coeff_asIdeal_of_not_dvd _ hv]
     obtain ⟨x, hx, hxI⟩ := exists_mem_primeToLevel (primeIdealUnit_mem_idealsPrimeTo hv)
     have heq : (primeIdealUnit v : (FractionalIdeal (𝓞 F)⁰ F)ˣ) =
@@ -790,8 +784,7 @@ theorem coeff_classHecke (ψ : AddChar (Additive (ClassGroup (𝓞 F))) ℂ)
   refine UniqueFactorizationMonoid.induction_on_prime (P := fun I : Ideal (𝓞 F) => ∀ hI : I ≠ ⊥,
       (classHecke ψ).coeff I =
         ψ (Additive.ofMul (ClassGroup.mk0 ⟨I, mem_nonZeroDivisors_of_ne_zero hI⟩))) J ?_ ?_ ?_ hJ
-  · intro h
-    exact absurd Ideal.zero_eq_bot h
+  · exact fun h => absurd Ideal.zero_eq_bot h
   · intro x hx hx0
     obtain rfl := Ideal.isUnit_iff.mp hx
     have h1 : (⟨⊤, mem_nonZeroDivisors_of_ne_zero hx0⟩ : (Ideal (𝓞 F))⁰) = 1 :=
@@ -799,8 +792,7 @@ theorem coeff_classHecke (ψ : AddChar (Additive (ClassGroup (𝓞 F))) ℂ)
     rw [HeckeCharacter.coeff_top, h1, map_one, ofMul_one, AddChar.map_zero_eq_one]
   · intro a p ha hp ih hpa
     have ha' : a ≠ ⊥ := by
-      rw [← Ideal.zero_eq_bot]
-      exact ha
+      rwa [← Ideal.zero_eq_bot]
     have hp0 : p ≠ ⊥ := by
       rw [← Ideal.zero_eq_bot]
       exact hp.ne_zero
@@ -833,8 +825,7 @@ theorem discrNormConductor_eq_dF_of_unramified :
   have htop : χ.conductor = ⊤ := by
     have h := (χ.map_idealLevel_le_ker_iff (𝔪 := ⊤) top_ne_bot).1
       ((map_idealLevel_le_standardOpenSubgroup ⊤).trans hχ)
-    rw [Ideal.dvd_iff_le, top_le_iff] at h
-    exact h
+    rwa [Ideal.dvd_iff_le, top_le_iff] at h
   rw [HeckeCharacter.discrNormConductor, htop, Ideal.absNorm_top, GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.dF]
   simp
 
@@ -869,8 +860,7 @@ theorem fe_of_parts (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (χ :
   have key := χ.continuedLFunction_functional_equation (s := s)
     (by rw [hG]; exact pow_ne_zero _ (nz s h1))
     (by rw [hG']; exact pow_ne_zero _ (nz _ h2))
-  rw [hG, hG', hD, hR] at key
-  exact key
+  rwa [hG, hG', hD, hR] at key
 
 end GlobalTheory.CompanionTheory.PartialZeta
 end -- clump:auto
@@ -954,8 +944,7 @@ theorem differentiableOn_continuedLFunction :
       MonoidHom.mem_ker.1 (hU (moduleSection_mem_standardOpenSubgroup w t))
     have h0 : archExponent w χ = 0 := archExponent_unique w χ fun t ↦ by simp [hs t]
     have hτ0 : τ = 0 := (archExponent_eq_of_forall hτ w).symm.trans h0
-    have hd := HeckeCharacter.differentiableOn_continuedLFunction_of_forall hτ
-    simpa [hτ0] using hd
+    simpa [hτ0] using HeckeCharacter.differentiableOn_continuedLFunction_of_forall hτ
   · exact (χ.differentiable_continuedLFunction h).differentiableOn
 
 end GlobalTheory.CompanionTheory.PartialZeta
@@ -1178,8 +1167,7 @@ theorem isPartialZeta_of_indicator {ι : Type} [Fintype ι] (χ : ι → HeckeCh
           ((Ideal.absNorm (J.1 : Ideal (𝓞 F)) : ℕ) : ℂ) ^ (-s) := funext fun J => by
       simp only [Function.comp_apply]
       rw [hfac, show g J = (J.1 : Ideal (𝓞 F)) from rfl, (horth J.1).1 J.2, one_mul]
-    rw [h3] at h2
-    exact h2
+    rwa [h3] at h2
 
 theorem card_classGroup_ne_zero : (Fintype.card (ClassGroup (𝓞 F)) : ℂ) ≠ 0 :=
   Nat.cast_ne_zero.2 Fintype.card_ne_zero
@@ -1232,8 +1220,7 @@ theorem functionalEquation_classHecke [IsTotallyReal F] (ψ : AddChar (Additive 
     (gammaFactor_eq_of_unramified F _ hU)
     (gammaFactor_eq_of_unramified F _ (standardOpenSubgroup_le_ker_inv F _ hU))
     (rootNumber_eq_coeff_different F _ hU) s h1 h2
-  rw [← hD, coeff_classHecke ψ _ (nonZeroDivisors.coe_ne_zero D)] at h
-  exact h
+  rwa [← hD, coeff_classHecke ψ _ (nonZeroDivisors.coe_ne_zero D)] at h
 
 end GlobalTheory.CompanionTheory.Hypotheses₂
 
@@ -1276,8 +1263,7 @@ theorem exists_lie (H : Subgroup 𝔸ˣ) (hH : IsClosed (H : Set 𝔸ˣ)) : ∃ 
   have hsub : ∀ u ∈ H, (u : 𝔸) ∈ (M : Set 𝔸) := fun u hu => subset_closure ⟨u, hu, rfl⟩
   have hcl : ∀ u : 𝔸ˣ, (u : 𝔸) ∈ (M : Set 𝔸) → u ∈ H := fun u hu => by
     have : u ∈ closure (H : Set 𝔸ˣ) := by
-      rw [Units.isOpenEmbedding_val.isInducing.closure_eq_preimage_closure_image]
-      exact hu
+      rwa [Units.isOpenEmbedding_val.isInducing.closure_eq_preimage_closure_image]
     rwa [hH.closure_eq] at this
   have hm : ∀ a ∈ (M : Set 𝔸), ∀ b ∈ (M : Set 𝔸), a * b ∈ (M : Set 𝔸) := fun a ha b hb => M.mul_mem ha hb
   have hi : ∀ Z : 𝔸, exp Z ∈ (M : Set 𝔸) → exp (-Z) ∈ (M : Set 𝔸) := fun Z hZ =>

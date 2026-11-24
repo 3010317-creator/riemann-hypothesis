@@ -126,10 +126,8 @@ theorem linearIndependent_chars [Module.Free ℤ X] :
   have h1 : t (Multiplicative.ofAdd χ) = t (Multiplicative.ofAdd ψ) :=
     Units.ext (DFunLike.congr_fun h t)
   have h2 : Units.mk0 z hz0 ^ (b.repr χ j - b.repr ψ j) = 1 := by
-    rw [zpow_sub, mul_inv_eq_one]
-    exact h1
-  have h3 := congrArg Units.val (pow_natAbs_eq_one.2 h2)
-  exact hz (by simpa using h3)
+    rwa [zpow_sub, mul_inv_eq_one]
+  exact hz (by simpa using (congrArg Units.val (pow_natAbs_eq_one.2 h2)))
 
 variable {H : Type} [CommGroup H] (τ : (Multiplicative X →* kˣ) →* H) (A : Subalgebra k (H → k))
 
@@ -314,8 +312,7 @@ theorem exists_lift {T N G : Over (Sp k)} [LocallyOfFiniteType T.hom] [IsReduced
     obtain ⟨n, hn⟩ := h1 ⟨t, rfl⟩
     have h3 : n ∈ ν.left ⁻¹ᵁ G.left.basicOpen a := by
       change ν.left n ∈ G.left.basicOpen a
-      rw [hn]
-      exact ht
+      rwa [hn]
     rw [Scheme.preimage_basicOpen, show ν.left.app U a = 0 from ν.left.ideal_ker_le U ha,
       Scheme.basicOpen_zero] at h3
     exact h3
@@ -394,8 +391,7 @@ theorem exists_const_of_invariant {G B T N : Over (Sp k)} [GrpObj G] [GrpObj B] 
       obtain ⟨t, ht⟩ := hsat ((k₁ ≫ l) ≫ ν) (k₂ ≫ l) (by
         simp only [Category.assoc, reassoc_of% hl, hP, reassoc_of% e'])
       have := hf' t (k₂ ≫ l)
-      rw [(cancel_mono ν).1 ht] at this
-      exact this
+      rwa [(cancel_mono ν).1 ht] at this
   let s : N ⟶ P := Over.homMk (pullback.lift ν.left m.left (congrArg (·.left) hm).symm) (by
     change _ ≫ pullback.snd q.left β.left ≫ Y.hom = _
     rw [pullback.lift_snd_assoc, Over.w])
@@ -620,8 +616,7 @@ theorem torus_torsion (k : Type) [Field k] (X : Type) [AddCommGroup X] [Module.F
     have : (MonoidHom.toAdditiveRight (e₁ s.1)).toIntLinearMap =
         (MonoidHom.toAdditiveRight (e₁ t.1)).toIntLinearMap :=
       b.ext fun j => congrArg Additive.ofMul (e₃.injective (congrArg Subtype.val (congrFun h j)))
-    refine MonoidHom.ext fun x => ?_
-    exact congrArg Additive.toMul (DFunLike.congr_fun this x)
+    exact MonoidHom.ext fun x => congrArg Additive.toMul (DFunLike.congr_fun this x)
   refine ⟨Finite.of_injective _ hf, (Nat.card_le_card_of_injective _ hf).trans ?_⟩
   rw [Nat.card_fun, Nat.card_eq_fintype_card (α := Fin _), Fintype.card_fin]
   exact Nat.pow_le_pow_left (by simpa using card_rootsOfUnity k n) _

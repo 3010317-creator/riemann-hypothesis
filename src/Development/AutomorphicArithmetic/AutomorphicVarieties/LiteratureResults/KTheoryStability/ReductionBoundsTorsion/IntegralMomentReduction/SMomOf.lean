@@ -637,8 +637,7 @@ theorem local_decomp {ι : Type*} [Fintype ι] [Nonempty ι] {N : ℕ} (hN : 1 �
     obtain ⟨w⟩ := ‹Nonempty ι›
     have h1 := hbM w ⟨0, hN⟩ ⟨0, hN⟩
     have h2 := hbm w ⟨0, hN⟩
-    by_contra h
-    push Not at h
+    by_contra! h
     have h3 : 1 < M⁻¹ := (one_lt_inv₀ hM).mpr h
     linarith
   have hlogM : 0 ≤ Real.log M := Real.log_nonneg hM1
@@ -1083,8 +1082,7 @@ theorem lintegral_le_of_cover (μ : Measure G) [μ.IsMulLeftInvariant] (Γ : Sub
     intro x hx
     obtain ⟨γ, hγ, hxT⟩ := hT x hx
     refine Set.mem_iUnion.2 ⟨(⟨γ, hγ⟩ : Γ)⁻¹, ?_, hx⟩
-    rw [Set.mem_smul_set_iff_inv_smul_mem, inv_inv]
-    exact hxT
+    rwa [Set.mem_smul_set_iff_inv_smul_mem, inv_inv]
   calc ∫⁻ x in F, f x ∂μ ≤ ∫⁻ x in ⋃ g : Γ, g • T ∩ F, f x ∂μ := lintegral_mono_set hcov
     _ ≤ ∑' g : Γ, ∫⁻ x in g • T ∩ F, f x ∂μ := lintegral_iUnion_le _ _
     _ = ∫⁻ x in T, f x ∂μ := by
@@ -1194,8 +1192,7 @@ theorem sMom_of_parts (hD : SDisc) (hH : SHtB) (hI : SIntB) (hR : SRed) (h : SHt
     refine ⟨?_⟩
     have h0 := GroundTheory.Automorphic.RightCosetSpace.lintegral_quotientMeasure (latS L N) μ (fun _ => 1)
     rw [lintegral_one, setLIntegral_one] at h0
-    rw [h0]
-    exact hvol
+    rwa [h0]
   have hright : μ.IsMulRightInvariant :=
     GroundTheory.Automorphic.RightCosetSpace.isMulRightInvariant_of_isFiniteMeasure_quotientMeasure (latS L N) μ
   refine ⟨⟨μ, _, inferInstance, hright, hF, hvol⟩, ?_⟩
@@ -1442,8 +1439,7 @@ private theorem posIdele_infinite_component (w : InfinitePlace L) (ρ : ℝ) (h�
   unfold Reduction.posIdele
   rw [finset_prod_units_component_eq_prod, Finset.prod_eq_single w]
   · exact moduleSection_component_self_eq_posRealElem _ _
-  · intro v _ hv
-    exact moduleSection_component_eq_one_of_ne hv _ _
+  · exact fun v _ hv => moduleSection_component_eq_one_of_ne hv _ _
   · simp
 
 theorem ph_posIdele {w : InfinitePlace L} (hw : w.IsComplex) (r : Fin N → ℝ) (hr : ∀ i, 0 < r i) :
@@ -1464,7 +1460,6 @@ theorem ph_posIdele {w : InfinitePlace L} (hw : w.IsComplex) (r : Fin N → ℝ)
     unfold GroundTheory.Global.posRealElem
     rw [dite_eq_right hnr, RingEquiv.apply_symm_apply, Real.sqrt_sq (hr i).le]
   · rw [diagonal_apply_ne _ h, diagonal_apply_ne _ h]
-    show Completion.ringEquivComplexOfIsComplex hw 0 = 0
     exact map_zero _
 
 private theorem mem_unitaryGroup_of_vecMul_norm_sq_preserved (M : Matrix (Fin N) (Fin N) ℂ)
@@ -1476,8 +1471,7 @@ private theorem mem_unitaryGroup_of_vecMul_norm_sq_preserved (M : Matrix (Fin N)
     rw [EuclideanSpace.norm_eq, EuclideanSpace.norm_eq, Matrix.ofLp_toEuclideanCLM, Matrix.mulVec_transpose, h]
   have ha := (ContinuousLinearMap.norm_map_iff_adjoint_comp_self _).mp hn
   rw [← ContinuousLinearMap.star_eq_adjoint] at ha
-  rw [map_mul, map_star, map_one]
-  exact ha
+  rwa [map_mul, map_star, map_one]
 
 theorem ph_mem_unitary {w : InfinitePlace L} (hw : w.IsComplex) {k : GL (Fin N) w.Completion}
     (hk : k ∈ Reduction.archCompact w) :

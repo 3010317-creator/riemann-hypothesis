@@ -148,8 +148,7 @@ theorem isCosetRep_map (R : RealDat D A Ks) (i : Fin D.R.m) (v : HeightOneSpectr
     obtain ⟨b1, b2⟩ := (mem_locK_iff R i v ⟨k₂, g₂⟩).1 hk₂
     have hx2 : (⟨x, hxG⟩ : GfC (Wc D i)) = ⟨k₁, g₁⟩ * α * ⟨k₂, g₂⟩ := by
       apply Subtype.ext
-      simp only [Subgroup.coe_mul]
-      exact hx
+      simpa only [Subgroup.coe_mul] using hx
     have hex := hC.2 ⟨x, hxG⟩ ⟨_, _, a1, a2, b1, b2, hx2⟩
     obtain ⟨δ, ⟨hδC, hδK, hδc⟩, huniq⟩ := hex
     have hm := (mem_locK_iff R i v (δ⁻¹ * (⟨x, hxG⟩ : GfC (Wc D i)))).2 ⟨hδK, hδc⟩
@@ -396,8 +395,7 @@ theorem out_mk {Γ : Type} [Group Γ] (K : Subgroup Γ) (c : Γ →* Γ) (δ : �
   have e := QuotientGroup.eq.1 (QuotientGroup.out_eq' (QuotientGroup.mk δ : Γ ⧸ K.comap c))
   refine ⟨δ⁻¹ * Quotient.out (QuotientGroup.mk δ : Γ ⧸ K.comap c), ?_, by group⟩
   have := (K.comap c).inv_mem e
-  rw [mul_inv_rev, inv_inv] at this
-  exact this
+  rwa [mul_inv_rev, inv_inv] at this
 
 end GlobalTheory.UpInj.LocalSum
 
@@ -485,8 +483,7 @@ theorem GlobalTheory.UpInj.localSum_hasSum : ∀ (Γ : Type) [Group Γ] (K : Sub
       have h' : (QuotientGroup.mk δ : Γ ⧸ K.comap c) = QuotientGroup.mk δ' := congrArg Subtype.val h
       have hfix : c (δ⁻¹ * δ') = δ⁻¹ * δ' := by rw [map_mul, map_inv, (hC.1 δ hδ).1, (hC.1 δ' hδ').1]
       rw [QuotientGroup.eq, Subgroup.mem_comap, hfix] at h'
-      apply Subtype.ext
-      exact (hC.2 δ' (hC.1 δ' hδ').2).unique ⟨hδ, h', hfix⟩ ⟨hδ', by simp, by simp⟩
+      exact Subtype.ext ((hC.2 δ' (hC.1 δ' hδ').2).unique ⟨hδ, h', hfix⟩ ⟨hδ', by simp, by simp⟩)
     have hsurj : Function.Surjective e := by
       rintro ⟨x, hx⟩
       obtain ⟨k₁, k₂, h1, h2, h3, h4, hxe⟩ := (memfib x).1 hx
@@ -494,8 +491,7 @@ theorem GlobalTheory.UpInj.localSum_hasSum : ∀ (Γ : Type) [Group Γ] (K : Sub
       refine ⟨⟨δ, hδ⟩, Subtype.ext ?_⟩
       show (QuotientGroup.mk δ : Γ ⧸ K.comap c) = x
       conv_rhs => rw [← QuotientGroup.out_eq' x]
-      rw [QuotientGroup.eq, Subgroup.mem_comap, map_mul, map_inv, (hC.1 δ hδ).1]
-      exact hK
+      rwa [QuotientGroup.eq, Subgroup.mem_comap, map_mul, map_inv, (hC.1 δ hδ).1]
     have hT : ∀ f : Γ ⧸ K.comap c → (H →L[ℂ] H),
         ∑' y : {x // q x = q x0}, f y.1 = ∑ δ ∈ C, f (QuotientGroup.mk δ) := by
       intro f
@@ -564,8 +560,7 @@ theorem quotient_equiv_restrictedFamilies : ∀ (Γ : Type) [Group Γ] (K : Subg
     rw [QuotientGroup.eq, hK]
     intro v
     have := h' v
-    rw [hF, hF, hmk] at this
-    exact this
+    rwa [hF, hF, hmk] at this
   have hcw : ∀ w (g : Γ), (QuotientGroup.mk (c w g) : Γ ⧸ K.comap (c w)) = QuotientGroup.mk g := by
     intro w g
     rw [hmk, map_mul, map_inv, hidem, inv_mul_cancel]
@@ -671,9 +666,7 @@ theorem finprod_components_of_rightInvariant_mul :
   intro g
   have hsub : Function.mulSupport (fun v => a (c v g)) ⊆ ((hfin g).toFinset : Set ι) := by
     intro w hw
-    simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-    intro hwK
-    exact hw (haK _ hwK)
+    simpa only [Set.Finite.coe_toFinset, Set.mem_setOf_eq] using fun hwK => hw (haK _ hwK)
   rw [finprod_eq_prod_of_mulSupport_subset _ hsub]
   exact key _ g (by simp)
 
@@ -727,8 +720,7 @@ theorem coef_mult_small : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T :
       obtain ⟨g, hgC, rfl⟩ := Finset.mem_map.1 hg
       obtain ⟨g', hgC', rfl⟩ := Finset.mem_map.1 hg'
       refine congrArg _ (hCd g hgC g' hgC' (Subgroup.mem_subgroupOf.2 ?_))
-      rw [Subgroup.coe_mul, Subgroup.coe_inv]
-      exact hgg
+      rwa [Subgroup.coe_mul, Subgroup.coe_inv]
 
 
 

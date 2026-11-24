@@ -72,8 +72,7 @@ theorem mt_mul_frame (W : HSp D) {s : ℕ} (L : Matrix (Fin W.rank) (Fin s) D.ho
   induction hn using Subgroup.closure_induction with
   | mem g hg =>
     have h1 : (Formalism.L2.Theta.mt W g - 1) * L.map (incA D) = 0 := hg.1
-    rw [Matrix.sub_mul, Matrix.one_mul, sub_eq_zero] at h1
-    exact h1
+    rwa [Matrix.sub_mul, Matrix.one_mul, sub_eq_zero] at h1
   | one => simp [Formalism.L2.Theta.mt]
   | mul x y _ _ hx hy => rw [_root_.GlobalTheory.BesselCompare.mt_mul, Matrix.mul_assoc, hy, hx]
   | inv x _ hx =>
@@ -183,7 +182,6 @@ theorem stab : ∀ (D : D7) (W : HSp D) (s : ℕ) (L : Matrix (Fin W.rank) (Fin 
     · intro x hx
       rw [← hG, ← hσ, ← hP] at hx
       exact conj_unipotentRadical_kernelCondition_of_rationalFixed W L P γ m γ₀ γi hγ₀ hγγi hPγi hΓL h3 x hx
-  intro n hn
-  exact key hn
+  exact fun n hn => key hn
 
 end GlobalTheory.FrameStab

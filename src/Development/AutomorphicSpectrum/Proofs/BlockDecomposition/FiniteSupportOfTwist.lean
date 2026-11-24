@@ -123,8 +123,7 @@ theorem cover_of_fin {H : Type} [Group H] [TopologicalSpace H] [IsTopologicalGro
   refine Set.mem_biUnion (x := DoubleCoset.mk (twCent θ d) K z) ⟨k⁻¹, inv_mem hk, ?_⟩ ⟨k⁻¹, inv_mem hk, ez⟩
   rw [ez, map_mul]
   have e3 : (h * z)⁻¹ * d * (θ h * θ z) = z⁻¹ * (h⁻¹ * (d * θ h)) * θ z := by group
-  rw [e3, ← hh', inv_mul_cancel_left]
-  exact hz
+  rwa [e3, ← hh', inv_mul_cancel_left]
 
 theorem glue {S : Set (Pl E)} (hS : IsSection S) (δ₁ : GL (Fin a) E) (δ₂ : GL (Fin b) E) (t₀ : Gf E a b)
     (ht : ∀ w ∈ S, atH a b w t₀ ∈ twCent (thW a b w) (dW w δ₁ δ₂)) :
@@ -147,8 +146,7 @@ theorem glue {S : Set (Pl E)} (hS : IsSection S) (δ₁ : GL (Fin a) E) (δ₂ :
       rw [e1, hg, thP_thP, map_mul, map_mul, map_inv, hin u huS]
       group
     · have hm : atH a b u t₀ * dW u δ₁ δ₂ = dW u δ₁ δ₂ * thW a b u (atH a b u t₀) := ht u huS
-      rw [usage₇ hsp, hδ, atH_dG_of_not_split hsp, hin u huS]
-      exact hm
+      rwa [usage₇ hsp, hδ, atH_dG_of_not_split hsp, hin u huS]
   · obtain ⟨v, hv, rfl⟩ := (mem_or_conj hS u).resolve_left huS
     have hne : GlobalTheory.EulerTw.cPl E v ≠ v := fun e => huS (by rw [e]; exact hv)
     have hsp := split_of_conj_ne hne
@@ -158,8 +156,7 @@ theorem glue {S : Set (Pl E)} (hS : IsSection S) (δ₁ : GL (Fin a) E) (δ₂ :
     have hc : atH a b v (t₀ * (δ * thP E a b δ)) = atH a b v ((δ * thP E a b δ) * t₀) := by
       have hm : atH a b v t₀ * dW v δ₁ δ₂ = dW v δ₁ δ₂ * thW a b v (atH a b v t₀) := ht v hv
       rw [thW_of_split hsp] at hm
-      rw [map_mul (atH a b v) t₀, map_mul (atH a b v) (δ * _) t₀, hδ, atH_norm_of_split hsp]
-      exact hm
+      rwa [map_mul (atH a b v) t₀, map_mul (atH a b v) (δ * _) t₀, hδ, atH_norm_of_split hsp]
     have hc' := atH_thP_congr (cPl_cPl v) hc
     simp only [map_mul, map_inv, thP_thP] at hc' ⊢
     have h3 := congrArg (fun z => (atH a b (GlobalTheory.EulerTw.cPl E v) (thP E a b δ))⁻¹ * z) hc'
@@ -254,8 +251,7 @@ theorem exists_cover (hU : GlobalTheory.BCT.Unr E) (LS : LocSupp) (UA : UnitAE) 
     by_cases h : IsSplitAt w
     · simp only [C', ite_eq_left h]
       exact ((test_parts h₁).1 w).isCompact.mul ((test_parts h₂).1 w).isCompact
-    · simp only [C', ite_eq_right h]
-      exact ((test_parts h₁).1 w).isCompact
+    · simpa only [C', ite_eq_right h] using ((test_parts h₁).1 w).isCompact
   choose B₀ hB₀c hB₀ using fun w : Pl E => cover_of_fin (thW a b w) (K2 a b w) (hKc w) (dW w δ₁ δ₂) (C' w)
     ((LS E hU a b w (dW w δ₁ δ₂) (sep₁ w) (sep₂ w)).1 (C' w) (hC' w))
   have hUA := UA E hU a b S hS δ₁ δ₂ e₁ e₂

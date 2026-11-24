@@ -252,16 +252,13 @@ theorem exists_wit (hU : Out.UnifBaseChangeSt) (h5 : Out.Laws5) (h6 : Out.UnifUn
         X.presheaf.map (homOfLE (h.trans h')).op := by
       rw [← Functor.map_comp]
       rfl
-    apply Units.ext
-    exact congrArg (fun φ => φ.hom (x : Γ(X, U))) e
+    exact Units.ext (congrArg (fun φ => φ.hom (x : Γ(X, U))) e)
 
   have res_g_mul_res_g_eq_res_g_of_isLB {X : Scheme.{0}} {L : LB X} (hL : L.IsLB) (i j k : L.ι) {W : X.Opens}
       (h₁ : W ≤ L.U i ⊓ L.U j) (h₂ : W ≤ L.U j ⊓ L.U k) (h₃ : W ≤ L.U i ⊓ L.U k) :
       res h₁ (L.g i j) * res h₂ (L.g j k) = res h₃ (L.g i k) := by
     have hW : W ≤ L.U i ⊓ L.U j ⊓ L.U k := le_inf h₁ (h₂.trans inf_le_right)
-    have key := congrArg (⇑(res hW)) (hL.cocycle i j k)
-    simp only [map_mul, res_res_lemma] at key
-    exact key
+    simpa only [map_mul, res_res_lemma] using congrArg (⇑(res hW)) (hL.cocycle i j k)
 
   have isGen_g_iso_self_of_isLB {X : Scheme.{0}} {L : LB X} (hL : L.IsLB) :
       (⟨fun p : L.ι × L.ι => L.g p.1 p.2⟩ : LB.Iso L L).IsGen := by
@@ -289,10 +286,8 @@ theorem exists_wit (hU : Out.UnifBaseChangeSt) (h5 : Out.Laws5) (h6 : Out.UnifUn
     cases h
     refine ⟨⟨fun p : L₁.L.ι × L₁.L.ι => L₁.L.g p.1 p.2⟩, ⟨fun p : L₁.L.ι × L₁.L.ι => L₁.L.g p.1 p.2⟩,
       isGen_g_iso_self_of_isLB L₁.isLB, isGen_g_iso_self_of_isLB L₁.isLB, ?_, ?_⟩
-    · intro p
-      exact L₁.rigGen p.1 p.2
-    · intro p
-      exact L₁.rigGen p.1 p.2
+    · exact fun p => L₁.rigGen p.1 p.2
+    · exact fun p => L₁.rigGen p.1 p.2
   obtain ⟨wL₀, -, g₀, -, m₀, -⟩ := exists_iso_pair_of_eq (P.bundle.trans P₁.bundle.symm)
   obtain ⟨hD₁, hlev, holin⟩ := h6 R I hR P₁.D P.D P₁.A P.A t₁.G t₁.semi P₁.U P.U wL₀ g₀ m₀
   obtain ⟨xl₁, el₁⟩ := holin (𝓞 E) P₁.oD P.oD P₁.oA P.oA t₁.act.toRingAct P₁.lin P.lin
@@ -917,8 +912,7 @@ theorem hasArcData_of_traitData : Laws → Laws2 → Laws3 → Laws4 → Laws5 �
     have h := hasArcData_trait h₁ h₂ h₃ h₄ h₅ h₆ hE hU hP hH Y a hp y χ hχ hT (cdvr_powerSeries O') (RingHom.id _)
       Function.injective_id PowerSeries.X_prime.not_unit (fun x hx => (IsUnit.mk0 x hx).map (PowerSeries.C (R := O')))
     have e : spMap (RingHom.id (PowerSeries O')) = 𝟙 _ := Spec.map_id _
-    rw [e, Category.id_comp, PowerSeries.maximalIdeal_eq_span_X] at h
-    exact h
+    rwa [e, Category.id_comp, PowerSeries.maximalIdeal_eq_span_X] at h
   · have hi := IsFractionRing.injective O' (FractionRing O')
     have hX : ¬ IsUnit (PowerSeries.map (algebraMap O' (FractionRing O')) PowerSeries.X) := by
       rw [PowerSeries.map_X]
@@ -941,8 +935,7 @@ theorem hasArcData_of_traitData : Laws → Laws2 → Laws3 → Laws4 → Laws5 �
     have := hadm.2.2.1
     refine GlobalTheory.T.arcData_descends_from_completeDVR h₁ h₂ h₃ h₄ h₅ h₆ hH E H D l Xo c W₀ Y O' b a _ _ _ _ hadm.1 hadm.2.2.2.1.ne_top
       PowerSeries.C_injective _ _ hχ.symm t m P hPt _ hV _ (PowerSeries.map_injective _ hi) ?_ hX hC h
-    rw [Ideal.map_span, Set.image_singleton, Ideal.span_singleton_le_iff_mem]
-    exact hX
+    rwa [Ideal.map_span, Set.image_singleton, Ideal.span_singleton_le_iff_mem]
 
 end GlobalTheory.ArcData
 end -- clump:auto

@@ -106,8 +106,7 @@ theorem _root_.GlobalTheory.Ker.tsum_indicator_coset (Γ K : Subgroup G) (a : G)
       · rw [Set.indicator_of_mem hγ, Set.indicator_of_mem]
         · rfl
         · exact hγ
-      · rw [Set.indicator_of_notMem hγ, Set.indicator_of_notMem]
-        exact hγ
+      · rwa [Set.indicator_of_notMem hγ, Set.indicator_of_notMem]
     simp_rw [hterm]
     rw [← tsum_subtype T (1 : Γ → ENNReal)]
     simp only [Pi.one_apply]
@@ -199,8 +198,7 @@ theorem _root_.GlobalTheory.Ker.integral_fundamentalDomain_eq_sum_doubleCoset : 
     · intro j _ hj
       exact Set.indicator_of_notMem
         (show x ∉ {x : G | ∃ γ ∈ Γ, ∃ k ∈ K, x = γ * h j * k} from fun hx => hj (hiuniq j hx)) _
-    · intro hi'
-      exact absurd (Finset.mem_univ i) hi'
+    · exact fun hi' => absurd (Finset.mem_univ i) hi'
   have hint : ∀ i, IntegrableOn
       ({x : G | ∃ γ ∈ Γ, ∃ k ∈ K, x = γ * h i * k}.indicator (fun _ => F (h i))) 𝓖 ν := by
     intro i

@@ -118,8 +118,7 @@ theorem exists_hol_away {A : Type} [CommRing A] (ψ : ℂ → (A →+* ℂ)) (V 
     if h : u ∈ V then IsLocalization.Away.lift a (g := ψ u) (Ne.isUnit (ha u h))
     else IsLocalization.Away.lift a (g := ψ u₀) (Ne.isUnit (ha u₀ h₀))
   have hev : ∀ u ∈ V, (ev u).comp (algebraMap A _) = ψ u := fun u hu => by
-    simp only [ev, dite_eq_left hu]
-    exact IsLocalization.Away.lift_comp a _
+    simpa only [ev, dite_eq_left hu] using IsLocalization.Away.lift_comp a _
   refine ⟨ev, hev, fun t => ?_⟩
   obtain ⟨n, b, hb⟩ := IsLocalization.Away.surj a t
   refine (((hψ b).div ((hψ a).pow n) fun u hu => pow_ne_zero n (ha u hu))).congr fun u hu => ?_
@@ -217,8 +216,7 @@ theorem countable_eq_of_differentiableOn_of_ne {g : ℕ} {U : Set ℂ} {f f' : �
 theorem exists_const_substitution_of_holomorphic_families :
     ∀ (L D : Type) [Countable D] (g : ℕ) (act : D → L → L) (U : Set ℂ) (s s' : ℂ → L → Fin g → ℂ), IsOpen U → IsPreconnected U → U.Nonempty → (∀ a, DifferentiableOn ℂ (fun w => s w a) U) → (∀ a, DifferentiableOn ℂ (fun w => s' w a) U) → (∀ w ∈ U, ∃ δ, ∀ a, s' w a = s w (act δ a)) → ∃ δ, ∀ w ∈ U, ∀ a, s' w a = s w (act δ a) := by
   intro L D _ g act U s s' hU hc hne hs hs' h
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   choose w hw a ha using hcon
   have hcount : ∀ δ, {z | z ∈ U ∧ s' z (a δ) = s z (act δ (a δ))}.Countable := fun δ =>
     countable_eq_of_differentiableOn_of_ne hU hc (hs' (a δ)) (hs (act δ (a δ)))
@@ -313,8 +311,7 @@ private theorem mix_apply_eq_one_apply_of_mem (hA : A.det ≠ 0) {j : Fin r} (hj
     mixRow p A P a j = (1 : Matrix (Fin r) (Fin r) ℂ) a j := by
   by_cases ha : p a
   · simp only [mixRow, Matrix.of_apply, ite_eq_left ha]
-  · simp only [mixRow, Matrix.of_apply, ite_eq_right ha]
-    exact inv_mul_mixCol p hA hj a
+  · simpa only [mixRow, Matrix.of_apply, ite_eq_right ha] using inv_mul_mixCol p hA hj a
 
 theorem mix_col_eq (hA : A.det ≠ 0) (hQ : (mixCol p A P).det ≠ 0) {j : Fin r} (hj : p j) (k : Fin r) :
     (mixCol p A P * (mixRow p A P)⁻¹) k j = A k j := by
@@ -352,10 +349,8 @@ theorem differentiableOn_inv {B : Set ℂ} {M : ℂ → Matrix (Fin r) (Fin r) �
     intro k l
     by_cases hk : k = j
     · subst hk
-      simp only [Matrix.updateRow_self]
-      exact differentiableOn_const _
-    · simp only [Matrix.updateRow_ne hk]
-      exact hM k l
+      simpa only [Matrix.updateRow_self] using differentiableOn_const _
+    · simpa only [Matrix.updateRow_ne hk] using hM k l
   have e : (fun w => (M w)⁻¹ i j) = fun w => ((M w).det)⁻¹ * (M w).adjugate i j := by
     funext w
     rw [Matrix.inv_def, Matrix.smul_apply, Ring.inverse_eq_inv, smul_eq_mul]
@@ -578,8 +573,7 @@ theorem exists_holomorphic_frames : ∀ (E : Type) [Field E] [NumberField E] [Is
       intro w
       simp only [GlobalTheory.GenericFrames.pc, ite_eq_right ha, he]
       simp [Matrix.mulVec, dotProduct, Pi.single_apply]
-    have h := hall (Pi.single k 1) τ a
-    simpa only [hv] using h
+    simpa only [hv] using hall (Pi.single k 1) τ a
   choose P hPdet hP using X.signature
   have hdetA : ∀ w ∈ B, ∀ τ, (mat (x₁ w) τ).det ≠ 0 :=
     fun w hw τ => ((Data.mem_dom_iff X _).mp (hdom w hw) τ).1
@@ -880,19 +874,16 @@ theorem Adp.comp {y : FrPt Xo c (CAt σ)} {k : Fin F.n} {P : (F.Di k).La →+ (F
     obtain ⟨a1, a2, a3, a4, Hm, a5, a6, a7⟩ := hP
     refine ⟨fun a x i => ?_, a2.comp δ.injective, ?_, by rw [hr, a4], Hm, a5, a6, fun x y => ?_⟩
     · have := a1 a (δ x) i
-      rw [← map_smul] at this
-      exact this
+      rwa [← map_smul] at this
     · have : (P.comp δ.toLinearMap.toAddMonoidHom).range = P.range := SetLike.coe_injective hr
-      rw [this]
-      exact a3
+      rwa [this]
     · rw [← h1]
       exact a7 _ _
   obtain ⟨-, hu, hex⟩ := GlobalTheory.FamRigid.ex_eq_of_level_group GlobalTheory.latMinkowski E H Dw l Xo _ g _ F k _ P δ 1 hQ hP h1 h2 h3
     (fun a => by rw [Matrix.one_mulVec]; rfl)
   refine ⟨hQ, hx.trans hu.symm, fun τ i => ?_⟩
   simp only [Matrix.one_mulVec] at hex
-  simp only [← hex]
-  exact hd τ i
+  simpa only [← hex] using hd τ i
 
 theorem Adp.exists_lev {y : FrPt Xo c (CAt σ)} {k : Fin F.n} {P P' : (F.Di k).La →+ (Fin g → ℂ)} (hP : Adp F y k P)
     (hP' : Adp F y k P') : ∃ δ : Lev (F.Di k) l, ∀ a, P' a = P (δ.1 a) := by
@@ -945,8 +936,7 @@ theorem exists_adp_local {R : Type} [CommRing R] (xR : Sp R ⟶ Xo.X)
     rw [(hy b (hsub hb)).2] at this
     have hmap : dualMap (ev b) =
         ReciprocityTheory.ChartRestriction.G.Chart.dualMapR (ev b) := RingHom.ext fun _ => rfl
-    rw [← hmap]
-    exact this
+    rwa [← hmap]
   have hVd : ∀ i j, DifferentiableAt ℂ (fun b => V b i j) b :=
     HolFrameMatrix.differentiableAt_of_mul_eq_one V (fun b => Matrix.of fun i j => w b j i) b
       (fun i j => differentiableAt_pi.1 (hwd j) i) (by
@@ -1030,8 +1020,7 @@ theorem exists_pow_mem {E : Type} [Field E] [NumberField E] [IsCMField E] {H : R
     constructor
     · rintro ⟨a, rfl⟩
       exact (φ a).2
-    · intro hy
-      exact ⟨φ.symm ⟨y, hy⟩, by simp [φ']⟩
+    · exact fun hy => ⟨φ.symm ⟨y, hy⟩, by simp [φ']⟩
   have hspan : Submodule.span E (Set.range φ') = ⊤ := by rw [hrange]; exact X.Λ_span
   obtain ⟨γ, hγ⟩ := GlobalTheory.FrameFibre.exists_gl φ' (fun a b hab => φ.injective (Subtype.ext hab)) hspan δ
   have hn : ∀ (n : ℕ) a, ((γ ^ n : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) *ᵥ φ' a = φ' ((δ ^ n) a) := by

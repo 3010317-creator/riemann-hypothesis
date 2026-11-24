@@ -71,8 +71,7 @@ theorem mulVec_initCols_mem {n r : ℕ} (X : Matrix (Fin n) (Fin r) E) (m : Fin 
 theorem exists_of_card_lt {r : ℕ} (S : Finset (Fin r)) {a b : ℕ}
     (h : (S.filter fun k => k.val < a).card < (S.filter fun k => k.val < b).card) :
     ∃ k ∈ S, a ≤ k.val ∧ k.val < b := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   refine absurd h (not_lt.2 (Finset.card_le_card fun k hk => ?_))
   simp only [Finset.mem_filter] at hk ⊢
   exact ⟨hk.1, not_le.1 fun h' => absurd hk.2 (not_lt.2 (hc k hk.1 h'))⟩
@@ -149,8 +148,7 @@ theorem unipFlag_le_unip (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
         refine GlobalTheory.FlagRad.mulVec_initCols_mem X m _ a fun l' hl' => ?_
         obtain ⟨k, hk, h1, h2⟩ := GlobalTheory.FlagRad.exists_of_card_lt S (not_le.1 fun h' => hl' (ha0 l' h'))
         refine ⟨k, hk, h1, ?_⟩
-        rw [Fin.lt_def, ← hij]
-        exact h2
+        rwa [Fin.lt_def, ← hij]
       · have hx : (cT (σ : E →+* E) C * J) *ᵥ (fun k => X k i) = 0 :=
           funext fun l => congrFun (congrFun hW.xx (l.castLE m.2)) i
         obtain ⟨a, ha⟩ := hg1.2 _ hx

@@ -151,8 +151,7 @@ theorem pullback_span {M' ι : Type} [AddCommGroup M'] [Module LL M'] {P : ι �
   · rintro _ ⟨d, hd, rfl⟩
     obtain ⟨d', hd', rfl⟩ := hsurj hd
     have hd'' : d' ∈ Submodule.span LL (Set.range fun x => e' x 0) := by
-      rw [span_const hS]
-      exact hd'
+      rwa [span_const hS]
     clear hd hd'
     induction hd'' using Submodule.span_induction with
     | mem z hz =>

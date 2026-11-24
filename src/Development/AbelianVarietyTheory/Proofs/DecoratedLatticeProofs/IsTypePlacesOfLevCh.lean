@@ -87,8 +87,7 @@ theorem mem_S {L : LevCh D Unit} (hL : L.Is ()) (θ ψ P) (k : Fin 2) (Q : Pl D.
     show algebraMap _ _ x ∈ Q'.asIdeal ↔ algebraMap _ _ x ∈ Q.asIdeal
     rw [hc, Formalism.L2.Col.mem_conjIdeal]
     have : Formalism.L2.Col.cO D.host.E (algebraMap (𝓞 D.host.F) (𝓞 D.host.E) x) = algebraMap _ _ x := by
-      apply RingOfIntegers.ext
-      exact (D.sp.cm.fixed _).2 ⟨x, rfl⟩
+      exact RingOfIntegers.ext ((D.sp.cm.fixed _).2 ⟨x, rfl⟩)
     rw [this]
 
 end GlobalTheory.ChainOnto.Model
@@ -148,8 +147,7 @@ theorem com_is_of_levCh {L : LevCh D Unit} (hL : L.Is ()) (c : GlobalTheory.Chai
       Q.under (𝓞 D.host.F) ∈ c.S := fun k Q hk => by
     have := GlobalTheory.ChainOnto.Model.mem_S hL c.θ c.ψ L.triv k Q hk
     unfold GlobalTheory.ChainOnto.Com.S at this ⊢
-    rw [hP]
-    exact this
+    rwa [hP]
   refine ⟨hθ, hψ, ⟨hη.1, GlobalTheory.Mem.TupChar.unramEverywhere hη L.C.isEta.unr, ⟨⟨_, hres⟩, fun η h a => ?_⟩, fun τ => ?_,
     fun j hj => ?_⟩, fun j τ => ?_, fun j w hw => ?_, fun j => ⟨_, hμ j, hχ j⟩, ?_⟩
   · rw [(GlobalTheory.IdeleNormChar.existsUnique_isEta D).unique h hres, pow_one, MonoidHom.comp_apply]
@@ -163,8 +161,7 @@ theorem com_is_of_levCh {L : LevCh D Unit} (hL : L.Is ()) (c : GlobalTheory.Chai
     rw [pow_zero]
     exact GlobalTheory.GridWeil.triv_base (hμ ⟨i, hi⟩) (L.C.isMu0 ⟨i, hi⟩).triv a
   · have h1 := GlobalTheory.HeckeInfExp.hasInfExp_of_chrEq D _ _ _ (hμ j) (GlobalTheory.InnerSteps.hasInfQ_tauE (L.C.isMu0 j).inf) τ
-    simp only [Formalism.L2.Host.eExp, Equiv.symm_apply_apply] at h1
-    exact h1
+    simpa only [Formalism.L2.Host.eExp, Equiv.symm_apply_apply] using h1
   · exact (GlobalTheory.LFun.unrAt_iff_of_chrEq (hμ j) w).2 ((L.C.isMu0 j).unr w fun k hk => hw (hS k w hk))
   · rw [hP]
     exact GlobalTheory.CentralShift.exists_idemSum _ fun Q hQ Q' hQ' => GlobalTheory.HeckeCharacterRestriction.not_isConjPl_union hL () (Or.inl hQ) (Or.inl hQ')

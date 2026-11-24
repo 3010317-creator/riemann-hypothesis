@@ -189,8 +189,7 @@ theorem GlobalTheory.BCT.LocCpt.loc_cpt : ∀ (E : Type) [Field E] [NumberField 
       apply mem_GLint_of_entries'
       · intro a b
         exact hO _ (entry_mem_of_mem_KGL ((GlobalTheory.LFun.KGL _ (n := n)).inv_mem hk') b a)
-      · intro a b
-        exact hO _ (entry_mem_of_mem_KGL hk' b a)
+      · exact fun a b => hO _ (entry_mem_of_mem_KGL hk' b a)
   have hB := isCompact_box D hD hDK
 
   have hmem : ∀ (x : finU (E := E) (n := n)) (w : Pl E), toSub (UL n w) (cLoc w (x : UA E n)) ∈ C w ↔
@@ -224,8 +223,7 @@ theorem GlobalTheory.BCT.LocCpt.loc_cpt : ∀ (E : Type) [Field E] [NumberField 
         cLoc u (x : UA E n) := fun u => Units.ext rfl
     rw [e]
     by_cases hwS : w ∈ S
-    · simp only [D, ite_eq_left hwS]
-      exact (hmem x w).1 (hx w hwS)
+    · simpa only [D, ite_eq_left hwS] using (hmem x w).1 (hx w hwS)
     · simp only [D, ite_eq_right hwS]
       have hw' := (mem_or_conj_mem hS w).resolve_left hwS
       refine ⟨cLoc (conjSrc c w) (x : UA E n), (hmem x _).1 (hx _ hw'), ?_⟩

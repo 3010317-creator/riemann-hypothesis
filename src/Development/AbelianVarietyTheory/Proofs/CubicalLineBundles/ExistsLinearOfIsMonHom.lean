@@ -89,8 +89,7 @@ theorem top_le_ex_zero (u : HolUnif A L g) {v : epsR ℂ ⟶ A} (hv : IsTangent 
   have h0 : u.ex 0 = η[A] := by
     rw [(u.ker 0).mpr u.Λ.zero_mem, Hom.one_def, toUnit_unit, Category.id_comp]
   rw [h0, ← hv]
-  intro a _
-  exact h (Set.mem_univ _)
+  exact fun a _ => h (Set.mem_univ _)
 
 theorem isDiff_comp (u : HolUnif A L g) (u' : HolUnif A' L' g') (f : A ⟶ A') [IsMonHom f]
     (F : (Fin g → ℂ) →ₗ[ℂ] (Fin g' → ℂ)) (hF : ∀ z, u'.ex (F z) = u.ex z ≫ f) {w : Fin g → ℂ} {v : epsR ℂ ⟶ A}
@@ -111,8 +110,7 @@ theorem isDiff_comp (u : HolUnif A L g) (u' : HolUnif A' L' g') (f : A ⟶ A') [
   have hch := (HasFDerivAt.comp (0 : Fin g → ℂ) (f := LinearMap.toContinuousLinearMap F)
     (by rw [map_zero]; exact hdiff.hasFDerivAt) (LinearMap.toContinuousLinearMap F).hasFDerivAt).fderiv
   rw [hfun, hch] at h1
-  rw [e]
-  exact h1
+  rwa [e]
 
 theorem exists_linear_of_isMonHom :
     ∀ (A A' : Over (Sp ℂ)) [GrpObj A] [GrpObj A'], IsAbelianScheme A → IsAbelianScheme A' →

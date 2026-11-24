@@ -187,8 +187,7 @@ omit [NumberField F] [NumberField E] in
 theorem sum_reindex {ι κ α : Type} [MeasurableSpace α] (e : ι ≃ κ) (m : κ → Measure α) :
     Measure.sum (fun i => m (e i)) = Measure.sum m := by
   ext s hs
-  simp only [Measure.sum_apply _ hs]
-  exact e.tsum_eq (fun k => m k s)
+  simpa only [Measure.sum_apply _ hs] using e.tsum_eq (fun k => m k s)
 
 def gramEquiv (σ : E →ₐ[F] E) {M n : ℕ} (J : Matrix (Fin M) (Fin M) E) (g : GL (Fin M) E)
     (T : Matrix (Fin n) (Fin n) E) :
@@ -297,8 +296,7 @@ theorem isFD_pull (σ : E →ₐ[F] E) {M : ℕ} {J J' : Matrix (Fin M) (Fin M) 
       exact Subtype.ext (e.symm.injective h')
     · intro δ
       refine ⟨⟨e (up J' δ), hmem J _ ((hrat (up J' δ)).2 (hup J' δ))⟩, ?_⟩
-      apply Subtype.ext
-      exact e.symm_apply_apply (up J' δ)
+      exact Subtype.ext (e.symm_apply_apply (up J' δ))
   refine IsFundamentalDomain.preimage_of_equiv h𝓕 hq hc ?_
   intro γ x
   change e (e.symm (up J γ) * x) = up J γ * e x
@@ -410,8 +408,7 @@ theorem swMeas_of_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     (fun v => local_map σ hCM J hJ g (Fv F v) (hLv v) n _ _ (hWv v).1 (hWv v).2 (m v) (m' v) (hm v)
       (hm' v) (c v) (hcv v _ (hWv v).1) _) hfin hEul
   have hth := theta_map (n := n) σ hCM J hJ g He hmat μ 𝓕 T
-  rw [hth] at key
-  exact key
+  rwa [hth] at key
 
 end Main
 

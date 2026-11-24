@@ -172,8 +172,7 @@ theorem colMul_mem_latV_iff : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k]
       · intro h j
         by_cases hj : j = y₁
         · subst hj
-          rw [Pi.single_eq_same, mul_unit_mem_iff (by rw [map_inv₀, hu₁, inv_one])]
-          exact h
+          rwa [Pi.single_eq_same, mul_unit_mem_iff (by rw [map_inv₀, hu₁, inv_one])]
         · rw [Pi.single_eq_of_ne hj]
           exact zero_mem _
     · rw [csec_mem_iff hL]
@@ -197,8 +196,7 @@ theorem colMul_mem_latV_iff : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k]
           by_cases hj : j = y₂
           · subst hj; rw [Pi.single_eq_same]; exact one_mem _
           · rw [Pi.single_eq_of_ne hj]; exact zero_mem _)
-        rw [hsum, Pi.single_eq_same, mul_one, mul_unit_mem_iff hu₂] at h2
-        exact h2
+        rwa [hsum, Pi.single_eq_same, mul_one, mul_unit_mem_iff hu₂] at h2
       · intro hb' x hx
         have hx' : x = F.β *ᵥ (F.γ *ᵥ x) := by rw [Matrix.mulVec_mulVec, F.βγ, Matrix.one_mulVec]
         rw [hx'] at hx ⊢
@@ -208,8 +206,7 @@ theorem colMul_mem_latV_iff : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k]
   · intro h
     have ha := GlobalTheory.FinPl.SuppShift.idAt_of_colMul d h
     exact (GlobalTheory.SplitIntComp.mem_intAt_iff q ha).2 ((key a ha).1 h)
-  · intro h
-    exact (key a h.1).2 ((GlobalTheory.SplitIntComp.mem_intAt_iff q h.1).1 h)
+  · exact fun h => (key a h.1).2 ((GlobalTheory.SplitIntComp.mem_intAt_iff q h.1).1 h)
 
 end GlobalTheory.PrimSplitLine
 

@@ -204,8 +204,7 @@ theorem hasSupport_transport (i : k ≃+* k') (hi : Continuous i) {x : IrrGL (k 
   have hrel : ∀ a, RepRel i (xs a) (IrrGL.of (σ' a) (hsm a) (hir a)) := fun a => by
     have h1 := (hT (xs a) (T (xs a))).2 rfl
     have h2 := eq_of_repRel i hi' h1
-    rw [h2] at h1
-    exact h1
+    rwa [h2] at h1
   have hcu : ∀ a, IsCuspidal (σ' a) := fun a =>
     (IrrGL.isCusp_of.1 ((hC _ _ (hrel a)).1.1 ⟨(hc a).1, (hc a).2.2⟩)).2
   obtain rfl := eq_of_repRel i hi' hx
@@ -237,8 +236,7 @@ theorem goodCusp_transport (i : k ≃+* k') (hi : Continuous i)
   obtain rfl : T y = y' := (hT _ _).1 hy
   rcases h with h1 | ⟨⟨g, hg, j, hj⟩, y₀, χ, hχ, hfix, rfl⟩
   · left
-    rw [hTd]
-    exact h1
+    rwa [hTd]
   · right
     have hv : ∀ z, (χ.comp (Units.map i.symm.toRingHom.toMonoidHom)) (Units.map i.toRingHom.toMonoidHom z) = χ z :=
       fun z => congrArg χ (Units.ext (by simp))
@@ -601,8 +599,7 @@ private theorem typeLaw_fwd (P : PlaceIso A w A' w' φ j i) (rc : IrrGL (k := w.
     (RingEquiv.refl _) P'' a'' a₃ ha'' ha₃ (ineIncl h'' t) (ineIncl h₃ ⟨t₁, ht₁⟩) hrt
   have hv' : Valued.v ((a₃ (ineIncl h₃ ⟨t₁, ht₁⟩) : w''.adicCompletion E'') -
       algebraMap E'' (w''.adicCompletion E'') (x : E'')) < 1 := by
-    rw [hart]
-    exact hv
+    rwa [hart]
   rw [← hp ⟨t₁, ht₁⟩ x z hxz hv']
   refine (inePol_transport P W fun z => ?_).symm
   have := hrt (φ z)

@@ -808,8 +808,7 @@ theorem lieLat_conjData : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       have hv' : v = ∑ l, (a l : K) • c l := M.inj (Over.OverMorphism.ext (hvw.trans hbc))
       show e v ∈ D.lie i
       rw [hDlie, hv', hea, Matrix.mulVec_mulVec, hΨΦ, Matrix.one_mulVec]
-      intro j
-      exact (a j).2
+      exact fun j => (a j).2
     exact hsub hv
   · intro hv
     have hint : ∀ j, C.v i ((lin (F.ψ i) 1).mulVec (e v) j) ≤ 1 := (hDlie i (e v)).1 hv
@@ -1055,8 +1054,7 @@ theorem deg_neg_one {G G' : Lat ξ Ω} {T : Set (Cpt ξ)} {a : K → ℤ} {e : �
   have h2 := span_inv (regAt ξ q) hs.1 h1
   have e1 : (∏ k, y ⟨k, c k⟩ ^ (-a) k) • e⁻¹ = ((∏ k, y ⟨k, c k⟩ ^ a k) • e)⁻¹ := by
     simp [Pi.neg_apply, zpow_neg, Finset.prod_inv_distrib, mul_comm]
-  rw [h q hq, hs.2, e1]
-  exact h2
+  rwa [h q hq, hs.2, e1]
 
 theorem natCast_residue_eq_zero (q : Cpt ξ) {p : ℕ} (h : InFibre ξ p q) : (p : X.residueField q.1) = 0 := by
   by_contra hne
@@ -1119,8 +1117,7 @@ theorem drTie_of_hodgeCpt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   haveI := hnoeth.2
   have hpow : PowFns 𝔐.t := GlobalTheory.T.powFns_of_abelian_generic E H 𝔐.X 𝔐.t inferInstance inferInstance fun z hz => by
     have h1 : genPt 𝔐.ξ = z := hz _ (𝔐.all z)
-    rw [← h1]
-    exact hint
+    rwa [← h1]
   have hc : ∀ τ : CMType H, D.p + D.q - D.p = labelRk D (.inr τ) := fun _ => Nat.add_sub_cancel_left _ _
   let G : (Σ s, Fin (labelRk D s)) → Lat 𝔐.ξ M.Ω := fun x => (𝔐.V x.1).gr (Fl.b x.1) x.2
   have hG : ∀ x, (G x).IsVBOn Set.univ 1 ⊤ := fun x =>
@@ -1158,8 +1155,7 @@ theorem drTie_of_hodgeCpt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   · have h0 := natCast_residue_eq_zero q hq
     have h1 : ((p : Y.X.residueField (𝔐.f q.1))) = 0 := by
       apply (𝔐.f.residueFieldMap q.1).hom.injective
-      rw [map_natCast, map_zero]
-      exact h0
+      rwa [map_natCast, map_zero]
     exact h1
   · rw [Fintype.card_sum] at hcard
     omega

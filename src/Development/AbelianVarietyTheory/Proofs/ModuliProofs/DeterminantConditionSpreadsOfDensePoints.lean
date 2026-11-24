@@ -107,8 +107,7 @@ theorem detCond_of_basis {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
   obtain ⟨M', hM', e⟩ := hM K f
   have hr : (δ₀.hom ρ) ^ 2 = -(H.d : R) := by
     have := congrArg δ₀.hom hρ
-    rw [map_pow, map_neg, map_natCast] at this
-    exact this
+    rwa [map_pow, map_neg, map_natCast] at this
   have main := _root_.GlobalTheory.eigenMult_of_dense E H D.p D.q n R M (δ₀.hom ρ) hr (by
     refine (hd.preimage j.isOpenEmbedding.isOpenMap).mono ?_
     rintro q ⟨L, _, _, _, x, β', ⟨y, hy⟩, hx, hdet⟩
@@ -134,8 +133,7 @@ theorem detCond_of_dense : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   let a : Sp (Localization.Away r) ⟶ Sp Γ(S, U) := spMap (algebraMap Γ(S, U) (Localization.Away r))
   have : IsOpenImmersion a := IsOpenImmersion.of_isLocalization r
   obtain ⟨q', hq'⟩ : q ∈ Set.range (PrimeSpectrum.comap (algebraMap Γ(S, U) (Localization.Away r))) := by
-    rw [PrimeSpectrum.localization_away_comap_range (Localization.Away r) r]
-    exact hr
+    rwa [PrimeSpectrum.localization_away_comap_range (Localization.Away r) r]
   obtain ⟨f, rfl, -⟩ := exists_factor (a ≫ j) x q' y (by
     rw [← hq, ← hq']
     rfl)

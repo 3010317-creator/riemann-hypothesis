@@ -100,8 +100,7 @@ theorem img_inv_img {D : D7} (Z : LocDat D) (p : PlF D) (h : Vp D p ≃ₗ[(D.s.
   constructor
   · rintro ⟨y, ⟨z, hz, rfl⟩, rfl⟩
     simpa using hz
-  · intro hx
-    exact ⟨h x, ⟨x, hx, rfl⟩, by simp⟩
+  · exact fun hx => ⟨h x, ⟨x, hx, rfl⟩, by simp⟩
 
 theorem noBB_of_moved {D : D7} (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH Z p) D.R.rS) (p : PlF D)
     (hRel : (FP p).RelG (LocNG.theta (Z.M p))) (h : Vp D p ≃ₗ[(D.s.atP p).Ep] Vp D p) (hh : h ∈ (FP p).UW0)
@@ -143,10 +142,8 @@ theorem closed_ng_gen : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.
   · intro t t' Λ Λ' hT hT' hloc ht
     rw [mem_genSet_iff] at ht ⊢
     exact ⟨pt t' Λ' hT', fwd t t' Λ Λ' hT hT' hloc ht.2⟩
-  · intro t ht
-    exact ((mem_ngSet_iff Y u u' t).1 ht).1
-  · intro t ht
-    exact ((mem_genSet_iff Y u u' t).1 ht).1
+  · exact fun t ht => ((mem_ngSet_iff Y u u' t).1 ht).1
+  · exact fun t ht => ((mem_genSet_iff Y u u' t).1 ht).1
 
 end GlobalTheory.LocOrbit
 end -- clump:auto

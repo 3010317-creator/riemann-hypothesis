@@ -365,14 +365,11 @@ theorem coreGen (hc : CMData F E) {n : ℕ} {ST SG Q0 Q1 SQ : Finset (HeightOneS
           ptFr_eq p0 p1 hdeco.symm (hQ0 P.1) hQa]
   refine ⟨κ, hκout, h1, ⟨h1.uni, ?_, fun P x hx i hi => ?_, fun w x hx i => ?_, fun P => absurd P.2 (hQ0 P.1)⟩⟩
   · have e := h1.lat
-    rw [hN] at e
-    exact e
+    rwa [hN] at e
   · have e := h1.f P x (by rw [hN]; exact hx) i hi
-    rw [hd'] at e
-    exact e
+    rwa [hd'] at e
   · have e := h1.be w x (by rw [hN]; exact hx) i
-    rw [hd'] at e
-    exact e
+    rwa [hd'] at e
 
 end Core
 
@@ -394,8 +391,7 @@ theorem not_underQ {B : Base} {X : PreX B.toPre} (I : TC B X) (hOk : I.Ok) (u : 
     have hE : (((B.primes X).T u : ℕ) : 𝓞 B.fields.E) ∈ P.asIdeal := by
       rw [← hPr.piT_norm u]
       exact Ideal.mul_mem_right _ _ ((mem_divs hT0 P).1 hP)
-    have e2 := (ReadTwist.plc_under_eq_iff (F := B.host.F) P (hPr.T_prime u)).2 hE
-    exact hg (e2 ▸ hOk.T_mem u)
+    exact hg (((ReadTwist.plc_under_eq_iff (F := B.host.F) P (hPr.T_prime u)).2 hE) ▸ hOk.T_mem u)
   · exact hg (LevTwist.plc_mem hOk hP)
 
 

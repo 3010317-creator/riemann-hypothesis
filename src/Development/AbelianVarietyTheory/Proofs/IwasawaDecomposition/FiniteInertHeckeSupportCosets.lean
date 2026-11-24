@@ -125,9 +125,7 @@ theorem finite_inert_support : ∀ (L : Type) [Field L] [NumberField L] [IsCMFie
     have hm : Dv.loc x ∈ GU Dv.σw n := by
       by_contra hm
       exact hx (dite_eq_right hm)
-    have hne : h ⟨Dv.loc x, hm⟩ ≠ 0 := by
-      intro h0
-      exact hx ((dite_eq_left hm).trans h0)
+    have hne : h ⟨Dv.loc x, hm⟩ ≠ 0 := fun h0 => hx ((dite_eq_left hm).trans h0)
     obtain ⟨s, hs, a, b, e⟩ := hS _ hne
     refine ⟨hm, Set.mem_biUnion hs ⟨a, a.2, ?_⟩⟩
     have e' : (⟨locHom Dv x, hm⟩ : GU Dv.σw n) = (a : GU Dv.σw n) * s * b := e

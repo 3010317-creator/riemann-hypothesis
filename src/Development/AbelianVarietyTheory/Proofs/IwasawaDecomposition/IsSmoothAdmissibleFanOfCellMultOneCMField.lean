@@ -181,8 +181,7 @@ theorem isStrict_face_of_isCone : ∀ (O : Type) [CommRing O] [IsDedekindDomain 
         have hs : 0 ≤ ∑ i, c i • (if i ∈ T then (1 : ℤ) else 0) :=
           Finset.sum_nonneg fun i _ => by split_ifs <;> simp
         rw [← e, nsmul_eq_mul] at hs
-        by_contra hneg
-        push Not at hneg
+        by_contra! hneg
         have : (k : ℤ) * h u < 0 := mul_neg_of_pos_of_neg (by exact_mod_cast hk) hneg
         linarith
       have e1 : (ℓ u : ℝ) = N * n := by exact_mod_cast heq
@@ -348,8 +347,7 @@ theorem exists_prim [Module.Finite ℤ O] {β : LinearMap.BilinForm ℤ X} (hβ 
     ∃ (n : ℕ) (u : LinearMap.BilinForm ℤ X) (hu : u ∈ balForms bar X), 0 < n ∧ β = (n : ℤ) • u ∧ IsPrim bar ⟨u, hu⟩ := by
   classical
   obtain ⟨a, b, hab⟩ : ∃ a b, β a b ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact h0 (by ext a b; simpa using hc a b)
   have bound : ∀ (n : ℕ) (u : LinearMap.BilinForm ℤ X), β = (n : ℤ) • u → n ≤ (β a b).natAbs := by
     intro n u hn
@@ -388,15 +386,13 @@ private lemma evalZ_eq_mul_evalZ_of_eq_nsmul {δ u : Fin m → LinearMap.BilinFo
       field_simp
     · intro l _ hl
       rw [Pi.single_eq_of_ne hl, zero_mul]
-    · intro hj
-      exact absurd (Finset.mem_univ j) hj
+    · exact fun hj => absurd (Finset.mem_univ j) hj
   have hr : ∑ l, (Pi.single j (1 / (n j : ℝ)) : Fin m → ℝ) l * φ.evalZ (δ l) = 1 / n j * φ.evalZ (δ j) := by
     rw [Finset.sum_eq_single j]
     · rw [Pi.single_eq_same]
     · intro l _ hl
       rw [Pi.single_eq_of_ne hl, zero_mul]
-    · intro hj
-      exact absurd (Finset.mem_univ j) hj
+    · exact fun hj => absurd (Finset.mem_univ j) hj
   rw [hf, hr] at key
   have e : φ.evalZ (u j) = 1 / n j * φ.evalZ (δ j) := key
   rw [e]
@@ -561,8 +557,7 @@ theorem ray_of_mem_cone : ∀ (O : Type) [CommRing O] (bar : O → O) (φ : InvF
     exact this.symm
   have hev : φ.evalZ (γ j) = ∑ i, a j i * φ.evalZ (γ' i) := by
     have := hγ'.linear (a j) (ha j)
-    rw [hfun] at this
-    exact this
+    rwa [hfun] at this
   have hℓ : (ℓ (γ j) : ℝ) = ∑ i, a j i * (ℓ (γ' i) : ℝ) := by
     have := sum_mul_eq_of_sum_toReal_eq (j := LinearMap.id) (fun _ _ h => h) ℓ (u := fun _ : Unit => γ j)
       (w := γ') (a := fun _ => (1 : ℝ)) (b := a j) (by simpa using hsum j)
@@ -580,8 +575,7 @@ theorem ray_of_mem_cone : ∀ (O : Type) [CommRing O] (bar : O → O) (φ : InvF
     exact h3 _ (hγ'.mem i) (hγ'.nonneg i) (by linarith)
   have hγj : γ j ≠ 0 := hγ.linearIndependent.ne_zero j
   obtain ⟨i, hai, hγi⟩ : ∃ i, a j i ≠ 0 ∧ γ' i ≠ 0 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     apply hγj
     apply toReal_injective
     rw [hsum j]
@@ -640,8 +634,7 @@ theorem ray_of_mem_cone : ∀ (O : Type) [CommRing O] (bar : O → O) (φ : InvF
     rw [natCast_zsmul, natCast_zsmul, hkc, Finset.sum_eq_single j]
     · intro l _ hl
       rw [hcl l hl, zero_smul]
-    · intro hj
-      exact absurd (Finset.mem_univ j) hj
+    · exact fun hj => absurd (Finset.mem_univ j) hj
   have hcj : 0 < c j := by
     rcases Nat.eq_zero_or_pos (c j) with h0 | h0
     · exfalso
@@ -806,10 +799,8 @@ theorem isPolFan_of_maxMult_le_one (hD : ∀ (X : Type) [AddCommGroup X] [Module
       [Module.Projective O X], Dominates bar X) (hPF : IsPolyFan bar q φ) (hSL : SimpLab bar q φ lab)
     (hM : maxMult bar q φ ≤ 1) : IsPolFan bar q φ ∧ NoSelfInt bar q φ := by
   refine ⟨?_, ?_⟩
-  · intro X _ _ _ _ hX
-    exact (onModule hD hPF hSL hM X hX).1
-  · intro X _ _ _ _ hX
-    exact (onModule hD hPF hSL hM X hX).2
+  · exact fun X _ _ _ _ hX => (onModule hD hPF hSL hM X hX).1
+  · exact fun X _ _ _ _ hX => (onModule hD hPF hSL hM X hX).2
 
 end GlobalTheory.PolFan.SmoothEnd
 

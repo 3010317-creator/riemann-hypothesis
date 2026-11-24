@@ -330,8 +330,7 @@ theorem exists_key (hpq : 1 ≤ Dw.p + Dw.q) (hg : ∀ p : ℕ, p.Prime → l.Go
   refine ⟨K, hKmem, fun T io y ho => ?_⟩
   letI := io.toAlgebra
   obtain ⟨Φ, hΦ, h⟩ := exists_tied_integral hkr hpq hg e ho y.1 y.2.2
-  rw [← hKval T.Fr y.1 Φ hΦ] at h
-  exact h
+  rwa [← hKval T.Fr y.1 Φ hΦ] at h
 
 end Key
 
@@ -506,8 +505,7 @@ theorem through_point (y : Y₀ X Z) (T : CDVR) (io : c.F →+* T.Fr) (y' : IntF
   have hx' := (X.pt_inc _).trans hx₀
   have hU₀ : ⊤ ≤ (Spec.map (CommRingCat.ofHom ((algebraMap T.V T.Fr).comp g)) ≫ (Y₀ X Z).fromSpecStalk y) ⁻¹ᵁ U₀ X Z := by
     have h1 := hOf
-    rw [hx', Scheme.Hom.comp_preimage] at h1
-    exact h1
+    rwa [hx', Scheme.Hom.comp_preimage] at h1
   refine ⟨fun a => ?_, ?_, hU₀, fun la f j hj' hO hj => ?_⟩
   · have h1 := ptY_str X y'.1
     rw [hpt', Category.assoc] at h1
@@ -521,8 +519,7 @@ theorem through_point (y : Y₀ X Z) (T : CDVR) (io : c.F →+* T.Fr) (y' : IntF
   have hzV : ⊤ ≤ (Spec.map (CommRingCat.ofHom g) ≫ (Y₀ X Z).fromSpecStalk y ≫ inc₀ X Z) ⁻¹ᵁ
       X.F.U (j PUnit.unit) := by
     have := top_le_stalkPt y g (inc₀ X Z ⁻¹ᵁ X.F.U (j PUnit.unit)) hk
-    rw [← Category.assoc, Scheme.Hom.comp_preimage]
-    exact this
+    rwa [← Category.assoc, Scheme.Hom.comp_preimage]
   have hz : ⊤ ≤ (X.pt y'.1 ≫ X.inc) ⁻¹ᵁ X.F.U (j PUnit.unit) := by
     rw [X.pt_inc, hpt']
     exact FlagMod.le_preimage_comp _ hzV

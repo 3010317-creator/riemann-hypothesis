@@ -110,8 +110,7 @@ theorem det_submatrix_lt (g : Matrix (Fin s) (Fin s) ℂ) (hg : ∀ i j, i < j �
       ∏ a : {a : Fin s // (a : ℕ) < m}, g a a := by
   rw [Matrix.det_of_lowerTriangular]
   · rfl
-  · intro a b h
-    exact hg a.1 b.1 h
+  · exact fun a b h => hg a.1 b.1 h
 
 theorem leadMinor_conj_lower (g G : Matrix (Fin s) (Fin s) ℂ) (hg : ∀ i j, i < j → g i j = 0) (m : ℕ) :
     leadMinor (g * G * gᴴ) m =
@@ -126,8 +125,7 @@ theorem det_updateRow_finset_sum {ι κ : Type} [Fintype ι] [DecidableEq ι] (A
     (A.updateRow r (∑ l ∈ t, c l • v l)).det = ∑ l ∈ t, c l * (A.updateRow r (v l)).det := by
   classical
   refine Finset.induction_on t ?_ ?_
-  · simp only [Finset.sum_empty]
-    exact Matrix.det_eq_zero_of_row_eq_zero r (fun c => by simp)
+  · simpa only [Finset.sum_empty] using Matrix.det_eq_zero_of_row_eq_zero r (fun c => by simp)
   · intro a t ha ih
     rw [Finset.sum_insert ha, Matrix.det_updateRow_add, Matrix.det_updateRow_smul, ih, Finset.sum_insert ha]
 

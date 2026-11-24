@@ -195,8 +195,7 @@ theorem isPshOn_stepPot : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, F
   have hHh' : ∀ a b, R.A.HoloOn V' fun y' => H y' a b := fun a b =>
     holoOn_mono (hHh a b) hVW
   have hgh : ∀ a b, R.A.HoloOn V' fun y' => g y' a b := fun a b => by
-    simp only [g, Matrix.mul_apply]
-    exact holoOn_sum _ fun c' => holoOn_mul (hPh' a c') (hHh' c' b)
+    simpa only [g, Matrix.mul_apply] using holoOn_sum _ fun c' => holoOn_mul (hPh' a c') (hHh' c' b)
   have hstep : ∀ (i : Fin N), ∀ y' ∈ V', InFlagDomain N j (g y') ∧
       stepPot N j i (g y') = blockPot j i (BM.G l p.1 (pr y')) (H y') + Real.log ‖detFac j i (H y')‖ := by
     intro i y' hy'

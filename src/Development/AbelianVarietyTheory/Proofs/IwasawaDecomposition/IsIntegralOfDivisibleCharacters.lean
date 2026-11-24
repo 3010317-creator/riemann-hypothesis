@@ -93,8 +93,7 @@ theorem _root_.GlobalTheory.IntegralOfPointValues.isIntegral_inv_smul_of_closed 
       have hmon : ((minpoly C y) /ₘ (X - Polynomial.C α)).Monic :=
         (monic_X_sub_C α).of_mul_monic_left (by rw [hfac]; exact minpoly.monic hyint)
       apply minpoly.aeval_ne_zero_of_dvdNotUnit_minpoly (A := C) (x := y) hyint hmon
-      · refine ⟨hmon.ne_zero, X - Polynomial.C α, ?_, by rw [mul_comm, hfac]⟩
-        exact not_isUnit_X_sub_C α
+      · exact ⟨hmon.ne_zero, X - Polynomial.C α, not_isUnit_X_sub_C α, by rw [mul_comm, hfac]⟩
       · have h0 := minpoly.aeval C y
         rw [← hfac, map_mul] at h0
         simpa using (hu'.mul_right_eq_zero).1 (by simpa using h0)
@@ -108,8 +107,7 @@ theorem _root_.GlobalTheory.IntegralOfPointValues.isIntegral_inv_smul_of_closed 
       have h1 : Ideal.Quotient.mkₐ C M yD = e α := by
         rw [Ideal.Quotient.mkₐ_eq_mk]
         change _ = Ideal.Quotient.mk M (algebraMap C D α)
-        rw [Ideal.Quotient.eq]
-        exact hMmem
+        rwa [Ideal.Quotient.eq]
       simp only [ψ, AlgHom.comp_apply, h1]
       exact e.symm_apply_apply α
     have hcomm : ∀ o : O,

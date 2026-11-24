@@ -146,8 +146,7 @@ theorem UpperTheory.Gal.projectedFormsSystemPart.autAway_alt (PH : _root_.UpperT
     have : Finite (ResidueField c.O) := hfin
     have : CharP (ResidueField c.O) l := by
       refine (CharP.charP_iff_prime_eq_zero (Fact.out : l.Prime)).2 ?_
-      rw [← map_natCast (residue c.O), residue_eq_zero_iff]
-      exact hlm
+      rwa [← map_natCast (residue c.O), residue_eq_zero_iff]
     have : CharP (c.O ⧸ maximalIdeal c.O) l := inferInstanceAs (CharP (ResidueField c.O) l)
     have : PerfectRing (ResidueField c.O) l := inferInstance
     let j : ResidueField c.O →+* Perfection (c.O ⧸ maximalIdeal c.O) l :=
@@ -189,8 +188,7 @@ theorem UpperTheory.Gal.projectedFormsSystemPart.autAway_alt (PH : _root_.UpperT
   have hu : w.under (𝓞 (Lp L)) ∈ s.St := by
     rcases hwS with h | h | h
     · refine absurd ?_ hw
-      rw [← map_natCast (algebraMap (𝓞 (Lp L)) (𝓞 L))]
-      exact h
+      rwa [← map_natCast (algebraMap (𝓞 (Lp L)) (𝓞 L))]
     · exact h
     · exact absurd h hw0
   refine hC L n hn π p2 (s.w (w.under (𝓞 (Lp L)))) w (hwv _).symm ?_
@@ -256,8 +254,7 @@ private theorem coreA (H : _root_.UpperTheory.V.Af.HypothesesH') (hL : _root_.Up
     RingHom.ext fun b => (hy b).symm
   have e3 : x.D = W.GDet.ofRep (W.mat ρ) := by
     change B.u.D.map (x : B.B →+* Qbar l) = _
-    rw [hxy]
-    exact hD
+    rwa [hxy]
   change x.D.comap V.pr = _
   rw [e3]
   exact (AlgebraTools.Det.repApi (W.mat ρ)).2.2.2.2.2.2.1 V.pr
@@ -487,8 +484,7 @@ private theorem trace_of_flag {r : H →* GL (Fin n) k} {ψ : Fin n → H →* k
 private theorem mem_range_of_sum [CharZero k] (a b : Fin n → H →* kˣ) (h : ∀ s, ∑ i, (a i s : k) = ∑ i, (b i s : k)) (i : Fin n) :
     ∃ j, a i = b j := by
   classical
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   let c : (H →* kˣ) → (H →* k) := fun x => (Units.coeHom k).comp x
   have hc : Function.Injective c := fun x y e => MonoidHom.ext fun s => Units.ext (DFunLike.congr_fun e s)
   let L : (H →* k) →₀ k := ∑ j, Finsupp.single (c (a j)) 1 - ∑ j, Finsupp.single (c (b j)) 1
@@ -692,12 +688,10 @@ private theorem rel_conj [IsCMField E] {τ : E ≃+* E} {σ : Ω ≃+* Ω} (h : 
     have h1 : (P : Matrix (Fin n) (Fin n) (Qbar l)) * (ρ s' : Matrix (Fin n) (Fin n) (Qbar l)) =
         ((cycBar E Ω l ^ (1 - (n : ℤ))) s : Qbar l) • ((dualRep ρ s : Matrix (Fin n) (Fin n) (Qbar l)) * (P : Matrix (Fin n) (Fin n) (Qbar l))) := by
       have := congrArg (fun X => (dualRep ρ s : Matrix (Fin n) (Fin n) (Qbar l)) * X) hpair
-      simp only [Matrix.mul_smul, ← Matrix.mul_assoc, hD, Matrix.one_mul] at this
-      exact this
+      simpa only [Matrix.mul_smul, ← Matrix.mul_assoc, hD, Matrix.one_mul] using this
     have h2 := congrArg (fun X => ((P⁻¹ : GL (Fin n) (Qbar l)) : Matrix (Fin n) (Fin n) (Qbar l)) * X) h1
     simp only [← Matrix.mul_assoc, ← Units.val_mul, Matrix.mul_smul] at h2
-    rw [inv_mul_cancel_left, ← mul_assoc] at h2
-    exact h2
+    rwa [inv_mul_cancel_left, ← mul_assoc] at h2
   have ht : ρ t.1 = ρ u * ρ s' * (ρ u)⁻¹ := by
     simp only [s', map_mul, map_inv]
     group
@@ -759,8 +753,7 @@ theorem UpperTheory.V.Z.Ord.conj_unlinked_of_printed_results :
       with v ⟨B, hB, hF⟩ ⟨B', hB', hF'⟩
     refine ⟨B', ?_, hF'⟩
     have e := CG.HasSat.unique hB ((UpperTheory.satake_parameters_complex_conjugate E v).1 n π hcsd B' hB')
-    rw [← e]
-    exact hF
+    rwa [← e]
   haveI : IsAlgClosure (maximalRealSubfield E) Ω :=
     ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans (maximalRealSubfield E) E Ω⟩
   have key : ∀ A' : ValuationSubring Ω, IsPlaceOver A' w' → ∃ κ : Fin n → Dec (F := E) A' →* (Qbar l)ˣ,
@@ -851,8 +844,7 @@ private theorem algPow_nat [Fintype (W.Emb l w)] (d : (L →+* Qbar l) → ℤ) 
     fun T c => T.cons_induction (by simp) fun j T hj ih => by rw [Finset.prod_cons, Finset.sum_cons, ih, zpow_add₀ h0]
   unfold algPow
   rw [finprod_eq_prod_of_fintype]
-  simp only [map_natCast]
-  exact hp _ _
+  simpa only [map_natCast] using hp _ _
 private theorem sum_eq_zero [Fintype (W.Emb l w)] (ha : IsLocalArtin h a) (d : (L →+* Qbar l) → ℤ)
     (χ : Dec (F := L) A →* (Qbar l)ˣ) (hχ : Continuous χ)
     (hv : ∀ s : Weil h, (χ (Subgroup.inclusion (Weil_le_Dec h) s) : Qbar l) = algPow w d (a s : w.adicCompletion L)) :
@@ -1039,8 +1031,7 @@ private theorem abs_unif (ι : Qbar l ≃+* ℂ) (ha : IsLocalArtin h a) :
     rw [hs0, ord_unif] at this
     omega
   have h1 := congrArg ι (abs_val ι ha s0)
-  rw [hs0, hd0, ι.apply_symm_apply, zpow_neg_one, map_inv₀, map_natCast] at h1
-  exact h1
+  rwa [hs0, hd0, ι.apply_symm_apply, zpow_neg_one, map_inv₀, map_natCast] at h1
 private theorem supp_ps [_root_.NumberField.IsTotallyComplex F] {n : ℕ} (hn : 1 ≤ n) (π : CuspSub F n) {ω : Fin n → (w.adicCompletion F)ˣ →* ℂˣ}
     (hs : ∀ i, IsSmoothChar (ω i)) (hσ : ∀ σ, π.IsLocComp w σ → IsSubquotient σ.ρ (PS ω)) :
     Gam.TorAt π w ∧ ∀ s, Gam.SuppAt π w s → (∀ i, ω i * absPow (w.adicCompletion F) (((n : ℂ) - 1) / 2) ∈ ImaginaryQuadraticEtaCharacter.chars s) ∧
@@ -1229,8 +1220,7 @@ theorem UpperTheory.V.Z.Ord.flagJ_alt :
   have e0 : xb.comp (Ideal.Quotient.mk J) = (x : B.B →+* Qbar l) := RingHom.ext fun a => rfl
   have e1 : (B.DD J).map xb = W.GDet.ofRep (W.mat ρ₀) := by
     have h1 : (B.DD J).map xb = B.u.D.map (xb.comp (Ideal.Quotient.mk J)) := (CA.d_gmap B.u.D).2.1 _ _
-    rw [h1, e0]
-    exact hD
+    rwa [h1, e0]
   have e2 := (AlgebraTools.Det.mapApi (B.DD J) xb).1 (MonoidAlgebra.single (V.frame.φ v t) 1)
   rw [MonoidAlgebra.mapRingHom_single, map_one, e1, (AlgebraTools.Det.repApi _).2.1] at e2
   refine e2.trans ((congrArg (Polynomial.map xb) (hJ.O1 v t)).trans ?_)

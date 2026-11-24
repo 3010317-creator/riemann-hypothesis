@@ -308,8 +308,7 @@ private theorem sb_cosInd (hc : D.host.ccK = ⊤) (hS : S.gram = 1) {e : AE D} {
           have h3 := (mem_latRat_iff hc hS mem_stdL M).1 hM i j
           rw [mul_one] at h3
           have h4 := FractionalIdeal.mul_mem_mul h3 (mem_skewEnt h𝔪 hnm)
-          rw [Matrix.smul_apply, nsmul_eq_mul, mul_comm (n : D.host.E)]
-          exact h4
+          rwa [Matrix.smul_apply, nsmul_eq_mul, mul_comm (n : D.host.E)]
         have h5 : finTens α (n • M) = n • finTens α M := by
           clear h2 hnm hn0
           induction n with
@@ -407,8 +406,7 @@ private theorem fix_deep (hc : D.host.ccK = ⊤) (hs : Setup ψ θ S T ⊤ δ 1)
       exact ((GlobalTheory.PlaceModel.isBichar_symplO S T ψ).nsmul n _ _).trans
         (char_sympl_eq_one hs.std (sdC_std hs.gS) (sdC_std hs.gT) (nsmul_mem hl 2) h2)
     have h5 : GlobalTheory.PlaceModel.heisL S T ψ (2 • (n • l)) v = v := hv.1 _ (nsmul_mem hl n)
-    rw [h4, h5, one_smul] at h3
-    exact h3
+    rwa [h4, h5, one_smul] at h3
   have h6 := congrArg (GlobalTheory.PlaceModel.heisL S T ψ (2 • (n • l))) hT
 
   rw [map_sum, map_smul, Finset.sum_congr rfl fun q _ => hq q, hT] at h6
@@ -938,11 +936,9 @@ theorem intU_map (x : (AE D)ˣ) (h : toEAf D (x : AE D) ∈ Formalism.L2.Herm.in
     IntU D (Units.map (finHom D) x) := by
   refine ⟨(GlobalTheory.BotClassDict.toAfE_int_iff _).1 ?_, (GlobalTheory.BotClassDict.toAfE_int_iff _).1 ?_⟩
   · change Lev.swapAE D (GlobalTheory.BotFormula.toAfE D ((GlobalTheory.BotFormula.toAfE D).symm (finPart D (x : AE D)))) ∈ _
-    rw [RingEquiv.apply_symm_apply]
-    exact h
+    rwa [RingEquiv.apply_symm_apply]
   · change Lev.swapAE D (GlobalTheory.BotFormula.toAfE D ((GlobalTheory.BotFormula.toAfE D).symm (finPart D ((x⁻¹ : (AE D)ˣ) : AE D)))) ∈ _
-    rw [RingEquiv.apply_symm_apply]
-    exact h'
+    rwa [RingEquiv.apply_symm_apply]
 
 end GlobalTheory.StdRead
 
@@ -993,8 +989,7 @@ theorem absNorm_mem_conj (𝔪 : Ideal (𝓞 D.host.E)) : ((Ideal.absNorm 𝔪 :
   have h2 : D.host.conj • ((Ideal.absNorm 𝔪 : ℕ) : 𝓞 D.host.E) = ((Ideal.absNorm 𝔪 : ℕ) : 𝓞 D.host.E) := by
     first
     | exact map_natCast (MulSemiringAction.toRingHom _ _ D.host.conj) _
-  rw [h2] at this
-  exact this
+  rwa [h2] at this
 
 end GlobalTheory.StdRead
 

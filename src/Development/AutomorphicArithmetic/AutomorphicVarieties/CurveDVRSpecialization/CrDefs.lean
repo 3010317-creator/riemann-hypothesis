@@ -109,12 +109,10 @@ theorem GalLink.surjective_levelChangeBaseGroupHom (k : GalLink η Ψ σ g₁ B 
   rintro ⟨y, hy⟩
   obtain ⟨s, hs⟩ := k.p_surj y
   have hη : η s = 1 := by
-    rw [← k.del s, hs]
-    exact hy
+    rwa [← k.del s, hs]
   obtain ⟨g', hg'⟩ := toUpl_surj s
   have hη' : η (galEmb ℚ (W.Lp L) Ω g') = 1 := by
-    rw [← hg'] at hη
-    exact hη
+    rwa [← hg'] at hη
   obtain ⟨g, rfl⟩ := (k.mem_range_resP g').2 hη'
   refine ⟨g, Subtype.ext ?_⟩
   rw [k.galois_link_projection_coe, hg', hs]

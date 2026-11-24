@@ -277,12 +277,10 @@ theorem UpperTheory.Gal.TP.Chr.chrEx :
     · rw [pow_one, neg_one_pow_eq_pow_mod_two, ← hj, ← neg_one_pow_eq_pow_mod_two]
   · have h1 : (psi μ k s).loc w x = 1 := h x hx
     rw [psi, hloc, hpow_loc, ((hAb E emb _).1 w).1 x hx, mul_one] at h1
-    rw [lc_pow, hl]
-    exact h1
+    rwa [lc_pow, hl]
   · have h1 : locChar (χ ^ k) w x = 1 := h x hx
     rw [lc_pow, hl] at h1
-    rw [psi, hloc, hpow_loc, ((hAb E emb _).1 w).1 x hx, mul_one]
-    exact h1
+    rwa [psi, hloc, hpow_loc, ((hAb E emb _).1 w).1 x hx, mul_one]
   · rw [psi, HChar.val_mul, Units.val_mul, hpow_val, Units.val_pow_eq_pow_val, ((hAb E emb _).1 w).2, hval, neg_div]
   · rw [hTP E emb _ _ (x : E), inf_psi hAb emb μ m hμi]
     refine Finset.prod_congr rfl fun w _ => ?_
@@ -690,13 +688,11 @@ private theorem consistent (hU : GlobalTheory.BCT.Unr E) (w₀ : HeightOneSpectr
         Units.map (GlobalTheory.IdeleNormChar.finEval w₀) (diagUnits E t) := Units.ext rfl
     have e2 : conjQuot E w₀ x = Units.map (GlobalTheory.IdeleNormChar.finEval w₀) (x / C x) := rfl
     have e3 : conjQuot E w₀ u = Units.map (GlobalTheory.IdeleNormChar.finEval w₀) (u / C u) := rfl
-    rw [e1, hdt, map_mul, map_inv, ← e2, ← e3, hcqu, inv_one, mul_one]
-    exact hx3
+    rwa [e1, hdt, map_mul, map_inv, ← e2, ← e3, hcqu, inv_one, mul_one]
   have ht1 := hV t htor hmem
   have hck : c k = k := (div_eq_one.1 ht1).symm
   have hkF : (k : E) ∈ maximalRealSubfield E := by
-    refine (IsCMField.complexConj_eq_self_iff E _).1 ?_
-    exact congrArg Units.val hck
+    exact (IsCMField.complexConj_eq_self_iff E _).1 (congrArg Units.val hck)
   set k' : (maximalRealSubfield E)ˣ := Units.mk0 ⟨(k : E), hkF⟩ (fun h => k.ne_zero (congrArg Subtype.val h)) with hk'
   have hdk : diagUnits E k = ideleMap (maximalRealSubfield E) E (diagUnits (maximalRealSubfield E) k') := by
     refine (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.ideleMap_principalIdele (maximalRealSubfield E) E k').trans ?_ |>.symm
@@ -1038,11 +1034,9 @@ theorem UpperTheory.Gal.TP.Chr.readEx :
   · intro z
     rfl
   · have hf : Continuous f := by
-      show Continuous (Units.map (e : AE (↥(maximalRealSubfield E)) E →* AdeleRing (𝓞 E) E))
       exact Continuous.units_map _ (GlobalTheory.UnitaryHeckeBaseChange.continuous_toAdele _ E)
     have hμc : Continuous (μ.1 : Ideles E → ℂˣ) := μ.2.1
-    refine continuous_induced_rng.2 ?_
-    exact Units.continuous_val.comp (hμc.comp hf)
+    exact continuous_induced_rng.2 (Units.continuous_val.comp (hμc.comp hf))
   · intro x
     apply Subtype.ext
     show ((μ.1 (f _) : ℂˣ) : ℂ) = 1
@@ -1405,8 +1399,7 @@ theorem UpperTheory.Gal.TP.Chr.typProd :
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_insert,
       Finset.mem_singleton]
     constructor
-    · intro h
-      exact eq_or_conj_of_pl_eq (h.trans (pl_emb (emb w)).symm)
+    · exact fun h => eq_or_conj_of_pl_eq (h.trans (pl_emb (emb w)).symm)
     · rintro (rfl | rfl)
       · exact pl_emb _
       · rw [pl_conj, pl_emb]

@@ -171,8 +171,7 @@ private theorem linearIndependent_map_algebraMap {σ K L : Type} [Field K] [Fiel
       (algebraTensorAlgEquiv K L).toLinearEquiv.toLinearMap ∘ fun i => (1 : L) ⊗ₜ[K] v i := by
     funext i
     simp [algebraTensorAlgEquiv_tmul]
-  rw [he]
-  exact h2
+  rwa [he]
 
 open MvPolynomial Filter in
 open scoped ENNReal in

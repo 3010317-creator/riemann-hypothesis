@@ -115,8 +115,7 @@ theorem isWt_coordinate (d : E.GtDatum G) (j : E.ChartIdx) (k : Module.Free.Choo
     have e : ((lift t g).left ≫ (snd (splitTorus S E.X) G).left) = g.left := by
       rw [← Over.comp_left, lift_snd]
     show ((lift t g).left ≫ (snd (splitTorus S E.X) G).left) z ∈ d.q.left ⁻¹ᵁ E.chart j
-    rw [e]
-    exact hz
+    rwa [e]
   have key := congrArg (gm (lift t g).left z _) (d.equiv j k)
   rw [map_mul] at key
   rw [gm_res_pullU_eq_gm_comp (a := (lift (fst (splitTorus S E.X) G ≫ d.i) (snd (splitTorus S E.X) G) ≫ μ).left) _ _ hp,
@@ -163,8 +162,7 @@ def TQ.ofGtDatum (d : E.GtDatum G) : TQ G E.X where
 
 theorem exists_tq_of_gtDatum :
     ∀ (S : Scheme.{0}) (E : SplitExt S) (G : Over S) [GrpObj G] (Dat : E.GtDatum G), ∃ Q : TQ G E.X, Q.i = Dat.i := by
-  intro S E G _ Dat
-  exact ⟨TQ.ofGtDatum Dat, rfl⟩
+  exact fun S E G _ Dat => ⟨TQ.ofGtDatum Dat, rfl⟩
 
 end GlobalTheory.UU
 end

@@ -141,8 +141,7 @@ theorem isLattice_divLat {r : ℕ} {AA : Submodule (𝓞 E) E} (hfg : AA.FG) (h0
     rintro _ ⟨v, hv, rfl⟩
     exact hv a ha
   · apply top_unique
-    rw [← hs]
-    rw [Submodule.span_le]
+    rw [← hs, Submodule.span_le]
     intro v hv
     apply mem_of_forall_mul_smul AA hfg h0 (Submodule.span E (divLat AA M : Set (Fin r → E))).toAddSubmonoid v
     intro a ha b hb
@@ -289,8 +288,7 @@ lemma isPeriod_comp_symm {D' D'' : Datum H} {g : ℕ} {ty : Fin g → (E →+* �
   refine ⟨?_, ?_, ?_, ?_, Hm, hH, hpos, ?_⟩
   · intro a x k
     rw [hP', hP', map_smul, h1]
-  · intro x y hxy
-    exact gam.symm.injective (h2 hxy)
+  · exact fun x y hxy => gam.symm.injective (h2 hxy)
   · rw [hr]; exact h3
   · have : Set.range (P.comp gam.symm.toLinearMap.toAddMonoidHom) = Set.range P := by
       have := congrArg (fun s : AddSubgroup (Fin g → ℂ) => (s : Set (Fin g → ℂ))) hr
@@ -316,8 +314,7 @@ lemma isHolTo_ex {D : Datum H} {l : Level H} {Xo : Moduli D l} {σ : KA l →+* 
       exact ⟨fun hz => ⟨⟨trivial, trivial⟩, hz.2⟩, fun hz => ⟨trivial, hz.2⟩⟩
     exact h4 ▸ h3
   · refine hd.comp (f := fun z : Fin g → ℂ => ((0 : Fin 0 → ℂ), z)) hc.differentiableOn ?_
-    intro z hz
-    exact ⟨⟨trivial, trivial⟩, hz.2⟩
+    exact fun z hz => ⟨⟨trivial, trivial⟩, hz.2⟩
 
 theorem index_eq_of_isometry : ThetaUnifAV → Out.Laws → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (σ : KA l →+* ℂ) (g : ℕ) (ty : Fin g → (E →+* ℂ)), 1 ≤ D.p + D.q → σ (baseKA l).ρ = H.rt0 → IsTypeFn H D.p D.q ty → ∀ U : FamilyUnif Xo σ ty, ∀ (i j : Fin U.n) (gam : (U.Di i).La ≃ₗ[𝓞 E] (U.Di j).La), (∀ a b, (U.Di j).EF (gam a) (gam b) = (U.Di i).EF a b) → (∀ a, ∃ e, gam (U.t i a) = U.t j a + l.M' • e) → i = j := by
   intro hT hL E _ _ _ H D l Xo σ g ty hr hσ hty U i j gam hg ht
@@ -454,8 +451,7 @@ theorem exists_representatives {n : ℕ} (Di : Fin n → Datum H) :
   let e := Finite.equivFin (Quotient S)
   refine ⟨_, fun c => (e.symm c).out, fun c d h => ?_, fun i => ⟨e (Quotient.mk S i), ?_⟩⟩
   · exact e.symm.injective (Quotient.out_equiv_out.1 h)
-  · simp only [Equiv.symm_apply_apply]
-    exact Isometric.symm (Quotient.mk_out (s := S) i)
+  · simpa only [Equiv.symm_apply_apply] using Isometric.symm (Quotient.mk_out (s := S) i)
 
 end PeriodSpaceCount
 

@@ -128,8 +128,7 @@ theorem finrank_of_isBaseChange {A F : Type} [CommRing A] [Field F] [Algebra A F
     [Module A E] [AddCommGroup E'] [Module F E'] [Module A E'] [IsScalarTower A F E'] [Module.Finite A E]
     [Module.Projective A E] (j : E →ₗ[A] E') (hj : IsBaseChange F j) (p : PrimeSpectrum F) :
     Module.finrank F E' = Module.rankAtStalk E (PrimeSpectrum.comap (algebraMap A F) p) := by
-  rw [← Module.rankAtStalk_baseChange (S := F) (M := E) p]
-  rw [Module.rankAtStalk_eq_finrank_of_free]
+  rw [← Module.rankAtStalk_baseChange (S := F) (M := E) p, Module.rankAtStalk_eq_finrank_of_free]
   exact (LinearEquiv.finrank_eq hj.equiv).symm
 
 theorem finrank_eq_of_isBaseChange_fractionRing {D L : Type} [CommRing D] [IsDomain D] [Field L] [Algebra D L]
@@ -151,8 +150,7 @@ theorem exists_factor {X : Scheme.{0}} {A F : Type} [CommRing A] [Field F] (i₀
   have hr : Set.range y ⊆ Set.range i₀ := by
     rintro _ ⟨p, rfl⟩
     have hp : p = IsLocalRing.closedPoint F := Subsingleton.elim _ _
-    rw [hp]
-    exact h
+    rwa [hp]
   refine ⟨(Spec.preimage (IsOpenImmersion.lift i₀ y hr)).hom, ?_⟩
   have e : spMap (Spec.preimage (IsOpenImmersion.lift i₀ y hr)).hom = IsOpenImmersion.lift i₀ y hr :=
     Spec.map_preimage _

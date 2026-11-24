@@ -277,8 +277,7 @@ theorem GlobalTheory.HTRho.finrank_homO_eq_sum_quot : ∀ {k O C Idx W V : Type*
         change (mSub τ (χ i) ⊤).mkQ (T (σW a x)) = (mSub τ (χ i) ⊤).mkQ (τ a (T x))
         rw [hT, ← qAct_mk τ _ (mSub_stable τ (χ i) ⊤ (fun _ _ _ => trivial)), hT,
           (mem_homO _ _ _).mp (F i).2 a x]
-      refine ⟨⟨T, hTm⟩, funext fun i => Subtype.ext (LinearMap.ext fun x => ?_)⟩
-      exact hT x i
+      exact ⟨⟨T, hTm⟩, funext fun i => Subtype.ext (LinearMap.ext fun x => (hT x i))⟩
   rw [LinearEquiv.finrank_eq (LinearEquiv.ofBijective Ψ hΨ), Module.finrank_pi_fintype]
 end -- clump:auto
 end -- clump:auto
@@ -341,8 +340,7 @@ theorem quotFacts {k O C Idx H : Type*} [Field k] [AddCommGroup H] [Module k H] 
       refine Finset.sum_congr rfl fun l _ => ?_
       rw [map_smul]
       rfl
-    rw [this, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-    exact hmem
+    rwa [this, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
   · rw [mSub_qAct_top]
     exact LinearEquiv.finrank_eq (Submodule.quotientQuotientEquivQuotientSup G (mSub σ (χ i) ⊤))
 
@@ -396,8 +394,7 @@ theorem finrank_ksSub_map_cls_eq_homO {k O H : Type*} [Field k] [AddCommGroup H]
       · intro a x hx
         rw [← Submodule.Quotient.mk_eq_zero, Submodule.Quotient.mk_sub, sub_eq_zero]
         change G.mkQ (f (σ a x)) = G.mkQ (σ a (f x))
-        rw [hf _ (hG a x hx), ← qAct_mk σ G hG, hf x hx]
-        rw [← (mem_homO _ _ _).1 S.2 a]
+        rw [hf _ (hG a x hx), ← qAct_mk σ G hG, hf x hx, ← (mem_homO _ _ _).1 S.2 a]
         rfl
       · intro x hx
         rw [← Submodule.Quotient.mk_eq_zero]
@@ -713,11 +710,9 @@ theorem weightSpace_iff_idempotent_fixed : ∀ (k : Type) [Field k] (C : Type) [
       ext ⟨x, hx⟩
       have hx' : x ∈ Module.End.maxGenEigenspace (DistribSMul.toLinearMap k M ((1 : k) ⊗ₜ[ℤ] c)) (χ c) :=
         (Submodule.mem_iInf _).1 hx c
-      rw [Module.End.maxGenEigenspace_eq, Module.End.mem_genEigenspace_nat] at hx'
-      rw [← hρT, ← map_pow] at hx'
+      rw [Module.End.maxGenEigenspace_eq, Module.End.mem_genEigenspace_nat, ← hρT, ← map_pow] at hx'
       rw [LinearMap.mem_ker] at hx'
-      rw [← map_pow, LinearMap.zero_apply]
-      exact hx'
+      rwa [← map_pow, LinearMap.zero_apply]
     have hall : ∀ a, IsNilpotent (ρX (a - algebraMap k (k ⊗[ℤ] C) (φ a))) := by
       intro a
       induction a using TensorProduct.induction_on with
@@ -1179,8 +1174,7 @@ theorem exists_delta {Idx : Type*} [Fintype Idx] [DecidableEq Idx] (χ : Idx →
       have h1 : f (v d) = 0 := by
         have : f (v d) ∈ (Submodule.span k (Set.range v)).map f :=
           Submodule.mem_map_of_mem (Submodule.subset_span ⟨d, rfl⟩)
-        rw [hf'] at this
-        exact this
+        rwa [hf'] at this
       rw [LinearMap.pi_apply_eq_sum_univ f (v d)] at h1
       simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply]
       rw [← h1]
@@ -1488,8 +1482,7 @@ theorem count {ι : Type*} [Fintype ι] [FiniteDimensional k H] (σ : O →+* Mo
   rw [finrank_ks_map_cls σ G Z hG hZ hZG] at key
   convert key using 1
   obtain ⟨hF1, hF2⟩ := quot_facts σ G hG χ
-  rw [finrank_homO_crt _ _ χ hχ (hF1 hJ)]
-  rw [← Finset.card_univ, ← smul_eq_mul, ← Finset.sum_const]
+  rw [finrank_homO_crt _ _ χ hχ (hF1 hJ), ← Finset.card_univ, ← smul_eq_mul, ← Finset.sum_const]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [finrank_homO_quot _ _ (χ i) (qAct_mSub_algebraMap _ (χ i))]
   have hD := finrank_sub_quot σ χ hχ Fil hFil ω r₀ r₁ hr hω hχω hG hZ hJ i
@@ -1499,8 +1492,7 @@ theorem count {ι : Type*} [Fintype ι] [FiniteDimensional k H] (σ : O →+* Mo
   simp only at hD
   rw [hlie i, hrank i] at hD
   have h1 := Nat.eq_sub_of_add_eq hD
-  rw [h1, ← Nat.mul_sub_one] at hM
-  rw [show m * (n - 1) * m = m ^ 2 * (n - 1) by ring] at hM
+  rw [h1, ← Nat.mul_sub_one, show m * (n - 1) * m = m ^ 2 * (n - 1) by ring] at hM
   exact (Nat.eq_of_mul_eq_mul_left (by positivity) hM).symm
 
 end GlobalTheory.HTRho
@@ -1580,8 +1572,7 @@ theorem rhoCount : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum 
       have := _root_.GlobalTheory.HTRho.finrank_homO_morita p D k hchar (χ i) _ _ (trAct eX σX) (trAct eY σY)
         (fun c => LinearMap.ext fun x => by rw [trAct_apply, hX]; simp) (fun c => LinearMap.ext fun x => by rw [trAct_apply, hY]; simp)
       rwa [← eX.finrank_eq, ← eY.finrank_eq] at this)
-  rw [Fintype.card_fin] at key
-  exact key
+  rwa [Fintype.card_fin] at key
 
 end GlobalTheory.HTRho
 end -- clump:auto
@@ -1669,8 +1660,7 @@ theorem ksDim_of_eigen_reduce : ∀ (k : Type) (H : Type 1) (O : Type) [Field k]
     have hle : Fil ≤ φ.orthogonal Fil := by
       intro x hx
       rw [LinearMap.BilinForm.mem_orthogonal_iff]
-      intro y hy
-      exact hiso y hy x hx
+      exact fun y hy => hiso y hy x hx
     have hdim2 := LinearMap.BilinForm.finrank_orthogonal hnd' Fil
     have heq : Fil = φ.orthogonal Fil := Submodule.eq_of_le_of_finrank_le hle (by omega)
     intro v hv

@@ -290,8 +290,7 @@ private theorem ngl_windows_le (p : ℕ → ℝ) (hp : ∀ a, 0 ≤ p a ∧ p a 
     _ = ∑ i ∈ Finset.range n, exP p (window n i L ∩ (Finset.range n).erase i₀)
           (fun T => ind (K' ≤ T.card)) := by
         apply Finset.sum_congr rfl
-        intro i _
-        exact h_restr _ _ (fun T => ind (K' ≤ T.card)) Finset.inter_subset_right
+        exact fun i _ => h_restr _ _ (fun T => ind (K' ≤ T.card)) Finset.inter_subset_right
     _ ≤ ∑ _i ∈ Finset.range n, b := by
         apply Finset.sum_le_sum
         intro i _
@@ -403,8 +402,7 @@ theorem UpperTheory.BernoulliSumsFrobeniusOrbits.shares_of_counts :
       intro t
       have h2 := Equiv.sum_comp (Equiv.subLeft t) (fun x => if x ∈ A0 then (1:ℕ) else 0)
       simp only [Equiv.subLeft_apply] at h2
-      rw [h2, ← Finset.card_filter]
-      exact hcardA0
+      rwa [h2, ← Finset.card_filter]
     rw [Finset.sum_congr rfl (fun t _ => inner t), Finset.sum_const, smul_eq_mul]
   have hsum : (∑ γ : A, ((T.filter fun t => t - γ ∈ A0).card : ℝ)) = n * T.card := by
     have h3 := congrArg (Nat.cast : ℕ → ℝ) hsumN
@@ -439,8 +437,7 @@ theorem UpperTheory.BernoulliSumsFrobeniusOrbits.shares_of_counts :
   rw [abs_le] at hT
   have hX1 : 3 * m * δ * n / 4 ≤ (T.card : ℝ) := by nlinarith
   have hη0 : 0 ≤ η := by
-    by_contra hneg
-    push Not at hneg
+    by_contra! hneg
     have h5 : η * (δ * n) < 0 := mul_neg_of_neg_of_pos hneg hδn
     linarith
   have hηX : 3 * D ≤ η * T.card := by
@@ -574,16 +571,14 @@ private lemma fin_sum_eq (n : ℕ) (q : ℕ → ℝ) (F : Finset ℕ → ℝ) :
     intro x hx
     obtain ⟨i, _, rfl⟩ := mem_map.mp hx
     simp
-  · intro S _ S' _ h
-    exact Finset.map_injective _ h
+  · exact fun S _ S' _ h => Finset.map_injective _ h
   · intro T hT
     refine ⟨univ.filter (fun i : Fin n => (i : ℕ) ∈ T), mem_univ _, ?_⟩
     ext x
     simp only [mem_map, mem_filter, mem_univ, true_and, Fin.valEmbedding_apply]
     constructor
     · rintro ⟨i, hi, rfl⟩; exact hi
-    · intro hx
-      exact ⟨⟨x, mem_range.mp (mem_powerset.mp hT hx)⟩, hx, rfl⟩
+    · exact fun hx => ⟨⟨x, mem_range.mp (mem_powerset.mp hT hx)⟩, hx, rfl⟩
   · intro S _
     have e : range n \ S.map Fin.valEmbedding = (univ \ S).map Fin.valEmbedding := by
       ext x
@@ -676,8 +671,7 @@ theorem UpperTheory.BernoulliSumsFrobeniusOrbits.markedLow_bounds :
     have e : 1 - (1 - δ)⁻¹ = -(δ / (1 - δ)) := by
       field_simp
       ring
-    rw [e] at h
-    exact h
+    rwa [e] at h
   have hexp : (1 - δ) ^ u = Real.exp (u * Real.log (1 - δ)) := by
     rw [← Real.log_pow, Real.exp_log (pow_pos h1δ u)]
   have hq : (u : ℝ) * δ / (1 - δ) ≤ 103 / 100 := by
@@ -901,8 +895,7 @@ theorem UpperTheory.BernoulliSumsFrobeniusOrbits.orbit_terms :
         _ ≤ x ^ (eps / 8) := Real.rpow_le_rpow (by positivity) hx100 (by positivity)
     have := inv_anti₀ (by norm_num) h100
     rw [← hδinv, inv_inv] at this
-    rw [one_div]
-    exact this
+    rwa [one_div]
   have hδ1 : δ ≤ 1 := by linarith
   have hexpb : ∀ t : ℝ, (h + 3) * Real.log x ≤ t → Real.exp (-t) ≤ x ^ (-(h + 3)) := by
     intro t ht
@@ -1057,8 +1050,7 @@ private theorem sel_moment' {α : Type} [Fintype α] [DecidableEq α] (p g : α 
     ∑ T : Finset α, pw p T * (c + ∑ a ∈ T, g a) ^ 2 =
       (c + ∑ a, g a * p a) ^ 2 + ∑ a, g a ^ 2 * (p a * (1 - p a)) := by
   have := sel_moment p g univ c
-  rw [Finset.powerset_univ] at this
-  exact this
+  rwa [Finset.powerset_univ] at this
 
 private theorem sel_exists {γ : Type} [Fintype γ] (w F : γ → ℝ) (hw : ∀ T, 0 ≤ w T)
     (h1 : ∑ T, w T = 1) : ∃ T, 0 < w T ∧ F T ≤ ∑ U, w U * F U := by

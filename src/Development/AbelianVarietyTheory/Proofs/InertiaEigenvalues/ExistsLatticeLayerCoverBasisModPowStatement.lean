@@ -117,13 +117,11 @@ theorem GlobalTheory.CovRep.rep_of_basis : ∀ (l : ℕ) [Fact l.Prime] (Γ : Ty
   have hcrd : ∀ x ∈ T, x = ∑ s, zOm l (crd x s) • bb s := by
     intro x hx
     have h := hcoord x hx
-    simp only [crd, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [crd, dite_eq_left h] using h.choose_spec
   have hcrd_eq : ∀ z : Fin d' → ℤ_[l], crd (∑ s, zOm l (z s) • bb s) = z := by
     intro z
     have h : ∃ z' : Fin d' → ℤ_[l], ∑ s, zOm l (z s) • bb s = ∑ s, zOm l (z' s) • bb s := ⟨z, rfl⟩
-    simp only [crd, dite_eq_left h]
-    exact (coord_unique hli h.choose_spec).symm
+    simpa only [crd, dite_eq_left h] using (coord_unique hli h.choose_spec).symm
   let Mf : Γ → Matrix (Fin d') (Fin d') ℤ_[l] := fun g => Matrix.of fun s j => crd (GlobalTheory.TraceConjugationCover.tup ρs g * bb j) s
   have hMf : ∀ g j, GlobalTheory.TraceConjugationCover.tup ρs g * bb j = ∑ s, zOm l (Mf g s j) • bb s :=
     fun g j => hcrd _ (hstab g _ (hbbT j))
@@ -189,8 +187,7 @@ theorem GlobalTheory.CovRep.rep_of_basis : ∀ (l : ℕ) [Fact l.Prime] (Γ : Ty
     have e : (fun x : ℤ_[l] => (x : ℚ_[l])) ∘ (fun g => crd (F g) s) =
         fun g => B.coord s ⟨F g, hW _ (hT g)⟩ := by
       funext g
-      simp only [Function.comp_apply, Module.Basis.coord_apply]
-      exact hrepr _ (hT g) s
+      simpa only [Function.comp_apply, Module.Basis.coord_apply] using hrepr _ (hT g) s
     rw [e]
     exact (LinearMap.continuous_of_finiteDimensional (B.coord s)).comp (hF.subtype_mk _)
   have htup : Continuous fun g => GlobalTheory.TraceConjugationCover.tup ρs g :=
@@ -215,8 +212,7 @@ theorem GlobalTheory.CovRep.rep_of_basis : ∀ (l : ℕ) [Fact l.Prime] (Γ : Ty
     funext g
     rw [← map_inv]
     exact hval _
-  rw [e]
-  exact hMci
+  rwa [e]
 
 end
 end -- clump:auto
@@ -329,8 +325,7 @@ theorem satA : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] (a m : ℕ) (
     intro n w
     rw [← GlobalTheory.TraceConjugationCover.zOm_smul, map_pow, map_natCast]
   have hsingle : ∀ k, ∀ z ∈ t k, Pi.single k z ∈ Λ := by
-    intro k z hz
-    exact Submodule.subset_span (Set.mem_iUnion.2 ⟨k, z, hz, by simp⟩)
+    exact fun k z hz => Submodule.subset_span (Set.mem_iUnion.2 ⟨k, z, hz, by simp⟩)
   have hlat : ∀ M, ∀ x ∈ GlobalTheory.TraceConjugationCover.latL t M, ∃ y ∈ Λ, x = ((l : ℤ_[l]) ^ M) • y := by
     intro M x hx
     induction hx using Submodule.span_induction with
@@ -371,8 +366,7 @@ theorem satA : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] (a m : ℕ) (
       Λ.comap (LinearMap.single ℤ_[l] (fun _ : Fin m => Matrix (Fin a) (Fin a) (Om l)) k) := by
     intro k
     rw [Submodule.span_le]
-    intro z hz
-    exact hsingle k z hz
+    exact fun z hz => hsingle k z hz
   have hEΛ : E ≤ Λ := by
     rw [Submodule.span_le]
     rintro _ ⟨g, rfl⟩
@@ -577,12 +571,10 @@ theorem latT_basis : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] (a m : 
       obtain ⟨k, y, hy, rfl⟩ := Set.mem_iUnion.1 hz
       refine hsingle k _ ?_
       have : ((l : ℤ_[l]) ^ M) • y ∈ Λ k := Submodule.smul_mem _ _ (Submodule.subset_span hy)
-      rw [← zOm_smul, map_pow, map_natCast] at this
-      exact this
+      rwa [← zOm_smul, map_pow, map_natCast] at this
   have hfg0 : (latL t (0 : ℕ)).FG := by
     rw [latL]
-    refine Submodule.fg_span ?_
-    exact Set.finite_iUnion fun k => (t k).finite_toSet.image _
+    exact Submodule.fg_span (Set.finite_iUnion fun k => (t k).finite_toSet.image _)
   have hfg : (latT ρs t M).FG := hfg0.of_le hT
   haveI : Module.Finite ℤ_[l] (latT ρs t M) := Module.Finite.iff_fg.2 hfg
   have hinj : Function.Injective (zOm l) :=
@@ -604,8 +596,7 @@ theorem latT_basis : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] (a m : 
     refine ⟨b.repr ⟨x, hx⟩, ?_⟩
     have := congrArg Subtype.val (b.sum_repr ⟨x, hx⟩)
     simp only [Submodule.coe_sum, Submodule.coe_smul] at this
-    simp only [zOm_smul]
-    exact this.symm
+    simpa only [zOm_smul] using this.symm
 
 end GlobalTheory.TraceConjugationCover
 end -- clump:auto
@@ -752,8 +743,7 @@ theorem norm_trace_latL {l : ℕ} [Fact l.Prime] {a m : ℕ} (t : Fin m → Fins
     · subst hjk
       rw [Pi.single_eq_same, Matrix.trace_smul, smul_eq_mul, norm_mul, norm_pow, norm_l]
       exact mul_le_mul_of_nonneg_left (le_trBound t k hz) (pow_nonneg (inv_nonneg.2 (Nat.cast_nonneg _)) _)
-    · rw [Pi.single_eq_of_ne hjk, Matrix.trace_zero, norm_zero]
-      exact h0
+    · rwa [Pi.single_eq_of_ne hjk, Matrix.trace_zero, norm_zero]
   | zero => simpa using h0
   | add x y _ _ hx hy =>
     rw [Pi.add_apply, Matrix.trace_add]
@@ -1030,8 +1020,7 @@ theorem layer : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [Topological
     exact Dvd.dvd.mul_right (pow_dvd_pow _ hnN) _
   · intro s
     have := hM₁ M hM1 (F s) (y s) (hy s)
-    rw [sumZ_fin, hP s, hFy s, ← sumZ, ← sumZ]
-    exact this
+    rwa [sumZ_fin, hP s, hFy s, ← sumZ, ← sumZ]
 
 end GlobalTheory.CovLayer
 end -- clump:auto

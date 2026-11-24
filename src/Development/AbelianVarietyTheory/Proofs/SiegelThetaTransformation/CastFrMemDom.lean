@@ -184,14 +184,12 @@ theorem anFib_move : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
       fr_per := ?_ }, fun θ hθ => hθ, ?_, ?_⟩
   · intro v hv j z hz
     obtain ⟨u, hu, rfl⟩ := (mem_mapL_iff ga L v).1 hv
-    simp only [GL_inv_mulVec_mulVec, pvT, hxT]
-    exact A.fr_per u hu j z hz
+    simpa only [GL_inv_mulVec_mulVec, pvT, hxT] using A.fr_per u hu j z hz
   · intro θ hθ
     unfold MeanOne at hθ ⊢
     obtain ⟨Ag, Fd, hA, hFd, hint⟩ := hθ
     refine ⟨Ag, Fd, fun z => (hA z).trans (hT z), hFd, ?_⟩
-    simp only [hxT]
-    exact hint
+    simpa only [hxT] using hint
   · intro mk hmk
     unfold AnFib.Marked at hmk ⊢
     intro a ha

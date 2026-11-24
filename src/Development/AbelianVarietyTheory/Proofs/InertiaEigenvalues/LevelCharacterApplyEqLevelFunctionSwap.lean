@@ -84,8 +84,7 @@ theorem levFn_conj {S T : HSp D} {B : Base S T} (hB : B.Good) {τ : ℂ ≃+* �
   congr 1
   congr 1
   · exact levPOf_ext1_apply_eq_units_map_inv B.G.P hf.2.1 _
-  · refine Finset.prod_congr rfl fun PP hPP => Finset.prod_congr rfl fun c _ => ?_
-    exact hf.2.2 PP hPP _
+  · exact Finset.prod_congr rfl fun PP hPP => Finset.prod_congr rfl fun c _ => hf.2.2 PP hPP _
   · refine Finset.prod_congr rfl fun PP _ => ?_
     rw [MonoidHom.mul_apply, MonoidHom.mul_apply, Units.val_mul, Units.val_mul, map_mul,
       locC_conj hf.conjChar hB.de hB.de, locC_conj hcc hψ hψ']
@@ -93,8 +92,7 @@ theorem levFn_conj {S T : HSp D} {B : Base S T} (hB : B.Good) {τ : ℂ ≃+* �
 theorem mem_levJ_of {S T : HSp D} (B : Base S T) {ψ ψ' : Twist D Circle} (hQ : ψ'.Q = ψ.Q) {k : Bridge.Gf S}
     (hk : k ∈ B.levJ ψ') : k ∈ B.levJ ψ := by
   simp only [Base.levJ, Subgroup.mem_comap, Lev.toAfE, mem_lev, mem_parLev, Base.levS] at hk ⊢
-  rw [hQ] at hk
-  exact hk
+  rwa [hQ] at hk
 
 
 theorem levelCharacter_apply_eq_levelFunction_swap {S T : HSp D} (B : Base S T) (ψ : Twist D Circle) (k : B.levJ ψ) :

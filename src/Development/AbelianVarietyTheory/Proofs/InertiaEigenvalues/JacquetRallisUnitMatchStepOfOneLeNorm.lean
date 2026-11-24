@@ -161,8 +161,7 @@ theorem glNormal_of_ne_zero : ∀ (k : Type) [Field k] (r : ℕ) (a : Inv (r + 1
     have e : (GlobalTheory.JR.Step.eL r k ᵥ* GlobalTheory.JR.Step.nfMat a.2.1) ᵥ*
         ((hu.unit⁻¹ : GL (Fin (r + 1)) k) : Matrix (Fin (r + 1)) (Fin (r + 1)) k) = GlobalTheory.JR.Step.eL r k := by
       rw [Matrix.vecMul_vecMul, hgi, Matrix.vecMul_one]
-    rw [hinv] at e
-    exact e
+    rwa [hinv] at e
 
 end GlobalTheory.JR.Step
 end -- clump:auto
@@ -489,8 +488,7 @@ theorem GlobalTheory.JR.orbG_integrand_hasCompactSupport : ∀ (F : Type) [Nontr
   have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   obtain ⟨-, -, hCB, -, -⟩ := _root_.GlobalTheory.JR.normalForm_invariants F n
   have hdet : (Cm Y).det * (Bm Y).det ≠ 0 := by
-    rw [← Matrix.det_mul, hCB Y]
-    exact hY
+    rwa [← Matrix.det_mul, hCB Y]
   have hB : IsUnit (Bm Y).det := isUnit_iff_ne_zero.mpr (right_ne_zero_of_mul hdet)
   have hC : IsUnit (Cm Y).det := isUnit_iff_ne_zero.mpr (left_ne_zero_of_mul hdet)
 
@@ -659,8 +657,7 @@ theorem omega_act (F : Type) [NontriviallyNormedField F] [IsUltrametricDist F] (
     rw [← norm_mul, ← Matrix.det_mul, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.det_one, norm_one]
   have hkinv : ‖((k⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F).det‖ = 1 := by
     apply le_antisymm hb
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     have : ‖(k : Matrix (Fin n) (Fin n) F).det‖ * ‖((k⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F).det‖ < 1 :=
       lt_of_le_of_lt (mul_le_of_le_one_left (norm_nonneg _) ha) hlt
     linarith
@@ -977,8 +974,7 @@ theorem inv_glMap (Y : Gl r k) : inv (glMap φ Y) = (inv Y).map φ := by
   · ext i
     simp [inv, Inv.map, glMap, Matrix.charpoly_map]
   · ext i
-    simp only [inv, Inv.map]
-    exact mom_glMap φ Y i
+    simpa only [inv, Inv.map] using mom_glMap φ Y i
   · rfl
 
 theorem sec_map (a : Inv r k) : sec (a.map φ) = glMap φ (sec a) := by
@@ -1074,8 +1070,7 @@ theorem hasInv_of_lift : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivia
     have := congrFun h2 i
     rw [Matrix.mulVec_smul, eL, Matrix.mulVec_single_one] at this
     simp only [Pi.smul_apply, smul_eq_mul] at this
-    rw [mul_comm]
-    exact this
+    rwa [mul_comm]
   have hrow : eL r E ᵥ* G = (star ν)⁻¹ • eL r E := by
     have hs : star ν • (eL r E ᵥ* G) = eL r E := by
       rw [← Matrix.smul_vecMul, ← h3, Matrix.vecMul_vecMul, hGiG, Matrix.vecMul_one]

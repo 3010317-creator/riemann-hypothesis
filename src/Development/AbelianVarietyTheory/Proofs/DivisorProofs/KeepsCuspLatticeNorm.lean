@@ -739,8 +739,7 @@ theorem invariant_prob_eq : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTop
     simp only [measure_univ, Measure.smul_apply, smul_eq_mul] at this
     rw [Measure.map_apply (measurable_cls Γ) MeasurableSet.univ] at this
     simpa using this.symm
-  rw [← ENNReal.eq_inv_of_mul_eq_one_left h1]
-  exact key
+  rwa [← ENNReal.eq_inv_of_mul_eq_one_left h1]
 
 end GlobalTheory.LatticeQuotUniq
 end -- clump:auto
@@ -860,8 +859,7 @@ theorem val_transl_nonneg (hpq : 1 ≤ Dw.p + Dw.q) (hA : l.A.Coprime l.M) (γ :
   have h0 : 0 ≤ nval S.V n (evI y' f) := h la _ ⟨PtV.mk la ho y' hy () trivial, rfl⟩
   have e1 : evI y (transl Xo c γ f) = evI y' f := evR_transl hpq hA γ hf y.1
   show 0 ≤ nval S.V n (evI y (transl Xo c γ f))
-  rw [e1]
-  exact h0
+  rwa [e1]
 
 variable {σ : c.F →+* ℂ} {r : ℕ} {U : Unf Xo c σ r} {g : ℕ} {e : Fin g ≃ Σ τ : E →+* ℂ, Fin (Dw.mult τ)}
   {F : FamilyUnif Xo (σ.comp (IntermediateField.inclusion c.le).toRingHom) (fun j => relab c σ (e j).1)}

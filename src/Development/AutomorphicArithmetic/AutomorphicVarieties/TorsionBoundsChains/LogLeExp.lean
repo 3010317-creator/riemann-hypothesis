@@ -110,8 +110,7 @@ theorem UpperTheory.V.KH.fullEnum :
       · exact absurd h (hn0 i)
     · intro j _ hj
       simp [hj]
-    · intro h
-      exact absurd hi h
+    · exact fun h => absurd hi h
   let w : ι → Submodule.span ℤ b := fun k => ⟨n k • Finsupp.single k (1 : ℤ), hmem k⟩
   have hw : LinearIndependent ℤ w :=
     LinearIndependent.of_comp (Submodule.span ℤ b).subtype hind
@@ -125,8 +124,7 @@ theorem UpperTheory.V.KH.fullEnum :
   constructor
   · rintro ⟨k, rfl⟩
     exact (e k).2
-  · intro hy
-    exact ⟨e.symm ⟨y, hy⟩, by simp⟩
+  · exact fun hy => ⟨e.symm ⟨y, hy⟩, by simp⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.TorsionBoundsChains.FullEnum =====
@@ -263,8 +261,7 @@ theorem UpperTheory.V.KH.maxIndep :
       · simp [Finsupp.erase_ne hy]
     rw [← he]
     apply (linearIndepOn_iff.mp hmi) _ hl'
-    rw [h0, zero_smul, zero_add] at hsum
-    exact hsum
+    rwa [h0, zero_smul, zero_add] at hsum
   refine ⟨l x, hxne, ?_⟩
   have hmem : Finsupp.linearCombination ℤ id (Finsupp.erase x l) ∈ Submodule.span ℤ m := by
     have h2 := (Finsupp.mem_span_image_iff_linearCombination ℤ (v := id) (s := m)).mpr ⟨_, hl', rfl⟩
@@ -341,8 +338,7 @@ private theorem torsSat_tors {M : Type} [AddCommGroup M] (N : Submodule ℤ M) (
   have hx' : IsOfFinAddOrder (Submodule.Quotient.mk x : M ⧸ N) := hx
   obtain ⟨n, hn, h⟩ := isOfFinAddOrder_iff_nsmul_eq_zero.1 hx'
   refine ⟨n, by exact_mod_cast hn.ne', ?_⟩
-  rw [← Submodule.Quotient.mk_eq_zero, Submodule.Quotient.mk_smul, natCast_zsmul]
-  exact h
+  rwa [← Submodule.Quotient.mk_eq_zero, Submodule.Quotient.mk_smul, natCast_zsmul]
 
 theorem UpperTheory.V.KH.torsSat :
     ∀ (M ι : Type) [AddCommGroup M] [IsAddTorsionFree M] (L : Set M) (v : ι → M) (B : ℕ),
@@ -437,8 +433,7 @@ theorem UpperTheory.V.KH.base :
     rw [h1, Submodule.span_image, ← Submodule.map_top]
     congr 1
     have := (Finsupp.basisSingleOne (R := ℤ) (ι := Y)).span_eq
-    rw [Finsupp.coe_basisSingleOne] at this
-    exact this
+    rwa [Finsupp.coe_basisSingleOne] at this
   have hker : ∀ f : X →₀ ℤ, e.hom f = 0 ↔ f ∈ Submodule.span ℤ S := by
     intro f
     rw [hspan, LinearMap.mem_range]
@@ -447,8 +442,7 @@ theorem UpperTheory.V.KH.base :
   have hL : ∀ x ∈ Finsupp.mapDomain (Quotient.mk (MulAction.orbitRel G X)) '' S, l1 x ≤ b := by
     rintro x ⟨s, ⟨y, rfl⟩, rfl⟩
     exact (l1_mapDomain_le_and_l1_faceD_single_le.1 _ _ _ _).trans (hd y)
-  have hT := cokerTors (MulAction.orbitRel.Quotient G X) A b _ hA hb hL
-  exact transport.1 _ _ φ.symm _ hT
+  exact transport.1 _ _ φ.symm _ (cokerTors (MulAction.orbitRel.Quotient G X) A b _ hA hb hL)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.TorsionBoundsChains.Imports =====

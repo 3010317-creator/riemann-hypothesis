@@ -102,14 +102,12 @@ theorem exists_basePlace_contains_every_chartLevelPrime {A : AdData t u μ St} {
     rw [← t.pr_ok.piT_norm]
     exact Ideal.mul_mem_right _ _ hpi
   have hTQ : (((St j hj).T : ℕ) : 𝓞 D.host.E) ∈ (seamP t.seam P.1).asIdeal := by
-    rw [H.T_eq j hj, ← t.T_rec u, ← map_natCast (RingOfIntegers.mapRingEquiv t.seam.iE), mem_seamP]
-    exact hT
+    rwa [H.T_eq j hj, ← t.T_rec u, ← map_natCast (RingOfIntegers.mapRingEquiv t.seam.iE), mem_seamP]
   have hT0 : (((St j hj).T : ℕ) : 𝓞 D.host.F) ≠ 0 := by
     rw [H.T_eq j hj, ← t.T_rec u]
     exact Nat.cast_ne_zero.2 (t.pr_ok.T_prime _).ne_zero
   have hmem : (((St j hj).T : ℕ) : 𝓞 D.host.F) ∈ (seamP t.seam P.1).asIdeal.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) := by
-    rw [Ideal.mem_comap, map_natCast]
-    exact hTQ
+    rwa [Ideal.mem_comap, map_natCast]
   let v : HeightOneSpectrum (𝓞 D.host.F) := ⟨(seamP t.seam P.1).asIdeal.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)),
     Ideal.IsPrime.comap _, fun h => hT0 (by rw [h] at hmem; exact (Ideal.mem_bot.1 hmem))⟩
   exact ⟨v, hmem, rfl⟩
@@ -147,8 +145,7 @@ theorem ptAd_mul_lev_deco : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A 
     rw [p₁.deco.2.f_smul P _ w hw₁, p.deco.2.f_smul P _ w hw] at e3
     haveI hP := P.1.isPrime
     have hu : Ideal.Quotient.mk P.1.asIdeal s ≠ 0 := by
-      rw [Ne, Ideal.Quotient.eq_zero_iff_mem]
-      exact hs
+      rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
     exact mul_left_cancel₀ hu e3
   · have hw₁ : w ∉ p₁.deco.1.at P.1 := by simpa only [Deco.at, hN] using hw
     rw [p₁.deco.2.f_off P w hw₁, p.deco.2.f_off P w hw]
@@ -270,8 +267,7 @@ theorem core [StarRing E] (Q : HeightOneSpectrum (𝓞 E)) (n : ℕ) (hn : 1 ≤
   show IntAt Q ((((qOf Q : ℕ) : E) ^ n)⁻¹ * Mm a b)
   refine GlobalTheory.RatInt.intAt_of_intAtA (F := F) Q _ ?_
   have e3 : iA F E ((((qOf Q : ℕ) : E) ^ n)⁻¹ * Mm a b) = qi * Mh a b := by rw [map_mul, hMh, Matrix.map_apply]
-  rw [e3]
-  exact hfin
+  rwa [e3]
 
 end Core
 

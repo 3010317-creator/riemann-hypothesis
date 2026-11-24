@@ -76,8 +76,7 @@ private theorem mem_span_of_pow_mul_mem_span {R : Type*} [CommRing R] (g h : R)
       intro z hz
       refine ih z (hcan n (h ^ m * z) ?_)
       have hmul : h * (h ^ m * z) = h ^ (m + 1) * z := by ring
-      rw [hmul]
-      exact hz
+      rwa [hmul]
 
 variable {X : Scheme.{u}}
 
@@ -324,8 +323,7 @@ theorem stalkIdeal_monomialPartAlongDivisor_of_mem [TopologicalSpace.NoetherianS
       have hxC' : x ∉ C' := Set.disjoint_left.mp hdisj hx
       rw [stalkIdeal_componentPowerIdeal_of_not_mem I D C' hxC', Ideal.one_eq_top]
     have h3 := stalkIdeal_mono hle x
-    rw [hprod, hCpart] at h3
-    exact h3
+    rwa [hprod, hCpart] at h3
 
 def monomialFactorIdeal [TopologicalSpace.NoetherianSpace ↥X] (E : List X.IdealSheafData)
     (I : X.IdealSheafData) : X.IdealSheafData :=
@@ -425,8 +423,7 @@ private theorem exists_nhds_ideal_monomialPartAlongDivisor_eq_span [TopologicalS
     have hres : restrictIdeal D (W : X.Opens) = (c.restrict hWV).coordIdeal {j} :=
       restrictIdeal_eq_restrict_coordIdeal_of_le hWV c D {j} hDV
     have hDW : D.ideal W = Ideal.span {(c.restrict hWV).coord j} := by
-      have h1 := EtaleChart.ideal_eq_span_coord (c.restrict hWV) W.2 D {j} hres
-      simpa using h1
+      simpa using EtaleChart.ideal_eq_span_coord (c.restrict hWV) W.2 D {j} hres
     have hcomp0 : (componentPowerIdeal I D C₀).ideal W
         = Ideal.span {(c.restrict hWV).coord j ^ orderAlongComponent I hC₀.isIrreducible} := by
       rw [componentPowerIdeal_of_isIrreducibleComponentOfSupport I D hC₀, idealSheafData_ideal_pow,
@@ -463,8 +460,7 @@ private theorem exists_nhds_ideal_monomialPartAlongDivisor_eq_span [TopologicalS
   · push Not at hx
     have hclosed : IsClosed (⋃ C ∈ (supportComponentsFinset D : Set (Set X)), C) := by
       refine Set.Finite.isClosed_biUnion (supportComponentsFinset D).finite_toSet ?_
-      intro C hC
-      exact ((hmemiff C).mp (Finset.mem_coe.mp hC)).isClosed
+      exact fun C hC => ((hmemiff C).mp (Finset.mem_coe.mp hC)).isClosed
     refine ⟨⟨(⋃ C ∈ (supportComponentsFinset D : Set (Set X)), C)ᶜ, hclosed.isOpen_compl⟩, ?_, ?_⟩
     · intro hmem
       rw [Set.mem_iUnion₂] at hmem
@@ -530,8 +526,7 @@ theorem isLocallyGeneratedByNonZeroDivisor_monomialFactorIdeal [TopologicalSpace
   obtain ⟨f, hfle, hxf⟩ := hU.exists_basicOpen_le (⟨x, hxΩ⟩ : ↥Ω) hxU
   obtain ⟨g, hg, hgeq⟩ := hΩ (X.affineBasicOpen f) hfle
   refine ⟨X.affineBasicOpen f, g, hxf, hg, ?_⟩
-  rw [monomialFactorIdeal_eq_prod_monomialPartAlongDivisor]
-  exact hgeq
+  rwa [monomialFactorIdeal_eq_prod_monomialPartAlongDivisor]
 
 private theorem natCast_add_one_le_of_not_le (n : ℕ) (b : ℕ∞) (h : ¬ b ≤ (n : ℕ∞)) :
     ((n + 1 : ℕ) : ℕ∞) ≤ b := by
@@ -572,8 +567,7 @@ private theorem prod_map_eq_apply_getElem_of_forall_ne {α : Type*} {M : Type*} 
             have h2 := hone (j + 1) (by simp only [List.length_cons]; omega) (by omega)
             simpa using h2
           show (List.map g (b :: L)).prod = g L[i]
-          rw [List.map_cons, List.prod_cons, hb, one_mul]
-          exact hrest
+          rwa [List.map_cons, List.prod_cons, hb, one_mul]
 
 private theorem not_mem_support_of_stalkIdeal_eq_maximalIdeal (p : X ⟶ Spec (CommRingCat.of k))
     {V : X.Opens} (hV : IsAffineOpen V) {m : ℕ} (c : EtaleChart p V m)
@@ -607,8 +601,7 @@ private theorem not_mem_support_of_stalkIdeal_eq_maximalIdeal (p : X ⟶ Spec (C
     (M := (hV.primeIdealOf ⟨x, hx⟩).asIdeal.primeCompl) g
   have hw' : g * (X.presheaf.germ V x hx).hom (w.2 : Γ(X, V))
       = (X.presheaf.germ V x hx).hom w.1 := by
-    rw [← halg]
-    exact hw
+    rwa [← halg]
   have heq : (algebraMap Γ(X, V) (X.presheaf.stalk x)) ((w.2 : Γ(X, V)) * c.coord s)
       = (algebraMap Γ(X, V) (X.presheaf.stalk x)) (w.1 * c.coord t) := by
     rw [map_mul, map_mul, halg, ← hg, ← hw']
@@ -671,9 +664,7 @@ private theorem stalkIdeal_monomialFactorIdeal_genericPoint [TopologicalSpace.No
     | none =>
         exact notMem_support_of_mem_opens_of_restrictIdeal_eq_top E[j] U (hnone j hj haj) _ hηU hmem
     | some s =>
-        have hts : t ≠ s := by
-          intro h
-          exact hji0 (hinj j hj i0 hi0 t (by rw [haj, h]) hat)
+        have hts : t ≠ s := fun h => hji0 (hinj j hj i0 hi0 t (by rw [haj, h]) hat)
         have hmem' : hC.isIrreducible.genericPoint ∈ E[j].support := hmem
         have hxtop : hC.isIrreducible.genericPoint ∈ (⨆ W : X.affineOpens, (W : X.Opens)) := by
           rw [AlgebraicGeometry.iSup_affineOpens_eq_top X]
@@ -782,8 +773,7 @@ private theorem mem_prod_map_of_forall_mem_span {R : Type*} [CommRing R] {α : T
           have hzi : z ∈ Ideal.span ({g (i + 1)} : Set R) :=
             hz (i + 1) (by simp only [List.length_cons]; omega)
           have hzi' : g 0 * y ∈ Ideal.span ({g (i + 1) ^ 1} : Set R) := by
-            rw [pow_one, ← hzy]
-            exact hzi
+            rwa [pow_one, ← hzy]
           have h3 := hcan (i + 1) (by simp only [List.length_cons]; omega) 0
             (by simp only [List.length_cons]; omega) (by omega) 1 y hzi'
           rwa [pow_one] at h3
@@ -824,8 +814,7 @@ private theorem mem_span_algebraMap_of_mul_mem {S : Type*} [CommRing S] {q : Sub
     exact (h1.mul h2).mul h3
   obtain ⟨eu, heu⟩ := hunit
   have h7 := (Ideal.span ({algebraMap S A d} : Set A)).mul_mem_right ((eu⁻¹ : Aˣ) : A) hstep
-  rw [mul_assoc, ← heu, Units.mul_inv, mul_one] at h7
-  exact h7
+  rwa [mul_assoc, ← heu, Units.mul_inv, mul_one] at h7
 
 private theorem mem_span_germ_coord_pow_of_mul_mem (p : X ⟶ Spec (CommRingCat.of k))
     {V : X.Opens} (hV : IsAffineOpen V) {m : ℕ} (c : EtaleChart p V m) {x : X} (hx : x ∈ V)
@@ -925,8 +914,7 @@ theorem monomialFactorIdeal_mul_nonMonomialFactorIdeal [TopologicalSpace.Noether
       · rw [hi1, one_pow, Ideal.span_singleton_one]
         exact Submodule.mem_top
       · rcases (hee j hj).2.2 with hj1 | ⟨tj, bj, haj, hej⟩
-        · rw [hj1, one_mul] at hw
-          exact hw
+        · rwa [hj1, one_mul] at hw
         · have htne : ti ≠ tj := by
             intro htt
             refine hij ?_
@@ -948,10 +936,8 @@ theorem monomialFactorIdeal_mul_nonMonomialFactorIdeal [TopologicalSpace.Noether
     intro z hz
     refine mem_prod_map_of_forall_mem_span (fun D => stalkIdeal (monomialPartAlongDivisor I D) x) E ee ?_
       hcan z ?_
-    · intro i h
-      exact (hee i h).1
-    · intro i h
-      exact (hee i h).2.1 hz
+    · exact fun i h => (hee i h).1
+    · exact fun i h => (hee i h).2.1 hz
   rw [nonMonomialFactorIdeal_eq_idealSheafColon]
   exact hM.mul_idealSheafColon hIM
 
@@ -966,8 +952,7 @@ private theorem exists_affineOpens_ideal_comap_ι_eq_map (Ω : X.Opens)
     V.2.image_of_isOpenImmersion Ω.ι
   have he : (V : Ω.toScheme.Opens) ≤
       (TopologicalSpace.Opens.map Ω.ι.base).obj (Ω.ι ''ᵁ (V : Ω.toScheme.Opens)) := by
-    intro y hy
-    exact ⟨y, hy, rfl⟩
+    exact fun y hy => ⟨y, hy, rfl⟩
   have hle : (Ω.ι ''ᵁ (V : Ω.toScheme.Opens)) ≤ Ω := by
     rintro z ⟨y, -, rfl⟩
     exact y.2
@@ -997,8 +982,7 @@ private theorem idealSheafData_comap_prod (Ω : X.Opens) :
   induction n with
   | zero =>
       intro J
-      simp only [Finset.univ_eq_empty, Finset.prod_empty]
-      exact idealSheafData_comap_one Ω
+      simpa only [Finset.univ_eq_empty, Finset.prod_empty] using idealSheafData_comap_one Ω
   | succ n ih =>
       intro J
       rw [Fin.prod_univ_succ, Scheme.IdealSheafData.comap_mul, ih (fun i => J i.succ),
@@ -1035,8 +1019,7 @@ private theorem exists_nhds_ideal_monomialPartAlongDivisor_eq_pow [TopologicalSp
     have hres : restrictIdeal D (W : X.Opens) = (c.restrict hWV).coordIdeal {j} :=
       restrictIdeal_eq_restrict_coordIdeal_of_le hWV c D {j} hDV
     have hDW : D.ideal W = Ideal.span {(c.restrict hWV).coord j} := by
-      have h1 := EtaleChart.ideal_eq_span_coord (c.restrict hWV) W.2 D {j} hres
-      simpa using h1
+      simpa using EtaleChart.ideal_eq_span_coord (c.restrict hWV) W.2 D {j} hres
     have hcomp0 : (componentPowerIdeal I D C₀).ideal W
         = Ideal.span {(c.restrict hWV).coord j ^ orderAlongComponent I hC₀.isIrreducible} := by
       rw [componentPowerIdeal_of_isIrreducibleComponentOfSupport I D hC₀, idealSheafData_ideal_pow,
@@ -1076,8 +1059,7 @@ private theorem exists_nhds_ideal_monomialPartAlongDivisor_eq_pow [TopologicalSp
   · push Not at hx
     have hclosed : IsClosed (⋃ C ∈ (supportComponentsFinset D : Set (Set X)), C) := by
       refine Set.Finite.isClosed_biUnion (supportComponentsFinset D).finite_toSet ?_
-      intro C hC
-      exact ((hmemiff C).mp (Finset.mem_coe.mp hC)).isClosed
+      exact fun C hC => ((hmemiff C).mp (Finset.mem_coe.mp hC)).isClosed
     refine ⟨⟨(⋃ C ∈ (supportComponentsFinset D : Set (Set X)), C)ᶜ, hclosed.isOpen_compl⟩,
       ?_, 0, ?_⟩
     · intro hmem
@@ -1170,8 +1152,7 @@ theorem exists_isMonomialSplitting [TopologicalSpace.NoetherianSpace ↥X] [IsLo
       intro W hW
       have hW' := ha W hW
       rw [hlist] at hW'
-      rw [monomialFactorIdeal_eq_prod_monomialPartAlongDivisor]
-      exact hW'
+      rwa [monomialFactorIdeal_eq_prod_monomialPartAlongDivisor]
     rw [hcongr, idealSheafData_comap_prod Ω E.length (fun i => E.get i ^ a i)]
     exact Finset.prod_congr rfl
       (fun i _ => Scheme.IdealSheafData.comap_pow (E.get i) Ω.ι (a i))

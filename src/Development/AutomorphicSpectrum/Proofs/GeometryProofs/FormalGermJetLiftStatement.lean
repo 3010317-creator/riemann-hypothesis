@@ -354,8 +354,7 @@ theorem exists_pow_eq_fractionRing_of_pderiv_eq_zero : ∀ (k : Type) [Field k] 
       zero_smul, zero_sub] at h2
     exact (neg_mem_iff).mp h2
   apply _root_.GlobalTheory.exists_pow_eq_of_forall_derivation_eq_zero
-  intro D
-  exact derivation_eq_zero_of_kaehler p f hd D
+  exact fun D => derivation_eq_zero_of_kaehler p f hd D
 
 end GlobalTheory.CubeFib
 end -- clump:auto
@@ -500,8 +499,7 @@ theorem jet_of_mono {e : Sp k ⟶ Z} {m : ℕ} {x : Sp (Jet k κ m) ⟶ Z} (hu :
   · obtain ⟨a, ha⟩ := Ideal.Quotient.mk_surjective (ψ c)
     refine ⟨a, ?_⟩
     have := AlgHom.congr_fun hid c
-    rw [AlgHom.comp_apply, ← ha] at this
-    exact this
+    rwa [AlgHom.comp_apply, ← ha] at this
   · have := AlgHom.congr_fun hψτ a
     rw [AlgHom.comp_apply, ha, map_zero] at this
     exact Ideal.Quotient.eq_zero_iff_mem.1 this.symm

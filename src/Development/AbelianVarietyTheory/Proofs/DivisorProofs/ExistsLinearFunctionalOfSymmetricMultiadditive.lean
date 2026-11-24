@@ -83,7 +83,6 @@ theorem exists_perm_of_expv_eq {ι : Type} {n : ℕ} {c c' : Fin n → ι} (h : 
   let E : ∀ i, {a // c' a = i} ≃ {a // c a = i} := fun i => Fintype.equivOfCardEq (hc i)
   refine ⟨(Equiv.sigmaFiberEquiv c').symm.trans ((Equiv.sigmaCongrRight E).trans (Equiv.sigmaFiberEquiv c)),
     fun a => ?_⟩
-  show c' a = c (E (c' a) ⟨a, rfl⟩).1
   exact (E (c' a) ⟨a, rfl⟩).2.symm
 
 end GlobalTheory.MixHt.PolForm

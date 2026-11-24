@@ -83,9 +83,7 @@ theorem homog_X [DecidableEq K] (p : Σ k, ι k) : IsMultiHomog (X p : MRing ι)
 theorem homog_sub {g h : MRing ι} {d : K → ℕ} (hg : IsMultiHomog g d) (hh : IsMultiHomog h d) :
     IsMultiHomog (g - h) d := by
   rw [sub_eq_add_neg]
-  refine isMultiHomog_add hg ?_
-  intro m hm
-  exact hh m (by simpa using hm)
+  exact isMultiHomog_add hg (fun m hm => hh m (by simpa using hm))
 
 theorem exists_form (c : ∀ k, ι k) (G : MRing ι) :
     ∃ (D : K → ℕ) (H M : MRing ι), IsMultiHomog H D ∧ IsMultiHomog M D ∧
@@ -199,8 +197,7 @@ theorem existsUnique_ptOver (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fin
   have hG : ∀ a : 𝓞 F, ∃ G : MRing ι, aeval (fun p => y p / y ⟨p.1, c p.1⟩) G = φ (a : F) := by
     intro a
     have h := hO.2 c hy a
-    rw [chartRingZ, Algebra.adjoin_range_eq_range_aeval] at h
-    exact h
+    rwa [chartRingZ, Algebra.adjoin_range_eq_range_aeval] at h
   obtain ⟨τ, hτ⟩ := exists_intHom φ hz hc hy hG
   have hinj := intHom_injective τ
   let σ : F →+* ℂ := IsFractionRing.lift hinj

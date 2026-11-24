@@ -158,8 +158,7 @@ private theorem mem_span_coord_of_coord_pow_mul_mem {X : Scheme.{u}} {k : Type u
       intro x hx
       refine mem_span_coord_of_coord_mul_mem hU c hjs x (ih (c.coord s * x) ?_)
       have h : c.coord s ^ n * (c.coord s * x) = c.coord s ^ (n + 1) * x := by ring
-      rw [h]
-      exact hx
+      rwa [h]
 
 theorem EtaleChart.saturation_coordIdeal_of_ne {X : Scheme.{u}} {k : Type u} [Field k]
     {p : X ⟶ Spec (CommRingCat.of k)} {U : X.Opens} {m : ℕ} (c : EtaleChart p U m)
@@ -176,8 +175,7 @@ theorem EtaleChart.saturation_coordIdeal_of_ne {X : Scheme.{u}} {k : Type u} [Fi
   constructor
   · rintro ⟨n, hn⟩
     exact mem_span_coord_of_coord_pow_mul_mem V.2 (c.restrictOpens V.1) hjs n f hn
-  · intro hf
-    exact ⟨0, by simpa using hf⟩
+  · exact fun hf => ⟨0, by simpa using hf⟩
 
 namespace BlowupChart
 

@@ -331,8 +331,7 @@ theorem exists_trace_mul_ne_zero (u : mixedEmbedding.mixedSpace F) (hu : u ≠ 0
     (h2.map (Algebra.lmul ℝ (mixedEmbedding.mixedSpace F)))).1 h
   have h4 := LinearMap.congr_fun h3 u
   simp only [LinearMap.zero_apply] at h4
-  rw [← h1]
-  exact h4
+  rwa [← h1]
 
 
 open scoped Classical in
@@ -402,8 +401,7 @@ theorem arch_bump_trig : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [F
     intro x w
     have h2 : (x ⬝ᵥ ι w).2 = 0 := by
       have := map_sum (RingHom.snd (Ainf F) (Af F)) (fun i => x i * ι w i) Finset.univ
-      refine this.trans (Finset.sum_eq_zero fun i _ => ?_)
-      exact mul_zero (x i).2
+      exact this.trans (Finset.sum_eq_zero fun i _ => (mul_zero (x i).2))
     have h1 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI F (x ⬝ᵥ ι w) = (P fun i => (x i).1) ⬝ᵥ w := by
       have := map_sum (e.toRingHom.comp (RingHom.fst (Ainf F) (Af F))) (fun i => x i * ι w i) Finset.univ
       refine this.trans (Finset.sum_congr rfl fun i _ => ?_)
@@ -762,9 +760,7 @@ theorem sq_lintegral_lt_top : ∀ {F : Type} [Field F] [NumberField F] {κ : Typ
   intro F _ _ κ _ Φ hΦ μ hμ
   letI : MeasurableSpace (κ → AF F) := borel _
   have h := (GlobalTheory.WeilM.schA_memLp_two F κ μ hμ Φ hΦ).integrable_norm_pow two_ne_zero
-  have h2 := h.2
-  simp only [HasFiniteIntegral, enorm_pow, enorm_norm] at h2
-  exact h2
+  simpa only [HasFiniteIntegral, enorm_pow, enorm_norm] using h.2
 
 theorem continuous_and_compact_finite_support : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ], ∀ Φ ∈ GlobalTheory.WeilM.schA F κ,
     Continuous Φ ∧ ∃ K : Set (κ → Af F), IsCompact K ∧ ∀ x : κ → AF F, Φ x ≠ 0 → (fun i => (x i).2) ∈ K := by
@@ -994,8 +990,7 @@ theorem exists_localizing_weight : ∀ {F : Type} [Field F] [NumberField F] {κ 
       by_cases hxA : (fun i => (x i).2) ∈ A
       · rw [Set.indicator_of_mem hxA, one_mul]
         exact hCb n x
-      · rw [Set.indicator_of_notMem hxA, zero_mul, norm_zero]
-        exact hC0
+      · rwa [Set.indicator_of_notMem hxA, zero_mul, norm_zero]
     · intro x hx
       simp only [hsc _ x, hfK x (hK x hx)]
       by_cases hxA : (fun i => (x i).2) ∈ A
@@ -1089,8 +1084,7 @@ theorem vanish_at_point : ∀ {X : Type} [AddCommGroup X] [TopologicalSpace X] [
   have hsum : P y + (y - P y) = y := by abel
   have hpre : (fun p : X × X => p.1 + p.2) ⁻¹' V ∈ 𝓝 (P y, y - P y) := by
     apply continuous_add.continuousAt.preimage_mem_nhds
-    simp only [hsum]
-    exact hVo.mem_nhds hyV
+    simpa only [hsum] using hVo.mem_nhds hyV
   obtain ⟨u, hu, v, hv, huv⟩ := mem_nhds_prod_iff.mp hpre
   obtain ⟨s1, hs1, hs1u, hs1c⟩ := local_compact_nhds hu
   obtain ⟨s2, hs2, hs2v, hs2c⟩ := local_compact_nhds hv
@@ -1191,8 +1185,7 @@ theorem vanish_at_point : ∀ {X : Type} [AddCommGroup X] [TopologicalSpace X] [
           lintegral_mono hpt
       _ = (ε:ENNReal) ^ 2 * ∑ a ∈ t, ∫⁻ x, Set.indicator {x | P x - (a - P y) ∈ U1} h x ∂μ := by
           rw [lintegral_const_mul' _ _ (by simp), MeasureTheory.lintegral_finsetSum]
-          intro a _
-          exact hhm.indicator ((hU1o.preimage (hPc.sub continuous_const)).measurableSet)
+          exact fun a _ => hhm.indicator ((hU1o.preimage (hPc.sub continuous_const)).measurableSet)
       _ = (ε:ENNReal) ^ 2 * (N * I) := by
           congr 1
           rw [Finset.sum_congr rfl (fun a ha => lintegral_indicator_translate μ P h hinv U1 (a - P y)
@@ -1304,8 +1297,7 @@ theorem ls_pure {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ] (v
   have hι : Continuous ι := continuous_const.prodMk continuous_id
   let Θ : (κ → FiniteAdeleRing (𝓞 F) F) → (κ → AF F) := fun z => e • fun i => ι (z i)
   have hΘ : Continuous Θ := by
-    refine (continuous_const_smul e).comp (continuous_pi fun i => ?_)
-    exact hι.comp (continuous_apply i)
+    exact (continuous_const_smul e).comp (continuous_pi fun i => (hι.comp (continuous_apply i)))
   have he1 : e.1 = 0 := rfl
   refine ⟨Θ '' tsupport g, hg.2.isCompact.image hΘ, fun x hx => ⟨fun i => (x i).2, ?_, ?_⟩⟩
   · refine subset_tsupport _ ?_
@@ -1342,8 +1334,7 @@ theorem liftV_mul_self {F : Type} [Field F] [NumberField F] (v : GlobalTheory.In
     GlobalTheory.LatVac.liftV v (1 : Fv F v) * GlobalTheory.LatVac.liftV v 1 = GlobalTheory.LatVac.liftV v 1 := by
   have h := GlobalTheory.LatVac.at_liftV v (1 : Fv F v) (GlobalTheory.LatVac.liftV v 1 - 1)
     (by rw [map_sub, GlobalTheory.LatVac.evFin_liftV, map_one, sub_self])
-  rw [smul_eq_mul, sub_mul, one_mul, sub_eq_zero] at h
-  exact h
+  rwa [smul_eq_mul, sub_mul, one_mul, sub_eq_zero] at h
 
 theorem at_iff {F : Type} [Field F] [NumberField F] {κ : Type} (v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F)) (z : κ → AF F) :
     GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (evFin F v) z ↔ GlobalTheory.LatVac.liftV v 1 • z = z := by
@@ -1395,8 +1386,7 @@ theorem eq_zero_of_vanish_fibre : ∀ {F : Type} [Field F] [NumberField F] {κ :
       have hs0 : ∀ Ψ' : (κ → AF F) → ℂ,
           schr ψ ((1 - e) • (0 : κ → AF F), (1 - e) • b) Ψ' = fun x => ψ (x ⬝ᵥ b) * Ψ' x := by
         intro Ψ'; funext x; simp [schr, hb']
-      rw [hs0, hs0] at h1
-      exact h1
+      rwa [hs0, hs0] at h1
     have hsum : ∀ G : (κ → AF F) → ℂ, (fun x => (∑ b ∈ s, c b * ψ (x ⬝ᵥ b)) * G x) =
         ∑ b ∈ s, c b • (fun x => ψ (x ⬝ᵥ b) * G x) := by
       intro G; funext x; simp [Finset.sum_mul, mul_assoc]
@@ -1410,8 +1400,7 @@ theorem eq_zero_of_vanish_fibre : ∀ {F : Type} [Field F] [NumberField F] {κ :
       refine Finset.sum_congr rfl fun b hb => ?_
       rw [map_smul, hchar b hb Φ hΦ]
     have := hiso μ inferInstance _ hmem
-    rw [hT] at this
-    exact this
+    rwa [hT] at this
   exact _root_.GlobalTheory.OffVLocalWeights.exists_localizing_weight v ψ hstd hnt μ inferInstance Φ hΦ (T Φ) hTΦ htrig y O hO hyO
 
 end GlobalTheory.FibreLocality

@@ -177,8 +177,7 @@ theorem levi_eq_zero_of_compatChart : ∀ (e : ℕ) (X : Type) [TopologicalSpace
     simp only [Function.comp_apply, (A.chart j).left_inv hy.2]
   have hcz : (⇑(A.chart j) ∘ ⇑ψ.symm) z ∈ (A.chart j).target ∩ (A.chart j).symm ⁻¹' U := by
     refine ⟨(A.chart j).map_source hj, ?_⟩
-    simp only [Set.mem_preimage, Function.comp_apply, (A.chart j).left_inv hj]
-    exact hzU
+    simpa only [Set.mem_preimage, Function.comp_apply, (A.chart j).left_inv hj] using hzU
   have hopen2 : IsOpen ((A.chart j).target ∩ (A.chart j).symm ⁻¹' U) :=
     (A.chart j).continuousOn_symm.isOpen_inter_preimage (A.chart j).open_target hU
   have hsm : ContDiffAt ℝ 2 (g ∘ ⇑(A.chart j).symm) ((⇑(A.chart j) ∘ ⇑ψ.symm) z) :=
@@ -332,8 +331,7 @@ theorem le_zero_of_bddAbove_punctured (g : ℂ → ℝ) (ρ C : ℝ) (hρ : 0 < 
         fun z hz => ⟨lt_of_lt_of_le hr0 hz.1, hz.2⟩
       refine (hc.mono hsub).sub (continuousOn_const.mul (continuousOn_const.sub ?_))
       refine ContinuousOn.log continuous_norm.continuousOn ?_
-      intro z hz
-      exact (lt_of_lt_of_le hr0 hz.1).ne'
+      exact fun z hz => (lt_of_lt_of_le hr0 hz.1).ne'
     have hharm : ∀ z : ℂ, r < ‖z‖ → ‖z‖ < ρ → InnerProductSpace.HarmonicAt h z := by
       intro z hz1 hz2
       have hz0 : 0 < ‖z‖ := lt_trans hr0 hz1
@@ -343,8 +341,7 @@ theorem le_zero_of_bddAbove_punctured (g : ℂ → ℝ) (ρ C : ℝ) (hρ : 0 < 
         InnerProductSpace.harmonicAt_const _
       have h2 : InnerProductSpace.HarmonicAt
           (ε • ((fun _ : ℂ => Real.log ρ) - fun y : ℂ => Real.log ‖y‖)) z := by
-        apply InnerProductSpace.HarmonicAt.const_smul
-        exact hcst.sub hlog
+        exact InnerProductSpace.HarmonicAt.const_smul (hcst.sub hlog)
       exact (hh z hz0 hz2).sub h2
     have hbdry : ∀ z : ℂ, ‖z‖ = r ∨ ‖z‖ = ρ → h z ≤ 0 := by
       intro z hz
@@ -455,10 +452,8 @@ theorem poisson_formula_punctured (f : ℂ → ℝ) (ρ R M : ℝ) (hρ : 0 < ρ
   have hΦbd : ∀ z : ℂ, 0 < ‖z‖ → ‖z‖ ≤ ρ → |Φ z| ≤ M := by
     intro z hz0 hzρ
     by_cases hzl : ‖z‖ < ρ
-    · simp only [Φ, ite_eq_left hzl]
-      exact hPbd z hzl
-    · simp only [Φ, ite_eq_right hzl]
-      exact hB z (norm_pos_iff.mp hz0) (lt_of_le_of_lt hzρ hρR)
+    · simpa only [Φ, ite_eq_left hzl] using hPbd z hzl
+    · simpa only [Φ, ite_eq_right hzl] using hB z (norm_pos_iff.mp hz0) (lt_of_le_of_lt hzρ hρR)
   have hA := le_zero_of_bddAbove_punctured (fun z => f z - Φ z) ρ (2 * M) hρ
     (hfS.sub (hΦcont.mono hS))
     (fun z hz0 hzρ => (hH z (norm_pos_iff.mp hz0) (lt_trans hzρ hρR)).sub (hPharm z hzρ))
@@ -577,8 +572,7 @@ theorem integral_pi_cons {n : ℕ} (F : (Fin (n + 1) → ℝ) → ℝ)
     ext i
     refine Fin.cases ?_ (fun j => ?_) i <;> simp [MeasurableEquiv.piFinSuccAbove]
   rw [← mp.integral_comp']
-  simp only [he]
-  exact integral_prod _ hF
+  simpa only [he] using integral_prod _ hF
 
 theorem polyPoisson_eq_self : ∀ (n : ℕ) (f : (Fin n → ℂ) → ℝ) (ρ R M : ℝ), 0 < ρ → ρ < R →
     ContinuousOn f (punct R) → SepHarm R f → (∀ z ∈ punct R, |f z| ≤ M) →
@@ -729,8 +723,7 @@ theorem ae_mem_box (n : ℕ) :
   have h1 : ∀ᵐ t ∂angMeas, t ∈ Set.Ioc 0 (2 * Real.pi) :=
     Measure.smul_absolutelyContinuous.ae_le (ae_restrict_mem measurableSet_Ioc)
   rw [ae_all_iff]
-  intro i
-  exact Measure.tendsto_eval_ae_ae.eventually h1
+  exact fun i => Measure.tendsto_eval_ae_ae.eventually h1
 
 private theorem contDiffOn_integral_angMeas {n : ℕ} {ρ : ℝ} (g : (Fin n → ℝ) → ℝ) (hg : Continuous g) :
     ∀ (k : ℕ) (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
@@ -828,8 +821,7 @@ theorem contDiffOn_polyPoisson :
     funext θ
     rw [smul_eq_mul, mul_comm]
   rw [e, contDiffOn_infty]
-  intro k
-  exact contDiffOn_integral_angMeas _ hh k ℝ _ (contDiffOn_prod_pker hρ)
+  exact fun k => contDiffOn_integral_angMeas _ hh k ℝ _ (contDiffOn_prod_pker hρ)
 
 end GlobalTheory.CompanionTheory.Ar.PB.Flat.Smooth
 end -- clump:auto
@@ -859,8 +851,7 @@ theorem contDiffAt_comp_compatChart_symm :
   have hy : (A.chart j) (ψ.symm z) ∈ (A.chart j).target ∩ ⇑(A.chart j).symm ⁻¹' U := by
     refine ⟨(A.chart j).map_source hj, ?_⟩
     show (A.chart j).symm ((A.chart j) (ψ.symm z)) ∈ U
-    rw [(A.chart j).left_inv hj]
-    exact hzU
+    rwa [(A.chart j).left_inv hj]
   have hgc : ContDiffAt ℝ ∞ (g ∘ ⇑(A.chart j).symm) ((A.chart j) (ψ.symm z)) :=
     (hg j).contDiffAt (((A.chart j).isOpen_inter_preimage_symm hU).mem_nhds hy)
   have hcomp := hgc.comp z hτ
@@ -916,8 +907,7 @@ open scoped ContDiff
 
 namespace GlobalTheory.CompanionTheory.Ar.PB.Flat
 
-theorem locExt_two_le : (2 : WithTop ℕ∞) ≤ ∞ := by
-  exact WithTop.coe_le_coe.2 (le_top : (2 : ℕ∞) ≤ ⊤)
+theorem locExt_two_le : (2 : WithTop ℕ∞) ≤ ∞ := WithTop.coe_le_coe.2 (le_top : (2 : ℕ∞) ≤ ⊤)
 
 theorem locExt_isOpen_punct {n : ℕ} (R : ℝ) : IsOpen (punct (n := n) R) := by
   have h : punct (n := n) R = ⋂ i, ({z | z i ≠ 0} ∩ {z | ‖z i‖ < R}) := by

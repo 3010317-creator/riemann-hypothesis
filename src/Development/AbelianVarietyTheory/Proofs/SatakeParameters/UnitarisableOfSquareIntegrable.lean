@@ -161,8 +161,7 @@ private lemma transvection_trivial (φ : GL (Fin N) k →* NNReal) (hx : ∃ x :
       _ = φ (T (c + (x - 1) * c)) := by congr 2; ring
       _ = φ (T c) * φ (T ((x - 1) * c)) := by rw [← hmulT, map_mul]
       _ = φ (T c) * φ (T c) := by rw [hscale (x - 1) (sub_ne_zero.mpr hx1) c]
-  have h0 := hom_ne_zero φ (T c)
-  exact (mul_right_eq_self₀.mp key.symm).resolve_right h0
+  exact (mul_right_eq_self₀.mp key.symm).resolve_right (hom_ne_zero φ (T c))
 
 end HomTriv2
 end GlobalTheory
@@ -252,8 +251,7 @@ theorem gl_hom_nnreal_trivial_of_scalar :
   · intro D hD h hh
     rw [det_diagonal] at hD
     exact diagonal_trivial φ hφ D (fun t => (Finset.prod_ne_zero_iff.mp hD) t (Finset.mem_univ t)) h hh
-  · intro t h hh
-    exact transvection_trivial φ hx t.i t.j t.hij t.c h hh
+  · exact fun t h hh => transvection_trivial φ hx t.i t.j t.hij t.c h hh
   · intro A B hA hB hPA hPB h hh
     let uA : GL (Fin N) k := nonsingInvUnit A (isUnit_iff_ne_zero.mpr hA)
     let uB : GL (Fin N) k := nonsingInvUnit B (isUnit_iff_ne_zero.mpr hB)
@@ -350,8 +348,7 @@ theorem main : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [I
     rw [QuotientGroup.mk_one, h1, map_one, Module.End.one_apply] at h2
     have h3 : L v₀ ≠ 0 := hl
     have : ‖c‖ * ‖L v₀‖ = 1 * ‖L v₀‖ := by
-      rw [one_mul, ← norm_mul, ← smul_eq_mul, ← map_smul, ← hc]
-      exact h2
+      rwa [one_mul, ← norm_mul, ← smul_eq_mul, ← map_smul, ← hc]
     exact mul_right_cancel₀ (norm_ne_zero_iff.2 h3) this
   let f : V → V → GL (Fin N) k → ℂ := fun v w g => L (π g v) * conj (L (π g w))
   have hfz : ∀ v w g, ∀ z ∈ Subgroup.center (GL (Fin N) k), f v w (g * z) = f v w g := by

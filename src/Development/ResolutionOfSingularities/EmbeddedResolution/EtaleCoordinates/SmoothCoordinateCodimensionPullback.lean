@@ -94,8 +94,7 @@ theorem resLE_open {X X' : Scheme.{u}}
     congrArg (fun m : (τ ⁻¹ᵁ O).toScheme ⟶ X' => m.base x) (resLE_comp_ι τ O)
   refine ⟨O.ι ⁻¹ᵁ U, ?_, O.ι.resLE U (O.ι ⁻¹ᵁ U) le_rfl ≫ q, inferInstance, ?_, ?_⟩
   · show O.ι.base ((τ.resLE O (τ ⁻¹ᵁ O) le_rfl).base x) ∈ U
-    rw [hw]
-    exact hU
+    rwa [hw]
   · rw [Category.assoc, hqs, ← Category.assoc, resLE_comp_ι O.ι U, Category.assoc]
   · calc restrictIdeal (τ.resLE O (τ ⁻¹ᵁ O) le_rfl).ker (O.ι ⁻¹ᵁ U)
         = (τ.ker.comap O.ι).comap (O.ι ⁻¹ᵁ U).ι := by
@@ -124,8 +123,7 @@ theorem comp_iso_hom {X X' X'' : Scheme.{u}}
   · show φ.inv.base ((τ ≫ φ.hom).base x) ∈ U
     have hb : φ.inv.base ((τ ≫ φ.hom).base x) = τ.base x :=
       congrArg (fun m : X ⟶ X' => m.base x) (by simp : (τ ≫ φ.hom) ≫ φ.inv = τ)
-    rw [hb]
-    exact hU
+    rwa [hb]
   · rw [Category.assoc, hqs, ← Category.assoc, resLE_comp_ι φ.inv U, Category.assoc, hs']
   · calc restrictIdeal (τ ≫ φ.hom).ker (φ.inv ⁻¹ᵁ U)
         = (τ.ker.comap φ.inv).comap (φ.inv ⁻¹ᵁ U).ι := by

@@ -135,8 +135,7 @@ theorem actO_off {S T : HSp D} {P : Pl D → Prop} {g : GA D S} {h : GA D T} (hg
   rw [Matrix.sub_mul, Matrix.one_mul, sub_eq_zero] at h1
   rw [Matrix.mul_sub, Matrix.mul_one, sub_eq_zero] at h2
   unfold actO
-  rw [h1]
-  exact h2
+  rwa [h1]
 
 end GlobalTheory.DisjComb
 
@@ -226,8 +225,7 @@ theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1
     rw [Matrix.smul_apply]
     exact nsmul_mem (hx i j) 2
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · intro e e' he he' f
-    exact HC.2.1 e e' (fun x hx y hy => symplO_disj hd (he x hx) (he' y hy)) f
+  · exact fun e e' he he' f => HC.2.1 e e' (fun x hx y hy => symplO_disj hd (he x hx) (he' y hy)) f
   · intro e he
     have hfin : IsFinComb e := fun u hu => Matrix.ext fun i j => (mem_idAt_iff.1 (he u hu i j)).1
     refine ⟨hfin, fun LS LT f hf => ⟨HC.2.2.1 e f hf.1 hfin hψ, fun u hu => ?_, fun e' he' u hu hh => ?_⟩⟩

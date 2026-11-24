@@ -66,8 +66,7 @@ theorem conjInt_conjInt (x : 𝓞 D.host.E) : conjInt D (conjInt D x) = x := by
 theorem isConjPl_iff {P P' : PlE D.host} :
     IsConjPl D.host P P' ↔ ∀ x, x ∈ P.asIdeal ↔ conjInt D x ∈ P'.asIdeal := by
   constructor
-  · intro h x
-    exact h x _ rfl
+  · exact fun h x => h x _ rfl
   · intro h x y hxy
     have e : y = conjInt D x := RingOfIntegers.ext hxy
     rw [e, h]
@@ -200,8 +199,7 @@ theorem isFrob_smul {B : ValuationSubring N.Om} {q : ℕ} {σ : GE N} (hσ : IsF
     have e : (g⁻¹ : GE N) ((g * σ * g⁻¹) x - x ^ q) = σ ((g⁻¹ : GE N) x) - ((g⁻¹ : GE N) x) ^ q := by
       rw [map_sub, map_pow, ← AlgEquiv.mul_apply, mul_assoc, inv_mul_cancel_left, AlgEquiv.mul_apply]
     rw [valuation_lt_one_iff'] at h2 ⊢
-    rw [hm, hm, map_inv₀, ← map_eq_zero_iff (g⁻¹ : GE N) (g⁻¹ : GE N).injective, e]
-    exact h2
+    rwa [hm, hm, map_inv₀, ← map_eq_zero_iff (g⁻¹ : GE N) (g⁻¹ : GE N).injective, e]
 
 theorem exists_frob_of_conj {P P' : PlE D.host} (h : IsConjPl D.host P P') {σ : GE N}
     (hσ : IsFrob (N.plOm.1 P') (normV P') σ) :

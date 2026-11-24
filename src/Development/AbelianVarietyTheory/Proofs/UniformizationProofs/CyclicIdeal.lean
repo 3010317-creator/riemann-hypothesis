@@ -87,8 +87,7 @@ theorem coker_equiv {R : Type} [CommRing R] {a b : ℕ} (D : Matrix (Fin b) (Fin
   have he : ∀ j, N.mkQ (Pi.single j 1) = v₀ j • c.snd := fun j => by
     have := congrArg TrivSqZeroExt.snd (congrFun hc j)
     change _ = (c * TrivSqZeroExt.inl (v₀ j)).snd at this
-    rw [_root_.mul_comm, TrivSqZeroExt.inl_mul_eq_smul, TrivSqZeroExt.snd_smul] at this
-    exact this
+    rwa [_root_.mul_comm, TrivSqZeroExt.inl_mul_eq_smul, TrivSqZeroExt.snd_smul] at this
   have hx : ∀ x : Fin a → R, N.mkQ x = (x ⬝ᵥ v₀) • c.snd := fun x => by
     have : x = ∑ j, x j • (Pi.single j 1 : Fin a → R) := by
       funext j
@@ -119,8 +118,7 @@ theorem coker_equiv {R : Type} [CommRing R] {a b : ℕ} (D : Matrix (Fin b) (Fin
     · rintro ⟨y, rfl⟩
       rw [Matrix.mulVecLin_apply, Matrix.mulVec_transpose, ← Matrix.dotProduct_mulVec]
       exact Ideal.sum_mem _ fun i _ => I.mul_mem_left _ (Ideal.subset_span ⟨i, rfl⟩)
-    · intro h
-      exact (Submodule.Quotient.mk_eq_zero N).1 ((hx x).trans (hIq _ h))
+    · exact fun h => (Submodule.Quotient.mk_eq_zero N).1 ((hx x).trans (hIq _ h))
   exact ⟨(Submodule.quotEquivOfEq _ _ hk').trans (φ.quotKerEquivOfSurjective hs)⟩
 
 theorem cyclic_ideal : ∀ (R : Type) [CommRing R] [IsLocalRing R] (X : Scheme.{0}) (f : X ⟶ Spec (CommRingCat.of R)) (M : LB X), M.IsLB → ∀ P : Perf f M, UniversallyClosed f → Surjective f → ∀ (K : Type) [Field K] (g₀ : R →+* K), IsLocalHom g₀ → ∀ (X₀ : Scheme.{0}) (π₀ : X₀ ⟶ X) (f₀ : X₀ ⟶ Spec (CommRingCat.of K)), IsPullback π₀ f₀ f (Spec.map (CommRingCat.ofHom g₀)) → Function.Bijective f₀.appTop.hom → Triv (M.pull π₀) → ∃ I : Ideal R, Nonempty (((Fin P.a → R) ⧸ LinearMap.range P.D₀.transpose.mulVecLin) ≃ₗ[R] (R ⧸ I)) ∧ ∀ (R' : Type) [CommRing R'] (g : R →+* R') (X' : Scheme.{0}) (π : X' ⟶ X) (f' : X' ⟶ Spec (CommRingCat.of R')), IsPullback π f' f (Spec.map (CommRingCat.ofHom g)) → (Triv (M.pull π) ↔ I ≤ RingHom.ker g) := by
@@ -192,7 +190,6 @@ theorem cyclic_ideal : ∀ (R : Type) [CommRing R] [IsLocalRing R] (X : Scheme.{
       exact fun hm => (f (π y)).isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _ hm hr₁')
     obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 hy
     refine ⟨i, ?_⟩
-    rw [loc_comp P h, ← Scheme.preimage_basicOpen]
-    exact hi
+    rwa [loc_comp P h, ← Scheme.preimage_basicOpen]
 
 end GlobalTheory.UU.SecCyclic

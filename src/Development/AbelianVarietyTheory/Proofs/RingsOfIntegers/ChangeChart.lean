@@ -117,8 +117,7 @@ private theorem gw_mul_gm_transition_eq_gw_of_isGen {B G T Z : Scheme.{0}} {M : 
   have hp : (r ≫ p) z ∈ M.U c := h1
   have gM : gm (r ≫ p) z (M.U c ⊓ M.U c) (M.g c c) = 1 := by
     have e0 := congrArg (gm (r ≫ p) z _) (hM.g_self c)
-    rw [gm_res (r ≫ p) z _ hp, map_one] at e0
-    exact e0
+    rwa [gm_res (r ≫ p) z _ hp, map_one] at e0
   have e := congrArg (gm r z _) (hwe (fun _ => c, fun _ => a) (fun _ => c, fun _ => b))
   rw [map_mul, gm_res r z _ hz, gm_res r z _ hz] at e
   have eg : gm r z _ (((M.pull p).div (L.pull f)).g (fun _ => c, fun _ => a) (fun _ => c, fun _ => b)) =
@@ -153,8 +152,7 @@ theorem change_chart (hM : M.IsLB) {we : LB.Iso (L.pull f) (M.pull p)} (hwe : we
   refine congrArg (· ^ ε k) ?_
   have e := gw_mul_gm_transition_eq_gw_of_isGen hM hwe (P k) z (jM k) (a k) (b k) (hM' k) (by rw [hf k]; exact ha k)
     (by rw [hf k]; exact hb k)
-  rw [c k] at e
-  exact e
+  rwa [c k] at e
 
 theorem alg {U K I : Type} [CommGroup U] [Fintype K] [Fintype I] (ε : K → ℤ) (A W' : K → U) (W : K → I → U)
     (h : ∀ k, A k * W' k = ∏ i, W k i) {a' : U} {a b : I → U} (e₁ : (∏ k, A k ^ ε k) * a' = ∏ i, a i)
@@ -210,8 +208,7 @@ theorem rel_box (hM : M.IsLB) (hM' : M'.IsLB) (hL : L.IsLB)
     unfold om
     rw [hJ'e k]
     simp only [hk]
-    rw [← c₂ k]
-    exact e
+    rwa [← c₂ k]
   have he₂ : ∀ i, val tM (nB i) z J = (∏ k, Geo.Tor.gw we (P k ≫ h i) z (J (nB i ≫ ψ k)) (fun _ => jL k i) ^ ε k) *
       gm (nG i) z (LB.wchart L φ (fun k => jL k i)) (tL.s (fun k => jL k i)) := fun i =>
     (HU i J N hJ hN).trans (change_chart hM hwe z (fun k => P k ≫ h i) htL (nG i) (c₁ i)

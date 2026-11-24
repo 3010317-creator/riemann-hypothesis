@@ -359,8 +359,7 @@ theorem lift_cpt_finite : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyRea
     have h := congrArg (fun m => m i j v) r.2.2
     simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.star_apply, Matrix.one_apply, Pi.add_apply, Pi.mul_apply,
       star_trivial] at h
-    rw [ite_apply] at h
-    exact h
+    rwa [ite_apply] at h
   have h1 : ∀ v, x.val 0 0 v ^ 2 + x.val 0 1 v ^ 2 = 1 := fun v => by
     have := hr v 0 0; simp only [ite_true] at this; linear_combination this
   have h2 : ∀ v, x.val 1 0 v ^ 2 + x.val 1 1 v ^ 2 = 1 := fun v => by
@@ -376,8 +375,7 @@ theorem lift_cpt_finite : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyRea
   have hs : ∀ v, x.val 1 0 v = -(sg s v * x.val 0 1 v) ∧ x.val 1 1 v = sg s v * x.val 0 0 v := fun v => by
     by_cases h : x.val 1 0 v = -x.val 0 1 v ∧ x.val 1 1 v = x.val 0 0 v
     · have : sg s v = 1 := by simp only [sg, s, decide_eq_true_eq]; exact ite_eq_left h
-      rw [this, one_mul, one_mul]
-      exact h
+      rwa [this, one_mul, one_mul]
     · have : sg s v = -1 := by simp only [sg, s, decide_eq_true_eq]; exact ite_eq_right h
       rw [this]
       have := (orth_cases (h1 v) (h2 v) (h3 v)).resolve_left h
@@ -553,8 +551,7 @@ theorem arch_der {ι : Type} [Fintype ι] [DecidableEq ι] (k : ℕ) (g : (ι �
   rw [heq, he1] at hc
   refine ⟨deriv (fun z => g (Function.update (fun _ => Complex.I) v z)) Complex.I, fun y => ?_⟩
   have := hv y
-  rw [hL.unique hc, Function.update_eq_self_iff.2 rfl] at this
-  exact this
+  rwa [hL.unique hc, Function.update_eq_self_iff.2 rfl] at this
 
 end GlobalTheory.HilbertThetaSeries.ArchLift
 
@@ -769,8 +766,7 @@ theorem map_scalar {R S : Type} [CommRing R] [CommRing S] (f : R →+* S) (z : R
 
 theorem scalar_comm {R : Type} [CommRing R] (z : Rˣ) (g : GL (Fin 2) R) :
     g * Matrix.GeneralLinearGroup.scalar (Fin 2) z = Matrix.GeneralLinearGroup.scalar (Fin 2) z * g := by
-  apply Units.ext
-  exact ((Matrix.scalar_commute (z : R) (fun r => Commute.all _ r) g.val).eq).symm
+  exact Units.ext ((Matrix.scalar_commute (z : R) (fun r => Commute.all _ r) g.val).eq).symm
 
 theorem exists_lift : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (k : ℕ), Even k → ∀ (Ψ : GL (Fin 2) (Af F) → Hn F → ℂ), Sys k Ψ → ∃ φ : GA F 2 → ℂ, IsLift k Ψ φ ∧ (∀ u ∈ KLev F 2 1, ∀ g, φ (g * finGL F 2 u) = φ g) ∧ ∀ (z : Ideles F) (g : GA F 2), φ (Matrix.GeneralLinearGroup.scalar (Fin 2) z * g) = φ g := by
   intro F _ _ _ k hk Ψ hΨ
@@ -850,8 +846,7 @@ theorem lift_isHol : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] 
   have hcen : ∀ (z : Ideles F) (g : GA F 2),
       φ.1 (Matrix.GeneralLinearGroup.scalar (Fin 2) z * g) = (((1 : HChar F).1 z : ℂˣ) : ℂ) * φ.1 g := by
     intro z g
-    simp only [OneMemClass.coe_one, MonoidHom.one_apply, Units.val_one, one_mul]
-    exact hZ z g
+    simpa only [OneMemClass.coe_one, MonoidHom.one_apply, Units.val_one, one_mul] using hZ z g
   have haut : TR.IsAutForm φ :=
     ⟨hL.1, hlev, _root_.GlobalTheory.HilbertThetaSeries.LiftCpt.lift_cpt_finite F k Ψ φ hL,
       UpperTheory.V.Af.Nf.zFin F k 1 IsOfFinOrder.one φ hcen (fun v => (hlie v).1) (fun v => (hlie v).2),

@@ -73,16 +73,13 @@ theorem proj_eq_one_of_finHom (V : HSp D) (h : GA D V) (hh : h ∈ GinfC V) (v :
     GlobalTheory.AdelicU.proj D.sp.cm.sig V.gram v h = 1 := by
   rw [← GlobalTheory.AdelicU.projFinLoc_projFin]
   have : GlobalTheory.AdelicU.projFin D.sp.cm.sig V.gram h = 1 := by
-    apply Subtype.ext
-    apply Units.ext
-    exact congrArg Units.val hh
+    exact Subtype.ext (Units.ext (congrArg Units.val hh))
   rw [this, map_one]
 
 theorem proj_finPartG (V : HSp D) (g : GA D V) (v : HeightOneSpectrum (𝓞 D.host.F)) :
     GlobalTheory.AdelicU.proj D.sp.cm.sig V.gram v (GlobalTheory.LevelNbhd.finPartG V g) = GlobalTheory.AdelicU.proj D.sp.cm.sig V.gram v g := by
   have h := proj_eq_one_of_finHom V _ (GlobalTheory.LevelNbhd.inv_finPartG_mul_mem_GinfC V g) v
-  rw [map_mul, map_inv, inv_mul_eq_one] at h
-  exact h
+  rwa [map_mul, map_inv, inv_mul_eq_one] at h
 
 theorem finE_finPartG (V : HSp D) (g : GA D V) : Lev.finE V (GlobalTheory.LevelNbhd.finPartG V g) = Lev.finE V g := by
   show (Formalism.UG.bc _) (finHom V _) = (Formalism.UG.bc _) (finHom V g)

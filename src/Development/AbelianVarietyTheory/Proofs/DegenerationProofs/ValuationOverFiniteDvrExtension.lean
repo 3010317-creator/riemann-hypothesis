@@ -167,8 +167,7 @@ theorem _root_.GlobalTheory.FiniteDVRValuation.main :
       have hix : ¬IsUnit (i x) := (IsLocalRing.mem_maximalIdeal _).1 (Ideal.mem_comap.1 hmem)
       have hle := (_root_.ReciprocityTheory.ChartRestriction.G.DVR.TWO.v_of_V v hϖ hv (i x)).2 hix ((map_ne_zero_iff i hi).2 hx0)
       have hle' : (1 : WithTop ℚ) ≤ 0 := by
-        rw [← hx]
-        exact hle
+        rwa [← hx]
       exact absurd hle' (by norm_num)
     refine ⟨IsFractionRing.lift hinj, fun r => IsFractionRing.lift_algebraMap hinj r,
       fun a ha => ?_⟩

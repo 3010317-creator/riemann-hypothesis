@@ -210,17 +210,13 @@ theorem exists_mul_of_fixes {l : ℕ} [Fact l.Prime] (M K'' : IntermediateField 
   have hfix : IntermediateField.fixedField T ≤ M ⊓ K'' := by
     refine le_inf ?_ ?_
     · rw [← InfiniteGalois.fixedField_fixingSubgroup M]
-      intro x hx s
-      exact hx ⟨s.1, hMT s.2⟩
+      exact fun x hx s => hx ⟨s.1, hMT s.2⟩
     · rw [← InfiniteGalois.fixedField_fixingSubgroup K'']
-      intro x hx s
-      exact hx ⟨s.1, hNT s.2⟩
+      exact fun x hx s => hx ⟨s.1, hNT s.2⟩
   have hT : h ∈ (IntermediateField.fixedField (Tc : Subgroup (GQ l))).fixingSubgroup := by
     rw [IntermediateField.mem_fixingSubgroup_iff]
-    intro x hx
-    exact hh x (hfix hx)
-  rw [InfiniteGalois.fixingSubgroup_fixedField Tc] at hT
-  exact hT
+    exact fun x hx => hh x (hfix hx)
+  rwa [InfiniteGalois.fixingSubgroup_fixedField Tc] at hT
 
 theorem inertia_of_fixes_Kur {l : ℕ} [Fact l.Prime] (i : GQ l) (hi : ∀ x ∈ MaximalUnramifiedExtension l, i x = x) :
     ∀ x : Om l, ‖x‖ ≤ 1 → ‖i x - x‖ < 1 := by
@@ -257,8 +253,7 @@ theorem lift : ∀ (l : ℕ) [Fact l.Prime] (K' F K'' : FinExt l), (GK K').Norma
     refine ⟨?_, F.1.fixingSubgroup.mul_mem (F.1.fixingSubgroup.mul_mem
       (F.1.fixingSubgroup.inv_mem hs.1) hk.2) hs.1⟩
     have := hnorm.conj_mem k hk.1 s⁻¹
-    rw [inv_inv] at this
-    exact this
+    rwa [inv_inv] at this
   obtain ⟨i, hi, hik⟩ := exists_mul_of_fixes (F.1 ⊔ MaximalUnramifiedExtension l) K''.1 hfK hconj h h2
   rw [IntermediateField.fixingSubgroup_sup] at hi
   have hiQ : i ∈ GK (Formalism.MainNotions.ElementDenominator.qlExt l) := by
@@ -284,8 +279,7 @@ open Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.Weakl
 namespace GlobalTheory.InertQlUnr
 
 theorem IK_qlExt_fixes_Kur : ∀ (l : ℕ) [Fact l.Prime] (g : ↥(GK (Formalism.MainNotions.ElementDenominator.qlExt l))), g ∈ IK (Formalism.MainNotions.ElementDenominator.qlExt l) → ∀ x ∈ MaximalUnramifiedExtension l, (g : GQ l) x = x := by
-  intro l _ g hg x hx
-  exact GlobalTheory.InerQl.IK_fixes_Kur _ hg hx
+  exact fun l _ g hg x hx => GlobalTheory.InerQl.IK_fixes_Kur _ hg hx
 
 end GlobalTheory.InertQlUnr
 end -- clump:auto
@@ -472,8 +466,7 @@ theorem speiser_descent_span :
     rw [e1, Fintype.sum_eq_single ⟨a 1, h1S⟩]
     · have hg1 : ∀ c, a (gs ⟨a 1, h1S⟩) c = algebraMap L Ω c := by
         intro c; rw [hgs]; exact ha1 c
-      simp only [δ, ite_eq_left rfl, one_smul]
-      exact hker _ hg1 m hm
+      simpa only [δ, ite_eq_left rfl, one_smul] using hker _ hg1 m hm
     · intro h hne
       have : (h : L →+* Ω) ≠ a 1 := fun e => hne (Subtype.ext e)
       simp [δ, this]
@@ -775,8 +768,7 @@ theorem descend (P : LocPrime l) {LL : FinExt l} (T : QLat LL) (K' F K'' : FinEx
     m hm
   refine Submodule.span_mono ?_ key
   rintro w ⟨_, hinv⟩
-  rw [SetLike.mem_coe, mem_res]
-  exact hinv
+  rwa [SetLike.mem_coe, mem_res]
 
 end GlobalTheory.CrysInertDescent
 
@@ -823,11 +815,9 @@ theorem main : GlobalTheory.Published.FontaineBcris → ∀ (l : ℕ) [Fact l.Pr
       have h1 : (TensorProduct.comm ℚ_[l] Pl.R.B T.V).symm x ∈ DcrisK₀ (Pl.PD F) (T.ρ.comp (inclG F)) := by
         change TensorProduct.comm ℚ_[l] Pl.R.B T.V ((TensorProduct.comm ℚ_[l] Pl.R.B T.V).symm x) ∈
           Dcris (Pl.PD F) (T.ρ.comp (inclG F))
-        rw [LinearEquiv.apply_symm_apply]
-        exact hx
+        rwa [LinearEquiv.apply_symm_apply]
       rw [hres] at h1 ⊢
-      intro k
-      exact h1 ⟨k.1, GK_le hF k.2⟩
+      exact fun k => h1 ⟨k.1, GK_le hF k.2⟩
     have h2 := kill_span Pl T K' K'' _ (fun c => commute_aeval_mulVB Pl T K'' g hg c p) hp _ (hspan hw)
     rwa [LinearEquiv.apply_symm_apply] at h2
 

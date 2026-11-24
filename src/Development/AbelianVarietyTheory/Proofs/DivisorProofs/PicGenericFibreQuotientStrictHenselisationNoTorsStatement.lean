@@ -111,8 +111,7 @@ theorem eq_of_le_of_comap_eq_of_indEtale : ∀ (B O : Type) [CommRing B] [CommRi
   intro B O _ _ _ ⟨ι, _, _, _, Si, _, hcov, hloc⟩ p p' hp hp' hle hcomap
   by_contra hne
   obtain ⟨x, hx', hx⟩ : ∃ x, x ∈ p' ∧ x ∉ p := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hne (le_antisymm hle h)
   obtain ⟨i, hi⟩ := hcov x
   obtain ⟨E, _, _, _, P, _, ⟨e⟩⟩ := hloc i
@@ -291,8 +290,7 @@ open MvPolynomial
 theorem smul_comm_of_invertible {B : Type} [CommRing B] {L : Type} [AddCommGroup L] [Module B L]
     [Module.Invertible B L] (ψ : L →ₗ[B] B) (e ℓ : L) : ψ e • ℓ = ψ ℓ • e := by
   let T : L ⊗[B] L →ₗ[B] L := TensorProduct.lift ((LinearMap.lsmul B L).compl₁₂ ψ LinearMap.id)
-  have h := congrArg T (Module.Invertible.tmul_comm (R := B) (m₁ := e) (m₂ := ℓ))
-  simpa [T] using h
+  simpa [T] using congrArg T (Module.Invertible.tmul_comm (R := B) (m₁ := e) (m₂ := ℓ))
 
 variable {B : Type} [CommRing B] {L : Type} [AddCommGroup L] [Module B L] {q : ℕ}
 
@@ -386,8 +384,7 @@ theorem liftRoot_gen [Module.Invertible B L] (φ : MultilinearMap (RingHom.id B)
   have h0 : liftRoot φ e hu x hx (gen φ e) =
       MvPolynomial.aeval (fun ℓ => algebraMap B R (intersection_update_fsHerm_neg_one φ e ℓ) * ↑hu.unit⁻¹ * x) (X e) := rfl
   rw [h0, aeval_X, position_self]
-  have : algebraMap B R (φ (fun _ => e)) * ↑hu.unit⁻¹ = 1 := by
-    exact hu.mul_val_inv
+  have : algebraMap B R (φ (fun _ => e)) * ↑hu.unit⁻¹ = 1 := hu.mul_val_inv
   rw [this, one_mul]
 
 end GlobalTheory.KummerAlg
@@ -911,8 +908,7 @@ theorem kummer_step : ∀ (B : Type) [CommRing B] (q : ℕ), 0 < q → IsUnit (q
   obtain ⟨hfin, hproj, hff⟩ := _root_.GlobalTheory.KummerAlg.finite_projective_faithfullyFlat B (CommRing.Pic.AsModule c) q φ hq hφ
   obtain ⟨s⟩ := hT (Alg φ) hfin hproj hff (act φ ζ hζ) (_root_.GlobalTheory.KummerTorsor.bijective B (CommRing.Pic.AsModule c) q φ hqu hφ ζ hζ hζk)
   have := free_of_section B (CommRing.Pic.AsModule c) q φ hq hφ s
-  rw [← CommRing.Pic.mk_eq_self (M := c), CommRing.Pic.mk_eq_one_iff_free]
-  exact this
+  rwa [← CommRing.Pic.mk_eq_self (M := c), CommRing.Pic.mk_eq_one_iff_free]
 
 end GlobalTheory.KummerStep
 end -- clump:auto
@@ -985,9 +981,7 @@ theorem exists_maximal_over_closedPt : ∀ (T E : Type) [CommRing T] [IsLocalRin
   have hymax : (y.comap f).IsMaximal := by
     rw [hyc]; exact Ideal.comap_isMaximal_of_surjective _ Ideal.Quotient.mk_surjective
   refine ⟨y, hy, hQy, fun h => hPnf (h ▸ hymax), ?_⟩
-  have hle : maximalIdeal T ≤ (y.comap f).comap C := by
-    intro a ha
-    exact hPy (Ideal.mem_map_of_mem _ ha)
+  have hle : maximalIdeal T ≤ (y.comap f).comap C := fun a ha => hPy (Ideal.mem_map_of_mem _ ha)
   have hne : (y.comap f).comap (C : T →+* T[X]) ≠ ⊤ := (Ideal.comap_isPrime C (y.comap f)).ne_top
   exact ((maximalIdeal.isMaximal T).eq_of_le hne hle).symm
 
@@ -1148,8 +1142,7 @@ theorem keyGeneric_of_keyClosedPts : KeyClosedPts → KeyGeneric := by
     · exact IsLocalRing.le_maximalIdeal (Ideal.comap_ne_top _ (Ideal.IsMaximal.ne_top inferInstance))
     · intro x hx
       rw [Ideal.mem_comap, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-      intro hu
-      exact (IsLocalRing.mem_maximalIdeal _).1 hx (isUnit_of_map_unit φ x hu)
+      exact fun hu => (IsLocalRing.mem_maximalIdeal _).1 hx (isUnit_of_map_unit φ x hu)
   have hQP : Q.comap (algebraMap (Polynomial T) E) = P := by
     rw [hQdef, Ideal.comap_comap]
     have h1 : ψ.toRingHom.comp (algebraMap (Polynomial T) E) = φ.comp (algebraMap (Polynomial T) _) := by
@@ -1372,8 +1365,7 @@ theorem keyAll_of_keyLocal : KeyLocal → KeyAll := by
     have hc : (P'.comap (algebraMap T[X] T'[X])).primeCompl = P.primeCompl := by
       ext x; simp only [Ideal.mem_primeCompl_iff, hcomapP']
     unfold IsLocalization.AtPrime at this ⊢
-    rw [hc] at this
-    exact this
+    rwa [hc] at this
   let e : Localization.AtPrime P ≃ₐ[T[X]] Localization.AtPrime P' :=
     IsLocalization.algEquiv P.primeCompl _ _
   let φ' : Localization.AtPrime P' →+* O := φ.comp e.symm.toRingEquiv.toRingHom

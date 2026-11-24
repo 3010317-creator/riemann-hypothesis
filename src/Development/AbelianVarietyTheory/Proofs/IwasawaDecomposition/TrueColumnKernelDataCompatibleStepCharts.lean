@@ -170,8 +170,7 @@ private theorem mem_GLint_and_exists_liftsInv_of_congE : ∀ {B : Base} {X : Pre
       subst hw
       have hgQ : (⟨g, hgi⟩ : ↥(Formalism.L2.Col.GLint B.fields.E (B.R.N i) P.1)) ∈
           ((I.idx a).levQ i (Idx.get b hi) ⟨P.1, hwQ⟩).H := by
-        rw [hO.grpQ, Subgroup.mem_subgroupOf]
-        exact hpr
+        rwa [hO.grpQ, Subgroup.mem_subgroupOf]
       set k := (⟨g, hgi⟩ : ↥(Formalism.L2.Col.GLint B.fields.E (B.R.N i) P.1))⁻¹ with hk
       have hkg : ∀ v, k.1 (g v) = v := by
         intro v
@@ -415,8 +414,7 @@ theorem exists_topLev_liftsInv : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X),
         (fun x y hx hy => by rw [← redGL_val, hj]; exact hJ.1.2.2.1 x y hx hy)
       have e : GlobalTheory.CongLevel.extE 0 j.1 = j.1 := LinearEquiv.ext (GlobalTheory.Mem.LastGrp.extE_zero j.1)
       rw [e, hsym] at h
-      simp only [GlobalTheory.TwU.rowLevTop, ite_eq_left hP, hI.sharp a, ite_true]
-      exact h
+      simpa only [GlobalTheory.TwU.rowLevTop, ite_eq_left hP, hI.sharp a, ite_true] using h
     refine ⟨sumE hN j.1 1, sumE hN j.1 1, _, ⟨j.1, hlev, prXpG_sumE hN j.1, atNL_sumE hN j.1, rfl⟩, ⟨?_, ?_, ?_⟩, congE_refl _ _ _⟩
     · rw [← extI_val hN j]
       exact (extI hN P.1 j).2
@@ -627,8 +625,7 @@ theorem redV_eq_of_cong {E : Type} [Field E] [NumberField E] [StarRing E] {n : �
     obtain ⟨c, rfl⟩ : ∃ c', c = c' + 1 := ⟨c - 1, by omega⟩
     simp only [Nat.add_sub_cancel, pow_succ]
     field_simp
-  rw [reduction_sub (ha i) (mem_stdAt.1 hb i), sub_eq_zero] at h4
-  exact h4
+  rwa [reduction_sub (ha i) (mem_stdAt.1 hb i), sub_eq_zero] at h4
 
 theorem lamQB_mul_levCong : ∀ {X : Fields} {R : Ranks} (ξ : Chr X.F X.E X.K) (Q : Finset (HeightOneSpectrum (𝓞 X.E))) (P : Q) (c M : ℕ), 1 ≤ M →
     ∀ (k : Formalism.L2.Col.GLint X.E (R.N R.m) P.1) (hk : k ∈ (levCong (N_m_succ R) P.1 c (rowTyQ R ξ Q P)).H)
@@ -757,10 +754,8 @@ theorem lamGBS_top_mul_lam_eq_one : ∀ {X : Fields} {Pr : Primes X} {R : Ranks}
       rw [mem_stdAt]
       intro l
       by_cases hl : l.1 < R.N R.m - 1
-      · simp only [v, dite_eq_left hl]
-        exact mem_stdAt.1 hx _
-      · simp only [v, dite_eq_right hl]
-        exact intAt_zero
+      · simpa only [v, dite_eq_left hl] using mem_stdAt.1 hx _
+      · simpa only [v, dite_eq_right hl] using intAt_zero
     have hpv : prXpG X.E (R.N R.m) v = x := by
       funext i
       have hi : i.1 < R.N R.m - 1 := i.2
@@ -933,8 +928,7 @@ theorem chr_mul_prod_top_core {B : Base} {X : PreX B.toPre} (I : TC B X) (hOk : 
     have hc' : CongE Q.1 (2 * (I.cst a).M) (g ⟨Q.1, Finset.mem_union_right _ Q.2⟩) ((y.1 Q)⁻¹).1 := by
       have h1 := hc
       unfold GlobalTheory.TwU.topDep at h1
-      rw [ite_eq_right hnot, hgy Q.2] at h1
-      exact h1
+      rwa [ite_eq_right hnot, hgy Q.2] at h1
     rw [mul_comm, hz']
     exact GlobalTheory.T.twistPrime_rowType_topRestriction_mul_levelChar_eq_one (I.tup a : Chr B.fields.F B.fields.E B.fields.K) (I.Q a) Q _ _ (hOk.idx_ok a).cst_ok.M_pos (y.1 Q) hk' _ g'' hmem hpr hc'
   calc _ = (∏ w : (B.primes X).vGs, (((Λ w).lam ⟨x.1 w, x.2 w (Set.mem_univ w)⟩ : B.fields.Kˣ) : B.fields.K) *
@@ -1120,8 +1114,7 @@ theorem exists_fun (hLb : IsBase S π) (hv : (T : 𝓞 F) ∈ v.asIdeal) (hP : P
     rw [← hψ, hx] at h
     exact fT_kill hLb hv hP hw h2 h3 hk r hr x (hasRes_lt_one h)
   have hne : ∃ a, (S.fT v hv).toAddMonoidHom a ≠ 0 := by
-    by_contra H
-    push Not at H
+    by_contra! H
     exact S.fT_ne v hv (LinearMap.ext H)
   have hker : ∀ x, S.fT v hv x = 0 → ψ x = 0 := fun x hx =>
     GlobalTheory.Mem.Col2.Reside.ker_of_prime (S.fT v hv).toAddMonoidHom ψ (hcard ▸ hT) hne hle x hx
@@ -1208,8 +1201,7 @@ theorem GlobalTheory.Mem.Col2.TC.funMoved_charts : ∀ {B : Base} {X : PreX B.to
     (under_eq_iff B.host P.1 w).1 (hw'.trans hPv.symm)
   have hcard : Nat.card (𝓞 B.host.E ⧸ P.1.asIdeal) = B.T u := by
     have e := hPr.vT_norm u P.1 P.2
-    rw [Ideal.absNorm_apply, Submodule.cardQuot_apply] at e
-    exact e
+    rwa [Ideal.absNorm_apply, Submodule.cardQuot_apply] at e
   have hN : 0 < B.R.N i := B.R.N_pos i
   let r : Fin (B.R.N i) := ⟨B.R.N i - 1, by omega⟩
   have hr : r.1 + 1 = B.R.N i := by show B.R.N i - 1 + 1 = _; omega
@@ -1222,9 +1214,7 @@ theorem GlobalTheory.Mem.Col2.TC.funMoved_charts : ∀ {B : Base} {X : PreX B.to
   have hf := (hR.pt c).f P w hw' r hr
   have hsum := GlobalTheory.Mem.Col2.FunMv.hasRes_last (((K (chOf c)).y ⟨c, rfl⟩).1 : GA B (B.R.N i)) (k (chOf c)) v P.1 hPv w r _ cj (fun j => hR.k_T (chOf c) P r j hr)
     (fun j => by have := hcj j; rw [hz] at this; exact this)
-  refine (hf.unique hsum).trans ?_
-  show _ = Ideal.Quotient.mk P.1.asIdeal (B.fields.conjO (X.piT u)) * ι₀ ((K (chOf c)).lev.fT v h z)
-  exact congrArg _ (hι₀ z (cj r) (hcj r)).symm
+  exact (hf.unique hsum).trans (congrArg _ (hι₀ z (cj r) (hcj r)).symm)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelPrimeFunctionalsEqMovedLevelFunctionals =====
@@ -1655,13 +1645,11 @@ theorem adTie_true : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC
       rfl
     · exact (seamOf_lat _ _ _ _ _ _ _ _).trans ((hN i c).trans (GlobalTheory.T.representativeLattice_eq_companion_of_adelicRep I hOk hP l Z u a i hi bad _ _ _ _ (hk i hi) c))
     · have h := GlobalTheory.T.chart_reads_at_class_GL I hOk hP l Z u a i hi bad _ _ _ _ (hk i hi) c _ (hfb i hi _) P
-      rw [← hmov ((Kc i hi (chOf i hi c)).y ⟨c, rfl⟩).1] at h
-      exact h
+      rwa [← hmov ((Kc i hi (chOf i hi c)).y ⟨c, rfl⟩).1] at h
     · obtain ⟨ι, hι⟩ := GlobalTheory.T.levelPrimeFunctionals_eq_moved_level_functionals I hOk hP l Z u a i hi bad _ _ _ _ (hk i hi) β (hFun i hi β) P v h hv
       refine ⟨ι, fun c hc => ?_⟩
       have h := hι c hc
-      rw [← hmov ((Kc i hi (chOf i hi c)).y ⟨c, rfl⟩).1] at h
-      exact h
+      rwa [← hmov ((Kc i hi (chOf i hi c)).y ⟨c, rfl⟩).1] at h
     · have h1 := (GlobalTheory.T.couplingCosetInFrames_shape_at_bad_prime I hOk u a _ ((I.stp u a _).rep c) P).2 (show B.R.m - 2 + 1 + 1 = B.R.m by omega)
       have h2 := hy0 (chOf _ hm1 c) P
       rw [(hkey _ hm1 c).2] at h2
@@ -1685,8 +1673,7 @@ theorem adTie_true : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC
       · exact hDet ha i hi c y hy
     · have e := eq_of_heq hamb
       have h := _root_.GlobalTheory.Mem.Col2.AdT.aaUnit_sall I hOk u a χ
-      rw [← e] at h
-      exact h
+      rwa [← e] at h
 
 end GlobalTheory.Mem.Col2.AdT
 

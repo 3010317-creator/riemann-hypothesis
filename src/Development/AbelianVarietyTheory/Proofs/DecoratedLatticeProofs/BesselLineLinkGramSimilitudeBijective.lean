@@ -71,9 +71,7 @@ theorem link_simil {σ : ℕ} {B : BesLev D σ} {L' : HSp D} {ζ' : Fin L'.rank 
   rw [Subsingleton.elim i default, Subsingleton.elim j default]
   have a : star ζ' default ≠ 0 := left_ne_zero_of_mul h2
   have b : ζ' default ≠ 0 := right_ne_zero_of_mul (right_ne_zero_of_mul h2)
-  have c := mul_left_cancel₀ a e
-  have c' := mul_right_cancel₀ b c
-  exact c'
+  exact mul_right_cancel₀ b (mul_left_cancel₀ a e)
 
 end GlobalTheory.Unf.StCheck
 
@@ -112,8 +110,7 @@ theorem exists_inv_of_rank_one {m n : ℕ} (hm : m = 1) (hn : n = 1) (τ : Matri
 
 theorem scalar_one : incA D (-D.host.xi0⁻¹) * cA D (incA D D.host.xi0) = 1 := by
   have h := congrArg (cA D) (HypDec.wittDecomp_trace0Unit_mul_conj_neg_inv (D := D))
-  rw [map_mul, map_one, cA_cA, mul_comm] at h
-  exact h
+  rwa [map_mul, map_one, cA_cA, mul_comm] at h
 
 theorem ofAdj_starAdj (L S : HSp D) (x : WO L S) : ofAdj L S (starAdj L S x) = x := by
   rw [starAdj, ofAdj, adj_smul, adj_mul, adj_mul, adj_adj, adj_gA, adj_giA, Matrix.smul_mul, Matrix.mul_smul, smul_smul,

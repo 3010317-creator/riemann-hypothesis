@@ -212,8 +212,7 @@ theorem UpperTheory.exists_admissible_equivariantFormsRep :
         exact Pairs.apply_mem_img j ⟨eqRep ρ k p.1, hU k _ p.2⟩ v)
       exact fun φ hφ => h1 hφ
   · have := hmem v
-    rw [h, Submodule.mem_bot] at this
-    exact this
+    rwa [h, Submodule.mem_bot] at this
   · refine Pairs.eq_bot_or_eq_img hsp (R := fun x => RU E n x.1) hj
       (Q := fun k : finU (E := E) (n := n) => (eqRep ρ k).restrict (hU k)) (T := fun k => RU E n k.1) (fun _ _ _ => rfl)
       (fun P hP => ?_) hle (fun x => hN x.1) (fun k => hN k.1)
@@ -428,8 +427,7 @@ theorem UpperTheory.exists_invariant_nondegenerate_pairing_weightRep_nablaT :
         apply Module.Basis.ext_multilinear (fun τ => ssBasis ℂ (lam τ))
         intro i
         simp only [LinearMap.compMultilinearMap_apply, ← hBasis, p, Module.Basis.constr_basis]
-      intro w
-      exact congrArg (fun m => m w) hComp
+      exact fun w => congrArg (fun m => m w) hComp
     · intro q hq
       apply (bVV ℂ lam).ext
       intro i
@@ -492,8 +490,7 @@ private theorem cont_rowAct (n : ℕ) (f : MvPolynomial (Fin n × Fin n) ℂ) :
       rw [mul_left_comm, ← MvPolynomial.smul_eq_C_mul, map_smul, smul_eq_mul]
       rfl
     simp only [e]
-    refine continuous_finsetSum _ fun b _ => ?_
-    exact (continuous_id.matrix_elem v.1 b).mul (hp _)
+    exact continuous_finsetSum _ fun b _ => (continuous_id.matrix_elem v.1 b).mul (hp _)
 
 private theorem cont_rep (n : ℕ) (ν : Fin n → ℕ) (ℓ : Formalism.GradedWeylDivisibility.dualWeyl ℂ n n ν →ₗ[ℂ] ℂ)
     (u : Formalism.GradedWeylDivisibility.dualWeyl ℂ n n ν) :
@@ -548,8 +545,7 @@ theorem UpperTheory.finiteDimensional_nablaT_and_continuous_wtOp :
   have h2 : Continuous fun g : ι → GL (Fin n) ℂ =>
       (∏ τ, Matrix.GeneralLinearGroup.det (g τ) ^ (-sh τ) : ℂˣ) := by
     refine continuous_finsetProd _ fun τ _ => ?_
-    refine Continuous.zpow ?_ _
-    exact Matrix.GeneralLinearGroup.continuous_det.comp (continuous_apply τ)
+    exact Continuous.zpow (Matrix.GeneralLinearGroup.continuous_det.comp (continuous_apply τ)) _
   exact (Units.continuous_val.comp h2).smul h1
 end -- clump:auto
 end -- clump:auto
@@ -607,8 +603,7 @@ theorem UpperTheory.hasWeightAt_of_ne_zero_intertwining :
         simp only [Function.update_self]
       · have h4 : cEmb (emb σ) x.1 = 1 := cEmb_of_mem_embU (fun h5 => h (hinj h5)) x.2
         simp only [Function.update_of_ne h, h4, map_one, Module.End.one_apply]
-    rw [h3] at h2
-    exact h2
+    rwa [h3] at h2
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.DivisorFrames.HasWeightAtOfNeZeroIntertwining =====

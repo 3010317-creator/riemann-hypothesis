@@ -179,8 +179,7 @@ theorem casimir_on_generated : ∀ (p q : ℕ) (V : Type) [AddCommGroup V] [Modu
       have := congrArg (fun f : Module.End ℂ V => f y) (hc Z)
       simp only [Module.End.mul_apply] at this
       rw [this, hy, map_smul]
-  have hx := hle (hg ▸ Submodule.mem_top : x ∈ genSub act {e})
-  simpa [sub_eq_zero] using hx
+  simpa [sub_eq_zero] using hle (hg ▸ Submodule.mem_top : x ∈ genSub act {e})
 
 end GlobalTheory.CasimirLowest
 end -- clump:auto
@@ -384,8 +383,7 @@ theorem exists_central_eigen : ∀ (p q : ℕ) (T : GrpData p q) (σ : URep T) (
     rw [TorusWt.torX_eq_sum, map_sum, LinearMap.sum_apply, Fintype.sum_sum_type, mul_smul, ← hN m x hx,
     Finset.smul_sum]
     simp [hθ]
-  rw [h1, map_smul] at h0
-  exact h0
+  rwa [h1, map_smul] at h0
 
 end GlobalTheory.GradedCentralCircle
 end -- clump:auto
@@ -590,8 +588,7 @@ theorem exists_submodule : ∀ (p q : ℕ) (M : GKMod p q) (N : Submodule ℂ M.
     · exact Module.Finite.of_injective
         (N.subtype.restrict (p := W.comap N.subtype) (q := W) (fun x hx => hx))
         (fun a b hab => Subtype.ext (Subtype.ext (congrArg (fun z : W => (z : M.V)) hab)))
-    · intro X hX w hw
-      exact hs X hX w hw
+    · exact fun X hX w hw => hs X hX w hw
   have hw : ∀ v : N, v ∈ ⨆ μ : Ix p q → ℚ, wtSub (resAct M N h) μ := by
     intro v
     have h1 := _root_.GlobalTheory.WeightDecomp.mem_iSup_inf_wtSub p q M.V M.act N (fun a => h _) v v.2 (M.wts v)
@@ -656,8 +653,7 @@ theorem inner_orbit_eq_zero (πU : URep T) {V : Type} [AddCommGroup V] [Module �
   · intro k s
     have h1 := hasDerivAt_orbit πU hY (hd ((A ^ k) y)) s
     have h2 := ((innerSL ℂ w).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt s h1
-    rw [pow_succ', Module.End.mul_apply]
-    exact h2
+    rwa [pow_succ', Module.End.mul_apply]
   · intro k s
     refine (norm_inner_le_norm _ _).trans ?_
     rw [πU.isom, mul_assoc, mul_assoc]
@@ -833,8 +829,7 @@ theorem genSub_le {p q : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
 theorem subset_genSub {p q : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
     (act : Mat p q →ₗ[ℂ] Module.End ℂ V) (S : Set V) : S ⊆ genSub act S := by
   intro x hx
-  simp only [genSub, SetLike.mem_coe, Submodule.mem_sInf]
-  exact fun N hN => hN.1 hx
+  simpa only [genSub, SetLike.mem_coe, Submodule.mem_sInf] using fun N hN => hN.1 hx
 
 theorem genSub_stable {p q : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
     (act : Mat p q →ₗ[ℂ] Module.End ℂ V) (S : Set V) (Z : Mat p q) (y : V)
@@ -854,8 +849,7 @@ theorem intertwiner_unique_and_range : ∀ (p q n : ℕ) (T0 : GrpData (p * n + 
         rw [hN] at hy ⊢
         rw [← hio.2, ← hI.2, hy]) with h | h
       · exact absurd ((Submodule.mem_bot ℂ).1 (h ▸ (hN v₀).2 h0)) hv
-      · intro v
-        exact (hN v).1 (h ▸ Submodule.mem_top)
+      · exact fun v => (hN v).1 (h ▸ Submodule.mem_top)
     refine TensorProduct.ext' fun e v => ?_
     let N : Submodule ℂ W := LinearMap.eqLocus (io ∘ₗ (TensorProduct.mk ℂ W M.V).flip v)
         (I ∘ₗ (TensorProduct.mk ℂ M₁.V M.V).flip v ∘ₗ W.subtype)
@@ -1018,13 +1012,11 @@ theorem form_eq_zero {p q : ℕ} (M : GKMod p q) (D : M.V → M.V → ℂ)
     apply sInf_le
     refine ⟨?_, ?_⟩
     · intro x hx
-      rw [Set.mem_singleton_iff.1 hx]
-      exact hv0
+      rwa [Set.mem_singleton_iff.1 hx]
     · intro Z x hx y
       rw [hinv]
       exact hx _
-  intro x y
-  exact hN (hgen ▸ Submodule.mem_top) y
+  exact fun x y => hN (hgen ▸ Submodule.mem_top) y
 
 theorem inner_eq_mul : ∀ (p q : ℕ) (M : GKMod p q) (H₁ : Type) [NormedAddCommGroup H₁] [InnerProductSpace ℂ H₁] (H₂ : Type) [NormedAddCommGroup H₂] [InnerProductSpace ℂ H₂] (j : M.V →ₗ[ℂ] H₁) (E₁ E₂ : M.V →ₗ[ℂ] H₂), (∀ Z x y, inner ℂ (j (M.act Z x)) (j y) = inner ℂ (j x) (j (M.act (adjZ Z) y))) → (∀ Z x y, inner ℂ (E₁ (M.act Z x)) (E₂ y) = inner ℂ (E₁ x) (E₂ (M.act (adjZ Z) y))) → ∀ (μ : Ix p q → ℚ) (v : M.V), v ∈ wtSub M.act μ → (∀ x ∈ wtSub M.act μ, ∃ c : ℂ, x = c • v) → genSub M.act {v} = ⊤ → ‖j v‖ = 1 → ∀ x y, inner ℂ (E₁ x) (E₂ y) = inner ℂ (E₁ v) (E₂ v) * inner ℂ (j x) (j y) := by
   intro p q M H₁ _ _ H₂ _ _ j E₁ E₂ hj hE μ v hv hline hgen hnorm x y
@@ -1142,8 +1134,7 @@ theorem irrU_of_dense_graded_irrGK :
       rw [GlobalTheory.FockTensor.inner_pi_left]
       exact Submodule.inner_left_of_mem_orthogonal (hinv _ _ hu) hb
     have hdense : Dense ((⨆ m, (N m).map j : Submodule ℂ σ.H) : Set σ.H) := by
-      rw [← Submodule.map_iSup, hN, Submodule.map_top]
-      exact hd
+      rwa [← Submodule.map_iSup, hN, Submodule.map_top]
     have hle : (⨆ m, (N m).map j : Submodule ℂ σ.H) ≤ Sᗮ := by
       refine iSup_le fun m => ?_
       rintro _ ⟨x, hx, rfl⟩
@@ -1165,11 +1156,9 @@ theorem irrU_of_dense_graded_irrGK :
       have h5 : x' ∈ S.comap j := by rw [Submodule.mem_comap, hx']; exact ha
       rw [h, Submodule.mem_bot] at h5
       rw [h5, map_zero] at hx'
-      rw [hab, ← hx', zero_add]
-      exact hb
+      rwa [hab, ← hx', zero_add]
     rw [← Submodule.orthogonal_eq_top_iff, eq_top_iff]
-    intro v _
-    exact closure_minimal hle S.isClosed_orthogonal (hdense v)
+    exact fun v _ => closure_minimal hle S.isClosed_orthogonal (hdense v)
   · right
     rw [eq_top_iff]
     intro v _
@@ -1872,8 +1861,7 @@ theorem harmonicMaps_of (hn : 1 ≤ n) (F : FockData T0 T1 T2) (D : DSRep T1) (W
     have h4 : inner ℂ (j v) (j v) ≠ 0 := inner_self_ne_zero.2 ((map_ne_zero_iff j hM.1).2 hv)
     have h5 := ((mul_eq_zero.1 ((mul_eq_zero.1 h1.symm).resolve_right h4)).resolve_left h3)
     exact sub_eq_zero.1 ((map_eq_zero_iff D.ι D.ι_inj).1 (inner_self_eq_zero.1 h5))
-  · simp only [hio]
-    exact u3 v
+  · simpa only [hio] using u3 v
   · rw [hio, hio, hcoef]
   · have e1 : ∀ z : ℂ, z * star z = ((‖z‖ ^ 2 : ℝ) : ℂ) := fun z => by
       rw [Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq]

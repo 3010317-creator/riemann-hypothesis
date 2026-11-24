@@ -394,9 +394,7 @@ theorem derFam_expand_words : ∀ (n : ℕ) (ε : Fin n → Bool) (F : List (Glo
       have h2 : HasDerivAt (fun t : ℝ => ∑ J : Fin m → Fin d, (∏ j, (c (J j) (Y j.succ) : ℂ)) *
           F (List.ofFn fun j => b (J j)) (g * NormedSpace.exp (t • b i)))
           (∑ J : Fin m → Fin d, (∏ j, (c (J j) (Y j.succ) : ℂ)) * F (b i :: List.ofFn fun j => b (J j)) g) 0 := by
-        apply HasDerivAt.fun_sum
-        intro J _
-        exact (hF _ (hwb J) (b i) (hb i) g hg).const_mul _
+        exact HasDerivAt.fun_sum (fun J _ => (hF _ (hwb J) (b i) (hb i) g hg).const_mul _)
       have heq : (fun t : ℝ => F (List.ofFn fun j : Fin m => Y j.succ) (g * NormedSpace.exp (t • b i))) =
           fun t : ℝ => ∑ J : Fin m → Fin d, (∏ j, (c (J j) (Y j.succ) : ℂ)) *
             F (List.ofFn fun j => b (J j)) (g * NormedSpace.exp (t • b i)) := by
@@ -509,8 +507,7 @@ theorem hasStrictFDerivAt_expProd {d : ℕ} (b : Fin d → Matrix (Fin n) (Fin n
     have h2 : HasDerivAt (fun r : ℝ => f (r • Pi.single j (1 : ℝ))) (b j) 0 := by
       have h3 := hasDerivAt_exp_smul_const (𝕂 := ℝ) (b j) (0 : ℝ)
       simp only [zero_smul, NormedSpace.exp_zero, one_mul] at h3
-      refine h3.congr_of_eventuallyEq (Filter.Eventually.of_forall fun r => ?_)
-      exact expProd_line b j r
+      exact h3.congr_of_eventuallyEq (Filter.Eventually.of_forall fun r => (expProd_line b j r))
     exact h1.unique h2
   ext1 v
 
@@ -553,8 +550,7 @@ theorem exp_product_chart_local (n : ℕ) (ε : Fin n → Bool) (d : ℕ) (b : F
   have hlog : HasStrictFDerivAt (Formalism.MainNotions.S.Gauge.logM n) (ContinuousLinearMap.id ℝ _) (f 0) := by
     have h := (Formalism.MainNotions.S.Gauge.hasStrict_expM (n := n)).to_localInverse
     rw [NormedSpace.exp_zero] at h
-    rw [hf0]
-    exact h
+    rwa [hf0]
   set ψ : (Fin d → ℝ) → (Fin d → ℝ) := fun s => Cc (Formalism.MainNotions.S.Gauge.logM n (f s)) with hψdef
   have hψ : HasStrictFDerivAt ψ ((ContinuousLinearEquiv.refl ℝ (Fin d → ℝ) : (Fin d → ℝ) ≃L[ℝ] (Fin d → ℝ)) :
       (Fin d → ℝ) →L[ℝ] (Fin d → ℝ)) 0 := by
@@ -950,8 +946,7 @@ theorem continuousOn_and_umg_kAvg : ∀ (n : ℕ) (ε : Fin n → Bool) (f : Glo
     have := congrArg Subtype.val (B.sum_repr ⟨Z, hZ'⟩)
     rw [Submodule.coe_sum] at this
     simp only [Submodule.coe_smul] at this
-    simp only [c, dite_eq_left hZ]
-    exact this.symm
+    simpa only [c, dite_eq_left hZ] using this.symm
   have hli : LinearIndependent ℝ b :=
     B.linearIndependent.map' (GlobalTheory.LowTypeDetermined.lie (Jm ε)).subtype (Submodule.ker_subtype _)
   have hC : ∀ l : List (Mx n), (∀ Y ∈ l, Y ∈ lieSet ε) → ∀ Z ∈ lieSet ε, ∀ g ∈ UJset ε,

@@ -333,16 +333,14 @@ theorem int_of_pow {g : GL ι k} {d m : ℕ} (hν : (g.val - 1) ^ d = 0) (h0 : (
       exact (intM k ι).sub_mem (intM_mul hg hx) hx)
     1 intM_one
   have h2 := (intM k ι).add_mem h1 intM_one
-  rw [smul_eq_mul, mul_one, sub_add_cancel] at h2
-  exact h2
+  rwa [smul_eq_mul, mul_one, sub_add_cancel] at h2
 
 theorem mem_KO_of_pow {ℓ : ι → ℕ} {g : GL ι k} (hU : g ∈ UT k ℓ) {m : ℕ} (h0 : (m : k) ≠ 0)
     (hm : ((m : k))⁻¹ ∈ 𝒪[k]) (hg : g ^ m ∈ KO k ι) : g ∈ KO k ι := by
   obtain ⟨h1, h2⟩ := (mem_KO_iff _).1 hg
   refine (mem_KO_iff _).2 ⟨int_of_pow (UT_pow_eq_zero hU) h0 hm h1, ?_⟩
   refine int_of_pow (g := g⁻¹) (UT_pow_eq_zero (inv_mem hU)) h0 hm ?_
-  rw [inv_pow]
-  exact h2
+  rwa [inv_pow]
 
 variable {n : Type} [Fintype n] [DecidableEq n] {c : ℕ}
 
@@ -629,8 +627,7 @@ theorem coefficient_local_term_at_split_place {μ₀ : T} (hL : L.Is μ₀) (S :
   have hb' : β ⟨P, hl⟩ ∈ unfSupport (psiAt W P) (unitVol P) false
       (Reps.through hs (givenLevel G t P) (stair (locGrid G t P) (unifAt P) (cosExp G P))) (Tflip W S.B t Φ P) := by
     have : keepAt G (⟨P, hl⟩ : locPl G t).1 = false := hkeep
-    rw [this] at hb
-    exact hb
+    rwa [this] at hb
   have hβ' := funext (hO _ hb')
   have hz : ∀ i : Fin ((locGrid G t P).m - 2), ∃ z : ℤ,
       invVol (conjLevel hs (givenLevel G t P) ((repsAt G t P).elt (β ⟨P, hl⟩)) (j := i + 1) (by omega)) =

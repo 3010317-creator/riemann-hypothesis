@@ -89,16 +89,14 @@ theorem UpperTheory.V.Stick.sqfree :
   ext i
   rw [hs i, ← Ideal.dvd_span_singleton, hu]
   constructor
-  · intro hi
-    exact Finset.dvd_prod_of_mem P hi
+  · exact fun hi => Finset.dvd_prod_of_mem P hi
   · intro hd
     have hex : ∀ t : Finset ι, P i ∣ ∏ j ∈ t, P j → ∃ j ∈ t, P i ∣ P j := by
       intro t
       induction t using Finset.induction_on with
       | empty =>
         simp only [Finset.prod_empty]
-        intro h
-        exact False.elim ((hP i).not_unit (isUnit_iff_dvd_one.mpr h))
+        exact fun h => False.elim ((hP i).not_unit (isUnit_iff_dvd_one.mpr h))
       | @insert a t ha ih =>
         rw [Finset.prod_insert ha]
         intro h

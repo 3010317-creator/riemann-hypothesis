@@ -59,8 +59,7 @@ variable {l : ℕ} [Fact l.Prime]
 
 theorem tiedA_inv_of_theta {y : Per6.BdRp l} (h : Per6.θD l y ≠ 0) : ∃ z, y * z = 1 := by
   have h1 : y ∉ IsLocalRing.maximalIdeal (Per6.BdRp l) := by
-    rw [← filq_ker_eq]
-    exact h
+    rwa [← filq_ker_eq]
   exact (IsLocalRing.notMem_maximalIdeal.1 h1).exists_right_inv
 
 variable {P : LocPrime l} {AI : LocAinf l P}
@@ -96,7 +95,6 @@ theorem tied_field : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf
     tiedA_φ_injective P, fun K x h0 h1 => ?_⟩
   obtain ⟨y, hy⟩ := (tie_fil_zero T K x).1 h0
   refine tiedA_inv T K hy fun h => h1 ((filq_tie_fil T K 1 hy).2 ?_)
-  rw [pow_one]
-  exact h
+  rwa [pow_one]
 
 end PositivityTheory.LocInh

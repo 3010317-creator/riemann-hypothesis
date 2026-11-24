@@ -55,15 +55,13 @@ theorem int_geom (β y₀ : ℂ) (hβ : β ≠ 0) (h1 : ‖y₀ * β‖ < 1) (h2
   apply HasSum.of_nat_of_neg_add_one
   · have e : ∀ n : ℕ, β ^ (n : ℤ) * y₀ ^ (n : ℤ).natAbs = (y₀ * β) ^ n := fun n => by
       simp [zpow_natCast, mul_pow, mul_comm]
-    simp only [e]
-    exact hasSum_geometric_of_norm_lt_one h1
+    simpa only [e] using hasSum_geometric_of_norm_lt_one h1
   · have e : ∀ n : ℕ, β ^ (-((n : ℤ) + 1)) * y₀ ^ (-((n : ℤ) + 1)).natAbs = y₀ / β * (y₀ / β) ^ n := fun n => by
       rw [show (-((n : ℤ) + 1)) = -((n + 1 : ℕ) : ℤ) by push_cast; ring, zpow_neg, zpow_natCast,
         show (-((n + 1 : ℕ) : ℤ)).natAbs = n + 1 by omega, div_pow]
       field_simp
       ring
-    simp only [e]
-    exact (hasSum_geometric_of_norm_lt_one h2).mul_left (y₀ / β)
+    simpa only [e] using (hasSum_geometric_of_norm_lt_one h2).mul_left (y₀ / β)
 
 theorem q_pow (q : ℂ) (hq : q ≠ 0) (N : ℕ) (a : ℤ) :
     q ^ ((2 * N + 2) * a.toNat) * q ^ (-a * ((N : ℤ) + 1)) = (q ^ (N + 1)) ^ a.natAbs := by

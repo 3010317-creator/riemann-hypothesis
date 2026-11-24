@@ -185,8 +185,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.hopf_order_ideals_eq_top : ∀
     unfold augIdeal
     exact Submodule.mem_inf.2 ⟨h'M, by simp [LinearMap.mem_ker, h'z]⟩
   have h't : ¬ v (h' t) < 1 := by
-    rw [h'apply]
-    exact hh
+    rwa [h'apply]
   obtain ⟨σ, hσ⟩ := PositivityTheory.HtPt.Rb.fund_ex p C v R hv hp F f hc
   obtain ⟨P1, P2, P3, P4, -⟩ :=
     PositivityTheory.HtPt.Rb.proj_props p C v R hv hp F f hc N AA hFS σ hσ h' h'aug
@@ -255,8 +254,7 @@ namespace PositivityTheory.HtPt.Rd
 
 theorem powadd : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] (v : Valuation C NNReal) (x y z : C), v x ≤ 1 → v y ≤ 1 → v (z - x - y) ≤ v (p : C) → v (z ^ p - x ^ p - y ^ p) ≤ v (p : C) := by
   intro p hp C _ v x y z hx hy h
-  have hp1 : v (p : C) ≤ 1 := by
-    exact natCast_mem v.integer p
+  have hp1 : v (p : C) ≤ 1 := natCast_mem v.integer p
   have hz : v z ≤ 1 := by
     have e : z = (z - x - y) + x + y := by ring
     rw [e]
@@ -388,8 +386,7 @@ theorem mem_aug (M : Submodule R (F → C)) (g : F → C) :
     g ∈ augIdeal M ↔ g ∈ M ∧ g 0 = 0 := Iff.rfl
 
 theorem v_le_of_mem (hv : v.Integers R) {a b : R} (h : a ∈ Ideal.span {b}) :
-    v (algebraMap R C a) ≤ v (algebraMap R C b) := by
-  exact hv.le_of_dvd (Ideal.mem_span_singleton.mp h)
+    v (algebraMap R C a) ≤ v (algebraMap R C b) := hv.le_of_dvd (Ideal.mem_span_singleton.mp h)
 
 theorem v_eq_of_span (hv : v.Integers R) {a b : R} (h : Ideal.span {a} = Ideal.span {b}) :
     v (algebraMap R C a) = v (algebraMap R C b) := by
@@ -515,12 +512,10 @@ private theorem prime_pow_le_sum_mul_pow_of_modEq (p f n : ℕ) (hp : p.Prime) (
   have hS2 : 2 ≤ S := by
     refine le_trans he (Finset.sum_le_sum (fun i _ => ?_))
     exact Nat.le_mul_of_pos_right _ (pow_pos (by omega) _)
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   unfold Nat.ModEq at hS1
   rcases Nat.lt_or_ge S M with h | h
-  · rw [Nat.mod_eq_of_lt h] at hS1
-    rw [Nat.mod_eq_of_lt (by omega)] at hS1
+  · rw [Nat.mod_eq_of_lt h, Nat.mod_eq_of_lt (by omega)] at hS1
     omega
   · have : S = M := by omega
     rw [this, Nat.mod_self, Nat.mod_eq_of_lt (by omega)] at hS1
@@ -611,9 +606,7 @@ theorem r_om_of (h : type_of% @_root_.GlobalTheory.CompanionTheory.Relay.fundame
     have h1 := hv.le_of_dvd (Ideal.mem_span_singleton.1 (hstep m))
     simp only [ha, map_pow] at h1 ⊢
     exact h1
-  have haper : ∀ m, a (m % f) = a m := by
-    intro m
-    exact v_eq_of_span hv (by rw [← hc, ← hc, hper])
+  have haper : ∀ m, a (m % f) = a m := fun m => v_eq_of_span hv (by rw [← hc, ← hc, hper])
   have hE : ∀ m, 1 ≤ m → m ≤ p ^ f - 1 → ∀ e ∈ eig AA.carrier (σ ^ m), ∃ d : Fin f → Fin p,
       (∃ i, (d i : ℕ) ≠ 0) ∧ ∑ i : Fin f, (d i : ℕ) * p ^ (i : ℕ) = m ∧
       v (e 1) ≤ ∏ i : Fin f, a i ^ (d i : ℕ) := by
@@ -680,8 +673,7 @@ theorem r_om_of (h : type_of% @_root_.GlobalTheory.CompanionTheory.Relay.fundame
       simp
   have hsqn : (fun x : F => algebraMap R C (c n ^ p * χ x)) ∈ sqIdeal (augIdeal AA.carrier) := by
     have h1 := pow_mem_sq AA (σ ^ p ^ n) (c := c n) (by rw [hc]; exact Ideal.mem_span_singleton_self _) (k := p) hp2
-    rw [← pow_mul, ← pow_succ] at h1
-    exact h1
+    rwa [← pow_mul, ← pow_succ] at h1
   have hP1 : ∀ r : R, (fun x : F => algebraMap R C (r * χ x)) ∈ sqIdeal (augIdeal AA.carrier) ↔
       r ∈ Ideal.span {c n ^ p} := by
     intro r
@@ -822,8 +814,7 @@ theorem _root_.GlobalTheory.T.stable_hopf_order_fundamental_character : ∀ (p :
   · intro K hK χ
     obtain ⟨hA, hinv⟩ := hK
     refine PositivityTheory.HtPt.Rb.proj_mem hw _ χ g fun a => ⟨hFS a g hA, fun y k hk => ?_⟩
-    simp only [smul_add]
-    exact hinv (a • y) (a • k) (K.smul_mem a hk)
+    simpa only [smul_add] using hinv (a • y) (a • k) (K.smul_mem a hk)
   · intro hsq χ
     refine PositivityTheory.HtPt.Rb.proj_mem hw _ χ g fun a => ?_
     let L : (N → C) →ₗ[R] (N → C) := LinearMap.funLeft R C (fun x : N => a • x)
@@ -959,8 +950,7 @@ theorem a_nonunit_of (hproj : type_of% @GlobalTheory.T.stable_hopf_order_fundame
   have hρ2 : ρ ∈ Ideal.span {cc (τ ^ p ^ 0) ^ p} := by
     refine ((hom p C v R hv hp1 F f hF S hSst τ hτ (fun n => cc (τ ^ p ^ n)) (fun n => hcc _)
       0).1 ρ).1 ?_
-    rw [zero_add, pow_one, ← hρ]
-    exact hρ1
+    rwa [zero_add, pow_one, ← hρ]
   have hcc' : cc (τ ^ p ^ 0) ∈ Ideal.span {c'} := by
     rw [← hc', idealX, ← hS, pow_zero, pow_one, hcc]
     exact Ideal.mem_span_singleton_self _

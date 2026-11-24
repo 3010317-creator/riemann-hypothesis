@@ -116,8 +116,6 @@ theorem UpperTheory.V.Pa.pair_desc :
       refine ⟨⟨a, ha, rfl⟩, Subgroup.mem_iInf.2 fun i => ?_⟩
       have := Subgroup.mem_iInf.1 ha' i
       rw [MonoidHom.mem_ker] at this ⊢
-      rw [hc1, MonoidHom.comp_apply, g.p₀_φu]
-      exact this
+      rwa [hc1, MonoidHom.comp_apply, g.p₀_φu]
     have := u.I w _ hmem h
-    rw [htr, map_mul, map_sub, map_one, md_single, md_single, g.p₀_φu] at this
-    exact this
+    rwa [htr, map_mul, map_sub, map_one, md_single, md_single, g.p₀_φu] at this

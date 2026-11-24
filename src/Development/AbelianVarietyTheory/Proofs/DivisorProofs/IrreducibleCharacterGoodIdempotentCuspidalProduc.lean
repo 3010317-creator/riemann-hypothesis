@@ -124,8 +124,7 @@ theorem GlobalTheory.SeriesIdem.exists_simple_of_eSerO_pair : ∀ (g : ℕ) [Fac
   classical
   obtain ⟨W, hWs, rfl⟩ := (PI.SerBridgeGLW.irrCharIff_of PI.SerBridgeGLW.conjugate_character_formula _ ψ).1 hψ
   haveI := hWs
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   have hnt : Nontrivial W := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
@@ -156,13 +155,11 @@ theorem GlobalTheory.SeriesIdem.exists_simple_of_eSerO_pair : ∀ (g : ℕ) [Fac
   · rw [finsum_eq_sum F hfin]
     have hsplit : ∑ x, (∑ z ∈ hfin.toFinset, F z).coeff x * W.character x =
         ∑ z ∈ hfin.toFinset, ∑ x, (F z).coeff x * W.character x := by
-      simp only [MonoidAlgebra.coeff_sum, Finset.sum_apply', Finset.sum_mul]
-      exact Finset.sum_comm
+      simpa only [MonoidAlgebra.coeff_sum, Finset.sum_apply', Finset.sum_mul] using Finset.sum_comm
     rw [hsplit]
     refine Finset.sum_eq_zero fun z _ => ?_
     by_cases hP : ∃ τ : FDRep ℂ (GL (Fin r) (ZMod g)), Simple τ ∧ zIdem τ = z ∧ HasLabelO O τ f
-    · simp only [hF, finsum_eq_if, ite_eq_left hP]
-      exact hz z hP
+    · simpa only [hF, finsum_eq_if, ite_eq_left hP] using hz z hP
     · simp only [hF, finsum_eq_if, ite_eq_right hP]
       simp
   · rw [finsum_of_infinite_support hfin]
@@ -229,12 +226,10 @@ theorem mem_parab (e : ι ≃ κ) (b : ι → Fin s) (p : parab K b) :
   obtain ⟨h1, h2⟩ := p.2
   refine ⟨fun i j hij => ?_, fun i j hij => ?_⟩
   · show Matrix.reindex e e (p.1 : Matrix ι ι K) i j = 0
-    simp only [Matrix.reindex_apply, Matrix.submatrix_apply]
-    exact h1 _ _ (by simpa using hij)
+    simpa only [Matrix.reindex_apply, Matrix.submatrix_apply] using h1 _ _ (by simpa using hij)
   · rw [← map_inv]
     show Matrix.reindex e e ((p.1⁻¹ : GL ι K) : Matrix ι ι K) i j = 0
-    simp only [Matrix.reindex_apply, Matrix.submatrix_apply]
-    exact h2 _ _ (by simpa using hij)
+    simpa only [Matrix.reindex_apply, Matrix.submatrix_apply] using h2 _ _ (by simpa using hij)
 
 theorem infl_symm (e : ι ≃ κ) (b : ι → Fin s) (lam : ∀ c : Fin s, FDRep ℂ (GL {i // b i = c} K))
     (p : parab K (b ∘ e.symm)) :
@@ -467,8 +462,7 @@ theorem tprod_update_injective (v : ∀ i, M i) (hv : ∀ i, v i ≠ 0) (i : ι)
     · rw [Function.update_of_ne hj]; exact hv j
   have hφ : ∀ j, ∃ φ : Module.Dual ℂ (M j), φ (Function.update v i x j) ≠ 0 := by
     intro j
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hw j ((Module.forall_dual_apply_eq_zero_iff ℂ _).1 hc)
   choose φ hφ using hφ
   have h1 := congrArg (PiTensorProduct.lift ((MultilinearMap.mkPiAlgebra ℂ ι ℂ).compLinearMap φ)) hx
@@ -655,8 +649,7 @@ theorem eq_bot_or_top_of_map_stable [∀ i, FiniteDimensional ℂ (V i)]
   let e := fun c => Module.finBasis ℂ (V c)
   let B := Basis.piTensorProduct e
   obtain ⟨I, hI⟩ : ∃ I, B.repr x I ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hx0 (B.repr.map_eq_zero_iff.1 (Finsupp.ext hc))
   have hJ : ∀ J, B J ∈ W := by
     intro J
@@ -796,12 +789,10 @@ theorem exists_sorted {C : LabelConv K} (O : LabelMap K C) (b : Fin r → Fin s)
     obtain ⟨h1, h2⟩ := q.2
     refine ⟨fun i j hij => ?_, fun i j hij => ?_⟩
     · show Matrix.reindex e e (q.1 : Matrix (Fin r) (Fin r) K) i j = 0
-      simp only [Matrix.reindex_apply, Matrix.submatrix_apply]
-      exact h1 _ _ hij
+      simpa only [Matrix.reindex_apply, Matrix.submatrix_apply] using h1 _ _ hij
     · rw [← map_inv]
       show Matrix.reindex e e ((q.1⁻¹ : GL (Fin r) K) : Matrix (Fin r) (Fin r) K) i j = 0
-      simp only [Matrix.reindex_apply, Matrix.submatrix_apply]
-      exact h2 _ _ hij
+      simpa only [Matrix.reindex_apply, Matrix.submatrix_apply] using h2 _ _ hij
   have hlevi : ∀ (p : parab K b') (c : Fin s),
       levi K b c ⟨A p.1, hpar p⟩ = (glEquiv K (ec c)).symm (levi K b' c p) := by
     intro p c
@@ -983,8 +974,7 @@ theorem isCuspProdChar_of_squarefree : ∀ (K : Type) [Field K] [Fintype K] [Dec
     funext x
     rw [htr x]
     exact character_eq_of_constituent τ _ hτ hirr hc x
-  rw [hfun]
-  exact hcp
+  rwa [hfun]
 
 end GlobalTheory.SqfreeCuspProd
 end -- clump:auto
@@ -1174,8 +1164,7 @@ theorem exists_factor [DecidableEq ι] {χ : (∀ i, G i) → ℂ} (hχ : IsIrrC
     simp only [← Finset.mul_sum, hdelta]
     simp
   obtain ⟨p, hp, hne⟩ : ∃ p ∈ Fintype.piFinset Z, ∑ x, χ x * ∏ i, (p i).coeff (x i) ≠ 0 := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     exact irr_one_ne_zero hχ (hkey.trans (Finset.sum_eq_zero hno))
   have hτ : ∀ i, ∃ τ : FDRep ℂ (G i), Simple τ ∧ zIdem τ = p i := fun i => by
     have := Fintype.mem_piFinset.1 hp i
@@ -1254,8 +1243,7 @@ theorem irreducible_character_good_idempotent_cuspidal_product : ∀ (D : D7) [F
     (hψ kv) h1
   have h2 := _root_.GlobalTheory.SqfreeCuspProd.isCuspProdChar_of_squarefree (ZMod (D.host.g kv.1)) (C kv.1) (O kv.1) D.R.r τ _ hτ hl hsq
   have e : ψ kv = fun x => τ.character x := funext fun x => (hc x).symm
-  rw [e]
-  exact h2
+  rwa [e]
 
 end GlobalTheory.GoodFactor
 end -- clump:auto

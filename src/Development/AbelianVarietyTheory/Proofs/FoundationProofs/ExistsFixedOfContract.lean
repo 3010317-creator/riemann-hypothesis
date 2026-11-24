@@ -85,8 +85,7 @@ theorem exists_fixed_of_contract {R : Type*} [CommRing R] (T : PowerSeries R →
   rw [Function.iterate_succ_apply'] at h2
   have h3 := dvd_sub h1 h2
   have h4 := X_pow_dvd_iff.1 h3 n (by omega)
-  rw [sub_sub_sub_cancel_right, map_sub, sub_eq_zero] at h4
-  exact h4
+  rwa [sub_sub_sub_cancel_right, map_sub, sub_eq_zero] at h4
 
 theorem exists_isWq {p : ℕ} [Fact p.Prime] (W : WeierstrassCurve ℂ_[p]) : ∃ wq, IsWq W wq := by
   let c := algebraMap ℂ_[p] (PowerSeries ℂ_[p])
@@ -105,8 +104,7 @@ theorem exists_isWq {p : ℕ} [Fact p.Prime] (W : WeierstrassCurve ℂ_[p]) : �
 
 theorem constantCoeff_of_isWq {p : ℕ} [Fact p.Prime] {W : WeierstrassCurve ℂ_[p]}
     {wq : PowerSeries ℂ_[p]} (h : IsWq W wq) : PowerSeries.constantCoeff wq = 1 := by
-  have h' := congrArg PowerSeries.constantCoeff h
-  simpa using h'
+  simpa using congrArg PowerSeries.constantCoeff h
 
 theorem coeff_one_flog {p : ℕ} [Fact p.Prime] {W : WeierstrassCurve ℂ_[p]}
     {wq : PowerSeries ℂ_[p]} (h : IsWq W wq) : PowerSeries.coeff 1 (flog W wq) = 1 := by

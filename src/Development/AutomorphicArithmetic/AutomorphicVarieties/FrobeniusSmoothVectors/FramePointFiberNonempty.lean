@@ -61,27 +61,21 @@ theorem UpperTheory.V.Fr.framePoint_fiber_nonempty :
   intro l _ k _ _ F C₀ hF Q _ _ ρ hbar htri hlc
   have hd0 : ∀ g : F.G0, ρ.r g 0 0 = algebraMap k Q ((F.Ψ (g : F.Γ) : k)) := by
     intro g
-    have h := hbar.1 g 0
-    simpa [w] using h
+    simpa [w] using hbar.1 g 0
   have hd1 : ∀ g : F.G0, ρ.r g 1 1 = algebraMap k Q ((F.Ψ (g : F.Γ) : k))⁻¹ := by
     intro g
-    have h := hbar.1 g 1
-    simpa [w] using h
+    simpa [w] using hbar.1 g 1
   have hup : ∀ g : F.G0, ρ.r g 0 1 = 0 := by
     intro g
     have h : ρ.r g 0 1 ∈ ρ.triM := by
-      apply Ideal.subset_span (s := {x | ∃ g i j, i < j ∧ x = ρ.r g i j})
-      exact ⟨g, 0, 1, by decide, rfl⟩
-    rw [htri, Ideal.mem_bot] at h
-    exact h
+      exact Ideal.subset_span (s := {x | ∃ g i j, i < j ∧ x = ρ.r g i j}) ⟨g, 0, 1, by decide, rfl⟩
+    rwa [htri, Ideal.mem_bot] at h
   have hψ0 : ∀ v (s : F.Gv v), ((ρ.ψ v 0 s : Qˣ) : Q) = algebraMap k Q ((F.Ψ (F.loc v s) : k)) := by
     intro v s
-    have h := hbar.2 v 0 s
-    simpa [w] using h
+    simpa [w] using hbar.2 v 0 s
   have hψ1 : ∀ v (s : F.Gv v), ((ρ.ψ v 1 s : Qˣ) : Q) = algebraMap k Q ((F.Ψ (F.loc v s) : k))⁻¹ := by
     intro v s
-    have h := hbar.2 v 1 s
-    simpa [w] using h
+    simpa [w] using hbar.2 v 1 s
   refine ⟨hlc 1 0, ?_, ?_, ?_⟩
   · intro g h
     simp only [map_mul, Matrix.mul_apply, Fin.sum_univ_two, Algebra.smul_def, Units.val_inv_eq_inv_val]

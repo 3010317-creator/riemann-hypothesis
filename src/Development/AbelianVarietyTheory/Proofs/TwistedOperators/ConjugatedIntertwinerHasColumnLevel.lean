@@ -140,11 +140,9 @@ theorem conjMap_level : GlobalTheory.Published.DiscreteSeriesClassification → 
   obtain ⟨κ, hκdef⟩ : ∃ κ, κ = ((iotaX X h).toMulEquiv (t⁻¹⁻¹ * k * t⁻¹)).2 := ⟨_, rfl⟩
   have hq : (iotaX X h).toMulEquiv (t⁻¹⁻¹ * k * t⁻¹) = ((1 : X.B.I.Ginf), κ) := Prod.ext hp1 hκdef.symm
   have hκ : κ ∈ X.K2 := by
-    rw [hκdef]
-    exact hp2
+    rwa [hκdef]
   have hv' : star (X.chi2 κ) = levChi (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true)) k := by
-    rw [hκdef]
-    exact hv
+    rwa [hκdef]
   have hsplit : (iotaX X h).toMulEquiv (g * k * t⁻¹) =
       (iotaX X h).toMulEquiv (g * t⁻¹) * ((1 : X.B.I.Ginf), κ) := by
     rw [← hq]

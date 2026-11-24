@@ -331,10 +331,8 @@ theorem eventually_forall_proj_mem (L : Submodule (𝓞 E) (Fin n → E)) [Submo
     (hK : IsCompact K) : ∀ᶠ v in cofinite, ∀ x ∈ K, proj σ J v x ∈ stabLoc σ J L v := by
   apply hK.induction_on (p := fun K => ∀ᶠ v in cofinite, ∀ x ∈ K, proj σ J v x ∈ stabLoc σ J L v)
   · simp
-  · intro s t hs ht
-    exact ht.mono fun v hv x hx => hv x (hs hx)
-  · intro s t hs ht
-    exact (hs.and ht).mono fun v hv x hx => hx.elim (hv.1 x) (hv.2 x)
+  · exact fun s t hs ht => ht.mono fun v hv x hx => hv x (hs hx)
+  · exact fun s t hs ht => (hs.and ht).mono fun v hv x hx => hx.elim (hv.1 x) (hv.2 x)
   · intro x hx
     refine ⟨_, mem_nhdsWithin_of_mem_nhds (((restrGroup_GAd σ J L).isOpen_level.preimage
       (continuous_const_mul x⁻¹)).mem_nhds (by simp)), ?_⟩

@@ -174,8 +174,7 @@ private theorem not_isSquare_residue_of_not_isSquare (L : IsLoc O Δ) (ε : Oˣ)
     exact hε0 hc
   obtain ⟨r, hr, -⟩ := sqrtO O K Δ L ε r₀ hr₀ (by
     rw [← residue_eq_zero_iff, map_sub, map_pow, hc, sq, sub_self])
-  apply hε
-  exact ⟨algebraMap O K r, by rw [← map_mul, ← sq, hr]⟩
+  exact hε ⟨algebraMap O K r, by rw [← map_mul, ← sq, hr]⟩
 
 theorem IsLoc.even_of_norm (L : IsLoc O Δ) (ε : Oˣ) (hε : ¬ IsSquare (algebraMap O K ε)) {a b : K}
     (h : a ^ 2 - algebraMap O K ε * b ^ 2 ≠ 0) : EvenVal O (a ^ 2 - algebraMap O K ε * b ^ 2) := by
@@ -193,8 +192,7 @@ theorem IsLoc.even_of_norm (L : IsLoc O Δ) (ε : Oˣ) (hε : ¬ IsSquare (algeb
     field_simp
   rw [heq] at h ⊢
   have hnz : x1 * z2 ≠ 0 ∨ y1 * z1 ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     apply h
     rw [hc.1, hc.2]
     simp

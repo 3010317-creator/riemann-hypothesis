@@ -209,8 +209,7 @@ private theorem comm_ine {A : ValuationSubring Ω} {q : ℕ} {σ g : G ℚ Ω} (
   have e' : g (g⁻¹ x) = x := g.apply_symm_apply _
   rw [e, map_sub, map_pow, e'] at h2
   have h3 := Valuation.map_sub_lt A.valuation h1 h2
-  rw [sub_sub_sub_cancel_right] at h3
-  exact h3
+  rwa [sub_sub_sub_cancel_right] at h3
 
 variable {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c}
 
@@ -337,6 +336,5 @@ theorem UpperTheory.V.Loc.spTanP :
       · have hn : ((D.Ip q).subgroupOf (D.Gp q)).Normal := inferInstance
         have h1 : s ∈ (D.Ip q).subgroupOf (D.Gp q) := hs
         have h2 := mul_mem h1 (hn.conj_mem _ (inv_mem h1) g)
-        rw [← mul_assoc, ← mul_assoc] at h2
-        exact h2
+        rwa [← mul_assoc, ← mul_assoc] at h2
       · simp

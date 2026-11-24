@@ -108,8 +108,7 @@ private theorem lb_const [Finite σ] (x : MvPowerSeries σ O →ₐ[O] O) (h0 : 
     { (constantCoeff : MvPowerSeries σ O →+* O) with commutes' := fun a => by simp [MvPowerSeries.algebraMap_apply] }
   have := GlobalTheory.algHom_sub_mem_pow x k (J := (⊥ : Ideal O)) (fun s => h0 s) (fun s => by simp [k])
     (n := 1) (fun s => by simp [h0, k]) f
-  rw [pow_one, Ideal.mem_bot, sub_eq_zero] at this
-  exact this
+  rwa [pow_one, Ideal.mem_bot, sub_eq_zero] at this
 
 private theorem lb_max {K : Type} [Field K] : maximalIdeal (MvPowerSeries τ K) = GlobalTheory.germIdeal τ K := by
   ext f
@@ -467,8 +466,7 @@ private theorem rep_ex (hD : D.Good) (hP : Loc.LocalPublishedTheorems) (v : ℕ)
   haveI : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
       mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
-    intro hu
-    exact PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
+    exact fun hu => PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
   obtain ⟨-, -, -, -, -, -, -, -, -, -, -, hk, -⟩ := facts D hD
   have hlc : IsLocallyConstant (D.rbarAt v) := by
     refine IsLocallyConstant.comp_continuous (g := D.rbar) ?_ continuous_subtype_val
@@ -575,11 +573,9 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.locBase :
         rw [hPp v hv']
         exact h.2 v hv'
     · have : P l R _ := h ⟨l, D.residueChar_mem_levelPrimes⟩
-      rw [hPl] at this
-      exact this
+      rwa [hPl] at this
     · have : P p R _ := h ⟨p, D.mem_T hp⟩
-      rw [hPp p hp] at this
-      exact this
+      rwa [hPp p hp] at this
   obtain ⟨B, _, _, _, W, org, ρ, h1, h2, h3, h4, h5, h6⟩ := pk_sum fun v => (hK v).some
   refine ⟨{ B := B, W := W, wt_mem := h1, org := org, ρ := ρ, eqs := (hE B ρ).2 h2
             univ := fun R _ _ _ ρ' h => h3 R ρ' ((hE R ρ').1 h), hom := h4, at0 := h5, smooth := ?_ }⟩

@@ -147,7 +147,6 @@ theorem red_iff_pre : ∀ (R R' : Type) [CommRing R] [CommRing R'] (X X' : Schem
   · have e : (pairRes φ s').pull2 (pullHO2 h y) = (pairPull h).pull2 y :=
       (LinearEquiv.ofBijective (pairRes φ s').pull2 (pairRes_pull2_bijective φ s')).apply_symm_apply _
     have e' := congrArg (pairToPre φ s').pull2 e
-    rw [pairToPre_pull2_pairPull, pairToPre_pull2_pairRes] at e'
-    exact e'
+    rwa [pairToPre_pull2_pairPull, pairToPre_pull2_pairRes] at e'
 
 end GlobalTheory.AbCoh

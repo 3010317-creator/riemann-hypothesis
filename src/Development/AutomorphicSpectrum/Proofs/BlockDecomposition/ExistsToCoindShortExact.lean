@@ -378,10 +378,8 @@ theorem cubeB_bijective [DecidableEq κ] (e : κ → P) (M : P → ModuleCat.{0}
     · exact hi.ge
     · exact hs.down j hj
   constructor
-  · intro x y h
-    exact funext fun hs ↦ congrFun h ⟨key hs⟩
-  · intro y
-    exact ⟨fun hs ↦ (show BV e M b (insert i s) from y) ⟨key hs⟩, rfl⟩
+  · exact fun x y h => funext fun hs ↦ congrFun h ⟨key hs⟩
+  · exact fun y => ⟨fun hs ↦ (show BV e M b (insert i s) from y) ⟨key hs⟩, rfl⟩
 
 abbrev AV (e : κ → P) (M : P → ModuleCat.{0} R) (s : Finset κ) : Type :=
   ∀ hs : PLift s.Nonempty, ∀ b : {b : P // b ≤ s.inf' hs.down e}, M b.1
@@ -655,8 +653,7 @@ theorem GlobalTheory.CompanionTheory.Hodge.Nerve.isZero_homology_coind {R : Type
   intro x hx
   have hx' : GlobalTheory.CompanionTheory.Hodge.Nerve.dNC (GlobalTheory.CompanionTheory.Hodge.Nerve.coind M) (n + 1) x = 0 := by
     change ((GlobalTheory.CompanionTheory.Hodge.Nerve.nerveCx.obj (GlobalTheory.CompanionTheory.Hodge.Nerve.coind M)).d (n + 1) (n + 1 + 1)).hom x = 0 at hx
-    rw [GlobalTheory.CompanionTheory.Hodge.Nerve.nerveCx_d] at hx
-    exact hx
+    rwa [GlobalTheory.CompanionTheory.Hodge.Nerve.nerveCx_d] at hx
   refine ⟨((-1 : R) ^ (n + 1)) • GlobalTheory.CompanionTheory.Hodge.Nerve.Acyc.contr M x, ?_⟩
   change ((GlobalTheory.CompanionTheory.Hodge.Nerve.nerveCx.obj (GlobalTheory.CompanionTheory.Hodge.Nerve.coind M)).d n (n + 1)).hom
     (((-1 : R) ^ (n + 1)) • GlobalTheory.CompanionTheory.Hodge.Nerve.Acyc.contr M x) = x
@@ -921,8 +918,7 @@ theorem dNC_zero_iff (x : NC G 0) : dNC G 0 x = 0 ↔ Compat G x := by
     have h1 := congrFun hx (ComposableArrows.mk₁ (homOfLE h).op)
     have hm : (ComposableArrows.mk₁ (homOfLE h).op).map (homOfLE (Fin.le_last (0 : Fin (0 + 1 + 1)))) =
         (homOfLE h).op := Quiver.Hom.unop_inj (Subsingleton.elim _ _)
-    rw [dNC_zero_apply, Pi.zero_apply, sub_eq_zero, hm] at h1
-    exact h1
+    rwa [dNC_zero_apply, Pi.zero_apply, sub_eq_zero, hm] at h1
   · intro hc
     funext c
     rw [dNC_zero_apply, Pi.zero_apply, sub_eq_zero]
@@ -939,8 +935,7 @@ theorem epsLin_injective (he : Function.Surjective e) : Function.Injective (epsL
   have h1 : x (pt (op (({k} : Finset κ).inf' (Finset.singleton_nonempty k) e))) =
       y (pt (op (({k} : Finset κ).inf' (Finset.singleton_nonempty k) e))) :=
     congrFun (congrFun hxy ⟨{k}, Finset.card_singleton k⟩) ⟨Finset.singleton_nonempty k⟩
-  rw [Finset.inf'_singleton, hk] at h1
-  exact h1
+  rwa [Finset.inf'_singleton, hk] at h1
 
 private theorem map_eqToHom_singleton_eq (z : Cube.Term (cubeOf e G) 1) {k' k : κ} (h : k' = k)
     (pr : op (({k'} : Finset κ).inf' (Finset.singleton_nonempty k') e) =

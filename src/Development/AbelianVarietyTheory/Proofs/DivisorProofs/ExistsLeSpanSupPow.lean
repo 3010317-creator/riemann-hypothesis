@@ -128,8 +128,7 @@ theorem exists_le_span_sup_pow (A : Type) [CommRing A] [IsLocalRing A] [IsNoethe
   set I : Ideal B := Ideal.span {φ f}
   let L : ℕ → Submodule B (B ⧸ I) := fun N => Submodule.map I.mkQ ((K N).map φ)
   have hL : Directed (· ≥ ·) L := by
-    refine Antitone.directed_ge fun N N' hN => ?_
-    exact Submodule.map_mono (Ideal.map_mono (hK hN))
+    exact Antitone.directed_ge fun N N' hN => Submodule.map_mono (Ideal.map_mono (hK hN))
   have hIK : ∀ N, I ≤ (K N).map φ := fun N =>
     (Ideal.span_le).2 (Set.singleton_subset_iff.2 (Ideal.mem_map_of_mem φ (hf N)))
   have h0 : (⨅ N, L N) = ⊥ := by
@@ -145,8 +144,7 @@ theorem exists_le_span_sup_pow (A : Type) [CommRing A] [IsLocalRing A] [IsNoethe
       have := Submodule.sub_mem _ hb' (hIK N hd)
       simpa using this
     have := h hb
-    simp only [Submodule.mem_bot, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-    exact this
+    simpa only [Submodule.mem_bot, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] using this
   obtain ⟨N, hN⟩ := GlobalTheory.Chevalley.exists_le_maximalIdeal_pow_smul_of_directed B (B ⧸ I) ℕ L
     inferInstance hL h0 e
   refine ⟨N, fun a ha => ?_⟩
@@ -166,8 +164,7 @@ theorem exists_le_span_sup_pow (A : Type) [CommRing A] [IsLocalRing A] [IsNoethe
       rw [AdicCompletion.maximalIdeal_eq_map, ← Ideal.map_pow, Ideal.map_le_iff_le_comap]
       intro r hr
       simp only [Ideal.mem_comap, RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom]
-      rw [hψ, Ideal.Quotient.eq_zero_iff_mem]
-      exact hr
+      rwa [hψ, Ideal.Quotient.eq_zero_iff_mem]
     exact hle ht
   obtain ⟨c', hc'⟩ := Ideal.Quotient.mk_surjective (ψ c)
   have h3 := congrArg ψ hut

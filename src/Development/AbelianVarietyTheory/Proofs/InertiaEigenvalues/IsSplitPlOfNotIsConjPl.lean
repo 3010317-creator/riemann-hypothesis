@@ -62,9 +62,7 @@ theorem isSplitPl_of_not_isConjPl (D : Formalism.BasicNotions.D7) (w : IsDedekin
     by_contra hy
     apply hs
     refine ⟨x, hx, fun y' hy' => ?_⟩
-    have : y' = y := by
-      apply RingOfIntegers.ext
-      exact hy'.trans hxy.symm
+    have : y' = y := RingOfIntegers.ext (hy'.trans hxy.symm)
     rwa [this]
   intro x y hxy
   refine ⟨key x y hxy, key y x ?_⟩

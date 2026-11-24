@@ -370,8 +370,7 @@ private theorem eq_zero_of_coeff (Φ : A ℚ → ℂ) (hc : Continuous Φ) (hp :
       change algebraMap ℚ (A ℚ) (-k) + x = _
       rw [map_neg]
       abel
-    rw [e]
-    exact hk
+    rwa [e]
   refine GlobalTheory.SeparatingCharacters.eq_zero_of_coefficients_eq_zero (A ℚ) (AdeleRing.principalSubgroup (𝓞 ℚ) ℚ) C hC hcov ℚ
     (fun a v => ψ (rt a * v)) cont_psi_mul ?_ ?_ ?_ (fun a x => Pp.norm_ψ _) ker_psi (adeleMeasure ℚ) (fundamentalSet ℚ)
     inferInstance (isAddFundamentalDomain_fundamentalSet ℚ) Φ hc ?_ h0
@@ -452,8 +451,7 @@ private theorem inv_of_summable (f : A ℚ → ℂ) (hc : Continuous f) (hp : �
     rw [integral_sub hi1 hi2, hcoef, sub_self]
   have h0 := congrFun hz 0
   simp only [Pi.zero_apply, sub_eq_zero] at h0
-  rw [h0]
-  exact hG0
+  rwa [h0]
 
 section Slice
 
@@ -622,8 +620,7 @@ theorem UpperTheory.hasSum_whittaker_diagTorus_rat_eq_unipotentConstantTerm :
     simp only [hcdef, coeff_eq D hA.cont x 0]
     have e : ∀ u : Fin 2 → A ℚ, φ (nE D u * x) * ψ (rt (0 : ℚ) * u 1) = φ (nE D u * x) := fun u => by
       rw [show (rt 0 : A ℚ) = 0 from map_zero _, zero_mul, ψ_zero, mul_one]
-    simp only [e]
-    exact hA.zero x
+    simpa only [e] using hA.zero x
   have hcα : ∀ α : ℚˣ, c α = Wo D φ (UpperTheory.ConvolutionTheory.RankTwoDescent.em E (aE (IdeleGroup.diagonal ℚ α)) * x) := fun α => by
     rw [coeff_ne D hL x α]
     exact coeff_eq D hA.cont x α
@@ -821,8 +818,7 @@ theorem UpperTheory.tsum_unfoldedIntegrand_ideleCovering_eq_exp_mul :
     exact mul_ne_zero (mul_ne_zero (Units.ne_zero _) (cpow_ne (ab_pos' y) _)) (mul_ne_zero h0 (cpow_ne (ab_pos' z) _))
   have hsW : Summable W := (summable_mul_right_iff hCne).1 hS'
   have hsum : Summable fun α : ℚˣ => Wo D φ (em E (aE (IdeleGroup.diagonal ℚ α)) * x) := by
-    simp only [hW]
-    exact hsW.mul_left _
+    simpa only [hW] using hsW.mul_left _
   have hFb : Un.Fb φ x = ((ω.1 c : ℂˣ) : ℂ) ^ 2 * ∑' α, W α := by
     have h := (UpperTheory.hasSum_whittaker_diagTorus_rat_eq_unipotentConstantTerm E D ω φ hA x hsum).tsum_eq
     simp only [hW] at h

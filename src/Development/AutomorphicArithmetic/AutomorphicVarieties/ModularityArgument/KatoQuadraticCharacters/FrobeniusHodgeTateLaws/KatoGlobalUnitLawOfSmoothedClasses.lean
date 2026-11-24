@@ -320,8 +320,7 @@ theorem glue2 : Glue2 := by
   have ht : ∀ i, ¬ l ∣ t i := by
     intro i
     refine Fin.addCases (fun i => ?_) (fun i => ?_) i
-    · simp only [t, Fin.append_left]
-      exact hsmT i
+    · simpa only [t, Fin.append_left] using hsmT i
     · simp only [t, Fin.append_right]
       intro h
       rcases (Nat.Prime.dvd_mul hlp).1 h with h | h
@@ -422,8 +421,7 @@ theorem chiFix : ChiFix := by
   intro l _ ι N χ χd hχ
   have hinj : ∀ x y : ℤ_[l], ι (algebraMap ℚ_[l] (Qbar l) (x : ℚ_[l])) =
       ι (algebraMap ℚ_[l] (Qbar l) (y : ℚ_[l])) → x = y := by
-    intro x y h
-    exact PadicInt.ext ((algebraMap ℚ_[l] (Qbar l)).injective (ι.injective h))
+    exact fun x y h => PadicInt.ext ((algebraMap ℚ_[l] (Qbar l)).injective (ι.injective h))
   have hF1 : ι (algebraMap ℚ_[l] (Qbar l) ((1 : ℤ_[l]) : ℚ_[l])) = 1 := by simp
   have hFm : ∀ x y : ℤ_[l], ι (algebraMap ℚ_[l] (Qbar l) ((x * y : ℤ_[l]) : ℚ_[l])) =
       ι (algebraMap ℚ_[l] (Qbar l) (x : ℚ_[l])) * ι (algebraMap ℚ_[l] (Qbar l) (y : ℚ_[l])) := by
@@ -512,8 +510,7 @@ private theorem cont_of_apply [IsAlgClosure ℚ Ω] {Y : Type} [TopologicalSpace
   have ht : t ∈ (fun s : Ω ≃ₐ[ℚ] Ω => t⁻¹ * s) ⁻¹'
       (((IntermediateField.adjoin ℚ {ζ}).fixingSubgroup : Subgroup (Ω ≃ₐ[ℚ] Ω)) :
         Set (Ω ≃ₐ[ℚ] Ω)) := by
-    simp only [Set.mem_preimage, inv_mul_cancel, SetLike.mem_coe]
-    exact Subgroup.one_mem _
+    simpa only [Set.mem_preimage, inv_mul_cancel, SetLike.mem_coe] using Subgroup.one_mem _
   refine (continuousAt_const (y := f t)).congr ?_
   filter_upwards [hU.mem_nhds ht] with s hs
   have h1 : (t⁻¹ * s) ζ = ζ :=
@@ -653,8 +650,7 @@ theorem UpperTheory.V.Z.Kato.Joint.detIne :
     root_pow hM hv (hcop v hlv) hζ.pow_eq_one (fun x hx => by simpa using hs'.2 x hx)
   have h1 := congrFun key s
   simp only [f, hsζ, hF, Nat.cast_one, map_one, Units.val_eq_one] at h1
-  rw [inv_pow, mul_inv_eq_one] at h1
-  exact h1
+  rwa [inv_pow, mul_inv_eq_one] at h1
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.KatoQuadraticCharacters.FrobeniusHodgeTateLaws.DetIne =====
@@ -1125,15 +1121,13 @@ private theorem cg_cases {l : ℕ} [Fact l.Prime] {κ₀ κ : Qbar l} (hκ : κ 
     have e1 : v * a ^ m * (κ₀ / κ) * (κ * b * g * w) = v * κ₀ * a ^ m * (b * g * w) := by
       field_simp
     have e2 : v * a ^ m * (κ₀ / κ) * X = v * (κ₀ / κ) * a ^ m * X := by ring
-    rw [e1, e2] at h3
-    exact h3
+    rwa [e1, e2] at h3
   · have hps : p ^ 2 = s ^ 2 := by rw [hp, hs]
     have hO : p = -s := (sq_eq_sq_iff_eq_or_eq_neg.1 hps).resolve_left hE
     rw [ite_eq_right hE]
     have h3 := hN m hm c₀ (v * a ^ m) X 0 hu (h2 hO)
     have e2 : v * a ^ m * (κ₀ / κ) * X = v * (κ₀ / κ) * a ^ m * X := by ring
-    rw [mul_zero, e2] at h3
-    exact h3
+    rwa [mul_zero, e2] at h3
 
 theorem UpperTheory.V.Z.Kato.Joint.pinOf :
     UpperTheory.V.Z.Kato.Joint.PinOf := by
@@ -1289,8 +1283,7 @@ theorem UpperTheory.V.Z.Kato.Joint.psiEx :
         simpa [pow_one] using ZMod.val_lt (cycMod ℚ Ω l 1 s : ZMod (l ^ 1))
       have ht : (cycMod ℚ Ω l 1 t : ZMod (l ^ 1)).val < l := by
         simpa [pow_one] using ZMod.val_lt (cycMod ℚ Ω l 1 t : ZMod (l ^ 1))
-      rw [ZMod.val_natCast, ZMod.val_natCast, Nat.mod_eq_of_lt hs, Nat.mod_eq_of_lt ht] at h1
-      exact h1
+      rwa [ZMod.val_natCast, ZMod.val_natCast, Nat.mod_eq_of_lt hs, Nat.mod_eq_of_lt ht] at h1
     have hfix : ∀ ζ : Ω, ζ ^ l = 1 → (t⁻¹ * s) ζ = ζ := by
       intro ζ hζ
       rw [AlgEquiv.mul_apply, apply_eq_pow_cycMod_of_pow_eq_one l Ω s ζ hζ, hv, ← apply_eq_pow_cycMod_of_pow_eq_one l Ω t ζ hζ]
@@ -1482,8 +1475,7 @@ section -- clump:auto
 open UpperTheory.V.Z.Kato.Joint
 
 private lemma smNz_unit {l : ℕ} [Fact l.Prime] {n : ℕ} (h : ¬ l ∣ n) : IsUnit (n : ZMod l) := by
-  rw [isUnit_iff_ne_zero, Ne, ZMod.natCast_eq_zero_iff]
-  exact h
+  rwa [isUnit_iff_ne_zero, Ne, ZMod.natCast_eq_zero_iff]
 
 private lemma smNz_norm {l : ℕ} [Fact l.Prime] (χ : DirichletCharacter ℂ l) {n : ℕ} (h : ¬ l ∣ n) :
     ‖χ (n : ZMod l)‖ = 1 := by

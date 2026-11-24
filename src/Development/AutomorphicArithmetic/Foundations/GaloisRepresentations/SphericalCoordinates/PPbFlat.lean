@@ -79,8 +79,7 @@ private theorem exists_isDerivAt0_line_of_isHolTo {X : Scheme.{0}} {V : Type} [N
   have hW0 : ⊤ ≤ t v₀ ⁻¹ᵁ W := by
     rw [top_le_preimage_iff_mem]
     have hd : (@default (PrimeSpectrum ℂ) _) = (@default (↥(Sp ℂ)) _) := Subsingleton.elim _ _
-    rw [hd]
-    exact hxW
+    rwa [hd]
   have hℓc : Continuous (fun z : Fin 1 → ℂ => v₀ + z 0 • w) := by
     fun_prop
   have hℓ0 : (fun z : Fin 1 → ℂ => v₀ + z 0 • w) 0 = v₀ := by
@@ -103,8 +102,7 @@ private theorem exists_isDerivAt0_line_of_isHolTo {X : Scheme.{0}} {V : Type} [N
         simp
       map_mul' := by
         intro a b
-        simp only [valAt'_mul]
-        exact FibreDeriv.jet_mul _ (hdiff a) (hdiff b)
+        simpa only [valAt'_mul] using FibreDeriv.jet_mul _ (hdiff a) (hdiff b)
       map_zero' := by
         simp only [valAt'_zero]
         rw [FibreDeriv.jet_const]
@@ -153,8 +151,7 @@ private theorem flat_of_isDerivAt0_line_const {X : Scheme.{0}} {V : Type} [Norme
     LocalLift.isDerivAt0_const (fun _ : Fin 1 → ℂ => t v₀) (fun _ => 1)
       (fun U' f' _ => by simp)
   have h : ⊤ ≤ (spMap (algebraMap ℂ (DualNumber ℂ)) ≫ t v₀) ⁻¹ᵁ U := by
-    rw [TangentOrigin.top_le_preimage_iff, hc.1]
-    exact hU
+    rwa [TangentOrigin.top_le_preimage_iff, hc.1]
   rw [← hd.2 U h f, hc.2 U h f]
   simp
 

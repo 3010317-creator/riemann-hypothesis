@@ -256,8 +256,7 @@ private theorem idem_core {A : Type} [CommRing A] (bar : A ≃+* A) (ω : A) (tr
     exact ⟨b, hb, by rw [← hab, add_sub_cancel_right]; exact ha⟩
   choose ε hεv hεu using ex
   refine ⟨ε, fun e => ⟨hεu e, pv e _ (hεv e), ?_, ?_, ?_, ?_⟩⟩
-  · intro x hx
-    exact dv e _ (Ideal.mul_mem_left _ _ hx) (Ideal.mul_mem_right _ _ (hεv e))
+  · exact fun x hx => dv e _ (Ideal.mul_mem_left _ _ hx) (Ideal.mul_mem_right _ _ (hεv e))
   · apply dv e
     · have h3 := Ideal.sub_mem _ (pv e _ (hεv e)) (hεu e)
       convert h3 using 1
@@ -318,9 +317,7 @@ private theorem exists_sep {A : Type} [CommRing A] [IsDedekindDomain A] (u 𝔞 
   refine ⟨s, t, hs, hst, fun 𝔪 hm hum ha => ?_⟩
   have hne : 𝔪 ≠ ⊥ := fun h => hu (le_bot_iff.1 (h ▸ hum))
   let v : IsDedekindDomain.HeightOneSpectrum A := ⟨𝔪, hm.isPrime, hne⟩
-  have hv : v ∈ S := by
-    refine Finset.mem_filter.2 ⟨hfin.mem_toFinset.2 ?_, ha⟩
-    exact Ideal.dvd_iff_le.2 hum
+  have hv : v ∈ S := Finset.mem_filter.2 ⟨hfin.mem_toFinset.2 (Ideal.dvd_iff_le.2 hum), ha⟩
   exact Ideal.le_of_dvd (Finset.dvd_prod_of_mem (fun v : IsDedekindDomain.HeightOneSpectrum A => v.asIdeal) hv) ht
 
 private theorem sup_range_pow {A M : Type} [CommRing A] [AddCommGroup M] [Module A M] [Module.Finite A M]
@@ -426,16 +423,14 @@ theorem UpperTheory.Gal.FiniteEtaleModels.O.liftUnit :
       obtain ⟨y, rfl⟩ := N.mkQ_surjective y
       have h1 : x - g y ∈ N := (Submodule.Quotient.eq N).1 (show N.mkQ x = N.mkQ (g y) by rw [hlift, hy])
       have h2 : x - g y ∈ (𝔪 • ⊤ : Submodule A M) := Submodule.smul_mono_left ha h1
-      have h3 := Submodule.add_mem_sup (LinearMap.mem_range_self g y) h2
-      simpa using h3
+      simpa using Submodule.add_mem_sup (LinearMap.mem_range_self g y) h2
     · have htm := ht 𝔪 hm hum ha
       have h1 : x - g x = t • (x - g' x) := by
         rw [hgv, hs1, sub_smul, one_smul, smul_sub]; abel
       have h2 : x - g x ∈ (𝔪 • ⊤ : Submodule A M) := by
         rw [h1]
         exact Submodule.smul_mem_smul htm trivial
-      have h3 := Submodule.add_mem_sup (LinearMap.mem_range_self g x) h2
-      simpa using h3
+      simpa using Submodule.add_mem_sup (LinearMap.mem_range_self g x) h2
   choose h hh using fun e => exists_inv g (u ^ e) (sup_range_pow g u hmax e)
   exact ⟨g, h, hlift, fun e x => hh e x⟩
 end -- clump:auto
@@ -641,8 +636,7 @@ theorem qSys : QSys := by
     exact this)
   have adjA : ∀ (c : 𝓞 D.F) (x y : D.La), D.EF (c • x) y = D.EF x (D.bar c • y) := fun c x y => by
     have := D.adj (algebraMap _ _ c) x y
-    rw [D.star_F, MulOpposite.unop_op] at this
-    exact this
+    rwa [D.star_F, MulOpposite.unop_op] at this
   have hP : (wSub D 𝔞 1).restrictScalars (𝓞 D.F) = 𝔞 • (⊤ : Submodule (𝓞 D.F) D.La) := by
     apply le_antisymm
     · intro x hx
@@ -650,13 +644,11 @@ theorem qSys : QSys := by
       · rintro _ ⟨c, hc, z, rfl⟩
         exact Submodule.smul_mem_smul (by rwa [pow_one] at hc) Submodule.mem_top
       · exact zero_mem _
-      · intro a b _ _ ha hb
-        exact add_mem ha hb
+      · exact fun a b _ _ ha hb => add_mem ha hb
       · intro b a _ ha
         obtain ⟨c, rfl⟩ := hbij.2 b
         exact Submodule.smul_mem _ c ha
-    · refine Submodule.smul_le.2 fun c hc x _ => ?_
-      exact Submodule.subset_span ⟨c, by rwa [pow_one], x, rfl⟩
+    · exact Submodule.smul_le.2 fun c hc x _ => Submodule.subset_span ⟨c, by rwa [pow_one], x, rfl⟩
   have hu : ES.uIdeal D r ≠ ⊥ := by
     intro h0
     have h1 := ES.p_mem_uIdeal D r
@@ -903,10 +895,8 @@ private theorem sys_of {O M : Type} [Ring O] [AddCommGroup M] [Module O M] (B : 
       rw [Nat.ordCompl_mul] at e1
       exact cg_trans (cg_of_dvd (dvd_mul_right _ _) e1) (cg_symm (hg n hn0 x).2)
     exact cg_split hq hn0 ha hb
-  · intro n hn x
-    exact (hg n hn.ne' x).1
-  · intro n hn x
-    exact (hg n hn.ne' x).2
+  · exact fun n hn x => (hg n hn.ne' x).1
+  · exact fun n hn x => (hg n hn.ne' x).2
 
 private theorem pow_mem_of {A : Type} [CommRing A] (I : Ideal A) {q a c f : ℕ} (hc : c.Coprime q)
     (hn : ((q ^ a * c : ℕ) : A) ∈ I) (hf : (q : A) ^ f ∈ I) : (q : A) ^ a ∈ I := by
@@ -940,15 +930,13 @@ theorem UpperTheory.Gal.FiniteEtaleModels.O.liftSys :
     have hv : N₀.factorization q = 0 := Nat.factorization_eq_zero_of_not_dvd hnd
     intro x
     have h := h7 N₀ (Nat.pos_of_ne_zero hN) x
-    rw [hv, pow_zero, Nat.div_one] at h
-    exact h
+    rwa [hv, pow_zero, Nat.div_one] at h
   · intro n hn hmem x
     have hn0 : n ≠ 0 := hn.ne'
     obtain ⟨f, hf⟩ := hpow
     have hqf : (q : 𝓞 D.F) ^ f ∈ 𝔞 := hf (Ideal.pow_mem_pow (GlobalTheory.UPel.HT.ES.p_mem_uIdeal D r) f)
     have hn' : ((q ^ n.factorization q * (n / q ^ n.factorization q) : ℕ) : 𝓞 D.F) ∈ 𝔞 := by
-      rw [prod_eq]
-      exact hmem
+      rwa [prod_eq]
     have hqa : (q : 𝓞 D.F) ^ n.factorization q ∈ 𝔞 :=
       pow_mem_of 𝔞 (Nat.coprime_ordCompl hq hn0).symm hn' hqf
     rw [← (hG (n.factorization q)).2.2.2 hqa x]
@@ -1040,8 +1028,7 @@ theorem tResim : TResim := by
       have : 2 * G.EF (g n x) (g n y) = 2 * G.EF x y + (n : ℤ) * (2 * c) := by
         linarith [hc]
       rw [this, zpow_add, zpow_mul (I.ζ n) (n : ℤ), hz, one_zpow, mul_one]
-    rw [hE] at h
-    exact h
+    rwa [hE] at h
   · intro n h0 x
     simp only [ite_eq_left h0]
 
@@ -1285,9 +1272,7 @@ theorem clsAt : ClsAt := by
     obtain ⟨z1, hz1⟩ := glin N hpos (algebraMap (𝓞 D.F) D.O a) y'
     have hq := gq N hpos (nat_mem_of_isGen hgen) y'
     have hdiff : g N y' - liftAct g₀ y' ∈ wSub D 𝔞 1 := by
-      rw [← Submodule.Quotient.eq]
-      rw [mk_liftAct]
-      exact hq
+      rwa [← Submodule.Quotient.eq, mk_liftAct]
     obtain ⟨z2, hz2⟩ := ((UpperTheory.lattice_generation q D a N 𝔞 hpos hgen).1 _).mpr hdiff
     have hsplit : algebraMap (𝓞 D.F) D.O a • g N y' =
         algebraMap (𝓞 D.F) D.O a • liftAct g₀ y' + N • z2 := by
@@ -1342,8 +1327,7 @@ theorem UpperTheory.Gal.FiniteEtaleModels.O.baseOnto :
     rw [hn', ← Category.assoc]
     refine (congrArg (· ≫ C.m.φ) (m.eta _)).trans ?_
     refine (Category.assoc _ _ _).trans ?_
-    refine (congrArg (x ≫ ·) (C.lv v)).trans ?_
-    exact (Category.assoc _ _ _).symm
+    exact (congrArg (x ≫ ·) (C.lv v)).trans (Category.assoc _ _ _).symm
   have hu := (hCls q (datAt S.atq S.sp) (Ow w) E S.b gb (algebraMap (Ow w) E) S.mat M.1 S.N₀ c a S.𝔞 hnum.1 hpos
     S.std.three S.std.cop hnum.2 S.Y (Sp Ω) σ o).2 ⟨x ≫ C.j, hov, n', hlv⟩ C'
   exact ⟨x, hu.1.trans hC', hxs⟩

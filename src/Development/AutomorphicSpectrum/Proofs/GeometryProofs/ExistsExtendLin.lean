@@ -188,9 +188,7 @@ theorem exists_vec [IsDomain A] [IsFractionRing A K] (hc : ∀ x, c (c x) = x)
     ext v
     exact LinearMap.congr_fun h v
   obtain ⟨v, hv⟩ := (LinearMap.flip_injective_iff₂.mp hB) (G.comp T.subtype)
-  have hv' : ∀ w ∈ T, w v = G w := by
-    intro w hw
-    exact LinearMap.congr_fun hv ⟨w, hw⟩
+  have hv' : ∀ w ∈ T, w v = G w := fun w hw => LinearMap.congr_fun hv ⟨w, hw⟩
   have hom : D.om' ≤ D.om := by
     rw [HTChart.om', sup_le_iff]
     constructor

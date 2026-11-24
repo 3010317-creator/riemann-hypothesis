@@ -516,8 +516,7 @@ theorem involution_pair_representatives :
   set S : Finset ι := Finset.univ.filter (fun i => enc i < enc (s i)) with hS
   have memS : ∀ x : S, enc (x : ι) < enc (s x) := fun x => (Finset.mem_filter.1 x.2).2
   refine ⟨S.card, fun j => (S.equivFin.symm j : ι), ?_, ?_, ?_⟩
-  · intro j k h
-    exact S.equivFin.symm.injective (Subtype.ext h)
+  · exact fun j k h => S.equivFin.symm.injective (Subtype.ext h)
   · intro j k h
     simp only at h
     have hj := memS (S.equivFin.symm j)
@@ -597,8 +596,7 @@ theorem exists_surjective_valuation_isIntegral_iff (K : UQ) (L : Type) [Field L]
           rw [this]; exact ((s⁻¹ : Rˣ) : R).2
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible R
   have hπ0 : algebraMap R L π ≠ 0 := by
-    intro h
-    exact hπ.ne_zero ((injective_iff_map_eq_zero _).1 (IsFractionRing.injective R L) _ h)
+    exact fun h => hπ.ne_zero ((injective_iff_map_eq_zero _).1 (IsFractionRing.injective R L) _ h)
   let πL : Lˣ := Units.mk0 _ hπ0
   have huπ : u πL = Multiplicative.ofAdd (-1 : ℤ) := by
     apply WithZero.coe_injective
@@ -744,8 +742,7 @@ theorem GlobalTheory.UnitLemma.InvAlg.isIntegral_mk_comap_sigma_iff :
       rw [Ideal.quotientMap_mk, key]) h'
     have e2 : ψ (Ideal.Quotient.mk (m.asIdeal.comap σr) x) = Ideal.Quotient.mk m.asIdeal (σr x) :=
       Ideal.quotientMap_mk
-    rw [e2] at this
-    exact this
+    rwa [e2] at this
   · intro h
     have h' : IsIntegral K.O (Ideal.Quotient.mk m.asIdeal (σr x)) := h
     have := isIntegral_map_semilinear (conjO K) φ (fun o => by
@@ -755,8 +752,7 @@ theorem GlobalTheory.UnitLemma.InvAlg.isIntegral_mk_comap_sigma_iff :
     have e2 : φ (Ideal.Quotient.mk m.asIdeal (σr x)) = Ideal.Quotient.mk (m.asIdeal.comap σr) (σr (σr x)) :=
       Ideal.quotientMap_mk
     have e : σr (σr x) = x := B.σ_σ x
-    rw [e2, e] at this
-    exact this
+    rwa [e2, e] at this
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIntegralResidueComapInvolutionIff =====
@@ -1075,8 +1071,7 @@ theorem torus_mod_intUnits_structure : ∀ (K : UQ) (B : InvAlg K), B.LieReg →
       show v j _ = _
       rw [this, map_one]
   have hne : algebraMap K.O K.E a ≠ 0 := by
-    intro h
-    exact ha.1 (IsFractionRing.injective K.O K.E (h.trans (map_zero _).symm))
+    exact fun h => ha.1 (IsFractionRing.injective K.O K.E (h.trans (map_zero _).symm))
   let α : B.Aˣ := Units.map (algebraMap K.E B.A : K.E →* B.A) (Units.mk0 _ hne)
   have hαv : (α : B.A) = algebraMap K.O B.A a := (IsScalarTower.algebraMap_apply K.O K.E B.A a).symm
   have hτα : τ α = α := by
@@ -1085,8 +1080,7 @@ theorem torus_mod_intUnits_structure : ∀ (K : UQ) (B : InvAlg K), B.LieReg →
     rw [B.σ_alg, ha.2.2]
   have hαpos : ∀ m, 0 < Multiplicative.toAdd (w m α) := by
     intro m
-    by_contra hle
-    push Not at hle
+    by_contra! hle
     have h1 : 0 ≤ Multiplicative.toAdd (w m α⁻¹) := by
       rw [map_inv, toAdd_inv]
       linarith
@@ -1102,8 +1096,7 @@ theorem torus_mod_intUnits_structure : ∀ (K : UQ) (B : InvAlg K), B.LieReg →
     show _ ↔ IsIntegral K.O ((t : B.Aˣ) : B.A) ∧ IsIntegral K.O (((t : B.Aˣ)⁻¹ : B.Aˣ) : B.A)
     rw [hP, hP]
     constructor
-    · intro h
-      exact ⟨fun m => (h m).ge, fun m => by rw [map_inv, toAdd_inv, h m, neg_zero]⟩
+    · exact fun h => ⟨fun m => (h m).ge, fun m => by rw [map_inv, toAdd_inv, h m, neg_zero]⟩
     · rintro ⟨ha1, ha2⟩ m
       have := ha2 m
       rw [map_inv, toAdd_inv] at this
@@ -1144,8 +1137,7 @@ theorem mem_mulLat_unit (u : Aˣ) (L : Submodule O A) (w : A) :
   constructor
   · rintro ⟨y, hy, rfl⟩
     simpa using hy
-  · intro h
-    exact ⟨_, h, by simp⟩
+  · exact fun h => ⟨_, h, by simp⟩
 
 theorem mulLat_eq_iff (u v : Aˣ) (L : Submodule O A) :
     mulLat O (u : A) L = mulLat O (v : A) L ↔ u⁻¹ * v ∈ stabLat O L := by
@@ -1168,8 +1160,7 @@ theorem isIntegral_inv_mul_iff (t u : Aˣ) (hu : u ∈ intUnits O A) (w : A) :
   · intro h
     have := hu.1.mul h
     simpa using this
-  · intro h
-    exact hu.2.mul h
+  · exact fun h => hu.2.mul h
 
 end General
 
@@ -1311,8 +1302,7 @@ theorem torusOrb_mem_mulLat_unit (u : B.Aˣ) (L : Submodule K.O B.A) (y : B.A) :
   constructor
   · rintro ⟨z, hz, rfl⟩
     simpa [LinearMap.mulLeft_apply, ← mul_assoc] using hz
-  · intro h
-    exact ⟨_, h, by simp [LinearMap.mulLeft_apply, ← mul_assoc]⟩
+  · exact fun h => ⟨_, h, by simp [LinearMap.mulLeft_apply, ← mul_assoc]⟩
 
 theorem torusOrb_mulLat_one (L : Submodule K.O B.A) : mulLat K.O (1 : B.A) L = L := by
   ext y; simpa using torusOrb_mem_mulLat_unit B 1 L y
@@ -1343,8 +1333,7 @@ def torusOrbRel (x : B.A) (L M : B.X x) : Prop :=
 
 theorem torusOrb_orbRel_equivalence (x : B.A) : Equivalence (B.torusOrbRel x) := by
   refine { refl := ?_, symm := ?_, trans := ?_ }
-  · intro L
-    exact ⟨1, B.T.one_mem, by rw [Units.val_one, torusOrb_mulLat_one]⟩
+  · exact fun L => ⟨1, B.T.one_mem, by rw [Units.val_one, torusOrb_mulLat_one]⟩
   · rintro L M ⟨t, ht, h⟩
     refine ⟨t⁻¹, B.T.inv_mem ht, ?_⟩
     rw [h, torusOrb_mulLat_inv]

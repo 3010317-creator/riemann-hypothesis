@@ -230,8 +230,7 @@ theorem sec_eq_zero_of_generic [IsReduced S.Y] {η : S.Y} (hη : IsGenericPoint 
     (s : (lbZPow S.L m).Sec) (h : η ∉ nonzeroLocus s) : s = 0 := by
   refine zglobal_ext fun i => ?_
   rw [zfun_zero, ← basicOpen_eq_bot_iff, basicOpen_zfun, eq_bot_iff]
-  intro y hy
-  exact (h ((hη.mem_open_set_iff (nonzeroLocus s).isOpen).2 ⟨y, trivial, hy.2⟩)).elim
+  exact fun y hy => (h ((hη.mem_open_set_iff (nonzeroLocus s).isOpen).2 ⟨y, trivial, hy.2⟩)).elim
 
 theorem growth_mono (D : ℕ) {r r' : ℕ → ℕ∞} (h : ∀ τ, r τ ≤ r' τ) : growth D r ≤ growth D r' :=
   limsup_le_limsup (Eventually.of_forall fun τ => by
@@ -425,8 +424,7 @@ theorem degree_image_eq_topSelf : Quoted → ∀ (F : Type) [Field F] [NumberFie
   obtain ⟨Ω, _, _, x, hx, -⟩ := HeightExists.exists_generic hV
   obtain ⟨j, hj⟩ := Function.ne_iff.1 (hb.coords_ne_zero x.1)
   have hX : (X j : MvPolynomial (Fin S.N) F) ∉ S.imageIdeal := fun hX => hj (by simpa using S.eval₂_coords_eq_zero x.1 hX)
-  have hpos := hilbertDegree_pos hI hX
-  exact ⟨hdel ▸ (by exact_mod_cast hpos), hdel, hdim⟩
+  exact ⟨hdel ▸ (by exact_mod_cast (hilbertDegree_pos hI hX)), hdel, hdim⟩
 
 end GlobalTheory.ImageDegree
 end -- clump:auto

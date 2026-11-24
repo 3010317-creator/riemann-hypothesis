@@ -116,21 +116,17 @@ theorem core (n k : ℕ) (ν c : ℕ → ℝ)
     have := hP k hkn
     linarith
   have hb : ∃ b, b < k ∧ b ∉ I := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hEq
     symm
     apply Finset.eq_of_subset_of_card_le
-    · intro i hi
-      exact hcon i (Finset.mem_range.1 hi)
+    · exact fun i hi => hcon i (Finset.mem_range.1 hi)
     · simp [hk]
   have ha : ∃ a ∈ I, k ≤ a := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hEq
     apply Finset.eq_of_subset_of_card_le
-    · intro i hi
-      exact Finset.mem_range.2 (hcon i hi)
+    · exact fun i hi => Finset.mem_range.2 (hcon i hi)
     · simp [hk]
   obtain ⟨b, hbk, hbI⟩ := hb
   obtain ⟨a, haI, hka⟩ := ha
@@ -249,8 +245,7 @@ theorem core (n k : ℕ) (ν c : ℕ → ℝ)
     (∑ i ∈ Finset.Ico s (s + r), (i : ℝ)) (∑ i ∈ A, (i : ℝ)) hRpos hUpos h1 h2
     (by rw [hL1, hL2]; linarith) h4 hE hC
   rw [hsplit, Finset.sum_add_distrib, Finset.sum_add_distrib, Finset.sum_add_distrib]
-  rw [hL1] at fin
-  rw [hG1] at fin
+  rw [hL1, hG1] at fin
   linarith
 
 theorem abel (z d : ℕ → ℝ) (N : ℕ) (hz : ∀ i, i < N → 1 ≤ z i - z (i + 1))
@@ -341,8 +336,7 @@ theorem map_filter_lt {k : ℕ} (hk : k ≤ n) :
   constructor
   · rintro ⟨a, ha, rfl⟩
     exact ha
-  · intro hi
-    exact ⟨⟨i, by omega⟩, hi, rfl⟩
+  · exact fun hi => ⟨⟨i, by omega⟩, hi, rfl⟩
 
 theorem card_filter_lt {k : ℕ} (hk : k ≤ n) :
     (univ.filter (fun a : Fin n => (a : ℕ) < k)).card = k := by
@@ -398,8 +392,7 @@ theorem step1 (lam : Fin n → ℤ) (hl : StrictAnti lam) (ν : Fin n → ℤ) (
       have : w y = b := Fin.ext hx
       rw [← this]
       simpa using hy
-    · intro h
-      exact ⟨b, ⟨w.symm b, h, by simp⟩, rfl⟩
+    · exact fun h => ⟨b, ⟨w.symm b, h, by simp⟩, rfl⟩
   have hcore := core n k (ex (wtR ν)) (ex c)
     (by
       intro i j hij hj
@@ -639,11 +632,9 @@ theorem maj (S : Finset ℕ) (n : ℕ) : ∀ m p, p + m = n → ∃ c : ℕ → 
     by_cases ha : a < q
     · by_cases hb : b < q
       · simp only [ite_eq_left ha, ite_eq_left hb, le_refl]
-      · simp only [ite_eq_left ha, ite_eq_right hb]
-        exact hrest b (by omega) h3
+      · simpa only [ite_eq_left ha, ite_eq_right hb] using hrest b (by omega) h3
     · have hb : ¬ b < q := by omega
-      simp only [ite_eq_right ha, ite_eq_right hb]
-      exact i1 a b (by omega) h2 h3
+      simpa only [ite_eq_right ha, ite_eq_right hb] using i1 a b (by omega) h2 h3
   · intro j h1 h2
     by_cases hj : j ≤ q
     · rw [hsum0 j h1 hj]
@@ -734,8 +725,7 @@ theorem dom_sum (n : ℕ) (ν L : ℕ → ℝ) (C : ℝ) (hν : ∀ i, i + 1 < n
   have hsub : I ⊆ Finset.range n := fun i hi => Finset.mem_range.2 (hI i hi)
   have hfilI : I.filter (fun a => 0 ≤ a ∧ a < n) = I := by
     ext a
-    simp only [Finset.mem_filter]
-    exact ⟨fun h => h.1, fun h => ⟨h, Nat.zero_le _, hI a h⟩⟩
+    simpa only [Finset.mem_filter] using ⟨fun h => h.1, fun h => ⟨h, Nat.zero_le _, hI a h⟩⟩
   have hcard : cnt I 0 n = I.card := by rw [cnt, hfilI]
   rw [hfilI, hcard] at c5
   rw [hcard] at c3
@@ -876,8 +866,7 @@ theorem ivt (f : ℕ → ℤ) (c : ℕ) (t : ℤ) (h1 : t ≤ f c) : ∀ d, c �
   intro d hd
   induction d, hd using Nat.le_induction with
   | base =>
-    intro _ h2
-    exact ⟨c, le_rfl, le_rfl, le_antisymm h2 h1⟩
+    exact fun _ h2 => ⟨c, le_rfl, le_rfl, le_antisymm h2 h1⟩
   | succ d hd ih =>
     intro hs h2
     rcases eq_or_lt_of_le h2 with h3 | h3
@@ -1091,8 +1080,7 @@ theorem harm_of_perm (lam : Fin n → ℤ) (hl : Antitone lam) (ν : Fin n → �
         omega
       omega
     have hff : f (f b) = b := by omega
-    rw [hb] at hff
-    rw [hpb] at hff
+    rw [hb, hpb] at hff
     have hpp : π (π b) = b := Fin.ext hff
     have hg1 := hgv b
     have hg2 := hgv (π b)

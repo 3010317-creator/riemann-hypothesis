@@ -167,8 +167,7 @@ theorem isChowFormCycle_unique {F : Type} [Field F] {n k : ℕ} {Z : ProjCycle F
   let d : Ideal (MvPolynomial (Fin n) F) → F := fun W =>
     if h : W ∈ Z.support then (hex W h).choose else 1
   have hd : ∀ W ∈ Z.support, d W ≠ 0 ∧ g1 W = C (d W) * g2 W := fun W hW => by
-    simp only [d, dite_eq_left hW]
-    exact (hex W hW).choose_spec
+    simpa only [d, dite_eq_left hW] using (hex W hW).choose_spec
   have key : ∏ W ∈ Z.support, g1 W ^ Z W =
       C (∏ W ∈ Z.support, d W ^ Z W) * ∏ W ∈ Z.support, g2 W ^ Z W := by
     rw [map_prod, ← Finset.prod_mul_distrib]
@@ -238,8 +237,7 @@ theorem chowFormSectionPerfect_of (hA : ChowFormSectionAlgClosed.Statement)
     fun W => if h : ∃ g, IsChowForm W e g then h.choose else 1
   have hg : ∀ W ∈ (divCycle I u).support, IsChowForm W e (g W) := fun W hW => by
     have hex := chowFormExists_full F n e W (hWc W hW).1 (hWc W hW).2
-    simp only [g, dite_eq_left hex]
-    exact hex.choose_spec
+    simpa only [g, dite_eq_left hex] using hex.choose_spec
 
   let K := AlgebraicClosure F
   let σ : F →+* K := algebraMap F K
@@ -258,8 +256,7 @@ theorem chowFormSectionPerfect_of (hA : ChowFormSectionAlgClosed.Statement)
     apply hu
     rw [← hcomap P hP, Ideal.mem_comap]
     change map σ (linForm u) ∈ P
-    rw [map_linForm]
-    exact hmem
+    rwa [map_linForm]
   have hPsupp : ∀ P ∈ IK.minimalPrimes, P ∈ (fundCycle IK).support := by
     intro P hP
     rw [mem_support_fundCycle_iff hIKr]
@@ -268,8 +265,7 @@ theorem chowFormSectionPerfect_of (hA : ChowFormSectionAlgClosed.Statement)
     refine ⟨j, fun hjP => hj ?_⟩
     rw [← hcomap P hP, Ideal.mem_comap]
     change map σ (X j) ∈ P
-    rw [map_X]
-    exact hjP
+    rwa [map_X]
   have hPdim : ∀ P ∈ IK.minimalPrimes,
       ringKrullDim (MvPolynomial (Fin n) K ⧸ P) = ((e + 1 : ℕ) : WithBot ℕ∞) := fun P hP =>
     coneDimOfChowForm_full K n (e + 1) P (gP P)
@@ -305,8 +301,7 @@ theorem chowFormSectionPerfect_of (hA : ChowFormSectionAlgClosed.Statement)
       (chowFormExtend_full F K σ n e W (g W) (hg W hW))
   have hcyc : ∑ P ∈ (fundCycle IK).support, divCycle P uK =
       ∑ W ∈ (divCycle I u).support, divCycle I u W • fundCycle (W.map φ) := by
-    rw [← hsec, ← hmapJ]
-    exact hbase
+    rwa [← hsec, ← hmapJ]
   rw [hcyc] at hL
   obtain ⟨c', hc', hc'eq⟩ := isChowFormCycle_unique hL hR
 
@@ -391,8 +386,7 @@ theorem chowFormSectionAlgClosed_of (h₅ : SectionOrderAlgClosed.Statement) :
   let g : Ideal (MvPolynomial (Fin n) F) → MvPolynomial (Fin e × Fin n) F :=
     fun W => if h : ∃ g, IsChowForm W e g then h.choose else 1
   have hg : ∀ W ∈ (divCycle I u).support, IsChowForm W e (g W) := fun W hW => by
-    simp only [g, dite_eq_left (hex W hW)]
-    exact (hex W hW).choose_spec
+    simpa only [g, dite_eq_left (hex W hW)] using (hex W hW).choose_spec
   have hspan : ∀ W ∈ (divCycle I u).support, incIdeal W e = Ideal.span {g W} := fun W hW =>
     (isChowForm_iff_span.mp (hg W hW)).2
   have hgprime : ∀ W ∈ (divCycle I u).support, Prime (g W) := by

@@ -324,8 +324,7 @@ theorem val_coord_le (hLb : IsBase S π) (hP : P.under (𝓞 F) = v) (h3 : π �
   by_cases hj : j.1 + 1 = n
   · have h4 := (mem_intV_iff v _).1 (h.2 hj) P hP
     have h5 : cO E π ∉ P.asIdeal := h3
-    rw [map_mul, psi_inclE v P hP, map_mul, ← algebraMap_cO, val_eq_one h5, one_mul] at h4
-    exact h4
+    rwa [map_mul, psi_inclE v P hP, map_mul, ← algebraMap_cO, val_eq_one h5, one_mul] at h4
   · exact (mem_intV_iff v _).1 (h.1 hj) P hP
 
 theorem val_entry_le (hLb : IsBase S π) (hP : P.under (𝓞 F) = v) (h3 : π ∉ (conjPrime₂ P).asIdeal)
@@ -451,8 +450,7 @@ theorem last_row (hLb : IsBase S π) (hv : (T : 𝓞 F) ∈ v.asIdeal) (hP : P.u
         rw [heL, ee_self, mul_one]
       rw [e1, map_sub, psi_inclE]
       exact h)
-    rw [map_sub, map_smul, sub_eq_zero] at e
-    exact e
+    rwa [map_sub, map_smul, sub_eq_zero] at e
   have hne0 : S.fT v hv eL ≠ 0 := by
     intro h0
     apply S.fT_ne v hv

@@ -71,13 +71,11 @@ theorem denom_cmp_mul (v : InfinitePlace F) (h h' : GL (Fin 2) (InfinitePlace F 
 
 theorem act_mul (h h' : GL (Fin 2) (InfinitePlace F → ℝ)) (z : Hn F) : act (h * h') z = act h (act h' z) := by
   funext v
-  simp only [act, map_mul]
-  exact mul_smul _ _ _
+  simpa only [act, map_mul] using mul_smul _ _ _
 
 theorem act_one (z : Hn F) : act (1 : GL (Fin 2) (InfinitePlace F → ℝ)) z = z := by
   funext v
-  simp only [act, map_one]
-  exact one_smul _ _
+  simpa only [act, map_one] using one_smul _ _
 
 theorem hilbertSlashUnnormalized_mul (k : ℕ) (h h' : GL (Fin 2) (InfinitePlace F → ℝ)) (hh' : Pos h') (f : Hn F → ℂ) :
     sl0 k (h * h') f = sl0 k h' (sl0 k h f) := by

@@ -73,8 +73,7 @@ theorem map_logDerivIdeal_basicOpen (k : Type u) [CommRing k] [IsNoetherianRing 
   have noeth : IsNoetherianRing Γ(X, U.1) := isNoetherianRing_sections k p U rfl
   have hP : (P.ideal U).FG := IsNoetherian.noetherian _
   have key := logDerivIdeal_map_away (S' := Γ(X, X.basicOpen f)) k f hP (I.ideal U)
-  rw [← P.map_ideal_basicOpen U f, ← I.map_ideal_basicOpen U f]
-  exact key
+  rwa [← P.map_ideal_basicOpen U f, ← I.map_ideal_basicOpen U f]
 
 noncomputable def logDerivIdealSheaf (k : Type u) [CommRing k] [IsNoetherianRing k]
     {X : Scheme.{u}} (p : X ⟶ Spec (CommRingCat.of k)) [LocallyOfFiniteType p]
@@ -153,8 +152,7 @@ theorem logDerivIdealSheafIterate_mono (k : Type u) [CommRing k] [IsNoetherianRi
   induction r with
   | zero =>
       intro I J h
-      rw [logDerivIdealSheafIterate_zero, logDerivIdealSheafIterate_zero]
-      exact h
+      rwa [logDerivIdealSheafIterate_zero, logDerivIdealSheafIterate_zero]
   | succ r ih =>
       intro I J h
       rw [logDerivIdealSheafIterate_succ, logDerivIdealSheafIterate_succ]

@@ -132,8 +132,7 @@ theorem exists_geometricallyConnected : ∀ (R K : Type) [CommRing R] [IsDomain 
     rintro rfl
     obtain ⟨i, hi⟩ := exists_mem P ((pullback.fst f₀ y₀ ≫ φ) x₀)
     have h₁ := mem_of_isUnit (hu i) (y := x₀) hi
-    rw [← zero_smul L (0 : Fin P.a → L), loc_smul, map_zero, zero_mul, Scheme.basicOpen_zero] at h₁
-    exact h₁
+    rwa [← zero_smul L (0 : Fin P.a → L), loc_smul, map_zero, zero_mul, Scheme.basicOpen_zero] at h₁
   obtain ⟨δ, v₀, hδ, hker⟩ := exists_kernel_vector g₀ P.D₀ v hv0 (hline (surjective_appTop _))
   have hsurj : Surjective f := by
     have hcl : IsClosed (Set.range f) := f.isClosedMap.isClosed_range
@@ -780,8 +779,7 @@ theorem polAV_spreads_out : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o
       ∃ v : G ⟶ G, φ₂ ≫ v.left = v₀.left ≫ φ₂ := by
     rintro v₀ ⟨u, hu, hu'⟩
     refine ⟨Over.homMk (q₂.lift u G.hom (hu.trans q₂.w)) (q₂.lift_snd _ _ _), q₂.hom_ext ?_ ?_⟩
-    · simp only [Over.homMk_left, Category.assoc, IsPullback.lift_fst, e₂]
-      exact hu' φ₂ e₂
+    · simpa only [Over.homMk_left, Category.assoc, IsPullback.lift_fst, e₂] using hu' φ₂ e₂
     · simp only [Over.homMk_left, Category.assoc, IsPullback.lift_snd, p₂.w, Over.w_assoc]
       exact p₂.w
   obtain ⟨w, hw⟩ := endo w₀ (Hw R₂ g₂ (u₂ (.inl 3)) _ _ _ q₂.w)
@@ -789,8 +787,7 @@ theorem polAV_spreads_out : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o
   have pts : ∀ i, ∃ y : baseOver (Sp R₂) ⟶ G, (lev.pt i).left ≫ φ₂ = spMap (algebraMap R₂ Ω) ≫ y.left := fun i => by
     obtain ⟨u, hu, hu'⟩ := Hpt i R₂ g₂ (u₂ (.inr i)) (Sp R₂) (spMap g₂) (𝟙 _) (by simp)
     refine ⟨Over.homMk (q₂.lift u (𝟙 _) (by simpa using hu)) (q₂.lift_snd _ _ _), q₂.hom_ext ?_ ?_⟩
-    · simp only [Over.homMk_left, Category.assoc, IsPullback.lift_fst, e₂]
-      exact (hu' _ es₂).symm
+    · simpa only [Over.homMk_left, Category.assoc, IsPullback.lift_fst, e₂] using (hu' _ es₂).symm
     · simp only [Over.homMk_left, Category.assoc, IsPullback.lift_snd, p₂.w, Over.w_assoc]
       simp
   choose y hy using pts
@@ -877,8 +874,7 @@ theorem polAV_spreads_out : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o
     (by simpa using hM.map (algebraMap o R₃)) rfl lev y' hy₃ (Hi R₃ g₃ (u₃ 4) _ _ y' q₃ hy')
   refine ⟨R₃, P', φ₃, lev', le₁.trans (le₂.trans le₃), hR₃, rfl, Hs R₃ g₃ (u₃ 3) _ _ _ q₃ hL₃ (lbIso_refl hL₃),
     hG₃, eL₃, ?_⟩
-  rw [hlev]
-  exact hy₃
+  rwa [hlev]
 
 end GlobalTheory.GenSpread
 end -- clump:auto

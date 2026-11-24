@@ -152,8 +152,7 @@ theorem isHerm_unitSpc_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B
     · exact absurd h1.symm h2
     · exact absurd h2.symm h1
     · exact map_zero σ
-  · simp only [unitSpc, Matrix.map_one _ (map_zero _) (map_one _)]
-    exact hasSig_one
+  · simpa only [unitSpc, Matrix.map_one _ (map_zero _) (map_one _)] using hasSig_one
   · simp only [unitSpc]
     rw [mem_std]
     constructor
@@ -171,8 +170,7 @@ theorem isHerm_unitSpc_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B
       have := h _ hx
       rw [form_one] at this
       simpa [Pi.single_apply] using this
-  · simp only [unitSpc, Matrix.map_one _ (map_zero _) (map_one _)]
-    exact isCartan_one
+  · simpa only [unitSpc, Matrix.map_one _ (map_zero _) (map_one _)] using isCartan_one
   · exact isSplitBasis_stdLattice (B.τ v) hB.cm
 end PositivityTheory.SiegelWeilFormula.Ldexb.UnitHermitianSpace
 end
@@ -341,9 +339,7 @@ theorem UpperTheory.unramified_anti_invariant_local :
   refine ⟨a, a, ⟨c, hci⟩, ?_, hσa, hc.symm⟩
   intro hn
   have h1 := (Ideal.mem_of_liesOver w v.asIdeal _).mp hn
-  have h2 : algebraMap (𝓞 F) (𝓞 E) ⟨c, hci⟩ = a * a := by
-    apply RingOfIntegers.ext
-    exact hc
+  have h2 : algebraMap (𝓞 F) (𝓞 E) ⟨c, hci⟩ = a * a := RingOfIntegers.ext hc
   rw [h2] at h1
   exact hx ((hw.isPrime.mem_or_mem h1).elim id id)
 end -- clump:auto
@@ -1127,8 +1123,7 @@ theorem smallS_of_k (hC : _root_.PositivityTheory.SiegelWeilFormula.Ald.ChartFac
     intro u φ hφ
     have := (hF F (Fin d.m × Fin n × Fin 2) (Fin d.m × Fin 2)).1 _
       (hsplit.pres u _ (GlobalTheory.SchwartzBox.boxFun_mem_schA F _ _ φ hφ φ₀ hφ₀))
-    rw [hbox u φ hφ φ₀ hφ₀, slice0_box, Function.comp_apply, Lc_zero, hφ₀1, one_smul] at this
-    exact this
+    rwa [hbox u φ hφ φ₀ hφ₀, slice0_box, Function.comp_apply, Lc_zero, hφ₀1, one_smul] at this
   have oneS : ∀ φ ∈ schA F (Fin d.m × Fin n × Fin 2), c 1 φ = φ := by
     intro φ _
     have hm : mat (1 : UA σ d.A.J)⁻¹ = 1 := by rw [inv_one]; rfl
@@ -1299,8 +1294,7 @@ theorem siegelSmall_of_k (hF : SliceFacts) (hAC : AdaptedChar) : _root_.Positivi
     intro y φ hφ
     obtain ⟨z, hz⟩ := (hAC F E σ d.m n d.bs d.A Y b dd' had' hb).2 y
     have := hinv z φ hφ
-    rw [Darboux.rho, hz, schr_zero_fst] at this
-    exact this
+    rwa [Darboux.rho, hz, schr_zero_fst] at this
   obtain ⟨c, hc⟩ := _root_.GlobalTheory.CharInvForm.main F d.B.ψ hψ (Fin d.m × Fin n × Fin 2) l hl hchar
   have hbm : boxFun φ φ₀ ∈ schA F (K1 d.m n) := GlobalTheory.SchwartzBox.boxFun_mem_schA F _ _ φ hφ φ₀ hφ₀
   have hb1 := hbox p φ hφ

@@ -795,8 +795,7 @@ theorem topCoeff_eq_tc {n : ℕ} (P : MvPolynomial (Fin n × Fin n) ℂ) : Globa
 
 theorem tc_sum {κ : Type} (s : Finset κ) (f : κ → MvPolynomial (α × α) ℂ) :
     tc (∑ i ∈ s, f i) = ∑ i ∈ s, tc (f i) := by
-  simp only [tc, coeff_sum, Finset.mul_sum]
-  exact Finset.sum_comm
+  simpa only [tc, coeff_sum, Finset.mul_sum] using Finset.sum_comm
 
 theorem tc_monomial (u : α × α →₀ ℕ) (c : ℂ) : tc (monomial u c) = c * tc (monomial u 1) := by
   simp only [tc, coeff_monomial, Finset.mul_sum]
@@ -933,8 +932,7 @@ theorem tc_monomial_glue (D : ι → (γ × γ →₀ ℕ)) :
     exact Finset.prod_eq_one fun τ _ => ite_eq_left (congrFun hD τ)
   · rw [ite_eq_right hD]
     obtain ⟨τ, hτ⟩ : ∃ τ, D τ ≠ graph (σ τ) := by
-      by_contra hall
-      push Not at hall
+      by_contra! hall
       exact hD (funext hall)
     symm
     exact Finset.prod_eq_zero (Finset.mem_univ τ) (ite_eq_right hτ)
@@ -1137,8 +1135,7 @@ theorem invT_contDiffAt_and_isUnit : ∀ (ι : Type) [Fintype ι] (p q n : ℕ) 
     simp only [Matrix.transpose_apply, Matrix.inv_def, Matrix.smul_apply, smul_eq_mul,
       Ring.inverse_eq_inv']
     exact (hdet.contDiffAt.inv hne).mul hadj.contDiffAt
-  · rw [Matrix.det_transpose, Matrix.det_nonsing_inv]
-    rw [Ring.inverse_eq_inv']
+  · rw [Matrix.det_transpose, Matrix.det_nonsing_inv, Ring.inverse_eq_inv']
     exact (inv_ne_zero hne).isUnit
 
 end GlobalTheory.ModelMetricReg
@@ -1246,8 +1243,7 @@ theorem eventually_frameAt_unif : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       show flat (domPt _ _ _ (stdFrame _ _ _ hp0 (unflat (L.symm (L v)))).1) = v
       rw [L.symm_apply_apply, domPt_stdFrame _ _ _ hp0 hv]
       rfl
-    rw [h2] at h1
-    exact h1
+    rwa [h2] at h1
   have hcont : ContinuousOn (fun b => cxPt T.Z (U.un k (x b))) B := by
     rw [continuousOn_iff_continuous_restrict]
     refine GlobalTheory.CxPts.continuous_iff.2 fun W => ⟨?_, fun g => ?_⟩
@@ -1418,8 +1414,7 @@ theorem GlobalTheory.UnifFrameChange.exists_holomorphic_frame_change : ∀ (E : 
     intro W' hW'
     refine ((hY W' 0).1).mem_nhds ⟨hv₀, ?_⟩
     show ⊤ ≤ (cxPt T.Z (U.un k (x v))).1 ⁻¹ᵁ W'
-    rw [hxpt v hv₀]
-    exact hW'
+    rwa [hxpt v hv₀]
   have hpre : ∀ (W : X.X.Opens) (z : CxPts X.str (σ.comp e.toRingHom)),
       z ∈ ptsIn X.str (σ.comp e.toRingHom) W ↔ cxOf e σ hj z ∈ ptsIn (genStr T.Z) σ (j ''ᵁ W) := by
     intro W z

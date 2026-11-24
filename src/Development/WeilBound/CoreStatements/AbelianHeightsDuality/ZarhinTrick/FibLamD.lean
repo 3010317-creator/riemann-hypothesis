@@ -103,8 +103,7 @@ theorem line_bundle_pairing_first [IsCommMonObj A] (i : Fin 4) :
   show lam (pull ((pA (B := B) s i)⁻¹).left (cls L hL)) u u' = _
   rw [lam_pull_pt ((pA s i)⁻¹) _ u u' hm h1, lam_cL_pt s hD.isLB l L hL e,
     GrpObj.comp_inv, GrpObj.comp_inv, toBase_inv, toBase_inv, GrpObj.inv_comp]
-  simp only [pA, toBase_map, Category.assoc]
-  exact evc_inv_inv hD hD' _ _
+  simpa only [pA, toBase_map, Category.assoc] using evc_inv_inv hD hD' _ _
 
 include e in
 theorem line_bundle_pairing_second (i : Fin 4) :
@@ -133,8 +132,7 @@ theorem line_bundle_pairing_third [IsCommMonObj A] (i : Fin 4) :
   show lam (pull ((pM mu s i)⁻¹).left (cls L hL)) u u' = _
   rw [lam_pull_pt ((pM mu s i)⁻¹) _ u u' hm h1, lam_cL_pt s hD.isLB l L hL e,
     GrpObj.comp_inv, GrpObj.comp_inv, toBase_inv, toBase_inv, GrpObj.inv_comp]
-  simp only [pM, toBase_map, Category.assoc]
-  exact evc_inv_inv hD hD' _ _
+  simpa only [pM, toBase_map, Category.assoc] using evc_inv_inv hD hD' _ _
 
 include hD hD' in
 theorem evc_lam_key {Y : Over S} (a a' : Y ⟶ A) (b b' : Y ⟶ B) :

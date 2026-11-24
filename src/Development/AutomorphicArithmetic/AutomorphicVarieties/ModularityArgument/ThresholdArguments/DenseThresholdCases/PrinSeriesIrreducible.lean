@@ -97,8 +97,7 @@ private theorem prinSeries_irreducible {n : ℕ} (ω : Fin n → kˣ →* ℂˣ)
     refine ⟨equivOfBijective F ⟨(injective_iff_map_eq_zero _).2 fun x hx => ?_, hs⟩⟩
     rcases eq_bot_or_eq_top F.ker with h | h
     · have : x ∈ F.ker := hx
-      rw [h] at this
-      exact this
+      rwa [h] at this
     · have : v.1 ∈ F.ker := by rw [h]; trivial
       exact absurd this hy
   obtain ⟨E⟩ := equiv_local (GlobalTheory.PrinProd.isSubquotient_prinSeries_multiProd k n ω) hM
@@ -113,8 +112,7 @@ theorem principal_series_of_statement_w : _root_.UpperTheory.V.Z.Sym.W.PsOfAlt :
     Multiset.mem_map_of_mem _ (Finset.mem_univ i)
   have hne : ∀ i j, ξ j ≠ ξ i * absPow (w.adicCompletion L) 1 := fun i j e => by
     refine hu _ (hmem j) _ (hmem i) ?_
-    simp only [IrrGL.nu, IrrGL.tw_ofChar, IrrGL.ofChar_inj]
-    exact e
+    simpa only [IrrGL.nu, IrrGL.tw_ofChar, IrrGL.ofChar_inj] using e
   obtain ⟨hi, hq⟩ := (_root_.UpperTheory.Gal.LocD.ofSupport _ n τ.V τ.ρ ξ hξ).1 hs'
   obtain ⟨E⟩ := hq.nonempty_equiv hi (prinSeries_irreducible ξ hξ hne)
   exact ⟨ξ, hξ, ⟨E.symm⟩, fun i j => hne j i⟩

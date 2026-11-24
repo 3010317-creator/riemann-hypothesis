@@ -158,11 +158,9 @@ theorem koszulTwoExact_of_gl2 : FiltrationCocycleLiftCriterion → SubQEx → Ko
     · intro i hi hne
       have hiQ : i ∉ Q := by
         intro h
-        apply (Finset.mem_compl.1 hi)
-        exact Finset.mem_erase.2 ⟨hne, Finset.mem_insert_of_mem h⟩
+        exact (Finset.mem_compl.1 hi) (Finset.mem_erase.2 ⟨hne, Finset.mem_insert_of_mem h⟩)
       simp [wOn, hiQ]
-    · intro h
-      exact absurd (Finset.mem_compl.2 (Finset.notMem_erase _ _)) h
+    · exact fun h => absurd (Finset.mem_compl.2 (Finset.notMem_erase _ _)) h
   have hsum : ∀ (t : Finset κ) (f : Fin d → E),
       (Pi.single t (∑ j, f j) : Finset κ → E) = ∑ j, Pi.single t (f j) := fun t f =>
     map_sum (AddMonoidHom.single (fun _ : Finset κ => E) t) f Finset.univ

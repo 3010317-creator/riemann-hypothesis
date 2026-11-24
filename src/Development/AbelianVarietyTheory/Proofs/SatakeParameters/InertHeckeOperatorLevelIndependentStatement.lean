@@ -87,8 +87,7 @@ theorem finsum_cosets_eq {G W : Type} [Group G] [AddCommMonoid W] (S K U : Subgr
     apply QuotientGroup.eq.2
     rw [Subgroup.mem_subgroupOf]
     have h1 := QuotientGroup.eq.1 h
-    have h2 := (key _ _ (q.out).2 (q'.out).2).1 h1
-    simpa using h2
+    simpa using (key _ _ (q.out).2 (q'.out).2).1 h1
   have hsupp : (Function.support fun c : G ⧸ U =>
       if hc : ∃ x : G, (x : G ⧸ U) = c ∧ x ∈ S then F hc.choose else 0) ⊆ Set.range ι := by
     intro c hc

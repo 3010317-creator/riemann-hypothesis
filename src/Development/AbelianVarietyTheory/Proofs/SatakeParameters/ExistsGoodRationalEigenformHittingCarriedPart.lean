@@ -162,8 +162,7 @@ theorem q_ne_zero (R : RealDat D A Ks) (hF : R.IsFam) (P : Pl0) : A.q P ≠ 0 :=
   rw [hT.q P]
   intro h0
   apply (R.pl P).ne_bot
-  rw [← Ideal.absNorm_eq_zero_iff, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  exact h0
+  rwa [← Ideal.absNorm_eq_zero_iff, Ideal.absNorm_apply, Submodule.cardQuot_apply]
 
 theorem blockProd_map_ne_zero (i : Fin D.R.m) (t : T) (P : A.ok t) :
     ((A.fam.L i t).blockProd P).map D.what₂.embLL ≠ 0 := by
@@ -280,10 +279,7 @@ theorem parts_eq_of_labW : HoweUnram → ∀ {D : D7} {G : Type} [Group G] [Fint
       let i0 : (A3.liftI j A3.A.μ0).OpIx := Sum.inl (⟨P0, hP0⟩, k')
       have hop : hV (pl i0) (cV i0) = hV (R.pl P0) (Finsupp.single (splitLab (Vc D j).rank k') 1) := by
         apply endV_ext R.toRealDat hM j A3.A.μ0
-        intro x
-        have e1 := hLD.op hV hVops i0 x
-        have e2 := hsplit k' hk' x
-        exact e1.symm.trans e2
+        exact fun x => (hLD.op hV hVops i0 x).symm.trans (hsplit k' hk' x)
       have hf := hfam i0
       have a1 := hcancel _ _ ((h12.1.symm.trans (LinearMap.congr_fun hop y).symm).trans hf.1)
       have a2 := hcancel' _ _ ((h12.2.symm.trans (LinearMap.congr_fun hop y').symm).trans hf.2)
@@ -320,10 +316,7 @@ theorem parts_eq_of_labW : HoweUnram → ∀ {D : D7} {G : Type} [Group G] [Fint
         let i0 : (A3.liftI j A3.A.μ0).OpIx := Sum.inr (⟨Q, hQ⟩, s)
         have hop : hV (pl i0) (cV i0) = hV (R.plI Q) (Finsupp.single (GlobalTheory.Hk3.labIn (Vc D j).rank s) 1) := by
           apply endV_ext R.toRealDat hM j A3.A.μ0
-          intro x
-          have e1 := hLD.op hV hVops i0 x
-          have e2 := hop1 x
-          exact e1.symm.trans e2
+          exact fun x => (hLD.op hV hVops i0 x).symm.trans (hop1 x)
         have hf := hfam i0
         exact ⟨_, (LinearMap.congr_fun hop y).symm.trans hf.1, (LinearMap.congr_fun hop y').symm.trans hf.2⟩
       · refine ⟨0, ?_, ?_⟩
@@ -450,8 +443,7 @@ theorem mem_of_components {ι : Type} (Wp : ι → Submodule ℂ H)
     refine horth c c' (fun h => hV' (Subtype.ext ?_)) _ hv _ (hc' ▸ hf V')
     rw [← hc', ← hc, h]
   have := hk c _ hv (by rw [hin]; exact inner_self_ne_zero.2 hne)
-  rw [← this]
-  exact hv
+  rwa [← this]
 
 end Lin
 
@@ -526,8 +518,7 @@ theorem exists_rational_eig (j : V →ₛₗ[σ] W)
   refine ⟨x, ⟨x.2, ?_⟩, rfl⟩
   refine (Submodule.mem_iInf _).2 fun i => ?_
   have h2 := (Submodule.mem_iInf _).1 hx i
-  rw [Module.End.maxGenEigenspace, Module.End.genEigenspace_restrict] at h2
-  exact h2
+  rwa [Module.End.maxGenEigenspace, Module.End.genEigenspace_restrict] at h2
 
 end Form
 
@@ -606,8 +597,7 @@ theorem core_witness (j : V →ₛₗ[σ] Hv) (θ : Hv →ₗ[ℂ] Hw)
   have hy0 : LinearMap.adjoint θ w ≠ 0 := fun h0 => hy (by rw [h0, map_zero])
   obtain ⟨sy, hsy, hyE⟩ := exists_rational_eig j hli op T hint hc hs Gd hG (lab c) hyS hy0 fun i => hTy c i w hw
   obtain ⟨x, hxS, hxθ⟩ : ∃ x ∈ (Gd ⊓ eigAt op sy : Submodule K V), θ (j x) ≠ 0 := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     have h1 : Submodule.span ℂ (j '' ((Gd ⊓ eigAt op sy : Submodule K V) : Set V)) ≤ LinearMap.ker θ :=
       Submodule.span_le.2 (by rintro _ ⟨x, hx, rfl⟩; exact hno x hx)
     exact hy (h1 hyE)
@@ -668,8 +658,7 @@ theorem parts_orth (R : RealDat D A Ks) (SF : Finset (HeightOneSpectrum (𝓞 D.
       rw [hNorm.2 P hP]
       exact hEv c2 P hP _ x2 hx2
     refine inner_eq_zero_of_eig (h P (Finsupp.single d 1)) (hEv c1 P hP _ x1 hx1) (hEv c2 P hP _ x2 hx2) hν ?_
-    rw [evC_single_one _ _ _ hd, evC_single_one _ _ _ hd]
-    exact hcd
+    rwa [evC_single_one _ _ _ hd, evC_single_one _ _ _ hd]
 
 theorem level_vector (R : RealDat D A Ks) (F : Face D A) (hCore : Core R F) (hirr : ∀ χ ∈ A.X, IsAbsIrrChar χ)
     (hG : GoodGeneric A.X F.P0 F.ψ0⁻¹) (i : Fin D.R.m) (U : Submodule ℂ (R.HW i (sg0 D A)).H)
@@ -677,8 +666,7 @@ theorem level_vector (R : RealDat D A Ks) (F : Face D A) (hCore : Core R F) (hir
     ∃ w ∈ U, w ≠ 0 ∧ (R.HW i _).e w ∈ R.Wat i (sg0 D A) (R.levL F false (sg0 D A)) := by
   have hE' : ∀ u ∈ U, ∑ g, sg0 D A ((idemOf A.X).coeff g) • R.gW i (sg0 D A) g u = u := by
     intro u hu
-    have h1 := hE u hu
-    simpa [eH, LinearMap.sum_apply, RealDat.eC] using h1
+    simpa [eH, LinearMap.sum_apply, RealDat.eC] using hE u hu
   refine Exists.elim (GlobalTheory.Hk3.exists_level_vector (sg0 D A) A.X F.P0 F.ψ0⁻¹ (R.gW i (sg0 D A)) U hirr hG hst hne hE') fun w hw => ?_
   exact ⟨w, hw.1, hw.2.1, (GlobalTheory.Hk3.goodForms_baseLevel R F hCore hirr i w).2 ⟨hE w hw.1, hw.2.2⟩⟩
 
@@ -814,8 +802,7 @@ theorem exists_good_eigenform : HoweUnram → ∀ {D : D7} {G : Type} [Group G] 
     intro c c' w hw w' hw' h1 h2 h3
     have h4 := GlobalTheory.T.parts_eq_of_same_eigensystem_thetaAdjoint hHowe R F hLI hC hEx hSch hJunk hirr j pl cV cW hDict c c' w (by rw [hWeq]; exact hw) w'
       (by rw [hWeq]; exact hw') h1 h2 h3
-    rw [hWeq, hWeq] at h4
-    exact h4
+    rwa [hWeq, hWeq] at h4
   have hne' : Wcc R.toRealDat R.SF j c ≠ ⊥ := by rw [← hWeq]; exact hne
   have hlam : ∃ l : ℂ, l ≠ 0 ∧ ∀ w ∈ Wcc R.toRealDat R.SF j c,
       R.thG j A3.A.μ0 (LinearMap.adjoint (R.thG j A3.A.μ0) w) = l • w := by

@@ -221,8 +221,7 @@ theorem casimir_mul_pos {O : Type} [Ring O] {r : ℕ} (x : Module.Basis (Fin r) 
     rw [e]
     exact adjugate_posDef h1
   have hy0 : ∃ i, y i ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hu
     calc u = (∑ i, x.repr 1 i • x i) * u := by rw [x.sum_repr, one_mul]
       _ = ∑ i, x.repr 1 i • y i := by rw [Finset.sum_mul]; simp only [hy, smul_mul_assoc]
@@ -299,10 +298,8 @@ theorem trace_comp_pos_of_adjoint {V : Type} [AddCommGroup V] [Module ℝ V] [Fi
     · simp [h]
     · exact (hp _ h).le
   obtain ⟨i, hi⟩ : ∃ i, T' (b i) ≠ 0 := by
-    by_contra h
-    push Not at h
-    apply hT'
-    exact b.toBasis.ext (fun i => by simpa using h i)
+    by_contra! h
+    exact hT' (b.toBasis.ext (fun i => by simpa using h i))
   exact Finset.sum_pos' (fun i _ => hnn i) ⟨i, Finset.mem_univ _, hp _ hi⟩
 
 theorem trace_mul_star_pos : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (x : D.O), x ≠ 0 →
@@ -447,8 +444,7 @@ theorem exists_W_of_casimir (x : Module.Basis (Fin r) ℤ O) (s : O →+ O) (φ 
   have hAs : ∀ i j, A i j = A j i := adjugate_gram_symm hs hss hφs
   have hG't : G'ᵀ = G' := by
     ext i j
-    simp only [transpose_apply, hG', gram_eq, of_apply]
-    exact b'symm _ _
+    simpa only [transpose_apply, hG', gram_eq, of_apply] using b'symm _ _
   have hA's : ∀ i j, A' i j = A' j i := by
     intro i j
     have h := congrArg (fun M : Matrix (Fin r) (Fin r) ℤ => M i j) (adjugate_transpose G')
@@ -567,8 +563,7 @@ theorem htStar_mul (D : Datum p) (a b : D.O) : htStar D (a * b) = htStar D b * h
   change (D.star (a * b)).unop = (D.star b).unop * (D.star a).unop
   rw [map_mul, MulOpposite.unop_mul]
 
-theorem htStar_star (D : Datum p) (a : D.O) : htStar D (htStar D a) = a := by
-  exact D.star_star a
+theorem htStar_star (D : Datum p) (a : D.O) : htStar D (htStar D a) = a := D.star_star a
 
 open scoped TensorProduct in
 theorem exists_W_datum (D : Datum p) : ∃ (r : ℕ) (x : Module.Basis (Fin r) ℤ D.O) (W : Matrix (Fin r) (Fin r) ℤ)
@@ -912,8 +907,7 @@ theorem exists_pull_level : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (N : ℕ)
     rw [hη, hlin, Category.assoc, ha, ← Category.assoc, hη]; rfl
   · rw [hη, htor]
     have e := congrArg (fun q => q.left) (map_one (pushHom hg (𝟙_ (Over Y.left))))
-    refine Eq.trans ?_ e.symm
-    exact (one_congr hT).symm
+    exact Eq.trans (one_congr hT).symm e.symm
 
 end GlobalTheory.UPel.HT.LevPull
 end -- clump:auto

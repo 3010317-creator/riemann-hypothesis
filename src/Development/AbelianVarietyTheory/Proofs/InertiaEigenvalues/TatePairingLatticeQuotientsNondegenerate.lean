@@ -230,8 +230,7 @@ theorem nondeg_torsion [CompactSpace G] [ContinuousMul G] {χ : G →* ℤ_[l]ˣ
           abel)⟩ hb hbe
     refine ⟨fun g => ψ (b' g), hb'.comp ψ, fun g h => ?_⟩
     have e := congrArg ψ (hbe' (g, h))
-    rw [cob, map_add (f := _), map_sub, hψs] at e
-    exact e
+    rwa [cob, map_add (f := _), map_sub, hψs] at e
   obtain ⟨H1, H2⟩ := nondeg_of_perfect (redChar χ (n + m + 1)) a rho hcont (hT (n + m) N rho hcont) β'
     (fun g x y => by
       rw [hβ', hβ']
@@ -297,8 +296,7 @@ theorem exists_pair (T : Submodule O V) (T' : Submodule O V') (m : V →ₗ[LL] 
     rw [← inv_inv u, ← hw]
     exact (eq_inv_of_mul_eq_one_left (by rw [← map_mul, Units.inv_mul, map_one])).symm
   have hd : ϖ ∣ w := by
-    rw [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
-    exact hwu
+    rwa [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
   obtain ⟨o, rfl⟩ := hd
   refine ⟨o • ⟨y, hy⟩, ?_⟩
   rw [Submodule.coe_smul, ← algebraMap_smul LL, map_smul, smul_eq_mul, mul_left_comm, ← hudef]

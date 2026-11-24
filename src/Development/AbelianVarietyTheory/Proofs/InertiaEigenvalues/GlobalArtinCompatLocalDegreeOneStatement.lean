@@ -125,8 +125,7 @@ theorem valuation_lt_one_of_continuous {F F' : Type} [Field F] [NumberField F] [
   have hxn : x ^ n ∈ i ⁻¹' {y : P'.adicCompletion F' | Valued.v y < 1} := by
     apply hγ
     show Valued.v.restrict (x ^ n) < γ.1
-    rw [Valuation.restrict_lt_iff_lt_embedding, map_pow]
-    exact hn
+    rwa [Valuation.restrict_lt_iff_lt_embedding, map_pow]
   have h1 : Valued.v (i x) ^ n < 1 := by simpa [map_pow] using hxn
   by_contra h
   exact absurd h1 (not_lt.2 (one_le_pow₀ (not_lt.1 h)))
@@ -155,8 +154,7 @@ theorem comap_eq_of_continuous_iso : ∀ (E E' : Type) [Field E] [NumberField E]
     have h2 := valuation_lt_one_of_continuous (i : w.adicCompletion E →+* w'.adicCompletion E') hi h1
     have h3 : (i : w.adicCompletion E →+* w'.adicCompletion E') (algebraMap E (w.adicCompletion E) (e : E)) =
         algebraMap E' (w'.adicCompletion E') (algebraMap E E' (e : E)) := hc _
-    rw [h3, valued_algebraMap] at h2
-    exact h2
+    rwa [h3, valued_algebraMap] at h2
   exact (w.isMaximal.eq_of_le (Ideal.comap_ne_top _ w'.isPrime.ne_top) hle).symm
 
 end GlobalTheory.PlaceOver
@@ -329,8 +327,7 @@ theorem exists_tensor_idem_of_algHom (E K E' : Type) [Field E] [CharZero E] [Fie
     rw [← aeval_algHom_apply]; rfl
   have hψe : ψ e = 1 := by
     have hc : ψ (algebraMap K A (g.eval α)⁻¹) = (g.eval α)⁻¹ := ψ.commutes _
-    simp only [e, map_mul, hc, hψg]
-    exact inv_mul_cancel₀ hgα
+    simpa only [e, map_mul, hc, hψg] using inv_mul_cancel₀ hgα
   have hTe : e * T = algebraMap K A (ψ T) * e := by
     have h0 : (T - algebraMap K A α) * aeval T g = 0 := by
       have : aeval T ((X - C α) * g) = (T - algebraMap K A α) * aeval T g := by
@@ -471,8 +468,7 @@ theorem integral_of_sq_sub_integral (E E' : Type) [Field E] [NumberField E] [Fie
     refine (Valuation.map_sum_le _ fun i _ => ?_)
     rw [Algebra.smul_def, map_mul]
     exact mul_le_one' (hc _ (hε i)) (hb i)
-  by_contra h
-  push Not at h
+  by_contra! h
   have h2 : w''.valuation E' (ε * ε) ≤ w''.valuation E' ε := by
     have : ε * ε = ε + (ε * ε - ε) := by ring
     rw [this]
@@ -935,19 +931,16 @@ theorem res_art_eq_art (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algeb
       au (fun φ => hapos φ) (TK ∪ TSK) fun u hu => by
         rw [Finset.mem_union, not_or] at hu
         exact hTK2 u hu.1 fun v' hv' e => hu.2 ((hTSK u).mpr ⟨v', hv', e⟩)
-    rw [Finset.prod_union hdisj, Finset.prod_eq_single_of_mem w' hWT F3] at h
-    exact h
+    rwa [Finset.prod_union hdisj, Finset.prod_eq_single_of_mem w' hWT F3] at h
   have hPE : (∏ v' ∈ TE, ψ2 (locUnit E v' (NK au))) * ψ2 (locUnit E w (NK au)) = 1 := by
     have hdisj : Disjoint TE SE := by
       rw [Finset.disjoint_left]
-      intro v' h1 h2
-      exact hTE1 v' h1 h2
+      exact fun v' h1 h2 => hTE1 v' h1 h2
     have h := _root_.GlobalTheory.ProdLocUnitPos.prod_locUnit_eq_one_of_pos E (Gab E Ω ⧸ U) ψ2 ho2 (fun k => by simp [ψ2, hdE]) (fun z hz => by simp [ψ2, hiE z hz])
       (NK au) (fun φ => _root_.GlobalTheory.norm_pos_of_totallyPositive E E' a ha0 hapos φ) (TE ∪ SE) fun v' hv' => by
         rw [Finset.mem_union, not_or] at hv'
         exact hTE2 v' hv'.1 hv'.2
-    rw [Finset.prod_union hdisj, Finset.prod_eq_single_of_mem w hwSE F4] at h
-    exact h
+    rwa [Finset.prod_union hdisj, Finset.prod_eq_single_of_mem w hwSE F4] at h
   have key : ψ1 (locUnit E' w' au) = ψ2 (locUnit E w (NK au)) := by
     rw [← hprod] at hPE
     exact mul_left_cancel (hPK.trans hPE.symm)

@@ -485,11 +485,9 @@ private theorem entry_le_of_maps (hQ : Q' * P' = 1) (hP : LocBasisW D ρ L P) (h
     have e2 : (∑ x, c x • fun b => (1 : Matrix (Fin N') (Fin N') D.host.E) b x) b = (c b : D.host.E) := by
       rw [Finset.sum_apply]
       simp [Algebra.smul_def, Matrix.one_apply]
-    rw [e2, Pi.smul_apply, Pi.smul_apply, e1, Algebra.smul_def, Algebra.smul_def] at h1
-    exact h1
+    rwa [e2, Pi.smul_apply, Pi.smul_apply, e1, Algebra.smul_def, Algebra.smul_def] at h1
   have h4 := norm_int_le_one ρ (c b)
-  rw [← key, map_mul, map_mul, norm_mul, norm_mul, hs, hs', one_mul, one_mul] at h4
-  exact h4
+  rwa [← key, map_mul, map_mul, norm_mul, norm_mul, hs, hs', one_mul, one_mul] at h4
 
 private def IntIn (ρ : D.host.E →+* ℂ_[p]) (Q' : Matrix (Fin N') (Fin N') D.host.E) (P : Matrix (Fin N) (Fin N) D.host.E)
     (B : Matrix (Fin N') (Fin N) D.host.E) : Prop :=
@@ -581,8 +579,7 @@ private theorem norm_hK_le_one : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam : Qb
     simp only [Matrix.mul_apply, Matrix.map_apply, map_sum, map_mul, Finset.sum_mul]
     rw [Finset.sum_comm]
   show ‖((hK D lam P P' b w a b₀ i : MaximalUnramifiedExtension p) : ℂ_[p])‖ ≤ 1
-  rw [e, hρC]
-  exact hint
+  rwa [e, hρC]
 
 end UpperTheory.LocalBasisConjugationRank
 
@@ -698,8 +695,7 @@ private lemma dual_swap {om oms : Fin i → K}
     simp only [V, Q, Matrix.of_apply, mul_comm ((σ ^ _) (oms r)), this, eq_comm]
   have hVQ : V * Q = 1 := mul_eq_one_comm.1 hQV
   have := congrFun (congrFun hVQ t) s
-  rw [Matrix.mul_apply, Matrix.one_apply] at this
-  exact this
+  rwa [Matrix.mul_apply, Matrix.one_apply] at this
 
 private lemma gam_pair [Fintype ι] {R : Finset Lt}
     (hB : Function.Injective fun y : {z // z ∈ R} × Fin i => pos y.1.1 (2 * y.2.val))
@@ -726,8 +722,7 @@ private lemma gam_pair [Fintype ι] {R : Finset Lt}
         exact hz (by rw [hm])
       · rw [ite_eq_right hm]
   simp only [gam, Finset.sum_mul_sum]
-  rw [Finset.sum_comm]
-  rw [Finset.sum_congr rfl fun m _ => Finset.sum_comm]
+  rw [Finset.sum_comm, Finset.sum_congr rfl fun m _ => Finset.sum_comm]
   simp only [e, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   split_ifs <;> simp
 

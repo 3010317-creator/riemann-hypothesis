@@ -196,8 +196,7 @@ theorem vV_unit (T : CDVR) {x : T.V} (hx : IsUnit x) : vV T.V (algebraMap T.V T.
   have h : valV T.V (algebraMap T.V T.Fr x) = 1 := by
     unfold valV
     rw [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_eq_one_iff]
-    intro hm
-    exact (IsLocalRing.mem_maximalIdeal _).1 hm hx
+    exact fun hm => (IsLocalRing.mem_maximalIdeal _).1 hm hx
   simp [vV, h]
 
 theorem le_nval_mul (T : CDVR) {e r : ℕ} (hr : 0 < r) (ν : ℝ) (x : T.Fr)
@@ -206,8 +205,7 @@ theorem le_nval_mul (T : CDVR) {e r : ℕ} (hr : 0 < r) (ν : ℝ) (x : T.Fr)
   · subst hx; rw [nval_zero]; exact le_top
   rw [nval_of_ne hx, EReal.coe_le_coe_iff] at h ⊢
   have hr' : (0 : ℝ) < r := by exact_mod_cast hr
-  rw [Nat.cast_mul, ← div_div, le_div_iff₀ hr', mul_comm]
-  exact h
+  rwa [Nat.cast_mul, ← div_div, le_div_iff₀ hr', mul_comm]
 
 theorem exists_closed_field_over_place : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (lv : Level H) (Xo : Moduli Dw lv) (c : Coeff lv) [StarRing (𝓞 E)] (la : HeightOneSpectrum (𝓞 c.F)) (T : CDVR) (io : c.F →+* T.Fr) (e : ℕ), OverLa la T.V io e → ∃ (C : Type) (_ : Field C) (_ : CharZero C) (V : VF C) (ι : T.Fr →+* C), V.l = resCharOf la ∧ EmbOK T V ι ∧ IsAlgClosed C ∧ (∀ s : ℕ → C, (∀ n : ℕ, V.Ge n (s (n + 1) - s n)) → ∃ x, ∀ n : ℕ, V.Ge n (x - s n)) ∧ (∀ x ∈ la.asIdeal, V.MM (ι (io ((x : 𝓞 c.F) : c.F)))) ∧ (∀ m : ℕ, ¬ resCharOf la ∣ m → V.v (m : C) = 0) ∧ ∀ (y : IntFr Xo c T io) (C3 : IntChart T io y) (k : ℕ) (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ) (ν : ℝ), (((ramOverZ la : ℝ) * ν : ℝ) : EReal) ≤ nuLocC C3 e k a n → (ν : EReal) ≤ nuLocC C3 (eOf T V) k a n := by
   intro E _ _ _ H Dw lv Xo c _ la T io e ho
@@ -250,8 +248,7 @@ theorem exists_closed_field_over_place : ∀ (E : Type) [Field E] [NumberField E
     rw [hE]
     unfold nuLocC at h ⊢
     simp only [le_iInf_iff] at h ⊢
-    intro P hP f hf
-    exact le_nval_mul T hr ν _ (h P hP f hf)
+    exact fun P hP f hf => le_nval_mul T hr ν _ (h P hP f hf)
 
 end GlobalTheory.PlaceClosedField
 end -- clump:auto

@@ -157,8 +157,7 @@ theorem finprod_eq_finprod_mem_fibres_of_section :
   have key : ∀ s ∈ S, ∀ x, p x = p s ↔ g x = s := by
     intro s hs x
     constructor
-    · intro h
-      exact (hS x).unique (hg x) ⟨hs, h.symm⟩
+    · exact fun h => (hS x).unique (hg x) ⟨hs, h.symm⟩
     · rintro rfl
       exact (hg x).2.symm
   set T := hf.toFinset with hT
@@ -263,8 +262,7 @@ theorem absHalf_prodFormula : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
         Function.mulSupport fun w : Pl E => Real.sqrt (FinitePlace.mk w x) := by
       ext w
       simp only [Function.mem_mulSupport, key, ne_eq, Complex.ofReal_eq_one]
-    rw [hs, hsup]
-    exact hfin
+    rwa [hs, hsup]
   · have hA : (∏ᶠ w : Pl E, Real.sqrt (FinitePlace.mk w x)) ^ 2 = ∏ᶠ w : Pl E, FinitePlace.mk w x := by
       have hfs : Function.HasFiniteMulSupport fun w : Pl E => Real.sqrt (FinitePlace.mk w x) := by
         unfold Function.HasFiniteMulSupport; rw [hsup]; exact hfin
@@ -282,8 +280,7 @@ theorem absHalf_prodFormula : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
         ite_eq_right (InfinitePlace.not_isReal_iff_isComplex.mpr (IsTotallyComplex.isComplex v))]
     have hprod := prod_abs_eq_one (K := E) hx
     have hsq : ((∏ᶠ w : Pl E, Real.sqrt (FinitePlace.mk w x)) * ∏ v : InfinitePlace E, ‖v.embedding x‖) ^ 2 = 1 := by
-      rw [mul_pow, hA, hP, hF, mul_comm]
-      exact hprod
+      rwa [mul_pow, hA, hP, hF, mul_comm]
     have h1 : (∏ᶠ w : Pl E, Real.sqrt (FinitePlace.mk w x)) * ∏ v : InfinitePlace E, ‖v.embedding x‖ = 1 :=
       (pow_eq_one_iff_of_nonneg (mul_nonneg (finprod_nonneg fun w => Real.sqrt_nonneg _)
         (Finset.prod_nonneg fun v _ => norm_nonneg _)) two_ne_zero).mp hsq
@@ -328,8 +325,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 
 namespace GlobalTheory.ProdForm
 theorem resNe : ∀ (K : Type) [Field K] (P Q : K[X]), P.Monic → Q.Monic → IsCoprime P Q → resultant P Q ≠ 0 := by
-  intro K _ P Q _ _ hc
-  exact Polynomial.resultant_ne_zero P Q hc
+  exact fun K _ P Q _ _ hc => Polynomial.resultant_ne_zero P Q hc
 
 theorem resMap : ∀ (K L : Type) [Field K] [Field L] (f : K →+* L) (P Q : K[X]),
     resultant (P.map f) (Q.map f) = f (resultant P Q) := by
@@ -408,8 +404,7 @@ theorem exists_bound {X : Type} [TopologicalSpace X] (w : Pl E) {f : X → w.adi
     · exact ⟨0, by rw [h]; exact zero_le'⟩
     · exact ⟨WithZero.log (Valued.v (f x)), (WithZero.exp_log h).ge⟩
   have hmono : Monotone fun m : ℤ => f ⁻¹' {y | Valued.v y ≤ WithZero.exp m} := by
-    intro a b hab x hx
-    exact le_trans hx (WithZero.exp_le_exp.2 hab)
+    exact fun a b hab x hx => le_trans hx (WithZero.exp_le_exp.2 hab)
   obtain ⟨m, hm⟩ := hC.elim_directed_cover _ (fun m => (isOpen_vle w m).preimage hf) hcov hmono.directed_le
   exact ⟨WithZero.exp m, fun x hx => hm hx⟩
 
@@ -559,8 +554,7 @@ theorem ell_coeff_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   have hnd : (P.map (IsCMField.complexConj E).toRingEquiv.toRingHom).natDegree = n := by
     rw [natDegree_map_eq_of_injective (IsCMField.complexConj E).toRingEquiv.toRingHom.injective, hdeg]
   rw [hnd, revAt_le hk, coeff_map] at hc
-  have hc2 := congrArg (IsCMField.complexConj E) hc
-  simpa [map_mul] using hc2
+  simpa [map_mul] using congrArg (IsCMField.complexConj E) hc
 
 end GlobalTheory.ConjSelfRecip
 end -- clump:auto
@@ -597,8 +591,7 @@ theorem exists_le_exp_nat (B : WithZero (Multiplicative ℤ)) : ∃ n : ℕ, B �
   | coe m =>
     refine ⟨(Multiplicative.toAdd m).toNat, ?_⟩
     rw [WithZero.exp, WithZero.coe_le_coe, ← Multiplicative.toAdd_le]
-    simp only [toAdd_ofAdd]
-    exact Int.self_le_toNat _
+    simpa only [toAdd_ofAdd] using Int.self_le_toNat _
 
 theorem exists_clearing {K : Type} [Field K] [NumberField K] (A : Set K)
     (w : HeightOneSpectrum (𝓞 K)) (B : WithZero (Multiplicative ℤ))
@@ -872,8 +865,7 @@ theorem mem_prod_of_mem_tsupport (hU : Unr E) (a b : ℕ) (w : Pl E) {y : GLw a 
   have hcl : IsClosed (((GlobalTheory.LFun.KGL w (n := a)).prod (GlobalTheory.LFun.KGL w (n := b))) : Set (GLw a w × GLw b w)) := by
     rw [Subgroup.coe_prod]
     exact (isClosed_KGL hU a w).prod (isClosed_KGL hU b w)
-  have h := closure_minimal Set.support_indicator_subset hcl hy
-  exact Subgroup.mem_prod.1 h
+  exact Subgroup.mem_prod.1 (closure_minimal Set.support_indicator_subset hcl hy)
 
 theorem finite_pairs : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (a b : ℕ) (S : Set (Pl E)), IsSection S → ∀ φ : ∀ w : Pl E, GLw a w × GLw b w → ℂ, (∀ w, HasCompactSupport (φ w)) → (∀ᶠ w in cofinite, φ w = (((GlobalTheory.LFun.KGL w (n := a)).prod (GlobalTheory.LFun.KGL w (n := b))) : Set (GLw a w × GLw b w)).indicator 1) → {p : E[X] × E[X] | p.1 ∈ Ell E a ∧ p.2 ∈ Ell E b ∧ ∀ w ∈ S, ∃ y : GLw a w × GLw b w, φ w y ≠ 0 ∧ (nrmL a w y.1).val.charpoly = atPl w p.1 ∧ (nrmL b w y.2).val.charpoly = atPl w p.2}.Finite := by
   intro E _ _ _ hU a b S hS φ hc hφ
@@ -1299,8 +1291,7 @@ theorem sum_identity (hEL : EllLocal) (hKO : KapOrbAE) (hU : Unr E) {n a : ℕ} 
   set F := hfin'.toFinset with hFdef
   have hF : ∀ p, p ∈ F ↔ p ∈ t ∧ p ∈ (F : Set (E[X] × E[X])) := fun p => by
     constructor
-    · intro hp
-      exact ⟨((hfin'.mem_toFinset).1 hp).1, hp⟩
+    · exact fun hp => ⟨((hfin'.mem_toFinset).1 hp).1, hp⟩
     · exact fun hp => hp.2
   let T : (∀ v, κ v) → E[X] × E[X] → ℂ := fun s p => kap p.1 * kap p.2 * chW (fun v => l₁ v (s v)) p.1 *
     chW (fun v => l₂ v (s v)) p.2 * ∏ᶠ w ∈ S, stTw2 a (n - a) w (atPl w p.1) (atPl w p.2) (φ w)
@@ -1350,8 +1341,7 @@ theorem g2c : EllLocal → KapOrbAE → ChWMap → GlobalComplexCoefficients := 
   rw [h1]
   have h2 : ∑ j : J, G j = ∑ i : {j : J // c₀ j ≠ 0}, G i.1 := by
     rw [← Finset.sum_subtype (Finset.univ.filter fun j => c₀ j ≠ 0) (by simp) G, Finset.sum_filter_of_ne]
-    intro j _ h
-    exact left_ne_zero_of_mul h
+    exact fun j _ h => left_ne_zero_of_mul h
   exact h2
 
 end GlobalTheory.CompanionTheory.resultantFactorHypotheses

@@ -81,8 +81,7 @@ theorem intst : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ) (v u : Height
     change _ ∈ u.adicCompletionIntegers E
     change x ∈ v.adicCompletionIntegers E at hx
     rw [HeightOneSpectrum.mem_adicCompletionIntegers] at hx ⊢
-    rw [hf]
-    exact hx
+    rwa [hf]
   refine ⟨invT n _ (GeneralLinearGroup.map r g0), ?_⟩
   apply Units.ext
   ext i j
@@ -101,8 +100,7 @@ theorem ns : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (Y
       (HeightOneSpectrum.denseRange_algebraMap (K := E) v).equalizer hf hex.choose_spec.1
         (funext fun k => (hext k).trans (hex.choose_spec.2 k).symm)
     rw [hcj]
-    refine Units.ext (Matrix.ext fun i j => ?_)
-    exact congrFun hfs ((Y v).val i j)
+    exact Units.ext (Matrix.ext fun i j => (congrFun hfs ((Y v).val i j)))
   have hcu : conjSrc (GlobalTheory.SplitPts.conjE E) u = u := by
     by_contra h
     exact hu ⟨_, h, (GlobalTheory.Mem.Chr.under_eq_iff_conjPl (IsCMField.complexConj E)
@@ -117,8 +115,7 @@ theorem twice : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ)
     rintro v rfl f hf hext
     have hfs : (f : v.adicCompletion E → v.adicCompletion E) = id :=
       (HeightOneSpectrum.denseRange_algebraMap (K := E) v).equalizer hf continuous_id (funext fun k => hext k)
-    refine Units.ext (Matrix.ext fun i j => ?_)
-    exact congrFun hfs ((Y v).val i j)
+    exact Units.ext (Matrix.ext fun i j => (congrFun hfs ((Y v).val i j)))
   have h := key _ (GlobalTheory.SplitPts.conjSrc_conjSrc_cm u)
     ((conjLoc (GlobalTheory.SplitPts.conjE E) u).comp (conjLoc (GlobalTheory.SplitPts.conjE E) (conjSrc (GlobalTheory.SplitPts.conjE E) u)))
     ((conjLoc_spec _ u).1.comp (conjLoc_spec _ _).1) fun k => by
@@ -181,8 +178,7 @@ theorem GlobalTheory.BCT.exists_finU_of_loc : ∀ (E : Type) [Field E] [NumberFi
           rwa [ite_eq_right hsp] at hg
         have hUL : (y u).1 ∈ UJ (cj u) 1 := key _ (y u).2
         have h3 : cT (cj u) (y u).1.val * 1 * (y u).1.val = 1 := hUL
-        rw [Matrix.mul_one] at h3
-        exact h3
+        rwa [Matrix.mul_one] at h3
     · rw [hz_out u hu, hz_in _ (hnotS u hu)]
       change ((GeneralLinearGroup.map (conjLoc c u) (y (conjSrc c u)).1).val)ᵀ *
         (((GeneralLinearGroup.map (conjLoc c u) (y (conjSrc c u)).1)⁻¹ : GLw n u).val)ᵀ = 1

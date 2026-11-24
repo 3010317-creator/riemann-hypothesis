@@ -338,8 +338,7 @@ theorem exists_powUnif (hL : L.IsLB) {L' : LB G'.left} (hL' : L'.IsLB) (w : LB.I
   have hcd : ∀ z i, c z ≫ (p.pr i).left = d (blockPr e i z) := fun z i => congrArg (·.left) (hex z i)
   have hd : IsHolFamily d := u.hol
   have hc : IsHolFamily c := isHolFamily_pow p ex fun i => by
-    simp only [hex]
-    exact hd.precomp (blockPr e i).differentiable
+    simpa only [hex] using hd.precomp (blockPr e i).differentiable
   obtain ⟨fr', h₁, h₂, h₃, h₄⟩ := exists_frame hc hL hL' (fun i => (p.pr i).left) w hw
     (fun i a z => u.fr a (blockPr e i z))
     (fun i a => by
@@ -377,8 +376,7 @@ theorem isDiff_map (φ : G ⟶ G') (T : (Fin g → ℂ) →L[ℂ] (Fin n → ℂ
     rw [ex_zero, one_left]
     intro x hx
     have h1 : (spMap (TrivSqZeroExt.fstHom ℂ ℂ ℂ).toRingHom ≫ (v ≫ φ).left) x ∈ U := hU (Set.mem_univ _)
-    rw [ht] at h1
-    exact h1
+    rwa [ht] at h1
   have hF : DifferentiableAt ℂ (fun z => valAt' (u'.ex z).left U f) (T 0) := by
     rw [map_zero]
     exact (u'.hol U f).2.differentiableAt ((u'.hol U f).1.mem_nhds h0)
@@ -416,8 +414,7 @@ theorem val_boxRig {G' G : Over (Sp ℂ)} [GrpObj G'] [IsCommMonObj G'] [GrpObj 
   · refine Eq.trans (Finset.prod_congr rfl fun i _ => ?_) (valAt'_units_prod (κ := Fin j) _ ha' Finset.univ _).symm
     have hi : ⊤ ≤ (𝟙 (Sp ℂ)) ⁻¹ᵁ LB.wchart (L.pull (p.pr i).left) (fun _ : PUnit => eSec G') (fun _ _ => a) :=
       top_le_preimage_mono _ (Out.GeneratorPullback.box_le L (fun i => (p.pr i).left) (fun _ : PUnit => eSec G') (fun _ _ => a) i) ha'
-    refine Eq.trans ?_ (val_res _ _ _ ha').symm
-    exact (val_res_pull (𝟙 (Sp ℂ)) (𝟙 (Sp ℂ)) _ _ _ hi).symm
+    exact Eq.trans (val_res_pull (𝟙 (Sp ℂ)) (𝟙 (Sp ℂ)) _ _ _ hi).symm (val_res _ _ _ ha').symm
   · refine (valAt'_units_prod (κ := PUnit) _ hV Finset.univ _).trans ?_
     rw [Fintype.prod_unique, zpow_one]
     exact val_res_pull (𝟙 (Sp ℂ)) (eSec G') ((Out.boxLB L p.pr).U (fun _ => a) ⊓ L'.U (b PUnit.unit)) _ _ hV

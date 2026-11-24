@@ -132,8 +132,7 @@ theorem flagN_nil {ε : Fin n → Bool} {a : ℕ} {W : Fin (a + 1) → Submodule
       simp [hy]
     · have h1 := hstep k y hy
       have h2 : W k.castSucc ≤ W k.succ := hm (Fin.castSucc_lt_succ (i := k)).le
-      have h3 := Submodule.add_mem _ (h2 h1) hy
-      simpa using h3
+      simpa using Submodule.add_mem _ (h2 h1) hy
   refine ⟨hstab i, ?_⟩
   have hnil : ∀ m : ℕ, ∀ i : Fin (a + 1), (i : ℕ) = m → ∀ y ∈ W i,
       ((Matrix.toLin' (uMat u) - 1) ^ m) y = 0 := by
@@ -176,8 +175,7 @@ theorem gram_move {r : ℕ} (c : Fin r → Fin n → ℂ) (hc : LinearIndependen
     intro a
     have h1 : f (b a) = ∑ i, A i a • b i := by
       rw [hA]; simp only [LinearMap.toMatrix_apply]; exact (b.sum_repr (f (b a))).symm
-    have h2 := congrArg Subtype.val h1
-    simpa [hf, hb, Module.Basis.span_apply, Matrix.toLin'_apply] using h2
+    simpa [hf, hb, Module.Basis.span_apply, Matrix.toLin'_apply] using congrArg Subtype.val h1
   have hgC : g * C = C * A := by
     ext i a
     have h := congrFun (hcol a) i
@@ -480,8 +478,7 @@ theorem size_move : ∀ (I : AutInst) (xf : I.Gf) (a : ℕ) (j : Fin a → ℕ),
     ext y
     simp only [Submodule.mem_inf, Submodule.restrictScalars_mem]
     constructor
-    · intro hy
-      exact ⟨hmono (Fin.castSucc_lt_succ (i := i)).le hy, Submodule.subset_span hy⟩
+    · exact fun hy => ⟨hmono (Fin.castSucc_lt_succ (i := i)).le hy, Submodule.subset_span hy⟩
     · rintro ⟨h1, h2⟩
       exact (hmem _ y).2 ⟨((hmem _ y).1 h1).1, h2⟩
   have hhtpos : ∀ x : I.GA, ∀ l, 0 < Formalism.HN.ht (bas I) (frm I x) (S l) := fun x l =>
@@ -517,8 +514,7 @@ theorem size_move : ∀ (I : AutInst) (xf : I.Gf) (a : ℕ) (j : Fin a → ℕ),
   have hmove : ∀ l, Formalism.HN.ht (bas I) (frm I (u * m * k, xf)) (S l) *
       (∏ v, detOn (uMat (m v)) (flagAt I S v l)) ^ 2 = Formalism.HN.ht (bas I) (frm I (1, xf)) (S l) := by
     intro l
-    have h := ht_move I S l (hfg l) xf (u * m) k (fun v => hWum v l) hk
-    simpa only [hdet] using h
+    simpa only [hdet] using ht_move I S l (hfg l) xf (u * m) k (fun v => hWum v l) hk
   have hDpos : ∀ l, 0 < ∏ v, detOn (uMat (m v)) (flagAt I S v l) := fun l =>
     Finset.prod_pos fun v _ => detOn_pos_of_isUnit_det_of_mapsTo _ ((Matrix.isUnit_iff_isUnit_det _).1 (Units.isUnit _)) _ (hWm v l)
   have hls : ∏ v, locSize j (flagAt I S v) (uMat (m v)) i =

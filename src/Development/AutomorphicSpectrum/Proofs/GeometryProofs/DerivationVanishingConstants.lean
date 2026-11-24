@@ -198,8 +198,7 @@ theorem le_preimage_jet {X : Scheme.{0}} {ξ : Sp (J1 g) ⟶ X} {x : Sp ℂ ⟶ 
     rfl
   have := hx (x := q) trivial
   show ξ p ∈ U
-  rw [← e]
-  exact this
+  rwa [← e]
 
 variable {X : Scheme.{0}} {x : Sp ℂ ⟶ X} {V : X.Opens} {ξ : Sp (J1 g) ⟶ X}
 

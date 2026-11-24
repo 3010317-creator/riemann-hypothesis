@@ -124,8 +124,7 @@ theorem norm_fin {ψ : AddChar (AF F) ℂ} (hc : Continuous ψ) (y : FiniteAdele
     exact mul_mem (HeightOneSpectrum.coe_mem_adicCompletionIntegers v _) (ha v)
   have hle : ∀ a ∈ K, ‖ψ (embFin a)‖ ≤ 1 := by
     intro a ha
-    by_contra h
-    push Not at h
+    by_contra! h
     obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt M h
     have := hM _ (hKn a ha n)
     rw [hmul, norm_pow] at this
@@ -199,8 +198,7 @@ theorem hasDerivAt_line (d : Darboux B κ) (ψ : AddChar (AF F) ℂ) (u : W) {Φ
       rfl
     rw [e, sub_self]
     exact (hd (z + (d.e (realAd F t • u)).1)).const_mul _
-  have h2 := h1.comp_sub_const t t
-  simpa only [add_sub_cancel] using h2
+  simpa only [add_sub_cancel] using h1.comp_sub_const t t
 
 theorem norm_rho {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (d : Darboux B κ) (w : W) (Ψ : (κ → AF F) → ℂ)
     (z : κ → AF F) : ‖d.rho ψ w Ψ z‖ = ‖Ψ (z + (d.e w).1)‖ := by
@@ -304,8 +302,7 @@ theorem majorant_pure (f : SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ)
         _ = C * (1 + R') ^ k := by ring
     have hpos : 0 < (1 + ‖ι ξ‖) ^ k := by positivity
     have hf : ‖f x‖ ≤ C * (1 + R') ^ k * (1 + ‖ι ξ‖)⁻¹ ^ k := by
-      rw [inv_pow, ← div_eq_mul_inv, le_div_iff₀ hpos]
-      exact hfx
+      rwa [inv_pow, ← div_eq_mul_inv, le_div_iff₀ hpos]
     calc ‖f x‖ * ‖g _‖ ≤ (C * (1 + R') ^ k * (1 + ‖ι ξ‖)⁻¹ ^ k) * max Bg 0 :=
           mul_le_mul hf (le_max_of_le_left (hB _)) (norm_nonneg _) (by positivity)
       _ = h ξ := by rw [hh]; ring

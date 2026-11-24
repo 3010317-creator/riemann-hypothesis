@@ -96,8 +96,7 @@ theorem exists_nsmul_mem {L M : Submodule ℤ V} [DiscreteTopology M]
     rw [(Submodule.comapSubtypeEquivOfLe h).finrank_eq, ZLattice.rank ℝ L, ZLattice.rank ℝ M]
   haveI hfin : Finite (M ⧸ L.comap M.subtype) := Submodule.finiteQuotientOfFreeOfRankEq _ hr
   refine ⟨Nat.card (M ⧸ L.comap M.subtype), Nat.card_pos, fun x hx => ?_⟩
-  have h1 := (L.comap M.subtype).toAddSubgroup.nsmul_index_mem ⟨x, hx⟩
-  exact h1
+  exact (L.comap M.subtype).toAddSubgroup.nsmul_index_mem ⟨x, hx⟩
 
 theorem exists_selfDual (B : LinearMap.BilinForm ℝ V) (hB : B.Nondegenerate) (hA : B.IsAlt)
     (Λ : Submodule ℤ V) [DiscreteTopology Λ] (hs : Submodule.span ℝ (Λ : Set V) = ⊤)
@@ -184,8 +183,7 @@ theorem exists_unimodular (B : LinearMap.BilinForm ℝ V) (hB : B.Nondegenerate)
   obtain ⟨N, hN, hNM⟩ := exists_nsmul_mem hs h1
   let e := LinearEquiv.ofEq _ _ h3.symm
   refine ⟨M, N, (B.dualSubmoduleToDual M).comp e.toLinearMap, h1, hN, hNM, this, hsM, ?_, ?_⟩
-  · intro a b
-    exact B.dualSubmoduleParing_spec (e a) b
+  · exact fun a b => B.dualSubmoduleParing_spec (e a) b
   · exact Function.Bijective.comp (g := B.dualSubmoduleToDual M) (f := e)
       ⟨B.dualSubmoduleToDual_injective hB M hsM, dualSubmoduleToDual_surjective B hB M hsM⟩
       e.bijective

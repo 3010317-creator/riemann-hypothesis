@@ -227,10 +227,8 @@ def mjIds (Xd : DivX D) (h : Xd.MjH = mjH Z) : MjHIds D A3.A Xd (A3.indefDown (s
 theorem mjHTie_of_eq (Xd : DivX D) (h : Xd.MjH = mjH Z) (hj : HEq Xd.jM (jM Z)) :
     MjHTie D A3.A Xd (A3.indefDown (s0Of R F)) Z.jW (mjIds Z Xd h) := by
   constructor
-  · intro i x
-    exact map_castV _ _ D.what₂.Mj Z.jW h hj i _ x
-  · intro i
-    exact hLatTie_castV ((mjH_succ Z i).symm.trans (congrFun h _).symm)
+  · exact fun i x => map_castV _ _ D.what₂.Mj Z.jW h hj i _ x
+  · exact fun i => hLatTie_castV ((mjH_succ Z i).symm.trans (congrFun h _).symm)
 
 theorem exists_mjHTie (Xd : DivX D) (h : Xd.MjH = mjH Z) (hj : HEq Xd.jM (jM Z)) :
     ∃ JM, MjHTie D A3.A Xd (A3.indefDown (s0Of R F)) Z.jW JM :=

@@ -361,8 +361,7 @@ theorem diag_unitAt_and_mul : ∀ (F : Type) [Field F] (X : Var F) (ι : Type) (
   obtain ⟨τ, i⟩ := x
   have hP : Par m ((ratOf X).O z).toSubring (A' * A⁻¹) := (Fr.mem_iff hA).1 hA'
   have hl : ∀ (C : Mat m X.Fn) (O : Subring X.Fn), Par m O C → (C τ).BlockTriangular OrderDual.toDual := by
-    intro C O hC a b hab
-    exact (hC τ).2.2.2 a b a.2 hab
+    exact fun C O hC a b hab => (hC τ).2.2.2 a b a.2 hab
   refine ⟨?_, ?_⟩
   · set P := A' * A⁻¹ with hPdef
     have hdet : (P τ).det = P τ i i * ∏ j ∈ Finset.univ.erase i, P τ j j := by
@@ -511,8 +510,7 @@ theorem leadMinor_conj (T G : Matrix (Fin s) (Fin s) ℂ) (hT : ∀ a b, a < b �
       rfl
   have h3 : (T * G * Tᴴ).submatrix v v = T.submatrix v v * (G.submatrix v v * (T.submatrix v v)ᴴ) := by
     have := submatrix_mul_lower T hT ((G * Tᴴ).submatrix id v) j
-    rw [← h1, Matrix.mul_assoc]
-    exact this
+    rwa [← h1, Matrix.mul_assoc]
   have h4 : (T.submatrix v v).det = ∏ a, T (v a) (v a) :=
     Matrix.det_of_isLowerTriangular _ fun a b hab => hT _ _ hab
   unfold leadMinor
@@ -1199,12 +1197,9 @@ theorem exists_goodPatch_of_mem : ∀ {F : Type} [Field F] {σ : F →+* ℂ} {X
   refine ⟨hhol, isOpen_interior, fun z hz => (hsub z hz).1, fun z hz => (hsub z hz).2.2.1,
     fun z _ a ha => absurd ha (Finset.notMem_empty a), fun z hz => ?_, fun z hz _ a i j => ?_,
     fun z hz _ a b i j => ?_⟩
-  · simp only [Finset.notMem_empty, false_imp_iff, implies_true, iff_true]
-    exact (hsub z hz).2.1
-  · simp only [poinWt, Finset.notMem_empty, ite_false, mul_one]
-    exact (hsub z hz).2.2.2.1 a i j
-  · simp only [poinWt, Finset.notMem_empty, ite_false, mul_one]
-    exact (hsub z hz).2.2.2.2 a b i j
+  · simpa only [Finset.notMem_empty, false_imp_iff, implies_true, iff_true] using (hsub z hz).2.1
+  · simpa only [poinWt, Finset.notMem_empty, ite_false, mul_one] using (hsub z hz).2.2.2.1 a i j
+  · simpa only [poinWt, Finset.notMem_empty, ite_false, mul_one] using (hsub z hz).2.2.2.2 a b i j
 
 end GlobalTheory.GoodTop
 end -- clump:auto
@@ -1254,8 +1249,7 @@ theorem exists_goodPatch : ∀ {F : Type} [Field F] {σ : F →+* ℂ} {X : Var 
     mem := fun z hz => by
       have := hcomp z (hW z hz).2.2.1
       constructor
-      · intro hzO a ha h
-        exact (this.2 ⟨a, ha, h⟩) hzO
+      · exact fun hzO a ha h => (this.2 ⟨a, ha, h⟩) hzO
       · intro hne
         by_contra hzO
         obtain ⟨a, ha, h⟩ := this.1 hzO

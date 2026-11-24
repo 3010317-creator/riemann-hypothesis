@@ -75,8 +75,7 @@ theorem exists_primeInvolution_of_ringInvolution {R : Type} [CommRing R] [IsDede
     constructor
     · rintro ⟨y, hy, h⟩
       rwa [← s.injective h]
-    · intro h
-      exact ⟨x, h, rfl⟩
+    · exact fun h => ⟨x, h, rfl⟩
   let f : HeightOneSpectrum R → HeightOneSpectrum R := fun P =>
     { asIdeal := P.asIdeal.map s
       isPrime := by
@@ -102,8 +101,7 @@ theorem exists_primeInvolution_of_ringInvolution {R : Type} [CommRing R] [IsDede
     rw [Ideal.absNorm_of_ne_bot (f P).ne_bot, Ideal.absNorm_of_ne_bot P.ne_bot,
       Submodule.cardQuot_apply, Submodule.cardQuot_apply]
     exact (Nat.card_congr (Ideal.quotientEquiv P.asIdeal (P.asIdeal.map s) s rfl).toEquiv).symm
-  · intro P x
-    exact hm _ x
+  · exact fun P x => hm _ x
   · intro P x
     show s x ∈ (P.asIdeal.map s) ^ 2 ↔ _
     rw [← Ideal.map_pow, hm]
@@ -120,8 +118,7 @@ theorem cmConjugation_on_primes : ∀ (F E : Type) [Field F] [NumberField F] [Fi
     have := Subalgebra.isSimpleOrder_of_finrank h2
     rcases eq_bot_or_eq_top (AlgHom.equalizer σ (AlgHom.id F E)) with h | h
     · have hx' : x ∈ AlgHom.equalizer σ (AlgHom.id F E) := hx
-      rw [h] at hx'
-      exact hx'
+      rwa [h] at hx'
     · exfalso
       apply IsTotallyComplex.complexEmbedding_not_isReal τ
       rw [ComplexEmbedding.isReal_iff]

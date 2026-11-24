@@ -167,8 +167,7 @@ theorem finMeas_eq : ∀ (D : D7) (V : HSp D) (μf : ∀ v, Measure (GLoc D.sp.c
     have hK' : ν K ≠ ⊤ := hKcpt.measure_lt_top.ne
     have hP : ∏ᶠ v, μf v (stabLoc D.sp.cm.sig V.gram (frameLat V) v) ≠ ⊤ := by
       rw [← h1]; exact hKcpt.measure_lt_top.ne
-    rw [← ENNReal.toReal_eq_toReal_iff' hK' hP]
-    rw [show (ν K).toReal = ν.real K from rfl, h2]
+    rw [← ENNReal.toReal_eq_toReal_iff' hK' hP, show (ν K).toReal = ν.real K from rfl, h2]
     exact (ENNReal.toRealHom.map_finprod hfin).symm
   have hc := Measure.measure_isMulInvariant_eq_smul_of_isCompact_closure ν ν' (s := K)
     (by rw [hKc.closure_eq]; exact hKcpt)
@@ -406,8 +405,7 @@ theorem integral_indicator_smul_of_measurePreserving {X Y Z E : Type} [Measurabl
     simp [Measure.real]
   rw [hΦ]
   refine ⟨(he.integrable_comp_emb e.measurableEmbedding).2 hint, ?_⟩
-  rw [show (∫ x, (Φ ∘ e) x ∂μ) = ∫ x, Φ (e x) ∂μ from rfl, he.integral_comp' Φ]
-  exact hval
+  rwa [show (∫ x, (Φ ∘ e) x ∂μ) = ∫ x, Φ (e x) ∂μ from rfl, he.integral_comp' Φ]
 
 theorem integral_indicatorFin_smul_arch : ∀ (D : D7) (V : HSp D) (μa : ∀ w, Measure (GArch D.sp.cm.sig V.gram w)) (μf : ∀ v, Measure (GLoc D.sp.cm.sig V.gram v)) (μ : Measure (GA D V)), IsRestrictedProd D.sp.cm.sig V.gram (frameLat V) μa μf μ → ∀ (νF : Measure (GFin D.sp.cm.sig V.gram)), IsRestrictedProdFin D.sp.cm.sig V.gram (frameLat V) μf νF → ∀ (E : Type) [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E] (B : Set (GFin D.sp.cm.sig V.gram)), MeasurableSet B → νF B ≠ ⊤ → ∀ (a : (∀ w, GArch D.sp.cm.sig V.gram w) → E), Integrable a (Measure.pi μa) → Integrable (fun g : GA D V => B.indicator (fun _ => (1 : ℂ)) (projFin D.sp.cm.sig V.gram g) • a fun w => projArch D.sp.cm.sig V.gram w g) μ ∧ ∫ g, B.indicator (fun _ => (1 : ℂ)) (projFin D.sp.cm.sig V.gram g) • a (fun w => projArch D.sp.cm.sig V.gram w g) ∂μ = (νF B).toReal • ∫ x, a x ∂Measure.pi μa := by
   intro D V μa μf μ hμ νF hF E _ _ _ B hB hBf a ha
@@ -482,8 +480,7 @@ theorem exists_sum_indicator {X W : Type} [TopologicalSpace X] [T2Space X] [AddC
   · have hr0 : r ≠ 0 := (Finset.mem_filter.1 hr).2
     refine ⟨hF.isOpen_fiber r, hc.of_isClosed_subset isClosed_closure
       (closure_minimal (fun x hx => subset_tsupport F ?_) (isClosed_tsupport F))⟩
-    rw [Function.mem_support, show F x = r from hx]
-    exact hr0
+    rwa [Function.mem_support, show F x = r from hx]
   · by_cases h0 : F x = 0
     · rw [h0]
       symm
@@ -494,8 +491,7 @@ theorem exists_sum_indicator {X W : Type} [TopologicalSpace X] [T2Space X] [AddC
       · rw [Set.indicator_of_mem (show x ∈ F ⁻¹' {F x} from rfl), one_smul]
       · intro r _ hne
         rw [Set.indicator_of_notMem (s := F ⁻¹' {r}) (fun hx => hne (show F x = r from hx).symm), zero_smul]
-      · intro hn
-        exact absurd (Finset.mem_filter.2 ⟨hfin.mem_toFinset.2 ⟨x, rfl⟩, h0⟩) hn
+      · exact fun hn => absurd (Finset.mem_filter.2 ⟨hfin.mem_toFinset.2 ⟨x, rfl⟩, h0⟩) hn
 
 theorem integralOp_eq_sum {G W : Type} [Group G] [MeasurableSpace G] [AddCommGroup W] [Module ℂ W]
     (ν : Measure G) (σ : Representation ℂ G W) (b : G → ℂ) (A : W →ₗ[ℂ] W)

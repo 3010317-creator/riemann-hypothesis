@@ -130,15 +130,13 @@ theorem reading_linearIndependent_and_injective : Out.SecBaseChangeSt → ∀ (E
           rw [← Finset.mul_sum, e2, mul_zero]) θ
         simpa [Finset.sum_apply] using hpt
       exact fun i => Fintype.linearIndependent_iff.1 hli _ hz i
-    intro i
-    exact (Module.forall_dual_apply_eq_zero_iff c.F (toCAt σ (w i))).1 fun θ => hθ θ i
+    exact fun i => (Module.forall_dual_apply_eq_zero_iff c.F (toCAt σ (w i))).1 fun θ => hθ θ i
   · funext p y
     show f p y = 0
     refine eq_zero_of_cpts σ p _ fun ψ => ?_
     obtain ⟨k, x, u, hk⟩ := h p y ψ
     have e := hk f hf
-    rw [h0 k x.1 x.2, mul_zero] at e
-    exact e
+    rwa [h0 k x.1 x.2, mul_zero] at e
 
 end GlobalTheory
 end -- clump:auto

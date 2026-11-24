@@ -155,8 +155,7 @@ def IsSeg (N j : ℕ) (T : Finset (Fin N)) : Prop :=
   (∃ m, m ≤ N - j ∧ T = Finset.univ.filter fun a : Fin N => (a : ℕ) < m) ∨
     ∃ m, T = Finset.univ.filter fun a : Fin N => N - j ≤ (a : ℕ) ∧ (a : ℕ) < m
 
-theorem isSeg_omIdx (N j : ℕ) : IsSeg N j (omIdx N j) := by
-  exact Or.inl ⟨N - j, le_refl _, rfl⟩
+theorem isSeg_omIdx (N j : ℕ) : IsSeg N j (omIdx N j) := Or.inl ⟨N - j, le_refl _, rfl⟩
 
 theorem isSeg_wIdx (N j : ℕ) : IsSeg N j (wIdx N j) :=
   Or.inr ⟨N, by ext a; simp [wIdx]⟩
@@ -255,13 +254,11 @@ theorem exists_lu : ∀ (N j : ℕ) (kp : Fin N → Prop) (G : Matrix (Fin N) (F
     · refine hWsupp (omIdx N j) (Or.inr (Or.inl rfl)) c ?_ x ?_
       · simp only [omIdx, Finset.mem_filter, Finset.mem_univ, true_and]; exact hc
       · simp only [omIdx, Finset.mem_filter, Finset.mem_univ, true_and]
-        intro hx
-        exact hxc (iff_of_true hx hc)
+        exact fun hx => hxc (iff_of_true hx hc)
     · refine hWsupp (wIdx N j) (Or.inr (Or.inr rfl)) c ?_ x ?_
       · simp only [wIdx, Finset.mem_filter, Finset.mem_univ, true_and]; exact not_lt.mp hc
       · simp only [wIdx, Finset.mem_filter, Finset.mem_univ, true_and]
-        intro hx
-        exact hxc (iff_of_false (not_lt.mpr hx) hc)
+        exact fun hx => hxc (iff_of_false (not_lt.mpr hx) hc)
   have hLblk : IsBlockDiag j (G * W) := by
     intro a b hab
     rw [Matrix.mul_apply]
@@ -283,8 +280,7 @@ theorem exists_lu : ∀ (N j : ℕ) (kp : Fin N → Prop) (G : Matrix (Fin N) (F
       exact hs.mpr hb
     · simp only [wIdx, Finset.mem_filter, Finset.mem_univ, true_and] at hb ⊢
       exact not_lt.mp (fun h => (not_lt.mpr hb) (hs.mp h))
-  · intro i hki hpi c hc x hx
-    exact hWsupp _ (Or.inl ⟨i, hki, hpi, rfl⟩) c hc x hx
+  · exact fun i hki hpi c hc x hx => hWsupp _ (Or.inl ⟨i, hki, hpi, rfl⟩) c hc x hx
 
 end GlobalTheory.CompanionTheory.Ar.PB.BigCellLU
 end -- clump:auto
@@ -382,8 +378,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
     simp only [pL, pRho, Equiv.symm_apply_apply]
   have hwD : pRho M Rb keep v F kb r h ε z ∈ pD ε V := by
     show pB ε _ ∈ V
-    rw [hB]
-    exact hV
+    rwa [hB]
   refine ⟨hwD, ?_⟩
   obtain ⟨hblm, hblnorm, hblgood, hblorb⟩ := hBC.2.2.2.2 _ hV
   rw [(Rb.A.chart kb).left_inv hs] at hblorb
@@ -392,15 +387,12 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
   obtain ⟨c₀, hc₀, he⟩ := horb
   have hv : ∀ s, valAt M.x s zc = valAt M.x s (pBase M v z) := fun s => by
     have := StepW.TorusAct.valAt_torus (x := M.x) c₀ hc₀ hzb (he ▸ hblm) s
-    rw [he]
-    exact this
+    rwa [he]
   let c : Kk → ℂ := fun k => if hk : ∀ p, M.blk p ≠ some (κ k) then c₀ ⟨κ k, hk⟩ else 1
   have hc : ∀ k, c k ≠ 0 := fun k => by
     by_cases hk : ∀ p, M.blk p ≠ some (κ k)
-    · simp only [c, dite_eq_left hk]
-      exact hc₀ _
-    · simp only [c, dite_eq_right hk]
-      exact one_ne_zero
+    · simpa only [c, dite_eq_left hk] using hc₀ _
+    · simpa only [c, dite_eq_right hk] using one_ne_zero
   let z' : (Σ k, ιk k) → ℂ := fun p => c p.1 * z p
   have hz' : z' ∈ mcPts (mCoordIdeal (y ∘ v)) :=
     mcPts_smul (GroundTheory.Heights₂.Heights.CoordinateConeArithVar.isMultiHomogIdeal _) c hc hzP
@@ -432,8 +424,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
     have h1 := Cover.twMinor_of_flag M hF hblm hblgood hk (hH p.1).1 hw g J
     have h2 := Orb.twMinor_scale M F hv p.2 k g (hkept p k hp hk) J
     rw [one_mul] at h2
-    rw [← h2]
-    exact h1
+    rwa [← h2]
   have hsome : ∀ p, IsProperStep N j p.2 → ∃ k, M.blk p = some k := fun p hp =>
     Option.ne_none_iff_exists'.1 fun e' => (M.blk_none p).1 e' hp
   have hproper : ∀ p k, M.blk p = some k → IsProperStep N j p.2 := fun p k hk => by

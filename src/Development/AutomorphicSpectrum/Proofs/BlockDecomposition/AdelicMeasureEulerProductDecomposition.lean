@@ -270,8 +270,7 @@ theorem dx_splitN' (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M : ℕ) (J : Ma
   obtain ⟨f1, f3⟩ := coordMapN σ hCM (Af F) b lf hlf n M
   haveI hBi := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)).2.2.2.2.2.2.2.1 n M
   haveI hBf := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)).2.2.2.2.2.2.2.1 n M
-  haveI : SigmaFinite l := by
-    exact Measure.IsAddHaarMeasure.sigmaFinite l
+  haveI : SigmaFinite l := Measure.IsAddHaarMeasure.sigmaFinite l
   haveI : SigmaFinite lf := Measure.IsAddHaarMeasure.sigmaFinite lf
   let eI := (i1.homeomorph).toMeasurableEquiv
   let eF := (f1.homeomorph).toMeasurableEquiv
@@ -331,8 +330,7 @@ theorem dx_splitN (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M : ℕ) (J : Mat
     (GroundTheory.Global.borelSpace_infiniteAdeleRing F).measurable_eq
   obtain ⟨l, hl, hH, D, hD, hD1⟩ := @std_transfer F _ _ laminf hinf (GroundTheory.Global.measurableSpace_infiniteAdeleRing F) hm
   have h := dx_splitN' σ hCM M J hJ ψ hψ n dx hdx b l hH D hD hD1 lf hlf h1
-  rw [coordW_congr hm l laminf hl b n M] at h
-  exact h
+  rwa [coordW_congr hm l laminf hl b n M] at h
 
 theorem euler_product_of_standard_local_measures (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M : ℕ) (J : Matrix (Fin M) (Fin M) E) (hJ : IsHermND σ J)
     (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ) (n : ℕ) (dx : Measure (Fin n → Fin M → AF F ⊗[F] E))

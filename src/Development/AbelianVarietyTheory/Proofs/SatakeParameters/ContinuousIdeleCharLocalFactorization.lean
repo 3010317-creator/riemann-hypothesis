@@ -74,8 +74,7 @@ theorem eventually_unrAt (χ : Ideles L →* ℂˣ) (hχ : Continuous χ) :
   have h0 : Tendsto (fun v => localIdele L v (x v)) cofinite (𝓝 1) :=
     GlobalTheory.Mem.UnrAe.tendsto_localIdele x hx
   have h1 := (hc.tendsto 1).comp h0
-  have h2 := h1.eventually_lt_const (u := 1 / 2) (by simp)
-  exact h2.mono fun v hv => hx' v hv
+  exact (h1.eventually_lt_const (u := 1 / 2) (by simp)).mono fun v hv => hx' v hv
 
 theorem exists_level (χ : Ideles L →* ℂˣ) (hχ : Continuous χ) (v : HeightOneSpectrum (𝓞 L)) :
     ∃ n : ℕ, ∀ x : (v.adicCompletion L)ˣ,
@@ -157,9 +156,7 @@ theorem tendsto_truncIdele (x : Ideles L) :
     exact tendsto_const_nhds.prodMk_nhds (GlobalTheory.HeckeProduct.tendsto_cut _)
   rw [Units.isEmbedding_embedProduct.tendsto_nhds_iff]
   refine (h x).prodMk_nhds ((MulOpposite.continuous_op.tendsto _).comp ?_)
-  have h2 := h x⁻¹
-  simp only [truncIdele_inv] at h2
-  exact h2
+  simpa only [truncIdele_inv] using h x⁻¹
 
 theorem char_eq_prod_local (χ : Ideles L →* ℂˣ) (hχ : Continuous χ) (x : Ideles L)
     (S : Finset (HeightOneSpectrum (𝓞 L)))

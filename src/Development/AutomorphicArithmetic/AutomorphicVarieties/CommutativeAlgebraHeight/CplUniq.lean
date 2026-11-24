@@ -83,8 +83,7 @@ theorem UpperTheory.Reformulated.B.LevelOfCongruence.cu_ex :
   have hk : ∀ (n : ℕ) (c : C), algebraMap C R c ∈ IsLocalRing.maximalIdeal R ^ n → f c ∈ J ^ n := by
     intro n c hc
     have h1 : c ∈ x ^ n := by
-      rw [← h.comap_pow n]
-      exact hc
+      rwa [← h.comap_pow n]
     exact Ideal.le_comap_pow f n (Ideal.pow_right_mono hx n h1)
   choose g hg using fun n : ℕ => UpperTheory.Reformulated.B.LevelOfCongruence.level (algebraMap C R) f
     (IsLocalRing.maximalIdeal R ^ n) (J ^ n) (h.dense n) (hk n)
@@ -157,8 +156,7 @@ private theorem cu_map {C R : Type} [CommRing C] [CommRing R] [Algebra C R] [IsL
   have h3 : r = algebraMap C R c + (r - algebraMap C R c) := by ring
   rw [h3]
   refine Submodule.add_mem_sup (Ideal.mem_map_of_mem _ h2) ?_
-  rw [smul_eq_mul, ← pow_two]
-  exact hc
+  rwa [smul_eq_mul, ← pow_two]
 
 private theorem cu_equiv {C R S : Type} [CommRing C] [CommRing R] [Algebra C R] [IsLocalRing R]
     [CommRing S] [Algebra C S] [IsLocalRing S] {x : Ideal C}

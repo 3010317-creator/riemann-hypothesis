@@ -121,8 +121,7 @@ theorem map_saturationByPowers_of_flat {A B : Type*} [CommRing A] [CommRing B] [
   have hex : Function.Exact (LinearMap.ker u).subtype u := by
     intro c
     constructor
-    · intro hc
-      exact ⟨⟨c, hc⟩, rfl⟩
+    · exact fun hc => ⟨⟨c, hc⟩, rfl⟩
     · rintro ⟨⟨c, hc⟩, rfl⟩
       exact hc
   have hflat : Function.Exact (LinearMap.lTensor B (LinearMap.ker u).subtype)
@@ -186,8 +185,7 @@ private theorem exists_pow_mul_mem_of_mem_map_away {A B : Type*} [CommRing A] [C
   obtain ⟨p, hp⟩ := m.2
   have hp' : f ^ p = (m : A) := hp
   have h2 : algebraMap A B (x * (m : A)) = algebraMap A B (i : A) := by
-    rw [map_mul]
-    exact hxe
+    rwa [map_mul]
   obtain ⟨cc, hcc⟩ := (IsLocalization.eq_iff_exists (Submonoid.powers f) B).1 h2
   obtain ⟨q, hq⟩ := cc.2
   have hq' : f ^ q = (cc : A) := hq
@@ -267,8 +265,7 @@ private theorem ideal_comap_saturation_of_ideal_eq_span_singleton {Y Y' : Scheme
     exact mem_saturation_ideal_iff F T U t ht w
   have h4 : (F.comap g).ideal V = Ideal.span {algebraMap Γ(Y, U.1) Γ(Y', V.1) t} := by
     rw [halg]
-    have hh := Scheme.IdealSheafData.comap_ideal_eq_span_image F g U V e {t} ht
-    simpa using hh
+    simpa using Scheme.IdealSheafData.comap_ideal_eq_span_image F g U V e {t} ht
   have h5 : (saturation (F.comap g) (T.comap g)).ideal V
       = saturationByPowers ((T.comap g).ideal V) (algebraMap Γ(Y, U.1) Γ(Y', V.1) t) := by
     ext w

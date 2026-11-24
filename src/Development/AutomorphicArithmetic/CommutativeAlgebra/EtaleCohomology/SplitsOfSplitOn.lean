@@ -132,9 +132,7 @@ private lemma splitOn_perm {X Y Z : Scheme.{0}} (p : Z ⟶ Y) (x : X ⟶ Y) {m :
         Sigma.ι (fun _ : Fin m => X) (σ j) := Sigma.ι_reindex_hom σ (fun _ : Fin m => X) j
     rw [Sigma.ι_desc]
     refine Eq.symm ?_
-    refine (Category.assoc _ _ _).symm.trans ?_
-    refine (congrArg (· ≫ _) e1).trans ?_
-    exact Sigma.ι_desc _ _
+    exact (Category.assoc _ _ _).symm.trans ((congrArg (· ≫ _) e1).trans (Sigma.ι_desc _ _))
   rw [e]
   infer_instance
 

@@ -559,8 +559,7 @@ theorem isAdmissibleSplitHeckePrime_conj (h : admitted l P p) : admitted l (P.ma
   obtain ⟨hmax, hcop, hp, hpP, hl⟩ := h
   refine ⟨?_, ?_, hp, ?_, hl⟩
   · exact Ideal.map_isMaximal_of_equiv H.bar (p := P)
-  · rw [GlobalTheory.HeckeDual.map_bar_map_bar, sup_comm]
-    exact hcop
+  · rwa [GlobalTheory.HeckeDual.map_bar_map_bar, sup_comm]
   · have := Ideal.mem_map_of_mem (H.bar : 𝓞 E →+* 𝓞 E) hpP
     rwa [map_natCast] at this
 
@@ -599,8 +598,7 @@ theorem exists_dual (Z : Corr Xo P p i) (h : admitted l P p) : ∃ χ : Z.o₂.t
     have hmem : ((p : 𝓞 E) * p) ∈ Ideal.span {(p : 𝓞 E)} * P.map (H.bar : 𝓞 E →+* 𝓞 E) :=
       Ideal.mul_mem_mul (Ideal.mem_span_singleton_self _) hpb
     have h1 : z ≫ Z.o₁.t.act.act ((p : 𝓞 E) * p) = 1 := hK.2.2.1 hzC _ hmem
-    rw [← Nat.cast_mul, oAct_act_natCast, MonObj.comp_pow, Category.comp_id, ← sq] at h1
-    exact h1
+    rwa [← Nat.cast_mul, oAct_act_natCast, MonObj.comp_pow, Category.comp_id, ← sq] at h1
   obtain ⟨χ, h1, h2, h3⟩ :=
     exists_dual_isogeny E H D l p Z.Hk (Z.π₁ ≫ Xo.s) Z.o₁ Z.o₂ Z.ψ hp hl Z.isog hker
   exact ⟨χ, h1, h2, GlobalTheory.isHecke_dual E H D l P p i Z.Hk _ Z.o₁ Z.o₂ Z.ψ χ h (isHecke Z) h3 h1⟩
@@ -652,8 +650,7 @@ theorem Exch.comp_π₁ {Z : Corr Xo P p i} {Z' : Corr Xo P' p i} {χ : Z.o₂.t
   obtain ⟨c, -⟩ := ((GlobalTheory.ObjMaps.id_comp_cancel _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ Xo.univ Z'.o₁ Z.o₂).2
     Z'.π₁ a Z'.m₁).1 n₁
   have e1 := huniq (a ≫ Z'.π₁) ⟨by rw [Category.assoc]; exact ha1, ⟨c⟩⟩
-  have e2 := huniq Z.π₂ ⟨Z.base₂, ⟨Z.m₂⟩⟩
-  exact e1.trans e2.symm
+  exact e1.trans (huniq Z.π₂ ⟨Z.base₂, ⟨Z.m₂⟩⟩).symm
 
 end GlobalTheory.HkFam.Swap
 

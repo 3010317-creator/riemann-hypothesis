@@ -131,12 +131,10 @@ theorem finF_lin : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D)
     simpa only [zero_smul] using h
   refine ⟨h0, hadd, hsm, fun f g P hf hg => ?_, fun c f P hf => ?_⟩
   · have h := GlobalTheory.FockFiniteHeis.pureTensorO_lin ψ θ (sgn ε M) X hψ hθ (frSgn ε A).cart A.onb B.cart B.onb 1 hf.1 hg.1 P
-    rw [one_smul, one_smul] at h
-    exact h
+    rwa [one_smul, one_smul] at h
   · have h := GlobalTheory.FockFiniteHeis.pureTensorO_lin ψ θ (sgn ε M) X hψ hθ (frSgn ε A).cart A.onb B.cart B.onb c hf.1
       h0.1 P
-    rw [add_zero, GlobalTheory.FockFiniteHeis.pureTensorO_zero ψ θ _ _ hψ hθ, add_zero] at h
-    exact h
+    rwa [add_zero, GlobalTheory.FockFiniteHeis.pureTensorO_zero ψ θ _ _ hψ hθ, add_zero] at h
 
 end GlobalTheory.FinFockLin
 
@@ -205,8 +203,7 @@ theorem eval_injective (ρ : ι → Module.End ℂ Pr) (σ : ι → Module.End �
   let π : R →ₗ[ℂ] Pr := (Finsupp.lapply k₀) ∘ₗ R.subtype
   have πinj : Function.Injective π := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro d hd
-    exact Subtype.ext (inj d.1 d.2 hd)
+    exact fun d hd => Subtype.ext (inj d.1 d.2 hd)
   have mapR : ∀ i, ∀ d ∈ R, Finsupp.mapRange (ρ i) (map_zero _) d ∈ R := by
     intro i d hd
     rw [memR] at hd ⊢
@@ -365,8 +362,7 @@ theorem factorSpace_le (ρ : ι → Module.End ℂ Pr) (σ : ι → Module.End �
   let b := Module.Basis.ofVectorSpace ℂ F'
   let b' : _ → Pr →ₗ[ℂ] Pi := fun k => ((b k : F') : Pr →ₗ[ℂ] Pi)
   obtain ⟨x, hx⟩ : ∃ x, φ x ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hφ' (by rw [show φ = 0 from LinearMap.ext h]; exact F'.zero_mem)
   obtain ⟨t, ht⟩ := ev_surjective ρ σ q' β' S' F' le_rfl hS' hspan' (φ x)
   let E := TensorProduct.equivFinsuppOfBasisRight (M := Pr) b
@@ -380,8 +376,7 @@ theorem factorSpace_le (ρ : ι → Module.End ℂ Pr) (σ : ι → Module.End �
     rw [linearIndependent_option]
     refine ⟨b.linearIndependent.map' F'.subtype F'.ker_subtype, ?_⟩
     change φ ∉ Submodule.span ℂ (Set.range b')
-    rw [hspanb]
-    exact hφ'
+    rwa [hspanb]
   have hv : ∀ o i, v o ∘ₗ ρ i = σ i ∘ₗ v o := by
     rintro (_ | k) i
     · obtain ⟨f, -, h1, -⟩ := hφ
@@ -985,8 +980,7 @@ theorem simpleQuot_iso_of_intertwined : ∀ (ι Fm Q Q' Pi : Type) [AddCommGroup
     rw [map_add (f := _), map_add (f := _), map_add (f := _), hPU _ (hUs i u hu), hPN _ (hN's i n hn), hPU u hu, hPN n hn, add_zero, add_zero]
 
   obtain ⟨f, hf⟩ : ∃ f, P ∘ₗ β f ≠ 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     have hle : ∀ f, LinearMap.range (β f) ≤ N' := by
       rintro f _ ⟨x, rfl⟩
       obtain ⟨u, hu, n, hn, he⟩ := hdec (β f x)
@@ -1000,8 +994,7 @@ theorem simpleQuot_iso_of_intertwined : ∀ (ι Fm Q Q' Pi : Type) [AddCommGroup
     apply hβ₁0
     ext x
     have : β₁ x ∈ U := LinearMap.mem_range_self β₁ x
-    rw [hU0, Submodule.mem_bot] at this
-    exact this
+    rwa [hU0, Submodule.mem_bot] at this
   set γ := P ∘ₗ β f with hγdef
   have hγi : ∀ i, γ ∘ₗ ρ i = σ i ∘ₗ γ := by
     intro i; ext x
@@ -1028,8 +1021,7 @@ theorem simpleQuot_iso_of_intertwined : ∀ (ι Fm Q Q' Pi : Type) [AddCommGroup
       apply hf
       ext x
       have : γ x ∈ LinearMap.range γ := LinearMap.mem_range_self γ x
-      rw [h, Submodule.mem_bot] at this
-      exact this
+      rwa [h, Submodule.mem_bot] at this
   let φ := R.liftQ γ hRγ
   let ψ := R'.liftQ β₁ hkβ₁
   have hφi : Function.Injective φ := LinearMap.ker_eq_bot.1 (Submodule.ker_liftQ_eq_bot _ _ _ hkerγ.le)
@@ -1058,8 +1050,7 @@ theorem simpleQuot_iso_of_intertwined : ∀ (ι Fm Q Q' Pi : Type) [AddCommGroup
   have hb := LinearMap.congr_fun (hβ₁ i) q'
   have hg := LinearMap.congr_fun (hγi i) q
   simp only [LinearMap.comp_apply] at hb hg
-  rw [hb, h2]
-  exact hg
+  rwa [hb, h2]
 
 end GlobalTheory.RealQuot
 end -- clump:auto
@@ -1180,8 +1171,7 @@ theorem twist_quotient_isReal : GlobalTheory.Published.HoweDualityReal → _root
   have nz : ∀ {Fm Q : Type} [AddCommGroup Q] [Module ℂ Q] (β : Fm → Q →ₗ[ℂ] Pi₀), (⨆ f, LinearMap.range (β f)) = ⊤ →
       ∃ f, β f ≠ 0 := by
     intro Fm Q _ _ β h
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have : (⊤ : Submodule ℂ Pi₀) = ⊥ := by
       rw [← h]; exact iSup_eq_bot.2 fun f => by rw [hc f, LinearMap.range_zero]
     exact bot_ne_top this.symm

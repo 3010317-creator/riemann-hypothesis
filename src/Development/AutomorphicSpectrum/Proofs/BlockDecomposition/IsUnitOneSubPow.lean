@@ -84,8 +84,7 @@ theorem exists_universal (q : ℕ) [NeZero q] :
     exact NeZero.ne q (by exact_mod_cast this)⟩
   refine (isRoot_cyclotomic_iff).1 ?_
   have h := AdjoinRoot.eval₂_root (cyclotomic q ℤ)
-  rw [eval₂_eq_eval_map, map_cyclotomic] at h
-  exact h
+  rwa [eval₂_eq_eval_map, map_cyclotomic] at h
 
 theorem X_pow_sub_one_eq {R : Type} [CommRing R] [IsDomain R] (q : ℕ) [NeZero q] {ξ : R}
     (hξ : IsPrimitiveRoot ξ q) :
@@ -95,10 +94,8 @@ theorem X_pow_sub_one_eq {R : Type} [CommRing R] [IsDomain R] (q : ℕ) [NeZero 
   symm
   refine Finset.prod_bij (fun a _ => ξ ^ a.val) ?_ ?_ ?_ ?_
   · intro a _
-    rw [mem_nthRootsFinset hq]
-    rw [← pow_mul, mul_comm, pow_mul, hξ.pow_eq_one, one_pow]
-  · intro a _ b _ h
-    exact ZMod.val_injective q (hξ.pow_inj (ZMod.val_lt a) (ZMod.val_lt b) h)
+    rw [mem_nthRootsFinset hq, ← pow_mul, mul_comm, pow_mul, hξ.pow_eq_one, one_pow]
+  · exact fun a _ b _ h => ZMod.val_injective q (hξ.pow_inj (ZMod.val_lt a) (ZMod.val_lt b) h)
   · intro μ hμ
     rw [mem_nthRootsFinset hq] at hμ
     obtain ⟨i, hi, rfl⟩ := hξ.eq_pow_of_pow_eq_one hμ

@@ -279,8 +279,7 @@ theorem latO_signs : ∀ (D : D7) (r : ℕ) (k : Fin r → Type) [∀ i, Field (
           · simp
           · intro j _ hj
             rw [ite_eq_right (fun h => hj (hinj h).symm), zero_mul]
-          · intro h
-            exact absurd (Finset.mem_univ i) h
+          · exact fun h => absurd (Finset.mem_univ i) h
         · rw [hsupp v hv]
           simp
       rw [hdec]
@@ -598,8 +597,7 @@ theorem isIntM_iff_mem_latO : ∀ (D : D7) (r : ℕ) (k : Fin r → Type) [∀ i
       rw [h1, down_up, ← h1] at h2
       rw [← frMapO_smul]
       have h3 := hy a b
-      rw [h2] at h3
-      exact h3
+      rwa [h2] at h3
 
 end GlobalTheory.HalfInt
 
@@ -920,8 +918,7 @@ theorem exists_den_pr (q : GlobalTheory.FinPl.SplitPt D k) {ΛS : Submodule (�
       rw [Matrix.smul_apply, smul_eq_mul]; ring
     rw [e1, RingHom.map_mul, map_natCast]; exact h1
   have e2 : (M : k) * q.pr (u i j) = q.pr ((M : AE D) * u i j) := by rw [map_mul, map_natCast]
-  rw [e2, q.int_iff, q.sec_pr]
-  exact h2
+  rwa [e2, q.int_iff, q.sec_pr]
 
 theorem toEAf_mem_of_pr (q : GlobalTheory.FinPl.SplitPt D k) {x : AE D} (hx : q.pr x ∈ 𝒪[k]) :
     toEAf D (q.e * x) ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := by
@@ -1501,8 +1498,7 @@ theorem int_of_parPhi {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
   obtain ⟨⟨g, hg, e⟩, h1, h2, h3⟩ := (parPhi_ne_zero_iff δ).1 hz
   rcases i with i | i <;> rcases j with j | j
   · have := intM_of_mem_KO hg i j
-    rw [e] at this
-    exact this
+    rwa [e] at this
   · exact h2 i j
   · exact h1.intM i j
   · exact h3 i j

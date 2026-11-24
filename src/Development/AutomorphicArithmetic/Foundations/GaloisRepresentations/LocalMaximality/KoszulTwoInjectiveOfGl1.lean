@@ -89,8 +89,7 @@ theorem UpperTheory.Gal.productCup_of_system.koszulTwoInjective_of_gl1 :
   have hmem : ∀ j, e j ∈ img e := fun j => by simp [img]
   have hcz : ∀ s : Finset κ, (s.card : ℤ) ≠ d → c s = 0 := by
     intro s hs
-    have h := hc.1 s (Set.mem_univ s)
-    simpa [hs] using h
+    simpa [hs] using hc.1 s (Set.mem_univ s)
   have hcard : ∀ j, (((img e).erase (e j)).card : ℤ) = (d : ℤ) - 1 := by
     intro j
     have := j.pos
@@ -114,8 +113,7 @@ theorem UpperTheory.Gal.productCup_of_system.koszulTwoInjective_of_gl1 :
       rw [ite_eq_right fun h => hb (hinj _ _ h).symm]
     · simp
   have hy0 : ∀ s, (∀ j, s ≠ (img e).erase (e j)) → y s = 0 := by
-    intro s hs
-    exact Finset.sum_eq_zero fun j _ => ite_eq_right (hs j)
+    exact fun s hs => Finset.sum_eq_zero fun j _ => ite_eq_right (hs j)
   have hycard : ∀ s : Finset κ, (s.card : ℤ) ≠ (d : ℤ) - 1 → y s = 0 := by
     intro s hs
     refine hy0 s fun j h => hs ?_

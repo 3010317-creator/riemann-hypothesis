@@ -52,9 +52,7 @@ private theorem lc_mat {Γ S ι : Type} [TopologicalSpace Γ] [Fintype ι] (f : 
   rw [IsLocallyConstant.iff_eventually_eq]
   intro x
   have : ∀ᶠ y in nhds x, ∀ i j, f y i j = f x i j := by
-    simp only [Filter.eventually_all]
-    intro i j
-    exact (h i j).eventually_eq x
+    simpa only [Filter.eventually_all] using fun i j => (h i j).eventually_eq x
   exact this.mono fun y hy => Matrix.ext hy
 
 theorem UpperTheory.V.Ws.sxAdicMat :

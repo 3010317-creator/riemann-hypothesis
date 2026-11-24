@@ -122,10 +122,8 @@ theorem exists_indicator {Y : Scheme.{0}} {Z : Set Y} (hZ : IsClopen Z) :
     simp [V, W]
   obtain ⟨f, hfV, hfW⟩ := exists_extension_zero V W hVW hdis 1
   refine ⟨f, fun x p => ⟨fun hp => ?_, fun hp => ?_⟩⟩
-  · have h := ev_eq_of_restrict x V p hp f 1 (by rw [hfV, Nat.cast_one])
-    simpa using h
-  · have h := ev_eq_of_restrict x W p hp f 0 (by rw [hfW, Nat.cast_zero])
-    simpa using h
+  · simpa using ev_eq_of_restrict x V p hp f 1 (by rw [hfV, Nat.cast_one])
+  · simpa using ev_eq_of_restrict x W p hp f 0 (by rw [hfW, Nat.cast_zero])
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
   {l : Level H} {Xo : Moduli Dw l} {c : Coeff l}
@@ -223,7 +221,6 @@ theorem exists_frPt_liesOn : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hs : s = spMap (algebraMap K ℂ) default := Subsingleton.elim _ _
   have h1 := hxZ default
   rw [← hg] at h1
-  rw [hs]
-  exact h1
+  rwa [hs]
 
 end GlobalTheory.FixedPoint

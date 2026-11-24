@@ -68,8 +68,7 @@ theorem map_mem_nonZeroDivisors_of_iso {A B : CommRingCat.{u}} (e : A ≅ B) {x 
     rw [← h3 y, h4, map_zero]
   rw [mem_nonZeroDivisors_iff]
   refine ⟨key, fun y hy => key y ?_⟩
-  rw [mul_comm]
-  exact hy
+  rwa [mul_comm]
 
 private theorem exists_affineOpen_le (X : Scheme.{u}) (x : X) (W : X.Opens) (hx : x ∈ W) :
     ∃ U : X.affineOpens, x ∈ (U : X.Opens) ∧ (U : X.Opens) ≤ W := by
@@ -88,8 +87,7 @@ private theorem le_preimage_inv_preimage_hom {A B : Scheme.{u}} (e : A ≅ B) (U
   intro y hy
   show e.hom.base (e.inv.base y) ∈ U
   have hb : e.hom.base (e.inv.base y) = y := by simp
-  rw [hb]
-  exact hy
+  rwa [hb]
 
 private noncomputable def sectionsIsoPreimage {A B : Scheme.{u}} (e : A ≅ B) (U : B.Opens) :
     Γ(B, U) ≅ Γ(A, e.hom ⁻¹ᵁ U) where

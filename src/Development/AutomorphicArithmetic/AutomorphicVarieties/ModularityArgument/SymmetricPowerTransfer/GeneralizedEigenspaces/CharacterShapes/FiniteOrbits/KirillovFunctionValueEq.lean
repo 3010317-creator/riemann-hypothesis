@@ -136,8 +136,7 @@ private theorem gl_uniq (V : Lev k) (d : Fin 2 → kˣ) (hd : Dom d) {Y u : GL (
   obtain ⟨p, hp, q, hq, e⟩ := hYu
   have hcomm : ∀ g : GL (Fin 2) k, g * dg (fun _ => z) = dg (fun _ => z) * g := fun g => by
     rw [← scalar_eq]
-    apply Units.ext
-    exact (Matrix.scalar_commute _ (fun r => Commute.all _ r) _).eq.symm
+    exact Units.ext (Matrix.scalar_commute _ (fun r => Commute.all _ r) _).eq.symm
   have h1 : dg (d * fun _ => z) ∈ V.DC d := by
     refine ⟨a⁻¹ * p, mul_mem (inv_mem ha) hp, q * j⁻¹ * b⁻¹, mul_mem (mul_mem hq (inv_mem hj)) (inv_mem hb), ?_⟩
     have : dg (d * fun _ => z) = a⁻¹ * (a * dg d * b * u) * j⁻¹ * b⁻¹ := by
@@ -340,8 +339,7 @@ private theorem fk_uniq (hA : A.Ok) {t : Dat.Par F} (ht : A.Cone t) {g : DA Δ} 
     obtain ⟨z, j, hj, e⟩ := (hm _).1 huv
     have hb := b v hv
     have hbb : eD (A.hs v hv) (y.1 v) * eD (A.hs v hv) (u.1 v) ∈ (A.V v).DC ![t v, 1] := by
-      rw [← map_mul]
-      exact hb
+      rwa [← map_mul]
     exact gl_uniq _ _ (dom_of (val_lt _ (ht v hv))) (a v hv) hbb z j hj e
   · rw [level_two_outside_sigma A v hv]
     exact (mul_mem_cancel_left (a' v hv)).1 (b' v hv)
@@ -366,8 +364,7 @@ theorem UpperTheory.V.Z.Sym.So.kOps :
         have h0 : u.1 v ∈ A.dat.J2v v := Subgroup.mem_comap.1 (Subgroup.mem_iInf.1 hu v)
         simpa using h0⟩
     simp only [map_one, Units.val_one, finprod_one] at h2
-    rw [h2, one_smul] at h1
-    exact h1
+    rwa [h2, one_smul] at h1
   refine ⟨fun t g ht hg φ => ?_, hinv, fun φ hφ z s hs g => ?_⟩
   · have ht' : A.dat.Cone t := (hCone t).2 ht
     have htest := finK_test F Δ A.dat hOk V ch B hB t ht'
@@ -412,7 +409,6 @@ theorem UpperTheory.V.Z.Sym.So.kOps :
           change ((A.dat.χ v (z' v) : ℂˣ) : ℂ) = 1
           rw [hz]
           simp)
-    rw [h2, h3] at h1
-    exact h1
+    rwa [h2, h3] at h1
 
 end

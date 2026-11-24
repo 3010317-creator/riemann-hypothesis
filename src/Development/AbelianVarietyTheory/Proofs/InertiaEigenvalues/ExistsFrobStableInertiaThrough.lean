@@ -93,12 +93,10 @@ theorem inertialEig_inf_iSup_eq_bot (ρ : Representation LL G V) (I : Subgroup G
     have hbT : b ∉ T' := fun h => hb (Finset.mem_insert_of_mem h)
     have ih' := ih hbT
     obtain ⟨g, hg⟩ : ∃ g : I, b g ≠ a0 g := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hba0 (MonoidHom.ext h)
     have hne : ((b g : LLˣ) : LL) - ((a0 g : LLˣ) : LL) ≠ 0 := by
-      intro h
-      exact hg (Units.ext (sub_eq_zero.mp h))
+      exact fun h => hg (Units.ext (sub_eq_zero.mp h))
     set f : V ⊗[Qp] B →ₗ[LL] V ⊗[Qp] B :=
       actVB PC.PD ρ (g : G) - ((a0 g : LLˣ) : LL) • LinearMap.id with hf
     have hfE : ∀ (a : I →* LLˣ) w, w ∈ PC.Eig ρ I a →
@@ -187,8 +185,7 @@ theorem exists_frobStable_inertiaThrough {ι : Type} (ρ : ι → Representation
         apply hu0
         have : u ∈ PC.Eig (ρ x) PC.Iner b ⊓ (⨆ a ∈ S, PC.Eig (ρ x) PC.Iner a) := by
           refine ⟨huE, ?_⟩
-          rw [← (hS x).2.2]
-          exact huD
+          rwa [← (hS x).2.2]
         rw [hbot] at this
         exact (Submodule.mem_bot LL).mp this
       apply Finset.mem_insert_of_mem

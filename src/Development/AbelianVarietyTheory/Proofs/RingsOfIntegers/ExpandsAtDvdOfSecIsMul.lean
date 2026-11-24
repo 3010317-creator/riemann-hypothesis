@@ -75,8 +75,7 @@ theorem appLE_dvd {P T : Scheme.{0}} [IsAffine P] (p : P ⟶ T) (W : T.Opens) (e
     ((gs_eq (𝟙 P) z ⊤ hz _).symm.trans (gs_appLE p W ⊤ e (𝟙 P) z hz c)).trans
       ((by rw [Category.id_comp] : gs (𝟙 P ≫ p) z W c = gs p z W c).trans (gs_stalkMap p z W (e hz) c))
   have := map_dvd (p.stalkMap z).hom (h (p z) (e hz))
-  rw [← k, ← k] at this
-  exact this
+  rwa [← k, ← k] at this
 
 theorem dvd_of_sum {S : Scheme.{0}} (X : Type) [AddCommGroup X] (Y : Over S) {V : Y.left.Opens} (hV : IsAffineOpen V)
     (s : Finset X) (a : Γ(Y.left, V)) (h : X → Γ(Y.left, V))

@@ -62,8 +62,7 @@ namespace GlobalTheory.UPel.HT.EtLev.TanKill
 theorem exists_mem_pow_forall_ne_zero : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (w0 : Ideal (𝓞 D.F)) (r : ℕ), IsEtPlace b w0 → ∀ (k : Type) [Field k] (β : R →+* k), ∃ c ∈ w0 ^ r, ∀ i, β (b.t i c) ≠ 0 := by
   intro p _ D R _ b w0 r hw k _ β
   classical
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   rcases Nat.eq_zero_or_pos D.a with ha | ha
   · obtain ⟨i, -⟩ := hcon 0 (zero_mem _)
     exact (Fin.elim0 (ha ▸ i))
@@ -117,15 +116,13 @@ theorem exists_mem_pow_add_eq_one : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (
     have hmem : D.ω - (r2 : 𝓞 D.F) ∈ w0 := hle (Ideal.subset_span (Set.mem_insert _ _))
     rw [← hker, RingHom.mem_ker, map_sub, map_intCast, hφ, hr2] at hmem
     have hρ : β b.ρ ^ 2 - (D.tr : k) * β b.ρ + (D.nm : k) = 0 := by
-      have h := congrArg β b.ρ_root
-      simpa using h
+      simpa using congrArg β b.ρ_root
     have hd : ((D.tr ^ 2 - 4 * D.nm : ℤ) : k) = 0 := by
       push_cast
       linear_combination (-((D.tr : k) - 2 * β b.ρ)) * hmem - 4 * hρ
     exact D.disc_p ((CharP.intCast_eq_zero_iff k p _).mp hd)
   have hJr : w0 ^ r ⊔ J = ⊤ := by
-    have h := Ideal.isCoprime_iff_sup_eq.mpr hJ
-    exact Ideal.isCoprime_iff_sup_eq.mp h.pow_left
+    exact Ideal.isCoprime_iff_sup_eq.mp (Ideal.isCoprime_iff_sup_eq.mpr hJ).pow_left
   obtain ⟨c, hc, j, hj, hcj⟩ := Submodule.mem_sup.mp (hJr ▸ Submodule.mem_top : (1 : 𝓞 D.F) ∈ w0 ^ r ⊔ J)
   obtain ⟨e, f, hef⟩ := Ideal.mem_span_pair.mp hj
   exact ⟨c, hc, e, f, by rw [add_assoc, hef, hcj]⟩
@@ -192,8 +189,7 @@ theorem core {p : ℕ} [Fact p.Prime] (D : Datum p) {R : Type} [CommRing R] (b :
     rw [← sub_eq_zero, ← h]
     abel
   have hρ : ρ1 ^ 2 - (D.tr : k) * ρ1 + (D.nm : k) = 0 := by
-    have h := congrArg β b.ρ_root
-    simpa using h
+    simpa using congrArg β b.ρ_root
   have hsum : ρ1 + ρ2 = D.tr := by rw [hρ2]; ring
   have hprod : ρ1 * ρ2 = D.nm := by rw [hρ2]; linear_combination (-1 : k) * hρ
   clear_value Tω ρ1 ρ2

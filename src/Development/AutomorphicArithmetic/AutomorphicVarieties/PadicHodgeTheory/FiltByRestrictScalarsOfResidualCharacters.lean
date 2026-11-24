@@ -72,11 +72,9 @@ private theorem reach_step {G A V : Type} [Group G] [CommRing A] [AddCommGroup V
   rcases Nat.lt_succ_iff_lt_or_eq.mp hi with hi | rfl
   · have h1 : i ≤ n := hi.le
     have h2 : i + 1 ≤ n := hi
-    simp only [h1, h2, ite_true]
-    exact hs i hi
+    simpa only [h1, h2, ite_true] using hs i hi
   · have h2 : ¬ (i + 1 ≤ i) := by omega
-    simp only [h2, le_refl, ite_true, ite_false, hn]
-    exact ⟨le_sup_left, κ, hκ, x, rfl, hx⟩
+    simpa only [h2, le_refl, ite_true, ite_false, hn] using ⟨le_sup_left, κ, hκ, x, rfl, hx⟩
 
 private theorem reach_fin {G A V : Type} [Group G] [CommRing A] [AddCommGroup V] [Module A V]
     {ρ : Representation A G V} {S : Set (G →* Aˣ)} {U : Submodule A V} (h : Reach ρ S U)
@@ -94,8 +92,7 @@ private theorem reach_fin {G A V : Type} [Group G] [CommRing A] [AddCommGroup V]
     have e : U ⊔ Submodule.span A (insert a s) = U ⊔ Submodule.span A s ⊔ Submodule.span A {a} := by
       rw [Submodule.span_insert]
       ac_rfl
-    rw [e]
-    exact hr2
+    rwa [e]
 
 theorem UpperTheory.filtBy_restrictScalars_of_residual_characters :
     ∀ {G E B V : Type} [Group G] [Field E] [CommRing B] [Algebra E B] [Module.Finite E B] [AddCommGroup V] [Module B V] [Module E V] [IsScalarTower E B V] (π : B →ₐ[E] E), (∀ a, π a = 0 → IsNilpotent a) → ∀ (ρ : Representation B G V) (S : Set (G →* Eˣ)) {ι : Type} [Finite ι] (x : ι → V) (κ : ι → G →* Eˣ), Submodule.span B (Set.range x) = ⊤ → (∀ j, κ j ∈ S) → (∀ g j, ρ g (x j) - ((κ j g : Eˣ) : E) • x j ∈ (RingHom.ker (π : B →+* E)) • (⊤ : Submodule B V)) → FiltBy (resCoef E ρ) S := by
@@ -103,8 +100,7 @@ theorem UpperTheory.filtBy_restrictScalars_of_residual_characters :
   have hnil : IsNilpotent (RingHom.ker (π : B →+* E)) := by
     haveI : IsNoetherianRing B := isNoetherian_of_tower E inferInstance
     rw [Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian _)]
-    intro a ha
-    exact mem_nilradical.mpr (hπ a ha)
+    exact fun a ha => mem_nilradical.mpr (hπ a ha)
   obtain ⟨N, hN⟩ := hnil
   obtain ⟨M, hM⟩ : ∃ M : ℕ → Submodule E V, ∀ k,
       M k = ((RingHom.ker (π : B →+* E)) ^ k • (⊤ : Submodule B V)).restrictScalars E :=
@@ -137,8 +133,7 @@ theorem UpperTheory.filtBy_restrictScalars_of_residual_characters :
         obtain ⟨j, rfl⟩ := hy
         intro a ha
         have ha' : a ∈ Submodule.span E s := by
-          rw [hs]
-          exact ha
+          rwa [hs]
         clear ha
         induction ha' using Submodule.span_induction with
         | mem b hb => exact Submodule.subset_span ⟨b, hb, j, trivial, rfl⟩
@@ -166,8 +161,7 @@ theorem UpperTheory.filtBy_restrictScalars_of_residual_characters :
         refine Submodule.smul_induction_on hv ?_ ?_
         · intro a ha n _
           exact claim n (by rw [hx]; trivial) a ha
-        · intro y z hy hz
-          exact add_mem hy hz
+        · exact fun y z hy hz => add_mem hy hz
       · refine sup_le ?_ ?_
         · intro v hv
           rw [hMm] at hv ⊢
@@ -177,8 +171,7 @@ theorem UpperTheory.filtBy_restrictScalars_of_residual_characters :
           show a • x j ∈ M p
           rw [hMm]
           exact Submodule.smul_mem_smul (hsub a ha) trivial
-    rw [e]
-    exact hr
+    rwa [e]
   have base : M N = ⊥ := by
     rw [hM, hN, Submodule.zero_eq_bot, Submodule.bot_smul, Submodule.restrictScalars_bot]
   have all : ∀ k, Reach (resCoef E ρ) S (M (N - k)) := by
@@ -193,10 +186,8 @@ theorem UpperTheory.filtBy_restrictScalars_of_residual_characters :
         rw [e] at ih
         exact down _ ih
       · have e : N - (k + 1) = N - k := by omega
-        rw [e]
-        exact ih
+        rwa [e]
   have top : M 0 = ⊤ := by
     rw [hM, pow_zero, Ideal.one_eq_top, Submodule.top_smul, Submodule.restrictScalars_top]
   have fin := all N
-  rw [Nat.sub_self, top] at fin
-  exact fin
+  rwa [Nat.sub_self, top] at fin

@@ -163,8 +163,7 @@ theorem exists_basis_isUnit_det_of_isLocalization {k : Type*} [Field k] {ι : Ty
   have instFormallyEtale : Algebra.FormallyEtale (MvPolynomial ι k) S' :=
     Algebra.FormallyEtale.comp (MvPolynomial ι k) S S'
   refine ⟨EtaleCoordinates.basisKaehler k ι S', ?_⟩
-  rw [← EtaleCoordinates.algebraMap_det_basisKaehler k ι S S' v]
-  exact h
+  rwa [← EtaleCoordinates.algebraMap_det_basisKaehler k ι S S' v]
 
 theorem notMem_basicOpen_of_mem_primeIdealOf {X : Scheme.{u}} {U : X.Opens}
     (hU : IsAffineOpen U) {x : X} (hx : x ∈ U) (f : Γ(X, U))
@@ -174,8 +173,7 @@ theorem notMem_basicOpen_of_mem_primeIdealOf {X : Scheme.{u}} {U : X.Opens}
     hU.fromSpec_primeIdealOf ⟨x, hx⟩
   have h2 : hU.primeIdealOf ⟨x, hx⟩ ∈ hU.fromSpec ⁻¹ᵁ X.basicOpen f := by
     show hU.fromSpec.base (hU.primeIdealOf ⟨x, hx⟩) ∈ X.basicOpen f
-    rw [h1]
-    exact hmem
+    rwa [h1]
   rw [hU.fromSpec_preimage_basicOpen] at h2
   exact (PrimeSpectrum.mem_basicOpen f _).mp h2 hf
 
@@ -197,8 +195,7 @@ theorem mem_support_of_ideal_le_primeIdealOf {X : Scheme.{u}} (D : X.IdealSheafD
     (hU : IsAffineOpen U) {x : X} (hx : x ∈ U)
     (h : D.ideal ⟨U, hU⟩ ≤ (hU.primeIdealOf ⟨x, hx⟩).asIdeal) : x ∈ D.support := by
   rw [mem_support_iff_stalkIdeal_le_maximalIdeal, stalkIdeal_eq_map_germ D x ⟨U, hU⟩ hx]
-  refine le_trans (Ideal.map_mono h) ?_
-  exact le_of_eq (map_germ_primeIdealOf_eq_maximalIdeal hU hx)
+  exact le_trans (Ideal.map_mono h) (le_of_eq (map_germ_primeIdealOf_eq_maximalIdeal hU hx))
 
 private theorem appLE_top_eq_topIso_inv {X₁ : Scheme.{u}} (V : X₁.Opens)
     (e : (⊤ : (V.toScheme).Opens) ≤ V.ι ⁻¹ᵁ V) :
@@ -224,12 +221,8 @@ theorem ideal_eq_span_image_map_of_le {X : Scheme.{u}} (D : X.IdealSheafData) {U
     D.ideal ⟨U', hU'⟩ = Ideal.span ((X.presheaf.map (homOfLE h).op).hom '' s) := by
   have hU'aff : IsAffine U'.toScheme := hU'
   have htop : IsAffineOpen (⊤ : (U'.toScheme).Opens) := isAffineOpen_top U'.toScheme
-  have e2 : (⊤ : (U'.toScheme).Opens) ≤ U'.ι ⁻¹ᵁ U' := by
-    intro x _
-    exact x.2
-  have e1 : (⊤ : (U'.toScheme).Opens) ≤ U'.ι ⁻¹ᵁ U := by
-    intro x _
-    exact h x.2
+  have e2 : (⊤ : (U'.toScheme).Opens) ≤ U'.ι ⁻¹ᵁ U' := fun x _ => x.2
+  have e1 : (⊤ : (U'.toScheme).Opens) ≤ U'.ι ⁻¹ᵁ U := fun x _ => h x.2
   have key1 : (D.comap U'.ι).ideal ⟨⊤, htop⟩
       = Ideal.map (U'.ι.appLE U ⊤ e1).hom (D.ideal ⟨U, hU⟩) :=
     D.comap_ideal_eq_map_appLE U'.ι ⟨U, hU⟩ ⟨⊤, htop⟩ e1
@@ -293,8 +286,7 @@ theorem exists_etaleCharts_of_inStrictNormalCrossingPosition_cons {X : Scheme.{u
     refine ⟨fun hn => ?_, fun j hs => ?_⟩
     · exact restrictIdeal_eq_top_of_le (N[i]'hi) hVU₁ (hnone₁ i hi hn)
     · exact restrictIdeal_eq_restrict_coordIdeal_of_le hVU₁ c₁ (N[i]'hi) {j} (hsome₁ i hi j hs)
-  · intro i i' hi hi' j h h'
-    exact hinj₁ i hi i' hi' j h h'
+  · exact fun i i' hi hi' j h h' => hinj₁ i hi i' hi' j h h'
   · intro i hi
     have hi' : i + 1 < (H :: N).length := by
       simp only [List.length_cons]
@@ -503,8 +495,7 @@ theorem ringHom_etale_of_formallyEtale {X : Scheme.{u}} {k : Type u} [Field k]
       Algebra.adjoin_le Algebra.subset_adjoin
     exact hle hx
   have hFP : Algebra.FinitePresentation (MvPolynomial (ULift.{u} (Fin m)) k) Γ(X, V) := by
-    rw [← Algebra.FinitePresentation.of_finiteType]
-    exact hFTp
+    rwa [← Algebra.FinitePresentation.of_finiteType]
   have hEt : @Algebra.Etale (MvPolynomial (ULift.{u} (Fin m)) k) Γ(X, V) _ _ instP :=
     ⟨hf, hFP⟩
   exact hEt
@@ -642,8 +633,7 @@ theorem exists_etaleChart_update_coord {X : Scheme.{u}} {k : Type u} [Field k]
           (algebraMap Γ(X, U) Γ(X, X.basicOpen g) (v i)) := by
       funext i
       rw [hw i]
-    rw [hfun]
-    exact he
+    rwa [hfun]
   have instFSV : Algebra.FormallySmooth k Γ(X, X.basicOpen g) :=
     formallySmooth_sections k p (X.basicOpen g) hVaff
       (algebraMap_sectionsAlgebra k p (X.basicOpen g))
@@ -732,9 +722,7 @@ theorem hasStrictNormalCrossingsWith_cons_of_le {X : Scheme.{u}} {k : Type u} [F
   have hNVcoord : ∀ (i : ℕ) (hi : i < N.length) (t : Fin m), lab i = some t →
       restrictIdeal (N[i]'hi) V = c2.coordIdeal {t} := by
     intro i hi t hlt
-    have htj : t ≠ j := by
-      intro hcon
-      exact hjlab i hi (by rw [hlt, hcon])
+    have htj : t ≠ j := fun hcon => hjlab i hi (by rw [hlt, hcon])
     have hUeq : restrictIdeal (N[i]'hi) U = c.coordIdeal {t} := (hlab i hi).2 t hlt
     have hideal : (N[i]'hi).ideal ⟨U, hU⟩ = Ideal.span ({c.coord t} : Set Γ(X, U)) :=
       ideal_eq_span_coord_of_restrictIdeal_eq hU c (N[i]'hi) t hUeq
@@ -746,8 +734,7 @@ theorem hasStrictNormalCrossingsWith_cons_of_le {X : Scheme.{u}} {k : Type u} [F
     exact restrictIdeal_eq_coordIdeal_of_ideal_eq_span hV c2 (N[i]'hi) {t} hspanV
   have hNVtop : ∀ (i : ℕ) (hi : i < N.length), lab i = none →
       restrictIdeal (N[i]'hi) V = ⊤ := by
-    intro i hi hn
-    exact restrictIdeal_eq_top_of_le (N[i]'hi) hVU ((hlab i hi).1 hn)
+    exact fun i hi hn => restrictIdeal_eq_top_of_le (N[i]'hi) hVU ((hlab i hi).1 hn)
   obtain ⟨relab, hnl0, hnls⟩ :
       ∃ nl : ℕ → Option (Fin m), nl 0 = some j ∧ ∀ i : ℕ, nl (i + 1) = lab i :=
     ⟨fun i => if i = 0 then some j else lab (i - 1), by simp, fun i => by simp⟩

@@ -417,9 +417,7 @@ theorem GlobalTheory.Hk3.SysE.matched_keeps_eigen : ∀ {D : D7} {G : Type} [Gro
   have hX01 := (GlobalTheory.DefiniteOps.definite_ops R F hC.lev hC.fam hC.models).1 t
   rcases hX01 with ⟨hX, hXo, hXn⟩
   have comm : ∀ y, R.Th t (hX P cX y) = h P c0 (R.Th t y) := by
-    intro y
-    apply injE
-    exact (hM y (hX P cX y) (hXo P hg cX y)).trans (hh P hg c0 (R.Th t y)).symm
+    exact fun y => injE ((hM y (hX P cX y) (hXo P hg cX y)).trans (hh P hg c0 (R.Th t y)).symm)
   have eX : LinearMap.adjoint (hX P cX) = hX P (dualC (Finsupp.mapRange star (star_zero ℂ) cX)) := hXn.2 P hg cX
   have cX' : Commute (hX P cX) (hX P (dualC (Finsupp.mapRange star (star_zero ℂ) cX))) := hXn.1 P P hg hg _ _
   have nX : Commute (hX P cX) (LinearMap.adjoint (hX P cX)) :=
@@ -560,13 +558,11 @@ theorem transfer_good {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type}
       have h4 := funext (w1 (D.R.m - 1) (by omega) k)
       simp only [hmm] at h4
       rw [funext (w0 k), ← hX] at h4
-      simp only [h4]
-      exact h3
+      simpa only [h4] using h3
     · have h3 := step_match (ν := ν j) (s := s j) (hC.chain.ωY t j hj) hP (unrPl_step (u2 (j + 1) (by omega) hj.le) u1)
         (unrPl_step (v2 (j + 1) (by omega) hj.le) v1) he h1 h2 hx (hY _ (by omega)) (hY _ hj.le)
         (hn j) hq rfl rfl (W (j + 1) k)
-      simp only [funext (w1 j (by omega) k)]
-      exact h3
+      simpa only [funext (w1 j (by omega) k)] using h3
   · have h3 := chain_poly q D.R.t D.R.m (fun j => D.R.r + j * D.R.t) hn ν s W w0 w1 D.R.m 0 (zero_add _) a
     rw [hX, hY 0 (Nat.zero_le _), h3]
 

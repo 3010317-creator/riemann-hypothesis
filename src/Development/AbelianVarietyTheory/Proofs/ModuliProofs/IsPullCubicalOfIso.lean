@@ -125,8 +125,7 @@ theorem isPullCubical_of_iso (hG : Out.GlobalFnsSt) {S : Scheme.{0}} {G' G : Ove
       rw [vp] at v
       have eq : (lift (1 : 𝟙_ (Over S) ⟶ G) 1) ≫ faceMap G 0 = lift 1 (lift 1 1) := by
         simp [faceMap, x2, pzero, comp_lift, Hom.one_def]
-      rw [← Over.comp_left, eq] at v
-      exact v
+      rwa [← Over.comp_left, eq] at v
     have b₂ : val c'.t (lift (1 : 𝟙_ (Over S) ⟶ G') (lift 1 1)).left y J' = 1 := by
       have v := val_corr hJ' (c'.face 0) (lift (1 : 𝟙_ (Over S) ⟶ G') 1).left
       rw [val_one] at v
@@ -134,8 +133,7 @@ theorem isPullCubical_of_iso (hG : Out.GlobalFnsSt) {S : Scheme.{0}} {G' G : Ove
       rw [vp] at v
       have eq : (lift (1 : 𝟙_ (Over S) ⟶ G') 1) ≫ faceMap G' 0 = lift 1 (lift 1 1) := by
         simp [faceMap, x2, pzero, comp_lift, Hom.one_def]
-      rw [← Over.comp_left, eq] at v
-      exact v
+      rwa [← Over.comp_left, eq] at v
     have b₃ := prod_cub (1 : 𝟙_ (Over S) ⟶ G') 1 1 (fun ψ => gw w₁ ψ y (J (ψ ≫ α.left)) (J' ψ))
     refine Eq.trans ((congrArg (fun q => val (L := L.L) (φ := thφ G (x3 G)) (ε := thε) c.t q y J) a₁).trans b₁)
       (Eq.symm ?_)

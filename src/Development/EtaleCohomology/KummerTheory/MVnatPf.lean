@@ -70,8 +70,7 @@ theorem conn_pull (hD : Dict) {R : Type} [CommRing R] (F : Shv R) {W U V X W' U'
   obtain ⟨s, z, hs, hz, e1, e2⟩ := h
   refine ⟨Sec.res hu s, Sec.res hx z, ?_, ?_, ?_, ?_⟩
   · have := (hD R (res R F) W n).2.2.2.2 hw w _ hs
-    rw [res_res, ea, ← res_res]
-    exact this
+    rwa [res_res, ea, ← res_res]
   · exact (hD R (res R F) X (n + 1)).2.2.2.2 hx x _ hz
   · rw [res_res, ef, ← res_res, e1, map_res]
   · rw [res_res, eg, ← res_res, e2]
@@ -80,8 +79,7 @@ theorem conn_pull (hD : Dict) {R : Type} [CommRing R] (F : Shv R) {W U V X W' U'
 theorem unop_nat {K : Type 1} [Category.{0} K] {A B : K ⥤ Scheme.{0}ᵒᵖ} (φ : A ⟶ B) {k k' : K} (h : k ⟶ k') :
     (φ.app k').unop ≫ (A.map h).unop = (B.map h).unop ≫ (φ.app k).unop := by
   have := congrArg Quiver.Hom.unop (φ.naturality h)
-  rw [unop_comp, unop_comp] at this
-  exact this
+  rwa [unop_comp, unop_comp] at this
 
 theorem MVnat_of (hD : Dict) (hΔ : Delta) (hE : Exact) : MVnat := by
   intro R _ F K _ X U V W f g a b hM

@@ -175,8 +175,7 @@ theorem polZero_relV : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
       obtain ⟨w, hw⟩ := w
       by_cases hwv : w = v
       · subst hwv
-        simp only [Function.update_self]
-        exact hpv i
+        simpa only [Function.update_self] using hpv i
       · simp only [Function.update_of_ne hwv]
     simp only [e, add_neg_cancel]
 
@@ -335,8 +334,7 @@ theorem polZero_om_fin : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     intro x hx
     have e := hM.fin.equiv v h hh x.1 x.2 0 (zero_mem _) (D x.1 x.2) (hDSB x.1 x.2) 0 (zero_mem _) (hDA x.1 x.2) hA0
       (by rw [map_zero]; exact hx)
-    rw [map_zero] at e
-    exact e
+    rwa [map_zero] at e
   let L : Rf.Pi v →ₗ[ℂ] Rf.Pi v := GlobalTheory.ThK.RealUniq.induced π hsurj Dl hD
   let ψ : Fin m → (Fin a × Fin (a + a') → Fv F v) → ℂ := fun i => D (φ i v) ((hf i).2.1 v)
   have hL : ∀ i, L (Rf.p v (φ i v)) = Rf.p v (ψ i) := fun i =>
@@ -359,13 +357,10 @@ theorem polZero_om_fin : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   refine ⟨insert v T, hXT.trans hTS, m, f, φ₂, fun i => ⟨(hf i).1, fun w => ?_, fun w hw => ?_⟩, ?_, ?_⟩
   · by_cases hwv : w = v
     · subst hwv
-      simp only [φ₂, Function.update_self]
-      exact hDSB _ _
-    · simp only [φ₂, Function.update_of_ne hwv]
-      exact (hf i).2.1 w
+      simpa only [φ₂, Function.update_self] using hDSB _ _
+    · simpa only [φ₂, Function.update_of_ne hwv] using (hf i).2.1 w
   · rw [Finset.mem_insert, not_or] at hw
-    simp only [φ₂, Function.update_of_ne hw.1]
-    exact (hf i).2.2 w hw.2
+    simpa only [φ₂, Function.update_of_ne hw.1] using (hf i).2.2 w hw.2
 
   · rw [map_sum]
     exact Finset.sum_congr rfl fun i _ => hpure i
@@ -386,8 +381,7 @@ theorem polZero_om_fin : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     funext u
     by_cases hu : u = ⟨v, hv⟩
     · subst hu
-      simp only [Lw, φ₂, Function.update_self]
-      exact (hL i).symm
+      simpa only [Lw, φ₂, Function.update_self] using (hL i).symm
     · have hu' : u.1 ≠ v := fun e => hu (Subtype.ext e)
       simp only [Lw, φ₂, Function.update_of_ne hu, Function.update_of_ne hu', LinearMap.id_apply]
 

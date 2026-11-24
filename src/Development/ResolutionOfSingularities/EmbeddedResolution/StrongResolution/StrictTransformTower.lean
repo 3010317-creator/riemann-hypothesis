@@ -78,8 +78,7 @@ def strictTransformMapOfLE {a b : ℕ} (h : a ≤ b) : S.strictTransform b ⟶ S
     (𝟙 (S.strictTransform a)) (fun n _ f => S.strictTransformMap n ≫ f) h
 
 @[simp] theorem strictTransformMapOfLE_self (a : ℕ) :
-    S.strictTransformMapOfLE (le_refl a) = 𝟙 (S.strictTransform a) := by
-  exact Nat.leRec_self ..
+    S.strictTransformMapOfLE (le_refl a) = 𝟙 (S.strictTransform a) := Nat.leRec_self ..
 
 private theorem strictTransformMapOfLE_succ_of_le (T : EmbeddedBlowupSequence k Y pY) {a b : ℕ} (h : a ≤ b)
     {h' : a ≤ b + 1} :
@@ -124,9 +123,7 @@ private theorem exists_iso_of_coprodIso_of_isInitial {A B Z : Scheme.{u}} (hB : 
     (w : A ⨿ B ≅ Z) :
     ∃ e : A ≅ Z, e.hom = (coprod.inl : A ⟶ A ⨿ B) ≫ w.hom := by
   obtain ⟨u, hu⟩ := exists_iso_coprod_of_isInitial (A := A) (B := B) hB
-  refine ⟨u ≪≫ w, ?_⟩
-  show u.hom ≫ w.hom = (coprod.inl : A ⟶ A ⨿ B) ≫ w.hom
-  exact congrArg (fun t => t ≫ w.hom) hu
+  exact ⟨u ≪≫ w, congrArg (fun t => t ≫ w.hom) hu⟩
 
 private theorem comp_inv_comp_hom_cancel {A B C D E : Scheme.{u}} (f : A ⟶ B) (g : B ⟶ C)
     (h : C ⟶ E) (i : D ≅ E) :
@@ -273,11 +270,9 @@ private theorem detachedCoprod_hom_ext_forall (W : EmbeddedBlowupSequence k Y pY
         intro s hs
         have h := hf s (Nat.lt_succ_of_lt hs)
         rw [W.detachedToCoprod_succ_of_lt s i hs] at h
-        simp only [Category.assoc] at h
-        exact h
+        simpa only [Category.assoc] using h
       · have h := hf i (Nat.lt_succ_self i)
-        rw [W.detachedToCoprod_self i] at h
-        exact h
+        rwa [W.detachedToCoprod_self i] at h
 
 theorem detachedCoprod_hom_ext (i : ℕ) {T : Scheme.{u}} {f g : S.detachedCoprod i ⟶ T}
     (hf : ∀ s (hs : s < i), S.detachedToCoprod s i hs ≫ f = S.detachedToCoprod s i hs ≫ g) : f = g :=
@@ -295,8 +290,7 @@ def totalMapOfLE {a b : ℕ} (h : a ≤ b) : S.totalSpace b ⟶ S.totalSpace a :
     (𝟙 (S.totalSpace a)) (fun n _ f => S.totalTransition n ≫ f) h
 
 @[simp] theorem totalMapOfLE_self (a : ℕ) :
-    S.totalMapOfLE (le_refl a) = 𝟙 (S.totalSpace a) := by
-  exact Nat.leRec_self ..
+    S.totalMapOfLE (le_refl a) = 𝟙 (S.totalSpace a) := Nat.leRec_self ..
 
 theorem totalMapOfLE_succ {a b : ℕ} (h : a ≤ b) :
     S.totalMapOfLE (h.trans (Nat.le_succ b)) = S.totalTransition b ≫ S.totalMapOfLE h := by
@@ -304,8 +298,7 @@ theorem totalMapOfLE_succ {a b : ℕ} (h : a ≤ b) :
 
 private theorem totalMapOfLE_succ_of_le (T : EmbeddedBlowupSequence k Y pY) {a b : ℕ} (h : a ≤ b)
     {h' : a ≤ b + 1} :
-    T.totalMapOfLE h' = T.totalTransition b ≫ T.totalMapOfLE h := by
-  exact Nat.leRec_succ ..
+    T.totalMapOfLE h' = T.totalTransition b ≫ T.totalMapOfLE h := Nat.leRec_succ ..
 
 theorem inl_totalMapOfLE {a b : ℕ} (h : a ≤ b) :
     (coprod.inl : S.strictTransform b ⟶ S.totalSpace b) ≫ S.totalMapOfLE h =
@@ -352,8 +345,7 @@ def detachedCoprodMapOfLE {a b : ℕ} (h : a ≤ b) : S.detachedCoprod a ⟶ S.d
     (𝟙 (S.detachedCoprod a)) (fun n _ f => f ≫ S.detachedCoprodInl n) h
 
 @[simp] theorem detachedCoprodMapOfLE_self (a : ℕ) :
-    S.detachedCoprodMapOfLE (le_refl a) = 𝟙 (S.detachedCoprod a) := by
-  exact Nat.leRec_self ..
+    S.detachedCoprodMapOfLE (le_refl a) = 𝟙 (S.detachedCoprod a) := Nat.leRec_self ..
 
 theorem detachedCoprodMapOfLE_succ {a b : ℕ} (h : a ≤ b) :
     S.detachedCoprodMapOfLE (h.trans (Nat.le_succ b)) = S.detachedCoprodMapOfLE h ≫ S.detachedCoprodInl b := by

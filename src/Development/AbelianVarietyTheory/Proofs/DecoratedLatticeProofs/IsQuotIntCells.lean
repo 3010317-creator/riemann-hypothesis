@@ -165,8 +165,7 @@ theorem isQuotInt_cells : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
         f t / (((volCell ν μX p J t).toReal : ℝ) : ℂ) else 0 := by
       funext x
       simp only [F, QuotientGroup.eq]
-    rw [hFeq]
-    exact this
+    rwa [hFeq]
   have hFint : ∫ x, F x ∂μG =
       ∑ t ∈ T, ((((μG J).toReal / (volCell ν μX p J t).toReal : ℝ) : ℂ)) * f t := by
     have hind : ∀ t : GL (n ⊕ Fin c) k,

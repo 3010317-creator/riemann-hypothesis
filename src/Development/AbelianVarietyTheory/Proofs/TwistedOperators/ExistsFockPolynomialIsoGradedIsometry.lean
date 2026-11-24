@@ -135,10 +135,8 @@ theorem fockIp_ren (hs : ∀ v, s v * conj (s v) = 1) (P Q : MvPolynomial ι ℂ
     rw [mem_support_iff] at hk ⊢
     rw [coeff_ren]
     exact mul_ne_zero (hp k) hk
-  · intro k' _
-    exact hback k'
-  · intro k _
-    exact hfwd k
+  · exact fun k' _ => hback k'
+  · exact fun k _ => hfwd k
   · intro k' _
     have hF : ((k'.prod fun _ e => e.factorial : ℕ) : ℂ) =
         (((k'.mapDomain σ.symm).prod fun _ e => e.factorial : ℕ) : ℂ) := by

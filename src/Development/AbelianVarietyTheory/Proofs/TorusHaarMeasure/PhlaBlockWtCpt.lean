@@ -128,12 +128,9 @@ theorem curv_and_margin :
     obtain ⟨h1, h2, h3⟩ := hd τ
     have hab' : (b : ℕ) < a := hab
     rcases coeff_cases X.p0 hab' (la τ a : ℝ) (la τ b : ℝ) with ⟨h, e⟩ | ⟨h, e⟩ | ⟨h, h', e⟩
-    · refine le_of_le_of_eq ?_ e.symm
-      exact sub_nonneg.2 (Int.cast_le.2 (h1 b a (le_of_lt hab) h))
-    · refine le_of_le_of_eq ?_ e.symm
-      exact sub_nonneg.2 (Int.cast_le.2 (h2 b a h (le_of_lt hab)))
-    · refine le_of_le_of_eq ?_ e.symm
-      exact sub_nonneg.2 (Int.cast_le.2 (h3 b a h h'))
+    · exact le_of_le_of_eq (sub_nonneg.2 (Int.cast_le.2 (h1 b a (le_of_lt hab) h))) e.symm
+    · exact le_of_le_of_eq (sub_nonneg.2 (Int.cast_le.2 (h2 b a h (le_of_lt hab)))) e.symm
+    · exact le_of_le_of_eq (sub_nonneg.2 (Int.cast_le.2 (h3 b a h h'))) e.symm
   · obtain ⟨x1, D, ho, hinj, hD⟩ := htr r X x0 z hz
     show 0 < leviM X (phla X la) x0 z ξ
     rw [hD, hdiag r X la x1 ho]
@@ -144,20 +141,16 @@ theorem curv_and_margin :
       obtain ⟨h1, h2, h3⟩ := hd τ
       have hab' : (b : ℕ) < a := hab
       rcases coeff_cases X.p0 hab' (la τ a : ℝ) (la τ b : ℝ) with ⟨h, e⟩ | ⟨h, e⟩ | ⟨h, h', e⟩
-      · refine lt_of_lt_of_eq ?_ e.symm
-        exact sub_pos.2 (Int.cast_lt.2 (h1 b a hab h))
-      · refine lt_of_lt_of_eq ?_ e.symm
-        exact sub_pos.2 (Int.cast_lt.2 (h2 b a h hab))
-      · refine lt_of_lt_of_eq ?_ e.symm
-        exact sub_pos.2 (Int.cast_lt.2 (h3 b a h h'))
+      · exact lt_of_lt_of_eq (sub_pos.2 (Int.cast_lt.2 (h1 b a hab h))) e.symm
+      · exact lt_of_lt_of_eq (sub_pos.2 (Int.cast_lt.2 (h2 b a h hab))) e.symm
+      · exact lt_of_lt_of_eq (sub_pos.2 (Int.cast_lt.2 (h3 b a h h'))) e.symm
     have hne : D ξ ≠ 0 := fun h => hξ (hinj (h.trans (map_zero D).symm))
     obtain ⟨k, hk⟩ := Function.ne_iff.1 hne
     refine Finset.sum_pos' (fun e _ => mul_nonneg (hpos e).le (by positivity))
       ⟨(Fintype.equivFin (Ent X)).symm k, Finset.mem_univ _, mul_pos (hpos _) ?_⟩
     have hkk : (Fintype.equivFin (Ent X)) ((Fintype.equivFin (Ent X)).symm k) = k :=
       Equiv.apply_symm_apply (Fintype.equivFin (Ent X)) k
-    refine pow_pos (norm_pos_iff.2 fun h => hk ?_) 2
-    exact (congrArg (D ξ) hkk).symm.trans h
+    exact pow_pos (norm_pos_iff.2 fun h => hk ((congrArg (D ξ) hkk).symm.trans h)) 2
   · intro r X la m h1 h2 h3 x0 ho z hz ξ
     obtain ⟨x1, D, ho1, -, hD⟩ := htr r X x0 z hz
     rw [leviRh_eq X x0 ho hz, leviO, hD, hD, hdiag r X la x1 ho1, hdiag r X _ x1 ho1,

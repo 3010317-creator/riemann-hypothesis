@@ -89,16 +89,14 @@ theorem exists_extend_of_pow_denom {R A L : Type} [CommRing R] [CommRing A] [IsD
     have := key (r * s) (X r * X s) (d ^ T r * d ^ T s) (by
       rw [map_mul, map_mul, map_mul, ← hXT r, ← hXT s]; ring)
     rw [map_mul, map_mul] at this
-    rw [div_mul_div_comm, eq_div_iff (mul_ne_zero (hp _) (hp _))]
-    exact this
+    rwa [div_mul_div_comm, eq_div_iff (mul_ne_zero (hp _) (hp _))]
   · have := key 0 0 1 (by simp)
     simpa using this
   · intro r s
     have := key (r + s) (X r * d ^ T s + d ^ T r * X s) (d ^ T r * d ^ T s) (by
       rw [map_add (f := _), map_add (f := _), map_mul, map_mul, map_mul, ← hXT r, ← hXT s]; ring)
     rw [map_add (f := _), map_mul, map_mul, map_mul] at this
-    rw [div_add_div _ _ (hp _) (hp _), eq_div_iff (mul_ne_zero (hp _) (hp _))]
-    exact this
+    rwa [div_add_div _ _ (hp _) (hp _), eq_div_iff (mul_ne_zero (hp _) (hp _))]
 
 theorem openChart_regular_away :
     ∀ (K Ω O A : Type) [Field K] [Field Ω] [Algebra K Ω] [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CommRing A] [IsDomain A] [Algebra O A] (io : K →+* FractionRing O) (gens : Finset Ω) (e : Ω) (α : Ω →+* FractionRing A) (eb : A) (ϖ : O), Irreducible ϖ → e ≠ 0 → algebraMap A (FractionRing A) eb = α e → (∀ (k : K) (a b : O), io k * algebraMap O _ b = algebraMap O _ a → α (algebraMap K Ω k) * algebraMap A _ (algebraMap O A b) = algebraMap A _ (algebraMap O A a)) → (∀ g ∈ gens, α g ∈ Set.range (algebraMap A (FractionRing A))) → (∀ r ∈ Algebra.adjoin K (insert e⁻¹ (gens : Set Ω)), ∃ (x : A) (t : ℕ), α r * algebraMap A _ ((algebraMap O A ϖ * eb) ^ t) = algebraMap A _ x) ∧ ∀ (L : Type) [Field L] (φ : A →+* L), φ (algebraMap O A ϖ * eb) ≠ 0 → ∃ ψ : Algebra.adjoin K (insert e⁻¹ (gens : Set Ω)) →+* L, ∀ (r : Algebra.adjoin K (insert e⁻¹ (gens : Set Ω))) (x s : A), α r * algebraMap A _ s = algebraMap A _ x → ψ r * φ s = φ x := by

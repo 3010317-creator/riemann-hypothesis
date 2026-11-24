@@ -137,8 +137,7 @@ private lemma one_le_factorial_mul_exp_div_pow (k : ℕ) (hk : 1 ≤ k) :
   have h := Real.pow_div_factorial_le_exp (x := (k : ℝ)) (Nat.cast_nonneg k) k
   have hfac : (0 : ℝ) < k.factorial := by exact_mod_cast k.factorial_pos
   rw [div_le_iff₀ hfac] at h
-  rw [mul_comm]
-  exact h
+  rwa [mul_comm]
 
 theorem one_le_ratio_mul (f k : ℕ) (v L : ℝ) (hv : 0 < v) (hk : 1 ≤ k) (hL : ((2 : ℝ) ^ f)⁻¹ ≤ L) :
     1 ≤ (((k - 1).factorial : ℝ) * (v / Real.pi) ^ k) ^ f / Real.sqrt ((2 * v) ^ f) * L *
@@ -411,13 +410,11 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
       · intro H v hv
         obtain ⟨u, w, rfl⟩ := hdec v
         have := H w ((mB' w).2 ⟨u, hv⟩)
-        rw [map_add (f := _), LinearMap.add_apply, horth, zero_add]
-        exact this
+        rwa [map_add (f := _), LinearMap.add_apply, horth, zero_add]
       · intro H w hw
         obtain ⟨u, hu⟩ := (mB' w).1 hw
         have := H _ hu
-        rw [map_add (f := _), LinearMap.add_apply, horth, zero_add] at this
-        exact this
+        rwa [map_add (f := _), LinearMap.add_apply, horth, zero_add] at this
     have hgen := hg B' hBB' hB'fg
     obtain ⟨a, ha⟩ := (mB' (g B')).1
       (hgen.ge (Submodule.mem_sup_right (Submodule.mem_span_singleton_self _)))
@@ -425,8 +422,7 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
       rw [hAd, dualBasic_mem_dual]
       intro u hu
       have := hL.2 _ ((mA u).1 hu) _ ha
-      rw [map_add (f := _), horth, add_zero] at this
-      exact this
+      rwa [map_add (f := _), horth, add_zero] at this
     refine ⟨(dual (hRes h (perp h U)) B', Submodule.Quotient.mk ⟨a, haA⟩), ⟨⟨?_, ?_⟩, trivial⟩, ?_⟩
     · intro w hw
       rw [mC, dualBasic_mem_dual]
@@ -631,8 +627,7 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
       unfold lamMax
       refine finprod_mem_of_eqOn_one fun P _ => ?_
       have : (qIn P : ℝ) + 1 ≠ 0 := by positivity
-      simp only [hj, pow_one, sub_neg_eq_add, Pi.one_apply]
-      exact div_self this
+      simpa only [hj, pow_one, sub_neg_eq_add, Pi.one_apply] using div_self this
     rw [hc V h hs hp hj M₀ hM₀, this, mul_one]
   obtain ⟨mono, hconst, -⟩ := _root_.GlobalTheory.Mass.OrbMono.main (isom h) (Submodule (𝓞 K) V)
   have key : ∀ n : ℕ, orbMass (isom h) (latsDisc (R := 𝓞 K) h n) ≤ orbSum (isom h) (genus h M₀)
@@ -715,8 +710,7 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
   rw [ENNReal.ofReal_natCast]
   have a4 := ENat.toENNReal_le.2 a3
   rw [ENat.toENNReal_coe] at a4
-  refine le_trans (le_of_eq ?_) a4
-  exact (map_sum ENat.toENNRealRingHom _ _).symm
+  exact le_trans (le_of_eq (map_sum ENat.toENNRealRingHom _ _).symm) a4
 
 end GlobalTheory.Mass.LineMass
 end -- clump:auto
@@ -931,8 +925,7 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
       discN (hRes h U) M = p.1 ^ 2 ∧ p.1 ∣ de
   let f : ℕ × Finset (Ideal (𝓞 K)) → Submodule K V := fun I => if hI : ∃ U, Q I U then hI.choose else ⊥
   have hf : ∀ I, (∃ U, Q I U) → Q I (f I) := fun I hI => by
-    simp only [f, dite_eq_left hI]
-    exact hI.choose_spec
+    simpa only [f, dite_eq_left hI] using hI.choose_spec
   let A : Finset (ℕ × Finset (Ideal (𝓞 K))) :=
     ((Finset.Icc 1 de).sigma T).map ⟨fun x => (x.1, x.2), by
       rintro ⟨a, b⟩ ⟨c, d⟩ e
@@ -1001,8 +994,7 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
       have hd0 : p.1 ≠ 0 := by intro h0; rw [h0] at hi; omega
       have := space_mass hMM K U0 (hRes h U0) hK hsU0 hpU0 (hU0 ▸ hj) V₁ h₁ hs₁ I₁ (hU0 ▸ hI₁) M0 hM0
         (de ^ 2) i hi0 (by rw [hd, hi]; ring)
-      rw [hd, hU0, real_eq _ _ _ _ _ hd0 hi0, ← hi] at this
-      exact this
+      rwa [hd, hU0, real_eq _ _ _ _ _ hd0 hi0, ← hi] at this
     calc _ ≤ ∑ p ∈ A.filter fun I => ∃ U, Q I U,
           orbMass (isom (hRes h (f p))) (latsDisc (R := 𝓞 K) (hRes h (f p)) (de ^ 2)) :=
           Finset.sum_image_le_of_nonneg (fun _ _ => zero_le)
@@ -1122,8 +1114,7 @@ theorem orbMass_stabilizer_le (K V : Type) [Field K] [NumberField K] [StarRing K
     refine ⟨⟨k1, h4⟩, (memB _).2 ⟨k2, ?_, ?_⟩⟩
     · exact Nat.one_le_iff_ne_zero.2
         (_root_.GlobalTheory.Mass.DiscOrder.main K (perp h U) _ hK hs2 (pd_nondeg _ hp2) _ k2).1
-    · rw [h2, h4] at k3
-      exact k3
+    · rwa [h2, h4] at k3
   have fY : ∀ p ∈ A ×ˢ B, Finite (MulAction.stabilizer (MulAction.stabilizer (isom h) U) p) := by
     rintro p ⟨h1, h2⟩
     haveI := fA _ h1
@@ -1134,8 +1125,7 @@ theorem orbMass_stabilizer_le (K V : Type) [Field K] [NumberField K] [StarRing K
       (fun γ => (⟨(φ γ.1).1, congrArg Prod.fst γ.2⟩, ⟨(φ γ.1).2, congrArg Prod.snd γ.2⟩)) ?_
     intro a b e
     apply Subtype.ext
-    apply φ.injective
-    exact Prod.ext (congrArg (fun q => q.1.1) e) (congrArg (fun q => q.2.1) e)
+    exact φ.injective (Prod.ext (congrArg (fun q => q.1.1) e) (congrArg (fun q => q.2.1) e))
   have e1 := _root_.GlobalTheory.Mass.orbMass_eq_orbSum_fibre (MulAction.stabilizer (isom h) U) _ _ X (A ×ˢ B)
     (fun L : Submodule (𝓞 K) V => (latIn U L, latIn (perp h U) L))
     (fun γ L => Prod.ext (hφ γ L).1 (hφ γ L).2) sX sY mp fY
@@ -1326,8 +1316,7 @@ theorem main : ∀ (D : D7) (large₂ : SizeData₂ D) (u u' : D.what₂.Word) (
     have h3 : ((Lat.Tu D u : ℕ) : 𝓞 D.host.E) •
         (Submodule.Quotient.mk ⟨x, hx⟩ : ↥(dual h L) ⧸ L.comap (dual h L).subtype) = 0 :=
       e.injective (by rw [map_smul, h1, map_zero])
-    rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero, Submodule.mem_comap] at h3
-    exact h3
+    rwa [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero, Submodule.mem_comap] at h3
   have hU := GlobalTheory.Mass.StdMass.main _ hK
   have hT0 : ((Lat.Tu D u : ℕ) : 𝓞 D.host.E) ≠ 0 := by exact_mod_cast hTp.ne_zero
   have hnorm : Ideal.absNorm (Ideal.span {((Lat.Tu D u : ℕ) : 𝓞 D.host.E)}) = t ^ 2 := by

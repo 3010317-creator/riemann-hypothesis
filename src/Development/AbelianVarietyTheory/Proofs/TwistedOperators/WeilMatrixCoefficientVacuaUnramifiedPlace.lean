@@ -221,8 +221,7 @@ theorem GlobalTheory.InertHomIdx.idx_moved_inert : ∀ (D : D7) (S T : HSp D) (v
       refine ⟨c₀⁻¹ • (a.1 * Y * (b⁻¹ : GL (Fin S.rank) (w.adicCompletion D.host.E)).1), (hX _).2 ?_, ?_⟩
       · show c₀ • ((a⁻¹ : GL (Fin T.rank) (w.adicCompletion D.host.E)).1 * (c₀⁻¹ • (a.1 * Y * (b⁻¹ : GL (Fin S.rank) (w.adicCompletion D.host.E)).1)) * b.1) ∈ _
         simp only [Matrix.mul_smul, Matrix.smul_mul, smul_smul, mul_inv_cancel₀ hc₀, one_smul, ← Matrix.mul_assoc, Units.inv_mul, Matrix.one_mul]
-        rw [Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
-        exact hY
+        rwa [Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
       · show c₀ • ((a⁻¹ : GL (Fin T.rank) (w.adicCompletion D.host.E)).1 * (c₀⁻¹ • (a.1 * Y * (b⁻¹ : GL (Fin S.rank) (w.adicCompletion D.host.E)).1)) * b.1) = Y
         simp only [Matrix.mul_smul, Matrix.smul_mul, smul_smul, mul_inv_cancel₀ hc₀, one_smul, ← Matrix.mul_assoc, Units.inv_mul, Matrix.one_mul]
         rw [Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
@@ -368,8 +367,7 @@ theorem relIndex_half_act : ∀ (D : D7) (S T : HSp D) (v : HeightOneSpectrum (�
     constructor
     · rintro ⟨h, -⟩ i j
       exact GlobalTheory.SplitHecke.isInt_Ov.1 ((hc u hu').1 h i j)
-    · intro h
-      exact ⟨(hc u hu').2 fun i j => GlobalTheory.SplitHecke.isInt_Ov.2 (h i j), hu⟩
+    · exact fun h => ⟨(hc u hu').2 fun i j => GlobalTheory.SplitHecke.isInt_Ov.2 (h i j), hu⟩
   have hmt1 : Formalism.L2.Theta.mt S (1 : GA D S)⁻¹ = 1 := by
     rw [inv_one]; unfold Formalism.L2.Theta.mt; rw [map_one]; rfl
   have hA : ∀ u, Ψ (actL S T g u) = P * Ψ u := by
@@ -421,8 +419,7 @@ theorem relIndex_half_act : ∀ (D : D7) (S T : HSp D) (v : HeightOneSpectrum (�
       exact (hmemH w w.2).1 (AddSubgroup.mem_addSubgroupOf.1 hw)
     · intro hy
       obtain ⟨w, hw⟩ := hf_surj y
-      refine ⟨w, AddSubgroup.mem_addSubgroupOf.2 ((hmemH w w.2).2 ?_), hw⟩
-      exact hw ▸ hy
+      exact ⟨w, AddSubgroup.mem_addSubgroupOf.2 ((hmemH w w.2).2 (hw ▸ hy)), hw⟩
   have e2 : (((halfLat S T ε).map (actL S T g)).addSubgroupOf Hf).map f =
       (intMat D.host.F v T.rank S.rank).map (mulL P) := by
     ext y
@@ -634,8 +631,7 @@ theorem actL_of_killed {g : GA D T} {r : AE D}
   have h : @HMul.hMul (Matrix (Fin T.rank) (Fin T.rank) (AE D)) (Matrix (Fin T.rank) (Fin S.rank) (AE D))
       (Matrix (Fin T.rank) (Fin S.rank) (AE D)) _ (Formalism.L2.Theta.mt T g - 1) x = 0 := by
     rw [← (mem_half S T).1 hx, Matrix.mul_smul, ← Matrix.smul_mul, hr, Matrix.zero_mul]
-  rw [Matrix.sub_mul, Matrix.one_mul, sub_eq_zero] at h
-  exact h
+  rwa [Matrix.sub_mul, Matrix.one_mul, sub_eq_zero] at h
 
 theorem rest_idem {R : Type} [CommRing R] {e f r : R} (he : e * e = e) (hf : f * f = f) (hef : e * f = 0)
     (hr : r = 1 - e - f) :
@@ -669,8 +665,7 @@ theorem split_index {Λ : AddSubgroup (WO S T)} {g : GA D T} {ε c r : AE D}
     refine AddSubgroup.ext fun y => ⟨?_, fun hy => ⟨y, hy, actL_of_killed hkill (AddSubgroup.mem_inf.1 hy).2⟩⟩
     rintro ⟨x, hx, rfl⟩
     rwa [actL_of_killed hkill (AddSubgroup.mem_inf.1 hx).2]
-  rw [hid, AddSubgroup.relIndex_self, mul_one] at key
-  exact key
+  rwa [hid, AddSubgroup.relIndex_self, mul_one] at key
 
 
 open GlobalTheory.SplitScalar GlobalTheory.FinWeil GlobalTheory.WeilParts in
@@ -713,8 +708,7 @@ theorem idx_dec : ∀ (D : D7) (S T : HSp D) (ε : AE D), IsSplitIdem D ε → �
       refine AddSubgroup.ext fun u => ⟨?_, ?_⟩
       · rintro ⟨x, ⟨y, hy, rfl⟩, rfl⟩
         refine ⟨(y : WO S T), ?_, rfl⟩
-        rw [hΛ]
-        exact hy
+        rwa [hΛ]
       · rintro ⟨w, hw, rfl⟩
         rw [hΛ] at hw
         exact ⟨GlobalTheory.FinWeilO.rhoF S T (1, g) (XF.mk w (latO_fin hw)), ⟨XF.mk w (latO_fin hw), hw, rfl⟩, rfl⟩
@@ -862,14 +856,12 @@ theorem half_index : ∀ (D : D7) (S T : HSp D) (v : HeightOneSpectrum (𝓞 D.h
   have hK : ∀ x ∈ KGL w (n := T.rank),
       Matrix.GeneralLinearGroup.map (ψ.symm : w.adicCompletion D.host.E →+* Fv D.host.F v) x ∈ KGL v (n := T.rank) := by
     intro x hx
-    rw [GlobalTheory.LFun.SplitTie.mem_KGL_iff hψ, hback]
-    exact hx
+    rwa [GlobalTheory.LFun.SplitTie.mem_KGL_iff hψ, hback]
   have hunif : IsUnifV D.host.F v (ψ.symm ϖ) := by
     have h1 := hψ (ψ.symm ϖ)
     rw [RingEquiv.apply_symm_apply] at h1
     show Valued.v _ = _
-    rw [← h1]
-    exact hϖ
+    rwa [← h1]
   have hdiag : (Matrix.GeneralLinearGroup.map (ψ.symm : w.adicCompletion D.host.E →+* Fv D.host.F v) t).1 =
       Matrix.diagonal (fun i => ψ.symm ϖ ^ d i) := by
     ext i j
@@ -921,8 +913,7 @@ theorem index_moved_split : ∀ (D : D7) (S T : HSp D) (v : HeightOneSpectrum (�
     · simp [hij, Ne.symm hij]
   have hunif : IsUnifV D.host.E w' (c ϖ) := by
     show Valued.v (c ϖ) = _
-    rw [hc]
-    exact hϖ
+    rwa [hc]
   have hsym : e.symm (k₁ * t * k₂) = (e.trans (GlobalTheory.LFun.ConjPlace.invT c T.rank)).symm
       (GlobalTheory.LFun.ConjPlace.invT c T.rank k₁ * GlobalTheory.LFun.ConjPlace.invT c T.rank t *
         GlobalTheory.LFun.ConjPlace.invT c T.rank k₂) := by
@@ -1112,8 +1103,7 @@ theorem natCast_mem_of_prime_dvd_absNorm {K : Type} [Field K] [NumberField K]
     rw [← nsmul_eq_mul, ← hx]
     exact addOrderOf_nsmul_eq_zero x
   have h2 : (q : RingOfIntegers K ⧸ w.asIdeal) = 0 := (mul_eq_zero.mp h1).resolve_right hx0
-  rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
-  exact h2
+  rwa [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
 
 end GlobalTheory.NatCastMemOfPrimeDvdNorm
 end -- clump:auto

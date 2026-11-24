@@ -55,8 +55,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.evalBasis_pf :
     obtain ⟨f, hf0, hf⟩ := Submodule.exists_le_ker_of_lt_top _ (lt_top_iff_ne_top.2 hne)
     obtain ⟨v, rfl⟩ := (Module.evalEquiv ℂ W).surjective f
     have hv : (v : V) = 0 := hsep v fun x => by
-      have h := hf (Submodule.subset_span (Set.mem_range_self x))
-      simpa [r] using h
+      simpa [r] using hf (Submodule.subset_span (Set.mem_range_self x))
     have hv0 : v = 0 := Subtype.ext hv
     exact hf0 (by simp [hv0])
   obtain ⟨b, hbs, hbspan, hli⟩ := exists_linearIndependent ℂ (Set.range r)

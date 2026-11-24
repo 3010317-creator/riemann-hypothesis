@@ -66,8 +66,7 @@ theorem symm_mem_sm (R : RealDat D A Ks) (X : Formalism.L2.SG.HidaSetting.HidaSe
   have : (c τ).symm (y : X.B.H (X.pl.symm τ)) = w := by
     rw [← hwy]
     exact (c τ).symm_apply_apply w
-  rw [this]
-  exact hw
+  rwa [this]
 
 def vecOf (R : RealDat D A Ks) (X : Formalism.L2.SG.HidaSetting.HidaSetting D)
     (c : ∀ τ, (MP R).H τ ≃ₗᵢ⋆[ℂ] X.B.H (X.pl.symm τ)) (y : ∀ τ, Wsub R X c τ) : (MP R).Vec :=
@@ -92,8 +91,7 @@ namespace GlobalTheory.RowEvalHH
 theorem tensT_inner {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (a b : ∀ τ, X.B.H (X.pl.symm τ)) :
     ⟪tensT X a, tensT X b⟫_ℂ = ∏ τ, ⟪a τ, b τ⟫_ℂ := by
   unfold tensT
-  rw [X.B.tens_spec.1]
-  rw [← Equiv.prod_comp X.pl.symm]
+  rw [X.B.tens_spec.1, ← Equiv.prod_comp X.pl.symm]
   simp only [Equiv.piCongrLeft_apply_apply]
 
 theorem tensT_dense {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) :

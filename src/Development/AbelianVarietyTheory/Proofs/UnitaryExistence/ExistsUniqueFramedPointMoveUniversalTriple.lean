@@ -120,10 +120,8 @@ theorem carried_generator_unique {S : Type} [CommRing S] {ρ : Xo.X ⟶ Xo.X} (�
     refine Set.mem_iInter.2 fun _ => ?_
     have h1 : (pm ≫ (snd (Over.mk (x ≫ ρ)) Xo.univ.t.G).left).base z ∈ (Xo.univ.t.PP.L.U i : Set _) :=
       Set.mem_iInter.1 hz 0
-    rw [hs] at h1
-    exact h1
-  · intro j
-    exact h i j _ rfl (hW j)
+    rwa [hs] at h1
+  · exact fun j => h i j _ rfl (hW j)
 
 theorem frMove_unique {S : Type} [CommRing S] [Algebra c.F S] {ρ : Xo.X ⟶ Xo.X}
     (ν : SABMap Xo.univ.t Xo.univ.t ρ) (hw : ∀ w w', CubIso ν w → CubIso ν w' → w = w')
@@ -195,8 +193,7 @@ theorem sec_trans_one {Z : Scheme.{0}} {p : Y ⟶ X} (s : LB.Sec (pullOne L p)) 
     gs r z ((pullOne L p).U (fun _ => j)) (s.f (fun _ => j)) =
       (gm (r ≫ p) z _ (L.g j j')).val * gs r z ((pullOne L p).U (fun _ => j')) (s.f (fun _ => j')) := by
   have := sec_trans s r z (j := fun _ => j) (j' := fun _ => j') (mem_pullOne.2 hj) (mem_pullOne.2 hj')
-  rw [trF, Fin.prod_univ_one, zpow_one] at this
-  exact this
+  rwa [trF, Fin.prod_univ_one, zpow_one] at this
 
 theorem exists_carry (hL : L.IsLB) (hL' : L'.IsLB) (p : Y ⟶ X) (p' : Y' ⟶ X') (q : Y ⟶ Y')
     (U : ∀ j i, Γ(Y, p ⁻¹ᵁ L.U j ⊓ q ⁻¹ᵁ p' ⁻¹ᵁ L'.U i)ˣ)
@@ -379,8 +376,7 @@ theorem exists_isTanAt {w : Sp (DualNumber S) ⟶ Xo.univ.t.G.left} (h : IsTanAt
 theorem isEigAt_iff [Algebra c.F S] (τ : E →+* ℂ) {v : Sp (DualNumber S) ⟶ Xo.univ.t.G.left} (h : IsTanAt x v) :
     IsEigAt c τ (v ≫ ν.φ) ↔ IsEigAt c τ v := by
   refine forall_congr' fun a => ⟨fun k => ν.cart.1.hom_ext ?_ ?_, fun k => ?_⟩
-  · rw [Category.assoc, ν.act, ← Category.assoc, Category.assoc _ v]
-    exact k
+  · rwa [Category.assoc, ν.act, ← Category.assoc, Category.assoc _ v]
   · rw [Category.assoc, Over.w, Category.assoc, h.1, ← Category.assoc, eps_alg]
   · rw [Category.assoc, ← ν.act, ← Category.assoc, k, Category.assoc]
 

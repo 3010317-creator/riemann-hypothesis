@@ -67,8 +67,7 @@ private theorem iwLev_loc : IsOpen (AlgebraTools.iwC k n C : Set (GL (Fin n) k))
       GlobalTheory.StepData.isOpen_KOne
   refine ⟨hopen, ?_, hle⟩
   refine IsCompact.of_isClosed_subset GlobalTheory.SplitFlip.isCompact_KO (Subgroup.isClosed_of_isOpen _ hopen) ?_
-  intro g hg
-  exact GlobalTheory.SmGL.iwahori_le_KO k (Fin n) ((h1 g).1 hg).1
+  exact fun g hg => GlobalTheory.SmGL.iwahori_le_KO k (Fin n) ((h1 g).1 hg).1
 
 private theorem iwLev_conj {x g : GL (Fin n) k} (hx : x ∈ AlgebraTools.iwC k n C) (hg : g ∈ AlgebraTools.iwC k n ⊤) :
     g * x * g⁻¹ ∈ AlgebraTools.iwC k n C := by
@@ -86,10 +85,8 @@ theorem UpperTheory.V.Hi.levelUR2IwLev :
   have hle : Pa.UIw1 l n w ≤ Pa.UIw n w := by
     intro g hg
     simp only [Pa.UIw, Pa.UIw1, Subgroup.mem_pi] at hg ⊢
-    intro j hj
-    exact (iwLev_loc _ n _).2.2 (hg j hj)
+    exact fun j hj => (iwLev_loc _ n _).2.2 (hg j hj)
   rw [Subgroup.normal_subgroupOf_iff hle]
   intro h g hh hg
   simp only [Pa.UIw, Pa.UIw1, Subgroup.mem_pi] at hh hg ⊢
-  intro j hj
-  exact iwLev_conj _ n _ (hh j hj) (hg j hj)
+  exact fun j hj => iwLev_conj _ n _ (hh j hj) (hg j hj)

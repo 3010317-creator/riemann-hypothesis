@@ -81,8 +81,7 @@ theorem pureL_insert {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F
   have hmem : X ∈ intOff b S ↔
       X ∈ intOff b (insert v S) ∧ projV v (projFin X) ∈ latV b v := by
     constructor
-    · intro h
-      exact ⟨fun w hw => h w (fun hs => hw (Finset.mem_insert_of_mem hs)), h v hv⟩
+    · exact fun h => ⟨fun w hw => h w (fun hs => hw (Finset.mem_insert_of_mem hs)), h v hv⟩
     · rintro ⟨h1, h2⟩ w hw
       by_cases hwv : w = v
       · subst hwv; exact h2
@@ -160,8 +159,7 @@ theorem exists_isEulerProd : ∀ (F E : Type) [Field F] [NumberField F] [Field E
           simp only [φ1, Function.update_of_ne hne]
       have hL : ∫⁻ X, φ1 v X ∂(m v (hermOf (Fv F v) σ T hT)) =
           m v (hermOf (Fv F v) σ T hT) (latV b v) := by
-        simp only [φ1, Function.update_self]
-        exact lintegral_indicator_one hlatm
+        simpa only [φ1, Function.update_self] using lintegral_indicator_one hlatm
       have hB : ∀ w, ∫⁻ X, φ0 w X ∂(m w (hermOf (Fv F w) σ T hT)) =
           m w (hermOf (Fv F w) σ T hT) (B w) := fun w => lintegral_indicator_one (hBm w)
       have hA : ∫⁻ X, A.indicator (1 : (Fin n → Fin M → Ainf F ⊗[F] E) → ℝ≥0∞) X ∂(minf (hermOf (Ainf F) σ T hT)) =
@@ -178,8 +176,7 @@ theorem exists_isEulerProd : ∀ (F E : Type) [Field F] [NumberField F] [Field E
       have e4 : (c S : ℝ≥0∞) * (a * Q) = ((c (insert v S) : ℝ≥0∞) * L) * (a * Q) := by
         rw [e2]; ring
       have e5 := (ENNReal.mul_left_inj hP0 hPt).mp e4
-      have e6 := congrArg ENNReal.toReal e5
-      simpa [ENNReal.toReal_mul] using e6
+      simpa [ENNReal.toReal_mul] using congrArg ENNReal.toReal e5
     obtain ⟨c₀, S₀, -, hS₀⟩ := _root_.GlobalTheory.CompanionTheory.SW.TailConst.exists_const_mul_tail _ (fun v => (m v (hermOf (Fv F v) σ T hT) (latV b v)).toReal) c ∅
       (fun _ => ENNReal.toReal_nonneg) hsum hstep
     refine ⟨c₀, hfin, hsum, S₀, fun S hS φinf φ hφi hφ => ?_⟩

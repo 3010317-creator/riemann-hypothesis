@@ -215,8 +215,7 @@ theorem hasDerivAt_orbit (hσ : IsURepOn (UJset ε) σ) (hD : IsDer ε σ V E)
     have e : s + (t - s) = t := by ring
     rw [e] at h
     rw [h, ContinuousLinearMap.mul_apply]
-  rw [key]
-  exact h1
+  rwa [key]
 
 private theorem two_mul_sq_add_abs_mul_sq_le_sq (n c T w : ℝ) (hn : 0 ≤ n) (hT : 0 ≤ T) :
     (2 * n * T ^ 2 + |c|) * w ^ 2 ≤ ((2 * n + |c| + 1) * (T + 1) * w) ^ 2 := by
@@ -296,8 +295,7 @@ private theorem exp_smul_mem_closure_cyc_of_small [CompleteSpace H] (hσ : IsURe
       have h2 := ((innerSL ℂ y).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt s h
       have e : act E X (((act E X) ^ m) x) = ((act E X) ^ (m + 1)) x := by
         rw [pow_succ', Module.End.mul_apply]
-      rw [← e]
-      exact h2
+      rwa [← e]
     have h0' : ∀ m : ℕ,
         ⟪y, σ (NormedSpace.exp (((0 : ℝ) : ℂ) • X)) ((((act E X) ^ m) x : V) : H)⟫_ℂ = 0 := by
       intro m
@@ -317,20 +315,17 @@ private theorem exp_smul_mem_closure_cyc_of_small [CompleteSpace H] (hσ : IsURe
     have h := chain_zero
       (fun m s => ⟪y, σ (NormedSpace.exp ((s : ℂ) • X)) ((((act E X) ^ m) x : V) : H)⟫_ℂ)
       C (B + j) (‖y‖ * ‖x‖) t hC (by positivity) ht hlt hd' h0' hM'
-    simp only [pow_zero, Module.End.one_apply] at h
-    exact h
+    simpa only [pow_zero, Module.End.one_apply] using h
   have hMM : ∀ z ∈ M, σ (NormedSpace.exp ((t : ℂ) • X)) z ∈ M.topologicalClosure := by
     intro z hz
     obtain ⟨x, hx, rfl⟩ := Submodule.mem_map.mp hz
     rw [← Submodule.orthogonal_orthogonal_eq_closure, Submodule.mem_orthogonal]
-    intro y hy
-    exact hvan y hy x hx
+    exact fun y hy => hvan y hy x hx
   have hcl : M.topologicalClosure ≤
       M.topologicalClosure.comap (σ (NormedSpace.exp ((t : ℂ) • X))).toLinearMap :=
     Submodule.topologicalClosure_minimal M (fun z hz => hMM z hz)
       (M.isClosed_topologicalClosure.preimage (σ _).continuous)
-  intro v hv
-  exact hcl hv
+  exact fun v hv => hcl hv
 
 theorem exp_stable [CompleteSpace H] (hσ : IsURepOn (UJset ε) σ) (hD : IsDer ε σ V E)
     {μ : Fin n → ℝ} {c : ℝ} {u : V} (hu : KHighest ε E μ u)
@@ -343,8 +338,7 @@ theorem exp_stable [CompleteSpace H] (hσ : IsURepOn (UJset ε) σ) (hD : IsDer 
   have hNpos : (0 : ℝ) < N := lt_of_le_of_lt (mul_nonneg hC (Real.exp_pos 1).le) hN
   have hδ : C * (1 / (N : ℝ)) * Real.exp 1 < 1 := by
     have e : C * (1 / (N : ℝ)) * Real.exp 1 = C * Real.exp 1 / N := by ring
-    rw [e, div_lt_one hNpos]
-    exact hN
+    rwa [e, div_lt_one hNpos]
   have hstep := exp_smul_mem_closure_cyc_of_small hσ hD hX hB hC hgr (by positivity) hδ
   have hk : ∀ k : ℕ, ∀ v ∈ ((cyc E u).map V.subtype).topologicalClosure,
       σ (NormedSpace.exp ((((k : ℝ) * (1 / (N : ℝ)) : ℝ) : ℂ) • X)) v ∈
@@ -365,8 +359,7 @@ theorem exp_stable [CompleteSpace H] (hσ : IsURepOn (UJset ε) σ) (hD : IsDer 
   intro v hv
   have h := hk N v hv
   have e : (N : ℝ) * (1 / (N : ℝ)) = 1 := by field_simp
-  rw [e, Complex.ofReal_one, one_smul] at h
-  exact h
+  rwa [e, Complex.ofReal_one, one_smul] at h
 
 theorem cyc_dense : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (V : Submodule ℂ H) (E : Fin n → Fin n → Module.End ℂ V) (μ : Fin n → ℝ) (c : ℝ) (u : V), IsURepOn (UJset ε) σ → IsDer ε σ V E → IsIrredOn (UJset ε) σ → u ≠ 0 → KHighest ε E μ u → FiniteDimensional ℂ (kSpan ε E u) → Cas E u = (c : ℂ) • u → Dense (((cyc E u).map V.subtype : Submodule ℂ H) : Set H) := by
   intro n ε H _ _ _ σ V E μ c u hσ hD hirr hu0 hu hfd hc
@@ -377,12 +370,10 @@ theorem cyc_dense : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCom
     obtain ⟨Z, Y, hZ, hY, rfl⟩ := genExp n ε g hg
     have hZ' : NormedSpace.exp Z ∈ UJset ε := by
       have h1 := expUJ n ε Z hZ.1 1
-      rw [Complex.ofReal_one, one_smul] at h1
-      exact h1
+      rwa [Complex.ofReal_one, one_smul] at h1
     have hY' : NormedSpace.exp Y ∈ UJset ε := by
       have h1 := expUJ n ε Y hY.1 1
-      rw [Complex.ofReal_one, one_smul] at h1
-      exact h1
+      rwa [Complex.ofReal_one, one_smul] at h1
     rw [hσ.1.2 _ hZ' _ hY', ContinuousLinearMap.comp_apply]
     exact exp_stable hσ hD hu hfd hc hZ.1 _ (exp_stable hσ hD hu hfd hc hY.1 v hv)
   rcases hirr _ (Submodule.isClosed_topologicalClosure _) hstab with h | h
@@ -596,8 +587,7 @@ theorem form_eq_zero_of_casK (V : Type) [NormedAddCommGroup V] [InnerProductSpac
     apply Subtype.ext
     apply indexArray_ext
     intro α
-    have h' := congrArg (fun f => ((f α : kSpan ε E u) : V)) h
-    simpa [φ, arrOf] using h'
+    simpa [φ, arrOf] using congrArg (fun f => ((f α : kSpan ε E u) : V)) h
   haveI : CompleteSpace (arrV0 ε E u (j + 1)) := FiniteDimensional.complete ℂ _
   let f : arrV0 ε E u (j + 1) →L[ℂ] ℂ := LinearMap.toContinuousLinearMap (T ∘ₗ (arrV0 ε E u (j + 1)).subtype)
   let G0 : arrV0 ε E u (j + 1) := (InnerProductSpace.toDual ℂ (arrV0 ε E u (j + 1))).symm f
@@ -663,11 +653,9 @@ theorem form_eq_zero_of_casK (V : Type) [NormedAddCommGroup V] [InnerProductSpac
       obtain ⟨p, hp, m, hm, hpmE⟩ := Submodule.mem_sup.mp hP
       have hmm : ⟪m, m⟫_ℂ = 0 := by
         have h1 := hperp m hm
-        rw [← hpmE, inner_add_left, hpm p hp m hm, zero_add] at h1
-        exact h1
+        rwa [← hpmE, inner_add_left, hpm p hp m hm, zero_add] at h1
       rw [inner_self_eq_zero] at hmm
-      rw [← hpmE, hmm, add_zero]
-      exact hp
+      rwa [← hpmE, hmm, add_zero]
     · rw [slice_eq_zero_of_compact hGW α' hα]
       exact zero_mem _
   have hN : G ∈ Nset ε E (LamOf ε lam) u j := by
@@ -994,8 +982,7 @@ theorem isKTypeOf_lowKSub : ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n →
         exact orth_of_ne hK hR (hk1 _ _ (hx i).2.1 (hx i).2.2 hfi) hμ w hw _ ⟨y, hy, rfl⟩
     exact hle hj
   have : lowKSub ε lam σ = S := le_antisymm (sSup_le fun T hT => (huniq T hT).le) (le_sSup hS)
-  rw [this]
-  exact hS
+  rwa [this]
 
 end GlobalTheory.Jet.MultGap
 end -- clump:auto

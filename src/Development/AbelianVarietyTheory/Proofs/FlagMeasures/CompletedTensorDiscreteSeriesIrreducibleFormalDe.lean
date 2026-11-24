@@ -209,8 +209,7 @@ theorem rel_dense (hd : 0 < d) (T : Set H) (hT : Dense T)
       rw [← ofReal_integral_eq_lintegral_ofReal (hint v w) (ae_of_all _ fun g => by positivity)] at this
       exact (ENNReal.ofReal_le_ofReal_iff (by positivity)).1 this
     apply le_of_sq_le_sq _ (by positivity)
-    rw [e2, div_pow, mul_pow, Real.sq_sqrt hd.le]
-    exact e3
+    rwa [e2, div_pow, mul_pow, Real.sq_sqrt hd.le]
   have hsplit : ∀ v w v0 w0, C v w - C v0 w0 = C (v - v0) w + C v0 (w - w0) := by
     intro v w v0 w0
     simp only [C]

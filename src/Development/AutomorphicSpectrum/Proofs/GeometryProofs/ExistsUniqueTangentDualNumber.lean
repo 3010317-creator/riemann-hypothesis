@@ -56,8 +56,7 @@ theorem comp_one_over {S : Scheme.{0}} {X Y M : Over S} [GrpObj M] (u : Y ⟶ X)
   exact MonObj.comp_one u
 
 theorem comp_mul_over {S : Scheme.{0}} {X Y M : Over S} [GrpObj M] (u : Y ⟶ X) (a b : X ⟶ M) :
-    u ≫ (a * b) = (u ≫ a) * (u ≫ b) := by
-  exact MonObj.comp_mul u a b
+    u ≫ (a * b) = (u ≫ a) * (u ≫ b) := MonObj.comp_mul u a b
 
 theorem comp_pow_over {S : Scheme.{0}} {X Y M : Over S} [GrpObj M] (u : Y ⟶ X) (a : X ⟶ M) (n : ℕ) :
     u ≫ a ^ n = (u ≫ a) ^ n := by

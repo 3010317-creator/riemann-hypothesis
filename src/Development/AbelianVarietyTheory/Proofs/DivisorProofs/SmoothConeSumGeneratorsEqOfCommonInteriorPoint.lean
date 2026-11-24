@@ -90,13 +90,11 @@ theorem cone_gen_mem_of_common {O : Type} [CommRing O] {bar : O → O} {φ : Inv
     simp only [map_nsmul, hfG, smul_ite, smul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true, nsmul_eq_mul,
       _root_.mul_one] at h1
     have hk'' : (0 : ℤ) < k' := by exact_mod_cast hk'
-    by_contra hneg
-    push Not at hneg
+    by_contra! hneg
     have : (k' : ℤ) * f l (G' i) < 0 := mul_neg_of_pos_of_neg hk'' hneg
     linarith [Int.natCast_nonneg (e l)]
   have hex : ∃ i, 0 < d i := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     have h0 : k • ζ j = 0 := by
       rw [hd]
       exact Finset.sum_eq_zero fun i _ => by rw [Nat.le_zero.1 (hno i), zero_smul]

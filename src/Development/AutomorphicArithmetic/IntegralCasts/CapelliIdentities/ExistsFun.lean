@@ -123,6 +123,4 @@ theorem UpperTheory.Reformulated.B.Gr28.indVec :
           rw [← Module.End.mul_apply, ← map_mul]
           simp }
     exact Subgroup.isOpen_mono (H₁ := K) (H₂ := T) hF hK
-  refine ⟨⟨F, hs⟩, h1, ?_⟩
-  intro k hk
-  exact Subtype.ext (hF k hk)
+  exact ⟨⟨F, hs⟩, h1, fun k hk => Subtype.ext (hF k hk)⟩

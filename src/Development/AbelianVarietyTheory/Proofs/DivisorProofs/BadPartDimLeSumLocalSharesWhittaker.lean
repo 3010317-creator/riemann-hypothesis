@@ -128,8 +128,7 @@ theorem prod_fac_coeff (k : Fin 2) (t : Tup D k) (g : G0g D.nd) :
     rw [Finset.prod_congr rfl e, Finset.prod_boole]
     by_cases hc : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), kv.1 ≠ k → g kv = 1
     · rw [ite_eq_left hc, ite_eq_left]
-      intro k' hk' v
-      exact hc ⟨k', v⟩ (by simpa using hk')
+      exact fun k' hk' v => hc ⟨k', v⟩ (by simpa using hk')
     · rw [ite_eq_right hc, ite_eq_right]
       intro h
       apply hc
@@ -170,8 +169,7 @@ theorem tens_fac_mul_of_ne (k : Fin 2) {t t' : Tup D k} (h : t ≠ t') :
   obtain ⟨v, hv⟩ := Function.ne_iff.1 h
   rw [Formalism.BasicNotions.Examples₂.NZ.tens_mul]
   refine Formalism.BasicNotions.Examples₂.NZ.tens_eq_zero _ ⟨k, v⟩ ?_
-  simp only [fac_self]
-  exact D.ntypes.eSer_orth k _ _ hv
+  simpa only [fac_self] using D.ntypes.eSer_orth k _ _ hv
 
 theorem badElt_idem_central : ∀ (D : D7) (k : Fin 2) (S : Finset (Tup D k)),
     badElt D k S * badElt D k S = badElt D k S ∧ ∀ a, badElt D k S * a = a * badElt D k S := by
@@ -442,8 +440,7 @@ theorem cardU_ne_zero (k : Fin 2) : cardU D k ≠ 0 := by
   haveI : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
   unfold cardU
   refine Nat.cast_ne_zero.mpr (Finset.card_ne_zero.mpr ⟨1, ?_⟩)
-  simp only [Finset.mem_filter, Finset.mem_univ, true_and, Units.val_one]
-  exact isUniUp_one
+  simpa only [Finset.mem_filter, Finset.mem_univ, true_and, Units.val_one] using isUniUp_one
 
 open Classical in
 theorem coeff_eUk (k : Fin 2) (ψ₀ : AddChar (ZMod (D.host.g k)) ℂ) (x : GL (Fin D.R.r) (ZMod (D.host.g k))) :
@@ -530,8 +527,7 @@ theorem term_eq [Fintype (G0g D.nd)] (P : Subgroup (G0g D.nd)) (lam : P →* ℂ
     · rw [zero_mul]
       obtain ⟨v, hv⟩ : ∃ v : D.nd.PlG k, ¬ IsUniUp ((y ⟨k, v⟩ : GL (Fin D.R.r) (ZMod (D.host.g k))) :
           Matrix (Fin D.R.r) (Fin D.R.r) (ZMod (D.host.g k))) := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         apply hP
         rw [hW.2.1]
         rintro ⟨k', v⟩
@@ -604,8 +600,7 @@ theorem finrank_range_idem_le_of_embReg : ∀ (K Γ V : Type) [Field K] [CharZer
     apply MonoidAlgebra.coeff_injective
     show Finsupp.mapDomain Subtype.val (Finsupp.comapDomain Subtype.val a.coeff Subtype.val_injective.injOn) = a.coeff
     apply Finsupp.mapDomain_comapDomain _ Subtype.val_injective
-    intro g hg
-    exact ⟨⟨g, ha g (by simpa using hg)⟩, rfl⟩
+    exact fun g hg => ⟨⟨g, ha g (by simpa using hg)⟩, rfl⟩
   have hidem' : a' * a' = a' := hψinj (by rw [map_mul, hψa, hidem])
   have hc1 : a'.coeff 1 = a.coeff 1 := rfl
   have key : ∀ (b : MonoidAlgebra K H) (v : V) (i : Fin n), j (ρ.asAlgebraHom (ψ b) v) i = b * j v i := by
@@ -971,8 +966,7 @@ theorem sum_eSer_monicOf (k : Fin 2) :
   · intro f hf
     obtain ⟨h1, h2, -⟩ := (hS f).1 hf
     exact Finset.mem_image.2 ⟨_, Finset.mem_univ _, Formalism.CyclotomicNorms.Sqf.monicOf_coeffs f h1 h2⟩
-  · intro f _ hf
-    exact D.ntypes.eSer_zero k f fun h => hf ((hS f).2 h)
+  · exact fun f _ hf => D.ntypes.eSer_zero k f fun h => hf ((hS f).2 h)
 
 theorem badElt_all (k : Fin 2) : badElt D k (allTup D k) = 1 := by
   apply MonoidAlgebra.coeff_injective
@@ -1043,11 +1037,9 @@ theorem coeff_mul_factors (x y : MonoidAlgebra ℂ (G0g D.nd))
       apply hkv
       simp only [h0, ite_true]
       have : (b⁻¹ * g) kv = 1 := hc
-      rw [Pi.mul_apply, Pi.inv_apply, inv_mul_eq_one] at this
-      exact this
+      rwa [Pi.mul_apply, Pi.inv_apply, inv_mul_eq_one] at this
     · exact absurd (by simp [h0, hb0 kv h0]) hkv
-  · intro _
-    exact zero_mul _
+  · exact fun _ => zero_mul _
 
 theorem e0_eq : D.ntypes.e0 = badElt D 0 (goodSet D 0) * badElt D 1 (goodSet D 1) := by
   apply MonoidAlgebra.coeff_injective

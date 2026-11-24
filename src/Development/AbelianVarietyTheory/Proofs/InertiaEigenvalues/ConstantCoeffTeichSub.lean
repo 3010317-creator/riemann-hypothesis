@@ -207,8 +207,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime], ∀ e : OCb l, ¬ IsUnit (e - 1) �
   refine ⟨?_, fun io hio => ⟨?_, fun he1 a ha => ?_⟩⟩
   · obtain ⟨f, hf⟩ := algHom_exists (R := ℤ_[l]) _ hc hs
     refine ⟨f, hf, fun g hg => algHom_unique g f (Eq.trans hg hf.symm) ?_⟩
-    rw [show g X = _ from hg]
-    exact hs
+    rwa [show g X = _ from hg]
   · have he' : ¬ IsUnit (e ^ l - 1) := fun h => he (by
       rw [← geom_sum_mul] at h
       exact isUnit_of_mul_isUnit_right h)
@@ -232,7 +231,6 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime], ∀ e : OCb l, ¬ IsUnit (e - 1) �
         change WittVector.constantCoeff (io X) ≠ 0
         rw [hio', constantCoeff_teich_sub]
         exact sub_ne_zero.2 he1) a ha
-    intro hz
-    exact this ((IsFractionRing.injective (OCb l) (Cb l)) (hz.trans (map_zero _).symm))
+    exact fun hz => this ((IsFractionRing.injective (OCb l) (Cb l)) (hz.trans (map_zero _).symm))
 
 end GlobalTheory.Cyc.IoMap

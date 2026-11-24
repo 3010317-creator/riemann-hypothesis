@@ -316,15 +316,13 @@ theorem core (H : HermSpace K V) {J : Type} [Fintype J] [DecidableEq J] (e f : J
   have hsR : ∀ (a : R) v, s (a • v) = a • s v := fun a v => by
     rw [← algebraMap_smul K a v, map_smul, algebraMap_smul]
   have hAs : ∀ x ∈ A, x ∈ Bd (c ^ n) (s • Λ) := by
-    intro x hx a ha
-    exact (hmem _).2 ⟨_, hAΛ x hx a ha, hs3 _ (hpA _ (A.smul_mem a hx))⟩
+    exact fun x hx a ha => (hmem _).2 ⟨_, hAΛ x hx a ha, hs3 _ (hpA _ (A.smul_mem a hx))⟩
   have hMs : ∀ y ∈ M, y ∈ Bd (c ^ (3 * n + 12)) (s • Λ) := by
     intro y hy
     have e1 : y = s (Φ y) - (s (Φ y) - y) := by abel
     rw [e1]
     refine Submodule.sub_mem _ (bd_mono (n := 4) ?_ (by omega)) (bd_mono (n := 2 * n + 11 + 1 + n) ?_ (by omega))
-    · intro a ha
-      exact (hmem _).2 ⟨_, hΦ3 y hy a ha, hsR _ _⟩
+    · exact fun a ha => (hmem _).2 ⟨_, hΦ3 y hy a ha, hsR _ _⟩
     · refine bd_add fun a ha => hAs _ ?_
       obtain ⟨x, hx, m, hm, h⟩ := hdec _ (hz y hy a ha)
       have hz0 : s (Φ y) - y = (Φ y - y) - (Φ y - s (Φ y)) := by abel
@@ -573,8 +571,7 @@ theorem near_of_skew : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [
   let e : J → V := fun b => N.F.e b.1.castSucc
   let f : J → V := fun b => N.ist b.1
   have hef : ∀ a b, H.B (e a) (f b) = if a = b then 1 else 0 := fun a b => by
-    simp only [e, f, N.ist_e a.1 b.1 b.2]
-    exact if_congr Subtype.ext_iff.symm rfl rfl
+    simpa only [e, f, N.ist_e a.1 b.1 b.2] using if_congr Subtype.ext_iff.symm rfl rfl
   have heI : Submodule.span K (Set.range e) ≤ II N.F N.F' := by
     rw [Submodule.span_le]; rintro _ ⟨b, rfl⟩; exact e_mem_II N b.1 b.2
   have hII : II N.F N.F' ≤ V0 N.F N.F' := inf_le_left.trans (le_sup_left.trans le_sup_left)

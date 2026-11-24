@@ -56,8 +56,7 @@ theorem mem_img (g : V ≃ₗ[E] V) (Λ : Submodule M.L.O V) (x : V) : x ∈ img
   constructor
   · rintro ⟨y, hy, rfl⟩
     simpa using hy
-  · intro h
-    exact ⟨g.symm x, h, by simp⟩
+  · exact fun h => ⟨g.symm x, h, by simp⟩
 
 theorem map_mem_span_range {R : Type} [Semiring R] [Module R V] (φ : V →ₗ[R] V) {ι : Type} (v : ι → V)
     {x : V} (hx : x ∈ Submodule.span R (Set.range v)) :
@@ -100,8 +99,7 @@ theorem prim_img (g : V ≃ₗ[E] V) {Λ : Submodule M.L.O V} {ι : Type} {v : �
       have := map_mem_span_range (g.symm : V →ₗ[E] V) _ hxs
       simpa using this
     have h2 := hsat _ ((mem_img g Λ x).1 hx) h1
-    have h3 := map_mem_span_range ((g : V →ₗ[E] V).restrictScalars M.L.O) _ h2
-    simpa using h3
+    simpa using map_mem_span_range ((g : V →ₗ[E] V).restrictScalars M.L.O) _ h2
 
 theorem isFrame_img {g : V ≃ₗ[E] V} (hg : IsUnitary H g) {Λ : Submodule M.L.O V} {r : ℕ}
     {f : Fin (r + 1) → V} {T : F} (h : H.IsFrame Λ r f T) :
@@ -135,8 +133,7 @@ theorem isTerm_move {r : ℕ} (g : V ≃ₗ[E] V) (t : Term V M r) (hg : IsUnita
   refine ⟨isSelfDual_img H hg hSD, isFrame_img H hg hF, isFrame_img H hg hF', ?_, ?_, fun gs hgs => ?_⟩
   · rw [hD]; exact hU
   · unfold HermSp.Gdet
-    rw [hD, hD]
-    exact hG
+    rwa [hD, hD]
   · obtain ⟨h1, h2, h3⟩ := hsplit gs hgs
     refine ⟨h1, h2, fun b => ?_⟩
     show g (t.f' b) - g (t.f b) ∈ H.smulLat _ (img g t.abelian₂)

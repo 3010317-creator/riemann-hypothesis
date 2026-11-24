@@ -209,8 +209,7 @@ theorem loc_match : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X P
     constructor
     · rintro ⟨g, ⟨r₁, hr₁, hres⟩, hred⟩
       refine ⟨γ⁻¹ * g * γ, ⟨r⁻¹ * r₁ * r, (cbe_iff _ hr hκ).1 hr₁, GlobalTheory.Proof.level_eq_parahoric_category.conj_res hγ hres⟩, ?_⟩
-      intro y hy
-      exact red_conj γg⁻¹ (hint ⟨r₁, hr₁, hres⟩) hred y hy
+      exact fun y hy => red_conj γg⁻¹ (hint ⟨r₁, hr₁, hres⟩) hred y hy
     · rintro ⟨g', ⟨r₁', hr₁', hres'⟩, hred'⟩
       have hγ' : ∀ y, r⁻¹ (Loc.inX X.E (R.N j) (cOf R j) y) = Loc.inX X.E (R.N j) (cOf R j) (γ⁻¹ y) := by
         intro y
@@ -227,8 +226,7 @@ theorem loc_match : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X P
         intro Q A
         group
       have := red_conj γg (hint' ⟨r₁', hr₁', hres'⟩) hred' y hy
-      rw [map_inv, e] at this
-      exact this
+      rwa [map_inv, e] at this
   · intro hbar hbar' hx
     obtain ⟨g, ⟨r₁, hr₁, hres⟩, hred⟩ := (hG hbar.1).1 hbar.2
     have hgint := hint ⟨r₁, hr₁, hres⟩
@@ -249,8 +247,7 @@ theorem loc_match : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X P
       have h3 := mul_mem (mul_mem hst h2) (inv_mem hst)
       rw [show r * h' * κ * ((r * h' * κ)⁻¹ * r₁ * (r * h' * κ)⁻¹⁻¹) * (r * h' * κ)⁻¹ = r₁ by group] at h3
       unfold lamYat at h3
-      rw [ite_eq_left hP] at h3
-      exact h3
+      rwa [ite_eq_left hP] at h3
     have hq := GlobalTheory.TopStep.qOf_ne_zero (P := w.1) (E := X.E)
     have hia := GlobalTheory.Mem.LevFin.intAt_n1Arg_G hq r₁ hr₁s
     have ea : ((qOf w.1 : ℕ) : X.E) * Loc.n1Arg r₁ / ((qOf w.1 : ℕ) : X.E) = Loc.n1Arg r₁ := by

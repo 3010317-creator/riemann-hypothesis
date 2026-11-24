@@ -118,8 +118,7 @@ theorem frBor_down (hG : GlobalFnsSt) {t : Ix Dw → Sˣ} {y y' : FrPt Xo c S} {
   · obtain ⟨cf, c₁, c₂, hcf⟩ := au τ i
     refine ⟨cf, c₁, c₂, ?_⟩
     have k := (comb_iff d.m e (fun j => (y₂.tan τ j).1) cf (ex ▸ (y₂'.tan τ i).1)).1 hcf
-    rw [funext (hu τ), hu'] at k
-    exact k
+    rwa [funext (hu τ), hu'] at k
   · refine (pull_scal_iff b₁ (fst (Over.mk y.x) Xo.univ.t.G).left (toΓ S (t none)) y.s y'.s).2
       fun Z r z i hi => ?_
     obtain ⟨r₂, rfl⟩ : ∃ r₂, r = r₂ ≫ p'' := ⟨r ≫ n', by rw [Category.assoc, hn, Category.comp_id]⟩
@@ -306,8 +305,7 @@ theorem section_pullback_existsUnique :
     have hk : ∀ t : c.F, algebraMap d.c₂.F k (d.eF t) = algebraMap c.F k t := fun t =>
       congrArg (algebraMap c.F k) (d.eF.symm_apply_apply t)
     obtain ⟨y₂, hy⟩ := hlift k hk y
-    have e := h0 k hk y₂ y hy
-    exact e.symm.trans ((evalAt_zero _ _ y₂).trans (evalAt_zero _ _ y).symm)
+    exact (h0 k hk y₂ y hy).symm.trans ((evalAt_zero _ _ y₂).trans (evalAt_zero _ _ y).symm)
 
 end Main
 

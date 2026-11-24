@@ -152,13 +152,11 @@ theorem UpperTheory.V.AlgebraTools.topNil_eq_idem :
       have h1 : (1 : A) ∈ K.radical := htop ▸ Submodule.mem_top
       obtain ⟨r, hr⟩ := h1
       have h2 : (1 : A) ^ r • y ∈ (m ^ j • ⊤ : Submodule R M) := hr
-      rw [one_pow, one_smul] at h2
-      exact h2
+      rwa [one_pow, one_smul] at h2
     have hbot := Ideal.iInf_pow_smul_eq_bot_of_le_jacobson (M := M) m
       (by rw [hm, IsLocalRing.ringJacobson_eq_maximalIdeal])
     have hyi : y ∈ (⨅ i, m ^ i • ⊤ : Submodule R M) := Submodule.mem_iInf _ |>.mpr hall
-    rw [hbot] at hyi
-    exact hyi
+    rwa [hbot] at hyi
   · intro hx i j
     have hin : ∀ n : Ideal A, n.IsMaximal → t i * e ∈ n := by
       intro n hn

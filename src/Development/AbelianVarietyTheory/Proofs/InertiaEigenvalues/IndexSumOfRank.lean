@@ -378,8 +378,7 @@ theorem latIndex_eq_of_chart {D : D7} {W : HSp D} {P : HeightOneSpectrum (𝓞 D
         congr 1
         funext k
         rw [← ha, hπf]
-      rw [hz]
-      exact hi
+      rwa [hz]
     · intro hz
       choose a ha using fun k => hC.2.1 ((β.1 *ᵥ z) k)
       have hb : (β⁻¹).1 *ᵥ (fun k => π (a k)) = z := by
@@ -632,8 +631,7 @@ theorem step_exists (c : O ≃+* O) (cK : K ≃+* K)
   have hvΛ : v ∈ Λ := Λ.smul_mem _ hxΛ
   have hvL : v ∉ L := Nat.find_min hex (by omega : k0 - 1 < k0)
   have hwL : ϖ • v ∈ L := by
-    rw [hvdef, smul_smul, ← pow_succ', Nat.sub_add_cancel (Nat.pos_of_ne_zero hk0pos)]
-    exact hk0m
+    rwa [hvdef, smul_smul, ← pow_succ', Nat.sub_add_cancel (Nat.pos_of_ne_zero hk0pos)]
   have hvv := (hΛ.1 v).1 hvΛ v hvΛ
   have hstep : IsStep cK J ϖ L v := ⟨hvL, hwL, hvv⟩
   have hgood := good_nb c cK hcK hc2 hJ hϖ hL hstep
@@ -662,8 +660,7 @@ theorem step_exists (c : O ≃+* O) (cK : K ≃+* K)
       exact AddSubgroup.add_mem_sup hm
         (AddSubgroup.mem_sup_right (Submodule.mem_span_singleton.2 ⟨a, rfl⟩))
     · refine sup_le (fun y hy => mem_nb.2 ⟨y, hy, 0, by simp⟩) (sup_le ?_ ?_)
-      · intro y hy
-        exact mem_nb.2 ⟨y, hMMp hy, 0, by simp⟩
+      · exact fun y hy => mem_nb.2 ⟨y, hMMp hy, 0, by simp⟩
       · intro y hy
         obtain ⟨a, rfl⟩ := Submodule.mem_span_singleton.1 hy
         exact mem_nb.2 ⟨0, (perp cK J L v).zero_mem, a, by simp⟩
@@ -837,8 +834,7 @@ theorem card_nbrs (c : O ≃+* O) (cK : K ≃+* K)
           z = QuotientAddGroup.mk (⟨v - v0, h⟩ : L.toAddSubgroup) := by
       intro L' hL'
       obtain ⟨v, hs, hLv, hw, hu⟩ := (Finset.mem_filter.1 hL').2
-      have h := sub_mem_of_mk_eq hϖ hw hw0 (hu.trans hu0.symm)
-      exact ⟨_, v, hs, hLv, h, rfl⟩
+      exact ⟨_, v, hs, hLv, (sub_mem_of_mk_eq hϖ hw hw0 (hu.trans hu0.symm)), rfl⟩
     choose! g hg using hch
     have hinj : Set.InjOn g ↑(t.filter (fun L' => rel L' u)) := by
       intro L1 h1 L2 h2 he
@@ -854,11 +850,9 @@ theorem card_nbrs (c : O ≃+* O) (cK : K ≃+* K)
       exact nb_congr (p1.trans p2.symm) (p1 ▸ hd)
     have hle := Finset.card_le_card_of_injOn (s := t.filter (fun L' => rel L' u))
       (t := (Finset.univ : Finset (L.toAddSubgroup ⧸ Wq))) g (fun _ _ => Finset.mem_univ _) hinj
-    rw [Finset.card_univ, Fintype.card_eq_nat_card, hcq] at hle
-    exact hle
+    rwa [Finset.card_univ, Fintype.card_eq_nat_card, hcq] at hle
   have key := Finset.card_mul_le_card_mul rel (s := t) (t := Finset.univ) hm hn
-  rw [Finset.card_univ, Fintype.card_eq_nat_card, hcardW] at key
-  exact key
+  rwa [Finset.card_univ, Fintype.card_eq_nat_card, hcardW] at key
 
 end GlobalTheory.HermNbr
 end -- clump:auto
@@ -913,8 +907,7 @@ theorem good_map (cK : K ≃+* K) {J : Matrix (Fin r) (Fin r) K} {ϖ : O} {N : �
   · intro x
     obtain ⟨k, hk⟩ := habs (Gi x)
     refine ⟨k, (memG _).2 ?_⟩
-    rw [map_smul]
-    exact hk
+    rwa [map_smul]
   · have hinj : Function.Injective G.toAddMonoidHom := fun x y h => by
       have := congrArg Gi h
       simpa [h2] using this
@@ -973,8 +966,7 @@ theorem GlobalTheory.HermNbr.selfDual_sum_le : ∀ (O K : Type) [CommRing O] [Is
   have hD0 : 0 ≤ D := by positivity
   have hy0 : 0 < y := Real.rpow_pos_of_pos hQ0 _
   have hy4 : y ≤ 1 / 4 := by
-    rw [hy, Real.rpow_neg hQ0.le]
-    rw [show (2 : ℝ) = ((2 : ℕ) : ℝ) by norm_num, Real.rpow_natCast]
+    rw [hy, Real.rpow_neg hQ0.le, show (2 : ℝ) = ((2 : ℕ) : ℝ) by norm_num, Real.rpow_natCast]
     rw [inv_le_comm₀ (by positivity) (by norm_num)]
     nlinarith
   have hρ : D * (Q : ℝ) ^ (-s) ≤ 2 * y := by
@@ -1067,8 +1059,7 @@ theorem mulVec_maps_iff (M : Matrix (Fin r) (Fin r) K) :
       · simp [Pi.single_apply, hk]) i
     simpa [Matrix.mulVec_single_one] using this
   · intro h y hy i
-    simp only [Matrix.mulVec, dotProduct]
-    exact sum_mem (fun j _ => mul_mem (h i j) (hy j))
+    simpa only [Matrix.mulVec, dotProduct] using sum_mem (fun j _ => mul_mem (h i j) (hy j))
 
 theorem mem_GLint_iff (x : GL (Fin r) K) :
     x ∈ Formalism.UG.GLint (Fin r) A.toSubring ↔
@@ -1077,10 +1068,8 @@ theorem mem_GLint_iff (x : GL (Fin r) K) :
   constructor
   · rintro ⟨u, rfl⟩
     refine ⟨fun i j => ?_, fun i j => ?_⟩
-    · show ((u : Matrix (Fin r) (Fin r) A.toSubring) i j : K) ∈ A
-      exact (u : Matrix (Fin r) (Fin r) A.toSubring) i j |>.2
+    · exact (u : Matrix (Fin r) (Fin r) A.toSubring) i j |>.2
     · rw [← map_inv]
-      show (((u⁻¹ : GL (Fin r) A.toSubring) : Matrix (Fin r) (Fin r) A.toSubring) i j : K) ∈ A
       exact ((u⁻¹ : GL (Fin r) A.toSubring) : Matrix (Fin r) (Fin r) A.toSubring) i j |>.2
   · rintro ⟨h1, h2⟩
     let M : Matrix (Fin r) (Fin r) A.toSubring := Matrix.of fun i j => ⟨_, h1 i j⟩
@@ -1190,8 +1179,7 @@ theorem indexSum_inert : ∀ (D : D7) (W : HSp D) (n : ℕ), 2 * W.rank + 5 ≤ 
   let H : GA D W → Formalism.UG.UJ σ (1 : Matrix (Fin W.rank) (Fin W.rank) K) := fun g =>
     if hg : SuppF W (algebraMap (AF D.host.F) (AE D) ε) g then (hGC.2.2.1 g hg).choose else 1
   have hH : ∀ g ∈ C, ι (H g) = g := fun g hg => by
-    simp only [H, dite_eq_left (hC g hg).1]
-    exact (hGC.2.2.1 g (hC g hg).1).choose_spec
+    simpa only [H, dite_eq_left (hC g hg).1] using (hGC.2.2.1 g (hC g hg).1).choose_spec
   have hinj : Set.InjOn (fun g => ((H g : GL (Fin W.rank) K))) C := fun g hg g' hg' e => by
     rw [← hH g hg, ← hH g' hg', Subtype.ext e]
   have hsum := Finset.sum_image (f := fun x : GL (Fin W.rank) K =>
@@ -1222,8 +1210,7 @@ theorem indexSum_inert : ∀ (D : D7) (W : HSp D) (n : ℕ), 2 * W.rank + 5 ≤ 
     intro x hx
     obtain ⟨g, -, rfl⟩ := Finset.mem_image.1 hx
     have h1 := (H g).2
-    rw [Matrix.map_one _ (map_zero _) (map_one _)]
-    exact h1
+    rwa [Matrix.map_one _ (map_zero _) (map_one _)]
   have hnontriv : ∀ x ∈ C.image (fun g => ((H g : GL (Fin W.rank) K))),
       (Submodule.span O (Set.range (Pi.basisFun K (Fin W.rank)))).map ((x : Matrix (Fin W.rank) (Fin W.rank) K).mulVecLin.restrictScalars O) ≠
         Submodule.span O (Set.range (Pi.basisFun K (Fin W.rank))) := by
@@ -1464,8 +1451,7 @@ theorem indexSum_of_rank {D : D7} (W : HSp D) (n : ℕ) (hn : 2 * W.rank + 5 ≤
     · refine max_le (hz v).2 ?_
       have h3 : 0 ≤ q v ^ (-(3 : ℝ)) := by positivity
       linarith [(h8 v).1]
-  · intro v
-    exact max_lt (hz v).1 (by linarith [(h8 v).2])
+  · exact fun v => max_lt (hz v).1 (by linarith [(h8 v).2])
   · intro v f hf C hC hd
     rcases GlobalTheory.T.finite_place_split_idempotent_or_inert D v f hf with hs | hi
     · exact le_trans (GlobalTheory.T.split_place_lattice_index_sum_le_zeta_sq_sub_one D W n hn v f hf hs C hC hd) (le_max_left _ _)

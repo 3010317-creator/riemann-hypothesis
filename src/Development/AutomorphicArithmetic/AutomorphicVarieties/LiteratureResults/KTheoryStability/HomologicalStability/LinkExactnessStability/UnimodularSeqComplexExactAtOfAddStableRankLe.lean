@@ -91,8 +91,7 @@ theorem emb_apply_of_le {R : Type} [CommRing R] {m : ℕ} (v : Fin m → R) (n :
 theorem emb_injective (R : Type) [CommRing R] (m : ℕ) : Function.Injective (emb R m) := by
   intro v w hvw
   funext k
-  have e := congrArg (fun x => x (k : ℕ)) hvw
-  simpa only [emb_apply_val] using e
+  simpa only [emb_apply_val] using congrArg (fun x => x (k : ℕ)) hvw
 
 theorem emb_mem_low {R : Type} [CommRing R] {m : ℕ} (v : Fin m → R) : emb R m v ∈ low R m :=
   fun n h => emb_apply_of_le v n h
@@ -101,8 +100,7 @@ theorem emb_restrict {R : Type} [CommRing R] {m : ℕ} (x : ℕ →₀ R) (hx : 
     emb R m (fun k : Fin m => x k) = x := by
   ext n
   by_cases h : n < m
-  · have e := emb_apply_val (fun k : Fin m => x k) ⟨n, h⟩
-    simpa using e
+  · simpa using emb_apply_val (fun k : Fin m => x k) ⟨n, h⟩
   · rw [emb_apply_of_le _ n (not_lt.mp h)]
     exact (hx n (not_lt.mp h)).symm
 
@@ -139,9 +137,7 @@ theorem link_eq (R : Type) [CommRing R] (m : ℕ) :
       have e := hf (Fin.cast (by simp) i) (Fin.cast (by simp) j)
       simpa [List.get_eq_getElem, Fin.ext_iff] using e
     · rw [List.map_map]
-      refine (List.map_congr_left ?_).trans (List.map_id w)
-      intro x hx
-      exact emb_restrict x (hw x hx)
+      exact (List.map_congr_left (fun x hx => emb_restrict x (hw x hx))).trans (List.map_id w)
   · rintro ⟨u, ⟨g, hg⟩, rfl⟩
     refine ⟨?_, ?_⟩
     · intro x hx
@@ -327,15 +323,13 @@ theorem linkIn_exactAt_of_coord_one : ∀ (R : Type) [CommRing R] (s n : ℕ), L
       constructor
       · rintro ⟨hw, -, h2⟩
         refine ⟨hw, ?_⟩
-        rw [List.append_assoc]
-        exact h2
+        rwa [List.append_assoc]
       · rintro ⟨hw, h2⟩
         refine ⟨hw, fun x hx => ?_, ?_⟩
         · rcases List.mem_append.mp hx with hx | hx
           · exact hτ1.1 x hx
           · exact low_aff_subset_succ R n j (hw x hx)
-        · rw [← List.append_assoc]
-          exact h2
+        · rwa [← List.append_assoc]
     rw [heq]
     obtain ⟨τ', hτ', hl', heq'⟩ := _root_.GlobalTheory.SeqCx.linkIn_uniM_eq_of_form R (ℕ →₀ R) (Finsupp.lapply n) (low R n ∪ aff R n j)
       (coord_vanish_low_aff R n j hj) (τ ++ τ1) hτ1.2 v (List.mem_append_left _ hv)
@@ -367,8 +361,7 @@ theorem main : ∀ (R : Type) [CommRing R] (n : ℕ) (h : (ℕ →₀ R) →ₗ[
     constructor
     · intro hx i hi
       have hxi := hx i hi
-      rw [hy i hi, add_zero] at hxi
-      exact hxi
+      rwa [hy i hi, add_zero] at hxi
     · intro hx i hi
       rw [hx i hi, hy i hi, add_zero]
   have hts : ∀ c : R, c • t ∈ low R n := by
@@ -654,8 +647,7 @@ namespace GlobalTheory
 
 theorem finsupp_coord_ideal_eq_top {R : Type} [CommRing R] (u : ℕ →₀ R) (g : (ℕ →₀ R) →ₗ[R] R)
     (hg : g u = 1) (K : Ideal R) (hK : ∀ i, u i ∈ K) : K = ⊤ := by
-  rw [Ideal.eq_top_iff_one, ← hg]
-  rw [show g u = g (u.sum Finsupp.single) by rw [Finsupp.sum_single]]
+  rw [Ideal.eq_top_iff_one, ← hg, show g u = g (u.sum Finsupp.single) by rw [Finsupp.sum_single]]
 
   rw [Finsupp.sum, map_sum]
   refine Ideal.sum_mem _ fun i _ => ?_
@@ -740,8 +732,7 @@ theorem unimodular_partner_aff : ∀ (R : Type) [CommRing R] (s : ℕ), StableRa
     · simp
     · intro b _ hb
       simp [Fin.val_ne_of_ne hb]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+    · exact fun h => absurd (Finset.mem_univ i) h
   let x : ℕ →₀ R := Finsupp.single j 1 + y
   have hxj : x j = 1 := by simp [x, hy0 j hnj]
   have hxaff : x ∈ aff R n j := by
@@ -813,8 +804,7 @@ theorem low_union_aff_subset_low_succ (R : Type) [CommRing R] (n : ℕ) :
     low R n ∪ aff R n n ⊆ low R (n + 1) := by
   intro x hx
   rcases hx with hx | hx
-  · intro i hi
-    exact hx i (by omega)
+  · exact fun i hi => hx i (by omega)
   · intro i hi
     have := hx i (by omega)
     simpa [Finsupp.single_apply, show n ≠ i by omega] using this
@@ -834,15 +824,13 @@ theorem linkExactLow_succ_of_linkExactAff : ∀ (R : Type) [CommRing R] (s n : �
       constructor
       · rintro ⟨hw, -, h2⟩
         refine ⟨hw, ?_⟩
-        rw [List.append_assoc]
-        exact h2
+        rwa [List.append_assoc]
       · rintro ⟨hw, h2⟩
         refine ⟨hw, fun x hx => ?_, ?_⟩
         · rcases List.mem_append.mp hx with hx | hx
           · exact hτ1.1 x hx
           · exact low_union_aff_subset_low_succ R n (hw x hx)
-        · rw [← List.append_assoc]
-          exact h2
+        · rwa [← List.append_assoc]
     rw [heq]
     exact h n le_rfl (τ ++ τ1) hτ1.2 (p - τ1.length) (by rw [List.length_append]; omega)
 
@@ -877,8 +865,7 @@ private theorem exactAt_zero_of_singleton_mem' {V : Type} (F : Set (List V)) (x 
         simp
       · rw [Finsupp.single_apply, ite_eq_right (Ne.symm hl)]
         by_contra hne
-        have hmem := hc' (Finsupp.mem_support_iff.mpr hne)
-        exact hl (List.length_eq_zero_iff.mp hmem.2)
+        exact hl (List.length_eq_zero_iff.mp (hc' (Finsupp.mem_support_iff.mpr hne)).2)
     rw [bd, Finsupp.linearCombination_single]
     conv_rhs => rw [hcs]
     simp

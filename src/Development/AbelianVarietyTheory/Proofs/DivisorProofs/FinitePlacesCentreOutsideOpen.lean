@@ -67,9 +67,7 @@ theorem evAt_congr' {R : Type} [CommRing R] {X : Scheme.{0}} {ξ ξ' : Sp R ⟶ 
   subst e; rfl
 
 theorem top_le_preimage_comp' {X Y Z : Scheme.{0}} (f : X ⟶ Y) (g : Y ⟶ Z) (U : Z.Opens) (h : ⊤ ≤ g ⁻¹ᵁ U) :
-    ⊤ ≤ (f ≫ g) ⁻¹ᵁ U := by
-  intro z _
-  exact h (Set.mem_univ (f z))
+    ⊤ ≤ (f ≫ g) ⁻¹ᵁ U := fun z _ => h (Set.mem_univ (f z))
 
 theorem finite_centre_not_mem (k K E : Type) [Field k] [IsAlgClosed k] [CharZero k] [Field K] [Algebra k K] [Field E]
     [Algebra k E] [Algebra K E] [IsScalarTower k K E] [FiniteDimensional K E] (C : Scheme.{0}) [Algebra k Γ(C, ⊤)]
@@ -125,8 +123,7 @@ theorem finite_centre_not_mem (k K E : Type) [Field k] [IsAlgClosed k] [CharZero
     · exact (_root_.GlobalTheory.Nef.finite_support_and_sum_ord_eq_zero k E hE (f a) h0).1.subset fun p hp h1 => hp h1.le
   · rintro p ⟨b, hb1, hb2⟩
     simp only [Set.mem_iUnion, Set.mem_setOf_eq]
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     have hall := key p fun a ha => hno a ha
     have hmem : ∀ g, f g ∈ p.O := fun g => (Valuation.mem_valuationSubring_iff _ _).2 (hall g)
     let φ : Γ(C, V') →+* p.O := f.codRestrict p.O hmem

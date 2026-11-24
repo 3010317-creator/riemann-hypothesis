@@ -129,13 +129,11 @@ theorem minorIJ_moveMat (I C I' : Finset (Fin N)) (e : I.card = C.card) :
     unfold minorIJ
     split_ifs with e'
     · have hex : ∃ a ∈ I', a ∉ I := by
-        by_contra hc
-        push Not at hc
+        by_contra! hc
         exact hI (Finset.eq_of_subset_of_card_le hc (by rw [e, e']))
       obtain ⟨a, ha, haI⟩ := hex
       have hr : a ∈ Set.range (I'.orderEmbOfFin e') := by
-        rw [Finset.range_orderEmbOfFin]
-        exact ha
+        rwa [Finset.range_orderEmbOfFin]
       obtain ⟨s, rfl⟩ := hr
       refine det_eq_zero_of_row_eq_zero s fun t => ?_
       rw [Matrix.submatrix_apply]
@@ -196,8 +194,7 @@ theorem map_identity (j : ℕ) (hj : j ≤ N) (i : Fin N) (hC : stepCols N j i �
     exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
   have r : ρ P * ∑ I, ρ (u I) * minorIJ h I (stepCols N j i) =
       ∑ I', ρ (P * u I') * minorIJ h I' (stepCols N j i) := by
-    simp only [map_mul, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun _ _ => by ring
+    simpa only [map_mul, Finset.mul_sum] using Finset.sum_congr rfl fun _ _ => by ring
   rw [l, r]
   refine Finset.sum_congr rfl fun I' _ => ?_
   by_cases hI : IsStepRows N j i I'
@@ -306,8 +303,7 @@ theorem read_minor (M : FlagModel y Ψ N j) (F : FrameData ι Ψ N M.Ω M.blk) (
       α (∏ k', M.x ⟨k', F.c k'⟩ ^ M.b p k') * ∑ I, α (F.u ⟨k, m⟩ I) * minorIJ h I (stepCols N j p.2) := fun m => by
     have := _root_.GlobalTheory.CompanionTheory.Ar.PB.CovGraph.FrameExt.frame_identity_map K ι Φ y Ψ N j M Φ α F hF p k hk m h hb
     rw [← hTdef, hTh] at this
-    rw [M.y_step p k hk m]
-    exact this
+    rwa [M.y_step p k hk m]
   have hv : ∀ I, ¬ IsStepRows N j p.2 I → minorIJ h I (stepCols N j p.2) = 0 := fun I hI =>
     ((_root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main Φ N j p.2 M.j_le).2.1 h I hb hI).resolve_right (stepCols_ne_empty j p.2)
   calc detFac j p.2 T * ∑ m : ι k, α (F.u' I' ⟨k, m⟩) * y ⟨k, m⟩
@@ -379,8 +375,7 @@ theorem transPt_eq_smul_sum : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ 
       μ * ∑ I, α (Cv.φ (F.u ⟨k, m⟩ I)) * minorIJ h₀ I (stepCols N j p.2) := fun m => by
     have := _root_.GlobalTheory.CompanionTheory.Ar.PB.CovGraph.FrameExt.frame_identity_map K ι Φ y Ψ N j M Φ' ρ F hF p k hk m h₀ hb₀
     rw [← hT, hTh₀] at this
-    rw [transPt_step Cv p k hk m]
-    exact this
+    rwa [transPt_step Cv p k hk m]
   refine ⟨μ / d * (d' / μ'), mul_ne_zero (div_ne_zero hμ hd) (div_ne_zero hd' hμ'), fun m => ?_⟩
   have htr : transPt Cv ⟨k, m⟩ = μ / d * ∑ I, α (Cv.φ (F.u ⟨k, m⟩ I)) * minorIJ h₀ I (stepCols N j p.2) := by
     rw [div_mul_eq_mul_div, eq_div_iff hd, mul_comm]

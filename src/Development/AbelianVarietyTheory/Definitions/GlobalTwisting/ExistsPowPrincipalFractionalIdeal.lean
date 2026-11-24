@@ -82,11 +82,7 @@ theorem exists_single_mem_span {E M ι : Type} [Field E] [NumberField E] [Field 
 
   let χ : ι → (𝓞 E →* M) := fun j => ((f j).comp (algebraMap (𝓞 E) E)).toMonoidHom
   have hχ : Function.Injective χ := by
-    intro j k h
-    apply hf
-    apply IsFractionRing.ringHom_ext (A := 𝓞 E)
-    intro x
-    exact DFunLike.congr_fun h x
+    exact fun j k h => hf (IsFractionRing.ringHom_ext (A := 𝓞 E) (fun x => DFunLike.congr_fun h x))
   have hli : LinearIndependent M (fun j => (χ j : 𝓞 E → M)) :=
     (linearIndependent_monoidHom (𝓞 E) M).comp χ hχ
 
@@ -117,8 +113,7 @@ theorem exists_single_mem_span {E M ι : Type} [Field E] [NumberField E] [Field 
     by_cases hk : k = i
     · subst hk; simp
     · simp [hk]
-  rw [this]
-  exact hy
+  rwa [this]
 
 open Formalism.BasicNotions Formalism.MainNotions.TaylorLogMetric
 
@@ -288,8 +283,7 @@ theorem normSq1_eq_nrm1Sq (Λ : AddSubgroup ℂ) (G : ℂ → ℂ) : GL3Theta.no
 
 theorem normSq1_nonneg (Λ : AddSubgroup ℂ) (G : ℂ → ℂ) : 0 ≤ GL3Theta.normSq1 Λ G := by
   unfold GL3Theta.normSq1
-  simp only [MeasureTheory.average]
-  exact MeasureTheory.integral_nonneg fun z => by positivity
+  simpa only [MeasureTheory.average] using MeasureTheory.integral_nonneg fun z => by positivity
 
 theorem normSq_thetaZero_pos (h : Crv D cc δ) (hM : DataIn D (tor0 D cc δ) M) (ρ : M →ₐ[ℚ] ℂ) {t : ℂ}
     (ht : GL3Theta.IsTwoTorsionPointUnkilled D (lamConj M ρ (lamOf D cc δ)) t) :

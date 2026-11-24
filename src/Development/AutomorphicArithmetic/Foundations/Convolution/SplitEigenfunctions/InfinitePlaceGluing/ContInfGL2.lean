@@ -175,8 +175,7 @@ private theorem split_int {Φ : ℝ → ℂ} (h1 : IntegrableOn Φ (Set.Ioi 0)) 
       (MeasurableEquiv.neg ℝ).measurableEmbedding (f := Φ) (s := Set.Iio 0)
     refine h3.1 ?_
     have e : (Neg.neg : ℝ → ℝ) ⁻¹' Set.Iio 0 = Set.Ioi 0 := by ext y; simp
-    rw [e]
-    exact h2
+    rwa [e]
   have e := integral_comp_neg_Ioi (0 : ℝ) Φ
   rw [e, neg_zero, add_comm, intervalIntegral.integral_Iic_add_Ioi hL h1]
 
@@ -306,8 +305,7 @@ private theorem cont_Wo (D : Dat ℚ E) {φ : GL (Fin 2) (A E) → ℂ} (hc : Co
   · refine Eventually.of_forall fun u => ?_
     rw [norm_mul, norm_ψ, mul_one]
     exact hB _
-  · refine Eventually.of_forall fun u => ?_
-    exact (hc.comp (continuous_const.mul hh)).mul continuous_const
+  · exact Eventually.of_forall fun u => (hc.comp (continuous_const.mul hh)).mul continuous_const
 
 private theorem norm_chi {ω χ : HChar ℚ} (hω : Unit1 ω) (h : ∀ a, (χ.1 a * ω.1 a) ^ 2 = 1) (a : (A ℚ)ˣ) :
     ‖((χ.1 a : ℂˣ) : ℂ)‖ = 1 := by
@@ -343,7 +341,6 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.hol_of :
     refine ⟨B, fun t ht y hy => ?_⟩
     have h1 := (hB (iy y) (em E (rot t)) ⟨t, ht, rfl⟩).1
     rw [re_iy hy, ← map_mul] at h1
-    rw [norm_mul, norm_chi hω hsq, mul_one]
-    exact h1
+    rwa [norm_mul, norm_chi hω hsq, mul_one]
 
 end

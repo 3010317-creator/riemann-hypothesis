@@ -69,8 +69,7 @@ theorem extZero_of_isRegularLocalRing (R : Type) [CommRing R] [IsRegularLocalRin
   · rw [Module.support_eq_zeroLocus, Ideal.annihilator_quotient]
   · rw [smul_eq_mul, Ideal.mul_top]
     exact (maximalIdeal.isMaximal R).ne_top.lt_top
-  · intro r hr
-    exact h ▸ Ideal.subset_span hr
+  · exact fun r hr => h ▸ Ideal.subset_span hr
 
 end DualCokernel
 
@@ -103,8 +102,7 @@ theorem exact_dualMap_of_exact_fibres_of_isRegularLocalRing :
     refine ⟨t, ht, fun f hf => ⟨k₁.dualMap f, LinearMap.ext fun x => ?_⟩⟩
     have h1 : f ((C.d (i - 1) i).hom (k₀ x)) = 0 := LinearMap.congr_fun hf (k₀ x)
     have h2 := congrArg f (hk x)
-    rw [map_add (f := _), h1, zero_add, map_smul] at h2
-    exact h2
+    rwa [map_add (f := _), h1, zero_add, map_smul] at h2
 
   have hhom : ∀ i, g ≤ i → ∃ (s : C.X (i + 1) →ₗ[A] C.X i) (t : C.X (i + 1 + 1) →ₗ[A] C.X (i + 1)),
       ∀ x, (C.d i (i + 1)).hom (s x) + t ((C.d (i + 1) (i + 1 + 1)).hom x) = x := by
@@ -166,7 +164,6 @@ theorem exact_dualMap_of_exact_fibres_of_isRegularLocalRing :
     refine ⟨t.dualMap f, LinearMap.ext fun x => ?_⟩
     have h1 : f ((C.d i (i + 1)).hom (s x)) = 0 := LinearMap.congr_fun hf (s x)
     have h2 := congrArg f (hst x)
-    rw [map_add (f := _), h1, zero_add] at h2
-    exact h2
+    rwa [map_add (f := _), h1, zero_add] at h2
 
 end GlobalTheory

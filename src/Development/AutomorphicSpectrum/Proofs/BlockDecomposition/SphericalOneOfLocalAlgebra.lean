@@ -146,8 +146,7 @@ theorem tr_mem_UJ (σ : L →+* L) (hσ : ∀ x, σ (σ x) = x) {h : GL (Fin n) 
     simp [hσ]
   have h1 : h.valᵀ * antiJ L n * h.val.map σ = antiJ L n := by
     have := congrArg (fun M : Matrix (Fin n) (Fin n) L => M.map σ) h0
-    simp only [cT, Matrix.map_mul, hJσ, hmm] at this
-    exact this
+    simpa only [cT, Matrix.map_mul, hJσ, hmm] using this
   have h2 : h.valᵀ * (antiJ L n * h.val.map σ * antiJ L n) = 1 := by
     rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, h1, hJ]
   have h3 : (antiJ L n * h.val.map σ * antiJ L n) * h.valᵀ = 1 := mul_eq_one_comm.1 h2

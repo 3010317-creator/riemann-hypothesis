@@ -677,8 +677,7 @@ theorem phRat_of_before (hE : O.EquivAt κ cc) {chi : G →* D.what₂.LLˣ} (h�
     have : RealDat.eC (A := A) (sg0 D A) g = D.what₂.embLL ((idemOf A.X).coeff g) :=
       RingHom.congr_fun hs ((idemOf A.X).coeff g)
     have h2 := IsRat.mul O κ cc ((idemOf A.X).coeff g) (isRat_act O κ cc hE hχ g (h x))
-    rw [← this] at h2
-    exact h2
+    rwa [← this] at h2
   obtain ⟨n, a, f, hf⟩ := key
   refine ⟨n, a, f, fun y => ?_⟩
   rw [← hf y, hG i A.μ0, map_smul]
@@ -748,8 +747,7 @@ theorem exists_common [Finite T0] (hR : PreChar R) (hT : TieIn T R κ v₀) {ι 
   have e : M.lev2 = O.lev2 := by funext g; simp only [OMDat.lev2, hlev]
   have hE' : O.EquivAt (κ i) cc := by
     unfold OMDat.EquivAt at hE ⊢
-    rw [e] at hE
-    exact hE
+    rwa [e] at hE
   have hO := oneMapOf_of_serOf hR hT hF hP hE' (hdesc cc 1 hS) fun x hx => (h0 x hx).1
   have hL := hF.ge.trans h₁
   exact ⟨cc, hO, comap M some, hL, pins_comap some hM, oneMapOf_comap some
@@ -967,8 +965,7 @@ theorem jMemL2_of_muUnit (h : MuUnit V dict mu) (h' : MuUnit V dict mu') (hc : C
   have hm : AEStronglyMeasurable (onQ V (fun g => mu' g / mu g)) (muQ1 V) := by
     haveI : BorelSpace (GA D V) := ⟨rfl⟩
     rw [onQ_eq_lift _ hinv]
-    refine Measurable.aestronglyMeasurable ?_
-    exact measurable_from_quotient.2 (hc'.div hc hne).measurable
+    exact Measurable.aestronglyMeasurable (measurable_from_quotient.2 (hc'.div hc hne).measurable)
   have he : jFn V σ rd dict mu' f = onQ V (fun g => mu' g / mu g) * jFn V σ rd dict mu f := by
     funext q
     show mu' q.out * rd f (dict q.out).1 (dict q.out).2 =
@@ -1722,13 +1719,11 @@ theorem selHalf_of_pin {B : Base} {f : Fr B.toPre} {T : TwDat B} {w : ColW B f T
   have hab : ∀ v, (w.I.sel v).under (𝓞 B.host.F) = v := fun v => by
     have h := p.above v
     unfold Formalism.L2.Host.aboveF at h
-    rw [Set.Finite.mem_toFinset] at h
-    exact h
+    rwa [Set.Finite.mem_toFinset] at h
   have hmem : ∀ v, ((q : 𝓞 B.host.E) ∈ (w.I.sel v).asIdeal) → (q : 𝓞 B.host.F) ∈ v.asIdeal := fun v h => by
     rw [← hab v]
     show (q : 𝓞 B.host.F) ∈ (w.I.sel v).asIdeal.comap (algebraMap _ _)
-    rw [Ideal.mem_comap, map_natCast]
-    exact h
+    rwa [Ideal.mem_comap, map_natCast]
   have := p.half v v' q hq (hmem v hqP) (hmem v' hqP')
   exact congrArg HeightOneSpectrum.asIdeal this
 

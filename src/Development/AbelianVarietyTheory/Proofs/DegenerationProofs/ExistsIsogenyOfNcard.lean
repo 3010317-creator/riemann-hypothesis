@@ -258,8 +258,7 @@ theorem exists_descent : ∀ (k : Type) [Field k] [IsAlgClosed k] (A B : Over (S
   have hfin : IsOfFinOrder x := by
     rw [← orderOf_pos_iff, hord]
     omega
-  have : Finite (Subgroup.zpowers x) := by
-    exact finite_zpowers.mpr hfin
+  have : Finite (Subgroup.zpowers x) := finite_zpowers.mpr hfin
   have hi : ∀ c : Subgroup.zpowers x, ∃ j : ℕ, x ^ j = (Subgroup.zpowers x).subtype c := fun c =>
     (Submonoid.mem_powers_iff _ _).mp (hfin.mem_powers_iff_mem_zpowers.mpr c.2)
   obtain ⟨u, hu, hcoc⟩ := exists_cocycle globalFns_holds hA hL (ThetaSplit.units_divisible k) hx
@@ -439,8 +438,7 @@ theorem pow_eq_one_of_etale {k : Type} [Field k] [IsAlgClosed k] {A B : Over (Sp
     have e' := congrArg (fun q => q.left (IsLocalRing.closedPoint k)) e
     have hz' : p.left (IsLocalRing.closedPoint k) = z := pointOfClosedPoint_apply K.hom z hz _
     simp only [Over.comp_left] at e'
-    rw [← hz']
-    exact e'
+    rwa [← hz']
   have hx' : x ≫ ψ = toUnit T ≫ η[B] := hx
   rw [← pullback.lift_fst x (toUnit T) hx', ← MonObj.comp_pow]
   change _ ≫ inc ^ n = 1

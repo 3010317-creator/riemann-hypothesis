@@ -325,8 +325,7 @@ theorem hwFin : PositivityTheory.PfSWUS.SwFockk.HWFin := by
       (∀ j, z j ∈ intLoc D.host.F D.host.E v) ↔ ∀ j, (cf.mapMatrix (mat k) *ᵥ z) j ∈ intLoc D.host.F D.host.E v := by
     intro z
     have h := GlobalTheory.AdelicU.mem_stabLoc.1 hkv z
-    rw [mem_latLoc_stdLattice, mem_latLoc_stdLattice] at h
-    exact h
+    rwa [mem_latLoc_stdLattice, mem_latLoc_stdLattice] at h
   have hkk : cf.mapMatrix (mat k) * cf.mapMatrix (mat k⁻¹) = 1 := by
     rw [← map_mul, ← GlobalTheory.StdUnn.LeftInvSect.mat_mul, mul_inv_cancel, GlobalTheory.StdUnn.LeftInvSect.mat_one, map_one]
   have hset := image_eq (intLoc D.host.F D.host.E v) (PositivityTheory.PfSWUS.SwFockk.lstd D.host.F D.host.E n v)
@@ -534,8 +533,7 @@ theorem compAt_K_unitary (θ : InfFam D) (hθ : IsInfFam θ) (n : ℕ) (k : G D 
   rw [inv_one, Units.val_one, Matrix.map_one _ (map_zero _) (map_one _),
     Matrix.map_one _ (map_zero _) (map_one _)] at hunit
   simp only [Matrix.one_mul, Matrix.mul_one] at hunit
-  rw [← e2, ← e1] at hunit
-  exact hunit
+  rwa [← e2, ← e1] at hunit
 
 theorem local_det {n : ℕ} (α ai β β0 : Matrix (Fin n) (Fin n) ℂ) (U : Matrix (Fin (n + n)) (Fin (n + n)) ℂ)
     (hU : Uᴴ * U = 1) (hα : α * ai = 1) (hβ : βᴴ = β)

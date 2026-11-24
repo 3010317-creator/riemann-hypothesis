@@ -100,8 +100,7 @@ theorem gramForm_zero (y : W) : gramForm β p g 0 y = 0 := by
 
 theorem gramForm_adj (ha : ∀ c x y, β (c • x) y = β x (br c • y)) (c : O) (x y : W) :
     gramForm β p g (c • x) y = gramForm β p g x (br c • y) := by
-  simp only [gramForm, map_smul]
-  exact Finset.sum_congr rfl fun k _ => by rw [smul_comm, ha]
+  simpa only [gramForm, map_smul] using Finset.sum_congr rfl fun k _ => by rw [smul_comm, ha]
 
 theorem gramForm_comm (hs : ∀ x y, β x y = β y x) (ha : ∀ c x y, β (c • x) y = β x (br c • y))
     (hg : ∀ i j, g j i = br (g i j)) (x y : W) : gramForm β p g x y = gramForm β p g y x :=

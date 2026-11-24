@@ -77,8 +77,7 @@ theorem kerDat_of_isBaseKernel : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (
   · intro PP hP
     have hP' := (Finset.mem_filter.1 hP).1
     exact ⟨(hL.Q_pl _ PP hP').1, fun PP' hP'' => (hL.Q_pl _ PP hP').2 PP' (Finset.mem_filter.1 hP'').1⟩
-  · intro PP hP
-    exact (hL.Q_off _ PP (Finset.mem_filter.1 hP).1).1
+  · exact fun PP hP => (hL.Q_off _ PP (Finset.mem_filter.1 hP).1).1
   · intro PP
     constructor
     · intro hnu
@@ -96,8 +95,7 @@ theorem kerDat_of_isBaseKernel : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (
               (a * b).loc PP x = a.loc PP x * b.loc PP x := rfl
           rw [loc_mul] at h1
           have h2 : ψ.loc PP x ^ (Formalism.EigenvalueLevelCeiling.plc v ^ a) = 1 := by
-            have h3 := congrArg (fun χ' : Formalism.L2.Host.HChar D.host.E => χ'.loc PP x) ha
-            exact h3
+            exact congrArg (fun χ' : Formalism.L2.Host.HChar D.host.E => χ'.loc PP x) ha
           rw [eq_inv_of_mul_eq_one_left h1, inv_pow, h2, inv_one]
         have hl := Formalism.EigenvalueLevelCeiling.plc_prime v
         have h3 : 3 = Formalism.EigenvalueLevelCeiling.plc v := (Nat.prime_dvd_prime_iff_eq Nat.prime_three hl).1

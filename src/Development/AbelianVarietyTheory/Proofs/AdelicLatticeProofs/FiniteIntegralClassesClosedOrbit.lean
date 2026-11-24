@@ -333,8 +333,7 @@ theorem exists_isMinVec_of_isClosed (ι : Type) [Fintype ι] [DecidableEq ι] (m
     refine (Metric.isBounded_closedBall (x := (0 : TIdx ι d → ℂ)) (r := Real.sqrt (nsq v))).subset ?_
     intro w hw
     rw [mem_closedBall_zero_iff, pi_norm_le_iff_of_nonneg (Real.sqrt_nonneg _)]
-    intro k
-    exact Real.le_sqrt_of_sq_le ((norm_sq_le_nsq w k).trans hw.2)
+    exact fun k => Real.le_sqrt_of_sq_le ((norm_sq_le_nsq w k).trans hw.2)
   have hcomp : IsCompact K := Metric.isCompact_of_isClosed_isBounded hKc hKb
   obtain ⟨w, hwK, hmin⟩ := hcomp.exists_isMinOn ⟨v, hv, le_refl (nsq v)⟩ continuous_nsq.continuousOn
   refine ⟨w, hwK.1, ?_⟩
@@ -608,8 +607,7 @@ theorem GlobalTheory.ClassFin.orbit_proper_of_isClosed : ∀ (ι : Type) [Fintyp
         (hM.trans (Set.image_mono (box_mono (le_max_right _ _))))⟩
     · intro w hw
       obtain ⟨O, hO, hwO, N, hN⟩ := locally_box d v hX w hw.1
-      refine ⟨O ∩ orb d v, ?_, N, hN⟩
-      exact mem_nhdsWithin.2 ⟨O, hO, hwO, fun x hx => ⟨hx.1, hx.2.1⟩⟩
+      exact ⟨O ∩ orb d v, (mem_nhdsWithin.2 ⟨O, hO, hwO, fun x hx => ⟨hx.1, hx.2.1⟩⟩), N, hN⟩
   obtain ⟨N, hN⟩ := key
   refine ⟨N, fun y hy hC => ?_⟩
   obtain ⟨a, ha, hav⟩ := hN (a := act d v y) ⟨⟨y, hy, rfl⟩, hC⟩
@@ -718,8 +716,7 @@ theorem finite_integral_classes_closed_orbit : ∀ (ι : Type) [Fintype ι] [Dec
         (h * γ.map (Int.cast : ℤ → ℚ)).map (Rat.castHom ℂ) := by
       ext i j
       simp [Matrix.mul_apply]
-    rw [h3]
-    exact h2
+    rwa [h3]
   rw [Set.Finite.mem_toFinset]
   refine ⟨hwint, ?_⟩
   rw [← hact]

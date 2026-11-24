@@ -340,8 +340,7 @@ theorem exists_gl_map_eq (O : Type) [CommRing O] [IsLocalRing O] (D : Type) [Fin
   have hu : IsUnit (Matrix.of A).det := by
     rw [← IsLocalRing.residue_ne_zero_iff_isUnit, RingHom.map_det]
     change ((Matrix.of A).map (IsLocalRing.residue O)).det ≠ 0
-    rw [hAM]
-    exact hM
+    rwa [hAM]
   obtain ⟨g, hg⟩ := (Matrix.isUnit_iff_isUnit_det _).2 hu
   refine ⟨g, ?_⟩
   rw [hg, hAM, ← he]
@@ -355,8 +354,7 @@ def projE (F : Type) [Field F] (s : Finset D) : Matrix D D F := diagonal fun i =
 
 theorem rank_projE (F : Type) [Field F] (s : Finset D) : (projE F s).rank = s.card := by
   classical
-  rw [projE, rank_diagonal]
-  rw [Fintype.card_subtype]
+  rw [projE, rank_diagonal, Fintype.card_subtype]
   congr 1
   ext i
   by_cases h : i ∈ s <;> simp [h]
@@ -414,8 +412,7 @@ theorem int_mul {m n : Type} {A : Matrix m D k} {B : Matrix D n k} (hA : ∀ i j
 
 theorem int_of_KO {g : GL D k} (hg : g ∈ KO k D) : ∀ i j, g.1 i j ∈ 𝒪[k] := by
   obtain ⟨κ, rfl⟩ := hg
-  intro i j
-  exact (κ.1 i j).2
+  exact fun i j => (κ.1 i j).2
 
 theorem KO_of_int {g : GL D k} (hg : ∀ i j, g.1 i j ∈ 𝒪[k]) (hg' : ∀ i j, (g⁻¹).1 i j ∈ 𝒪[k]) : g ∈ KO k D := by
   let A : Matrix D D 𝒪[k] := fun i j => ⟨_, hg i j⟩
@@ -632,8 +629,7 @@ theorem exists_gl_map_eq (O : Type) [CommRing O] [IsLocalRing O] (n : Type) [Fin
   have hu : IsUnit (Matrix.of A).det := by
     rw [← IsLocalRing.residue_ne_zero_iff_isUnit, RingHom.map_det]
     change ((Matrix.of A).map (IsLocalRing.residue O)).det ≠ 0
-    rw [hAM]
-    exact hM
+    rwa [hAM]
   obtain ⟨g, hg⟩ := (Matrix.isUnit_iff_isUnit_det _).2 hu
   refine ⟨g, ?_⟩
   rw [hg, hAM, ← he]
@@ -653,8 +649,7 @@ def projE (F : Type) [Field F] (s : Finset n) : Matrix n n F := diagonal fun i =
 
 theorem rank_projE (F : Type) [Field F] (s : Finset n) : (projE F s).rank = s.card := by
   classical
-  rw [projE, rank_diagonal]
-  rw [Fintype.card_subtype]
+  rw [projE, rank_diagonal, Fintype.card_subtype]
   congr 1
   ext i
   by_cases h : i ∈ s <;> simp [h]
@@ -726,8 +721,7 @@ theorem int_mul {a b : Type} {A : Matrix a n k} {B : Matrix n b k} (hA : ∀ i j
 
 theorem int_of_KO {g : GL n k} (hg : g ∈ KO k n) : ∀ i j, g.1 i j ∈ 𝒪[k] := by
   obtain ⟨κ, rfl⟩ := hg
-  intro i j
-  exact (κ.1 i j).2
+  exact fun i j => (κ.1 i j).2
 
 theorem KO_of_int {g : GL n k} (hg : ∀ i j, g.1 i j ∈ 𝒪[k]) (hg' : ∀ i j, (g⁻¹).1 i j ∈ 𝒪[k]) : g ∈ KO k n := by
   let A : Matrix n n 𝒪[k] := fun i j => ⟨_, hg i j⟩
@@ -1025,8 +1019,7 @@ theorem omTwo_datum_inv : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
       exact det_cong hj
     have t2 : ξ (Units.mk0 _ hs.det_ne) = ξ (u * Units.mk0 _ hy.det_ne) := by
       refine tame_eq hξ (by rw [Units.val_mul, map_mul, hu, Units.val_mk0, Units.val_mk0, hy.2.1, h11, mul_one]) ?_
-      rw [Units.val_mul, Units.val_mk0, Units.val_mk0]
-      exact hc
+      rwa [Units.val_mul, Units.val_mk0, Units.val_mk0]
     rw [dite_eq_left hs, dite_eq_left hy, MonoidHom.inv_apply, MonoidHom.inv_apply, inv_inv, inv_inv, t1, t2, map_mul, map_mul]
     simp only [Units.val_mul]
     ring
@@ -1067,8 +1060,7 @@ theorem omTwo_torusLeft : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
   have hvj : valuation k ((GeneralLinearGroup.det j : kˣ) : k) = 1 := (nabs_eq_one_iff _).1 hnj
   have hξ : μS (GeneralLinearGroup.det j) = ξ (GeneralLinearGroup.det j) := by
     have := hu _ hvj
-    rw [MonoidHom.mul_apply, MonoidHom.inv_apply, mul_inv_eq_one] at this
-    exact this
+    rwa [MonoidHom.mul_apply, MonoidHom.inv_apply, mul_inv_eq_one] at this
   have hdm : GeneralLinearGroup.det (mtor ϖ (indic s) : GL (A ⊕ D') k) = ϖ ^ (s.card : ℤ) := by
     rw [GlobalTheory.ChainStepCoef.det_mtor, sum_indic]
   have hnm : nabs k (GeneralLinearGroup.det (mtor ϖ (indic s) : GL (A ⊕ D') k)) = (resCard k : ℝ) ^ (-(s.card : ℤ)) := by
@@ -1323,8 +1315,7 @@ theorem torusRight : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace
   have hv1 : valuation k ((GeneralLinearGroup.det j : kˣ) : k) = 1 := (nabs_eq_one_iff _).1 hn1
   have hxi : μT (GeneralLinearGroup.det j) = ξ (GeneralLinearGroup.det j) := by
     have := hun _ hv1
-    rw [MonoidHom.mul_apply, MonoidHom.inv_apply, mul_inv_eq_one] at this
-    exact this
+    rwa [MonoidHom.mul_apply, MonoidHom.inv_apply, mul_inv_eq_one] at this
   have hdet : GeneralLinearGroup.det (j * mtor ϖ (-indic s)) =
       GeneralLinearGroup.det j * ϖ ^ (-(s.card : ℤ)) := by
     rw [map_mul, det_mtor', sum_neg_indic]
@@ -1726,8 +1717,7 @@ theorem coset_term : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace
   have t2 : ξ (Units.mk0 _ hs.det_ne) = ξ (Units.mk0 _ hW.det_ne * u₁) := by
     refine GlobalTheory.DatumEigen.tame_eq hξ (by rw [Units.val_mul, map_mul, Units.val_mk0, hW.2.1, one_mul]; exact h11) ?_
     show valuation k (x.toBlocks₁₁.det - y.toBlocks₁₁.det * j.val.toBlocks₁₁.det) < 1
-    rw [mul_comm (y.toBlocks₁₁.det)]
-    exact hc
+    rwa [mul_comm (y.toBlocks₁₁.det)]
   simp only [datum, dite_eq_left hs, dite_eq_left hW]
   rw [t1, t2, ← Units.val_mul]
   congr 1
@@ -1890,8 +1880,7 @@ theorem transfer : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k
     congr 1
     have hN := GlobalTheory.ParHecke.StringEig.genVal_add_segL k ϖ hϖ (Fintype.card A) (Fintype.card D) t s.card B (μS ϖ) (μT ϖ) hx2
       (by rw [← hD']; exact Finset.card_le_univ s)
-    rw [show Fintype.card D' = Fintype.card D + t from hD']
-    rw [hN, Finset.mul_sum, Finset.mul_sum]
+    rw [show Fintype.card D' = Fintype.card D + t from hD', hN, Finset.mul_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun n _ => ?_
     simp only [hC, hcn, hden, hD']
     ring

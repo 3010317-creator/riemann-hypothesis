@@ -87,8 +87,7 @@ theorem _root_.GlobalTheory.AdicSum.sumI_unique [IsNoetherianRing R] (hI : I ≤
   have h0 : (⟨s - s', hmem⟩ : M) = 0 := by
     rw [Ideal.jacobson_bot] at hI
     have hK := Ideal.iInf_pow_smul_eq_bot_of_le_jacobson (M := M) I hI
-    rw [← Submodule.mem_bot R, ← hK, Submodule.mem_iInf]
-    exact hpow
+    rwa [← Submodule.mem_bot R, ← hK, Submodule.mem_iInf]
   exact sub_eq_zero.mp (congrArg Subtype.val h0)
 
 
@@ -168,8 +167,7 @@ theorem _root_.GlobalTheory.AdicSum.sumI_comp_iff {Jx : Type} {e : Jx → Ix}
         Function.Embedding.coeFn_mk, he.eq_iff, exists_eq_right]
       exact ⟨fun hj => hj.elim id fun hj => hT (Finset.mem_preimage.mpr hj), Or.inl⟩
     have hsum := hS (T.map ⟨e, he⟩ ∪ S) Finset.subset_union_right
-    rw [← Finset.sum_preimage e _ he.injOn x (fun i _ hi => h0 i hi), hpre] at hsum
-    exact hsum
+    rwa [← Finset.sum_preimage e _ he.injOn x (fun i _ hi => h0 i hi), hpre] at hsum
 
 end
 

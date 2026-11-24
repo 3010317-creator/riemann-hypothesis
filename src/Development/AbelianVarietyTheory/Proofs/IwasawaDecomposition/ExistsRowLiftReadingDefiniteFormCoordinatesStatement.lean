@@ -213,8 +213,7 @@ theorem exists_lat [NumberField K] {O : Type} [CommRing O] (o : O →+* K) (σ :
   obtain ⟨G, hG⟩ := hN.fg.restrictScalars (R := ℤ)
   have hGN : ∀ g ∈ G, g ∈ N := fun g hg => by
     have : g ∈ Submodule.span ℤ (G : Set (Fin n → K)) := Submodule.subset_span hg
-    rw [hG] at this
-    exact this
+    rwa [hG] at this
 
   have hsum : ∀ φ : W → ℂ, ∑ v ∈ G.image j, φ v • v = ∑ g ∈ G, φ (j g) • j g := fun φ =>
     Finset.sum_image fun a _ b _ h => hj h
@@ -636,8 +635,7 @@ theorem hp_model (h : PeterssonHilbertSpace.IsHermPos C ip) : ∃ H : Hs, ∃ j 
     intro x hx y hy z hz c
     refine ⟨?_, ?_⟩
     · have e1 := hp_add_right h ⟨x, hx⟩ ⟨y, hy⟩ ⟨c • z, C.smul_mem c hz⟩
-      have e2 := hp_smul_right h c ⟨x, hx⟩ ⟨z, hz⟩
-      exact e1.trans (congrArg (fun t => ip x y + t) e2)
+      exact e1.trans (congrArg (fun t => ip x y + t) (hp_smul_right h c ⟨x, hx⟩ ⟨z, hz⟩))
     · exact (h.herm ⟨x, hx⟩ ⟨y, hy⟩).symm
   have h2 : ∀ x ∈ C, x ≠ 0 → 0 < (ip x x).re := fun x hx hne =>
     h.pos ⟨x, hx⟩ (fun h0 => hne (by simpa using congrArg Subtype.val h0))
@@ -1160,8 +1158,7 @@ theorem chain_exists : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T :
   have hptop : (⨆ π, p π) = ⊤ := by
     apply Submodule.map_injective_of_injective hEi
     rw [Submodule.map_iSup, Submodule.map_top, hEr]
-    simp only [hmap]
-    exact hsup
+    simpa only [hmap] using hsup
   have hporth : ∀ π π', π ≠ π' → p π ⟂ p π' := by
     intro π π' hne
     rw [Submodule.isOrtho_iff_inner_eq]

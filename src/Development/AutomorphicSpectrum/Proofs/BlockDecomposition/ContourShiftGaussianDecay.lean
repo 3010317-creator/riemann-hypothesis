@@ -94,8 +94,7 @@ theorem integral_vertical_line_eq {Y : Type} [NormedAddCommGroup Y] [NormedSpace
         Complex.I • (∫ y in (-R)..R, f ((a : ℂ) + (y : ℂ) * Complex.I)) = 0 := by
     intro R _
     refine Complex.integral_boundary_rect_eq_zero_of_differentiableOn f ⟨a, -R⟩ ⟨b, R⟩ ?_
-    refine hd.mono fun z hz => ?_
-    exact (Set.uIcc_of_le hab).subset (Complex.mem_reProdIm.mp hz).1
+    exact hd.mono fun z hz => (Set.uIcc_of_le hab).subset (Complex.mem_reProdIm.mp hz).1
   have hexp : Tendsto (fun R : ℝ => Real.exp (-R ^ 2)) atTop (𝓝 0) :=
     Real.tendsto_exp_atBot.comp (tendsto_neg_atTop_atBot.comp (tendsto_pow_atTop two_ne_zero))
   have hH : Tendsto (fun R : ℝ => (∫ x in a..b, f ((x : ℂ) + ((-R : ℝ) : ℂ) * Complex.I)) -
@@ -130,7 +129,6 @@ theorem shift_vertical_line : ∀ (Y : Type) [NormedAddCommGroup Y] [NormedSpace
     (f : ℂ → Y) (a b M : ℝ), a ≤ b → DifferentiableOn ℂ f {z : ℂ | z.re ∈ Set.Icc a b} →
     (∀ z : ℂ, z.re ∈ Set.Icc a b → ‖f z‖ ≤ M * Real.exp (-z.im ^ 2)) →
     ∫ y : ℝ, f ⟨a, y⟩ = ∫ y : ℝ, f ⟨b, y⟩ := by
-  intro Y _ _ _ f a b M hab hd hb
-  exact integral_vertical_line_eq f a b M hab hd hb
+  exact fun Y _ _ _ f a b M hab hd hb => integral_vertical_line_eq f a b M hab hd hb
 
 end GlobalTheory.CompanionTheory.TubeFourier.ShiftLine

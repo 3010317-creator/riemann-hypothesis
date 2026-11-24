@@ -313,8 +313,7 @@ theorem smul_mem_hLat {V : HSp D} {β : GL (Fin V.rank) (Lev.EAf D)}
       funext i
       rw [Nat.cast_smul_eq_nsmul, Pi.smul_apply, Pi.smul_apply, TensorProduct.tmul_smul]
     change ((finHom V (h * k))⁻¹).1 *ᵥ _ ∈ GlobalTheory.AdLat.hat D.host.F (Λ : Set (Fin V.rank → D.host.E))
-    rw [e, map_mul, mul_inv_rev, Units.val_mul, mulVec_nsmul, ← map_inv]
-    exact h1
+    rwa [e, map_mul, mul_inv_rev, Units.val_mul, mulVec_nsmul, ← map_inv]
   | zero => rw [smul_zero]; exact Submodule.zero_mem _
   | add x y _ _ hx hy => rw [smul_add]; exact Submodule.add_mem _ hx hy
   | smul r x _ hx => rw [smul_comm]; exact Submodule.smul_mem _ _ hx
@@ -340,8 +339,7 @@ theorem frame_full (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D))
   rw [one_pow] at hB
   rw [eq_top_iff, ← GlobalTheory.ParIndex.hermitianSpace_standard_lattice_span_eq_top D V]
   refine Submodule.span_mono fun x hx => ?_
-  have h := hB.2.2.2.1 x hx
-  simpa using h
+  simpa using hB.2.2.2.1 x hx
 
 theorem inCoefLat_pow (R : RealDat D A Ks) (i : Fin D.R.m) (hβ : IsSDFrame (Vc D i) (R.βV i) (R.ΛV i) 1) {a : AE D}
     {k : GA D (Vc D i)} (hk : Formalism.L2.Theta.SuppAt a (Vc D i) k) {p : ℕ}
@@ -684,8 +682,7 @@ theorem prime_absNorm {Q : Finset (Pl D.host.E)} (hQ : IsTwistPlaces D.host.g Q)
     (Ideal.absNorm PP.asIdeal).Prime ∧ ((Ideal.absNorm PP.asIdeal : ℕ) : 𝓞 D.host.E) ∉ PP.asIdeal ^ 2 := by
   obtain ⟨⟨q, hq, hc, hn, -⟩, -⟩ := hQ PP h
   have e : Ideal.absNorm PP.asIdeal = q := by
-    rw [Ideal.absNorm_eq_natCard]
-    exact hc
+    rwa [Ideal.absNorm_eq_natCard]
   rw [e]
   exact ⟨hq, hn⟩
 

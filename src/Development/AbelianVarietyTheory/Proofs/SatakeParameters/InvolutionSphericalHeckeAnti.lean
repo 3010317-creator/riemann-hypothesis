@@ -87,8 +87,7 @@ theorem mem_map_conj {G : Type} [Group G] (K : Subgroup G) (g y : G) :
   · rintro ⟨z, hz, rfl⟩
     have : g⁻¹ * (MulAut.conj g).toMonoidHom z * g = z := by
       simp [mul_assoc]
-    rw [this]
-    exact hz
+    rwa [this]
   · intro h
     refine ⟨g⁻¹ * y * g, h, ?_⟩
     simp [mul_assoc]
@@ -787,8 +786,7 @@ theorem keeps_iff (he : e * e = e) (h2 : ∀ a, π (finPart D (s a)) = a)
       funext a
       have := congrFun (congrFun B.inv_mul a) j
       rw [Matrix.one_apply] at this
-      rw [Pi.single_apply]
-      exact this
+      rwa [Pi.single_apply]
     have hm : (fun a => finPart D (s (B.1 a j))) ∈ LamHat V := by
       have := (hB fun a => finPart D (s (B.1 a j))).2 (by
         intro a
@@ -800,8 +798,7 @@ theorem keeps_iff (he : e * e = e) (h2 : ∀ a, π (finPart D (s a)) = a)
     rwa [hy, Matrix.mulVec_single_one] at this
   · intro h y hy
     have h1 := (hB y).1 (smul_mem V (idem_mem he) hy)
-    refine (key y).2 fun i => ?_
-    exact Subring.sum_mem _ fun j _ => mul_mem (h i j) (h1 j)
+    exact (key y).2 fun i => Subring.sum_mem _ fun j _ => mul_mem (h i j) (h1 j)
 
 theorem K_iff (he : IsSplitIdem D e) (h2 : ∀ a, π (finPart D (s a)) = a)
     (h3 : ∀ x, finPart D (s (π x)) = finPart D e * x)

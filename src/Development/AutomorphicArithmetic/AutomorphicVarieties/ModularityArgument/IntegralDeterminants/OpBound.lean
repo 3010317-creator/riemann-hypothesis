@@ -101,8 +101,7 @@ theorem valued_det_of_KGL {w : HeightOneSpectrum (𝓞 K)} {n : ℕ} {g : GL (Fi
   obtain ⟨g0, rfl⟩ := hg
   set O := (w.adicCompletionIntegers K).toSubring
   have hd : ∀ h : GL (Fin n) O, ((Formalism.UG.bc O.subtype h).val.det) = ((h.val.det : O) : w.adicCompletion K) := by
-    intro h
-    exact (RingHom.map_det O.subtype h.val).symm
+    exact fun h => (RingHom.map_det O.subtype h.val).symm
   have h1 : Valued.v ((g0.val.det : O) : w.adicCompletion K) ≤ 1 := (g0.val.det).2
   have h2 : Valued.v (((g0⁻¹).val.det : O) : w.adicCompletion K) ≤ 1 := ((g0⁻¹).val.det).2
   have h3 : ((g0.val.det : O) : w.adicCompletion K) * (((g0⁻¹).val.det : O) : w.adicCompletion K) = 1 := by
@@ -186,8 +185,7 @@ theorem absBound :
     rw [← Matrix.mulVec_smul, ← heig h, Matrix.mulVec_sum]
 
   obtain ⟨g0, i0, h0⟩ : ∃ g i, Nf g i ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     apply hF
     funext g
     have : F g = R g *ᵥ Nf g := by
@@ -263,8 +261,7 @@ theorem absBound :
     have := hit n [] (by simp) i0
     simpa [hN] using this
   have hd : 0 < nu ι (Nf g0 i0) := nu_pos' ι h0
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   rcases hc.eq_or_lt with h0c | hcpos
   · have := hfinal 1
     rw [← h0c] at this hlt
@@ -670,8 +667,7 @@ private theorem expand {V : Type} [Fintype V] {W : V → Type} [∀ v, AddCommGr
     f (fun v => T v (e v (i v))) =
       ∑ j : ∀ v, Fin (d v), (∏ v, LinearMap.toMatrix (e v) (e v) (T v) (j v) (i v)) • f (fun v => e v (j v)) := by
   have h : ∀ v, T v (e v (i v)) = ∑ b, LinearMap.toMatrix (e v) (e v) (T v) b (i v) • e v b := fun v => by
-    simp only [LinearMap.toMatrix_apply]
-    exact ((e v).sum_repr _).symm
+    simpa only [LinearMap.toMatrix_apply] using ((e v).sum_repr _).symm
 
   rw [show (fun v => T v (e v (i v))) = fun v => ∑ b, LinearMap.toMatrix (e v) (e v) (T v) b (i v) • e v b from funext h,
   MultilinearMap.map_sum]
@@ -685,8 +681,7 @@ private theorem inf_comm (k : infU E n) (g : finU (E := E) (n := n)) : k.1 * g.1
     have a1 : GlobalTheory.BCT.TrKer.splitInf E n g.1 = 1 := by simpa using GlobalTheory.BCT.TrKer.splitInf_mul g 1
     have a2 : GlobalTheory.BCT.TrKer.splitInf E n k.1 = k := by simpa using GlobalTheory.BCT.TrKer.splitInf_mul 1 k
     rw [map_mul, a1, a2, mul_one]
-  rw [h1, h2] at h
-  exact h
+  rwa [h1, h2] at h
 
 private theorem cEmb_rat {γ₀ : GlobalTheory.BCT.UE E n} {r : UA E n} (hr : r ∈ ratU E n)
     (hre : ∀ v : InfinitePlace E, cEmb v.embedding r = GeneralLinearGroup.map v.embedding γ₀.1) (τ : E →+* ℂ) :
@@ -820,12 +815,10 @@ private theorem core (hn : 1 ≤ n) (σ : Submodule ℂ (UA E n → ℂ)) (hσ :
     refine Finset.prod_le_prod₀ (fun _ _ => nu_nonneg _ _) fun v _ => ?_
     have hg := intDet_of_KGL (hKl k hk (u v))
     have h0 : nu ι (ψ v (cLoc (u v) k.1).val.det) = 1 := by
-      have h1 := nu_of_val ι (u v) (ψ v) (φ v) (hψ v) (hint v) _ 0 hg.2
-      simpa using h1
+      simpa using nu_of_val ι (u v) (ψ v) (φ v) (hψ v) (hint v) _ 0 hg.2
     have h2 := (hRB v (lo (φ v)) (hi (φ v)) (hlh _) _ hg.1 (j v) (i v)).2
     rw [h0, _root_.one_zpow, mul_one] at h2
-    simp only [M, mv_apply, hinv]
-    exact h2.trans (le_max_left _ _)
+    simpa only [M, mv_apply, hinv] using h2.trans (le_max_left _ _)
   have himg : Ov ι w = (Finset.univ.filter fun v => u v = w).image φ := by
     ext τ
     simp only [Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and]
@@ -898,8 +891,7 @@ private theorem intDet_prod {w : HeightOneSpectrum (𝓞 E)} {j : ℕ} (L : List
   | nil => simpa using intDet_one w
   | cons x L ih =>
     have h1 := intDet_mul (h x List.mem_cons_self) (ih fun y hy => h y (List.mem_cons_of_mem _ hy))
-    rw [List.prod_cons, map_mul, List.length_cons, Nat.mul_succ, Nat.add_comm]
-    exact h1
+    rwa [List.prod_cons, map_mul, List.length_cons, Nat.mul_succ, Nat.add_comm]
 
 private theorem intDet_prod_inv {w : HeightOneSpectrum (𝓞 E)} {j : ℕ} (L : List (UA E n))
     (h : ∀ x ∈ L, IntDet w j (cLoc w x⁻¹)) : IntDet w (j * L.length) (cLoc w L.prod⁻¹) := by
@@ -907,8 +899,7 @@ private theorem intDet_prod_inv {w : HeightOneSpectrum (𝓞 E)} {j : ℕ} (L : 
   | nil => simpa using intDet_one w
   | cons x L ih =>
     have h1 := intDet_mul (ih fun y hy => h y (List.mem_cons_of_mem _ hy)) (h x List.mem_cons_self)
-    rw [List.prod_cons, _root_.mul_inv_rev, map_mul, List.length_cons, Nat.mul_succ]
-    exact h1
+    rwa [List.prod_cons, _root_.mul_inv_rev, map_mul, List.length_cons, Nat.mul_succ]
 
 private theorem zpow_pow_pow (x : ℝ) (z : ℤ) (j m : ℕ) : ((x ^ z) ^ j) ^ m = (x ^ (j * m)) ^ z := by
   rw [← pow_mul, ← zpow_natCast, ← zpow_natCast, ← _root_.zpow_mul, ← _root_.zpow_mul, mul_comm]
@@ -929,8 +920,7 @@ theorem UpperTheory.V.Z.Int.opBound :
     have hI : IntDet u (j * L.length) (cLoc u L.prod) := intDet_prod L fun x hx => (h x (hL x hx)).2
     have hb := (hR (lo τ) (hi τ) (hlh τ) (cLoc u L.prod) hI.1 a b).2
     rw [nu_of_val ι u ψ τ hψ hint _ _ hI.2] at hb
-    rw [map_inv, zpow_pow_pow]
-    exact hb
+    rwa [map_inv, zpow_pow_pow]
   · rw [← Finset.prod_pow]
     refine core ι hn σ hσ lam hlam w hw hU lo hi hlh s a hs
       (fun x hx => (h x hx).1) _
@@ -940,8 +930,7 @@ theorem UpperTheory.V.Z.Int.opBound :
     have hI : IntDet u (j * L.length) (cLoc u L.prod⁻¹) := intDet_prod_inv L fun x hx => (h x (hL x hx)).2
     have hb := (hR (lo τ) (hi τ) (hlh τ) (cLoc u L.prod⁻¹) hI.1 a b).1
     rw [nu_of_val ι u ψ τ hψ hint _ _ hI.2] at hb
-    rw [zpow_pow_pow]
-    exact hb
+    rwa [zpow_pow_pow]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.IntegralDeterminants.OpBound =====

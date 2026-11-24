@@ -150,10 +150,8 @@ theorem GlobalTheory.Unf.realParam_size_bounds : ∀ (D : D7) (θ : InfFam D), I
       have hLt : L t = 0 := by
         ext i j
         refine hσ.ext _ ?_ fun τ => ?_
-        · have h := congrFun (congrFun (hL.2 t) i) j
-          simpa only [Matrix.map_apply, Matrix.zero_apply] using h
-        · have h := congrFun (congrFun (congrFun h0 τ) i) j
-          exact h
+        · simpa only [Matrix.map_apply, Matrix.zero_apply] using congrFun (congrFun (hL.2 t) i) j
+        · exact congrFun (congrFun (congrFun h0 τ) i) j
       exact hinj (hLt.trans L.map_zero.symm)
     obtain ⟨K, -, hK⟩ := (A : (Fin k → ℝ) →ₗ[ℝ] (D.what₂.Tau → Fin m → Fin n → ℂ)).exists_antilipschitzWith hker
     refine ⟨K, fun x t => ?_⟩

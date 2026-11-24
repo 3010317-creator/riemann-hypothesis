@@ -259,8 +259,7 @@ theorem frame_adelic {b : GL (Fin n ⊕ Fin n) E} {ε : ℤˣ}
       Matrix.fromBlocks 0 1 (inclR (F := F) (E := E) (AF F) ((ε : ℤ) : E) • 1) 0 := by
   have := congrArg (fun M => M.map (inclR (F := F) (E := E) (AF F))) h
   simp only [Matrix.map_mul, incM_dbl, map_sigma_incM] at this
-  rw [← incM_alt_alt]
-  exact this
+  rwa [← incM_alt_alt]
 
 
 end SiegelEisensteinSeries.Grp

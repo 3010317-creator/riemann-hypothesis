@@ -347,8 +347,7 @@ theorem exists_stdChart : ∀ N : ℕ, ∃ (c : AlgChart (PSpace.str ℂ N) (Rin
   have hw0 : IsUnit (w.1 0) := by
     rw [← le_pt_preimage_chart_iff (RingHom.id ℂ) w.1 w.2 0]
     have h' := hy
-    rw [he] at h'
-    exact h'
+    rwa [he] at h'
   have hrat : ∀ a : Fin N, v.ofLp a = w.1 a.succ / w.1 0 := by
     intro a
     have h1 := hev v a
@@ -361,8 +360,7 @@ theorem exists_stdChart : ∀ N : ℕ, ∃ (c : AlgChart (PSpace.str ℂ N) (Rin
       Real.log (∑ a, ‖w.1 a / w.1 0‖ ^ 2) := by
     refine (Weight.fsBasis_φ _ _ _ _ _ _ _).trans (congrArg _ (Finset.sum_congr rfl fun a _ => ?_))
     simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
-    rw [div_eq_mul_inv, ← Ring.inverse_eq_inv, ← valR_pt_ratio (RingHom.id ℂ) w.1 w.2 hw0 a]
-    rw [he]
+    rw [div_eq_mul_inv, ← Ring.inverse_eq_inv, ← valR_pt_ratio (RingHom.id ℂ) w.1 w.2 hw0 a, he]
     rfl
   refine key.trans ?_
   congr 1

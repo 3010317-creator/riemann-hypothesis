@@ -122,14 +122,12 @@ theorem jet_mono {z : GlobalTheory.PowGerm.JetPts G κ} (hz : GlobalTheory.PowGe
     Ideal.Quotient.liftₐ _ k fun a ha => by
       have h1 : I ≤ (RingHom.ker (Chart.jetAug V κ m)).comap k := fun b hb => (hqk' b).trans hb
       have h2 := Ideal.le_comap_pow _ (m + 1) (Ideal.pow_right_mono h1 (m + 1) ha)
-      rw [Chart.ker_jetAug_pow] at h2
-      exact h2
+      rwa [Chart.ker_jetAug_pow] at h2
   have hkb : (Chart.jetAug V κ m).comp kb = aug := Ideal.Quotient.algHom_ext _ (AlgHom.ext hqk')
   have e : kb.comp ψ₀ = AlgHom.id V _ := by
     refine (hx.2.2 _ (Chart.jetAug V κ m) m (Chart.ker_jetAug_pow _ m) _ (hx.2.1 m)).unique ⟨?_, ?_⟩ ⟨rfl, ?_⟩
     · rw [← AlgHom.comp_assoc, hkb, ha]
-    · rw [← Chart.spMap_comp, Category.assoc, ← hψ₀, Chart.spMap_pt]
-      exact hk
+    · rwa [← Chart.spMap_comp, Category.assoc, ← hψ₀, Chart.spMap_pt]
     · apply Over.OverMorphism.ext
       show _ = Spec.map (𝟙 _) ≫ _
       rw [Spec.map_id, Category.id_comp]
@@ -174,8 +172,7 @@ theorem coord_iff {z : GlobalTheory.PowGerm.JetPts G κ} {a : Sp V ⟶ G.left} {
   refine forall_congr' fun m => ⟨?_, fun h => ⟨_, evJ_X α hα m, h⟩⟩
   rintro ⟨ψ, h1, h2⟩
   have : ψ = evJ α hα m := Chart.jet_ext fun p => (h1 p).trans (evJ_X α hα m p).symm
-  rw [← this]
-  exact h2
+  rwa [← this]
 
 omit [IsLocalRing V] in
 theorem spMap_homAt {A B D : Type} [CommRing A] [Algebra V A] [CommRing B] [Algebra V B] [CommRing D] [Algebra V D]

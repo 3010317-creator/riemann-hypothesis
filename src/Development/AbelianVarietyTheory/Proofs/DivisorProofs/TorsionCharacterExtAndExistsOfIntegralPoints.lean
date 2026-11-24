@@ -104,8 +104,7 @@ private lemma exists_eq_one_and_eq_zero_of_ne_algHom {C V : Type} [Field C] [Com
     ∃ w : V, z w = 1 ∧ ∀ z' : V →ₐ[C] C, z' ≠ z → z' w = 0 := by
   have hsep : ∀ z' : V →ₐ[C] C, z' ≠ z → ∃ a : V, z a ≠ z' a := by
     intro z' hz'
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hz' (AlgHom.ext fun a => (h a).symm)
   classical
   let u : (V →ₐ[C] C) → V := fun z' =>
@@ -179,8 +178,7 @@ theorem _root_.GlobalTheory.exists_eval_eq_of_multiplicative_on_points : ∀ (O 
       rw [hevC]
       exact ha (res z)
     funext i
-    have hi := congrArg (fun v => eC.repr v i) hv
-    simpa [Finsupp.single_apply] using hi
+    simpa [Finsupp.single_apply] using congrArg (fun v => eC.repr v i) hv
   haveI : Finite (C ⊗[O] A →ₐ[C] C) := (linearIndependent_toLinearMap C (C ⊗[O] A) C).finite
   letI : Fintype (C ⊗[O] A →ₐ[C] C) := Fintype.ofFinite _
   choose w hw1 hw0 using fun z : C ⊗[O] A →ₐ[C] C => exists_eq_one_and_eq_zero_of_ne_algHom z
@@ -233,8 +231,7 @@ theorem _root_.GlobalTheory.exists_eval_eq_of_multiplicative_on_points : ∀ (O 
     rw [Submodule.span_mul_span, Submodule.span_le]
     rintro _ ⟨s, hs, t, ht, rfl⟩
     rcases hs with rfl | ⟨i, rfl⟩ <;> rcases ht with rfl | ⟨j, rfl⟩ <;> dsimp only
-    · rw [one_mul]
-      exact hoM
+    · rwa [one_mul]
     · rw [one_mul]
       exact hcM j
     · rw [mul_one]

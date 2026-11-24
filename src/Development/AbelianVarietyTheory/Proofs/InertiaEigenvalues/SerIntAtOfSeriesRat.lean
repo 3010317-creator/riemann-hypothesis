@@ -258,8 +258,7 @@ theorem exists_isHalfIdem : ∀ (D : D7) (H : Geo.Tor.Host D.host.E) (l : Geo.To
     refine sup_le h1 (Ideal.map_le_iff_le_comap.2 fun x hx => ?_)
     have h3 := h2 hx
     rw [GlobalTheory.IdemSupport.mem_cP] at h3
-    rw [Ideal.mem_comap, RingHom.coe_coe, hbar]
-    exact h3
+    rwa [Ideal.mem_comap, RingHom.coe_coe, hbar]
   have hne : l.Mb ≠ ⊥ := by
     intro h
     have h1 := l.prod
@@ -274,8 +273,7 @@ theorem exists_isHalfIdem : ∀ (D : D7) (H : Geo.Tor.Host D.host.E) (l : Geo.To
     refine GlobalTheory.Hk3.SplitMatch.exists_isIdemAt fun h => key Q hQ fun x hx => ?_
     rw [GlobalTheory.IdemSupport.mem_cP]
     have h4 : Formalism.DivisionValues.cO D.host.E x ∈ (Formalism.DivisionValues.conjPl Q).asIdeal := Ideal.mem_map_of_mem _ (hQ hx)
-    rw [h] at h4
-    exact h4
+    rwa [h] at h4
   · intro Q hQ Q' hQ' hu
     rw [Set.Finite.mem_toFinset] at hQ hQ'
     rcases GlobalTheory.IdemSupport.eq_or_eq_cP hu with h | h
@@ -612,8 +610,7 @@ theorem sub_levPoint_mem_latO : ∀ (D : D7) (V W : HSp D) (ΛV : Submodule (�
     ext a b
     have hzb : (β : D.host.E) * ι (x b - cSep l₂ • r b) a = (l₂.M : D.host.E) * ι (w b) a := by
       have := congrFun (congrArg ι (hw b)) a
-      rw [map_smul, map_nsmul, Pi.smul_apply, Pi.smul_apply, nsmul_eq_mul] at this
-      exact this
+      rwa [map_smul, map_nsmul, Pi.smul_apply, Pi.smul_apply, nsmul_eq_mul] at this
     rw [map_sub, Pi.sub_apply] at hzb
     change e * incA D (ι (x b) a / (l₂.M : D.host.E)) - e * incA D (ι (cSep l₂ • r b) a / (l₂.M : D.host.E)) =
       (e * incA D ((β : D.host.E))⁻¹) * (pairA D.host.F 0 1 ⊗ₜ[D.host.F] ι (w b) a)
@@ -947,8 +944,7 @@ theorem rd_add (C : Cover T j σ) (a : (D.host.E →+* ℂ) × ℕ → ℕ) (f g
 
 theorem rd_smul (C : Cover T j σ) (a : (D.host.E →+* ℂ) × ℕ → ℕ) (x : C.d.c₂.F) (f : Rul C.d.Xo₂ C.d.c₂) :
     C.rd a (x • f) = C.σ₂ x • C.rd a f := by
-  simp only [Cover.rd, LinearMap.map_smulₛₗ, map_smul]
-  exact smul_comm _ _ _
+  simpa only [Cover.rd, LinearMap.map_smulₛₗ, map_smul] using smul_comm _ _ _
 
 theorem rd_zero (C : Cover T j σ) (a : (D.host.E →+* ℂ) × ℕ → ℕ) : C.rd a 0 = 0 := by
   simp only [Cover.rd, map_zero, smul_zero]
@@ -1035,8 +1031,7 @@ theorem mem_intForms_of_spans : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, F
   obtain ⟨f, hf, rfl⟩ := exists_of_mem_span_ratForms C wa n hφ
   refine ⟨f, ⟨hf, fun la hla => ?_⟩, rfl⟩
   obtain ⟨g, hg, hvg, hfg⟩ := exists_of_mem_span_intForms C wa n la (hS la hla)
-  rw [eq_of_rd_eq D T hT j hj σ hσ C hC hcc wa n hn hf.1 hg.1 hfg.symm]
-  exact hvg
+  rwa [eq_of_rd_eq D T hT j hj σ hσ C hC hcc wa n hn hf.1 hg.1 hfg.symm]
 
 end GlobalTheory.LevelSeries.SpanInt
 end -- clump:auto
@@ -1222,8 +1217,7 @@ theorem mul_twist_mem_intForms : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, 
     obtain ⟨w', hw', e⟩ := GlobalTheory.CharRead.det_cong_one D.host.F (GlobalTheory.Member.latC (T.V j T.σ₀)) k3 k4 C.d.l₂.M (by omega)
       (finHom (T.V j T.σ₀) u).1 (by rw [← k1]; exact hu)
     refine hxi.cond _ (hno u) ⟨T.Q.l.M • w', AddSubgroup.nsmul_mem _ (GlobalTheory.IdeleParts.integralFiniteAdeles_eq_adelicCompletion_integers D ▸ hw') _, ?_⟩
-    rw [smul_smul, mul_comm, ← hlev]
-    exact e
+    rwa [smul_smul, mul_comm, ← hlev]
   have key := (GlobalTheory.CoverComp.forms_mul_comp D T hL j hj T.σ₀ rfl C hU C.d.l₂.M (by omega) dvd_rfl (Or.inl hWc) w
     (fun h h' hh => hinj _ _ (by rw [hh]))
     (fun γ hγ h => hinj _ _ (by rw [map_mul, map_mul, map_mul, hleft γ hγ, one_mul]))

@@ -89,8 +89,7 @@ theorem UpperTheory.Reformulated.B.DYdc6.main :
   obtain ⟨s, hs⟩ := nonempty_sections_of_finite_inverse_system F
   refine ⟨fun n => s (Opposite.op n), fun n => ?_⟩
   have h := hs (CategoryTheory.homOfLE (Nat.le_add_right n 1)).op
-  rw [CategoryTheory.Functor.ofOpSequence_map_homOfLE_succ] at h
-  exact h
+  rwa [CategoryTheory.Functor.ofOpSequence_map_homOfLE_succ] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ImportsMore =====
@@ -226,8 +225,7 @@ theorem lim_O (hc : IsAdicComplete (Ideal.span {ϖ}) O) (a : ℕ → O)
     | succ n hmn ih =>
       have h1 : Ideal.span {ϖ ^ n} ≤ Ideal.span {ϖ ^ m} :=
         Ideal.span_singleton_le_span_singleton.2 (pow_dvd_pow ϖ hmn)
-      have h2 := Ideal.add_mem _ (h1 (h n)) ih
-      simpa using h2
+      simpa using Ideal.add_mem _ (h1 (h n)) ih
   obtain ⟨L, hL⟩ := hc.toIsPrecomplete.prec (f := a) (fun {m n} hmn => by
     rw [SModEq.sub_mem, pow_smul_top, ← neg_sub]
     exact Ideal.neg_mem_iff _ |>.2 (hle m n hmn))
@@ -486,8 +484,7 @@ theorem cobLO : ∀ (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l), F
     have h1 : (L1.T : Set LL) = Set.range (algebraMap O LL) := by
       ext y
       exact mem_T L1 hL1
-    rw [h1]
-    exact hop
+    rwa [h1]
   exact ⟨fun h a => cobO_of_cobL L1 hopT h a, fun h =>
     cobL_of_all L1 hL1 hϖ hop hc hb (fun n => hfin LL O hO A L1 ϖ hϖ n (stable_pw L1 ϖ n))
       (fun r z hr hz' => htop LL O hO L1 hL1 ϖ hϖ r z hr hz') hz h⟩

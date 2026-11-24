@@ -311,8 +311,7 @@ theorem eq_zero_of (ψ : AddChar (AF F) ℂ) (a : Fin N → F) (hψ : IsCharAF F
       rw [QuotientAddGroup.eq, show -x + x' = -(x - x') by abel]
       exact neg_mem h
     obtain ⟨ξ, hξ⟩ : ∃ ξ, ψ (-(Bd (AF F) a (x - x') (rat ξ))) ≠ 1 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hnot (mem_of_chi hann ha _ h)
     refine ⟨chiC a hL hψ ξ, ⟨chiC a hL hψ ξ, Submodule.subset_span ⟨ξ, rfl⟩, rfl⟩, ?_⟩
     intro heq
@@ -344,8 +343,7 @@ theorem eq_zero_of (ψ : AddChar (AF F) ℂ) (a : Fin N → F) (hψ : IsCharAF F
       have h1 := hvan b hb
       have h2 : ∫ u in D, P u * (Pb - b) (u : Q F N) ∂μ =
           ∫ u in D, P u * Pb (u : Q F N) ∂μ - ∫ u in D, P u * b (u : Q F N) ∂μ := by
-        simp only [ContinuousMap.sub_apply, mul_sub]
-        exact integral_sub (hint Pb) (hint b)
+        simpa only [ContinuousMap.sub_apply, mul_sub] using integral_sub (hint Pb) (hint b)
       rw [h2, h1, sub_zero]
       rfl
     rw [e, zero_add]
@@ -384,9 +382,7 @@ theorem eq_zero_of (ψ : AddChar (AF F) ℂ) (a : Fin N → F) (hψ : IsCharAF F
     have h1 : (μ.restrict D) t = 0 := by
       rw [Filter.EventuallyEq, ae_iff] at hae
       refine measure_mono_null (fun u hu => ?_) hae
-      simp only [Set.mem_setOf_eq, Pi.zero_apply]
-      intro h0
-      exact hu (by simpa using h0)
+      simpa only [Set.mem_setOf_eq, Pi.zero_apply] using fun h0 => hu (by simpa using h0)
     rwa [Measure.restrict_apply hto.measurableSet] at h1
   haveI : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
   have hcount : Countable (Lat F N) := by
@@ -415,8 +411,7 @@ theorem eq_zero_of (ψ : AddChar (AF F) ℂ) (a : Fin N → F) (hψ : IsCharAF F
   funext u
   by_contra hu
   have : u ∈ t := hu
-  rw [hte] at this
-  exact this
+  rwa [hte] at this
 
 end GlobalTheory.SWQ.FZero
 
@@ -553,8 +548,7 @@ theorem fourier_series : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (ψ 
   have hQ0 := _root_.GlobalTheory.SWQ.periodic_eq_zero_of_coeff F N ψ lam ν a hC D hD hD1 Q hQc hQper hQcoef
   intro u
   have := congrFun hQ0 u
-  simp only [hQdef, Pi.zero_apply, sub_eq_zero] at this
-  exact this
+  simpa only [hQdef, Pi.zero_apply, sub_eq_zero] using this
 
 end GlobalTheory.SWQ.FourierSeries
 end -- clump:auto

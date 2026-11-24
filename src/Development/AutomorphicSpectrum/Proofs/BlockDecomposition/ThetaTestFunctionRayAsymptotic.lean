@@ -75,8 +75,7 @@ theorem cK_tmul_mul (r : R) (y : R ⊗[F] E) (k : Fin d) :
 
 theorem cK_nat_mul (N : ℕ) (y : R ⊗[F] E) (k : Fin d) :
     cK R b ((N : R ⊗[F] E) * y) k = (N : R) * cK R b y k := by
-  have e : (N : R ⊗[F] E) = (N : R) ⊗ₜ[F] (1 : E) := by
-    exact (map_natCast (algebraMap R (R ⊗[F] E)) N).symm
+  have e : (N : R ⊗[F] E) = (N : R) ⊗ₜ[F] (1 : E) := (map_natCast (algebraMap R (R ⊗[F] E)) N).symm
   rw [e, cK_tmul_mul]
 
 theorem cK_incl (e : E) (k : Fin d) : cK R b (inclR R e) k = algebraMap F R (b.repr e k) := by
@@ -197,8 +196,7 @@ theorem unit_box : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
         rw [hN1, hc]
         push_cast
         ring
-      rw [e]
-      exact h1
+      rwa [e]
     · rw [hAoff v hv] at hY
       exact nat_mul_latV b v N1 hY
   obtain ⟨r1, hr1⟩ := (IsCompact.image hφs t9).bddAbove

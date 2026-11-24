@@ -173,8 +173,7 @@ theorem labels_hom : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X₁
     obtain ⟨a, ha⟩ := h2 (𝔪.e₈.symm α)
     refine ⟨a, ?_⟩
     have := (key a _).1 ha
-    rw [AddEquiv.apply_symm_apply] at this
-    exact this
+    rwa [AddEquiv.apply_symm_apply] at this
 
 
 open GlobalTheory.ZH.TorusPerp GlobalTheory.ZH.PerpTorus GlobalTheory.TorusExt GlobalTheory.TorsionExt in
@@ -235,8 +234,7 @@ theorem exists_torus_char : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁
     rw [← map_pow, ← MonoidHom.pow_apply, hχ1, MonoidHom.one_apply, map_one]
   have hqbt : IsTor χb qb.g := by
     have e1 : q.g = torusPt _ _ (Additive.ofMul χ) := (isTorusPtF_iff_eq _ _).1 ((isTor_iff _ _).1 (hqg ▸ hg₀))
-    rw [(eq_gtExt_iff _ hf _ _).2 hqb.2]
-    rw [e1, GlobalTheory.QkNumberField.gtExt_torusPt, isTor_iff]
+    rw [(eq_gtExt_iff _ hf _ _).2 hqb.2, e1, GlobalTheory.QkNumberField.gtExt_torusPt, isTor_iff]
     exact isTorusPtF_torusPt _
   have hlab : ∀ b mu, 𝔪.YY b mu → (χb (Multiplicative.ofAdd (𝔪.e₈ mu)) : AlgebraicClosure (FractionRing V)) =
       algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V))
@@ -250,7 +248,6 @@ theorem exists_torus_char : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁
     rw [hover, Over.comp_left, Category.assoc, hxF, ← Category.assoc]
     congr 1
     exact (Spec.map_comp _ _).symm
-  rw [heq]
-  exact hqbf
+  rwa [heq]
 
 end GlobalTheory.GSep.TorPt

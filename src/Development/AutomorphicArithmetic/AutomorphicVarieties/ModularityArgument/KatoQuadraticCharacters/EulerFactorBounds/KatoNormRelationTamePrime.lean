@@ -372,8 +372,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sXiAct :
     intro m
     have := congrArg (fun z : GL (Fin 2) (ZMod M) => (z : Matrix (Fin 2) (Fin 2) (ZMod M))) (he m)
     simp only [Units.val_mul] at this
-    rw [Matrix.smul_eq_diagonal_mul]
-    exact this
+    rwa [Matrix.smul_eq_diagonal_mul]
   have hdet : ∀ m, Matrix.GeneralLinearGroup.det m = Matrix.GeneralLinearGroup.det (e m) * ν ^ 2 := by
     intro m
     apply Units.ext
@@ -786,8 +785,7 @@ private theorem AA_left (X : Tower Ω ε) {m p M : ℕ} (hp : IsUnit (p : ZMod M
     Cgr m (AA X p a η x y) (AA X p a γ x y) := by
   obtain ⟨β', h1, h2⟩ := conjD h
   have h3 := cgr_map (slU X (ofSL γ)) ((ha _ _ (ok_zr hp (η * γ⁻¹ * γ) hxy)).2 _ _ h1)
-  rw [zr_left (h2 M), zr_left (h2 M), ← slU_mul, inv_mul_cancel_right] at h3
-  exact h3
+  rwa [zr_left (h2 M), zr_left (h2 M), ← slU_mul, inv_mul_cancel_right] at h3
 
 private theorem AA_perm (X : Tower Ω ε) {m p N M : ℕ} [Fact p.Prime] (hN : (N : ZMod p) ≠ 0) (hp : IsUnit (p : ZMod M))
     {a : Fam X M} (ha : EqvH X m p M a) (η : Option (Fin p) → SL(2, ℤ))
@@ -819,8 +817,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sLineCoh :
       rw [mul_inv_rev, mul_assoc, mul_inv_cancel_left, mem0] at h
       simpa only [gam_row] using h)) (⟨ne_rt γ hxy.1, ne_rt γ hxy.2⟩ : Ok (rt x γ) (rt y γ))
     simp only [AA, zr_right, slU_mul] at h
-    rw [map_prod]
-    exact h
+    rwa [map_prod]
   · have he := cyc_inv X M s
     have hu : IsUnit (cyc M s⁻¹) := IsUnit.of_mul_eq_one _ ((mul_comm _ _).trans he)
     have hu' : cyc p s ≠ 0 := left_ne_zero_of_mul_eq_one (cyc_inv X p s)
@@ -885,8 +882,7 @@ private theorem tp_inj (p M : ℕ) [NeZero p] [NeZero M] (s t : ZMod p)
 private theorem tp_surj (p M : ℕ) [NeZero p] [NeZero M] (w : ZMod (p * M))
     (h : ZMod.castHom (dvd_mul_left M p) (ZMod M) w = 0) : ∃ t : ZMod p, w = ((M * t.val : ℕ) : ZMod (p * M)) := by
   have hw : M ∣ w.val := by
-    rw [ZMod.castHom_apply, ZMod.cast_eq_val, CharP.cast_eq_zero_iff (ZMod M) M] at h
-    exact h
+    rwa [ZMod.castHom_apply, ZMod.cast_eq_val, CharP.cast_eq_zero_iff (ZMod M) M] at h
   obtain ⟨k, hk⟩ := hw
   have hkp : k < p := by
     have hv := ZMod.val_lt w
@@ -918,8 +914,7 @@ private theorem prod_fib {G : Type} [CommMonoid G] (p M : ℕ) [NeZero p] [NeZer
     rw [map_add (f := _), dn_up, htp, add_zero]
   · intro t _ t' _ h
     funext i
-    have hi := add_left_cancel (congrFun h i)
-    exact tp_inj p M (t i) (t' i) hi
+    exact tp_inj p M (t i) (t' i) (add_left_cancel (congrFun h i))
   · intro z hz
     rw [hS] at hz
     have hex : ∀ i, ∃ s : ZMod p, z i - up p M x i = ((M * s.val : ℕ) : ZMod (p * M)) := by
@@ -1055,9 +1050,7 @@ private theorem prod_dep {G : Type} [CommMonoid G] (p N : ℕ) [Fact p.Prime] (h
         rfl
       refine ⟨⟨o, 0, j⟩, ?_, ?_⟩
       · rw [Finset.mem_product, Finset.mem_erase]
-        refine ⟨Finset.mem_univ _, ?_, Finset.mem_univ _⟩
-        intro h0
-        exact hj0 (congrArg Prod.snd h0)
+        exact ⟨Finset.mem_univ _, fun h0 => hj0 (congrArg Prod.snd h0), Finset.mem_univ _⟩
       · simp only [zero_smul]
         rw [ht, hj]
     · obtain ⟨o, i, hi⟩ := lin_surj p N hN t
@@ -1074,9 +1067,7 @@ private theorem prod_dep {G : Type} [CommMonoid G] (p N : ℕ) [Fact p.Prime] (h
       obtain ⟨j, hj⟩ := lin_dep p N o t' hd
       refine ⟨⟨o, i, j⟩, ?_, ?_⟩
       · rw [Finset.mem_product, Finset.mem_erase]
-        refine ⟨Finset.mem_univ _, ?_, Finset.mem_univ _⟩
-        intro h0
-        exact hi0 (congrArg Prod.fst h0)
+        exact ⟨Finset.mem_univ _, fun h0 => hi0 (congrArg Prod.fst h0), Finset.mem_univ _⟩
       · simp only
         rw [hi, hj]
   · intro _ _
@@ -1628,13 +1619,11 @@ theorem sXiTame : SXiTame := by
     rw [Matrix.add_vecMul]
     congr 1
     · have := tm_vec rfl h1 z (cD N (p * M₀) m'.1)
-      rw [gamma_zero_double_coset_reduce hL.eq h h1] at this
-      exact this
+      rwa [gamma_zero_double_coset_reduce hL.eq h h1] at this
     · exact tm_vec (mul_comm _ _) h0 s (cD N (p * M₀) m'.1)
   rw [hv, hv, ← map_smul, ← sub_eq_zero, ← map_sub]
   apply hw
-  rw [← Ideal.mem_span_singleton, ← SModEq.sub_mem]
-  rw [hdet, ← map_inv]
+  rw [← Ideal.mem_span_singleton, ← SModEq.sub_mem, hdet, ← map_inv]
   exact (tm_wt l n hln h _).mul ((((tm_wt l n hln h _).mul SModEq.rfl).add ((tm_wt l n hln h _).mul SModEq.rfl)).pow w)
 
 end UpperTheory.V.Z.Kato.Nb
@@ -1758,8 +1747,7 @@ private theorem xi_hecke_prime_relation (X : Tower Ω ε) (l : ℕ) [Fact l.Prim
     have b2 := xi_hecke_third_relation X l n N M₀ M w g hL p xb yb hok (ws n M₀ s) ((hws.coc n M₀ hLv0).eqv s) A π q hq _ hδ ν h1 h2 h3 hπ t
     have b3 := (hadd _ _ _ _ (E.refl ((p : ℤ_[l]) • Xi X l n N M₀ M w g ((p : ZMod M₀) • xb) ((p : ZMod M₀) • yb)
       (fun z => π z = t) (ws n M₀ s))) (hadd _ _ _ _ b2 (E.symm b1)).2).1
-    rw [sub_add_eq_add_sub, add_sub_assoc]
-    exact b3
+    rwa [sub_add_eq_add_sub, add_sub_assoc]
 
 private theorem sum_filter_fiber_eq {G B : Type} [CommGroup G] [Fintype G] {H ι : Type} [Fintype ι] [AddCommMonoid B] [DecidableEq (G × H)]
     [DecidableEq H] (ρ : ι → G × H) (f : ι → B) (e : G) (y : H) :

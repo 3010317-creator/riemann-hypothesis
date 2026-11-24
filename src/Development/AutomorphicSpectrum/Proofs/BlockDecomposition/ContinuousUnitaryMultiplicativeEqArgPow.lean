@@ -57,8 +57,7 @@ theorem cstar_char_eq_zpow : ∀ φ : ℂ → ℂ, (∀ z w : ℂ, z ≠ 0 → w
     simpa [Submonoid.unitSphere] using hn z z.ne_zero
   let f : ℂˣ → Circle := fun z => ⟨φ (z : ℂ), hmem z⟩
   have hfc : Continuous f := by
-    refine Continuous.subtype_mk ?_ _
-    exact hc.comp_continuous Units.continuous_val fun z => z.ne_zero
+    exact Continuous.subtype_mk (hc.comp_continuous Units.continuous_val fun z => z.ne_zero) _
   have hf1 : f 1 = 1 := by
     apply Circle.ext
     have := h1 1 one_pos
@@ -83,7 +82,6 @@ theorem cstar_char_eq_zpow : ∀ φ : ℂ → ℂ, (∀ z w : ℂ, z ≠ 0 → w
     exact h.symm
   refine ⟨m, fun z hz => ?_⟩
   have h := hp' (Units.mk0 z hz)
-  rw [Units.val_mk0, hr _ (norm_pos_iff.mpr hz), mul_one] at h
-  exact h
+  rwa [Units.val_mk0, hr _ (norm_pos_iff.mpr hz), mul_one] at h
 
 end GlobalTheory.CompanionTheory.KlocOp

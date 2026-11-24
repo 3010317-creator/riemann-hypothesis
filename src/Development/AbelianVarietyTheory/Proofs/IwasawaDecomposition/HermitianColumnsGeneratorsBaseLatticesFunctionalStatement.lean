@@ -139,8 +139,7 @@ theorem base_sup_dual_eq {E : Type} [Field E] [NumberField E] (σ : E →+* E) {
       simp at this
     have hpb0 : (pb : E) ≠ 0 := by
       rw [hpb]
-      intro h
-      exact hπ (by simpa using (map_eq_zero σ).1 h)
+      exact fun h => hπ (by simpa using (map_eq_zero σ).1 h)
     obtain ⟨t, ht⟩ := hxi l
     have hy : Pi.single l (x l / (pb : E)) ∈ dualSet σ (1 : Matrix (Fin n) (Fin n) E) Lb := by
       intro z hz
@@ -190,8 +189,7 @@ theorem base_step_zero_tied : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.
     have := congrFun (congrFun hgram (Fin.cast (rank_eq_first_level (I.rec7 l Z).R) a)) (Fin.cast (rank_eq_first_level (I.rec7 l Z).R) b)
     have e : (Fin.cast (rank_eq_first_level (I.rec7 l Z).R) a = Fin.cast (rank_eq_first_level (I.rec7 l Z).R) b) ↔ a = b := by simp [Fin.ext_iff]
     simp only [Matrix.one_apply, e] at this
-    rw [Matrix.one_apply]
-    exact this
+    rwa [Matrix.one_apply]
   rw [hgram0]
   obtain ⟨k, hk⟩ := (hS u).1.ends 0 (Nat.zero_le _) (Or.inl rfl)
   have hLb := (hH.car0 u).Lb_eq
@@ -308,8 +306,7 @@ theorem sup_dual_eq (σ : E →+* E) {n : ℕ} (t pb : 𝓞 E) (ht : (t : E) ≠
           rw [Pi.smul_apply, Algebra.smul_def]
           by_cases hj : j.1 + 1 = n
           · have h1 := hval t (hs t fun j' _ => by split_ifs <;> simp)
-            rw [show algebraMap (𝓞 E) E pb = (pb : E) from rfl, hpb]
-            exact h1
+            rwa [show algebraMap (𝓞 E) E pb = (pb : E) from rfl, hpb]
           · have h1 := hval 1 (hs 1 fun j' hj' => by
               split_ifs with h
               · subst h; exact absurd hj' hj
@@ -355,8 +352,7 @@ theorem sup_dual_eq (σ : E →+* E) {n : ℕ} (t pb : 𝓞 E) (ht : (t : E) ≠
         rw [e, ← ha]
         obtain ⟨b, hb⟩ := sig_int σ s
         exact ⟨b * a, by rw [map_mul, hb]⟩
-      · simp only [z, hi, ite_false, mul_zero]
-        exact Subring.zero_mem _
+      · simpa only [z, hi, ite_false, mul_zero] using Subring.zero_mem _
 
 end GlobalTheory.Mem.Col2.TC.ChartBase
 
@@ -377,8 +373,7 @@ theorem mem_reL_iff {a b : ℕ} (h : a = b) (L : Submodule (𝓞 E) (Fin a → E
     obtain ⟨y, hy, hyx⟩ := Submodule.mem_map.1 hx
     have : y = x := by
       have := hyx
-      simp only [LinearMap.coe_restrictScalars, LinearEquiv.coe_coe, e] at this
-      exact this
+      simpa only [LinearMap.coe_restrictScalars, LinearEquiv.coe_coe, e] using this
     exact this ▸ hy
 
 theorem reV_apply {a b : ℕ} (h : a = b) (x : Fin a → E) (j : Fin b) :
@@ -544,9 +539,7 @@ theorem crdN_mem_LdG (D : D7) (u : D.what₂.Word) (i : ℕ) (hi : i ≤ D.R.m) 
     (fun j => Formalism.L2.Herm.crd (D.sp.X i) y ((finCongr (rankN D i hi)).symm j))
     (fun j => Formalism.L2.Herm.crd (D.sp.X i) z.1 ((finCongr (rankN D i hi)).symm j))
   unfold gramN
-  rw [h2]
-  rw [hr]
-  exact h3
+  rwa [h2, hr]
 
 end GlobalTheory.Mem.Col2.TC.FvChart
 
@@ -824,8 +817,7 @@ section Main
 
 theorem sub_kill_eq {S M : Type} [CommRing S] [AddCommGroup M] [Module S M] (P P' X X' : S)
     (hP : ∀ m : M, P • m = 0) (m : M) : ((P + P') * X) • m = (X * P' + X' * P) • m := by
-  simp only [add_mul, add_smul, mul_smul, hP, smul_zero, zero_add, add_zero]
-  exact smul_comm _ _ _
+  simpa only [add_mul, add_smul, mul_smul, hP, smul_zero, zero_add, add_zero] using smul_comm _ _ _
 
 theorem acts_by_same_integer : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (w : HeightOneSpectrum (𝓞 F)), (∀ x, σ (σ x) = x) → (∀ x, σ x = x → x ∈ (algebraMap F E).range) → ∀ (T : ℕ), T.Prime → (T : 𝓞 F) ∈ w.asIdeal → ∀ (p : 𝓞 E), (∀ d : 𝓞 F, algebraMap F E (d : F) = (p : E) + σ (p : E) → d ∉ w.asIdeal) → ∀ (A B : Type) [AddCommGroup A] [Module (intV E w) A] [AddCommGroup B] [Module (intV E w) B], Nat.card A = T → Nat.card B = T → (∀ a : intV E w, (a : TensorProduct F E (w.adicCompletion F)) = inclE (F := F) (w.adicCompletion F) (p : E) → ∀ m : A, a • m = 0) → (∀ a : intV E w, (a : TensorProduct F E (w.adicCompletion F)) = inclE (F := F) (w.adicCompletion F) (p : E) → ∀ m : B, a • m = 0) → ∀ s : intV E w, ∃ k : ℤ, (∀ m : A, s • m = k • m) ∧ ∀ m : B, s • m = k • m := by
   intro F E _ _ _ _ _ σ w hinv hfix T hT hTw p hd A B _ _ _ _ hA hB hpA hpB s
@@ -943,8 +935,7 @@ theorem localDual_eq_add_span : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
   obtain ⟨pb, hpb⟩ := hσO p
   have hpb0 : (algebraMap (𝓞 E) E pb) ≠ 0 := by
     rw [hpb]
-    intro h
-    exact hp (by simpa using (map_eq_zero σ).1 h)
+    exact fun h => hp (by simpa using (map_eq_zero σ).1 h)
   set e0 : Fin n → E := Pi.single l (algebraMap (𝓞 E) E pb)⁻¹ with he0def
   have he0 : e0 ∈ dualSet (σ : E →+* E) (1 : Matrix (Fin n) (Fin n) E) L := by
     intro x hx
@@ -1014,8 +1005,7 @@ theorem localDual_eq_add_span : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
       rw [this]
       exact L.smul_mem c hr
   have hincl : ∀ r : 𝓞 E, inclE (F := F) R (algebraMap (𝓞 E) E r) ∈ intV E w := by
-    intro r
-    exact Subring.subset_closure (Or.inl ⟨⟨_, r, rfl⟩, rfl⟩)
+    exact fun r => Subring.subset_closure (Or.inl ⟨⟨_, r, rfl⟩, rfl⟩)
   refine ⟨⟨fun i => inclE (F := F) R (e0 i),
     Submodule.subset_span ⟨e0, Submodule.subset_span he0, rfl⟩⟩, fun t => ?_⟩
   obtain ⟨t, ht⟩ := t
@@ -1327,10 +1317,8 @@ theorem _root_.GlobalTheory.Mem.LevDual.unitary_carry_dual : ∀ (F E : Type) [F
     have hd : ∀ i, d i ∈ _root_.Formalism.BasicNotions.dualSet (σ : E →+* E) 1 L := by
       intro i
       by_cases h : i = Fin.last m
-      · simp only [d, h, ite_true]
-        exact he0
-      · simp only [d, h, ite_false]
-        exact hd_single i
+      · simpa only [d, h, ite_true] using he0
+      · simpa only [d, h, ite_false] using hd_single i
     let c : Fin (m + 1) → _root_.Formalism.BasicNotions.intV (F := F) E w := fun i =>
       if h : i = Fin.last m then ⟨_, hcoef_last⟩ else ⟨_, hcoef_low i h⟩
     have hsum : ((Yw⁻¹ : GL (Fin (m + 1)) (E ⊗[F] w.adicCompletion F)) :
@@ -1349,8 +1337,7 @@ theorem _root_.GlobalTheory.Mem.LevDual.unitary_carry_dual : ∀ (F E : Type) [F
         · subst hbl
           simp [c, d, he0_def, Pi.single_apply, Ne.symm hb]
         · simp [c, d, hbl, Pi.single_apply, Ne.symm hb]
-      · intro h
-        exact absurd (Finset.mem_univ k) h
+      · exact fun h => absurd (Finset.mem_univ k) h
     rw [hsum]
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _
       (Submodule.subset_span ⟨d i, Submodule.subset_span (hd i), rfl⟩)
@@ -1591,8 +1578,7 @@ theorem stepZeroLevel_functional_residueField {D : D7} (H : Formalism.L2.Herm.He
     refine (F u).atT.res_conj v (algebraMap (𝓞 D.host.F) (𝓞 D.host.E) d - (F u).atT.piU) ?_ ?_
     · rw [hT.piU u, ← Formalism.MainNotions.GlobalTheoryTheory.jnt_sig_eq_conj D]
       push_cast
-      rw [sub_eq_iff_eq_add']
-      exact hd
+      rwa [sub_eq_iff_eq_add']
     · rw [map_sub, h1, (F u).atT.res_pi, sub_zero]
   have hne : ∀ c, ∃ z : Formalism.L2.Herm.Ld D u 0 c, (D.fm u).fv 0 v c ((A u).pr 0 v c z) ≠ 0 := by
     intro c
@@ -1621,8 +1607,7 @@ theorem intV_coe_eq_inclE_of_T_mem : ∀ {B : Base} {X : PreX B.toPre} (I : TC B
     have := congrFun (congrFun hgram (Fin.cast (rank_eq_first_level (I.rec7 l Z).R) a)) (Fin.cast (rank_eq_first_level (I.rec7 l Z).R) b)
     have e : (Fin.cast (rank_eq_first_level (I.rec7 l Z).R) a = Fin.cast (rank_eq_first_level (I.rec7 l Z).R) b) ↔ a = b := by simp [Fin.ext_iff]
     simp only [Matrix.one_apply, e] at this
-    rw [Matrix.one_apply]
-    exact this
+    rwa [Matrix.one_apply]
   obtain ⟨k, hk⟩ := (hS u).1.ends 0 (Nat.zero_le _) (Or.inl rfl)
   have hLb := (hH.car0 u).Lb_eq
   have hpU : (A u).piU = X.piT u := (hT.piU u).symm.trans (hS u).1.piU

@@ -344,8 +344,7 @@ theorem trivLocus_pf : CompanionTheory.ObstructionTrivialLocus.TrivLocus := by
   have e : lift (fst A T) (snd A T ≫ y) = A ◁ y := by ext <;> simp
   rw [← hZ T y, ev, e]
   constructor
-  · intro ht p
-    exact ⟨⊤, trivial, CubeOpen.triv_pull_pull _ _ (CubeOpen.triv_comp _ rfl ht)⟩
+  · exact fun ht p => ⟨⊤, trivial, CubeOpen.triv_pull_pull _ _ (CubeOpen.triv_comp _ rfl ht)⟩
   · intro hloc
     have hpb : IsPullback (pullback.fst A.hom T.hom) (snd A T).left A.hom T.hom :=
       IsPullback.of_hasPullback _ _
@@ -385,8 +384,7 @@ theorem isRegular_fibre (k E : Type) [Field k] [CommRing E] [Algebra k E] (g : �
   have hmaxOf : ∀ P : Ideal E, P.IsPrime → I ≤ P → P.IsMaximal := by
     intro P hP hIP
     have hker : RingHom.ker (Ideal.Quotient.mk I) ≤ P := by
-      rw [Ideal.mk_ker]
-      exact hIP
+      rwa [Ideal.mk_ker]
     haveI : (P.map (Ideal.Quotient.mk I)).IsPrime :=
       Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective hker
     haveI : (P.map (Ideal.Quotient.mk I)).IsMaximal := IsArtinianRing.isMaximal_of_isPrime _
@@ -419,8 +417,7 @@ theorem isRegular_fibre (k E : Type) [Field k] [CommRing E] [Algebra k E] (g : �
       rintro J ⟨hJ, hJp⟩
       have hP : (J.comap (algebraMap E (Localization.AtPrime Q))).IsPrime := Ideal.comap_isPrime _ _
       have hIP : I ≤ J.comap (algebraMap E (Localization.AtPrime Q)) := by
-        rw [← Ideal.map_le_iff_le_comap, ← hofList]
-        exact hJ
+        rwa [← Ideal.map_le_iff_le_comap, ← hofList]
       have hPQ : J.comap (algebraMap E (Localization.AtPrime Q)) ≤ Q := by
         calc J.comap (algebraMap E (Localization.AtPrime Q))
             ≤ (IsLocalRing.maximalIdeal (Localization.AtPrime Q)).comap
@@ -536,8 +533,7 @@ theorem exists_localization_fibre (R C : Type) [CommRing R] [CommRing C] [Algebr
       rw [hθ, hθ, hcA, hcA, ← map_mul, hct]
     · intro x y hxy
       have he : θ (x - y) = 0 := by
-        rw [map_sub, sub_eq_zero]
-        exact hxy
+        rwa [map_sub, sub_eq_zero]
       obtain ⟨b, hb, c, hc⟩ := fibre_exists R C p (x - y)
       have hc0 : cA c = 0 := by
         rw [← hθ, ← hc, map_smul, he, smul_zero]
@@ -908,8 +904,7 @@ theorem surjective_snd (hA : IsAbelianScheme A) (V : T.left.Opens) :
       (pullbackRestrictIsoRestrict (pullback.snd A.hom T.hom) V).inv ≫ pullback.snd (pullback.snd A.hom T.hom) V.ι := rfl
   have h2 := (ConcreteCategory.bijective_of_isIso
     ((pullbackRestrictIsoRestrict (pullback.snd A.hom T.hom) V).inv.app ⊤)).2.comp h1
-  rw [e, Scheme.Hom.comp_appTop]
-  exact h2
+  rwa [e, Scheme.Hom.comp_appTop]
 
 end Pull
 
@@ -932,8 +927,7 @@ theorem exists_point_of_isAffine (hA : IsAbelianScheme A) {P : LB (A ⊗ B).left
   refine ⟨i' ≫ x, ?_⟩
   have k := GlobalTheory.BirigidLift.evc_of_cls hP hN hx (fst A T) (snd A T ≫ i')
   rw [GlobalTheory.BirigidLift.evc_of_cls hM hN rfl, Category.assoc, Category.assoc, hii, Category.comp_id] at k
-  rw [cls_eq_evc hM]
-  exact k
+  rwa [cls_eq_evc hM]
 
 end Global
 
@@ -1268,8 +1262,7 @@ theorem factor_iff {Y Z : Scheme.{0}} (i : Z ⟶ Y) [IsClosedImmersion i] {V : Y
   have hZV : IsAffineOpen (i ⁻¹ᵁ V) := hV.preimage i
   have key : Spec.map (i.app V) ≫ hV.fromSpec = hZV.fromSpec ≫ i := by
     have := IsAffineOpen.SpecMap_appLE_fromSpec i hV hZV le_rfl
-    rw [Scheme.Hom.app_eq_appLE]
-    exact this
+    rwa [Scheme.Hom.app_eq_appLE]
   constructor
   · rintro ⟨z, hz⟩
     have hr : Set.range z ⊆ Set.range hZV.fromSpec := by
@@ -1396,8 +1389,7 @@ theorem SpecMap_app_fromSpec {Y Z : Scheme.{0}} (i : Z ⟶ Y) [IsClosedImmersion
     (hV : IsAffineOpen V) (hZV : IsAffineOpen (i ⁻¹ᵁ V)) :
     Spec.map (i.app V) ≫ hV.fromSpec = hZV.fromSpec ≫ i := by
   have := IsAffineOpen.SpecMap_appLE_fromSpec i hV hZV le_rfl
-  rw [Scheme.Hom.app_eq_appLE]
-  exact this
+  rwa [Scheme.Hom.app_eq_appLE]
 
 theorem ker_le_prime {Y Z : Scheme.{0}} (i : Z ⟶ Y) [IsClosedImmersion i] {V : Y.Opens} (hV : IsAffineOpen V)
     (z : Z) (hy : i z ∈ V) :
@@ -1412,8 +1404,7 @@ theorem ker_le_prime {Y Z : Scheme.{0}} (i : Z ⟶ Y) [IsClosedImmersion i] {V :
       (Scheme.Hom.comp_apply _ _ _).symm.trans
         ((congrArg (fun m : Spec Γ(Z, i ⁻¹ᵁ V) ⟶ Y => m q) (SpecMap_app_fromSpec i hV hZV)).trans
           (Scheme.Hom.comp_apply _ _ _))
-    refine e₁.trans (Eq.trans ?_ e₃.symm)
-    exact congrArg i e₂.symm
+    exact e₁.trans (Eq.trans (congrArg i e₂.symm) e₃.symm)
   intro r hr
   have e' : (hV.primeIdealOf ⟨i z, hy⟩).asIdeal = (hZV.primeIdealOf ⟨z, hy⟩).asIdeal.comap (i.app V).hom :=
     congrArg PrimeSpectrum.asIdeal e
@@ -1471,8 +1462,7 @@ theorem flat_of_gens (hCI : CIFlat) {S Y Z : Scheme.{0}} [IsLocallyNoetherian S]
     simpa using h0.comp hs
   have hmem : i z ∈ Y.basicOpen h := by
     have e₃ : P ∈ hV.fromSpec ⁻¹ᵁ Y.basicOpen h := by
-      rw [hV.fromSpec_preimage_basicOpen]
-      exact hp
+      rwa [hV.fromSpec_preimage_basicOpen]
     have e₄ : hV.fromSpec P ∈ Y.basicOpen h := e₃
     rwa [hV.fromSpec_primeIdealOf] at e₄
   have e₂ : i ⁻¹ᵁ Y.basicOpen h ≤ (i ≫ s) ⁻¹ᵁ U := fun x hx => e₁ hx

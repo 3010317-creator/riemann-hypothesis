@@ -452,8 +452,7 @@ theorem proper_chart {q : ℕ} {b : n ⊕ Fin c → ℕ} {S : (n ⊕ Fin c) × (
       mul_assoc, inv_mul_cancel_left, ← _root_.mul_inv_rev]
     rfl
   refine ⟨h1, (t.1, _), ⟨h1, ht⟩, funext fun i => ?_⟩
-  simp only [inv_mul_cancel_left]
-  exact chart_pos hS _ i
+  simpa only [inv_mul_cancel_left] using chart_pos hS _ i
 
 variable [MeasurableSpace k] [BorelSpace k] (ν : Measure k) [ν.IsAddHaarMeasure]
 
@@ -488,8 +487,7 @@ theorem isSplit_col {p : ℕ} (hp : p < c) : IsSplit (n := n) ν p p (colE c (p 
     fun y => chartN_entries (mul_mem (chartB_mem p _).1 (Radical.colE_mem _ (Nat.lt_succ_self p)))⟩
   · rintro ⟨r | r, s | s⟩ <;> simp [Both, lev, Fin.ext_iff] <;> omega
   · rintro β (r | r) (s | s) h <;> simp [colE, upU, Matrix.one_apply]
-    intro hs
-    exact absurd (by simp [Fin.ext_iff, hs]) (h r)
+    exact fun hs => absurd (by simp [Fin.ext_iff, hs]) (h r)
 
 theorem isSplit_row {p : ℕ} (hp1 : 1 ≤ p) (hp : p < c) : IsSplit (n := n) ν p (p + 1) (rowE c p) := by
   refine ⟨_, measurePreserving_mul (b := lev (p + 1)) (S := Both n c p) (fun _ h => h.2) ν
@@ -499,8 +497,7 @@ theorem isSplit_row {p : ℕ} (hp1 : 1 ≤ p) (hp : p < c) : IsSplit (n := n) ν
     fun y => chartN_entries (mul_mem (chartB_mem p _).2 (Radical.rowE_mem _ (Nat.lt_succ_self p)))⟩
   · rintro ⟨r | r, s | s⟩ <;> simp [Both, lev, Fin.ext_iff] <;> omega
   · rintro β (r | r) (s | s) h <;> simp [rowE, lowU, Matrix.one_apply]
-    intro hs
-    exact absurd (by simp [Fin.ext_iff, ← hs]) (h s)
+    exact fun hs => absurd (by simp [Fin.ext_iff, ← hs]) (h s)
 
 theorem average_step {p q : ℕ} {E : (n → k) → GL (n ⊕ Fin c) k} (hE : IsSplit ν p q E)
     (μX : Measure (GL n k)) [μX.IsHaarMeasure] {F : GL (n ⊕ Fin c) k → ℂ} (hF : F ∈ SB (GL (n ⊕ Fin c) k))
@@ -590,8 +587,7 @@ theorem quotInt_step : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
   obtain ⟨Ω, hΩ, hsupp⟩ := hΩ
   let δ : GL n k → ℝ := fun x => nabs k (Matrix.GeneralLinearGroup.det x) ^ ((c : ℝ) - 2 * p)
   have hδm : ∀ x y, δ (x * y) = δ x * δ y := fun x y => by
-    simp only [δ, map_mul, Model.nabs_mul]
-    exact Real.mul_rpow (nabs_pos' _).le (nabs_pos' _).le
+    simpa only [δ, map_mul, Model.nabs_mul] using Real.mul_rpow (nabs_pos' _).le (nabs_pos' _).le
   have hδc : Continuous δ := (((isLocallyConstant_nabs k).comp_continuous Matrix.GeneralLinearGroup.continuous_det).comp
     (fun t : ℝ => t ^ ((c : ℝ) - 2 * p))).continuous
   refine (exists_average μX (Measure.pi fun _ : {rs // Both n c p rs} => ν) (KO k (n ⊕ Fin c))
@@ -623,9 +619,7 @@ theorem quotInt_step : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
     obtain ⟨x, e, rfl⟩ := exists_of_mem_inf hr
     exact ⟨(x, e), w, hw, rfl⟩
   · refine ⟨∫ h, F h ∂μG, ⟨F, hF, fun h => ?_, rfl⟩, ⟨F, hF, fun h => ?_, rfl⟩⟩
-    · simp only [hav]
-      exact average_step ν (isSplit_col ν hp) μX hF h
-    · simp only [hav]
-      exact average_step ν (isSplit_row ν hp1 hp) μX hF h
+    · simpa only [hav] using average_step ν (isSplit_col ν hp) μX hF h
+    · simpa only [hav] using average_step ν (isSplit_row ν hp1 hp) μX hF h
 
 end GlobalTheory.RootEx.QuotStep

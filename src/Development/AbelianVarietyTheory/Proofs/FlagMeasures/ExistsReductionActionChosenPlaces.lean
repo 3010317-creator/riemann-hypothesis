@@ -956,8 +956,7 @@ theorem exists_intAd (f : ∀ v : HeightOneSpectrum (𝓞 F), v.adicCompletion F
   exact ⟨⟨⟨f, Filter.Eventually.of_forall hmem⟩, hmem⟩, fun _ => rfl⟩
 
 theorem intAd_ext {x y : intAd F} (h : ∀ v, (x : Af F) v = (y : Af F) v) : x = y := by
-  apply Subtype.ext
-  exact DFunLike.ext _ _ h
+  exact Subtype.ext (DFunLike.ext _ _ h)
 
 theorem isUnit_intAd (x : intAd F) (hx : ∀ v, Valued.v ((x : Af F) v) = 1) : IsUnit x := by
   have hne : ∀ v, (x : Af F) v ≠ 0 := fun v h0 => by simpa [h0] using hx v
@@ -1041,8 +1040,7 @@ theorem intAdIncl_isIntegral : (intAdIncl F E).IsIntegral := by
     · exact ⟨algebraMap (intAd F) (IntAf F E) y, isIntegral_algebraMap, rfl⟩
   intro x
   obtain ⟨y, hy, hyx⟩ := hle x.2
-  rw [show x = y from Subtype.ext hyx.symm]
-  exact hy
+  rwa [show x = y from Subtype.ext hyx.symm]
 
 theorem intAdIncl_jacobson {x : intAd F} (hx : x ∈ Ideal.jacobson (⊥ : Ideal (intAd F))) :
     intAdIncl F E x ∈ Ideal.jacobson (⊥ : Ideal (IntAf F E)) := by
@@ -1274,8 +1272,7 @@ theorem trivial_iff_mem_Kg : ∀ (I : AutInst) (N : ℕ) (g : Fin 2 → ℕ) (Pl
       intro k v y hy
       have h1 : I.fmat x * I.fmat x⁻¹ = 1 := by rw [← fmat_mul, mul_inv_cancel, fmat_one]
       have h := neg_mem (H1 k v _ (mulVec_mem hx' hy))
-      rw [Matrix.mulVec_mulVec, sub_mul, h1, one_mul, ← Matrix.neg_mulVec, neg_sub] at h
-      exact h
+      rwa [Matrix.mulVec_mulVec, sub_mul, h1, one_mul, ← Matrix.neg_mulVec, neg_sub] at h
     refine ⟨hx, fun y hy => (crt y hy).1 fun u hu => ?_⟩
     have hk : ∃ k, ((g k : ℕ) : 𝓞 I.E) ∈ u.asIdeal := by
       rw [Nat.cast_mul] at hu

@@ -199,8 +199,7 @@ private theorem adicCont_add {Γ R : Type} [TopologicalSpace Γ] [CommRing R] (I
 
 private theorem adicCont_const {Γ R : Type} [TopologicalSpace Γ] [CommRing R] (I : Ideal R) (c : R) :
     AdicCont I (fun _ : Γ => c) := by
-  intro N
-  exact IsLocallyConstant.const _
+  exact fun N => IsLocallyConstant.const _
 
 private theorem adicCont_sub {Γ R : Type} [TopologicalSpace Γ] [CommRing R] (I : Ideal R) (f g : Γ → R)
     (hf : AdicCont I f) (hg : AdicCont I g) : AdicCont I (fun x => f x - g x) := by
@@ -214,8 +213,7 @@ private theorem dm_lift {Γ : Type} [Group Γ] [TopologicalSpace Γ] {rbar : Γ 
     intro g i j
     rfl
   refine ⟨⟨⟨⟨fun g => dm (r.hom g) (Y * r.hom g - r.hom g * Y), ?_⟩, ?_⟩, ?_, ?_⟩, fun g => rfl⟩
-  · simp only [map_one, Matrix.mul_one, Matrix.one_mul, sub_self]
-    exact dm_one
+  · simpa only [map_one, Matrix.mul_one, Matrix.one_mul, sub_self] using dm_one
   · intro g h
     simp only [map_mul]
     rw [dm_mul]
@@ -269,8 +267,7 @@ theorem UpperTheory.exists_pointDerivation_framed_commutator_tangent :
       rwa [Algebra.algebraMap_self, RingHom.id_apply] at h2
     · intro Aa hAa g hg hbar
       rw [hr' g, Ex.unr_map D (F.W.origin F.org) F.r F.fr.unr Aa hAa g hg hbar]
-      simp only [Matrix.mul_one, Matrix.one_mul, sub_self]
-      exact dm_one
+      simpa only [Matrix.mul_one, Matrix.one_mul, sub_self] using dm_one
     · intro v
       refine ⟨dm_sp (hA v), ?_⟩
       ext a b
@@ -323,8 +320,7 @@ theorem UpperTheory.exists_pointDerivation_framed_commutator_tangent :
       change TrivSqZeroExt.fst (i' ((L.ρ v).hom g a b)) = (L.W.origin L.org) ((L.ρ v).hom g a b)
       rw [hiρ, (hρ v g a b).1, L.at0]
     have e2 := huniq y0 ⟨?_, ?_, ?_⟩
-    · intro f
-      exact congrArg (fun φ => φ f) (e2.trans e1.symm)
+    · exact fun f => congrArg (fun φ => φ f) (e2.trans e1.symm)
     · rw [← hloc0, ← hyi]
       rfl
     · apply Lift.ext
@@ -344,8 +340,7 @@ theorem UpperTheory.exists_pointDerivation_framed_commutator_tangent :
     rw [show δ (F.r.hom g a b) = (y (F.r.hom g a b)).snd from congrFun hδeq _]
     rw [hyR, hr' g, dm_snd, hr₀]
   · intro v a b
-    rw [show δ (F.α v a b) = (y (F.α v a b)).snd from congrFun hδeq _]
-    rw [hyA]
+    rw [show δ (F.α v a b) = (y (F.α v a b)).snd from congrFun hδeq _, hyA]
     exact dm_snd _ _ a b
 end -- clump:auto
 end -- clump:auto
@@ -386,8 +381,7 @@ private theorem core {O B ι : Type} [CommRing O] [IsDomain O] [IsLocalRing O] [
     intro s
     by_contra hs
     have hu' : IsUnit (W.z s) := by
-      rw [mem_maximalIdeal, mem_nonunits_iff, not_not] at hs
-      exact hs
+      rwa [mem_maximalIdeal, mem_nonunits_iff, not_not] at hs
     have h0 : W.origin h (W.z s) = 0 := by
       rw [WPres.z, WPres.origin_π, MvPowerSeries.constantCoeff_X]
     have h3 := hu'.map (W.origin h)
@@ -419,8 +413,7 @@ private theorem core {O B ι : Type} [CommRing O] [IsDomain O] [IsLocalRing O] [
   set c : O := ↑(s (Multiplicative.ofAdd j))⁻¹ with hc
   let φ : DualNumber O →ₐ[O] DualNumber O := TrivSqZeroExt.map (c • LinearMap.id)
   have hφ : ∀ d : DualNumber O, (φ d).fst = d.fst ∧ (φ d).snd = c * d.snd := by
-    intro d
-    exact ⟨TrivSqZeroExt.fst_map _ _, TrivSqZeroExt.snd_map _ _⟩
+    exact fun d => ⟨TrivSqZeroExt.fst_map _ _, TrivSqZeroExt.snd_map _ _⟩
   have hcj : c * ↑(s (Multiplicative.ofAdd j)) = 1 := Units.inv_mul _
   have heq : φ.comp y1 = y := by
     apply huniq
@@ -455,9 +448,7 @@ private theorem ex_unit (l : ℕ) [hl : Fact l.Prime] (O : Type) [CommRing O] [I
     [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] : ∃ u : Oˣ, ¬ IsOfFinOrder u := by
   obtain ⟨hinj, -, -, -, -, -, -, -, hunit⟩ := dvrFacts l O
   have hnd : ¬ l ∣ (l + 1) := by
-    intro h
-    have h' := (Nat.dvd_add_right (dvd_refl l)).mp h
-    exact hl.out.one_lt.ne' (Nat.dvd_one.mp h')
+    exact fun h => hl.out.one_lt.ne' (Nat.dvd_one.mp ((Nat.dvd_add_right (dvd_refl l)).mp h))
   obtain ⟨u, hu⟩ := hunit (l + 1) hnd
   refine ⟨u, ?_⟩
   intro hfin
@@ -991,8 +982,7 @@ theorem UpperTheory.nonempty_cover_of_relative_presentation_smoothPt :
   · refine le_antisymm (fun y hy => ?_) (Ideal.span_le.2 ?_)
     · obtain ⟨F, rfl⟩ := Ideal.Quotient.mk_surjective y
       have h3 : F ∈ J ⊔ Ideal.span (Set.range f) := by
-        rw [← hker]
-        exact hy
+        rwa [← hker]
       have h4 : J ⊔ Ideal.span (Set.range f) ≤
           (Ideal.span (Set.range fun k => Ideal.Quotient.mk J (f k))).comap (Ideal.Quotient.mk J) := by
         refine sup_le (fun y hy => ?_) (Ideal.span_le.2 ?_)
@@ -1114,8 +1104,7 @@ private lemma extend {O R K τ : Type} [CommRing O] [CommRing R] [Algebra O R] [
     have h1 : x - y ∈ q ^ (m.degree + 1) := Ideal.pow_le_pow_right hm hy
     have h2 : ((a (m.degree + 1) x - y : A) : R) ∈ q ^ (m.degree + 1) := by
       have := Ideal.sub_mem _ h1 (ha (m.degree + 1) x)
-      rw [sub_sub_sub_cancel_left] at this
-      exact this
+      rwa [sub_sub_sub_cancel_left] at this
     have h3 : MvPowerSeries.coeff m (φ (a (m.degree + 1) x - y)) = 0 := by
       refine MvPowerSeries.coeff_of_lt_order (lt_of_lt_of_le ?_ (ho _ _ h2))
       exact_mod_cast Nat.lt_succ_self _
@@ -1129,8 +1118,7 @@ private lemma extend {O R K τ : Type} [CommRing O] [CommRing R] [Algebra O R] [
     rw [map_add (f := _), spec _ x _ (ha _ x) m hm, spec _ x' _ (ha _ x') m hm, ← map_add (f := _), ← map_add (f := _)]
     refine spec _ _ _ ?_ m hm
     have := Ideal.add_mem _ (ha (m.degree + 1) x) (ha (m.degree + 1) x')
-    rw [sub_add_sub_comm] at this
-    exact this
+    rwa [sub_add_sub_comm] at this
   have hmul : ∀ x x', ψ (x * x') = ψ x * ψ x' := fun x x' => by
     ext m
     have hm := Nat.lt_succ_self m.degree
@@ -1167,12 +1155,10 @@ theorem UpperTheory.smoothPt_part_of_smoothPt_associatedGraded :
   have hx : ∀ (f : R) (y : W.A), f - y ∈ RingHom.ker (W.origin h) ^ 2 → W.origin h f = W.originA h y := by
     intro f y hy
     have := Ideal.pow_le_self (two_ne_zero) hy
-    rw [RingHom.mem_ker, map_sub, sub_eq_zero] at this
-    exact this
+    rwa [RingHom.mem_ker, map_sub, sub_eq_zero] at this
   refine ⟨τ, fτ, wt, ψ, ⟨fun j f hf => ?_, fun f => ?_, fun i => ?_, fun f hf hl => ?_⟩, hn⟩
   · have := H.graded j ⟨f, W.part_le_A hf⟩ hf
-    rw [← onA] at this
-    exact this
+    rwa [← onA] at this
   · obtain ⟨y, hy⟩ := h2 f
     rw [hx f y hy, ← H.const, ← MvPowerSeries.coeff_zero_eq_constantCoeff_apply,
       ← MvPowerSeries.coeff_zero_eq_constantCoeff_apply]
@@ -1549,8 +1535,7 @@ private theorem al_one (ht : ∀ k, σ (tOdd F k) = 0) (hs : ∀ k, σ (sEq F k)
     have s : ∀ k, σ (F.α ⟨p, hp⟩ (p4 k).1 (p4 k).2) = (1 : M4 S) (p4 k).1 (p4 k).2 := fun k => by
       have := hs (.inl (⟨p, hp'⟩, k))
       simp only [sEq, Matrix.sub_apply] at this
-      rw [map_sub, sub_eq_zero, one_entry c.O F.U, AlgHom.commutes, ← one_entry] at this
-      exact this
+      rwa [map_sub, sub_eq_zero, one_entry c.O F.U, AlgHom.commutes, ← one_entry] at this
     refine (sixBlock S 1 _ isUnit_one h1 (off_mem (c := c) (m := 1) (fun a b => ?_) fun a b => Matrix.one_apply_ne)
       (t 0) (t 1) (t 2) (t 3) (t 4) (t 5)).2 rfl (s 0) (s 1) (s 2) (s 3)
     exact (res_map σ _).trans (congrFun (congrFun (F.fr.sp ⟨p, hp⟩).2 a) b)
@@ -1585,8 +1570,7 @@ private theorem isFr_map {R : Type} [CommRing R] [Algebra c.O R] [IsCO c.O R] (y
     rw [F.fr.atL]
     exact Matrix.map_one _ (map_zero _) (map_one _)
   · have h := congrArg (y : F.U →+* R).mapMatrix (F.fr.loc v g)
-    rw [map_mul, map_mul] at h
-    exact h
+    rwa [map_mul, map_mul] at h
 
 private theorem gen (hσ : Function.Surjective σ) (hα : ∀ v, (F.α v).map σ = 1) : (F.r.map σ).Generates := by
   intro R _ _ _ f f' h
@@ -1688,8 +1672,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.exModel :
       rw [Matrix.sub_apply, map_sub, b6, one_entry c.O, der_const b1, sub_self]
     have z1 : z 1 = 0 := by
       have := hz.coc 1 1
-      rw [mul_one, map_one, Units.val_one, map_one, one_mul, left_eq_add] at this
-      exact this
+      rwa [mul_one, map_one, Units.val_one, map_one, one_mul, left_eq_add] at this
     have z2 : z D.g0⁻¹ = 0 := by
       have := hz.coc D.g0⁻¹ D.g0
       rw [inv_mul_cancel, z1, hz.g0, mul_zero, add_zero] at this

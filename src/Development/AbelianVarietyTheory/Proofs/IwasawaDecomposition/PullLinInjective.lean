@@ -126,8 +126,7 @@ theorem orad_pull {r : X →ₗ[O] X₁} (hr : Function.Surjective r) (β : Line
   · intro h a y
     obtain ⟨y, rfl⟩ := hr y
     exact h a y
-  · intro h a y
-    exact h a (r y)
+  · exact fun h a y => h a (r y)
 
 def qEquiv {r : X →ₗ[O] X₁} (hr : Function.Surjective r) (N : Submodule O X₁) : (X ⧸ N.comap r) ≃ₗ[O] (X₁ ⧸ N) :=
   (Submodule.quotEquivOfEq _ _ (by rw [LinearMap.ker_comp, Submodule.ker_mkQ])).trans
@@ -167,8 +166,7 @@ theorem cdimSet_pull {X X₁ : Type} [AddCommGroup X] [Module O X] [Module.Finit
     rw [← key, pull_pull_symm]
   · rintro ⟨m, δ, h1, h2, rfl⟩
     refine ⟨m, fun i => pull e.toLinearMap (δ i), isCell_pull_equiv h1 e, ?_, genRank_pull e.surjective _⟩
-    simp only [key]
-    exact (inRCone_pull_iff hr).2 h2
+    simpa only [key] using (inRCone_pull_iff hr).2 h2
 
 theorem zero_mem_cdimSet {X : Type} [AddCommGroup X] [Module O X] [Module.Finite O X] [Subsingleton X] (N : Submodule O X)
     (β : LinearMap.BilinForm ℤ X) : 0 ∈ cdimSet bar ψ X N β := by

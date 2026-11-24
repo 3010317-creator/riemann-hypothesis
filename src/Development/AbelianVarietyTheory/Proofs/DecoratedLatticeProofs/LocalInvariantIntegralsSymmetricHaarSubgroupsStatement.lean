@@ -123,8 +123,7 @@ theorem finite_on_compacts_prodRFJ : ∀ (k : Type) [Field k] [ValuativeRel k] [
   have hD2 : IsCompact ((fun w : GL n k × N k n c (ρ + 1) × (n → k) => ((w.1, w.2.1), w.2.2)) '' D) :=
     hD.image (by fun_prop)
   have hsub : prodRFJ ρ ⁻¹' K ⊆ (fun w : GL n k × N k n c (ρ + 1) × (n → k) => ((w.1, w.2.1), w.2.2)) '' D := by
-    intro z hz
-    exact ⟨(z.1.1, z.1.2, z.2), hD' _ ⟨_, hz, rfl⟩, rfl⟩
+    exact fun z hz => ⟨(z.1.1, z.1.2, z.2), hD' _ ⟨_, hz, rfl⟩, rfl⟩
   by_cases hf : AEMeasurable (prodRFJ (k := k) (n := n) (c := c) ρ) M
   · rw [Measure.map_apply_of_aemeasurable hf hK.isClosed.measurableSet]
     exact (measure_mono hsub).trans_lt hD2.measure_lt_top
@@ -532,8 +531,7 @@ theorem mem_N_of_mem_R (r : R k n c p) : (embX c (gpart r))⁻¹ * (r : GL (n �
   have : gpart r = x := Units.ext (by
     change (r : GL (n ⊕ Fin c) k).val.toBlocks₁₁ = _
     rw [e]; exact GlobalTheory.RootEx.Radical.toBlocks₁₁_embX_mul x hu)
-  rw [this, e, inv_mul_cancel_left]
-  exact hu
+  rwa [this, e, inv_mul_cancel_left]
 
 def upart (r : R k n c p) : N k n c p := ⟨(embX c (gpart r))⁻¹ * (r : GL (n ⊕ Fin c) k), mem_N_of_mem_R r⟩
 
@@ -784,8 +782,7 @@ theorem prodR_preimage_KO : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
           rw [map_inv]; group
         have := h2 (Sum.inl i) (Sum.inl j)
         rw [hinv] at this
-        rw [← e]
-        exact this
+        rwa [← e]
     refine ⟨hg, ?_⟩
     have := mul_mem (inv_mem (rootExchangeEmbedGL_mem_integralGL c hg)) h
     rwa [inv_mul_cancel_left] at this
@@ -1023,8 +1020,7 @@ theorem eq_of_mass_one {G : Type} [TopologicalSpace G] [Group G] [IsTopologicalG
   have h := Measure.isMulLeftInvariant_eq_smul κ μ
   set a := Measure.haarScalarFactor κ μ
   have h1 : (a : ℝ≥0∞) = 1 := by
-    rw [h, Measure.smul_apply, hS, ENNReal.smul_def, smul_eq_mul, mul_one] at hκ
-    exact hκ
+    rwa [h, Measure.smul_apply, hS, ENNReal.smul_def, smul_eq_mul, mul_one] at hκ
   have : a = 1 := by exact_mod_cast h1
   rw [h, this, one_smul]
 

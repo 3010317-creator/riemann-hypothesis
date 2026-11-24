@@ -118,8 +118,7 @@ theorem resS_eq {φ : SplitProj D v} {PP : Pl D.host.E} (hφ : IsProjAt φ PP)
     (swapProj φ) p (swapProj_one_tmul φ) ((hφ p).1 hp) hp'
   have h0 : IsLocalRing.residue _ (ρ s) = IsLocalRing.residue _ (ρ (oToS D.host.F D.host.E x)) := by
     refine Ideal.Quotient.eq.2 ((GlobalTheory.SplitResidue.mem_maximalIdeal_iff v _).2 ?_)
-    rw [AddSubgroupClass.coe_sub, hρ, hρ, swapProj_prV_oToS, swapProj_prV]
-    exact h
+    rwa [AddSubgroupClass.coe_sub, hρ, hρ, swapProj_prV_oToS, swapProj_prV]
   rw [hρr, hρr, resS_oToS] at h0
   exact ι.injective h0
 
@@ -167,8 +166,7 @@ theorem liftsChar_of_resAt : ∀ (D : D7) (χ : (AE D)ˣ →* Circle) (PP : Pl D
   have hk : resS D.host.F PP ⟨_, hint⟩ = Ideal.Quotient.mk PP.asIdeal x0 := by
     refine resS_eq hφ _ x0 ?_
     change Valued.v (GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting.rdE φ (toEAf D (x : AE D)) - _) < 1
-    rw [GlobalTheory.SplitProjChart.rdE_toEAf, h3]
-    exact hx0
+    rwa [GlobalTheory.SplitProjChart.rdE_toEAf, h3]
   rw [hμ x u ⟨e, he, h1, h3⟩]
   exact Units.ext (hres e hAt x h2 hint k (hk.trans hx0k).symm)
 

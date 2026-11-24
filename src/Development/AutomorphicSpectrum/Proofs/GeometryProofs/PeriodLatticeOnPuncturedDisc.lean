@@ -139,9 +139,7 @@ theorem mem_of_forall_card_mul_eq_pow :
     have hmem : b' - b ∈ W :=
       hW (N : ℤ) (b' - b) (by exact_mod_cast hN.ne') (by rw [← hdiff]; exact W.sub_mem w.2 w'.2)
     rw [Submodule.Quotient.eq]
-    refine ⟨⟨b' - b, hmem⟩, ?_⟩
-    apply Subtype.ext
-    exact hdiff.symm
+    exact ⟨⟨b' - b, hmem⟩, Subtype.ext hdiff.symm⟩
   have h3 : ∀ p, ∃ a, R a p := by
     intro p
     obtain ⟨w, rfl⟩ := Submodule.Quotient.mk_surjective _ p
@@ -319,8 +317,7 @@ theorem exists_marking_tube {B : Set (Fin n → ℂ)} (hconv : Convex ℝ B)
       have hsub : γ '' Icc 0 (t 0 : ℝ) ⊆ N := by
         rintro _ ⟨r, hr, rfl⟩
         have hr0 : r = 0 := le_antisymm (by simpa [ht0] using hr.2) hr.1
-        rw [hr0, hγ0]
-        exact haN
+        rwa [hr0, hγ0]
       obtain ⟨δ, hδ, hth⟩ := (isCompact_Icc.image hγ).exists_thickening_subset_open hN hsub
       exact ⟨δ, hδ, hth.trans hNB, P, hP.mono hth⟩
     | succ k ih =>
@@ -354,8 +351,7 @@ theorem exists_marking_tube {B : Set (Fin n → ℂ)} (hconv : Convex ℝ B)
       refine ⟨min δ₁ δ₂, hδ, ?_, R, ?_⟩
       · rw [hKs, Metric.thickening_union]
         exact union_subset (hA.trans hB₁) (hC.trans hNB)
-      · rw [hKs, Metric.thickening_union]
-        exact hR
+      · rwa [hKs, Metric.thickening_union]
   obtain ⟨δ, hδ, hδB, P, hP⟩ := claim m
   have htm : (t m : ℝ) = 1 := by rw [hm m le_rfl]; rfl
   rw [htm] at hδB hP
@@ -398,8 +394,7 @@ variable {n a : ℕ}
 lemma expCover_mem_punctured (h : a ≤ n) {w : Fin n → ℂ} (hw : w ∈ logCover h) :
     expCover a w ∈ {z | z ∈ ball (0 : Fin n → ℂ) 1 ∧ ∀ i : Fin n, i.val < a → z i ≠ 0} := by
   refine ⟨expCover_mem_ball h hw, fun i hi => ?_⟩
-  simp only [expCover, hi, ite_true]
-  exact Complex.exp_ne_zero _
+  simpa only [expCover, hi, ite_true] using Complex.exp_ne_zero _
 
 lemma exists_mem_logCover (h : a ≤ n) {z : Fin n → ℂ}
     (hz : z ∈ {z | z ∈ ball (0 : Fin n → ℂ) 1 ∧ ∀ i : Fin n, i.val < a → z i ≠ 0}) :
@@ -464,21 +459,17 @@ lemma eq_at_zero_of_eqOn {F : Type*} [TopologicalSpace F] [T2Space F]
       simp only [Function.comp]
       push_cast
       ring_nf
-    have h2 := (Complex.continuous_ofReal.tendsto 0).comp h1
-    simpa [u, Function.comp_def] using h2
+    simpa [u, Function.comp_def] using (Complex.continuous_ofReal.tendsto 0).comp h1
   have hmem : ∀ k, u k ∈ {z | z ∈ ball (0 : Fin n → ℂ) 1 ∧ ∀ i : Fin n, i.val < a → z i ≠ 0} := by
     intro k
     refine ⟨?_, fun i _ => ?_⟩
     · rw [mem_ball_zero_iff, pi_norm_lt_iff one_pos]
       intro j
-      simp only [u, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (hpos k)]
-      exact hlt k
+      simpa only [u, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (hpos k)] using hlt k
     · simp only [u]
       exact_mod_cast (hpos k).ne'
   have t1 := hf.tendsto.comp hu
-  have t2 := hf'.tendsto.comp hu
-  refine tendsto_nhds_unique t1 (t2.congr fun k => ?_)
-  exact (he _ (hmem k)).symm
+  exact tendsto_nhds_unique t1 ((hf'.tendsto.comp hu).congr fun k => (he _ (hmem k)).symm)
 
 lemma coiso_of_count {Λ M : Type} [AddCommGroup Λ] [Module.Free ℤ Λ] [Module.Finite ℤ Λ]
     [AddCommGroup M] (E : LinearMap.BilinForm ℤ Λ) (hbij : Function.Bijective E)
@@ -502,8 +493,7 @@ lemma coiso_of_count {Λ M : Type} [AddCommGroup Λ] [Module.Free ℤ Λ] [Modul
       refine ⟨(N : ℤ) • e.symm y', ⟨e.symm y', by simp⟩, by simp⟩
   let Q := Submodule.Quotient.equiv _ _ e hmap
   refine ⟨Q '' T, ?_, ?_⟩
-  · rw [Nat.card_image_of_injective Q.injective, ← Nat.card_congr Q.toEquiv]
-    exact hcard
+  · rwa [Nat.card_image_of_injective Q.injective, ← Nat.card_congr Q.toEquiv]
   · intro x y hx
     obtain ⟨x', rfl⟩ := e.surjective x
     obtain ⟨y', rfl⟩ := e.surjective y
@@ -644,8 +634,7 @@ theorem exists_logPeriods_range_eq : ∀ (n a g : ℕ) (_h : a ≤ n) (Λ : Type
       refine ⟨e ⟨u, hu⟩, ?_⟩
       simp only [LinearEquiv.symm_apply_apply, (hS _).2.1]
   change Submodule.span ℂ (Set.range fun x : LinearMap.range lam => S (e.symm x) 0) = ⊤
-  rw [hr]
-  exact hspan
+  rwa [hr]
 
 end GlobalTheory.CompanionTheory.Ar.Flat
 end -- clump:auto

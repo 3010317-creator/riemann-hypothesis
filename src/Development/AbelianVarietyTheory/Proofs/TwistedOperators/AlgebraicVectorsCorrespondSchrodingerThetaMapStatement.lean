@@ -837,7 +837,6 @@ theorem GlobalTheory.VacFactor.mem_span_of_isGaussEq : ∀ {F E : Type} [Field F
       have hz2 : ∀ i, (z i).2 = 0 := by
         intro i
         have h0 : evI F (show AF F from ((0 : InfiniteAdeleRing F), (1 : FiniteAdeleRing (𝓞 F) F))) = 0 := by
-          show InfiniteAdeleRing.ringEquiv_mixedSpace F (0 : InfiniteAdeleRing F) = 0
           exact map_zero _
         have := congrArg (fun v : Fin n × Fin d → AF F => (v i).2) (hz _ h0)
         change (1 : FiniteAdeleRing (𝓞 F) F) * (z i).2 = 0 at this
@@ -1038,8 +1037,7 @@ theorem exists_mem_algF_deriv : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (�
       funext t
       have h4 := (GlobalTheory.T.schrodingerThetaDatum_heisenberg_oriented D Bs.ψ θ hθ ε S X A B e Bs hBs rfl Vs Ws r s r' s' hJ hJW hV hW hemb M hM cS hcS
         (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure g φ) f hD (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.realAd D.host.F t • u)).2 u'
-      rw [hsm] at h4
-      exact h4
+      rwa [hsm] at h4
     rw [heq] at h2
     rw [h2.unique h3, Finset.sum_apply]
 

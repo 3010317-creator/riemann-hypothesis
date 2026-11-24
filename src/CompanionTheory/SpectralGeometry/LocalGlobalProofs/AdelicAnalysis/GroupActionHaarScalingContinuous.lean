@@ -48,8 +48,7 @@ theorem exists_continuous_modulus :
     refine ⟨fun K hK => ?_⟩
     rw [Measure.map_apply (hat t).measurable hK.isClosed.measurableSet]
     refine lt_of_le_of_lt (measure_mono ?_) ((hK.image (hat t⁻¹)).measure_lt_top)
-    intro y hy
-    exact ⟨a t y, hy, hleft t y⟩
+    exact fun y hy => ⟨a t y, hy, hleft t y⟩
   have hinvar : ∀ t, (μ.map (a t)).IsAddLeftInvariant := by
     intro t
     refine ⟨fun g => ?_⟩

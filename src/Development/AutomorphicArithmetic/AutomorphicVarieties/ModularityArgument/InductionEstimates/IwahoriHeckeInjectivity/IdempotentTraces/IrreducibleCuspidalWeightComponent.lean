@@ -341,16 +341,14 @@ private theorem hop_mul [∀ i, TopologicalSpace (G i)] [∀ i, IsTopologicalGro
         by_cases hj : j = i
         · subst hj
           rw [Pi.mul_apply, hb, mul_one] at this
-          rw [pr_mk, Pi.mulSingle_eq_same j (Quotient.out e j)]
-          exact this
+          rwa [pr_mk, Pi.mulSingle_eq_same j (Quotient.out e j)]
         · rw [pr_mk, Pi.mulSingle_eq_of_ne hj, Pi.mulSingle_eq_of_ne hj, mem_dbl_one]
       · have := he j
         by_cases hj : j = i
         · subst hj
           rw [hd, hb, mem_dbl_one]
         · rw [Pi.mul_apply, Pi.mulSingle_eq_of_ne hj, one_mul] at this
-          rw [pr_mk, Function.update_of_ne hj]
-          exact this
+          rwa [pr_mk, Function.update_of_ne hj]
     · refine pr_ext U fun j => ?_
       by_cases hj : j = i
       · subst hj
@@ -380,8 +378,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.hopProd 
     | empty =>
       intro g hg v hv
       have : g = 1 := funext fun j => hg j (Finset.notMem_empty j)
-      rw [this, hop_one ρ (hfix v hv)]
-      exact hv
+      rwa [this, hop_one ρ (hfix v hv)]
     | insert i s hi ih =>
       intro g hg v hv
       have hb : hopR ρ (Subgroup.pi Set.univ U) (Function.update g i 1) v ∈ Q := by

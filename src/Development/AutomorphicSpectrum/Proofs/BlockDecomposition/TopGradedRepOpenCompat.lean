@@ -416,8 +416,7 @@ theorem lf_sub_mem (hL : IsLoc q s t E ε) (g : Γ(X, V)) (T : (KS q s {V}).Full
     lf q s V g T - ((sP (KS q s {V})).A.map u).hom (ε g) ∈ (sP (KS q s {V})).J.S T := by
   have a1 : Ideal.Quotient.mk T.obj.J (lf q s V g T) = ev T.obj (ks_in q s V T.obj T.property) g :=
     Classical.choose_spec (Ideal.Quotient.mk_surjective (ev T.obj (ks_in q s V T.obj T.property) g))
-  have a2 := hL.2.2.2.1 T u g
-  exact Ideal.Quotient.eq.1 (a1.trans a2)
+  exact Ideal.Quotient.eq.1 (a1.trans (hL.2.2.2.1 T u g))
 
 theorem addC_eq (hL : IsLoc q s t E ε) (k : Fin d) (u : ComposableArrows (KS q s {V}).FullSubcategory 1) :
     (show (sP (KS q s {V})).A.obj (u.obj (Fin.last 1)) from addC (KS q s {V}) (lf q s V (t k)) u) -
@@ -461,8 +460,7 @@ theorem sum_fc_delta (m : ℕ) (E : Frame Φ m) (σ : ∀ T : C, E.D ⟶ T) :
   · simp
   · intro I _ hI
     obtain ⟨k, hk⟩ : ∃ k, k ≠ I k := by
-      by_contra hh
-      push Not at hh
+      by_contra! hh
       exact hI (funext fun k => (hh k).symm)
     rw [Finset.prod_eq_zero (Finset.mem_univ k) (ite_eq_right hk), fc_zero]
   · simp
@@ -487,8 +485,7 @@ theorem rep_xdt {n : ℕ} {t : Fin (n + 1) → Γ(X, V)} {E : Frame (sP (KS q s 
   have hh0 : ∀ k, h0 (hh k) ∈ FC (sFil (KS q s {V}) ((1 : ℕ) : ℤ)) 0 := fun k => mem_FC.2 fun u => by
     have := hJ k (u.obj (Fin.last 0))
     rw [← hF.one] at this
-    rw [Nat.cast_one]
-    exact this
+    rwa [Nat.cast_one]
   have he : ∀ k, ℓ k - (∑ i, fc E σ ![i] (cc k i) + CH.d (CH.modF (sP (KS q s {V})).A) 0 (h0 (hh k))) ∈
       FC (sFil (KS q s {V}) ((1 + 1 : ℕ) : ℤ)) 1 := fun k => mem_FC.2 fun u => by
     have e : vl (ℓ k - (∑ i, fc E σ ![i] (cc k i) + CH.d (CH.modF (sP (KS q s {V})).A) 0 (h0 (hh k)))) u =
@@ -500,8 +497,7 @@ theorem rep_xdt {n : ℕ} {t : Fin (n + 1) → Γ(X, V)} {E : Frame (sP (KS q s 
       rw [vl, Finset.sum_apply]
       rfl
     rw [e]
-    have e0 := addC_eq σ hL k u
-    exact e0 ▸ Ideal.zero_mem _
+    exact (addC_eq σ hL k u) ▸ Ideal.zero_mem _
   obtain ⟨g, hg, hn⟩ := near E σ hF hc (n + 1) ℓ cc (fun k => h0 (hh k)) hh0 he
   obtain ⟨H, hH, rfl⟩ := hg
   rw [show (∑ I : Fin (n + 1) → Fin (n + 1), fc E σ I (∏ k, cc k (I k))) = fc E σ id 1 from sum_fc_delta _ E σ] at hn
@@ -533,8 +529,7 @@ theorem rep_xdt {n : ℕ} {t : Fin (n + 1) → Γ(X, V)} {E : Frame (sP (KS q s 
     have e3 : ((sP (KS q s {V})).A.map (σ T0 ≫ ψ)).hom (ε w) =
         ((sP (KS q s {V})).A.map ψ).hom (((sP (KS q s {V})).A.map (σ T0)).hom (ε w)) := by
       rw [Functor.map_comp]; rfl
-    rw [e3, map_sub, sub_add_sub_cancel] at a4
-    exact a4
+    rwa [e3, map_sub, sub_add_sub_cancel] at a4
   have ex : vl (xdtC (q := q) s V t w) u = ((sP (KS q s {V})).A.map ψ).hom (lf q s V w T0) * vl (cupListC (sP (KS q s {V})).A ℓ) u :=
     congrArg (fun b : (sP (KS q s {V})).A.obj (u.obj (Fin.last (n + 1))) => ((sP (KS q s {V})).A.map ψ).hom (lf q s V w T0) * b)
       (CrystallineSemistableComparison.Auxff.term_id _ u _ _ _ (fun t => by simp [CH.back]))

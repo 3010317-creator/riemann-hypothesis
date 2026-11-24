@@ -244,8 +244,7 @@ theorem exists_descData : ∀ {R : Type} [CommRing R] [IsDomain R] {Q : DegPre R
     rw [← hV i]
     refine ⟨isField_dE h ν hfield i, fun O hO r => ?_⟩
     show h.d i O _ + constFn Y.H.hom O ν * ∑ a, constFn Y.H.hom O (h.u a) * dd a O (constFn Y.H.hom O r) = _
-    simp only [hconst, mul_zero, Finset.sum_const_zero, add_zero]
-    exact (h.lift i).2 O hO r
+    simpa only [hconst, mul_zero, Finset.sum_const_zero, add_zero] using (h.lift i).2 O hO r
   have hwt0 : ∀ i (V' : Q.P.A.left.Opens), V' ≤ V i → ∀ f, IsWt Y 0 (Y.q.left ⁻¹ᵁ V') f →
       IsWt Y 0 (Y.q.left ⁻¹ᵁ V') (dE h ν i _ f) := by
     intro i V' hV' f hf
@@ -466,8 +465,7 @@ theorem term_germ {e : ℕ} {α : Q.X} {σ : Q.SecB e α} {τ : SecM Y.q.left Q.
   have f0 : Q.famφB α 0 = 𝟙 _ := rfl
   have h₀ : y ∈ LB.wchart Q.P.L (fun _ : Fin 1 => Y.q.left) fun _ => t 0 := Set.mem_iInter.2 fun _ => by
     have := Set.mem_iInter.1 h₁ 0
-    rw [f0] at this
-    exact this
+    rwa [f0] at this
   rw [sval_of τ _ y J (fun _ => J Y.q.left) (fun _ => by simp),
     sval_of σ _ y J (fun j => J (Y.q.left ≫ Q.famφB α j)) (fun _ => by simp),
     val_of _ _ y J (fun k => J (Y.q.left ≫ Q.famφB α (![1, 2, 0, 3] k))) (fun k => by rw [Category.id_comp, gtφT_eq])] at e₀
@@ -842,8 +840,7 @@ theorem exists_coordEq : ∀ {R : Type} [CommRing R] [IsDomain R] {Q : DegPre R}
     · rw [hD.1]; exact hy.1
     · have := Set.mem_iInter.1 hy.2 (![1, 2, 0, 3] k)
       show y ∈ DegPre.gtφT Q Y.H (Y.Φ Y.H (𝟙 _)).b α k ⁻¹ᵁ Q.P.L.U (h.j (i (![1, 2, 0, 3] k)))
-      rw [gtφT_eq, Scheme.Hom.comp_preimage]
-      exact this
+      rwa [gtφT_eq, Scheme.Hom.comp_preimage]
   have exA : ∀ i : Fin 4 → h.J, ∃ A : Γ(Q.P.A.left, U i), (Y.q.left.app (U i)).hom A *
       rsT (xc Y α fun j => h.j (i j)).val (Y.q.left ⁻¹ᵁ U i) =
       dE h ν (i 0) _ (rsT (xc Y α fun j => h.j (i j)).val (Y.q.left ⁻¹ᵁ U i)) := fun i =>
@@ -859,18 +856,15 @@ theorem exists_coordEq : ∀ {R : Type} [CommRing R] [IsDomain R] {Q : DegPre R}
     · rintro ⟨⟨⟨h0, h1⟩, h2⟩, h3⟩ j
       fin_cases j
       exacts [h0, h1, h2, h3]
-    · intro H
-      exact ⟨⟨⟨H 0, H 1⟩, H 2⟩, H 3⟩
+    · exact fun H => ⟨⟨⟨H 0, H 1⟩, H 2⟩, H 3⟩
   have hOU : ∀ i, Oi i ≤ m₀ ⁻¹ᵁ U i := by
     intro i p hp
     have H := (memO i p).1 hp
     refine ⟨?_, Set.mem_iInter.2 fun k => ?_⟩
     · have := H 0
-      rw [hT0] at this
-      exact this
+      rwa [hT0] at this
     · have := hV _ (H k)
-      rw [← Scheme.Hom.comp_apply, hT₁ k, Scheme.Hom.comp_apply] at this
-      exact this
+      rwa [← Scheme.Hom.comp_apply, hT₁ k, Scheme.Hom.comp_apply] at this
   have hOT : ∀ i j, Oi i ≤ T j ⁻¹ᵁ (m₀ ⁻¹ᵁ V (i j)) := fun i j p hp => (memO i p).1 hp j
   let f : ∀ i, Γ(A₀.left, Oi i) := fun i =>
     pbT m₀ (A i) (Oi i) + pbT (T 0) (pb (i 0)) (Oi i) - pbT (T 1) (pb (i 1)) (Oi i) +
@@ -1349,8 +1343,7 @@ theorem commutes : ∀ {R : Type} [CommRing R] [IsDomain R] (Q : DegPre R) {k : 
     (e2 ▸ h₂.1) h₃ hpr₁ hpr₂
   have hpre : ∀ U : Q.P.A.left.Opens, π₂ ⁻¹ᵁ U ≤ π₁ ⁻¹ᵁ U := fun U x hx => by
     change π₁ x ∈ U
-    rw [hpts x]
-    exact hx
+    rwa [hpts x]
   have hprle : ∀ U : Q.P.A.left.Opens, π₂ ⁻¹ᵁ U ≤ pr ⁻¹ᵁ (m₀ ⁻¹ᵁ U) := fun U x hx => by
     change m₀ (pr x) ∈ U
     have : (pr ≫ m₀) x ∈ U := by rw [hpr₁]; exact hx

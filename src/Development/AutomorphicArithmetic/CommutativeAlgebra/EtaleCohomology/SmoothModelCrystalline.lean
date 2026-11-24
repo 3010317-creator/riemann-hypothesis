@@ -307,15 +307,13 @@ theorem close_dvd (r : Res l K) [FiniteDimensional ℚ_[l] K] (f : ℕ) (hf : 0 
     rw [← map_pow, ← map_pow, hN]
   have hp := Pb.G3.pow_close (okToOC l K x) (PreTilt.untilt (r.s (r.ρ x))) c (hc x) (fr * (f * j))
   rw [ht] at hp
-  refine hp.trans (max_le le_rfl ?_)
-  exact (pow_le_pow_of_le_one hc0 hc1.le hjN).trans hj.le
+  exact hp.trans (max_le le_rfl ((pow_le_pow_of_le_one hc0 hc1.le hjN).trans hj.le))
 
 theorem teich_dvd (r : Res l K) [FiniteDimensional ℚ_[l] K] (f : ℕ) (hf : 0 < f) :
     ∃ N : ℕ, f ∣ N ∧ Pb.Mid.TeichmullerCongruence r N := by
   obtain ⟨N, hfN, hN⟩ := close_dvd r f hf
   refine ⟨N, hfN, fun n x => ?_⟩
-  rw [Pb.Mid.phiQ_pow, Pb.G3.struct, ← Pb.G3.cong n _ _ (hN x)]
-  rw [map_pow, map_pow]
+  rw [Pb.Mid.phiQ_pow, Pb.G3.struct, ← Pb.G3.cong n _ _ (hN x), map_pow, map_pow]
   rfl
 
 end CrystallineSemistableComparison.crystallineComparison.PinP
@@ -439,8 +437,7 @@ private theorem V_induction {M : Model l K} {n : ℕ} {P : M.V n → Prop} (h0 :
   refine TensorProduct.induction_on (motive := fun w : ℚ_[l] ⊗[ℤ_[l]] M.T n => P w) (show ℚ_[l] ⊗[ℤ_[l]] M.T n from w) h0 ?_ h2
   intro a v
   have := h1 a v
-  rw [smul_toV] at this
-  exact this
+  rwa [smul_toV] at this
 
 private structure IsVal (e : EMap G D) (b : BMap G D) (p : PMap G D) {M : Model l K} (a : D.Ch M) (n : ℕ)
     (C : M.V n →+ (Module.Dual K (HdR M.q n) → R.B)) : Prop where
@@ -584,8 +581,7 @@ private theorem pow_rep (hS : EtSide G) (hL : D.Laws G) (hM : G M) (x : (D.H a).
     rw [hw, hx] at h1
     refine ⟨w', ?_⟩
     have h2 := hL.cup_uniq a _ _ _ _ h1 (hL.cup_smul a _ _ _ _ _ (e.cup a hM w v w' hw'))
-    rw [pow_succ]
-    exact h2
+    rwa [pow_succ]
 
 private theorem IsVal.top {d : ℕ} {C : M.V (2 * d) →+ (Module.Dual K (HdR M.q (2 * d)) → R.B)} (hC : IsVal e b p a (2 * d) C)
     (hF : R.Facts) (hS : EtSide G) (hL : D.Laws G) (hM : G M) (hd : M.Conn d) : ∃ w φ, C w φ ≠ 0 := by
@@ -638,8 +634,7 @@ private theorem inj_conn (hF : R.Facts) (hS : EtSide G) (hL : D.Laws G) (e : EMa
     rintro _ rfl; exact (hC _).top hF hS hL hM hd
   obtain ⟨w, φ, hw⟩ := htop _ hj'
   have hg : ∃ s, C (j + j') (g s) φ ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hw' : w ∈ Submodule.span ℚ_[l] (Set.range g) := by rw [hspan]; trivial
     refine hw (Submodule.span_induction (p := fun w _ => C (j + j') w φ = 0) ?_ (by simp) ?_ ?_ hw')
     · rintro _ ⟨s, rfl⟩; exact hcon s
@@ -889,12 +884,10 @@ private theorem lift_comm {A C E : Type} [CommRing A] [CommRing C] [Field E] (t 
   obtain ⟨r, a, h⟩ := loc x
   have h1 : d (i t) ^ r * ι (s x) = d (i a) := by
     have := congrArg (fun y => ι (s y)) h
-    simp only [map_mul, map_pow, hs, hι, hd] at this
-    exact this
+    simpa only [map_mul, map_pow, hs, hι, hd] using this
   have h2 : i t ^ r * ι x = i a := by
     have := congrArg ι h
-    simp only [map_mul, map_pow, hι] at this
-    exact this
+    simpa only [map_mul, map_pow, hι] using this
   rw [← h2, map_mul, map_pow] at h1
   exact mul_left_cancel₀ (pow_ne_zero _ ((map_ne_zero d).2 ht)) h1
 
@@ -993,8 +986,7 @@ private theorem gfix (r : Res l K) (g : Gal(PadicAlgCl l/K)) (a : r.k) : EigenWi
   have hee : (v - u) ^ l ^ f = v - u := by rw [sub_pow_char_pow, hu, hv]
   have hc : ‖((PreTilt.untilt u : OC l) : ℂ_[l]) - ((okToOC l K x : OC l) : ℂ_[l])‖ < 1 := by
     have := r.hs x
-    rw [coe_sub_oc, ← hudef] at this
-    exact this
+    rwa [coe_sub_oc, ← hudef] at this
   have hsv : ((PreTilt.untilt v : OC l) : ℂ_[l]) = g • ((PreTilt.untilt u : OC l) : ℂ_[l]) := by
     rw [hvdef]; exact AInf.coe_untilt_gal g u
   have hgx : g • ((okToOC l K x : OC l) : ℂ_[l]) = ((okToOC l K x : OC l) : ℂ_[l]) :=
@@ -1129,8 +1121,7 @@ private theorem galCris_w (r : Res l K) (σ : Gal(PadicAlgCl l/K)) (w : WittVect
     rw [AInf.gal_smul_coeff, WittVector.map_coeff]
     exact gfix r σ _
   have h2 := ACris.gal_smul_algebraMap σ (WittVector.map r.s w)
-  rw [h] at h2
-  exact h2
+  rwa [h] at h2
 
 private def tau (r : Res l K) : WittVector l r.k →+* OC l :=
   (WittVector.fontaineTheta (OC l) l).comp (WittVector.map r.s)
@@ -1207,8 +1198,7 @@ private theorem hK [FiniteDimensional ℚ_[l] K] (r : Res l K) {k : PadicAlgCl l
       have h2 := r.hs xo
       rw [coe_sub_oc, ← hk₀τ] at h2
       have e : ((okToOC l K xo : OC l) : ℂ_[l]) = clToC l k := rfl
-      rw [e, ← map_sub, norm_clToC, norm_sub_rev] at h2
-      exact h2
+      rwa [e, ← map_sub, norm_clToC, norm_sub_rev] at h2
     have hy : k - k₀ ∈ maxUnramified l K := sub_mem hk hk₀
     have hl0 : (l : PadicAlgCl l) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero
     have hy' : (k - k₀) / (l : PadicAlgCl l) ∈ maxUnramified l K := div_mem hy (natCast_mem _ l)
@@ -1239,8 +1229,7 @@ private theorem injective_of_pow_mul_ker {A C D : Type*} [CommRing A] [CommRing 
   obtain ⟨m, hm⟩ := hker (u - v) ((map_sub c u v).trans (sub_eq_zero.mpr huv))
   have hz := congrArg i hm
   simp only [map_mul, map_pow, map_zero] at hz
-  have hsub := hi (((ht.pow m).mul_right_eq_zero).1 hz |>.trans (map_zero i).symm)
-  exact sub_eq_zero.mp hsub
+  exact sub_eq_zero.mp (hi (((ht.pow m).mul_right_eq_zero).1 hz |>.trans (map_zero i).symm))
 
 private theorem map_cross_mul {A C : Type*} [CommRing A] [CommRing C]
     (c : A →+* C) (s : A →+* A) (g : C →+* C) {t a : A} {n : ℕ} {x : C}
@@ -1381,8 +1370,7 @@ theorem UpperTheory.Ru.crystallineComparison.finAll_of :
     have e : IsLocalRing.ResidueField (OK l K) ≃+* r.k :=
       (Ideal.quotEquivOfEq hker.symm).trans (RingHom.quotientKerEquivOfSurjective r.surj)
     have hcard : Nat.card r.k = l ^ f := by
-      rw [← Nat.card_congr e.toEquiv]
-      exact hc
+      rwa [← Nat.card_congr e.toEquiv]
     have hfin : Finite r.k :=
       Nat.finite_of_card_ne_zero (by rw [hcard]; exact pow_ne_zero _ (Fact.out : l.Prime).ne_zero)
     have := Fintype.ofFinite r.k

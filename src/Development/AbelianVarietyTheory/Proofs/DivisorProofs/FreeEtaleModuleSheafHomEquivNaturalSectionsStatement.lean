@@ -78,8 +78,7 @@ theorem _root_.GlobalTheory.T.freeEtaleModuleSheaf_hom_equiv_natural_sections :
     apply ModuleCat.free_hom_ext
     rintro ⟨x⟩
     have hx := h U.unop x
-    rw [evaluate, evaluate] at hx
-    exact hx
+    rwa [evaluate, evaluate] at hx
   · intro φ hφ
     refine ⟨desc P G φ hφ, ?_⟩
     intro U x
@@ -88,8 +87,7 @@ theorem _root_.GlobalTheory.T.freeEtaleModuleSheaf_hom_equiv_natural_sections :
         descP P G φ hφ := by
       have h := ((sheafificationAdjunction Scheme.etaleTopology.{0}
         (ModuleCat.{1} (ULift.{1} R))).homEquiv _ _).apply_symm_apply (descP P G φ hφ)
-      rw [Adjunction.homEquiv_unit] at h
-      exact h
+      rwa [Adjunction.homEquiv_unit] at h
     rw [hdesc]
     change (ModuleCat.freeDesc _).hom (ModuleCat.freeMk (ULift.up x)) = _
     erw [ModuleCat.freeDesc_apply]

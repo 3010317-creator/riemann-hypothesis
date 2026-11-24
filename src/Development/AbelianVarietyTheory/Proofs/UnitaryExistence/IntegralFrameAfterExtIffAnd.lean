@@ -214,8 +214,7 @@ theorem fromTest_of_same_point {S : Type} [Field S] [Algebra c.F S] {y y' : FrPt
   obtain ⟨z', hz', -⟩ := existsUnique_frChg E H Dw l Xo c r.R z g₀ a₀ hd
   refine ⟨r, χ, z', (ChgBC.frChg_baseChange E H Dw l Xo c r.R S χ z z' y y' g₀ a₀ hz' hzy).2 ?_⟩
   have ha : χ (a₀ : r.R) = (a : S) := hgr (.inr true)
-  simp only [hg₀, ha]
-  exact hc
+  simpa only [hg₀, ha] using hc
 
 theorem reFrame : Formalism.L2.PjFree.ReFrame Xo c := by
   refine Formalism.L2.PjFree.reFrame_of

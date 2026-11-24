@@ -204,8 +204,7 @@ theorem shift_central (hP : O.Pins κ v₀ ι x₀) (hn : κ.n = (Vc D i).rank) 
     rintro _ ⟨g, y, rfl⟩
     obtain ⟨k', hk', e⟩ := exists_liftW_act R i (hlift g)
     have h1 := shiftSub_translate (liftW_mul R i) hz hk (hall y) hk'
-    rw [← funext (e (R.thF i A.μ0 y v₀))] at h1
-    exact h1
+    rwa [← funext (e (R.thF i A.μ0 y v₀))] at h1
   intro f hf h
   obtain ⟨U, hU, e⟩ := hW f hf
   have h1 : U v₀ h = ze * chiC R i z / ph * ratio O cE c0 h * U v₀ (h * k) := (hWall hU).2 h
@@ -230,8 +229,7 @@ theorem oneMapOf_smul {ph ze : ℂ} (h : O.OneMapOf κ v₀ c0 ph) (hL : ze ∈ 
   · rw [phi_smul, phi_smul, (hE g k hk f hf).2 x, mul_left_comm]
   · have := h4 k
     show ‖ze⁻¹ * c0 k‖ = 1
-    rw [norm_mul, norm_inv, hn, inv_one, one_mul]
-    exact this
+    rwa [norm_mul, norm_inv, hn, inv_one, one_mul]
   · obtain ⟨y, hy, ⟨n, hn0, hyn⟩, h8⟩ := h6 t
     refine ⟨y * ze, mul_mem hy hL, ⟨n * m, Nat.mul_pos hn0 hm, ?_⟩, fun x hx => ⟨(h8 x hx).1, fun f hf hc q => ?_⟩⟩
     · rw [mul_pow, pow_mul, hyn, one_pow, mul_comm n, pow_mul, hze, one_pow, one_mul]
@@ -482,12 +480,10 @@ theorem exists_framed_half (hP : GlobalTheory.Published.CuspRapidDecay) (hsz : 8
       by_cases e : σ = T.σ₀
       · subst e
         have h : CUnit (c1 ⟨n, hj.2⟩) := (hO ⟨n, hj.2⟩).2.1.2.2.2.1
-        rw [← h0 ⟨n, hj.2⟩] at h
-        exact h
+        rwa [← h0 ⟨n, hj.2⟩] at h
       · have h := B.fw.laws.cUnit _ hj σ hσ
         have e2 : c n σ = T.cE (n + 1) σ := h1 ⟨n, hj.2⟩ σ e
-        rw [← e2] at h
-        exact h
+        rwa [← e2] at h
   have hM : Moves B c' w := fun i σ hσ hV f hf => by
     by_cases e : σ = T.σ₀
     · subst e
@@ -500,21 +496,17 @@ theorem exists_framed_half (hP : GlobalTheory.Published.CuspRapidDecay) (hsz : 8
     · rw [show w i σ = 1 from ite_eq_right e, phiC_setCE_of_eq hV (h1 i σ e)]
       have h2 := rho_e hK i 1 ⟨f, hf⟩
       rw [map_one] at h2
-      have h3 := congrArg Subtype.val ((B.fw.e i).injective (Subtype.ext h2))
-      exact congrArg _ h3
+      exact congrArg _ (congrArg Subtype.val ((B.fw.e i).injective (Subtype.ext h2)))
   have hF : @Fired D G _ _ Pl0 T0 A (setCE T c') iA R B.κ B.v₀ B.O fun _ => 1 := by
     refine ⟨fun i => ?_, fun i σ hσ hV => ?_⟩
     · have h := hO i
-      rw [← h0 i] at h
-      exact h
+      rwa [← h0 i] at h
     · by_cases e : σ = T.σ₀
       · subst e
         have h := GlobalTheory.RealGeoConst.eqAt_base T R B.κ B.v₀ hC.lev ht i (B.O i) (c1 i) (hO i).1 hV
-        rw [← h0 i] at h
-        exact h
+        rwa [← h0 i] at h
       · have h := B.equivAll i σ hσ hV (hx i σ hσ hV)
-        rw [← h1 i σ e] at h
-        exact h
+        rwa [← h1 i σ e] at h
   refine ⟨c', overEmb T w, fun i σ => ?_, fun i hV => hfr i c' (h0 i) hV, exists_geoHalf_move hL hI hK hM hF⟩
   have key : ∀ s, w i s ∈ Subgroup.center G := fun s => by
     by_cases e : s = T.σ₀

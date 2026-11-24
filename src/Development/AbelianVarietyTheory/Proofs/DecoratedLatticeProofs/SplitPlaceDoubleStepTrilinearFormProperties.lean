@@ -831,8 +831,7 @@ theorem actO_one_of_away {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {σ : ℕ} {S
     have h0 : ((ofSplit Q.q).e + cA D (ofSplit Q.q).e) • (show Matrix (Fin S.B'.A.rank) (Fin S.J.W₀.rank) (AE D) from y) = 0 := hfy
     rw [h0, Matrix.mul_zero]
   simp only [actO, inv_one, GlobalTheory.MixModel.mt_one, Matrix.mul_one]
-  rw [Matrix.sub_mul, Matrix.one_mul, sub_eq_zero] at hz
-  exact hz
+  rwa [Matrix.sub_mul, Matrix.one_mul, sub_eq_zero] at hz
 
 theorem biComb_eq_sum {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (A S A' : HSp D) (c₁ : WO A S →₀ ℂ) (c₂ : WO S A' →₀ ℂ)
     (C : WO A S → WO S A' → ℂ) (u : WO A S) :
@@ -1048,8 +1047,7 @@ theorem mem_space_of_typed : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ :
           Units.val_pow_eq_pow_val, Metric.mem_ball, dist_eq_norm] at h2
         exact h2
       have := hT ⟨u, huJ⟩
-      rw [hlam, one_smul] at this
-      exact this
+      rwa [hlam, one_smul] at this
     · push Not at h0
       refine ⟨⊤, isOpen_univ, fun u _ => ?_⟩
       funext g

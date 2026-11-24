@@ -248,8 +248,7 @@ theorem exists_mem_closure_sub_mem_maximalIdeal_pow
     intro j
     induction j with
     | zero =>
-      intro x _
-      exact (memC _ _).2 ⟨inc (ev x), incP _, by simp, by simpa using hker x⟩
+      exact fun x _ => (memC _ _).2 ⟨inc (ev x), incP _, by simp, by simpa using hker x⟩
     | succ j ih =>
       rw [pow_succ]
       refine Ideal.mul_le.2 fun y hy w hw => ?_
@@ -269,8 +268,7 @@ theorem exists_mem_closure_sub_mem_maximalIdeal_pow
     obtain ⟨p, hp, hfp⟩ := ih
     obtain ⟨q, hq, -, hqe⟩ := (memC _ _).1 (hCj k hfp)
     refine ⟨p + q, P.add_mem hp hq, ?_⟩
-    rw [show f - (p + q) = f - p - q by ring]
-    exact hqe
+    rwa [show f - (p + q) = f - p - q by ring]
 
 end GlobalTheory
 end -- clump:auto
@@ -602,8 +600,7 @@ theorem degree_eq_one {n : ℕ} {D : Fin n →₀ ℕ} (h : D.degree = 1) : ∃ 
   have hsum := h
   rw [Finsupp.degree_eq_sum] at hsum
   obtain ⟨s, hs⟩ : ∃ s, D s ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     simp [hc] at hsum
   refine ⟨s, ?_⟩
   have hle : ∀ t, t ≠ s → D s + D t ≤ 1 := fun t ht => by
@@ -1411,10 +1408,8 @@ theorem spMap_fromSpecStalk_le_preimage_iff (X : Scheme.{0}) (x : X) (Ω : Type)
     have hm : (spMap ψ ≫ X.fromSpecStalk x) p ∈ O := h (x := p) trivial
     rw [Scheme.Hom.comp_apply] at hm
     have e : (spMap ψ) p = (closedPoint (X.presheaf.stalk x) : ↥(Spec (X.presheaf.stalk x))) := by
-      show PrimeSpectrum.comap ψ (closedPoint Ω) = _
       exact IsLocalRing.comap_closedPoint ψ
-    rw [e, Scheme.fromSpecStalk_closedPoint] at hm
-    exact hm
+    rwa [e, Scheme.fromSpecStalk_closedPoint] at hm
   · intro hx w _
     have : X.fromSpecStalk x (spMap ψ w) ∈ Set.range (X.fromSpecStalk x) := ⟨_, rfl⟩
     rw [Scheme.range_fromSpecStalk] at this

@@ -69,8 +69,7 @@ private theorem quotEq {Q A X : Type} [CommRing Q] [CommRing A] [Algebra Q A] [A
     show x ∈ B
     rw [← this]
     exact (hB _).1 hy
-  · intro h
-    exact ⟨⟨x, (hZ x).2 hx⟩, (hB x).2 h, rfl⟩
+  · exact fun h => ⟨⟨x, (hZ x).2 hx⟩, (hB x).2 h, rfl⟩
 
 theorem UpperTheory.nonempty_cohomology_restrictScalars_linearEquiv :
     ∀ (Q : Type) {A : Type} [CommRing Q] [CommRing A] [Algebra Q A] {G : Type} [Group G] [TopologicalSpace G] {V : Type} [AddCommGroup V] [Module A V] [Module Q V] [IsScalarTower Q A V] [TopologicalSpace V] [IsTopologicalAddGroup V] [ContinuousConstSMul A V] [ContinuousConstSMul Q V] (ρ : Representation A G V), Nonempty (↥(H0 (resCoef Q ρ)) ≃ₗ[Q] ↥(H0 ρ)) ∧ Nonempty (H1 (resCoef Q ρ) ≃ₗ[Q] H1 ρ) ∧ Nonempty (H2 (resCoef Q ρ) ≃ₗ[Q] H2 ρ) ∧ ∀ n, Nonempty (Hn (resCoef Q ρ) n ≃ₗ[Q] Hn ρ n) := by

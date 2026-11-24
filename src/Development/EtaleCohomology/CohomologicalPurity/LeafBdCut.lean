@@ -171,9 +171,7 @@ theorem goal_of (h1 : LeafMono) (h2 : LeafPush) (h3 : LeafGood) (h4 : LeafDelta)
         · change pb _ (pb _ b.1) = _
           rw [pb_pb, ← Functor.map_comp, dbl.inr_map, Functor.map_comp, ← pb_pb, t3]
           exact Cochain.comp_zero _ _)
-    apply Subtype.ext
-    refine Eq.trans ?_ e'.symm
-    exact congrArg (pull _ (dbl.map φ) (tw q i) (n + 1)) e
+    exact Subtype.ext (Eq.trans (congrArg (pull _ (dbl.map φ) (tw q i) (n + 1)) e) e'.symm)
   · intro Q q _ _ P hP n i u
     obtain ⟨T, hv, hδ, hp⟩ := h6 _ _ _ _ (redMap Q q i)
     let Z : ∀ (E : Spc) (m : ℤ), Cocycle ((chains _).obj E) (res _ (tw Q i)) m → Cocycle ((chains _).obj E) (res _ (tw q i)) m :=

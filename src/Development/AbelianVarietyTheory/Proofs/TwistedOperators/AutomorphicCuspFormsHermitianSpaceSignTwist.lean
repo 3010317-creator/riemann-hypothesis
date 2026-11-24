@@ -66,8 +66,7 @@ theorem inv_neg_sq {k : Type} [Fintype k] [DecidableEq k] {R : Type} [CommRing R
     simp
   · have h' : ¬ IsUnit (-A).det := by
       rw [Matrix.det_neg]
-      intro hu
-      exact h (IsUnit.mul_iff.1 hu).2
+      exact fun hu => h (IsUnit.mul_iff.1 hu).2
     rw [Matrix.nonsing_inv_apply_not_isUnit _ h, Matrix.nonsing_inv_apply_not_isUnit _ h', neg_zero]
 
 theorem conjAt_sgn_true (V : HSp D) (τ : D.what₂.Tau) (Z : Matrix (Fin V.rank) (Fin V.rank) ℂ) :

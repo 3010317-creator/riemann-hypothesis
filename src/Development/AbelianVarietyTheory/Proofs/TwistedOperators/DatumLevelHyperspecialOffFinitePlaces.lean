@@ -184,8 +184,7 @@ theorem redFn_eq_one_of_proj {V : HSp D} (β : GL (Fin V.rank) (EAf D)) (Sb : Fi
     rw [Matrix.smul_apply, smul_eq_mul, ex]
     show Formalism.IndefR.Lev.swapAE D (b ⊗ₜ[D.host.F] (1 : D.host.E)) * _ = _
     rw [← RingHom.map_mul]
-    refine congrArg (Formalism.IndefR.Lev.swapAE D) ?_
-    exact one_sub_ind_tmul_mul Sb _ hz
+    exact congrArg (Formalism.IndefR.Lev.swapAE D) (one_sub_ind_tmul_mul Sb _ hz)
 
 open GlobalTheory.AdelicU
 
@@ -207,8 +206,7 @@ theorem level_offS : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (EAf D)) (Λ
     exact ⟨e, f, hpe, h1, h2⟩
   · intro g hg
     constructor
-    · intro h
-      exact ⟨⟨g, h, fun _ _ => rfl⟩, fun v _ => hK g h v⟩
+    · exact fun h => ⟨⟨g, h, fun _ _ => rfl⟩, fun v _ => hK g h v⟩
     · rintro ⟨⟨k, hk, heq⟩, hoff⟩
       have hxf : g * k⁻¹ ∈ GfC V := mul_mem hg (inv_mem hk.1)
       have hx1 : ∀ v ∈ Sb, projV V v (g * k⁻¹) = 1 := fun v hv => by

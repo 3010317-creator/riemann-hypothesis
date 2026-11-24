@@ -445,8 +445,7 @@ theorem locFin_tens (ε : Fin n → Bool) (X : GMod n) (h : LocFin ε X.E) : Loc
     split_ifs
     · exact hv' b
     · exact Submodule.zero_mem _
-  · intro i _
-    exact (le_iSup S i) (hSmem i)
+  · exact fun i _ => (le_iSup S i) (hSmem i)
 
 theorem finiteDimensional_comap_subtype {V : Type} [AddCommGroup V] [Module ℂ V]
     (S T : Submodule ℂ V) [FiniteDimensional ℂ T] : FiniteDimensional ℂ (T.comap S.subtype) := by
@@ -462,8 +461,7 @@ theorem locFin_sub (ε : Fin n → Bool) (X : GMod n) (S : Submodule ℂ X.V)
   obtain ⟨F, hF, hst, hx⟩ := hX x.1
   haveI := hF
   refine ⟨F.comap S.subtype, finiteDimensional_comap_subtype S F, ?_, hx⟩
-  intro a b hab v hv
-  exact hst a b hab v.1 hv
+  exact fun a b hab v hv => hst a b hab v.1 hv
 
 theorem intWt_tens (X : GMod n) (h : IntWt X) : IntWt (tens X) := by
   intro μ u hu hw a
@@ -494,8 +492,7 @@ theorem intWt_sub (X : GMod n) (S : Submodule ℂ X.V) (h : ∀ a b, ∀ x ∈ S
   exact hX μ x.1 (fun h0 => hx (Subtype.ext h0)) (fun b => congrArg Subtype.val (hw b)) a
 
 theorem locFin_step (ε : Fin n → Bool) (X : GMod n) (z : ℂ) (h : LocFin ε X.E) :
-    LocFin ε (step X z).E := by
-  exact locFin_sub ε (CompanionTheory.RgExh.tens X) _ _ (locFin_tens ε X h)
+    LocFin ε (step X z).E := locFin_sub ε (CompanionTheory.RgExh.tens X) _ _ (locFin_tens ε X h)
 
 theorem intWt_step (X : GMod n) (z : ℂ) (h : IntWt X) : IntWt (step X z) := by
   exact intWt_sub (CompanionTheory.RgExh.tens X) _ _ (intWt_tens X h)
@@ -791,8 +788,7 @@ theorem locFin_of_iso {X Y : GMod n} (ε : Fin n → Bool) (h : Iso X Y) (hX : L
     exact Module.Finite.map S _
   · intro a b hab v hv
     obtain ⟨x, hxS, rfl⟩ := Submodule.mem_map.mp hv
-    have hm := Submodule.mem_map_of_mem (f := (e : X.V →ₗ[ℂ] Y.V)) (hst a b hab x hxS)
-    simpa [he] using hm
+    simpa [he] using Submodule.mem_map_of_mem (f := (e : X.V →ₗ[ℂ] Y.V)) (hst a b hab x hxS)
   · exact ⟨e.symm y, hx, by simp⟩
 
 theorem isWeight_of_intertwine {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W]
@@ -1362,8 +1358,7 @@ theorem normal_pow {A B : Module.End ℂ M} (hB : ∀ x y : M, inner ℂ (A x) y
     simp [this]
   | succ k ih =>
     refine normal_sq hB hc y (ih (A y) ?_)
-    rw [pow_succ] at h
-    exact h
+    rwa [pow_succ] at h
 
 theorem qdet_shift_pow {ε : Fin n → Bool} {E : Fin n → Fin n → Module.End ℂ M} (hE : GlRel E)
     (hU : IsInfUnitary ε E) (w s : ℂ) (k : ℕ) (y : M)
@@ -1463,8 +1458,7 @@ theorem simplePath_ne {n : ℕ} (ss : List (Fin n)) :
     have hmem' : r ∈ l ∨ s ∈ l := by
       simp only [List.mem_cons] at hmem
       tauto
-    have h3 := ih _ h2 r s hrs hmem'
-    simpa [Pi.single_apply, hra, hsa] using h3
+    simpa [Pi.single_apply, hra, hsa] using ih _ h2 r s hrs hmem'
 
 theorem simpleDistinct (n : ℕ) (χ : Fin n → ℂ) (ss : List (Fin n))
     (hp : SimplePath χ ss) (hall : ∀ s, s ∈ ss) : Function.Injective χ := by
@@ -1551,8 +1545,7 @@ theorem exists_unitary_image {ε : Fin n → Bool} {σ : Matrix (Fin n) (Fin n) 
     obtain ⟨u, rfl⟩ := e.surjective y
     obtain ⟨v, rfl⟩ := e.surjective z
     have h := hU a b (c u) (c v)
-    rw [← adjSign_eq_sgn]
-    rw [Submodule.coe_inner, Submodule.coe_inner, hcoe, hcoe, he, he]
+    rw [← adjSign_eq_sgn, Submodule.coe_inner, Submodule.coe_inner, hcoe, hcoe, he, he]
     simpa [Submodule.coe_inner] using h
 
 end GlobalTheory.CompanionTheory.Unitarize

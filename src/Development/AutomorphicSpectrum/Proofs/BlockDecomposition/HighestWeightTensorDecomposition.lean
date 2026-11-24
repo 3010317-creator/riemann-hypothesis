@@ -225,12 +225,10 @@ theorem kmap_extend : ∀ {n : ℕ} (H V : Type) [NormedAddCommGroup H] [InnerPr
   let ξ := stdOrthonormalBasis ℂ Hs
   have hself : ∀ i, ⟪(ξ i : H), (ξ i : H)⟫_ℂ = 1 := fun i => by
     have := (orthonormal_iff_ite.1 ξ.orthonormal) i i
-    rw [ite_eq_left rfl] at this
-    exact this
+    rwa [ite_eq_left rfl] at this
   have hoff : ∀ i j, i ≠ j → ⟪(ξ i : H), (ξ j : H)⟫_ℂ = 0 := fun i j hij => by
     have := (orthonormal_iff_ite.1 ξ.orthonormal) i j
-    rw [ite_eq_right hij] at this
-    exact this
+    rwa [ite_eq_right hij] at this
   have hne : ∀ i, (ξ i : H) ≠ 0 := fun i h0 => by
     have := hself i
     rw [h0, inner_zero_left] at this
@@ -293,10 +291,8 @@ theorem kmap_extend : ∀ {n : ℕ} (H V : Type) [NormedAddCommGroup H] [InnerPr
       · rw [hdiag, hTi]
       · intro i _ hij
         rw [hzero i j hij, map_zero]
-      · intro h
-        exact absurd (Finset.mem_univ j) h
-    intro x
-    exact LinearMap.congr_fun hb x
+      · exact fun h => absurd (Finset.mem_univ j) h
+    exact fun x => LinearMap.congr_fun hb x
   · intro a b w
 
     rw [hTapp, hTapp, map_sum]

@@ -168,8 +168,7 @@ theorem exists_coord : ∃ p : KOG O 1 →+ (Fin (finrank ℤ_[l] O) → QZ l), 
     · rintro ⟨u, hu⟩
       refine ⟨fun _ => u, ?_⟩
       funext j
-      rw [Subsingleton.elim j 0]
-      exact hu
+      rwa [Subsingleton.elim j 0]
     · rintro ⟨u, rfl⟩
       exact ⟨u 0, rfl⟩
   let p : KOG O 1 →+ (Fin (finrank ℤ_[l] O) → QZ l) :=
@@ -291,8 +290,7 @@ theorem LocTriv.vanish {f : G F Ω → QZ l} (hf : LocTriv Dd e A f) (n : G F Ω
     refine ⟨?_, hf.2.1 v (by rw [← Dd.hS]; exact hv) _ h2⟩
     apply Subgroup.le_topologicalClosure
     apply Subgroup.subset_normalClosure
-    simp only [Set.mem_iUnion]
-    exact ⟨v, hv, A.1 v, A.2 v, h2⟩
+    simpa only [Set.mem_iUnion] using ⟨v, hv, A.1 v, A.2 v, h2⟩
   have := hN.conj_mem _ h3 g
   simpa [mul_assoc] using this
 
@@ -326,8 +324,7 @@ theorem mk_mem_Sha (z : ↥(Z1 (qzTw Dd e))) (hz : LocTriv Dd e A (infl Dd e z))
   have h1 : (σ : G F Ω) ∈ Dec (F := F) (g • A.1 v.1) := by rw [hg]; exact σ.2
   have h2 := coc_conj _ _ hz.1.2 g _ m (hm _ (conj_mem_Dec h1))
   have h3 : g * (g⁻¹ * σ * g) * g⁻¹ = σ := by group
-  rw [h3] at h2
-  exact h2
+  rwa [h3] at h2
 
 theorem exists_toSha {C : Type} [AddCommGroup C] [Module ℤ_[l] C] (a : C →ₗ[ℤ_[l]] (G F Ω → QZ l))
     (ha : ∀ x, LocTriv Dd e A (a x)) :

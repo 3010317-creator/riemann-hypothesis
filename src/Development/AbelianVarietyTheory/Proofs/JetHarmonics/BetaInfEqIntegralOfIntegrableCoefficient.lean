@@ -311,8 +311,7 @@ theorem coef_hasDerivAt (H : SqIntegrable D α) {A B A1 B1 : Mat k r → (Wq →
     funext t
     unfold Ph
     simp only [rho_eq]
-  rw [e2]
-  exact key
+  rwa [e2]
 
 theorem coef_hasDerivAt_right (H : SqIntegrable D α) {A B : Mat k r → (Wq →L[ℂ] Wp)} {cA cB : ℝ} (hA : admitted α cA A)
     (hA' : admitted α cA (Rr A)) (hB : admitted α cB B) (hB' : admitted α cB (Rr B)) (dA : DR A) (dB : DR B)
@@ -406,8 +405,7 @@ theorem leibnizR_hasDerivAt_right (H : SqIntegrable D α) {l : ℕ} {A B : Mat k
     have h1 := ih (admissibleWeight_right_derivative hA) (admissible_weight_lower_order hB)
     have h2 := ih (admissible_weight_lower_order hA) (admissibleWeight_right_derivative hB)
     have h3 := h1.add h2
-    rw [← mul_add] at h3
-    exact h3
+    rwa [← mul_add] at h3
 
 theorem leibnizL_hasDerivAt_left (H : SqIntegrable D α) {m : ℕ} {A B : Mat k r → (Wq →L[ℂ] Wp)} {cA cB : ℝ}
     (hA : AdmW α cA 0 (m + 1) A) (hB : AdmW α cB 0 (m + 1) B) {p : SS k r} (hp : D.inSS p) {x y : ℝ}
@@ -421,8 +419,7 @@ theorem leibnizL_hasDerivAt_left (H : SqIntegrable D α) {m : ℕ} {A B : Mat k 
     have h1 := ih (admissibleWeight_left_derivative hA) (admissibleWeight_of_succ_left_order hB)
     have h2 := ih (admissibleWeight_of_succ_left_order hA) (admissibleWeight_left_derivative hB)
     have h3 := h1.add h2
-    rw [← mul_add] at h3
-    exact h3
+    rwa [← mul_add] at h3
 
 theorem leibnizR_hasDerivAt_left (H : SqIntegrable D α) {m l : ℕ} {A B : Mat k r → (Wq →L[ℂ] Wp)} {cA cB : ℝ}
     (hA : AdmW α cA l (m + 1) A) (hB : AdmW α cB l (m + 1) B) {p : SS k r} (hp : D.inSS p) {x y : ℝ}
@@ -434,8 +431,7 @@ theorem leibnizR_hasDerivAt_left (H : SqIntegrable D α) {m l : ℕ} {A B : Mat 
     have h1 := ih (admissibleWeight_right_derivative hA) (admissible_weight_lower_order hB)
     have h2 := ih (admissible_weight_lower_order hA) (admissibleWeight_right_derivative hB)
     have h3 := h1.add h2
-    rw [← mul_add] at h3
-    exact h3
+    rwa [← mul_add] at h3
 
 theorem leibnizL_continuousOn (H : SqIntegrable D α) {m : ℕ} {A B : Mat k r → (Wq →L[ℂ] Wp)} {cA cB : ℝ}
     (hA : AdmW α cA 0 m A) (hB : AdmW α cB 0 m B) :

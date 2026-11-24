@@ -167,5 +167,4 @@ theorem UpperTheory.globalOrbitalComparison_of_split :
       μE j ν hPE _ hmeas hinv
     have hj' : (fun t : Subgroup.centralizer {γ₁} => (j t : GA E n)) =
         fun t : Subgroup.centralizer {γ₁} => mapGL n (adeleMap F E) ((t : G1 F n) : GA F n) := funext hjv
-    rw [hj'] at hq
-    exact hq
+    rwa [hj'] at hq

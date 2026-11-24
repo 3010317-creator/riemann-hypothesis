@@ -147,8 +147,7 @@ theorem UpperTheory.ConvolutionTheory.T.coreLift :
     rw [Amp.A, ContinuousLinearMap.comp_apply, h𝔣.2.2.2.1, prj_of_mem _ hfix, oinf_congr μF _ νF h𝔣.1, h𝔣.2.1]
     intro h
     refine hb4 (pow_zero_of _ m v₀ ?_)
-    rw [← s1, ← s4]
-    exact h
+    rwa [← s1, ← s4]
   obtain ⟨x, hx, hxe⟩ := (ampFin F n hn μF 𝔣.toAmp).2 V hV ⟨v₀, hv1, hne0⟩
   have hfS : ∀ v ∉ 𝔣.S, v ∉ S₀ := fun v h => (hS1 v fun h' => h ((h𝔣.2.2.1 v).2 (Or.inl (hLS ▸ h')))).1
   have hoff : OffFam F n 𝔢.S 𝔣.S (bcInf Λ) (bcSat t) := by
@@ -167,5 +166,4 @@ theorem UpperTheory.ConvolutionTheory.T.coreLift :
     mul_ne_zero (Complex.ofReal_ne_zero.2 hκ.ne') (Finset.prod_ne_zero_iff.2 fun v h => (hL v (hLS ▸ h)).1)
   by_contra hno
   refine mul_ne_zero hc hj2 (hj1.symm.trans ?_)
-  refine finsum_mem_of_eqOn_zero fun V' hV' => ?_
-  exact absurd ⟨V', hV'.1, hV'.2.1, 𝔢.S, 𝔢.finS, hV'.2.2⟩ hno
+  exact finsum_mem_of_eqOn_zero fun V' hV' => absurd ⟨V', hV'.1, hV'.2.1, 𝔢.S, 𝔢.finS, hV'.2.2⟩ hno

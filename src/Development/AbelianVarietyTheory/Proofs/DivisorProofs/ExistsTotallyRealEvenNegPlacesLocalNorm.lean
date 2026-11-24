@@ -195,11 +195,9 @@ theorem exists_signs_iff_even (K L : Type) [Field K] [NumberField K] [Field L] [
       by_cases hP : P w
       · simp only [y, ite_eq_left hP]
         exact eta_eq_neg_one_iff.2 (SignCount.neg_one_not_mem_normGroup hL hP.1)
-      · simp only [y, ite_eq_right hP]
-        exact eta_eq_one_iff.2 (one_mem _)
+      · simpa only [y, ite_eq_right hP] using eta_eq_one_iff.2 (one_mem _)
     have hx : AlmostNorm K L (1 : FinFam K) := by
-      refine Set.Finite.subset Set.finite_empty fun v hv => hv ?_
-      exact one_mem _
+      exact Set.Finite.subset Set.finite_empty fun v hv => hv (one_mem _)
     have hprod : etaProd K L 1 y = 1 := by
       unfold etaProd
       have hf1 : ∀ v : HeightOneSpectrum (𝓞 K),
@@ -225,8 +223,7 @@ theorem exists_signs_iff_even (K L : Type) [Field K] [NumberField K] [Field L] [
         rw [hyw, Units.val_one, map_one] at key
         exact (one_div_pos).1 key
     · have := htf v
-      rw [Pi.one_apply, one_div, inv_mem_iff] at this
-      exact this
+      rwa [Pi.one_apply, one_div, inv_mem_iff] at this
 
 theorem exists_signs_of_even (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L]
     [Algebra K L] [Algebra.IsQuadraticExtension K L] (hK : IsTotallyReal K) (hL : IsTotallyComplex L)
@@ -307,8 +304,7 @@ theorem eq_or_eq_conjugate (hd : Module.finrank K L = 2) (σ : L →+* L) (hσ :
     φ = ε ∨ φ = ComplexEmbedding.conjugate ε := by
   have hss := conj_involutive σ hc
   obtain ⟨s, hs⟩ : ∃ s, σ s ≠ s := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     exact hσ (RingHom.ext hne)
   set t := s - σ s with ht
   have hσt : σ t = -t := by rw [ht, map_sub, hss]; ring
@@ -869,8 +865,7 @@ theorem GlobalTheory.NormSign.exists_neg_even_norm_away : ∀ (M : Type) [Field 
           (by rw [hmem] at hφ'; exact hφ'.1))
       · refine mul_neg_of_pos_of_neg (hbpos φ hφ') (hcneg φ ?_)
         rw [hmem] at hφ'
-        by_contra hne
-        push Not at hne
+        by_contra! hne
         exact hφ' ⟨hne.2.2.2, hne.2.2.1, hne.2.1, hne.1, hφ⟩
     · intro φ hφ
       rw [re_mul hc φ hbσ]

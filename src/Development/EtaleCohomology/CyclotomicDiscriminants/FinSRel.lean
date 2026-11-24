@@ -328,8 +328,7 @@ theorem gen_les (S : ShortComplex (Rep k G)) (h : S.ShortExact) (n : ℕ) {a b :
 
 theorem rep_exact (S : ShortComplex (Rep k G)) (h : ∀ x, S.g.hom x = 0 → ∃ y, S.f.hom y = x) : S.Exact := by
   apply (forget₂ _ (ModuleCat k)).reflects_exact_of_faithful
-  rw [ShortComplex.moduleCat_exact_iff]
-  exact h
+  rwa [ShortComplex.moduleCat_exact_iff]
 
 theorem four (A W : Rep k G) (i : A ⟶ W) (T : W ⟶ W) (s : W ⟶ A) (w1 : i ≫ T = 0) (w2 : T ≫ s = 0)
     (hi : Function.Injective i.hom) (hs : Function.Surjective s.hom)
@@ -467,10 +466,8 @@ theorem gen_two (r q : ℕ) [NeZero q] (e : ℕ) :
   have hp : Function.Surjective p := Prod.fst_surjective
   have hb : Function.Bijective ((MonoidHom.snd (Cq q) (Cq q)).comp p.ker.subtype) := by
     constructor
-    · intro x y h
-      exact Subtype.ext (Prod.ext (Eq.trans x.2 (Eq.symm y.2)) h)
-    · intro c
-      exact ⟨⟨(1, c), rfl⟩, rfl⟩
+    · exact fun x y h => Subtype.ext (Prod.ext (Eq.trans x.2 (Eq.symm y.2)) h)
+    · exact fun c => ⟨⟨(1, c), rfl⟩, rfl⟩
   induction e with
   | zero => exact groupHomology_zero_zmod_trivial_rep_generated_by_one r _
   | succ e ih =>

@@ -128,8 +128,7 @@ theorem thetaP_read : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : 
     have e2 : w' (PiTensorProduct.map (fun τ => (lowT (R.MW i (sg0 D A3.A)) τ).subtype) (PiTensorProduct.tprod ℂ v)) =
         PiTensorProduct.lift (R.thF i u z')
           (PiTensorProduct.map (fun τ => (lowT (R.MW i (sg0 D A3.A)) τ).subtype) (PiTensorProduct.tprod ℂ v)) := e
-    rw [PiTensorProduct.map_tprod, PiTensorProduct.lift.tprod] at e2
-    exact e2
+    rwa [PiTensorProduct.map_tprod, PiTensorProduct.lift.tprod] at e2
   have hw0 : U - R.thF i t zt = 0 :=
     GlobalTheory.LowTypeDetermined.eq_zero_of_lowT D _ _ (R.MW i (sg0 D A3.A)) R.θ hM.inf
       (GlobalTheory.LowTypeRestriction.lowT_ne_bot _) _ _ _ (Submodule.sub_mem _ hU (hE.thF_mem i t zt)) (fun v => by
@@ -225,8 +224,7 @@ theorem thG_eq_zero_of_orth : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0
   have key := theta_eq_zero_of_orth H (hRZ.2 i t) (goodAt ℓ.X ℓ.P ℓ.ψ) (idemOf A3.A.X)
     (opF_goodAt_idem _ _ hok.ok2.irr _ _) hfix f0 hea horth
   have h2 := congrArg (Tw.out (s := twAt D.what₂.embLL A3.A.v0) (E := (R.HW i (sg0 D A3.A)).H)) key
-  rw [hθ, hP.phs i, map_one, one_smul] at h2
-  exact h2
+  rwa [hθ, hP.phs i, map_one, one_smul] at h2
 
 end GlobalTheory.Mem.ThOrth.L0
 
@@ -255,8 +253,7 @@ variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type} {A3 : FamIn
 
 theorem carried : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Type) (A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) (cG : G0 R.Pg D.R.r ≃* G0g D.nd) (X0 : BaseLevelRowSide D) (Y : Read (A3 := A3) R.toRealDat F.lv2 X0) (Z : GlobalTheory.Mem.R3.Rw.RationalReadingWithoutCongruence R F X0 Y), Pins R F cG → Holds R F → HostHyp D → ∀ (c : Pl D.host.E → List ℤ → ℂ) (b : Bool) (x : R.HE.H), x ≠ 0 → x ∈ R.EEc c → R.HE.e x ∈ R.toRealDat.EEat (R.toRealDat.levR F.lv2 b) → ∃ p, R.Carries p c := by
   intro hWe hDs hHC hCu D G _ _ Pl0 I0 T A3 Ks _ _ _ R F cG X0 Y Z hP hHo hHost c b x hx0 hxc hxb
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   obtain ⟨hcore, hSF, -, -, hEEc, -, -⟩ := GlobalTheory.CoreThree.heckeCharacterisation_places_parts_of_weak R F hP.char
   obtain ⟨h, -, hN, -, hev, hchar⟩ := GlobalTheory.T.exists_sphericalOperators_rows_normal_eigenspaces R.toRealDat F.lv2 (hcore hHo.aux.ex)
     (GlobalTheory.Hk3.schurAll_of_cuspRapidDecay hCu R.toRealDat) R.SF hSF
@@ -273,8 +270,7 @@ theorem carried : GlobalTheory.Published.WeilRepresentationUnitaryPair → Globa
     intro c' hne y hy
     have hex : ∃ P d, GlobalTheory.Hk3.Good R.toRealDat A3.A.μ0 P ∧ GlobalTheory.Hk3.IsLab (Yc D 0) P d ∧
         c' P (dualLab d) ≠ c P (dualLab d) := by
-      by_contra hall
-      push Not at hall
+      by_contra! hall
       apply hne
       ext z
       constructor
@@ -295,8 +291,7 @@ theorem carried : GlobalTheory.Published.WeilRepresentationUnitaryPair → Globa
   have hpart : ∀ p, R.EEp3 p ≤ (ℂ ∙ x)ᗮ := by
     intro p
     unfold RealDat3.EEp3
-    refine iSup₂_le fun c' hc' => horth c' fun heq => hno p ?_
-    exact carries_of_eq R p heq hc'
+    exact iSup₂_le fun c' hc' => horth c' fun heq => hno p (carries_of_eq R p heq hc')
 
   have hxT : (Tw.mk (twAt D.what₂.embLL A3.A.v0) x : Tw (twAt D.what₂.embLL A3.A.v0) R.HE.H) ∈ (R.toCx3 F).EEl b := hxb
   rw [← (hHo.prim.sumE b).2] at hxT
@@ -328,9 +323,7 @@ theorem span_jW_wp : GlobalTheory.Published.WeilRepresentationUnitaryPair → Gl
     refine (GlobalTheory.Mem.LiftTheta.liftWeight_complexPoint_eq_twist R.toRealDat F.lv2 false i y).trans ?_
     congr 1
   have hmem : ∀ y, y ∈ (s0Of R F).Wp i p ↔ Z.jW i y ∈ (R.Wp3 i p).comap (Y.mj.eW i) := by
-    intro y
-    show (R.toCx3 F).w0C false i (cpt A3.A.v0.embedding y) ∈ (R.toCx3 F).Wp i p ↔ _
-    exact (Iff.of_eq (congrArg (· ∈ (R.toCx3 F).Wp i p) (hpt y))).trans Iff.rfl
+    exact fun y => (Iff.of_eq (congrArg (· ∈ (R.toCx3 F).Wp i p) (hpt y))).trans Iff.rfl
   apply le_antisymm
   · rw [Submodule.span_le]
     rintro _ ⟨y, hy, rfl⟩
@@ -389,8 +382,7 @@ theorem span_jW_wp : GlobalTheory.Published.WeilRepresentationUnitaryPair → Gl
         ((R.toCx3 F).w0C false i (cpt A3.A.v0.embedding y))
       exact (congrArg (Tw.out (s := twAt D.what₂.embLL A3.A.v0) (E := (R.HW i (sg0 D A3.A)).H)) (hpt y)).symm
     obtain ⟨x', hx', hxx⟩ := h5 h4
-    rw [← hinj hxx]
-    exact hx'
+    rwa [← hinj hxx]
 
 end GlobalTheory.Mem.R3.RatSpan.L0
 
@@ -509,8 +501,7 @@ theorem cnt : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalThe
   have hxφ : ∀ k, φ (x k) = (Y.Iz.jE (D.what₂.onb0 k)).1 := fun k => (hxe k).symm
   have hli0 : LinearIndependent ℂ (fun k => ((Y.Iz.jE (D.what₂.onb0 k)).1 : C.Amb 0)) := by
     have h1 := D.what₂.onb0.toBasis.linearIndependent.map' Y.Iz.jE.toLinearMap Y.Iz.jE.ker
-    have h2 := h1.map' (C.EEc false).subtype (Submodule.ker_subtype _)
-    exact h2
+    exact h1.map' (C.EEc false).subtype (Submodule.ker_subtype _)
   have hli : LinearIndependent ℂ x := by
     apply LinearIndependent.of_comp φ
     convert hli0 using 1
@@ -553,8 +544,7 @@ theorem cnt : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalThe
     constructor
     · intro h; exact ⟨h ▸ hσ.2, h⟩
     · intro h; exact h.2
-  rw [hEp, ← hcard]
-  exact hcount
+  rwa [hEp, ← hcard]
 
 end GlobalTheory.Mem.R3.LabCount.L0
 

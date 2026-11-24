@@ -195,8 +195,7 @@ theorem xiSizes_explicit : Formalism.HermitianLatticesTheory.SiegelMassRatio →
   have hCX : |(408 : ℝ)| * max 1 |Real.exp 1 * Real.pi| ≤ C := by
     rw [abs_of_pos (by norm_num : (0 : ℝ) < 408), abs_of_pos (by positivity), max_eq_right he]; exact hC
   have hXi := Formalism.MainNotions.BridgeLemma.xiHyp_of_stX D large₂ hH hX hCX (by linarith)
-  rw [← Formalism.MainNotions.BridgeLemma.d_m_eq D]
-  exact hXi
+  rwa [← Formalism.MainNotions.BridgeLemma.d_m_eq D]
 end GlobalTheory.Core.Deg
 end -- clump:auto
 end -- clump:auto
@@ -433,8 +432,7 @@ theorem corankSums_expLoss : ∀ C : ℝ, 1 ≤ C → ∃ K₀ : ℝ, ∀ (k m f
     exact ndRow_mono hC hf hb1 hg hv (hXs s hs) hG
   · have E2 := H2 k m f b g v NT 1 Xi P2 X'
     rw [one_pow, inv_one, mul_one] at E2
-    refine le_trans (Finset.sum_le_sum fun s hs => ?_) E2
-    exact degRow_mono hC hf hb1 hg hv (hXs s hs) hG
+    exact le_trans (Finset.sum_le_sum fun s hs => (degRow_mono hC hf hb1 hg hv (hXs s hs) hG)) E2
 
 end GlobalTheory.Core.Deg
 end -- clump:auto
@@ -571,8 +569,7 @@ theorem collS_of_rowBounds : Formalism.HermitianLatticesTheory.SiegelMassRatio �
     intro s h2 hk
     have base := Formalism.L2.SG.LoopTieOf.gam_mul_le hG Z hFo
       (Formalism.L2.SG.LoopTieOf.classS_le T hJ hW hFC Z C hn hd s h2 hk)
-    rw [hm, ← hg] at base
-    exact base
+    rwa [hm, ← hg] at base
   have habs := GlobalTheory.T.pairAbs_corank_ge_two_le_sum_corankClasses _ _ _ _ _ (Y.tO u u) D.R.k _ hAbs
     (fun p _ => Formalism.L2.SG.LoopsCut.corank_le_k Y u u p.1 p.2) hcls
   have hdd : ddC X Y u u = (D.duS u : ℝ) * BridgeLemma.rDD D u := Formalism.L2.SG.LoopTieOf.ddC_eq hCc u u
@@ -979,8 +976,7 @@ theorem GlobalTheory.Core.Deg.exists_termLoop_of_standingHypotheses : ∀ (D : D
     rw [h2v] at hv0
     have hCl0 : (0 : ℝ) < Cl := by linarith
     have hL0 : 0 ≤ large₂.sc.L := by
-      by_contra hneg
-      push Not at hneg
+      by_contra! hneg
       have : large₂.sc.L / Cl < 0 := div_neg_of_neg_of_pos hneg hCl0
       linarith
     have h72 : large₂.sc.L / Cl ≤ large₂.sc.L / 72 := div_le_div_of_nonneg_left hL0 (by norm_num) hCl

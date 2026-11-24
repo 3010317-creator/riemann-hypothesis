@@ -69,8 +69,7 @@ private theorem sep_of_integer {F : Type} [Field F] [NumberField F] {R : Type} [
     exact hs.map
   · rw [aeval_map_algebraMap]
     have h2 := aeval_algHom_apply f.toIntAlgHom c (minpoly ℤ (c : F))
-    rw [h0, map_zero] at h2
-    exact h2
+    rwa [h0, map_zero] at h2
 
 private theorem exDiag (hSim : SimDiag) (hExt : ExtendEmb) {F : Type} [Field F] [NumberField F]
     {O : Type} [Ring O] {g : ℕ} (ρ : O →+* Matrix (Fin g) (Fin g) ℂ) (a : 𝓞 F →+* O) :
@@ -93,8 +92,7 @@ private theorem exDiag (hSim : SimDiag) (hExt : ExtendEmb) {F : Type} [Field F] 
       rw [hdiag, hdiag, hdiag, map_mul, map_mul]
       simp only [Matrix.mul_assoc, Matrix.mul_nonsing_inv_cancel_left _ _ hunit]
     rw [Matrix.diagonal_mul_diagonal] at h1
-    have h2 := congrFun (congrFun h1 i) i
-    simpa using h2
+    simpa using congrFun (congrFun h1 i) i
   let f : Fin g → (𝓞 F →+* ℂ) := fun i =>
     { toFun := fun c => d c i
       map_one' := by
@@ -155,12 +153,10 @@ private theorem rootsW {p : ℕ} [Fact p.Prime] (D : Datum p) (hne : (starRingEn
     rw [← D.tr_eq, ← D.nm_eq]
     ring
   have h2 : τ (D.ω : D.F) ^ 2 - (D.tr : ℂ) * τ (D.ω : D.F) + (D.nm : ℂ) = 0 := by
-    have h := congrArg (fun c : 𝓞 D.F => τ (c : D.F)) h0
-    simpa using h
+    simpa using congrArg (fun c : 𝓞 D.F => τ (c : D.F)) h0
   have h3 := D.ρc_root
   have h4 : (starRingEnd ℂ) D.ρc ^ 2 - (D.tr : ℂ) * (starRingEnd ℂ) D.ρc + (D.nm : ℂ) = 0 := by
-    have h := congrArg (starRingEnd ℂ) h3
-    simpa using h
+    simpa using congrArg (starRingEnd ℂ) h3
   have ht : (D.tr : ℂ) - (D.ρc + (starRingEnd ℂ) D.ρc) = 0 := by
     have h : (D.ρc - (starRingEnd ℂ) D.ρc) * ((D.tr : ℂ) - (D.ρc + (starRingEnd ℂ) D.ρc)) = 0 := by
       linear_combination h4 - h3
@@ -219,8 +215,7 @@ private theorem cmType_at_place_iff (hr : ∀ τ : F →+* ℂ, τ w = r ∨ τ 
       rw [hc]
       exact ⟨fun h2 => absurd h2 hne, fun h2 => absurd h2 h1⟩
     · have h1 : idx.1.embedding (e w) ≠ r := by
-        rw [hc]
-        exact hne
+        rwa [hc]
       have h2 : idx = (v, i₀) := by
         by_contra h3
         exact h ⟨fun h4 => absurd h4 h3, fun h4 => absurd h4 h1⟩
@@ -232,8 +227,7 @@ private theorem emb_sep (hr : ∀ τ : F →+* ℂ, τ w = r ∨ τ w = (starRin
     (hw : τ w = τ' w) : τ = τ' := by
   rcases InfinitePlace.mk_eq_iff.1 hm with h | h
   · ext x
-    have h1 := RingHom.congr_fun h (e x)
-    simpa using h1
+    simpa using RingHom.congr_fun h (e x)
   · exfalso
     have h1 := RingHom.congr_fun h (e w)
     simp only [ComplexEmbedding.conjugate_coe_eq, RingHom.comp_apply, RingHom.coe_coe, RingEquiv.symm_apply_apply] at h1
@@ -278,8 +272,7 @@ private theorem cmType_card_fiber (t₀ : F →+* ℂ) (hr : ∀ τ : F →+* �
         ext idx
         simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
         constructor
-        · intro h
-          exact (cmType_at_place_iff e w r v i₀ hr hne idx).1 (by rw [h, hτ])
+        · exact fun h => (cmType_at_place_iff e w r v i₀ hr hne idx).1 (by rw [h, hτ])
         · rintro rfl
           rw [hB, h0]
       rw [hf, typeMult, ite_eq_left h0, Finset.card_singleton]
@@ -313,8 +306,7 @@ private theorem cmType_card_fiber (t₀ : F →+* ℂ) (hr : ∀ τ : F →+* �
           exact (cmType_infinitePlace e w r v i₀ idx).symm
       · rintro ⟨h1, h2⟩
         refine emb_sep e w r hr hne _ _ ?_ ?_
-        · rw [cmType_infinitePlace e w r v i₀ idx]
-          exact h2
+        · rwa [cmType_infinitePlace e w r v i₀ idx]
         · rw [hτ']
           exact (hr _).resolve_left fun h => h1 ((cmType_at_place_iff e w r v i₀ hr hne idx).1 h)
     have hpl : InfinitePlace.mk (t₀.comp (e.symm : F' →+* F)) = v := by
@@ -332,8 +324,7 @@ private theorem cmType_card_fiber (t₀ : F →+* ℂ) (hr : ∀ τ : F →+* �
       rw [typeMult, ite_eq_right h0, ite_eq_left h1, h2, Finset.card_erase_of_mem (by simp)]
       simp
     · have h2 : InfinitePlace.mk (τ.comp (e.symm : F' →+* F)) ≠ v := by
-        intro h
-        exact h1 (emb_sep e w r hr hne _ _ (by rw [h, hpc]) (by rw [hτ', hconj]))
+        exact fun h => h1 (emb_sep e w r hr hne _ _ (by rw [h, hpc]) (by rw [hτ', hconj]))
       rw [typeMult, ite_eq_right h0, ite_eq_right h1, ite_eq_right hτ, Finset.erase_eq_of_notMem (by simp [h2])]
       simp
 

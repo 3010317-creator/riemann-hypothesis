@@ -174,8 +174,7 @@ private theorem conjTranspose_mul_diagonal_mul_inv_sqrt_eq_Jpq {n p q : ℕ} (d 
     · rw [ite_eq_right (Ne.symm hab), ite_eq_right hab, star_zero, zero_mul, zero_mul]
   · intro i _ hi
     rw [hC i b, ite_eq_right hi, mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 private theorem conjTranspose_mul_Jpq_mul_sqrt_eq_diagonal {n p q : ℕ} (d : Fin n → ℝ) (hd : ∀ i, d i ≠ 0)
     (e : Fin n ≃ Fin p ⊕ Fin q) (he : ∀ i, 0 < d i ↔ (e i).isLeft = true)
@@ -190,17 +189,14 @@ private theorem conjTranspose_mul_Jpq_mul_sqrt_eq_diagonal {n p q : ℕ} (d : Fi
       rw [Jpq_equiv_apply_eq_ite_sign d e he, Matrix.diagonal_apply]
       by_cases hij : i = j
       · subst hij
-        simp only [↓reduceIte]
-        exact star_sqrt_abs_mul_sign_mul_sqrt_abs_eq _ (hd _)
+        simpa only [↓reduceIte] using star_sqrt_abs_mul_sign_mul_sqrt_abs_eq _ (hd _)
       · rw [ite_eq_right hij, ite_eq_right hij, mul_zero, zero_mul]
     · intro b _ hb
       rw [Matrix.conjTranspose_apply, hB, ite_eq_right hb, star_zero, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   · intro a _ ha
     rw [hB a j, ite_eq_right ha, mul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem exists_monomial : ∀ (n p q : ℕ) (G Q : Matrix (Fin n) (Fin n) ℂ) (d : Fin n → ℝ), Formalism.UG.HasSignature G p q → Q.det ≠ 0 → (∀ i, d i ≠ 0) → Qᴴ * G * Q = Matrix.diagonal (fun i => (d i : ℂ)) → ∃ A : Matrix (Fin p ⊕ Fin q) (Fin n) ℂ, Aᴴ * Formalism.UG.Jpq p q * A = G ∧ ∀ a i j, (A * Q) a i ≠ 0 → (A * Q) a j ≠ 0 → i = j := by
   intro n p q G Q d hG hQ hd hQG
@@ -757,8 +753,7 @@ theorem range_iff {m : ℕ} (hε : ε * ε = ε) {M : Matrix (Fin n) (Fin m) R} 
   constructor
   · rintro ⟨y, hy⟩
     rw [hy, Matrix.mulVec_smul, Matrix.mulVec_mulVec, h, Matrix.one_mulVec, Matrix.mulVec_smul]
-  · intro hx
-    exact ⟨L *ᵥ (ε • x), by rw [hx, smul_smul, hε]⟩
+  · exact fun hx => ⟨L *ᵥ (ε • x), by rw [hx, smul_smul, hε]⟩
 
 variable [TopologicalSpace R] [IsTopologicalRing R] [T2Space R] {X : Type} [TopologicalSpace X]
   {φ : X → Matrix (Fin n) (Fin n) R}

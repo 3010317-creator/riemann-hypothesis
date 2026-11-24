@@ -137,8 +137,7 @@ private theorem exists_common_eigenvector_of_commuting {V ι : Type*} [AddCommGr
     have hU'0 : U ⊓ Module.End.eigenspace (T t) c ≠ ⊥ := by
       rw [Submodule.ne_bot_iff]
       refine ⟨u, Submodule.mem_inf.mpr ⟨u.2, Module.End.mem_eigenspace_iff.mpr hu1⟩, ?_⟩
-      intro h
-      exact hu0 (Subtype.ext h)
+      exact fun h => hu0 (Subtype.ext h)
     have hU'f : FiniteDimensional ℂ (U ⊓ Module.End.eigenspace (T t) c : Submodule ℂ V) :=
       Submodule.finiteDimensional_of_le inf_le_left
     have hTU' : ∀ r, ∀ y ∈ U ⊓ Module.End.eigenspace (T t) c,
@@ -228,8 +227,7 @@ theorem exists_highest_pair {V : Type*} [AddCommGroup V] [Module ℂ V] {k l : �
         apply Subtype.ext
         simp only [LinearMap.restrict_apply, SetLike.val_smul]
         rw [hHT, hHx, map_smul, add_smul]
-      · intro h0
-        exact hne (congrArg Subtype.val h0)
+      · exact fun h0 => hne (congrArg Subtype.val h0)
     have h := hmax _ hev
     simp only [Complex.add_re] at h
     linarith
@@ -240,8 +238,7 @@ theorem exists_highest_pair {V : Type*} [AddCommGroup V] [Module ℂ V] {k l : �
   have hU0 : W ⊓ Module.End.eigenspace H μ ≠ ⊥ := by
     rw [Submodule.ne_bot_iff]
     refine ⟨u, Submodule.mem_inf.mpr ⟨u.2, Module.End.mem_eigenspace_iff.mpr huH⟩, ?_⟩
-    intro h
-    exact hu0 (Subtype.ext h)
+    exact fun h => hu0 (Subtype.ext h)
   have hUf : FiniteDimensional ℂ (W ⊓ Module.End.eigenspace H μ : Submodule ℂ V) :=
     Submodule.finiteDimensional_of_le inf_le_left
   have hT : ∀ s t, Commute (Sum.elim (fun a => e a a) (fun b => f b b) s)

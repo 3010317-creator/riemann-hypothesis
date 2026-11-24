@@ -330,8 +330,7 @@ theorem condLE_mono {F : Type} [Field F] [NumberField F] {v : Pl (F := F)} {e m 
   have h1 : ValuativeRel.valuation (Fv F v) ((unifAt v : (Fv F v)ˣ) : Fv F v) ≤ 1 := hϖ.mem
   intro x hx
   refine h x ⟨hx.1, hx.2.trans ?_⟩
-  simp only [Units.val_pow_eq_pow_val, map_pow]
-  exact pow_le_pow_right_of_le_one' h1 hem
+  simpa only [Units.val_pow_eq_pow_val, map_pow] using pow_le_pow_right_of_le_one' h1 hem
 
 theorem nu_cond_at_ram : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E) (a a' : ℕ) (G : Geo σ a a') (X : Chars F E) (om : Rep σ G.V G.W) (om' : Rep σ G.V' G.W),
     IsTriple B G X om om' → ∀ v : B.P, v.1 ∈ X.T →
@@ -427,8 +426,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem mem_KO_iff_isGLO {n : ℕ} (g : GL (Fin n) k) : g ∈ KO k (Fin n) ↔ IsGLO g.val := by
   constructor
-  · intro hg
-    exact ⟨((mem_KO_iff g).1 hg).1, valuation_gdet_of_mem_KO hg⟩
+  · exact fun hg => ⟨((mem_KO_iff g).1 hg).1, valuation_gdet_of_mem_KO hg⟩
   · rintro ⟨hM, hd⟩
     let A : Matrix (Fin n) (Fin n) 𝒪[k] := fun i j => ⟨g.val i j, hM i j⟩
     have e : (algebraMap 𝒪[k] k).mapMatrix A = g.val := rfl
@@ -982,8 +980,7 @@ theorem UpperTheory.localChar_conductor_le_of_heckeExponent :
         refine le_of_eq_of_le ?_ h2
         rw [← SplitTie.valued_complMap τ (splitPrime_under τ), RingHom.map_sub, RingHom.map_one]
         rfl)
-    rw [← locChar_eq_of_chrEq h] at h3
-    exact h3
+    rwa [← locChar_eq_of_chrEq h] at h3
   · by_contra h0
     apply hn
     rw [unrAt_iff_of_chrEq h]
@@ -1214,8 +1211,7 @@ theorem vac_acts {Bs : Base D.host.F D.host.E} (hBs : Bs.IsGood D.sp.cm.sig) {r 
     · exact GlobalTheory.BigDat.VacFix.psi_double _ Bs Xs Ws _ _ _ _ hBs hX hW v θ γ' (hle γ' hγ')
     · unfold symp
       rw [hTens_half (R := AF D.host.F) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig) _ _ a ha.2.1 γ hγ, mul_zero, map_zero, mul_zero, AddChar.map_zero_eq_one]
-  rw [h2, one_smul] at h1
-  exact h1
+  rwa [h2, one_smul] at h1
 
 theorem exists_vac (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT) {Bs : Base D.host.F D.host.E}
     (hψ : IsStdChar D Bs.ψ (-1)) (hBs : Bs.IsGood D.sp.cm.sig) {r s r' s' : ℕ}

@@ -120,8 +120,7 @@ theorem conj_mem_setStab_image {κ : Type} [CommRing κ] {n : ℕ} (C : Set (Fin
   · intro H v
     have := H (y.1 *ᵥ v)
     rwa [e2] at this
-  · intro H w
-    exact H _
+  · exact fun H w => H _
 
 
 
@@ -181,8 +180,7 @@ theorem coset_match : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → �
           (levQAt I.sel (I.tup I.mu0) (I.idx I.mu0) (I.Tp I.mu0) i b0) g0 r0 = q0 := hg0
       have h3 := MemChart.bar_ya (levGAt I.sel (I.tup I.mu0) (I.idx I.mu0) (I.Tp I.mu0) i b0)
           (levQAt I.sel (I.tup I.mu0) (I.idx I.mu0) (I.Tp I.mu0) i b0) g0 r0 w
-      rw [e] at h3
-      exact h3
+      rwa [e] at h3
     have hb0' : ∀ w, MemChart.bar r0 w = (fun v => (((g0.2.1.1)⁻¹ : GLG (E := B.fields.E) (n := B.R.N i) (SG := (B.primes X).vGs)) w).1 *ᵥ v) '' MemChart.bar r w := by
       intro w
       have e : ∀ v, ((g0.2.1.1 w)⁻¹).1 *ᵥ ((g0.2.1.1 w).1 *ᵥ v) = v := fun v => by
@@ -401,8 +399,7 @@ theorem exists_lift (hc : CMData F E) (n : ℕ) (Q : Finset (HeightOneSpectrum (
       simp only [Matrix.map_mul, hMi, mul_one] at h
       rw [h, Matrix.map_one _ (map_zero _) (map_one _)]
     have h := congrFun (congrFun hMg i) j
-    rw [Matrix.map_apply, Matrix.one_apply] at h
-    exact h
+    rwa [Matrix.map_apply, Matrix.one_apply] at h
   · rw [c2 P.1 P.2 r j, mat_frOf (isFr_frOf (hdet P.1 P.2)).1, ← hlift P.1 ((x P).1 r j), ← hM P r j]
     exact hasRes_coe _ _
 
@@ -744,16 +741,14 @@ theorem conj_unitary_preserves_stdLat_of_ptOf : ∀ {B : Base} {X : PreX B.toPre
       have key := Subgroup.mul_mem _ (Subgroup.mul_mem _ htU hm) (Subgroup.inv_mem _ htU)
       convert key using 1
       group
-    · intro hm
-      exact Subgroup.mul_mem _ (Subgroup.mul_mem _ (Subgroup.inv_mem _ htU) hm) htU
+    · exact fun hm => Subgroup.mul_mem _ (Subgroup.mul_mem _ (Subgroup.inv_mem _ htU) hm) htU
   ·
     constructor
     · intro hm
       have key := carries_mul' (carries_mul' htC hm) htiC
       convert key using 2
       group
-    · intro hm
-      exact carries_mul' (carries_mul' htiC hm) htC
+    · exact fun hm => carries_mul' (carries_mul' htiC hm) htC
   · refine forall_congr' fun P => forall_congr' fun r => forall_congr' fun j => ?_
     rw [e3]
   · dsimp only
@@ -769,8 +764,7 @@ theorem conj_unitary_preserves_stdLat_of_ptOf : ∀ {B : Base} {X : PreX B.toPre
       have eR : ((((x w)⁻¹)⁻¹ : GL (Fin n) (𝓞 B.host.E ⧸ w.1.asIdeal)) : Matrix (Fin n) (Fin n) (𝓞 B.host.E ⧸ w.1.asIdeal)) * ((h w : GL (Fin n) (𝓞 B.host.E ⧸ w.1.asIdeal)) : Matrix (Fin n) (Fin n) (𝓞 B.host.E ⧸ w.1.asIdeal)) *
           (((x w)⁻¹ : GL (Fin n) (𝓞 B.host.E ⧸ w.1.asIdeal)) : Matrix (Fin n) (Fin n) (𝓞 B.host.E ⧸ w.1.asIdeal)) = ((x w * h w * (x w)⁻¹ : GL (Fin n) (𝓞 B.host.E ⧸ w.1.asIdeal)) : Matrix (Fin n) (Fin n) (𝓞 B.host.E ⧸ w.1.asIdeal)) := by
         rw [inv_inv, Units.val_mul, Units.val_mul]
-      rw [eL, eR] at key
-      exact key
+      rwa [eL, eR] at key
     · intro H w r j
       have key := hasRes_conj w.1 t ((s⁻¹ : GA B n) : Matrix (Fin n) (Fin n) (AfE B.host.F B.host.E)) (x w)
         ((x w * h w * (x w)⁻¹ : GL (Fin n) (𝓞 B.host.E ⧸ w.1.asIdeal)) : Matrix (Fin n) (Fin n) (𝓞 B.host.E ⧸ w.1.asIdeal)) (hx w) (hint w.1) (H w) r j
@@ -782,8 +776,7 @@ theorem conj_unitary_preserves_stdLat_of_ptOf : ∀ {B : Base} {X : PreX B.toPre
         rw [← Units.val_mul, ← Units.val_mul]
         congr 1
         group
-      rw [eL, eR] at key
-      exact key
+      rwa [eL, eR] at key
 
 end GlobalTheory.Mem.Col2.TC.ChTw.Match
 end -- clump:auto
@@ -880,8 +873,7 @@ theorem locCQ_conj_iff_eq_one : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), 
     have hvw : HeightOneSpectrum.under (𝓞 B.host.F) P.1 = w := by
       ext1
       have := hI.sel_ok w
-      rw [hsel] at this
-      exact this
+      rwa [hsel] at this
     have htv : bc (prV (E := B.host.E) w) t = 1 :=
       ht w (Or.inr fun j => natCast_not_mem_of_goodPl B.fields.E hgood (B.host.g_prime j) (hI.g_mem j))
     have hsv : bc (prV (E := B.host.E) w) s = 1 := hs w (hvw ▸ hvQ)

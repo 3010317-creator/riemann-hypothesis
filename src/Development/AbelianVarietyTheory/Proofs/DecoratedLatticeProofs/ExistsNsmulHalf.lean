@@ -119,10 +119,7 @@ theorem eq_add_halves (p : SplitPt D k) {S T : HSp D} {LS : Set (Fin S.rank → 
 
 theorem smul_conj_zero (e e' : AE D) (h : e' * cA D e' = 0) {S T : HSp D} (u : WO S T) (hu : e' • u = u) :
     cA D e' • (e • u) = 0 := by
-  rw [← hu, smul_smul, smul_smul]
-  rw [mul_comm (cA D e') e]
-  rw [mul_assoc]
-  rw [mul_comm (cA D e') e']
+  rw [← hu, smul_smul, smul_smul, mul_comm (cA D e') e, mul_assoc, mul_comm (cA D e') e']
   rw [h, mul_zero, zero_smul]
 
 theorem isHalf_add {S T : HSp D} {e : AE D} {a b : WO S T} (ha : IsHalf e a) (hb : IsHalf e b) : IsHalf e (a + b) :=

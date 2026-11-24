@@ -115,16 +115,14 @@ theorem det_low {n l : ℕ} (h : l ≤ n) (A : Matrix (Fin n) (Fin n) E)
     (A.submatrix (Fin.castLE h) (Fin.castLE h)).det = 1 := by
   rw [Matrix.det_of_isLowerTriangular]
   · simp [hA1]
-  · intro i j hij
-    exact hA _ _ hij
+  · exact fun i j hij => hA _ _ hij
 
 theorem det_up {n l : ℕ} (h : l ≤ n) (B : Matrix (Fin n) (Fin n) E)
     (hB : ∀ a k : Fin n, k < a → B a k = 0) (hB1 : ∀ a, B a a = 1) :
     (B.submatrix (Fin.castLE h) (Fin.castLE h)).det = 1 := by
   rw [Matrix.det_of_isUpperTriangular]
   · simp [hB1]
-  · intro i j hij
-    exact hB _ _ hij
+  · exact fun i j hij => hB _ _ hij
 
 theorem sub_three {n l : ℕ} (h : l ≤ n) (A W B : Matrix (Fin n) (Fin n) E)
     (hA : ∀ a k : Fin n, a < k → A a k = 0) (hB : ∀ a k : Fin n, k < a → B a k = 0) :
@@ -152,8 +150,7 @@ theorem unit_cut {n l : ℕ} (h : l ≤ n) (W : Matrix (Fin n) (Fin n) E) (hW : 
       invFun := fun a => ⟨a.1, a.2⟩
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl }
-  rw [← Matrix.det_submatrix_equiv_self e] at h1
-  exact h1
+  rwa [← Matrix.det_submatrix_equiv_self e] at h1
 
 theorem col_lemma (O : Subring E) {n l : ℕ} (h : l ≤ n) (A W B : Matrix (Fin n) (Fin n) E)
     (hA : ∀ a k : Fin n, a < k → A a k = 0) (hA1 : ∀ a, A a a = 1)

@@ -93,8 +93,7 @@ theorem actQ_tpow (g : GQ l) (a : ℤ) : P.actQ g (((isUnit_tB P).unit ^ a : P.R
     simpa [Algebra.smul_def] using localPrime_galoisAction_periodT P g
   have h2 := congrArg (fun u : P.R.Bˣ => ((u ^ a : P.R.Bˣ) : P.R.B)) h
   simp only [mul_zpow, ← map_zpow, Units.val_mul, Units.coe_map] at h2
-  rw [← map_zpow P.χQ]
-  exact h2
+  rwa [← map_zpow P.χQ]
 
 theorem act_tz (g : GQ l) (a : ℤ) : P.actQdR g (tz P a) =
     algebraMap ℚ_[l] P.R.BdR ((P.χQ g ^ a : ℚ_[l]ˣ) : ℚ_[l]) * tz P a := by
@@ -111,8 +110,7 @@ theorem fil_step (T : LocTied l P AI) (a : ℤ) (x : P.R.BdR) : x ∈ Fil P a �
   change x ∈ (P.PD (botExt l)).Fil a ↔ P.ιB P.tB * x ∈ (P.PD (botExt l)).Fil (a + 1)
   rw [h]
   constructor
-  · intro hx
-    exact ⟨x, hx, rfl⟩
+  · exact fun hx => ⟨x, hx, rfl⟩
   · rintro ⟨y, hy, e⟩
     have hu : IsUnit (P.ιB P.tB) := tu_val P ▸ (tu P).isUnit
     rwa [hu.mul_left_cancel e]
@@ -160,8 +158,7 @@ theorem exact_deg (x : P.R.BdR) (hx : x ≠ 0) : ∃ a : ℤ, x ∈ Fil P a ∧ 
   classical
   obtain ⟨a₀, ha₀⟩ := (P.PD (botExt l)).Fil_exh x
   have hc : ∃ c, x ∉ Fil P c := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hx ((P.PD (botExt l)).Fil_sep x h)
   obtain ⟨c, hc⟩ := hc
   have hbd : ∀ z : ℤ, x ∈ Fil P z → z ≤ c := fun z hz => by

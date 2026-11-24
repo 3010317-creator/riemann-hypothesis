@@ -81,8 +81,7 @@ theorem valued_lt_one_of_map {F E : Type} [Field F] [NumberField F] [Field E] [N
     refine tendsto_pow_atTop_nhds_zero_iff_norm_lt_one.1 ?_
     simpa [Function.comp_def, map_pow] using h2
   obtain ⟨ϖ, hϖ0, hϖ1⟩ := exists_ne_zero_norm_lt_one v
-  by_contra h
-  push Not at h
+  by_contra! h
   have hz0 : z ≠ 0 := by
     rintro rfl
     rw [norm_zero] at h
@@ -96,8 +95,7 @@ theorem valued_lt_one_of_map {F E : Type} [Field F] [NumberField F] [Field E] [N
       rw [norm_div, norm_pow, div_lt_one (by positivity)]
       exact lt_of_lt_of_le hϖ1 hzN
     have := h1 _ hq
-    rw [map_div₀, map_pow, norm_div, norm_pow, div_lt_one (by positivity)] at this
-    exact this
+    rwa [map_div₀, map_pow, norm_div, norm_pow, div_lt_one (by positivity)] at this
   have ht := tendsto_pow_atTop_nhds_zero_of_lt_one (norm_nonneg (c z)) hz
   obtain ⟨N, hN⟩ := (ht.eventually (gt_mem_nhds hcϖ)).exists
   exact lt_asymm hN (key N)
@@ -181,8 +179,7 @@ theorem fixed_ne_bot_of_fixed_vector : ∀ (L : Type) [Field L] [NumberField L] 
   let T : t → σ'.IntertwiningMap ρ' := fun j =>
     LinearMap.intertwiningMap_of_isIntertwiningMap σ' ρ' j.1.1 fun g v => j.1.2.2 g.1 g.2 v
   have hf' : f ∈ ⨆ j, LinearMap.range (T j).toLinearMap := by
-    rw [iSup_subtype'] at ht
-    exact ht
+    rwa [iSup_subtype'] at ht
   let K : Subgroup H := (GlobalTheory.SplitWeil.KOne (s.w.adicCompletion L) (Fin n)).comap φ
   have hfixK : ∀ k ∈ K, ρ' k f = f := fun k hk =>
     hfix k.1 k.2 (mem_KOne_of_map c hc _ hk)

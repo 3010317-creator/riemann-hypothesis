@@ -126,8 +126,7 @@ theorem cong_map {γ : GL (Fin r) E} (hγ : Near X 𝔪 (mapL γ X.Λ)) (h : Con
   have := mul_smul_mem h1 𝔪 (map_smul_mem (B := mapL γ X.Λ)
     ((Matrix.toLin' (γ : Matrix (Fin r) (Fin r) E)).restrictScalars (𝓞 E))
     (fun v hv => Submodule.mem_map_of_mem hv) 𝔪 h)
-  rw [map_smul, map_sub, smul_smul] at this
-  exact this
+  rwa [map_smul, map_sub, smul_smul] at this
 
 end Congruence
 
@@ -399,8 +398,7 @@ theorem exists_reps (idx : Fin g ≃ X.Ψ × Fin r) (hs : IsSympl X bas) (he : E
         · exact zero_mem _
     refine ⟨y, hy, ⟨Matrix.of k', by ext i j; exact hk' i j, fun i => ?_⟩, fun k hk => ?_⟩
     · have := hc (Fin.castLE hn i)
-      rw [dite_eq_left (show ((Fin.castLE hn i : Fin n) : ℕ) < r from i.2)] at this
-      exact this
+      rwa [dite_eq_left (show ((Fin.castLE hn i : Fin n) : ℕ) < r from i.2)] at this
     · have := hc k
       rwa [dite_eq_right (not_lt.2 hk)] at this
   choose f h1 h2 h3 using H

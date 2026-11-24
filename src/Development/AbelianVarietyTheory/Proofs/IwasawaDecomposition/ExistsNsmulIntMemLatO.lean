@@ -304,8 +304,7 @@ theorem exists_nsmul_latO_int (hS : ΛS.FG) (hT : ΛT.FG) : ∃ k : ℕ, 0 < k �
     obtain ⟨α, hα, -, a, ha, s, hs, t, ht, rfl⟩ := hw
     obtain ⟨o, ho⟩ := hsp _ (GlobalTheory.LatFinMod.genMap_mem_span S T (hA2 a ha) (hB2 s hs) (hC2 t ht)) i j
     have h1 := tmul_mem_int (F := D.host.F) hα o
-    rw [show (o : D.host.E) = _ from ho, ← TensorProduct.smul_tmul'] at h1
-    exact h1
+    rwa [show (o : D.host.E) = _ from ho, ← TensorProduct.smul_tmul'] at h1
   | zero => rw [Matrix.zero_apply, RingHom.map_zero, smul_zero]; exact zero_mem _
   | add x y _ _ hx hy => rw [Matrix.add_apply, RingHom.map_add (f := _), smul_add]; exact add_mem hx hy
   | neg x _ hx => rw [Matrix.neg_apply, RingHom.map_neg, smul_neg]; exact neg_mem hx
@@ -444,8 +443,7 @@ theorem placeModel_unique {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ
       have e2 := h₀.modul _ (GlobalTheory.isSBHalf_halfInd a Λ) y ((isHalf_iff S T).2 hy)
       have e3 := h₀.vac
       rw [one_smul] at e3
-      rw [e2, e3, halfInd_eq_ind] at e1
-      exact e1
+      rwa [e2, e3, halfInd_eq_ind] at e1
     exact (key T₁ h₁).trans (key T₂ h₂).symm
   exact hsub hmem
 
@@ -473,8 +471,7 @@ theorem redM_add_nsmul {b c : ℕ} (PP : Formalism.L2.DIV.Pl D.host.E) {n : ℕ}
   rw [dite_eq_left h2, dite_eq_left (h i j)]
   have e : (⟨_, h2⟩ : Formalism.L2.Herm.intAf D.host.F D.host.E) = ⟨_, h i j⟩ + n • ⟨_, h' i j⟩ := rfl
   have h0 : (n : Formalism.L2.DIV.kP PP) = 0 := by
-    rw [← map_natCast (Ideal.Quotient.mk PP.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
-    exact hn
+    rwa [← map_natCast (Ideal.Quotient.mk PP.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
   rw [e, RingHom.map_add (f := _), nsmul_eq_mul, RingHom.map_mul, map_natCast, h0, zero_mul, add_zero]
 
 

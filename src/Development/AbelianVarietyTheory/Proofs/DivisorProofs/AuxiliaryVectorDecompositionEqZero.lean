@@ -221,8 +221,7 @@ theorem exists_sumFrame {A B : HSp D} {c : ℕ} {ε : D.host.E} (hε : ε ≠ 0)
         have e4 : z ∘ σ = Sum.elim y0 u := hCinj (by rw [← hCrv, hCv, hxu]; rfl)
         refine ⟨?_, fun p => ?_⟩
         · have : z ∘ σ ∘ Sum.inl = y0 := by rw [← Function.comp_assoc, e4]; rfl
-          rw [this]
-          exact hy0
+          rwa [this]
         · have : z (σ (Sum.inr p)) = u p := congrFun e4 (Sum.inr p)
           rw [this]
           exact hu p
@@ -269,8 +268,7 @@ theorem exists_gen {I : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E} (hI : I ≠
       ((t⁻¹ : (FiniteAdeleRing (𝓞 D.host.E) D.host.E)ˣ) : FiniteAdeleRing (𝓞 D.host.E) D.host.E) Q)
     (fun Q => by
       by_cases hQ : Q ∈ S
-      · simp only [ite_eq_left hQ]
-        exact mul_inv_cancel₀ (hu0 Q hQ)
+      · simpa only [ite_eq_left hQ] using mul_inv_cancel₀ (hu0 Q hQ)
       · simp only [ite_eq_right hQ]
         exact GlobalTheory.Idele.idele_apply_mul_inv t Q)
     (by
@@ -329,8 +327,7 @@ theorem conjPl_eq_cP (w : Pl D.host.E) : Formalism.DivisionValues.conjPl w = Glo
   constructor
   · rintro ⟨y, hy, rfl⟩
     rwa [hc']
-  · intro hx
-    exact ⟨_, hx, hc x⟩
+  · exact fun hx => ⟨_, hx, hc x⟩
 
 variable {T : Type} {L : LevCh D T} {sc : Consts}
 
@@ -532,8 +529,7 @@ theorem gridChoice_nonempty {U : Set T} (N : Std G U) (Z : Normal W N)
       (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ hy' 
     change (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ •
       ((algebraMap (𝓞 D.host.E) D.host.E a) • y) ∈ _ at this
-    rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
-    exact this
+    rwa [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
   have hlatTop : ∀ j, j ≤ D.R.m → Submodule.IsFullLattice D.host.E (G.Λ (.top j)) := fun j hj =>
     hfull _ _ (G.isV (X := .top j) hj fun _ e => by cases e).sd
   have hb : ∀ j, ∃ β : GL (Fin (G.V (.top j)).rank) (Lev.EAf D), j ≤ D.R.m → IsFrame β (G.Λ (.top j)) := fun j => by
@@ -562,8 +558,7 @@ theorem gridChoice_nonempty {U : Set T} (N : Std G U) (Z : Normal W N)
         frameSign (Kw w) (D.R.m - 1 - j) p * (unifAt w : Kw w) ^ if j = 0 then cosExp G w * (p.1 + 1) else 0 :=
       funext fun p => hy2 p w hw
     have := h2 w
-    rw [e] at this
-    exact this
+    rwa [e] at this
   have hF : ∀ i j, ∃ f : GL (Fin (G.V (.grid i j)).rank) (Lev.EAf D),
       (1 ≤ i → i ≤ D.R.m → j ≤ D.R.m → IsFrame f (G.Λ (.grid i j))) ∧
       ∀ (hi : i = D.R.m) (hj : j < D.R.m), ∀ w ∈ ⋃ t ∈ U, (locPl G t : Set (Pl D.host.E)),
@@ -600,15 +595,13 @@ theorem gridChoice_nonempty {U : Set T} (N : Std G U) (Z : Normal W N)
     (fun _ Q => by rw [Units.val_one, map_one, map_one, FractionalIdeal.count_one, neg_zero, WithZero.exp_zero])
   have hl1' : IsFrame βl (G.Λ (.top D.R.m)) := by
     change IsFrame βl (xOf (G.sp.P D.R.m) G.sp.Xs D.R.m).lat
-    rw [G.sp.topLat]
-    exact hl1
+    rwa [G.sp.topLat]
   have hl2' : ∀ w, IsSumFrame G.sp.topDec w (F D.R.m D.R.m) βl 1 := fun w => by
     have := hl2 w
     have e : (fun _ : Fin 1 => cpt (D := D) w ((1 : (Lev.EAf D)ˣ) : Lev.EAf D)) = 1 := funext fun _ => by
       rw [Units.val_one, map_one]
       rfl
-    rw [e] at this
-    exact this
+    rwa [e] at this
 
   obtain ⟨tA, htA⟩ := GlobalTheory.Idele.exists_idealOf_eq (GlobalTheory.ChiGrid.StairConj.conj_AA_and_stA D).1.1
   have hfinA : {w : Pl D.host.E | FractionalIdeal.count D.host.E w D.host.AA ≠ 0}.Finite := by
@@ -623,8 +616,7 @@ theorem gridChoice_nonempty {U : Set T} (N : Std G U) (Z : Normal W N)
   refine ⟨⟨B, Function.update b0 D.R.m βl, fun j hj => ?_, fun t ht w hw j hj => ?_, fun t ht w hw => ?_, N, Z,
     hfinA.toFinset.filter fun w => w = rep (w.under (𝓞 D.host.F)), fun w hw => ?_, fun w hw => ?_⟩⟩
   · rcases eq_or_ne j D.R.m with rfl | hj'
-    · rw [Function.update_self]
-      exact hl1'
+    · rwa [Function.update_self]
     · rw [Function.update_of_ne hj']
       exact hb0 j hj
   · rw [Function.update_of_ne hj.ne, hB D.R.m j hm]

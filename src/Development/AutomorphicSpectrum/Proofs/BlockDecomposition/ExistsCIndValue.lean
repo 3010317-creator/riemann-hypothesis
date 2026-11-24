@@ -177,8 +177,7 @@ theorem exists_cInd_value (H : Subgroup G) (σ : Representation ℂ H W) (hσ : 
     rw [hOe] at this
     exact this)
   refine ⟨B, ?_⟩
-  have h := hB 1 1 (one_mem K)
-  simpa using h
+  simpa using hB 1 1 (one_mem K)
 
 end Abstract
 
@@ -201,8 +200,7 @@ theorem mem_mirabolicParabolic_iff (m j : ℕ) (g : Mir k (m + j)) :
   show (g : GL (Fin (m + j + 1)) k) ∈ parab k (eGP m j) ↔ _
   rw [mem_parab_iff]
   constructor
-  · intro h b a
-    exact h true false b a (by decide)
+  · exact fun h b a => h true false b a (by decide)
   · intro h x y i l hxy
     cases x <;> cases y <;> first | exact absurd hxy (by decide) | exact h i l
 

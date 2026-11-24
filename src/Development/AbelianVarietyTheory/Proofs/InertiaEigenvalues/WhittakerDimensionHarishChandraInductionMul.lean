@@ -96,8 +96,7 @@ theorem inPar_iff (a : ℕ) (p : Gn g n) :
   · intro h i j hij
     by_cases hi : (i : ℕ) < a <;> by_cases hj : (j : ℕ) < a <;> simp [hi, hj] at hij
     exact h i j hj (not_lt.1 hi)
-  · intro h i j hj hi
-    exact h i j (by simp [hj, not_lt.2 hi])
+  · exact fun h i j hj hi => h i j (by simp [hj, not_lt.2 hi])
 
 theorem block_of_eq {a : ℕ} {σ σ' : Equiv.Perm (Fin n)} {u u' p p' : Gn g n} (hu : IsUniUp (u : Mt g n))
     (hu' : IsUniUp (u' : Mt g n)) (hp : InPar a (p : Mt g n)) (hp' : InPar a (p' : Mt g n))
@@ -325,15 +324,13 @@ private lemma isUniUp_and_inPar_iff_good (M : _root_.GlobalTheory.GLq.Mt g (a + 
       omega
     have := h _ _ hJa hIa
     simp only [Matrix.submatrix_apply, Equiv.apply_symm_apply] at this
-    rw [entN_eq_apply_of_lt' _ (by omega) hjn]
-    exact this
+    rwa [entN_eq_apply_of_lt' _ (by omega) hjn]
   · have hI := hσ i
     have hJ := hσ j
     rw [ite_eq_right (by omega)] at hI
     rw [ite_eq_left hj] at hJ
     have := h (σ i) (σ j) (by omega) (by omega) (σ j).2
-    rw [entN_fin_eq_apply] at this
-    exact this
+    rwa [entN_fin_eq_apply] at this
 
 open Polynomial in
 open scoped Classical in
@@ -343,8 +340,7 @@ private lemma isUnit_of_isUniUp' {n : ℕ} {M : _root_.GlobalTheory.GLq.Mt g n} 
   unfold _root_.Formalism.MainNotions.ArithmeticCylinders.IsUniUp at h
   rw [Matrix.isUnit_iff_isUnit_det, Matrix.det_of_upperTriangular]
   · simp [(h _ _).2 rfl]
-  · intro i j hij
-    exact (h i j).1 hij
+  · exact fun i j hij => (h i j).1 hij
 
 open Polynomial in
 open scoped Classical in
@@ -1021,8 +1017,7 @@ theorem wh_hcT : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g) ℂ), ψ �
     rw [h0, h0]
     split_ifs <;> omega
   rw [Finset.sum_eq_single_of_mem σ₀ h0R]
-  · simp only [hU, hP]
-    exact OpenCell.openCell g ψ a b (a + b) σ₀ Φ rfl h0
+  · simpa only [hU, hP] using OpenCell.openCell g ψ a b (a + b) σ₀ Φ rfl h0
   · intro σ hσ hne
     have hσ' : ∀ i j : Fin (a + b), i < j → ((j : ℕ) < a ∨ a ≤ (i : ℕ)) → σ i < σ j := by
       simpa [hR] using hσ

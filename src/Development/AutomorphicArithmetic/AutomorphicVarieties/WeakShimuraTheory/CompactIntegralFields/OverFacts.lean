@@ -94,8 +94,7 @@ private theorem eq_of_isLow_of_isUp_adj_mul_of_isUnit_det {k : Type} [Field k] {
     have a1 : Matrix.BlockTriangular (adj m * B) id := fun i j hij => h2 i j hij
     have a2 : Matrix.BlockTriangular (adj n * B) id := fun i j hij => h1 i j hij
     haveI := Matrix.invertibleOfIsUnitDet _ hXu
-    have a3 := a1.mul (Matrix.blockTriangular_inv_of_blockTriangular a2)
-    exact fun i j hij => a3 hij
+    exact fun i j hij => (a1.mul (Matrix.blockTriangular_inv_of_blockTriangular a2)) hij
   have hC1 : adj m * n = 1 := by
     obtain ⟨-, hmd, hmz⟩ := hm
     obtain ⟨-, hnd, hnz⟩ := hn
@@ -290,8 +289,7 @@ private theorem exists_entry_pow_l_pow_ne_zero {Γ k : Type} [Group Γ] [Field k
       · rw [hc, h2, zero_mul, zero_add]
         exact mul_ne_zero (hd y i) hx
       · rw [hdi, hdj, h1]
-        intro h
-        exact hy (mul_right_cancel₀ (hd x j) h)
+        exact fun h => hy (mul_right_cancel₀ (hd x j) h)
     · exact ⟨y, key y h2 hy⟩
   · exact ⟨x, key x hx h1⟩
 
@@ -333,8 +331,7 @@ private theorem exists_pow_res_surj_of_tower_le {Ω : Type} [Field Ω] [CharZero
   refine ⟨e, fun z => ?_⟩
   have hz : resQ T.F z ∈ T.F.fixingSubgroup := by
     rw [IntermediateField.mem_fixingSubgroup_iff]
-    intro x hx
-    exact z.commutes ⟨x, hx⟩
+    exact fun x hx => z.commutes ⟨x, hx⟩
   have h2 := he _ hz
   refine ⟨IntermediateField.fixingSubgroupEquiv T'.F ⟨_, h2⟩, ?_⟩
   apply AlgEquiv.ext
@@ -541,8 +538,7 @@ theorem UpperTheory.V.Ws.overFacts :
       intro h
       apply hy2
       have e : (T.fr ∅).rt (-wBe) y2 = (T.fr W).χ 2 y2 * ((T.fr W).χ 1 y2)⁻¹ := by
-        simp [Fr.rt, wBe, Tower.fr]
-        exact mul_inv_mul_mul_inv_eq _ _ _
+        simpa [Fr.rt, wBe, Tower.fr] using mul_inv_mul_mul_inv_eq _ _ _
       rw [Tower.rb, e]
       exact residue_mul_inv_eq_one_of_map_eq a _ _ h
     have hrel : s.r y 0 0 * s.r y 3 3 = s.r y 1 1 * s.r y 2 2 :=

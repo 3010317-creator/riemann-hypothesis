@@ -302,8 +302,7 @@ theorem UpperTheory.thetaLift_triple_local_split_places :
       unfold frMapO
       rw [Matrix.map_mul, Matrix.map_mul]
       congr 2
-      refine Matrix.ext fun i j => ?_
-      exact GlobalTheory.BotMatch.evW_toEAf (τ v) (x i j)
+      exact Matrix.ext fun i j => GlobalTheory.BotMatch.evW_toEAf (τ v) (x i j)
     rw [← hG, hbG, e1, e2]
     refine fmFst_mat (finCongr hr) _ _ _ (hGi v) (X.rW.β.1.map (evW (τ v))) _ ?_ (c v) (hc v) _
     rw [← Matrix.map_mul, Units.inv_mul, Matrix.map_one _ (map_zero _) (map_one _)]
@@ -362,8 +361,7 @@ private theorem coord_eq {D : D7} {v : GlobalTheory.IndefiniteRowSideFullHecke.W
   have hG : (A'.gram⁻¹)ᴴ = A'.gram⁻¹ := by
     rw [Matrix.conjTranspose_nonsing_inv]
     congr 1
-    refine Matrix.ext fun i j => ?_
-    exact GlobalTheory.DualPairCheck.gram_star A' j i
+    exact Matrix.ext fun i j => GlobalTheory.DualPairCheck.gram_star A' j i
   have h0 : ((GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.incM (A'.gram⁻¹))ᵀ).map (piW (t.comp D.sp.cm.sig)) = (A'.gram⁻¹).map t := by
     refine Matrix.ext fun i j => ?_
     have h := congrFun (congrFun hG i) j
@@ -394,8 +392,7 @@ private theorem coord_eq {D : D7} {v : GlobalTheory.IndefiniteRowSideFullHecke.W
         ((y : Matrix _ _ (AE D))ᵀ).map (piW (t.comp D.sp.cm.sig)) * WW.gram.map t) * βW.1.map (evW t)) := by
     rw [← hxi, ← hinc, ← hinc, ← hy, ← Matrix.map_mul, ← Matrix.map_mul, ← Matrix.map_mul, ← Matrix.map_mul,
       ← Matrix.map_mul, ← Matrix.map_mul]
-    refine Matrix.ext fun i j => ?_
-    exact map_mul (evW t) _ _
+    exact Matrix.ext fun i j => map_mul (evW t) _ _
   rw [h1, h2, h3, Matrix.mul_smul, Matrix.smul_mul, Matrix.submatrix_smul]
   simp only [Pi.smul_apply]
   congr 1

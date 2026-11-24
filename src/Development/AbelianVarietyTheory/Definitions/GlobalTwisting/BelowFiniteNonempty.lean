@@ -199,18 +199,15 @@ theorem T_notMem_rowSG (hPr : Pr.Ok) (hsel : IsSel X sel) (hT : Pr.T u ∈ S) :
         by_contra hg
         exact hv' (Subgroup.mem_iInf.1 (Subgroup.mem_iInf.1 mu.2.2 v) hg)
       have h1 : (Pr.T u : 𝓞 X.F) ∈ v.asIdeal := by
-        rw [← hsel v, Ideal.under_def, Ideal.mem_comap, map_natCast]
-        exact hm
+        rwa [← hsel v, Ideal.under_def, Ideal.mem_comap, map_natCast]
       apply hg.2.2
       have h2 : ringChar (𝓞 X.F ⧸ v.asIdeal) = Pr.T u := by
         have := v.isPrime
         have h3 : ((Pr.T u : ℕ) : 𝓞 X.F ⧸ v.asIdeal) = 0 := by
-          rw [← map_natCast (Ideal.Quotient.mk v.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
-          exact h1
+          rwa [← map_natCast (Ideal.Quotient.mk v.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
         exact ((Nat.dvd_prime (hPr.T_prime u)).1 (ringChar.dvd h3)).resolve_left CharP.ringChar_ne_one
       show ringChar (𝓞 X.F ⧸ v.asIdeal) ∈ S
-      rw [h2]
-      exact hT
+      rwa [h2]
     · simp at h
 
 

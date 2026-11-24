@@ -97,8 +97,7 @@ theorem term_eq (k L N : ℕ) (ε : DirichletCharacter ℂ N) (β : M2) (γ : Ga
   rw [hlin]
   have hdetg : g 0 0 * g 1 1 - g 0 1 * g 1 0 = 1 := by
     have := g.2
-    rw [Matrix.det_fin_two] at this
-    exact this
+    rwa [Matrix.det_fin_two] at this
   have h00 : ((((g : M2)) * β) 0 0 : ZMod N) = (g 0 0 : ZMod N) * (β 0 0 : ZMod N) := by
     rw [Matrix.mul_apply, Fin.sum_univ_two]
     have : ((β 1 0 : ℤ) : ZMod N) = 0 := (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).2 hN
@@ -108,8 +107,7 @@ theorem term_eq (k L N : ℕ) (ε : DirichletCharacter ℂ N) (β : M2) (γ : Ga
     have : ((g 1 0 : ℤ) : ZMod N) = 0 := (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).2 hgN
     have h2 : ((g 0 0 * g 1 1 - g 0 1 * g 1 0 : ℤ) : ZMod N) = 1 := by rw [hdetg]; simp
     push_cast at h2
-    rw [this, mul_zero, sub_zero] at h2
-    exact h2
+    rwa [this, mul_zero, sub_zero] at h2
   simp only [ch]
   rw [h00, map_mul]
   have : ε (g 0 0 : ZMod N) * ε (g 1 1 : ZMod N) = 1 := by rw [← map_mul, h1, map_one]

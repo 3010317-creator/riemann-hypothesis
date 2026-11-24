@@ -59,8 +59,7 @@ theorem le_preimage_wchart_of_section {X Y : Scheme.{0}} (L : LB X) (π : Y ⟶ 
   intro x hx
   refine Set.mem_iInter.2 fun _ => ?_
   change (σ ≫ π) x ∈ L.U k
-  rw [h]
-  exact hx
+  rwa [h]
 
 noncomputable def secOfSection {X Y : Scheme.{0}} (L : LB X) (π : Y ⟶ X) (σ : X ⟶ Y) (h : σ ≫ π = 𝟙 X)
     (s : LB.Sec (LB.LinComb L (K := Fin 1) (fun _ => π) (fun _ => 1))) : LB.Sec L where
@@ -120,7 +119,6 @@ theorem exists_sec_of_baseOver : ∀ (R : Type) [CommRing R] (P : PolAV (Sp R)) 
     ((HolHom.valR_eq x _ hw _).symm.trans ((HolHom.valR_res x _ _ hw).trans (Conv.valR_spMap_top f a)))
     (HolHom.valR_eq x _ hw _).symm))
   refine (valR_secOfSection P.L _ σ.left hl th (x ≫ z.left) k hk).trans ?_
-  rw [Category.assoc, e']
-  exact H₂
+  rwa [Category.assoc, e']
 
 end GlobalTheory.UnitTheta

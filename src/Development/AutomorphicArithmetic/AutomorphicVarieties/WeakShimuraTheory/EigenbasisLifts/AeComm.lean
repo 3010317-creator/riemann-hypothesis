@@ -166,9 +166,7 @@ theorem UpperTheory.V.Ws.Eb.adExt :
     intro X
     exact exists_rep_conj_chi_smul_and_q_twisted _ _ _ _ _ _ _ huv hvu (Units.mul_inv _) (Units.mul_inv _) (hF g) X
   have hθθ : θ * θ = 1 := by
-    apply LinearMap.ext
-    intro X
-    exact neg_conj_neg_transpose_eq_self_of_symm _ _ X hvu (hS X)
+    exact LinearMap.ext (fun X => neg_conj_neg_transpose_eq_self_of_symm _ _ X hvu (hS X))
   have hker : ∀ γ : F.Γ, F.η γ ≠ 1 → γ * F.c ∈ F.η.ker := by
     intro γ h
     rw [MonoidHom.mem_ker, map_mul, F.η_c]

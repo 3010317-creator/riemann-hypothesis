@@ -300,8 +300,7 @@ theorem singleSeries_eq_phase_thetaKO : ∀ (D : D7) (G : Type) [Group G] [Finty
     intro f hf P'
     have h := GlobalTheory.AdTh.SourceBasis.pureTensorO_mul_source D R.ψ R.θ (Vc D i) (Wc D i) hψ hθ (fun _ => 1) (R.BV i) _ _ _ f5
       (fun τ => (trace_parity (f5 τ)).1) (fun τ => by simp) (fun τ => det_ne_zero (hBV τ)) f hf P'
-    simp only [Matrix.one_mul] at h
-    exact h
+    simpa only [Matrix.one_mul] using h
   have hinj : Function.Injective (pureTensorO R.ψ R.θ (Vc D i) (Wc D i) (fun _ => 1) (cart (R.MW i (sg0 D A))) (fun _ => 1) (onb (R.MW i (sg0 D A))) (R.vP i A.μ0)) :=
     GlobalTheory.FockVecInj.pureTensorO_injective D R.ψ R.θ (Vc D i) (Wc D i) hψ hθ _ _ _ _ _ _ f4 f3 hon f5 hPr.sigV hPr.sigW _ f1 f2
       (GlobalTheory.AdTh.VecNeCore.thetaVector_ne_zero_core D G Pl0 T0 A _ R F hR i hstd)
@@ -336,8 +335,7 @@ theorem singleSeries_eq_phase_thetaKO : ∀ (D : D7) (G : Type) [Group G] [Finty
                 else (starRingEnd ℂ) ((R.BV i k.1)⁻¹ k.2.2 b)) * MvPolynomial.X (k.1, k.2.1, b))) (R.ioP i (PiTensorProduct.tprod ℂ w) ((O i).c0' y)) =
       ka • MvPolynomial.rename vr (MvPolynomial.rename Dc.eL (MvPolynomial.map (O i).s0 P)) := by
     apply hinj
-    rw [map_smul, ← hsub _ f1, ← hpol]
-    exact hio
+    rwa [map_smul, ← hsub _ f1, ← hpol]
 
   have hth : IsThetaFunO R.ψ (Vc D i) (Wc D i)
       (pureTensorO R.ψ R.θ (Vc D i) (Wc D i) (fun _ => 1) (cart (R.MW i (sg0 D A))) (fun _ => 1) (onb (R.MW i (sg0 D A))) φ' (MvPolynomial.rename vr (MvPolynomial.rename Dc.eL (MvPolynomial.map (O i).s0 P)))) :=
@@ -582,8 +580,7 @@ theorem isPair_tw (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type)
     obtain ⟨z, hz⟩ := (D.hc τ).e_int i
     refine ⟨-z, ?_⟩
     have h3 := GlobalTheory.Mem.HeckeExp.hasInfExp_mul h1 h2
-    rw [hz, add_zero, ← Int.cast_neg] at h3
-    exact h3
+    rwa [hz, add_zero, ← Int.cast_neg] at h3
   refine ⟨hW, hC.models.inf, hV.1, hev, D.sp.V_sig _, D.sp.W_sig _, hexp, fun τ => ?_, fun v ε hv => ?_, ⟨_, hη⟩⟩
   · obtain ⟨a, ha⟩ := hexp τ
     obtain ⟨s, hs⟩ := hr
@@ -591,8 +588,7 @@ theorem isPair_tw (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type)
     have h3 := GlobalTheory.Mem.HeckeExp.hasInfExp_mul ha (GlobalTheory.Mem.HeckeExp.hasInfExp_inv (hη.2.2.2 τ))
     have e : ((a - s - 1 : ℤ) : ℚ) + ((Wc D i).rank : ℚ) / 2 = (a : ℚ) + -(1 / 2) := by
       rw [rW, hs]; push_cast; ring
-    rw [e]
-    exact h3
+    rwa [e]
   · obtain ⟨⟨es, hes, -⟩, -⟩ := he
     have hne : ∀ PP ∈ R.Pg ∪ Q, (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) ≠ v := fun PP hPP =>
       GlobalTheory.AdTh.RecPair.under_ne (hes PP hPP) hv
@@ -654,8 +650,7 @@ theorem moved_datum_tw : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 :
   rw [one_smul, ← h1] at h4
   rw [hp.weil.om_heis h k _ _ hvac.theta]
   congr 1
-  refine Eq.trans ?_ h4
-  exact congrArg _ h3.symm
+  exact Eq.trans (congrArg _ h3.symm) h4
 
 
 
@@ -971,8 +966,7 @@ theorem vLa_beta {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
   have hwτ : ∀ τ, ∀ r : 𝓞 E, w.comap (embF c τ) (algebraMap (𝓞 E) E r) ≤ 1 := fun τ r =>
     hw ⟨_, map_isIntegral_int (embF c τ) r.isIntegral_coe⟩
   have hnat : ∀ τ, w.comap (embF c τ) (k : E) = 1 := fun τ => by
-    simp only [w, Valuation.comap_apply, map_natCast]
-    exact valuation_nat la hk
+    simpa only [w, Valuation.comap_apply, map_natCast] using valuation_nat la hk
   have hm : ∀ (A : Submodule (𝓞 E) (Fin n → E)), (∀ v ∈ A, k • v ∈ stdLat E n) → (∀ v ∈ stdLat E n, k • v ∈ A) →
       HasMax w (∏ τ : E →+* ℂ, idealAt c A τ ^ Dw.mult τ) 1 := fun A a1 a2 => by
     have := hasMax_prod hw Finset.univ (fun τ => idealAt c A τ ^ Dw.mult τ) (fun _ => 1) fun τ => by
@@ -1239,8 +1233,7 @@ theorem unitOff_onId (E : Type) [Field E] [NumberField E] (ψ : HChar E) (I : Ty
       by_contra h
       exact hw (hu w h)
     show w.asIdeal ∣ Ideal.span {(b : 𝓞 E)}
-    rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-    exact hbw
+    rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   have hcc0 : cc ≠ 0 := hcc
   unfold HChar.onId
   refine finprod_induction (fun u : ℂˣ => UnitOff (Ideal.absNorm cc) (u : ℂ)) (by simpa using unitOff_one _)
@@ -1634,8 +1627,7 @@ theorem short_at_frame : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 :
       exact zero_ne_one hz
     refine ⟨hzI, ?_⟩
     have e : z⁻¹ = z ^ (m - 1) := by
-      rw [eq_comm, ← mul_eq_one_iff_eq_inv₀ hz0, ← pow_succ, Nat.sub_add_cancel hm]
-      exact hz
+      rwa [eq_comm, ← mul_eq_one_iff_eq_inv₀ hz0, ← pow_succ, Nat.sub_add_cancel hm]
     rw [e]
     exact hzI.pow _
   set d := degW (T.J.Q.Dw ((i : ℕ) + 1)) (wtA (κ i)) with hd

@@ -147,11 +147,9 @@ theorem exists_prime_under (p : ℕ) [Fact p.Prime] (R : Type) [CommRing R] [IsD
     have h0 : (p : ℤ_[p]) ∈ m.comap (algebraMap ℤ_[p] w.Ow) := by
       rw [hc, PadicInt.maximalIdeal_eq_span_p]
       exact Ideal.mem_span_singleton_self _
-    rw [Ideal.mem_comap, map_natCast] at h0
-    exact h0
+    rwa [Ideal.mem_comap, map_natCast] at h0
   have hpP : (p : R) ∈ P := by
-    rw [hP, Ideal.mem_comap, map_natCast]
-    exact hpm
+    rwa [hP, Ideal.mem_comap, map_natCast]
   have hPne : P ≠ ⊥ := by
     intro h
     rw [h, Ideal.mem_bot] at hpP

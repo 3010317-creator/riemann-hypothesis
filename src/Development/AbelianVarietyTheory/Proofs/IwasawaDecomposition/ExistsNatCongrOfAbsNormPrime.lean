@@ -67,11 +67,9 @@ theorem localUnit_div_congr_one {L : Type} [Field L] [NumberField L]
   have hy1 : Valued.v (algebraMap (𝓞 L) (v.adicCompletion L) y) = 1 := by
     rw [← hx']
     apply Valuation.map_eq_of_sub_lt
-    rw [Valuation.map_sub_swap, hx']
-    exact hy
+    rwa [Valuation.map_sub_swap, hx']
   have hy2 : v.valuation L (algebraMap (𝓞 L) L y) = 1 := by
-    rw [← ReciprocityTheory.Aut.adic_valued_algebraMap, ← ReciprocityTheory.Aut.adic_algebraMap_R]
-    exact hy1
+    rwa [← ReciprocityTheory.Aut.adic_valued_algebraMap, ← ReciprocityTheory.Aut.adic_algebraMap_R]
   have hnot : y ∉ v.asIdeal := (HeightOneSpectrum.valuation_eq_one_iff_notMem v).mp hy2
   have hy0 : (y : L) ≠ 0 := by
     intro h

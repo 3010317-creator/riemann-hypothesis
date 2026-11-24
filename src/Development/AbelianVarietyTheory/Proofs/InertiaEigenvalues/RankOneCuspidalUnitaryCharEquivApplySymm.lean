@@ -86,9 +86,7 @@ theorem u_last_le {R : Ranks} (P : HCParam R) (h : 0 < R.k) (a : Fin R.k) : P.u 
   induction' hd : R.k - 1 - a.1 with d ih generalizing a
   · rw [show a = ⟨R.k - 1, by omega⟩ from Fin.ext (by have := a.2; simp only; omega)]
   · have h1 := ih ⟨a.1 + 1, by omega⟩ (show R.k - 1 - (a.1 + 1) = d by omega)
-    have h2 := P.u_gt_v ⟨a.1, by omega⟩
-    have h3 := P.v_gt_u ⟨a.1, by omega⟩
-    exact h1.trans (h3.trans h2).le
+    exact h1.trans ((P.v_gt_u ⟨a.1, by omega⟩).trans (P.u_gt_v ⟨a.1, by omega⟩)).le
 
 theorem gap_rowPar {R : Ranks} (P : HCParam R) (j : Fin R.m) {y : ℚ} (hy : y ∈ rowPar P) :
     ((R.t : ℚ) + 3) / 2 ≤ y + P.e j ∨ y + P.e j ≤ -(((R.t : ℚ) + 3) / 2) := by
@@ -133,8 +131,7 @@ theorem twBy_unr {w : PlE D.host} (h : D.naut.unr (D.naut.locG π w)) (h' : ξ.U
   exact ⟨D.naut.unr_char _ _ (D.naut.locG_dim _ _) h h2, D.naut.frobEig_char _ _ _ h h2 (D.naut.locG_dim _ _) h3⟩
 
 theorem twBy_mono {w : PlE D.host} (h : D.naut.mono0 (D.naut.locG π w)) : D.naut.mono0 (D.naut.locG (twBy S π hξ) w) := by
-  rw [twBy, D.naut.locG_tw, D.naut.monomial_char_iff _ _ (D.naut.locG_dim _ _)]
-  exact h
+  rwa [twBy, D.naut.locG_tw, D.naut.monomial_char_iff _ _ (D.naut.locG_dim _ _)]
 
 theorem twBy_csd (h : D.naut.csd π) (h' : IsCSD D.host ξ) : D.naut.csd (twBy S π hξ) :=
   D.naut.csd_tw _ _ ((S.csd _).2 (by rwa [rankOneCuspidal_unitaryChar_equiv_apply_symm])) h

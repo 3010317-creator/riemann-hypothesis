@@ -104,8 +104,7 @@ theorem levelOneEq_of_fam (hG : GlobalFnsSt) {D : DegPre R} (hB : D.TauBimult) (
     exact (val_pull hJ _ _ _).trans (congrArg (fun q => val D.rig q z J) (Category.assoc _ _ _))
   rw [hu1, _root_.one_mul, ρ₁, LevelOneIdeal.val_famMult_one hB _ hJ, v₃] at vu
   rw [vu] at hrel
-  rw [← htr, ← congrArg (fun q => sval (g (0 + 1 • mu)) q.left z J) ρ₂]
-  exact hrel
+  rwa [← htr, ← congrArg (fun q => sval (g (0 + 1 • mu)) q.left z J) ρ₂]
 
 theorem levelOneEq_of_expandsAt (hG : GlobalFnsSt) [IsLocalRing R] {I : Ideal R} (hR : AdmBase R I) {D : DegData R I}
     {A : PolAV (Spec (CommRingCat.of (FractionRing R)))} {G : Over (Spec (CommRingCat.of R))} [GrpObj G]
@@ -257,8 +256,7 @@ theorem psi_maps {D D' : DegPre R} (Φ : D'.P.A ⟶ D.P.A) [IsMonHom Φ] (w : LB
       rw [val_pull hJ, val_pull hJ, Category.id_comp, key z J J' hJ hJ']
       refine Eq.trans ?_ (hv _ π z _ _ (Good.mem hJ _ π) (Good.mem hJ' _ π)).symm
       rw [pw, Fintype.prod_unique, zpow_neg_one, ExpTrans.om, Category.assoc]; rfl
-  have hz : (DegPre.zF D' (FractionRing R)).left ≫ π = 𝟙 (TK R).left := by
-    exact zF_fst D'
+  have hz : (DegPre.zF D' (FractionRing R)).left ≫ π = 𝟙 (TK R).left := zF_fst D'
   refine RigidIsoCube.pmaps_of_section pg hL hL' _ (D'.psi_gen x) _ (D.psi_gen _) (fun _ => hx) (𝟙 _) (𝟙 _)
     (Category.id_comp _) (by rw [Scheme.Hom.id_appTop]; exact Function.surjective_id) fun y J J' hJ hJ' => ?_
   have := val_corr hJ hcorr (DegPre.zF D' (FractionRing R)).left

@@ -104,8 +104,7 @@ theorem _root_.GlobalTheory.WeilIntegral.isAlgebraic_of_etale (S B : Type) [Comm
   obtain ⟨s, hs⟩ := (IsLocalizedModule.eq_zero_iff (nonZeroDivisors S) (TensorProduct.mk S K B 1)).1 hmap
   refine ⟨Polynomial.C (s : S) * q, ?_, ?_⟩
   · exact mul_ne_zero (Polynomial.C_ne_zero.2 (nonZeroDivisors.coe_ne_zero s)) hq0
-  · rw [map_mul, Polynomial.aeval_C, ← Algebra.smul_def]
-    exact hs
+  · rwa [map_mul, Polynomial.aeval_C, ← Algebra.smul_def]
 
 end GlobalTheory.WeilIntegral
 end -- clump:auto
@@ -142,8 +141,7 @@ theorem exists_poly_dvd {k R : Type} [CommRing k] [IsDomain k] [CommRing R] [IsD
 theorem volume_poly_zero (D : ℕ) (P : MvPolynomial (Fin D) ℂ) (hP : P ≠ 0) :
     volume {v : ReciprocityTheory.L2DbarEstimates.V D | MvPolynomial.eval (fun a => v a) P = 0} = 0 := by
   obtain ⟨w, hw⟩ : ∃ w, MvPolynomial.eval w P ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hP (MvPolynomial.funext fun x => by simpa using h x)
   have h0 := ReciprocityTheory.AnForm.volume_zero_set_of_analyticOnNhd isOpen_univ isPreconnected_univ
     (fun z _ => _root_.GlobalTheory.SimpleRoots.analyticAt_mvPolynomial_eval P z) ⟨w, mem_univ _, hw⟩
@@ -153,10 +151,8 @@ theorem volume_poly_zero (D : ℕ) (P : MvPolynomial (Fin D) ℂ) (hP : P ≠ 0)
     simp
   have hT : MeasurableSet {z : Fin D → ℂ | MvPolynomial.eval z P = 0} :=
     (isClosed_eq (MvPolynomial.continuous_eval P) continuous_const).measurableSet
-  rw [hs] at h0
-  rw [← (volume_preserving_ofLp_complex (Fin D)).measure_preimage hT.nullMeasurableSet] at h0
-  refine measure_mono_null (fun v hv => ?_) h0
-  exact hv
+  rw [hs, ← (volume_preserving_ofLp_complex (Fin D)).measure_preimage hT.nullMeasurableSet] at h0
+  exact measure_mono_null (fun v hv => hv) h0
 
 theorem injective_of_arithVar {k : Type} [CommRing k] {X : Scheme.{0}} {p : X ⟶ Sp k} {D : ℕ}
     (h : IsArithVar p D) (σ : k →+* ℂ) : Function.Injective σ := by
@@ -177,8 +173,7 @@ theorem exists_sec_vanish {X : Scheme.{0}} [IsIntegral X] {U : X.Opens} (hU : Is
   let W : X.Opens := U ⊓ ⟨Zᶜ, hZ.isOpen_compl⟩
   obtain ⟨g, hgW, hgm⟩ := hU.exists_basicOpen_le (V := W) ⟨genericPoint X, ⟨hgU, hgen⟩⟩ hgU
   refine ⟨g, fun e => ?_, fun z _ hz hzg => (hgW hzg).2 hz⟩
-  rw [e, X.basicOpen_zero] at hgm
-  exact hgm
+  rwa [e, X.basicOpen_zero] at hgm
 
 theorem chart_null {k : Type} [CommRing k] {X : Scheme.{0}} [IsIntegral X] {p : X ⟶ Sp k}
     {D : ℕ} (h : IsArithVar p D) {Z : Set X} (hZ : IsClosed Z) (hgen : genericPoint X ∉ Z)

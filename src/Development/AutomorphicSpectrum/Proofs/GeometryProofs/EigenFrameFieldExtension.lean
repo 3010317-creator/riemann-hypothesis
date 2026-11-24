@@ -115,11 +115,9 @@ theorem exists_sum_of_mem_eigSp {j : V →ₗ[F] T} (hj : IsBaseChange F' j) {ρ
     rw [← hb, map_finsuppSum] at h0
     simp only [LinearMap.baseChange_tmul] at h0
     have h1 : (b.mapRange A (map_zero A)).sum (fun i n => B i ⊗ₜ[F] n) = 0 := by
-      rw [Finsupp.sum_mapRange_index (by simp)]
-      exact h0
+      rwa [Finsupp.sum_mapRange_index (by simp)]
     have h2 := TensorProduct.sum_tmul_basis_left_eq_zero B _ h1
-    have h3 := DFunLike.congr_fun h2 k
-    simpa [hA, sub_eq_zero] using h3
+    simpa [hA, sub_eq_zero] using DFunLike.congr_fun h2 k
   · rw [← hj.equiv.apply_symm_apply t, ← hb, map_finsuppSum]
     simp [hj.equiv_tmul]
 

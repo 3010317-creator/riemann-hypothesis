@@ -88,8 +88,7 @@ theorem exists_isom_vec : ∀ {K : Type} [Field K] [NumberField K] [StarRing K] 
   intro K _ _ _ S ok G Γ W _ _ _ _ ι σ ρ J χ P c d H hne
   obtain ⟨φ, hφ⟩ := hne
   obtain ⟨k, hk⟩ : ∃ k, φ.1 (S.outSec.rep k) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hφ ((S.res ok).map_eq_zero_iff.1 (Subtype.ext (funext h)))
   set x := φ.1 (S.outSec.rep k) with hx
   have vi := (S.res ok φ).2 k
@@ -158,8 +157,7 @@ theorem bot_or_top (U : Submodule ℂ c.W) (hU : ∀ γ ∈ GQ V, ∀ w ∈ U, c
   refine closed_eq_univ V {h | c.ρ h w ∈ U} (U.closed_of_finiteDimensional.preimage (hc.2.2.1 w))
     (fun γ hγ => hU γ hγ w hw) (fun h k hk H => ?_) h
   show c.ρ (h * k) w ∈ U
-  rw [map_mul, hc.1 k hk, mul_one]
-  exact H
+  rwa [map_mul, hc.1 k hk, mul_one]
 
 
 omit hc in
@@ -420,8 +418,7 @@ theorem coef_of_iso {D : D7} (V : HSp D) (c : CoefA V) {n : ℕ} (h : n = V.rank
   · exact (GlobalTheory.CoefSpace.bcVV_indep D.what₂.embLL _).map' e.toLinearMap (LinearEquiv.ker e)
   · have hs := congrArg (Submodule.map e.toLinearMap)
       (GlobalTheory.CoefSpace.bcVV_span D.what₂.embLL (fun τ => Bridge.lamLdef (D := D) V.rank j τ))
-    rw [Submodule.map_span, Submodule.map_top, LinearEquiv.range, ← Set.range_comp] at hs
-    exact hs
+    rwa [Submodule.map_span, Submodule.map_top, LinearEquiv.range, ← Set.range_comp] at hs
   · subst hJ
     show inner ℂ (e _) (e _) = _
     rw [hinn, pairVr, ← GlobalTheory.CoefModel.pairK_mapVV D.what₂.embLL _ D.starLL_cx]

@@ -811,8 +811,7 @@ theorem span_image_inf {n : ℕ} (X : Submodule (𝓞 K) (Fin n → K)) (V : Sub
       exact_mod_cast this
     have hb' : ∀ i r, ((b (i, r) : 𝓞 K) : K) = ((d : 𝓞 K) : K) * ℓ r (x i) := fun i r => by
       have := hb (i, r)
-      rw [Algebra.smul_def] at this
-      exact this
+      rwa [Algebra.smul_def] at this
     letI : Algebra (𝓞 K) (𝓞 K') := ψ.toAlgebra
     have hinj : Function.Injective ψ := fun a a' h => by
       have := congrArg (fun z : 𝓞 K' => (z : K')) h
@@ -1208,8 +1207,7 @@ theorem matLat_relMat_of_heq (φ : K →+* K') (σ : K →+* ℂ) (σ' : K' →+
       simp only [Matrix.mulVecLin_apply, LinearMap.comp_apply, LinearEquiv.coe_coe]
       rw [← hk k i, Matrix.mulVec_single_one]
       rfl
-    intro u
-    exact congrArg (fun f => f u) hlin
+    exact fun u => congrArg (fun f => f u) hlin
 
   unfold Formalism.DivisionValues.matLat
   rw [Submodule.map_span, Submodule.map_coe, Set.image_image, Set.image_image]

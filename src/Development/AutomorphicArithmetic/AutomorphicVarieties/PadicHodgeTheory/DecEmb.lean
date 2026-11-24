@@ -85,8 +85,7 @@ private theorem de_ine {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algeb
       rw [map_sub]
       ring
     have h1 : ‖σ (y - j x)‖ < 1 := by
-      rw [GlobalTheory.PlaceBridge.norm_algEquiv]
-      exact hx
+      rwa [GlobalTheory.PlaceBridge.norm_algEquiv]
     have h5 : ‖σ (y - j x) - (y - j x)‖ < 1 := by
       have hm := IsUltrametricDist.norm_add_le_max (σ (y - j x)) (-(y - j x))
       rw [norm_neg, ← sub_eq_add_neg] at hm
@@ -111,8 +110,7 @@ private theorem de_cyc {F Ω : Type} [Field F] [Field Ω] [CharZero Ω] [Algebra
   rw [show (MulSemiringAction.toRingAut (G F Ω) Ω g) ζ = g ζ from rfl] at h1
   rw [show (MulSemiringAction.toRingAut (GQ v) (Om v) σ) (j ζ) = σ (j ζ) from rfl] at h2
   rw [hi, h1, ← map_pow] at h2
-  have h4 := hζ.pow_inj (ZMod.val_lt _) (ZMod.val_lt _) (hjinj h2)
-  exact (ZMod.val_injective _ h4).symm
+  exact (ZMod.val_injective _ (hζ.pow_inj (ZMod.val_lt _) (ZMod.val_lt _) (hjinj h2))).symm
 
 theorem UpperTheory.V.Loc.decEmb :
     ∀ {F Ω : Type} [Field F] [NumberField F] [Field Ω] [CharZero Ω] [Algebra F Ω] [IsAlgClosure F Ω] {v : ℕ} [Fact v.Prime], (∀ (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 F)), IsPlaceOver A w → ((v : ℕ) : 𝓞 F) ∈ w.asIdeal → ∃ j : Ω →+* Om v, placeJ j = A) ∧ ∀ j : Ω →+* Om v, (∃ w : HeightOneSpectrum (𝓞 F), IsPlaceOver (placeJ j) w ∧ ((v : ℕ) : 𝓞 F) ∈ w.asIdeal) ∧ ∃ φ : ↥(Dec (F := F) (placeJ j)) →* GQ v, IsOpenEmbedding φ ∧ (∀ g y, φ g (j y) = j ((g : G F Ω) y)) ∧ (∀ σ : GQ v, σ ∈ φ.range ↔ ∀ x : F, σ (j (algebraMap F Ω x)) = j (algebraMap F Ω x)) ∧ (∀ g, φ g ∈ Iq v ↔ (g : G F Ω) ∈ Ine (F := F) (placeJ j)) ∧ (∀ (l : ℕ) [Fact l.Prime] g, UpperTheory.V.Loc.cyc v l (φ g) = cycZ F Ω l (g : G F Ω)) ∧ ∀ w : HeightOneSpectrum (𝓞 F), IsPlaceOver (placeJ j) w → φ.range.index = locDeg w := by
@@ -145,8 +143,7 @@ theorem UpperTheory.V.Loc.decEmb :
         constructor
         · rintro ⟨g, rfl⟩
           exact (e g).2
-        · intro h
-          exact ⟨e.symm ⟨σ, h⟩, by rw [hφ, MulEquiv.apply_symm_apply]⟩
+        · exact fun h => ⟨e.symm ⟨σ, h⟩, by rw [hφ, MulEquiv.apply_symm_apply]⟩
       have hopen : IsOpen ((GK K : Subgroup (GQ v)) : Set (GQ v)) :=
         IntermediateField.fixingSubgroup_isOpen (K : IntermediateField ℚ_[v] (Om v))
       refine ⟨φ, ?_, fun g y => he g y, fun σ => by rw [hrange, GlobalTheory.PlaceBridge.mem_GK_iff (E := F) K hK],

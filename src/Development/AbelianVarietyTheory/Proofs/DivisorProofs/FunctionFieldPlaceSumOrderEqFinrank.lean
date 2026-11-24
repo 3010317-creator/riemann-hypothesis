@@ -128,8 +128,7 @@ theorem sum_ord_eq_finrank : ∀ (k F E : Type) [Field k] [IsAlgClosed k] [CharZ
       exact hρ p x
     constructor
     · rintro rfl; exact h1
-    · intro h
-      exact toRing_injective (GroundTheory.FunctionField.Place.ext (h1.symm.trans h))
+    · exact fun h => toRing_injective (GroundTheory.FunctionField.Place.ext (h1.symm.trans h))
   have hfin := (toRing v).finite_liesOver (K' := E)
   have hfin' : {p | ρ p = v}.Finite := by
     refine (hfin.preimage toRing_injective.injOn).subset fun p hp => (key p).1 hp
@@ -139,8 +138,7 @@ theorem sum_ord_eq_finrank : ∀ (k F E : Type) [Field k] [IsAlgClosed k] [CharZ
   refine Finset.sum_bij (fun p _ => toRing p) ?_ ?_ ?_ ?_
   · intro p hp
     simpa [key] using hp
-  · intro p _ q _ h
-    exact toRing_injective h
+  · exact fun p _ q _ h => toRing_injective h
   · intro w hw
     obtain ⟨p, rfl⟩ := toRing_surjective w
     exact ⟨p, by simpa [key] using hw, rfl⟩

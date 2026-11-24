@@ -427,8 +427,7 @@ theorem complEquivFun_surjective : Function.Surjective (complEquivFun (B := B) J
   · apply (levelEquiv J m).injective
     rw [levelEquiv_transitionMap, LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply]
     exact z.property hmn
-  · refine AdicCompletion.ext fun n => ?_
-    exact LinearEquiv.apply_symm_apply (levelEquiv J n) (z.val n)
+  · exact AdicCompletion.ext fun n => LinearEquiv.apply_symm_apply (levelEquiv J n) (z.val n)
 
 end CompletionTransfer
 
@@ -840,8 +839,7 @@ theorem finite_alg_hom_ker_coker_killed_of_onto_mod_ideal
       rw [Ideal.smul_top_eq_map]; exact ht
     have hm : R.mkQ (y - φ t) ∈ J • (⊤ : Submodule A (N ⧸ R)) := by
       have := Submodule.mem_map_of_mem (f := R.mkQ) hz
-      rw [Submodule.map_smul'', Submodule.map_top, Submodule.range_mkQ] at this
-      exact this
+      rwa [Submodule.map_smul'', Submodule.map_top, Submodule.range_mkQ] at this
     have he : R.mkQ (y - φ t) = R.mkQ y := by
       rw [map_sub, sub_eq_self, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
       exact ⟨t, rfl⟩
@@ -1024,8 +1022,7 @@ theorem quot_tensor_level : ∀ (R : Type) [CommRing R] (I : Ideal R) (R' : Type
     obtain ⟨s, hs⟩ := hGs (πC t)
     have hs0 : s ∈ RingHom.ker (Algebra.TensorProduct.lift (i e)
         ((Ideal.Quotient.mkₐ R _).comp (IsScalarTower.toAlgHom R R' C')) (fun _ _ => Commute.all _ _)) := by
-      rw [RingHom.mem_ker, ← hΛG, hs, hΛπ, Ideal.Quotient.eq_zero_iff_mem]
-      exact ht
+      rwa [RingHom.mem_ker, ← hΛG, hs, hΛπ, Ideal.Quotient.eq_zero_iff_mem]
     rw [(hi e).2] at hs0
     have hGz : G s = 0 := by
       have hle : (I ^ (e + 1)).map (algebraMap R (O ⊗[R] R')) ≤ RingHom.ker G.toRingHom := by

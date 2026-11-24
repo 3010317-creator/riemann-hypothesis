@@ -69,18 +69,15 @@ theorem UpperTheory.V.KT.psdcone :
     intro w i j
     exact (continuous_apply j).comp ((continuous_apply i).comp ((continuous_apply w).comp continuous_subtype_val))
   have htr : ∀ k ∈ Psd L N, ∀ w, 0 ≤ (mat k w).trace := by
-    intro k hk w
-    exact Finset.sum_nonneg fun i _ => (hk w).diag_nonneg
+    exact fun k hk w => Finset.sum_nonneg fun i _ => (hk w).diag_nonneg
   refine ⟨?_, ?_, ?_, ?_⟩
   · have hP : Psd L N = ⋂ w : InfinitePlace L, ⋂ x : Fin N →₀ ℂ,
         {h : HS L N | 0 ≤ x.sum fun i xi => x.sum fun j xj => star xi * mat h w i j * xj} := by
       ext h
       simp only [Psd, Set.mem_setOf_eq, Set.mem_iInter]
       constructor
-      · intro hh w x
-        exact (hh w).2 x
-      · intro hh w
-        exact ⟨mat_herm h w, hh w⟩
+      · exact fun hh w x => (hh w).2 x
+      · exact fun hh w => ⟨mat_herm h w, hh w⟩
     rw [hP]
     refine isClosed_iInter fun w => isClosed_iInter fun x => ?_
     refine isClosed_le continuous_const ?_
@@ -91,8 +88,7 @@ theorem UpperTheory.V.KT.psdcone :
     show (mat (c • k) w).PosSemidef
     rw [mat_smul]
     exact (hk w).smul hc.le
-  · intro k hk w
-    exact (hk w).posSemidef
+  · exact fun k hk w => (hk w).posSemidef
   · let f : HS L N →ₗ[ℝ] ℝ :=
       { toFun := fun h => ∑ w, ((mat h w).trace).re
         map_add' := by
@@ -111,8 +107,7 @@ theorem UpperTheory.V.KT.psdcone :
     refine ⟨⟨f, hf⟩, ?_⟩
     intro k hk hk0
     have hw : ∃ w, mat k w ≠ 0 := by
-      by_contra hne
-      push Not at hne
+      by_contra! hne
       exact hk0 (HS_ext fun w => by rw [hne w, mat_zero])
     obtain ⟨w, hw⟩ := hw
     show 0 < ∑ w, ((mat k w).trace).re
@@ -138,8 +133,7 @@ open scoped ComplexOrder
 private theorem ryne_place (L : Type) [Field L] [NumberField L] (x : 𝓞 L) (hx : x ≠ 0) :
     ∃ w : InfinitePlace L, 1 ≤ w (x : L) := by
   classical
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have hprod := InfinitePlace.prod_eq_abs_norm (x : L)
   rw [← Algebra.coe_norm_int] at hprod
   have hn : Algebra.norm ℤ x ≠ 0 := Algebra.norm_ne_zero_iff.mpr hx
@@ -170,13 +164,11 @@ theorem UpperTheory.V.KT.ryne :
     rw [Complex.star_def, Complex.conj_mul']
     norm_cast
   obtain ⟨a, ha⟩ : ∃ a, y a ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hy (funext hc)
   obtain ⟨w, hw⟩ := ryne_place L (y a) ha
   have hw' : ‖embO w (y a)‖ = w ((y a : 𝓞 L) : L) := by
-    simp only [embO, RingHom.comp_apply]
-    exact InfinitePlace.norm_embedding_eq w _
+    simpa only [embO, RingHom.comp_apply] using InfinitePlace.norm_embedding_eq w _
   simp only [q, qR, mat_mkHS, one_mulVec, dotProduct, Pi.star_apply, Complex.re_sum, hterm, toR]
   calc (1 : ℝ) ≤ ‖embO w (y a)‖ ^ 2 := by rw [hw']; nlinarith
     _ ≤ ∑ a', ‖embO w (y a')‖ ^ 2 :=

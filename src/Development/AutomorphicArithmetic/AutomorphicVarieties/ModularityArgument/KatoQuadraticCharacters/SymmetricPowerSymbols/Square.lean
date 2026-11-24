@@ -79,8 +79,7 @@ theorem cmp : Cmp := by
   obtain ⟨-, hadm, hrefl, -⟩ := admB Ω ε X
   have c1 := ((lgB Ω ε X m hm).2.2.2.2.2.2 1 1).2.1
   have key : ∀ x y : Row M, Ok x y → ∃ b ∈ X.Un m, Mv X m (RingEquiv.refl _) 1 (R x y) (Q x y) b := by
-    intro x y hxy
-    exact (mvEx Ω ε X m hm _ 1 hrefl _ _ _ (hRQ x y hxy).1).1 _ (hRQ x y hxy).2
+    exact fun x y hxy => (mvEx Ω ε X m hm _ 1 hrefl _ _ _ (hRQ x y hxy).1).1 _ (hRQ x y hxy).2
   have triv : m = 1 → ∀ f g : X.Kˣ, Cgr m f g := by
     rintro rfl f g
     unfold Cgr
@@ -89,8 +88,7 @@ theorem cmp : Cmp := by
   let a : Row M → Row M → X.Kˣ := fun x y => if h : Ok x y then Classical.choose (key x y h) else 1
   have ha : ∀ x y (h : Ok x y), a x y ∈ X.Un m ∧ Mv X m (RingEquiv.refl _) 1 (R x y) (Q x y) (a x y) := by
     intro x y h
-    simp only [a, h, ↓reduceDIte]
-    exact Classical.choose_spec (key x y h)
+    simpa only [a, h, ↓reduceDIte] using Classical.choose_spec (key x y h)
   have hgal : ∀ s : Gal(Ω/ℚ), galU X s = unU X (X.gal s) := fun s => rfl
   refine ⟨a, ?_, ?_⟩
   · unfold CobBy

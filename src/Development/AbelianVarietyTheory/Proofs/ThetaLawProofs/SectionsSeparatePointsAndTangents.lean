@@ -160,8 +160,7 @@ theorem exists_separating (f : X ⟶ Spec (CommRingCat.of k)) {H : LB X} (hH : H
   · exact ⟨s a, hpa, hqa⟩
   obtain ⟨haff, r, hr, hsurj⟩ := hs.2 a
   obtain ⟨b, hb⟩ : ∃ b, valueAt p _ hpa (r b) ≠ valueAt q _ hqa (r b) := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     refine hne (eq_of_valueAt_eq p q haff hpa hqa (RingHom.ext fun x => ?_))
     obtain ⟨F, rfl⟩ := hsurj x
     induction F using MvPolynomial.induction_on with
@@ -288,8 +287,7 @@ theorem GlobalTheory.VeryAmpleJet.veryAmpleBy_of_veryAmpleAt {R : Type} [CommRin
       have e₁ := Scheme.Hom.appLE_comp_appLE ψ (A.hom ∣_ ⊤) ⊤ (nonzeroLocus (s i))
         (nonzeroLocus (M := pw H N) (s' i)) le_top (loc i).le
       ext x
-      have e₂ := congrArg (fun q => q.hom (θ.hom x)) e₁
-      exact e₂.symm
+      exact (congrArg (fun q => q.hom (θ.hom x)) e₁).symm
     intro d
     obtain ⟨d, rfl⟩ := (ConcreteCategory.bijective_of_isIso (ψ.appLE _ _ (loc i).le)).2 d
     obtain ⟨p, rfl⟩ := hsurj d
@@ -350,8 +348,7 @@ theorem valH_cst_eq (f : X ⟶ Sp K) (p q : Sp T ⟶ X) (e : p ≫ f = q ≫ f) 
     (hq : ⊤ ≤ q ⁻¹ᵁ V) (c : K) : valH p U hp (AbLaw.cst f U c) = valH q V hq (AbLaw.cst f V c) := by
   have h1 := valT_appLE p f (U := ⊤) le_top hp ((Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom c)
   have h2 := valT_appLE q f (U := ⊤) le_top hq ((Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom c)
-  rw [e, ← h2, valT_eq _ _ hp, valT_eq _ _ hq] at h1
-  exact h1
+  rwa [e, ← h2, valT_eq _ _ hp, valT_eq _ _ hq] at h1
 
 theorem valH_rs (w : Sp T ⟶ X) {U V : X.Opens} (hle : V ≤ U) (h : ⊤ ≤ w ⁻¹ᵁ V) (h' : ⊤ ≤ w ⁻¹ᵁ U) (a : Γ(X, U)) :
     valH w V h (rs X hle a) = valH w U h' a :=

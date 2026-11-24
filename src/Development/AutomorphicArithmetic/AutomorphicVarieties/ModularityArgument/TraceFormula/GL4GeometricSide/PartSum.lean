@@ -143,8 +143,7 @@ private theorem harmonic_dominant_weight {n : ℕ} (lam : Fin n → ℤ) (hl : A
         simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hb ⊢
         exact lt_of_le_of_lt (hmono hcb) hb) c
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at h
-    rw [hD]
-    exact h
+    rwa [hD]
   have hUhi : ∀ a c, L a < L c ↔ n ≤ (c : ℕ) + U a := by
     intro a c
     have h := mem_hi (Finset.filter (fun b => L a < L b) Finset.univ)
@@ -152,8 +151,7 @@ private theorem harmonic_dominant_weight {n : ℕ} (lam : Fin n → ℤ) (hl : A
         simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hb ⊢
         exact lt_of_lt_of_le hb (hmono hcb)) c
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at h
-    rw [hU]
-    exact h
+    rwa [hU]
   have hDa : ∀ a : Fin n, D a ≤ a := fun a => not_lt.mp (fun h => lt_irrefl _ ((hDlo a a).mpr h))
   have hUa : ∀ a : Fin n, (a : ℕ) + U a < n := fun a => not_le.mp (fun h => lt_irrefl _ ((hUhi a a).mpr h))
   let f : Fin n → Fin n := fun a => ⟨D a + (n - 1 - U a) - a, by
@@ -236,8 +234,7 @@ private theorem harmonic_dominant_weight {n : ℕ} (lam : Fin n → ℤ) (hl : A
     have hxy : muQ lam L - rhoV n = y ∘ w := by
       funext a
       have h := hx (f a)
-      rw [hinv a] at h
-      exact h
+      rwa [hinv a] at h
     have R := (rearr n).2.1 y
     rw [hxy, R.2.2.2.1 w, R.2.2.1 hyA]
     funext a
@@ -273,8 +270,7 @@ private theorem kspan_stb {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
     Stb F (Formalism.REAL.kSpan (fun _ => true) F x) := by
   intro a b y hy
   rw [Formalism.REAL.kSpan, Submodule.mem_sInf] at hy ⊢
-  intro S hS
-  exact hS.2 a b rfl y (hy S hS)
+  exact fun S hS => hS.2 a b rfl y (hy S hS)
 
 private theorem proj_comm {n : ℕ} {N : Type} [NormedAddCommGroup N] [InnerProductSpace ℂ N]
     {F : Fin n → Fin n → Module.End ℂ N} (hF : UF F) (S : Submodule ℂ N) [S.HasOrthogonalProjection]
@@ -495,8 +491,7 @@ theorem UpperTheory.RealTr.dualEx :
     calc ‖ξ.comp (E.ρ k)‖ ≤ ‖ξ‖ * ‖E.ρ k‖ := ContinuousLinearMap.opNorm_comp_le _ _
       _ ≤ ‖ξ‖ * 1 := by gcongr
       _ = ‖ξ‖ := mul_one _
-  have hinv : Continuous (fun k : UK n => k⁻¹) := by
-    exact continuous_inv
+  have hinv : Continuous (fun k : UK n => k⁻¹) := continuous_inv
   let ρ' : UK n →* (EuclideanSpace ℂ (Fin (Module.finrank ℂ E.V)) →L[ℂ] EuclideanSpace ℂ (Fin (Module.finrank ℂ E.V))) :=
     { toFun := fun k => pr (E.ρ k⁻¹)
       map_one' := by simp [pr_one]
@@ -833,8 +828,7 @@ private theorem skew_hermitian_of_unitary_exp (X : Matrix (Fin n) (Fin n) ℂ)
       _ = NormedSpace.exp (t • (-X)) := by rw [← mul_assoc, h3, one_mul]
   have d1 := hasDerivAt_exp_smul_const (𝕂 := ℝ) Xᴴ (0 : ℝ)
   have d2 := hasDerivAt_exp_smul_const (𝕂 := ℝ) (-X) (0 : ℝ)
-  have hu := (d1.congr_of_eventuallyEq (Filter.Eventually.of_forall fun t => (e t).symm)).unique d2
-  simpa using hu
+  simpa using (d1.congr_of_eventuallyEq (Filter.Eventually.of_forall fun t => (e t).symm)).unique d2
 
 private theorem skew_of (X : Matrix (Fin n) (Fin n) ℂ)
     (h : ∀ t : ℝ, NormedSpace.exp ((t : ℂ) • X) ∈ Matrix.unitaryGroup (Fin n) ℂ) :
@@ -960,8 +954,7 @@ private theorem sgm_rep (E : KMod n) : PI.UpqRep.IsURepOn (UU n) (sgm E) := by
   · have ha' := mem_UU.1 ha
     have hb' := mem_UU.1 hb
     have h := sgm_coe E (⟨a, ha'⟩ * ⟨b, hb'⟩)
-    rw [map_mul, ← sgm_coe E ⟨a, ha'⟩, ← sgm_coe E ⟨b, hb'⟩] at h
-    exact h
+    rwa [map_mul, ← sgm_coe E ⟨a, ha'⟩, ← sgm_coe E ⟨b, hb'⟩] at h
   · rw [show sgm E g = E.ρ ⟨g, mem_UU.1 hg⟩ from sgm_coe E ⟨g, mem_UU.1 hg⟩]
     exact E.iso _ v
   · rw [continuousOn_iff_continuous_restrict]
@@ -993,10 +986,8 @@ theorem UpperTheory.RealTr.kDer :
     have h := congrArg (fun T : Module.End ℂ (⊤ : Submodule ℂ E.V) => ((T ⟨x, trivial⟩ : (⊤ : Submodule ℂ E.V)) : E.V)) (hM.gl a b c d)
     by_cases h1 : b = c <;> by_cases h2 : d = a <;> simpa [h1, h2, hF', Module.End.mul_apply] using h
   · intro a b x y
-    have h := hM.unit a b ⟨x, trivial⟩ ⟨y, trivial⟩
-    simpa [Formalism.REAL.sgn, hF'] using h
-  · intro k x y
-    exact (⟨(E.ρ k : E.V →ₗ[ℂ] E.V), E.iso k⟩ : E.V →ₗᵢ[ℂ] E.V).inner_map_map x y
+    simpa [Formalism.REAL.sgn, hF'] using hM.unit a b ⟨x, trivial⟩ ⟨y, trivial⟩
+  · exact fun k x y => (⟨(E.ρ k : E.V →ₗ[ℂ] E.V), E.iso k⟩ : E.V →ₗᵢ[ℂ] E.V).inner_map_map x y
   · intro v
     refine ⟨⊤, inferInstance, trivial, fun _ _ _ => trivial, fun _ _ _ _ => trivial, ?_⟩
     intro X γ hγ w _
@@ -1006,8 +997,7 @@ theorem UpperTheory.RealTr.kDer :
       funext t
       rw [← hγ t, sgm_coe]
       rfl
-    rw [e]
-    exact h
+    rwa [e]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1122,8 +1112,7 @@ theorem UpperTheory.RealTr.lefData :
     have hinj' : Function.Injective fun a => conj (z a) ^ 2 := by
       intro a b h
       apply hinj
-      have h' := congrArg conj h
-      simpa [map_pow] using h'
+      simpa [map_pow] using congrArg conj h
     have hσk : (σ' k : Module.End ℂ E'.V) = ((E'.ρ k : E'.V →L[ℂ] E'.V) : Module.End ℂ E'.V) := by
       ext v
       exact hσ k v
@@ -1146,8 +1135,7 @@ theorem UpperTheory.RealTr.lefData :
     rw [eq_bot_iff]
     intro x hx
     have hx' : x ∈ wsp F ν ⊓ ⊤ := ⟨hx.1, trivial⟩
-    rw [hs ν hν] at hx'
-    exact hx'
+    rwa [hs ν hν] at hx'
   · intro ν hν
     have mT := mult n E'.V F hUF ⊤ inferInstance hStop T' cT hCmT hcT ν hν
     have m1 := mult n E'.V F hUF ⊤ inferInstance hStop 1 c₁ hCm1 hc₁ ν hν

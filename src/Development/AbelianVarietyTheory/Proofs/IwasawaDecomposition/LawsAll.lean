@@ -136,8 +136,7 @@ theorem fam_ok : ∀ {E K ι : Type} [Field E] [NumberField E] [StarRing E] [Fie
     have hU : S.gam b g ∈ Formalism.UG.UJ (starRingEnd E) (1 : Matrix (Fin n) (Fin n) E) := by
       have := h.unit b g
       show _ * _ * _ = _
-      rw [Matrix.mul_one]
-      exact this
+      rwa [Matrix.mul_one]
     have hi : pairVr emb lam (1 : Matrix (Fin n) (Fin n) E) (rhoVr emb lam (S.gam b g) x) (rhoVr emb lam (S.gam b g) y) =
         pairVr emb lam (1 : Matrix (Fin n) (Fin n) E) x y :=
       pairInv K ι n lam _ _ (fun τ => (uJUnitary E K ι n emb (starRingEnd E) τ
@@ -594,8 +593,7 @@ theorem mv_smul' (b : S.β) (d : S.D b) : S.mv b d • S.rp b (Quotient.mk _ d) 
 
 theorem eq_of_free (hf : S.Free) (b : S.β) (g h : S.G b) (d : S.D b) (e : g • d = h • d) : g = h := by
   have h1 : (h⁻¹ * g) • d = d := by rw [mul_smul, e, inv_smul_smul]
-  have h2 := hf b _ d h1
-  exact (inv_mul_eq_one.1 h2).symm
+  exact (inv_mul_eq_one.1 (hf b _ d h1)).symm
 
 theorem mv_smul_eq (hf : S.Free) (b : S.β) (g : S.G b) (d : S.D b) : S.mv b (g • d) = g * S.mv b d := by
   apply eq_of_free S hf b _ _ (S.rp b (Quotient.mk _ d))
@@ -755,8 +753,7 @@ theorem span_locW_BLat : ∀ {E K ι : Type} [Field E] [NumberField E] [StarRing
           Submodule.subset_span hrx
         have hh : (algebraMap (𝓞 E) E r)⁻¹ • (r • x) ∈
             Submodule.span E (((J.A i).ker b d P) : Set _) := Submodule.smul_mem _ _ hspan
-        rw [← algebraMap_smul E r x, smul_smul, inv_mul_cancel₀ hrE, one_smul] at hh
-        exact hh
+        rwa [← algebraMap_smul E r x, smul_smul, inv_mul_cancel₀ hrE, one_smul] at hh
       letI := isLattice_delAtr emb (lamT hc i) ((J.A i).ker b d P) hker
       exact Submodule.IsFullLattice.span_eq_top) x
 

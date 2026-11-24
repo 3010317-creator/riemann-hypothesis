@@ -164,8 +164,7 @@ theorem qn_not_mem_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi :
   have hqP : ((Ideal.absNorm (PP.asIdeal.under ℤ) : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal := by
     have h : algebraMap ℤ (𝓞 D.host.E) ((Ideal.absNorm (PP.asIdeal.under ℤ) : ℕ) : ℤ) ∈ PP.asIdeal :=
       Ideal.absNorm_mem (PP.asIdeal.under ℤ)
-    rw [eq_intCast, Int.cast_natCast] at h
-    exact h
+    rwa [eq_intCast, Int.cast_natCast] at h
   have e := resChar_eq (D.plEq.symm w) hq (by rw [Equiv.apply_symm_apply]; exact hqw)
   exact key PP hPP (e ▸ hqP)
 end GlobalTheory.ThmAUpper
@@ -206,8 +205,7 @@ theorem add_zpow (v : K → ℤ) (hv : ∀ x y, x ≠ 0 → y ≠ 0 → v (x * y
     v (x ^ n) = n * v x := by
   let φ : Kˣ →* Multiplicative ℤ := MonoidHom.mk' (fun a => Multiplicative.ofAdd (v a)) fun a b => by
     rw [Units.val_mul, hv _ _ a.ne_zero b.ne_zero, ofAdd_add]
-  have h := congrArg Multiplicative.toAdd (map_zpow φ (Units.mk0 x hx) n)
-  simpa [φ] using h
+  simpa [φ] using congrArg Multiplicative.toAdd (map_zpow φ (Units.mk0 x hx) n)
 
 theorem proportional (f : K →+* L) (v : K → ℤ) (v' : L → ℤ)
     (hv : ∀ x y, x ≠ 0 → y ≠ 0 → v (x * y) = v x + v y)
@@ -476,8 +474,7 @@ theorem exists_pow_of_two_emb {L K : Type} [Field L] [Field K] (f g : L →+* K)
     rw [e, map_zpow₀, map_zpow₀, hc, ← zpow_mul, ← zpow_mul, mul_comm]
   have h1 : ((z : Lˣ) : L) ^ (l ^ n) = 1 := by
     have := z.2
-    rw [mem_rootsOfUnity'] at this
-    exact this
+    rwa [mem_rootsOfUnity'] at this
   obtain ⟨m, -, hm⟩ := (Nat.dvd_prime_pow hl).1 (orderOf_dvd_of_pow_eq_one h1)
   have hp : IsPrimitiveRoot ((z : Lˣ) : L) (l ^ m) := hm ▸ IsPrimitiveRoot.orderOf _
   rcases Nat.eq_zero_or_pos m with rfl | hm0
@@ -503,8 +500,7 @@ theorem exists_extend {A B K : Type} [CommRing A] [IsDomain A] [CommRing B] [IsD
     rw [RingHom.injective_iff_ker_eq_bot]
     refine Ideal.eq_bot_of_comap_eq_bot (R := A) ?_
     rw [Ideal.under_def, RingHom.comap_ker, ← RingHom.injective_iff_ker_eq_bot]
-    intro a b hab
-    exact hf ((J0.commutes a).symm.trans (Eq.trans hab (J0.commutes b)))
+    exact fun a b hab => hf ((J0.commutes a).symm.trans (Eq.trans hab (J0.commutes b)))
   exact ⟨IsFractionRing.lift hJ, fun a => by rw [IsFractionRing.lift_algebraMap]; exact J0.commutes a⟩
 
 theorem isClassTerm_reindex {E : Type} [Field E] [NumberField E] {I I' : Type} [Fintype I] [Fintype I'] (e : I' ≃ I)
@@ -514,8 +510,7 @@ theorem isClassTerm_reindex {E : Type} [Field E] [NumberField E] {I I' : Type} [
   refine ⟨S, ⟨hS.1, fun σ hσ => ?_⟩, hT⟩
   have : ∀ x, term (φ ∘ e) (2 * s) (κ ∘ e) σ x = term φ (2 * s) κ σ x := fun x =>
     Fintype.prod_equiv e _ _ fun _ => rfl
-  simp only [this]
-  exact hS.2 σ hσ
+  simpa only [this] using hS.2 σ hσ
 
 
 open GlobalTheory.ChiGrid GlobalTheory.FunObj.SqNum GlobalTheory.ToricDenom in
@@ -795,8 +790,7 @@ theorem read_twisted_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi
         J (algebraMap (D.ntw.Ok (ex.nch.twI w) (ex.nch.k' w)) _ x) ^ a := fun x => by
       have := congrArg Units.val (map_zpow (Units.map (J.comp
         (algebraMap (D.ntw.Ok (ex.nch.twI w) (ex.nch.k' w)) _)).toMonoidHom) x a)
-      rw [Units.val_zpow_eq_zpow_val] at this
-      exact this
+      rwa [Units.val_zpow_eq_zpow_val] at this
     rw [MonoidHom.zpow_apply, MonoidHom.zpow_apply, h2, ← h1, hψ, zpow_mul, Units.val_zpow_eq_zpow_val _ a, map_zpow₀]
   refine ⟨lam, J, if b then e else -e, hlam, by cases b <;> simp [he, he.neg_left], RingHom.ext hJ, fun a => ?_⟩
   rw [hJ, s0, hlam]
@@ -1253,8 +1247,7 @@ private theorem isSet_pz (h : GridFit p G) {w : D.what₂.places.Pl} (hw : Twist
     rw [this, ← h0]
   · refine Dvd.dvd.mul_right (dvd_pow (Ideal.dvd_span_singleton.2 ?_) two_ne_zero) _
     have := (GlobalTheory.ChiGrid.S1_mem_OmF D).1 h1
-    simp only [Nat.cast_mul, (below P).isPrime.mul_mem_iff_mem_or_mem, or_assoc]
-    exact this
+    simpa only [Nat.cast_mul, (below P).isPrime.mul_mem_iff_mem_or_mem, or_assoc] using this
 end Point
 theorem _root_.GlobalTheory.T.toric_ratio_field_data_cm_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts} {Y : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y cX} {Csz : ℝ} (p : PtAt ex Csz) (CF : ℝ) (d : FunIn p CF), p.PointConditions' → Fitted (@Comparison₂) p CF d → GlobalTheory.IndefiniteRowSideFullHecke.ToricSymbols.ToricRatioConjugates → (∃ (_ : IsCMField D.host.E) (_ : IsAbelianGalois ℚ D.host.E), GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBounds.IsFieldData D.host.d (GlobalTheory.FunObj.SqNum.cmPhi D) ∧
     GlobalTheory.CMVal.IsBaseCond (GlobalTheory.FunObj.SqNum.condF d.G.pl) ∧ ∃ Λ, GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBounds.IsIntLattice D.host.d Λ) → ∀ w : D.what₂.places.Pl, TwistedAt D w → ∀ (i j : Fin D.R.m) (s : ℕ), 1 ≤ s → s ≤ halfRank D i j →
@@ -1586,8 +1579,7 @@ theorem thmA_upper_alt : GlobalTheory.IndefiniteRowSideFullHecke.ToricSymbols.To
   have hl' : D.what₂.places.resChar (D.plEq.symm w) = l := resChar_eq _ hl (by rw [hw']; exact hlw)
   have key := _root_.GlobalTheory.ThmAUpper.val_bound_twisted_alt p CF d hp hd hG hf ht (D.plEq.symm w) (xiH_twisted p w hw).1 i j s Λ Λd z hs1 hs2
     (by rw [← nuH_twisted p d.G w hw]; exact hΛ) (by rw [hl']; exact hΛd) hz
-  rw [hw', hl'] at key
-  exact key
+  rwa [hw', hl'] at key
 end GlobalTheory.ThmAUpper
 end
 end

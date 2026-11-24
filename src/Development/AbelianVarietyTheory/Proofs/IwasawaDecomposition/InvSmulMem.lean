@@ -252,8 +252,7 @@ theorem GlobalTheory.Mem.Col2.TC.tr_eq_of_isTr : ∀ {B : Base} {X : PreX B.toPr
     have h1 : s.1 τ = Formalism.L2.Forms.atInf (Formalism.L2.Forms.embT (I.rec7 l Z))
         (((I.stp u a i).gam b g : GL (Fin (B.R.N i)) B.fields.E) : Matrix (Fin (B.R.N i)) (Fin (B.R.N i)) B.host.E) τ * s'.1 τ := by
       have := hT τ
-      rw [hId, hId] at this
-      exact this
+      rwa [hId, hId] at this
     have hf : embAt B.embLL B.fields.emb τ = Formalism.L2.Forms.embT (I.rec7 l Z) τ := B.fields_embC τ
     show s'.1 τ = ((((I.stp u a i).gam b g)⁻¹ : GL _ _) : Matrix _ _ _).map (embAt B.embLL B.fields.emb τ) * s.1 τ
     rw [h1, hf]
@@ -277,8 +276,7 @@ theorem GlobalTheory.Mem.Col2.TC.step_gam_mem_UJ : ∀ {B : Base} {X : PreX B.to
   have hG := ((GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hI hP l Z).2.2.2 i hi).1
   have hU := (hI.stp_ok u a i).unit b g
   show cT _ _ * _ * _ = _
-  rw [hG, Matrix.mul_one]
-  exact hU
+  rwa [hG, Matrix.mul_one]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepGamMemUJ =====
@@ -337,8 +335,7 @@ theorem TC.cosetIn_rep_up (hX : B.fields.Ok) (hPr : (B.primes X).Ok) (u : B.Word
       funext P
       have hq : q.1.2 = ∅ := by
         have := q.2
-        rw [ysAt_ys_of_ne I.sel (I.tup a) (I.cst a) hj] at this
-        exact this
+        rwa [ysAt_ys_of_ne I.sel (I.tup a) (I.cst a) hj] at this
       ext z
       simp [cosetIn, hq]
     exact (h0 _).trans (h0 _).symm
@@ -601,8 +598,7 @@ theorem isPt_up (hI : I.Ok) (l : I.Laws) (u : B.Word) (a : I.ι) (i : ℕ) {Ch :
       have := (under_eq_iff B.host P.1 w).not.1 (hw ▸ hv')
       exact h1 w (fun e => this (Or.inl e)) fun e => this (Or.inr e)
     rw [map_mul, map_mul, e, mul_one, ← map_mul, mul_inv_cancel, map_one]
-  · rw [← mul_assoc, ← mul_assoc, inv_mul_cancel_right]
-    exact h2
+  · rwa [← mul_assoc, ← mul_assoc, inv_mul_cancel_right]
 
 
 
@@ -642,8 +638,7 @@ theorem upNatTie : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.P
   obtain ⟨δ, hδ, hδ1, hδ2⟩ := isPt_up I hI l u a i hR v c (L.pr v c z) hz
   obtain ⟨κ, hκ1, hκ2⟩ := exists_level I hI l u a i hR v c (L.pr v c z) hz hch δ hδ2 (chOf c) hch
   have hδ' : δ ∈ UPts (sigD (I.rec7 l Z)) (gramN (I.rec7 l Z) i hi) (FiniteAdeleRing (𝓞 (I.rec7 l Z).host.F) (I.rec7 l Z).host.F) := by
-    rw [hJ]
-    exact hδ
+    rwa [hJ]
   have hg := (I.stp u a i).mv_smul c.1 (upperParabolic I u a i v c (L.pr v c z))
   have hT := T_unif (FieldsLaws.fields_ok B) l.pr u v
   have hact := (congrArg (fun q : (I.stp u a i).D c.1 => q.1.1.deco.1) hg).trans (upAt_spec I hI l u a i v c (L.pr v c z) hz).1
@@ -653,8 +648,7 @@ theorem upNatTie : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.P
     (sub_mem I hI hP l Z u a i hi L hL v c z _ (Quotient.out_eq _))
   refine ⟨hch, ⟨_, _root_.GlobalTheory.Mem.Col2.TC.step_gam_mem_UJ I hI hP l Z u a i hi c.1 ((I.stp u a i).mv c.1 (upperParabolic I u a i v c (L.pr v c z)))⟩, ⟨δ, hδ'⟩, κ⁻¹,
     fun v' hv' => hδ1 v' fun e => hv' (e.trans (hV v).symm), ?_, ?_, ?_, fun x hx => ?_, fun h s s' hs => ?_⟩
-  · refine Eq.trans (congrArg (_ * ·) (hy (chOf c) ⟨_, hch⟩)) ?_
-    exact eq_mul_inv_of_mul_eq hκ1.symm
+  · exact Eq.trans (congrArg (_ * ·) (hy (chOf c) ⟨_, hch⟩)) (eq_mul_inv_of_mul_eq hκ1.symm)
   · refine locP_congr (E := B.fields.E) (hJ' := v.1.isPrime) e2 ?_
     refine Eq.trans (congrArg _ ((mulLat_ufGL _ _).trans (congrArg _ (hlat _)))) (d1.trans (congrArg _ (hD c).symm))
   · refine locP_congr (E := B.fields.E) (hJ' := v.1.isPrime) e2 ?_

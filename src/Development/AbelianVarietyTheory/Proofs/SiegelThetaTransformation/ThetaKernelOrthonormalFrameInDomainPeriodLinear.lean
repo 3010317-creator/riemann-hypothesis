@@ -109,8 +109,7 @@ theorem isCartanInv (hs : s * s = 1) (hs' : sᴴ = s) (h : Bᴴ * G * B = s) : I
             rw [hBi, Matrix.mul_one, Matrix.mul_assoc B⁻¹ᴴ s s, hs, Matrix.mul_one]
     have hinj : Function.Injective (B⁻¹).mulVec := by
       intro x y hxy
-      have h4 := congrArg B.mulVec hxy
-      simpa [Matrix.mulVec_mulVec, hBr] using h4
+      simpa [Matrix.mulVec_mulVec, hBr] using congrArg B.mulVec hxy
     rw [hGM]
     exact Matrix.PosDef.conjTranspose_mul_self _ hinj
 
@@ -281,8 +280,7 @@ theorem zR_unitMap {B : C.Bas} (hB : C.IsB B) (τ : D.what₂.Tau) (i : Fin T.ra
 theorem compAt_unitary (τ : D.what₂.Tau) (g : GA D T) :
     (compAt C.θ τ (mt T g))ᴴ * gramAt D T τ * compAt C.θ τ (mt T g) = gramAt D T τ := by
   have h1 := GlobalTheory.FockCompare.RealAction.infMat_mem_UH C.inf T g τ
-  rw [GlobalTheory.FockCompare.RealAction.infMat_eq] at h1
-  exact h1
+  rwa [GlobalTheory.FockCompare.RealAction.infMat_eq] at h1
 
 theorem isB_mvB {B : C.Bas} (hB : C.IsB B) (g : GA D T) : C.IsB (C.mvB g B) := by
   intro τ
@@ -310,8 +308,7 @@ theorem mvB_fin (B : C.Bas) {g : GA D T} (hg : g ∈ GfC T) : C.mvB g B = B := b
   funext τ
   show compAt C.θ τ (Formalism.L2.Theta.mt T g) * B τ = B τ
   have h1 : Formalism.L2.Theta.infHom T g = 1 := (MonoidHom.mem_ker).mp hg
-  have h2 : (Formalism.L2.Theta.mt T g).map (infPart D) = 1 := by
-    exact congrArg Units.val h1
+  have h2 : (Formalism.L2.Theta.mt T g).map (infPart D) = 1 := congrArg Units.val h1
   have h4 : compAt C.θ τ (Formalism.L2.Theta.mt T g) = ((Formalism.L2.Theta.mt T g).map (infPart D)).map (C.θ τ) := rfl
   rw [h4, h2, Matrix.map_one _ (map_zero _) (map_one _), Matrix.one_mul]
 

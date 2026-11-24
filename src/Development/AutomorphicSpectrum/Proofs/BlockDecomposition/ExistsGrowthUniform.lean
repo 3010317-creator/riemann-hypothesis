@@ -194,8 +194,7 @@ theorem height_gInf_dg_le (ρ : Fin a → ℝ) (hρ : ∀ i, 0 < ρ i) {L : ℝ}
 theorem gFin_infEmb (y : AutomorphicForm.archGroup E a) : gFin (AutomorphicForm.infEmb E a y : GA E a) = 1 := by
   refine Units.ext (Matrix.ext fun i j => ?_)
   have h := AutomorphicForm.prodEquiv_infEmb (K := E) (n := a) y
-  have h2 := congrArg (fun p => (p.2 : GL (Fin a) (Af E)) i j) h
-  exact h2
+  exact congrArg (fun p => (p.2 : GL (Fin a) (Af E)) i j) h
 
 theorem finGL_mul_infGL (g : GA E a) : finGL E a (gFin g) * infGL E a (gInf g) = g := by
   rw [← infGL_comm]; exact infGL_mul_finGL g
@@ -248,8 +247,7 @@ theorem box_bound : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField
   rw [finGL_mul_infGL] at hbound
   refine hbound.trans ?_
   rw [mul_assoc, ← mul_pow]
-  refine mul_le_mul_of_nonneg_left ?_ hC₀
-  exact pow_le_pow_left₀ (by linarith [one_le_height (gInf x)]) hH N
+  exact mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (by linarith [one_le_height (gInf x)]) hH N) hC₀
 
 end GlobalTheory.CompanionTheory.BoxBound
 

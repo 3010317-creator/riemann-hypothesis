@@ -281,8 +281,7 @@ theorem GlobalTheory.PerQ.Co.PtInt.exists_mem_SP_of_coP_mem : ∀ {B : Base} {X 
       rw [_root_.GlobalTheory.WeylLocOnePlace.mem_locW_delAtr_iff B.fields.emb B.embLL B.places (I.rec7 l Z).plEq (I.rec7 l Z).val_eq (I.perIn u a).sgT
         (I.perIn u a).sg (GlobalTheory.PerQ.Co.PtInt.natW_sgT I u a) _ (hOk.lsh_full_lat c.1 _) w _ hspec.1, hinv]
       have h := hco c
-      rw [hGe] at h
-      exact h
+      rwa [hGe] at h
   choose v hv1 hv2 using key
   obtain ⟨y, hy1, hy2⟩ := _root_.GlobalTheory.Glob.FormDescent.desc B.fields.emb B.embLL (I.perIn u a).S' (I.perIn u a).sgT (l.fmL u a).famP z hz' v hv1
   refine ⟨y, ?_, hy2⟩
@@ -351,8 +350,7 @@ theorem coP_mem_intSpan : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok �
       (invTrK (Formalism.L2.DIV.embGL B.fields.emb (GlobalTheory.PerQ.Co.bP I u a w c)⁻¹)) (y.1 c).1)
     rw [GlobalTheory.ValCmp.use₂]
     congr 2
-  rw [e]
-  exact key
+  rwa [e]
 
 end GlobalTheory.PtIntCoord
 end -- clump:auto
@@ -402,8 +400,7 @@ theorem intSpan_smul (D : D7) {n : ℕ} (w : D.what₂.places.Pl) (lam : D.what�
   induction hp using AddSubgroup.closure_induction with
   | mem q hq =>
     obtain ⟨r', f, hr', hf, rfl⟩ := hq
-    apply AddSubgroup.subset_closure
-    exact ⟨r * r', f, mul_mem hr hr', hf, by rw [map_mul, mul_smul]⟩
+    exact AddSubgroup.subset_closure ⟨r * r', f, mul_mem hr hr', hf, by rw [map_mul, mul_smul]⟩
   | zero => rw [smul_zero]; exact zero_mem _
   | add p q _ _ hp hq => rw [smul_add]; exact add_mem hp hq
   | neg p _ hp => rw [smul_neg]; exact neg_mem hp
@@ -685,8 +682,7 @@ private theorem eq_zero_of_fockS_self_eq_zero {σ : Type} (w : MvPolynomial σ �
   rw [Finset.sum_eq_zero_iff_of_nonneg hnn] at hre
   by_contra hw
   obtain ⟨m, hm⟩ : w.support.Nonempty := by
-    rw [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
-    exact hw
+    rwa [Finset.nonempty_iff_ne_empty, Ne, MvPolynomial.support_eq_empty]
   have h2 := hre m hm
   rcases mul_eq_zero.mp h2 with h1 | h1
   · exact (MvPolynomial.mem_support_iff.mp hm) (Complex.normSq_eq_zero.mp h1)
@@ -794,8 +790,7 @@ private theorem coefLast_monomial' {ι : Type} [Fintype ι] {N n : ℕ} (hN : N 
     constructor
     · rintro ⟨h1, h2⟩ τ
       exact ⟨fun _ s => h1 τ s, fun _ a => h2 τ a⟩
-    · intro h
-      exact ⟨fun τ s => (h τ).1 () s, fun τ a => (h τ).2 () a⟩
+    · exact fun h => ⟨fun τ s => (h τ).1 () s, fun τ a => (h τ).2 () a⟩
   rw [Formalism.L2.Col.Br.coefLast_monomial]
   simp_rw [toUnit_monomial, Formalism.L2.Col.Br.coefLast_monomial, apply_ite (Formalism.L2.Ker.toUnit ℂ n).symm,
     map_zero, toUnit_symm_monomial]
@@ -880,18 +875,14 @@ theorem isBlock_of_mulVec' {E : Type} [Field E] {N n : ℕ} (hN : N = n + 1) {A'
   · have h := congrFun (h1 (Pi.single (Br.iC hN b) 1)) a
     have e : iniH hN (Pi.single (Br.iC hN b) (1 : E)) = Pi.single b 1 := funext fun i => by
       simp only [iniH, Pi.single_apply, (Br.iC_inj hN).eq_iff]
-    rw [e, mulVec_single_one, mulVec_single_one] at h
-    exact h
+    rwa [e, mulVec_single_one, mulVec_single_one] at h
   · have h := congrFun (h1 (Pi.single (Br.iL hN) 1)) a
     have e : iniH hN (Pi.single (Br.iL hN) (1 : E)) = 0 := funext fun i => Pi.single_eq_of_ne (hne i) _
-    rw [e, mulVec_single_one, mulVec_zero] at h
-    exact h
+    rwa [e, mulVec_single_one, mulVec_zero] at h
   · have h := h2 (Pi.single (Br.iC hN a) 1)
-    rw [mulVec_single_one, Pi.single_eq_of_ne (hne a).symm, mul_zero] at h
-    exact h
+    rwa [mulVec_single_one, Pi.single_eq_of_ne (hne a).symm, mul_zero] at h
   · have h := h2 (Pi.single (Br.iL hN) 1)
-    rw [mulVec_single_one, Pi.single_eq_same, mul_one] at h
-    exact h
+    rwa [mulVec_single_one, Pi.single_eq_same, mul_one] at h
 
 theorem rhoVr_brAt_eq_brStd : ∀ {E K ι : Type} [Field E] [Field K] [CharZero K] [Fintype ι] (emb : ι → E →+* K) {N n : ℕ}
     (hN : N = n + 1) (lam : ι → DomWeight N) (sg : ι → DomWeight n), (∀ τ, Br.Interlace hN (lam τ) (sg τ)) →

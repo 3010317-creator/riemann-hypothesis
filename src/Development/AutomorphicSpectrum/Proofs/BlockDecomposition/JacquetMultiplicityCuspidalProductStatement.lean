@@ -237,9 +237,7 @@ private theorem occursTimes_of_equiv_lemma {G V₁ V₂ Y : Type} [Group G] [Add
     show Submodule.Quotient.mk (e1 ((A.toRepresentation g) x)) =
       Submodule.Quotient.mk (((mp A).toRepresentation g) (e1 x))
     congr 1
-    apply Subtype.ext
-    show e (ρ₁ g (x : V₁)) = ρ₂ g (e (x : V₁))
-    exact he g x
+    exact Subtype.ext (he g x)
   refine Exists.intro (fun i => mp (S i)) (Exists.intro (fun i => mp (T i))
     ⟨fun i => hmono (hTS i), fun i j hij => hmono (hST i j hij), fun i => ?_⟩)
   obtain ⟨q⟩ := hQ (S i) (T i)
@@ -361,8 +359,7 @@ theorem cell_bij {α β : Type} [Fintype α] [LinearOrder α] [Fintype β] [Line
   · show Ψ ((piTensor fun j => ρ (e j)) x (Ψ.symm (φ.1.1 1))) = φ.1.1 x
     refine (law ⟨x, hP x⟩ (Ψ.symm (φ.1.1 1))).symm.trans ?_
     refine (congrArg (τ ⟨x, hP x⟩) (Ψ.apply_symm_apply (φ.1.1 1))).trans ?_
-    refine (φ.1.2 ⟨x, hP x⟩ 1).symm.trans ?_
-    exact congrArg φ.1.1 (mul_one x)
+    exact (φ.1.2 ⟨x, hP x⟩ 1).symm.trans (congrArg φ.1.1 (mul_one x))
 
 theorem isIrreducible_piTensor (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {β : Type} [Fintype β]
     (x : β → IrrGL (k := k)) : (piTensor fun j => (x j).rep).IsIrreducible := by
@@ -381,8 +378,7 @@ theorem jhMult_cell_comp (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {
   obtain ⟨g, hg⟩ := hf
   refine ⟨f, g, ?_⟩
   have h1 := jhMult_self (isIrreducible_piTensor hA fun j => x (e j))
-  have h2 := jhMult_of_nonempty (piTensor fun j => (x (e j)).rep) hg
-  exact h2.trans h1
+  exact (jhMult_of_nonempty (piTensor fun j => (x (e j)).rep) hg).trans h1
 
 theorem jhMult_cell_bij : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k], GlobalTheory.Published.IrreducibleAdmissibleGL →

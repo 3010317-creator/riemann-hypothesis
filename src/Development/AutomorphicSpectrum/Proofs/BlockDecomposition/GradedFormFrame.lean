@@ -61,8 +61,7 @@ variable {O : Type} [CommRing O] {X : Scheme.{0}} {q : X ⟶ Spec (CommRingCat.o
 
 theorem inU_of_SS {l s : ℕ} {W : X.Opens} (T : Thick (LL q)) (h : SS q l s W T) : InU W T := by
   obtain ⟨-, V, hV, hT⟩ := h
-  rw [Set.mem_singleton_iff.1 hV] at hT
-  exact hT
+  rwa [Set.mem_singleton_iff.1 hV] at hT
 
 end GlobalTheory.CompanionTheory.GrForm.FrameEx
 
@@ -106,7 +105,6 @@ theorem stFrame : StFrame := by
   · intro i T
     change (σ T).φ (θ (c.t i)) = u i T.obj
     rw [hθ, het, hσ]
-  · intro T h f
-    exact hval T.obj h (σ T) f
+  · exact fun T h f => hval T.obj h (σ T) f
 
 end GlobalTheory.CompanionTheory.GrForm

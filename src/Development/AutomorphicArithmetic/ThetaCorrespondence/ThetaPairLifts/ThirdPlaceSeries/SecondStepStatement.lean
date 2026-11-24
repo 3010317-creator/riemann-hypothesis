@@ -172,8 +172,7 @@ theorem v_nonneg_int [NumberField K] (v : AddValuation K (WithTop ℤ)) (a : �
   have h2 : IsIntegral (vRing v) (a : K) := h1.tower_top
   obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.mp h2
   have h3 : algebraMap (vRing v) K y ∈ vRing v := y.2
-  rw [hy] at h3
-  exact h3
+  rwa [hy] at h3
 
 theorem emb_int_mem [NumberField K] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     (e : K →+* FractionRing O) (a : 𝓞 K) : ∃ y : O, algebraMap O (FractionRing O) y = e a := by
@@ -385,8 +384,7 @@ theorem star_mul_self_of_pow (D : D7) (ζ : (↥D.LL0)ˣ) (n : ℕ) (hn : n ≠ 
   apply D.what₂.embLL.injective
   rw [map_mul, map_one, D.starLL_cx]
   have hp : ((ζ : ↥D.LL0) : D.what₂.LL) ^ n = 1 := by
-    have e := congrArg (fun u : (↥D.LL0)ˣ => ((u : ↥D.LL0) : D.what₂.LL)) h
-    simpa using e
+    simpa using congrArg (fun u : (↥D.LL0)ˣ => ((u : ↥D.LL0) : D.what₂.LL)) h
   have hz : (D.what₂.embLL ((ζ : ↥D.LL0) : D.what₂.LL)) ^ n = 1 := by
     rw [← map_pow, hp, map_one]
   have hn1 : ‖D.what₂.embLL ((ζ : ↥D.LL0) : D.what₂.LL)‖ = 1 := Complex.norm_eq_one_of_pow_eq_one hz hn
@@ -485,8 +483,7 @@ theorem exists_root_congr_unit : ∀ {E Ω : Type} [Field E] [NumberField E] [Fi
     simp only [hp, Polynomial.eval_sub, Polynomial.eval_pow, Polynomial.eval_X,
       Polynomial.eval_C, Function.comp_def] at this
     rw [this]
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hall : ∀ ζ ∈ p.roots, 1 ≤ A.valuation (a - ζ) := by
     intro ζ hζ
     have hroot : ζ ^ n = 1 := by
@@ -767,7 +764,6 @@ theorem formsExport_eq : ∀ (D : D7) (S : RatDat D.ntw) (In : RatIn D S) (T : T
     induction y using TensorProduct.induction_on with
     | zero => simp only [map_zero]
     | tmul a w =>
-      show a ⊗ₜ[S.Ks] (LinearEquiv.ofEq _ _ hW (f w)) = a ⊗ₜ[S.Ks] (f' (LinearEquiv.ofEq _ _ hW w))
       exact congrArg (a ⊗ₜ[S.Ks] ·) (Subtype.ext (hf w))
     | add y z hy hz => rw [map_add (f := _), map_add (f := _), hy, hz, map_add (f := _), map_add (f := _)]
   have hc : ∀ g', cR D S In.chi j g' = chiL S j (In.chi j h1 h2) g' := fun g' => dite_eq_left ⟨h1, h2⟩
@@ -848,8 +844,7 @@ theorem universalCharacter_admissibleConductor_inertia_surjective : GlobalTheory
   obtain ⟨-, hadm⟩ := hQ
   have hcl : ∀ P ∈ Q, ∀ P', IsConjPl D.host P P' → P' ∈ Q := fun P hP P' h => by
     obtain ⟨⟨P'', hP'', h''⟩, -⟩ := hadm P hP
-    rw [GlobalTheory.GalChar.isConjPl_unique h h'']
-    exact hP''
+    rwa [GlobalTheory.GalChar.isConjPl_unique h h'']
   obtain ⟨-, χ, h1, h2, h3, h4, h5⟩ := hadm P hP
   have hsP : ∀ A : ValuationSubring D.nd.Om, IsPlaceOver A P →
       ∀ b, ∃ σ ∈ Ine (F := D.host.E) A, χ σ = b := fun A hA b => by
@@ -1002,8 +997,7 @@ theorem residueHom_zmod : ∀ (D : D7) (kv : Σ k : Fin 2, D.nd.PlG k) (s : Spli
   have hN := GlobalTheory.TameLabels.normV_eq_of_split hp (D.nd.g_split kv.1) (D.naut.plGw_over kv.1 kv.2)
   have hc : Nat.card (IsLocalRing.ResidueField (s.v.adicCompletionIntegers (maximalRealSubfield D.host.E))) =
       D.host.g kv.1 := by
-    rw [ReciprocityTheory.Bridge.ResidueFieldCardinality.card_residue, ← s.card_quot, hs]
-    rw [← hN]
+    rw [ReciprocityTheory.Bridge.ResidueFieldCardinality.card_residue, ← s.card_quot, hs, ← hN]
     rfl
   haveI : Finite (IsLocalRing.ResidueField (s.v.adicCompletionIntegers (maximalRealSubfield D.host.E))) :=
     Nat.finite_of_card_ne_zero (by rw [hc]; exact hp.ne_zero)
@@ -1110,8 +1104,7 @@ theorem mem_placesOver_of_comap {D : D7} {P P' : PlE D.host}
   have e : ((p : ℕ) : 𝓞 D.host.E) = (algebraMap (𝓞 (maximalRealSubfield D.host.E)) (𝓞 D.host.E)) (p : 𝓞 (maximalRealSubfield D.host.E)) := (map_natCast _ p).symm
   show ((p : ℕ) : 𝓞 D.host.E) ∈ P'.asIdeal
   have hP' : ((p : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal := hP
-  rw [e, ← Ideal.mem_comap, ← h, Ideal.mem_comap, ← e]
-  exact hP'
+  rwa [e, ← Ideal.mem_comap, ← h, Ideal.mem_comap, ← e]
 
 theorem isConjPl_conjPlE {D : D7} (P : PlE D.host) : Formalism.BasicNotions.IsConjPl D.host P (GlobalTheory.SplitConjPlace.conjPlE P) := by
   intro x y hxy
@@ -1579,8 +1572,7 @@ theorem span_eig_BI_alt (D : D7) (cf : CharFrame D) (jE : D.host.E →+* Qb) (A 
   intro y _
   have hy : e y ∈ Submodule.map e _ := key (he_rng ▸ LinearMap.mem_range_self e y)
   obtain ⟨z, hz, hze⟩ := Submodule.mem_map.mp hy
-  rw [← he_inj hze]
-  exact hz
+  rwa [← he_inj hze]
 theorem sig_of_fg_alt (hfg : ∀ (D : D7) (S : RatDat D.ntw) (In : RatIn D S) (T : TwR D.LL0 D.nd) (i : T.Tw) (j : ℕ) (b : Bool),
     (BsupT D T S i j b).FG ∧
       Submodule.span (FractionRing (T.O i)) (BsupT D T S i j b : Set (FmT D T S i j b)) = ⊤) : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E →+* Qb) (A : _root_.GlobalTheory.HeightCounting.CharFrameHostEmbedding D cf jE) (S : RatDat D.ntw)

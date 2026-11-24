@@ -233,8 +233,7 @@ theorem e8data : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Globa
   refine ⟨pG, c, Φ.symm.trans Sm.symm, hpGm, hgen, hc, fun y => ?_⟩
   have h1 : Sm ((Φ.symm.trans Sm.symm) y) = Φ.symm y := by simp
   have h2 : Φ (Φ.symm y) = y := Φ.apply_symm_apply y
-  rw [← h1] at h2
-  exact h2
+  rwa [← h1] at h2
 
 end GlobalTheory.Poinc.Eq8
 end -- clump:auto
@@ -351,9 +350,7 @@ theorem lattice_of_charMap {X Y : Type} [AddCommGroup X] [AddCommGroup Y] (S a a
 
   simp only [map_sum, map_zsmul, hh, Finset.smul_sum, smul_smul]
   have L : ∀ f : Fin 8 → Fin 8 → Fin 8 → Y, ∑ v, ∑ u, ∑ w, f v u w = ∑ w, ∑ u, ∑ v, f v u w := fun f => by
-    rw [Finset.sum_comm]
-    rw [Finset.sum_congr rfl fun u _ => Finset.sum_comm]
-    rw [Finset.sum_comm]
+    rw [Finset.sum_comm, Finset.sum_congr rfl fun u _ => Finset.sum_comm, Finset.sum_comm]
   calc ∑ v, ∑ u, ∑ w, (S v u * a' v w) • c w (e y u)
       = ∑ w, ∑ u, ∑ v, (S v u * a' v w) • c w (e y u) := L (fun v u w => (S v u * a' v w) • c w (e y u))
     _ = ∑ w, ∑ u, (∑ v, a' v w * S v u) • c w (e y u) := by
@@ -487,8 +484,7 @@ def lamHom (z : T ⟶ G) : (T ⟶ G) →* Multiplicative (Pic T.left) where
 
 theorem lam_zpow_left (x z : T ⟶ G) (k : ℤ) :
     lam (cls L hL) (x ^ k) z = k • lam (cls L hL) x z := by
-  have h := map_zpow (lamHom hL hΘ z) x k
-  exact congrArg Multiplicative.toAdd h
+  exact congrArg Multiplicative.toAdd (map_zpow (lamHom hL hΘ z) x k)
 
 theorem lam_prod_left : ∀ (n : ℕ) (x : Fin n → (T ⟶ G)) (e : Fin n → ℤ) (z : T ⟶ G),
     lam (cls L hL) (List.ofFn fun v => x v ^ e v).prod z = ∑ v, e v • lam (cls L hL) (x v) z
@@ -531,8 +527,7 @@ theorem alg_left {M : Type*} [AddCommGroup M] (S a : Matrix (Fin 8) (Fin 8) ℤ)
   simp only [Matrix.mul_apply, Matrix.transpose_apply, Finset.sum_smul, Finset.smul_sum, mul_smul]
   simp_rw [smul_comm (S _ _) (a _ _)]
   rw [Finset.sum_comm]
-  refine (Finset.sum_congr rfl fun j _ => Finset.sum_comm).trans ?_
-  exact Finset.sum_comm
+  exact (Finset.sum_congr rfl fun j _ => Finset.sum_comm).trans Finset.sum_comm
 
 theorem alg_right {M : Type*} [AddCommGroup M] (S a' : Matrix (Fin 8) (Fin 8) ℤ) (B : Fin 8 → Fin 8 → M) :
     ∑ i, ∑ j, S i j • ∑ v, a' j v • B i v = ∑ i, ∑ v, (S * a') i v • B i v := by
@@ -956,8 +951,7 @@ theorem ident_pow {g n : ℕ} (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (F
     rw [hφp' a, ← Category.assoc, hε E a, prod_comp, List.map_map]
     congr 1
     refine List.map_congr_left fun b _ => ?_
-    simp only [Function.comp_apply, hφp' b]
-    exact zpow_comp' e.hom (pr b) (E a b)
+    simpa only [Function.comp_apply, hφp' b] using zpow_comp' e.hom (pr b) (E a b)
 
 theorem exists_proj {g n : ℕ} (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ) (T : Trait F)
     (P : PolAV (Sp (FractionRing T.V))) (ε : Matrix (Fin 8) (Fin 8) ℤ → (P.A ⟶ P.A)) (hD : IsDiagEnd F W P T.y ε) :
@@ -1396,8 +1390,7 @@ theorem traitLabels : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (F
       refine Finset.sum_congr rfl fun x _ => Finset.sum_congr rfl fun y _ => ?_
       simp only [jj, AddEquiv.trans_apply, AddEquiv.piCongrRight_apply]
       ring
-    rw [map_mul, map_mul, norm_mul, hunit, one_mul, map_pow, map_pow, norm_pow] at hq
-    rw [← ha] at hq
+    rw [map_mul, map_mul, norm_mul, hunit, one_mul, map_pow, map_pow, norm_pow, ← ha] at hq
     have hN : ((qW W T'.β (j' χ)).toNat : ℝ) = ((k : ℤ) : ℝ) * (qW W T.β (jj χ) : ℝ) := by
       rw [← Int.cast_mul, ← hsc]
       exact_mod_cast Int.toNat_of_nonneg hq0

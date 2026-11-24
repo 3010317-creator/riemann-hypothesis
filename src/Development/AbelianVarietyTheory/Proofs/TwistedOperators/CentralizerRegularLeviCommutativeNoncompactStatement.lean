@@ -108,8 +108,7 @@ theorem exists_pow_projArch_not_mem_of_eigen_two : ∀ (D : D7) (V : HSp D) (g :
   have hM : (g.1.1 : Matrix (Fin V.rank) (Fin V.rank) D.host.E) *ᵥ c = (2 : D.host.E) • c := by
     have h1 := congrArg (fun y => ⇑(V.frame.repr y)) hg
     simp only [GlobalTheory.Cusp.ratAct, map_smul, Finsupp.coe_smul] at h1
-    rw [← LinearMap.toMatrix_mulVec_repr V.frame V.frame, LinearMap.toMatrix_toLin] at h1
-    exact h1
+    rwa [← LinearMap.toMatrix_mulVec_repr V.frame V.frame, LinearMap.toMatrix_toLin] at h1
   have hMn : ∀ n : ℕ, ((g ^ n).1.1 : Matrix (Fin V.rank) (Fin V.rank) D.host.E) *ᵥ c = (2 : D.host.E) ^ n • c := by
     intro n
     induction n with
@@ -118,14 +117,12 @@ theorem exists_pow_projArch_not_mem_of_eigen_two : ∀ (D : D7) (V : HSp D) (g :
       rw [pow_succ, Subgroup.coe_mul, Units.val_mul, ← Matrix.mulVec_mulVec, hM, Matrix.mulVec_smul, ih, smul_smul,
         pow_succ, mul_comm]
   obtain ⟨j, hj⟩ : ∃ j, c j ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hx
     have : V.frame.repr x = 0 := Finsupp.ext h
     simpa using this
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual D.host.F D.host.E, φ (c j) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hj ((Module.forall_dual_apply_eq_zero_iff _ _).1 h)
 
   let ι : D.host.E →+* w.Completion ⊗[D.host.F] D.host.E := inclR (F := D.host.F) w.Completion
@@ -416,8 +413,7 @@ theorem mem_parab_of_mem_cent {D : D7} {V : HSp D} {γ : GF V} (hγ : IsRegSS γ
 theorem exists_ne_zero_mem_sub {D : D7} {V : HSp D} (Φ : WittFrame V) {u : SV (wittIndex V)} (hu : u ≠ 0) :
     ∃ x ∈ Φ.sub u, x ≠ 0 := by
   obtain ⟨i, hi⟩ : ∃ i, u i ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hu (funext h)
   have h1 := Φ.ef i i
   rw [ite_eq_left rfl] at h1

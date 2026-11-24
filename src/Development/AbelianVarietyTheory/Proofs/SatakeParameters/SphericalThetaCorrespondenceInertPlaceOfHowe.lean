@@ -83,8 +83,7 @@ theorem finiteIndex_stab {K : Subgroup G} {g : G} {R : Finset G} (hR : Reps K g 
     obtain ⟨γ, ⟨hγ, e⟩, -⟩ := hR.2 ((k : G) * g) ⟨k, k.2, 1, one_mem _, by simp⟩
     refine ⟨γ, hγ, ?_⟩
     show (QuotientGroup.mk γ : G ⧸ K) = (k : G) • (QuotientGroup.mk g : G ⧸ K)
-    rw [MulAction.Quotient.smul_mk, smul_eq_mul, QuotientGroup.eq]
-    exact e
+    rwa [MulAction.Quotient.smul_mk, smul_eq_mul, QuotientGroup.eq]
   refine ⟨?_⟩
   rw [MulAction.index_stabilizer]
   exact ((Set.ncard_pos hfin).2 ⟨_, MulAction.mem_orbit_self _⟩).ne'
@@ -164,8 +163,7 @@ theorem fixed_comb {K : Subgroup G} {ι : Type} (s : Finset ι) (g : ι → G) (
           rw [Nat.cast_smul_eq_nsmul ℂ, ← Finset.card_univ, ← Finset.sum_const]
           exact Finset.sum_congr rfl fun q _ => (hw _ q.out.2).symm
       _ = ∑ i ∈ s, a i • T i := by
-          simp only [e, T, Finset.smul_sum]
-          exact Finset.sum_comm
+          simpa only [e, T, Finset.smul_sum] using Finset.sum_comm
   refine smul_right_injective M hQ ?_
   simp only
   rw [main, Finset.smul_sum]
@@ -484,8 +482,7 @@ theorem sphCorr_of_inert : HoweUnram → ∀ {D : D7} (ψ : AddChar (AF D.host.F
     obtain ⟨bS, hbS⟩ := h1 bT fun s hs k hk => by
       apply Subtype.ext
       rw [ωT, coe_sum_smul]
-      simp only [ωT]
-      exact hb s ((hvac s).1 hs) _ ((kT k).2 hk)
+      simpa only [ωT] using hb s ((hvac s).1 hs) _ ((kT k).2 hk)
     refine ⟨bS, fun u hu => ?_⟩
     have := congrArg Subtype.val (hbS ⟨u, hM u hu⟩ ((hvac _).2 hu))
     rw [coe_sum_smul, coe_sum_smul] at this
@@ -498,8 +495,7 @@ theorem sphCorr_of_inert : HoweUnram → ∀ {D : D7} (ψ : AddChar (AF D.host.F
     obtain ⟨bT, hbT⟩ := h2 bS fun s hs k hk => by
       apply Subtype.ext
       rw [ωS, coe_sum_smul]
-      simp only [ωS]
-      exact hb s ((hvac s).1 hs) _ ((kS k).2 hk)
+      simpa only [ωS] using hb s ((hvac s).1 hs) _ ((kS k).2 hk)
     refine ⟨bT, fun u hu => ?_⟩
     have := congrArg Subtype.val (hbT ⟨u, hM u hu⟩ ((hvac _).2 hu))
     rw [coe_sum_smul, coe_sum_smul] at this

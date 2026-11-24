@@ -486,8 +486,7 @@ theorem exists_cInf_bump (k : Type) [CommRing k] (X : Scheme.{0}) (p : X ⟶ Sp 
     have ht : Tendsto (fun z => z) (u : Filter (CxPts p σ)) (𝓝 z') := by
       refine (PtsOver.tendsto_iff_of_generators hW hz'W hs).2 ⟨hWu, fun f _ => ?_⟩
       have := hc f
-      rw [← hz'ev f] at this
-      exact this
+      rwa [← hz'ev f] at this
     have hφz' : φ z' = v := funext fun a =>
       (hz'ev a.1).trans (tendsto_nhds_unique (hc a.1) (((continuous_apply a).tendsto _).comp hv'))
     refine ⟨z', ⟨hz'W, ?_⟩, ht⟩
@@ -540,8 +539,7 @@ theorem cInfAt_inv {f : CxPts p σ → ℝ} {y : CxPts p σ} (h : CInfAt f y) (h
     (h₄.mono Set.inter_subset_left).inv fun v hv => hv.2, h₅.mono fun z hz => by simp only [hz]⟩
   have := h₅.self_of_nhds
   simp only at this
-  rw [Set.mem_preimage, ← this]
-  exact h0
+  rwa [Set.mem_preimage, ← this]
 
 theorem cInfAt_mul {f g : CxPts p σ → ℝ} {y : CxPts p σ} (h : CInfAt f y) (h' : CInfAt g y) :
     CInfAt (fun z => f z * g z) y :=
@@ -659,8 +657,7 @@ theorem locExt {k : Type} [CommRing k] {X Y : Scheme.{0}} {p : X ⟶ Sp k} {q : 
     have hW₁ : π ⁻¹ᵁ W₁ = W := Opens.ext htW
     have hz₀ : π (y₀.1 (IsLocalRing.closedPoint ℂ)) ∈ W₁ := by
       have := mem_ptsIn.1 h₁
-      rw [← hW₁] at this
-      exact this
+      rwa [← hW₁] at this
     obtain ⟨W', hW'a, hzW', hW'le⟩ := Opens.isBasis_iff_nbhd.1 X.isBasis_affineOpens hz₀
     have hle : π ⁻¹ᵁ W' ≤ W := by
       rw [← hW₁]
@@ -681,15 +678,13 @@ theorem locExt {k : Type} [CommRing k] {X Y : Scheme.{0}} {p : X ⟶ Sp k} {q : 
     · have : y₀ ∈ ptMap π hπ σ ⁻¹' N' := hNN'.symm ▸ hy₀N
       exact this
     · exact mem_ptsIn.2 hzW'
-    · simp only [Set.mem_preimage, hval y₀ hy₀W']
-      exact h₃
+    · simpa only [Set.mem_preimage, hval y₀ hy₀W'] using h₃
     · exact ⟨W', ι, inferInstance, g', F, O₀, hz.2.1, h₂, hz.2.2, h₄, EventuallyEq.rfl⟩
     · have hyN : y ∈ N := by
         have : y ∈ ptMap π hπ σ ⁻¹' N' := hy.1
         rwa [hNN'] at this
       have hyW' : y ∈ ptsIn q σ (π ⁻¹ᵁ W') := mem_ptsIn.2 (mem_ptsIn.1 hy.2.1)
-      simp only [hval y hyW']
-      exact (hsu (hNs hyN)).symm
+      simpa only [hval y hyW'] using (hsu (hNs hyN)).symm
   · exact ⟨(Set.range (ptMap π hπ σ))ᶜ, fun _ => 0, hemb.isClosed_range.isOpen_compl, hx,
       fun z _ => cInfAt_const 0 z, fun y hy => absurd (Set.mem_range_self y) hy⟩
 
@@ -746,8 +741,7 @@ theorem semiPosReg_pull : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) (p : X 
   have e : (fun v => ((φ.pull π hπ).φ i (c.e.symm v) : ℂ)) =ᶠ[𝓝 (c.e y)] g ∘ F := by
     filter_upwards [hU.mem_nhds hyU] with v hv
     have := Weight.pull_φ φ π hπ i (c.e.symm v)
-    simp only [g, hFdef, Function.comp_apply, c0.e.left_inv hv.2]
-    exact congrArg _ this
+    simpa only [g, hFdef, Function.comp_apply, c0.e.left_inv hv.2] using congrArg _ this
   rw [ReciprocityTheory.L2DbarEstimates.leviV_congr e,
     ReciprocityTheory.ChartRestriction.G.AR.Up.RGF.gc_leviV_comp D' D g F U hU _ hyU hF hg ξ, hFy]
   exact hSP (i PUnit.unit) c0 (m y) ⟨h0, him⟩ _
@@ -1236,8 +1230,7 @@ theorem GlobalTheory.Mix.semiPosReg_addFn_log_nsq : ∀ (k : Type) [CommRing k] 
     rw [h1, Real.log_mul (Real.exp_pos _).ne' (add_pos_of_nonneg_of_pos (Complex.normSq_nonneg _)
       (Real.exp_pos _)).ne', Real.log_exp]
     ring
-  rw [ReciprocityTheory.L2DbarEstimates.leviV_congr e]
-  exact key
+  rwa [ReciprocityTheory.L2DbarEstimates.leviV_congr e]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1265,8 +1258,7 @@ theorem tendsto_integral_log_add_inv : ∀ (T : Type) [MeasurableSpace T] (μ : 
     rw [← integral_const_mul]; congr 1; ext x; ring
   rw [hlim]
   refine tendsto_integral_of_dominated_convergence (fun x => |Real.log (w x)| + |Real.log (C + 1)|) ?_ ?_ ?_ ?_
-  · intro n
-    exact (Real.measurable_log.comp (hw.add_const _)).aestronglyMeasurable
+  · exact fun n => (Real.measurable_log.comp (hw.add_const _)).aestronglyMeasurable
   · exact hint'.abs.add (integrable_const _)
   · intro n
     filter_upwards [hpos] with x hx
@@ -1348,12 +1340,10 @@ theorem GlobalTheory.Mix.tendsto_logReg : GlobalTheory.Published.Principalisatio
       haveI := hfin ε
       have hnull := _root_.GlobalTheory.MixNull.part_compl_null F X p σ σ.injective hp (e + 1) L ε (nonzeroLocus t) hgen
       refine _root_.GlobalTheory.Mix.tendsto_integral_log_add_inv _ (part L ε) w C hcont.measurable hwC ?_ hi
-      refine ae_iff.2 (measure_mono_null (fun y hy => ?_) hnull)
-      exact fun h => hy ((hbasic.2.1 y).2 h)
+      exact ae_iff.2 (measure_mono_null (fun y hy => (fun h => hy ((hbasic.2.1 y).2 h))) hnull)
     have h1 := one 1 hint.1
     have h2 := one (-1) hint.2
-    simp only [Mix.int, MLine.logSec, mul_sub]
-    exact h1.sub h2
+    simpa only [Mix.int, MLine.logSec, mul_sub] using h1.sub h2
   · haveI : CompactSpace X := compactSpace_of_proj hp
     have hS := Δ.finite_support_mult
     have hsub (f : X → ℝ) : Function.support (fun z => (Δ.mult z : ℝ) * f z) ⊆ ↑hS.toFinset := by

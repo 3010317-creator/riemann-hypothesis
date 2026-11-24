@@ -199,8 +199,7 @@ private theorem eval_powE {n : ℕ} (f : ℕ) (i : Fin n) (s : Multiset ℂ) (hs
     simp
   rw [h3] at h2
   simp only [aeval_esymm_eq_multiset_esymm] at h2
-  rw [Multiset.map_map, ← coe_aeval_eq_eval]
-  exact h2
+  rwa [Multiset.map_map, ← coe_aeval_eq_eval]
 
 private theorem map_eq_cm {κ R R' : Type} [CommRing R] [CommRing R'] (φ : R →+* R') (P : MvPolynomial κ R) :
     map φ P = cm φ P := by
@@ -228,8 +227,7 @@ theorem UpperTheory.ConvolutionTheory.Ci.kfBc :
   · have h1 := hΦ.1 fun τ => w (τ.comp (algebraMap F E))
     refine (map_sb h (algebraMap ℂ _) (algebraMap ℂ _) (ren res) (ren res)
       (ren fun x : Ix E n => (x.1, w (x.1.comp (algebraMap F E)) x.2)) _ ?_ ?_ Φ).trans (by rw [h1])
-    · intro c
-      exact lift_alg _ _ c
+    · exact fun c => lift_alg _ _ c
     · intro r
       rw [ren_ren, ren_ren]
       rfl
@@ -268,8 +266,7 @@ theorem UpperTheory.ConvolutionTheory.Ci.kfBc :
   · rw [← RingHom.comp_apply]
     refine hom_congr_vars (p₁ := Φ) (p₂ := Φ) ?_ ?_ rfl
     · refine RingHom.ext fun f => ?_
-      simp only [evK, sb, RingHom.comp_apply, eval₂Hom_C]
-      exact ev_ren res L' f
+      simpa only [evK, sb, RingHom.comp_apply, eval₂Hom_C] using ev_ren res L' f
     · intro y hy _
       have h1 := eval_powE (resDeg F y.1) y.2 _ (ht _ fun hh => hΦ.2 y hy ((hS _).2 hh))
       simp only [evK, sb, h, RingHom.comp_apply, eval₂Hom_X', coe_eval₂Hom, eval₂_map, eval₂_rename]

@@ -104,8 +104,7 @@ theorem exists_irreducible_subquotient_eigen : ∀ (G : Type) [Group G] (V : Typ
   have hcov : Tr ⋖ Sr := by
     refine ⟨lt_of_le_of_ne (fun v hv => hTS hv) fun h => hxT ?_, fun R h1 h2 => ?_⟩
     · have : x ∈ Sr := hxS0
-      rw [← h] at this
-      exact this
+      rwa [← h] at this
     by_cases hxR : x ∈ R.toSubmodule
     · exact h2.not_ge fun v hv => hgen R.toSubmodule R.apply_mem_toSubmodule hxR hv
     · have hRP : R.toSubmodule ∈ P := ⟨fun v hv => h2.le hv, hxR, R.apply_mem_toSubmodule⟩
@@ -115,8 +114,7 @@ theorem exists_irreducible_subquotient_eigen : ∀ (G : Type) [Group G] (V : Typ
     ⟨Sr, ⟨Submodule.mkQ _, fun _ => rfl⟩, Submodule.Quotient.mk_surjective _⟩,
     Submodule.Quotient.mk ⟨x, hxS0⟩, ?_, fun g hg => ?_⟩
   · intro h0
-    have h1 := (Submodule.Quotient.mk_eq_zero (T.comap S0.subtype) (x := (⟨x, hxS0⟩ : S0))).1 h0
-    exact hxT h1
+    exact hxT ((Submodule.Quotient.mk_eq_zero (T.comap S0.subtype) (x := (⟨x, hxS0⟩ : S0))).1 h0)
   · show Submodule.Quotient.mk (Sr.toRepresentation g ⟨x, hxS0⟩) = _
     rw [← Submodule.Quotient.mk_smul]
     congr 1

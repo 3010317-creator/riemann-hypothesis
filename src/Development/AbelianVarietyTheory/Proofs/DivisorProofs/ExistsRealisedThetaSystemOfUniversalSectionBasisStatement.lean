@@ -152,8 +152,7 @@ theorem span_eq_top_of_geomFibres (hS : SecBaseChangeAnySt) [IsAffine S] (N : �
       obtain ⟨b', hb'⟩ := exists_basis P N b hb (Over.mk w) (h ≫ l)
       refine (hu _).1 (functional_mem_of_span h.left.appTop.hom (pullM P.A P.L N h) c b'
         (fun i => by rw [hc, hb', pullM_comp P.A P.isLB]) _ ?_ ℓ (fun i => (hu _).2 (hl i)) y)
-      simp only [pullM_comp P.A P.isLB]
-      exact H K w _
+      simpa only [pullM_comp P.A P.isLB] using H K w _
     obtain ⟨n, u, hu, e⟩ := exists_pow_smul_of_mem_span (overResι W).left.appTop.hom
       (pullM P.A P.L N (overResι W)) f (exists_pow_mul_extend f) t (pullM P.A P.L N (overResι W) x)
       (hspan.ge trivial)
@@ -165,8 +164,7 @@ theorem span_eq_top_of_geomFibres (hS : SecBaseChangeAnySt) [IsAffine S] (N : �
       rw [hk]
       exact Submodule.smul_mem _ _ hu
     · rw [Scheme.mem_basicOpen_top] at hp ⊢
-      simp only [map_mul, map_pow]
-      exact (hp.pow _).mul (hp.pow _)
+      simpa only [map_mul, map_pow] using (hp.pow _).mul (hp.pow _)
   have hI : Ideal.span (J : Set Γ((baseOver S).left, ⊤)) = ⊤ :=
     (isAffineOpen_top (baseOver S).left).self_le_iSup_basicOpen_iff.1 fun p _ => by
       obtain ⟨f, hf, hp⟩ := key p
@@ -401,8 +399,7 @@ theorem exists_monomial_matrices_of_indep : ∀ (o A M : Type) [CommRing o] [Com
     obtain ⟨e', he'⟩ := key (a + x i)
     refine ⟨e + e', ?_⟩
     have := he s₀
-    rw [he', hπadd, hπx, smul_smul, ← map_mul, ← pow_add] at this
-    exact this
+    rwa [he', hπadd, hπx, smul_smul, ← map_mul, ← pow_add] at this
   choose E hE using key2
   have hspan : ⊤ ≤ Submodule.span A (Set.range s) := by
     rw [← h5, Submodule.span_le]
@@ -498,8 +495,7 @@ theorem GlobalTheory.ThetaSBasis.exists_real_of_secBasis : ∀ (o Ω : Type) [Co
   have un : ∀ q e : ℕ, q = n ^ e → IsUnit (q : Γ(Sp R, ⊤)) := fun q e hq => by
     have := (hu.pow e).map f
     rw [map_pow, map_natCast] at this
-    rw [hq, Nat.cast_pow]
-    exact this
+    rwa [hq, Nat.cast_pow]
   have prim : IsPrimitiveRoot (ze : o) ((n ^ j * (n ^ k) ^ 2) ^ 2) := (prim_iff R ze _).1 lev.prim
   obtain ⟨pt, hadd, hbij, hweil, hdiv, -⟩ := GlobalTheory.T.exists_torsionPoints_of_squareLevel_alt hL _ P _ _ hM1 (un _ _ hM) lev
   obtain ⟨h0, hsm⟩ := pt_nsmul pt hadd

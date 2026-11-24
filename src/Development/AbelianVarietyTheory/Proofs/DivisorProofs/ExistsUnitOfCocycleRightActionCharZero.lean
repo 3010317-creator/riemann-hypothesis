@@ -112,8 +112,7 @@ theorem exists_unit_of_cocycle_rightAction_charZero :
     rw [key γ δ, hσ]
     ring
   have hex : ∃ b, F b ≠ 0 := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     let φ : Γ → (K →* K) := fun γ => (σ γ : K →* K)
     let s : Finset (K →* K) := Finset.univ.image φ
     let g : (K →* K) → K := fun ψ => ∑ γ ∈ Finset.univ.filter (fun γ => φ γ = ψ), ((c γ : K))⁻¹
@@ -144,7 +143,6 @@ theorem exists_unit_of_cocycle_rightAction_charZero :
     simp at hmem
   obtain ⟨b, hb⟩ := hex
   refine ⟨Units.mk0 (F b) hb, fun γ => ?_⟩
-  simp only [Units.val_mk0]
-  exact hF b γ
+  simpa only [Units.val_mk0] using hF b γ
 
 end GlobalTheory

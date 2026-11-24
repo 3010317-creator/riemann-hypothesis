@@ -100,8 +100,7 @@ theorem smallFormalGroupPoints_mul_coe_eq_formalAdd (x y : Sm B n) (hx : GP x.1)
   rw [Sm.mul_val]
   funext i
   have e := evA_eq_ev ![x, y] hc (B.G.F i)
-  rw [smallPointsSubstitutionAlgHom_two_points, hv] at e
-  exact e
+  rwa [smallPointsSubstitutionAlgHom_two_points, hv] at e
 
 theorem smallPointsRingAction_coe_eq_comp (o : O) (x : Sm B n) (hx : GP x.1) : (Sm.act B o x).1 = comp1 (B.A.act o) x.1 := by
   have hc : ∀ j i, MvPowerSeries.constantCoeff ((![x] j).1 i) = 0 := by
@@ -115,8 +114,7 @@ theorem smallPointsRingAction_coe_eq_comp (o : O) (x : Sm B n) (hx : GP x.1) : (
   rw [Sm.act_val]
   funext i
   have e := evA_eq_ev ![x] hc (B.A.act o i)
-  rw [smallPointsSubstitutionAlgHom_single_point, hv] at e
-  exact e
+  rwa [smallPointsSubstitutionAlgHom_single_point, hv] at e
 
 theorem smallPointsSubstitution_three_eq_eval (x y z : Sm B n) (hx : GP x.1) (hy : GP y.1) (hz : GP z.1) (f : PS V 3 d) :
     evA ![x, y, z] f = ev ![x.1, y.1, z.1] f := by
@@ -320,8 +318,7 @@ theorem evA_theta_mul_quadQ :
       (p₂' := u3 p₂) (w := Sm.act B w0) (w' := Sm.act B w0) (fun a => (Sm.sub_act ![x, y, z] w0 a).symm)
       (fun a b c => unitSeriesValueThreePoints_substitution ![x, y, z] p₁ a b c) (fun a b c => unitSeriesValueThreePoints_substitution ![x, y, z] p₂ a b c)
       (Sm.gen B 0) (Sm.gen B 1) (Sm.gen B 2)
-    rw [Sm.sub_gen, Sm.sub_gen, Sm.sub_gen] at e
-    exact e
+    rwa [Sm.sub_gen, Sm.sub_gen, Sm.sub_gen] at e
   rw [hm, evU_val, ← map_mul (evA ![x, y, z]), hu, map_one]
 
 end GlobalTheory.TransUnit

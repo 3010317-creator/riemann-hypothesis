@@ -113,13 +113,11 @@ private theorem same_ker {A B G Ω : Type} [CommRing A] [CommRing B] [Algebra A 
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective x
     exact Ideal.Quotient.eq_zero_iff_mem.2 (hf b hx)
   have φi : Function.Injective φb := inj φb fun b hb => by
-    rw [φm] at hb
-    exact hb
+    rwa [φm] at hb
   have ψi : Function.Injective ψb := inj ψb fun b hb => by
     rw [ψm] at hb
     have h' : b ∈ RingHom.ker ψ := hb
-    rw [← hk] at h'
-    exact h'
+    rwa [← hk] at h'
   have hr : ψb.range = φb.range := by
     ext y
     constructor
@@ -184,8 +182,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.invTrans_of :
   obtain ⟨g, hg⟩ := same_ker (G := G) φ ψ hA hk
   refine ⟨g * g0⁻¹, fun b => ?_⟩
   have e := hg (g0⁻¹ • b)
-  rw [hψ, smul_inv_smul, ← mul_smul] at e
-  exact e
+  rwa [hψ, smul_inv_smul, ← mul_smul] at e
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.TranscendenceTraces.PInvTrans =====

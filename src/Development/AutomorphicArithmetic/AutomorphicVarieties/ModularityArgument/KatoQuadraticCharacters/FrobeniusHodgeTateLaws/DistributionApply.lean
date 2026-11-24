@@ -98,8 +98,7 @@ theorem UpperTheory.exists_integral_powerSeries_of_bounded_distribution :
   obtain ⟨L, hLO, hL⟩ := GlobalTheory.AmiceDist.amice l c μ
     (fun r x => by
       by_cases hr : r = 0
-      · simp only [μ, ite_eq_left hr]
-        exact sum_mem (fun x' _ => hO 1 le_rfl x')
+      · simpa only [μ, ite_eq_left hr] using sum_mem (fun x' _ => hO 1 le_rfl x')
       · simp only [μ, ite_eq_right hr]
         exact hO r (Nat.one_le_iff_ne_zero.2 hr) x)
     (fun r x => by
@@ -250,8 +249,7 @@ theorem UpperTheory.norm_character_pow_difference_estimate :
     intro h
     apply hn
     have h1 : (l : ℤ) ∣ (y.val : ℤ) * a := (Int.natCast_dvd_natCast.2 h).mul_right _
-    have h2 := dvd_sub h1 hl
-    simpa using h2
+    simpa using dvd_sub h1 hl
   refine ⟨hyv, ?_⟩
   have hmod : ((n : ℤ) : ZMod l) = (y.val : ZMod l) * (a : ZMod l) := by
     have := (ZMod.intCast_eq_intCast_iff_dvd_sub n ((y.val : ℤ) * a) l).2 hl
@@ -556,8 +554,7 @@ theorem exists_finiteExt_eisensteinUnitFunctional_mem {ι : Qbar l ≃+* ℂ} {e
       rw [← one_add_one_eq_two]
       exact E.add_mem E.one_mem E.one_mem
     exact E.div_mem (E.add_mem (hg _) (E.mul_mem hs' (hg _))) h2
-  · simp only [sym, ite_eq_right hy, map_zero]
-    exact E.zero_mem
+  · simpa only [sym, ite_eq_right hy, map_zero] using E.zero_mem
 
 theorem sym_char (ι : Qbar l ≃+* ℂ) (s : ℂ) {N : ℕ} (χ : DirichletCharacter (Qbar l) N) (y : ZMod N) :
     sym ι s (fun x => χ⁻¹ x) y = (1 + s * ι (χ (-1))) / 2 * ι (χ y) := by

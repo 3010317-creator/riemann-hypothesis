@@ -949,8 +949,7 @@ theorem continuous_char_det {a : ℕ} {ν : kˣ →* ℂˣ} (hν : IsSmU ν) :
   have hg' : χ (g0⁻¹ * g) = 1 := hg
   have e : χ g = χ g0 := by
     have := congrArg (χ g0 * ·) hg'
-    simp only [← map_mul, mul_inv_cancel_left, mul_one] at this
-    exact this
+    simpa only [← map_mul, mul_inv_cancel_left, mul_one] using this
   exact congrArg (fun u : ℂˣ => (u : ℂ)) e
 
 variable [MeasurableSpace k] [BorelSpace k]
@@ -1188,8 +1187,7 @@ theorem UpperTheory.setIntegral_mem_addSubgroup_of_openSubgroup_invariant :
     simp only [C]; rw [measure_preimage_mul_right, hμ]
   have hCf : ∀ a, Set.EqOn f (fun _ => f a) (C a) := fun a x hx => by
     have := hf (x * a⁻¹) hx a
-    rw [inv_mul_cancel_right] at this
-    exact this
+    rwa [inv_mul_cancel_right] at this
   have hCi : ∀ a, IntegrableOn f (C a) μ := fun a => by
     refine IntegrableOn.congr_fun ?_ (hCf a).symm (hCo a).measurableSet
     exact integrableOn_const (by rw [hCμ]; simp)
@@ -1221,8 +1219,7 @@ theorem UpperTheory.setIntegral_mem_addSubgroup_of_openSubgroup_invariant :
           have := J.mul_mem (J.mul_mem hy (J.inv_mem hx1)) hxb
           show y * b⁻¹ ∈ (J : Set G)
           simpa [mul_assoc] using this
-        rw [Set.union_eq_self_of_subset_left hsub]
-        exact h2
+        rwa [Set.union_eq_self_of_subset_left hsub]
   obtain ⟨t, ht, hcov⟩ := hS.elim_nhds_subcover C (fun x _ => (hCo x).mem_nhds (by
     show x * x⁻¹ ∈ (J : Set G)
     simp))
@@ -1325,8 +1322,7 @@ theorem UpperTheory.integral_mem_addSubgroup_of_ramified_twisted_invariant :
         ring
     · by_cases hm' : ∀ i, -(a : ℤ) ≤ m i
       · have : ∃ i, (0 : ℤ) ≤ m i := by
-          by_contra h
-          push Not at h
+          by_contra! h
           exact hm fun i => ⟨hm' i, h i⟩
         rw [h2 0 hP m this z]; exact M.zero_mem
       · rw [h3 a hS m hm' z]; exact M.zero_mem

@@ -360,8 +360,7 @@ theorem UpperTheory.exteriorCup_cocycle_exists_of_pairing :
       rw [sg_sub]
       have e' : sg z' = sg κ := by
         have := hz0 W (𝟙 W)
-        rw [res_id] at this
-        exact this
+        rwa [res_id] at this
       rw [e', sub_self]
     exact (map_zero ((P.d 0 1).hom.app (op W)).hom).trans e.symm
   let A : Cocycle ((chains R).obj (sch.obj W ⨯ E)) Q m :=
@@ -541,8 +540,7 @@ private theorem idem_laurent (O : Type) [CommRing O] [IsLocalRing O] (e : Lauren
 
 theorem UpperTheory.connectedSpace_spec_local_and_laurent :
     ∀ (O : Type) [CommRing O] [IsLocalRing O], ConnectedSpace (Spec (CommRingCat.of O)) ∧ ConnectedSpace (Spec (CommRingCat.of (LaurentPolynomial O))) := by
-  intro O _ _
-  exact ⟨conn_of_idem O (idem_local O), conn_of_idem _ (idem_laurent O)⟩
+  exact fun O _ _ => ⟨conn_of_idem O (idem_local O), conn_of_idem _ (idem_laurent O)⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.ConnectedSpaceSpecLocalAndLaurent =====
@@ -605,8 +603,7 @@ theorem UpperTheory.nonempty_primitive_root_of_strictly_henselian :
     (Polynomial.separable_cyclotomic q (IsLocalRing.ResidueField O))
   obtain ⟨a₀, rfl⟩ := IsLocalRing.residue_surjective r
   have h1 : (Polynomial.cyclotomic q O).eval a₀ ∈ IsLocalRing.maximalIdeal O := by
-    rw [← IsLocalRing.residue_eq_zero_iff, key, Polynomial.map_cyclotomic]
-    exact hr
+    rwa [← IsLocalRing.residue_eq_zero_iff, key, Polynomial.map_cyclotomic]
   have h2 : IsUnit ((Polynomial.derivative (Polynomial.cyclotomic q O)).eval a₀) := by
     rw [← IsLocalRing.residue_ne_zero_iff_isUnit, key, ← Polynomial.derivative_map,
       Polynomial.map_cyclotomic]
@@ -616,8 +613,7 @@ theorem UpperTheory.nonempty_primitive_root_of_strictly_henselian :
   obtain ⟨a, ha, -⟩ := HenselianLocalRing.is_henselian (Polynomial.cyclotomic q O)
     (Polynomial.cyclotomic.monic q O) a₀ h1 h2
   refine ⟨⟨a, hq, ?_⟩⟩
-  rw [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic]
-  exact ha
+  rwa [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.NonemptyPrimitiveRootOfStrictlyHenselian =====
@@ -654,8 +650,7 @@ private theorem cupRootInj {X : Scheme.{0}} (ζ : Prim q Γ(X, ⊤)) (j : ℤ) {
     (h : cup q (rootClass j ζ) x = 0) : x = 0 := by
   have h1 : cup q (cup q (rootClass (-j) ζ) (rootClass j ζ)) x = 0 := by
     rw [_root_.GlobalTheory.EtC.CupAssoc.main, h, map_zero, cast_zero']
-  rw [((_root_.GlobalTheory.EtC.CupGen.main q).2 X ζ (-j) j).1] at h1
-  rw [cup_cast'] at h1
+  rw [((_root_.GlobalTheory.EtC.CupGen.main q).2 X ζ (-j) j).1, cup_cast'] at h1
   have h2 := cast_eq_zero' _ _ _ h1
   have key : ∀ (k : ℤ), k = 0 → cup q (rootClass k ζ) x = 0 → x = 0 := by
     intro k hk hx
@@ -861,13 +856,11 @@ noncomputable def UpperTheory.Reformulated.B.LaurentCharacterLambda.iot :
 
 theorem UpperTheory.Reformulated.B.LaurentCharacterLambda.aux9 :
     ∀ (q : ℕ), LaurentPolynomial.T (1 : ℤ) * LaurentPolynomial.T (-1 : ℤ) = (1 : UpperTheory.Reformulated.B.LaurentCharacterLambda.LqR q) := by
-  intro q
-  exact UpperTheory.Reformulated.B.LaurentCharacterLambda.aux5 _
+  exact fun q => UpperTheory.Reformulated.B.LaurentCharacterLambda.aux5 _
 
 theorem UpperTheory.Reformulated.B.LaurentCharacterLambda.laurent_T_neg_one_mul_T_one :
     ∀ (q : ℕ), LaurentPolynomial.T (-1 : ℤ) * LaurentPolynomial.T (1 : ℤ) = (1 : UpperTheory.Reformulated.B.LaurentCharacterLambda.LqR q) := by
-  intro q
-  exact UpperTheory.Reformulated.B.LaurentCharacterLambda.aux6 _
+  exact fun q => UpperTheory.Reformulated.B.LaurentCharacterLambda.aux6 _
 
 noncomputable def UpperTheory.Reformulated.B.LaurentCharacterLambda.tR :
     (q : ℕ) → (UpperTheory.Reformulated.B.LaurentCharacterLambda.LqR q)ˣ :=
@@ -1178,14 +1171,12 @@ private theorem surj_part (q : ℕ) [NeZero q] (T : Scheme.{0}) (hq : IsUnit (q 
   have hd : pull _ (sch.map (prod.map (𝟙 (Gq q)) (e k))) _ _
       (Phi q m j (D.obj k) (a1, b1) - pull _ (sch.map (prod.map (𝟙 (Gq q)) (t k))) _ _ y) = 0 := by
     rw [map_sub, Phi_nat, pull_prod, het, sub_eq_zero]
-    simp only [ea, eb]
-    exact hp
+    simpa only [ea, eb] using hp
   obtain ⟨k', f', hf'⟩ := c2 _ _ k _ hd
   refine ⟨D.obj k', t k', (hD k').1, (hD k').2, ⟨e k' v, ?_⟩,
     (pull _ (sch.map (D.map f')) _ _ a1, pull _ (sch.map (D.map f')) _ _ b1), ?_⟩
   · rw [← Scheme.Hom.comp_apply, het, hv]
-  · rw [map_sub, sub_eq_zero, Phi_nat, pull_prod, hDt] at hf'
-    exact hf'
+  · rwa [map_sub, sub_eq_zero, Phi_nat, pull_prod, hDt] at hf'
 
 private theorem inj_part (q : ℕ) [NeZero q] (T : Scheme.{0}) (hq : IsUnit (q : Γ(T, ⊤))) (m j : ℤ)
     (p : Ht q (sch.obj T) (m + 1) (j + 1) × Ht q (sch.obj T) m j) (hp : Phi q m j T p = 0) :
@@ -1459,8 +1450,7 @@ private theorem UpperTheory.Kun.main (q : ℕ) [NeZero q] (E : Spc) (hE : Inv q 
       subst h'
       exact (UpperTheory.locally_surjective_multiplicativeGroupKunnethMap q T hT m' j).2 (a, b) (by rw [hκ] at e; exact e))
     E hE m (m + 1) rfl
-  rw [hκ] at h
-  exact h
+  rwa [hκ] at h
 
 theorem UpperTheory.bijective_cohomology_gm_product_kummer_cup :
     ∀ (q : ℕ) [NeZero q] (E : Spc), Inv q E → ∀ n i : ℤ, Function.Bijective fun p : Ht q E n i × Ht q E (n - 1) (i - 1) =>

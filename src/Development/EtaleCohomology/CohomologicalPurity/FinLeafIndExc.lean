@@ -727,8 +727,7 @@ def oj (I : Ideal A) (j : J) : (Spec (D.obj j)).Opens := off (D.obj j) (I.map (s
 
 theorem s_nat {j k : J} (f : j ⟶ k) : s.app k = s.app j ≫ D.map f := by
   have := s.naturality f
-  simp only [Functor.const_obj_obj, Functor.const_obj_map, Category.id_comp] at this
-  exact this
+  simpa only [Functor.const_obj_obj, Functor.const_obj_map, Category.id_comp] using this
 
 theorem oj_pre (I : Ideal A) {j k : J} (f : j ⟶ k) : oj D s I k = Spec.map (D.map f) ⁻¹ᵁ oj D s I j := by
   unfold oj
@@ -738,8 +737,7 @@ theorem oj_pre (I : Ideal A) {j k : J} (f : j ⟶ k) : oj D s I k = Spec.map (D.
 theorem ojsup_pre (I1 I2 : Ideal A) {j k : J} (f : j ⟶ k) :
     oj D s I1 k ⊔ oj D s I2 k ≤ Spec.map (D.map f) ⁻¹ᵁ (oj D s I1 j ⊔ oj D s I2 j) := by
   intro x hx
-  rw [oj_pre D s I1 f, oj_pre D s I2 f] at hx
-  exact hx
+  rwa [oj_pre D s I1 f, oj_pre D s I2 f] at hx
 
 def sysU (U V : ∀ j, (Spec (D.obj j)).Opens) (hU : ∀ j k (f : j ⟶ k), U k ≤ Spec.map (D.map f) ⁻¹ᵁ U j)
     (hV : ∀ j k (f : j ⟶ k), V k ≤ Spec.map (D.map f) ⁻¹ᵁ V j) : Jᵒᵖ ⥤ Arrow Spc where
@@ -800,8 +798,7 @@ def conA (he : ∀ j, s.app j ≫ t.app j = CommRingCat.ofHom φ) (j : J) : limA
 theorem oinfsup_pre (he : ∀ j, s.app j ≫ t.app j = CommRingCat.ofHom φ) (j : J) :
     off B (I1.map φ) ⊔ off B (I2.map φ) ≤ Spec.map (t.app j) ⁻¹ᵁ (oj D s I1 j ⊔ oj D s I2 j) := by
   intro x hx
-  rw [oinf_pre φ D s t I1 he j, oinf_pre φ D s t I2 he j] at hx
-  exact hx
+  rwa [oinf_pre φ D s t I1 he j, oinf_pre φ D s t I2 he j] at hx
 
 def conB (he : ∀ j, s.app j ≫ t.app j = CommRingCat.ofHom φ) (j : J) : limB φ I1 I2 ⟶ (sysB I1 I2 D s).obj (op j) :=
   mapA (Spec.map (t.app j)) _ _ _ _ (oinf_pre φ D s t I1 he j).le (oinfsup_pre φ I1 I2 D s t he j)

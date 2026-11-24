@@ -64,8 +64,7 @@ theorem card_filter_eq_finrank {V Q ι : Type} [AddCommGroup V] [Module ℂ V] [
     intro q
     let y : {k // lab k = q} → P q := fun k => ⟨x k.1, by have h := hmem k.1; rwa [k.2] at h⟩
     have hy : LinearIndependent ℂ y := by
-      apply LinearIndependent.of_comp (P q).subtype
-      exact hx.comp Subtype.val Subtype.val_injective
+      exact LinearIndependent.of_comp (P q).subtype (hx.comp Subtype.val Subtype.val_injective)
     have := hy.fintype_card_le_finrank
     rwa [Fintype.card_subtype] at this
   have htot : ∑ q, (Finset.univ.filter (fun k => lab k = q)).card = Fintype.card ι := by
@@ -122,8 +121,7 @@ theorem cnt : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalThe
   have hxφ : ∀ k, φ (x k) = (Y.Iz.jE (D.what₂.onb0 k)).1 := fun k => (hxe k).symm
   have hli0 : LinearIndependent ℂ (fun k => ((Y.Iz.jE (D.what₂.onb0 k)).1 : C.Amb 0)) := by
     have h1 := D.what₂.onb0.toBasis.linearIndependent.map' Y.Iz.jE.toLinearMap Y.Iz.jE.ker
-    have h2 := h1.map' (C.EEc false).subtype (Submodule.ker_subtype _)
-    exact h2
+    exact h1.map' (C.EEc false).subtype (Submodule.ker_subtype _)
   have hli : LinearIndependent ℂ x := by
     apply LinearIndependent.of_comp φ
     convert hli0 using 1
@@ -166,8 +164,7 @@ theorem cnt : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalThe
     constructor
     · intro h; exact ⟨h ▸ hσ.2, h⟩
     · intro h; exact h.2
-  rw [hEp, ← hcard]
-  exact hcount
+  rwa [hEp, ← hcard]
 
 end GlobalTheory.Mem.R3.LabCount
 

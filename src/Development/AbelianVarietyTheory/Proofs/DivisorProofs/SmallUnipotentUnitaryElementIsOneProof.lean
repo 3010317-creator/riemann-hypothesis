@@ -92,10 +92,8 @@ private lemma charpoly_dvd_pow_card_of_aeval_eq_zero {K : Type} [Field K] {r : �
       rw [Polynomial.aeval_map_algebraMap]
       have := Polynomial.aeval_algHom_apply
         (AlgHom.mapMatrix (Algebra.ofId K Ω) : Matrix (Fin r) (Fin r) K →ₐ[K] _) N φ
-      rw [h, map_zero] at this
-      exact this
-    rw [h3, spectrum.zero_eq] at h2
-    exact h2
+      rwa [h, map_zero] at this
+    rwa [h3, spectrum.zero_eq] at h2
   have hcard : N'.charpoly.roots.card = r := by
     rw [← hs.natDegree_eq_card_roots, Matrix.charpoly_natDegree_eq_dim, Fintype.card_fin]
   rw [hs.eq_prod_roots_of_monic (Matrix.charpoly_monic _)]
@@ -147,8 +145,7 @@ theorem _root_.GlobalTheory.trace_mem_prime_of_pow_mulVec_mem_smul : ∀ (K : Ty
         Submodule.coe_sum, LinearMap.smul_apply, Submodule.coe_smul, hpow, LinearMap.zero_apply,
         Submodule.coe_zero] at this
       rw [Polynomial.aeval_eq_sum_range, Matrix.sum_mulVec]
-      refine (Finset.sum_congr rfl fun i _ => ?_).trans this
-      exact Matrix.smul_mulVec _ _ _
+      exact (Finset.sum_congr rfl fun i _ => (Matrix.smul_mulVec _ _ _)).trans this
     have h1 : Matrix.toLin' (aeval (N ^ m) q) = 0 :=
       LinearMap.ext_on hspan (fun x hx => by simpa using hon x hx)
     exact Matrix.toLin'.injective (h1.trans (map_zero _).symm)
@@ -332,8 +329,7 @@ theorem smallElement : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E],
     have e : (mat x1 τ)⁻¹ *ᵥ (mat x1 τ *ᵥ u) = u := by
       rw [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ (hu τ), Matrix.one_mulVec]
     rw [hmaj, hmaj, e, exp_sq] at h
-    rw [Matrix.nonsing_inv_nonsing_inv _ (hu τ), ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
-    exact h
+    rwa [Matrix.nonsing_inv_nonsing_inv _ (hu τ), ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
   have hQdet : ∀ σ, (Q σ).det ≠ 0 := by
     intro σ
     by_cases hσ : σ ∈ X.Ψ

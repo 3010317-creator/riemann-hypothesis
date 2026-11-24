@@ -89,8 +89,7 @@ private theorem kappa_ne_zero (M : Meas ℚ)
   have hnull : ∀ c ∈ KK ℚ, M.κ ((fun x => c * x) ⁻¹' U) = 0 := by
     intro c hc
     have hm : Measurable (fun x : G1 ℚ => c * x) := (continuous_const.mul continuous_id).measurable
-    rw [← Measure.map_apply hm hU.measurableSet, M.κ_left c hc]
-    exact h0
+    rwa [← Measure.map_apply hm hU.measurableSet, M.κ_left c hc]
   obtain ⟨t, ht, hcov⟩ := hC.elim_nhds_subcover (fun x => (fun y => (k * x⁻¹) * y) ⁻¹' U) (by
     intro x hx
     refine ((continuous_const.mul continuous_id).isOpen_preimage _ hU).mem_nhds ?_
@@ -125,8 +124,7 @@ private theorem isOpen_dv {N : ℕ} (hN : 0 < N) (v : H.P ℚ) :
       (fun k : G1 ℚ => H.cp v (k 1 0) * (N : H.Kv v)⁻¹) ⁻¹' ((v.adicCompletionIntegers ℚ : ValuationSubring (H.Kv v)) : Set (H.Kv v)) := by
     ext k
     simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe, Dv]
-    rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_inv₀]
-    rw [← div_eq_mul_inv]
+    rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_inv₀, ← div_eq_mul_inv]
     exact (div_le_one₀ (zero_lt_iff.2 hv0)).symm
   rw [this]
   exact hO.preimage hc
@@ -149,8 +147,7 @@ private theorem dv_of_int {N : ℕ} (hN : 0 < N) (v : H.P ℚ)
     exact (inv_le_one₀ hp).1 h3
   have h4 : Valued.v (N : H.Kv v) = v.valuation ℚ (N : ℚ) := val_nat v N
   refine hx.trans ?_
-  rw [h4]
-  exact h2
+  rwa [h4]
 
 theorem UpperTheory.congruenceSubgroup_volume_pos :
     ∀ (M : Meas ℚ) (N : ℕ), 0 < N → 0 < cK M N := by
@@ -174,8 +171,7 @@ theorem UpperTheory.congruenceSubgroup_volume_pos :
   · refine Or.inl ⟨fun v => ?_, hkK⟩
     by_cases hv : v ∈ T
     · exact Set.mem_iInter₂.1 hk v hv
-    · refine dv_of_int hN v hv ?_
-      exact (HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).1 (hkK.2 v 1 0)
+    · exact dv_of_int hN v hv ((HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).1 (hkK.2 v 1 0))
   · exact Or.inr hkK
 end -- clump:auto
 end -- clump:auto
@@ -224,8 +220,7 @@ private lemma v_natCast_of_not_bad (L : ℕ) (v : H.P ℚ) (h : ¬ Bad L v) : Va
 private lemma finite_bad (L : ℕ) (hL : 0 < L) : {v : H.P ℚ | Bad L v}.Finite := by
   have hne : Ideal.span {(L : 𝓞 ℚ)} ≠ 0 := by
     simpa [Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot] using hL.ne'
-  refine (Ideal.finite_factors hne).subset fun v hv => ?_
-  exact Ideal.dvd_span_singleton.2 hv
+  exact (Ideal.finite_factors hne).subset fun v hv => Ideal.dvd_span_singleton.2 hv
 
 private lemma nhds_cong (L : ℕ) (hL : 0 < L) (v : H.P ℚ) :
     {x : (FiniteAdeleRing (𝓞 ℚ) ℚ)ˣ | Valued.v ((x : FiniteAdeleRing (𝓞 ℚ) ℚ) v - 1) ≤ Valued.v (L : H.Kv v)} ∈
@@ -314,8 +309,7 @@ private theorem ab_mul' (a b : (A ℚ)ˣ) : ab (a * b) = ab a * ab b := by
 
 private theorem mul_sg (v : H.P ℚ) (y : A ℚ) (x : H.Kv v) : y * H.sg v x = H.sg v (H.cp v y * x) := by
   refine Prod.ext ?_ (FiniteAdeleRing.ext (K := ℚ) fun w => ?_)
-  · show y.1 * 0 = 0
-    exact mul_zero _
+  · exact mul_zero _
   · by_cases h : w = v
     · subst h
       show y.2 w * (H.sg w x).2 w = (H.sg w (H.cp w y * x)).2 w
@@ -408,12 +402,10 @@ private theorem wo_int {D : Dat ℚ E} {P : CuspSub E 2} {ω : HChar ℚ} {L N :
   rw [e'] at e
   have h1 : ψ (-((y : A ℚ) * H.sg v c)) = 1 := by
     have : (1 : ℂ) * Wo D φ (em E (aE y) * infGL E 2 X) = ψ (-((y : A ℚ) * H.sg v c)) * Wo D φ (em E (aE y) * infGL E 2 X) := by
-      rw [one_mul]
-      exact e
+      rwa [one_mul]
     exact (mul_right_cancel₀ hne this).symm
   have h2 := Nz.psi_neg_mul ((y : A ℚ) * H.sg v c)
-  rw [h1, one_mul, mul_sg, mul_comm] at h2
-  exact h2
+  rwa [h1, one_mul, mul_sg, mul_comm] at h2
 end
 
 theorem UpperTheory.has_sum_twisted_zeta_integral_dirichlet_series :
@@ -516,8 +508,7 @@ theorem UpperTheory.has_sum_twisted_zeta_integral_dirichlet_series :
     have h1 := core hs (W := Wo D φ (em E (aE (iy r * pin n) * rot t))) (c := ((χ.1 (iy r * pin n) : ℂˣ) : ℂ)) hr hn1 (nχ _)
       (by simpa only [hab4 r n hr n.2.1] using hb (iy r * pin n))
     simp only [hf]
-    rw [hab]
-    exact h1
+    rwa [hab]
   have hSum : Summable (fun n : {n : ℕ // 0 < n ∧ n.Coprime N} => ∫ r : ℝ, ‖f (iy r * pin n) / ((|r| : ℝ) : ℂ)‖) := by
     have hbi : Integrable fun r : ℝ => |B0| * (1 + r ^ 2)⁻¹ := integrable_inv_one_add_sq.const_mul |B0|
     have hs1 : Summable fun n : ℕ => ((n : ℝ)⁻¹ ^ (s.re - 1)) * ∫ r : ℝ, |B0| * (1 + r ^ 2)⁻¹ := by
@@ -538,8 +529,7 @@ theorem UpperTheory.has_sum_twisted_zeta_integral_dirichlet_series :
       fun n : {n : ℕ // 0 < n ∧ n.Coprime N} => (cT L : ℂ) * ∫ r : ℝ, f (iy r * pin n) / ((|r| : ℝ) : ℂ) := by
     funext n
     rw [hI n, mul_assoc]
-  rw [e5]
-  exact key
+  rwa [e5]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.WhittakerHecke.HasSumTwistedZetaIntegralDirichletSeries =====
@@ -764,8 +754,7 @@ private theorem avg {X : Type} [MeasurableSpace X] (κ : Measure X) [IsProbabili
       rw [← intervalIntegral.integral_of_le hpi, intervalIntegral.integral_comp_add_left (fun t => H' t) (θ k)]
       have := hper.intervalIntegral_add_eq (θ k) 0
       rw [zero_add] at this
-      rw [add_zero]
-      exact this
+      rwa [add_zero]
     · simp [Fu, hs]
   calc (2 * Real.pi : ℝ) • I
       = ∫ _u in Set.Ioc 0 (2 * Real.pi), I := by
@@ -825,8 +814,7 @@ theorem UpperTheory.integral_maxCompact_eq_circle_average :
   have hpi0 : (2 * Real.pi : ℝ) ≠ 0 := by positivity
   have hpc : ((2 * Real.pi : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hpi0
   simp only [Complex.real_smul] at hmain
-  rw [Complex.ofReal_div, div_mul_eq_mul_div, eq_div_iff hpc, mul_comm]
-  exact hmain
+  rwa [Complex.ofReal_div, div_mul_eq_mul_div, eq_div_iff hpc, mul_comm]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.WhittakerHecke.IntegralMaxCompactEqCircleAverage =====
@@ -1188,8 +1176,7 @@ theorem UpperTheory.twisted_zeta_integral_at_compact_eq_at_rotation :
   have hχω : ((ω.1 ζ⁻¹ : ℂˣ) : ℂ) ^ 2 = ((χ.1 ζ : ℂˣ) : ℂ) ^ 2 := by
     have h := hχ ζ
     have h2 : (ω.1 ζ⁻¹) ^ 2 = (χ.1 ζ) ^ 2 := by
-      rw [map_inv, inv_pow, inv_eq_iff_mul_eq_one, ← mul_pow, mul_comm]
-      exact h
+      rwa [map_inv, inv_pow, inv_eq_iff_mul_eq_one, ← mul_pow, mul_comm]
     exact_mod_cast congrArg (fun u : ℂˣ => (u : ℂ)) h2
   let Gf : IdeleGroup ℚ → ℂ := fun y => Wo D φ (em E (aE y * rot t)) * ((χ.1 y : ℂˣ) : ℂ) * ((ab y : ℝ) : ℂ) ^ (s - 1)
   have key : ∀ y : IdeleGroup ℚ, Wo D φ (em E (aE y * gl k)) * ((χ.1 y : ℂˣ) : ℂ) * ((ab y : ℝ) : ℂ) ^ (s - 1) = Gf (y * ζ ^ 2) := by
@@ -1236,8 +1223,7 @@ private theorem loc_dv {K Γ : Type} [Field K] [LinearOrderedCommGroupWithZero �
       _ ≤ w z * w c := mul_le_mul' h4 le_rfl
       _ = w (z * c) := (map_mul _ _ _).symm
       _ ≤ w n := h0
-  · rw [heq]
-    exact hc
+  · rwa [heq]
 
 private theorem nat_le_one (v : H.P ℚ) (N : ℕ) : Valued.v (N : H.Kv v) ≤ 1 := by
   have h : (N : H.Kv v) ∈ v.adicCompletionIntegers ℚ := natCast_mem _ N
@@ -1306,8 +1292,7 @@ private theorem rhoB (p : MvPolynomial (Fin 2) ℂ) :
 
 private theorem It_ne {E : Type} [Field E] [NumberField E] (D : Dat ℚ E) (χ : HChar ℚ) (φ : GL (Fin 2) (A E) → ℂ) (s : ℂ) (hs : 4 < s.re) (t : ℝ)
     (h : It D χ φ s t ≠ 0) : ∃ r t : ℝ, r ≠ 0 ∧ Wo D φ (em E (aE (iy r) * rot t)) ≠ 0 := by
-  by_contra hn
-  push Not at hn
+  by_contra! hn
   refine h ?_
   unfold It
   have : ∀ y : ℝ, Wo D φ (em E (aE (iy y) * rot t)) * ((χ.1 (iy y) : ℂˣ) : ℂ) * (y : ℂ) ^ 0 * ((|y| : ℝ) : ℂ) ^ (s - 2) = 0 := by
@@ -1328,8 +1313,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.fac_of :
   intro E _ _ _ D P ω χ hCen hU hχω M L N hχ
   by_cases hLN : 0 < L ∧ 0 < N
   swap
-  · refine ⟨1, one_ne_zero, fun φ _ hG => ?_⟩
-    exact absurd ⟨Nat.pos_of_dvd_of_pos hG.dvd hG.pos, hG.pos⟩ hLN
+  · exact ⟨1, one_ne_zero, fun φ _ hG => (absurd ⟨Nat.pos_of_dvd_of_pos hG.dvd hG.pos, hG.pos⟩ hLN)⟩
   obtain ⟨hL, hN⟩ := hLN
   have hcK := UpperTheory.congruenceSubgroup_volume_pos M N hN
   have hcL := UpperTheory.finiteIdele_congruenceVolume_pos L hL
@@ -1351,8 +1335,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.fac_of :
   set G0 : ℂ := (Real.pi : ℂ) ^ (-(s + e)) * Complex.Gamma (s + e) with hG0
   have e1 : Zu D M χ φ (PhiN N p) s = ∫ k, Yt D χ φ s (gl k) * Zr N p s k ∂M.κ := by
     unfold Zu Yt Zr
-    refine integral_congr_ae (Eventually.of_forall fun k => ?_)
-    exact integral_mul_const _ _
+    exact integral_congr_ae (Eventually.of_forall fun k => (integral_mul_const _ _))
   have e2 : ∫ k, Yt D χ φ s (gl k) * Zr N p s k ∂M.κ =
       ((cK M N / (2 * Real.pi) : ℝ) : ℂ) * ∫ t in (0 : ℝ)..2 * Real.pi, Yt D χ φ s (rot t) * (Z0 * ρ t) := by
     refine UpperTheory.integral_maxCompact_eq_circle_average M N hN _ (fun t => Yt D χ φ s (rot t) * (Z0 * ρ t)) (hYm.mul (measurable_const.mul hρm))

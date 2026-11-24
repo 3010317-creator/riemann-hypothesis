@@ -65,9 +65,7 @@ namespace GlobalTheory.CompanionTheory.Ar.PB.LocalForm
 
 theorem holoOn_coord {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X)
     (ψ : OpenPartialHomeomorph X (Fin e → ℂ)) (hψ : IsCompatChart A ψ) (i : Fin e) :
-    A.HoloOn ψ.source (fun y => ψ y i) := by
-  intro j z hz
-  exact (analyticAt_pi_iff.1 ((hψ j).1 z hz)) i
+    A.HoloOn ψ.source (fun y => ψ y i) := fun j z hz => (analyticAt_pi_iff.1 ((hψ j).1 z hz)) i
 
 theorem exists_local_form : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] (A : FinHolAtlas e X) (L : LocPot X) (s : X → X → ℂ) (nb : ℕ) (m : Fin nb → ℕ) (W : Fin nb → Set X), IsSNC A L s m W → ∀ x, ∃ (φ : OpenPartialHomeomorph X (Fin e → ℂ)) (S : Finset (Fin e)) (μ : Fin e → ℕ) (v : X → ℂ), IsCompatChart A φ ∧ x ∈ φ.source ∧ Metric.closedBall (0 : Fin e → ℂ) 2 ⊆ φ.target ∧ φ x = 0 ∧ φ.source ⊆ L.U x ∧ (∀ i ∈ S, 1 ≤ μ i) ∧ A.HoloOn φ.source v ∧ (∀ y ∈ φ.source, v y ≠ 0) ∧ ∀ y ∈ φ.source, s x y = v y * ∏ i ∈ S, φ y i ^ μ i := by
   intro e X _ A L s nb m W hsnc x
@@ -173,8 +171,7 @@ theorem exists_local_form : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] (A : F
   · exact fun y hy => hψU (hsrc y hy).1
   · intro i hi
     obtain ⟨-, -, k, hk, hm⟩ := Finset.mem_filter.1 hi
-    rw [hμ k i hk]
-    exact hm
+    rwa [hμ k i hk]
   · intro j z hz
     have hz' : z ∈ (A.chart j).target ∩ (A.chart j).symm ⁻¹' ψ.source := ⟨hz.1, (hsrc _ hz.2).1⟩
     exact ((hu j z hz').mul analyticAt_const).mul

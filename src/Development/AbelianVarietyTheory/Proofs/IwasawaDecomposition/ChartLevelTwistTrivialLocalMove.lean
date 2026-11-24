@@ -149,8 +149,7 @@ theorem locMv_of_mem : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → 
   have e : y c * k (chOf c) * ((k (chOf c))⁻¹ * x * k (chOf c)) = y c * x * k (chOf c) := by group
   have hγ : κ.1 = 1 := by
     have h1 : toGLm B.fields.E (B.R.N i) κ.1.1 = toGLm B.fields.E (B.R.N i) 1 := by
-      rw [map_one]
-      exact hκ1
+      rwa [map_one]
     exact Subtype.ext ((toGLm B.fields.E (B.R.N i)).injective h1)
   · refine ChTwRead.isPtOf_mul B.sp.cm κ.2.1.1 ?_ hg hp (by rw [e, hκq]; exact hq)
     show ((κ.1, (κ.2.1 : GLG (E := B.fields.E) (n := B.R.N i) (SG := (B.primes X).vGs))) • ((I.stp u a i).rep c).1.1.deco).1 = _

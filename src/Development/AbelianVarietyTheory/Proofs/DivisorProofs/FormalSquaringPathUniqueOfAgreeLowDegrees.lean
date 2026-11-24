@@ -76,8 +76,7 @@ theorem coeff_mul_of_coeff_lt_eq_zero {R : Type} [CommRing R] (φ δ : PowerSeri
       subst ha hb'
       exact hne rfl
     rw [h _ hb, mul_zero]
-  · intro hn
-    exact absurd (by simp) hn
+  · exact fun hn => absurd (by simp) hn
 
 theorem ringHom_powerSeries_eq_of_rescale :
     ∀ (A B R : Type) [CommRing A] [CommRing B] [CommRing R] (π : B →+* A) (ε : A →+* B) (m : A →+* A) (β : B →+* R) (c : R) (n : ℕ), ε.comp π = RingHom.id B → m.comp π = π → ε.comp m = ε → (∀ f ∈ RingHom.ker ε, m f - 2 * f ∈ RingHom.ker ε ^ 2) → 0 < n → (∀ j, n ≤ j → IsUnit (c ^ j - 2)) → ∀ γ γ' : A →+* PowerSeries R, γ.comp π = PowerSeries.C.comp β → γ'.comp π = PowerSeries.C.comp β → PowerSeries.constantCoeff.comp γ = β.comp ε → PowerSeries.constantCoeff.comp γ' = β.comp ε → (PowerSeries.rescale c).comp γ = γ.comp m → (PowerSeries.rescale c).comp γ' = γ'.comp m → (∀ j < n, ∀ f, PowerSeries.coeff j (γ f) = PowerSeries.coeff j (γ' f)) → γ = γ' := by
@@ -204,8 +203,7 @@ theorem path_unique : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (R : Type) [C
     intro q0 hq0
     have e := congrArg (fun q : Sp R ⟶ G.left => q (IsLocalRing.closedPoint (CommRingCat.of R))) hq0.zero
     change q0 (spMap PowerSeries.constantCoeff (IsLocalRing.closedPoint (CommRingCat.of R))) = unitSec G s at e
-    rw [spMap_constantCoeff_closedPoint] at e
-    exact e
+    rwa [spMap_constantCoeff_closedPoint] at e
   obtain ⟨π, ε, m, hSD, h1, h2, h3⟩ := _root_.GlobalTheory.Nef.stalkData_exists S G s
   have hm := _root_.GlobalTheory.Nef.sqr_sub_two_mem S G hqs s π ε m hSD
   obtain ⟨β, hβ⟩ := exists_spMap_fromSpecStalk b s rfl
@@ -238,8 +236,7 @@ theorem path_unique : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (R : Type) [C
       obtain ⟨hh, hev⟩ := (_root_.GlobalTheory.Nef.evAt_calculus).2.2.2.2.2.2 (PowerSeries R) G.left x g U hxU
       obtain ⟨hh', hev'⟩ := (_root_.GlobalTheory.Nef.evAt_calculus).2.2.2.2.2.2 (PowerSeries R) G.left x g' U hxU
       have := hlow U hh hh' f0 j hj0 hj
-      rw [hev, hev'] at this
-      exact this
+      rwa [hev, hev'] at this
   have := ringHom_powerSeries_eq_of_rescale _ _ R π ε m β c n h1 h2 h3 hm hn hc g g' (E1 g hξ) (E1 g' hξ')
     (E2 g hξ) (E2 g' hξ') (E3 g hξ) (E3 g' hξ') hlow'
   rw [this]

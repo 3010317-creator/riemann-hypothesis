@@ -115,14 +115,12 @@ theorem UpperTheory.V.Ws.Bl.cardP :
     exact Submodule.finite_quotient_smul _ (Module.finite_def.mp inferInstance)
   obtain ⟨y, hyP, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hP
   have hx : ∃ x ∈ P, x ∉ lev A T 1 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hall : ∀ k : ℕ, ∀ z ∈ P, z ∈ lev A T k := by
       intro k
       induction k with
       | zero =>
-        intro z _
-        exact (hL 0 z).mpr ⟨z, by simp⟩
+        exact fun z _ => (hL 0 z).mpr ⟨z, by simp⟩
       | succ k ih =>
         intro z hz
         obtain ⟨t, rfl⟩ := (hL 1 z).mp (hcon z hz)
@@ -200,8 +198,7 @@ theorem UpperTheory.Reformulated.B.Qj7.seq_ex :
     | zero =>
       intro x
       refine ⟨Function.update (fun n => Classical.choice (hne n)) 0 x, ?_, by simp⟩
-      intro n hn
-      exact absurd hn (Nat.not_lt_zero n)
+      exact fun n hn => absurd hn (Nat.not_lt_zero n)
     | succ k ih =>
       intro x
       obtain ⟨u, hu, hk⟩ := ih (t k x)
@@ -626,8 +623,7 @@ theorem UpperTheory.V.Ws.Bl.selToZc :
           Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure
             (Set.mem_iUnion₂.mpr ⟨v, hvS, Set.mem_iUnion₂.mpr ⟨A, hAv', hgA⟩⟩))
         rw [show toGS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ))) g = 1 from (QuotientGroup.eq_one_iff g).mpr hgN, hz1]
-    · intro h hh
-      exact hy ⟨h, hh⟩
+    · exact fun h hh => hy ⟨h, hh⟩
   choose zc hzc using hex
   refine ⟨fun x => ⟨fun g => (zc x.1).1 (toGS Ω _ g), hA x.1 x.2 (zc x.1) (hzc x.1).1 (hzc x.1).2⟩, ?_⟩
   intro x x' hxx
@@ -811,8 +807,7 @@ theorem UpperTheory.V.Ws.Bl.limit :
   choose z' hz' using fun g => lift_seq (fun n => z n g) fun n => hz n g
   obtain ⟨y', hy'⟩ := lift_seq y hy
   refine ⟨z', y', ⟨fun n => ?_, fun g h => ?_, ?_, fun g hg => ?_, fun h hh => ?_⟩, ?_⟩
-  · simp only [hz']
-    exact (hZ n).lc
+  · simpa only [hz'] using (hZ n).lc
   · refine eq_of_lev (A := A) _ _ fun n => ?_
     rw [map_add (f := _), ← modRep_mk, hz', hz', hz']
     exact (hZ n).coc g h
@@ -863,8 +858,7 @@ private theorem mem_of_bij {A : Type} [CommRing A] {T : Type} [AddCommGroup T] [
   have h0 : g (Q.mkQ y) = g 0 := by
     simp only [g, Submodule.mkQ_apply, Submodule.mapQ_apply, map_zero]
     exact (Submodule.Quotient.mk_eq_zero Q).2 hy
-  have h1 := hi h0
-  simpa using h1
+  simpa using hi h0
 
 theorem UpperTheory.V.Ws.Bl.divStep :
     ∀ (A : Type) [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] (T : Type) [AddCommGroup T] [Module A T] [Module.Finite A T] [Module.Free A T] (Γ : Type) [Group Γ] [TopologicalSpace Γ] (ρ : Representation A Γ T) (c : Γ) (N : Set Γ) (H : Subgroup Γ) (P : Submodule A T), Lat ρ H P → ∀ t : A, Irreducible t → ∀ n, ∀ z ∈ Zn ρ c N H P (n + 1), ¬ Prim z →
@@ -903,8 +897,7 @@ theorem UpperTheory.V.Ws.Bl.divStep :
       have e : t • (x + t ^ n • v) = q := by
         rw [smul_add, ← mul_smul, ← pow_succ', hv]
         abel
-      rw [e]
-      exact hq
+      rwa [e]
     have hxP := hL.sat t _ ht0 hq'
     refine Submodule.mem_map.2 ⟨x + t ^ n • v, hxP, ?_⟩
     rw [Submodule.mkQ_apply, Submodule.mkQ_apply, Submodule.Quotient.eq]
@@ -1001,8 +994,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 theorem UpperTheory.V.Ws.Bl.primEx :
     ∀ (A : Type) [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] (T : Type) [AddCommGroup T] [Module A T] [Module.Finite A T] [Module.Free A T] (Γ : Type) [Group Γ] [TopologicalSpace Γ] (ρ : Representation A Γ T) (c : Γ) (N : Set Γ) (H : Subgroup Γ) (P : Submodule A T), Lat ρ H P → (∀ n, (Zn ρ c N H P n).Finite) → (∀ n, n ≤ Nat.card (Zn ρ c N H P n)) → ∀ n, 0 < n → ∃ z ∈ Zn ρ c N H P n, Prim z := by
   intro A _ _ _ T _ _ _ _ Γ _ _ ρ c N H P hL hfin hcard n hn
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   obtain ⟨t, ht⟩ := IsDiscreteValuationRing.exists_irreducible A
   have hA : ∀ k, ∀ z ∈ Zn ρ c N H P (n + k), ¬Prim z := by
     intro k
@@ -1362,8 +1354,7 @@ private theorem isLocallyConstant_mkQ_adU_of_adicCont {A : Type} [CommRing A] [I
         (fun g => (φ (r g), φ (r g⁻¹))) ⁻¹' {(φ (r g), φ (r g⁻¹))} := by
     ext g'
     constructor
-    · intro h
-      exact Set.mem_biUnion h rfl
+    · exact fun h => Set.mem_biUnion h rfl
     · intro h
       obtain ⟨g, hg, hgg⟩ := Set.mem_iUnion₂.1 h
       simp only [Set.mem_preimage, Set.mem_singleton_iff] at hg hgg ⊢
@@ -1507,8 +1498,7 @@ theorem UpperTheory.V.Ws.Bl.cocA :
     fun h hh => ?_, fun e => hne (funext fun g => ?_)⟩
   · exact Ideal.mul_mem_right _ _ htm
   · have := (uPlus u).smul_mem t (hz.loc h hh)
-    rw [smul_sub, smul_sub, ← map_smul] at this
-    exact this
+    rwa [smul_sub, smul_sub, ← map_smul] at this
   · have e1 : t • (z g).1 = 0 := congrFun e g
     exact Subtype.ext ((smul_eq_zero.1 e1).resolve_left ht.ne_zero)
 end -- clump:auto

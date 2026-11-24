@@ -91,8 +91,7 @@ theorem bExt_posOf (B : ∀ s, Matrix (Fin (rk Ψ p q s)) (Fin (n s)) Ω) (s : �
   · rw [ite_eq_left rfl]
   · intro b _ hb
     rw [ite_eq_right fun h => hb (hinj h)]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem aExt_posOf (C : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p q s)) Ω) (s : Ψ ⊕ Ψ)
     (j : Fin (n s)) (l : Fin (rk Ψ p q s)) : aExt C s j (posOf p q s l) = C s j l := by
@@ -102,8 +101,7 @@ theorem aExt_posOf (C : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p q s)) Ω) (s : �
   · rw [ite_eq_left rfl]
   · intro b _ hb
     rw [ite_eq_right fun h => hb (hinj h)]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem aExt_of_forall_ne (C : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p q s)) Ω) (s : Ψ ⊕ Ψ)
     (j : Fin (n s)) {b : Fin (p + q)} (h : ∀ l, posOf p q s l ≠ b) : aExt C s j b = 0 :=
@@ -146,8 +144,7 @@ theorem sum_strictMono_eq {M : Type} [AddCommMonoid M] {d m : ℕ} (f : (Fin d �
     have hc : (Finset.univ.image J).card = d := by
       rw [Finset.card_image_of_injective _ hm.injective]
       simp
-    refine ⟨⟨Finset.univ.image J, hc⟩, ?_⟩
-    exact (Finset.orderEmbOfFin_unique hc (fun x => by simp) hm).symm
+    exact ⟨⟨Finset.univ.image J, hc⟩, (Finset.orderEmbOfFin_unique hc (fun x => by simp) hm).symm⟩
 
 theorem sum_sMin_mul_cMin : ∀ {Ψ : Type} {p q : ℕ} {Ω : Type} [Field Ω] {n : Ψ ⊕ Ψ → ℕ}
     (C : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p q s)) Ω) (B : ∀ s, Matrix (Fin (rk Ψ p q s)) (Fin (n s)) Ω)
@@ -183,8 +180,7 @@ theorem sum_sMin_mul_cMin : ∀ {Ψ : Type} {p q : ℕ} {Ω : Type} [Field Ω] {
     have hns : ¬ I ⊆ I' := fun hs => e (Finset.eq_of_subset_of_card_le hs (by omega))
     obtain ⟨a, ha, ha'⟩ := Finset.not_subset.1 hns
     have hr : a ∈ Set.range (I.orderEmbOfFin hI) := by
-      rw [Finset.range_orderEmbOfFin]
-      exact ha
+      rwa [Finset.range_orderEmbOfFin]
     obtain ⟨x, rfl⟩ := hr
     refine Matrix.det_eq_zero_of_row_eq_zero x fun y => ?_
     rw [Matrix.submatrix_apply]
@@ -252,8 +248,7 @@ theorem exists_point_of_prime : ∀ {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ 
   have hsurj : Function.Surjective φ := by
     rintro ⟨a, ha⟩
     have ha' : a ∈ (dh y c).range := by
-      rw [← adjoin_eq hc]
-      exact ha
+      rwa [← adjoin_eq hc]
     obtain ⟨f, rfl⟩ := ha'
     exact ⟨f, Subtype.ext rfl⟩
   let Q : Ideal (MRing J) := RingHom.ker (dh y' c : MRing J →+* F)
@@ -280,8 +275,7 @@ theorem exists_point_of_prime : ∀ {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ 
     obtain ⟨x, hx', e⟩ := (Ideal.mem_map_iff_of_surjective φ hsurj).1 h
     have : g - x ∈ RingHom.ker φ := by
       rw [RingHom.mem_ker, map_sub, e, sub_self]
-    have h2 := Q.add_mem (hker this) hx'
-    simpa using h2
+    simpa using Q.add_mem (hker this) hx'
   have key : ∀ (g : MRing J) (d : K → ℕ), IsMultiHomog g d →
       (g ∈ GlobalTheory.CompanionTheory.Ar.TiePrimes.Wp tie p ↔ g ∈ W) := by
     intro g d hg
@@ -350,16 +344,14 @@ theorem frames_at_point : ∀ {X : Scheme.{0}} {Ω : Type} [Field Ω] (ξ : Spec
     have h1 : ∑ l, φ j (cc l) * t a l = φ j (b a) := by
 
       rw [← ht a, map_sum]
-      simp only [map_smul, smul_eq_mul]
-      exact Finset.sum_congr rfl fun l _ => mul_comm _ _
+      simpa only [map_smul, smul_eq_mul] using Finset.sum_congr rfl fun l _ => mul_comm _ _
     rw [h1]
     by_cases hx : x c₁ ^ m = 0
     · exfalso
       have h2 := congrFun (congrFun hBC a) a
       simp [Matrix.mul_apply, hx] at h2
     · field_simp
-  · intro j a
-    exact hCreg j a
+  · exact fun j a => hCreg j a
 
 end GlobalTheory.CompanionTheory.Ar.PB.FMX.Frm
 end -- clump:auto
@@ -395,8 +387,7 @@ theorem aExt_posOf (C : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p q s)) Ω) (s : �
   · rw [ite_eq_left rfl]
   · intro b _ hb
     rw [ite_eq_right fun e => hb (hi e)]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem aExt_off (C : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p q s)) Ω) (s : Ψ ⊕ Ψ) (j : Fin (n s))
     (b : Fin (p + q)) (hb : ¬ ∃ l, posOf p q s l = b) : aExt C s j b = 0 :=
@@ -527,8 +518,7 @@ private theorem det_submatrix_mul_det_eq_pow_mul {Ω : Type} [Field Ω] {n r : �
     (A.submatrix J id).det * T.det = a ^ r * (C.submatrix J id).det := by
   have h1 : A.submatrix J id * T = a • C.submatrix J id := by
     ext i j
-    have h := congrFun (congrFun hAT (J i)) j
-    simpa [Matrix.mul_apply] using h
+    simpa [Matrix.mul_apply] using congrFun (congrFun hAT (J i)) j
   rw [← Matrix.det_mul, h1, Matrix.det_smul, Fintype.card_fin]
 
 theorem minor_isUnit_of_leftInverse : ∀ {Ω : Type} [Field Ω] {n r : ℕ} (R : Subring Ω) (A C : Matrix (Fin n) (Fin r) Ω)
@@ -674,8 +664,7 @@ theorem prod_xb_zpow_bF {Ψ : Type} [Fintype Ψ] {p q : ℕ} {Ω : Type} [Field 
   have hg : ∏ k', g k' = xcOf x₀ c ^ N := by
     rw [xcOf, ← Finset.prod_pow]
     refine (Fintype.prod_of_injective (baseInl (Ψ := Ψ) (p := p) (q := q)) ?_ _ _ ?_ ?_).symm
-    · intro a b e
-      exact Sum.inl.inj (congrArg Subtype.val e)
+    · exact fun a b e => Sum.inl.inj (congrArg Subtype.val e)
     · rintro ⟨k | t, hk⟩ hi
       · exact absurd ⟨k, rfl⟩ hi
       · rfl
@@ -770,8 +759,7 @@ theorem tMat_main {Ψ : Type} {p q : ℕ} {Ω : Type} [Field Ω]
         (if p ≤ (i : ℕ) + 1 then (Ts (.inl τ)).det else 1) * (if (i : ℕ) + 1 = p + q then (Ts (.inr τ)).det else 1) := by
   refine ⟨isBlockDiag_tMat Ts τ, ?_, fun i => ?_⟩
   · have h := (isBlockDiag_tMat Ts τ).det_eq_blocks
-    rw [omBlock_tMat, wBlock_tMat] at h
-    exact h
+    rwa [omBlock_tMat, wBlock_tMat] at h
   · have h1 : minorIJ (tMat Ts τ) (wIdx (p + q) p) (wIdx (p + q) p) = (Ts (.inl τ)).det := by
       rw [minorIJ_wIdx, wBlock_tMat]
       rfl
@@ -818,8 +806,7 @@ theorem coefF_mem (R : Subring Ω) (C : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p 
   · exact R.zero_mem
   · show (if e : I.card = (t.2 : ℕ) + 1 then _ else 0) ∈ R
     split_ifs with e
-    · refine det_mem_subring R _ fun a b => ?_
-      exact aExt_mem R C hC t.1 _ _
+    · exact det_mem_subring R _ fun a b => aExt_mem R C hC t.1 _ _
     · exact R.zero_mem
 
 theorem sMin_mem (R : Subring Ω) (B : ∀ s, Matrix (Fin (rk Ψ p q s)) (Fin (n s)) Ω)

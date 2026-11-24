@@ -264,8 +264,7 @@ theorem twAct_lie {q : Tens F p₁ q₁ r s →ₗ[ℂ] P} {w : InfinitePlace F}
   cases ε
   · simp only [twAct, Bool.false_eq_true, ite_false, LinearMap.comp_apply]
     rw [negT_lie, fockOp_lie hq hK]
-  · simp only [twAct, ite_true]
-    exact fockOp_lie hq hK Y Z
+  · simpa only [twAct, ite_true] using fockOp_lie hq hK Y Z
 
 theorem twAct_comm {q : Tens F p₁ q₁ r s →ₗ[ℂ] P} (hq : Function.Surjective q)
     (hK : ∀ w Y, Keeps q (atPl w (fockAct2 p₁ q₁ r s Y))) (ε : Bool) {w w' : InfinitePlace F} (hw : w ≠ w')
@@ -273,8 +272,7 @@ theorem twAct_comm {q : Tens F p₁ q₁ r s →ₗ[ℂ] P} (hq : Function.Surje
   cases ε
   · simp only [twAct, Bool.false_eq_true, ite_false, LinearMap.comp_apply]
     exact fockOp_comm hq hK hw _ _
-  · simp only [twAct, ite_true]
-    exact fockOp_comm hq hK hw _ _
+  · simpa only [twAct, ite_true] using fockOp_comm hq hK hw _ _
 
 end Laws
 
@@ -828,8 +826,7 @@ theorem good_lin (D : Derivation ℂ R R) {τ : Type} [Fintype τ] [DecidableEq 
 
       rw [map_sum]
       exact Finset.sum_congr rfl fun a _ => by rw [map_smul, smul_eq_mul]
-    rw [e1, e2]
-    exact T
+    rwa [e1, e2]
 
 theorem der_sum_apply {ι : Type} (s : Finset ι) (f : ι → Derivation ℂ R R) (x : R) :
     (∑ i ∈ s, f i) x = ∑ i ∈ s, f i x := by
@@ -1026,9 +1023,7 @@ private theorem isExp_add {A B U W : Module.End ℂ V} (hU : IsExp A U) (hW : Is
   have cA : ∀ x : N, ((A' x : N) : V) = A x := fun x => rfl
   have cB : ∀ x : N, ((B' x : N) : V) = B x := fun x => rfl
   have cS : ∀ x : N, (((A' + B') x : N) : V) = (A + B) x := fun x => rfl
-  have hc' : Commute A' B' := by
-    refine LinearMap.ext fun x => Subtype.ext ?_
-    exact LinearMap.congr_fun hc.eq (x : V)
+  have hc' : Commute A' B' := LinearMap.ext fun x => Subtype.ext (LinearMap.congr_fun hc.eq (x : V))
   have e1 : W v = (Ex B' ⟨v, hv⟩ : V) := eq_compat cB hW (isExp_Ex B') ⟨v, hv⟩
   have e : (U * W) v = (Ex (A' + B') ⟨v, hv⟩ : V) := by
     rw [Ex_add hc', Module.End.mul_apply, Module.End.mul_apply, e1]
@@ -1156,8 +1151,7 @@ theorem UpperTheory.TP.RP.expSum :
     ∀ {ι : Type} [Fintype ι] [DecidableEq ι] {V : ι → Type} [∀ i, AddCommGroup (V i)] [∀ i, Module ℂ (V i)]
       (L U : ∀ i, Module.End ℂ (V i)), (∀ i, LocFin (L i)) → (∀ i, IsExp (L i) (U i)) → IsExp (sumPl L) (PiTensorProduct.map U) := by
   intro ι _ _ V _ _ L U hL hU
-  have h := UpperTheory.TP.RP.isExp_partial L U hL hU Finset.univ
-  simpa [sumPl] using h
+  simpa [sumPl] using UpperTheory.TP.RP.isExp_partial L U hL hU Finset.univ
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.BlockDeterminants.ExponentialEntries.ExpSum =====
@@ -1493,15 +1487,13 @@ private theorem acts_of_k_pk (hcm : IsCMExt (maximalRealSubfield E) E (UpperTheo
     refine hlast w _ _ ?_
     have h1 := hgen 1 w
     rw [one_smul, hγ1] at h1
-    rw [← he.emb w (B.emb w) k]
-    exact h1
+    rwa [← he.emb w (B.emb w) k]
   change γ (Multiplicative.ofAdd 1) = e k at hγ1
   obtain ⟨U, hU1, hU2⟩ := exp_gen_pk hact hadm hloc hγ hgen
   have e2 := isExp_unique_pk hU1 (UpperTheory.TP.RP.expSum _ _ (fun w => hloc _ _) fun w => hU w (Y w) _ (hg w))
   have := hU2 T
   change Acts (evI (maximalRealSubfield E)) (om' (γ (Multiplicative.ofAdd 1))) (Φ T) (Φ (U T)) at this
-  rw [hγ1, e2] at this
-  exact this
+  rwa [hγ1, e2] at this
 private theorem parity_of_pk (hcm : IsCMExt (maximalRealSubfield E) E (UpperTheory.TP.cj E)) {B : Base (maximalRealSubfield E) E} {N : ℕ}
     {W : Spc (maximalRealSubfield E) E N} {b : ℂ} (hN : 1 ≤ N)
     {C : InfinitePlace (maximalRealSubfield E) → Matrix (Fin N) (Ix N 0) ℂ}

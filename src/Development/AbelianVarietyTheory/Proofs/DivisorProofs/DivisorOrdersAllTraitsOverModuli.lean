@@ -218,8 +218,7 @@ theorem exists_trait_lattice_equiv : ∀ (E : Type) [Field E] [NumberField E] [I
     intro y
     have hs : (⇑(spMap j ≫ Y.Z.fromSpecStalk x) ⁻¹' abLocus out.G) = abLocus G := Set.ext hab
     have := hPsi y
-    rw [hs] at this
-    exact this
+    rwa [hs] at this
 
   let bc : tW.G ≅ (Over.pullback (specOf ψ)).obj G :=
     Over.isoMk hβ.1.isoPullback (by simp)
@@ -796,8 +795,7 @@ theorem exists_completion_unif {o' Ω : Type} [CommRing o'] [Field Ω] [Algebra 
       exact bot_le)
     have hsp : ξ w ⤳ genericPoint M.Z := by
       have := hpq.map (M.Z.fromSpecStalk x).continuous
-      rw [hq] at this
-      exact this
+      rwa [hq] at this
     refine ⟨w, ?_⟩
     show ξ w ∈ abLocus FinalForm.G
     rw [FinalForm.ab]
@@ -848,8 +846,7 @@ theorem GlobalTheory.UPoinc.GPeriods.main : ∀ (E : Type) [Field E] [NumberFiel
     refine ⟨{ e₀ with map_smul' := hlin }, fun y => ?_⟩
     obtain ⟨h0, hA⟩ := hord (ρ₀.symm y) (s (ρ₀.symm y)) (hs _)
     refine ⟨(T.be (ρT (ρ₀.symm y)) (ρT (ρ₀.symm y))).toNat, Int.toNat_of_nonneg h0, ?_⟩
-    rw [map_pow]
-    exact hA
+    rwa [map_pow]
   · refine ⟨R, inferInstance, inferInstance, inferInstance, j, PUnit, inferInstance, inferInstance, fun _ => 0, hB, hC,
       fun T ψ hψ hc => (hex ⟨T, ψ, hψ, hc⟩).elim⟩
 

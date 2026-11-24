@@ -126,8 +126,7 @@ theorem coordForm_posDef (m : ℕ) : IsPosDef (coordForm (E := E) m) := by
     intro k τ
     rw [Fintype.sum_sigma, Finset.sum_eq_single k]
     · exact Finset.sum_congr rfl fun j _ => by simp [Pi.basis_apply]
-    · intro k' _ hk'
-      exact Finset.sum_eq_zero fun j _ => by simp [Pi.basis_apply, Ne.symm hk']
+    · exact fun k' _ hk' => Finset.sum_eq_zero fun j _ => by simp [Pi.basis_apply, Ne.symm hk']
     · simp
   have hsum : ∑ a, ∑ a', c a * c a' * coordForm m ((Pi.basis fun _ : Fin m => RingOfIntegers.basis E) a)
       ((Pi.basis fun _ : Fin m => RingOfIntegers.basis E) a') =
@@ -166,8 +165,7 @@ theorem exists_posDef_realForm : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   obtain ⟨s, hs⟩ := Module.projective_lifting_property f LinearMap.id hf
   have hinj : Function.Injective s := Function.LeftInverse.injective (g := f) fun x => LinearMap.congr_fun hs x
   refine ⟨pullR s (coordForm m), ⟨fun y z => (coordForm_mem H m).1 _ _, fun a y z => ?_⟩, ?_⟩
-  · simp only [pullR_apply, map_smul]
-    exact (coordForm_mem H m).2 a _ _
+  · simpa only [pullR_apply, map_smul] using (coordForm_mem H m).2 a _ _
   · intro n x hx c hc
     exact coordForm_posDef m n (s ∘ x) (hx.map' s.toAddMonoidHom.toIntLinearMap (LinearMap.ker_eq_bot.2 hinj)) c hc
 
@@ -211,8 +209,7 @@ theorem adjoint_weighted_sq_trace : ∀ (n : ℕ) (A A' : Matrix (Fin n) (Fin n)
     have : (u * a' * v) * (u * a * v) = u * (a' * a) * v := by
       rw [show (u * a' * v) * (u * a * v) = u * a' * (v * u) * a * v by simp only [Matrix.mul_assoc], hvu]
       simp only [Matrix.mul_one, Matrix.mul_assoc]
-    rw [this, Matrix.trace_mul_comm, ← Matrix.mul_assoc, hvu, Matrix.one_mul]
-    rw [ha, ha']
+    rw [this, Matrix.trace_mul_comm, ← Matrix.mul_assoc, hvu, Matrix.one_mul, ha, ha']
     simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, Matrix.map_apply]
     push_cast; rfl
   refine ⟨c1, ?_, ?_⟩
@@ -325,8 +322,7 @@ theorem lowerBlock_eq_zero_of_gap : ∀ (n : ℕ) (K c : ℝ), ∃ R : ℝ, 1 �
     have h1 : X * Wm s t ^ 2 ≤ K := le_trans (mul_le_mul_of_nonneg_right hXr.le (sq_nonneg _)) (hterm s t)
     have h2 : C ^ 2 * Wm s t ^ 2 < 1 := by
       have hK : K ≤ |K| := le_abs_self K
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       have : (|K| + 1) * 1 ≤ (|K| + 1) * (C ^ 2 * Wm s t ^ 2) := by gcongr
       nlinarith
     have h3 : (C * |Wm s t|) ^ 2 < 1 := by rw [mul_pow, sq_abs]; exact h2
@@ -594,8 +590,7 @@ theorem balanced_entries_bounded : ∀ (n : ℕ) (K : ℝ), ∃ C : ℝ, ∀ (A 
           _ = (n : ℝ) * (|c| * (1 + B)) := by ring
       _ = (n : ℝ) ^ 2 * |c| * (1 + B) := by simp; ring
   have hcast : ((|A i j| : ℤ) : ℝ) = |Ar i j| := by simp [hAr, Int.cast_abs]
-  rw [hcast]
-  exact hentry
+  rwa [hcast]
 
 end GlobalTheory.RedTh
 end -- clump:auto
@@ -625,8 +620,7 @@ theorem trace_le_of_aeval_monic_eq_zero :
   have hAp : Polynomial.aeval A pC = 0 := by
     have e := Polynomial.aeval_algHom_apply ((Int.castRingHom ℂ).mapMatrix (m := Fin n)).toIntAlgHom M p
     rw [hM, map_zero] at e
-    rw [hpC, show Int.castRingHom ℂ = algebraMap ℤ ℂ from rfl, Polynomial.aeval_map_algebraMap]
-    exact e
+    rwa [hpC, show Int.castRingHom ℂ = algebraMap ℤ ℂ from rfl, Polynomial.aeval_map_algebraMap]
   have htr : ((M.trace : ℤ) : ℂ) = A.trace := by
     simp [hA, Matrix.trace, Matrix.map_apply]
   have hroot : ∀ μ ∈ A.charpoly.roots, ‖μ‖ ≤ B := by

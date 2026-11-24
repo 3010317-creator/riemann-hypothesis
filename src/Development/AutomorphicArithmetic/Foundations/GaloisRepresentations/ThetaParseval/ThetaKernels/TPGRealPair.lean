@@ -462,8 +462,7 @@ private theorem map_mem (S : Submodule ℂ (⨂[ℂ] i, V i))
   | empty =>
     intro A hA x hx
     have : A = fun i => LinearMap.id := funext fun i => hA i (Finset.notMem_empty i)
-    rw [this, PiTensorProduct.map_id]
-    exact hx
+    rwa [this, PiTensorProduct.map_id]
   | insert a s ha ih =>
     intro A hA x hx
     have hsplit : A = fun i => (Function.update (fun i => (1 : Module.End ℂ (V i))) a (A a)) i ∘ₗ
@@ -485,8 +484,7 @@ private theorem map_mem (S : Submodule ℂ (⨂[ℂ] i, V i))
 
 private theorem exists_dual_ne (x : ⨂[ℂ] i, V i) (hx : x ≠ 0) :
     ∃ f : ∀ i, Module.Dual ℂ (V i), PiTensorProduct.dualDistrib (PiTensorProduct.tprod ℂ f) x ≠ 0 := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   refine hx ((Module.forall_dual_apply_eq_zero_iff ℂ x).1 fun ℓ => ?_)
   obtain ⟨t, rfl⟩ := (PiTensorProduct.dualDistribEquiv (R := ℂ) (M := V)).surjective ℓ
   change PiTensorProduct.dualDistrib t x = 0
@@ -593,8 +591,7 @@ private theorem irr_tensRep {I : Type} [Fintype I] {emb : I → (E →+* ℂ)} (
   refine isIrreducible_of_factors _ (fun i => Set.range (atEmb (emb i) (lam i)))
     (fun i => GlobalTheory.ClassFin.span_range_eq_top_of_isIrreducible _ _ _ (irr_atEmb _ _)) ?_
   rintro i _ ⟨g, rfl⟩
-  refine ⟨g.1, ?_⟩
-  exact congrArg PiTensorProduct.map (comps_eq_update lam hb (i := i) (y := g.1.1) g.2)
+  exact ⟨g.1, congrArg PiTensorProduct.map (comps_eq_update lam hb (i := i) (y := g.1.1) g.2)⟩
 
 private theorem exists_equivariant {I : Type} [Fintype I] (emb : I → (E →+* ℂ))
     (hb : Function.Bijective (fun i => InfinitePlace.mk (emb i))) (lam : I → DomWeight n)
@@ -818,8 +815,7 @@ theorem UpperTheory.TP.RP.jointNe :
     ∀ {n d : ℕ} (h : n ≤ d) (μ : Fin n → ℕ), Antitone μ → joint h μ ≠ 0 := by
   intro n d h μ _ h0
   refine Formalism.GradedWeylDivisibility.hwNe ℂ d n h μ (ofTall_injective ?_)
-  rw [map_zero]
-  exact h0
+  rwa [map_zero]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.BlockDeterminants.ExponentialEntries.JointNe =====
@@ -887,8 +883,7 @@ theorem UpperTheory.TP.realPair_k : _root_.UpperTheory.TP.Tools_k → _root_.Upp
           exact LinearMap.ext fun y => (hi₁ w _ y).symm
         exact LinearMap.congr_fun e2 x
       have := h1 k.1 k.2 (iV x)
-      rw [e1] at this
-      exact this
+      rwa [e1] at this
   refine ⟨Φ T₀, hmem _, fun h => hT₀ (hinj (h.trans (map_zero Φ).symm)), j (PiTensorProduct.tprod ℂ x₁), hjU _,
     fun h => tprodNe x₁ hx0 (hjinj (h.trans (map_zero j).symm)), hS, fun w => ?_⟩
   let lam' : DomWeight d := ⟨fun k => (if hk : (k : ℕ) < n then (μ w ⟨k, hk⟩ : ℤ) else 0) + b w, fun p q hpq => by
@@ -933,8 +928,7 @@ theorem UpperTheory.TP.realPair_k : _root_.UpperTheory.TP.Tools_k → _root_.Upp
         rw [h5, polyAction_one]
         rfl
     have := h2 k (Subgroup.mem_inf.1 hk).1 (up (i₂ x))
-    rw [e1] at this
-    exact this
+    rwa [e1] at this
 end
 end
 end -- clump:auto

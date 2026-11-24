@@ -92,8 +92,7 @@ end Group
 
 theorem pullGen_genPull {X Y Z : Scheme.{0}} (M : LB X) (c : LB.Gen M) (f : Y ⟶ X) (h : Z ⟶ Y) :
     LB.pullGen M _ _ (LB.genPull M c f) h = LB.genPull M c (h ≫ f) := by
-  refine lbGen_ext fun j => congrArg Units.val ?_
-  exact LB.pull_res_comp h f _ _ _ _ _
+  exact lbGen_ext fun j => congrArg Units.val (LB.pull_res_comp h f _ _ _ _ _)
 
 end CubeExtension
 
@@ -123,10 +122,8 @@ theorem extendGen_of_extension
   obtain ⟨r', ⟨h₃, h₄⟩, hu'⟩ := existsUnique_genPull_eq (𝟙 G.left)
     (fun _ => Function.bijective_id) N.L c hc₁
   refine ⟨r', ⟨h₃, ?_⟩, fun r'' ⟨h₅, h₆⟩ => hu' r'' ⟨h₅, hu _ ⟨LB.isGen_genPull _ _ h₅ _, ?_⟩⟩⟩
-  · rw [← h₄, pullGen_genPull] at hc₂
-    exact hc₂
-  · rw [pullGen_genPull]
-    exact h₆
+  · rwa [← h₄, pullGen_genPull] at hc₂
+  · rwa [pullGen_genPull]
 
 theorem cubical_extends_and_extendGen :
     (∀ (X S : Scheme.{0}) (f : X ⟶ S), Smooth f → GeometricallyConnected f → GeometricallyIntegral f) →

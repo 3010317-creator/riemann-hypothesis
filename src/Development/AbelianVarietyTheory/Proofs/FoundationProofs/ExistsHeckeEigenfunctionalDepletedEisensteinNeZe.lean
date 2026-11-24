@@ -571,8 +571,7 @@ theorem adjoint_U : ∀ (k L N l : ℕ) (ε : DirichletCharacter ℂ N) (ρ : �
     funext τ
     refine Finset.sum_congr rfl (fun j _ => ?_)
     simp [repL, ch, Matrix.adjugate_fin_two_of]
-  rw [e1, e2]
-  exact key
+  rwa [e1, e2]
 
 end GlobalTheory
 end -- clump:auto
@@ -675,8 +674,7 @@ theorem repL_LRep : ∀ L q : ℕ, q.Prime → ¬ q ∣ L → LRep L (DT L q) (r
       | none => simpa [repL, Matrix.mul_apply, Fin.sum_univ_two] using h
       | some j =>
         simp only [repL, Matrix.mul_apply, Fin.sum_univ_two]
-        simp
-        exact dvd_add (dvd_mul_of_dvd_left h _) (Dvd.dvd.mul_left (dvd_mul_right _ _) _)
+        simpa using dvd_add (dvd_mul_of_dvd_left h _) (Dvd.dvd.mul_left (dvd_mul_right _ _) _)
   · rintro ⟨γ, i⟩ - ⟨γ', i'⟩ - h
     dsimp only at h
     have hd := (γ : SL(2, ℤ)).2
@@ -747,8 +745,7 @@ theorem repL_LRep : ∀ L q : ℕ, q.Prime → ¬ q ∣ L → LRep L (DT L q) (r
         · rw [Ne, ZMod.natCast_eq_zero_iff]; exact hqL
         · have := congrArg (fun x : ℤ => (x : ZMod q)) hdet
           simpa using this
-        · by_contra hn
-          push Not at hn
+        · by_contra! hn
           exact hbd ⟨(ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mp hn.1,
             (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mp hn.2⟩
       obtain ⟨u, hu0, hu1⟩ := hu
@@ -831,8 +828,7 @@ namespace GlobalTheory.EisM
 
 private theorem qs_smul (t : ℂ) (a : ℕ → ℂ) : qs (t • a) = fun τ => t * qs a τ := by
   funext τ; unfold qs
-  simp only [Pi.smul_apply, smul_eq_mul, mul_assoc]
-  exact tsum_mul_left
+  simpa only [Pi.smul_apply, smul_eq_mul, mul_assoc] using tsum_mul_left
 
 theorem sum_slz_repL_Vo : ∀ (k N l : ℕ) (ε : DirichletCharacter ℂ N) (h : ℕ → ℂ) (t : ℂ), 1 ≤ k → 0 < N → l.Prime → ¬ l ∣ N → MF k N (ch ε) h → To k (ch ε l) l h = t • h → ∀ τ : ℍ, ∑ j : Fin l, slz k (repL (N * l) l (some j)) (qs (Vo l h)) τ = ch ε⁻¹ l * (t * qs (Vo l h) τ - (l : ℂ)⁻¹ * qs h τ) := by
   intro k N l ε h t hk hN hl hlN hMF hT τ
@@ -1141,8 +1137,7 @@ theorem factors_ne_zero : ∀ (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* 
     have hcu : ‖χ⁻¹ (l : ZMod N)‖ = 1 := Complex.norm_eq_one_of_pow_eq_one hut htot.ne'
     have hβn : ‖β‖ = (l : ℝ) ^ (2 * e) := by
       have h := congrArg norm hp
-      rw [norm_mul, norm_mul, hcα, hcu, norm_pow, Complex.norm_natCast, one_mul, one_mul] at h
-      exact h
+      rwa [norm_mul, norm_mul, hcα, hcu, norm_pow, Complex.norm_natCast, one_mul, one_mul] at h
     obtain ⟨_, hrec, _⟩ := _root_.GlobalTheory.EisM.hecke_relations (2 * e + 1) N χ g (by omega) hN hP
     obtain ⟨_, ⟨C, hC⟩, _⟩ := _root_.GlobalTheory.rankin_mean_square (2 * e + 1) N (ch χ) g (by omega) hP.cf
     set u := χ⁻¹ (l : ZMod N) with hu_def

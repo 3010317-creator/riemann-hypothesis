@@ -137,8 +137,7 @@ theorem cong_on_adjoin : ∀ (W K : Type) [CommRing W] [IsDomain W] [IsDiscreteV
     have e : O.valuation (algebraMap W F (u : W)) * O.valuation (algebraMap W F ((u⁻¹ : Wˣ) : W)) = 1 := by
       rw [← map_mul, ← map_mul, Units.mul_inv, map_one, map_one]
     refine le_antisymm a1 ?_
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have := mul_lt_one_of_lt_of_le hc a2
     rw [e] at this
     exact lt_irrefl _ this
@@ -457,8 +456,7 @@ theorem exists_comap_eq {K L : Type} [Field K] [Field L] (f : K →+* L) (U : Va
     have h4 : 0 < W.valuation (f x) := by
       rw [zero_lt_iff, Valuation.ne_zero_iff]; exact (map_ne_zero f).2 h0
     exact absurd ((inv_lt_one₀ h4).1 h2) (not_lt.2 h3)
-  · intro x hx
-    exact hW ⟨x, hx⟩
+  · exact fun x hx => hW ⟨x, hx⟩
 
 theorem val_eq_one_iff {F : Type} [Field F] (T : ValuationSubring F) (y : F) :
     T.valuation y = 1 ↔ y ≠ 0 ∧ y ∈ T ∧ y⁻¹ ∈ T := by
@@ -561,15 +559,13 @@ theorem core {k K L : Type} [Field k] [IsAlgClosed k] [CharZero k] [Field K] [Al
         refine ⟨p.map ρ, hp.map ρ, ?_⟩
         rw [eval₂_map]
         have := congrArg (algebraMap E L) hpx
-        rw [hom_eval₂, map_zero] at this
-        exact this
+        rwa [hom_eval₂, map_zero] at this
       obtain ⟨y, hy⟩ := IsIntegrallyClosed.algebraMap_eq_of_integral hi
       rw [← hy]; exact y.2)
     (fun g hg => GlobalTheory.NeedB.kum_eq_of hζ hθ0 0 (by
       have := hT (g : L →+* L) hg fun t ht => g.commutes ⟨t, hE t (Finset.mem_insert_of_mem ht)⟩
       simpa using this))
-  refine ⟨c, fun h => hc (Subtype.ext h), ?_⟩
-  exact hv
+  exact ⟨c, fun h => hc (Subtype.ext h), hv⟩
 
 end GlobalTheory.KZ.UnRoot
 

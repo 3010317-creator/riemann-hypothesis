@@ -131,8 +131,7 @@ theorem exists_equiv_of_cell {l : ℕ} (x y : Fin l → IrrGL (k := k)) (hxc : �
   choose r hr1 hr0 using fun i => _root_.GlobalTheory.CompanionTheory.CuspCell.exists_eq_singleton_of_sum (hAt i)
   have hsurj : Function.Surjective r := by
     intro j
-    by_contra hj
-    push Not at hj
+    by_contra! hj
     have hz : ∑ i, t i j = 0 := Finset.sum_eq_zero fun i _ => hr0 i j (Ne.symm (hj i))
     have h1 := (hC j).sum_fst
     rw [hz] at h1
@@ -146,9 +145,7 @@ theorem exists_equiv_of_cell {l : ℕ} (x y : Fin l → IrrGL (k := k)) (hxc : �
   have hs1 : ∑ i, t i j = {x (E.symm j)} := by
     rw [Finset.sum_eq_single (E.symm j)]
     · rw [← hr1 (E.symm j), hrE]
-    · intro i _ hi
-      refine hr0 i j fun e => hi ?_
-      exact hbij.1 (e.symm.trans hrE.symm)
+    · exact fun i _ hi => hr0 i j fun e => hi (hbij.1 (e.symm.trans hrE.symm))
     · simp
   have h2 := hC j
   rw [hs1] at h2

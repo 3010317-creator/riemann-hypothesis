@@ -100,8 +100,7 @@ private theorem ag_lift {G C : Type} [Group G] [TopologicalSpace G] [IsTopologic
   have hle : (commutator G).topologicalClosure ≤ q.ker :=
     Subgroup.topologicalClosure_minimal _ (Abelianization.commutator_subset_ker q)
       (isClosed_singleton.preimage hq)
-  refine ⟨QuotientGroup.lift _ q hle, ?_, fun g => rfl⟩
-  exact continuous_coinduced_dom.2 hq
+  exact ⟨QuotientGroup.lift _ q hle, continuous_coinduced_dom.2 hq, fun g => rfl⟩
 
 private theorem ag_map {G G' : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Group G']
     [TopologicalSpace G'] [IsTopologicalGroup G'] (f : G →* G') (hf : Continuous f) :
@@ -248,8 +247,7 @@ theorem UpperTheory.local_class_field_theory_of_open_embedding :
     · rcases Nat.eq_zero_or_pos m with rfl | hpos
       · simp at hm
       · exact hpos
-    · intro hdvd
-      exact hm ((CharP.cast_eq_zero_iff _ l m).2 hdvd)
+    · exact fun hdvd => hm ((CharP.cast_eq_zero_iff _ l m).2 hdvd)
   · rintro h ξ ⟨m, -, hml, hξ⟩
     apply h
     exact ⟨m, fun h0 => hml ((CharP.cast_eq_zero_iff _ l m).1 h0), hξ⟩
@@ -334,8 +332,7 @@ theorem UpperTheory.exists_principal_units_retraction_localField :
     · simp
   have hinj : ∀ w : (𝒪[K])ˣ, unitsIncl K w = 1 → w = 1 := by
     intro w hw
-    have h := congrArg (fun z => ((unitsEquivIntProd hϖ) z).2) hw
-    simpa [unitsEquivIntProd_unitsIncl] using h
+    simpa [unitsEquivIntProd_unitsIncl] using congrArg (fun z => ((unitsEquivIntProd hϖ) z).2) hw
   refine ⟨?_, ?_⟩
   · intro y hy
     obtain ⟨k, hk⟩ := CommGroup.mem_primaryComponent.mp hy
@@ -365,8 +362,7 @@ theorem UpperTheory.exists_principal_units_retraction_localField :
     have hunit : IsUnit ((Nat.card 𝓀[K] - 1 : ℕ) : ℤ_[l]) := by
       rw [PadicInt.isUnit_iff]
       apply le_antisymm (PadicInt.norm_le_one _)
-      by_contra hlt
-      push Not at hlt
+      by_contra! hlt
       have h : l ∣ Fintype.card 𝓀[K] - 1 := by simpa using hlt
       rw [← Nat.card_eq_fintype_card] at h
       exact (hl.coprime_iff_not_dvd.mp hcop.symm) h
@@ -485,8 +481,7 @@ theorem UpperTheory.finite_zp_module_torsion_free_splitting :
   · refine hq.isCoinducing.isOpen_preimage.mp ?_
     show IsOpen ((LinearMap.ker (t ∘ₗ g) : Submodule ℤ_[l] (Fin m → ℤ_[l])) : Set (Fin m → ℤ_[l]))
     refine Submodule.isOpen_mono (U := Submodule.pi Set.univ (fun _ => Ideal.span {(l : ℤ_[l]) ^ K})) ?_ ?_
-    · intro c hc
-      exact LinearMap.mem_ker.mpr (hker c (fun i => hc i (Set.mem_univ i)))
+    · exact fun c hc => LinearMap.mem_ker.mpr (hker c (fun i => hc i (Set.mem_univ i)))
     · rw [Submodule.coe_pi]
       exact isOpen_set_pi Set.finite_univ (fun i _ => hopenI)
   · show b.equivFun (T.mkQ y) = 0
@@ -676,8 +671,7 @@ theorem UpperTheory.localField_units_structure_theorem :
       rw [hhom]
   have hfr : Module.finrank ℤ_[l] (Additive (unitFiltrationUnits K 1)) = Module.finrank ℚ_[l] K := by
     have := finrank_principalUnits (K := K) l
-    rw [halg] at this
-    exact this
+    rwa [halg] at this
   haveI := finite_principalUnits (K := K) l
   obtain ⟨hPU, r, hr, hid, hdiv⟩ := UpperTheory.exists_principal_units_retraction_localField K l
   obtain ⟨hfin, p, t, hp, ht, hpt, hsurj, hpow⟩ := UpperTheory.finite_quotient_of_retraction_rank l (unitFiltrationUnits K 1) hPU r hr
@@ -696,8 +690,7 @@ theorem UpperTheory.localField_units_structure_theorem :
   · intro x τ
     obtain ⟨y, hy, hpx, hty⟩ := hsurj x τ
     exact ⟨y, hord y hy, hpx, hty⟩
-  · intro n y hpd hod hty
-    exact hdiv n y hod (hpow n y hpd hty)
+  · exact fun n y hpd hod hty => hdiv n y hod (hpow n y hpd hty)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.LocalFieldUnitsStructureTheorem =====
@@ -829,8 +822,7 @@ private theorem as_cont {M B : Type} [Group M] [TopologicalSpace M] [IsTopologic
   have hx : ∀ᶠ y in 𝓝 x, f x = f y := by
     filter_upwards [hn] with y hy
     have hy' : f (x⁻¹ * y) = 1 := hy
-    rw [map_mul, map_inv, inv_mul_eq_one] at hy'
-    exact hy'
+    rwa [map_mul, map_inv, inv_mul_eq_one] at hy'
   exact continuousAt_const.congr hx
 
 open GroundTheory.LocalField.Abstract in
@@ -1013,13 +1005,11 @@ private theorem as_core {l : ℕ} [Fact l.Prime] {d : ℕ} {M A : Type} [CommGro
       rw [hmθ'] at e1
       apply Subtype.ext
       apply hi
-      have e2 := congrArg Subtype.val e1
-      simpa [hθlv] using e2
+      simpa [hθlv] using congrArg Subtype.val e1
     obtain ⟨z, rfl⟩ := h3 n y hp' hv'' ht'
     have e1 : f (θ (z ^ l ^ n)) = 1 := by rw [map_pow, map_pow, ← hn, pow_card_eq_one']
     have e2 : f (g⁻¹ * θ (z ^ l ^ n)) = 1 := hy1
-    rw [map_mul, e1, mul_one, map_inv, inv_eq_one] at e2
-    exact e2
+    rwa [map_mul, e1, mul_one, map_inv, inv_eq_one] at e2
   have hsepA : ∀ h ∈ CommGroup.primaryComponent A l, (∀ (Y : Type) [CommGroup Y] [Finite Y],
       IsPGroup l Y → ∀ f : A →* Y, IsOpen (f.ker : Set A) → f h = 1) → h = 1 := by
     rintro h ⟨j, hj⟩ hall
@@ -1042,8 +1032,7 @@ private theorem as_core {l : ℕ} [Fact l.Prime] {d : ℕ} {M A : Type} [CommGro
       simp [f, φ, (QuotientGroup.eq_one_iff x).2 hx]
     have hfh := hall _ hY f hfo
     have e1 : (QuotientGroup.mk' V h) ^ e' = 1 := by
-      have e0 := congrArg Subtype.val hfh
-      simpa [f, φ] using e0
+      simpa [f, φ] using congrArg Subtype.val hfh
     have e2 : (QuotientGroup.mk' V h) ^ (l ^ j) = 1 := by rw [← map_pow, hj, map_one]
     have hcop : Nat.Coprime (l ^ j) e' :=
       Nat.Coprime.pow_left _ ((Nat.Prime.coprime_iff_not_dvd Fact.out).2 hle')
@@ -1054,8 +1043,7 @@ private theorem as_core {l : ℕ} [Fact l.Prime] {d : ℕ} {M A : Type} [CommGro
   have hmm : ∀ g, m (m g : A) = m g := by
     intro g
     have e1 : (m g : A) = θ (mM g) := rfl
-    rw [e1, hmθ']
-    rw [(h1 (mM g)).2]
+    rw [e1, hmθ', (h1 (mM g)).2]
     rfl
   have hmid : ∀ g ∈ CommGroup.primaryComponent A l, (m g : A) = g := by
     intro g hg
@@ -1067,9 +1055,7 @@ private theorem as_core {l : ℕ} [Fact l.Prime] {d : ℕ} {M A : Type} [CommGro
       · rw [map_mul, map_inv, hat g hg, hat _ (m g).2, inv_one, mul_one]
       · rw [map_mul, map_inv, hmm, mul_inv_cancel]
     exact (mul_inv_eq_one.1 e1).symm
-  have hsurj : Function.Surjective θl := by
-    intro x
-    exact ⟨mM x, Subtype.ext (hmid x x.2)⟩
+  have hsurj : Function.Surjective θl := fun x => ⟨mM x, Subtype.ext (hmid x x.2)⟩
   refine ⟨Finite.of_surjective θl hsurj, isCyclic_of_surjective θl hsurj, π, a, m, hπc, hac, hmker,
     fun g hg => ⟨hπt g hg, hat g hg, hmid g hg⟩, hDa, hasurj, ?_, hsep⟩
   intro x τ
@@ -1152,11 +1138,9 @@ theorem UpperTheory.V.Loc.abStruct :
         ext z
         obtain ⟨z, rfl⟩ := hqs z
         constructor
-        · intro hz
-          exact ⟨z, hz, rfl⟩
+        · exact fun hz => ⟨z, hz, rfl⟩
         · rintro ⟨w, hw, hwz⟩
-          rw [← hwz]
-          exact hw
+          rwa [← hwz]
       rw [e0]
       exact hqo _ hf
     exact hA5 Y hY f' hf' (q g) e1 e2 e3
@@ -1227,8 +1211,7 @@ private theorem lc_ab {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [Topological
     have := hu C hC χ hχ (g * h⁻¹) (by rw [map_mul, map_inv, p1, hg1]; simp) (by rw [map_mul, map_inv, p2, hg2]; simp)
       (by rw [map_mul, map_inv, hmh, mul_inv_cancel])
     have h3 : χ h = 1 := h1 hmem
-    rw [map_mul, map_inv, h3, inv_one, mul_one] at this
-    exact this
+    rwa [map_mul, map_inv, h3, inv_one, mul_one] at this
 
 theorem UpperTheory.V.W.locCFT :
     GlobalTheory.Published.GlobalArtinReciprocity → Pa.CohP → LocCFTAll := by

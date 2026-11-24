@@ -64,8 +64,7 @@ theorem eq_of_isPrim_of_toReal_eq_smul : ∀ {O : Type} [CommRing O] (bar : O �
     rintro rfl
     exact not_isPrim_zero (bar := bar) py
   obtain ⟨a, c, hac⟩ : ∃ a c, y a c ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hy0 (LinearMap.ext₂ hc)
   have hR : ∀ u v, (x u v : ℝ) = b * (y u v : ℝ) := fun u v => by
     have := LinearMap.congr_fun₂ h u v

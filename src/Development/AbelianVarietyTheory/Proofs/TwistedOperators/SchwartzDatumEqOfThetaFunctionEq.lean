@@ -173,8 +173,7 @@ theorem coeff_zero {κ : Type} [Fintype κ] {ψ : AddChar (AF F) ℂ} (hψ : Glo
     (κ × Fin (Module.finrank ℝ (mixedEmbedding.mixedSpace F)) → ℝ) pI hp ?_ {0} (measurableSet_singleton 0)
   · have hpre : pI ⁻¹' {0} = ({0} : Set (κ → F)) := by
       ext ξ
-      simp only [Set.mem_preimage, Set.mem_singleton_iff]
-      exact ⟨pI_eq_zero, fun h => h ▸ pI_zero⟩
+      simpa only [Set.mem_preimage, Set.mem_singleton_iff] using ⟨pI_eq_zero, fun h => h ▸ pI_zero⟩
     rw [hpre, integral_singleton] at key
     simpa using key
   · intro l
@@ -216,8 +215,7 @@ theorem theta_inj : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Number
     hsum ?_
   · have h0 : (fun i => algebraMap F (AF F) ((0 : Fin n × Fin d → F) i)) + x = x := by
       funext i; simp
-    simp only [h0, sub_eq_zero] at key
-    exact key
+    simpa only [h0, sub_eq_zero] using key
   · intro t
     have hn : ∀ ξ : Fin n × Fin d → F,
         ‖ψ ((fun i => algebraMap F (AF F) (ξ i)) ⬝ᵥ fun i => infAd (mI t i))‖ = 1 := fun ξ => by

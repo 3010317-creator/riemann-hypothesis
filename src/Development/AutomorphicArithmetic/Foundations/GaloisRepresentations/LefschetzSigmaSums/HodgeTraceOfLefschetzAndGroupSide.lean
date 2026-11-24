@@ -166,8 +166,7 @@ private theorem level_isPullback {S S' B B' Z : Scheme.{0}} {A : Over S} {A' : O
     refine IsPullback.of_horiz_isIso ⟨?_⟩
     rw [← he, Category.comp_id, Iso.inv_hom_id_assoc]
   have R := P.paste_horiz Q
-  rw [Category.comp_id] at R
-  exact R
+  rwa [Category.comp_id] at R
 
 private theorem pow_square (pc : PowComp) {S₁ S₂ S₁' S₂' : Scheme.{0}} {A₁ : Over S₁} {A₂ : Over S₂} {A₁' : Over S₁'}
     {A₂' : Over S₂'} {f₁ : S₁' ⟶ S₁} {f₂ : S₂' ⟶ S₂} {π : S₂ ⟶ S₁} {π' : S₂' ⟶ S₁'} {φ₁ : A₁'.left ⟶ A₁.left}
@@ -212,8 +211,7 @@ theorem UpperTheory.Gal.LocalSmoothExtension.kSBc_of :
     fun N => level_isPullback (hφ N) (m N).cart.1 (hpb N) k (T.e N) (T.e_q N)
   refine ⟨UpperTheory.Gal.Int.Geo.KS.mk (towerBc T.X (Spec.map (CommRingCat.ofHom τ))) T.lev T.K_eq T.Δ_eq M'
     (fun N => (P N).isoPullback.symm) ?_ ?_, rfl, HEq.rfl⟩
-  · intro N
-    exact (P N).isoPullback_inv_snd
+  · exact fun N => (P N).isoPullback_inv_snd
   · intro N' N h a b
     obtain ⟨π₀, o₀, ψ₀, φ₀, hw₀, hs₀, htr₀, he₀⟩ := T.tr_eq N' N h a b
     obtain ⟨π₁, o₁, ψ₁, φ₁, hs₁, htr₁, hπ, hc⟩ := hleg p D G L R ℂ τ gb gb' hρ ht' N N' (T.M N) (T.M N')
@@ -445,8 +443,7 @@ theorem UpperTheory.Gal.LocalSmoothExtension.cntSum_of :
     apply hy
     have e : Finset.univ.filter (fun b => g b = y) = ∅ := by
       rw [Finset.filter_eq_empty_iff]
-      intro b _ hb
-      exact hyn (Finset.mem_coe.2 (Finset.mem_image.2 ⟨b, Finset.mem_univ _, hb⟩))
+      exact fun b _ hb => hyn (Finset.mem_coe.2 (Finset.mem_image.2 ⟨b, Finset.mem_univ _, hb⟩))
     simp [e]
   have hR : ∑ y ∈ Finset.univ.image g, cntFn K K' M h (Quotient.out y) • P (Quotient.out y)⁻¹
       = ∑ b, P (Quotient.out (g b))⁻¹ := by
@@ -494,8 +491,7 @@ theorem coeffOcc_of : CoeffOcc := by
     · simp
     · intro j _ hji
       rw [ite_eq_right (fun e => hji (hinj e).symm), mul_zero]
-    · intro hi
-      exact absurd (Finset.mem_univ i) hi
+    · exact fun hi => absurd (Finset.mem_univ i) hi
   have hP : P.coeff (h i) = if h i ∈ Finset.range (d + 1) then (-1) ^ (h i) * t (h i) else 0 := by
     simp only [hPdef, finsetSum_coeff, coeff_C_mul, coeff_X_pow, mul_ite, mul_one, mul_zero]
     rw [Finset.sum_ite_eq]
@@ -554,8 +550,7 @@ private lemma coset_ne (hb : ∀ k ∈ K, ∀ g, f (k * g) = f g ∧ f (g * k) =
     (g : H ⧸ K) ∈ {y : H ⧸ K | f y.out ≠ 0} := by
   obtain ⟨c, hc⟩ := QuotientGroup.mk_out_eq_mul K g
   show f (g : H ⧸ K).out ≠ 0
-  rw [hc, (hb c c.2 g).2]
-  exact hg
+  rwa [hc, (hb c c.2 g).2]
 
 private lemma mem_hecke (hb : ∀ k ∈ K, ∀ g, f (k * g) = f g ∧ f (g * k) = f g)
     (hfin : {y : H ⧸ K | f y.out ≠ 0}.Finite) : f ∈ Formalism.UG.Hecke ℂ K := by
@@ -607,8 +602,7 @@ private lemma decomp (hb : ∀ k ∈ K, ∀ g, f (k * g) = f g ∧ f (g * k) = f
         apply hi
         have : (⟨_, hpQ⟩ : Q) = e.symm i := Subtype.ext (mk_of_mem hm)
         rw [this, e.apply_symm_apply]
-      · intro h
-        exact absurd (Finset.mem_univ _) h
+      · exact fun h => absurd (Finset.mem_univ _) h
   · intro i g hg
     rw [val_of_mem hb (mem_of_ind hg)]
     exact hne _ (e.symm i).2
@@ -642,14 +636,12 @@ private theorem UpperTheory.Gal.LocalSmoothExtension.FunctionDecomposition.bwd {
     simpa only [inv_inv] using this
   refine ((S.filter fun s => s⁻¹ ∈ X.Δ).finite_toSet.biUnion
     (t := fun s => {y : Γ ⧸ X.K j | UpperTheory.Gal.G3.ind ℂ (X.K j) s y.out ≠ 0}) ?_).subset ?_
-  · intro s hs
-    exact hone s (Finset.mem_filter.1 hs).2
+  · exact fun s hs => hone s (Finset.mem_filter.1 hs).2
   · intro y hy
     obtain ⟨s, hs, a, b, e⟩ := hS y.out hy
     have hfs : f s ≠ 0 := by
       have h1 : f y.out = f s := by rw [e]; exact hb a b s
-      rw [← h1]
-      exact hy
+      rwa [← h1]
     refine Set.mem_biUnion (Finset.mem_coe.2 (Finset.mem_filter.2 ⟨hs, hΔ s hfs⟩)) ?_
     show UpperTheory.Gal.G3.ind ℂ (X.K j) s y.out ≠ 0
     rw [UpperTheory.Gal.LocalSmoothExtension.FunctionDecomposition.ind_mem (K := X.K j)
@@ -841,14 +833,12 @@ theorem UpperTheory.Gal.LocalSmoothExtension.hodgeEig_of :
       hk T N (wordFn (L.KN N.1) ψ w f) a b = (w.map fun j => hk T N (ψ j) a b).prod * hk T N f a b := by
     intro a b w
     have := ((hWord _ _ T.X (UpperTheory.Gal.G3.hodge ℂ a b) (hG a b) (T.lev N)).2 J ψ f hψ hf).1 w
-    rw [T.K_eq] at this
-    exact this
+    rwa [T.K_eq] at this
   have hPoly : ∀ (a b : ℕ) (s : List J →₀ ℂ), T.X.IsFn (T.lev N) (polyFn (L.KN N.1) ψ s f) ∧
       hk T N (polyFn (L.KN N.1) ψ s f) a b = wop (fun j => hk T N (ψ j) a b) s * hk T N f a b := by
     intro a b s
     have := ((hWord _ _ T.X (UpperTheory.Gal.G3.hodge ℂ a b) (hG a b) (T.lev N)).2 J ψ f hψ hf).2 s
-    rw [T.K_eq] at this
-    exact this
+    rwa [T.K_eq] at this
   obtain ⟨hcomm, V, _, _, _, ξ, hξ, hspec⟩ := hS
   have hcm : ∀ (b : Fin (d + 1)) (j j' : J) (w : List J),
       hk T N (ψ j) (h i) b.1 * hk T N (ψ j') (h i) b.1 * (w.map fun j => hk T N (ψ j) (h i) b.1).prod *
@@ -946,8 +936,7 @@ theorem UpperTheory.Gal.LocalSmoothExtension.hodgeTr_of :
     (hgeo i (fun _ => 2) (fun _ => ⟨two_ne_zero, dvd_rfl⟩)).1
   have hhk : ∀ a b, hk T N f a b = ∑ i, cc i • hk T N (ind ℂ (L.KN N.1) (g i)⁻¹) a b := fun a b => by
     have e := ((hHW _ _ T.X (hodge ℂ a b) (hHG ℂ a b) (T.lev N)).1 m _ cc hfnu).2
-    rw [← hdec] at e
-    exact e
+    rwa [← hdec] at e
   have e1 : altTr (qAt T N) d (fun a b => hk T N f a b ∘ₗ cutD T N c a b) y =
       ∑ i, cc i * c.sum fun α r => r * cxTotalM G v (cW L i₀ v α y) (L.KN N.1) (ind ℂ (L.KN N.1) (g i)⁻¹) (Kp G) (oneP G) := by
     have e := hAL _ (qAt T N) d m (Fin k → 𝓞 D.F) (fun i a b => hk T N (ind ℂ (L.KN N.1) (g i)⁻¹) a b) cc c
@@ -1034,8 +1023,7 @@ variable {B : AlgebraicGeometry.Scheme.{0}} {Γ : Type} [Group Γ] (X : Tower B 
 
 private theorem hecke_zero (hL : UpperTheory.Gal.G3.HopLin.{0}) (hT : T.Good) (j : X.ι) (hz : X.IsFn j (0 : Γ → ℂ)) :
     X.hecke T j 0 = 0 := by
-  have h := (hL X T hT j 0 0 0 hz hz).2
-  simpa using h
+  simpa using (hL X T hT j 0 0 0 hz hz).2
 
 private theorem hecke_sum (hL : UpperTheory.Gal.G3.HopLin.{0}) (hT : T.Good) (j : X.ι) (hz : X.IsFn j (0 : Γ → ℂ))
     (hadd : ∀ f f' : Γ → ℂ, X.IsFn j f → X.IsFn j f' → X.IsFn j (f + f'))
@@ -1150,8 +1138,7 @@ theorem UpperTheory.Gal.LocalSmoothExtension.kSHodge_of :
   have hfn : T.X.IsFn (T.lev N) f := by
     refine (hF _ _ T.X (T.lev N) f).2 ?_ ?_
     · rw [T.K_eq]; exact hf.1
-    · intro y hy
-      exact (T.Δ_eq _).2 (hf.2 y hy)
+    · exact fun y hy => (T.Δ_eq _).2 (hf.2 y hy)
   have hfn' : T.X.IsFn (T.lev N) fun y => σ (f y) := by
     obtain ⟨a1, a2, a3⟩ := hfn
     refine ⟨fun k hk y => ⟨?_, ?_⟩, fun y hy => a2 y ?_, a3.subset fun y hy => ?_⟩
@@ -1271,8 +1258,7 @@ theorem UpperTheory.Gal.LocalSmoothExtension.legBc_of :
     ⟨hf.lift (f' ≫ π) P'.s hw, hf.lift_fst _ _ _, hf.lift_snd _ _ _⟩
   obtain ⟨o₁, ⟨φ₁⟩⟩ : ∃ o₁ : GObj gb₂ N P'.s, Nonempty (GObjMap o₁ P.univ π₁) := by
     have key := exists_gObjMap_pull π₁ P.univ
-    rw [hπs] at key
-    exact key
+    rwa [hπs] at key
   let d₁ : GObj gb₁ N (P'.s ≫ spMap τ) := down hρ ht rfl o₁
   let φd : GObjMap d₁ (down hρ ht rfl P.univ) π₁ :=
     ⟨φ₁.φ, φ₁.φ₂, φ₁.cart, φ₁.sq, φ₁.act, φ₁.pol, φ₁.eta⟩
@@ -1654,8 +1640,7 @@ private theorem pt_ext {G : GDatum} {R : Type} [CommRing R] [Algebra ℚ R] {b :
     (m : GObjMap o₁ o f) {t : T ⟶ S₁} (x y : Over.mk t ⟶ o₁.A) (h : x.left ≫ m.φ = y.left ≫ m.φ) : x = y := by
   letI := o.grp
   letI := o₁.grp
-  apply GlobalTheory.SiegelPull.push_injective m.cart (Over.mk t)
-  exact Over.OverMorphism.ext h
+  exact GlobalTheory.SiegelPull.push_injective m.cart (Over.mk t) (Over.OverMorphism.ext h)
 
 theorem UpperTheory.Gal.LocalSmoothExtension.transPull_of :
     HomEx → PolPull → TatePull → TransPull := by

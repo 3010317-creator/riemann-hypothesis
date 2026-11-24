@@ -259,7 +259,6 @@ lemma local_zero {Q : (ι → Fin n → Fin n → ℂ) → ℂ} {Ω : Set (ι �
       ((norm_le_pi_norm (z τ a) a).trans (norm_le_pi_norm (z τ) a)).trans (norm_le_pi_norm z τ)
     rw [hm1, norm_neg, norm_one] at hle
     linarith [hz.trans_le (min_le_right r 1)]
-  show Q (luMap z) = 0
   exact hb _ hyΩ _ hup (hdisc z hzr)
 
 theorem eq_zero_of_torus_law (n : ℕ) (ι : Type) [Fintype ι] [DecidableEq ι] (Hm : ι → Mt n) (q : ι → ℕ) (x₀ : ι → Mt n)

@@ -215,8 +215,7 @@ private theorem ker_lift (hK : IsQi K) (hF : IsHostFrame Ω c e ψ S A F) {g : G
     ∃ s : Formalism.ConjugateSelfDual.G K Ω, toGS Ω _ (s.restrictScalars ℚ) = g := by
   obtain ⟨σ, rfl⟩ : ∃ σ, toGS Ω (S : Set Pl) σ = g := QuotientGroup.mk_surjective g
   have h : σ ∈ (eta4 Ω).ker := by
-    rw [← hF.η, hF.π]
-    exact hg
+    rwa [← hF.η, hF.π]
   rw [← (gaussian_field_range_eq_ker_quartic_char.2 Ω K hK).1] at h
   obtain ⟨s, rfl⟩ := h
   exact ⟨s, rfl⟩
@@ -279,8 +278,7 @@ private theorem admissible_unitary_three_point (hP : _root_.UpperTheory.V.Af.Hyp
     have : CharP (ResidueField c.O) l := by
       rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
         mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
-      intro hu
-      exact PadicInt.prime_p.not_isUnit (isUnit_of_map_unit _ _ hu)
+      exact fun hu => PadicInt.prime_p.not_isUnit (isUnit_of_map_unit _ _ hu)
     obtain ⟨σ, hσ, hσc⟩ := hF.cc
     have hv : (A F.vl).valuation (l : Ω) < 1 := by simpa using (hF.isOver F.vl (l : 𝓞 ℚ)).2 hF.vl
     have hfr := Fr.host_ex ⟨⟨hN.coh.lf, hN.coh.lt, hN.coh.le, hN.coh.gf, hN.coh.ge, hN.coh.pt⟩, hN.coh.uo, hN.coh.gw⟩

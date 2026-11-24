@@ -109,8 +109,7 @@ private theorem integral_comp_unitary_mulVec (U : Matrix (Fin n) (Fin n) ℂ) (h
     have h := Matrix.det_of_mem_unitary hU
     have h2 : star U.det * U.det = 1 := Unitary.star_mul_self_of_mem h
     have h3 : ((Complex.normSq U.det : ℝ) : ℂ) = 1 := by
-      rw [Complex.normSq_eq_conj_mul_self]
-      exact h2
+      rwa [Complex.normSq_eq_conj_mul_self]
     exact_mod_cast h3
   have hsU : star U * U = 1 := Matrix.mem_unitaryGroup_iff'.mp hU
   have hUs : U * star U = 1 := Matrix.mem_unitaryGroup_iff.mp hU

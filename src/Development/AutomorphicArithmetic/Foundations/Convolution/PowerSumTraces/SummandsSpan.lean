@@ -60,8 +60,7 @@ private theorem isSummandOf_map (hWc : IsClosed (W : Set H))
     (completeSpace_coe_iff_isComplete.1 ‹CompleteSpace V›).isClosed
   have hemb : Topology.IsClosedEmbedding ((↑) : W → H) := hWc.isClosedEmbedding_subtypeVal
   refine ⟨Submodule.map_subtype_le _ _, ?_, ?_, ?_, ?_⟩
-  · have h := hemb.isClosedMap _ hVc
-    simpa [Submodule.map_coe] using h
+  · simpa [Submodule.map_coe] using hemb.isClosedMap _ hVc
   · rintro g _ ⟨w, hw, rfl⟩
     exact ⟨π.restrict W hWi g w, hinv g w hw, rfl⟩
   · haveI := hirr.1
@@ -115,8 +114,7 @@ private theorem closure_iSup_summands (hWc : IsClosed (W : Set H))
     have htop : (⊤ : Submodule ℂ W) ≤ S.topologicalClosure.comap W.subtype := by
       rw [← hspan]
       exact Submodule.topologicalClosure_minimal _ hle hcl
-    intro x hx
-    exact htop (Submodule.mem_top : (⟨x, hx⟩ : W) ∈ ⊤)
+    exact fun x hx => htop (Submodule.mem_top : (⟨x, hx⟩ : W) ∈ ⊤)
 
 end Generic
 

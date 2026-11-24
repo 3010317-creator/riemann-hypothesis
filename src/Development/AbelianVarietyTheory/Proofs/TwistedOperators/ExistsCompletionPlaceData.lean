@@ -151,8 +151,7 @@ theorem continuous_cpt_toEAf (w : Pl D.host.E) : Continuous fun a : AE D => cpt 
     simpa [u, Units.val_pow_eq_pow_val, map_pow] using hn
   have hU : {z : AE D | finPart D (atPl w ((u⁻¹ : (Kw w)ˣ) : Kw w) * z) ∈ intAE D} ∈ 𝓝 (0 : AE D) := by
     refine IsOpen.mem_nhds (h1.preimage (hfc.comp (continuous_const.mul continuous_id))) ?_
-    simp only [Set.mem_setOf_eq, mul_zero, map_zero]
-    exact zero_mem _
+    simpa only [Set.mem_setOf_eq, mul_zero, map_zero] using zero_mem _
   filter_upwards [hU] with z hz
   have h3 := valuation_cpt_le_one w _ hz
   rw [cpt_atPl_mul] at h3
@@ -188,8 +187,7 @@ theorem continuous_atPl (w : Pl D.host.E) : Continuous (atPl (D := D) w) := by
     have e1 : ((toAd D).comp (toEAf D)) (e.symm (0, y)) = R y := by
       show toAd D (Formalism.IndefR.Lev.swapAE D (finPart D (e.symm (0, y)))) = toAd D (Formalism.IndefR.Lev.swapAE D y)
       rw [hfin]
-    rw [e1] at key
-    exact key
+    rwa [e1] at key
   have hform : ∀ x, atPl w x = e.symm (0, R.symm (singleV D.host.E w x)) := fun x => by
     refine ae_ext ?_ fun Q => ?_
     · rw [(atPl_spec w x).1, ← (he _).1, RingEquiv.apply_symm_apply]

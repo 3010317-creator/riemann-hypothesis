@@ -84,8 +84,6 @@ theorem GlobalTheory.TwParts.mem_iSup_Wp3_of_mem_WS : ∀ {D : D7} {G : Type} [G
       iSup_mono fun p => inf_le_left
     exact hle hk
   refine Submodule.iSup_induction (fun p => (R.toCx3 F).Wp j p) (motive := fun x => Tw.out (s := twAt D.what₂.embLL A3.A.v0) (E := (R.HW j (sg0 D A3.A)).H) x ∈ ⨆ p, R.Wp3 j p) hk' ?_ ?_ ?_
-  · intro p x hx
-    exact Submodule.mem_iSup_of_mem p hx
+  · exact fun p x hx => Submodule.mem_iSup_of_mem p hx
   · exact Submodule.zero_mem _
-  · intro x y hx hy
-    exact Submodule.add_mem _ hx hy
+  · exact fun x y hx hy => Submodule.add_mem _ hx hy

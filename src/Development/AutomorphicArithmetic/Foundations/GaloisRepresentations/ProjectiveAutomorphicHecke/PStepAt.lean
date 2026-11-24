@@ -82,8 +82,7 @@ private theorem isCompact_CJ {w : Plc E} (hw : IsSplitAt w) (J : Subgroup (GLw n
     · rintro ⟨x, hx, rfl⟩
       refine ⟨((locE hw).symm x).2, ?_⟩
       show cLoc w (locF hw x).1 ∈ J
-      rw [cLoc_locF]
-      exact hx
+      rwa [cLoc_locF]
   rw [he]
   exact hJ.image hc
 
@@ -198,7 +197,6 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pStepAt_of :
     rw [e]
     refine Subtype.ext (LinearMap.ext fun v => ?_)
     have h2 := hrχ ⟨a.1, hak⟩ v
-    rw [← hval, hχ] at h2
-    exact h2
+    rwa [← hval, hχ] at h2
 
 end

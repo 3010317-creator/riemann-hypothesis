@@ -432,8 +432,7 @@ theorem exists_dominant (O : Type) [CommRing O] [IsDedekindDomain O] [CharZero O
     have hc : IsCone bar φ ![pull e.toLinearMap (γ j)] := by
       have := (hφ.face _ 1 γ ⟨fun _ => j, fun _ _ _ => Subsingleton.elim _ _⟩ hγ).pull_equiv e
       have h0 : ![pull e.toLinearMap (γ j)] = fun _ : Fin 1 => pull e.toLinearMap (γ j) := funext fun i => by simp
-      rw [h0]
-      exact this
+      rwa [h0]
     have h1 := hgap _ hc fun j' hj => h ⟨j', hj⟩
     rw [← hlin' _ (pull_mem _ (hγ.mem j)), evalZ_pull φ (r := e.toLinearMap) e.surjective, mul_assoc, hs.eq j] at h1
     have h2 : D * ∑ i, γ j (a₀ i) (a₀ i) + (∑ j, lam' (γ j) + 1) ≤ lin W a (pull e.toLinearMap (γ j)) := by
@@ -493,15 +492,13 @@ private theorem mem_of_forall_mem_sup_maximalIdeal_pow' (N : Ideal V) (x : V)
       rfl
     rw [h1]
     exact Submodule.smul_mem_smul hy Submodule.mem_top
-  rw [hbot] at hmem
-  exact hmem
+  rwa [hbot] at hmem
 
 open IsLocalRing in
 variable {V : Type} [CommRing V] [IsLocalRing V] [IsNoetherianRing V] in
 private theorem exists_not_mem_span_mul_maximalIdeal_sup_pow [IsDomain V] {g : V} (hg : g ≠ 0) :
     ∃ e : ℕ, g ∉ Ideal.span {g} * maximalIdeal V ⊔ maximalIdeal V ^ e := by
-  by_contra h
-  push Not at h
+  by_contra! h
   have hg' := mem_of_forall_mem_sup_maximalIdeal_pow' _ g h
   obtain ⟨z, hz, hgz⟩ := Ideal.mem_span_singleton_mul.1 hg'
   have hz1 : z = 1 := by
@@ -829,8 +826,7 @@ theorem GlobalTheory.Poinc.Sep.values_of_elements : ∀ (O : Type) [CommRing O] 
       Finset.prod_induction _ IsUnit (fun _ _ => IsUnit.mul) isUnit_one fun i _ => (Φ.u_unit y _).choose_spec
     obtain ⟨h, hh, hhp⟩ := (hc (Function.update c₀ i₀ c)).2 hIp
     obtain ⟨h', hh', hhp'⟩ := (hc (Function.update c₀ i₀ c')).2 hIp
-    rw [hsplit, hzero, _root_.mul_one] at hhp hhp'
-    rw [RingHom.mem_ker, map_sub, sub_eq_zero] at hhp hhp'
+    rw [hsplit, hzero, _root_.mul_one, RingHom.mem_ker, map_sub, sub_eq_zero] at hhp hhp'
     have hUe : ev (∏ i ∈ Finset.univ.erase i₀, Φ.u y (fun v => a (i, v)) (c₀ i)) ≠ 0 := (hU.map ev).ne_zero
     have hce : ev (Φ.u y mu c') ≠ 0 := (hc'.map ev).ne_zero
     refine ⟨ev h / ev h', div_mem (hO' h hh).1 (hO' h' hh').1, ?_⟩

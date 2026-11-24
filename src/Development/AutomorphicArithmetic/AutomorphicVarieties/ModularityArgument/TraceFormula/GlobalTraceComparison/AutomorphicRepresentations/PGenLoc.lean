@@ -78,8 +78,7 @@ private theorem dcs_eq_of_mem {H : Type} [Group H] {N : Subgroup H} {q : H} (hq 
   constructor
   · rintro ⟨a, ha, b, hb, rfl⟩
     exact N.mul_mem (N.mul_mem ha hq) hb
-  · intro hx
-    exact ⟨x * q⁻¹, N.mul_mem hx (N.inv_mem hq), 1, N.one_mem, by simp⟩
+  · exact fun hx => ⟨x * q⁻¹, N.mul_mem hx (N.inv_mem hq), 1, N.one_mem, by simp⟩
 
 private theorem ind_inv {H : Type} [Group H] {N : Subgroup H} (q : H) {k : H} (hk : k ∈ N) (x : H) :
     (dcs N q).indicator (1 : H → ℂ) (k * x) = (dcs N q).indicator 1 x ∧
@@ -316,8 +315,7 @@ private theorem pf_eq {Z : Finset (Pl E)} {S : Set (Pl E)} {N : ∀ w : Pl E, Su
     · simp
   · rw [Set.indicator_of_notMem hx]
     obtain ⟨i, hi, hix⟩ : ∃ i : Pl E × Bool, Sl S i ∧ qw n i.1 i.2 x ∉ dcs (N i.1) (qw n i.1 i.2 g) := by
-      by_contra hn
-      push Not at hn
+      by_contra! hn
       exact hx (mem_dcs_of_positions hqj hsep g x hn (bad_finite hG hbad x g))
     unfold pf
     rw [finprod_mem_def]
@@ -387,8 +385,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.genLoc_pf :
         refine ⟨jw n i.1 i.2 a, mem_Lev.2 fun k hk => ?_, hqj _ _ a⟩
         by_cases hki : k = i
         · subst hki
-          rw [hqj]
-          exact ha
+          rwa [hqj]
         · rw [hsep i k hi hk (Ne.symm hki)]
           exact (N k.1).one_mem
       · rintro ⟨k, hk, rfl⟩

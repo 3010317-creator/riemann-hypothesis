@@ -106,8 +106,7 @@ theorem isBaseCond_cond0 : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (
       rw [Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot] at h2
       exact hN0 h2
     · exact (below w0).ne_bot h1
-  · intro h
-    exact (below w0).isPrime.ne_top (top_le_iff.mp (h ▸ hle))
+  · exact fun h => (below w0).isPrime.ne_top (top_le_iff.mp (h ▸ hle))
   · intro v hv
 
     obtain ⟨p, hp, hpv⟩ : ∃ p ∈ [H.g 0, H.g 1, H.pde, H.pde', q0], ((p : ℕ) : OF H.E) ∈ v.asIdeal := by
@@ -130,8 +129,7 @@ theorem isBaseCond_cond0 : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (
         exact hok.referencePlaceOverPrime
     obtain ⟨P, hPv⟩ := basecond_exists_above v
     have hpP : ((p : ℕ) : 𝓞 H.E) ∈ P.asIdeal := by
-      rw [← _root_.GlobalTheory.LamTie.ExpCond.mem_below, hPv]
-      exact hpv
+      rwa [← _root_.GlobalTheory.LamTie.ExpCond.mem_below, hPv]
     obtain ⟨hpr, hp2, hdisc, hnorm⟩ := hok.splits p hp
     refine ⟨hPv ▸ hspl p hp P hpP, ?_, p, hpr, hp2, hpv, hdisc, hnorm⟩
 
@@ -231,8 +229,7 @@ theorem lam0_expAt : ∀ (D : D7) (Z : LamDat D), Z.Ok → ∀ (l : ℕ) (j a : 
       exact expAt_mul_inv _ (Z.chi a) _ w 1 le_rfl (hA.one w hb) ((HChar.unrAt_iff _ _).1 hu)
     · rw [hO hw hb]
       have hu := HChar.UnrAt.mul (mu0_del_unr Z.C l j w hw) (HChar.UnrAt.inv (hA.unr w hw hb))
-      intro m
-      exact ⟨fun _ => Nat.zero_le m, fun _ => HChar.UnrAt.levelLe hu m⟩
+      exact fun m => ⟨fun _ => Nat.zero_le m, fun _ => HChar.UnrAt.levelLe hu m⟩
 
 end GlobalTheory.LamTie
 end -- clump:auto

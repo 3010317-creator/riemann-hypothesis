@@ -103,8 +103,7 @@ theorem localization_quotient_separated_dvd {R S : Type} [CommRing R] [CommRing 
       ring)
     rw [SModEq.zero, smul_eq_mul, Ideal.mul_top, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
     refine ⟨Ideal.Quotient.mk _ a, ?_⟩
-    rw [← map_pow, ← map_mul, Ideal.Quotient.eq, Ideal.mem_span_singleton]
-    exact h2
+    rwa [← map_pow, ← map_mul, Ideal.Quotient.eq, Ideal.mem_span_singleton]
   rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton] at h1
   have := dvd_add h0 (map_dvd (algebraMap R S) h1)
   simpa using this
@@ -191,8 +190,7 @@ theorem ev_σDp (g : Per.Gq l) (n : ℕ) (w : Per.BdRp l) (y : Per.AinfP l)
     rw [Ideal.mem_comap, Ideal.mem_comap, RingHom.mem_ker, σDp_alg, ev_alg, Ideal.Quotient.eq_zero_iff_mem]
     exact ((Ideal.pow_right_mono (GlobalTheory.RingBasics.ker_σ g) n).trans (Ideal.le_comap_pow _ n)) ha
   have h3 := h2 h1
-  rw [Ideal.mem_comap, RingHom.mem_ker, map_sub, map_sub, σDp_alg, ev_alg, sub_eq_zero] at h3
-  exact h3
+  rwa [Ideal.mem_comap, RingHom.mem_ker, map_sub, map_sub, σDp_alg, ev_alg, sub_eq_zero] at h3
 
 theorem sigA_alg (g : Per.Gq l) (s : Per.Acris0 l) :
     sigA g (algebraMap (Per.Acris0 l) (Per.Acris l) s) =

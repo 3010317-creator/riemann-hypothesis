@@ -118,8 +118,7 @@ theorem twistPlaces : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B
       intro c hc'
       have h1 : algebraMap (𝓞 X.B.host.F) (𝓞 X.B.host.E) c ∈ (I.sel v).asIdeal := by
         have := hI.sel_ok v
-        rw [← this] at hc'
-        exact hc'
+        rwa [← this] at hc'
       obtain ⟨c', h2, h3⟩ := hc _ h1
       have h4 : c' = algebraMap (𝓞 X.B.host.F) (𝓞 X.B.host.E) c := by
         apply RingOfIntegers.ext
@@ -127,8 +126,7 @@ theorem twistPlaces : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B
         show star (algebraMap X.B.host.F X.B.host.E (c : X.B.host.F)) = algebraMap X.B.host.F X.B.host.E (c : X.B.host.F)
         rw [hstar, ← X.B.conjF_eq, AlgHom.commutes]
       rw [h4] at h2
-      rw [← hI.sel_ok v']
-      exact h2
+      rwa [← hI.sel_ok v']
     have hv : v = v' := HeightOneSpectrum.ext (v.isMaximal.eq_of_le v'.isPrime.ne_top hle)
     subst hv
     obtain ⟨⟨x, hx, hy⟩, -⟩ := key _ hPP

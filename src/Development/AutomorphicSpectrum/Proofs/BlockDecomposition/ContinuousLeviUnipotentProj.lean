@@ -68,8 +68,7 @@ theorem continuous_uM_val (n : ℕ) : Continuous fun y : Fin n → k =>
     funext y
     rfl
   rw [h]
-  refine continuous_const.add (continuous_matrix fun a b => ?_)
-  exact continuous_colMat_entry k n a b
+  exact continuous_const.add (continuous_matrix fun a b => (continuous_colMat_entry k n a b))
 
 theorem uM_inv (n : ℕ) (y : Fin n → k) : (uM k n y)⁻¹ = uM k n (-y) := by
   have h : uM k n (-y) * uM k n y = 1 := by

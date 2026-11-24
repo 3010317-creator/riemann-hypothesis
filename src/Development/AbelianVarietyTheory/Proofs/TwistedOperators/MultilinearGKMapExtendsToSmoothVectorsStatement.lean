@@ -392,8 +392,7 @@ theorem invariant_insert (A B : ∀ τ, Submodule ℂ (H τ)) (hAB : ∀ τ, A �
           hExtA _ h₂ x hx]
         abel) b hb
     simp only [LinearMap.sub_apply] at this
-    rw [sub_sub, sub_eq_zero] at this
-    exact this
+    rwa [sub_sub, sub_eq_zero] at this
   have ExtSmul : ∀ (c : ℂ) (L : H τ₀ →ₗ[ℂ] E), (∀ r ∈ Rk τ₀, ∀ x ∈ A τ₀, L (r.1 x) = r.2 (L x)) →
       ∀ b ∈ B τ₀, Ext (c • L) b = c • Ext L b := by
     intro c L h b hb
@@ -405,8 +404,7 @@ theorem invariant_insert (A B : ∀ τ, Submodule ℂ (H τ)) (hAB : ∀ τ, A �
         intro x hx
         simp only [LinearMap.sub_apply, LinearMap.smul_apply, hExtA _ hc x hx, hExtA _ h x hx, sub_self]) b hb
     simp only [LinearMap.sub_apply, LinearMap.smul_apply] at this
-    rw [sub_eq_zero] at this
-    exact this
+    rwa [sub_eq_zero] at this
   have hPupd : ∀ (v : ∀ τ, H τ) (i : ι) (z : H i),
       (fun τ => R τ (update v i z τ)) = update (fun τ => R τ (v τ)) i (R i z) := by
     intro v i z
@@ -745,8 +743,7 @@ theorem sobCont_rep_of_bound : ∀ {D : D7} {V : HSp D} {S : D.what₂.Tau → S
       unfold GlobalTheory.SmoothGlob.sobNorm
       rw [List.map_map]
       congr 1
-      refine List.map_congr_left fun l _ => ?_
-      exact congrArg norm (foldr_dRep_conj_inv (σ := M.σ τ) hP l w)
+      exact List.map_congr_left fun l _ => congrArg norm (foldr_dRep_conj_inv (σ := M.σ τ) hP l w)
     rw [hs]
     exact hC w hw'
 
@@ -821,8 +818,7 @@ theorem uniq (hHC : GlobalTheory.Published.HarishChandraModules) (M : DSModel V 
     (h0 : ∀ a ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ, L a = 0) : ∀ w ∈ M.sm τ, L w = 0 := by
   intro w hw
   have h := _root_.GlobalTheory.mem_closure_of_forall_dual_vanish hp ⊥ (L w) fun f _ => form_zero hHC M τ hp hL f (fun a ha => by rw [h0 a ha, map_zero]) w hw
-  rw [Submodule.bot_coe, closure_singleton] at h
-  exact h
+  rwa [Submodule.bot_coe, closure_singleton] at h
 
 end GlobalTheory.FactorExtension
 
@@ -917,12 +913,10 @@ theorem extend_positions : GlobalTheory.Published.HarishChandraModules → Globa
     rcases hr with ⟨k, hk, rfl⟩ | ⟨X, hX, rfl⟩
     · have h := hK τ k hk (Function.update (fun τ' => P τ' (u τ')) τ (P τ x)) (P τ (M.σ τ k x))
         (by rw [Function.update_self, hP' τ _ hx, hP' τ _ hr'])
-      rw [Function.update_idem] at h
-      exact h
+      rwa [Function.update_idem] at h
     · have h := hL τ X hX (Function.update (fun τ' => P τ' (u τ')) τ (P τ x)) (P τ (dRep (M.σ τ) X x))
         (by rw [Function.update_self, hP' τ _ hx, hP' τ _ hr'])
-      rw [Function.update_idem] at h
-      exact h
+      rwa [Function.update_idem] at h
   by_cases hz : ∀ u : GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.KVec M, T₀ u = 0
   · refine ⟨0, fun v u _ => (hz u).symm, fun τ g _ v w _ => by simp, fun τ i v => ⟨[], 0, by simp, fun w => by simp⟩⟩
   push Not at hz
@@ -936,15 +930,13 @@ theorem extend_positions : GlobalTheory.Published.HarishChandraModules → Globa
     let u : ∀ τ, M.H τ := fun τ => (u₀ τ : M.H τ)
     have hLk : ∀ r ∈ Rk τ, ∀ x ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ, T₀'.toLinearMap u τ (r.1 x) = r.2 (T₀'.toLinearMap u τ x) :=
       fun r hr x hx => by
-        simp only [MultilinearMap.toLinearMap_apply]
-        exact h0 τ u (fun τ' _ => (u₀ τ').2) r hr x hx
+        simpa only [MultilinearMap.toLinearMap_apply] using h0 τ u (fun τ' _ => (u₀ τ').2) r hr x hx
     obtain ⟨T, hT1, ⟨-, hT3⟩, hT4, hT5⟩ := hcw τ _ hLk
     refine ⟨T, hT3, hT4, hT5 ⟨u τ, (u₀ τ).2, ?_⟩⟩
     rw [MultilinearMap.toLinearMap_apply, Function.update_eq_self]
     show T₀ (fun τ' => P τ' (u₀ τ' : M.H τ')) ≠ 0
     have : (fun τ' => P τ' (u₀ τ' : M.H τ')) = u₀ := funext fun τ' => hP τ' (u₀ τ')
-    rw [this]
-    exact hu₀
+    rwa [this]
   have hbs : ∀ τ τ', τ ≠ τ' → ∀ F : M.H τ →ₗ[ℂ] M.H τ' →ₗ[ℂ] E, (∀ w ∈ M.sm τ, F w ∈ C τ') →
       (∀ a ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ', F.flip a ∈ C τ) → ∀ b ∈ M.sm τ', F.flip b ∈ C τ := by
     intro τ τ' _ F hF1 hF2 b hb
@@ -970,8 +962,7 @@ theorem extend_positions : GlobalTheory.Published.HarishChandraModules → Globa
           exact ⟨x, (hsm τ x).1 x.2, rfl⟩
         · rintro ⟨w, hw, rfl⟩
           exact ⟨⟨w, (hsm τ w).2 hw⟩, rfl⟩
-      rw [e]
-      exact hN₁cl
+      rwa [e]
     let D₂ : Submodule ℂ (M.sm τ') := (GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ').comap (M.sm τ').subtype
     have hD : ∀ x, j₂ x ∈ closure (j₂ '' (D₂ : Set (M.sm τ'))) := by
       intro x
@@ -1010,16 +1001,14 @@ theorem extend_positions : GlobalTheory.Published.HarishChandraModules → Globa
     show Tab (fun τ' => ((Function.update v τ w τ' : M.sm τ') : M.H τ')) = π τ g (Tab fun τ' => (v τ' : M.H τ'))
     rw [hupd, hw]
     have h := (hT2 τ (fun τ' => (v τ' : M.H τ')) fun τ' _ => (v τ').2).2 _ ⟨g, hg, rfl⟩ (v τ) (v τ).2
-    rw [Function.update_eq_self] at h
-    exact h
+    rwa [Function.update_eq_self] at h
   · intro τ i v
     obtain ⟨Sl, C', hS, hb⟩ := (hT2 τ (fun τ' => (v τ' : M.H τ')) fun τ' _ => (v τ').2).1 i
     refine ⟨Sl, C', hS, fun w => ?_⟩
     have h := hb w ((hsm τ w).1 w.2)
     rw [MultilinearMap.toLinearMap_apply] at h
     show p i (Tab (fun τ' => ((Function.update v τ w τ' : M.sm τ') : M.H τ'))) ≤ _
-    rw [hupd]
-    exact h
+    rwa [hupd]
 
 end GlobalTheory.FactorExtension
 end -- clump:auto

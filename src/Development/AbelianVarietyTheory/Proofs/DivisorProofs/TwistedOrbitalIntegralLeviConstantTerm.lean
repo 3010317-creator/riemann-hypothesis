@@ -249,8 +249,7 @@ namespace GlobalTheory
 theorem resultant_ne_zero_of_separable_mul :
     ∀ (k : Type) [Field k] (P Q : k[X]), P.Monic → Q.Monic → (P * Q).Separable →
       resultant P Q ≠ 0 := by
-  intro k _ P Q _ _ h
-  exact Polynomial.resultant_ne_zero P Q h.isCoprime
+  exact fun k _ P Q _ _ h => Polynomial.resultant_ne_zero P Q h.isCoprime
 
 end GlobalTheory
 end -- clump:auto
@@ -347,8 +346,7 @@ theorem isClosed_parP : ∀ (E : Type) [Field E] [NumberField E] (a n : ℕ) (w 
   by_cases hij : decide (a ≤ (j : ℕ)) < decide (a ≤ (i : ℕ))
   · simp only [hij, true_implies]
     exact isClosed_eq (Continuous.matrix_elem (Units.continuous_val (M := Matrix (Fin n) (Fin n) (w.adicCompletion E))) i j) continuous_const
-  · simp only [hij, false_implies, Set.ofPred_true]
-    exact isClosed_univ
+  · simpa only [hij, false_implies, Set.ofPred_true] using isClosed_univ
 
 theorem blk_mem_parP : ∀ (E : Type) [Field E] [NumberField E] (n a b : ℕ) (h : a + b = n) (w : Pl E) (m : GLw a w × GLw b w) (X : Matrix (Fin a) (Fin b) (w.adicCompletion E)), blk h w m X ∈ GlobalTheory.LeviDesc.parP a n w := by
   intro E _ _ n a b h w m X
@@ -359,13 +357,11 @@ theorem blk_mem_parP : ∀ (E : Type) [Field E] [NumberField E] (n a b : ℕ) (h
     rw [IsUnit.unit_spec]
     intro i j hij
     have hj : (j : ℕ) < a := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       simp only [hc, decide_true] at hij
       exact (by decide : ∀ c : Bool, ¬ (true < c)) _ hij
     have hi : a ≤ (i : ℕ) := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       simp only [not_le.2 hc, decide_false] at hij
       exact (by decide : ∀ c : Bool, ¬ (c < false)) _ hij
     simp only [Matrix.reindex_apply, Matrix.submatrix_apply]

@@ -344,8 +344,7 @@ theorem isField_stalk_of_forall_specializes {Z : Scheme.{0}} (ζ : Z) [IsDomain 
   rw [Scheme.range_fromSpecStalk] at hp
   have h1 : Z.fromSpecStalk ζ p = Z.fromSpecStalk ζ (IsLocalRing.closedPoint _) :=
     (h _ hp).trans Scheme.fromSpecStalk_closedPoint.symm
-  have h2 := (Z.fromSpecStalk ζ).isEmbedding.injective h1
-  exact (congrArg PrimeSpectrum.asIdeal h2).symm
+  exact (congrArg PrimeSpectrum.asIdeal ((Z.fromSpecStalk ζ).isEmbedding.injective h1)).symm
 
 theorem isField_stalk_genPt :
     ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsIntegral Y] [GlobalTheory.IsNormalScheme Z], IsOpen (Set.range π) →
@@ -567,8 +566,7 @@ theorem normIdeal_map_away : ∀ (A K L B A' B' : Type) [CommRing A] [CommRing B
     obtain ⟨a, ha⟩ := hcoef (fun i => j i * b ^ (N - n i)) s
     have hcoef' : algebraMap A K a = (c ^ N) ^ Module.finrank K L * algebraMap A' K a' := by
       rw [ha, hs]
-      simp only [himg]
-      exact normForm_coeff_smul K L _ _ s
+      simpa only [himg] using normForm_coeff_smul K L _ _ s
     have hmem : a ∈ normIdeal A K L B J := Ideal.subset_span ⟨m, _, hjJ, s, ha⟩
     have key : algebraMap A A' a = algebraMap A A' (f ^ (N * Module.finrank K L)) * a' := by
       apply hinj
@@ -721,12 +719,10 @@ theorem ideal_eq_top_of_forall_not_mem {X : Scheme.{0}} (I : X.IdealSheafData) (
   have hempty : X.zeroLocus (U := V.1) (I.ideal V : Set Γ(X, V.1)) ∩ V.1 = ∅ := by
     ext x
     simp only [Set.mem_inter_iff, Set.mem_empty_iff_false, iff_false, not_and]
-    intro hx hxV
-    exact h x ((Scheme.IdealSheafData.mem_support_iff_of_mem hxV).2 hx) hxV
+    exact fun hx hxV => h x ((Scheme.IdealSheafData.mem_support_iff_of_mem hxV).2 hx) hxV
   rw [← hV.fromSpec_image_zeroLocus] at hempty
   have h0 : PrimeSpectrum.zeroLocus (I.ideal V : Set Γ(X, V.1)) = ∅ := Set.image_eq_empty.mp hempty
-  rw [PrimeSpectrum.zeroLocus_empty_iff_eq_top] at h0
-  exact h0
+  rwa [PrimeSpectrum.zeroLocus_empty_iff_eq_top] at h0
 
 theorem famIdeal_eq_top_of_disjoint : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFinite π] [IsIntegral Y]
     (hK : IsField (Z.presheaf.stalk (GlobalTheory.NormSheafDescent.genPt π)))
@@ -784,8 +780,7 @@ theorem descendedIdealSheaf_exists : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFi
   refine ⟨Z.presheaf.stalk (GlobalTheory.NormSheafDescent.genPt π), Y.functionField, inferInstance, inferInstance,
     inferInstance, hfd, GlobalTheory.T.charZero_stalk_imageOfGenericPoint Y Z π hchar hK, J, ?_, ?_⟩
   · intro x hx
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     have hxW := hJs hx
     have hS : IsClosed (π '' (I.support : Set Y)) := π.isClosedMap _ I.support.isClosed
     obtain ⟨_, ⟨U, hU, rfl⟩, hxU, hUsub⟩ := Z.isBasis_affineOpens.exists_subset_of_mem_open
@@ -941,8 +936,7 @@ theorem exists_finite_split_normForm : ∀ (A B K L : Type) [CommRing A] [IsDoma
   have hSint : ∀ y ∈ S, IsIntegral A y := by
     rintro _ ⟨p, rfl⟩
     exact (Algebra.IsIntegral.isIntegral (R := A) (p.2 : B)).map (F p.1)
-  have hRfin : Module.Finite A R := by
-    exact Module.Finite.iff_fg.mpr (fg_adjoin_of_finite hSfin hSint)
+  have hRfin : Module.Finite A R := Module.Finite.iff_fg.mpr (fg_adjoin_of_finite hSfin hSint)
   have hmem : ∀ j (y : B), F j y ∈ R := by
     intro j y
     have hy : y ∈ Submodule.span A (s : Set B) := hs ▸ Submodule.mem_top
@@ -1159,8 +1153,7 @@ theorem exists_primitive_part [IsDomain V] [IsDiscreteValuationRing V] (f : MvPo
   · refine ⟨a, g, rfl, ?_⟩
     rw [span_coeff_C_mul] at ha'
     have hne : Ideal.span {a} ≠ (0 : Ideal V) := by
-      rw [Ideal.zero_eq_bot, ne_eq, Ideal.span_singleton_eq_bot]
-      exact h0
+      rwa [Ideal.zero_eq_bot, ne_eq, Ideal.span_singleton_eq_bot]
     apply mul_left_cancel₀ hne
     rw [ha', Ideal.mul_top]
 
@@ -1204,8 +1197,7 @@ theorem span_coeff_linear {m : ℕ} (c : Fin m → V) :
     · simp
     · intro j _ hj
       rw [ite_eq_right, mul_zero]
-      intro h
-      exact hj (Finsupp.single_left_injective one_ne_zero h)
+      exact fun h => hj (Finsupp.single_left_injective one_ne_zero h)
     · simp
 
 theorem span_coeff_prod_linear (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V]
@@ -1357,8 +1349,7 @@ theorem normDescentSheaf : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z), IsFinite π �
       Scheme.germ_stalkClosedPointTo]
     congr 2
   rw [hidl, hJU, Ideal.map_map]
-  simp only [hψI]
-  exact hprod
+  simpa only [hψI] using hprod
 
 end GlobalTheory.NormSheaf
 end -- clump:auto

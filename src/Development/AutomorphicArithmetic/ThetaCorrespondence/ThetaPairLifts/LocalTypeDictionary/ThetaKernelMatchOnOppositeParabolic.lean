@@ -157,8 +157,7 @@ theorem polMatch_onto : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Nu
     apply congrArg (fun z => R.p (c i • f i) ⊗ₜ[ℂ] z)
     apply congrArg (PiTensorProduct.tprod ℂ)
     funext v
-    simp only [φ', ite_eq_left v.property]
-    exact (hφ₀eq i v).symm
+    simpa only [φ', ite_eq_left v.property] using (hφ₀eq i v).symm
 
 end GlobalTheory.SquareAgree
 end -- clump:auto
@@ -312,8 +311,7 @@ theorem isDatum_derivative_second_factor_eq_sum_pure : _root_.GlobalTheory.FunPr
       (((hev i).2.and hM.std).mono fun v hv => hv.1.trans hv.2), fun u => ?_⟩
     have h1 := _root_.GlobalTheory.ThetaLineDer.hasDerivAt_theta_sum_along_line hP Γ.M' ψ Xc.α (Xc.α / Xc.β) om' hT.base.cm hstd hM hW γ hL m f f₁ φ hev hact u
     have h2 : HasDerivAt (fun t : ℝ => GlobalTheory.WeilM.thetaSum D.host.F (Γ.M'.co.rho ψ u (om' (1, γ (Multiplicative.ofAdd t)) (∑ i, pure (f i) (φ i))))) (Φ' (cB u)) 0 := by
-      simp only [hval]
-      exact hDer (cB u)
+      simpa only [hval] using hDer (cB u)
     exact h1.unique h2
   exact GlobalTheory.T.schwartzDatum_eq_of_thetaFunction_eq Γ.M' ψ hstd cB Φ'D _ Φ' hΦ'D hnew
 end GlobalTheory.SquareAgree.LieDat
@@ -455,8 +453,7 @@ theorem polarization_match_square_kappa : _root_.GlobalTheory.FunPr.ThetaLocalIn
     | insert v U hv ih =>
       rw [Finset.union_insert]
       by_cases hvX : v ∈ Xc.T
-      · rw [Finset.insert_eq_of_mem (Finset.mem_union_left _ (hXT hvX))]
-        exact ih
+      · rwa [Finset.insert_eq_of_mem (Finset.mem_union_left _ (hXT hvX))]
       · exact GlobalTheory.ThK.PolynomialMatching.polMatchOn_insert _ _ _ Bs _ _ Γ Xc R Rf v (hM.fin.sph v hvX).1 _ _ _ ih
   have hOnS : GlobalTheory.ThK.PolynomialMatching.PolMatchOn Bs Γ Xc R Rf S ΦD Φ₀D := by
     have := ext S
@@ -566,8 +563,7 @@ theorem theta_kernel_match_on_opposite_parabolic : GlobalTheory.Published.HoweDu
     have hm : Φ₀D ∈ KD := (hKD _).2 ⟨hΦ₀D, hpm⟩
     rw [h2] at hm
     obtain ⟨_, Φ₁, _, hD₁, h0⟩ := (hK _).1 hm
-    rw [IsDatum.fun_eq Γ.M' ψ cB cB.surjective hD hD₁]
-    exact h0
+    rwa [IsDatum.fun_eq Γ.M' ψ cB cB.surjective hD hD₁]
 theorem theta_kernels_agree_up_to_scalar : GlobalTheory.Published.HoweDualityReal → _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (W W₁ X : HSp D) (A : Fr W) (A₁ : Fr W₁)
     (B : Fr X) (α β : (AE D)ˣ →* Circle) (ν : Measure (GA D W)) (𝓕 : Set (GA D W)) (ν₁ : Measure (GA D W₁))
     (𝓕₁ : Set (GA D W₁)) (ωA : WRep W X) (ωB : WRep W₁ X) (e : Fin X.rank ≃ Fin (W.rank + W₁.rank))

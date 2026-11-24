@@ -92,8 +92,7 @@ theorem UpperTheory.center_tensorProduct_le_sup_map_center :
       ((Algebra.TensorProduct.includeLeft : A →ₐ[ℂ] TensorProduct ℂ A B).range :
         Set (TensorProduct ℂ A B)) := by
     rw [Subalgebra.mem_centralizer_iff]
-    intro g _
-    exact hz' g
+    exact fun g _ => hz' g
   rw [Subalgebra.centralizer_coe_range_includeLeft_eq_center_tensorProduct] at h1
   obtain ⟨w, hw⟩ := h1
   have hw' : Algebra.TensorProduct.map (Subalgebra.center ℂ A).val (AlgHom.id ℂ B) w = z := hw
@@ -265,8 +264,7 @@ theorem UpperTheory.symmetricSubalgebra_le_adjoin_range_prod_C_add_X_complex :
     · intro b hb hbj
       rw [Finset.mem_range] at hb
       exact Finsupp.single_eq_of_ne (by omega)
-    · intro h
-      exact absurd (Finset.mem_range.2 hj) h
+    · exact fun h => absurd (Finset.mem_range.2 hj) h
   intro p hp
   obtain ⟨q, hq⟩ := (esymmAlgHom_fin_bijective ℂ n).2 ⟨p, hp⟩
   have hq' : p = aeval (fun i : Fin n => esymm (Fin n) ℂ (i + 1)) q := by
@@ -290,10 +288,8 @@ open GroundTheory.Automorphic.HarishChandra in
 private theorem qdet_mem_center (n : ℕ) (u : ℂ) :
     Formalism.REAL.qdet (fun i j : Fin n => e (i, j)) u ∈ Subalgebra.center ℂ (U n) := by
   have hgl : Formalism.REAL.GlRel (fun i j : Fin n => e (i, j)) := by
-    intro i j k l
-    exact e_mul_sub_mul (i, j) (k, l)
-  refine mem_center_of_commute_e fun a => ?_
-  exact (Formalism.REAL.qDetCentral (U n) n _ hgl u a.1 a.2).symm
+    exact fun i j k l => e_mul_sub_mul (i, j) (k, l)
+  exact mem_center_of_commute_e fun a => (Formalism.REAL.qDetCentral (U n) n _ hgl u a.1 a.2).symm
 
 open GroundTheory.Automorphic.HarishChandra in
 private theorem hc_qdet (n : ℕ) (u : ℂ) :
@@ -437,8 +433,7 @@ theorem UpperTheory.map_center_envelopingProductGL_mem_capelliAlgebra :
         rw [h1, hE.rel.1 v i j k m, map_sub]
         congr 1 <;> split_ifs <;> simp [hl]
       · rw [h2 v v' hv, map_zero, (hE.rel.2 v v' hv i j k m).eq, sub_self]
-    intro x y
-    exact LinearMap.congr_fun₂ key x y
+    exact fun x y => LinearMap.congr_fun₂ key x y
   let L : 𝔤 →ₗ⁅ℝ⁆ T := { l with map_lie' := fun {x y} => hlie x y }
   let f : UniversalEnvelopingAlgebra ℝ 𝔤 →ₐ[ℝ] T := UniversalEnvelopingAlgebra.lift ℝ L
   have hf : ∀ v i j, f (UniversalEnvelopingAlgebra.ι ℝ (b (v, i, j))) = E v i j := fun v i j => by

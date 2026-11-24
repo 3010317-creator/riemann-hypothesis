@@ -69,8 +69,7 @@ theorem exists_face_coord_of_linearOn {O : Type} [CommRing O] {bar : O → O} {�
   choose a ha he using h
   have h1 : toReal v = ∑ i, (∑ l, b l * a l i) • toReal (γ i) := by
     rw [hvb]
-    simp only [he, Finset.smul_sum, smul_smul, Finset.sum_smul]
-    exact Finset.sum_comm
+    simpa only [he, Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
   have h2 : (fun i => (∑ l, b l * a l i) - t i) = 0 := by
     refine eq_zero_of_toReal_rel (u := γ) (v := (![] : Fin 0 → _)) (s := ![]) (fun d c hc => ?_) ?_
     · funext i

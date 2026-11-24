@@ -100,8 +100,7 @@ theorem fst_surjective (R : Type) [CommRing R] :
     have : a ^ 2 = 0 := by
       ext <;> simp [sq, ha']
     rw [this]; exact Ideal.zero_mem _
-  rw [← range_comap_of_surjective _ _ hs] at h
-  exact h
+  rwa [← range_comap_of_surjective _ _ hs] at h
 
 theorem snd_map {R R' : Type} [CommRing R] [CommRing R'] (f : R →+* R') (F : DualNumber R →+* DualNumber R')
     (h₁ : ∀ a, F (algebraMap R _ a) = algebraMap R' _ (f a)) (h₂ : F DualNumber.eps = DualNumber.eps)
@@ -141,8 +140,7 @@ theorem translate_le (z : 𝟙_ (Over (Sp R)) ⟶ G) (v : epsR R ⟶ G) (hv : Is
   intro p _
   obtain ⟨q, rfl⟩ := fst_surjective R p
   have := h (show q ∈ ⊤ from trivial)
-  rw [← fst_comp_translate z v hv] at this
-  exact this
+  rwa [← fst_comp_translate z v hv] at this
 
 theorem fst_valT_translate (z : 𝟙_ (Over (Sp R)) ⟶ G) (v : epsR R ⟶ G) (hv : IsTangent v) {U : G.left.Opens}
     (h : ⊤ ≤ z.left ⁻¹ᵁ U) (a : Γ(G.left, U)) :
@@ -205,8 +203,7 @@ theorem mem_nonzeroLocus_via {l : ℕ} {s' : RR x' l} {s : RR x l} (hs : SecVia 
     have := Scheme.basicOpen_appLE φ _ (x.P.L.U k) hle (s.f k)
     refine this.ge ⟨⟨mem_pull.2 (x.P.A.left.basicOpen_le _ hk), hi⟩, hk⟩
   replace h1 := (Scheme.basicOpen_mul _ _ _).le ((congrArg x'.P.A.left.basicOpen e).le h1)
-  refine TopologicalSpace.Opens.mem_iSup.2 ⟨i, ?_⟩
-  exact ((Scheme.basicOpen_res _ _ _).le h1.2).2
+  exact TopologicalSpace.Opens.mem_iSup.2 ⟨i, ((Scheme.basicOpen_res _ _ _).le h1.2).2⟩
 
 end Via
 
@@ -274,8 +271,7 @@ theorem etZ_baseChange : ∀ (R R' : Type) [CommRing R] [IsLocalRing R] [CommRin
   · exact isUnit_of_mul_isUnit_left (hjac a ▸ (hz₃ a).map f)
   · refine hz₄ a a' h (spMap f p) ?_
     have e₁ := congrArg (fun q => q p) (hz' a)
-    have e₂ := congrArg (fun q => q p) (hz' a')
-    exact e₁.symm.trans ((congrArg φ e).trans e₂)
+    exact e₁.symm.trans ((congrArg φ e).trans (congrArg (fun q => q p) (hz' a')))
   · obtain ⟨a, p, hp'⟩ := hz₅ (φ y) fun i h => hy (i.cast hg.symm) (mem_nonzeroLocus_via (hs (i.cast hg.symm)) y h)
     have sq : IsPullback (spMap f) (z' a).left (z a).left φ := by
       refine IsPullback.of_bot (t := hp.1) ?_ (hz' a).symm

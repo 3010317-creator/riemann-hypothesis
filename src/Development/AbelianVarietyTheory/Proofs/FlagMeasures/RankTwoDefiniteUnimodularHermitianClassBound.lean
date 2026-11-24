@@ -123,10 +123,8 @@ theorem exists_scale {L M : Submodule (𝓞 E) E} (hL : Submodule.IsFullLattice 
   rw [h3, h2, FractionalIdeal.mem_singleton_mul]
   constructor
   · rintro ⟨z, hz, he⟩
-    rw [mul_left_cancel₀ a.ne_zero he]
-    exact hz
-  · intro hy
-    exact ⟨y, hy, rfl⟩
+    rwa [mul_left_cancel₀ a.ne_zero he]
+  · exact fun hy => ⟨y, hy, rfl⟩
 
 def idealOf (β : E) (L : Submodule (𝓞 E) E) : Submodule (𝓞 E) E :=
   Submodule.span (𝓞 E) {t | ∃ x ∈ L, ∃ y ∈ L, t = star x * β * y}
@@ -211,8 +209,7 @@ theorem exists_sq_of_parity {u w : (𝓞 E)ˣ} (h : even_im_hermitian_sub u = ev
   have hd : ∀ i, ∃ k : ℤ,
       (Units.basisModTorsion E).repr (Additive.ofMul (u : (𝓞 E)ˣ ⧸ Units.torsion E)) i -
       (Units.basisModTorsion E).repr (Additive.ofMul (w : (𝓞 E)ˣ ⧸ Units.torsion E)) i = 2 * k := by
-    intro i
-    exact (ZMod.intCast_eq_intCast_iff_dvd_sub _ _ 2).mp (congrFun h i).symm
+    exact fun i => (ZMod.intCast_eq_intCast_iff_dvd_sub _ _ 2).mp (congrFun h i).symm
   choose k hk using hd
   obtain ⟨v, hv⟩ := QuotientGroup.mk_surjective
     (Additive.toMul ((Units.basisModTorsion E).equivFun.symm k))
@@ -943,16 +940,14 @@ theorem eq_map_comap {E : Type} [Field E] [NumberField E] [StarRing E]
     rfl
   rw [← hs']
   refine Ideal.mem_map_of_mem _ ?_
-  rw [Ideal.mem_comap, hs']
-  exact ht
+  rwa [Ideal.mem_comap, hs']
 
 private theorem isCMField_of_star_compat {E : Type} [Field E] [NumberField E] [StarRing E]
     [hTC : _root_.NumberField.IsTotallyComplex E]
     (hs : ∀ (φ : E →+* ℂ) (a : E), φ (star a) = starRingEnd ℂ (φ a)) : IsCMField E := by
   refine GlobalTheory.LeastExponentCompare.isCMField_of_conj E (fun z => star z)
     (fun φ z => by rw [hs, starRingEnd_apply]) ?_
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   obtain ⟨w⟩ := (inferInstance : Nonempty (InfinitePlace E))
   have hreal : w.IsReal := by
     rw [InfinitePlace.isReal_iff, ComplexEmbedding.isReal_iff]
@@ -1057,8 +1052,7 @@ def LineRel (X Y : E × Submodule (𝓞 E) E) : Prop :=
 
 theorem lineRel_equivalence : Equivalence (LineRel (E := E)) := by
   refine ⟨?_, ?_, ?_⟩
-  · intro X
-    exact ⟨1, one_ne_zero, by simp, by simp⟩
+  · exact fun X => ⟨1, one_ne_zero, by simp, by simp⟩
   · rintro X Y ⟨c, hc, h1, h2⟩
     have hs : star c ≠ 0 := by simpa using hc
     refine ⟨c⁻¹, inv_ne_zero hc, ?_, fun y => ?_⟩
@@ -1101,14 +1095,11 @@ theorem pull_isLattice {r : ℕ} (γ : GL (Fin r) E) (Λ : Submodule (𝓞 E) (F
     ext y
     rw [mem_pull, Submodule.mem_map]
     constructor
-    · intro hy
-      exact ⟨_, hy, inv_mulVec_cancel γ y⟩
+    · exact fun hy => ⟨_, hy, inv_mulVec_cancel γ y⟩
     · rintro ⟨x, hx, rfl⟩
       change (γ : Matrix (Fin r) (Fin r) E) *ᵥ (((γ⁻¹ : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) *ᵥ x) ∈ Λ
       rwa [mulVec_inv_cancel]
-  refine ⟨hm ▸ h.fg.map _, ?_⟩
-  intro s hs hli
-  exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  exact ⟨hm ▸ h.fg.map _, fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli⟩
 theorem pull_unimodular {r : ℕ} (γ : GL (Fin r) E) (J : Matrix (Fin r) (Fin r) E)
     (Λ : Submodule (𝓞 E) (Fin r → E))
     (h : ∀ x, x ∈ Λ ↔ ∀ y ∈ Λ, star y ⬝ᵥ (J *ᵥ x) ∈ (algebraMap (𝓞 E) E).range) (x : Fin r → E) :

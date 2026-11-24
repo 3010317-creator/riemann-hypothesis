@@ -483,8 +483,7 @@ theorem identOf' : IdentOf := by
   have h0 := O.eigArch (.inl ()) (F.t₀ i) rfl rfl
   have h3 := hχ.2.1 (.inl ())
   have one : (F.t₀ i).val O.χa O.χb = 1 := by
-    rw [← h0]
-    exact h3
+    rwa [← h0]
   have key : ∀ (v : InfinitePlace E) (s : Bool) (m : ℕ) (side : Bool),
       (if side then zVal [(s, m)] (O.χb v) else zVal [(s, m)] (O.χa v)) =
         (if side then zVal [(s, m)] ((F₀.A i).χb v) else zVal [(s, m)] ((F₀.A i).χa v)) := by
@@ -871,8 +870,7 @@ theorem candT_of (h1 : Tail.ReadT) (h2 : Tail.ExpRead) (h3 : RS.JoinSat) : CandT
     refine Finset.sum_congr rfl fun j _ => ?_
     ring
   have hJ' : JEig Pa Pb w (F₀.d₀.ϖ w) ξa ξb := by
-    rw [← F.same.2.2.2.1]
-    exact hJ
+    rwa [← F.same.2.2.2.1]
   obtain ⟨hma, hmb, hbc⟩ := F.choiceT i s₁ s₂ Pa Pb D hc w hwd s.1.1 hadm ξa ξb hJ' hsum'
   obtain ⟨hSa, hSb⟩ := h2 E (F₀.C.a i) (n - F₀.C.a i) Pa Pb w (F.d.ϖ w) ξa ξb (hd.unif w) hma hmb hJ
   have hS0 : w ∉ F₀.d₀.S₀ := by
@@ -1233,8 +1231,7 @@ theorem pw_single {N : ℕ} (ξ : Fin N → ℂˣ) (i : Fin N) : pw ξ (Pi.singl
   · simp
   · intro j _ hj
     simp [hj]
-  · intro h
-    exact absurd (Finset.mem_univ i) h
+  · exact fun h => absurd (Finset.mem_univ i) h
 
 def x0 (N : ℕ) : Fin N → ℤ := fun i => -(2 * ((i : ℕ) : ℤ))
 
@@ -1316,8 +1313,7 @@ theorem je_finite (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) {V : Type} [AddCommGr
     show ((hkW ρ (I2 a b w) _ _ _ ⟨v, hv⟩ : GlobalTheory.PRep.fixed ρ (I2 a b w)) : V) = _
     rw [hkW_apply]
     exact hev _ _ (hgap o).1 (hgap o).2
-  · intro h0
-    exact hne (congrArg Subtype.val h0)
+  · exact fun h0 => hne (congrArg Subtype.val h0)
 
 end Place
 
@@ -1408,8 +1404,7 @@ theorem mem_zs (Pa : Pre E a) (Pb : Pre E b) (w : Pl E) (ϖ : (w.adicCompletion 
     (h : ∃ p, Good Pa Pb w κ p) (ξ : (Fin a → ℂˣ) × (Fin b → ℂˣ)) (hJ : JEig h.choose.1 h.choose.2 w ϖ ξ.1 ξ.2) :
     ξ ∈ ZS Pa Pb w ϖ κ := by
   unfold ZS
-  rw [dite_eq_left h]
-  exact hJ
+  rwa [dite_eq_left h]
 
 theorem ms_eq (Pa : Pre E a) (Pb : Pre E b) (w : Pl E)
     (κ : (Fin Pa.c → GlobalTheory.LocGL.IrrGL (k := w.adicCompletion E)) × (Fin Pb.c → GlobalTheory.LocGL.IrrGL (k := w.adicCompletion E)))
@@ -1471,8 +1466,7 @@ theorem isoV_map_mulChi {N : ℕ} {V V' : Submodule ℂ (Sm E N)} (χ : HChar E)
   obtain ⟨ψ, rfl⟩ := S.surjective ψ
   have h1 : ψ.1 = ((opMul χ o : ℂˣ) : ℂ) • act o φ.1 + opAdd χ o • φ.1 := by
     apply (mulChi N χ).injective
-    rw [← act_mulChi]
-    exact hψ
+    rwa [← act_mulChi]
   have hm : act o φ.1 ∈ V := by
     have h2 : ((opMul χ o : ℂˣ) : ℂ) • act o φ.1 ∈ V := by
       have h3 := V.sub_mem ψ.2 (V.smul_mem (opAdd χ o) φ.2)

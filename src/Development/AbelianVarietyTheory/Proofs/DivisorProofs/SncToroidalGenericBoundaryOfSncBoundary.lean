@@ -97,8 +97,7 @@ theorem snc_vanishingIdeal_of_isIso {A B : Scheme.{0}} (f : A ⟶ B) [IsIso f] (
   · have hg : ∀ i, A.presheaf.germ U'.1 a hU' (f.app U.1 (g i)) = e (B.presheaf.germ U.1 (f a) hU (g i)) := by
       intro i
       rw [he, Scheme.Hom.germ_stalkMap_apply]
-    simp only [hg]
-    exact rsp_ringEquiv e hrsp
+    simpa only [hg] using rsp_ringEquiv e hrsp
   · let φ : Γ(B, U.1) ≃+* Γ(A, U'.1) := (asIso (f.app U.1)).commRingCatIsoToRingEquiv
     have hφ : ∀ t, φ t = f.app U.1 t := fun _ => rfl
     ext t
@@ -110,8 +109,7 @@ theorem snc_vanishingIdeal_of_isIso {A B : Scheme.{0}} (f : A ⟶ B) [IsIso f] (
       · intro H b hbU hbZ hbs
         obtain ⟨a', rfl⟩ : ∃ a', f a' = b := ⟨(inv f) b, by rw [← Scheme.Hom.comp_apply, IsIso.inv_hom_id]; rfl⟩
         exact H a' hbU ((hZ a').2 hbZ) hbs
-      · intro H a' ha'U ha'Z ha's
-        exact H (f a') ha'U ((hZ a').1 ha'Z) ha's
+      · exact fun H a' ha'U ha'Z ha's => H (f a') ha'U ((hZ a').1 ha'Z) ha's
     rw [key, hid, Ideal.mem_span_singleton, Ideal.mem_span_singleton]
     have hp : (∏ i ∈ J, f.app U.1 (g i)) = φ (∏ i ∈ J, g i) := by
       rw [map_prod]; rfl

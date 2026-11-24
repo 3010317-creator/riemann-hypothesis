@@ -136,8 +136,7 @@ theorem bijective_locallyConstant_comap_of_specializes_of_isClopen {X Y : Type*}
     · ext x
       obtain ⟨V, -, hVU, hV'⟩ := key (ψ x)
       have hx : x ∈ f ⁻¹' V := by rw [hVU]; rfl
-      rw [← hV'] at hx
-      exact hx
+      rwa [← hV'] at hx
 
 theorem map_maximalIdeal_le_of_isIntegral (A B : Type*) [CommRing A] [IsLocalRing A] [CommRing B]
     [Algebra A B] [Algebra.IsIntegral A B] (M : Ideal B) [M.IsMaximal] :
@@ -210,7 +209,6 @@ theorem bijective_locallyConstant_comap_algebraicClosure_tensor : ∀ (Λ : Type
   let σ : k →ₐ[A] B ⧸ I := Ideal.Quotient.liftₐ (maximalIdeal A) (Algebra.ofId A (B ⧸ I))
     fun a ha ↦ by
       rw [Algebra.ofId_apply]
-      show Ideal.Quotient.mk I (algebraMap A B a) = 0
       exact Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_map_of_mem _ ha)
   let τ : k ⊗[A] B →ₐ[A] B ⧸ I :=
     Algebra.TensorProduct.lift σ (Ideal.Quotient.mkₐ A I) fun _ _ ↦ Commute.all _ _
@@ -255,8 +253,7 @@ theorem bijective_locallyConstant_comap_algebraicClosure_tensor : ∀ (Λ : Type
     rw [← PrimeSpectrum.le_iff_specializes, ← PrimeSpectrum.asIdeal_le_asIdeal]
     show y.asIdeal ≤ (PrimeSpectrum.comap
       (Algebra.TensorProduct.includeRight : B →ₐ[A] Ω ⊗[A] B).toRingHom x).asIdeal
-    rw [hfac, hx, hPM]
-    exact hyM
+    rwa [hfac, hx, hPM]
   · intro U hU
     have hU' : IsClopen (PrimeSpectrum.comap ρ '' U) :=
       ⟨hρ.isClosedMap U hU.1, hρ.isOpenMap U hU.2⟩
@@ -463,8 +460,7 @@ theorem exists_ringHom_algClosure_residueField_of_isIntegral (A B : Type) [CommR
   refine ⟨l.toRingHom.comp (Ideal.Quotient.mk P), ?_⟩
   ext a
   have h := l.commutes (algebraMap A (IsLocalRing.ResidueField A) a)
-  rw [← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply] at h
-  exact h
+  rwa [← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply] at h
 
 theorem exists_point_algClosure_residueField_of_isIntegralHom :
     ∀ (A : Type) [CommRing A] [IsLocalRing A] (Y : Scheme.{0}) (g : Y ⟶ Spec (CommRingCat.of A)),

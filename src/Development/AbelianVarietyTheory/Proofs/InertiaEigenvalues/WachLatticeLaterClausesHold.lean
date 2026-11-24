@@ -184,8 +184,7 @@ theorem XX_pow_mem_of_QQ_pow_mul_mem_map_phi : ∀ (l : ℕ) [Fact l.Prime] (O :
   intro l _ O _ _ _ _ _ hl0 hlu s n H c _ _ 𝔞 hc hK i
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hdvd : ∀ a : O, ¬ IsUnit a → ϖ ∣ a := fun a ha => by
-    rw [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
-    exact ha
+    rwa [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
   by_contra hi
   have main : ∀ (m : ℕ) (y : PowerSeries O), XX l O s ^ H * y ∈ 𝔞 (i + m) →
       y ∈ Ideal.span {PowerSeries.C ϖ, PowerSeries.X ^ (m + 1)} := by
@@ -724,8 +723,7 @@ theorem lettersDecompose [NeZero n] : GlobalTheory.IndefiniteRowSideFullHecke.Le
       rw [LinearMap.mem_ker, LinearMap.lsmul_apply, ← ((mem_Nl_iff W T j y).1 hy).2, smul_smul,
         letE_mul_ne hj.symm, zero_smul]
     have h0 := hk hx'
-    rw [LinearMap.mem_ker, LinearMap.lsmul_apply, ((mem_Nl_iff W T i x).1 hx).2] at h0
-    exact h0
+    rwa [LinearMap.mem_ker, LinearMap.lsmul_apply, ((mem_Nl_iff W T i x).1 hx).2] at h0
   · rw [← sum_letE_smul W T x]
     exact Submodule.sum_mem _ fun i _ => Submodule.mem_iSup_of_mem i ⟨x, hx, rfl⟩
 
@@ -756,8 +754,7 @@ theorem isLetterBasis {r : ℕ} (b : Module.Basis (Fin r) (LetA O n) ↥(W.N T))
     have h0 := Fintype.linearIndependent_iff.1 hli
       (fun k => (Pi.single i (c k) : LetA O n) - Pi.single i (a k i))
       (by simp only [sub_smul, Finset.sum_sub_distrib, hc, sub_self]) k
-    have h1 := congrFun h0 i
-    simpa [sub_eq_zero] using h1
+    simpa [sub_eq_zero] using congrFun h0 i
 
 attribute [local instance] GlobalTheory.IndefiniteRowSideFullHecke.LetterBasisDecomposition.letterModule
 
@@ -776,8 +773,7 @@ theorem exists_letter_basis {r : ℕ} (b : Module.Basis (Fin r) (LetA O n) ↥(W
     intro c hc k
     have h1 := hs c
     rw [hc] at h1
-    have h2 := (hu 0 (Submodule.zero_mem _)).unique h1 (y₂ := fun _ => 0) (by simp)
-    exact congrFun h2 k
+    exact congrFun ((hu 0 (Submodule.zero_mem _)).unique h1 (y₂ := fun _ => 0) (by simp)) k
   have hsp : ⊤ ≤ Submodule.span (PowerSeries O) (Set.range f) := by
     intro x _
     obtain ⟨c, hc, -⟩ := hu x.1 x.2
@@ -1174,8 +1170,7 @@ theorem cmp_iso_of_expansions [NeZero n] (hinj : Function.Injective (algebraMap 
       (Set.range fun x : ↥(W.N T) => W.cmp T ((letE i : LetA O n) • x)) =
         DcrisL PD T.ρ (W.emb i) := by
     intro i
-    simp only [hcmp]
-    exact span_const_of_std (hstd i)
+    simpa only [hcmp] using span_const_of_std (hstd i)
   refine ⟨fun x => ⟨fun hx => ?_, ?_⟩, ?_, hlet, ?_⟩
   · rw [cmp_eq_sum] at hx
     have h0 : ∀ i, ex i x 0 = 0 := by

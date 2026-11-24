@@ -71,8 +71,7 @@ theorem exists_const_mul_tail : ∀ (ι : Type) [DecidableEq ι] (a : ι → ℝ
       by_cases hv : v ∈ S₀ ∪ T
       · have h1 : S₀ ∪ insert v T = S₀ ∪ T := by
           rw [Finset.union_insert, Finset.insert_eq_of_mem hv]
-        rw [h1]
-        exact ih
+        rwa [h1]
       · have h1 : S₀ ∪ insert v T = insert v (S₀ ∪ T) := Finset.union_insert _ _ _
         have hsub : S₀ ⊆ S₀ ∪ T := Finset.subset_union_left
         have hav : 0 < a v := hS₀ v (fun h => hv (hsub h))
@@ -84,7 +83,6 @@ theorem exists_const_mul_tail : ∀ (ι : Type) [DecidableEq ι] (a : ι → ℝ
           rw [ih]; ring
         exact mul_right_cancel₀ hav.ne' h4
   have h := key S
-  rw [Finset.union_eq_right.2 hS] at h
-  exact h
+  rwa [Finset.union_eq_right.2 hS] at h
 
 end GlobalTheory.CompanionTheory.SW.TailConst

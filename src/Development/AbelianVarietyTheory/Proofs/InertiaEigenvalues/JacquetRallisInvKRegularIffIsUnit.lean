@@ -160,8 +160,7 @@ theorem invK_regular_iff_isUnit :
     simp only [hΨ, Pi.zero_apply] at this
     rw [this, mul_zero]
   have hbij : Function.Bijective Ψ := by
-    refine ⟨hinj, ?_⟩
-    exact (LinearMap.injective_iff_surjective_of_finrank_eq_finrank (by simp [hfr])).1 hinj
+    exact ⟨hinj, (LinearMap.injective_iff_surjective_of_finrank_eq_finrank (by simp [hfr])).1 hinj⟩
   have hmom : ∀ a : A.K, ∀ i : ℕ, mom (sec (A.invK τ p lam a)) i = Algebra.trace F A.K (τ ^ i * a) := by
     intro a i
     simp only [mom, sec, Et.invK]
@@ -192,7 +191,6 @@ theorem invK_regular_iff_isUnit :
       LinearMap.injective_iff_surjective.1 h
     obtain ⟨y, hy⟩ := hs 1
     exact ⟨⟨a, y, hy, by rw [mul_comm]; exact hy⟩, rfl⟩
-  · intro h
-    exact h.mul_right_injective
+  · exact fun h => h.mul_right_injective
 
 end GlobalTheory.JR.EtInv

@@ -204,8 +204,7 @@ theorem eq_unrChar {χ : kˣ →* ℂˣ} (h : IsUnram χ) {ϖ : kˣ}
       ← ofAdd_zsmul, smul_eq_mul, mul_one]
     exact div_self' _
   have h2 := h _ (ord_eq_zero_iff.1 (ofAdd_eq_one.1 h1))
-  rw [map_div, map_zpow, div_eq_one] at h2
-  exact h2
+  rwa [map_div, map_zpow, div_eq_one] at h2
 
 variable {α n : Type} {m : α → Type} [Fintype α] [LinearOrder α]
   [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n]
@@ -432,8 +431,7 @@ theorem modulus_torus {n : Type} [Fintype n] [LinearOrder n] (t : n → kˣ) :
     Finset.sum_const, nsmul_eq_mul, mul_one, zpow_sub₀ (nabs_pos' k _).ne', zpow_natCast,
     Finset.prod_const]
   congr 1
-  simp only [← Finset.prod_const, Finset.prod_filter]
-  exact Finset.prod_comm
+  simpa only [← Finset.prod_const, Finset.prod_filter] using Finset.prod_comm
 
 def indB (ρ : Representation ℂ (n → kˣ) W) :=
   parInd (points n) (ρ.comp (leviTorus k n).symm.toMonoidHom)
@@ -656,8 +654,7 @@ theorem hasSatake_detRep {N : ℕ} {χ : kˣ →* ℂˣ} (h : IsUnram χ) {ϖ : 
     push_cast
     ring
   have := isSubquotient_detRep_parInd (points (Fin N)) (isSmoothChar_of_isUnram h)
-  rw [← key] at this
-  exact this
+  rwa [← key] at this
 
 theorem isCuspidal_detRep_one {χ : kˣ →* ℂˣ} (hχ : IsSmoothChar χ) :
     IsCuspidal (detRep (Fin 1) χ) := by

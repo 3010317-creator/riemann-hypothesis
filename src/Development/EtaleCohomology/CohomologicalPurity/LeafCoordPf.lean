@@ -88,8 +88,7 @@ theorem LeafCoord_of (hR : LeafRank) (hP : LeafPick) (hS : LeafSpan) (hE : LeafE
   have hfx : ∀ a ∈ I, f * a ∈ Ideal.span (Set.range x') := by
     intro a ha
     have h := Submodule.mem_map_of_mem (f := I.subtype) (hx ⟨a, ha⟩)
-    rw [Submodule.map_span, ← Set.range_comp] at h
-    exact h
+    rwa [Submodule.map_span, ← Set.range_comp] at h
   obtain ⟨y, g, hg, hy⟩ := hS e d R A I p hp hIp h2 x' f hxI hf hfx
   refine ⟨f * g, fun h => (hp.mem_or_mem h).elim hf hg, ?_⟩
   intro A' _ _ _
@@ -133,8 +132,7 @@ theorem LeafCoord_of (hR : LeafRank) (hP : LeafPick) (hS : LeafSpan) (hE : LeafE
       rw [Ideal.map_span, map_mul, ← Set.range_comp] at h
       obtain ⟨u, hu⟩ := hfu
       have h6 := Ideal.mul_mem_left _ (↑u⁻¹ : A') h
-      rw [← mul_assoc, ← hu, Units.inv_mul, one_mul] at h6
-      exact h6
+      rwa [← mul_assoc, ← hu, Units.inv_mul, one_mul] at h6
     · rw [Ideal.span_le]
       rintro _ ⟨j, rfl⟩
       exact Ideal.mem_map_of_mem _ (hxI j)

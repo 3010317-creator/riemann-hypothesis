@@ -203,8 +203,7 @@ theorem prime_dvd_card_residue (v : HeightOneSpectrum (𝓞 (NumberField.maximal
   have h1 : ringChar (IsLocalRing.ResidueField (v.adicCompletionIntegers L⁺)) = p :=
     (hp.eq_one_or_self_of_dvd _ (ringChar.dvd h0)).resolve_left CharP.ringChar_ne_one
   have h2 := ringChar.dvd (FiniteField.cast_card_eq_zero (IsLocalRing.ResidueField (v.adicCompletionIntegers L⁺)))
-  rw [h1, ← Nat.card_eq_fintype_card] at h2
-  exact h2
+  rwa [h1, ← Nat.card_eq_fintype_card] at h2
 
 end Main
 
@@ -342,8 +341,7 @@ variable {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} {V : Type}
 
 theorem eig_unique {F : GAf L n → V} (hF : F ≠ 0) {κ : GAf L n} {c d : ℂ} (h1 : Eig F κ c) (h2 : Eig F κ d) : c = d := by
   obtain ⟨g, hg⟩ : ∃ g, F g ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hF (funext h)
   have : c • F g = d • F g := by rw [← h1 g, ← h2 g]
   exact smul_left_injective ℂ hg this
@@ -447,8 +445,7 @@ theorem idx {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} (s : Sp
   have hJH : ∀ κ, TrivOutside {s.v} κ → (κ ∈ J ↔ s.loc n κ ∈ H) := by
     intro κ hκT
     constructor
-    · intro hκJ
-      exact ⟨κ, ⟨hκJ, hκT⟩, rfl⟩
+    · exact fun hκJ => ⟨κ, ⟨hκJ, hκT⟩, rfl⟩
     · rintro ⟨κ', ⟨hκ'J, hκ'T⟩, he⟩
       have : κ' = κ := (hlift (s.loc n κ)).unique ⟨hκ'T, he⟩ ⟨hκT, rfl⟩
       exact this ▸ hκ'J
@@ -508,8 +505,7 @@ theorem fractionFieldToGenericStalk_algebraMap_eq : ∀ (L : Type) [Field L] [Nu
       rw [Subgroup.mem_map_equiv, ← hθK, MulEquiv.apply_symm_apply]
     have h3 : ((J ⊓ K).map θ.toMonoidHom).relIndex K = J.relIndex K := by
       have e := Subgroup.relIndex_map_map_of_injective (f := θ.toMonoidHom) (J ⊓ K) K θ.injective
-      rw [hKθ, Subgroup.inf_relIndex_right] at e
-      exact e
+      rwa [hKθ, Subgroup.inf_relIndex_right] at e
     exact Nat.Coprime.coprime_dvd_left (h3 ▸ (h1.trans h2)) (idx s r p J hp hsp hrn hJ.mem)
   have hn : 2 ≤ n := le_trans h2r hrn
   let i0 : Fin n := ⟨0, by omega⟩
@@ -583,16 +579,14 @@ theorem fractionFieldToGenericStalk_algebraMap_eq : ∀ (L : Type) [Field L] [Nu
       split_ifs with h
       · rw [hent, ite_eq_right (fun h' => by simp [i0, Fin.ext_iff] at h'; omega), ite_eq_right (fun h' => hb h'.2), add_zero]
       · rfl
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
     · intro a _ ha
       apply Finset.sum_eq_zero
       intro b _
       split_ifs with h
       · rw [hent, ite_eq_right (fun h' => by simp [Fin.ext_iff] at h'; omega), ite_eq_right (fun h' => ha h'.1), add_zero]
       · rfl
-    · intro h
-      exact absurd (Finset.mem_univ _) h
+    · exact fun h => absurd (Finset.mem_univ _) h
   have hxJ : x ∈ J := (hJ.mem x hxT).2 hUni
   have hxJ' : x ∈ J' := (hJ'.mem x hxT).2 hUni
   have hχx : ((χ ⟨x, hxJ⟩ : ℂˣ) : ℂ) = ψ₀ y := by

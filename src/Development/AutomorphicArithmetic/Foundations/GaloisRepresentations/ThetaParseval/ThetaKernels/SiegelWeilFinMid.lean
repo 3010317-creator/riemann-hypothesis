@@ -513,8 +513,7 @@ theorem der_nbar_k {d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ} (R : 
     cont_slice _ _ hcont nbb _ fun zv hzv => ⟨Set.mem_univ _, hsub hzv.1, Set.mem_univ _⟩
   have hΦb : ∀ z ∈ Metric.ball (0 : ℂ) rr, ∀ v, ‖Φ z v‖ ≤ Cb * Real.exp (-δ * sq v) := by
     intro z hz v
-    have h := hNb (nbb, z) (hsubN z hz) (hsub hz) v
-    simpa [sq, neg_mul] using h
+    simpa [sq, neg_mul] using hNb (nbb, z) (hsubN z hz) (hsub hz) v
   have hC : C ≠ 0 := by
     intro hC0
     have h := congrFun (h4 _ (hFP d.m d.n 1)) 0
@@ -611,8 +610,7 @@ theorem locFamG_of_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hA
   · exact cont_slice2 _ _ hcont u _ fun q' hq' => ⟨Set.mem_univ _, hq'.2, Set.mem_univ _⟩
   · obtain ⟨N, δ, C, hN, hδ, hNb⟩ := hbd q'.1 q'.2 hq'.2
     refine ⟨N, hN, C, δ, hδ, fun q'' hq'' hs u => ?_⟩
-    have h := hNb q'' hq'' hs u
-    simpa [sq, neg_mul] using h
+    simpa [sq, neg_mul] using hNb q'' hq'' hs u
 theorem locFamG_of'_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hA : _root_.PositivityTheory.SiegelWeilFormula.SiegelWeilDatumProperties) (hG : _root_.PositivityTheory.SiegelWeilFormula.GoodAwayEx_k) (hFP : FPSw) (hLI : _root_.PositivityTheory.SiegelWeilFormula.LocInst_k) : _root_.PositivityTheory.SiegelWeilFormula.Kdil.LocFamG_k :=
   _root_.PositivityTheory.SiegelWeilFormula.Kdil.locFamG_of_k hT hA hG hFP hLI gfBound
 end PositivityTheory.SiegelWeilFormula.Kdil
@@ -1145,11 +1143,9 @@ theorem locOp_cont_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) {d 
       Pi.zero_apply] at e1 e2
     refine ⟨?_, ?_⟩
     · have := congrArg π2 e1
-      rw [map_mul, h1, one_mul, map_zero] at this
-      exact this
+      rwa [map_mul, h1, one_mul, map_zero] at this
     · have := congrArg π2 e2
-      rw [map_mul, h1, one_mul, map_zero] at this
-      exact this
+      rwa [map_mul, h1, one_mul, map_zero] at this
   have hadm := rho_adm F d.B.ψ d.ok.good.std d.ok.dbl.adm (d.dd.e v) hv
   have hc := d.ok.dbl.weil.2.1.cont _ hadm Φ hΦ
   refine ((hc.comp (R.cont w)).div_const (Ψ 0)).congr fun y => (key y).symm

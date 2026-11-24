@@ -81,9 +81,7 @@ theorem core (S₀ L : Submodule (𝓞 E) (Sp E n)) (F : Sp E n ≃ₗ[E] Sp E n
       abel
     rw [h3]
     exact S₀.sub_mem h1 h2
-  have hself : ∀ y ∈ Y, F.symm y ∈ C := by
-    intro y hy
-    exact (hC _).2 ⟨y, hy, by simp⟩
+  have hself : ∀ y ∈ Y, F.symm y ∈ C := fun y hy => (hC _).2 ⟨y, hy, by simp⟩
 
   have hmem : ∀ z ∈ C, ∀ z', z' ∈ C ↔ (c ^ e)⁻¹ • (z' - z) ∈ S₀ := by
     intro z hz z'
@@ -176,15 +174,13 @@ theorem cosShape : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → ∀ 
     have hF : ∀ w ∈ Formalism.HermitianLatticesTheory.localization₂ P.1.asIdeal p.1.1.deco.1.N,
         (frsF I.sel (I.tup a) p.1.1 P).symm w ∈ stdAt B.fields.E (B.R.N i) P.1 := by
       intro w hw
-      rw [← hfr, LinearEquiv.apply_symm_apply]
-      exact hw
+      rwa [← hfr, LinearEquiv.apply_symm_apply]
     have hc : ((qOf P.1 : ℕ) : B.fields.E) ≠ 0 := by
       exact_mod_cast (GlobalTheory.GO.ChRoot.qOf_pos P.1).ne'
     have hpow : ∀ (S : Submodule (𝓞 B.fields.E) (Sp B.fields.E (B.R.N i))) (k : ℕ) (x : Sp B.fields.E (B.R.N i)),
         x ∈ S → ((qOf P.1 : ℕ) : B.fields.E) ^ k • x ∈ S := by
       intro S k x hx
-      have h := pow_smul_mem S ((qOf P.1 : ℕ) : 𝓞 B.fields.E) k hx
-      simpa using h
+      simpa using pow_smul_mem S ((qOf P.1 : ℕ) : 𝓞 B.fields.E) k hx
     have hY0 : y₀ ∈ p.1.2 := by
       rw [hYeq, Set.mem_setOf_eq, sub_self]
       exact zero_mem _
@@ -192,15 +188,13 @@ theorem cosShape : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → ∀ 
     have hGL : ∀ g' : Sp B.fields.E (B.R.N i) ≃ₗ[B.fields.E] Sp B.fields.E (B.R.N i),
         g' ∈ Formalism.L2.Col.GLint B.fields.E (B.R.N i) P.1 →
           ∀ x, g' x ∈ stdAt B.fields.E (B.R.N i) P.1 ↔ x ∈ stdAt B.fields.E (B.R.N i) P.1 := by
-      intro g' hg'
-      exact hg'
+      exact fun g' hg' => hg'
     by_cases hP : P.1 ∈ (B.primes X).vGs
     ·
       have hYl : ∀ y ∈ p.1.2, (((qOf P.1 : ℕ) : B.fields.E) ^ 0)⁻¹ • (y - y₀) ∈ Formalism.HermitianLatticesTheory.localization₂ P.1.asIdeal p.1.1.deco.1.N := by
         intro y hy
         rw [hYeq, Set.mem_setOf_eq] at hy
-        have h := (mem_locLat _ _ _ _).1 hy P
-        simpa [hP] using h
+        simpa [hP] using (mem_locLat _ _ _ _).1 hy P
       have hy₀' : ((qOf P.1 : ℕ) : B.fields.E) ^ 1 • y₀ ∈ Formalism.HermitianLatticesTheory.localization₂ P.1.asIdeal p.1.1.deco.1.N := by
         simpa [hP] using hY1
       have hC : ∀ z, z ∈ cosetIn p P ↔ ∃ y ∈ p.1.2,
@@ -224,8 +218,7 @@ theorem cosShape : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → ∀ 
           Formalism.HermitianLatticesTheory.localization₂ P.1.asIdeal p.1.1.deco.1.N := by
         intro y hy
         rw [hYeq, Set.mem_setOf_eq] at hy
-        have h := (mem_locLat _ _ _ _).1 hy P
-        simpa [hP] using h
+        simpa [hP] using (mem_locLat _ _ _ _).1 hy P
       have hy₀' : ((qOf P.1 : ℕ) : B.fields.E) ^ (I.cst a).M • y₀ ∈ Formalism.HermitianLatticesTheory.localization₂ P.1.asIdeal p.1.1.deco.1.N := by
         simpa [hP] using hY1
       have hC : ∀ z, z ∈ cosetIn p P ↔ ∃ y ∈ p.1.2,

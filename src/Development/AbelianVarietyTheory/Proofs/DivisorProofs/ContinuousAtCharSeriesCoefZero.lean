@@ -103,8 +103,7 @@ theorem exists_avg {Y Ξ : Type} [AddCommGroup Y] [Zero Ξ] (e : Ξ → AddChar 
   classical
   revert h0
   refine Finset.induction_on T ?_ ?_
-  · intro _
-    exact ⟨Unit, inferInstance, inferInstance, fun _ => 0, by simp⟩
+  · exact fun _ => ⟨Unit, inferInstance, inferInstance, fun _ => 0, by simp⟩
   · intro a T ha ih h0
     have ha0 : a ≠ 0 := fun h => h0 (by simp [h])
     have hT0 : (0:Ξ) ∉ T := fun h => h0 (Finset.mem_insert_of_mem h)
@@ -197,8 +196,7 @@ theorem continuousAt_coef_zero {Y Ξ P : Type} [AddCommGroup Y] [Zero Ξ] [Topol
         hasSum_sum_of_ne_finset_zero (fun b hb => ite_eq_right hb)
       have e2 : (∑ b ∈ s, if b ∈ s then M b else 0) = ∑ b ∈ s, M b :=
         Finset.sum_congr rfl (fun b hb => ite_eq_left hb)
-      rw [e2] at this
-      exact this
+      rwa [e2] at this
     refine h3.norm_le_of_bounded hg (fun a => ?_)
     have hMa := hM0 a
     by_cases ha : a = 0

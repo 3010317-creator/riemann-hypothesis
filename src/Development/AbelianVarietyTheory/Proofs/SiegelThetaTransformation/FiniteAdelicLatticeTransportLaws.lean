@@ -76,8 +76,7 @@ theorem onto_iff {m m' : Matrix (Fin n) (Fin n) (RA F E)} (h : m * m' = 1)
     rwa [Matrix.mulVec_mulVec, h', Matrix.one_mulVec]
   · rintro ⟨H, H'⟩ u
     constructor
-    · intro hu
-      exact ⟨m' *ᵥ u, H' u hu, by rw [Matrix.mulVec_mulVec, h, Matrix.one_mulVec]⟩
+    · exact fun hu => ⟨m' *ᵥ u, H' u hu, by rw [Matrix.mulVec_mulVec, h, Matrix.one_mulVec]⟩
     · rintro ⟨u, hu, rfl⟩
       exact H u hu
 
@@ -152,8 +151,7 @@ theorem span_eq_top_of_into {m m' : Matrix (Fin n) (Fin n) (RA F E)} (h : m * m'
     rw [Matrix.mulVec_smul, Matrix.mulVec_smul, Matrix.mulVec_mulVec (fv F x) m m', h, Matrix.one_mulVec,
       map_mulVec_fv, hP] at h1
     exact fv_eq_zero (F := F) (nsmul_cancel hd (h1.trans (smul_zero d).symm))
-  refine (Pi.basisFun E (Fin n)).ext fun i => ?_
-  exact congrFun (key _) i
+  exact (Pi.basisFun E (Fin n)).ext fun i => congrFun (key _) i
 
 theorem into_smul {m : Matrix (Fin n) (Fin n) (RA F E)} {L L' : Submodule (𝓞 E) (Fin n → E)}
     (H : Into F m L L') (𝔞 : Ideal (𝓞 E)) : Into F m (𝔞 • L) (𝔞 • L') := by
@@ -197,8 +195,7 @@ theorem idq_fg {L : Submodule (𝓞 E) (Fin n → E)} (hL : L.FG) (𝔞 𝔟 : I
   obtain ⟨b, hb, hb0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hb
   have hb' : algebraMap (𝓞 E) E b ≠ 0 := fun h => hb0 (RingOfIntegers.coe_injective (by simpa using h))
   have hinj : Function.Injective (b • (LinearMap.id : (Fin n → E) →ₗ[𝓞 E] (Fin n → E))) := by
-    intro x y hxy
-    exact smul_right_injective _ hb' hxy
+    exact fun x y hxy => smul_right_injective _ hb' hxy
   refine Submodule.fg_of_fg_map_injective _ hinj ?_
   have hle : (idq 𝔞 𝔟 L).map (b • (LinearMap.id : (Fin n → E) →ₗ[𝓞 E] (Fin n → E))) ≤ L := by
     rintro _ ⟨x, hx, rfl⟩

@@ -626,8 +626,7 @@ theorem lv_down [CharZero Ω] (o : Obj D l b s) (t : SAB H X) (m : SABMap o.t t 
       have h7 := h6.map (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom
       rwa [map_natCast] at h7
     have h8 := ((GlobalTheory.PairingLawZeroCounterexample.laws.1 _ (GlobalTheory.Obj.toPolAV o) n (Over.mk (spMap i))).2.2.2 r a a' (unitOn c) hu ha ha').2 hc
-    rw [Nat.cast_mul]
-    exact h8
+    rwa [Nat.cast_mul]
   · obtain ⟨u, hu, he⟩ := h3 e v hev hv
     refine ⟨r * u, mul_mem (natCast_mem _ r) hu, ?_⟩
     rw [he]

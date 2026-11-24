@@ -382,8 +382,7 @@ theorem lowL_holds : LowL := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · intro X n hn
     exact sub_of l (fun j => ((In.a9 hI) (ZMod (l ^ j)) (tw (l ^ j) 0)).1 (sch.obj X) n hn)
-  · intro n hn
-    exact sub_of l (fun j => hP hI k (l ^ j) n 0 hn)
+  · exact fun n hn => sub_of l (fun j => hP hI k (l ^ j) n 0 hn)
   · intro z
     obtain ⟨b, x, hb, rfl⟩ := tensor_form l z
     obtain ⟨c, rfl⟩ := hsurj x
@@ -403,8 +402,7 @@ theorem lowL_holds : LowL := by
       intro y
       have h1 := hz y
       rw [hpb] at h1
-      have h2 := key b _ hb h1
-      exact congrArg (fun w : Hl l (sch.obj (S k)) 0 0 => w.1 j) h2
+      exact congrArg (fun w : Hl l (sch.obj (S k)) 0 0 => w.1 j) (key b _ hb h1)
     rw [hx, TensorProduct.tmul_zero]
   · intro X p hp hc z y y'
     obtain ⟨b, x, hb, rfl⟩ := tensor_form l z
@@ -487,8 +485,7 @@ theorem basisOne_holds : BasisOne := by
   · haveI := hlam h0
     exact ⟨0, Module.Basis.empty M, fun t => t.elim0⟩
   obtain ⟨x, hx⟩ : ∃ x, lam x ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact h0 (LinearMap.ext hc)
   set v : M := (lam x)⁻¹ • x with hvdef
   have hv : lam v = 1 := by
@@ -498,8 +495,7 @@ theorem basisOne_holds : BasisOne := by
   let f : Fin (Module.finrank F N + 1) → M := Fin.cons v (fun i => v + (e i : M))
   have hrange : LinearMap.range lam = ⊤ := by
     rw [eq_top_iff]
-    intro c _
-    exact ⟨c • v, by rw [map_smul, hv, smul_eq_mul, mul_one]⟩
+    exact fun c _ => ⟨c • v, by rw [map_smul, hv, smul_eq_mul, mul_one]⟩
   have hcard : Fintype.card (Fin (Module.finrank F N + 1)) = Module.finrank F M := by
     rw [Fintype.card_fin, ← LinearMap.finrank_range_add_finrank_ker lam, hrange, finrank_top,
       Module.finrank_self, add_comm]
@@ -521,8 +517,7 @@ theorem basisOne_holds : BasisOne := by
     have hz : z - lam z • v ∈ N := by
       rw [LinearMap.mem_ker, map_sub, map_smul, hv, smul_eq_mul, mul_one, sub_self]
     have h2 := hNmem ⟨_, hz⟩
-    have h3 := Submodule.add_mem _ h2 (Submodule.smul_mem _ (lam z) hvmem)
-    simpa using h3
+    simpa using Submodule.add_mem _ h2 (Submodule.smul_mem _ (lam z) hvmem)
   refine ⟨_, basisOfTopLeSpanOfCardEqFinrank f hspan hcard, fun t => ?_⟩
   rw [coe_basisOfTopLeSpanOfCardEqFinrank]
   refine Fin.cases ?_ (fun i => ?_) t
@@ -674,8 +669,7 @@ theorem detectL_holds : DetectL := by
   have hone := hΛ0 Λ0 h0
   have hunit : IsUnit ((l : Γ(X, ⊤))) := by
     have h1 : IsUnit ((l : k)) := isUnit_iff_ne_zero.mpr hl
-    have h2 := (h1.map (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).map p.appTop.hom
-    simpa [map_natCast] using h2
+    simpa [map_natCast] using (h1.map (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).map p.appTop.hom
   have hδ : δ ∈ Submodule.span ℚ_[l]
       {w | ∃ a b, ∃ (h : a + b = 2 * (d : ℤ)), ∃ u v, w = ext2 l p h u v} := by
     rw [K.span]
@@ -753,8 +747,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.dualL_holds :
     haveI := fd m
     have inj : Function.Injective ((cupV l X h).compr₂ lam).flip := by
       rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-      intro y hy
-      exact nd n m h y (fun x => by simpa using LinearMap.congr_fun hy x)
+      exact fun y hy => nd n m h y (fun x => by simpa using LinearMap.congr_fun hy x)
     have := LinearMap.finrank_le_finrank_of_injective inj
     rwa [Subspace.dual_finrank_eq] at this
   have d0 : Module.finrank ℚ_[l] (V l X 0) ≤ 1 := by
@@ -780,8 +773,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.dualL_holds :
       haveI : Subsingleton (V l X 0) := ⟨fun x y => by rw [hz x, hz y]⟩
       simp [Module.finrank_zero_of_subsingleton]
   obtain ⟨x0, hx0⟩ : ∃ x, lam x ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hlam (LinearMap.ext hc)
   have surj : Function.Surjective lam := fun r => ⟨(r / lam x0) • x0, by
     rw [map_smul, smul_eq_mul, div_mul_cancel₀ _ hx0]⟩
@@ -801,8 +793,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.dualL_holds :
   haveI := fd m
   have injf : Function.Injective ((cupV l X h).compr₂ lam).flip := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-    intro y hy
-    exact nd n m h y (fun x => by simpa using LinearMap.congr_fun hy x)
+    exact fun y hy => nd n m h y (fun x => by simpa using LinearMap.congr_fun hy x)
   have heq : Module.finrank ℚ_[l] (V l X m) = Module.finrank ℚ_[l] (V l X n →ₗ[ℚ_[l]] ℚ_[l]) := by
     rw [Subspace.dual_finrank_eq]
     exact le_antisymm (le n m h) (le m n (by omega))
@@ -833,8 +824,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.finFib_holds :
   have hF : Finite ↥(pullback π t0) := by
     have h := (pullback.snd π t0).finite_preimage_singleton (IsLocalRing.closedPoint k)
     rw [← Set.finite_univ_iff]
-    refine h.subset fun z _ => ?_
-    exact Subsingleton.elim _ _
+    exact h.subset fun z _ => Subsingleton.elim _ _
   haveI : Fintype ↥(pullback π t0) := Fintype.ofFinite _
   let c : ↥(S k) := IsLocalRing.closedPoint k
   let e : ↥(pullback π t0) → (S k ⟶ pullback π t0) := fun z =>
@@ -979,8 +969,7 @@ private theorem off_hyp (k : Type) [Field k] (d : ℕ) :
       (k := 0) (by simp)
     have hy : y ∈ GlobalTheory.ProjSpace.linearι k (Fin.succ_injective (d + 1)) ⁻¹ᵁ
         GlobalTheory.ProjSpace.chart k (d + 1) 0 := hx
-    rw [hb] at hy
-    exact hy
+    rwa [hb] at hy
   · intro hx
     by_contra hc
     have h0 : (X 0 : MvPolynomial (Fin (d + 2)) k) ∈ x.asHomogeneousIdeal := by
@@ -1163,8 +1152,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.limOnto_holds :
   refine ⟨fun j => (s (Opposite.op j) : F j).1, fun j => ?_, fun j => (s (Opposite.op j) : F j).2⟩
   have h1 := hs (homOfLE (Nat.le_succ j)).op
   rw [Functor.ofOpSequence_map_homOfLE_succ] at h1
-  have h2 := congrArg Subtype.val h1
-  exact h2
+  exact congrArg Subtype.val h1
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1217,8 +1205,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.pairs_holds :
     smoothOfRelativeDimension_comp (n := d) (m := d) (pullback.fst p p) p
   have hid : SmoothOfRelativeDimension 0 (𝟙 (S k)) := inferInstance
   refine ⟨⟨inferInstance, hcomp, ?_⟩, fun y => ⟨⟨?_, ?_, ?_⟩, ?_⟩⟩
-  · rw [pullback.diagonal_fst_assoc]
-    exact hsm
+  · rwa [pullback.diagonal_fst_assoc]
   · have h1 : IsClosedImmersion (y.1 ≫ p) := by rw [y.2]; infer_instance
     exact IsClosedImmersion.of_comp y.1 p
   · rw [Nat.zero_add]; exact hsm
@@ -1271,8 +1258,7 @@ private theorem slice_gen {l : ℕ} [Fact l.Prime] {k : Type} [Field k] (R : Rin
   rw [R.nat (slice y) a b n h]
   have e1 : pb l (slice y) a (pb l (pullback.fst p p) a u) = u := by
     rw [← LinearMap.comp_apply, ← pb_comp]
-    simp only [slice, pullback.lift_fst]
-    exact pb_id' l X a u
+    simpa only [slice, pullback.lift_fst] using pb_id' l X a u
   have e2 : pb l (slice y) b (pb l (pullback.snd p p) b v) = pb l p b (pb l y.1 b v) := by
     rw [← LinearMap.comp_apply, ← pb_comp, ← LinearMap.comp_apply, ← pb_comp]
     simp only [slice, pullback.lift_snd]
@@ -1282,8 +1268,7 @@ theorem ptInt_holds : PtInt := by
   intro l _ k _ _ hl d X p hSP R L K lam Λ hΛ y w
   have hunitX : IsUnit ((l : Γ(X, ⊤))) := by
     have h1 : IsUnit ((l : k)) := isUnit_iff_ne_zero.mpr hl
-    have h2 := (h1.map (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).map p.appTop.hom
-    simpa [map_natCast] using h2
+    simpa [map_natCast] using (h1.map (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).map p.appTop.hom
   have hunitS : IsUnit ((l : Γ(S k, ⊤))) := by
     simpa [map_natCast] using hunitX.map (y.1.appTop).hom
   have key : (pb l y.1 0) ∘ₗ Λ =
@@ -1414,8 +1399,7 @@ private theorem tors_of {l : ℕ} [Fact l.Prime] {M : Type*} [AddCommGroup M] [M
     (w : M) (h : ((b : ℚ_[l]))⁻¹ ⊗ₜ[ℤ_[l]] w = 0) : ∃ c : ℤ_[l], c ≠ 0 ∧ c • w = 0 := by
   have hb' : (b : ℚ_[l]) ≠ 0 := by rwa [Ne, PadicInt.coe_eq_zero]
   have h1 : (1 : ℚ_[l]) ⊗ₜ[ℤ_[l]] w = 0 := by
-    have h2 := congrArg (fun t => (b : ℚ_[l]) • t) h
-    simpa [TensorProduct.smul_tmul', hb'] using h2
+    simpa [TensorProduct.smul_tmul', hb'] using congrArg (fun t => (b : ℚ_[l]) • t) h
   have hloc : IsLocalizedModule (nonZeroDivisors ℤ_[l]) (TensorProduct.mk ℤ_[l] ℚ_[l] M 1) := inferInstance
   obtain ⟨c, hc⟩ := (IsLocalizedModule.eq_zero_iff (nonZeroDivisors ℤ_[l]) (TensorProduct.mk ℤ_[l] ℚ_[l] M 1)).1 h1
   exact ⟨c, nonZeroDivisors.ne_zero c.2, hc⟩
@@ -1485,8 +1469,7 @@ theorem qProj_holds : QProj := by
     simp only [Gys0.q, LinearMap.baseChange_tmul]
     rw [LRingPf.cupQ_tmul]
     congr 1
-    refine Subtype.ext (funext fun j => ?_)
-    exact G.proj j h h1 h2 h3 h4 (x.1 j) (y.1 j)
+    exact Subtype.ext (funext fun j => (G.proj j h h1 h2 h3 h4 (x.1 j) (y.1 j)))
   have hfg : ((cupV l Z h1 ∘ₗ pb l ι n).compr₂ (G.q h h2)) = (cupV l X h4).compl₂ (G.q h h3) :=
     LRingPf.ext2 fun x y => key x y
   exact DFunLike.congr_fun (DFunLike.congr_fun hfg a) b
@@ -1515,8 +1498,7 @@ theorem slice_holds : Slice := by
   obtain ⟨hy, hpb⟩ := hpt y
   have hunitX : IsUnit ((l : Γ(X, ⊤))) := by
     have h1 : IsUnit ((l : k)) := isUnit_iff_ne_zero.mpr hl
-    have h2 := (h1.map (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).map p.appTop.hom
-    simpa [map_natCast] using h2
+    simpa [map_natCast] using (h1.map (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).map p.appTop.hom
   have hunit : IsUnit ((l : Γ(S k, ⊤))) := by
     simpa [map_natCast] using hunitX.map (y.1.appTop).hom
   simp only [GysQ.diag, GysQ.pt, GysQ.cls, dite_eq_left hdiag, dite_eq_left hy]
@@ -1777,8 +1759,7 @@ theorem trComp_holds : TrComp := by
     · rintro ⟨t', rfl⟩
       rw [Subsingleton.elim t' s]
       rfl
-    · intro ht
-      exact ⟨s, ht.symm⟩
+    · exact fun ht => ⟨s, ht.symm⟩
   obtain ⟨j, hj⟩ := hcov (y.1 s)
   have hsub : Set.range y.1 ⊆ Set.range (U j).ι := by
     rw [Scheme.Opens.range_ι, hrange]
@@ -1805,8 +1786,7 @@ theorem trComp_holds : TrComp := by
     rw [LinearMap.comp_apply, ← Scheme.homOfLE_ι X hle, pb_comp, LinearMap.comp_apply]
     unfold GysQ.pt GysQ.cls
     rw [dite_eq_left hy, G.off hy _ W hW, map_zero, map_zero]
-  · intro h
-    exact absurd (Finset.mem_univ j) h
+  · exact fun h => absurd (Finset.mem_univ j) h
 
 end UpperTheory.Gal.KunnethLefschetz
 end -- clump:auto
@@ -1908,8 +1888,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.swap_holds :
   have hpair := (hP k d p inferInstance hsm).1
   have hunit : IsUnit ((l : Γ(X, ⊤))) := by
     have h1 : IsUnit ((l : k)) := isUnit_iff_ne_zero.mpr hl
-    have h2 := (h1.map (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).map p.appTop.hom
-    simpa [map_natCast] using h2
+    simpa [map_natCast] using (h1.map (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).map p.appTop.hom
   have hu := hR.mul_one X hunit
   have key : ∀ f : pullback p p ⟶ X, pullback.diagonal p ≫ f = 𝟙 X →
       cupV l (pullback p p) h (pb l f n x) (G.diag d p) = G.g hpair h x := by

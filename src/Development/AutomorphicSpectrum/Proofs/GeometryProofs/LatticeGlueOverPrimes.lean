@@ -197,8 +197,7 @@ theorem exists_nat_mul_mem [CharZero Ω] (hξ : IsCptGen ξ) (W : X.Opens) (hW :
     exact (Set.ext_iff.1 this _).1 ⟨z, rfl⟩
   let x : W := ⟨hW.fromSpec z, hxW⟩
   have hxz : hW.primeIdealOf x = z := by
-    apply hW.fromSpec.isOpenEmbedding.injective
-    exact hW.fromSpec_primeIdealOf x
+    exact hW.fromSpec.isOpenEmbedding.injective (hW.fromSpec_primeIdealOf x)
 
   have hPD : (hW.primeIdealOf ⟨genPt ξ, hη⟩).asIdeal ≤ D := by
     intro s hs
@@ -249,8 +248,7 @@ theorem exists_nat_mul_mem [CharZero Ω] (hξ : IsCptGen ξ) (W : X.Opens) (hW :
   have := (IsLocalization.AtPrime.isUnit_to_map_iff (X.presheaf.stalk x.1)
       (hW.primeIdealOf x).asIdeal t).1 ht
   apply this
-  rw [hxz]
-  exact htD
+  rwa [hxz]
 
 theorem exists_nat_span_eq [CharZero Ω] (hξ : IsCptGen ξ) (W : X.Opens) (hW : IsAffineOpen W) {r : ℕ}
     (b c : Fin r → E) (hb : LinearIndependent Ω b) (hc : LinearIndependent Ω c)
@@ -317,8 +315,7 @@ theorem local_step [CharZero Ω] [IsLocallyNoetherian X] (hξ : IsCptGen ξ) (S 
     have hcpt := hN.isCompact (Subtype.val ⁻¹' C : Set (U₂ : Set X))
     have := Subtype.isCompact_iff.1 hcpt
     have hCU : C ⊆ (U₂ : Set X) := fun x hx => hx.1
-    rw [Subtype.image_preimage_coe, Set.inter_eq_right.2 hCU] at this
-    exact this
+    rwa [Subtype.image_preimage_coe, Set.inter_eq_right.2 hCU] at this
   have key : ∀ x ∈ C, ∃ W : X.Opens, x ∈ W ∧ ∃ m : ℕ, m ≠ 0 ∧ ∀ q : Cpt ξ, q.1 ∈ W → ¬ InFibre ξ l q →
       (∀ n : ℕ, n.Prime → n ∣ m → ¬ InFibre ξ n q) →
       L₀ q = Submodule.span (regAt ξ q) (Set.range b) := by

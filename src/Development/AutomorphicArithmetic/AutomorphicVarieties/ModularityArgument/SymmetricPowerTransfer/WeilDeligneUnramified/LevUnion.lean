@@ -319,8 +319,7 @@ private theorem val_norm {F : Type} [Field F] [NumberField F] (v : Pl F) :
     rw [e2]
     refine e.trans_lt ?_
     change v.valuation F (algebraMap (𝓞 F) F ((Ideal.absNorm v.asIdeal : ℕ) : 𝓞 F)) < 1 at h
-    rw [map_natCast] at h
-    exact h
+    rwa [map_natCast] at h
   haveI : (Valued.v : Valuation (Kv v) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
   have he : (valuation (Kv v)).IsEquiv (Valued.v : Valuation (Kv v) (WithZero (Multiplicative ℤ))) := isEquiv _ _
   simp only [← not_le] at h2 ⊢
@@ -369,8 +368,7 @@ private theorem mem_lvS_of_congruence {F : Type} [Field F] [NumberField F] {Δ :
 
 private theorem mem_under {L : Type} [Field L] [NumberField L] [IsCMField L] (w : Plc L) (N : ℕ)
     (hN : (N : 𝓞 (Lp L)) ∈ (un w).asIdeal) : (N : 𝓞 L) ∈ w.asIdeal := by
-  have h2 := Ideal.mem_comap.1 hN
-  simpa using h2
+  simpa using Ideal.mem_comap.1 hN
 
 private theorem norm_ne {F : Type} [Field F] [NumberField F] (v : Pl F) : Ideal.absNorm v.asIdeal ≠ 0 :=
   fun h => v.ne_bot (Ideal.absNorm_eq_zero_iff.1 h)
@@ -605,8 +603,7 @@ private theorem fin_uniq (f f' : finU (E := L) (n := 3)) (k k' : UA L 3) (hk : k
   have hff : (f : UA L 3) = f' := by
     refine hext _ _ (fun w => ?_) (fun τ => ?_)
     · have h1 := congrArg (cLoc w) he
-      rw [map_mul, map_mul, ((hfi k).2.1 hk) w, ((hfi k').2.1 hk') w, mul_one, mul_one] at h1
-      exact h1
+      rwa [map_mul, map_mul, ((hfi k).2.1 hk) w, ((hfi k').2.1 hk') w, mul_one, mul_one] at h1
     · rw [((hfi _).1.1 f.2) τ, ((hfi _).1.1 f'.2) τ]
   refine ⟨Subtype.ext hff, ?_⟩
   rw [hff] at he
@@ -645,8 +642,7 @@ private theorem level_step (B : Bridge L) (A : SD B.Δ) (S : Finset (Plc L)) (VL
     (u : finU (E := L) (n := 3)) (hu : (u : UA L 3) ∈ lev (Kall (L := L) 3) S VL) (g : finU (E := L) (n := 3)) :
     ψ (B.bG.symm (g * u)) = ψ (B.bG.symm g) := by
   have hm : B.bG.symm u ∈ C.U := by
-    rw [hBG.U, hlG, MulEquiv.apply_symm_apply]
-    exact hu
+    rwa [hBG.U, hlG, MulEquiv.apply_symm_apply]
   have h1 := hψ.2 (B.bG.symm g) ⟨_, hm⟩
   rw [map_mul]
   rw [hBG.ω] at h1
@@ -786,12 +782,10 @@ private theorem eig_fin (B : Bridge L) (T : Spl B) (S : Finset (Plc L)) (VL : �
   have hE' := hE _ _ (dom_ddf T A w h d hd) hg
   rw [ex_ddf T S VL A hF a b hab hEx w hw h d] at hE'
   have hfo2 : UpperTheory.V.AlgebraTools.FinOrb ((lev (Kall (L := L) 3) S VL).subgroupOf (finU (E := L) (n := 3))) ((lev (Kall (L := L) 3) S VL).subgroupOf (finU (E := L) (n := 3))) (B.bG (B.bG.symm x)) := by
-    rw [MulEquiv.apply_symm_apply]
-    exact hfo
+    rwa [MulEquiv.apply_symm_apply]
   have hstep := dc_step B.bG ((lev (Kall (L := L) 3) S VL).subgroupOf (finU (E := L) (n := 3))) A.dat.UG hcomap ψ (B.bG.symm x) _ hfo2
     (fun u hu g => level_step B A S VL hlG j ch C s hBG ψ hψ u (Subgroup.mem_subgroupOf.1 hu) g) hE'
-  rw [MulEquiv.apply_symm_apply] at hstep
-  exact hstep
+  rwa [MulEquiv.apply_symm_apply] at hstep
 
 end
 
@@ -897,8 +891,7 @@ theorem UpperTheory.V.Z.Sym.So.repsEx :
   · intro y' hy'
     obtain ⟨y, hy, rfl⟩ := Finset.mem_image.mp hy'
     obtain ⟨w, -, -, ht, hfin⟩ := (trim A.dat y (hY y hy)).choose_spec
-    simp only [f, dite_eq_left (hY y hy)]
-    exact ⟨ht, hfin⟩
+    simpa only [f, dite_eq_left (hY y hy)] using ⟨ht, hfin⟩
   · intro g
     obtain ⟨γ, s, hs, y, hy, u, hu, rfl⟩ := hdec g
     obtain ⟨w, hw, hty, -, -⟩ := (trim A.dat y (hY y hy)).choose_spec
@@ -1077,8 +1070,7 @@ private theorem exSec {W P : Type} {X : P → Type} (f : W → P) (S : Set W) (i
     obtain rfl := inj hw' hw he
     rfl
   have hex : ∃ w', ∃ hw' : w' ∈ S, f w' = f w := ⟨w, hw, rfl⟩
-  simp only [dite_eq_left hex]
-  exact key _ _ _
+  simpa only [dite_eq_left hex] using key _ _ _
 
 variable {L : Type} [Field L] [NumberField L] [IsCMField L]
 
@@ -1116,8 +1108,7 @@ private theorem exTwo : ∃ w : Plc L, (2 : 𝓞 L) ∈ w.asIdeal := by
   exact ⟨⟨P, hPm.isPrime, hne⟩, hP⟩
 
 private theorem two_under (w : Plc L) (h : (2 : 𝓞 (Lp L)) ∈ (un w).asIdeal) : (2 : 𝓞 L) ∈ w.asIdeal := by
-  rw [HeightOneSpectrum.under_asIdeal, Ideal.under_def, Ideal.mem_comap, map_ofNat] at h
-  exact h
+  rwa [HeightOneSpectrum.under_asIdeal, Ideal.under_def, Ideal.mem_comap, map_ofNat] at h
 
 private def pullLev {B : Bridge L} {w : Plc L} (T : B.toRingBr.Split w) (V : Lev (Kw w)) : Lev (Kv (un w)) where
   c := V.c
@@ -1165,8 +1156,7 @@ theorem UpperTheory.V.Z.Sym.So.fitEx :
     · exact fun v _ => (finFacts _ (Vf v)).2.2.2.2.1.choose_spec
     · intro v
       simp [A]
-    · intro w hw h
-      exact hsf w hw
+    · exact fun w hw h => hsf w hw
     · intro w hw
       show (Vf (un w)).c = _
       rw [hVf w hw]; rfl

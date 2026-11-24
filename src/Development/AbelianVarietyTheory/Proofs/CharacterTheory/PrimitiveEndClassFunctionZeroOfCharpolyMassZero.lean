@@ -120,8 +120,7 @@ theorem ker_aeval_add_nilRad :
       simpa using h1
     rw [← Module.End.mul_apply, this, Module.End.mul_apply, hx, map_zero]
   refine ⟨fun x hx => ?_, fun he j => ?_⟩
-  · rw [LinearMap.mem_ker, (aeval_add_nilRad hg hh f).1 x hx]
-    exact hx
+  · rwa [LinearMap.mem_ker, (aeval_add_nilRad hg hh f).1 x hx]
   · have : LinearMap.ker (aeval g (f ^ j)) = LinearMap.ker (aeval (g + h) (f ^ j)) := by
       cases j with
       | zero =>
@@ -188,8 +187,7 @@ theorem primitive_eq_zero_of_primary : ∀ (F : Type) [Field F] [Finite F] (V : 
       rw [← map_pow, hCH g hg] at hinj'
       apply htop
       rw [hb, eq_comm, eq_bot_iff]
-      intro x _
-      exact (Submodule.mem_bot F).mpr (hinj' (by simp))
+      exact fun x _ => (Submodule.mem_bot F).mpr (hinj' (by simp))
     have hinv : ∀ x ∈ LinearMap.ker (aeval g f), g x ∈ LinearMap.ker (aeval g f) := by
       intro x hx
       rw [LinearMap.mem_ker] at hx ⊢
@@ -221,8 +219,7 @@ theorem primitive_eq_zero_of_primary : ∀ (F : Type) [Field F] [Finite F] (V : 
     rw [Nat.cast_eq_zero, Finset.card_eq_zero, ← Ne, ← Finset.nonempty_iff_ne_empty]
     refine ⟨0, ?_⟩
     simp [nilRad]
-  intro g hg
-  exact key _ g rfl hg
+  exact fun g hg => key _ g rfl hg
 
 end GlobalTheory.CuspGL
 end -- clump:auto
@@ -258,8 +255,7 @@ theorem eq_zero_of_mass_charpoly_eq_zero (F : Type) [Field F] [Finite F] (V : Ty
       simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
       have : g' = g := Subsingleton.elim _ _
       simp [this]
-    rw [mass, hset, finsum_mem_singleton] at hm
-    exact hm
+    rwa [mass, hset, finsum_mem_singleton] at hm
   by_cases hprim : ∃ (f : F[X]) (m : ℕ), f.Monic ∧ Irreducible f ∧ 0 < m ∧ LinearMap.charpoly g = f ^ m
   swap
   · exact _root_.GlobalTheory.CuspGL.eq_zero_of_not_primary F V φ hc hp hpos g hprim
@@ -285,8 +281,7 @@ theorem eq_zero_of_mass_charpoly_eq_zero (F : Type) [Field F] [Finite F] (V : Ty
       exact_mod_cast this.ne'
     exact div_ne_zero (mul_ne_zero h1 h2) h3
   have hex : ∃ g₀ : Module.End F V, LinearMap.charpoly g₀ = f ^ m ∧ aeval g₀ f = 0 ∧ psi s V g₀ ≠ 0 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     apply hmass
     rw [mass]
     refine finsum_mem_eq_zero_of_forall_eq_zero fun x hx => ?_

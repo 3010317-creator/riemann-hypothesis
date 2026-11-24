@@ -375,8 +375,7 @@ private theorem real_sign {F : Type} [Field F] [NumberField F] (d : F) [Fact (�
   have hv : ρ ((infDiag F t (InfinitePlace.mk φ) : (InfinitePlace.mk φ).Completionˣ) :
       (InfinitePlace.mk φ).Completion) = σ t := key t
   rw [hab, map_sub, map_mul, map_pow, map_pow, key] at hv
-  by_contra hd
-  push Not at hd
+  by_contra! hd
   nlinarith [sq_nonneg (ρ a), mul_nonneg (neg_nonneg.mpr hd) (sq_nonneg (ρ b))]
 
 theorem UpperTheory.V.Z.Sym.Glob.symbolEx :
@@ -414,8 +413,7 @@ theorem UpperTheory.V.Z.Sym.Glob.symbolEx :
         have huw' : ((u : ℤ) : ℂ) = ((w : ℤ) : ℂ) := huw
         exact Units.ext (Int.cast_injective huw')
       apply hg
-      rw [MonoidHom.map_finprod g (AlmostNorm.finite_mulSupport hA), map_one]
-      rw [← hprod]
+      rw [MonoidHom.map_finprod g (AlmostNorm.finite_mulSupport hA), map_one, ← hprod]
       apply finprod_congr
       intro v
       rw [E v (y v)]
@@ -523,8 +521,7 @@ private theorem abs_sum {I G : Type} (Sg : Finset I) (P : G → Prop) (S : G →
       rw [Finset.mem_coe, Finset.mem_powerset]
       by_contra hsub
       exact hne (hPi_zero g hsub)
-    · intro g hg g' hg' h
-      exact inj g g' hg.1 hg'.1 h
+    · exact fun g hg g' hg' h => inj g g' hg.1 hg'.1 h
   refine ⟨hA, ?_⟩
   have hsupp : Function.support (fun g => one (P g) *
       (∏ᶠ (v : I) (_ : v ∉ Sg), if v ∈ S g then b v else a v)) ⊆ ↑hA.toFinset := by
@@ -967,8 +964,7 @@ theorem sumT : SumT := by
   · simp_rw [hterm]
     exact A1
   · simp_rw [hterm]
-    rw [R1, R2]
-    exact A2
+    rwa [R1, R2]
 
 end UpperTheory.V.Z.Sym.Glob
 end -- clump:auto
@@ -1161,8 +1157,7 @@ theorem UpperTheory.V.Z.Sym.Loc.stable : UpperTheory.V.Z.Sym.Loc.Stable := by
   rcases tri hL τ₀ with ⟨hm, hu⟩ | ⟨hm, hu⟩ | ⟨hu1, hu2⟩
   · have hx : (2 + τ₀) - 2 ^ 2 ∈ IsLocalRing.maximalIdeal O := by
       have e : (2 + τ₀) - 2 ^ 2 = τ₀ - 2 := by ring
-      rw [e]
-      exact hm
+      rwa [e]
     obtain ⟨r, hr2, hrm⟩ := sqrtO O K Δ hL (2 + τ₀) 2 hL.two hx
     have hrK : (algebraMap O K) r ^ 2 = 2 + τ := by
       rw [← map_pow, hr2, map_add (f := _), map_ofNat, hτ₀]
@@ -1183,12 +1178,10 @@ theorem UpperTheory.V.Z.Sym.Loc.stable : UpperTheory.V.Z.Sym.Loc.Stable := by
     exact ((sumShift O K Δ τ hL hreg f hf 1).2.2 _ _ hP ⟨Units.mk0 _ hc2, by rw [Units.val_mk0]⟩).1
   · have hevc : EvenVal O c := by
       apply EvenVal.of_mul_unit hu
-      rw [map_sub, map_ofNat, hτ₀]
-      exact hev
+      rwa [map_sub, map_ofNat, hτ₀]
     have hm2 : τ₀ - 2 * (((-1 : ℤˣ) : ℤ) : O) ∈ IsLocalRing.maximalIdeal O := by
       have e : τ₀ - 2 * (((-1 : ℤˣ) : ℤ) : O) = τ₀ + 2 := by push_cast; ring
-      rw [e]
-      exact hm
+      rwa [e]
     obtain ⟨x, y, _, hsq, hn⟩ := rootEx O K Δ τ hL τ₀ (-1) hτ₀ hm2
     set u : Etau K τ := { re := (algebraMap O K) x, im := (algebraMap O K) y } with hu_def
     have hu2' : u ^ 2 = -ω := by
@@ -1211,8 +1204,7 @@ theorem UpperTheory.V.Z.Sym.Loc.stable : UpperTheory.V.Z.Sym.Loc.Stable := by
     let f : Kˣ → ℂ := fun y => pcount O τ (y : K)
     have hf : ∀ t ∈ NE τ, ∀ x : Kˣ, f (t * x) = f x := by
       intro t ht x
-      simp only [f, Units.val_mul]
-      exact pNorm O K Δ τ hL t ht x
+      simpa only [f, Units.val_mul] using pNorm O K Δ τ hL t ht x
     have hk : ∀ k : Kˣ, lcount O c d ((k : K) • m) = f (k * g) := by
       intro k
       rw [hmove, ← smul_assoc, smul_smul, ← Units.val_mul, hM]
@@ -1221,8 +1213,7 @@ theorem UpperTheory.V.Z.Sym.Loc.stable : UpperTheory.V.Z.Sym.Loc.Stable := by
     exact pStable O K Δ τ hL hreg j χ hj hχ a ha
   · have hevc : EvenVal O c := by
       apply EvenVal.of_mul_unit hu2
-      rw [map_sub, map_ofNat, hτ₀]
-      exact hev
+      rwa [map_sub, map_ofNat, hτ₀]
     have hU : (algebraMap O K) ↑(-(hu1.unit * hu2.unit)) = τ ^ 2 - 4 := by
       rw [Units.val_neg, Units.val_mul, IsUnit.unit_spec, IsUnit.unit_spec, map_neg, map_mul, map_add (f := _), map_sub,
         map_ofNat, hτ₀]
@@ -1354,8 +1345,7 @@ theorem sg_ev (hD : D.Ok) {τ c : F} {d m : EL Δ τ} (h : IsDat c d m) (hn : D.
     rw [this]
     exact ite_eq_left (one_mem _)
   have := (vanish (Ov w) (Kv w) (cv w Δ) (cv w τ) (hD.off w hw) _ _ _ (modelMap F (Kv w) (cv w) Δ τ c d m h).1 hl).2
-  rw [map_mul, map_sub, map_ofNat]
-  exact this
+  rwa [map_mul, map_sub, map_ofNat]
 
 theorem sg_stab (hD : D.Ok) {τ c : F} {d m : EL Δ τ} (h : IsDat c d m) (he : D.Ev (c * (2 - τ))) :
     (∏ᶠ (v : Pl F) (_ : v ∉ D.Sg), stabSum (Ov v) (cv v c) (elmap (cv v) d) (elmap (cv v) m)) = D.nS τ := by
@@ -1484,8 +1474,7 @@ theorem sg_out {c t : Kˣ} {d m : EL Δ τ} {δ ι P} (h : Models (c : K) d ((t 
   obtain ⟨P', h'⟩ := sg_scale h s z
   refine ⟨(c, t), P', ?_⟩
   simp only [hs, hz]
-  rw [smul_smul, mul_comm _ (t : K)] at h'
-  exact h'
+  rwa [smul_smul, mul_comm _ (t : K)] at h'
 
 end Scale
 

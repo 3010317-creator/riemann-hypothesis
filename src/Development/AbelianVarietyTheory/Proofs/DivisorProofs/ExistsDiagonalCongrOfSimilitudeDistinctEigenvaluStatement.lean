@@ -116,8 +116,7 @@ theorem similitude_eigvec_orthogonal : ∀ {n : ℕ} (h g : Matrix (Fin n) (Fin 
     exact mul_ne_zero (mul_ne_zero (by simpa using hMdet) hdet) hMdet
   intro i hi
   rw [hdiag, Matrix.det_diagonal] at hdetH
-  apply hdetH
-  exact Finset.prod_eq_zero (Finset.mem_univ i) (by simp [hi])
+  exact hdetH (Finset.prod_eq_zero (Finset.mem_univ i) (by simp [hi]))
 
 end GlobalTheory
 end -- clump:auto

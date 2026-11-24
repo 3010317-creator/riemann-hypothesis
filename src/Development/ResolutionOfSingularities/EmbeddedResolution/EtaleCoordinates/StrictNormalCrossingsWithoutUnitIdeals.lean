@@ -76,8 +76,7 @@ private theorem mem_of_mem_filterNeTop {D : X.IdealSheafData} {E : List X.IdealS
 
 private theorem mem_filterNeTop {D : X.IdealSheafData} {E : List X.IdealSheafData}
     (hD : D ∈ E) (h : D ≠ ⊤) : D ∈ filterNeTop E := by
-  simp only [filterNeTop, List.mem_filter]
-  exact ⟨hD, by simpa using h⟩
+  simpa only [filterNeTop, List.mem_filter] using ⟨hD, by simpa using h⟩
 
 private def unshiftIndex (g₀ : ℕ → ℕ) : ℕ → ℕ
   | 0 => 0
@@ -119,8 +118,7 @@ private theorem exists_index_map_of_filterNeTop_eq (n : ℕ) :
           | succ i =>
             simp only [List.getElem?_cons_succ] at hne
             simp only [List.length_cons] at hi
-            simp only [unshiftIndex, List.getElem?_cons_succ]
-            exact h1 i (by omega) hne
+            simpa only [unshiftIndex, List.getElem?_cons_succ] using h1 i (by omega) hne
         · intro i j hi hj hni hnj hgij
           cases i with
           | zero => simp at hni
@@ -148,8 +146,7 @@ private theorem exists_index_map_of_filterNeTop_eq (n : ℕ) :
               simp only [List.length_cons] at hlen ⊢
               omega
             have hfilt' : filterNeTop (D :: T') = filterNeTop T := by
-              rw [filterNeTop_cons_of_ne_top D T' hD]
-              exact hfilt
+              rwa [filterNeTop_cons_of_ne_top D T' hD]
             obtain ⟨g₀, h1, h2⟩ := ih T (D :: T') hlen' hfilt'
             refine ⟨fun i => g₀ i + 1, ?_, ?_⟩
             · intro i hi hne

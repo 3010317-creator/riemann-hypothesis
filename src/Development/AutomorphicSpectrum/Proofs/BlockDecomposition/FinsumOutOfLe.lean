@@ -73,8 +73,7 @@ theorem finsum_out_of_le {H : Type} [Group H] {L S : Subgroup H} (u : H → ℂ)
   by_cases hfin : (Function.support fun c : H ⧸ S => u c.out).Finite
   · have hsupp : (Function.support fun p : (H ⧸ S) × (S ⧸ L.subgroupOf S) => u p.1.out).Finite := by
       refine (hfin.prod (Set.finite_univ (α := S ⧸ L.subgroupOf S))).subset ?_
-      intro p hp
-      exact ⟨hp, Set.mem_univ _⟩
+      exact fun p hp => ⟨hp, Set.mem_univ _⟩
     rw [finsum_curry _ hsupp]
     have hin : ∀ c : H ⧸ S, ∑ᶠ _ : S ⧸ L.subgroupOf S, u c.out = ((L.relIndex S : ℕ) : ℂ) * u c.out := by
       intro c
@@ -87,9 +86,7 @@ theorem finsum_out_of_le {H : Type} [Group H] {L S : Subgroup H} (u : H → ℂ)
   · have h0 : ∑ᶠ c : H ⧸ S, u c.out = 0 := finsum_of_infinite_support hfin
     rw [h0, mul_zero]
     refine finsum_of_infinite_support fun hsupp => hfin ?_
-    refine (hsupp.image Prod.fst).subset ?_
-    intro c hc
-    exact ⟨(c, ((1 : S) : S ⧸ L.subgroupOf S)), hc, rfl⟩
+    exact (hsupp.image Prod.fst).subset (fun c hc => ⟨(c, ((1 : S) : S ⧸ L.subgroupOf S)), hc, rfl⟩)
 
 theorem hint_eq_level : ∀ (H : Type) [Group H] (K L : Subgroup H) (u : H → ℂ), L ≤ K → L ≤ rStab u →
     L.relIndex K ≠ 0 → hint K u = ((L.relIndex K : ℕ) : ℂ)⁻¹ * ∑ᶠ q : H ⧸ L, u q.out := by

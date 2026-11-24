@@ -107,11 +107,9 @@ theorem UpperTheory.ConvolutionTheory.L1.jointNe :
     have hU : ∀ a b : H, U a = U b → a = b := fun a b hab => U.injective hab
     refine (Submodule.ne_bot_iff _).2 ⟨u, (hmemZ _ u).2 ⟨(hmemVE u).2 ⟨hu, ?_⟩, ?_⟩, ?_⟩
     · apply hU
-      rw [h.U_E]
-      exact hvE'
+      rwa [h.U_E]
     · apply hU
-      rw [h.U_A, map_smul]
-      exact hvA
+      rwa [h.U_A, map_smul]
     · rintro rfl
       exact hv0 (by simp)
   have hall : ∀ j, eigIn (eigIn V E 1) (A j) y ≠ ⊥ := by
@@ -329,8 +327,7 @@ private lemma list_mem (h : Slots π V m ι E A U) (L : List (Fin (m + 1))) {v :
   induction L with
   | nil => simpa using hv
   | cons a L ih =>
-    simp only [List.map_cons, List.prod_cons, ContinuousLinearMap.mul_apply]
-    exact A_cut h a ih
+    simpa only [List.map_cons, List.prod_cons, ContinuousLinearMap.mul_apply] using A_cut h a ih
 
 private lemma list_sa (h : Slots π V m ι E A U) (L : List (Fin (m + 1))) :
     IsSelfAdjoint (L.map A).prod := by
@@ -339,8 +336,7 @@ private lemma list_sa (h : Slots π V m ι E A U) (L : List (Fin (m + 1))) :
   | cons a L ih =>
     have hc : (L.map A).prod * A a = A a * (L.map A).prod := by
       ext v
-      simp only [ContinuousLinearMap.mul_apply]
-      exact (list_comm_A h a L v).symm
+      simpa only [ContinuousLinearMap.mul_apply] using (list_comm_A h a L v).symm
     simp only [List.map_cons, List.prod_cons]
     rw [isSelfAdjoint_iff, star_mul, ih.star_eq, (IsSelfAdjoint.of_nonneg (h.A_pos a)).star_eq, hc]
 
@@ -364,8 +360,7 @@ private lemma list_ne (h : Slots π V m ι E A U) (hall : ∀ j, ∃ v ∈ eigIn
     obtain ⟨u, hu, hQ⟩ := ih (List.nodup_cons.1 hL).2
     have hk : k ∉ L := (List.nodup_cons.1 hL).1
     obtain ⟨hcl, hinv, hirr⟩ := cutIrr Γ G H π V m ι E A U h
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     simp only [List.map_cons, List.prod_cons, ContinuousLinearMap.mul_apply] at hcon
     let M : Submodule ℂ H :=
       { carrier := {w | w ∈ eigIn V E 1 ∧ ∀ g, A k (π (ι k g) w) = 0}
@@ -457,8 +452,7 @@ theorem UpperTheory.ConvolutionTheory.L1.jointEx :
     refine fd_of_compact hcomp (x := (x : ℂ)) (by exact_mod_cast hx) _ (closed_eigIn hcl _ _) ?_
     intro v hv
     obtain ⟨h1, h2⟩ := mem_eigIn.1 hv
-    rw [ContinuousLinearMap.comp_apply, prj_fix h1]
-    exact h2
+    rwa [ContinuousLinearMap.comp_apply, prj_fix h1]
   refine ⟨fun x hx => hfd x hx.ne', ?_⟩
   rintro ⟨i, v₀, hv₀, hne⟩
   have hall := ne_all h ⟨v₀, hv₀, hne⟩
@@ -477,8 +471,7 @@ theorem UpperTheory.ConvolutionTheory.L1.jointEx :
   have hTeq : (List.ofFn A).prod ∘L prj (eigIn V E 1) =
       prj (eigIn V E 1) ∘L (List.ofFn A).prod ∘L prj (eigIn V E 1) := by
     ext v
-    simp only [ContinuousLinearMap.comp_apply]
-    exact (prj_fix (hQmem _ (hPm v))).symm
+    simpa only [ContinuousLinearMap.comp_apply] using (prj_fix (hQmem _ (hPm v))).symm
   have hTsa : IsSelfAdjoint ((List.ofFn A).prod ∘L prj (eigIn V E 1)) := by
     rw [hTeq]
     have := hQsa.conj_adjoint (prj (eigIn V E 1))
@@ -526,8 +519,7 @@ theorem UpperTheory.ConvolutionTheory.L1.jointEx :
         | exact RCLike.re_ofReal_mul _ _
     rw [hw1] at h3
     have h6 : 0 ≤ r * ‖(w : H)‖ ^ 2 := h5 ▸ h3
-    by_contra hneg
-    push Not at hneg
+    by_contra! hneg
     nlinarith
   have hrne : r ≠ 0 := by
     rintro rfl

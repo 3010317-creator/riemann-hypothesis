@@ -543,8 +543,7 @@ theorem cosetSum_transfer_surj {G H V : Type} [Group G] [Group H] [AddCommGroup 
     intro h0
     apply hc
     have hF' := hval ((ψ ⟨x, hx⟩ : H) : H ⧸ K)
-    rw [h1, h2, h0, zero_smul] at hF'
-    exact hF'
+    rwa [h1, h2, h0, zero_smul] at hF'
   have hL : Function.support (fun d : H ⧸ K => a d.out * φ' d.out) ⊆ ↑S := by
     intro d hd
     rw [hS, Set.Finite.coe_toFinset]
@@ -598,7 +597,6 @@ theorem ku_iff : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ
     rw [hO]; rfl
   have h1 : p x ∈ Formalism.UG.KU σ n ↔ (p x).val ∈ GlobalTheory.LFun.KGL w (n := n) := by
     rw [hK]
-    show (p x).val ∈ Formalism.UG.intPts (Formalism.UG.intL _).subtype (Formalism.UG.GU σ n) ↔ _
     exact ⟨fun h => h.2, fun h => ⟨(p x).2, h⟩⟩
   rw [h1, hp]
   have hbi : b⁻¹ ∈ GlobalTheory.LFun.KGL w (n := n) := inv_mem hb
@@ -1286,8 +1284,7 @@ theorem GlobalTheory.InertFrameConj.conj_and_surjective : ∀ (L : Type) [Field 
     refine cT_mul_self_of_frame Dv.σw b (cLoc w x.1) _ hb ?_
     have h : Formalism.UG.cT Dv.σw (p x).val.val * Formalism.UG.antiJ (w.adicCompletion L) n * (p x).val.val =
         Formalism.UG.antiJ (w.adicCompletion L) n := (p x).2
-    rw [hp x] at h
-    exact h
+    rwa [hp x] at h
   have hdg : ∀ (t : (w.adicCompletion L)ˣ) (x : locU n w), cLoc w x.1 = dg i0 t → Dv.σw t * t = 1 := by
     intro t x hx
     have := hu x
@@ -1356,8 +1353,7 @@ theorem GlobalTheory.InertFrameConj.conj_and_surjective : ∀ (L : Type) [Field 
       have := hpair (y + 1) hy1
       simpa only [map_add (f := _), map_one] using this
     obtain ⟨t, ht⟩ : ∃ t : L, t ≠ IsCMField.complexConj L t := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact IsCMField.complexConj_ne_one L (AlgEquiv.ext fun t => (hc t).symm)
     intro x
     by_cases hx : x = IsCMField.complexConj L x
@@ -1601,8 +1597,7 @@ theorem eq_of_sum_abs_le_one (κ : Fin m → ℤ) (h : ∑ i, |κ i| ≤ 1) :
   · exact Or.inl h0
   right
   obtain ⟨k, hk⟩ : ∃ k, κ k ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact h0 (funext hc)
   have hsplit := Finset.add_sum_erase Finset.univ (fun i => |κ i|) (Finset.mem_univ k)
   have hk1 : 1 ≤ |κ k| := Int.one_le_abs hk

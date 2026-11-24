@@ -92,8 +92,7 @@ theorem isPtOf_mul_inv [IsEmpty Q] {g : GL (Fin n) (AfE F E)} {p : DecoF E n ST 
     IsPtOf hc (g * z.1⁻¹) (((1, redG hc n ST SG z, 1) : UF E n × GLG (E := E) (n := n) (SG := SG) × GLQ E n Q) • p) := by
   refine isPtOf_of_decoRaw (mul_mem h.uni (inv_mem (congruence_le_adelic_unitary hc n ST z.2))) ?_
   have := decoRaw_rawSm hc ST SG 1 z g
-  rw [map_one, OneMemClass.coe_one, map_one, one_mul, (ColAd.near_of_isPtOf h 0).deco] at this
-  exact this
+  rwa [map_one, OneMemClass.coe_one, map_one, one_mul, (ColAd.near_of_isPtOf h 0).deco] at this
 
 
 omit [NeZero n] in
@@ -103,8 +102,7 @@ theorem glg_free {p : DecoF E n ST SG Q} {a b : GLG (E := E) (n := n) (SG := SG)
   refine Units.ext (Matrix.ext_of_mulVec_single fun j => ?_)
   obtain ⟨x, -, hx⟩ := p.deco.2.be_surj w (Pi.single j 1)
   have := congrArg (fun q : DecoF E n ST SG Q => q.deco.1.be w x) h
-  rw [← hx]
-  exact this
+  rwa [← hx]
 
 
 variable (hc) in
@@ -255,8 +253,7 @@ theorem nonempty_cmp {R : Ranks} (H : Formalism.BasicNotions.Host R) (hc : CMDat
       rw [← e, h0]; exact Ideal.comap_bot_of_injective (algebraMap (𝓞 H.F) (𝓞 H.E)) (FaithfulSMul.algebraMap_injective _ _))⟩
     have e' : underPl H.F w = v := HeightOneSpectrum.ext e
     have hg : (H.g j : 𝓞 H.E) ∈ w.asIdeal := by
-      rw [← e, Ideal.mem_comap, map_natCast] at h
-      exact h
+      rwa [← e, Ideal.mem_comap, map_natCast] at h
     rcases hl.cover j w hg with h' | h'
     · exact ⟨⟨w, h'⟩, e'⟩
     · exact ⟨⟨_, h'⟩, ((under_eq_iff H w _).2 (Or.inr rfl)).trans e'⟩
@@ -291,8 +288,7 @@ theorem Cmp.prod_eq {σ : E →ₐ[F] E} {gp : Fin 2 → ℕ} {G : GLoc F E σ g
   · refine Finset.prod_congr rfl fun w hw => ?_
     obtain rfl : jj w = j := (Finset.mem_filter.1 hw).2
     rw [finprod_eq_dif, dite_eq_left (hj w), ← C.uniq _ _ _ w rfl]
-  · intro w _ w' _ e
-    exact (C.uniq _ _ (hj w') w e).trans (C.uniq _ _ (hj w') w' rfl).symm
+  · exact fun w _ w' _ e => (C.uniq _ _ (hj w') w e).trans (C.uniq _ _ (hj w') w' rfl).symm
   · intro v hv
     have h : (gp j : 𝓞 F) ∈ v.asIdeal := by
       by_contra h
@@ -370,8 +366,7 @@ theorem exists_gLevH {K : Type} [Field K] {T f : ℕ} {bad : Set (HeightOneSpect
       · subst hw
         have e' := Units.ext e
         rw [← hconj j v h M hM, mul_left_inj, mul_right_inj] at e'
-        rw [hH, ← e']
-        exact hM
+        rwa [hH, ← e']
       · rw [rll_put_red n v x hS w.1 fun ho => hw (C.uniq j v h w (HeightOneSpectrum.ext ho.symm))]
         exact one_mem _
   · rw [← hz x v ((hbad v).2 ⟨j, h⟩), redM_mat G j v h _ _ (C.ρ_eq j v h) (C.e_eq j v h),

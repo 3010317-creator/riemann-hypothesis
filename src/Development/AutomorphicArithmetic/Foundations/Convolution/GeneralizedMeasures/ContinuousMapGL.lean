@@ -93,14 +93,12 @@ private theorem rp_compact {ι : Type*} {R : ι → Type*} [∀ i, TopologicalSp
     (D : ∀ i, Set (R i)) (hD : ∀ i, IsCompact (D i)) (T : Set ι) (hT : T.Finite)
     (hDA : ∀ i, i ∉ T → D i ⊆ A i) : IsCompact {x : Πʳ i, [R i, A i] | ∀ i, x i ∈ D i} := by
   have hle : (Filter.cofinite : Filter ι) ≤ Filter.principal Tᶜ := by
-    rw [Filter.le_principal_iff, Filter.mem_cofinite, compl_compl]
-    exact hT
+    rwa [Filter.le_principal_iff, Filter.mem_cofinite, compl_compl]
   have Y : IsCompact ((↑) ⁻¹' (Set.univ.pi D) : Set (Πʳ i, [R i, A i]_[Filter.principal Tᶜ])) := by
     refine RestrictedProduct.isEmbedding_coe_of_principal.isCompact_preimage_iff ?_ |>.mpr
       (isCompact_univ_pi hD)
     rw [RestrictedProduct.range_coe_principal]
-    intro f hf i hi
-    exact hDA i hi (hf i trivial)
+    exact fun f hf i hi => hDA i hi (hf i trivial)
   convert Y.image (RestrictedProduct.continuous_inclusion hle) using 1
   ext x
   constructor
@@ -129,8 +127,7 @@ private theorem under_eq {v : Pl F} (w : PlacesOver E v) : w.1.under (𝓞 F) = 
 private theorem finite_under (S : Set (Pl F)) (hS : S.Finite) :
     {w : Pl E | w.under (𝓞 F) ∈ S}.Finite := by
   refine (hS.biUnion fun v _ => Set.finite_range (Subtype.val : PlacesOver E v → Pl E)).subset ?_
-  intro w hw
-  exact Set.mem_biUnion hw ⟨⟨w, liesOver_under w⟩, rfl⟩
+  exact fun w hw => Set.mem_biUnion hw ⟨⟨w, liesOver_under w⟩, rfl⟩
 
 private noncomputable def pv (v : Pl F) (x : AdelicGLn.FiniteAdelicGL E n) : GL (Fin n) (CompletionsOver E v) :=
   mapGL n (atFin v) (finEmb E n x)
@@ -187,8 +184,7 @@ private theorem e_formula (S : Finset (Pl F)) (φ : ∀ v : Pl F, GL (Fin n) (Co
     rw [hφ v hvS', Set.indicator_of_mem, Pi.one_apply]
     intro w
     have := hx w.1 (by rw [under_eq]; exact hvS')
-    rw [← cmp_pv] at this
-    exact this
+    rwa [← cmp_pv] at this
   · rw [Set.indicator_of_notMem hx, mul_zero]
     simp only [U, Set.mem_setOf_eq, not_forall] at hx
     obtain ⟨w, hwS, hw⟩ := hx
@@ -201,8 +197,7 @@ private theorem e_formula (S : Finset (Pl F)) (φ : ∀ v : Pl F, GL (Fin n) (Co
       refine hw ?_
       have h1 : cmp (⟨w, liesOver_under w⟩ : PlacesOver E (w.under (𝓞 F))) (pv _ x) ∈
           GLnLocal.integralGL (w.adicCompletion E) n := h ⟨w, liesOver_under w⟩
-      rw [cmp_pv] at h1
-      exact h1
+      rwa [cmp_pv] at h1
     · refine (S.finite_toSet.union (hB.image fun w : Pl E => w.under (𝓞 F))).subset fun v hv => ?_
       by_cases hvS : v ∈ S
       · exact Or.inl hvS
@@ -218,8 +213,7 @@ private theorem e_formula (S : Finset (Pl F)) (φ : ∀ v : Pl F, GL (Fin n) (Co
         intro h
         refine hw' ?_
         have : cmp w' (pv v x) ∈ GLnLocal.integralGL (w'.1.adicCompletion E) n := by
-          rw [cmp_pv]
-          exact h
+          rwa [cmp_pv]
         exact this
 
 private theorem e_compact (S : Finset (Pl F)) (φ : ∀ v : Pl F, GL (Fin n) (CompletionsOver E v) → ℂ)
@@ -280,8 +274,7 @@ theorem UpperTheory.ConvolutionTheory.GM.avgE :
       exact LocallyConstant.isLocallyConstant _
     have h3 := h1.mul h2
     have : e₀ = _ := funext hform
-    rw [this]
-    exact h3
+    rwa [this]
   have hcs : HasCompactSupport e₀ := by
     obtain ⟨C, hC, hsub⟩ := e_compact S φ fun v hv => (hS v hv).2
     refine HasCompactSupport.of_support_subset_isCompact hC fun x hx => ?_

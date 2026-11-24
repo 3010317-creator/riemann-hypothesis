@@ -183,9 +183,7 @@ theorem mem_moved {i : ℕ} {P : HeightOneSpectrum (𝓞 X.E)} {h : AutY X R (i 
     have h1 : h.symm (z v) ∈ lamYat (Pr := Pr) (R := R) (i + 1) P := hz v hv
     have h2 := (hh (h.symm (z v))).2 h1
     rwa [LinearEquiv.apply_symm_apply] at h2
-  · intro hz v hv
-    show h.symm (z v) ∈ _
-    exact (inv_mem hh (z v)).2 (hz v hv)
+  · exact fun hz v hv => (inv_mem hh (z v)).2 (hz v hv)
 
 theorem intAt_chArg_G {i : ℕ} (hi : i + 2 ≤ R.m) {P : HeightOneSpectrum (𝓞 X.E)} (hP : P ∈ Pr.vGs)
     (z : HomE X.E (R.N i + cOf R i) (R.N (i + 1) + cOf R (i + 1)))
@@ -209,8 +207,7 @@ theorem intAt_chArg_G {i : ℕ} (hi : i + 2 ≤ R.m) {P : HeightOneSpectrum (�
     rw [ite_eq_right (by omega), ite_eq_right (by omega)]
     dsimp only
     omega
-  rw [e, zpow_one, mul_comm] at h2
-  exact h2
+  rwa [e, zpow_one, mul_comm] at h2
 
 end Chain
 

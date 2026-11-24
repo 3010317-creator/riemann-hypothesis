@@ -159,8 +159,7 @@ theorem der_eq_sum : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g) ℂ) (i
         refine mul_eq_zero_of_right _ (ite_eq_right ?_)
         rintro ⟨-, -, hb⟩
         exact hv (Units.ext (hb.symm.trans hv0.symm))
-      · intro hv
-        exact absurd (Finset.mem_univ _) hv
+      · exact fun hv => absurd (Finset.mem_univ _) hv
     · rw [ite_eq_right hx]
       refine Finset.sum_eq_zero fun v _ => ?_
       by_cases hv : IsUniUp (v : Mt g (n - i))

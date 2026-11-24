@@ -526,8 +526,7 @@ theorem prodLaw_cont (hψ : IsStdChar D ψ (-1)) (hS : IsWeilDatumO ψ S T (χA 
   have hnd : ∀ p, num p = c p * den p := by
     rintro ⟨a, b, h⟩
     have := congrFun (hc a b h gA gB tA tB) 0
-    simp only [Pi.smul_apply, OrthDec.boxS_zero, smul_eq_mul] at this
-    exact this
+    simpa only [Pi.smul_apply, OrthDec.boxS_zero, smul_eq_mul] using this
   have hev : (fun p => num p / den p) =ᶠ[nhds (a₀, b₀, h₀)] c := by
     filter_upwards [hden.continuousAt.eventually_ne hd0] with p hp
     rw [hnd p]; field_simp
@@ -603,8 +602,7 @@ theorem prodLaw_split (hS : IsWeilDatumO ψ S T (χA * χB) χT omS)
   rw [H fA fB hfA hfB, LinearMap.map_smul, hbox _ _ (hA.om_pres _ _ hfA) (hB.om_pres _ _ hfB),
     HA ℓA hℓA fA hfA, HB ℓB hℓB fB hfB, hbox fA fB hfA hfB, smul_eq_mul] at k1
   have hfac : splitFacO (χA * χB) χT (xA * xB) y = splitFacO χA χT xA y * splitFacO χB χT xB y := by
-    simp only [splitFacO, map_mul, MonoidHom.mul_apply, mul_inv]
-    exact mul_mul_mul_comm _ _ _ _
+    simpa only [splitFacO, map_mul, MonoidHom.mul_apply, mul_inv] using mul_mul_mul_comm _ _ _ _
   rw [hfac, Circle.coe_mul] at k1
   have hZ : (splitFacO χA χT xA y : ℂ) * (splitFacO χB χT xB y : ℂ) * (ℓA fA * ℓB fB) ≠ 0 :=
     mul_ne_zero (mul_ne_zero (Circle.coe_ne_zero _) (Circle.coe_ne_zero _)) (mul_ne_zero hℓfA hℓfB)
@@ -731,8 +729,7 @@ theorem tensorSource : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar 
     funext x
     obtain ⟨⟨u, v⟩, rfl⟩ := (d.resS T).symm.surjective x
     rw [GlobalTheory.T.weilTensorRule_scalar_eq_one D ψ S A B T d χA χB χT omS omA omB hS hA hB a b h _ (h1 fA fB hfA hfB) u v, hb]
-    simp only [hb]
-    exact op_prod _ _ fA fB u v
+    simpa only [hb] using op_prod _ _ fA fB u v
   · intro χA χB χT omS omA omB hS hA hB a b h f hf v
     refine ⟨?_, fun u => GlobalTheory.T.weilTensorRule_scalar_eq_one D ψ S A B T d χA χB χT omS omA omB hS hA hB a b h f hf u v⟩
     have := (h4 _ ((GlobalTheory.T.weilOperator_oneVariable_keeps_thetaFunctions D ψ S A B T d f hf).2 χB χT omB hB (b, h))).1 v

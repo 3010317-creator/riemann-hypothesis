@@ -225,8 +225,7 @@ private theorem diag_eq_and_triangular_of_charpoly_eq [Finite (ResidueField O)] 
     · show Units.map _ (Ψ c) = 1
       rw [hM.Ψc, map_one]
     · have := hM.Ψg.map (residue O)
-      rw [map_sub, map_pow, map_one] at this
-      exact this
+      rwa [map_sub, map_pow, map_one] at this
   obtain ⟨hT, hd⟩ := constOfChar Γ (ResidueField O) A h2' η (barChar O Ψ) c g₁ hM' r hr.mult
     (fun g => e' g ▸ hr.red g) hN U hU fun g hg hη => e' g ▸ hc g hg hη
   have key : ∀ g, ∃ g' ∈ η.ker, (r g).mat = (r g').mat := by
@@ -415,8 +414,7 @@ private theorem exists_pres {O : Type} [CommRing O] [IsDomain O] [IsLocalRing O]
       algebraMap O S.R ((r0 η Ψ s.1).mat s.2.1 s.2.2) ∈ maximalIdeal S.R := fun ⟨g, a, b⟩ => by
     have h1 := congrArg (fun x : GG (m := 3) (R := ResidueField O) => x.mat a b)
       ((S.r.red g).trans (map_reducible_three_dim η Ψ g).symm)
-    rw [← res_eq_zero_iff O, map_sub, AlgHom.commutes, sub_eq_zero]
-    exact h1
+    rwa [← res_eq_zero_iff O, map_sub, AlgHom.commutes, sub_eq_zero]
   obtain ⟨W, u, hu, he⟩ := coord_grading O ℤ S.R (Γ × Fin 3 × Fin 3)
     (fun s => (S.r.hom s.1).mat s.2.1 s.2.2 - algebraMap O S.R ((r0 η Ψ s.1).mat s.2.1 s.2.2))
     (fun s => wt s.2.1 s.2.2) hm

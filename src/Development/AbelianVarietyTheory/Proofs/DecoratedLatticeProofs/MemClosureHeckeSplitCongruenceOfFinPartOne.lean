@@ -72,8 +72,7 @@ def GoodAt (N : ℕ) (Δ α β : F) (v : HeightOneSpectrum (𝓞 F)) : Prop :=
 theorem norm_eq_one_of_sub_lt {K : Type*} [NormedField K] [IsUltrametricDist K] {x : K} (h : ‖x - 1‖ < 1) :
     ‖x‖ = 1 := by
   have := IsUltrametricDist.norm_add_eq_max_of_norm_ne_norm (x := x - 1) (y := 1) (by rw [norm_one]; exact h.ne)
-  rw [sub_add_cancel, norm_one, max_eq_right h.le] at this
-  exact this
+  rwa [sub_add_cancel, norm_one, max_eq_right h.le] at this
 
 theorem norm_le_one_of_sub_le {K : Type*} [NormedField K] [IsUltrametricDist K] {x : K} (h : ‖x - 1‖ ≤ 1) :
     ‖x‖ ≤ 1 := by
@@ -472,8 +471,7 @@ theorem mem_closure_grpH_of_finPart_eq_one (D : D7) (N : ℕ) (hN : 0 < N) (z : 
       rw [eq_div_iff h0]
       linear_combination a.1 w * p2 - b.1 w * p1
     rw [q1, q2]
-    simp only [map_div₀, map_sub, map_mul, map_neg]
-    exact ⟨(tα w).div tn h0, (tβ w).neg.div tn h0⟩
+    simpa only [map_div₀, map_sub, map_mul, map_neg] using ⟨(tα w).div tn h0, (tβ w).neg.div tn h0⟩
   have tpt : ∀ (c d : ℕ → D.host.F) (A B : AF D.host.F), A.2 = 1 → B.2 = 0 →
       (∀ w, Tendsto (fun k => algebraMap D.host.F w.Completion (c k)) atTop (𝓝 (A.1 w))) →
       (∀ w, Tendsto (fun k => algebraMap D.host.F w.Completion (d k)) atTop (𝓝 (B.1 w))) →
@@ -490,12 +488,10 @@ theorem mem_closure_grpH_of_finPart_eq_one (D : D7) (N : ℕ) (hN : 0 < N) (z : 
   refine mem_closure_of_tendsto (f := g) (b := atTop) ?_ (Eventually.of_forall hgm)
   refine Units.isInducing_embedProduct.tendsto_nhds_iff.2 (Tendsto.prodMk_nhds ?_ ?_)
   · show Tendsto (fun k => (g k : AE D)) atTop (𝓝 (z : AE D))
-    simp only [hg1, hab]
-    exact tpt _ _ _ _ f1 f2 tα tβ
+    simpa only [hg1, hab] using tpt _ _ _ _ f1 f2 tα tβ
   · refine (MulOpposite.continuous_op.tendsto _).comp ?_
     show Tendsto (fun k => (((g k)⁻¹ : (AE D)ˣ) : AE D)) atTop (𝓝 ((z⁻¹ : (AE D)ˣ) : AE D))
-    simp only [hg2, hab']
-    exact tpt _ _ _ _ f1' f2' (fun w => (tinv w).1) fun w => (tinv w).2
+    simpa only [hg2, hab'] using tpt _ _ _ _ f1' f2' (fun w => (tinv w).1) fun w => (tinv w).2
 
 end Main
 

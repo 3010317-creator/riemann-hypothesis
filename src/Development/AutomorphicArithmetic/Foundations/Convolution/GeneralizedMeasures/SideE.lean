@@ -423,8 +423,7 @@ private theorem mulSupport_finite (S : Finset (Pl F)) (φ : ∀ v : Pl F, GL (Fi
     intro h
     refine hw' ?_
     have : cmp w' (pv v x) ∈ GLnLocal.integralGL (w'.1.adicCompletion E) n := by
-      rw [cmp_pv]
-      exact h
+      rwa [cmp_pv]
     exact this
 
 end

@@ -298,8 +298,7 @@ theorem core (hF : D.host.F = maximalRealSubfield D.host.E) (PY : principalLevel
     · rw [← adeleEquiv_conj, ← map_mul, a2, map_zero]
     · have := off_conj (GlobalTheory.FixedConj.adeleEquiv D hF) U U' hU c0 x.1 _ _ (off_mul_eq_zero (s i) (a6 i) hx) a b
       rw [adeleEquiv_conj] at this
-      rw [hfin]
-      exact this
+      rwa [hfin]
     · rw [hent]
       exact GlobalTheory.FixedConj.adeleEquiv_mem_intAf D hF _ (mul_mem (a4 i) (hxU _ _))
     · have e : (finE (Yc D 0) (MulAut.conj t (PY.ψ (c * x * c⁻¹))))⁻¹ =
@@ -332,8 +331,7 @@ theorem core (hF : D.host.F = maximalRealSubfield D.host.E) (PY : principalLevel
   congr 1
   apply Subtype.ext
   have h5 := hent i' x a b
-  rw [← hz1] at h5
-  exact h5
+  rwa [← hz1] at h5
 
 end Core
 
@@ -351,8 +349,7 @@ theorem lev_of_lift_one {T : Type} (L : LevCh D T) (P : LevelP L.Pg D.R.r ℂ) (
   · unfold levChi levFn
     rw [hr, blockDiagonalExtendByOnePrimeField_one, one_mul, Finset.prod_eq_one, Finset.prod_eq_one, one_mul]
     · rfl
-    · intro PP hP
-      exact absurd hP (Finset.notMem_empty PP)
+    · exact fun PP hP => absurd hP (Finset.notMem_empty PP)
     · intro PP _
       exact Finset.prod_eq_one fun c hc => absurd hc (by show c ∉ Finset.range 0; simp)
 

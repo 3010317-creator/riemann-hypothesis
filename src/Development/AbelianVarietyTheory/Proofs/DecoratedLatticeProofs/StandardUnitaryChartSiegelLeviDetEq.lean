@@ -70,8 +70,7 @@ theorem chart_lowerLeft_zero {D : D7} {n : ℕ} {g : G D n} (hg : g ∈ P D n) (
   have h1 := (hg (Pi.single (Fin.castAdd n j) 1)).1 hx
   rw [upperHalf, LinearMap.mem_ker] at h1
   have h2 := congrFun h1 i
-  rw [LinearMap.funLeft_apply, Pi.zero_apply, finSumFinEquiv_apply_right, mulVec_single_one] at h2
-  exact h2
+  rwa [LinearMap.funLeft_apply, Pi.zero_apply, finSumFinEquiv_apply_right, mulVec_single_one] at h2
 
 end GlobalTheory.StdUnn
 
@@ -108,8 +107,7 @@ theorem chart_aP_eq_det : ∀ (D : D7) (A : HSp D) (μ : D.host.E), IsSkew μ �
   have hu : IsUnit (rat (D := D) A.gram⁻¹).det := by
     rw [rat, ← RingHom.mapMatrix_apply, ← RingHom.map_det]
     refine IsUnit.map _ (isUnit_iff_ne_zero.2 ?_)
-    rw [Matrix.det_nonsing_inv]
-    rw [Ring.inverse_eq_inv']
+    rw [Matrix.det_nonsing_inv, Ring.inverse_eq_inv']
     exact inv_ne_zero (gram_det_ne A)
   refine Units.ext ?_
   change (leviMat finSumFinEquiv (mt (dblSp A) (p : GA D (dblSp A)))).det = a.1.det

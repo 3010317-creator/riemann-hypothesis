@@ -142,8 +142,7 @@ theorem hasSum_integral_theta (I : Type) [Fintype I] (ι : Type) [Countable ι] 
     simp only [hF, GlobalTheory.HeckeTheta.theta, term]
     rw [← tsum_mul_left, ← tsum_mul_right]
     congr 1; funext j; ring
-  rw [hl, hr] at h
-  exact h
+  rwa [hl, hr] at h
 
 end GlobalTheory.HeckeMellin
 end -- clump:auto
@@ -234,8 +233,7 @@ theorem gamma_integral_exp_substitution :
   constructor
   · have h1 := (integrableOn_image_iff_integrableOn_abs_deriv_smul MeasurableSet.univ hder hinj g).mp
       (by rw [himg]; exact integrableOn_cpow_mul_exp_neg_mul hw hc)
-    rw [hfun, integrableOn_univ] at h1
-    exact h1
+    rwa [hfun, integrableOn_univ] at h1
   · have h2 := integral_image_eq_integral_abs_deriv_smul MeasurableSet.univ hder hinj g
     rw [himg, hfun, Measure.restrict_univ] at h2
     rw [← h2, hg, Complex.integral_cpow_mul_exp_neg_mul_Ioi hw hc, one_div,
@@ -292,8 +290,7 @@ theorem term_eq (I : Type) [Fintype I] (n : I → ℤ) (s : ℂ) (v : I → ℂ)
       ∏ i, GlobalTheory.HeckeTheta.hmon (n i) (v i) * fac (s + ((|n i| : ℤ) : ℂ) / 2) (‖v i‖ ^ 2) (y i) := by
   unfold GlobalTheory.HeckeMellin.term GlobalTheory.HeckeTheta.gauss GlobalTheory.HeckeTheta.dil
   rw [Complex.ofReal_sum, Finset.mul_sum, Complex.exp_sum, ← Finset.prod_mul_distrib]
-  refine Finset.prod_congr rfl fun i _ => ?_
-  exact coord (n i) s (v i) (y i)
+  exact Finset.prod_congr rfl fun i _ => coord (n i) s (v i) (y i)
 
 theorem norm_fac (w : ℂ) (r : ℝ) (t : ℝ) :
     ‖fac w r t‖ = Real.exp (w.re * t) * Real.exp (-(2 * Real.pi * r * Real.exp t)) := by
@@ -541,9 +538,7 @@ theorem GlobalTheory.HeckeShift.term_unit_mul : ∀ (K : Type) [Field K] [Number
   intro K _ _ _ I _ φ hφ n s u α y
   have hsum : (∑ i, (y + GlobalTheory.HeckeTheta.ulog φ u) i) = ∑ i, y i := by
     simp only [Pi.add_apply, Finset.sum_add_distrib, GlobalTheory.HeckeShift.sum_ulog φ hφ u, add_zero]
-  have hu0 : ((u : 𝓞 K) : K) ≠ 0 := by
-    intro h
-    exact (Units.ne_zero u) (by exact_mod_cast h)
+  have hu0 : ((u : 𝓞 K) : K) ≠ 0 := fun h => (Units.ne_zero u) (by exact_mod_cast h)
   unfold GlobalTheory.HeckeMellin.term
   rw [hsum, ← mul_assoc]
   congr 1
@@ -657,8 +652,7 @@ theorem sum_over_principal_ideals_units (K : Type) [Field K] [NumberField K] (E 
     rw [summable_sigma_of_nonneg]
     · refine ⟨fun J => (hβ J).summable, ?_⟩
       simpa [(hβ _).tsum_eq] using hbs
-    · intro p
-      exact (norm_nonneg _).trans (hbd p.1 p.2)
+    · exact fun p => (norm_nonneg _).trans (hbd p.1 p.2)
   have hF : Summable (fun p : (Σ _ : {J : Ideal (𝓞 K) // J ≠ ⊥ ∧ J.IsPrincipal}, (𝓞 K)ˣ) => f (g p)) :=
     Summable.of_norm_bounded hnorm (fun p => hbd p.1 p.2)
   have hcs : HasSum c (∑' p : (Σ _ : {J : Ideal (𝓞 K) // J ≠ ⊥ ∧ J.IsPrincipal}, (𝓞 K)ˣ), f (g p)) :=
@@ -714,8 +708,7 @@ theorem archFactor_mul_pSeries_eq_integral : ∀ (K : Type) [Field K] [NumberFie
       GlobalTheory.HeckeStrip.wt φ n ((u : 𝓞 K) : K) * tm α (y + GlobalTheory.HeckeTheta.ulog φ u) := by
     intro u α y
     have : (((u : 𝓞 K) * α : 𝓞 K) : K) = ((u : 𝓞 K) : K) * (α : K) := by push_cast; rfl
-    simp only [htm, this]
-    exact _root_.GlobalTheory.HeckeShift.term_unit_mul K I φ hφ n s u α y
+    simpa only [htm, this] using _root_.GlobalTheory.HeckeShift.term_unit_mul K I φ hφ n s u α y
   have hwtu : ∀ u : (𝓞 K)ˣ, ‖GlobalTheory.HeckeStrip.wt φ n ((u : 𝓞 K) : K)‖ = 1 := fun u =>
     GlobalTheory.HeckeStrip.norm_wt φ n (by
       have := u.ne_zero
@@ -865,8 +858,7 @@ theorem ulog_idx [_root_.NumberField.IsTotallyComplex K] (hφ : GlobalTheory.CMV
 
 theorem sum_ulog_idx [_root_.NumberField.IsTotallyComplex K] (hφ : GlobalTheory.CMVal.IsCMType φ) (u : (𝓞 K)ˣ) :
     ∑ w : InfinitePlace K, GlobalTheory.HeckeTheta.ulog φ u (idx hφ w) = 0 := by
-  simp only [ulog_idx hφ]
-  exact sum_mult_mul_log u
+  simpa only [ulog_idx hφ] using sum_mult_mul_log u
 
 def mean (hφ : GlobalTheory.CMVal.IsCMType φ) (y : I → ℝ) : ℝ :=
   (∑ w : InfinitePlace K, y (idx hφ w)) / Fintype.card (InfinitePlace K)
@@ -901,8 +893,7 @@ theorem exists_measurable_nonneg_hasSum_ulog_translates : ∀ (K : Type) [Field 
   obtain ⟨η, hη, hc, h0, hs⟩ := exists_nonneg_hasSum_lattice_translates (logSpace K) (unitLattice K)
   refine ⟨fun y => η (proj hφ y) / Nat.card (torsion K), ?_, ?_, ?_, ?_⟩
   · exact ((hη.continuous.comp (continuous_proj hφ)).div_const _).measurable
-  · intro y
-    exact div_nonneg (h0 _) (Nat.cast_nonneg _)
+  · exact fun y => div_nonneg (h0 _) (Nat.cast_nonneg _)
   · intro y
     have h1 := ((Additive.ofMul.trans (logEmbeddingEquiv K).toEquiv).hasSum_iff).mpr (hs (proj hφ y))
     have h2 := GlobalTheory.UnitPartition.hasSum_quot (torsion K) _ _ h1
@@ -1116,8 +1107,7 @@ variable {K : Type} [Field K] [NumberField K] {I : Type} [Fintype I]
 
 theorem exists_one_le_norm {φ : I → K →+* ℂ} (hφ : GlobalTheory.CMVal.IsCMType φ) {α : 𝓞 K} (hα : α ≠ 0) :
     ∃ i, 1 ≤ ‖φ i (α : K)‖ := by
-  by_contra h
-  push Not at h
+  by_contra! h
   have hlt : ∀ w : InfinitePlace K, w (α : K) < 1 := by
     intro w
     obtain ⟨i, hi, -⟩ := hφ w.embedding
@@ -1334,8 +1324,7 @@ theorem tsum_ideal_eq_sum_classGroup_of_summable {K : Type} [Field K] [NumberFie
     · obtain ⟨c, hc, hu⟩ := GlobalTheory.existsUnique_isPrincipal_mul_classRep b hb I hI
       rw [Finset.sum_eq_single c]
       · exact (Set.indicator_of_mem (show I ∈ S c from ⟨hI, hc⟩) _).symm
-      · intro c' _ hne
-        exact Set.indicator_of_notMem (by exact fun h => hne (hu c' h.2)) _
+      · exact fun c' _ hne => Set.indicator_of_notMem (by exact fun h => hne (hu c' h.2)) _
       · simp
   rw [tsum_congr h1, Summable.tsum_finsetSum (fun c _ => hsum.indicator (S c))]
   refine Finset.sum_congr rfl fun c _ => ?_

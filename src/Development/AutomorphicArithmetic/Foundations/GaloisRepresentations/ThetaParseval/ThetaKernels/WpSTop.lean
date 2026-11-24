@@ -139,8 +139,7 @@ theorem resEtaF_of_resEtaPow_k : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   · rw [← two_mul, pow_mul, pow_mul, neg_one_sq, one_pow, ← Circle.coe_pow, sq, hsq a]; simp
   have hn1 : ((-1 : ℂ)) ^ n = -1 := hn.neg_one_pow
   obtain ⟨b, hb⟩ : ∃ b, η b ≠ 1 := by
-    by_contra hh
-    push Not at hh
+    by_contra! hh
     exact h3 (MonoidHom.ext hh)
   have hbS : b ∉ normGrp F E := fun hm => hb (hS b hm)
   have hab : a * b ∈ normGrp F E := by
@@ -262,8 +261,7 @@ theorem dblS_of_dblT_k (H : _root_.PositivityTheory.ThKW.ThetaLiftNonvanishing) 
     isUWeilSplit_cast₂ _ hD hge' (isLagr_diagCols _ _) k2, fun g gd hgd φ₁ hφ₁ φ₂ hφ₂ => ?_⟩
   have k4 := k3 (Subgroup.inclusion hge g) (Subgroup.inclusion hge' gd) hgd φ₁ hφ₁ φ₂ hφ₂
   rw [swapHom_fst] at k4
-  rw [MonoidHom.comp_apply]
-  exact k4
+  rwa [MonoidHom.comp_apply]
 end PositivityTheory.ThKW
 end
 end
@@ -1205,8 +1203,7 @@ theorem exists_dbl_target_k : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   have key := _root_.GlobalTheory.DblTargetRestrict.restrict_boxFun_k F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ0 hσξ χS χT hS hT rS rT ω hω JA JB ξ hA hBm κ co hrat om hom
     ωd hωd omp hmp g (GlobalTheory.WeilSchrodinger.DblTargetF.ugDbl hA gd)
     (by rw [GlobalTheory.WeilSchrodinger.DblTargetF.ugDbl_coe, hgd]) φ₁ hφ₁ φ₂ hφ₂
-  rw [MonoidHom.comp_apply, MonoidHom.comp_apply, MonoidHom.inl_apply]
-  exact key
+  rwa [MonoidHom.comp_apply, MonoidHom.comp_apply, MonoidHom.inl_apply]
 end PositivityTheory.ThKW.S
 end
 end

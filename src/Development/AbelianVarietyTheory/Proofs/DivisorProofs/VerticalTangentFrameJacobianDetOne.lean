@@ -138,11 +138,9 @@ theorem det_eq_one_of_key {ι R : Type} [Fintype ι] [DecidableEq ι] [CommRing 
   · simp [hd]
   · intro s _ hs
     obtain ⟨i, hi, hk⟩ : ∃ i, s i ≠ i ∧ k (s i) ≤ k i := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       obtain ⟨i₀, hi₀⟩ : ∃ i, s i ≠ i := by
-        by_contra h0
-        push Not at h0
+        by_contra! h0
         exact hs (Equiv.ext h0)
       have hlt : ∑ i, k i < ∑ i, k (s i) := by
         refine Finset.sum_lt_sum (fun i _ => ?_) ⟨i₀, Finset.mem_univ _, hc i₀ hi₀⟩
@@ -152,8 +150,7 @@ theorem det_eq_one_of_key {ι R : Type} [Fintype ι] [DecidableEq ι] [CommRing 
       rw [Equiv.sum_comp s k] at hlt
       exact lt_irrefl _ hlt
     rw [Finset.prod_eq_zero (f := fun j => A (s j) j) (Finset.mem_univ i) (h _ _ hi hk), smul_zero]
-  · intro h1
-    exact absurd (Finset.mem_univ _) h1
+  · exact fun h1 => absurd (Finset.mem_univ _) h1
 
 theorem snd_unip_mul {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E}
     {Dw : Datum H} {K : Type} [Field K] (N : GlobalTheory.FlagTan.FIx Dw → K) (σ : E →+* ℂ)
@@ -185,8 +182,7 @@ theorem det_vert : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : R
       intro e
       obtain ⟨-, e'⟩ := Sigma.mk.inj_iff.1 (Option.some.inj e)
       exact hr (Prod.mk.inj (eq_of_heq e')).2
-    · intro h1
-      exact absurd (Finset.mem_univ _) h1
+    · exact fun h1 => absurd (Finset.mem_univ _) h1
 
 end GlobalTheory.LogPole.VertDet
 end -- clump:auto
@@ -287,8 +283,7 @@ theorem frVec_isVert_isCombAtG : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     rfl
   have hv' : (fun j => spMap (dualMap (ev x U.1 hUx)) ≫ v (e ⟨σ, j⟩)) =
       fun j => (tv (frVec TF.Y P₀' hx' σ j)).left := funext fun j => (e3 j).symm
-  rw [hv', GlobalTheory.LieMet.isComb_iff]
-  exact key
+  rwa [hv', GlobalTheory.LieMet.isComb_iff]
 
 end GlobalTheory.LogPole
 end -- clump:auto
@@ -357,8 +352,7 @@ theorem lu_unique : ∀ (R : Type) [CommRing R] (m : ℕ) (A₁ A₂ N₁ U N₀
       have : (U * N₀ * N₁⁻¹).BlockTriangular id :=
         BlockTriangular.mul (fun a b hab => hV a b hab) hinv
       exact this hij
-  rw [hA1, one_mul] at h
-  exact h
+  rwa [hA1, one_mul] at h
 
 end GlobalTheory
 end -- clump:auto

@@ -101,8 +101,7 @@ theorem exists_form_limit_ideal (R : Type) [CommRing R] (I : Ideal R) (hI : IsAd
     refine ⟨L, fun m => ?_⟩
     have h := hL (e + m + 1)
     rw [SModEq.sub_mem, hmem] at h
-    have h2 := Ideal.add_mem _ (hd d m (e + m + 1) (by omega)) h
-    simpa using h2
+    simpa using Ideal.add_mem _ (hd d m (e + m + 1) (by omega)) h
   choose L hL using hlim
   have hfin : {d : σ →₀ ℕ | d.degree = t}.Finite :=
     (Finsupp.finite_of_degree_le t).subset fun d hd => le_of_eq hd
@@ -122,7 +121,6 @@ theorem exists_form_limit_ideal (R : Type) [CommRing R] (I : Ideal R) (hI : IsAd
       exact Ideal.zero_mem _
   refine ⟨F₁, hF₁, fun m => hdesc _ hF₁ m e ?_, hc 0⟩
   rw [add_comm m e]
-  have h := Ideal.sub_mem _ (s m).2.2 (hcoef _ _ (hc m))
-  simpa using h
+  simpa using Ideal.sub_mem _ (s m).2.2 (hcoef _ _ (hc m))
 
 end GlobalTheory.Degen

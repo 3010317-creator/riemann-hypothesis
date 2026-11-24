@@ -76,13 +76,11 @@ theorem sndPt_blocks {k₀ : K} {z : (Σ o : Option K, ι (o.getD k₀)) → ℂ
     obtain ⟨i, hi⟩ := h none
     refine ⟨i, ?_⟩
     change z (v₁ k ⟨k, i⟩) ≠ 0
-    rw [v₁_self]
-    exact hi
+    rwa [v₁_self]
   · obtain ⟨i, hi⟩ := h (some k)
     refine ⟨i, ?_⟩
     change z (v₁ k₀ ⟨k, i⟩) ≠ 0
-    rw [v₁_ne (p := ⟨k, i⟩) e]
-    exact hi
+    rwa [v₁_ne (p := ⟨k, i⟩) e]
 
 theorem basePart_snd_eq_fst {σ : Type} (blk : σ → Option K) {k₀ : K} (p : σ) (hp : blk p = some k₀)
     (z : (Σ o : Option K, ι (o.getD k₀)) → ℂ) :

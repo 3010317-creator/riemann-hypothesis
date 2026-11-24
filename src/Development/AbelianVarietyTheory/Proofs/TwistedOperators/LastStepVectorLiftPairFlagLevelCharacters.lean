@@ -208,8 +208,7 @@ theorem lowZero_iff {a b r : ℕ} {gS : GL (Fin a) κ} {gT : GL (Fin b) κ}
         Matrix.mul_assoc, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.mul_one]
     rw [hy]
     exact lowZero_mul (lowZero_mul (lowZero_of_mem hT) h) (lowZero_of_mem (inv_mem hS))
-  · intro h
-    exact lowZero_mul (lowZero_mul hTi h) hS'
+  · exact fun h => lowZero_mul (lowZero_mul hTi h) hS'
 
 end Fin
 
@@ -688,8 +687,7 @@ theorem redFn_congr {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
   simp only [Matrix.smul_apply, Matrix.map_apply, smul_eq_mul] at hxy
   have hs : a * (x' : Matrix (Fin n) (Fin n) ↥(Formalism.L2.Herm.intAf F E)) i j = a * (y' : Matrix (Fin n) (Fin n) ↥(Formalism.L2.Herm.intAf F E)) i j :=
     Subtype.ext (by simpa using hxy)
-  have hr := congrArg (resS F PP) hs
-  simpa [map_mul, ha] using hr
+  simpa [map_mul, ha] using congrArg (resS F PP) hs
 
 variable {D : D7}
 
@@ -909,8 +907,7 @@ theorem levChi_flag_datY (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (r t j :
   refine congrArg₂ _ ((congrArg₂ _ (congrArg Units.val h) rfl).trans ?_) ?_
   · rw [Units.val_one, one_mul]; rfl
   · rw [Units.coe_prod]
-    refine Finset.prod_congr rfl fun PP _ => ?_
-    exact Units.val_inv_eq_inv_val _
+    exact Finset.prod_congr rfl fun PP _ => Units.val_inv_eq_inv_val _
 
 theorem vacScal_resChr {T0 : Type} (L : LevCh D T0) (t : T0) (n : ℕ) (hd : Disjoint L.Pg (L.Q t)) {S T : HSp D}
     (βS : GL (Fin S.rank) (Lev.EAf D)) (βT : GL (Fin T.rank) (Lev.EAf D)) (P : Finset (Pl D.host.E))

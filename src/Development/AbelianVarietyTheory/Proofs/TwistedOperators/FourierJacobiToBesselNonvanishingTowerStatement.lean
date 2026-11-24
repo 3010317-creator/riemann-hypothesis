@@ -518,8 +518,7 @@ theorem theta_flBF (hΦ : IsThetaFunO ψ B.V J.W Φ) : IsThetaFunO ψ B.V₀ J.W
   obtain ⟨hb, -, hx, -⟩ := GlobalTheory.Unf.base_point D J.W J.W₀ ρ J.d
   have h := (GlobalTheory.Unf.Flat.flatLaw D ψ s.weil.std B.V B.V₀ J.W J.W₀ ρ ρ B.d J.d s.vS s.vT s.vU J.d.e hb.1
     (yZero B.V₀ ρ (vecB B.o B.ζ)) Φ hΦ).2
-  rw [← hx] at h
-  exact h
+  rwa [← hx] at h
 
 theorem ker_left (hΦ : IsThetaFunO ψ B.V J.W Φ) {γ : GA D B.A} (hγ : γ ∈ GQ B.A) (h₀ : GA D B.A) (g : GA D J.W) :
     ‖ker s Φ (γ * h₀) g‖ = ‖ker s Φ h₀ g‖ := by
@@ -570,8 +569,7 @@ theorem continuous_ker (hΦ : IsThetaFunO ψ B.V J.W Φ) :
     ((hemb.comp continuous_snd).prodMk continuous_fst).prodMk continuous_const
   have h4 := h2.comp h3
   simp only [Function.comp_def] at h4
-  simp only [ker, flBF, flatS]
-  exact h4
+  simpa only [ker, flBF, flatS] using h4
 
 theorem ker_le (hΦ : IsThetaFunO ψ B.V J.W Φ) : ∃ (C : ℝ) (a b : ℕ), 0 ≤ C ∧ ∀ h₀ g,
     ‖ker s Φ h₀ g‖ ≤ C * quotHeight B.A h₀ ^ a * height J.W g ^ b := by
@@ -960,8 +958,7 @@ theorem vanBF : ∀ D : D7, VanBF D := by
   obtain ⟨habs, hTc⟩ := GlobalTheory.T.besselMean_period_converges_continuous D ψ ρ B J s φ G Φ hφ hG hΦ
   have hmeas : ∀ h, Measurable fun g => f (g * h) := fun h => hm.comp (measurable_mul_const h)
   have habs' : ∀ h, AbsConv J.v0.μ J.v0.𝓕 J.vN.ν J.vN.𝓝 fun h' n => f (n.1 * J.d.emb0 h' * h) := fun h => by
-    simp only [hval]
-    exact habs h
+    simpa only [hval] using habs h
   have hfun : ∀ h, ∫ r in 𝓡, f ((r : GA D J.W) * h) ∂(semiMeas (flagN J.d) J.d.emb0 J.v0.μ J.vN.ν) =
       J.perAll ψ B s.om₀ φ (rTrans h G) (flBF s (s.om (1, h) Φ)) := fun h => by
     refine ((hsem (fun g => f (g * h)) (hmeas h)).2 (habs' h)).trans ?_
@@ -1028,8 +1025,7 @@ namespace GlobalTheory.UpBessel
 
 theorem upBF : ∀ D : D7, UpBF D := by
   intro D ψ ρ B J s 𝒮 Γ₀ K hL L' ζ' hζ' l χA χz χ' oma omz hχ hWa hWz φ G hφ hG hK Ξ₁ Ξ₂ hΞ₁ hΞ₂ hbox hJ
-  by_contra hnone
-  push Not at hnone
+  by_contra! hnone
 
   have hstd : IsStdChar D ψ (-1) := s.weil.std
   have hℓ : Tame ψ B.V₀ J.W₀ (J.perAll ψ B s.om₀ φ G) :=
@@ -1173,8 +1169,7 @@ theorem rungB : FockTot → PartFixed → RungB := by
   have h0 : (F.bes v k h).per W.ψ φ (star (part W M ρ' Φ' u (2 * k + 1 + 1) hi)) = 0 := by
     by_contra hne0
     exact hall ⟨ρ', Φ', hne0⟩
-  rw [htop] at h0
-  exact h0
+  rwa [htop] at h0
 
 end GlobalTheory.AscRungB
 

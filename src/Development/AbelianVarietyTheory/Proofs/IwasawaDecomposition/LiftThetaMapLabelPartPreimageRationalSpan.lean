@@ -92,8 +92,7 @@ theorem mem_span_rat {K V E : Type} [Field K] [AddCommGroup V] [Module ℂ V] [A
   have hcd : c - d = 0 := by
     apply hinj
     simp only [Pi.sub_apply, sub_smul, Finset.sum_sub_distrib, map_sub, hwe, sub_self]
-  rw [sub_eq_zero.1 hcd]
-  exact hw
+  rwa [sub_eq_zero.1 hcd]
 
 
 
@@ -178,8 +177,7 @@ theorem mem_span_part : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T 
         rw [hk, ← hcon a]
         exact Submodule.subset_span ⟨Φ (u a), ⟨u a, ⟨a, hy', rfl⟩, rfl⟩, rfl⟩)
     rw [(R.toCx3 F).finrank_WpK F.cr false hR.h4pos hR.kForm hR.ewNorm hR.types0 h5 hR.ratTh hR.liftHyp0.h3W hR.partsW i p] at hle
-    have heq := Submodule.eq_of_le_of_finrank_le (inf_le_inf_right _ hSpW) hle
-    exact heq.symm.le.trans inf_le_left
+    exact (Submodule.eq_of_le_of_finrank_le (inf_le_inf_right _ hSpW) hle).symm.le.trans inf_le_left
   have hspan : ∀ c : Fin ((A3.A.fam.L i t).dZ (A3.A.fam.lvlA F.P0 F.ψ0) ((A3.fam3.toSub2 (zsOf R F)).Zl i t)) → ℂ, Φ (∑ k, c k • u (Pi.single k 1)) ∈ R.Wp3 i p →
       Φ (∑ k, c k • u (Pi.single k 1)) ∈ Submodule.span ℂ (Φ '' {y | ∃ a, Φ (u a) ∈ R.Wp3 i p ∧ u a = y}) := by
     intro c hc
@@ -192,8 +190,7 @@ theorem mem_span_part : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T 
     rw [← Submodule.map_span] at h1
     obtain ⟨w, hw, hwe⟩ := Submodule.mem_map.1 h1
     have hwe' : w = Φ (∑ k, c k • u (Pi.single k 1)) := hwe
-    rw [← hwe']
-    exact hw
+    rwa [← hwe']
   exact mem_span_rat u Φ (R.Wp3 i p) hinj hspan x hx hW
 
 end GlobalTheory.Mem.R3.PartSpan

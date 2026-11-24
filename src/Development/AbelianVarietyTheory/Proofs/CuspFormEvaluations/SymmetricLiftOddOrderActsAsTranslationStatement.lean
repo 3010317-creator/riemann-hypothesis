@@ -229,8 +229,7 @@ theorem exists_thConst : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMon
     fin_cases i <;> rfl
   have hR := hvR z
   rw [hp] at hR
-  rw [hvz]
-  exact hR
+  rwa [hvz]
 
 end GlobalTheory.AnVal
 end -- clump:auto
@@ -330,8 +329,7 @@ theorem AnFr.rd_of_isActOf : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCom
     simp only [fock]
     rw [add_comm x z]
     ring
-  rw [← hfun]
-  exact key
+  rwa [← hfun]
 
 end GlobalTheory.AnVal
 end -- clump:auto
@@ -451,18 +449,15 @@ theorem hol_ptSecT : IsHolFam (fun z => ((ptSecT A (Φ.e z)).left : Sp ℂ ⟶ (
       rw [Over.comp_left] at h
       simp only [Over.mk_hom, Category.assoc, pullbackSymmetry_hom_comp_fst]
       unfold ReciprocityTheory.ChartRestriction.G.PullbackSections.vtfLift
-      rw [pullback.lift_snd]
-      exact h
+      rwa [pullback.lift_snd]
     · have h := congrArg Over.Hom.left (show ptSecT A (Φ.e z) ≫ snd (Over.mk x0) A = Φ.e z by
         unfold ptSecT
         exact lift_snd _ _)
       rw [Over.comp_left] at h
       simp only [Over.mk_hom, Category.assoc, pullbackSymmetry_hom_comp_snd]
       unfold ReciprocityTheory.ChartRestriction.G.PullbackSections.vtfLift
-      rw [pullback.lift_fst]
-      exact h
-  rw [key]
-  exact h2
+      rwa [pullback.lift_fst]
+  rwa [key]
 
 theorem genRd_one {Z : Scheme.{0}} (q : Sp ℂ ⟶ Z) :
     Φ.GenRd (K := PEmpty) PEmpty.elim PEmpty.elim (LB.oneGen L.L) q PEmpty.elim 1 := by
@@ -874,8 +869,7 @@ theorem rd_fock_of_symLift : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCom
 
   have hc1 : c = 1 := by
     obtain ⟨m, rfl⟩ := hn
-    rw [pow_succ, pow_mul, hsq, one_pow, _root_.one_mul] at hpow
-    exact hpow
+    rwa [pow_succ, pow_mul, hsq, one_pow, _root_.one_mul] at hpow
   subst hc1
   simpa only [_root_.one_mul] using hread
 

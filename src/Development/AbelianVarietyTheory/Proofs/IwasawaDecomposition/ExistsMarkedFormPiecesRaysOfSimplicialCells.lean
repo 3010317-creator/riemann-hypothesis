@@ -135,15 +135,13 @@ theorem exists_desc_rays_pullAdd : ∀ (E : Type) [Field E] [NumberField E] [IsC
     refine ⟨hu i hi, ⟨fun y z => ?_, fun a y z => ?_⟩, fun y => ?_, fun k β' hk => ?_, fun lab hlab => ?_⟩
     · obtain ⟨y₀, hy₀⟩ := hq (f y)
       obtain ⟨z₀, hz₀⟩ := hq (f z)
-      simp only [pullAdd_apply, ← hy₀, ← hz₀, hU i hi]
-      exact (hm i).1 y₀ z₀
+      simpa only [pullAdd_apply, ← hy₀, ← hz₀, hU i hi] using (hm i).1 y₀ z₀
     · obtain ⟨y₀, hy₀⟩ := hq (f y)
       obtain ⟨z₀, hz₀⟩ := hq (f z)
       simp only [pullAdd_apply, hsm, ← hy₀, ← hz₀, ← Submodule.Quotient.mk_smul, hU i hi]
       rw [(hm i).2, _root_.GlobalTheory.ringOfIntegers_equiv_bar_comm E H τ a]
     · obtain ⟨y₀, hy₀⟩ := hq (f y)
-      simp only [pullAdd_apply, ← hy₀, hU i hi]
-      exact hpos i y₀
+      simpa only [pullAdd_apply, ← hy₀, hU i hi] using hpos i y₀
     · obtain ⟨ζ, hζ⟩ : ∃ ζ : LinearMap.BilinForm ℤ (X₀ ⧸ K), (k : ℤ) • ζ = u i := by
         rcases Nat.eq_zero_or_pos k with rfl | hk0
         · refine ⟨0, ?_⟩
@@ -171,8 +169,7 @@ theorem exists_desc_rays_pullAdd : ∀ (E : Type) [Field E] [NumberField E] [IsC
       ext a b
       simp
     · have h1 := eval_pull_semilinear_of_isTwInv E H lab hlab τ hτ f hf hsm (fun a b => (u i a b : ℝ))
-      rw [← hu i hi, evalZ_pull lab K.mkQ_surjective]
-      exact h1
+      rwa [← hu i hi, evalZ_pull lab K.mkQ_surjective]
 
 end GlobalTheory.PolFan.OrbMark
 end -- clump:auto

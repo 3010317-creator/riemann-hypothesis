@@ -167,8 +167,7 @@ theorem exists_eq_pow_mul_of_norm_le {n : ℕ} {x : Qbar l} (hx : x ∈ c.O)
       linarith
   have hϖ0 : 0 < ‖(ϖ : Qbar l)‖ := by
     rw [norm_pos_iff]
-    intro h0
-    exact hϖ.ne_zero (Subtype.ext h0)
+    exact fun h0 => hϖ.ne_zero (Subtype.ext h0)
   by_cases hx0 : x = 0
   · exact ⟨0, c.O.zero_mem, by rw [hx0, mul_zero]⟩
   have hy0 : (⟨x, hx⟩ : c.O) ≠ 0 := fun h0 => hx0 (congrArg Subtype.val h0)
@@ -189,8 +188,7 @@ theorem exists_eq_pow_mul_of_norm_le {n : ℕ} {x : Qbar l} (hx : x ∈ c.O)
     rw [this, Units.val_mul]
     have hv : ((v' : c.O) * ((v'⁻¹ : (c.O)ˣ) : c.O)) = 1 := Units.mul_inv v'
     linear_combination (-(↑v * ϖ ^ b * ϖ ^ (a - b))) * hv
-  have e4 := congrArg Subtype.val e3
-  simpa using e4
+  simpa using congrArg Subtype.val e3
 
 theorem norm_le_iff_crd_eq_zero {n : ℕ} {x : Qbar l} (hx : x ∈ c.O) :
     ‖x‖ ≤ ‖((l : ℕ) : Qbar l) ^ n‖ ↔ ∀ i, crd c n i x = 0 := by
@@ -217,8 +215,7 @@ theorem norm_le_iff_crd_eq_zero {n : ℕ} {x : Qbar l} (hx : x ∈ c.O) :
       rw [ha i, smul_smul]
     have hx' : x = algebraMap ℤ_[l] (Qbar l) ((l : ℤ_[l]) ^ n) * ((∑ i, a i • bas c i : c.O) : Qbar l) := by
       have := congrArg Subtype.val hsum
-      rw [Subalgebra.coe_smul, Algebra.smul_def] at this
-      exact this
+      rwa [Subalgebra.coe_smul, Algebra.smul_def] at this
     rw [hx', hmap, norm_mul]
     calc ‖((l : ℕ) : Qbar l) ^ n‖ * ‖((∑ i, a i • bas c i : c.O) : Qbar l)‖
         ≤ ‖((l : ℕ) : Qbar l) ^ n‖ * 1 := by

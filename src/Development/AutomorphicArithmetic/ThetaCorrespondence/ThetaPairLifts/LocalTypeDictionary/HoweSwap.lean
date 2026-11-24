@@ -179,8 +179,7 @@ private theorem actsD_zero {F : Type} [Field F] [NumberField F] {κ : Type} [Fin
     ActsD (evI F) (fun t => ⇑(T t)) ⇑(0 : SInf F κ) ⇑(0 : SInf F κ) := by
   intro r _ x
   have e : tens (evI F) (⇑(0 : SInf F κ)) r = 0 := by funext y; simp [tens]
-  simp only [e, map_zero, Pi.zero_apply]
-  exact hasDerivAt_const _ _
+  simpa only [e, map_zero, Pi.zero_apply] using hasDerivAt_const _ _
 
 theorem howe_real_ker' : GlobalTheory.Published.HoweDualityReal →
     ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
@@ -335,8 +334,7 @@ theorem actsD_zero {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
   intro r _ x
   have h0 : tens (evI F) ((0 : SInf F κ) : (κ → mixedEmbedding.mixedSpace F) → ℂ) r = 0 := by
     funext y; simp [tens]
-  simp only [h0, map_zero, Pi.zero_apply]
-  exact hasDerivAt_const 0 0
+  simpa only [h0, map_zero, Pi.zero_apply] using hasDerivAt_const 0 0
 
 theorem acts_zero {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
     (T : ((κ → AF F) → ℂ) →ₗ[ℂ] (κ → AF F) → ℂ) :
@@ -519,8 +517,7 @@ theorem GlobalTheory.HoweGlobal.howe_tensor_transfer : _root_.GlobalTheory.FunPr
             om (k, 1) (pure (f : SInf F (Fin a × Fin (a + a'))) (ext G.M T φ)) := (hA _ (hR _ φ)).symm
         rw [TensorProduct.sub_tmul, map_sub, hLe, hLe, e]
         exact hN.2.2.1 k hk _ (hpA _ f.2 φ)
-    intro x hx y
-    exact mem_of_tprod (N.comap (L ∘ₗ TensorProduct.mk ℂ _ _ x)) (fun φ => key φ hx) y
+    exact fun x hx y => mem_of_tprod (N.comap (L ∘ₗ TensorProduct.mk ℂ _ _ x)) (fun φ => key φ hx) y
   · intro v x hx x₀ y
     let ℓ := L ∘ₗ TensorProduct.mk ℂ _ _ x₀ ∘ₗ (PiTensorProduct.tprod ℂ).toLinearMap y v
     have hℓ : ∀ z, ℓ z = L (x₀ ⊗ₜ[ℂ] PiTensorProduct.tprod ℂ (Function.update y v z)) := fun z => rfl
@@ -537,8 +534,7 @@ theorem GlobalTheory.HoweGlobal.howe_tensor_transfer : _root_.GlobalTheory.FunPr
       exact hN.2.1 v.1 g hg _ (hpA _ x₀.2 _)
     obtain ⟨x', hx', he⟩ := hsub (Submodule.mem_comap.1 hx)
     have : x' = x := Subtype.ext he
-    rw [← hℓ, ← this]
-    exact hx'
+    rwa [← hℓ, ← this]
   · intro g hg t ht
     rcases hg with ⟨k, hk, hkA⟩ | ⟨γ, hγ, hgD⟩
     · have e : ∀ t, L (TensorProduct.map g LinearMap.id t) = om (1, k) (L t) := by
@@ -666,8 +662,7 @@ theorem howe_real_place_transfer : _root_.GlobalTheory.FunPr.ThetaLocalInputs �
   · obtain ⟨L, hL⟩ := hreal.1
     refine ⟨L, fun m N hN hN' => hL m (fun i => (N i).map P.subtype)
       ((Submodule.map_strictMono_of_injective P.injective_subtype).comp hN) fun i => key _ (hN' i).1 (hN' i).2⟩
-  · intro N hrel hop hN x hx
-    exact hreal.2 _ (key N hrel hop) (hne N hN) x ⟨x, hx, rfl⟩
+  · exact fun N hrel hop hN x hx => hreal.2 _ (key N hrel hop) (hne N hN) x ⟨x, hx, rfl⟩
   · refine Submodule.span_le.2 ?_
     rintro x (⟨γ, hγ, f, hf, hA⟩ | ⟨k, hk, f, f₁, hA, rfl⟩)
     · exact hM.real.quot.lie γ hγ f hf _ hA

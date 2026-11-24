@@ -172,8 +172,7 @@ theorem sum_smul_toReal_mem_psdCone : ∀ (O : Type) [CommRing O] [IsDedekindDom
   have hint : ∀ u : X ⧸ R, u ≠ 0 → cmin ≤ B₁ u u := by
     intro u hu
     obtain ⟨i, hi, hpos⟩ : ∃ i ∈ S, 0 < γ i (s u) (s u) := by
-      by_contra hne
-      push Not at hne
+      by_contra! hne
       apply hu
       rw [← hs u, Submodule.Quotient.mk_eq_zero]
       exact fun i hi z => eq_zero_of_self_eq_zero (γ i) (hbal i).1 (hpsd i)
@@ -193,7 +192,6 @@ theorem sum_smul_toReal_mem_psdCone : ∀ (O : Type) [CommRing O] [IsDedekindDom
       (fun z hz => ?_) x hx
     show cmin ≤ ∑ k, ∑ l, (z k : ℝ) * z l * B₁ (b k) (b l)
     rw [sum_expand]
-    refine hint _ fun h0 => hz ?_
-    exact funext (Fintype.linearIndependent_iff.1 b.linearIndependent z h0)
+    exact hint _ fun h0 => hz (funext (Fintype.linearIndependent_iff.1 b.linearIndependent z h0))
   exact ⟨X ⧸ R, inferInstance, inferInstance, hproj, R.mkQ, B₁, Submodule.mkQ_surjective R, hreal₁, hdef,
     fun a b => hBB₁ a b⟩

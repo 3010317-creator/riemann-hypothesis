@@ -85,8 +85,7 @@ theorem unit_pow_dvd_sub_one_of_finite {R : Type} [CommRing R] (g : R)
     have := congrArg Units.val h
     simp only [Units.val_pow_eq_pow_val, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, Units.val_one] at this
     rw [map_sub, map_pow, this, map_one, sub_self]
-  rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton] at h2
-  exact h2
+  rwa [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton] at h2
 
 end GlobalTheory
 
@@ -181,8 +180,7 @@ theorem eq_one_of_approx_by_congruent_units : ChevalleyUnits → ∀ (E : Type) 
     obtain ⟨ε, hε⟩ := hch u hdvd
     have hgk : g ∣ κ - 1 := by
       have := hmg ε
-      rw [← Units.val_pow_eq_pow_val, ← hε] at this
-      exact this
+      rwa [← Units.val_pow_eq_pow_val, ← hε] at this
     have hwk1 : w.valuation E ((k : E) - 1) ≤ γ ^ (n + 1) := by
       obtain ⟨c, hc⟩ := hgk
       rw [← hκ, ← map_one (algebraMap (𝓞 E) E), ← map_sub, valuation_of_algebraMap, hc, map_mul]
@@ -281,8 +279,7 @@ theorem exists_global_approx : ∀ (E Ω : Type) [Field E] [NumberField E] [Fiel
   intro E Ω _ _ _ _ _ art ha w x hx a _ t ht
   classical
   have hmem : localIdele E w x ∈ closure (((diagUnits E).range ⊔ infConn E : Subgroup (Ideles E)) : Set (Ideles E)) := by
-    rw [← Subgroup.topologicalClosure_coe, ← ha.ker]
-    exact hx
+    rwa [← Subgroup.topologicalClosure_coe, ← ha.ker]
   let g1 : Ideles E → FiniteAdeleRing (𝓞 E) E := fun y => (y : AdeleRing (𝓞 E) E).2
   let g2 : Ideles E → FiniteAdeleRing (𝓞 E) E := fun y => ((y⁻¹ : Ideles E) : AdeleRing (𝓞 E) E).2
   have hg1 : Continuous g1 := continuous_snd.comp Units.continuous_val
@@ -581,8 +578,7 @@ theorem artin_localIdele_injective : ChevalleyUnits → ∀ (E Ω : Type) [Field
           rw [Units.val_inv_eq_inv_val, map_inv₀]
           exact inv_le_one_of_one_le₀ h
         have h3 := GlobalTheory.T.valuation_eq_one_of_congruent_global_approx E w _ (x⁻¹).ne_zero h2 (GlobalTheory.T.exists_global_approx_of_artin_trivial E Ω art ha w x⁻¹ hx')
-        rw [Units.val_inv_eq_inv_val, map_inv₀, inv_eq_one] at h3
-        exact h3
+        rwa [Units.val_inv_eq_inv_val, map_inv₀, inv_eq_one] at h3
     exact Units.ext (GlobalTheory.T.eq_one_of_approx_by_congruent_global_units hC E w x hv (GlobalTheory.T.exists_global_approx_of_artin_trivial E Ω art ha w x hx))
   intro x y hxy
   have : art (Neutral.B1.localIdele E w (x * y⁻¹)) = 1 := by

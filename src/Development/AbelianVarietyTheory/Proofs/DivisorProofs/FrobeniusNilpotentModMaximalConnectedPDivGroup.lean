@@ -125,8 +125,7 @@ theorem aeval_mem_span {A R : Type} [CommRing A] [CommRing R] [Algebra R A] {d :
     rintro rfl
     exact (MvPolynomial.mem_support_iff.1 hm) (by rwa [MvPolynomial.constantCoeff_eq] at h0)
   obtain ⟨i, hi⟩ : ∃ i, m i ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hm0 (Finsupp.ext h)
   refine Ideal.mul_mem_left _ _ ?_
   have hdvd : x i ∣ ∏ j ∈ m.support, x j ^ m j :=
@@ -483,8 +482,7 @@ theorem isLie_add_smul {p : ℕ} {G : PDivGroup p O} (c : QLog.Chart G d)
   refine ⟨s + a • s', ?_, fun w φ hφ => ?_⟩
   · rw [defect_add_smul c.isLaw.const, ← hs, ← hs']
     have := (intMap (d := d) (O := O) (E := E)).map_add s (a • s')
-    rw [LinearMap.map_smul] at this
-    exact this
+    rwa [LinearMap.map_smul] at this
   · have := dvd_add (H w φ hφ) (dvd_mul_of_dvd_right (H' w φ hφ) a)
     rw [LinearMap.add_apply, LinearMap.smul_apply, map_add (f := _), map_smul, map_add (f := _), map_smul,
       smul_eq_mul, smul_eq_mul]
@@ -1300,8 +1298,7 @@ theorem isNil_frobenius_chart : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C
     intro w
     have h := (QLogDefect.main p F.B O F.Q F.θ F.frame d μ' hlift ⊤ _ (hQL w) p).1
     choose b _ hb using h
-    refine ⟨(fun α => b α : MvPowerSeries (Fin d) F.B), MvPowerSeries.ext fun α => ?_⟩
-    exact (hb α).symm
+    exact ⟨(fun α => b α : MvPowerSeries (Fin d) F.B), MvPowerSeries.ext fun α => (hb α).symm⟩
   choose A hA using hlf
   let δ : (Fin d ⊕ Fin k → F.B) → G.A 1 := fun w => c.ev 1 (map F.θ (A w))
   set I := Ideal.span (algebraMap O (G.A 1) '' {o | ¬IsUnit o}) with hI

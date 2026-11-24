@@ -115,8 +115,7 @@ theorem iter_differentiableOn {B V : Type} [NormedAddCommGroup B] [NormedSpace �
     have e : iter h (k + 1) = h ∘ fun p => (p.1, iter h k p) := funext fun p => rfl
     rw [e]
     refine hd.comp (differentiableOn_fst.prodMk ih) ?_
-    intro p hp
-    exact Set.mk_mem_prod hp.1 (iter_mem_ball b₀ h ρ hcontr hp.1 hp.2 k)
+    exact fun p hp => Set.mk_mem_prod hp.1 (iter_mem_ball b₀ h ρ hcontr hp.1 hp.2 k)
 
 theorem medial_eventually {B V : Type} [TopologicalSpace B] [Zero V] [TopologicalSpace V] (b₀ : B)
     (μ : B × V × V → V) (hc : ContinuousAt μ (b₀, 0, 0)) (h0 : μ (b₀, 0, 0) = 0)

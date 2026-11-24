@@ -78,8 +78,7 @@ theorem descent {G M Ω : Type} [Group G] [AddCommGroup M] [Field Ω] (H : Subgr
         simp only [Set.mem_setOf_eq, Pi.add_apply, hma, Finset.sum_add_distrib] at *
         exact F'.add_mem ha hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, Pi.zero_apply, hm0, Finset.sum_const_zero]
-        exact F'.zero_mem
+        simpa only [Set.mem_setOf_eq, Pi.zero_apply, hm0, Finset.sum_const_zero] using F'.zero_mem
       smul_mem' := fun c a ha => by
 
         simp only [Set.mem_setOf_eq, Pi.smul_apply, smul_eq_mul, hmm, ← map_sum] at *
@@ -164,8 +163,7 @@ theorem mul_mem_Fil (K : FinExt l) (a : ℤ) (c : Om l) (b : P.R.BdR) (hb : b �
   rw [P.PD_Fil K E a] at h
   have h2 : (⟨c, hc⟩ : ↥E.1) • b ∈
       (((P.PD E).Fil a : Submodule ↥E.1 P.R.BdR) : Set P.R.BdR) := Submodule.smul_mem _ _ h
-  rw [P.PD_Fil E K a, Algebra.smul_def] at h2
-  exact h2
+  rwa [P.PD_Fil E K a, Algebra.smul_def] at h2
 
 theorem mem_DdR (K : FinExt l) (ρ : Representation LL ↥(GK K) V) (x : V ⊗[ℚ_[l]] P.R.BdR) :
     x ∈ DdR (P.PD K) ρ ↔ ∀ g, actVdR (P.PD K) ρ g x = x := by
@@ -252,8 +250,7 @@ theorem mem_succ_of_fixed {K K' : FinExt l} (h : K.1 ≤ K'.1) (ρ : Representat
     exact ⟨fun hg a ha => hg ⟨a, ha⟩, fun hg a => hg a.1 a.2⟩
   · intro g hg
     have := (mem_DdR P K' _ x).1 hxH ⟨g.1, hg⟩
-    rw [actVdR_comp P h] at this
-    exact this
+    rwa [actVdR_comp P h] at this
 
 theorem de_rham_jump_iff_extension {K K' : FinExt l} (h : K.1 ≤ K'.1) (ρ : Representation LL ↥(GK K) V)
     (u : ℤ) :

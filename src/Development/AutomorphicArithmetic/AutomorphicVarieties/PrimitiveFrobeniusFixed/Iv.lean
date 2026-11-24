@@ -150,8 +150,7 @@ private theorem cyc_ine {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 F
     (hl : ((l : ℕ) : 𝓞 F) ∉ v.asIdeal) {σ : G F Ω} (hσ : σ ∈ Ine (F := F) A) : cycMod F Ω l r σ = 1 := by
   refine Units.ext ?_
   have := cycZ_toZModPow_eq (l := l) hl hA (σ := σ) (q := 1) (fun x hx => by simpa using hσ.2 x hx) r
-  rw [Nat.cast_one, map_one] at this
-  exact this
+  rwa [Nat.cast_one, map_one] at this
 
 private theorem loc (hU : UnramifiedOrthogonality) (hr : 0 < r) {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 F)}
     (hA : IsPlaceOver A v) (hl : ((l : ℕ) : 𝓞 F) ∉ v.asIdeal) (f : Dec (F := F) A → ZMod (l ^ r)) (hf : Continuous f)
@@ -301,8 +300,7 @@ private theorem over_iff {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 
     A.valuation (n : Ω) < 1 ↔ ((n : ℕ) : 𝓞 F) ∈ v.asIdeal := by
   have h := hv ((n : ℕ) : 𝓞 F)
   have e : algebraMap F Ω (((n : ℕ) : 𝓞 F) : F) = (n : Ω) := by simp
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 private theorem place_eq {q : ℕ} (hq : q.Prime) {v w : HeightOneSpectrum (𝓞 ℚ)} (hv : (q : 𝓞 ℚ) ∈ v.asIdeal)
     (hw : (q : 𝓞 ℚ) ∈ w.asIdeal) : v = w := by
@@ -350,8 +348,7 @@ private theorem core (hPT : PoitouTateDuality) (hU : UnramifiedOrthogonality) {�
     by_cases h : v.1 = v₀
     · simp only [Av, ite_eq_left h]
       rw [h]; exact hv₀
-    · simp only [Av, ite_eq_right h]
-      exact isPlaceOver_placeOf Ω v.1
+    · simpa only [Av, ite_eq_right h] using isPlaceOver_placeOf Ω v.1
   have hA0 : Av ⟨v₀, h₀⟩ = A₀ := ite_eq_left rfl
   have hχ : ∀ g z, ((cycMod ℚ Ω l r g : (ZMod (l ^ r))ˣ) : ZMod (l ^ r)) * lam z = lam (α g * β g * z) := fun g z => by
     rw [hαβ, hlam]
@@ -539,12 +536,10 @@ private theorem exists_prime_dvd_over_of_over_mul_iff (Ω : Type) [Field Ω] (A 
     ∃ r, r.Prime ∧ r ∣ n ∧ Over A r := by
   refine Nat.recOnMul (motive := fun n => n ≠ 0 → Over A n → ∃ r, r.Prime ∧ r ∣ n ∧ Over A r)
     ?_ ?_ ?_ ?_ n hn h
-  · intro h0
-    exact absurd rfl h0
+  · exact fun h0 => absurd rfl h0
   · intro _ h1
     simp [Over] at h1
-  · intro p hp _ hpA
-    exact ⟨p, hp, dvd_rfl, hpA⟩
+  · exact fun p hp _ hpA => ⟨p, hp, dvd_rfl, hpA⟩
   · intro a b iha ihb hab hAab
     rcases (hmul a b).1 hAab with ha | hb
     · obtain ⟨r, hr, hra, hrA⟩ := iha (left_ne_zero_of_mul hab) ha
@@ -567,8 +562,7 @@ theorem UpperTheory.V.ML.primRam :
     · show ((MulChar.toUnitHom ψ (Chr.cls ℚ Ω f g) : c.Oˣ) : c.O) ^ orderOf ψ = 1
       rw [MulChar.coe_toUnitHom, ← MulChar.pow_apply_coe, pow_orderOf_eq_one,
         MulChar.one_apply_coe]
-    · intro h
-      exact hg (Units.val_eq_one.mp h)
+    · exact fun h => hg (Units.val_eq_one.mp h)
   refine ⟨?_, ?_, hC⟩
   · intro A hA
     obtain ⟨r, hr, hrf, hAr⟩ := exists_prime_dvd_over_of_over_mul_iff Ω A (hpb.2.2.1 A) f (NeZero.ne f) hA
@@ -666,8 +660,7 @@ private theorem kum {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω
     have h3 := mul_right_cancel₀ hy0 h2
     rw [pow_eq_pow_mod _ hζ.pow_eq_one, pow_eq_pow_mod (_ + _) hζ.pow_eq_one] at h3
     have h4 := hζ.pow_inj (Nat.mod_lt _ hl.pos) (Nat.mod_lt _ hl.pos) h3
-    have h5 := (ZMod.natCast_eq_natCast_iff' _ _ l).2 h4
-    simpa using h5
+    simpa using (ZMod.natCast_eq_natCast_iff' _ _ l).2 h4
   have hj0 : (j : ZMod l) = 0 := by
     have h2 := key t
     rw [h0, zero_add] at h2
@@ -1007,8 +1000,7 @@ private theorem ze_chi {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ
   have h4 : ((cycZ ℚ Ω l g : ℤ_[l]ˣ) : ℤ_[l]) - k ∈ Ideal.span {(l : ℤ_[l]) ^ m} := by
     rw [← PadicInt.ker_toZModPow, RingHom.mem_ker, map_sub, map_natCast, ← (ZMod.natCast_eq_natCast_iff _ _ _).2 h3,
       ZMod.natCast_zmod_val, sub_self]
-  have h5 := map_dvd (algebraMap ℤ_[l] O) (Ideal.mem_span_singleton.1 h4)
-  simpa [chiO] using h5
+  simpa [chiO] using map_dvd (algebraMap ℤ_[l] O) (Ideal.mem_span_singleton.1 h4)
 
 private theorem ze_dir {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {O : Type} [CommRing O]
     {f F k : ℕ} [NeZero f] (ψ : DirichletCharacter O f) (h : f ∣ F) (hk : k.Coprime F) {g : G ℚ Ω} (hg : Pows F k g) :
@@ -1243,8 +1235,7 @@ open scoped nonZeroDivisors Pointwise
 
 private theorem valuation_natCast_le_one_primitive_frobenius_fixed {Ω : Type} [Field Ω] (A : ValuationSubring Ω) (n : ℕ) :
     A.valuation (n : Ω) ≤ 1 := by
-  have h := A.valuation_le_one (n : A)
-  simpa using h
+  simpa using A.valuation_le_one (n : A)
 
 private theorem over_mul {Ω : Type} [Field Ω] (A : ValuationSubring Ω) (m n : ℕ) :
     Over A (m * n) ↔ Over A m ∨ Over A n := by
@@ -1253,8 +1244,7 @@ private theorem over_mul {Ω : Type} [Field Ω] (A : ValuationSubring Ω) (m n :
   simp only [Over, Nat.cast_mul, map_mul]
   constructor
   · intro h
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have h1 : A.valuation (m : Ω) = 1 := le_antisymm hm hc.1
     have h2 : A.valuation (n : Ω) = 1 := le_antisymm hn hc.2
     rw [h1, h2, one_mul] at h
@@ -1404,8 +1394,7 @@ private theorem lev_case (hR : Rec) (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsA
   have hs' : φ (-1) = (-1) ^ (e + 1) := by
     have hc := DirichletCharacter.changeLevel_eq_cast_of_dvd' (χ := φ) h (a := -1) isCoprime_one_left.neg_left
     push_cast at hc
-    rw [← hc]
-    exact hs
+    rwa [← hc]
   have hrc : (DirichletCharacter.changeLevel h φ).ringHomComp c.O.val.toRingHom =
       DirichletCharacter.changeLevel h (φ.ringHomComp c.O.val.toRingHom) := by
     ext u
@@ -1464,8 +1453,7 @@ theorem UpperTheory.V.ML.psiOf :
     simp only [ψ', MulChar.pow_apply_coe, MulChar.ofUnitHom_coe, MulChar.one_apply_coe]
     have h2 : ψ (ρ b) ^ Fintype.card Gal(E/ℚ) = 1 := by
       rw [← map_pow, pow_card_eq_one, map_one]
-    have h3 := congrArg (fun u : (↥O)ˣ => ((u : ↥O) : PadicAlgCl l)) h2
-    simpa using h3
+    simpa using congrArg (fun u : (↥O)ˣ => ((u : ↥O) : PadicAlgCl l)) h2
   have hodd' : ψ' (-1) = (-1) ^ (e + 1) := by
     have h1 := congrArg (fun χ => χ (-1)) hcomp
     simp only [MulChar.ringHomComp_apply] at h1
@@ -1479,8 +1467,7 @@ theorem UpperTheory.V.ML.psiOf :
     have h1 := hρ (Chr.cls ℚ Ω N σ) σ.toRingEquiv (fun x hx => Chr.cls_spec N σ x hx)
     have h2 := hlift σ
     ext x
-    apply (algebraMap E Ω).injective
-    exact (h1 x).symm.trans (h2 x)
+    exact (algebraMap E Ω).injective ((h1 x).symm.trans (h2 x))
   have hdir : Chr.dirG ℚ Ω ψ' = ψ.comp (AlgEquiv.restrictNormalHom E) := by
     ext σ
     simp [Chr.dirG, ψ', hρσ]
@@ -1496,8 +1483,7 @@ theorem UpperTheory.V.ML.psiOf :
   have heig := Chr.eigV ℚ Ω l O e (ψ.comp (AlgEquiv.restrictNormalHom E)) (galOf ℚ E Ω) hopen hle
     (by rw [hidx]; exact hlE)
   have hpsi : psiLen Ω e ψ = Chr.eigL l e (galOf ℚ E Ω) (ψ.comp (AlgEquiv.restrictNormalHom E)) := rfl
-  rw [hpsi, heig, ← hdir]
-  exact key
+  rwa [hpsi, heig, ← hdir]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PrimitiveFrobeniusFixed.PsiOf =====

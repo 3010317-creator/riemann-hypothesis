@@ -243,8 +243,7 @@ private theorem cv_ne : ∃ x, cv lam hj x ≠ 0 := by
     rw [D_coe] at this
     simp [lin] at this
   have hl : ∀ v, ∃ l : Module.Dual ℂ (nablaSq ℂ 2 (lam v)), l (D (lam v) (hj v) 1 0) ≠ 0 := fun v => by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hne v ((Module.forall_dual_apply_eq_zero_iff ℂ _).1 hc)
   choose l hl using hl
   refine ⟨fun p => if p.2 = 0 then 1 else 0, fun h => ?_⟩
@@ -461,8 +460,7 @@ private theorem mu_fund (ψ : Fin n → kˣ →* ℂˣ) (j : ℕ) :
   rw [torusChar_apply, Units.coe_prod, psEig, Finset.prod_filter]
   refine Finset.prod_congr rfl fun i _ => ?_
   by_cases h : (i : ℕ) < j
-  · simp only [fund, ite_eq_left h, zpow_one]
-    exact mu_unif ψ i
+  · simpa only [fund, ite_eq_left h, zpow_one] using mu_unif ψ i
   · simp [fund, ite_eq_right h]
 private theorem diagT_inj : Function.Injective (diagT k (Fin n)) := by
   intro s t h
@@ -553,16 +551,13 @@ private theorem uOp_upow {T : Type} [AddCommGroup T] [Module ℂ T] (τ : Repres
     rw [u2]
     have hE : torusChar (mu ψ) (fun i => UpperTheory.V.Hi.unif k ^ (-1 : Fin n → ℤ) i) =
         (torusChar (mu ψ) (fun i => UpperTheory.V.Hi.unif k ^ (1 : Fin n → ℤ) i))⁻¹ := by
-      rw [eq_inv_iff_mul_eq_one, ← E_add]
-      rw [neg_add_cancel]
-      exact E_zero
+      rwa [eq_inv_iff_mul_eq_one, ← E_add, neg_add_cancel]
     rw [hE, ← hinv]
     rw [u1] at e1
     have h3 : τ (upow k n 1)⁻¹ (τ (upow k n 1) v) = v := by
       rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
     rw [e1, map_smul] at h3
-    rw [Units.val_inv_eq_inv_val, eq_inv_smul_iff₀ (Units.ne_zero _)]
-    exact h3
+    rwa [Units.val_inv_eq_inv_val, eq_inv_smul_iff₀ (Units.ne_zero _)]
   exact (antitone_mem M hfund hneg a ha).2
 end LocEigAux
 theorem UpperTheory.V.Z.Sym.Al.exists_fixd_dc_eq_expo_smul_of_equiv_prinSeries :
@@ -572,8 +567,7 @@ theorem UpperTheory.V.Z.Sym.Al.exists_fixd_dc_eq_expo_smul_of_equiv_prinSeries :
   intro hLit k _ _ _ _ n W ψ _ hH T _ _ τ he
   have hE : Nonempty (τ.Equiv (Hi.PS (omg ψ))) := by
     show Nonempty (τ.Equiv (prinSeries fun i => omg ψ i * absPow k (((n : ℂ) - 1) / 2)))
-    rw [om_shift]
-    exact he
+    rwa [om_shift]
   have hHv : ∀ y ∈ W.H, valuation k (y : k) = 1 := fun y hy => W.H_le hy
   obtain ⟨v, hv, hv0, hev⟩ := _root_.UpperTheory.V.Hi.exists_ne_zero_mem_eig_uOp_eq_psEig_smul_of_equiv_ps hLit k n T τ (omg ψ) hE W.c
     (fun i y hy => by rw [om_unit ψ i (hHv y (W.le hy)), hH i y (W.le hy)]) (phi (omg ψ)) (phi_inv _)
@@ -584,8 +578,7 @@ theorem UpperTheory.V.Z.Sym.Al.exists_fixd_dc_eq_expo_smul_of_equiv_prinSeries :
     have h2 : torusChar (omg ψ) u = torusChar (mu ψ) u := by
       rw [torusChar_apply, torusChar_apply]
       exact Finset.prod_congr rfl fun i _ => by rw [om_unit ψ i (hu i), mu_unit ψ i (hu i)]
-    rw [← h2]
-    exact h1
+    rwa [← h2]
   have hvJ : v ∈ Hi.fixd τ (W.J n) := by
     let S : Subgroup (GL (Fin n) k) :=
       { carrier := {g | τ g v = v}

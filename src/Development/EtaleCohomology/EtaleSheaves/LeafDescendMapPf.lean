@@ -173,8 +173,7 @@ def aL (hR : R.FG) (s : Cone (D R q)) : s.pt ⟶ D0 :=
 
 lemma aL_w (hR : R.FG) (s : Cone (D R q)) : aL R q hR s ≫ q = bL R q hR s ≫ toR R := by
   have := bL_fac R q hR s (op (⟨R, le_rfl, hR⟩ : J R))
-  simp only [aL, Category.assoc, pullback.condition, incl_self, Category.comp_id]
-  exact this.symm
+  simpa only [aL, Category.assoc, pullback.condition, incl_self, Category.comp_id] using this.symm
 
 def coneIsLimit (hR : R.FG) : IsLimit (cone R q c0 v0 hPB) where
   lift s := hPB.lift (aL R q hR s) (bL R q hR s) (aL_w R q hR s)

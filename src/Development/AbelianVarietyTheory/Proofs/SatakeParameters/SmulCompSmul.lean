@@ -88,10 +88,8 @@ theorem supSum_eq {κ : Type} [CommRing κ] {n r : ℕ} (hr : r ≤ n) (M : Matr
       if i.1 < r - 1 then A i.1 (i.1 + 1) else 0 := fun i => by
     split_ifs with h
     · rw [Finset.sum_eq_single (⟨i.1 + 1, by omega⟩ : Fin n), ite_eq_left ⟨rfl, by simp only; omega, Finset.mem_range.2 h⟩, ← hA]
-      · intro j _ hj
-        exact ite_eq_right fun h' => hj (Fin.ext h'.1.symm)
-      · intro h'
-        exact absurd (Finset.mem_univ _) h'
+      · exact fun j _ hj => ite_eq_right fun h' => hj (Fin.ext h'.1.symm)
+      · exact fun h' => absurd (Finset.mem_univ _) h'
     · exact Finset.sum_eq_zero fun j _ => ite_eq_right fun h' => h (Finset.mem_range.1 h'.2.2)
   rw [Finset.sum_congr rfl fun i _ => h1 i,
     Fin.sum_univ_eq_sum_range (fun i => if i < r - 1 then A i (i + 1) else 0) n, ← Finset.sum_filter]
@@ -204,8 +202,7 @@ theorem phiTop_target_gen : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : C
   intro X Pr R Ch S mu m2 P hm hq hP j h x
   have h' : redGL _ P j ∈ HJ (𝓞 X.E ⧸ P.asIdeal) (R.N R.m - 1) R.r R.t R.m := by
     have := rowLevel_unipotent_group Ch ⟨P, hP⟩
-    rw [this] at h
-    exact h
+    rwa [this] at h
   have e1 : psi0P Ch P = Ch.psi0 ⟨P, hP⟩ := dite_eq_left hP
   have e2 : chiP Ch P = chiAt Ch ⟨P, hP⟩ := dite_eq_left hP
   have hk : R.k ≤ R.N R.m - 1 := by
@@ -249,8 +246,7 @@ theorem det_diagMat {κ : Type} [CommRing κ] {n N : ℕ} (hN : N = n + 1) (A : 
     simp
   · intro j _ hj
     rw [diagMat_of_not_left _ _ (by simp), Matrix.one_apply_ne hj.symm, mul_zero, zero_mul]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem unitV_det_ext (χ : (𝓞 E ⧸ P.asIdeal)ˣ →* Kˣ) {n N : ℕ} (hN : N = n + 1) (j : GLint E n P) (k : GLint E N P)
     (h : redGL N P k = redGL N P (extI hN P j)) :

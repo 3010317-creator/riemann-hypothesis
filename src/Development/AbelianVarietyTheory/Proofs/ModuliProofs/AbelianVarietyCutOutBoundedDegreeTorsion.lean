@@ -729,8 +729,7 @@ theorem sub_rename_mem_span_degree {K σ : Type*} [Field K] (t : σ → σ)
       exact add_mem hx hy
   induction e, he using Nat.le_induction with
   | base =>
-    intro F hF
-    exact Ideal.subset_span ⟨hI F, hF.sub hF.rename_isHomogeneous⟩
+    exact fun F hF => Ideal.subset_span ⟨hI F, hF.sub hF.rename_isHomogeneous⟩
   | succ n hn ih =>
     intro F hF
     rw [add_comm] at hF
@@ -782,8 +781,7 @@ theorem regularity_comap_rename_of_surjective :
       apply le_antisymm
       · rintro _ ⟨F, hF, rfl⟩
         exact IsHomogeneous.rename_isHomogeneous hF
-      · intro G hG
-        exact ⟨rename s G, IsHomogeneous.rename_isHomogeneous hG, hrs G⟩
+      · exact fun G hG => ⟨rename s G, IsHomogeneous.rename_isHomogeneous hG, hrs G⟩
     have e2 : (homogeneousSubmodule σ K e ⊓ I.restrictScalars K).map
         (rename r : MvPolynomial σ K →ₐ[K] MvPolynomial σ₀ K).toLinearMap =
         homogeneousSubmodule σ₀ K e ⊓ I₀.restrictScalars K := by
@@ -942,8 +940,7 @@ theorem vamp_of_comp {K σ σ₀ : Type} [Field K] {X : Scheme.{0}} (p : X ⟶ S
     obtain ⟨ha, ρ, h₁, h₂⟩ := h.2 i
     refine ⟨ha, ρ ∘ s, fun j k => ?_, fun f => ?_⟩
     · have := h₁ (s j) k
-      simp only [Function.comp_apply, hs j] at this
-      exact this
+      simpa only [Function.comp_apply, hs j] using this
     · obtain ⟨F, rfl⟩ := h₂ f
       refine ⟨MvPolynomial.rename r F, ?_⟩
       rw [MvPolynomial.eval₂_rename]
@@ -964,8 +961,7 @@ theorem secCoord_comp {σ σ₀ : Type} {X : Scheme.{0}} {M : LB X} (hM : M.IsLB
   obtain ⟨τ, hτ, h⟩ := h
   refine ⟨⟨τ, hτ, fun i j hj => ?_⟩, funext fun a => ?_⟩
   · have := h (s i) j hj
-    simp only [Function.comp_apply, hs i] at this
-    exact this
+    simpa only [Function.comp_apply, hs i] using this
   · apply (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of R)).inv).1
     refine (Sp R).IsSheaf.section_ext fun y _ => ?_
     obtain ⟨k, hk⟩ := exists_chart hM (x y)

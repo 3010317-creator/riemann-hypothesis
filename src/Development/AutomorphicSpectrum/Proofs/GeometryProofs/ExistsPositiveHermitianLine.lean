@@ -80,8 +80,7 @@ variable {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)]
 
 theorem exists_block_ne {z w : (Σ k, J k) → ℂ} (hw : ∀ c : K → ℂ, w ≠ torusSmul c z) :
     ∃ k, ∀ c : ℂ, (fun i => w ⟨k, i⟩) ≠ fun i => c * z ⟨k, i⟩ := by
-  by_contra h
-  push Not at h
+  by_contra! h
   choose c hc using h
   exact hw c (funext fun p => by
     obtain ⟨k, i⟩ := p
@@ -177,8 +176,7 @@ theorem heights_fsMulti {II : IntersectionSystem} (hII : IsIntersectionSystem II
   refine HilbertSamuel.SmallGenHeightsNonneg.proof K J ⊥ (fsMulti J) II _ (fun j => chartForm (e.symm j)) hII
     (FsLineSmooth.proof K J) (fun k => ?_) (fun j => isMultiHomog_chartForm _) (fun Q hQ _ => ?_)
     (fun j z _ => chartForm_le _ z) W hW bot_le
-  · show (0 : ℤ) ≤ 1
-    exact zero_le_one
+  · exact zero_le_one
   · obtain ⟨c, hc⟩ := exists_chartForm_notMem hQ
     exact ⟨e c, by simpa using hc⟩
 

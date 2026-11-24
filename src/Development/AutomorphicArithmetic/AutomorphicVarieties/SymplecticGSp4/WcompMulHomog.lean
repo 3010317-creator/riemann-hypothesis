@@ -127,8 +127,7 @@ private theorem span_coeffs {O R X κ N : Type} [CommRing O] [CommRing R] [Algeb
     conv_lhs => rw [hsum]
 
     rw [map_sum]
-    simp only [key, Finset.sum_mul]
-    exact Finset.sum_comm
+    simpa only [key, Finset.sum_mul] using Finset.sum_comm
 
 end SlopeTestRemainingChoices
 
@@ -175,5 +174,4 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.kerA :
     exact hle hf
   · rintro n x ⟨f, hf, hfx⟩
     exact ⟨⟨f, M.aPart_le (n := n) hf⟩, hf, Subtype.ext hfx⟩
-  · intro n f hf
-    exact ⟨f, hf, rfl⟩
+  · exact fun n f hf => ⟨f, hf, rfl⟩

@@ -98,8 +98,7 @@ private theorem wcoc_gen [NeZero N] (hζ : IsPrimitiveRoot ζ N) (hC : CobOn (ge
   have hv'0 : v' ≠ 0 := by
     intro h0
     rw [h0, map_zero] at hv'
-    apply hv0
-    exact (map_eq_zero _).1 (a.injective (hv'.trans (map_zero a).symm))
+    exact hv0 ((map_eq_zero _).1 (a.injective (hv'.trans (map_zero a).symm)))
   refine ⟨mul_ne_zero hw0 hv'0, θw * a θv, ?_, ?_⟩
   · rw [mul_pow, ← map_pow, hθw, hθv, hv', map_mul]
   · intro g hg

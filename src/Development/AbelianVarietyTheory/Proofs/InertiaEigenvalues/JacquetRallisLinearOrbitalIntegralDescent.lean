@@ -165,8 +165,7 @@ theorem exists_leftMul_of_comm {F E : Type} [NontriviallyNormedField F] [Nontriv
   have hlm : ∀ x : A.K, Algebra.leftMulMatrix b x = LinearMap.toMatrix b b (Algebra.lmul F A.K x) := fun x => rfl
   have hτ : φ ∘ₗ Algebra.lmul F A.K τ = Algebra.lmul F A.K τ ∘ₗ φ := by
     apply (LinearMap.toMatrix b b).injective
-    rw [LinearMap.toMatrix_comp b b b, LinearMap.toMatrix_comp b b b, hMφ, ← hlm, leftMul_tau]
-    exact hM
+    rwa [LinearMap.toMatrix_comp b b b, LinearMap.toMatrix_comp b b b, hMφ, ← hlm, leftMul_tau]
   have hτx : ∀ x, φ (τ * x) = τ * φ x := fun x => by
     have := congrArg (fun f => f x) hτ
     simpa using this
@@ -184,8 +183,7 @@ theorem exists_leftMul_of_comm {F E : Type} [NontriviallyNormedField F] [Nontriv
   rw [← hMφ, hlm]
   congr 1
   ext x
-  rw [Algebra.coe_lmul_eq_mul, LinearMap.mul_apply']
-  rw [mul_comm, ← hall, mul_one]
+  rw [Algebra.coe_lmul_eq_mul, LinearMap.mul_apply', mul_comm, ← hall, mul_one]
 
 theorem centr : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] (A : Et F E) (r : ℕ) (τ : A.K) (p : Fin r → F) (hG : A.IsGen τ p) (t : GL (Fin r) F), (t : Matrix (Fin r) (Fin r) F) * companion p = companion p * (t : Matrix (Fin r) (Fin r) F) → ∃ t₁ : A.Kˣ, LinDesc.tm A hG t₁ = t := by
   intro F E _ _ _ _ A r τ p hG t ht
@@ -245,9 +243,7 @@ theorem tm_isClosedEmbedding : ∀ (F E : Type) [NontriviallyNormedField F] [Non
   have hg : IsClosedEmbedding g := by
     refine LinearMap.isClosedEmbedding_of_injective ?_
     rw [LinearMap.ker_eq_bot]
-    intro x y hxy
-    have h1 := Algebra.leftMulMatrix_injective (bas A hG) hxy
-    exact e.symm.injective h1
+    exact fun x y hxy => e.symm.injective (Algebra.leftMulMatrix_injective (bas A hG) hxy)
   let f : A.K → Matrix (Fin r) (Fin r) F := fun x => Algebra.leftMulMatrix (bas A hG) x
   have hf : IsClosedEmbedding f := by
     have : f = g ∘ eh := by
@@ -273,8 +269,7 @@ theorem tm_isClosedEmbedding : ∀ (F E : Type) [NontriviallyNormedField F] [Non
   have hcont : Continuous (LinDesc.tm A hG) := by
     rw [hM.isInducing.continuous_iff]; exact hc.continuous
   refine ⟨⟨Topology.IsInducing.of_comp hcont hM.continuous hc.isInducing, ?_⟩, ?_⟩
-  · intro x y hxy
-    exact hc.injective (by simp [Function.comp_apply, hxy])
+  · exact fun x y hxy => hc.injective (by simp [Function.comp_apply, hxy])
   · have : Set.range (LinDesc.tm A hG) = (Units.embedProduct (Matrix (Fin r) (Fin r) F)) ⁻¹' Set.range ((Units.embedProduct (Matrix (Fin r) (Fin r) F)) ∘ (LinDesc.tm A hG)) := by
       ext x; constructor
       · rintro ⟨t, rfl⟩; exact ⟨t, rfl⟩
@@ -986,8 +981,7 @@ theorem desc_unit_eq {F E : Type} [NontriviallyNormedField F] [NontriviallyNorme
         (α (g * (tm A hG u)⁻¹) : ℂ) ∂M.μG := by
     have := integral_mul_right_eq_self (μ := M.μG) (fun h : GL (Fin r) F => f' (act h Y) *
       eta (((h * (tm A hG u)⁻¹ : GL (Fin r) F) : Matrix (Fin r) (Fin r) F).det) * (α (h * (tm A hG u)⁻¹) : ℂ)) (tm A hG u)
-    simp only [mul_inv_cancel_right] at this
-    exact this
+    simpa only [mul_inv_cancel_right] using this
   rw [h1, h2, ← integral_mul_const, ← integral_const_mul]
   refine integral_congr_ae (Eventually.of_forall fun g => ?_)
   have hui : (tm A hG u)⁻¹ = tm A hG a⁻¹ * tm A hG s := by
@@ -1181,8 +1175,7 @@ theorem pi_selfDual (F E : Type) [NontriviallyNormedField F] [NontriviallyNormed
     · intro h
       rw [hmem]
       intro i
-      by_contra hi
-      push Not at hi
+      by_contra! hi
       obtain ⟨x0, hx0, hx0'⟩ := hψ.2
       have hyi : y i ≠ 0 := by intro h0; rw [h0, norm_zero] at hi; linarith
       have hsmall : ‖(y i)⁻¹‖ < 1 := by rw [norm_inv]; exact inv_lt_one_of_one_lt₀ hi
@@ -1306,8 +1299,7 @@ theorem descent : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNorm
   have hsupp : ∀ g : GL (Fin r) F, (∃ v w : Fin r → F, fourG M ψ f' ((g : Matrix (Fin r) (Fin r) F) * companion p * ((g⁻¹ : GL (Fin r) F) : Matrix (Fin r) (Fin r) F), v, w, lam) ≠ 0) →
       ∃ v w : Fin r → F, f' ((g : Matrix (Fin r) (Fin r) F) * companion p * ((g⁻¹ : GL (Fin r) F) : Matrix (Fin r) (Fin r) F), v, w, lam) ≠ 0 := by
     intro g ⟨v, w, h⟩
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     apply h
     simp only [fourG, hc, zero_mul, MeasureTheory.integral_zero]
   have hsw : LinDesc.desc A M hG lam α (fourG M ψ f') = A.fourK m.μK ψ (LinDesc.desc A M hG lam α f') :=

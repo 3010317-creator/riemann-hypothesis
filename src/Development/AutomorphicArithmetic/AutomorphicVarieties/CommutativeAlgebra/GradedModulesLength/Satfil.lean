@@ -92,8 +92,7 @@ theorem UpperTheory.V.Alg.M.satfil_holds :
       intro p hp
       rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
       have hd : Finsupp.degree p.1 + Finsupp.degree p.2 ≤ 1 := by
-        rw [← map_add (f := _), hp]
-        exact hν
+        rwa [← map_add (f := _), hp]
       have hm0 : MvPowerSeries.coeff 0 (φ m) = 0 := by
         rw [MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hφ.const, RingHom.mem_ker.mp hm, map_zero]
       have hn0 : MvPowerSeries.coeff 0 (φ n) = 0 := by
@@ -117,8 +116,7 @@ theorem UpperTheory.V.Alg.M.satfil_holds :
     have h0 := hlow _ hcf ν hd1
     rw [map_smul, ← algebraMap_smul (FractionRing O) c (φ f), map_smul, smul_eq_mul] at h0
     have hc' : algebraMap O (FractionRing O) c ≠ 0 := by
-      intro hz
-      exact hc (IsFractionRing.injective O (FractionRing O) (by rw [hz, map_zero]))
+      exact fun hz => hc (IsFractionRing.injective O (FractionRing O) (by rw [hz, map_zero]))
     exact hne ((mul_eq_zero.mp h0).resolve_left hc')
   · intro b hb hxb ν hν
     by_contra hne

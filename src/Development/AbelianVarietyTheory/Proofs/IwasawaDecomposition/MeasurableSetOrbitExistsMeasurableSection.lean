@@ -79,15 +79,13 @@ theorem exists_section_real {X : Type} [TopologicalSpace X] [T2Space X] [Measura
         Set.mem_compl_iff, Set.mem_setOf_eq]
       by_cases hy : y ∈ Set.range f
       · constructor
-        · intro h
-          exact Or.inl ⟨τ y, h, (h1 y hy).1⟩
+        · exact fun h => Or.inl ⟨τ y, h, (h1 y hy).1⟩
         · rintro (⟨c, hc, hcy⟩ | h)
           · exact ((h1 y hy).2 c hcy).trans hc
           · exact absurd hy h.1
       · rw [h2 y hy]
         constructor
-        · intro h
-          exact Or.inr ⟨hy, h⟩
+        · exact fun h => Or.inr ⟨hy, h⟩
         · rintro (⟨c, -, hcy⟩ | h)
           · exact absurd ⟨c, hcy⟩ hy
           · exact h.2

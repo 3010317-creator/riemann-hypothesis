@@ -82,8 +82,7 @@ theorem pair_dich : ∀ (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A'] 
     have := congrArg (fun m : T ⟶ Spec (CommRingCat.of A) =>
       ((Scheme.ΓSpecIso (CommRingCat.of A)).inv ≫ m.appTop).hom r) hyy
     simp only at this
-    rw [comp_rule, comp_rule] at this
-    exact this
+    rwa [comp_rule, comp_rule] at this
   letI : Algebra A Γ(T, ⊤) := (φ.comp (algebraMap A A')).toAlgebra
   let φa : A' →ₐ[A] Γ(T, ⊤) := ⟨φ, fun _ => rfl⟩
   let φa' : A' →ₐ[A] Γ(T, ⊤) := ⟨φ', fun r => (hA r).symm⟩
@@ -109,8 +108,7 @@ theorem pair_dich : ∀ (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A'] 
       simp only [Scheme.Γ_map_op, Scheme.Hom.comp_appTop]
       ext a
       have h0 := congrArg W.ι.appTop.hom (hE a)
-      rw [map_mul, map_sub, map_zero, hunit.mul_left_eq_zero, sub_eq_zero] at h0
-      exact h0
+      rwa [map_mul, map_sub, map_zero, hunit.mul_left_eq_zero, sub_eq_zero] at h0
     · obtain ⟨W, hW, htW, hunit⟩ := key _ h2
       refine ⟨W, W.ι, hW, inferInstance, by rw [Scheme.Opens.range_ι]; exact htW, Or.inr ?_⟩
       rw [← Category.assoc, comp_rule, Scheme.Hom.comp_appTop]

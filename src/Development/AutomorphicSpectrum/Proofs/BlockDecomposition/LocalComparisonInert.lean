@@ -120,8 +120,7 @@ theorem cjv_apply (hC : CjEx) (hU : Unr E) {w : Pl E} (hw : ¬ IsSplitAt w)
     exact hp
   have hs : cjv (w.under (𝓞 (maximalRealSubfield E))) = h.choose := by
     rw [cjv, dite_eq_left h]
-  rw [← hx, hs, ← h.choose_spec.2 X]
-  rw [evR_apply, evR_apply]
+  rw [← hx, hs, ← h.choose_spec.2 X, evR_apply, evR_apply]
   exact hc' X
 
 theorem evY_thv (hC : CjEx) (hU : Unr E) {w : Pl E} (hw : ¬ IsSplitAt w) (a b : ℕ)
@@ -138,8 +137,7 @@ theorem mem_Kv_iff {w : Pl E} (hw : ¬ IsSplitAt w) (a b : ℕ) (y : Yv a b (w.u
     y ∈ Kv a b _ ↔ evY hw a b y ∈ K2 a b w := by
   rw [Kv, Subgroup.mem_iInf]
   constructor
-  · intro h
-    exact h (aw w)
+  · exact fun h => h (aw w)
   · intro h u
     obtain rfl := eq_aw hw u
     exact h

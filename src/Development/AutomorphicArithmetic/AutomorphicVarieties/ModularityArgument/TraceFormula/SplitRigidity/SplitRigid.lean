@@ -549,21 +549,18 @@ theorem UpperTheory.V.Z.Tf.SR.splitRigid_of (hSh : ShareBd) (hAS : AbsShare) (hT
     intro w
     by_contra h
     refine w.2 (Finset.mem_union_left _ (Finset.mem_union_left _ (Finset.mem_union_left _ ?_)))
-    rw [Set.Finite.mem_toFinset]
-    exact h
+    rwa [Set.Finite.mem_toFinset]
   have hS2 : ∀ w : Off E S, χ.UnrAt w.1 ∧ ‖((χ.val w.1 : ℂˣ) : ℂ)‖ = 1 ∧ (¬ IsSplitAt w.1 → χ.val w.1 = 1) := by
     intro w
     by_contra h
     refine w.2 (Finset.mem_union_left _ (Finset.mem_union_left _ (Finset.mem_union_right _ ?_)))
-    rw [Set.Finite.mem_toFinset]
-    exact h
+    rwa [Set.Finite.mem_toFinset]
   have hex : ∀ (x : X) (w : Off E S), ∃ f : Fin x.1.1 → ℂˣ, x.1.2.HasSat w.1 (Finset.univ.val.map f) := by
     intro x w
     have hw : ∃ B, x.1.2.HasSat w.1 B := by
       by_contra h
       refine w.2 (Finset.mem_union_left _ (Finset.mem_union_right _ (Finset.mem_biUnion.2 ⟨x, Finset.mem_univ _, ?_⟩)))
-      rw [Set.Finite.mem_toFinset]
-      exact h
+      rwa [Set.Finite.mem_toFinset]
     obtain ⟨B, hB⟩ := hw
     obtain ⟨f, hf⟩ := _root_.PositivityTheory.RgJS.RigidityLemmas.exists_fin B hB.card
     exact ⟨f, hf ▸ hB⟩
@@ -580,8 +577,7 @@ theorem UpperTheory.V.Z.Tf.SR.splitRigid_of (hSh : ShareBd) (hAS : AbsShare) (hT
       rw [Real.sqrt_eq_rpow]
       exact h.le
     · have h := determinant_one_condition_holds E x.1.1 x.1.2 w.1 _ (hX x).2 (hα x w)
-      rw [← Finset.prod_eq_multiset_prod, Units.coe_prod] at h
-      exact h
+      rwa [← Finset.prod_eq_multiset_prod, Units.coe_prod] at h
     · obtain ⟨F, σ₀, hF, hFe⟩ := hS0 x y S (hsub x y) (α x) (α y) (hα x) (hα y)
       refine ⟨F, σ₀, hF, fun σ hσ => ?_⟩
       rw [hFe σ hσ]

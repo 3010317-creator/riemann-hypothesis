@@ -251,8 +251,7 @@ theorem linFactor_of : LinFactor := by
   by_cases hk : k = k₀
   · subst hk
     simp
-  · simp only [hk, ite_false]
-    exact (hall k).choose_spec
+  · simpa only [hk, ite_false] using (hall k).choose_spec
 
 end UpperTheory.Gal.crystallineComparison
 end -- clump:auto
@@ -306,8 +305,7 @@ theorem UpperTheory.Gal.crystallineComparison.matchPart_of :
       have h1 := L1 _ _ hz'
       have h2 : e * z * ϖ = 0 := by
         rw [mul_zero] at h1
-        rw [mul_assoc]
-        exact h1
+        rwa [mul_assoc]
       have h3 : e * z = 0 := (mem_nonZeroDivisors_iff.mp hϖ).2 _ h2
       rw [← one_mul (ρ z), ← hρe, ← map_mul, h3, map_zero]
     rw [mem_nonZeroDivisors_iff]
@@ -373,15 +371,13 @@ private lemma coeff_lin_form {A ι : Type} [CommRing A] [Fintype ι] (a : ι →
   · simp
   · intro k _ hk
     rw [MvPolynomial.coeff_X', ite_eq_right, mul_zero]
-    intro h
-    exact hk (Finsupp.single_left_injective one_ne_zero h)
+    exact fun h => hk (Finsupp.single_left_injective one_ne_zero h)
   · simp
 
 theorem UpperTheory.Gal.crystallineComparison.matchStep_of :
     GaussLin → SameNormBasic → LinFactor → MatchStep := by
   intro hG hS hL B _ ϖ hϖ hnu ι _ N m hm u u' hcard hsame x hx hchain hdich
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hex : ∀ y : ι → B, ∃ c : B, ∃ e : ι → B,
       y ∈ u' → c ∣ ϖ ^ m ∧ (∃ k₀, e k₀ = 1) ∧ ∀ k, x k - y k = c * e k := by
     intro y
@@ -585,9 +581,7 @@ theorem UpperTheory.Gal.crystallineComparison.permMap_of :
     simpa [Finset.card_def, Finset.filter_val, eq_comm] using hp
   let e : ∀ p, {i // f i = p} ≃ {j // g j = p} := fun p => Fintype.equivOfCardEq (hc p)
   refine ⟨(Equiv.sigmaFiberEquiv f).symm.trans ((Equiv.sigmaCongrRight e).trans (Equiv.sigmaFiberEquiv g)), ?_⟩
-  intro i
-  show f i = g ((e (f i)) ⟨i, rfl⟩).1
-  exact ((e (f i)) ⟨i, rfl⟩).2.symm
+  exact fun i => ((e (f i)) ⟨i, rfl⟩).2.symm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AnnihilatorModels.PPermMap =====
@@ -606,8 +600,7 @@ private theorem UpperTheory.Gal.crystallineComparison.one_not_mem {B : Type} [Co
 
 private theorem UpperTheory.Gal.crystallineComparison.good_or {B : Type} [CommRing B] {𝔪 : Ideal B} (h𝔪 : 𝔪.IsPrime) (e : B) :
     e ∉ 𝔪 ∨ 1 - e ∉ 𝔪 := by
-  by_contra h
-  push Not at h
+  by_contra! h
   exact one_not_mem h𝔪 (by simpa using 𝔪.add_mem h.1 h.2)
 
 private theorem UpperTheory.Gal.crystallineComparison.mul_not_mem {B : Type} [CommRing B] {𝔪 : Ideal B} (h𝔪 : 𝔪.IsPrime)
@@ -719,8 +712,7 @@ private theorem root_exists {l : ℕ} [Fact l.Prime] (A : PAlg l) (a : ℕ) (y :
     obtain ⟨z, hz⟩ := (A.perf.bijective_frobenius).2 y
     obtain ⟨w, hw⟩ := ih z
     refine ⟨w, ?_⟩
-    rw [pow_succ l a, pow_mul, hw]
-    exact hz
+    rwa [pow_succ l a, pow_mul, hw]
 
 theorem UpperTheory.exists_orthogonalIdempotents_matching_of_sameNorm :
     ∀ (l : ℕ) [Fact l.Prime] (A : PAlg l), A.IsTest → ∀ (a : ℕ) {ι I I' : Type} [Fintype ι] [Fintype I] [Fintype I']
@@ -764,8 +756,7 @@ theorem UpperTheory.exists_orthogonalIdempotents_matching_of_sameNorm :
       funext k
       simp only [Function.comp_apply, ← hd i k]
       exact Ideal.Quotient.factor_mk hle _
-    rw [← e1 u c hu, ← e1 u' c' hu']
-    exact h2
+    rwa [← e1 u c hu, ← e1 u' c' hu']
   have MV : MatchingVal := matchVal_of idemCover_of valLocal_of
     (matchPart_of snBasic_of (matching_of snBasic_of (matchStep_of gaussLin_of snBasic_of linFactor_of)) permMap_of)
   obtain ⟨e, hce, he⟩ := MV A.A w hwn hv ι I I' N hI hI' u u' hsn
@@ -776,8 +767,7 @@ theorem UpperTheory.exists_orthogonalIdempotents_matching_of_sameNorm :
     rwa [Nat.sub_add_cancel hq] at this
   have key : e σ * (u i k ^ l ^ a - u' (σ i) k ^ l ^ a) = A.pi * t ^ l ^ a := by
     have h3 := congrArg φ ht
-    rw [map_mul, map_sub, map_mul, hφ, hφ, hφ, hφ, hφ, hid, hw] at h3
-    exact h3
+    rwa [map_mul, map_sub, map_mul, hφ, hφ, hφ, hφ, hφ, hid, hw] at h3
   rw [← hu i k, ← hu' (σ i) k, ← map_pow, ← map_pow, ← map_mul, ← map_mul]
   refine Ideal.Quotient.eq.2 (Ideal.mem_span_singleton.2 ⟨t ^ l ^ a, ?_⟩)
   rw [← mul_sub, key]

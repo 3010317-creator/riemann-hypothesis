@@ -120,9 +120,7 @@ theorem levChi_eq_one_of_isLocElt : ∀ (X : Stages) (px : PreX X.B.toPre) (I : 
   have hSt := Formalism.L2.DIV.parLev_St (Formalism.L2.DIV.lev_le_parLev hm)
   have hloc := locAt_of_isLocElt (Vc X.toD7 i) _ _ hj
 
-  have hoff : Q0 ∉ Formalism.L2.Col.rowSG (X.B.primes px) I.sel t.1 := by
-    have h := q.1.2
-    exact fun hm => h (Or.inr hm)
+  have hoff : Q0 ∉ Formalism.L2.Col.rowSG (X.B.primes px) I.sel t.1 := fun hm => q.1.2 (Or.inr hm)
   have hconj : Formalism.DivisionValues.conjPl Q0 = Q0 := by
     rw [← GlobalTheory.PlaceDict.conjP_eq_conjPl X.toD7]
     exact (q.1.1 : PlI X.B px).2.1

@@ -60,8 +60,7 @@ theorem pres_qminor {n t : ℕ} {R : Submodule ℂ (V × W)} (E : Fin n → Fin 
       · simpa using h1
   have := R.sum_mem (t := univ) (fun σ _ => key σ x y hxy)
   unfold qminor
-  rw [LinearMap.sum_apply, LinearMap.sum_apply, prod_mk_sum]
-  exact this
+  rwa [LinearMap.sum_apply, LinearMap.sum_apply, prod_mk_sum]
 
 theorem blk_eq {n : ℕ} (ε : Fin n → Bool) (s : Bool) (i : Fin (nb ε s)) : ε (blk ε s i) = s := by
   have := Finset.orderEmbOfFin_mem (univ.filter fun a => ε a = s) rfl i
@@ -231,14 +230,12 @@ theorem co_of (hB : BdFacts) (hG : GFacts) (hC : Cover) (h0 : CapelliDeterminant
     have hπx : lift ε π x' = x := by
       funext A
       by_cases hA : A.card = j + 1
-      · simp only [lift_apply, x', ite_eq_left hA]
-        exact (hs (x A)).choose_spec
+      · simpa only [lift_apply, x', ite_eq_left hA] using (hs (x A)).choose_spec
       · simp [x', hA, hx A hA]
     have hy : ∀ A, bd ε EY x' A ∈ LinearMap.ker π := by
       intro A
       have := congrFun (lift_bd π EY E hπ x') A
-      rw [hπx, hbx] at this
-      exact this
+      rwa [hπx, hbx] at this
     let y : Ch ε (LinearMap.ker π) := fun A => ⟨_, hy A⟩
     have hιy : lift ε (LinearMap.ker π).subtype y = bd ε EY x' := rfl
     have hyd : Deg j y := fun A hA => Subtype.ext (deg_bd EY hx' A hA)

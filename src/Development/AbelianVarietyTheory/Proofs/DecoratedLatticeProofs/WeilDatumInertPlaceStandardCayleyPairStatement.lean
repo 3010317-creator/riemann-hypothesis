@@ -161,8 +161,7 @@ theorem GlobalTheory.InertHomIdx.heisenbergRelativeIndex_inert_move_source (D : 
   have hmat : (mt S (embV S v g⁻¹)).map (GlobalTheory.InertHomIdx.compW D w) = (locMat D.sp.cm.sig S.gram h g)⁻¹.1 := by
     have e := finMat_map_compAt D.sp.cm.sig S.gram h (embV S v g⁻¹)
     rw [proj_emb_self] at e
-    rw [← map_inv]
-    exact e
+    rwa [← map_inv]
   refine GlobalTheory.InertHomIdx.relIndex_map_of_proj (latF S T (frameLat S) (frameLat T)).toAddSubgroup
     (rhoF S T (embV S v g, 1)).toAddMonoidHom (mulF S T (algebraMap (AF D.host.F) (AE D) ε)).toAddMonoidHom
     (GlobalTheory.InertHomIdx.matW S T w) (GlobalTheory.InertHomIdx.rmul (locMat D.sp.cm.sig S.gram h g)⁻¹.1) ?_ ?_ ?_ ?_
@@ -183,8 +182,7 @@ theorem GlobalTheory.InertHomIdx.heisenbergRelativeIndex_inert_move_source (D : 
   · intro a _
     refine XF.ext ?_
     have := hoff (a : WO S T)
-    rw [sub_smul, sub_smul, one_smul, one_smul] at this
-    exact this
+    rwa [sub_smul, sub_smul, one_smul, one_smul] at this
 
 namespace GlobalTheory.InertHomLattice
 
@@ -358,8 +356,7 @@ theorem GlobalTheory.InertHomIdx.idx_latF_map_rhoF_eq_qV_pow : ∀ (D : D7) (S T
       obtain ⟨x, hx, hx₀⟩ :=
         Submodule.exists_mem_ne_zero_of_ne_bot (LinearMap.ker_ne_bot_of_finrank_lt (f := g) hdim)
       have hsmul (a : D.host.E) : a • e x ∈ T.L0 := by
-        rw [← T.baseLattice_isUnimodular]
-        rw [Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
+        rw [← T.baseLattice_isUnimodular, Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
         intro y hy
         have hxy : T.hT (e x) y = 0 :=
           congrArg (fun f : Module.Dual D.host.E W => f ⟨y, Submodule.subset_span hy⟩) (LinearMap.mem_ker.mp hx)
@@ -423,8 +420,7 @@ theorem GlobalTheory.InertHomIdx.idx_latF_map_rhoF_eq_qV_pow : ∀ (D : D7) (S T
       refine ⟨c₀⁻¹ • (aT.1 * Y * (b⁻¹ : GL (Fin S.rank) (w.adicCompletion D.host.E)).1), (hX _).2 ?_, ?_⟩
       · show c₀ • ((aT⁻¹ : GL (Fin T.rank) (w.adicCompletion D.host.E)).1 * (c₀⁻¹ • (aT.1 * Y * (b⁻¹ : GL (Fin S.rank) (w.adicCompletion D.host.E)).1)) * b.1) ∈ _
         simp only [Matrix.mul_smul, Matrix.smul_mul, smul_smul, mul_inv_cancel₀ hc₀, one_smul, ← Matrix.mul_assoc, Units.inv_mul, Matrix.one_mul]
-        rw [Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
-        exact hY
+        rwa [Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
       · show c₀ • ((aT⁻¹ : GL (Fin T.rank) (w.adicCompletion D.host.E)).1 * (c₀⁻¹ • (aT.1 * Y * (b⁻¹ : GL (Fin S.rank) (w.adicCompletion D.host.E)).1)) * b.1) = Y
         simp only [Matrix.mul_smul, Matrix.smul_mul, smul_smul, mul_inv_cancel₀ hc₀, one_smul, ← Matrix.mul_assoc, Units.inv_mul, Matrix.one_mul]
         rw [Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
@@ -567,8 +563,7 @@ theorem weilScalar_source_eq_one_nonsplit_unramified (hψ : IsStdChar D ψ (-1))
       ∀ u ∈ (latO S T ΛS ΛT fun w => w = v), heisO ψ S T u f = f := by
     obtain ⟨f, f0, hf⟩ := GlobalTheory.FinWeilForm.exists_theta hψ S T
     obtain ⟨e, he, e0⟩ : ∃ e, Fixes (opF hψ.1 S T w₀) (latF S T ΛS ΛT) e ∧ e ≠ 0 := by
-      by_contra hn
-      push Not at hn
+      by_contra! hn
       have : (⊤ : Submodule ℂ (thetaSub ψ S T)) ≤ ⊥ := by
         rw [← hL.span, Submodule.span_le]
         rintro _ ⟨x, e, he, rfl⟩
@@ -621,8 +616,7 @@ theorem GlobalTheory.WeilAtPlaceSrc.weilDatum_src_inert : ∀ (D : D7) (ψ : Add
     (GlobalTheory.WeilAtPlace.isSelfDualC_frameLat T) hL hν hns
     (GlobalTheory.WeilAtPlace.unramAt_of_unrAt hp uS) (GlobalTheory.WeilAtPlace.unramAt_of_unrAt hp uT) hsu
   have e2 := hν _ hk f.1 f.2
-  rw [e1, Circle.coe_one, one_smul] at e2
-  exact e2
+  rwa [e1, Circle.coe_one, one_smul] at e2
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumSourceInertPlaceEqLatticeIntertwiner =====

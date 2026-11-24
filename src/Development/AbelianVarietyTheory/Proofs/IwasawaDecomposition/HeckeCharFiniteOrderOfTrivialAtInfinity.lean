@@ -102,8 +102,7 @@ theorem triv_inf (χ : HChar L) (h : ∀ k, χ.inf k = 1) (u : ∀ w : InfiniteP
     · funext k
       have h1 : χ.1 (infDiag k) = 1 := h k
       unfold infDiag at h1
-      rw [MonoidHom.finsetProd_apply] at h1
-      exact h1
+      rwa [MonoidHom.finsetProd_apply] at h1
   exact congrFun key u
 
 theorem exists_decomp (a : Ideles L) :
@@ -119,9 +118,7 @@ theorem exists_decomp (a : Ideles L) :
     rw [Units.val_mul, map_mul, Units.coe_prod, map_prod, Finset.prod_eq_single w]
     · show p w a = Pi.mulSingle (M := fun w : InfinitePlace L => w.Completion) w (p w a) w * 1
       simp
-    · intro w' _ hw
-      show Pi.mulSingle (M := fun w : InfinitePlace L => w.Completion) w' (p w' a) w = 1
-      exact Pi.mulSingle_eq_of_ne hw.symm _
+    · exact fun w' _ hw => Pi.mulSingle_eq_of_ne hw.symm _
     · simp
   · show q a = q ((∏ w, infIdele L w (Units.map (p w) a)) * finPartI L a : Ideles L)
     rw [Units.val_mul, map_mul, Units.coe_prod, map_prod, Finset.prod_eq_one, one_mul]

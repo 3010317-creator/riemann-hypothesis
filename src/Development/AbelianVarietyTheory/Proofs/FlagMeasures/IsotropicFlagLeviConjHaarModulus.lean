@@ -206,8 +206,7 @@ theorem finrank_and_det (n : ℕ) (ε : Fin n → Bool) (N : Submodule ℂ (Matr
       ∑ i, star (g i) • (Formalism.REAL.Jm ε * (E i)ᴴ * Formalism.REAL.Jm ε) := by
     intro g
     rw [Matrix.conjTranspose_sum, Matrix.mul_sum, Matrix.sum_mul]
-    refine Finset.sum_congr rfl fun i _ => ?_
-    exact hS_smul (g i) (E i)
+    exact Finset.sum_congr rfl fun i _ => hS_smul (g i) (E i)
 
   have hEmem : ∀ k, E k ∈ N ∧ Formalism.REAL.inG ε (E k) := fun k =>
     (hs (E k)).2 (Submodule.subset_span ⟨k, rfl⟩)
@@ -529,8 +528,7 @@ theorem det_sup_mul_det_inf [FiniteDimensional K B] (Φ : B →ₗ[K] B) (P Q S 
         rw [eq_neg_of_add_eq_zero_left h']
         exact Q.neg_mem q.2
       have hq : -(p : B) = q := by
-        rw [neg_eq_iff_add_eq_zero]
-        exact h'
+        rwa [neg_eq_iff_add_eq_zero]
       refine ⟨⟨p, Submodule.mem_inf.2 ⟨p.2, hpQ⟩⟩, Prod.ext (Subtype.ext rfl) (Subtype.ext ?_)⟩
       simpa [i] using hq
   have key := det_exact i π hi hπ hex (Φ.restrict hI')
@@ -553,8 +551,7 @@ def homSub (P Q : Submodule ℂ (Fin n → ℂ)) : Submodule ℂ (Matrix (Fin n)
     fun y => by rw [Matrix.smul_mulVec]; exact Q.smul_mem c (hX.2 y)⟩
 
 theorem mem_homSub {P Q : Submodule ℂ (Fin n → ℂ)} {X : Matrix (Fin n) (Fin n) ℂ} :
-    X ∈ homSub P Q ↔ (∀ y ∈ P, X *ᵥ y = 0) ∧ ∀ y, X *ᵥ y ∈ Q := by
-  exact Iff.rfl
+    X ∈ homSub P Q ↔ (∀ y ∈ P, X *ᵥ y = 0) ∧ ∀ y, X *ᵥ y ∈ Q := Iff.rfl
 
 def twoSided (f g : Matrix (Fin n) (Fin n) ℂ) :
     Matrix (Fin n) (Fin n) ℂ →ₗ[ℂ] Matrix (Fin n) (Fin n) ℂ :=
@@ -779,8 +776,7 @@ theorem flag_finrank_det : ∀ (n : ℕ) (f g : Matrix (Fin n) (Fin n) ℂ) (r :
   · have ht := telescope_nat (fun k => Module.finrank ℂ (killing N (F k)))
       (fun s => (Module.finrank ℂ (F (s + 1)) - Module.finrank ℂ (F s)) * Module.finrank ℂ (F s))
       r hdim
-    rw [hK0, hKr, finrank_bot, zero_add] at ht
-    exact ht
+    rwa [hK0, hKr, finrank_bot, zero_add] at ht
   · have ht := telescope_real (fun k => ‖LinearMap.det ((twoSided f g).restrict (hKst k))‖)
       (fun s => detOn f (F s) ^ Module.finrank ℂ (F (s + 1)) /
         detOn f (F (s + 1)) ^ Module.finrank ℂ (F s)) r hstep
@@ -1226,8 +1222,7 @@ theorem pairMap_surj (V : Submodule ℂ (Fin n → ℂ)) : Function.Surjective (
   simp only [← Matrix.finrank_range_mulVecLin] at hrk
   have htop : LinearMap.range (pairMap ε V) = ⊤ := by
     apply Submodule.eq_top_of_finrank_eq
-    rw [Module.finrank_fin_fun]
-    exact hrk
+    rwa [Module.finrank_fin_fun]
   exact LinearMap.range_eq_top.mp htop
 
 theorem pair_sum (V : Submodule ℂ (Fin n → ℂ)) (x : V) (y : Fin n → ℂ) :
@@ -1249,8 +1244,7 @@ private theorem pairMap_eq_zero_iff (V : Submodule ℂ (Fin n → ℂ)) (y : Fin
   constructor
   · intro h0 x hx
     have hs := pair_sum (ε := ε) V ⟨x, hx⟩ y
-    simp only [h0, Pi.zero_apply, mul_zero, Finset.sum_const_zero] at hs
-    exact hs
+    simpa only [h0, Pi.zero_apply, mul_zero, Finset.sum_const_zero] using hs
   · intro h0
     funext i
     rw [pairMap_apply, Pi.zero_apply]
@@ -1293,8 +1287,7 @@ theorem perp_perp {V V' : Submodule ℂ (Fin n → ℂ)}
     intro y hy
     rw [← star_form, (h y).1 hy v hv, star_zero]
   have heq := Submodule.eq_of_le_of_finrank_eq hle (by omega)
-  rw [heq, mem_ker_pairMap]
-  exact hx
+  rwa [heq, mem_ker_pairMap]
 
 theorem norm_det (m : Formalism.REAL.UJ ε) : ‖(uMat m).det‖ = 1 := by
   have hm : (uMat m)ᴴ * Formalism.REAL.Jm ε * uMat m = Formalism.REAL.Jm ε := m.2
@@ -1339,8 +1332,7 @@ theorem det_of_intertwine {X Y : Type} [AddCommGroup X] [Module ℂ X] [AddCommG
   have : FiniteDimensional ℂ Y := Module.Finite.of_surjective π hπ
   obtain ⟨C, hC⟩ := Submodule.exists_isCompl W
   have hπW : ∀ x ∈ W, π x = 0 := fun x hx => by
-    rw [← LinearMap.mem_ker, hW]
-    exact hx
+    rwa [← LinearMap.mem_ker, hW]
   have hπp : ∀ x, π x = π (((Submodule.prodEquivOfIsCompl W C hC).symm x).2 : X) := by
     intro x
     conv_lhs => rw [← (Submodule.prodEquivOfIsCompl W C hC).apply_symm_apply x,
@@ -1350,8 +1342,7 @@ theorem det_of_intertwine {X Y : Type} [AddCommGroup X] [Module ℂ X] [AddCommG
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro c hc
     have hcW : (c : X) ∈ W := by
-      rw [← hW, LinearMap.mem_ker]
-      exact hc
+      rwa [← hW, LinearMap.mem_ker]
     exact Subtype.ext ((Submodule.disjoint_def.mp hC.disjoint) _ hcW c.2)
   have hsurj : Function.Surjective (π ∘ₗ C.subtype) := by
     intro y
@@ -1630,8 +1621,7 @@ theorem dblFlag_mono (hW : IsIsoFlag ε j W) : Monotone (dblFlag ε W) := by
     rw [hl]
     intro x hx
     rw [mem_perpJ]
-    intro x' hx'
-    exact hW.2.2.2 x' hx' x hx
+    exact fun x' hx' => hW.2.2.2 x' hx' x hx
   intro s t hst
   by_cases ht : t ≤ a
   · rw [dblFlag_le (hst.trans ht), dblFlag_le ht]
@@ -1784,7 +1774,6 @@ theorem modulus : ∀ (n : ℕ) (ε : Fin n → Bool) (a : ℕ) (j : Fin a → �
     · intro h
       apply (half g).2
       have h' : ∀ s, s < 2 * a + 1 → ∀ y ∈ dblFlag ε W (s + 1), (uMat g - 1) *ᵥ y ∈ dblFlag ε W s := h
-      show ∀ s, s < a + 1 → ∀ y ∈ dblFlag ε W (s + 1), (uMat g - 1) *ᵥ y ∈ dblFlag ε W s
       exact fun s hs => h' s (by omega)
   have hAmul : ∀ X ∈ lower (dblFlag ε W) (2 * a + 1), ∀ Y ∈ lower (dblFlag ε W) (2 * a + 1),
       X * Y ∈ lower (dblFlag ε W) (2 * a + 1) := by
@@ -1833,8 +1822,7 @@ theorem modulus : ∀ (n : ℕ) (ε : Fin n → Bool) (a : ℕ) (j : Fin a → �
       rw [dblFlag_last]
       intro x hx
       rw [mem_perpJ]
-      intro x' hx'
-      exact hW.2.2.2 x' hx' x hx
+      exact fun x' hx' => hW.2.2.2 x' hx' x hx
     have h3 := Submodule.finrank_mono hle
     omega
   have hsym : ∀ s, s ≤ a → detOn (uMat m) (dblFlag ε W (2 * a + 1 - s)) = detOn (uMat m) (dblFlag ε W s) ∧

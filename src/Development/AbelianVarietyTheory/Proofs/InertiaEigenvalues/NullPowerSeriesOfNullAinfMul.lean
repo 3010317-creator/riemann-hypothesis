@@ -68,8 +68,7 @@ theorem topBasis_c_mem_map {S A ι : Type} [CommRing S] [CommRing A] {s : S →+
 theorem topBasis_c_i₀ {S A ι : Type} [CommRing S] [CommRing A] {s : S →+* A} {I : Ideal S}
     (TB : TopBasis s I ι) (a : S) : TB.c TB.i₀ (s a) = a := by
   have h := TB.c_mul TB.i₀ a 1
-  rw [mul_one, ← TB.b_i₀, TB.c_self, mul_one] at h
-  exact h
+  rwa [mul_one, ← TB.b_i₀, TB.c_self, mul_one] at h
 
 end GlobalTheory.NullOverS
 
@@ -87,8 +86,7 @@ theorem GlobalTheory.NullOverS.null_of_mul_null : ∀ (l : ℕ) [Fact l.Prime] (
   refine (Set.finite_iUnion fun c : Fin d => hσ n' c b).subset ?_
   intro i hi
   simp only [Set.mem_iUnion, Set.mem_setOf_eq] at hi ⊢
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   apply hi
   apply hn'
   have h1 : (t • adjugate Y * (Y * (σ i).map bk.ev)) a b = t * Y.det * bk.ev (σ i a b) := by

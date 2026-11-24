@@ -252,8 +252,7 @@ theorem norm_a_le : ∀ (k : ℕ) (g : Newform k) (p : ℕ), p.Prime → ¬ p �
     have h := hC τ
     have hpos : 0 < τ.im ^ r := Real.rpow_pos_of_pos τ.im_pos r
     have hc : ((((k : ℤ)) : ℝ) / 2) = r := by simp [hr]
-    rw [hc, le_div_iff₀ hpos] at h
-    exact h
+    rwa [hc, le_div_iff₀ hpos] at h
   have hbdd : BddAbove (Set.range φ) := ⟨C, by rintro _ ⟨τ, rfl⟩; exact hφC τ⟩
   set S := ⨆ τ, φ τ with hSdef
   have hφS : ∀ τ, φ τ ≤ S := fun τ => le_ciSup hbdd τ
@@ -317,15 +316,13 @@ theorem norm_a_le : ∀ (k : ℕ) (g : Newform k) (p : ℕ), p.Prime → ¬ p �
         rw [e1, Real.div_rpow hy.le hp0.le, Real.mul_rpow hp0.le hy.le]
         field_simp
   have hne : ∃ τ, 0 < φ τ := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have h0 : (g.f : ℍ → ℂ) = 0 := by
       funext τ
       have h1 := hcon τ
       have hpos : 0 < τ.im ^ r := Real.rpow_pos_of_pos τ.im_pos r
       have h2 : ‖g.f τ‖ ≤ 0 := by
-        by_contra h'
-        push Not at h'
+        by_contra! h'
         exact absurd (mul_pos h' hpos) (not_lt.mpr h1)
       simpa using norm_le_zero_iff.mp h2
     have h1 := g.one

@@ -129,8 +129,7 @@ theorem Space.cont_map {R : Type} [CommRing R] [Algebra Λ R] [IsCO Λ R] (f : X
     (X.P.map (f : X.A →+* R)).Cont (maximalIdeal R) := by
   refine X.cont.map _ (Ideal.map_le_iff_le_comap.2 fun b hb => ?_)
   show (f.comp (IsScalarTower.toAlgHom Λ X.B X.A)) b ∈ maximalIdeal R
-  rw [← res_eq_zero_iff Λ, res_map (O := Λ) (R := X.B), res_eq_zero_iff]
-  exact hb
+  rwa [← res_eq_zero_iff Λ, res_map (O := Λ) (R := X.B), res_eq_zero_iff]
 
 theorem Space.hom_ext {R : Type} [CommRing R] [Algebra Λ R] [IsCO Λ R] (f f' : X.A →ₐ[Λ] R)
     (h : X.P.map (f : X.A →+* R) = X.P.map (f' : X.A →+* R)) : f = f' := by

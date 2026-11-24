@@ -96,14 +96,12 @@ theorem keepsCusp_iff_exists (hE : HasTransform Xo c P p i cq a n) (hD : Detects
     (hF : FinKer Xo c P p i) : KeepsCusp Xo c U P p i cq a n ↔
       ∀ f ∈ cusp Xo c U a n, ∃ g ∈ cusp Xo c U a n, IsTransform Xo c P p i cq n f g := by
   constructor
-  · intro h f hf
-    exact ⟨_, h hE hD hF ⟨f, hf.1⟩ hf, hkOp_spec hE hD hF ⟨f, hf.1⟩⟩
+  · exact fun h f hf => ⟨_, h hE hD hF ⟨f, hf.1⟩ hf, hkOp_spec hE hD hF ⟨f, hf.1⟩⟩
   · intro h hE' hD' hF' f hf
     obtain ⟨g, hg, hr⟩ := h f hf
     have e := hkRel_unique hD' (hkOp hE' hD' hF' f).2 hg.1 (hkOp_spec hE' hD' hF' f) hr
     show (hkOp hE' hD' hF' f).1 ∈ cusp Xo c U a n
-    rw [e]
-    exact hg
+    rwa [e]
 
 end Local
 

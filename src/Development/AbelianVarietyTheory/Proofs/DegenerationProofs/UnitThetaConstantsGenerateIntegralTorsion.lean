@@ -485,8 +485,7 @@ theorem exists_torsion_lift_of_generic_rational : (∀ (V : Type) [CommRing V] [
     change Ideal.comap (algebraMap V W) (RingHom.ker β.toRingHom) = ⊥
     rw [RingHom.comap_ker]
     refine (RingHom.injective_iff_ker_eq_bot _).1 ?_
-    rw [show β.toRingHom.comp (algebraMap V W) = algebraMap V C from β.comp_algebraMap]
-    exact hC
+    rwa [show β.toRingHom.comp (algebraMap V W) = algebraMap V C from β.comp_algebraMap]
   have hβα : β.toRingHom.comp (algebraMap V W) = ga.comp (algebraMap V (FractionRing V)) :=
     β.comp_algebraMap
   have hw : spMap β.toRingHom ≫ spMap (algebraMap V W) = spMap ga ≫ jK V := by
@@ -917,8 +916,7 @@ theorem exists_translate (hL : Laws) {V : Type} [CommRing V] [IsDomain V] [IsDis
   rw [← y₁]
   refine (hθ _).2 ?_
   have := hb' (x := IsLocalRing.closedPoint κ) trivial
-  rw [← map_mul, ← y₂] at this
-  exact this
+  rwa [← map_mul, ← y₂] at this
 
 alias isUnit_level := _root_.GlobalTheory.ZH.TestVal.isUnit_level
 
@@ -956,8 +954,7 @@ theorem exists_bound (hL : Laws) (hL₂ : Laws2) (u : ρ.UTest p y₀) (hy : ∀
   refine ⟨b, hb, (H _ _ (GlobalTheory.T.modelPointExtendsTorsionPoint_mul o Ω S ρ p y₀ u a b h h' hh hb')).2 ?_⟩
   obtain rfl : r ≫ h' = x := Over.OverMorphism.ext e₂
   rw [← MonObj.comp_mul] at hx'
-  rw [← IsLocalRing.comap_closedPoint f]
-  exact hx'
+  rwa [← IsLocalRing.comap_closedPoint f]
 
 theorem closure_unit_theta : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (l : u.Lab), (∀ a : o, ‖y₀ (algebraMap o S.R a)‖ ≤ 1) → (0 < S.delta y₀ ∧ AddSubgroup.closure {x | ‖y₀ ⟨S.th x, S.th_mem x⟩‖ = S.delta y₀} = l.yy.ker) := by
   intro hL hL₂ hT o Ω _ _ _ _ S ρ p _ y₀ u l hy

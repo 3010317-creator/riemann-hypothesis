@@ -192,8 +192,7 @@ theorem exists_idempotent {O : Type} [CommRing O] [IsLocalRing O] {A : Type} [Co
         refine Multiset.mem_map.2 ⟨x, Multiset.mem_filter.2 ⟨hx, hρ⟩, ?_⟩
         simp [hcx]
       rw [ite_eq_left (hcx.trans hρ), map_mul]
-      rw [hg0, mul_zero, zero_add] at h1
-      exact h1
+      rwa [hg0, mul_zero, zero_add] at h1
     · have hh0 : aeval (c a) h = 0 := by
         rw [hh, map_multiset_prod, Multiset.map_map]
         apply Multiset.prod_eq_zero
@@ -258,9 +257,7 @@ theorem finite_and_idempotents {L : Type} [Field L] [IsAlgClosed L] {v : Valuati
     exists_idempotent (hr a) ρ
   have hsep : ∀ c c' : A →ₐ[O] IsLocalRing.ResidueField O,
       (∀ j ∈ S, c' j = c j) → c' = c := by
-    intro c c' hcc
-    apply AlgHom.toLinearMap_injective
-    exact LinearMap.ext_on hS fun x hx => hcc x hx
+    exact fun c c' hcc => AlgHom.toLinearMap_injective (LinearMap.ext_on hS fun x hx => hcc x hx)
   let e : (A →ₐ[O] IsLocalRing.ResidueField O) → A := fun c => ∏ j ∈ S, E j (c j)
   have hec : ∀ c c' : A →ₐ[O] IsLocalRing.ResidueField O,
       c' (e c) = if c = c' then 1 else 0 := by
@@ -288,8 +285,7 @@ theorem finite_and_idempotents {L : Type} [Field L] [IsAlgClosed L] {v : Valuati
         simp only [T, Multiset.mem_toFinset, Multiset.mem_map]
         exact ⟨x, hx, hcx.symm⟩⟩
     refine Finite.of_injective F ?_
-    intro c c' hcc
-    exact hsep c' c fun j hj => congrArg Subtype.val (congrFun hcc ⟨j, hj⟩)
+    exact fun c c' hcc => hsep c' c fun j hj => congrArg Subtype.val (congrFun hcc ⟨j, hj⟩)
   refine ⟨hfin, e, hei, hort, ?_, ?_⟩
   · haveI := hfin
     letI := Fintype.ofFinite (A →ₐ[O] IsLocalRing.ResidueField O)
@@ -724,8 +720,7 @@ theorem counit_endo (n : ℕ) :
   simp only [smul_eq_mul, mul_ite, mul_one, mul_zero]
   rw [Finset.sum_ite_eq']
   simp only [Finset.mem_univ, ite_true]
-  have h := congrArg (fun x : G.A n →ₐ[O] O => x a) (sig_one (hpt := hpt) hw n)
-  exact h
+  exact congrArg (fun x : G.A n →ₐ[O] O => x a) (sig_one (hpt := hpt) hw n)
 
 end Endo
 
@@ -1147,11 +1142,9 @@ theorem exists_isSum_conn_const : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field
     abel
   obtain ⟨G₁, i₁, q₁, h₁1, h₁2⟩ := GlobalTheory.PDivGroup.IdemSplit.idempotent_split_integers p C v O hv G (𝟙 G - u) h1u
   have hl₁ : ∀ n (b : G₁.A n), i₁.app n (q₁.app n b) = b := fun n b => by
-    have h := congrArg (fun f : G₁ ⟶ G₁ => f.app n b) h₁1
-    simpa using h
+    simpa using congrArg (fun f : G₁ ⟶ G₁ => f.app n b) h₁1
   have hl₂ : ∀ n (b : G₂.A n), i₂.app n (q₂.app n b) = b := fun n b => by
-    have h := congrArg (fun f : G₂ ⟶ G₂ => f.app n b) h₂1
-    simpa using h
+    simpa using congrArg (fun f : G₂ ⟶ G₂ => f.app n b) h₂1
   have hu₂ : ∀ n (a : G.A n), u.app n a = q₂.app n (i₂.app n a) := fun n a => by
     rw [← h₂2]; rfl
   refine ⟨G₁, G₂, ⟨i₁, i₂, q₁, q₂, h₁1, h₂1, ?_, ?_, ?_⟩, ?_, ?_⟩

@@ -107,11 +107,9 @@ private theorem polZ_ext {l : ℕ} [Fact l.Prime] (F : GFrame l) {A M : Type} [C
   classical
   obtain ⟨p, hp, hp1, hp2⟩ := polZ_proj F
   have hZ1 : Z 1 = 0 := by
-    have h1 := hm 1 1
-    simpa using h1
+    simpa using hm 1 1
   have hpc : p F.c = 1 := by
-    have h2 := hp2 1
-    simpa using h2
+    simpa using hp2 1
   have hmem : (fun γ => Z (p γ)) ∈ Zl rep := by
     show IsLocallyConstant (fun γ => Z (p γ)) ∧
       ∀ g h : F.Γ, Z (p (g * h)) = Z (p g) + rep g (Z (p h))
@@ -120,12 +118,10 @@ private theorem polZ_ext {l : ℕ} [Fact l.Prime] (F : GFrame l) {A M : Type} [C
     rcases polZ_cases F γ with ⟨g, rfl⟩ | ⟨g, rfl⟩ <;>
       rcases polZ_cases F δ with ⟨h, rfl⟩ | ⟨h, rfl⟩
     · rw [← Subgroup.coe_mul]
-      simp only [hp1]
-      exact hm g h
+      simpa only [hp1] using hm g h
     · rw [show (g : F.Γ) * (h * F.c) = ((g * h : F.G₀) : F.Γ) * F.c by
         simp only [Subgroup.coe_mul, mul_assoc]]
-      simp only [hp1, hp2]
-      exact hm g h
+      simpa only [hp1, hp2] using hm g h
     · rw [show (g : F.Γ) * F.c * h = ((g * F.conj h : F.G₀) : F.Γ) * F.c by
         simp only [Subgroup.coe_mul, polZ_conj, mul_assoc, F.c_sq, mul_one]]
       simp only [hp1, hp2]

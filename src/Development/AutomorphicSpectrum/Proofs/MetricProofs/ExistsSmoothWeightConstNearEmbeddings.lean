@@ -89,8 +89,7 @@ theorem exists_smooth_weight_const_near_embeddings :
           exact ⟨⟨h1, h2⟩, h3⟩
         · rintro ⟨⟨h1, h2⟩, h3⟩
           refine ⟨⟨⟨fun k => ?_, h1⟩, h2⟩, h3⟩
-          by_contra hcon
-          push Not at hcon
+          by_contra! hcon
           have := h3 k
           simp [blockNormSq, hcon] at this
       rw [this]
@@ -141,8 +140,7 @@ theorem exists_smooth_weight_const_near_embeddings :
     simp only [u, projPt_smul c hc]
   refine ⟨HermLine.ofWeight (fun z => -u z) hu_smul, rfl, ?_, ?_⟩
   · have h1 := hg.comp_contDiffOn (contDiffOn_projPt (ι := ι))
-    have hu := h1.neg.neg
-    exact Real.contDiff_exp.comp_contDiffOn hu
+    exact Real.contDiff_exp.comp_contDiffOn h1.neg.neg
   · intro z hz sg hsg
     have hzC : projPt z ∈ C sg := ⟨z, ⟨hz, hsg⟩, rfl⟩
     have hcont : ContinuousAt projPt z :=

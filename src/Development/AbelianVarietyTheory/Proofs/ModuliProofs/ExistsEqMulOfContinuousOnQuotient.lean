@@ -268,11 +268,9 @@ theorem dense_preimage (W : A.left.Opens) (hW : ∃ z, ⊤ ≤ (u.ex z).left ⁻
   have hpt : ∀ (X : Scheme.{0}) (x : Sp ℂ ⟶ X) (U : X.Opens), ⊤ ≤ x ⁻¹ᵁ U ↔ x.base pt ∈ U := by
     intro X x U
     constructor
-    · intro h
-      exact h (show pt ∈ (⊤ : (Sp ℂ).Opens) from trivial)
+    · exact fun h => h (show pt ∈ (⊤ : (Sp ℂ).Opens) from trivial)
     · intro h q _
-      rw [Subsingleton.elim q pt]
-      exact h
+      rwa [Subsingleton.elim q pt]
   by_contra hnd
   set F := closure V with hF
   have hFne : F ≠ Set.univ := fun h => hnd (dense_iff_closure_eq.2 h)
@@ -347,8 +345,7 @@ theorem dense_preimage (W : A.left.Opens) (hW : ∃ z, ⊤ ≤ (u.ex z).left ⁻
     rw [hℓ1]; exact hz1b
   apply hf1'
   have := hzero h1T
-  simp only [h, hℓ1, Pi.zero_apply] at this
-  exact this
+  simpa only [h, hℓ1, Pi.zero_apply] using this
 
 end GlobalTheory.ContinuousQuotient
 
@@ -435,7 +432,6 @@ theorem exists_eq_mul_of_continuousOn_quotient :
     simpa using closure_mono hsub hGz
   apply hxs
   have hrx : valAt' x.left U r = 0 := hxp r hr
-  simp only [G, hz₀, hrx, mul_zero, sub_zero] at hGz0
-  exact hGz0
+  simpa only [G, hz₀, hrx, mul_zero, sub_zero] using hGz0
 
 end GlobalTheory

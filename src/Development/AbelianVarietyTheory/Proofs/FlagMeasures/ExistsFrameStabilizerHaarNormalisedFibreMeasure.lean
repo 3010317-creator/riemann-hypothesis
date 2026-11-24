@@ -126,8 +126,7 @@ theorem eq_zero_of_traceBilin {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (x : ι 
   · rwa [Pi.single_eq_same, mul_comm] at this
   · intro i _ hi
     rw [Pi.single_eq_of_ne hi, mul_zero, map_zero]
-  · intro hj
-    exact absurd (Finset.mem_univ j) hj
+  · exact fun hj => absurd (Finset.mem_univ j) hj
 
 end Form
 
@@ -540,10 +539,8 @@ theorem unitri_section : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     have hc : Continuous fun x : {p : Fin (r + 1) × Fin (r + 1) // p.1 < p.2} → Fv F v ⊗[F] E =>
         coef (Fv F v) x b a := by
       by_cases h : a < b
-      · simp only [coef, dite_eq_left h]
-        exact continuous_apply _
-      · simp only [coef, dite_eq_right h]
-        exact continuous_const
+      · simpa only [coef, dite_eq_left h] using continuous_apply _
+      · simpa only [coef, dite_eq_right h] using continuous_const
     exact hc.smul continuous_const
   have hMb : ∀ b, Continuous fun x : {p : Fin (r + 1) × Fin (r + 1) // p.1 < p.2} → Fv F v ⊗[F] E =>
       Mb (Fv F v) σ J P T x b := by
@@ -574,10 +571,8 @@ theorem unitri_section : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     | succ k ih =>
       simp only [Pm_succ]
       by_cases hk : k < r + 1
-      · simp only [dite_eq_left hk]
-        exact (hMb _).matrix_mul ih
-      · simp only [dite_eq_right hk]
-        exact continuous_const.matrix_mul ih
+      · simpa only [dite_eq_left hk] using (hMb _).matrix_mul ih
+      · simpa only [dite_eq_right hk] using continuous_const.matrix_mul ih
   refine ⟨fun x => mkHA hdet (Pm (Fv F v) σ J P T x (r + 1)) (Pm_unitary x hσ hJ hP (r + 1)), ?_, ?_⟩
   · have hinv : Continuous fun x : {p : Fin (r + 1) × Fin (r + 1) // p.1 < p.2} → Fv F v ⊗[F] E =>
         (JR (F := F) (Fv F v) J)⁻¹ * Formalism.UG.cT (sigR (Fv F v) σ) (Pm (Fv F v) σ J P T x (r + 1)) * JR (F := F) (Fv F v) J := by
@@ -1460,10 +1455,8 @@ theorem fibre_unitri_invariant : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     · intro h
       have h' := linIndep_comb (Fv F v) w u huw _ h
       have e2 : (fun b => ∑ c, w c b • (e X) c) = X := e.left_inv X
-      rw [e2] at h'
-      exact h'
-    · intro h
-      exact linIndep_comb (Fv F v) u w hwu X h
+      rwa [e2] at h'
+    · exact fun h => linIndep_comb (Fv F v) u w hwu X h
   have hfam := isFibreFamily_transport e r hfib hμe hνr hf hU
   have heq := GlobalTheory.LocalFibreUnique.fibre_family_unique F E σ hE n J hJ v a μ ν hμ hν fib hfib _ hfam
   have hrS : r.symm S = S := by
@@ -1541,8 +1534,7 @@ theorem conj_map_eq (x0 : X) (hcl : IsClosed (MulAction.stabilizer G x0 : Set G)
   let sec : X → G := fun y => if h : ∃ g : G, g • x0 = y then h.choose else 1
   have hsec : ∀ y, (∃ g : G, g • x0 = y) → sec y • x0 = y := by
     intro y h
-    simp only [sec, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [sec, dite_eq_left h] using h.choose_spec
   have horb : ∀ y, (∃ g : G, g • x0 = y) → ∃ g : G, g • x0 = R.symm y := by
     rintro y ⟨g, rfl⟩
     refine ⟨g * s⁻¹, ?_⟩
@@ -1811,8 +1803,7 @@ theorem exists_tied_haar : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     unfold Formalism.L2.SG.LocVol.IsCompatLoc
     rw [hom]
     exact ⟨hc1, hc2⟩
-  · intro h hh t ht
-    exact hprod h hh t ht
+  · exact fun h hh t ht => hprod h hh t ht
 
 end GlobalTheory.LocalStabiliserTie
 end -- clump:auto

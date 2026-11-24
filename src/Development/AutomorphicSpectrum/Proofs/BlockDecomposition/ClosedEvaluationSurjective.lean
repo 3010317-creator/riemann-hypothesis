@@ -240,8 +240,7 @@ theorem exists_entry_nhds {k : Type} [Field k] [TopologicalSpace k] [IsTopologic
   have e : 𝓝 (0 : Fin m → Fin m → k) = Filter.pi fun a => 𝓝 ((0 : Fin m → Fin m → k) a) := nhds_pi
   have hs' : ((fun B : Matrix (Fin m) (Fin m) k => 1 + B) ⁻¹' t : Set (Fin m → Fin m → k)) ∈
       Filter.pi fun a => 𝓝 ((0 : Fin m → Fin m → k) a) := by
-    rw [← e]
-    exact hs
+    rwa [← e]
   obtain ⟨I, -, t₁, ht₁, hsub⟩ := Filter.mem_pi.1 hs'
   have h2 : ∀ a, ∃ t₂ : Fin m → Set k, (∀ b, t₂ b ∈ 𝓝 (0 : k)) ∧ Set.univ.pi t₂ ⊆ t₁ a := by
     intro a
@@ -272,8 +271,7 @@ theorem congM_subset_nhds (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
   obtain ⟨t₁, ht₁, t₂, ht₂, hsub⟩ := hw
   have ht₁' : t₁ ∈ 𝓝 (1 : Matrix (Fin (n + 1)) (Fin (n + 1)) k) := by simpa using ht₁
   have ht₂' : MulOpposite.op ⁻¹' t₂ ∈ 𝓝 (1 : Matrix (Fin (n + 1)) (Fin (n + 1)) k) := by
-    have h := MulOpposite.continuous_op.continuousAt.preimage_mem_nhds ht₂
-    simpa using h
+    simpa using MulOpposite.continuous_op.continuousAt.preimage_mem_nhds ht₂
   obtain ⟨U₁, hU₁, h₁⟩ := GlobalTheory.CompanionTheory.BZPhiPG.Onto.exists_entry_nhds (n + 1) ht₁'
   obtain ⟨U₂, hU₂, h₂⟩ := GlobalTheory.CompanionTheory.BZPhiPG.Onto.exists_entry_nhds (n + 1) ht₂'
   obtain ⟨s₀, hs₀⟩ := GlobalTheory.SplitWeil.exists_cball_subset (Filter.inter_mem hU₁ hU₂)
@@ -285,12 +283,10 @@ theorem congM_subset_nhds (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
   refine huO (hwu (hsub (Set.mem_prod.2 ⟨?_, ?_⟩)))
   · have hg' : GlobalTheory.CompanionTheory.BZPhiPG.Onto.NearOne s ((g : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) :=
       hg.1
-    show ((g : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) ∈ t₁
     exact h₁ _ fun a b => (hs₀ (hball _ (hg' a b))).1
   · have hg' : GlobalTheory.CompanionTheory.BZPhiPG.Onto.NearOne s
         (((g : GL (Fin (n + 1)) k)⁻¹ : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) :=
       hg.2
-    show MulOpposite.op (((g : GL (Fin (n + 1)) k)⁻¹ : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) ∈ t₂
     exact h₂ _ fun a b => (hs₀ (hball _ (hg' a b))).2
 
 end GlobalTheory.CompanionTheory.BZPhiPG.Onto
@@ -333,22 +329,19 @@ theorem nearOne_glEmbMat_iff (s : kˣ) (m : ℕ) (A : Matrix (Fin m) (Fin m) k) 
       | last =>
         have e : glEmbMat k m A (Fin.last m) (Fin.last m) - (1 : Matrix (Fin (m + 1)) (Fin (m + 1)) k) (Fin.last m) (Fin.last m) = 0 := by
           simp [glEmbMat]
-        rw [e]
-        exact z
+        rwa [e]
       | cast j =>
         have e : glEmbMat k m A (Fin.last m) (Fin.castSucc j) - (1 : Matrix (Fin (m + 1)) (Fin (m + 1)) k) (Fin.last m) (Fin.castSucc j) = 0 := by
           rw [Matrix.one_apply_ne (Fin.castSucc_lt_last j).ne', sub_zero]
           simp [glEmbMat]
-        rw [e]
-        exact z
+        rwa [e]
     | cast i =>
       induction b using Fin.lastCases with
       | last =>
         have e : glEmbMat k m A (Fin.castSucc i) (Fin.last m) - (1 : Matrix (Fin (m + 1)) (Fin (m + 1)) k) (Fin.castSucc i) (Fin.last m) = 0 := by
           rw [Matrix.one_apply_ne (Fin.castSucc_lt_last i).ne, sub_zero]
           simp [glEmbMat]
-        rw [e]
-        exact z
+        rwa [e]
       | cast j =>
         rw [e1, e2]
         exact h i j
@@ -440,8 +433,7 @@ theorem exists_small_cut (H : Subgroup G) (ρ : Representation ℂ H W)
     apply hg
     refine ⟨a, c⁻¹ * x * c, (hmem _).2 ?_, ?_⟩
     · have e3 : c * (c⁻¹ * x * c) * c⁻¹ = x := by group
-      rw [e3]
-      exact hx
+      rwa [e3]
     · have e4 : g = (g * c⁻¹) * c := by group
       rw [e4, e]
       group
@@ -617,8 +609,7 @@ theorem eq_top_of_bumps : ∀ {G W : Type} [Group G] [TopologicalSpace G] [IsTop
         rw [e]
         exact (hl a ha _).2 ((hr x hx c).2 (hcov c hc))
       rw [Set.indicator_of_mem hg]
-  rw [hyz]
-  exact hz
+  rwa [hyz]
 
 end GlobalTheory.CompanionTheory.PRep.CIndGlue
 end -- clump:auto
@@ -669,8 +660,7 @@ theorem colMat_mul_apply {n : ℕ} (v : Fin n → k) (A : Matrix (Fin (n + 1)) (
   · simp [GlobalTheory.BZMir.colMat]
   · intro j _ hj
     simp [GlobalTheory.BZMir.colMat, hj]
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem ball_of_unip_eq_mul {s : kˣ} (hs : ValuativeRel.valuation k (s : k) ≤ 1) {n : ℕ} {v : Fin n → k}
     {h κ : GL (Fin (n + 1)) k} (heq : unip k n (Multiplicative.ofAdd v) = h * κ)
@@ -695,8 +685,7 @@ theorem ball_of_unip_eq_mul {s : kˣ} (hs : ValuativeRel.valuation k (s : k) ≤
 theorem Mir_last_last {n : ℕ} (g : Mir k n) :
     ((g : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) (Fin.last n) (Fin.last n) = 1 := by
   have hrow := (GlobalTheory.BZMir.mem_Mir_iff k (g : GL (Fin (n + 1)) k)).1 g.2
-  have hentry := congrFun hrow (Fin.last n)
-  simpa [GlobalTheory.BZMir.eLast] using hentry
+  simpa [GlobalTheory.BZMir.eLast] using congrFun hrow (Fin.last n)
 
 theorem ePG_true_natAdd (i t : ℕ) (j : Fin (t + 1)) :
     ePG (i + 1) (t + 1) ⟨true, j⟩ = Fin.castSucc (Fin.natAdd (i + 1) j) := by
@@ -911,8 +900,7 @@ theorem near_block {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [I
   have e : (1 : Matrix (Fin (n + 1)) (Fin (n + 1)) k) (Fin.castSucc a) (Fin.castSucc b) =
       (1 : Matrix (Fin n) (Fin n) k) a b := by
     simp [Matrix.one_apply]
-  rw [e] at h
-  exact h
+  rwa [e] at h
 
 theorem mirProj_mem_cong {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (s : kˣ) (hs : valuation k (s : k) ≤ 1) {n : ℕ} (g : Mir k n) (hg : g ∈ congM k s hs n) :

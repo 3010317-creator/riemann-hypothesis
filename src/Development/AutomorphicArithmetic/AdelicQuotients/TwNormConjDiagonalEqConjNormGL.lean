@@ -119,5 +119,4 @@ theorem UpperTheory.twNorm_conj_diagonal_eq_conj_normGL :
   intro F E _ _ _ _ _ _ σ n δ x
   have h := twNorm_twConj_of_pow_eq_one (thetaE σ n) (theta_pow_eq_one σ n) x
     (AdelicGLn.diagonal E n δ)
-  rw [twNorm_diag] at h
-  exact h
+  rwa [twNorm_diag] at h

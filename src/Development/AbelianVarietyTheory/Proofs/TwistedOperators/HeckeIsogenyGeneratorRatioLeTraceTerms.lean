@@ -449,14 +449,10 @@ theorem exists_pointwise_bound : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   · rintro _ ⟨a, rfl⟩
     obtain ⟨b, hb'⟩ := hlat a
     exact ⟨b, hb'.symm⟩
-  · intro a ha0 z
-    exact per k x Pm Hm χ fr θ hp hu hH hn ha hv a ha0 z
-  · intro a ha0 z
-    exact per k' x' Pm' Hm' χ' fr' θ' hp' hu' hH' hn' ha' hv' a ha0 z
-  · simp only [hsq']
-    exact hI
-  · simp only [hsq']
-    exact hI'
+  · exact fun a ha0 z => per k x Pm Hm χ fr θ hp hu hH hn ha hv a ha0 z
+  · exact fun a ha0 z => per k' x' Pm' Hm' χ' fr' θ' hp' hu' hH' hn' ha' hv' a ha0 z
+  · simpa only [hsq'] using hI
+  · simpa only [hsq'] using hI'
   · intro w
     obtain ⟨j, hj, hval⟩ := hid w
     have hfa : ∀ m, ‖fr' j (h w)‖ = Real.exp (Real.pi * (hermForm Hm' (h w) (h (wm m))).re +

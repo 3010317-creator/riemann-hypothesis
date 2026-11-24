@@ -86,8 +86,7 @@ theorem triv_inv {T : Set (HeightOneSpectrum (𝓞 L⁺))} {x : GAf L n} (hx : T
   rw [h2, Matrix.map_one _ (map_zero _) (map_one _)]
 
 theorem triv_one {T : Set (HeightOneSpectrum (𝓞 L⁺))} : TrivOutside T (1 : GAf L n) := by
-  intro w _
-  exact Matrix.map_one _ (map_zero _) (map_one _)
+  exact fun w _ => Matrix.map_one _ (map_zero _) (map_one _)
 
 def locK (n : ℕ) (v : HeightOneSpectrum (𝓞 L⁺)) : Subgroup (GAf L n) where
   carrier := {κ | κ ∈ Umax L n ∧ TrivOutside {v} κ}
@@ -559,8 +558,7 @@ theorem not_dvd_q (s : SplitPlace L) {l : ℕ} (hl : l.Prime) (h : ¬ s.Above l)
   rw [nsmul_eq_mul] at h1
   have h2 := (mul_eq_zero.1 h1).resolve_right h0
   show _ ∈ _
-  rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
-  exact h2
+  rwa [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
 
 theorem exists_pow_val (s : SplitPlace L) (y : s.v.adicCompletion L⁺) :
     ∃ e : ℕ, ∀ e' ≥ e, Valued.v (((s.q : ℕ) : s.v.adicCompletion L⁺) ^ e' * y) ≤ 1 := by
@@ -623,8 +621,7 @@ theorem exists_ring (q : ℕ) (hq : q ≠ 0) (S : Set ℂ) (hS : S.Finite) (hint
     have e : algebraMap R ℂ ⟨_, hr⟩ = (q : ℂ)⁻¹ := by
       show (((q : ℚ)⁻¹ : ℚ) : ℂ) = _
       simp
-    rw [e] at this
-    exact this
+    rwa [e] at this
   · have h1 : IsIntegral A μ := hμ
     have h2 : IsIntegral R μ := isIntegral_trans μ h1
     obtain ⟨⟨_, m, rfl⟩, hm⟩ := IsIntegral.exists_multiple_integral_of_isLocalization (Submonoid.powers (q : ℤ)) μ h2
@@ -702,8 +699,7 @@ theorem eigen_integral {ρ : Representation ℂ (GQ L n) W} (hρ : IsAlgWeight L
       exact e2 ▸ h2
     rw [e1, ← LinearMap.toMatrix_mulVec_repr b b, hmat]
     simp only [Matrix.mulVec, dotProduct]
-    refine sum_mem fun j _ => ?_
-    exact Submodule.mem_iSup_of_mem (⟨t, ht⟩, ⟨c, hc⟩, j) ⟨_, hMe j _ hden, rfl⟩
+    exact sum_mem fun j _ => Submodule.mem_iSup_of_mem (⟨t, ht⟩, ⟨c, hc⟩, j) ⟨_, hMe j _ hden, rfl⟩
   let N' : Submodule A ℂ := Submodule.span A {z | ∃ x, TrivOutside {s.v} x ∧ z = b.repr (f (g₀ * x)) i₀}
   have hle : N' ≤ Nn := Submodule.span_le.2 (by rintro _ ⟨x, hx, rfl⟩; exact key x hx)
   have hfg : N'.FG := hNn.of_le hle
@@ -736,7 +732,6 @@ theorem heckeStdPlain : HeckeStdPlain := by
     rw [heckeD_type hB hv h1 h2 hf, inv_smul_eq_iff₀ hq, smul_smul] at hμ
     obtain ⟨m, hm⟩ := eigen_integral a.alg s R (fun γ hγ => (h1 γ hγ).1) hf.1 hf0 hμ
     refine ⟨s.q ^ (m + k * (n - 1)), fun h => not_dvd_q s hl hs (hl.dvd_of_dvd_pow h), ?_⟩
-    rw [Nat.cast_pow, pow_add, mul_assoc]
-    exact hm
+    rwa [Nat.cast_pow, pow_add, mul_assoc]
 
 end GlobalTheory.HeckeStdFacts

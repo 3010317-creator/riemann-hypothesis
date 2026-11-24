@@ -354,8 +354,7 @@ theorem casimir_inverse_bound : ∀ {n : ℕ} (ε : Fin n → Bool) {r : ℕ} (X
   · rw [← hcoe, hs]
   · have h := hbound M s
     rw [hs] at h
-    rw [le_inv_mul_iff₀ (by positivity)]
-    exact h
+    rwa [le_inv_mul_iff₀ (by positivity)]
 
 end GlobalTheory.KFourier
 end -- clump:auto
@@ -425,8 +424,7 @@ theorem integral_deriv_eq_zero {ε : Fin n → Bool} {X : Mx n} (hX : inK ε X) 
     have hfun : (fun t => G (k * expK ε X s * expK ε X (t - s))) = fun t => G (k * expK ε X t) := by
       funext t
       rw [mul_assoc, ← expK_add hX, add_sub_cancel]
-    rw [hfun] at h2
-    exact h2
+    rwa [hfun] at h2
   have h := (hasDerivAt_integral_of_dominated_loc_of_deriv_le (μ := muK ε) (𝕜 := ℝ)
     (F := fun t k => G (k * expK ε X t)) (F' := fun t k => D (k * expK ε X t)) (x₀ := 0) (bound := fun _ => C)
     (s := Set.univ) Filter.univ_mem
@@ -563,8 +561,7 @@ theorem casimir_pow_bound : ∀ {n : ℕ} (ε : Fin n → Bool) (N : ℕ) (F : L
     have e : ∀ j, ∫ k, rder ε [X j, X j] q k * F u (y * toMK k) ∂(muK ε) =
         ∫ k, q k * F (X j :: X j :: u) (y * toMK k) ∂(muK ε) := fun j => by
       have a := by_parts hF hg hc hy hu (hX j) (hr j)
-      rw [by_parts hF hg hc hy (h1 j) (hX j) hq, neg_neg] at a
-      exact a
+      rwa [by_parts hF hg hc hy (h1 j) (hX j) hq, neg_neg] at a
     simp only [Finset.sum_apply, Finset.sum_mul]
     rw [integral_finsetSum _ fun j _ => integrable_mul_fam hF hg hc hy hu (continuous_of_mem (hrr j))]
     refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun j _ => ?_)

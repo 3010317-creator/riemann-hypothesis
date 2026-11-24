@@ -137,8 +137,7 @@ theorem local_step (hE : Unr E) (w : Pl E) (hw : ¬ IsSplitAt w) (M G : Matrix (
           simp only [← Matrix.mul_assoc]
           rw [hkinv, Matrix.one_mul, Units.mul_inv]
   have hγUL : γ0 ∈ UL n w := by
-    rw [UL, ite_eq_right hw]
-    exact hγU
+    rwa [UL, ite_eq_right hw]
   refine ⟨⟨γ0, hγUL⟩, ?_, ?_⟩
   · rw [KL, Subgroup.mem_subgroupOf]
     have hinv : cT (cj w) γ0.val = (γ0⁻¹ : GLw n w).val := by
@@ -156,8 +155,7 @@ theorem local_step (hE : Unr E) (w : Pl E) (hw : ¬ IsSplitAt w) (M G : Matrix (
     have h0 := hint b a
     rw [HeightOneSpectrum.mem_adicCompletionIntegers] at h0 ⊢
     simp only [cT, Matrix.transpose_apply, Matrix.map_apply]
-    rw [hv]
-    exact h0
+    rwa [hv]
   · show (k.val * hMwu.unit.val * (k⁻¹ : GLw n w).val).charpoly = _
     rw [Matrix.coe_units_inv, Matrix.charpoly_units_conj, IsUnit.unit_spec]
     exact Matrix.charpoly_map M f

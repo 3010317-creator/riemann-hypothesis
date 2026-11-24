@@ -217,8 +217,7 @@ theorem norm_muInvDet_zero_or_one : ∀ (CY : ℝ) (D : D7) (N : NumDatum) (X : 
     subst hmu
     rcases Finset.mem_union.1 P.2 with h | h
     · exact h
-    · have h0 := twistPrimes_trivialTuple_empty sel Sg
-      exact absurd (h0 ▸ h) (Finset.notMem_empty _)
+    · exact absurd ((twistPrimes_trivialTuple_empty sel Sg) ▸ h) (Finset.notMem_empty _)
   have hnorm : ‖σ (muInvDet sel (rowSG Pr sel mu) (mUof Ch mu i) (muAt Ch sel mu cst i) L fr)‖ = 1 := by
     have hU := fun P x y hy => GlobalTheory.ScalarModulus.norm_eq_one_of_locK hX.ok hPr
       (ht.mu0 ⟨i, hi⟩) P x y hy σ
@@ -333,8 +332,7 @@ theorem aaUnit_bad_sharp : ∀ (CY : ℝ) (D : D7) (N : NumDatum) (X : Fields) (
   obtain ⟨l, hl, hlP, hd⟩ := GlobalTheory.ColNormsUnit.exists_prime hPr sel u P hP
   rw [hcond] at hd
   refine GlobalTheory.AAUnitAway.locP_AA D X s _ dl B χ cD P l hl ?_ ?_ hlP ?_
-  · intro hs
-    exact hd (((Nat.dvd_of_mem_primeFactors hs).mul_right _).mul_right _)
+  · exact fun hs => hd (((Nat.dvd_of_mem_primeFactors hs).mul_right _).mul_right _)
   · rintro rfl
     exact hd ((dvd_mul_left _ _).mul_right _)
   · rw [hcc, Ideal.absNorm_top]
@@ -701,8 +699,7 @@ theorem mem_lamY_iff (P : HeightOneSpectrum (𝓞 E)) (q n c : ℕ) (ex : ℕ �
 theorem proj_mem {P : HeightOneSpectrum (𝓞 E)} {q n c : ℕ} {ex : ℕ → ℕ} {v : Sp E (n + c)} (hv : v ∈ LocE.lamY P q n c ex) :
     LinearMap.funLeft E E (Fin.castAdd c) v ∈ stdAt E n P := by
   refine (mem_localization_standardLattice P _).2 fun i => ?_
-  have h := (mem_lamY_iff P q n c ex v).1 hv (Fin.castAdd c i)
-  simpa [LocE.scE, LinearMap.funLeft_apply] using h
+  simpa [LocE.scE, LinearMap.funLeft_apply] using (mem_lamY_iff P q n c ex v).1 hv (Fin.castAdd c i)
 
 theorem proj_inX {n c : ℕ} (y : Sp E n) : LinearMap.funLeft E E (Fin.castAdd c) (Loc.inX E n c y) = y := by
   funext i
@@ -764,8 +761,7 @@ theorem smallDatum_of_frames {a b : ℕ} {ST SG SG' SB : Finset (HeightOneSpectr
       · exact absurd rfl h1
     · have h3 := Finset.prod_ne_zero_iff.1 h2 ⟨P, hP⟩ (Finset.mem_univ _)
       have h4 : (f ⟨P, hP⟩).symm y ∈ stdAt E a P := (hf ⟨P, hP⟩ _).1 (by simpa using hy)
-      have h5 := (hf' ⟨P, hP⟩ _).2 ((hΨ ⟨P, hP⟩).1 _ h3 _ h4)
-      simpa [inFr] using h5
+      simpa [inFr] using (hf' ⟨P, hP⟩ _).2 ((hΨ ⟨P, hP⟩).1 _ h3 _ h4)
   · obtain ⟨z, hz, rfl⟩ := Submodule.mem_map.1 hy
     have hz' : ∀ P ∈ ST ∪ SB, ∀ y ∈ d.at P, z y ∈ d'.1.at P := hz
     have e0 : (((c : 𝓞 E) • (LinearMap.id : HomE E a b →ₗ[𝓞 E] HomE E a b)) z) = (c : 𝓞 E) • z := rfl
@@ -839,8 +835,7 @@ theorem smallDatum_xiCpl1_sharp : ∀ (CY : ℝ) (D : D7) (N : NumDatum) (X : Fi
     p₀.deco.1 p.deco (frsF sel mu p₀) (frsF sel mu p) (hfr p₀) (hfr p) (Pr.T u * (Pr.g 0 * Pr.g 1))
     (fun P => Formalism.L2.Col.qOf P.1) ?_ ?_
     (fun P x => PsiAt Ch sel mu cst (N.R.m - 2) P (I.h (N.R.m - 2) al P) x ((frsF sel mu p P).symm (repY Y))) (fun _ => 1) ?_
-  · rw [Finset.prod_const_one] at key
-    exact key
+  · rwa [Finset.prod_const_one] at key
   · intro P
     obtain ⟨i, -, hq, -⟩ := hG P.1 (hrow P.1 P.2)
     show Formalism.L2.Col.qOf P.1 ∣ _
@@ -1430,8 +1425,7 @@ theorem smallDatum_xiEntry_sharp : ∃ C : ℕ, ∀ (CY : ℝ) (D : D7) (N : Num
     rw [← pow_mul]
     congr 1
     ring
-  rw [e] at key
-  exact key
+  rwa [e] at key
 
 end GlobalTheory.Core.Ht2.EntryDatumS
 end -- clump:auto

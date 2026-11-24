@@ -71,15 +71,13 @@ private theorem one_le_of_mem {d : 𝓞 ℚ} (hd0 : d ≠ 0) {e : ℚ} (he : e �
       integralFiniteAdeles (𝓞 ℚ) ℚ) :
     1 ≤ |((algebraMap (𝓞 ℚ) ℚ d : ℚ) : ℝ)| * |(e : ℝ)| := by
   have h2 : algebraMap (𝓞 ℚ) ℚ d * e ∈ ((1 : (FractionalIdeal (𝓞 ℚ)⁰ ℚ)ˣ) : FractionalIdeal (𝓞 ℚ)⁰ ℚ) := by
-    rw [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
-    exact h
+    rwa [← algebraMap_mem_idealFiniteAdeles_iff, ← SetLike.mem_coe, idealFiniteAdeles_one]
   rw [Units.val_one] at h2
   obtain ⟨r, hr⟩ := (FractionalIdeal.mem_one_iff _).mp h2
   obtain ⟨n, hn⟩ := IsIntegrallyClosed.isIntegral_iff.mp (RingOfIntegers.isIntegral_coe r)
   have hdK : algebraMap (𝓞 ℚ) ℚ d ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective (𝓞 ℚ) ℚ)).mpr hd0
   have hnq : (n : ℚ) = algebraMap (𝓞 ℚ) ℚ d * e := by
-    rw [← hr]
-    exact hn
+    rwa [← hr]
   have hn0 : n ≠ 0 := by
     rintro rfl
     have : algebraMap (𝓞 ℚ) ℚ d * e ≠ 0 := mul_ne_zero hdK he
@@ -142,8 +140,7 @@ private theorem idele_le {K1 : Set (FiniteAdeleRing (𝓞 ℚ) ℚ)} (hK : IsCom
     have := congrArg Prod.snd hux
     rw [Units.val_mul] at this
     change (((u⁻¹ : IdeleGroup ℚ) : A ℚ)).2 * (x : A ℚ).2 = (rt ((t : ℚ)⁻¹) : A ℚ).2 * (((p : IdeleGroup ℚ) : A ℚ)).2 at this
-    rw [hp2, mul_one] at this
-    exact this
+    rwa [hp2, mul_one] at this
   have hint : 1 ≤ D * |(((t : ℚ)⁻¹ : ℚ) : ℝ)| := by
     refine one_le_of_mem hd0 (inv_ne_zero t.ne_zero) ?_
     rw [map_mul]

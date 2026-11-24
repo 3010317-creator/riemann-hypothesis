@@ -166,8 +166,7 @@ theorem exists_of_toOD_iTot_mem (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e) 
     rw [Ideal.mem_span_singleton']
     refine ⟨crdB b j z, ?_⟩
     have := congrArg (crdB b j) (hz.trans hT)
-    rw [crdB_sum, Algebra.TensorProduct.tmul_pow, one_pow, crdB_mul] at this
-    exact this
+    rwa [crdB_sum, Algebra.TensorProduct.tmul_pow, one_pow, crdB_mul] at this
   choose y hy using hx
   refine ⟨∑ j, b j • toAc t K (y j), ?_⟩
   simp only [hy, map_mul, map_pow, toAc_eis, Finset.mul_sum, mul_smul_comm]
@@ -218,8 +217,7 @@ theorem eq_Ehat_pow_mul_of_iD_mem : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [Ne
         EIn l e (invL l (A O K)) ^ n * algebraMap (A O K) (invL l (A O K)) (h τ) := by
       have h5 := (hr τ).symm
       rw [Algebra.smul_def, hh, Pi.mul_apply, Pi.pow_apply] at h5
-      simp only [map_mul, map_pow, hEA] at h5
-      exact h5
+      simpa only [map_mul, map_pow, hEA] using h5
     have hone : (↑(hu.unit⁻¹ ^ m) : invL l (A O K)) * algebraMap (A O K) (invL l (A O K)) (l : A O K) ^ m = 1 := by
       rw [Units.val_pow_eq_pow_val, ← mul_pow, hu.val_inv_mul, one_pow]
     linear_combination (-(g τ)) * hone + (↑(hu.unit⁻¹ ^ m) : invL l (A O K)) * h4

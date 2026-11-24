@@ -152,8 +152,7 @@ theorem rat_conjEquiv (V W : HSp D) (e : Fin V.rank ≃ Fin W.rank) (h : V.gram�
     show Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) Z * W.gram * Z = W.gram
     apply Matrix.map_injective inclR_inj
     dsimp only
-    rw [Matrix.map_mul, Matrix.map_mul]
-    exact hm
+    rwa [Matrix.map_mul, Matrix.map_mul]
   · exact hZ.symm
 
 theorem suppAt_conjEquiv (V W : HSp D) (e : Fin V.rank ≃ Fin W.rank) (h : V.gramᵀ = -(W.gram.submatrix e e)) (a : AE D)
@@ -166,8 +165,7 @@ theorem suppAt_conjEquiv (V W : HSp D) (e : Fin V.rank ≃ Fin W.rank) (h : V.gr
     split_ifs <;> simp
   rw [k]
   have := congrArg (cA D) (hs (e.symm i) (e.symm j))
-  rw [map_mul, map_add (f := _), Formalism.L2.Theta.cA_cA, add_comm] at this
-  exact this
+  rwa [map_mul, map_add (f := _), Formalism.L2.Theta.cA_cA, add_comm] at this
 
 theorem det_conjEquiv (V W : HSp D) (e : Fin V.rank ≃ Fin W.rank) (h : V.gramᵀ = -(W.gram.submatrix e e)) (g : GA D V) :
     (mt W (conjEquiv V W e h g)).det = (mt V g⁻¹).det := by

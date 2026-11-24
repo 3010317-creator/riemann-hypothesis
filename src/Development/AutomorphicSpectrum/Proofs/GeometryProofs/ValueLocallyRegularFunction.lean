@@ -109,8 +109,7 @@ theorem section_near : ∀ (X T : Scheme.{0}) (j : T ⟶ X) (Ω : Type) [Field �
   · obtain ⟨h', s', hs', rfl⟩ := hr
     have hcV : (spMap χ ≫ hV.fromSpec) (IsLocalRing.closedPoint ℂ) ∈ V := by
       have : hV.fromSpec ((spMap χ) (IsLocalRing.closedPoint ℂ)) ∈ Set.range hV.fromSpec := ⟨_, rfl⟩
-      rw [hV.range_fromSpec] at this
-      exact this
+      rwa [hV.range_fromSpec] at this
     have hq : centre ((spMap χ ≫ hV.fromSpec) ≫ j) ∈ N := hVN hcV
     have e : s' = X.presheaf.germ N _ hq G :=
       hξ.inj ⟨_, h'⟩ (hs'.trans ((hs.symm.trans (hgerm ⟨_, h⟩ hp)).trans (hgerm ⟨_, h'⟩ hq).symm))

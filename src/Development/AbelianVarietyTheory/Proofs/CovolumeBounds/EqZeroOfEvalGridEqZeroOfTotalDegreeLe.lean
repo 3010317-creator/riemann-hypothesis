@@ -140,8 +140,7 @@ theorem span_grid_eq_span_range_of_eq_sum (d : ℕ) (Φ : (σ → A) → V)
     Submodule.span K ((fun x : σ → ℕ => Φ fun i => (x i : A)) '' {x | ∀ i, x i ≤ d}) =
       Submodule.span K (Set.range Φ) := by
   refine span_grid_eq_span_range d Φ fun l => ?_
-  simp only [hΦ]
-  exact exists_poly_dual_sum_monomial_smul d s v hs l
+  simpa only [hΦ] using exists_poly_dual_sum_monomial_smul d s v hs l
 
 theorem span_grid_eval_eq_span_range {B : Type*} [CommRing B] [Algebra K B] (d : ℕ)
     (F : MvPolynomial σ B) (hF : ∀ i, F.degreeOf i ≤ d) :

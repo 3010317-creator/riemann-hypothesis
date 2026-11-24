@@ -143,7 +143,6 @@ theorem toric_torsion_radical_period : ∀ (E : Type) [Field E] [NumberField E] 
     (spMap (ψ b₀)) dG hNc
   have hsurj := _root_.GlobalTheory.CompanionTheory.Ar.Flat.famExp_ex_surjective R t.G g n M B ψ e t.semi b₀ hb₀
   obtain ⟨T, h₁, h₂, h₃, h₄⟩ := exists_periodQuot_transport (e.ex b₀) (e.add b₀ hb₀) hsurj Γ₀ hΓ N hN T₀ hT₁
-  refine ⟨T, by rw [h₁, h₂, hT₃], fun x y hx => ?_⟩
-  exact hT₂ _ (h₃ x hx) _ (h₄ y)
+  exact ⟨T, by rw [h₁, h₂, hT₃], fun x y hx => (hT₂ _ (h₃ x hx) _ (h₄ y))⟩
 
 end GlobalTheory.CompanionTheory.Ar.Flat

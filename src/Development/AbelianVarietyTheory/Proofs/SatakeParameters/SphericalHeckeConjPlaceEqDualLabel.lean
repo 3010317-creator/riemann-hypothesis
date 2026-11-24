@@ -121,8 +121,7 @@ theorem ext_cols {M N : Matrix (Fin n) (Fin n) A} (h : ∀ j, M *ᵥ Pi.single j
 
 theorem int_mulVec {I : AddSubgroup A} (hI : ∀ x ∈ I, ∀ y ∈ I, x * y ∈ I) {M : Matrix (Fin n) (Fin n) A}
     (hM : ∀ i j, M i j ∈ I) {z : Fin n → A} (hz : ∀ i, z i ∈ I) (i : Fin n) : (M *ᵥ z) i ∈ I := by
-  simp only [Matrix.mulVec, dotProduct]
-  exact sum_mem fun j _ => hI _ (hM i j) _ (hz j)
+  simpa only [Matrix.mulVec, dotProduct] using sum_mem fun j _ => hI _ (hM i j) _ (hz j)
 
 theorem int_single {I : AddSubgroup A} (hI1 : (1 : A) ∈ I) (j i : Fin n) : (Pi.single j (1 : A) : Fin n → A) i ∈ I := by
   by_cases h : i = j
@@ -244,8 +243,7 @@ theorem dv_conj (σ : A →+* A) (hσ : ∀ x, σ (σ x) = x) {J Ji : Matrix (Fi
     rw [this, Matrix.diagonal_one, Matrix.one_mul]
   have hZZ' : ε • (Z * Z') = ε • 1 := by
     have a : ε • (B * Matrix.diagonal u * (Z * Z')) = ε • (B * Matrix.diagonal u * 1) := by
-      rw [← Matrix.mul_assoc, smul_congr_right Z' hZ.symm, Matrix.mul_one]
-      exact hZ'
+      rwa [← Matrix.mul_assoc, smul_congr_right Z' hZ.symm, Matrix.mul_one]
     rw [← cancel (Z * Z'), ← cancel 1]
     exact smul_congr_left _ a
   have hZ'Z : ε • (Z' * Z) = ε • 1 := GlobalTheory.LatIntFacts.exists_left_inverse ε Z Z' hε hZZ'
@@ -257,8 +255,7 @@ theorem dv_conj (σ : A →+* A) (hσ : ∀ x, σ (σ x) = x) {J Ji : Matrix (Fi
   have hL1 : ε • (C * Ji * Formalism.UG.cT σ g * (J * g * B)) = ε • 1 := by
     have e : C * Ji * Formalism.UG.cT σ g * (J * g * B) = C * (Ji * (Formalism.UG.cT σ g * J * g) * B) := by
       simp only [Matrix.mul_assoc]
-    rw [e, hg, hJi, Matrix.one_mul]
-    exact hCB
+    rwa [e, hg, hJi, Matrix.one_mul]
   have hR1 : ε • (Z' * Matrix.diagonal v * (C * Ji) * (J * g * B)) = ε • 1 := by
     have e : Z' * Matrix.diagonal v * (C * Ji) * (J * g * B) = Z' * Matrix.diagonal v * C * (g * B) := by
       simp only [Matrix.mul_assoc]

@@ -125,9 +125,7 @@ theorem sncPts_of_isoAt :
   obtain ⟨p₁, -, c₁, r⟩ := exists_below t₂.gen hd hi p hp
   obtain ⟨A, z, n, q, hP, hq, hl⟩ := hs p₁ c₁
   refine ⟨A, z, n, q, ?_, hq, ?_⟩
-  · rw [ePts, eB]
-    exact hP
-  · rw [r]
-    exact hl
+  · rwa [ePts, eB]
+  · rwa [r]
 
 end GlobalTheory.CompanionTheory.Ar.PatchIso

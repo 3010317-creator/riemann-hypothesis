@@ -233,8 +233,7 @@ theorem finite_units_quot_sq_normed (F : Type) [NontriviallyNormedField F] [Comp
       · rw [hnv, zpow_add₀ (by positivity), zpow_one, le_div_iff₀ (by positivity)]
         calc ‖b‖ ^ 2 * (((‖b‖ ^ 2)⁻¹) ^ n * (‖b‖ ^ 2)⁻¹) = ((‖b‖ ^ 2)⁻¹) ^ n := by field_simp
           _ ≤ ‖(u : R)‖ := hn1.le
-      · rw [hnv, div_le_one (by positivity)]
-        exact hn2
+      · rwa [hnv, div_le_one (by positivity)]
     obtain ⟨c, hct, hcv⟩ := Set.mem_iUnion₂.mp (hcov hv)
     have hcu := hCu c (htC c hct)
     obtain ⟨s, hs⟩ := hball hcv
@@ -330,8 +329,7 @@ theorem finite_units_quot_sq_reduced (F : Type) [NontriviallyNormedField F] [Com
       rw [QuotientGroup.eq_one_iff, map_pow]
       exact ⟨_, rfl⟩
   have := Finite.of_injective _ (QuotientGroup.kerLift_injective φ)
-  rw [hker] at this
-  exact this
+  rwa [hker] at this
 
 theorem Et.finite_units_quot_sq : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E]
     [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E),
@@ -447,8 +445,7 @@ theorem okCompact : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNo
   have hc : Continuous h := continuous_finsetSum _ fun k _ => continuous_norm.comp ((hPc k).comp hes)
   have hpos : ∀ v ∈ T, 0 < h v := by
     intro v hv
-    by_contra hle
-    push Not at hle
+    by_contra! hle
     have hsum : h v = 0 := le_antisymm hle (Finset.sum_nonneg fun k _ => norm_nonneg _)
     have h0 : ∀ k < n, P k (e.symm v) = 0 := by
       intro k hk
@@ -478,8 +475,7 @@ theorem okCompact : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNo
       intro k
       conv_lhs => rw [hvw, map_smul]
       have := coeff_charpoly_lmul_smul (F := F) (e.symm (d • e z)) (inv_ne_zero hd0) k
-      rw [hn] at this
-      exact this
+      rwa [hn] at this
     have hhv : h (e z) ≤ n := by
       calc h (e z) ≤ ∑ k ∈ Finset.range n, (1 : ℝ) := Finset.sum_le_sum fun k _ => by
               show ‖P k (e.symm (e z))‖ ≤ 1
@@ -591,8 +587,7 @@ theorem normE [U : Unram F E] (z : E) : algebraMap F E (Algebra.norm F z) = z * 
   exact (quadratic_star_structure b d hb0 hs hd U.star_fix (IsUnit.mk0 d hd0) h2).2.1 z
 
 theorem free_L_E [Unram F E] (A : Et F E) : Module.Free E A.L := by
-  have hbc := A.push.out
-  exact Module.Free.of_basis (hbc.basis (Module.Free.chooseBasis F A.K))
+  exact Module.Free.of_basis ((A.push.out).basis (Module.Free.chooseBasis F A.K))
 
 theorem free_L_K [Unram F E] (A : Et F E) : Module.Free A.K A.L := by
   obtain ⟨⟨b⟩, -⟩ := GlobalTheory.JR.Et.quadratic_structure F E A
@@ -665,8 +660,7 @@ theorem finite_of_reps [Unram F E] (A : Et F E) (hf : Finite (A.Kˣ ⧸ (EtMeas.
     rintro ⟨x, hx⟩ ⟨x', hx'⟩ h
     obtain ⟨z, -, hz⟩ := hS x'
     have e1 := hz x ⟨hx, (key_rel A _ _).2 h⟩
-    have e2 := hz x' ⟨hx', (key_rel A _ _).2 rfl⟩
-    exact Subtype.ext (e1.trans e2.symm)
+    exact Subtype.ext (e1.trans (hz x' ⟨hx', (key_rel A _ _).2 rfl⟩).symm)
   exact Set.finite_coe_iff.1 (Finite.of_injective _ hinj)
 
 end GlobalTheory.JR.EtFacts

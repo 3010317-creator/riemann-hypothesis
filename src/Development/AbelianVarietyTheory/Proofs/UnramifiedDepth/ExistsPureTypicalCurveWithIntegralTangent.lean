@@ -189,8 +189,7 @@ theorem coeff_filt_good {l : ℕ} (hl : l.Prime) (hl2 : l ≠ 2) (f : PowerSerie
   by_cases hm : ∃ s, l ^ s = m
   · obtain ⟨s, rfl⟩ := hm
     rw [coeff_tyS_pow hl.two_le, ite_eq_left]
-    intro p _ hp hpl hd
-    exact hpl ((Nat.prime_dvd_prime_iff_eq hp hl).1 (hp.dvd_of_dvd_pow hd))
+    exact fun p _ hp hpl hd => hpl ((Nat.prime_dvd_prime_iff_eq hp hl).1 (hp.dvd_of_dvd_pow hd))
   · rw [coeff_tyS_of_ne _ m (fun s hs => hm ⟨s, hs⟩), ite_eq_right]
     intro hg
     rcases Nat.eq_zero_or_pos m with rfl | hpos
@@ -240,34 +239,29 @@ theorem filt_good_mem (hX : RLaw X V) (g : Fin 2)
   induction n with
   | zero =>
     have h : ∀ m, Good V.l 0 m := fun m p hp => absurd hp (Nat.not_lt_zero p)
-    simp only [filt_true h]
-    exact ha
+    simpa only [filt_true h] using ha
   | succ n ih =>
     by_cases hn : n.Prime ∧ n ≠ V.l
     · have h : ∀ m, Good V.l (n + 1) m ↔ (¬ n ∣ m ∧ Good V.l n m) := by
         intro m
         constructor
-        · intro hg
-          exact ⟨hg n (by omega) hn.1 hn.2, fun p hp => hg p (by omega)⟩
+        · exact fun hg => ⟨hg n (by omega) hn.1 hn.2, fun p hp => hg p (by omega)⟩
         · rintro ⟨h1, h2⟩ p hp hpp hpl
           rcases Nat.lt_succ_iff_lt_or_eq.1 hp with h | rfl
           · exact h2 p h hpp hpl
           · exact h1
       have := filt_not_dvd_mem hX g hn.1 hn.2 _ ih
       simp only [filt_filt] at this
-      simp only [filt_congr h]
-      exact this
+      simpa only [filt_congr h] using this
     · have h : ∀ m, Good V.l (n + 1) m ↔ Good V.l n m := by
         intro m
         constructor
-        · intro hg p hp
-          exact hg p (by omega)
+        · exact fun hg p hp => hg p (by omega)
         · intro h2 p hp hpp hpl
           rcases Nat.lt_succ_iff_lt_or_eq.1 hp with h | rfl
           · exact h2 p h hpp hpl
           · exact absurd ⟨hpp, hpl⟩ hn
-      simp only [filt_congr h]
-      exact ih
+      simpa only [filt_congr h] using ih
 
 end GlobalTheory.RowLaw.TypPart
 
@@ -349,9 +343,7 @@ theorem mean_pow {N : ℕ} (hN : (N : C) ≠ 0) {z y : C} (hz : z ^ N = 1) (hy :
   split_ifs with h
   · rw [h, mul_inv_cancel₀ hy0]
     simp [hN]
-  · have h1 : z * y⁻¹ ≠ 1 := by
-      intro h1
-      exact h ((mul_inv_eq_one₀ hy0).1 h1)
+  · have h1 : z * y⁻¹ ≠ 1 := fun h1 => h ((mul_inv_eq_one₀ hy0).1 h1)
     rw [geom_sum_eq h1, mul_pow, inv_pow, hz, hy]
     simp
 
@@ -428,8 +420,7 @@ theorem exists_start (hR : RLaw X V) (hP : HasProj X V) (g : Fin 2) (w : I g →
     by_cases hji : j = i
     · rw [hji, ite_eq_left rfl, ite_eq_left rfl]
     · rw [ite_eq_right hji, ite_eq_right]
-      intro h
-      exact hji (Finsupp.single_left_injective one_ne_zero h)
+      exact fun h => hji (Finsupp.single_left_injective one_ne_zero h)
   have h0 : ((fun i => alongCv γ (X.lg i), fun q => 0 - alongCv γ (X.sg (X.u (1 - g) q))) :
       (κ → PowerSeries C) × (JJ I g → PowerSeries C)) ∈ Cv X V g :=
     ⟨γ, fun _ => 0, hγcv, fun _ => ⟨map_zero _, fun n => by rw [map_zero]; exact VF.Ge.zero 0⟩,
@@ -530,8 +521,7 @@ theorem pure_mem (hR : RLaw X V) {g : Fin 2} (hT : HasTeich X V g) (a : ZMod d) 
     intro n
     induction n with
     | zero =>
-      simp only [Finset.range_zero, Finset.sum_empty, zero_mul, emb_zero]
-      exact hzero
+      simpa only [Finset.range_zero, Finset.sum_empty, zero_mul, emb_zero] using hzero
     | succ n ih =>
       simp only [Finset.sum_range_succ, add_mul]
       rw [emb_add X hl]
@@ -568,8 +558,7 @@ theorem exists_pure_typical : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [NeZ
     ∑ c, if X.ty g c = X.ty (1 - g) q then X.sg1 (X.u g c) (X.u (1 - g) q) * b' s c else 0,
     ⟨γ, lam, hγ, hlam, fun i => ?_, fun q => ?_⟩, ?_, ?_⟩
   · rw [h1 i]
-    simp only [emb, Sum.elim_inl, ← tyS_smul hl]
-    exact tyS_sum hl _ _
+    simpa only [emb, Sum.elim_inl, ← tyS_smul hl] using tyS_sum hl _ _
   · rw [← h2 q]
     simp only [emb, Sum.elim_inl, Sum.elim_inr]
     rw [tyS_add hl, tyS_sum hl]

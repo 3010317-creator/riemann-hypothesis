@@ -506,8 +506,7 @@ theorem GlobalTheory.LeviDesc.ConjStab.exists_stab : ∀ (E : Type) [Field E] [N
       Subgroup.quotient_finite_of_isOpen _ (hC.preimage continuous_subtype_val)
     exact Subgroup.index_ne_zero_of_finite
   · have := (Subgroup.mem_inf.1 hk).2
-    rw [Subgroup.mem_comap, conjLevi_apply] at this
-    exact this
+    rwa [Subgroup.mem_comap, conjLevi_apply] at this
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -648,8 +647,7 @@ theorem pow_dim_eq_neg_sum_charpoly_coeff {F : Type} [Field F] {r : ℕ} (y : Ma
 
   simp [map_sum] at h
   rw [Fin.sum_univ_eq_sum_range (fun k => y.charpoly.coeff k • y ^ k)]
-  simp only [Algebra.smul_def]
-  exact eq_neg_of_add_eq_zero_left h
+  simpa only [Algebra.smul_def] using eq_neg_of_add_eq_zero_left h
 
 def companion {F : Type} [Field F] (r : ℕ) (p : F[X]) : Matrix (Fin r) (Fin r) F :=
   Matrix.of fun i j => if (j : ℕ) + 1 < r then (if (i : ℕ) = (j : ℕ) + 1 then 1 else 0) else - p.coeff i
@@ -773,8 +771,7 @@ theorem orbit_fin (E : Type) [Field E] [NumberField E] (w : Pl E) (r : ℕ) (γ 
     _ = γ * (q * c * Bf⁻¹) := by group
 
 theorem avg_ne_zero_exists {H : Type} [Group H] (u : H → ℂ) (h : avg u ≠ 0) : ∃ x, u x ≠ 0 := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   apply h
   simp [avg, hc]
 
@@ -791,8 +788,7 @@ theorem charpoly_blk_separable (E : Type) [Field E] [NumberField E] (n a b : ℕ
     simp only [blk]
     rw [dite_eq_left hM]
     rfl
-  rw [hval, Matrix.charpoly_reindex, Matrix.mul_zero, Matrix.charpoly_fromBlocks_zero₁₂]
-  exact hs
+  rwa [hval, Matrix.charpoly_reindex, Matrix.mul_zero, Matrix.charpoly_fromBlocks_zero₁₂]
 
 theorem fin_doubleCosets : ∀ (E : Type) [Field E] [NumberField E] (n a b : ℕ) (h : a + b = n) (w : Pl E) (f : GLw n w → ℂ), (∃ K' : Subgroup (GLw n w), IsOpen (K' : Set (GLw n w)) ∧ IsHecke K' f) → ∀ m : GLw a w × GLw b w, (m.1.val.charpoly * m.2.val.charpoly).Separable → ∀ hγ : blk h w m 0 ∈ GlobalTheory.LeviDesc.parP a n w, {d : DoubleCoset.Quotient (twCent (MonoidHom.id _) (⟨blk h w m 0, hγ⟩ : GlobalTheory.LeviDesc.parP a n w) : Set (GlobalTheory.LeviDesc.parP a n w)) (((GlobalTheory.LFun.KGL w (n := n)).subgroupOf (GlobalTheory.LeviDesc.parP a n w) : Subgroup _) : Set (GlobalTheory.LeviDesc.parP a n w)) | GlobalTheory.LeviDesc.cavg (GlobalTheory.LFun.KGL w (n := n)) f (((Quotient.out d)⁻¹ * ⟨blk h w m 0, hγ⟩ * Quotient.out d : GlobalTheory.LeviDesc.parP a n w) : GLw n w) ≠ 0}.Finite := by
   intro E _ _ n a b h w f hf m hs hγ
@@ -821,8 +817,7 @@ theorem fin_doubleCosets : ∀ (E : Type) [Field E] [NumberField E] (n a b : ℕ
     rw [← mul_assoc, ← hq, mul_inv_cancel_right]
   refine Set.Finite.of_injOn (f := fun d => if hd : ∃ t, Q d t then hd.choose else 1) (t := T) ?_ ?_ hT
   · intro d hd
-    simp only [dite_eq_left (hex d hd)]
-    exact (hex d hd).choose_spec.1
+    simpa only [dite_eq_left (hex d hd)] using (hex d hd).choose_spec.1
   · intro d₁ hd₁ d₂ hd₂ heq
     simp only [dite_eq_left (hex d₁ hd₁), dite_eq_left (hex d₂ hd₂)] at heq
     obtain ⟨-, z₁, hz₁, k₁, hk₁, hp₁⟩ := (hex d₁ hd₁).choose_spec
@@ -1036,8 +1031,7 @@ theorem isClosed_parP' (a n : ℕ) (w : Pl E) : IsClosed (GlobalTheory.LeviDesc.
   by_cases hij : decide (a ≤ (j : ℕ)) < decide (a ≤ (i : ℕ))
   · simp only [hij, true_implies]
     exact isClosed_eq (Continuous.matrix_elem (Units.continuous_val (M := Matrix (Fin n) (Fin n) (w.adicCompletion E))) i j) continuous_const
-  · simp only [hij, false_implies, Set.ofPred_true]
-    exact isClosed_univ
+  · simpa only [hij, false_implies, Set.ofPred_true] using isClosed_univ
 
 theorem mem_compactPart_parabolic_iff : ∀ (E : Type) [Field E] [NumberField E] (n a b : ℕ) (h : a + b = n) (w : Pl E) (m : GLw a w × GLw b w), (m.1.val.charpoly * m.2.val.charpoly).Separable → ∀ (hγ : blk h w m 0 ∈ GlobalTheory.LeviDesc.parP a n w) (p : GlobalTheory.LeviDesc.parP a n w), p ∈ cptPart (twCent (MonoidHom.id _) (⟨blk h w m 0, hγ⟩ : GlobalTheory.LeviDesc.parP a n w)) ↔ ∃ t ∈ cptPart (twCent (MonoidHom.id _) m), blk h w t 0 = (p : GLw n w) := by
   intro E _ _ n a b h w m hsep hγ p
@@ -1388,8 +1382,7 @@ theorem orbit_count_parabolic_unfold : ∀ (P M N : Type) [Group P] [Group M] [G
     exact (QuotientGroup.eq (s := L)).2 h
   have hcard : Nat.card {x : N ⧸ L // DoubleCoset.mk TP KP (s q * u (Quotient.out x)) = DoubleCoset.mk TP KP (s q * u X)} = Nat.card (MulAction.orbit S x0) := by
     refine Nat.card_congr (Equiv.ofBijective (fun x => ⟨QuotientGroup.mk (u (Quotient.out x.1)), (key _).1 x.2⟩) ⟨?_, ?_⟩)
-    · intro x y h
-      exact Subtype.ext (hinj _ _ (congrArg Subtype.val h))
+    · exact fun x y h => Subtype.ext (hinj _ _ (congrArg Subtype.val h))
     · rintro ⟨y, ⟨⟨r, hr⟩, rfl⟩⟩
       have hk : π (s r * u X * (s r)⁻¹) = 1 := by
         rw [map_mul, map_mul, map_inv, hπs, hπu]; group
@@ -1519,8 +1512,7 @@ theorem stab_relIndex_ne_zero : ∀ (P M N : Type) [Group P] [Group M] [Group N]
     hUi (Subgroup.relIndex_eq_zero_of_le_right hSK h)
   have hCS : C.relIndex S ≠ 0 := fun h =>
     hUS (Nat.eq_zero_of_zero_dvd (h ▸ Subgroup.relIndex_dvd_of_le_left S hUC))
-  rw [Subgroup.inf_relIndex_left]
-  exact hCS
+  rwa [Subgroup.inf_relIndex_left]
 
 end GlobalTheory
 end -- clump:auto
@@ -1540,8 +1532,7 @@ theorem unfold_sum_conj_invariant : ∀ (P M N : Type) [Group P] [Group M] [Grou
   have hc : c ∈ KP := hsK k hk
   have hπu : ∀ X, π (u X) = 1 := fun X => (hker _).2 ⟨X, rfl⟩
   have hex : ∀ (d : P), ∀ X, ∃ Y, u Y = d * u X * d⁻¹ := by
-    intro d X
-    exact (hker _).1 (by simp [map_mul, map_inv, hπu])
+    exact fun d X => (hker _).1 (by simp [map_mul, map_inv, hπu])
   choose φ hφ using hex c
   choose ψ hψ using hex c⁻¹
   have h1 : ∀ X, φ (ψ X) = X := fun X => hu (by rw [hφ, hψ]; group)
@@ -1552,8 +1543,7 @@ theorem unfold_sum_conj_invariant : ∀ (P M N : Type) [Group P] [Group M] [Grou
     · intro h
       have := KP.mul_mem (KP.mul_mem (KP.inv_mem hc) h) hc
       simpa [mul_assoc] using this
-    · intro h
-      exact KP.mul_mem (KP.mul_mem hc h) (KP.inv_mem hc)
+    · exact fun h => KP.mul_mem (KP.mul_mem hc h) (KP.inv_mem hc)
   let eN : N ≃ N := ⟨φ, ψ, h2, h1⟩
   let e : N ⧸ L ≃ N ⧸ L := Quotient.congr eN (by
     intro a b
@@ -1706,8 +1696,7 @@ theorem core : ∀ (P M N : Type) [Group P] [Group M] [Group N] (s : M →* P) (
   set q0 := Quotient.out q with hq0def
   have hq0 : DoubleCoset.mk TM KM q0 = q := DoubleCoset.out_eq' q
   have hψ : ∀ x : N ⧸ L, ρ (DoubleCoset.mk TP KP (s q0 * u (Quotient.out x))) = q := fun x => by
-    rw [hρmk, map_mul, hs, (hker _).2 ⟨_, rfl⟩, mul_one]
-    exact hq0
+    rwa [hρmk, map_mul, hs, (hker _).2 ⟨_, rfl⟩, mul_one]
   let ψ : N ⧸ L → {d // ρ d = q} := fun x => ⟨DoubleCoset.mk TP KP (s q0 * u (Quotient.out x)), hψ x⟩
   have hfib : ∀ d : {d // ρ d = q}, ∃ X : N, DoubleCoset.mk TP KP (s q0 * u X) = d.1 ∧
       Nat.card (ψ ⁻¹' {d}) = (TM.map (MulAut.conj q0⁻¹).toMonoidHom ⊓ KM ⊓ KP.comap ((MulAut.conj (u X)⁻¹).toMonoidHom.comp s)).relIndex (TM.map (MulAut.conj q0⁻¹).toMonoidHom ⊓ KM) := by
@@ -1828,14 +1817,12 @@ theorem twistedOrbitalIntegral_parabolic_unfolding : ∀ (E : Type) [Field E] [N
   · intro p
     rw [hcpt]
     simp only [Subtype.ext_iff, hs]
-  · intro q
-    exact GlobalTheory.T.centralizer_inf_conj_integralGLProd_le_cptPart E a (n - a) w m q
+  · exact fun q => GlobalTheory.T.centralizer_inf_conj_integralGLProd_le_cptPart E a (n - a) w m q
   · intro X
     obtain ⟨U, hU, hUi, hUk⟩ := GlobalTheory.T.exists_finiteIndex_levi_subgroup_unipotentConj_integral E n a (n - a) (Nat.add_sub_cancel' ha) w (Multiplicative.toAdd X)
     refine ⟨U, hU, hUi, fun k hk => ?_⟩
     rw [Subgroup.mem_subgroupOf]
-    simp only [Subgroup.coe_mul, InvMemClass.coe_inv, hs, hu]
-    exact hUk k hk
+    simpa only [Subgroup.coe_mul, InvMemClass.coe_inv, hs, hu] using hUk k hk
   · intro k hk x
     simp only [Subgroup.coe_mul, InvMemClass.coe_inv]
     exact cavg_conj_KGL E n w f hf _ (Subgroup.mem_subgroupOf.1 hk) _

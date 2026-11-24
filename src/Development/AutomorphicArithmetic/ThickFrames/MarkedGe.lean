@@ -175,8 +175,7 @@ theorem UpperTheory.BernoulliSumsFrobeniusOrbits.marked_ge :
       exP p (Finset.Ico (s * ((6 * r + 1) * u)) ((s + 1) * ((6 * r + 1) * u)))
         (fun T => ind (Marked T r u s)) := by
     apply (expectation_spec p).2.2.2.1
-    · intro a _
-      exact ⟨hp0 a, le_trans (hp a).2 h1⟩
+    · exact fun a _ => ⟨hp0 a, le_trans (hp a).2 h1⟩
     · intro T _
       by_cases hM : Marked T r u s
       · rw [ind_pos' hM]
@@ -192,18 +191,14 @@ theorem UpperTheory.BernoulliSumsFrobeniusOrbits.marked_ge :
         by_cases hj : Even j
         · have hne : ¬ Even (j + 1) := Nat.not_even_iff_odd.2 hj.add_one
           simp only [hg, hA, ite_eq_left hj]
-          apply ind_neg'
-          intro h
-          exact hc ⟨fun _ => h, fun he => absurd he hne⟩
+          exact ind_neg' (fun h => hc ⟨fun _ => h, fun he => absurd he hne⟩)
         · have hev : Even (j + 1) := by
             rcases Nat.even_or_odd j with h | h
             · exact absurd h hj
             · exact h.add_one
           have hno : ¬ Odd (j + 1) := Nat.not_odd_iff_even.2 hev
           simp only [hg, hA, ite_eq_right hj]
-          apply ind_neg'
-          intro h
-          exact hc ⟨fun ho => absurd ho hno, fun _ => h⟩
+          exact ind_neg' (fun h => hc ⟨fun ho => absurd ho hno, fun _ => h⟩)
   refine le_trans ?_ hmono
   rw [(expectation_spec p).2.2.2.2.2.2 (Finset.range (6 * r + 1)) A g _ hdisj hsub]
   have hlow : ∀ j ∈ Finset.range (6 * r + 1),

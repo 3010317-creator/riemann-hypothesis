@@ -392,8 +392,7 @@ private lemma exists_common_eigenspace_of_commuting {V : Type u_1} {ι : Type u_
   obtain ⟨c, hce⟩ := Module.End.exists_eigenvalue ((H i).restrict (hWi i))
   obtain ⟨w, hw⟩ := hce.exists_hasEigenvector
   have hwv : (H i : V → V) w = c • (w : V) := by
-    have h1 := congrArg Subtype.val hw.apply_eq_smul
-    simpa using h1
+    simpa using congrArg Subtype.val hw.apply_eq_smul
   let W' : Submodule ℂ V := W ⊓ LinearMap.ker (H i - c • LinearMap.id)
   have hmem : ∀ x, x ∈ W' ↔ x ∈ W ∧ (H i : V → V) x = c • x := by
     intro x
@@ -564,8 +563,7 @@ theorem polE_comm (τ' τ : D.what₂.Tau) (c a b : Fin m) :
 theorem polE_commute (τ' τ : D.what₂.Tau) (c c' : Fin m) :
     Commute (polE τ' c c : Module.End ℂ (PolF D m n)) (polE τ c' c') := by
   have h := polE_comm (n := n) τ' τ c c' c'
-  rw [sub_self, ite_self, zero_smul, sub_eq_zero] at h
-  exact h
+  rwa [sub_self, ite_self, zero_smul, sub_eq_zero] at h
 
 theorem comm_aff {A B : Module.End ℂ (PolF D m n)} (h : Commute A B) (u v d e : ℂ) :
     Commute (u • A + d • 1) (v • B + e • 1) := by
@@ -666,8 +664,7 @@ theorem exists_hw_of_height {V ι ρ : Type*} [AddCommGroup V] [Module ℂ V] [F
       refine Module.End.hasEigenvalue_of_hasEigenvector (x := ⟨R r x, hTR r x hxT⟩) ?_
       rw [Module.End.hasEigenvector_iff, Module.End.mem_eigenspace_iff]
       refine ⟨Subtype.ext ?_, fun h0 => hne (congrArg Subtype.val h0)⟩
-      rw [LinearMap.coe_restrict_apply]
-      exact e1
+      rwa [LinearMap.coe_restrict_apply]
     have := hzmax _ hev
     simp only [Complex.add_re, Complex.ofReal_re] at this
     linarith [hβ r]
@@ -1306,8 +1303,7 @@ theorem fadj_term (w : GlobalTheory.ExportSeries.Weight D n) (τ : D.what₂.Tau
   · have hb := h.mp ha
     simp [ha, hb]
     have h1 := @fadj_X D n m (fun a b => Classical.propDecidable (a = b)) (τ, a, j)
-    have h2 := @fadj_d D n m (fun a b => Classical.propDecidable (a = b)) (τ, b, j)
-    exact fadj_mul h1 h2
+    exact fadj_mul h1 (@fadj_d D n m (fun a b => Classical.propDecidable (a = b)) (τ, b, j))
   · have hb : ¬ (b : ℕ) < w.p τ := fun hb => ha (h.mpr hb)
     simp [ha, hb]
     have h1 := @fadj_d D n m (fun a b => Classical.propDecidable (a = b)) (τ, a, j)

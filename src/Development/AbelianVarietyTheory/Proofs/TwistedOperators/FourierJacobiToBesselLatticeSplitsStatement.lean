@@ -349,8 +349,7 @@ theorem hatMx_mul_rat {m n : ℕ} (N : Submodule (𝓞 D.host.E) (Matrix (Fin m)
   induction hw using AddSubgroup.closure_induction with
   | mem w hw =>
     obtain ⟨α, hα, x, hx, rfl⟩ := hw
-    apply AddSubgroup.subset_closure
-    exact ⟨α, hα, x * M, hN x hx, of_tmul_mul_rat _ _ _⟩
+    exact AddSubgroup.subset_closure ⟨α, hα, x * M, hN x hx, of_tmul_mul_rat _ _ _⟩
   | zero => simp
   | add x y _ _ hx hy => rw [Matrix.add_mul]; exact add_mem hx hy
   | neg x _ hx => rw [Matrix.neg_mul]; exact neg_mem hx
@@ -557,8 +556,7 @@ theorem val_le_one_of_mem_inv {𝔪 : Ideal (𝓞 D.host.E)} (h𝔪 : 𝔪 ≠ �
     exact le_antisymm (Q.intValuation_le_one m)
       (not_lt.1 fun h => hmQ ((Q.intValuation_lt_one_iff_mem m).1 h))
   have ho1 : Q.valuation D.host.E (algebraMap (𝓞 D.host.E) D.host.E o) ≤ 1 := Q.valuation_le_one o
-  rw [ho, map_mul, hm1, mul_one] at ho1
-  exact ho1
+  rwa [ho, map_mul, hm1, mul_one] at ho1
 
 end GlobalTheory.DepthMap
 
@@ -656,8 +654,7 @@ theorem GlobalTheory.DepthMap.smul_mulVec_mem_latV : All fun {D} _ _ {sc} {G} _ 
         rw [← mul_assoc, mul_comm e z, mul_assoc, ← mul_assoc e e, GlobalTheory.PlaceDatum.idemSum_mul_self he]
       have h4 := GlobalTheory.RowLatChi.mem_latO_of_mem_hatMx hsd he (GlobalTheory.AAUnit.exists_valuation_one_element_at_grid_places hD hL G) hhalf h2
       refine (GlobalTheory.AscFinWit.mem_latO_at (fun a b => ?_)).1 h4
-      simp only [Matrix.smul_apply, smul_eq_mul]
-      exact Ideal.mul_mem_right _ _ hzA
+      simpa only [Matrix.smul_apply, smul_eq_mul] using Ideal.mul_mem_right _ _ hzA
     · have hint : finPart D ((1 - e) * z) ∈ intAE D := by
         refine ((GlobalTheory.StdFrames.comp_toAd D).int _).2 fun Q => ?_
         show Valued.v (GlobalTheory.StdFrames.cpt (D := D) Q (toEAf D ((1 - e) * z))) ≤ 1
@@ -665,14 +662,9 @@ theorem GlobalTheory.DepthMap.smul_mulVec_mem_latV : All fun {D} _ _ {sc} {G} _ 
         by_cases hQ : Q ∈ G.pl.W0
         · rw [cpt_idemSum_of_mem he hQ, sub_self, zero_mul, Valuation.map_zero]; exact zero_le'
         · have hc := cpt_idemSum_of_not_mem he hQ
-          have hb := val_cpt_le_one hm0 (modul_not_le G.pl sc hQ) hz
-          simp only [hc, sub_zero, one_mul]
-          exact hb
-      have hI : (1 - e) * z ∈ intAt D (· = v) := by
-        refine ⟨?_, hint⟩
-        exact Ideal.mul_mem_left _ _ hzA
-      have hS := GlobalTheory.RowInt.smul_mem_latO_at D hD T L μ0 hL sc G W M hM
-      exact hS i hi v _ hI u hu
+          simpa only [hc, sub_zero, one_mul] using val_cpt_le_one hm0 (modul_not_le G.pl sc hQ) hz
+      have hI : (1 - e) * z ∈ intAt D (· = v) := ⟨Ideal.mul_mem_left _ _ hzA, hint⟩
+      exact (GlobalTheory.RowInt.smul_mem_latO_at D hD T L μ0 hL sc G W M hM) i hi v _ hI u hu
   have hlatA : ∀ z ∈ GlobalTheory.SeeSaw.idV ((G.pl.modul sc : Ideal (𝓞 D.host.E)) : GlobalTheory.SeeSaw.FI D)⁻¹ v,
       z • (u *ᵥ y) ∈ latA (G.V (.grid i 0)) (G.Λ (.grid i 0)) (· = v) := by
     intro z hz
@@ -792,8 +784,7 @@ theorem pair_mem_idV_of_maps {S T : HSp D} {ΛS : Lat S} {ΛT : Lat T} (sdT : Is
     rw [GlobalTheory.CharXFB.OffPl.hA_smul_left, GlobalTheory.CharXFB.OffPl.hA_smul_right, Matrix.mulVec_smul,
       GlobalTheory.CharXFB.OffPl.hA_smul_right, GlobalTheory.SeeSaw.cA_cA, GlobalTheory.SeeSaw.cA_cA]
     ring
-  rw [← e]
-  exact hprod
+  rwa [← e]
 
 private theorem stairId_ne_zero_twisted_operators {D : D7} {A B : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E} (hA : A ≠ 0) (hB : B ≠ 0)
     (c : ℕ) (p : Fin c) : GlobalTheory.ChiGrid.stairId A B c p ≠ 0 := by
@@ -825,8 +816,7 @@ theorem pair_mem_AA_AAbar : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
         latV (G.V (.grid (2 * σ + 2) 0)) (G.Λ (.grid (2 * σ + 2) 0)) (· = v) := by
     intro r hr
     have hl := GlobalTheory.CharXFB.OffPl.scaled_auxiliary_vector_mem_lattice_completion (G.colDec (2 * σ + 2) (by omega) h') (G.sp.P (2 * σ + 2)).lat _ _ v hr
-    rw [show G.Λ (.grid (2 * σ + 2) 0) = _ from G.sp.colLat (2 * σ + 2) (by omega) h']
-    exact hl
+    rwa [show G.Λ (.grid (2 * σ + 2) 0) = _ from G.sp.colLat (2 * σ + 2) (by omega) h']
   have hyS : ∀ t ∈ GlobalTheory.SeeSaw.idV (GlobalTheory.ChiGrid.stairId (G.pl.stA sc) (G.pl.stAbar sc) (2 * (σ + 1) + 1 - 1)
       (Fin.castLE (by omega) p : Fin (2 * (σ + 1) + 1 - 1)).rev) v,
       t • ratV (fun k => (G.colDec (2 * (σ + 1) + 1) (by omega) (by omega)).a k
@@ -860,8 +850,7 @@ theorem pair_mem_AA_AAbar : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
           ((G.pl.modulBar sc : Ideal (𝓞 D.host.E)) : GlobalTheory.SeeSaw.FI D)) := by ring
       _ = D.host.AA * D.host.AAbar := by rw [inv_mul_cancel₀ hmB, mul_one]
   rw [hcM] at key
-  rw [← hid _ _ hst]
-  exact key
+  rwa [← hid _ _ hst]
 
 end GlobalTheory.CharXFB.PairAt
 end -- clump:auto

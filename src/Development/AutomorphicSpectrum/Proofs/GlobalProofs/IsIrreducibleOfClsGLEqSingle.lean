@@ -118,8 +118,7 @@ theorem isIrreducible_of_clsGL_eq_single {N : ℕ} {B : Representation ℂ (GL (
     rw [← e] at hv'
     exact hv ((Submodule.mem_bot ℂ).mp hv')
   refine { exists_pair_ne := ⟨⊥, ⊤, hbt⟩, eq_bot_or_eq_top := fun S => ?_ }
-  by_contra hS
-  push Not at hS
+  by_contra! hS
   obtain ⟨hS0, hS1⟩ := hS
   have hn1 : Nontrivial S.toSubmodule :=
     Submodule.nontrivial_iff_ne_bot.mpr (fun e => hS0 (Subrepresentation.toSubmodule_injective e))
@@ -447,16 +446,14 @@ theorem isIrreducible_of_cls_eq_mul (hG : GeometricLemma) (hBZ : BernsteinZelevi
     rw [h, map_zero] at hmon
     exact one_ne_zero (monomial_eq_zero.mp hmon.symm)
   obtain ⟨w, hw⟩ : ∃ w : IrrGL (k := k), C w ≠ 0 := by
-    by_contra hh
-    push Not at hh
+    by_contra! hh
     exact hC0 (Finsupp.ext hh)
   have hms : msum m0 = {x} + {y} := by
     rw [hm0, msum_add, msum_single, msum_single, Segment.ms_single, Segment.ms_single]
   have hsupp : HasSupport w.rep ({x} + {y}) := by
     rw [← hms]
     refine hasSupport_of_symm_monomial_ne_zero hS hΨ hX w m0 ?_
-    rw [← hmon, AddEquiv.symm_apply_apply]
-    exact hw
+    rwa [← hmon, AddEquiv.symm_apply_apply]
   obtain ⟨c, hc⟩ := eq_monomial_of_hasSupport hG hBZ hS hΨ hX hx hy hl hsupp
   have hsw : Finsupp.single w 1 = c • C := by
     apply Ψ.injective

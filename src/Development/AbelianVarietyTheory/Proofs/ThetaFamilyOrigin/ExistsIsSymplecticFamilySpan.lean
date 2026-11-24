@@ -173,8 +173,7 @@ theorem exists_stdSymp_zmod {p j g : ℕ} (hp : p.Prime) {V : Type*} [AddCommGro
         show Nat.card φ.ker = _ from h₁, pow_succ', mul_pow] at h
       exact (Nat.eq_of_mul_eq_mul_right (by positivity) h).symm.trans h₂.symm
     have := AddSubgroup.eq_of_le_of_card_ge hle hc.ge
-    intro x hx
-    exact (this ▸ hx : x ∈ φ.range)
+    exact fun x hx => (this ▸ hx : x ∈ φ.range)
   obtain ⟨g', e, f, hs, hspan⟩ := exists_isSymplecticFamily_span hB ((p ^ j : ℕ) : ZMod (p ^ (j + 1))) (by
     intro r hr
     obtain ⟨m, rfl⟩ := ZMod.natCast_zmod_surjective r
@@ -248,11 +247,9 @@ theorem exists_stdSymp_of_pairing {p J g : ℕ} (hp : p.Prime) {G R : Type*} [Co
   let β : Additive T → Additive T → ZMod (p ^ (j + 1)) := fun x y =>
     hz.zmodEquivZPowers.symm (Additive.ofMul ⟨w x.toMul y.toMul, wm _ _⟩)
   have βl : ∀ x x' y, β (x + x') y = β x y + β x' y := fun x x' y => by
-    simp only [β, ← map_add (f := _)]
-    exact congrArg _ (Subtype.ext (wl _ _ _))
+    simpa only [β, ← map_add (f := _)] using congrArg _ (Subtype.ext (wl _ _ _))
   have βr : ∀ x y y', β x (y + y') = β x y + β x y' := fun x y y' => by
-    simp only [β, ← map_add (f := _)]
-    exact congrArg _ (Subtype.ext (wr _ _ _))
+    simpa only [β, ← map_add (f := _)] using congrArg _ (Subtype.ext (wr _ _ _))
   have βw : ∀ x y (n : ℤ), β x y = n ↔ w x.toMul y.toMul = ze ^ n := fun x y n => by
     simp only [β]
     rw [AddEquiv.symm_apply_eq, hz.zmodEquivZPowers_apply_intCast]

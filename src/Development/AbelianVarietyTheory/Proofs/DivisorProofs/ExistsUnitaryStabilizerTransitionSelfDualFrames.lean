@@ -86,8 +86,7 @@ private theorem int_of_parts {R : Type} [CommRing R] (O : Subring R) {n : Type} 
   have hs1 : (1 - ε - ε') ∈ O := O.sub_mem (O.sub_mem O.one_mem hε) hε'
   have hA : (1 - (ε + ε')) • G = (1 - (ε + ε')) • (1 : Matrix n n R) := by
     have : (1 - (ε + ε')) • (G - 1) = 0 := by rw [sub_smul, one_smul, hs, sub_self]
-    rw [smul_sub, sub_eq_zero] at this
-    exact this
+    rwa [smul_sub, sub_eq_zero] at this
   have hB : (1 - (ε + ε')) • Gi = (1 - (ε + ε')) • (1 : Matrix n n R) := by
     calc (1 - (ε + ε')) • Gi = ((1 - (ε + ε')) • (1 : Matrix n n R)) * Gi := by
           rw [Matrix.smul_mul, Matrix.one_mul]
@@ -156,8 +155,7 @@ private theorem frame_inv_mul_int {D : D7} {n : ℕ} {Λ : Submodule (𝓞 D.hos
     · exact Subring.one_mem _
     · exact Subring.zero_mem _
   have h2 := (hb _).1 h1 i
-  rw [Matrix.mulVec_mulVec, Matrix.mulVec_single_one] at h2
-  exact h2
+  rwa [Matrix.mulVec_mulVec, Matrix.mulVec_single_one] at h2
 
 
 
@@ -183,8 +181,7 @@ private theorem mem_St_of_comp {D : D7} (e : AE D) (he : e * e = e) (V : HSp D)
       split_ifs
       · rw [map_one]
       · rw [map_zero]
-    rw [map_mul, RingHom.map_add (f := _), h1] at h0
-    exact h0
+    rwa [map_mul, RingHom.map_add (f := _), h1] at h0
   have i1 : ∀ i j, (toEAf D e • (b⁻¹ * X * b : GL (Fin V.rank) (EAf D)).1) i j ∈
       Formalism.L2.Herm.intAf D.host.F D.host.E := by
     intro i j; rw [c1]; exact Subring.mul_mem _ hε (frame_inv_mul_int hb hb' i j)

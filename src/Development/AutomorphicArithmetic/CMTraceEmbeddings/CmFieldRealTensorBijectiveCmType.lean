@@ -85,11 +85,9 @@ private theorem family_inj {E : Type} [Field E] [NumberField E] [IsCMField E] (A
     ext x
     exact congrArg (fun g : E →* ℂ => g x) h
   · exfalso
-    refine hval τ τ' fun x => ?_
-    exact congrArg (fun g : E →* ℂ => g x) h
+    exact hval τ τ' fun x => congrArg (fun g : E →* ℂ => g x) h
   · exfalso
-    refine hval τ' τ fun x => ?_
-    exact (congrArg (fun g : E →* ℂ => g x) h).symm
+    exact hval τ' τ fun x => (congrArg (fun g : E →* ℂ => g x) h).symm
   · congr 1
     apply Subtype.ext
     ext x

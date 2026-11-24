@@ -73,8 +73,7 @@ theorem eventually_isSquare_finite (v : HeightOneSpectrum (𝓞 F)) :
   set m : ℤ := WithZero.log (Valued.v (2 : v.adicCompletion F)) with hm
   have hexp : WithZero.exp m = Valued.v (2 : v.adicCompletion F) := WithZero.exp_log h2v
   have hm0 : m ≤ 0 := by
-    rw [← WithZero.exp_le_exp, hexp, WithZero.exp_zero]
-    exact h2le
+    rwa [← WithZero.exp_le_exp, hexp, WithZero.exp_zero]
   set e : ℕ := (-m).toNat with he_def
   have he : Valued.v (2 : v.adicCompletion F) = WithZero.exp (-(e : ℤ)) := by
     have : ((-m).toNat : ℤ) = -m := Int.toNat_of_nonneg (by omega)
@@ -147,8 +146,7 @@ theorem eventually_integral :
   exact ho.mem_nhds (fun v => (one_mem (v.adicCompletionIntegers F) : _))
 
 theorem continuous_eval (v : HeightOneSpectrum (𝓞 F)) :
-    Continuous (fun a : FiniteAdeleRing (𝓞 F) F => a v) := by
-  exact RestrictedProduct.continuous_eval v
+    Continuous (fun a : FiniteAdeleRing (𝓞 F) F => a v) := RestrictedProduct.continuous_eval v
 
 end NormOpen
 

@@ -249,8 +249,7 @@ theorem eq_const_of_val {E : Type} [Field E] [NumberField E] [IsCMField E] {H : 
     have e2 : evR d.Xo₂ d.c₂ d.cδ y = algebraMap d.c₂.F _ a := hval y
     unfold evR at e1 e2 ⊢
     rw [evalAt_add, evalAt_smul, e1, e2, mul_one, map_neg, add_neg_cancel]
-  rw [neg_smul, ← sub_eq_add_neg, sub_eq_zero] at hz
-  exact hz
+  rwa [neg_smul, ← sub_eq_add_neg, sub_eq_zero] at hz
 
 end GlobalTheory.GalRef
 
@@ -337,8 +336,7 @@ theorem exists_root_galRul_isSum : Formalism.MainNotions.ModuliIntegralCharts.H1
   have e1 : ta (M.vol A.μ0) = M.vol A.μ0 := hvol
   have e2 : (fun k => ta (M.ep A.μ0 k)) = M.ep A.μ0 := funext hep
   have k2 := key.2
-  rw [e1, e2] at k2
-  exact k2
+  rwa [e1, e2] at k2
 
 end GlobalTheory.GalRef
 end -- clump:auto
@@ -408,8 +406,7 @@ theorem conjFun_congr {Tp' : Type} {tup' : Tp' → T0} (O : OMDat T.toCore R i T
     (hphi : O.phi (T.cE ((i : ℕ) + 1) O.s0) = O'.phi (T.cE ((i : ℕ) + 1) O'.s0)) (h : ConjFun O κ τ ζ Φ Φ') :
     ConjFun O' κ τ ζ Φ Φ' := by
   unfold ConjFun Expands at h ⊢
-  rw [← hphi]
-  exact h
+  rwa [← hphi]
 
 end Scale
 
@@ -424,8 +421,7 @@ theorem conjFun_lifts_root : Formalism.MainNotions.ModuliIntegralCharts.H1.Chart
   have elev : M.lev2 = (O i).lev2 := by funext g; simp only [OMDat.lev2, hMl]
   have hEq : M.EquivAt (κ i) (T.cE ((i : ℕ) + 1) M.s0) := by
     unfold OMDat.EquivAt
-    rw [GlobalTheory.OneMapAll.phi_eq M (O i) (T.cE ((i : ℕ) + 1)), elev]
-    exact hEqO
+    rwa [GlobalTheory.OneMapAll.phi_eq M (O i) (T.cE ((i : ℕ) + 1)), elev]
   obtain ⟨ζ, z, hζ, -, hser⟩ :=
     GlobalTheory.T.oneMap_every_normalisedFamily_at_coreConstants hC D G Pl0 T0 A T R F κ v₀ O ph hnV hcore hfin ⟨fw⟩ hio hQ i hpins hphase T0 id M hMp hMl hMe
   obtain ⟨nζ, hnζ, hζn⟩ := hζ

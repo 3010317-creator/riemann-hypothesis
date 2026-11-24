@@ -208,8 +208,7 @@ theorem exists_step (hcc : ∀ a, c (c a) = a) (hεε : ε * ε = ε) (hεc : c 
     have e : α' * (β' * b j j) = β' := by linear_combination β' * hα + h1
     rwa [e] at this
   have := hKO _ hβ' _ hβ
-  rw [mul_comm, h2] at this
-  exact this
+  rwa [mul_comm, h2] at this
 
 theorem exists_flag_dual (hcc : ∀ a, c (c a) = a) (hεε : ε * ε = ε) (hεc : c ε = ε) (hεO : ε ∈ O)
     (hOε : ∀ a ∈ O, ε * a = a) (hmul : ∀ a ∈ O, ∀ b ∈ O, a * b ∈ O) (hcO : ∀ a ∈ O, c a ∈ O) (hP : Princ ε O)
@@ -371,8 +370,7 @@ theorem princ_intGrpAt {ε : AE D} (hεε : ε * ε = ε) (hεc : cA D ε = ε) 
   refine ⟨β 0 0, (g5 (fun _ => β 0 0) fun _ => g1 0 0).2 fun i => ?_, β' 0 0, (hε _).1 (g2 0 0), e3, fun a ha => ?_⟩
   · rw [ev, mul_comm, e3]; exact hεI
   · have := (g5 (fun _ => a) fun _ => (hε _).2 (h1 a ha)).1 ha 0
-    rw [ev] at this
-    exact this
+    rwa [ev] at this
 
 theorem exists_flag_basis : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (v : Pl D) (ε : AE D) (hεε : ε * ε = ε) (hεc : cA D ε = ε) (hεI : ε ∈ intAt D (· = v)) (hε : ∀ a, a ∈ idAt D (· = v) ↔ ε * a = a), Tame D v → ∀ M : AddSubgroup (Fin S.rank → AE D), IsSDAt S v M → ∃ b : Mx D ρ ρ, (∀ i j, j < i → b i j = 0) ∧ (∀ i j, b i j ∈ idAt D (· = v)) ∧ (∀ i, (fun k => (d.jX ⬝ b) k i) ∈ M) ∧ ∃ c' : Mx D S.rank ρ, (∀ i, (fun k => c' k i) ∈ M) ∧ adj c' ⬝ (gA S ⬝ (d.jX ⬝ b)) = ε • (1 : Mx D ρ ρ) := by
   intro D S S₀ ρ d v ε hεε hεc hεI hε ht M ⟨hsupp, ⟨m, hm, hmul⟩, hdual⟩
@@ -841,8 +839,7 @@ theorem GlobalTheory.IwaPlace.exists_grpAt_of_dual_frames : ∀ (D : D7) (S S₀
       (by rw [d.ofImages_jX h, hE]; exact smul_shift hεε (by rw [← Matrix.smul_mul, hjb]) _)
       (by rw [d.wittDecomp_ofImages_inclAnisotropic h, sub_sub_cancel_left, smul_neg, ← Matrix.smul_mul, hjb])
       (by rw [d.ofImages_jY h]; exact smul_shift hεε (by rw [← Matrix.smul_mul, hc]) _)
-    refine (mem_congGrp_iff S _ _).2 fun i j => (hε _).2 ?_
-    exact congrFun (congrFun key i) j
+    exact (mem_congGrp_iff S _ _).2 fun i j => (hε _).2 (congrFun (congrFun key i) j)
   · rw [mulVec_colMul, d.ofImages_jX h, hE]
     funext k
     rw [Matrix.add_apply, Matrix.mul_diagonal, Matrix.smul_apply, smul_eq_mul]
@@ -945,8 +942,7 @@ theorem _root_.GlobalTheory.T.exists_unitarySupportedAtPlace_of_dual_isotropic_f
       (by rw [d.ofImages_jX h, hE]; exact smul_shift hεε (by rw [← Matrix.smul_mul, hjb]) _)
       (by rw [d.wittDecomp_ofImages_inclAnisotropic h, sub_sub_cancel_left, smul_neg, ← Matrix.smul_mul, hjb])
       (by rw [d.ofImages_jY h]; exact smul_shift hεε (by rw [← Matrix.smul_mul, hc]) _)
-    refine (mem_congGrp_iff S _ _).2 fun i j => (hε _).2 ?_
-    exact congrFun (congrFun key i) j
+    exact (mem_congGrp_iff S _ _).2 fun i j => (hε _).2 (congrFun (congrFun key i) j)
   · rw [mulVec_colMul, d.ofImages_jX h, hE]
     funext k
     rw [Matrix.add_apply, Matrix.mul_diagonal, Matrix.smul_apply, smul_eq_mul]

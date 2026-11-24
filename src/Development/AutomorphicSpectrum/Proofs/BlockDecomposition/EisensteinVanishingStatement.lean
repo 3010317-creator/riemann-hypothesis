@@ -130,8 +130,7 @@ theorem char_integral {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F 
       apply hξ
       exact Matrix.ext fun i j => incA_injective ((congrFun (congrFun h i) j).trans (map_zero (incA D)).symm)
     obtain ⟨y₀, hy₀⟩ : ∃ y₀, pairing V.gram ψ ξ' y₀ ≠ 1 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hne (h2 ξ' hrat hc)
     have hper : ∀ γ ∈ ratMx D V.rank n, ∀ a, pairing V.gram ψ ξ' (γ + a) = pairing V.gram ψ ξ' a := by
       intro γ hγ a
@@ -156,8 +155,7 @@ theorem zero : PositivityTheory.GramSchwartzFunctions.EC.Zero := by
     let g : Matrix (Fin V.rank) (Fin n) D.host.E → ratMx D V.rank n := fun ξ => ⟨ξ.map (incA D), ξ, rfl⟩
     have hg : Function.Injective g := by
       intro a b h
-      have h' := congrArg Subtype.val h
-      exact Matrix.ext fun i j => incA_injective (congrFun (congrFun h' i) j)
+      exact Matrix.ext fun i j => incA_injective (congrFun (congrFun (congrArg Subtype.val h) i) j)
     exact hg.countable
   haveI : IsFiniteMeasure (μ.restrict 𝓕) :=
     isFiniteMeasure_restrict.2 (by rw [hμ.2.2]; exact ENNReal.one_ne_top)
@@ -174,8 +172,7 @@ theorem zero : PositivityTheory.GramSchwartzFunctions.EC.Zero := by
   have hsum : Summable fun ξ => ∫ y, ‖F ξ y‖ ∂(μ.restrict 𝓕) := by
     simp only [hnorm, integral_const, smul_eq_mul]
     have hr : (μ.restrict 𝓕).real Set.univ = 1 := by simp [Measure.real, hμ.2.2]
-    simp only [hr, one_mul]
-    exact GlobalTheory.SiegelWeilLitCompare.summable_rat hθ ⟨Φ, hΦ⟩
+    simpa only [hr, one_mul] using GlobalTheory.SiegelWeilLitCompare.summable_rat hθ ⟨Φ, hΦ⟩
   show Φ 0 = ∫ y in 𝓕, ∑' ξ, F ξ y ∂μ
   rw [← integral_tsum_of_summable_integral_norm hint hsum]
   simp only [hF, integral_mul_const, char_integral hψ V hμ]

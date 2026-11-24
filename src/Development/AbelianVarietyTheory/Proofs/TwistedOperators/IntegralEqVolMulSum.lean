@@ -133,8 +133,7 @@ theorem comap_finPt (V : HSp D) (K : Subgroup (GL (Fin V.rank) (Lev.EAf D))) :
 theorem eq_one_of_finPt (V : HSp D) {γ : GA D V} (hγ : γ ∈ GQ V) (h : finPt V γ = 1) : γ = 1 := by
   refine (GlobalTheory.DefFree.AdelCls.adelic_classes D V).2.2.2.1 γ hγ (Subtype.ext ?_)
   have := congrArg (finG V) h
-  rw [finG_finPt, map_one] at this
-  exact this
+  rwa [finG_finPt, map_one] at this
 
 theorem mem_ratFin (V : HSp D) (x : GfC V) : x ∈ ratFin V ↔ ∃ γ ∈ GQ V, finPt V γ = x := by
   constructor
@@ -213,8 +212,7 @@ theorem finCl_regroup (V : HSp D) (hV : ∀ φ : D.host.E →+* ℂ, (V.gram.map
     (fun γ hγ h => by rw [map_mul]; exact hl _ ((mem_ratFin V _).2 ⟨γ, hγ, rfl⟩) _)
     (fun k hk h => by rw [map_mul]; exact hr _ hk _)
   simp only [card_stab, comap_finPt, ha, ha''] at key
-  rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]
-  exact key
+  rwa [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]
 
 end GlobalTheory.ClassRegroup
 
@@ -351,8 +349,7 @@ theorem finCl_regroup_pi {ι : Type} [Fintype ι] [DecidableEq ι] (V : ι → H
     (fun v g => (∀ γ ∈ ratFin (V v), ∀ z, g (γ * z) = g z) ∧ ∀ k ∈ (K v).comap (finG (V v)), ∀ z, g (z * k) = g z) ?_ f hf
   rintro v g ⟨hl, hr⟩
   have := (finCl_regroup (V v) (hV v) (hK v) (hK'' v) (hle v) (hμ v) g hl hr).2
-  rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype] at this
-  exact this
+  rwa [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype] at this
 
 theorem finCl_regroup_prod {ι κ : Type} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ] (V : ι → HSp D) (V' : κ → HSp D)
     (hV : ∀ v, ∀ φ : D.host.E →+* ℂ, ((V v).gram.map φ).PosDef) (hV' : ∀ v, ∀ φ : D.host.E →+* ℂ, ((V' v).gram.map φ).PosDef)

@@ -97,8 +97,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (D : Deg
       exact ((Scheme.ΓSpecIso (CommRingCat.of (FractionRing R))).inv_hom_id_apply _).symm
     · rw [Units.val_mul, hs, e, map_mul]
   refine ⟨v, ?_⟩
-  rw [mul_comm]
-  exact h2
+  rwa [mul_comm]
 
 end GlobalTheory.PsiCoordRescaleLocal
 end -- clump:auto
@@ -359,8 +358,7 @@ theorem main (W R : Type) [CommRing W] [IsDomain W] [CommRing R] [IsDomain R] [I
         refine Finset.prod_congr rfl fun j _ => ?_
         have h := congrArg Units.val (map_zpow (Units.map (algebraMap R (FractionRing R)).toMonoidHom) (u j)
           ((M : ℤ) * ε' j y (w0 • y)))
-        rw [Units.val_zpow_eq_zpow_val] at h
-        rw [Units.coe_map, Units.coe_map] at h
+        rw [Units.val_zpow_eq_zpow_val, Units.coe_map, Units.coe_map] at h
         exact h.symm
       · rw [map_prod]
         refine Finset.prod_congr rfl fun i _ => ?_
@@ -370,8 +368,7 @@ theorem main (W R : Type) [CommRing W] [IsDomain W] [CommRing R] [IsDomain R] [I
     · show ((M : ℤ) • δ' i) y y = 2 * ((n i : ℕ) : ℤ)
       rw [LinearMap.smul_apply, LinearMap.smul_apply, smul_eq_mul, hn i, diag_eq_two_mul (hδ'b i) hw y]
       ring
-    · rw [Units.val_mul, _root_.mul_assoc]
-      exact hu'
+    · rwa [Units.val_mul, _root_.mul_assoc]
 
   have hpos' : ∀ χ : D'.X, χ ≠ 0 → 0 < ∑ i, δ' i χ χ := fun χ hχ =>
     hdef (e χ) ((LinearEquiv.map_ne_zero_iff e).2 hχ)
@@ -380,8 +377,7 @@ theorem main (W R : Type) [CommRing W] [IsDomain W] [CommRing R] [IsDomain R] [I
     obtain ⟨w, n, hn, hc⟩ := hmono χ
     rw [GlobalTheory.PeriodFormEdge.psiIn_iff hc]
     obtain ⟨i, hi⟩ : ∃ i, 0 < δ' i χ χ := by
-      by_contra h
-      push Not at h
+      by_contra! h
       have := Finset.sum_nonpos fun i (_ : i ∈ Finset.univ) => h i
       linarith [hpos' χ hχ]
     have hni : 0 < n i := by
@@ -401,8 +397,7 @@ theorem main (W R : Type) [CommRing W] [IsDomain W] [CommRing R] [IsDomain R] [I
     obtain ⟨w, k, hk, hc⟩ := hmono χ
     have hχ' : ¬ (w : R) * ∏ i, t i ^ k i ∈ I ^ n := fun h => hχ ((GlobalTheory.PeriodFormEdge.psiIn_iff hc _).2 h)
     show B χ χ ≤ 2 * (n : ℤ)
-    by_contra hlt
-    push Not at hlt
+    by_contra! hlt
     apply hχ'
     refine Ideal.mul_mem_left _ _ ?_
     have h1 : ∀ i, (M : ℤ) * δ' i χ χ = 2 * (k i : ℤ) := fun i => (hsm i χ).symm.trans (hk i)
@@ -433,8 +428,7 @@ theorem main (W R : Type) [CommRing W] [IsDomain W] [CommRing R] [IsDomain R] [I
   have hnt : Nontrivial D'.X := by
     obtain ⟨i, hi⟩ := hne
     obtain ⟨y, hy⟩ : ∃ y : D₀.X, y ≠ 0 := by
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hi (LinearMap.ext₂ fun y z => by simp [h y])
     exact ⟨⟨e.symm y, 0, by simpa using hy⟩⟩
   refine ⟨hPE, hTB, hPI, hfin, ⟨oa1, fun a => ?_, hPW⟩, hmono, ⟨τ₁, fun a b => (hτ₁ a b).2, hFB, hTI⟩, hnt, ⟨⟨_, hPE, hTB, hPI, hfin⟩, rfl⟩⟩

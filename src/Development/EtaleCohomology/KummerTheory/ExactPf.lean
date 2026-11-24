@@ -124,8 +124,7 @@ theorem Exact_of (hD : Dict) (hG : Glue) (hF : Flasque) : Exact := by
     obtain ⟨r', hr'⟩ := hF R ((res R F).X (n - 1)) a r
     change Sec.res a r' = r at hr'
     have hu1 : Sec.res a (u0 - Sec.map ((res R F).d (n - 1) n) r') = Sec.res b v0 := by
-      rw [rsub]
-      rw [← map_res, hr', hr]
+      rw [rsub, ← map_res, hr', hr]
       abel
     obtain ⟨z, hzf, hzg⟩ := (hG R ((res R F).X n) a b f g hmv).2 _ v0 hu1
     have hdz : Sec.map ((res R F).d n (n + 1)) z = 0 := by
@@ -204,14 +203,12 @@ theorem Exact_of (hD : Dict) (hG : Glue) (hF : Flasque) : Exact := by
       · have h1 : IsCls (pull R (sch.map a) F n u) (Sec.res a u0) := (hD R (res R F) U n).2.2.2.2 a u u0 hu0
         have h2 : IsCls (pull R (sch.map b) F n v) (Sec.res b v0) := (hD R (res R F) V n).2.2.2.2 b v v0 hv0
         have h3 := ((hD R (res R F) W n).2.2.2.1 _ _ _ _ h1 ((hD R (res R F) W n).2.2.2.1 _ _ _ _ h2 h2).2).1
-        rw [← sub_eq_add_neg, ← sub_eq_add_neg, ← hs', ← rsub] at h3
-        exact h3
+        rwa [← sub_eq_add_neg, ← sub_eq_add_neg, ← hs', ← rsub] at h3
       · obtain ⟨y, hy⟩ := (hD R (res R F) X (n + 1)).1 (-Sec.map ((res R F).d n (n + 1)) t)
           (by rw [mneg, dd, neg_zero])
         have hy0 : y = 0 := ((hD R (res R F) X (n + 1)).2.2.1 _ _ hy).2.mpr
           (tr (res R F) n (n + 1 - 1) (n + 1) (by ring) _ ⟨-t, mneg _ _⟩)
-        rw [hy0] at hy
-        exact hy
+        rwa [hy0] at hy
       · rw [rneg, ← map_res, htf, msub, hu0c, zero_sub]
       · rw [rneg, ← map_res, htg, hv0c, neg_zero]
 

@@ -115,8 +115,7 @@ theorem chars_of_link : ∀ {K : Ctx} {B B' : Base} {f : Top.Fr B.toPre} {f' : T
   have hC' : x'.m.z.R.toLevCh.C = Top.Fr.at (w'.st x'.o.Z) f' := x'.m.z.lev.C.trans (by rw [w'.C_eq])
   have hs := x.m.z.lev.is
   have hs' := x'.m.z.lev.is
-  have hm : (Dof x').R.m = (Dof x).R.m := by
-    exact congrArg (fun p : Pre => p.R.m) hP
+  have hm : (Dof x').R.m = (Dof x).R.m := congrArg (fun p : Pre => p.R.m) hP
   have hmu0 : ∀ (i : Fin (Dof x).R.m) (i' : Fin (Dof x').R.m), (i : ℕ) = i' →
       HEq (x'.m.z.R.toLevCh.C.mu0 i') (x.m.z.R.toLevCh.C.mu0 i) := by
     intro i i' h
@@ -907,8 +906,7 @@ theorem sel_eq_of_conj {X : Formalism.L2.Col.Fields} (hX : X.Ok) {sel : HeightOn
     rw [← hs u']
     obtain ⟨c', hc', e⟩ := h _ hy
     have : c' = algebraMap (𝓞 X.F) (𝓞 X.E) y := RingOfIntegers.ext (e.trans (hX.star_F (y : X.F)))
-    rw [this] at hc'
-    exact hc'
+    rwa [this] at hc'
   rw [HeightOneSpectrum.ext (u.isMaximal.eq_of_le u'.isPrime.ne_top hle)]
 
 theorem unrAt_mul_iff {L : Type} [Field L] [NumberField L] {χ χ' : HChar L} {v : HeightOneSpectrum (𝓞 L)} (h' : χ'.UnrAt v) :
@@ -1515,8 +1513,7 @@ theorem cusp_type_eq_dat {B B' : Base} {f : Top.Fr B.toPre} {f' : Top.Fr B'.toPr
   have M := cusp_type_eq_of_heq hH hN.l hN.c hN.Dw hN.Xo hN.U ha hκ.2.2 hj1
   have hn : z'.R.nW j' = z.R.nW j :=
     (congrFun (eq_of_heq hN.nW) j').trans (congrArg z.R.nW (Fin.ext hj.symm))
-  refine ⟨hn.symm, ?_⟩
-  exact (by with_unfolding_all exact (M :))
+  exact ⟨hn.symm, (by with_unfolding_all exact (M :))⟩
 
 
 
@@ -1709,8 +1706,7 @@ theorem formsCl_of_link : ∀ {K : Ctx} {B B' : Base} {f : Top.Fr B.toPre} {f' :
   have hphi := fun j j' h => (GlobalTheory.T.linkedStates_rationalForms_correspond_coordinatewise x x' ι e g g' l hg hg' a a' j j' h)
   choose hn φ hφ using hphi
   refine ⟨fun j j' h => { φ := φ j j' h, alg := halg, smul := ?_, mk_iff := ?_, rho := ?_, chi := ?_ }, ?_⟩
-  · intro c y
-    exact coord_smul ι (hn j j' h) (φ j j' h) (hφ j j' h) (halg c) y
+  · exact fun c y => coord_smul ι (hn j j' h) (φ j j' h) (hφ j j' h) (halg c) y
   · intro y
     exact GlobalTheory.T.linkedStates_supLattice_mem_iff_coordinateImage x x' ι e g g' l hg hg' a a' j j' h y.1 (φ j j' h y).1 (hφ j j' h y) y.2
   · intro u y z

@@ -173,9 +173,7 @@ theorem norm_eq_of_samePlace (τ φ : E →+* Om l) (w : HeightOneSpectrum (𝓞
     have := congrArg Real.log hl
     rw [Real.log_rpow hpos] at this
     exact (mul_eq_right₀ hL).1 this
-  have hx := congrFun hce x
-  simp only [PI.CompDegEF.normAbv_apply, hc1, Real.rpow_one] at hx
-  exact hx
+  simpa only [PI.CompDegEF.normAbv_apply, hc1, Real.rpow_one] using congrFun hce x
 
 end GlobalTheory.GalFirstClause.Emb
 

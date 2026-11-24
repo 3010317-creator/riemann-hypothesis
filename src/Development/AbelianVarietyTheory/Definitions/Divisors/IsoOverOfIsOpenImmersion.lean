@@ -175,8 +175,7 @@ theorem restr_injective_of_dense [IsReduced Y] (h : O' ≤ O) (hd : Dense (O' : 
 def IsoOver (r : T ⟶ Y) (O : Y.Opens) : Prop := ∀ V ≤ O, IsIso (r.app V)
 
 theorem isoOver_of_isOpenImmersion (r : T ⟶ Y) [IsOpenImmersion r] (h : O ≤ r.opensRange) : IsoOver r O := by
-  intro V hV
-  exact r.isIso_app V (hV.trans h)
+  exact fun V hV => r.isIso_app V (hV.trans h)
 
 theorem isoOver_of_isIso (r : T ⟶ Y) [IsIso (r ∣_ O)] : IsoOver r O := by
   intro V hV
@@ -186,8 +185,7 @@ theorem isoOver_of_isIso (r : T ⟶ Y) [IsIso (r ∣_ O)] : IsoOver r O := by
     rw [← morphismRestrict_ι]
     exact isoOver_of_isOpenImmersion _ (by rwa [Scheme.Hom.opensRange_comp_of_isIso, Scheme.Opens.opensRange_ι]) V le_rfl
   rw [Scheme.Hom.comp_app] at hc
-  have h2 := hι (r ⁻¹ᵁ V) (r.preimage_mono hV)
-  exact @IsIso.of_isIso_comp_right _ _ _ _ _ _ _ h2 hc
+  exact @IsIso.of_isIso_comp_right _ _ _ _ _ _ _ (hι (r ⁻¹ᵁ V) (r.preimage_mono hV)) hc
 
 theorem IsoOver.bijective {r : T ⟶ Y} (h : IsoOver r O) {V : Y.Opens} (hV : V ≤ O) {W : T.Opens}
     (e : W ≤ r ⁻¹ᵁ V) (e' : r ⁻¹ᵁ V ≤ W) : Function.Bijective (r.appLE V W e).hom := by
@@ -219,8 +217,7 @@ theorem IsoOver.bijective_pull {r : T ⟶ Y} (h : IsoOver r O) (hB : B.IsLB) {W 
     refine fun_ext_ger fun z hz => ?_
     rw [ger_appLE]
     refine (germ_apply (pIdx B r i) z hz.1 hz.2 (H0.pull r e f)).symm.trans ?_
-    refine (germ_pull r e (pIdx B r i) z hz.1 hz.2 f).trans ?_
-    exact congrArg _ (germ_apply i (r z) _ _ f)
+    exact (germ_pull r e (pIdx B r i) z hz.1 hz.2 f).trans (congrArg _ (germ_apply i (r z) _ _ f))
   refine ⟨fun f g hfg => extY f g fun i => (bij i).1 ?_, fun g => ?_⟩
   · rw [← hloc, ← hloc, hfg]
   choose a ha using fun i => (bij i).2 (g.loc (pIdx B r i))
@@ -557,8 +554,7 @@ theorem nowhereZero_pow (p : Y ⟶ Sp k) {O : Y.Opens} (hO : ∀ y ∈ O, y ∉ 
   have hi : y ∈ Δ.P.U (j PUnit.unit) := (mem_zpow_U (j := j PUnit.unit)).1 hj
   have e := Δ.germ_pow p n (j PUnit.unit) y hy hi hj
   have u := ((isUnit_ger_iff Δ.t hi).2 ((Δ.mem_nonzeroLocus y).2 (hO y hy))).pow n
-  rw [← e] at u
-  exact u
+  rwa [← e] at u
 
 end Cartier
 
@@ -568,8 +564,7 @@ namespace Cartier
 
 abbrev moving : LB T := LB.div (B.pull r) Δ.P
 
-theorem isLB_moving : Δ.moving.IsLB := by
-  exact LB.isLB_div (LB.isLB_pull hB r) Δ.isLB
+theorem isLB_moving : Δ.moving.IsLB := LB.isLB_div (LB.isLB_pull hB r) Δ.isLB
 
 def incl (O : T.Opens) : H0 (r ≫ p) Δ.moving O →ₗ[k] H0 (r ≫ p) (B.pull r) O :=
   (divChart (LB.isLB_pull hB r) Δ.isLB).mul (H0.ofSec _ O Δ.t)
@@ -633,16 +628,14 @@ theorem iSup_nonzeroLocus {ι : Type} {v : ι → W} (hv : Submodule.span k (Set
     have e : ger z hj.2 (Δ.t.f j.2) * (x - 1) = 0 := by rw [mul_sub, hx', mul_one, sub_self]
     exact sub_eq_zero.1 ((mul_left_mem_nonZeroDivisors_eq_zero_iff hn).1 e)
   have htop : J = ⊤ := (Ideal.eq_top_iff_one _).2 (h1 ▸ hx)
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have hle : J ≤ IsLocalRing.maximalIdeal _ := by
     rw [Ideal.span_le]
     rintro _ ⟨i, rfl⟩
     rw [SetLike.mem_coe, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
     intro hu
     apply hne i
-    rw [← isUnit_ger_iff _ hj, ger_toSec]
-    exact hu
+    rwa [← isUnit_ger_iff _ hj, ger_toSec]
   rw [htop] at hle
   exact (IsLocalRing.maximalIdeal.isMaximal _).ne_top (top_le_iff.1 hle)
 
@@ -705,8 +698,7 @@ theorem existsUnique_lift {S : Scheme.{0}} (x : S ⟶ Y) (hx : ⊤ ≤ x ⁻¹�
       rintro _ ⟨s, rfl⟩
       rw [Scheme.Opens.range_ι]
       have h1 : x.base s ∈ U := hx (show s ∈ (⊤ : S.Opens) from trivial)
-      rw [← hz] at h1
-      exact h1
+      rwa [← hz] at h1
     let z' := IsOpenImmersion.lift M.opn.ι z hr'
     have hz' : z' ≫ M.opn.ι = z := IsOpenImmersion.lift_fac _ _ _
     have e : z' ≫ (M.σ ∣_ U) = x' := by

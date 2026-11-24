@@ -147,8 +147,7 @@ theorem UpperTheory.eval_localElement_matrix_eq_one_of_prime_not_dvd :
         (fun a ha => by
           change ‖ev (a ⊗ₜ[D.host.F] D.sp.cm.sig 1)‖ ≤ 1
           rw [map_one]; exact h a ha) P hP e h1 h2
-      rw [RingHom.map_add (f := _), RingHom.map_add (f := _), a1, finPart_cA, zero_add]
-      exact a2
+      rwa [RingHom.map_add (f := _), RingHom.map_add (f := _), a1, finPart_cA, zero_add]
     · refine ev_idem ev h P hP f ?_ h2
       rw [h1, ← RingHom.map_mul, placeIdem hε]
   ext i j
@@ -358,8 +357,7 @@ private theorem core {l : ℕ} [Fact l.Prime] {ι : Type} [Fintype ι] {n : ℕ}
     have h1 : Φ (wtOp _ n mu sh (A (e x) * bs) (f (e.symm (e x)))) = 0 := congrFun h (e x)
     rw [e.symm_apply_apply, ← Φ.map_zero] at h1
     have h2 := congrArg (wtOp _ n mu sh (A (e x) * bs)⁻¹) (hΦ h1)
-    rw [← Module.End.mul_apply, ← wtOp_mul, inv_mul_cancel, wtOp_one, map_zero] at h2
-    exact h2
+    rwa [← Module.End.mul_apply, ← wtOp_mul, inv_mul_cancel, wtOp_one, map_zero] at h2
   · show Φ _ = wtOp _ _ _ _ _ (Φ _)
     rw [← hΦw, map_mul, map_mul, hf1 _ hγ, mul_assoc, wtOp_mul, Module.End.mul_apply]
   · show Φ _ = c • Φ _

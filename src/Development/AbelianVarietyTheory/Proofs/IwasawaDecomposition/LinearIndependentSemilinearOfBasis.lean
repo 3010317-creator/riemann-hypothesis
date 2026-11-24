@@ -224,8 +224,7 @@ theorem linearIndependent_semilinear_of_basis {K : Type} [Field K] (e : K →+* 
   have h6 : (fun i => j (v i)) = (⇑S.subtype ∘ fun i => j' (b' i)) ∘ f := by
     funext i
     simp [b', f, j', Module.Basis.extend_apply_self]
-  rw [h6]
-  exact h5
+  rwa [h6]
 
 def coordForm {K : Type} [Field K] (e : K →+* ℂ) {W : Type} [AddCommGroup W] [Module ℂ W] {n : ℕ}
     (c : Fin n → W) : (Fin n → K) →ₛₗ[e] W where
@@ -271,8 +270,7 @@ theorem ramForm_basis {B : Base} {C : Cols B} (W : RowsRest B C) (u : B.Word) {�
       (b.linearIndependent.map' (C.fm u).ramSub.subtype (Submodule.ker_subtype _))
     have h6 : (⇑g ∘ fun i => ramForm W u (b i)) =
         fun i => (C.fm u).emb 0 ((b i : (C.fm u).ramSub) : ((C.fm u).lat 0).V) := funext fun i => hg _
-    rw [h6]
-    exact this
+    rwa [h6]
   · set S := Submodule.span ℂ (Set.range (fun i => ramForm W u (b i))) with hS
     have hmem : ∀ x, ramForm W u x ∈ S := by
       intro x

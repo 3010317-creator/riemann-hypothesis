@@ -83,8 +83,7 @@ theorem cosetIn_eqG (q : PtAt R sel mu cst u j) {y : Sp X.E (R.N j)} (hy0 : y �
       exact (hf.1 _).1 (by rw [LinearEquiv.apply_symm_apply]; exact hY y' hy' P.1 hP)
     have := add_mem hz h1
     rwa [sub_add_sub_cancel] at this
-  · intro hz
-    exact ⟨y, hy0, hz⟩
+  · exact fun hz => ⟨y, hy0, hz⟩
 
 theorem bar_eqG (q : PtAt R sel mu cst u j) {y : Sp X.E (R.N j)}
     (hy : ∀ w ∈ Pr.vGs, ((qOf w : ℕ) : X.E) • y ∈ Formalism.HermitianLatticesTheory.localization₂ w.asIdeal q.1.1.deco.1.N) (hy0 : y ∈ q.1.2)
@@ -148,8 +147,7 @@ theorem cosetIn_eq_iff_bar_cq : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {se
         exact this
   · have e : ∀ p : PtAt R sel mu cst u j, p.1.2 = ∅ := fun p => by
       have := p.2
-      rw [ysAt_ys_of_ne sel mu cst h] at this
-      exact this
+      rwa [ysAt_ys_of_ne sel mu cst h] at this
     have h1 : ∀ p : PtAt R sel mu cst u j, cosetIn p = fun _ => ∅ := fun p => by
       funext P
       ext z

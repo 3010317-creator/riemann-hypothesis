@@ -108,8 +108,7 @@ theorem UpperTheory.V.Cu.autOf4_of (hne : AlNe) : AutOf4 := by
   have hLa : IsAbelianGalois ℚ T.L := by
     have h := @GroundTheory.Global.isAbelianGalois_sup ℚ Ω _ _ _ _ T.F T.K
       T.nF.to_finiteDimensional T.nK.to_finiteDimensional T.abF hK
-    rw [← T.hL] at h
-    exact h
+    rwa [← T.hL] at h
   obtain ⟨π, hreg, hatt⟩ := d.aut T.L hLa hkL
     (goodOf4 Ω l d.c d.D d.T₀ T d.ctx.1 hT d.K' d.quad.splS d.quad.off d.w d.θ d.wp d.wsp d.wunr d.k _ d.ρ d.c₁ d.h d.ρ₁ d.x d.mod) hL
   refine ⟨π, hreg, ?_⟩
@@ -122,5 +121,4 @@ theorem UpperTheory.V.Cu.autOf4_of (hne : AlNe) : AutOf4 := by
     simp only [MonoidHom.inv_apply, MonoidHom.comp_apply]
     rw [show resQ T.F (resLe T.F_le g) = resQ T.L g from AlgEquiv.ext fun _ => rfl, Units.inv_mul, one_smul]
     rfl
-  rw [key]
-  exact hatt
+  rwa [key]

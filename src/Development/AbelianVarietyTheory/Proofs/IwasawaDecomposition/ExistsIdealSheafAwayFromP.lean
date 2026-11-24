@@ -98,8 +98,7 @@ theorem comapIdealTopLe {X W : Scheme.{0}} [IsAffine W] (J : X.IdealSheafData) (
     rw [e, Scheme.IdealSheafData.ofIdealTop_ideal]
     have h2 := Ideal.mem_map_of_mem (g.appLE (X.basicOpen t) B' hB'D).hom h1
     rw [Ideal.map_map, ← CommRingCat.hom_comp, Scheme.Hom.map_appLE] at h2
-    rw [Ideal.map_map, ← CommRingCat.hom_comp, Scheme.Hom.appLE_map]
-    exact h2
+    rwa [Ideal.map_map, ← CommRingCat.hom_comp, Scheme.Hom.appLE_map]
   have := key ⟨⊤, isAffineOpen_top W⟩
   rw [Scheme.IdealSheafData.ofIdealTop_ideal] at this
   refine this.trans (le_of_eq ?_)
@@ -121,8 +120,7 @@ theorem comapIdealAffine : ∀ {X W : Scheme.{0}} (J : X.IdealSheafData) (g : W 
       Ideal.mem_comap, Ideal.map_map, ← CommRingCat.hom_comp, Scheme.Hom.appLE_comp_appLE]
     exact h2
   · rw [Ideal.map_le_iff_le_comap]
-    intro a ha
-    exact (GlobalTheory.Cartier.comap_le_iff J g _).1 le_rfl U a ha A h
+    exact fun a ha => (GlobalTheory.Cartier.comap_le_iff J g _).1 le_rfl U a ha A h
 
 theorem kerIdealAffine : ∀ (X : Scheme.{0}) [IsLocallyNoetherian X] (U : X.Opens) (hU : IsAffineOpen U) (I : Ideal Γ(X, U)), ∃ J : X.IdealSheafData, J.ideal ⟨U, hU⟩ = I ∧ ∀ N : ℕ, (N : Γ(X, U)) ∈ I → ∀ V : X.affineOpens, (N : Γ(X, V.1)) ∈ J.ideal V := by
   intro X _ U hU I
@@ -200,8 +198,7 @@ theorem exists_dvd_of_span_mul_eq {R : Type*} [CommRing R] (P : Ideal R) [P.IsPr
     conv_rhs => rw [hfc]
     exact Finset.sum_congr rfl fun k _ => (ht k k).symm
   obtain ⟨k, hk⟩ : ∃ k, t k k ∉ P := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact (Ideal.IsPrime.ne_top inferInstance) ((Ideal.eq_top_iff_one _).2
       (hsum ▸ Ideal.sum_mem _ fun k _ => hcon k))
   refine ⟨k, t k k, hk, fun k' => ⟨t k k', ?_⟩⟩

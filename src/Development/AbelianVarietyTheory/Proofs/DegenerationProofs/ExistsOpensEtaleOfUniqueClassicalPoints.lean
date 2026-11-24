@@ -133,8 +133,7 @@ theorem exists_factor_of_lift_fromSpecResidueField {Y W : Scheme.{0}} (h : Y ⟶
     exact (Category.id_comp _).symm
   have h2 : φ ≫ ψ = 𝟙 _ := by
     ext z
-    apply φ.hom.injective
-    exact congr($h1 (φ z))
+    exact φ.hom.injective (congr($h1 (φ z)))
   refine ⟨ψ ≫ σ, ?_⟩
   rw [← hσ, ← hφ, ← Spec.map_comp_assoc, ← Category.assoc φ, h2, Category.id_comp]
 
@@ -265,8 +264,7 @@ theorem exists_opens_etale_of_finite_etale_localisation
   · rw [Category.assoc, sq, morphismRestrict_ι_assoc]
   · rw [← cancel_mono (f ⁻¹ᵁ T').ι]
     exact hmono _ _ _ (by simpa only [Category.assoc] using e₁) (hcomp e₂)
-  · rw [Scheme.Hom.comp_apply]
-    exact hv
+  · rwa [Scheme.Hom.comp_apply]
   · have := hgeo K _ _ (hcomp e) (by
       rw [Category.assoc, ← morphismRestrict_ι, ← Category.assoc, Scheme.Hom.comp_apply, hc,
         ← Scheme.Hom.comp_apply, morphismRestrict_ι, Scheme.Hom.comp_apply]
@@ -316,8 +314,7 @@ theorem exists_opens_etale_of_unique_classical_points :
     simp only [Category.assoc, hξ'] at e'
     have e'' : CommRingCat.ofHom β ≫ σ = CommRingCat.ofHom β ≫ τ := by
       apply Spec.map_injective
-      rw [Spec.map_comp, Spec.map_comp]
-      exact e'
+      rwa [Spec.map_comp, Spec.map_comp]
     have : σ = τ := by
       ext z
       obtain ⟨z, rfl⟩ := hβ z

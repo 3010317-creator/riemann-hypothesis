@@ -104,8 +104,7 @@ private lemma conv_eq (s₁ : B.Tw) {f₁ : G → ℂ} (f₂ : G → ℂ) (h₁ 
     s₁.conv f₁ f₂ y = ∑ x ∈ h₁.fin.toFinset, f₁ (s₁.θ x.out) * f₂ (x.out⁻¹ * s₁.θ.symm y) := by
   refine finsum_eq_sum_of_support_subset _ ?_
   intro x hx
-  simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-  exact left_ne_zero_of_mul hx
+  simpa only [Set.Finite.coe_toFinset, Set.mem_setOf_eq] using left_ne_zero_of_mul hx
 
 private lemma conv_test (s₁ s₂ : B.Tw) {f₁ f₂ : G → ℂ} (h₁ : s₁.IsTest f₁) (h₂ : s₂.IsTest f₂) :
     (s₁.mul s₂).IsTest (s₁.conv f₁ f₂) := by
@@ -183,14 +182,10 @@ private lemma opF_comp (s₁ s₂ : B.Tw) {f₁ f₂ : G → ℂ} (h₁ : s₁.I
         simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
         exact right_ne_zero_of_mul (left_ne_zero_of_smul hz)
       · intro z hz
-        simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-        exact left_ne_zero_of_smul hz
+        simpa only [Set.Finite.coe_toFinset, Set.mem_setOf_eq] using left_ne_zero_of_smul hz
     · intro x hx
-      simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-      exact left_ne_zero_of_smul hx
-  · intro x _
-    refine (hfin x.out).subset fun z hz => ?_
-    exact right_ne_zero_of_mul (left_ne_zero_of_smul hz)
+      simpa only [Set.Finite.coe_toFinset, Set.mem_setOf_eq] using left_ne_zero_of_smul hx
+  · exact fun x _ => (hfin x.out).subset fun z hz => right_ne_zero_of_mul (left_ne_zero_of_smul hz)
 
 end UpperTheory.V.Z.Sym.Tf
 
@@ -254,8 +249,7 @@ private theorem dc_one {U : Subgroup G} {y : G} : y ∈ DC U (1 : G) ↔ y ∈ U
   constructor
   · rintro ⟨p, hp, q, hq, rfl⟩
     simpa using U.mul_mem hp hq
-  · intro h
-    exact ⟨y, h, 1, U.one_mem, by simp⟩
+  · exact fun h => ⟨y, h, 1, U.one_mem, by simp⟩
 
 private theorem dc_sig {U : Subgroup G} (σ : G →* G) (h : ∀ u ∈ U, σ u ∈ U) (hi : ∀ g, σ (σ g) = g) (a y : G) :
     σ y ∈ DC U (σ a) ↔ y ∈ DC U a := by
@@ -363,8 +357,7 @@ private theorem conv_right (h : TwOk s w) (a : G) :
       rwa [sgm_key h] at this
     · intro hm
       have := sgm_mem h hm
-      rw [← sgm_key h, sgm_sgm h] at this
-      exact this
+      rwa [← sgm_key h, sgm_sgm h] at this
   have hz : ∀ x : G ⧸ B.U, x ≠ ((w⁻¹ : G) : G ⧸ B.U) →
       fw B.U w 1 (s.θ x.out) * one (x.out⁻¹ * s.θ y ∈ DC B.U a) = 0 := by
     intro x hx
@@ -419,16 +412,13 @@ private theorem fp_one {I : Type} (p : I → Prop) (h : ∀ᶠ v in Filter.cofin
   by_cases hall : ∀ v, p v
   · rw [one_pos hall]
     have : ∀ v, one (p v) = 1 := fun v => one_pos (hall v)
-    simp only [this]
-    exact finprod_one
+    simpa only [this] using finprod_one
   · rw [one_neg hall]
     obtain ⟨v, hv⟩ := not_forall.1 hall
     rw [finprod_eq_prod_of_mulSupport_subset (s := hfin.toFinset) _ ?_]
     · exact Finset.prod_eq_zero (hfin.mem_toFinset.2 hv) (one_neg hv)
     · intro x hx
-      simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
-      intro hp
-      exact hx (one_pos hp)
+      simpa only [Set.Finite.coe_toFinset, Set.mem_setOf_eq] using fun hp => hx (one_pos hp)
 
 open Classical in
 private theorem split_prod {I : Type} {f c : I → ℂ} (S T : Finset I) (hST : S ⊆ T) (hc : ∀ v ∉ T, c v = 1)
@@ -478,8 +468,7 @@ private theorem dc_loc (L : LocOk A) {v : Pl F} (h : v ∈ A.Sg) (x a : U3 (cv v
     (ha : eU (A.hs v h) a = dg e) : x ∈ DC (A.dat.Jv v) a ↔ eU (A.hs v h) x ∈ (A.V v).DC e := by
   rw [jv_pos A h]
   have := (dcMap _ _ ℂ (eU (A.hs v h)) (L.bij v h) ((A.V v).J 3) a a).1 x
-  rw [ha] at this
-  exact this
+  rwa [ha] at this
 
 private theorem exW (L : LocOk A) : ∃ w : GA Δ, (∀ v (h : v ∈ A.Sg), eU (A.hs v h) (w.1 v) = Phi (Kv v)) ∧
     ∀ v ∉ A.Sg, w.1 v = 1 := by
@@ -573,8 +562,7 @@ private theorem twOk (hok : A.Ok) (L : LocOk A) (hB : A.dat.IsBG ch B s) {w : GA
     refine ⟨fun v h => ?_, fun v h => ?_⟩
     · have := (thFacts (Kv v) (A.V v)).2.1 _ (hu.1 v h)
       show eU _ (w.1 v * (s.θ u).1 v * (w.1 v)⁻¹) ∈ _
-      rw [hB.θ, map_mul, map_mul, map_inv, hw v h, L.th v h]
-      exact this
+      rwa [hB.θ, map_mul, map_mul, map_inv, hw v h, L.th v h]
     · show w.1 v * (s.θ u).1 v * (w.1 v)⁻¹ ∈ _
       rw [hB.θ, hw' v h]
       simpa using theta_KU (hu.2 v h)
@@ -587,8 +575,7 @@ private theorem el_sg (L : LocOk A) (hB : A.dat.IsBG ch B s) {w : GA Δ}
     rw [hB.θ, map_mul, map_mul, map_inv, hw v h, L.th v h, ha.1 v h]
     have e : d v = ![d v 0, d v 1, d v 2] := funext fun i => by fin_cases i <;> rfl
     have := (thFacts (Kv v) (A.V v)).2.2.1 (d v 0) (d v 1) (d v 2)
-    rw [← e] at this
-    exact this
+    rwa [← e] at this
   · show w.1 v * (s.θ a).1 v * (w.1 v)⁻¹ = 1
     rw [hB.θ, hw' v h, ha.2 v h]
     simp
@@ -740,8 +727,7 @@ private theorem uf_dg (V : Lev k) (d d' : Fin 3 → kˣ) (hd : Dom d) (hd' : Dom
   exact h
 
 private theorem dg_mem (V : Lev k) (d : Fin 3 → kˣ) (hd : ∀ i, d i ∈ V.H) : dg d ∈ V.J 3 := by
-  refine Subgroup.mem_sup_left (Subgroup.mem_sup_right ?_)
-  exact ⟨d, by simpa [Subgroup.mem_pi] using hd, rfl⟩
+  exact Subgroup.mem_sup_left (Subgroup.mem_sup_right ⟨d, by simpa [Subgroup.mem_pi] using hd, rfl⟩)
 
 end Local
 
@@ -851,9 +837,7 @@ theorem UpperTheory.V.Z.Sym.So.gOpsEx :
     rw [hop, (dcBasic _ V A.dat.UG (gd d) (hfin d) (φ : GA Δ → V) (hinv φ)).2.2.2.1 hmem]
     rfl
   · intro d hd
-    have f1 := ((hF.1 (SD.sg d) (gd (SD.sg d)) (hgd _))).2.1
-    have f2 := ((hF.1 d (gd d) (hgd d))).2.2
-    exact f2.symm.trans f1
+    exact (((hF.1 d (gd d) (hgd d))).2.2).symm.trans (((hF.1 (SD.sg d) (gd (SD.sg d)) (hgd _))).2.1)
   · intro t ht
     rw [hF.2 t ht]
     have hl := Tf.rLin _ _ _ B s _ A.Ys (fun _ => 1) (fun y => A.F0 (A.dG t y))

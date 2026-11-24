@@ -271,8 +271,7 @@ theorem exists_proj [FiniteDimensional ℂ H] {D : Fin n → Fin n → Module.En
     rw [Submodule.mem_orthogonal] at hw ⊢
     intro u hu
     rw [← hU, hw _ (hstab b a u hu)]
-  · intro x hx
-    exact Submodule.starProjection_eq_self_iff.2 (hmem 0 hx)
+  · exact fun x hx => Submodule.starProjection_eq_self_iff.2 (hmem 0 hx)
   · intro ν hne y hy
     refine Submodule.eq_starProjection_of_mem_orthogonal N.zero_mem ?_
     rw [sub_zero, Submodule.mem_orthogonal]
@@ -529,8 +528,7 @@ theorem dual_weight (hG : IsDualFam E G) (μ : Fin n → ℤ) {v : E.V →L[ℂ]
     have h3 : HasDerivAt (fun y : ℂ => Complex.exp (y * (Complex.I * ((μ a : ℝ) : ℂ))))
         (Complex.exp ((0 : ℂ) * (Complex.I * ((μ a : ℝ) : ℂ))) * (1 * (Complex.I * ((μ a : ℝ) : ℂ)))) 0 :=
       ((hasDerivAt_id (0 : ℂ)).mul_const _).cexp
-    have h4 := (h3.comp_ofReal).smul_const v
-    simpa using h4
+    simpa using (h3.comp_ofReal).smul_const v
   have e := hd.unique h2
   calc G a a v = (-Complex.I) • (Complex.I • G a a v) := by rw [smul_smul]; simp
     _ = ((μ a : ℝ) : ℂ) • v := by rw [e, smul_smul, ← mul_assoc]; simp
@@ -1056,8 +1054,7 @@ theorem score_tZero_level : ∀ {n : ℕ} (lev : Fin n → ℕ), Monotone lev �
     · intro b hb
       have hb' : lev a < lev b := (Finset.mem_filter.mp hb).2
       simp [tZero, prs, hb', hlt b hb']
-    · intro b _ c _ h
-      exact (Prod.ext_iff.mp h).2
+    · exact fun b _ c _ h => (Prod.ext_iff.mp h).2
     · rintro ⟨x, b⟩ hp
       simp only [tZero, prs, Finset.mem_filter, Finset.mem_univ, true_and] at hp
       obtain ⟨⟨_, h⟩, rfl⟩ := hp
@@ -1069,8 +1066,7 @@ theorem score_tZero_level : ∀ {n : ℕ} (lev : Fin n → ℕ), Monotone lev �
     · intro b hb
       have hb' := (Finset.mem_filter.mp hb).2
       simp [tZero, prs, hb'.1, hb'.2]
-    · intro b _ c _ h
-      exact (Prod.ext_iff.mp h).1
+    · exact fun b _ c _ h => (Prod.ext_iff.mp h).1
     · rintro ⟨b, x⟩ hp
       simp only [tZero, prs, Finset.mem_filter, Finset.mem_sdiff, Finset.mem_univ, true_and, not_and,
         not_lt] at hp
@@ -1517,8 +1513,7 @@ theorem finiteDimensional_of_hom (W H : Type) [AddCommGroup W] [Module ℂ W]
     FiniteDimensional ℂ H := by
   obtain ⟨w, hw⟩ := exists_ne (0 : W)
   have hex : ∃ φ : Module.Dual ℂ W, φ w ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hw ((Module.forall_dual_apply_eq_zero_iff ℂ w).1 hcon)
   obtain ⟨φ, hφ⟩ := hex
   let j : H →ₗ[ℂ] (W →ₗ[ℂ] H) :=
@@ -1865,8 +1860,7 @@ theorem countG : CountG := by
       ext ξ
       rw [hR0]
       have := hf i.1 i.2 ξ
-      rw [dite_eq_left i.2] at this
-      exact this
+      rwa [dite_eq_left i.2] at this
   let R := LinearEquiv.ofBijective R0 hbij
   let Fl := (flipA E A T).restrict (p := invA σ E) (q := invA σ E) hF
   have hcomp : ∀ x i, R (Fl x) i = a i ∘ₗ R x i ∘ₗ b i := by
@@ -1880,8 +1874,7 @@ theorem countG : CountG := by
   · rw [hse, Finset.mem_image] at hμ
     obtain ⟨ν, hν, rfl⟩ := hμ
     exact ⟨hA _, hfd ⟨ν, hν⟩⟩
-  · by_contra hno
-    push Not at hno
+  · by_contra! hno
     apply hne
     refine (Submodule.eq_bot_iff _).2 fun t ht => hinj t ht fun μ hμ ξ hξ => ?_
     have h1 := hmaps t ht _ ξ hξ

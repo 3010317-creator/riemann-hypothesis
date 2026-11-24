@@ -989,8 +989,7 @@ theorem isPushout_awayRingMap (i : Fin 3) :
       awayEval W' i s.inr.hom _ (he s) (hu s) (awayCoord W' i j) =
         s.inl.hom (awayCoord W i j) := by
     have := awayEval_awayCoord_mul W' i s.inr.hom _ (he s) (hu s) j
-    simp only [Function.comp_apply, awayCoord_self, map_one, mul_one] at this
-    exact this
+    simpa only [Function.comp_apply, awayCoord_self, map_one, mul_one] using this
   refine ⟨⟨w⟩, ⟨PushoutCocone.IsColimit.mk w
     (fun s => CommRingCat.ofHom (awayEval W' i s.inr.hom _ (he s) (hu s))) ?_ ?_ ?_⟩⟩
   · intro s

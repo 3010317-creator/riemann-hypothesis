@@ -88,8 +88,7 @@ theorem exists_veryGeneral_point_of_holomorphic_family :
       (B ×ˢ ({0}ᶜ : Set ℂ)) := by
     ext p
     constructor
-    · intro hp
-      exact ⟨(Fin.tail p, p 0), ⟨hp.1, hp.2⟩, Fin.cons_self_tail p⟩
+    · exact fun hp => ⟨(Fin.tail p, p 0), ⟨hp.1, hp.2⟩, Fin.cons_self_tail p⟩
     · rintro ⟨⟨z, c⟩, ⟨hz, hc⟩, rfl⟩
       exact ⟨by simpa using hz, by simpa using hc⟩
   have hΩc : IsPreconnected Ω := by

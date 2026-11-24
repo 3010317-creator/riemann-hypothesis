@@ -67,8 +67,7 @@ theorem asAlgebraHom_surjective_of_finrank_intertwiningMap_eq_one :
   refine ⟨hV, ?_⟩
   have : Nontrivial τ.asModule := hV
   have hE : Module.finrank K (Module.End K[G] τ.asModule) = 1 := by
-    rw [← (Representation.IntertwiningMap.equivAlgEnd τ).toLinearEquiv.finrank_eq]
-    exact h
+    rwa [← (Representation.IntertwiningMap.equivAlgEnd τ).toLinearEquiv.finrank_eq]
   have hscalar : ∀ φ : Module.End K[G] τ.asModule, ∃ c : K, c • (1 : Module.End K[G] τ.asModule) = φ :=
     (finrank_eq_one_iff_of_nonzero' _ one_ne_zero).mp hE
   have : IsScalarTower K (Module.End K[G] τ.asModule) τ.asModule := ⟨fun _ _ _ => rfl⟩
@@ -82,7 +81,6 @@ theorem asAlgebraHom_surjective_of_finrank_intertwiningMap_eq_one :
         obtain ⟨c, rfl⟩ := hscalar φ
         exact f.map_smul c m }
   obtain ⟨a, ha⟩ := Module.Finite.toModuleEnd_moduleEnd_surjective (R := K[G]) (M := τ.asModule) F
-  refine ⟨a, LinearMap.ext fun v => ?_⟩
-  exact congrArg (fun g => g v) ha
+  exact ⟨a, LinearMap.ext fun v => (congrArg (fun g => g v) ha)⟩
 
 end GlobalTheory

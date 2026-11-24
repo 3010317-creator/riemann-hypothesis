@@ -72,8 +72,7 @@ theorem minorIJ_image_of_tri {R : Type} [CommRing R] (M : Matrix (Fin N) (Fin N)
   rw [dite_eq_left e]
   have hf : (fun i => σ (S.orderEmbOfFin rfl i)) = ⇑((S.image σ).orderEmbOfFin e) := by
     apply Finset.orderEmbOfFin_unique e
-    · intro i
-      exact Finset.mem_image_of_mem σ (Finset.orderEmbOfFin_mem S rfl i)
+    · exact fun i => Finset.mem_image_of_mem σ (Finset.orderEmbOfFin_mem S rfl i)
     · intro i i' hii
       exact hσ (Finset.orderEmbOfFin_mem S rfl i) (Finset.orderEmbOfFin_mem S rfl i')
         ((S.orderEmbOfFin rfl).strictMono hii)
@@ -117,8 +116,7 @@ theorem param_core (S : Finset (Fin N)) (ca cb : Fin N) (hca : ca ∈ S) (hmax :
     by_cases hy' : y = ca
     · rw [hy', hσca]
       exact (hxy.trans_le (hmax y hy)).trans hlt
-    · rw [hσne y hy']
-      exact hxy
+    · rwa [hσne y hy']
   have hge : ∀ x ∈ S, x ≤ σ x := by
     intro x hx
     by_cases hx' : x = ca

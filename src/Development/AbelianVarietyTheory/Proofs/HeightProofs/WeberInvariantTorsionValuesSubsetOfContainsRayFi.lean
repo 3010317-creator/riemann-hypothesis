@@ -68,8 +68,7 @@ theorem finite_norm_mem {K : Type} [Field K] [NumberField K] (S : Finset ℕ) :
     {𝔭 : HeightOneSpectrum (𝓞 K) | Ideal.absNorm 𝔭.asIdeal ∈ S}.Finite := by
   have h : {I : Ideal (𝓞 K) | Ideal.absNorm I ≠ 0 ∧ Ideal.absNorm I ∈ S}.Finite := by
     refine (Ideal.finite_setOf_absNorm_le (S := 𝓞 K) (S.sup id)).subset ?_
-    intro I hI
-    exact Finset.le_sup (f := id) hI.2
+    exact fun I hI => Finset.le_sup (f := id) hI.2
   refine (h.preimage (f := fun 𝔭 : HeightOneSpectrum (𝓞 K) => 𝔭.asIdeal)
     (fun a _ b _ hab => HeightOneSpectrum.ext hab)).subset ?_
   intro 𝔭 h𝔭
@@ -87,8 +86,7 @@ theorem numberField_adjoin (K L : IntermediateField ℚ ℂ) [NumberField L] (S 
   have h3 : FiniteDimensional ℚ ((IntermediateField.adjoin L S).restrictScalars ℚ) := by
     have e := IntermediateField.restrictScalars_adjoin_eq_sup ℚ L S
     have h5 : FiniteDimensional ℚ (L ⊔ IntermediateField.adjoin ℚ S : IntermediateField ℚ ℂ) := inferInstance
-    rw [← e] at h5
-    exact h5
+    rwa [← e] at h5
   have h4 : FiniteDimensional ℚ (IntermediateField.adjoin L S) := h3
   exact NumberField.mk
 

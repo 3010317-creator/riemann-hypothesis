@@ -79,8 +79,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.embEx :
   have L := fun v : Pl K => UpperTheory.ConvolutionTheory.Tf.locEmb K n v
   refine ⟨?_, ?_⟩
   · refine ⟨MonoidHom.noncommPiCoprod (fun i => AdelicGLn.localEmbedding (w i)) ?_, ?_⟩
-    · intro i j hij x y
-      exact (L (w i)).2.2.2.1 (w j) (fun e => hij (hw e).symm) x y
+    · exact fun i j hij x y => (L (w i)).2.2.2.1 (w j) (fun e => hij (hw e).symm) x y
     · intro i g
       exact MonoidHom.noncommPiCoprod_mulSingle (N := fun i => Gw n (w i)) (fun i => AdelicGLn.localEmbedding (w i)) i g
   intro ι hι
@@ -154,8 +153,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.embEx :
     rw [← e]
     exact hc Finset.univ
   refine ⟨hcont, hcf, hoff, ?_, hcomm, ?_⟩
-  · intro h
-    exact ⟨fun j => GM.cf (w j) h, _, (mul_inv_cancel_left _ _).symm, hsplit h⟩
+  · exact fun h => ⟨fun j => GM.cf (w j) h, _, (mul_inv_cancel_left _ _).symm, hsplit h⟩
   · intro U h
     constructor
     · intro hh

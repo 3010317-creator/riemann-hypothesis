@@ -99,8 +99,7 @@ theorem exists_rat_basis [Module ℚ V] [IsScalarTower ℚ K V] [Module.Finite �
   have hfinZ : Module.Finite ℤ A := Module.Finite.trans (𝓞 K) _
   have hL : Submodule.IsLattice ℚ (A.restrictScalars ℤ) := by
     refine ⟨Module.Finite.iff_fg.mp hfinZ, ?_⟩
-    intro s hs hli
-    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+    exact fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli
   have hsmul (a : K) {x : V}
       (hx : x ∈ Submodule.span ℚ ((A.restrictScalars ℤ : Submodule ℤ V) : Set V)) :
       a • x ∈ Submodule.span ℚ ((A.restrictScalars ℤ : Submodule ℤ V) : Set V) := by
@@ -339,8 +338,7 @@ theorem disc_latIn {H : HermSpace K V} (hP : PD H.B.flip) {U : Submodule K V} (p
     · intro h y hy
       have := h (p y) ⟨y, hy, rfl⟩
       change H.B t (p y) ∈ _ at this
-      rw [p2] at this
-      exact this
+      rwa [p2] at this
     · rintro h _ ⟨y, hy, rfl⟩
       change H.B t (p y) ∈ _
       rw [p2]
@@ -379,8 +377,7 @@ theorem exists_same_index {U : Submodule K V} (p : V →ₗ[K] U) (p1 : ∀ t : 
       obtain ⟨m, hm, y, hy, e⟩ := hBm _ hb
       have := congrArg p e
       rw [hPx, map_add (f := _), map_sub, p1, p1, p1, sub_self, add_zero] at this
-      rw [SetLike.mem_coe, hPx, this]
-      exact hm
+      rwa [SetLike.mem_coe, hPx, this]
     · rintro b ⟨hb, z, hz, rfl⟩
       exact ⟨Submodule.mem_sup_left ⟨hb, (p z).2⟩, z, hz, rfl⟩
   have k : ∀ X : Submodule (𝓞 K) V, idxN (D.map P ⊔ X) X = idxN (D.map P) (X ⊓ D.map P) := by

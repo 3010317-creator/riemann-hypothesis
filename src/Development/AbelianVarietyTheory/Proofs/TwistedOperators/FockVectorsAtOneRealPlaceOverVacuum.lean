@@ -411,13 +411,11 @@ private theorem laws_lemma_7 {D : D7} {V W : HSp D} {ψ : AddChar (AF D.host.F) 
   have haa : ∀ i j (g : GlobalTheory.VacuumFockLaws.thetaSub V W ψ), a i (a j g) = a j (a i g) := by
     intro i j g
     apply Subtype.ext
-    simp only [ha']
-    exact ccr1 i j g g.2
+    simpa only [ha'] using ccr1 i j g g.2
   have hba : ∀ i j (g : GlobalTheory.VacuumFockLaws.thetaSub V W ψ), b i (a j g) = a j (b i g) + (@ite ℂ (i = j) (Classical.propDecidable (i = j)) 1 0) • g := by
     intro i j g
     apply Subtype.ext
-    simp only [ha', hb', Submodule.coe_add, Submodule.coe_smul]
-    exact ccr2 i j g g.2
+    simpa only [ha', hb', Submodule.coe_add, Submodule.coe_smul] using ccr2 i j g g.2
   have hv : ∀ z, Formalism.IndefR.Datum.annih (heisO ψ V W) θ τ (cplxO s s') z f = 0 := hvac
   have hfb : ∀ i, b i ⟨f, hf⟩ = 0 := by
     intro i
@@ -445,13 +443,10 @@ private theorem laws_lemma_7 {D : D7} {V W : HSp D} {ψ : AddChar (AF D.host.F) 
     have sk : ∀ z F H, IsThetaFunO ψ V W F → IsThetaFunO ψ V W H → ipO μ 𝓕 (Formalism.IndefR.Datum.dRho (heisO ψ V W) θ τ z F) H = -ipO μ 𝓕 F (Formalism.IndefR.Datum.dRho (heisO ψ V W) θ τ z H) :=
       fun z F H hF hH => (hsk τ z).2.2 μ 𝓕 hμ h𝓕 F H hF hH
     apply R.2 (ipO μ 𝓕)
-    · intro x y z
-      exact GlobalTheory.Size.ipO_add_left hψ hμ h𝓕 x.2 y.2 z.2
-    · intro c x z
-      exact GlobalTheory.Size.ipO_smul_left (μ := μ) (𝓕 := 𝓕) c x z
+    · exact fun x y z => GlobalTheory.Size.ipO_add_left hψ hμ h𝓕 x.2 y.2 z.2
+    · exact fun c x z => GlobalTheory.Size.ipO_smul_left (μ := μ) (𝓕 := 𝓕) c x z
     · intro x
-      have e := GlobalTheory.Size.ipO_smul_right (μ := μ) (𝓕 := 𝓕) (0 : ℂ) x 0
-      simpa using e
+      simpa using GlobalTheory.Size.ipO_smul_right (μ := μ) (𝓕 := 𝓕) (0 : ℂ) x 0
     · intro i x y
       have hx : IsThetaFunO ψ V W (x : WO V W → ℂ) := x.2
       have hy : IsThetaFunO ψ V W (y : WO V W → ℂ) := y.2

@@ -58,15 +58,13 @@ private theorem lc_val {n : ℕ} {w : Pl E} (hs : IsSplitAt w) {g : GLw n w → 
   refine ⟨K'.subgroupOf (UL n w), ?_, ?_, ?_, ?_⟩
   · rw [Subgroup.coe_subgroupOf]
     exact ho.preimage continuous_subtype_val
-  · intro x hx
-    exact hle hx
+  · exact fun x hx => hle hx
   · have hU : ((UL n w : Subgroup (GLw n w)) : Set (GLw n w)) = Set.univ := by
       simp [UL, hs]
     have hcl : IsClosed ((UL n w : Subgroup (GLw n w)) : Set (GLw n w)) := by
       rw [hU]; exact isClosed_univ
     exact hc.comp_isClosedEmbedding hcl.isClosedEmbedding_subtypeVal
-  · intro k hk' x
-    exact ⟨(hk k.1 hk' x.1).1, (hk k.1 hk' x.1).2⟩
+  · exact fun k hk' x => ⟨(hk k.1 hk' x.1).1, (hk k.1 hk' x.1).2⟩
 
 private theorem unit_eq (n : ℕ) (w : Pl E) :
     (KL n w : Set (UL n w)).indicator 1 = fun x : UL n w => fn1 n w Ex.one x.1 := by
@@ -81,13 +79,11 @@ private theorem split_level {a b : ℕ} {w : Pl E} (hs : IsSplitAt w) {φ : GLw 
   obtain ⟨K', ho, hle, hc, hk⟩ := hφ
   refine ⟨K'.comap (MonoidHom.inl _ _), K'.comap (MonoidHom.inr _ _), ⟨?_, ?_, ?_⟩, ⟨?_, ?_, ?_⟩, hc, ?_⟩
   · exact ho.preimage (continuous_id.prodMk continuous_const)
-  · intro x hx
-    exact (hle hx).1
+  · exact fun x hx => (hle hx).1
   · intro k hk'
     simpa [thL, hs] using hk'
   · exact ho.preimage (continuous_const.prodMk continuous_id)
-  · intro x hx
-    exact (hle hx).2
+  · exact fun x hx => (hle hx).2
   · intro k hk'
     simpa [thL, hs] using hk'
   · rintro ⟨k₁, k₂⟩ ⟨h₁, h₂⟩ x

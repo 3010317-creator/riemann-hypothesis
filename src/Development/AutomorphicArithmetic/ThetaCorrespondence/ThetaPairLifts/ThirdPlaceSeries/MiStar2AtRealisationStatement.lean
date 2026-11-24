@@ -230,8 +230,7 @@ theorem miStar2_of_anchored : ∀ {K : Type} [Field K] [NumberField K] [StarRing
     dsimp only
     field_simp
     linear_combination h
-  · intro u
-    exact div_ne_zero (hp u) (mul_ne_zero (hb u) (hUn.1 u Bs.μ0))
+  · exact fun u => div_ne_zero (hp u) (mul_ne_zero (hb u) (hUn.1 u Bs.μ0))
 
 end GlobalTheory.MiTop
 end -- clump:auto
@@ -409,8 +408,7 @@ theorem colCrd_of_real_pack : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} 
     exact congrFun (_root_.GlobalTheory.MiTop.colC_eq_lin_alt W u) x
   rw [hx] at key
   have hv : W.P.A3.fam3.base3.v0 = InfinitePlace.mk D.what₂.embLL := hv0
-  rw [hv]
-  exact key
+  rwa [hv]
 end GlobalTheory.MiTop
 end
 end -- clump:auto
@@ -619,8 +617,7 @@ theorem eq_of_evS_ae {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h
   have hz := GlobalTheory.TranslatedEvalInj.eq_zero_of_ae_fund X.B.I X.B.μf X.B.fund_spec hφc hφi hae
   funext g
   have e := hz (ι (g * t⁻¹))
-  simp only [φ, ContinuousMulEquiv.symm_apply_apply, inv_mul_cancel_right, sub_eq_zero] at e
-  exact e
+  simpa only [φ, ContinuousMulEquiv.symm_apply_apply, inv_mul_cancel_right, sub_eq_zero] using e
 
 end GlobalTheory.MiTop.LineV
 
@@ -792,7 +789,6 @@ theorem pwOf_op_ramCrd_eq_puFun (W : _root_.GlobalTheory.MiS.RealPackAlt ex) (u 
   refine op_eq (_root_.Formalism.IndefR.pwOf_alt W.S W.Q.hin w) _ T ?_
   show Formalism.L2.SG.ColDict.colDictL W.S.X (W.S.tr w) W.S.Y.hK T = _
   refine hT.trans ?_
-  show _ = ((Submodule.inclusion inf_le_left (Fintype.linearCombination ℂ _ x) : (D.mem w).A.Mu0) : (D.mem w).C.cls 0 → (D.mem w).C.Y 0 → ℂ)
   exact congrArg (fun z : (D.mem w).A.Mram => (z : (D.mem w).C.cls 0 → (D.mem w).C.Y 0 → ℂ)) hr.symm
 end GlobalTheory.MiTop.PairingL2
 namespace GlobalTheory.MiTop.PairingL2

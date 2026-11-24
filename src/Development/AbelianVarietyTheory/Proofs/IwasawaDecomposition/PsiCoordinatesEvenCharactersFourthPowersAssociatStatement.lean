@@ -348,11 +348,9 @@ theorem GlobalTheory.psi_coord_fourth_associated : ∀ (R : Type) [CommRing R] [
     refine gm_of_top (π ≫ jK R) z (D'.toPre.c mu).left hψ (fun y _ => ?_) _
     refine ⟨Set.mem_iInter.2 fun _ => Set.mem_iInter.2 fun _ => ?_, Set.mem_iInter.2 fun _ => ?_⟩
     · have m := hpkD _ hcΦ (show y ∈ (⊤ : (Spec (CommRingCat.of R)).Opens) from trivial)
-      rw [← k1] at m
-      exact m
+      rwa [← k1] at m
     · have m := hpkD' _ hc' (show y ∈ (⊤ : (Spec (CommRingCat.of R)).Opens) from trivial)
-      rw [← k2] at m
-      exact m
+      rwa [← k2] at m
   have O2 : ∃ b : Rˣ, (ExpTrans.om w z (fun q _ => J q) (fun q _ => J' q)
       (1 : DegPre.BF D.toPre (FractionRing R) ⟶ D'.toPre.P.A).left).val = cst (π ≫ jK R) z b := by
     have k1 : J ((1 : DegPre.BF D.toPre (FractionRing R) ⟶ D'.toPre.P.A).left ≫ Φ.hom.left) =
@@ -363,11 +361,9 @@ theorem GlobalTheory.psi_coord_fourth_associated : ∀ (R : Type) [CommRing R] [
     refine gm_of_top (π ≫ jK R) z (eSec D'.toPre.P.A) hψ1 (fun y _ => ?_) _
     refine ⟨Set.mem_iInter.2 fun _ => Set.mem_iInter.2 fun _ => ?_, Set.mem_iInter.2 fun _ => ?_⟩
     · have m := hpkD _ heΦ (show y ∈ (⊤ : (Spec (CommRingCat.of R)).Opens) from trivial)
-      rw [← k1] at m
-      exact m
+      rwa [← k1] at m
     · have m := hpkD' _ he' (show y ∈ (⊤ : (Spec (CommRingCat.of R)).Opens) from trivial)
-      rw [← k2] at m
-      exact m
+      rwa [← k2] at m
   obtain ⟨b, O1⟩ := O1
   obtain ⟨b', O2⟩ := O2
   rw [val_famMult_two D'.tau_bimult _ hJ', val_famMult_two D.tau_bimult _ hJ] at HH
@@ -742,7 +738,6 @@ theorem GlobalTheory.sq_corr_of_thickenings : ∀ (R : Type) [CommRing R] [IsDom
     fun e q => (ExtDiv.pG_app_eq_zero_iff (U'.gt e) _ _).1 (hvan e q)
   have key : sval a ρ z (fun q _ => J' q) = sval (sqSec s') ρ z (fun q _ => J' q) := by
     have h1 : sval (secSub a (sqSec s')) ρ z (fun q _ => J' q) = 0 := by
-      show gs _ _ _ _ = 0
       exact (congrArg (gs ρ z _) (h0 _)).trans (gs_zero _ _ _)
     have h2 := sval_secSub a (sqSec s') ρ z (good_sq hJ')
     rw [h1] at h2
@@ -1662,8 +1657,7 @@ theorem GlobalTheory.torus_coord_squares_correspond : ∀ (R : Type) [CommRing R
       thickObj R (maximalIdeal R) e G) ≫ (U.gt e).q))
     (GlobalTheory.globalFns_holds _ _ (TLinPf.isAb_pullback _ _ D.toPre.P.isAb)).2 a b ha hb hinv hone Z r z
     (fun q _ => J q) (GlobalTheory.SqCube.good_sq hJ)
-  rw [va' r z J hJ, vb' r z J J' hJ hJ'] at key
-  exact key
+  rwa [va' r z J hJ, vb' r z J J' hJ hJ'] at key
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1805,8 +1799,7 @@ theorem feq_of_expandsAt : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
   rw [vu] at hrel
   rw [← htr, ← congrArg (fun q => sval (f (α + k • mu)) q.left z J) ρ₂]
   rw [ρ₁] at hrel
-  simp only [Over.comp_left]
-  exact hrel
+  simpa only [Over.comp_left] using hrel
 
 end GlobalTheory.PsiCompare
 end -- clump:auto

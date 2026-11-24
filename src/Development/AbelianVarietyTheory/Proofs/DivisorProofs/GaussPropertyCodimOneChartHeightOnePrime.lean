@@ -200,8 +200,7 @@ theorem height_le_of_map {A E : Type} [CommRing A] [IsNoetherianRing A] [CommRin
     rw [← h₃, Ideal.map_quotient_self]
   have : Nontrivial (E ⧸ q.map (algebraMap A E)) :=
     Ideal.Quotient.nontrivial_iff.2 (h₃ ▸ (maximalIdeal.isMaximal E).ne_top)
-  rw [h₄, Ideal.height_bot, add_zero]
-  exact hq
+  rwa [h₄, Ideal.height_bot, add_zero]
 
 theorem injective_of_flat {A E : Type} [CommRing A] [IsDomain A] [CommRing E] [Nontrivial E]
     {a : A →+* E} (h : a.Flat) : Function.Injective a := by
@@ -216,8 +215,7 @@ theorem dvd_pow_of_dim {O : Type} [CommRing O] [IsDomain O] [IsLocalRing O] (h :
     rw [Ideal.radical_eq_sInf, Ideal.mem_sInf]
     rintro J ⟨hJ, hp⟩
     have hne : J ≠ ⊥ := fun e => hg (by simpa [e] using hJ)
-    rw [eq_maximalIdeal (hp.isMaximal_of_ne_bot hne)]
-    exact ht
+    rwa [eq_maximalIdeal (hp.isMaximal_of_ne_bot hne)]
   obtain ⟨n, hn⟩ := this
   exact ⟨n, Ideal.mem_span_singleton.1 hn⟩
 
@@ -321,8 +319,7 @@ theorem descent {R₁ E : Type} [CommRing R₁] [CommRing E] [IsLocalRing E] (a 
       RingHom.algebraMap_toAlgebra]
     simp only [smul_eq_mul, _root_.mul_one]
   obtain ⟨l, hl⟩ : ∃ l, α (ev 0) l ∉ q := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     have : (1 : E) ∈ maximalIdeal E := by
       rw [← h1, hy]
       exact Ideal.sum_mem _ fun l _ => Ideal.mul_mem_right _ _ (hq _ (hall l))
@@ -708,8 +705,7 @@ theorem exists_mul_mem [Module.IsTorsionFree T F'] [Module.IsTorsionFree T E]
     have hg' : ∀ l, ∑ i, g i * A (Sum.inl i) l = 0 := fun l => by
       simpa using congrFun hg l
     calc ∑ i, g i • ε i = ∑ l, (∑ i, g i * A (Sum.inl i) l) • e l := by
-          simp only [hz', Finset.smul_sum, smul_smul, Finset.sum_smul]
-          exact Finset.sum_comm
+          simpa only [hz', Finset.smul_sum, smul_smul, Finset.sum_smul] using Finset.sum_comm
       _ = 0 := by simp [hg']
   obtain ⟨D, t, ht, hD⟩ := exists_dual_coeffs_of_linearIndependent (fun i l => A (Sum.inl i) l) hB j
   have hD' : ∀ a, ∑ l, D l * A (Sum.inl a) l = if a = j then t else 0 := hD
@@ -719,8 +715,7 @@ theorem exists_mul_mem [Module.IsTorsionFree T F'] [Module.IsTorsionFree T E]
       _ = ∑ i, (∑ l, D l * A (Sum.inl i) l) • w i :=
           Finset.sum_congr rfl fun i _ => by rw [hD' i]
       _ = ∑ l, D l • ∑ i, A (Sum.inl i) l • w i := by
-          simp only [Finset.sum_smul, Finset.smul_sum, smul_smul]
-          exact Finset.sum_comm
+          simpa only [Finset.sum_smul, Finset.smul_sum, smul_smul] using Finset.sum_comm
   rw [ht']
   exact N.sum_mem fun l _ => N.smul_mem _ (hmem l)
 

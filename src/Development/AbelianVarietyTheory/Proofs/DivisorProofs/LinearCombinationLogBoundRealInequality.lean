@@ -151,12 +151,9 @@ theorem sum_ceil_off_le {E : Type} [Field E] [NumberField E] {I : Type} [Fintype
     calc ∑ l ∈ S.filter (fun l => c_vp 𝔣 l ≠ 0), c_vp 𝔣 l * Real.log l
         ≤ ∑ l ∈ S, c_vp 𝔣 l * Real.log l := by
           apply Finset.sum_le_sum_of_subset_of_nonneg hsubS
-          intro l hl _
-          exact mul_nonneg (hc0 l) (hlog l hl)
+          exact fun l hl _ => mul_nonneg (hc0 l) (hlog l hl)
       _ ≤ ∑ l ∈ S, delta_vp E l * Real.log l := by
-          apply Finset.sum_le_sum
-          intro l hl
-          exact mul_le_mul_of_nonneg_right (hcle l hl) (hlog l hl)
+          exact Finset.sum_le_sum (fun l hl => mul_le_mul_of_nonneg_right (hcle l hl) (hlog l hl))
       _ ≤ Real.log (|(discr E : ℝ)| ^ ((1 : ℝ) / (Module.finrank ℚ E : ℝ))) := by
           have := sum_delta_log_le E S hS
           simpa [delta_vp] using this

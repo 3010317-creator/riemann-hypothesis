@@ -298,8 +298,7 @@ variable {B : Base} {X : PreX B.toPre} {I : TC B X} {l : I.Laws} {Z : TC.Later B
 theorem cosetIn_eq_empty {j : ℕ} (h : j + 1 ≠ B.R.m) (p : PtAt B.R I.sel (I.tup a) (I.cst a) u j) : cosetIn p = fun _ => ∅ := by
   have h1 : p.1.2 = ∅ := by
     have := p.2
-    rw [ysAt_ys_of_ne I.sel (I.tup a) (I.cst a) h] at this
-    exact this
+    rwa [ysAt_ys_of_ne I.sel (I.tup a) (I.cst a) h] at this
   funext P
   ext z
   simp [cosetIn, h1]
@@ -419,8 +418,7 @@ theorem tailTop_eq_of_pin : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (
   have hper : (I.per l u a).Ptil ψ (G' f) = tl ψ f := by
     rw [htl]
     have := GlobalTheory.Fam.Check.ReadsG.period_eq K eW j g.bT (hG' f) hR'' Lz hw
-    rw [hLz] at this
-    exact this
+    rwa [hLz] at this
 
   have hsum : ∀ β : k.Ch B.R.m, ∑ c, ((stabOrd UT (h c) : ℕ) : ℂ)⁻¹ * ellTop R P eW ε G' c f
       (lowOf I l Z u (fun z => k.rd B.R.m β ψ ⟨z.1, z.2⟩ ((g.oT B.R.m rfl).emb (h c, 1)))) = ε * tl ψ f := by
@@ -536,8 +534,7 @@ theorem bc_inclE_inj {n : ℕ} : Function.Injective
       GL (Fin n) D.host.E → GL (Fin n) (D.host.E ⊗[D.host.F] FiniteAdeleRing (𝓞 D.host.F) D.host.F)) := by
   intro a b hab
   refine Units.ext (Matrix.ext fun i j => inclE_inj (D := D) ?_)
-  have h2 := congrArg (fun g : GL (Fin n) _ => g.val i j) hab
-  simpa [Formalism.UG.bc] using h2
+  simpa [Formalism.UG.bc] using congrArg (fun g : GL (Fin n) _ => g.val i j) hab
 
 theorem eq_one_of_GQ {V : HSp D} {γ : GA D V} (hγ : γ ∈ GQ V) (h1 : finM V rfl γ = 1) : γ = 1 := by
   obtain ⟨δ, hδ, e⟩ := Subgroup.mem_subgroupOf.1 hγ
@@ -626,8 +623,7 @@ theorem isReps_of_level (V : HSp D) {n : ℕ} (hn : V.rank = n) (hV : ∀ τ, (g
     exact ⟨γ, hγ, c, a, ha, κ, hκ, by rw [e]; simp only [mul_assoc]⟩
   · obtain ⟨c₀, -, hu⟩ := hex (h c')
     have h1 := hu c ⟨γ, hγ, k * κ, mul_mem (hinf k hk) ((mem κ).1 hκ).2, by rw [e]; simp only [mul_assoc]⟩
-    have h2 := hu c' ⟨1, one_mem _, 1, one_mem _, by rw [one_mul, mul_one]⟩
-    exact h1.trans h2.symm
+    exact h1.trans (hu c' ⟨1, one_mem _, 1, one_mem _, by rw [one_mul, mul_one]⟩).symm
   · have hh' : GlobalTheory.ClassSumLevel.finGLHom V hn (h c) = (yc c).1 := Units.ext (hh c)
     have key : ∀ γ : GA D V, (∃ k ∈ GinfC V, ∃ κ ∈ U, γ * h c = h c * k * κ) ↔
         GlobalTheory.ClassSumLevel.finGLHom V hn γ ∈ S.U.map (MulAut.conj (yc c).1).toMonoidHom := by
@@ -648,8 +644,7 @@ theorem isReps_of_level (V : HSp D) {n : ℕ} (hn : V.rank = n) (hV : ∀ τ, (g
         group
       · rintro ⟨κ, hκ, e⟩
         have e' : (yc c).1 * κ * (yc c).1⁻¹ = GlobalTheory.ClassSumLevel.finGLHom V hn γ := e
-        rw [← e', show (yc c).1⁻¹ * ((yc c).1 * κ * (yc c).1⁻¹) * (yc c).1 = κ by group]
-        exact hκ
+        rwa [← e', show (yc c).1⁻¹ * ((yc c).1 * κ * (yc c).1⁻¹) * (yc c).1 = κ by group]
     have hr : ∀ δ : Formalism.UG.UJ (sigD D : D.host.E →+* D.host.E) (V.gram.reindex (finCongr hn) (finCongr hn)), ∃ γ ∈ GQ V,
         GlobalTheory.ClassSumLevel.finGLHom V hn γ =
           Formalism.UG.bc (Formalism.UG.inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) δ.1 := fun δ =>
@@ -838,8 +833,7 @@ theorem exists_jetS : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC
     fun j hj => GlobalTheory.AdForm.JetRead.pureTensorO_zero_eq_jetP (I.rec7 l Z) ψ θ _ _ _ _ (rankN (I.rec7 l Z) j (Nat.le_of_succ_le hj))
       (rankN (I.rec7 l Z) (j + 1) hj) I.A.δ I.A.sc (stdPair_world I hI l Z ψ θ hψ hθ j)
   refine ⟨fun j => if hj : j + 1 ≤ B.R.m then (hstep j hj).choose else 1, fun j hj => ?_⟩
-  simp only [dite_eq_left hj]
-  exact (hstep j hj).choose_spec
+  simpa only [dite_eq_left hj] using (hstep j hj).choose_spec
 
 end GlobalTheory.AdForm.JetScales
 end -- clump:auto
@@ -990,8 +984,7 @@ theorem eq_smul_of_pair (G G' : ι → Matrix (Fin n) (Fin n) ℂ) (lam lam' : �
   have hp : ∀ P, polOf G' (shiftOf lam) o (fnOf G (shiftOf lam) 1 P) = P := fun P => by
     have e : (fun τ => (o.1 τ)⁻¹) = 1 := funext fun τ => by rw [ho τ]; exact inv_one
     have := polOf_fnOf G' (shiftOf lam) o P
-    rw [e] at this
-    exact this
+    rwa [e] at this
   have hm : w - c • rhoP lam k w ∈ VV ℂ lam := sub_mem hw (Submodule.smul_mem _ _ (polyAction_mem_VV lam k hw))
   have h0 := (pairingBNondegenerate_holds ℂ ι n lam).2 ⟨_, hm⟩ fun P => by
     obtain ⟨φ', e1, e2⟩ := h (lT G k (fnOf G (shiftOf lam) 1 P.1))
@@ -1087,8 +1080,7 @@ theorem chi_eq_chr {B : Base} {X : PreX B.toPre} (I : TC B X) (a : I.ι) {Lb U c
     conv_rhs => rw [e']
     group
   have hq : PtOf (y c * κ.1) ((I.stX a).act c.1 κ0 ((I.stX a).rep c)).1.1 := by
-    rw [hyk, hact]
-    exact hp
+    rwa [hyk, hact]
   exact hR.chr c κ κ0 hgam hq
 
 theorem sgT_eq {B : Base} {X : PreX B.toPre} (I : TC B X) (l : I.Laws) (Z : TC.Later B (I.cols l)) (u : B.Word) (a : I.ι) :
@@ -1158,8 +1150,7 @@ theorem reading_stab_inv : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I
       (e1.trans (congrArg (· * (K.y c).1 * κ.1) e4.symm)) v
     refine ⟨j v', e7, ?_⟩
     have e9 := e8 f.1 f.2
-    rw [hf v' h hh, hf v h hh, e6] at e9
-    exact e9
+    rwa [hf v' h hh, hf v h hh, e6] at e9
 
 end Main
 

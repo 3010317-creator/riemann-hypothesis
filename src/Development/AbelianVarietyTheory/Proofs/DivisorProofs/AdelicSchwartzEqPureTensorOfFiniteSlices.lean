@@ -154,8 +154,7 @@ theorem eq_pure_of_slices : ∀ {F : Type} [Field F] [NumberField F] {κ : Type}
     {v | ¬ vac v = Set.indicator {x | ∀ i, x i ∈ v.adicCompletionIntegers F} 1} with hT0
   have hT0f : T0.Finite := hcof
   have hex : ∀ v, ∃ ζ : κ → Fv F v, vac v ζ ≠ 0 := fun v => by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hvac v (funext h)
   let ζ : ∀ v, κ → Fv F v := fun v => if v ∈ T0 then (hex v).choose else 0
   have hζ1 : ∀ v, v ∉ T0 → vac v (ζ v) = 1 := by
@@ -168,8 +167,7 @@ theorem eq_pure_of_slices : ∀ {F : Type} [Field F] [NumberField F] {κ : Type}
   have hζ : ∀ v, vac v (ζ v) ≠ 0 := by
     intro v
     by_cases hv : v ∈ T0
-    · simp only [ζ, ite_eq_left hv]
-      exact (hex v).choose_spec
+    · simpa only [ζ, ite_eq_left hv] using (hex v).choose_spec
     · rw [hζ1 v hv]
       exact one_ne_zero
   let ξ0 : κ → Af F := fun i => ∑ v ∈ hT0f.toFinset, singleFin v (ζ v i)
@@ -244,8 +242,7 @@ theorem eq_pure_of_slices : ∀ {F : Type} [Field F] [NumberField F] {κ : Type}
   have hcS : ∏ v ∈ S, vac v (ζ v) = c := by
     symm
     refine Finset.prod_subset (fun v hv => hS2 (Finset.mem_union_right _ hv)) ?_
-    intro v _ hv
-    exact hζ1 v (fun h => hv (hT0f.mem_toFinset.2 h))
+    exact fun v _ hv => hζ1 v (fun h => hv (hT0f.mem_toFinset.2 h))
   have hfp : ∏ᶠ v, vac v (fun i => evFin F v (x i)) = ∏ v ∈ S, vac v (fun i => evFin F v (x i)) := by
     apply finprod_eq_prod_of_mulSupport_subset
     intro v hv

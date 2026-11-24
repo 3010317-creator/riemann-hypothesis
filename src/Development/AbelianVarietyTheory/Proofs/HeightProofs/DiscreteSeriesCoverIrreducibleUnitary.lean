@@ -130,8 +130,7 @@ theorem continuousOn_of_cover {e : Ix p q ≃ Fin n} {ε : Fin n → Bool} (h : 
       simp only [Set.mem_preimage, hy1, hy2]
       exact h1
     rw [hCe] at hy
-    simp only [Set.mem_preimage, hy1] at hy
-    exact hy
+    simpa only [Set.mem_preimage, hy1] using hy
 
 theorem urep_irred : ∀ (p q n : ℕ) (e : Ix p q ≃ Fin n) (ε : Fin n → Bool) (T : GrpData p q) (R : DSRep T)
     (σ : Matrix (Fin n) (Fin n) ℂ → (R.U.H →L[ℂ] R.U.H)), BlockOrd e ε → Factors R.U e σ →

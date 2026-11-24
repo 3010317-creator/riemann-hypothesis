@@ -80,8 +80,7 @@ theorem isUnit_of_map_ne_zero {A L : Type} [CommRing A] [Finite A] [CommRing L] 
   have : (RingHom.ker ψ).IsPrime := RingHom.ker_isPrime ψ
   have hmax : (RingHom.ker ψ).IsMaximal :=
     Ideal.Quotient.maximal_of_isField _ (Finite.isField_of_domain (A ⧸ RingHom.ker ψ))
-  have hEq := hmax.eq_of_le hM.ne_top hle
-  exact hx (RingHom.mem_ker.1 (hEq ▸ hxM'))
+  exact hx (RingHom.mem_ker.1 ((hmax.eq_of_le hM.ne_top hle) ▸ hxM'))
 
 theorem isLocalRing_of_map {A L : Type} [CommRing A] [Finite A] [CommRing L] [IsDomain L]
     (ψ : A →+* L) (h : ∀ x, ψ x = 0 → IsNilpotent x) : IsLocalRing A := by
@@ -98,8 +97,7 @@ theorem adjoinRoot_eq_zero {R : Type} [CommRing R] {g : R[X]} (hg : g.Monic) {j 
     (hj : j < g.natDegree) {r : R} (h : AdjoinRoot.of g r * AdjoinRoot.root g ^ j = 0) : r = 0 := by
   nontriviality R
   have h1 : AdjoinRoot.mk g (C r * X ^ j) = 0 := by
-    rw [map_mul, map_pow, AdjoinRoot.mk_C, AdjoinRoot.mk_X]
-    exact h
+    rwa [map_mul, map_pow, AdjoinRoot.mk_C, AdjoinRoot.mk_X]
   rw [AdjoinRoot.mk_eq_zero, ← Polynomial.modByMonic_eq_zero_iff_dvd hg] at h1
   have hdeg : (C r * X ^ j).degree < g.degree := by
     refine lt_of_le_of_lt (Polynomial.degree_C_mul_X_pow_le j r) ?_
@@ -179,8 +177,7 @@ theorem exists_point {ι L : Type} [Fintype ι] [Field L] [Infinite L] (K : Set 
         obtain ⟨q, hq, hq0⟩ := hz
         rw [Finset.prod_eq_zero (Finset.mem_univ q) (by simp [hq, hq0]), mul_zero]
     · rw [ite_eq_right (fun h => hd h.1), ite_eq_right hd, map_zero]
-  rw [aeval_C_mul_X_coeff, ← key]
-  exact hxH
+  rwa [aeval_C_mul_X_coeff, ← key]
 
 theorem exists_primitive {k L ι : Type} [Field k] [Finite k] [Field L] [Algebra k L]
     [Algebra.IsAlgebraic k L] [Finite ι] (b : ι → L) :
@@ -315,8 +312,7 @@ theorem exists_truncation {R L : Type} [CommRing R] [Finite R] [Field L] (ψ : R
       mul_zero, sub_zero]
   have hu : IsUnit (AdjoinRoot.mk (X ^ (N + 1) : R[X]) V) := by
     refine isUnit_of_map_ne_zero _ hnil' ?_
-    rw [AdjoinRoot.lift_mk, Polynomial.eval₂_at_zero, hV0]
-    exact hd0
+    rwa [AdjoinRoot.lift_mk, Polynomial.eval₂_at_zero, hV0]
   have hy : AdjoinRoot.mk (X ^ (N + 1) : R[X]) P =
       AdjoinRoot.of (X ^ (N + 1) : R[X]) π * AdjoinRoot.mk (X ^ (N + 1) : R[X]) A' +
         AdjoinRoot.root (X ^ (N + 1) : R[X]) ^ d0 * AdjoinRoot.mk (X ^ (N + 1) : R[X]) V := by
@@ -374,8 +370,7 @@ theorem exists_finite_local_ring (O : Type) [CommRing O] [IsDomain O] [IsDiscret
     rw [h1, hI]
     exact Ideal.mul_mem_mul (Ideal.mem_span_singleton.2 (dvd_mul_left l _)) hϖmem
   have hpow : IsLocalRing.maximalIdeal O ^ (e + 1) ≤ I := by
-    rw [hmax, Ideal.span_singleton_pow, Ideal.span_le, Set.singleton_subset_iff]
-    exact hϖI
+    rwa [hmax, Ideal.span_singleton_pow, Ideal.span_le, Set.singleton_subset_iff]
   have : Finite (O ⧸ IsLocalRing.maximalIdeal O) :=
     (inferInstance : Finite (IsLocalRing.ResidueField O))
   have : Finite (O ⧸ IsLocalRing.maximalIdeal O ^ (e + 1)) :=
@@ -445,8 +440,7 @@ theorem exists_finite_local_ring (O : Type) [CommRing O] [IsDomain O] [IsDiscret
     rw [MvPolynomial.aeval_def, MvPolynomial.eval₂_map, Polynomial.algebraMap_eq, hPp,
       ← Polynomial.coe_mapRingHom, MvPolynomial.eval₂_comp_left, e1, e2]
   have hcoefP : ψ (Pp.coeff m.degree) ≠ 0 := by
-    rw [← Polynomial.coeff_map, hmapP]
-    exact hbcoef
+    rwa [← Polynomial.coeff_map, hmapP]
   obtain ⟨hloc, hdiv⟩ := exists_truncation ψ (f (Ideal.Quotient.mk I ϖ)) (e + 1) w
     (2 * (e + 1) * w + 1) hfπ hψker Pp m.degree (by omega) hcoefP
   have hTmon : (X ^ (2 * (e + 1) * w + 1 + 1) : S[X]).Monic := Polynomial.monic_X_pow _
@@ -469,15 +463,13 @@ theorem exists_finite_local_ring (O : Type) [CommRing O] [IsDomain O] [IsDiscret
     obtain ⟨c, hc⟩ := hlI
     apply hϖ.not_isUnit
     have h2 : l * 1 = l * (ϖ * c) := by
-      rw [mul_one, ← mul_assoc]
-      exact hc
+      rwa [mul_one, ← mul_assoc]
     have h3 := mul_left_cancel₀ hl0 h2
     exact ⟨⟨ϖ, c, h3.symm, by rw [mul_comm]; exact h3.symm⟩, rfl⟩
   · intro q hq
     dsimp only
     rw [haK q hq, map_zero]
-  · intro q hq
-    exact (haU q hq).map _
+  · exact fun q hq => (haU q hq).map _
   · have hev : MvPolynomial.aeval (fun q => AdjoinRoot.of (X ^ (2 * (e + 1) * w + 1 + 1) : S[X]) (a q) *
         AdjoinRoot.root _) F = AdjoinRoot.mk (X ^ (2 * (e + 1) * w + 1 + 1) : S[X]) Pp := by
       have e3 : (AdjoinRoot.mk (X ^ (2 * (e + 1) * w + 1 + 1) : S[X])).comp (C.comp hOS) =
@@ -490,7 +482,6 @@ theorem exists_finite_local_ring (O : Type) [CommRing O] [IsDomain O] [IsDiscret
         simp [AdjoinRoot.mk_C, AdjoinRoot.mk_X]
       rw [MvPolynomial.aeval_def, RingHom.algebraMap_toAlgebra, hPp, MvPolynomial.eval₂_comp_left,
         e3, e4]
-    rw [hev]
-    exact hdiv
+    rwa [hev]
 
 end GlobalTheory.NewPrime.LocalRing

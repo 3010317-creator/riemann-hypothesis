@@ -77,8 +77,7 @@ private theorem exists_pow_mul_isIntegral_of_valuation_le_one_away {F : Type} [F
     let v : HeightOneSpectrum (𝓞 F) := ⟨P, hP, hPne⟩
     have hv := h v hc
     have hspan : Ideal.span {q} ≠ 0 := by
-      rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-      exact hq0
+      rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     have hPunit : ¬ IsUnit P := by
       rw [Ideal.isUnit_iff]
       exact hP.ne_top
@@ -156,8 +155,7 @@ theorem UpperTheory.V.ZK.Cl.cRes :
       algebraMap (𝓞 L) (𝓞 F) b ^ n, by rw [map_pow]; exact pow_ne_zero _ hb, ?_, ?_⟩⟩
     · have e : ((algebraMap (𝓞 L) (𝓞 F) b ^ n : 𝓞 F) : F)
           = ((algebraMap (𝓞 L) (𝓞 F) b : 𝓞 F) : F) ^ n := by push_cast; rfl
-      rw [e, mul_comm]
-      exact ha
+      rwa [e, mul_comm]
     · rw [div_mul_cancel₀]
       rw [map_pow]
       exact pow_ne_zero _ hb

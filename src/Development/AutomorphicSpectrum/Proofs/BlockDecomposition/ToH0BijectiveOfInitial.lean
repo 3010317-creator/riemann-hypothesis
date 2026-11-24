@@ -442,8 +442,7 @@ theorem step (a b : ι → ℤ → IdF Φ.A) (a' b' : ℤ → IdF Φ'.A) (r : �
   obtain ⟨z, rfl⟩ := (u i).surjective x
   rw [LinearEquiv.symm_apply_apply]
   symm
-  refine (AddEquiv.symm_apply_eq u'.toAddEquiv).2 ?_
-  exact pull_U m E E' e (ν i n) (ha i n r) (hb i n r) j z
+  exact (AddEquiv.symm_apply_eq u'.toAddEquiv).2 (pull_U m E E' e (ν i n) (ha i n r) (hb i n r) j z)
 
 end Step
 

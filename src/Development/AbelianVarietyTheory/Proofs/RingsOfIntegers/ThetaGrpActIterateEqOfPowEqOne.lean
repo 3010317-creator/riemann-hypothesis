@@ -100,8 +100,7 @@ private theorem mem_wchart_of_good_of_index_eq {X Y : Scheme.{0}} (L : LB X) {K 
     (hc : ∀ k, J (r ≫ φ k) = c k) : r z ∈ L.wchart φ c := by
   have hm := mem_wchart_of_good L φ r z hJ
   have hfun : (fun k => J (r ≫ φ k)) = c := funext hc
-  rw [hfun] at hm
-  exact hm
+  rwa [hfun] at hm
 
 private theorem val_thetaGrp_eq_of_index_eq {L : LB A.left} {k : ℤ} {T : Over S} (θ : ThetaGrp A L k T) {Z : Scheme.{0}}
     (p : Z ⟶ (T ⊗ A).left) (z : Z) (J : (Z ⟶ A.left) → L.ι) (c : Fin 2 → L.ι)
@@ -182,8 +181,7 @@ theorem val_powGen {L : LB A.left} {k : ℤ} {T : Over S} (θ : ThetaGrp A L k T
   simp only [hmem, hmi, ↓reduceDIte]
   erw [map_prod]
   refine Finset.prod_congr rfl (fun i _ => ?_)
-  apply Units.ext
-  exact germ_app_presheaf_map_app_eq_germ_comp_app r _ z _ _ _ _ _ _ _ _
+  exact Units.ext (germ_app_presheaf_map_app_eq_germ_comp_app r _ z _ _ _ _ _ _ _ _)
 
 theorem iter_sval {L : LB A.left} {k : ℤ} {T : Over S} {θ : ThetaGrp A L k T} {n : ℕ}
     (t : Fin (n + 1) → LB.Sec (LPow A L k T)) (ht : ∀ i : Fin n, IsActOf A L k θ (t i.castSucc) (t i.succ))

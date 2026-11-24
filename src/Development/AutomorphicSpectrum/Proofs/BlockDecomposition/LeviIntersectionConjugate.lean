@@ -403,8 +403,7 @@ theorem mem_relUnip_iff_leviEmb_mem : ∀ (k : Type) [Field k] [ValuativeRel k] 
         rw [one_apply_sigma]
         exact (mem_unipRad.1 (hx' a)).2 j t t'
       · rw [leviEmb_apply_ne k e x hab r s, Matrix.one_apply_ne]
-        intro h
-        exact hab (congrArg Sigma.fst (e.injective h))
+        exact fun h => hab (congrArg Sigma.fst (e.injective h))
   · rintro ⟨hP, h1⟩ a -
     refine mem_unipRad.2 ⟨mem_parab_iff.2 fun j j' t t' hjj => ?_, fun j t t' => ?_⟩
     · have := hP ((hδ a j' j t' t).2 hjj)
@@ -450,8 +449,7 @@ theorem prod_row (i : α) (S : β' → Prop) [DecidablePred S] {G : Type} [CommM
           Finset.prod_congr rfl fun j _ => by split_ifs with h <;> simp [h]
       _ = ∏ j with S j, a ^ Fintype.card (c i j) := (Finset.prod_filter _ _).symm
       _ = _ := Finset.prod_pow_eq_pow_sum _ _ _
-  · intro b _ hb
-    exact Finset.prod_eq_one fun q _ => by simp [hb]
+  · exact fun b _ hb => Finset.prod_eq_one fun q _ => by simp [hb]
   · simp
 
 theorem prod_rel {G : Type} [CommGroupWithZero G] (v : (Σ i, Σ j, c i j) → G) (hv : ∀ q, v q ≠ 0) :
@@ -571,15 +569,13 @@ theorem relDeltaHalf_eq_one_of_integral (e : (Σ i, m i) ≃ Fin N) (f : ∀ i, 
   refine Finset.prod_eq_one fun j _ => ?_
   refine isUnram_absPow k _ _ (valuation_det_eq_one _ (fun a b => ?_) fun a b => ?_)
   · have := h1 (e ⟨i, f i ⟨j, a⟩⟩) (e ⟨i, f i ⟨j, b⟩⟩)
-    rw [leviEmb_apply_same] at this
-    exact this
+    rwa [leviEmb_apply_same] at this
   · have := h2 (e ⟨i, f i ⟨j, a⟩⟩) (e ⟨i, f i ⟨j, b⟩⟩)
     rw [← map_inv, leviEmb_apply_same] at this
     have e1 : ((relProj k f ⟨x, hx⟩ i j)⁻¹ : GL (c i j) k) = relProj k f (⟨x, hx⟩⁻¹) i j := by
       rw [map_inv]
       rfl
-    rw [e1]
-    exact this
+    rwa [e1]
 
 theorem nabs_det_diag (e : (Σ i, m i) ≃ Fin N) (f : ∀ i, (Σ j, c i j) ≃ m i)
     (x : Levi k m) (hx : x ∈ relParab k f) (μ : Fin N → ℤ)

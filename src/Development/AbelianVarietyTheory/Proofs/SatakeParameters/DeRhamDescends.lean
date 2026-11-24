@@ -92,15 +92,13 @@ theorem deRham_descends : ∀ (K L Ω : Type) [Field Ω] [Field K] [NumberField 
   have hdL : Bw'.IsdRE P M (rE.comp (GlobalTheory.AboveLRes.decRes A)) := (hmodL.isdRAt_iff P).1 hc
   have hdR' : IsDR (P.PD Bw'.Kw) (GlobalTheory.Pst.resTo (Bw.repE M rE) hKle) := by
     unfold IsDR
-    rw [← hrep, Module.finrank_fin_fun]
-    exact hdL
+    rwa [← hrep, Module.finrank_fin_fun]
   have hdR : IsDR (P.PD Bw.Kw) (Bw.repE M rE) :=
     (GlobalTheory.Per.TiedRestrict.isDR_restrict_iff hKle (Bw.repE M rE) T).2 hdR'
   have hdK : Bw.IsdRE P M rE := by
     have := hdR
     unfold IsDR at this
-    rw [Module.finrank_fin_fun] at this
-    exact this
+    rwa [Module.finrank_fin_fun] at this
   exact ⟨M, rE, hmodE, hdK⟩
 
 end GlobalTheory.DRDescent

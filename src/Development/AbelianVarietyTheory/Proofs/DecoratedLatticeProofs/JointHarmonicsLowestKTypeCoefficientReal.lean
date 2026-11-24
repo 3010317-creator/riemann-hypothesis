@@ -187,8 +187,7 @@ theorem holShape_signs_first : ∀ (D : D7) (σ : D.what₂.LL →+* ℂ), (∀ 
       · exact absurd h1 (hlt _ _ hc (F (K n)).2).ne
     intro a
     have h1 := hK2 a
-    rw [eq_self_of_strictMono hKm hFm hFK a] at h1
-    exact h1
+    rwa [eq_self_of_strictMono hKm hFm hFK a] at h1
   have hc : ∀ ρ, Formalism.QuantumDeterminants.IsHCParam (M.lam ρ) := fun ρ => by
     have he := M.enum ρ
     refine ⟨he.1, fun a => ?_⟩
@@ -414,8 +413,7 @@ theorem pair_of_ext (θ : InfFam D) (hθ : IsInfFam θ) (M : DSModel W S') (hLS 
           ∏ ρ, ⟪((e ρ : M.sm ρ) : M.H ρ), M.rep ρ (infMat D.sp.cm.sig W.gram (θ ρ)
             (g * atTau θ W τ ((M.fr τ)⁻¹ * k * M.fr τ))) ((v' ρ : M.sm ρ) : M.H ρ)⟫_ℂ :=
         Finset.prod_congr rfl fun ρ _ => by rw [hA τ k hk v' u hu ρ, hrep]; rfl
-      rw [hp]
-      exact this
+      rwa [hp]
 
   have hconj : ∀ (x y : ∀ ρ, M.H ρ), ∏ ρ, ⟪y ρ, x ρ⟫_ℂ = star (∏ ρ, ⟪x ρ, y ρ⟫_ℂ) := fun x y => by
     rw [star_prod]
@@ -468,8 +466,7 @@ theorem pair_of_ext (θ : InfFam D) (hθ : IsInfFam θ) (M : DSModel W S') (hLS 
             ((v ρ : M.sm ρ) : M.H ρ)⟫_ℂ :=
         Finset.prod_congr rfl fun ρ _ => by
           rw [hA τ k hk v u hu ρ, hrep, ContinuousLinearMap.comp_apply, hinv]
-      rw [hp]
-      exact this
+      rwa [hp]
   exact ⟨_, st2⟩
 
 end GlobalTheory.RawLift.FockPair
@@ -751,8 +748,7 @@ theorem killed_of_harmonic_adapted : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
   have a3 := congrFun (congrArg (om (h, g)) key) w
   rw [LinearMap.add_apply, LinearMap.smul_apply, map_add (f := _), map_smul, map_zero] at a3
   simp only [Pi.add_apply, Pi.smul_apply, Rder]
-  rw [a1, a2]
-  exact a3
+  rwa [a1, a2]
 
 end GlobalTheory.FockKillAdapted
 
@@ -1161,8 +1157,7 @@ theorem fock_coef_real : GlobalTheory.IndefiniteRowSideFullHecke.MatrixMinorProd
     (deltaAtEmb D i σ) (deltaAtEmb D i σ)
   have hΔ : l2 μ 𝓧 (pt (deltaAtEmb D i σ)) (pt (deltaAtEmb D i σ)) =
       Formalism.E.fock (deltaAtEmb D i σ) (deltaAtEmb D i σ) * l2 μ 𝓧 f f := by
-    rw [l2_self_eq_setIntegral_norm_sq μ 𝓧 f, ← fockIp_eq_fock]
-    exact hip
+    rwa [l2_self_eq_setIntegral_norm_sq μ 𝓧 f, ← fockIp_eq_fock]
   rw [hpt, hww, hΔ]
   ring
 

@@ -250,8 +250,7 @@ theorem nmat_zero_mem_Bor {r : ℕ} (X : Data E r) : nmat X 0 ∈ Bor X.Ψ r := 
   intro τ
   refine ⟨by rw [mat_nmat_zero, Matrix.det_one]; exact one_ne_zero, fun a c h => ?_⟩
   have := congrFun (congrFun (mat_nmat_zero X τ) a) c
-  rw [Matrix.one_apply_ne h.ne'] at this
-  exact this
+  rwa [Matrix.one_apply_ne h.ne'] at this
 
 theorem lact_one {r : ℕ} (X : Data E r) (x : Frame X.Ψ r) : lact (1 : GL (Fin r) E) x = x := by
   funext τ

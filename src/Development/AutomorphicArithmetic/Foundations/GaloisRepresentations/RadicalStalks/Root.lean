@@ -165,9 +165,7 @@ private theorem frob_rootMor (h : (p : Γ(X, ⊤)) = 0) : GlobalTheory.VB.frob X
   intro U
   erw [eqToHom_refl, op_id, CategoryTheory.Functor.map_id, Category.comp_id]
   ext s
-  have e := GlobalTheory.VB.frob_app p h (rootMor ψ H h ⁻¹ᵁ U) (rt ψ H U s)
-  refine Eq.trans ?_ (rt_pow ψ H U s)
-  exact e
+  exact Eq.trans (GlobalTheory.VB.frob_app p h (rootMor ψ H h ⁻¹ᵁ U) (rt ψ H U s)) (rt_pow ψ H U s)
 
 end UpperTheory.Gal.Ord.RootBuild
 
@@ -254,8 +252,7 @@ theorem UpperTheory.Reformulated.B.NonvanishingPoint.exists_point_nonvanishing_r
   have : Module.Finite k (B ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (B ⧸ m)
   let f : (B ⧸ m) →ₐ[k] k := IsAlgClosed.lift
   refine ⟨f.comp (Ideal.Quotient.mkₐ k m), ?_⟩
-  intro h
-  exact hcm (Ideal.Quotient.eq_zero_iff_mem.mp ((map_eq_zero f).mp h))
+  exact fun h => hcm (Ideal.Quotient.eq_zero_iff_mem.mp ((map_eq_zero f).mp h))
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.NonvanishingPoint =====
@@ -272,8 +269,7 @@ open scoped TensorProduct
 private theorem exists_functional_ne_zero_projective {B M : Type} [CommRing B] [AddCommGroup M] [Module B M]
     [Module.Projective B M] {m : M} (hm : m ≠ 0) : ∃ l : M →ₗ[B] B, l m ≠ 0 := by
   obtain ⟨s, hs⟩ := Module.projective_def'.mp (inferInstance : Module.Projective B M)
-  by_contra hall
-  push Not at hall
+  by_contra! hall
   apply hm
   have h0 : s m = 0 := by
     ext a
@@ -517,8 +513,7 @@ theorem UpperTheory.Gal.Ord.rootMor :
   have hFu : ∀ g : A ⊗ A ⟶ A, F ≫ u g = v g := by
     intro g
     apply Over.OverMorphism.ext
-    simp only [F, u, v, Over.comp_left, Over.homMk_left]
-    exact hnat g.left
+    simpa only [F, u, v, Over.comp_left, Over.homMk_left] using hnat g.left
   have huniv : (u (fst A A) * u (snd A A)).left = (fst A A * snd A A).left ≫ ψ' := by
     apply (cancel_epi (GlobalTheory.VB.frob (A ⊗ A).left p (cast_left p k hk (A ⊗ A)))).mp
     rw [hnat]

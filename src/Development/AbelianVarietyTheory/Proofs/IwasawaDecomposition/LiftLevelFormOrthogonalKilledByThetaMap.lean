@@ -69,8 +69,7 @@ theorem theta_eq_zero_of_orth {K : Type} [Field K] {G : Type} [Group G] [Fintype
   obtain ⟨u', hu', hθ⟩ := H.dn e he h2
   have hu'' : u' ∈ Submodule.span ℂ (j '' ((((LinearMap.range (LinearMap.adjoint Θ)).comap j) ⊓
       LinearMap.range (opF r e) : Submodule K F) : Set F)) := by
-    rw [H.ratLev hRZ e he]
-    exact hu'
+    rwa [H.ratLev hRZ e he]
   have h3 : ⟪u', j f⟫_ℂ = 0 := by
     have hle : Submodule.span ℂ (j '' ((((LinearMap.range (LinearMap.adjoint Θ)).comap j) ⊓
         LinearMap.range (opF r e) : Submodule K F) : Set F)) ≤ (Submodule.span ℂ {j f})ᗮ := by

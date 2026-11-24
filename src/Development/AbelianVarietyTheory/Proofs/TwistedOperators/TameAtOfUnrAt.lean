@@ -71,8 +71,7 @@ theorem isRes_one {χ : Formalism.L2.Host.HChar D.host.E} {PP : Pl D.host.E} (h 
   exact this.symm
 
 theorem tameAt_of_unrAt {χ : Formalism.L2.Host.HChar D.host.E} {PP : Pl D.host.E} (h : χ.UnrAt PP) : χ.TameAt PP := by
-  intro x hx _
-  exact h x hx
+  exact fun x hx _ => h x hx
 
 theorem UnrOff.mul {b : AE D} {χ χ' : (AE D)ˣ →* Circle} (h : UnrOff b χ) (h' : UnrOff b χ') : UnrOff b (χ * χ') := by
   intro x h1 h2 h3 h4
@@ -105,7 +104,6 @@ theorem unrOff_mu (hL : L.Is μ0) (t : T0) (j : Fin D.R.m) {P : Finset (Pl D.hos
     · exact (hsub PP' hn hc).2.2.2 PP hm hcj
   refine ⟨?_, GlobalTheory.T.heckeChar_trivial_on_idempotentIntegralUnits D _ L.C.eta P e hL.eta he
     (fun PP' _ _ => L.C.isEta.unr PP')⟩
-  show UnrOff (e + cA D e) (L.mu0 ((j : ℕ) + 1) * L.xi t)
   exact h0.mul h1
 
 theorem mu_val (hL : L.Is μ0) (t : T0) (j : Fin D.R.m) {P : Finset (Pl D.host.E)} {e : AE D}
@@ -124,8 +122,7 @@ theorem mu_val (hL : L.Is μ0) (t : T0) (j : Fin D.R.m) {P : Finset (Pl D.host.E
     (fun PP => if PP ∈ L.Pg then (L.chi ((j : ℕ) + 1) PP)⁻¹ else 1) (hL.mu0 j) he
     (fun PP hm => by
       by_cases hg : PP ∈ L.Pg
-      · simp only [ite_eq_left hg]
-        exact ⟨(L.C.isMu0 j).tame PP, hL.chi j PP hg⟩
+      · simpa only [ite_eq_left hg] using ⟨(L.C.isMu0 j).tame PP, hL.chi j PP hg⟩
       · simp only [ite_eq_right hg]
         have hq : PP ∈ L.Q t := ((hP PP).mp hm).resolve_left hg
         exact ⟨tameAt_of_unrAt (hQ PP hq), isRes_one (hQ PP hq)⟩) x a a' u hx ha hu
@@ -133,8 +130,7 @@ theorem mu_val (hL : L.Is μ0) (t : T0) (j : Fin D.R.m) {P : Finset (Pl D.host.E
     (fun PP => if PP ∈ L.Q t then L.xiR t PP else 1) (hL.xi t) he
     (fun PP hm => by
       by_cases hq : PP ∈ L.Q t
-      · simp only [ite_eq_left hq]
-        exact ⟨hL.xi_tame t PP, hL.xiR t PP hq⟩
+      · simpa only [ite_eq_left hq] using ⟨hL.xi_tame t PP, hL.xiR t PP hq⟩
       · simp only [ite_eq_right hq]
         have hg : PP ∈ L.Pg := ((hP PP).mp hm).resolve_right hq
         exact ⟨tameAt_of_unrAt (hPg PP hg), isRes_one (hPg PP hg)⟩) x a a' u hx ha hu

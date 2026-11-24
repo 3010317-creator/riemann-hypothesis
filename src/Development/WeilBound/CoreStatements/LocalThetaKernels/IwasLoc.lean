@@ -102,8 +102,7 @@ theorem iso_iff_cT (hc : ∀ x, c (c x) = x) (M : Matrix (β ⊕ β) (β ⊕ β)
   · intro h
     have := congrArg (fun N => N.map c) h
     simp only [Matrix.map_mul, Wm_map] at this
-    rw [cT, transpose_map, hcc] at this
-    exact this
+    rwa [cT, transpose_map, hcc] at this
 
 theorem inv_eq_of_iso (hc : ∀ x, c (c x) = x) {M N : Matrix (β ⊕ β) (β ⊕ β) L} (h : Iso c (Wm L β) (Wm L β) M)
     (hN : M * N = 1) : N = Wm L β * cT c M * Wm L β := by

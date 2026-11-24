@@ -82,8 +82,7 @@ theorem main {K B W G ι : Type} [Field K] [CommRing B] [IsDomain B] [Algebra K 
     induction T using Finset.strongInduction with
     | H T ih =>
       intro hTs f hf
-      by_contra hne
-      push Not at hne
+      by_contra! hne
       obtain ⟨i₀, hi₀, hfi₀⟩ := hne
 
       have hrel : ∀ j ∈ T, ∀ g : G, f i₀ * a g (f j) = a g (f i₀) * f j := by
@@ -101,8 +100,7 @@ theorem main {K B W G ι : Type} [Field K] [CommRing B] [IsDomain B] [Algebra K 
             smul_zero, sub_zero]
         have hf'i₀ : f' i₀ = 0 := by simp only [hf']; ring
         have hsum' : ∑ i ∈ T.erase i₀, f' i • v i = 0 := by
-          rw [← Finset.add_sum_erase T _ hi₀, hf'i₀, zero_smul, zero_add] at hsum
-          exact hsum
+          rwa [← Finset.add_sum_erase T _ hi₀, hf'i₀, zero_smul, zero_add] at hsum
         by_cases hj0 : j = i₀
         · subst hj0; ring
         · have := ih (T.erase i₀) (Finset.erase_ssubset hi₀)
@@ -116,8 +114,7 @@ theorem main {K B W G ι : Type} [Field K] [CommRing B] [IsDomain B] [Algebra K 
         have : f i₀ • ∑ i ∈ T, c i • v i = 0 := by
           rw [← hf, Finset.smul_sum]
           refine Finset.sum_congr rfl fun i hi => ?_
-          rw [hc i hi, mul_comm, mul_smul, smul_comm]
-          rw [algebraMap_smul]
+          rw [hc i hi, mul_comm, mul_smul, smul_comm, algebraMap_smul]
           exact smul_comm (c i) (f i₀) (v i)
         exact (smul_eq_zero_iff_right hfi₀).1 this
       have hKT : LinearIndepOn K v (↑T : Set ι) := hK.mono (by exact_mod_cast hTs)

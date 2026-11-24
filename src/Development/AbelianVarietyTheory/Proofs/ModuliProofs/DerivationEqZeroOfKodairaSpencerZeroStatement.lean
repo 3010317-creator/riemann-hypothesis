@@ -555,8 +555,7 @@ theorem exists_mor : ∀ (Y Y' : Scheme.{0}) (q : Y ⟶ Sp ℂ) (π : Y' ⟶ Sp 
       intro x hx
       have hx' : (j ≫ ρ) x = x := by rw [hjρ]; rfl
       show (j ≫ ρ) x ∈ m ⁻¹ᵁ U
-      rw [hx']
-      exact hx
+      rwa [hx']
     apply CommRingCat.hom_ext
     ext f
     change (j.appLE (ρ ⁻¹ᵁ (m ⁻¹ᵁ U)) (m ⁻¹ᵁ U) hle).hom
@@ -940,8 +939,7 @@ theorem endo_comp_proj : Out.Laws → Out.Laws2 → ∀ (P₀ : Out.PolAV (Sp �
     have e2 : δ.left (j y) = (η[P₀.A]).left (P₀.A.hom y) := by
       have := congrArg (fun m => m y) e1
       simpa [jT, Hom.one_def] using this
-    rw [e2, Subsingleton.elim (P₀.A.hom y) p₀]
-    exact hxV
+    rwa [e2, Subsingleton.elim (P₀.A.hom y) p₀]
   have : IsAffine V := hV
   have hG : Function.Bijective (A'.hom.appTop).hom := by
     have hgl := hL.globalFns
@@ -1094,8 +1092,7 @@ lemma eq_one_add_eps {Y Y' : Scheme.{0}} {q : Y ⟶ Sp ℂ} {π : Y' ⟶ Sp (Dua
     subst e
     obtain ⟨ab, hab, -⟩ := h₃ O F
     refine ⟨ab.1, ab.2, fun h => ?_⟩
-    rw [Scheme.Hom.appLE_eq_app]
-    exact hab
+    rwa [Scheme.Hom.appLE_eq_app]
   obtain ⟨a, b, hab⟩ := key _ O' (h₁ O') F
   refine ⟨b, fun h => ?_⟩
   have ha : a = 1 := by

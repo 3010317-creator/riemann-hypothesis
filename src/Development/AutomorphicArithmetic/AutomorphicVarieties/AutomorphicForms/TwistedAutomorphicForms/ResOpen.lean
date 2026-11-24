@@ -48,7 +48,5 @@ theorem UpperTheory.V.Af.Tw.resOpen :
   obtain ⟨hemb, hop, hidx⟩ := UpperTheory.V.Base.galEmbTop F L Ω
   rw [hre]
   refine ⟨⟨hemb, ?_⟩, ?_⟩
-  · rw [← MonoidHom.coe_range, UpperTheory.V.Base.range_galEmb]
-    exact hop
-  · rw [UpperTheory.V.Base.range_galEmb]
-    exact hidx
+  · rwa [← MonoidHom.coe_range, UpperTheory.V.Base.range_galEmb]
+  · rwa [UpperTheory.V.Base.range_galEmb]

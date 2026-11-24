@@ -563,8 +563,7 @@ theorem isLift_of_ofCore {F : Face D A} (h : GlobalTheory.Hk3.Core R F) (i : Fin
   have a := GlobalTheory.BaseScalar.integrableOn_of_isThetaLift hP.1 x (PiTensorProduct.tprod ℂ v) g
   have c := (congrFun (hP.2 x v) g).trans a.2
   refine ⟨a.1, ?_⟩
-  rw [hth x]
-  exact c
+  rwa [hth x]
 
 theorem scalar_of_lift_ofCore {F : Face D A} (hA : GlobalTheory.LowRow.AdelC R F) (h : GlobalTheory.Hk3.Core R F) (i : Fin D.R.m) (b : ℝ)
     (hb : Sizes D i b) (t : T0) (ht : PrimeToHost R t)
@@ -663,8 +662,7 @@ theorem l6m_le_log_lam3_base_place {D : D7} {G : Type} [Group G] [Fintype G] {Pl
   · rw [hC.scal.abs0 j A3.A.μ0 p hW, Real.log_exp]
   · obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hW
     have hpos : 0 < R.lam3 j A3.A.μ0 p A3.A.v0 := hP.2 j A3.A.μ0 p A3.A.v0
-    have heig := hA j A3.A.μ0 p x hx
-    exact (hB j).trans (hL j _ x hx0 hpos heig)
+    exact (hB j).trans (hL j _ x hx0 hpos (hA j A3.A.μ0 p x hx))
 
 end GlobalTheory.LowRow
 end -- clump:auto
@@ -1180,8 +1178,7 @@ theorem parts_scalar_six (h : GlobalTheory.Hk3.Core R F) (i : Fin D.R.m) (σ : D
   refine (hT ev (fun h0 => hev (e.symm.trans h0))).elim fun l a => ?_
   refine ⟨l, a.1, fun y hy => ?_, le_trans (sub_le_sub_right (hookPlus_le i σ hlog) _) a.2.2⟩
   have e1 := LinearMap.congr_fun (GlobalTheory.BaseScalar.adjLev_triv R T) y
-  have e2 := a.2.1 y (e.ge hy)
-  exact (congrArg T e1).symm.trans e2
+  exact (congrArg T e1).symm.trans (a.2.1 y (e.ge hy))
 
 
 open GlobalTheory.IndefiniteRowSideFullHecke.WeilGramSignature in

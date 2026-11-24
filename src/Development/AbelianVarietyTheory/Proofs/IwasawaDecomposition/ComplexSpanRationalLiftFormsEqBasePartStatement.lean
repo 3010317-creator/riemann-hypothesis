@@ -78,9 +78,7 @@ theorem span_jW_wp : GlobalTheory.Published.WeilRepresentationUnitaryPair → Gl
     exact congrArg (Tw.mk (twAt D.what₂.embLL A3.A.v0))
       (congrArg ((R.FW i).j (sg0 D A3.A)) (Fintype.linearCombination_apply _ _ _)).symm
   have hmem : ∀ y, y ∈ (s0Of R F).Wp i p ↔ Z.jW i y ∈ (R.Wp3 i p).comap (Y.mj.eW i) := by
-    intro y
-    show (R.toCx3 F).w0C false i (cpt A3.A.v0.embedding y) ∈ (R.toCx3 F).Wp i p ↔ _
-    exact (Iff.of_eq (congrArg (· ∈ (R.toCx3 F).Wp i p) (hpt y))).trans Iff.rfl
+    exact fun y => (Iff.of_eq (congrArg (· ∈ (R.toCx3 F).Wp i p) (hpt y))).trans Iff.rfl
   apply le_antisymm
   · rw [Submodule.span_le]
     rintro _ ⟨y, hy, rfl⟩
@@ -139,8 +137,7 @@ theorem span_jW_wp : GlobalTheory.Published.WeilRepresentationUnitaryPair → Gl
         ((R.toCx3 F).w0C false i (cpt A3.A.v0.embedding y))
       exact (congrArg (Tw.out (s := twAt D.what₂.embLL A3.A.v0) (E := (R.HW i (sg0 D A3.A)).H)) (hpt y)).symm
     obtain ⟨x', hx', hxx⟩ := h5 h4
-    rw [← hinj hxx]
-    exact hx'
+    rwa [← hinj hxx]
 
 end GlobalTheory.Mem.R3.RatSpan
 end -- clump:auto

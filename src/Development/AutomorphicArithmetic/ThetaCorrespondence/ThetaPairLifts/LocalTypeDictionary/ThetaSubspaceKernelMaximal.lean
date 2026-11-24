@@ -267,8 +267,7 @@ theorem kappa_stabilized_of_isStabilizedW : _root_.GlobalTheory.FunPr.ThetaLocal
     | nil =>
       intro _ Ψ hΨ
       simp only [List.map_nil, List.prod_nil]
-      rw [Prod.mk_one_one, map_one]
-      exact hΨ
+      rwa [Prod.mk_one_one, map_one]
     | cons x l' ih =>
       intro hx Ψ hΨ
       simp only [List.map_cons, List.prod_cons]
@@ -607,8 +606,7 @@ theorem kStable_subspace_sums : _root_.GlobalTheory.FunPr.ThetaLocalInputs → �
     have h2 := GlobalTheory.KStableLie.mem_of_isExp (isExp_piEnd hU m) N' hstab h0
     have e := hG (piEnd m U T)
     simp only [piEnd_apply] at e
-    rw [hsum, ← e]
-    exact h2
+    rwa [hsum, ← e]
 end GlobalTheory.KStableSums
 end
 end
@@ -679,8 +677,7 @@ theorem ker_projection_maximalCompact_stable : _root_.GlobalTheory.FunPr.ThetaLo
     have h0 : Q ΦD ∈ (⊥ : Submodule ℂ Pi) := by
       rw [Submodule.mem_bot, hQv _ hΦD, ← hFn _ _ hD, hp]
     have h2 := hker h0
-    rw [Submodule.mem_bot, hQv _ hmem, ← hFn _ _ hD1] at h2
-    exact h2
+    rwa [Submodule.mem_bot, hQv _ hmem, ← hFn _ _ hD1] at h2
   case hyp =>
     intro w Z γ hγ hw hw' m f f₁ φ hφ hf hact hN
     have hmemS : ∀ g : Fin m → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf D.host.F _, (∀ i, g i ∈ Γ.M.Pol Bs.ψ Bs.emb) →
@@ -737,8 +734,7 @@ theorem resEtaPow_div {K : Subgroup (AF F)ˣ} {χ χ' : Chr F E} {n m : ℕ} (h 
 
 theorem isHecke_div {χ χ' : Chr F E} (h : IsHecke F E χ) (h' : IsHecke F E χ') : IsHecke F E (χ / χ') := by
   refine ⟨?_, fun x => ?_⟩
-  · show Continuous fun x => χ x / χ' x
-    exact h.1.div' h'.1
+  · exact h.1.div' h'.1
   · rw [MonoidHom.div_apply, h.2 x, h'.2 x, div_one]
 
 end GlobalTheory.ThKRatInv
@@ -983,8 +979,7 @@ theorem exists_derivation_action_weil (hPr : _root_.GlobalTheory.FunPr.ThetaLoca
   rw [← hr] at hf
   obtain ⟨T, rfl⟩ := hf
   obtain ⟨Yg, -, hY⟩ := _root_.GlobalTheory.RealLiftGen.genEx F E σ (Fin (a + a')) _ _ B.emb (incM F G.W.J) Complex.I C hb.cm hC1 γ hγ
-  have h2 := (hL F _ (Φ T) _ (Φ T)).1 _ (fun t => map_zero _) (hW2 γ hγ Yg hY T)
-  exact ⟨_, mem _, h2⟩
+  exact ⟨_, mem _, ((hL F _ (Φ T) _ (Φ T)).1 _ (fun t => map_zero _) (hW2 γ hγ Yg hY T))⟩
 theorem thetaSum_weil_hasDerivAt (hPr : _root_.GlobalTheory.FunPr.ThetaLocalInputs) {B : Base F E} {a a' : ℕ} {G : Geo σ a a'} {X : Chars F E}
     {om : Rep σ G.V G.W} {om' : Rep σ G.V' G.W} (h : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsTriple B G X om om')
     (γ : Multiplicative ℝ →* UA σ G.W.J) (hγ : γ ∈ Lines σ G.W) (f : SInf F (Fin a × Fin (a + a')))
@@ -1166,8 +1161,7 @@ theorem GlobalTheory.SquareAgree.kernel_maximal_theta_subspace : _root_.GlobalTh
       ΦD ∈ algD Γ.M Bs.ψ Bs.emb := by
     intro ΦD h hF
     obtain ⟨ΨD, hΨ, hd⟩ := hO.algA _ hF
-    rw [inj ΦD h ΨD (hS _ hΨ) (hdat _ _ hd)]
-    exact hΨ
+    rwa [inj ΦD h ΨD (hS _ hΨ) (hdat _ _ hd)]
   have hWf : ∀ h' ∈ GfC X, ∀ ΦD ∈ algD Γ.M Bs.ψ Bs.emb, om (1, kapX X e hO.JX h') ΦD ∈ algD Γ.M Bs.ψ Bs.emb ∧
       dF (om (1, kapX X e hO.JX h') ΦD) = ωA (1, h') (dF ΦD) := by
     intro h' hh' ΦD hΦD
@@ -1237,8 +1231,7 @@ theorem GlobalTheory.SquareAgree.kernel_maximal_theta_subspace : _root_.GlobalTh
     intro hK
     have hnt := hm.irred.1
     have : ∃ Φ ∈ algF Bs.ψ θ true A B, p Φ ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       have hb : (algF Bs.ψ θ true A B).map p = ⊥ := by
         rw [eq_bot_iff]
         rintro _ ⟨Φ, hΦ, rfl⟩

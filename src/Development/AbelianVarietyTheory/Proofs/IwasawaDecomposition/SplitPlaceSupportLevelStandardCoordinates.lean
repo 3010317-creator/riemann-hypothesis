@@ -167,8 +167,7 @@ theorem mem_levJ_iff {D : D7} (V : HSp D) (β : GL (Fin V.rank) (Formalism.Indef
     (hoff : ∀ PP, PP ∈ L.Pg ∨ PP ∈ L.Q → (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) ≠ v) :
     x ∈ (levEnv V β L).J ↔ Formalism.UG.bc (swapAE D) (x : GL (Fin V.rank) _) ∈ Formalism.L2.DIV.St β := by
   constructor
-  · intro h
-    exact Formalism.L2.DIV.parLev_St (Formalism.L2.DIV.lev_le_parLev h)
+  · exact fun h => Formalism.L2.DIV.parLev_St (Formalism.L2.DIV.lev_le_parLev h)
   · intro hS
     set y := Formalism.UG.bc (swapAE D) (x : GL (Fin V.rank) _) with hy
     have hred : ∀ PP, PP ∈ L.Pg ∨ PP ∈ L.Q → Formalism.L2.DIV.redFn β PP y = 1 :=
@@ -210,8 +209,7 @@ theorem conj_mem_iff {G : Type} [Group G] (H : Subgroup G) {a : G} (ha : a ∈ H
     have : u = a⁻¹ * (a * u * a⁻¹) * a := by group
     rw [this]
     exact H.mul_mem (H.mul_mem (H.inv_mem ha) h) ha
-  · intro h
-    exact H.mul_mem (H.mul_mem ha h) (H.inv_mem ha)
+  · exact fun h => H.mul_mem (H.mul_mem ha h) (H.inv_mem ha)
 
 theorem mem_mhlKv_iff_St {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E]
     {hc : Formalism.BasicNotions.CMData F E} {n : ℕ} [NeZero n] {v : HeightOneSpectrum (𝓞 F)} (u : Formalism.L2.Col.UAd hc n)

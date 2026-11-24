@@ -433,8 +433,7 @@ theorem exists_std : ∀ {R : Type} [CommRing R] [TopologicalSpace R] [IsTopolog
           rw [hB1, LinearEquiv.apply_symm_apply] at h3
           simp only [zero_dotProduct, dotProduct_single, zero_sub] at h3
           rw [AddChar.map_neg_eq_inv, inv_eq_one] at h3
-          rw [mul_comm ((u : Rˣ) : R) _, mul_assoc]
-          exact h3
+          rwa [mul_comm ((u : Rˣ) : R) _, mul_assoc]
         have h4 := (h.ann _).1 key
         rwa [← mul_assoc, Units.inv_mul, one_mul] at h4
       · intro i
@@ -447,8 +446,7 @@ theorem exists_std : ∀ {R : Type} [CommRing R] [TopologicalSpace R] [IsTopolog
         have h3 := hall _ hγ
         rw [hB1, LinearEquiv.apply_symm_apply] at h3
         simp only [single_dotProduct, dotProduct_zero, sub_zero] at h3
-        rw [mul_comm]
-        exact h3
+        rwa [mul_comm]
   · refine ⟨fun x hx => ?_, fun x hx y hy => ?_⟩
     · obtain ⟨hxa, hxb⟩ := (hΓ x).1 hx
       have h2 : ψ (-(⅟2 * ((d.e x).1 ⬝ᵥ (d.e x).2))) * ψ (-(⅟2 * ((d.e x).1 ⬝ᵥ (d.e x).2))) = 1 := by
@@ -619,8 +617,7 @@ theorem irreducible : ∀ {X M : Type} [AddCommGroup X] [AddCommGroup M] [Module
     obtain ⟨f, hf⟩ := Finsupp.mem_span_range_iff_exists_finsupp.1 hmem
     have hφ : φ ∈ N := by
       refine mem_of_sum S hd hs hl N hN f.support f ?_ ?_
-      · rw [← hf] at hv
-        exact hv
+      · rwa [← hf] at hv
       · exact fun h => hv0 (hf.symm.trans h)
     rw [eq_top_iff, ← hc, Submodule.span_le]
     rintro _ ⟨x, rfl⟩

@@ -94,8 +94,7 @@ theorem exists_root_of_ne_zero (g : ℂ → ℂ) (m : ℕ) (c : ℂ) (R : ℝ) (
     field_simp at hconst
     exact hconst
   refine ⟨fun z => Complex.exp (L z / m), ?_, ?_⟩
-  · intro z hz
-    exact (((hL z hz).differentiableAt.div_const (m : ℂ)).cexp).differentiableWithinAt
+  · exact fun z hz => (((hL z hz).differentiableAt.div_const (m : ℂ)).cexp).differentiableWithinAt
   · intro z hz
     have hm' : (m : ℂ) ≠ 0 := by exact_mod_cast hm.ne'
     rw [← Complex.exp_nat_mul, mul_div_cancel₀ _ hm', hexp z hz]
@@ -131,8 +130,7 @@ theorem exists_root_disc : ∀ (h : ℂ → ℂ) (m : ℕ) (c : ℂ) (R : ℝ), 
     intro u hu
     obtain ⟨k, hk⟩ := hdU u hu
     have : kk u = k := by
-      simp only [kk, hk, Int.toNat_natCast]
-      exact Nat.mul_div_cancel_left k hm
+      simpa only [kk, hk, Int.toNat_natCast] using Nat.mul_div_cancel_left k hm
     rw [this, hk]
   have hSU : ∀ u ∈ S, u ∈ U := by
     intro u hu

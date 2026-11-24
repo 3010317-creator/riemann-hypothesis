@@ -111,8 +111,7 @@ theorem linearEquiv_of_prod_corner_bijective (e : (M × P) ≃ₗ[R] (M' × P))
       have h1 : d x.2 = -c x.1 := by
         rw [eq_neg_iff_add_eq_zero, add_comm]; exact h0.symm
       have h2 : dE.symm (d x.2) = x.2 := dE.symm_apply_apply x.2
-      rw [h1, map_neg] at h2
-      exact h2
+      rwa [h1, map_neg] at h2
     have hk := key x.1
     rw [hp] at hk
     have hψ : ψ m' = x.1 := rfl
@@ -149,8 +148,7 @@ theorem linearEquiv_cancel_of_nilpotent_or_bijective
     have h2 := congrArg Prod.snd (e.symm_apply_apply (0, p))
     rw [h, map_add (f := _)] at h2
     show c' (b p) = p - d' (d p)
-    rw [eq_sub_iff_add_eq]
-    exact h2
+    rwa [eq_sub_iff_add_eq]
   have hnil : IsNilpotent (d' * d) := by
     rcases hP (d' * d) with h | h
     · exact h

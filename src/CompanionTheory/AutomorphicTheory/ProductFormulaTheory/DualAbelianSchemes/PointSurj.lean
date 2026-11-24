@@ -79,8 +79,7 @@ theorem not_acyclic_cechLB_of_triv {R : Type} [CommRing R] {X : Scheme.{0}} [Non
     have e₄ : rs X (inf_le_inf_right _ (iInf_le_iInf_of_subset D (Finset.empty_subset {i})))
         (SecOnR.coord y c) = 0 := e₂
     have e₅ : SecOnR.coord y c = rs X inf_le_right (t.s c).val := GlobalTheory.LB.coord_ofSec _ _ _
-    rw [e₅, rs_rs] at e₄
-    exact e₄
+    rwa [e₅, rs_rs] at e₄
   rw [e₃] at hu
   have hu' := hu.map (X.presheaf.germ _ p hpW).hom
   rw [map_zero] at hu'
@@ -252,8 +251,7 @@ theorem exists_affine_cover_finite_closed_points : ∀ (X : Scheme.{0}) [Compact
       ∀ x ∈ F, ∀ i j, x ∈ V i → x ∈ V j → i = j := by
   intro X _ F hF hc
   have hcl : ∀ G : Set X, G ⊆ F → IsClosed G := fun G hG => by
-    have h := (hF.subset hG).isClosed_biUnion (fun x hx => hc x (hG hx))
-    simpa using h
+    simpa using (hF.subset hG).isClosed_biUnion (fun x hx => hc x (hG hx))
 
   have hW : ∀ x : F, ∃ W : X.Opens, IsAffineOpen W ∧ x.1 ∈ W ∧ ∀ y ∈ F, y ∈ W → y = x.1 := by
     intro x
@@ -303,8 +301,7 @@ theorem exists_affine_cover_finite_closed_points : ∀ (X : Scheme.{0}) [Compact
       exact ⟨e (some (Sum.inl x)), by simpa [V'] using hx⟩
     · obtain ⟨U, hU, hyU⟩ := Set.mem_iUnion₂.1 (hs hy)
       exact ⟨e (some (Sum.inr ⟨U, hU⟩)), by simpa [V'] using hyU⟩
-  · intro x hx i j hi hj
-    exact e.symm.injective ((hV'F x hx _ hi).trans (hV'F x hx _ hj).symm)
+  · exact fun x hx i j hi hj => e.symm.injective ((hV'F x hx _ hi).trans (hV'F x hx _ hj).symm)
 
 end GlobalTheory.CompanionTheory.CoverPoints
 end -- clump:auto

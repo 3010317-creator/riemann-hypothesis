@@ -722,8 +722,7 @@ theorem stages {G G' : Type} [Group G] [Group G'] [Fintype G] [Fintype G'] (P : 
       refine Finset.sum_eq_zero fun q hq => ?_
       obtain ⟨hq, hq'⟩ := (Finset.mem_filter.1 hq).2
       rw [hF _ (hw q hq), hconj q hq z hz, ite_eq_right]
-      rw [P'.mul_mem_cancel_right hq', P'.mul_mem_cancel_left (P'.inv_mem hq')]
-      exact hz'
+      rwa [P'.mul_mem_cancel_right hq', P'.mul_mem_cancel_left (P'.inv_mem hq')]
   · simp [hy]
 
 variable {g : ℕ} [Fact g.Prime]
@@ -983,8 +982,7 @@ variable {g : ℕ} [Fact g.Prime]
 theorem inMir_toG {m : ℕ} {M : Mt g m} (h : InMir M) : InMir ((toG M : Gn g m) : Mt g m) := by
   unfold toG
   split_ifs with hu
-  · rw [hu.unit_spec]
-    exact h
+  · rwa [hu.unit_spec]
   · exact inMir_one m
 
 theorem indV_sum (ψ : AddChar (ZMod g) ℂ) (m : ℕ) (f : Gn g m → ℂ) (s : Finset ℕ) (fs : ℕ → Gn g m → ℂ)
@@ -1059,8 +1057,7 @@ theorem der_one (ψ : AddChar (ZMod g) ℂ) (F : Gn g 1 → ℂ) (h : Gn g 0) : 
   · rw [MonoidAlgebra.coeff_single, Finsupp.single_eq_same, one_mul, res_one]
   · intro b _ hb
     simp [MonoidAlgebra.coeff_single, Ne.symm hb]
-  · intro h1
-    exact absurd (Finset.mem_univ _) h1
+  · exact fun h1 => absurd (Finset.mem_univ _) h1
 
 theorem base (ψ : AddChar (ZMod g) ℂ) (F : Gn g 1 → ℂ) : F 1 = indR ψ 0 1 (der ψ 0 F) 1 := by
   have hc : (Finset.univ.filter fun p : Gn g 1 => InR 0 (p : Mt g 1)) = {1} := by
@@ -1281,8 +1278,7 @@ theorem sum_conj_fR (ψ : AddChar (ZMod g) ℂ) (i n : ℕ) (hi : i ≤ n) (ρ :
         rw [ite_eq_left (hiff.2 hz), ite_eq_left hz, e1, e2]
         congr 1
         have := hρ (toG (tl i (z : Mt g n))) (toG (tl i (p : Mt g n)))⁻¹
-        rw [inv_inv] at this
-        exact this
+        rwa [inv_inv] at this
       · rw [ite_eq_right (fun hh => hz (hiff.1 hh)), ite_eq_right hz]
     · rw [ite_eq_right hp, ite_eq_right hp]
   rw [Finset.sum_congr rfl (fun p _ => key p), sum_par i (n - i) n hn (fun (_ : Gn g i) (h₂ : Gn g (n - i)) =>
@@ -1325,8 +1321,7 @@ theorem stages (ψ : AddChar (ZMod g) ℂ) (i n : ℕ) (hi : i ≤ n) (ρ : Gn g
     rw [Nat.cast_ne_zero]
     refine Finset.card_ne_zero_of_mem (a := 1) (Finset.mem_filter.2 ⟨Finset.mem_univ _, ?_⟩)
     rw [Units.val_one]
-    intro a b hb ha
-    exact Matrix.one_apply_ne (Fin.ne_of_val_ne (by omega))
+    exact fun a b hb ha => Matrix.one_apply_ne (Fin.ne_of_val_ne (by omega))
   have hU0 : ((Finset.univ.filter fun u : Gn g (n - i) => IsUniUp (u : Mt g (n - i))).card : ℂ) ≠ 0 := by
     rw [Nat.cast_ne_zero]
     refine Finset.card_ne_zero_of_mem (a := 1) (Finset.mem_filter.2 ⟨Finset.mem_univ _, ?_⟩)
@@ -1361,8 +1356,7 @@ theorem stages (ψ : AddChar (ZMod g) ℂ) (i n : ℕ) (hi : i ≤ n) (ρ : Gn g
         ∑ y : Gn g n, (if InPar i (p : Mt g n) then fR ψ i ρ (p⁻¹ * (y⁻¹ * h * y) * p) else 0) := by
       intro p
       by_cases hp : InPar i (p : Mt g n)
-      · simp only [ite_eq_left hp]
-        exact e2 p
+      · simpa only [ite_eq_left hp] using e2 p
       · simp only [ite_eq_right hp, Finset.sum_const_zero]
     rw [e1, Finset.sum_congr rfl (fun p _ => e3 p), Finset.sum_comm, Finset.mul_sum]
     refine Finset.sum_congr rfl fun y _ => ?_
@@ -1509,7 +1503,6 @@ theorem coe_diag1 {k : ℕ} (h : Gn g k) : (diag1 h (k + 1) : Mt g (k + 1)) = dM
     ⟨⟨dM (h : Mt g k), dM ((h⁻¹ : Gn g k) : Mt g k),
       by rw [dM_mul_flag_measures, Units.mul_inv, dM_one_flag_measures],
       by rw [dM_mul_flag_measures, Units.inv_mul, dM_one_flag_measures]⟩, rfl⟩
-  show ((toG (dM (h : Mt g k)) : Gn g (k + 1)) : Mt g (k + 1)) = dM (h : Mt g k)
   exact coe_toG hu
 
 theorem inR_iff_ent {i n : ℕ} (M : Mt g n) :
@@ -1635,8 +1628,7 @@ private theorem entN_eq_zero_of_mul_eq_of_inR {k i : ℕ} (hik : i < k) (X Yi Dm
       rfl
     · intro c _ hc
       rw [ite_eq_right (fun hh => hc (Fin.ext hh))]
-    · intro hh
-      exact absurd (Finset.mem_univ _) hh
+    · exact fun hh => absurd (Finset.mem_univ _) hh
   rw [hs] at e
   rw [entN, dite_eq_left ⟨by omega, by omega⟩]
   show X ⟨k - 1, by omega⟩ (Fin.last k) = 0
@@ -1682,8 +1674,7 @@ theorem fR_conj_diag1 (ψ : AddChar (ZMod g) ℂ) (i k : ℕ) (hi : i ≤ k) (ρ
         supFrom i (((toG (tl k (y : Mt g (k + 1))))⁻¹ * h * toG (tl k (y : Mt g (k + 1))) : Gn g k) : Mt g k) := by
     intro hR
     have hRX : InR i ((y⁻¹ * diag1 h (k + 1) * y : Gn g (k + 1)) : Mt g (k + 1)) := by
-      rw [inR_iff_tl hi hXm, hT]
-      exact hR
+      rwa [inR_iff_tl hi hXm, hT]
     unfold supFrom
     rw [← hT]
     rcases Nat.lt_or_ge i k with hik | hik

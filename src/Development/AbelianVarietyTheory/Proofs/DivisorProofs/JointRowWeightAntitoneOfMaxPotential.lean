@@ -183,8 +183,7 @@ theorem jointWt_perm (O : Type) [CommRing O] (N : ℕ) {ι : Type} [Fintype ι] 
   · intro h0
     apply hz0
     have := congrArg (fun t => grpA O N lam g⁻¹ • t) h0
-    simp only [smul_smul, grpA_inv_mul, one_smul, smul_zero] at this
-    exact this
+    simpa only [smul_smul, grpA_inv_mul, one_smul, smul_zero] using this
   · intro τ' a ha
     obtain ⟨b0, hb0, -⟩ := GlobalTheory.ExpFrame.exists_unique_isProj O N ι lam τ' (w τ')
     obtain ⟨c, -, huniq⟩ := GlobalTheory.ExpFrame.exists_unique_isProj O N ι lam τ' (Function.update w τ (w τ ∘ σ) τ')
@@ -251,8 +250,7 @@ theorem antitone_of_pot_max : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscre
   intro O _ _ _ _ N ι _ _ lam Gm _ _ w hw hmax τ
   apply antitone_of_adj
   intro a b hab
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have h1 := hmax _ (jointWt_perm O N lam Gm w hw τ (Equiv.swap a b))
   have h2 := pot_lt_swap w τ a b hab hlt
   omega

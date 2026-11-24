@@ -546,8 +546,7 @@ theorem exists_spread : Out.Laws → Out.Laws2 → ∀ (o : Type) [CommRing o] (
   obtain ⟨c1, c2, c3⟩ := H _ ρ _ t' h4 ht'
   refine ⟨F, hF, t', ψ, h2, ?_, ?_, c2, c3⟩
   · refine ((_root_.GlobalTheory.ZM.tmap_id_comp_cancel o g (N' ^ 2) J b _ _ _ _ _ _ t₂ t' t).2 (spMap ρ) (spMap ψ) ht').2 ?_
-    rw [spMap_comp_eq _ _ _ h3]
-    exact hm
+    rwa [spMap_comp_eq _ _ _ h3]
   · have : (fun a => ρ (io (v a))) = fun a => algebraMap R (Localization.Away F) (v a) :=
       funext fun a => RingHom.congr_fun h1 (v a)
     exact this ▸ c1
@@ -625,8 +624,7 @@ theorem exists_obj_over_complete_dvr : Out.Laws → Out.Laws2 → ∀ (o : Type)
   have e : (fun a => algebraMap V F (y (v a))) =
       fun a => φ (algebraMap R (Localization.Away f) (v a)) :=
     funext fun a => (RingHom.congr_fun hφ (v a)).symm
-  rw [e]
-  exact h3
+  rwa [e]
 
 end GlobalTheory.ZM
 end -- clump:auto
@@ -683,8 +681,7 @@ theorem charZero_quotient {o R : Type} [CommRing o] [IsDomain o] [CharZero o] [C
   have h1 : (n : o) ∈ nonZeroDivisors o := mem_nonZeroDivisors_of_ne_zero (by exact_mod_cast h0)
   have hreg := Module.Flat.isSMulRegular_of_nonZeroDivisors (M := R) h1
   have h2 : (n : R) ∈ q := by
-    rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
-    exact hn
+    rwa [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
   refine Set.disjoint_left.mp (Ideal.disjoint_nonZeroDivisors_of_mem_minimalPrimes hq) h2 ?_
   refine mem_nonZeroDivisors_iff_left.2 fun x hx => hreg ?_
   simpa [Algebra.smul_def] using hx

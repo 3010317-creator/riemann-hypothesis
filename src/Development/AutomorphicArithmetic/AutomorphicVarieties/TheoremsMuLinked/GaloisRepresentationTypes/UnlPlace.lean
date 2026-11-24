@@ -150,10 +150,8 @@ theorem UpperTheory.V.Th.spUnl :
         apply Units.ext
         have e2 := congrArg Units.val h1
         have e3 : algebraMap ℚ_[l] (Qbar l) ((cycZ ℚ Ω l (D.s0 : G ℚ Ω) : ℤ_[l]) : ℚ_[l]) = algebraMap ℚ_[l] (Qbar l) 1 := by
-          rw [map_one]
-          exact e2
-        have e4 := (algebraMap ℚ_[l] (Qbar l)).injective e3
-        exact PadicInt.ext e4
+          rwa [map_one]
+        exact PadicInt.ext ((algebraMap ℚ_[l] (Qbar l)).injective e3)
       rw [h2]
       exact IsOfFinOrder.one
     · have hmem : D.sg l ∈ D.Gp l := ((UpperTheory.V.GradeZeroInterpolatingElement.facts D hG).2.1 l (Finset.mem_insert_self _ _)).1

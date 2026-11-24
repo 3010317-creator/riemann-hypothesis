@@ -471,8 +471,7 @@ theorem chartι_str (i : Fin (N + 1)) :
   rw [chartι, PSpace.str, Category.assoc, Proj.awayι_toSpecZero_assoc, ← Spec.map_comp, ← Spec.map_comp]
   congr 1
   ext1
-  refine RingHom.ext fun r => ?_
-  exact (awayToPoly_mk R N i 0 (C r) (isHomogeneous_C _ r)).trans (by simp)
+  exact RingHom.ext fun r => (awayToPoly_mk R N i 0 (C r) (isHomogeneous_C _ r)).trans (by simp)
 
 def chartCover : (PSpace R N).OpenCover :=
   Scheme.Cover.mkOfCovers (Fin (N + 1)) (fun i => Sp (MvPolynomial {j // j ≠ i} R)) (chartι R N)

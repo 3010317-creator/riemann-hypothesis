@@ -33,8 +33,7 @@ lemma kword_mem {l : List (Fin n × Fin n)} (hl : KLower ε l) : word F l w ∈ 
   exact Submodule.subset_span ⟨l, hl, rfl⟩
 
 lemma kself_mem : w ∈ kLowSpan ε F w := by
-  have h := kword_mem (ε := ε) (F := F) (w := w) (l := []) (fun p hp => by simp at hp)
-  simpa using h
+  simpa using kword_mem (ε := ε) (F := F) (w := w) (l := []) (fun p hp => by simp at hp)
 
 lemma klower_mem {a b : Fin n} (hab : b < a) (he : ε a = ε b) {x : U}
     (hx : x ∈ kLowSpan ε F w) : F a b x ∈ kLowSpan ε F w := by
@@ -46,8 +45,7 @@ lemma klower_mem {a b : Fin n} (hab : b < a) (he : ε a = ε b) {x : U}
       rcases List.mem_cons.1 hp with rfl | hp
       · exact ⟨hab, he⟩
       · exact hl p hp
-    have h := kword_mem (F := F) (w := w) hl'
-    simpa [word_cons] using h
+    simpa [word_cons] using kword_mem (F := F) (w := w) hl'
   | zero => simp
   | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
   | smul c x _ hx => rw [map_smul]; exact Submodule.smul_mem _ c hx

@@ -100,12 +100,10 @@ theorem exists_place_over (Ω : Type) [Field Ω] [Algebra ℚ Ω] (l : ℕ) [Fac
     have h1 : ((l * n : ℤ) : Ω) = 1 := by
       have hv := congrArg Subtype.val hy
       rw [Subring.coe_mul, Subring.coe_one, ← hn] at hv
-      rw [Int.cast_mul, Int.cast_natCast]
-      exact hv
+      rwa [Int.cast_mul, Int.cast_natCast]
     have h2 : (l : ℤ) * n = 1 := by
       have h5 : algebraMap ℚ Ω (((l * n : ℤ)) : ℚ) = algebraMap ℚ Ω 1 := by
-        rw [map_intCast, map_one]
-        exact h1
+        rwa [map_intCast, map_one]
       exact_mod_cast (algebraMap ℚ Ω).injective h5
     have h3 := Int.eq_one_or_neg_one_of_mul_eq_one h2
     have h4 := (Fact.out : l.Prime).two_le

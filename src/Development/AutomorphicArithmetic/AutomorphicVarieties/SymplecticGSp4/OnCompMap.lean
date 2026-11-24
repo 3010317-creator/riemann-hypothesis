@@ -63,8 +63,7 @@ private theorem smul_map' (f : R →+* R') (a : R) (X : M4 R) : f.mapMatrix (a �
 private theorem isGSp_map (f : R →+* R') {ν : R} {g : M4 R} (h : IsGSp ν g) : IsGSp (f ν) (f.mapMatrix g) := by
   unfold IsGSp at h ⊢
   have h2 := congrArg f.mapMatrix h
-  rw [map_mul, smul_map', map_one, ← adj_map'] at h2
-  exact h2
+  rwa [map_mul, smul_map', map_one, ← adj_map'] at h2
 
 private theorem aeval_map' (f : R →+* R') (X : M4 R) (p : Polynomial R) :
     Polynomial.aeval (f.mapMatrix X) (p.map f) = f.mapMatrix (Polynomial.aeval X p) := by
@@ -124,8 +123,7 @@ private theorem condP_map (p : ℕ) (f : R →ₐ[c.O] R') (ρ : Lift c.O (D.rba
     D.condP p R' (ρ.map f) := by
   refine ⟨fun g => ?_, fun g hg => ?_⟩
   · have := isGSp_map (f : R →+* R') (h.1 g)
-    rw [RingHom.coe_coe, f.commutes] at this
-    exact this
+    rwa [RingHom.coe_coe, f.commutes] at this
   · show (f : R →+* R').mapMatrix (ρ.hom g) = 1
     rw [h.2 g hg, map_one]
 

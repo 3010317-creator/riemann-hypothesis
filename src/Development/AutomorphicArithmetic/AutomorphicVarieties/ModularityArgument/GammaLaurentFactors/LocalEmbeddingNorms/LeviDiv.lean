@@ -208,8 +208,7 @@ private theorem exists_shape (hB : LdBlock) (hσ : IsAdmissible σ) [σ.IsIrredu
         Integrable (fun x => g (e.symm x)) (Measure.pi μ') → Integrable g μM := by
       intro g hg
       have := hg.smul_measure (c := (c : ℝ≥0∞)) ENNReal.coe_ne_top
-      rw [← hmap, em.measurableEmbedding.integrable_map_iff, hcomp] at this
-      exact this
+      rwa [← hmap, em.measurableEmbedding.integrable_map_iff, hcomp] at this
     have hI : ∀ g : levi F n β → ℂ, ∫ m, g m ∂μM = (c : ℂ) * ∫ x, g (e.symm x) ∂(Measure.pi μ') := by
       intro g
       have h1 := integral_map_equiv (μ := μM) em (fun x => g (e.symm x))
@@ -218,10 +217,8 @@ private theorem exists_shape (hB : LdBlock) (hσ : IsAdmissible σ) [σ.IsIrredu
       rw [← h1]
       simp [Complex.real_smul]
     refine ⟨⟨s₁, fun s hs => hint _ ?_⟩, ⟨-s₁, fun s hs => hint _ ?_⟩, ?_⟩
-    · simp only [hA]
-      exact (hs₁ Ψ hΨs w ℓ hlρ).1 s hs
-    · simp only [hB2]
-      exact (hs₁ _ hΨh w ℓ hlρ).2 s hs
+    · simpa only [hA] using (hs₁ Ψ hΨs w ℓ hlρ).1 s hs
+    · simpa only [hB2] using (hs₁ _ hΨh w ℓ hlρ).2 s hs
     · refine ((hγfe Ψ hΨs w ℓ hlρ).const_mul (c : ℂ)).congr ⟨0, fun s _ => ?_⟩ ⟨0, fun s _ => ?_⟩
       · rw [hI]; simp only [hA]
       · rw [hI]; simp only [hB2]

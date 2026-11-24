@@ -68,8 +68,7 @@ private theorem wcomp_mul_homog {O σ X : Type} [CommRing O] [AddCommGroup X] (w
     have hp' := Finset.HasAntidiagonal.mem_antidiagonal.1 hp
     by_cases h2 : Finsupp.weight wt p.2 = c
     · rw [coeff_wcomp, ite_eq_right, zero_mul]
-      intro h1
-      exact h (by rw [← hp', map_add (f := _), h1, h2, sub_add_cancel])
+      exact fun h1 => h (by rw [← hp', map_add (f := _), h1, h2, sub_add_cancel])
     · rw [ha _ h2, mul_zero]
 
 private theorem homog_of_span {O σ X : Type} [CommRing O] [AddCommGroup X] (wt : σ → X)
@@ -172,7 +171,6 @@ theorem UpperTheory.V.Alg.part_closed :
     exact Ideal.mem_map_of_mem _ h4
   have h0 : W.π (f - wcomp O W.wt j f) = 0 := by
     have := Ideal.iInf_pow_eq_bot_of_isLocalRing (maximalIdeal R) (maximalIdeal.isMaximal R).ne_top
-    rw [← Ideal.mem_bot, ← this, Ideal.mem_iInf]
-    exact key
+    rwa [← Ideal.mem_bot, ← this, Ideal.mem_iInf]
   rw [map_sub, sub_eq_zero] at h0
   exact ⟨_, wcomp_mem O W.wt j f, h0.symm⟩

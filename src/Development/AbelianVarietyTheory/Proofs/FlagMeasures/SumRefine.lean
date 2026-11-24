@@ -85,9 +85,7 @@ theorem sum_refine {W : Type} [AddCommGroup W] {A B C : AddSubgroup W} {φ : W �
     exact hcong _ _ (QuotientAddGroup.out_eq' _).symm
   have : Finite (↥B ⧸ C.addSubgroupOf B) := Nat.finite_of_card_ne_zero hi
   have hg : (Function.support fun b : W ⧸ B => φ (Quotient.out b)).Finite := by
-    refine hfin.subset ?_
-    intro b hb
-    exact ⟨Quotient.out b, hb, QuotientAddGroup.out_eq' b⟩
+    exact hfin.subset (fun b hb => ⟨Quotient.out b, hb, QuotientAddGroup.out_eq' b⟩)
   rw [← finsum_comp_equiv e.symm]
   simp_rw [hval, Equiv.apply_symm_apply]
   rw [finsum_fst (fun b : W ⧸ B => φ (Quotient.out b)) hg]

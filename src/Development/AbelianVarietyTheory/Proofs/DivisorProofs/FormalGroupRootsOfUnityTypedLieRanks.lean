@@ -828,8 +828,7 @@ theorem isIntHom_diagonal_of_limit :
       have e1 : A * U = U * Matrix.diagonal t' := by
         ext e ℓ
         have := congrFun (hA ℓ) e
-        rw [Matrix.mul_diagonal, mul_comm]
-        exact this
+        rwa [Matrix.mul_diagonal, mul_comm]
       have e2 : A = U * Matrix.diagonal t' * L := by
         rw [← e1, Matrix.mul_assoc, hUL, Matrix.mul_one]
       have e3 : (U * Matrix.diagonal t * L) a b - A a b =
@@ -1006,8 +1005,7 @@ theorem const_comb {σ ι : Type} [Fintype ι] (c : ι → C) {f : ι → MvPowe
 theorem comb_comb {σ : Type} {l m n : ℕ} (A : Matrix (Fin l) (Fin m) C) (B : Matrix (Fin m) (Fin n) C)
     (f : Fin n → MvPowerSeries σ C) (b : Fin l) :
     ∑ a, A b a • ∑ e, B a e • f e = ∑ e, (A * B) b e • f e := by
-  simp only [Matrix.mul_apply, Finset.smul_sum, Finset.sum_smul, smul_smul]
-  exact Finset.sum_comm
+  simpa only [Matrix.mul_apply, Finset.smul_sum, Finset.sum_smul, smul_smul] using Finset.sum_comm
 
 theorem comb_one {σ : Type} {n : ℕ} (f : Fin n → MvPowerSeries σ C) (b : Fin n) :
     ∑ e, (1 : Matrix (Fin n) (Fin n) C) b e • f e = f b := by
@@ -1369,8 +1367,7 @@ theorem diagonal_mulVec (hLU : L * U = 1) (t : κ → C) (ℓ : κ) :
 theorem coord_mulVec (hLU : L * U = 1) (j : Fin d' → κ) (ℓ : κ) (b : Fin d') :
     (L.submatrix j id).mulVec (fun e => U e ℓ) b = if j b = ℓ then 1 else 0 := by
   have := congrFun (congrFun hLU (j b)) ℓ
-  rw [Matrix.mul_apply, Matrix.one_apply] at this
-  exact this
+  rwa [Matrix.mul_apply, Matrix.one_apply] at this
 
 theorem intSpan_equiv {α β : Type} [Fintype α] [Fintype β] (e : α ≃ β) (u : β → Fin d → C) :
     intSpan v (fun a => u (e a)) = intSpan v u := by
@@ -1422,8 +1419,7 @@ theorem exists_orbit (X : ValExt T p) (hp : UnramIn E p) (τ : E →+* ℂ) :
       rw [map_pow, hz', ← Nat.sub_add_cancel (Nat.one_le_of_lt (Nat.lt_of_sub_ne_zero hq)), pow_succ, hz, one_mul])
     obtain ⟨a, ha⟩ := hon (residue X.O z') (by rw [← map_pow, h1])
     refine ⟨a, ?_⟩
-    rw [← hz', ← algebraMap_embO, ← residue_eq_iff_v]
-    exact ha
+    rwa [← hz', ← algebraMap_embO, ← residue_eq_iff_v]
 
 variable [StarRing (𝓞 E)] {y : IntFr Xo c T io} (Ch : IntegralChartA3 Xo c T io y) (X : ValExt T p)
 
@@ -1525,8 +1521,7 @@ theorem typedPartAt (hp : UnramIn E p) (τ : E →+* ℂ) : TypedPartAt Ch X τ 
       simp [eq_comm]
     rw [this]; simp
   · rw [frame, hco', ite_eq_right]
-    intro hb'
-    exact hb (hinj ((congrArg Sigma.fst hb').trans hf))
+    exact fun hb' => hb (hinj ((congrArg Sigma.fst hb').trans hf))
   · exact _root_.GlobalTheory.DepthMono.detDepth_le_of_isIntHom X.C _ _ _ _ k _ _ _ _ hπ _
   · have := _root_.GlobalTheory.DepthMono.detDepth_le_of_isIntHom X.C _ _ _ _ k _ _ _ _ hι fun a => (L.submatrix j id).mulVec (frame Ch X f a)
     simp only [Matrix.mulVec_mulVec, frame, hfix, hf, ht1, one_pow, one_smul] at this

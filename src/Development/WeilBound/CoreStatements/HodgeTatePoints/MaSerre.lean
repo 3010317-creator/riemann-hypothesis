@@ -226,8 +226,7 @@ theorem finite_gen (hsm : ∀ (a : A) (e : E), a • e = ι a • e) (hAR : ∀ 
   obtain ⟨c, hc⟩ := Finsupp.mem_ideal_span_range_iff_exists_finsupp.1 h1
   have hsome : ∀ q, ∃ l ∈ c.support, IsU (R q) (ι (F l)) := by
     intro q
-    by_contra hn
-    push Not at hn
+    by_contra! hn
     letI := hloc q
     let φ : A →+* R q := ι.codRestrict (R q) (hAR q)
     have hmem : (1 : A) ∈ (IsLocalRing.maximalIdeal (R q)).comap φ := by
@@ -340,8 +339,7 @@ theorem twist_mem {c j : κ} {t : Set E}
   rw [ht q hq]
   have h1 := mem_of_mem_spanA ι hsm (S := regAt M.ξ q)
     (fun a => (regat_loc o Ω κ x M j q hq).1 _ a.2) hk
-  rw [hsm, one_pow, one_mul, map_pow] at h1
-  exact h1
+  rwa [hsm, one_pow, one_mul, map_pow] at h1
 
 end
 
@@ -378,8 +376,7 @@ theorem serre : ∀ (o : Type) [CommRing o] (Ω : Type) [Field Ω] [Algebra o Ω
         (x s.1 / x j) ^ r • (x s.1 / x j) ^ m (s, j) • b s.1 s.2 := by
       rw [smul_smul, smul_smul, ← pow_add, add_comm r, ← hr, div_pow, div_eq_inv_mul]
     change (x j ^ d)⁻¹ • x s.1 ^ d • b s.1 s.2 ∈ L p
-    rw [h4]
-    exact h3
+    rwa [h4]
 
 end PositivityTheory.HtPt.Ma
 end -- clump:auto

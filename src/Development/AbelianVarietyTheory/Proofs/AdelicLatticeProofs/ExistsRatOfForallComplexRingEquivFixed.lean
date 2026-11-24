@@ -92,9 +92,7 @@ namespace GlobalTheory.ClassFin
 theorem exists_ringEquiv_ne_of_transcendental :
     ∀ z : ℂ, Transcendental ℚ z → ∃ σ : ℂ ≃+* ℂ, σ z ≠ z := by
   intro z hz
-  have hind : AlgebraicIndepOn ℚ id ({z} : Set ℂ) := by
-    show AlgebraicIndependent ℚ _
-    exact algebraicIndependent_unique_type_iff.2 hz
+  have hind : AlgebraicIndepOn ℚ id ({z} : Set ℂ) := algebraicIndependent_unique_type_iff.2 hz
   obtain ⟨t, hzt, ht⟩ := exists_isTranscendenceBasis_superset hind
   let v : t → ℂ := (↑)
   let i0 : t := ⟨z, hzt rfl⟩
@@ -145,8 +143,7 @@ open scoped Kronecker ComplexOrder TensorProduct in
 theorem _root_.GlobalTheory.ClassFin.exists_rat_of_forall_ringEquiv_fixed :
     ∀ z : ℂ, (∀ σ : ℂ ≃+* ℂ, σ z = z) → ∃ q : ℚ, z = q := by
   intro z hz
-  by_contra h
-  push Not at h
+  by_contra! h
   by_cases ha : IsAlgebraic ℚ z
   · obtain ⟨σ, hσ⟩ := _root_.GlobalTheory.ClassFin.exists_ringEquiv_apply_ne_of_isAlgebraic z ha h
     exact hσ (hz σ)

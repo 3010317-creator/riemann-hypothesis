@@ -277,8 +277,7 @@ theorem chiArg_sub_rootSum : ∀ (I : AutInst) (g : ℕ) {ρ k : ℕ} (e0 f0 : F
       · rw [ite_eq_right h, dite_eq_right h]
         unfold flagVec
         rw [dite_eq_right (by omega), dite_eq_right (by omega), ite_eq_left rfl]
-    rw [← e1, ← e2]
-    exact key
+    rwa [← e1, ← e2]
   · have hi := i.2
     by_cases h : i.1 + 1 < k
     swap
@@ -466,8 +465,7 @@ theorem col_mem (I : AutInst) {β : GL (Fin I.n) (I.E ⊗[I.F] Formalism.MainNot
     rw [Matrix.one_apply]; split_ifs
     · exact one_mem _
     · exact zero_mem _
-  rw [← h2] at h3
-  exact h3
+  rwa [← h2] at h3
 
 section
 variable (I : AutInst) (g : ℕ)
@@ -1203,8 +1201,7 @@ theorem mul_flagGram_apply {K : Type} [CommRing K] {ρ k : ℕ}
   · intro l _ hl
     simp only [flagGram]
     rw [ite_eq_right, mul_zero]
-    intro h
-    exact hl (Fin.ext ((dualIdx_iff' j.2 l.2).mp h))
+    exact fun h => hl (Fin.ext ((dualIdx_iff' j.2 l.2).mp h))
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem flagGram_mul_apply {K : Type} [CommRing K] {ρ k : ℕ}
@@ -1216,8 +1213,7 @@ theorem flagGram_mul_apply {K : Type} [CommRing K] {ρ k : ℕ}
   · intro l _ hl
     simp only [flagGram]
     rw [ite_eq_right, zero_mul]
-    intro h
-    exact hl (Fin.ext h)
+    exact fun h => hl (Fin.ext h)
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem flagCond_dual_unipSym : ∀ (K : Type) [CommRing K] (n ρ k : ℕ), n = 2 * ρ + k + 1 → ∀ M M' : GL (Fin n) K,
@@ -1273,8 +1269,7 @@ theorem flagCond_dual_unipSym : ∀ (K : Type) [CommRing K] (n ρ k : ℕ), n = 
       have hNM : (((M⁻¹ : GL (Fin (2 * ρ + k + 1)) K) : Matrix (Fin (2 * ρ + k + 1)) (Fin (2 * ρ + k + 1)) K) * (M : Matrix (Fin (2 * ρ + k + 1)) (Fin (2 * ρ + k + 1)) K)) p q = (1 : Matrix (Fin (2 * ρ + k + 1)) (Fin (2 * ρ + k + 1)) K) p q := by
         rw [Units.inv_mul]
       rw [Matrix.mul_apply, Finset.sum_eq_single p] at hNM
-      · rw [hN p p hp le_rfl, Matrix.one_apply_eq, one_mul] at hNM
-        exact hNM
+      · rwa [hN p p hp le_rfl, Matrix.one_apply_eq, one_mul] at hNM
       · intro l _ hl
         rcases lt_or_gt_of_ne (Fin.val_ne_of_ne hl) with h | h
         · rw [hN p l hp (le_of_lt h), Matrix.one_apply_ne (fun e => hl (e.symm)), zero_mul]
@@ -1286,17 +1281,11 @@ theorem flagCond_dual_unipSym : ∀ (K : Type) [CommRing K] (n ρ k : ℕ), n = 
     intro i j hji
     have hi2 := i.2
     by_cases h1 : j.val < ρ
-    · have h := hM.1 i j h1 hji
-      simp only [Matrix.sub_apply, sub_eq_zero] at h
-      exact h
+    · simpa only [Matrix.sub_apply, sub_eq_zero] using hM.1 i j h1 hji
     by_cases h2 : j.val < ρ + k
-    · have h := hM.2.2 i j (by omega) h2 hji
-      simp only [Matrix.sub_apply, one_mul, sub_eq_zero] at h
-      exact h
+    · simpa only [Matrix.sub_apply, one_mul, sub_eq_zero] using hM.2.2 i j (by omega) h2 hji
     by_cases h3 : j.val = ρ + k
-    · have h := hM.2.1 i j h3 (by omega)
-      simp only [Matrix.sub_apply, sub_eq_zero] at h
-      exact h
+    · simpa only [Matrix.sub_apply, sub_eq_zero] using hM.2.1 i j h3 (by omega)
     · exact hMrow (2 * ρ + k - i.val) i j (by omega) (by omega) hji
   refine ⟨⟨fun i j hij => ?_, fun i => ?_⟩, fun i j h0 h1 h2 => ?_⟩
   · have hij' : j.val < i.val := hij

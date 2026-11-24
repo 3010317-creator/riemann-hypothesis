@@ -127,8 +127,7 @@ theorem coeff_single_X [DecidableEq τ] (q p : τ) :
   by_cases h : q = p
   · simp [h]
   · rw [ite_eq_right, ite_eq_right h]
-    intro h'
-    exact h (Finsupp.single_left_injective one_ne_zero h')
+    exact fun h' => h (Finsupp.single_left_injective one_ne_zero h')
 
 theorem const_hom [Fintype σ] (ψ : MvPowerSeries σ V →ₐ[V] MvPowerSeries τ V)
     (h : ∀ j, constantCoeff (ψ (X j)) = 0) (f : MvPowerSeries σ V) : constantCoeff (ψ f) = constantCoeff f := by
@@ -846,8 +845,7 @@ theorem exp_iota (hh : B.IsCanonGauge K h) {jo : PS V 1 d} (hj : IsIota B K h w0
     · have e : mp K (uP B (0 : Fin 1)).val = pt K d 0 := mp_pt K 0
       have e' : ((-1 : O) • uP B (0 : Fin 1)).val = B.A.act (-1) :=
         (val_smul_gp _ (p 0)).trans (gt_comp1_pt_right _)
-      rw [lg, lg, e, e', gt_ev_pt_self]
-      exact hj
+      rwa [lg, lg, e, e', gt_ev_pt_self]
   have ha : ∀ j, GP (![x] j).val := by intro j; fin_cases j; exact hx
   have := base.ev ![x] ha
   simp only [map_sub, map_smul, evK_lg _ _ ha (p _), evK_lg _ _ ha (gp_smul _ (p _)), sL_uP] at this
@@ -867,8 +865,7 @@ theorem exp_kappa (hh : B.IsCanonGauge K h) {n : ℕ} {mu : Matrix (Fin n) (Fin 
       have e' : ∀ b, (mv mu (uP B) b).val = matV B mu (fun j => pt V (n := n) d j) b :=
         fun b => (congrFun (matV_val B mu (uP B)) b).symm
       simp only [lg, e, e']
-      rw [← Nat.cast_smul_eq_nsmul K]
-      exact hκ
+      rwa [← Nat.cast_smul_eq_nsmul K]
   have := base.ev x hx
 
   simp only [map_sub, map_nsmul, map_sum, evK_lg _ _ hx (p _), evK_lg _ _ hx (gp_mv mu p _), sL_uP, sL_mv] at this
@@ -1093,8 +1090,7 @@ theorem copy_shift {α : Fin n → Fin d → V} (hα : ∀ b, Small (α b)) (b :
   subst hj
   have eL := evV_addV B.G.F h1 (sm_pt (V := V) (d := d) (n := 1) 0) (sm_cpt (n := 1) (hα b))
   rw [evV_pt h1, evV_cpt h1] at eL
-  refine eL.trans ?_
-  exact (evV_pt h3 b).symm
+  exact eL.trans (evV_pt h3 b).symm
 
 theorem box_shift {α : Fin n → Fin d → V} (hα : ∀ b, Small (α b)) (u f : Fin n → PS V 1 d) :
     ∏ b, evV (n := n) ![pt V d b] (u b * shift B.G.F (fun _ => α b) (f b)) =

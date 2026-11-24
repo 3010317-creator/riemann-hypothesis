@@ -141,8 +141,7 @@ theorem chain_aeval_mem : ∀ {K V : Type} [Field K] [AddCommGroup V] [Module K 
     intro n
     induction n with
     | zero =>
-      intro _ J' _ x hx
-      exact hWq _ x (hb (by simpa using (Submodule.mem_inf.1 hx).2))
+      exact fun _ J' _ x hx => hWq _ x (hb (by simpa using (Submodule.mem_inf.1 hx).2))
     | succ n ih =>
       intro hn J' hJ' x hx
       obtain ⟨k, hk⟩ : ∃ k, k = b - ((n + 1 : ℕ) : ℤ) := ⟨_, rfl⟩
@@ -239,8 +238,7 @@ theorem lc_semisimple : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltrame
       simp only [lam]
       push_cast
       ring
-    rw [h2]
-    exact h1
+    rwa [h2]
   have hb : F η ≤ D.Man := by
     intro x hx
     have h1 := D.smul_mem_Mext (A_le_Rpi l e) ((mem_shiftE).1 hx)

@@ -594,14 +594,12 @@ theorem _root_.UpperTheory.TP.nonVan_k :
     (κ * coef om ν (pure f₀ φf) 1) r (fun c => ENNReal.ofReal (a (ε (c.1, 1)) ^ ((d : ℝ) / 2)))
     (mul_ne_zero hκ hc1) r0 hIP ?_ ?_ ?_ ?_ ?_ (hTail μC inferInstance) hc
   · intro x b c hb'
-    rw [hj]
-    rw [(hco x.1 x.2 b.1 b.2 c.1 c.2).1 hb', zero_mul]
+    rw [hj, (hco x.1 x.2 b.1 b.2 c.1 c.2).1 hb', zero_mul]
   · intro x c b hb'
     rw [hj]
     simp only
     rw [s3 c x.1 x.2 b.1 hb', hmc _ _ _ hb', mul_assoc]
-  · intro c
-    exact hκe c.1 (hOff0 c.2)
+  · exact fun c => hκe c.1 (hOff0 c.2)
   · intro c hc'
     refine ⟨s2 c hc', ?_⟩
     have : (fun y => φ' (y * c.1)) = fun y => φ' (y * 1) := funext fun y => by

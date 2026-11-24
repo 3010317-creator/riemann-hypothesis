@@ -163,7 +163,6 @@ theorem exists_suppOn_sec₀_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     · unfold evR evalAt
       rw [dite_eq_right hT]
   · show H0.pull (inc₀ X Z) le_rfl ((secOf X e) ((secOf X e).symm m')) = m
-    rw [LinearEquiv.apply_symm_apply]
-    exact h₁
+    rwa [LinearEquiv.apply_symm_apply]
 
 end GlobalTheory.CompHS

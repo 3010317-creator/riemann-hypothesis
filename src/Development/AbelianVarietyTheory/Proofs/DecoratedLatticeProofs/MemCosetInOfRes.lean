@@ -100,8 +100,7 @@ theorem sameCoset_of_mem_cosetIn {X : Fields} {Pr : Primes X} {R : Ranks} {sel :
   have h2 : c • (F.symm w - F.symm w') ∈ stdAt X.E (R.N j) P.1 := by
     rw [← map_sub, ← map_smul]
     apply (hFm _).1
-    rw [LinearEquiv.apply_symm_apply]
-    exact h1
+    rwa [LinearEquiv.apply_symm_apply]
   have h3 : c • (z - z') = c • (z - F.symm w) - c • (z' - F.symm w') + c • (F.symm w - F.symm w') := by
     rw [← smul_sub, ← smul_add]
     congr 1
@@ -111,8 +110,7 @@ theorem sameCoset_of_mem_cosetIn {X : Fields} {Pr : Primes X} {R : Ranks} {sel :
     exact add_mem (sub_mem hzw hzw') h2
   intro l
   have h5 := (ciMem_stdAt _ _).1 h4 l
-  rw [Pi.smul_apply, smul_eq_mul] at h5
-  exact h5
+  rwa [Pi.smul_apply, smul_eq_mul] at h5
 
 end GlobalTheory.TwU.AtTrue.Cl
 
@@ -250,8 +248,7 @@ theorem good_smul (hq : ∀ P : rowSG Pr sel mu, ((qOf P.1 : ℕ) : 𝓞 X.E) �
     have h3 := (frsF sel mu p'.1.1 P).apply_symm_apply (g.1.1 y)
     rw [e1] at h3 ⊢
     rw [hκ] at h3
-    rw [hκ]
-    exact h3
+    rwa [hκ]
   rw [map_sub, e, map_smul]
   convert add_mem h2 h1 using 1
   rw [smul_sub]

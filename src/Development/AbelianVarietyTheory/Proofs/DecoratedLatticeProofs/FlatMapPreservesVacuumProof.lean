@@ -132,8 +132,7 @@ theorem wittExtendByZero_mem_completedHomLattice {T : HSp D} {LT : Lat T} {P : P
   · show ∑ k, w i k * d.p0 k j ∈ idAt D P
     exact Ideal.sum_mem _ fun k _ => Ideal.mul_mem_right _ _ (h1 i k)
   · have := h2 _ (mulVec_latV_of_local hL.1 hL₀.1 d.p0 (fun v hv z hz => p0_mem (h v hv) hz) hy)
-    rw [Matrix.mulVec_mulVec] at this
-    exact this
+    rwa [Matrix.mulVec_mulVec] at this
 
 theorem wittCoreInclusion_mem_completedHomLattice {T : HSp D} {LT : Lat T} {P : Pl D → Prop} (hL : IsSelfDualC S L) (hL₀ : IsSelfDualC S₀ L₀)
     (hT : IsSelfDualC T LT) (h : ∀ v, P v → MonoAt d L L₀ v) {w : WO T S₀}
@@ -144,8 +143,7 @@ theorem wittCoreInclusion_mem_completedHomLattice {T : HSp D} {LT : Lat T} {P : 
     exact Ideal.sum_mem _ fun k _ => Ideal.mul_mem_left _ _ (h1 k j)
   · have := mulVec_latA d.j0
       (fun z hz => mulVec_latV_of_local hL₀.1 hL.1 d.j0 (fun v hv z hz => wittCoreInclusion_mulVec_mem_latticeCompletionAtPlace (h v hv) hz) hz) (h2 y hy)
-    rw [Matrix.mulVec_mulVec] at this
-    exact this
+    rwa [Matrix.mulVec_mulVec] at this
 
 theorem isHalf_wittExtendByZero {T : HSp D} {e : AE D} {w : WO S₀ T} (hw : IsHalf e w) : IsHalf e (d.ext0 T w) :=
   fun i j => GlobalTheory.WeilSrc.entries_fix_right e hw d.p0 i j

@@ -153,8 +153,7 @@ private theorem stabilizes_lamAf_iff (I : AutInst) (M : Matrix (Fin I.n) (Fin I.
       rw [← tensorComm_mulVec_map_eq I M]
       congr 1
       exact e1.symm
-    rw [mem_lamAf_iff, mem_lamAf_iff, e1, ← e2] at h1
-    exact h1
+    rwa [mem_lamAf_iff, mem_lamAf_iff, e1, ← e2] at h1
   · intro h y
     rw [mem_lamAf_iff, mem_lamAf_iff, ← tensorComm_mulVec_map_eq I M]
     exact h _
@@ -249,8 +248,7 @@ theorem exists_continuousMulEquiv_adelic : ∀ (I : AutInst), ∃ e : I.Gf ≃�
       have e1 : (fun i => Algebra.TensorProduct.comm I.F I.E (Af I.F)
           ((Algebra.TensorProduct.comm I.F I.E (Af I.F)).symm (w i))) = w :=
         funext fun i => AlgEquiv.apply_symm_apply _ _
-      rw [e1, ← adLat_hat_eq_latHat]
-      exact hw
+      rwa [e1, ← adLat_hat_eq_latHat]
     · funext i
       apply (Algebra.TensorProduct.comm I.F I.E (Af I.F)).injective
       have e3 := congrFun hwe i
@@ -275,8 +273,7 @@ theorem exists_continuousMulEquiv_adelic : ∀ (I : AutInst), ∃ e : I.Gf ≃�
       rintro ⟨c, ⟨-, hcV⟩, hc1⟩
       apply hcV
       have hc : c = 1 := by simpa using congrArg e₀ hc1
-      rw [hc]
-      exact hV'1
+      rwa [hc]
     refine Filter.mem_of_superset (hO.mem_nhds h1O) ?_
     rintro x ⟨hxK, hxC⟩
     show e₀ x ∈ V
@@ -399,8 +396,7 @@ theorem exists_adelic_equiv : ∀ I : AutInst, Formalism.MainNotions.GlobalTheor
   have hinf : ∀ v h, uMat (((sp.trans g) h).1 v) = (I.P v)⁻¹ * infMat I.cm.sig I.J (θ v) h * I.P v := by
     intro v h
     have h1 := her (sp h).1 v
-    rw [(hsp h).2] at h1
-    exact h1
+    rwa [(hsp h).2] at h1
   have hrat : ∀ (γ : GL (Fin I.n) I.E) (h : HA (AF I.F) I.cm.sig I.J),
       Formalism.UG.bc (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := I.F) (AF I.F)) γ = HA.mat _ _ _ h →
       (∀ v, uMat (((sp.trans g) h).1 v) = (I.P v)⁻¹ * (γ : Matrix (Fin I.n) (Fin I.n) I.E).map (I.φ v) * I.P v) ∧

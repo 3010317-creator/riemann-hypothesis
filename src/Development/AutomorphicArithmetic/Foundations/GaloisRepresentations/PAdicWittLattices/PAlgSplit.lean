@@ -75,8 +75,7 @@ theorem UpperTheory.Reformulated.B.ExistsEvaluation.exists_eval :
       simpa using Finset.univ_sum_single (1 : J → C)
     rw [h, map_one]
   obtain ⟨j, hj⟩ : ∃ j : J, f (Pi.single j 1) ≠ 0 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     rw [Finset.sum_eq_zero (fun j _ => hne j)] at hsum
     exact zero_ne_one hsum
   have hidem : f (Pi.single j 1) * f (Pi.single j 1) = f (Pi.single j 1) := by
@@ -86,8 +85,7 @@ theorem UpperTheory.Reformulated.B.ExistsEvaluation.exists_eval :
     by_cases hi : i = j
     · subst hi; simp
     · simp [Pi.single_eq_of_ne hi]
-  have hone : f (Pi.single j 1) = 1 := by
-    exact mul_left_cancel₀ hj (by rw [hidem, mul_one])
+  have hone : f (Pi.single j 1) = 1 := mul_left_cancel₀ hj (by rw [hidem, mul_one])
   refine ⟨j, fun v => ?_⟩
   have hmul : v * Pi.single j 1 =
       (Algebra.algebraMap C (J → C) : C → J → C) (v j) * Pi.single j 1 := by
@@ -95,8 +93,7 @@ theorem UpperTheory.Reformulated.B.ExistsEvaluation.exists_eval :
     by_cases hi : i = j
     · subst hi; simp [Algebra.algebraMap_eq_smul_one]
     · simp [Pi.single_eq_of_ne hi]
-  have h2 := congrArg f hmul
-  simpa [map_mul, hone] using h2
+  simpa [map_mul, hone] using congrArg f hmul
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExistsEvaluation =====

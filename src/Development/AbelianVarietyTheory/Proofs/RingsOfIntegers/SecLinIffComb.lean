@@ -117,9 +117,7 @@ section
 
 variable (V : Type) [CommRing V] [IsDomain V] (F : Type) [Field F] [Algebra (FractionRing V) F]
 
-theorem jFK_self : jFK (R := V) (FractionRing V) = 𝟙 _ := by
-  show Spec.map (CommRingCat.ofHom (RingHom.id _)) = 𝟙 _
-  exact Spec.map_id _
+theorem jFK_self : jFK (R := V) (FractionRing V) = 𝟙 _ := Spec.map_id _
 
 def specFrac : Spec (CommRingCat.of F) ⟶ Spec (CommRingCat.of (FractionRing V)) :=
   Spec.map (CommRingCat.ofHom (algebraMap (FractionRing V) F))
@@ -480,12 +478,10 @@ theorem of_generic (hL : Laws) (U : Unif (maximalIdeal V) D A G) {O : Type} [Rin
         term hL U oa a φ k N hk hB u hu hc F _ _ (fun e => expandsAt_zero U.toUnifPre e k)
       have := GlobalTheory.T.pullAl_linear_combination hL.globalFns V D F O oa a k N 1 one_pos (fun _ => 0) _ _ (fun _ => hP₀)
       rw [Fin.sum_univ_one, Fin.sum_univ_one, zero_smul, zero_smul] at this
-      rw [hs, Fin.sum_univ_zero, Fin.sum_univ_zero]
-      exact this
+      rwa [hs, Fin.sum_univ_zero, Fin.sum_univ_zero]
     · have := GlobalTheory.T.pullAl_linear_combination hL.globalFns V D F O oa a k N n hn c' _ _ hP
       simp only [smul_smul, hc'] at this
-      rw [hs]
-      exact this
+      rwa [hs]
   · refine (secLin_iff_val U.LG.isLB _ _ _ _).2 fun y J hJ => ?_
     rw [hσ y J hJ, secLin_val h₂ _ y hJ, Finset.sum_mul]
     refine Finset.sum_congr rfl fun i _ => ?_

@@ -138,12 +138,10 @@ theorem qdet_shift_next_coeff : ∀ (A : Type) [Ring A] [Algebra ℂ A] (m : ℕ
       simp
     · intro σ _ hσ
       obtain ⟨k, hk⟩ : ∃ k, σ k ≠ k := by
-        by_contra hne
-        push Not at hne
+        by_contra! hne
         exact hσ (Equiv.ext hne)
       rw [hc1 σ, Finset.prod_eq_zero (mem_univ k) (ite_eq_right hk), zero_smul, mul_zero]
-    · intro h1
-      exact absurd (mem_univ _) h1
+    · exact fun h1 => absurd (mem_univ _) h1
   · simp only
     rw [Finset.sum_eq_single (1 : Equiv.Perm (Fin (m + 1)))]
     · rw [hc0 1]
@@ -154,8 +152,7 @@ theorem qdet_shift_next_coeff : ∀ (A : Type) [Ring A] [Algebra ℂ A] (m : ℕ
       simp only [Algebra.algebraMap_eq_smul_one, ← sum_smul]
     · intro σ _ hσ
       obtain ⟨k₀, hk₀⟩ : ∃ k, σ k ≠ k := by
-        by_contra hne
-        push Not at hne
+        by_contra! hne
         exact hσ (Equiv.ext hne)
       rw [hc0 σ]
       have hz : ∀ k, (∏ j, (if j = k then (1 : ℂ) else (if σ j = j then (1 : ℂ) else 0))) = 0 := by
@@ -168,8 +165,7 @@ theorem qdet_shift_next_coeff : ∀ (A : Type) [Ring A] [Algebra ℂ A] (m : ℕ
           have h2 : σ (σ k) ≠ σ k := fun e => hk (σ.injective e)
           simp [hk, h2]
       simp [hz]
-    · intro h1
-      exact absurd (mem_univ _) h1
+    · exact fun h1 => absurd (mem_univ _) h1
   · unfold Formalism.REAL.qdet Formalism.REAL.qminor
     rw [Finset.sum_congr rfl fun σ _ => by rw [hc σ u]]
     simp_rw [mul_sum, mul_smul_comm]

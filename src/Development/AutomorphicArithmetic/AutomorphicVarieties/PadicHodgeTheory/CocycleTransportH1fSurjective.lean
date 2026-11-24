@@ -164,8 +164,7 @@ private theorem ker_cocycle_transport_H1f (he : Continuous e) (he' : Continuous 
   refine exists_congr fun m => ?_
   show (∀ g, c.1 (e g) = ρ g m - m) ↔ (fun g => tr e ρ g m - m) = c.1
   rw [funext_iff, e.surjective.forall]
-  simp only [tr_apply]
-  exact forall_congr' fun g => eq_comm
+  simpa only [tr_apply] using forall_congr' fun g => eq_comm
 
 private def h1fEquiv (he : Continuous e) (he' : Continuous e.symm) :
     FiniteCohomology ((PP l).PD K) (tr e ρ) ≃ₗ[ℚ_[l]] ↥(finiteCohomology ((GK K).subtype.comp e.toMonoidHom) ρ) :=
@@ -190,8 +189,7 @@ theorem UpperTheory.V.Loc.bkDim :
   have hcont : ∀ x, Continuous fun g => tr e ρ g x := fun x =>
     hc.comp (he'.prodMk continuous_const)
   have hdR' : IsDR ((PP l).PD K) (tr e ρ) := by
-    rw [IsDR, DdR_tr]
-    exact hdR
+    rwa [IsDR, DdR_tr]
   obtain ⟨hfin, hdim⟩ := hD V (tr e ρ) hcont hdR'
   haveI : Module.Finite ℚ_[l] ↥(finiteCohomology ((GK K).subtype.comp e.toMonoidHom) ρ) :=
     Module.Finite.equiv (h1fEquiv e ρ he he')

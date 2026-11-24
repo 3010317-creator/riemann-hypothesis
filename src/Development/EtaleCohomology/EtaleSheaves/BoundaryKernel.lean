@@ -118,8 +118,7 @@ lemma exists_epi {P : C} {M : DerivedCategory C} (x : (singleFunctor C 0).obj P 
   refine ⟨T, e, he, fun P' c => ?_⟩
   have := H P' c
   rw [Functor.map_comp, hg] at this
-  rw [← cancel_mono (i.inv ≫ Q.map s), zero_comp, Category.assoc]
-  exact this
+  rwa [← cancel_mono (i.inv ≫ Q.map s), zero_comp, Category.assoc]
 end Hom
 
 section Sh
@@ -217,8 +216,7 @@ theorem etale_sheaf_zeroth_cohomology_kernel_exact : EtaleDerivedDegreeZeroHomol
   refine ⟨Z, hZ, fun U' a ha => ?_⟩
   obtain ⟨c, hc⟩ := hc U' a ha
   have h := H _ c
-  rw [← hc] at h
-  exact h
+  rwa [← hc] at h
 
 end LateralTheory.E.H0Kernel
 end -- clump:auto

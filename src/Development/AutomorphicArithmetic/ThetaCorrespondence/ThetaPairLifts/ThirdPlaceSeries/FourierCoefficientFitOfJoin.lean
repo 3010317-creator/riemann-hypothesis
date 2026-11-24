@@ -1094,8 +1094,7 @@ theorem GlobalTheory.BigTop.Fun.oneSq_of_log_derivative_bound_thA (hS : _root_.G
   · have h := (key w ij).2
     have hd2 : 2 * GlobalTheory.FunObj.SqNum.halfRank D ij.1 ij.2 = d.O.dd ij := by
       rw [E' ij]; exact (hev ij).symm
-    rw [hd2, E' ij] at h
-    exact h
+    rwa [hd2, E' ij] at h
 end
 end
 end -- clump:auto
@@ -1578,8 +1577,7 @@ theorem htLe_one_zero {K : Type} [Field K] [NumberField K] [StarRing K] {B : ℝ
   refine ⟨?_, ?_⟩
   · rw [e]
     simp
-  · rw [e, finsum_zero]
-    exact hB
+  · rwa [e, finsum_zero]
 
 end GlobalTheory.BigTop.Fun.ThbTie
 

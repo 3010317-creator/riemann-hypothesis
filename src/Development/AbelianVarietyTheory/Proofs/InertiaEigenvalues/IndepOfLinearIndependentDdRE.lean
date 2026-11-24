@@ -77,8 +77,7 @@ private theorem eq_zero_of_sum_smul_invariant_eq_zero_of_card_support_le {G E M 
     omega
   | succ n ih =>
     intro c hcard hsum
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     obtain ⟨i₀, hi₀⟩ := hne
     obtain ⟨b, hb⟩ := hE.mul_inv_cancel hi₀
 
@@ -86,9 +85,7 @@ private theorem eq_zero_of_sum_smul_invariant_eq_zero_of_card_support_le {G E M 
     have hsum' : ∑ i, c' i • v i = 0 := by
       simp only [hc', mul_smul, ← Finset.smul_sum, hsum, smul_zero]
     have hone : c' i₀ = 1 := by rw [hc', mul_comm, hb]
-    have hsupp : ∀ i, c' i ≠ 0 → c i ≠ 0 := by
-      intro i h hci
-      exact h (by rw [hc', hci, mul_zero])
+    have hsupp : ∀ i, c' i ≠ 0 → c i ≠ 0 := fun i h hci => h (by rw [hc', hci, mul_zero])
     have hinv : ∀ g i, σ g (c' i) = c' i := by
       intro g
 
@@ -121,8 +118,7 @@ private theorem eq_zero_of_sum_smul_invariant_eq_zero_of_card_support_le {G E M 
         omega
       intro i
       have h0 := ih d hdcard hdsum i
-      rw [hd, sub_eq_zero] at h0
-      exact h0
+      rwa [hd, sub_eq_zero] at h0
     have h1 := hind c' hinv hsum' i₀
     rw [hone] at h1
     haveI : Nontrivial E := ⟨hE.exists_pair_ne⟩

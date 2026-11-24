@@ -98,8 +98,7 @@ theorem exists_cocycle_extension_of_neg_action : ∀ (G : Type) [Group G] (R : T
     rw [mul_inv_cancel, h1] at this
     exact (neg_eq_of_add_eq_zero_right this.symm).symm
   refine ⟨fun g => -(↑u⁻¹ : R) • ρ g (φ (c * g * c⁻¹ * g⁻¹)), ?_, ?_, ?_⟩
-  · intro g
-    exact S.smul_mem _ (hS g _ (hφS _ (hk g)))
+  · exact fun g => S.smul_mem _ (hS g _ (hφS _ (hk g)))
   · intro g h
     simp only
     rw [hw, smul_add, map_smul]
@@ -313,8 +312,7 @@ theorem exists_coc_near : ∀ (N l w : ℕ), 0 < N → l.Prime → l ≠ 2 → �
   classical
   refine ⟨fun γ => if h : γ ∈ Gam N l then z ⟨γ, h⟩ else 0, ⟨?_, ?_⟩, ?_⟩
   · intro γ hγ
-    simp only [dite_eq_left hγ]
-    exact (MvPolynomial.mem_homogeneousSubmodule _ _).mp (hzS _)
+    simpa only [dite_eq_left hγ] using (MvPolynomial.mem_homogeneousSubmodule _ _).mp (hzS _)
   · intro γ hγ δ hδ
     simp only [dite_eq_left hγ, dite_eq_left hδ, dite_eq_left (mul_mem hγ hδ)]
     simpa using hzc ⟨γ, hγ⟩ ⟨δ, hδ⟩
@@ -324,8 +322,7 @@ theorem exists_coc_near : ∀ (N l w : ℕ), 0 < N → l.Prime → l ≠ 2 → �
       mem_Gam_of_Gamma (dvd_mul_of_dvd_left ⟨M' * l ^ (max b n), by ring⟩ _) (dvd_mul_left _ _) hδ
     have hδK : δ ∈ CongruenceSubgroup.Gamma (M' * N * l ^ (max b n)) :=
       mem_Gamma_of_dvd (dvd_mul_right _ _) hδ
-    simp only [dite_eq_left hδG]
-    exact hzΔ ⟨δ, hδG⟩ (Subgroup.mem_subgroupOf.mpr hδK)
+    simpa only [dite_eq_left hδG] using hzΔ ⟨δ, hδG⟩ (Subgroup.mem_subgroupOf.mpr hδK)
 
 end GlobalTheory.KZ.H3
 end -- clump:auto
@@ -367,8 +364,7 @@ theorem homogeneous_lift_compatible : ∀ (l : ℕ) [Fact l.Prime] (w : ℕ) (p 
     apply MvPolynomial.ringHom_ext
     · intro r; simp [f]
     · intro m
-      simp only [f, RingHom.comp_apply, MvPolynomial.eval₂Hom_X']
-      exact hc m k₁ k₂ hk
+      simpa only [f, RingHom.comp_apply, MvPolynomial.eval₂Hom_X'] using hc m k₁ k₂ hk
   let g := PadicInt.lift hf
   let c : (Fin 2 →₀ ℕ) → ℤ_[l] := fun m => g (MvPolynomial.X m)
   have hcn : ∀ m n, PadicInt.toZModPow n (c m) = (p n).coeff m := by
@@ -400,8 +396,7 @@ theorem homogeneous_lift_compatible : ∀ (l : ℕ) [Fact l.Prime] (w : ℕ) (p 
   · intro m hm
     rw [hq] at hm
     have h := hdeg m hm
-    rw [Finsupp.degree_eq_weight_one] at h
-    exact h
+    rwa [Finsupp.degree_eq_weight_one] at h
   · intro n
     ext m
     rw [MvPolynomial.coeff_map, hq, hcn]
@@ -435,8 +430,7 @@ theorem cocycle_isCoboundary_of_neg_central : ∀ (G : Type) [Group G] (R : Type
     have e1 : z (c * g) = z (g * c) := by
       have : c * g = (c * g * c⁻¹ * g⁻¹) * (g * c) := by group
       rw [this, hz, hzΔ _ (hcomm g), map_zero, zero_add]
-    rw [hz, hz, hc _ (hzS g)] at e1
-    exact e1
+    rwa [hz, hz, hc _ (hzS g)] at e1
   have h2z : (2 : R) • z g = z c - ρ g (z c) := by
     rw [two_smul, ← sub_eq_zero]
     calc z g + z g - (z c - ρ g (z c)) = (ρ g (z c) + z g) - (-z g + z c) := by abel
@@ -516,9 +510,7 @@ theorem adj_of_near : ∀ (N l w n : ℕ), 0 < N → l.Prime → l ≠ 2 → ¬ 
     have hc : Nat.Coprime 2 (l ^ n) :=
       Nat.Coprime.pow_right n ((Nat.coprime_primes Nat.prime_two hl).mpr (Ne.symm hl2))
     exact_mod_cast (ZMod.isUnit_iff_coprime 2 (l ^ n)).mpr hc
-  have hS : ∀ g, ∀ v ∈ S, ρ g v ∈ S := by
-    intro g v hv
-    exact L3 _ w v hv
+  have hS : ∀ g, ∀ v ∈ S, ρ g v ∈ S := fun g v hv => L3 _ w v hv
   have hΔn : Δ.Normal := by
     haveI := CongruenceSubgroup.Gamma_normal (M * N * l ^ a)
     exact Subgroup.normal_subgroupOf
@@ -550,9 +542,7 @@ theorem adj_of_near : ∀ (N l w n : ℕ), 0 < N → l.Prime → l ≠ 2 → ¬ 
     rw [Subgroup.mem_subgroupOf]
     exact hcomm g
   let zz : G → V := fun g => z g - z' g
-  have hzS : ∀ g, zz g ∈ S := by
-    intro g
-    exact (hz.1 g g.2).sub (hz'.1 g g.2)
+  have hzS : ∀ g, zz g ∈ S := fun g => (hz.1 g g.2).sub (hz'.1 g g.2)
   have hzc : ∀ g h, zz (g * h) = ρ h (zz g) + zz h := by
     intro g h
     have hgh : ((g * h : G) : SL(2, ℤ)) = (g : SL(2, ℤ)) * h := rfl
@@ -565,8 +555,7 @@ theorem adj_of_near : ∀ (N l w n : ℕ), 0 < N → l.Prime → l ≠ 2 → ¬ 
     simp only [zz]
     rw [hM'eq _ (gamma_le hM'K hδ), sub_self]
   obtain ⟨p, hpS, hp⟩ := _root_.GlobalTheory.KZ.H3.cocycle_isCoboundary_of_neg_central G R V ρ hρmul hρone h2 S hS Δ hΔn hΔ c' hc1 hc2 zz hzS hzc hzΔ
-  refine ⟨p, hpS, fun γ hγ => ?_⟩
-  exact hp ⟨γ, hγ⟩
+  exact ⟨p, hpS, fun γ hγ => (hp ⟨γ, hγ⟩)⟩
 
 end GlobalTheory.KZ.H3
 end -- clump:auto

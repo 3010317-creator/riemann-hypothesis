@@ -117,9 +117,7 @@ namespace LateralTheory.E.SpecAICPf
 theorem roots_eq {R : Type} [CommRing R] [IsDomain R] {K : Type} [Field K] [Algebra R K] (hK : Function.Injective (algebraMap R K)) (L : Subalgebra R K) (hL : AIC L)
     (p : R[X]) (hp : p.Monic) : (p.map (algebraMap R L)).roots.map L.val.toRingHom = (p.map (algebraMap R K)).roots ∧
       Multiset.card (p.map (algebraMap R L)).roots = p.natDegree := by
-  have hinj : Function.Injective (algebraMap R L) := by
-    intro a b hab
-    exact hK (congrArg Subtype.val hab)
+  have hinj : Function.Injective (algebraMap R L) := fun a b hab => hK (congrArg Subtype.val hab)
   have hc : Multiset.card (p.map (algebraMap R L)).roots = p.natDegree := by
     rw [card_roots_of_aic hL _ _ (hp.map _) rfl, natDegree_map_eq_of_injective hinj]
   refine ⟨?_, hc⟩

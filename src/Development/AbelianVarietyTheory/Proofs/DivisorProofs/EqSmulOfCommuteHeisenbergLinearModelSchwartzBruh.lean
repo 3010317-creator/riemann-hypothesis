@@ -90,8 +90,7 @@ theorem cind_mem {X : Type} [AddCommGroup X] [TopologicalSpace X] [IsTopological
   · have himg : {Z : X | Z - y ∈ L} = (fun Z => Z + y) '' (L : Set X) := by
       ext Z
       constructor
-      · intro h
-        exact ⟨Z - y, h, sub_add_cancel Z y⟩
+      · exact fun h => ⟨Z - y, h, sub_add_cancel Z y⟩
       · rintro ⟨W, hW, rfl⟩
         show W + y - y ∈ L
         rwa [add_sub_cancel_right]
@@ -127,8 +126,7 @@ theorem GlobalTheory.LinSchur.eq_smul_of_commute : ∀ {k : Type} [Field k] [Val
   have surj : ∀ f ∈ GlobalTheory.WeilM.SB (Matrix (Fin n) (Fin d) k), ∃ x, x ∈ V ∧ ι₁ x = f := fun f hf => hbij.surjOn hf
   have maps : ∀ x ∈ V, ι₁ x ∈ GlobalTheory.WeilM.SB (Matrix (Fin n) (Fin d) k) := fun x hx => hbij.mapsTo hx
   have h20 : ι₂ 0 = 0 := by
-    have e := hlin 0 V.zero_mem 0 V.zero_mem 1
-    simpa using e
+    simpa using hlin 0 V.zero_mem 0 V.zero_mem 1
   have hsmul : ∀ x ∈ V, ∀ c : ℂ, ι₂ (c • x) = c • ι₂ x := by
     intro x hx c
     have e := hlin x hx 0 V.zero_mem c

@@ -221,8 +221,7 @@ theorem isProGen_iff_isUnit : ∀ (F Ω : Type) [Field F] [NumberField F] [Field
     have h3 : τ.1⁻¹ * ⟨σ, hσ⟩ ∈ S :=
       Subgroup.le_topologicalClosure _ (Subgroup.mem_sup_right ((hk _).1 h2))
     have h4 := S.mul_mem τ.2 h3
-    rw [mul_inv_cancel_left] at h4
-    exact h4
+    rwa [mul_inv_cancel_left] at h4
 
 theorem mem_Ine_of_integral {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω]
     [IsAlgClosure F Ω] {A : ValuationSubring Ω} {τ : G F Ω} (hτ : τ ∈ Dec (F := F) A)
@@ -403,8 +402,7 @@ theorem exists_openNormal_le {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTop
   obtain ⟨V, hV, hVU⟩ := isOpen_induced_iff.1 hU
   have h1 : (1 : Γ) ∈ V := by
     have : (1 : K) ∈ (U : Set K) := U.one_mem
-    rw [← hVU] at this
-    exact this
+    rwa [← hVU] at this
   obtain ⟨H, hH⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hV h1
   refine ⟨H.toSubgroup, H.isNormal', H.isOpen, fun σ hσ => ?_⟩
   have h2 : σ ∈ (U : Set K) := by
@@ -629,8 +627,7 @@ theorem exists_hom {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F
       have := toZModPow_kummer_eq_iff l (unifUnit v) g.1 1 k
       rw [kummer_one, map_zero] at this
       simp only [κ, map_mul, Set.mem_ofPred_eq, Set.mem_preimage]
-      rw [((Units.isUnit u⁻¹).map (PadicInt.toZModPow k)).mul_right_eq_zero]
-      exact this
+      rwa [((Units.isUnit u⁻¹).map (PadicInt.toZModPow k)).mul_right_eq_zero]
     rw [e]
     exact (isOpen_setOf_apply (F := F) _ (fun t => t = _)).preimage continuous_subtype_val
   obtain ⟨M, hM, h1, h2, h3⟩ : ∃ M : ℕ, 0 < M ∧ κ (φ ^ M) = 0 ∧ a ^ M = 1 ∧ χ φ ^ M = 1 := by

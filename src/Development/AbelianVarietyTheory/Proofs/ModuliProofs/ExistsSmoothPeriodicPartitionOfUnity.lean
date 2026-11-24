@@ -99,8 +99,7 @@ theorem _root_.GlobalTheory.PeriodicPartition.exists_finite_subcover (Λ : Submo
   obtain ⟨t, ht⟩ := hK.elim_finite_subcover V hV (fun z _ => Set.mem_iUnion.2 (hcov z))
   refine ⟨t, fun z => ?_⟩
   obtain ⟨k, hk, hz⟩ := Set.mem_iUnion₂.1 (ht (subset_closure (ZSpan.fract_mem_fundamentalDomain b' z)))
-  have hmem : (ZSpan.floor b' z : E) ∈ Λ := by
-    exact (b.ofZLatticeBasis_span ℝ Λ).le (ZSpan.floor b' z).2
+  have hmem : (ZSpan.floor b' z : E) ∈ Λ := (b.ofZLatticeBasis_span ℝ Λ).le (ZSpan.floor b' z).2
   refine ⟨k, hk, ?_⟩
   simpa [ZSpan.fract_apply] using hper k ⟨_, hmem⟩ _ hz
 

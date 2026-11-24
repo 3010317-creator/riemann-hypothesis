@@ -128,8 +128,7 @@ theorem exists_col_reduced (g : GL (Fin n) F) :
       (∀ a c : Fin n, f c ≤ a.val → ((g * v : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) a c = 0) →
       ∀ c, ∃ a : Fin n, a.val + 1 = f c ∧ ((g * v : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) a c ≠ 0 := by
     intro v hv hzv c
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hlt : ∑ k, Function.update f c (f c - 1) k < Nat.find hex := by
       rw [← hf]
       refine Finset.sum_lt_sum (fun k _ => ?_) ⟨c, Finset.mem_univ _, ?_⟩
@@ -218,7 +217,6 @@ theorem bruhat : ∀ (F : Type) [Field F] (n : ℕ) (g : GL (Fin n) F), ∃! m :
   have h3 := congrArg (fun X => ((u⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) * X *
     ((v'⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F)) h2
   simp only [Matrix.mul_assoc, Units.mul_inv, Matrix.mul_one, Units.inv_mul_cancel_left] at h3
-  simp only [Units.val_mul, Matrix.mul_assoc]
-  exact h3
+  simpa only [Units.val_mul, Matrix.mul_assoc] using h3
 
 end GlobalTheory.FinGL.Bruhat

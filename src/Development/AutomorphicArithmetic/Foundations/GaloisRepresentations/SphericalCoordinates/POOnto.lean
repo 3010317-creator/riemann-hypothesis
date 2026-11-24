@@ -52,13 +52,11 @@ namespace UpperTheory.Gal.W2
 private theorem tens_inj (p : ℕ) [Fact p.Prime] {O : Type} [Ring O] [Module.Free ℤ O] :
     Function.Injective (fun x : O => x ⊗ₜ[ℤ] (1 : ℤ_[p])) := by
   have hinj : Function.Injective (Algebra.linearMap ℤ ℤ_[p]) := by
-    intro a b h
-    exact RingHom.injective_int (algebraMap ℤ ℤ_[p]) h
+    exact fun a b h => RingHom.injective_int (algebraMap ℤ ℤ_[p]) h
   have h1 := Module.Flat.lTensor_preserves_injective_linearMap (M := O) (Algebra.linearMap ℤ ℤ_[p]) hinj
   intro x y hxy
   have h2 : x ⊗ₜ[ℤ] (1 : ℤ) = y ⊗ₜ[ℤ] (1 : ℤ) := h1 (by simpa using hxy)
-  have h3 := congrArg (TensorProduct.rid ℤ O) h2
-  simpa using h3
+  simpa using congrArg (TensorProduct.rid ℤ O) h2
 
 theorem mul_comm_of_padic_split (p : ℕ) [Fact p.Prime] {O : Type} [Ring O] [Module.Free ℤ O] {R : Type} [CommRing R]
     {m : ℕ} (hm : m = 1) (f : (O ⊗[ℤ] ℤ_[p]) ≃+* Matrix (Fin m) (Fin m) R) (x y : O) : x * y = y * x := by

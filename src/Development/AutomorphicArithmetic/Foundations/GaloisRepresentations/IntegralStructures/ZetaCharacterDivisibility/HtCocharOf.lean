@@ -490,8 +490,7 @@ theorem mem_closure_of_jumps : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI
   have hD := GlobalTheory.Pst.BridgeInd.finrank_DdR_conj P hρ hK
   have hdR₁ : Module.finrank ↥LL'.1 ↥(DdR (P.PD K₁) (LL := ↥LL'.1) (V := Fin a → ↥LL'.1) (((Matrix.toLinAlgEquiv' : Matrix (Fin a) (Fin a) ↥LL'.1 ≃ₐ[↥LL'.1] _) : _ →* _).comp
         ((Units.coeHom _).comp r₁))) = Module.finrank ℚ_[l] ↥K₁.1 * a := by
-    rw [← hD, ← GlobalTheory.Pst.BridgeInd.finrank_eq_of_mem_iff_field hK]
-    exact hdR
+    rwa [← hD, ← GlobalTheory.Pst.BridgeInd.finrank_eq_of_mem_iff_field hK]
   let τ₂ : ↥K₁.1 →ₐ[ℚ_[l]] ↥LL'.1 := IntermediateField.inclusion hK₁LL
   have hτ₂ : ∀ x : ↥K₁.1, ((τ₂ x : ↥LL'.1) : Om l) = (x : Om l) := fun x => rfl
   have hM : ∀ n, multV (P.PD Bw.Kw) (Bw.repE LL' r') τ' n = multV (P.PD K₁) _ τ₂ n :=
@@ -529,8 +528,7 @@ theorem mem_closure_of_jumps : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI
   have h2 : (h : GQ l) ∈ GK K₂ := GK_le le_sup_left hh
   have h3 : ((cj h : ↥(GK Bw.Kw)) : GQ l) ∈ GK K' := GlobalTheory.Pst.BridgeInd.mem_GK_conj_inv hK' h2
   have h4 := hf (Bw.e.symm (cj h)) (by simpa using h3)
-  rw [← hmod] at h4
-  exact h4
+  rwa [← hmod] at h4
 
 end GlobalTheory.HodgeTateCochar
 end -- clump:auto
@@ -622,8 +620,7 @@ theorem laurent_eq_zero {K : Type} [Field K] [Infinite K] (L : LaurentPolynomial
     intro t ht
     have ht0 : t ≠ 0 := Set.mem_compl_singleton_iff.mp ht
     have h1 := congrArg (LaurentPolynomial.eval₂ (RingHom.id K) (Units.mk0 t ht0)) hp
-    rw [LaurentPolynomial.eval₂_toLaurent, map_mul, h (Units.mk0 t ht0), zero_mul] at h1
-    exact h1
+    rwa [LaurentPolynomial.eval₂_toLaurent, map_mul, h (Units.mk0 t ht0), zero_mul] at h1
   rw [hp0, map_zero] at hp
   exact (LaurentPolynomial.isUnit_T (m : ℤ)).mul_left_eq_zero.mp hp.symm
 
@@ -680,8 +677,7 @@ theorem inLie_of_cochar {K K' ι : Type} [Field K] [Field K'] [Algebra K K'] [Is
       funext p
       rw [conj_apply]
       simp [Units.val_zpow_eq_zpow_val]
-    rw [e1, hfun]
-    exact this
+    rwa [e1, hfun]
   have hd := hev (algebraMap K' (DualNumber K')) (epsUnit K')
   rw [hL0, map_zero] at hd
   have hent : ∀ p : ι × ι, (∑ j, algebraMap K' (DualNumber K') (P p.1 j) *
@@ -729,10 +725,8 @@ theorem cocharToLie_holds : CocharToLie := by
   haveI : CharZero K' := charZero_of_injective_algebraMap (algebraMap (Formalism.ConjugateSelfDual.Qbar l) K').injective
   refine ⟨K', inferInstance, inferInstance, inferInstance,
     P * Matrix.diagonal (fun j => ((k j : ℤ) : K')) * P⁻¹, ?_, fun i => ((e i : ℤ) : K'), ?_, ?_, ?_⟩
-  · intro f hf
-    exact inLie_of_cochar P hP k f (hvan f hf)
-  · intro i j hij
-    exact he (by simpa using hij)
+  · exact fun f hf => inLie_of_cochar P hP k f (hvan f hf)
+  · exact fun i j hij => he (by simpa using hij)
   · intro A B hA hB hAB heq
     apply hlac A B hA hB hAB
     have h1 : ((((B.card : ℚ) * ∑ i ∈ A, ((e i : ℤ) : ℚ) : ℚ)) : K') =
@@ -792,8 +786,7 @@ theorem htCochar_of (hJ : JumpCard) : PositivityTheory.AutomorphicGaloisHodgeTat
     refine hf Bw.Kw le_rfl _ (fun g _ => ?_) t ht
     have := congrArg (algebraMap (Qbar l) ℂ_[l]) (h0 g)
     rw [map_zero, MvPolynomial.eval, MvPolynomial.coe_eval₂Hom, MvPolynomial.eval₂_comp_left] at this
-    rw [MvPolynomial.eval_map]
-    exact this
+    rwa [MvPolynomial.eval_map]
 
 theorem senWLac_of (hJ : JumpCard) : SenWLac := PositivityTheory.AutomorphicGaloisHodgeTate.Div.cocharToLie_holds (htCochar_of hJ)
 

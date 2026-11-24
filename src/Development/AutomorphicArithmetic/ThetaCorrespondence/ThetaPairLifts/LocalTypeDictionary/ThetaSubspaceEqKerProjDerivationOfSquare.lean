@@ -234,8 +234,7 @@ theorem exists_finset_sep (S : Submodule ℂ (SchwartzMap Y ℂ)) [FiniteDimensi
   refine ⟨P, fun s hs h0 => ?_⟩
   by_contra hne
   obtain ⟨y, hy⟩ : ∃ y, s y ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hne (SchwartzMap.ext h)
   have hlt : zeroOn S (insert y P) < zeroOn S P := by
     refine lt_of_le_of_ne (fun a ha z hz => ha z (Finset.mem_insert_of_mem hz)) fun heq => ?_
@@ -255,8 +254,7 @@ theorem sub_mem_of_hasDerivAt (S T : Submodule ℂ (SchwartzMap Y ℂ)) [FiniteD
       map_smul' := by intro a b; funext p; simp }
   have hE : LinearMap.ker E = ⊥ := by
     rw [LinearMap.ker_eq_bot']
-    intro s hs
-    exact Subtype.ext (hP s s.2 fun y hy => congrFun hs ⟨y, hy⟩)
+    exact fun s hs => Subtype.ext (hP s s.2 fun y hy => congrFun hs ⟨y, hy⟩)
   obtain ⟨L, hL⟩ := LinearMap.exists_leftInverse_of_injective E hE
   let C : ℝ → (P → ℂ) := fun u p => c u p
   have hCd : ∀ t, HasDerivAt C (fun p => d t p) t := fun t => hasDerivAt_pi.2 fun p => hder p t
@@ -670,8 +668,7 @@ theorem sub_mem_span_kInfty_exp_derivatives : _root_.GlobalTheory.FunPr.ThetaLoc
           fun s' => c (s' + t) y := by
         funext s'
         rw [← hsplit s', hom, htens]
-      rw [e1, htens] at h0
-      exact h0
+      rwa [e1, htens] at h0
     have h2' : HasDerivAt (fun u => c (u - t + t) y) (Dg (c t) y) t := by
       have := h0'
       rw [show (0 : ℝ) = t - t from (sub_self t).symm] at this
@@ -1276,8 +1273,7 @@ theorem exists_finset_sep (C : Submodule ℂ (α → ℂ)) [FiniteDimensional �
   refine ⟨P, fun s hs h0 => ?_⟩
   by_contra hne
   obtain ⟨y, hy⟩ : ∃ y, s y ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hne (funext h)
   have hlt : zeroOnF C (insert y P) < zeroOnF C P := by
     refine lt_of_le_of_ne (fun a ha z hz => ha z (Finset.mem_insert_of_mem hz)) fun heq => ?_
@@ -1298,16 +1294,14 @@ theorem ode_mem {ι : Type} [Fintype ι] (A : (ι → ℂ) →ₗ[ℂ] (ι → �
     intro z
     have hz : z - q z ∈ Z := (hq0 _).1 (by rw [map_sub, hqq, sub_self])
     have h2 := (hq0 _).2 (hA _ hz)
-    rw [map_sub, map_sub, sub_eq_zero] at h2
-    exact h2
+    rwa [map_sub, map_sub, sub_eq_zero] at h2
   let Bc : (ι → ℂ) →L[ℝ] (ι → ℂ) := ((q ∘ₗ A).restrictScalars ℝ).toContinuousLinearMap
   let qc : (ι → ℂ) →L[ℝ] (ι → ℂ) := (q.restrictScalars ℝ).toContinuousLinearMap
   have hu : ∀ t, HasDerivAt (fun s => q (y s)) (Bc (q (y t))) t := by
     intro t
     have h := qc.hasFDerivAt.comp_hasDerivAt t (hy t)
     have e : Bc (q (y t)) = qc (A (y t)) := (hkill (y t)).symm
-    rw [e]
-    exact h
+    rwa [e]
   have hv : ∀ t : ℝ, HasDerivAt (fun _ : ℝ => (0 : ι → ℂ)) (Bc 0) t := by
     intro t
     rw [map_zero]
@@ -1397,8 +1391,7 @@ theorem orbit_mem (U : Multiplicative ℝ →* Module.End ℂ (α → ℂ)) (P N
       map_smul' := by intro a b; funext p; simp }
   have hEv : LinearMap.ker Ev = ⊥ := by
     rw [LinearMap.ker_eq_bot']
-    intro s hs
-    exact Subtype.ext (hP0 s s.2 fun y hy => congrFun hs ⟨y, hy⟩)
+    exact fun s hs => Subtype.ext (hP0 s s.2 fun y hy => congrFun hs ⟨y, hy⟩)
   obtain ⟨L, hL⟩ := LinearMap.exists_leftInverse_of_injective Ev hEv
   have hLE : ∀ w : C', L (Ev w) = w := fun w => LinearMap.congr_fun hL w
   have hDC : ∀ Ψ : C', D Ψ ∈ C' := by
@@ -1447,23 +1440,20 @@ theorem orbit_mem (U : Multiplicative ℝ →* Module.End ℂ (α → ℂ)) (P N
   have hA : ∀ z ∈ Z, A z ∈ Z := by
     rintro _ ⟨w, hw, rfl⟩
     refine ⟨D' w, ?_, ?_⟩
-    · show D w ∈ N
-      exact hN _ hw _ (hCP (hC'C (hDC w))) (hD w)
+    · exact hN _ hw _ (hCP (hC'C (hDC w))) (hD w)
     · show Ev (D' w) = Ev (D' (L (Ev w)))
       rw [hLE]
   have h0 : y 0 ∈ Z := by
     refine ⟨⟨c 0, hcC' 0⟩, ?_, rfl⟩
     show c 0 ∈ N
     show U (Multiplicative.ofAdd (0 : ℝ)) Φ ∈ N
-    rw [ofAdd_zero, map_one]
-    exact hΦ
+    rwa [ofAdd_zero, map_one]
   obtain ⟨w, hw, hwe⟩ := ode_mem A Z hA y hy h0 t
   have : w = ⟨c t, hcC' t⟩ := by
     have := congrArg L hwe
     rwa [hLE, hLE] at this
   have hw' : (w : α → ℂ) ∈ N := hw
-  rw [this] at hw'
-  exact hw'
+  rwa [this] at hw'
 
 end Orbit
 
@@ -1547,8 +1537,7 @@ theorem polData_kfin : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     haveI := hfin m
     refine ⟨(GlobalTheory.FockKFin.polLe M B.emb m).map (GlobalTheory.FockKFin.pureL φ), inferInstance, ?_, fun k hk => ?_⟩
     · rw [Submodule.map_le_iff_le_comap]
-      intro g hg
-      exact Submodule.subset_span ⟨g, hle m hg, φ, hφ, hvac, rfl⟩
+      exact fun g hg => Submodule.subset_span ⟨g, hle m hg, φ, hφ, hvac, rfl⟩
     · obtain ⟨A, hA⟩ := GlobalTheory.ArchLocalAct.exists_op_of_KInf F E σ B n d X W M om χX χW hP.base hP.good hP.weil k hk
       rw [map_pure M B.ψ hP.good _ f (A f) (hA f) φ hφ hvac]
       exact Submodule.mem_map_of_mem (hst k hk A hA m f hm)

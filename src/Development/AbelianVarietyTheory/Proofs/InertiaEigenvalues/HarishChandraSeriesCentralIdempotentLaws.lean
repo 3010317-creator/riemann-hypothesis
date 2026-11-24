@@ -124,10 +124,8 @@ theorem eSerC_laws : ∀ (g : ℕ) [Fact g.Prime] (L : LabelDatum g), 5 ≤ g �
           · intro b _ hb
             rw [ite_eq_right]
             exact fun h => hb (hu b h)
-          · intro h0
-            exact absurd ((hSmem f0).2 (hprops χ f0 hf0)) h0
+          · exact fun h0 => absurd ((hSmem f0).2 (hprops χ f0 hf0)) h0
       _ = 1 := by
-          rw [← finsum_mem_coe_finset, Set.Finite.coe_toFinset]
-          exact hsum
+          rwa [← finsum_mem_coe_finset, Set.Finite.coe_toFinset]
 
 end GlobalTheory.GLq

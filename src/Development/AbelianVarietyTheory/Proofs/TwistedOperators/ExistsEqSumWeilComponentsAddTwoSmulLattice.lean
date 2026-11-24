@@ -101,8 +101,7 @@ theorem tendsto_one_sub_sum (F : Type) [Field F] [NumberField F] :
       (𝓝 (RestrictedProduct.structureMap (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F) A
         Filter.cofinite z)) :=
     ((hc.tendsto z).comp hy).congr (fun Q => (key Q).symm)
-  rw [h0] at h1
-  exact h1
+  rwa [h0] at h1
 
 variable {D : D7}
 
@@ -171,8 +170,7 @@ theorem exists_eq_sum_wAt_add_two_smul : ∀ (D : D7) (S T : HSp D) (ΛS : Submo
     rw [show pairA D.host.F 0 0 = 0 from rfl, map_zero, zero_smul]
   have hlim : Tendsto (fun Q => g (1 - ∑ v ∈ Q, singleV D.host.F v 1)) atTop (𝓝 0) := by
     have h := (hg.tendsto 0).comp (tendsto_one_sub_sum D.host.F)
-    rw [hg0] at h
-    exact h
+    rwa [hg0] at h
   have hmem : (0 : WO S T) ∈ {x : WO S T | ∃ l ∈ (latO S T (ΛS : Set (Fin S.rank → D.host.E))
       (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True), (x - (2 : ℕ) • l).map (finPart D) = 0} := by
     simp only [Set.mem_ofPred_eq]

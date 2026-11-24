@@ -200,8 +200,7 @@ theorem UpperTheory.V.Z.J.archUp :
     obtain ⟨n, hn⟩ := IsDiscreteValuationRing.ideal_eq_span_pow_irreducible hne hϖ
     haveI : Finite (O ⧸ maximalIdeal O) := (inferInstance : Finite (ResidueField O))
     have hf : Finite (O ⧸ maximalIdeal O ^ n) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) n
-    rw [hϖ.maximalIdeal_eq, Ideal.span_singleton_pow, ← hn] at hf
-    exact hf
+    rwa [hϖ.maximalIdeal_eq, Ideal.span_singleton_pow, ← hn] at hf
   have h2 : IsUnit (2 : O) := by
     rw [← residue_ne_zero_iff_isUnit, map_ofNat]
     intro h
@@ -614,8 +613,7 @@ private theorem cnt {D N : Type} [Group D] [TopologicalSpace D] [IsTopologicalGr
       rw [ha.2 s t]
       simp only [map_add (f := _), map_sub, he, map_mul, Module.End.mul_apply]
       abel
-  · intro Y
-    exact ⟨(0, Y), funext fun s => by simp [hψ]⟩
+  · exact fun Y => ⟨(0, Y), funext fun s => by simp [hψ]⟩
   · have hcard : Nat.card (↥A × N) = Nat.card ψ.range * Nat.card ψ.ker := by
       rw [AddSubgroup.card_eq_card_quotient_mul_card_addSubgroup ψ.ker,
         Nat.card_congr (QuotientAddGroup.quotientKerEquivRange ψ).toEquiv]
@@ -855,8 +853,7 @@ private theorem card_borel_torsion_lower_bound (A : Type) [AddCommGroup A] [Fini
     funext ⟨⟨a, b⟩, hp⟩
     have hp' : a ≤ b ∧ (a, b) ≠ (i.succ, i.succ) := hp
     have := congrArg (fun x : b0 A i => (x : Matrix (Fin 3) (Fin 3) A) a b) hgg
-    simp only [f, F, dite_eq_left hp'] at this
-    exact this
+    simpa only [f, F, dite_eq_left hp'] using this
   have h1 := Nat.card_le_card_of_injective f hf
   rw [Nat.card_fun] at h1
   have h5 : Nat.card {p : Fin 3 × Fin 3 // p.1 ≤ p.2 ∧ p ≠ (i.succ, i.succ)} = 5 := by
@@ -1134,8 +1131,7 @@ theorem UpperTheory.V.Z.J.lift :
   obtain ⟨y, hy⟩ := hw
   refine ⟨y.1, y.2, fun s => (Submodule.Quotient.eq N').1 ?_⟩
   have h2 : N'.mkQ (y.1 s) = C.factorial • N'.mkQ (z s) := congrFun (congrArg Subtype.val hy) s
-  rw [← map_nsmul] at h2
-  exact h2
+  rwa [← map_nsmul] at h2
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LinkedUnramifiedChains.CrystallineCardinalities.HomMuLe =====
@@ -1389,8 +1385,7 @@ theorem UpperTheory.V.Z.J.locHigh :
   have hg : ∀ b ∈ (J : Set (Ok l O k)), g b * mc = b := by
     intro b hb
     have h : ∃ a, a * mc = b := Ideal.mem_span_singleton'.mp hb
-    simp only [g, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [g, dite_eq_left h] using h.choose_spec
   have hcount : (W ×ˢ (J : Set (Ok l O k))).ncard ≤ (ZF (l := l) I k t).ncard := by
     refine Set.ncard_le_ncard_of_injOn (fun p => p.1 + g p.2 • y) ?_ ?_ hZfin
     · rintro ⟨w, b⟩ ⟨hw, -⟩
@@ -1500,8 +1495,7 @@ private theorem core {R Γ : Type} [CommRing R] [Group Γ] (r : Γ →* GG (m :=
     intro i j
     have h2 : z c = Jmat R 3 * (z c)ᵀ * Jmat R 3 := by
       unfold thetaLie at h
-      rw [eq_comm, add_neg_eq_zero] at h
-      exact h
+      rwa [eq_comm, add_neg_eq_zero] at h
     have h3 := congrFun (congrFun h2 i) j
     rwa [jtj] at h3
   have r0 : (0 : Fin 3).rev = 2 := rfl
@@ -1523,8 +1517,7 @@ private theorem core {R Γ : Type} [CommRing R] [Group Γ] (r : Γ →* GG (m :=
   have zgi : z g⁻¹ = -(((A⁻¹ : GL (Fin 3) R) : Matrix (Fin 3) (Fin 3) R) * z g * (A : Matrix (Fin 3) (Fin 3) R)) := by
     have h := hz g⁻¹ g
     rw [inv_mul_cancel, z1, ad1 _ _ hgi, GG.mat, hgil, inv_inv] at h
-    rw [eq_comm, ← eq_neg_iff_add_eq_zero] at h
-    exact h
+    rwa [eq_comm, ← eq_neg_iff_add_eq_zero] at h
   have zh : z (c * g⁻¹ * c) = -(Jmat R 3 * (z g⁻¹)ᵀ * Jmat R 3) := by
     rw [hz, hzc, ad0, add_zero, hz, hzc, zero_add, adc]
     rfl

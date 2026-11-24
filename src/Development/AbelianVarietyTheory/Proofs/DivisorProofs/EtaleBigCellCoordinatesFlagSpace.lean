@@ -142,8 +142,7 @@ theorem le_basicOpen_of_isUnit (x : Sp S ⟶ X) {U : X.Opens} (h : ⊤ ≤ x ⁻
     ((Scheme.ΓSpecIso (CommRingCat.of S)).hom_inv_id_apply _).symm
   have hu : IsUnit ((x.appLE U ⊤ h).hom a) := e ▸ ha.map _
   have h1 := Scheme.basicOpen_appLE x ⊤ U h a
-  have h2 := Scheme.basicOpen_of_isUnit (Sp S) hu
-  exact h2.symm.le.trans (h1.le.trans inf_le_right)
+  exact (Scheme.basicOpen_of_isUnit (Sp S) hu).symm.le.trans (h1.le.trans inf_le_right)
 
 theorem isUnit_of_mem_basicOpen {K : Type} [Field K] (x : Sp K ⟶ X) {U : X.Opens} (h : ⊤ ≤ x ⁻¹ᵁ U) (a : Γ(X, U))
     (p : Sp K) (hp : x p ∈ X.basicOpen a) : IsUnit (ev x U h a) := by
@@ -153,8 +152,7 @@ theorem isUnit_of_mem_basicOpen {K : Type} [Field K] (x : Sp K ⟶ X) {U : X.Ope
   rw [h0, map_zero] at e
   have h1 := Scheme.basicOpen_appLE x ⊤ U h a
   have h2 : p ∈ (Sp K).basicOpen ((x.appLE U ⊤ h).hom a) := h1.ge ⟨trivial, hp⟩
-  rw [e, Scheme.basicOpen_zero] at h2
-  exact h2
+  rwa [e, Scheme.basicOpen_zero] at h2
 
 end Basic
 
@@ -669,8 +667,7 @@ theorem exists_section_of_away {X Y : Scheme.{0}} (f : Y ⟶ X) (U : X.Opens) (W
     rw [map_mul, map_mul] at hu
     have hu1 := isUnit_of_mul_isUnit_left hu
     rw [MvPolynomial.eval₂Hom_C, FlagMod.ev_appLE z₀ f hWU hz₀ (FlagMod.le_preimage_map f hWU hz₀)] at hu1
-    have hb := top_le_basicOpen_of_isUnit _ _ _ a hu1
-    exact fun q _ => ha (hb (Set.mem_univ q))
+    exact fun q _ => ha ((top_le_basicOpen_of_isUnit _ _ _ a hu1) (Set.mem_univ q))
 
 theorem map_entry_eq_of_lower_mul {R A S : Type} [CommRing R] [CommRing A] [CommRing S] {m : ℕ} (χ : R →+* S)
     (ε : A →+* S) (t : ∀ i j : Fin m, i < j → R) {L N : Matrix (Fin m) (Fin m) A} {b : Matrix (Fin m) (Fin m) S}
@@ -704,8 +701,7 @@ theorem exists_cell_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   · intro w hw
     have hcomp : toBase TF Z w = TF.X.π w.1 := Scheme.Hom.comp_apply _ _ _
     have hI : toBase TF Z w ∈ LogKS.interior TF.Y := (ha.1 hw).1.1
-    rw [hcomp] at hI
-    exact hI
+    rwa [hcomp] at hI
   · intro S _ ψ hW i
     refine (hz₁.2.2.2 S ψ hW i.1).elim fun b hb => ?_
     exact map_entry_eq_of_lower_mul (ψ.comp (algebraMap (MvPolynomial (VIx Dw) Γ(TF.Y.X, U.1)) _))
@@ -752,11 +748,9 @@ theorem exists_isOpenImmersion : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have hψφ : ψ.comp φ = algebraMap _ (Localization.Away g) := by
     apply MvPolynomial.ringHom_ext
     · intro r
-      simp only [RingHom.comp_apply, hφ, MvPolynomial.eval₂Hom_C, hψ]
-      exact hC r
+      simpa only [RingHom.comp_apply, hφ, MvPolynomial.eval₂Hom_C, hψ] using hC r
     · intro i
-      simp only [RingHom.comp_apply, hφ, MvPolynomial.eval₂Hom_X', hψ]
-      exact hX i
+      simpa only [RingHom.comp_apply, hφ, MvPolynomial.eval₂Hom_X', hψ] using hX i
   have hψu : IsUnit (ψ (φ g)) := by
     rw [← RingHom.comp_apply, hψφ]
     exact IsLocalization.Away.algebraMap_isUnit g
@@ -779,12 +773,10 @@ theorem exists_isOpenImmersion : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
         rw [ev₀]; exact IsLocalization.Away.algebraMap_isUnit _)) (fun r => ?_) (fun i => ?_)
     · have := hcomp (MvPolynomial.C r)
       simp only [hφ, MvPolynomial.eval₂Hom_C] at this
-      rw [ev', ev₀, RingHom.comp_apply]
-      exact this
+      rwa [ev', ev₀, RingHom.comp_apply]
     · have := hcomp (MvPolynomial.X i)
       simp only [hφ, MvPolynomial.eval₂Hom_X'] at this
-      rw [ev', ev₀, RingHom.comp_apply]
-      exact this
+      rwa [ev', ev₀, RingHom.comp_apply]
   have hθψ : θ.comp ψ = algebraMap _ (Localization.Away (φ g)) := by
     exact ev'.symm.trans ((GlobalTheory.FlagMod.ev_congr heq W hz' hz₀).trans ev₀)
   have h1 : ψ'.comp θ = RingHom.id _ :=
@@ -810,8 +802,7 @@ theorem exists_isOpenImmersion : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     haveI := _root_.GlobalTheory.SecGlue.away_open g
     have hoi : IsOpenImmersion ((spMap (algebraMap Γ(Y₀ TF.X Z, W) (Localization.Away (φ g)))).isoOpensRange.inv ≫
         spMap θ ≫ spMap (algebraMap (MvPolynomial (VIx Dw) Γ(TF.Y.X, U.1)) (Localization.Away g))) := inferInstance
-    rw [← hfac, ← Category.assoc, ← key] at hoi
-    exact hoi
+    rwa [← hfac, ← Category.assoc, ← key] at hoi
 
 end GlobalTheory.LogPole.CellBir
 end -- clump:auto
@@ -1067,8 +1058,7 @@ theorem locallyOfFiniteType_cell (TF : TorFlag Xo c) (Z : Comp Xo c) (U : TF.Y.X
   rw [HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)]
   refine RingHom.FiniteType.of_comp_finiteType
     (f := (MvPolynomial.C : Γ(TF.Y.X, U.1) →+* MvPolynomial (VIx Dw) Γ(TF.Y.X, U.1))) ?_
-  rw [CommRingCat.hom_ofHom, MvPolynomial.eval₂Hom_comp_C]
-  exact h1
+  rwa [CommRingCat.hom_ofHom, MvPolynomial.eval₂Hom_comp_C]
 
 end GlobalTheory.LogPole.CellQF
 
@@ -1230,8 +1220,7 @@ theorem finiteType_cell : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   have h1 := HasRingHomProperty.appLE (P := @LocallyOfFiniteType) (toBase TF Z) hπ U ⟨W, h.1⟩ h.2.1
   refine RingHom.FiniteType.of_comp_finiteType
     (f := (MvPolynomial.C : Γ(TF.Y.X, U.1) →+* MvPolynomial (VIx Dw) Γ(TF.Y.X, U.1))) ?_
-  rw [MvPolynomial.eval₂Hom_comp_C]
-  exact h1
+  rwa [MvPolynomial.eval₂Hom_comp_C]
 
 theorem etale_cellCoord : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), FnAlgClosed (Xo := Xo) (c := c) → ∀ (U : TF.Y.X.affineOpens) (n : ℕ) (e : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)) ≃ Fin n) (v : Fin n → (Sp (DualNumber Γ(TF.Y.X, U.1)) ⟶ TF.Y.t.G.left)), IsEigBasis TF U e v → ∀ (W : (Y₀ TF.X Z).Opens) (k : TF.X.F.J) (L N : ∀ σ : E →+* ℂ, Matrix (Fin (Dw.mult σ)) (Fin (Dw.mult σ)) Γ(Y₀ TF.X Z, W)) (h : IsCell TF Z U e v W k L N), (MvPolynomial.eval₂Hom ((toBase TF Z).appLE U.1 W h.2.1).hom (cellCoord N)).Etale := by
   intro E _ _ _ H Dw l Xo c TF Z hF U n e v hv W k L N h

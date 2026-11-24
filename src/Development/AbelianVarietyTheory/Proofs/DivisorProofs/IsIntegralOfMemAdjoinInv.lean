@@ -135,8 +135,7 @@ theorem _root_.GlobalTheory.ValCrit.dvd_of_forall_cdvr : ∀ (R : Type) [CommRin
     rw [map_mul, hr, hy_def, inv_div, mul_comm, div_mul_cancel₀ _ hqK]
   let ys : S := ⟨y, Algebra.self_mem_adjoin_singleton R y⟩
   have hinjS : Function.Injective (algebraMap R S) := by
-    intro a b hab
-    exact hinjK (congrArg Subtype.val hab)
+    exact fun a b hab => hinjK (congrArg Subtype.val hab)
   haveI : Algebra.FiniteType R S := Algebra.FiniteType.adjoin_of_finite (Set.finite_singleton y)
   haveI : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing R S
   haveI : CharZero S := charZero_of_injective_algebraMap hinjS
@@ -159,9 +158,7 @@ theorem _root_.GlobalTheory.ValCrit.dvd_of_forall_cdvr : ∀ (R : Type) [CommRin
     apply Subtype.ext
     change y * algebraMap R K p = algebraMap R K q
     rw [hy_def, div_mul_cancel₀ _ hpK]
-  have hψp : φ (algebraMap R S p) ≠ 0 := by
-    intro h0
-    exact hp (hψ (by simpa using h0))
+  have hψp : φ (algebraMap R S p) ≠ 0 := fun h0 => hp (hψ (by simpa using h0))
   have hone : φ ys * v = 1 := by
     apply mul_left_cancel₀ hψp
     simp only [RingHom.comp_apply] at hv

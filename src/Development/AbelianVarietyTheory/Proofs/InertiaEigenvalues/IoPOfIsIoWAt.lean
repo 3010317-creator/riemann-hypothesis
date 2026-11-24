@@ -98,8 +98,7 @@ theorem ioP_of_isIoW_at : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T :
       exact one_mem_K
     have a0 := ((hact t₀) u hu 1 (one_mem _) hK).2 (y x w)
     have at' := ((hact t) u hu 1 (one_mem _) hK).2 (y x w)
-    have e := hinj (a0.symm.trans (y1 u hu x w))
-    exact at'.trans (congrArg (R.ptP i t) e)
+    exact at'.trans (congrArg (R.ptP i t) (hinj (a0.symm.trans (y1 u hu x w))))
   · have hs := GlobalTheory.PointAtPlaceHom.atTau_spec hθ (Wc D i) τ (GlobalTheory.JointHarm.conj_mem_UH (R.MW i (sg0 D A)) τ hk)
     have hfr : ∀ ρ, (R.MW i (sg0 D A)).fr ρ * ((R.MW i (sg0 D A)).fr ρ)⁻¹ = 1 := fun ρ =>
       Matrix.mul_nonsing_inv _ ((Matrix.isUnit_iff_isUnit_det _).1 ((R.MW i (sg0 D A)).fr_unit ρ))
@@ -124,8 +123,7 @@ theorem ioP_of_isIoW_at : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T :
       · rw [Pi.mulSingle_eq_of_ne h]; exact one_mem_K
     have a0 := ((hact t₀) 1 (one_mem _) _ hs.1 hK).2 (y (PiTensorProduct.tprod ℂ v) w)
     have at' := ((hact t) 1 (one_mem _) _ hs.1 hK).2 (y (PiTensorProduct.tprod ℂ v) w)
-    have e2 := hinj (a0.symm.trans (y2 τ k hk v u hu w))
-    exact at'.trans (congrArg (R.ptP i t) e2)
+    exact at'.trans (congrArg (R.ptP i t) (hinj (a0.symm.trans (y2 τ k hk v u hu w))))
 
 end GlobalTheory.IoAllTuples
 

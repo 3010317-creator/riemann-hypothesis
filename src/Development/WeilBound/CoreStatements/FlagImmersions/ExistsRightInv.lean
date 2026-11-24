@@ -275,19 +275,15 @@ theorem perMat_of : PerCoord → MatStep → PerMat := by
     have hk : ∀ τ j, k (x τ j t') = ∑ i, U τ i j • x τ i t := fun τ j => by
       have h := B.constr_basis ℂ (Sum.elim (fun a : Ψ × Fin p => ∑ i, U a.1 i a.2 • x a.1 i t)
         fun a : Ψ × Fin q => ∑ i, U' a.1 i a.2 • x' a.1 i t) (.inl (τ, j))
-      rw [Module.Basis.mk_apply] at h
-      exact h
+      rwa [Module.Basis.mk_apply] at h
     have hk' : ∀ τ j, k (x' τ j t') = ∑ i, U' τ i j • x' τ i t := fun τ j => by
       have h := B.constr_basis ℂ (Sum.elim (fun a : Ψ × Fin p => ∑ i, U a.1 i a.2 • x a.1 i t)
         fun a : Ψ × Fin q => ∑ i, U' a.1 i a.2 • x' a.1 i t) (.inr (τ, j))
-      rw [Module.Basis.mk_apply] at h
-      exact h
+      rwa [Module.Basis.mk_apply] at h
     have hf : ∀ τ m, flagStep ℂ (fun i => k (x τ i t')) m = flagStep ℂ (fun i => x τ i t) m := fun τ m => by
-      simp only [hk]
-      exact flagStep_eq _ _ (hU τ) (hUd τ) m
+      simpa only [hk] using flagStep_eq _ _ (hU τ) (hUd τ) m
     have hf' : ∀ τ m, flagStep ℂ (fun i => k (x' τ i t')) m = flagStep ℂ (fun i => x' τ i t) m := fun τ m => by
-      simp only [hk']
-      exact flagStep_eq _ _ (hU' τ) (hUd' τ) m
+      simpa only [hk'] using flagStep_eq _ _ (hU' τ) (hUd' τ) m
     have hsurj : Function.Surjective k := by
       rw [← LinearMap.range_eq_top, eq_top_iff, ← (hall t ht.1).2.2.2, Submodule.span_le]
       have hr : ∀ {m : ℕ} (y : Fin m → Fin g → ℂ), flagStep ℂ (fun i => k (y i)) m ≤ LinearMap.range k := fun y =>

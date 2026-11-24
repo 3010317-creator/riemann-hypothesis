@@ -414,8 +414,7 @@ theorem isThetaFunO_placeModel_apply : ∀ {D : D7} {ψ : AddChar (AF D.host.F) 
       have e2 := h₁.modul _ (GlobalTheory.isSBHalf_halfInd a Λ) y ((isHalf_iff S T).2 hy)
       have e3 := h₁.vac
       rw [one_smul] at e3
-      rw [e2, e3, halfInd_eq_ind] at e1
-      exact e1
+      rwa [e2, e3, halfInd_eq_ind] at e1
     show IsThetaFunO ψ S T (Tm _)
     rw [key]
     exact GlobalTheory.ThetaClosed.isThetaFunO_heisO_all hψ (GlobalTheory.ThetaClosed.isThetaFunO_heisO_all hψ hf₀ y) x
@@ -916,17 +915,14 @@ theorem thetaAt_prodDat : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCh
     let σ : Equiv.Perm (Fin (m+1)) := Equiv.swap 0 j
     have hinjσ : Function.Injective fun i => (L1 (σ i)).q.v := hinj.comp σ.injective
     have hTσ : IsPlaceModel ψ (symplO S T) (heisO ψ S T) (∑ i, (L1 (σ i)).q.e) (latO S T (M : Set _) (M' : Set _) fun _ => True) 1 f₀ T' := by
-      rw [Equiv.sum_comp σ (fun i => (L1 i).q.e)]
-      exact hT'
+      rwa [Equiv.sum_comp σ (fun i => (L1 i).q.e)]
     obtain ⟨Tm, hTm, hTmΦ, -⟩ := step hψ hM hM' (fun i => L1 (σ i)) hinjσ f₀ hf₀ T' hTσ
     have hval : Tm (L1 (σ 0)).Φ = (List.finRange (m+1)).foldr (fun i g => comb ψ S T (L i).o g) f₀ := by
-      rw [hTmΦ, prodDat_perm L1 σ]
-      exact hg1
+      rwa [hTmΦ, prodDat_perm L1 σ]
     have hv := vac_at_of_model hψ (L1 (σ 0)) N N' hN hN' (hI (σ 0)) _ Tm hTm hval
     have h0 : σ 0 = j := Equiv.swap_apply_left _ _
     have hq : (L1 (σ 0)).q.v = (L j).q.v := by rw [h0]; rfl
-    rw [hq] at hv
-    exact hv
+    rwa [hq] at hv
 
   have hQc : Vac ψ S T N N' (fun p => ∀ i, p ≠ (L i).q.v)
       ((List.finRange n).foldr (fun i g => comb ψ S T (L i).o g) f₀) := by
@@ -971,8 +967,7 @@ theorem thetaAt_prodDat : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCh
           fun p => ∀ i, p ≠ (L i).q.v := by
         funext p
         simp
-      rw [hfun]
-      exact hQc
+      rwa [hfun]
     | succ j ih =>
       intro hj
       have hj' : j < n := hj
@@ -1013,8 +1008,7 @@ theorem thetaAt_prodDat : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCh
       · obtain ⟨i, hi⟩ := h
         exact Or.inr ⟨i, i.isLt, hi⟩
       · exact Or.inl fun i hi => h ⟨i, hi⟩
-  rw [hfun] at hfin
-  exact hfin
+  rwa [hfun] at hfin
 
 end GlobalTheory.VecProd
 

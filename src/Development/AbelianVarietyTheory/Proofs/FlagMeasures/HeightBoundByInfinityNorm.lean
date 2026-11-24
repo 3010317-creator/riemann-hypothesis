@@ -120,8 +120,7 @@ theorem inv_tau_mul_le (I : AutInst) (hn : 1 ≤ I.n) (x g : I.GA) (hg : g.2 = 1
   have hK1 : g.2 ∈ I.Kset := by
     rw [hg]
     show ((1 : I.Gf) : GL (Fin I.n) (I.E ⊗[I.F] Af I.F)) ∈ Formalism.UG.stabGL I.Lf
-    simp only [OneMemClass.coe_one]
-    exact one_mem _
+    simpa only [OneMemClass.coe_one] using one_mem _
   have hlog := GlobalTheory.TauLipschitz.log_trunc_le I hn x g hK1
   have hx := GlobalTheory.TauLipschitz.trunc_pos I hn x
   have hxg := GlobalTheory.TauLipschitz.trunc_pos I hn (x * g)
@@ -132,8 +131,7 @@ theorem inv_tau_mul_le (I : AutInst) (hn : 1 ≤ I.n) (x g : I.GA) (hg : g.2 = 1
   have hdiv : GlobalTheory.Count.tau1 I x / GlobalTheory.Count.tau1 I (x * g) ≤ K := by
     rw [← Real.exp_log (div_pos hx hxg), Real.log_div hx.ne' hxg.ne']
     exact (Real.exp_le_exp.2 (by linarith)).trans hmean
-  rw [inv_mul_eq_div, le_div_iff₀ hx, inv_mul_eq_div]
-  exact hdiv
+  rwa [inv_mul_eq_div, le_div_iff₀ hx, inv_mul_eq_div]
 
 theorem sum_le_normInf {D : D7} {V : HSp D}
     (θ : D.what₂.Tau → (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)) (g : GA D V) (τ : D.what₂.Tau) :

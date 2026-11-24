@@ -123,8 +123,7 @@ theorem exists_factor {K : Type} [Field K] (X : Over (Sp K)) (hX : IsFinite X.ho
     ext a
     apply hσ
     refine (h1 _).trans ?_
-    refine Eq.trans ?_ (σ.commutes a).symm
-    exact congrArg (fun g => CommRingCat.Hom.hom g a) e
+    exact Eq.trans (congrArg (fun g => CommRingCat.Hom.hom g a) e) (σ.commutes a).symm
   · show x = _ ≫ _ ≫ _
     rw [← Category.assoc, Iso.eq_comp_inv, ← hφ, ← Spec.map_comp]
     congr 1
@@ -211,7 +210,6 @@ theorem pow_eq_one_of_points : ∀ (K : Type) [Field K] (A C : AbVar K) (f : A �
     haveI : IsClosedImmersion (pullback.fst a (η[C.X]).left) := inferInstance
     haveI : FormallyUnramified (pullback.fst a (η[C.X]).left) := inferInstance
     haveI : FormallyUnramified H.hom := by
-      show FormallyUnramified (pullback.fst a (η[C.X]).left ≫ Z.hom)
       exact MorphismProperty.comp_mem @FormallyUnramified _ _ ‹_› ‹FormallyUnramified Z.hom›
     haveI : LocallyOfFinitePresentation H.hom := by
       show LocallyOfFinitePresentation (pullback.fst a (η[C.X]).left ≫ Z.hom); infer_instance
@@ -424,8 +422,7 @@ theorem card_kerLPart_eq (K : Type) [Field K] (l : ℕ) [Fact l.Prime] (hl : (l 
       rw [← hkq, MonoidHom.mem_ker, map_pow, hyl]
     obtain ⟨n, hn⟩ := hxl.2
     have hx : x ∈ G := ⟨hxf, n + 1, by rw [pow_succ', pow_mul]; exact hn⟩
-    rw [← hkq] at hx
-    exact hx
+    rwa [← hkq] at hx
   have hdh : deg h ≠ 0 := fun h0 => hnot (h0 ▸ dvd_zero l)
   rw [hcomp.2, hdq, hk, (show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) (pow_ne_zero _ (Fact.out : l.Prime).ne_zero) hdh,
     Nat.padicValNat_def, Nat.multiplicity_prime_pow, Nat.padicValNat_def, multiplicity_eq_zero_of_not_dvd hnot, add_zero]

@@ -180,8 +180,7 @@ private theorem isClosed_range_iso_comp_comp_iso_inv_iff {A B C D : Scheme.{0}} 
     change y ∈ Set.range g ↔ (e.inv ≫ e.hom) y ∈ Set.range g
     rw [e.inv_hom_id]
     rfl
-  · intro h
-    exact h.preimage e.hom.continuous
+  · exact fun h => h.preimage e.hom.continuous
 
 open AlgebraicGeometry CategoryTheory Limits in
 private theorem isSeparated_pullback_snd_spMap_iff_isClosed_preimage (k R : Type) [CommRing k] [CommRing R] [Algebra k R]
@@ -283,8 +282,7 @@ theorem _root_.GlobalTheory.SpreadSep.exists_fg_isSeparated (k V : Type) [CommRi
       ext x
       exact (hset (c.π.app i₀ x)).trans
         (Iff.of_eq (congrArg (· ∈ Set.range (pullback.diagonal p)) (hπ i₀ x)))
-    rw [hs]
-    exact h'
+    rwa [hs]
   obtain ⟨j, f, hj⟩ := _root_.GlobalTheory.SpreadSep.exists_isClosed_preimage_diff D c hc O O' (hcpt _) (hcpt _) H
   refine ⟨Algebra.adjoin k (↑(Opposite.unop j) : Set V), Subalgebra.fg_adjoin_finset _, ?_⟩
   rw [isSeparated_pullback_snd_spMap_iff_isClosed_preimage]
@@ -294,7 +292,6 @@ theorem _root_.GlobalTheory.SpreadSep.exists_fg_isSeparated (k V : Type) [CommRi
     ext x
     exact (hset (D.map f x)).trans
       (Iff.of_eq (congrArg (· ∈ Set.range (pullback.diagonal p)) (hmap f x)))
-  rw [hs] at hj
-  exact hj
+  rwa [hs] at hj
 
 end GlobalTheory.SpreadSep

@@ -126,8 +126,7 @@ theorem invL_smooth : (∀ x ∈ invSet E a, ContDiffAt ℝ ∞ invL x) ∧
   refine ⟨fun x hx => e.symm.contDiff.contDiffAt.comp _ (ContDiffAt.comp _ ?_ e.contDiff.contDiffAt), ?_⟩
   · obtain ⟨u, hu⟩ := hx
     have := contDiffAt_ringInverse ℝ (n := ∞) u
-    rw [hu] at this
-    exact this
+    rwa [hu] at this
   · have h1 := hasFDerivAt_ringInverse (𝕜 := ℝ) (1 : (Matrix (Fin a) (Fin a) (Cinf E))ˣ)
     have h2 := e.symm.hasFDerivAt.comp (oneL E a) (HasFDerivAt.comp (oneL E a) (f := e) h1 e.hasFDerivAt)
     refine h2.congr_fderiv ?_

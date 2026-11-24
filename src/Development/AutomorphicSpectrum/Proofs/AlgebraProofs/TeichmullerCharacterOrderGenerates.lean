@@ -101,8 +101,7 @@ def mIdeal {C : Type} [Field C] (v : Valuation C NNReal) (R : Type) [CommRing R]
 
 theorem mem_mIdeal {C : Type} [Field C] (v : Valuation C NNReal) (R : Type) [CommRing R]
     [Algebra R C] (hv : v.Integers R) (r : R) :
-    r ∈ mIdeal v R hv ↔ v (algebraMap R C r) < 1 := by
-  exact Iff.rfl
+    r ∈ mIdeal v R hv ↔ v (algebraMap R C r) < 1 := Iff.rfl
 
 theorem mIdeal_ne_top {C : Type} [Field C] (v : Valuation C NNReal) (R : Type) [CommRing R]
     [Algebra R C] (hv : v.Integers R) : mIdeal v R hv ≠ ⊤ := by

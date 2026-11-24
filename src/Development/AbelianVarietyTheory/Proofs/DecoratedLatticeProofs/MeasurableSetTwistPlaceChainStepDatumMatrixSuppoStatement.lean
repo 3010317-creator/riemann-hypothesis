@@ -123,9 +123,7 @@ theorem measurableSet_suppQ : ∀ (D : D7) (v : FinPl D) (a b r : ℕ),
     · have : {x : Matrix (Fin b) (Fin a) (Fv D.host.F v) | r ≤ i.val → j.val < r → Valued.v (x i j) < 1} =
           Set.univ := by
         ext x
-        simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]
-        intro h h'
-        exact absurd ⟨h, h'⟩ hij
+        simpa only [Set.mem_setOf_eq, Set.mem_univ, iff_true] using fun h h' => absurd ⟨h, h'⟩ hij
       rw [this]
       exact MeasurableSet.univ
   have : suppQ (a := a) (b := b) v r =

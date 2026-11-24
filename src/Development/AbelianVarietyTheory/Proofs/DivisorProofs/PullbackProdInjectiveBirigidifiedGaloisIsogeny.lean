@@ -115,8 +115,7 @@ theorem axis_unit : ∀ (A₀ A₀' X X' : Scheme.{0}) (ψ : A₀ ⟶ A₀') (e 
     have hk₂ : ψ x ∈ (Q₂.pull e').U k.1 := h₂ k hx.1
     have hl₂ : ψ x ∈ (Q₂.pull e').U l.1 := h₂ l hx.2
     have E := gen_germ hw e x hk hl
-    rw [germ_div_g _ _ e x hk hl] at E
-    rw [show e = 𝟙 A₀ ≫ e from (Category.id_comp e).symm] at E
+    rw [germ_div_g _ _ e x hk hl, show e = 𝟙 A₀ ≫ e from (Category.id_comp e).symm] at E
     rw [gm_pull_g Q₂ π (𝟙 A₀ ≫ e) x hk'.1 hl'.1, gm_pull_g Q₁ π (𝟙 A₀ ≫ e) x hk'.2 hl'.2] at E
     simp only [Category.id_comp] at E
     have R₁ := gen_germ hρ₁ ψ x hk₁ hl₁
@@ -274,8 +273,7 @@ theorem GlobalTheory.UPel.HT.Hecke.pullback_prod_injective_birigidified_galois_i
     rw [e, hb Z _ z k hk', ha Z r z k hk]
 
   let s₀ : (G2 A).left ⟶ A.left := (toUnit (G2 A) ≫ η[A]).left
-  have hs₀ : s₀ ≫ A.hom = (G2 A).hom := by
-    exact Over.w (toUnit (G2 A) ≫ η[A])
+  have hs₀ : s₀ ≫ A.hom = (G2 A).hom := Over.w (toUnit (G2 A) ≫ η[A])
 
   have axis : ∀ (c : ↥G × ↥G) (e : A.left ⟶ (G2 A).left) (e' : A'.left ⟶ (G2 A').left) (T : A.left ⟶ A.left),
       e ≫ π = ψ.left ≫ e' → e ≫ (G2 A).hom = A.hom → e ≫ τ c = T ≫ e → T ≫ ψ.left = ψ.left → T ≫ A.hom = A.hom →

@@ -108,8 +108,7 @@ theorem isUnit_det_of_sub_one_mem (I : Ideal O) (hI : I ≤ Ideal.jacobson ⊥) 
     rw [RingHom.map_det, h1, Matrix.det_one]
   have h3 : A.det - 1 ∈ I := by
     rw [← Ideal.Quotient.eq, h2, map_one]
-  have h4 := (Ideal.mem_jacobson_bot.1 (hI h3)) 1
-  simpa using h4
+  simpa using (Ideal.mem_jacobson_bot.1 (hI h3)) 1
 
 variable {a b : Type} [Fintype a] [Fintype b]
 
@@ -304,8 +303,7 @@ theorem mem_idOff_iff_pr {D : D7} {k : Type} [Field k] [ValuativeRel k] [Topolog
     rw [← hsum, mul_add, mul_comm (cA D p.e) p.e, hec, zero_add, ← map_mul, hee]
   rw [hoff, hkey, hpr, hprc]
   constructor
-  · intro h
-    exact ⟨by rw [← h1, mul_assoc, h, mul_zero], by rw [← h2, mul_assoc, h, mul_zero]⟩
+  · exact fun h => ⟨by rw [← h1, mul_assoc, h, mul_zero], by rw [← h2, mul_assoc, h, mul_zero]⟩
   · rintro ⟨h, h'⟩
     rw [← hsum, add_mul, h, h', add_zero]
 
@@ -470,14 +468,12 @@ theorem core_basis {O k : Type} [CommRing O] [Field k] [Algebra O k] (hinj : Fun
   have h1' : ∀ q i, s q * (b' * X) i q = if i = ι q then 1 else 0 := by
     intro q i
     have h := congrFun (h1 q) i
-    rw [Pi.smul_apply, smul_eq_mul, Pi.single_apply] at h
-    exact h
+    rwa [Pi.smul_apply, smul_eq_mul, Pi.single_apply] at h
   have h2' : ∀ q i, t q * (Xcᵀ * J * b) q i = if i = ι' q then 1 else 0 := by
     intro q i
     have h := congrFun (h2 q) i
     rw [Pi.smul_apply, smul_eq_mul, Pi.single_apply] at h
-    rw [Matrix.mul_assoc]
-    exact h
+    rwa [Matrix.mul_assoc]
   have ha1' : ∀ q i, ∃ z ∈ I, algebraMap O k z = s q * (b' * A) i q := fun q i => ha1 q i
   have ha2' : ∀ q i, ∃ z ∈ I, algebraMap O k z = t q * (Acᵀ * J * b) q i := by
     intro q i
@@ -586,8 +582,7 @@ theorem one_orbit : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topologi
     exact Ideal.pow_le_self (Nat.pos_iff_ne_zero.mp he)
   have hJ : IsUnit (W.gram.map (fun c => p.pr (incA D c))).det := by
     have h := (_root_.GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.gram_det_isUnit W).map (p.pr.comp (incA D))
-    rw [RingHom.map_det] at h
-    exact h
+    rwa [RingHom.map_det] at h
   have hU : ∀ j, u.1.1.map p.pr (Fin.last ρ) j = if j = Fin.last ρ then 1 else 0 := by
     intro j
     rw [Matrix.map_apply, uni_last, apply_ite p.pr, map_one, map_zero]

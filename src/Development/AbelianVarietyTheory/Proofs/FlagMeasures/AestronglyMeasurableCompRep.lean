@@ -219,8 +219,7 @@ theorem edist_indicator_le (hD : IsFundamentalDomain Γ D μ) (hDm : MeasurableS
   have hSm : MeasurableSet S := by
     apply MeasurableSet.symmDiff <;> exact (hs.inter hDm).preimage (by fun_prop)
   have hUm : NullMeasurableSet (⋃ γ : Γ, γ • S) (μ.restrict D) := by
-    apply MeasurableSet.nullMeasurableSet
-    exact MeasurableSet.iUnion fun γ => hSm.const_smul γ
+    exact MeasurableSet.nullMeasurableSet (MeasurableSet.iUnion fun γ => hSm.const_smul γ)
   rw [Lp.edist_def]
   calc eLpNorm (⇑(R g F) - ⇑(R g₀ F)) 2 (μ.restrict D)
       ≤ eLpNorm ((⋃ γ : Γ, γ • S).indicator fun _ => c) 2 (μ.restrict D) := by
@@ -278,7 +277,6 @@ theorem continuous_map [LocallyCompactSpace G] [SecondCountableTopology G]
       (mem_closure_iff_frequently.1 hF)
     refine Metric.tendstoUniformly_iff.2 fun ε hε => ?_
     filter_upwards [Metric.ball_mem_nhds F hε] with F' h g
-    rw [dist_eq_norm, ← map_sub, norm_map hD hDm hr hR, ← dist_eq_norm, dist_comm]
-    exact h
+    rwa [dist_eq_norm, ← map_sub, norm_map hD hDm hr hR, ← dist_eq_norm, dist_comm]
 
 end GlobalTheory.RightRegFund

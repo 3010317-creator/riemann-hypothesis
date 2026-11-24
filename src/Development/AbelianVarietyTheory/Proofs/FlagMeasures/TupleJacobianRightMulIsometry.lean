@@ -186,8 +186,7 @@ theorem cont_linearEquiv [IsNonarchimedeanLocalField F] [CharZero F] (L : LocE F
       exact ⟨fun h i => h _ _ _, fun h j i k => h ⟨j, (k, i)⟩⟩)
   intro T hT
   have h2 := GlobalTheory.HL.ContAut.cont_image (tupLat L Λ m) (φ.restrictScalars F).toAddEquiv h.1 h.2.1 T hT
-  rw [h.2.2] at h2
-  exact h2
+  rwa [h.2.2] at h2
 
 def rmulL {n m : ℕ} (A : Matrix (Fin m) (Fin m) E) :
     (Fin m → Fin n → E) →ₗ[E] (Fin m → Fin n → E) where
@@ -261,8 +260,7 @@ theorem GlobalTheory.HL.TupleJac.tuple_jacobian : ∀ {F : Type} [Field F] [Valu
         simp)
     have hfun : (LinearMap.equivOfIsUnitDet hdet : _ → _) = fun x => rmul x A :=
       funext fun x => LinearMap.congr_fun hφ x
-    rw [hfun] at key
-    exact key
+    rwa [hfun] at key
   · have key := TupleJac.cont_linearEquiv L ϖ hϖ Hm hH Λ hΛ m
       (LinearEquiv.piCongrRight fun _ => g) 0 1 (by
         have h : (LinearEquiv.piCongrRight fun _ : Fin m => g).toLinearMap =
@@ -270,5 +268,4 @@ theorem GlobalTheory.HL.TupleJac.tuple_jacobian : ∀ {F : Type} [Field F] [Valu
         rw [h, LinearMap.det_pi, Finset.prod_const, map_pow, ← mul_pow,
           TupleJac.det_isom L Hm hH.2 g hg]
         simp) T hT
-    rw [neg_zero, zpow_zero, one_mul] at key
-    exact key
+    rwa [neg_zero, zpow_zero, one_mul] at key

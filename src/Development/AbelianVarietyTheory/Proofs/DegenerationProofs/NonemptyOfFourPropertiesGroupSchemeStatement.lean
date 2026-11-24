@@ -654,8 +654,7 @@ theorem mem_basicOpen_iff (h : Sp K ⟶ P) (U : P.Opens) (hU : ⊤ ≤ h ⁻¹�
   constructor
   · intro ht h0
     have : h.appLE U ⊤ hU D = 0 := hinj.1 (by rw [map_zero]; exact h0)
-    rw [this, Scheme.basicOpen_zero] at ht
-    exact ht
+    rwa [this, Scheme.basicOpen_zero] at ht
   · intro h0
     have : IsUnit (h.appLE U ⊤ hU D) :=
       (MulEquiv.isUnit_map
@@ -733,12 +732,10 @@ theorem isOpen_setOf_linearIndependent_on_fibres :
         by_contra hn
         exact ha (Matrix.det_eq_zero_of_row_eq_zero k fun i => dite_eq_right hn)
       have := hk ht
-      rw [← hπ k] at this
-      exact this
+      rwa [← hπ k] at this
     refine ⟨h t₀, (mem_basicOpen_iff h U hle M.det t₀).2 ?_, ?_⟩
     · rw [hM]
-      simp only [hπ]
-      exact ha
+      simpa only [hπ] using ha
     · rw [← Scheme.Hom.comp_apply, hp, hxt]
 
 end GlobalTheory.FibreLinInd
@@ -799,12 +796,10 @@ theorem geometric_of_field (G Z : Scheme.{0}) (f : G ⟶ Z) [Flat f]
         by_contra hn
         exact ha (Matrix.det_eq_zero_of_row_eq_zero k fun i => dite_eq_right hn)
       have := hk ht
-      rw [← hπ k] at this
-      exact this
+      rwa [← hπ k] at this
     refine ⟨h t₀, (mem_basicOpen_iff h U hle M.det t₀).2 ?_, ?_⟩
     · rw [hM]
-      simp only [hπ]
-      exact ha
+      simpa only [hπ] using ha
     · rw [← Scheme.Hom.comp_apply, hp, hxt]
   obtain ⟨w, hw, rfl⟩ := hmem
   let t : Sp K' := IsLocalRing.closedPoint K'
@@ -872,8 +867,7 @@ theorem exists_origin (hU : (U₀ : Set M.Z).Nonempty) {a : Q.L.L.ι}
   obtain ⟨e', c1, c2⟩ : ∃ e' : U₀.toScheme ⟶ pullback ρ.P.A.hom Q.u₀, e' ≫ Q.φ = U₀.ι ≫ eSec Q.G ∧
       e' ≫ pullback.fst _ _ = Q.u₀ ≫ eSec ρ.P.A := by
     have c1 := PolBaseChange.eSec_comm Q.cart
-    have c2 := PolBaseChange.eSec_comm (isGrpPullback_pullback ρ.P.A Q.u₀)
-    exact ⟨_, c1, c2⟩
+    exact ⟨_, c1, (PolBaseChange.eSec_comm (isGrpPullback_pullback ρ.P.A Q.u₀))⟩
   have e1 : g = (g ≫ pullback.snd _ _) ≫ e' := by
     refine (cancel_mono Q.φ).1 (h1.trans (Eq.symm ((Category.assoc _ _ _).trans ?_)))
     refine (congrArg ((g ≫ pullback.snd _ _) ≫ ·) c1).trans ?_
@@ -926,8 +920,7 @@ theorem exists_unit_val (V : W.toScheme.Opens) (c : Ω)
     rw [map_mul, map_one, M.res_apply, M.res_apply, hf, hf', mul_inv_cancel₀ (h _ hz).1]))
   refine ⟨(hu.map (W.ι.appLE _ V (W.ι.preimage_image_eq V).ge).hom).unit, fun _ => ?_⟩
   refine (valR_appLE j W.ι _ hV f).trans ?_
-  rw [hj]
-  exact hf
+  rwa [hj]
 
 end Open
 
@@ -1020,8 +1013,7 @@ theorem exists_local [ArithBase o Ω] (hS : S.Over₀ M U₀) {W : M.Z.Opens} (h
           exact hy ▸ y.2
         have m2 : W.ι z ∈ (Q.L.L.pull (eSec Q.G)).U (fun _ => a.1 0) := Set.mem_iInter.2 fun _ => by
           have : (e ≫ ν) z ∈ Q.L.L.U (a.1 0) := Set.mem_iInter.1 hz.1 0
-          rw [he'] at this
-          exact this
+          rwa [he'] at this
         have r1 := (Reg.val W.ι (Q.L.rig.s fun _ => a.1 0).val m2).mem_O hj
         have r2 := (Reg.inv W.ι (Q.L.rig.s fun _ => a.1 0).val (by
           rw [Scheme.basicOpen_of_isUnit _ (Units.isUnit _)]; exact m2)).mem_O hj
@@ -1053,8 +1045,7 @@ theorem exists_local [ArithBase o Ω] (hS : S.Over₀ M U₀) {W : M.Z.Opens} (h
       rw [Category.assoc, Category.assoc, hp', hj, ← h1, Category.assoc])), pullback.lift_fst _ _ _⟩
   have m : ⊤ ≤ (h ≫ pullback.fst p j) ⁻¹ᵁ N.U (fun _ => a, k) := le_inf' (le_wchart _ _ _ fun _ => h2) h3
   have := ht (fun _ => a, k) K h m
-  rw [← hσ _ K h ((top_le_preimage_iff _ _).1 m)] at this
-  exact this
+  rwa [← hσ _ K h ((top_le_preimage_iff _ _).1 m)] at this
 
 theorem exists_pack [ArithBase o Ω] (hS : S.Over₀ M U₀) {EE : M.Lat S.J} (hQ : Q.SecO EE) {W : M.Z.Opens}
     (haff : IsAffineOpen W) (hW : (W : Set M.Z).Nonempty) {b : Matrix S.J S.J Ω} {d : Ω} (hd : d ≠ 0)
@@ -1367,8 +1358,7 @@ theorem cls_generic (hU : (U₀ : Set M.Z).Nonempty) {H Y : Scheme.{0}} [IsInteg
       have hx : ⊤ ≤ x ⁻¹ᵁ ((LPow ρ.P.A ρ.P.L S.N (baseOver (Sp S.R))).pull r₀).U (fun _ _ => jP) := fun y _ => by
         refine mem_pull.2 (Set.mem_iInter.2 fun _ => ?_)
         have := hj' (x := y) trivial
-        rw [← hr₀] at this
-        exact this
+        rwa [← hr₀] at this
       refine ⟨fun _ _ => jP, c * (Units.mk0 d hd)⁻¹, hx, fun i => ?_⟩
       have e₁ : valR x _ ((GlobalTheory.secPull (τ i) k).f l) = valF (x ≫ k) _ ((τ i).f (l PUnit.unit)) :=
         Points.valR_appLE x k _ hl _
@@ -1813,8 +1803,7 @@ theorem ZHPre.immersedBy_of_clos (Q : ZHPre ρ M U₀) (C : Clos ρ M U₀ EE) (
       rw [Category.assoc, hξ]
       exact fun w _ => Set.mem_iInter.2 fun _ => hL ⟨w, rfl⟩)
     simp only [Category.assoc] at h5
-    rw [hξ] at h5
-    exact h5
+    rwa [hξ] at h5
   · have hw : ⊤ ≤ g ⁻¹ᵁ (LB.div (ρ.P.L.pull (pullback.fst ρ.P.A.hom Q.u₀)) (Q.L.L.pull Q.φ)).U
         (fun _ => jP, fun _ => jL) := fun w _ =>
       ⟨Set.mem_iInter.2 fun _ => h3 ⟨w, Scheme.Hom.comp_apply _ _ _⟩,

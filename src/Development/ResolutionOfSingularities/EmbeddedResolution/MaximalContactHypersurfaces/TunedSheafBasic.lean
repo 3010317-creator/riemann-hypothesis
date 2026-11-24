@@ -78,8 +78,7 @@ private theorem listProd_map_le_listProd_map {X : Scheme.{u}} (f g : ℕ → X.I
   intro L
   induction L with
   | nil =>
-      intro _
-      exact le_rfl
+      exact fun _ => le_rfl
   | cons a L ih =>
       intro h
       simp only [List.map_cons, List.prod_cons]
@@ -115,8 +114,7 @@ private theorem le_sum_mul_min_of_le_sum (m s : ℕ) (c : ℕ → ℕ)
         _ ≤ (m - j) * s := Nat.mul_le_mul h1 (le_refl s)
     refine le_trans hterm (Finset.single_le_sum
       (f := fun j : ℕ => (m - j) * min (c j) s) ?_ hj)
-    intro i _
-    exact Nat.zero_le _
+    exact fun i _ => Nat.zero_le _
 
 theorem prod_pow_derivIdealSheafIterate_le_tunedSheaf (k : Type u) [Field k] [IsNoetherianRing k]
     {X : Scheme.{u}} (p : X ⟶ Spec (CommRingCat.of k)) [LocallyOfFiniteType p]
@@ -209,26 +207,19 @@ theorem tunedSheaf_eq_top_of_orderAtLeastLocus_eq_empty (k : Type u) [Field k] [
     Finset.sum_eq_single (m - 1) (fun b _ hb => by rw [ite_eq_right hb, mul_zero])
       (fun hb => absurd hmem hb)
   have h3 : (m - (m - 1)) * (if m - 1 = m - 1 then s else 0) = s := by simp [hm2]
-  have hsum : s ≤ ∑ j ∈ Finset.range m, (m - j) * (if j = m - 1 then s else 0) :=
-    (heq.trans h3).ge
   have hprod : ((List.range m).map (fun j => derivIdealSheafIterate k p j I ^
       (if j = m - 1 then s else 0))).prod = ⊤ := by
-    have h1 : ((List.range m).map (fun j => derivIdealSheafIterate k p j I ^
-        (if j = m - 1 then s else 0))).prod = 1 := by
-      refine List.prod_eq_one ?_
-      intro x hx
-      rw [List.mem_map] at hx
-      obtain ⟨j, -, rfl⟩ := hx
-      by_cases hj : j = m - 1
-      · subst hj
-        rw [htop, ← Scheme.IdealSheafData.one_eq_top, one_pow]
-      · rw [ite_eq_right hj, pow_zero]
-    rw [h1, Scheme.IdealSheafData.one_eq_top]
+    rw [← Scheme.IdealSheafData.one_eq_top]
+    refine List.prod_eq_one fun x hx => ?_
+    obtain ⟨j, -, rfl⟩ := List.mem_map.1 hx
+    rcases eq_or_ne j (m - 1) with rfl | hj
+    · rw [htop, ← Scheme.IdealSheafData.one_eq_top, one_pow]
+    · rw [ite_eq_right hj, pow_zero]
   rw [tunedSheaf_eq_iSup]
   exact top_le_iff.mp (le_trans (le_of_eq hprod.symm)
     (le_iSup (fun c : {c : ℕ → ℕ // s ≤ ∑ j ∈ Finset.range m, (m - j) * c j} =>
       ((List.range m).map (fun j => derivIdealSheafIterate k p j I ^ (c.1 j))).prod)
-      ⟨fun j => if j = m - 1 then s else 0, hsum⟩))
+      ⟨fun j => if j = m - 1 then s else 0, (heq.trans h3).ge⟩))
 
 theorem balancedTunedSheaf_eq_top_of_orderAtLeastLocus_eq_empty (k : Type u) [Field k] [CharZero k]
     [IsNoetherianRing k] {X : Scheme.{u}} (p : X ⟶ Spec (CommRingCat.of k))

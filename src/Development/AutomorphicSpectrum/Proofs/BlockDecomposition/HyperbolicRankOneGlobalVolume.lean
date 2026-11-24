@@ -126,14 +126,11 @@ theorem exists_approx {α : Type*} [MeasurableSpace α] (μ : Measure α) [Sigma
     · have hx' : x ∈ spanningSets μ l := monotone_spanningSets μ hkl hx
       simp only [Set.indicator_of_mem hx, Set.indicator_of_mem hx']
       exact min_le_min_left _ (by exact_mod_cast hkl)
-    · simp only [Set.indicator_of_notMem hx]
-      exact zero_le
+    · simpa only [Set.indicator_of_notMem hx] using zero_le
   · refine le_antisymm (iSup_le fun k => ?_) ?_
     · by_cases hx : x ∈ spanningSets μ k
-      · simp only [Set.indicator_of_mem hx]
-        exact min_le_left _ _
-      · simp only [Set.indicator_of_notMem hx]
-        exact zero_le
+      · simpa only [Set.indicator_of_mem hx] using min_le_left _ _
+      · simpa only [Set.indicator_of_notMem hx] using zero_le
     · have hx : x ∈ ⋃ k, spanningSets μ k := by
         rw [iUnion_spanningSets]
         trivial
@@ -143,8 +140,7 @@ theorem exists_approx {α : Type*} [MeasurableSpace α] (μ : Measure α) [Sigma
       rw [min_eq_left le_top] at hlim
       refine le_of_tendsto hlim (eventually_atTop.2 ⟨k₀, fun n hn => ?_⟩)
       refine le_iSup_of_le n ?_
-      simp only [Set.indicator_of_mem (monotone_spanningSets μ hn hk₀)]
-      exact le_rfl
+      simpa only [Set.indicator_of_mem (monotone_spanningSets μ hn hk₀)] using le_rfl
   · have hle : ∫⁻ x, (spanningSets μ k).indicator (fun x => min (f x) (k : ℝ≥0∞)) x ∂μ ≤
         ∫⁻ x, (spanningSets μ k).indicator (fun _ => (k : ℝ≥0∞)) x ∂μ :=
       lintegral_mono fun x => Set.indicator_le_indicator (min_le_right _ _)
@@ -295,8 +291,7 @@ theorem finite_case (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {M d : ℕ} (J :
           fun v _ hvS => hy v hvS⟩
       rw [Set.indicator_of_mem (show y ∈ {y : Fin 1 → Fin (M + 2) → AF F ⊗[F] E |
         ∀ v, v ∉ S → projV v (projFin y) ∈ primV σ J b v} from hy)]
-      simp only [hfeq, Set.indicator_of_mem (hmem _)]
-      exact iInf_const
+      simpa only [hfeq, Set.indicator_of_mem (hmem _)] using iInf_const
     · rw [Set.indicator_of_notMem (show y ∉ {y : Fin 1 → Fin (M + 2) → AF F ⊗[F] E |
         ∀ v, v ∉ S → projV v (projFin y) ∈ primV σ J b v} from hy)]
       push Not at hy
@@ -373,8 +368,7 @@ theorem prim_formula : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
       ∏ v ∈ S, g v k (projV v (projFin a)) := fun a k l hkl =>
     Finset.prod_le_prod' fun v _ => gmono v _ hkl
   have hGmono : Monotone G := by
-    intro k l hkl y
-    exact Set.indicator_le_indicator (mul_le_mul' (gimono _ hkl) (hpm y hkl))
+    exact fun k l hkl y => Set.indicator_le_indicator (mul_le_mul' (gimono _ hkl) (hpm y hkl))
   have hGsup : ∀ y, ⨆ k, G k y = purePr σ J b S Ψinf Ψ y := by
     intro y
     by_cases hy : ∀ v, v ∉ S → projV v (projFin y) ∈ primV σ J b v
@@ -385,8 +379,7 @@ theorem prim_formula : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
       simp only [gisup, gsup]
     · have hmem : y ∉ {y : Fin 1 → Fin (M + 2) → AF F ⊗[F] E |
           ∀ v, v ∉ S → projV v (projFin y) ∈ primV σ J b v} := hy
-      simp only [G, purePr, Set.indicator_of_notMem hmem]
-      exact iSup_const
+      simpa only [G, purePr, Set.indicator_of_notMem hmem] using iSup_const
   have hIinf : ⨆ k, ∫⁻ y, gi k y ∂minf = ∫⁻ y, Ψinf y ∂minf := by
     rw [← lintegral_iSup gim (fun k l hkl y => gimono y hkl)]
     exact lintegral_congr gisup
@@ -693,8 +686,7 @@ theorem maximal_ideals : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     apply τ.injective
     rw [h.2.2.2, h.2.2.2, star_star]
   have hne : ∃ x, σ x ≠ x := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     obtain ⟨w⟩ := (inferInstance : Nonempty (NumberField.InfinitePlace E))
     have hreal : w.IsReal := by
       rw [← NumberField.InfinitePlace.mk_embedding w, NumberField.InfinitePlace.isReal_mk_iff,
@@ -765,8 +757,7 @@ theorem norm_le_of_val_lt {F : Type} [Field F] [NumberField F] (v : HeightOneSpe
   have hv : Valued.v x = WithZero.exp (WithZero.log (Valued.v x)) := (WithZero.exp_log h0).symm
   set n : ℤ := WithZero.log (Valued.v x) with hn
   have hlt : n < 0 := by
-    rw [hv, ← WithZero.exp_zero, WithZero.exp_lt_exp] at h
-    exact h
+    rwa [hv, ← WithZero.exp_zero, WithZero.exp_lt_exp] at h
   have h2 : 2 ≤ Ideal.absNorm v.asIdeal := GlobalTheory.CompanionTheory.SW.Growth.two_le_norm v
   rw [FinitePlace.norm_def, hv, WithZeroMulInt.toNNReal_neg_apply _ WithZero.exp_ne_zero]
   push_cast
@@ -831,14 +822,12 @@ theorem fibre_zero_image_mul (F E : Type) [Field F] [NumberField F] [Field E] [N
     constructor
     · rintro ⟨Y, hY, rfl⟩
       simpa [hTiT] using hY
-    · intro hX
-      exact ⟨Ti X, hX, hTT X⟩
+    · exact fun hX => ⟨Ti X, hX, hTT X⟩
   have himg' : ∀ C : Set (Fin 1 → Fin N → Fv F v ⊗[F] E), T ⁻¹' C = Ti '' C := by
     intro C
     ext X
     constructor
-    · intro hX
-      exact ⟨T X, hX, hTiT X⟩
+    · exact fun hX => ⟨T X, hX, hTiT X⟩
     · rintro ⟨Y, hY, rfl⟩
       simpa [hTT] using hY
   have hnorm_inv : ‖Algebra.norm (Fv F v) ((u⁻¹ : (Fv F v ⊗[F] E)ˣ) : Fv F v ⊗[F] E)‖₊ = q⁻¹ := by
@@ -934,12 +923,9 @@ theorem norm_le_of_nonunit (F E : Type) [Field F] [NumberField F] [Field E] [Num
       ∀ c : O, ¬ IsUnit c → IsUnit (c : Fv F v ⊗[F] E) →
         ‖Algebra.norm (Fv F v) (c : Fv F v ⊗[F] E)‖ ≤ 1 / (Ideal.absNorm v.asIdeal : ℝ) := by
   haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
-  have hb1 : b.repr 1 ≠ 0 := by
-    intro h
-    exact one_ne_zero (b.repr.map_eq_zero_iff.1 h)
+  have hb1 : b.repr 1 ≠ 0 := fun h => one_ne_zero (b.repr.map_eq_zero_iff.1 h)
   obtain ⟨k0, hk0⟩ : ∃ k, b.repr 1 k ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     exact hb1 (Finsupp.ext hcon)
   filter_upwards [GlobalTheory.CompanionTheory.SW.GoodRing.good_ring F E σ hσ d b, val_eq_one_eventually _ hk0]
     with v hgood hv O hO c hc hcu
@@ -974,8 +960,7 @@ theorem norm_le_of_nonunit (F E : Type) [Field F] [NumberField F] [Field E] [Num
       refine (hO _).2 fun k => ?_
       have h := (hO _).1 hσc k
       rw [HeightOneSpectrum.mem_adicCompletionIntegers] at h ⊢
-      rw [hrepr, map_mul, map_inv₀, h1, inv_one, one_mul]
-      exact h
+      rwa [hrepr, map_mul, map_inv₀, h1, inv_one, one_mul]
     have hcw : c * (⟨_, hw⟩ : O) = 1 := by
       apply Subtype.ext
       change (c : Fv F v ⊗[F] E) * (algebraMap (Fv F v) (Fv F v ⊗[F] E) s⁻¹ * sigR (Fv F v) σ c) = 1
@@ -1091,15 +1076,13 @@ theorem exists_u_local {A : Type} [CommRing A] (σ : A →+* A) {M : ℕ}
       | succ j => exact ⟨j, rfl⟩
   set w : Fin M → A := fun i => x i.succ.succ with hw
   have hex : ∃ k, (J *ᵥ w) k ∉ P := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have e : w = Ji *ᵥ (J *ᵥ w) := by
       rw [Matrix.mulVec_mulVec, mul_eq_one_comm.1 hJi, one_mulVec]
     apply hi
     show w j ∈ P
     rw [e]
-    simp only [mulVec, dotProduct]
-    exact P.sum_mem fun k _ => P.mul_mem_left _ (hc k)
+    simpa only [mulVec, dotProduct] using P.sum_mem fun k _ => P.mul_mem_left _ (hc k)
   obtain ⟨k, hk⟩ := hex
   refine ⟨Pi.single k 1, Or.inr fun hmem => hk ?_⟩
   have e : hform σ J (Pi.single k 1) w = (J *ᵥ w) k := by
@@ -1167,8 +1150,7 @@ theorem exists_u {A : Type} [CommRing A] (σ : A →+* A) (hσ : ∀ a, σ (σ a
 theorem exists_mu {A : Type} [CommRing A] (P₁ P₂ : Ideal A)
     (hmax : ∀ P : Ideal A, P.IsMaximal → P = P₁ ∨ P = P₂) (h2 : IsUnit (2 : A)) (a b : A)
     (hab : ∀ P : Ideal A, P.IsMaximal → b ∉ P ∨ a ∉ P) : ∃ μ : ℤ, IsUnit (a - (μ : A) * b) := by
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have pair : ∀ P : Ideal A, P.IsMaximal → ∀ m n : ℤ, IsUnit ((n : A) - m) →
       a - (m : A) * b ∈ P → a - (n : A) * b ∈ P → False := by
     intro P hP m n hu h1 h3
@@ -1192,8 +1174,7 @@ theorem exists_mu {A : Type} [CommRing A] (P₁ P₂ : Ideal A)
   have u0m : IsUnit (((-1 : ℤ) : A) - ((0 : ℤ) : A)) := by simp
   have u1m : IsUnit (((1 : ℤ) : A) - ((-1 : ℤ) : A)) := by
     have : ((1 : ℤ) : A) - ((-1 : ℤ) : A) = 2 := by push_cast; ring
-    rw [this]
-    exact h2
+    rwa [this]
   have hpig : Pa = Pb ∨ Pa = Pc ∨ Pb = Pc := by
     rcases hmax Pa ha with h | h <;> rcases hmax Pb hb with h' | h' <;>
       rcases hmax Pc hc₁ with h'' | h'' <;> simp_all
@@ -1338,8 +1319,7 @@ theorem trans_orbit : ∀ (T : Type) [CommRing T] (O : Subring T) (s : T →+* T
   have hmul : JO * JiO = 1 := by
     apply Matrix.map_injective (f := O.subtype) Subtype.val_injective
     show (JO * JiO).map O.subtype = (1 : Matrix (Fin M) (Fin M) O).map O.subtype
-    rw [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
-    exact hJJ
+    rwa [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
   have hiso0 : hform τ (hypOne JO) x x = 0 := by
     have h3 : ((hform τ (hypOne JO) x x : O) : T) =
         hform s (hypOne J) (fun i => (x i : T)) (fun i => (x i : T)) := by
@@ -1501,8 +1481,7 @@ theorem cover_pt (σ : E →ₐ[F] E) {M d : ℕ} (J Ji : Matrix (Fin M) (Fin M)
     refine ⟨(⟨g, hgH⟩ : HR (Fv F v) σ (hypOne J)),
       latStab_of_integral σ (hypOne J) b v O hO g hgH hgO hgiO, ?_⟩
     funext a
-    rw [Fin.fin_one_eq_zero a]
-    exact hgx
+    rwa [Fin.fin_one_eq_zero a]
   · right
     push Not at hp
     obtain ⟨P, hPm, hP⟩ := hp
@@ -1524,8 +1503,7 @@ theorem cover_pt (σ : E →ₐ[F] E) {M d : ℕ} (J Ji : Matrix (Fin M) (Fin M)
         have := congrArg Subtype.val (hy i)
         simp only [Subring.coe_mul] at this
         show (c : Fv F v ⊗[F] E) * (y i : Fv F v ⊗[F] E) = X 0 i
-        rw [mul_comm]
-        exact this
+        rwa [mul_comm]
     rcases hπ P hPm with h | h
     · exact ⟨π₁, Or.inl rfl, aux _ h⟩
     · exact ⟨π₂, Or.inr rfl, aux _ h⟩

@@ -185,8 +185,7 @@ theorem genFibre_of_field_point (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp
     exact ho (hC (by simpa using hm'))
   have hpb : f q' ∈ X.basicOpen g := by
     have := Scheme.preimage_basicOpen s r
-    rw [← this]
-    exact hpt
+    rwa [← this]
   have hmem : f q' ∈ s ⁻¹ᵁ ⊤ := trivial
   have hu : IsUnit (X.presheaf.germ (s ⁻¹ᵁ ⊤) (f q') hmem g) := (X.mem_basicOpen g (f q') hmem).1 hpb
   have hv : genMap ξ p (X.presheaf.germ (s ⁻¹ᵁ ⊤) (f q') hmem g) = algebraMap O Ω o :=
@@ -220,8 +219,7 @@ theorem descent_core {K Ω C : Type} [Field K] [Field Ω] [Algebra K Ω] [Field 
     | mem z hz =>
       obtain ⟨a, ha, c, rfl⟩ := hz
       rw [Algebra.TensorProduct.basis_repr_tmul]
-      simp only [Finsupp.smul_apply, Finsupp.mapRange_apply, smul_eq_mul]
-      exact mul_mem ha (hK p _)
+      simpa only [Finsupp.smul_apply, Finsupp.mapRange_apply, smul_eq_mul] using mul_mem ha (hK p _)
     | zero => simp [zero_mem]
     | add u v _ _ hu hv =>
       rw [map_add (f := _), Finsupp.add_apply]
@@ -230,8 +228,7 @@ theorem descent_core {K Ω C : Type} [Field K] [Field Ω] [Algebra K Ω] [Field 
   have hυ0 : υ ≠ 0 := fun h => one_ne_zero (by rw [← hτυ, h, mul_zero] : (1 : Ω ⊗[K] C) = 0)
   have hne : ∀ z : Ω ⊗[K] C, z ≠ 0 → ∃ j, B.repr z j ≠ 0 := by
     intro z hz
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hz (B.repr.map_eq_zero_iff.1 (Finsupp.ext h))
   obtain ⟨j, hj⟩ := hne τ hτ0
   obtain ⟨k, hk⟩ := hne υ hυ0
@@ -395,8 +392,7 @@ theorem compat_base {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRing
       Spec.map (CommRingCat.ofHom (algebraMap C Ω')) ≫ Spec.map (CommRingCat.ofHom (algebraMap O C)) := by
     rw [← h1, ← h2, Category.assoc, ← hw, ← Category.assoc, ← hd, Category.assoc]
   rw [← Spec.map_comp, ← Spec.map_comp] at e
-  have e' := Spec.map_injective e
-  exact congrArg (fun g => g.hom o) e'
+  exact congrArg (fun g => g.hom o) (Spec.map_injective e)
 
 theorem chart (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X)
     (O : Type) [CommRing O] [IsDomain O] [Algebra O Ω] (s : X ⟶ Spec (CommRingCat.of O))
@@ -582,8 +578,7 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card (X : Scheme.{0}) (Ω : Type) [Field 
     obtain ⟨u, hu, hut⟩ := ZUnit.exists_of_span_eq a.1 (a.2.symm.trans b.2)
     have e1 : t' / i (e p) = u := by
       rw [hut, smul_eq_mul, mul_div_cancel_right₀ _ (hei p)]
-    rw [e1]
-    exact hu
+    rwa [e1]
   have hx := fun p => (hcharts p).2.2 (t' / i (e p)) (fun q' hq => (hunit p q' hq).2.1)
   have hy := fun p => (hcharts p).2.2 (i (e p) / t') (fun q' hq => by
     have := (hunit p q' hq).2.2
@@ -692,8 +687,7 @@ theorem genMap_stalkMap' (ξ : Sp Ω ⟶ X) (g : X ⟶ X') (q : Cpt ξ)
   have e := Scheme.Hom.stalkSpecializes_stalkMap g _ _ q.2
   have e2 := congrArg (fun t => (t ≫ Scheme.stalkClosedPointTo ξ).hom s) e
   have e3 := Scheme.stalkClosedPointTo_comp ξ g
-  have e4 := congrArg (fun t => (X'.presheaf.stalkSpecializes h ≫ t).hom s) e3
-  exact e2.symm.trans e4.symm
+  exact e2.symm.trans (congrArg (fun t => (X'.presheaf.stalkSpecializes h ≫ t).hom s) e3).symm
 
 section Spec
 
@@ -878,8 +872,7 @@ theorem exists_chart {K C : Type} [Field K] [CommRing C] [Algebra K C] (s : X �
     rw [Category.assoc, hm1, ← Category.assoc, he1]
   · show (e.inv ≫ m) ≫ pullback.snd s y = _
     rw [Category.assoc, hm2, he2]
-  · rw [Scheme.Hom.comp_base, TopCat.coe_comp, e.inv.surjective.range_comp]
-    exact hr
+  · rwa [Scheme.Hom.comp_base, TopCat.coe_comp, e.inv.surjective.range_comp]
 
 section BaseChange
 
@@ -895,8 +888,7 @@ theorem exists_ringHom_of_mem {A : Type} [CommRing A] (a : Sp A ⟶ X) [IsOpenIm
   have hr : Set.range ξ ⊆ Set.range a := by
     rintro _ ⟨z, rfl⟩
     have : z = IsLocalRing.closedPoint Ω := Subsingleton.elim (α := PrimeSpectrum Ω) _ _
-    rw [this]
-    exact h
+    rwa [this]
   let g := IsOpenImmersion.lift a ξ hr
   refine ⟨(Spec.preimage g).hom, ?_⟩
   have e : CommRingCat.ofHom (Spec.preimage g).hom = Spec.preimage g := rfl
@@ -926,8 +918,7 @@ theorem chart_data {K C : Type} [Field K] [Field C] [Algebra K C] [Algebra K Ω]
   have hcomm : ∀ k, φ₀ (algebraMap K A k) = algebraMap K Ω k := by
     have e : spMap (φ₀.comp (algebraMap K A)) = spMap (algebraMap K Ω) := by
       rw [← hξs, ← hφ₀, Category.assoc, has, spMap_comp]
-    have e2 := Spec.map_injective e
-    exact fun k => congrArg (fun t => t.hom k) e2
+    exact fun k => congrArg (fun t => t.hom k) (Spec.map_injective e)
   let φ : A →ₐ[K] Ω := { φ₀ with commutes' := hcomm }
   refine ⟨A, _, _, a, j, φ, ha, hr, hφ₀, hj, hjf, hjr, ?_⟩
   apply pullback.hom_ext
@@ -1033,8 +1024,7 @@ theorem cpt_base_change_dominates (K C : Type) [Field K] [CharZero K] [Field C] 
   · have h0 := (H1 (genPt ξ') (hD.specializes (CptModel.self ξ'))).2 (specializes_refl _)
     have h3 : genMap ξ' ⟨genPt ξ', specializes_refl _⟩ = (Scheme.stalkClosedPointTo ξ').hom :=
       CptModel.genMap_self ξ'
-    rw [h3] at h0
-    exact h0
+    rwa [h3] at h0
   · intro c
     obtain ⟨U, hU, hpU, -⟩ := exists_isAffineOpen_mem_and_subset (show genPt ξ ∈ (⊤ : X.Opens) from trivial)
     obtain ⟨A, _, _, a, j, φ, ha, hr, hφ, hj, hjf, hjr, hjξ⟩ := chart_data s ξ hξs ξ' h1 h2 U hU hpU
@@ -1107,8 +1097,7 @@ theorem closedPointTo_cgerm {K R : Type} [CommRing K] [CommRing R] [IsLocalRing 
     (Scheme.stalkClosedPointTo u).hom (cgerm (u (IsLocalRing.closedPoint R)) c) = σ c := by
   subst hu
   have e := Scheme.germ_stalkClosedPointTo_Spec (CommRingCat.ofHom σ)
-  have e2 := congrArg (fun t => t.hom ((Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom c)) e
-  simpa [cgerm] using e2
+  simpa [cgerm] using congrArg (fun t => t.hom ((Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom c)) e
 
 def cst {K : Type} [CommRing K] (s : X ⟶ Sp K) (x : X) (c : K) : X.presheaf.stalk x :=
   (s.stalkMap x).hom (cgerm (s x) c)
@@ -1185,8 +1174,7 @@ theorem centre_mem {z : Sp ℂ ⟶ X} {U : X.Opens} (h : ⊤ ≤ z ⁻¹ᵁ U) :
 theorem top_le_of_centre_mem {z : Sp ℂ ⟶ X} {U : X.Opens} (h : centre z ∈ U) : ⊤ ≤ z ⁻¹ᵁ U := by
   rw [GlobalTheory.top_le_preimage_iff_mem]
   have : (default : PrimeSpectrum ℂ) = IsLocalRing.closedPoint ℂ := Subsingleton.elim (α := PrimeSpectrum ℂ) _ _
-  rw [this]
-  exact h
+  rwa [this]
 
 theorem isHolTo_comp {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] {B : Set V} {y : V → (Sp ℂ ⟶ X')}
     (f : X' ⟶ X) (h : IsHolTo B y) : IsHolTo B (fun b => y b ≫ f) := by
@@ -1227,8 +1215,7 @@ theorem extends_pull {K : Type} [Field K] {σ : K →+* ℂ} {s : X ⟶ Sp K} {s
   have hv : ValAt ξ (y b ≫ f) t ((Scheme.stalkClosedPointTo (y b ≫ f)).hom s₀) := ⟨hcen, s₀, hs₀, rfl⟩
   have e := val_eq hξ' (val_pull hD (y b) h' hv) hr
   have H' := H b ⟨hbB, ball_subset_ball (min_le_left _ _) hbε⟩ hW' _ hv
-  rw [e] at H'
-  exact H'
+  rwa [e] at H'
 
 theorem cpt_base_change : ∀ (K : Type) [Field K] [CharZero K] (σ : K →+* ℂ) (X : Scheme.{0}) (s : X ⟶ Sp K)
     (Ω : Type) [Field Ω] [Algebra K Ω] (ξ : Sp Ω ⟶ X), ξ ≫ s = spMap (algebraMap K Ω) → IsCptGen ξ →
@@ -1325,8 +1312,7 @@ theorem gaga_rat : GagaSections → ∀ (K : Type) [Field K] (σ : K →+* ℂ) 
     simp only [RingHom.id_apply] at e
     field_simp
     linear_combination e
-  rw [← e']
-  exact hv
+  rwa [← e']
 
 end GlobalTheory.CompanionTheory.Ar.Flat
 end -- clump:auto

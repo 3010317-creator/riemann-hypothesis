@@ -611,8 +611,7 @@ theorem actLev_int (hL : ActLev (Xo := Xo) c lev) (g : G) {f : Rul Xo c}
   have e1 : evI y (actLev c lev g f) = evI y' f :=
     evalAt_actL hL (GlobalTheory.TransferCompare.evalWD_framed Xo c) frMap_trans_id g hf y.1
   show 0 ≤ nval S.V e (evI y (actLev c lev g f))
-  rw [e1]
-  exact h0
+  rwa [e1]
 
 variable {r : ℕ} {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} {ξ : ℝ} {a : (D.host.E →+* ℂ) × ℕ → ℕ} {n : ℕ}
 

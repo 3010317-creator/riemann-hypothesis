@@ -419,8 +419,7 @@ theorem mulVec_surj {d : ℕ} {W : Spc F E d} (hL : W.L.IsFullLattice E) (v : Pl
         simp only [Set.mem_setOf_eq, map_add (f := _)] at ha hb ⊢
         exact add_mem ha hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, map_zero]
-        exact zero_mem _
+        simpa only [Set.mem_setOf_eq, map_zero] using zero_mem _
       smul_mem' := fun e x hx => by
         have he : oneT v d (e • x) = ((1 : Fv F v) ⊗ₜ[F] e) • oneT v d x := by
           funext i
@@ -549,8 +548,7 @@ theorem exists_inv_keeps_latAt : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   have hz' : z = fun i => liftT (E := E) v (evT (E := E) v (z i)) := funext fun i => (liftT_evT_of_at (at_of_mem hz i)).symm
   rw [hz', mulVec_liftT, hM'v]
   have : (fun i => evT (E := E) v (z i)) = (M.map (evT (E := E) v)) *ᵥ y := hu
-  rw [this, Matrix.mulVec_mulVec, hNv, Matrix.nonsing_inv_mul _ hdet, Matrix.one_mulVec]
-  exact hy
+  rwa [this, Matrix.mulVec_mulVec, hNv, Matrix.nonsing_inv_mul _ hdet, Matrix.one_mulVec]
 
 end GlobalTheory.InertSph
 end -- clump:auto
@@ -625,8 +623,7 @@ theorem at_atPlace (v : Pl (F := F)) (a : Fv F v) : At (evFin F v) (atPlace v a)
 
 theorem eq_atPlace (v : Pl (F := F)) (a : AF F) (ha : At (evFin F v) a) : a = atPlace v (evFin F v a) := by
   have h := ha (1 - atPlace v 1) (by rw [map_sub, map_one, evFin_atPlace, sub_self])
-  rw [smul_eq_mul, sub_mul, one_mul, atPlace_mul_right, one_mul, sub_eq_zero] at h
-  exact h
+  rwa [smul_eq_mul, sub_mul, one_mul, atPlace_mul_right, one_mul, sub_eq_zero] at h
 
 omit [NumberField E] in
 theorem gen_mem {d : ℕ} (W : Spc F E d) (v : Pl (F := F)) (c : v.adicCompletionIntegers F) (y : Fin d → E) (hy : y ∈ W.L) :

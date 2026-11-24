@@ -168,13 +168,11 @@ theorem exists_nat_mul_le_one (v : HeightOneSpectrum (𝓞 F)) (A : WithZero (Mu
     simpa using h
   obtain ⟨k, hk⟩ := exists_pow_lt₀ hlt (Units.mk0 _ (inv_ne_zero hA))
   have hpos : 0 < Ideal.absNorm v.asIdeal := by
-    refine Nat.pos_of_ne_zero fun h => v.ne_bot ?_
-    exact Ideal.absNorm_eq_zero_iff.mp h
+    exact Nat.pos_of_ne_zero fun h => v.ne_bot (Ideal.absNorm_eq_zero_iff.mp h)
   refine ⟨Ideal.absNorm v.asIdeal ^ k, pow_pos hpos k, ?_⟩
   have h3 : v.valuation F (((Ideal.absNorm v.asIdeal ^ k : ℕ)) : F) < A⁻¹ := by
     push_cast
-    rw [map_pow]
-    exact hk
+    rwa [map_pow]
   calc v.valuation F (((Ideal.absNorm v.asIdeal ^ k : ℕ)) : F) * A ≤ A⁻¹ * A :=
         mul_le_mul' h3.le le_rfl
     _ = 1 := inv_mul_cancel₀ hA

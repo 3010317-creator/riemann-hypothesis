@@ -95,11 +95,9 @@ theorem basis_map {S S' : Type} [CommRing S] [CommRing S'] (ψ : S →+* S') {σ
     have e : (fun i => (M * P) ℓ i) = fun i => (1 : Matrix σ σ S) ℓ i := by
       refine (h (U ℓ)).unique (fun j => ?_) (fun j => ?_)
       · have : (M * P * M) ℓ j = M ℓ j := by rw [Matrix.mul_assoc, h1, Matrix.mul_one]
-        rw [Matrix.mul_apply] at this
-        exact this
+        rwa [Matrix.mul_apply] at this
       · have : ((1 : Matrix σ σ S) * M) ℓ j = M ℓ j := by rw [Matrix.one_mul]
-        rw [Matrix.mul_apply] at this
-        exact this
+        rwa [Matrix.mul_apply] at this
     exact congrFun e ℓ'
   have h1' : P.map ψ * M.map ψ = 1 := by rw [← Matrix.map_mul, h1]; simp
   have h2' : M.map ψ * P.map ψ = 1 := by rw [← Matrix.map_mul, h2]; simp
@@ -241,7 +239,6 @@ theorem rIsChart_baseChange : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       rw [← Category.assoc, sq_tan, Category.assoc]
       rfl
     have := isCombAt_map ψ x0 (hX.tan ℓ)
-    rw [← hv] at this
-    exact this
+    rwa [← hv] at this
 
 end GlobalTheory.RawChartBC

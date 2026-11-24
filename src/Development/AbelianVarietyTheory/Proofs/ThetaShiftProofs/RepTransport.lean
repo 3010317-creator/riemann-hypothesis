@@ -149,8 +149,7 @@ theorem rep_transport {π : X ⟶ Z} {p : X ⟶ Sp K} {n : ℕ} {σ : Fin n → 
       rw [hs R _ j hj', Category.assoc, e.hom_inv_id, Category.comp_id] at this
       rw [this]
       exact Finset.sum_congr rfl fun i _ => by rw [hσ i R _ j hj]
-  simp only [key]
-  exact H s
+  simpa only [key] using H s
 
 
 open Out in

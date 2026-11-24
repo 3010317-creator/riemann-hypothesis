@@ -1032,8 +1032,7 @@ theorem isScal_of_normalises (K : Type) [Field K] (O : ValuationSubring K) (k : 
     apply hc2O
     have h3 : (((u⁻¹ : Oˣ) : O) : K) * π = 1 := by
       have := congrArg Subtype.val u.inv_mul
-      rw [hu] at this
-      exact this
+      rwa [hu] at this
     have h4 : (((u⁻¹ : Oˣ) : O) : K) = c₂ := (mul_inv_eq_one₀ c₂.ne_zero).1 h3
     rw [← h4]; exact ((u⁻¹ : Oˣ) : O).2
   have e3 : ∀ i j, π * P₁ i j ∈ O := hc₂
@@ -1249,11 +1248,9 @@ theorem gU_glO {K : Type} [Field K] (O : ValuationSubring K) {n : ℕ} (M N : Ma
     Matrix.map_injective fun x y hxy => Subtype.ext hxy
   refine ⟨⟨Matrix.of fun i j => ⟨M i j, hM i j⟩, Matrix.of fun i j => ⟨N i j, hN i j⟩, inj ?_, inj ?_⟩, rfl⟩
   · show Matrix.map _ O.subtype = Matrix.map _ O.subtype
-    rw [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
-    exact h
+    rwa [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
   · show Matrix.map _ O.subtype = Matrix.map _ O.subtype
-    rw [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
-    exact h'
+    rwa [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
 
 theorem gU_val_inv {R : Type} [CommRing R] {n : ℕ} (g : GL (Fin n) R) (L : Matrix (Fin n) (Fin n) R)
     (h : L * (g : Matrix (Fin n) (Fin n) R) = 1) : ((g⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) = L := by
@@ -1688,8 +1685,7 @@ theorem loc_inert (hσ : ∀ a, σ (σ a) = a) (hS : ∀ a ∈ S, σ a ∈ S) (h
         (Z.O Q').subtype.mapMatrix (y : Matrix (Fin n) (Fin n) (Z.O Q')) := congrArg Units.val hx1
       have h4 := congrArg (Z.O Q').subtype.mapMatrix (show cT t _ * _ * _ = _ from hy)
       rw [map_mul, map_mul] at h4
-      rw [h3]
-      exact h4
+      rwa [h3]
     · obtain ⟨Q₁, h1⟩ := Z.exists_bar hσ Q'
       have h1' : σ (Z.e Q₁) = Z.e Q' := by rw [← h1, hσ]
       obtain ⟨s', hs', -⟩ := Z.exists_conj hS h1'

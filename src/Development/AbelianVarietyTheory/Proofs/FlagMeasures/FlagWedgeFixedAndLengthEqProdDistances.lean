@@ -68,8 +68,7 @@ theorem len_castLE {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℂ V] 
     · rintro ⟨b, hb, rfl⟩
       simp only [Set.mem_ofPred_eq, Fin.lt_def, Fin.val_castLE] at hb
       refine ⟨⟨b.val, by omega⟩, ?_, ?_⟩
-      · simp only [Set.mem_ofPred_eq, Fin.lt_def]
-        exact hb
+      · simpa only [Set.mem_ofPred_eq, Fin.lt_def] using hb
       · exact congrArg y (Fin.ext rfl)
   unfold majorantDistance
   rw [hS]
@@ -87,8 +86,7 @@ theorem fixes_partial_wedge_and_length : ∀ (k r l : ℕ) (hl : l ≤ r + 1) (z
       simp only [Fin.lt_def, Fin.val_castLE] at hac ⊢
       exact hac
     · intro c
-      simp only [Matrix.submatrix_apply]
-      exact hU1 _
+      simpa only [Matrix.submatrix_apply] using hU1 _
     · intro i a
       have ha := a.isLt
       show (s *ᵥ Formalism.QuantumDeterminants.fvec k r z (Fin.castLE hl a)) i =

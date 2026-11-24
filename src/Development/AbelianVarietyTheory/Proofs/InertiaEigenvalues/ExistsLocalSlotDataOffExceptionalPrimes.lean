@@ -283,8 +283,7 @@ theorem position_conditions : ∀ (l t : ℕ) (up : Bool) (Fl Fc : Finset ℤ) (
     rw [e]; exact this
   have hT2' : ∀ x ∈ Formalism.MainNotions.tableLineDegreeTwo.lows up (hS up t Fl Fc) (etaS t Fl) (US up Fl Fc),
       ∀ y ∈ Formalism.WachCohomologyFacts.Top.GlobalTheory (wS up Fl Fc) t, σ + 2 < |x - y| := by
-    intro x hx
-    exact hT2 x (Multiset.mem_filter.mp hx).1
+    exact fun x hx => hT2 x (Multiset.mem_filter.mp hx).1
   cases up
   ·
     have hmA0 := mnAll_le_zero' Fl Fc
@@ -654,8 +653,7 @@ theorem hS_le_bound : ∀ (t : ℕ) (up : Bool) (Fl Fc : Finset ℤ) (η S B W0 
       · exact hFc' y hy
     have h0 : mnAll Fl Fc ≤ 0 := Finset.min'_le _ _ (Finset.mem_insert_self _ _)
     have hw : ((wS false Fl Fc : ℕ) : ℤ) = 1 - mnAll Fl Fc := by
-      simp only [wS, Bool.false_eq_true, ite_false]
-      exact Int.toNat_of_nonneg (by omega)
+      simpa only [wS, Bool.false_eq_true, ite_false] using Int.toNat_of_nonneg (by omega)
     simp only [PositionData.hS, Bool.false_eq_true, ite_false]
     rw [castToNat, hw]
     apply max_le
@@ -684,8 +682,7 @@ theorem hS_le_bound : ∀ (t : ℕ) (up : Bool) (Fl Fc : Finset ℤ) (η S B W0 
       · exact (hFl' y hy).1
     have h0 : mnLo Fl ≤ 0 := Finset.min'_le _ _ (Finset.mem_insert_self _ _)
     have hw : ((wS true Fl Fc : ℕ) : ℤ) = 1 - mnLo Fl := by
-      simp only [wS, ite_true]
-      exact Int.toNat_of_nonneg (by omega)
+      simpa only [wS, ite_true] using Int.toNat_of_nonneg (by omega)
     simp only [PositionData.hS, ite_true]
     rw [castToNat, hw]
     apply max_le

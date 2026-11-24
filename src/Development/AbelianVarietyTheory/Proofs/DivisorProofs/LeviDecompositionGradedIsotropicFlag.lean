@@ -665,8 +665,7 @@ private theorem exists_unipFlag_mul_leviFlag_eq_of_mem_parFlag (F E : Type) [Fie
   have hgl : g ∈ leviFlag σ J X Y d :=
     _root_.GlobalTheory.UAut.mem_leviFlag_of_keeps_weights F E σ h n J hJ r X Y d _ hdM hxx hyy hxy g (by rw [hg1]; exact hmd) (by rw [hg2]; exact hm'd)
   refine ⟨p * g⁻¹, ?_, g, hgl, (inv_mul_cancel_right p g).symm, ?_⟩
-  · rw [mem_unipFlag_iff_raise hJ hσ X _ hL hxx hLL hdM, map_mul, Units.val_mul, hg2]
-    exact hraise
+  · rwa [mem_unipFlag_iff_raise hJ hσ X _ hL hxx hLL hdM, map_mul, Units.val_mul, hg2]
   · intro hpr
     rw [← range_ratEmb σ J] at hpr
     obtain ⟨γ, hγ⟩ := hpr
@@ -716,13 +715,9 @@ private theorem exists_unipFlag_mul_leviFlag_eq_of_mem_parFlag (F E : Type) [Fie
             rw [← mul_assoc J, ← mul_assoc J, Matrix.mul_nonsing_inv _ hdet, one_mul]
         _ = J := by rw [hadj, mul_assoc, hk'k, mul_one]
     let K : GL (Fin n) E := ⟨k, k', hkk', hk'k⟩
-    have hK : K ∈ Formalism.UG.UJ (σ : E →+* E) J := by
-      show Formalism.UG.cT (σ : E →+* E) k * J * k = J
-      exact hUJ
+    have hK : K ∈ Formalism.UG.UJ (σ : E →+* E) J := hUJ
     rw [← range_ratEmb σ J]
-    refine ⟨⟨K, hK⟩, matHom_injective _ σ J (Units.ext ?_)⟩
-    show (inclR (F := F) (AF F) : E →+* AF F ⊗[F] E).mapMatrix k = m
-    exact hk
+    exact ⟨⟨K, hK⟩, matHom_injective _ σ J (Units.ext hk)⟩
 
 private theorem unipFlag_inf_leviFlag_eq_bot (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (h : IsCMExt F E σ) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (hJ : IsHermND σ J) (r : ℕ)

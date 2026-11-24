@@ -115,8 +115,7 @@ theorem wittDecomposition_gram_projection_identity (s : Fin W₀.rank → D.host
   have h : Matrix.vecMul (Matrix.vecMul (star s) W₀.gram) d.q0 = Matrix.vecMul (star (Matrix.mulVec d.i₀ s)) W.gram := by
     rw [Matrix.vecMul_vecMul, HypDec.q0, ← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (gram_isUnit_det W₀),
       Matrix.one_mul, ← Matrix.vecMul_vecMul, Matrix.star_mulVec]
-  have hj := congrFun h j
-  simpa only [Matrix.vecMul, dotProduct, Pi.star_apply] using hj
+  simpa only [Matrix.vecMul, dotProduct, Pi.star_apply] using congrFun h j
 
 end
 

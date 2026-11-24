@@ -151,8 +151,7 @@ theorem smooth_of_chart {E : Type} [Field E] [NumberField E] [IsCMField E] {H : 
   have := Xo.smooth
   have : Smooth Xo.s := SmoothOfRelativeDimension.smooth Dw.dim Xo.s
   have h : Smooth (spMap (algebraMap c.F R)) := by rw [← hs]; infer_instance
-  have h' := (HasRingHomProperty.Spec_iff (P := @Smooth)).1 h
-  exact RingHom.smooth_algebraMap.1 h'
+  exact RingHom.smooth_algebraMap.1 ((HasRingHomProperty.Spec_iff (P := @Smooth)).1 h)
 
 theorem exists_integral_chart_frame : ReciprocityTheory.ChartRestriction.G.Out.SecTwistSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), ∀ p : Xo.XF c, ∃ (A : Type) (_ : CommRing A) (_ : IsDomain A) (_ : Algebra c.F A) (j : Sp A ⟶ Xo.XF c) (y : FrPt Xo c A), IsOpenImmersion j ∧ p ∈ Set.range j ∧ j ≫ pullback.snd _ _ = spMap (algebraMap c.F A) ∧ Algebra.Smooth c.F A ∧ y.x = j ≫ pullback.fst _ _ := by
   intro hT E _ _ _ H Dw l Xo c z
@@ -212,10 +211,8 @@ theorem exists_integral_chart_frame : ReciprocityTheory.ChartRestriction.G.Out.S
   refine ⟨A, inferInstance, hA, inferInstance, spMap ψ ≫ jR, ⟨x', hx, u', htan, heig', hbasis, s', hgen⟩,
     inferInstance, ?_, hsA, smooth_of_chart _ hsA, (Category.assoc _ _ _).symm⟩
   have hr : q ∈ Set.range (PrimeSpectrum.comap ψ) := by
-    rw [PrimeSpectrum.localization_away_comap_range A g]
-    exact hg
+    rwa [PrimeSpectrum.localization_away_comap_range A g]
   obtain ⟨q', hq''⟩ := hr
-  refine ⟨q', ?_⟩
-  exact (Scheme.Hom.comp_apply _ _ _).trans ((congrArg jR hq'').trans hq)
+  exact ⟨q', (Scheme.Hom.comp_apply _ _ _).trans ((congrArg jR hq'').trans hq)⟩
 
 end GlobalTheory.LocalFrame

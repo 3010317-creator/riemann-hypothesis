@@ -403,8 +403,7 @@ theorem norm_coeff_le_one_of_mul {x g : K⟦X⟧} (hx : ∃ B : ℝ, ∀ n, ‖c
     exact (hgx _).trans (le_max_left _ _)
   have hSM : S ≤ Mx := ciSup_le key
   have hS1 : S ≤ 1 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have h2 : S ≤ θ * S := by
       rcases le_total 1 ((θ : ℝ) * S) with h3 | h3
       · rwa [hMx, max_eq_right h3] at hSM
@@ -876,8 +875,7 @@ theorem frobSlice_mul_frob {l : ℕ} [Fact l.Prime] {i : ℕ} (hi : i < l) (z f 
         by simp only [coeff_frobSlice]; exact hne, rfl⟩
     · exact absurd (mul_zero _) hne
   · rintro ⟨p, q⟩ - -
-    simp only [coeff_frobSlice]
-    exact hval p q
+    simpa only [coeff_frobSlice] using hval p q
 
 theorem bdd_frobSlice (l i : ℕ) {z : K⟦X⟧} (hz : ∃ c : ℝ, ∀ n, ‖coeff n z‖ ≤ c) :
     ∃ c : ℝ, ∀ n, ‖coeff n (frobSlice l i z)‖ ≤ c := by
@@ -930,8 +928,7 @@ theorem frobSlice_mem_ldivSet : ∀ (O K : Type) [CommRing O] [NormedField K] [I
       (E K l e ^ (N₁ + N₂) * h) • (1 : Matrix ι ι K⟦X⟧) := by
     have : Z * (F.mat (τ - 1)).map (frob K l) =
         E K l e ^ N₁ • E K l e ^ N₂ • (P.mxInv τ * (Y * Q.mx τ * (F.mat (τ - 1)).map (frob K l))) := by
-      simp only [hZ, Matrix.smul_mul, Matrix.mul_smul, Matrix.mul_assoc]
-      exact smul_comm _ _ _
+      simpa only [hZ, Matrix.smul_mul, Matrix.mul_smul, Matrix.mul_assoc] using smul_comm _ _ _
     rw [this, h1, Matrix.mul_smul, P.mxInv_mul_mx]
     simp only [smul_smul, pow_add, mul_assoc]
   have hPb : ∀ r k, ∃ c : ℝ, ∀ n, ‖coeff n ((E K l e ^ N₁ • P.mxInv τ) r k)‖ ≤ c := fun r k =>
@@ -1105,15 +1102,13 @@ theorem wdiv [CompleteSpace K] (g h : K⟦X⟧) (d : ℕ) (hg1 : ∀ n, ‖coeff
     rw [PowerSeries.order_eq_nat]
     refine ⟨?_, fun i hi => ?_⟩
     · rw [PowerSeries.coeff_map, Ne, Ideal.Quotient.eq_zero_iff_mem]
-      intro hmem
-      exact hI (Ideal.eq_top_of_isUnit_mem _ hmem hgdU)
+      exact fun hmem => hI (Ideal.eq_top_of_isUnit_mem _ hmem hgdU)
     · rw [PowerSeries.coeff_map, Ideal.Quotient.eq_zero_iff_mem]
       have h1 := (mem_span_pow a' (coeff i g') 1).2 (by simpa [g', a'] using hle i hi)
       rwa [pow_one] at h1
   have H : g'.IsWeierstrassDivisorAt (Ideal.span {a'}) := by
     unfold PowerSeries.IsWeierstrassDivisorAt
-    rw [hord, ENat.toNat_coe]
-    exact hgdU
+    rwa [hord, ENat.toNat_coe]
   have hdiv := H.isWeierstrassDivisionAt_div_mod h'
   refine ⟨PowerSeries.map ι (H.div h'), PowerSeries.map ι (H.mod h' : (𝒪)⟦X⟧),
     fun n => ?_, fun n => ?_, fun n hn => ?_, ?_⟩
@@ -1124,8 +1119,7 @@ theorem wdiv [CompleteSpace K] (g h : K⟦X⟧) (d : ℕ) (hg1 : ∀ n, ‖coeff
     rw [hord, ENat.toNat_coe] at hdl
     exact lt_of_lt_of_le hdl (by exact_mod_cast hn)
   · have e := congrArg (PowerSeries.map ι) hdiv.eq_mul_add
-    rw [hh', map_add (f := _), map_mul, hg'] at e
-    exact e
+    rwa [hh', map_add (f := _), map_mul, hg'] at e
 
 theorem first_unit_index (g : K⟦X⟧) (m : ℕ) (hg1 : ∀ n, ‖coeff n g‖ ≤ 1)
     (hm : ‖coeff m g‖ = 1) : ∃ d ≤ m, ‖coeff d g‖ = 1 ∧ ∀ n < d, ‖coeff n g‖ < 1 := by
@@ -1163,8 +1157,7 @@ theorem exists_primitive_generator : ∀ (K : Type) [NormedField K] [IsUltrametr
   · exact ⟨q, hq1, by rw [hqr, hr, add_zero, mul_comm]⟩
   exfalso
   have hex : ∃ n, coeff n r ≠ 0 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     exact hr (PowerSeries.ext fun n => by simpa using hne n)
   obtain ⟨n0, hn0⟩ := hex
   have hn0d : n0 < Nat.find hS := by
@@ -1424,8 +1417,7 @@ theorem DomTerm.frob (l : ℕ) [Fact l.Prime] {f : K⟦X⟧} {i : ℕ} (h : DomT
     exact GlobalTheory.BK.coeff_frob l f n
   refine ⟨one_pos, ?_, fun n => ?_, fun n hn => ?_⟩
   · rw [hco, ite_eq_left (dvd_mul_right l i), Nat.mul_div_cancel_left i hl0, one_pow, mul_one]
-    rw [one_pow, mul_one] at hi
-    exact hi
+    rwa [one_pow, mul_one] at hi
   · rw [hco, one_pow, mul_one]
     split_ifs
     · have hx := hle (n / l)
@@ -1554,8 +1546,7 @@ theorem norm_constantCoeff_eq_one_of_cycle (K : Type) [NormedField K] [IsUltrame
   have hord : ∀ σ, o σ = l * o (σ - 1) := fun σ => by
     have h := congrArg order (hcyc σ)
     rw [order_mul, order_mul, hkord σ, hEord M, ← ho σ, order_frob l (ho (σ - 1)).symm] at h
-    simp only [Nat.cast_zero, add_zero, zero_add, Nat.cast_inj] at h
-    exact h
+    simpa only [Nat.cast_zero, add_zero, zero_add, Nat.cast_inj] using h
   have hsum_o : ∑ σ, o σ = l * ∑ σ, o σ :=
     calc ∑ σ, o σ = ∑ σ, l * o (σ - 1) := Finset.sum_congr rfl fun σ _ => hord σ
       _ = ∑ σ, l * o σ := sum_sub_one (fun σ => l * o σ)
@@ -1574,8 +1565,7 @@ theorem norm_constantCoeff_eq_one_of_cycle (K : Type) [NormedField K] [IsUltrame
       (r ^ e) ^ M * ‖constantCoeff (Δ (σ - 1))‖ := fun σ => by
     have h := congrArg (fun F => ‖constantCoeff F‖) (hcyc σ)
     simp only [map_mul, map_pow, norm_mul, norm_pow, hE0, hF0] at h
-    rw [← hkn σ, hre]
-    exact h
+    rwa [← hkn σ, hre]
   have hP : 0 < ∏ σ, ‖constantCoeff (Δ σ)‖ :=
     Finset.prod_pos fun σ _ => norm_pos_iff.mpr (hc0 σ)
   have hprod : (∏ σ, ‖constantCoeff (Δ σ)‖) * r ^ (∑ σ, κ σ) =

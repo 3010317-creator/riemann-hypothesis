@@ -116,8 +116,7 @@ theorem mem_differentIdeal_iff_one (x : 𝓞 E) :
   rw [← Submodule.mem_div_iff_forall_mul_mem, ← coeSubmodule_differentIdeal ℤ ℚ (L := E) (𝓞 E),
     IsLocalization.mem_coeSubmodule]
   constructor
-  · intro h
-    exact ⟨x, h, rfl⟩
+  · exact fun h => ⟨x, h, rfl⟩
   · rintro ⟨y, hy, h⟩
     have : y = x := FaithfulSMul.algebraMap_injective (𝓞 E) E h
     exact this ▸ hy
@@ -137,11 +136,9 @@ theorem galois_smul_mem_differentIdeal (σ : E ≃ₐ[ℚ] E) {x : 𝓞 E}
     intro a ha
     have := hy (σ a) (hone σ a ha)
     rw [Algebra.traceForm_apply] at this ⊢
-    rw [← Algebra.trace_eq_of_algEquiv σ, map_mul, AlgEquiv.apply_symm_apply]
-    exact this
+    rwa [← Algebra.trace_eq_of_algEquiv σ, map_mul, AlgEquiv.apply_symm_apply]
   have := hone σ _ (hx _ hy')
-  rw [map_mul, AlgEquiv.apply_symm_apply] at this
-  exact this
+  rwa [map_mul, AlgEquiv.apply_symm_apply] at this
 
 theorem differentIdeal_pow_finrank_eq_span_discr :
     ∀ (F : Type) [Field F] [NumberField F] [IsGalois ℚ F],
@@ -520,8 +517,7 @@ theorem _root_.GlobalTheory.HilbFam.sz_hfun_coef : _root_.GlobalTheory.LatJet.Ei
       simp only [_root_.GlobalTheory.HilbFam.split]
       change (![β, β * x] : Fin 2 → F) 0 ∈ _ ∧
         (![β, β * x] : Fin 2 → F) 1 - (![β, β * x] : Fin 2 → F) 0 * x ∈ _
-      simp only [Matrix.cons_val_zero, Matrix.cons_val_one, sub_self]
-      exact ⟨hβ, zero_mem _⟩
+      simpa only [Matrix.cons_val_zero, Matrix.cons_val_one, sub_self] using ⟨hβ, zero_mem _⟩
     simpa using hρ₀ _ hv i
 
   have hξ : ∀ ξ, a ξ ≠ 0 → ∀ i : _root_.GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.Emb F,
@@ -642,8 +638,7 @@ namespace GlobalTheory.HilbFam.TwistSize
 theorem intVec_mem_std {F : Type} [Field F] [NumberField F] (z : Fin 2 → ℤ) :
     (fun j ↦ ((z j : ℤ) : F)) ∈ stdLat F := by
   rw [stdLat, Submodule.mem_pi]
-  intro j _
-  exact Submodule.mem_one.2 ⟨(z j : 𝓞 F), by simp⟩
+  exact fun j _ => Submodule.mem_one.2 ⟨(z j : 𝓞 F), by simp⟩
 
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (lam : algebraicClosure ℚ ℂ →+* ℂ_[l]), ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (N n : ℕ) (L : Lat F) (α : GL (Fin 2) (ZMod N)) (ρ₀ : ℝ), L ≤ stdLat F → (∀ x ∈ stdLat F, (n : 𝓞 F) • x ∈ L) → (∀ v ∈ L, ∀ (j : Fin 2) (i : Emb F), Sz l lam ρ₀ ((i (v j) : ℝ) : ℂ)) → Sz l lam ρ₀ (N : ℂ) → ![0, (n : F)] ∈ twist N L (α : Matrix (Fin 2) (Fin 2) (ZMod N)) ∧ ∀ v ∈ twist N L (α : Matrix (Fin 2) (Fin 2) (ZMod N)), ∀ i : Emb F, Sz l lam ρ₀ ((i (v 0) : ℝ) : ℂ) := by
   intro l _ lam F _ _ _ N n L α ρ₀ hLs hnL hL hN
@@ -872,8 +867,7 @@ theorem mem_szRing_of_isIntegral (x : ℂ) (hx : IsIntegral (szRing l lam) x) : 
     mem_algebraicClosure_iff'.2 (isIntegral_trans x h1)
   have h3 : eval₂ (toAlg l lam) ⟨x, h2⟩ p = 0 := by
     apply (algebraMap (algebraicClosure ℚ ℂ) ℂ).injective
-    rw [hom_eval₂, hc, map_zero]
-    exact hpx
+    rwa [hom_eval₂, hc, map_zero]
   have h4 : eval₂ (lam.comp (toAlg l lam)) (lam ⟨x, h2⟩) p = 0 := by
     rw [← hom_eval₂, h3, map_zero]
   let g : szRing l lam →+* (nval l).integer :=
@@ -1057,8 +1051,7 @@ theorem size_values_hfun : EisExp → ∀ (F : Type) [Field F] [NumberField F] [
   have hq := GlobalTheory.HilbFam.SizeGL.main hE F hf s N L hs hL z hz l lam κ y M M' b e ρ₀ ρ he hze hlM hML hLsz hNsz hρ hρ0 hlM' hMy hy
   have key := GlobalTheory.QFam.sz_value_of_family l lam (GL (Fin 2) (ZMod N)) (gact N 1) (wt (2 * s) κ) N _ _ τ ω hN
     ((hA.2.1 1).actBij) hfam hq hj hω 1
-  simp only [Units.val_one, twist_one_of_hasLevel F N L hL, hA.2.2.2.1] at key
-  exact key
+  simpa only [Units.val_one, twist_one_of_hasLevel F N L hL, hA.2.2.2.1] using key
 
 end GlobalTheory.HilbFam
 end -- clump:auto

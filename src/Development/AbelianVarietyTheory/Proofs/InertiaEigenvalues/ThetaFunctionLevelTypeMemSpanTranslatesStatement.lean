@@ -224,8 +224,7 @@ theorem rel_indep {G M : Type} [AddCommGroup G] [AddCommGroup M] [Module ℂ M] 
         rw [← QuotientAddGroup.out_eq' y, ← QuotientAddGroup.out_eq' y', QuotientAddGroup.eq_iff_sub_mem]
         exact hm)
       C (by rw [← hdec s hvac]; exact hsum)
-    intro y hy
-    exact (smul_eq_zero.mp (hind y hy)).resolve_right (hnz _)
+    exact fun y hy => (smul_eq_zero.mp (hind y hy)).resolve_right (hnz _)
   rw [hdec s' hvac']
   exact Finset.sum_eq_zero fun y hy => by rw [hC0 y hy, zero_smul]
 
@@ -267,8 +266,7 @@ theorem exists_latO_le (S T : HSp D) (U : AddSubgroup (WO S T)) (hU : IsOpen (U 
     induction he using Submodule.span_induction with
     | mem e he =>
       refine hS i j e α hα fun v hv => h0 v (not_not.2 ?_)
-      simp only [Finset.mem_biUnion, Finset.mem_univ, true_and]
-      exact ⟨i, j, e, he, hv⟩
+      simpa only [Finset.mem_biUnion, Finset.mem_univ, true_and] using ⟨i, j, e, he, hv⟩
     | zero => rw [TensorProduct.tmul_zero, Matrix.single_zero]; exact zero_mem U
     | add e e' _ _ h h' => rw [TensorProduct.tmul_add, Matrix.single_add]; exact add_mem h h'
     | smul n e _ h =>
@@ -660,8 +658,7 @@ theorem mul_mt_eq {S T : HSp D} {e : AE D} {g : GA D S} (hg : ∀ i j, e * (mt S
   have hM : ∀ k j, e * mt S g k j = e * (1 : Matrix (Fin S.rank) (Fin S.rank) (AE D)) k j := by
     intro k j
     have h := hg k j
-    rw [Matrix.sub_apply, mul_sub, sub_eq_zero] at h
-    exact h
+    rwa [Matrix.sub_apply, mul_sub, sub_eq_zero] at h
   ext i j
   rw [Matrix.mul_apply]
   conv_rhs => rw [← Matrix.mul_one (u : Matrix (Fin T.rank) (Fin S.rank) (AE D)), Matrix.mul_apply]
@@ -856,10 +853,8 @@ theorem form_placeModel_eq_zero_of_vanish : ∀ (D : D7) (ψ : AddChar (AF D.hos
     · rintro _ ⟨u, rfl⟩
       exact GlobalTheory.ThetaClosed.isThetaFunO_heisO_all hψ hf₀ u
     · exact Formalism.IndefR.Fock.CCR.theta_zero ψ S T
-    · intro x y _ _ hx hy
-      exact Formalism.IndefR.Fock.CCR.theta_add hx hy
-    · intro c x _ hx
-      exact Formalism.IndefR.Fock.CCR.theta_smul hx c
+    · exact fun x y _ _ hx hy => Formalism.IndefR.Fock.CCR.theta_add hx hy
+    · exact fun c x _ hx => Formalism.IndefR.Fock.CCR.theta_smul hx c
   have hca : cA D b * cA D a = cA D a := by rw [← RingHom.map_mul, hba]
   have hmod : ∀ y, IsHalf (cA D a) y → ℓ (Tm (fun t => ψ (symplO S T t y) * Ψ t)) = ℓ (Tm Ψ) := by
     intro y hy
@@ -964,8 +959,7 @@ theorem isSBHalf_sub_smul {m n : ℕ} {e : AE D} {Λ : AddSubgroup (Mx D m n)} {
   obtain ⟨f1, k, hk, f2, f3⟩ := hf
   obtain ⟨g1, l, hl, g2, g3⟩ := hg
   have hne : ∀ t, (f - c • g) t ≠ 0 → f t ≠ 0 ∨ g t ≠ 0 := fun t ht => by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact ht (by rw [Pi.sub_apply, Pi.smul_apply, h.1, h.2, smul_zero, sub_zero])
   have hh : ∀ (j : ℕ) (u : Mx D m n), IsHalf e u → IsHalf e (j • u) := fun j u hu => by
     rw [GlobalTheory.SplitScalar.isHalf_iff] at hu ⊢
@@ -1192,8 +1186,7 @@ theorem exists_decomp (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (a : AE D) 
       simp [LinearMap.mem_ker, map_sub, hℓ u hu g hg]
     · intro hle u hu g hg
       have := hle (Submodule.subset_span ⟨u, g, hu, hg, rfl⟩)
-      rw [LinearMap.mem_ker, map_sub, sub_eq_zero] at this
-      exact this
+      rwa [LinearMap.mem_ker, map_sub, sub_eq_zero] at this
   have inv_comp : ∀ μ : ((WO S T → ℂ) ⧸ K) →ₗ[ℂ] ℂ, InvForm ψ S T a (μ ∘ₗ K.mkQ) := by
     intro μ
     rw [inv_iff]
@@ -1234,8 +1227,7 @@ theorem exists_decomp (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (a : AE D) 
       · simp [Fq, he]
       · intro b _ hb
         simp [hb]
-      · intro h
-        exact absurd hx₁ h
+      · exact fun h => absurd hx₁ h
   have key := congrArg (K.liftQ ℓ hle) (hs _ hmem)
 
   rw [hA, map_sum] at key
@@ -1769,8 +1761,7 @@ theorem step_twist : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type
     · refine Subgroup.mem_iInf.2 fun P' => Subgroup.mem_iInf.2 fun h => mem_parah.2 ⟨k3, ?_⟩
       by_cases h' : P' = PP
       · rw [h']
-        rw [rW] at k4
-        exact k4
+        rwa [rW] at k4
       · rw [k5 P' ((hP P').2 (Or.inr h)) h']
         exact one_mem _
     · refine Subgroup.mem_bot.2 (funext fun P' => ?_)

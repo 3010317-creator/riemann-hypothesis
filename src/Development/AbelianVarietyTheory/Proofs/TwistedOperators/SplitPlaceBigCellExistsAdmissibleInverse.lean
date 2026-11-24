@@ -580,8 +580,7 @@ theorem GlobalTheory.IntKeepConj.conj_integral : ∀ {F E : Type} [Field F] [Num
         have e : (fun j => π₂ (z j)) = 0 := funext hz2
         rw [e, Matrix.mulVec_zero]; exact (v.adicCompletionIntegers F).zero_mem
     have h := ((hchar _).1 (hA z hzL)).2.1 i
-    rw [mulVec_conj_col π₁ b₁ A z k (funext hz1)] at h
-    exact h
+    rwa [mulVec_conj_col π₁ b₁ A z k (funext hz1)] at h
   · intro i k
     choose z hzA hz1 hz2 using fun j => hsurj 0 (((b₂ : Matrix (Fin d) (Fin d) (Fv F v)) *ᵥ Pi.single k 1) j)
     have hzL : z ∈ GlobalTheory.InertSph.latAt W v := by
@@ -596,8 +595,7 @@ theorem GlobalTheory.IntKeepConj.conj_integral : ∀ {F E : Type} [Field F] [Num
         rw [e, Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec]
         exact single_mem v k i'
     have h := ((hchar _).1 (hA z hzL)).2.2 i
-    rw [mulVec_conj_col π₂ b₂ A z k (funext hz2)] at h
-    exact h
+    rwa [mulVec_conj_col π₂ b₂ A z k (funext hz2)] at h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralLocalBasisConjugatesOfKeepsLatticeAtPlac =====
@@ -789,8 +787,7 @@ theorem splitPlace_bigCell_exists_admissible_inverse : (∀ {R : Type} [CommRing
     have en : (-S).map (fun x => (x : Fv F v)) = -(S.map (fun x => (x : Fv F v))) := by ext i j; rfl
     have ez : (0 : Matrix (Fin d) (Fin d) (v.adicCompletionIntegers F)).map (fun x => (x : Fv F v)) = 0 := by
       ext i j; rfl
-    rw [e, e, Matrix.transpose_map, Matrix.fromBlocks_map, en, ez, hG₁, hG₂, hS]
-    exact hU
+    rwa [e, e, Matrix.transpose_map, Matrix.fromBlocks_map, en, ez, hG₁, hG₂, hS]
   obtain ⟨X₁, X₂, hX, hP₁, hP₂⟩ := hLoc h2 S hSdet G₁ G₂ hG₁u hUO
   obtain ⟨Y, hYat, hY₁, hY₂, hYadm⟩ :=
     _root_.GlobalTheory.AdmLift.exists_admissible_lift σ W v hskew π₁ π₂ b₁ b₂ hc₁ hc₂ hinj hsurj S hS X₁ X₂ hX

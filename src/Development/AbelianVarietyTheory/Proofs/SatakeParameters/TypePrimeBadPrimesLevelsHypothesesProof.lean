@@ -131,8 +131,7 @@ theorem setting_of_unit (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) (i : Fin 
     have hd := Finset.dvd_prod_of_mem (fun P : rowSG Pr sel mu => Formalism.L2.Col.qOf P.1)
       (Finset.mem_univ (⟨P₀, hP₀r⟩ : rowSG Pr sel mu))
     beta_reduce at hd
-    rw [e] at hd
-    exact hd
+    rwa [e] at hd
 
 theorem typePrimeBadPrimesLevelsHypotheses_proof : GlobalTheory.DatumJets.TypePrimeBadPrimesLevelsHypotheses := by
   intro D EX sel δ B χ cD hH hsel i u mu cst hcst a b hLa hE
@@ -146,8 +145,7 @@ theorem typePrimeBadPrimesLevelsHypotheses_proof : GlobalTheory.DatumJets.TypePr
     refine notMem_Sall hPr hsel u hl (GlobalTheory.IndefiniteRowSideFullHecke.BadPrimesPeriodBound.small_mem_badS D l hs) ?_ hP hlP
     exact ((Nat.dvd_of_mem_primeFactors hs).mul_right _).mul_right _
   · rintro rfl
-    refine notMem_Sall hPr hsel u hl (Or.inl (by simp)) ?_ hP hlP
-    exact (dvd_mul_left _ _).mul_right _
+    exact notMem_Sall hPr hsel u hl (Or.inl (by simp)) ((dvd_mul_left _ _).mul_right _) hP hlP
   · rw [hcc, Ideal.absNorm_top]
     exact Nat.coprime_one_left _
 

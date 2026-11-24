@@ -139,8 +139,7 @@ theorem exists_separating {A B : Type} [AddCommGroup A] [AddCommGroup B] (e : A 
     show ψ0 (u : A ⧸ H) = 1
     rw [hu0]
     exact ψ0.map_zero_eq_one
-  · rw [← hf b x, hb, AddChar.compAddMonoidHom_apply]
-    exact hψ0
+  · rwa [← hf b x, hb, AddChar.compAddMonoidHom_apply]
 
 theorem finite_quot {G : Type} [AddCommGroup G] (A L₀ : AddSubgroup G) (N : ℕ) (hN : 0 < N)
     (tf : Function.Injective fun t : G => N • t)
@@ -228,8 +227,7 @@ theorem mem_of_double_annihilator : ∀ {G : Type} [AddCommGroup G] (χ : G → 
     exact hNL u hu
   have hxP : x ∈ P := (memP x).mpr ⟨hx, hNx⟩
   have hxH : (⟨x, hxP⟩ : P) ∉ L.addSubgroupOf P := by
-    rw [AddSubgroup.mem_addSubgroupOf]
-    exact hxL
+    rwa [AddSubgroup.mem_addSubgroupOf]
   obtain ⟨b, hb1, hb2⟩ := exists_separating (fun (a : P) (b : Q) => χ a b)
     (fun a a' b => hχ.left a a' b) (fun a b b' => hχ.right a b b')
     (fun b => hχ.zero_left b) (fun a => hχ.zero_right a) M K eM eK

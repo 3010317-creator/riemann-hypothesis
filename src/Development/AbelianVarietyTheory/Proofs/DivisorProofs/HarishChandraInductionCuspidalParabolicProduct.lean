@@ -64,10 +64,8 @@ theorem parab_eq_blockTri (b : Fin r → Fin s) :
     parab K b = blockTri (κ := K) (fun i => (b i : ℕ)) := by
   ext g
   constructor
-  · intro hg
-    exact hg.1
-  · intro hg
-    exact ⟨hg, (blockTri (κ := K) (fun i => (b i : ℕ))).inv_mem hg⟩
+  · exact fun hg => hg.1
+  · exact fun hg => ⟨hg, (blockTri (κ := K) (fun i => (b i : ℕ))).inv_mem hg⟩
 
 
 omit [Fintype K] [DecidableEq K] in

@@ -80,8 +80,7 @@ theorem unif_mem_maximal {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
     have key := Polynomial.hom_eval₂ p φ L.O.subtype x
     rw [hcomp] at key
     show L.O.subtype (Polynomial.eval₂ φ x p) = L.O.subtype 0
-    rw [key, map_zero]
-    exact hpx
+    rwa [key, map_zero]
 
   have := hm
   have hmax := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' φ hint m
@@ -125,7 +124,6 @@ theorem exists_inner_lattice_vector_anisotropic' : ∀ {F : Type} [Field F] [Val
          rw [h_add_right, hya, hyb]
        zero_mem' := by
          refine ⟨0, by rw [map_zero]; exact L.zero_mem, ?_⟩
-         show H.h _ (0 : V) = 0
          exact h_zero_right H _
        smul_mem' := by
          rintro c a ⟨y, hy, hya⟩
@@ -166,8 +164,7 @@ theorem exists_inner_lattice_vector_anisotropic' : ∀ {F : Type} [Field F] [Val
       apply Subtype.ext
       show (xz : V) = (π : E) • (πi • (xz : V))
       rw [smul_smul, mul_comm, hinv, one_smul]
-    have hu := hprim π (πi • xz) hvL hxzv
-    exact hm.ne_top (hπ.trans (Ideal.span_singleton_eq_top.2 hu))
+    exact hm.ne_top (hπ.trans (Ideal.span_singleton_eq_top.2 (hprim π (πi • xz) hvL hxzv)))
   have h1 : (1 : M.L.O) ∈ I := by
     rw [htop]
     exact Submodule.mem_top
@@ -188,10 +185,8 @@ theorem exists_inner_lattice_vector_anisotropic' : ∀ {F : Type} [Field F] [Val
     · intro a s ha ih
       rw [Finset.sum_insert ha, Finset.sum_insert ha, H.h_add_left, ih]
   refine ⟨y0 - ⟨w, hwp⟩, ?_, ?_, ?_⟩
-  · have hmk0 : H.mkW Fr.f ⟨w, hwp⟩ = 0 := by
-      exact (Submodule.Quotient.mk_eq_zero _).2 hwX
-    rw [map_sub, hmk0, sub_zero]
-    exact hy0L
+  · have hmk0 : H.mkW Fr.f ⟨w, hwp⟩ = 0 := (Submodule.Quotient.mk_eq_zero _).2 hwX
+    rwa [map_sub, hmk0, sub_zero]
   · show H.h _ ((y0 : V) - w) = 1
     rw [h_sub_right, h_right H _ w, pairing_isotropicSpan_lastVector Fr w hwX, map_zero, sub_zero, hy0z']
   · intro b
@@ -265,8 +260,7 @@ lemma eichG_inv {x v : V} {c c' : E} (hxx : H.h x x = 0) (hxv : H.h x v = 0)
     unfold eichG at e1 e2 ⊢
     rw [e1, e2, h_neg_right]
     module
-  rw [hc, zero_mul, zero_smul, sub_eq_zero] at key
-  exact key
+  rwa [hc, zero_mul, zero_smul, sub_eq_zero] at key
 
 lemma smul_memO {Λ : Submodule M.L.O V} {α : E} (hα : α ∈ M.L.O) {v : V} (hv : v ∈ Λ) : α • v ∈ Λ :=
   Λ.smul_mem ⟨α, hα⟩ hv
@@ -437,8 +431,7 @@ theorem zstep : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {
   · apply le_antisymm
     · rintro _ ⟨w, hw, rfl⟩
       exact hmap w hw
-    · intro w hw
-      exact ⟨eichG H (-x) y (M.L.cj c) w, hmap' w hw, eichG_inv hxx hxy hc1 w⟩
+    · exact fun w hw => ⟨eichG H (-x) y (M.L.cj c) w, hmap' w hw, eichG_inv hxx hxy hc1 w⟩
 
 end GlobalTheory.LocOver.ZStep
 end -- clump:auto

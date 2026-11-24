@@ -98,8 +98,7 @@ theorem nm_eq_mul (b : GlobalTheory.UPel.HT.Base D R) (β : R →+* k) :
 
 theorem exists_sep (b : GlobalTheory.UPel.HT.Base D R) (β : R →+* k) {i j : Fin D.a} (hij : i ≠ j) :
     ∃ c : 𝓞 D.F, β (b.t i c) ≠ β (b.t j c) := by
-  by_contra h
-  push Not at h
+  by_contra! h
   have hle : Ideal.span (Set.range fun x => b.t i x - b.t j x) ≤ RingHom.ker β := by
     rw [Ideal.span_le]
     rintro _ ⟨x, rfl⟩
@@ -163,8 +162,7 @@ theorem lie_rho_decomp (o₀ : GlobalTheory.UPel.HT.Obj b N t) (β : R →+* k) 
     rw [← HL.ker_toLie (o₀.act.toF D), LinearMap.mem_ker, map_sub, map_smul, toLie_crys', sub_eq_zero] at this
     exact this
 
-  · rw [← HL.ker_toLie (o₀.act.toF D), LinearMap.mem_ker, map_sub, map_sum, sub_eq_zero] at hs
-    exact hs
+  · rwa [← HL.ker_toLie (o₀.act.toF D), LinearMap.mem_ker, map_sub, map_sum, sub_eq_zero] at hs
 
 theorem lie_decomp (o₀ : GlobalTheory.UPel.HT.Obj b N t) (β : R →+* k) (ht : t = spMap β) (HL : LieExact o₀.A)
     (v : Lie (o₀.act.toF D)) :
@@ -248,8 +246,7 @@ theorem jSub_le (o₀ : GlobalTheory.UPel.HT.Obj b N t) (β : R →+* k) (ht : t
           refine Finset.sum_congr rfl fun l _ => ?_
           rw [smul_add, smul_add, Finset.smul_sum]
           congr 2
-          refine Finset.sum_congr rfl fun j _ => ?_
-          exact Lie.mem_eig_iff.1 (hw j) (c l)
+          exact Finset.sum_congr rfl fun j _ => Lie.mem_eig_iff.1 (hw j) (c l)
       _ = ∑ l, lam l • c l • u := by rw [h2, add_zero]
   refine mem_G_of_rhobar o₀ β HL ?_
   rw [hT, Finset.smul_sum, Finset.smul_sum]
@@ -339,8 +336,7 @@ theorem finrank_quot [IsAlgClosed k] (o₀ : GlobalTheory.UPel.HT.Obj b N t) (β
         rw [sub_smul, ← hyρ, hy, sub_self]
       obtain rfl := (smul_eq_zero.1 h0).resolve_left hd
       rw [zero_add] at hvE ⊢
-      have hind := (Lie.iSupIndep_eig (o₀.act.toF D)).comp hχ
-      exact Submodule.disjoint_def.1 (hind i) z hvE hz
+      exact Submodule.disjoint_def.1 (((Lie.iSupIndep_eig (o₀.act.toF D)).comp hχ) i) z hvE hz
     · rw [codisjoint_iff_le_sup]
       intro v _
       obtain ⟨u, hu, w, hw, rfl⟩ := lie_decomp o₀ β ht HL v

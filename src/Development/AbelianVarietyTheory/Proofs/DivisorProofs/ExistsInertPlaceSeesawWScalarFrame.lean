@@ -76,8 +76,7 @@ theorem mul_mem_range_of_trace {t : 𝓞 E} (ht : t ∈ differentIdeal ℤ (𝓞
 
 theorem exists_mem_different {σ : E →ₐ[F] E} {B : Base F E} (hB : B.IsGood σ) (hw : Formalism.UG.IsInertAt F E v w)
     (h : w.under (𝓞 F) = v) : ∃ t ∈ differentIdeal ℤ (𝓞 E), t ∉ w.asIdeal := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   have hle : differentIdeal ℤ (𝓞 E) ≤ w.asIdeal := fun t ht => hcon t ht
   rw [differentIdeal_eq_differentIdeal_mul_differentIdeal ℤ (𝓞 F) (𝓞 E)] at hle
   rcases (Ideal.IsPrime.mul_le w.isPrime).1 hle with h1 | h2
@@ -177,11 +176,9 @@ theorem isSelfDualAt {σ : E →ₐ[F] E} {B : Base F E} (hB : B.IsGood σ) {n r
       have he : (d : E)⁻¹ * (((d * t : 𝓞 E) : E) * form σ X.J y x) = (t : E) * form σ X.J y x := by
         push_cast
         rw [← mul_assoc, ← mul_assoc, inv_mul_cancel₀ hd0, one_mul]
-      rw [he]
-      exact hf
+      rwa [he]
   · refine latLoc_le hw h (t := 1) ?_ ?_
-    · intro h1
-      exact w.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h1)
+    · exact fun h1 => w.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h1)
     · intro y hy
       rw [one_smul]
       rw [SelfDual.mem_dualGlob] at hy
@@ -254,8 +251,7 @@ theorem exists_frame_skew {σ : E →ₐ[F] E} {B : Base F E} (hB : B.IsGood σ)
       let coord := (LinearMap.proj i : (Fin n → E) →ₗ[E] E).restrictScalars (𝓞 E)
       have ht : X.L.map coord = ⊤ := by
         rw [eq_top_iff]
-        intro x _
-        exact ⟨(x / u i) • u, hline _, div_mul_cancel₀ _ hi⟩
+        exact fun x _ => ⟨(x / u i) • u, hline _, div_mul_cancel₀ _ hi⟩
       have : Module.Finite (𝓞 E) E := Module.finite_def.mpr (ht ▸ hX.lat.fg.map coord)
       exact RingOfIntegers.not_isField E
         (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 E) E) (Field.toIsField E))

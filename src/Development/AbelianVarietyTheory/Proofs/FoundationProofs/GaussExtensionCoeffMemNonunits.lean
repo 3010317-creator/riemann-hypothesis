@@ -219,8 +219,7 @@ theorem _root_.GlobalTheory.gaussExtension_coeff_mem_nonunits : ∀ {F : Type} [
     obtain ⟨Q', hQ', -, hQ'm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hlift hQm
     have hint : IsIntegral W ω := by
       refine ⟨Q', hQ'm, ?_⟩
-      rw [← Polynomial.eval_map, hQ', Polynomial.eval_map]
-      exact hroot
+      rwa [← Polynomial.eval_map, hQ', Polynomial.eval_map]
     obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 hint
     rw [← hy]
     exact (W.valuation_le_one_iff _).2 y.2
@@ -229,8 +228,7 @@ theorem _root_.GlobalTheory.gaussExtension_coeff_mem_nonunits : ∀ {F : Type} [
     intro n
     have hn : R.coeff n ∈ Polynomial.lifts V.subtype := by
       rw [Polynomial.lifts_iff_coeff_lifts]
-      intro m
-      exact ⟨⟨_, hRV n m⟩, rfl⟩
+      exact fun m => ⟨⟨_, hRV n m⟩, rfl⟩
     exact (Polynomial.lifts_iff_set_range _).1 hn
   obtain ⟨Rv, hRv⟩ := RingHom.mem_rangeS.1 hRl
   rw [Polynomial.coe_mapRingHom] at hRv
@@ -251,8 +249,7 @@ theorem _root_.GlobalTheory.gaussExtension_coeff_mem_nonunits : ∀ {F : Type} [
       (Ψ.map (Polynomial.mapRingHom (IsLocalRing.residue V))).natDegree := by
     rw [hΨ.natDegree_map]
     refine lt_of_le_of_lt Polynomial.natDegree_map_le ?_
-    rw [← hRv, Polynomial.natDegree_map_eq_of_injective hinjV] at hdeg
-    exact hdeg
+    rwa [← hRv, Polynomial.natDegree_map_eq_of_injective hinjV] at hdeg
   obtain ⟨A, B, c, hc0, hABc⟩ := exists_mul_add_mul_eq_C_of_monic_irreducible
     (Ψ.map (Polynomial.mapRingHom (IsLocalRing.residue V)))
     (Rv.map (Polynomial.mapRingHom (IsLocalRing.residue V))) (hΨ.map _)
@@ -265,8 +262,7 @@ theorem _root_.GlobalTheory.gaussExtension_coeff_mem_nonunits : ∀ {F : Type} [
   set D : Polynomial (Polynomial V) := Av * Rv + Bv * Ψ - Polynomial.C cv with hDdef
   have hDm : D.map (Polynomial.mapRingHom (IsLocalRing.residue V)) = 0 := by
     simp only [hDdef, Polynomial.map_sub, Polynomial.map_add (f := _), Polynomial.map_mul, Polynomial.map_C]
-    rw [sub_eq_zero]
-    exact hABc
+    rwa [sub_eq_zero]
   have hD : ∀ i j, W.valuation (algebraMap F L ((D.coeff i).coeff j : F)) < 1 := by
     intro i j
     have h' := congrArg (fun P => (P.coeff i).coeff j) hDm
@@ -283,8 +279,7 @@ theorem _root_.GlobalTheory.gaussExtension_coeff_mem_nonunits : ∀ {F : Type} [
     rw [hCeq, map_sub, map_add (f := _), map_mul, map_mul]
   rw [hev Ψ, hroot, mul_zero, add_zero] at hsplit
   obtain ⟨j, hj⟩ : ∃ j, IsLocalRing.residue V (cv.coeff j) ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hc0
     ext j
     simp [Polynomial.coeff_map, h j]

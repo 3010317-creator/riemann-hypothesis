@@ -177,8 +177,7 @@ theorem _root_.GlobalTheory.Member.TameDivOrd.tame_fixed_dvd_ord : ∀ (W : Type
   have hV : O.valuation d ^ k * O.valuation π ^ (k * m') = O.valuation π ^ (k * m) := by
     have := congrArg O.valuation keyF
     simp only [map_mul, map_pow, hφu, _root_.one_mul, hP] at this
-    rw [hdz, pow_mul, pow_mul]
-    exact this
+    rwa [hdz, pow_mul, pow_mul]
   have hvπ : O.valuation π ≠ 0 := (Valuation.ne_zero_iff _).2 hπ0
   set y := d * π ^ m' / π ^ m with hydef
   have hvy : O.valuation y = 1 := by
@@ -200,10 +199,8 @@ theorem _root_.GlobalTheory.Member.TameDivOrd.tame_fixed_dvd_ord : ∀ (W : Type
     rw [hσy, show w * y - y = (w - 1) * y by ring, map_mul, hvy, _root_.mul_one] at hlt
     exact absurd hlt (not_lt.2 h1)
   have hdvd : (k : ℤ) ∣ (m' : ℤ) - m := by
-    rw [← hζ.zpow_eq_one_iff_dvd, zpow_sub₀ (hζ.ne_zero hk0), zpow_natCast, zpow_natCast]
-    exact hw
+    rwa [← hζ.zpow_eq_one_iff_dvd, zpow_sub₀ (hζ.ne_zero hk0), zpow_natCast, zpow_natCast]
   have hn : (_root_.GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.ord_vw W).toFun z = m - m' := by omega
-  rw [hn, ← dvd_neg, neg_sub]
-  exact hdvd
+  rwa [hn, ← dvd_neg, neg_sub]
 
 end GlobalTheory.Member.TameDivOrd

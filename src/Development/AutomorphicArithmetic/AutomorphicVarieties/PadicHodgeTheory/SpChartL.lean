@@ -158,8 +158,7 @@ theorem UpperTheory.lift_symplectic_similitude_nilpotent :
     rw [← sub_eq_zero, this, ← hU, e1, sub_self, neg_zero]
   have hY'0 : (π' : B' →+* E).mapMatrix Y' = 0 := by
     have := congrArg (π' : B' →+* E).mapMatrix e1
-    rw [map_mul, map_sub, map_one, hr', sub_self, hU, hu0.mul_right_eq_zero] at this
-    exact this
+    rwa [map_mul, map_sub, map_one, hr', sub_self, hU, hu0.mul_right_eq_zero] at this
   have hadj : adj Y' = -Y' := by
     have hT : IsUnit (adj (U : M4 B')) :=
       ⟨⟨adj (U : M4 B'), adj (↑U⁻¹ : M4 B'), by rw [← adj_mul', Units.inv_mul, adj_one'],

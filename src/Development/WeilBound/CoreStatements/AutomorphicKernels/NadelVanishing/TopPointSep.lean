@@ -740,11 +740,9 @@ theorem topologicalKrullDim_closure_closedPt_le_zero {X : Scheme.{0}} {x : X}
     obtain ⟨c, hc⟩ := t.isIrreducible.nonempty
     constructor
     · intro _
-      rw [hsing a c]
-      exact hc
+      rwa [hsing a c]
     · intro _
-      rw [hsing a b]
-      exact hb
+      rwa [hsing a b]
   unfold topologicalKrullDim
   rw [Order.krullDim_nonpos_iff_forall_isMax]
   intro s t _
@@ -758,8 +756,7 @@ private lemma two_mul_lt_pow_mul_of_le (a t t' c : ℚ) (k : ℕ) (ha : 0 ≤ a)
     (h : 2 * a < t ^ k * c) : 2 * a < t' ^ k * c ∧ a < t' ^ k * c := by
   have htk : 0 < t ^ k := pow_pos ht k
   have hc : 0 < c := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     have : t ^ k * c ≤ 0 := mul_nonpos_of_nonneg_of_nonpos htk.le hc
     linarith
   have hpow : t ^ k ≤ t' ^ k := by

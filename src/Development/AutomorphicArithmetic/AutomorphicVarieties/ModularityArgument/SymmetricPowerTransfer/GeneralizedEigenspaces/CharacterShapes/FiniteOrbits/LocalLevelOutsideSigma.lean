@@ -250,8 +250,7 @@ theorem _root_.UpperTheory.V.Z.Sym.Sig.modelD : UpperTheory.V.Z.Sym.Sig.ModelD :
   have hne : a ≠ a⁻¹ := by
     intro h
     have h' : valuation k ((a⁻¹ : kˣ) : k) < 1 := by
-      rw [← h]
-      exact ha
+      rwa [← h]
     exact (mul_lt_of_le_one_of_lt h'.le ha).ne hprod
   have hcp : ((eD hs γ : GL (Fin 2) k) : Matrix (Fin 2) (Fin 2) k).charpoly =
       (X - C (a : k)) * (X - C ((a⁻¹ : kˣ) : k)) := by
@@ -406,8 +405,7 @@ private theorem uc_relIndex (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     refine fun h => (finFacts k (Lev.deep k 0)).1 (Subgroup.relIndex_eq_zero_of_le_left (H := Uc k (0 + 1)) ?_ h)
     refine Subgroup.map_mono fun u _ => ?_
     rw [MonoidHom.mem_ker]
-    apply Units.ext
-    exact (quot_pow_zero _).elim _ _
+    exact Units.ext ((quot_pow_zero _).elim _ _)
 
 private theorem diagonal_orbit_admissible : OkDOrb := by
   intro k _ _ _ _ O _ _ hO h2 Δ s hs hs0 V Ry hRy χ hχ t ht S τ γ j hτ hTr hE z hz
@@ -430,8 +428,7 @@ private theorem diagonal_orbit_admissible : OkDOrb := by
     have hh' : h ∈ V.H := hh
     have ha : valuation k ((t * h : kˣ) : k) < 1 := by
       have h1 : valuation k (h : k) = 1 := V.H_le hh'
-      rw [Units.val_mul, map_mul, h1, mul_one]
-      exact ht1
+      rwa [Units.val_mul, map_mul, h1, mul_one]
     obtain ⟨g₀, hγ, hj⟩ := modelD k O hO h2 Δ s hs hs0 (t * h) ha γ j hTr hE
     obtain ⟨hsurj, hC, -⟩ := roots k O hO (t * h) ha
     have hχ' : ∀ u ∈ V.H, χ u = 1 := fun u hu => hχ u (V.H_le hu)
@@ -606,8 +603,7 @@ private theorem two_v (v : Pl F) : (2 : Kv v) ≠ 0 := by
   intro h
   apply two_ne_zero (α := F)
   apply (cv v).injective
-  rw [map_ofNat, map_zero]
-  exact h
+  rwa [map_ofNat, map_zero]
 
 private theorem chi_unit (v : Pl F) {χ : (Kv v)ˣ →* ℂˣ} (h : Unr (Ov v) χ) : ∀ u ∈ Uo (Kv v), χ u = 1 := by
   intro u hu
@@ -729,8 +725,7 @@ theorem UpperTheory.V.Z.Sym.So.datOk :
     · intro H
       refine ⟨fun v h => ?_, fun v h => ?_⟩
       · have := H v
-        rw [dat_Jv A v h] at this
-        exact this
+        rwa [dat_Jv A v h] at this
       · have := H v
         rwa [dat_Jv' A v h] at this
     · rintro ⟨H1, H2⟩ v
@@ -745,8 +740,7 @@ theorem UpperTheory.V.Z.Sym.So.datOk :
     · intro H
       refine ⟨fun v h => ?_, fun v h => ?_⟩
       · have := H v
-        rw [local_level_at_sigma A v h] at this
-        exact this
+        rwa [local_level_at_sigma A v h] at this
       · have := H v
         rwa [local_level_outside_sigma A v h] at this
     · rintro ⟨H1, H2⟩ v

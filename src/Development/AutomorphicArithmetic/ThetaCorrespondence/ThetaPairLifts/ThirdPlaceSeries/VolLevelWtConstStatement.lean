@@ -166,8 +166,7 @@ theorem mul_moved (p : GlobalTheory.LocMod.Place D k) {π' : Formalism.IndefR.Le
     have h5 := congrArg (fun g : GL (Fin V.rank) (Formalism.IndefR.Lev.EAf D) => g.val.map π') h3
     simp only [Units.val_mul, Matrix.map_mul] at h5
     have h6 : (Formalism.IndefR.Lev.finE V (t⁻¹ * x * t)).val.map π' = (mt V (t⁻¹ * x * t)).map p.π := Matrix.ext fun i j => hπ _
-    rw [h6] at h5
-    exact h5
+    rwa [h6] at h5
   have h7 : mt V x * mt V t = mt V t * mt V (t⁻¹ * x * t) := by
     rw [← GlobalTheory.MixModel.mt_mul, ← GlobalTheory.MixModel.mt_mul, mul_assoc, mul_inv_cancel_left]
   rw [← h1, ← Matrix.mul_assoc, ← Matrix.map_mul, h7, Matrix.map_mul, Matrix.mul_assoc, h4, Matrix.mul_assoc]
@@ -734,8 +733,7 @@ theorem levSph_bT_compact_open_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B
         (fun k => a.g.bT * k * a.g.bT⁻¹) '' (Formalism.IndefR.Lev.levG _ (_root_.GlobalTheory.Fam.pk_z W).βX (_root_.GlobalTheory.TopVol.datSph_alt W) : Set _) := by
       ext h
       constructor
-      · intro hh
-        exact ⟨_, (hmem h).1 hh, by group⟩
+      · exact fun hh => ⟨_, (hmem h).1 hh, by group⟩
       · rintro ⟨k, hk, rfl⟩
         refine (hmem _).2 ?_
         have : a.g.bT⁻¹ * (a.g.bT * k * a.g.bT⁻¹) * a.g.bT = k := by group
@@ -1222,8 +1220,7 @@ theorem pen_bridge_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I :
   have hidx := _root_.GlobalTheory.relIndex_preimage_pi_eq_prod (_root_.GlobalTheory.PenBridge.reductionHomAtLastLevel J j hj) U0 (J.A.U j (J.ι j α)) (fun i => KO (J.G i).k _)
     (fun i => ((GlobalTheory.PenVol.cosStab (((J.G i).T (J.E i).δ (J.E i).tame (J.E i).η).lev ((J.G i).s + 1) 0 rfl).J (GlobalTheory.StepData.box _ ((J.G i).ϖ ^ (J.E i).M)) ((J.E i).cos (cast (congrArg (J.E i).Ch (show j = (J.G i).s + 1 by have h1 : (J.G i).s + 1 + 1 = B.R.m := (J.G i).hs; have h2 : (I.rec7 l Z).R.m = B.R.m := rfl; omega)) (α i))))).comap (MulAut.conj (c i)).toMonoidHom) hJK ?img ?onto ?mem
   · rw [hidx]
-    refine Finset.prod_congr rfl fun i _ => ?_
-    exact relIndex_comap_conj _ _ (hcKO i)
+    exact Finset.prod_congr rfl fun i _ => relIndex_comap_conj _ _ (hcKO i)
   case img =>
     intro g hg i
     show _root_.GlobalTheory.PenBridge.reductionHomAtLevel J j i (_root_.GlobalTheory.PenBridge.eq_s_succ_of_succ_eq_m J hj i) g ∈ _

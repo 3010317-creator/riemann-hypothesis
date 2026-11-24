@@ -71,8 +71,7 @@ variable {D s M}
 
 theorem app_map_apply {j k : J} (φ : j ⟶ k) (x : D.obj j) :
     (s.app k).hom ((D.map φ).hom x) = (s.app j).hom x := by
-  have h := congr(($(s.naturality φ)).hom x)
-  simpa using h
+  simpa using congr(($(s.naturality φ)).hom x)
 
 instance : SmallCategory (Idx D s M) where
   Hom a b := {φ : a.j ⟶ b.j // ∃ c : D.obj b.j, (D.map φ).hom a.e * c = b.e}
@@ -280,7 +279,6 @@ theorem isIndEtale_of_isLocalization : ∀ (R S S' : Type) [CommRing R] [CommRin
     have h := congr(($((hst a.j).2)).hom x)
     change (s.app a.j).hom ((t.app a.j).hom x) = algebraMap R S x at h
     change leg S' a (algebraMap _ (Localization.Away a.e) ((t.app a.j).hom x)) = algebraMap R S' x
-    rw [leg_algebraMap]
-    rw [h, ← IsScalarTower.algebraMap_apply]
+    rw [leg_algebraMap, h, ← IsScalarTower.algebraMap_apply]
 
 end GlobalTheory.IndEtaleLoc

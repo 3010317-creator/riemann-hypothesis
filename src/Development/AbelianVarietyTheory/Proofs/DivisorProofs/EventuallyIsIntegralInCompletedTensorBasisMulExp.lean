@@ -83,9 +83,7 @@ theorem isIntV_mul_eventually (G : HTGroup p) :
   have h : ∀ᶠ v in (Filter.cofinite : Filter (AwayP p)), ∀ i j k : Fin (Module.finrank ℚ G.C),
       algebraMap ℚ (Qv v) ((Module.finBasis ℚ G.C).repr
         (Module.finBasis ℚ G.C i * Module.finBasis ℚ G.C j) k) ∈ v.1.adicCompletionIntegers ℚ := by
-    simp only [Filter.eventually_all]
-    intro i j k
-    exact eventually_rat_mem_integers _
+    simpa only [Filter.eventually_all] using fun i j k => eventually_rat_mem_integers _
   filter_upwards [h] with v hv a b ha hb k
   rw [basV_repr_mul]
   exact Subring.sum_mem _ fun i _ => Subring.sum_mem _ fun j _ =>

@@ -191,9 +191,7 @@ theorem reg_value (z : Sp (𝓞 L) ⟶ X) (hξ : IsCptGen ξ) (𝔭 : PrimeSpect
     simp only [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
   have hc : z 𝔭 = centre zA := by
     have e : (spMap (algebraMap (𝓞 L) A)) (IsLocalRing.closedPoint A) = 𝔭 := by
-      apply PrimeSpectrum.ext
-      show (IsLocalRing.maximalIdeal A).comap (algebraMap (𝓞 L) A) = 𝔭.asIdeal
-      exact Localization.AtPrime.under_maximalIdeal
+      exact PrimeSpectrum.ext Localization.AtPrime.under_maximalIdeal
     show z 𝔭 = z ((spMap (algebraMap (𝓞 L) A)) (IsLocalRing.closedPoint A))
     rw [e]
   have key : ∀ (q : X) (hq : q = centre zA) (h' : genPt ξ ⤳ q), a ∈ regAt ξ ⟨q, h'⟩ →
@@ -402,8 +400,7 @@ theorem core (hξ : IsCptGen ξ) (all : ∀ q : X, genPt ξ ⤳ q) (z : Sp (𝓞
   · obtain ⟨o₀, h0, h1⟩ := exists_bot_point z
     have hs' : Vl.IsFrameAt s ⟨z o₀, all _⟩ := by
       have e : (⟨z o₀, all _⟩ : Cpt ξ) = ⟨centre (spMap (algebraMap (𝓞 L) L) ≫ z), all _⟩ := Subtype.ext h1
-      rw [e]
-      exact hs
+      rwa [e]
     have hbot := local_iff hξ all z M ML Vl o₀ hs' hval x
     have hloc := fun v => local_iff hξ all z M ML Vl (primeOf v) (hfr v) (hrel v) x
     rw [Submodule.mem_iInf]
@@ -421,8 +418,7 @@ theorem core (hξ : IsCptGen ξ) (all : ∀ q : X, genPt ξ ⤳ q) (z : Sp (𝓞
       · obtain rfl : 𝔭 = o₀ := PrimeSpectrum.ext (h𝔭.trans h0.symm)
         obtain ⟨c, hc, hcx⟩ := (exists_smul_mem_iff sL x).2 hx
         refine hbot.2 ⟨c, fun e => hc ?_, hcx⟩
-        rw [h0] at e
-        exact e
+        rwa [h0] at e
       · obtain ⟨c, hc, hcx⟩ := hv v
         exact (hloc v).2 ⟨c, hc, hcx⟩
 

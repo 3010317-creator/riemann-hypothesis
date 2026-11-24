@@ -203,8 +203,7 @@ theorem hasDerivAt_intT (σ : ℂ) (hσ : σ ∈ halfPlane) (ν : ℝ) {a b : �
     rw [MeasureTheory.integral_add _ (i3.const_mul _), MeasureTheory.integral_add (i1.const_mul _) (i2.const_mul _),
       MeasureTheory.integral_const_mul, MeasureTheory.integral_const_mul, MeasureTheory.integral_const_mul]
     exact (i1.const_mul _).add (i2.const_mul _)
-  rw [hI] at k2
-  exact k2
+  rwa [hI] at k2
 
 theorem contDiffOn_intT (σ : ℂ) (hσ : σ ∈ halfPlane) (ν : ℝ) :
     ∀ n : ℕ, ∀ a b m : ℕ, 2 ≤ a + 2 * b → ContDiffOn ℝ n (intT σ ν a b m) {y | y ≠ 0} := by
@@ -220,8 +219,7 @@ theorem contDiffOn_intT (σ : ℂ) (hσ : σ ∈ halfPlane) (ν : ℝ) :
     have c1 := (contDiffOn_const (c := -(a : ℂ) * I)).mul (ih (a + 1) b m (by omega))
     have c2 := (contDiffOn_const (c := 2 * (-σ - (b : ℂ)))).mul (ih a (b + 1) (m + 1) (by omega))
     have c3 := (contDiffOn_const (c := (m : ℂ))).mul (ih a b (m - 1) hab)
-    refine ((c1.add c2).add c3).congr fun y hy => ?_
-    exact (hasDerivAt_intT σ hσ ν m hab hy).deriv
+    exact ((c1.add c2).add c3).congr fun y hy => (hasDerivAt_intT σ hσ ν m hab hy).deriv
 
 theorem hTrans_eq (σ : ℂ) (ν : ℝ) {y : ℝ} (hy : y ≠ 0) : hTrans σ ν y = intT σ ν 2 0 0 y := by
   unfold hTrans intT

@@ -246,8 +246,7 @@ private theorem exists_characteristics_eq_canMult_of_semicharacter {La : Type} [
       rw [key]
       rcases hpm (bs (Sum.inl j)) with h | h
       · simp [c, h]
-      · simp only [c, h, ite_eq_right (show (-1 : ℂ) ≠ 1 by norm_num)]
-        exact hhalf'.symm
+      · simpa only [c, h, ite_eq_right (show (-1 : ℂ) ≠ 1 by norm_num)] using hhalf'.symm
     · have hm : (fun k => bs.repr (bs (Sum.inr j)) (Sum.inr k)) = Pi.single j 1 := by
         ext k; simp [Finsupp.single_apply, Pi.single_apply, eq_comm]
       have hn : (fun k => bs.repr (bs (Sum.inr j)) (Sum.inl k)) = 0 := by
@@ -261,8 +260,7 @@ private theorem exists_characteristics_eq_canMult_of_semicharacter {La : Type} [
       rw [key]
       rcases hpm (bs (Sum.inr j)) with h | h
       · simp [a, h]
-      · simp only [a, h, ite_eq_right (show (-1 : ℂ) ≠ 1 by norm_num)]
-        exact hhalf.symm
+      · simpa only [a, h, ite_eq_right (show (-1 : ℂ) ≠ 1 by norm_num)] using hhalf.symm
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField in
 open scoped CategoryTheory.Obj TensorProduct in

@@ -100,8 +100,7 @@ theorem finCong_of_mem_GinfC {V : HSp D} (N : ℕ) {k : GA D V} (hk : k ∈ Ginf
   have h1 : finHom V k = finHom V 1 := by rw [map_one]; exact hk
   have := GlobalTheory.Member.PrincLevel.finCong_one V N
   unfold GlobalTheory.Member.FinCong at this ⊢
-  rw [h1]
-  exact this
+  rwa [h1]
 
 end GlobalTheory.StdFstFix
 
@@ -168,11 +167,9 @@ theorem stdFst_fixed : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G 
       (GlobalTheory.VacFixTarget.isOpen_congGroup (GlobalTheory.Grid.neg A) m.factorial_pos), fun k hk => ?_, fun k hkU hkf => ?_⟩
   · show GlobalTheory.Member.FinCong (GlobalTheory.Grid.neg A) m.factorial ((GlobalTheory.Grid.ofSgn true A).symm k)
     refine finCong_of_mem_GinfC _ ?_
-    rw [GlobalTheory.SgnIdent.mem_GinfC_sgn, MulEquiv.apply_symm_apply]
-    exact hk
+    rwa [GlobalTheory.SgnIdent.mem_GinfC_sgn, MulEquiv.apply_symm_apply]
   · have hκf : (GlobalTheory.Grid.ofSgn true A).symm k ∈ GfC (GlobalTheory.Grid.neg A) := by
-      rw [GlobalTheory.SgnIdent.mem_GfC_sgn, MulEquiv.apply_symm_apply]
-      exact hkf
+      rwa [GlobalTheory.SgnIdent.mem_GfC_sgn, MulEquiv.apply_symm_apply]
     have hκc : GlobalTheory.Member.FinCong (GlobalTheory.Grid.neg A) m.factorial ((GlobalTheory.Grid.ofSgn true A).symm k) := hkU
     refine ⟨fun u => ⟨fun hu => ?_, fun hu => ?_⟩, fun x => ?_⟩
     · obtain ⟨l, hl', e⟩ := hm _ hκf hκc u hu
@@ -289,8 +286,7 @@ theorem exists_open_fix_vac_neg : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : 
     (hW.om_cont _ hvac.2.theta w₀).comp (continuous_id.prodMk continuous_const)
   have key : ∃ n : ℕ, ∀ k ∈ GfC (neg A), GlobalTheory.Member.FinCong (neg A) (N₁ * n.factorial) k →
       om' (k, 1) X.vac = X.vac := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     choose k hk hkc hkne using hne
     have hpow : ∀ n, ∃ m : ℕ, ∃ c : ℂ, om' (k n ^ m, 1) X.vac = c • X.vac ∧ ¬ ‖c - 1‖ ≤ 1 / 2 := by
       intro n
@@ -298,8 +294,7 @@ theorem exists_open_fix_vac_neg : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : 
       have hc1 : c ≠ 1 := by
         rintro rfl
         exact hkne n (by rw [hc, one_smul])
-      by_contra h
-      push Not at h
+      by_contra! h
       exact hc1 (GlobalTheory.Doubling.eq_one_of_forall_norm_pow_sub_one_le (A := ℂ) fun m =>
         h m (c ^ m) (GlobalTheory.VacFixSource.om_pow_eq_fst _ (k n) _ c hc m))
     choose m c hmc hc using hpow
@@ -333,8 +328,7 @@ theorem exists_open_fix_vac_neg : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : 
   · have h1 := hn ((GlobalTheory.Grid.ofSgn true A).symm k) hk hU
     have e : om' ((GlobalTheory.Grid.ofSgn true A).symm k, 1) = X.ω t (k, 1) := by
       simp [hom', GlobalTheory.Grid.WRep.toSgn]
-    rw [e] at h1
-    exact h1
+    rwa [e] at h1
 
 end GlobalTheory.VacFixNeg
 end -- clump:auto

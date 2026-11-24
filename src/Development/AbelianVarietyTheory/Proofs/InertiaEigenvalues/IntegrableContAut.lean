@@ -266,8 +266,7 @@ theorem param_down (hH : GlobalTheory.Hk3.HoweUnram) {ψ : AddChar (AF D.host.F)
       obtain ⟨x, hx, hx₀⟩ :=
         Submodule.exists_mem_ne_zero_of_ne_bot (LinearMap.ker_ne_bot_of_finrank_lt (f := g) hdim)
       have hsmul (a : D.host.E) : a • e x ∈ S.L0 := by
-        rw [← S.baseLattice_isUnimodular]
-        rw [Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
+        rw [← S.baseLattice_isUnimodular, Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
         intro y hy
         have hxy : S.hT (e x) y = 0 :=
           congrArg (fun f : Module.Dual D.host.E W => f ⟨y, Submodule.subset_span hy⟩) (LinearMap.mem_ker.mp hx)
@@ -290,8 +289,7 @@ theorem param_down (hH : GlobalTheory.Hk3.HoweUnram) {ψ : AddChar (AF D.host.F)
     (frameLat S) hH' hL.fg hspan (GlobalTheory.AdelicU.SelfDual.isSelfDualAt_frameLat D S v)
 
   obtain ⟨j0, hj0⟩ : ∃ j, b (f j) (x j) ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hz0 (Finset.sum_eq_zero fun j _ => hc j)
   have hx0 : x j0 ≠ 0 := fun e => hj0 (by rw [e, map_zero])
   have hf0 : (f j0 : WO S T → ℂ) ≠ 0 := fun e => hj0 (by rw [show f j0 = 0 from Subtype.ext e, map_zero, LinearMap.zero_apply])
@@ -571,8 +569,7 @@ theorem unrCorr_inert : GlobalTheory.Hk3.HoweUnram → ∀ (D : D7) (G : Type) [
     unrAt_of_unrPl hw (GlobalTheory.VacFixInert.unrPl_mul_inv' u1 hU.1)
 
   obtain ⟨v0, hv0⟩ : ∃ v0 : ∀ ρ, lowT (R.MW i (sg0 D A)) ρ, R.thF i t y (fun ρ => v0 ρ) ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hth (GlobalTheory.LowTypeDetermined.eq_zero_of_lowT D _ _ _ R.θ hC.models.inf (GlobalTheory.LowTypeRestriction.lowT_ne_bot _) _ _ _
       (hC.thP.thF_mem i t y) hc)
 

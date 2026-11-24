@@ -98,8 +98,7 @@ theorem lieMult_iff_finrank_eig : ∀ (W : Type) [CommRing W] (G : Over (Sp W)) 
       have hu' : u = fun i => T (c i • x i) := funext fun i => Over.OverMorphism.ext ((hu i).trans (hsc _ _).symm)
       rw [hu', Tsum] at hy
       exact hinj hy
-    · intro hy
-      exact ⟨fun i => T (c i • x i), fun i => hsc _ _, by rw [Tsum, hy]⟩
+    · exact fun hy => ⟨fun i => T (c i • x i), fun i => hsc _ _, by rw [Tsum, hy]⟩
   show (∃ v : Fin N → (epsPt (spMap β) ⟶ G), (∀ i, IsLieEigen act (spMap β) τ (v i)) ∧ ∀ w, IsLieEigen act (spMap β) τ w →
     ∃! c : Fin N → k, ∃ u : Fin N → (epsPt (spMap β) ⟶ G),
       (∀ i, (u i).left = spMap (epsScale (c i)) ≫ (v i).left) ∧ w = (List.ofFn u).prod) ↔ _
@@ -112,8 +111,7 @@ theorem lieMult_iff_finrank_eig : ∀ (W : Type) [CommRing W] (G : Over (Sp W)) 
       refine (Function.bijective_iff_existsUnique _).2 fun y => ?_
       refine (existsUnique_congr fun c => ?_).1 (H (T y) ((eig _).2 ⟨y, y.2, rfl⟩))
       rw [comb x y c, Subtype.ext_iff, Fintype.linearCombination_apply]
-      simp only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul, b]
-      exact eq_comm
+      simpa only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul, b] using eq_comm
     rw [← (LinearEquiv.ofBijective _ bij).finrank_eq, Module.finrank_fin_fun]
   · intro h
     let b := Module.finBasisOfFinrankEq k E h
@@ -122,7 +120,6 @@ theorem lieMult_iff_finrank_eig : ∀ (W : Type) [CommRing W] (G : Over (Sp W)) 
     refine (existsUnique_congr fun c => ?_).2
       ((Function.bijective_iff_existsUnique _).1 b.equivFun.symm.bijective ⟨y, hy⟩)
     rw [comb (fun i => (b i : Fin n → k)) y c, Module.Basis.equivFun_symm_apply, Subtype.ext_iff]
-    simp only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul]
-    exact eq_comm
+    simpa only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul] using eq_comm
 
 end GlobalTheory.LieCoordMult

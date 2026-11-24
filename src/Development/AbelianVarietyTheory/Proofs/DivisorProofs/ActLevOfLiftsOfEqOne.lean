@@ -91,15 +91,13 @@ theorem actLev_of_lifts (Xo : Moduli Dw l) (c : Coeff l) {G : Type} [Group G]
       levActR (Xo := Xo) (c := c) (fun g => (lev g, (LinearMap.id : Dw.La →ₗ[𝓞 D.host.E] Dw.La))) g y y' ↔
         levActR (Xo := Xo) (c := c) (GlobalTheory.FormTies.levFull Dw l) (ψ g) y y' := by
     intro g S _ _ y y'
-    refine levR_congr (fun a => (Submodule.Quotient.eq _).1 ?_) y y'
-    exact (liftLa_spec (ψ g) a).symm
+    exact levR_congr (fun a => (Submodule.Quotient.eq _).1 (liftLa_spec (ψ g) a).symm) y y'
   have L := GlobalTheory.FullLevelAction.actLaws_levFull Xo c hpq hA
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro g S _ _ y
     obtain ⟨y', h⟩ := L.total (ψ g) S y
     exact ⟨y', (key g y y').2 h⟩
-  · intro g S _ _ y y' y'' h h'
-    exact L.func (ψ g) S y y' y'' ((key _ _ _).1 h) ((key _ _ _).1 h')
+  · exact fun g S _ _ y y' y'' h h' => L.func (ψ g) S y y' y'' ((key _ _ _).1 h) ((key _ _ _).1 h')
   · intro S _ _ y
     refine (key 1 y y).2 ?_
     rw [map_one]

@@ -59,8 +59,7 @@ theorem mt_one : mt V (1 : GA D V) = 1 := by
 
 theorem finM_mul (g h : GA D V) : finM V hn (g * h) = finM V hn g * finM V hn h := by
   subst hn
-  simp only [finM, mt_mul, finCongr_refl, Matrix.reindex_refl_refl]
-  exact Matrix.map_mul
+  simpa only [finM, mt_mul, finCongr_refl, Matrix.reindex_refl_refl] using Matrix.map_mul
 
 theorem finM_one : finM V hn (1 : GA D V) = 1 := by
   subst hn
@@ -72,8 +71,7 @@ theorem infM_eq (g : GA D V) (τ : D.what₂.Tau) :
 
 theorem infM_mul (g h : GA D V) (τ : D.what₂.Tau) : infM θ V hn (g * h) τ = infM θ V hn g τ * infM θ V hn h τ := by
   subst hn
-  simp only [infM_eq, mt_mul, finCongr_refl, Matrix.reindex_refl_refl]
-  exact Matrix.map_mul
+  simpa only [infM_eq, mt_mul, finCongr_refl, Matrix.reindex_refl_refl] using Matrix.map_mul
 
 theorem infM_one (τ : D.what₂.Tau) : infM θ V hn (1 : GA D V) τ = 1 := by
   subst hn

@@ -71,8 +71,7 @@ variable {K M N : Type} [Field K] [NumberField K] [Field M] [NumberField M] [Fie
 theorem under_under (w : HeightOneSpectrum (𝓞 N)) :
     (w.under (𝓞 M)).under (𝓞 K) = w.under (𝓞 K) := by
   apply HeightOneSpectrum.ext
-  simp only [HeightOneSpectrum.under_asIdeal]
-  exact Ideal.under_under w.asIdeal
+  simpa only [HeightOneSpectrum.under_asIdeal] using Ideal.under_under w.asIdeal
 
 theorem eq_under_of_continuous {v : HeightOneSpectrum (𝓞 K)} {w : HeightOneSpectrum (𝓞 N)}
     (i : v.adicCompletion K →+* w.adicCompletion N) (hi : Continuous i)
@@ -82,8 +81,7 @@ theorem eq_under_of_continuous {v : HeightOneSpectrum (𝓞 K)} {w : HeightOneSp
     rw [HeightOneSpectrum.under_asIdeal, Ideal.under_def, Ideal.mem_comap, GlobalTheory.DegOneLift.mem_iff_lt_one]
     rw [GlobalTheory.DegOneLift.mem_iff_lt_one] at hx
     have := GlobalTheory.DegOneLift.lt_one_of_continuous i hi hx
-    rw [he] at this
-    exact this
+    rwa [he] at this
   exact HeightOneSpectrum.ext (v.isMaximal.eq_of_le (w.under (𝓞 K)).isPrime.ne_top h1)
 
 end Places

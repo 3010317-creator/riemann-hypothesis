@@ -167,12 +167,10 @@ theorem coboundary_of_approx {K : Type} [NormedField K] (q : K) (hq : ‖q‖ < 
       rw [← sub_eq_zero]
       funext i
       have := congrFun h0 (⟨t, ht⟩, i)
-      rw [he] at this
-      exact this
+      rwa [he] at this
     have h2 := hT _ h1 s hs
     rw [Matrix.mulVec_sub] at h2
-    rw [sub_eq_sub_iff_sub_eq_sub]
-    exact h2
+    rwa [sub_eq_sub_iff_sub_eq_sub]
   obtain ⟨C, hC, hCb⟩ := exists_bound L
   let Y : T × Fin 2 → K := fun p => y p.1 p.2
   refine ⟨L Y, fun s hs => ?_⟩
@@ -247,8 +245,7 @@ theorem eq_one_of_pow_near {K : Type} [NormedField K] [IsUltrametricDist K] {n :
   simp only [add_sub_cancel_left] at h1
   by_contra hne
   have hX : ∃ i j, X i j ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hne (by rw [show X = 0 from Matrix.ext hc, add_zero])
   obtain ⟨i₀, j₀, h0⟩ := hX
   obtain ⟨⟨a, b⟩, -, hab⟩ := Finset.exists_max_image (Finset.univ : Finset (n × n)) (fun p => ‖X p.1 p.2‖)
@@ -439,8 +436,7 @@ theorem fg_map_mkQ_of_ev {R M N : Type*} [CommRing R] [IsNoetherianRing R] [AddC
     rintro _ ⟨y, rfl⟩
     exact h2 y y.2
   have hker : LinearMap.ker f ≤ LinearMap.ker g := by
-    intro y hy
-    exact (Submodule.Quotient.mk_eq_zero B).2 (h3 y y.2 hy)
+    exact fun y hy => (Submodule.Quotient.mk_eq_zero B).2 (h3 y y.2 hy)
   haveI : Module.Finite R (LinearMap.range f) := Module.Finite.iff_fg.2 hf
   haveI : Module.Finite R (Y ⧸ LinearMap.ker f) := Module.Finite.equiv f.quotKerEquivRange.symm
   have hg : (LinearMap.range g).FG := by
@@ -482,8 +478,7 @@ theorem fg_coc_mod_cob : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Al
     · intro σ hσ
       simp only [Pi.sub_apply, hzv σ hσ, sub_self]
     · exact mem_cob.2 ⟨v, fun s _ => by simp only [sub_sub_cancel]⟩
-  · intro y hy
-    exact ⟨fun i => ⟨y γ i, (mem_coc.1 ((hY y).1 hy).1).2.1 γ i⟩, rfl⟩
+  · exact fun y hy => ⟨fun i => ⟨y γ i, (mem_coc.1 ((hY y).1 hy).1).2.1 γ i⟩, rfl⟩
   · intro y hy h0
     refine mem_cob.2 ⟨0, fun s hs => ?_⟩
     rw [hγ y ((hY y).1 hy).1 ((hY y).1 hy).2 h0 s hs]
@@ -799,8 +794,7 @@ theorem norm_le_one_of_isIntegral (x : PadicAlgCl l) (hx : IsIntegral ℤ_[l] x)
     intro c
     rw [IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] (PadicAlgCl l), norm_algebraMap']
     exact c.2
-  by_contra h
-  push Not at h
+  by_contra! h
   obtain ⟨p, hm, hp⟩ := hx
   rw [Polynomial.eval₂_eq_sum_range, Finset.sum_range_succ, hm.coeff_natDegree, map_one, one_mul] at hp
   have h1 : x ^ p.natDegree = - ∑ i ∈ Finset.range p.natDegree, algebraMap ℤ_[l] (PadicAlgCl l) (p.coeff i) * x ^ i :=
@@ -926,8 +920,7 @@ theorem unr_of_limit_spec : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] 
     intro r x
     refine ⟨fun i => hYc r x i, fun s i => hYO r s x i, fun s hs t _ => ?_⟩
     have h := hsh r s t x
-    simp only [MonoidHom.inv_apply, cycMod_eq_one_of_mem_Ine hB hl r hs, inv_one, mul_one] at h
-    exact h
+    simpa only [MonoidHom.inv_apply, cycMod_eq_one_of_mem_Ine hB hl r hs, inv_one, mul_one] using h
   have hFB := frobOp_cob W c B hφ.1
   let FH := (cob W c (Ine (F := ℚ) B)).mapQ (cob W c (Ine (F := ℚ) B)) (frobOp W c φ) hFB
   have hFM : ∀ x ∈ (coc W c (Ine (F := ℚ) B)).map (cob W c (Ine (F := ℚ) B)).mkQ,
@@ -1031,8 +1024,7 @@ theorem continuous_untwist {W : R2 Ω l} {θ : G ℚ Ω →* (Qbar l)ˣ} (hW : C
     funext s
     rw [← map_inv, ← map_inv]
     have := mat_untwist W θ s⁻¹
-    rw [map_inv θ, inv_inv] at this
-    exact this
+    rwa [map_inv θ, inv_inv] at this
   rw [h2]
   exact (Units.continuous_val.comp hθ).smul (Units.continuous_coe_inv.comp hW)
 

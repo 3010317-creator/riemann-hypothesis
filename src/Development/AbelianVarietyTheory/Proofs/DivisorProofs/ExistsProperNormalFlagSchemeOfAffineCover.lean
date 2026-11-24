@@ -648,12 +648,9 @@ theorem range_le (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
     refine (hW k (spMap f ≫ h)).2 ⟨f.comp MvPolynomial.C, base_eq hb f, ?_⟩
     intro τ j hj b v hv e
     obtain ⟨u, rfl⟩ := unit_of_eq hp f _ e
-    have hl := lead_eq (w := w) hD f (down_std τ j hj) u
-    intro h0
-    exact u.ne_zero (hl.symm.trans h0)
+    exact fun h0 => u.ne_zero ((lead_eq (w := w) hD f (down_std τ j hj) u).symm.trans h0)
   have hy : (spMap f) (show Sp k from (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum k)) = y := by
-    apply PrimeSpectrum.ext
-    exact Ideal.ker_algebraMap_residueField _
+    exact PrimeSpectrum.ext (Ideal.ker_algebraMap_residueField _)
   exact hz ⟨_, by rw [Scheme.Hom.comp_apply, hy]⟩
 
 private theorem mono_cell_lemma (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
@@ -679,8 +676,7 @@ private theorem mono_cell_lemma (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
     over_inj (by rw [← base_eq hb ψ₁, ← base_eq hb ψ₂, e])
   congr 1
   apply MvPolynomial.ringHom_ext
-  · intro r
-    exact congrArg (fun f => f r) hC
+  · exact fun r => congrArg (fun f => f r) hC
   · intro x
     obtain ⟨hu₂, he₂⟩ := hp (vEn x)
     have e₂ : (spMap ψ₁ ≫ h) ≫ p (vEn x) =
@@ -694,8 +690,7 @@ private theorem mono_cell_lemma (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
     rw [one_smul, hu, ← hC] at l₂ r₂
     have hu₁ : (u : R) = 1 := l₁.symm.trans (by rw [l₂, Units.val_one])
     have key := r₁.symm.trans r₂
-    rw [hu₁, Units.val_one, one_mul, one_mul] at key
-    exact key
+    rwa [hu₁, Units.val_one, one_mul, one_mul] at key
 
 theorem mono_cell (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
     (hp : ∀ en, ∃ hu, h ≫ p en = pt a (plk (uvec c w) en.2.1) hu) : Mono h := by
@@ -938,8 +933,7 @@ theorem exists_lower_mul_upper (A : Matrix (Fin n) (Fin n) K)
       refine Fintype.sum_of_injective (Fin.castLE i.isLt.le) (Fin.castLE_injective _) _ _ (fun k hk => ?_)
         (fun k => by simp)
       rw [dite_eq_right]
-      intro hlt
-      exact hk ⟨⟨k, hlt⟩, Fin.ext rfl⟩
+      exact fun hlt => hk ⟨⟨k, hlt⟩, Fin.ext rfl⟩
     rw [← hs]
     have hj := congrFun (hv i) ⟨j, h⟩
     simp only [vecMul, dotProduct, Matrix.submatrix_apply] at hj
@@ -1335,8 +1329,7 @@ theorem exists_integral_cell : ∀ (O K : Type) [CommRing O] [Field K] (β : O �
   · have e : ((algebraMap A k).comp χ) ∘ MvPolynomial.X = y := funext fun v => by
       rw [← hyt]
       exact congrArg (algebraMap A k) (MvPolynomial.eval₂Hom_X' φ t v)
-    rw [map_uvec, map_uvec, hχ', e]
-    exact ht
+    rwa [map_uvec, map_uvec, hχ', e]
 
 end GlobalTheory.FlagEmb.Valu
 end -- clump:auto

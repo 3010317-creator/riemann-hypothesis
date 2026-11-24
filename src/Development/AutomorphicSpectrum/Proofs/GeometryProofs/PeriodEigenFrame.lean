@@ -120,9 +120,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Flat.exists_directions_of_isEigFrame : �
       isEigVec_of_isDerivAt0 FU i P hP χ τ hχ 0 (fun k hk => absurd rfl hk) w hw
     obtain ⟨c₀, -, hu⟩ := hF.2 w hw'
     have a1 := hu c ((comb c w).2 (by rw [hc]; exact hw))
-    have a2 := hu 0 ((comb 0 w).2 (by simpa using hw))
-    intro k
-    exact congrFun (a1.trans a2.symm) k
+    exact fun k => congrFun (a1.trans (hu 0 ((comb 0 w).2 (by simpa using hw))).symm) k
   · obtain ⟨w, hw, -⟩ := (FU.ex_diff i P hP).1 (tyPart ty τ z)
     have hw' : GlobalTheory.CompanionTheory.Ar.Fl.IsEigVec Xo.univ.t.act (FU.u i P) χ w :=
       isEigVec_of_isDerivAt0 FU i P hP χ τ hχ _ (fun k hk => ?_) w hw

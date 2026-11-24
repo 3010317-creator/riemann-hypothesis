@@ -89,18 +89,14 @@ private theorem exists_intertwiner_decomp_of_kernel_intertwines {σ O : Type} [F
         by_cases hle : Finsupp.single i 1 ≤ n
         · rw [ite_eq_left hle, hc, tsub_add_cancel_of_le hle, ite_eq_right]
           rw [hsel]
-          intro heq
-          exact hi (Option.some_injective _ heq).symm
+          exact fun heq => hi (Option.some_injective _ heq).symm
         · rw [ite_eq_right hle]
-      · intro hnot
-        exact absurd (Finset.mem_univ _) hnot
+      · exact fun hnot => absurd (Finset.mem_univ _) hnot
     · have hn0 : n = 0 := by
-        rw [Finset.not_nonempty_iff_eq_empty, Finsupp.support_eq_empty] at hn
-        exact hn
+        rwa [Finset.not_nonempty_iff_eq_empty, Finsupp.support_eq_empty] at hn
       subst hn0
       rw [Finset.sum_eq_zero]
-      · rw [coeff_zero_eq_constantCoeff_apply]
-        exact hg
+      · rwa [coeff_zero_eq_constantCoeff_apply]
       · intro i _
         rw [ite_eq_right]
         intro hle
@@ -172,8 +168,7 @@ theorem UpperTheory.V.Alg.chart_free :
       exact one_ne_zero
     · intro i' hi'
       rw [hφ, MvPowerSeries.map_X, MvPowerSeries.coeff_X, ite_eq_right]
-      intro heq
-      exact hi' (Finsupp.single_left_injective one_ne_zero heq)
+      exact fun heq => hi' (Finsupp.single_left_injective one_ne_zero heq)
   · intro f hf0 hlin
     obtain ⟨g, rfl⟩ := W.surj f
     unfold satSq
@@ -181,8 +176,7 @@ theorem UpperTheory.V.Alg.chart_free :
     refine ⟨1, one_ne_zero, ?_⟩
     rw [one_smul]
     apply π_mem_sq W h g
-    · rw [← WPres.origin_π W h]
-      exact hf0
+    · rwa [← WPres.origin_π W h]
     · intro i
       have hi := hlin i
       rw [hφ, MvPowerSeries.coeff_map] at hi
@@ -206,8 +200,7 @@ private theorem chart_add_coeff {K τ τ' : Type} [CommRing K] (ε : τ ≃ τ')
   have h := coeff_embDomain_rename ε.toEmbedding p (Finsupp.mapDomain ε.symm n)
   rw [Finsupp.embDomain_eq_mapDomain, ← Finsupp.mapDomain_comp] at h
   have h2 : (ε.toEmbedding : τ → τ') ∘ ε.symm = id := funext fun x => ε.apply_symm_apply x
-  rw [h2, Finsupp.mapDomain_id] at h
-  exact h
+  rwa [h2, Finsupp.mapDomain_id] at h
 
 private theorem chart_add_weight {τ τ' X : Type} [AddCommGroup X] (g : τ' → τ) (wt : τ → X) (n : τ' →₀ ℕ) :
     Finsupp.weight wt (Finsupp.mapDomain g n) = Finsupp.weight (fun s => wt (g s)) n := by
@@ -296,8 +289,7 @@ theorem UpperTheory.V.Alg.chart_add :
   refine ⟨h', ((rename ε).restrictScalars O).comp ψ, chart_add_rename hψ ε _ ?_, fun s => ?_, fun s => ?_⟩
   · rintro (s | s) <;> rfl
   · have h1 := congrArg (rename ε) (hz true s)
-    rw [rename_rename] at h1
-    exact h1
+    rwa [rename_rename] at h1
   · have h1 := congrArg (rename ε) (hz false s)
     rw [rename_rename] at h1
     refine h1.trans ?_

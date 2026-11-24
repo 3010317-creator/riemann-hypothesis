@@ -171,14 +171,12 @@ theorem nodup_qv (R : Ranks) (h : HCParam R) (j : Fin R.m) : (qv R h j).Nodup :=
     intro i hi
     have h1 := h.u_gt_v ⟨i, by omega⟩
     have h2 := h.v_gt_u ⟨i, by omega⟩
-    simp only [U, dite_eq_left hi, dite_eq_left (show i < R.k by omega)]
-    exact lt_trans h2 h1
+    simpa only [U, dite_eq_left hi, dite_eq_left (show i < R.k by omega)] using lt_trans h2 h1
   have hV : ∀ i, i + 1 < R.k - 1 → V (i + 1) < V i := by
     intro i hi
     have h1 := h.u_gt_v ⟨i + 1, hi⟩
     have h2 := h.v_gt_u ⟨i, by omega⟩
-    simp only [V, dite_eq_left hi, dite_eq_left (show i < R.k - 1 by omega)]
-    exact lt_trans h1 h2
+    simpa only [V, dite_eq_left hi, dite_eq_left (show i < R.k - 1 by omega)] using lt_trans h1 h2
   have hB : ∀ i, i + 1 < R.m → B (i + 1) < B i := by
     intro i hi
     have h1 := h.gap_be ⟨i, by omega⟩

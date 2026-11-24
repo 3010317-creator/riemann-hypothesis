@@ -219,8 +219,7 @@ theorem oneOn_singleton_of_rows :
     have r := H C' Cl a1 b1 D large₂ X Y u hT hH hs hC ha
     unfold GeneratorBoundAt at r
     rw [gamB_eq_gamL] at r
-    rw [ite_eq_left rfl]
-    exact r
+    rwa [ite_eq_left rfl]
   · intro hN c Cg cb Cu cT CT hcb hcT
     obtain ⟨C4, hC4, C'₀, Cl₀, H⟩ := hN Cg cb Cu cT CT c hcb hcT
     refine ⟨C4, hC4, max (max C'₀ Cl₀) 3, ?_⟩
@@ -294,8 +293,7 @@ theorem stepFam1_of : (∀ D : D7, 4 * D.R.rS + 7 ≤ D.R.k → Formalism.L2.SG.
     hRel hTerm hDs hrw (hG6 D (Formalism.L2.SG.FamDefs.four_rank_add_seven_le_k hc)) hG5Fm
     (hH2 C' Cl e1b e2b D large₂ X Y u u hc _ _ _ γ Fm hFT) hWpos hWle (fun x _ => ?_)⟩
   have h := htie _ _ _ _ hQ γ hP Fm hFT x.1 x.2
-  rw [ampQ_not_eq_ampG] at h
-  exact h
+  rwa [ampQ_not_eq_ampG] at h
 
 end GlobalTheory.Core.One
 end -- clump:auto
@@ -482,8 +480,7 @@ theorem corankOne_of_same_flagDoubleCoset : ∀ (D : D7) (X : HidaSetting D) (Y 
     (Formalism.L2.SG.NGCut.CorankRelation.s0_eq_one_iff_Th_eq_Hp D.R.k hdim t.lam hlat _ t.frame t'.frame _ hLF hLt hGv).2 hTh
   show s0T t t' = 1
   unfold s0T
-  rw [ite_eq_left ⟨hlam, hlam'⟩]
-  exact hs0
+  rwa [ite_eq_left ⟨hlam, hlam'⟩]
 
 end GlobalTheory.Core.OneCoset
 end -- clump:auto
@@ -576,8 +573,7 @@ theorem occurs_iff_generic_corank_one (νL νB : X.B.I.Ginf → Measure X.B.I.Gi
     exact ⟨t, ⟨h1, h2, h3, h4⟩, h5⟩
   · rintro ⟨t, ⟨h1, h2, h3, h4⟩, h5⟩
     refine ⟨t, ?_, h2, h3, h4, h5⟩
-    rw [genT_ngSet]
-    exact h1
+    rwa [genT_ngSet]
 
 variable {Y u}
 
@@ -644,8 +640,7 @@ theorem nmlInvOne_of (hE : CorankOneIsEquivalenceOnRow) (hL : NmlLine) (hI : Nml
       IsGenericCorankOneTerm Y u c γ (pick ν) ∧ nmlOf Y u u (pick ν) = ν := by
     intro ν hν
     have h := (occurs_iff_generic_corank_one Y u νL νB ng c γ ν).1 hν
-    simp only [hpick, dite_eq_left h]
-    exact h.choose_spec
+    simpa only [hpick, dite_eq_left h] using h.choose_spec
   refine ⟨J, J', 1, 1, fun ν => (coefA Y u u t0 (pick ν), coefA' Y u u t0 (pick ν)), hJ, hJ', one_ne_zero,
     one_ne_zero, fun ν hν => ?_, fun ν₁ ν₂ h₁ h₂ hκ => ?_, ?_, ?_⟩
   · obtain ⟨hp, -⟩ := hpick_spec ν hν
@@ -935,8 +930,7 @@ theorem rowGen1P_of_steps (hCh : PN.NGChain) (hC : StepClass1) (hN : StepNormals
   have r := key ha hG hNI hFI (ngSizes_of hSz hb0 le_rfl zero_le_two le_rfl) hIn
   rw [hdd] at r
   unfold PB.Terms.RowMain at r
-  rw [scT_sc_genSet] at r
-  exact r
+  rwa [scT_sc_genSet] at r
 
 end GlobalTheory.Core.One
 end -- clump:auto
@@ -1153,8 +1147,7 @@ theorem diag_abstract_collisions_once :
       ext p; simp [Y, Formalism.FourierDecayAlt.PB.Terms.sc, Formalism.FourierDecayAlt.PB.Terms.one, Formalism.FourierDecayAlt.PB.Terms.allPairs,
         Formalism.FourierDecayAlt.PB.Terms.genSet]
     have e0 : Y.pairSum ∅ = 0 := by simp [Formalism.FourierDecayAlt.PB.Terms.pairSum]
-    rw [e1, e2, e0, add_zero] at hg
-    exact hg
+    rwa [e1, e2, e0, add_zero] at hg
 
   have hS : Summable (fun p : τ × τ => ‖inner ℂ (X.vec p.1) (X.vec p.2)‖) := by
     have hv := hA.2.1
@@ -1163,8 +1156,7 @@ theorem diag_abstract_collisions_once :
     exact Summable.of_nonneg_of_le (fun _ => norm_nonneg _) (fun p => norm_inner_le_norm _ _) hm
   have hdisj : Disjoint (X.big X.genSet) (X.big X.ngSet) := by
     rw [Set.disjoint_left]
-    intro p hp hq
-    exact hq.1.1.2 hp.1.1.2
+    exact fun p hp hq => hq.1.1.2 hp.1.1.2
   have hunion : X.pairAbs (X.big X.genSet) + X.pairAbs (X.big X.ngSet) =
       X.pairAbs (X.big X.genSet ∪ X.big X.ngSet) := by
     unfold Formalism.FourierDecayAlt.PB.Terms.pairAbs

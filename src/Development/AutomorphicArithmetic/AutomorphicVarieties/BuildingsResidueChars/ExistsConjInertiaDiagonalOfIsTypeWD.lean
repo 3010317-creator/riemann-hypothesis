@@ -71,15 +71,13 @@ theorem UpperTheory.exists_conj_inertia_diagonal_of_isTypeWD :
     apply LinearMap.ext
     intro v
     have h0 := he2 v
-    rw [hbN, LinearMap.zero_apply, LinearEquiv.map_eq_zero_iff] at h0
-    exact h0
+    rwa [hbN, LinearMap.zero_apply, LinearEquiv.map_eq_zero_iff] at h0
   have hN0 : N = 0 := by
     have h0 : Matrix.toLin' (N.map ι) = Matrix.toLin' (0 : Matrix (Fin n) (Fin n) ℂ) := by
       rw [← htoEnd, ← haN, haN0, map_zero]
     have h2 := Matrix.toLin'.injective h0
     ext i j
-    have h3 := congrFun (congrFun h2 i) j
-    simpa using h3
+    simpa using congrFun (congrFun h2 i) j
   have hpow : ∀ s : Ine (F := L) A, ∃ m : ℕ, 0 < m ∧ s ^ m ∈ U := by
     intro s
     have hUn : (U : Set (Ine (F := L) A)) ∈ nhds (1 : Ine (F := L) A) := hUo.mem_nhds U.one_mem

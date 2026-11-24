@@ -138,16 +138,13 @@ theorem eq_zero_on_KC_of_eq_zero_on_Kset : ∀ (n : ℕ) (ε : Fin n → Bool) (
     rw [← Matrix.exp_conjTranspose, Matrix.conjTranspose_smul, hLh]
   have hEJ : ∀ w : ℂ, E' w * Jm ε = Jm ε * E' w := by
     intro w
-    simp only [hE']
-    exact (hLJ.smul_left w).exp_left.eq
+    simpa only [hE'] using (hLJ.smul_left w).exp_left.eq
   have hE0 : E' 0 = 1 := by simp [hE']
   have hEone : E' 1 = yᴴ * y := by
-    simp only [hE', one_smul]
-    exact hLe
+    simpa only [hE', one_smul] using hLe
   have hEu : ∀ w : ℂ, IsUnit (E' w) := by
     intro w
-    simp only [hE']
-    exact Matrix.isUnit_exp _
+    simpa only [hE'] using Matrix.isUnit_exp _
   obtain ⟨u, hu⟩ : ∃ u : Matrix (Fin n) (Fin n) ℂ, u = y * E' (-(1 / 2)) := ⟨_, rfl⟩
   have hhalf : star (-(1 / 2 : ℂ)) = -(1 / 2) := by simp
   have hu1 : uᴴ * u = 1 := by
@@ -181,8 +178,7 @@ theorem eq_zero_on_KC_of_eq_zero_on_Kset : ∀ (n : ℕ) (ε : Fin n → Bool) (
     refine differentiable_pi.2 fun a => differentiable_pi.2 fun b => ?_
     have hd : ∀ c, Differentiable ℂ (fun z : ℂ => E' z c b) := by
       intro c
-      simp only [hE']
-      exact differentiable_exp_entry L c b
+      simpa only [hE'] using differentiable_exp_entry L c b
     simp only [Matrix.mul_apply]
     exact Differentiable.fun_sum fun c _ => (differentiable_const (u a c)).mul (hd c)
   have hg : Differentiable ℂ (fun z : ℂ => F (u * E' z)) := fun z =>
@@ -205,8 +201,7 @@ theorem eq_zero_on_KC_of_eq_zero_on_Kset : ∀ (n : ℕ) (ε : Fin n → Bool) (
     have e3 : (-(1 / 2 : ℂ) + 1 / 2) = 0 := by ring
     rw [hu, mul_assoc, hmul, e3, hE0, mul_one]
   simp only [Pi.zero_apply] at h12
-  rw [hy'] at h12
-  exact h12
+  rwa [hy'] at h12
 
 end GlobalTheory.Dec.KCIdent
 end -- clump:auto
@@ -317,8 +312,7 @@ theorem peak_lt {n : ℕ} {g : Matrix (Fin n) (Fin n) ℂ} (hg : gᴴ * g = 1) (
     peak g < peak (1 : Matrix (Fin n) (Fin n) ℂ) := by
   have h := (Matrix.posSemidef_conjTranspose_mul_self (g - 1)).trace_nonneg
   have hne : ((g - 1)ᴴ * (g - 1)).trace ≠ 0 := by
-    rw [Ne, Matrix.trace_conjTranspose_mul_self_eq_zero_iff, sub_eq_zero]
-    exact h1
+    rwa [Ne, Matrix.trace_conjTranspose_mul_self_eq_zero_iff, sub_eq_zero]
   have h2 := (Complex.lt_def.1 (lt_of_le_of_ne h hne.symm)).1
   simp only [conjTranspose_sub, conjTranspose_one, Matrix.sub_mul, Matrix.mul_sub, hg, Matrix.mul_one,
     Matrix.one_mul, trace_sub, trace_one, trace_conjTranspose, Fintype.card_fin, Complex.sub_re,
@@ -363,8 +357,7 @@ theorem exists_holomorphic_extension : ∀ (n : ℕ) (ε : Fin n → Bool) (B : 
     ((hc.pow N).smul hb).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hAu : ∃ A' : B, A * A' = 1 := by
     have e3 : ‖(1 : B) - c⁻¹ • A‖ < 1 := by
-      rw [← dist_eq_norm, dist_comm]
-      exact hN
+      rwa [← dist_eq_norm, dist_comm]
     obtain ⟨u, hu⟩ := isUnit_one_sub_of_norm_lt_one e3
     rw [sub_sub_cancel] at hu
     refine ⟨c⁻¹ • (↑u⁻¹ : B), ?_⟩
@@ -808,8 +801,7 @@ theorem adj_on_KC {W : Type} [NormedAddCommGroup W] [InnerProductSpace ℂ W]
   have h1 : DifferentiableOn ℂ (fun y : Fin n → Fin n → ℂ => star ⟪u, τ (Matrix.of y)ᴴ v⟫_ℂ)
       {y | Matrix.of y ∈ KC ε} := by
     intro z hz
-    have hz' : IsUnit (Matrix.of fun i j => (star z) j i) := by
-      exact hz.1.star
+    have hz' : IsUnit (Matrix.of fun i j => (star z) j i) := hz.1.star
     have h2 := (((hc u v).differentiableAt (isOpen_units.mem_nhds hz')).comp (star z) (ht (star z))).star_star
     rw [star_star] at h2
     exact h2.differentiableWithinAt

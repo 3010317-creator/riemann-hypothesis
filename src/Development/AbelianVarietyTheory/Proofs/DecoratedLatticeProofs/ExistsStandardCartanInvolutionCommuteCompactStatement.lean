@@ -84,8 +84,7 @@ theorem compAt_K_comm (θ : InfFam D) (hθ : IsInfFam θ) (n : ℕ) (k : G D n) 
     (AdelicU.projArch D.sp.cm.sig (Jst D n) (placeOf D τ) k)).2
   have hiso' : (compAt θ τ (mat k))ᴴ * (Jst D n).map (embOverOf D τ).1 * compAt θ τ (mat k) =
       (Jst D n).map (embOverOf D τ).1 := by
-    rw [e1, e2, AdelicU.infMat_infProj (Jst D n) (isCMExt_host D)]
-    exact hiso
+    rwa [e1, e2, AdelicU.infMat_infProj (Jst D n) (isCMExt_host D)]
   rw [Jst, GlobalTheory.CartanPt.blkJ_map] at hiso'
   exact comm_of_unitary_isom hunit hiso'
 
@@ -101,8 +100,7 @@ theorem exists_stdInv_comm_K : ∀ (D : D7) (A : HSp D) (μ : D.host.E), IsSkew 
     intro g τ
     have h2 := congrArg (compAt θ τ) (hκ g)
     have hr : compAt θ τ (rat (Tm A μ)) = (Tm A μ).map (tauE D τ) := GlobalTheory.AdForm.RatMove.compAt_rat hθ τ _
-    rw [GlobalTheory.AdForm.RatMove.compAt_mul, GlobalTheory.AdForm.RatMove.compAt_mul, hr] at h2
-    exact h2
+    rwa [GlobalTheory.AdForm.RatMove.compAt_mul, GlobalTheory.AdForm.RatMove.compAt_mul, hr] at h2
   refine ⟨fun τ => compAt θ τ (Formalism.L2.Theta.mt (dblSp A) (κ.symm k₀)), fun τ => ?_, fun k hk τ => ?_⟩
   · have h := hch (κ.symm k₀) τ
     rw [κ.apply_symm_apply, hk₀] at h
@@ -118,8 +116,7 @@ theorem exists_stdInv_comm_K : ∀ (D : D7) (A : HSp D) (μ : D.host.E), IsSkew 
     have hX : T * U = X * T := hch k τ
     have hS : T * stdInv A.rank μ τ = S * T := by
       have h := hch (κ.symm k₀) τ
-      rw [κ.apply_symm_apply, hk₀] at h
-      exact h
+      rwa [κ.apply_symm_apply, hk₀] at h
     have hU : U * stdInv A.rank μ τ = stdInv A.rank μ τ * U := by
       rw [stdInv, Matrix.mul_smul, Matrix.smul_mul, compAt_K_comm θ hθ A.rank (κ k) hk τ]
     have key : X * S * T = S * X * T := by

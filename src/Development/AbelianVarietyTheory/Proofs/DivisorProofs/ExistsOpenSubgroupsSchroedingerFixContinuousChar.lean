@@ -104,9 +104,7 @@ theorem isOpen_transFix {M : Type} [AddCommGroup M] [TopologicalSpace M] [IsTopo
 
 theorem adeleJoin_zero {κ : Type} (y : κ → FiniteAdeleRing (𝓞 F) F) (i : κ) :
     GlobalTheory.WeilCont.adeleJoin F 0 y i = ((0 : InfiniteAdeleRing F), y i) := by
-  refine Prod.ext ?_ rfl
-  show (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm 0 = 0
-  exact map_zero _
+  exact Prod.ext (map_zero _) rfl
 
 theorem dot_adeleJoin_zero {κ : Type} [Fintype κ] (v : κ → AdeleRing (𝓞 F) F) (y : κ → FiniteAdeleRing (𝓞 F) F) :
     v ⬝ᵥ GlobalTheory.WeilCont.adeleJoin F 0 y = ((0 : InfiniteAdeleRing F), (fun i => (v i).2) ⬝ᵥ y) := by

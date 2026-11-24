@@ -283,8 +283,7 @@ theorem sum_over_dyadic_shells :
       have hγ' := Finset.mem_filter.mp (Finset.mem_coe.mp hγ)
       intro v
       have := hsh1 (d γ v)
-      rw [← hγ'.2]
-      exact this
+      rwa [← hγ'.2]
     have hle := Set.ncard_le_ncard hsub hfin
     rw [Set.ncard_coe_finset] at hle
     calc ((u.filter fun γ => K γ = k).card : ℝ)
@@ -398,16 +397,13 @@ theorem summable_of_support {α : Type} (S : Set α) (F : α → ℝ) (C : ℝ)
     (summable_subtype_iff_indicator (s := {a | a ∈ S ∧ F a ≠ 0}) (f := F)).1 hs
   rw [← key] at hT
   refine ⟨(summable_subtype_iff_indicator (s := S) (f := F)).2 hT, ?_⟩
-  rw [tsum_subtype S F, key, ← tsum_subtype {a | a ∈ S ∧ F a ≠ 0} F]
-  exact hle
+  rwa [tsum_subtype S F, key, ← tsum_subtype {a | a ∈ S ∧ F a ≠ 0} F]
 
 private lemma one_le_n_of_sigIs_of_one_le_q (B : RowsAut) (p q : ℕ) (hS : SigIs B p q) (hq : 1 ≤ q) :
     1 ≤ B.I.n := by
   obtain ⟨v⟩ := (inferInstance : Nonempty (InfinitePlace B.I.F))
   have h1 : B.I.qAt v = q := (hS v).2
-  have h2 : B.I.qAt v ≤ B.I.n := by
-    show (Finset.univ.filter fun a => B.I.ε v a = false).card ≤ B.I.n
-    exact (Finset.card_filter_le _ _).trans (by simp)
+  have h2 : B.I.qAt v ≤ B.I.n := (Finset.card_filter_le _ _).trans (by simp)
   omega
 
 theorem farBound_of_ptBound : GlobalTheory.Deep.PtBound → GlobalTheory.Deep.FarBound := by
@@ -461,8 +457,7 @@ theorem farBound_of_ptBound : GlobalTheory.Deep.PtBound → GlobalTheory.Deep.Fa
     have hfar : ∀ γ : {a // a ∈ GlobalTheory.IndefiniteRowSideFullHecke.FarTermsLatticeBound.farSet B d ep x ∧ ‖phe B d (x⁻¹ * a * x)‖ ≠ 0}, ∃ v, ep < GlobalTheory.Count.dHS (uMat ((x⁻¹ * γ.1 * x).1 v)) := by
       intro γ
       have hm : γ.1 ∈ B.I.GFset ∧ ¬ GlobalTheory.Count.IsNear B d ep x γ.1 := γ.2.1
-      by_contra hcon
-      push Not at hcon
+      by_contra! hcon
       exact hm.2 (by unfold GlobalTheory.Count.IsNear; exact ⟨hm.1, hne γ, hcon⟩)
     have hw : ∀ γ : {a // a ∈ GlobalTheory.IndefiniteRowSideFullHecke.FarTermsLatticeBound.farSet B d ep x ∧ ‖phe B d (x⁻¹ * a * x)‖ ≠ 0}, 0 ≤ ‖phe B d (x⁻¹ * γ.1 * x)‖ / ((∏ v, d v) * (B.e 1).re) ∧
         ‖phe B d (x⁻¹ * γ.1 * x)‖ / ((∏ v, d v) * (B.e 1).re) ≤

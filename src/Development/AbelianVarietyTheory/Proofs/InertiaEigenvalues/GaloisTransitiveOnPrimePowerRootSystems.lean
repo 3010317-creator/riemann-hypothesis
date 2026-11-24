@@ -81,8 +81,7 @@ theorem galois_transitive_on_roots_of_prime (l : ℕ) [Fact l.Prime] (K : FinExt
     refine Polynomial.irreducible_of_eisenstein_criterion
       ((Ideal.span_singleton_prime hπ.ne_zero).2 hπ) ?_ ?_ ?_ ?_ hmon.isPrimitive
     · rw [hmon.leadingCoeff]
-      intro h
-      exact hπ.not_isUnit (Ideal.span_singleton_eq_top.1 ((Ideal.eq_top_iff_one _).2 h))
+      exact fun h => hπ.not_isUnit (Ideal.span_singleton_eq_top.1 ((Ideal.eq_top_iff_one _).2 h))
     · intro m hm
       rw [Polynomial.degree_X_pow_sub_C hn π, Nat.cast_lt] at hm
       rw [Polynomial.coeff_sub, Polynomial.coeff_X_pow, Polynomial.coeff_C, ite_eq_right hm.ne]
@@ -96,8 +95,7 @@ theorem galois_transitive_on_roots_of_prime (l : ℕ) [Fact l.Prime] (K : FinExt
       rintro ⟨c, hc⟩
       apply hπ.not_isUnit
       have h1 : π * 1 = π * (π * c) := by
-        rw [mul_one, ← mul_assoc, ← pow_two]
-        exact hc
+        rwa [mul_one, ← mul_assoc, ← pow_two]
       exact isUnit_of_dvd_one ⟨c, mul_left_cancel₀ hπ.ne_zero h1⟩
 
   have hirrF : Irreducible (Polynomial.X ^ n - Polynomial.C ((π : ↥K.1))) := by
@@ -116,8 +114,7 @@ theorem galois_transitive_on_roots_of_prime (l : ℕ) [Fact l.Prime] (K : FinExt
   refine ⟨⟨σ.restrictScalars ℚ_[l], ?_⟩, hσ⟩
   show σ.restrictScalars ℚ_[l] ∈ IntermediateField.fixingSubgroup K.1
   rw [IntermediateField.mem_fixingSubgroup_iff]
-  intro x hx
-  exact σ.commutes ⟨x, hx⟩
+  exact fun x hx => σ.commutes ⟨x, hx⟩
 
 end GlobalTheory
 end -- clump:auto

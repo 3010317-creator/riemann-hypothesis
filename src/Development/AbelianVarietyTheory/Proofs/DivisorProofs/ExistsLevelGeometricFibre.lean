@@ -57,8 +57,7 @@ theorem eq_iff_of_add {La G : Type} [AddGroup La] [Group G] (P : La → G)
   rw [add_neg_cancel_left] at h
   rw [h]
   constructor
-  · intro e
-    exact mul_left_cancel (e.symm.trans (_root_.mul_one _).symm)
+  · exact fun e => mul_left_cancel (e.symm.trans (_root_.mul_one _).symm)
   · intro e
     rw [e, _root_.mul_one]
 
@@ -89,8 +88,7 @@ theorem exists_eq_of_count {La G : Type} [AddCommGroup La] [Module.Finite ℤ La
     simpa using e'
   obtain ⟨q, hq⟩ := (Finite.injective_iff_surjective.1 hg) (c : La ⧸ K)
   refine ⟨q.out, ?_⟩
-  rw [hf, hmk Q hQa hQ]
-  exact hq
+  rwa [hf, hmk Q hQa hQ]
 
 end GlobalTheory.UPel.GeometricLevelExistence
 

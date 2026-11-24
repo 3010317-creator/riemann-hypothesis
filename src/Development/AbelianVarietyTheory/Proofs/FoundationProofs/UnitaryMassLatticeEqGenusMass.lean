@@ -131,8 +131,7 @@ theorem exists_approx (v : HeightOneSpectrum (𝓞 F)) (d : 𝓞 F) (hd : d ≠ 
   obtain ⟨t, htJ, htP⟩ := SetLike.not_le_iff_exists.1 hJP
   have hb : ∀ w : HeightOneSpectrum (𝓞 F), w ≠ v → ∃ b ∈ v.asIdeal ^ k, b ∉ w.asIdeal := by
     intro w hw
-    by_contra h
-    push Not at h
+    by_contra! h
     have hle : v.asIdeal ≤ w.asIdeal := Ideal.IsPrime.le_of_pow_le (fun b hb' => h b hb')
     exact hw (HeightOneSpectrum.ext (v.isMaximal.eq_of_le w.isPrime.ne_top hle).symm)
   have hval : ∀ w : HeightOneSpectrum (𝓞 F), w ≠ v → w.intValuation t ≤ w.intValuation d := by
@@ -357,8 +356,7 @@ theorem mem_loc_iff : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     have hnot : algebraMap (𝓞 F) (𝓞 E) t ∉ p := by
       intro hm
       apply htv
-      rw [← hpv]
-      exact hm
+      rwa [← hpv]
     refine ⟨algebraMap (𝓞 F) (𝓞 E) t, Submonoid.subset_closure ⟨hnot, ?_⟩, hx'⟩
     intro t' ht'
     have ht'' : t' = algebraMap (𝓞 F) (𝓞 E) t := by
@@ -367,8 +365,7 @@ theorem mem_loc_iff : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       show (σ : E →+* E) (algebraMap (𝓞 E) E (algebraMap (𝓞 F) (𝓞 E) t)) = _
       rw [← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply (𝓞 F) F E]
       simp
-    rw [ht'']
-    exact hnot
+    rwa [ht'']
 
 end GlobalTheory.LocDict
 end -- clump:auto

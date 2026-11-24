@@ -332,8 +332,7 @@ theorem inversion_neg (ι : Type) [Fintype ι] (Φ : (ι → ℝ) → ℂ) (hc :
     simp
   have hFi : Integrable (FourierTransform.fourier Ψ) volume := by
     refine (mp.integrable_comp_emb emb).1 ?_
-    refine hi.congr (Filter.Eventually.of_forall fun y => ?_)
-    exact (hF y).symm
+    exact hi.congr (Filter.Eventually.of_forall fun y => (hF y).symm)
   have hinv := congrFun (hΨc.fourierInv_fourier_eq hΨi hFi) (WithLp.toLp 2 (-z))
   rw [Real.fourierInv_eq, ← mp.integral_comp emb] at hinv
   have hval : Ψ (WithLp.toLp 2 (-z)) = Φ (-z) := rfl
@@ -699,8 +698,7 @@ theorem setIntegral_fourier_mul_char {ψ : AddChar K Circle} (hψ : Continuous �
 theorem iUnion_valBall_sub (n : ℤ) : ⋃ k : ℕ, (valBall K (n - (k : ℤ)) : Set K) = Set.univ := by
   refine Set.eq_univ_of_forall fun x => ?_
   obtain ⟨m, hm⟩ := exists_mem_valBall_neg_nat x
-  refine Set.mem_iUnion.mpr ⟨(n + m).toNat, ?_⟩
-  exact valBall_antitone (by omega) hm
+  exact Set.mem_iUnion.mpr ⟨(n + m).toNat, valBall_antitone (by omega) hm⟩
 
 theorem inversion {ψ : AddChar K Circle} (hψ : Continuous ψ) (hψ1 : ψ ≠ 1)
     {Φ : K → ℂ} (hΦ : Continuous Φ) (hc : HasCompactSupport Φ)

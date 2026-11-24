@@ -268,8 +268,7 @@ def gel (Γ : Subgroup SL(2, ℤ)) (τ : ℂ) : SL(2, ℤ) :=
 
 theorem gel_spec (Γ : Subgroup SL(2, ℤ)) {τ : ℂ} (h : τ ∈ Hs) :
     gel Γ τ ∈ Γ ∧ mob (ofSL (gel Γ τ)) (rep Γ ⟨τ, h⟩).1 = τ := by
-  simp only [gel, dite_eq_left h]
-  exact (rep_rel Γ ⟨τ, h⟩).choose_spec
+  simpa only [gel, dite_eq_left h] using (rep_rel Γ ⟨τ, h⟩).choose_spec
 
 theorem rep_eq (Γ : Subgroup SL(2, ℤ)) {δ : SL(2, ℤ)} (hδ : δ ∈ Γ) {τ : ℂ} (h : τ ∈ Hs)
     (h' : mob (ofSL δ) τ ∈ Hs) : rep Γ ⟨mob (ofSL δ) τ, h'⟩ = rep Γ ⟨τ, h⟩ := by
@@ -620,8 +619,7 @@ theorem eventually_ne_zero {b : ℂ → ℂ} (hb : DifferentiableOn ℂ b Hs) (h
     ∀ᶠ z in Filter.codiscreteWithin Hs, b z ≠ 0 := by
   have hA : AnalyticOnNhd ℂ b Hs := hb.analyticOnNhd isOpen_Hs
   obtain ⟨z0, hz0, hbz0⟩ : ∃ z0 ∈ Hs, b z0 ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hb0 (Filter.Germ.coe_eq.2 (Filter.eventually_of_mem (Filter.self_mem_codiscreteWithin Hs) h))
   have h0 : analyticOrderAt b z0 ≠ ⊤ := by
     rw [(hA z0 hz0).analyticOrderAt_eq_zero.2 hbz0]; exact ENat.zero_ne_top
@@ -843,8 +841,7 @@ theorem exists_basis (hinj : Function.Injective (algebraMap ℤ_[l] E)) (S : Fin
     have h2 : ((∑ i, (b.repr ⟨x, hxL⟩) i • b i : L) : E) = x := congrArg Subtype.val (b.sum_repr _)
     rw [Submodule.coe_sum] at h2
     simp only [Submodule.coe_smul] at h2
-    simp only [dite_eq_left hxL]
-    exact h2.symm
+    simpa only [dite_eq_left hxL] using h2.symm
 
 theorem poly_decomp {k : ℕ} (v : Fin k → E) (r : E → Fin k → ℤ_[l]) (P : MvPolynomial (Fin 2) E)
     (hr : ∀ m ∈ P.support, P.coeff m = ∑ a, r (P.coeff m) a • v a) :

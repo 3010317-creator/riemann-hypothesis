@@ -134,8 +134,7 @@ theorem exists_cdvr (M : RatModel o' Ω) (U₀ : M.Z.Opens) (hU : (U₀ : Set M.
         have h := congrArg (ιk.comp (residue W)) hqW
         rw [map_natCast, map_zero] at h
         refine (map_eq_zero_iff (algebraMap κ (AlgebraicClosure κ)) (algebraMap κ _).injective).1 ?_
-        rw [map_natCast]
-        exact h
+        rwa [map_natCast]
       have : CharP κ q := (CharP.charP_iff_prime_eq_zero hqp).2 hqκ
       have hpq : p = q := ringChar.eq κ q
       have hp : p ≠ 0 := hpq ▸ hqp.ne_zero
@@ -157,8 +156,7 @@ theorem exists_cdvr (M : RatModel o' Ω) (U₀ : M.Z.Opens) (hU : (U₀ : Set M.
       exact Ideal.comap_bot_of_injective _ (IsFractionRing.injective _ _)
     have hm : (PrimeSpectrum.comap ψ' ⊥ : PrimeSpectrum O) ∈ (PrimeSpectrum.basicOpen f₀ : Set (PrimeSpectrum O)) := by
       show f₀ ∉ Ideal.comap ψ' ⊥
-      rw [Ideal.mem_comap, Ideal.mem_bot]
-      exact hψ'f₀
+      rwa [Ideal.mem_comap, Ideal.mem_bot]
     have := hf hm
     simp only [a, Scheme.Hom.comp_apply, ht]
     exact this

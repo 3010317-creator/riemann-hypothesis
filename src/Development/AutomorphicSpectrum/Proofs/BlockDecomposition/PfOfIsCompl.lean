@@ -59,11 +59,9 @@ theorem pf_of_isCompl : ∀ (p : ℕ) [Fact p.Prime] (B : Type) [CommRing B] (T 
   obtain ⟨FB, hFB⟩ := GlobalTheory.CompanionTheory.Frobenius.exists_ringHom_pow_prime_pow p B hB.char 1
   obtain ⟨FT, hFT⟩ := GlobalTheory.CompanionTheory.Frobenius.exists_ringHom_pow_prime_pow p T hT 1
   have subB : ∀ x y : B, (x - y) ^ p = x ^ p - y ^ p := fun x y => by
-    have h := map_sub FB x y
-    simpa only [hFB, pow_one] using h
+    simpa only [hFB, pow_one] using map_sub FB x y
   have subT : ∀ x y : T, (x - y) ^ p = x ^ p - y ^ p := fun x y => by
-    have h := map_sub FT x y
-    simpa only [hFT, pow_one] using h
+    simpa only [hFT, pow_one] using map_sub FT x y
   have surj' : ∀ (M : ℕ) (y : T), ∃ x, g π ^ M ∣ y - g x := fun M y => by
     obtain ⟨x, hx⟩ := hC.surj M y
     exact ⟨x, Ideal.mem_span_singleton.1 hx⟩

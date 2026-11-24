@@ -221,8 +221,7 @@ theorem contDiffOn_of_im_eq {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X
   have hF : ∀ k l, (hermForm (Hm b) (P b (v k)) (P b (v l))).im = F (v k) (v l) :=
     fun k l => hH b hb.1 _ _
   have h1 := entry_eq (Hm b) p q
-  rw [imForm_std (Hm b) _ (hdet b hb) _ hF, imForm_std (Hm b) _ (hdet b hb) _ hF] at h1
-  exact h1
+  rwa [imForm_std (Hm b) _ (hdet b hb) _ hF, imForm_std (Hm b) _ (hdet b hb) _ hF] at h1
 
 theorem exists_riem_contDiffOn : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (σ : c.F →+* ℂ) (g : ℕ) (ty : Fin g → (E →+* ℂ)) (Fu : FamilyUnif Xo (σ.comp (IntermediateField.inclusion c.le).toRingHom) ty) (i : Fin Fu.n) (d : ℕ) (B : Set (ReciprocityTheory.L2DbarEstimates.V d)) (P : ReciprocityTheory.L2DbarEstimates.V d → ((Fu.Di i).La →+ (Fin g → ℂ))), IsOpen B → (∀ b ∈ B, IsPeriod (Fu.Di i) ty (P b)) → (∀ v, DifferentiableOn ℂ (fun b => P b v) B) → ∃ Hm : ReciprocityTheory.L2DbarEstimates.V d → Matrix (Fin g) (Fin g) ℂ, (∀ b ∈ B, IsRiem Fu i (P b) (Hm b)) ∧ ∀ p q, ContDiffOn ℝ ∞ (fun b => Hm b p q) B := by
   intro E _ _ _ H Dw l Xo c σ g ty Fu i d B P hB hper hhol
@@ -364,8 +363,7 @@ theorem exists_orth {U : Formalism.L2.PjFree.Unf Xo c σ r} (hσ : Formalism.L2.
   have hxF : xF ≫ Z.jQ = y.1 := IsOpenImmersion.lift_fac _ _ _
   have hs : xF ≫ pullback.snd _ _ = spMap (algebraMap c.F (CAt σ)) := by
     have h2 := y.2
-    rw [← hxF, Category.assoc, Z.jQ_over] at h2
-    exact h2
+    rwa [← hxF, Category.assoc, Z.jQ_over] at h2
   have ho : (xF ≫ pullback.fst _ _) ≫ Xo.s = sOf c (CAt σ) := by
     rw [Category.assoc, pullback.condition, ← Category.assoc, hs]
     exact OpenReg.spMap_comp _ _
@@ -408,8 +406,7 @@ theorem exists_lift_comb (q : FrPt Xo c (CAt σ)) {y : CxPts (genStr Z) σ} (hq 
     refine (LinearEquiv.apply_symm_apply L _).trans ?_
 
     rw [map_sum, e1]
-    refine Finset.sum_congr rfl fun i _ => ?_
-    exact (LinearEquiv.map_smul L _ _).symm
+    exact Finset.sum_congr rfl fun i _ => (LinearEquiv.map_smul L _ _).symm
 
 end GlobalTheory.HodgeSmooth
 
@@ -496,8 +493,7 @@ theorem exists_expCoord_of_base : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       rw [hpq b hb q hq]
       exact hwt.1
     have h := isDerivAt0_ex_of_push Z Fu (p (L b)) i (P₂ (L b)) (hP₂ _) (hu _) hbase hd
-    rw [hP₂L b hb] at h
-    exact h
+    rwa [hP₂L b hb] at h
 
 end GlobalTheory.ShFam.ExpCoord
 

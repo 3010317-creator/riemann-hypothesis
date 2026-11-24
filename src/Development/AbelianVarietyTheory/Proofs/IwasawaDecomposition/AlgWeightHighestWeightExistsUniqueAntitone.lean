@@ -177,11 +177,9 @@ theorem span_tau_commutant : ∀ (L : Type) [Field L] [NumberField L] [IsCMField
         rintro (h' | h')
         · exact h (Or.inr (by rw [← h', conj_conj]))
         · exact h (Or.inl (by simpa [conj_conj] using congrArg ComplexEmbedding.conjugate h'))
-      simp only [R, ite_eq_right h, ite_eq_right h']
-      exact hU σ
+      simpa only [R, ite_eq_right h, ite_eq_right h'] using hU σ
   have hinv : ((B⁻¹ : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ) = (ratPt γ₀.val (ComplexEmbedding.conjugate τ))ᵀ := by
-    apply Units.inv_eq_of_mul_eq_one_right
-    exact hU τ
+    exact Units.inv_eq_of_mul_eq_one_right (hU τ)
   have hdec : ratPt γ₀.val = fun σ => tauPt τ B σ * R σ := by
     funext σ
     have hne := conjugate_ne_self τ
@@ -270,15 +268,12 @@ theorem domLE_of_mem_Sle : ∀ (n : ℕ) (ι : Type) [Fintype ι] [DecidableEq �
     refine Submodule.mem_iInf _ |>.mpr fun D => ?_
     apply Module.End.eigenspace_le_maxGenEigenspace
     rw [Module.End.mem_eigenspace_iff]
-    simp only [T, Matrix.toLin'_apply]
-    exact hv D.1 D.2
+    simpa only [T, Matrix.toLin'_apply] using hv D.1 D.2
   have hχinj : ∀ ν ν', χ ν = χ ν' → ν = ν' := by
     intro ν ν' h
     funext i
     let u : Fin n → ℂˣ := Function.update 1 i (Units.mk0 2 two_ne_zero)
-    have hD : (diagU u).val.IsDiag := by
-      show (Matrix.diagonal _).IsDiag
-      exact Matrix.isDiag_diagonal _
+    have hD : (diagU u).val.IsDiag := Matrix.isDiag_diagonal _
     have key := congrFun h ⟨diagU u, hD⟩
     have hprod : ∀ ν'' : Fin n → ℤ, χ ν'' ⟨diagU u, hD⟩ = (2 : ℂ) ^ (ν'' i) := by
       intro ν''
@@ -428,8 +423,7 @@ theorem lu : ∀ {n : ℕ} (B : GL (Fin n) ℂ), (∀ (k : ℕ) (hk : k ≤ n), 
     have := hx1 i k hik'
     simp only [M, add_mul, Finset.sum_add_distrib, ite_mul, one_mul, zero_mul,
       Finset.sum_ite_eq, Finset.mem_univ, ite_true]
-    rw [add_comm]
-    exact this
+    rwa [add_comm]
 
 end GlobalTheory.LUDecomp
 end -- clump:auto
@@ -579,8 +573,7 @@ theorem conj_val {n : ℕ} {i j : Fin n} (h : i ≠ j) (D : GL (Fin n) ℂ) (hD 
   have key : D.val * T.val = transvection i j (s * (D.val i i / D.val j j)) * D.val := by
     have := diagonal_mul_transvection h (fun m => D.val m m) (diag_ne_zero D hD j) s
     rw [← diagonal_eq_of_isDiag _ hD] at this
-    rw [hT]
-    exact this
+    rwa [hT]
   rw [Units.val_mul, Units.val_mul, key, Matrix.mul_assoc, ← Units.val_mul, mul_inv_cancel,
     Units.val_one, Matrix.mul_one]
 
@@ -885,8 +878,7 @@ theorem mulVec_mem_of_cofinite_shift : ∀ {n : ℕ} {ι : Type} [Fintype ι] [D
     have hcl : IsClosed (F \ {0}) := (hF.diff).isClosed
     have hmem : (F \ {0})ᶜ ∈ nhds (0:ℂ) := hcl.isOpen_compl.mem_nhds (by simp)
     filter_upwards [nhdsWithin_le_nhds hmem, self_mem_nhdsWithin] with s hs1 hs2
-    intro hsF
-    exact hs1 ⟨hsF, hs2⟩
+    exact fun hsF => hs1 ⟨hsF, hs2⟩
   have hev : ∀ᶠ s in nhdsWithin (0:ℂ) {0}ᶜ, g s ∈ S := by
     filter_upwards [hFev, nhdsWithin_le_nhds hdetev] with s hs hdet
     rw [hgC s (Matrix.nonsingInvUnit (M s) hdet) rfl]
@@ -914,9 +906,7 @@ theorem mulVec_mem_sle_of_isBEig : ∀ (n : ℕ) (ι : Type) [Fintype ι] [Decid
   intro n ι _ _ Φ hΦ v lam hv B
   have hdom : DomLE lam lam := ⟨rfl, fun _ => le_rfl⟩
   have hvS : v ∈ Sle Φ lam := by
-    refine Submodule.subset_span ⟨lam, hdom, fun D hD => hv.2 D ?_⟩
-    intro a b hab
-    exact hD (ne_of_gt hab)
+    exact Submodule.subset_span ⟨lam, hdom, fun D hD => hv.2 D (fun a b hab => hD (ne_of_gt hab))⟩
 
   have hstab : ∀ L : GL (Fin n) ℂ, L.val.BlockTriangular OrderDual.toDual →
       ∀ w ∈ Sle Φ lam, Φ L *ᵥ w ∈ Sle Φ lam := by

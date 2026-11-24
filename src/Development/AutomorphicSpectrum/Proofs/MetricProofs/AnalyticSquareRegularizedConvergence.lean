@@ -378,8 +378,7 @@ theorem regular (hC : ConvergenceSignedStatement) {e : ℕ} {τ : Type} (S : AnS
     by_cases ht : 0 < t ∧ t ≤ S.t₀
     · simp only [ht, and_self, ite_true]
       exact abs_lin_le c cst _ (fun i => hphT (mm i) t ht.1 ht.2 y hy) (hl y hy)
-    · simp only [ht, ite_false]
-      exact abs_lin_le c cst _ (fun i => hph (mm i) y hy) (hl y hy)
+    · simpa only [ht, ite_false] using abs_lin_le c cst _ (fun i => hph (mm i) y hy) (hl y hy)
   have hlim := sum_unif S.A hU (fun i => S.ph (mm i)) (fun i => S.phT (mm i)) c cst
     (fun i j K hK hKc => ((S.c2 (mm i)) j K hK hKc).1) S.t₀ ht₀
   have h := hC S.A S.Θ S.L S.s S.m S.W S.potΘ S.posΘ S.potL S.sec S.snc S.norm_le
@@ -458,8 +457,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.analytic_square_regularized_co
       by_cases ha : a = a₀
       · subst ha
         simp [mm, Q.ph1]
-      · simp [mm, ha, Q.ph0]
-        exact congrFun (Q.base_ph a ha) x
+      · simpa [mm, ha, Q.ph0] using congrFun (Q.base_ph a ha) x
     rw [e0, e1]
     simp only [c]
     ring
@@ -473,8 +471,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.analytic_square_regularized_co
       by_cases ha : a = a₀
       · subst ha
         simp [mm, Q.phase_none_eq_comp_second_projection]
-      · simp [mm, ha, Q.phase_some_eq_comp_first_projection]
-        exact congrFun (Q.base_phT a ha t) x
+      · simpa [mm, ha, Q.phase_some_eq_comp_first_projection] using congrFun (Q.base_phT a ha t) x
     rw [e0, e1]
     simp only [c]
     ring

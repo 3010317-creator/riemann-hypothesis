@@ -114,8 +114,7 @@ theorem end_eq_one_of_pow_eq_one_of_congr (Y : Type*) [AddCommGroup Y] [Module.F
         rw [this, map_zero]
       have hle : M * p z ≤ k + k := by
         have := h1 (σ y) y
-        rw [h4, hy, hz, add_sub_cancel_left, h2] at this
-        exact this
+        rwa [h4, hy, hz, add_sub_cancel_left, h2] at this
       have hlt : p z < k := by nlinarith
       have hzz : σ z = z := ih _ hlt z rfl
       have hj : ∀ j : ℕ, (σ ^ j) y = y + (j * M) • z := by
@@ -149,8 +148,7 @@ theorem latMinkowski : ReciprocityTheory.ChartRestriction.G.Geo.Tor.LatMinkowski
     ext y
     have : (σ ^ n) y = y := by rw [hσ]; rfl
     rw [LinearEquiv.pow_apply] at this
-    rw [Module.End.pow_apply]
-    exact this
+    rwa [Module.End.pow_apply]
   have := end_eq_one_of_pow_eq_one_of_congr Y (σ : Module.End ℤ Y) n M hn hp hM h
   ext y
   exact LinearMap.congr_fun this y

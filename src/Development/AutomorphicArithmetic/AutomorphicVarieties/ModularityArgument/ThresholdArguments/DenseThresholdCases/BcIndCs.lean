@@ -428,8 +428,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.indAutLP_of_upQuad_u
   haveI hLa : IsAbelianGalois ℚ T.L := by
     have h := @GroundTheory.Global.isAbelianGalois_sup ℚ Ω _ _ _ _ T.F T.K
       T.nF.to_finiteDimensional T.nK.to_finiteDimensional T.abF hK
-    rw [← T.hL] at h
-    exact h
+    rwa [← T.hL] at h
   haveI : IsAbelianGalois ℚ M := hM ▸ @GroundTheory.Global.isAbelianGalois_sup ℚ Ω _ _ _ _ k₀ T.L ‹_› ‹_› hk₀ hLa
   haveI : IsAbelianGalois E M := IsAbelianGalois.tower_top ℚ _ _
   haveI : Group.IsSolvable (M ≃ₐ[E] M) := Group.isSolvable_of_comm fun a b => mul_comm' a b
@@ -528,11 +527,9 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.indAutLP_of_upQuad_u
     refine ⟨fun g g' e => c1 (galEmb k₀ E Ω (galEmb E M Ω g)) (galEmb k₀ E Ω (galEmb E M Ω g')) ?_,
       fun g e => c2 (galEmb k₀ E Ω (galEmb E M Ω g)) ?_⟩
     · have := congrArg (resQ T.L) e
-      rw [map_mul, map_mul, map_inv] at this
-      exact this
+      rwa [map_mul, map_mul, map_inv] at this
     · have := congrArg (resQ T.L) e
-      rw [map_mul] at this
-      exact this
+      rwa [map_mul] at this
 end
 end -- clump:auto
 end -- clump:auto
@@ -630,8 +627,7 @@ private theorem exists_embedding_prime_above [NumberField K] [CharZero k] [IsAlg
   have h1 : ∀ σ : K →ₐ[ℚ] k, ‖σ (a : K)‖ = 1 := by
     intro σ
     refine norm_embedding_eq_one_of_not_mem (σ : K →+* k) a fun h => ha ?_
-    simp only [Set.mem_iUnion]
-    exact ⟨σ, by simp, h⟩
+    simpa only [Set.mem_iUnion] using ⟨σ, by simp, h⟩
   have hprod : ‖algebraMap ℚ k (Algebra.norm ℚ (a : K))‖ = 1 := by
     rw [Algebra.norm_eq_prod_embeddings, norm_prod]
     exact Finset.prod_eq_one (fun σ _ => h1 σ)
@@ -741,8 +737,7 @@ theorem UpperTheory.quadratic_field_split_prime_two_places :
     intro A A' hA g hg hAA
     have hA' : A'.valuation (p : Ω) < 1 := by
       rw [valuation_lt_one_iff'] at hA ⊢
-      rw [← hAA, ← hAA, map_inv₀, map_natCast]
-      exact hA
+      rwa [← hAA, ← hAA, map_inv₀, map_natCast]
     obtain ⟨a1, a2, a3, -⟩ := places k₀ Ω p A
     obtain ⟨b1, b2, b3, -⟩ := places k₀ Ω p A'
     obtain ⟨v, hv⟩ := a1 fun h => (a2 h).2 hA
@@ -1003,11 +998,9 @@ theorem UpperTheory.V.Z.Win.Birth.mix_birth_of_prints :
     rintro _ ⟨hk, k, rfl⟩
     have h1 := h k fun φ => by
       have h2 := hk (InfinitePlace.mk (Complex.ofRealHom.comp φ))
-      have h3 := diagR_mk (Complex.ofRealHom.comp φ) (k : F)
-      exact h2.trans_eq (Complex.ofReal_injective h3)
+      exact h2.trans_eq (Complex.ofReal_injective (diagR_mk (Complex.ofRealHom.comp φ) (k : F)))
     rw [HChar.inf, MonoidHom.comp_apply, infDiag_eqR] at h1
-    refine h1.trans (Finset.prod_congr rfl fun φ _ => ?_)
-    exact congrArg (· ^ n φ) (diagR_mk φ (k : F)).symm
+    exact h1.trans (Finset.prod_congr rfl fun φ _ => (congrArg (· ^ n φ) (diagR_mk φ (k : F)).symm))
   have expo_abs (v : InfinitePlace F) : TR.expo (Model.absPow F k) v = k := by
     classical
     refine TR.expo_eq_of_exp _ v _ fun t => ?_
@@ -1356,8 +1349,7 @@ theorem _root_.UpperTheory.Esk.pf_HRep_alt : _root_.UpperTheory.V.Af.HypothesesH
   have hq : ∀ w : Pl F, (0 : ℝ) < normV w := fun w =>
     Nat.cast_pos.2 (zero_lt_one.trans (by rw [hnorm]; exact NumberField.HeightOneSpectrum.one_lt_absNorm w))
   have hν3 : ∀ w, ((ν.val w : ℂˣ) : ℂ) = (((normV w : ℝ) ^ ((k : ℝ) / 2 - 1) : ℝ) : ℂ) := fun w => by
-    rw [hν2, Complex.ofReal_cpow (hq w).le, ← Complex.ofReal_neg, neg_sub]
-    rw [hnorm]
+    rw [hν2, Complex.ofReal_cpow (hq w).le, ← Complex.ofReal_neg, neg_sub, hnorm]
     push_cast
     rfl
   set π := π₀.twist ν
@@ -1755,8 +1747,7 @@ theorem UpperTheory.V.Sd.Wc.exL :
     have hJJ := exL_uniq (hS _ (exL_mem (hpl v))).1 (hu v) (J v) J' (fun x => (hJ2 v x).1.2) fun x => (h2 x).1.2
     have : v.embedding = v'.embedding := by
       ext x
-      apply ι.symm.injective
-      exact ((hJ1 v x).symm.trans (by rw [hJJ])).trans (h1 x)
+      exact ι.symm.injective (((hJ1 v x).symm.trans (by rw [hJJ])).trans (h1 x))
     rw [← v.mk_embedding, this, v'.mk_embedding]
   · obtain ⟨σ, hσ⟩ := KStar.IdealValuations.exists_embedding_place w hw
     exact ⟨_, (hemb σ w).1 fun x => (hσ x).symm⟩
@@ -1912,8 +1903,7 @@ theorem UpperTheory.Esk.pf_PropMV_sv_alt : _root_.UpperTheory.V.Af.HypothesesH' 
         ext i; fin_cases i <;> simp [h, hS]
       · have hS : v ∉ {v | D.pl v ∈ P} := by simpa [hv] using h
         ext i; fin_cases i <;> simp [h, hS]
-  · simp only [eisT, ite_eq_left hw, ite_eq_left h]
-    exact hfr w (hcl w hw) A hA σ hσ
+  · simpa only [eisT, ite_eq_left hw, ite_eq_left h] using hfr w (hcl w hw) A hA σ hσ
   · simp only [eisT, ite_eq_left hw, ite_eq_right h, map_one]
 end
 end -- clump:auto

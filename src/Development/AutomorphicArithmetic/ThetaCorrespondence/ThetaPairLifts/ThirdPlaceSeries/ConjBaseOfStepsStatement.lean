@@ -208,8 +208,7 @@ theorem baseLat_le
       rw [map_smul, ← ho]
   obtain ⟨g, hg, hm⟩ := key P (hgen ρ hρ hp h P hd.mem)
   have : f = g := hinj ρ hρ ν hN.1 (hf.trans hg.symm)
-  rw [this]
-  exact hm
+  rwa [this]
 
 end Point
 
@@ -543,8 +542,7 @@ theorem smallComb_of_ratScalar (hRF : GlobalTheory.NT.RayField) {F : Face D A3.A
   have hω' : IsWeilDatumO Rl.ψ (Vc D j) (Wc D j) (Lift.chrTh (Lift.tup Rl.mu0 (ρ.B i j b).de.chi) Rl.eta ((j : ℕ) + 1)).1
       (Lift.chrTh (Lift.tup Rl.mu0 (ρ.B i j b).de.chi) Rl.eta ((j : ℕ) + 1)).2 (ρ.om i j b 1) := by
     have h1 := hω
-    rw [Base.IsWeil, mul_one, Base.mu, hBo.ψ, hBo.mu0, hBo.eta] at h1
-    exact h1
+    rwa [Base.IsWeil, mul_one, Base.mu, hBo.ψ, hBo.mu0, hBo.eta] at h1
 
   have hm : ∀ τ, (ρ.B i j b).w.p τ + (ρ.B i j b).w.q τ ≤ (Wc D j).rank := fun τ => by
     have h2 := Formalism.BasicNotions.sig_sum _ hB.sigOK (tauE D τ)

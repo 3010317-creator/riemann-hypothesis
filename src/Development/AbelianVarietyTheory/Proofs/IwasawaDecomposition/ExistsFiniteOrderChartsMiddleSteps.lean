@@ -281,8 +281,7 @@ theorem image_eq_iff_frStab {P : HeightOneSpectrum (𝓞 X.E)} (C : Set (Sp X.E 
       exact (h u).2 hu
     · intro hv
       refine ⟨g.1.symm v, (h _).1 ?_, LinearEquiv.apply_symm_apply g.1 v⟩
-      rw [LinearEquiv.apply_symm_apply]
-      exact hv
+      rwa [LinearEquiv.apply_symm_apply]
 
 def frLift (Λ : LevFam X.E X.K n SG) (Θ : LevQFam X.E X.K n Q) (C : ∀ w : SG, Set (Fin n → 𝓞 X.E ⧸ w.1.asIdeal))
     (D : ∀ P : Q, Set (Sp X.E n)) (g : UF X.E n × chG Λ C × (cutQ Θ D).grp) : FrmG Λ Θ :=
@@ -442,8 +441,7 @@ theorem lev_iff_frames : ∀ {X : Fields} {n : ℕ} {ST SG Q : Finset (HeightOne
     have ht : ∀ P : Q, t P ∈ (cutQ Θ D P).H := fun P => by
       refine (q.U_rat P (t P)).1 ?_
       have h' := hsQ P
-      rw [hs_at P] at h'
-      exact h'
+      rwa [hs_at P] at h'
     have hθ : (fun P => (t P)⁻¹ : GLQ X.E n Q) ∈ Θ.grp := fun P _ => inv_mem (Subgroup.mem_inf.1 (ht P)).1
     let κ : FrmG Λ Θ := (1, ⟨_, h2.1⟩, ⟨_, hθ⟩)
     refine ⟨κ, map_one _, ?_, (bar_ya_eq_iff _ _ _ _).2 ?_, (hcq κ).1 fun P => inv_mem (Subgroup.mem_inf.1 (ht P)).2⟩
@@ -767,13 +765,9 @@ theorem exists_ptAt_bar_cq_eq : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {se
         rw [mul_smul, ← e, inv_smul_smul₀ (pow_ne_zero _ GlobalTheory.TopStep.qOf_ne_zero)]
     obtain ⟨y', hy'⟩ := exists_approx (rowSG Pr sel mu) p.deco.1.N c a ha
     have hy'G : ∀ P : rowSG Pr sel mu, P.1 ∈ Pr.vGs → y' - a P ∈ p.deco.1.at P.1 := fun P hP => by
-      have h1 := hy' P
-      simp only [c, ite_eq_left hP, pow_zero, inv_one, one_smul] at h1
-      exact h1
+      simpa only [c, ite_eq_left hP, pow_zero, inv_one, one_smul] using hy' P
     have hy'Q : ∀ P : rowSG Pr sel mu, P.1 ∉ Pr.vGs → ((qOf P.1 : X.E) ^ cst.M)⁻¹ • (y' - a P) ∈ p.deco.1.at P.1 := fun P hP => by
-      have h1 := hy' P
-      simp only [c, ite_eq_right hP] at h1
-      exact h1
+      simpa only [c, ite_eq_right hP] using hy' P
     have eG : ∀ (P : rowSG Pr sel mu) (hP : P.1 ∈ Pr.vGs), ((qOf P.1 : ℕ) : X.E) • y' =
         xw ⟨P.1, hP⟩ + ((qOf P.1 : ℕ) : X.E) • (y' - a P) := fun P hP => by
       rw [haG P hP, smul_sub, smul_inv_smul₀ GlobalTheory.TopStep.qOf_ne_zero, add_sub_cancel]
@@ -930,8 +924,7 @@ theorem qPi_eq_phi_of_adAt : ∀ {F E K : Type} [Field F] [NumberField F] [Field
     have e1 : sp.symm (1, 0) + sp.symm (0, 1) = 1 := by
       rw [← map_add (f := _)]; simp
     have e2 := congrArg ψ e1
-    rw [map_add (f := _), hu', add_zero, map_one] at e2
-    exact e2
+    rwa [map_add (f := _), hu', add_zero, map_one] at e2
 
   set x := prV (E := E) (qv F P.1) a - Formalism.UG.inclE (F := F) ((qv F P.1).adicCompletion F) e with hx
   have hψx : ψ x = 0 := by
@@ -1049,8 +1042,7 @@ theorem thetaOpen_levQ : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {Ch : Char
   have hq := ciQ_mem P.1
   have hq0 : ((qOf P.1 : ℕ) : X.E) ≠ 0 := by
     rw [Nat.cast_ne_zero]
-    intro h0
-    exact P.1.ne_bot ((Ideal.absNorm_eq_zero_iff).1 h0)
+    exact fun h0 => P.1.ne_bot ((Ideal.absNorm_eq_zero_iff).1 h0)
   obtain ⟨a, ha⟩ := qth_bound P.1 ((toGLm X.E (R.N j + cOf R j) h : GL (Fin (R.N j + cOf R j)) X.E) : Matrix (Fin (R.N j + cOf R j)) (Fin (R.N j + cOf R j)) X.E)
   obtain ⟨b', hb⟩ := qth_bound P.1 ((toGLm X.E (R.N j + cOf R j) h⁻¹ : GL (Fin (R.N j + cOf R j)) X.E) : Matrix (Fin (R.N j + cOf R j)) (Fin (R.N j + cOf R j)) X.E)
   obtain ⟨e, he⟩ := qth_exists_e P.1 hq0
@@ -1093,8 +1085,7 @@ theorem thetaOpen_levQ : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {Ch : Char
         (g⁻¹ : GLint E n P).2
       have h2 := (hmem _).2 hs
       have h3 := (mem_localization_standardLattice P _).1 h2 a
-      rw [qth_intAt_iff] at h3
-      exact h3
+      rwa [qth_intAt_iff] at h3
     have hBm : B - 1 = -(B * (A - 1)) := by
       rw [Matrix.mul_sub, hBA, Matrix.mul_one, neg_sub]
     rw [hBm, Matrix.neg_apply, Valuation.map_neg, Matrix.mul_apply]
@@ -1231,8 +1222,7 @@ theorem lamExp_of_princ {E K : Type} [Field E] [NumberField E] [StarRing E] [Fie
     rw [← hrel, Subgroup.relIndex, hsub, h0, zero_mul]
   refine ⟨lam.ker.index, Nat.pos_of_ne_zero hki, fun x => ?_⟩
   have := Subgroup.pow_index_mem lam.ker x
-  rw [MonoidHom.mem_ker, map_pow] at this
-  exact this
+  rwa [MonoidHom.mem_ker, map_pow] at this
 
 theorem qbLoc_chr_exp {F E K : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E] [Field K] (hc : Formalism.BasicNotions.CMData F E) {n : ℕ} [NeZero n] {Q : Finset (Pl E)} (Θ : LevQFam E K n Q) (hQ : ∀ P : Q, conjPrime₂ P.1 ≠ P.1) (hΘ : ThetaOpen Θ) (P : Q) : ∃ m : ℕ, 0 < m ∧ ∀ k, (qbLoc hc Θ hQ hΘ).chr P k ^ m = 1 := by
   obtain ⟨N, hN, hH⟩ := hΘ P
@@ -1862,8 +1852,7 @@ theorem exists_charts : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok →
     have e' := _root_.GlobalTheory.Mem.Col2.ChEx.frExact_of_isPtOf B.sp.cm (B.R.N i) (q (GlobalTheory.Mem.Col2.TC.ChTw.chartOf I u a i c)) hcj h2'
     have hc := (hp (GlobalTheory.Mem.Col2.TC.ChTw.chartOf I u a i c) c).1 rfl
     have h3 := K3 (GlobalTheory.Mem.Col2.TC.ChTw.chartOf I u a i c) x ⟨_, hz⟩ (by simp only [id, mul_assoc, mul_inv_cancel_left, mul_inv_cancel, mul_one])
-    refine (congrArg Units.val h3).trans ?_
-    exact chr_at I c _ hc.1 _ _ _ ⟨_, hz⟩ e.1 κ h1 e.2 e'.2
+    exact (congrArg Units.val h3).trans (chr_at I c _ hc.1 _ _ _ ⟨_, hz⟩ e.1 κ h1 e.2 e'.2)
 
 end AutomorphyRankFourMain
 

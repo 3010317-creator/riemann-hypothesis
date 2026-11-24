@@ -80,8 +80,7 @@ private theorem isUnifAt_unif {K : Type} [Field K] [NumberField K] (v : HeightOn
           ValuativeRel.valuation (v.adicCompletion K) x ≤
             ValuativeRel.valuation (v.adicCompletion K) (p : v.adicCompletion K) := by
     refine ⟨Formalism.L2.Host.atFin v (Formalism.L2.Host.unif v), ?_, ?_⟩
-    · rw [hlt1, hπ]
-      exact hexp
+    · rwa [hlt1, hπ]
     · intro x hx
       rw [hiff, hπ]
       exact hdisc _ ((hlt1 x).1 hx)
@@ -91,8 +90,7 @@ private theorem isUnifAt_unif {K : Type} [Field K] [NumberField K] (v : HeightOn
   · exact hdisc _ ((hlt1 _).1 hu1)
   · rw [← hπ, ← hiff]
     apply hu2
-    rw [hlt1, hπ]
-    exact hexp
+    rwa [hlt1, hπ]
 
 theorem UpperTheory.V.Z.ImaginaryQuadraticEtaCharacter.charAbs :
     UpperTheory.V.Z.ImaginaryQuadraticEtaCharacter.CharAbs := by

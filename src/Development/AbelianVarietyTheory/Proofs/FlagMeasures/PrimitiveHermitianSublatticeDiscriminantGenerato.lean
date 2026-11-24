@@ -113,8 +113,7 @@ theorem dual_latIn (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (hp : PD h
       exact H (p y) ⟨y, hy, rfl⟩
     · rintro H _ ⟨y, hy, rfl⟩
       have := H y hy
-      rw [← hh] at this
-      exact this
+      rwa [← hh] at this
   rw [e] at k1 k2
   exact ⟨⟨k1, fun x hx y hy => hL.2 x hx y hy⟩, k2⟩
 
@@ -170,8 +169,7 @@ theorem gens_swap (A B : Submodule K V) (p : V →ₗ[K] A) (q : V →ₗ[K] B)
     have e : (t : Set B) = (q.restrictScalars (𝓞 K)) '' Set.range f := by
       ext b
       constructor
-      · intro hb
-        exact ⟨f ⟨b, hb⟩, ⟨_, rfl⟩, hf2 _⟩
+      · exact fun hb => ⟨f ⟨b, hb⟩, ⟨_, rfl⟩, hf2 _⟩
       · rintro ⟨_, ⟨c, rfl⟩, rfl⟩
         have : q (f c) ∈ t := by rw [hf2]; exact c.2
         exact this

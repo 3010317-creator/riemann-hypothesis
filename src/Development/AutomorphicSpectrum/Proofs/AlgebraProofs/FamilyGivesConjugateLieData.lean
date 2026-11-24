@@ -259,15 +259,13 @@ theorem calc_map_right {f : PS R 2 d} (hf : AxOne f) {V : Pt R 1 d} (hV : ∀ i,
     AxOne (ev (n := 2) ![P₀, comp1 V P₁] f) ∧
       bil (ev (n := 2) ![P₀, comp1 V P₁] f) 1 1 = bil f 1 1 * lin V 1 := by
   have t := calc_cmp hf (φ := pt R d 0) (ψ := V) (pt_noConst 0) hV
-  rw [comp1_identity_left, lin_pt_eq_one, Matrix.transpose_one, Matrix.one_mul] at t
-  exact t
+  rwa [comp1_identity_left, lin_pt_eq_one, Matrix.transpose_one, Matrix.one_mul] at t
 
 theorem calc_map_left {f : PS R 2 d} (hf : AxOne f) {V : Pt R 1 d} (hV : ∀ i, constantCoeff (V i) = 0) :
     AxOne (ev (n := 2) ![comp1 V P₀, P₁] f) ∧
       bil (ev (n := 2) ![comp1 V P₀, P₁] f) 1 1 = (lin V 1).transpose * bil f 1 1 := by
   have t := calc_cmp hf (φ := V) (ψ := pt R d 0) hV (pt_noConst 0)
-  rw [comp1_identity_left, lin_pt_eq_one, Matrix.mul_one] at t
-  exact t
+  rwa [comp1_identity_left, lin_pt_eq_one, Matrix.mul_one] at t
 
 theorem axOne_swap {f : PS R 2 d} (hf : AxOne f) : AxOne (ev (n := 2) ![P₁, P₀] f) := by
   have c0 : ∀ i, constantCoeff ((0 : Pt R 1 d) i) = 0 := fun i => by simp
@@ -455,8 +453,7 @@ theorem left_inv_of_residue {A : Type} [CommRing A] [IsLocalRing A] {m n : Type}
     (h : ∀ u, (M.map (IsLocalRing.residue A)).mulVec u = 0 → u = 0) : ∃ N : Matrix n m A, N * M = 1 := by
   have hi : LinearMap.ker (Matrix.toLin' (M.map (IsLocalRing.residue A))) = ⊥ := by
     rw [LinearMap.ker_eq_bot']
-    intro u hu
-    exact h u (by simpa using hu)
+    exact fun u hu => h u (by simpa using hu)
   obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective _ hi
   have h1 : LinearMap.toMatrix' g * M.map (IsLocalRing.residue A) = 1 := by
     have := congrArg LinearMap.toMatrix' hg
@@ -572,10 +569,8 @@ theorem mem_colLat_iff {i : C.I} {g g' : Matrix (Fin d) (Fin d) K} (h₁ : g * g
   rw [mem_colLat]
   constructor
   · rintro ⟨w, hw, rfl⟩
-    rw [Matrix.mulVec_mulVec, h₂, Matrix.one_mulVec]
-    exact hw
-  · intro h
-    exact ⟨g'.mulVec x, h, by rw [Matrix.mulVec_mulVec, h₁, Matrix.one_mulVec]⟩
+    rwa [Matrix.mulVec_mulVec, h₂, Matrix.one_mulVec]
+  · exact fun h => ⟨g'.mulVec x, h, by rw [Matrix.mulVec_mulVec, h₁, Matrix.one_mulVec]⟩
 
 def frame {g g' : Matrix (Fin d) (Fin d) K} (h₁ : g * g' = 1) (h₂ : g' * g = 1) :
     Module.Basis (Fin d) K (Fin d → K) :=
@@ -685,8 +680,7 @@ theorem isBun_imLat (T : C.I → ((Fin d → K) × (Fin d → K)) →ₗ[K] (Fin
       have : (LinearEquiv.ofBijective (T i) (hT i)).symm (T i w) = w :=
         (LinearEquiv.ofBijective (T i) (hT i)).symm_apply_apply w
       rwa [this]
-    · intro h
-      exact ⟨_, h, (LinearEquiv.ofBijective (T i) (hT i)).apply_symm_apply x⟩
+    · exact fun h => ⟨_, h, (LinearEquiv.ofBijective (T i) (hT i)).apply_symm_apply x⟩
   · intro x
     rw [forall_stdBasis]
     exact iff_of_eq (congrArg (x ∈ ·) h)

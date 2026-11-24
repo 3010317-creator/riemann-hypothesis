@@ -119,8 +119,7 @@ theorem cover_injective_and_descent : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [C
   have hlev : ∀ (m : ℕ) (b : B.A), h.f b ∈ adI C ^ m → b ∈ adI B ^ m := fun m b hb => by
     rw [← Ideal.Quotient.eq_zero_iff_mem]
     apply hinj m
-    rw [qmap_mk, map_zero, Ideal.Quotient.eq_zero_iff_mem]
-    exact hb
+    rwa [qmap_mk, map_zero, Ideal.Quotient.eq_zero_iff_mem]
   refine ⟨fun x y hxy => ?_, fun D p q hpo c hpq => ?_⟩
   · rw [← sub_eq_zero]
     refine eq_zero_of_mem_adI_pow B _ fun n => hlev n _ ?_
@@ -132,8 +131,7 @@ theorem cover_injective_and_descent : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [C
       obtain ⟨b', hb'⟩ := hd
       obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective b'
       refine ⟨b, ?_⟩
-      rw [qmap_mk, Ideal.Quotient.eq] at hb'
-      exact hb'
+      rwa [qmap_mk, Ideal.Quotient.eq] at hb'
     choose b hb using happ
     have hcauchy : ∀ {m n : ℕ}, m ≤ n → b m ≡ b n [SMOD (adI B ^ m • ⊤ : Submodule B.A B.A)] := by
       intro m n hmn

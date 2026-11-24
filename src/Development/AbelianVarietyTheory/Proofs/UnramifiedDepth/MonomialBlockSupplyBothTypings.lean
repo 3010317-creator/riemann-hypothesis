@@ -124,8 +124,7 @@ theorem Low.mul {α β : σ →₀ ℕ} {g h : MvPowerSeries σ C} (hg : Low α 
         rw [map_add (f := _), map_add (f := _)] at h
         omega
       · exact hne
-    · intro h
-      exact (h (Finset.HasAntidiagonal.mem_antidiagonal.2 rfl)).elim
+    · exact fun h => (h (Finset.HasAntidiagonal.mem_antidiagonal.2 rfl)).elim
   · intro m hm hne
     rw [MvPowerSeries.coeff_mul]
     apply Finset.sum_eq_zero
@@ -293,8 +292,7 @@ theorem lead_det {k : ℕ} (w : Fin k → Fin k → σ) (hw : ∀ b c, p (w b c)
         (fun _ => 1) (fun i _ => MvPolynomial.isHomogeneous_X _ _)
       simpa using h
     rcases Int.units_eq_one_or (Equiv.Perm.sign s) with h | h
-    · rw [h, one_smul]
-      exact hprod
+    · rwa [h, one_smul]
     · rw [h, Units.neg_smul, one_smul]
       exact hprod.neg
   · intro x hx
@@ -399,8 +397,7 @@ theorem lead_minor (j : Fin N × Fin N' → σ) (hj : ∀ b c, p (j (b, c)) ↔ 
     unfold dgOne
     rw [dite_eq_left ⟨lt_of_lt_of_le b.isLt h1, lt_of_lt_of_le b.isLt h2⟩]
     rfl
-  rw [hpoly, hexp]
-  exact hL
+  rwa [hpoly, hexp]
 
 theorem lead_monP (j : Fin N × Fin N' → σ) (hj : ∀ b c, p (j (b, c)) ↔ b.val = c.val)
     (e : ℕ → ℕ) :
@@ -440,20 +437,15 @@ theorem dg_apply (j : Fin N × Fin N' → σ) (hj : Function.Injective j) (f : �
     · rw [ite_eq_right hbc]
       split_ifs with h
       · rw [Finsupp.single_apply, ite_eq_right]
-        intro he
-        have h' := congrArg (fun x => x.2.val) (hj he)
-        exact hbc (by simpa using h')
+        exact fun he => hbc (by simpa using (congrArg (fun x => x.2.val) (hj he)))
       · rfl
   · intro ρ _ hρ
     unfold dgOne
     split_ifs with h
     · rw [Finsupp.single_apply, ite_eq_right]
-      intro he
-      have h' := congrArg (fun x => x.1.val) (hj he)
-      exact hρ (by simpa using h')
+      exact fun he => hρ (by simpa using (congrArg (fun x => x.1.val) (hj he)))
     · rfl
-  · intro hb
-    exact absurd (Finset.mem_range.2 b.isLt) hb
+  · exact fun hb => absurd (Finset.mem_range.2 b.isLt) hb
 
 theorem dg_apply_of_notMem (j : Fin N × Fin N' → σ) (f : ℕ → ℕ) (x : σ) (hx : ∀ y, x ≠ j y) :
     dg j f x = 0 := by
@@ -530,8 +522,7 @@ theorem Tan.subst {σ τ : Type} [Finite σ] {x : σ} {F : MvPowerSeries σ C} (
   rw [← h1, ← rename_X e x, coeff_rename, coeff_rename]
   refine Finset.sum_congr rfl fun y hy => h y ?_
   have : Finsupp.mapDomain e y = m := by simpa using hy
-  rw [← this, Finsupp.degree_mapDomain] at hm
-  exact hm
+  rwa [← this, Finsupp.degree_mapDomain] at hm
 
 variable {V : VF C} {d : ℕ}
 
@@ -694,8 +685,7 @@ theorem core (X : RowData C V d I J) (g : Fin 2) (r : ZMod d → ℕ) (en : ∀ 
       · split_ifs
         · exact h _ _
         · exact V.l_prime.pos
-      · intro a' _ ha
-        exact dg_apply_of_notMem _ _ _ fun y' h' => ha (hj _ _ _ _ h').symm
+      · exact fun a' _ ha => dg_apply_of_notMem _ _ _ fun y' h' => ha (hj _ _ _ _ h').symm
       · simp
     · rw [Finset.sum_eq_zero fun a _ => dg_apply_of_notMem _ _ _ fun y' h' => hx' ⟨a, y', h'⟩]
       exact V.l_prime.pos

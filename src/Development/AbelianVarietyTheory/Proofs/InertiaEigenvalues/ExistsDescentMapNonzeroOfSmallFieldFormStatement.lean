@@ -85,10 +85,7 @@ theorem exists_desc_of_isKsForm : ∀ (D : D7) (S : RatDat D.ntw) (j : ℕ), (S.
   let bK0 : Module.Basis (Fin n) S.Ks (Submodule.span S.Ks (Set.range v)) := Module.Basis.span hliK
   let bK : Module.Basis (Fin n) S.Ks (FmK S j) := bK0.map (LinearEquiv.ofEq _ _ hspK)
   let ι : FmK S j →ₗ[S.Ks] S.WL j := (S.A j).WK.subtype
-  have hbK : ∀ r, ι (bK r) = v r := by
-    intro r
-    show ((bK0 r : Submodule.span S.Ks (Set.range v)) : S.WL j) = v r
-    exact congrArg Subtype.val (Module.Basis.span_apply hliK r)
+  have hbK : ∀ r, ι (bK r) = v r := fun r => congrArg Subtype.val (Module.Basis.span_apply hliK r)
   have hbL : ∀ r, bL r = v r := by intro r; simp [bL]
   let bF : Module.Basis (Fin n) (KB S i b) (Fm S i j b) := Algebra.TensorProduct.basis (KB S i b) bK
   obtain ⟨r0, ha⟩ : ∃ r0, bL.repr x r0 ≠ 0 := by

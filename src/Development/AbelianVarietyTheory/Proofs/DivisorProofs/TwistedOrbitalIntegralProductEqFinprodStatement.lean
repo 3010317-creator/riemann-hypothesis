@@ -103,7 +103,6 @@ namespace GlobalTheory.BCT
 theorem cLoc_fin_continuous {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} (w : Pl E) :
     Continuous (fun x : finU (E := E) (n := n) => cLoc w (x : UA E n)) := by
   have hf : Continuous ((pLoc E w).comp (pFin E)) := by
-    show Continuous (fun x => pLoc E w (pFin E x))
     exact (RestrictedProduct.continuous_eval w).comp continuous_snd
   have hm : Continuous (((pLoc E w).comp (pFin E)).mapMatrix : Matrix (Fin n) (Fin n) (Ad E) →+* _) :=
     continuous_id.matrix_map hf
@@ -370,8 +369,7 @@ theorem eval_eq_ite_prod_of_finprod (ι G : Type) [Group G] (H : ι → Type) [�
     apply Finset.prod_eq_zero (i := i)
     · refine Finset.mem_union_right _ ?_
       simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
-      intro hk
-      exact hbad 1 (TH i).one_mem (p i g) hk (one_mul _).symm
+      exact fun hk => hbad 1 (TH i).one_mem (p i g) hk (one_mul _).symm
     · rw [hS0 i hi, ite_eq_right (by push Not; exact hbad)]
 
 theorem doubleCoset_mk_eq_of_local (ι G : Type) [Group G] (H : ι → Type) [∀ i, Group (H i)] (p : ∀ i, G →* H i)
@@ -506,11 +504,9 @@ private lemma rStab_comp_eq_comap_of_surjective {A B : Type} [Group A] [Group B]
   constructor
   · intro h y
     obtain ⟨x, rfl⟩ := hπ y
-    have h2 := h x
-    simpa [Function.comp, map_mul] using h2
+    simpa [Function.comp, map_mul] using h x
   · intro h x
-    simp only [Function.comp_apply, map_mul]
-    exact h (π x)
+    simpa only [Function.comp_apply, map_mul] using h (π x)
 
 private lemma bijective_quotient_comap_of_surjective {A B : Type} [Group A] [Group B] (π : A →* B)
     (hπ : Function.Surjective π) (S : Subgroup B) :
@@ -527,8 +523,7 @@ private lemma bijective_quotient_comap_of_surjective {A B : Type} [Group A] [Gro
     have h2 := QuotientGroup.eq.mp (QuotientGroup.out_eq' (a : A ⧸ S.comap π))
     rw [Subgroup.mem_comap, map_mul, map_inv] at h2
     show ((π (a : A ⧸ S.comap π).out : B) : B ⧸ S) = z
-    rw [← QuotientGroup.out_eq' z, ← ha, QuotientGroup.eq]
-    exact h2
+    rwa [← QuotientGroup.out_eq' z, ← ha, QuotientGroup.eq]
 
 theorem avg_comp_surj {A B : Type} [Group A] [Group B] (π : A →* B) (hπ : Function.Surjective π) (v : B → ℂ) :
     avg (v ∘ π) = avg v := by
@@ -540,8 +535,7 @@ theorem avg_comp_surj {A B : Type} [Group A] [Group B] (π : A →* B) (hπ : Fu
   rw [hidx]
   congr 1
   refine (finsum_congr ?_).trans (finsum_comp_equiv e (f := fun z : B ⧸ rStab v => v z.out))
-  intro q
-  exact (apply_out v (π q.out)).symm
+  exact fun q => (apply_out v (π q.out)).symm
 
 private lemma bijective_pi_quotient_to_quotient_pi {J : Type} (M : J → Type) [∀ j, Group (M j)] (R : ∀ j, Subgroup (M j)) :
     Function.Bijective
@@ -550,8 +544,7 @@ private lemma bijective_pi_quotient_to_quotient_pi {J : Type} (M : J → Type) [
   · intro q q' h
     rw [← QuotientGroup.out_eq' q, ← QuotientGroup.out_eq' q', QuotientGroup.eq, Subgroup.mem_pi]
     intro j _
-    have h2 := QuotientGroup.eq.mp (congrFun h j)
-    simpa only [Pi.mul_apply, Pi.inv_apply] using h2
+    simpa only [Pi.mul_apply, Pi.inv_apply] using QuotientGroup.eq.mp (congrFun h j)
   · intro z
     refine ⟨(((fun j => (z j).out) : ∀ j, M j) : (∀ j, M j) ⧸ Subgroup.pi Set.univ R), ?_⟩
     funext j
@@ -560,8 +553,7 @@ private lemma bijective_pi_quotient_to_quotient_pi {J : Type} (M : J → Type) [
     have hj := (Subgroup.mem_pi _).mp hm j (Set.mem_univ j)
     simp only [Pi.mul_apply, Pi.inv_apply] at hj
     show ((_ : M j) : M j ⧸ R j) = z j
-    rw [← QuotientGroup.out_eq' (z j), QuotientGroup.eq]
-    exact hj
+    rwa [← QuotientGroup.out_eq' (z j), QuotientGroup.eq]
 
 theorem avg_pi {J : Type} [Fintype J] (M : J → Type) [∀ j, Group (M j)] (v : ∀ j, M j → ℂ)
     (hv : ∀ j, (rStab (v j)).index ≠ 0) :
@@ -584,9 +576,7 @@ theorem avg_pi {J : Type} [Fintype J] (M : J → Type) [∀ j, Group (M j)] (v :
     rw [hidx]; exact Finset.prod_ne_zero_iff.mpr (fun j _ => hv j)
   have hsum : (∑ᶠ q : (∀ j, M j) ⧸ S, ∏ j, v j (q.out j)) = ∏ j, ∑ᶠ q : M j ⧸ rStab (v j), v j q.out := by
     have h1 : ∀ q : (∀ j, M j) ⧸ S, ∏ j, v j (q.out j) = ∏ j, v j ((e q j).out) := by
-      intro q
-      refine Finset.prod_congr rfl (fun j _ => ?_)
-      exact (apply_out (v j) (q.out j)).symm
+      exact fun q => Finset.prod_congr rfl (fun j _ => (apply_out (v j) (q.out j)).symm)
     rw [finsum_congr h1]
     refine (finsum_comp_equiv e (f := fun z : (∀ j, M j ⧸ rStab (v j)) => ∏ j, v j (z j).out)).trans ?_
     rw [finsum_eq_sum_of_fintype]
@@ -627,8 +617,7 @@ theorem avg_restrProd : ∀ (ι G : Type) [Group G] (H : ι → Type) [∀ i, Gr
     · exact (Finset.prod_coe_sort T (fun i => u i ⟨p i k, (hK k).1 k.2 i⟩)).symm
     · intro i hi
       simp only [Finset.mem_coe, T, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
-      intro hall
-      exact (Function.mem_mulSupport.mp hi) (hall _)
+      exact fun hall => (Function.mem_mulSupport.mp hi) (hall _)
   rw [hfun, avg_comp_surj π hπ]
   refine (avg_pi (fun j : T => (KH j : Type)) (fun j => u j) (fun j => hu j)).trans ?_
   rw [finprod_eq_prod_of_mulSupport_subset _ (s := T)]
@@ -682,8 +671,7 @@ theorem mem_cptPart_iff_local (ι G : Type) [Group G] [TopologicalSpace G] [IsTo
       rintro _ ⟨k, rfl⟩
       exact ⟨t ^ k, subset_closure ⟨k, rfl⟩, by simp⟩
     have := hle hx
-    simp only [Subgroup.mem_inf, Subgroup.mem_iInf, Subgroup.mem_comap] at this
-    exact this
+    simpa only [Subgroup.mem_inf, Subgroup.mem_iInf, Subgroup.mem_comap] using this
   · rintro ⟨hxT, hxi⟩
     have hloc : ∀ i, IsCompact (closure (Subgroup.zpowers (p i x) : Set (H i))) := fun i =>
       (GlobalTheory.LocFinU.cptPart_subset_of_comm (TH i) (hcomm i) (hxi i)).2
@@ -901,8 +889,7 @@ theorem twOrb_restrProd : ∀ (ι G : Type) [Group G] [TopologicalSpace G] [IsTo
   rw [GlobalTheory.TwOrbConj.twOrb_eq]
   simp only [GlobalTheory.TwOrbConj.twOrb_eq]
   refine _root_.GlobalTheory.DoubleCosetEuler.finsum_doubleCoset_eq_finprod_local ι G H p _ K _ KH _ _ hglue hfin hK hT ?_ ?_ ?_ hs
-  · intro i t ht k hk x
-    exact GlobalTheory.TwOrbConj.summand_rep _ _ _ _ x ht hk
+  · exact fun i t ht k hk x => GlobalTheory.TwOrbConj.summand_rep _ _ _ _ x ht hk
   · intro i
     refine (hsupp i).subset ?_
     intro q hq
@@ -1059,8 +1046,7 @@ theorem twOrb_globFn_eq_finprod : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       obtain ⟨k, hk, hke⟩ := h i.1 i.2
       have : p i x = k := Subtype.ext hke.symm
       rw [this]; exact hk
-    · intro h w hw
-      exact ⟨p ⟨w, hw⟩ x, h ⟨w, hw⟩, rfl⟩
+    · exact fun h w hw => ⟨p ⟨w, hw⟩ x, h ⟨w, hw⟩, rfl⟩
   rw [hglob]
   have hmain := GlobalTheory.T.orbitalIntegral_restrictedProduct_eq_prod S (finU (E := E) (n := n)) (fun i : S => UL n i.1) p (globLev S (KL n)) (fun i => KL n i.1) (finPt γ)
     (fun i => f i.1)

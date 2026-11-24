@@ -65,14 +65,11 @@ theorem GlobalTheory.HSAmp.pow_sec_dict : ∀ (k : Type) [CommRing k] (X : Schem
     obtain ⟨i, hi⟩ := hcov P.L.isLB x
     obtain ⟨j, hj⟩ := hcov P.A.isLB x
     constructor
-    · intro h
-      exact (hloc u x i j hi hj).2 (h i j hi hj)
-    · intro h i' j' hi' hj'
-      exact (hloc u x i' j' hi' hj').1 h
+    · exact fun h => (hloc u x i j hi hj).2 (h i j hi hj)
+    · exact fun h i' j' hi' hj' => (hloc u x i' j' hi' hj').1 h
   refine ⟨fun u => ⟨g u, ?_, key u⟩, fun f hf => ?_⟩
   · have : g u ∈ Set.range g := ⟨u, rfl⟩
-    rw [hrange] at this
-    exact this
+    rwa [hrange] at this
   · have : f ∈ Set.range g := by rw [hrange]; exact hf
     obtain ⟨u, rfl⟩ := this
     exact ⟨u, key u⟩

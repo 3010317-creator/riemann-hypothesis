@@ -532,8 +532,7 @@ theorem UpperTheory.jacquet_borel_nontrivial_of_character_support :
         apply Finset.card_lt_card
         rw [Finset.ssubset_iff_of_subset]
         · refine ⟨(p, q), ?_, ?_⟩
-          · simp only [S, Finset.mem_filter, Finset.mem_univ, true_and]
-            exact hnpq
+          · simpa only [S, Finset.mem_filter, Finset.mem_univ, true_and] using hnpq
           · simp [S, hpq]
         · intro x hx
           simp only [S, Finset.mem_filter, Finset.mem_univ, true_and] at hx ⊢

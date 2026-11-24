@@ -283,8 +283,7 @@ theorem isThetaPt_iff {P₀ : PolAV S} {P : PolAV S'} {φ : P.A.left ⟶ P₀.A.
   have hi : inv τ = 𝟙 V.toScheme := IsIso.inv_eq_of_hom_inv_id (Category.id_comp _)
   refine ⟨fun H => ?_, fun H => isThetaPtOver_down τ hp hw hτ mv hk' H⟩
   have Q := isThetaPtOver_up τ hp hw hτ mv hk' H
-  rw [hi] at Q
-  exact Q
+  rwa [hi] at Q
 
 theorem map_linComb {S S' : Scheme.{0}} {A T : Over S} {A' T' : Over S'} [GrpObj A] [GrpObj A']
     (F : (T ⟶ A) →* (T' ⟶ A')) {r : ℕ} (y : Fin r → (T ⟶ A)) (a : Fin r → ℕ) :

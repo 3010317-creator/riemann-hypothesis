@@ -83,8 +83,7 @@ theorem tateIso_exists_lift_of_two_data (I : TateIso D k Q act e) (I' : TateIso 
   refine ⟨((LinearMap.snd (𝓞 E) D.La D'.La).comp R.subtype).comp s, fun a => ?_⟩
   have h1 : (s a).1.1 = a := LinearMap.congr_fun hs a
   have h2 : I.ev n (s a).1.1 = I'.ev n (s a).1.2 := (s a).2
-  rw [h1] at h2
-  exact h2
+  rwa [h1] at h2
 
 theorem tateIso_similar_of_two_data
     (he : ∀ n x y c c', e n x y c → e n x y c' → c = c') (I : TateIso D k Q act e) (I' : TateIso D' k Q act e) :

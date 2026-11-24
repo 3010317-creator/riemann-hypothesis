@@ -92,8 +92,7 @@ theorem plc_bijective (F : UnivFam E Ψ j j' n g Λ) : Function.Bijective (plc F
     · exact F.cm.1 (embOf_inj h)
     · exfalso
       rw [← embOf_conj] at h
-      have h' := embOf_inj h
-      exact (F.cm.2 (F.σ τ)).1 ⟨τ, rfl⟩ ⟨τ', h'.symm⟩
+      exact (F.cm.2 (F.σ τ)).1 ⟨τ, rfl⟩ ⟨τ', (embOf_inj h).symm⟩
   · intro w
     by_cases hs : ∃ τ, F.σ τ = w.embedding.comp (algebraMap (𝓞 E) E)
     · obtain ⟨τ, hτ⟩ := hs
@@ -127,8 +126,7 @@ theorem tm_surj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (Ψ : T
     by_cases hc : w.embedding = embOf (F.σ (e.symm w))
     · have hg : gramAt C.h v w = C.gr (e.symm w) := by
         simp only [gramAt, LatEmb.gr, hc]; rfl
-      simp only [M, ite_eq_left hc, hg]
-      exact hτ
+      simpa only [M, ite_eq_left hc, hg] using hτ
     · have hconj : w.embedding = ComplexEmbedding.conjugate (embOf (F.σ (e.symm w))) := by
         have h1 : InfinitePlace.mk (embOf (F.σ (e.symm w))) = InfinitePlace.mk w.embedding := by
           rw [InfinitePlace.mk_embedding]; exact hw w
@@ -144,13 +142,11 @@ theorem tm_surj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (Ψ : T
       have h3 : ((b (e.symm w)).map (starRingEnd ℂ))ᴴ = ((b (e.symm w))ᴴ).map (starRingEnd ℂ) := by
         ext i k; simp [Matrix.conjTranspose_apply]
       simp only [M, ite_eq_right hc, hg]
-      rw [h3]
-      exact h2
+      rwa [h3]
   have hH : ∀ w, IsUnit (gramAt C.h v w).det := by
     intro w
     have := (isUnit_det_gram C.h v).map w.embedding
-    rw [RingHom.map_det] at this
-    exact this
+    rwa [RingHom.map_det] at this
   let a : InfinitePlace E → GL (Fin (j + j')) ℂ := fun w =>
     Matrix.nonsingInvUnit (M w) (isUnit_det_of_unitary (starRingEnd ℂ) (hH w) (hM w))
   have ha : a ∈ C.Arch := mem_archUnitary.2 fun w => hM w

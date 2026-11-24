@@ -313,8 +313,7 @@ lemma sum_finset_zmod {d : ℕ} [NeZero d] (s : ℕ) (f : ℕ → ℤ) (q : ℕ)
     refine ⟨fun y hy => ?_, (Finset.mem_filter.mp hI).2⟩
     obtain ⟨x, -, rfl⟩ := Finset.mem_image.mp hy
     exact Finset.mem_range.mpr (ZMod.val_lt x)
-  · intro I _ J _ hIJ
-    exact Finset.image_injective hinj hIJ
+  · exact fun I _ J _ hIJ => Finset.image_injective hinj hIJ
   · intro J hJ
     rw [Finset.mem_powersetCard] at hJ
     have hJ' : (J.image (fun n : ℕ => (n : ZMod d))).image ZMod.val = J := by
@@ -606,8 +605,7 @@ theorem exists_regular_exponent_of_sum_sq_eq :
     ((Nat.modEq_iff_dvd' h1.le).2 dvd_rfl).symm
   generalize q ^ d - 1 = N at *
   obtain ⟨k, hk⟩ : ∃ k, a k ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     simp [h] at hsum
     omega
   refine ⟨k, hk, fun i hi hid hki => ?_⟩
@@ -943,8 +941,7 @@ theorem exists_surjective_pi_adjoinRoot_ker_eq_range (F : Type) [Field F] (V : T
   obtain ⟨t, e, he, hd⟩ := exists_equiv_pi_adjoinRoot_of_aeval_eq_zero F (V ⧸ N) gq f h0
   refine ⟨t, e.toLinearMap ∘ₗ N.mkQ, e.surjective.comp N.mkQ_surjective, fun v => ?_, ?_, ?_⟩
   · have := he (N.mkQ v)
-    rw [hq] at this
-    exact this
+    rwa [hq] at this
   · rw [LinearEquiv.ker_comp, Submodule.ker_mkQ]
   · have h1 := LinearMap.finrank_range_add_finrank_ker (aeval g f)
     have h2 := Submodule.finrank_quotient_add_finrank N
@@ -1010,8 +1007,7 @@ theorem moebius_affine_finrank (K : Type) [Field K] [Finite K] (U : Type) [AddCo
       congr 1
       rw [Finset.sum_eq_single (⟨⊥, bot_le⟩ : {B : Submodule K U // B ≤ A})]
       · simp
-      · intro B _ hB
-        exact ite_eq_right fun e => hB (Subtype.ext e)
+      · exact fun B _ hB => ite_eq_right fun e => hB (Subtype.ext e)
       · intro h
         exact absurd (Finset.mem_univ _) h) ⊤
   haveI : Nontrivial U := Module.nontrivial_of_finrank_pos hU

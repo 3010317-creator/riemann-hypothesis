@@ -67,8 +67,7 @@ def uliftFinset (m : ℕ) (S : Finset (Fin m)) : Finset (ULift.{u} (Fin m)) :=
   · intro h
     obtain ⟨a, ha, rfl⟩ := Finset.mem_map.mp h
     exact ha
-  · intro h
-    exact Finset.mem_map.mpr ⟨x.down, h, rfl⟩
+  · exact fun h => Finset.mem_map.mpr ⟨x.down, h, rfl⟩
 
 theorem up_mem_uliftFinset {m : ℕ} {S : Finset (Fin m)} {j : Fin m} (hj : j ∈ S) :
     (ULift.up j : ULift.{u} (Fin m)) ∈ uliftFinset.{u} m S :=
@@ -260,9 +259,7 @@ theorem iSup_opensRange_affineSpaceCoordBlowupChart (k : Type u) [Field k] (m : 
       = (⊤ : (affineSpaceCoordBlowup k m S).Opens) := by
   refine le_antisymm le_top ?_
   rw [← iSup_opensRange_affineBlowupChart_coordIdealGen k (uliftFinset.{u} m S)]
-  refine iSup_le fun j => ?_
-  refine le_iSup_of_le ⟨j.1.down, down_mem_of_mem_uliftFinset j.2⟩ ?_
-  exact le_rfl
+  exact iSup_le fun j => le_iSup_of_le ⟨j.1.down, down_mem_of_mem_uliftFinset j.2⟩ le_rfl
 
 end FunctorialResolution.EmbeddedResolution
 

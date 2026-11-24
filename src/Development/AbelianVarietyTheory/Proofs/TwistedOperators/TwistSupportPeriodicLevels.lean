@@ -111,8 +111,7 @@ theorem intM_of_coords {F : LatFrame k ι Y} {F' : LatFrame k ι' Y'} (hF : F.ba
     {x : Matrix Y Y' k} (h : IntM (F.coords F' x)) : IntM x := by
   have hM : IntM ((F.bas⁻¹).val * x * F'.bas.val) := fun a b => by
     have := h (F.ord.symm a) (F'.ord.symm b)
-    simp only [LatFrame.coords, Matrix.submatrix_apply, Equiv.apply_symm_apply] at this
-    exact this
+    simpa only [LatFrame.coords, Matrix.submatrix_apply, Equiv.apply_symm_apply] using this
   have hx : F.bas.val * ((F.bas⁻¹).val * x * F'.bas.val) * (F'.bas⁻¹).val = x := by
     rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, Units.mul_inv, Matrix.one_mul, Matrix.mul_assoc,
       Units.mul_inv, Matrix.mul_one]
@@ -123,7 +122,6 @@ theorem maxM_coords {F : LatFrame k ι Y} {F' : LatFrame k ι' Y'} (hF : F.bas �
     {y : Matrix Y Y' k} (h : MaxM y) : MaxM (F.coords F' y) := by
   have hM : MaxM ((F.bas⁻¹).val * y * F'.bas.val) :=
     ((mem_KO.mp hF).2.mul_maxM h).mul_intM (intM_of_mem_KO hF')
-  show MaxM (((F.bas⁻¹).val * y * F'.bas.val).submatrix F.ord F'.ord)
   exact fun i j => hM (F.ord i) (F'.ord j)
 
 theorem coords_add (F : LatFrame k ι Y) (F' : LatFrame k ι' Y') (x y : Matrix Y Y' k) :

@@ -57,8 +57,7 @@ theorem countOut_of : CountOut := by
   intro k H _ _ _ _ _ C hC E
   obtain ⟨s0, hs0⟩ := Module.projective_lifting_property C.mkQ E.subtype (Submodule.mkQ_surjective C)
   have hsec : ∀ (s : E →ₗ[k] H), C.mkQ ∘ₗ s = E.subtype → ∀ e : E, C.mkQ (s e) = e := by
-    intro s hs e
-    exact LinearMap.congr_fun hs e
+    exact fun s hs e => LinearMap.congr_fun hs e
   let S := {s : E →ₗ[k] H // C.mkQ ∘ₗ s = E.subtype}
   have hF : ∀ s : S, ¬C ≤ LinearMap.range s.1 ∧ Submodule.map C.mkQ (LinearMap.range s.1) = E := by
     intro s
@@ -105,9 +104,7 @@ theorem countOut_of : CountOut := by
       let f : D →ₗ[k] H ⧸ C := C.mkQ ∘ₗ D.subtype
       have hf : Function.Injective f := by
         rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-        intro d hd
-        apply Subtype.ext
-        exact hdisj d.1 d.2 ((Submodule.Quotient.mk_eq_zero C).1 hd)
+        exact fun d hd => Subtype.ext (hdisj d.1 d.2 ((Submodule.Quotient.mk_eq_zero C).1 hd))
       have hr : LinearMap.range f = E := by
         rw [LinearMap.range_comp, Submodule.range_subtype, hmap]
       let φ : D ≃ₗ[k] E := (LinearEquiv.ofInjective f hf).trans (LinearEquiv.ofEq _ _ hr)

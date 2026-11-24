@@ -142,8 +142,7 @@ theorem exists_pow_cong_of_mem {K Ω : Type} [Field K] [NumberField K] [Field Ω
   refine ⟨c, hc, fun z hz => ?_⟩
   have h1 := hφ _ hz
   rw [hN, φ.commutes] at h1
-  rw [← Valuation.map_neg, neg_sub]
-  exact h1
+  rwa [← Valuation.map_neg, neg_sub]
 
 end GlobalTheory.DecFrobPow
 
@@ -263,8 +262,7 @@ theorem cong_pow_of_cong_pow_int (E Ω : Type) [Field E] [NumberField E] [Field 
   have hv : A.valuation (s ^ q * σ s * (σ x - x ^ q)) < 1 := by
     rw [key]
     apply Valuation.map_add_lt
-    · rw [Valuation.map_mul, Valuation.map_pow, hs1, one_pow, one_mul]
-      exact hct
+    · rwa [Valuation.map_mul, Valuation.map_pow, hs1, one_pow, one_mul]
     · rw [Valuation.map_mul, Valuation.map_sub_swap]
       calc A.valuation (t ^ q) * A.valuation (σ s - s ^ q) ≤ 1 * A.valuation (σ s - s ^ q) :=
             mul_le_mul_left (by rw [Valuation.map_pow]; exact pow_le_one' hvt q) _
@@ -303,7 +301,6 @@ theorem lift_resAut_of_fixes (E Ω : Type) [Field E] [NumberField E] [Field Ω] 
     rw [Ideal.map_comap_of_equiv]
     ext b
     rw [Ideal.mem_comap]
-    show A.valuation (b : Ω) < 1 ↔ A.valuation (σ₀⁻¹ (b : Ω)) < 1
     exact (valuation_apply_lt_one_iff ((Dec (F := E) A).inv_mem hσ₀) _).symm
   let ψ₀ : (IntCl K Ω ⧸ Q) ≃+* (IntCl K Ω ⧸ Q) := Ideal.quotientEquiv Q Q e hQe
   have hψ₀ : ∀ b, ψ₀ (Ideal.Quotient.mk Q b) = Ideal.Quotient.mk Q (e b) := fun _ => rfl

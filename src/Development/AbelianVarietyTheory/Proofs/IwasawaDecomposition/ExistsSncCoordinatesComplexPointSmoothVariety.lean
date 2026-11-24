@@ -332,8 +332,7 @@ theorem chart_change : ∀ (k : Type) [CommRing k] (Y : Scheme.{0}) (p : Y ⟶ S
     have h2 : DifferentiableOn ℂ (CxPts.ev p σ U' f ∘ c.e.symm ∘ ψ.symm)
         {z ∈ (c.e.trans ψ).target | ⊤ ≤ ((c.e.trans ψ).symm z).1 ⁻¹ᵁ U'} :=
       (c.holo U' f).comp (hψs.mono fun z hz => (hm z hz).1) fun z hz => ⟨(hm z hz).2.1, (hm z hz).2.2⟩
-    refine h2.congr fun z hz => ?_
-    exact valAt'_eq_ev (hm z hz).2.2 f
+    exact h2.congr fun z hz => valAt'_eq_ev (hm z hz).2.2 f
 
 end GlobalTheory.ShFam.Hor.LogCh
 end -- clump:auto
@@ -390,8 +389,7 @@ theorem exists_der_of_rsp {k R : Type} [Field k] [CommRing R] [IsLocalRing R] [I
       rw [← Set.range_comp]; rfl
     rw [e, CotangentSpace.span_image_eq_top_iff]
     apply Submodule.map_injective_of_injective (maximalIdeal R).injective_subtype
-    rw [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp]
-    exact hspan
+    rwa [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp]
   have hfr : Module.finrank (ResidueField R) (CotangentSpace R) = m := by
     apply le_antisymm
     · rw [← finrank_top (ResidueField R) (CotangentSpace R), ← hv]
@@ -783,8 +781,7 @@ theorem linearIndependent_fderiv_params (k : Type) [Field k] [CharZero k] (Y : S
     LinearIndependent ℂ (fun i => fderiv ℂ (CxPts.ev p σ U.1 (f i) ∘ c.e.symm) (c.e x₀)) := by
   rw [Fintype.linearIndependent_iff]
   intro l hl
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   have hl0 : l ≠ 0 := fun h => by obtain ⟨i, hi⟩ := hne; exact hi (congrFun h i)
   obtain ⟨δ, hc0, hlb, hne'⟩ := GlobalTheory.T.exists_complexPointDerivation_separating_params_charZero k Y p n σ inferInstance x₀ U hy m f hR l hl0
   obtain ⟨v, hv⟩ := GlobalTheory.T.pointDerivation_affineOpen_eq_fderiv_etaleChart k Y p n σ c x₀ hx U (CxPts.mem_ptsIn.2 hy) δ hc0 hlb

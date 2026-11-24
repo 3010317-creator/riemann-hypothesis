@@ -87,8 +87,7 @@ theorem exists_extend_of_dense [IsReduced Y] {O : Y.Opens} (hO : Dense (O : Set 
             H0.germ_change (c t) (c t') z ho _ (hc t' hz.2), val_tr N z (memInf (hc t hz.1) (hc t' hz.2))]
       have e' := congrArg (ger y (memInf hy hy')) e
       rw [map_mul, ger_resG, ger_resG, ger_resG] at e'
-      rw [val_tr N y (memInf (hc t hy) (hc t' hy'))]
-      exact e'
+      rwa [val_tr N y (memInf (hc t hy) (hc t' hy'))]
   refine ⟨G, H0.ext_germ fun y hy => ⟨c y, hc y (hW y), ?_⟩⟩
   rw [H0.germ_restr, ← hw y y (hW y) hy]
   exact hG y y (hW y)
@@ -107,8 +106,7 @@ theorem exists_extend_mul_of_simplePole : ∀ {k : Type} [CommRing k] {Y : Schem
   obtain ⟨W₁, hy₁, h₁, rfl⟩ := Y.presheaf.exists_germ_eq h
   have e : ger y (memInf hyV hy₁) (resG Y inf_le_left gl) =
       ger y (memInf hyV hy₁) (resG Y inf_le_left t * resG Y inf_le_right h₁) := by
-    rw [map_mul, ger_resG, ger_resG, ger_resG]
-    exact hh
+    rwa [map_mul, ger_resG, ger_resG, ger_resG]
   obtain ⟨W, hyW, i₁, i₂, e'⟩ := Y.presheaf.germ_eq y _ _ _ _ e
   have hWV : W ≤ V := i₁.le.trans inf_le_left
   have hW₁ : W ≤ W₁ := i₁.le.trans inf_le_right

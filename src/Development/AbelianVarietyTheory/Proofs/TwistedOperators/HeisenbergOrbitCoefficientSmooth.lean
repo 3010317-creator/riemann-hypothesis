@@ -81,7 +81,6 @@ variable {F : Type} [Field F] [NumberField F]
 def incI (x : mixedEmbedding.mixedSpace F) : AF F := ⟨(InfiniteAdeleRing.ringEquiv_mixedSpace F).symm x, 0⟩
 
 theorem evI_incI (x : mixedEmbedding.mixedSpace F) : evI F (incI x) = x := by
-  show InfiniteAdeleRing.ringEquiv_mixedSpace F ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm x) = x
   exact RingEquiv.apply_symm_apply _ _
 
 theorem evI_add (a b : AF F) : evI F (a + b) = evI F a + evI F b :=
@@ -114,9 +113,7 @@ theorem incI_evI {a : AF F} (h : (finOne : AF F) * a = 0) : incI (evI F a) = a :
     have := congrArg Prod.snd h
     calc a.2 = 1 * a.2 := (one_mul _).symm
       _ = 0 := this
-  show (⟨_, 0⟩ : Ainf F × Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) = (a : Ainf F × Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F)
-  refine Prod.ext ?_ h2.symm
-  exact RingEquiv.symm_apply_apply _ _
+  exact Prod.ext (RingEquiv.symm_apply_apply _ _) h2.symm
 
 variable {κ : Type} [Fintype κ] {W : Type} [AddCommGroup W] [Module (AF F) W] {B : W → W → AF F}
 

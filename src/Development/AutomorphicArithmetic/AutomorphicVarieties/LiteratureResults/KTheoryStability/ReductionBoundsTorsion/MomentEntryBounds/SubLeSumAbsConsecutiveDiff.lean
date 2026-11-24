@@ -140,14 +140,12 @@ theorem sub_le_sum_abs_consecutive_diff {N : ℕ} (s : Fin N → ℝ) (i j : Fin
       · simp [ha, hf, a.2]
       · intro b _ hb
         rw [ite_eq_right]
-        intro e
-        exact hb (Fin.ext e)
+        exact fun e => hb (Fin.ext e)
       · simp
     · rw [ite_eq_right ha]
       refine Finset.sum_eq_zero fun b _ => ?_
       rw [ite_eq_right]
-      intro e
-      exact ha (e ▸ b.2)
+      exact fun e => ha (e ▸ b.2)
   rw [hW, ← hfs i, ← hfs j]
   have key : ∀ a b : ℕ, a ≤ b → b < N → |f a - f b| ≤
       ∑ k ∈ Finset.range N, if k + 1 < N then |f k - f (k + 1)| else 0 := by

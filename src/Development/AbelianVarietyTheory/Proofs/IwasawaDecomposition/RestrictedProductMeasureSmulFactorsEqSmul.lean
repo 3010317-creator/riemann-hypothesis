@@ -54,8 +54,7 @@ namespace GlobalTheory.GaugeEx.ProdScale
 theorem finite_mulSupport_sub {ι : Type} (r : ι → ℝ≥0) (hr : (Function.mulSupport r).Finite)
     (p : ι → Prop) : (Function.mulSupport fun v : {v // p v} => (r v.1 : ℝ)).Finite := by
   refine (hr.preimage (f := (Subtype.val : {v // p v} → ι)) Subtype.val_injective.injOn).subset ?_
-  intro v hv h
-  exact hv (by simp [h])
+  exact fun v hv h => hv (by simp [h])
 
 theorem summable_scale {ι : Type} (f : ι → ℝ) (r : ι → ℝ≥0) (hf : Summable fun v => |f v - 1|)
     (hr : (Function.mulSupport r).Finite) : Summable fun v => |r v * f v - 1| := by
@@ -109,8 +108,7 @@ theorem isProd_smul (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
     intro v
     rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, ENNReal.toReal_mul, ENNReal.coe_toReal]
   refine ⟨⟨inferInstance, fun v => inferInstance, ?_⟩, ?_⟩
-  · simp only [key]
-    exact summable_scale _ r hs hr
+  · simpa only [key] using summable_scale _ r hs hr
   · intro S fi fv hfi hfv
     obtain ⟨c, hc, hc'⟩ := finprod_ennreal r hr S
     have ht : tailProd b (fun v => r v • mv v) S = c * tailProd b mv S := by

@@ -79,8 +79,7 @@ theorem isCompact_restrictedProduct_forall_mem {ι : Type} (R : ι → Type) [�
   convert h1.image (RestrictedProduct.continuous_inclusion hS) using 1
   ext x
   constructor
-  · intro hx
-    exact ⟨⟨x, Filter.eventually_principal.2 fun i hi => hi (hx i)⟩, fun i _ => hx i, rfl⟩
+  · exact fun hx => ⟨⟨x, Filter.eventually_principal.2 fun i hi => hi (hx i)⟩, fun i _ => hx i, rfl⟩
   · rintro ⟨y, hy, rfl⟩ i
     exact hy i trivial
 
@@ -162,10 +161,8 @@ theorem GlobalTheory.IdeleCyl.exists_isCompact_box : ∀ (F E : Type) [Field F] 
         exact h2 y (h1 hy))
     exact this
   refine ⟨e.symm '' Set.univ.pi Q, (isCompact_univ_pi hQ).image he, fun z hz1 hz2 => ⟨e z, fun j _ => ⟨fun w _ => ?_, fun v => ?_⟩, e.symm_apply_apply z⟩⟩
-  · refine ⟨compInf F E w z, hz1 w, ?_⟩
-    exact repr_map_tens b (evInf F w) z j
-  · refine ⟨compFin F E v z, hz2 v, ?_⟩
-    exact repr_map_tens b (evFin F v) z j
+  · exact ⟨compInf F E w z, hz1 w, repr_map_tens b (evInf F w) z j⟩
+  · exact ⟨compFin F E v z, hz2 v, repr_map_tens b (evFin F v) z j⟩
 
 namespace GlobalTheory.IdeleCyl
 

@@ -137,8 +137,7 @@ theorem algHom_ext : ∀ (p : ℕ) (O : Type) [CommRing O] [IsAdicComplete (Idea
       MvPowerSeries.coeff α (f - (g : MvPowerSeries σ O)) = 0 := by
     intro α hα
     rw [map_sub, MvPolynomial.coeff_coe, hg, MvPowerSeries.coeff_trunc', ite_eq_left, sub_self]
-    intro i
-    exact (Finsupp.le_degree i α).trans (by simpa using hα.le)
+    exact fun i => (Finsupp.le_degree i α).trans (by simpa using hα.le)
   have hdiff : F f - F' f = F (f - (g : MvPowerSeries σ O)) - F' (f - (g : MvPowerSeries σ O)) := by
     rw [map_sub, map_sub, hg']
     ring
@@ -254,8 +253,7 @@ theorem ev_subst_of_gen (n k : ℕ)
       exact pow_dvd_map (PDiv.mulBy O (G.A n) k : G.A n →ₐ[O] G.A n) (hN f hf)⟩
   have e := _root_.GlobalTheory.PadicMvPowerSeriesExt.algHom_ext p O (Fin d) (G.A n) _ _ gens (cont_subst (c.ev n) (c.isEval n).2 ha) cont'
   have := DFunLike.congr_fun e h
-  rw [AlgHom.comp_apply, AlgHom.comp_apply, substAlgHom_apply] at this
-  exact this
+  rwa [AlgHom.comp_apply, AlgHom.comp_apply, substAlgHom_apply] at this
 
 end GlobalTheory.EvMul
 
@@ -309,8 +307,7 @@ theorem ev_subst_nmul : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing O]
     [IsAdicComplete (Ideal.span {(p : O)}) O] (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d)
     (n k : ℕ) (h : MvPowerSeries (Fin d) O),
     c.ev n (subst (nmul c.μ k) h) = PDiv.mulBy O (G.A n) k (c.ev n h) := by
-  intro p _ O _ _ G d c n k h
-  exact ev_subst_of_gen c n k (ev_nmul c n k) h
+  exact fun p _ O _ _ G d c n k h => ev_subst_of_gen c n k (ev_nmul c n k) h
 
 end GlobalTheory.EvMul
 end -- clump:auto

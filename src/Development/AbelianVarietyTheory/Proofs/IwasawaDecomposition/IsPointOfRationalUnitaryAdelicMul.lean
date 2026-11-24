@@ -91,8 +91,7 @@ theorem pullV_ratMul (γ : GL (Fin n) E) (g : GL (Fin n) (AfE F E)) (x : Sp E n)
     GlobalTheory.Mem.Col2.pullV (Formalism.UG.bc (iA F E) γ * g) x = GlobalTheory.Mem.Col2.pullV g ((Formalism.UG.glEquiv γ).symm x) := by
   have h := Formalism.L2.Col.pullV_rawSm γ g 1 x
   rw [inv_one, mul_one, Units.val_one, Matrix.one_mulVec] at h
-  rw [glEquiv_symm_apply]
-  exact h
+  rwa [glEquiv_symm_apply]
 
 variable {hc} {ST SG Q : Finset (HeightOneSpectrum (𝓞 E))}
 
@@ -141,8 +140,7 @@ theorem isPtOf_ratMul (γ : URat hc n) {g : GL (Fin n) (AfE F E)} {p : DecoF E n
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · exact mul_mem (ratIn hc n γ).2 h.uni
   · have hc2 := PtExist.carries_globLat (F := F) (Formalism.UG.bc (iA F E) (γ : GL (Fin n) E) * g)
-    rw [hN2, hN] at hc2
-    exact hc2
+    rwa [hN2, hN] at hc2
   · intro P x hx i hi
     have hx' : (Formalism.UG.glEquiv (γ : GL (Fin n) E)).symm x ∈ p.deco.1.N := (mem_gmap _ _ _).1 hx
     rw [pullV_ratMul]
@@ -177,7 +175,6 @@ theorem isPtOf_ratAd : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     rw [ufGL_eq hc]
   have := isPtOf_ratMul ((ratEquiv hc n).symm γ) (ST := ST) (SG := SG) (Q := Q) h
   rw [hγ] at this
-  rw [hR]
-  exact this
+  rwa [hR]
 
 end GlobalTheory.Mem.Col2.RatMove

@@ -172,8 +172,7 @@ theorem step {O B : Type*} [CommRing O] [CommRing B] (a p : O →+* B) (J : Idea
     have : (((l ^ (d' + 1) : ℕ) : B) * p x ^ (l ^ (d' + 1) - 1) - 1 + H * (a x - p x)) * (a x - p x)
         = (a x ^ (l ^ (d' + 1)) - a x) - (p x ^ (l ^ (d' + 1)) - p x) := by
       rw [hH]; ring
-    rw [this]
-    exact ht
+    rwa [this]
 
 variable {C : Type} [Field C] {V : VF C}
 
@@ -270,8 +269,7 @@ theorem eigen_of_gen_eigen (C : Type) [Field C] (V : VF C) (O : Type) [CommRing 
     induction k with
     | zero =>
       intro y
-      rw [mem]
-      rw [Nat.cast_zero, add_zero]
+      rw [mem, Nat.cast_zero, add_zero]
       exact ge_mulVec (hΦ _) hm0
     | succ k ih =>
       refine step a p _ V.l d V.l_prime.pos hd ε h1 h2 ?_ ?_ ?_ ?_
@@ -342,8 +340,7 @@ theorem step {C : Type} [Field C] {O κ : Type} [Fintype κ] [DecidableEq κ]
   · obtain ⟨k, h⟩ := hn x
     exact ⟨k, key x k h⟩
   · rw [Matrix.mulVec_mulVec, ← pow_succ']
-    rw [hj] at hk
-    exact hk
+    rwa [hj] at hk
   · have := key y 1 (by rwa [pow_one])
     rwa [pow_one] at this
 
@@ -354,9 +351,7 @@ theorem ge_of_eigen {C : Type} [Field C] (V : VF C) {κ : Type} [Fintype κ]
   obtain ⟨i₀, hi₀⟩ := Function.ne_iff.mp hu
   obtain ⟨i, -, hi⟩ := Finset.exists_min_image Finset.univ (fun i => V.v (u i))
     ⟨i₀, Finset.mem_univ _⟩
-  have h0 : V.v (u i₀) ≠ ⊤ := by
-    intro h
-    exact hi₀ (by simpa using h)
+  have h0 : V.v (u i₀) ≠ ⊤ := fun h => hi₀ (by simpa using h)
   have h1 : V.v (u i) ≠ ⊤ := ne_top_of_le_ne_top h0 (hi i₀ (Finset.mem_univ _))
   obtain ⟨t, ht⟩ := WithTop.ne_top_iff_exists.mp h1
   have h2 : V.Ge t (c * u i) := by
@@ -681,8 +676,7 @@ theorem limit_idempotent_range : ∀ (C : Type) [Field C] [IsAlgClosed C] (V : V
       rw [Module.End.mem_maxGenEigenspace] at this
       obtain ⟨k, hk⟩ := this
       refine ⟨k, ?_⟩
-      rw [← Matrix.toLin'_apply, Matrix.toLin'_pow, map_sub, map_smul, Matrix.toLin'_one]
-      exact hk
+      rwa [← Matrix.toLin'_apply, Matrix.toLin'_pow, map_sub, map_smul, Matrix.toLin'_one]
     by_cases hv0 : v = 0
     · subst hv0; simpa using hzero
     obtain ⟨ψ, hψχ, hψ⟩ := _root_.GlobalTheory.GenChar.exists_character C V O κ L hL χ v hv0 hgen
@@ -703,8 +697,7 @@ theorem limit_idempotent_range : ∀ (C : Type) [Field C] [IsAlgClosed C] (V : V
         refine (hL x i j).sub ((hψ x).mul_int ?_)
         rw [← map_one L]; exact hL 1 i j
       have hc : Commute (L x - ψ x • (1 : Matrix κ κ C)) (L (ε ^ (V.l ^ n))) := by
-        refine Commute.sub_left ((Commute.all _ _).map L) ?_
-        exact (Commute.one_left _).smul_left _
+        exact Commute.sub_left ((Commute.all _ _).map L) ((Commute.one_left _).smul_left _)
       have h2 := ge_pow_mulVec hint (v := w - (L (ε ^ (V.l ^ n))).mulVec v) (hn n le_rfl) k i
       rw [Matrix.mulVec_sub, Matrix.mulVec_mulVec v _ (L _), (hc.pow_left k).eq, ← Matrix.mulVec_mulVec, hk,
         Matrix.mulVec_zero, sub_zero] at h2
@@ -1380,8 +1373,7 @@ theorem exists_seq (hint : ∀ a x, V.Ge 0 (em a x)) {ε : O} (h : ∃ y, ε * �
     have e : ε ^ (V.l ^ (n + 1)) * x (n + 1) - ε ^ (V.l ^ n) * x n =
       (ε ^ V.l ^ (n + 1) - ε ^ V.l ^ n) * x (n + 1) + ε ^ V.l ^ n * (x (n + 1) - x n) := by ring
     show (V.l : O) ^ n ∣ ε ^ (V.l ^ (n + 1)) * x (n + 1) - ε ^ (V.l ^ n) * x n
-    rw [e]
-    exact h5
+    rwa [e]
   · have h2 := (hx n a).sub ((hint a (x n)).mul_int (em_idem (em a) (hint a) h (h1 a) n))
     have hn' : (N : ℝ) ≤ n := by exact_mod_cast hn
     refine VF.Ge.mono ?_ hn'
@@ -1464,8 +1456,7 @@ theorem isEnd_blks (M M' : Fin 2 → Fin 2 → Matrix (Fin dd) (Fin dd) C)
   have e : blks M' = blk 0 0 (M' 0 0) + blk 1 0 (M' 1 0) + (blk 0 1 (M' 0 1) + blk 1 1 (M' 1 1)) := by
     unfold blks
     abel
-  rw [e]
-  exact this
+  rwa [e]
 
 theorem exists_pair : ∃ b : (Fin dd → C) → I0 → C, ∀ φ : ZMod d → C,
     (∀ N : ℕ, ∃ x : O, ∀ a, V.Ge N (φ a - p.em a x)) →
@@ -1496,8 +1487,7 @@ theorem exists_pair : ∃ b : (Fin dd → C) → I0 → C, ∀ φ : ZMod d → C
     obtain ⟨y, hy⟩ := hP (1 - star ε) fun a => by
       have := h1 (a + p.hd)
       unfold VF.MM at this ⊢
-      rw [map_sub, map_one, p.em_conj, ← V.v.map_neg, neg_sub]
-      exact this
+      rwa [map_sub, map_one, p.em_conj, ← V.v.map_neg, neg_sub]
     refine ⟨-star y, ?_⟩
     have h2 := congrArg star hy
     simp only [star_mul', star_sub, star_one, star_star, star_natCast] at h2
@@ -1506,8 +1496,7 @@ theorem exists_pair : ∃ b : (Fin dd → C) → I0 → C, ∀ φ : ZMod d → C
   · exact IsLim.eig L (a := s) hM (p.em (p.ty0 c)) _ (hsl _) (p.e_int c) fun x => by rw [hL, p.e_eig]
   · refine IsLim.eig L (a := fun n => star (s n)) hM' (p.em (p.ty0 c)) _ ?_ (p.e_int c) fun x => by
       rw [hL, p.e_eig]
-    simp only [p.em_conj]
-    exact hsl _
+    simpa only [p.em_conj] using hsl _
   · rw [← hb]
     refine IsLim.absorb L hLi (a := s) (e := fun n => ε ^ (V.l ^ n)) hM hE (fun n => ?_) v
     obtain ⟨z, hz⟩ := hsd n

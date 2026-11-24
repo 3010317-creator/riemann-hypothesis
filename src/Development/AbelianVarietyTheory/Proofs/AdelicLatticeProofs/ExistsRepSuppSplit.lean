@@ -91,9 +91,7 @@ theorem exists_rep_suppSplit : ∀ (D : D7) (V : HSp D) (N : ℕ), 0 < N → ∀
     simp only [map_mul, map_inv, e]
     group
   · unfold FinCong
-    rw [e1, ek]
-    exact hk
-  · rw [eh]
-    exact hs
+    rwa [e1, ek]
+  · rwa [eh]
 
 end GlobalTheory.UnRep.Space

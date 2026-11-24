@@ -165,14 +165,12 @@ theorem schur (σ : Representation ℂ H W) [σ.IsIrreducible] (K : Subgroup H) 
       simp) with h | h
   · exfalso
     have : v.1 ∈ LinearMap.ker (φ.toLinearMap - c • LinearMap.id) := by
-      rw [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero]
-      exact hv1
+      rwa [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero]
     rw [h] at this
     exact hv.2 (Subtype.ext this)
   · intro w
     have : w ∈ LinearMap.ker (φ.toLinearMap - c • LinearMap.id) := h ▸ Submodule.mem_top
-    rw [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at this
-    exact this
+    rwa [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero] at this
 
 theorem exists_decomp (σ : Representation ℂ H W) [σ.IsIrreducible] (τ : Representation ℂ H X) (ρ : Representation ℂ H V)
     (j : τ.IntertwiningMap ρ) (hj : Function.Injective j.toLinearMap)
@@ -573,8 +571,7 @@ theorem trOn_hop_peel : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], 
     · rintro _ ⟨q, hq, rfl⟩
       obtain ⟨k, hk⟩ := QuotientGroup.mk_out_eq_mul (globLev S K') ((q.out : r.ker) : finU (E := E) (n := n))
       change globFn S _ _ ≠ 0
-      rw [hk, (hH'.2 _ k.2 _).2, ← hb]
-      exact hq
+      rwa [hk, (hH'.2 _ k.2 _).2, ← hb]
     · have h' : ((((p.out : r.ker) : finU (E := E) (n := n))) : finU (E := E) (n := n) ⧸ globLev S K') = ((q.out : r.ker) : finU (E := E) (n := n)) := h
       rw [← QuotientGroup.out_eq' p, ← QuotientGroup.out_eq' q]
       refine QuotientGroup.eq.2 (Subgroup.mem_subgroupOf.2 ?_)
@@ -776,8 +773,7 @@ theorem trOn_hop_eq_dimW_mul_finprod_twTr : ∀ (E : Type) [Field E] [NumberFiel
     · have : w ∈ U := Finset.mem_filter.2 ⟨h, hw⟩
       simp only [this, ite_true]
     · have : w ∉ U := fun h' => h (Finset.mem_filter.1 h').1
-      simp only [this, ite_false, hone]
-      exact ((hout w h).1).symm
+      simpa only [this, ite_false, hone] using ((hout w h).1).symm
   have hkey := key U hUS
   rw [hfU] at hkey
 
@@ -801,8 +797,7 @@ theorem trOn_hop_eq_dimW_mul_finprod_twTr : ∀ (E : Type) [Field E] [NumberFiel
       ((((K' w).relIndex (KL n w) : ℕ) : ℂ))⁻¹ * (Module.finrank ℂ (fixed (σ w).ρ (K' w)) : ℂ) :=
     fun w => (hTW w).2.2.1
   rw [Finset.prod_congr rfl (fun w _ => hone_w w)] at hkey
-  rw [Finset.prod_mul_distrib, Finset.prod_inv_distrib] at hkey
-  rw [hbase, hdim, hRf, hDf] at hkey
+  rw [Finset.prod_mul_distrib, Finset.prod_inv_distrib, hbase, hdim, hRf, hDf] at hkey
   rw [hTf]
   have hR : (∏ w ∈ U, (((K' w).relIndex (KL n w) : ℕ) : ℂ)) ≠ 0 :=
     Finset.prod_ne_zero_iff.2 fun w _ => Nat.cast_ne_zero.2 (hTW w).2.1

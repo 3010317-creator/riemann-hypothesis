@@ -1304,8 +1304,7 @@ theorem main : ∀ (g : ℕ) [Fact g.Prime] (L : List (Pc g)) (a b : ℕ), degL 
     · intro i hi
       simp only [hS, Finset.mem_filter, Finset.mem_range] at hi
       exact collapse_mid ρ hρ i (a - i) (degL L - (a - i)) (by omega) (by omega) _ x y
-    rw [Finset.filter_eq', Finset.filter_eq']
-    rw [Finset.sum_filter]
+    rw [Finset.filter_eq', Finset.filter_eq', Finset.sum_filter]
     erw [sum_subsets_fin_succ]
     rw [Finset.sum_add_distrib]
     have hget : ∀ j : Fin L.length, (⟨e, ρ⟩ :: L).get (Fin.succEmb L.length j) = L.get j := fun j => rfl
@@ -1366,8 +1365,7 @@ theorem main : ∀ (g : ℕ) [Fact g.Prime] (L : List (Pc g)) (a b : ℕ), degL 
             omega)]
       · rw [ite_eq_right (by simp only [hS, Finset.mem_filter, Finset.mem_range]; omega), Finset.sum_empty]
         refine (Finset.sum_eq_zero fun J _ => ?_).symm
-        rw [Finset.sum_insert (by simp [Fin.succ_ne_zero])]
-        rw [ite_eq_right]
+        rw [Finset.sum_insert (by simp [Fin.succ_ne_zero]), ite_eq_right]
         show ¬ e + _ = a
         omega
 

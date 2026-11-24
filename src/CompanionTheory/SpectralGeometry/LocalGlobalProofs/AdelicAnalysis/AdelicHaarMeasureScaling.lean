@@ -129,8 +129,7 @@ lemma isOpen_image_mul (a : (A F)ˣ) {s : Set (A F)} (hs : IsOpen s) :
     constructor
     · rintro ⟨y, hy, rfl⟩
       simpa [mulEquiv] using hy
-    · intro hx
-      exact ⟨_, hx, (mulEquiv a).apply_symm_apply x⟩
+    · exact fun hx => ⟨_, hx, (mulEquiv a).apply_symm_apply x⟩
   rw [h]
   exact hs.preimage (continuous_mulEquiv_symm a)
 
@@ -148,8 +147,7 @@ theorem scale_unit [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : Measure (A F
     constructor
     · rintro ⟨y, hy, rfl⟩
       simpa [mulEquiv] using hy
-    · intro hx
-      exact ⟨_, hx, (mulEquiv a).apply_symm_apply x⟩
+    · exact fun hx => ⟨_, hx, (mulEquiv a).apply_symm_apply x⟩
   have hval : ∀ t : Set (A F), MeasurableSet t →
       lf ((fun x => (a : A F) * x) '' t) = (lf.map (mulEquiv a).symm) t := by
     intro t ht
@@ -218,8 +216,7 @@ lemma isOpen_denSub (b : F) : IsOpen (denSub b : Set (A F)) := by
   have h3 := hOo.inter h2
   have h4 : (denSub b : Set (A F)) = Oh F ∩ ((fun x : A F => algebraMap F (A F) b * x) ⁻¹' Oh F) :=
     Set.ext fun x => Iff.rfl
-  rw [h4]
-  exact h3
+  rwa [h4]
 
 def denI (b : F) : Ideal (𝓞 F) :=
   Submodule.comap (LinearMap.toSpanSingleton (𝓞 F) F b) (1 : Submodule (𝓞 F) F)

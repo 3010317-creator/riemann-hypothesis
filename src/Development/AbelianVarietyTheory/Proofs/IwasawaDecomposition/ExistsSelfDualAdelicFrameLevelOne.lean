@@ -261,8 +261,7 @@ theorem exists_isSDFrame : ∀ (D : D7) (V : HSp D) (Λ : Submodule (𝓞 D.host
       obtain ⟨x, hx, hx₀⟩ :=
         Submodule.exists_mem_ne_zero_of_ne_bot (LinearMap.ker_ne_bot_of_finrank_lt (f := g) hdim)
       have hsmul (a : D.host.E) : a • e x ∈ V.L0 := by
-        rw [← V.baseLattice_isUnimodular]
-        rw [Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
+        rw [← V.baseLattice_isUnimodular, Formalism.HermitianLatticesTheory.dualBasic_mem_dual]
         intro y hy
         have hxy : V.hT (e x) y = 0 :=
           congrArg (fun f : Module.Dual D.host.E W => f ⟨y, Submodule.subset_span hy⟩) (LinearMap.mem_ker.mp hx)
@@ -283,9 +282,7 @@ theorem exists_isSDFrame : ∀ (D : D7) (V : HSp D) (Λ : Submodule (𝓞 D.host
   obtain ⟨β, hβ⟩ := exists_isFrame D.host.F Λ hfg hsp
   refine ⟨β, 0, hβ, hd, one_pos, fun x hx => ?_, fun x hx => ?_⟩
   · rw [pow_zero, Nat.cast_one, one_smul]
-    rw [← hΛ] at hx
-    exact hx
-  · rw [pow_zero, Nat.cast_one, one_smul, ← hΛ]
-    exact hx
+    rwa [← hΛ] at hx
+  · rwa [pow_zero, Nat.cast_one, one_smul, ← hΛ]
 
 end GlobalTheory.AdelicFrame

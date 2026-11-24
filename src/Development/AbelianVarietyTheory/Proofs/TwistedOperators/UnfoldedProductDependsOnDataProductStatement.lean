@@ -86,8 +86,7 @@ theorem lastDat_lin (hM : M.Is t) (j : ℕ) (hj : j + 2 * 0 + 2 = D.R.m) (vN : G
   have h3 : IsThetaFunO W.ψ _ _ (c • s.om (g, 1) Φ) := GlobalTheory.LocMod.LinSpace.isThetaFunO_smul c h1
   have e1 : (s.om (g, 1)) (c • Φ + Φ') = c • (s.om (g, 1)) Φ + (s.om (g, 1)) Φ' := by
     have := (s.om (g, 1)).map_add (c • Φ) Φ'
-    have h' := (s.om (g, 1)).map_smul c Φ
-    exact this.trans (congrArg (· + (s.om (g, 1)) Φ') h')
+    exact this.trans (congrArg (· + (s.om (g, 1)) Φ') ((s.om (g, 1)).map_smul c Φ))
   have key : GlobalTheory.Unf.flatBF s (s.om (g, 1) (c • Φ + Φ')) =
       c • GlobalTheory.Unf.flatBF s (s.om (g, 1) Φ) + GlobalTheory.Unf.flatBF s (s.om (g, 1) Φ') := by
     rw [e1, (GlobalTheory.FlatLin.flatBF_linear D (GlobalTheory.Unf.Flat.flatLaw D) _ _ _ _ s _ _ c h3 h2).1,

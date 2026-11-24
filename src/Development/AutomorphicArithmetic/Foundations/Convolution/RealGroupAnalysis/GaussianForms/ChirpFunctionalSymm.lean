@@ -101,8 +101,7 @@ private theorem continuous_chirp {F : Type} [Field F] [NumberField F] (δ : F) (
   exact continuous_subtype_val.comp ((continuous_adelicChar (K := F)).comp (continuous_const.mul hq))
 
 private theorem norm_chirp_le {F : Type} [Field F] [NumberField F] (δ : F) (b : A F) (v : V4 F) :
-    ‖ψ (b * q4 δ v)‖ ≤ 1 := by
-  exact (Circle.norm_coe _).le
+    ‖ψ (b * q4 δ v)‖ ≤ 1 := (Circle.norm_coe _).le
 
 private theorem chirpFunctional_symm {F : Type} [Field F] [NumberField F] (δ : F) (hδ : δ ≠ 0) (b : (A F)ˣ)
     (φ₁ φ₂ : V4 F → ℂ) (h1 : φ₁ ∈ schwartzBruhatPi (K := F) (ι := Fin 4)) (h2 : φ₂ ∈ schwartzBruhatPi (K := F) (ι := Fin 4)) :
@@ -123,9 +122,7 @@ theorem UpperTheory.ConvolutionTheory.R2.C.idxEx :
     have h := chirpFunctional_symm δ hδ b φ.1 (four (g1 g)) φ.2 hmem
     field_simp
     exact h
-  · intro c hc
-    have h := hc ⟨four (g1 g), hmem⟩
-    exact eq_div_of_mul_eq hne h.symm
+  · exact fun c hc => eq_div_of_mul_eq hne (hc ⟨four (g1 g), hmem⟩).symm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.GaussianForms.ChirpFunctionalSymm =====

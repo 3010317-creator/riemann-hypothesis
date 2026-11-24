@@ -311,8 +311,7 @@ theorem εroot_pow (s : ℕ) : AI.εroot s ^ l ^ s = AI.ε := by
   induction s with
   | zero => simp [LocAinf.εroot]
   | succ s ih =>
-    rw [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
-    exact ih
+    rwa [pow_succ', pow_mul, LocAinf.εroot, Function.iterate_succ_apply', frobeniusEquiv_symm_pow_p]
 
 theorem εroot_ne_one (s : ℕ) : AI.εroot s ≠ 1 := fun h =>
   AI.ε_ne_one (by rw [← _root_.GlobalTheory.Cyc.εroot_pow AI s, h, one_pow])
@@ -337,8 +336,7 @@ theorem io_binomial (s : ℕ) (g : GQ l) (c : ℤ_[l]) (hc : (c : ℚ_[l]) = (P.
     simp [GlobalTheory.Cyc.cyc]
   have h1 : GlobalTheory.Cyc.phi l ℤ_[l] (binomialSeries ℤ_[l] c) = binomialSeries ℤ_[l] c ^ l := by
     have := hmul (l : ℤ_[l]) c X
-    rw [hX, hX, hcyc, hcyc, map_sub, map_one, binomialSeries_natMul, sub_left_inj] at this
-    exact this
+    rwa [hX, hX, hcyc, hcyc, map_sub, map_one, binomialSeries_natMul, sub_left_inj] at this
   have h2 := eq_teichmuller_of_frobenius (io (binomialSeries ℤ_[l] c)) (by rw [← hφ, h1, map_pow])
   rw [h2]
   congr 1
@@ -486,8 +484,7 @@ theorem inclR_φRA (LL : FinExt l) : (inclR LL).comp (φRA LL) = (φRW LL).comp 
 theorem inclR_gRA (LL : FinExt l) (g : GQ l) :
     (inclR LL).comp (gRA AI LL g) = (AI.gRW LL g).comp (inclR LL) := by
   have h : (inclWA l).comp (AI.actWHom g).toAlgHom = (AI.actWCbHom g).toAlgHom.comp (inclWA l) := by
-    refine AlgHom.ext fun w => WittVector.ext fun k => ?_
-    exact (autCb_alg l (AI.actT g) (w.coeff k)).symm
+    exact AlgHom.ext fun w => WittVector.ext fun k => (autCb_alg l (AI.actT g) (w.coeff k)).symm
   rw [inclR, gRA, LocAinf.gRW, ← Algebra.TensorProduct.map_comp, ← Algebra.TensorProduct.map_comp, h]
 
 theorem tmul_sub_one (LL : FinExt l) (w : Ainf l) :

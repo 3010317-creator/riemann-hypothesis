@@ -324,8 +324,7 @@ theorem exists_compact_avg (μ : Measure (GL (Fin a) k)) [μ.IsHaarMeasure] {ϖ 
 
 theorem measureReal_KO_ne (μ : Measure (GL (Fin a) k)) [μ.IsHaarMeasure] : (μ.real (KO k (Fin a)) : ℂ) ≠ 0 := by
   have := haar_ne_zero_ne_top μ (isOpen_KO (k := k) (n := Fin a)) le_rfl
-  rw [Complex.ofReal_ne_zero, Measure.real, ENNReal.toReal_ne_zero]
-  exact this
+  rwa [Complex.ofReal_ne_zero, Measure.real, ENNReal.toReal_ne_zero]
 
 theorem shells_left (μ : Measure (GL (Fin a) k)) [μ.IsHaarMeasure] {ϖ : kˣ} (hϖ : IsUnif ϖ) {ν : kˣ →* ℂˣ} {e : ℕ}
     (hν : ¬ IsUnram ν) (he : CondLE ϖ e ν) (z : ℂ) {φ : Matrix (Fin a) (Fin a) k → ℂ}
@@ -439,8 +438,7 @@ theorem exists_open_omA {ϖ : kˣ} {e : ℕ} (ν : kˣ →* ℂˣ) {β : kˣ →
       one_mem' := LinearMap.congr_fun (repA ν β).map_one Φ
       mul_mem' := fun {u v} hu hv => by
         have := omA_mul ν β 1 1 u v Φ
-        rw [mul_one, show omA ν β 1 v Φ = Φ from hv, show omA ν β 1 u Φ = Φ from hu] at this
-        exact this
+        rwa [mul_one, show omA ν β 1 v Φ = Φ from hv, show omA ν β 1 u Φ = Φ from hu] at this
       inv_mem' := fun {u} hu => by
         have := omA_mul ν β 1 1 u⁻¹ u Φ
         rw [mul_one, inv_mul_cancel, show omA ν β 1 u Φ = Φ from hu] at this
@@ -459,8 +457,7 @@ theorem exists_open_omB {ϖ : kˣ} {e : ℕ} (ν : kˣ →* ℂˣ) {α : kˣ →
       one_mem' := LinearMap.congr_fun (repB ν α).map_one Φ
       mul_mem' := fun {u v} hu hv => by
         have := omB_mul ν α 1 1 u v Φ
-        rw [mul_one, show omB ν α 1 v Φ = Φ from hv, show omB ν α 1 u Φ = Φ from hu] at this
-        exact this
+        rwa [mul_one, show omB ν α 1 v Φ = Φ from hv, show omB ν α 1 u Φ = Φ from hu] at this
       inv_mem' := fun {u} hu => by
         have := omB_mul ν α 1 1 u⁻¹ u Φ
         rw [mul_one, inv_mul_cancel, show omB ν α 1 u Φ = Φ from hu] at this
@@ -531,8 +528,7 @@ theorem exists_bump (μ : Measure (GL n k)) [μ.IsHaarMeasure] {ϖ : kˣ} {e : �
   have hSV : S ⊆ detCong (ϖ ^ e) n := fun g hg => by
     have := hW hg
     simp only [Set.mem_preimage, Matrix.mul_assoc, hR, Matrix.mul_one] at this
-    rw [← hV]
-    exact this
+    rwa [← hV]
   have hz : zint ν z (fun g => W.indicator (fun _ => (1 : ℂ)) (g * X)) = S.indicator fun _ => 1 := by
     funext g
     by_cases hg : g ∈ S
@@ -788,8 +784,7 @@ theorem onto_of_irred (hI : IndIrred) (H : HidaSetting a a' ϖ α β ν) {X : Ty
   · obtain ⟨Φ, hΦ, hne⟩ := hne
     exact absurd ((Submodule.eq_bot_iff N).1 h _ ⟨Φ, hΦ, rfl⟩) hne
   · intro F hF
-    rw [← h] at hF
-    exact hF
+    rwa [← h] at hF
 
 end Maps
 

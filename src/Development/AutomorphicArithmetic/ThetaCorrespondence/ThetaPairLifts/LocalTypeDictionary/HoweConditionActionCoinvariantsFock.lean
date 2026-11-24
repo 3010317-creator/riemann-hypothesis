@@ -495,8 +495,7 @@ theorem exists_darboux_pair : _root_.GlobalTheory.FunPr.ThetaLocalInputs →
       simp [gramAt, hτ]
     have e2 : Xs.θ w = -sgnM ε (A.cart (τf w)) := by
       cases ε <;> simp [Xs, sgnM]
-    rw [e1, e2]
-    exact h
+    rwa [e1, e2]
   · have h := isCartan_conj (Formalism.L2.Theta.xi_zero_im_pos D (τf w)) (GlobalTheory.CompactFockAction.cart_isCartanInv B (τf w))
     have e0 : Complex.I * conj (tauE D (τf w) D.host.xi0) = ((tauE D (τf w) D.host.xi0).im : ℂ) := by
       apply Complex.ext <;> simp [Formalism.IndefR.Fock.CCR.realPlace_imaginaryGenerator_re_eq_zero]
@@ -507,8 +506,7 @@ theorem exists_darboux_pair : _root_.GlobalTheory.FunPr.ThetaLocalInputs →
         exact (hcm.2.2.2 (tauE D (τf w)) (X.gram b a)).symm
       show Complex.I * conj (tauE D (τf w) (D.host.xi0 * X.gram b a)) = _ * tauE D (τf w) (X.gram a b)
       rw [map_mul, map_mul, ← mul_assoc, e0, e3]
-    rw [e1]
-    exact h
+    rwa [e1]
 end GlobalTheory.PairDarboux
 end
 end
@@ -621,8 +619,7 @@ theorem restTr : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype �
     rw [hrg x]
 
   obtain ⟨x₀, hx₀⟩ : ∃ x₀, f x₀ ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hf (SchwartzMap.ext h)
   let a : κ → InfiniteAdeleRing F := fun i => (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (x₀ i)
   let Λ : ((κ → AF F) → ℂ) →ₗ[ℂ] ((κ → FiniteAdeleRing (𝓞 F) F) → ℂ) :=
@@ -806,8 +803,7 @@ theorem lie_derivative_mem_coinvariants : _root_.GlobalTheory.FunPr.ThetaLocalIn
       exact congrFun h3 x
     simp only [h2] at h1
     have h4 := h1.unique (hQd x)
-    rw [(hFr Q).2]
-    exact h4
+    rwa [(hFr Q).2]
   obtain ⟨d, hd⟩ : ∃ d : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf D.host.F (Fin M.rank × Fin X.rank), d = f₁ - Φ Q := ⟨_, rfl⟩
   have e1 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI D.host.F) d r =
       GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI D.host.F) f₁ r - GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI D.host.F) (Φ Q) r := by
@@ -819,8 +815,7 @@ theorem lie_derivative_mem_coinvariants : _root_.GlobalTheory.FunPr.ThetaLocalIn
     rw [e1, map_sub, hT _ hRf₁.2, hT _ hRQ.2, funext key, sub_self]
   have hz := hTinj _ hmem hT0
   have hr : ∃ x₀, r x₀ ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have h0 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI D.host.F) (Φ 1) r = 0 := funext fun x => by
       simp [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens, hcon]
     have h2 := (hFr 1).2
@@ -889,8 +884,7 @@ theorem hasDerivAt_linear {X E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E
   rw [hasDerivAt_iff_tendsto_slope]
   have h1 : Filter.Tendsto (slope u t) (nhdsWithin t {t}ᶜ) (nhds u') := by
     rw [tendsto_pi_nhds]
-    intro z
-    exact hasDerivAt_iff_tendsto_slope.1 (hd z)
+    exact fun z => hasDerivAt_iff_tendsto_slope.1 (hd z)
   have hm : ∀ s, slope u t s ∈ U := fun s => U.smul_of_tower_mem _ (U.sub_mem (hu s) (hu t))
   have h2 : Filter.Tendsto (fun s => (⟨slope u t s, hm s⟩ : U)) (nhdsWithin t {t}ᶜ) (nhds ⟨u', hu'⟩) :=
     tendsto_subtype_rng.2 h1
@@ -1382,20 +1376,17 @@ theorem howe_condition_action_coinvariants_fock : GlobalTheory.Published.HoweDua
       exact LinearMap.map_le_range
     · intro γ hγ f hf f₁ h
       exact Submodule.map_mono hc (hLS γ hγ f hf f₁ h)
-    · intro k hk f hf f₁ h
-      exact Submodule.map_mono hc (hKS k hk f hf f₁ h)
+    · exact fun k hk f hf f₁ h => Submodule.map_mono hc (hKS k hk f hf f₁ h)
     · intro γ hγ f hf f₁ h
       exact hLT N hs γ hγ f hf f₁ h
-    · intro k hk f hf f₁ h
-      exact hKT N hs k hk f hf f₁ h
+    · exact fun k hk f hf f₁ h => hKT N hs k hk f hf f₁ h
   have hne : ∀ N : Submodule ℂ (PolF D X.rank M.rank), N ≠ ⊤ → N.map Φ ≠ Mo.Pol ψ' τ := by
     intro N hN h
     apply hN
     apply Submodule.map_injective_of_injective hinj
     rw [h, Submodule.map_top, hran]
   refine ⟨⟨L, fun m N hN hk => hL m (fun i => (N i).map Φ) ?_ fun i => key _ (hk i).1 (hk i).2⟩, ?_⟩
-  · intro i j hij
-    exact (Submodule.map_strictMono_of_injective hinj) (hN hij)
+  · exact fun i j hij => (Submodule.map_strictMono_of_injective hinj) (hN hij)
   · intro N N' hs hc hN hs' hc' hN' hsup
     apply hsum _ _ (key N hs hc) (key N' hs' hc') (hne N hN) (hne N' hN')
     rw [← Submodule.map_sup, hsup, Submodule.map_top, hran]

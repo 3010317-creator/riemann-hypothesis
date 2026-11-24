@@ -226,8 +226,7 @@ theorem seq_sub_dvd (x : AdicCompletion.AdicCauchySequence (pI p) (Lau p)) {m n 
 theorem exists_not_dvd (x : AdicCompletion.AdicCauchySequence (pI p) (Lau p))
     (hx : AdicCompletion.mk (pI p) (Lau p) x ≠ 0) :
     ∃ a, ∀ n, a ≤ n → ¬ (p : Lau p) ^ a ∣ x.1 n := by
-  by_contra hcon
-  push Not at hcon
+  by_contra! hcon
   apply hx
   apply AdicCompletion.ext_evalₐ
   intro a
@@ -316,8 +315,7 @@ theorem tw_prim_step {Ω : Type*} [Field Ω] {ζ z : Ω} {n : ℕ}
       rw [hko]
       exact pow_dvd_pow p (by omega)
     have h3 : ζ ^ (p ^ n) = 1 := by
-      rw [← hz, ← pow_mul, ← pow_succ']
-      exact h2
+      rwa [← hz, ← pow_mul, ← pow_succ']
     have h4 := hζ.dvd_of_pow_eq_one _ h3
     rw [Nat.pow_dvd_pow_iff_le_right hp.out.one_lt] at h4
     omega
@@ -387,8 +385,7 @@ theorem exists_isEmb (T : Tower p Ω) (n : ℕ) : ∃ ι : On p n →ₐ[O0 p] �
       rintro b (rfl | rfl)
       · have := (T.prim n).isRoot_cyclotomic hpos
         simp only [SetLike.mem_coe, RingHom.mem_ker, aevalTower_C]
-        rw [aeval_def, eval₂_eq_eval_map, map_cyclotomic]
-        exact this
+        rwa [aeval_def, eval₂_eq_eval_map, map_cyclotomic]
       · simp [RingHom.mem_ker, qq_pow T]
     exact this ha
   · show aevalTower (aeval (T.ζ n) : (O0 p)[X] →ₐ[O0 p] Ω) (T.qq n) (C X) = _

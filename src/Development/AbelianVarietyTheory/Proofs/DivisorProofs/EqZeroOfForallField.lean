@@ -116,8 +116,7 @@ theorem ext_valR {O : Y.Opens} (s s' : Γ(Y, O))
     exact TopologicalSpace.Opens.mem_iSup.2 ⟨⟨⟨V, hV⟩, hle⟩, hy'⟩
   · obtain ⟨x, hx, e⟩ := exists_evalPt_eq V.1.2 (RingHom.id _)
     have := h _ x fun p hp => V.2 (hx hp)
-    rw [← valR_rsT x V.2 hx, ← valR_rsT x V.2 hx, valR_eq x hx, valR_eq x hx, e] at this
-    exact this
+    rwa [← valR_rsT x V.2 hx, ← valR_rsT x V.2 hx, valR_eq x hx, valR_eq x hx, e] at this
 
 theorem exists_section (io : Z ⟶ Y) [IsOpenImmersion io] :
     ∃ σ : ∀ O : Z.Opens, Γ(Z, O) →+* Γ(Y, io ''ᵁ O), (∀ O f, pbT io (σ O f) O = f) ∧
@@ -270,8 +269,7 @@ theorem exists_ksCoc {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
       refine Eq.trans ?_ (GlobalTheory.FinAffineCharts.res_res (le_inf (inf_le_left.trans (LB.wchart_le t.PP.L (fun _ : PUnit => io)
         (fun _ => j (κ a)) PUnit.unit)) (inf_le_right.trans (LB.wchart_le t.PP.L (fun _ : PUnit => io)
         (fun _ => j (κ b)) PUnit.unit))) (inf_le_inf (hle a) (hle b)) _)
-      refine congrArg (res (inf_le_inf (hle a) (hle b))) ?_
-      exact pull_g _ _ _ _
+      exact congrArg (res (inf_le_inf (hle a) (hle b))) (pull_g _ _ _ _)
     rw [this]
     rfl
   refine ⟨L, hfin, GlobalTheory.FinAffineCharts.refineLB_isLB hP _ _ hle hs,
@@ -443,8 +441,7 @@ theorem ksClass_mem_balanced : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     rw [← sub_eq_zero]
     refine eq_zero_of_dense (dense_interior Y) U _ fun g hg K _ x => ?_
     have e := congrFun₂ (key g hg K x).1 a b
-    rw [map_sub, map_sub, sub_eq_zero]
-    exact e
+    rwa [map_sub, map_sub, sub_eq_zero]
   · ext a b
     rw [← sub_eq_zero]
     refine eq_zero_of_dense (dense_interior Y) U _ fun g hg K _ x => ?_

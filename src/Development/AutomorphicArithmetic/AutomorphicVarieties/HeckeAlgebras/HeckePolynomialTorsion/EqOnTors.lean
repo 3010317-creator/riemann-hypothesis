@@ -100,8 +100,7 @@ private theorem ext_lc {D W B : Type} [Group D] [TopologicalSpace D] [IsTopologi
       rw [this]
       exact V.mul_mem (V.inv_mem h1) h2
     have h4 := hχ _ h3
-    rw [map_mul, map_inv, inv_mul_eq_one] at h4
-    exact h4
+    rwa [map_mul, map_inv, inv_mul_eq_one] at h4
   choose f hf using hex
   refine ⟨{ toFun := fun d => χ (f d), map_one' := ?_, map_mul' := ?_ }, ?_, ?_⟩
   · show χ (f 1) = 1
@@ -126,9 +125,7 @@ private theorem ext_lc {D W B : Type} [Group D] [TopologicalSpace D] [IsTopologi
     have e : x⁻¹ * i (f y) = (x⁻¹ * y) * (y⁻¹ * i (f y)) := by group
     rw [e]
     exact V.mul_mem hy (hf y)
-  · intro s
-    show χ (f (i s)) = χ s
-    exact key (i s) _ _ (hf _) (by simp [V.one_mem])
+  · exact fun s => key (i s) _ _ (hf _) (by simp [V.one_mem])
 
 private theorem locallyConstant_hom_trivial_on_commutator_closure {D W C : Type} [Group D] [TopologicalSpace D] [IsTopologicalGroup D] [Group W]
     [Group C] (i : W →* D) (hi : DenseRange i) (P : D →* C) (hP : IsLocallyConstant P)

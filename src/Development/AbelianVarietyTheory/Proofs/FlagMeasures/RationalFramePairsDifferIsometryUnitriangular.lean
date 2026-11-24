@@ -134,9 +134,7 @@ theorem witt_frames_at_point : ∀ (D : D7) {T T' : D.host.E} (F F00 : LFlag (D.
   obtain ⟨⟨Fb, Fb', h1, h2, hb⟩, hall⟩ := GlobalTheory.T.exists_unitriangular_frames_gram_eq_cell_point D F F' w hT hT' hcell
   have hGb : Gval Fb Fb' = Gval F F' := (hall Fb Fb' h1 h2).2
   have hZ : ZhatL Fb Fb' = ZhatL F00 F'0 := zhatOM_injective (hb.trans hpt.symm)
-  have hG0 : Gval F00 F'0 = Gval Fb Fb' := by
-    show Gmat (Zhat F00.fl F'0.fl) T T' = Gmat (Zhat Fb.fl Fb'.fl) T T'
-    exact congrArg (fun Z => Gmat Z T T') hZ.symm
+  have hG0 : Gval F00 F'0 = Gval Fb Fb' := congrArg (fun Z => Gmat Z T T') hZ.symm
   refine ⟨hG0.trans hGb, ?_⟩
   have hGb0 : Gflag Fb.fl Fb'.fl ≠ 0 := by rw [← hGb] at hG; exact hG
   have hG00 : Gflag F00.fl F'0.fl ≠ 0 := by

@@ -112,8 +112,7 @@ theorem grp_finiteIndex (Θ : LevQFam X.E X.K n Q) (h : ∀ R : Q, (Θ R).H.Fini
   have h2 := Subgroup.finiteIndex_iInf h1
   refine Subgroup.finiteIndex_of_le (H := ⨅ R : Q, (Θ R).H.comap
     (Pi.evalMonoidHom (fun P : Q => ↥(GLint X.E n P.1)) R)) ?_
-  intro c hc
-  exact (Subgroup.mem_pi _).mpr fun R _ => Subgroup.mem_iInf.mp hc R
+  exact fun c hc => (Subgroup.mem_pi _).mpr fun R _ => Subgroup.mem_iInf.mp hc R
 
 theorem chr_root (Λ : LevFam X.E X.K n SG) (Θ : LevQFam X.E X.K n Q)
     (hΘ : ∀ g, ∃ k : ℕ, 0 < k ∧ Θ.chr g ^ k = 1) (g : FrmG Λ Θ) :

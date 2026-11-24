@@ -654,8 +654,7 @@ private theorem exists_symm_isUnit_det_sub_mul_of_finrank_ker (b : Matrix κ κ 
   have hdx : d *ᵥ x = 0 := by simpa using hxk
   have hbx : b *ᵥ x ≠ 0 := fun h0 => hx0 (hinj x h0 hdx)
   obtain ⟨i, hi⟩ : ∃ i, (b *ᵥ x) i ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hbx (funext hc)
   have key : ∀ y, (b *ᵥ x) ⬝ᵥ (d *ᵥ y) = 0 := by
     intro y
@@ -705,8 +704,7 @@ private theorem exists_symm_isUnit_det_sub_mul_of_finrank_ker (b : Matrix κ κ 
   refine ⟨C + E, by rw [Matrix.transpose_add, hC, hET], ?_⟩
   have : d - (C + E) * b = d' - C * b := by
     rw [hd', Matrix.add_mul]; abel
-  rw [this]
-  exact hu
+  rwa [this]
 
 theorem main (g : Matrix (κ ⊕ κ) (κ ⊕ κ) F) (hg : Sp g) : g ∈ Submonoid.closure (GlobalTheory.AdelicSvN.gens F κ) := by
   obtain ⟨a, b, c, d, rfl⟩ : ∃ a b c d, g = Matrix.fromBlocks a b c d :=

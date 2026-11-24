@@ -81,9 +81,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
   (ν : Measure k) [ν.IsAddHaarMeasure]
 
 omit [MeasurableSpace k] [BorelSpace k] in
-theorem nabs_pos' (x : kˣ) : 0 < nabs k x := by
-  show (0 : ℝ) < ((distribHaarChar k x : NNReal) : ℝ)
-  exact NNReal.coe_pos.mpr distribHaarChar_pos
+theorem nabs_pos' (x : kˣ) : 0 < nabs k x := NNReal.coe_pos.mpr distribHaarChar_pos
 
 private lemma measurable_mulVec' {ι : Type} [Fintype ι] (M : Matrix ι ι k) : Measurable M.mulVec := by
   have : SecondCountableTopology k := secondCountable k
@@ -157,8 +155,7 @@ private lemma map_mulVec_measure_pi_eq_distribHaarChar_smul {M : Matrix a a k} (
     (fun M => ∀ u : kˣ, (u : k) = M.det →
       Measure.map M.mulVec (Measure.pi fun _ : a => ν) = distribHaarChar k u⁻¹ • Measure.pi fun _ : a => ν)
     M hM ?_ ?_ ?_
-  · intro D _ u hu
-    exact map_diagonal_mulVec_measure_pi ν D u hu
+  · exact fun D _ u hu => map_diagonal_mulVec_measure_pi ν D u hu
   · intro t u hu
     have h1 : u = 1 := Units.ext (by rw [hu, Matrix.TransvectionStruct.det, Units.val_one])
     rw [h1, inv_one, map_one, one_smul, map_transvection_mulVec_measure_pi ν t]

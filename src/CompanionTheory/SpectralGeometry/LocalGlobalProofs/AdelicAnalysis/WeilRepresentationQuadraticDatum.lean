@@ -67,8 +67,7 @@ lemma mem_Gs_iff {g : Matrix ι ι F} (hg : g.det ≠ 0) {S : Set (A F)} {y : ι
     y ∈ Gs g S ↔ ∀ i, (Bf g⁻¹ *ᵥ y) i ∈ S := by
   constructor
   · rintro ⟨x, hx, rfl⟩ i
-    simp only [Matrix.mulVec_mulVec, Bf_inv_mul hg, Matrix.one_mulVec]
-    exact hx i (Set.mem_univ i)
+    simpa only [Matrix.mulVec_mulVec, Bf_inv_mul hg, Matrix.one_mulVec] using hx i (Set.mem_univ i)
   · intro h
     refine ⟨Bf g⁻¹ *ᵥ y, fun i _ => h i, ?_⟩
     simp only [Matrix.mulVec_mulVec, Bf_mul_inv hg, Matrix.one_mulVec]
@@ -292,8 +291,7 @@ lemma LL_good (lf : Measure (A F)) (hlf : lf.IsAddHaarMeasure) (h1 : lf (Oh F) =
     rw [Matrix.det_mul, Matrix.det_transpose]
     exact mul_ne_zero (det_inv_ne hh) hB
   have hperp2 := perp_Gs ψ B (gᵀ * B)⁻¹ hh' h0P
-  rw [coe_LL hc, ← hgdef]
-  rw [hperp, hperp2, hmat]
+  rw [coe_LL hc, ← hgdef, hperp, hperp2, hmat]
   refine ⟨isCompact_Gs g hOc, isOpen_Gs hg hOo, isCompact_Gs _ hPc, isOpen_Gs (det_inv_ne hh) hPo,
     Gs_mono g hPP, mass_one lf hlf h1 hB hg hPo.measurableSet hP⟩
 

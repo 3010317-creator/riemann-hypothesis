@@ -171,9 +171,7 @@ theorem kill (t : AD K L) (j : ℕ) (hs : Function.Surjective ((pr t).mapH j)) (
     refine ⟨t.r j v - b, ?_⟩
     have e : x = y - K.d j v := by rw [hv]; abel
     have := t.anti j v
-    rw [e, map_sub, map_sub]
-    rw [eq_neg_of_add_eq_zero_left h1]
-    rw [eq_neg_of_add_eq_zero_left this]
+    rw [e, map_sub, map_sub, eq_neg_of_add_eq_zero_left h1, eq_neg_of_add_eq_zero_left this]
     abel
 
 def secM (t : AD K L) (u : NH t) (c : ℕ) (l : K.H c →ₗ[R] L.H c) : K.H c →ₗ[R] (cone t).H c :=
@@ -344,8 +342,7 @@ theorem sh_sub {n : ℕ} (h : ∀ m, m + 1 = n → Subsingleton (A.H m)) : Subsi
     rw [e]
     exact Submodule.zero_mem _
   | succ m =>
-    refine sub_of_mem_B fun x hx => ?_
-    exact sh_mem_B _ (mem_B_of_sub (h m rfl) _ (sh_cocycle x hx))
+    exact sub_of_mem_B fun x hx => sh_mem_B _ (mem_B_of_sub (h m rfl) _ (sh_cocycle x hx))
 
 variable {B B' : Cx.{w} R}
 

@@ -51,8 +51,7 @@ namespace GlobalTheory.FinPl.AlmostAll
 theorem exists_nat_eq_mul {E : Type} [Field E] [NumberField E] {c : 𝓞 E} (hc : c ≠ 0) :
     ∃ n : ℕ, n ≠ 0 ∧ ∃ c' : 𝓞 E, (n : 𝓞 E) = c * c' := by
   refine ⟨Ideal.absNorm (Ideal.span {c}), ?_, ?_⟩
-  · rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-    exact hc
+  · rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
   · obtain ⟨c', hc'⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {c}))
     exact ⟨c', by rw [← hc', mul_comm]⟩
 
@@ -92,8 +91,7 @@ theorem eventually_notMem {F : Type} [Field F] [NumberField F] {N : ℕ} (hN : N
   refine Filter.eventually_cofinite.2 ((Ideal.finite_factors hI).subset ?_)
   intro v hv
   simp only [Set.mem_setOf_eq, not_not] at hv ⊢
-  rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  exact hv
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
 
 theorem inv_mem_integers {F : Type} [Field F] [NumberField F] {N : ℕ} {v : HeightOneSpectrum (𝓞 F)}
     (hv : (N : 𝓞 F) ∉ v.asIdeal) : algebraMap F (Fv F v) (N : F)⁻¹ ∈ v.adicCompletionIntegers F := by

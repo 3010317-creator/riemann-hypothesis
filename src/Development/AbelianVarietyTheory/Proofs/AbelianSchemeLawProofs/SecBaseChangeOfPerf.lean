@@ -278,8 +278,7 @@ theorem RepAt.pull {h : T ⟶ Over.mk t₀} {v : Fin F.a → R} {s : LB.Sec (LPo
     RepAt F (h' ≫ h) (fun k => cfun (h' ≫ h) (v k)) s' := by
   refine Rep.pull (fun _ => snd_eq A h) H (h' ▷ A).left (by rw [comp_whiskerRight, Over.comp_left])
     (fun _ => snd_eq A h') (fun k => ?_) _ hs
-  have e := congrArg (fun q => q.appTop.hom (cfun h (v k))) (fst_eq A h')
-  exact e.symm
+  exact (congrArg (fun q => q.appTop.hom (cfun h (v k))) (fst_eq A h')).symm
 
 theorem repAt_main [IsAffine T.left] (h : T ⟶ Over.mk t₀) :
     (∀ v, (F.D₀.map (cfun h)).mulVec v = 0 → ∃ s, RepAt F h v s) ∧
@@ -310,8 +309,7 @@ theorem basis_of_rep [IsAffine T.left] (h : T ⟶ Over.mk t₀) {m : ℕ} (B : M
       rw [Submodule.coe_sum, Finset.sum_apply]
       rfl
     unfold RepAt
-    rw [e]
-    exact this
+    rwa [e]
   constructor
   · rw [Fintype.linearIndependent_iff]
     intro z hz
@@ -319,8 +317,7 @@ theorem basis_of_rep [IsAffine T.left] (h : T ⟶ Over.mk t₀) {m : ℕ} (B : M
     have r₀ := rep 0
     rw [hz] at r₁
     simp only [Pi.zero_apply, zero_smul, Finset.sum_const_zero] at r₀
-    have e := h₃ _ _ _ (ker z) (ker 0) r₁ r₀
-    exact congrFun ((hu _ (ker 0)).unique e rfl)
+    exact congrFun ((hu _ (ker 0)).unique (h₃ _ _ _ (ker z) (ker 0) r₁ r₀) rfl)
   · refine top_unique fun s _ => ?_
     obtain ⟨v, hv, hr⟩ := h₂ (SecM.toSec A s)
     obtain ⟨z, rfl, -⟩ := hu v hv
@@ -430,8 +427,7 @@ theorem secBaseChange_of_perf :
   have hlD : ∀ y, l y ∈ D := fun y => by
     obtain ⟨x, hx, e⟩ := y.2
     have : t₀ (l y) = t₀ x := (congrArg (fun Q => Q y) hl).trans e.symm
-    rw [t₀.isOpenEmbedding.injective this]
-    exact hx
+    rwa [t₀.isOpenEmbedding.injective this]
   let hD : overRes (T := baseOver S) (t₀ ''ᵁ D) ⟶ Over.mk t₀ := Over.homMk l (hl.trans (Category.comp_id _).symm)
   choose b hb using fun i => exists_pullSec P.A P.L n hD (b₀ i)
   refine ⟨t₀ ''ᵁ D, ⟨q, hq, rfl⟩, b, fun R' _ t b' hb' => ?_⟩

@@ -129,8 +129,7 @@ theorem derRing_injective {ψ ψ' : (RingHom.ker ε).Cotangent →ₗ[R] V} (h :
   apply LinearMap.ext
   intro x
   obtain ⟨y, rfl⟩ := Ideal.toCotangent_surjective (RingHom.ker ε) x
-  have hy := congrArg TrivSqZeroExt.snd (DFunLike.congr_fun h y.1)
-  simpa [derRing_of_mem] using hy
+  simpa [derRing_of_mem] using congrArg TrivSqZeroExt.snd (DFunLike.congr_fun h y.1)
 
 end Alg
 

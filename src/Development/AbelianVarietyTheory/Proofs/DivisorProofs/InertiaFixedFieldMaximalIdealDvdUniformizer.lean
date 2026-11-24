@@ -178,8 +178,7 @@ theorem valuation_le_exp_neg_card_inertia (R K L : Type) [CommRing R] [IsDomain 
 
   let Q : Ideal OE := P.asIdeal.under OE
   have hPne : P.asIdeal ≠ ⊥ := P.ne_bot
-  have hQne : Q ≠ ⊥ := by
-    exact Ideal.under_ne_bot OE hPne
+  have hQne : Q ≠ ⊥ := Ideal.under_ne_bot OE hPne
   haveI hQmax : Q.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hQne
   have hQR : (Q.under R).IsMaximal := Ideal.IsMaximal.under R Q
   haveI : Q.LiesOver (IsLocalRing.maximalIdeal R) := ⟨(IsLocalRing.eq_maximalIdeal hQR).symm⟩
@@ -199,8 +198,7 @@ theorem valuation_le_exp_neg_card_inertia (R K L : Type) [CommRing R] [IsDomain 
     exact AddSubgroup.mem_inertia.mpr fun x => AddSubgroup.mem_inertia.mp σ.2 x
   have hcard : Nat.card H = P.asIdeal.ramificationIdx OE := by
     have h := Ideal.card_inertia_eq_ramificationIdxIn (G := H) Q P.asIdeal
-    rw [Ideal.ramificationIdxIn_eq_ramificationIdx Q P.asIdeal H, htop, Subgroup.card_top] at h
-    exact h
+    rwa [Ideal.ramificationIdxIn_eq_ramificationIdx Q P.asIdeal H, htop, Subgroup.card_top] at h
 
   have hyE : y ∈ E := fun σ => hy σ σ.2
   let z : E := ⟨y, hyE⟩
@@ -252,8 +250,7 @@ theorem valuation_uniformizer_integralClosure (R K L : Type) [CommRing R] [IsDom
     have h : Function.Injective (algebraMap R L) := by
       rw [IsScalarTower.algebraMap_eq R K L]
       exact (algebraMap K L).injective.comp (IsFractionRing.injective R K)
-    rw [IsScalarTower.algebraMap_eq R (integralClosure R L) L] at h
-    rw [RingHom.coe_comp] at h
+    rw [IsScalarTower.algebraMap_eq R (integralClosure R L) L, RingHom.coe_comp] at h
     exact Function.Injective.of_comp h
   have : FaithfulSMul R (integralClosure R L) := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
   have : Module.IsTorsionFree R (integralClosure R L) := inferInstance
@@ -299,8 +296,7 @@ theorem valuationSubring_valuation_lt_one_iff {L : Type} [Field L] {Γ : Type} [
     · rintro (h | h)
       · exact absurd h hx
       · exact (one_lt_inv₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hx))).1 h
-    · intro h
-      exact Or.inr ((one_lt_inv₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hx))).2 h)
+    · exact fun h => Or.inr ((one_lt_inv₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hx))).2 h)
 
 theorem mem_iff_valuation_le_one (L S : Type) [Field L] [CommRing S] [IsDomain S] [IsDedekindDomain S]
     [Algebra S L] [IsFractionRing S L] (W : ValuationSubring L) (hS : ∀ s : S, algebraMap S L s ∈ W)
@@ -348,8 +344,7 @@ theorem mem_inertia_of_mem_inertia (K L S : Type) [Field K] [Field L] [Algebra K
     have va' : v (τ (algebraMap S L s)) = 1 := by
       have h := Valuation.map_add_eq_of_lt_right v (x := τ (algebraMap S L s) - algebraMap S L s)
         (y := algebraMap S L s) (by rw [va]; exact hdiff s)
-      rw [sub_add_cancel, va] at h
-      exact h
+      rwa [sub_add_cancel, va] at h
     have hs0 : algebraMap S L s ≠ 0 := fun h => by rw [h, map_zero] at va; exact zero_ne_one va
     have hs0' : τ (algebraMap S L s) ≠ 0 := fun h => by rw [h, map_zero] at va'; exact zero_ne_one va'
     have hx' : x = algebraMap S L t / algebraMap S L s := by rw [← e]; field_simp
@@ -377,8 +372,7 @@ theorem mem_inertia_of_mem_inertia (K L S : Type) [Field K] [Field L] [Algebra K
     · intro h
       have h2 := (aux σ hσ _ h).1
       rwa [← AlgEquiv.mul_apply, mul_inv_cancel, AlgEquiv.one_apply] at h2
-    · intro h
-      exact (aux σ⁻¹ (inv_mem hσ) x h).1
+    · exact fun h => (aux σ⁻¹ (inv_mem hσ) x h).1
   · rw [hWeq, valuationSubring_valuation_lt_one_iff]
     exact (aux σ hσ x ((hW x).1 hx)).2
 
@@ -447,8 +441,7 @@ theorem div_uniformiser_mem : ∀ (R K L : Type) [CommRing R] [IsDomain R] [IsDi
   have hlt : P.valuation L y < 1 := by
     rcases (ValuationSubring.mem_nonunits_iff_or W).1 hyW with h | h
     · rw [h, map_zero]; exact zero_lt_one
-    · by_contra hge
-      push Not at hge
+    · by_contra! hge
       apply h
       rw [hWv, map_inv₀]
       have h1 : P.valuation L y ≤ 1 := (hWv y).1 ((W.valuation_le_one_iff y).1 (le_of_lt (W.mem_nonunits_iff.1 hyW)))
@@ -456,8 +449,7 @@ theorem div_uniformiser_mem : ∀ (R K L : Type) [CommRing R] [IsDomain R] [IsDi
   have key := valuation_le_of_fixed R K L P π hπ y (fun σ hσ => hy σ (hI σ hσ)) hlt
   rw [hWv, map_div₀]
   have hv0 : P.valuation L c ≠ 0 := (Valuation.ne_zero_iff _).2 hc0
-  rw [div_le_one₀ (zero_lt_iff.2 hv0)]
-  exact key
+  rwa [div_le_one₀ (zero_lt_iff.2 hv0)]
 
 end GlobalTheory.InertiaUnram
 end -- clump:auto

@@ -93,8 +93,7 @@ theorem abelianization_eq_of_forall_abRestrict_eq :
     ∀ (K : Type) [Field K] [NumberField K] (a b : Field.absoluteGaloisGroupAbelianization K),
       (∀ (L : IntermediateField K (AlgebraicClosure K)) (h : Neutral.B1.IsFiniteAbelian K L),
         Neutral.B1.abRestrict K L h a = Neutral.B1.abRestrict K L h b) → a = b := by
-  intro K _ _ a b hab
-  exact ReciprocityTheory.DiscreteGroups.GlobalClassField.abRestrict_ext hab
+  exact fun K _ _ a b hab => ReciprocityTheory.DiscreteGroups.GlobalClassField.abRestrict_ext hab
 
 end GlobalTheory.CompanionTheory.GaloisAb
 end -- clump:auto
@@ -367,13 +366,11 @@ theorem localIdele_eq {Art Art' : IdeleClassGroup K →* Field.absoluteGaloisGro
   refine mem_of_units_of_unif v (MonoidHom.eqLocus (localComposite K Art L h v)
     (localComposite K Art' L h v)) (fun y hy => ?_) π hπ ?_ x
   · have hy' : Valued.v ((localIdele K v y : AdeleRing (𝓞 K) K).2 v) = 1 := by
-      rw [localIdele_snd_self]
-      exact hy
+      rwa [localIdele_snd_self]
     exact ((hA.2.2.2.1 L h v hv _ (localIdele_isSupportedAt K v y)).2 hy').trans
       ((hA'.2.2.2.1 L h v hv _ (localIdele_isSupportedAt K v y)).2 hy').symm
   · have hπ' : IsUniformiserAt K v ((localIdele K v π : AdeleRing (𝓞 K) K).2 v) := by
-      rw [localIdele_snd_self]
-      exact hπ
+      rwa [localIdele_snd_self]
     exact ReciprocityTheory.DiscreteGroups.GlobalClassField.isFrobAt_unique v Q hv _ _
       ((hA.2.2.2.1 L h v hv _ (localIdele_isSupportedAt K v π)).1 hπ' Q hQ hQv)
       ((hA'.2.2.2.1 L h v hv _ (localIdele_isSupportedAt K v π)).1 hπ' Q hQ hQv)

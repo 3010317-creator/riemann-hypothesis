@@ -89,8 +89,7 @@ theorem mem_localLattice_inf_of_mem_span : ∀ (D : D7) (Z : LocDat D) (p : PlF 
     Submodule.IsLattice D.host.E Λ → ∀ y ∈ lattice₂ D Z.M p Λ,
     y ∈ Submodule.span (D.s.atP p).Ep (baseChange₂ D p '' (U : Set (VS D).V)) → y ∈ lattice₂ D Z.M p (Λ ⊓ toO (VS D) U) := by
   intro D Z p U Λ h y hy hs
-  have e := Formalism.L2.SG.Pf.locSatC_holds D Z p Λ U h.fg
-  exact (Set.ext_iff.1 e y).2 ⟨hy, hs⟩
+  exact (Set.ext_iff.1 (Formalism.L2.SG.Pf.locSatC_holds D Z p Λ U h.fg) y).2 ⟨hy, hs⟩
 
 theorem gS_unit : ∀ (D : D7) (Z : LocDat D) (p : PlF D), (Z.M p).split = none →
     ∃ u ∈ (Z.M p).L.O, u * ((gS D : ℕ) : (D.s.atP p).Ep) = 1 := by
@@ -233,9 +232,7 @@ theorem gS_ne : ((gS D : ℕ) : D.host.E) ≠ 0 := by
 theorem ngx_lattice {T T' : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag (D.sp.Y 0) D.R.rS T') (Λ : LV D)
     (h : Submodule.IsLattice D.host.E Λ) : Submodule.IsLattice D.host.E (NgX Λ (gS D) F F') := by
   have hle : NgX Λ (gS D) F F' ≤ Λ := sup_le (sup_le Submodule.smul_le_right inf_le_left) inf_le_left
-  refine ⟨h.fg.of_le hle, ?_⟩
-  intro s hs hli
-  exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  exact ⟨h.fg.of_le hle, fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli⟩
 theorem lrep_mem_lsub {T : D.host.E} {Λ : LV D} {G : LFlag (D.sp.Y 0) D.R.rS T} {l : (VS D).V}
     (hl : l ∈ Lrep Λ G) : l ∈ Lsub Λ G :=
   Submodule.mem_inf.2 ⟨Submodule.mem_sup_left hl, (Submodule.mem_inf.1 hl).2⟩
@@ -828,11 +825,8 @@ theorem xi_mem {Λ : Submodule (𝓞 D.host.E) (VS D).V} {T : D.host.E} {F : LFl
 theorem isLattice_NgX {Λ : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Submodule.IsLattice D.host.E Λ) {T T' : D.host.E}
     (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag (D.sp.Y 0) D.R.rS T') : Submodule.IsLattice D.host.E (NgX Λ (gS D) F F') := by
   have hle : NgX Λ (gS D) F F' ≤ Λ := by
-    refine sup_le (sup_le ?_ inf_le_left) inf_le_left
-    exact Submodule.smul_le_right
-  refine ⟨hΛ.fg.of_le hle, ?_⟩
-  intro s hs hli
-  exact (LinearIndependent.iff_fractionRing _ _).mp hli
+    exact sup_le (sup_le Submodule.smul_le_right inf_le_left) inf_le_left
+  exact ⟨hΛ.fg.of_le hle, fun s hs hli => (LinearIndependent.iff_fractionRing _ _).mp hli⟩
 theorem NgX_dec {Λ : Submodule (𝓞 D.host.E) (VS D).V} {T T' : D.host.E} {F : LFlag (D.sp.Y 0) D.R.rS T}
     {F' : LFlag (D.sp.Y 0) D.R.rS T'} {x : (VS D).V} (hx : x ∈ NgX Λ (gS D) F F') :
     ∃ l ∈ Λ, ∃ ξ ∈ XLam Λ F, ∃ ξ' ∈ XLam Λ F', x = ((gS D : ℕ) : D.host.E) • l + ξ + ξ' := by
@@ -1013,8 +1007,7 @@ theorem graph_reps {T T' : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag
   intro l' hl' l hl hN
   have k : (l', l) ∈ (gdat F F' Λ₁).2.2 :=
     ⟨l', hl', l, hl, by rw [sub_self]; exact zero_mem _, by rw [sub_self]; exact zero_mem _, hN⟩
-  rw [h] at k
-  exact k
+  rwa [h] at k
 
 theorem io_le (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH Z p) D.R.rS) (Tn T'n : ℕ) (F : LFlag (D.sp.Y 0) D.R.rS (Tn : D.host.E)) (F' : LFlag (D.sp.Y 0) D.R.rS (T'n : D.host.E)) (hB : Based Z FP Tn T'n F F') (Λ₁ Λ₂ : LV D) (h₁ : Submodule.IsLattice D.host.E Λ₁) (hL : Lsub Λ₁ F = Lsub Λ₂ F) (hL' : Lsub Λ₁ F' = Lsub Λ₂ F') (h : (gdat F F' Λ₁).2.2 = (gdat F F' Λ₂).2.2) (p : PlF D) (g : Loc.SplitG (Z.M p).L) (hs : (Z.M p).split = some g) :
     (locH Z p).iotaGraph g ⟨lattice₂ D Z.M p Λ₁, (FP p).A.f, (FP p).B.f, (FP p).A.T, (FP p).B.T⟩ ⊆ (locH Z p).iotaGraph g ⟨lattice₂ D Z.M p Λ₂, (FP p).A.f, (FP p).B.f, (FP p).A.T, (FP p).B.T⟩ :=
@@ -1151,8 +1144,7 @@ lemma good_inv {X : Submodule E V} {u : V ≃ₗ[E] V} (hX : X ≤ H.perp X) (hu
     rw [← this]
     exact hv _ (good_map_le H hX hu x hx)
   have := X.neg_mem (hu.2 _ hv')
-  rw [LinearEquiv.apply_symm_apply, neg_sub] at this
-  exact this
+  rwa [LinearEquiv.apply_symm_apply, neg_sub] at this
 
 lemma good_mul {X : Submodule E V} {u w : V ≃ₗ[E] V} (hX : X ≤ H.perp X) (hu : Good H X u)
     (hw : Good H X w) : Good H X (u * w) := by
@@ -1177,8 +1169,7 @@ lemma h_es_e (a b : Fin r) : H.h (Fr.es a) (Fr.e b) = if b = a then 1 else 0 := 
 
 lemma mem_perp_iff (v : V) : v ∈ H.perp (H.X Fr.f) ↔ ∀ a, H.h v (Fr.e a) = 0 := by
   constructor
-  · intro hv a
-    exact hv _ (Submodule.subset_span ⟨a, rfl⟩)
+  · exact fun hv a => hv _ (Submodule.subset_span ⟨a, rfl⟩)
   · intro h x hx
     induction hx using Submodule.span_induction with
     | mem x hx =>
@@ -1277,7 +1268,6 @@ theorem Lset_LamStd (L : Submodule M.L.O (H.Wb Fr.f)) :
           have := (H.X Fr.f).neg_mem (sub_prF_mem Fr x0 x0.2); simpa using this)]
         exact hw
     · have := (H.X Fr.f).neg_mem (sub_prF_mem Fr x0 x0.2)
-      show H.mkW Fr.f _ = H.mkW Fr.f x0
       exact mkW_eq H _ _ (by simpa using this)
 
 lemma good_of_mem_N {g : V ≃ₗ[E] V} (hg : g ∈ Fr.N) : Good H (H.X Fr.f) g := by
@@ -1548,8 +1538,7 @@ theorem GlobalTheory.Unfold.ratCls_agree : ∀ (D : D7) (X : HidaSetting D) (Y :
       constructor
       · rintro rfl
         exact hm''
-      · intro hm
-        exact rm_fun h hh y y'' y' hm'' hm
+      · exact fun hm => rm_fun h hh y y'' y' hm'' hm
     refine ⟨⟨fun ⟨h, hh, he⟩ => ⟨h, hh, (key h hh _ _ _ _ h₁ h₂).1 he⟩,
       fun ⟨h, hh, hm⟩ => ⟨h, hh, (key h hh _ _ _ _ h₁ h₂).2 hm⟩⟩, ?_⟩
     ext h

@@ -151,8 +151,7 @@ theorem snoc_smooth {n : ℕ} {L : Fin n → HermLine ι} {B : HermLine ι} (hL 
     (hB : IsSmoothHerm B) (j : Fin (n + 1)) :
     IsSmoothHerm ((Fin.snoc L B : Fin (n + 1) → HermLine ι) j) := by
   refine Fin.lastCases ?_ (fun i => ?_) j
-  · rw [Fin.snoc_last]
-    exact hB
+  · rwa [Fin.snoc_last]
   · rw [Fin.snoc_castSucc]
     exact hL i
 
@@ -228,8 +227,7 @@ theorem num_sub_num : Inputs → ∀ (II : IntersectionSystem), IsFullIntersecti
     intro a s hs hs0 x _
     obtain ⟨V, hV, hxV, G, hG, hVG⟩ := Re.ref_pot a x (Set.mem_univ x)
     refine ⟨V ∩ Re.R.U x, hV.inter (Re.R.isOpen_U x), ⟨hxV, Re.R.mem_U x⟩, G, ?_, ?_⟩
-    · intro j
-      exact (hG j).mono fun y hy => ⟨hy.1, hy.2.1⟩
+    · exact fun j => (hG j).mono fun y hy => ⟨hy.1, hy.2.1⟩
     · rintro y ⟨hyV, hyU⟩
       have hm := Re.R.mem x y hyU
       obtain ⟨c, hc, e⟩ := Re.R.compat y x y ⟨Re.R.mem_U y, hyU⟩
@@ -511,8 +509,7 @@ theorem abs_mInt_le_of_lintegral [CompactSpace X] [T2Space X] [MeasurableSpace X
   obtain ⟨-, hm⟩ := maMeasure_thm A F hp hpsh
   rw [(hm g hg.measurable).2 (mIntegrableCont A F hp g hg)]
   refine (norm_integral_le_lintegral_norm g).trans ?_
-  simp only [Real.norm_eq_abs]
-  exact ENNReal.toReal_le_of_le_ofReal hB h
+  simpa only [Real.norm_eq_abs] using ENNReal.toReal_le_of_le_ofReal hB h
 
 end GlobalTheory.CompanionTheory.Ar.PB.Rate
 
@@ -793,8 +790,7 @@ theorem agreementPos : AgreementPos := by
   have hδ : Tendsto (fun t => ((D : ℝ) + 1) * (|C'| * |agreeRate t|)) (𝓝[>] 0) (𝓝 0) := by
     have : Tendsto (fun t => |agreeRate t|) (𝓝[>] 0) (𝓝 0) := by
       have h2 := hlim.abs
-      rw [abs_zero] at h2
-      exact h2
+      rwa [abs_zero] at h2
     simpa using (this.const_mul |C'|).const_mul ((D : ℝ) + 1)
   have hL := fun w => tendsto_limUnder_of_cauchy_rate (fun t => Re.num II t w)
     (fun t => ((D : ℝ) + 1) * (|C'| * |agreeRate t|)) t₁ ht₁ hδ (hc II hII K ι P Re w)

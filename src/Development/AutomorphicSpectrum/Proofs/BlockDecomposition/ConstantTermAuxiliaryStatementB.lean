@@ -260,8 +260,7 @@ theorem kfin_of_coeff {a : ℕ} {W : Type} [AddCommGroup W] [Module ℂ W] [Fini
     have e : cptRep E a k φ = ∑ κ : S, lam k κ • cptRep E a κ.1 φ := by
       refine Subtype.ext (funext fun g => ?_)
       have h1 := key _ (h g) k
-      rw [AddSubmonoidClass.coe_finsetSum, Finset.sum_apply]
-      exact h1
+      rwa [AddSubmonoidClass.coe_finsetSum, Finset.sum_apply]
     beta_reduce
     rw [e]
     exact Submodule.sum_mem _ fun κ _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨κ.1, κ.2, rfl⟩)
@@ -385,8 +384,7 @@ theorem sl_left (F : Sm E (r + s))
       lev (Ad E) r s (ratGL E r 1, ratGL E s γ) * lev (Ad E) r s (m₁, g) := by
     rw [← map_mul, Prod.mk_mul_mk, map_one, one_mul]
   rw [e]
-  simp only [mul_assoc]
-  exact a2 (1, γ) _
+  simpa only [mul_assoc] using a2 (1, γ) _
 
 
 variable (r) in
@@ -476,11 +474,9 @@ theorem slice2 : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.Is
   have hco := sl_coeff ρ F a4 m₁ t κ
   have hkill : ∀ z ∈ J₂, z (sl F m₁ t κ) = 0 := by
     refine H (rt E (r + s) (hh m₁ t κ) F) (fun x g => ?_) (fun z hz => ?_) _ (fun m => rfl)
-    · simp only [rt_apply, mul_assoc]
-      exact a1 x _
+    · simpa only [rt_apply, mul_assoc] using a1 x _
     · have h := LinearMap.congr_fun (Zalg_comm_rt (hh m₁ t κ) (hJ.1 hz)).eq F
-      rw [Module.End.mul_apply, Module.End.mul_apply, a6 z hz, map_zero] at h
-      exact h
+      rwa [Module.End.mul_apply, Module.End.mul_apply, a6 z hz, map_zero] at h
   refine ⟨sl F m₁ t κ, ⟨⟨fun γ g => sl_left F a2 m₁ t κ γ g, ?_, kfin_of_coeff _ _ hco,
     zfin_of_cofin hJ₂ _ hkill, sl_growth F a5 m₁ t κ⟩, hlev, hco, hkill⟩, sl_apply F m₁ t κ⟩
   exact isOpen_stab_of_mem_nhds _ _ (Filter.mem_of_superset ((isOpen_L₂ hL t).mem_nhds (one_mem _)) hlev)

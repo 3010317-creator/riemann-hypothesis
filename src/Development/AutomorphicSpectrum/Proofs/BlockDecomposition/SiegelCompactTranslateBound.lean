@@ -155,8 +155,7 @@ theorem exists_nat_mul_isIntegral_of_isCompact (F E : Type) [Field F] [NumberFie
     have hc : ((y.natAbs : ℕ) : E) = ((|y| : ℤ) : E) := by
       rw [← Int.cast_natCast, Int.natCast_natAbs]
     rcases abs_choice y with h | h
-    · rw [hc, h, ← zsmul_eq_mul]
-      exact hyx
+    · rwa [hc, h, ← zsmul_eq_mul]
     · rw [hc, h, Int.cast_neg, neg_mul, ← zsmul_eq_mul]
       exact hyx.neg
   let b := Module.finBasis F E
@@ -182,8 +181,7 @@ theorem exists_nat_mul_isIntegral_of_isCompact (F E : Type) [Field F] [NumberFie
     intro i
     refine isIntegral_of_forall_mem_adicCompletionIntegers _ fun v => ?_
     have h1 := hx i v
-    rw [hcoord, ← map_natCast (algebraMap F (Af F)) N, ← map_mul] at h1
-    exact h1
+    rwa [hcoord, ← map_natCast (algebraMap F (Af F)) N, ← map_mul] at h1
   have hsum : ((N * m : ℕ) : E) * e = ∑ i, algebraMap F E ((N : F) * b.repr e i) * ((m : E) * b i) := by
     conv_lhs => rw [← b.sum_repr e]
     rw [Finset.mul_sum]
@@ -383,8 +381,7 @@ theorem minPar_frame_block_eq_zero : ∀ (F E : Type) [Field F] [NumberField F] 
     · simp [Formalism.UG.cT, hij, Ne.symm hij]
   have hyx : cT (σ : E →+* E) Y * (J * X) = 1 := by
     have h := congrArg (cT (σ : E →+* E)) hW.xy
-    rw [cT_mul, cT_mul, cT_cT, cT_J, cT_one] at h
-    exact h
+    rwa [cT_mul, cT_mul, cT_cT, cT_J, cT_one] at h
   have hxx : cT (σ : E →+* E) X * (J * X) = 0 := by
     rw [← Matrix.mul_assoc]
     exact hW.xx
@@ -396,8 +393,7 @@ theorem minPar_frame_block_eq_zero : ∀ (F E : Type) [Field F] [NumberField F] 
     simp [φ, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR, GlobalTheory.AdelicU.compInf, GlobalTheory.AdelicU.infEmb]
   have hAd : (GlobalTheory.SiegelSet.adMat F X).map φ = X.map τ.1 := by
     ext i j
-    simp only [GlobalTheory.SiegelSet.adMat, Matrix.map_apply]
-    exact hφ (X i j)
+    simpa only [GlobalTheory.SiegelSet.adMat, Matrix.map_apply] using hφ (X i j)
   have hA : archMat σ J τ (projArch σ J w g) =
       ((GlobalTheory.AdelicU.matHom (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F) σ J g : GL (Fin n) _) : Matrix (Fin n) (Fin n) _).map φ := by
     ext i j

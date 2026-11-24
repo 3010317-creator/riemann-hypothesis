@@ -240,8 +240,7 @@ theorem emb_unique {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l
       ValuationSubring.mem_inv_pointwise_smul_iff, AlgEquiv.smul_def, AlgEquiv.smul_def, map_inv₀,
       map_eq_zero_iff _ g.injective]
   have hB1 : (g⁻¹ • A).valuation (l : Ω) < 1 := by
-    rw [hval, map_natCast]
-    exact hA
+    rwa [hval, map_natCast]
   have hBt : g⁻¹ • A ≠ ⊤ := fun h => ((UpperTheory.V.Base.places K' Ω l _).2.1 h).2 hB1
   obtain ⟨w', hw'⟩ := (UpperTheory.V.Base.places K' Ω l _).1 hBt
   have hne' : w' ≠ w := by
@@ -271,8 +270,7 @@ theorem emb_unique {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l
     exact hbB)
   have h2 := norm_lt_one_of_contEmb w j hj rb hrb
   have h2' : ‖j' (algebraMap K' (w.adicCompletion K') (algebraMap (𝓞 K') K' b))‖ < 1 := by
-    rw [hkey]
-    exact h2
+    rwa [hkey]
   have h4 := IsUltrametricDist.norm_add_le_max
     (j' (algebraMap K' (w.adicCompletion K') (algebraMap (𝓞 K') K' a)))
     (j' (algebraMap K' (w.adicCompletion K') (algebraMap (𝓞 K') K' b)))
@@ -405,8 +403,7 @@ private theorem desc_ex (f : R →+* R') (hf : Function.Injective f) (P : PD ι 
   have e : ∀ g, (Matrix.of (r g)).map f = P.r g := fun g => by ext i j; exact hr g i j
   have hi : Function.Injective fun X : M4 R => X.map f := Matrix.map_injective hf
   refine ⟨⟨⟨⟨fun g => Matrix.of (r g), hi ?_⟩, fun a b => hi ?_⟩, fun v => Matrix.of (n v)⟩, ?_⟩
-  · simp only [e, map_one]
-    exact (Matrix.map_one f (map_zero f) (map_one f)).symm
+  · simpa only [e, map_one] using (Matrix.map_one f (map_zero f) (map_one f)).symm
   · simp only [e, map_mul, Matrix.map_mul]
   · ext g i j
     · exact hr g i j
@@ -506,8 +503,7 @@ private theorem ev_k (x : 𝔞.k) : Ev fun c => x ∈ (𝔞.j c).range := by
   obtain ⟨x, rfl⟩ := residue_surjective x
   obtain ⟨c, y, hy⟩ := 𝔞.alg x
   refine ⟨c, fun c' h => ⟨residue c'.O (inc h y), ?_⟩⟩
-  refine (RingHom.congr_fun (j_comp 𝔞 h) y).trans ?_
-  exact (Ideal.Quotient.eq.2 hy).symm
+  exact (RingHom.congr_fun (j_comp 𝔞 h) y).trans (Ideal.Quotient.eq.2 hy).symm
 
 private theorem ev_poly (c : Coef l) (x : 𝔞.k[X]) : Ev fun c => x ∈ (mapRingHom (𝔞.j c)).range := by
   refine ev_mono (ev_fin c (ev_k 𝔞) _ x.coeffs.finite_toSet) fun c' h => ?_
@@ -681,8 +677,7 @@ private theorem lifts_map {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSpac
   · have h1 := h.pair.map (f : R →+* R')
     rwa [← RingHom.comp_assoc, AlgHom.comp_algebraMap] at h1
   · show f y ∈ maximalIdeal R'
-    rw [← res_eq_zero_iff Λ, res_map, res_eq_zero_iff]
-    exact hy
+    rwa [← res_eq_zero_iff Λ, res_map, res_eq_zero_iff]
   · rw [PD.map_map, ← h.red]
     congr 1
     exact RingHom.ext fun x => res_map f x
@@ -697,8 +692,7 @@ private theorem lc_dual {Γ k : Type} [TopologicalSpace Γ] [Field k] {f : Γ �
     rw [Ideal.mem_bot]
     ext <;> simp [hm x hx, hm y hy]
   refine IsLocallyConstant.desc f _ (h 2) fun x y e => ?_
-  rw [Ideal.Quotient.eq, h2, Ideal.mem_bot, sub_eq_zero] at e
-  exact e
+  rwa [Ideal.Quotient.eq, h2, Ideal.mem_bot, sub_eq_zero] at e
 
 private theorem hom_of_der {O A k : Type} [CommRing O] [CommRing A] [Algebra O A] [CommRing k] [Algebra O k]
     (x : A →ₐ[O] k) (D : A →ₗ[O] k) (hD : D ∈ PtDer x k) :
@@ -1172,8 +1166,7 @@ theorem seed_res_alt (T : Tower D) (𝔞 : Amb l) {ι : PadicAlgCl l ≃+* ℂ} 
   have h2 := (chainMap (T.fr ∅) _ (𝔞.j c₁) _).1.2 h1
   have e1 : (𝔞.j c₁).comp ((residue c₁.O).comp (inc h)) = 𝔞.red c :=
     RingHom.ext fun x => congrArg (residue 𝔞.V) (𝔞.compat c c₁ h x)
-  rw [e1] at h2
-  exact h2
+  rwa [e1] at h2
 end Gal
 end UpperTheory.V.Ws.Chn
 end
@@ -1439,8 +1432,7 @@ theorem isOpen_kappaOpenNeighbourhood (l : ℕ) [Fact l.Prime] : IsOpen ((W l : 
 
 theorem cong_of_mem {l : ℕ} [Fact l.Prime] {x : (Qbar l)ˣ} (hx : x ∈ W l) : Cong x 1 := by
   unfold Cong
-  rw [Units.val_one]
-  exact hx
+  rwa [Units.val_one]
 
 theorem exists_pow_cong {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ]
     {l : ℕ} [Fact l.Prime] (f : Γ →* (Qbar l)ˣ) (hf : Continuous f) : ∃ d : ℕ, 0 < d ∧ ∀ g, f g ^ d ∈ W l := by
@@ -1761,8 +1753,7 @@ private theorem last_step (hCh : _root_.UpperTheory.V.Cu.ChainRankFour) (hCD : C
     refine ⟨Asm.pair_of f fi ?_, qc, inj ?_⟩
     · rw [← RingHom.comp_assoc, fa]
       have : (𝔞.a c').comp (inc h) = 𝔞.a c := RingHom.ext fun x => 𝔞.compat c c' h x
-      rw [this]
-      exact hp
+      rwa [this]
     · show (QR.map _).map _ = s.map _
       rw [es, PD.map_map, PD.map_map, fr]
   obtain ⟨f₀, hf₀⟩ := X.univ R s _ rs lR
@@ -1776,8 +1767,7 @@ private theorem last_step (hCh : _root_.UpperTheory.V.Cu.ChainRankFour) (hCD : C
   refine ⟨c', h, X, J, f.comp (f₀ : X.A →+* R), hJ, ?_, fun b hb => ?_, Asm.zero_of_allIn X J _ all fun z hz => ?_, ?_⟩
   · rw [RingHom.comp_assoc, AlgHom.comp_algebraMap, fa]
   · have h0 : res c'.O R ((f₀.comp (IsScalarTower.toAlgHom c'.O X.B X.A)) b) = 0 := by
-      rw [res_map, res_eq_zero_iff]
-      exact hb
+      rwa [res_map, res_eq_zero_iff]
     refine (residue_eq_zero_iff _).1 ((RingHom.congr_fun fr (f₀ (algebraMap X.B X.A b))).trans ?_)
     exact (congrArg (𝔞.j c') h0).trans (map_zero _)
   · have h0 : f₀ z = 0 := (map_eq_zero_iff f fi).1 hz

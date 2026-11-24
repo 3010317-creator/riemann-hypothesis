@@ -65,8 +65,7 @@ theorem coset_eq_iff_redV (hq : ((qOf P : ℕ) : 𝓞 E) ∉ P.asIdeal ^ 2) {a a
         show a - a ∈ stdAt E n P
         rw [sub_self]
         exact zero_mem _
-      rw [h] at h0
-      exact h0
+      rwa [h] at h0
     · intro h
       ext z
       simp only [Set.mem_setOf_eq]
@@ -111,9 +110,7 @@ variable {X : Fields} {Pr : Primes X} {R : Ranks} {sel : HeightOneSpectrum (𝓞
   {mu : Tup X.F X.E X.K S} {cst : LocCst X (rowSG Pr sel mu)} {u : Pr.Word} {j : ℕ}
 
 theorem mem_vGs_of_rowSG (hQ : QE sel (mu : Chr X.F X.E X.K) = ∅) (P : rowSG Pr sel mu) : P.1 ∈ Pr.vGs := by
-  have h := P.2
-  simp only [rowSG, uSG, hQ, Finset.union_empty] at h
-  exact h
+  simpa only [rowSG, uSG, hQ, Finset.union_empty] using P.2
 
 theorem ptAt_coset (hQ : QE sel (mu : Chr X.F X.E X.K) = ∅) (q : PtAt R sel mu cst u j) (h : j + 1 = R.m) :
     ∃ y : Sp X.E (R.N j), (∀ w ∈ Pr.vGs, ((qOf w : ℕ) : X.E) • y ∈ Formalism.HermitianLatticesTheory.localization₂ w.asIdeal q.1.1.deco.1.N) ∧
@@ -206,8 +203,7 @@ theorem cosetIn_eq_iff_bar_eq : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {se
       exact (coset_eq_iff_redV (hq P.1 hP) (hA q y hy ⟨P.1, hP⟩) (hA q' y' hy' ⟨P.1, hP⟩)).2 this
   · have e : ∀ p : PtAt R sel mu cst u j, p.1.2 = ∅ := fun p => by
       have := p.2
-      rw [ysAt_ys_of_ne sel mu cst h] at this
-      exact this
+      rwa [ysAt_ys_of_ne sel mu cst h] at this
     have h1 : ∀ p : PtAt R sel mu cst u j, cosetIn p = fun _ => ∅ := fun p => by
       funext P
       ext z

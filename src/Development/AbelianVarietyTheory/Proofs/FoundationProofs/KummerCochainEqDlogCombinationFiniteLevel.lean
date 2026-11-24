@@ -408,8 +408,7 @@ theorem zeta_sub_one_mem_span : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∀ (�
     have e2 : (p : Ω) / (T.ζ j - 1) * W * (T.ζ j - 1) = (p : Ω) * W := by
       rw [div_mul_eq_mul_div, div_mul_cancel₀ _ hτ0]
     rw [sub_mul, one_mul, e2]
-  rw [key, ← mul_assoc, inv_mul_cancel₀ hu0, one_mul] at this
-  exact this
+  rwa [key, ← mul_assoc, inv_mul_cancel₀ hu0, one_mul] at this
 
 end GlobalTheory.KumIdeal
 end -- clump:auto
@@ -496,8 +495,7 @@ theorem gal_mem_C {T : Tower p Ω} {n : ℕ} {r : Ω}
     refine mem_Hfix.2 ⟨(Hinf T).mul_mem ((Hinf T).mul_mem ((Hinf T).inv_mem hg) hhinf) hg, ?_⟩
     rw [AlgEquiv.mul_apply, AlgEquiv.mul_apply, hgr, AlgEquiv.aut_inv, AlgEquiv.symm_apply_apply]
   have e := hx.2 _ hk
-  rw [AlgEquiv.mul_apply, AlgEquiv.mul_apply, AlgEquiv.aut_inv, AlgEquiv.symm_apply_eq] at e
-  exact e
+  rwa [AlgEquiv.mul_apply, AlgEquiv.mul_apply, AlgEquiv.aut_inv, AlgEquiv.symm_apply_eq] at e
 
 theorem eq_on_C {T : Tower p Ω} {r : Ω} {g h : Gal p Ω} (hg : g ∈ Hinf T) (hh : h ∈ Hinf T)
     (hr : h r = g r) {x : Ω} (hx : x ∈ FixI (Hfix T r)) : h x = g x := by
@@ -505,8 +503,7 @@ theorem eq_on_C {T : Tower p Ω} {r : Ω} {g h : Gal p Ω} (hg : g ∈ Hinf T) (
     refine mem_Hfix.2 ⟨(Hinf T).mul_mem ((Hinf T).inv_mem hg) hh, ?_⟩
     rw [AlgEquiv.mul_apply, hr, AlgEquiv.aut_inv, AlgEquiv.symm_apply_apply]
   have e := hx.2 _ hk
-  rw [AlgEquiv.mul_apply, AlgEquiv.aut_inv, AlgEquiv.symm_apply_eq] at e
-  exact e
+  rwa [AlgEquiv.mul_apply, AlgEquiv.aut_inv, AlgEquiv.symm_apply_eq] at e
 
 theorem rep_of_span {T : Tower p Ω} {n : ℕ} {r : Ω}
     (hH : ∀ h ∈ Hinf T, ∃ i : ℕ, h r = T.ζ n ^ i * r) {g : Gal p Ω} (hg : g ∈ Hinf T) {y : Ω}
@@ -895,8 +892,7 @@ theorem glue_fam (T : Tower p Ω) (F : ℕ → Ω → Ω) (hF : ∀ m, GlobalThe
     refine int_congr (int_sub (int_sub (int_add ((hF n).2.1 x hxn y hyn)
       (hG n _ (mul_mem hxn hyn))) (int_mul ix (hG n y hyn))) (int_mul iy (hG n x hxn))) ?_
     ring
-  · have hm := (Lev T (0 + 1)).algebraMap_mem c
-    exact int_congr (int_add (hG 0 _ hm) ((hF 0).2.2 c)) (by ring)
+  · exact int_congr (int_add (hG 0 _ ((Lev T (0 + 1)).algebraMap_mem c)) ((hF 0).2.2 c)) (by ring)
 
 theorem glue : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 p) Ω], IsClo p Ω →
     ∀ (T : Tower p Ω) (B : Subalgebra (O0 p) Ω), (∀ x ∈ B, ∃ m : ℕ, x ∈ Lev T m) →
@@ -1276,8 +1272,7 @@ theorem exponents : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra
   rw [gz, ← ezn, ← pow_mul, ← pow_succ] at kz
   rw [gq, ← ezn, ← pow_mul] at kq
   have kq' := mul_right_cancel₀ (qq_ne T (2 * n)) kq
-  rw [GlobalTheory.K5.Basic.zeta_pow_eq_iff] at kz kq'
-  rw [Nat.modEq_iff_dvd] at kz kq'
+  rw [GlobalTheory.K5.Basic.zeta_pow_eq_iff, Nat.modEq_iff_dvd] at kz kq'
   obtain ⟨s, hs⟩ := kz
   obtain ⟨t, ht⟩ := kq'
   refine ⟨i, j, -s, -t, hi.symm, hj', ?_, ?_⟩

@@ -58,8 +58,7 @@ theorem exists_zsmul_mem_of_finrank_le_of_le {M : Type} [AddCommGroup M] {N L : 
   have h0 : Module.finrank ℤ (L ⧸ N.comap L.subtype) = 0 := by omega
   obtain ⟨a, ha, hax⟩ := (Module.finrank_eq_zero_iff.1 h0) (Submodule.Quotient.mk ⟨x, hx⟩)
   refine ⟨a, ha, ?_⟩
-  rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at hax
-  exact hax
+  rwa [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at hax
 
 theorem vanish_of_inRCone_of_genRank_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (q : ℕ) (ψ lab : InvFun (𝓞 E)), IsPolyFan H.bar q ψ → IsCarrierDim H.bar q ψ lab → ∀ (X : Type) [AddCommGroup X] [Module (𝓞 E) X] [Module.Finite (𝓞 E) X] [Module.Projective (𝓞 E) X], Module.finrank (𝓞 E) X ≤ q → Dominates H.bar X → ∀ (m : ℕ) (τ : Fin m → LinearMap.BilinForm ℤ X), IsCell H.bar ψ τ → ∀ β ∈ balForms H.bar X, (∀ y, 0 ≤ β y y) → InRCone τ β → (genRank τ : ℝ) ≤ lab.evalZ β → ∀ j y, β y y = 0 → τ j y y = 0 := by
   intro E _ _ _ H q ψ lab hψ hlab X _ _ _ _ hX hdom m τ hτ β hβ hβp hβc hrk j y hy
@@ -91,8 +90,7 @@ theorem vanish_of_inRCone_of_genRank_le : ∀ (E : Type) [Field E] [NumberField 
           Finset.single_le_sum (f := fun i => τ k (w i) (w i)) (fun i _ => hτ.nonneg k (w i)) (Finset.mem_univ k)
         have h2 := hwpos k hk
         omega
-      · intro hk
-        exact Finset.sum_eq_zero fun i _ => hk _ (hw0 i)
+      · exact fun hk => Finset.sum_eq_zero fun i _ => hk _ (hw0 i)
   have hcell : IsCell H.bar ψ (fun k => τ (s k)) :=
     isCell_face_of_isFaceCut E H q ψ hψ X hX hdom m τ hτ _ s hf hcut
   obtain ⟨c, hc, hce⟩ := hβc

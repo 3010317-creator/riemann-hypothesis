@@ -80,8 +80,7 @@ theorem loc_mem {v : HeightOneSpectrum (𝓞 L)} {x : (v.adicCompletion L)ˣ} (h
   intro w
   by_cases hw : w = v
   · subst hw
-    rw [loc_self]
-    exact hx
+    rwa [loc_self]
   · rw [loc_ne hw, map_one]
 
 theorem inf_mem (w : InfinitePlace L) (y : (w.Completion)ˣ) : infIdele L w y ∈ unitIdl L := fun v => by
@@ -199,8 +198,7 @@ theorem exists_anti [Fintype I] (h : CMData F c φ) {C : Ideles L →* Ideles L}
     field_simp
   have := hν1 ⟨_, hk⟩
   show ν (diagUnits L k / C (diagUnits L k)) = 1
-  rw [hC.diag, ← map_div]
-  exact this
+  rwa [hC.diag, ← map_div]
 
 end CM
 

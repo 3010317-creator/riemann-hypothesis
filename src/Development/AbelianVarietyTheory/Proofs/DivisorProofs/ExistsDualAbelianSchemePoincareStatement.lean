@@ -157,8 +157,7 @@ theorem GlobalTheory.chartAroundUnit (R : Type) [CommRing R] (A : Over (Sp R)) [
   obtain ⟨W, hW, hsW, -⟩ := exists_isAffineOpen_mem_and_subset (U := ⊤) (x := e s) trivial
   have hrange : ∀ f : R, Set.range (spMap (algebraMap R (Localization.Away f))) =
       (PrimeSpectrum.basicOpen f : Set (PrimeSpectrum R)) := by
-    intro f
-    exact PrimeSpectrum.localization_away_comap_range (Localization.Away f) f
+    exact fun f => PrimeSpectrum.localization_away_comap_range (Localization.Away f) f
   have hopen : IsOpen (e ⁻¹' (W : Set A.left)) := W.isOpen.preimage e.continuous
   obtain ⟨_, ⟨f, rfl⟩, hsf, hsub⟩ :=
     (PrimeSpectrum.isTopologicalBasis_basic_opens (R := R)).exists_subset_of_mem_open
@@ -352,8 +351,7 @@ theorem rep_exists {S : Scheme.{0}} (A : Over S) [GrpObj A] {κ : Type} [Finite 
   let xx : T ⟶ Bt := Over.homMk xl hxo
   have wxx : ∀ i, w i ≫ xx = x i ≫ j i := fun i ↦ by
     ext1
-    simp only [Over.comp_left, Over.homMk_left, w, xx]
-    exact hxl i
+    simpa only [Over.comp_left, Over.homMk_left, w, xx] using hxl i
   have hxt : xx ≫ bt = t := by
     ext1
     refine Cofan.IsColimit.hom_ext hT _ _ fun i ↦ ?_
@@ -663,8 +661,7 @@ theorem isPullback_sigmaι_desc {X : Scheme.{0}} {κ : Type} (V : κ → X.Opens
       simp at h3
   refine ⟨⟨Sigma.ι_desc _ _⟩, ⟨PullbackCone.IsLimit.mk _
     (fun s => IsOpenImmersion.lift (Sigma.ι B i) s.fst (hr s)) ?_ ?_ ?_⟩⟩
-  · intro s
-    exact IsOpenImmersion.lift_fac _ _ _
+  · exact fun s => IsOpenImmersion.lift_fac _ _ _
   · intro s
     rw [← cancel_mono (V i).ι, Category.assoc, ← Sigma.ι_desc (fun j => f j ≫ (V j).ι) i,
       IsOpenImmersion.lift_fac_assoc, s.condition]
@@ -820,8 +817,7 @@ theorem hasRepAF_of_disjoint_cover {S : Scheme.{0}} (A : Over S) [GrpObj A] (g :
     obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 hz
     refine TopologicalSpace.Opens.mem_iSup.2 ⟨i, ?_⟩
     change z ∈ Set.range (A ◁ j i).left
-    rw [(GlobalTheory.T.isOpenImmersion_whiskerLeft_range_preimage_snd A (j i)).2]
-    exact hi
+    rwa [(GlobalTheory.T.isOpenImmersion_whiskerLeft_range_preimage_snd A (j i)).2]
   have hkd : Pairwise fun i i' => Disjoint (A ◁ j i).left.opensRange (A ◁ j i').left.opensRange := by
     intro i i' hii'
     rw [disjoint_iff, eq_bot_iff]
@@ -903,8 +899,7 @@ theorem hasRepAF_of_isEmpty : ∀ (S : Scheme.{0}) (A S' : Over S) [GrpObj A] (g
     exact ⟨t, ⟨Category.comp_id _, lbIso_of_isEmpty _ _⟩, fun x hx => (Category.comp_id x).symm.trans hx.1⟩
   · rw [Over.id_left]
     refine ⟨inferInstance, ⟨fun x => isEmptyElim x⟩, ⟨?_⟩⟩
-    intro K _ y Z fst snd h
-    exact isEmptyElim (y (IsLocalRing.closedPoint K))
+    exact fun K _ y Z fst snd h => isEmptyElim (y (IsLocalRing.closedPoint K))
   · intro F; exact ⟨⊥, isAffineOpen_bot _, fun x _ => isEmptyElim x⟩
 
 end GlobalTheory.DualCon
@@ -941,8 +936,7 @@ namespace GlobalTheory.ReducedNormalisation
 theorem exists_mem_others_not_mem {R : Type} [CommRing R] {ι : Type} [Fintype ι] [DecidableEq ι]
     (p : ι → Ideal R) (hp : ∀ i, (p i).IsPrime) (hmin : ∀ i j, p i ≤ p j → i = j) (i : ι) :
     ∃ a : R, a ∉ p i ∧ ∀ j, j ≠ i → a ∈ p j := by
-  by_contra h
-  push Not at h
+  by_contra! h
   have hle : (Finset.univ.erase i).inf p ≤ p i := by
     intro a ha
     by_contra hai
@@ -1037,8 +1031,7 @@ theorem exists_conductor {R : Type} [CommRing R] {ι : Type} [Fintype ι] [Decid
   · intro i _ hik
     rw [algebraMap_eq_zero_of_mem (p k) (hmemJ (hcJ i) hik), zero_mul]
   · intro h; exact absurd (Finset.mem_univ k) h
-  · intro i _ hik
-    exact algebraMap_eq_zero_of_mem (p k) (hmemJ (hyJ i) hik)
+  · exact fun i _ hik => algebraMap_eq_zero_of_mem (p k) (hmemJ (hyJ i) hik)
   · intro h; exact absurd (Finset.mem_univ k) h
 
 end GlobalTheory.ReducedNormalisation
@@ -1236,8 +1229,7 @@ theorem local_of_opens_pullback (Q : MorphismProperty Scheme.{0}) [IsZariskiLoca
     (h : ∀ i, Q (pullback.snd f (V i).ι)) : Q f := by
   have hV' : iSup V = ⊤ := by
     rw [eq_top_iff]
-    intro y _
-    exact TopologicalSpace.Opens.mem_iSup.2 (hV y)
+    exact fun y _ => TopologicalSpace.Opens.mem_iSup.2 (hV y)
   exact IsZariskiLocalAtTarget.of_openCover (P := Q) (Y.openCoverOfIsOpenCover V hV') h
 
 theorem Good.of_opens {g : ℕ} {X Y : Scheme.{0}} (f : X ⟶ Y) {Ix : Type} (V : Ix → Y.Opens)

@@ -97,8 +97,7 @@ theorem actSt : ActSt := by
       addOf (GlobalTheory.FBMap.mapLaw (algebraMap R C) B.G).F (comp1 (B.actK C a) (pt C (n := 2) d 0))
         (comp1 (B.actK C a) (pt C (n := 2) d 1)) := by
     have h := (GlobalTheory.FBMap.mapAct (algebraMap R C) B.A).hom a
-    rw [GlobalTheory.LawLog.add_pt] at h
-    exact h
+    rwa [GlobalTheory.LawLog.add_pt] at h
 
   have hcomp := GlobalTheory.FactorDepth.logOf_comp_hom _ _ (B.actK C a) hφ0 hhom
   have h0 : ∀ e, constantCoeff (subst (oneVar C d) (B.actK C a e)) = 0 := fun e =>
@@ -273,8 +272,7 @@ theorem biadd_of_add_of_act : AddSt → ActSt → BiaddSt := by
       subst_pointFamily_germEvalPair hx (cc_pt _) (cc_pt _), subst_pointFamily_germEvalPair hx (cA _ _) (cc_pt _), sA hx] at k
     simp only [subst_famPt_pt hx] at k
     unfold pairSer
-    rw [hadd]
-    exact k
+    rwa [hadd]
   · have hx : ∀ (j : Fin 3) i, constantCoeff ((![expPt (fglOf hB) z, expPt (fglOf hB) w, expPt (fglOf hB) w'] :
         Fin 3 → Fin d → MvPowerSeries σ C) j i) = 0 := fun j i => by
       fin_cases j; exacts [cz i, cw i, cw' i]
@@ -285,8 +283,7 @@ theorem biadd_of_add_of_act : AddSt → ActSt → BiaddSt := by
       subst_pointFamily_germEvalPair hx (cc_pt _) (cc_pt _), subst_pointFamily_germEvalPair hx (cc_pt _) (cA _ _), sA hx] at k
     simp only [subst_famPt_pt hx] at k
     unfold pairSer
-    rw [hadd]
-    exact k
+    rwa [hadd]
   · have hx := constantCoeff_vecCons_pair_eq_zero cw cz
     have k := logUnit_subst (v := v) hx (fun j i => by fin_cases j; exacts [hw.2 i, hz.2 i]) (hB.2.2.2.2 a)
       (by rw [map_sub, constantCoeff_germEvalPair_eq_zero (cc_comp1 (cc_pt _) (hA _)) (cc_pt _) hc,
@@ -295,8 +292,7 @@ theorem biadd_of_add_of_act : AddSt → ActSt → BiaddSt := by
       subst_pointFamily_germEvalPair hx (cc_pt _) (cc_comp1 (cc_pt _) (hA _)), subst_famPt_comp1 hx, subst_famPt_comp1 hx] at k
     simp only [subst_famPt_pt hx] at k
     unfold pairSer
-    rw [(hAct C v d R O B hB σ a).1 w hw.1, (hAct C v d R O B hB σ (star a)).1 z hz.1]
-    exact k
+    rwa [(hAct C v d R O B hB σ a).1 w hw.1, (hAct C v d R O B hB σ (star a)).1 z hz.1]
 
 end GlobalTheory.IsoTriv.GaugeBiadd
 end -- clump:auto
@@ -460,8 +456,7 @@ theorem subst_expPt_sum_mv {C : Type} [Field C] {v : AddValuation C (WithTop ℝ
   congr 1
   funext e'
   rw [subst_lgPt G ht (by simp)]
-  simp only [subst_X ht]
-  exact congrFun (lgPt_expPt G (hw (r b))) e'
+  simpa only [subst_X ht] using congrFun (lgPt_expPt G (hw (r b))) e'
 
 theorem retrSt_of : LimActSt → LimPtSt → InvSt → RetrSt := by
   intro hAct hPt hInv E _ _ _ H Dw l Xo c _ hstar T io y Ch p _ X cx n B hB
@@ -635,8 +630,7 @@ private theorem constantCoeff_subst_of_constantCoeff_zero' {K ι Λ : Type} [Fie
     constantCoeff (subst A Ψ) = constantCoeff Ψ := by
   have hs : HasSubst A := hasSubst_of_constantCoeff_zero hA
   have h := constantCoeff_subst_eq_zero hs hA (f := Ψ - C (constantCoeff Ψ)) (by simp)
-  rw [subst_sub hs, subst_C, map_sub, constantCoeff_C, sub_eq_zero] at h
-  exact h
+  rwa [subst_sub hs, subst_C, map_sub, constantCoeff_C, sub_eq_zero] at h
 
 private theorem pderiv_sum_smul_X_eq_C {K ι Λ : Type} [Field K] [Fintype Λ] [DecidableEq Λ] (β : Λ → ι → K)
     (lam : Λ) (l : ι) :
@@ -646,8 +640,7 @@ private theorem pderiv_sum_smul_X_eq_C {K ι Λ : Type} [Field K] [Fintype Λ] [
   · rw [Derivation.map_smul, pderiv_X_self, MvPowerSeries.smul_eq_C_mul, mul_one]
   · intro b _ hb
     rw [Derivation.map_smul, pderiv_X_of_ne hb, smul_zero]
-  · intro h
-    exact absurd (Finset.mem_univ lam) h
+  · exact fun h => absurd (Finset.mem_univ lam) h
 
 end Rules
 
@@ -831,8 +824,7 @@ variable {C : Type} [Field C] {d : ℕ} {σ : Type}
 theorem mv_sum (A : Matrix (Fin d) (Fin d) C) {β : Type} (s : Finset β) (x : β → Fin d → MvPowerSeries σ C) :
     mv A (∑ b ∈ s, x b) = ∑ b ∈ s, mv A (x b) := by
   funext e
-  simp only [mv, Finset.sum_apply, Finset.smul_sum]
-  exact Finset.sum_comm
+  simpa only [mv, Finset.sum_apply, Finset.smul_sum] using Finset.sum_comm
 
 theorem mv_mv (A A' : Matrix (Fin d) (Fin d) C) (w : Fin d → MvPowerSeries σ C) :
     mv A (mv A' w) = mv (A * A') w := by
@@ -1154,8 +1146,7 @@ theorem limFrame : AddSt → ActSt → UnitSt → BiaddSt → FrameSt → FinSt 
   have hD : ∀ (x : O) i j, IsIntV v (dAct C B x i j) := fun x i j => hB.2.1 x i _
   have hAi : ∀ b j e e', IsIntV v (A b j e e') := fun b j e e' => by
     have := (ReciprocityTheory.ChartRestriction.G.Sh.ptIntSub v).add_mem (zle (hA 0 b j e e')) (hD (a 0 b j) e e')
-    rw [sub_add_cancel] at this
-    exact this
+    rwa [sub_add_cancel] at this
   obtain ⟨m, e, he⟩ := Module.Finite.exists_fin (R := ℤ) (M := O)
   let g : κ × κ × Fin m → MvPowerSeries σ C := fun i =>
     pairSer (fglOf hB) h (w i.1) (mv (dAct C B (e i.2.2)) (w i.2.1))
@@ -1203,15 +1194,13 @@ theorem limFrame : AddSt → ActSt → UnitSt → BiaddSt → FrameSt → FinSt 
     simp only [zero_smul, Finset.sum_const_zero] at h3
     have h4 := (ReciprocityTheory.ChartRestriction.G.Sh.ptIntSub v).add_mem h3 (hz.2 x.2)
     have h5 : ∀ y z : C, y - z + z ∈ ReciprocityTheory.ChartRestriction.G.Sh.ptIntSub v → IsIntV v y := fun y z hyz => by
-      rw [sub_add_cancel] at hyz
-      exact hyz
+      rwa [sub_add_cancel] at hyz
     exact h5 _ _ h4
   rw [coeff_mul] at h1
   have h6 := (ReciprocityTheory.ChartRestriction.G.Sh.ptIntSub v).add_mem h1
     ((ReciprocityTheory.ChartRestriction.G.Sh.ptIntSub v).sum_mem fun x hx =>
       (ReciprocityTheory.ChartRestriction.G.Sh.ptIntSub v).mul_mem (hU.2 x.1) (h2 x hx))
-  rw [sub_add_cancel] at h6
-  exact h6
+  rwa [sub_add_cancel] at h6
 
 end GlobalTheory.IsoTriv
 end -- clump:auto
@@ -1676,8 +1665,7 @@ theorem poly_bound {C : Type} [Field C] (v : AddValuation C (WithTop ℝ)) {κ :
       · rw [v.map_mul]
         have := coe_le_add (h N s' s' hs' hs' (fun k => by rw [sub_self, v.map_zero]; exact le_top)).2 (hss k)
         have e2 : (-K + N : ℝ) = N - K := by ring
-        rw [e2] at this
-        exact this
+        rwa [e2] at this
     · rw [v.map_mul]
       have := coe_le_add (y := 0) b (hs k)
       rwa [add_zero] at this

@@ -109,8 +109,7 @@ theorem lattice_exists_scalar_bound_attained : ∀ (k : Type) [Field k] [Valuati
   obtain ⟨s, hs⟩ := hL.fg
 
   have hex : ∃ x ∈ s, ∃ j, x j ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
+    by_contra! hcon
     have hbot : L = ⊥ := by
       rw [← hs, Submodule.span_eq_bot]
       intro x hx
@@ -218,8 +217,7 @@ theorem no_pair_on_scaled_kernel : ∀ (k : Type) [Field k] [ValuativeRel k] [To
   have hzero : ∀ a, a ≠ i → P.HasVal (Pi.single a c) 0 := by
     intro a ha
     obtain ⟨d, hda, hdi⟩ : ∃ d, d ≠ a ∧ d ≠ i := by
-      by_contra h
-      push Not at h
+      by_contra! h
       have hsub : (Finset.univ : Finset n) ⊆ {a, i} := fun d _ => by
         by_cases hd : d = a
         · simp [hd]
@@ -238,8 +236,7 @@ theorem no_pair_on_scaled_kernel : ∀ (k : Type) [Field k] [ValuativeRel k] [To
     have hw0 : w = 0 := by linear_combination -h3
     exact hw0 ▸ hw
   obtain ⟨a, ha⟩ : ∃ a, a ≠ i := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have : Fintype.card n ≤ 1 := Fintype.card_le_one_iff.2 (fun x y => (h x).trans (h y).symm)
     omega
   have hzi : ∀ t : 𝒪[k], t ∈ IsLocalRing.maximalIdeal 𝒪[k] → P.HasVal (Pi.single i ((t : k) * c)) 0 := by
@@ -361,8 +358,7 @@ theorem latPair_hasVal_residue_of_transvections : ∀ (k : Type) [Field k] [Valu
         simp [Ne.symm hb]
       · simp
     have := hsum s Finset.univ
-    rw [hx', Finset.sum_eq_single i (fun b _ hb => by rw [hzero b hb, mul_zero]) (by simp)] at this
-    exact this
+    rwa [hx', Finset.sum_eq_single i (fun b _ hb => by rw [hzero b hb, mul_zero]) (by simp)] at this
   refine ⟨v i, ?_, hval⟩
   intro h0
   apply P.fn_ne
@@ -414,8 +410,7 @@ theorem GlobalTheory.LatPairStab.stable_lattice_shape : ∀ (k : Type) [Field k]
   intro k _ _ _ _ n _ _ i L c hcard hc hcl hbd hex
   obtain ⟨x₀, hx₀, j, hj⟩ := hex
   obtain ⟨a, hai, haj⟩ : ∃ a, a ≠ i ∧ a ≠ j := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have hsub : (Finset.univ : Finset n) ⊆ {i, j} := fun b _ => by
       by_cases hbi : b = i
       · simp [hbi]
@@ -434,16 +429,14 @@ theorem GlobalTheory.LatPairStab.stable_lattice_shape : ∀ (k : Type) [Field k]
 
   have ha : ∀ t : 𝒪[k], Pi.single a ((t : k) * c) ∈ L := by
     intro t
-    have h := L.sub_mem (hcl x₀ hx₀ a j t haj (Or.inl hai)) hx₀
-    simpa [hj] using h
+    simpa [hj] using L.sub_mem (hcl x₀ hx₀ a j t haj (Or.inl hai)) hx₀
   have hca : Pi.single a c ∈ L := by simpa using ha 1
 
   have hsing : ∀ b, b ≠ i → ∀ t : 𝒪[k], Pi.single b ((t : k) * c) ∈ L := by
     intro b hbi t
     by_cases hba : b = a
     · subst hba; exact ha t
-    · have h := L.sub_mem (hcl (Pi.single a c) hca b a t hba (Or.inl hbi)) hca
-      simpa using h
+    · simpa using L.sub_mem (hcl (Pi.single a c) hca b a t hba (Or.inl hbi)) hca
 
   have hi : ∀ t : 𝒪[k], t ∈ IsLocalRing.maximalIdeal 𝒪[k] → Pi.single i ((t : k) * c) ∈ L := by
     intro t ht
@@ -500,8 +493,7 @@ theorem GlobalTheory.LatPairStab.stable_lattice_shape : ∀ (k : Type) [Field k]
       rw [e]; exact L.smul_mem _ hxi
     intro x
     constructor
-    · intro hx
-      exact ⟨hbd x hx, ⟨c⁻¹ * x i, hbd x hx i⟩, hm x hx, rfl⟩
+    · exact fun hx => ⟨hbd x hx, ⟨c⁻¹ * x i, hbd x hx i⟩, hm x hx, rfl⟩
     · rintro ⟨hx, s, hs, hsx⟩
       refine hsum x fun b => ?_
       by_cases hb : b = i
@@ -687,13 +679,11 @@ theorem eq_scalar_smul_of_stab : ∀ (k : Type) [Field k] [ValuativeRel k] [Topo
   obtain ⟨ε, hε0, hε⟩ := GlobalTheory.T.transvectionInvariant_pair_functional_residue k n i Q c (by omega) hc0 hA hcl
   obtain ⟨w, hw⟩ := IsLocalRing.residue_surjective (R := 𝒪[k]) ε
   have hwu : IsUnit w := by
-    rw [← IsLocalRing.notMem_maximalIdeal, ← IsLocalRing.residue_eq_zero_iff, hw]
-    exact hε0
+    rwa [← IsLocalRing.notMem_maximalIdeal, ← IsLocalRing.residue_eq_zero_iff, hw]
   obtain ⟨u, hu⟩ := hwu
   have huw : (((u⁻¹ : 𝒪[k]ˣ) : 𝒪[k]) : k) * (w : k) = 1 := by
     have h1 : ((u⁻¹ : 𝒪[k]ˣ) : 𝒪[k]) * w = 1 := by rw [← hu, Units.inv_mul]
-    have h2 := congrArg (fun z : 𝒪[k] => (z : k)) h1
-    simpa using h2
+    simpa using congrArg (fun z : 𝒪[k] => (z : k)) h1
   have hw0 : (w : k) ≠ 0 := fun h0 => by simp [h0] at huw
   have hint : ∀ y : k, (w : k) * y ∈ 𝒪[k] → y ∈ 𝒪[k] := by
     intro y hy
@@ -851,8 +841,7 @@ theorem glued_zero {n : Type} [Fintype n] [DecidableEq n] {q : GlobalTheory.LatP
       exact h2.resolve_left (inv_ne_zero q.ne_zero)
     have hs' : s = 0 := Subtype.ext hs
     simpa [hs'] using h1
-  · intro h
-    exact ⟨0, by simpa using h, by simp⟩
+  · exact fun h => ⟨0, by simpa using h, by simp⟩
 
 end GlobalTheory.Core.Mi.LatMatch.StabPair
 

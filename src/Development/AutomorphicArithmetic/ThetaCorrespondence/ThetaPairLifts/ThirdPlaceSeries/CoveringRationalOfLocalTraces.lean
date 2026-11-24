@@ -167,8 +167,7 @@ theorem expand {K L : Type} [Field K] [Field L] [Algebra K L] {n : ℕ} {s : Typ
   rw [Finsupp.sum_of_support_subset _ (s := Finset.univ.biUnion (fun i => (b.repr (v i)).support))]
   · refine Finset.sum_congr rfl (fun j _ => ?_)
     rw [Algebra.smul_def, mul_comm]
-  · intro j hj
-    exact Finset.mem_biUnion.2 ⟨i, Finset.mem_univ _, hj⟩
+  · exact fun j hj => Finset.mem_biUnion.2 ⟨i, Finset.mem_univ _, hj⟩
   · intro j _
     simp
 
@@ -282,8 +281,7 @@ theorem mall_eq_span_rat (LL Ks WL G0 : Type) [Field LL] [NumberField LL] [Field
     rw [hψ, hψ, map_sum]
     simp only [LinearMap.map_smul, ← hcc, Finset.smul_sum, Matrix.mulVec, dotProduct, Matrix.map_apply, Matrix.of_apply, Am, Finset.sum_smul, mul_smul, algebraMap_smul]
     rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun k _ => ?_
-    exact smul_comm _ _ _
+    exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun k _ => smul_comm _ _ _
   have hmemT : ∀ y, ψ y ∈ A.typeP J0 lam0 ↔ ∀ p : J0, ((Am p).map (algebraMap Ks LL)).mulVec y = algebraMap Ks LL (lamK p) • y := by
     intro y
     rw [FormsL.mem_typeP]
@@ -355,8 +353,7 @@ theorem rho_mem_WK (p : PtAt ex Csz) (i : Fin D.R.m) (g) (f) (hf : f ∈ (p.R.to
     rw [hc] at h2
     rw [← h2]
     exact Subtype.property _
-  · rw [(p.rhoGeo i).2 hk g]
-    exact hf
+  · rwa [(p.rhoGeo i).2 hk g]
 
 end GlobalTheory.CovTop
 end -- clump:auto

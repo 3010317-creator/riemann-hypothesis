@@ -85,8 +85,7 @@ private theorem join_inj {N : ℕ} {A : Type} [CommRing A] {x y : Um N A × Um 2
     exact hu.mul_left_cancel this
   refine Prod.ext (Subtype.ext (funext hi)) (Subtype.ext (funext fun j => ?_))
   refine Fin.cases hs (fun k => ?_) j
-  rw [Fin.fin_one_eq_zero k]
-  exact hl
+  rwa [Fin.fin_one_eq_zero k]
 
 private theorem join_surj {N : ℕ} {A : Type} [CommRing A] (w : Um (N + 1) A)
     (hw : Ideal.span (w.1 '' Set.range Fin.castSucc) = ⊤) (u : Aˣ) :
@@ -149,8 +148,7 @@ private theorem pts_bij (N : ℕ) (Q : Pred (XC (N + 1))) (hQ : Q.Le (Q2 N)) (A 
     obtain ⟨x, hx0, hxw⟩ := join_surj w (hQ A w hw) (_root_.UpperTheory.P2.unimodularRow_one_isUnit c).unit
     refine ⟨⟨x, ?_⟩, ?_⟩
     · show Q.P A (Um.join x)
-      rw [hxw]
-      exact hw
+      rwa [hxw]
     · refine Prod.ext (Subtype.ext hxw) (Subtype.ext (funext fun i => ?_))
       obtain rfl : i = 0 := Subsingleton.elim _ _
       exact hx0.trans (_root_.UpperTheory.P2.unimodularRow_one_isUnit c).unit_spec
@@ -175,8 +173,7 @@ private theorem grp_bij (N : ℕ) (Q : Pred (XC (N + 1))) (hQ : Q.Le (Q2 N)) (A 
     let m' : (↑A : Type)ˣ := m
     let c' : (↑A : Type)ˣ := c
     refine ⟨(show (↑A : Type)ˣ × (↑A : Type)ˣ from (m' * c'⁻¹, m')), ?_⟩
-    refine Prod.ext rfl ?_
-    exact mul_ringHom_units_ratio m' c'
+    exact Prod.ext rfl (mul_ringHom_units_ratio m' c')
 
 private theorem lh_norm {q : ℕ} {X E : Spc} (π : X ⟶ E) {d e : Fin 1 → ℤ} (c : ∀ j, Ht q X (d j) (e j))
     (hd : ∀ j, d j = 0) (he : ∀ j, e j = 0) (hc : ∀ j, c j = (one q X).cast (hd j).symm (he j).symm)

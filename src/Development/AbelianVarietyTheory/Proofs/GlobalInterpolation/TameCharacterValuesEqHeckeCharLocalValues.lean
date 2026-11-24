@@ -83,8 +83,7 @@ theorem val_le_two {P : HeightOneSpectrum (𝓞 E)} {z : RInt F E} (hz : z ∈ (
 
 theorem exp_neg_two_lt {P : HeightOneSpectrum (𝓞 E)} {b : 𝓞 E} (hb2 : b ∉ P.asIdeal ^ 2) :
     WithZero.exp (-((2 : ℕ) : ℤ)) < Valued.v (algebraMap E (P.adicCompletion E) (b : E)) := by
-  rw [GlobalTheory.SuppIdele.val_algebraMap, ← not_le, P.intValuation_le_pow_iff_mem]
-  exact hb2
+  rwa [GlobalTheory.SuppIdele.val_algebraMap, ← not_le, P.intValuation_le_pow_iff_mem]
 
 theorem value_of_congr2 (h : Reads σ μ ξ) (ht : ∀ P, ξ.TameAt P) {P : HeightOneSpectrum (𝓞 E)} {u : (AfE F E)ˣ}
     {y : RInt F E} (hy : (y : AfE F E) = u) {b : 𝓞 E} (hb2 : b ∉ P.asIdeal ^ 2) {x : Eˣ} (hx : (x : E) = b)
@@ -112,8 +111,7 @@ theorem value_of_congr2 (h : Reads σ μ ξ) (ht : ∀ P, ξ.TameAt P) {P : Heig
         rw [← hx]; rfl
       rw [e2, e3] at e1
       rw [← e1, ← sub_one_mul, map_mul] at a1
-      by_contra hn
-      push Not at hn
+      by_contra! hn
       exact absurd (lt_of_lt_of_le hb (le_mul_of_one_le_left' hn)) (not_lt.2 a1)
     · rw [ev_local_ne hQ] at e2
       rw [e2, mul_one] at e1
@@ -155,8 +153,7 @@ theorem main : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
       rw [hy, ← hv hc hc2]
       exact value_of_congr2 h ht f1 hc2 rfl f3 f4
     unfold unifVal
-    rw [dite_eq_left hex, ← (hex.choose_spec (P.under (𝓞 F)) rfl y y₀ b a1 hb hb2 a2 a3 a4)]
-    exact hy
+    rwa [dite_eq_left hex, ← (hex.choose_spec (P.under (𝓞 F)) rfl y y₀ b a1 hb hb2 a2 a3 a4)]
   · intro hq q hqe
     set b : 𝓞 E := ((Ideal.absNorm P.asIdeal : ℕ) : 𝓞 E) with hbdef
     have hqb : (q : E) = (b : E) := by rw [hqe, hbdef]; simp
@@ -167,7 +164,6 @@ theorem main : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
       rw [hy]
       exact value_of_congr2 h ht f1 hq hqb f3 f4
     unfold qVal qValC
-    rw [dite_eq_left hex, ← (hex.choose_spec (P.under (𝓞 F)) rfl y y₀ a1 a2 a3 a4)]
-    exact hy
+    rwa [dite_eq_left hex, ← (hex.choose_spec (P.under (𝓞 F)) rfl y y₀ a1 a2 a3 a4)]
 
 end GlobalTheory.TwistVal

@@ -274,8 +274,7 @@ theorem projection_q_zero_e_prime_eq_zero {S S₀ : HSp D} {ρ : ℕ} (d : HypDe
 
 theorem mul_col_eq {R m N Y Z : Type} [CommRing R] [Fintype N] (Q : Matrix m N R) (F : Matrix N Y R) (y : Y) (C : R)
     (E : Matrix N Z R) (z : Z) (h : ∀ r, F r y = C * E r z) (a : m) : (Q * F) a y = C * (Q * E) a z := by
-  simp only [Matrix.mul_apply, h, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun _ _ => by ring
+  simpa only [Matrix.mul_apply, h, Finset.mul_sum] using Finset.sum_congr rfl fun _ _ => by ring
 
 theorem mul_col_eq' {R m N Y Z : Type} [CommRing R] [Fintype N] (Q : Matrix m N R) (F : Matrix N Y R) (y : Y)
     (E : Matrix N Z R) (z : Z) (h : ∀ r, F r y = E r z) (a : m) : (Q * F) a y = (Q * E) a z := by
@@ -655,8 +654,7 @@ theorem GlobalTheory.LocMod.flatFB_mulrow : ∀ (D : D7), GlobalTheory.FinPl.Fla
     have hξ' : cA D p.e • ξ = ξ := by ext i j; exact hξh i j
     have hm : cA D p.e • ((B.d.jX ⬝ ξ) ⬝ J.d.p0) = (B.d.jX ⬝ ξ) ⬝ J.d.p0 := by
       rw [← Matrix.smul_mul, ← Matrix.mul_smul, hξ']
-    intro i j
-    exact congrArg (fun M => M i j) hm
+    exact fun i j => congrArg (fun M => M i j) hm
   have hsym : ∀ t, ψ (symplO J.W B.V (p.up FW FV t) (J.d.ext0 B.V (B.d.incX J.W₀ ξ))) =
       (ψk (b * t (Sum.inr l) (Sum.inl s')) : ℂ) := by
     intro t
@@ -731,8 +729,7 @@ theorem unip_law : ∀ (D : D7), GlobalTheory.FinPl.FlatLaws D → OmLoc D → �
     have : Ideal.Quotient.mk (GlobalTheory.FinPl.idAt D (· = v)) ((1 : Matrix (Fin B.V.rank) (Fin B.V.rank) (AE D)) i j) =
         (1 : Matrix (Fin B.V.rank) (Fin B.V.rank) (AE D ⧸ GlobalTheory.FinPl.idAt D (· = v))) i j := by
       by_cases h : i = j <;> simp [Matrix.one_apply, h]
-    rw [this] at h1
-    exact h1
+    rwa [this] at h1
   have hdet : Matrix.GeneralLinearGroup.det (embA n u) = 1 := det_of_mem_N hu
   obtain ⟨-, -, -, -, hcomp⟩ := GlobalTheory.LocChar.weil_char_split D k p ψ st.weil.std
   obtain ⟨μS, hμS⟩ := hcomp st.χV
@@ -978,10 +975,8 @@ theorem jac_γ_inl (h : p.IsJacFrame J s hh G₀ FW) (j : n') (col : Fin J.W.ran
     simp only [Sum.inl.injEq, eq_comm]
   · rw [ite_eq_right Sum.inr_ne_inl]
     rcases jac_cases h.1 j' with ⟨i', hi'⟩ | ⟨i', hi'⟩
-    · simp only [h.2.2.1 i' j' hi']
-      exact key _ (wittDecomposition_coreProj_mul_e_eq_zero J.d) _ _
-    · simp only [h.2.2.2 i' j' hi']
-      exact key _ (wittZeroProjection_mul_dualBasis_eq_zero J.d) _ _
+    · simpa only [h.2.2.1 i' j' hi'] using key _ (wittDecomposition_coreProj_mul_e_eq_zero J.d) _ _
+    · simpa only [h.2.2.2 i' j' hi'] using key _ (wittZeroProjection_mul_dualBasis_eq_zero J.d) _ _
 
 end Jac
 
@@ -1115,11 +1110,9 @@ theorem pairVal_zero (h : p.IsBesFrame B s FA FV) (r : n ⊕ Fin c) (i : Fin (σ
   rcases r with a | l
   · refine Fin.lastCases ?_ (fun i => ?_) i
     · rw [pairVal_last]
-      simp only [h.2.1]
-      exact sum_core_zero p (zCol_A B) _ _
+      simpa only [h.2.1] using sum_core_zero p (zCol_A B) _ _
     · rw [pairVal_castSucc]
-      simp only [h.2.1]
-      exact sum_core_zero p (qY_A B) _ _
+      simpa only [h.2.1] using sum_core_zero p (qY_A B) _ _
   have hl := hr l rfl
   have hlc := l.isLt
   rcases lt_trichotomy l.val σ with h1 | h1 | h1
@@ -1177,8 +1170,7 @@ theorem GlobalTheory.LocMod.flatFB_trans_free : ∀ (D : D7), GlobalTheory.FinPl
       rw [TransLaw.up_single, hBF.2.2.1 ⟨l.val, hl⟩ l rfl, TransLaw.jac_γ_inl p hJF,
         TransLaw.wittExtZero_inclusionX_adelicSingleRowMatrix]
       congr 1
-      simp only [Finset.mul_sum]
-      exact Finset.sum_congr rfl fun m _ => by ring
+      simpa only [Finset.mul_sum] using Finset.sum_congr rfl fun m _ => by ring
     rw [hup, hL.iso _ (hTm.theta Φ) _ (TransLaw.mxAt_rowMx p _ _), map_zero]
     simp [symplO, hO, ch, Matrix.single]
   · have hj : σ < j.val := hq j rfl

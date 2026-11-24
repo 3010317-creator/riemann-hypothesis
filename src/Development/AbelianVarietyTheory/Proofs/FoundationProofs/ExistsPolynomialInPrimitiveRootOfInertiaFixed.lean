@@ -92,10 +92,8 @@ theorem exists_polynomial_closedSubgroup_fixed_eval_eq {F Ω : Type*} [Field F] 
     refine h s ?_ (hs ζ (IntermediateField.mem_adjoin_simple_self T ζ))
     have : s ∈ T.fixingSubgroup := by
       rw [IntermediateField.mem_fixingSubgroup_iff]
-      intro x hx
-      exact hs x ((IntermediateField.adjoin T ({ζ} : Set Ω)).algebraMap_mem ⟨x, hx⟩)
-    rw [hT] at this
-    exact this
+      exact fun x hx => hs x ((IntermediateField.adjoin T ({ζ} : Set Ω)).algebraMap_mem ⟨x, hx⟩)
+    rwa [hT] at this
   have hint : IsIntegral T ζ :=
     (Algebra.IsAlgebraic.isAlgebraic (R := F) ζ).isIntegral.tower_top
   have hu' : u ∈ (IntermediateField.adjoin T ({ζ} : Set Ω)).toSubalgebra := hu
@@ -106,8 +104,7 @@ theorem exists_polynomial_closedSubgroup_fixed_eval_eq {F Ω : Type*} [Field F] 
   · intro s hs d
     rw [Polynomial.coeff_map]
     exact (IntermediateField.mem_fixedField_iff H.toSubgroup _).1 (Q.coeff d).2 s hs
-  · rw [Polynomial.eval_map_algebraMap]
-    exact hQ
+  · rwa [Polynomial.eval_map_algebraMap]
 
 theorem exists_polynomial_inertia_fixed_eval_eq (Ω : Type) [Field Ω] [Algebra ℚ Ω]
     [IsAlgClosure ℚ Ω] (A : ValuationSubring Ω) (ζ u : Ω)
@@ -187,8 +184,7 @@ theorem mem_of_sum_mul_pow_mem_of_valuation_zpow (Ω : Type) [Field Ω] (A : Val
   have h1 : t i ^ N ≤ 1 := pow_le_one₀ zero_le' (hle i (Finset.mem_range.2 hi))
   rw [hpow i k hk, zpow_le_one_iff_right_of_lt_one₀ hb0 hℓ1] at h1
   have hk0 : 0 ≤ k := by
-    by_contra hneg
-    push Not at hneg
+    by_contra! hneg
     have : (N : ℤ) * k ≤ -(N : ℤ) := by nlinarith
     omega
   rw [← A.valuation_le_one_iff, hk]

@@ -108,10 +108,8 @@ theorem UpperTheory.V.Th.locSup :
         y.ρ0 m (G0.φ v g) * red m (y.w v : Matrix (Fin n) (Fin n) O) : Mm O n m) i j = 0 := fun g i j hij => by
       have := congrArg (Ideal.Quotient.mk (maximalIdeal O ^ m)) ((y.tri v g).1 i j hij)
       rw [map_zero] at this
-      rw [Pt.ρ0, ← red_mul, ← red_mul]
-      exact this
+      rwa [Pt.ρ0, ← red_mul, ← red_mul]
     refine ⟨hmem.1, fun g g' => ?_, fun g i j hij => ?_⟩
     · exact (hmem.2 g g').trans (congrArg (_ + ·) (hv g _))
     · have := up_conj hw (t g) (by have := t g⁻¹; rwa [map_inv] at this) hY i j hij
-      rw [← hv g Y] at this
-      exact this
+      rwa [← hv g Y] at this

@@ -140,8 +140,7 @@ theorem exists_ratModel_normalization : ∀ (A o Ω : Type) [CommRing A] [IsDede
       refine ⟨((Sp Ω).presheaf.map (homOfLE le_top).op).hom ((Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom x), ?_⟩
       rw [hE, GlobalTheory.Points.valR_res (𝟙 (Sp Ω)) le_top h1]
       have := GlobalTheory.Points.valR_specMap (𝟙 (CommRingCat.of Ω)) x
-      rw [Spec.map_id] at this
-      exact this
+      rwa [Spec.map_id] at this
 
     let y := gB.hom y'
     have hy : IsIntegral (Z.presheaf.stalk (p ξ)) y := hfin.to_isIntegral y
@@ -161,8 +160,7 @@ theorem exists_ratModel_normalization : ∀ (A o Ω : Type) [CommRing A] [IsDede
       have : gB' d' = (m : Γ(Z, V)) • y := by
         rw [Algebra.smul_def, map_mul]
         exact congrArg (· * y) (hcomm _)
-      rw [this]
-      exact hm
+      rwa [this]
     have hc0 : c' ≠ 0 := by
       intro h0
       have h2 : IsUnit (gB.hom c') := by

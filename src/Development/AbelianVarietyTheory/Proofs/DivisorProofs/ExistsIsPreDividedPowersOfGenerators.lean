@@ -113,10 +113,8 @@ theorem isExpType_mul {f g : PowerSeries B} (hf : IsExpType f) (hg : IsExpType g
       rw [Finset.HasAntidiagonal.mem_antidiagonal]; omega
     have he : (x.1 + (z.1 - x.1), x.2 + (z.2 - x.2)) = z := Prod.ext (by simp; omega) (by simp; omega)
     refine ⟨(z.1 - x.1, z.2 - x.2), hy, ?_, he⟩
-    rw [key _ hy, Nat.add_sub_cancel' h1, Nat.add_sub_cancel' h2]
-    exact hz0
-  · intro y hy _
-    exact key y hy
+    rwa [key _ hy, Nat.add_sub_cancel' h1, Nat.add_sub_cancel' h2]
+  · exact fun y hy _ => key y hy
 
 def ser (g : ℕ → B) (a : B) : PowerSeries B := mk fun n ↦ a ^ n * g n
 

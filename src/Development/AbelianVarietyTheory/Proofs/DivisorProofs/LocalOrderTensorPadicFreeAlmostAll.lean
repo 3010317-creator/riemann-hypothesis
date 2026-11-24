@@ -136,8 +136,7 @@ theorem exists_den {F B : Type} [Field F] [NumberField F] [Ring B] [Algebra F B]
         exact (hy i).add (hz i)
       zero_mem' := by
         intro i
-        simp
-        exact isIntegral_zero
+        simpa using isIntegral_zero
       smul_mem' := by
         intro c y hy i
         simp only [Set.mem_setOf_eq] at hy ⊢
@@ -183,8 +182,7 @@ theorem exists_coeffs {F B : Type} [Field F] [NumberField F] [Ring B] [Algebra F
     intro x hx
     refine ⟨fun i => ⟨_, GlobalTheory.SepModel.tmul_mem_cenOrder ℓ hℓ (hD x hx i)⟩, ?_⟩
     conv_lhs => rw [← v.sum_repr x, TensorProduct.tmul_sum]
-    refine Finset.sum_congr rfl fun i _ => ?_
-    exact tmul_smul_eq_cenMap_mul ℓ 1 _ _
+    exact Finset.sum_congr rfl fun i _ => tmul_smul_eq_cenMap_mul ℓ 1 _ _
   have hz' : z ∈ Subalgebra.toSubmodule (locOrder ℓ Λ) := hz
   rw [locOrder, Algebra.adjoin_eq_span] at hz'
   have hcl : (Submonoid.closure ((fun b : B => (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] b) '' (Λ : Set B)) :

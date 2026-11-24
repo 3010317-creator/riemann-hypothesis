@@ -179,8 +179,7 @@ theorem UpperTheory.Gal.productCup_of_system.pTheta_of :
             have hXprod : ∏ m ∈ Iᶜ, (((sysP K x a).X m : (F ⊗[ℂ] K)ˣ) : F ⊗[ℂ] K) =
                 (f ⊗ₜ (1 : K)) * (((sysP K x a).X (pk I) : (F ⊗[ℂ] K)ˣ) : F ⊗[ℂ] K) ^ L.card := by
               have e := congrArg (Algebra.TensorProduct.includeLeftRingHom : F →+* F ⊗[ℂ] K) hsplit
-              rw [map_prod, map_mul, map_pow, hcompl] at e
-              exact e
+              rwa [map_prod, map_mul, map_pow, hcompl] at e
             have hU' : (((∏ l ∈ L, (sysP K x a).u n11 (pk I) (pk J) l : (F ⊗[ℂ] K)ˣ)) : F ⊗[ℂ] K) =
                 (((sysP K x a).X (pk I) : (F ⊗[ℂ] K)ˣ) : F ⊗[ℂ] K) ^ L.card *
                   (((sysP K x a).Y (pk J) : (F ⊗[ℂ] K)ˣ) : F ⊗[ℂ] K) ^ L.card := by
@@ -216,8 +215,7 @@ theorem UpperTheory.Gal.productCup_of_system.pTheta_of :
     refine hzero I J L ?_
     by_cases hI : I = ∅
     · exact Or.inl hI
-    · refine Or.inr (Or.inr fun h => hI ?_)
-      exact Finset.card_eq_zero.1 (by omega)
+    · exact Or.inr (Or.inr fun h => hI (Finset.card_eq_zero.1 (by omega)))
   · intro s L hL
     obtain ⟨I, J, rfl⟩ : ∃ I J, s = uni I J := ⟨lft s, rgt s, (hlr s).symm⟩
     have hedge : edge2 β (uni I J) = if I.card = 1 then β J else 0 := by simp only [edge2, hl, hr]

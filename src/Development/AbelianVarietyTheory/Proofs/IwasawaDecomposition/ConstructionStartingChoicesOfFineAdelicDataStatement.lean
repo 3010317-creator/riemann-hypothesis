@@ -344,8 +344,7 @@ theorem lvlMat_laws {σ : K →+* ℂ} (hσ : ∀ a, σ (star a) = starRingEnd �
     rw [CSD.gaMat_eq_lift, CSD.gaMat_eq_lift, map_smul, Matrix.mul_smul, Matrix.smul_mul]
   · show S.lvlOp r P ψ 1 = 1
     unfold CSD.lvlOp
-    rw [(group_action_matrix_hom K S G r).1, Matrix.mul_one]
-    exact hproj
+    rwa [(group_action_matrix_hom K S G r).1, Matrix.mul_one]
   · have h1 := (hop (idemOf X) (hI.2 _).symm).1
     have h2 := group_action_matrix_adjoint K S G r hr (idemOf X)
     rw [hI.1.selfAdj] at h2
@@ -998,8 +997,7 @@ theorem zeOf_eq {R : Ranks} (Dd : Rows.Data R) (u : Dd.Word) (μ : Dd.Tup) (c : 
   · obtain ⟨z, hz'⟩ := hc
     have hc0 : c ≠ 0 := by
       obtain ⟨φ, F, hF, hne⟩ := h.2
-      intro h0
-      exact hne (by rw [h.1 φ F hF, h0, zero_mul])
+      exact fun h0 => hne (by rw [h.1 φ F hF, h0, zero_mul])
     have hz0 : z ≠ 0 := fun h0 => hc0 (by rw [← hz', h0, map_zero])
     have hex : ∃ z : Dd.LLˣ, ZeFact Dd u μ (Dd.embLL (z : Dd.LL)) :=
       ⟨Units.mk0 z hz0, by simpa [hz'] using h⟩
@@ -1119,8 +1117,7 @@ theorem exists_nums_numOK : ∀ (B : Base) (C : Cols B) (G : Type) [Group G] (p 
           have ht := h1 φ F (by change F ∈ ((p.what₂ e W₀ (numsOf p e W₀) η hη).what₂).V0 μ; rw [← hv μ]; exact hF)
           change perOf p e W₀ u μ φ F = c * buSec (data0 p e W₀) u φ (((p.what₂ e W₀ (numsOf p e W₀) η hη).what₂).iota μ (((p.what₂ e W₀ (numsOf p e W₀) η hη).what₂).Qsp μ |>.starProjection F)) at ht
           change perOf p e W₀ u μ φ F = c * buSec (data0 p e W₀) u φ ((data0 p e W₀).iota μ ((data0 p e W₀).Qsp μ |>.starProjection F))
-          rw [hi μ, hq μ]
-          exact ht
+          rwa [hi μ, hq μ]
         · exact h2
       · exact h3
     idx := fun Y => ⟨fun μ j w h1 h2 => (ijIdx_eq_can _ Y μ j h1 h2 w).symm, fun μ j w _ _ => rfl⟩
@@ -1153,8 +1150,7 @@ theorem rowPk_nonempty : ∀ (B : Base) (f : Fr B.toPre) (T : TwDat B) (w : ColW
     if h : ∃ t, ixOf w.I (usedOf w.I T Wt) t = a then h.choose else mu0F (X := B.fields) (tuOf w.I (usedOf w.I T Wt))
   have htt : ∀ t, tupT (ixOf w.I (usedOf w.I T Wt) t) = t := fun t => by
     have h : ∃ t', ixOf w.I (usedOf w.I T Wt) t' = ixOf w.I (usedOf w.I T Wt) t := ⟨t, rfl⟩
-    simp only [tupT, dite_eq_left h]
-    exact ixOf_injective w.I _ h.choose_spec
+    simpa only [tupT, dite_eq_left h] using ixOf_injective w.I _ h.choose_spec
   obtain ⟨y, hy, -⟩ := HdExist.hd_exists (w.D Z₀) (Gc B w.px) (PlS B w.px) (PlI B w.px) (TupU w.I (usedOf w.I T Wt))
     (famR (w.st Z₀) w.I hX (usedOf w.I T Wt) z₀.Xg z₀.tr) z₀.core.Q.c.F z₀.R z₀.F z₀.cG z₀.pins hF hY hW
     (ixOf w.I (usedOf w.I T Wt)) tupT htt (ixOf_mu0F w.I _)

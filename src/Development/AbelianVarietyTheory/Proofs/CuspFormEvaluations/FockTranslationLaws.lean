@@ -82,8 +82,7 @@ theorem herm_smul_right (c : ℂ) (u w : EuclideanSpace ℂ ι) :
 
 theorem herm_conj (u w : EuclideanSpace ℂ ι) : (starRingEnd ℂ) (Hf u w) = Hf w u := by
 
-  simp only [Hf, map_sum, map_mul, Complex.conj_conj]
-  exact Finset.sum_congr rfl fun i _ => by ring
+  simpa only [Hf, map_sum, map_mul, Complex.conj_conj] using Finset.sum_congr rfl fun i _ => by ring
 
 theorem herm_sub_swap (u w : EuclideanSpace ℂ ι) :
     Hf w u = Hf u w - 2 * I * ((Hf u w).im : ℂ) := by
@@ -158,8 +157,7 @@ theorem fock_translation_laws {ι : Type} [Fintype ι] (U : ℕ → EuclideanSpa
     refine and_congr_right fun _ => forall₂_congr fun γ _ => ⟨fun h => ?_, fun h v => ?_⟩
     · funext w
       have := key γ (w - γ)
-      rw [← h, sub_add_cancel] at this
-      exact this
+      rwa [← h, sub_add_cancel] at this
     · rw [← key, h]
   refine ⟨h1, h2, ?_, ?_, ?_, h6, ?_, ?_⟩
   · intro a F

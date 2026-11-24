@@ -92,11 +92,9 @@ theorem aeval_nab_mem {a : ℕ} (g : Vc k a →ₗ[k] Vc k a) (N : Submodule k�
     (f : Polynomial k) (x : Vc k a) (hx : x ∈ N) : Polynomial.aeval (nab g) f x ∈ N := by
   induction f using Polynomial.induction_on generalizing x with
   | C c =>
-    simp only [Polynomial.aeval_C, Module.algebraMap_end_apply]
-    exact N.smul_of_tower_mem c hx
+    simpa only [Polynomial.aeval_C, Module.algebraMap_end_apply] using N.smul_of_tower_mem c hx
   | add p q hp hq =>
-    simp only [map_add (f := _), LinearMap.add_apply]
-    exact N.add_mem (hp x hx) (hq x hx)
+    simpa only [map_add (f := _), LinearMap.add_apply] using N.add_mem (hp x hx) (hq x hx)
   | monomial m c ih =>
     rw [pow_succ, ← mul_assoc, map_mul, Polynomial.aeval_X, Module.End.mul_apply]
     exact ih _ ((condC_iff_nab_mem g N).1 hN x hx)

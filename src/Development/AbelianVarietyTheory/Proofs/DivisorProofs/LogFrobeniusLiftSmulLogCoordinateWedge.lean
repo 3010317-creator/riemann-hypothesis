@@ -53,8 +53,6 @@ theorem cartierMap_smul_logWedge : ∀ (K : Type) [Field K] (p : ℕ) (n : ℕ) 
   unfold logWedge
   rw [map_list_prod, List.map_map]
   congr 1
-  apply List.map_congr_left
-  intro i _
-  exact hγ.2 i
+  exact List.map_congr_left (fun i _ => hγ.2 i)
 
 end GlobalTheory

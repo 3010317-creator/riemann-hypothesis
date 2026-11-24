@@ -1156,8 +1156,7 @@ theorem qPt_add {k : ℕ} {p p' : QkPt D C k} {q q' : N.QT k} (h : ν.QPt p q) (
     rw [map_add (f := _), h.1, h'.1]
   · obtain ⟨c, hc⟩ := (H.1 (qkAdd hb p p').g).exists
     have := (H.2.2.1 p.g p'.g _ _ _ _ h.2 h'.2 hc).1 ((isAdd_iff_eq _ _ _).2 rfl)
-    rw [this] at hc
-    exact hc
+    rwa [this] at hc
 
 
 include he hb he' hb' in
@@ -1331,8 +1330,7 @@ theorem recognition_core : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
       (em₀.comp_algebraMap.trans (IsLocalization.ringHom_ext (nonZeroDivisors R) (RingHom.ext fun r => (c₀ r).trans
         (congrArg (algebraMap (FractionRing W₀) (Kb W₀)) (hga₀ r).symm)))) (lab k p)
     obtain ⟨p₁, t₁, t₂, t₃⟩ := (lies_iff h₀ c₀ em₀ D₀.tau_bimult p _).2 rfl
-    rw [← (hg₀' k hk _ x).1 (H₀ k hk p p₁ _ x t₁ t₂ t₃ hx)]
-    exact hx
+    rwa [← (hg₀' k hk _ x).1 (H₀ k hk p p₁ _ x t₁ t₂ t₃ hx)]
 
   haveI := lφ
   obtain ⟨DW, ⟨hWp⟩⟩ := GlobalTheory.MumPull.exists_pull R W φ iφ lφ D
@@ -1401,8 +1399,7 @@ theorem recognition_core : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
     intro k hk σ p pσ hp
     obtain ⟨-, hx, hiff⟩ := GlobalTheory.UT.Cl.galois_holds W _ bW D' A' G' hG' U' C C σ.toAlgHom k hk p
     obtain ⟨x', hx'⟩ := hx (f' k p)
-    rw [← (hf' k hk pσ x').1 ((hiff pσ (f' k p) x' hp hx').1 ((hf' k hk p _).2 rfl))]
-    exact hx'
+    rwa [← (hf' k hk pσ x').1 ((hiff pσ (f' k p) x' hp hx').1 ((hf' k hk p _).2 rfl))]
   have gal : ∀ (σ : C ≃ₐ[FractionRing W] C) (p pσ : QkPt DW.toPre C ((n ^ 1) ^ 2))
       (p' pσ' : QkPt D'.toPre C ((n ^ 1) ^ 2)), QkExt (σ : C →+* C) p pσ → QkExt (σ : C →+* C) p' pσ' →
       fW _ p = f' _ p' → fW _ pσ = f' _ pσ' := fun σ p pσ p' pσ' h₁ h₂ h₃ =>
@@ -1563,8 +1560,7 @@ theorem induces_of_one_embedding : ∀ (R : Type) [CommRing R] [IsDomain R] [IsL
       ((eq_pullQk_iff hD hGF c hB hB' _ _).2 ⟨t₂, t₁⟩).symm
     have u : QkExt (i'.comp e).toRingHom q s₁ := by
       have := qkExt_trans hq w₀
-      rw [← hi'] at this
-      exact this
+      rwa [← hi'] at this
     have l := lab_indep_level hB (fun σ => hlab σ j) m (i'.comp e) w₁ u
     refine hgal s' x₀ z ht ?_
     apply gpa.1.hom_ext

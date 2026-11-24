@@ -240,8 +240,7 @@ theorem encard_kernels_le : ∀ {F : Type} [Field F] [ValuativeRel F] [Topologic
     rw [hcard, ← pow_mul]
     refine Nat.pow_le_pow_right (by omega) (Nat.mul_le_mul (by omega) (by omega))
   have h3 := key.trans (Nat.cast_le.2 hN)
-  have h4 := ENat.toENNReal_le.2 h3
-  simpa using h4
+  simpa using ENat.toENNReal_le.2 h3
 
 end GlobalTheory.HL.GluingKernels
 end -- clump:auto
@@ -653,8 +652,7 @@ theorem gluing_count : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpa
     exact Nat.pow_le_pow_left hNle _
   have h3 := h1.trans (Nat.cast_le.2 h2)
   have h4 := ENat.toENNReal_le.2 h3
-  rw [ENat.toENNReal_coe, Nat.cast_pow] at h4
-  exact h4
+  rwa [ENat.toENNReal_coe, Nat.cast_pow] at h4
 
 end GlobalTheory.HL.Gluing
 end -- clump:auto
@@ -676,8 +674,7 @@ theorem encard_le_mul {α β : Type} (s : Set α) (f : α → β) (t : Set β) (
     (hB : ∀ b ∈ t, (({a | a ∈ s ∧ f a = b} : Set α).encard : ℝ≥0∞) ≤ B) :
     (s.encard : ℝ≥0∞) ≤ A * B := by
   have h1 : s ⊆ ⋃ b : t, {a | a ∈ s ∧ f a = b.1} := by
-    intro a ha
-    exact Set.mem_iUnion.2 ⟨⟨f a, hf a ha⟩, ha, rfl⟩
+    exact fun a ha => Set.mem_iUnion.2 ⟨⟨f a, hf a ha⟩, ha, rfl⟩
   calc (s.encard : ℝ≥0∞) = ∑' _ : s, (1 : ℝ≥0∞) := (ENNReal.tsum_set_one s).symm
     _ ≤ ∑' _ : (⋃ b : t, {a | a ∈ s ∧ f a = b.1} : Set α), (1 : ℝ≥0∞) :=
         ENNReal.tsum_mono_subtype (fun _ => (1 : ℝ≥0∞)) h1
@@ -731,8 +728,7 @@ theorem nT_cardI_le {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
   refine hmain.trans ?_
   have hq' : (S.q : ℝ) ^ S.a.toNat ≤ S.Hp := by
     have : S.a = (S.a.toNat : ℤ) := (Int.toNat_of_nonneg ha).symm
-    rw [this, zpow_natCast] at hq
-    exact hq
+    rwa [this, zpow_natCast] at hq
   have hreal : ((S.q : ℝ) ^ S.a.toNat) ^ (10 * (r + 1)) * (j : ℝ) ^ (k - 1) ≤
       S.Hp ^ (12 * (r + 1)) * (j : ℝ) ^ (k - 1) := by
     refine mul_le_mul_of_nonneg_right ?_ (by positivity)
@@ -855,8 +851,7 @@ theorem finite_orbits (S : Frames L r k) (d : S.Datum) :
     refine ⟨h.1 • o.out, ?_, ?_⟩
     · simp only [Set.mem_iUnion, Set.mem_setOf_eq]
       exact ⟨o', hF ▸ (GlobalTheory.HL.TermBasic.term_basic L r k S d _ hA.1).2.2.2.2.2.2.1, hA.1, hF⟩
-    · refine Eq.trans ?_ (Quotient.out_eq o)
-      exact Quotient.sound (MulAction.orbitRel_apply.2 ⟨h, rfl⟩)
+    · exact Eq.trans (Quotient.sound (MulAction.orbitRel_apply.2 ⟨h, rfl⟩)) (Quotient.out_eq o)
   · refine Set.finite_empty.subset fun o ho => hex ⟨_, ho⟩
 
 end GlobalTheory.HL.MassGlue

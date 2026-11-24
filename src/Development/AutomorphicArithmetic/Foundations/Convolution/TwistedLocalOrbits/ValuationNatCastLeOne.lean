@@ -180,8 +180,7 @@ theorem pow_mem_ball {q : ℕ} {r : ValueGroupWithZero E} (hr : r < valuation E 
     rw [Matrix.smul_apply, nsmul_eq_mul, map_mul, mul_comm]
     exact mul_le_mul' (hu' i j) le_rfl
   have h3 := h1.add h2
-  rw [sub_add_cancel, add_sub_cancel, ← Units.val_pow_eq_pow_val] at h3
-  exact h3
+  rwa [sub_add_cancel, add_sub_cancel, ← Units.val_pow_eq_pow_val] at h3
 
 theorem sg_mem_ball_iff {σ : E ≃+* E} (hσ : Isom σ) {r : ValueGroupWithZero E} {u : GL (Fin n) E} :
     sg σ u ∈ ball n r ↔ u ∈ ball n r := by
