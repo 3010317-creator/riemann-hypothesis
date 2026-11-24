@@ -195,4 +195,119 @@ theorem LFunction_zero_of_re_nonpos : ∀ (q : ℕ) [NeZero q] (χ : DirichletCh
     · omega
     · exact ho
 
+
+namespace LFunctionImaginaryAxis
+
+open Filter Topology
+
+private lemma analyticAt_factor (a : ℂ) {p : ℕ} (hp : p.Prime) (s : ℂ) :
+    AnalyticAt ℂ (fun z : ℂ => 1 - a * (p : ℂ) ^ (-z)) s := by
+  apply Differentiable.analyticAt
+  intro z
+  have hp0 : (p : ℂ) ≠ 0 := by exact_mod_cast hp.ne_zero
+  fun_prop (disch := exact Or.inl hp0)
+
+private lemma order_factor (a : ℂ) {p : ℕ} (hp : p.Prime) (s : ℂ) :
+    analyticOrderAt (fun z : ℂ => 1 - a * (p : ℂ) ^ (-z)) s =
+      if a * (p : ℂ) ^ (-s) = 1 then 1 else 0 := by
+  split_ifs with ha
+  · apply (analyticAt_factor a hp s).analyticOrderAt_eq_one_of_zero_deriv_ne_zero (by simp [ha])
+    have hp0 : (p : ℂ) ≠ 0 := by exact_mod_cast hp.ne_zero
+    have hd : HasDerivAt (fun z : ℂ => 1 - a * (p : ℂ) ^ (-z))
+        (a * (p : ℂ) ^ (-s) * Complex.log p) s := by
+      convert ((((hasDerivAt_id' s).neg).const_cpow (Or.inl hp0)).const_mul a).const_sub 1 using 1
+      simp only [Pi.neg_apply]
+      ring
+    rw [hd.deriv, ha, one_mul, ← Complex.ofReal_natCast,
+      ← Complex.ofReal_log (Nat.cast_nonneg p)]
+    exact Complex.ofReal_ne_zero.mpr (ne_of_gt (Real.log_pos (by exact_mod_cast hp.one_lt)))
+  · exact analyticOrderAt_eq_zero.mpr (.inr (sub_ne_zero.mpr (Ne.symm ha)))
+
+private lemma order_product (a : ℕ → ℂ) (S : Finset ℕ)
+    (hS : ∀ p ∈ S, p.Prime) (s : ℂ) :
+    analyticOrderAt (fun z : ℂ => ∏ p ∈ S, (1 - a p * (p : ℂ) ^ (-z))) s =
+      (S.filter fun p => a p * (p : ℂ) ^ (-s) = 1).card := by
+  classical
+  induction S using Finset.induction_on with
+  | empty => simp
+  | @insert p S hp ih =>
+    have hp' := hS p (Finset.mem_insert_self p S)
+    have hS' : ∀ p ∈ S, p.Prime := fun p hp => hS p (Finset.mem_insert_of_mem hp)
+    have heq : (fun z : ℂ => ∏ r ∈ insert p S, (1 - a r * (r : ℂ) ^ (-z))) =
+        (fun z : ℂ => 1 - a p * (p : ℂ) ^ (-z)) *
+          (fun z : ℂ => ∏ r ∈ S, (1 - a r * (r : ℂ) ^ (-z))) := by
+      funext z
+      rw [Finset.prod_insert hp]
+      rfl
+    rw [heq, analyticOrderAt_mul (analyticAt_factor (a p) hp' s)
+      (S.analyticAt_fun_prod fun p hp => analyticAt_factor (a p) (hS' p hp) s),
+      order_factor _ hp', ih hS']
+    by_cases ha : a p * (p : ℂ) ^ (-s) = 1
+    · simp [ha, Finset.filter_insert, Finset.mem_filter, hp, add_comm]
+    · simp [ha, Finset.filter_insert]
+
+private lemma primitive_ne_zero {q : ℕ} [NeZero q] {χ : DirichletCharacter ℂ q}
+    (hχ : χ.IsPrimitive) {s : ℂ} (hs : s.re = 0) (hs0 : s ≠ 0) : LFunction χ s ≠ 0 := by
+  intro hz
+  obtain ⟨⟨n, rfl⟩, _⟩ := LFunction_zero_of_re_nonpos q χ hχ s hs.le hz
+  have hn : n = 0 := by
+    simp only [Complex.neg_re, Complex.natCast_re, neg_eq_zero] at hs
+    exact_mod_cast hs
+  exact hs0 (by simp [hn])
+
+/-- Away from the origin, zeros on the imaginary axis come precisely from removed
+Euler factors. Each such factor contributes one to the vanishing order. -/
+theorem analyticOrderAt_eq {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
+    {s : ℂ} (hs : s.re = 0) (hs0 : s ≠ 0) :
+    have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+    analyticOrderAt (LFunction χ) s =
+      (q.primeFactors.filter fun (p : ℕ) =>
+        χ.primitiveCharacter p * (p : ℂ) ^ (-s) = 1).card := by
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  have hs1 : s ≠ 1 := by intro h; norm_num [h] at hs
+  have ha : AnalyticAt ℂ (LFunction χ.primitiveCharacter) s :=
+    DifferentiableOn.analyticAt (s := {z | z ≠ 1})
+      (fun z hz => (differentiableAt_LFunction _ z (.inl hz)).differentiableWithinAt)
+      (isOpen_ne.mem_nhds hs1)
+  have hp : AnalyticAt ℂ (fun z : ℂ => ∏ p ∈ q.primeFactors,
+      (1 - χ.primitiveCharacter p * (p : ℂ) ^ (-z))) s :=
+    q.primeFactors.analyticAt_fun_prod fun p hp =>
+      analyticAt_factor (χ.primitiveCharacter p) (Nat.prime_of_mem_primeFactors hp) s
+  have heq : LFunction χ =ᶠ[𝓝 s] LFunction χ.primitiveCharacter *
+      (fun z : ℂ => ∏ p ∈ q.primeFactors, (1 - χ.primitiveCharacter p * (p : ℂ) ^ (-z))) := by
+    filter_upwards [eventually_ne_nhds hs1] with z hz
+    simpa [changeLevel_primitiveCharacter] using
+      LFunction_changeLevel χ.conductor_dvd_level χ.primitiveCharacter (.inr hz)
+  rw [analyticOrderAt_congr heq, analyticOrderAt_mul ha hp,
+    analyticOrderAt_eq_zero.mpr (.inr (primitive_ne_zero χ.primitiveCharacter_isPrimitive hs hs0)),
+    zero_add, order_product _ _ (fun p hp => Nat.prime_of_mem_primeFactors hp)]
+
+/-- The natural-number multiplicity version of `analyticOrderAt_eq`. -/
+theorem analyticOrderNatAt_eq {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
+    {s : ℂ} (hs : s.re = 0) (hs0 : s ≠ 0) :
+    have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+    analyticOrderNatAt (LFunction χ) s =
+      (q.primeFactors.filter fun (p : ℕ) =>
+        χ.primitiveCharacter p * (p : ℂ) ^ (-s) = 1).card := by
+  simp [analyticOrderNatAt, analyticOrderAt_eq χ hs hs0]
+
+
+/-- Away from zero on the imaginary axis, vanishing is equivalent to the vanishing
+of at least one removed Euler factor. -/
+theorem zero_iff {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
+    {s : ℂ} (hs : s.re = 0) (hs0 : s ≠ 0) :
+    have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+    LFunction χ s = 0 ↔ ∃ p ∈ q.primeFactors,
+      χ.primitiveCharacter p * (p : ℂ) ^ (-s) = 1 := by
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  have hs1 : s ≠ 1 := by intro h; norm_num [h] at hs
+  have heq := LFunction_changeLevel χ.conductor_dvd_level χ.primitiveCharacter (.inr hs1)
+  rw [changeLevel_primitiveCharacter] at heq
+  rw [heq]
+  simp only [mul_eq_zero, primitive_ne_zero χ.primitiveCharacter_isPrimitive hs hs0,
+    false_or, Finset.prod_eq_zero_iff, sub_eq_zero]
+  simp only [eq_comm]
+
+end LFunctionImaginaryAxis
+
 end GlobalTheory
