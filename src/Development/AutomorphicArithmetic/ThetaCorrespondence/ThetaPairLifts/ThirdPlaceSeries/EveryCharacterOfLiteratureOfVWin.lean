@@ -1191,8 +1191,6 @@ theorem UpperTheory.LiteratureTheorems.radford_shuffle_polynomial_of_literature 
   PositivityTheory.Stage1.PM.radfordShufflePolynomial
 theorem UpperTheory.LiteratureTheorems.siegel_weil_unitary_convergent_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.Published.SiegelWeilUnitaryConvergent :=
   UpperTheory.Lit.Sw47.convergent
-theorem UpperTheory.LiteratureTheorems.weil_theta_convergence_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.Published.WeilThetaConvergence :=
-  _root_.PositivityTheory.Rg.Sw.Glob.wtc
 theorem UpperTheory.LiteratureTheorems.ray_character_artin_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.Published.RayCharacterArtin :=
   GlobalTheory.Published.GlobalArtinReciprocity.rayCharacterArtin (_root_.UpperTheory.LiteratureTheorems.global_artin_reciprocity_of_literature O)
 theorem UpperTheory.LiteratureTheorems.ray_class_field_st_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.Published.RayClassFieldSt :=
