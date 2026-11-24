@@ -1613,7 +1613,7 @@ theorem sAff : SAff := sAff_of _root_.PositivityTheory.KB.sChain_of _root_.Posit
 theorem sHecke : SHecke := sHecke_of _root_.PositivityTheory.KB.sChain_of _root_.PositivityTheory.KB.sEv_of sStab sFin sAff
 theorem sPU : SPU := sPU_of sHt_of
 theorem sMom : SMom := TwSMInt2.sMom_of sHt_of
-theorem sWhit : SWhit := sWhit_of _root_.PositivityTheory.KB.sEv_of sStokes_of
+theorem sWhit : SWhit := sWhit_of sStokes_of
 theorem sCen : SCen := sCen_of _root_.PositivityTheory.KB.sEv_of
 theorem sLoc : SLoc := sLoc_of _root_.PositivityTheory.KB.sEv_of
 
