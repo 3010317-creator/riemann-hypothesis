@@ -65,7 +65,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 
 noncomputable section
 
-open Matrix Formalism.DoubleCosetMeasures Formalism.FourierDecayAlt.A5 Formalism.FourierDecayAlt.A6 Formalism.FourierDecayAlt.P.A5x5 Formalism.FourierDecayAlt.P.A5x8 Formalism.FourierDecayAlt.P.A6x8 Filter Topology
+open Matrix Formalism.DoubleCosetMeasures Formalism.FourierDecayAlt.A5 Formalism.FourierDecayAlt.A6 Formalism.FourierDecayAlt.P.A5x5 Formalism.FourierDecayAlt.P.A5x8 Formalism.FourierDecayAlt.P.A6x8 Filter Topology Formalism.FourierDecayAlt.P.AdicNeighbourhood
 
 namespace Formalism.FourierDecayAlt.P.OrbitalIntegralReduction
 
