@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 """Restore a successful public CI cache for the current clean build inputs.
 
+The receipt is found through the input-fingerprint index (ci/inputs/), else a bounded walk over
+ancestors with identical build inputs (ci/revisions/), else the toolchain's pinned baseline. Its
+immutable map and module manifest are checked against the receipt's SHA-256 values and against
+each other. Then, at the same time, the map is registered with `lake cache add` in parallel
+shards and the missing artifacts are downloaded by one 500-way curl process, each checked
+against the manifest's SHA-256 before it enters the cache (scripts/rh-buildq/fetch-artifacts.py).
+Finally `lake build --no-build` lets Lake unpack exactly the modules whose input hashes are
+mapped, and fails if anything would have to be compiled.
+
 Exit 3 means no equivalent successful CI receipt was found. Other failures must
 not silently fall back: a matching receipt with corrupt bytes is an error.
 """
@@ -16,6 +25,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import time
 import tomllib
 import urllib.error
 import urllib.request
@@ -28,13 +38,15 @@ SHA40 = re.compile(r"[0-9a-f]{40}\Z")
 SHA256 = re.compile(r"[0-9a-f]{64}\Z")
 HASH = re.compile(r"[0-9a-f]{16}\Z")
 ARTIFACT = re.compile(r"[0-9a-f]{16}\.ltar\Z")
+MODULE = re.compile(r"[\w']+(?:\.[\w']+)*\Z")  # Unicode names occur in the tree.
+SCHEMA = "2026-03-17"
+USER_AGENT = "RiemannHypothesisCache/1.0"
+SHARDS = 16
 MAX_JSON = 64 * 1024 * 1024
 MAX_RECEIPT = 2 * 1024 * 1024
 MAX_MODULES = 500000
 
-_SPEC = importlib.util.spec_from_file_location("rh_initial_restore", Path(__file__).with_name("restore-cache.py"))
-restore = importlib.util.module_from_spec(_SPEC)
-_SPEC.loader.exec_module(restore)
+FETCH_ARTIFACTS = Path(__file__).resolve().with_name("rh-buildq") / "fetch-artifacts.py"
 _SETTINGS = importlib.util.spec_from_file_location("rh_client_baseline", Path(__file__).with_name("cache-settings.py"))
 settings = importlib.util.module_from_spec(_SETTINGS)
 _SETTINGS.loader.exec_module(settings)
@@ -65,6 +77,27 @@ def decode(value):
     return json.loads(value, object_pairs_hook=_pairs)
 
 
+def local_path(root, relative, checked):
+    """Reject unsafe parts and symlinks in a path below root, including existing leaves.
+
+    Populate the ancestor-closed ``checked`` set only through this helper.
+    """
+    if any(part in ("", ".", "..") or "/" in part or "\\" in part
+           for part in relative.parts):
+        raise ValueError("unsafe module path")
+    path = root / relative
+    pending = []
+    current = path
+    while current != root and current not in checked:
+        pending.append(current)
+        current = current.parent
+    for current in reversed(pending):
+        if current.is_symlink():
+            raise ValueError(f"symlink in source/output path: {current}")
+        checked.add(current)
+    return path
+
+
 def git(root, *args):
     return subprocess.check_output(["git", "-C", str(root), *args], text=True).strip()
 
@@ -74,11 +107,11 @@ def current_identity(root):
     checked = set()
     files = {}
     for name in ("lakefile.toml", "lake-manifest.json", "lean-toolchain"):
-        path = restore.local_path(root, Path(name), checked)
+        path = local_path(root, Path(name), checked)
         if not path.is_file() or path.stat().st_size > MAX_JSON:
             raise ValueError(f"expected a bounded regular input: {name}")
         files[name] = path.read_bytes()
-    restore.local_path(root, Path("src"), checked)
+    local_path(root, Path("src"), checked)
     subprocess.run(["git", "-C", str(root), "diff", "--no-ext-diff", "--no-textconv", "--quiet",
                     "HEAD", "--", "src", *files], check=True)
     if git(root, "ls-files", "--others", "--", "src"):
@@ -100,18 +133,26 @@ def current_identity(root):
 
 
 def fetch(key, maximum=MAX_JSON):
+    """GET a public key; None on 404. Retries CDN 5xx and transport errors."""
     request = urllib.request.Request(
         PUBLIC_BASE + "/" + key,
-        headers={"User-Agent": "RiemannHypothesisCache/1.0", "Cache-Control": "no-cache"})
-    try:
-        with urllib.request.urlopen(request, timeout=60) as response:
-            if response.status != 200:
-                raise ValueError(f"unexpected cache HTTP status: {response.status}")
-            data = response.read(maximum + 1)
-    except urllib.error.HTTPError as error:
-        if error.code == 404:
-            return None
-        raise
+        headers={"User-Agent": USER_AGENT, "Cache-Control": "no-cache"})
+    for attempt in range(6):
+        try:
+            with urllib.request.urlopen(request, timeout=60) as response:
+                if response.status != 200:
+                    raise ValueError(f"unexpected cache HTTP status: {response.status}")
+                data = response.read(maximum + 1)
+            break
+        except urllib.error.HTTPError as error:
+            if error.code == 404:
+                return None
+            if error.code < 500 or attempt == 5:
+                raise
+        except (urllib.error.URLError, TimeoutError, ConnectionError):
+            if attempt == 5:
+                raise
+        time.sleep(2 ** attempt)
     if len(data) > maximum:
         raise ValueError(f"public metadata exceeds size limit: {key}")
     return data
@@ -185,7 +226,7 @@ def validated_blobs(record, identity, fetcher=fetch):
             or len(manifest) != record["module_manifest_bytes"]):
         raise ValueError("successful CI receipt's immutable module manifest is missing or corrupt")
     lines = contents.splitlines()
-    if not lines or decode(lines[0]) != "2026-03-17" or not 0 < len(lines) - 1 <= MAX_MODULES:
+    if not lines or decode(lines[0]) != SCHEMA or not 0 < len(lines) - 1 <= MAX_MODULES:
         raise ValueError("unsupported or empty CI Lake map")
     entries = {}
     for line in lines[1:]:
@@ -206,53 +247,101 @@ def validated_blobs(record, identity, fetcher=fetch):
             or header.get("map_sha256") != record["map_sha256"]
             or type(header.get("modules")) is not int or header["modules"] != len(entries)):
         raise ValueError("CI module manifest is not bound to the current inputs and immutable map")
-    # Only these two metadata globals change. The initial archive's configuration
-    # allowlist/check_project stay intact; this path has its own exact Git/file binding.
-    restore.HEADER = header
-    restore.MANIFEST_SHA256 = record["module_manifest_sha256"]
-    module_rows = restore.manifest_rows(manifest)
-    inputs = set()
-    for name, input_hash, artifact, sha256 in module_rows:
-        if input_hash in inputs or entries.get(input_hash) != artifact:
+    shas = {}
+    names = set()
+    for line in rows[1:]:
+        row = decode(line)
+        if not isinstance(row, list) or len(row) != 4 or not all(isinstance(x, str) for x in row):
+            raise ValueError("invalid CI module record")
+        name, input_hash, artifact, sha256 = row
+        if (not MODULE.fullmatch(name) or name in names or not SHA256.fullmatch(sha256)
+                or entries.pop(input_hash, None) != artifact or shas.setdefault(artifact, sha256) != sha256):
             raise ValueError("CI module manifest does not uniquely cover its immutable map")
-        inputs.add(input_hash)
-    if inputs != set(entries):
+        names.add(name)
+    if entries:
         raise ValueError("CI module manifest does not completely cover its immutable map")
-    return contents, module_rows
+    return contents, shas
 
 
-def consume(root, cache, record, identity, workers=24, fetcher=fetch):
-    contents, rows = validated_blobs(record, identity, fetcher)
+def registered(cache):
+    """Input hashes already registered in this cache (outputs/<scope>/<hash>.json)."""
+    have = set()
+    for _, _, files in os.walk(cache / "outputs"):
+        have.update(name[:-5] for name in files if name.endswith(".json"))
+    return have
+
+
+def write_map(path, items):
+    path.write_text(json.dumps(SCHEMA) + "\n" + "".join(json.dumps(item) + "\n" for item in items))
+
+
+def register(root, env, service, temporary, items, shards=SHARDS):
+    """`lake cache add` in parallel shards. Lake writes one file per mapping, so shards cannot
+    conflict; a small first shard runs alone so that one process creates the outputs directory."""
+    command = ["lake", "-q", "cache", "add", "--repo", REPOSITORY]
+    if service:
+        command += ["--service", service]
+    first, rest = items[:100], items[100:]
+    shards = max(1, min(shards, len(rest) // 2000 or 1))
+    write_map(temporary / "add-0.jsonl", first)
+    subprocess.run([*command, str(temporary / "add-0.jsonl")], cwd=root, env=env, check=True)
+    processes = []
+    for index in range(shards):
+        part = rest[index::shards]
+        if part:
+            path = temporary / f"add-{index + 1}.jsonl"
+            write_map(path, part)
+            processes.append(subprocess.Popen([*command, str(path)], cwd=root, env=env))
+    codes = [process.wait() for process in processes]
+    if any(codes):
+        raise subprocess.CalledProcessError(max(codes), command)
+
+
+def consume(root, cache, record, identity, fetcher=fetch):
+    contents, shas = validated_blobs(record, identity, fetcher)
     if current_identity(root) != identity:
         raise ValueError("project inputs changed during cache lookup")
-    restore.local_path(root, Path(".lake"), set()).mkdir(exist_ok=True)
+    local_path(root, Path(".lake"), set()).mkdir(exist_ok=True)
+    (cache / "artifacts").mkdir(parents=True, exist_ok=True)
     env = os.environ.copy()
     for key in list(env):
         if (key.startswith(("AWS_", "CLOUDFLARE_", "CF_"))
                 or key in ("LAKE_CACHE_KEY", "LAKE_CACHE_ARTIFACT_ENDPOINT", "LAKE_CACHE_REVISION_ENDPOINT",
-                           "LAKE_CACHE_SERVICE", "GH_TOKEN", "GITHUB_TOKEN", "HF_TOKEN")):
+                           "LAKE_CACHE_SERVICE", "GH_TOKEN", "GITHUB_TOKEN", "HF_TOKEN",
+                           # A writable artifact cache would copy every unpacked file into it.
+                           "LAKE_ARTIFACT_CACHE")):
             env.pop(key)
     env.update(LAKE_CONFIG=str(root / "lakefile.toml"), LAKE_CACHE_DIR=str(cache),
-               LAKE_ARTIFACT_CACHE="true", LAKE_RESTORE_ARTIFACTS="true", ELAN_TOOLCHAIN=identity["toolchain"])
-    print(f"Fetching successful CI cache {record['candidate_head']} for current build inputs...", flush=True)
+               LAKE_RESTORE_ARTIFACTS="true", ELAN_TOOLCHAIN=identity["toolchain"])
+    env["RUST_MIN_STACK"] = str(max(int(env.get("RUST_MIN_STACK", "0")), 8388608))
+    service = tomllib.loads((root / "lakefile.toml").read_text()).get("cache", {}).get("defaultService")
+    entries = [decode(line) for line in contents.splitlines()[1:]]
+    have = registered(cache)
+    fresh = [entry for entry in entries if entry[0] not in have]
+    print(f"Fetching successful CI cache {record['candidate_head']} for current build inputs: "
+          f"{len(entries)} modules, {len(fresh)} not yet registered...", flush=True)
     with tempfile.TemporaryDirectory(prefix="ci-cache-", dir=root / ".lake") as temporary:
-        path = Path(temporary) / "outputs.jsonl"
-        path.write_bytes(contents)
-        subprocess.run(["lake", "-q", "cache", "get", str(path), "--repo", REPOSITORY],
-                       cwd=root, env=env, check=True)
-    jobs = restore.restore_jobs(root, cache, rows)
+        temporary = Path(temporary)
+        (temporary / "outputs.jsonl").write_bytes(contents)
+        (temporary / "sha256.json").write_text(json.dumps(shas))
+        downloads = subprocess.Popen(
+            [sys.executable, "-I", str(FETCH_ARTIFACTS), str(temporary / "outputs.jsonl"), str(cache),
+             "--sha256", str(temporary / "sha256.json"), "--verify-existing",
+             "--base-url", f"{PUBLIC_BASE}/artifacts/{REPOSITORY}/", "--user-agent", USER_AGENT])
+        try:
+            if fresh:
+                register(root, env, service, temporary, fresh)
+        finally:
+            code = downloads.wait()
+    if code:
+        raise ValueError("some cached artifacts could not be downloaded and verified; rerun lake exe cache get")
     if current_identity(root) != identity:
         raise ValueError("project inputs changed before restoration")
-    for job in jobs:
-        for base in job["base"]:
-            Path(base).mkdir(parents=True, exist_ok=True)
-    env["RUST_MIN_STACK"] = str(max(int(env.get("RUST_MIN_STACK", "0")), 8388608))
-    lean = Path(subprocess.check_output(["elan", "which", "lean"], cwd=root, env=env, text=True).strip())
-    restore.clear_output_hashes(root, rows)
-    print(f"Restoring {len(jobs)} CI modules with stock leantar ({workers} workers)...", flush=True)
-    subprocess.run([str(lean.with_name("leantar")), "--jobs", str(workers), "-f", "-x", "-j", "-"],
-                   input=json.dumps(jobs), text=True, cwd=root, env=env, check=True)
-
+    print(f"Unpacking {len(entries)} modules with lake build --no-build...", flush=True)
+    result = subprocess.run(["lake", "-q", "--log-level=error", "build", "--no-build"], cwd=root, env=env)
+    if result.returncode:
+        raise ValueError(f"lake build --no-build exited {result.returncode} after restoring the cache"
+                         " (exit 3: some modules would need compiling)")
 
 
 def baseline_record(identity, fetcher=fetch):
@@ -284,10 +373,9 @@ def main():
     parser.add_argument("--project", type=Path, default=Path.cwd())
     parser.add_argument("--cache-dir", type=Path)
     parser.add_argument("--ancestor-limit", type=int, default=100)
-    parser.add_argument("--jobs", type=int, default=24)
     args = parser.parse_args()
-    if args.jobs < 1 or not 1 <= args.ancestor_limit <= 1000:
-        parser.error("jobs must be positive; ancestor limit must be 1..1000")
+    if not 1 <= args.ancestor_limit <= 1000:
+        parser.error("ancestor limit must be 1..1000")
     root = args.project.resolve()
     identity = current_identity(root)
     record = find_record(root, identity, args.ancestor_limit)
@@ -298,7 +386,7 @@ def main():
         print("No equivalent successful cache found for the current build inputs.", flush=True)
         return 3
     cache = (args.cache_dir or Path(os.environ.get("LAKE_CACHE_DIR", str(root / ".lake/cache")))).resolve()
-    consume(root, cache, record, identity, args.jobs,
+    consume(root, cache, record, identity,
             fetcher=lambda key, maximum=MAX_JSON: cached[key] if key in cached else fetch(key, maximum))
     return 0
 
