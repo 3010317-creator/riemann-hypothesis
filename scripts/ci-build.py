@@ -684,6 +684,37 @@ def module_traces(project, incomplete=False):
         yield name, module, dep_hash
 
 
+def info_messages(project, modules):
+    """Info-level entries in the saved Lake logs of `modules`.
+
+    These are the output of commands such as `#check`, `#print` and `#eval` without a
+    `#guard_msgs`, `trace_state`, and `Try this` suggestions (for example `ring` falling back
+    to `ring_nf`). Lake keeps each module's log in its .trace and restores it with the module,
+    so modules taken from a cache count too. Warnings are left out until the project is free
+    of them (#137). A missing or unreadable trace is skipped; the build reports those modules.
+    """
+    library = project / ".lake/build/lib/lean"
+    found = []
+    for name in sorted(set(modules)):
+        if not MODULE.fullmatch(name):
+            raise ValueError("unsafe compiled module name")
+        *parents, leaf = name.split(".")
+        try:
+            path = safe_file(library, "/".join([*parents, leaf + ".trace"]))
+        except FileNotFoundError:
+            continue
+        if path.stat().st_size > 32 * 1024**2:
+            continue
+        try:
+            log = json.loads(path.read_text()).get("log")
+        except (json.JSONDecodeError, UnicodeError, AttributeError):
+            continue
+        for entry in log if isinstance(log, list) else []:
+            if isinstance(entry, dict) and entry.get("level") == "info" and isinstance(entry.get("message"), str):
+                found.append({"module": name, "message": entry["message"]})
+    return found
+
+
 def recover_completed_map(project, cache, toolchain, work, destination, known_hashes=None, existing=None, known_mappings=None):
     """Recover only already-saved LTARs after Lake dies before flushing -o."""
     known_by_digest = {digest: name for name, digest in (known_hashes or {}).items()}
@@ -991,6 +1022,12 @@ def main():
             recover_completed_map(project, cache, toolchain, work, mapping_file, base_hashes, mapping, known_mappings)
             mapping = load_map(mapping_file)
         modules = collect_mapped_modules(project, cache, mapping, incomplete=bool(build_exit_code))
+        # Reported apart from build_exit_code: the cache of a noisy build is still valid, and
+        # the workflow fails on these after uploading it.
+        info = info_messages(project, [name for name, _, _ in modules])
+        (output / "info-messages.json").write_text(json.dumps(info, indent=2) + "\n")
+        if info:
+            print(f"{len(info)} info messages in {len({row['module'] for row in info})} modules", flush=True)
         artifacts = []
         paths = [safe_file(cache, "artifacts/" + name) for name in sorted(set(mapping.values()))]
         new_paths = [path for path in paths if path.name not in base_hashes]

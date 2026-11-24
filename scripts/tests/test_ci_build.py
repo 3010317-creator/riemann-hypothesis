@@ -201,6 +201,34 @@ def snapshot_tests(ci):
     print("PASS snapshot verification: rejects missing or changed files, mode changes, and symlinks")
 
 
+def info_message_tests(ci):
+    with tempfile.TemporaryDirectory(prefix="rh-ci-info-") as temporary:
+        project = Path(temporary).resolve() / "project"
+        library = project / ".lake/build/lib/lean"
+        (library / "A").mkdir(parents=True)
+
+        def trace(relative, log):
+            (library / relative).write_text(json.dumps({"depHash": "1" * 16, "log": log}))
+
+        trace("A/Noisy.trace", [{"level": "info", "message": "src/A/Noisy.lean:3:0: value : Nat"},
+                                {"level": "warning", "message": "src/A/Noisy.lean:5:2: unused variable `x`"}])
+        trace("Quiet.trace", [{"level": "warning", "message": "src/Quiet.lean:1:0: `if_pos` has been deprecated"}])
+        trace("Odd.trace", ["info", {"level": "info"}, {"level": "info", "message": 3}])
+        (library / "Broken.trace").write_text("{")
+        (library / "List.trace").write_text("[]")
+        found = ci.info_messages(project, ["A.Noisy", "Quiet", "Odd", "Broken", "List", "Missing", "A.Noisy"])
+        assert found == [{"module": "A.Noisy", "message": "src/A/Noisy.lean:3:0: value : Nat"}], found
+        (library / "Linked.trace").symlink_to(library / "A/Noisy.trace")
+        for modules in (["Linked"], ["A..Noisy"], ["../Escape"]):
+            try:
+                ci.info_messages(project, modules)
+            except ValueError:
+                pass
+            else:
+                raise AssertionError(f"read the trace of {modules}")
+    print("PASS info messages: only info entries of real trace files; warnings, bad and missing traces skipped")
+
+
 def recovery_tests(ci):
     environment = {**ci.trusted_env(), "ELAN_TOOLCHAIN": ci.TOOLCHAIN}
     toolchain = Path(subprocess.check_output(["elan", "which", "lean"], env=environment, text=True).strip()).parent.parent
@@ -267,6 +295,7 @@ def main():
     if args.resource_tests_only:
         return
     snapshot_tests(ci)
+    info_message_tests(ci)
     recovery_tests(ci)
     with (nullcontext(str(args.keep.resolve())) if args.keep else tempfile.TemporaryDirectory(prefix="rh-ci-fixture-")) as temporary:
         temporary = Path(temporary).resolve()
@@ -378,6 +407,21 @@ roots = ["Base", "Stable", "Main"]
         assert ci.load_map(reused / "outputs.jsonl") == mapping
         assert "Built Base" not in (reused / "build.log").read_text()
         assert "Unpacked Base" in (reused / "build.log").read_text(), "read-only cache mode must still reuse prior PR artifacts"
+        assert json.loads((reused / "info-messages.json").read_text()) == []
+        # A #check is reported apart from the build's exit code, also once its module comes from a cache.
+        (root / "src/Main.lean").write_text("import Base\nimport Stable\ndef answer : Nat := value + 1\n#check answer\n")
+        commit()
+        noisy, noisy_receipt = build("noisy")
+        assert noisy_receipt["build_exit_code"] == 0
+        info = json.loads((noisy / "info-messages.json").read_text())
+        assert [row["module"] for row in info] == ["Main"] and "answer : Nat" in info[0]["message"], info
+        for archive in (noisy / "artifacts").iterdir():
+            shutil.copyfile(archive, cache / "artifacts" / archive.name)
+        replayed, _ = build("noisy-replayed", ["--cache-map", str(noisy / "outputs.jsonl")])
+        assert "Unpacked Main" in (replayed / "build.log").read_text()
+        assert json.loads((replayed / "info-messages.json").read_text()) == info
+        (root / "src/Main.lean").write_text("import Base\nimport Stable\ndef answer : Nat := value + 1\n")
+        commit()
         # Changed options must not retain old input hashes, even with warm archives available.
         (root / "lakefile.toml").write_text(config + "\n[leanOptions]\npp.unicode.fun = true\n")
         commit()

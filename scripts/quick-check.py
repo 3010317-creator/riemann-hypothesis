@@ -170,8 +170,11 @@ def run(args):
     env=ci.trusted_env()
     with(output/'build.log').open('wb')as log:
         code=ci.supervised_build(command+['/opt/lean/bin/lake','--packages',overrides,'--rehash','build',*['+'+m for m in selected['targets']]],env,log,[work],10,timeout_seconds=host['seconds'])
-    status='changed_roots_pass'if code==0 else'deferred_budget'if code in(124,137,143)else'changed_roots_fail'
+    # A changed root that prints info messages (#check output, a `Try this`) fails too.
+    infos=ci.info_messages(project,selected['targets'])if code==0 else[]
+    status='changed_roots_pass'if code==0 and not infos else'deferred_budget'if code in(124,137,143)else'changed_roots_fail'
     write(output/'result.json',{'status':status,'scope':'changed-modules-only','full_build':False,'exit_code':code,
+                               'info_messages':[{**row,'message':row['message'][:2000]}for row in infos[:50]],'info_message_count':len(infos),
                                'candidate_head':selected['candidate_head'],'targets':selected['targets'],'ancestor_modules':len(selected['closure']),
                                'raw_work_preserved':str(work),'raw_work_source_tree':ci.git(candidate,'rev-parse','HEAD:src'),
                                'raw_work_uploaded':False,'runner_name':host['runner_name']})

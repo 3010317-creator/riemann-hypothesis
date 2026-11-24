@@ -215,6 +215,26 @@ jobs:
                           '--uploaded-artifact-id', os.environ['CACHE_ARTIFACT_ID'],
                           '--uploaded-artifact-digest', os.environ['CACHE_ARTIFACT_DIGEST']], check=True)
           PY
+      # After the cache upload, so a noisy build still publishes its (valid) cache.
+      - name: Fail on info messages
+        if: ${{ always() && steps.build.outputs.exit_code == '0' }}
+        run: |
+          python3 - <<'PY'
+          import json, secrets
+          rows = json.load(open('staging/info-messages.json'))
+          if rows:
+              # The messages come from the candidate's build; don't let them run workflow commands.
+              token = secrets.token_hex(16)
+              print(f'::stop-commands::{token}')
+              for row in rows[:200]:
+                  print(row['message'].rstrip()[:2000] + '\n')
+              print(f'::{token}::')
+              modules = len({row['module'] for row in rows})
+              print(f'::error::{len(rows)} info messages in {modules} modules. Delete the #check, #print, #eval '
+                    'or trace_state that prints them, take the tactic a "Try this" suggests, or put #guard_msgs '
+                    'in front of a command whose output should stay.')
+              raise SystemExit(1)
+          PY
       - name: Remove disposable build outputs
         if: ${{ always() }}
         run: rm -rf -- staging identity rh-ci-build-*

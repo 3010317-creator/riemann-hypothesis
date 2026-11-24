@@ -73,6 +73,10 @@ Drop the part from `---` on if the pull request depends on no other.
   CI rejects any pull request that does.
 - add axioms or `sorry`. `src/Main.lean` may use only `propext`, `Quot.sound` and
   `Classical.choice`.
+- leave anything in a file that prints a message when it compiles: `#check`, `#print`, `#eval`,
+  `trace_state`, or a tactic that prints `Try this` (such as `ring` falling back to `ring_nf`;
+  write the suggested tactic instead). CI fails on these. If the output of a command is meant
+  to stay, put `#guard_msgs` in front of it.
 - rewrite the proof along a substantially different path, or add files or lemmas the proof does
   not need.
 - report the results of your own builds or Comparator runs in a pull request. Check that your
