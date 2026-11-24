@@ -143,12 +143,10 @@ theorem greenbergWiles_pair : PoitouTateTotallyComplex → LocalFiniteness → G
   intro hPT hLF hGF hEC F Ω _ _ _ _ _ _ l _ n Λ _ W _ _ _ _ _ W' _ _ _ _ _ ρ ρ' P hn hρ hρ' h1 h2 hP
     S A hS hur L hL C hC
   haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  have hk : ∀ (x : W) (y : W'), (l ^ n) • P x y = 0 := fun x y => by
-    rw [nsmul_eq_mul, ZMod.natCast_self, zero_mul]
-  haveI : Module (ZMod (l ^ n)) W := AddCommGroup.zmodModule fun x => h1 _ fun y => by
-    rw [map_nsmul, AddMonoidHom.nsmul_apply, hk]
-  haveI : Module (ZMod (l ^ n)) W' := AddCommGroup.zmodModule fun y => h2 _ fun x => by
-    rw [map_nsmul, hk]
+  haveI : Module (ZMod (l ^ n)) W :=
+    AddCommGroup.zmodModule (GlobalTheory.LocalPair.nsmul_eq_zero_of_nondegenerate_pairing P h1)
+  haveI : Module (ZMod (l ^ n)) W' :=
+    AddCommGroup.zmodModule (GlobalTheory.LocalPair.nsmul_eq_zero_of_nondegenerate_pairing P.flip h2)
   obtain ⟨ρS, hρS, hd⟩ := exists_descent (zmodRep (l ^ n) ρ) hρ (S : Set _)
     fun v hv B hB σ hσ => by
       ext x
