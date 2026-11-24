@@ -90,6 +90,65 @@ lemma hasDerivAt_factor {p : ℕ} (hp : p.Prime) (s : ℂ) :
   convert h2 using 1
   ring
 
+private lemma analyticAt_factor {p : ℕ} (hp : p.Prime) (s : ℂ) :
+    AnalyticAt ℂ (fun z : ℂ => 1 - (p : ℂ) ^ (-z)) s :=
+  (show Differentiable ℂ (fun z : ℂ => 1 - (p : ℂ) ^ (-z)) from
+    fun z => (hasDerivAt_factor hp z).differentiableAt).analyticAt s
+
+/-- Every removed Euler factor has a simple zero at the origin. -/
+lemma analyticOrderAt_factor_zero {p : ℕ} (hp : p.Prime) :
+    analyticOrderAt (fun z : ℂ => 1 - (p : ℂ) ^ (-z)) 0 = 1 := by
+  apply (analyticAt_factor hp 0).analyticOrderAt_eq_one_of_zero_deriv_ne_zero (by simp)
+  rw [(hasDerivAt_factor hp 0).deriv]
+  simp only [neg_zero, cpow_zero, one_mul]
+  rw [← Complex.ofReal_natCast, ← Complex.ofReal_log (Nat.cast_nonneg p)]
+  exact Complex.ofReal_ne_zero.mpr (ne_of_gt (Real.log_pos (by exact_mod_cast hp.one_lt)))
+
+private lemma analyticOrderAt_factor_prod_zero (S : Finset ℕ)
+    (hS : ∀ p ∈ S, p.Prime) :
+    analyticOrderAt (fun z : ℂ => ∏ p ∈ S, (1 - (p : ℂ) ^ (-z))) 0 = S.card := by
+  classical
+  induction S using Finset.induction_on with
+  | empty => simp
+  | @insert p S hp ih =>
+    have hp' := hS p (Finset.mem_insert_self p S)
+    have hS' : ∀ p ∈ S, p.Prime := fun p hp => hS p (Finset.mem_insert_of_mem hp)
+    have heq : (fun z : ℂ => ∏ r ∈ insert p S, (1 - (r : ℂ) ^ (-z))) =
+        fun z => (1 - (p : ℂ) ^ (-z)) * ∏ r ∈ S, (1 - (r : ℂ) ^ (-z)) := by
+      funext z
+      rw [Finset.prod_insert hp]
+    rw [heq]
+    change analyticOrderAt ((fun z : ℂ => 1 - (p : ℂ) ^ (-z)) *
+      (fun z : ℂ => ∏ r ∈ S, (1 - (r : ℂ) ^ (-z)))) 0 = _
+    rw [analyticOrderAt_mul (analyticAt_factor hp' 0)
+      (S.analyticAt_fun_prod fun p hp => analyticAt_factor (hS' p hp) 0),
+      analyticOrderAt_factor_zero hp', ih hS', Finset.card_insert_of_notMem hp]
+    simp [add_comm]
+
+/-- The principal L-function has one zero at the origin for each distinct prime
+factor of its modulus. At modulus one this says that zeta does not vanish there. -/
+theorem analyticOrderAt_LFunction_one_zero (q : ℕ) [NeZero q] :
+    analyticOrderAt (LFunction (1 : DirichletCharacter ℂ q)) 0 = q.primeFactors.card := by
+  have hev : LFunction (1 : DirichletCharacter ℂ q) =ᶠ[nhds (0 : ℂ)]
+      fun z => (∏ p ∈ q.primeFactors, (1 - (p : ℂ) ^ (-z))) * riemannZeta z := by
+    filter_upwards [eventually_ne_nhds (by norm_num : (0 : ℂ) ≠ 1)] with z hz
+    exact LFunctionTrivChar_eq_mul_riemannZeta hz
+  have hprod : AnalyticAt ℂ (fun z : ℂ => ∏ p ∈ q.primeFactors,
+      (1 - (p : ℂ) ^ (-z))) 0 :=
+    q.primeFactors.analyticAt_fun_prod fun p hp =>
+      analyticAt_factor (Nat.prime_of_mem_primeFactors hp) 0
+  have hz : analyticOrderAt riemannZeta 0 = 0 :=
+    analyticOrderAt_eq_zero.mpr (.inr (by rw [riemannZeta_zero]; norm_num))
+  rw [analyticOrderAt_congr hev]
+  change analyticOrderAt ((fun z : ℂ => ∏ p ∈ q.primeFactors,
+    (1 - (p : ℂ) ^ (-z))) * riemannZeta) 0 = _
+  rw [analyticOrderAt_mul hprod (analyticOn_riemannZeta 0 (by simp)),
+    analyticOrderAt_factor_prod_zero _ (fun p hp => Nat.prime_of_mem_primeFactors hp), hz, add_zero]
+
+theorem analyticOrderNatAt_LFunction_one_zero (q : ℕ) [NeZero q] :
+    analyticOrderNatAt (LFunction (1 : DirichletCharacter ℂ q)) 0 = q.primeFactors.card := by
+  simp [analyticOrderNatAt, analyticOrderAt_LFunction_one_zero]
+
 lemma norm_logDeriv_factor_le {p : ℕ} (hp : p.Prime) {s : ℂ} (hs : 1 ≤ s.re) :
     ‖logDeriv (fun z : ℂ => 1 - (p : ℂ) ^ (-z)) s‖ ≤ Real.log p := by
   have h1 := norm_cpow_neg_le hp hs
