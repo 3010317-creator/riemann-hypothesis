@@ -1025,13 +1025,6 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (τ : Ain
       have : ι (fun a => (l : Ainf l) * y a) = ((l : ℕ) : WCb l) • ι y := by funext a; simp [ι]
       rw [this, Matrix.mulVec_smul] at h
       exact hOEcl.1 _ h)
-    (fun y hy _ z hz i => by
-      refine hOEcl.2.1 _ fun n => ⟨_, hy n i, ?_⟩
-      rw [← Pi.sub_apply, ← Matrix.mulVec_sub]
-      simp only [Matrix.mulVec, dotProduct]
-      refine Finset.dvd_sum fun j _ => Dvd.dvd.mul_left ?_ _
-      have := map_dvd (inclW l) (hz n j)
-      simpa [ι, map_sub, map_pow, map_natCast] using this)
     Y1 M (by rw [hY1M, Matrix.det_mul]; exact (hMu.mul hVu).ne_zero)
     ((Matrix.isUnit_iff_isUnit_det M).2 hMu) hmemV
     (fun y hy => by
