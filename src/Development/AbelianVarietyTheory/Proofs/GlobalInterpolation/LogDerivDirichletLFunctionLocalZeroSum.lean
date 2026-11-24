@@ -67,8 +67,9 @@ namespace GlobalTheory.LGrowth
 
 open Filter Topology Asymptotics
 
-theorem norm_partialSum_le (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q) (hχ : χ ≠ 1) (n : ℕ) :
-    ‖∑ k ∈ Finset.Icc 1 n, χ (k : ZMod q)‖ ≤ q := by
+/-- Bound a partial character sum by either side of the remaining period. -/
+theorem norm_partialSum_le_min (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q) (hχ : χ ≠ 1) (n : ℕ) :
+    ‖∑ k ∈ Finset.Icc 1 n, χ (k : ZMod q)‖ ≤ min ((n % q : ℕ) : ℝ) ((q - n % q : ℕ) : ℝ) := by
   have hq : 0 < q := Nat.pos_of_ne_zero (NeZero.ne q)
   have hper : ∀ m : ℕ, ∑ k ∈ Finset.range q, χ ((m + k : ℕ) : ZMod q) = 0 := by
     intro m
@@ -92,16 +93,45 @@ theorem norm_partialSum_le (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q) 
   induction n using Nat.strong_induction_on with
   | _ n ih =>
     rcases lt_or_ge n q with h | h
-    · refine (norm_sum_le _ _).trans ?_
-      refine (Finset.sum_le_sum fun k _ => χ.norm_le_one _).trans ?_
-      simp only [Finset.sum_const, Finset.card_range, nsmul_eq_mul, mul_one]
-      exact_mod_cast h.le
+    · rw [Nat.mod_eq_of_lt h]
+      have hfirst : ‖∑ k ∈ Finset.range n, χ ((1 + k : ℕ) : ZMod q)‖ ≤ (n : ℝ) := by
+        refine (norm_sum_le _ _).trans ?_
+        simpa using Finset.sum_le_sum
+          (fun k (_ : k ∈ Finset.range n) => χ.norm_le_one ((1 + k : ℕ) : ZMod q))
+      have hlast : ‖∑ k ∈ Finset.range (q - n), χ ((1 + (n + k) : ℕ) : ZMod q)‖ ≤ (q - n : ℕ) := by
+        refine (norm_sum_le _ _).trans ?_
+        simpa using Finset.sum_le_sum
+          (fun k (_ : k ∈ Finset.range (q - n)) => χ.norm_le_one ((1 + (n + k) : ℕ) : ZMod q))
+      have hsplit : (∑ k ∈ Finset.range n, χ ((1 + k : ℕ) : ZMod q)) +
+          (∑ k ∈ Finset.range (q - n), χ ((1 + (n + k) : ℕ) : ZMod q)) = 0 := by
+        rw [← Finset.sum_range_add, Nat.add_sub_of_le h.le]
+        exact hper 1
+      refine le_min hfirst ?_
+      rw [eq_neg_of_add_eq_zero_left hsplit, norm_neg]
+      exact hlast
     · obtain ⟨m, rfl⟩ := Nat.exists_eq_add_of_le' h
       rw [Finset.sum_range_add]
       have := hper (1 + m)
       simp only [← add_assoc]
       rw [this, add_zero]
-      exact ih m (by omega)
+      simpa [Nat.add_mod] using ih m (by omega)
+
+/-- Completing the remaining part of a period bounds a nonprincipal character sum by half
+its modulus. -/
+theorem norm_partialSum_le_half (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q)
+    (hχ : χ ≠ 1) (n : ℕ) : ‖∑ k ∈ Finset.Icc 1 n, χ (k : ZMod q)‖ ≤ (q : ℝ) / 2 := by
+  refine (norm_partialSum_le_min q χ hχ n).trans ?_
+  have hr : n % q ≤ q := (Nat.mod_lt n (NeZero.pos q)).le
+  rw [Nat.cast_sub hr]
+  have h1 := min_le_left ((n % q : ℕ) : ℝ) ((q : ℝ) - (n % q : ℕ))
+  have h2 := min_le_right ((n % q : ℕ) : ℝ) ((q : ℝ) - (n % q : ℕ))
+  linarith
+
+theorem norm_partialSum_le (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q) (hχ : χ ≠ 1) (n : ℕ) :
+    ‖∑ k ∈ Finset.Icc 1 n, χ (k : ZMod q)‖ ≤ q := by
+  refine (norm_partialSum_le_half q χ hχ n).trans ?_
+  have : (0 : ℝ) ≤ q := Nat.cast_nonneg q
+  linarith
 
 section General
 
@@ -187,13 +217,21 @@ theorem LFunction_eq_mul_mellin (q : ℕ) [NeZero q] (χ : DirichletCharacter �
   refine IsBigO.of_bound q (Eventually.of_forall fun n => ?_)
   simpa using hC n
 
-theorem norm_LFunction_le : ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q), χ ≠ 1 →
-    ∀ s : ℂ, 0 < s.re → ‖LFunction χ s‖ ≤ q * ‖s‖ / s.re := by
+theorem norm_LFunction_le_half : ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q), χ ≠ 1 →
+    ∀ s : ℂ, 0 < s.re → ‖LFunction χ s‖ ≤ ((q : ℝ) / 2) * ‖s‖ / s.re := by
   intro q _ χ hχ s hs
   rw [LFunction_eq_mul_mellin q χ hχ hs, norm_mul]
   refine (mul_le_mul_of_nonneg_left
-    (norm_mellin_summatory_le (norm_partialSum_le q χ hχ) hs) (norm_nonneg s)).trans ?_
+    (norm_mellin_summatory_le (norm_partialSum_le_half q χ hχ) hs) (norm_nonneg s)).trans ?_
   exact le_of_eq (by ring)
+
+theorem norm_LFunction_le : ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q), χ ≠ 1 →
+    ∀ s : ℂ, 0 < s.re → ‖LFunction χ s‖ ≤ q * ‖s‖ / s.re := by
+  intro q _ χ hχ s hs
+  refine (norm_LFunction_le_half q χ hχ s hs).trans ?_
+  gcongr
+  have : (0 : ℝ) ≤ q := Nat.cast_nonneg q
+  linarith
 
 end GlobalTheory.LGrowth
 end -- clump:auto
