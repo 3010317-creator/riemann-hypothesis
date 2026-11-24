@@ -1083,8 +1083,10 @@ section -- clump:auto
 
 
 section
-/- The literature providers below use only the arithmetic hypotheses needed by their proofs.
-   The polarized-pair and local-global constructions share the same `M.Row` hypothesis. -/
+/- These providers expose the arithmetic hypotheses used by this proof assembly.
+   The former polarized-pair and local-global fields had the same formal type `M.Row`.
+   Sharing this input does not identify the corresponding literature theorems:
+   `M.Row` is the project-specific interface, not a claim of their full textbook strength. -/
 theorem UpperTheory.LiteratureTheorems.logDerivOne : GlobalTheory.Mem.An.LogDerOne :=
   GlobalTheory.LogDerOneProof.logDerOne_holds
 theorem UpperTheory.LiteratureTheorems.ellipticMainTheoremCM' : GlobalTheory.Published.EllipticMainTheoremCM :=
