@@ -43,7 +43,7 @@ theorem pullback_two_var_prod {ι : Type} (s : Finset ι) (F : ι → PS C 2 dd)
 end VP
 
 theorem valuation_eq_self_of_unit_germ (Y : FBChart C V O dd) (p : ∀ o, SelfData Y d (I0 o)) (H : ∀ o, (Y.rawSelf (p o)).Hyps V)
-    (Ls : LetSys C dd) (n : ℕ) (h2 : UnitSelfSt Y p) (h3 : GermLiftSelfSt Y p H) : ValEqSelfSt Y p H Ls n :=
+    (Ls : LetSys C dd) (n : ℕ) (_h2 : UnitSelfSt Y p) (_h3 : GermLiftSelfSt Y p H) : ValEqSelfSt Y p H Ls n :=
   by apply GlobalTheory.ValSelf.valEqSelf
 
 end Formalism.L2.FormalSeriesBounds
