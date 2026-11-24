@@ -260,49 +260,21 @@ theorem HodgeFlagSpan.full : HodgeFlagSpan.Statement := by
     refine Finset.sum_congr rfl fun m _ => ?_
     ring
 
-  let P : Module.Dual Ω (⋀[Ω]^((i : ℕ) + 1) (E τ)) →ₗ[Ω] Pl.ΩY :=
-    { toFun := fun φ => ∑ c : Fin ((i : ℕ) + 1) → Fin D.N,
-        (∏ a, Pl.gvar0 τ (headIdx (step_le i) a) (c a)) *
-          algebraMap Ω Pl.ΩY (φ (exteriorPower.ιMulti Ω _ (B.e τ ∘ c)))
-      map_add' := fun φ ψ => by
-        simp only [LinearMap.add_apply, map_add (f := _), mul_add, Finset.sum_add_distrib]
-      map_smul' := fun x φ => by
-        simp only [LinearMap.smul_apply, smul_eq_mul, map_mul, RingHom.id_apply, Algebra.smul_def,
-          Finset.mul_sum]
-        refine Finset.sum_congr rfl fun c _ => ?_
-        ring }
+  -- Send the dual exterior basis to the corresponding flag minors.
+  let minor (T : Set.powersetCard (Fin D.N) ((i : ℕ) + 1)) : Pl.ΩY :=
+    flagMinor (genMat0Fr Ω Ψ D.N D.j τ) i ⟨T.1, Set.powersetCard.card_eq T⟩
+  let P := (Be.exteriorPower ((i : ℕ) + 1)).dualBasis.constr Ω minor
   have hPpl : ∀ m, P (Pl.gen τ i m) = Pl.pluecker0 B τ i m := by
     intro m
-    simp only [P, LinearMap.coe_mk, AddHom.coe_mk, PlueckerData.pluecker0, PlueckerData.ofΩ_eq]
-
-  have hPexp : ∀ φ, P φ = ∑ T : Set.powersetCard (Fin D.N) ((i : ℕ) + 1),
-      algebraMap Ω Pl.ΩY (φ (Be.exteriorPower _ T)) *
-        flagMinor (genMat0Fr Ω Ψ D.N D.j τ) i ⟨(T : Finset (Fin D.N)), Set.powersetCard.card_eq T⟩ := by
-    intro φ
     have h := PlueckerSpan.sum_prod_mul_apply_eq (R := Pl.ΩY) Be
-      (Matrix.of fun a b => Pl.gvar0 τ (headIdx (step_le i) a) b) φ
+      (Matrix.of fun a b => Pl.gvar0 τ (headIdx (step_le i) a) b) (Pl.gen τ i m)
     rw [hcoe] at h
-    exact h.trans (Finset.sum_congr rfl fun T _ => rfl)
-
+    simp only [P, Module.Basis.constr_apply_fintype, Module.Basis.equivFun_apply,
+      Module.Basis.dualBasis_repr, Algebra.smul_def, PlueckerData.pluecker0, PlueckerData.ofΩ_eq]
+    exact (h.trans (Finset.sum_congr rfl fun _ _ => rfl)).symm
   have hrange : LinearMap.range P =
-      Submodule.span Ω (Set.range (flagMinor (genMat0Fr Ω Ψ D.N D.j τ) i)) := by
-    apply le_antisymm
-    · rintro _ ⟨φ, rfl⟩
-      rw [hPexp]
-      refine Submodule.sum_mem _ fun T _ => ?_
-      rw [← Algebra.smul_def]
-      exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨_, rfl⟩)
-    · rw [Submodule.span_le]
-      rintro _ ⟨S, rfl⟩
-      let T : Set.powersetCard (Fin D.N) ((i : ℕ) + 1) := ⟨S.1, Set.powersetCard.mem_iff.2 S.2⟩
-      refine ⟨(Be.exteriorPower _).coord T, ?_⟩
-      rw [hPexp, Finset.sum_eq_single T]
-      · rw [Module.Basis.coord_apply, Module.Basis.repr_self, Finsupp.single_eq_same, map_one, one_mul]
-      · intro T' _ hT'
-        rw [Module.Basis.coord_apply, Module.Basis.repr_self, Finsupp.single_eq_of_ne (Ne.symm hT'),
-          map_zero, zero_mul]
-      · intro h
-        exact absurd (Finset.mem_univ T) h
+      Submodule.span Ω (Set.range (flagMinor (genMat0Fr Ω Ψ D.N D.j τ) i)) :=
+    Module.Basis.constr_range _ _
 
   have hpl : Set.range (Pl.pluecker0 B τ i) = P '' Set.range (Pl.gen τ i) := by
     rw [← Set.range_comp]
