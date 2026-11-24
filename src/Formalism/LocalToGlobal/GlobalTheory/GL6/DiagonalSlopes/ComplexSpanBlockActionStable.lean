@@ -90,12 +90,6 @@ theorem frame_translate_is_orthonormal (emb : ι → E →+* ℂ) (hc : ∀ τ x
   rw [e, at_infinity_unitary emb hc γ hγ τ]
   exact hy τ
 
-theorem at_infinity_mul_inv (emb : ι → E →+* ℂ) (γ : GL (Fin n) E) (τ : ι) :
-    atInf emb (γ : Matrix (Fin n) (Fin n) E) τ * atInf emb ((γ⁻¹ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) τ = 1 := by
-  simp only [atInf]
-  rw [← Matrix.map_mul, Units.mul_inv]
-  simp
-
 theorem adelic_value_translate (S : StepLevel F E σ J T f bad) (emb : ι → E →+* ℂ)
     (hc : ∀ τ x, emb τ (σ x) = starRingEnd ℂ (emb τ x))
     {g : UPts σ J (FiniteAdeleRing (𝓞 F) F) → Frames (gramC J emb) → ℂ} (hg : g ∈ AdFun S emb)
@@ -106,7 +100,7 @@ theorem adelic_value_translate (S : StepLevel F E σ J T f bad) (emb : ι → E 
   intro τ
   show y.1 τ = atInf emb (γ : Matrix (Fin n) (Fin n) E) τ *
     (atInf emb ((γ⁻¹ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) τ * y.1 τ)
-  rw [← Matrix.mul_assoc, at_infinity_mul_inv, Matrix.one_mul]
+  rw [← Matrix.mul_assoc, Formalism.L2.Forms.atInf_mul_inv, Matrix.one_mul]
 
 end Gen
 
