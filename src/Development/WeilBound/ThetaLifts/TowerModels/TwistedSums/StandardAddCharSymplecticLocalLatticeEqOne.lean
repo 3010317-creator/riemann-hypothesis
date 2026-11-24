@@ -70,19 +70,6 @@ noncomputable section
 namespace Tw.LatVac
 open _root_.GlobalTheory
 
-variable {F : Type} [Field F] [NumberField F]
-
-def liftV (v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F)) : Fv F v →ₗ[F] AF F :=
-  (LinearMap.inr F (Ainf F) (Af F)).comp (GlobalTheory.AdelicU.singleFin v)
-
-theorem evFin_liftV (v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F)) (a : Fv F v) : GlobalTheory.AdelicU.evFin F v (liftV v a) = a :=
-  GlobalTheory.AdelicU.evalV_singleFin_self v a
-
-end Tw.LatVac
-
-namespace Tw.LatVac
-open _root_.GlobalTheory
-
 theorem symp_smul_smul {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) {n d : ℕ} (JA : Matrix (Fin n) (Fin n) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)))
     (JB : Matrix (Fin d) (Fin d) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) (ξ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) (a a' : AF F)
@@ -98,11 +85,6 @@ theorem symp_smul_smul {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
     simp only [Algebra.smul_def, map_mul]
     ring
   rw [h, map_smul, smul_eq_mul]
-
-end Tw.LatVac
-
-namespace Tw.LatVac
-open _root_.GlobalTheory
 
 end Tw.LatVac
 end -- clump:auto
