@@ -160,7 +160,10 @@ theorem first_sigma_valuation_bound : TwoIntervalValuationSumBound := by
     calc
       _ ≤ (Nat.log ℓ (2 * (h + η)) : ℝ) := by exact_mod_cast Nat.log_mono_right hN
       _ ≤ Real.logb ℓ ((2 * (h + η) : ℕ) : ℝ) := Real.natLog_le_logb _ _
-      _ ≤ _ := by simp [lam]
+      _ ≤ _ := by
+        unfold lam
+        push_cast
+        exact le_add_of_nonneg_right zero_le_one
   refine le_trans (Nat.cast_le.mpr tot) ?_
   push_cast
   linarith
