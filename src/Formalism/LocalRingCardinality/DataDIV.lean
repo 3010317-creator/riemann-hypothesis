@@ -469,10 +469,6 @@ structure DivX (D : D7) : Type 1 where
 
   Mp : letI := D.host.cmStar; ∀ (_S : HSpace D.host.E) (_κ : Lev) (p : ℕ) [Fact p.Prime], PlP p → Type
 
-  md : letI := D.host.cmStar; ∀ (S : HSpace D.host.E) (κ : Lev) (p : ℕ) [Fact p.Prime] (la : PlP p),
-    Mp S κ p la →
-      DV.Mdl D p (shv S κ).N (DV.rkOf (DV.PsiOf D (jC p la)) (shv S κ).N (shv S κ).j)
-
   vdd : ℕ → D.what₂.Tau → ℝ
   vdd_unram : ∀ p τ, DV.UnramE D p → vdd p τ = 0
 

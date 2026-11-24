@@ -49,9 +49,8 @@ variable (w : ColW B f T) (Z : w.Lt) (N : ∀ u, Submodule (𝓞 B.LL) (Z.V.div.
 -- Construct the records directly at the index used by the transported columns.
 abbrev latTrZ (Gy : G.LatInst (w.D Z)) : G.LatInst (w.D (setDivZ Z N h)) := { Gy with }
 
-open DivX (md) in
 abbrev divTrZ (X : DivX (w.D Z)) : DivX (w.D (setDivZ Z N h)) :=
-  { X with md := fun S κ p _ la z => { md X S κ p la z with } }
+  { X with }
 
 def kerTr {t : ColT w Z} {Gy : G.LatInst (w.D Z)} (ker : KerFam (w.D Z) t.Gt t.cmp (w.tw Z) Gy) :
     KerFam (w.D (setDivZ Z N h)) (colTTr w Z N h t).Gt (colTTr w Z N h t).cmp

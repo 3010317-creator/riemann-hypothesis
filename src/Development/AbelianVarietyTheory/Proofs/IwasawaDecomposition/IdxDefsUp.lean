@@ -52,11 +52,9 @@ abbrev refUp (Z : w.Lt) (S' : SStage B w.C Z.W) (N : ∀ u, Submodule (𝓞 B.LL
   { Refill.ofDiv Z N h with S := S' }
 
 
-open Formalism.BasicNotions.DivX (md) in
-
 def divBack {Z : w.Lt} {S' : SStage B w.C Z.W} {N : ∀ u, Submodule (𝓞 B.LL) (Z.V.div.Nu u).V} {h : B.Word → ℝ}
     (X : DivX (w.D (SRe.upL Z S' N h))) : DivX (w.D Z) :=
-  { X with md := fun S κ p _ la z => { md X S κ p la z with } }
+  { X with }
 
 
 

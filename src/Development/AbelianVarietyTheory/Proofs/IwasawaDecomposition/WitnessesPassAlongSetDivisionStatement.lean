@@ -159,11 +159,10 @@ noncomputable section
 
 namespace GlobalTheory.Mem.Top.Bl.WitTr
 
-open DivX (md) in
 @[reducible] def divXTr {B : Base} {f : Fr B.toPre} {T : TwDat B}
     (w : ColW B f T) (Z : w.Lt) (N : ∀ u, Submodule (𝓞 B.LL) (Z.V.div.Nu u).V)
     (h : B.Word → ℝ) (Y : DivX (w.D Z)) : DivX (w.D (setDivZ Z N h)) :=
-  { Y with md := fun S κ p _ la z => { md Y S κ p la z with } }
+  { Y with }
 
 
 theorem divT_setDiv : ∀ {B : Base} {f : Fr B.toPre} {T : TwDat B} (w : ColW B f T)
