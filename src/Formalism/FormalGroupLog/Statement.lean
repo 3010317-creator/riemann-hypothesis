@@ -1,8 +1,8 @@
 module
 
 public import Mathlib.Analysis.Normed.Field.Basic
-public import Mathlib.Analysis.Normed.Group.Ultra
 public import Mathlib.Topology.MetricSpace.Ultra.Basic
+public import Mathlib.Analysis.Normed.Group.Ultra
 public import Mathlib.NumberTheory.Padics.PadicNumbers
 public import Mathlib.RingTheory.FormalGroup.Basic
 public import Mathlib.RingTheory.MvPowerSeries.Expand
