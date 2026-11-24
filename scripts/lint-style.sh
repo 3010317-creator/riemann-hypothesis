@@ -46,15 +46,19 @@ fi
 # listed, so they stay errors.
 cp "$nolints" "$tmp/old"
 grep '^--' "$tmp/old" > "$nolints" || true
-lake exe mathlib/lint-style --github Src > "$tmp/out" 2> "$tmp/err" || true
-if grep -q '^uncaught exception' "$tmp/err"; then
-  cat "$tmp/err" >&2
+status=0
+lake exe mathlib/lint-style --github Src > "$tmp/out" 2> "$tmp/err" || status=$?
+sed -n 's/^::ERR file=\([^,]*\),line=\([0-9]*\),code=\([A-Z_]*\)::[^ ]* [A-Z_]*: \(.*\)$/\1 : line \2 : \3 : \4/p' \
+    "$tmp/out" > "$tmp/entries"
+# Mathlib returns up to 125 for lint findings. A failed Lake invocation can also
+# return nonzero, so require recognizable findings before accepting that status.
+if grep -q '^uncaught exception' "$tmp/err" || [ "$status" -gt 125 ] ||
+    { [ "$status" -ne 0 ] && [ ! -s "$tmp/entries" ] && ! grep -q '^error: module name ' "$tmp/err"; }; then
+  cat "$tmp/out" "$tmp/err" >&2
   echo "lint-style.sh: lint-style stopped early; $nolints is unchanged" >&2
   exit 1
 fi
-sed -n 's/^::ERR file=\([^,]*\),line=\([0-9]*\),code=\([A-Z_]*\)::[^ ]* [A-Z_]*: \(.*\)$/\1 : line \2 : \3 : \4/p' \
-    "$tmp/out" \
-  | LC_ALL=C sort -k1,1 -k4,4n \
+LC_ALL=C sort -k1,1 -k4,4n "$tmp/entries" \
   | awk -F ' : ' '{ key = $1; for (i = 3; i <= NF; i++) key = key FS $i } !seen[key]++' \
   >> "$nolints"
 rm "$tmp/old"
