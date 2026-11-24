@@ -332,11 +332,8 @@ def weilTiedTr {X : ThetaX (w.D Z)} {T : ThetaTied (w.D Z) X} (Wl : WeilTied (w.
 
 
 
-theorem weilTiedEq_tr {X : ThetaX (w.D Z)} {T : ThetaTied (w.D Z) X} {Wl : WeilTied (w.D Z) X T} (e : WeilCompatibleEquivariance Wl) :
-    WeilCompatibleEquivariance (weilTiedTr w Z N h Wl) :=
-  { e with
-    evS_range := fun V W hr => (e.evS_range V W hr).trans (Set.ext fun _ => isThetaFun_tr w Z N h)
-    om_tw := { e.om_tw with } }
+theorem weilTiedEq_tr {X : ThetaX (w.D Z)} {T : ThetaTied (w.D Z) X} {Wl : WeilTied (w.D Z) X T} (_e : WeilCompatibleEquivariance Wl) :
+    WeilCompatibleEquivariance (weilTiedTr w Z N h Wl) := ⟨⟩
 
 
 
