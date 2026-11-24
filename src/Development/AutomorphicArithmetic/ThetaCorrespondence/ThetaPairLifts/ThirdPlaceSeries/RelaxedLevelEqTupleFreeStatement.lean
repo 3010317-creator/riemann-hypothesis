@@ -250,7 +250,18 @@ theorem bc_congr (V : HSp D) {n : ℕ} (hn : V.rank = n) (v : GlobalTheory.FinPl
   change Formalism.UG.prV (E := D.host.E) v (x.1 i j) = Formalism.UG.prV (E := D.host.E) v (y.1 i j)
   rw [hx, hy]
   simp only [GlobalTheory.AdForm.finM, Matrix.reindex_apply, Matrix.submatrix_apply, Matrix.map_apply]
-  exact _root_.GlobalTheory.PenLevPrime.prV_toEAf_congr v (e _ _)
+  have key : ∀ {y y' : AE D}, GlobalTheory.FinPl.compAt D v y = GlobalTheory.FinPl.compAt D v y' →
+      Formalism.UG.prV (E := D.host.E) v (toEAf D y) = Formalism.UG.prV (E := D.host.E) v (toEAf D y') := by
+    intro y y' h
+    unfold GlobalTheory.FinPl.compAt at h
+    unfold toEAf
+    simp only [RingHom.comp_apply] at h ⊢
+    generalize finPart D y = z at h ⊢
+    generalize finPart D y' = z' at h ⊢
+    refine (_root_.GlobalTheory.StabOff.prV_comm v z).trans
+      (Eq.trans ?_ (_root_.GlobalTheory.StabOff.prV_comm v z').symm)
+    rw [h]
+  exact key (e _ _)
 
 theorem bc_eq_one (V : HSp D) {n : ℕ} (hn : V.rank = n) {P : GlobalTheory.FinPl.Pl D → Prop} {v : GlobalTheory.FinPl.Pl D} (hv : ¬ P v) {g : GA D V}
     (hg : g ∈ grpAt V P) {x : GL (Fin n) (EF D)} (hx : x.1 = finM V hn g) :

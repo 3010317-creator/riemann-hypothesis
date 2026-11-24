@@ -139,7 +139,10 @@ theorem datRoot_prod {ι : Type*} (s : Finset ι) (x : ι → ℂ) (h : ∀ i �
   | empty => exact ⟨1, one_pos, by simp⟩
   | insert a s ha ih =>
     rw [Finset.prod_insert ha]
-    exact _root_.GlobalTheory.TwPlaces.rou_mul (h a (Finset.mem_insert_self a s)) (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
+    obtain ⟨n, hn, hx⟩ := h a (Finset.mem_insert_self a s)
+    obtain ⟨m, hm, hy⟩ := ih fun i hi => h i (Finset.mem_insert_of_mem hi)
+    refine ⟨n * m, Nat.mul_pos hn hm, ?_⟩
+    rw [mul_pow, pow_mul, hx, one_pow, one_mul, mul_comm, pow_mul, hy, one_pow]
 
 end GlobalTheory.Fam
 

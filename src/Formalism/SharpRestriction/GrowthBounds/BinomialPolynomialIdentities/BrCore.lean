@@ -174,40 +174,7 @@ lemma qh_can_emb [NeZero n] (mu : Fin n → ℤ) (c : ↥(TCols mu)) (a : Fin (c
     exact hxy
   exact (congrFun (Finset.orderEmbOfFin_unique (canT mu c).2 hmem hmono) a).symm
 
-lemma qh_mapCoord_minor [NeZero n] (mu : Fin n → ℤ) (c : ↥(TCols mu)) (S : Finset (Fin n))
-    (hS : S.card = colH mu c) :
-    mapCoord R (minorC (canT mu c).1 S (canT mu c).2 hS) =
-      qhN R (colH mu c) (colH_le mu c) (fun q => S.orderEmbOfFin hS q) := by
-  unfold minorC qhN
-  rw [qh_mapCoord_alg, RingHom.map_det (MvPolynomial.map (Int.castRingHom R))]
-  congr 2
-  ext p q
-  first
-    | (simp only [RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.of_apply, genMat, MvPolynomial.map_X,
-        qh_can_emb]; done)
-
-lemma qh_mapCoord_brk [NeZero n] (mu : Fin n → ℤ) (I : TIdx mu) :
-    mapCoord R (brk mu I) = ((qhDet R n ^ mu (lastIdx n) : (GLCoord R n)ˣ) : GLCoord R n) *
-      ∏ c : ↥(TCols mu), qhN R (colH mu c) (colH_le mu c) (fun q => (I c).1.orderEmbOfFin (I c).2 q) := by
-  first
-    | (simp only [brk, TMat]
-       rw [map_mul, map_prod, qh_mapCoord_detU]
-       congr 1
-       refine Finset.prod_congr rfl (fun c _ => ?_)
-       exact qh_mapCoord_minor mu c _ _)
-
-lemma qh_brk_mem [NeZero n] {mu : Fin n → ℤ} (hmu : Dominant mu) (I : TIdx mu) :
-    mapCoord R (brk mu I) ∈ inducedSections R mu := by
-  rw [qh_mapCoord_brk]
-  have h := qh_mul_mem (qh_det_zpow_mem (R := R) (n := n) (mu (lastIdx n)))
-    (qh_prod_mem (R := R) (Finset.univ : Finset ↥(TCols mu))
-      (fun c => qhN R (colH mu c) (colH_le mu c) (fun q => (I c).1.orderEmbOfFin (I c).2 q))
-      (fun c => fun a : Fin n => if a.val < colH mu c then (1 : ℤ) else 0)
-      (fun c _ => qh_N_mem (R := R) (colH mu c) (colH_le mu c) _))
-  first
-    | (rw [qh_weight_sum hmu] at h; exact h)
-
-def qhM(R : Type) [CommRing R] {n : ℕ} (s : ℕ) (J : ℕ → Fin n) : GLCoord R n :=
+def qhM (R : Type) [CommRing R] {n : ℕ} (s : ℕ) (J : ℕ → Fin n) : GLCoord R n :=
   if hs : s ≤ n then qhN R s hs (fun q => J q.val) else 0
 
 lemma qhM_zero (J : ℕ → Fin n) : qhM R 0 J = 1 := by
@@ -520,7 +487,38 @@ namespace Formalism.InvariantFactorPaths.ColumnFamilies
 
 variable {n : ℕ} {R : Type} [CommRing R]
 
--- (lemmas of this clump member moved earlier, before QhCountAll, which uses them)
+lemma qh_mapCoord_minor [NeZero n] (mu : Fin n → ℤ) (c : ↥(TCols mu)) (S : Finset (Fin n))
+    (hS : S.card = colH mu c) :
+    mapCoord R (minorC (canT mu c).1 S (canT mu c).2 hS) =
+      qhN R (colH mu c) (colH_le mu c) (fun q => S.orderEmbOfFin hS q) := by
+  unfold minorC qhN
+  rw [qh_mapCoord_alg, RingHom.map_det (MvPolynomial.map (Int.castRingHom R))]
+  congr 2
+  ext p q
+  first
+    | (simp only [RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.of_apply, genMat, MvPolynomial.map_X,
+        qh_can_emb]; done)
+
+lemma qh_mapCoord_brk [NeZero n] (mu : Fin n → ℤ) (I : TIdx mu) :
+    mapCoord R (brk mu I) = ((qhDet R n ^ mu (lastIdx n) : (GLCoord R n)ˣ) : GLCoord R n) *
+      ∏ c : ↥(TCols mu), qhN R (colH mu c) (colH_le mu c) (fun q => (I c).1.orderEmbOfFin (I c).2 q) := by
+  first
+    | (simp only [brk, TMat]
+       rw [map_mul, map_prod, qh_mapCoord_detU]
+       congr 1
+       refine Finset.prod_congr rfl (fun c _ => ?_)
+       exact qh_mapCoord_minor mu c _ _)
+
+lemma qh_brk_mem [NeZero n] {mu : Fin n → ℤ} (hmu : Dominant mu) (I : TIdx mu) :
+    mapCoord R (brk mu I) ∈ inducedSections R mu := by
+  rw [qh_mapCoord_brk]
+  have h := qh_mul_mem (qh_det_zpow_mem (R := R) (n := n) (mu (lastIdx n)))
+    (qh_prod_mem (R := R) (Finset.univ : Finset ↥(TCols mu))
+      (fun c => qhN R (colH mu c) (colH_le mu c) (fun q => (I c).1.orderEmbOfFin (I c).2 q))
+      (fun c => fun a : Fin n => if a.val < colH mu c then (1 : ℤ) else 0)
+      (fun c _ => qh_N_mem (R := R) (colH mu c) (colH_le mu c) _))
+  first
+    | (rw [qh_weight_sum hmu] at h; exact h)
 
 end Formalism.InvariantFactorPaths.ColumnFamilies
 end -- clump:auto

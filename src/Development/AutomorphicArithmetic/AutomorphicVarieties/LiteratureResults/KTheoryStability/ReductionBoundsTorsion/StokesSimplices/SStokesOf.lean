@@ -320,6 +320,21 @@ open MeasureTheory
 
 namespace PositivityTheory.KB.StokesSlices
 
+lemma isClosed_Δ (m : ℕ) : IsClosed (Δ m) := by
+  have h1 : IsClosed {t : Fin m → ℝ | ∀ j, 0 ≤ t j} := by
+    simp only [Set.ofPred_forall]
+    exact isClosed_iInter fun j => isClosed_le continuous_const (continuous_apply j)
+  have h2 : IsClosed {t : Fin m → ℝ | ∑ j, t j ≤ 1} :=
+    isClosed_le (by fun_prop) continuous_const
+  exact h1.inter h2
+
+lemma isCompact_Δ (m : ℕ) : IsCompact (Δ m) := by
+  refine (isCompact_Icc : IsCompact (Set.Icc (0 : Fin m → ℝ) 1)).of_isClosed_subset (isClosed_Δ m) ?_
+  rintro t ⟨h0, h1⟩
+  refine ⟨fun j => h0 j, fun j => ?_⟩
+  calc t j ≤ ∑ k, t k := Finset.single_le_sum (fun k _ => h0 k) (Finset.mem_univ j)
+    _ ≤ 1 := h1
+
 variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 def I {q : ℕ} (ω : V → V [⋀^Fin q]→L[ℝ] ℝ) (y : Fin (q + 1) → V) : ℝ :=
@@ -511,21 +526,6 @@ lemma mem_Δ_insertNth {m : ℕ} (i : Fin (m + 1)) (x : ℝ) (s : Fin m → ℝ)
       linarith⟩, hx, by linarith⟩
   · rintro ⟨⟨hs, _⟩, hx, h⟩
     exact ⟨⟨hx, hs⟩, by linarith⟩
-
-lemma isClosed_Δ (m : ℕ) : IsClosed (Δ m) := by
-  have h1 : IsClosed {t : Fin m → ℝ | ∀ j, 0 ≤ t j} := by
-    simp only [Set.ofPred_forall]
-    exact isClosed_iInter fun j => isClosed_le continuous_const (continuous_apply j)
-  have h2 : IsClosed {t : Fin m → ℝ | ∑ j, t j ≤ 1} :=
-    isClosed_le (by fun_prop) continuous_const
-  exact h1.inter h2
-
-lemma isCompact_Δ (m : ℕ) : IsCompact (Δ m) := by
-  refine (isCompact_Icc : IsCompact (Set.Icc (0 : Fin m → ℝ) 1)).of_isClosed_subset (isClosed_Δ m) ?_
-  rintro t ⟨h0, h1⟩
-  refine ⟨fun j => h0 j, fun j => ?_⟩
-  calc t j ≤ ∑ k, t k := Finset.single_le_sum (fun k _ => h0 k) (Finset.mem_univ j)
-    _ ≤ 1 := h1
 
 lemma measurableSet_Δ (m : ℕ) : MeasurableSet (Δ m) := (isClosed_Δ m).measurableSet
 
