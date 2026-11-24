@@ -8,7 +8,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPrimeNo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFunctionHeisenbergInvariant
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionFractionalIdealProperties
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FiniteAdeleStrongApproximationModNat
-public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepB_A
+public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepBA
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.SumFourEqTrace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

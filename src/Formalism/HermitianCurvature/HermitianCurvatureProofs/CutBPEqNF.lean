@@ -1,6 +1,6 @@
 module
 
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.Cut_BPEq
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutBPEq
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularityAtPlaceOfSubadditive
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutBPEqDecay
 import Mathlib.Algebra.Order.Floor.Extended

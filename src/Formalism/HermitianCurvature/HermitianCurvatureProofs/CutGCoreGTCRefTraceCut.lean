@@ -2,7 +2,7 @@ module
 
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutGCoreGTCTheta
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TheSection
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.cut_GCore_GTConnCut
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutGCoreGTConnCut
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

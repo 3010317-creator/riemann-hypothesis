@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.PrimitiveCosets.RecH
-public import Development.AutomorphicArithmetic.PrimitiveCosets.hostFactsS
+public import Development.AutomorphicArithmetic.PrimitiveCosets.HostFactsS
 import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.HostFacts
 import Formalism.SizeWindowBrackets.ChainSlopeWindows.GaloisMapComplexConjugation
 import Mathlib.Algebra.Order.Floor.Extended

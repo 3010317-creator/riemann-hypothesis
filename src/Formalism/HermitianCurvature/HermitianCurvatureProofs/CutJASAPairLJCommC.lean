@@ -2,7 +2,7 @@ module
 
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAFFStable2
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASAPairL
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.cut_JA_LocLemmas
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJALocLemmas
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BigCellHermitian
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAFFStableAdjComm
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAFFStableGerm

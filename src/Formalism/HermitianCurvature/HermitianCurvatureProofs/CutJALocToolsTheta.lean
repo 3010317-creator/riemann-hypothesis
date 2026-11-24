@@ -1,6 +1,6 @@
 module
 
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.cut_JA_LocLemmas
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJALocLemmas
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAFFStable2
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.AdjointLeibnizExpansion
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaSesquilinearity

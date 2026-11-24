@@ -10,7 +10,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanHeisenbe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFunctionHeisenbergInvariant
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepA
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepC
-import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepB_A
+import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepBA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

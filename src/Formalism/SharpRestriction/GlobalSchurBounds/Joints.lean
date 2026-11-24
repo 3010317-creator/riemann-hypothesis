@@ -7,7 +7,7 @@ public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLattice
 public import Formalism.SharpRestriction.GlobalSchurBounds.CMFieldLemmas
 public import Formalism.SharpRestriction.GlobalSchurBounds.ZetaZeroFreeRegion
 public import Development.AutomorphicArithmetic.PrimitiveCosets.RecH
-public import Development.AutomorphicArithmetic.ConductorsKronecker.dataField
+public import Development.AutomorphicArithmetic.ConductorsKronecker.DataField
 public import Development.AutomorphicArithmetic.PrimeDiscriminants.RamDiscr
 import Development.AutomorphicArithmetic.PrimitiveCosets.ToEBij
 public import Formalism.SatakeDualWeyl.KpqSubgroupCompact

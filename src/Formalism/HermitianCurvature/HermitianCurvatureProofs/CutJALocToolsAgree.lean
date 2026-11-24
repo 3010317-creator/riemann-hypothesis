@@ -1,6 +1,6 @@
 module
 
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.cut_JA_LocLemmas
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJALocLemmas
 public import Formalism.FormalDegreeBessel.FormalDegreeRatio.BesselUnipotentEquivHolds
 import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BigCellDiagonalMap

@@ -1,6 +1,6 @@
 module
 
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.cut_GCore_GenTransferKapCut
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutGCoreGenTransferKapCut
 public import Formalism.FormalDegreeBessel.FinalG
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DiagonalTransferAction
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.NFRadRedA

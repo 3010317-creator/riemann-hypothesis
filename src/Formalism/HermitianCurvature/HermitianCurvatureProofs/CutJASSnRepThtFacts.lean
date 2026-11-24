@@ -8,7 +8,7 @@ import Formalism.HermitianCurvature.HermitianCurvatureProofs.ExistsFrameTwo
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.LieBracketMultiplication
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ParametersUPrimeForULower
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RestrictionIrrelevantDoubleLevelOperator
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.cut_TypeNormMeas_TC
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutTypeNormMeasTC
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -1,6 +1,6 @@
 module
 
-import Development.EtaleCohomology.TateTwists.acycIffPf
+import Development.EtaleCohomology.TateTwists.AcycIffPf
 public import Development.EtaleCohomology.TateTwists.EtaleSheafShortComplexExactIffLocallyLifts
 import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 import Mathlib.Algebra.Order.Floor.Extended

@@ -49,7 +49,7 @@ public import PositivityTheory.AutomorphicForms.PublishedInputs.CyclicBaseChange
 public import PositivityTheory.AutomorphicForms.PublishedInputs.CyclicBaseChange.PSNormPow
 public import PositivityTheory.AutomorphicForms.PublishedInputs.CyclicBaseChange.PSSmo
 public import PositivityTheory.AutomorphicForms.PublishedInputs.CyclicBaseChange.PSTwSat
-import PositivityTheory.AutomorphicForms.PublishedInputs.CyclicBaseChange.P_SSatEx
+import PositivityTheory.AutomorphicForms.PublishedInputs.CyclicBaseChange.PSSatEx
 
 @[expose] public section
 

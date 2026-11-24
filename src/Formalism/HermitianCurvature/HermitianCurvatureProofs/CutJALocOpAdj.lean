@@ -1,7 +1,7 @@
 module
 
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJALocCC
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.cut_JA_LocLemmas
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJALocLemmas
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaSesquilinearity
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaCutoffLimit
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.BigCellHermitian

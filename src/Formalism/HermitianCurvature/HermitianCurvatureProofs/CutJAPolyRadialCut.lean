@@ -2,7 +2,7 @@ module
 
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnRepThConstS
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TheSection
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.cut_GCore_GenTransferKapCut
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutGCoreGenTransferKapCut
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

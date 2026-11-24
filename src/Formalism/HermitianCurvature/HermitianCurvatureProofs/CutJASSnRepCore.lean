@@ -1,7 +1,7 @@
 module
 
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnRepCut
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.cut_GCore_GTConnCut
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutGCoreGTConnCut
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

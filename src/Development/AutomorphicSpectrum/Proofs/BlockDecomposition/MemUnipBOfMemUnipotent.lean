@@ -1,6 +1,6 @@
 module
 
-public import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaBound.lift_levelP_alt2
+public import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaBound.LiftLevelPAlt2
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology2.NotIsGenericDetRepTwo
 public import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors2.IsGenericIffIsGenericFor

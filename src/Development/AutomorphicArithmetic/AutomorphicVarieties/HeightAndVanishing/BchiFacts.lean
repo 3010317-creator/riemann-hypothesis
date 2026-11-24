@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeightAndVanishing.DirichletPrimeToLPartMulLPowerPart
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.CMFieldExponentialBounds.primesex
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CMFieldExponentialBounds.Primesex
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeightAndVanishing.HostIndex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

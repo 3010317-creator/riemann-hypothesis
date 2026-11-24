@@ -41,7 +41,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import CompanionTheory.AutomorphicTheory.BesselWaveGrids.CoefFacts
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.Cut_BPEq
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutBPEq
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.NormSqLeShifted
 
 @[expose] public section

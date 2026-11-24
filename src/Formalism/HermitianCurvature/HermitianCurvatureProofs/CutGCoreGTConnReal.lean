@@ -1,7 +1,7 @@
 module
 
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.NormalFormOrderZeroOfParts
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.cut_GCore_GTConnCut
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutGCoreGTConnCut
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CoordinateCommuteRaisingConstant
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutGCoreGTConnGaugeB
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutGCoreGTRadAdj
