@@ -129,7 +129,6 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Infinitesima
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JoinOutOfFive
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KawamataViehwegOfNadelVanishingPair
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KudlaSplittingSplitUnitary
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.L2ExtensionLogCanonical
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LoceulerHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocfinHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MetaplecticRepresentationHolds
@@ -1359,8 +1358,6 @@ theorem UpperTheory.LiteratureTheorems.kawamata_viehweg_of_literature (O : _root
   GlobalTheory.KVFromPair.kawamataViehweg_of_nadelVanishingPair (GlobalTheory.nefNumerics_outright) (And.left (NadelVanishingSeparation.NSI.nadelVanishingAndNonKltDivisor))
 theorem UpperTheory.LiteratureTheorems.kudla_splitting_split_unitary_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.Published.KudlaSplittingSplitUnitary :=
   GlobalTheory.kudlaSplittingSplitUnitary
-theorem UpperTheory.LiteratureTheorems.l2_extension_log_canonical_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.Published.L2ExtensionLogCanonical :=
-  GlobalTheory.l2ExtensionLogCanonical'
 theorem UpperTheory.LiteratureTheorems.landherr_st_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.Published.LandherrSt :=
   (GlobalTheory.QNorm.landherr_and_landherrSt).2
 theorem UpperTheory.LiteratureTheorems.linnik_of_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenLiteratureStatements) : GlobalTheory.Published.Linnik :=
@@ -1727,7 +1724,6 @@ theorem UpperTheory.LiteratureTheorems.published_results_arithmetic (O : _root_.
     q4 := (_root_.UpperTheory.LiteratureTheorems.prismatic_dieudonne_hodge_of_literature O),
     q6 := (_root_.UpperTheory.LiteratureTheorems.kawamata_viehweg_of_literature O),
     q7 := (_root_.UpperTheory.LiteratureTheorems.nef_numerics_of_literature O),
-    q8 := (_root_.UpperTheory.LiteratureTheorems.l2_extension_log_canonical_of_literature O),
     q9 := (_root_.UpperTheory.LiteratureTheorems.arith_hilbert_samuel_of_literature O),
     q10 := (_root_.UpperTheory.LiteratureTheorems.chow_form_exists_of_literature O),
     q11 := (_root_.UpperTheory.LiteratureTheorems.cycle_heights_of_literature O),
