@@ -76,6 +76,13 @@ end Flath
 
 namespace Published
 
+/-- **Flath's factorization theorem**: every irreducible admissible unitary representation `π`
+of an adelic reductive group (such as a unitary group `G(𝔸)`) decomposes as a restricted tensor
+product `⨂'_v π_v` of irreducible unitary representations `π_v` of the local groups, with
+almost all `π_v` containing a non-zero unramified (spherical) vector.
+
+Proposed reference:
+[D. Flath, *Decomposition of representations into tensor products* (pp. 179–183)][flath1979]. -/
 def FlathFactorisation : Prop :=
   ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ →
     ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J →
