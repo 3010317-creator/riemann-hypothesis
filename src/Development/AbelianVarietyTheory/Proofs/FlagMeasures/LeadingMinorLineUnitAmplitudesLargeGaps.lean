@@ -356,7 +356,7 @@ open BranchingSupport Formalism.FourierDecayAlt Formalism.FourierDecayAlt.ThreeD
 open scoped InnerProductSpace ENNReal
 
 theorem _root_.GlobalTheory.T.besselExteriorPower_constant_bound_largeGap : GlobalTheory.GapIn.Hyp → ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [CompleteSpace Wp] [FiniteDimensional ℂ Wp] (lam : Fin (2 * r + k + 1) → ℝ) (u : ℕ → ℝ) (b bv ga h : ℝ) (q0 : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (π : Mx k r → (Wp →L[ℂ] Wp)) (μW μN μG νq : Measure (Formalism.QuantumDeterminants.Mt k r)) (R : (Fin (2 * r + k + 1) → ℤ) → Rep k r) (lb : ∀ ν, (R ν).H → Wp) (dg : (Fin (2 * r + k + 1) → ℤ) → ℝ), Setup lam u b bv ga h q0 z π μW μN μG νq R lb dg → ∀ (l : ℕ) (hl : l ≤ r + 1) ν, n1 ν + (r + 1) * (r + 2) ≤ q0 → ∀ io pr ep, TensH (cmp l) (cmp l (Formalism.QuantumDeterminants.Hpk k r)) (R ν) (fun I : Sub (2 * r + k + 1) l => R (ν + eZ I.1)) io pr ep → NzOn (R ν) (lb ν) → ∀ (I : Sub (2 * r + k + 1) l) (κ₀ : ℂ), NzOn (R (ν + eZ I.1)) (lb (ν + eZ I.1)) → (∀ v ∈ (R ν).sm, lb (ν + eZ I.1) (∑ c, pr I c (tm (R ν) (wedge (fun a : Fin l => Formalism.QuantumDeterminants.fvec k r z (Fin.castLE hl a))) v c)) = κ₀ • lb ν v) → ‖κ₀‖ ^ 2 * dg ν / dg (ν + eZ I.1) ≤ Hsq r (Formalism.QuantumDeterminants.Tz k r z) b ^ l := by
-  first | exact @GlobalTheory.GapWedgeKappaL.kappa_bound | exact GlobalTheory.GapWedgeKappaL.kappa_bound | (intros; apply GlobalTheory.GapWedgeKappaL.kappa_bound <;> assumption)
+  first | exact @GlobalTheory.GapWedgeKappaL.kappa_bound
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselExteriorPowerConstantBoundLargeGapStatement =====
@@ -408,7 +408,7 @@ open BranchingSupport GlobalTheory.CellAmp GlobalTheory.Amp Formalism.BasicNotio
 open scoped InnerProductSpace ENNReal
 
 theorem _root_.GlobalTheory.T.exists_goodLocalDatum_of_nonzero_periods_gap : GlobalTheory.GapIn.Hyp → ∀ (D : D7) τ w w' θ (W : LocW D.R.k D.R.rS) (lam : Fin (2 * D.R.rS + D.R.k + 1) → ℝ) (R : Rep D.R.k D.R.rS) (h : ℝ) (l : R.H → W.Wp) (l' : R.H → W.Wq) (dd : ℝ), cdScaleTie D → GoodW D τ w w' θ W → R.IsDG (epsSH D.R) lam → PI.BesselMapUniq.IsBesselMapSm (k := D.R.k) (r := D.R.rS) W.z (psiS D W.z) R.σ W.π l → PI.BesselMapUniq.IsBesselMapSm (k := D.R.k) (r := D.R.rS) W.z' (psiS D W.z') R.σ W.π' l' → 0 < dd → (∀ v ∈ R.sm, l2SG W.νS (fun g => l (R.σ g v)) = ENNReal.ofReal (‖v‖ ^ 2 / dd)) → (∀ v ∈ R.sm, l2SG W.νS' (fun g => l' (R.σ g v)) = ENNReal.ofReal (‖v‖ ^ 2 / dd)) → ∃ A : LocS W, GoodS D lam A := by
-  first | exact @GlobalTheory.DatumOfPeriodsGap.exists_goodS | exact GlobalTheory.DatumOfPeriodsGap.exists_goodS | (intros; apply GlobalTheory.DatumOfPeriodsGap.exists_goodS <;> assumption)
+  first | exact @GlobalTheory.DatumOfPeriodsGap.exists_goodS
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGoodLocalDatumOfNonzeroPeriodsGapStatement =====
@@ -651,7 +651,7 @@ theorem lOneNorm_add_single_unit_le {n : ℕ} (x : Fin n → ℤ) (a : Fin n) (z
     rw [Finset.sum_eq_single a]
     · simp [hz]
     · intro b _ hb
-      simp [Pi.single_apply, hb]
+      simp [hb]
     · simp
   calc ∑ i, ((x + (Pi.single a z : Fin n → ℤ)) i).natAbs ≤ ∑ i, ((x i).natAbs + ((Pi.single a z : Fin n → ℤ) i).natAbs) :=
         Finset.sum_le_sum fun i _ => h1 i

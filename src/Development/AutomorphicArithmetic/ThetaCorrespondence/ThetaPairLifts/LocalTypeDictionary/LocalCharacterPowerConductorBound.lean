@@ -413,7 +413,7 @@ theorem UpperTheory.exists_mem_KO_eq_stdFrame_mul_of_isPrimFrame_fin :
   have hYrank : Y.rank = a' := by
     have hY0 : Y0 k σ * (Y0 k σ).transpose = 1 := by
       ext i j
-      simp [Y0, Matrix.mul_apply, Matrix.one_apply, Finset.sum_ite_eq']
+      simp [Y0, Matrix.mul_apply, Matrix.one_apply]
     have hW : Y * (((h⁻¹ : GL D k) : Matrix D D k) * (Y0 k σ).transpose) = 1 := by
       rw [hYeq, Matrix.mul_assoc, ← Matrix.mul_assoc (h : Matrix D D k), ← Units.val_mul,
         mul_inv_cancel, Units.val_one, Matrix.one_mul, hY0]
@@ -1279,7 +1279,7 @@ private theorem local_grid_entries_unitary {K : Type} [Field K] {ι τ : K →+*
     {i j : ℕ} (hi : i < D.R.m) (hj : j < D.R.m) (u : (Kw w)ˣ) : Un ι τ ((locGrid G t w).nu i j u : ℂ) := by
   have e1 : (((locGrid G t w).nu i j u : ℂˣ) : ℂ) =
       ((L.C.mu0 ⟨j, hj⟩).loc w u : ℂ) * ((L.xiH t).loc w u : ℂ) * (((G.ch.chiH (D.R.m - i)).loc w u : ℂ))⁻¹ := by
-    simp only [Grid.nu, locGrid, muBase, dif_pos hj, MonoidHom.div_apply, Units.val_div_eq_div_val, div_eq_mul_inv]
+    simp only [Grid.nu, locGrid, muBase, dif_pos hj, div_eq_mul_inv]
     simp [HChar.loc]
   rw [e1]
   exact ((hmu _ _).mul (hxi _)).mul (hchi _ (by omega) (by omega) _).inv

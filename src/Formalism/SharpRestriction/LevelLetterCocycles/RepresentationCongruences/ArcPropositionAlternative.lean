@@ -222,7 +222,7 @@ theorem arc_length_one_or_two_case_c [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsD
     refine ⟨lA W ^ ArcLengthOneTwo.deA PD.p (size c) (size (c - 1) + S) * u₀ - qA W ^ size c * algebraMap O (LetA O n) x'',
       Subalgebra.sub_mem _ (Subalgebra.mul_mem _ (Subalgebra.pow_mem _ (Subalgebra.natCast_mem _ _) _) hu₀)
         (Subalgebra.mul_mem _ (Subalgebra.pow_mem _ (GS.qA_mem W) _) (Subalgebra.algebraMap_mem _ _)), ?_⟩
-    simp only [map_mul, map_sub, map_one, mul_one, hlE, hxE] at e1 ⊢
+    simp only [map_mul, map_sub, mul_one, hlE, hxE] at e1 ⊢
     linear_combination lE W (ArcLengthOneTwo.deA PD.p (size c) (size (c - 1) + S)) * e1
   have hgdown : ∀ s < (arcOf b w S η up size).len c, ∀ bs,
       (arcOf b w S η up size).ty (c - (s : ZMod n)) = Formalism.MainNotions.LocalTheoryWindows.LT.down bs →
@@ -490,7 +490,7 @@ theorem den_step [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (IsLoc
     funext i
     by_cases hi : i = c
     · subst hi; simp [letE, hF₁, Formalism.MainNotions.N.FrobeniusPowerSeries.PhiBridge.cst]
-    · simp [letE, Pi.single_apply, hi]
+    · simp [letE, hi]
   have e1 : (letE c : LetA O n) * Br.cst G =
       lA W ^ de * (letE c * Br.cst 1 * u₁) - Br.cst (P.p 1 ^ y) * (letE c * algebraMap O (LetA O n) x') := by
     rw [Br.cst_one, mul_one, hletu, hG, Br.lA_eq, ← Br.cst_pow, ← Br.cst_C]

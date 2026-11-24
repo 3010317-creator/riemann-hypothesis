@@ -187,7 +187,7 @@ theorem exists_unit_eq_matLat : ∀ {O K : Type} [CommRing O] [IsDomain O] [IsDi
     intro M hM
     refine ⟨hM.1.map _, ?_⟩
     have hcoe : ((J M : Submodule O A) : Set A) = (e.symm : (Fin n → K) →ₗ[K] A) '' (M : Set _) := by
-      ext y; simp [J, Submodule.mem_map]; rfl
+      ext y; simp [J]; rfl
     rw [hcoe, Submodule.span_image, hM.2, Submodule.map_top, LinearEquiv.range]
   have stJ : ∀ M, (∀ v ∈ M, γ *ᵥ v ∈ M) →
       ∀ a ∈ integralClosure O A, ∀ y ∈ J M, a * y ∈ J M := by
@@ -725,7 +725,7 @@ theorem single_mem_stdLat {O K : Type} [CommRing O] [Field K] [Algebra O K] (n :
   intro j
   by_cases h : j = i
   · subst h; exact ⟨1, by simp⟩
-  · exact ⟨0, by simp [Pi.single_apply, h]⟩
+  · exact ⟨0, by simp [h]⟩
 
 theorem stdLat_eq_span {O K : Type} [CommRing O] [Field K] [Algebra O K] (n : ℕ) :
     stdLat O n = Submodule.span O (Set.range fun i : Fin n => (Pi.single i (1 : K) : Fin n → K)) := by
@@ -823,7 +823,7 @@ theorem selfDual_matLat_stdLat {O K : Type} [CommRing O] [Field K] [Algebra O K]
       intro i
       by_cases hij : i = j
       · subst hij; exact ⟨1, by simp⟩
-      · exact ⟨0, by simp [Pi.single_apply, hij]⟩
+      · exact ⟨0, by simp [hij]⟩
     have := h _ hx
     rw [herm_mulVec_right] at this
     simpa [herm, Pi.single_apply, map_one] using this
