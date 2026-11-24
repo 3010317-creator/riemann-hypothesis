@@ -108,7 +108,9 @@ theorem orth_inner (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι ℂ)
 
 theorem main (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι ℂ)
     (hX : ∀ v, IsUnit (X v).det) {S : Type} (A : S → Submodule (𝓞 K) V) (hA : ∀ s, (A s).FG)
-    (horth : ∀ s t, s ≠ t → OrthAt b X (A s) (A t)) (s : Finset S) :
+    (hinner : ∀ i j, i ≠ j → ∀ x ∈ A i, ∀ y ∈ A j,
+      inner ℝ (Formalism.HermitianLatticesTheory.realize b X x) (Formalism.HermitianLatticesTheory.realize b X y) = 0)
+    (s : Finset S) :
     (⨆ i ∈ s, A i).FG ∧ Formalism.HN.rkK (⨆ i ∈ s, A i) = ∑ i ∈ s, Formalism.HN.rkK (A i) ∧
       Formalism.HN.deg (Formalism.HermitianLatticesTheory.realize b X) (⨆ i ∈ s, A i) =
         ∑ i ∈ s, Formalism.HN.deg (Formalism.HermitianLatticesTheory.realize b X) (A i) ∧
@@ -129,7 +131,7 @@ theorem main (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι ℂ)
 
       rw [← hμ, map_sum, inner_sum]
       refine Finset.sum_eq_zero fun i hi => ?_
-      exact orth_inner b X (horth a i (fun h => ha (h ▸ hi))) x hx _ (μ i).2
+      exact hinner a i (fun h => ha (h ▸ hi)) x hx _ (μ i).2
     have hlA := (Formalism.HN.plLat K V ι b X hX (A a) (hA a)).1
     have hlB := (Formalism.HN.plLat K V ι b X hX B ihfg).1
     obtain ⟨hl, hdeg, hmu⟩ :=
@@ -167,7 +169,7 @@ end OrthogonalSumAlt
 open OrthogonalSumAlt in
 theorem orthogonal_sum_slope : OrthSum := by
   intro K V ι _ _ _ _ _ _ _ _ _ _ b X hX S _ A hA horth
-  obtain ⟨hfg, hrk, hdeg, hmu⟩ := main b X hX A hA horth Finset.univ
+  obtain ⟨hfg, hrk, hdeg, hmu⟩ := main b X hX A hA (fun s t h => orth_inner b X (horth s t h)) Finset.univ
   have hu : (⨆ i ∈ (Finset.univ : Finset S), A i) = ⨆ i, A i := by simp
   rw [hu] at hfg hrk hdeg hmu
   refine ⟨hrk, ?_, ?_⟩
