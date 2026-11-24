@@ -81,8 +81,11 @@ Drop the part from `---` on if the pull request depends on no other.
 
 ## Mistakes we keep seeing
 
-These are changes agents often make that we don't want. Most of them hide a problem in one file
-instead of fixing it where it comes from. We add to this list as we find more.
+We're glad to take a speed-up that costs a little readability, such as passing an explicit
+argument, using `rw` where `simp` was slow, or restating a lemma so that Lean has less to unfold.
+The changes below are different. Agents often make them and we don't want them: most of them hide
+a problem in one file instead of fixing it where it comes from. We add to this list as we find
+more.
 
 ### Keeping the old lemma next to a new one
 
@@ -129,7 +132,16 @@ whether it assigns the goal without checking the term's type or checks it with `
 Both hide a slow unification instead of fixing it, and the first leaves a wrong term to show up only
 as a kernel error at the end of the declaration. Some files already have one, such as
 `exact_by_kernel`; don't copy those. If `exact` is slow because the term and the goal only agree
-after unfolding, work out what Lean has to unfold and rewrite with a lemma for it.
+after unfolding, leave the proof as it is and open an issue with the profile instead.
+
+### Working around the unused-section-variable linter
+
+`linter.unusedSectionVars` can take tens of seconds on one theorem. For each section variable that
+the statement doesn't mention, it searches the whole proof term, and that search is slow on a long
+proof term. Don't make a file faster by adding `omit … in` lines or
+`set_option linter.unusedSectionVars false in` in front of the slow theorems. Each one helps a
+single declaration and leaves the check as slow everywhere else. If this linter is what makes your
+file slow, open an issue with the profile instead, so it can be fixed once for the whole project.
 
 ### Small speed-ups to the CI scripts
 
