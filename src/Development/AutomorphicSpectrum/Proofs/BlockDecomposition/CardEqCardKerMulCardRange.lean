@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Algebra.Exact.Basic
 public import Mathlib.Algebra.Module.Submodule.Range
 public import Mathlib.SetTheory.Cardinal.Finite
 public import Mathlib.Data.Fintype.BigOperators
