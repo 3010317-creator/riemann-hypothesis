@@ -271,8 +271,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.TranslCP
@@ -580,8 +578,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
-
-set_option autoImplicit false
 
 noncomputable section
 namespace GlobalTheory.TranslateEvenTriv
