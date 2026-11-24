@@ -76,6 +76,12 @@ def HarishChandraModulesOn {p q : ℕ} (T : GrpData p q) : Prop :=
   (∀ (πU : URep T) (M : GKMod p q) (io : M.V →ₗ[ℂ] πU.H), IsHCMod πU M io →
     AdmGK M → IrrGK M → IrrU πU)
 
+/-- **Harish-Chandra modules theorem**: the category of admissible $(\mathfrak{g}, K)$-modules
+of finite length is abelian and equivalent to the category of infinitesimal equivalences of
+irreducible admissible representations.
+
+Proposed reference:
+[Harish-Chandra, *The characters of semisimple Lie groups*][harishChandra1956characters]. -/
 def KFiniteAnalyticUJ : Prop :=
   ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     [Nontrivial H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)),
