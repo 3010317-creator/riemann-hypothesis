@@ -78,6 +78,23 @@ import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.BitVec
 import Std.Tactic.BVDecide.Normalize.Prop
 
+attribute [-instance]
+  NormedSpace.toModule NormedAlgebra.toAlgebra
+  Subalgebra.normedCommRing Subalgebra.seminormedRing
+  Subalgebra.seminormedCommRing Subalgebra.normedRing
+  Submodule.normedSpace Submodule.seminormedAddCommGroup
+  Submodule.normedAddCommGroup SubalgebraClass.toNormedAlgebra
+  Subalgebra.isScalarTower_left Subalgebra.isScalarTower_mid
+  Submonoid.instIsScalarTowerSubtypeMem Submonoid.instSMulCommClassSubtypeMem_1
+  Subalgebra.smulCommClass_right Subalgebra.smulCommClass_left
+  MulSemiringAction.toDistribMulAction
+  RingHomClass.toLinearMapClassNNRat RingHomClass.toLinearMapClassRat
+  NonUnitalAlgHomClass.instLinearMapClass
+  NonUnitalAlgHomClass.instSemilinearMapClassOfNonUnitalAlgSemiHomClassOfClassRingHom
+  Algebra.TensorProduct.instNonUnitalSemiring Algebra.TensorProduct.instNonUnitalRing
+attribute [local instance high]
+  Submodule.module TensorProduct.leftModule Algebra.TensorProduct.leftAlgebra
+
 @[expose] public section
 
 section S_T1
@@ -3298,21 +3315,17 @@ theorem DnM_diag (hL : IsModelLevel P (DQ P) L) (Y : ℝ) (w : List ℝ)
   · simp only [Fin.zero_eta, Fin.isValue, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero,
       Matrix.empty_val', Matrix.cons_val_fin_one]
     rw [hq, hxi, ← Matrix.diagonal_smul, Matrix.diagonal_mul_diagonal]
-    congr 1
-    funext e
+    refine congrArg Matrix.diagonal (funext fun e => ?_)
     rw [Pi.smul_apply, ← map_smul, mul_assoc, ← map_mul]
-    congr 2
-    funext π
+    refine congrArg _ (congrArg (kap P (DQ P)) (funext fun π => ?_))
     rw [cs_cons, if_pos rfl, div_eq_mul_inv]
     rfl
   · simp only [Fin.mk_one, Fin.isValue, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_one, Matrix.head_cons,
       Matrix.empty_val', Matrix.cons_val_fin_one]
     rw [hx, Matrix.diagonal_mul_diagonal]
-    congr 1
-    funext e
+    refine congrArg Matrix.diagonal (funext fun e => ?_)
     rw [mul_assoc, ← map_mul]
-    congr 2
-    funext π
+    refine congrArg _ (congrArg (kap P (DQ P)) (funext fun π => ?_))
     rw [cs_cons, if_neg (by decide)]
     rfl
 
@@ -15651,7 +15664,7 @@ theorem multAdj {m : ℕ} (hD : JDecay P L j m) {a β s : A P (DQ P)} {C : ℝ} 
       _ = _ := by rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   refine ⟨int1, int2, ?_⟩
   rw [ipA_eq, ipA_eq, ← integral_finsetSum _ fun π _ => int1 π, ← integral_finsetSum _ fun π _ => int2 π]
-  congr 1; funext q
+  refine MeasureTheory.integral_congr_ae (Filter.Eventually.of_forall fun q => ?_)
 
   simp only [e1, e2, map_sum, map_mul, Complex.conj_conj, Finset.mul_sum, Finset.sum_mul]
   rw [Finset.sum_comm]
@@ -16869,7 +16882,8 @@ theorem ipA_conj (f g : M.Ty P → SmQ P.r P.TT) : ipA P f g = conj (ipA P g f) 
   rw [AD.ipA_eq, AD.ipA_eq, map_sum]
   refine Finset.sum_congr rfl fun π _ => ?_
   rw [← integral_conj]
-  congr 1; funext q
+  refine MeasureTheory.integral_congr_ae (Filter.Eventually.of_forall fun q => ?_)
+  dsimp only
   rw [map_mul, Complex.conj_conj, mul_comm]
 
 theorem pair_sum {N : ℕ} (j : M.Ty P → SmQ P.r P.TT) (F Gf : Qp P.r P.TT → Iota P N → ℂ) (U V : Ix (Fin N) → A P (DQ P))
@@ -17254,7 +17268,7 @@ theorem adjoint_bounded : Formalism.FourierDecayAlt.MA.AdjBQ := by
     rw [Formalism.FourierDecayAlt.P.MAx3.AB.ipA_conj, (QR b e).2.2]
 
   simp only [eL, eR, ← map_sum]
-  congr 1
+  apply congrArg conj
   rw [ipA_sum_j Finset.univ _ j (fun e _ => (QL e).2.1)]
   have inner : ∀ b, ∑ e, ipA P (actA P (star (uv P l L' w Y b e) * yv' P l L' w Y ψ b e) j) j =
       ipA P (actA P (∑ e, star (uv P l L' w Y b e) * yv' P l L' w Y ψ b e) j) j :=
