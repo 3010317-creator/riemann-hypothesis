@@ -50,6 +50,11 @@ namespace UpperTheory.V.Published
 
 open UpperTheory.V.Sd
 
+/-- **Baily–Borel theorem on Hilbert modular varieties**: the quotient of a Hermitian symmetric
+domain by an arithmetic subgroup admits a canonical projective compactification via Eisenstein series.
+
+Proposed reference:
+[W. L. Baily, Jr. and A. Borel, *Compactification of arithmetic quotients of bounded symmetric domains*][bailyBorel1966]. -/
 def HilbertEisOne : Prop :=
   ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (ω : HChar F) (c : HeightOneSpectrum (𝓞 F) → ℕ),
     IsOfFinOrder ω → (∀ v, ω.locInf v (-1) = -1) → (∀ w, IsCondAt w ω (c w)) → (∃ w, c w ≠ 0) →
