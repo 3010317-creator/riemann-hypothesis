@@ -351,8 +351,6 @@ def unif : Unif (fam I) (str B) σ where
 theorem isFor (K : Charts (fam I)) : (real σ K).IsFor (unif σ) := fun k p hp ↦
   (Cris.spMap_comp _ _).symm.trans (congrArg spMap (ev_comp_pt σ K k p hp))
 
-theorem based : (unif σ).Based := ⟨⊤, isAffineOpen_top _, fun _ _ ↦ le_top⟩
-
 theorem unif_ne (z : I → ℂ) : (unif σ).E (z, 0) ≠ (unif σ).E (z, fun _ ↦ Real.pi * Complex.I) := fun h ↦ by
   have e := congrArg (fun φ ↦ φ.hom (coord B)) (Spec.map_injective h)
   simp only [CommRingCat.hom_ofHom, expPt, pt_coord] at e
