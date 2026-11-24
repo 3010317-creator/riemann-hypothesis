@@ -24,8 +24,6 @@ namespace Formalism.IndefR.Fin.PDA
 
 open Formalism.IndefR.Fin Formalism.IndefR.Datum
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7}
 
 theorem exists_nat_eq_mul {K : Type} [Field K] [NumberField K] (b : 𝓞 K) (hb : b ≠ 0) :

@@ -11,8 +11,6 @@ open scoped TensorProduct ContDiff
 
 namespace Formalism.L2.Theta
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7}
 
 structure TwRuleEq {X : ThetaX D} (T : ThetaTied D X)
