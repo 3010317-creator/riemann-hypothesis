@@ -610,7 +610,7 @@ theorem exists_extension_integral_frame_uniformizer : _root_.GlobalTheory.CovTop
   obtain ⟨z', hz'⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.abelianSchemeLaws_all.1.secBaseChange E H Dw l Xo c
     T.Fr T'.Fr ψ y₀.1
   let y' : IntFr Xo c T' (i.comp io) := ⟨z', GlobalTheory.NonIntegralFrameExample.spread_holds Xo c T'.Fr z',
-    GlobalTheory.IntegralExt.integral_baseChange T T' io (i.comp io) j hi ψ hφ y₀.1 z' hz' y₀.2.2⟩
+    GlobalTheory.IntegralPull.integral_baseChange T T' io (i.comp io) j hi ψ hφ y₀.1 z' hz' y₀.2.2⟩
   obtain ⟨G, ⟨mG⟩⟩ : ∃ G : SAB H (Sp T'.V), Nonempty (SABMap G TF.Y.t (spMap j ≫ w)) := by
     obtain ⟨_, _, _, _, _, m, -⟩ := sabPull Out.CubePf.cubePull (spMap j ≫ w) TF.Y.t
     exact ⟨_, ⟨m⟩⟩
@@ -626,7 +626,7 @@ theorem exists_extension_integral_frame_uniformizer : _root_.GlobalTheory.CovTop
   have hx' : y'.1.x = (spMap i ≫ FlagMod.frX P) ≫ pullback.fst _ _ := by
     rw [Category.assoc, FlagMod.frX_fst, ← hB.1]
     exact hz'.1
-  obtain ⟨Pu, -⟩ := GlobalTheory.IntegralExt.exists_unif_of_split T T' j i hφ m1₀ m2₀ (Category.assoc _ _ _) m1 m2 hS
+  obtain ⟨Pu, -⟩ := GlobalTheory.IntegralPull.exists_unif_of_split T T' j i hφ m1₀ m2₀ (Category.assoc _ _ _) m1 m2 hS
   have hloc : IsLocalHom j := hfin.to_isIntegral.isLocalHom hi
   refine ⟨T', i, j, r, y', G, mG, Pu, t', (by rw [hx']; exact m1), m2, hr0, hv, hι, fun a ha => map_nonunit j a ha,
     ?_⟩
