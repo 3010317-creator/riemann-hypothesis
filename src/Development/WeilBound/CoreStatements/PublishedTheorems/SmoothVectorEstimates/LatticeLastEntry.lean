@@ -242,8 +242,7 @@ theorem mir_mul (hk : m + 1 < a) (h : GL (Fin a) F) (hh : GlobalTheory (m + 1) h
         by_cases hl : (l : ℕ) < m + 1
         · rw [dite_eq_left hl]
           rfl
-        · rw [dite_eq_right hl]
-          rw [hh _ _ (Or.inr (by omega)), Matrix.one_apply_ne]
+        · rw [dite_eq_right hl, hh _ _ (Or.inr (by omega)), Matrix.one_apply_ne]
           intro e
           rw [← e] at hl
           simp at hl
@@ -287,8 +286,7 @@ theorem contOn_sM [TopologicalSpace F] [IsTopologicalDivisionRing F] (hk : m + 1
     exact (h1.comp hc.continuousAt).comp continuous_subtype_val.continuousAt
   rw [continuousOn_iff_continuous_domRestrict]
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
-  · refine (hc.comp continuous_subtype_val).congr fun x => ?_
-    exact (sM_val hk x.1 x.2).symm
+  · exact (hc.comp continuous_subtype_val).congr fun x => (sM_val hk x.1 x.2).symm
   · refine hi.congr fun x => ?_
     show _ = ((sM hk x.1)⁻¹ : GL (Fin a) F).val
     rw [Matrix.coe_units_inv, sM_val hk x.1 x.2]

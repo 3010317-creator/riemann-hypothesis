@@ -172,8 +172,7 @@ private theorem posDef_imM_mul_inv_of_skew_relation (X U : Matrix (Fin n) (Fin n
   have hinj : Function.Injective U.mulVec := by
     intro v w hvw
     have h0 : U *ᵥ (v - w) = 0 := by
-      rw [Matrix.mulVec_sub, sub_eq_zero]
-      exact hvw
+      rwa [Matrix.mulVec_sub, sub_eq_zero]
     exact sub_eq_zero.1 (hker _ h0)
   have hU : IsUnit U := mulVec_injective_iff_isUnit.1 hinj
   have hUU : U * U⁻¹ = 1 := Matrix.mul_nonsing_inv U ((Matrix.isUnit_iff_isUnit_det U).1 hU)
@@ -208,8 +207,7 @@ theorem zOf_mem' (y : GR n) : zOf y ∈ Dom n := by
     Matrix.neg_mul, add_zero, zero_add] at hM
   obtain ⟨h1, h2, h3, h4⟩ := Matrix.fromBlocks_inj.1 hM
   have hk := conjTranspose_I_smul_add_sub_eq_neg_two_I _ _ _ _ h1 h2 h3 h4
-  refine (mem_dom_iff (n := n) (zOf y)).2 ?_
-  exact posDef_imM_mul_inv_of_skew_relation _ _ hk
+  exact (mem_dom_iff (n := n) (zOf y)).2 (posDef_imM_mul_inv_of_skew_relation _ _ hk)
 
 theorem neg_conj_mem' {W : Fin n → Fin n → ℂ} (hW : W ∈ Dom n) :
     (-(Matrix.of W)ᴴ : Matrix (Fin n) (Fin n) ℂ) ∈ Dom n := by

@@ -124,8 +124,7 @@ theorem coneGL : ConeGL := by
   refine ⟨?_, hd⟩
   have h1 := congrArg Matrix.det (hσ v hv)
   rw [Matrix.det_mul] at h1
-  intro h0
-  exact hd (by rw [← h1, h0, zero_mul])
+  exact fun h0 => hd (by rw [← h1, h0, zero_mul])
 
 theorem hOf_contDiff : ContDiff ℝ ∞ (fun v : Fin n × Fin n → ℝ => hOf v) := by
   unfold hOf

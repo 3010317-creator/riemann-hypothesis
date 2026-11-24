@@ -282,8 +282,7 @@ theorem gammaE_id {M : Model l K} {a a' : D.Ch M} (m : D.Mo (𝟙 M.X) (Category
     (u : M.T n) (φ : Module.Dual K (HdR M.q n)) :
     gamma hF β κ a' n (E.e a' n u) φ = gamma hF β κ a n (E.e a n u) φ := by
   have := gammaE_nat hF E β κ m hM hM n u φ
-  rw [pullT_id, LinearMap.id_apply, pullR_genMap_id, LinearMap.comp_id] at this
-  exact this
+  rwa [pullT_id, LinearMap.id_apply, pullR_genMap_id, LinearMap.comp_id] at this
 
 
 include hL in

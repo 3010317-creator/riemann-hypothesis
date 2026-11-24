@@ -141,8 +141,7 @@ theorem u_det_ne (g : M2 n) (hg : InG g) (w : ℂ) (hw : w = Complex.I ∨ w = -
   have key := form_inv g hg (Sum.elim (w • x) x)
   rw [mulVec_elim] at key
   have hl : g.toBlocks₂₁ *ᵥ (w • x) + g.toBlocks₂₂ *ᵥ x = 0 := by
-    rw [Matrix.mulVec_smul, ← Matrix.smul_mulVec, ← Matrix.add_mulVec]
-    exact hx
+    rwa [Matrix.mulVec_smul, ← Matrix.smul_mulVec, ← Matrix.add_mulVec]
   rw [hl, JJ_mulVec, JJ_mulVec, star_elim, star_elim, dot_elim, dot_elim] at key
   have hs : star (w • x) = star w • star x := by
     funext j; simp

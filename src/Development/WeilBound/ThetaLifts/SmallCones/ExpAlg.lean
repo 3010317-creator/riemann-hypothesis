@@ -128,8 +128,7 @@ theorem pure_ne_zero {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype �
     GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ ≠ 0 := by
   classical
   obtain ⟨yi, hyi⟩ : ∃ y, f y ≠ 0 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hf (SchwartzMap.ext h)
   have hS : Set.Finite {v | ¬ (φ v = Set.indicator {x | ∀ i, x i ∈ v.adicCompletionIntegers F} 1)} :=
     Filter.eventually_cofinite.mp hstd
@@ -153,7 +152,6 @@ theorem pure_ne_zero {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype �
   have hx := congrFun hz x
   have h1 : (fun i => evI F (x i)) = yi := by
     funext i
-    show InfiniteAdeleRing.ringEquiv_mixedSpace F ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (yi i)) = yi i
     exact RingEquiv.apply_symm_apply _ _
   have h2 : ∀ v, (fun i => evFin F v (x i)) = fun i => if v ∈ S then p v i else 0 := fun v => rfl
   simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.zero_apply, h1, h2] at hx
@@ -223,8 +221,7 @@ theorem ev_ne_zero (hM : M.IsGood B.ψ) (hM₁ : M₁.IsGood B.ψ) (he : IsEv B 
     ⟨GlobalTheory.WeilM.isLocallyConstant_finprod_evalV M.vac hsb hM.std,
       GlobalTheory.AdelicCoordSupport.hasCompactSupport_finprod M.vac hsb hM.std⟩, rfl⟩, ?_⟩
   rw [h2 f M.vac hsb (Eventually.of_forall fun _ => rfl)]
-  simp only [(h1 _).1]
-  exact pure_ne_zero _ hf _ (fun v => (hM₁.vac v).2.1) hM₁.std
+  simpa only [(h1 _).1] using pure_ne_zero _ hf _ (fun v => (hM₁.vac v).2.1) hM₁.std
 
 theorem lin_add (y y' : Fin m → AF F) : lin u (y + y') = lin u y + lin u y' := by
   simp [lin, add_smul, Finset.sum_add_distrib]

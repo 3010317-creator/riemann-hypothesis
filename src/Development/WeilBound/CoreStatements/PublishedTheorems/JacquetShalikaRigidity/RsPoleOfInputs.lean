@@ -251,14 +251,12 @@ namespace CosetIntegralMeasure
 
 variable {E : Type} [Field E] [NumberField E] {k : ℕ}
 
-theorem meas_mul (g : GA E k) : Measurable (fun h : GA E k => g * h) := by
-  exact measurable_const_mul g
+theorem meas_mul (g : GA E k) : Measurable (fun h : GA E k => g * h) := measurable_const_mul g
 
 theorem lint_nuG (Γ : Set (GL (Fin k) E)) (d : ℕ) (F : GA E k → ℝ≥0∞) (hF : Measurable F) :
     ∫⁻ h, F h ∂nuG Γ d = ∑' γ : Γ, ∫⁻ h, F (ratGL E k γ * h) ∂nuD E k d := by
   rw [nuG, lintegral_sum_measure]
-  refine tsum_congr fun γ => ?_
-  exact lintegral_map hF (meas_mul _)
+  exact tsum_congr fun γ => lintegral_map hF (meas_mul _)
 
 end CosetIntegralMeasure
 
@@ -393,8 +391,7 @@ theorem kir_of : jumpWindows.S2 → jumpWindows.G0 → jumpWindows.G2a → jumpW
     · intro g hg z hz
       rw [hmem] at hz ⊢
       exact ⟨⟨hYi g z hz.1.1, hYgi g z hz.1.2⟩, fun w => hYwi w g (hg w.1 w.2) z (hz.2 w)⟩
-    · intro z hz
-      exact ((hYgm z).1 ((hmem z).1 hz).1.2).1
+    · exact fun z hz => ((hYgm z).1 ((hmem z).1 hz).1.2).1
   have hcusp := π.cusp φ hφ
   have hxY' : Rt E k h x ∈ Y' := by
     have hxg : x ∈ Yg := by
@@ -1513,8 +1510,7 @@ theorem spherical_function_of : jumpWindows.G0 → jumpWindows.G5 → C0 → K7 
   refine ⟨hφ, fun g κ hinf hS hint => ?_, fun g hg => ⟨fun g₀ hi hS hIn h0 => ?_, fun w hw => ?_⟩⟩
   · have e : Rt E k κ φ = φ := by
       ext x
-      simp only [Rt_apply]
-      exact hφ x κ hinf hS hint
+      simpa only [Rt_apply] using hφ x κ hinf hS hint
     rw [← hrt, e]
   · refine hg (jumpWindows.convergence_entries_general_linear hG0 E k S (Wh ψ φ) hcont (fun w hw h hh h0 u => ?_) g g₀ hi hS hIn h0)
     obtain ⟨χ, -, -, hK⟩ := hK7 E k ψ hψ w (hcond w hw)

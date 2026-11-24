@@ -415,8 +415,7 @@ theorem exists_herm_of_selfRecip [CharZero E] (c : E →+* E) (hc : ∀ x, c (c 
       rw [← b.equivFun_apply, LinearEquiv.apply_symm_apply]
     have htr : ∀ z : A, Algebra.trace E A (z * y) = 0 := by
       intro z
-      rw [← sig_sig hc h0 hr z]
-      rw [hexp]
+      rw [← sig_sig hc h0 hr z, hexp]
       refine Finset.sum_eq_zero fun k _ => ?_
       simp only [hy, mul_assoc, ← Finset.mul_sum]
       have := congrFun hv k
@@ -659,15 +658,13 @@ theorem kapOrb_unit_zero (w : Pl E) (Q₁ Q₂ : (w.adicCompletion E)[X]) (hQ : 
   rw [finsum_unique]
   set γ : UL 0 w := (default : TwCl (MonoidHom.id (UL 0 w))).rep
   have hcp : γ.1.val.charpoly = Q₁ * Q₂ := by
-    rw [hQ]
-    rw [Matrix.charpoly, Matrix.det_isEmpty]
+    rw [hQ, Matrix.charpoly, Matrix.det_isEmpty]
   have hγ : γ ∈ KL 0 w := by
     rw [Subsingleton.elim γ 1]
     exact one_mem _
   have hT : twOrb (MonoidHom.id _) (KL 0 w) γ ((KL 0 w : Set (UL 0 w)).indicator 1) = 1 := by
     rw [GlobalTheory.BCT.OrbUnit.twOrb_unit (KL 0 w) γ, ite_eq_left ⟨1, by simpa using hγ⟩]
-    · intro g₁ g₂ _ _
-      exact ⟨1, one_mem _, 1, one_mem _, Subsingleton.elim _ _⟩
+    · exact fun g₁ g₂ _ _ => ⟨1, one_mem _, 1, one_mem _, Subsingleton.elim _ _⟩
     · intro g _ x _
       rw [Subsingleton.elim x 1]
       exact one_mem _
@@ -691,8 +688,7 @@ theorem GlobalTheory.CompanionTheory.KapOrbAE.kapOrbAE : KapOrbAE := by
     · exact GlobalTheory.CompanionTheory.KapOrbAE.kapOrb_unit_pos hU n hn p₁ p₂ h1 h2 hc hd
   have hall : ∀ᶠ w : Pl E in cofinite, kapOrb n w (atPl w p₁) (atPl w p₂) (f w) = 1 := by
     filter_upwards [hf.2, hunit] with w hw h
-    rw [hw]
-    exact h
+    rwa [hw]
   exact Filter.eventually_cofinite.1 hall
 end -- clump:auto
 end -- clump:auto

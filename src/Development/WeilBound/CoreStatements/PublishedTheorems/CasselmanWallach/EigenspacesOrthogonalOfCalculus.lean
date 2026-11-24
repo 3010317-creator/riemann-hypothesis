@@ -126,8 +126,7 @@ lemma key (hgl : IsGlRep E) (huni : IsInfUnitary ε E)
       - (if ε a ≠ ε b then (if d = a then inner ℂ (E c b x) (A (E a b y)) else 0) else 0) := by
     intro a b
     by_cases hab : ε a ≠ ε b
-    · simp only [ite_eq_left hab]
-      exact pt hgl huni hA hcd a b x y
+    · simpa only [ite_eq_left hab] using pt hgl huni hA hcd a b x y
     · simp only [ite_eq_right hab]
       simp
   have h1 := s1 (ε := ε) (fun a b => inner ℂ (E a b x) (A (E d b y))) c
@@ -142,14 +141,12 @@ lemma key (hgl : IsGlRep E) (huni : IsInfUnitary ε E)
 lemma beta_sum_left {ι : Type*} (s : Finset ι) (f : ι → V) (w : V) :
     beta ε E A (∑ i ∈ s, f i) w = ∑ i ∈ s, beta ε E A (f i) w := by
 
-  simp only [beta, map_sum, sum_inner]
-  exact Finset.sum_comm
+  simpa only [beta, map_sum, sum_inner] using Finset.sum_comm
 
 lemma beta_sum_right {ι : Type*} (s : Finset ι) (f : ι → V) (v : V) :
     beta ε E A v (∑ i ∈ s, f i) = ∑ i ∈ s, beta ε E A v (f i) := by
 
-  simp only [beta, map_sum, inner_sum]
-  exact Finset.sum_comm
+  simpa only [beta, map_sum, inner_sum] using Finset.sum_comm
 
 lemma Lsym (hgl : IsGlRep E) (huni : IsInfUnitary ε E)
     (hA : ∀ c d, ε c = ε d → ∀ z, A (E c d z) = E c d (A z)) (v w : V) :

@@ -101,13 +101,11 @@ theorem jacquet_shalika_rigidity_of_bound : AbsRig → UnitEx → SatTw → DetO
   have hsat0 : ∀ (w : Off E S) (i : ι), (π0 i).HasSat w.1 ((B w i).map (· * ((ν (t i))⁻¹).val w.1)) := by
     intro w i
     have h := hST E (m i) (π i) ((ν (t i))⁻¹) w.1 (B w i) (unrAt_inv ((hν (t i)).1 w.1)) (hB w i)
-    rw [hπ0 i, ← CG.twist_mul, mul_inv_cancel, CG.twist_one] at h
-    exact h
+    rwa [hπ0 i, ← CG.twist_mul, mul_inv_cancel, CG.twist_one] at h
   have hsat0' : ∀ (w : Off E S) (j : κ), (π0' j).HasSat w.1 ((B' w j).map (· * ((ν (t' j))⁻¹).val w.1)) := by
     intro w j
     have h := hST E (m' j) (π' j) ((ν (t' j))⁻¹) w.1 (B' w j) (unrAt_inv ((hν (t' j)).1 w.1)) (hB' w j)
-    rw [hπ0' j, ← CG.twist_mul, mul_inv_cancel, CG.twist_one] at h
-    exact h
+    rwa [hπ0' j, ← CG.twist_mul, mul_inv_cancel, CG.twist_one] at h
   have hex : ∀ (x : X) (w : Off E S), ∃ f : Fin x.1.1 → ℂˣ, x.1.2.HasSat w.1 (Finset.univ.val.map f) := by
     rintro ⟨p, (⟨i, rfl⟩ | ⟨j, rfl⟩)⟩ w
     · obtain ⟨f, hf⟩ := exists_fin _ (hsat0 w i).card
@@ -127,8 +125,7 @@ theorem jacquet_shalika_rigidity_of_bound : AbsRig → UnitEx → SatTw → DetO
       rw [Real.sqrt_eq_rpow]
       exact h.le
     · have h := hDO E x.1.1 x.1.2 w.1 _ (hX x).2 (hα x w)
-      rw [← Finset.prod_eq_multiset_prod, Units.coe_prod] at h
-      exact h
+      rwa [← Finset.prod_eq_multiset_prod, Units.coe_prod] at h
     · obtain ⟨F, σ₀, hF, hFe⟩ := hS0 x y S (hsub x y) (α x) (α y) (hα x) (hα y)
       refine ⟨F, σ₀, hF, fun σ hσ => ?_⟩
       rw [hFe σ hσ]
@@ -159,8 +156,7 @@ theorem jacquet_shalika_rigidity_of_bound : AbsRig → UnitEx → SatTw → DetO
     rw [map_sum, map_sum] at h
     simp only [hφ, hBi, hBj, sum_pow] at h
     have ev : ∀ τ : ℝ, (((ν τ).val w.1 : ℂˣ) : ℂ) = (nq w : ℂ) ^ (-(τ : ℂ)) := fun τ => (hν τ).2.1 w.1
-    simp only [ev] at h
-    exact h
+    simpa only [ev] using h
   obtain ⟨s, hs⟩ := hAR (Off E S) nq X d A hSys ι κ x y hRel
   refine ⟨s, fun i => ?_⟩
   have h1 : u i = u' (s i) := congrArg (fun z : X × ℝ => z.1.1) (hs i)

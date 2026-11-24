@@ -122,8 +122,7 @@ theorem le_of_mem_cone {r : ℕ} {c : ℝ} (hc : 0 < c) {t : Fin r → ℝ} (ht 
         _ ≤ min c 1 * t ⟨i.val + 1, hj⟩ := mul_le_mul_of_nonneg_left h1 hb0.le
         _ ≤ t i := h3.trans h2
   have hk : i.val + (r - i.val - 1) + 1 = r := by omega
-  refine le_trans ?_ (key (r - i.val - 1) i hk)
-  exact pow_le_pow_of_le_one hb0.le hb1 (by omega)
+  exact le_trans (pow_le_pow_of_le_one hb0.le hb1 (by omega)) (key (r - i.val - 1) i hk)
 
 theorem integrand_eq (F : Type) [Field F] [NumberField F] (n : ℕ) {r : ℕ} (m : ℕ) {t : Fin r → ℝ} (ht : ∀ i, 0 < t i) :
     ENNReal.ofReal (∏ i, (t i)⁻¹ ^ m) * ENNReal.ofReal ((modulus F n t * ∏ i, t i)⁻¹) =
@@ -257,8 +256,7 @@ theorem integrable_descend_of_cover : ∀ (D : D7) (V : HSp D) (μ : Measure (GA
     show γ⁻¹ * q.out = s
     rw [hq, inv_mul_cancel_left]
   have hmem : (((⟨γ, hγ⟩ : GQ V)⁻¹ : GQ V) : GA D V) * q.out ∈ S := by
-    rw [e]
-    exact hs
+    rwa [e]
   have h1 : S.indicator (fun g => ‖φ g‖ₑ) ((((⟨γ, hγ⟩ : GQ V)⁻¹ : GQ V) : GA D V) * q.out) = ‖φ q.out‖ₑ := by
     rw [Set.indicator_of_mem hmem, hinv _ (((⟨γ, hγ⟩ : GQ V)⁻¹ : GQ V)).2]
   show ‖φ q.out‖ₑ ≤ _
@@ -326,8 +324,7 @@ theorem mem_parRat_frameFlag_firstCols : ∀ (D : D7) (V : HSp D) (r : ℕ) (X Y
         exact Submodule.zero_mem _
     exact fun x hx => hle hx
   change GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.diagH D.sp.cm.sig V.gram D.host.F δ ∈ IsoFlag.par _ D.sp.cm D.host.F
-  rw [frameFlag, IsoFlag.par_single, diagH_mem_parab]
-  exact hspan
+  rwa [frameFlag, IsoFlag.par_single, diagH_mem_parab]
 
 end GlobalTheory.CompanionTheory.RegInt
 end -- clump:auto
@@ -482,8 +479,7 @@ theorem eq_zero_of_intertwine (hAB : A ≤ B) {f f' T : Module.End E M} (hs : (L
   have k1 : ∀ z, T z ∈ A → T z = 0 := fun z hz => by
     have e1 : (Polynomial.aeval f' p) (T z) = T z := by
       have := (Stabs.aeval hAB hf hd p).2.1 _ hz
-      rw [LinearMap.sub_apply, hp2 _ hz, sub_eq_zero] at this
-      exact this
+      rwa [LinearMap.sub_apply, hp2 _ hz, sub_eq_zero] at this
     have e2 := congrArg (fun U : Module.End E M => U z) hpi
     simp only [Module.End.mul_apply] at e2
     rw [e1, hT.1 _ (hp1 z)] at e2
@@ -496,8 +492,7 @@ theorem eq_zero_of_intertwine (hAB : A ≤ B) {f f' T : Module.End E M} (hs : (L
     have e2 := congrArg (fun U : Module.End E M => U z) hqi
     simp only [Module.End.mul_apply] at e2
     rw [← e2] at e1
-    have e3 := sub_mem (hT.2.1 _ (hq1 z)) e1
-    simpa using e3
+    simpa using sub_mem (hT.2.1 _ (hq1 z)) e1
   ext z
   simpa using k1 z (k2 z)
 
@@ -900,8 +895,7 @@ theorem regSS_of_conj {γ δ : GF V} (h : IsConj γ δ) (hγ : IsRegSS γ.1.1) :
   obtain ⟨g, rfl⟩ := isConj_iff.1 h
   show IsRegSS ((g.1 : Matrix (Fin V.rank) (Fin V.rank) D.host.E) * γ.1.1 * ((g.1)⁻¹ : GL (Fin V.rank) D.host.E).1)
   unfold IsRegSS
-  rw [Matrix.coe_units_inv, Matrix.charpoly_units_conj]
-  exact hγ
+  rwa [Matrix.coe_units_inv, Matrix.charpoly_units_conj]
 
 theorem conj_id {G : Type} [Group G] (a ω d n : G) :
     (a * ω)⁻¹ * (d * n) * (a * ω) = ω⁻¹ * (a⁻¹ * d * a) * (a⁻¹ * n * a) * ω := by group
@@ -1098,8 +1092,7 @@ theorem regClassInt : PositivityTheory.ThKR.SiegelCore → MainStatements.Regula
   set q : (Fin r → ℝ) → ENNReal := fun t => ENNReal.ofReal (∏ i, (t i)⁻¹ ^ m₀) with hq
   have hqm : Measurable q := by
     refine ENNReal.measurable_ofReal.comp ?_
-    refine Finset.measurable_prod _ fun i _ => ?_
-    exact ((measurable_pi_apply i).inv).pow_const _
+    exact Finset.measurable_prod _ fun i _ => ((measurable_pi_apply i).inv).pow_const _
   have h1 := hbd (fun g => ‖GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.classKernel (GQ V) (rat V γ) f g‖ₑ)
     (fun t => ENNReal.ofReal B * q t) (hqm.const_mul _) (fun p hp t ht a ha k hk => by
       rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul hB0]

@@ -85,8 +85,7 @@ theorem signs {n : ℕ} {ε : Fin (n + 1) → Bool} {lam : Fin (n + 1) → ℝ} 
       exact absurd ha (by decide)
     · obtain ⟨c, rfl⟩ := key0 a hz
       exact ⟨c, by rw [← hε' c]; exact ha⟩
-  · by_contra hno
-    push Not at hno
+  · by_contra! hno
     have key : ∀ x, x ≠ zi e → ε x = false := by
       intro x hx
       obtain ⟨c, rfl⟩ := key0 x hx
@@ -108,8 +107,7 @@ theorem signs {n : ℕ} {ε : Fin (n + 1) → Bool} {lam : Fin (n + 1) → ℝ} 
     have hsub : Finset.univ.erase (zi e) ⊆ Finset.filter (fun a => ε a = false) Finset.univ := by
       intro x hx
       simp only [Finset.mem_erase, Finset.mem_univ, and_true] at hx
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-      exact key x hx
+      simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using key x hx
     have h2 := Finset.card_le_card hsub
     rw [Finset.card_erase_of_mem (Finset.mem_univ _), Finset.card_univ, Fintype.card_fin] at h2
     have h3 := hG.le
@@ -265,8 +263,7 @@ theorem decay_low {n : ℕ} {ε' : Fin n → Bool} {mu : Fin n → ℝ} {K : Typ
       ring
     have key : (CompanionTheory.Lime.T3.nG h)⁻¹ ^ (2 * N) = hs (um h) ^ (-((n : ℝ) ^ 2 + 1 + n)) := by
       rw [pow_mul, inv_pow, CompanionTheory.Lime.T3.nG_sq, hexp, Real.rpow_neg hpos, Real.rpow_natCast, inv_pow]
-    rw [RCLike.norm_conj, ← key]
-    exact hb
+    rwa [RCLike.norm_conj, ← key]
 
 end PositivityTheory.RgHe.SM.LowWeightDensity
 end -- clump:auto

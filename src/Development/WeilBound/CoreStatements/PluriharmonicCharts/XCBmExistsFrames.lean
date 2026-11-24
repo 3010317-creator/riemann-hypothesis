@@ -66,8 +66,7 @@ theorem continuousAt_of_holoOn {e : ℕ} {X : Type} [TopologicalSpace X] (A : Re
   have hx' : A.chart j x ∈ (A.chart j).target ∩ (A.chart j).symm ⁻¹' U :=
     ⟨(A.chart j).map_source hj, by simp [Set.mem_preimage, (A.chart j).left_inv hj, hx]⟩
   have h1 : ContinuousAt ((f ∘ (A.chart j).symm) ∘ (A.chart j)) x := by
-    refine ContinuousAt.comp ?_ ((A.chart j).continuousAt hj)
-    exact (hf j _ hx').continuousAt
+    exact ContinuousAt.comp (hf j _ hx').continuousAt ((A.chart j).continuousAt hj)
   refine h1.congr ?_
   filter_upwards [(A.chart j).open_source.mem_nhds hj] with z hz
   simp [(A.chart j).left_inv hz]
@@ -176,8 +175,7 @@ theorem PositivityTheory.Xgp.t_c_bm_exists_frames : ∀ (K : Type) [Fintype K] (
       obtain ⟨c, hc, hceq⟩ := Rb.compat x z z ⟨hU, Rb.mem_U z⟩
       have e := PositivityTheory.Xgp.c_bm_exists_frames.mCoordIdeal_smul c hc (Rb.lift z z)
       rw [← hceq] at e
-      rw [e] at hz
-      exact hz
+      rwa [e] at hz
     obtain ⟨t, ht, htc, hts⟩ := exists_mem_nhds_isClosed_subset hS
     exact ⟨F, t, hFr, ht, htc, fun z hz => (hts hz).2⟩
   choose F t hFr ht htc hgood using key
@@ -192,5 +190,4 @@ theorem PositivityTheory.Xgp.t_c_bm_exists_frames : ∀ (K : Type) [Fintype K] (
     simp only [Set.mem_iUnion] at hx
     obtain ⟨i, hi, hx⟩ := hx
     exact ⟨e ⟨i, hi⟩, by simpa using hx⟩
-  · intro l x hx
-    exact hgood _ x (closure_minimal interior_subset (htc _) hx)
+  · exact fun l x hx => hgood _ x (closure_minimal interior_subset (htc _) hx)

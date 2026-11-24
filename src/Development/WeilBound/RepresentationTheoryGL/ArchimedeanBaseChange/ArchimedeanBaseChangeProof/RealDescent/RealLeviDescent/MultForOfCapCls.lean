@@ -379,8 +379,7 @@ theorem liftInv : LiftInv := by
     have e1 : ev2 E1 E2 a0 s = φ ⟨s, hs⟩ := ha0 ⟨s, hs⟩
     have e2 : ev2 E1 E2 a0 ((E1 c d + E2 c d) s) = φ (EL c d ⟨s, hs⟩) := by
       have := ha0 (EL c d ⟨s, hs⟩)
-      rw [hEL] at this
-      exact this
+      rwa [hEL] at this
     rw [e1, e2, hφ c d rfl]
     rfl
   refine ⟨a, hinv, ?_⟩
@@ -566,8 +565,7 @@ theorem pick (σ : Bool) (x y : Fin n) (h : x < y) (G : Bool → Fin n → Fin n
     rw [ite_eq_right, zero_mul]
     rintro ⟨h1, h2⟩
     exact hb (Prod.ext h1 (Subtype.ext h2))
-  · intro hmem
-    exact absurd (Finset.mem_univ _) hmem
+  · exact fun hmem => absurd (Finset.mem_univ _) hmem
 
 theorem lt_of_lev {lev : Fin n → ℕ} (hm : Monotone lev) {x y : Fin n} (h : lev x < lev y) : x < y := by
   by_contra hxy
@@ -946,9 +944,7 @@ theorem sum_diag {lev : Fin n → ℕ} (hm : Monotone lev) (p : Fin n) :
       obtain ⟨h1, h2⟩ := (mem_filter.1 hi).2
       exact mem_filter.2 ⟨mem_univ _, h2 ▸ h1⟩
     · intro i hi j hj e
-      have h1 := (mem_filter.1 hi).2.2
-      have h2 := (mem_filter.1 hj).2.2
-      exact Subtype.ext (Prod.ext (h1.trans h2.symm) e)
+      exact Subtype.ext (Prod.ext (((mem_filter.1 hi).2.2).trans ((mem_filter.1 hj).2.2).symm) e)
     · intro b hb
       have hb' := (mem_filter.1 hb).2
       exact ⟨⟨(p, b), hm.reflect_lt hb'⟩, mem_filter.2 ⟨mem_univ _, hb', rfl⟩, rfl⟩
@@ -959,9 +955,7 @@ theorem sum_diag {lev : Fin n → ℕ} (hm : Monotone lev) (p : Fin n) :
       obtain ⟨h1, h2⟩ := (mem_filter.1 hi).2
       exact mem_filter.2 ⟨mem_univ _, h2 ▸ h1⟩
     · intro i hi j hj e
-      have h1 := (mem_filter.1 hi).2.2
-      have h2 := (mem_filter.1 hj).2.2
-      exact Subtype.ext (Prod.ext e (h1.trans h2.symm))
+      exact Subtype.ext (Prod.ext e (((mem_filter.1 hi).2.2).trans ((mem_filter.1 hj).2.2).symm))
     · intro b hb
       have hb' := (mem_filter.1 hb).2
       exact ⟨⟨(b, p), hm.reflect_lt hb'⟩, mem_filter.2 ⟨mem_univ _, hb', rfl⟩, rfl⟩
@@ -1076,8 +1070,7 @@ theorem top_smul (lev : Fin n → ℕ) (c : ℂ) (x : V) :
   split_ifs <;> simp
 
 omit [Module ℂ V] in
-theorem top_zero (lev : Fin n → ℕ) : (Pi.single (omU lev) (0 : V) : Cq n V) = 0 := by
-  exact Pi.single_zero _
+theorem top_zero (lev : Fin n → ℕ) : (Pi.single (omU lev) (0 : V) : Cq n V) = 0 := Pi.single_zero _
 
 theorem liftL_top (lev : Fin n → ℕ) (T : Module.End ℂ V) (x : V) :
     (liftL n T : Module.End ℂ (Cq n V)) (Pi.single (omU lev) x) = Pi.single (omU lev) (T x) := by
@@ -1114,8 +1107,7 @@ theorem creL_annL_top_ne {lev : Fin n → ℕ} {l m : Lt n} (x : V) (hm : m ∈ 
       · simp
       · intro e
         have hmem : m ∈ insert l (B.erase m) := by
-          rw [e]
-          exact hm
+          rwa [e]
         simp [hne] at hmem
   · rfl
 
@@ -1453,8 +1445,7 @@ theorem multiplicity_assembly_holds : MultiplicityAssembly := by
   have hbd : bdL (inUU lev) E1 E2 y ∈ B := Submodule.mem_map.2 ⟨y, ⟨hyS, hyD⟩, rfl⟩
   have hcw : B.mkQ (Pi.single (omU lev) w : Cq n V) = FreeAlgebra.lift ℂ sc z • c := by
     have e1 : B.mkQ (Pi.single (omU lev) (evKP E1 E2 a v) - evLc lev E1 E2 b (Pi.single (omU lev) v) : Cq n V) = 0 := by
-      rw [hyEq, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-      exact hbd
+      rwa [hyEq, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
     rw [map_sub, sub_eq_zero, ← iL] at e1
     rw [← hav, e1, hz (Cq n V ⧸ B) FrobeniusMapsXPow FiniteCocycleOfIntegral hLq c hsemi, hev z]
   refine ⟨FreeAlgebra.lift ℂ sc z, ?_⟩

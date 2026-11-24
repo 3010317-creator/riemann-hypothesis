@@ -110,14 +110,12 @@ theorem lag_of_finrank (L : Submodule F ((κ → F) × (κ → F))) (h : ∀ a �
     intro x hx
     rw [Submodule.mem_bot]
     apply eq_zero_of_om
-    intro w'
-    exact (LinearMap.BilinForm.mem_orthogonal_iff.mp hx.2) w' Submodule.mem_top
+    exact fun w' => (LinearMap.BilinForm.mem_orthogonal_iff.mp hx.2) w' Submodule.mem_top
   have hdim := LinearMap.BilinForm.finrank_add_finrank_orthogonal (om_refl (F := F) (κ := κ)) L
   rw [hbot, finrank_bot, Module.finrank_prod, Module.finrank_fintype_fun_eq_card, hr] at hdim
   have heq : L = (om F κ).orthogonal L := Submodule.eq_of_le_of_finrank_eq hiso (by rw [hr]; omega)
   constructor
-  · intro ha
-    exact h a ha
+  · exact fun ha => h a ha
   · intro ha
     rw [heq, LinearMap.BilinForm.mem_orthogonal_iff]
     intro y hy
@@ -256,8 +254,7 @@ theorem exists_lag [Invertible (2 : A)] [FiniteDimensional F V₁] [FiniteDimens
     have h1 := Submodule.finrank_sup_add_finrank_inf_eq (LinearMap.range s) (L₁.map j)
     rw [hdisj, finrank_bot, add_zero, LinearMap.finrank_range_of_inj hs,
       ← LinearEquiv.finrank_eq (Submodule.equivMapOfInjective j hjinj L₁), hfinL₁] at h1
-    rw [← hd]
-    exact h1
+    rwa [← hd]
   have T1 : ∀ u u', om F κ (r (s u)) (r (s u')) = 0 := fun u u' => hA (by
     rw [← hBx, hss, map_zero])
   have T2 : ∀ z u, om F κ (r (j z)) (r (s u)) = 0 := fun z u => hA (by
@@ -573,8 +570,7 @@ theorem map_line (h : LagLine) {M : Model σ X W} {M₁ : Model σ X₁ W₁} {�
       hy₀ (((congrFun (he (M₁.co.e.symm (y₀, 0)) Φ₀ hΦ₀) 0).trans (r1 y₀ _)).symm.trans h')⟩
   refine ⟨c, fun Φ hΦ => funext fun y => ?_⟩
   have := hc _ (GlobalTheory.HeisSchA.rho_mem_schA M ψ hψ (incM F ι * M₁.co.e.symm (y, 0) * (incM F ι')ᵀ) Φ hΦ)
-  rw [Pi.smul_apply, smul_eq_mul, ← r1 y (T Φ), ← r1 y (e Φ), ← hT _ Φ hΦ, ← he _ Φ hΦ]
-  exact this
+  rwa [Pi.smul_apply, smul_eq_mul, ← r1 y (T Φ), ← r1 y (e Φ), ← hT _ Φ hΦ, ← he _ Φ hΦ]
 
 end PositivityTheory.ThKF0.Geo
 end -- clump:auto

@@ -341,8 +341,7 @@ theorem exists_finset_separating {Y : Type} (Ψ : Submodule ℂ (Y → ℂ)) [Fi
   refine ⟨Function.argmin f, fun ψ hψ h0 => ?_⟩
   by_contra hne
   obtain ⟨y, hy⟩ : ∃ y, ψ y ≠ 0 := by
-    by_contra hall
-    push Not at hall
+    by_contra! hall
     exact hne (funext hall)
   set t := Function.argmin f with ht
   have hlt : K (insert y t) < K t := by
@@ -744,8 +743,7 @@ theorem lintegral_compact_le {G : Type} [Group G] [TopologicalSpace G] [IsTopolo
       have e : w ((δ : G) * p) ^ (-(2 * K : ℤ)) = (w ((δ : G) * p) ^ (2 * K))⁻¹ := by
         rw [_root_.zpow_neg]
         norm_cast
-      rw [e, ← div_eq_mul_inv, one_le_div (pow_pos hw0 _)]
-      exact hpow
+      rwa [e, ← div_eq_mul_inv, one_le_div (pow_pos hw0 _)]
     have hW0 : 0 ≤ W ^ (2 * K) := (pow_pos hw0 _).le.trans hpow
     simp only [h, Set.indicator_of_mem hx]
     rw [← mul_assoc, ← ENNReal.ofReal_mul hW0]
@@ -799,8 +797,7 @@ theorem pair_bound {X Y : Type} [Group X] [Group Y] [TopologicalSpace X] [Topolo
   refine ⟨h3, ?_⟩
   have h4 : ∫⁻ y in B, ∫⁻ x in A, ‖f (x, y)‖ₑ ^ 2 ∂μ₁ ∂μ₂ = ∫⁻ x in A, ∫⁻ y in B, ‖f (x, y)‖ₑ ^ 2 ∂μ₂ ∂μ₁ :=
     (lintegral_lintegral_swap (f := fun x y => ‖f (x, y)‖ₑ ^ 2) hmeas.aemeasurable).symm
-  rw [h4]
-  exact h3
+  rwa [h4]
 
 theorem final_le (Cy c : NNReal) (n n₂ K : ℕ) (R R₂ : ℝ) (hR : 0 ≤ R) (hR₂ : 0 ≤ R₂) (I : ℝ≥0∞) (hI : I ≠ ⊤) :
     (Cy : ℝ≥0∞) * (c * (((n * n₂ : ℕ) : ℝ≥0∞) * (ENNReal.ofReal ((1 + R + R₂) ^ (2 * K)) * I))) ≤
@@ -882,8 +879,7 @@ theorem exists_logSize_le (hS : SizeT) {n : ℕ} {Q : Set (GA E n)} (hQ : IsComp
     ∃ R : ℝ, 0 ≤ R ∧ ∀ q ∈ Q, logSize q ≤ R := by
   obtain ⟨C, hC0, hC⟩ := hS E n {(An.tor E (0 : Fin n → ℝ) : GA E n)⁻¹} Q isCompact_singleton hQ
   refine ⟨C, hC0, fun q hq => ?_⟩
-  have h := hC _ rfl q hq 0
-  simpa using h
+  simpa using hC _ rfl q hq 0
 
 theorem countable_ratH (E : Type) [Field E] [NumberField E] [IsCMField E] (a b : ℕ) : Countable (ratH E a b) := by
   have hE : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
@@ -1328,8 +1324,7 @@ theorem type₁ {K₁ : Subgroup (GL (Fin a) (Af E))} {K₂ : Subgroup (GL (Fin 
     (∀ u ∈ K₁, ∀ x, F (x * finGL E a u, y) = F (x, y)) ∧
       ∀ x, (fun k : Kinf E a => F (x * infGL E a (Unitary.toUnits k), y)) ∈ W₁ := by
   refine ⟨fun u hu x => ?_, fun x => ?_⟩
-  · have h := hF.1 u hu 1 K₂.one_mem (x, y)
-    simpa using h
+  · simpa using hF.1 u hu 1 K₂.one_mem (x, y)
   · let L : (Kinf E a × Kinf E b → ℂ) →ₗ[ℂ] (Kinf E a → ℂ) := LinearMap.funLeft ℂ ℂ fun k => (k, 1)
     have hle : Submodule.span ℂ {f | ∃ w₁ ∈ W₁, ∃ w₂ ∈ W₂, f = fun k : Kinf E a × Kinf E b => w₁ k.1 * w₂ k.2} ≤
         W₁.comap L := by
@@ -1351,8 +1346,7 @@ theorem type₂ {K₁ : Subgroup (GL (Fin a) (Af E))} {K₂ : Subgroup (GL (Fin 
     (∀ u ∈ K₂, ∀ x, F (y, x * finGL E b u) = F (y, x)) ∧
       ∀ x, (fun k : Kinf E b => F (y, x * infGL E b (Unitary.toUnits k))) ∈ W₂ := by
   refine ⟨fun u hu x => ?_, fun x => ?_⟩
-  · have h := hF.1 1 K₁.one_mem u hu (y, x)
-    simpa using h
+  · simpa using hF.1 1 K₁.one_mem u hu (y, x)
   · let L : (Kinf E a × Kinf E b → ℂ) →ₗ[ℂ] (Kinf E b → ℂ) := LinearMap.funLeft ℂ ℂ fun k => (1, k)
     have hle : Submodule.span ℂ {f | ∃ w₁ ∈ W₁, ∃ w₂ ∈ W₂, f = fun k : Kinf E a × Kinf E b => w₁ k.1 * w₂ k.2} ≤
         W₂.comap L := by

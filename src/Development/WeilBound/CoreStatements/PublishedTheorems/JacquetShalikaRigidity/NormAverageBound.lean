@@ -90,8 +90,7 @@ theorem fourier_column_of : N0 → P0 → P1 → CornerEmbedding → FourierSeri
     · obtain ⟨c, hc⟩ := Function.ne_iff.1 (Subtype.property ρ).1
       intro h0
       apply hc
-      have h1 := congrFun h0 ⟨c, lt_trans c.isLt hkm⟩
-      simpa [c.isLt] using h1
+      simpa [c.isLt] using congrFun h0 ⟨c, lt_trans c.isLt hkm⟩
     · intro i hi
       simp [show ¬ (i : ℕ) < k by omega]
   choose lift hlift using hlift
@@ -138,8 +137,7 @@ theorem fourier_column_of : N0 → P0 → P1 → CornerEmbedding → FourierSeri
     have h1 := congrFun h (Subtype.mk ((⟨j, lt_trans j.isLt hkm⟩ : Fin m), (⟨k, hkm⟩ : Fin m))
       ⟨j.isLt, le_rfl, le_rfl⟩ : UnipotentBlockColumnIndex m k k)
     beta_reduce at h1
-    rw [hlift, hlift, dite_eq_left j.isLt, dite_eq_left j.isLt] at h1
-    exact h1
+    rwa [hlift, hlift, dite_eq_left j.isLt, dite_eq_left j.isLt] at h1
   have hkey : ∀ t : UnipotentBlockColumnIndex m k k, t = (Subtype.mk ((⟨((Subtype.val t).1 : ℕ), ((Subtype.val t).1).isLt⟩ : Fin m),
       (⟨k, hkm⟩ : Fin m)) ⟨(Subtype.property t).1, le_rfl, le_rfl⟩ : UnipotentBlockColumnIndex m k k) := by
     intro t
@@ -216,8 +214,7 @@ theorem fourier_column_of : N0 → P0 → P1 → CornerEmbedding → FourierSeri
       obtain ⟨ρ, rfl⟩ := hsurj c hc0
       refine ⟨ρ, ?_, rfl⟩
       show colT ψ k F (ι (ratGL E k (gam ρ) * g)) ≠ 0
-      rw [← hA ρ]
-      exact hc
+      rwa [← hA ρ]
     have hs : HasSum (fun c => coefF ψ k c F (ι g)) (F (blkU (0 : UnipotentBlockColumnIndex m k k → GlobalTheory.CuspRep.Ad E) * ι g)) :=
       hP0c _ hper hfin'
     have hb0 : blkU (0 : UnipotentBlockColumnIndex m k k → GlobalTheory.CuspRep.Ad E) = 1 := by

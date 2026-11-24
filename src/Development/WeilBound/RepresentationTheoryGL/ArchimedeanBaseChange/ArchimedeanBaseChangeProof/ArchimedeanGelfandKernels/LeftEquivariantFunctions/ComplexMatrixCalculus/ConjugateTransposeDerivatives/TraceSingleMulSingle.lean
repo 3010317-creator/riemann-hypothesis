@@ -103,9 +103,7 @@ theorem eq_zero_of_trace (D : Mat n) (h : ∀ p, (D * hb p).trace = 0) : D = 0 :
     norm_num
   have hdiag : ∀ i, D i i = 0 := by
     intro i
-    have e := h (i, i)
-    simp only [PositivityTheory.RgTw.hb, ite_true, trace_mul_single, mul_one] at e
-    exact e
+    simpa only [PositivityTheory.RgTw.hb, ite_true, trace_mul_single, mul_one] using h (i, i)
   have key : ∀ i j : Fin n, i < j → D i j = 0 ∧ D j i = 0 := by
     intro i j hij
     have e1 := h (i, j)

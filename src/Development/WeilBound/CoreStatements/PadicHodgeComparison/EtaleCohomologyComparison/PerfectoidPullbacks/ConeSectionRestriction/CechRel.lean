@@ -103,8 +103,7 @@ theorem Lm_d {a : IdF A} {U : ObjectProperty C} {q : ℕ} {x : Ch A U q} (hx : x
     CH.d _ q x ∈ Lm a U (q + 1) := by
   intro σ
   change ∑ i : Fin (q + 2), (-1 : ℤ) ^ (i : ℕ) • _ ∈ a.S _
-  refine (a.S _).sum_mem fun i _ => ?_
-  exact Submodule.smul_of_tower_mem (a.S _) _ (a.map_mem _ (hx _))
+  exact (a.S _).sum_mem fun i _ => Submodule.smul_of_tower_mem (a.S _) _ (a.map_mem _ (hx _))
 
 theorem Lm_res {a : IdF A} {U V : ObjectProperty C} (h : V ≤ U) {q : ℕ} {x : Ch A U q} (hx : x ∈ Lm a U q) :
     resB A h x ∈ Lm a V q := fun σ => hx (σ ⋙ ObjectProperty.ιOfLE h)
@@ -293,8 +292,7 @@ theorem BB_dh (p q : ℕ) (x : (KK A W).X p q) :
   refine (add_assoc _ _ _).trans (congrArg₂ (· + ·) (Finset.sum_congr rfl fun j _ => ?_) ?_)
   · rw [h1]; rfl
   · rw [h2, h3, LL_add b i (Fin.last p).castSucc.castSucc (Fin.last (p + 2)) (Fin.last (p + 1)).castSucc, bm_add]
-    simp only [Fin.val_castSucc, Fin.val_last, smul_add, pow_succ]
-    exact neg_one_smul_cancel _ _ _
+    simpa only [Fin.val_castSucc, Fin.val_last, smul_add, pow_succ] using neg_one_smul_cancel _ _ _
 
 variable {V : ObjectProperty C} (hWV : ∀ α, W α ≤ V) (z : Ch A V 2)
 
@@ -848,8 +846,7 @@ theorem cech_top_cup_power : ∀ {R : Type} [CommRing R] {C : Type 1} [Category.
       (e * (-1 : ℤ) ^ (k : ℕ)) • resB Φ.A (hU.trans (cap_le W k tp)) (ω (fc k tp)) := fun k =>
     map_zsmul ((rM Φ.A (capS_univ_le W (Finset.univ.erase k))).pullC (n + 1)) _ _
   simp only [e3]
-  rw [hd']
-  exact hEq
+  rwa [hd']
 
 end GlobalTheory.CompanionTheory.ConeZig
 end -- clump:auto

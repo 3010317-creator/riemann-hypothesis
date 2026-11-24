@@ -229,8 +229,7 @@ theorem matchUnitIOf : MatchUnitIOf := by
       ((((GlobalTheory.LFun.KGL w (n := a)).prod (GlobalTheory.LFun.KGL w (n := (n - a))) : Subgroup _) : Set (GLw a w × GLw (n - a) w)).indicator 1) := by
     funext y
     simp [idem, Set.indicator_apply, Subgroup.relIndex_self]
-  rw [he]
-  exact hM
+  rwa [he]
 
 end PositivityTheory.Rg.BcB.F.MB
 

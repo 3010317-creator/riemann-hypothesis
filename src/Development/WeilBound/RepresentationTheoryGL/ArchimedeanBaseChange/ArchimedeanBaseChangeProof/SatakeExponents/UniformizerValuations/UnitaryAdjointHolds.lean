@@ -673,10 +673,8 @@ theorem gelPair_split (n : ℕ) (w : Pl E) (hw : IsSplitAt w) : GelPair (KL n w)
     rw [h]
     exact Subgroup.mem_top x
   refine ⟨relIndex_conj_KL_ne_zero n w, fun g => ⟨Formalism.UG.P.heckecomm_tr g.1, hmem _⟩, ?_, ?_, ?_, ?_⟩
-  · intro a b
-    exact Subtype.ext (Formalism.UG.P.heckecomm_tr_mul a.1 b.1)
-  · intro a
-    exact Subtype.ext (Formalism.UG.P.heckecomm_tr_tr a.1)
+  · exact fun a b => Subtype.ext (Formalism.UG.P.heckecomm_tr_mul a.1 b.1)
+  · exact fun a => Subtype.ext (Formalism.UG.P.heckecomm_tr_tr a.1)
   · intro g
     obtain ⟨a, b, e⟩ := Formalism.UG.P.heckecomm_tr_dc Formalism.UG.Final.CartanDecomp E w n g.1
     exact ⟨⟨a, hmem _⟩, Subgroup.mem_subgroupOf.2 a.2, ⟨b, hmem _⟩, Subgroup.mem_subgroupOf.2 b.2, Subtype.ext e⟩
@@ -881,8 +879,7 @@ theorem sphStar : LocAlg → SphStarU := by
 
       simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul] at h2
       have hsub : Function.support (fun q : UL n w ⧸ KL n w => f q.out * φ q.out) ⊆ ↑hfin.toFinset := by
-        intro q hq
-        exact Finset.mem_coe.2 (hS q (left_ne_zero_of_mul (Function.mem_support.1 hq)))
+        exact fun q hq => Finset.mem_coe.2 (hS q (left_ne_zero_of_mul (Function.mem_support.1 hq)))
       rw [← h2, finsum_eq_sum_of_support_subset _ hsub]
     have hφ : ∀ x, starRingEnd ℂ (φ x) = φ x⁻¹ := by
       intro x
@@ -976,8 +973,7 @@ theorem pu_hz {w : Pl E} (K : Subgroup (UL n w)) : IsHecke K (0 : UL n w → ℂ
 theorem pu_lev {S : Set (Pl E)} {B : Finset (Pl E)} {K' : ∀ w : Pl E, Subgroup (UL n w)} (hB : LevelOff S B K')
     (w : Pl E) (hw : w ∉ B) : IsLevel (MonoidHom.id _) (KL n w) (KL n w) := by
   have h := hB.2.1.1 w
-  rw [hB.2.2 w hw] at h
-  exact h
+  rwa [hB.2.2 w hw] at h
 
 theorem uAdjOfU : DiagAlg → LocAlg → SphOne → CompUnit → SphStarU → UAdj := by
   intro hD hL h1 hC hS E _ _ _ hE n S lam K' F B g R hB x hx
@@ -1043,8 +1039,7 @@ theorem pu_sph_hecke (hL : LocAlg) (hB : LevelOff S B K') (l : List (UGen E n)) 
   induction l with
   | nil =>
     have h := (hL E n w (SmIrr.triv _) (KL n w) hlev 0 0 (pu_hz _) (pu_hz _)).2.2.2.2.2.2.1
-    rw [Subgroup.relIndex_self, Nat.cast_one] at h
-    exact h
+    rwa [Subgroup.relIndex_self, Nat.cast_one] at h
   | cons x l ih =>
     have ih' := ih fun y hy => hl y (List.mem_cons_of_mem _ hy)
     rcases x with c | ⟨w0, h⟩

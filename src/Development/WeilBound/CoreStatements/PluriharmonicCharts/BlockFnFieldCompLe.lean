@@ -169,8 +169,7 @@ theorem transPt_block_base : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k
     (c₀ kb * z₁ ⟨(Cv.κ kb).1, c⟩)⁻¹, hy, inv_ne_zero (mul_ne_zero (hc₀ kb) hc), fun i => ⟨?_, ?_⟩⟩
   · rw [mul_div_cancel₀ _ hy]
     have h1 := transPt_base Cv (⟨kb, i⟩ : Σ k, baseIdx ι M.blk k)
-    rw [← Cv.x_eq, hw i, ← M'.y_base] at h1
-    exact h1
+    rwa [← Cv.x_eq, hw i, ← M'.y_base] at h1
   · have h2 : z₀ ⟨kb.1, i⟩ = c₀ kb * z₁ ⟨(Cv.κ kb).1, w i⟩ := by
       have h3 := congrFun e₀ (⟨kb, i⟩ : Σ k, baseIdx ι M.blk k)
       simp only [Function.comp, hw i] at h3
@@ -250,8 +249,7 @@ theorem algebraMap_mem_blockFnField :
       rw [mCoordIdeal, RingHom.mem_ker, mConeMap_eq_prod_X_pow_mul_C M.x h d hh, h0, map_zero, mul_zero]
     have hz := hzv h hker
     have hz' : MvPolynomial.aeval zb h = 0 := by
-      rw [MvPolynomial.aeval_def, algebraMap_int_eq, ← MvPolynomial.eval_map]
-      exact hz
+      rwa [MvPolynomial.aeval_def, algebraMap_int_eq, ← MvPolynomial.eval_map]
     rw [mCoordIdeal, RingHom.mem_ker, mConeMap_eq_prod_X_pow_mul_C zb h d hh, hz', map_zero, mul_zero]
   have hs : s = MvPolynomial.aeval M.x g / MvPolynomial.aeval M.x h := eq_div_of_mul_eq hxh hgs.symm
   rw [hs, map_div₀, ← MvPolynomial.aeval_algebraMap_apply, ← MvPolynomial.aeval_algebraMap_apply]
@@ -330,8 +328,7 @@ theorem transPt_ratio_base [CharZero Φ'] {M : FlagModel y Ψ N j} {M' : FlagMod
     transPt Cv ⟨k, i⟩ / transPt Cv ⟨k, i₂⟩ ∈ blockFnField y' := by
   have e : ∀ m : ι k, transPt Cv ⟨k, m⟩ = y' ⟨(Cv.v ⟨⟨k, h⟩, m⟩).1.1, (Cv.v ⟨⟨k, h⟩, m⟩).2⟩ := fun m => by
     have h1 := transPt_base Cv ⟨⟨k, h⟩, m⟩
-    rw [← Cv.x_eq, ← M'.y_base] at h1
-    exact h1
+    rwa [← Cv.x_eq, ← M'.y_base] at h1
   rw [e, e]
   refine IntermediateField.subset_adjoin _ _ ⟨_, _, ?_, rfl⟩
   show (Cv.v ⟨⟨k, h⟩, i⟩).1.1 = (Cv.v ⟨⟨k, h⟩, i₂⟩).1.1
@@ -427,8 +424,7 @@ theorem isValueAt_of_base : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k,
   · rw [ha]
     exact (map_ne_zero _).2 hy
   · rw [ha, ha, heq, map_mul]
-  · rw [hev]
-    exact hz0
+  · rwa [hev]
   · rw [hev, hev]
 
 end GlobalTheory.CompanionTheory.Ar.PB.CovGraph
@@ -476,8 +472,7 @@ theorem isValueAt_sum {α : Type} (S : Finset α) (f : α → Ω) (v : α → �
 theorem isValueAt_valAt (hz : z ∈ mcPts (mCoordIdeal x)) {s : Ω} (hs : RegAt x (mCoordIdeal z) s) :
     IsValueAt x s z (valAt x s z) := by
   obtain ⟨v, hv⟩ := ValRing.exists_isValueAt hz hs
-  rw [valAt_eq hz hv]
-  exact hv
+  rwa [valAt_eq hz hv]
 
 theorem valAt_sum_mul (hz : z ∈ mcPts (mCoordIdeal x)) {α : Type} (S : Finset α) (f g : α → Ω)
     (hf : ∀ i ∈ S, RegAt x (mCoordIdeal z) (f i)) (hg : ∀ i ∈ S, RegAt x (mCoordIdeal z) (g i)) :
@@ -607,8 +602,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
       rw [e1, key m, hz0 m]
       simp only [hval]
       field_simp
-    rw [← e]
-    exact hv
+    rwa [← e]
 
 end GlobalTheory.CompanionTheory.Ar.PB.CovGraph.BStep
 end -- clump:auto
@@ -744,8 +738,7 @@ theorem _root_.GlobalTheory.T.flag_cover_frames_lift_point : ∀ (K : Type) [Fin
     · rw [ha]
       exact (map_ne_zero _).2 hy
     · rw [ha, ha, heq, map_mul]
-    · rw [hev]
-      exact hz0
+    · rwa [hev]
     · rw [hev, hev]
   refine ⟨c * y' ⟨k', c'⟩, fun m => ∑ m', algebraMap M'.Ω Φ' (coE Cv F' F p ⟨k, m⟩ ⟨k', m'⟩) *
     (y' ⟨k', m'⟩ / y' ⟨k', c'⟩), a' / (a * z₁ ⟨k', c'⟩), mul_ne_zero hc0 hy0,
@@ -770,8 +763,7 @@ theorem _root_.GlobalTheory.T.flag_cover_frames_lift_point : ∀ (K : Type) [Fin
       rw [e1, key m, hz0 m]
       simp only [hval]
       field_simp
-    rw [← e]
-    exact hv
+    rwa [← e]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverFramesLiftPointStatement =====
@@ -871,8 +863,7 @@ theorem minor_lowerUni {A : Matrix (Fin N) (Fin N) R} (hA : IsLowerUni A) (S : F
     minorIJ A S S = 1 := by
   rw [MinorCalc.minorIJ_eq_det A S S _ rfl rfl, det_of_lowerTriangular]
   · exact Finset.prod_eq_one fun i _ => hA.1 _
-  · intro x y hxy
-    exact hA.2 _ _ ((S.orderEmbOfFin rfl).strictMono hxy)
+  · exact fun x y hxy => hA.2 _ _ ((S.orderEmbOfFin rfl).strictMono hxy)
 
 theorem minor_transv {a b ca cb i : Fin N} (hj : j ≤ N) (hb : (b : ℕ) = a + 1) (hab : (b : ℕ) < j ∨ j ≤ (a : ℕ))
     (hca : (ca : ℕ) = lastCol N j a) (hcb : (cb : ℕ) = ca + 1) (hi : i ≠ a) (A : Matrix (Fin N) (Fin N) R) (t : R)
@@ -1212,8 +1203,7 @@ theorem graph_alt {M : FlagModel y Ψ N j} {M' : FlagModel y' Ψ N j} (Cv : Flag
       · obtain ⟨e, s, t, he, ht, hs⟩ := val_img C₀ (z := fstPt k₀' z) (by rw [e₀]; exact fst_mem hz) hr.1 k
         refine ⟨e, s, t, he, ht, fun i => ⟨(t₀' k i).trans (hs i).1, isValueAt_pull (Pts.isBlockMap_v₀ k₀') ?_⟩⟩
         have := (hs i).2
-        rw [← l₀] at this
-        exact this
+        rwa [← l₀] at this
       · obtain ⟨c, hc⟩ := hz.1 k
         obtain ⟨hy0, hval⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.CovGraph.isValueAt_coord_ratio _ _ _ w' z k c hzL hc
         exact ⟨w' ⟨k, c⟩, fun i => w' ⟨k, i⟩ / w' ⟨k, c⟩, (z ⟨k, c⟩)⁻¹, hy0, inv_ne_zero hc,

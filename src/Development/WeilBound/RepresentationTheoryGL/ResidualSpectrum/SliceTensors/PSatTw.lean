@@ -60,8 +60,7 @@ theorem finRep_mulChi {m : ℕ} (χ : HChar E) (w : HeightOneSpectrum (𝓞 E)) 
     finRep E m (locGL E m w g) (mulChi m χ x) =
       ((χ.loc w (Matrix.GeneralLinearGroup.det g) : ℂˣ) : ℂ) • mulChi m χ (finRep E m (locGL E m w g) x) := by
   have := act_mulChi (o := (Op.fin (locGL E m w g) : Op E m)) χ x
-  rw [opAdd, zero_smul, add_zero, opMul, CuspSub.chiDet_locGL, map_smul] at this
-  exact this
+  rwa [opAdd, zero_smul, add_zero, opMul, CuspSub.chiDet_locGL, map_smul] at this
 
 theorem satLike_map_mulChi {m : ℕ} {V : Submodule ℂ (Sm E m)} {w : HeightOneSpectrum (𝓞 E)} {B : Multiset ℂˣ}
     {χ : HChar E} (hχ : χ.UnrAt w) (h : SatLike V w B) :
@@ -106,8 +105,7 @@ theorem val_absC (s : ℂ) (w : HeightOneSpectrum (𝓞 E)) : (Model.absC E s).v
 theorem satLike_tw {m : ℕ} {V : Submodule ℂ (Sm E m)} {w : HeightOneSpectrum (𝓞 E)} {B : Multiset ℂˣ}
     (h : SatLike V w B) (z : ℂ) : SatLike (tw V z) w (B.map (· * qU w (-z))) := by
   have := satLike_map_mulChi (unrAt_absC z w) h
-  rw [val_absC] at this
-  exact this
+  rwa [val_absC] at this
 
 end PositivityTheory.Rg.Rs.SatakeVectors
 

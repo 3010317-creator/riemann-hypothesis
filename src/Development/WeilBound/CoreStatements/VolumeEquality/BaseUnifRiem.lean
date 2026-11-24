@@ -130,8 +130,7 @@ theorem exists_decomp {V : Type} [AddCommGroup V] [Module ℂ V] (ρ : 𝓞 E �
   · have h := congrArg (actHom ρ) hsum
 
     rw [map_sum, map_one] at h
-    have h2 := LinearMap.congr_fun h x
-    simpa [LinearMap.sum_apply] using h2
+    simpa [LinearMap.sum_apply] using LinearMap.congr_fun h x
 
 omit [IsCMField E] in
 theorem exists_proj {V : Type} [AddCommGroup V] [Module ℂ V] (ρ : 𝓞 E →+* Module.End ℂ V) (s : 𝓞 E →+* ℂ) :
@@ -204,7 +203,6 @@ theorem riemBasic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (g : 
   intro E _ _ _ g Λ _ _ Ψ _ R
   refine ⟨Riem.inj R, Riem.span_top R, fun s => ?_, Riem.sum_eigComp R.B, Riem.orth R⟩
   obtain ⟨p, h₁, h₂, h₃, h₄⟩ := Riem.exists_proj R.B s
-  simp only [h₁]
-  exact ⟨h₂, h₃, fun c x y => by rw [map_add (f := _), map_smul], h₄⟩
+  simpa only [h₁] using ⟨h₂, h₃, fun c x y => by rw [map_add (f := _), map_smul], h₄⟩
 
 end SheetDecomposition

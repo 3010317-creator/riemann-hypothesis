@@ -82,8 +82,7 @@ theorem isSum_lift {X S Z : Scheme.{0}} {r : ℕ} {Y : Fin r → Scheme.{0}} (u 
   refine ⟨fun s => (lift_facts (u s) f g (fY s) (hf s)).1 (ho s), fun x => ?_, fun s s' hss' => ?_⟩
   · obtain ⟨s, hs⟩ := hc (pullback.fst f g x)
     refine ⟨s, ?_⟩
-    rw [(lift_facts (u s) f g (fY s) (hf s)).2]
-    exact hs
+    rwa [(lift_facts (u s) f g (fY s) (hf s)).2]
   · rw [(lift_facts (u s) f g (fY s) (hf s)).2, (lift_facts (u s') f g (fY s') (hf s')).2]
     exact (hd s s' hss').preimage _
 
@@ -120,8 +119,7 @@ theorem comp_str {M : Model l K} (h : M.Good) {d : ℕ} (hc : M.Conn d) {r : ℕ
         ext x
         simp only [Set.mem_compl_iff, Set.mem_iUnion, not_exists]
         constructor
-        · intro hx t hts hxt
-          exact Set.disjoint_left.1 (hd s t (Ne.symm hts)) hx hxt
+        · exact fun hx t hts hxt => Set.disjoint_left.1 (hd s t (Ne.symm hts)) hx hxt
         · intro hx
           obtain ⟨t, ht⟩ := hcov x
           by_cases hts : t = s
@@ -148,8 +146,7 @@ theorem prim_of_over {Ω : Type} [Field Ω] [IsAlgClosed Ω] [CharZero Ω] {Y : 
   have hdeg : (Polynomial.cyclotomic q Ω).degree ≠ 0 := (Polynomial.degree_cyclotomic_pos q Ω (NeZero.pos q)).ne'
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root _ hdeg
   have h0 : Polynomial.aeval ζ (Polynomial.cyclotomic q ℤ) = 0 := by
-    rw [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic]
-    exact hζ
+    rwa [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic]
   exact ⟨GlobalTheory.EtC.Prim.map ((Scheme.ΓSpecIso (CommRingCat.of Ω)).inv ≫ f.appTop).hom
     ⟨ζ, (Nat.cast_ne_zero.2 (NeZero.ne q)).isUnit, h0⟩⟩
 

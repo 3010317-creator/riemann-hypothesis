@@ -127,8 +127,7 @@ theorem exists_common_eigenvector_in_submodule {W : Type} [AddCommGroup W] [Modu
       obtain ⟨a, ha⟩ := Module.End.exists_eigenvalue R
       obtain ⟨⟨w, hwU⟩, hw⟩ := ha.exists_hasEigenvector
       have hw' : H i w = a • w := by
-        have h1 := congrArg Subtype.val hw.apply_eq_smul
-        simpa [R] using h1
+        simpa [R] using congrArg Subtype.val hw.apply_eq_smul
       have hw0 : w ≠ 0 := by
         intro h
         exact hw.2 (Subtype.ext h)
@@ -160,8 +159,7 @@ theorem exists_common_eigenvector_in_submodule {W : Type} [AddCommGroup W] [Modu
 theorem exists_hasEigenvalue_ne_zero {W : Type} [AddCommGroup W] [Module ℂ W]
     [FiniteDimensional ℂ W] (T : End ℂ W) (v : W) (m : ℕ) (hm : finrank ℂ W ≤ m)
     (hv : (T ^ m) v ≠ 0) : ∃ μ : ℂ, μ ≠ 0 ∧ T.HasEigenvalue μ := by
-  by_contra hno
-  push Not at hno
+  by_contra! hno
   have hbot : ∀ μ : ℂ, μ ≠ 0 → T.maxGenEigenspace μ = ⊥ := by
     intro μ hμ
     by_contra hne
@@ -190,8 +188,7 @@ theorem exists_joint_eigenvector_combination_ne_zero :
   intro W _ _ _ ι J _ H hc c s v m hm hv
   obtain ⟨μ, hμ, hT⟩ := exists_hasEigenvalue_ne_zero _ v m hm hv
   have hcomm : ∀ i, Commute (∑ j, c j • H (s j)) (H i) := by
-    intro i
-    exact Commute.sum_left _ _ _ fun j _ => (hc (s j) i).smul_left (c j)
+    exact fun i => Commute.sum_left _ _ _ fun j _ => (hc (s j) i).smul_left (c j)
   obtain ⟨v₀, hv₀U, hv₀, χ, hχ⟩ := exists_common_eigenvector_in_submodule H hc _
     (End.eigenspace (∑ j, c j • H (s j)) μ) le_rfl hT (by
       intro i x hx
@@ -236,9 +233,7 @@ variable (π : Representation ℂ G V) (K : Subgroup G) {f : G → ℂ}
 theorem term_support_subset (hf : (Function.support fun q : G ⧸ K => f q.out).Finite) (u : V) :
     (Function.support fun q : G ⧸ K => f q.out • π q.out u) ⊆ hf.toFinset := by
   intro q hq
-  simp only [Set.Finite.coe_toFinset, Function.mem_support]
-  intro h0
-  exact hq (by simp [h0])
+  simpa only [Set.Finite.coe_toFinset, Function.mem_support] using fun h0 => hq (by simp [h0])
 
 theorem heckeSum_eq_sum (hf : (Function.support fun q : G ⧸ K => f q.out).Finite) (u : V) :
     heckeSum π K f u = ∑ q ∈ hf.toFinset, f q.out • π q.out u :=
@@ -279,10 +274,7 @@ theorem heckeSum_fixed (hf : (Function.support fun q : G ⧸ K => f q.out).Finit
 
     rw [heckeSum_eq_sum π K hf, map_sum]
     refine (finsum_eq_sum_of_support_subset _ ?_).symm
-    intro q hq
-    refine term_support_subset π K hf u ?_
-    intro h0
-    exact hq (by simp only [h0, map_zero])
+    exact fun q hq => term_support_subset π K hf u (fun h0 => hq (by simp only [h0, map_zero]))
   rw [h2, finsum_congr key]
   exact finsum_comp_equiv (f := fun q : G ⧸ K => f q.out • π q.out u)
     (MulAction.toPerm k : Equiv.Perm (G ⧸ K))
@@ -776,8 +768,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (w : Pl E)
     funext g
     rw [tdiag_add]
     exact conv_dc (iw_fact hϖ hx hx') (iw_chain hϖ hx hx') (dcos_mem a w _) (dcos_mem a w _) (dcos_mem a w _) g
-  rw [hc] at hm
-  exact hm
+  rwa [hc] at hm
 
 end Local
 
@@ -844,8 +835,7 @@ theorem exists_char_of_mul_on_cone {G : Type*} [AddCommGroup G] (S : Set G)
       rw [← sub_eq_zero, this, h, sub_self]
     have e' := congrArg f e
     rw [hf _ h₁ _ h₄, hf _ h₃ _ h₂] at e'
-    rw [div_eq_div_iff (hnz _ h₂) (hnz _ h₄)]
-    exact e'
+    rwa [div_eq_div_iff (hnz _ h₂) (hnz _ h₄)]
   choose k hk hd using arch
   have hc : ∀ g, k g • s₀ ∈ S := fun g => (hmem' _ (hk g)).1
   let φ : G → ℂˣ := fun g =>
@@ -873,8 +863,7 @@ theorem char_eq_prod {n : ℕ} (φ : (Fin n → ℤ) → ℂˣ) (h : ∀ g g', �
 
     rw [map_sum]
     simp only [map_zsmul]
-  have h3 := congrArg Additive.toMul h2
-  simpa [F, toMul_sum] using h3
+  simpa [F, toMul_sum] using congrArg Additive.toMul h2
 
 theorem zpow_sum_units (Q : ℂˣ) {n : ℕ} (e : Fin n → ℤ) : Q ^ (∑ i, e i) = ∏ i, Q ^ e i := by
   classical
@@ -1243,8 +1232,7 @@ theorem core (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) (hϖ : ordL (ϖ : w.adicCo
           GlobalTheory.PRep.fixed ρ (I2 a b w)) : V) :=
       (hkW_apply _ _ _ _ _ _).symm
     rw [e1, hχ2 x y ⟨hx, hy⟩, Submodule.coe_smul, hev x y ⟨hx, hy⟩]
-  · simp only [hev _ _ (hgap _)]
-    exact hsum
+  · simpa only [hev _ _ (hgap _)] using hsum
 
 end Place
 

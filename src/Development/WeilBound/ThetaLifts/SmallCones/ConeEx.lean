@@ -100,8 +100,7 @@ theorem LineOK.val_sum (h : LineOK B M om M₀ om₀ e μ u ν z S) {m : ℕ} (c
       ∑ i, c i * theta om₀ (e (M.co.rho B.ψ (u l) (Ψ i))) g h₁ := by
 
   rw [rho_linear, map_sum]
-  simp only [map_smul]
-  exact h.theta_sum c (fun i => h.sch l _ (h.le _ (hΨ i))) g h₁
+  simpa only [map_smul] using h.theta_sum c (fun i => h.sch l _ (h.le _ (hΨ i))) g h₁
 
 theorem LineOK.coneI_eq [SFinite μ] [SFinite M₀.μ] (h : LineOK B M om M₀ om₀ e μ u ν z S) {K : Subgroup (UA σ X.J)} (μK : Measure K)
     {Φ : Fn F n d} {m : ℕ} {Ψ : Fin m → Fn F n d} {c : Fin m → K → ℂ} (hΨ : ∀ i, Ψ i ∈ S) (hc : ∀ i, Integrable (c i) μK)

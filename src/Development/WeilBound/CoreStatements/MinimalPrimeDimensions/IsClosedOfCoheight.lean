@@ -515,8 +515,7 @@ theorem secVal_comb (hB : B.IsLB) {u : Fin m → R} {su : B.Sec} (hu : IsComb p 
     induction t using Finset.induction_on with
     | empty =>
       simp only [Finset.sum_empty]
-      have h0 := ev_add (p := p) (σ := σ) (U := B.U (pick hB y)) 0 0 y
-      simpa using h0
+      simpa using ev_add (p := p) (σ := σ) (U := B.U (pick hB y)) 0 0 y
     | insert a t ha ih =>
       rw [Finset.sum_insert ha, Finset.sum_insert ha, ev_add, ev_mul, ev_algX hy, ih]
   exact key Finset.univ
@@ -534,8 +533,7 @@ theorem log_nsq (φ : Weight p σ B) {h : HermNorm m} (hφ : IsFS φ s h) {u : F
   have hpk := mem_pick φ.isLB y
   have hsum : (∑ k, σ (u k) * coords p σ φ.isLB s y k) ≠ 0 := by
     have h1 := hy
-    rw [ptsIn_comb φ.isLB hu] at h1
-    exact h1
+    rwa [ptsIn_comb φ.isLB hu] at h1
   have hc : coords p σ φ.isLB s y ≠ 0 := by
     intro h0
     apply hsum
@@ -614,8 +612,7 @@ theorem charZero_iff {Z : Scheme.{0}} [IsIntegral Z] {q : Z ⟶ Sp (𝓞 K)} {B 
     have h1 : CC (n : 𝓞 K) ∈ ptIdeal q s (genericPoint Z) := by
       rw [hmem]
       intro i h
-      rw [map_natCast, map_natCast]
-      exact hn
+      rwa [map_natCast, map_natCast]
     have h2 : (n : 𝓞 K) ∈ (ptIdeal q s (genericPoint Z)).comap CC := h1
     rw [hb, Ideal.mem_bot] at h2
     exact_mod_cast h2
@@ -650,8 +647,7 @@ private theorem ev_chart_eq_gv_mul {R : Type} [CommRing R] {Z : Scheme.{0}} {B :
   have hx : x ∈ ptsIn p σ (B.U j ⊓ B.U j') := mem_ptsIn_inf.mpr ⟨hj, hj'⟩
   have h1 := congrArg (fun g => ev p σ (B.U j ⊓ B.U j') g x) (t.compat j j')
   rw [ev_mul] at h1
-  rw [← ev_res inf_le_left hx, ← ev_res inf_le_right hx]
-  exact h1
+  rwa [← ev_res inf_le_left hx, ← ev_res inf_le_right hx]
 
 private theorem dualNorm_smul' {m : ℕ} (h : HermNorm m) (c : ℂ) (v : Fin m → ℂ) :
     h.dualNorm (c • v) = ‖c‖ * h.dualNorm v := by
@@ -747,8 +743,7 @@ theorem arch_pull (hA : StArch) (hX : IsArithVar p D) (hE : Emb p s)
       simp only [Set.mem_setOf_eq, not_not] at hy1
       have hy2 : PtsOver.map i rfl (spMap (σ.comp (algebraMap (𝓞 K) K))) y ∉
           ptsIn p (σ.comp (algebraMap (𝓞 K) K)) (nonzeroLocus su) := by
-        rw [← mem_ptsIn_preimage hm, ← GlobalTheory.Cartier.nonzeroLocus_secPull]
-        exact hy
+        rwa [← mem_ptsIn_preimage hm, ← GlobalTheory.Cartier.nonzeroLocus_secPull]
       have h0 : secVal p (σ.comp (algebraMap (𝓞 K) K)) su
           (pick (L.φ (σ.comp (algebraMap (𝓞 K) K))).isLB (PtsOver.map i rfl (spMap (σ.comp (algebraMap (𝓞 K) K))) y))
           (PtsOver.map i rfl (spMap (σ.comp (algebraMap (𝓞 K) K))) y) = 0 := by
@@ -765,8 +760,7 @@ theorem arch_pull (hA : StArch) (hX : IsArithVar p D) (hE : Emb p s)
           (fun k => GlobalTheory.secPull (s k) i) y k) = 0 from hy1]
       simp
   refine ⟨?_, fun he _ => ?_⟩
-  · rw [hfun, hset, ← hgen]
-    exact k1
+  · rwa [hfun, hset, ← hgen]
   · rw [hfun, ← hgen]
     exact k2 he
 
@@ -790,8 +784,7 @@ theorem step (hA : StArch) (hX : IsArithVar p D) (hE : Emb p s)
       have hy := GlobalTheory.TwistTop.under_eq_genericPoint hXZ y
       rw [GlobalTheory.CxPts.mem_ptsIn]
       simp only [GlobalTheory.Cartier.under] at hy
-      rw [hy]
-      exact hη
+      rwa [hy]
     have hhZ := GlobalTheory.HermLB.IsArithHeight.restrict hX hh i rfl
     rw [GlobalTheory.HermLB.IsArithHeight.point hh Z i hc hd1 _ (GlobalTheory.Cartier.isRatSec_ratOfSec _ hη),
       GlobalTheory.HermLB.curveDeg_sec i su hη hall, finsum_emb]
@@ -811,8 +804,7 @@ theorem step (hA : StArch) (hX : IsArithVar p D) (hE : Emb p s)
   · obtain ⟨_, hrec⟩ := GlobalTheory.HermLB.IsArithHeight.recursion_sec i su hη hh hc he hd
     rw [hrec, finsum_emb]
     congr 1
-    refine Finset.sum_congr rfl fun σ _ => ?_
-    exact (arch_pull hA hX hE hF i hc hd hg hf hI hu hn σ).1
+    exact Finset.sum_congr rfl fun σ _ => (arch_pull hA hX hE hF i hc hd hg hf hI hu hn σ).1
 
 theorem height_vertical (hV : StVert) (hX : IsArithVar p D) (hE : Emb p s) (hh : L.IsArithHeight h)
     {Z : Scheme.{0}} (i : Z ⟶ X) [IsClosedImmersion i] [IsIntegral Z] {e : ℕ} (hd : topologicalKrullDim Z = e)
@@ -822,8 +814,7 @@ theorem height_vertical (hV : StVert) (hX : IsArithVar p D) (hE : Emb p s) (hh :
   obtain ⟨hE', hpt, -⟩ := stPull (𝓞 K) X Z p L.B m s i hE
   have hproj : IsProjOver (i ≫ p) := GlobalTheory.ProjSpace.isProjOver_comp_of_isClosedImmersion i hX.isProjOver
   have hv' : (ptIdeal (i ≫ p) (fun k => GlobalTheory.secPull (s k) i) (genericPoint Z)).comap CC = v.asIdeal := by
-    rw [hpt]
-    exact hv
+    rwa [hpt]
   obtain ⟨x, hx⟩ := hV K Z (i ≫ p) (L.B.pull i) m (fun k => GlobalTheory.secPull (s k) i) v e hproj hE' hv' hd
   rw [hpt] at hx
   letI := x
@@ -834,8 +825,7 @@ theorem height_vertical (hV : StVert) (hX : IsArithVar p D) (hE : Emb p s) (hh :
   haveI : Finite v.asIdeal.ResidueField := by
     apply Nat.finite_of_card_ne_zero
     rw [hcard]
-    intro h0
-    exact v.ne_bot (Ideal.absNorm_eq_zero_iff.mp h0)
+    exact fun h0 => v.ne_bot (Ideal.absNorm_eq_zero_iff.mp h0)
   rw [hh.vertical Z i v.asIdeal.ResidueField e hd, hx, hcard]
   push_cast
   rfl
@@ -899,8 +889,7 @@ private theorem core_lemma (hV : StVert) (hA : StArch) (hR : GroundTheory.Height
     rwa [comap_map hQproj.isPrime hc0] at hmem'
   have hu' := hcomb' _ _ hu
   have hη : genericPoint Z ∈ nonzeroLocus (GlobalTheory.secPull (s j) i) := by
-    rw [ChowFormHeightComparison₂.CF.P.mem_iff hE' hu' (genericPoint Z), hQpt]
-    exact hnQ
+    rwa [ChowFormHeightComparison₂.CF.P.mem_iff hE' hu' (genericPoint Z), hQpt]
   have hstep := step hA hX hE hF hh i hc hd rfl ⟨f, hf⟩ hIproj hu hn hη
   have hrec := hR K m e δ H _ f _ hIproj hf hδ hn
   obtain ⟨hdiv1, hdiv2⟩ := stDiv (𝓞 K) Z (i ≫ p) (L.B.pull i) m (fun k => GlobalTheory.secPull (s k) i) hE'
@@ -910,21 +899,18 @@ private theorem core_lemma (hV : StVert) (hA : StArch) (hR : GroundTheory.Height
         Ideal.span {GroundTheory.Heights₂.Heights.linForm (Pi.single j 1 : Fin m → 𝓞 K)}) := by
     intro z
     have h1 := hdiv1 z
-    rw [hpt', hpt'] at h1
-    exact h1
+    rwa [hpt', hpt'] at h1
   have hmu : ∀ z : Z, (divOfSec (L.restr i).isLB (GlobalTheory.secPull (s j) i) hη).mult z ≠ 0 →
       (divOfSec (L.restr i).isLB (GlobalTheory.secPull (s j) i) hη).mult z =
         (localMult (ptIdeal p s (i (genericPoint Z)) ⊔
           Ideal.span {GroundTheory.Heights₂.Heights.linForm (Pi.single j 1 : Fin m → 𝓞 K)}) (ptIdeal p s (i z)) : ℤ) := by
     intro z hz
     have h1 := hdiv2 z hz
-    rw [hpt', hpt'] at h1
-    exact h1
+    rwa [hpt', hpt'] at h1
   have hPtinj : Function.Injective (fun z : Z => ptIdeal p s (i z)) := by
     intro a b hab
     apply ChowFormHeightComparison₂.CF.P.injective hE'
-    simp only [hpt']
-    exact hab
+    simpa only [hpt'] using hab
   have hrelfin : (relComps (ptIdeal p s (i (genericPoint Z)) ⊔
       Ideal.span {GroundTheory.Heights₂.Heights.linForm (Pi.single j 1 : Fin m → 𝓞 K)})).Finite :=
     (Ideal.finite_minimalPrimes_of_isNoetherianRing _ _).subset (fun W hW => hW.1)
@@ -969,12 +955,10 @@ private theorem core_lemma (hV : StVert) (hA : StArch) (hR : GroundTheory.Height
     haveI := hZz
     have hv' : (ptIdeal p s ((jz ≫ i) (genericPoint Zz))).comap CC = v.asIdeal := by
       show (ptIdeal p s (i (jz (genericPoint Zz)))).comap CC = v.asIdeal
-      rw [hgen]
-      exact hv
+      rwa [hgen]
     have hfin : h (i (jz (genericPoint Zz))) = chowDegree (reduceMod v (ptIdeal p s (i (jz (genericPoint Zz)))))
         (e + 1) * Real.log (Ideal.absNorm v.asIdeal) := height_vertical hV hX hE hh (jz ≫ i) hdz v hv'
-    rw [hgen] at hfin
-    exact hfin
+    rwa [hgen] at hfin
   have hvert := vertTerm_eq (S := hSfin.toFinset) (Pt := fun z => ptIdeal p s (i z))
     (μ := fun z => (divOfSec (L.restr i).isLB (GlobalTheory.secPull (s j) i) hη).mult z)
     hQproj.isPrime hc0 hPtinj hrel hμ (e + 1) (fun z => h (i z)) hvg
@@ -1046,8 +1030,7 @@ private theorem core_lemma (hV : StVert) (hA : StArch) (hR : GroundTheory.Height
             (δW ((ptIdeal p s (i z)).map φ)) (g ((ptIdeal p s (i z)).map φ))
             (by show IsChowForm ((ptIdeal p s (i (jz (genericPoint Zz)))).map φ) (e' + 1) _
                 rw [hgen]; exact hg _ hW) (hδW _ hW)
-        rw [hgen] at key
-        exact key
+        rwa [hgen] at key
       have hprodH : IsMultiHomog (∑ W ∈ (divCycle ((ptIdeal p s (i (genericPoint Z))).map φ)
           (fun k => ((Pi.single j 1 : Fin m → 𝓞 K) k : K))).support,
             (divCycle ((ptIdeal p s (i (genericPoint Z))).map φ)

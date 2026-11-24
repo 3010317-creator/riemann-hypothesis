@@ -159,8 +159,7 @@ theorem exists_covolOne (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (n : ℕ) {d
       rw [hadd]
       intro p _
       have := hk p
-      rw [Pi.add_apply, hr, hrk, map_neg, neg_add_eq_sub]
-      exact this
+      rwa [Pi.add_apply, hr, hrk, map_neg, neg_add_eq_sub]
     · rintro ⟨_, r', rfl⟩ h
       change e (ratTup (AF F) r' + x) ∈ Set.univ.pi fun _ => fundamentalSet F at h
       rw [hadd] at h
@@ -199,8 +198,7 @@ theorem split_coord' (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M n : ℕ) (dx
   obtain ⟨f1, f3⟩ := coordMapN σ hCM (Af F) b lf hlf n M
   haveI hBi := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)).2.2.2.2.2.2.2.1 n M
   haveI hBf := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)).2.2.2.2.2.2.2.1 n M
-  haveI : SigmaFinite l := by
-    exact Measure.IsAddHaarMeasure.sigmaFinite l
+  haveI : SigmaFinite l := Measure.IsAddHaarMeasure.sigmaFinite l
   haveI : SigmaFinite lf := Measure.IsAddHaarMeasure.sigmaFinite lf
   let eI := (i1.homeomorph).toMeasurableEquiv
   let eF := (f1.homeomorph).toMeasurableEquiv
@@ -260,8 +258,7 @@ theorem split_coord (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M n : ℕ) (dx 
     (GroundTheory.Global.borelSpace_infiniteAdeleRing F).measurable_eq
   obtain ⟨l, hl, hH, D, hD, hD1⟩ := @std_transfer F _ _ laminf hinf (GroundTheory.Global.measurableSpace_infiniteAdeleRing F) hm
   have h := split_coord' σ hCM M n dx b e he hB hdxc l hH D hD hD1 lf hlf h1
-  rw [coordW_congr hm l laminf hl b n M] at h
-  exact h
+  rwa [coordW_congr hm l laminf hl b n M] at h
 
 theorem euler_coord (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M n : ℕ) (dx : Measure (Fin n → Fin M → AF F ⊗[F] E))
     {d : ℕ} (b : Module.Basis (Fin d) F E)
@@ -1013,14 +1010,12 @@ theorem hyp_step : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
       rw [e1]
       refine le_trans ?_ (mul_meas_ge_le_lintegral (hGm v) (ENNReal.ofReal (τ v)))
       gcongr
-      intro y hy
-      exact (hGprim v hv y hy).ge
+      exact fun y hy => (hGprim v hv y hy).ge
     by_cases hpt : m₁ v (hermOf (Fv F v) σ 0 h₂) (primV σ J b v) = ⊤
     · rw [hp, hpt]
       simpa using hM0 v
     · have h2 : ENNReal.ofReal (τ v * p v) ≤ ENNReal.ofReal (Mv v) := by
-        rw [ENNReal.ofReal_mul (hτ0 v), hp, ENNReal.ofReal_toReal hpt, ← hMv']
-        exact h1
+        rwa [ENNReal.ofReal_mul (hτ0 v), hp, ENNReal.ofReal_toReal hpt, ← hMv']
       exact (ENNReal.ofReal_le_ofReal_iff (hM0 v)).1 h2
 
   have hpure := hS₂ S hS2 φinf φ Ψinf Ψ G hφinf hφ hΨinf1 hΨ1 hG1

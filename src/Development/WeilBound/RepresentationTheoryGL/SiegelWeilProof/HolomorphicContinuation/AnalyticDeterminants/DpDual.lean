@@ -102,8 +102,7 @@ theorem contDiff_det_one_add (M : Matrix ι ι ℂ) {k : WithTop ℕ∞} :
 theorem contDiffAt_det_zpow (M : Matrix ι ι ℂ) (t : ℤ) {k : WithTop ℕ∞} :
     ContDiffAt ℂ k (fun S : Matrix ι ι ℂ => (1 + M * S).det ^ t) 0 := by
   obtain ⟨m, rfl | rfl⟩ := Int.eq_nat_or_neg t
-  · simp only [zpow_natCast]
-    exact ((contDiff_det_one_add M).pow m).contDiffAt
+  · simpa only [zpow_natCast] using ((contDiff_det_one_add M).pow m).contDiffAt
   · simp only [_root_.zpow_neg, zpow_natCast]
     refine (((contDiff_det_one_add M).pow m).contDiffAt).inv ?_
     simp
@@ -126,8 +125,7 @@ theorem incl_mul_apply {m : Type} [Fintype m] (s : Finset (Fin n)) (X : Matrix s
     · simp
     · intro c _ hc
       rw [ite_eq_right]
-      intro hac
-      exact hc (Subtype.ext hac.symm)
+      exact fun hac => hc (Subtype.ext hac.symm)
     · simp
   · refine Finset.sum_eq_zero fun c _ => ?_
     rw [ite_eq_right]
@@ -142,8 +140,7 @@ theorem mul_proj_apply {m : Type} [Fintype m] (s : Finset (Fin n)) (X : Matrix m
     · simp
     · intro c _ hc
       rw [ite_eq_right]
-      intro hcb
-      exact hc (Subtype.ext hcb)
+      exact fun hcb => hc (Subtype.ext hcb)
     · simp
   · refine Finset.sum_eq_zero fun c _ => ?_
     rw [ite_eq_right]
@@ -445,8 +442,7 @@ theorem dpDual (hC : Cayley) (hU : UAct) : DpDual := by
     rw [wM, Matrix.mul_assoc, u_mul_u_conj hx, ← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hu2, Matrix.one_mul]
   have hub : ub1 x = (u1 x)ᴴ := by
     have := inverse_first_block_unipotent_formula hx 0 0 (by simp) (by simp)
-    rw [mX_one, Matrix.mul_one, Matrix.zero_mul, add_zero] at this
-    exact this
+    rwa [mX_one, Matrix.mul_one, Matrix.zero_mul, add_zero] at this
   have key : ∀ (T : Matrix (blkA (n := n) j) (blkA j) ℂ) (S : Matrix (blkB (n := n) j) (blkB j) ℂ),
       (1 + wM x * embOn (blkB j) S).det ≠ 0 →
       fV p q (x * mX 1 (embOn (blkB j) S) (embOn (blkA j) T) 1) =

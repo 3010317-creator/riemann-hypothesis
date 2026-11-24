@@ -111,9 +111,7 @@ theorem gsEquiv_toGS' (K : IntermediateField ℚ (AlgebraicClosure ℚ)) [Number
       exact h1.symm
     · intro h
       apply AlgEquiv.ext
-      intro x
-      apply Subtype.ext
-      exact (AlgEquiv.restrictNormal_commutes σ E x).trans (h x.1 x.2)
+      exact fun x => Subtype.ext ((AlgEquiv.restrictNormal_commutes σ E x).trans (h x.1 x.2))
   have hφc : Continuous φ := InfiniteGalois.restrictNormalHom_continuous E
   let q : GS (AlgebraicClosure ℚ) S ≃* Gal(E/K) :=
     (QuotientGroup.quotientMulEquivOfEq hker.symm).trans

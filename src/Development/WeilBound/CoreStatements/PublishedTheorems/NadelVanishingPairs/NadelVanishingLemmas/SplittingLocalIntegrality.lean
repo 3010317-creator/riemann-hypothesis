@@ -381,10 +381,8 @@ theorem GlobalTheory.DI.cechZero_of_hypZero_filtered : ∀ {ι : Type} [LinearOr
         refine ⟨hc0, ?_⟩
         rw [hc0, hγ0 t hne] at hl
         rcases neg_one_pow_eq_or ℤ p with h | h
-        · rw [h, one_smul] at hl
-          exact hl
-        · rw [h, neg_one_smul, neg_eq_zero] at hl
-          exact hl
+        · rwa [h, one_smul] at hl
+        · rwa [h, neg_one_smul, neg_eq_zero] at hl
       by_cases hpn1 : p = n + 1
       · refine ⟨0, GlobalTheory.DI.FiltVanish.inTot_zero N n, ?_⟩
         funext s
@@ -645,8 +643,7 @@ theorem cechZero_of_hypZero_of_closed_map : ∀ {ι : Type} [LinearOrder ι] {E 
         simp only [Finset.mem_filter]
         constructor
         · exact fun h => h.1
-        · intro hx
-          exact ⟨hx, u.le_max' x hx⟩
+        · exact fun hx => ⟨hx, u.le_max' x hx⟩
       have hR : ({x ∈ u | u.max' hu ≤ x}) = {u.max' hu} := by
         ext x
         simp only [Finset.mem_filter, Finset.mem_singleton]
@@ -732,8 +729,7 @@ theorem exists_isPhi : ∀ {K : Type} [CommRing K] {V : Type} [AddCommGroup V] [
     | succ a ih =>
       intro v i x x'
       rcases Fin.eq_zero_or_eq_succ i with rfl | ⟨j, rfl⟩
-      · simp only [List.ofFn_succ, hcons, Function.update_self, hupd0]
-        exact lopAddV _ _ _
+      · simpa only [List.ofFn_succ, hcons, Function.update_self, hupd0] using lopAddV _ _ _
       · simp only [List.ofFn_succ, hcons, hupds,
           Function.update_of_ne (Fin.succ_ne_zero j).symm]
         rw [ih, lopAddY]
@@ -746,8 +742,7 @@ theorem exists_isPhi : ∀ {K : Type} [CommRing K] {V : Type} [AddCommGroup V] [
     | succ a ih =>
       intro v i c x
       rcases Fin.eq_zero_or_eq_succ i with rfl | ⟨j, rfl⟩
-      · simp only [List.ofFn_succ, hcons, Function.update_self, hupd0]
-        exact lopSmulV _ _ _
+      · simpa only [List.ofFn_succ, hcons, Function.update_self, hupd0] using lopSmulV _ _ _
       · simp only [List.ofFn_succ, hcons, hupds,
           Function.update_of_ne (Fin.succ_ne_zero j).symm]
         rw [ih, lopSmulY]
@@ -892,9 +887,7 @@ theorem dtot_oneC (d : ExteriorAlgebra K V →+ ExteriorAlgebra K V) (hd : IsOdd
 private theorem cubeSign_min_eq_one (s : Finset ι) (hs : s.Nonempty) : GlobalTheory.cubeSign s (s.min' hs) = 1 := by
   unfold GlobalTheory.cubeSign
   have e : ({x ∈ s | x < s.min' hs}) = ∅ := by
-    apply Finset.filter_false_of_mem
-    intro x hx
-    exact not_lt.mpr (s.min'_le x hx)
+    exact Finset.filter_false_of_mem (fun x hx => not_lt.mpr (s.min'_le x hx))
   rw [e]
   simp
 
@@ -954,8 +947,7 @@ private theorem Dtot_Lop_eq_zero_of_Dtot_eq_zero_of_empty_eq_zero (p : ℕ) (d :
     have e0 := congrFun hy s
     simp only [Dtot, Pi.zero_apply] at e0
     have e2 : (-1 : ℤ) ^ s.card • d (y s) = -delta y s := by
-      rw [eq_neg_iff_add_eq_zero, add_comm]
-      exact e0
+      rwa [eq_neg_iff_add_eq_zero, add_comm]
     have e1 : ((-1 : ℤ) ^ s.card * (-1) ^ s.card) = 1 := by
       rw [← mul_pow]
       simp
@@ -1042,8 +1034,7 @@ private theorem Dtot_Lop_eq_zero_of_Dtot_eq_zero_of_empty_eq_zero (p : ℕ) (d :
             le_antisymm ((s'.erase b).min'_le n hnb)
               (Finset.le_min' _ _ _ (fun z hz => s'.min'_le z (Finset.mem_of_mem_erase hz)))
           rw [dite_eq_left ⟨n, hnb⟩, hmin, smul_comm (h m n v) (GlobalTheory.cubeSign s' b), sub_self]
-        · intro hn
-          exact absurd hns hn
+        · exact fun hn => absurd hns hn
       have hcomm : ∀ x : ExteriorAlgebra K V,
           h m n v • ((-1 : ℤ) ^ s.card • x) = (-1 : ℤ) ^ s.card • (h m n v • x) :=
         fun x => smul_comm _ _ _
@@ -1263,8 +1254,7 @@ theorem forms_mul_smul_mono (A : Subring K) (L : Set V) :
     exact forms_gen_mem (B := (fun b => c * b) '' B) (Set.mem_image_of_mem _ hb) v hv
   · intro B B' L' q hB hL
     refine (forms_le_comap_of_gen (B' := B') (L' := L') (q' := q) (AddMonoidHom.id _) ?_)
-    intro b hb v hv
-    exact forms_gen_mem (hB hb) v (fun k => hL (hv k))
+    exact fun b hb v hv => forms_gen_mem (hB hb) v (fun k => hL (hv k))
 
 end
 
@@ -1392,8 +1382,7 @@ theorem pow_smul_mem_forms_powMul {K : Type} [CommRing K] {V : Type} [AddCommGro
   induction hy using AddSubgroup.closure_induction with
   | mem x hx =>
     obtain ⟨a', ha', v, hv, rfl⟩ := hx
-    apply AddSubgroup.subset_closure
-    exact ⟨b ^ p * a', ⟨b, hb, a', ha', rfl⟩, v, hv, by rw [smul_smul]⟩
+    exact AddSubgroup.subset_closure ⟨b ^ p * a', ⟨b, hb, a', ha', rfl⟩, v, hv, by rw [smul_smul]⟩
   | zero => rw [smul_zero]; exact zero_mem _
   | add x y _ _ hx hy => rw [smul_add]; exact add_mem hx hy
   | neg x _ hx => rw [smul_neg]; exact neg_mem hx

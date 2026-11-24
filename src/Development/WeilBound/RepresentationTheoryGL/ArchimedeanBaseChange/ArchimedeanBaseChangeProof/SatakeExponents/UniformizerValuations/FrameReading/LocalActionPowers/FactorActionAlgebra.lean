@@ -204,8 +204,7 @@ theorem actAlg : ActAlg := by
   refine ⟨?_, fun c => ?_, fun hij => ?_, ?_⟩
   · rw [actS_eq]
     exact act_lev ci hK hKo hA hf hGl
-  · simp only [actS_eq]
-    exact act_add hK hKo hA hf (sm_of_lev ci hGl) (sm_of_lev ci hGl') c
+  · simpa only [actS_eq] using act_add hK hKo hA hf (sm_of_lev ci hGl) (sm_of_lev ci hGl') c
   · simp only [actS_eq]
     refine act_comm hK hKo hA hKj hKoj hB' hf hg' (sm_of_lev ci hGl) (sm_of_lev cj hGl) fun x y => ?_
     simp only [MonoidHom.comp_apply]
@@ -365,8 +364,7 @@ theorem fixed_mono {k G V : Type} [Field k] [Group G] [AddCommGroup V] [Module k
     {K K' : Subgroup G} (hle : K' ≤ K) {v : V} (hv : v ∈ fixed ρ K) : v ∈ fixed ρ K' := by
   simp only [GlobalTheory.PRep.fixed, GlobalTheory.PRep.eig, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
     Set.mem_ofPred_eq] at hv ⊢
-  intro h
-  exact hv ⟨h.1, hle h.2⟩
+  exact fun h => hv ⟨h.1, hle h.2⟩
 
 theorem isHecke_zero {G : Type} [Group G] [TopologicalSpace G] (K : Subgroup G) : IsHecke K (fun _ : G => (0 : ℂ)) :=
   ⟨HasCompactSupport.zero, fun _ _ _ => ⟨rfl, rfl⟩⟩
@@ -763,8 +761,7 @@ theorem fmPowOf_holds : FmPowOf := by
     · obtain ⟨hne', hwP⟩ := Finset.mem_erase.1 hw
       unfold LM.ent
       rw [dite_eq_left hwP]
-      simp only [hL0, only0, ite_eq_right hne']
-      exact hdgH w _ _
+      simpa only [hL0, only0, ite_eq_right hne'] using hdgH w _ _
   have hL1ok : L1.Ok P := by
     refine ⟨fun x y => isTestFunction_modify (hL.1 x y) {w₀.1} V₁ V₂ hV₁ hV₂ (fun w hw => ?_) (fun w hw => ?_), by rw [hL1t]; exact hL.2⟩
     · have hne' : w ≠ w₀.1 := fun h => hw (Finset.mem_singleton.2 h)
@@ -775,8 +772,7 @@ theorem fmPowOf_holds : FmPowOf := by
     · rw [Finset.mem_singleton.1 hw]
       unfold LM.ent
       rw [dite_eq_left hw₀P]
-      simp only [hL1, rest1, ite_true]
-      exact hdgH _ _ _
+      simpa only [hL1, rest1, ite_true] using hdgH _ _ _
 
   set Φ : ∀ w : Pl E, GLw B.a w × GLw B.b w → ℂ := fun w => if w ∈ P then idem (V w) else L.s w with hΦ
   have hΦt : IsTestP Φ := by

@@ -120,8 +120,7 @@ theorem mem_ker_conj_diagonal (P : GL (Fin n) K) (d : Fin n → K) (x : Fin n �
   · intro h i
     have h2 := congrArg (fun z => ((P⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) *ᵥ z) h
     simp only [inv_mulVec_mulVec, Matrix.mulVec_zero] at h2
-    have h3 := congrFun h2 i
-    simpa [Matrix.mulVec_diagonal] using h3
+    simpa [Matrix.mulVec_diagonal] using congrFun h2 i
   · intro h
     have : Matrix.diagonal d *ᵥ (((P⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) *ᵥ x) = 0 := by
       funext i
@@ -148,8 +147,7 @@ theorem ker_conj_diagonal_eq_span (P : GL (Fin n) K) (d : Fin n → K) (S : Fins
       funext k
       rw [Finset.sum_apply]
       simp only [Pi.smul_apply, smul_eq_mul]
-      rw [Matrix.mulVec, dotProduct]
-      rw [← Finset.sum_subset (Finset.subset_univ S)]
+      rw [Matrix.mulVec, dotProduct, ← Finset.sum_subset (Finset.subset_univ S)]
       · exact Finset.sum_congr rfl fun j _ => mul_comm _ _
       · intro j _ hj
         rw [hy0 j hj, mul_zero]
@@ -250,13 +248,11 @@ theorem sum_rev_parity (f : Fin n → ℤ) (hf : ∀ j, f (Fin.rev j) = f j) (S 
     · intro j _
       rw [hf]
       exact CharTwo.add_self_eq_zero _
-    · intro j hj _
-      exact (Finset.mem_filter.1 hj).2
+    · exact fun j hj _ => (Finset.mem_filter.1 hj).2
     · intro j hj
       rw [Finset.mem_filter] at hj ⊢
       exact ⟨hS _ hj.1, by rw [Fin.rev_rev]; exact fun h => hj.2 h.symm⟩
-    · intro j _
-      exact Fin.rev_rev j
+    · exact fun j _ => Fin.rev_rev j
   rw [h0, add_zero]
 
 theorem rev_fixed_unique {i j : Fin n} (hi : Fin.rev i = i) (hj : Fin.rev j = j) : i = j := by
@@ -313,8 +309,7 @@ theorem kapSign_eq_one_of_vals (hU : Unr E) (w : Pl E) (n : ℕ) (γ : GLw n w) 
     rw [ite_eq_right hs] at h
     have h2 : cT (cj w) (γ : Matrix (Fin n) (Fin n) (w.adicCompletion E)) * 1 *
         (γ : Matrix (Fin n) (Fin n) (w.adicCompletion E)) = 1 := h
-    rw [Matrix.mul_one] at h2
-    exact h2
+    rwa [Matrix.mul_one] at h2
   obtain ⟨u, hu_prod, hu⟩ := hV
   have huinj : Function.Injective u := fun i j h => hv (by rw [← (hu i).2, ← (hu j).2, h])
   have hroot : ∀ i, γ.val.charpoly.eval (u i) = 0 := by
@@ -415,8 +410,7 @@ theorem kapSign_eq_one_of_vals (hU : Unr E) (w : Pl E) (n : ℕ) (γ : GLw n w) 
         simp only [Finset.mem_filter, Finset.mem_univ, true_and]
         constructor
         · exact fun h => h.2
-        · intro h
-          exact ⟨(rev_fixed_unique h hm) ▸ hmS, h⟩
+        · exact fun h => ⟨(rev_fixed_unique h hm) ▸ hmS, h⟩
       rw [e, ← sum_rev_parity f hf _ (fun i _ => Finset.mem_univ _)]
       exact (ZMod.intCast_eq_zero_iff_even).2 htot
     · have e : S.filter (fun j => Fin.rev j = j) = ∅ := by
@@ -452,8 +446,7 @@ theorem kapSign_eq_one_of_vals (hU : Unr E) (w : Pl E) (n : ℕ) (γ : GLw n w) 
     rfl
   have key : (Matrix.of fun i j => ∑ k, cj w ((B i).1 k) * (B j).1 k).det =
       cj w d * d * (H.submatrix (fun i : S => i.1) (fun i : S => i.1)).det := by
-    rw [← hG]
-    exact hdet
+    rwa [← hG]
   rw [key]
   by_cases hS : ∀ i ∈ S, Fin.rev i ∈ S
   · have hne : (H.submatrix (fun i : S => i.1) (fun i : S => i.1)).det ≠ 0 := by

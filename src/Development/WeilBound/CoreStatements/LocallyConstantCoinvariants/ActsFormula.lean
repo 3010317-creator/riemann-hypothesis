@@ -78,8 +78,7 @@ theorem exists_dotProduct_ne_one {k : Type} [Field k] {κ : Type} [Fintype κ] {
   have hi' : x i ≠ 0 := hi
   refine ⟨Pi.single i (t / x i), ?_⟩
   have hxt : x i * (t / x i) = t := by field_simp
-  rw [dotProduct_single, hxt]
-  exact ht
+  rwa [dotProduct_single, hxt]
 
 theorem exists_eq_mul_apply_zero : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] [Invertible (2 : k)] (κ : Type) [Fintype κ] (ψ : AddChar k ℂ),
@@ -377,16 +376,14 @@ theorem acts_formula (hM : ModelEx) (hC : Cyc) (hA : AdSt) (hψ : IsStd ψ) (h :
   have rest := hA.rest F κ v r φ₀ hφ₀ hφne hr
   obtain ⟨φ₁, hφ₁, φ₂, hφ₂, hnz⟩ : ∃ φ₁ ∈ SB (κ → Fv F v), ∃ φ₂ ∈ SB (κ → Fv F v),
       l (omd x⁻¹ (boxFun (tens (evFin F v) φ₁ r) (tens (evFin F v) φ₂ r))) ≠ 0 := by
-    by_contra hno
-    push Not at hno
+    by_contra! hno
     obtain ⟨c₂, hc₂⟩ := acts_scalar hA hψ h hG2 hι₂ hj₂ hsd x hxa X₀ hx
     have := hC _ (κ ⊕ κ) (psiV ψ v) hc h1 _ hbS hbne (l ∘ₗ omd x⁻¹ ∘ₗ tensL v (boxFun r r)) (fun w => by
       rw [schr_box]
       exact (congrArg (fun Φ => l (omd x⁻¹ Φ)) (tens_box _ _ r)).trans (hno _ (schr_mem hc _ hφ₀) _ (schr_mem hc _ hφ₀))) _
       (Submodule.smul_mem _ c₂ (hj₂ _ (rmL_mem X₀ (hι₂.bij.1 hbS))).1)
     refine hne ?_
-    rw [← tens_box, ← xx (tens _ _ _), hc₂ _ hbS _ hrr]
-    exact this
+    rwa [← tens_box, ← xx (tens _ _ _), hc₂ _ hbS _ hrr]
   let m : ((κ → Fv F v) → ℂ) →ₗ[ℂ] ℂ := l ∘ₗ omd x⁻¹ ∘ₗ boxL (tens (evFin F v) φ₂ r) ∘ₗ tensL v r
   have bm : ∀ φ ∈ SB (κ → Fv F v), boxFun (tens (evFin F v) φ r) (tens (evFin F v) φ₂ r) ∈ schA F (κ ⊕ κ) := fun φ hφ =>
     GlobalTheory.SchwartzBox.boxFun_mem_schA F κ κ _ (rest φ hφ).2 _ (rest φ₂ hφ₂).2

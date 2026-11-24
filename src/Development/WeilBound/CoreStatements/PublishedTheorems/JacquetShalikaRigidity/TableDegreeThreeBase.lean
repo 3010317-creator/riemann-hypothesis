@@ -108,8 +108,7 @@ theorem avg_char {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (ζ : ι → E) :
     rw [setIntegral_const]
     simp [Measure.real, vecMeasure_vecDomain]
   · obtain ⟨t, ht⟩ : ∃ t, ζ t ≠ 0 := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact h (funext hc)
     obtain ⟨a, ha⟩ := exists_ne_one hψ
     set y : ι → Ad E := Pi.single t (algebraMap E (Ad E) (ζ t)⁻¹ * a)
@@ -351,8 +350,7 @@ theorem parseval (f g : (ι → Ad E) → ℂ) (hf : Per (ratV E ι) f) (hg : Pe
         avg (ratV E ι) fun x => ψ (-dot ξ x) * f x := by
       rw [coe_basis, inner_chL]
     rw [e1, e2, mul_comm]
-  simp only [key] at h
-  exact h
+  simpa only [key] using h
 
 end tableDegreeThreeBase
 
@@ -384,8 +382,7 @@ theorem fin_case {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (f : (ι → Ad E) 
     simp only [h]
     rw [hf.2 γ hγ x]
     congr 1
-    refine Finset.sum_congr rfl fun η _ => ?_
-    exact (per_cmul hψ (c η) η).2 γ hγ x
+    exact Finset.sum_congr rfl fun η _ => (per_cmul hψ (c η) η).2 γ hγ x
   have hcoef : ∀ ξ, avg (ratV E ι) (fun x => ψ (-dot ξ x) * h x) = 0 := by
     intro ξ
     rw [avg_eq_integral _ (hψ.per_twist hh ξ)]
@@ -409,8 +406,7 @@ theorem fin_case {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (f : (ι → Ad E) 
       · subst hξ
         simp
       · rw [ite_eq_right, ite_eq_right hξ, mul_zero]
-        intro h'
-        exact hξ (sub_eq_zero.1 h').symm
+        exact fun h' => hξ (sub_eq_zero.1 h').symm
     rw [Finset.sum_congr rfl h3, Finset.sum_ite_eq]
     split_ifs with hm
     · exact sub_self _

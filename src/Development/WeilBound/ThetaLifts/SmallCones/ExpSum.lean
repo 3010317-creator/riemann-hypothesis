@@ -114,8 +114,7 @@ theorem summable_wt {κ : Type} [Fintype κ] {C : Set (κ → Af F)} (hC : IsCom
         have h := norm_le_sz (fun i => algebraMap F (AF F) (ξ.1 i))
         have e : (fun i => evI F (algebraMap F (AF F) (ξ.1 i))) = fun i => mixedEmbedding F (ξ.1 i) :=
           funext fun i => (InfiniteAdeleRing.mixedEmbedding_eq_algebraMap_comp F).symm
-        rw [e] at h
-        exact h
+        rwa [e] at h
       · positivity
 
 variable {n d n₁ d₁ m : ℕ} {B : Base F E} {X : Spc F E n} {W : Spc F E d} {X₁ : Spc F E n₁} {W₁ : Spc F E d₁}

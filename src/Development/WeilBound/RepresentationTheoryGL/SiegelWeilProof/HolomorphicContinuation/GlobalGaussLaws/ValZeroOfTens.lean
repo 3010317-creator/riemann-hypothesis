@@ -187,8 +187,7 @@ theorem up_inv {q : GR n} (hq : (mR q).toBlocks₂₁ = 0) : (mR q⁻¹).toBlock
     have := congrArg Matrix.toBlocks₂₁ hQN
     rw [← Matrix.fromBlocks_toBlocks Q, ← Matrix.fromBlocks_toBlocks N, Matrix.fromBlocks_multiply,
       Matrix.toBlocks_fromBlocks₂₁, h1b] at this
-    rw [hq, Matrix.zero_mul, zero_add] at this
-    exact this
+    rwa [hq, Matrix.zero_mul, zero_add] at this
   calc N.toBlocks₂₁ = Q.toBlocks₁₁ᴴ * (Q.toBlocks₂₂ * N.toBlocks₂₁) := by
         rw [← Matrix.mul_assoc, hAD, Matrix.one_mul]
     _ = 0 := by rw [h21, Matrix.mul_zero]
@@ -208,12 +207,10 @@ theorem ll_zero {θ : InfFam D} (hθ : IsInfFam θ) {τ : D.what₂.Tau} {ι : G
     · subst hτ; rw [h1]
       have h0 : (mR q).toBlocks₂₁ i j = 0 := by rw [hq]; rfl
       show (mR q) (finSumFinEquiv.symm (finSumFinEquiv (Sum.inr i))) (finSumFinEquiv.symm (finSumFinEquiv (Sum.inl j))) = 0
-      rw [Equiv.symm_apply_apply, Equiv.symm_apply_apply]
-      exact h0
+      rwa [Equiv.symm_apply_apply, Equiv.symm_apply_apply]
     · rw [h2 τ' hτ, Matrix.one_apply_ne hne]
   · have e := congrFun (congrFun h3 (finSumFinEquiv (Sum.inr i))) (finSumFinEquiv (Sum.inl j))
-    rw [Matrix.map_apply, Matrix.one_apply_ne hne] at e
-    exact e
+    rwa [Matrix.map_apply, Matrix.one_apply_ne hne] at e
 
 theorem mulVec_upper {M : Matrix (Fin (n + n)) (Fin (n + n)) (AE D)}
     (hM : ∀ i j, M (finSumFinEquiv (Sum.inr i)) (finSumFinEquiv (Sum.inl j)) = 0) {x : Fin (n + n) → AE D}

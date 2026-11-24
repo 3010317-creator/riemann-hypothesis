@@ -72,8 +72,7 @@ theorem analyticAt_flagPt {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] 
     (hh : ∀ τ r s, AnalyticAt ℂ (fun u => h τ u r s) w) (q : Σ k, ι k) :
     AnalyticAt ℂ (fun u => FC.flagPt M F (b u) (fun τ => h τ u) q) w := by
   by_cases hk : ∀ p, M.blk p ≠ some q.1
-  · simp only [FC.flagPt, dite_eq_left hk]
-    exact hb _
+  · simpa only [FC.flagPt, dite_eq_left hk] using hb _
   · simp only [FC.flagPt, dite_eq_right hk]
     exact Finset.analyticAt_fun_sum _ fun I _ => (hv q I).mul
       (Fib.analyticAt_minorIJ_of_entries _ w (hh _) _ _)
@@ -152,8 +151,7 @@ theorem exists_holo_flags (hp : HoloMap A BM.Rb.A pr) {W : Set X} (hW : IsOpen W
       lowRead M (BM.F l) (FC.bvec BM l (pr x)) h₀ (z x) q.1.1 q.1.2.1 q.1.2.2) τ, hh₀, fun τ a b => ?_,
     fun τ x => lowMat_props _ _, fun x hx => ?_⟩
   · obtain ⟨α, hα, e⟩ := tweq x₀ hx₀ h₀ (fun τ => (hh₀ τ).1) ho₀ t
-    rw [e, Matrix.nonsing_inv_mul _ (hh₀ _).2.isUnit, CPts.minorIJ_one, mul_one]
-    exact hα
+    rwa [e, Matrix.nonsing_inv_mul _ (hh₀ _).2.isUnit, CPts.minorIJ_one, mul_one]
   · by_cases h1 : b < a ∧ ((a : ℕ) < N - j ↔ (b : ℕ) < N - j)
     · simp only [lowMat, dite_eq_left h1, lowRead]
       rcases hk : M.blk (τ, stepOf N j b) with _ | k

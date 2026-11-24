@@ -326,8 +326,7 @@ theorem intM_compact : IsCompact (intM k n d : Set (Matrix (Fin n) (Fin d) k)) :
   have e : (intM k n d : Set (Matrix (Fin n) (Fin d) k)) =
       Set.univ.pi fun _ : Fin n => Set.univ.pi fun _ : Fin d => {x : k | ValuativeRel.valuation k x ≤ 1} :=
     Set.ext fun Y => ⟨fun h a _ b _ => h a b, fun h a b => h a trivial b trivial⟩
-  rw [e]
-  exact h
+  rwa [e]
 
 def colL (i : Fin d) (ρ : Fin d → k) : Matrix (Fin n) (Fin d) k →ₗ[k] Matrix (Fin n) (Fin d) k where
   toFun Y := vecMulVec (fun a => Y a i) ρ
@@ -409,8 +408,7 @@ theorem kills_indep (hψ : ψ ≠ 1) (hL : LeftLaw ξ l) (hC : ColLaw ψ {i₀} 
   have l0 : ∀ Y, lam Y ⬝ᵥ c₀ Y = 0 := fun Y => by
     simp only [lam, smul_dotProduct, sub_dotProduct, smul_eq_mul]; ring
   have l1 : ∀ Y, Dt Y ≠ 0 → lam Y ⬝ᵥ c₁ Y = 1 := fun Y hY => by
-    simp only [lam, smul_dotProduct, sub_dotProduct, smul_eq_mul]
-    exact inv_mul_cancel₀ hY
+    simpa only [lam, smul_dotProduct, sub_dotProduct, smul_eq_mul] using inv_mul_cancel₀ hY
   let N : Matrix (Fin n) (Fin d) k → Matrix (Fin n) (Fin n) k := fun Y => vecMulVec (-t • c₀ Y) (lam Y)
   have hN : ∀ Y, N Y * N Y = 0 := fun Y => by
     simp only [N, vecMulVec_mul_vecMulVec, dotProduct_smul, l0]; simp

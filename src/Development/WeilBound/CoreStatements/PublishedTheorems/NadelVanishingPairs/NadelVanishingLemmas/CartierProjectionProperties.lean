@@ -153,8 +153,7 @@ lemma good_sSup (p : ℕ) (f : K) (c : Set (Subring (TrivSqZeroExt K K)))
   · intro r hr h
     obtain ⟨s, hs, hrs⟩ := (mem r).1 hr
     exact (show Good p f s from hc hs).1 r hrs h
-  · intro g
-    exact le y hy ((show Good p f y from hc hy).2.1 g)
+  · exact fun g => le y hy ((show Good p f y from hc hy).2.1 g)
   · intro r hr h
     obtain ⟨s, hs, hrs⟩ := (mem r).1 hr
     obtain ⟨t, ht, hrt⟩ := (show Good p f s from hc hs).2.2.1 r hrs h
@@ -217,8 +216,7 @@ private theorem exists_inclusion_mul_eq_mul_inclusion_of_normal (p : ℕ) [Fact 
     have := congrArg φ hab
     rw [map_add (f := _), map_mul, map_mul, hφm, mul_zero, zero_add, map_one] at this
     rw [mul_comm]; exact this
-  · intro a
-    exact ⟨Polynomial.C a, by simp [φ]⟩
+  · exact fun a => ⟨Polynomial.C a, by simp [φ]⟩
   · exact ⟨Polynomial.X, by simp [φ]⟩
 
 lemma exists_good (p : ℕ) [Fact p.Prime] [CharP K p] (f : K) (hf : ∀ g : K, f ≠ g ^ p) :
@@ -257,8 +255,7 @@ theorem exists_derivation (p : ℕ) [Fact p.Prime] [CharP K p] (f : K)
       rw [this]
       exact hsR' _
     have hgood : Good p f R' := ⟨h0', fun g => hle (hpw g), hinv', hle hf1⟩
-    have hR'M := hM.2 hgood hle
-    exact hx ⟨_, hR'M hxR', by simp⟩
+    exact hx ⟨_, (hM.2 hgood hle) hxR', by simp⟩
   let e : K →+* fieldOf M hinv :=
     { toFun := fun a => ⟨a, hall a⟩
       map_one' := rfl
@@ -295,8 +292,7 @@ namespace GlobalTheory
 theorem dK_eq_zero_imp_pow : ∀ (K : Type) [Field K] (p : ℕ) [Fact p.Prime] [CharP K p] (f : K),
     dK f = 0 → ∃ g : K, f = g ^ p := by
   intro K _ p _ _ f hf
-  by_contra hne
-  push Not at hne
+  by_contra! hne
   obtain ⟨D, hD⟩ := DerivExt.exists_derivation p f hne
   have h := D.liftKaehlerDifferential_comp_D f
   have h0 : (KaehlerDifferential.D ℤ K) f = 0 := hf
@@ -427,8 +423,7 @@ private theorem derivation_iterate_char_eq_self_of_coords {K : Type} [Field K] (
       rw [hz, Function.iterate_fixed (map_zero (D i)), sub_self]
   have := derivation_eq_zero_of_kills_coords x D hd E hE c
   have h2 : L c = 0 := this
-  rw [hL, sub_eq_zero] at h2
-  exact h2
+  rwa [hL, sub_eq_zero] at h2
 
 private theorem derivation_comm_of_dK_eq_sum_dlog {K : Type} [Field K] {n : ℕ} (x : Fin n → Kˣ)
     (D : Fin n → Derivation ℤ K K) (hd : ∀ c : K, dK c = ∑ j, D j c • dlog (x j))
@@ -438,8 +433,7 @@ private theorem derivation_comm_of_dK_eq_sum_dlog {K : Type} [Field K] {n : ℕ}
     intro k
     rw [Derivation.commutator_apply]
     by_cases hik : i = k <;> by_cases hjk : j = k <;> simp [hD, hik, hjk]) c
-  rw [Derivation.commutator_apply, sub_eq_zero] at h
-  exact h
+  rwa [Derivation.commutator_apply, sub_eq_zero] at h
 
 theorem projector_pthPow : ∀ (K : Type) [Field K] (p : ℕ) [Fact p.Prime] [CharP K p] (n : ℕ) (x : Fin n → Kˣ) (D : Fin n → Derivation ℤ K K), IsCoord x → (∀ c : K, dK c = ∑ j, D j c • dlog (x j)) → (∀ i j, D i (x j : K) = if i = j then (x j : K) else 0) → ∀ π : AddMonoid.End K, π = (List.ofFn fun i => 1 - (show AddMonoid.End K from (D i).toLinearMap.toAddMonoidHom) ^ (p - 1)).prod → (∀ c, ∃ g : K, π c = g ^ p) ∧ ∀ g : K, π (g ^ p) = g ^ p := by
   intro K _ p _ _ n x D _hx hd hD π hπ
@@ -452,9 +446,7 @@ theorem projector_pthPow : ∀ (K : Type) [Field K] (p : ℕ) [Fact p.Prime] [Ch
   obtain ⟨m, hm⟩ : ∃ m, p - 1 = m + 1 := ⟨p - 2, by have := hpr.two_le; omega⟩
   have hπ' : π = (List.ofFn fun i => 1 - Dend i ^ (p - 1)).prod := hπ
   have hcomm : ∀ i j, Commute (Dend i) (Dend j) := by
-    intro i j
-    refine AddMonoidHom.ext fun c => ?_
-    exact derivation_comm_of_dK_eq_sum_dlog x D hd hD i j c
+    exact fun i j => AddMonoidHom.ext fun c => derivation_comm_of_dK_eq_sum_dlog x D hd hD i j c
   refine ⟨?_, ?_⟩
   · intro c
     apply dK_eq_zero_imp_pow K p
@@ -521,8 +513,7 @@ private theorem dDR_prod_dlog_eq_zero_and_euler_contraction (K : Type) [Field K]
     CechDR.dDR ℤ K (θ (l.map (fun j => ExteriorAlgebra.ι K (dlog (x j)))).prod) = 0 := by
   have d1 : CechDR.dDR ℤ K (1 : CechDR.DR ℤ K) = 0 := by
     have h := CechDR.dDR_algebraMap (R := ℤ) (B := K) 1
-    rw [map_one, Derivation.map_one_eq_zero, map_zero] at h
-    exact h
+    rwa [map_one, Derivation.map_one_eq_zero, map_zero] at h
   induction l with
   | nil =>
     simp only [List.map_nil, List.prod_nil]
@@ -627,8 +618,7 @@ private theorem dDR_prod_dlog_eq_zero_and_euler_contraction (K : Type) [Field K]
   induction l with
   | nil =>
     have h := CechDR.dDR_algebraMap (R := ℤ) (B := K) 1
-    rw [map_one, Derivation.map_one_eq_zero, map_zero] at h
-    exact h
+    rwa [map_one, Derivation.map_one_eq_zero, map_zero] at h
   | cons a l ih =>
     simp only [List.map_cons, List.prod_cons]
     rw [CechDR.dDR_mul, ih, GlobalTheory.dDR_iota_dlog_eq_zero, mul_zero, zero_mul, add_zero]
@@ -692,14 +682,12 @@ private theorem homotopy_maps_filtration_of_list_maps {M : Type} [AddCommGroup M
       obtain ⟨a1, a2, a3⟩ := hT a List.mem_cons_self
       refine ⟨?_, ?_, ?_⟩
       · intro q η hη
-        show h' η + a.2 (P η) ∈ T q
         exact add_mem (h1 q η hη) (a1 q _ (h3 (q + 1) η hη))
       · intro η hη
         show h' η + a.2 (P η) = 0
         rw [h2 η hη, a2 _ (h3 0 η hη), add_zero]
       · intro q η hη
         simp only [List.map_cons, List.prod_cons, hP]
-        show P η - a.1 (P η) ∈ T q
         exact sub_mem (h3 q η hη) (a3 q _ (h3 q η hη))
 
 theorem cartier_projector_homotopic : ∀ (K : Type) [Field K] (p : ℕ) [Fact p.Prime] [CharP K p] (n : ℕ) (x : Fin n → Kˣ), IsCoord x → ∃ (h Q : abelian₂ K →+ abelian₂ K) (π : K →+ K), (∀ η, η - Q η = extD K (h η) + h (extD K η)) ∧ (∀ c I, Q (c • logWedge x I) = π c • logWedge x I) ∧ (∀ c, ∃ g : K, π c = g ^ p) ∧ (∀ g : K, π (g ^ p) = g ^ p) ∧ (∀ η, Q (extD K η) = 0) ∧ ∀ T : ℕ → AddSubgroup (abelian₂ K), (∀ q, ∀ η ∈ T q, extD K η ∈ T (q + 1)) → (∀ i θ, IsEulerContraction x i θ → (∀ q, ∀ η ∈ T (q + 1), θ η ∈ T q) ∧ ∀ η ∈ T 0, θ η = 0) → (∀ q, ∀ η ∈ T (q + 1), h η ∈ T q) ∧ (∀ η ∈ T 0, h η = 0) ∧ ∀ q, ∀ η ∈ T q, Q η ∈ T q := by
@@ -773,8 +761,7 @@ theorem cartier_projector_homotopic : ∀ (K : Type) [Field K] (p : ℕ) [Fact p
     show (List.ofFn fun i => 1 - Dend i ^ (p - 1)).prod = _
     rw [List.ofFn_eq_map]
   have hLact : ∀ I i c, LE i (c • logWedge x I) = Dend i c • logWedge x I := by
-    intro I i c
-    exact euler_cartan_logWedge K n x i (θ i) (hθ i) c (fun j => D j c) I (hd c)
+    exact fun I i c => euler_cartan_logWedge K n x i (θ i) (hθ i) c (fun j => D j c) I (hd c)
   have hQact : ∀ c I, Q (c • logWedge x I) =
       π c • logWedge x I := by
     intro c I
@@ -820,10 +807,8 @@ theorem cartier_projector_homotopic : ∀ (K : Type) [Field K] (p : ℕ) [Fact p
       | succ q => exact hdT q _ (hθ1 q η hη)
     refine ⟨?_, ?_, ?_⟩
     · intro q η hη
-      show θ i ((LE i ^ m) η) ∈ T q
       exact hθ1 q _ (addMonoidEnd_pow_mem_of_mapsTo (LE i) (T (q + 1)) (hLT (q + 1)) m η hη)
     · intro η hη
-      show θ i ((LE i ^ m) η) = 0
       exact hθ0 _ (addMonoidEnd_pow_mem_of_mapsTo (LE i) (T 0) (hLT 0) m η hη)
     · intro q η hη
       exact addMonoidEnd_pow_mem_of_mapsTo (LE i) (T q) (hLT q) (p - 1) η hη

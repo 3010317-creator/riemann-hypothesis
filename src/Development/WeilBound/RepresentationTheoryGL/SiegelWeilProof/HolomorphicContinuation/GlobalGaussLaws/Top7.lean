@@ -214,8 +214,7 @@ theorem integral_deriv_zero {X Ξ : Type*} [MeasurableSpace X] [Countable Ξ] [M
     rw [this, MeasureTheory.integral_const, Measure.real, hμ1, ENNReal.toReal_one, one_smul]
   have hsub : ∀ᵐ x ∂m, ∑' ξ, ∫ t, F' x t ξ ∂μ = ∑' ξ, F x 1 ξ - ∑' ξ, F x 0 ξ := by
     filter_upwards [hsum0, hsum1] with x h0 h1
-    simp only [hftc]
-    exact (h1.of_norm).tsum_sub h0.of_norm
+    simpa only [hftc] using (h1.of_norm).tsum_sub h0.of_norm
   calc c = ∫ t, ∑' ξ, ∫ x, F' x t ξ ∂m ∂μ := key
     _ = ∑' ξ, ∫ t, ∫ x, F' x t ξ ∂m ∂μ := S2
     _ = ∑' ξ, ∫ x, ∫ t, F' x t ξ ∂μ ∂m := tsum_congr fun ξ => (hswap ξ).symm
@@ -311,8 +310,7 @@ theorem mp_r (k : GA D V) :
 theorem int_r (f : GA D V → ℂ) (hf : LeftInv (GQ V) f) (k : GA D V) :
     ∫ x in stdDom (GQ V), f (x * k) ∂ν = ∫ x in stdDom (GQ V), f x ∂ν := by
   rw [← int_q V ν _ (hf.mul_right k), ← int_q V ν f hf]
-  simp only [desc_r V f hf k]
-  exact (mp_r V ν k).integral_comp' (descend (GQ V) f)
+  simpa only [desc_r V f hf k] using (mp_r V ν k).integral_comp' (descend (GQ V) f)
 
 theorem lint_r (f : GA D V → ℝ≥0∞) (hf : LeftInv (GQ V) f) (k : GA D V) :
     ∫⁻ x in stdDom (GQ V), f (x * k) ∂ν = ∫⁻ x in stdDom (GQ V), f x ∂ν := by
@@ -422,16 +420,14 @@ theorem derivOne_of (hW : GlobalTheory.Published.WeilThetaConvergence) (hC : Der
       exact (hfinA Θ').ne)
     (by
       have h1 : ∫⁻ x in stdDom (GQ V), ∑' ξ, ‖FF V Θ.1 (DerOneH.hhT θ V τ fr X) x 0 ξ‖ₑ ∂ν ≠ ⊤ := by
-        simp only [tsum_nFF, hfinA']
-        exact (hfinA Θ).ne
+        simpa only [tsum_nFF, hfinA'] using (hfinA Θ).ne
       filter_upwards [ae_lt_top' (hmeasA Θ 0).aemeasurable h1] with x hx'
       have hs : Summable fun ξ => ‖FF V Θ.1 (DerOneH.hhT θ V τ fr X) x 0 ξ‖₊ :=
         ENNReal.tsum_coe_ne_top_iff_summable.1 hx'.ne
       exact NNReal.summable_coe.2 hs)
     (by
       have h1 : ∫⁻ x in stdDom (GQ V), ∑' ξ, ‖FF V Θ.1 (DerOneH.hhT θ V τ fr X) x 1 ξ‖ₑ ∂ν ≠ ⊤ := by
-        simp only [tsum_nFF, hfinA']
-        exact (hfinA Θ).ne
+        simpa only [tsum_nFF, hfinA'] using (hfinA Θ).ne
       filter_upwards [ae_lt_top' (hmeasA Θ 1).aemeasurable h1] with x hx'
       have hs : Summable fun ξ => ‖FF V Θ.1 (DerOneH.hhT θ V τ fr X) x 1 ξ‖₊ :=
         ENNReal.tsum_coe_ne_top_iff_summable.1 hx'.ne
@@ -609,10 +605,8 @@ theorem key (hθ : IsInfFam θ) {Y : Matrix (Fin V.rank) (Fin V.rank) ℂ} (hY :
     refine Differentiable.mul_const (f.differentiable.comp ?_) _
     refine differentiable_pi.2 fun τ' => differentiable_pi.2 fun i => differentiable_pi.2 fun j => ?_
     by_cases h : τ' = τ
-    · simp only [h, ite_true]
-      exact diff_entry Y (compAt θ τ z) i j
-    · simp only [h, ite_false, Matrix.one_mul]
-      exact differentiable_const _
+    · simpa only [h, ite_true] using diff_entry Y (compAt θ τ z) i j
+    · simpa only [h, ite_false, Matrix.one_mul] using differentiable_const _
   · exact ⟨continuous_const, fun z => by simpa using differentiable_const (0 : ℂ)⟩
   · rintro x y - - ⟨h1, h2⟩ ⟨h3, h4⟩
     exact ⟨h1.add h3, fun z => (h2 z).add (h4 z)⟩

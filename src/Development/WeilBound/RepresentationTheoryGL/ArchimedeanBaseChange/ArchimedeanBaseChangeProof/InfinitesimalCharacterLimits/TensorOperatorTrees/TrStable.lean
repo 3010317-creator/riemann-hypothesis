@@ -125,8 +125,7 @@ theorem lie_mem_indSub {U₁ : Submodule ℂ (Sm E r)} {U₂ : Submodule ℂ (Sm
         res 1 (lie E (r + s) X' (rt E (r + s) (cf (r + s) k g) F)).1 := funext fun m => by
       have := congrArg (fun f : Module.End ℂ (Sm E (r + s)) => (f F).1 (lev (Ad E) r s m * 1)) hX'
       simp only [mul_apply_eq_comp, rt_apply, mul_one] at this
-      rw [res_apply, res_apply, mul_one]
-      exact this
+      rwa [res_apply, res_apply, mul_one]
     change res (cf (r + s) k g) (lie E (r + s) X F).1 ∈ tens2 U₁ U₂
     rw [ec]
     exact res_one_lie_mem hU₁ hU₂ (isInd_rt hF k g) (finVec_rt hK k g) X'
@@ -157,8 +156,7 @@ theorem isStable_space : ∀ {N : ℕ} (t : Tr E N), (t.AllLeaves fun _ V => _ro
   intro N t
   induction t with
   | leaf V z =>
-    simp only [Tr.AllLeaves, Tr.space]
-    exact fun h => ParabolicProjection.isStable_tw h z
+    simpa only [Tr.AllLeaves, Tr.space] using fun h => ParabolicProjection.isStable_tw h z
   | node t₁ t₂ ih₁ ih₂ =>
     simp only [Tr.AllLeaves, Tr.space]
     intro ⟨h₁, h₂⟩

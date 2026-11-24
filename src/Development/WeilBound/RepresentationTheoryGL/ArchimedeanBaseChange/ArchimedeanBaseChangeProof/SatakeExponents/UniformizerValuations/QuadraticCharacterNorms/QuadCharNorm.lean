@@ -98,9 +98,7 @@ theorem char_eq_zpow (χ : ℂˣ →* ℂˣ) (hc : Continuous χ) (hu : ∀ z, �
         funext x; simp
       rw [this]
       exact (continuous_subtype_val).inv₀ fun x => Circle.coe_ne_zero x
-  have hf : Continuous f := by
-    refine Continuous.subtype_mk ?_ _
-    exact Units.continuous_val.comp (hc.comp hcu)
+  have hf : Continuous f := Continuous.subtype_mk (Units.continuous_val.comp (hc.comp hcu)) _
   obtain ⟨n, hn⟩ := GlobalTheory.circle_hom_eq_zpow f hf
   refine ⟨n, fun z => ?_⟩
   have hz0 : (z : ℂ) ≠ 0 := z.ne_zero
@@ -511,13 +509,11 @@ theorem GlobalTheory.ConsEta.exists_open_subgroup_eta_consistent : ∀ (E : Type
         Units.map (GlobalTheory.IdeleNormChar.finEval w0) (Neutral.B1.diagUnits E t) := Units.ext rfl
     have e2 : conjQuot E w0 x = Units.map (GlobalTheory.IdeleNormChar.finEval w0) (x / C x) := rfl
     have e3 : conjQuot E w0 u = Units.map (GlobalTheory.IdeleNormChar.finEval w0) (u / C u) := rfl
-    rw [e1, hdt, map_mul, map_inv, ← e2, ← e3, hcqu, inv_one, mul_one]
-    exact hx3
+    rwa [e1, hdt, map_mul, map_inv, ← e2, ← e3, hcqu, inv_one, mul_one]
   have ht1 := hV t htor hmem
   have hck : c k = k := (div_eq_one.1 ht1).symm
   have hkF : (k : E) ∈ maximalRealSubfield E := by
-    refine (IsCMField.complexConj_eq_self_iff E _).1 ?_
-    exact congrArg Units.val hck
+    exact (IsCMField.complexConj_eq_self_iff E _).1 (congrArg Units.val hck)
   set k' : (maximalRealSubfield E)ˣ := Units.mk0 ⟨(k : E), hkF⟩ (fun h => k.ne_zero (congrArg Subtype.val h)) with hk'
   have hdk : Neutral.B1.diagUnits E k =
       GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.ideleMap (maximalRealSubfield E) E (Neutral.B1.diagUnits (maximalRealSubfield E) k') := by

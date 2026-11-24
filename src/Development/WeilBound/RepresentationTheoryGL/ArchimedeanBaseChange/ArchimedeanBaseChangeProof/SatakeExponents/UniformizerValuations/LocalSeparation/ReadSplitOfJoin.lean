@@ -313,15 +313,13 @@ theorem infOf_eq {τ : E →+* ℂ} {x : Σ M : ℕ, Submodule ℂ (Sm E M)} (h0
 
 theorem sum_m {n : ℕ} (P : Pre E n) (τ : E →+* ℂ) : ∑ i, P.m i τ = ((parts P).map (infOf τ)).sum := by
   rw [PositivityTheory.Rg.BcB.F.RS.parts, List.map_ofFn, List.sum_ofFn]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  exact (infOf_eq (P.discrete i).ne_bot (P.inf i τ)).symm
+  exact Finset.sum_congr rfl fun i _ => (infOf_eq (P.discrete i).ne_bot (P.inf i τ)).symm
 
 theorem infOf_twPart {n : ℕ} (P : Pre E n) (χ : HChar E) (τ : E →+* ℂ) (i : Fin P.c) :
     infOf τ (twPart χ ⟨P.N i, P.V i⟩) = (P.m i τ).map (· + expo χ τ) := by
   have hne : Submodule.map ((GlobalTheory.CuspRep.mulChi (P.N i) χ : Sm E (P.N i) ≃ₗ[ℂ] Sm E (P.N i)) :
       Sm E (P.N i) →ₗ[ℂ] Sm E (P.N i)) (P.V i) ≠ ⊥ := by
-    intro hb
-    exact (P.discrete i).ne_bot (Submodule.map_eq_bot_iff.1 hb)
+    exact fun hb => (P.discrete i).ne_bot (Submodule.map_eq_bot_iff.1 hb)
   exact infOf_eq hne (GlobalTheory.BCT.TwistDisc.hasInfCharGL_map (P.inf i τ) χ)
 
 theorem sum_tw {n : ℕ} (P : Pre E n) (χ : HChar E) (τ : E →+* ℂ) :
@@ -334,8 +332,7 @@ theorem sum_tw {n : ℕ} (P : Pre E n) (χ : HChar E) (τ : E →+* ℂ) :
     | empty => simp
     | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, Multiset.map_add (f := _), ih]
   rw [hmap Finset.univ]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  exact infOf_twPart P χ τ i
+  exact Finset.sum_congr rfl fun i _ => infOf_twPart P χ τ i
 
 end GlobalTheory.CompanionTheory.JoinInfProof
 
@@ -590,8 +587,7 @@ theorem core {G : Type} [Group G] {W U : Type} [AddCommGroup W] [Module ℂ W] [
       obtain ⟨v, rfl⟩ := LinearMap.mem_range.1 hz
       exact Submodule.mem_iSup_of_mem F ⟨v, rfl⟩
     · exact zero_mem _
-    · intro a b ha hb
-      exact add_mem ha hb
+    · exact fun a b ha hb => add_mem ha hb
   haveI : IsSemisimpleModule (MonoidAlgebra ℂ G) W :=
     isSemisimpleModule_of_isSemisimpleModule_submodule' (fun F => IsSemisimpleModule.range (FR F)) htop
   obtain ⟨D, hD⟩ := exists_isCompl (Submodule.span (MonoidAlgebra ℂ G) {x})
@@ -608,8 +604,7 @@ theorem core {G : Type} [Group G] {W U : Type} [AddCommGroup W] [Module ℂ W] [
     rw [eq_top_iff, ← hD.sup_eq_top]
     exact sup_le ((Submodule.span_singleton_le_iff_mem _ _).2 hxC) hDC
   obtain ⟨F, hF⟩ : ∃ F, ¬ LinearMap.range (FR F) ≤ C := by
-    by_contra h
-    push Not at h
+    by_contra! h
     apply hC.1
     rw [eq_top_iff, ← htop]
     exact iSup_le h
@@ -619,8 +614,7 @@ theorem core {G : Type} [Group G] {W U : Type} [AddCommGroup W] [Module ℂ W] [
     apply hF
     intro z hz
     obtain ⟨v, rfl⟩ := LinearMap.mem_range.1 hz
-    have h1 := LinearMap.congr_fun h0 v
-    simpa [Submodule.Quotient.mk_eq_zero] using h1
+    simpa [Submodule.Quotient.mk_eq_zero] using LinearMap.congr_fun h0 v
   let e := LinearEquiv.ofBijective _ (LinearMap.bijective_of_ne_zero hφ)
   let L0 : W →ₗ[MonoidAlgebra ℂ G] U := e.symm.toLinearMap ∘ₗ C.mkQ
   refine ⟨L0.restrictScalars ℂ, fun g y => ?_, ?_⟩
@@ -880,8 +874,7 @@ theorem sep_pair [TopologicalSpace G1] [TopologicalSpace G2] {X1 X2 : Type} [Add
   choose L hLs using hL
   have spec : ∀ j t, L j (Ψ t) = TensorProduct.map (L1 j.1 ∘ₗ S1.subtype) (L2 j.2 ∘ₗ S2.subtype) t := by
     intro j t
-    have h := LinearMap.congr_fun (hLs j) (e t)
-    simpa [e] using h
+    simpa [e] using LinearMap.congr_fun (hLs j) (e t)
   have specS : ∀ j {κ : Type} (s : Finset κ) (x : κ → S1) (y : κ → S2),
       L j (fun z => ∑ k ∈ s, (x k).1.1 z.1 * (y k).1.1 z.2) = ∑ k ∈ s, L1 j.1 (x k).1 ⊗ₜ L2 j.2 (y k).1 := by
     intro j κ s x y
@@ -1212,8 +1205,7 @@ theorem treeSatOf_holds : TreeSatOf := by
     obtain ⟨S, hS, hfS⟩ := GlobalTheory.SatInd.exists_sat_multiProd P.h (π := fun i => (P.σ i w).ρ)
       (fun i => (P.σ i w).smooth) (fun i => (P.σ i w).irred) hf hf0
     have e : S = b := funext fun a => (hS a).unique (hb a)
-    rw [← e]
-    exact hfS
+    rwa [← e]
   have hcard : (∑ i, b i).card = N := (hvec _ (hLfix j φ0 hφ0S (fixK _ hφ0K)) hj).2.2.1
   refine ⟨_, ⟨b, fun i => ⟨(hb i).1, hb i⟩, rfl⟩, fun φ hφS hφ0 hφK => ?_⟩
   have hf := fixK _ hφK

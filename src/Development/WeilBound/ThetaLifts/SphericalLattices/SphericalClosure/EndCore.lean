@@ -797,8 +797,7 @@ def convS (hp : IsPair B M χX χW om r s r' s') : Submodule ℂ (Fn F n d) wher
 theorem I_add' (hp : IsPair B M χX χW om r s r' s') {Φ Ψ : Fn F n d} (hΦ : Φ ∈ convS hp) (hΨ : Ψ ∈ convS hp) :
     M.I om (Φ + Ψ) = M.I om Φ + M.I om Ψ := by
   funext h
-  simp only [Model.I, theta_add hp hΦ.1 hΨ.1, Pi.add_apply]
-  exact integral_add (hΦ.2 h) (hΨ.2 h)
+  simpa only [Model.I, theta_add hp hΦ.1 hΨ.1, Pi.add_apply] using integral_add (hΦ.2 h) (hΨ.2 h)
 
 def kerS (hp : IsPair B M χX χW om r s r' s') : Submodule ℂ (Fn F n d) where
   carrier := {Φ | Φ ∈ convS hp ∧ M.I om Φ = 0}
@@ -1011,8 +1010,7 @@ theorem soMove_of (hT : ThetaBasic) (hU : Unimod) (hD : DomSoU) (hF : SoFin) (hP
       funext a; simp [tens, mul_assoc]
   have := hmem _ hu
   rw [esub, Function.update_eq_self] at this
-  rw [SetLike.mem_coe, Submodule.mem_comap, LinearMap.sub_apply, hop f h2]
-  exact this
+  rwa [SetLike.mem_coe, Submodule.mem_comap, LinearMap.sub_apply, hop f h2]
 
 theorem conePol_of (hM : MeasEx) (hC : ConeIntegralFactorisation) : ConePol := by
   intro F E _ _ _ _ _ σ B b a' G G₁ H H' hc e he K μK μ hK hμK hμ X om om' om₁ om₁' hT hT₁ Φ hΦ
@@ -1111,8 +1109,7 @@ theorem sigSplit_of (hS : SplitEx) (hP : Tow.PlaneSkew) (hI : Iwa) (hC : CTBasic
   obtain ⟨a1, a2⟩ := hA F E σ B a a' (reG G G.V G.V' Y) X om om' t'
   have k3 := split_sub (W := (reG G G.V G.V' Y).W) hC t.base h1 p (a1 Φ hΦ) (a2 Φ' hΦ') k1 k2 h₀⁻¹
   have e' : f = _ := funext fun y => (congrArg f (inv_mul_cancel_right y h₀).symm).trans (congrFun e (y * h₀⁻¹))
-  rw [e']
-  exact k3
+  rwa [e']
 
 end PositivityTheory.ThKEnd.Two
 

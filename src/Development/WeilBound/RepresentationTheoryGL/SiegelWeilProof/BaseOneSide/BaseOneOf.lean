@@ -550,8 +550,7 @@ theorem testEx : TestEx := by
     exact Finset.prod_congr rfl fun v hvS => by simp [hvS]
   refine ⟨φ, fun v => if v ∈ S then A0 v else latV b v, ⟨h1, h2, h3, h4, ?_, ?_⟩, ?_, ?_⟩
   · intro v hvS
-    simp only [hvS, ite_true]
-    exact ⟨hc v, ho v, hs v⟩
+    simpa only [hvS, ite_true] using ⟨hc v, ho v, hs v⟩
   · intro v hvS
     simp [hvS]
   · rw [hv]
@@ -701,8 +700,7 @@ theorem hasse : Hasse := by
       ext Y
       simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_singleton_iff, Set.mem_empty_iff_false, iff_false,
         not_and]
-      intro hY _
-      exact hcon (local_form R hCM hj.symm hj0 he hσ hδ' β Y hY)
+      exact fun hY _ => hcon (local_form R hCM hj.symm hj0 he hσ hδ' β Y hY)
     apply hne
     have h1 := hG.1 (hermScal R σ (algebraMap F R β))
     rw [hempty, Set.compl_empty] at h1
@@ -753,8 +751,7 @@ theorem norm_tmul_one {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (x : AF F ⊗[F]
     (Algebra.norm (AF F) x) ⊗ₜ[F] (1 : E) = sigR (AF F) σ x * x := by
   have e := GlobalTheory.Doubling.algebraMap_norm_eq h (R := AF F) x
   rw [Algebra.TensorProduct.algebraMap_apply] at e
-  rw [mul_comm]
-  exact e
+  rwa [mul_comm]
 
 theorem isNm_iff {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (x : (AF F ⊗[F] E)ˣ) (a : (AF F)ˣ) :
     IsNm σ x a ↔ Algebra.norm (AF F) (x : AF F ⊗[F] E) = a := by
@@ -859,8 +856,7 @@ theorem cfac_ne_zero {F : Type} (E : Type) [Field F] [NumberField F] [Field E] [
       rw [div_lt_one (by linarith)]; linarith
     linarith
   unfold cfac
-  simp only [ne_eq, Real.toNNReal_eq_zero, not_le]
-  exact inv_pos.2 hpos
+  simpa only [ne_eq, Real.toNNReal_eq_zero, not_le] using inv_pos.2 hpos
 
 theorem euler_of_factor {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (n M d : ℕ) (b : Module.Basis (Fin d) F E)
@@ -907,8 +903,7 @@ theorem euler_of_factor {F E : Type} [Field F] [NumberField F] [Field E] [Number
         have hne : w ≠ v := fun h => hv (h ▸ hw)
         simp only [φ1, Function.update_of_ne hne]
     have hL : ∫⁻ X, φ1 v X ∂(mm v) = mm v (latV b v) := by
-      simp only [φ1, Function.update_self]
-      exact lintegral_indicator_one hlatm
+      simpa only [φ1, Function.update_self] using lintegral_indicator_one hlatm
     have hB : ∀ w, ∫⁻ X, φ0 w X ∂(mm w) = mm w (B w) := fun w => lintegral_indicator_one (hBm w)
     have hA : ∫⁻ X, A.indicator (1 : (Fin n → Fin M → Ainf F ⊗[F] E) → ℝ≥0∞) X ∂minf = minf A :=
       lintegral_indicator_one hAm
@@ -924,8 +919,7 @@ theorem euler_of_factor {F E : Type} [Field F] [NumberField F] [Field E] [Number
     have e4 : (c S : ℝ≥0∞) * (a * Q) = ((c (insert v S) : ℝ≥0∞) * L) * (a * Q) := by
       rw [e2]; ring
     have e5 := (ENNReal.mul_left_inj hP0 hPt).mp e4
-    have e6 := congrArg ENNReal.toReal e5
-    simpa [ENNReal.toReal_mul] using e6
+    simpa [ENNReal.toReal_mul] using congrArg ENNReal.toReal e5
   obtain ⟨c₀, S₀, -, hS₀⟩ := _root_.GlobalTheory.CompanionTheory.SW.TailConst.exists_const_mul_tail _ (fun v => (mm v (latV b v)).toReal) c ∅
     (fun _ => ENNReal.toReal_nonneg) hsum hstep
   refine ⟨c₀, hfin, hsum, S₀, fun S hS φinf φ hφi hφ => ?_⟩
@@ -1408,8 +1402,7 @@ private theorem mul_mem_nonnegReal {z w : ℂ} (hz : z ∈ {z : ℂ | z.im = 0 �
   obtain ⟨hz0, hz1⟩ := hz
   obtain ⟨hw0, hw1⟩ := hw
   refine ⟨by simp [Complex.mul_im, hz0, hw0], ?_⟩
-  simp only [Complex.mul_re, hz0, hw0, mul_zero, sub_zero]
-  exact mul_nonneg hz1 hw1
+  simpa only [Complex.mul_re, hz0, hw0, mul_zero, sub_zero] using mul_nonneg hz1 hw1
 
 private theorem tprod_mem_nonnegReal {ι : Type*} (f : ι → ℂ)
     (hf : ∀ i, f i ∈ {z : ℂ | z.im = 0 ∧ 0 ≤ z.re}) :
@@ -1566,8 +1559,7 @@ theorem map_fib (hS : Scal) {F E : Type} [Field F] [NumberField F] [Field E] [Nu
     simp [Algebra.TensorProduct.algebraMap_apply]
   have hu : IsUnit (algebraMap F R β) := (IsUnit.mk0 _ hβ).map _
   have := hS F E σ hcm J hJ R hL μ ν m hμ hν hm _ _ _ hn hu
-  rw [tuple_action_scalar_eq_mul, map_mul]
-  exact this
+  rwa [tuple_action_scalar_eq_mul, map_mul]
 
 theorem hermitian_similitude_scalar {F E : Type} [Field F] [Field E] [Algebra F E] (σ : E →ₐ[F] E) (J : Matrix (Fin 1) (Fin 1) E)
     (x : E) (hx : x ≠ 0) (l : F) (hl : σ x * x = algebraMap F E l) :
@@ -1592,8 +1584,7 @@ theorem exists_norm {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F 
     rwa [Matrix.det_fin_one] at this
   have e : ∀ (Z : Fin 1 → Fin 1 → E) (t : F), Z ∈ sph σ J t → σ (Z 0 0) * J 0 0 * Z 0 0 = algebraMap F E t := by
     intro Z t hZ
-    have h0 := congrFun (congrFun hZ 0) 0
-    simpa [gramE, hE, hform] using h0
+    simpa [gramE, hE, hform] using congrFun (congrFun hZ 0) 0
   have eX := e X β hX
   have eY := e Y β' hY
   have hb : algebraMap F E β ≠ 0 := by simpa using hβ

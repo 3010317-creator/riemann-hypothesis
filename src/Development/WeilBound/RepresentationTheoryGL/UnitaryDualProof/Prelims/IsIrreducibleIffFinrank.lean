@@ -90,8 +90,7 @@ theorem finrank_smoothPart_ind [TopologicalSpace G] [IsTopologicalGroup G] {Z : 
     simp [GlobalTheory.PRep.indSpace, Subsingleton.elim _ (1 : H)]
   have hsmooth : ∀ v : GlobalTheory.PRep.indSpace H σ,
       v ∈ GlobalTheory.PRep.smoothPart (GlobalTheory.PRep.ind H σ) := by
-    intro v
-    exact isOpen_discrete _
+    exact fun v => isOpen_discrete _
   let e : GlobalTheory.PRep.smoothPart (GlobalTheory.PRep.ind H σ) →ₗ[ℂ] Z :=
     (LinearMap.proj (R := ℂ) (φ := fun _ : G => Z) 1).comp
       ((GlobalTheory.PRep.indSpace H σ).subtype.comp
@@ -101,8 +100,7 @@ theorem finrank_smoothPart_ind [TopologicalSpace G] [IsTopologicalGroup G] {Z : 
     apply Subtype.ext
     apply Subtype.ext
     funext g
-    rw [Subsingleton.elim g 1]
-    exact hvw
+    rwa [Subsingleton.elim g 1]
   have he_surj : Function.Surjective e := fun z => ⟨⟨⟨fun _ => z, hmem z⟩, hsmooth _⟩, rfl⟩
   exact (LinearEquiv.ofBijective e ⟨he_inj, he_surj⟩).finrank_eq
 

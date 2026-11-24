@@ -355,8 +355,7 @@ theorem regFun_det (τ : E →+* ℂ) : (fun y : GL (Fin a) (Cinf E) => coord τ
 theorem regFun_zpow (n : ℤ) :
     (fun y : GL (Fin a) (Cinf E) => (∏ τ : E →+* ℂ, coord τ y.val.det) ^ n) ∈ regFun E a := by
   rcases Int.eq_nat_or_neg n with ⟨m, rfl | rfl⟩
-  · simp only [zpow_natCast]
-    exact regFun_pow' (regFun_prod' _ _ fun τ _ => regFun_det τ) m
+  · simpa only [zpow_natCast] using regFun_pow' (regFun_prod' _ _ fun τ _ => regFun_det τ) m
   · have e : (fun y : GL (Fin a) (Cinf E) => (∏ τ : E →+* ℂ, coord τ y.val.det) ^ (-(m : ℤ))) =
         fun y => (∏ τ : E →+* ℂ, (coord τ y.val.det)⁻¹) ^ m := by
       funext y; rw [_root_.zpow_neg, zpow_natCast, Finset.prod_inv_distrib, inv_pow]
@@ -557,8 +556,7 @@ theorem span_fr : Submodule.span ℝ (Set.range (fr : _ → Herm E a)) = ⊤ := 
   have hX' : Xᴴ = X := hX
   have : (⟨X, hX⟩ : Herm E a) = ∑ x, ip X (fr x).1 • fr x := by
     apply Subtype.ext
-    simp only [Submodule.coe_sum, Submodule.coe_smul]
-    exact (expand X hX').symm
+    simpa only [Submodule.coe_sum, Submodule.coe_smul] using (expand X hX').symm
   rw [this]
   exact Submodule.sum_mem _ fun x _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨x, rfl⟩)
 
@@ -574,8 +572,7 @@ theorem iM_iM (X : Matrix (Fin a) (Fin a) (Cinf E)) : iM (iM X) = -X := by
 
 theorem iM_sum {ι : Type} [Fintype ι] (r : ι → ℝ) (M : ι → Matrix (Fin a) (Fin a) (Cinf E)) :
     iM (∑ k, r k • M k) = ∑ k, r k • iM (M k) := by
-  simp only [iM, Finset.smul_sum]
-  exact Finset.sum_congr rfl fun k _ => smul_comm _ _ _
+  simpa only [iM, Finset.smul_sum] using Finset.sum_congr rfl fun k _ => smul_comm _ _ _
 
 theorem ip_neg (X Y : Matrix (Fin a) (Fin a) (Cinf E)) : ip (-X) Y = -ip X Y := by
   simp [ip, Finset.sum_neg_distrib]
@@ -923,8 +920,7 @@ theorem Jm_colstab (S : Submodule ℂ (EuclideanSpace ℂ I)) (M : Matrix I I �
     (hM : ∀ v ∈ S, WithLp.toLp 2 (M *ᵥ v.ofLp) ∈ S) : Jm S * ((Jm S)ᴴ * (M * Jm S)) = M * Jm S := by
   refine Matrix.toLin'.injective (LinearMap.ext fun w => ?_)
   simp only [Matrix.toLin'_apply, ← Matrix.mulVec_mulVec]
-  have h := Jm_proj S (hM _ (Jm_mulVec_mem S w))
-  simpa using h
+  simpa using Jm_proj S (hM _ (Jm_mulVec_mem S w))
 
 end LinAlg
 
@@ -1146,10 +1142,8 @@ theorem bigCx_holds : BigCx := by
             rw [ite_eq_left hc, ite_eq_left hl, ite_eq_left hl, ite_eq_left hi, one_mul]
           · intro J _ hJ
             rw [ite_eq_right, zero_mul]
-            intro h
-            exact hJ (Function.eq_update_iff.mpr ⟨h.2.2, fun r hr => (h.1 r hr).symm⟩)
-          · intro h
-            exact absurd (Finset.mem_univ _) h
+            exact fun h => hJ (Function.eq_update_iff.mpr ⟨h.2.2, fun r hr => (h.1 r hr).symm⟩)
+          · exact fun h => absurd (Finset.mem_univ _) h
         · simp only [ite_eq_left hl, ite_eq_right hi]
           refine Finset.sum_eq_zero fun J _ => ?_
           rw [ite_eq_right (fun h => hi h.2.1), zero_mul]

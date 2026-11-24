@@ -87,8 +87,7 @@ theorem nsmul_injective_lattice (D : Datum H) {m : ℕ} (hm : m ≠ 0) {y y' : D
   haveI := D.proj
   have hm' : (m : 𝓞 E) ≠ 0 := by exact_mod_cast hm
   have h' : (m : 𝓞 E) • y = (m : 𝓞 E) • y' := by
-    rw [Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul]
-    exact h
+    rwa [Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul]
   exact smul_right_injective _ hm' h'
 
 theorem padic_norm_sesq_le (D : Datum H) (ℓ : Nat.Primes) (j : E →+* ℂ_[ℓ]) (y y' : D.La) :
@@ -106,8 +105,7 @@ theorem padic_norm_sesq_le (D : Datum H) (ℓ : Nat.Primes) (j : E →+* ℂ_[�
   have hb1 : ‖j (b : E)‖ ≤ 1 :=
     (_root_.GlobalTheory.CompanionTheory.Relay.padic_integral_iff_denominator E ℓ (b : E)).mpr ⟨1, b, Nat.Prime.not_dvd_one ℓ.prop, by simp⟩ j
   have hm : ‖j (a : E)‖ * ‖j (sesq D y y')‖ ≤ 1 := by
-    rw [← norm_mul, ← map_mul, hb]
-    exact hb1
+    rwa [← norm_mul, ← map_mul, hb]
   calc ‖j (sesq D y y')‖ = ‖j (a : E)‖⁻¹ * (‖j (a : E)‖ * ‖j (sesq D y y')‖) := by
         field_simp
     _ ≤ ‖j (a : E)‖⁻¹ * 1 := mul_le_mul_of_nonneg_left hm (inv_nonneg.mpr hja.le)

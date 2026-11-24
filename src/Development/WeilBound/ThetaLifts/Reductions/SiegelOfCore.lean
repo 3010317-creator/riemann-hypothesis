@@ -101,8 +101,7 @@ theorem siegelSet_eq (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame
     have hb' : b = a (fun i => Real.log (t i)) := isTorusElt_unique h hJ hW hb h3
     have hs : (fun i => Real.log (t i)) ∈ {s : Fin r → ℝ | (fun i => Real.exp (s i)) ∈ cone r c} := by
       show (fun i => Real.exp (Real.log (t i))) ∈ cone r c
-      rw [et]
-      exact ht
+      rwa [et]
     exact ⟨p * b, ⟨p, hp, b, ⟨_, hs, hb'.symm⟩, rfl⟩, k, hk, rfl⟩
   · rintro ⟨_, ⟨p, hp, _, ⟨s, hs, rfl⟩, rfl⟩, k, hk, rfl⟩
     exact ⟨p, hp, _, hs, a s, ha.tor s, k, hk, rfl⟩
@@ -203,8 +202,7 @@ theorem lintegral_cone_lt_top (F : Type) [Field F] [NumberField F] {n r : ℕ} (
     have h1 := cone_lower hc.le hu (r - i.val - 1) i (by omega)
     have e : r - i.val = r - i.val - 1 + 1 := by omega
     change c ^ (r - i.val) ≤ u i
-    rw [e]
-    exact h1
+    rwa [e]
   have hB : ∀ u ∈ Set.univ.pi (fun i => Set.Ici (b i)), ENNReal.ofReal ((modulus F n u * ∏ i, u i)⁻¹) =
       ENNReal.ofReal (∏ i, u i ^ ex i) := fun u hu => by
     congr 1

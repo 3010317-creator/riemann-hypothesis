@@ -63,8 +63,7 @@ def invSub (Γ : Subgroup G) : Submodule ℂ (G → ℂ) where
 
 theorem lam_zero (hG : GlobData ε c sL ρ G Pp Γ ι s₀ Ht sec I Λ) (l : (G → ℂ) → ℂ) (hl : l ∈ Λ) : l 0 = 0 := by
   obtain ⟨C, -, hC⟩ := hG.Λbd l hl
-  have h0 := hC 0 0 continuous_const (fun _ _ _ => rfl) (fun x _ => by simp)
-  exact norm_le_zero_iff.mp h0
+  exact norm_le_zero_iff.mp (hC 0 0 continuous_const (fun _ _ _ => rfl) (fun x _ => by simp))
 
 theorem lam_smul (hG : GlobData ε c sL ρ G Pp Γ ι s₀ Ht sec I Λ) (l : (G → ℂ) → ℂ) (hl : l ∈ Λ) (a : ℂ) (F : G → ℂ)
     (hF : Continuous F) (hFi : ∀ γ ∈ Γ, ∀ g, F (γ * g) = F g) : l (fun g => a * F g) = a * l F := by
@@ -73,8 +72,7 @@ theorem lam_smul (hG : GlobData ε c sL ρ G Pp Γ ι s₀ Ht sec I Λ) (l : (G 
   have hfun : (fun g => a * F g) = a • F := by
     funext g
     simp [Pi.smul_apply, smul_eq_mul]
-  rw [hfun]
-  exact h
+  rwa [hfun]
 
 theorem lam_local (hBH : BanachHol) (hFL : FactorL) (hG : GlobData ε c sL ρ G Pp Γ ι s₀ Ht sec I Λ)
     {U : Set ℂ} {d : Polynomial ℂ} {E : ℂ → G → ℂ} {σ : ℝ} (hUo : IsOpen U) (hUr : GlobalTheory.Cont.IsRightDomain U)

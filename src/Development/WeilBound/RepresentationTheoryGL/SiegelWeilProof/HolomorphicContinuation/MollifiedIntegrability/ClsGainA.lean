@@ -199,10 +199,8 @@ theorem entAn_inv {M : MC n → Matrix (Fin n) (Fin n) ℂ} {B₀ : MC n} (h : E
   refine ((an_det h).inv h0).mul (an_det fun a b => ?_)
   simp only [updateRow_apply]
   by_cases hab : a = j
-  · simp only [hab, ite_true]
-    exact analyticAt_const
-  · simp only [hab, ite_false]
-    exact h a b
+  · simpa only [hab, ite_true] using analyticAt_const
+  · simpa only [hab, ite_false] using h a b
 
 theorem entAn_X (c : ℂ) (B₀ : MC n) : EntAn (fun B : MC n => 1 - c • Matrix.of B) B₀ := fun i j => by
   simp only [Matrix.sub_apply, Matrix.smul_apply, of_apply, smul_eq_mul]
@@ -244,10 +242,8 @@ theorem an_clsC (s z : ℂ) (p q : ℕ) (R : MvPolynomial (Bool × Fin n × Fin 
   have hf : ∀ k : Bool × Fin n × Fin n, AnalyticAt ℂ (fun B : MC n => if k.1 then (1 + (Complex.I * s) • Matrix.of B)⁻¹ k.2.1 k.2.2
       else (1 - (Complex.I * s) • Matrix.of B)⁻¹ k.2.1 k.2.2) B₀ := by
     rintro ⟨_ | _, a, b⟩
-    · simp only [Bool.false_eq_true, ite_false]
-      exact hu a b
-    · simp only [ite_true]
-      exact hv a b
+    · simpa only [Bool.false_eq_true, ite_false] using hu a b
+    · simpa only [ite_true] using hv a b
   have hev := an_eval (fun k B => if k.1 then (1 + (Complex.I * s) • Matrix.of B)⁻¹ k.2.1 k.2.2
       else (1 - (Complex.I * s) • Matrix.of B)⁻¹ k.2.1 k.2.2) B₀ hf R
   unfold clsC

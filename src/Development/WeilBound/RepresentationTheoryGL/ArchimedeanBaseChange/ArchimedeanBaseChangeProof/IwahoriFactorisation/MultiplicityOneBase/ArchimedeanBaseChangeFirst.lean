@@ -582,16 +582,14 @@ theorem finsum_match {α β : Type*} (F : α → ℂ) (G : β → ℚ) (Φ : α 
     · intro a ha
       simp only [Function.mem_support] at ha ⊢
       rwa [hF a (hP a ha)] at ha
-    · intro a ha a' ha' h
-      exact hinj a a' (hP a ha) (hP a' ha') h
+    · exact fun a ha a' ha' h => hinj a a' (hP a ha) (hP a' ha') h
     · intro b hb
       simp only [Function.mem_support, ne_eq, Rat.cast_eq_zero] at hb
       obtain ⟨a, ha, rfl⟩ := hsurj b hb
       refine ⟨a, ?_, rfl⟩
       simp only [Function.mem_support, hF a ha]
       exact_mod_cast hb
-  · intro a ha
-    exact hF a (hP a ha)
+  · exact fun a ha => hF a (hP a ha)
 
 end GlobalTheory.InertUnitOrb
 
@@ -685,8 +683,7 @@ theorem kapOrb_unit_eq_kapSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     else Quot.mk _ ⟨1, by simp⟩
   unfold kapOrb clSum InvAlg.kapSum
   refine finsum_match _ _ Φ P ?_ ?_ ?_ ?_
-  · intro c hc
-    exact ite_eq_right hc
+  · exact fun c hc => ite_eq_right hc
   · intro c hc
     have hc' : c.rep ∈ {γ : UL n w | γ.1.val.charpoly = Q₁ * Q₂} := hc
     rw [ite_eq_left hc']
@@ -713,8 +710,7 @@ theorem kapOrb_unit_eq_kapSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     have hcomm : c.rep * g = g * c'.rep := by
       apply Subtype.ext
       apply trinj
-      rw [Subgroup.coe_mul, Subgroup.coe_mul, trmul, trmul]
-      exact hγu
+      rwa [Subgroup.coe_mul, Subgroup.coe_mul, trmul, trmul]
     rw [← Quot.out_eq c, ← Quot.out_eq c']
     refine Quot.sound ⟨g, ?_⟩
     change c'.rep = g⁻¹ * c.rep * g
@@ -1039,8 +1035,7 @@ theorem isometry_unit : ∀ (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheory.Un
     rw [LinearEquiv.apply_symm_apply] at this
     exact ⟨⟨φ 1, φ.symm 1, by rw [mul_comm]; exact this.symm, this.symm⟩, rfl⟩
   refine ⟨ht.unit, ?_⟩
-  rw [IsUnit.unit_spec]
-  rw [← sub_eq_zero]
+  rw [IsUnit.unit_spec, ← sub_eq_zero]
   apply nd
   intro y
   have h1 := hφ y 1
@@ -1096,8 +1091,7 @@ theorem antidiag_twisted_norm : ∀ (E : Type) [Field E] (c : E ≃+* E), (∀ x
     simp only [Matrix.transpose_apply, Matrix.of_apply, Matrix.smul_apply, smul_eq_mul]
     by_cases h : j = i.rev
     · subst h
-      simp only [Fin.rev_rev, ite_true]
-      exact hsign i
+      simpa only [Fin.rev_rev, ite_true] using hsign i
     · have h' : ¬ i = j.rev := by
         intro h2; apply h; rw [h2, Fin.rev_rev]
       simp [h, h']
@@ -1268,14 +1262,12 @@ theorem exists_trace_form : ∀ (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheor
   set Y := ((δ.val * GlobalTheory.Tw.Phi a L)ᵀ).map f with hY
   have hSY : S * Y = 1 := by
     have h0 := congrArg f.mapMatrix (gram_mul_transpose a L δ)
-    rw [map_mul, map_one] at h0
-    exact h0
+    rwa [map_mul, map_one] at h0
   have hsep : (LinearMap.mulLeft K.E B.g).charpoly.Separable := by
     show B.P.Separable
     rw [hBP]; exact hQs.map
   have hchar : (LinearMap.mulLeft K.E B.g).charpoly = (Matrix.toLin' N').charpoly := by
-    rw [Matrix.charpoly_toLin', hN', Matrix.charpoly_map, hδ]
-    exact hBP
+    rwa [Matrix.charpoly_toLin', hN', Matrix.charpoly_map, hδ]
   obtain ⟨ψ, hψ⟩ := GlobalTheory.UnitLemma.PairClass.exists_intertwine K.E B.A (Fin a → K.E)
     (LinearMap.mulLeft K.E B.g) (Matrix.toLin' N') hsep hchar
   have hψ' : ∀ y, ψ (B.g * y) = N' *ᵥ ψ y := fun y => by simpa using hψ y
@@ -1298,8 +1290,7 @@ theorem exists_trace_form : ∀ (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheor
       funext j
       have h1 := hy (ψ.symm (Pi.single j 1))
       simp only [s, LinearEquiv.apply_symm_apply] at h1
-      rw [hc1 j, Matrix.dotProduct_mulVec, dotProduct_single, mul_one] at h1
-      exact h1
+      rwa [hc1 j, Matrix.dotProduct_mulVec, dotProduct_single, mul_one] at h1
     have h2 : ψ y = 0 := by
       rw [← Matrix.vecMul_one (ψ y), ← hSY, ← Matrix.vecMul_vecMul, hv, Matrix.zero_vecMul]
     exact ψ.injective (by rw [h2, map_zero])
@@ -1402,8 +1393,7 @@ theorem twConj_gram (L : Type) [Field L] (c : L →+* L) (a : ℕ) (δ q : GL (F
     intro X; rw [← Matrix.mul_assoc, Units.mul_inv, Matrix.one_mul]
   have hY : (q⁻¹ * δ * thetaGL a c q).val * GlobalTheory.Tw.Phi a L *
       ((q.val.map c)ᵀ * (GlobalTheory.Tw.Phi a L)ᵀ * (δ⁻¹).val * q.val) = 1 := by
-    simp only [Units.val_mul, hθ, Matrix.mul_assoc, k1, k2, k3, k4]
-    exact Units.inv_mul q
+    simpa only [Units.val_mul, hθ, Matrix.mul_assoc, k1, k2, k3, k4] using Units.inv_mul q
   rw [Matrix.inv_eq_right_inv hY, Matrix.mul_inv_rev, hinv, ← Matrix.coe_units_inv]
   simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
 
@@ -1567,8 +1557,7 @@ theorem twCl_equiv_cl : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], 
   obtain ⟨b, hb⟩ := hrep k _ (Quot.eqvGen_exact (Quot.out_eq (Quot.mk _ (δk k) : TwCl (thL a w)))).symm
   refine ⟨b, fun i j => ?_⟩
   have := congrFun (congrFun hb i) j
-  rw [Matrix.of_apply, Units.val_mul] at this
-  exact this
+  rwa [Matrix.of_apply, Units.val_mul] at this
 
 end GlobalTheory.TwClassForms
 end -- clump:auto
@@ -1707,8 +1696,7 @@ namespace GlobalTheory.BCT.UnitProd
 private theorem equivalence_twisted_conj {G : Type} [Group G] (θ : G →* G) :
     Equivalence (fun x y : G => ∃ g, y = g⁻¹ * x * θ g) := by
   constructor
-  · intro x
-    exact ⟨1, by simp⟩
+  · exact fun x => ⟨1, by simp⟩
   · rintro x y ⟨g, rfl⟩
     exact ⟨g⁻¹, by rw [map_inv]; group⟩
   · rintro x y z ⟨g, rfl⟩ ⟨h, rfl⟩

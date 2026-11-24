@@ -244,9 +244,7 @@ theorem mem_homIdeal_of_vanish {K : Type} [Field K] {X : Scheme.{0}} {N : ℕ} (
     rw [← evV_awayMap i hg rfl _ hWx hWU, away_factor hx hg hf hf' hc, map_mul,
       evV_awayMap i hx (mul_comm _ g) _ hWx hWg, evV_res i hWV hV hWg, h0, map_zero, zero_mul]
   · refine eq_zero_of_basicOpen_eq_bot _ (eq_bot_iff.2 ?_)
-    refine (X.basicOpen_le _).trans ?_
-    intro y hy
-    exact (hU ⟨y, hy⟩).elim
+    exact (X.basicOpen_le _).trans (fun y hy => (hU ⟨y, hy⟩).elim)
 
 end GlobalTheory.CompanionTheory.GeoVan
 end -- clump:auto
@@ -665,8 +663,7 @@ theorem GlobalTheory.CompanionTheory.GeoVanish.homIdeal_vanish : ∀ {K : Type} 
     (fun j => homOfLE inf_le_left) ?_ _ _ ?_
   · intro p hp
     obtain ⟨j, hj⟩ := exists_chart (i p)
-    refine TopologicalSpace.Opens.mem_iSup.2 ⟨j, ?_⟩
-    exact And.intro hp hj
+    exact TopologicalSpace.Opens.mem_iSup.2 ⟨j, And.intro hp hj⟩
   · intro j
     set x : MvPolynomial (Fin (N + 1)) K := MvPolynomial.X j with hxdef
     have hx : x ∈ grK K N 1 := xv_mem K N j
@@ -684,8 +681,7 @@ theorem GlobalTheory.CompanionTheory.GeoVanish.homIdeal_vanish : ∀ {K : Type} 
       rw [← evV_awayMap i hx rfl hWgx hWg, ratio_eq hg hx hf hf1 hxs, map_mul,
         evV_awayMap i hg (mul_comm g x) hWgx hWx, h0, mul_zero]
     change resO (inf_le_left : W ≤ V) (evV i g V hV _) = resO (inf_le_left : W ≤ V) 0
-    rw [map_zero, evV_res i g hV inf_le_left]
-    exact h1
+    rwa [map_zero, evV_res i g hV inf_le_left]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -822,8 +818,7 @@ theorem mono_mem {m e n : ℕ} (y : Fin m → MvPolynomial (Fin (N + 1)) K) (hy 
   have h := MvPolynomial.IsHomogeneous.prod Finset.univ (fun k => y k ^ α k) (fun k => e * α k)
     (fun k _ => (hy k).pow (α k))
   rw [← Finset.mul_sum, hα] at h
-  rw [MvPolynomial.mem_homogeneousSubmodule, smul_eq_mul, mul_comm]
-  exact h
+  rwa [MvPolynomial.mem_homogeneousSubmodule, smul_eq_mul, mul_comm]
 
 theorem mem_expS {d : ℕ} (S : Finset (Fin (d + 1))) (j : ℕ) (α : Fin (d + 1) → ℕ) (hα : ∑ k, α k = j * S.card) :
     (fun k : Fin d => (α k.succ : ℤ) - (bS S j k.succ : ℤ)) ∈ expS S := by
@@ -968,8 +963,7 @@ theorem away_val_mk {K : Type} [Field K] {N : ℕ} {g : MvPolynomial (Fin (N + 1
     (hg : g ∈ grK K N D) (n : ℕ) (x : MvPolynomial (Fin (N + 1)) K) (hx : x ∈ grK K N (n • D)) :
     (HomogeneousLocalization.Away.mk (grK K N) hg n x hx).val =
       algebraMap _ (Localization.Away g) x * (IsLocalization.Away.invSelf g : Localization.Away g) ^ n := by
-  rw [HomogeneousLocalization.Away.val_mk, Localization.mk_eq_mk']
-  rw [IsLocalization.mk'_eq_iff_eq_mul]
+  rw [HomogeneousLocalization.Away.val_mk, Localization.mk_eq_mk', IsLocalization.mk'_eq_iff_eq_mul]
   have h : algebraMap _ (Localization.Away g) g * IsLocalization.Away.invSelf g = 1 :=
     IsLocalization.Away.mul_invSelf g
   simp only [map_pow]
@@ -1146,8 +1140,7 @@ theorem prod_pow_mem {n e p : ℕ} (y : Fin n → MvPolynomial (Fin (N + 1)) K)
     ∏ j, y j ^ α j ∈ grK K N p := by
   have h := MvPolynomial.IsHomogeneous.prod Finset.univ (fun j => y j ^ α j) (fun j => e * α j)
     (fun j _ => (hy j).pow (α j))
-  rw [MvPolynomial.mem_homogeneousSubmodule, ← hp, mul_comm, Finset.mul_sum]
-  exact h
+  rwa [MvPolynomial.mem_homogeneousSubmodule, ← hp, mul_comm, Finset.mul_sum]
 
 theorem prod_mk_pow {n e c : ℕ} {g : MvPolynomial (Fin (N + 1)) K} (hg : g ∈ grK K N e)
     (y : Fin n → MvPolynomial (Fin (N + 1)) K) (h1 : ∀ j, y j ∈ grK K N (1 • e)) (α : Fin n → ℕ)

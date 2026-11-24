@@ -109,8 +109,7 @@ theorem norm_Phi (U : Matrix ι ι ℂ) (hU : star U * U = 1) (z : Sg ι A B →
   rw [Fintype.sum_sum_type, Fintype.sum_sum_type]
   congr 1
   rw [Fintype.sum_prod_type_right, Fintype.sum_prod_type_right]
-  refine Finset.sum_congr rfl fun b _ => ?_
-  exact unitary_norm U hU fun j => z (Sum.inr (j, b))
+  exact Finset.sum_congr rfl fun b _ => unitary_norm U hU fun j => z (Sum.inr (j, b))
 
 def PhiL (g : Matrix ι ι ℂ) : (Sg ι A B → ℂ) →ₗ[ℝ] (Sg ι A B → ℂ) where
   toFun := Phi g
@@ -143,8 +142,7 @@ theorem map_PhiL (U : Matrix ι ι ℂ) (hU1 : star U * U = 1) (hU2 : U * star U
       exact hw
     · intro hz
       refine ⟨Phi (star U) z, ?_, ?_⟩
-      · simp only [S, Set.mem_setOf_eq, norm_Phi (star U) hU3]
-        exact hz
+      · simpa only [S, Set.mem_setOf_eq, norm_Phi (star U) hU3] using hz
       · simp only [L, PhiL_apply, ← Phi_mul, hU2, Phi_one]
   have hpos : 0 < volume S := by
     have hopen : IsOpen {z : Sg ι A B → ℂ | ∑ s, ‖z s‖ ^ 2 < 1} :=

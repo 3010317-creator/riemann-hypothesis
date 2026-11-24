@@ -112,11 +112,9 @@ variable {P X : Type} [Group P] [Group X]
 theorem hint_smul (K : Subgroup P) (c : ℂ) (v : P → ℂ) : hint K (fun m => c * v m) = c * hint K v := by
   by_cases hc : c = 0
   · subst hc
-    simp only [zero_mul]
-    exact GlobalTheory.CompanionTheory.FamClP.hint_zero K
+    simpa only [zero_mul] using GlobalTheory.CompanionTheory.FamClP.hint_zero K
   · have hst : rStab (fun m => c * v m) = rStab v := by
       ext r
-      show (∀ x, c * v (x * r) = c * v x) ↔ ∀ x, v (x * r) = v x
       exact forall_congr' fun x => mul_right_inj' hc
     unfold hint
     rw [hst, show (∑ᶠ q : P ⧸ (rStab v ⊓ K), c * v q.out) = c * ∑ᶠ q : P ⧸ (rStab v ⊓ K), v q.out from
@@ -261,8 +259,7 @@ theorem actP_smul_vec (w : Pl E) (c : ℂ) (u : GLw a w × GLw b w → ℂ) (G :
 theorem actP_zero (w : Pl E) (G : H E a b → ℂ) : actP w (0 : GLw a w × GLw b w → ℂ) G = 0 := by
   funext z
   show hint _ (fun m => (0 : GLw a w × GLw b w → ℂ) m * _) = 0
-  simp only [Pi.zero_apply, zero_mul]
-  exact GlobalTheory.CompanionTheory.FamClP.hint_zero _
+  simpa only [Pi.zero_apply, zero_mul] using GlobalTheory.CompanionTheory.FamClP.hint_zero _
 
 theorem locM_iter_smul (w : Pl E) {k : Type} [Fintype k] (c : ℂ) (M : k → k → GLw a w × GLw b w → ℂ)
     (G : k → H E a b → ℂ) (m : ℕ) :
@@ -290,8 +287,7 @@ theorem locM_iter_diag (w : Pl E) {k : Type} [Fintype k] (q : k → GLw a w × G
     · simp
     · intro y _ hy
       rw [ite_eq_right (Ne.symm hy), actP_zero]
-    · intro h
-      exact absurd (Finset.mem_univ x) h
+    · exact fun h => absurd (Finset.mem_univ x) h
   induction m with
   | zero => rfl
   | succ m ih =>

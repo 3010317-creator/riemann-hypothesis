@@ -146,8 +146,7 @@ theorem action_uniqueness : ActsUniq := by
         have hew : evFin F w u = 1 := by
           show Function.update (fun w : Pl F => (1 : Fv F w)) v 0 w = 1
           rw [Function.update_of_ne hw]
-        rw [Pi.smul_apply, smul_eq_mul, map_mul, hew, one_mul, Pi.zero_apply, map_zero] at h
-        exact h
+        rwa [Pi.smul_apply, smul_eq_mul, map_mul, hew, one_mul, Pi.zero_apply, map_zero] at h
       have hI : ∀ i, evI F ((x + z) i) = evI F (x i) := by
         intro i
         change InfiniteAdeleRing.ringEquiv_mixedSpace F ((x i).1 + (z i).1) =
@@ -192,7 +191,6 @@ theorem action_uniqueness : ActsUniq := by
     show f (fun i => evI F (s i)) * ∏ᶠ w, ψ w (fun i => evFin F w (s i)) = 1
     have h0 : (fun i => evI F (s i)) = 0 := by
       funext i
-      show InfiniteAdeleRing.ringEquiv_mixedSpace F 0 = 0
       exact map_zero _
     have h1 : ∀ w, ψ w (fun i => evFin F w (s i)) = 1 := by
       intro w
@@ -209,7 +207,6 @@ theorem action_uniqueness : ActsUniq := by
     rw [h0, hf, finprod_congr h1, finprod_one, one_mul]
   have key := congrFun heq s
   change φ₁ (fun i => evFin F v (s i)) * r s = φ₂ (fun i => evFin F v (s i)) * r s at key
-  rw [hs, hrs, mul_one, mul_one] at key
-  exact key
+  rwa [hs, hrs, mul_one, mul_one] at key
 
 end PositivityTheory.KCo

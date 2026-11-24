@@ -111,8 +111,7 @@ theorem vecSlice {n g : ℕ} {V : Set (Fin n → ℂ)} {Z : Scheme.{0}} {e : (Fi
 
 theorem vecMono {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] {X : Scheme.{0}} {B C : Set V} {y : V → (Sp ℂ ⟶ X)}
     (h : IsHolTo B y) (hC : IsOpen C) (hm : C ⊆ B) : IsHolTo C y := by
-  have k := vecHolPre (φ := id) h hC differentiableOn_id hm
-  exact k
+  exact vecHolPre (φ := id) h hC differentiableOn_id hm
 
 theorem liftFam {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {X X' : Scheme.{0}} {t : SAB H X}
     {t' : SAB H X'} {f : X' ⟶ X} {n g : ℕ} {Λ : Type} [AddCommGroup Λ] [Module (𝓞 E) Λ] (m : SABMap t' t f)
@@ -166,8 +165,7 @@ theorem vecAt_of_goodExp (HC : HolCoord) {E : Type} [Field E] [NumberField E] [I
     simp only [ψ, valAt', dite_eq_left ht.2]
     rfl
   have hψz : ∀ t ∈ B, spMap (ψ t) ≫ hW.fromSpec = z t := fun t ht => by
-    simp only [ψ, dite_eq_left ht.2]
-    exact Flat.BdryModel.spMap_evalHom _ _ _ _
+    simpa only [ψ, dite_eq_left ht.2] using Flat.BdryModel.spMap_evalHom _ _ _ _
   have hco : ∀ a, ∀ t ∈ B, ∃ w, IsDerivAt0 (e₂ t) w (spMap (dualMap (ψ t)) ≫ (v a).left) := fun a t ht => by
     obtain ⟨u, hu, e⟩ := hval (ψ t) (z t) (hψz t ht) (𝔐.all _) a
     rw [← e]

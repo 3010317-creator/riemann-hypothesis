@@ -264,8 +264,7 @@ theorem hk_zero' (ρ : Representation ℂ (GL ι F) V) (K : Subgroup (GL ι F)) 
 theorem hk_supp (ρ : Representation ℂ (GL ι F) V) (K : Subgroup (GL ι F)) (e : GL ι F → ℂ) (he : IsHk K e) (v : V) :
     Function.HasFiniteSupport fun q : GL ι F ⧸ K => e q.out • ρ q.out v := by
   refine (GlobalTheory.CompanionTheory.DiagAvg.finite_cosets K he.1 e he.2.2.1).subset fun q hq => ?_
-  intro h0
-  exact hq (by simp [show e q.out = 0 from h0])
+  exact fun h0 => hq (by simp [show e q.out = 0 from h0])
 
 theorem hk_add' (ρ : Representation ℂ (GL ι F) V) (K : Subgroup (GL ι F)) (e : GL ι F → ℂ) (he : IsHk K e) (v w : V) :
     hk ρ K e (v + w) = hk ρ K e v + hk ρ K e w := by
@@ -308,8 +307,7 @@ theorem nonnil_of_pow (ρ : Representation ℂ (GL ι F) V) (K : Subgroup (GL ι
   · refine ⟨u, hu, fun h0 => hne ?_⟩
     have : m = (m - r) + r := (Nat.sub_add_cancel hr).symm
     rw [this, Function.iterate_add_apply, h0, hk_iter_zero]
-  · by_contra hall
-    push Not at hall
+  · by_contra! hall
     set T := hkEnd ρ K e he
     have hker : LinearMap.ker (T ^ r) = ⊤ := by
       rw [eq_top_iff]
@@ -323,8 +321,7 @@ theorem nonnil_of_pow (ρ : Representation ℂ (GL ι F) V) (K : Subgroup (GL ι
     rw [LinearMap.mem_ker] at hm
     apply hne
     have := congrArg Subtype.val hm
-    rw [hkEnd_pow] at this
-    exact this
+    rwa [hkEnd_pow] at this
 
 end Gen
 
@@ -576,11 +573,8 @@ theorem key_ind {n a b : ℕ} (h : a + b = n) (w : Pl E) (K' : Subgroup (GLw n w
   refine ⟨u, ?_, fun x hx lw => ?_⟩
   · intro k
     rw [MonoidHom.one_apply, Units.val_one, one_smul]
-    refine Subtype.ext (Subtype.ext (funext fun g => ?_))
-    show F (g * k) = F g
-    exact fv_right h w U ρ K' e hf X v g k k.2
-  · show lw (F x) = _
-    exact lw_fv h w U ρ e he.2.2.1 X v x hUK hUo hne (hinv x) hvU lw
+    exact Subtype.ext (Subtype.ext (funext fun g => (fv_right h w U ρ K' e hf X v g k k.2)))
+  · exact lw_fv h w U ρ e he.2.2.1 X v x hUK hUo hne (hinv x) hvU lw
 
 end PositivityTheory.Rg.BcB.F.Tail.PSc
 
@@ -795,8 +789,7 @@ theorem transport {n : ℕ} {w : Pl E} {V₁ V₂ : Type} [AddCommGroup V₁] [M
   refine ⟨mem_fixed_iff'.2 fun g hg => ?_, ?_⟩
   · rw [← hΨ, mem_fixed_iff'.1 hu g hg]
   · rw [← hTi]
-    intro h0
-    exact hne (Ψ.injective (h0.trans (map_zero Ψ).symm))
+    exact fun h0 => hne (Ψ.injective (h0.trans (map_zero Ψ).symm))
 
 theorem core {n a b : ℕ} (h : a + b = n) (w : Pl E) (μ : (w.adicCompletion E)ˣ →* ℂˣ)
     (S : Submodule ℂ (H E a b → ℂ)) (hinv : ∀ g, ∀ x ∈ S, pairRt a b w g x ∈ S)
@@ -821,8 +814,7 @@ theorem core {n a b : ℕ} (h : a + b = n) (w : Pl E) (μ : (w.adicCompletion E)
   have hLvo : IsOpen (Lv : Set (GLw a w × GLw b w)) := hK'o.preimage (GlobalTheory.CompanionTheory.GL3BlockMatrixLocal.continuous_dgM h w)
   have hLv : ∀ k ∈ Lv, k ∈ leviOf h w K' := fun k hk => by
     show blk h w k 0 ∈ K'
-    rw [GlobalTheory.CompanionTheory.GL3BlockMatrixLocal.blk_zero_eq]
-    exact hk
+    rwa [GlobalTheory.CompanionTheory.GL3BlockMatrixLocal.blk_zero_eq]
   have h1Lv : (1 : GLw a w × GLw b w) ∈ leviOf h w K' := by
     show blk h w 1 0 ∈ K'
     rw [GlobalTheory.LeviFubini.blk_one_zero]

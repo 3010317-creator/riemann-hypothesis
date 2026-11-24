@@ -163,8 +163,7 @@ theorem HWMod.centre {act : (ι → Mat R S) →ₗ[ℂ] Module.End ℂ M} {Λ :
       rwa [add_zero] at this
   have hx : x ∈ (act (Pi.single w 1)).eigenspace (∑ a, Λ w a) := this ▸ Submodule.mem_top
 
-  rw [Module.End.mem_eigenspace_iff, ← e, map_sum, LinearMap.sum_apply] at hx
-  exact hx
+  rwa [Module.End.mem_eigenspace_iff, ← e, map_sum, LinearMap.sum_apply] at hx
 
 theorem par_zero {m : Emb R S R₁ S₁} {act : (ι → Mat R S) →ₗ[ℂ] Module.End ℂ M}
     {act₁ : (ι → Mat R₁ S₁) →ₗ[ℂ] Module.End ℂ M₁} {Λ : ι → Ix R S → ℂ} {f : M} (hM : HWMod act Λ f) {c c' : ι → ℂ}
@@ -733,8 +732,7 @@ theorem core (hD : Dic) {a a' a₁ a₁' : ℕ} {G : Geo σ a a'} {G₁ : Geo σ
       (ι := H'.ι.map (B.emb w).1)
       (fun e => by
         have := fm w H'.x H'.y
-        rw [e, hH.xy] at this
-        rw [map_one, mul_one, hf, zero_dotProduct] at this
+        rw [e, hH.xy, map_one, mul_one, hf, zero_dotProduct] at this
         exact Complex.I_ne_zero this.symm)
       (by rw [fm, hH.xx]; simp) (c0' w) (hcy w)
       (fun j => by
@@ -765,8 +763,7 @@ theorem core (hD : Dic) {a a' a₁ a₁' : ℕ} {G : Geo σ a a'} {G₁ : Geo σ
   have c0 : c 0 = 0 := by
     refine (hd 0).unique ?_
     have : ∀ s, t 0 s = 1 := fun s => Units.ext (eq_of_inf hc B.emb (ht 0 s).1 fun w => by simp [(ht 0 s).2])
-    simp only [this]
-    exact hasDerivAt_const _ _
+    simpa only [this] using hasDerivAt_const _ _
   have ij : (Sum.inl m.i : Ix _ _) ≠ Sum.inr m.j := Sum.inl_ne_inr
   have par : ∀ D : Rm.Pi →ₗ[ℂ] Rm₁.Pi, IsArchimedeanLocalEquivariantMap B G.M G₁.M om om₁ H' χ r Rm.p Rm₁.p D →
       IsPar m act act₁ (fun w => -Complex.I * c (Pi.single w Complex.I)) (fun w => c (Pi.single w 1)) D := by

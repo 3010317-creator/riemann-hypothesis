@@ -60,9 +60,7 @@ variable {m n : ℕ}
 
 theorem pderiv_eq_zero_of_supported {S : Set (Fin m × Fin n × Bool)} {g : PX m n} (hg : g ∈ supported ℂ S)
     {k : Fin m × Fin n × Bool} (hk : k ∉ S) : pderiv k g = 0 := by
-  apply pderiv_eq_zero_of_notMem_vars
-  intro h
-  exact hk ((mem_supported.mp hg) h)
+  exact pderiv_eq_zero_of_notMem_vars (fun h => hk ((mem_supported.mp hg) h))
 
 theorem pderiv_mem_supported {S : Set (Fin m × Fin n × Bool)} {g : PX m n} (hg : g ∈ supported ℂ S)
     (k : Fin m × Fin n × Bool) : pderiv k g ∈ supported ℂ S := by

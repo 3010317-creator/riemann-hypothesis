@@ -242,8 +242,7 @@ theorem exists_toMK (N : ℕ) (u : Matrix (Fin N) (Fin N) ℂ) (hu : u ∈ Matri
   have hJ : Formalism.REAL.Jm (εT N) = 1 := by
     simp [Formalism.REAL.Jm, εT, Matrix.diagonal_one]
   have : u ∈ Formalism.REAL.Kset (εT N) := ⟨hu, by rw [hJ, Matrix.mul_one, Matrix.one_mul]⟩
-  rw [← Formalism.REAL.range_toMK] at this
-  exact this
+  rwa [← Formalism.REAL.range_toMK] at this
 
 theorem isEmbedding_toMK (N : ℕ) : Topology.IsEmbedding (fun k : Formalism.REAL.KG (εT N) => Formalism.REAL.toMK k) :=
   (Formalism.REAL.isClosedEmbeddingMatrix N (εT N)).1.isEmbedding.comp Topology.IsEmbedding.subtypeVal
@@ -255,8 +254,7 @@ instance instSCKG (N : ℕ) : SecondCountableTopology (Formalism.REAL.KG (εT N)
 
 theorem muK_univ (N : ℕ) : Formalism.REAL.muK (εT N) Set.univ = 1 := by
   have := Measure.haarMeasure_self (G := Formalism.REAL.KG (εT N)) (K₀ := ⊤)
-  rw [TopologicalSpace.PositiveCompacts.coe_top] at this
-  exact this
+  rwa [TopologicalSpace.PositiveCompacts.coe_top] at this
 
 theorem map_mul_right_muK (N : ℕ) (g : Formalism.REAL.KG (εT N)) :
     Measure.map (fun x => x * g) (Formalism.REAL.muK (εT N)) = Formalism.REAL.muK (εT N) := by
@@ -318,8 +316,7 @@ theorem avg : Avg := by
       intro k
       simp only [F]
       rw [AvgPf.eval_sub, actP_actP, ← AvgPf.eval_sub, toMK_mul, hku, map_star_mul]
-    simp only [e2]
-    exact integral_mul_right_eq_self (fun k => eval z (F k)) ku
+    simpa only [e2] using integral_mul_right_eq_self (fun k => eval z (F k)) ku
   · refine totalDegree_finsetSum_le fun m hm => (totalDegree_monomial_le _ _).trans ?_
     exact (Finset.mem_filter.1 hm).2
 
@@ -408,8 +405,7 @@ theorem coeff_sum_monomial {σ R : Type*} [CommSemiring R] [DecidableEq σ] (S :
     · simp
     · intro b _ hb
       simp [hb]
-    · intro h'
-      exact absurd h h'
+    · exact fun h' => absurd h h'
   · apply Finset.sum_eq_zero
     intro b hb
     have : b ≠ μ := fun e => h (e ▸ hb)
@@ -644,8 +640,7 @@ theorem exists_unitary_diagonal_unitary' (g : Matrix ι ι ℂ) (hg : IsUnit g) 
   have hspec : gᴴ * g = (hM.1.eigenvectorUnitary : Matrix ι ι ℂ) *
       diagonal (fun i => (hM.1.eigenvalues i : ℂ)) * star (hM.1.eigenvectorUnitary : Matrix ι ι ℂ) := by
     have h := hM.1.spectral_theorem
-    rw [Unitary.conjStarAlgAut_apply] at h
-    exact h
+    rwa [Unitary.conjStarAlgAut_apply] at h
   have hVmem : (hM.1.eigenvectorUnitary : Matrix ι ι ℂ) ∈ Matrix.unitaryGroup ι ℂ :=
     hM.1.eigenvectorUnitary.2
   generalize (hM.1.eigenvectorUnitary : Matrix ι ι ℂ) = V at hspec hVmem
@@ -1063,8 +1058,7 @@ theorem pos : Pos := by
     intro s
     rcases s with s | s
     · simp [kap]
-    · simp only [kap, Sum.elim_inr]
-      exact hM.eigenvalues_nonneg _
+    · simpa only [kap, Sum.elim_inr] using hM.eigenvalues_nonneg _
   rw [gip_sub_eq_of_unitary_conj_diag M _ _ hU1 hU2 hMU f, gip_diag]
   simp only [Complex.ofReal_re, Complex.ofReal_im]
   refine ⟨?_, trivial, ?_⟩
@@ -1077,8 +1071,7 @@ theorem pos : Pos := by
       intro s
       rcases s with s | s
       · simp [kap]
-      · simp only [kap, Sum.elim_inr]
-        exact hPD.eigenvalues_pos _
+      · simpa only [kap, Sum.elim_inr] using hPD.eigenvalues_pos _
     have hinv : sub 1 (star (hH.eigenvectorUnitary : Matrix ι ι ℂ))
         (sub 1 (hH.eigenvectorUnitary : Matrix ι ι ℂ) f) = f := by
       apply MvPolynomial.funext
@@ -1178,8 +1171,7 @@ theorem bound_aux {a r S : ℝ} (ha : 0 < a) (hr : 0 ≤ r) (hS : r ^ 2 ≤ S) :
   have h3 : r ≤ (1 + 1 / a) * Real.exp (a * S) := by
     have : 0 ≤ 1 + 1 / a := by positivity
     nlinarith
-  rw [Real.exp_neg, ← div_eq_mul_inv, div_le_iff₀ (Real.exp_pos _)]
-  exact h3
+  rwa [Real.exp_neg, ← div_eq_mul_inv, div_le_iff₀ (Real.exp_pos _)]
 
 theorem sq_le_sum_sum (x : Fin m → Fin n → ℂ) (a : Fin m) (i : Fin n) :
     ‖x a i‖ ^ 2 ≤ ∑ a, ∑ i, ‖x a i‖ ^ 2 := by
@@ -1308,13 +1300,11 @@ theorem nullIff_of (hS : SecLine) (hP : PowSpan) : NullIff := by
     have hF1 := han.eqOn_zero_of_preconnected_of_eventuallyEq_zero (strip_conn δ) h0 hloc h1
     have e1 := hre 1 (by simp)
     rw [one_smul] at e1
-    rw [← e1]
-    exact hF1
+    rwa [← e1]
   · intro hall R hR
     have hR' : R ∈ Submodule.span ℂ {R : PX m n | ∃ (b : Matrix (Fin n) (Fin n) ℂ) (k : ℕ),
         b.IsHermitian ∧ R = (∑ i : Fin n, ∑ j : Fin n, C (b i j) * Qp ε j i) ^ k} := by
-      rw [← hP m n ε]
-      exact hR
+      rwa [← hP m n ε]
     clear hR
     induction hR' using Submodule.span_induction with
     | mem R hmem =>
@@ -1429,8 +1419,7 @@ private theorem coeff_mem_of_forall_natCast_poly_sum_mem {M : Type*} [AddCommGro
   let V : Matrix (Fin (N + 1)) (Fin (N + 1)) ℂ := Matrix.vandermonde (fun t : Fin (N + 1) => ((t : ℕ) : ℂ))
   have hV : IsUnit V.det := by
     refine isUnit_iff_ne_zero.mpr (Matrix.det_vandermonde_ne_zero_iff.mpr ?_)
-    intro a b hab
-    exact Fin.ext (Nat.cast_injective hab)
+    exact fun a b hab => Fin.ext (Nat.cast_injective hab)
   have key : ∑ t : Fin (N + 1), (V⁻¹ ⟨k, hk⟩ t) • (∑ j ∈ Finset.range (N + 1), (((t : ℕ) : ℂ) ^ j) • c j) = c k := by
     have e : ∀ t : Fin (N + 1), (∑ j ∈ Finset.range (N + 1), (((t : ℕ) : ℂ) ^ j) • c j)
         = ∑ j : Fin (N + 1), V t j • c j := by
@@ -1499,8 +1488,7 @@ private theorem list_prod_mul_span_prod_mem_S : ∀ l : List (PX m n), (∀ x �
         · exact h ▸ hy
         · exact hq v h)
       rw [List.prod_cons] at this
-      rw [← mul_assoc, mul_comm q.prod y]
-      exact this
+      rwa [← mul_assoc, mul_comm q.prod y]
     | zero => simp
     | add a b _ _ ha hb =>
       rw [add_mul, mul_add]
@@ -1630,10 +1618,8 @@ theorem stable : Stable := by
           rw [Equiv.symm_apply_apply, mul_comm]
         rw [this]
         exact Algebra.subset_adjoin ⟨(ha.choose, hb.choose), rfl⟩
-      · simp only [dite_eq_right ha, mul_zero, Finset.sum_const_zero]
-        exact Subalgebra.zero_mem _
-    · simp only [dite_eq_right hb, zero_mul, Finset.sum_const_zero]
-      exact Subalgebra.zero_mem _
+      · simpa only [dite_eq_right ha, mul_zero, Finset.sum_const_zero] using Subalgebra.zero_mem _
+    · simpa only [dite_eq_right hb, zero_mul, Finset.sum_const_zero] using Subalgebra.zero_mem _
   rw [hp', hs, ← AlgHom.comp_apply, comp_aeval]
   clear hs hp'
   induction s using MvPolynomial.induction_on with

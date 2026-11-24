@@ -175,8 +175,7 @@ theorem affRelOf_pf : AffRelOf := by
     obtain ⟨ω', hω'⟩ := he'b.2 ((morV i rfl a h1).pull a y)
     obtain ⟨ω, rfl⟩ := hFL.1 ω'
     refine ⟨e0 ω, (hBij a).1 ?_⟩
-    rw [hcomp, hnat a e0 e' he0 he' ω]
-    exact hω'
+    rwa [hcomp, hnat a e0 e' he0 he' ω]
   have key : ∀ ι : Cx.Hom (RC (G q a) (inU q V) hQ) (CH.cx ((inU q V).ι ⋙ G q a)) (RingHom.id K),
       (∀ n x, ι.f n x = x.1) →
       (∀ j, j ≠ a → Subsingleton ((RC (G q a) (inU q V) hQ).H j)) ∧ Function.Injective (ι.mapH a) ∧

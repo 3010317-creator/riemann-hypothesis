@@ -67,8 +67,7 @@ theorem roots_trivial (hζ : ∃ ζ : L.1, IsPrimitiveRoot ζ ℓ) :
   apply Subtype.ext
   apply Units.ext
   change (g : galUnramifiedOutside K.1 ℚ̄ S) ((u : (maxUnramifiedOutside K.1 ℚ̄ S)ˣ) : maxUnramifiedOutside K.1 ℚ̄ S) = _
-  rw [← hk, map_pow, hfix]
-  exact hk
+  rwa [← hk, map_pow, hfix]
 
 instance moduleFinite_gsRootsZMod : Module.Finite (ZMod ℓ) (gsRootsZMod S ℓ) := by
   have : NeZero ℓ := ⟨(Fact.out : ℓ.Prime).ne_zero⟩

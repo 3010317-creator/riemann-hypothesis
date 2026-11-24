@@ -222,8 +222,7 @@ theorem isOpen_scaledInt [Finite κ] (a : F) : IsOpen (scaledInt F κ a : Set (�
     have h : (algebraMap F (FiniteAdeleRing (𝓞 F) F) a⁻¹ * z i) v =
         (algebraMap F (v.adicCompletion F) a)⁻¹ * (z i) v := by
       have h1 := map_mul (evalV F v) (algebraMap F (FiniteAdeleRing (𝓞 F) F) a⁻¹) (z i)
-      rw [AlgHom.commutes, map_inv₀ (algebraMap F (v.adicCompletion F))] at h1
-      exact h1
+      rwa [AlgHom.commutes, map_inv₀ (algebraMap F (v.adicCompletion F))] at h1
     rw [h]
   rw [e]
   exact isOpen_iInter_of_finite fun i => hO.preimage (continuous_const.mul (continuous_apply i))
@@ -262,8 +261,7 @@ theorem indicator_cosetBoxV_mem_SB [Finite κ] {a : F} (ha : a ≠ 0) (r : κ �
     refine (hPc.image hg).of_isClosed_subset hcl.isClosed ?_
     intro x hx
     refine ⟨f x, ?_, ?_⟩
-    · rw [hS] at hx
-      exact hx
+    · rwa [hS] at hx
     · funext i
       simp only [f, g]
       rw [mul_inv_cancel_left₀ ha0, sub_add_cancel]

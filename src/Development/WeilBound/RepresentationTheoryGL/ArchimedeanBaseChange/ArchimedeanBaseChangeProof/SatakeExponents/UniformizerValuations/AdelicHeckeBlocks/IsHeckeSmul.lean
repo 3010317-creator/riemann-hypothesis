@@ -77,8 +77,7 @@ theorem isHecke_fsum {G ι : Type} [Group G] [TopologicalSpace G] (K : Subgroup 
 theorem mconv_hecke {a b : ℕ} {w : Pl E} (K : Subgroup (GLw a w × GLw b w)) {f g : LF a b w}
     (hf : IsHecke K f) (hg : IsHecke K g) : IsHecke K (mconv f g) := by
   have := FinConv.cv_hecke ((GlobalTheory.LFun.KGL w (n := a)).prod (GlobalTheory.LFun.KGL w (n := b))) K K f g hf hg
-  rw [inf_idem] at this
-  exact this
+  rwa [inf_idem] at this
 
 variable {n : ℕ} (d : LocData E n)
 
@@ -147,8 +146,7 @@ def Inv {a : ℕ} (w : Pl E) (L : LM d.kap a (n - a)) : Prop :=
 theorem inv_mul {a : ℕ} {w : Pl E} {L L' : LM d.kap a (n - a)} (h : Inv d w L) (h' : Inv d w L') :
     Inv d w (L.mul L') := by
   refine ⟨fun hS x y => ?_, fun hB => ?_⟩
-  · show IsHecke _ (∑ z, mconv (L.m w x z) (L'.m w z y))
-    exact isHecke_fsum _ _ _ fun z _ => mconv_hecke _ (h.1 hS x z) (h'.1 hS z y)
+  · exact isHecke_fsum _ _ _ fun z _ => mconv_hecke _ (h.1 hS x z) (h'.1 hS z y)
   · exact mconv_hecke _ (h.2 hB) (h'.2 hB)
 
 theorem inv_letter (h3 : LocOpUniformizer E) (hd : d.Ok) {a : ℕ} {ha : a ≤ n} {L : LM d.kap a (n - a)}
@@ -177,20 +175,17 @@ theorem inv_letter (h3 : LocOpUniformizer E) (hd : d.Ok) {a : ℕ} {ha : a ≤ n
   · refine ⟨fun _ x y => ?_, fun _ => ?_⟩
     · rw [LocComm.gen_m d hg]
       exact eM x y
-    · rw [gs hg]
-      exact hI
+    · rwa [gs hg]
   · refine ⟨fun _ x y => ?_, fun _ => ?_⟩
     · rw [LocComm.adj_m d hg]
       exact eM x y
     · show IsHecke _ (lfStar (L'.s w))
-      rw [gs hg, LocComm.lfStar_idem]
-      exact hI
+      rwa [gs hg, LocComm.lfStar_idem]
   · refine ⟨fun hS x y => ?_, fun _ => ?_⟩
     · have := LocComm.hecke_beta d h3 hd ha (Finset.mem_union_right _ hS) x y
       rwa [hlev] at this
     · show IsHecke _ (idem (d.lev a w))
-      rw [hlev]
-      exact hI
+      rwa [hlev]
   · refine ⟨fun _ x y => ?_, fun hB => ?_⟩
     · show IsHecke _ (d.diag (fun _ => if w ∈ d.T then idem (d.lev a w) else d.sgn a w • idem (d.lev a w)) x y)
       unfold LocData.diag

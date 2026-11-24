@@ -59,8 +59,7 @@ variable {D : D7} {n : ℕ}
 
 
 theorem dirAt_ne {m : ℕ} {τ τ' : D.what₂.Tau} (h : τ' ≠ τ) (Z : Matrix (Fin m) (Fin n) ℂ) :
-    GlobalTheory.FockAnnKill.dirAt τ Z τ' = 0 := by
-  exact ite_eq_right h
+    GlobalTheory.FockAnnKill.dirAt τ Z τ' = 0 := ite_eq_right h
 
 theorem dirAt_self {m : ℕ} (τ : D.what₂.Tau) (Z : Matrix (Fin m) (Fin n) ℂ) : GlobalTheory.FockAnnKill.dirAt τ Z τ = Z := by
   exact ite_eq_left rfl

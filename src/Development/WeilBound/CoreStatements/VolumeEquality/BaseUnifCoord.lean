@@ -202,9 +202,7 @@ theorem holCoord : HolCoord := by
       fderiv ℂ (fun z => valAt' (e t z) U f) 0 u = fderiv ℂ G (t, 0) (0, u) := fun t ht u => by
     have h1 : HasFDerivAt (fun z : Fin g → ℂ => ((t, z) : (Fin n → ℂ) × (Fin g → ℂ)))
         (ContinuousLinearMap.inr ℂ _ _) 0 := hasFDerivAt_prodMk_right t 0
-    have h2 := ht.hasFDerivAt.comp (0 : Fin g → ℂ) h1
-    have h3 := h2.fderiv
-    exact congrArg (fun T => T u) h3
+    exact congrArg (fun T => T u) (ht.hasFDerivAt.comp (0 : Fin g → ℂ) h1).fderiv
   obtain ⟨a, r, k, hr0, hfr⟩ := exists_frac v U f (GlobalTheory.CompanionTheory.Ar.dualMap (ψ t₀)) h₀
   have hψa : ∀ x, AnalyticAt ℂ (fun t => ψ t x) t₀ := fun x =>
     GlobalTheory.SCV.analyticAt_of_differentiableOn (hψ x) (hB.mem_nhds ht₀)

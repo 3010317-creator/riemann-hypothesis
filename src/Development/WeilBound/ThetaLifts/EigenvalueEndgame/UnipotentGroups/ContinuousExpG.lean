@@ -87,8 +87,7 @@ theorem exists_ginv {F V V' : Type} [Field F] [AddCommGroup V] [Module F V] [Add
   have h1 := LinearMap.congr_fun hs (T.rangeRestrict v)
   have h2 := congrArg Subtype.val (LinearMap.congr_fun hr (T.rangeRestrict v))
   change s (T v) = _ at h1
-  rw [h1]
-  exact h2
+  rwa [h1]
 
 theorem ker_cocompact {F A V V' M M' : Type} [Field F] [CommRing A] [Algebra F A] [AddCommGroup V] [Module F V]
     [FiniteDimensional F V] [AddCommGroup V'] [Module F V'] [AddCommGroup M] [Module A M] [Module F M] [IsScalarTower F A M]
@@ -286,8 +285,7 @@ theorem Tri.inv {x y : Matrix n n R} (hx : Tri e f (x - 1)) (h : y * x = 1) : Tr
   have : y - 1 = -(x - 1) + (x - 1) * (x - 1) := by
     have h4 : x * (1 - (x - 1) + (x - 1) * (x - 1)) = 1 := by
       rw [show x * (1 - (x - 1) + (x - 1) * (x - 1)) = 1 + (x - 1) * (x - 1) * (x - 1) by noncomm_ring, h3, add_zero]
-    have h5 : y = 1 - (x - 1) + (x - 1) * (x - 1) := by
-      exact left_inv_eq_right_inv h h4
+    have h5 : y = 1 - (x - 1) + (x - 1) * (x - 1) := left_inv_eq_right_inv h h4
     rw [h5]; abel
   rw [this]
   exact hx.neg.add (hx.mul hx)
@@ -408,8 +406,7 @@ theorem gen_iff (e1 : ∀ z, e *ᵥ z ∈ U) (e2 : ∀ u ∈ U, e *ᵥ u = u) (f
     have a1 : mat m * incM F e = incM F e := by
       ext i j
       have := congrFun (h1 _ (e1 (Pi.single j 1))) i
-      rw [← col_eq] at this
-      exact this
+      rwa [← col_eq] at this
     refine ⟨by rw [Matrix.sub_mul, a1, Matrix.one_mul, sub_self], ?_, ?_⟩
     · ext i j
       have k : ∀ z ∈ Submodule.span (AE F E) (incV F '' (U : Set (Fin d → E))), incM F e *ᵥ z = z := fun z hz =>

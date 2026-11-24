@@ -229,8 +229,7 @@ theorem leviTau : LeviTau := by
     rw [hM, adelicConjTranspose_blockMatrixTwoByTwoFin, GlobalTheory.StdUnn.Frame.submatrix_fromBlocks_mul, GlobalTheory.StdUnn.Frame.submatrix_fromBlocks_mul] at hU
     have e := congrArg bB hU
     rw [upper_right_of_block_matrix, upper_right_of_block_matrix] at e
-    simp only [mul_zero, zero_mul, add_zero, zero_add, mul_one] at e
-    exact e
+    simpa only [mul_zero, zero_mul, add_zero, zero_add, mul_one] using e
   have hD : bD M = adj (bA M') := by
     have e : adj (bA M') * adj (bA M) = 1 := by rw [← LeviH.adj_mul, hAA', LeviH.adj_one]
     calc bD M = 1 * bD M := (one_mul _).symm

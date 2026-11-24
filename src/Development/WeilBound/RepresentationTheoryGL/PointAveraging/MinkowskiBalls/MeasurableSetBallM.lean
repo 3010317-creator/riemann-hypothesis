@@ -85,8 +85,7 @@ theorem isOpen_valSet (a : k) (c : kˣ) : IsOpen {y : k | valuation k (y - a) �
 private theorem vol_valSet_lemma : SigmaCompactSpace k := by
   obtain ⟨t, ht0, ht1⟩ := Valuation.IsNontrivial.exists_lt_one (v := valuation k)
   have hpos : (0 : ValueGroupWithZero k) < valuation k t := by
-    rw [zero_lt_iff, ne_eq, map_eq_zero]
-    exact ht0
+    rwa [zero_lt_iff, ne_eq, map_eq_zero]
   have hs : 1 < valuation k t⁻¹ := by
     rw [map_inv₀]
     exact (one_lt_inv₀ hpos).2 ht1
@@ -351,8 +350,7 @@ theorem inv_ball (hb : BallSt) {r t : ℕ} (μ : kˣ →* ℂˣ) {V W : Type} [A
     have hiff : (h⁻¹ : GL (Fin (r + t)) k).val * y ∈ ballM c' (GlobalTheory.GodementJacquet.eMat k r t) ↔
         y ∈ ballM c' x := by
       have key := ((hb k (r + t) r).1 c' x).2.2.2.2 h⁻¹ (inv_mem hK) 1 (one_mem _) y
-      rw [Units.val_one, Matrix.mul_one, Matrix.mul_one, hx'] at key
-      exact key
+      rwa [Units.val_one, Matrix.mul_one, Matrix.mul_one, hx'] at key
     by_cases hy : y ∈ ballM c' x
     · rw [Set.indicator_of_mem hy, Set.indicator_of_mem (hiff.2 hy)]
     · have hy' : (h⁻¹ : GL (Fin (r + t)) k).val * y ∉ ballM c' (GlobalTheory.GodementJacquet.eMat k r t) :=

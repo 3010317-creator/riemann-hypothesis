@@ -104,8 +104,7 @@ theorem exists_factor {A : ℂ → ℂ} (hA : Differentiable ℂ A) (hne : ∃ z
   obtain ⟨r, hr, hball⟩ :=
     Metric.eventually_nhds_iff_ball.mp (hev.and (hcont.and hg.eventually_analyticAt))
   refine ⟨k, g, r, 2 / ‖g s₀‖, hr, ?_, ?_, ?_, ?_⟩
-  · intro z hz
-    exact (hball z hz).2.2.differentiableAt.differentiableWithinAt
+  · exact fun z hz => (hball z hz).2.2.differentiableAt.differentiableWithinAt
   · intro z hz h0
     have h1 := (hball z hz).2.1
     rw [h0, zero_sub, norm_neg] at h1
@@ -181,8 +180,7 @@ theorem div_multiplier : ResidueKilled.Tr.Div := by
     show H s g * (u s)⁻¹ = (s - s₀) ^ k * cont (fun z => e z g) s
     rw [cont_eq_div hA hne (hH g) (fun z hz => hmul z hz g) hA0, hAs]
     field_simp
-  · intro g
-    exact (hH g).differentiableOn.mul (hu.inv hu0)
+  · exact fun g => (hH g).differentiableOn.mul (hu.inv hu0)
   · exact hHc.continuousOn.mul (hu1.inv₀ (fun x hx => hu0 x.1 hx.1))
   · intro s hs g
     have hs1 : ‖s - s₀‖ < r := by simpa [dist_eq_norm] using hs
@@ -599,8 +597,7 @@ theorem tTop : TTop := by
     · intro q₁ h₁ q₂ h₂
       show A.lg (bdet _ (q₁.1 * q₂.1)) = _
       rw [hmul q₁.1 h₁ q₂.1 h₂, hgood.lgmul]
-    · intro r h₁ h₂
-      exact hzero _ h₁ h₂
+    · exact fun r h₁ h₂ => hzero _ h₁ h₂
   have hηP : ∀ q : siegel V, η (Φ q) = Real.log (absA D (aP V q)) := by
     intro q
     have := hηQ (Φ q) ((hPs q).1 q.2) 1 (one_mem _)

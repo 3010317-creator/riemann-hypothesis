@@ -146,8 +146,7 @@ theorem differentiableOn_sheet (c : AlgChart p σ e) (i : B.ι) : Differentiable
     (PiLp.continuousLinearEquiv 2 ℂ (fun _ : Fin e => ℂ)).symm.differentiable
   have hg : ∀ k, DifferentiableOn ℂ (fun x : Fin e → ℂ => loc p s σ i (c.e.symm (WithLp.toLp 2 x)) k)
       ((WithLp.toLp 2 : (Fin e → ℂ) → V e) ⁻¹' (c.e.target ∩ c.e.symm ⁻¹' ptsIn p σ (B.U i))) := by
-    intro k
-    exact (c.holo (B.U i) ((s k).f i)).comp hL.differentiableOn (fun x hx => hx)
+    exact fun k => (c.holo (B.U i) ((s k).f i)).comp hL.differentiableOn (fun x hx => hx)
   rw [differentiableOn_pi]
   intro j
   simp only [sheet, Matrix.mulVec, dotProduct]
@@ -173,15 +172,13 @@ theorem chernDens_eq_fsDens (hE : Emb p s) (hφ : φ.IsCInf) (hF : IsFS φ s h) 
   have hO := c.e.isOpen_inter_preimage_symm (isOpen_ptsIn (B.U i))
   have hmem : c.e y ∈ c.e.target ∩ c.e.symm ⁻¹' ptsIn p σ (B.U i) := by
     refine ⟨c.e.map_source hy, ?_⟩
-    rw [Set.mem_preimage, c.e.left_inv hy]
-    exact hi
+    rwa [Set.mem_preimage, c.e.left_inv hy]
   rw [c.chernDens_eq hφ hy hi]
   unfold AlgChart.hess
   apply dens_eq
   · have hmem' : (c.e y).ofLp ∈ (WithLp.toLp 2 : (Fin e → ℂ) → V e) ⁻¹'
         (c.e.target ∩ c.e.symm ⁻¹' ptsIn p σ (B.U i)) := by
-      rw [Set.mem_preimage, WithLp.toLp_ofLp]
-      exact hmem
+      rwa [Set.mem_preimage, WithLp.toLp_ofLp]
     filter_upwards [(isOpen_dom c i).mem_nhds hmem'] with x hx
     exact (differentiableOn_sheet (s := s) (h := h) c i).differentiableAt ((isOpen_dom c i).mem_nhds hx)
   · exact sheet_ne_zero hE c hy hi
@@ -254,8 +251,7 @@ theorem measurable_coords {β : Type} [MeasurableSpace β] (hB : B.IsLB) {F : Eu
       obtain ⟨i, hi, hyi⟩ := hcov y
       exact ⟨i, hi, hyi, by rw [← heq i y hyi]; exact hy⟩
     · rintro ⟨i, hi, hyi, hy⟩
-      rw [heq i y hyi]
-      exact hy
+      rwa [heq i y hyi]
   rw [hpre]
   exact MeasurableSet.biUnion hT fun i _ => (isOpen_ptsIn _).measurableSet.inter (hloc i ht)
 
@@ -348,16 +344,14 @@ theorem lintegral_chart (hE : Emb p s) (hφ : φ.IsCInf) (hF : IsFS φ s h) (c :
       · rintro ⟨hxS, hxD⟩
         obtain ⟨a, ha, hax, hga⟩ := hpt x hxD
         refine ⟨a, ⟨?_, ha⟩, hax⟩
-        rw [← hga]
-        exact hxS
+        rwa [← hga]
       · rintro ⟨a, ⟨haS, ha⟩, hax⟩
         have hxD : x ∈ D := ⟨a, ha, hax⟩
         obtain ⟨a', ha', hax', hga'⟩ := hpt x hxD
         refine ⟨?_, hxD⟩
         show g x ∈ S
         have : a' = a := c.e.injOn (hAc ha') (hAc ha) (hax'.trans hax.symm)
-        rw [hga', this]
-        exact haS
+        rwa [hga', this]
     rw [hset, hglue (S ∩ A) (hS.inter hA) hSA, chartMeas_apply_of_subset _ _ (hS.inter hA) hSA,
       ← (GroundTheory.Heights₂.Heights.ConeMapAreaFormula.measurePreserving_toLp e).setLIntegral_comp_preimage_emb
         (MeasurableEquiv.toLp 2 (Fin e → ℂ)).measurableEmbedding]
@@ -727,8 +721,7 @@ theorem cone_side {K : Type} [Field K] [NumberField K] {e : ℕ} {I : Ideal (MvP
     have := (hproj W hW).isPrime
     refine ConeMeetNull.null_of_mem_not_mem ZeroLocusDimH.proof h W _ (hdimW W hW) _
       (Ideal.mem_span_singleton_self _) fun hqW => hq ?_
-    rw [← BaseChangeAvoid.comap_eq_of_mem_minimalPrimes σ I (mem_minimalPrimes_of_mem_support hW)]
-    exact hqW
+    rwa [← BaseChangeAvoid.comap_eq_of_mem_minimalPrimes σ I (mem_minimalPrimes_of_mem_support hW)]
 
 end ChowFormHeightComparison₂.CF.C
 end -- clump:auto
@@ -799,8 +792,7 @@ theorem map_notMem {K : Type} [Field K] [NumberField K] {m : ℕ} {P : Ideal (Mv
   apply hq
   have hc := IsLocalization.under_map_of_isPrime_disjoint (M := (nonZeroDivisors (𝓞 K)).map (C (σ := Fin m)))
     (S := MvPolynomial (Fin m) K) hP hdisj
-  rw [← hc, Ideal.mem_comap]
-  exact hmem
+  rwa [← hc, Ideal.mem_comap]
 
 theorem volume_univ_zero : (volume : Measure (V 0)) univ = 1 := by
   rw [← (stdOrthonormalBasis ℝ (V 0)).volume_parallelepiped]
@@ -824,8 +816,7 @@ theorem integral_zero {R : Type} [CommRing R] {Z : Scheme.{0}} {B : LB Z} {p : Z
     intro c y hy
     ext z
     constructor
-    · intro hz
-      exact c.e.injOn hz hy (hV _ _)
+    · exact fun hz => c.e.injOn hz hy (hV _ _)
     · rintro rfl
       exact hy
   haveI : DiscreteTopology (CxPts p σ) := by
@@ -873,8 +864,7 @@ theorem stArch (h1 : StPts) (h2 : StCharts) : StArch := by
     constructor
     · intro hx r hr
       have hx' := hx _ (Ideal.mem_map_of_mem _ (Ideal.mem_map_of_mem _ hr))
-      rw [MvPolynomial.map_map, MvPolynomial.eval_map] at hx'
-      exact hx'
+      rwa [MvPolynomial.map_map, MvPolynomial.eval_map] at hx'
     · intro hx r hr
       have hle : Ideal.map (MvPolynomial.map σ) (genIdeal p s) ≤ RingHom.ker (MvPolynomial.eval x) := by
         rw [Ideal.map_le_iff_le_comap, genIdeal, Ideal.map_le_iff_le_comap]
@@ -889,8 +879,7 @@ theorem stArch (h1 : StPts) (h2 : StCharts) : StArch := by
     rintro y ⟨hy1, hy2⟩
     refine ⟨hy1, ?_⟩
     simp only [Set.mem_setOf_eq] at hy2 ⊢
-    rw [MvPolynomial.map_map, MvPolynomial.eval_map]
-    exact hy2
+    rwa [MvPolynomial.map_map, MvPolynomial.eval_map]
   have hℓs : ∀ t : ℂ, t ≠ 0 → ∀ x : EuclideanSpace ℂ (Fin m),
       fsLog h (fun k => σ (u k)) (h.pointOf (t • x)) = fsLog h (fun k => σ (u k)) (h.pointOf x) := by
     intro t ht x

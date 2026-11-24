@@ -157,10 +157,8 @@ theorem hCls : HCls := by
   rw [e]
   have hW0 : (M0 + (0 : ℂ) • (-c • V)).det * (M0' + (0 : ℂ) • (c • V)).det ∈ Complex.slitPlane := by
     have e0 : (M0 + (0 : ℂ) • (-c • V)).det * (M0' + (0 : ℂ) • (c • V)).det = (1 + Matrix.of x * Matrix.of x).det := by
-      simp only [zero_smul, add_zero]
-      exact (det_sq_split s hs x).symm
-    rw [e0]
-    exact h3
+      simpa only [zero_smul, add_zero] using (det_sq_split s hs x).symm
+    rwa [e0]
   have hW := hdM.fun_mul hdM'
   have hL := hW.clog (by simpa using hW0)
   have hE := (hL.const_mul (-z)).cexp
@@ -409,8 +407,7 @@ theorem divZ_iff (i : ℕ) (Q : Fm n) : DivZ i Q ↔ ∃ R : Fm n, Q = R * wz n 
     have hmem : Q ∈ Ideal.map (MvPolynomial.C : Polynomial ℂ →+* Fm n)
         (Ideal.span {(Polynomial.X ^ i : Polynomial ℂ)}) := by
       rw [MvPolynomial.mem_map_C_iff]
-      intro e
-      exact Ideal.mem_span_singleton.mpr (h e)
+      exact fun e => Ideal.mem_span_singleton.mpr (h e)
     rw [Ideal.map_span, Set.image_singleton] at hmem
     obtain ⟨a, ha⟩ := Ideal.mem_span_singleton'.mp hmem
     exact ⟨a, ha.symm⟩
@@ -676,8 +673,7 @@ theorem cayDiv_of : CayDivOf := by
   have H := Submodule.span_induction
     (p := fun x _ => DivZ (n - m) (((φ x : Algebra.adjoin ℂ (Sop s m n)) : Module.End ℂ (Fm n)) 1))
     ?mem ?zero ?add ?smul hmem
-  · rw [map_pow, hpow, hcoe_cay] at H
-    exact H
+  · rwa [map_pow, hpow, hcoe_cay] at H
   case mem =>
     intro x hx
     obtain ⟨i, j, hij, hcase⟩ := hx
@@ -915,8 +911,7 @@ theorem exists_minor_ne_zero {n : ℕ} (M : Matrix (Fin n) (Fin n) K) {k : ℕ} 
   refine ⟨I, J, ?_⟩
   set T : Matrix (Fin k) (Fin k) K := Rᵀ.submatrix J id with hT
   have hTu : IsUnit T := by
-    rw [← linearIndependent_rows_iff_isUnit]
-    exact hJ
+    rwa [← linearIndependent_rows_iff_isUnit]
   have hTeq : T = (M.submatrix I J)ᵀ := by
     ext p q
     simp [T, R, transpose_apply, submatrix_apply]

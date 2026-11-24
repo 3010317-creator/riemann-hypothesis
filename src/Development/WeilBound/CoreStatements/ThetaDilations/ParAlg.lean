@@ -127,8 +127,7 @@ theorem hypJ_map {L : Type} [CommRing L] (φ : K →+* L) (J : Matrix (Fin M) (F
 
 theorem hform_eq (s : K →+* K) (J : Matrix (Fin M) (Fin M) K) (x y : Fin M → K) :
     hform s J x y = ((s ∘ x) ᵥ* J) ⬝ᵥ y := by
-  simp only [hform, vecMul, dotProduct, Finset.sum_mul, Function.comp]
-  exact Finset.sum_comm
+  simpa only [hform, vecMul, dotProduct, Finset.sum_mul, Function.comp] using Finset.sum_comm
 
 theorem gram_blk (s : K →+* K) (J : Matrix (Fin M) (Fin M) K) (a b d : K) (r t w : Fin M → K)
     (U : Matrix (Fin M) (Fin M) K) :
@@ -248,7 +247,6 @@ theorem continuous_UJ {n : ℕ} [TopologicalSpace K] [IsTopologicalRing K] {s : 
     have : g = mkU s hJ _ g.2 := Subtype.ext (Units.ext rfl)
     conv_rhs => rw [this]
     rfl
-  rw [e]
-  exact h3
+  rwa [e]
 
 end PositivityTheory.PlacePermOperatorBicommutantSpan

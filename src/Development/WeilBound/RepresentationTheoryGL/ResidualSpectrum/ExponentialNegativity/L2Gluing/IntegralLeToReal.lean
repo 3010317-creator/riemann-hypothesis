@@ -164,8 +164,7 @@ theorem lintegral_enorm_sq_le {α : Type} [MeasurableSpace α] (μ : Measure α)
   have h1 : (∫⁻ a, ((g * fun _ => (1 : ℝ≥0∞)) : α → ℝ≥0∞) a ∂μ) = ∫⁻ x, g x ∂μ := by simp
   have h2 : (∫⁻ _a, (1 : ℝ≥0∞) ^ (2 : ℝ) ∂μ) = μ Set.univ := by simp
   have h3 : (∫⁻ a, g a ^ (2 : ℝ) ∂μ) = ∫⁻ x, g x ^ 2 ∂μ := by
-    refine lintegral_congr fun x => ?_
-    exact ENNReal.rpow_two _
+    exact lintegral_congr fun x => ENNReal.rpow_two _
   rw [h1, h2, h3] at h
   calc (∫⁻ x, g x ∂μ) ^ 2
       ≤ ((∫⁻ x, g x ^ 2 ∂μ) ^ (1 / (2 : ℝ)) * (μ Set.univ) ^ (1 / (2 : ℝ))) ^ 2 := by
@@ -233,8 +232,7 @@ theorem tendsto_setLIntegral_diff_compactCovering
     rw [hm, withDensity_apply h (hmeas k), Measure.restrict_restrict (hmeas k), Set.diff_eq,
       Set.inter_comm]
   have huniv : m Set.univ < ⊤ := by
-    rw [hm, withDensity_apply h MeasurableSet.univ, Measure.restrict_univ]
-    exact hfin
+    rwa [hm, withDensity_apply h MeasurableSet.univ, Measure.restrict_univ]
   have hanti : Antitone (fun k : ℕ => (compactCovering α k)ᶜ) := fun i j hij =>
     Set.compl_subset_compl.mpr (compactCovering_subset α hij)
   have hinter : ⋂ k : ℕ, (compactCovering α k)ᶜ = ∅ := by

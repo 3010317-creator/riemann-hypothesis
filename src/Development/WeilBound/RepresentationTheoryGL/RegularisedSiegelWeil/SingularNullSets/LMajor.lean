@@ -117,8 +117,7 @@ theorem cutSupp (θ : InfFam D) (hθ : IsInfFam θ) {a b : ℕ} (K : Set (Mx D a
   refine Finset.sum_le_sum fun τ _ => Finset.sum_le_sum fun i _ => Finset.sum_le_sum fun j _ => ?_
   have h1 := norm_le_pi_norm (fun τ i j => compAt θ τ x i j) τ
   have h2 := norm_le_pi_norm (fun i j => compAt θ τ x i j) i
-  have h3 := norm_le_pi_norm (fun j => compAt θ τ x i j) j
-  exact h3.trans (h2.trans (h1.trans hmem))
+  exact (norm_le_pi_norm (fun j => compAt θ τ x i j) j).trans (h2.trans (h1.trans hmem))
 
 end PositivityTheory.Rg.Rsw.L.LMajor
 
@@ -621,8 +620,7 @@ theorem bumpMaj (hB : BumpEx) (θ : InfFam D) (hθ : IsInfFam θ) {S : Finset (P
   choose G hGSB hGeq using hG
   set Ψ : Mx D a b → ℂ := fun x => ∏ i, η i (sF D • row i x) with hΨ
   have hΨG : ∀ x, Ψ x = (fun z => ∏ i, G i fun _ j => z i j) (fun i j => finPart D (x i j)) := by
-    intro x
-    exact Finset.prod_congr rfl fun i _ => hGeq i (row i x)
+    exact fun x => Finset.prod_congr rfl fun i _ => hGeq i (row i x)
   have hΨgood : Good S e Ψ := by
     intro x
     by_cases hx : IntOff S x
@@ -718,8 +716,7 @@ theorem major : IdemEx → GoodEv → BumpEx → Major := by
   calc ‖1 - c (cA θ x)‖ * ‖Φ x‖ ≤ ‖1 - c (cA θ x)‖ * (M * ∑ i, ‖f i (cA θ x)‖) :=
         mul_le_mul_of_nonneg_left (hdom x) (norm_nonneg _)
     _ = M * ∑ i, ‖f i (cA θ x)‖ * ‖1 - c (cA θ x)‖ := by
-        simp only [Finset.mul_sum]
-        exact Finset.sum_congr rfl fun i _ => by ring
+        simpa only [Finset.mul_sum] using Finset.sum_congr rfl fun i _ => by ring
     _ ≤ M * ∑ _i : Fin k, ε / (M * k + 1) * (F₀ (cA θ x)).re := by
         exact mul_le_mul_of_nonneg_left (Finset.sum_le_sum fun i _ => hcb i _) hM
     _ = (M * k) / (M * k + 1) * (ε * (F₀ (cA θ x)).re) := by

@@ -140,8 +140,7 @@ theorem dFr_conj (h : CxData lam E Fr ε ι S Γ T) (k : Matrix.unitaryGroup (Fi
     have hd := (fr_diff h (one_mem_GLs (n := n))).hasFDerivAt
     rw [← hpt] at hd
     have := hd.comp (1 : Mat n) (mulLRL (k.1)ᴴ k.1).hasFDerivAt
-    rw [hpt] at this
-    exact this
+    rwa [hpt] at this
   have h2 : HasFDerivAt (fun y => L (Fr y)) (L.comp (fderiv ℝ Fr 1)) 1 :=
     L.hasFDerivAt.comp (1 : Mat n) (fr_diff h (one_mem_GLs (n := n))).hasFDerivAt
   rw [h1.fderiv, h2.fderiv] at e

@@ -287,8 +287,7 @@ theorem hasFDerivAt_orb_at {v : X} {D : LieI ι a →L[ℝ] X} (hD : HasFDerivAt
     rw [lmul_apply, mulI_gI, inv_mul_cancel, gI_one]
   have hD' : HasFDerivAt (orb ρ v) D (lmul (gI g⁻¹) (gI g)) := h1 ▸ hD
   have := ((ρ g).restrictScalars ℝ).hasFDerivAt.comp (gI g) (hD'.comp (gI g) (lmul (gI g⁻¹)).hasFDerivAt)
-  rw [e]
-  exact this
+  rwa [e]
 
 theorem polyBd_opNorm (hρ : PolyBd ρ) : ∃ (C : ℝ) (N : ℕ), 0 ≤ C ∧
     ∀ g : GL (Fin a) (ι → ℂ), ‖ρ g‖ ≤ C * (1 + ‖gI g‖ + ‖gI g⁻¹‖) ^ N := by

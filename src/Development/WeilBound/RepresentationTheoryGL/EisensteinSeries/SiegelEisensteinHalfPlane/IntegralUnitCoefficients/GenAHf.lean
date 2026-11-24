@@ -238,8 +238,7 @@ theorem int_of_K (k : G D n) (hk : k ∈ K D n) (v : GlobalTheory.FinPl.Pl D) (i
   have h2 := (mem_stabLoc.1 h _).1 hy
   rw [mem_latLoc_stdLattice] at h2
   have h3 := h2 i
-  rw [proj_mat, Matrix.mulVec_single_one] at h3
-  exact h3
+  rwa [proj_mat, Matrix.mulVec_single_one] at h3
 
 end PositivityTheory.Rg.Sw.Glob.GenFinLocHf
 
@@ -312,8 +311,7 @@ theorem locSub (hF : LocRedField) (hS : LocRedSplit) {S : Type} [CommRing S] {n 
   have hUni : Uni σ g := by
     apply hinj
     change (Formalism.UG.cT σ g * J2 O n * g).map O.subtype = (J2 O n).map O.subtype
-    rw [Matrix.map_mul, Matrix.map_mul, cT_map _ _ _ hc, standard_symplectic_matrix_map]
-    exact hU
+    rwa [Matrix.map_mul, Matrix.map_mul, cT_map _ _ _ hc, standard_symplectic_matrix_map]
   have hdet : IsUnit g.det := by
     have e : g * g' = 1 := by
       apply hinj
@@ -666,8 +664,7 @@ theorem adj_map {S : Type} [CommRing S] (f : AE D →+* S) (σS : S →+* S)
     (hf : ∀ z, f (sigR (AF D.host.F) D.sp.cm.sig z) = σS (f z)) (x : Matrix (Fin n) (Fin n) (AE D)) :
     (GlobalTheory.MixModel.adj x).map f = ((x.map f).map σS)ᵀ := by
   ext i j
-  simp only [GlobalTheory.MixModel.adj, Matrix.map_apply, Matrix.transpose_apply]
-  exact hf _
+  simpa only [GlobalTheory.MixModel.adj, Matrix.map_apply, Matrix.transpose_apply] using hf _
 
 theorem isUnit_of_intUnit {v : GlobalTheory.FinPl.Pl D} {z : Ev D v} (h : IsIntUnit z) : IsUnit z := by
   obtain ⟨-, z', -, hz⟩ := h
@@ -962,8 +959,7 @@ theorem locRedSplit : LocRedSplit := by
     refine hInjD u hC0 (fun j hj => ?_)
     obtain ⟨i, hi, hij⟩ := hπs j (hJT hj)
     have := (hmix i).2 hi
-    rw [← Matrix.vecMul_vecMul, hvP, hij] at this
-    exact this
+    rwa [← Matrix.vecMul_vecMul, hvP, hij] at this
   exact hu0 (lower_inj g u hC0 hD0)
 
 end PositivityTheory.Rg.Sw.Glob

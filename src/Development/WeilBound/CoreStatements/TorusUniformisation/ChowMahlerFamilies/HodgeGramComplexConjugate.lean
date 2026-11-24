@@ -258,8 +258,7 @@ theorem twPt_mul (h : IsGrpPullback A' A cj φ) (x y : 𝟙_ (Over (Sp ℂ)) ⟶
     Over.homMk cj ((Category.comp_id _).trans (Category.id_comp _).symm)
   have e := h.2 _ (twPt h x) (twPt h y) (U ≫ x) (U ≫ y) (twPt_comp h x).symm (twPt_comp h y).symm
   rw [← MonObj.comp_mul] at e
-  refine Over.OverMorphism.ext ((cancel_mono φ).1 ?_)
-  exact (twPt_comp h _).trans e
+  exact Over.OverMorphism.ext ((cancel_mono φ).1 ((twPt_comp h _).trans e))
 
 theorem twPt_inj (h : IsGrpPullback A' A cj φ) : Function.Injective (twPt h) := by
   intro x y e

@@ -108,22 +108,19 @@ theorem dL2 : DifferenceQuotientIsometryExchange := by
   have hlim_pt : ∀ u, Tendsto (fun h => F h u) (𝓝[≠] 0) (𝓝 (ENNReal.ofReal (‖E' u - T G' u‖ ^ 2))) := by
     intro u
     rw [hF]
-    have h1 := ((hpt u).sub_const (T G' u)).norm.pow 2
-    exact (ENNReal.continuous_ofReal.tendsto _).comp h1
+    exact (ENNReal.continuous_ofReal.tendsto _).comp (((hpt u).sub_const (T G' u)).norm.pow 2)
   have hint : ∀ h, ∫⁻ u, F h u = ENNReal.ofReal (κ * ∫ u, ‖(G (s + h) u - G s u) / (h : ℂ) - G' u‖ ^ 2) := by
     intro h
     rw [← hTiso _ (hD h), hTD, ofReal_integral_eq_lintegral_ofReal, hF]
     · have hi := isSch_sq_integrable (hTS _ (hD h))
-      rw [hTD] at hi
-      exact hi
+      rwa [hTD] at hi
     · exact Filter.Eventually.of_forall fun u => sq_nonneg _
   have hlim_int : Tendsto (fun h => ∫⁻ u, F h u) (𝓝[≠] 0) (𝓝 0) := by
     simp_rw [hint]
     have h1 := hL2.const_mul κ
     rw [mul_zero] at h1
     have h2 := (ENNReal.continuous_ofReal.tendsto 0).comp h1
-    rw [ENNReal.ofReal_zero] at h2
-    exact h2
+    rwa [ENNReal.ofReal_zero] at h2
   have hfatou := lintegral_liminf_le (μ := (volume : Measure (Fin m → Fin n → ℂ))) (u := 𝓝[≠] (0 : ℝ)) hmeas
   rw [hlim_int.liminf_eq] at hfatou
   have hz : ∫⁻ u, ENNReal.ofReal (‖E' u - T G' u‖ ^ 2) = 0 := by

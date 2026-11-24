@@ -297,8 +297,7 @@ theorem gen_cone {Φ : Type} [Field Φ] [Algebra (MvPolynomial K Ω₁) Φ] [IsF
     have hM : (∏ k : K, (X k : MvPolynomial K Ω₁) ^ d k) ≠ 0 :=
       Finset.prod_ne_zero_iff.mpr (fun k _ => pow_ne_zero _ (X_ne_zero k))
     have hCne : (C (aeval y h) : MvPolynomial K Ω₁) ≠ 0 := by
-      rw [Ne, MvPolynomial.C_eq_zero]
-      exact hne0
+      rwa [Ne, MvPolynomial.C_eq_zero]
     have hden : algebraMap (MvPolynomial K Ω₁) Φ (mConeMap y h) ≠ 0 := by
       rw [eh]
       intro h0
@@ -369,8 +368,7 @@ theorem exists_genFibre {y : (Σ b, ι b) → Ω₁} (y' : (Σ b, ι' b) → Ω)
     intro c
     rw [IsScalarTower.algebraMap_apply Ω₁ (MvPolynomial K Ω₁) Φ, MvPolynomial.algebraMap_eq]
   have hL : ∀ r, L (algebraMap (MvPolynomial K Ω₁) Φ r) = ν (MvPolynomial.map (algebraMap Ω₁ B) r) := by
-    intro r
-    exact IsFractionRing.lift_algebraMap hg r
+    exact fun r => IsFractionRing.lift_algebraMap hg r
   have hbc := ker_baseChange (algebraMap Ω₁ Φ) ha ν hν L hL ψ
   refine ⟨⟨Φ, Φ', fun p => algebraMap (MvPolynomial K Ω₁) Φ (C (y p) * X p.1),
     fun q => ν' (C (joinPt (fun x => algebraMap Ω₁ Ω (y x)) y' q) * X q.1), ?_, ?_, ?_, ?_⟩, ?_⟩
@@ -556,8 +554,7 @@ theorem geoPF : PtDim → GeoPF := by
       intro c
       rw [IsScalarTower.algebraMap_apply Ω₁ (MvPolynomial K Ω₁) Φ, MvPolynomial.algebraMap_eq]
     have hL : ∀ r, L (algebraMap (MvPolynomial K Ω₁) Φ r) = ν (MvPolynomial.map (algebraMap Ω₁ B) r) := by
-      intro r
-      exact IsFractionRing.lift_algebraMap hg r
+      exact fun r => IsFractionRing.lift_algebraMap hg r
     have hbc := ker_baseChange (algebraMap Ω₁ Φ) ha ν hν L hL ψ
     refine ⟨⟨Φ, Φ', fun p => algebraMap (MvPolynomial K Ω₁) Φ (C (y p) * X p.1),
       fun q => ν' (C (joinPt (fun x => algebraMap Ω₁ Ω (y x)) y' q) * X q.1), ?_, ?_, ?_, ?_⟩, ?_⟩

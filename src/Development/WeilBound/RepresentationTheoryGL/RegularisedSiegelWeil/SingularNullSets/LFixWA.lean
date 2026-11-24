@@ -204,8 +204,7 @@ theorem dual_psi {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) :
   have := hc _ hst
   have e : c * (algebraMap (Fv D.host.F v) (Fv D.host.F v ⊗[D.host.F] D.host.E) s * t) = s • (c * t) := by
     rw [Algebra.smul_def]; ring
-  rw [e, LinearMap.map_smul, smul_eq_mul, mul_comm] at this
-  exact this
+  rwa [e, LinearMap.map_smul, smul_eq_mul, mul_comm] at this
 
 end PositivityTheory.Rg.Rsw.L.LFixW
 
@@ -250,8 +249,7 @@ theorem offS_sub_idem (he : IsIdem S e) {x : AE D} (hx : IntS S x) : OffS S (x -
   · rw [RingHom.map_sub, RingHom.map_mul, he.1 w, one_mul, sub_self]
   · rw [RingHom.map_sub, RingHom.map_mul, idem_in he hv, one_mul, sub_self]
   · have h := hx v hv
-    rw [RingHom.map_sub, RingHom.map_mul, idem_out he hv, zero_mul, sub_zero]
-    exact h
+    rwa [RingHom.map_sub, RingHom.map_mul, idem_out he hv, zero_mul, sub_zero]
 
 def OffM (S : Finset (Pl D)) (z : Mx D a b) : Prop := ∀ i j, OffS S (z i j)
 
@@ -285,8 +283,7 @@ theorem good_of (he : IsIdem S e) {Φ : Mx D a b → ℂ} (hs : ∀ x, ¬ IntOff
       rw [Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul]
       exact offS_sub_idem he ((intOff_iff x).1 h i j)
     have := ht (e • x) (x - e • x) hz
-    rw [add_sub_cancel] at this
-    exact this
+    rwa [add_sub_cancel] at this
   · exact hs x h
 
 def kap {r n : ℕ} (ψ : AddChar (AF D.host.F) ℂ) (Q : Matrix (Fin r) (Fin r) D.host.E) (x y : Mx D r n) : ℂ :=

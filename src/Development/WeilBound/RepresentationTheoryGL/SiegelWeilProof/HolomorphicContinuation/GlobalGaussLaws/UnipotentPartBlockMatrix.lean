@@ -161,8 +161,7 @@ theorem psi_unip {θ : InfFam D} (hθ : IsInfFam θ) {ψ : AddChar (AF D.host.F)
     refine Prod.ext ?_ ?_
     · show (algebraMap D.host.F (AF D.host.F) (1 / 2)).1 * _ = _
       rfl
-    · show (algebraMap D.host.F (AF D.host.F) (1 / 2)).2 * 0 = 0
-      exact mul_zero _
+    · exact mul_zero _
   rw [hh, show ψ (pairA D.host.F _ 0) = psiInf D.host.F ψ _ from rfl, hl]
   have hterm : ∀ τ', θ τ' ((algebraMap D.host.F (Ainf D.host.F) (1 / 2) *
       fstA D.host.F (Algebra.trace (AF D.host.F) (AE D) z)) ⊗ₜ[D.host.F] (1 : D.host.E)) =
@@ -201,8 +200,7 @@ theorem psi_unip {θ : InfFam D} (hθ : IsInfFam θ) {ψ : AddChar (AF D.host.F)
   · intro τ' _ hne
     rw [hcomp τ', h2 τ' hne, Matrix.zero_mul, Matrix.trace_zero]
     simp
-  · intro h
-    exact absurd (Finset.mem_univ τ) h
+  · exact fun h => absurd (Finset.mem_univ τ) h
 
 end PositivityTheory.Rg.Sw.Glob.UnipH
 

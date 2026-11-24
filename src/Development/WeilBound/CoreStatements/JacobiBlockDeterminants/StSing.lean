@@ -157,8 +157,7 @@ theorem colFrame_li {c : Fin r → V} (hc : LinearIndependent Ω c) {A : Matrix 
     simp only [colFrame, Matrix.mulVec, dotProduct, Finset.sum_smul, Finset.smul_sum, smul_smul]
     rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by rw [mul_comm]
-  have h2 := GrNorm.coeff_eq_of_li hc h1
-  exact congrFun (Matrix.eq_zero_of_mulVec_eq_zero hA h2)
+  exact congrFun (Matrix.eq_zero_of_mulVec_eq_zero hA (GrNorm.coeff_eq_of_li hc h1))
 
 theorem colFrame_mem (A : Subring Ω) {c : Fin r → V} {T : Matrix (Fin r) (Fin r) Ω} (hT : ∀ p q, T p q ∈ A)
     (k : Fin r) : colFrame c T k ∈ Submodule.span A (Set.range c) :=
@@ -696,8 +695,7 @@ theorem minor_om (Γ : Matrix (Fin (p + q)) (Fin (p + q)) ℂ) (i : Fin (p + q))
     rfl
   · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_right hi]
     constructor
-    · intro h
-      exact ⟨⟨a, h⟩, rfl⟩
+    · exact fun h => ⟨⟨a, h⟩, rfl⟩
     · rintro ⟨s, rfl⟩
       exact s.2
 
@@ -727,10 +725,8 @@ theorem sum_tele {N : ℕ} (f : ℕ → ℝ) (i : Fin N) :
     ∑ m ∈ Finset.Iic i, (f ((m : ℕ) + 1) - f m) = f (i + 1) - f 0 := by
   rw [← Finset.sum_range_sub f]
   refine Finset.sum_bij (fun m _ => (m : ℕ)) ?_ ?_ ?_ (fun _ _ => rfl)
-  · intro m hm
-    exact Finset.mem_range.2 (Nat.lt_succ_of_le (Fin.le_def.1 (Finset.mem_Iic.1 hm)))
-  · intro a _ b _ h
-    exact Fin.ext h
+  · exact fun m hm => Finset.mem_range.2 (Nat.lt_succ_of_le (Fin.le_def.1 (Finset.mem_Iic.1 hm)))
+  · exact fun a _ b _ h => Fin.ext h
   · intro n hn
     have h1 := Finset.mem_range.1 hn
     have h2 := i.2
@@ -971,8 +967,7 @@ variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] {Ω : 
   {x : (Σ k, ι k) → Ω} {w : (Σ k, ι k) → ℂ}
 
 theorem mem_regRing_of_regAt (hw : w ∈ mcPts (mCoordIdeal x)) {s : Ω} (hs : RegAt x (mCoordIdeal w) s) :
-    s ∈ regRing x w := by
-  exact ValRing.exists_isValueAt hw hs
+    s ∈ regRing x w := ValRing.exists_isValueAt hw hs
 
 theorem valAt_one_multihomogeneous_squares (hw : w ∈ mcPts (mCoordIdeal x)) : valAt x (1 : Ω) w = 1 := (regVal hw).map_one
 
@@ -1025,8 +1020,7 @@ theorem block_diag_minor_ne_zero {N j : ℕ} (hj : j ≤ N) (i : Fin N) (h : Mat
     have heq : (h.submatrix (I.orderEmbOfFin hI) e).row = (A.row ∘ a) ∘ f := by
       funext t c
       simp [Matrix.row, A, hf]
-    rw [heq]
-    exact h2
+    rwa [heq]
   refine ⟨I, ⟨hI, ?_⟩, ?_⟩
   · intro r hr
     obtain ⟨c, -, rfl⟩ := Finset.mem_image.1 hr
@@ -1045,8 +1039,7 @@ theorem block_diag_minor_ne_zero {N j : ℕ} (hj : j ≤ N) (i : Fin N) (h : Mat
       have h3 : (a c : ℕ) < N - j := by omega
       exact absurd (hiff.1 h3) (by omega)
     · simp [omIdx] at hnot
-      intro hiff
-      exact absurd (hiff.2 hc) (by omega)
+      exact fun hiff => absurd (hiff.2 hc) (by omega)
   · rw [MinorCalc.minorIJ_eq_det h I J k hI rfl]
     have := Matrix.linearIndependent_rows_iff_isUnit.1 hrows
     exact ((Matrix.isUnit_iff_isUnit_det _).1 this).ne_zero
@@ -1056,8 +1049,7 @@ theorem c5 : C5 := by
   classical
   obtain ⟨I0, hI0, hne⟩ := block_diag_minor_ne_zero M.j_le p.2 h hb hd
   set J := stepCols N j p.2 with hJ
-  by_contra hall
-  push Not at hall
+  by_contra! hall
   have hreg : ∀ (q : (k : K) × ι k) (I : Finset (Fin N)),
       F.u q I ∈ regRing M.x wb ∧ F.u' I q ∈ regRing M.x wb :=
     fun q I => ⟨mem_regRing_of_regAt hw (hG.2.1 q I).1, mem_regRing_of_regAt hw (hG.2.1 q I).2⟩
@@ -1244,8 +1236,7 @@ theorem prod_dy {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
     · simp
     · rw [Finset.prod_eq_single (⟨k₀, fun h => h p hb⟩ : {k // ¬ ∀ p', M.blk p' ≠ some k})]
       · simp
-      · intro k _ hk
-        exact ite_eq_right fun e => hk (Subtype.ext (Option.some.inj e).symm)
+      · exact fun k _ hk => ite_eq_right fun e => hk (Subtype.ext (Option.some.inj e).symm)
       · simp
   · refine Finset.prod_congr (by ext; simp) fun k _ => ?_
     rw [FlagModel.dy, dite_eq_left k.2]
@@ -1280,8 +1271,7 @@ theorem stSing_of (h0 : C0) (h1 : C1) (h2 : C2) (h5 : C5) (hW : GradedLineNormsW
       have h3 := this _ _ (hW E H D l Xo c Y S K ι Φ y M 𝔐 tie 𝔐' Fl pr j z (BM.F q) τ B h _ hT hF hfW hA hGb hGp hint
         (hBM.gramW q τ x ⟨hq, hx⟩ _ hl) ⟨m, hm⟩)
       rw [zpow_one, zpow_one] at h3
-      rw [col, mu, dite_eq_left hm, ite_eq_left hm]
-      exact h3
+      rwa [col, mu, dite_eq_left hm, ite_eq_left hm]
     · have hm2 := m.2
       have e2 : HodgeCpt.rootIdx D (τ, m) = ⟨.inr τ, ⟨D.p + D.q - 1 - m, by show _ < D.q; omega⟩⟩ := dite_eq_right hm
       have e3 : HodgeCpt.rootSgn D (τ, m) = -1 := ite_eq_right hm
@@ -1292,8 +1282,7 @@ theorem stSing_of (h0 : C0) (h1 : C1) (h2 : C2) (h5 : C5) (hW : GradedLineNormsW
       have e4 : (⟨D.p + D.q - 1 - m, by omega⟩ : Fin D.q).rev = ⟨m - D.p, by omega⟩ :=
         Fin.ext (by simp only [Fin.val_rev]; omega)
       rw [e4] at h3
-      rw [col, mu, dite_eq_right hm, ite_eq_right hm]
-      exact h3
+      rwa [col, mu, dite_eq_right hm, ite_eq_right hm]
   have hdy' : M.dy (τ, i) = -∑ m ∈ Finset.Iic i, (sing (τ, m)).a := by simp only [hsd]; exact hdy τ i
   have hdeg : (Top.combLine sing (Cmp.fundOnRoot (τ, i))).a = (BM.hom (τ, i)).a := by
     show ∑ r, _ • (sing r).a = _

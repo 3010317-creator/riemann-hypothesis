@@ -81,8 +81,7 @@ theorem continuousAt_twisted_section {n : ℕ} (p q : ℕ) (e : ℤ) (M : M2 n) 
   · exact ContinuousAt.zpow₀ ((continuous_second_cayley_block n).matrix_det).continuousAt _ (Or.inl h2)
 
 theorem tsb_det_ne (n : ℕ) (g : GR n) : (mR g).det ≠ 0 := by
-  have h := g.1.isUnit
-  exact (Matrix.isUnit_iff_isUnit_det _).mp h |>.ne_zero
+  exact (Matrix.isUnit_iff_isUnit_det _).mp g.1.isUnit |>.ne_zero
 
 theorem continuous_spherical_section (hD : CayleyBlocksInvertible) (n p q : ℕ) (e : ℤ) : Continuous (F0 p q e : GR n → ℂ) := by
   refine continuous_iff_continuousAt.2 fun g => ?_
@@ -115,8 +114,7 @@ def kOf (n : ℕ) (M : kSet n) : KR n :=
 
 theorem tsb_kOf_cont (n : ℕ) : Continuous (kOf n) := by
   refine Continuous.subtype_mk (Continuous.subtype_mk ?_ _) _
-  refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
-  exact continuous_subtype_val.matrix_conjTranspose
+  exact Units.continuous_iff.2 ⟨continuous_subtype_val, continuous_subtype_val.matrix_conjTranspose⟩
 
 theorem tsb_kOf_surj (n : ℕ) : Function.Surjective (kOf n) := by
   intro k
@@ -251,8 +249,7 @@ theorem tsbFacts : TSBFacts := by
     obtain ⟨a, ha⟩ := tsb_dil_exists n X t
     have : Φ (y, (t : ℂ)) = mR (y * a) := by
       simp only [hΦ]; rw [← tsb_dil_aZ X t a ha]; rfl
-    simp only [hO, Set.mem_setOf_eq, this]
-    exact hD n (y * a)
+    simpa only [hO, Set.mem_setOf_eq, this] using hD n (y * a)
   have tube : ∀ t : ℝ, ∃ v : Set ℂ, IsOpen v ∧ (t : ℂ) ∈ v ∧ C ×ˢ v ⊆ O := by
     intro t
     obtain ⟨u, v, -, hv, hCu, htv, huv⟩ := generalized_tube_lemma hC (isCompact_singleton (x := (t : ℂ))) hOo

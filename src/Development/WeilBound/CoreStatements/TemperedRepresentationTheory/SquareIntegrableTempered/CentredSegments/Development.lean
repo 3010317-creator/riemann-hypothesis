@@ -284,8 +284,7 @@ theorem smul_eq_of_equiv {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V
     E.toIntertwiningMap.isIntertwining _ _ g y
   rw [hρ, hσ, map_smul] at hE
   have h2 : (c - c') • E.toLinearEquiv y = 0 := by
-    rw [sub_smul, sub_eq_zero]
-    exact hE
+    rwa [sub_smul, sub_eq_zero]
   rcases smul_eq_zero.1 h2 with h3 | h3
   · exact (sub_eq_zero.1 h3).symm
   · exact absurd h3 hw
@@ -310,8 +309,7 @@ theorem scalar_mul_eq : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
   haveI := GlobalTheory.CompanionTheory.TensorIrr.nontrivial_piTensorProduct_irrGL k x
   have hfin := smul_eq_of_equiv E (subQuot_apply_of_smul S T hjac)
     (piTensor_apply_of_smul x g cc hcc)
-  rw [Fin.prod_univ_two] at hfin
-  exact hfin
+  rwa [Fin.prod_univ_two] at hfin
 
 end GlobalTheory.CompanionTheory.JacCentral
 
@@ -363,8 +361,7 @@ theorem top_piece_exponent_lt_one : ∀ (α r : ℝ) (d l0 l1 : ℕ), 0 < α →
   have hlt : α ^ (d * ((l0 + l1) * l0 * l1)) < 1 :=
     pow_lt_one₀ hα0.le hα1
       (Nat.mul_pos (by omega) (Nat.mul_pos (Nat.mul_pos (by omega) (by omega)) (by omega))).ne'
-  by_contra hc
-  push Not at hc
+  by_contra! hc
   have h1 : 1 ≤ (r ^ l0 * α ^ (d * S)) ^ (2 * (l0 + l1)) := one_le_pow₀ hc
   rw [hpow] at h1
   exact absurd hlt (not_lt.mpr h1)
@@ -451,8 +448,7 @@ theorem scalarBy_of_isLSeg (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
     rw [← prod_mul_pow]
     refine Finset.prod_congr rfl fun a _ => ?_
     rw [MonoidHom.mul_apply, Units.val_mul, hωc, absPow_pow_comm]
-  rw [← h2]
-  exact hsc
+  rwa [← h2]
 
 end GlobalTheory.CompanionTheory.SegScalar
 
@@ -552,8 +548,7 @@ theorem norm_lt_of_norm_mul_cpow_lt (q e : ℕ) (hq : 0 < q) (μ : ℂ)
     rw [this, Complex.ofReal_re]
   rw [norm_mul, Complex.norm_natCast_cpow_of_pos hq, hre] at h
   have hp : 0 < (q : ℝ) ^ ((e : ℝ) / 2) := Real.rpow_pos_of_pos hq' _
-  rw [Real.rpow_neg hq'.le, ← one_div, lt_div_iff₀ hp]
-  exact h
+  rwa [Real.rpow_neg hq'.le, ← one_div, lt_div_iff₀ hp]
 
 theorem heckeSpectral_of_maxExpStrict (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] (N : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V]

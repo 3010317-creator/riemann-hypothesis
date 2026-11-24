@@ -180,8 +180,7 @@ theorem prX_ind_le {A : Type} [CommRing A] (s : A →+* A) {n r : ℕ} (J : Matr
     constructor
     · rintro ⟨j, rfl⟩
       exact Fin.le_iff_val_le_val.2 (Nat.lt_succ_iff.1 j.2)
-    · intro hc
-      exact ⟨⟨c.val, Nat.lt_succ_of_le (Fin.le_iff_val_le_val.1 hc)⟩, rfl⟩
+    · exact fun hc => ⟨⟨c.val, Nat.lt_succ_of_le (Fin.le_iff_val_le_val.1 hc)⟩, rfl⟩
   rw [← Finset.sum_image (s := Finset.univ) (g := Fin.castLE k.2) (f := fun c => Z a c * s (W b c))
     (fun x _ y _ h => Fin.castLE_injective _ h), e, Finset.sum_filter]
   refine Finset.sum_congr rfl fun c _ => ?_
@@ -802,8 +801,7 @@ theorem kInf_spec (hθ : IsInfFam θ) (hfr : IsFrameFam V ε fr) (κ : ∀ τ, F
       intro l
       induction l with
       | nil =>
-        intro _
-        exact ⟨fun h => absurd h List.not_mem_nil, fun _ => R.2.2.2.2.1 1 (one_mem _) τ⟩
+        exact fun _ => ⟨fun h => absurd h List.not_mem_nil, fun _ => R.2.2.2.2.1 1 (one_mem _) τ⟩
       | cons a l ih =>
         intro hn
         obtain ⟨ha, hl⟩ := List.nodup_cons.1 hn
@@ -850,8 +848,7 @@ theorem exists_archIwasawa : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F
   have hyx : ∀ τ, (Y.map (tauE D τ))ᴴ * gramAt D V τ * X.map (tauE D τ) = 1 := fun τ => by
     have h := congrArg conjTranspose (hxy τ)
     rw [conjTranspose_mul, conjTranspose_mul, conjTranspose_conjTranspose, hher τ, conjTranspose_one] at h
-    rw [Matrix.mul_assoc]
-    exact h
+    rwa [Matrix.mul_assoc]
   obtain ⟨w₀⟩ : Nonempty (NumberField.InfinitePlace D.host.F) := inferInstance
   obtain ⟨τ₀, -⟩ := (GlobalTheory.AdelicU.placeOf_bijective D).2 w₀
   have hQ : Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) Y * V.gram * X = 1 := by

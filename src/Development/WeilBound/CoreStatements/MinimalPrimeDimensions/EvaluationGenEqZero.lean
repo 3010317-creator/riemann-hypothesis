@@ -133,8 +133,7 @@ theorem loc_ne_zero_iff (hi : y ∈ ptsIn p σ (B.U i)) (k : Fin m) :
 
 theorem loc_ne_zero (hE : Emb p s) (hi : y ∈ ptsIn p σ (B.U i)) : loc p s σ i y ≠ 0 := by
   obtain ⟨k, hk⟩ := exists_mem_ptsIn hE.cover y
-  intro h
-  exact (loc_ne_zero_iff hi k).2 hk (congrFun h k)
+  exact fun h => (loc_ne_zero_iff hi k).2 hk (congrFun h k)
 
 theorem loc_ratio {k : Fin m} {t : Fin m → Γ(Z, nonzeroLocus (s k))}
     (ht : ∀ j i, resG Z (inf_le_right : nonzeroLocus (s k) ⊓ B.U i ≤ B.U i) ((s j).f i) =
@@ -220,8 +219,7 @@ theorem eval₂_loc_eq_zero (hi : y ∈ ptsIn p σ (B.U i)) {q : MvPolynomial (F
   have h1 := (mem_ptIdeal_iff.mp hq) i hU
   rw [coneHom_eq] at h1
   have hinj : Function.Injective (Z.evaluation (B.U i) (genericPoint Z) hU).hom := by
-    intro a b hab
-    exact sub_eq_zero.mp (evaluation_gen_eq_zero hU (by rw [map_sub, hab, sub_self]))
+    exact fun a b hab => sub_eq_zero.mp (evaluation_gen_eq_zero hU (by rw [map_sub, hab, sub_self]))
   have h2 : eval₂ (Polynomial.C.comp (algX p (B.U i)))
       (fun k => Polynomial.X * Polynomial.C ((s k).f i)) q = 0 := by
     apply Polynomial.map_injective _ hinj
@@ -246,8 +244,7 @@ theorem exists_loc (hE : Emb p s) {x : Fin m → ℂ} (hx : x ≠ 0)
     (h : ∀ q ∈ ptIdeal p s (genericPoint Z), eval₂ σ x q = 0) :
     ∃ (y : CxPts p σ) (c : ℂ), c ≠ 0 ∧ x = c • loc p s σ (pick hE.isLB y) y := by
   obtain ⟨k, hk⟩ : ∃ k, x k ≠ 0 := by
-    by_contra hne
-    push Not at hne
+    by_contra! hne
     exact hx (funext hne)
   obtain ⟨hU, t, hsurj, ht⟩ := hE.chart k
   have hgen : genericPoint Z ∈ nonzeroLocus (s k) := by
@@ -258,8 +255,7 @@ theorem exists_loc (hE : Emb p s) {x : Fin m → ℂ} (hx : x ≠ 0)
       intro i hi
       have h0 : Z.evaluation (B.U i) (genericPoint Z) hi ((s k).f i) = 0 := by
         rw [Scheme.evaluation_eq_zero_iff_notMem_basicOpen]
-        intro hb
-        exact hg (TopologicalSpace.Opens.mem_iSup.2 ⟨i, hb⟩)
+        exact fun hb => hg (TopologicalSpace.Opens.mem_iSup.2 ⟨i, hb⟩)
       simp [coneHom, h0]
     simpa using h _ hmem
   have hker : RingHom.ker (eval₂Hom (algX p (nonzeroLocus (s k))) t) ≤
@@ -275,8 +271,7 @@ theorem exists_loc (hE : Emb p s) {x : Fin m → ℂ} (hx : x ≠ 0)
           Z.evaluation (nonzeroLocus (s k)) _ hgen (t j) * Z.evaluation (B.U i) _ hi ((s k).f i) := by
         intro j
         have := congrArg (Z.evaluation _ _ hgi) (ht j i)
-        rw [map_mul, evaluation_resG, evaluation_resG, evaluation_resG] at this
-        exact this
+        rwa [map_mul, evaluation_resG, evaluation_resG, evaluation_resG] at this
       have halg : ∀ a, Z.evaluation (B.U i) _ hi (algX p (B.U i) a) =
           Z.evaluation (nonzeroLocus (s k)) _ hgen (algX p _ a) := by
         intro a
@@ -300,8 +295,7 @@ theorem exists_loc (hE : Emb p s) {x : Fin m → ℂ} (hx : x ≠ 0)
       simpa using key
     have key := hr' ℂ σ x (fun j => x j / x k) (fun j => by field_simp)
     rw [h r' hmem] at key
-    simp only [coe_eval₂Hom]
-    exact (mul_eq_zero.1 key.symm).resolve_left (pow_ne_zero _ hk)
+    simpa only [coe_eval₂Hom] using (mul_eq_zero.1 key.symm).resolve_left (pow_ne_zero _ hk)
   obtain ⟨φ, hφ⟩ : ∃ φ : Γ(Z, nonzeroLocus (s k)) →+* ℂ,
       ∀ r, φ (eval₂Hom (algX p _) t r) = eval₂ σ (fun j => x j / x k) r :=
     ⟨_, fun r => RingHom.liftOfSurjective_comp_apply _ hsurj ⟨_, hker⟩ r⟩
@@ -325,8 +319,7 @@ theorem eval₂_loc_ne_zero (hy : under y = genericPoint Z) (hj : y ∈ ptsIn p 
     {q : MvPolynomial (Fin m) R} (hn : q.IsHomogeneous n) (hq : q ∉ ptIdeal p s (genericPoint Z)) :
     eval₂ σ (loc p s σ j y) q ≠ 0 := by
   have hq' : ∃ i, ∃ hU : genericPoint Z ∈ B.U i, coneHom p s (genericPoint Z) i hU q ≠ 0 := by
-    by_contra hc
-    push Not at hc
+    by_contra! hc
     exact hq (mem_ptIdeal_iff.mpr hc)
   obtain ⟨i, hU, hne⟩ := hq'
   have hyi : y ∈ ptsIn p σ (B.U i) := by
@@ -334,8 +327,7 @@ theorem eval₂_loc_ne_zero (hy : under y = genericPoint Z) (hj : y ∈ ptsIn p 
     have hx : x = IsLocalRing.closedPoint ℂ := Subsingleton.elim _ _
     subst hx
     show under y ∈ B.U i
-    rw [hy]
-    exact hU
+    rwa [hy]
   have hcone : coneHom p s (genericPoint Z) i hU q = Polynomial.X ^ n *
       Polynomial.C ((Z.evaluation (B.U i) (genericPoint Z) hU).hom
         (eval₂ (algX p (B.U i)) (fun k => (s k).f i) q)) := by
@@ -356,8 +348,7 @@ theorem eval₂_loc_ne_zero (hy : under y = genericPoint Z) (hj : y ∈ ptsIn p 
   have hpt : Adelic.ptOf (y : Sp ℂ ⟶ Z) = genericPoint Z := hy
   have hval : ev p σ (B.U i) (eval₂ (algX p (B.U i)) (fun k => (s k).f i) q) y ≠ 0 := by
     show valR (y : Sp ℂ ⟶ Z) (B.U i) _ ≠ 0
-    rw [Adelic.valR_ne_zero_iff _ (hpt ▸ hU), hpt]
-    exact hgen
+    rwa [Adelic.valR_ne_zero_iff _ (hpt ▸ hU), hpt]
   rw [ev_eval₂ hyi] at hval
   change eval₂ σ (loc p s σ i y) q ≠ 0 at hval
   obtain ⟨c, _, hloc⟩ := loc_eq_smul hyi hj

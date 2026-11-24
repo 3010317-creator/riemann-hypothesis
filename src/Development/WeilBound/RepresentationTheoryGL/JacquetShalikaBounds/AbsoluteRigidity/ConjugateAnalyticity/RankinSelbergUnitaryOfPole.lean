@@ -106,8 +106,7 @@ theorem transfer {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTota
     (hα : SatOff (ρ.twist χ) S α) : SatOff ρ S (fun w a => α w a * (χ⁻¹).val w.1) := by
   intro w
   have h := hT E m (ρ.twist χ) χ⁻¹ w.1 _ (hχ w.1).inv (hα w)
-  rw [← CG.twist_mul, mul_inv_cancel, CG.twist_one, Multiset.map_map] at h
-  exact h
+  rwa [← CG.twist_mul, mul_inv_cancel, CG.twist_one, Multiset.map_map] at h
 
 theorem val_inv_eq {E : Type} [Field E] [NumberField E] {S : Finset (HeightOneSpectrum (𝓞 E))} (χ : HChar E) (τ : ℝ)
     (h : ∀ w, ((χ.val w : ℂˣ) : ℂ) = (Ideal.absNorm w.asIdeal : ℂ) ^ (-((τ : ℂ) * Complex.I))) (w : Off E S) :

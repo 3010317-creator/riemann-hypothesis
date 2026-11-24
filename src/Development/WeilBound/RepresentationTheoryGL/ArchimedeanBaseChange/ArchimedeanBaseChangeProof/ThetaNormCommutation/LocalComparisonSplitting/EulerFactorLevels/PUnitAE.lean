@@ -87,8 +87,7 @@ theorem unitae_single (hU : Unr E) (n : ℕ) (δ : GL (Fin n) E) (hsep : (polE �
       u * (nrmL n w (locEl n w δ)).val.charpoly + v * derivative (nrmL n w (locEl n w δ)).val.charpoly = 1 := by
     have e : (GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) (δ * thE E n δ)).val.charpoly =
         (polE δ).map (algebraMap E (w.adicCompletion E)) := Matrix.charpoly_map _ _
-    rw [hN, e]
-    exact h3
+    rwa [hN, e]
   have hy : locEl n w δ ∈ GlobalTheory.LFun.KGL w (n := n) := by
     unfold locEl
     split_ifs
@@ -105,14 +104,11 @@ theorem unitae_single (hU : Unr E) (n : ℕ) (δ : GL (Fin n) E) (hsep : (polE �
       obtain ⟨t, ht, k, hk, hgk⟩ := GlobalTheory.SplitUniq.splitUniq E n w _ g hy hbez hg
       refine ⟨t, ?_, ?_⟩
       · show t * locEl n w δ = locEl n w δ * thL n w t
-        rw [hθ, MonoidHom.id_apply]
-        exact ht
-      · rw [hgk, inv_mul_cancel_left]
-        exact hk
+        rwa [hθ, MonoidHom.id_apply]
+      · rwa [hgk, inv_mul_cancel_left]
     · obtain ⟨t, ht, k, hk, hgk⟩ := GlobalTheory.InertUniq.eq_twCent_mul_KGL E hU n w hs _ g hy hbez hg
       refine ⟨t, ht, ?_⟩
-      rw [hgk, inv_mul_cancel_left]
-      exact hk
+      rwa [hgk, inv_mul_cancel_left]
   · intro t ht hc
     have ht' : t * locEl n w δ = locEl n w δ * thL n w t := ht
     have hcomm : t * nrmL n w (locEl n w δ) = nrmL n w (locEl n w δ) * t := by
@@ -120,8 +116,7 @@ theorem unitae_single (hU : Unr E) (n : ℕ) (δ : GL (Fin n) E) (hsep : (polE �
       · have hθ : thL n w = MonoidHom.id _ := by unfold thL; rw [ite_eq_left hs]
         rw [hθ, MonoidHom.id_apply] at ht'
         unfold nrmL
-        rw [ite_eq_left hs]
-        exact ht'
+        rwa [ite_eq_left hs]
       · have hθ : thL n w = thetaGL n (cj w) := by unfold thL; rw [ite_eq_right hs]
         obtain ⟨-, hinv, -⟩ := GlobalTheory.ConjAtPlace.main E hU w
         rw [hθ] at ht'

@@ -99,8 +99,7 @@ theorem q1' (μ : Measure G) [μ.IsHaarMeasure] (ν ρ : Measure G) [SFinite ν]
           have : Measurable fun p : G × G => β₁ (p.1⁻¹ * p.2 * g) := by fun_prop
           exact this.lintegral_prod_right'
         have e : ∀ r, ∫⁻ h, β g * Φ g * β₁ (r⁻¹ * h * g) ∂ν = β g * Φ g * ∫⁻ h, β₁ (r⁻¹ * h * g) ∂ν := by
-          intro r
-          exact lintegral_const_mul _ (by fun_prop)
+          exact fun r => lintegral_const_mul _ (by fun_prop)
         simp only [e, Pi.mul_apply]
         rw [lintegral_const_mul _ hr, h1 g, mul_one]
     _ = ∫⁻ r, ∫⁻ h, ∫⁻ g, β g * Φ g * β₁ (r⁻¹ * h * g) ∂μ ∂ν ∂ρ :=

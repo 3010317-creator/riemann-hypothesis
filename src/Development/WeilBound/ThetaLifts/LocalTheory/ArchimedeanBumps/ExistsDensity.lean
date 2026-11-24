@@ -75,8 +75,7 @@ theorem core_bump {Ω : Type} [TopologicalSpace Ω] [T2Space Ω] [MeasurableSpac
   let b : ContDiffBump x₀ := ⟨min δ ε / 2, min δ ε, by positivity, by have := lt_min hδ hε; linarith⟩
   have hbs : ∀ x, b x ≠ 0 → dist x x₀ < min δ ε := fun x h => by
     have : x ∈ Function.support b := h
-    rw [b.support_eq] at this
-    exact this
+    rwa [b.support_eq] at this
   have hcs : HasCompactSupport fun x => ((b x : ℝ) : ℂ) := b.hasCompactSupport.comp_left (g := fun r : ℝ => (r : ℂ)) (by simp)
   have hsm : ContDiff ℝ (⊤ : ℕ∞) fun x => ((b x : ℝ) : ℂ) := Complex.ofRealCLM.contDiff.comp b.contDiff
   have hin : ∀ p, b (π p) ≠ 0 → p ∈ S := fun p h => hb p ((hbs _ h).le.trans (min_le_right _ _))
@@ -105,11 +104,9 @@ theorem core_bump {Ω : Type} [TopologicalSpace Ω] [T2Space Ω] [MeasurableSpac
         have : 0 < (G p).re := by
           by_contra hn
           exact hball ((hbs _ hp).trans_le (min_le_left _ _)) ⟨p, ⟨hS', not_lt.1 hn⟩, rfl⟩
-        simp only [Complex.re_ofReal_mul, Pi.zero_apply]
-        exact mul_nonneg b.nonneg this.le
+        simpa only [Complex.re_ofReal_mul, Pi.zero_apply] using mul_nonneg b.nonneg this.le
     · have : b (π p₀) = 1 := b.one_of_mem_closedBall (by rw [h₀]; exact Metric.mem_closedBall_self b.rIn_pos.le)
-      simp only [Complex.re_ofReal_mul, this, one_mul]
-      exact (hpos p₀ h₀).ne'
+      simpa only [Complex.re_ofReal_mul, this, one_mul] using (hpos p₀ h₀).ne'
   exact h2.ne' h1
 
 def ch (t : ℝ) : ℂ := Complex.exp (2 * Real.pi * Complex.I * t)

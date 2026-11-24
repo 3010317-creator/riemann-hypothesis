@@ -214,8 +214,7 @@ theorem clsGainB_of (hC : CauchyW) (hI : Invar) (hB : PBound) (hL : Link) (hT : 
   intro n s hs p q N R
   obtain ⟨hUo, hFc, -⟩ := hB n s hs p q R
   have hH : ContDiff ℝ (⊤ : ℕ∞) (cls s 0 p q R) := by
-    rw [cls_zero]
-    rw [contDiff_iff_contDiffAt]
+    rw [cls_zero, contDiff_iff_contDiffAt]
     intro y
     have h1 : ContDiffAt ℝ (⊤ : ℕ∞) (Fr s p q R) (herm y) :=
       ((hFc.restrict_scalars ℝ).contDiffAt (hUo.mem_nhds (herm_mem_Ugood s hs y)))
@@ -352,8 +351,7 @@ theorem pb_norm_one_sub (a : ℂ) (ha : a = Complex.I ∨ a = -Complex.I) (l : �
     rw [Complex.sq_norm]
     rcases ha with rfl | rfl <;> simp [Complex.normSq_apply] <;> ring
   have h2 : ((1 + |l|) / Real.sqrt 2) ^ 2 ≤ ‖1 - a * (l : ℂ)‖ ^ 2 := by
-    rw [hsq, div_pow, Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 2)]
-    rw [div_le_iff₀ (by norm_num : (0:ℝ) < 2)]
+    rw [hsq, div_pow, Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 2), div_le_iff₀ (by norm_num : (0:ℝ) < 2)]
     nlinarith [sq_abs l, sq_nonneg (1 - |l|), abs_nonneg l]
   exact (pow_le_pow_iff_left₀ (by positivity) (norm_nonneg _) two_ne_zero).1 h2
 
@@ -673,8 +671,7 @@ theorem contDiffOn_word {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U)
 
 theorem mem_pdisc_self (b : Mc n) {r : Fin n → Fin n → ℝ} (hr : ∀ i j, 0 < r i j) : b ∈ pdisc b r := by
   intro i j
-  simp only [sub_self, norm_zero]
-  exact (hr i j).le
+  simpa only [sub_self, norm_zero] using (hr i j).le
 
 theorem shift_apply (b : Mc n) (w : ℂ) (i j a c : Fin n) :
     (b + w • Matrix.single i j (1 : ℂ)) a c - b a c = if i = a ∧ j = c then w else 0 := by
@@ -738,8 +735,7 @@ theorem cauchy_gen {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U) (hF : Con
     have hφ : ∀ w : ℂ, HasDerivAt (fun w : ℂ => b + w • E) E w := by
       intro w
       have h := ((hasDerivAt_id w).smul_const E).const_add b
-      rw [one_smul] at h
-      exact h
+      rwa [one_smul] at h
     have hin : ∀ w : ℂ, ‖w‖ ≤ δ → b + w • E ∈ U := fun w hw =>
       hsub (shift_mem b hr ij.1 ij.2 (hw.trans hδr))
     have hdiffG : ∀ x ∈ U, DifferentiableAt ℂ G x := fun x hx =>
@@ -775,8 +771,7 @@ theorem cauchy_gen {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U) (hF : Con
           intro x _
           simp only [hr']
           field_simp
-        rw [heq] at this
-        exact this
+        rwa [heq] at this
     have hc := Complex.norm_deriv_le_of_forall_mem_sphere_norm_le hδ
       (hfd.diffContOnCl_ball subset_rfl) hsphere
     rw [hderiv] at hc
@@ -936,8 +931,7 @@ theorem contDiff_herm_entry (i j : Fin n) : ContDiff ℝ (⊤ : ℕ∞) (fun y :
     Complex.ofRealCLM.contDiff.comp ((contDiff_coord i j).add (contDiff_coord j i))
   have h2 : ContDiff ℝ (⊤ : ℕ∞) (fun y : E n => ((y i j - y j i : ℝ) : ℂ)) :=
     Complex.ofRealCLM.contDiff.comp ((contDiff_coord i j).sub (contDiff_coord j i))
-  simp only [herm]
-  exact (h1.div_const 2).add ((contDiff_const.mul h2).div_const 2)
+  simpa only [herm] using (h1.div_const 2).add ((contDiff_const.mul h2).div_const 2)
 
 theorem contDiff_dPc : ContDiff ℝ (⊤ : ℕ∞) (fun y : E n => (1 + herm y * herm y).det) := by
   have hM : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (fun y : E n => (1 + herm y * herm y) i j) := by

@@ -180,14 +180,12 @@ theorem tendsto_base (hC : ConvergenceSignedStatement) (a : σ) (w : Fin e → �
     (fun _ => 0) (fun t y => if 0 < t ∧ t ≤ S.t₀ then S.ph a y - S.phT a t y else 0) (|S.C| + |S.C₅|)
     (fun t => by
       by_cases h : 0 < t ∧ t ≤ S.t₀
-      · simp only [ite_eq_left h]
-        exact defect_cont S a h.1 h.2
+      · simpa only [ite_eq_left h] using defect_cont S a h.1 h.2
       · simp only [ite_eq_right h]
         exact continuousOn_const)
     (fun t y hy => by
       by_cases h : 0 < t ∧ t ≤ S.t₀
-      · simp only [ite_eq_left h]
-        exact defect_bound S a h.1 h.2 hy
+      · simpa only [ite_eq_left h] using defect_bound S a h.1 h.2 hy
       · simp only [ite_eq_right h, abs_zero]
         exact mul_nonneg (by positivity) (zero_le_one.trans (one_le_log S y)))
     (by
@@ -290,8 +288,7 @@ theorem preimage_null : IsNull Re.R.A (Re.π ⁻¹' S.open')ᶜ := by
     intro x hx
     have hns : ¬ interior (Re.π ⁻¹' bdry S.s) ⊆ Re.π ⁻¹' Re.br := fun hs => by
       have := interior_maximal hs isOpen_interior hx
-      rw [Re.degree.2.2.2.1] at this
-      exact this
+      rwa [Re.degree.2.2.2.1] at this
     obtain ⟨y, hy, hyb⟩ := Set.not_subset.1 hns
     obtain ⟨E, hyE, hE, -⟩ := exists_localHomeomorph_of_isDegreeOff Re.holo Re.degree y hyb
     have hn : E '' (E.source ∩ interior (Re.π ⁻¹' bdry S.s)) ∈ 𝓝 (E y) :=
@@ -301,16 +298,14 @@ theorem preimage_null : IsNull Re.R.A (Re.π ⁻¹' S.open')ᶜ := by
       rw [← hE hz.1]
       exact (interior_subset hz.2 : z ∈ Re.π ⁻¹' bdry S.s)
     have := mem_interior_iff_mem_nhds.2 (mem_of_superset hn hsub)
-    rw [hInt] at this
-    exact this
+    rwa [hInt] at this
   intro j
   have h := analyticNull Re.R.A _ hAn hInt' j
   have hc : (Re.π ⁻¹' S.open')ᶜ = Re.π ⁻¹' bdry S.s := by
     ext z
     simp [AnSys.open']
   rw [hc]
-  rw [Set.inter_comm, (Re.R.A.chart j).image_source_inter_eq'] at h
-  exact h
+  rwa [Set.inter_comm, (Re.R.A.chart j).image_source_inter_eq'] at h
 
 theorem pts_eq (hE : ResExistsStatement) (a₀ : σ) (A : HermLine ι) (w : Fin D → σ) (hA : IsSmoothHerm A)
     (ha : A.a = (Re.ref a₀).a)

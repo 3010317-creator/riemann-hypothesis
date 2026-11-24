@@ -126,8 +126,7 @@ private theorem hasDerivAt_mvPolynomial_eval_line_zero {σ : Type} [Fintype σ] 
     have hX : HasDerivAt (fun t : ℝ => (a + (t : ℂ) • v) i) (v i) 0 := by
       have h1 : HasDerivAt (fun t : ℝ => (t : ℂ)) 1 0 := by
         simpa using (hasDerivAt_id (0 : ℝ)).ofReal_comp
-      have h2 := (h1.mul_const (v i)).const_add (a i)
-      simpa using h2
+      simpa using (h1.mul_const (v i)).const_add (a i)
     have h := hp.mul hX
     simp only [map_mul, MvPolynomial.eval_X]
     refine h.congr_deriv ?_
@@ -152,8 +151,7 @@ private theorem hasDerivAt_mvPolynomial_eval_line_zero {σ : Type} [Fintype σ] 
         ring
       · intro b _ hb
         rw [ite_eq_right (Ne.symm hb), mul_zero]
-      · intro h
-        exact absurd (Finset.mem_univ i) h
+      · exact fun h => absurd (Finset.mem_univ i) h
     simp only [hk, mul_add, Finset.sum_add_distrib, hs1, hs2, Complex.ofReal_zero, zero_smul, add_zero]
 
 private theorem hasDerivAt_norm_sq_add_smul_zero (u w : ℂ) :
@@ -235,9 +233,7 @@ theorem annS_tens {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {τ : D.what�
     simp only [Complex.ofReal_zero, zero_smul, add_zero]
     ring
   have hφx : tens θ τ fr (fP c Q) (psi0 θ V n l s τ) x = eval (ptX U) Q * gs c U * Ψx := by
-    have h0 := hφ 0
-    simp only [map_zero, add_zero, Complex.ofReal_zero, zero_smul] at h0
-    exact h0
+    simpa only [map_zero, add_zero, Complex.ofReal_zero, zero_smul] using hφ 0
   have hdet : IsUnit fr.det := hfr.1
   have hdetH : IsUnit frᴴ.det := by
     rw [Matrix.det_conjTranspose]
