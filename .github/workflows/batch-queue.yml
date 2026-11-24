@@ -392,8 +392,10 @@ jobs:
     steps:
       - name: Check out this workflow's own copy of the scripts
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        # No `ref`: the default is the commit GitHub runs this workflow from. When a pull request
+        # from a fork is merged, that commit is also its merge commit, and checkout refuses it
+        # when it is passed as `ref`.
         with:
-          ref: ${{ github.workflow_sha }}
           persist-credentials: false
           sparse-checkout: scripts
       # GitHub performs each merge through its API. No pull request file is checked out or run.
