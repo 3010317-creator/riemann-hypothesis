@@ -116,20 +116,6 @@ theorem lemSSupBound_of (hE : Formalism.HermitianLatticeCounting.ExpansionTerms.
       field_simp
       ring
 
-lemma gl_radial_integrable (f : ℝ → ℝ) :
-    Integrable (fun x : ℂ => f ‖x‖) ↔ IntegrableOn (fun y : ℝ => y * f y) (Set.Ioi 0) := by
-  have h := integrable_fun_norm_addHaar (E := ℂ) (volume : Measure ℂ) (f := f)
-  simpa [Complex.finrank_real_complex] using h
-
-lemma gl_radial_integral (f : ℝ → ℝ) :
-    ∫ x : ℂ, f ‖x‖ = 2 * π * ∫ y in Set.Ioi (0 : ℝ), y * f y := by
-  have h := integral_fun_norm_addHaar (E := ℂ) (volume : Measure ℂ) f
-  have hv : (volume : Measure ℂ).real (Metric.ball 0 1) = π := by
-    simp [Measure.real, Complex.volume_ball]
-  rw [h, hv]
-  simp [Complex.finrank_real_complex]
-  ring
-
 lemma gl_cut_le {K L y : ℝ} (hK : 0 ≤ K) (hy : 0 < y) (h : y ≤ L) : y * TruncationCutoff K L y = y := by
   unfold TruncationCutoff
   rw [if_neg hy.ne', min_eq_left, mul_one]
@@ -159,7 +145,7 @@ lemma integrableOn_Ioi_truncated_power_moment {K L : ℝ} (hK : 2 < K) (hL : 0 <
   exact Integrable.const_mul (integrableOn_Ioi_rpow_of_lt (by linarith) hL) _
 
 lemma gl_e3Integral : Formalism.HermitianLatticeCounting.ExpansionTerms.CutoffIntegralFormula := by
-  apply Formalism.HermitianLatticeCounting.P.cutoff_integral_formula <;> assumption
+  apply Formalism.HermitianLatticeCounting.P.cutoff_integral_formula
 
 theorem sup_bound_of_truncated_integral : Formalism.HermitianLatticeCounting.ExpansionTerms.LemSSupBound := lemSSupBound_of gl_e3Integral
 

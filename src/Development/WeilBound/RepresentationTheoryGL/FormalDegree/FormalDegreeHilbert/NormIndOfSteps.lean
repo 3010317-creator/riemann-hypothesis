@@ -127,7 +127,7 @@ namespace PositivityTheory.RgFd
 open ReciprocityTheory.ChartRestriction.DS
 
 theorem degPsi : DegPsi := by
-  apply CompanionTheory.RgFd.degPsi <;> assumption
+  apply CompanionTheory.RgFd.degPsi
 
 end PositivityTheory.RgFd
 end -- clump:auto
@@ -202,7 +202,7 @@ theorem fdModel_of (hD : DegPsi) (hS : HlamStable) (hF : FormF) (hN : PsiNorm) (
   obtain ⟨hP, hDS⟩ := hM n ε lam T μ hl hμ
   have : CompleteSpace (Hlam ε (PsiM T μ) T.w) := hDS.1
   obtain ⟨d, hd⟩ := G2.fdcGood_of_isDS hDS
-  have hw : T.w ≠ 0 := G2.fdc_w_ne T
+  have hw : T.w ≠ 0 := _root_.ReciprocityTheory.ChartRestriction.DS.HW.KType.w_ne_zero T
   have hj0 : uniformisationL2 ε (PsiM T μ) T.w T.w ≠ 0 := by
     intro h
     have h0 : uniformisationL2 ε (PsiM T μ) T.w (0 : T.V) = 0 := by simpa using datumEmbedding_smul hP T.w 0 (0 : T.V)
@@ -262,11 +262,11 @@ theorem gapNorm_of (hD : DegPsi) : GapNorm := by
   intro n ε hp hq
   refine ⟨G2.thrS ε + 2, fun lam hlam hgap T μ hμ => ?_⟩
   have hh : G2.thrS ε + 1 < G2.thrS ε + 2 := by linarith
-  have hq0 := G2.one_le_q0_of_p_q_pos hp hq
+  have hq0 := one_le_q0_of_p_q_pos hp hq
   have h8 := G2.fdc_eight hh
   have hP : IsPsiFor ε lam T (PsiM T μ) := (S7.isPsiFor_psiM ε lam _ T μ hlam hμ hgap hq0 h8).1
   have hgap' := G2.fdc_stdGap hlam hgap hh
-  have hw := G2.fdc_w_ne T
+  have hw := _root_.ReciprocityTheory.ChartRestriction.DS.HW.KType.w_ne_zero T
   have hDS := G2.isDS_sigLam hgap' hP hw
   have : CompleteSpace (Hlam ε (PsiM T μ) T.w) := hDS.1
   have : Nontrivial (Hlam ε (PsiM T μ) T.w) := hDS.2.1
@@ -688,7 +688,7 @@ theorem momA : MomA := by
   · simpa only [← pow_mul, mul_comm t0] using hf j hj
 
 theorem momB : MomB := by
-  apply CompanionTheory.RgFd.momB <;> assumption
+  apply CompanionTheory.RgFd.momB
 
 theorem momW_of : MomA → MomB → MomW := by
   intro hA hB Ω _ P h U I _ α β c t0 hh hU h01 hα hβ hc hm
@@ -728,7 +728,7 @@ variable {n : ℕ}
 
 theorem pl_opNorm_le {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℂ V] [FiniteDimensional ℂ V]
     (A : V →L[ℂ] V) : ‖A‖ ^ 2 ≤ (Module.finrank ℂ V : ℝ) * hsOp A := by
-  apply CompanionTheory.RgFd.pl_opNorm_le <;> assumption
+  apply CompanionTheory.RgFd.pl_opNorm_le
 
 theorem square_integrable_of_norm : PsiNorm → PositivityTheory.RgDs.ExplicitFunctionSquareIntegrable := by
   intro hN n ε lam T μ hl hμ ν hν
@@ -947,7 +947,7 @@ theorem hsOp_op_mul {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ)
   rw [ContinuousLinearMap.mul_apply, KType_norm_op_apply]
 
 theorem hsPol : HsPol := by
-  apply _root_.CompanionTheory.RgFd.hsPol <;> assumption
+  apply _root_.CompanionTheory.RgFd.hsPol
 
 end PositivityTheory.RgFd
 end -- clump:auto
@@ -980,7 +980,7 @@ theorem pP_posDef {ε : Fin n → Bool} (g : UJ ε) : (pP (toM g)).PosDef :=
   exp_noncompactPart_posDef (PolarDecomposition.polar_L_inP (ε := ε) g.2)
 
 theorem phiCont : PhiCont := by
-  apply _root_.CompanionTheory.RgFd.phiCont <;> assumption
+  apply _root_.CompanionTheory.RgFd.phiCont
 
 end PositivityTheory.RgFd
 end -- clump:auto

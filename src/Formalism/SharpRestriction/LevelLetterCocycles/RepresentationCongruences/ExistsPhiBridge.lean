@@ -144,7 +144,6 @@ private theorem powerSeries_algHom_injective_of_X_ne_zero {R : Type*} [CommRing 
     first
     | rw [PowerSeries.coeff_X_pow_mul', if_pos le_rfl, Nat.sub_self,
         PowerSeries.coeff_zero_eq_constantCoeff_apply, h]
-    | (rw [mul_comm]; simpa [h] using PowerSeries.coeff_mul_X_pow U n 0)
   have hψU : ψ U ≠ 0 := by
     intro h
     apply hU0
@@ -156,8 +155,6 @@ private theorem substAlgHom_X_eq {R S : Type*} [CommRing R] [CommRing S] [Algebr
     {a : S⟦X⟧} (ha : HasSubst a) : (substAlgHom ha : R⟦X⟧ →ₐ[R] S⟦X⟧) X = a := by
   first
   | exact substAlgHom_X ha
-  | (rw [coe_substAlgHom]; exact subst_X ha)
-  | (rw [substAlgHom_apply]; exact subst_X ha)
 
 theorem subst_injective {a : R⟦X⟧} (ha0 : constantCoeff a = 0) (hane : a ≠ 0) :
     Function.Injective (substAlgHom (HasSubst.of_constantCoeff_zero' ha0) : R⟦X⟧ →ₐ[R] R⟦X⟧) := by
@@ -194,7 +191,6 @@ theorem smod_iff {a : ℕ} {x y : O} :
     x ≡ y [SMOD ((IsLocalRing.maximalIdeal O) ^ a • ⊤ : Submodule O O)] ↔ mkk a x = mkk a y := by
   first
   | (rw [SModEq.sub_mem, Ideal.smul_eq_mul, Ideal.mul_top]; exact Ideal.Quotient.eq.symm)
-  | (rw [SModEq.sub_mem, Ideal.smul_top_eq_map]; simp [Ideal.Quotient.eq])
 
 theorem ext_k {G G' : O⟦X⟧} (h : ∀ k, map (mkk k) G = map (mkk k) G') : G = G' := by
   refine PowerSeries.ext fun m => ?_
@@ -218,7 +214,6 @@ omit [IsAdicComplete (IsLocalRing.maximalIdeal O) O] in
 theorem hasSubst_k (k : ℕ) : HasSubst ((X : (Qk O k)⟦X⟧) + C (mkk k t)) := by
   first
   | exact nil_k t ht k
-  | (unfold HasSubst; exact nil_k t ht k)
 
 def τk (k : ℕ) : O⟦X⟧ →ₐ[O] (Qk O k)⟦X⟧ := substAlgHom (hasSubst_k t ht k)
 
@@ -295,21 +290,38 @@ theorem map_shift (k : ℕ) (F : O⟦X⟧) : map (mkk k) (shift t ht F) = τk t 
 theorem shift_X : shift t ht X = X + C t := ext_k fun k => by
   rw [map_shift, τk_X, _root_.map_add (f := _), PowerSeries.map_X, PowerSeries.map_C]
 
-theorem shift_shift (F : O⟦X⟧) : shift (-t) (neg_mem ht) (shift t ht F) = F := by
+omit ht in
+/-- Translation by zero fixes every formal power series. -/
+theorem shift_zero (F : O⟦X⟧) : shift (0 : O) (zero_mem _) F = F := by
+  have h : (shift (0 : O) (zero_mem _)).toRingHom = RingHom.id _ :=
+    ringHom_ext_nil (fun r => algC _ r)
+      (by simpa using shift_X (0 : O) (zero_mem _)) (by simp [shift_X])
+  exact RingHom.congr_fun h F
+
+omit ht in
+/-- Successive translations add their parameters. -/
+theorem shift_add (s t : O) (hs : s ∈ IsLocalRing.maximalIdeal O)
+    (ht : t ∈ IsLocalRing.maximalIdeal O) (F : O⟦X⟧) :
+    shift s hs (shift t ht F) = shift (s + t) (add_mem hs ht) F := by
   refine ext_k fun k => ?_
-  rw [map_shift]
-  have key : (τk (-t) (neg_mem ht) k).toRingHom.comp (shift t ht).toRingHom =
-      map (mkk k) := by
-    refine (ringHom_ext_nil (h₁ := map (mkk k)) (fun r => ?_) ?_ ?_).symm
-    · show map (mkk k) (C r) = τk (-t) (neg_mem ht) k (shift t ht (C r))
-      rw [PowerSeries.map_C, algC, τk_C]
-    · show map (mkk k) X = τk (-t) (neg_mem ht) k (shift t ht X)
-      rw [PowerSeries.map_X, shift_X, _root_.map_add (f := _), τk_X, τk_C,
-        _root_.map_neg, _root_.map_neg]
+  rw [map_shift, map_shift]
+  have key : (τk s hs k).toRingHom.comp (shift t ht).toRingHom =
+      (τk (s + t) (add_mem hs ht) k).toRingHom := by
+    symm
+    refine ringHom_ext_nil (fun r => ?_) ?_ ?_
+    · show τk (s + t) (add_mem hs ht) k (C r) = τk s hs k (shift t ht (C r))
+      rw [algC, τk_C, τk_C]
+    · show τk (s + t) (add_mem hs ht) k X = τk s hs k (shift t ht X)
+      rw [shift_X, _root_.map_add (f := _), τk_X, τk_C, τk_X,
+        _root_.map_add (f := _), _root_.map_add (f := _)]
       ring
-    · rw [PowerSeries.map_X, PowerSeries.constantCoeff_X]
-      exact IsNilpotent.zero
+    · show IsNilpotent (constantCoeff (τk (s + t) (add_mem hs ht) k X))
+      rw [τk_X]
+      exact nil_k (s + t) (add_mem hs ht) k
   exact RingHom.congr_fun key F
+
+theorem shift_shift (F : O⟦X⟧) : shift (-t) (neg_mem ht) (shift t ht F) = F := by
+  simpa only [neg_add_cancel, shift_zero] using shift_add (-t) t (neg_mem ht) ht F
 
 omit ht in
 theorem shift_congr {t t' : O} (h : t = t') (ht : t ∈ IsLocalRing.maximalIdeal O)

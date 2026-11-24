@@ -821,7 +821,6 @@ theorem inertAsm : InertAsm := by
     have hsm : ((t : E) • (G' * e₁ * G'ᴴ)) *ᵥ z = (t : E) • ((G' * e₁ * G'ᴴ) *ᵥ z) := by
       first
         | exact Matrix.smul_mulVec (t : E) (G' * e₁ * G'ᴴ) z
-        | (ext k; simp [Matrix.mulVec, Finset.mul_sum, mul_assoc])
     rw [hsm,
       show (t : E) • ((G' * e₁ * G'ᴴ) *ᵥ z) = t • ((G' * e₁ * G'ᴴ) *ᵥ z) from algebraMap_smul E t _,
       ht, show s' * s'' * (y * ∑ k ∈ Finset.range K, i ^ k) =
@@ -832,7 +831,6 @@ theorem inertAsm : InertAsm := by
     have hsm : ((t : E) • (G' * e₁ * G'ᴴ)) *ᵥ z = (t : E) • ((G' * e₁ * G'ᴴ) *ᵥ z) := by
       first
         | exact Matrix.smul_mulVec (t : E) (G' * e₁ * G'ᴴ) z
-        | (ext k; simp [Matrix.mulVec, Finset.mul_sum, mul_assoc])
     rw [hsm,
       show (t : E) • ((G' * e₁ * G'ᴴ) *ᵥ z) = t • ((G' * e₁ * G'ᴴ) *ᵥ z) from algebraMap_smul E t _,
       ht, show s' * s'' * (y * ∑ k ∈ Finset.range K, i ^ k) =
@@ -1395,7 +1393,7 @@ theorem mem_hcompl_of_inert {Q : Ideal (𝓞 E)} (hQ : Q.IsPrime) (hc : Q.comap 
 theorem mem_loc_inert {Q : Ideal (𝓞 E)} (hQ : Q.IsPrime) (hc : Q.comap (cj E) = Q) {N : ℕ}
     (L : Submodule (𝓞 E) (Fin N → E)) (y : Fin N → E) :
     y ∈ loc (K := E) Q L ↔ ∃ s : 𝓞 E, s ∉ Q ∧ s • y ∈ L := by
-  simp [loc, locS, mem_hcompl_of_inert hQ hc]
+  simp only [loc, locS, Formalism.HermitianLatticesTheory.mem_locS, mem_hcompl_of_inert hQ hc]
 
 theorem mem_loc_stdLat {Q : Ideal (𝓞 E)} (hQ : Q.IsPrime) (hc : Q.comap (cj E) = Q) {N : ℕ}
     (x : Fin N → E) : x ∈ loc (K := E) Q (stdLat E N) ↔ ∀ i, IntAt Q (x i) := by

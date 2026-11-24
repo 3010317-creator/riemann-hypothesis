@@ -49,6 +49,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 public import Mathlib.RingTheory.DedekindDomain.Factorization
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SquarePairLocal.IntAtOfDivAtZero
 
 @[expose] public section
 
@@ -94,13 +95,11 @@ theorem pres_mul {e f : Matrix (Fin N) (Fin N) E} (he : Pres L e) (hf : Pres L f
 private lemma integers_smul_eq_coe_smul (r : 𝓞 E) (v : Fin N → E) : r • v = (r : E) • v := by
   first
     | exact (algebraMap_smul E r v).symm
-    | (ext i; simp [Algebra.smul_def])
 
 private lemma smul_mulVec_eq_smul (a : E) (A : Matrix (Fin N) (Fin N) E) (b : Fin N → E) :
     (a • A) *ᵥ b = a • (A *ᵥ b) := by
   first
     | exact Matrix.smul_mulVec a A b
-    | (ext i; simp [Matrix.mulVec, dotProduct, Finset.mul_sum, mul_assoc])
 
 theorem pres_smul (r : 𝓞 E) {e : Matrix (Fin N) (Fin N) E} (he : Pres L e) :
     Pres L ((r : E) • e) := by
@@ -130,8 +129,6 @@ theorem pres_conj (hL : IsSDG E N L) {e : Matrix (Fin N) (Fin N) E} (he : Pres L
 end Pres
 
 section Cj
-
-theorem coe_cj (x : 𝓞 E) : ((cj E x : 𝓞 E) : E) = star (x : E) := rfl
 
 theorem cj_cj (x : 𝓞 E) : cj E (cj E x) = x := by
   have h : ((cj E (cj E x) : 𝓞 E) : E) = (x : E) := by rw [coe_cj, coe_cj, star_star]
