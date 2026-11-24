@@ -980,14 +980,24 @@ structure DivisionPackageFace {D : D7} {L : SizeData₂ D} (Rw : DivisionRowsFac
 
 attribute [instance] DivisionPackageFace.plF DivisionPackageFace.plD
 
+/-- Recover the local valuation estimate from the tied column realization and the
+shifted lattice. The arithmetic norm and slope inputs are not used here. -/
+theorem DivisionPackageFace.val2 {D : D7} {L : SizeData₂ D} {Rw : DivisionRowsFace L} {C Cabs : ℝ} (P : DivisionPackageFace Rw C Cabs)
+    (h2 : Formalism.MainNotions.LocalQuadraticParts.adm2 D L) (hcut : ∀ μ, Formalism.BasicNotions.DV.Used D μ → Formalism.L2.G.ServJoint.CutUp D μ)
+    (hN : Formalism.BasicNotions.DV.NprimeDef D L) (u : D.what₂.Word) (w : HeightOneSpectrum (𝓞 D.what₂.LL)) :
+    ∀ φ ∈ P.Nu u, ∀ F ∈ (Rw.fc P.Pk.Zs).Df1.Mt (P.Pk.core.cols.μ w),
+      (Rw.fc P.Pk.Zs).Dc.Pt (P.wU u) (P.Pk.core.cols.μ w) φ F = 0 ∨
+        sgRec L u w ≤ (vw w ((Rw.fc P.Pk.Zs).Dc.Pt (P.wU u) (P.Pk.core.cols.μ w) φ F) : ℝ) :=
+  Formalism.L2.G.ServJointF.val2AllAtRF D L _ P.brTied hcut h2 u (P.Nu u)
+    (Formalism.L2.G.ServJoint.nu_into L hN u (P.eNu u) (P.NuC (P.wU u)) (P.Nu u) (P.hNu u).lat (P.shift u)) w
+
 theorem DivisionPackageFace.wordFacts {D : D7} {L : SizeData₂ D} {Rw : DivisionRowsFace L} {C Cabs : ℝ} (P : DivisionPackageFace Rw C Cabs)
     (h2 : Formalism.MainNotions.LocalQuadraticParts.adm2 D L) (hcut : ∀ μ, Formalism.BasicNotions.DV.Used D μ → Formalism.L2.G.ServJoint.CutUp D μ)
     (hN : Formalism.BasicNotions.DV.NprimeDef D L) (u : D.what₂.Word) : WordFacts L C Cabs u :=
   wordFacts_of_core_face L C Cabs u P.Pk.core P.wU P.NuC (P.eNu u) P.eRR (P.hNu u) P.hRR (P.hBk u) (P.R u) (P.Nu u) (sgRec L u)
     (linkDIV_L2R_core_face P.Pk (P.hZs ▸ Rw.wf0) (P.hZs ▸ Rw.wf1) (P.R u) (P.wU u) (P.Nu u) (sgRec L u)
       { toDivInputs0R := P.inp u,
-        val2 := Formalism.L2.G.ServJointF.val2AllAtRF D L _ P.brTied hcut h2 u (P.Nu u)
-          (Formalism.L2.G.ServJoint.nu_into L hN u (P.eNu u) (P.NuC (P.wU u)) (P.Nu u) (P.hNu u).lat (P.shift u)) })
+        val2 := P.val2 h2 hcut hN u })
     (P.shift u) (P.hTie u) P.foTie (P.rhs u)
 
 structure BridgeRowsF {eps : ℝ} (Fm : FamP eps) (Rw : Σ' x0 : ℝ, ∀ x, Fm.x1 < x → x0 ≤ x → ∀ i : Fm.Ix x, DivisionRowsFace (Fm.L x i))
