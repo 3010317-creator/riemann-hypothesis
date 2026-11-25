@@ -190,9 +190,6 @@ lemma isLocallyFraction_val (s : Γ(twistingSheaf 𝒜 k, U)) :
 def mkSection (f : ∀ x : U, Loc 𝒜 x.1) (hf : (isLocallyFraction 𝒜 k).pred f) :
     Γ(twistingSheaf 𝒜 k, U) := ⟨f, hf⟩
 
-lemma val_smul (t : Γ(Proj 𝒜, U)) (s : Γ(twistingSheaf 𝒜 k, U)) (x : U) :
-    val (t • s) x = (t.1 x).val * val s x := rfl
-
 end ProjTwist
 
 end GroundTheory.Arith.SchemeCoh

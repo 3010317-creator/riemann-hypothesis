@@ -146,11 +146,6 @@ theorem infiniteAdelicChar_apply_of_isReal {w : InfinitePlace K} (hw : IsReal w)
   rw [infiniteAdelicChar_apply, hw.mult_eq_one, ← extensionEmbeddingOfIsReal_apply hw,
     Complex.ofReal_re, Nat.cast_one, one_mul]
 
-theorem infiniteAdelicChar_apply_of_isComplex {w : InfinitePlace K} (hw : IsComplex w)
-    (z : w.Completion) :
-    infiniteAdelicChar K w z = 𝐞 (-(2 * (extensionEmbedding w z).re)) := by
-  rw [infiniteAdelicChar_apply, hw.mult_eq_two, Nat.cast_ofNat]
-
 theorem addChar_map_finsetSum {ι A : Type*} [AddCommMonoid A] (χ : AddChar A Circle)
     (s : Finset ι) (f : ι → A) : χ (∑ i ∈ s, f i) = ∏ i ∈ s, χ (f i) := by
   classical

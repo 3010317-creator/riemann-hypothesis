@@ -199,12 +199,6 @@ def blockGL (hj : j ≤ n) : GL (Fin j) R →* GL (Fin n) R :=
 @[simp] theorem coe_blockGL (hj : j ≤ n) (h : GL (Fin j) R) :
     ((blockGL hj h : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) = blockMat hj h := rfl
 
-theorem map_blockMat {S : Type*} [CommRing S] (f : R →+* S) (hj : j ≤ n)
-    (h : Matrix (Fin j) (Fin j) R) : (blockMat hj h).map f = blockMat hj (h.map f) := by
-  ext a b
-  simp only [Matrix.map_apply, blockMat_apply]
-  split_ifs <;> simp
-
 theorem blockMat_blockMat {k : ℕ} (hk : k ≤ j) (hj : j ≤ n) (γ : Matrix (Fin k) (Fin k) R) :
     blockMat hj (blockMat hk γ) = blockMat (hk.trans hj) γ := by
   ext a b
