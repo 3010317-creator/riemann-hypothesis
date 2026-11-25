@@ -30,6 +30,24 @@ class QuickChecks(unittest.TestCase):
   self.assertEqual(plan['status'], 'ready')
   self.assertEqual(plan['targets'], ['DataParams₂'])
   self.assertEqual(plan['closure'], ['DataParams₂'])
+ def test_renamed_module_defers_when_an_unchanged_importer_uses_old_path(self):
+  def git(*args):
+   return q.ci.git(self.root, '-c', 'user.name=Test', '-c', 'user.email=test@example.org', *args)
+  git('init', '-q')
+  git('config', 'diff.renames', 'true')
+  for name in ('lakefile.toml', 'lean-toolchain', 'lake-manifest.json'):
+   shutil.copyfile(ROOT.parent / name, self.root / name)
+  self.source('Old', 'def n := 1\n')
+  self.source('Caller', 'import Old\n')
+  git('add', '.')
+  git('commit', '-qm', 'base')
+  base = git('rev-parse', 'HEAD')
+  git('mv', 'src/Old.lean', 'src/New.lean')
+  git('commit', '-qm', 'rename module')
+  head = git('rev-parse', 'HEAD')
+  with self.assertRaisesRegex(ValueError, 'deleted/unsafe source requires full build'):
+   q.plan(self.root, {'base_ref': 'main', 'base_head': base, 'pr_head': head,
+                      'expected': {'candidate_head': head}})
  def test_big_cone_deferred(self):
   for i in range(4):self.source('A'+str(i),'import A'+str(i+1)+'\n')
   with self.assertRaisesRegex(ValueError,'ancestor cone'):q.dependency_closure(self.root,['A0'],maximum=2)

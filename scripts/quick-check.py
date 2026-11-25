@@ -80,7 +80,8 @@ def plan(candidate, request):
     if ci.sha256(candidate/'lakefile.toml') != ci.sha256(HERE.parent/'lakefile.toml'): raise ValueError('configuration changes need the priority/full build pool')
     base = request.get('base_head', '')
     if not re.fullmatch('[0-9a-f]{40}', base): raise ValueError('resolved base identity missing')
-    changed = ci.git(candidate, 'diff', '--name-only', '-z', base, expected['candidate_head'], '--', 'src').split('\0')
+    changed = ci.git(candidate, 'diff', '--name-only', '-z', '--no-renames',
+                     base, expected['candidate_head'], '--', 'src').split('\0')
     changed = [name for name in changed if name.endswith('.lean')]
     if len(changed) > MAX_ROOTS: raise ValueError('more than eight changed source roots; deferred')
     targets = []
