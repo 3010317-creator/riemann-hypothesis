@@ -50,10 +50,8 @@ variable (A : Rep.{u} k G) [IsDiscreteRep A]
 
 
 omit [IsTopologicalGroup G] in
-theorem isLocallyConstant_cochain_zero (w : (Fin 0 → G) → A) : IsLocallyConstant w := by
-  have h : w = fun _ => w Fin.elim0 := funext fun x => congrArg w (Subsingleton.elim _ _)
-  rw [h]
-  exact IsLocallyConstant.const _
+theorem isLocallyConstant_cochain_zero (w : (Fin 0 → G) → A) : IsLocallyConstant w :=
+  IsLocallyConstant.of_constant w fun _ _ => congrArg w (Subsingleton.elim _ _)
 
 theorem cohomologyToGroupCohomology_one_injective :
     Function.Injective (cohomologyToGroupCohomology A 1).hom := by
