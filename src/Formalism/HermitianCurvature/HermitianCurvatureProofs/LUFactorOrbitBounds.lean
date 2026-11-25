@@ -1538,8 +1538,15 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 open Formalism.FourierDecayAlt.P.WeakDominationMajorants
 
-theorem nnMaj : Formalism.FourierDecayAlt.P.JFxDs2.NNMaj := by
-  intro k r Wp Wq _ _ _ _ D A m hThr K hK hKO
+theorem nnMaj_core (k r : ℕ) (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
+    [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] (D : B.RealPlaceData k r Wp Wq) (A : ℝ) (m : ℕ)
+    (hA1pos : 0 < A - 6 * (r : ℝ) * (m : ℝ))
+    (hthr : r = 0 ∨ (r : ℝ) * (4 * (r : ℝ) + 2 * (k : ℝ) - 1) < (A - 6 * (r : ℝ) * (m : ℝ)) / (6 * (r : ℝ) + 1))
+    (K : Set (B.Mat k r)) (hK : IsCompact K) (hKO : K ⊆ Om k r D.z D.z') :
+    ∃ b : B.SS k r → ℝ, Integrable b D.μSS ∧
+      ∀ u v : List (B.Mat k r), (∀ X ∈ u, B.unitLie k r X) → (∀ X ∈ v, B.unitLie k r X) →
+        u.length + v.length ≤ m → ∀ g ∈ K, ∀ᵐ p ∂D.μSS,
+          (u.map fun X => ‖AdL p X‖).prod * (v.map fun X => ‖AdR p X‖).prod * B.gN (B.sgs p g) ^ (-A) ≤ b p := by
   obtain ⟨C3, hC3, horb⟩ := orbit3 D.z D.z' K hK hKO
   obtain ⟨cW, hcW, hW⟩ := uw_bound D.z D.z_mem D.T_pos
   obtain ⟨cW', hcW', hW'⟩ := uw_bound D.z' D.z'_mem D.T'_pos
@@ -1551,29 +1558,12 @@ theorem nnMaj : Formalism.FourierDecayAlt.P.JFxDs2.NNMaj := by
   set Λ1 := max 1 (NN * c ^ 2 * C4 ^ 2) with hΛ1_def
   have hΛ1 : 1 ≤ Λ1 := le_max_left _ _
   set A1 := A - 6 * (r : ℝ) * (m : ℝ) with hA1_def
-
-  have hThr' : 9 * ((r : ℝ) + 1) * NN ^ 2 < A1 := by
-    have h9 : (0 : ℝ) < 9 * ((r : ℝ) + 1) := by positivity
-    have := (lt_div_iff₀ h9).1 hThr
-    rw [hNN]; linarith
-  have hA1pos : 0 < A1 := lt_of_le_of_lt (by positivity) hThr'
   set β := A1 / (6 * (r : ℝ) + 1) with hβ_def
   have hβ0 : 0 ≤ β := div_nonneg hA1pos.le (by positivity)
   have hβA : 6 * (r : ℝ) * β ≤ A1 := by
     rw [hβ_def, mul_div_assoc']
     rw [div_le_iff₀ (by positivity)]
     nlinarith
-  have hthr : r = 0 ∨ (r : ℝ) * (4 * (r : ℝ) + 2 * (k : ℝ) - 1) < β := by
-    rcases Nat.eq_zero_or_pos r with h | h
-    · exact Or.inl h
-    · right
-      rw [hβ_def, lt_div_iff₀ (by positivity)]
-      have hr : (1 : ℝ) ≤ r := by exact_mod_cast h
-      have hk : (0 : ℝ) ≤ k := by positivity
-      have hNNe : NN = 2 * (r : ℝ) + k + 1 := by rw [hNN]; push_cast; ring
-      rw [hNNe] at hThr'
-      nlinarith [mul_nonneg (by linarith : (0:ℝ) ≤ r) hk, mul_nonneg hk hk, mul_nonneg (mul_nonneg (by linarith : (0:ℝ) ≤ r) hk) hk,
-        mul_nonneg (mul_nonneg (by linarith : (0:ℝ) ≤ r) (by linarith : (0:ℝ) ≤ r)) hk]
 
   set f : Mt k r → ℝ := fun x => gN (Matrix.of x : Mat k r) ^ (-β) with hf_def
   refine ⟨fun p => Λ1 ^ m * (C4 ^ β) ^ 2 * (f p.1.2 * f p.2.2), ?_, ?_⟩
@@ -1677,6 +1667,28 @@ theorem nnMaj : Formalism.FourierDecayAlt.P.JFxDs2.NNMaj := by
     exact real_step X (gN (Matrix.of p.1.2)) (gN (Matrix.of p.2.2)) C4 Λ1 A A1 β _ m r hX1 hC4
       (Formalism.FourierDecayAlt.P.BetaSesquilinearity.gN_ge_one (Orb.n_mem_G hn)) (Formalism.FourierDecayAlt.P.BetaSesquilinearity.gN_ge_one (Orb.n_mem_G hn')) hG1 hG2 hβ0 hβA
       hA1_def hΛ1 hP
+
+theorem nnMaj : Formalism.FourierDecayAlt.P.JFxDs2.NNMaj := by
+  intro k r Wp Wq _ _ _ _ D A m hThr K hK hKO
+  set NN : ℝ := ((2 * r + k + 1 : ℕ) : ℝ) with hNN
+  set A1 := A - 6 * (r : ℝ) * (m : ℝ)
+  have hThr' : 9 * ((r : ℝ) + 1) * NN ^ 2 < A1 := by
+    have h9 : (0 : ℝ) < 9 * ((r : ℝ) + 1) := by positivity
+    have := (lt_div_iff₀ h9).1 hThr
+    rw [hNN]; linarith
+  have hA1pos : 0 < A1 := lt_of_le_of_lt (by positivity) hThr'
+  have hthr : r = 0 ∨ (r : ℝ) * (4 * (r : ℝ) + 2 * (k : ℝ) - 1) < A1 / (6 * (r : ℝ) + 1) := by
+    rcases Nat.eq_zero_or_pos r with h | h
+    · exact Or.inl h
+    · right
+      rw [lt_div_iff₀ (by positivity)]
+      have hr : (1 : ℝ) ≤ r := by exact_mod_cast h
+      have hk : (0 : ℝ) ≤ k := by positivity
+      have hNNe : NN = 2 * (r : ℝ) + k + 1 := by rw [hNN]; push_cast; ring
+      rw [hNNe] at hThr'
+      nlinarith [mul_nonneg (by linarith : (0:ℝ) ≤ r) hk, mul_nonneg hk hk, mul_nonneg (mul_nonneg (by linarith : (0:ℝ) ≤ r) hk) hk,
+        mul_nonneg (mul_nonneg (by linarith : (0:ℝ) ≤ r) (by linarith : (0:ℝ) ≤ r)) hk]
+  exact nnMaj_core k r Wp Wq D A m hA1pos hthr K hK hKO
 
 end Formalism.FourierDecayAlt.P.WeakDominationMajorants.Asm
 
