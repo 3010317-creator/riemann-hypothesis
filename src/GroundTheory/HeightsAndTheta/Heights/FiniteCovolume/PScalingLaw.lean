@@ -184,13 +184,8 @@ theorem ScalingLaw.proof (h : HermitianForm F E W) (v : Basis ι E W) [FiniteDim
         belowIndicator M (vecAt v (Y o)) t (((Quotient.out q : Γ) : archUnitary h v)⁻¹ * g) := by
     intro g t
     have hPA : vecAt v '' {x ∈ VV | M.len (invApply g (vecAt v x)) < t} =
-        vecAt v '' VV ∩ {p | M.len (g⁻¹ • p) < t} := by
-      ext p
-      constructor
-      · rintro ⟨x, ⟨hx, hxt⟩, rfl⟩
-        exact ⟨⟨x, hx, rfl⟩, hxt⟩
-      · rintro ⟨⟨x, hx, rfl⟩, hxt⟩
-        exact ⟨x, ⟨hx, hxt⟩, rfl⟩
+        vecAt v '' VV ∩ {p | M.len (g⁻¹ • p) < t} :=
+      Set.image_inter_preimage (vecAt v) VV {p | M.len (g⁻¹ • p) < t}
     have h1 : countBelow M VV g t =
         ∑' p : (vecAt v '' VV : Set _), {p | M.len (g⁻¹ • p) < t}.indicator 1 (p : _) := by
       rw [countBelow, ← (vecAt_injective v).encard_image, hPA, ← ENNReal.tsum_set_one,
