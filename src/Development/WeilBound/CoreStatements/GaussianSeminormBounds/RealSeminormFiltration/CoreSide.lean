@@ -409,31 +409,13 @@ section Gen
 
 variable {σ κ : Type} [Fintype κ]
 
-private theorem coeff_pderiv_real_seminorm_filtration (l : σ) (P : MvPolynomial σ ℂ) (γ : σ →₀ ℕ) :
-    AddMonoidAlgebra.coeff (pderiv l P) γ = AddMonoidAlgebra.coeff P (γ + Finsupp.single l 1) * ((γ l : ℂ) + 1) := by
-  classical
-  refine MvPolynomial.induction_on' P (fun s a => ?_) (fun p q hp hq => ?_)
-  · rw [pderiv_monomial, coeff_monomial, coeff_monomial]
-    by_cases hs : s = γ + Finsupp.single l 1
-    · subst hs
-      simp
-    · rw [if_neg hs, zero_mul]
-      rcases Nat.eq_zero_or_pos (s l) with h0 | hpos
-      · simp [h0]
-      · rw [if_neg]
-        intro h
-        apply hs
-        rw [← h]
-        exact (tsub_add_cancel_of_le (Finsupp.single_le_iff.mpr hpos)).symm
-  · simp [hp, hq, add_mul]
-
 theorem supp_wt_term (w : σ → ℕ) (l l' : σ) (P : MvPolynomial σ ℂ) (γ : σ →₀ ℕ)
     (h : AddMonoidAlgebra.coeff (X l * pderiv l' P) γ ≠ 0) :
     ∃ β ∈ P.support, Finsupp.weight w β + w l = Finsupp.weight w γ + w l' := by
   classical
   rw [coeff_X_mul'] at h
   split_ifs at h with hl
-  · rw [coeff_pderiv_real_seminorm_filtration] at h
+  · rw [coeff_pderiv] at h
     refine ⟨γ - Finsupp.single l 1 + Finsupp.single l' 1, ?_, ?_⟩
     · rw [mem_support_iff]
       intro h0
@@ -621,8 +603,7 @@ theorem supp_gen_pos {N : ℕ} (pos : κ → Bool) (ρ : Fin N → κ) (hρ : �
   have hg : ∀ γ ∈ (g i0).support, Finsupp.weight w e0 ≤ Finsupp.weight w γ := by
     intro γ hγ
     have h1 := mem_support_iff.mp hγ
-    change AddMonoidAlgebra.coeff (pderiv (v (ρ i0)) P) γ ≠ 0 at h1
-    rw [coeff_pderiv_real_seminorm_filtration] at h1
+    rw [coeff_pderiv] at h1
     have hmem : γ + Finsupp.single (v (ρ i0)) 1 ∈ P.support := by
       rw [mem_support_iff]
       intro h0
@@ -637,9 +618,7 @@ theorem supp_gen_pos {N : ℕ} (pos : κ → Bool) (ρ : Fin N → κ) (hρ : �
   have hadd : e0 - Finsupp.single (v (ρ i0)) 1 + Finsupp.single (v (ρ i0)) 1 = e0 :=
     tsub_add_cancel_of_le hle
   have hγ0 : e0 - Finsupp.single (v (ρ i0)) 1 ∈ (g i0).support := by
-    rw [mem_support_iff]
-    change AddMonoidAlgebra.coeff (pderiv (v (ρ i0)) P) _ ≠ 0
-    rw [coeff_pderiv_real_seminorm_filtration, hadd]
+    rw [mem_support_iff, coeff_pderiv, hadd]
     exact mul_ne_zero (mem_support_iff.mp he0) (Nat.cast_add_one_ne_zero _)
   have hwγ0 : Finsupp.weight w (e0 - Finsupp.single (v (ρ i0)) 1) = Finsupp.weight w e0 := by
     have h1 := congrArg (Finsupp.weight w) hadd
