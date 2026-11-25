@@ -27,23 +27,15 @@ theorem _root_.GlobalTheory.CM.deg_ideal_smul {K V : Type} [Field K] [NumberFiel
     _root_.ReciprocityTheory.GeometryOfNumbersTheory.deg h Λ = -Real.log (FractionalIdeal.absNorm 𝔠) / finrank ℚ K - _root_.ReciprocityTheory.GeometryOfNumbersTheory.meanLog K m / 2 := by
   set φ : K →ₗ[𝓞 K] V := (LinearMap.toSpanSingleton K V v).restrictScalars (𝓞 K) with hφ
   have hφapp : ∀ t, φ t = t • v := fun t => rfl
-  have hinj : Function.Injective φ := by
-    intro a b hab
-    simp only [hφapp] at hab
-    exact smul_left_injective K hv hab
+  have hinj : Function.Injective φ := smul_left_injective K hv
   have hΛmap : Λ = (𝔠 : Submodule (𝓞 K) K).map φ := by
     ext z
     rw [hΛ, Submodule.mem_map]
     constructor
     · rintro ⟨t, rfl, ht⟩; exact ⟨t, ht, rfl⟩
     · rintro ⟨t, ht, rfl⟩; exact ⟨t, rfl, ht⟩
-  have hform : ∀ s, h.form s v v = (m s : ℂ) := by
-    intro s
-    have hc := h.conj_symm s v v
-    apply Complex.ext
-    · simp [hf s]
-    · simp only [Complex.ofReal_im]
-      exact Complex.conj_eq_iff_im.mp hc
+  have hform : ∀ s, h.form s v v = (m s : ℂ) := fun s =>
+    (Complex.conj_eq_iff_re.1 (h.conj_symm s v v)).symm.trans (by rw [hf s])
   have hcFG : (𝔠 : Submodule (𝓞 K) K).FG := FractionalIdeal.fg_of_isNoetherianRing le_rfl 𝔠
   obtain ⟨r, w, hw⟩ := _root_.ReciprocityTheory.GeometryOfNumbersTheory.exists_isFullRankFamily_of_fg (𝔠 : Submodule (𝓞 K) K) hcFG
   have hw' := hw
