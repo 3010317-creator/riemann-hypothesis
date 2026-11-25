@@ -36,7 +36,7 @@ private theorem jqInj_dom {x : kˣ} (hx : valuation k (x : k) = uniformizer k) (
   have : ((i : ℕ) : ℤ) ≤ (j : ℕ) := by exact_mod_cast Fin.le_def.1 hij
   nlinarith
 
-private theorem jqInj_ev {x : kˣ} (hx : valuation k (x : k) = uniformizer k) {u : GL (Fin n) k}
+theorem _root_.UpperTheory.IwJqInj.jqInj_ev {x : kˣ} (hx : valuation k (x : k) = uniformizer k) {u : GL (Fin n) k}
     (hu : u ∈ unipB k (Fin n)) : ∀ᶠ m : ℕ in Filter.atTop,
       diagT k (Fin n) (fun i : Fin n => x ^ (-((m : ℤ) * (i : ℕ)))) * u *
         (diagT k (Fin n) (fun i : Fin n => x ^ (-((m : ℤ) * (i : ℕ)))))⁻¹ ∈ unipO k n := by
@@ -84,7 +84,7 @@ theorem UpperTheory.V.AlgebraTools.jqInj :
     induction hw using Submodule.span_induction with
     | mem y hy =>
       obtain ⟨u, w, rfl⟩ := hy
-      filter_upwards [jqInj_ev hx u.2] with m hm
+      filter_upwards [_root_.UpperTheory.IwJqInj.jqInj_ev hx u.2] with m hm
       have := GlobalTheory.IwahoriInj.sub_mem_twKer (π := π) (hle hm)
         (π (diagT k (Fin n) (fun i : Fin n => x ^ (-((m : ℤ) * (i : ℕ))))) w)
       rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel_right, map_mul, Module.End.mul_apply, ← map_sub] at this

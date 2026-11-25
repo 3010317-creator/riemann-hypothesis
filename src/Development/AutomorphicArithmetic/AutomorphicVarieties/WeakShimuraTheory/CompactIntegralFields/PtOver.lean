@@ -1533,7 +1533,7 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC ReciprocityTheory.Gal IsLocalRing UpperTheory.V.Base UpperTheory.V.Alg UpperTheory.V.HV UpperTheory.V.GradeZeroInterpolatingElement UpperTheory.V.Ws
 
-private theorem totDisc_quot {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
+theorem _root_.UpperTheory.UnivOf.totDisc_quot {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
     [TotallyDisconnectedSpace G] (N : Subgroup G) [N.Normal] (hN : IsClosed (N : Set G)) :
     TotallyDisconnectedSpace (G ⧸ N) := by
   rw [totallyDisconnectedSpace_iff_connectedComponent_one]
@@ -1562,7 +1562,7 @@ theorem UpperTheory.V.Ws.Po.univOf :
   haveI hcl := isClosed_NS Ω D.SP
   haveI : CompactSpace D.Gam := inferInstance
   haveI : T2Space D.Gam := inferInstance
-  haveI : TotallyDisconnectedSpace D.Gam := totDisc_quot _ hcl
+  haveI : TotallyDisconnectedSpace D.Gam := _root_.UpperTheory.UnivOf.totDisc_quot _ hcl
   have hq : Topology.IsQuotientMap (toGS Ω D.SP) := QuotientGroup.isQuotientMap_mk _
   have hlc : IsLocallyConstant D.rbar := by
     refine (IsLocallyConstant.iff_exists_open _).2 fun g =>

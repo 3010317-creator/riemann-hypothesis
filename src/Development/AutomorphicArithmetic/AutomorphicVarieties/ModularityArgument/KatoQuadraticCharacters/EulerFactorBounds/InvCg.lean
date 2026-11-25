@@ -44,7 +44,7 @@ import Mathlib.Tactic.ReduceModChar
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.MainNotions.N GlobalTheory.GalOfCusp UpperTheory.V UpperTheory.V.Af UpperTheory.V.HV GlobalTheory.Ord2 GlobalTheory.KZ GlobalTheory.K4 GlobalTheory.KA UpperTheory.Kd.K4 UpperTheory.V.Z.Kato.Sym UpperTheory.V.Z.Kato.Nb
 open scoped Matrix MatrixGroups Classical
 
-private theorem nle {l : ℕ} [Fact l.Prime] (c : Coef l) {a : Qbar l} (ha : a ∈ c.O) : ‖a‖ ≤ 1 := by
+theorem _root_.UpperTheory.InvCg.nle {l : ℕ} [Fact l.Prime] (c : Coef l) {a : Qbar l} (ha : a ∈ c.O) : ‖a‖ ≤ 1 := by
   have hi : IsIntegral ℤ_[l] a := (Algebra.IsIntegral.isIntegral (R := ℤ_[l]) (⟨a, ha⟩ : c.O)).map c.O.val
   have hq : IsIntegral ℚ_[l] a := Algebra.IsIntegral.isIntegral a
   change spectralValue (minpoly ℚ_[l] a) ≤ 1
@@ -103,7 +103,7 @@ private theorem inv_cg {l r : ℕ} [hl : Fact l.Prime] (c : Coef l) (hr : r ≠ 
       rw [← mul_pow, ← mul_pow, ← Units.val_mul, ← Units.val_mul, mul_comm u⁻¹, inv_mul_cancel_right, mul_inv]
     rw [← a1, ← a2, ← mul_sub, hk]; ring
   rw [e1, map_mul, map_pow, map_natCast]
-  exact smul' (nle c (c.O.algebraMap_mem _)) le_rfl
+  exact smul' (_root_.UpperTheory.InvCg.nle c (c.O.algebraMap_mem _)) le_rfl
 
 theorem UpperTheory.V.Z.Kato.Nb.sSpec :
     UpperTheory.V.Z.Kato.Nb.SSpec := by
@@ -133,7 +133,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sSpec :
       ‖η (y * t) - η y * (((algebraMap ℤ_[l] (Qbar l) τ) ^ e)⁻¹ * ψ (rd t : (ZMod l)ˣ))‖ ≤ ‖((l : ℕ) : Qbar l) ^ r‖ := fun t τ h y => by
     simp only [hη]
     rw [hrd, hrd, map_mul, hmul]
-    have := smul' (nle cf (mul_mem (hψ (rd y)) (hψ (rd t)))) (inv_cg cf hr e y t τ h)
+    have := smul' (_root_.UpperTheory.InvCg.nle cf (mul_mem (hψ (rd y)) (hψ (rd t)))) (inv_cg cf hr e y t τ h)
     convert this using 2
     ring
   have hp1 : (p : ZMod l) = 1 := by
@@ -156,7 +156,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sSpec :
   rw [Units.val_pow_eq_pow_val, map_pow, hπ', map_pow, Units.val_pow_eq_pow_val, hrq, one_pow, h1] at k2
   have hpO : (p : Qbar l)⁻¹ ∈ cf.O := hπ' ▸ uO π
   have hp0 : (p : Qbar l) ≠ 0 := Nat.cast_ne_zero.2 hp.ne_zero
-  have hpn : ‖(p : Qbar l)‖ ≤ 1 := nle cf (natCast_mem _ p)
+  have hpn : ‖(p : Qbar l)‖ ≤ 1 := _root_.UpperTheory.InvCg.nle cf (natCast_mem _ p)
   refine ⟨fun i => (p : Qbar l)⁻¹ * ∑ y, η y * b y i, fun i => mul_mem hpO (sum_mem fun y _ => mul_mem (ηO y) (hb y i)), fun s i => ?_⟩
   have k3 := key (cycMod ℚ Ω l r s) (cycZ ℚ Ω l s) rfl
   have hth : ((algebraMap ℤ_[l] (Qbar l) (cycZ ℚ Ω l s : ℤ_[l]ˣ)) ^ e)⁻¹ * ψ (rd (cycMod ℚ Ω l r s) : (ZMod l)ˣ) = thK l e ψ s := by
@@ -169,8 +169,8 @@ theorem UpperTheory.V.Z.Kato.Nb.sSpec :
   have h0 := norm_nonneg (((l : ℕ) : Qbar l) ^ r)
   have s1 := shift h0 η (fun y => Y s y i) _ _ k1 fun y => hY s y i
   have s2 := shift h0 η (fun y => Y s y i) _ _ k2 fun y => hY s y i
-  have s3 := fun j => shift h0 η (fun y => b y j) _ _ k3 fun y => nle cf (hb y j)
-  have s0 := IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg (s := Finset.univ) h0 fun y _ => smul' (nle cf (ηO y)) (H s y i)
+  have s3 := fun j => shift h0 η (fun y => b y j) _ _ k3 fun y => _root_.UpperTheory.InvCg.nle cf (hb y j)
+  have s0 := IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg (s := Finset.univ) h0 fun y _ => smul' (_root_.UpperTheory.InvCg.nle cf (ηO y)) (H s y i)
   have hθ0 : thK l e ψ s ≠ 0 := fun h => by simpa [h] using hθ s
   have hWρ : ∀ j, mat W s i j = thK l e ψ s * rhoK W e ψ s i j := fun j => by
     rw [rhoK, Matrix.smul_apply, smul_eq_mul, mul_inv_cancel_left₀ hθ0]
@@ -186,9 +186,9 @@ theorem UpperTheory.V.Z.Kato.Nb.sSpec :
     simp only [hinv, inv_pow, Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
     ring
   rw [E] at s0
-  have fin := smul' (nle cf hpO) (sadd (sadd (sadd (sadd s0 (smul' (a := -(k * a)) (by rw [norm_neg]; exact smul' hk ha) s1))
+  have fin := smul' (_root_.UpperTheory.InvCg.nle cf hpO) (sadd (sadd (sadd (sadd s0 (smul' (a := -(k * a)) (by rw [norm_neg]; exact smul' hk ha) s1))
     (smul' (a := k * ((p : Qbar l) ^ (2 * e - 1) * δ)) (smul' hk (smul' (by rw [norm_pow]; exact pow_le_one₀ (norm_nonneg _) hpn) hδ)) s2))
-    (smul' (nle cf (hρ s i 0)) (s3 0))) (smul' (nle cf (hρ s i 1)) (s3 1)))
+    (smul' (_root_.UpperTheory.InvCg.nle cf (hρ s i 0)) (s3 0))) (smul' (_root_.UpperTheory.InvCg.nle cf (hρ s i 1)) (s3 1)))
   unfold Cg
   convert fin using 2
   simp only [spec, eul, Finset.sum_apply, Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Matrix.mulVec, dotProduct,

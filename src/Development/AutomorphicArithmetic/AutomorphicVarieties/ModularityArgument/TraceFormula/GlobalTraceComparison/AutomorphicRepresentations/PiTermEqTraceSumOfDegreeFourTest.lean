@@ -1047,7 +1047,7 @@ protected theorem finFn_one {E : Type} [Field E] [NumberField E] [IsCMField E] {
   simp only [h1, h2]
   rfl
 
-private theorem ind_hecke {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} (w : Pl E)
+theorem _root_.UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.ind_hecke {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} (w : Pl E)
     (M N' : Subgroup (GLw n w)) (ho : IsOpen (M : Set (GLw n w))) (hM : M ≤ KGL w (n := n)) (hN : N' ≤ M) :
     IsHecke N' ((M : Set (GLw n w)).indicator 1) := by
   have hcl : IsClosed (M : Set (GLw n w)) := M.isClosed_of_isOpen ho
@@ -1074,11 +1074,11 @@ theorem levelTr_pf : UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.admitted → Z
       cases b <;> rfl
     refine ⟨φ₀, fun w _ N' hN' b => ?_, Finset.prod_ne_zero_iff.2 fun w hw h0 => ?_⟩
     · rw [h2]
-      exact ind_hecke w (N w) N' (hG w).1 (hG w).2.1 hN'
+      exact _root_.UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.ind_hecke w (N w) N' (hG w).1 (hG w).2.1 hN'
     · haveI : FiniteDimensional ℂ (fixed (τ w).ρ (N w)) := hAdm E n w (τ w) (N w) (hG w).1
       have e := hc w hw φ₀ φ₀ fun b => by
         rw [h2]
-        exact ind_hecke w (N w) (N w) (hG w).1 (hG w).2.1 le_rfl
+        exact _root_.UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.ind_hecke w (N w) (N w) (hG w).1 (hG w).2.1 le_rfl
       rw [h0, mul_zero, h2, h2, Pi.trOn_of_id _ _ fun v hv => by
         rw [Module.End.mul_apply, Pi.lv_unit _ _ v hv, Pi.lv_unit _ _ v hv]] at e
       exact hne w hw (Submodule.finrank_eq_zero.1 (Nat.cast_eq_zero.1 e))
@@ -1526,7 +1526,7 @@ protected theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.hint_fst {G P : Ty
   rw [← finsum_comp _ hbij]
   exact finsum_congr hval
 
-private theorem tr_core (hTr : UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.TrLevel) (hCv : UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.CvOp)
+theorem _root_.UpperTheory.PSeenTr.tr_core (hTr : UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.TrLevel) (hCv : UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.CvOp)
     {G V : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [AddCommGroup V] [Module ℂ V]
     (ρ : Representation ℂ G V) (K N : Subgroup G) (hKo : IsOpen (K : Set G)) (hKc : IsCompact (K : Set G))
     (hNo : IsOpen (N : Set G)) (hNc : IsCompact (N : Set G)) (hNK : N ≤ K)
@@ -1600,7 +1600,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.seenTr_pf :
   have hiC : ((N.relIndex (KGL w (n := n)) : ℕ) : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hi
   refine ⟨((N.relIndex (KGL w (n := n)) : ℕ) : ℂ) ^ 2, pow_ne_zero _ hiC, ?_⟩
   intro φ₁ φ₂ hb
-  refine tr_core hTr hCv τ.ρ (KGL w (n := n)) N hKo hKc hNo hNc hNK hiC (hAdm E n w τ N hNo) _ _ _ (hb false) (hb true) ?_
+  refine _root_.UpperTheory.PSeenTr.tr_core hTr hCv τ.ρ (KGL w (n := n)) N hKo hKc hNo hNc hNK hiC (hAdm E n w τ N hNo) _ _ _ (hb false) (hb true) ?_
   funext g
   have h₁ := hb false
   have h₂ := hb true

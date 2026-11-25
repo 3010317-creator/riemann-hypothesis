@@ -9,7 +9,7 @@ open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.AlgebraT
 
 namespace UpperTheory.V.Pa
 
-private theorem selLift {l : ℕ} [Fact l.Prime] (F : GFrame l) {n : ℕ} {A R R' : Type} [CommRing A] [CommRing R] [CommRing R']
+theorem _root_.UpperTheory.V.Pa.selLift {l : ℕ} [Fact l.Prime] (F : GFrame l) {n : ℕ} {A R R' : Type} [CommRing A] [CommRing R] [CommRing R']
     [Algebra A R] [Algebra A R'] (t : A) (f : R →+* R') (hf : Function.Injective f)
     (ρ : F.G₀ → Matrix (Fin n) (Fin n) R) (w wi : F.Vl → Matrix (Fin n) (Fin n) R)
     (ρ' : F.G₀ → Matrix (Fin n) (Fin n) R') (w' wi' : F.Vl → Matrix (Fin n) (Fin n) R')
@@ -69,7 +69,7 @@ theorem UpperTheory.V.Pa.selScale :
   obtain ⟨z', hc, hz'⟩ := a1
   choose Y' _ hY' using a2
   have hf : Function.Injective (algebraMap x.A x.Fr) := IsFractionRing.injective _ _
-  refine ⟨z', selLift G.frame x.t (algebraMap x.A x.Fr) hf _ _ _ _ _ _ (fun g => rfl) (fun v => rfl) (fun v => rfl)
+  refine ⟨z', _root_.UpperTheory.V.Pa.selLift G.frame x.t (algebraMap x.A x.Fr) hf _ _ _ _ _ _ (fun g => rfl) (fun v => rfl) (fun v => rfl)
     _ _ (algebraMap x.A x.Fr x.t ^ s) (fun Z Z' hZ' hZ => ?_) z hz Y hY z' hc hz' (fun v => Y' v 1) (fun v => hY' v 1), hz'⟩
   have key : ∀ i j, Z' i j = 0 → Z i j = 0 := fun i j e => hf (by
     have := congrFun (congrFun hZ i) j

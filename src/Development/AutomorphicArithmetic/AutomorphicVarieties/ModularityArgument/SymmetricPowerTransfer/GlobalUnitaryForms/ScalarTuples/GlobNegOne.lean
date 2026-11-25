@@ -150,7 +150,7 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain Matrix UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Glob
 
-private theorem mk_el {K : Type} [Field K] {Δ : K} (a b : Lsq K Δ) (h : a * star a + b * star b = 1) :
+theorem _root_.UpperTheory.GlobNegOne.mk_el {K : Type} [Field K] {Δ : K} (a b : Lsq K Δ) (h : a * star a + b * star b = 1) :
     ∃ γ : DX Δ, mt γ = !![a, b; -star b, star a] := by
   let g : GL (Fin 2) (Lsq K Δ) := ⟨!![a, b; -star b, star a], !![star a, -b; star b, a], by
     rw [Matrix.mul_fin_two, Matrix.one_fin_two]
@@ -168,7 +168,7 @@ private theorem mk_el {K : Type} [Field K] {Δ : K} (a b : Lsq K Δ) (h : a * st
   ext1 i j
   fin_cases i <;> fin_cases j <;> simp [starRingEnd_apply]
 
-private theorem el_shape {K : Type} [Field K] {Δ : K} (γ : DX Δ) :
+theorem _root_.UpperTheory.GlobNegOne.el_shape {K : Type} [Field K] {Δ : K} (γ : DX Δ) :
     mt γ 1 1 = star (mt γ 0 0) ∧ mt γ 1 0 = -star (mt γ 0 1) := by
   have h : GeneralLinearGroup.map (starRingEnd (Lsq K Δ)) γ.1 = (wJ Δ)⁻¹ * γ.1 * ((wJ Δ)⁻¹)⁻¹ := γ.2
   rw [inv_inv] at h
@@ -223,13 +223,13 @@ theorem UpperTheory.V.Z.Sym.Glob.embEx :
         linear_combination key
       · simp [a, b, QuadraticAlgebra.im_one]
         ring
-    obtain ⟨γ, hγ⟩ := mk_el a b hab
+    obtain ⟨γ, hγ⟩ := _root_.UpperTheory.GlobNegOne.mk_el a b hab
     refine ⟨γ, ?_, ?_⟩
     · rw [hγ, Matrix.det_fin_two_of]
       linear_combination hab
     · rw [hγ, Matrix.trace_fin_two_of]
       ext <;> simp [a]
-  · obtain ⟨s₁, s₂⟩ := el_shape γ
+  · obtain ⟨s₁, s₂⟩ := _root_.UpperTheory.GlobNegOne.el_shape γ
     obtain ⟨hd, ht⟩ := hγ
     rw [Matrix.det_fin_two, s₁, s₂] at hd
     rw [Matrix.trace_fin_two, s₁] at ht
