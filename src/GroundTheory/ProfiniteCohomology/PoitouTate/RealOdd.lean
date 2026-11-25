@@ -44,8 +44,6 @@ namespace GroundTheory.ProfCoh
 
 open CategoryTheory MonoidalCategory Involution OrderTwo
 
-attribute [local instance 2000] Rep.hV2
-
 section Transfer
 
 variable {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] (M : Rep.{0} (ULift.{0} ℤ) Gal(Ω/F))
@@ -341,8 +339,6 @@ noncomputable section
 namespace GroundTheory.ProfCoh
 
 open CategoryTheory MonoidalCategory Involution OrderTwo
-
-attribute [local instance 2000] Rep.hV2
 
 section Neg
 
@@ -710,8 +706,6 @@ namespace GroundTheory.ProfCoh
 
 open IsDedekindDomain NumberField CategoryTheory MonoidalCategory GroundTheory.Global
 
-attribute [local instance 2000] Rep.hV2
-
 section NormClassMap
 
 variable {k F : Type} [CommRing k] [Group F] [TopologicalSpace F] [IsTopologicalGroup F] [Fintype F]
@@ -986,8 +980,6 @@ noncomputable section
 namespace GroundTheory.ProfCoh
 
 open IsDedekindDomain NumberField CategoryTheory CategoryTheory.Limits MonoidalCategory GroundTheory.Global
-
-attribute [local instance 2000] Rep.hV2
 
 local notation "ℚ̄" => AlgebraicClosure ℚ
 

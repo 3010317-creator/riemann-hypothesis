@@ -533,8 +533,6 @@ theorem cdp_le_cdp_closedSubgroup {p : ℕ} (hp : p.Prime) {H : Subgroup G}
 
 section Summand
 
-attribute [local instance 2000] Rep.hV2
-
 
 omit [TotallyDisconnectedSpace G] in
 theorem finite_of_isSimpleOrder {p : ℕ} (hp : p.Prime) (A : Rep.{u} (ULift.{u} ℤ) G)
@@ -730,8 +728,6 @@ theorem summandMap_comp_coindFixedEval (hfix : ∀ h : H, (h : G) ∈ V → ∀ 
 end Splitting
 
 section Main
-
-attribute [local instance 2000] Rep.hV2
 
 theorem cdp_closedSubgroup_le {p : ℕ} (hp : p.Prime) {H : Subgroup G} (hH : IsClosed (H : Set G)) :
     cdp p H ≤ cdp p G := by

@@ -20,8 +20,6 @@ open CategoryTheory Limits
 
 universe u
 
-attribute [local instance 2000] Rep.hV2
-
 section General
 
 variable {k G : Type u} [CommRing k] [Group G] [TopologicalSpace G] [IsTopologicalGroup G]

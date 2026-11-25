@@ -19,8 +19,6 @@ open CategoryTheory MonoidalCategory
 
 universe u
 
-attribute [local instance 2000] Rep.hV2
-
 section Map
 
 variable {G : Type u} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
