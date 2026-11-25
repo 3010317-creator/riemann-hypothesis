@@ -116,11 +116,4 @@ theorem minorIJ_block_zero {R : Type} [CommRing R] {j : ℕ} {i : Fin N} {h : Ma
 
 end Minors
 
-section Model
-
-variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] {Φ : Type} [Field Φ] {y : (Σ k, ι k) → Φ}
-  {Ψ : Type} {N j : ℕ}
-
-end Model
-
 end GlobalTheory.CompanionTheory.Ar.PB

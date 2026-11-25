@@ -51,12 +51,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.WeaklyAdmissibl
 
 namespace GlobalTheory.HWL.NormVal
 
-section General
-
-variable {K : Type*} [Field K]
-
-end General
-
 open GlobalTheory.Per.Val
 
 open TensorProduct in

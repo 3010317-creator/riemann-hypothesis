@@ -41,12 +41,6 @@ theorem lconv_mul_mul {w : Pl E} (r s : ℂ) (u v : UL n w → ℂ) :
   funext z
   ring
 
-section S0
-
-variable (d : LocData E n) {a : ℕ} (ha : a ≤ n) {w : Pl E}
-
-end S0
-
 section T
 
 variable (d : LocData E n) {a : ℕ} (ha : a ≤ n) {w : Pl E}

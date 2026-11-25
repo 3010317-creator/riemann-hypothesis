@@ -85,10 +85,6 @@ theorem toENNReal_sum {ι : Type} (s : Finset ι) (f : ι → ℕ∞) :
     ((∑ a ∈ s, f a : ℕ∞) : ℝ≥0∞) = ∑ a ∈ s, (f a : ℝ≥0∞) :=
   map_sum ENat.toENNRealRingHom f s
 
-section Hyp
-
-end Hyp
-
 section Terms
 
 variable (D : D7) (i : D.nd.Loc)

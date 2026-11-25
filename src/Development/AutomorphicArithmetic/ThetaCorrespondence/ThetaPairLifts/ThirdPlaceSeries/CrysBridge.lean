@@ -45,9 +45,6 @@ import Mathlib.Topology.Sheaves.Init
 section
 noncomputable section
 section
-open Formalism Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal
-end
-section
 open NumberField IsDedekindDomain Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations Formalism.ConjugateSelfDual ReciprocityTheory.Gal
 namespace GlobalTheory.CrysFromGTwo
 end GlobalTheory.CrysFromGTwo
@@ -74,8 +71,6 @@ end
 section
 namespace GlobalTheory.AbsoluteIrreducibilityOfTraceSpan
 end GlobalTheory.AbsoluteIrreducibilityOfTraceSpan
-end
-section
 end
 end
 end

@@ -354,8 +354,4 @@ theorem blockConst_iff : BlockConst X la ↔
 
 end Block
 
-section Checks
-
-end Checks
-
 end GlobalTheory.Up

@@ -111,11 +111,5 @@ theorem eopW_mem_stabAlg (π : CuspSub E n) (w : InfinitePlace E) (s : Bool) (i 
   · exact Eop_mem_stabAlg π _ i j
   · exact Eop_mem_stabAlg π _ i j
 
-section Avg
-
-variable [MeasurableSpace (UU n)] (κ : Measure (UU n)) (Em : PositivityTheory.RgBcC.KMod n) (T : Em.V →L[ℂ] Em.V)
-
-end Avg
-
 end GlobalTheory.CompanionTheory.TwY
 end

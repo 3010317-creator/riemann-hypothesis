@@ -222,11 +222,4 @@ variable {Xo : Moduli D l} {c : Coeff l} {a : IsAuxiliarySplitSquarefreeLevel l}
 
 end Delta
 
-section Trivial
-
-variable {D : Datum H} {l : Level H}
-
-
-end Trivial
-
 end GlobalTheory.IndefiniteRowSideFullHecke.DeltaDatumCombinedCoefficient

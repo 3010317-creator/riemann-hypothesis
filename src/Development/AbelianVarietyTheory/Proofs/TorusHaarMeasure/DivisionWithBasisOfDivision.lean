@@ -72,12 +72,6 @@ noncomputable section
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
 
-section Local
-
-variable {X : Data E r} {Xa : ArchInM X} (Fl : FlatM X Xa)
-
-end Local
-
 section Hyp
 
 variable {X : Data E r}
@@ -230,12 +224,6 @@ theorem _root_.GlobalTheory.DivisionVolume.margin_iff (h0 : 0 < X.p0) (h1 : X.p0
       exact h
 
 end Hyp
-
-section Size
-
-variable {X : Data E r}
-
-end Size
 
 end
 

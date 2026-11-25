@@ -347,9 +347,4 @@ theorem prod_eq {u : ℕ → ℝ} {u₀ : Fin k → ℝ} (hπ : Q.IsType k r z �
 
 end param
 
-section main
-open PI.BesselPeriodGGP
-
-end main
-
 end GlobalTheory.SupNonzero

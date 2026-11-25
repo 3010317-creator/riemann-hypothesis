@@ -342,35 +342,6 @@ theorem cmHost_imaginaryGenerator_ne_zero : D.host.xi0 ≠ 0 := fun h => by
 
 end Table
 
-section Normal
-
-open GlobalTheory.RootEx (N)
-open Finset (range)
-
-variable {n : Type} [Fintype n] [DecidableEq n] {c : ℕ}
-
-variable {V X : HSp D} {τ : D.host.E →ₐ[D.host.F] Fv D.host.F v}
-  {jX : Matrix (Fin V.rank) (Fin X.rank) D.host.E} {a : ℕ → Fin V.rank → D.host.E}
-  {γ : LatFrame (Fv D.host.F v) n (Fin X.rank)} {β : LatFrame (Fv D.host.F v) (n ⊕ Fin c) (Fin V.rank)}
-  {κ t : ℕ → Fv D.host.F v} {ψ : AddChar (AF D.host.F) ℂ} (hψ : ∀ x, ‖ψ x‖ = 1) {θ : Fv D.host.F v}
-  {U : Subgroup (GL (n ⊕ Fin c) (Fv D.host.F v))} {χ : GA D V → ℂ}
-
-variable {V₀ A L L' : HSp D} {ρ : ℕ} (d : HypDec V V₀ ρ) (o : OrthDec V₀ A L) {ζ : Fin L.rank → D.host.E}
-
-section Bes
-
-variable {γ : LatFrame (Fv D.host.F v) n (Fin A.rank)}
-
-end Bes
-
-section FJ
-
-variable {γ : LatFrame (Fv D.host.F v) n (Fin V₀.rank)}
-
-end FJ
-
-end Normal
-
 end GlobalTheory.LocFrame
 
 end

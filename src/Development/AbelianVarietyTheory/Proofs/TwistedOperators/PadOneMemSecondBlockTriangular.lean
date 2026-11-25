@@ -240,25 +240,6 @@ theorem isLattice_of_isFrame {β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)}
 
 end Frame
 
-section Mat
-
-open GlobalTheory.StepLaw.TypeDatum
-
-variable {κ : Type} [CommRing κ] {r a b : ℕ}
-
-end Mat
-
-section Dat
-
-open GlobalTheory.StepLaw.TypeDatum
-
-variable {D : D7} {a b : ℕ} (L : LevDat D.host.E ℂ a) (hL : L.P = LevelP.triv L.Pg L.r ℂ)
-  (χj : ∀ PP : Pl D.host.E, (kP PP)ˣ →* ℂˣ) (y : ∀ PP : Pl D.host.E, Matrix (Fin b) (Fin a) (kP PP))
-
-include hL
-
-end Dat
-
 section Dual
 
 open GlobalTheory.PlaceModel GlobalTheory.PlaceDatum GlobalTheory.SplitHecke

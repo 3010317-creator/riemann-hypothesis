@@ -71,15 +71,6 @@ theorem exists_unit (k : Eˣ) (hk : diagUnits E k ∈ unitIdl E) : ∃ u : (𝓞
 
 end Char
 
-section Char
-
-open Neutral.B1 ReciprocityTheory.Neutral.Bridge.HCFR Formalism.L2.Host GlobalTheory.Mem.Chr
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E]
-
-
-end Char
-
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 open Formalism.L2.Host

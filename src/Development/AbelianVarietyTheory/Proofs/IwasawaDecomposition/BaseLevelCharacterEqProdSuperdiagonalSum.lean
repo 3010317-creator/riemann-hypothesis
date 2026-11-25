@@ -133,8 +133,4 @@ theorem roots_g (x : St P) (k : Fin 2) : ∃ ζ : ↥(Dof x).LL0,
 
 end State
 
-section Gen
-
-end Gen
-
 end GlobalTheory.HeightCounting.ThetaSt

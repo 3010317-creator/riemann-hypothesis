@@ -211,19 +211,6 @@ theorem exists_lift {y' : Ys X n} (hy : ∀ N, y.ys N = {∅}) {Λ₁ Λ₂ : Le
 
 end Points
 
-section Start
-
-variable {X : Fields} {n : ℕ} {ST SG Q Q' : Finset (HeightOneSpectrum (𝓞 X.E))} {T : ℕ}
-  {y y' : Ys X n} {β β' : Type} {iβ : Fintype β} {jβ : DecidableEq β} {iβ' : Fintype β'} {jβ' : DecidableEq β'}
-  {Λ : β → LevFam X.E X.K n SG} {Θ : β → LevQFam X.E X.K n Q} {pref : DecoF X.E n ST SG Q → Prop}
-  {Λ' : β' → LevFam X.E X.K n SG} {Θ' : β' → LevQFam X.E X.K n Q'} {pref' : DecoF X.E n ST SG Q' → Prop}
-  (σ : X.K →+* ℂ) (lam : X.Tau → DomWeight n)
-
-variable {σ lam} {e : ((stepY ST y β Λ Θ pref).Cl → Fr X.emb σ n → ℂ) ≃ₗ[ℂ]
-    ((stepY ST y' β' Λ' Θ' pref').Cl → Fr X.emb σ n → ℂ)}
-
-end Start
-
 section Lattice
 
 variable {D : D7} {u : D.what₂.Word} {X Y : Ch D u} {e : Fn X 0 ≃ₗ[ℂ] Fn Y 0} {eL : Vl X 0 ≃ₗ[D.what₂.LL] Vl Y 0}
@@ -295,28 +282,5 @@ variable {X : Fields} {Pr : Primes X} {R : Ranks}
 variable {sel mu cst L} {Cr : Chars X Pr R.m} {G : ChGlob X R.m} {m2 : ℕ}
 
 end Inputs
-
-section Main
-
-variable {D : D7} {u : D.what₂.Word} {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [StarRing E]
-  {emb : D.what₂.Tau → E →+* D.what₂.LL} {Pr : Primes (fieldsOver D F E emb)} {u' : Pr.Word}
-
-variable {Cr : Chars (fieldsOver D F E emb) Pr D.R.m} {sel : HeightOneSpectrum (𝓞 F) → HeightOneSpectrum (𝓞 E)} {S : Set ℕ} {m2 : ℕ}
-  {mu₀ : Tup F E D.what₂.LL S} {cst₀ : LocCst (fieldsOver D F E emb) (rowSG Pr sel mu₀)}
-  {L₀ : ChIdx (fieldsOver D F E emb) Pr D.R (QE (X := fieldsOver D F E emb) sel (mu₀ : Chr F E D.what₂.LL))}
-  {Tp₀ : TopLev (fieldsOver D F E emb) Pr D.R (QE (X := fieldsOver D F E emb) sel (mu₀ : Chr F E D.what₂.LL))}
-  {G₀ : ChGlob (fieldsOver D F E emb) D.R.m} {rho₀ rho₀' jet₀} {DG₀ : ℕ} {psi₀} {du₀ : ℕ} {Ds₀ Ga₀ : ℝ}
-  {Q₀ : PerIn (chainOn (X := fieldsOver D F E emb) sel mu₀ cst₀ L₀ Tp₀ u' rho₀ rho₀' jet₀ DG₀)}
-  {Z₀ : FmIn (levelOn (X := fieldsOver D F E emb) sel mu₀ cst₀ L₀ Tp₀ u' (rho := rho₀) (rho' := rho₀') (jet := jet₀) (DG := DG₀)
-    psi₀ du₀ Ds₀ Ga₀) D.what₂.places} {hI₀ hJ₀} {hQ₀ : Q₀.Ok} {l₀ lf₀ hO₀}
-  {mu : Tup F E D.what₂.LL S} {cst : LocCst (fieldsOver D F E emb) (rowSG Pr sel mu)}
-  {L : ChIdx (fieldsOver D F E emb) Pr D.R (QE (X := fieldsOver D F E emb) sel (mu : Chr F E D.what₂.LL))}
-  {Tp : TopLev (fieldsOver D F E emb) Pr D.R (QE (X := fieldsOver D F E emb) sel (mu : Chr F E D.what₂.LL))}
-  {G : ChGlob (fieldsOver D F E emb) D.R.m} {rho rho' jet} {DG : ℕ} {psi} {du : ℕ} {Ds Ga : ℝ}
-  {Q : PerIn (chainOn (X := fieldsOver D F E emb) sel mu cst L Tp u' rho rho' jet DG)}
-  {Z : FmIn (levelOn (X := fieldsOver D F E emb) sel mu cst L Tp u' (rho := rho) (rho' := rho') (jet := jet) (DG := DG)
-    psi du Ds Ga) D.what₂.places} {hI hJ} {hQ : Q.Ok} {l lf hO}
-
-end Main
 
 end GlobalTheory.LvT.StartTie

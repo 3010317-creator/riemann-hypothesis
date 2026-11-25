@@ -254,18 +254,6 @@ end Periods
 
 variable (D : D7)
 
-section Local
-
-variable (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.host.E)) (hw : w ∈ placesOver D.host.E (D.nd.l i))
-
-end Local
-
-section Family
-
-variable {eps : ℝ} (Fm : FamP eps)
-
-end Family
-
 end GlobalTheory.Cmp.JumpDict
 
 end

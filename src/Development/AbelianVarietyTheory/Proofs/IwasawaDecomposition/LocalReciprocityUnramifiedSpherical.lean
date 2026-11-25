@@ -178,7 +178,3 @@ end
 end GlobalTheory.SphLoc
 
 end
-
-section
-
-end

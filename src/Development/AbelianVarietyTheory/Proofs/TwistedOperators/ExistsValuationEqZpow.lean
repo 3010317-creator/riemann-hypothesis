@@ -59,11 +59,6 @@ open MeasureTheory ValuativeRel Matrix GlobalTheory.SplitWeil GlobalTheory.RootE
 
 namespace GlobalTheory.StepData.NormalForm
 
-section Plain
-variable {k : Type} [Field k] {n : Type} [Fintype n] [DecidableEq n] {c : ℕ}
-
-end Plain
-
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 

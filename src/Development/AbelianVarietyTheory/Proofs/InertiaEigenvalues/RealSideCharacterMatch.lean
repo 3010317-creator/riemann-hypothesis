@@ -347,24 +347,6 @@ def actTieNew : ActTie ι P Q ch (actNew P hχ hρ red hsurj hJ hker ch hch hchK
 
 end Main
 
-section Hecke
-
-variable {G Γ : Type} [Group G] [Group Γ] {ι : Γ →* G}
-variable {W : Type} [NormedAddCommGroup W] [InnerProductSpace ℂ W]
-variable {K : Type} [Field K] [NumberField K] [StarRing K]
-variable {S : CSD K} {σ : K →+* ℂ} {ρ : Γ →* Module.End ℂ W} {J : Subgroup G} {χ : J →* ℂˣ}
-variable (P : ClassPres ι S σ ρ J χ) (hχ : ∀ k, ∃ b : K, σ b = (χ k : ℂ))
-  (hρ : ∀ γ x, ∃ x', P.coef x' = ρ γ (P.coef x))
-  {S₀ : CSD K} {χ₀ : J →* ℂˣ} {P₀ : ClassPres ι S₀ σ ρ J χ₀} {I : Type} {op : I → Module.End K S₀.Forms}
-  {inR : I → Prop} {isT isLoc : I → G → Prop} (H : HeckeTie ι P₀ op inR isT isLoc)
-  (hloc : ∀ i, inR i → ∃ Lc : Subgroup G, (∀ x, isLoc i x → x ∈ Lc) ∧
-    (∀ k ∈ J, ∃ k₁ ∈ J, ∃ k₂ ∈ J, k₁ ∈ Lc ∧ k = k₁ * k₂ ∧ ∀ x ∈ Lc, Commute k₂ x) ∧
-    ∀ k : J, (k : G) ∈ Lc → χ k = 1)
-
-
-
-end Hecke
-
 end GlobalTheory.CharChange
 
 namespace GlobalTheory

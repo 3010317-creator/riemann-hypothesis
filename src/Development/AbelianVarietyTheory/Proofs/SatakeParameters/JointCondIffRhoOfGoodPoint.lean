@@ -101,12 +101,6 @@ theorem _root_.GlobalTheory.ParamRepCompare.conj_mem_Ine_of_smul_eq {A A' : Valu
 
 end Inertia
 
-section Clauses
-
-variable (D : D7)
-
-end Clauses
-
 end GlobalTheory.ParamRepCompare
 
 end
