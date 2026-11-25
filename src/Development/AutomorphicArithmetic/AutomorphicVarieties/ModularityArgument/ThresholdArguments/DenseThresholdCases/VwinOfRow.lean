@@ -1309,18 +1309,10 @@ theorem UpperTheory.One.Join.local_inputs_from_literature (O : _root_.UpperTheor
     geo := (_root_.UpperTheory.LiteratureTheorems.bernstein_zelevinsky_geometric_of_open O)
     zel := (_root_.UpperTheory.LiteratureTheorems.zelevinsky_polynomial_ring_of_open O)
     disj := (_root_.UpperTheory.LiteratureTheorems.totally_disjoint_product_irreducible_of_open O)
-    mp := (_root_.UpperTheory.LiteratureTheorems.moy_prasad_jacquet_iso_of_open O)
-    temp := (_root_.UpperTheory.LiteratureTheorems.tempered_product_of_square_integrable_of_open O)
-    seg := (_root_.UpperTheory.LiteratureTheorems.ess_square_integrable_segments_of_open O)
-    sq := (_root_.UpperTheory.LiteratureTheorems.square_integrable_segment_of_open O)
     gen := (_root_.UpperTheory.LiteratureTheorems.generic_unlinked_gl_of_open O)
-    multi := (_root_.UpperTheory.LiteratureTheorems.langlands_multisegments_of_open O)
     exh := (_root_.UpperTheory.LiteratureTheorems.langlands_exhaustion_gl_of_open O)
     cos := (_root_.UpperTheory.LiteratureTheorems.standard_cosocle_gl_of_open O)
-    dzi := (_root_.UpperTheory.LiteratureTheorems.depth_zero_induction_of_open O)
-    brauer := (_root_.UpperTheory.LiteratureTheorems.brauer_degree_zero_of_open O)
-    chev := (_root_.UpperTheory.LiteratureTheorems.chevalley_units_of_open O)
-    green := (_root_.UpperTheory.LiteratureTheorems.green_regular_characters_of_open O) }
+    chev := (_root_.UpperTheory.LiteratureTheorems.chevalley_units_of_open O) }
 theorem UpperTheory.One.Join.automorphic_inputs_from_literature (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) (bc : _root_.PositivityTheory.Rg.BcN.BaseChangeIsobaricN)
     (gal : _root_.UpperTheory.V.Z.Win.RowT) : _root_.GlobalTheory.Mem.LiteralAutomorphy.LiteratureAutomorphyHypothesis :=
   { decay := (_root_.UpperTheory.LiteratureTheorems.cusp_rapid_decay_of_open O)
