@@ -362,7 +362,7 @@ theorem ramUnitary_holds : ∀ D : D7, GlobalTheory.FinPl.RamUnitary D := by
   obtain ⟨hA', eA'⟩ := hB.2.1 φ' hφ'
   rw [eA, eA']
   have hO : OperatorIdentities k n (GA D S → ℂ) q (resChar χ hχ q) :=
-    ((GlobalTheory.PairOp.pairOperatorStatement k q χ hχ n).1 (GA D S → ℂ)).2
+    (GlobalTheory.PairOp.pairOperatorStatement k q χ hχ n (GA D S → ℂ)).2
   set X := FFStar q (resChar χ hχ q) φ with hX
   set X' := FFStar q (resChar χ hχ q) φ' with hX'
   have cX : ∀ Q, IsContAut S (X Q) := fun Q => by
