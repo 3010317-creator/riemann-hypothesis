@@ -107,31 +107,14 @@ end MC
 
 private theorem ker_inf {R : Type} [CommRing R] [IsLocalRing R] [IsNoetherianRing R] (K : Ideal R)
     (hK : maximalIdeal R * K = ⊥) : ∃ N, ∀ k ∈ K, k ∈ maximalIdeal R ^ N → k = 0 := by
-  have htor : Module.IsTorsionBySet R K (maximalIdeal R) := by
-    rintro ⟨k, hk⟩ ⟨a, ha⟩
-    apply Subtype.ext
-    show a * k = 0
-    rw [← Ideal.mem_bot, ← hK]
-    exact Ideal.mul_mem_mul ha hk
-  have hart : IsArtinian R K := by
-    letI : Module (ResidueField R) K := htor.module
-    haveI : IsScalarTower R (ResidueField R) K := htor.isScalarTower
-    haveI : Module.Finite (ResidueField R) K := Module.Finite.of_restrictScalars_finite R _ _
-    exact isArtinian_of_surjective_algebraMap (R := ResidueField R) (S := R) (M := K) residue_surjective
-  obtain ⟨N, hN⟩ := IsArtinian.monotone_stabilizes (R := R) (M := K)
-    ⟨fun n => OrderDual.toDual (Submodule.comap K.subtype (maximalIdeal R ^ n)),
-      fun a b hab => Submodule.comap_mono (Ideal.pow_le_pow_right hab)⟩
-  refine ⟨N, fun x hx hxN => ?_⟩
-  have := Ideal.iInf_pow_eq_bot_of_isLocalRing (maximalIdeal R) (maximalIdeal.isMaximal R).ne_top
-  rw [← Ideal.mem_bot, ← this, Ideal.mem_iInf]
-  intro n
-  rcases le_total n N with h | h
-  · exact Ideal.pow_le_pow_right h hxN
-  · have h1 : Submodule.comap K.subtype (maximalIdeal R ^ N) = Submodule.comap K.subtype (maximalIdeal R ^ n) :=
-      hN n h
-    have h2 : (⟨x, hx⟩ : K) ∈ Submodule.comap K.subtype (maximalIdeal R ^ N) := hxN
-    rw [h1] at h2
-    exact h2
+  obtain ⟨n, hn⟩ := Ideal.exists_pow_inf_eq_pow_smul (maximalIdeal R) K
+  refine ⟨n + 1, fun k hk hkN => ?_⟩
+  have h := hn (n + 1) n.le_succ
+  simp only [Ideal.smul_eq_mul, Ideal.mul_top, Nat.add_sub_cancel_left, pow_one] at h
+  have : k ∈ maximalIdeal R ^ (n + 1) ⊓ K := Submodule.mem_inf.2 ⟨hkN, hk⟩
+  rw [h] at this
+  rw [← Ideal.mem_bot, ← hK]
+  exact Ideal.mul_mono_right inf_le_right this
 
 private theorem ker_coord (O : Type) [CommRing O] [IsLocalRing O] {R : Type} [CommRing R] [Algebra O R] [IsCO O R]
     (K : Ideal R) (hK : maximalIdeal R * K = ⊥) :
