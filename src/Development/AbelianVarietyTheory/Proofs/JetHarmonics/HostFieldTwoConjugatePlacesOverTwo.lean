@@ -136,9 +136,6 @@ private theorem sig_sig (x : ℤ_[p] ⊗[ℤ] R) : sig p R (sig p R x) = x := by
   | tmul a b => simp [sig]
   | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
 
-private def sigEquiv : (ℤ_[p] ⊗[ℤ] R) ≃ₐ[ℤ_[p]] (ℤ_[p] ⊗[ℤ] R) :=
-  AlgEquiv.ofAlgHom (sig p R) (sig p R) (AlgHom.ext sig_sig) (AlgHom.ext sig_sig)
-
 variable {s : ℕ} (w : Fin s → Place p R)
 
 private def sumMap : (∀ i, (w i).Ow) →ₗ[ℤ_[p]] (ℤ_[p] ⊗[ℤ] R) :=
@@ -337,7 +334,6 @@ private theorem discr_CMDatum_eq_prod_places_lemma_6 {p : ℕ} [Fact p.Prime] {R
       Sum.map_inr, Module.Basis.prod_apply, Sum.elim_inr, Function.comp_apply, Pi.basis_apply,
       LinearMap.inr_apply]
     rw [hsplit, map_zero, zero_add, hs]
-
 
 open UpperTheory.PlacesDiscr in
 theorem UpperTheory.discr_CMDatum_eq_prod_places :
@@ -847,21 +843,7 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.G
 
 namespace UpperTheory.TraceSumEquivalence
 
-private theorem exists_equiv (E : Type) [Field E] [NumberField E] (C : Type) [Field C] [CharZero C]
-    (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] (hv : v.Integers O) :
-    ∃ Φ : (E →ₐ[ℚ] C) ≃ (𝓞 E →+* O), ∀ σ (y : 𝓞 E), algebraMap O C (Φ σ y) = σ (y : E) := by
-  apply _root_.GlobalTheory.EmbCount.exists_equiv <;> assumption
-
-private theorem trace_eq_sum (E : Type) [Field E] [NumberField E] (p : ℕ) [Fact p.Prime] (C : Type)
-    [Field C] [IsAlgClosed C] [CharZero C] (O : Type) [CommRing O] [Algebra O C]
-    [Algebra ℤ_[p] O] (Φ : (E →ₐ[ℚ] C) ≃ (𝓞 E →+* O))
-    (hΦ : ∀ σ (y : 𝓞 E), algebraMap O C (Φ σ y) = σ (y : E)) (x : ℤ_[p] ⊗[ℤ] 𝓞 E) :
-    algebraMap O C (algebraMap ℤ_[p] O (LinearMap.trace ℤ_[p] _ (LinearMap.mulLeft ℤ_[p] x))) =
-      ∑ σ : E →ₐ[ℚ] C, algebraMap O C (tauExt (Φ σ) x) := by
-  apply _root_.GlobalTheory.EmbCount.trace_eq_sum <;> assumption
-
 end UpperTheory.TraceSumEquivalence
-
 
 open UpperTheory.TraceSumEquivalence in
 theorem UpperTheory.trace_form_decomposition_CMDatum :
