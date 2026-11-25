@@ -66,12 +66,8 @@ theorem jetD_twist {S : Type} [CommRing S] [Algebra c.F S] [Algebra ℚ S] [Star
   have hC' := ReciprocityTheory.ChartRestriction.G.DVR.corr_trans hL h3 (ReciprocityTheory.ChartRestriction.G.DVR.corr_symm hG)
   have hV' := isValueAt_scale hV₁ (w ^ k)
   have hprod := unit_jet C.B H.w0 cc m k u hu
-  have hinv : psJet m (expP ((k : S) • diagL C.B H.w0 cc)) = ↑((U ^ k)⁻¹) := by
-    set X := psJet m (expP ((k : S) • diagL C.B H.w0 cc)) with hX
-    calc X = X * ((↑(U ^ k) : Jet S (Fin 1 × Fin C.d) m) * ↑((U ^ k)⁻¹)) := by
-          rw [Units.mul_inv, _root_.mul_one]
-      _ = (X * ↑(U ^ k)) * ↑((U ^ k)⁻¹) := (_root_.mul_assoc _ _ _).symm
-      _ = ↑((U ^ k)⁻¹) := by rw [hprod, _root_.one_mul]
+  have hinv : psJet m (expP ((k : S) • diagL C.B H.w0 cc)) = ↑((U ^ k)⁻¹) :=
+    Units.eq_inv_of_mul_eq_one_right hprod
   have hw' : ((w ^ k)⁻¹ : Γ(Sp (Jet S (Fin 1 × Fin C.d) m), ⊤)ˣ) = unitΓ ((U ^ k)⁻¹) := by
     simp [hw, unitΓ, map_pow, map_inv]
   refine ⟨F₁, _, hP₁, hC', ?_⟩
