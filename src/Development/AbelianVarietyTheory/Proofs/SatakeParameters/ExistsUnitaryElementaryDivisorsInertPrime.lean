@@ -83,11 +83,8 @@ theorem antiJ_herm (n : ℕ) (a b : Fin n) :
   simp only [Formalism.UG.antiJ, add_comm b.val a.val]
   split_ifs <;> simp only [ReciprocityTheory.ChartRestriction.G.FD.cc, map_one, map_zero]
 
-theorem antiJ_det_ne_zero (n : ℕ) : (Formalism.UG.antiJ E n).det ≠ 0 := by
-  intro h
-  have := congrArg Matrix.det (_root_.Formalism.UG.P.fIwasawa_antiJ_mul_antiJ (L := E) (n := n))
-  rw [Matrix.det_mul, h, zero_mul, Matrix.det_one] at this
-  exact zero_ne_one this
+theorem antiJ_det_ne_zero (n : ℕ) : (Formalism.UG.antiJ E n).det ≠ 0 :=
+  Matrix.det_ne_zero_of_right_inverse (_root_.Formalism.UG.P.fIwasawa_antiJ_mul_antiJ (L := E) (n := n))
 
 theorem selfDual_antiJ (n : ℕ) (x : Fin n → E) :
     x ∈ (Formalism.L2.Col.stdLat E n : Set (Fin n → E)) ↔
