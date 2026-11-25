@@ -236,12 +236,8 @@ theorem is_levi (h : IsSec σ t sec) {C} (hC : Fr σ t W W₁ H e C) {g : UA σ 
     (hp : (mat g).map (piW t) = (C * p * C⁻¹).val) {g₁ : UA σ W₁.J} (hg₁ : g₁ ∈ UAt σ W₁ (evFin F v)) {x y : (Fv F v)ˣ}
     (pe : p.val = bl e ((mat g₁).map (piW t)) x y) {z : (AE F E)ˣ} (za : At (evFin F v) ((z : AE F E) - 1)) (z1 : piW t z = x)
     (z2 : piW (t.comp σ) z = (y⁻¹ : (Fv F v)ˣ)) : IsLevi H z g₁ g := by
-  have i1 : piW t (z⁻¹).val = (x⁻¹ : (Fv F v)ˣ) := by
-    rw [Units.val_inv_eq_inv_val, ← z1]; exact eq_inv_of_mul_eq_one_left (by rw [← map_mul]; simp)
-  have i2 : piW (t.comp σ) (z⁻¹).val = y := by
-    have : piW (t.comp σ) (z⁻¹).val * piW (t.comp σ) z = 1 := by rw [← map_mul]; simp
-    rw [z2] at this
-    simpa using eq_inv_of_mul_eq_one_left this
+  have i1 : piW t (z⁻¹).val = (x⁻¹ : (Fv F v)ˣ) := by rw [map_units_inv, z1, Units.val_inv_eq_inv_val]
+  have i2 : piW (t.comp σ) (z⁻¹).val = y := by rw [map_units_inv, z2, Units.val_inv_eq_inv_val, inv_inv]
   have sg : ∀ (c : Fin d) (a : AE F E), At (evFin F v) (a - 1) →
       At (evFin F v) ((Pi.single c a : Fin d → AE F E) - Pi.single c 1) := fun c a ha u hu => by
     rw [← Pi.single_sub, ← Pi.single_smul, ha u hu, Pi.single_zero]
