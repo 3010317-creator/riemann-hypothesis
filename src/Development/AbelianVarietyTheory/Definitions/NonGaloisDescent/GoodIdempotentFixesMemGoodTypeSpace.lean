@@ -103,10 +103,9 @@ private lemma norm_le_one_of_monic_root_lemma {K : Type*} [NormedField K] [IsUlt
 open Polynomial in
 theorem _root_.GlobalTheory.padicAlgCl_embedding_bounded_continuous (l : ℕ) [Fact l.Prime] {O : Type} [CommRing O]
     [IsDomain O] [IsDiscreteValuationRing O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O]
-    [TopologicalSpace O] [IsTopologicalRing O] (hO : IsAdic (IsLocalRing.maximalIdeal O))
     (ι : O →+* PadicAlgCl l)
     (hι : ∀ z : ℤ_[l], ι (algebraMap ℤ_[l] O z) = algebraMap ℚ_[l] (PadicAlgCl l) (z : ℚ_[l])) :
-    (∀ a, ‖ι a‖ ≤ 1) ∧ (∀ a ∈ IsLocalRing.maximalIdeal O, ‖ι a‖ < 1) ∧ Continuous ι := by
+    (∀ a, ‖ι a‖ ≤ 1) ∧ (∀ a ∈ IsLocalRing.maximalIdeal O, ‖ι a‖ < 1) := by
   set g : ℤ_[l] →+* PadicAlgCl l := (algebraMap ℚ_[l] (PadicAlgCl l)).comp PadicInt.Coe.ringHom
   have hg : ι.comp (algebraMap ℤ_[l] O) = g := by
     ext z
@@ -152,25 +151,11 @@ theorem _root_.GlobalTheory.padicAlgCl_embedding_bounded_continuous (l : ℕ) [F
     obtain ⟨n, u, hxu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hx0 hϖ
     rw [hxu, map_mul, norm_mul, map_pow, norm_pow, heq, one_pow, mul_one, hunit] at hlt
     exact lt_irrefl _ hlt
-  have hpow : ∀ n : ℕ, ∀ a ∈ IsLocalRing.maximalIdeal O ^ n, ‖ι a‖ ≤ ‖ι ϖ‖ ^ n := by
-    intro n a ha
-    rw [hmax, Ideal.span_singleton_pow, Ideal.mem_span_singleton'] at ha
-    obtain ⟨b, rfl⟩ := ha
-    rw [map_mul, norm_mul, map_pow, norm_pow]
-    calc ‖ι b‖ * ‖ι ϖ‖ ^ n ≤ 1 * ‖ι ϖ‖ ^ n := by gcongr; exact h1 b
-      _ = ‖ι ϖ‖ ^ n := one_mul _
-  refine ⟨h1, fun a ha => ?_, ?_⟩
-  · have := hpow 1 a (by rwa [pow_one])
-    rw [pow_one] at this
-    exact this.trans_lt hϖlt
-  · refine continuous_of_continuousAt_zero ι ?_
-    rw [ContinuousAt, map_zero, Metric.tendsto_nhds]
-    intro ε hε
-    obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one hε hϖlt
-    have hopen := (isAdic_iff.mp hO).1 n
-    filter_upwards [hopen.mem_nhds (Ideal.zero_mem _)] with a ha
-    rw [dist_zero_right]
-    exact (hpow n a ha).trans_lt hn
+  refine ⟨h1, fun a ha => ?_⟩
+  rw [hmax, Ideal.mem_span_singleton'] at ha
+  obtain ⟨b, rfl⟩ := ha
+  rw [map_mul, norm_mul]
+  exact (mul_le_of_le_one_left (norm_nonneg _) (h1 b)).trans_lt hϖlt
 
 end GlobalTheory
 end -- clump:auto
@@ -455,7 +440,7 @@ variable {X : NTw D.R D.host D.what₂ D.LL0 D.nd} {i : X.Tw} {b : Bool}
 
 theorem norm_lt_iff (ρ : Reading X i b) (z : FractionRing (X.O0 i)) :
     (∃ y ∈ IsLocalRing.maximalIdeal (X.O0 i), algebraMap (X.O0 i) (FractionRing (X.O0 i)) y = z) ↔ ‖ρ.κ z‖ < 1 := by
-  obtain ⟨h1, h2, -⟩ := GlobalTheory.padicAlgCl_embedding_bounded_continuous (X.l i) (X.twistBaseCoefficientRing_isAdic i) (GlobalTheory.GalChar.toQ ρ.κ) ρ.κ_alg
+  obtain ⟨h1, h2⟩ := GlobalTheory.padicAlgCl_embedding_bounded_continuous (X.l i) (GlobalTheory.GalChar.toQ ρ.κ) ρ.κ_alg
   refine ⟨fun ⟨y, hy, e⟩ => e ▸ h2 y hy, fun h => ?_⟩
   rcases eq_or_ne z 0 with rfl | hz
   · exact ⟨0, zero_mem _, map_zero _⟩
