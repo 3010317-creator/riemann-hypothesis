@@ -26,12 +26,7 @@ variable {K : Type*} [Field K] [NumberField K]
 
 theorem sqrt_natCast_prod {ι : Type*} (s : Finset ι) (f : ι → ℕ) :
     Real.sqrt ((∏ i ∈ s, f i : ℕ) : ℝ) = ∏ i ∈ s, Real.sqrt (f i : ℝ) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp
-  | insert a s ha ih =>
-    rw [Finset.prod_insert ha, Finset.prod_insert ha, Nat.cast_mul,
-      Real.sqrt_mul (Nat.cast_nonneg _), ih]
+  rw [Nat.cast_prod, Real.sqrt_prod s fun i _ => Nat.cast_nonneg _]
 
 namespace HeckeCharacter
 
