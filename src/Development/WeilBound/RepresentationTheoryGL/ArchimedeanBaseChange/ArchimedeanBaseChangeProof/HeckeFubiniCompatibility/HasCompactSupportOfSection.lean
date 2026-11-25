@@ -116,10 +116,6 @@ theorem tensTr : TensTr := by
     (fun P Q : IxA Mb => ∏ v, ent (Mb v) (kb v (gInf v g.2).val) (P v) (Q v))
     (fun Q P : IxA Mb => ∏ v, ent (Mb v) (Tb v) (Q v) (P v)) (fun x y : κ => ψ x y (hFin g)) (fun y x : κ => N y x)
 
-theorem gInf_eq (v : InfinitePlace E) (g : GA E n) :
-    gInf v g = GeneralLinearGroup.map (Pi.evalRingHom (fun _ : InfinitePlace E => ℂ) v)
-      (GeneralLinearGroup.map (pInf E) g) := rfl
-
 theorem continuous_hFin : Continuous (hFin (E := E) (a := a) (b := b)) :=
   ((_root_.GlobalTheory.GLProj.continuous_proj_incl E a).2.1.comp continuous_fst).prodMk ((_root_.GlobalTheory.GLProj.continuous_proj_incl E b).2.1.comp continuous_snd)
 
