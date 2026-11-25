@@ -182,7 +182,7 @@ theorem splitLine_mem {σ n : ℕ} (L : HSp D) (ζ : Fin L.rank → D.host.E) (i
 
 theorem heis_base_gen (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-1)) (σ : ℕ) (S : HSp D)
     (V V₀ A L : HSp D) (d : HypDec V V₀ σ) (o : OrthDec V₀ A L) (ζ : Fin L.rank → D.host.E)
-    (hline : L.rank = 1 ∧ ζ ≠ 0)
+    (hline : IsLineVec L ζ)
     (vB : VolM D (σ + 1) S.rank) (vT : VolM D σ S.rank) (vL : VolM D L.rank S.rank)
     (f : WO S V → ℂ) (y : WO S L → ℂ) (hf : Quasi ψ S V f) (hy : Quasi ψ S L y) :
     (∫ b in vB.𝓕, f (xLast d (vecB o ζ) ⬝ b) * star (y (zEll L (σ + 1) ζ ⬝ b)) ∂vB.μ =
