@@ -60,18 +60,6 @@ section
 variable {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
   {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)}
 
-def kfSub (ε : Fin n → Bool) (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) : Submodule ℂ (smD ε σ) where
-  carrier := KF ε σ
-  add_mem' := by
-    rintro a b ⟨S, hS, ha, hSK⟩ ⟨T, hT, hb, hTK⟩
-    refine ⟨S ⊔ T, inferInstance, Submodule.add_mem_sup ha hb, fun g hg v hv => ?_⟩
-    obtain ⟨x, hx, y, hy, hxy⟩ := Submodule.mem_sup.1 hv
-    rw [← hxy, map_add (f := _)]
-    exact Submodule.add_mem_sup (hSK g hg x hx) (hTK g hg y hy)
-  zero_mem' := ⟨⊥, inferInstance, Submodule.zero_mem _, fun g _ v hv => by
-    rw [(Submodule.mem_bot ℂ).1 hv, map_zero]; exact Submodule.zero_mem _⟩
-  smul_mem' := fun c _ ⟨S, hS, ha, hSK⟩ => ⟨S, hS, by simpa using S.smul_mem c ha, hSK⟩
-
 theorem kStableSub_iSup {ι : Type} {E : Fin n → Fin n → Module.End ℂ (smD ε σ)} (S : ι → Submodule ℂ (smD ε σ))
     (h : ∀ i, IsKStableSub ε E (S i)) : IsKStableSub ε E (⨆ i, S i) := by
   intro a b hab x hx
@@ -90,7 +78,7 @@ theorem isAdmissibleSub_top (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAd
   have hD := isDerivedOn_smE hσ
   set A := {v : smD ε σ | v ∈ KF ε σ ∧ IsKHWVec ε (smE ε σ) Λ v}
   have hAf : FiniteDimensional ℂ (Submodule.span ℂ A) := uAdm n ε H σ hσ hirr Λ
-  have hAK : Submodule.span ℂ A ≤ kfSub ε σ := Submodule.span_le.2 fun v hv => hv.1
+  have hAK : Submodule.span ℂ A ≤ CompanionTheory.D.gk.HC.kdC ε σ := Submodule.span_le.2 fun v hv => hv.1
   let b := Module.finBasis ℂ (Submodule.span ℂ A)
   let M : Submodule ℂ (smD ε σ) := ⨆ i, Formalism.REAL.kSpan ε (smE ε σ) (b i : smD ε σ)
   have hbi : ∀ i, FiniteDimensional ℂ (Formalism.REAL.kSpan ε (smE ε σ) (b i : smD ε σ)) ∧

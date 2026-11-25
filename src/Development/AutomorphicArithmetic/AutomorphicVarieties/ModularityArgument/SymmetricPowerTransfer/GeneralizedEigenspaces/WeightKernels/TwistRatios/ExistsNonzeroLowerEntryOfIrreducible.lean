@@ -68,21 +68,9 @@ import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument
 section -- clump:auto
 @[expose] public section
 
-noncomputable def UpperTheory.Reformulated.B.IrreducibleInvariantSubspaces.IsInv :
-    {Γ : Type} →
-      [inst : Group Γ] → {k : Type} → [inst_1 : Field k] → {a : ℕ} → (Γ →* GL (Fin a) k) → Submodule k (Fin a → k) → Prop :=
-    fun {Γ : Type} [Group Γ] {k : Type} [Field k] {a : ℕ} (ρ : Γ →* GL (Fin a) k) (W : Submodule k (Fin a → k)) ↦
-      ∀ (g : Γ), ∀ v ∈ W, (↑((ρ : Γ → GL (Fin a) k) g) : Matrix (Fin a) (Fin a) k).mulVec v ∈ W
-
-noncomputable def UpperTheory.Reformulated.B.IrreducibleInvariantSubspaces.IsIrrSub :
-    {Γ : Type} →
-      [inst : Group Γ] → {k : Type} → [inst_1 : Field k] → {a : ℕ} → (Γ →* GL (Fin a) k) → Submodule k (Fin a → k) → Prop :=
-    fun {Γ : Type} [Group Γ] {k : Type} [Field k] {a : ℕ} (ρ : Γ →* GL (Fin a) k) (W : Submodule k (Fin a → k)) ↦
-      W ≠ ⊥ ∧ UpperTheory.Reformulated.B.IrreducibleInvariantSubspaces.IsInv ρ W ∧ ∀ W' ≤ W, UpperTheory.Reformulated.B.IrreducibleInvariantSubspaces.IsInv ρ W' → W' = ⊥ ∨ W' = W
-
 noncomputable def UpperTheory.Reformulated.B.IrreducibleInvariantSubspaces.IsIrr :
     {Γ k : Type} → [inst : Group Γ] → [inst_1 : Field k] → {n : ℕ} → (Γ →* GL (Fin n) k) → Prop :=
-    fun {Γ k : Type} [Group Γ] [Field k] {n : ℕ} (r : Γ →* GL (Fin n) k) ↦ UpperTheory.Reformulated.B.IrreducibleInvariantSubspaces.IsIrrSub r ⊤
+    fun {Γ k : Type} [Group Γ] [Field k] {n : ℕ} (r : Γ →* GL (Fin n) k) ↦ Formalism.MainNotions.N.IsIrrSub r ⊤
 
 theorem UpperTheory.Reformulated.B.IrreducibleInvariantSubspaces.irr_conj :
     ∀ {k : Type} [inst : Field k] {Γ : Type} [inst_1 : Group Γ] {n : ℕ} (r r' : Γ →* GL (Fin n) k) (g : GL (Fin n) k),
@@ -95,7 +83,7 @@ theorem UpperTheory.Reformulated.B.IrreducibleInvariantSubspaces.irr_conj :
       ((↑g : Matrix (Fin n) (Fin n) k).mulVec v) = v := by
     intro v
     rw [Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec]
-  have hinv : UpperTheory.Reformulated.B.IrreducibleInvariantSubspaces.IsInv r'
+  have hinv : Formalism.MainNotions.N.IsInv r'
       (W.comap (Matrix.mulVecLin (↑(g⁻¹) : Matrix (Fin n) (Fin n) k))) := by
     intro x v hv
     rw [Submodule.mem_comap, Matrix.mulVecLin_apply] at hv ⊢

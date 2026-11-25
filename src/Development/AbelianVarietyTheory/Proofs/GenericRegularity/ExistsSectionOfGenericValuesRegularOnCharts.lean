@@ -67,21 +67,17 @@ attribute [local instance 1100] Subalgebra.algebra
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l} {c : Coeff l}
 
-def liftF {S : Type} [CommRing S] [Algebra c.F S] (y : FrPt Xo c S) : Sp S ⟶ Xo.XF c :=
-  pullback.lift y.x (spMap (algebraMap c.F S)) (by
-    rw [y.x_over, spMap_comp_ring]; rfl)
-
 theorem liftF_fst {S : Type} [CommRing S] [Algebra c.F S] (y : FrPt Xo c S) :
-    liftF y ≫ pullback.fst Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom) = y.x :=
+    GlobalTheory.Reg.ChartCompat.liftF y ≫ pullback.fst Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom) = y.x :=
   pullback.lift_fst _ _ _
 
 theorem liftF_snd {S : Type} [CommRing S] [Algebra c.F S] (y : FrPt Xo c S) :
-    liftF y ≫ pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom) = spMap (algebraMap c.F S) :=
+    GlobalTheory.Reg.ChartCompat.liftF y ≫ pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom) = spMap (algebraMap c.F S) :=
   pullback.lift_snd _ _ _
 
 theorem liftF_map {S T : Type} [CommRing S] [Algebra c.F S] [CommRing T] [Algebra c.F T] (φ : S →ₐ[c.F] T)
     (y : FrPt Xo c S) (z : FrPt Xo c T) (h : z.x = spMap φ.toRingHom ≫ y.x) :
-    liftF z = spMap φ.toRingHom ≫ liftF y := by
+    GlobalTheory.Reg.ChartCompat.liftF z = spMap φ.toRingHom ≫ GlobalTheory.Reg.ChartCompat.liftF y := by
   apply pullback.hom_ext
   · rw [Category.assoc, liftF_fst, liftF_fst, h]
   · rw [Category.assoc, liftF_snd, liftF_snd, spMap_comp_ring]
@@ -89,13 +85,13 @@ theorem liftF_map {S T : Type} [CommRing S] [Algebra c.F S] [CommRing T] [Algebr
     exact RingHom.ext fun r => (φ.commutes r).symm
 
 theorem liftF_congr {S : Type} [CommRing S] [Algebra c.F S] (y z : FrPt Xo c S) (h : z.x = y.x) :
-    liftF z = liftF y := by
+    GlobalTheory.Reg.ChartCompat.liftF z = GlobalTheory.Reg.ChartCompat.liftF y := by
   apply pullback.hom_ext
   · rw [liftF_fst, liftF_fst, h]
   · rw [liftF_snd, liftF_snd]
 
 theorem liftF_gen (h : GenFrEx Xo c) (Z : Comp Xo c) :
-    liftF (genFr h Z) = spMap (algebraMap (kap Z) (Om Z)) ≫ genSp Z := by
+    GlobalTheory.Reg.ChartCompat.liftF (genFr h Z) = spMap (algebraMap (kap Z) (Om Z)) ≫ genSp Z := by
   have e : spMap (algebraMap c.F (kap Z)) = genSp Z ≫ strK := Spec.map_preimage _
   apply pullback.hom_ext
   · rw [liftF_fst, (isGenFr_genFr h Z).1, Category.assoc]; rfl
@@ -104,15 +100,15 @@ theorem liftF_gen (h : GenFrEx Xo c) (Z : Comp Xo c) :
     rw [spMap_comp_ring]
 
 theorem liftF_gen_apply (h : GenFrEx Xo c) (Z : Comp Xo c) (p : Sp (Om Z)) :
-    liftF (genFr h Z) p = genPt Z := by
+    GlobalTheory.Reg.ChartCompat.liftF (genFr h Z) p = genPt Z := by
   rw [liftF_gen, Scheme.Hom.comp_apply]
   exact Scheme.fromSpecResidueField_apply _ _
 
 theorem chart_comp {h : GenFrEx Xo c} (Z : Comp Xo c) (C : FChart h) (ψ : C.R →ₐ[c.F] Om Z)
     (z : FrPt Xo c (Om Z)) (t : Ix Dw → (Om Z)ˣ) (h1 : FrMap ψ C.y z) (h2 : FrBor t z (genFr h Z)) : C.Z = Z := by
-  have e1 : liftF (genFr h Z) = spMap ψ.toRingHom ≫ liftF C.y := by
+  have e1 : GlobalTheory.Reg.ChartCompat.liftF (genFr h Z) = spMap ψ.toRingHom ≫ GlobalTheory.Reg.ChartCompat.liftF C.y := by
     rw [liftF_congr _ _ h2.1, liftF_map ψ _ _ h1.1]
-  have e2 : liftF (genFr h C.Z) = spMap C.R.val.toRingHom ≫ liftF C.y := by
+  have e2 : GlobalTheory.Reg.ChartCompat.liftF (genFr h C.Z) = spMap C.R.val.toRingHom ≫ GlobalTheory.Reg.ChartCompat.liftF C.y := by
     rw [← liftF_congr _ _ C.bor.1, liftF_map _ _ _ C.gen.1]
   let p : Sp (Om Z) := IsLocalRing.closedPoint (Om Z)
   let p' : Sp (Om C.Z) := IsLocalRing.closedPoint (Om C.Z)
@@ -128,7 +124,7 @@ theorem chart_comp {h : GenFrEx Xo c} (Z : Comp Xo c) (C : FChart h) (ψ : C.R �
     have : x = 0 := Subtype.ext hx'
     rw [this]
     exact Ideal.zero_mem _
-  have hs' := hs.map (liftF C.y).continuous
+  have hs' := hs.map (GlobalTheory.Reg.ChartCompat.liftF C.y).continuous
   rw [f1, f2] at hs'
   have hm : genPt Z ∈ (C.Z : Set (Xo.XF c)) := by
     rw [← _root_.GlobalTheory.Reg.ChartCompat.closure_genPt']; exact hs'.mem_closure

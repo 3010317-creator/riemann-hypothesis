@@ -69,11 +69,6 @@ theorem mix_mul {l m n : Type} [Fintype m] {b : R} (hb : b * b = b) (A A' : Matr
 theorem mix_self {l m : Type} (b : R) (A : Matrix l m R) : b • A + (1 - b) • A = A := by
   rw [← add_smul, add_sub_cancel, one_smul]
 
-def mixGL {n : Type} [Fintype n] [DecidableEq n] {b : R} (hb : b * b = b) (g : GL n R) : GL n R :=
-  ⟨b • g.val + (1 - b) • 1, b • (g⁻¹).val + (1 - b) • 1,
-    by rw [mix_mul hb, Units.mul_inv, Matrix.mul_one, mix_self],
-    by rw [mix_mul hb, Units.inv_mul, Matrix.mul_one, mix_self]⟩
-
 theorem mix_unitary {n : Type} [Fintype n] [DecidableEq n] (σ : R →+* R) {b : R} (hb : b * b = b) (hc : σ b = b)
     (J M : Matrix n n R) (h : (M.map σ)ᵀ * J * M = J) :
     ((b • M + (1 - b) • (1 : Matrix n n R)).map σ)ᵀ * J * (b • M + (1 - b) • 1) = J := by
@@ -146,7 +141,7 @@ open GlobalTheory.AdelicLatMove (mt_mul mt_one)
 theorem ext_mt {V : HSp D} {g g' : GA D V} (h : mt V g = mt V g') : g = g' := Subtype.ext (Units.ext h)
 
 def cut (b : AE D) (hb : b * b = b) (hc : cA D b = b) (V : HSp D) (g : GA D V) : GA D V :=
-  ⟨mixGL hb (matHom V g), mix_unitary (cA D) hb hc (V.gram.map (incA D)) (mt V g) g.2⟩
+  ⟨GlobalTheory.IdemSupport.piece hb (matHom V g), mix_unitary (cA D) hb hc (V.gram.map (incA D)) (mt V g) g.2⟩
 
 variable {b : AE D} (hb : b * b = b) (hc : cA D b = b)
 
