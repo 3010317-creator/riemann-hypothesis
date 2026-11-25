@@ -69,7 +69,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Number
 open Formalism.L2.NT
 namespace Formalism.L2
 
-structure NTiedAllAlt (D : D7) (C : NChoice D) (I : TwIn D) where
+structure NTiedAllAlt (D : D7) (C : NChoice D) (_I : TwIn D) where
   gal : _root_.Formalism.L2.NGalTiedAlt D
   cover : NormalizedLocalCompatibility D gal.mt
   chiD : NC.NChiData D
@@ -79,7 +79,6 @@ structure NTiedAllAlt (D : D7) (C : NChoice D) (I : TwIn D) where
   tw : NTwTied D twF
   nct : NChTie D C
   exp : NExpTied D
-  choice : NChoiceTied D C I (avDesign D)
   cf : Host.CharFrame D
   tp : Host.TupTied D cf C
   plB : D.what₂.places.Pl → ValuationSubring ℂ
