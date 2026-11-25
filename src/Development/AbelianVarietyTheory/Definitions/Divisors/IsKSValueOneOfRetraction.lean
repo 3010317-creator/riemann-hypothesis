@@ -28,9 +28,14 @@ variable (κ : DividedPowers I) (t : S ⟶ Sp R)
 def pullOver {Y X : Over S} (f : Y ⟶ X) : Cris.H1 κ (X.hom ≫ t) →ₗ[R] Cris.H1 κ (Y.hom ≫ t) :=
   (IsMor.of_over κ (φ := f.left) (by rw [← Category.assoc, Over.w])).pull1
 
+/-- The condition cutting out `prim`. It is a separate definition so that unifying two copies of
+`prim` whose instance arguments are equal only up to unfolding compares those arguments, instead
+of unfolding this predicate and comparing the cohomology classes inside it. -/
+def IsPrimitiveClass (A : Over S) [GrpObj A] (c : Cris.H1 κ (A.hom ≫ t)) : Prop :=
+  ∀ (Y : Over S) (f g : Y ⟶ A), pullOver κ t (f * g) c = pullOver κ t f c + pullOver κ t g c
+
 def prim (A : Over S) [GrpObj A] : Submodule R (Cris.H1 κ (A.hom ≫ t)) where
-  carrier := {c | ∀ (Y : Over S) (f g : Y ⟶ A),
-    pullOver κ t (f * g) c = pullOver κ t f c + pullOver κ t g c}
+  carrier := {c | IsPrimitiveClass κ t A c}
   add_mem' {a b} ha hb Y f g := by rw [map_add (f := _), ha, hb, map_add (f := _), map_add (f := _)]; abel
   zero_mem' Y f g := by simp
   smul_mem' r c hc Y f g := by rw [map_smul, hc, map_smul, map_smul, smul_add]
