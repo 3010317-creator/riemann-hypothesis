@@ -46,13 +46,8 @@ def midPar (r t : ℕ) : Subgroup (GL (Fin (r + t)) k) :=
 theorem midPar_le (r t : ℕ) : midPar k r t ≤ parab k (two (eSt r t)) := Subgroup.map_subtype_le _
 
 theorem mem_midPar (r t : ℕ) (q : parab k (two (eSt r t))) :
-    (q : GL (Fin (r + t)) k) ∈ midPar k r t ↔ twoBlockParabolicFirstBlock k r t q ∈ parab k (points (Fin r)) := by
-  constructor
-  · rintro ⟨x, hx, hxq⟩
-    obtain rfl : x = q := Subtype.ext hxq
-    exact hx
-  · intro h
-    exact ⟨q, h, rfl⟩
+    (q : GL (Fin (r + t)) k) ∈ midPar k r t ↔ twoBlockParabolicFirstBlock k r t q ∈ parab k (points (Fin r)) :=
+  Subgroup.mem_map_iff_mem (Subgroup.subtype_injective _)
 
 end GlobalTheory.SmGL.PrinProd
 
