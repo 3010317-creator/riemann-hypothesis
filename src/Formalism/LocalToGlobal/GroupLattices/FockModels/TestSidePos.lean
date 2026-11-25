@@ -199,19 +199,6 @@ alias leAt_of_basis := _root_.Formalism.L2.G.Model.leAt_eq_colSpan_la_tw_mul_lb_
 
 theorem extO_colSpan (h : HidaSetting p n' W Qq O Kf ι σ j w) {k : ℕ} (g : Matrix (Fin k) (Fin k) Qq) (s : ℕ) :
     extO O ι σ s (colSpan W g) = colSpan O (la_tw ι σ s g) := by
-  have hσ : ∀ (t : ℕ) (x : W), ∃ y : W, (σ ^ t) (algebraMap W Qq x) = algebraMap W Qq y := by
-    intro t
-    induction t with
-    | zero => exact fun x => ⟨x, by simp⟩
-    | succ t ih =>
-      intro x
-      obtain ⟨y, hy⟩ := ih x
-      obtain ⟨z, hz⟩ := h.frob y
-      refine ⟨y ^ p + (p : W) * z, ?_⟩
-      have hs : (σ ^ (t + 1)) (algebraMap W Qq x) = σ ((σ ^ t) (algebraMap W Qq x)) := by
-        rw [pow_succ']
-        rfl
-      rw [hs, hy, hz]
   have tadd : ∀ x y : Fin k → Qq, twistVec ι σ s (x + y) = twistVec ι σ s x + twistVec ι σ s y := by
     intro x y
     funext i
@@ -219,12 +206,8 @@ theorem extO_colSpan (h : HidaSetting p n' W Qq O Kf ι σ j w) {k : ℕ} (g : M
   have tzero : twistVec ι σ s (0 : Fin k → Qq) = 0 := by
     funext i
     simp [twistVec]
-  have tsmul : ∀ (a : W) (x : Fin k → Qq), ∃ b : O, twistVec ι σ s (a • x) = b • twistVec ι σ s x := by
-    intro a x
-    obtain ⟨y, hy⟩ := hσ s a
-    refine ⟨j y, ?_⟩
-    funext i
-    simp only [twistVec, Pi.smul_apply, Algebra.smul_def, map_mul, hy, h.ι_comp]
+  have tsmul : ∀ (a : W) (x : Fin k → Qq), ∃ b : O, twistVec ι σ s (a • x) = b • twistVec ι σ s x :=
+    exists_twistVec_smul_eq_smul_twistVec h s
   have tcol : ∀ c : Fin k, twistVec ι σ s (fun i => g i c) = fun i => la_tw ι σ s g i c := by
     intro c
     funext i
