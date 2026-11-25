@@ -36,8 +36,6 @@ open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.Rg.BcB.SpectralAccumulation (Hf finH)
 open scoped Classical InnerProductSpace
 
-attribute [local instance] PositivityTheory.Rg.BcB.E.borelH
-
 set_option linter.unusedSectionVars false
 set_option linter.unusedSimpArgs false
 
@@ -360,8 +358,6 @@ open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.Rg.BcB.SpectralAccumulation (Hf finH)
 open PositivityTheory.RgBcC.Bridge (along atW)
 open scoped Classical InnerProductSpace
-
-attribute [local instance] PositivityTheory.Rg.BcB.E.borelH
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedSimpArgs false
@@ -743,8 +739,6 @@ open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.Rg.BcB.SpectralAccumulation (Hf finH)
 open scoped Classical InnerProductSpace
 
-attribute [local instance] PositivityTheory.Rg.BcB.E.borelH
-
 set_option linter.unusedSectionVars false
 set_option linter.unusedSimpArgs false
 
@@ -1040,8 +1034,6 @@ open NumberField IsDedekindDomain Matrix MeasureTheory
 open GlobalTheory.CuspRep GlobalTheory.UnitaryBC PositivityTheory.Rg.BcB.E PositivityTheory.RgBcC
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.Rg.BcB.SpectralAccumulation (Hf finH)
-
-attribute [local instance] PositivityTheory.Rg.BcB.E.borelH
 
 namespace PositivityTheory.Rg.BcB.CG
 

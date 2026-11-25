@@ -282,8 +282,6 @@ open PositivityTheory.Rg.Sw PositivityTheory.Rg.Sw.AbsSt PositivityTheory.Rg.Sw.
 
 variable {n : ℕ}
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 theorem hLoc_pos' (g : GR n) : 0 < hLoc g := Vac.hLoc_pos detU1 g
 
 theorem hLoc_slit (g : GR n) : ((hLoc g : ℝ) : ℂ) ∈ Complex.slitPlane :=
@@ -727,8 +725,6 @@ namespace PositivityTheory.Rg.Sw.HSt.Conv
 open PositivityTheory.Rg.Sw PositivityTheory.Rg.Sw.AbsSt PositivityTheory.Rg.Sw.HSt PositivityTheory.Rg.Sw.HSt.GRH PositivityTheory.Rg.Sw.HSt.MI
 
 variable {n : ℕ}
-
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 theorem integral_restrict_of_zero (ν : Measure (GR n)) {C : Set (GR n)} (_hCm : MeasurableSet C) {F : GR n → ℂ}
     (hF : ∀ u ∉ C, F u = 0) : ∫ u, F u ∂ν = ∫ u, F u ∂(ν.restrict C) :=

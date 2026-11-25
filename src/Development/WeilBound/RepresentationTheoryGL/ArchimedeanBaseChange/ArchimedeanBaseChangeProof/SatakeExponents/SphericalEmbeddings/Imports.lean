@@ -1010,8 +1010,6 @@ open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil ValuativeRel
 
 namespace PositivityTheory.Rg.BcB.N3.Pee
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
 theorem extremeSph_of (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (hC : SphConst k) (hS : SphEmb k) (hU : UniqSub k) : ExtremeSph k := by
   intro h0 n ξ hm V _ _ π hs hi ⟨f, hf⟩
@@ -1065,8 +1063,6 @@ open GlobalTheory.CuspRep Formalism.UG Formalism.BasicNotions GlobalTheory.Unita
 namespace PositivityTheory.Rg.BcB.N3.Psl
 
 open PositivityTheory.Rg.BcB.N3
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 variable {G V : Type} [Group G] [TopologicalSpace G] [AddCommGroup V] [Module ℂ V]
 

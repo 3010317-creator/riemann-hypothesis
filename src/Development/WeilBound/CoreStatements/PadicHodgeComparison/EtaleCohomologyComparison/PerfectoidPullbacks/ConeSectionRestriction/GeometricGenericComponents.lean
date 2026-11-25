@@ -395,7 +395,6 @@ section -- clump:auto
 
 set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor CrystallineSemistableComparison.Pb
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 end -- clump:auto
 end -- clump:auto
@@ -854,8 +853,6 @@ noncomputable section
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
 namespace CrystallineSemistableComparison.Pb
-
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 theorem exists_frac_basicOpen {X : Scheme.{0}} {W : X.Opens} (hW : IsAffineOpen W) (g : Γ(X, W))
     (hne : (X.basicOpen g : Set X).Nonempty) :

@@ -537,8 +537,6 @@ open GlobalTheory.CuspRep GlobalTheory.PRep Formalism.UG Formalism.BasicNotions 
 open GlobalTheory.CompanionTheory.DcosProduct (dc mem_dc_mul inv_mul_mem_of_dc tdiag_add conj_entry)
 open PositivityTheory.Rg.BcN.F2 (hconv hk IsHk)
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
 namespace GlobalTheory.CompanionTheory.IwHeckeMul
 
 section Abstract

@@ -59,8 +59,6 @@ open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.Rg.BcB.SpectralAccumulation (Hf finH)
 open scoped Classical
 
-attribute [local instance] PositivityTheory.Rg.BcB.E.borelH
-
 namespace PositivityTheory.Rg.BcB.CG
 
 namespace ActEq
