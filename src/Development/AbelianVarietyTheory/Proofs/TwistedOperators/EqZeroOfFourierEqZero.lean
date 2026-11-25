@@ -46,11 +46,8 @@ theorem integrable_mul_bcf (μ : Measure G) (g : G →ᵇ ℂ) {φ : G → ℂ} 
 
 private theorem exists_integer_complexConj (χ : A → G → ℂ) (ha : ∀ a b x, χ (a + b) x = χ a x * χ b x) (h0 : ∀ x, χ 0 x = 1)
     (hn : ∀ a x, ‖χ a x‖ = 1) (a : A) (x : G) : (starRingEnd ℂ) (χ a x) = χ (-a) x := by
-  have h1 : χ a x * χ (-a) x = 1 := by rw [← ha, add_neg_cancel, h0]
-  have h2 : χ a x * (starRingEnd ℂ) (χ a x) = 1 := by
-    rw [Complex.mul_conj, Complex.normSq_eq_norm_sq, hn]; norm_num
-  have hne : χ a x ≠ 0 := fun h => by simpa [h] using hn a x
-  exact mul_left_cancel₀ hne (h2.trans h1.symm)
+  rw [← Complex.inv_eq_conj (hn a x)]
+  exact inv_eq_of_mul_eq_one_right (by rw [← ha, add_neg_cancel, h0])
 
 theorem real_eq_zero (χ : A → G → ℂ) (hc : ∀ a, Continuous (χ a)) (hx : ∀ a x y, χ a (x + y) = χ a x * χ a y)
     (ha : ∀ a b x, χ (a + b) x = χ a x * χ b x) (h0 : ∀ x, χ 0 x = 1) (hn : ∀ a x, ‖χ a x‖ = 1)
