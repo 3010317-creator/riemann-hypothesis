@@ -84,8 +84,6 @@ theorem commute_jm {R S : ℕ} {X : Mat R S} (hX : IsKC X) : Commute X (Formalis
   rcases a with a | a <;> rcases b with b | b <;>
     simp [Formalism.BasicNotions.TH.Jm, Formalism.UG.Jpq, Matrix.mul_apply, Matrix.fromBlocks, Fintype.sum_sum_type, Matrix.one_apply, h1, h2]
 
-theorem isKC_smul {R S : ℕ} {X : Mat R S} (hX : IsKC X) (c : ℂ) : IsKC (c • X) := fun a b h => by
-  simp [hX a b h]
 
 theorem isKC_zero (R S : ℕ) : IsKC (0 : Mat R S) := fun a b _ => rfl
 
