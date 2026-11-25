@@ -550,7 +550,9 @@ theorem precompPos_surjective (h : Odd n ∨ IsTotallyComplex K) : Surjective (p
   have hle : sIdeleSubgroup S ≤ (ψ.comp (SIdeleClassGroupPos.mk S)).ker := by
     refine sup_le ?_ fun u hu ↦ ?_
     · rintro _ ⟨a, rfl⟩
-      rw [MonoidHom.mem_ker, MonoidHom.comp_apply, SIdeleClassGroupPos.mk_diagonal, map_one]
+      have h1 : SIdeleClassGroupPos.mk S (diagonal K a) = 1 :=
+        (QuotientGroup.eq_one_iff _).2 (Subgroup.mem_sup_left (MonoidHom.mem_range.2 ⟨a, rfl⟩))
+      rw [MonoidHom.mem_ker, MonoidHom.comp_apply, h1, map_one]
     · rw [MonoidHom.mem_ker, MonoidHom.comp_apply]
       rcases h with hn | hK
       · refine eq_one_of_sq_eq_one_of_odd hn ?_ (zmod_pow_eq_one _)
