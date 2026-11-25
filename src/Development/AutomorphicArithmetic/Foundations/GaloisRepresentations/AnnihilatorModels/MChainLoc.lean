@@ -39,9 +39,6 @@ private theorem ideal_eq_span_pow_of_finrank (κ Λ : Type) [Field κ] [CommRing
     rw [ht, Ideal.mem_span_singleton']
   have mem_pow : ∀ k x, x ∈ Ideal.span {t ^ k} ↔ ∃ a, a * t ^ k = x := fun k x ↦
     Ideal.mem_span_singleton'
-  have unit_of : ∀ a : Λ, a ∉ IsLocalRing.maximalIdeal Λ → IsUnit a := fun a ha ↦ by
-    by_contra hu
-    exact ha ((IsLocalRing.mem_maximalIdeal a).2 hu)
   have hker : ∀ a : Λ, a - algebraMap κ Λ (ε a) ∈ IsLocalRing.maximalIdeal Λ := by
     intro a
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
@@ -55,12 +52,8 @@ private theorem ideal_eq_span_pow_of_finrank (κ Λ : Type) [Field κ] [CommRing
   have drop : ∀ k, t ^ k ∈ Ideal.span {t ^ (k + 1)} → t ^ k = 0 := by
     intro k hk
     obtain ⟨a, ha⟩ := (mem_pow _ _).1 hk
-    have hu : IsUnit (1 - a * t) := unit_of _ (fun h ↦ by
-      have h1 : (1 : Λ) ∈ IsLocalRing.maximalIdeal Λ := by
-        have := (IsLocalRing.maximalIdeal Λ).add_mem h
-          ((IsLocalRing.maximalIdeal Λ).mul_mem_left a tm)
-        simpa using this
-      exact (IsLocalRing.mem_maximalIdeal _).1 h1 isUnit_one)
+    have hu : IsUnit (1 - a * t) := IsLocalRing.isUnit_one_sub_self_of_mem_nonunits _
+      ((IsLocalRing.mem_maximalIdeal _).1 ((IsLocalRing.maximalIdeal Λ).mul_mem_left a tm))
     have e : t ^ k * (1 - a * t) = 0 := by
       calc t ^ k * (1 - a * t) = t ^ k - a * t ^ (k + 1) := by ring
         _ = 0 := by rw [ha, sub_self]
@@ -143,7 +136,7 @@ private theorem ideal_eq_span_pow_of_finrank (κ Λ : Type) [Field κ] [CommRing
         apply hx
         rw [mem_pow]
         exact ⟨b, by ring⟩
-      obtain ⟨u, hu⟩ := unit_of a ha
+      obtain ⟨u, hu⟩ := IsLocalRing.notMem_maximalIdeal.1 ha
       refine ⟨k, by omega, le_antisymm hJk ?_⟩
       rw [Ideal.span_le, Set.singleton_subset_iff]
       have e : t ^ k = ↑u⁻¹ * (a * t ^ k) := by
