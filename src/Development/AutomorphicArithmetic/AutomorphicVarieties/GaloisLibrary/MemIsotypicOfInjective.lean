@@ -20,10 +20,7 @@ theorem mem_isotypic_of_injective {R S Y V : Type} [Ring R] [AddCommGroup S] [Mo
   have hiso : IsIsotypicOfType R Y S :=
     (IsIsotypicOfType.isotypicComponent R V S).of_injective _ hf
   have : IsSemisimpleModule R Y := IsSemisimpleModule.of_injective _ hf
-  rw [eq_top_iff, ← IsSemisimpleModule.sSup_simples_eq_top]
-  refine sSup_le fun m hm => ?_
-  have : IsSimpleModule R m := hm
-  exact le_sSup (hiso m)
+  exact isotypicComponent_eq_top_iff.mpr hiso
 
 theorem iso_sub {H S Y V : Type} [Group H] [AddCommGroup S] [Module ℂ S] [AddCommGroup Y] [Module ℂ Y]
     [AddCommGroup V] [Module ℂ V] (σ : Representation ℂ H S) (π : Representation ℂ H Y) (ρ : Representation ℂ H V)
