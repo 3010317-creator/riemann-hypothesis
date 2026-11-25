@@ -18,12 +18,7 @@ variable {k σ : Type} [Field k] {r : ℕ} (w e : Fin r → σ) (zv sv : σ)
 
 theorem mulLeft_pow_apply (a f : MvPolynomial σ k) (m : ℕ) :
     ((LinearMap.mulLeft k a) ^ m) f = a ^ m * f := by
-  induction m with
-  | zero => simp
-  | succ m ih =>
-    rw [pow_succ' a m, mul_assoc, ← ih, pow_succ']
-    show LinearMap.mulLeft k a ((LinearMap.mulLeft k a ^ m) f) = _
-    rw [LinearMap.mulLeft_apply]
+  rw [LinearMap.pow_mulLeft, LinearMap.mulLeft_apply]
 
 private lemma pderiv_mul_of_pderiv_eq_zero (i : σ) (q f : MvPolynomial σ k) (h : pderiv i q = 0) :
     pderiv i (q * f) = q * pderiv i f := by
