@@ -141,8 +141,8 @@ theorem unramOutside_of_corr : ∀ (D : D7) (N : NData D.R D.host D.what₂) (ar
   fun D N art hart r l _ hl hp c χ hc hcorr Q hQ hlQ hine =>
     unramOutside_of_tame D N art hart r c χ hc hcorr Q hQ (fun P hP P' hP' =>
       GlobalTheory.ToricDistribution.levelLe_one_of_pow hl (hcorr.pow hp) (by
-        rcases hP' with rfl | hc'
-        · exact hlQ P hP
+        rcases hP' with h | hc'
+        · rw [h]; exact hlQ P hP
         · exact fun hm => hlQ P hP ((hc' _ _ (by push_cast; exact (map_natCast _ l).symm)).2 hm))) hine
 
 end GlobalTheory.UnramPull
@@ -442,8 +442,8 @@ theorem good_pull : ∀ (D : D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D
   refine good_pull_of_tame D N X a ha A φ hφ hanti Q hQ (fun f χ hχ P hP P' hP' => ?_) hunr
   obtain ⟨_, n, h2⟩ := char_props (D := D) hφ hpow f
   exact GlobalTheory.ToricDistribution.levelLe_one_of_pow hl (hχ.pow h2) (by
-    rcases hP' with rfl | hc'
-    · exact hQl P hP
+    rcases hP' with h | hc'
+    · rw [h]; exact hQl P hP
     · exact fun hm => hQl P hP ((hc' _ _ (by push_cast; exact (map_natCast _ l).symm)).2 hm))
 
 end GlobalTheory.TwistPull
