@@ -339,13 +339,6 @@ namespace UpperTheory.V.GradeZeroInterpolatingElement.SymplecticFrames
 
 open Matrix
 
-private theorem totDisc_quot {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
-    [TotallyDisconnectedSpace G] (N : Subgroup G) [N.Normal] (hN : IsClosed (N : Set G)) :
-    TotallyDisconnectedSpace (G ⧸ N) := by
-  first
-  | exact _root_.Formalism.SharedLemmas.totDisc_quot
-  | (apply _root_.Formalism.SharedLemmas.totDisc_quot <;> assumption)
-
 section Form
 
 variable {O R : Type} [CommRing O] [CommRing R] [Algebra O R]
@@ -419,7 +412,7 @@ theorem UpperTheory.nonempty_local_frames_of_good_data :
   haveI hcl := isClosed_NS Ω D.SP
   haveI : CompactSpace D.Gam := inferInstance
   haveI : T2Space D.Gam := inferInstance
-  haveI : TotallyDisconnectedSpace D.Gam := totDisc_quot _ hcl
+  haveI : TotallyDisconnectedSpace D.Gam := Formalism.SharedLemmas.totDisc_quot _ hcl
   have hs : Function.Surjective (toGS Ω D.SP) := QuotientGroup.mk_surjective
   have hb' : ∀ g, rb (toGS Ω D.SP g) = D.rbar g := fun g => DFunLike.congr_fun hb g
   have h0' : ∀ g, r0.hom (toGS Ω D.SP g) = D.r0 g := fun g => DFunLike.congr_fun h0 g
