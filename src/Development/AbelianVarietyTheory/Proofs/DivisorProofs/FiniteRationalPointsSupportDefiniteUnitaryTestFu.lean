@@ -64,6 +64,7 @@ import Mathlib.Tactic.ENatToNat
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnderEqIffConjPl
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalTwistContinuousInvolutionIntegralProperties
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteUnitaryLocalComponentMemIntegralGLCofini, Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteUnitaryLocalComponentMemIntegralGLCofiniStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteOfValuationBoundedNormLeOne, Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlAdicCompletionEntriesBoundedOfIsCompact, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalTestFactorNeZeroOfGlobalProductNeZero, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalTestFactorNeZeroOfGlobalProductNeZeroStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormComplexEmbeddingEntryDefiniteUnitaryRational, Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormComplexEmbeddingEntryDefiniteUnitaryRationalStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteRationalPointsSupportDefiniteUnitaryTestFu
@@ -401,28 +402,7 @@ noncomputable section
 namespace GlobalTheory.BCT.SuppFin
 
 theorem cLoc_mem_UL : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (n : ℕ) (w : Pl E) (y : UA E n), cLoc w y ∈ UL n w := by
-  intro E _ _ _ hU n w y
-  by_cases hs : IsSplitAt w
-  · unfold UL
-    rw [if_pos hs]
-    exact Subgroup.mem_top _
-  · obtain ⟨-, -, hloc, -⟩ := (GlobalTheory.ConjAtPlace.main E hU w).2.2.2.1 hs
-    have hu := GlobalTheory.DefU.ClassFin.cT_pFin y
-    unfold UL
-    rw [if_neg hs]
-    change cT (cj w) (cLoc w y).val * 1 * (cLoc w y).val = 1
-    rw [mul_one]
-    have key : cT (cj w) ((GeneralLinearGroup.map (pFin E) (y : GA E n)).val.map (pLoc E w)) =
-        (cT (conjFin (GlobalTheory.DefU.ClassFin.cc E)) (GeneralLinearGroup.map (pFin E) (y : GA E n)).val).map (pLoc E w) := by
-      refine Matrix.ext fun i j => ?_
-      simp only [cT, Matrix.map_apply, Matrix.transpose_apply]
-      exact (hloc _).symm
-    calc cT (cj w) (cLoc w y).val * (cLoc w y).val =
-        (cT (conjFin (GlobalTheory.DefU.ClassFin.cc E)) (GeneralLinearGroup.map (pFin E) (y : GA E n)).val *
-          (GeneralLinearGroup.map (pFin E) (y : GA E n)).val).map (pLoc E w) := by
-          rw [Matrix.map_mul, ← key]
-          rfl
-      _ = 1 := by rw [hu, Matrix.map_one _ (map_zero _) (map_one _)]
+  apply _root_.GlobalTheory.BCT.ThBasic.cLoc_mem_UL <;> assumption
 
 theorem valuation_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (w : Pl E) (a : E), w.valuation E (IsCMField.complexConj E a) = (conjSrc (GlobalTheory.SplitPts.conjE E) w).valuation E a := by
   intro E _ _ _ w a
