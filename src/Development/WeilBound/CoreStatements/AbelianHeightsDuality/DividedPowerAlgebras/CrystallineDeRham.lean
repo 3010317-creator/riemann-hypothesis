@@ -957,15 +957,6 @@ theorem acyc_toSmall (hinf : ∀ k l, ∃ m, U m = U k ⊓ U l) (T : (IsSmall γ
 
 end Comma
 
-theorem tag_pull1 (hcov : ⨆ k, U k = ⊤) (hinf : ∀ k l, ∃ m, U m = U k ⊓ U l) :
-    Function.Bijective (CoefMap.restrict (O γ s) (Tag.forget γ s U)).pull1 := by
-  have key : ⇑(CoefMap.restrict (O γ s) (Tag.forget γ s U)).pull1 =
-      ⇑(CoefMap.restrict ((IsSmall γ s U).ι ⋙ O γ s) (toSmall γ s U)).pull1 ∘
-        ⇑(CoefMap.restrict (O γ s) (IsSmall γ s U).ι).pull1 :=
-    funext fun c => (restrict_pull1 (O γ s) (IsSmall γ s U).ι (toSmall γ s U) c).symm
-  rw [key]
-  exact (qa1 _ _ (fun T => acyc_toSmall hinf T)).comp
-    (SmallDescent.pull1_bijective R I γ X s K U hcov)
 
 private theorem pull2_restrict_isSmall_bijective_of_cover (hcov : ⨆ k, U k = ⊤) :
     Function.Bijective (CoefMap.restrict (O γ s) (IsSmall γ s U).ι).pull2 := by
@@ -998,14 +989,6 @@ private theorem pull2_restrict_isSmall_bijective_of_cover (hcov : ⨆ k, U k = �
     · intro i S u hu
       exact hσs _ (σ.equivFin.symm i).2 S u hu
 
-theorem tag_pull2 (hcov : ⨆ k, U k = ⊤) (hinf : ∀ k l, ∃ m, U m = U k ⊓ U l) :
-    Function.Bijective (CoefMap.restrict (O γ s) (Tag.forget γ s U)).pull2 := by
-  have key : ⇑(CoefMap.restrict (O γ s) (Tag.forget γ s U)).pull2 =
-      ⇑(CoefMap.restrict ((IsSmall γ s U).ι ⋙ O γ s) (toSmall γ s U)).pull2 ∘
-        ⇑(CoefMap.restrict (O γ s) (IsSmall γ s U).ι).pull2 :=
-    funext fun c => (restrict_pull2 (O γ s) (IsSmall γ s U).ι (toSmall γ s U) c).symm
-  rw [key]
-  exact (qa2 _ _ (fun T => acyc_toSmall hinf T)).comp (pull2_restrict_isSmall_bijective_of_cover hcov)
 
 end FubiniStudyChowHeightFormula₂.Adr
 end -- clump:auto
