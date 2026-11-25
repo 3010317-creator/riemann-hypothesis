@@ -27,9 +27,372 @@ import Formalism.RealPlaceAnalysis.RealPlaceTaylor.IsCompactInvariantOrthogonalI
 import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.PuniqSmoothAddSmul
 import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.Exists
 import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.PieriRules.CartanKType
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.DatumIrr
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.IsDSSigLam
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.RregRep
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.SigLamEquivData
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.LayerBasic
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.CcARatioZero
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.Decomp
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.PoleMatch
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.ProjectionCommutesDerivedAction
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.ConsumerC, ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.TensorProductsG2.ConsumerD, ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.TensorProductsG2.Consumer, ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.TensorProductsG2.FormalDegreeConstantDiscrete
+
+section
+@[expose] public section
+
+noncomputable section
+
+open Finset Matrix
+
+namespace ReciprocityTheory.ChartRestriction.DS
+
+variable {n : ℕ}
+
+theorem cns_shift_inj (dual : Bool) (μ : Fin n → ℝ) : Function.Injective (shiftF dual μ) := by
+  intro s s' h
+  have h1 : (Pi.single s (1 : ℝ) : Fin n → ℝ) = Pi.single s' 1 := by
+    cases dual
+    · exact add_left_cancel (a := μ) h
+    · exact sub_right_injective (b := μ) h
+  by_contra hne
+  have h2 := congrFun h1 s
+  rw [Pi.single_eq_same, Pi.single_eq_of_ne hne] at h2
+  exact one_ne_zero h2
+
+theorem cns_coefV {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+    (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (g : Matrix (Fin n) (Fin n) ℂ) (v w : H) (x y : Fin n → ℂ) :
+    inner ℂ w (σ g v) * (star y ⬝ᵥ (g *ᵥ x)) =
+      ∑ c, inner ℂ (y c • w) (tensGrp false σ g (fun d => x d • v) c) := by
+  simp only [tensGrp, Bool.cond_false, map_smul, inner_sum, inner_smul_left, inner_smul_right, dotProduct,
+    Matrix.mulVec, Pi.star_apply, Finset.mul_sum, RCLike.star_def]
+  refine Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun d _ => ?_
+  ring
+
+theorem cns_coefVd {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+    (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (g : Matrix (Fin n) (Fin n) ℂ) (v w : H) (x y : Fin n → ℂ) :
+    inner ℂ w (σ g v) * (star y ⬝ᵥ (g⁻¹ *ᵥ x)) =
+      ∑ c, inner ℂ (star (x c) • w) (tensGrp true σ g (fun d => star (y d) • v) c) := by
+  simp only [tensGrp, Bool.cond_true, map_smul, inner_sum, inner_smul_left, inner_smul_right, dotProduct,
+    Matrix.mulVec, Pi.star_apply, Finset.mul_sum, RCLike.star_def, Complex.conj_conj]
+  rw [Finset.sum_comm]
+  refine Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun d _ => ?_
+  ring
+
+theorem cns_expandV {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+    (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (g : Matrix (Fin n) (Fin n) ℂ) (f w : Fin n → H) :
+    ∑ c, inner ℂ (w c) (tensGrp false σ g f c) =
+      ∑ p : Fin n × Fin n, inner ℂ (w p.1) (σ g (f p.2)) *
+        (star (Pi.single p.1 1 : Fin n → ℂ) ⬝ᵥ (g *ᵥ (Pi.single p.2 1 : Fin n → ℂ))) := by
+  rw [Fintype.sum_prod_type]
+  refine Finset.sum_congr rfl fun c _ => ?_
+  simp only [tensGrp, Bool.cond_false, inner_sum, inner_smul_right]
+  refine Finset.sum_congr rfl fun d _ => ?_
+  rw [← Pi.single_star, star_one, Matrix.mulVec_single_one, single_one_dotProduct, mul_comm]
+  rfl
+
+theorem cns_expandVd {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+    (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (g : Matrix (Fin n) (Fin n) ℂ) (f w : Fin n → H) :
+    ∑ c, inner ℂ (w c) (tensGrp true σ g f c) =
+      ∑ p : Fin n × Fin n, inner ℂ (w p.1) (σ g (f p.2)) *
+        (star (Pi.single p.2 1 : Fin n → ℂ) ⬝ᵥ (g⁻¹ *ᵥ (Pi.single p.1 1 : Fin n → ℂ))) := by
+  rw [Fintype.sum_prod_type]
+  refine Finset.sum_congr rfl fun c _ => ?_
+  simp only [tensGrp, Bool.cond_true, inner_sum, inner_smul_right]
+  refine Finset.sum_congr rfl fun d _ => ?_
+  rw [← Pi.single_star, star_one, Matrix.mulVec_single_one, single_one_dotProduct, mul_comm]
+  rfl
+
+theorem cns_kfin_map {ε : Fin n → Bool} {H₁ H₂ : Type*} [NormedAddCommGroup H₁]
+    [InnerProductSpace ℂ H₁] [NormedAddCommGroup H₂] [InnerProductSpace ℂ H₂]
+    {σ₁ : Matrix (Fin n) (Fin n) ℂ → (H₁ →L[ℂ] H₁)} {σ₂ : Matrix (Fin n) (Fin n) ℂ → (H₂ →L[ℂ] H₂)}
+    (U : H₁ ≃ₗᵢ[ℂ] H₂) (hU : ∀ g ∈ UJset ε, ∀ x, U (σ₁ g x) = σ₂ g (U x))
+    {x : H₁} (hx : PI.UpqRep.IsKFin ε σ₁ x) : PI.UpqRep.IsKFin ε σ₂ (U x) := by
+  obtain ⟨S, hf, hxS, hst⟩ := hx
+  haveI := hf
+  refine ⟨S.map (U.toLinearEquiv : H₁ →ₗ[ℂ] H₂), (U.toLinearEquiv.submoduleMap S).finiteDimensional, ⟨x, hxS, rfl⟩, ?_⟩
+  rintro g hg _ ⟨z, hz, rfl⟩
+  exact ⟨σ₁ g z, hst g hg z hz, hU g (puniq_kset hg) z⟩
+
+theorem cns_kfin_smul {ε : Fin n → Bool} {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+    {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} {x : H} (a : ℂ) (hx : PI.UpqRep.IsKFin ε σ x) :
+    PI.UpqRep.IsKFin ε σ (a • x) := by
+  obtain ⟨S, hf, hxS, hst⟩ := hx
+  exact ⟨S, hf, S.smul_mem a hxS, hst⟩
+
+section NC
+
+variable {ε : Fin n → Bool} {lam : Fin n → ℝ} {T : S7.KType ε (lowK ε lam)}
+  {Ψ : Matrix (Fin n) (Fin n) ℂ → (T.V →L[ℂ] T.V)} {v₀ : T.V}
+
+theorem cns_gen_mem_Hlam {x : smD ε (rreg ε)} (hx : x ∈ genSub (smE ε (rreg ε)) (datumV ε Ψ v₀)) :
+    ((x : smD ε (rreg ε)) : L2 ε) ∈ Hlam ε Ψ v₀ := by
+  unfold Hlam closGen
+  exact Submodule.le_topologicalClosure _ (Submodule.mem_map_of_mem hx)
+
+theorem cns_kfin_gen (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ : v₀ ≠ 0) {x : smD ε (rreg ε)}
+    (hx : x ∈ genSub (smE ε (rreg ε)) (datumV ε Ψ v₀)) :
+    PI.UpqRep.IsKFin ε (sigLam ε Ψ v₀) (⟨(x : L2 ε), cns_gen_mem_Hlam hx⟩ : Hlam ε Ψ v₀) := by
+  have hσ := rreg_isURepOn ε
+  have hD : IsDerivedOn ε (rreg ε) (smD ε (rreg ε)) (smE ε (rreg ε)) := isDerivedOn_smE hσ
+  have hV := datumV_isKIrrHW hP hv₀
+  have hinj : Function.Injective (Hlam ε Ψ v₀).subtype := Subtype.val_injective
+  have hx' := hx
+  rw [genSub_eq_iSup_layer (ε := ε) hD.glRep hV.2.1] at hx'
+  obtain ⟨j, hj⟩ := (Submodule.mem_iSup_of_directed _ (Monotone.directed_le fun _ _ h => layer_mono h)).1 hx'
+  haveI := finiteDimensional_layer (ε := ε) (E := smE ε (rreg ε)) hV.1 j
+  let L : Submodule ℂ (L2 ε) := (layer ε (smE ε (rreg ε)) (datumV ε Ψ v₀) j).map (smD ε (rreg ε)).subtype
+  haveI hLf : FiniteDimensional ℂ L := inferInstance
+  refine ⟨L.comap (Hlam ε Ψ v₀).subtype, ?_, ⟨x, hj, rfl⟩, ?_⟩
+  · have hle : (L.comap (Hlam ε Ψ v₀).subtype).map (Hlam ε Ψ v₀).subtype ≤ L := Submodule.map_comap_le _ _
+    have := Submodule.finiteDimensional_of_le hle
+    exact (Submodule.equivMapOfInjective _ hinj _).symm.finiteDimensional
+  · rintro g hg v ⟨y, hy, hyv⟩
+    have hgK : g ∈ Kset ε := hg
+    obtain ⟨z, hz, hzy⟩ := layer_k_stable hσ hD hV.2.1 (datumV_kStable hP v₀) j g hgK y hy
+    refine ⟨z, hz, ?_⟩
+    show (z : L2 ε) = ((sigLam ε Ψ v₀ g v : Hlam ε Ψ v₀) : L2 ε)
+    rw [sigLam_coe hgap hP hv₀ (puniq_kset hg), hzy]
+    exact congrArg (rreg ε g) hyv
+
+theorem cns_kfin_rep (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ : v₀ ≠ 0) {x : Hlam ε Ψ v₀}
+    (hx : PI.UpqRep.IsKFin ε (sigLam ε Ψ v₀) x) :
+    ∃ y ∈ genSub (smE ε (rreg ε)) (datumV ε Ψ v₀), ((y : smD ε (rreg ε)) : L2 ε) = (x : L2 ε) := by
+  obtain ⟨S, hSf, hxS, hSK⟩ := hx
+  exact sigLam_kfin hgap hP hv₀ S hSf hSK hxS
+
+theorem cns_transport (dual : Bool) (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ : v₀ ≠ 0)
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)}
+    (U : Hlam ε Ψ v₀ ≃ₗᵢ[ℂ] H) (hU : ∀ g ∈ UJset ε, ∀ x : Hlam ε Ψ v₀, U (sigLam ε Ψ v₀ g x) = σ g (U x))
+    (a b : Fin n → Hlam ε Ψ v₀) {g : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ UJset ε) :
+    ∑ c, inner ℂ (U (b c)) (tensGrp dual σ g (fun d => U (a d)) c) =
+      ∑ c, inner ℂ (b c : L2 ε) (tensGrp dual (rreg ε) g (fun d => (a d : L2 ε)) c) := by
+  refine Finset.sum_congr rfl fun c _ => ?_
+  simp only [tensGrp, inner_sum, inner_smul_right]
+  refine Finset.sum_congr rfl fun d _ => ?_
+  rw [← hU g hg, LinearIsometryEquiv.inner_map_map, Submodule.coe_inner, sigLam_coe hgap hP hv₀ hg]
+
+theorem cns_tens_sum (dual : Bool) {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+    (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (g : Matrix (Fin n) (Fin n) ℂ) {D : Submodule ℂ H}
+    (η : Fin n → H) {β : Type*} (B : Finset β) (F : β → Fin n → D) :
+    ∑ c, inner ℂ (η c) (tensGrp dual σ g (fun d => (((∑ b ∈ B, F b) d : D) : H)) c) =
+      ∑ b ∈ B, ∑ c, inner ℂ (η c) (tensGrp dual σ g (fun d => ((F b d : D) : H)) c) := by
+  rw [Finset.sum_comm]
+  refine Finset.sum_congr rfl fun c _ => ?_
+  delta tensGrp
+  simp only [Finset.sum_apply, Submodule.coe_sum, map_sum, Finset.smul_sum, inner_sum]
+  rw [Finset.sum_comm]
+
+theorem cns_emb (dual : Bool) (hok : cns_Ok ε lam T Ψ) {lam' : Fin n → ℝ} {T' : S7.KType ε (lowK ε lam')}
+    {Ψ' : Matrix (Fin n) (Fin n) ℂ → (T'.V →L[ℂ] T'.V)} (hok' : cns_Ok ε lam' T' Ψ') (s : Fin n)
+    (hs : lam' = shiftF dual lam s) :
+    (∀ η ∈ tensSub (genSub (smE ε (rreg ε)) (datumV ε Ψ T.w)), ∀ f ∈ tensSub (genSub (smE ε (rreg ε)) (datumV ε Ψ T.w)),
+      eeF dual (smE ε (rreg ε)) f = poleF dual lam s • f →
+      ∃ x ∈ genSub (smE ε (rreg ε)) (datumV ε Ψ' T'.w), ∃ z ∈ genSub (smE ε (rreg ε)) (datumV ε Ψ' T'.w),
+        ∀ g ∈ UJset ε, ∑ c, inner ℂ ((η c : smD ε (rreg ε)) : L2 ε)
+          (tensGrp dual (rreg ε) g (fun d => ((f d : smD ε (rreg ε)) : L2 ε)) c) =
+            inner ℂ ((z : smD ε (rreg ε)) : L2 ε) (rreg ε g ((x : smD ε (rreg ε)) : L2 ε))) ∧
+    ∀ z ∈ genSub (smE ε (rreg ε)) (datumV ε Ψ' T'.w), ∀ x ∈ genSub (smE ε (rreg ε)) (datumV ε Ψ' T'.w),
+      ∃ η ∈ tensSub (genSub (smE ε (rreg ε)) (datumV ε Ψ T.w)), ∃ f ∈ tensSub (genSub (smE ε (rreg ε)) (datumV ε Ψ T.w)),
+        ∀ g ∈ UJset ε, inner ℂ ((z : smD ε (rreg ε)) : L2 ε) (rreg ε g ((x : smD ε (rreg ε)) : L2 ε)) =
+          ∑ c, inner ℂ ((η c : smD ε (rreg ε)) : L2 ε)
+            (tensGrp dual (rreg ε) g (fun d => ((f d : smD ε (rreg ε)) : L2 ε)) c) := by
+  obtain ⟨⟨h, hh, hth⟩, hgap, hP, hv, hpos, hW, hG⟩ := hok
+  obtain ⟨⟨h', hh', hth'⟩, hgap', hP', hv', hpos', hW', hG'⟩ := hok'
+  have hσ := rreg_isURepOn ε
+  have hD : IsDerivedOn ε (rreg ε) (smD ε (rreg ε)) (smE ε (rreg ε)) := isDerivedOn_smE hσ
+  have := Hlam_nontrivial hgap hP hv
+  have := Hlam_nontrivial hgap' hP' hv'
+  obtain ⟨w, hw⟩ := exists_ne (0 : Hlam ε Ψ T.w)
+  obtain ⟨w', hw'⟩ := exists_ne (0 : Hlam ε Ψ' T'.w)
+  obtain ⟨⟨ι, hι, -, hιs⟩, -⟩ := cc_gk dual hgap hP hv hgap' hP' hv' hh hth hh' hth' hpos hpos' hW hW' hG hG'
+    s hs hw hw'
+  obtain ⟨hto, hof⟩ := coef_of_emb dual hσ hD hgap (datumV_isKIrrHW hP hv) (datumV_casimir hP T.w)
+    (datumV_kStable hP T.w) hgap' (datumV_isKIrrHW hP' hv') (datumV_casimir hP' T'.w) (datumV_kStable hP' T'.w) hι
+  refine ⟨fun η hη f hf hfe => ?_, fun z hz x hx => ?_⟩
+  · obtain ⟨x, hx, rfl⟩ := hιs f hf hfe
+    obtain ⟨z, hz, hzg⟩ := hto η hη x hx
+    exact ⟨x, hx, z, hz, hzg⟩
+  · obtain ⟨η, hη, hηg⟩ := hof z hz x hx
+    exact ⟨η, hη, ι x, hι.1 x hx, hηg⟩
+
+theorem cns_decomp (dual : Bool) (hlam : S7.IsHCParam lam) (hok : cns_Ok ε lam T Ψ)
+    {f : Fin n → smD ε (rreg ε)} (hf : f ∈ tensSub (genSub (smE ε (rreg ε)) (datumV ε Ψ T.w))) :
+    ∃ (κ : Type) (_ : Fintype κ) (sI : κ → Fin n) (F : κ → Fin n → smD ε (rreg ε)),
+      (∀ i, S7.IsHCParam (shiftF dual lam (sI i)) ∧ F i ∈ tensSub (genSub (smE ε (rreg ε)) (datumV ε Ψ T.w)) ∧
+        eeF dual (smE ε (rreg ε)) (F i) = poleF dual lam (sI i) • F i) ∧ f = ∑ i, F i := by
+  classical
+  obtain ⟨-, hgap, hP, hv, hpos, hW, hG⟩ := hok
+  have hσ := rreg_isURepOn ε
+  have hD : IsDerivedOn ε (rreg ε) (smD ε (rreg ε)) (smE ε (rreg ε)) := isDerivedOn_smE hσ
+  have hsm : ∀ v : smD ε (rreg ε), IsSmoothVecU ε (rreg ε) (v : _) := fun v => (mem_smD_iff ε (rreg ε) _).1 v.2
+  have hV := datumV_isKIrrHW hP hv
+  have hc := datumV_casimir hP T.w
+  have hVK := datumV_kStable hP T.w
+  obtain ⟨B, hdec, -⟩ := ee_decomp dual hσ hD hgap hV hc hVK hW
+  obtain ⟨fb, hfb, hfe⟩ := hdec f hf
+  have hpole := (pole_match dual hσ hD hsm hgap hV hc hVK hW hG).1
+  have hex : ∀ i : {b // b ∈ B.filter (fun b => fb b ≠ 0)}, ∃ s, ((i.1 : ℝ) : ℂ) = poleF dual lam s := fun i =>
+    hpole _ _ (hfb i.1).1 (Finset.mem_filter.1 i.2).2 (hfb i.1).2
+  choose sI hsI using hex
+  refine ⟨{b // b ∈ B.filter (fun b => fb b ≠ 0)}, Finset.Subtype.fintype _, sI, fun i => fb i.1,
+    fun i => ⟨?_, (hfb i.1).1, by rw [← hsI i]; exact (hfb i.1).2⟩, ?_⟩
+  · by_contra hns
+    refine (Finset.mem_filter.1 i.2).2 ?_
+    exact cc_gk_singular dual hσ hD hsm hgap hV hc hVK hW hG (sI i) (cns_sing dual hlam hns) _ (hfb i.1).1
+      (by rw [← hsI i]; exact (hfb i.1).2)
+  · rw [hfe, ← Finset.sum_filter_ne_zero]
+    exact (Finset.sum_coe_sort (B.filter fun b => fb b ≠ 0) fb).symm
+
+end NC
+
+theorem cns_nc_data (dual : Bool) {ε : Fin n → Bool} (hq : 1 ≤ S7.q0 ε) {μ : Fin n → ℝ} {H : Type}
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)}
+    (hμ : S7.IsHCParam μ) (hd : Formalism.MainNotions.S.IsDS ε μ σ) {h : ℝ} (hG : GapAtLeast ε μ h)
+    (hth : thrStar ε + 1 < h) :
+    ∃ (lamS : Fin n → Fin n → ℝ) (Ts : ∀ s, S7.KType ε (lowK ε (lamS s)))
+      (Ψs : ∀ s, Matrix (Fin n) (Fin n) ℂ → ((Ts s).V →L[ℂ] (Ts s).V)),
+      (∀ s, S7.IsHCParam (shiftF dual μ s) → lamS s = shiftF dual μ s) ∧
+      (∀ s, Formalism.MainNotions.S.IsDS ε (lamS s) (sigLam ε (Ψs s) (Ts s).w)) ∧
+      (∀ s s', S7.IsHCParam (shiftF dual μ s) → S7.IsHCParam (shiftF dual μ s') → s ≠ s' →
+        ¬ ∃ U : Hlam ε (Ψs s) (Ts s).w ≃ₗᵢ[ℂ] Hlam ε (Ψs s') (Ts s').w, ∀ g ∈ UJset ε, ∀ x,
+          U (sigLam ε (Ψs s) (Ts s).w g x) = sigLam ε (Ψs s') (Ts s').w g (U x)) ∧
+      (∀ a b : Fin n → H, (∀ c, PI.UpqRep.IsKFin ε σ (a c)) → (∀ c, PI.UpqRep.IsKFin ε σ (b c)) →
+        ∃ (κ : Type) (_ : Fintype κ) (sI : κ → Fin n) (vI wI : ∀ i, Hlam ε (Ψs (sI i)) (Ts (sI i)).w),
+          (∀ i, S7.IsHCParam (shiftF dual μ (sI i)) ∧
+            PI.UpqRep.IsKFin ε (sigLam ε (Ψs (sI i)) (Ts (sI i)).w) (vI i) ∧
+            PI.UpqRep.IsKFin ε (sigLam ε (Ψs (sI i)) (Ts (sI i)).w) (wI i)) ∧
+          ∀ g ∈ UJset ε, ∑ c, inner ℂ (b c) (tensGrp dual σ g a c) =
+            ∑ i, inner ℂ (wI i) (sigLam ε (Ψs (sI i)) (Ts (sI i)).w g (vI i))) ∧
+      ∀ s, S7.IsHCParam (shiftF dual μ s) → ∀ v w : Hlam ε (Ψs s) (Ts s).w,
+        PI.UpqRep.IsKFin ε (sigLam ε (Ψs s) (Ts s).w) v → PI.UpqRep.IsKFin ε (sigLam ε (Ψs s) (Ts s).w) w →
+        ∃ a b : Fin n → H, (∀ c, PI.UpqRep.IsKFin ε σ (a c)) ∧ (∀ c, PI.UpqRep.IsKFin ε σ (b c)) ∧
+          ∀ g ∈ UJset ε, inner ℂ w (sigLam ε (Ψs s) (Ts s).w g v) = ∑ c, inner ℂ (b c) (tensGrp dual σ g a c) := by
+  obtain ⟨T, Ψ, hok⟩ := cns_data' hq hμ hG (by linarith)
+  obtain ⟨U, hU⟩ := equiv_sigLam_of_isDS hd hok.2.1 hok.2.2.1 hok.2.2.2.1
+  have hU' : ∀ g ∈ UJset ε, ∀ y : H, U.symm (σ g y) = sigLam ε Ψ T.w g (U.symm y) := by
+    intro g hg y
+    apply U.injective
+    rw [hU g hg, LinearIsometryEquiv.apply_symm_apply, LinearIsometryEquiv.apply_symm_apply]
+  have hdat : ∀ s, ∃ (lam' : Fin n → ℝ) (T' : S7.KType ε (lowK ε lam'))
+      (Ψ' : Matrix (Fin n) (Fin n) ℂ → (T'.V →L[ℂ] T'.V)), cns_Ok ε lam' T' Ψ' ∧
+        (S7.IsHCParam (shiftF dual μ s) → lam' = shiftF dual μ s) := by
+    intro s
+    by_cases hs : S7.IsHCParam (shiftF dual μ s)
+    · obtain ⟨T', Ψ', hok'⟩ := cns_data' hq hs (cns_shift_gap dual hG s) (by linarith)
+      exact ⟨_, T', Ψ', hok', fun _ => rfl⟩
+    · exact ⟨μ, T, Ψ, hok, fun h => absurd h hs⟩
+  choose lamS Ts Ψs hoks hsh using hdat
+  refine ⟨lamS, Ts, Ψs, hsh, fun s => isDS_sigLam (hoks s).2.1 (hoks s).2.2.1 (hoks s).2.2.2.1, ?_, ?_, ?_⟩
+  · rintro s s' hs hs' hne ⟨V, hV⟩
+    have e := sigLam_inj (hoks s).2.1 (hoks s).2.2.1 (hoks s).2.2.2.1 (hoks s').2.1 (hoks s').2.2.1
+      (hoks s').2.2.2.1 V hV
+    rw [hsh s hs, hsh s' hs'] at e
+    exact hne (cns_shift_inj dual μ e)
+  · intro a b ha hb
+    have hgen : ∀ (a : Fin n → H), (∀ c, PI.UpqRep.IsKFin ε σ (a c)) →
+        ∃ f ∈ tensSub (genSub (smE ε (rreg ε)) (datumV ε Ψ T.w)),
+          ∀ c, ((f c : smD ε (rreg ε)) : L2 ε) = ((U.symm (a c) : Hlam ε Ψ T.w) : L2 ε) := by
+      intro a ha
+      choose f hf hfe using fun c => cns_kfin_rep hok.2.1 hok.2.2.1 hok.2.2.2.1 (cns_kfin_map U.symm hU' (ha c))
+      exact ⟨f, tset_mem.2 hf, hfe⟩
+    obtain ⟨f, hf, hfe⟩ := hgen a ha
+    obtain ⟨η, hη, hηe⟩ := hgen b hb
+    obtain ⟨κ, hκ, sI, F, hF, hfF⟩ := cns_decomp dual hμ hok hf
+    choose x hx z hz hxz using fun i => (cns_emb dual hok (hoks (sI i)) (sI i) (hsh (sI i) (hF i).1)).1 η hη (F i)
+      (hF i).2.1 (hF i).2.2
+    refine ⟨κ, hκ, sI, fun i => ⟨_, cns_gen_mem_Hlam (hx i)⟩, fun i => ⟨_, cns_gen_mem_Hlam (hz i)⟩,
+      fun i => ⟨(hF i).1, cns_kfin_gen (hoks _).2.1 (hoks _).2.2.1 (hoks _).2.2.2.1 (hx i),
+        cns_kfin_gen (hoks _).2.1 (hoks _).2.2.1 (hoks _).2.2.2.1 (hz i)⟩, fun g hg => ?_⟩
+    have ht := cns_transport dual hok.2.1 hok.2.2.1 hok.2.2.2.1 U hU (fun c => U.symm (a c)) (fun c => U.symm (b c)) hg
+    simp only [LinearIsometryEquiv.apply_symm_apply, ← hfe, ← hηe] at ht
+    rw [ht, hfF, cns_tens_sum]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [hxz i g hg, Submodule.coe_inner, sigLam_coe (hoks _).2.1 (hoks _).2.2.1 (hoks _).2.2.2.1 hg]
+  · intro s hs v w hv hw
+    obtain ⟨x, hx, hxe⟩ := cns_kfin_rep (hoks s).2.1 (hoks s).2.2.1 (hoks s).2.2.2.1 hv
+    obtain ⟨z, hz, hze⟩ := cns_kfin_rep (hoks s).2.1 (hoks s).2.2.1 (hoks s).2.2.2.1 hw
+    obtain ⟨η, hη, f, hf, hηf⟩ := (cns_emb dual hok (hoks s) s (hsh s hs)).2 z hz x hx
+    rw [tset_mem] at hη hf
+    refine ⟨fun c => U ⟨_, cns_gen_mem_Hlam (hf c)⟩, fun c => U ⟨_, cns_gen_mem_Hlam (hη c)⟩,
+      fun c => cns_kfin_map U hU (cns_kfin_gen hok.2.1 hok.2.2.1 hok.2.2.2.1 (hf c)),
+      fun c => cns_kfin_map U hU (cns_kfin_gen hok.2.1 hok.2.2.1 hok.2.2.2.1 (hη c)), fun g hg => ?_⟩
+    rw [cns_transport dual hok.2.1 hok.2.2.1 hok.2.2.2.1 U hU (fun c => ⟨_, cns_gen_mem_Hlam (hf c)⟩)
+      (fun c => ⟨_, cns_gen_mem_Hlam (hη c)⟩) hg, ← hηf g hg, Submodule.coe_inner,
+      sigLam_coe (hoks s).2.1 (hoks s).2.2.1 (hoks s).2.2.2.1 hg, hxe, hze]
+
+theorem cns_zuck_nc {ε : Fin n → Bool} (hq : 1 ≤ S7.q0 ε) {μ : Fin n → ℝ} {H : Type}
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)}
+    (hμ : PI.UpqRep.IsHCParam μ) (hd : PI.UpqRep.IsDS ε μ σ) {h : ℝ} (hG : PI.ZuckTensor.GapAtLeast ε μ h)
+    (hth : thrStar ε + 1 < h) :
+    ∃ X : PI.ZuckTensor.TensorDS n ε μ H σ, ∀ s, s ∈ X.Sm ↔ PI.UpqRep.IsHCParam (μ + Pi.single s 1) := by
+  classical
+  obtain ⟨lamS, Ts, Ψs, hsh, hDS, hne, hto, hof⟩ := cns_nc_data false hq hμ hd hG hth
+  refine ⟨{ Sm := univ.filter (fun s => S7.IsHCParam (shiftF false μ s))
+            Hs := fun s => Hlam ε (Ψs s) (Ts s).w
+            σs := fun s => sigLam ε (Ψs s) (Ts s).w
+            ds := ?_, inequiv := ?_, toSum := ?_, ofSum := ?_ }, ?_⟩
+  · intro s hs
+    have hs' := (mem_filter.1 hs).2
+    refine ⟨hs', ?_⟩
+    have e : (μ + Pi.single s 1) = lamS s := (hsh s hs').symm
+    rw [e]
+    exact hDS s
+  · intro s hs s' hs' hss
+    exact hne s s' (mem_filter.1 hs).2 (mem_filter.1 hs').2 hss
+  · intro v w x y hv hw
+    obtain ⟨κ, hκ, sI, vI, wI, h1, h2⟩ := hto (fun d => x d • v) (fun c => y c • w)
+      (fun d => cns_kfin_smul _ hv) (fun c => cns_kfin_smul _ hw)
+    refine ⟨κ, hκ, sI, vI, wI, fun i => ⟨mem_filter.2 ⟨mem_univ _, (h1 i).1⟩, (h1 i).2⟩, fun g hg => ?_⟩
+    rw [cns_coefV]
+    exact h2 g hg
+  · intro s hs v w hv hw
+    obtain ⟨a, b, ha, hb, hab⟩ := hof s (mem_filter.1 hs).2 v w hv hw
+    refine ⟨Fin n × Fin n, inferInstance, fun p => a p.2, fun p => b p.1,
+      fun p => Pi.single p.2 1, fun p => Pi.single p.1 1, fun p => ⟨ha _, hb _⟩, fun g hg => ?_⟩
+    rw [hab g hg, cns_expandV]
+  · intro s
+    exact ⟨fun hs => (mem_filter.1 hs).2, fun hs => mem_filter.2 ⟨mem_univ _, hs⟩⟩
+
+theorem cns_zuckd_nc {ε : Fin n → Bool} (hq : 1 ≤ S7.q0 ε) {μ : Fin n → ℝ} {H : Type}
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)}
+    (hμ : PI.UpqRep.IsHCParam μ) (hd : PI.UpqRep.IsDS ε μ σ) {h : ℝ} (hG : PI.ZuckTensor.GapAtLeast ε μ h)
+    (hth : thrStar ε + 1 < h) :
+    ∃ X : PI.ZuckTensor.TensorDSd n ε μ H σ, ∀ s, s ∈ X.Sm ↔ PI.UpqRep.IsHCParam (μ - Pi.single s 1) := by
+  classical
+  obtain ⟨lamS, Ts, Ψs, hsh, hDS, hne, hto, hof⟩ := cns_nc_data true hq hμ hd hG hth
+  refine ⟨{ Sm := univ.filter (fun s => S7.IsHCParam (shiftF true μ s))
+            Hs := fun s => Hlam ε (Ψs s) (Ts s).w
+            σs := fun s => sigLam ε (Ψs s) (Ts s).w
+            ds := ?_, inequiv := ?_, toSum := ?_, ofSum := ?_ }, ?_⟩
+  · intro s hs
+    have hs' := (mem_filter.1 hs).2
+    refine ⟨hs', ?_⟩
+    have e : (μ - Pi.single s 1) = lamS s := (hsh s hs').symm
+    rw [e]
+    exact hDS s
+  · intro s hs s' hs' hss
+    exact hne s s' (mem_filter.1 hs).2 (mem_filter.1 hs').2 hss
+  · intro v w x y hv hw
+    obtain ⟨κ, hκ, sI, vI, wI, h1, h2⟩ := hto (fun d => star (y d) • v) (fun c => star (x c) • w)
+      (fun d => cns_kfin_smul _ hv) (fun c => cns_kfin_smul _ hw)
+    refine ⟨κ, hκ, sI, vI, wI, fun i => ⟨mem_filter.2 ⟨mem_univ _, (h1 i).1⟩, (h1 i).2⟩, fun g hg => ?_⟩
+    rw [cns_coefVd]
+    exact h2 g hg
+  · intro s hs v w hv hw
+    obtain ⟨a, b, ha, hb, hab⟩ := hof s (mem_filter.1 hs).2 v w hv hw
+    refine ⟨Fin n × Fin n, inferInstance, fun p => a p.2, fun p => b p.1,
+      fun p => Pi.single p.1 1, fun p => Pi.single p.2 1, fun p => ⟨ha _, hb _⟩, fun g hg => ?_⟩
+    rw [hab g hg, cns_expandVd]
+  · intro s
+    exact ⟨fun hs => (mem_filter.1 hs).2, fun hs => mem_filter.2 ⟨mem_univ _, hs⟩⟩
+
+end ReciprocityTheory.ChartRestriction.DS
+end
+end
+end
 
 -- ===== clump member: ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.ConsumerC =====
 -- clump-header: {"m": "ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.ConsumerC", "h": "module\n\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms\npublic import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.PieriRules.KTypeIntDomStatement\npublic import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.PieriRules.TensRepA\npublic import Formalism.RealPlaceAnalysis.QuotientSettingHolds\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\npublic import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.Bridge\npublic import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.ContinuousRepresentations.RelOpCurve\npublic import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.ContinuousRepresentations.URepCompRed\npublic import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.PieriRules.CountNotTwoOfFinrankLeOne\nimport ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.PieriRules.TensRepB\npublic import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.Unique\npublic import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.ContinuousRepresentations.DerivExistsAllPosStatement\nimport Formalism.RealPlaceAnalysis.RealPlaceTaylor.IsCompactInvariantOrthogonalInf\n\n"}
