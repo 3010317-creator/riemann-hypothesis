@@ -800,7 +800,7 @@ private theorem orderAtComapOffExceptionalLocus : OrderAtComapOffExceptionalLocu
 
 private theorem pushedBlowupSequenceProperties_canonicalAlgorithmRules (hres : FunctorialResolution.Blowup.StrictTransformIsBlowupOfClosedSubscheme.{u}) :
     PushedBlowupSequenceProperties hres blowupPreservesNoetherian := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro T hV j hj
     exact DivisorReduction.isOpen_preimage_support_containedComponentsIdeal T j hj
       (DivisorReduction.preimageSupportEqComponentsInOrderLocus_of_isAdmissible T hV j hj)
@@ -817,8 +817,6 @@ private theorem pushedBlowupSequenceProperties_canonicalAlgorithmRules (hres : F
   · intro T inst j hj hb s hpr hmk t ht
     exact DivisorReduction.boundaryLocus_subset_preimage_otherBoundaryLocus_succ hres blowupPreservesNoetherian T j hj hb s
       hpr hmk t ht
-  · intro T hV
-    exact DivisorReduction.one_le_mult_of_isAdmissible T hV
   · intro T hV hOB hbal j hj hpre hlow inst s hpr hmk t ht
     exact DivisorReduction.isSmoothDivisor_ker_embeddingIntoAmbient_of_eq_top hres blowupPreservesNoetherian T hV
       hOB hbal j hj hpre hlow s hpr hmk t ht
