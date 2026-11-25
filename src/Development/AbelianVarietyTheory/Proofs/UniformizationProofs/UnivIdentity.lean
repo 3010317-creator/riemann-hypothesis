@@ -199,7 +199,7 @@ theorem exists_kap [IsNoetherianRing R] (hM : MulPullSt) (n : ℕ) :
     (fun U _ h => by
       rw [Fin.prod_univ_three, one_pow]
       apply Additive.ofMul.injective
-      simp [ofMul_mul, ofMul_inv, ofMul_zpow, ofMul_pow]
+      simp [ofMul_mul, ofMul_inv, ofMul_zpow]
       module)
     (fun y J hJ => by
       rw [Category.comp_id, MonObj.comp_one, mul_inv_cancel])
@@ -214,7 +214,7 @@ theorem exists_nu [IsNoetherianRing R] (hM : MulPullSt) (n : ℕ) : ∃ ν : LB.
     (fun U _ h => by
       rw [Fin.prod_univ_four]
       apply Additive.ofMul.injective
-      simp [ofMul_mul, ofMul_inv, ofMul_zpow, ofMul_pow]
+      simp [ofMul_mul, ofMul_inv, ofMul_zpow]
       module)
     (fun y J hJ => by
       rw [Category.comp_id, normd_one hκ hJ, normd_one hκ' hJ, mul_inv_cancel])
