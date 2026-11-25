@@ -200,11 +200,7 @@ theorem conjHaar : ConjHaar := by
       have : a⁻¹ * (a * Matrix.of x * a⁻¹) * a = (a⁻¹ * a) * Matrix.of x * (a⁻¹ * a) := by simp only [Matrix.mul_assoc]
       rw [this, haa', Matrix.one_mul, Matrix.mul_one]; rfl
     exact lt_of_le_of_lt (measure_mono hsub) (hμ.finite_compact _ (hK.image (conjM_cont a⁻¹)))
-  · intro h0
-    apply hμ.ne_zero
-    have := congrArg (fun ν : Measure (Mt k r) => ν Set.univ) h0
-    simp only [Measure.map_apply hm MeasurableSet.univ, Set.preimage_univ, Measure.coe_zero, Pi.zero_apply] at this
-    exact Measure.measure_univ_eq_zero.mp this
+  · exact fun h0 => hμ.ne_zero ((Measure.map_eq_zero_iff hm.aemeasurable).1 h0)
 
 theorem conjM_conjM (a b : Mat k r) (x : Mt k r) : conjM a (conjM b x) = conjM (a * b) x := by
   show a * (b * Matrix.of x * b⁻¹) * a⁻¹ = (a * b) * Matrix.of x * (a * b)⁻¹
