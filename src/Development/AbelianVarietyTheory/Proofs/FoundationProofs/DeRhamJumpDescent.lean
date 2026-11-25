@@ -158,9 +158,9 @@ theorem mem_succ_of_fixed {K K' : FinExt l} (h : K.1 ≤ K'.1) (ρ : Representat
     (hxH : x ∈ DdR (P.PD K') (ρ.comp (Subgroup.inclusion (GK_le h)))) :
     x ∈ FilV (P.PD K) (LL := LL) (V := V) (u + 1) := by
   haveI : FiniteDimensional ℚ_[l] ↥K'.1 := K'.2
-  haveI : Finite (GQ l ⧸ GK K') :=
-    Subgroup.quotient_finite_of_isOpen _ (IntermediateField.fixingSubgroup_isOpen K'.1)
-  haveI : (GK K').FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  haveI : (GK K').FiniteIndex := ⟨by
+    rw [GK, ← IntermediateField.finrank_eq_fixingSubgroup_index]
+    exact Module.finrank_pos.ne'⟩
   have hA : ∀ (a : ℤ) (g : ↥(GK K)), ∀ x ∈ FilV (P.PD K) (LL := LL) (V := V) a,
       actVdR (P.PD K) ρ g x ∈ FilV (P.PD K) (LL := LL) (V := V) a := fun a g x hx =>
     map_mem_FilV P K K a _ _ (fun b hb => (P.PD K).Fil_G g a b hb) x hx
