@@ -50,14 +50,6 @@ import Mathlib.Tactic.ReduceModChar
 open scoped MatrixGroups Matrix Classical
 open GlobalTheory.KZ GlobalTheory.K4 UpperTheory.V.Z.Kato.Sym UpperTheory.Kd.K4 UpperTheory.V.Z.Kato.Nb
 
-private theorem diam_ex (N l p : ℕ) (h : Nat.Coprime p (l * N)) : IsDiam N l p (sgD N l p) := by
-  obtain ⟨a, b, hab⟩ : IsCoprime (p : ℤ) ((l * N : ℕ) : ℤ) := Nat.isCoprime_iff_coprime.mpr h
-  refine Classical.epsilon_spec (p := IsDiam N l p)
-    ⟨⟨!![a, -b; ((l * N : ℕ) : ℤ), (p : ℤ)], by rw [Matrix.det_fin_two_of]; linear_combination hab⟩, ?_, ?_⟩
-  · refine Subgroup.mem_inf.mpr ⟨?_, ?_⟩ <;> refine CongruenceSubgroup.Gamma0_mem.mpr ?_ <;>
-      show (Int.cast ((l * N : ℕ) : ℤ) : ZMod _) = 0 <;> simp
-  · simp [en]
-
 private theorem conj_mem (N l : ℕ) (σ γ : SL(2, ℤ))
     (hσ : σ ∈ CongruenceSubgroup.Gamma0 N ⊓ CongruenceSubgroup.Gamma0 l) (hγ : γ ∈ Gam N l) :
     σ * γ * σ⁻¹ ∈ Gam N l := by
@@ -102,7 +94,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sBStab :
       rw [← Matrix.SpecialLinearGroup.coe_mul, ← Matrix.SpecialLinearGroup.coe_mul, inv_mul_cancel_right]
     rw [StabHecke.act_act X l _ _ (hdet γ) (hdet σ), hg, ← StabHecke.act_act X l _ _ (hdet σ) (hdet _),
       hc.2 _ (conj_mem N l σ γ hσ hγ)]
-  · have hσ := diam_ex N l p hc'
+  · have hσ := GlobalTheory.KZ.Betti.isDiam_sgD hN.ne' (Fact.out : l.Prime).ne_zero hc'.coprime_mul_left_right
     have hpl : IsCoprime (p : ℤ) (l : ℤ) := Nat.isCoprime_iff_coprime.mpr (Nat.Coprime.coprime_mul_right_right hc')
     refine ⟨?_, fun γ hγ => ?_⟩
     · rw [StabHecke.heckeT_eq]
