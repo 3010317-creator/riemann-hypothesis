@@ -678,8 +678,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open MeasureTheory GlobalTheory.KFourier
 
 
-theorem _root_.GlobalTheory.T.eq_zero_of_orthogonal_compactUnitaryPolyFun : ∀ {n : ℕ} (ε : Fin n → Bool) (h : KG ε → ℂ), Continuous h → (∀ d, ∀ q ∈ GlobalTheory.KFourier.polyV ε d, ∫ k, star (q k) * h k ∂(muK ε) = 0) → h = 0 := by
-  first | exact @GlobalTheory.KFourier.eq_zero_of_orth_poly
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.HeightProofs.EqZeroOfOrthogonalCompactUnitaryPolyFunStatement =====
@@ -862,10 +860,6 @@ noncomputable section
 namespace GlobalTheory.KFourier
 open MeasureTheory
 variable {n : ℕ}
-
-theorem eq_zero_of_orth_L (ε : Fin n → Bool) (h : KG ε → ℂ) (hh : Continuous h)
-    (ho : ∀ d, ∀ q ∈ polyV ε d, ∫ k, star (q k) * h k ∂(muK ε) = 0) : h = 0 :=
-  GlobalTheory.T.eq_zero_of_orthogonal_compactUnitaryPolyFun ε h hh ho
 
 theorem integrable_of_cont (ε : Fin n → Bool) {f : KG ε → ℂ} (hf : Continuous f) : Integrable f (muK ε) :=
   hf.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace f)
