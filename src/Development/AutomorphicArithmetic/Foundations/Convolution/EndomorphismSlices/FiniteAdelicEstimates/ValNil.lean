@@ -52,8 +52,6 @@ open scoped Classical
 
 
 
-attribute [local instance] borelG borelF borelA borelH
-
 theorem UpperTheory.Zero.ConvolutionTheory.EB.valNil :
     UpperTheory.Zero.ConvolutionTheory.EB.ValNil := by
   intro E _ _ _ n Z T S D B₁ B₂ e₁ e₂ hS hZ hT hd hB

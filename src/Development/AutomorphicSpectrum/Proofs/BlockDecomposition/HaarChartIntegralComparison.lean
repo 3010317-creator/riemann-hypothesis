@@ -63,8 +63,6 @@ theorem isOpenEmbedding_valG (n : ℕ) : Topology.IsOpenEmbedding (Units.val : G
   haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
   Units.isOpenEmbedding_val
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 def coords {n : ℕ} (M : Mat n) : Idx n → ℝ :=
   fun p => if p.1 then (M p.2.1 p.2.2).re else (M p.2.1 p.2.2).im
 

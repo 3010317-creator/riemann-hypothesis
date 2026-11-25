@@ -184,8 +184,6 @@ namespace GlobalTheory.CompanionTheory.KerFc
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 theorem inner_cls_eq {n : ℕ} [MeasurableSpace (G n)] (μ : Measure (G n)) {V : Type} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] {a b : Mat n → V} (ha : MemLp (fun y : G n => a y.val) 2 μ)
     (hb : MemLp (fun y : G n => b y.val) 2 μ) :
@@ -345,8 +343,6 @@ namespace GlobalTheory.CompanionTheory.KerFc
 
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc
-
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 theorem rowExists_of_factor (hFac : FactorRapid) (hEv : EvAdj) : RowExists := by
   intro n _ _ μ _ E _ Ω T F c hS h hh v
@@ -517,8 +513,6 @@ namespace GlobalTheory.CompanionTheory.KerFc.RowLin
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 theorem sum_sec {n : ℕ} [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)) [μ.IsHaarMeasure]
     (E : KMod n) (hLg : LgFacts) (hU : Unimod) (hR : RCalc) (hCl : ClsFacts) (hOps : SobOps)
     {ι : Type} (f₀ : Mat n → E.V) (h₀ : Sob μ f₀) (f : ι → Mat n → E.V) (hS : ∀ i, Sob μ (f i))
@@ -555,8 +549,6 @@ namespace GlobalTheory.CompanionTheory.KerFc
 
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc
-
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 theorem rowMatrix_holds : RowMatrix := by
   intro n _ _ μ _ E _ Ω T F c hstd h hrow
@@ -756,8 +748,6 @@ namespace GlobalTheory.CompanionTheory.KerFc
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 def lTrL {n : ℕ} [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)) [μ.IsHaarMeasure] (V : Type)
     [NormedAddCommGroup V] [InnerProductSpace ℂ V] (x : G n) : Lp V 2 μ →L[ℂ] Lp V 2 μ :=
   (Lp.compMeasurePreservingₗᵢ ℂ (fun y : G n => x * y) (measurePreserving_mul_left μ x)).toContinuousLinearMap
@@ -915,8 +905,6 @@ namespace GlobalTheory.CompanionTheory.KerFc
 
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc
-
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 theorem toC0_eq_of_coe (p : C₀(ℝ, ℂ)) (f : ℝ → ℂ) (h : ∀ y, p y = f y) : toC0 f = p := by
   have hf : f = ⇑p := funext fun y => (h y).symm
@@ -1314,8 +1302,6 @@ open scoped ContDiff ComplexConjugate InnerProductSpace ZeroAtInfty
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc
 open PositivityTheory.RgTw (Mat G)
 open GlobalTheory.CompanionTheory.WaveFc.Asm
-
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 namespace GlobalTheory.CompanionTheory.KerFc
 

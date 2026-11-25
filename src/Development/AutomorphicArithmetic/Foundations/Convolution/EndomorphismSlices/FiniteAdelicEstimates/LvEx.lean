@@ -53,8 +53,6 @@ open scoped Classical
 
 
 
-attribute [local instance] borelG borelF borelA borelH
-
 theorem UpperTheory.Zero.ConvolutionTheory.EB.lvEx :
     UpperTheory.Zero.ConvolutionTheory.EB.LvEx := by
   intro E _ _ _ a b Z φ h

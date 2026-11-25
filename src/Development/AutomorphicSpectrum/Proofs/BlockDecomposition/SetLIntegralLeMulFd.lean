@@ -48,7 +48,6 @@ noncomputable section
 open NumberField IsDedekindDomain Matrix MeasureTheory Filter Topology
 open GlobalTheory.CuspRep GlobalTheory.UnitaryBC PositivityTheory.Rg.BcB PositivityTheory.Rg.BcB.E
 open scoped ENNReal Pointwise
-attribute [local instance] PositivityTheory.Rg.BcB.E.borelH
 
 namespace GlobalTheory.CompanionTheory.Growth
 

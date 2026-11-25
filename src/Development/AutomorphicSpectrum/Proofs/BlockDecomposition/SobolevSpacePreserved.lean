@@ -193,7 +193,6 @@ open MeasureTheory Matrix Finset Filter Topology
 open scoped ContDiff ComplexConjugate InnerProductSpace ZeroAtInfty
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc GlobalTheory.CompanionTheory.PresSobA
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 noncomputable section
 
 namespace GlobalTheory.CompanionTheory.PresSobA
@@ -683,8 +682,6 @@ open scoped ContDiff ComplexConjugate InnerProductSpace ZeroAtInfty
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc GlobalTheory.CompanionTheory.PresSobA
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 noncomputable section
 
 namespace GlobalTheory.CompanionTheory.PresSobA
@@ -725,7 +722,6 @@ open MeasureTheory Matrix Finset Filter Topology
 open scoped ContDiff ComplexConjugate InnerProductSpace ZeroAtInfty
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc GlobalTheory.CompanionTheory.PresSobA
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 noncomputable section
 
 end -- clump:auto

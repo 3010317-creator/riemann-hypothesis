@@ -54,8 +54,6 @@ open scoped Classical
 
 namespace UpperTheory.Zero.ConvolutionTheory.EB
 
-attribute [local instance] borelG borelF borelA borelH
-
 theorem locAlg : LocAlg := by
   intro E _ _ _ a b Z L w
   have hK2 : K2 a b w = (KGL w (n := a)).prod (KGL w (n := b)) := rfl

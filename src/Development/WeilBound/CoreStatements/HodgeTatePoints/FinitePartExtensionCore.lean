@@ -1316,8 +1316,6 @@ open scoped CategoryTheory.Obj
 noncomputable section
 namespace GlobalTheory.CompanionTheory.Ar.BT.GtI
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 open ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction.G.Out.TLinPf.ZeroLinearity
 
 section Units

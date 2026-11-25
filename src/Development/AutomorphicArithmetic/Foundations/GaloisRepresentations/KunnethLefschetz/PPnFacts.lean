@@ -64,7 +64,6 @@ section -- clump:auto
 
 noncomputable section
 open CategoryTheory AlgebraicGeometry
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 namespace LateralTheory.EtaleTrace.LProperPf
 

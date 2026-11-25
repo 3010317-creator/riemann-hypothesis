@@ -57,8 +57,6 @@ open scoped Classical
 
 namespace UpperTheory.Zero.ConvolutionTheory.EB
 
-attribute [local instance] borelG borelF borelA borelH
-
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 private theorem heckeFunction_mul (a b : ℕ) (w : Pl E) (x y : Ex (Fin (a + 1) × Fin (b + 1))) :

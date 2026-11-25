@@ -38,8 +38,6 @@ open ReciprocityTheory.ChartRestriction.G.Pdiv ReciprocityTheory.ChartRestrictio
 open GlobalTheory.TorsionCompare NumberField
 open scoped TensorProduct
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.AvChartCompare
 
 section Charts

@@ -735,8 +735,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor FunctorialResolution.Blowup
 open GroundTheory.Arith.SchemeCoh GroundTheory.Arith.SchemeCoh.ProjSpace MvPolynomial
 
-attribute [local instance] MvPolynomial.gradedAlgebra
-
 private theorem chart_cover {R : Type} [CommRing R] (I : Ideal R) {M : ℕ} (a : Fin (M + 1) → ↥I)
     (h : Ideal.span (Set.range fun l => (a l : R)) = I) :
     ⨆ m, (affineBlowupChart I (a m) ''ᵁ ⊤) = ⊤ := by
@@ -1213,8 +1211,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor FunctorialResolution.Blowup
 open GroundTheory.Arith.SchemeCoh GroundTheory.Arith.SchemeCoh.ProjSpace MvPolynomial
 
-attribute [local instance] MvPolynomial.gradedAlgebra
-
 theorem UpperTheory.restrict_mem_nonZeroDivisors_of_isAffineOpen :
     ∀ {W : Scheme.{0}} {V O : W.Opens}, IsAffineOpen V → ∀ (h : O ≤ V) (t : Γ(W, V)), t ∈ nonZeroDivisors Γ(W, V) →
         W.presheaf.map (homOfLE h).op t ∈ nonZeroDivisors Γ(W, O) := by
@@ -1244,8 +1240,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor FunctorialResolution.Blowup
 open GroundTheory.Arith.SchemeCoh GroundTheory.Arith.SchemeCoh.ProjSpace MvPolynomial
-
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 theorem UpperTheory.sections_generated_over_affine_product_cover :
     ∀ {S Z P W : Scheme.{0}} [IsAffine S] (p : Z ⟶ S) (q : P ⟶ S) (π : W ⟶ Z) (f : W ⟶ P)

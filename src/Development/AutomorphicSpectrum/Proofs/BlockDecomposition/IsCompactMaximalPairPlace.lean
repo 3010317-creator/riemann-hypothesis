@@ -54,8 +54,6 @@ open GlobalTheory.CuspRep GlobalTheory.PRep GlobalTheory.UnitaryBC GlobalTheory.
 open PositivityTheory.Rg.BcB.F.RS PositivityTheory.Rg.BcB.F.Tail PositivityTheory.Rg.BcB.F PositivityTheory.Rg.BcB.F.FA
 open scoped Classical
 
-attribute [local instance] borelG borelF borelH
-
 namespace GlobalTheory.CompanionTheory.FmPowP
 
 section Generic

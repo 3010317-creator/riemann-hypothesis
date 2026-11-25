@@ -157,8 +157,6 @@ open scoped ContDiff ComplexConjugate InnerProductSpace
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 namespace GlobalTheory.CompanionTheory.WaveMult
 
 theorem gser_mul_prod : ∀ (n : ℕ) (c : Fin n → ℂ),

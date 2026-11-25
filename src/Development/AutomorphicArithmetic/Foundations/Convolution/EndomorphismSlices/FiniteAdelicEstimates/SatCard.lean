@@ -50,8 +50,6 @@ open scoped Classical
 
 
 
-attribute [local instance] borelG borelF borelA borelH
-
 theorem UpperTheory.Zero.ConvolutionTheory.EB.satCard :
     UpperTheory.Zero.ConvolutionTheory.EB.SatCard := by
   intro E _ _ _ n D w B h
