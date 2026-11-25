@@ -10,8 +10,6 @@ open CategoryTheory AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp spMap)
 open GlobalTheory.DeRham GlobalTheory.PDiv
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.PtExt
 
 variable {R : Type} [CommRing R]

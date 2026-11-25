@@ -56,8 +56,6 @@ open scoped ComplexOrder
 
 namespace GlobalTheory.LieMet
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 section Gram
 
 variable {M : Type} [AddCommGroup M] [Module ℂ M] {n : Type} [Fintype n]

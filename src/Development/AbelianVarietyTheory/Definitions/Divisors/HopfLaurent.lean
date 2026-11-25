@@ -12,8 +12,6 @@ noncomputable section
 open CategoryTheory AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.AbTan
 
 variable {R : Type} [CommRing R]

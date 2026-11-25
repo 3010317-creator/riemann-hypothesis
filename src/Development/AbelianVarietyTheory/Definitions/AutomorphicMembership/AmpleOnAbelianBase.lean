@@ -58,8 +58,6 @@ open Formalism.MainNotions.DIV.Cons (intO)
 
 namespace GlobalTheory.ShFam.Pad
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 section Lattices
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {X : Scheme.{0}}

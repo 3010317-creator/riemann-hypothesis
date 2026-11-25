@@ -34,7 +34,6 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory.KerPow
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.TwistCompare
 
@@ -95,8 +94,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan GlobalTheory.ZM GlobalTheory.SiegelTor GlobalTheory.TorRef
 open scoped CategoryTheory.Obj
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.PolDeg
 

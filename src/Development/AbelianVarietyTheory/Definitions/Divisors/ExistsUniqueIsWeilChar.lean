@@ -29,7 +29,6 @@ section -- clump:auto
 noncomputable section
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry TensorProduct
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.ChTor
 
 namespace GlobalTheory.ChTor
@@ -95,7 +94,6 @@ open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj Alg
 open scoped CategoryTheory.Obj CategoryTheory.MonObj TensorProduct NNReal
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Pdiv ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory.ChTor GlobalTheory.EigenSplit GlobalTheory.KernelNoTorsion GlobalTheory.HodgeTateImage
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.HTLat
 

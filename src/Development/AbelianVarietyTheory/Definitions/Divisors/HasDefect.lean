@@ -18,8 +18,6 @@ open GlobalTheory.KS (rsT pbT C1 IsCoc IsCob)
 open GlobalTheory.LogKS (IsField)
 open GlobalTheory.RayEv (Ray)
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.Heat
 
 abbrev Fld (Z : Scheme.{0}) : Type := ∀ O : Z.Opens, Γ(Z, O) → Γ(Z, O)

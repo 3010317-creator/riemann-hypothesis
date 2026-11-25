@@ -55,8 +55,6 @@ open scoped ComplexOrder
 
 namespace GlobalTheory.ShFam
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 section Manifold
 
 variable {k : Type} [CommRing k] {Y : Scheme.{0}} {p : Y ⟶ Sp k} {σ σ' : k →+* ℂ} {d : ℕ}

@@ -119,8 +119,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.FlagMod (GChart ev tau tau_le le_preimage_comp)
 open scoped LaurentSeries
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.RigRescale
 
 open GlobalTheory GlobalTheory.ArchMetricCompare
@@ -431,8 +429,6 @@ open MonoidalCategory CartesianMonoidalCategory MonObj
 noncomputable section
 
 namespace GlobalTheory.ArcLieCoord
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem zeroPt_sc {S : Type} [CommRing S] (c : S) : GlobalTheory.PowLie.zeroPt S ≫ GlobalTheory.PowLie.sc c = GlobalTheory.PowLie.zeroPt S := by
   ext1

@@ -15,8 +15,6 @@ open GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan GlobalTheory.ZM
 open scoped CategoryTheory.Obj
 open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.Poinc.Sep
 
 variable {V V₁ : Type} [CommRing V] [IsDomain V] [CommRing V₁] [IsDomain V₁]
