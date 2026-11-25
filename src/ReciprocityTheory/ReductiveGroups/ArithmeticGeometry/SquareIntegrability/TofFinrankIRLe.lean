@@ -123,10 +123,7 @@ theorem tof_uMap_sep [IsCMField E] {X : PT E} {DF : ℕ} (P : Par X DF) {I : Sub
   have hb := hI.sep (x - x') (X.L.sub_mem hx hx') (uMap I (x - x')) (isU_uMap I (x - x')) hne'
   have h1 : (1 : ℝ) ≤ ‖uMap I (x - x')‖ ^ 2 := le_trans P.C2 hb
   rw [hsub]
-  by_contra hlt
-  have hlt' : ‖uMap I (x - x')‖ < 1 := lt_of_not_ge hlt
-  have h0 := norm_nonneg (uMap I (x - x'))
-  linarith [pow_lt_pow_left₀ hlt' h0 two_ne_zero]
+  exact ((one_le_sq_iff_one_le_abs _).1 h1).trans_eq (abs_norm _)
 
 theorem tof_finrank_IR_le [IsCMField E] {X : PT E} {DF : ℕ} (P : Par X DF) {I : Submodule ℤ (Vsp X.dim)}
     (hI : IsSplit P I) : Module.finrank ℝ (IR I) ≤ dstar (E := E) P.m := by
