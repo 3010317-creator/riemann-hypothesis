@@ -58,11 +58,6 @@ open GlobalTheory.CMVal (eulerFactor IsHeckeL)
 
 namespace GlobalTheory.Published
 
-/-- **Hecke analytic continuation for partial L-functions**: the partial Hecke $L$-function
-obtained by removing any finite set of places extends meromorphically to the entire complex plane.
-
-Proposed reference:
-[E. Hecke, *Analytische Funktionen und algebraische Zahlen*][hecke1924analytische]. -/
 def HeckeLPartialContinuation : Prop :=
   ∀ (K : Type) [Field K] [NumberField K] (T : Set (HeightOneSpectrum (𝓞 K))), T.Finite →
     (∀ χ : HChar K, χ.IsUnitary → (¬ ∃ t : ℝ, IsNormPow χ t) →

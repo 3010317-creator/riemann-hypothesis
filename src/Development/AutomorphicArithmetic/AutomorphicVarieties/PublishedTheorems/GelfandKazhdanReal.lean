@@ -49,11 +49,6 @@ open scoped Matrix
 
 namespace UpperTheory.V.Published
 
-/-- **Clozel's purity theorem for cohomological representations**: any regular algebraic cuspidal
-automorphic representation of $GL_n$ over a number field is pure and corresponds to a motive.
-
-Proposed reference:
-[L. Clozel, *Motifs et formes automorphes: applications du principe de fonctorialit\'e*][clozel1990motifs]. -/
 def ClozelCohC : Prop :=
   ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ), 1 ≤ a →
     ∀ (π : CuspSub E a) (Ξ : GlobalTheory.GKCoh.AlgRep E a),

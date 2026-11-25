@@ -82,12 +82,6 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.HolDS
 
-/-- **Harish-Chandra classification of holomorphic discrete series**: a semisimple Lie
-group `G` admits holomorphic discrete series representations if and only if the associated
-symmetric space `G/K` is Hermitian.
-
-Proposed reference:
-[Harish-Chandra, *Representations of semisimple Lie groups. V*][harishChandra1956hds]. -/
 def HolomorphicDiscreteSeries : Prop :=
   ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ), IsHCParam lam → IsHolChamber ε lam →
     ∀ (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)),

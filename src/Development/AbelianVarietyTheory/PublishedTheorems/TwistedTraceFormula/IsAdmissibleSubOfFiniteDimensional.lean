@@ -132,12 +132,6 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.GKModule
 
-/-- **Harish-Chandra's infinitesimal equivalence theorem**: two irreducible admissible
-representations of a real reductive Lie group are unitarily equivalent if and only if their
-underlying $(\mathfrak{g}, K)$-modules are isomorphic.
-
-Proposed reference:
-[Harish-Chandra, *Representations of semisimple Lie groups. II*][harishChandra1953rep2]. -/
 def AdmissibleClosure : Prop :=
   ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)), IsURepOn (UJset ε) σ →

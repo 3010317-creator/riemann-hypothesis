@@ -49,13 +49,6 @@ open scoped ContDiff ENNReal Matrix
 
 namespace GlobalTheory.Published
 
-/-- **Borel--Harish-Chandra Theorem on the Finite Covolume of Arithmetic Unitary Groups**.
-
-Let $E$ be a CM number field and let $G$ be an algebraic unitary group defined over $E$.
-Then any arithmetic subgroup $\Gamma \subset G(E)$ has finite covolume in the adelic / real points $G(\mathbb{A}_E)$,
-meaning there exists a fundamental domain $\Omega$ of finite Haar measure.
-
-Reference: [borelHarishChandra1962]. -/
 def UnitaryFiniteCovolume (E : Type) [Field E] [NumberField E] [IsCMField E] : Prop :=
   ∀ (r : ℕ) (X : Data E r) (H : Subgroup (X.Ψ → GL (Fin r) ℂ)),
     (∀ g, g ∈ H ↔ X.IsUnitaryC fun τ => (g τ : Matrix (Fin r) (Fin r) ℂ)) →

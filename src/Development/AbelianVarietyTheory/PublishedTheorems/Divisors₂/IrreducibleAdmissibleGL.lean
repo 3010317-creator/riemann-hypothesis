@@ -53,13 +53,6 @@ open GlobalTheory.PRep GlobalTheory.SmGL
 
 namespace GlobalTheory.Published
 
-/-- **Bernstein's Admissibility Theorem for $\mathrm{GL}_n$**.
-
-Every irreducible smooth representation $\pi$ of the general linear group $\mathrm{GL}_n(k)$ over a
-non-Archimedean local field $k$ is admissible, meaning that for every compact open subgroup $K$,
-the subspace of fixed vectors $V^K$ is finite-dimensional.
-
-Reference: [bernstein1974]. -/
 def IrreducibleAdmissibleGL : Prop :=
   ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : ℕ)
     (V : Type) [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin n) k) V),

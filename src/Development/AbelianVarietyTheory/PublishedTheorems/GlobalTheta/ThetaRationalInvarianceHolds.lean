@@ -46,11 +46,6 @@ open scoped BigOperators
 
 namespace GlobalTheory.Published
 
-/-- **Siegel's theorem on rational invariance of theta series**: theta series attached to
-rational indefinite quadratic forms transform invariantly under the rational orthogonal group.
-
-Proposed reference:
-[C. L. Siegel, *Indefinite quadratische Formen und Funktionentheorie. I*][siegel1951indefinite]. -/
 def ThetaRationalInvariance : Prop :=
   ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ), Crv D cc δ → ∀ N N' : ℕ, Even (N * N') →
     ∀ e0 ∈ Th D (tor0 D cc δ) (stdL D N) (stdL D N'), ∀ W : WeilO D cc δ N N' e0,

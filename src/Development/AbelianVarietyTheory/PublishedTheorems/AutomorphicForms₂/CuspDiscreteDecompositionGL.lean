@@ -125,13 +125,6 @@ end GlobalTheory.CuspRep.CuspidalL2GL
 
 namespace GlobalTheory.Published
 
-/-- **Gelfand--Graev--Piatetski-Shapiro Cuspidal Spectrum Decomposition**.
-
-Let $E$ be a number field and let $G = \mathrm{GL}_n(\mathbb{A}_E)$ be the adelic general linear group.
-The cuspidal space $L^2_{\mathrm{cusp}}(G(E) \backslash G(\mathbb{A}_E))$ decomposes discretely into a Hilbert
-direct sum of irreducible unitary representations of $G(\mathbb{A}_E)$, each occurring with finite multiplicity.
-
-Reference: [gelfandPiatetskiShapiro1962]. -/
 def CuspDiscreteDecompositionGL : Prop :=
   ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (μ : Measure (GA E a)) [μ.IsHaarMeasure]
     [μ.IsMulRightInvariant], IsDiscreteSum (Rcusp μ)

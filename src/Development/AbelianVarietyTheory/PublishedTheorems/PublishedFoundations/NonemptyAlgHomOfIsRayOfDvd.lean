@@ -54,11 +54,6 @@ open NumberField IsDedekindDomain GlobalTheory.NT GlobalTheory.FieldSize
 
 namespace GlobalTheory.Published
 
-/-- **Takagi existence theorem**: for every congruence subgroup $H$ of ideal classes modulo
-a cycle $\mathfrak{m}$, there exists a unique abelian extension whose Artin group is $H$.
-
-Proposed reference:
-[T. Takagi, *\"Uber eine Theorie des relativ-Abel'schen Zahlk\"orpers*][takagi1920existence]. -/
 def RayClassFieldSt : Prop := GlobalTheory.NT.RayField
 
 theorem rayClassFieldSt_iff_artinIso : RayClassFieldSt ↔

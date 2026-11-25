@@ -70,11 +70,6 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.HeckeOne
 
-/-- **Hecke's non-vanishing theorem**: for any non-trivial Grossencharacter `\chi` of a number
-field, the Hecke $L$-function `L(s, \chi)` is entire and non-zero at `s = 1`.
-
-Proposed reference:
-[E. Hecke, *Eine neue Art von Zetafunktionen und ihre Beziehungen zur Verteilung der Primzahlen. II*][hecke1920zeta]. -/
 def HeckeLEntireAndNonzeroAtOne : Prop :=
   ∀ (K : Type) [Field K] [NumberField K] (χ : HChar K), χ.IsUnitary →
     ((¬ ∃ t : ℝ, IsNormPow χ t) → ∃ Λ : ℂ → ℂ, IsHeckeL χ Λ) ∧
