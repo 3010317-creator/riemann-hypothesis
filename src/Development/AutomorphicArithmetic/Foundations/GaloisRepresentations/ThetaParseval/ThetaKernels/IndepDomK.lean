@@ -23,6 +23,7 @@ public import Formalism.LocalToGlobal.IndefiniteReal.PHeisFC
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.AdeleLC
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.T2SpaceTensorProductFiniteExtension
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TopoAF
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilTransportAdelicSchwartzCmExtension
 
 /-! # IndepDomK: Consolidated global theta-kernel definitions and proofs (IndepDomK). -/
 @[expose] public section
@@ -117,7 +118,7 @@ theorem parseval_rational_pairing : ∀ {F E : Type} [Field F] [NumberField F] [
   have hmem : ∀ a : ℂ, Φ₁ + a • Φ₂ ∈ schA F (Fin N) := fun a => add_mem hΦ₁ (Submodule.smul_mem _ a hΦ₂)
   have hth : ∀ a : ℂ, thV B.ψ (Φ₁ + a • Φ₂) = fun w => thV B.ψ Φ₁ w + a * thV B.ψ Φ₂ w := by
     intro a
-    rw [thV_add hR hψ (_root_.GlobalTheory.SchwartzDecay.decay_of_mem_schA F N Φ₁ hΦ₁)
+    rw [GlobalTheory.TransportF.thV_add hR hψ (_root_.GlobalTheory.SchwartzDecay.decay_of_mem_schA F N Φ₁ hΦ₁)
       (GlobalTheory.SchwartzDecay.decay_smul a (_root_.GlobalTheory.SchwartzDecay.decay_of_mem_schA F N Φ₂ hΦ₂)),
       thV_smul]
     rfl
