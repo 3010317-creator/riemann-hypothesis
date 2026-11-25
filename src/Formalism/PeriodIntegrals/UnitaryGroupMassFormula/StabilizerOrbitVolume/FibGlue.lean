@@ -140,12 +140,7 @@ theorem isCc_add {φ ψ : V → ℝ} (hφ : IsCcOn U φ) (hψ : IsCcOn U ψ) : I
   ⟨hφ.1.add hψ.1, hφ.2.1.add hψ.2.1, (tsupport_add φ ψ).trans (union_subset hφ.2.2 hψ.2.2)⟩
 
 theorem isCc_smul (c : ℝ) {φ : V → ℝ} (hφ : IsCcOn U φ) : IsCcOn U (c • φ) := by
-  have hs : Function.support (c • φ) ⊆ Function.support φ := by
-    intro x hx
-    rw [Function.mem_support] at hx ⊢
-    intro h0
-    apply hx
-    simp only [Pi.smul_apply, h0, smul_zero]
+  have hs := Function.support_const_smul_subset c φ
   exact ⟨hφ.1.const_smul c, hφ.2.1.mono hs, (closure_mono hs).trans hφ.2.2⟩
 
 theorem G_add (hD : DensAll μ f ι ν U) {φ ψ : V → ℝ} (hφ : IsCcOn U φ) (hψ : IsCcOn U ψ) :
