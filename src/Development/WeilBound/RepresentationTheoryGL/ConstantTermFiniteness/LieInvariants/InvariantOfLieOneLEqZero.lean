@@ -34,6 +34,7 @@ public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOfIsOpenStab
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsGrowthUniform
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsMonicAevalMemOfLeSup
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InvariantOfLieOneLEqZero
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GenericFiniteByInduction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -74,7 +75,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InvariantOfLieOneLEqZero
 
 @[expose] public section
 

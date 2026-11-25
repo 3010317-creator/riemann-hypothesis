@@ -50,6 +50,7 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Foundations.NormEulerPolySubOneLe
 import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.AbsPowOneNotIsAlgRat
 import Development.AutomorphicArithmetic.IntegralCasts.IsOpenStabOfMemNhds
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ResiduallyFiniteUnitOff
 import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.ReduceModChar
@@ -58,7 +59,6 @@ import Mathlib.Tactic.Basify
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Algebra.Order.Star.Int
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ResiduallyFiniteUnitOff
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.NotIsUnitaryAbsPow, Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PStringStepA, Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PStringStepD, Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.SdNormCpow, Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PStringStep
