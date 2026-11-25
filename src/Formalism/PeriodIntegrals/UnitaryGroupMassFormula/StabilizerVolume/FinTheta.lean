@@ -58,6 +58,18 @@ theorem crd_mul (R : Type) [CommRing R] [Algebra F R] (y z : R ⊗[F] E) (k : Fi
 
 end Coord
 
+theorem le_triple_sum_of_nonneg {ι κ ν : Type} [Fintype ι] [Fintype κ] [Fintype ν] (f : ι → κ → ν → ℝ)
+    (hf : ∀ i j k, 0 ≤ f i j k) (i : ι) (j : κ) (k : ν) : f i j k ≤ ∑ i, ∑ j, ∑ k, f i j k := by
+  calc f i j k ≤ ∑ k, f i j k :=
+        Finset.single_le_sum (f := fun k => f i j k) (fun _ _ => hf _ _ _) (Finset.mem_univ k)
+    _ ≤ ∑ j, ∑ k, f i j k :=
+        Finset.single_le_sum (f := fun j => ∑ k, f i j k)
+          (fun _ _ => Finset.sum_nonneg fun _ _ => hf _ _ _) (Finset.mem_univ j)
+    _ ≤ _ :=
+        Finset.single_le_sum (f := fun i => ∑ j, ∑ k, f i j k)
+          (fun _ _ => Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => hf _ _ _)
+          (Finset.mem_univ i)
+
 section Bounds
 
 variable {F E : Type} [Field F] [Field E] [Algebra F E] {d : ℕ} (b : Module.Basis (Fin d) F E)
@@ -123,17 +135,8 @@ theorem exists_bound_crd {R K : Type} [CommRing R] [Algebra F R] [TopologicalSpa
       continuous_finsetSum _ fun k _ => hc i j k
   obtain ⟨C, hC⟩ := hS.exists_bound_of_continuousOn hf.continuousOn
   refine ⟨max C 0, le_max_right _ _, fun Y hY i j k => ?_⟩
-  have h1 : ‖φ (crd b R (Y i j) k)‖ ≤ ∑ i, ∑ j, ∑ k, ‖φ (crd b R (Y i j) k)‖ := by
-    calc ‖φ (crd b R (Y i j) k)‖ ≤ ∑ k, ‖φ (crd b R (Y i j) k)‖ :=
-          Finset.single_le_sum (f := fun k => ‖φ (crd b R (Y i j) k)‖)
-            (fun _ _ => norm_nonneg _) (Finset.mem_univ k)
-      _ ≤ ∑ j, ∑ k, ‖φ (crd b R (Y i j) k)‖ :=
-          Finset.single_le_sum (f := fun j => ∑ k, ‖φ (crd b R (Y i j) k)‖)
-            (fun _ _ => Finset.sum_nonneg fun _ _ => norm_nonneg _) (Finset.mem_univ j)
-      _ ≤ _ :=
-          Finset.single_le_sum (f := fun i => ∑ j, ∑ k, ‖φ (crd b R (Y i j) k)‖)
-            (fun _ _ => Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => norm_nonneg _)
-            (Finset.mem_univ i)
+  have h1 : ‖φ (crd b R (Y i j) k)‖ ≤ ∑ i, ∑ j, ∑ k, ‖φ (crd b R (Y i j) k)‖ :=
+    le_triple_sum_of_nonneg (fun i j k => ‖φ (crd b R (Y i j) k)‖) (fun _ _ _ => norm_nonneg _) i j k
   have h2 := hC Y hY
   rw [Real.norm_eq_abs] at h2
   exact h1.trans ((le_abs_self _).trans (h2.trans (le_max_left _ _)))
@@ -245,18 +248,6 @@ theorem finite_bdd (S : Finset (HeightOneSpectrum (𝓞 F))) (C : HeightOneSpect
 end Finite
 
 section Main
-
-theorem le_triple_sum_of_nonneg {ι κ ν : Type} [Fintype ι] [Fintype κ] [Fintype ν] (f : ι → κ → ν → ℝ)
-    (hf : ∀ i j k, 0 ≤ f i j k) (i : ι) (j : κ) (k : ν) : f i j k ≤ ∑ i, ∑ j, ∑ k, f i j k := by
-  calc f i j k ≤ ∑ k, f i j k :=
-        Finset.single_le_sum (f := fun k => f i j k) (fun _ _ => hf _ _ _) (Finset.mem_univ k)
-    _ ≤ ∑ j, ∑ k, f i j k :=
-        Finset.single_le_sum (f := fun j => ∑ k, f i j k)
-          (fun _ _ => Finset.sum_nonneg fun _ _ => hf _ _ _) (Finset.mem_univ j)
-    _ ≤ _ :=
-        Finset.single_le_sum (f := fun i => ∑ j, ∑ k, f i j k)
-          (fun _ _ => Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => hf _ _ _)
-          (Finset.mem_univ i)
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E]
 
