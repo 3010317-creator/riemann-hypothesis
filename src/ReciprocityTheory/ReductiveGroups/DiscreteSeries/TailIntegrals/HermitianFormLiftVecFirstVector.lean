@@ -1,5 +1,6 @@
 module
 
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TailIntegrals.GoodRowsProjectorApplyEqSum
 public import Formalism.HermitianCurvature.WeylElementCommutesLevelOne
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TailIntegrals.MatExtBvec
 import Mathlib.RingTheory.PiTensorProduct
@@ -78,22 +79,7 @@ private lemma sum_eq_sum_sh_of_zero_at_edges (F : Fin (2 * (1 + r') + k + 1) →
 
 theorem hpk_lv (v : Fin (2 * r' + k + 1) → ℂ) :
     Hpk k (1 + r') *ᵥ liftVec k 1 r' v = liftVec k 1 r' (Hpk k r' *ᵥ v) := by
-  funext p
-  simp only [Matrix.mulVec, dotProduct]
-  refine (sum_eq_sum_sh_of_zero_at_edges _ ?_).trans ?_
-  · intro j hj
-    have h0 : ¬(1 ≤ j.val ∧ j.val < 2 * r' + k + 1 + 1) := by omega
-    simp only [liftVec, dif_neg h0, mul_zero]
-  · simp only [lv_in]
-    by_cases hp : p.val = 0 ∨ p.val = 2 * (1 + r') + k
-    · have h0 : ¬(1 ≤ p.val ∧ p.val < 2 * r' + k + 1 + 1) := by omega
-      simp only [hpk_out p hp, zero_mul, Finset.sum_const_zero, liftVec, dif_neg h0]
-    · have hp' : p = sh ⟨p.val - 1, by have := p.isLt; omega⟩ := by
-        ext
-        simp only [sh, Fin.val_mk]
-        omega
-      rw [hp']
-      simp only [hpk_sh, lv_in, Matrix.mulVec, dotProduct]
+  apply ReciprocityTheory.ChartRestriction.DS.Xi.StepA.Hpk_lift <;> assumption
 
 theorem herm_lv (v w : Fin (2 * r' + k + 1) → ℂ) :
     herm (Hpk k (1 + r')) (liftVec k 1 r' v) (liftVec k 1 r' w) = herm (Hpk k r') v w := by
