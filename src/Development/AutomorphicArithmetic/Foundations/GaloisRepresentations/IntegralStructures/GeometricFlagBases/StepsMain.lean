@@ -88,7 +88,6 @@ open UpperTheory.V.Af (algSat tw)
 open UpperTheory.Gal.TP.Sub (Cl unrPol)
 open UpperTheory.Gal.crystallineComparison (heckePol rootPol)
 open UpperTheory.Gal.Int.Div (CrysAt PhiKilled HTRichEx JumpsOcc VBase)
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 private theorem aeval_smul_prod {K : Type} [Field K] {n : ℕ} (M : Matrix (Fin n) (Fin n) K) (c : K) (S : Multiset K) :
     aeval (c • M) ((S.map fun b => X - C (b * c)).prod) =
@@ -160,7 +159,6 @@ open UpperTheory.V.Af (algSat tw)
 open UpperTheory.Gal.TP.Sub (Cl unrPol)
 open UpperTheory.Gal.crystallineComparison (heckePol rootPol)
 open UpperTheory.Gal.Int.Div (CrysAt PhiKilled HTRichEx JumpsOcc VBase)
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 theorem UpperTheory.Gal.Int.Geo.jumpsOf :
     UpperTheory.Gal.Int.Geo.JumpsOf := by
@@ -995,7 +993,6 @@ open UpperTheory.V.Af (algSat tw)
 open UpperTheory.Gal.TP.Sub (Cl unrPol)
 open UpperTheory.Gal.crystallineComparison (heckePol rootPol)
 open UpperTheory.Gal.Int.Div (CrysAt PhiKilled HTRichEx JumpsOcc VBase)
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 private theorem norm_lt_one_iff_mem {E : Type} [Field E] [NumberField E] {l : ℕ} [Fact l.Prime] (τ : E →+* Om l)
     (v : HeightOneSpectrum (𝓞 E)) (hv : ∀ x ∈ v.asIdeal, ‖τ (x : E)‖ < 1) (x : 𝓞 E) :
@@ -1081,7 +1078,6 @@ open UpperTheory.V.Af (algSat tw)
 open UpperTheory.Gal.TP.Sub (Cl unrPol)
 open UpperTheory.Gal.crystallineComparison (heckePol rootPol)
 open UpperTheory.Gal.Int.Div (CrysAt PhiKilled HTRichEx JumpsOcc VBase)
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 theorem UpperTheory.Gal.Int.Geo.twCrys :
     UpperTheory.Gal.Int.Geo.TwCrys := by
@@ -1116,7 +1112,6 @@ open UpperTheory.V.Af (algSat tw)
 open UpperTheory.Gal.TP.Sub (Cl unrPol)
 open UpperTheory.Gal.crystallineComparison (heckePol rootPol)
 open UpperTheory.Gal.Int.Div (CrysAt PhiKilled HTRichEx JumpsOcc VBase)
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 theorem UpperTheory.Gal.Int.Geo.twJ :
     UpperTheory.Gal.Int.Geo.TwJ := by
@@ -1155,7 +1150,6 @@ open UpperTheory.V.Af (algSat tw)
 open UpperTheory.Gal.TP.Sub (Cl unrPol)
 open UpperTheory.Gal.crystallineComparison (heckePol rootPol)
 open UpperTheory.Gal.Int.Div (CrysAt PhiKilled HTRichEx JumpsOcc VBase)
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 private theorem unrPol_neg_one (S : Multiset ℂ) : unrPol S (-1) = rootPol S := by
   simp [unrPol, rootPol]

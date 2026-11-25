@@ -1743,7 +1743,6 @@ namespace GlobalTheory.ReBase
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
   {B : Base F E} {a a' : ℕ} {G : Geo σ a a'} {X : Chars F E} {V : Spc F E a} {V' : Spc F E a'} {Z : Spc F E (a + a')}
 variable {om : Rep σ G.V G.W} {om' : Rep σ G.V' G.W}
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField in
 theorem rebase_finite_scalar (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs) {R R₂ : RealMaps F a a'} {Rf S : FinMaps F a a'}
     (hM : IsMatched B G X om om' R Rf) (hM₂ : IsMatched B (reG G V V' Z) X om om' R₂ S) :
     ∃ (ψ : ∀ v, Rf.Pi v ≃ₗ[ℂ] S.Pi v) (l : Pl F → ℂ), (∀ v ∉ X.T, l v = 1) ∧

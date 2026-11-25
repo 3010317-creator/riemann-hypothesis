@@ -285,12 +285,6 @@ def frobCoset (r : ℕ) : Set (Weil h) := {τ | deg τ = -(r : ℤ)}
 
 
 
-section Artin
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-end Artin
-
 
 variable (h) in
 abbrev VR : Type := IrrW h →₀ ℚ
@@ -320,8 +314,6 @@ noncomputable section
 open NumberField IsDedekindDomain ValuativeRel Matrix Polynomial Formalism.ConjugateSelfDual ReciprocityTheory.Gal
 open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.LocGL GlobalTheory.WeilDeligne GlobalTheory.LocLanglands UpperTheory.Zero.LLC
 open scoped TensorProduct
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace UpperTheory.V.Z.Win.Extra
 

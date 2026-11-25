@@ -169,8 +169,6 @@ set_option linter.unusedVariables false
 
 namespace GlobalTheory.RowsFive
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 section Fam
 
 variable {eps : ℝ} (Fm : FamP eps) (C1 : ℝ) (X : ∀ x, Fm.x1 < x → ∀ i : Fm.Ix x, TermTie (Fm.D x i))
@@ -1533,8 +1531,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.S Finset
 
 namespace GlobalTheory.CritLevelGap
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 open GlobalTheory.CritLevel
 
 theorem sq_le_two_pow (k : ℕ) (hk : 4 ≤ k) : k ^ 2 ≤ 2 ^ k := by
@@ -1739,8 +1735,6 @@ open scoped Classical
 open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.Cnt Formalism.L2.SG.HidaSetting Formalism.L2.SG.Full
   Formalism.L2.SG.RowsConc Formalism.L2.SG.PackageTie2 Formalism.L2.SG.TermTieOf Formalism.L2.SG.LoopTieOf Formalism.L2.SG.LoopsFinal Formalism.FourierDecayAlt
   Formalism.L2.SG.ThmSOwn Formalism.L2.SG.LoopsTies Formalism.L2.SG
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {𝒞 : FamClass} (sel : SSel 𝒞)
 
