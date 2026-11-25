@@ -2,6 +2,7 @@ module
 
 public import Mathlib.RingTheory.AdicCompletion.RingHom
 public import Mathlib.RingTheory.PowerSeries.Log
+import GroundTheory.PAdicHodge.LogPowSeries
 import Mathlib.Tactic.TypeStar
 public import Mathlib.Algebra.Algebra.Rat
 
@@ -13,7 +14,7 @@ noncomputable section
 
 namespace GroundTheory.PAdicHodge
 
-open PowerSeries
+open _root_.PowerSeries
 
 section TruncEval
 
@@ -189,49 +190,6 @@ end SeriesEval
 
 section Log
 
-theorem one_add_X_mul_geom : (1 + X : ℚ⟦X⟧) * mk (fun n => algebraMap ℚ ℚ ((-1) ^ n)) = 1 := by
-  ext n
-  rw [add_mul, one_mul, map_add (f := _), coeff_one]
-  rcases n with _ | n
-  · simp
-  · rw [coeff_succ_X_mul, coeff_mk, coeff_mk, ite_eq_right (Nat.succ_ne_zero n)]
-    simp [pow_succ]
-
-theorem log_subst_one_add_X_pow_sub_one (k : ℕ) :
-    (log ℚ).subst ((1 + X) ^ k - 1 : ℚ⟦X⟧) = (k : ℚ⟦X⟧) * log ℚ := by
-  have hg : constantCoeff ((1 + X) ^ k - 1 : ℚ⟦X⟧) = 0 := by simp
-  have hS := HasSubst.of_constantCoeff_zero' hg
-  apply derivative.ext
-  · set G : ℚ⟦X⟧ := mk (fun n => (-1 : ℚ) ^ n) with hG
-    have hsub : ((1 + X : ℚ⟦X⟧) ^ k) * G.subst ((1 + X) ^ k - 1 : ℚ⟦X⟧) = 1 := by
-      have h := congrArg (substAlgHom hS) one_add_X_mul_geom
-      rw [map_mul, map_one, map_add (f := _), map_one, coe_substAlgHom, subst_X hS, add_sub_cancel] at h
-      exact h
-    rw [derivative_subst hS, derivative_log, ← hG]
-    have hd : d⁄dX ((k : ℚ⟦X⟧) * log ℚ) = (k : ℚ⟦X⟧) * G := by
-      rw [Derivation.leibniz, derivative_log, ← hG, Derivation.map_natCast, smul_zero, add_zero,
-        smul_eq_mul]
-    rw [hd, map_sub, derivative_pow, derivative_one, sub_zero, map_add (f := _), derivative_one,
-      derivative_X, zero_add, mul_one]
-    have hne : ((1 + X : ℚ⟦X⟧) ^ k) ≠ 0 := by
-      refine pow_ne_zero _ fun h => ?_
-      have := congrArg constantCoeff h
-      simp at this
-    apply mul_left_cancel₀ hne
-    rcases k with _ | k
-    · simp
-    · have h1 : (1 + X : ℚ⟦X⟧) * G = 1 := one_add_X_mul_geom
-      calc (1 + X : ℚ⟦X⟧) ^ (k + 1) * (G.subst ((1 + X) ^ (k + 1) - 1 : ℚ⟦X⟧) *
-              (((k + 1 : ℕ) : ℚ⟦X⟧) * (1 + X) ^ (k + 1 - 1)))
-          = ((1 + X : ℚ⟦X⟧) ^ (k + 1) * G.subst ((1 + X) ^ (k + 1) - 1 : ℚ⟦X⟧)) *
-              (((k + 1 : ℕ) : ℚ⟦X⟧) * (1 + X) ^ k) := by rw [Nat.add_sub_cancel]; ring
-        _ = ((k + 1 : ℕ) : ℚ⟦X⟧) * (1 + X) ^ k * ((1 + X) * G) := by rw [hsub, h1]; ring
-        _ = (1 + X : ℚ⟦X⟧) ^ (k + 1) * (((k + 1 : ℕ) : ℚ⟦X⟧) * G) := by ring
-  · have h0 : MvPowerSeries.constantCoeff ((1 + X) ^ k - 1 : ℚ⟦X⟧) = 0 := hg
-    have := constantCoeff_subst_eq_zero h0 (log ℚ) constantCoeff_log
-    rw [map_mul, constantCoeff_log, mul_zero]
-    exact this
-
 variable {B : Type*} [CommRing B] [Algebra ℚ B] {I : Ideal B} [IsAdicComplete I B]
 
 
@@ -257,8 +215,8 @@ theorem logOnePlus_sub_sum_mem {z : B} (hz : z ∈ I) (n : ℕ) :
 theorem logOnePlus_pow {z : B} (hz : z ∈ I) (k : ℕ) (hk : (1 + z) ^ k - 1 ∈ I) :
     logOnePlus I ((1 + z) ^ k - 1) hk = k * logOnePlus I z hz := by
   have hg : constantCoeff ((1 + X) ^ k - 1 : ℚ⟦X⟧) = 0 := by simp
-  rw [logOnePlus, seriesEval_subst hz hg hk (by simp), log_subst_one_add_X_pow_sub_one, map_mul,
-    map_natCast, logOnePlus]
+  rw [logOnePlus, seriesEval_subst hz hg hk (by simp),
+    GroundTheory.PAdicHodge.PowerSeries.log_subst_one_add_X_pow_sub_one, map_mul, map_natCast, logOnePlus]
 
 end Log
 
