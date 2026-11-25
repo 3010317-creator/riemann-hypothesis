@@ -69,16 +69,7 @@ theorem exists_smul_of_comp_eq {A B Ω : Type} [CommRing A] [CommRing B] [Algebr
     refine ⟨g, ?_⟩
     simpa [sub_eq_zero] using hg
   let H : G → AddSubgroup B := fun g =>
-    { carrier := {b | ψ b = φ (g • b)}
-      zero_mem' := by simp
-      add_mem' := by
-        intro a b ha hb
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
-        rw [map_add (f := _), smul_add, map_add (f := _), ha, hb]
-      neg_mem' := by
-        intro a ha
-        simp only [Set.mem_setOf_eq] at ha ⊢
-        rw [map_neg, smul_neg, map_neg, ha] }
+    (ψ.eqLocus (φ.comp (MulSemiringAction.toRingHom G B g))).toAddSubgroup
   obtain ⟨g, -, hg⟩ := AddSubgroup.exists_finiteIndex_of_leftCoset_cover
     (H := H) (g := fun _ => 0) (s := Finset.univ) (by
       rw [Set.eq_univ_iff_forall]

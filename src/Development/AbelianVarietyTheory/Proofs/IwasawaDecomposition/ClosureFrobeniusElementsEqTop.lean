@@ -36,21 +36,11 @@ theorem closure_frob_eq_top : ∀ (K L : Type) [Field K] [NumberField K] [Field 
     Subgroup.closure {σ : L ≃ₐ[K] L | ∃ v : HeightOneSpectrum (𝓞 K), v ∉ S ∧ IsFrob L v σ} = ⊤ := by
   intro K L _ _ _ _ _ _ S _ h
   set H := Subgroup.closure {σ : L ≃ₐ[K] L | ∃ v : HeightOneSpectrum (𝓞 K), v ∉ S ∧ IsFrob L v σ} with hH
-  have hn : H.Normal := by
-    refine ⟨fun n hn g => ?_⟩
-    induction hn using Subgroup.closure_induction with
-    | mem x hx =>
-      obtain ⟨v, hv, hx⟩ := hx
-      exact Subgroup.subset_closure ⟨v, hv, isFrob_conj hx g⟩
-    | one => simp
-    | mul x y _ _ hx hy =>
-      have := H.mul_mem hx hy
-      convert this using 1
-      group
-    | inv x _ hx =>
-      have := H.inv_mem hx
-      convert this using 1
-      group
+  have hn : H.Normal := Subgroup.normalizer_eq_top_iff.1 <| eq_top_iff.2 fun g _ =>
+    Subgroup.normalizer_le_normalizer_closure _ <|
+      Subgroup.mem_set_normalizer_iff.2 fun _ =>
+        ⟨fun ⟨v, hv, h⟩ => ⟨v, hv, isFrob_conj h g⟩,
+         fun ⟨v, hv, h⟩ => ⟨v, hv, by simpa [mul_assoc] using isFrob_conj h g⁻¹⟩⟩
   let F := IntermediateField.fixedField H
   have : IsGalois K F := IsGalois.of_fixedField_normal_subgroup H
   have : NumberField F := NumberField.of_module_finite K F

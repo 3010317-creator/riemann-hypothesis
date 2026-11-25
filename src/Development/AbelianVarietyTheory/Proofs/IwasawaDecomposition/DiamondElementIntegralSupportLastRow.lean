@@ -58,20 +58,12 @@ def kap (F : Type) {E : Type} [Field F] [NumberField F] [Field E] [NumberField E
 theorem le_val_pi {P : HeightOneSpectrum (𝓞 E)} {π : 𝓞 E} (h2 : π ∉ P.asIdeal ^ 2) {z : P.adicCompletion E}
     (hz : Valued.v z < 1) : Valued.v z ≤ Valued.v (algebraMap E (P.adicCompletion E) (algebraMap (𝓞 E) E π)) := by
   rw [valued_algebraMap, HeightOneSpectrum.valuation_of_algebraMap]
-  have h3 : ¬ P.intValuation π ≤ WithZero.exp (-((2 : ℕ) : ℤ)) := fun h =>
-    h2 ((P.intValuation_le_pow_iff_mem π 2).1 h)
-  rw [not_le] at h3
-  rcases eq_or_ne (Valued.v z) 0 with h0 | h0
-  · rw [h0]; exact zero_le'
-  have hp : P.intValuation π ≠ 0 := (lt_of_le_of_lt zero_le' h3).ne'
-  rw [← WithZero.exp_log h0] at hz ⊢
-  rw [← WithZero.exp_log hp] at h3 ⊢
-  rw [WithZero.exp_lt_exp] at h3
-  rw [WithZero.exp_le_exp]
-  have h4 : WithZero.log (Valued.v z) < 0 := by
-    rw [← WithZero.exp_lt_exp, WithZero.exp_zero]; exact hz
-  push_cast at h3
-  omega
+  have hz1 : Valued.v z ≤ WithZero.exp (-1 : ℤ) :=
+    (WithZero.lt_mul_exp_iff_le WithZero.exp_ne_zero).1
+      (by rwa [← WithZero.exp_add, neg_add_cancel, WithZero.exp_zero])
+  refine hz1.trans (not_lt.1 fun h => h2 ((P.intValuation_le_pow_iff_mem π 2).1 ?_))
+  exact (WithZero.lt_mul_exp_iff_le WithZero.exp_ne_zero).1
+    (by rw [← WithZero.exp_add, show -((2 : ℕ) : ℤ) + 1 = -1 by omega]; exact h)
 
 theorem val_eq_one {P : HeightOneSpectrum (𝓞 E)} {π : 𝓞 E} (h : π ∉ P.asIdeal) :
     Valued.v (algebraMap E (P.adicCompletion E) (algebraMap (𝓞 E) E π)) = 1 := by

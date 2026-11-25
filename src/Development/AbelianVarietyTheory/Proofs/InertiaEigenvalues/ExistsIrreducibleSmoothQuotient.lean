@@ -3,6 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsComp
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
+import Mathlib.RepresentationTheory.Stabilizer
 import Mathlib.Tactic.Linter.HaveILetI
 
 @[expose] public section
@@ -35,25 +36,7 @@ theorem exists_irreducible_smooth_quotient : ∀ {G V : Type} [Group G] [Topolog
   ·
     intro x
     obtain ⟨v, rfl⟩ := Submodule.mkQ_surjective W x
-    let stab : (u : Type) → [AddCommGroup u] → [Module ℂ u] → (σ : Representation ℂ G u) → u → Subgroup G :=
-      fun u _ _ σ y =>
-        { carrier := {g | σ g y = y}
-          mul_mem' := by
-            intro a b ha hb
-            simp only [Set.mem_setOf_eq] at ha hb ⊢
-            rw [map_mul, Module.End.mul_apply, hb, ha]
-          one_mem' := by simp
-          inv_mem' := by
-            intro a ha
-            simp only [Set.mem_setOf_eq] at ha ⊢
-            conv_lhs => rw [← ha]
-            rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
-    have hle : stab V ρ v ≤ stab (V ⧸ W) τ (W.mkQ v) := by
-      intro g hg
-      change τ g (W.mkQ v) = W.mkQ v
-      rw [hτ]
-      exact congrArg W.mkQ hg
-    exact Subgroup.isOpen_mono hle (hsm v)
+    exact Subgroup.isOpen_mono (q.stabilizer_le v) (hsm v)
   ·
     have hMtop : M ≠ ⊤ := hM.1
     refine { exists_pair_ne := ⟨⊥, ⊤, ?_⟩, eq_bot_or_eq_top := ?_ }

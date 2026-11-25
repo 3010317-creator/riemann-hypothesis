@@ -145,14 +145,7 @@ variable {X : Type} [TopologicalSpace X]
 
 theorem indicator_mem {C : Set X} (hC : IsClopen C) (φ : SB X) : C.indicator φ.1 ∈ SB X := by
   refine ⟨?_, φ.2.2.mono fun x hx => ?_⟩
-  · rw [IsLocallyConstant.iff_exists_open]
-    intro x
-    by_cases hx : x ∈ C
-    · obtain ⟨U, hU, hxU, h⟩ := φ.2.1.exists_open x
-      exact ⟨C ∩ U, hC.2.inter hU, ⟨hx, hxU⟩, fun y hy => by
-        rw [Set.indicator_of_mem hy.1, Set.indicator_of_mem hx, h y hy.2]⟩
-    · exact ⟨Cᶜ, hC.1.isOpen_compl, hx, fun y hy => by
-        rw [Set.indicator_of_notMem hy, Set.indicator_of_notMem hx]⟩
+  · exact ((⟨φ.1, φ.2.1⟩ : LocallyConstant X ℂ).indicator hC).isLocallyConstant
   · rw [Set.support_indicator] at hx
     exact hx.2
 

@@ -73,18 +73,8 @@ theorem mem_span_of_forms {E A : Type} [Field E] [CommRing A] (ι : E →+* A) {
 
   set D : Submodule E (Module.Dual E (Fin n → E)) := Submodule.span E S with hD
   set K : Submodule E (Fin n → E) := D.dualCoannihilator with hK
-  have hKset : ∀ y, y ∈ K ↔ ∀ φ ∈ S, φ y = 0 := by
-    intro y
-    rw [hK, Submodule.mem_dualCoannihilator]
-    constructor
-    · intro h φ hφ
-      exact h φ (Submodule.subset_span hφ)
-    · intro h φ hφ
-      induction hφ using Submodule.span_induction with
-      | mem x hx => exact h x hx
-      | zero => simp
-      | add x z _ _ hx hz => simp [hx, hz]
-      | smul c x _ hx => simp [hx]
+  have hKset : ∀ y, y ∈ K ↔ ∀ φ ∈ S, φ y = 0 := fun y =>
+    Set.ext_iff.1 (hK ▸ Submodule.coe_dualCoannihilator_span S) y
 
   obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective K.subtype K.ker_subtype
   set P : (Fin n → E) →ₗ[E] (Fin n → E) := K.subtype ∘ₗ g with hP
@@ -129,28 +119,6 @@ def formRight {E : Type} [CommRing E] (σ : E →+* E) {n : ℕ} (J : Matrix (Fi
 theorem formRight_apply {E : Type} [CommRing E] (σ : E →+* E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E)
     (w y : Fin n → E) : formRight σ J w y = Formalism.UG.hform σ J w y := rfl
 
-private theorem hform_add_right_flag_measures {A : Type} [CommRing A] (s : A →+* A) {n : ℕ}
-    (J : Matrix (Fin n) (Fin n) A) (x y z : Fin n → A) :
-    Formalism.UG.hform s J x (y + z) = Formalism.UG.hform s J x y + Formalism.UG.hform s J x z := by
-  simp only [Formalism.UG.hform, Pi.add_apply, mul_add, Finset.sum_add_distrib]
-
-private theorem hform_smul_right_flag_measures {A : Type} [CommRing A] (s : A →+* A) {n : ℕ}
-    (J : Matrix (Fin n) (Fin n) A) (c : A) (x y : Fin n → A) :
-    Formalism.UG.hform s J x (c • y) = c * Formalism.UG.hform s J x y := by
-  simp only [Formalism.UG.hform, Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
-
-private theorem hform_add_left_flag_measures' {A : Type} [CommRing A] (s : A →+* A) {n : ℕ}
-    (J : Matrix (Fin n) (Fin n) A) (x x' y : Fin n → A) :
-    Formalism.UG.hform s J (x + x') y = Formalism.UG.hform s J x y + Formalism.UG.hform s J x' y := by
-  simp only [Formalism.UG.hform, Pi.add_apply, map_add (f := _), add_mul, Finset.sum_add_distrib]
-
-private theorem hform_smul_left_flag_measures {A : Type} [CommRing A] (s : A →+* A) {n : ℕ}
-    (J : Matrix (Fin n) (Fin n) A) (c : A) (x y : Fin n → A) :
-    Formalism.UG.hform s J (c • x) y = s c * Formalism.UG.hform s J x y := by
-  simp only [Formalism.UG.hform, Pi.smul_apply, smul_eq_mul, map_mul, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
-
 theorem perpSet_baseChange : ∀ (E A : Type) [Field E] [CommRing A] (σ : E →+* E) (s : A →+* A) (ι : E →+* A) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (W : Submodule E (Fin n → E)), (∀ e, s (ι e) = ι (σ e)) → perpSet s (J.map ι) (Submodule.span A ((fun w : Fin n → E => fun i => ι (w i)) '' (W : Set (Fin n → E)))) = (Submodule.span A ((fun w : Fin n → E => fun i => ι (w i)) '' perpSet σ J W) : Set (Fin n → A)) := by
   intro E A _ _ σ s ι n J W hs
   classical
@@ -183,23 +151,19 @@ theorem perpSet_baseChange : ∀ (E A : Type) [Field E] [CommRing A] (σ : E →
     exact hy _ (Submodule.subset_span ⟨w, hw, rfl⟩)
   · intro hy
     rw [SetLike.mem_coe] at hy
-    have hgen : ∀ w ∈ W, Formalism.UG.hform s (J.map ι) (fun i => ι (w i)) y = 0 := by
-      intro w hw
-      induction hy using Submodule.span_induction with
-      | mem x hx =>
-        obtain ⟨z, hz, rfl⟩ := hx
-        rw [key, hz w hw, map_zero]
-      | zero => simp [Formalism.UG.hform]
-      | add x x' _ _ hx hx' => rw [hform_add_right_flag_measures, hx, hx', add_zero]
-      | smul c x _ hx => rw [hform_smul_right_flag_measures, hx, mul_zero]
-    simp only [perpSet, Set.mem_setOf_eq]
+    have hgen : ∀ w ∈ W, Formalism.UG.hform s (J.map ι) (fun i => ι (w i)) y = 0 := fun w hw =>
+      (Submodule.span_le (p := LinearMap.ker (formRight s (J.map ι) (fun i => ι (w i))))).2
+        (by rintro _ ⟨z, hz, rfl⟩; simp [formRight_apply, key, hz w hw]) hy
+    let ψ : (Fin n → A) →ₛₗ[s] A :=
+      { toFun := fun x => Formalism.UG.hform s (J.map ι) x y
+        map_add' := fun x x' => by
+          simp only [Formalism.UG.hform, Pi.add_apply, map_add (f := _), add_mul,
+            Finset.sum_add_distrib]
+        map_smul' := fun c x => by
+          simp only [Formalism.UG.hform, Pi.smul_apply, smul_eq_mul, map_mul, Finset.mul_sum]
+          exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring }
     intro x hx
-    induction hx using Submodule.span_induction with
-    | mem x hx =>
-      obtain ⟨w, hw, rfl⟩ := hx
-      exact hgen w hw
-    | zero => simp [Formalism.UG.hform]
-    | add x x' _ _ hx hx' => rw [hform_add_left_flag_measures', hx, hx', add_zero]
-    | smul c x _ hx => rw [hform_smul_left_flag_measures, hx, mul_zero]
+    exact (Submodule.span_le (p := LinearMap.ker ψ)).2
+      (by rintro _ ⟨w, hw, rfl⟩; exact hgen w hw) hx
 
 end GlobalTheory.PerpBaseChange

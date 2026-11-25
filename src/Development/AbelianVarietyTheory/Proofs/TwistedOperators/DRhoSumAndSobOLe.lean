@@ -97,13 +97,8 @@ theorem dRho_eq_sum_heisDer (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (hf 
   simp [heisDer]
 
 theorem theta_finsetSum {ι : Type} (s : Finset ι) {g : ι → WO V W → ℂ} (hg : ∀ i ∈ s, IsThetaFunO ψ V W (g i)) :
-    IsThetaFunO ψ V W (∑ i ∈ s, g i) := by
-  classical
-  revert hg
-  refine Finset.induction_on s (fun _ => by rw [Finset.sum_empty]; exact theta_zero) ?_
-  intro a t ha ih hg
-  rw [Finset.sum_insert ha]
-  exact theta_add (hg a (Finset.mem_insert_self a t)) (ih fun i hi => hg i (Finset.mem_insert_of_mem hi))
+    IsThetaFunO ψ V W (∑ i ∈ s, g i) :=
+  Finset.sum_induction g (IsThetaFunO ψ V W) (fun _ _ => theta_add) theta_zero hg
 
 theorem sobO_sum_le (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) {ι : Type} (s : Finset ι) {g : ι → WO V W → ℂ}
     (hg : ∀ i ∈ s, IsThetaFunO ψ V W (g i)) (d : ℕ) :

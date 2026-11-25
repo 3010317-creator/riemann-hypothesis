@@ -1,6 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
+import Mathlib.RepresentationTheory.Stabilizer
 import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
 
@@ -87,21 +88,7 @@ theorem exists_back : ∀ (G W V : Type) [Group G] [TopologicalSpace G] [IsTopol
     by_contra! h
     exact hp (Representation.IntertwiningMap.ext (LinearMap.ext fun x => h x))
 
-  let K : Subgroup G :=
-    { carrier := {g | π g w = w}
-      mul_mem' := fun {a b} ha hb => by
-        have ha' : π a w = w := ha
-        have hb' : π b w = w := hb
-        show π (a * b) w = w
-        rw [map_mul, Module.End.mul_apply, hb', ha']
-      one_mem' := by
-        show π 1 w = w
-        rw [map_one, Module.End.one_apply]
-      inv_mem' := fun {a} ha => by
-        have ha' : π a w = w := ha
-        show π a⁻¹ w = w
-        nth_rewrite 1 [← ha']
-        rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
+  let K : Subgroup G := π.stabilizer w
   have hKopen : IsOpen (K : Set G) := hπ w
   have hKu : ∀ k ∈ K, ρ k (p w) = p w := by
     intro k hk

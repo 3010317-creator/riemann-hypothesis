@@ -27,13 +27,8 @@ theorem simple_zero {L : Type} [Field L] (f : PowerSeries L) (h0 : constantCoeff
 theorem coeff_one_pow_of_deriv {L : Type} [Field L] (U : PowerSeries L)
     (hU : derivative U = U) (m : ℕ) : coeff 1 (U ^ m) = (m : L) * constantCoeff U ^ m := by
   have h : derivative (U ^ m) = (m : PowerSeries L) * U ^ m := by
-    induction m with
-    | zero => simp
-    | succ m ih =>
-      rw [pow_succ, Derivation.leibniz, ih, hU]
-      push_cast
-      simp only [smul_eq_mul]
-      ring
+    rw [derivative_pow, hU]
+    cases m <;> simp [pow_succ, mul_assoc]
   have h2 := congrArg (coeff 0) h
   rw [coeff_derivative] at h2
   simpa using h2
