@@ -101,7 +101,6 @@ variable {ι : Type} [Fintype ι] {a : ℕ}
 
 section Norm
 
-attribute [-instance] instTopologicalSpaceMatrix
 
 attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra
   Matrix.linftyOpNormedSpace
