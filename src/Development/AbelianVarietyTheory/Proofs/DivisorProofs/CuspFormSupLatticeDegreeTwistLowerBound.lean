@@ -197,9 +197,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option synthInstance.maxHeartbeats 400000
-set_option maxHeartbeats 1000000
-
 noncomputable section
 
 namespace GlobalTheory.FlatTw
