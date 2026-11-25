@@ -39,20 +39,8 @@ private theorem exists_map_eq_algebraMap_padicInt_of_isDvr {l : ℕ} [Fact l.Pri
     exact ⟨a, by rw [← ha, mul_comm]⟩
   have hdvd : ∀ m k : ℕ, m ≤ k → ((l : ℤ) ^ m ∣ ((t.appr k : ℕ) : ℤ) - ((t.appr m : ℕ) : ℤ)) := by
     intro m k hmk
-    haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-    have e1 : PadicInt.toZModPow m t = PadicInt.toZModPow m ((t.appr m : ℕ) : ℤ_[l]) := by
-      rw [← sub_eq_zero, ← map_sub, ← RingHom.mem_ker, PadicInt.ker_toZModPow]
-      exact PadicInt.appr_spec m t
-    have e2 : PadicInt.toZModPow m t = PadicInt.toZModPow m ((t.appr k : ℕ) : ℤ_[l]) := by
-      rw [← sub_eq_zero, ← map_sub, ← RingHom.mem_ker, PadicInt.ker_toZModPow]
-      exact Ideal.span_singleton_le_span_singleton.mpr (pow_dvd_pow _ hmk) (PadicInt.appr_spec k t)
-    rw [e1] at e2
-    simp only [map_natCast] at e2
-    have e3 : (((((t.appr k : ℕ) : ℤ) - ((t.appr m : ℕ) : ℤ)) : ℤ) : ZMod (l ^ m)) = 0 := by
-      push_cast
-      rw [e2, sub_self]
-    have := (ZMod.intCast_zmod_eq_zero_iff_dvd _ (l ^ m)).mp e3
-    exact_mod_cast this
+    rw [← Nat.cast_sub (t.appr_mono hmk)]
+    exact_mod_cast t.dvd_appr_sub_appr m k hmk
   have hcau : ∀ {m k : ℕ}, m ≤ k → ((t.appr m : ℕ) : A) ≡ ((t.appr k : ℕ) : A)
       [SMOD (maximalIdeal A) ^ m • (⊤ : Submodule A A)] := by
     intro m k hmk
