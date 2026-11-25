@@ -58,20 +58,8 @@ variable {O A : Type} [CommRing O] [CommRing A] [Algebra O A] {B : Base O A} {M 
   {D : Type} [AddCommGroup D] [Module A D] [Module O D] [IsScalarTower O A D]
 
 lemma aeval_stable (δ : D →ₗ[O] D) (S : Submodule O D) (hS : ∀ y ∈ S, δ y ∈ S)
-    (f : Polynomial O) : ∀ y ∈ S, Polynomial.aeval δ f y ∈ S := by
-  induction f using Polynomial.induction_on with
-  | C a =>
-    intro y hy
-    rw [Polynomial.aeval_C, Module.algebraMap_end_apply]
-    exact S.smul_mem a hy
-  | add p q hp hq =>
-    intro y hy
-    rw [map_add (f := _), LinearMap.add_apply]
-    exact S.add_mem (hp y hy) (hq y hy)
-  | monomial n a ih =>
-    intro y hy
-    rw [pow_succ, ← mul_assoc, map_mul, Polynomial.aeval_X, Module.End.mul_apply]
-    exact ih _ (hS y hy)
+    (f : Polynomial O) : ∀ y ∈ S, Polynomial.aeval δ f y ∈ S :=
+  fun _ hy => Polynomial.aeval_apply_smul_mem_of_le_comap hy f δ hS
 
 def QS (W : WachMod B M D) : Submodule O D where
   carrier := {y | B.Q ^ M • y ∈ W.N}
