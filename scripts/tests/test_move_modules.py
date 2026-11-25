@@ -71,6 +71,13 @@ class MoveModules(unittest.TestCase):
         self.assertNotIn("??", staged)
         self.assertNotIn(" M ", staged)
 
+    def test_keeps_crlf(self):
+        write(self.root, "src/Lib/Crlf.lean", "")
+        (self.root / "src/Lib/Crlf.lean").write_bytes(b"module\r\n\r\nimport Lib.Flat.Old\r\n")
+        subprocess.run(["git", "-C", str(self.root), "add", "-A"], check=True)
+        self.run_script()
+        self.assertEqual((self.root / "src/Lib/Crlf.lean").read_bytes(), b"module\r\n\r\nimport Lib.Flat.Topic.Old\r\n")
+
     def test_rewrite_only(self):
         (self.root / "src/Lib/Flat/Old.lean").unlink()
         out = self.run_script("--rewrite-only")

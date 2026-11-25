@@ -101,7 +101,8 @@ def rewrite(root, moves):
     changed, count = [], 0
     for rel in files:
         path = os.path.join(root, rel)
-        text = open(path, encoding="utf-8").read()
+        with open(path, encoding="utf-8", newline="") as f:  # keep CRLF line endings as they are
+            text = f.read()
         n = 0
 
         def sub(m):
