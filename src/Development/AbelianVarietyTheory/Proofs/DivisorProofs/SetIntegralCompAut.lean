@@ -13,7 +13,6 @@ open scoped TensorProduct Matrix
 open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
 open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
 open Formalism.IndefR.DatumF
-attribute [-instance] CStarMatrix.instHMulOfFintypeOfMulOfAddCommMonoid
 
 noncomputable section
 
