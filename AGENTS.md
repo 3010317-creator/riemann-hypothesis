@@ -88,7 +88,7 @@ Check the labels when you put the batch together and again just before it is mer
 already contains a pull request that should be left out, take it out before the batch is merged,
 by rebuilding the batch without it or by reverting the merge commit that brought it in.
 
-If a pull request conflicts with `main`, you may merge `main` into its branch when the conflict
+If a pull request conflicts with `main` or a batch earlier in the queue, you may merge `main` or the earlier batch into its branch when the conflict
 is mechanical, such as one side deleting a file the other edited. Check that the changed files
 still compile and push the merge to the pull request's branch, so that the batch holds nothing
 the pull request doesn't. Otherwise leave it out. Don't settle conflicts in the batch branch.
