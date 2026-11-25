@@ -420,14 +420,6 @@ variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotio
 
 
 
-open GlobalTheory.IndefiniteRowSideFullHecke.FractionalBaseInclusion in
-
-theorem fracExt_algebraMap (c : NChoice D) (w : D.what₂.places.Pl) (x : D.ntw.O (c.twI w)) :
-    fracExt c w (algebraMap _ (FractionRing (D.ntw.O (c.twI w))) x) =
-      algebraMap (D.ntw.O (c.twI w)) (FractionRing (c.Oe w)) x := by
-  rw [IsScalarTower.algebraMap_apply (D.ntw.O (c.twI w)) (c.Oe w) (FractionRing (c.Oe w))]
-  simp [fracExt, IsFractionRing.map]
-
 
 
 
@@ -597,7 +589,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Numb
 open Formalism.L2.Rows
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-alias _root_.GlobalTheory.Adopt.lattice_family_adoption_first_alt := _root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.reading_ext_alt
 end
 end
 end -- clump:auto
@@ -791,7 +782,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Numb
 open Formalism.L2.Rows
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-alias _root_.GlobalTheory.Adopt.lattice_family_adoption_second_alt := _root_.GroupAverageFixedPoints.GlobalTheory.CompanionTheory.LatSpan.lattice_of_lifts_alt
 end
 end
 end -- clump:auto

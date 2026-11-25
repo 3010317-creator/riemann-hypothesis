@@ -445,17 +445,6 @@ theorem map_conj_one (A : Subgroup G) : A.map (MulAut.conj (1 : G)).toMonoidHom 
 theorem vol_self (A : Subgroup G) : vol A A = 1 := by
   simp [vol, Subgroup.relIndex_self]
 
-theorem fold_sum (Γ' T K : Subgroup G) (F : G → ℂ) (hΓT : Γ' ≤ T)
-    (hF : ∀ t ∈ T, ∀ x, ∀ k ∈ K, F (t * x * k) = F x)
-    (hfin : ∀ x : G, ((Γ' ⊓ K.map (MulAut.conj x).toMonoidHom : Subgroup G) : Set G).Finite)
-    (hsupp : {q : DoubleCoset.Quotient (Γ' : Set G) (K : Set G) | F (Quotient.out q) ≠ 0}.Finite) :
-    ∑ᶠ q : DoubleCoset.Quotient (Γ' : Set G) (K : Set G),
-        ((Nat.card (Γ' ⊓ K.map (MulAut.conj (Quotient.out q)).toMonoidHom : Subgroup G) : ℕ) : ℂ)⁻¹ *
-          F (Quotient.out q) =
-      ∑ᶠ y : DoubleCoset.Quotient (T : Set G) (K : Set G),
-        ((massC Γ' T (T ⊓ K.map (MulAut.conj (Quotient.out y)).toMonoidHom) : ℚ) : ℂ) * F (Quotient.out y) :=
-  _root_.GlobalTheory.finsum_fold_intermediate Γ' T K F hΓT hF hfin hsupp
-
 variable [TopologicalSpace G] [IsTopologicalGroup G]
 
 end Core

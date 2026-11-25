@@ -99,11 +99,6 @@ variable {C : Type} [Field C]
 def absDifferent (v : Valuation C ℝ≥0) {E : Type} [Field E] [NumberField E] (τ : E →+* C) : ℝ≥0 :=
   sSup {r | ∃ x ∈ differentIdeal ℤ (𝓞 E), v (τ x) = r}
 
-def IsPowMul_vp (p : ℕ) (v : Valuation C ℝ≥0) {O : Type} [CommRing O] [Algebra O C] {U : Type}
-    [AddCommGroup U] [Module C U] [Module O U] [IsScalarTower O C U] (t : ℝ)
-    (La La' : Submodule O U) : Prop :=
-  ∃ u : C, (v u : ℝ) = (v (p : C) : ℝ) ^ t ∧ La' = scaleLat u La
-
 
 set_option autoImplicit false in
 open scoped NNReal NumberField Classical in

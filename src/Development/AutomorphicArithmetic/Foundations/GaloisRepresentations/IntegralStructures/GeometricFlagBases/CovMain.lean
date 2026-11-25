@@ -1850,8 +1850,6 @@ theorem count_of (I : MIn) : Count := UpperTheory.tower_point_count_statement
 
 theorem tjLies_of (I : MIn) : TjLies := UpperTheory.heckeCorrespondence_lies_in_tower_of_lift_count I (numEx_of I) (clsEx_of I) (powCart_of I) (piInv_of I) (piFet_of I) (liftEx_of I) (liftSep_of I) (count_of I)
 
-theorem stdEx_of (I : MIn) : StdEx := UpperTheory.standard_datum_exists
-
 theorem kSCong_of (I : MIn) : KSCong := UpperTheory.tower_covering_congruence_of_hecke_lies I (siteEx_of I) (numEx_of I) (clsEx_of I) (kSCover_of I) (tjLies_of I)
 
 end UpperTheory.Gal.Int.Geo.CovMain
