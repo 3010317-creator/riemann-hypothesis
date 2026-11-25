@@ -202,12 +202,8 @@ theorem dOp_nonneg {n : ℕ} (hn : 1 ≤ n) {ε : Fin n → Bool} (g : UJ ε) : 
   have hg : (uMat g)ᴴ * Formalism.REAL.Jm ε * uMat g = Formalism.REAL.Jm ε := g.2
   have hJJ : Formalism.REAL.Jm ε * Formalism.REAL.Jm ε = 1 := Formalism.REAL.Jm_mul_self ε
   have hJh : (Formalism.REAL.Jm ε)ᴴ = Formalism.REAL.Jm ε := Formalism.REAL.Jm_conjTranspose ε
-  have hJn : ‖Formalism.REAL.Jm ε‖ = 1 := by
-    have h1 := Matrix.l2_opNorm_conjTranspose_mul_self (Formalism.REAL.Jm ε)
-    rw [hJh, hJJ, CStarRing.norm_one] at h1
-    have hle : ‖Formalism.REAL.Jm ε‖ ≤ 1 := by nlinarith [norm_nonneg (Formalism.REAL.Jm ε)]
-    have hge : 1 ≤ ‖Formalism.REAL.Jm ε‖ := by nlinarith [norm_nonneg (Formalism.REAL.Jm ε)]
-    linarith
+  have hJn : ‖Formalism.REAL.Jm ε‖ = 1 := CStarRing.norm_of_mem_unitary (Unitary.mem_iff.2
+    ⟨by rw [Matrix.star_eq_conjTranspose, hJh, hJJ], by rw [Matrix.star_eq_conjTranspose, hJh, hJJ]⟩)
   have hinv : (Formalism.REAL.Jm ε * (uMat g)ᴴ * Formalism.REAL.Jm ε) * uMat g = 1 := by
     calc (Formalism.REAL.Jm ε * (uMat g)ᴴ * Formalism.REAL.Jm ε) * uMat g
         = Formalism.REAL.Jm ε * ((uMat g)ᴴ * Formalism.REAL.Jm ε * uMat g) := by
