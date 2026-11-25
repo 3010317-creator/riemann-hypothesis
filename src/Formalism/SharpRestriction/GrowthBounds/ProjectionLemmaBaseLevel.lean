@@ -193,9 +193,6 @@ def BranchingColumnFamily (D : Formalism.BasicNotions.D7) : Prop := ArchimedeanS
 
 def GlobalSectionsSchur (D : Formalism.BasicNotions.D7) : Prop := Formalism.MainNotions.CovariantDegrees.AutomorphicSideConclusion D ∧ Formalism.MainNotions.CovariantDegrees.HyperplaneRank D ∧ Formalism.MainNotions.CovariantDegrees.DefiniteRankOne D
 
-def BracketPolynomialSpan (D : Formalism.BasicNotions.D7) : Prop :=
-  Formalism.MainNotions.CovariantDegrees.GlobalSectionsSchur D ∧ Formalism.MainNotions.CovariantDegrees.BracketPolynomialSpan D ∧ Formalism.MainNotions.CovariantDegrees.GradedLatticeStable D ∧ Formalism.MainNotions.CovariantDegrees.WeylDualityLattice D
-
 def CartanDomain : Prop :=
   ∀ (O Kf : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field Kf] [Algebra O Kf]
     [IsFractionRing O Kf] (w : O), Irreducible w →
@@ -230,7 +227,7 @@ def WeylV : Prop :=
 def PairedPathIndependence (D : Formalism.BasicNotions.D7) : Prop := Formalism.MainNotions.ColumnSystems.adm3 D ∧ WeylV
 
 def AdmT (D : Formalism.BasicNotions.D7) : Prop :=
-  GenericProjectionCriterion D ∧ ColumnFamilyClosure D ∧ TensorColumnFamily D ∧ BranchingColumnFamily D ∧ GlobalSectionsSchur D ∧ BracketPolynomialSpan D ∧ GradedLatticeStable D ∧ NestedTypeBound D ∧ TypeDecompositionsCommute D ∧ JointComponentsPaths D ∧
+  GenericProjectionCriterion D ∧ ColumnFamilyClosure D ∧ TensorColumnFamily D ∧ BranchingColumnFamily D ∧ GlobalSectionsSchur D ∧ GradedLatticeStable D ∧ NestedTypeBound D ∧ TypeDecompositionsCommute D ∧ JointComponentsPaths D ∧
     SaturatedLowerSetSpan D ∧ PairedPathIndependence D
 
 def AdmB (D : Formalism.BasicNotions.D7) (C₀ CH CA CE1 CE2 Cm Ckap Ct Cc Cs : ℝ) : Prop :=
