@@ -51,37 +51,31 @@ theorem rho_conj {G : Type} [Group G] (σ : FDRep ℂ G) (P X : G) (w : (σ : Ty
     inv_mul_cancel_right, map_mul]
   rfl
 
-theorem lab_transp_transp {C : LabelConv K} (O : LabelMap K C) {α β : Type} [Fintype α] [DecidableEq α]
-    [Fintype β] [DecidableEq β] (σ : FDRep ℂ (GL α K)) (e : α ≃ β) (d : ℕ) (e₁ : α ≃ Fin d) (e₂ : β ≃ Fin d) :
-    O.lab d (transp e₁ σ) = O.lab d (transp e₂ (transp e σ)) := by
+/-- The label can be computed using any enumeration of the matrix coordinates. -/
+theorem labO_eq_lab_transp {C : LabelConv K} (O : LabelMap K C) {α : Type} [Fintype α]
+    [DecidableEq α] (σ : FDRep ℂ (GL α K)) {d : ℕ} (e : α ≃ Fin d) :
+    labO O σ = O.lab d (transp e σ) := by
+  have hd : Fintype.card α = d := by simpa using Fintype.card_congr e
+  subst d
+  unfold labO
   apply O.lab_iso
-  let π : α ≃ α := e₁.trans (e.trans e₂).symm
-  have hA : ∀ γ : GL (Fin d) K, (glEquiv K e).symm ((glEquiv K e₂).symm γ) =
-      glEquiv K π ((glEquiv K e₁).symm γ) := by
-    intro γ
+  let e₀ := Fintype.equivFin α
+  let π := e₀.trans e.symm
+  have hA (γ : GL (Fin (Fintype.card α)) K) :
+      (glEquiv K e).symm γ = glEquiv K π ((glEquiv K e₀).symm γ) := by
     apply Units.ext
     ext i j
     simp [π, Formalism.L2.PT.coe_glEquiv_symm, Formalism.L2.PT.coe_glEquiv]
   refine ⟨repIsoOf _ _ (rhoEquiv σ (permGL π)) fun γ v => ?_⟩
-  show σ.ρ (permGL π) (σ.ρ ((glEquiv K e₁).symm γ) v) =
-    σ.ρ ((glEquiv K e).symm ((glEquiv K e₂).symm γ)) (σ.ρ (permGL π) v)
+  show σ.ρ (permGL π) (σ.ρ ((glEquiv K e₀).symm γ) v) =
+    σ.ρ ((glEquiv K e).symm γ) (σ.ρ (permGL π) v)
   rw [hA, glEquiv_perm]
   exact rho_conj σ _ _ v
 
 theorem labO_transp {C : LabelConv K} (O : LabelMap K C) {α β : Type} [Fintype α] [DecidableEq α]
     [Fintype β] [DecidableEq β] (e : α ≃ β) (σ : FDRep ℂ (GL α K)) :
     labO O (transp e σ) = labO O σ := by
-  have key : ∀ (d : ℕ) (e₂ : β ≃ Fin d) (d' : ℕ) (e₁ : α ≃ Fin d'),
-      O.lab d (transp e₂ (transp e σ)) = O.lab d' (transp e₁ σ) := by
-    intro d e₂ d' e₁
-    have hd : d = d' := by
-      have h1 := Fintype.card_congr e₂
-      have h2 := Fintype.card_congr e₁
-      have h3 := Fintype.card_congr e
-      simp only [Fintype.card_fin] at h1 h2
-      omega
-    subst hd
-    exact (lab_transp_transp O σ e d e₁ e₂).symm
-  exact key _ _ _ _
+  rw [labO_eq_lab_transp O σ (e.trans (Fintype.equivFin β))]
+  rfl
 
 end GlobalTheory.SerOSys.TranspLabel

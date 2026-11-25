@@ -835,8 +835,8 @@ theorem labO_eq_of_readings {C : LabelConv K} (O : LabelMap K C) {α β : Type} 
     (σ' : FDRep ℂ (GL β K)) (M : (σ : Type) ≃ₗ[ℂ] (σ' : Type))
     (hM : ∀ g v, M (σ.ρ ((glEquiv K e).symm g) v) = σ'.ρ ((glEquiv K e').symm g) (M v)) :
     labO O σ = labO O σ' := by
-  rw [← GlobalTheory.SerOSys.TranspLabel.labO_transp O e σ, ← GlobalTheory.SerOSys.TranspLabel.labO_transp O e' σ']
-  unfold labO
+  rw [GlobalTheory.SerOSys.TranspLabel.labO_eq_lab_transp O σ e,
+    GlobalTheory.SerOSys.TranspLabel.labO_eq_lab_transp O σ' e']
   apply O.lab_iso
   exact ⟨GlobalTheory.SerOSys.TranspLabel.repIsoOf _ _ M fun γ v => hM _ v⟩
 
