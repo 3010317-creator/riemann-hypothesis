@@ -106,17 +106,8 @@ theorem isOpen_stab {f : X → ℂ} (hf : IsLocallyConstant f) (hc : HasCompactS
     exact hne this.symm
   · exact hv (f y) ⟨y, subset_tsupport f hy, rfl⟩ hy y rfl
 
-theorem discrete_quot (U : AddSubgroup X) (hU : IsOpen (U : Set X)) : DiscreteTopology (X ⧸ U) := by
-  rw [discreteTopology_iff_isOpen_singleton]
-  intro c
-  induction c using QuotientAddGroup.induction_on with
-  | H g =>
-    have hpre : (QuotientAddGroup.mk : X → X ⧸ U) ⁻¹' {(g : X ⧸ U)} = (fun x => -g + x) ⁻¹' (U : Set X) := by
-      ext x
-      simp only [Set.mem_preimage, Set.mem_singleton_iff, SetLike.mem_coe]
-      rw [eq_comm, QuotientAddGroup.eq]
-    rw [← (QuotientAddGroup.isQuotientMap_mk (N := U)).isOpen_preimage, hpre]
-    exact hU.preimage (continuous_const.add continuous_id)
+theorem discrete_quot (U : AddSubgroup X) (hU : IsOpen (U : Set X)) : DiscreteTopology (X ⧸ U) :=
+  QuotientAddGroup.discreteTopology hU
 
 theorem integral_eq_sum [MeasurableSpace X] [OpensMeasurableSpace X] [MeasurableAdd X] (μ : Measure X) [μ.IsAddLeftInvariant]
     (U : AddSubgroup X) (hU : IsOpen (U : Set X)) (hUfin : μ U ≠ ⊤) (g : X → ℂ)
