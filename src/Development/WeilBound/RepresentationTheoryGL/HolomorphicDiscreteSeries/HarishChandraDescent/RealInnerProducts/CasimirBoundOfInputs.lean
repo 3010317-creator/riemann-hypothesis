@@ -144,7 +144,6 @@ end Group
 end CasimirBoundOperators
 
 open CasimirBoundOperators in
-set_option maxHeartbeats 1000000 in
 theorem casimir_bound_of_inputs : SqId → Markov → PosNeg → Inv → Commutant → AdEq → CasAd → Cut := by
   intro hSq hMk hPN hInv hCom hAd hCA n ε H _ _ _ ρ hρ hDense ν κ S y hS hy hq
   have hD := isDerivedOn_smE hρ
