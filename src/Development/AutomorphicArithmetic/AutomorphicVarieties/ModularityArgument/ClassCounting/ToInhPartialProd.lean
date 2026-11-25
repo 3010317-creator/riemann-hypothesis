@@ -193,14 +193,8 @@ theorem toInh_partialProd (n : ℕ) (g : Fin n → G) (c : A) :
     toInh A G n (Finsupp.single (Fin.partialProd g) c) = Finsupp.single g c := by
   simp [Fin.partialProd_right_inv]
 
-theorem toInh_surjective (n : ℕ) : Function.Surjective (toInh A G n) := fun z => by
-  induction z using Finsupp.induction_linear with
-  | zero => exact ⟨0, map_zero _⟩
-  | add a b ha hb =>
-    obtain ⟨a, rfl⟩ := ha
-    obtain ⟨b, rfl⟩ := hb
-    exact ⟨a + b, map_add _ _ _⟩
-  | single g c => exact ⟨_, toInh_partialProd A n g c⟩
+theorem toInh_surjective (n : ℕ) : Function.Surjective (toInh A G n) :=
+  Finsupp.mapDomain_surjective fun g => ⟨Fin.partialProd g, funext (Fin.partialProd_right_inv g)⟩
 
 theorem bd_toInh (n : ℕ) (y : Ch A G (n + 2)) : bd A G n (toInh A G (n + 1) y) = toInh A G n (hbd A G (n + 1) y) := by
   refine ch_ext A (f := (bd A G n).comp (toInh A G (n + 1))) (g := (toInh A G n).comp (hbd A G (n + 1))) (fun x => ?_) y
