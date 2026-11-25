@@ -36,10 +36,6 @@ theorem theta_kernel_local_operators_act (_hP : _root_.GlobalTheory.FunPr.ThetaL
       ⟨GlobalTheory.SchrSB.schr_mem_SB B.ψ hP.base.std.1 v _ φ hφ, GlobalTheory.VacBridge.rho_acts_locCo M.co B.ψ v u hu φ⟩,
       fun φ₂ hφ₂ => acts_unique v _ hφ hφ₂.2 (GlobalTheory.VacBridge.rho_acts_locCo M.co B.ψ v u hu φ)⟩
 end GlobalTheory.ThK.LocalOps
-namespace GlobalTheory.ThK.LocalOps
-end GlobalTheory.ThK.LocalOps
-namespace GlobalTheory.ThK.LocalOps
-end GlobalTheory.ThK.LocalOps
 end
 end
 

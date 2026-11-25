@@ -11,20 +11,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.StdFrames GlobalTheory.RowClaim GlobalTheory.FlipRun
 noncomputable section
 namespace GlobalTheory.EndCusp
-open Formalism.IndefR.Mult Matrix
-variable {D : D7}
-end GlobalTheory.EndCusp
-namespace GlobalTheory.EndCusp
-open Formalism.IndefR.Mult Matrix
-variable {D : D7}
-end GlobalTheory.EndCusp
-namespace GlobalTheory.EndCusp
-open Formalism.IndefR.Mult Matrix
-variable {D : D7}
-variable {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type} {A : FamIn D.what₂.LL Γ Pl0 T D.R.m}
-  {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL]
-end GlobalTheory.EndCusp
-namespace GlobalTheory.EndCusp
 theorem leadingForm_mem_cuspList : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.RowClaim.Big fun {D} _ _ _ _ {T} _ _ _ _ _ {R} ch => ∀ (t : T) (y : (R.HX t).H), GlobalTheory.FlipRun.IsCuspListed ch.W.θ (.grid 0 D.R.m) (GlobalTheory.RowClaim.formTop ch t y) := by
   intro _
   refine ⟨0, fun ε CF _ => ⟨0, fun D large₂ _ _ Γ _ _ Pl0 T A Ks _ _ _ R F hS ch hch _ => ?_⟩⟩

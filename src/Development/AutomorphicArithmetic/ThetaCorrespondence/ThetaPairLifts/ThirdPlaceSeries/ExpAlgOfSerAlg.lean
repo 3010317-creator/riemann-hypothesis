@@ -19,8 +19,6 @@ open scoped TensorProduct
 
 
 namespace GlobalTheory.BigOn.Exp
-end GlobalTheory.BigOn.Exp
-namespace GlobalTheory.BigOn.Exp
 def SerAlgAlt : Prop := _root_.GlobalTheory.BigOn.Exp.TwistConditions fun Fm x hx i p w j => ∀ (ρ : Setup (Fm.D x i).ntw) (hρ : ρ.Good) (ν : ℂ),
   RealPin p.R p.cG ρ →
   IsNorm p.R p.v₀ (ρ.B ((Fm.ex x hx i).nch.twI w) j ((Fm.ex x hx i).nch.sd w)) ν →
