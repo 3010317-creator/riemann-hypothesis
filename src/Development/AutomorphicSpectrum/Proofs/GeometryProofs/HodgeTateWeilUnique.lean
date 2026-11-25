@@ -58,7 +58,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapFromSpecStalk
 
 @[expose] public section
 
@@ -128,7 +127,13 @@ theorem le_of_field {k B : Type} [Field k] [CommRing B] [Nontrivial B] (φ : k �
 
 theorem spec_fst_surj (R : Type) [CommRing R] :
     Function.Surjective (Spec.map (CommRingCat.ofHom (TrivSqZeroExt.fstHom R R R).toRingHom)) := by
-  apply _root_.GlobalTheory.CompanionTheory.Ar.LieCarrier.surjective_fst <;> assumption
+  intro p
+  show p ∈ Set.range (PrimeSpectrum.comap (TrivSqZeroExt.fstHom R R R).toRingHom)
+  rw [_root_.range_comap_of_surjective _ _ TrivSqZeroExt.fst_surjective]
+  intro a ha
+  have ha' : a.fst = 0 := ha
+  have h2 : a ^ 2 = 0 := by ext <;> simp [pow_two, ha']
+  exact p.2.mem_of_pow_mem 2 (h2 ▸ Ideal.zero_mem _)
 
 section
 variable {X : Scheme.{0}} {Ω : Type} [Field Ω] {G : Over X} [GrpObj G] {ξ : Spec (CommRingCat.of Ω) ⟶ X}

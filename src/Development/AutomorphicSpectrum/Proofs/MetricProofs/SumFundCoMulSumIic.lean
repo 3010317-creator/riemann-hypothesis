@@ -1,5 +1,7 @@
 module
 
+import Development.WeilBound.CoreStatements.FlagImmersions.RootModelLineSemipositive
+
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplier
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Birational
 import Mathlib.Algebra.Order.Floor.Extended
@@ -45,7 +47,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Development.WeilBound.CoreStatements.FlagImmersions.RootModelLineSemipositive
 
 @[expose] public section
 

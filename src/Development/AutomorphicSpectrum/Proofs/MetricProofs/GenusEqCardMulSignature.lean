@@ -1,6 +1,5 @@
 module
 
-import Development.WeilBound.CoreStatements.PlurisubharmonicCones.FiniteOfTorsion
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
 public import Mathlib.LinearAlgebra.Eigenspace.Basic
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AbelianPartHeightLinear
@@ -86,8 +85,28 @@ theorem conj_conj_comp {E : Type} [Field E] [NumberField E] (s : 𝓞 E →+* �
 
 theorem both_bijective {E Ψ : Type} [Field E] [NumberField E] [IsCMField E] [Fintype Ψ] {σ : Ψ → (𝓞 E →+* ℂ)}
     (h : IsCMFam σ) : Function.Bijective (both σ) := by
-  intros
-  apply _root_.LevelTowerAlt.cm_bij <;> assumption
+  have hconj : Function.Injective fun s : 𝓞 E →+* ℂ => (starRingEnd ℂ).comp s :=
+    Function.Involutive.injective (conj_conj_comp (E := E))
+  have hcross : ∀ τ τ', σ τ ≠ (starRingEnd ℂ).comp (σ τ') := by
+    intro τ τ' e
+    exact ((h.2 (σ τ')).1 ⟨τ', rfl⟩) ⟨τ, e⟩
+  constructor
+  · rintro (τ | τ) (τ' | τ') e
+    · exact congrArg Sum.inl (h.1 e)
+    · exact absurd e (hcross τ τ')
+    · exact absurd e.symm (hcross τ' τ)
+    · exact congrArg Sum.inr (h.1 (hconj e))
+  · intro s
+    by_cases hs : ∃ τ, σ τ = s
+    · obtain ⟨τ, rfl⟩ := hs
+      exact ⟨Sum.inl τ, rfl⟩
+    · have h' : ∃ τ, σ τ = (starRingEnd ℂ).comp s := by
+        by_contra hn
+        exact hs ((h.2 s).2 hn)
+      obtain ⟨τ, e⟩ := h'
+      refine ⟨Sum.inr τ, ?_⟩
+      show (starRingEnd ℂ).comp (σ τ) = s
+      rw [e, conj_conj_comp]
 
 theorem card_sum_eq_finrank {E Ψ : Type} [Field E] [NumberField E] [IsCMField E] [Fintype Ψ] {σ : Ψ → (𝓞 E →+* ℂ)}
     (h : IsCMFam σ) : Fintype.card (Ψ ⊕ Ψ) = Module.finrank ℚ E := by

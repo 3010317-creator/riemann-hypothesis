@@ -1,6 +1,8 @@
 module
 
 import Development.WeilBound.CoreStatements.PluriharmonicCharts.PullDegSome
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsMultiHomogIdealMap
+
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PullbackPullback
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag
 public import Mathlib.FieldTheory.RatFunc.AsPolynomial
@@ -47,7 +49,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsMultiHomogIdealMap
 
 @[expose] public section
 

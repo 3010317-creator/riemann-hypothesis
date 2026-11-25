@@ -1,5 +1,7 @@
 module
 
+import Development.WeilBound.CoreStatements.CentralCharts.AnalyticAtEval
+
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -38,7 +40,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.WeilBound.CoreStatements.CentralCharts.AnalyticAtEval
 
 @[expose] public section
 

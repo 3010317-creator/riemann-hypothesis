@@ -1,5 +1,7 @@
 module
 
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullFormsGeneric
+
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsSmoothHermTrivLine
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PAdjoinIndepRelfinrank
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PChartScalingIndep
@@ -48,7 +50,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullFormsGeneric
 
 @[expose] public section
 

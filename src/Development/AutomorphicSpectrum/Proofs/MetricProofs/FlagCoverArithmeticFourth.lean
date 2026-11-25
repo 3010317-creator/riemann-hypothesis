@@ -1,5 +1,7 @@
 module
 
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PCoordConeArithVar
+
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsPeriodOn
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PtsOverPt
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.GenFibreChartDeg
@@ -68,7 +70,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PCoordConeArithVar
 
 @[expose] public section
 

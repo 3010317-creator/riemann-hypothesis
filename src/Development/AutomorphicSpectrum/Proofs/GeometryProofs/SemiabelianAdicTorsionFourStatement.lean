@@ -1,5 +1,7 @@
 module
 
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderComapHomStatement
+
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUnitFormLocalizationEtaleNbhd
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.NonemptyLinearEquivOfPiFinPowFinite
 public import Mathlib.Tactic.ENatToNat
@@ -45,7 +47,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Basify
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderComapHomStatement
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderComapHom, Development.WeilBound.CoreStatements.HodgeTatePoints.Twfunct, Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianAdicTorsionFour, Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianAdicTorsionFourStatement

@@ -1,5 +1,7 @@
 module
 
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverBasePointRegular
+
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ConjugateHermitianLineIsometries
@@ -63,7 +65,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.Topology.Sheaves.Init
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverBasePointRegular
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.WeilBound.CoreStatements.HomogeneousNonvanishing.CmpBuild, Development.WeilBound.CoreStatements.HomogeneousNonvanishing.TopCmp, Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComparisonOfInputsAvoidance
@@ -447,8 +448,6 @@ end GlobalTheory.CompanionTheory.Ar.Cmp.CoordK
 
 namespace PositivityTheory.UnitarySelfGeneration
 
-open MvPolynomial ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.AI.I2 ReciprocityTheory.ChartRestriction.G.AI.I4 ReciprocityTheory.AnForm.M ReciprocityTheory.AnForm.P GlobalTheory.CompanionTheory.Ar.Cmp GlobalTheory.CompanionTheory.Ar.PB Filter Topology
-open ReciprocityTheory.ChartRestriction.G.AI.I1 (IsBlockMap pullDeg)
 
 end PositivityTheory.UnitarySelfGeneration
 end -- clump:auto

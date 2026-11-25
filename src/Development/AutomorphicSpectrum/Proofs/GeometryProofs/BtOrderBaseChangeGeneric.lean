@@ -1,5 +1,7 @@
 module
 
+import Development.WeilBound.CoreStatements.HodgeTatePoints.TwhopfInd
+
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TranslateMemIndOrder
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUnitFormLocalizationEtaleNbhd
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.ExistsDenOfOpen
@@ -49,7 +51,6 @@ import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUniqueBtOrder
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
-import Development.WeilBound.CoreStatements.HodgeTatePoints.TwhopfInd
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderEqOfHopfEmbedding, Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderBaseChangeGeneric

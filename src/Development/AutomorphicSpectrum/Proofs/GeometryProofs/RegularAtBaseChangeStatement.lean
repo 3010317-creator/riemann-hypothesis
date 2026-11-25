@@ -1,5 +1,7 @@
 module
 
+import Development.WeilBound.CoreStatements.HodgeTatePoints.HtatBcPull
+
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUnitFormLocalizationEtaleNbhd
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BaseChangePointsCompat
 import Mathlib.Algebra.Order.Floor.Extended
@@ -45,7 +47,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.WeilBound.CoreStatements.HodgeTatePoints.HtatBcPull
 
 @[expose] public section
 
