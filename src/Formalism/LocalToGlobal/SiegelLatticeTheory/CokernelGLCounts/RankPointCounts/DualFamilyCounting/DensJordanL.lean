@@ -118,15 +118,9 @@ theorem jl_not_inv_mem (t : 𝓞 D.host.F) (ht : t ∈ p.asIdeal) (ht0 : (D.s.at
   have hc := (D.s.atP p).val 1 (t : D.host.F)
   rw [map_one, map_one] at hc
   have h1 : (1 : (D.s.atP p).Fp) ≤ᵥ (D.s.atP p).ιF (t : D.host.F) := by
-    rw [Valuation.Compatible.vle_iff_le (v := ValuativeRel.valuation (D.s.atP p).Fp)]
-    rw [Valuation.mem_integer_iff] at hmem
-    calc ValuativeRel.valuation _ 1 = ValuativeRel.valuation _
-          ((D.s.atP p).ιF (t : D.host.F) * ((D.s.atP p).ιF (t : D.host.F))⁻¹) := by
-          rw [mul_inv_cancel₀ ht0]
-      _ = ValuativeRel.valuation _ ((D.s.atP p).ιF (t : D.host.F)) *
-          ValuativeRel.valuation _ ((D.s.atP p).ιF (t : D.host.F))⁻¹ := map_mul _ _ _
-      _ ≤ ValuativeRel.valuation _ ((D.s.atP p).ιF (t : D.host.F)) * 1 := mul_le_mul' le_rfl hmem
-      _ = ValuativeRel.valuation _ ((D.s.atP p).ιF (t : D.host.F)) := mul_one _
+    rw [Valuation.Compatible.vle_iff_le (v := ValuativeRel.valuation (D.s.atP p).Fp), map_one]
+    rwa [Valuation.mem_integer_iff, map_inv₀,
+      inv_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero (ValuativeRel.valuation (D.s.atP p).Fp)).2 ht0))] at hmem
   have h2 := hc.mp h1
   have h3 := (IsDedekindDomain.HeightOneSpectrum.valuation_lt_one_iff_mem (K := D.host.F) p t).mpr ht
   exact absurd h2 (not_le.mpr h3)
@@ -191,11 +185,7 @@ theorem jordan_decomposition_holds : DualityBasisChange.JordanL := by
         lattice₂ L p (Submodule.span (𝓞 D.host.E) (Set.range b)) := by
       rw [jl_latP_span L p (hA p), ← Set.range_comp]
       congr 1
-      ext y
-      simp only [Set.mem_range, Function.comp_apply]
-      constructor
-      · rintro ⟨i, rfl⟩; exact ⟨e i, rfl⟩
-      · rintro ⟨j, rfl⟩; exact ⟨e.symm j, by simp⟩
+      exact e.surjective.range_comp (L.bc p ∘ b)
     rw [h1]
     exact le_antisymm (jl_latP_le L p (hA p) hloc.le) (jl_latP_le L p (hA p) hloc.ge)
   ·
