@@ -71,13 +71,9 @@ private theorem prod_factorial_single_add_eq_mul (v : σ) (e : ℕ) (m : σ →�
     ((Finsupp.single v e + m).prod fun _ k => (k.factorial : ℚ_[p])) =
       (e.factorial : ℚ_[p]) * m.prod fun _ k => (k.factorial : ℚ_[p]) := by
   classical
-  have hdisj : Disjoint (Finsupp.single v e).support m.support := by
-    rw [Finset.disjoint_left]
-    intro a ha hb
-    have ha' := Finsupp.support_single_subset ha
-    rw [Finset.mem_singleton] at ha'
-    subst ha'
-    exact (Finsupp.mem_support_iff.mp hb) hm
+  have hdisj : Disjoint (Finsupp.single v e).support m.support :=
+    (Finset.disjoint_singleton_left.2 (Finsupp.notMem_support_iff.2 hm)).mono_left
+      Finsupp.support_single_subset
   rw [Finsupp.prod_add_index_of_disjoint hdisj, Finsupp.prod_single_index (by simp)]
 
 theorem fock_eq_zero_of (F G : MvPolynomial σ ℚ_[p]) (h : ∀ m, AddMonoidAlgebra.coeff F m = 0 ∨ AddMonoidAlgebra.coeff G m = 0) : fock p F G = 0 := by
