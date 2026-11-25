@@ -83,6 +83,9 @@ theorem exists_generator_valuation_prime_dvd_pow_sub_of_finite_padicInt :
   haveI : Finite (ℤ_[p] ⧸ P.under ℤ_[p]) := by
     rw [hunder]
     exact Finite.of_equiv (ZMod p) (PadicInt.residueField (p := p)).symm.toEquiv
+  haveI : Module.Finite ℤ_[p] (R ⧸ P) := inferInstance
+  haveI : Module.Finite (ℤ_[p] ⧸ P.under ℤ_[p]) (R ⧸ P) :=
+    Module.Finite.of_restrictScalars_finite ℤ_[p] _ _
   haveI : Finite (R ⧸ P) := Module.finite_of_finite (ℤ_[p] ⧸ P.under ℤ_[p])
   letI := Fintype.ofFinite (R ⧸ P)
   obtain ⟨n, -, hcard⟩ := FiniteField.card (R ⧸ P) p
