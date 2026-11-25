@@ -92,7 +92,7 @@ def ptK {k : Type} [CommRing k] (κ : O →+* k) : CommRingCat.{0} ⥤ Type wher
     · rfl
     · exact congrFun (congrArg (fun t => (ConcreteCategory.hom t : _ → _)) (F.Pt.map_comp f g)) z.1.2
 
-def cr (b : Base) (ht : b.t = 1) (κ : O →+* b.R ⧸ b.I) : b.Fun where
+def cr (b : Base) (_ht : b.t = 1) (κ : O →+* b.R ⧸ b.I) : b.Fun where
   ι := Empty
   A := Unit
   Pt := F.ptK κ
@@ -101,14 +101,10 @@ def cr (b : Base) (ht : b.t = 1) (κ : O →+* b.R ⧸ b.I) : b.Fun where
   In _ _ _ := True
   in_map _ _ _ := trivial
   f _ i := i.elim
-  f_map i := i.elim
   g _ _ i := i.elim
   g_map i := i.elim
-  f_eq i := i.elim
   g_self i := i.elim
   g_comp i := i.elim
-  prod_f {_ _ y} _ := by simp [ht]
-  prod_g _ _ := by simp
 
 structure Sub (F : Fn O) where
   In : ∀ {B : CommRingCat.{0}}, F.Pt.obj B → Prop

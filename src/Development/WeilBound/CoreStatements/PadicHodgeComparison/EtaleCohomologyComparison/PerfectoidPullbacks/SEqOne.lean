@@ -146,14 +146,10 @@ def nlFun (γ : DividedPowers I) (p : ℕ) (X : Scheme.{0}) (q : X ⟶ Spec (Com
   In _ _ _ := True
   in_map _ _ _ := trivial
   f _ i := i.elim
-  f_map i := i.elim
   g _ _ i := i.elim
   g_map i := i.elim
-  f_eq i := i.elim
   g_self i := i.elim
   g_comp i := i.elim
-  prod_f {_ _ y} _ := by simp
-  prod_g _ _ := by simp
 
 variable {γ : DividedPowers I} {p : ℕ} {X : Scheme.{0}} {q : X ⟶ Spec (CommRingCat.of O)} {κ : O →+* R ⧸ I}
 
