@@ -2,6 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.EeProd
 import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.NumberTheory.Padics.ProperSpace
 import Development.AbelianVarietyTheory.Definitions.Foundations.Integral
 
 @[expose] public section
