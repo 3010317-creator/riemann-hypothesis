@@ -45,50 +45,49 @@ noncomputable section
 
 open NumberField IsDedekindDomain CategoryTheory GroundTheory.ProfCoh ReciprocityTheory.Gal Formalism.ConjugateSelfDual
 
-namespace PositivityTheory.Lit1.PTN
+namespace PositivityTheory.Lit1.GEN.W_dictfwd_b
 
-theorem gsEquiv_toGS' (K : IntermediateField ℚ (AlgebraicClosure ℚ)) [NumberField K]
-    [IsAlgClosure K (AlgebraicClosure ℚ)] (S : Set (HeightOneSpectrum (𝓞 K))) :
-    ∃ e : GS (AlgebraicClosure ℚ) S ≃ₜ*
-        GroundTheory.ProfCoh.galUnramifiedOutside K (AlgebraicClosure ℚ) S,
-      ∀ (σ : G K (AlgebraicClosure ℚ))
-        (y : GroundTheory.ProfCoh.maxUnramifiedOutside K (AlgebraicClosure ℚ) S),
-        ((e (toGS (AlgebraicClosure ℚ) S σ) y :
-          GroundTheory.ProfCoh.maxUnramifiedOutside K (AlgebraicClosure ℚ) S) : AlgebraicClosure ℚ) =
-          σ (y : AlgebraicClosure ℚ) := by
-  have : IsGalois K (AlgebraicClosure ℚ) := IsAlgClosure.isGalois K (AlgebraicClosure ℚ)
-  let E := maxUnramifiedOutside K (AlgebraicClosure ℚ) S
-  let φ : G K (AlgebraicClosure ℚ) →* Gal(E/K) := AlgEquiv.restrictNormalHom E
-  have hφs : Function.Surjective φ := AlgEquiv.restrictNormalHom_surjective (AlgebraicClosure ℚ)
-  have hker : φ.ker = NS (AlgebraicClosure ℚ) S := by
-    rw [GlobalTheory.CompanionTheory.Hypotheses₂.NS_eq_fixingSubgroup K (AlgebraicClosure ℚ) S]
-    ext σ
-    rw [MonoidHom.mem_ker, IntermediateField.mem_fixingSubgroup_iff]
-    constructor
-    · intro h x hx
-      have h1 := AlgEquiv.restrictNormal_commutes σ E (⟨x, hx⟩ : E)
-      have h2 : σ.restrictNormal E = 1 := h
-      rw [h2] at h1
-      exact h1.symm
-    · intro h
-      apply AlgEquiv.ext
-      intro x
-      apply Subtype.ext
-      exact (AlgEquiv.restrictNormal_commutes σ E x).trans (h x.1 x.2)
+variable {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω]
+
+noncomputable def resS (S : Set (HeightOneSpectrum (𝓞 F))) : G F Ω →* galUnramifiedOutside F Ω S :=
+  haveI : IsGalois F Ω := IsAlgClosure.isGalois F Ω
+  AlgEquiv.restrictNormalHom (maxUnramifiedOutside F Ω S)
+
+noncomputable def gsIso (S : Set (HeightOneSpectrum (𝓞 F))) :
+    GS Ω S ≃ₜ* galUnramifiedOutside F Ω S := by
+  have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
+  let E := maxUnramifiedOutside F Ω S
+  let φ : G F Ω →* Gal(E/F) := AlgEquiv.restrictNormalHom E
+  have hφs : Function.Surjective φ := AlgEquiv.restrictNormalHom_surjective Ω
+  have hker : φ.ker = NS Ω S :=
+    E.restrictNormalHom_ker.trans
+      (GlobalTheory.CompanionTheory.Hypotheses₂.NS_eq_fixingSubgroup F Ω S).symm
   have hφc : Continuous φ := InfiniteGalois.restrictNormalHom_continuous E
-  let q : GS (AlgebraicClosure ℚ) S ≃* Gal(E/K) :=
-    (QuotientGroup.quotientMulEquivOfEq hker.symm).trans
-      (QuotientGroup.quotientKerEquivOfSurjective φ hφs)
+  let q : GS Ω S ≃* Gal(E/F) :=
+    (QuotientGroup.quotientMulEquivOfEq hker.symm).trans (QuotientGroup.quotientKerEquivOfSurjective φ hφs)
   have hq : Continuous q := continuous_coinduced_dom.2 hφc
-  have : CompactSpace (G K (AlgebraicClosure ℚ)) := inferInstance
-  have : CompactSpace (GS (AlgebraicClosure ℚ) S) := Quotient.compactSpace
-  refine ⟨{ q with
+  have : CompactSpace (G F Ω) := inferInstance
+  have : CompactSpace (GS Ω S) := Quotient.compactSpace
+  haveI : T2Space Gal(E/F) := krullTopology_t2
+  exact { q with
     continuous_toFun := hq
-    continuous_invFun := Continuous.continuous_symm_of_equiv_compact_to_t2 (f := q.toEquiv) hq },
-    fun σ y => ?_⟩
-  exact AlgEquiv.restrictNormal_commutes σ E y
+    continuous_invFun := Continuous.continuous_symm_of_equiv_compact_to_t2 (f := q.toEquiv) hq }
 
-end PositivityTheory.Lit1.PTN
+theorem gsIso_toGS (S : Set (HeightOneSpectrum (𝓞 F))) (g : G F Ω) :
+    gsIso (Ω := Ω) S (toGS Ω S g) = resS S g := by
+  rfl
+
+theorem gsIso_symm_resS (S : Set (HeightOneSpectrum (𝓞 F))) (g : G F Ω) :
+    (gsIso (Ω := Ω) S).symm (resS S g) = toGS Ω S g := by
+  rw [← gsIso_toGS, ContinuousMulEquiv.symm_apply_apply]
+
+theorem gsIso_toGS_apply (S : Set (HeightOneSpectrum (𝓞 F))) (g : G F Ω)
+    (y : maxUnramifiedOutside F Ω S) :
+    ((gsIso (Ω := Ω) S (toGS Ω S g) y : maxUnramifiedOutside F Ω S) : Ω) = g (y : Ω) := by
+  rw [gsIso_toGS, resS]
+  exact AlgEquiv.restrictNormal_commutes g (maxUnramifiedOutside F Ω S) y
+
+end PositivityTheory.Lit1.GEN.W_dictfwd_b
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
