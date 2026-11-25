@@ -36,11 +36,8 @@ theorem TWincl_inj {R R' : Type} [CommRing R] [CommRing R'] [Algebra O R] [Algeb
   exact Module.Flat.rTensor_preserves_injective_linearMap (M := ↥T.L.T) f.toLinearMap hf
 
 theorem fix_of_unit {R M : Type} [CommRing R] [AddCommGroup M] [Module R M] (f : M →ₗ[R] M) (r : R)
-    (hr : IsUnit r) (m : M) (h : f (r • m) = r • m) : f m = m := by
-  obtain ⟨u, rfl⟩ := hr
-  have h2 := congrArg (fun y => ((u⁻¹ : Rˣ) : R) • y) h
-  simp only [← map_smul, smul_smul, Units.inv_mul, one_smul] at h2
-  exact h2
+    (hr : IsUnit r) (m : M) (h : f (r • m) = r • m) : f m = m :=
+  hr.smul_left_cancel.1 ((map_smul f r m).symm.trans h)
 
 end Generic
 
