@@ -98,7 +98,6 @@ def restrictIsoOfLinear {U : X.Opens}
     fun {_ _} h s => hφ _ (g.image_mono h) s
 
 
-set_option backward.isDefEq.respectTransparency false in
 def overIsoOfRestrictIso {U : X.Opens} (e : F.restrict U.ι ≅ G.restrict U.ι) :
     F.over U ≅ G.over U :=
   (Scheme.Modules.overEquiv U).fullyFaithfulFunctor.preimageIso
