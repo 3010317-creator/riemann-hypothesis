@@ -93,7 +93,7 @@ import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.JEvExistsAnd
 import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ChartIndependenceUnconditional
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsScaleOfChar
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MovedFiniteDatumFourierExpansionChainless
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCcIsEquivAtSerOfOneMapRowOfFive
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeCharacterTrivialOnSubfieldOfIdelicReading, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeCharacterTrivialOnSubfieldOfIdelicReadingStatement, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsResOfChrEq, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameAtOfCongr, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnrAtOfOff, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NatCastMemConj, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RatTwistOfIsRatScalar, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaSeriesBaseTwistedUniversalRational, Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaSeriesBaseTwistedUniversalRationalStatement
@@ -1246,8 +1246,8 @@ theorem ratRow : GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.
     have hcore := H.core
     have hti := H.tieIn
     have hrow0 : OneMapRow0 T Rl.toRealDat κ v₀ O j :=
-      GlobalTheory.OneMapTies.oneMapRow0_of_ties_base_clauses GlobalTheory.chartIndependence_unconditional D Γ Pl0 T0 A3.A T Rl.toRealDat F κ v₀
-        hcore.lev hcore.grp hcore.fam hcore.models hcore.thP hti H.io O j H.pins
+      GlobalTheory.OneMapTies.oneMapRow0_of_ties_ofFive GlobalTheory.chartIndependence_unconditional D Γ Pl0 T0 A3.A T Rl.toRealDat F κ v₀
+        (GlobalTheory.Core5.of_core hcore) hti H.io O j H.pins
     have hph1 : ‖cj (twAt D.what₂.embLL A3.A.v0) (Rl.phs j)‖ = 1 := (H.phase hrow0).2.1.2.2.2.2.1
     have hph0 : cj (twAt D.what₂.embLL A3.A.v0) (Rl.phs j) ≠ 0 := fun e => by
       rw [e, norm_zero] at hph1; exact zero_ne_one hph1

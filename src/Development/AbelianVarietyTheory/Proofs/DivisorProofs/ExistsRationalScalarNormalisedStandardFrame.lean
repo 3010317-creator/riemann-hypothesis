@@ -15,7 +15,7 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsT
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixesUntwistedTupleDataOfFixesSmallFieldStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RationalPhaseThetaSeriesExpandsCuspFormsSmallFieStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterIdeleCharacterMatchUnique
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MovedFiniteDatumFourierExpansionChainless
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCcIsEquivAtSerOfOneMapRowOfFive
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -184,8 +184,8 @@ theorem exists_isNorm_isRatScalar_std : GlobalTheory.Published.GlobalArtinRecipr
   have hray := H.small.ray
   have hroots := H.small.roots
   have hrow0 : OneMapRow0 T Rl.toRealDat κ v₀ O j :=
-    GlobalTheory.OneMapTies.oneMapRow0_of_ties_base_clauses hCI D Γ Pl0 T0 A3.A T Rl.toRealDat F κ v₀ hcore.lev hcore.grp hcore.fam
-      hcore.models hcore.thP hti hio O j hpins
+    GlobalTheory.OneMapTies.oneMapRow0_of_ties_ofFive hCI D Γ Pl0 T0 A3.A T Rl.toRealDat F κ v₀
+      (GlobalTheory.Core5.of_core hcore) hti hio O j hpins
 
   obtain ⟨gramR, c0R, c0L, hft, hbc⟩ := hpins.2.lift.c0
   obtain ⟨u, w₀, hu, -, hw⟩ := FWT.IsChosenExtremalVector.io _ (hti.hv₀ j (sg0 D A3.A)) hio

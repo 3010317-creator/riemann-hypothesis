@@ -27,7 +27,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjointInter
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteSideRealisationsCoefMapDifferRootOfUnityStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjFunBaseRoot
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsConjugateFormsThetaLiftEqThetaSeries
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MovedFiniteDatumFourierExpansionChainless
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCcIsEquivAtSerOfOneMapRowOfFive
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatOfOneMapOverL
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SeriesRatSOf
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FactTypePrime
@@ -807,8 +807,8 @@ theorem GlobalTheory.PhaseOneOnto.phase_mem_coefField : GlobalTheory.Published.C
     hph' ▸ GlobalTheory.PhaseOneOnto.isRatPhase_of_smul hb0 hca hrat
 
   have hrow0 : OneMapRow0 T Rl.toRealDat κ v₀ O j :=
-    GlobalTheory.OneMapTies.oneMapRow0_of_ties_base_clauses GlobalTheory.ChartFree.chartIndep D Γ Pl0 T0 A3.A T Rl.toRealDat F κ v₀
-      hR.core.lev hR.core.grp hR.core.fam hR.core.models hR.core.thP hR.tieIn hR.io O j hR.pins
+    GlobalTheory.OneMapTies.oneMapRow0_of_ties_ofFive GlobalTheory.ChartFree.chartIndep D Γ Pl0 T0 A3.A T Rl.toRealDat F κ v₀
+      (GlobalTheory.Core5.of_core hR.core) hR.tieIn hR.io O j hR.pins
   have hone : (fun j => cj (twAt D.what₂.embLL A3.A.v0) (Rl.phs j)) = fun _ => (1 : ℂ) := funext fun j => by rw [hphs, map_one]
   have hphase : PhaseTie T Rl.toRealDat κ v₀ O (fun _ => 1) j := hone ▸ hR.phase
 
