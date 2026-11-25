@@ -20,7 +20,6 @@ open NumberField Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Globa
 
 namespace PositivityTheory.SiegelWeilFormula.TBij
 
-attribute [-instance] CStarMatrix.instHMulOfFintypeOfMulOfAddCommMonoid
 
 
 open scoped Classical in
