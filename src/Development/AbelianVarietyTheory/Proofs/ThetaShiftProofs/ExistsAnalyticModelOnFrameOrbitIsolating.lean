@@ -243,8 +243,6 @@ theorem cc_two : cc (2 : E) = 2 := by simpa using cc_nat (E := E) 2
 theorem cc_cc' (x : E) : cc (cc x) = x := IsCMField.complexConj_apply_apply E x
 theorem emb_cc (τ : E →+* ℂ) (x : E) : τ (cc x) = (starRingEnd ℂ) (τ x) :=
   IsCMField.complexEmbedding_complexConj E τ x
-theorem trace_cc (x : E) : Algebra.trace ℚ E (cc x) = Algebra.trace ℚ E x :=
-  Algebra.trace_eq_of_algEquiv ((IsCMField.complexConj E).restrictScalars ℚ) x
 theorem im_zero {x : E} (h : cc x = x) (τ : E →+* ℂ) : (τ x).im = 0 := by
   have := emb_cc τ x
   rw [h] at this
@@ -256,7 +254,7 @@ theorem exists_sym (a : 𝓞 E) : ∃ t : 𝓞 E, cc (t : E) = t ∧ ∀ μ : E,
   · change cc ((a : E) + cc (a : E)) = (a : E) + cc (a : E)
     rw [cc_add', cc_cc', add_comm]
   · change Algebra.trace ℚ E (μ * ((a : E) + cc (a : E))) = _
-    rw [mul_add, map_add (f := _), ← trace_cc (μ * cc (a : E)), cc_mul', hμ, cc_cc']; ring
+    rw [mul_add, map_add (f := _), ← GlobalTheory.ArcFlow.trace_cc (μ * cc (a : E)), cc_mul', hμ, cc_cc']; ring
 
 theorem exists_sep (S : Finset E) (hS : ∀ μ ∈ S, μ ≠ 0 ∧ cc μ = μ) :
     ∃ t : 𝓞 E, cc (t : E) = t ∧ ∀ μ ∈ S, Algebra.trace ℚ E (μ * t) ≠ 0 := by
@@ -455,7 +453,7 @@ theorem exists_form_isolating : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hND' : (N * D : E) ≠ 0 := by exact_mod_cast (Nat.mul_pos hN hD).ne'
   refine ⟨be, s, jj, ⟨hreal u hu, hf⟩, fun x y => ?_, fun x hx => ?_, fun x y => ⟨m x y, rfl⟩, hc, fun s' hs' => ?_⟩
   · apply Int.cast_injective (α := ℚ)
-    rw [hbe, hbe, ← hf, ← hf, ← trace_cc, cc_mul', cc_mul', cc_mul', cc_cc', cc_two, hreal u hu]
+    rw [hbe, hbe, ← hf, ← hf, ← GlobalTheory.ArcFlow.trace_cc, cc_mul', cc_mul', cc_mul', cc_cc', cc_two, hreal u hu]
     congr 1; ring
   · have : (0 : ℝ) < ((f x x : ℚ) : ℝ) := by
       rw [← hf, trace_re]
@@ -977,7 +975,6 @@ open scoped ComplexConjugate
 
 namespace GlobalTheory.ComplementTypes
 
-
 open NumberField in
 open scoped ComplexConjugate in
 theorem _root_.GlobalTheory.ComplementTypes.types (E : Type) [Field E] [NumberField E]
@@ -1348,7 +1345,6 @@ theorem exists_anArc_of_period (D : Datum H) {g : ℕ} {ty : Fin g → (E →+* 
       simp
     exact ⟨h1, h2, h3, exists_datum_Lam A _ _ tyB h3 hF⟩
 
-
 end GlobalTheory.OfPeriod
 end -- clump:auto
 end -- clump:auto
@@ -1374,7 +1370,6 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 section Transfer
 
 variable {X Y : Type} [AddCommGroup X] [Module (𝓞 E) X] [AddCommGroup Y] [Module (𝓞 E) Y]
-
 
 omit [IsCMField E] in
 lemma pairE_comp (e : X →ₗ[𝓞 E] Y) (ξ : Module.Dual ℤ Y) (ξ₁ : Module.Dual ℤ X) (h : ∀ x, ξ₁ x = ξ (e x)) (x : X) :

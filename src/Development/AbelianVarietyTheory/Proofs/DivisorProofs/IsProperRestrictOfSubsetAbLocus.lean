@@ -85,7 +85,7 @@ theorem isProper_of_abLocus_eq_univ (R : Type) [CommRing R] [IsDomain R] [IsNoet
   haveI := hG.quasiCompact
   haveI := hG.smooth
   haveI : IsIntegral G.left := GlobalTheory.isIntegral_left_of_isSemiAbelian G
-  refine GlobalTheory.T.isProper_of_completeDVR_lift_genericPoint R G.left G.hom ?_
+  refine GlobalTheory.TraitProper.isProper_of_lift_genericPoint R G.left G.hom ?_
   intro V K _ _ _ _ _ _ _ x y _ hxy
   have hGV : IsSemiAbelian ((Over.pullback y).obj G) := IsSemiAbelian.pullback y G hG
   have habV : abLocus ((Over.pullback y).obj G) = Set.univ := Set.eq_univ_of_forall fun z =>

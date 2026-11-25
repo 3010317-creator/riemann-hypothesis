@@ -93,7 +93,7 @@ theorem term_bound : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     (_root_.GlobalTheory.RegularGerm.regular_germ E H Dw l Xo c hstar T io y C hC.1 (n' ^ 2 * A) (hh b)).1 (hReg b)
   obtain ⟨B, hB, h49⟩ := _root_.GlobalTheory.PlaceInt.integralBiext_gauge_eig_bound E H Dw l Xo c hstar T io y C
   have h48 := GlobalTheory.T.harmonicValue_integralPoint_eq_value_on_biextensionCopies E H Dw l Xo c hstar T io y C nab hnab B hB (n' ^ 2 * A) n hh f hf w P hP
-  have h58 := GlobalTheory.T.harmonic_value_chain_rule_normalized_pullback E H Dw l Xo c hstar nab hnab T.Fr y.1 β Bn (n' ^ 2 * A) (N ^ 2) hBn hN2 n hh
+  have h58 := GlobalTheory.PlaceInt.hv_pulls E H Dw l Xo c hstar nab hnab T.Fr y.1 β Bn (n' ^ 2 * A) (N ^ 2) hBn hN2 n hh
     (fun b => sqN Xo N (F b)) hPull w P hP
   by_cases hP0 : P = 0
   · subst hP0

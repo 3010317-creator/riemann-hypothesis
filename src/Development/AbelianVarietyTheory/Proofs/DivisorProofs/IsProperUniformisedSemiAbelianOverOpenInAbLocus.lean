@@ -100,11 +100,6 @@ variable {S S' S'' : Scheme.{0}} {G : Over S} {G' : Over S'} {G'' : Over S''} [G
 
 variable (hG : IsAbelianScheme G) (hG' : IsAbelianScheme G') (X : Type) [AddCommGroup X] [Subsingleton X]
 
-
-
-
-
-
 omit hG' in
 theorem ab_even (P : CP G) : ∃ σ : CubTriv P.c (TQ.abelian G hG X).i, σ.Even :=
   exists_even_one _ _ (Hom.one_def).symm
@@ -210,7 +205,7 @@ theorem isProper_away (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] 
   haveI := hGf.smooth
   haveI : IsIntegral Gf.left := GlobalTheory.isIntegral_left_of_isSemiAbelian Gf
   change IsProper Gf.hom
-  refine GlobalTheory.T.isProper_of_completeDVR_lift_genericPoint (Localization.Away f) Gf.left Gf.hom ?_
+  refine GlobalTheory.TraitProper.isProper_of_lift_genericPoint (Localization.Away f) Gf.left Gf.hom ?_
   intro V K _ _ _ _ _ _ _ x y hx hxy
   obtain ⟨φ, hφ⟩ : ∃ φ : R →+* V, spMap φ = y ≫ j := ⟨(Spec.preimage (y ≫ j)).hom, by simp [spMap]⟩
   let p₀ : Sp K := (⊥ : PrimeSpectrum K)

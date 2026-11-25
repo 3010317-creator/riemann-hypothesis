@@ -341,20 +341,6 @@ noncomputable section
 
 namespace GlobalTheory.JR.LinDesc
 
-theorem norm_eq_of_sub_lt {F : Type} [NormedField F] [IsUltrametricDist F] {x y : F}
-    (h : ‖x - y‖ < ‖y‖) : ‖x‖ = ‖y‖ := by
-  have h1 : ‖x‖ ≤ max ‖x - y‖ ‖y‖ := by
-    simpa using IsUltrametricDist.norm_add_le_max (x - y) y
-  have h2 : ‖y‖ ≤ max ‖y - x‖ ‖x‖ := by
-    simpa using IsUltrametricDist.norm_add_le_max (y - x) x
-  rw [norm_sub_rev] at h2
-  rcases le_total ‖x - y‖ ‖y‖ with h3 | h3
-  · rw [max_eq_right h3] at h1
-    rcases le_total ‖x - y‖ ‖x‖ with h4 | h4
-    · rw [max_eq_right h4] at h2; exact le_antisymm h1 h2
-    · rw [max_eq_left h4] at h2; exact absurd h (not_lt.mpr h2)
-  · exact absurd h (not_lt.mpr h3)
-
 theorem eta_det_isLocallyConstant {F : Type} [NontriviallyNormedField F] [IsUltrametricDist F] (r : ℕ) :
     IsLocallyConstant (fun g : GL (Fin r) F => eta ((g : Matrix (Fin r) (Fin r) F).det)) := by
   rw [IsLocallyConstant.iff_eventually_eq]
@@ -372,9 +358,7 @@ theorem eta_det_isLocallyConstant {F : Type} [NontriviallyNormedField F] [IsUltr
     exact (this.tendsto g).eventually_lt_const (by rw [sub_self, norm_zero]; exact hpos)
   filter_upwards [hev] with h hh
   unfold eta
-  rw [norm_eq_of_sub_lt hh]
-
-
+  rw [GlobalTheory.NormUnits.norm_eq_of_norm_sub_lt hh]
 
 theorem desc_isTest : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (r : ℕ) (τ : A.K) (p : Fin r → F) (hG : A.IsGen τ p) (lam : F), ∀ (M : Meas r F E) (α : GL (Fin r) F → ℝ) (f' : Gl r F → ℂ), IsTest f' → IsLocallyConstant α → HasCompactSupport α → IsTest (LinDesc.desc A M hG lam α f') := by
   intro F E _ _ _ _ hU A r τ p hG lam M α f' hf hα hαc
@@ -649,25 +633,12 @@ noncomputable section
 
 namespace GlobalTheory.JR.LinDesc.Swap
 
-theorem norm_eq_of_sub_lt {K : Type} [NormedField K] [IsUltrametricDist K] {x y : K}
-    (h : ‖x - y‖ < ‖y‖) : ‖x‖ = ‖y‖ := by
-  have h1 : ‖x‖ ≤ max ‖x - y‖ ‖y‖ := by
-    simpa using IsUltrametricDist.norm_add_le_max (x - y) y
-  have h2 : ‖y‖ ≤ max ‖y - x‖ ‖x‖ := by
-    simpa using IsUltrametricDist.norm_add_le_max (y - x) x
-  rw [norm_sub_rev] at h2
-  apply le_antisymm
-  · exact h1.trans (max_le h.le le_rfl)
-  · rcases le_max_iff.mp h2 with h3 | h3
-    · exact absurd h3 (not_le.mpr h)
-    · exact h3
-
 theorem eta_eventually {F : Type} [NormedField F] [IsUltrametricDist F] {x : F} (hx : x ≠ 0) :
     ∀ᶠ y in 𝓝 x, eta x = eta y := by
   have hpos : 0 < ‖x‖ := norm_pos_iff.mpr hx
   filter_upwards [Metric.ball_mem_nhds x hpos] with y hy
   rw [Metric.mem_ball, dist_eq_norm] at hy
-  have := norm_eq_of_sub_lt hy
+  have := GlobalTheory.NormUnits.norm_eq_of_norm_sub_lt hy
   unfold eta
   rw [this]
 

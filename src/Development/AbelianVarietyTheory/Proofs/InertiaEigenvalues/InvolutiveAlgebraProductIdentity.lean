@@ -102,17 +102,13 @@ private theorem mulLat_mulLat' (a b : A) (L : Submodule O A) :
   · rintro ⟨w, hw, rfl⟩
     exact ⟨b * w, ⟨w, hw, rfl⟩, (mul_assoc a b w).symm⟩
 
-private theorem mulLat_one_inertia_eigenvalues (L : Submodule O A) : mulLat O (1 : A) L = L := by
-  ext y
-  simp [mulLat]
-
 private theorem mem_stabLat_mulLat_iff (s u : Aˣ) (L : Submodule O A) :
     u ∈ stabLat O (mulLat O (s : A) L) ↔ u ∈ stabLat O L := by
   rw [mem_stabLat_iff, mem_stabLat_iff, mulLat_mulLat', mul_comm, ← mulLat_mulLat']
   constructor
   · intro h
     have := congrArg (mulLat O ((s⁻¹ : Aˣ) : A)) h
-    simpa [mulLat_mulLat', mulLat_one_inertia_eigenvalues] using this
+    simpa [mulLat_mulLat', GlobalTheory.UnitLemma.mulLat_one] using this
   · intro h
     rw [← h]
 

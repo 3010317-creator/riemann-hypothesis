@@ -49,7 +49,7 @@ theorem tw_good : ∀ (D : D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.h
   intro D N X ρ hρ i j b k Q ψ hψ
   classical
   obtain ⟨hsplit, hdisj, hopen, hanti, hzk, hram, -⟩ := hψ
-  have hadm : (ρ.B i j b).admitted (half (ρ.ch i) Q) := GlobalTheory.T.chosenPlaces_admissible_goodSetup D N X ρ hρ i j b Q hsplit hdisj
+  have hadm : (ρ.B i j b).admitted (half (ρ.ch i) Q) := GlobalTheory.ChoiceAdm.adm_half_of_good_of_split_disjoint D N X ρ hρ i j b Q hsplit hdisj
   let g : (X.Ok i k)ˣ →* Circle := unitPart.comp (Units.map (ρ.eOk i b k).toMonoidHom)
   have hkey : charOf ρ.rc (ρ.eOk i b k) ψ = ρ.rc.pull (g.comp ψ) := by
     rw [Recip.pull_comp _ hopen]

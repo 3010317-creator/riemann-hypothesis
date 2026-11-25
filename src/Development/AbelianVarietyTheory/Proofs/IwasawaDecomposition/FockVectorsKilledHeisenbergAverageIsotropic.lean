@@ -181,8 +181,6 @@ theorem val_sub_lt (φ : Datum.EAf D →+* Fv D.host.F v)
     rw [sub_zero]
     exact hres ⟨_, hU (Fin.castLE hr j) i⟩ h1
 
-
-
 theorem exists_const {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (S T : HSp D)
     (βS : GL (Fin S.rank) (Datum.EAf D)) (βT : GL (Fin T.rank) (Datum.EAf D)) (he : Formalism.L2.NTheta.IsIdemAt e PP)
     (c : Fin T.rank → AE D) (hc : ∃ i, e * c i ≠ 0) (hr : T.rank ≤ S.rank) :
@@ -250,8 +248,6 @@ theorem exists_const {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F �
     exact mul_lt_of_lt_one_right (zero_lt_iff.2 hx0)
       ((div_lt_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hj0))).2 hrow)
 
-
-
 open Classical in
 theorem exists_eigen {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D}
     {sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ} {sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ}
@@ -317,17 +313,12 @@ theorem exists_mem_Pg {T : Type} {L : LevCh D T} {μ0 : T} (h : L.Is μ0) : ∃ 
   · exact ⟨_, (h.Pg _).2 ⟨0, h1⟩⟩
   · exact ⟨_, (h.Pg _).2 ⟨0, h1⟩⟩
 
-theorem mt_mul_inv (V : HSp D) (g : GA D V) : Formalism.L2.Theta.mt V g * Formalism.L2.Theta.mt V g⁻¹ = 1 := by
-  have : Formalism.L2.Theta.mt V g * Formalism.L2.Theta.mt V g⁻¹ = Formalism.L2.Theta.mt V (g * g⁻¹) := rfl
-  rw [this, mul_inv_cancel]
-  rfl
-
 theorem sum_heisO_along_eq_zero : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (A : FamIn D.what₂.LL G Pl0 T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks), R.toLevCh.Is A.μ0 → R.models_inf → R.thP_ωP → R.thP_vP → R.thP_pt_theta → ∀ i t P h g ξ, IsoVec (Wc D i) ξ → ∃ n : ℕ, 0 < n ∧ ∃ a : Fin n → Fin (Vc D i).rank → AE D, ∑ k, heisO R.ψ (Vc D i) (Wc D i) (along (Vc D i) (Wc D i) ξ (a k)) (R.ωP i t (h, g) (R.ptP i t P)) = 0 := by
   intro D G _ _ Pl0 T A Ks _ _ _ R hL hθ hω hv hth i t P h g ξ hξ
   obtain ⟨PP, hPP⟩ := exists_mem_Pg hL
   let c : Fin (Wc D i).rank → AE D := Formalism.L2.Theta.mt (Wc D i) g⁻¹ *ᵥ fun a => incA D (ξ a)
   have hc : Formalism.L2.Theta.mt (Wc D i) g *ᵥ c = fun a => incA D (ξ a) := by
-    rw [Matrix.mulVec_mulVec, mt_mul_inv, Matrix.one_mulVec]
+    rw [Matrix.mulVec_mulVec, GlobalTheory.BesselChar.mt_mul_inv, Matrix.one_mulVec]
   obtain ⟨l, ζ, n, hn, hζ, hζn, hl⟩ := exists_eigen
     (GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ (hL.βV i))
     (GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ (hL.βW i))

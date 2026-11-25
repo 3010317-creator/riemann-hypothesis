@@ -222,29 +222,6 @@ section -- clump:auto
 open NumberField Classical Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3 GlobalTheory.NormSum GlobalTheory.GalTheta
 open scoped BigOperators
 
-namespace GlobalTheory.GalTheta
-
-theorem exists_top_embedding_eq_on_countable (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ] ℂ) (S : Set ℂ)
-    (hS : S.Countable) :
-    ∃ σ : (⊤ : IntermediateField ℚ ℂ) →ₐ[ℚ] ℂ, ∀ x ∈ S, x ∈ M → cj ⊤ σ x = cj M ρ x := by
-  let A : Set M := {y | (y : ℂ) ∈ S}
-  have hA : A.Countable := hS.preimage Subtype.val_injective
-  let k : Subfield M := Subfield.closure A
-  haveI : Countable k := by
-    rw [← Cardinal.mk_le_aleph0_iff]
-    refine (Subfield.cardinalMk_closure_le_max A).trans (max_le ?_ le_rfl)
-    exact Cardinal.mk_le_aleph0_iff.2 hA.to_subtype
-  obtain ⟨τ, hτ⟩ := GlobalTheory.GaloisDescent.exists_complex_ringEquiv_comp_eq (K := k)
-    ((M.val : M →+* ℂ).comp k.subtype) ((ρ : M →+* ℂ).comp k.subtype)
-  refine ⟨(τ.toRingHom.toRatAlgHom).comp (⊤ : IntermediateField ℚ ℂ).val, fun x hx hxM => ?_⟩
-  have h := hτ ⟨⟨x, hxM⟩, Subfield.subset_closure hx⟩
-  have h1 : liftM ⊤ x = ⟨x, IntermediateField.mem_top⟩ := dite_eq_left IntermediateField.mem_top
-  have h2 : liftM M x = ⟨x, hxM⟩ := dite_eq_left hxM
-  unfold cj
-  rw [h1, h2]
-  exact h
-
-end GlobalTheory.GalTheta
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsComplexEndomorphismEqOnCountable =====
@@ -1012,7 +989,7 @@ theorem fnConj_mul (D : D7) {N N' : ℕ} (M : IntermediateField ℚ ℂ) (ρ : M
 theorem gal_all : ∀ D : D7, gal D := by
   intro D cc δ hc M ρ hK hD N N' L L' hL hL' k c t e₀ x x' m₀ he hm hx ht hA hG hU
   obtain ⟨s, b, a, a', hb, ha, hxa, hxa', haa⟩ := hA
-  obtain ⟨σ, hσ⟩ := _root_.GlobalTheory.GalTheta.exists_top_embedding_eq_on_countable M ρ
+  obtain ⟨σ, hσ⟩ := _root_.GlobalTheory.QuadPhase.exists_top_extension M ρ
     ((⋃ τ, Set.range (embT D τ)) ∪ Set.range D.host.φ₀ ∪
       {g2 (lamOf D cc δ), g3 (lamOf D cc δ), wdPh D (tor0 D cc δ) x} ∪
       Set.range (fun j => wpF (lamOf D cc δ) (a j / ((2 * m₀ : ℕ) : ℂ))) ∪

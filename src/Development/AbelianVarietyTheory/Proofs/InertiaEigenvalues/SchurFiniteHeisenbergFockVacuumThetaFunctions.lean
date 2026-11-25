@@ -177,7 +177,6 @@ open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism
 open scoped TensorProduct InnerProductSpace
 open GlobalTheory.RawLift
 
-
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeisenbergRealPointFockVacuumPairingScalarStatement =====
@@ -395,7 +394,6 @@ open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism
 open scoped TensorProduct InnerProductSpace
 open GlobalTheory.RawLift
 
-
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaFunctionHeisenbergIrreducibleOrthogonalStatement =====
@@ -483,12 +481,6 @@ theorem thetaInner_re_pos (hψ : IsStdChar D ψ (-1)) (hcv : IsCovolOne (ratL T 
   refine lt_of_le_of_ne hnn fun h => hne ?_
   rw [← h, Complex.ofReal_zero]
 
-theorem symplO_neg_right' (a b : WO S T) : symplO S T a (-b) = -symplO S T a b := by
-  have h1 : symplO S T (-b) a = -symplO S T b a := by
-    have := GlobalTheory.SplitScalar.symplO_sub_left S T 0 b a
-    rwa [zero_sub, GlobalTheory.SplitScalar.symplO_zero_left, zero_sub] at this
-  rw [GlobalTheory.SplitScalar.symplO_skew S T (-b) a, h1, GlobalTheory.SplitScalar.symplO_skew S T a b, neg_neg]
-
 def vacSub (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ)
     (sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ) (U : AddSubgroup (WO S T)) :
     Submodule ℂ (WO S T → ℂ) where
@@ -568,8 +560,6 @@ namespace GlobalTheory.VacSchurFin
 variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D} {μ : Measure (WO S T)}
   {𝓕 : Set (WO S T)}
 
-
-
 theorem lev (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ)
     (sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ) (sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ)
     (hcS : ∀ τ, IsCartanInv (gramAt D S τ) (sS τ)) (hcT : ∀ τ, IsCartanInv (gramAt D T τ) (sT τ))
@@ -644,7 +634,7 @@ theorem lev (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ)
         show infPart D (-(w i j)) = 0
         rw [RingHom.map_neg, h1, neg_zero]
       have hfC : heisO ψ S T (-w) f ∈ C := mem_vacSub.2 ⟨laws.1 _ f hfT, fun u hu h0 => by
-          rw [GlobalTheory.SplitScalar.heisO_comm, hfL u hu h0, symplO_neg_right', AddChar.map_neg_eq_inv, hA u hu h0, inv_one,
+          rw [GlobalTheory.SplitScalar.heisO_comm, hfL u hu h0, Formalism.IndefR.Fin.symplO_neg_right, AddChar.map_neg_eq_inv, hA u hu h0, inv_one,
             one_smul], vac_heisO_fin hθ hnw hfV⟩
       obtain ⟨hfT', -, hfV'⟩ := mem_vacSub.1 hfC
       have e1 : heisO ψ S T w (heisO ψ S T (-w) f) = ψ (symplOH S T w (-w)) • f := by

@@ -89,8 +89,6 @@ theorem exists_val_ge {K Γ : Type} [Field K] [LinearOrderedCommGroupWithZero Γ
   rw [sub_sub_cancel] at h3
   exact lt_irrefl _ (h3.trans_lt (max_lt h2 h1))
 
-
-
 open Classical in
 theorem exists_sum_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (S T : HSp D)
     (βS : GL (Fin S.rank) (Datum.EAf D)) (βT : GL (Fin T.rank) (Datum.EAf D)) {e : AE D} {PP : Pl D.host.E}
@@ -275,8 +273,6 @@ theorem exists_sum_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.
   rw [← (Equiv.sum_comp eqv.symm (fun κ => χ κ)).trans (AddChar.sum_eq_zero_of_ne_one hχ)]
   exact Finset.sum_congr rfl fun k _ => hpair _
 
-
-
 open Classical in
 theorem exists_sum_heisO_eq_zero {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D}
     {sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ}
@@ -333,7 +329,7 @@ theorem sum_heisO_along_eq_zero_level : ∀ {D : D7} {G : Type} [Group G] [Finty
   obtain ⟨PP, hPP⟩ := exists_mem_Pg hL
   let c' : Fin (Wc D i).rank → AE D := Formalism.L2.Theta.mt (Wc D i) g⁻¹ *ᵥ fun a => incA D (ξ a)
   have hc : Formalism.L2.Theta.mt (Wc D i) g *ᵥ c' = fun a => incA D (ξ a) := by
-    rw [Matrix.mulVec_mulVec, mt_mul_inv, Matrix.one_mulVec]
+    rw [Matrix.mulVec_mulVec, GlobalTheory.BesselChar.mt_mul_inv, Matrix.one_mulVec]
   obtain ⟨n, l, hn, hl0, hl⟩ := exists_sum_heisO_eq_zero
     (GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ (hL.βV i))
     (GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ (hL.βW i))

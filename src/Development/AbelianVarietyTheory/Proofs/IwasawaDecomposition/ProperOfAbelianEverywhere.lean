@@ -62,7 +62,7 @@ theorem isProper_of_polAt_of_abLocus : ∀ (E : Type) [Field E] [NumberField E] 
   haveI := t.semi.quasiCompact
   haveI := t.semi.smooth
   haveI : IsIntegral t.G.left := GlobalTheory.isIntegral_left_of_isSemiAbelian t.G
-  refine GlobalTheory.T.isProper_of_completeDVR_lift_genericPoint R t.G.left t.G.hom ?_
+  refine GlobalTheory.TraitProper.isProper_of_lift_genericPoint R t.G.left t.G.hom ?_
   intro V K _ _ _ _ _ _ _ x y hx hxy
   obtain ⟨φ, rfl⟩ : ∃ φ : R →+* V, spMap φ = y := ⟨(Spec.preimage y).hom, by simp [spMap]⟩
 

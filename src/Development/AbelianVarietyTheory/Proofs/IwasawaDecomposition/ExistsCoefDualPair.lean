@@ -34,9 +34,6 @@ namespace GlobalTheory.CoefSpace.Conj
 variable {k : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
   {π : Matrix (Fin k) (Fin k) ℂ → (H →L[ℂ] H)}
 
-theorem ujset_eq (k : ℕ) : UJset (allPos k) = (Matrix.unitaryGroup (Fin k) ℂ : Set _) :=
-  GlobalTheory.RealPar.ujset_const true
-
 theorem conj_mem {g : Matrix (Fin k) (Fin k) ℂ} (hg : g ∈ Matrix.unitaryGroup (Fin k) ℂ) :
     g.map star ∈ Matrix.unitaryGroup (Fin k) ℂ :=
   Matrix.transpose_mem_unitaryGroup_iff.2 (Unitary.star_mem hg)
@@ -85,7 +82,7 @@ theorem tor_revM (θ : Fin k → ℝ) : tor θ * revM k = revM k * tor fun a => 
 theorem wt_rev (hπ : IsURepOn (UJset (allPos k)) π) {μ : Fin k → ℝ} {v : H} (hv0 : v ≠ 0)
     (hv : IsWtOn (Formalism.REAL.Kset (allPos k)) π μ v) :
     π (revM k) v ≠ 0 ∧ IsWtOn (Formalism.REAL.Kset (allPos k)) π (fun a => μ (Fin.rev a)) (π (revM k) v) := by
-  rw [ujset_eq] at hπ
+  rw [GlobalTheory.CompactDS.ujset_eq] at hπ
   refine ⟨fun h => hv0 ?_, (wt_iff _ _).2 fun θ => ?_⟩
   · rw [← norm_eq_zero, ← hπ.2.1 _ revM_mem v, h, norm_zero]
   · have e : ∑ a, μ a * θ (Fin.rev a) = ∑ a, μ (Fin.rev a) * θ a := by
@@ -121,10 +118,10 @@ theorem isHCTypeU_conj {u : Fin k → ℝ} (h : IsHCTypeU k u π) :
     push_cast
     ring
   have h3' := h3
-  rw [ujset_eq] at h3'
+  rw [GlobalTheory.CompactDS.ujset_eq] at h3'
   refine ⟨h1, h2, ?_, h4, fun _ _ _ _ => trivial, fun S hS hst => h5 S hS fun g hg x hx => ?_,
     ⟨_, trivial, (wt_rev h3 hv0 hv).1, ?_⟩, fun μ x _ hx0 hx => ?_⟩
-  · rw [ujset_eq]
+  · rw [GlobalTheory.CompactDS.ujset_eq]
     refine ⟨⟨?_, fun a ha b hb => ?_⟩, fun g hg => h3'.2.1 _ (conj_mem hg), fun x => ?_⟩
     · beta_reduce
       rw [Matrix.map_one _ (star_zero ℂ) (star_one ℂ)]

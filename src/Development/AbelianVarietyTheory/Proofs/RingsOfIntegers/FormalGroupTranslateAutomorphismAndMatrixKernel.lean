@@ -26,7 +26,7 @@ def Sm {m n : ℕ} (x : Fin m → Pt V n d) : Prop := ∀ b, Sm1 (x b)
 
 theorem evV_hom {m n : ℕ} {a : Fin m → Pt V n d} (ha : Sm a) :
     ∃ ψ : PS V m d →ₐ[V] PS V n d, (∀ j, ψ (MvPowerSeries.X j) = a j.1 j.2) ∧ ∀ f, evV a f = ψ f := by
-  obtain ⟨ψ, hψ, he⟩ := (GlobalTheory.T.mvPowerSeriesSubstConstTerms_local_algHom_spec V (Fin m × Fin d) (Fin n × Fin d) (Fin 0) (fun p => a p.1 p.2)
+  obtain ⟨ψ, hψ, he⟩ := (GlobalTheory.PlaceInt.evC_spec V (Fin m × Fin d) (Fin n × Fin d) (Fin 0) (fun p => a p.1 p.2)
     (fun p => ha p.1 p.2)).1
   exact ⟨ψ, fun j => hψ j, fun f => he f⟩
 
@@ -56,13 +56,13 @@ theorem evV_zero {m n : ℕ} {a : Fin m → Pt V n d} (ha : Sm a) : evV a 0 = 0 
   rw [he, map_zero]
 
 theorem evV_comp {m n k : ℕ} {a : Fin m → Pt V n d} (ha : Sm a) {b : Fin n → Pt V k d} (hb : Sm b) (f : PS V m d) :
-    evV b (evV a f) = evV (fun j i => evV b (a j i)) f := (GlobalTheory.T.mvPowerSeriesSubstConstTerms_local_algHom_spec V (Fin m × Fin d) (Fin n × Fin d) (Fin k × Fin d) (fun p => a p.1 p.2)
+    evV b (evV a f) = evV (fun j i => evV b (a j i)) f := (GlobalTheory.PlaceInt.evC_spec V (Fin m × Fin d) (Fin n × Fin d) (Fin k × Fin d) (fun p => a p.1 p.2)
     (fun p => ha p.1 p.2)).2.2.2 (fun p => b p.1 p.2) (fun p => hb p.1 p.2) f
 
 theorem sm_evV {m n : ℕ} {a : Fin m → Pt V n d} (ha : Sm a) {x : Pt V m d} (hx : Sm1 x) :
     Sm1 (fun i => evV a (x i)) := by
   intro i
-  exact (GlobalTheory.T.mvPowerSeriesSubstConstTerms_local_algHom_spec V (Fin m × Fin d) (Fin n × Fin d) (Fin 0) (fun p => a p.1 p.2)
+  exact (GlobalTheory.PlaceInt.evC_spec V (Fin m × Fin d) (Fin n × Fin d) (Fin 0) (fun p => a p.1 p.2)
     (fun p => ha p.1 p.2)).2.1 (x i) (hx i)
 
 omit [IsAdicComplete (maximalIdeal V) V] [CharZero V] in
@@ -85,7 +85,7 @@ theorem sm_cpt {n : ℕ} {α : Fin d → V} (h : Small α) : Sm1 (cpt α : Pt V 
 theorem evV_id {n : ℕ} (f : PS V n d) : evV (fun b => pt V d b) f = f := by
   have h0 : ∀ p : Fin n × Fin d, MvPowerSeries.constantCoeff ((pt V d p.1 : Pt V n d) p.2) = 0 :=
     fun p => MvPowerSeries.constantCoeff_X _
-  have e := (GlobalTheory.T.mvPowerSeriesSubstConstTerms_local_algHom_spec V (Fin n × Fin d) (Fin n × Fin d) (Fin 0) (fun p => (pt V d p.1 : Pt V n d) p.2)
+  have e := (GlobalTheory.PlaceInt.evC_spec V (Fin n × Fin d) (Fin n × Fin d) (Fin 0) (fun p => (pt V d p.1 : Pt V n d) p.2)
     (fun p => sm_pt p.1 p.2)).2.2.1 h0 f
   have hX : (fun p : Fin n × Fin d => (pt V d p.1 : Pt V n d) p.2) = MvPowerSeries.X := funext fun p => rfl
   show evC (fun p : Fin n × Fin d => (pt V d p.1 : Pt V n d) p.2) f = f
@@ -107,7 +107,7 @@ theorem evV_addV {m n : ℕ} (F : Fin d → PS V 2 d) {a : Fin m → Pt V n d} (
   show evV a (evV ![x, y] (F i)) = evV ![fun i => evV a (x i), fun i => evV a (y i)] (F i)
   rw [evV_comp hxy ha, e]
 
-theorem sm_addV (B : FB V d O) {n : ℕ} {x y : Pt V n d} (hx : Sm1 x) (hy : Sm1 y) : Sm1 (addV B.G.F x y) := (GlobalTheory.T.maximal_ideal_formal_points_form_module V d O B n x y x hx hy hx).1
+theorem sm_addV (B : FB V d O) {n : ℕ} {x y : Pt V n d} (hx : Sm1 x) (hy : Sm1 y) : Sm1 (addV B.G.F x y) := (GlobalTheory.PlaceInt.smallPts_module V d O B n x y x hx hy hx).1
 
 theorem sm_matV (B : FB V d O) {n m : ℕ} (p : Matrix (Fin n) (Fin n) O) {x : Fin n → Pt V m d} (hx : Sm x) :
     Sm (matV B p x) := fun b i => (GlobalTheory.T.formalModuleMatrixApplyPoints_action_laws V d O B n m p p x x (fun b i => hx b i) (fun b i => hx b i)).1 b i
@@ -124,9 +124,9 @@ theorem evV_matV (B : FB V d O) {n m k : ℕ} (p : Matrix (Fin n) (Fin n) O) {x 
 
 private lemma eq_zero_of_addV_self_eq (B : FB V d O) {n : ℕ} {z : Pt V n d} (hz : Sm1 z)
     (h : addV B.G.F z z = z) : z = 0 := by
-  have Tz := GlobalTheory.T.maximal_ideal_formal_points_form_module V d O B n z z z hz hz hz
+  have Tz := GlobalTheory.PlaceInt.smallPts_module V d O B n z z z hz hz hz
   have hw : Sm1 (compV (B.A.act (-1)) z) := (Tz.2.2.2.2.2.2.2 (-1) 0).1
-  have T := GlobalTheory.T.maximal_ideal_formal_points_form_module V d O B n z z (compV (B.A.act (-1)) z) hz hz hw
+  have T := GlobalTheory.PlaceInt.smallPts_module V d O B n z z (compV (B.A.act (-1)) z) hz hz hw
   calc z = addV B.G.F z 0 := T.2.2.2.1.symm
     _ = addV B.G.F z (addV B.G.F z (compV (B.A.act (-1)) z)) := by rw [Tz.2.2.2.2.1]
     _ = addV B.G.F (addV B.G.F z z) (compV (B.A.act (-1)) z) := T.2.2.1.symm
@@ -141,7 +141,7 @@ theorem matV_zero (B : FB V d O) {n m : ℕ} (p : Matrix (Fin n) (Fin n) O) :
     (GlobalTheory.T.formalModuleMatrixApplyPoints_action_laws V d O B n m p p 0 0 (fun b i => h0 b i) (fun b i => h0 b i)).2.2.1
   have hz : (fun b => addV B.G.F ((0 : Fin n → Pt V m d) b) ((0 : Fin n → Pt V m d) b)) = 0 := by
     funext b
-    exact (GlobalTheory.T.maximal_ideal_formal_points_form_module V d O B m 0 0 0 sm_zero sm_zero sm_zero).2.2.2.1
+    exact (GlobalTheory.PlaceInt.smallPts_module V d O B m 0 0 0 sm_zero sm_zero sm_zero).2.2.2.1
   rw [hz] at e3
   funext b
   exact eq_zero_of_addV_self_eq B (sm_matV B p h0 b) (congrFun e3 b).symm
@@ -175,7 +175,7 @@ theorem shift_zero (B : FB V d O) {n : ℕ} (f : PS V n d) : shift B.G.F 0 f = f
     funext b
     have h1 : (cpt ((0 : Fin n → Fin d → V) b) : Pt V n d) = 0 := cpt_zero
     rw [h1]
-    exact (GlobalTheory.T.maximal_ideal_formal_points_form_module V d O B n (pt V d b) (pt V d b) (pt V d b) (sm_pt b) (sm_pt b) (sm_pt b)).2.2.2.1
+    exact (GlobalTheory.PlaceInt.smallPts_module V d O B n (pt V d b) (pt V d b) (pt V d b) (sm_pt b) (sm_pt b) (sm_pt b)).2.2.2.1
   show evV _ f = f
   rw [e]
   exact evV_id f
@@ -189,14 +189,14 @@ theorem shift_shift (B : FB V d O) {n : ℕ} {α β δ : Fin n → Fin d → V} 
       (addV B.G.F (pt V d j) (cpt (β j)) i)) = fun b => addV B.G.F (pt V d b) (cpt (δ b)) := by
     funext j
     rw [evV_addV B.G.F hA (sm_pt j) (sm_cpt (hβ j)), evV_pt hA j, evV_cpt hA (β j),
-      (GlobalTheory.T.maximal_ideal_formal_points_form_module V d O B n (pt V d j) (cpt (α j)) (cpt (β j)) (sm_pt j) (sm_cpt (hα j))
+      (GlobalTheory.PlaceInt.smallPts_module V d O B n (pt V d j) (cpt (α j)) (cpt (β j)) (sm_pt j) (sm_cpt (hα j))
         (sm_cpt (hβ j))).2.2.1,
       ← addV_cpt B.G.F (hα j) (hβ j) (h j) n]
   show evV _ (evV _ f) = evV _ f
   rw [evV_comp hB hA, key]
 
 theorem zero_addV (B : FB V d O) {n : ℕ} {x : Pt V n d} (hx : Sm1 x) : addV B.G.F 0 x = x := by
-  have T := GlobalTheory.T.maximal_ideal_formal_points_form_module V d O B n x 0 x hx sm_zero hx
+  have T := GlobalTheory.PlaceInt.smallPts_module V d O B n x 0 x hx sm_zero hx
   rw [← T.2.1]
   exact T.2.2.2.1
 
@@ -232,18 +232,18 @@ theorem shift_equiv (B : FB V d O) {n : ℕ} {α : Fin n → Fin d → V} (hα :
     ∃ ψ : PS V n d ≃ₐ[V] PS V n d, ∀ f, shift B.G.F α f = ψ f := by
   have hc : ∀ b, Sm1 (cpt (α b) : Pt V 0 d) := fun b => sm_cpt (hα b)
   have hw : ∀ b, Sm1 (compV (B.A.act (-1)) (cpt (α b) : Pt V 0 d)) := fun b =>
-    ((GlobalTheory.T.maximal_ideal_formal_points_form_module V d O B 0 _ _ _ (hc b) (hc b) (hc b)).2.2.2.2.2.2.2 (-1) 0).1
+    ((GlobalTheory.PlaceInt.smallPts_module V d O B 0 _ _ _ (hc b) (hc b) (hc b)).2.2.2.2.2.2.2 (-1) 0).1
   let β : Fin n → Fin d → V := fun b i =>
     MvPowerSeries.constantCoeff (compV (B.A.act (-1)) (cpt (α b) : Pt V 0 d) i)
   have hβ : ∀ b, Small (β b) := fun b i => hw b i
   have hwβ : ∀ b, (cpt (β b) : Pt V 0 d) = compV (B.A.act (-1)) (cpt (α b)) := fun b => (eq_cpt _).symm
   have h1 : ∀ b, (cpt ((0 : Fin n → Fin d → V) b) : Pt V 0 d) = addV B.G.F (cpt (α b)) (cpt (β b)) := by
     intro b
-    rw [hwβ b, (GlobalTheory.T.maximal_ideal_formal_points_form_module V d O B 0 _ _ _ (hc b) (hc b) (hc b)).2.2.2.2.1]
+    rw [hwβ b, (GlobalTheory.PlaceInt.smallPts_module V d O B 0 _ _ _ (hc b) (hc b) (hc b)).2.2.2.2.1]
     exact cpt_zero
   have h2 : ∀ b, (cpt ((0 : Fin n → Fin d → V) b) : Pt V 0 d) = addV B.G.F (cpt (β b)) (cpt (α b)) := by
     intro b
-    rw [(GlobalTheory.T.maximal_ideal_formal_points_form_module V d O B 0 _ _ _ (sm_cpt (hβ b)) (hc b) (hc b)).2.1]
+    rw [(GlobalTheory.PlaceInt.smallPts_module V d O B 0 _ _ _ (sm_cpt (hβ b)) (hc b) (hc b)).2.1]
     exact h1 b
   obtain ⟨ψ, -, hψ⟩ := evV_hom (sm_shift B hα)
   obtain ⟨χ, -, hχ⟩ := evV_hom (sm_shift B hβ)
@@ -291,7 +291,7 @@ theorem mem_kerM_iff (B : FB V d O) {n : ℕ} (p : Matrix (Fin n) (Fin n) O) {α
     rw [hM, e3, ← e]
     show evV _ f = evV _ f
     exact congrArg (fun a => evV a f) (funext fun b =>
-      (GlobalTheory.T.maximal_ideal_formal_points_form_module V d O B n _ _ _ (sm_matV B p hP b) (sm_matV B p hP b) (sm_matV B p hP b)).2.2.2.1)
+      (GlobalTheory.PlaceInt.smallPts_module V d O B n _ _ _ (sm_matV B p hP b) (sm_matV B p hP b) (sm_matV B p hP b)).2.2.2.1)
   · intro h
     refine ⟨hα, ?_⟩
     have hMA : matV B p (fun b => addV B.G.F (pt V d b) (cpt (α b))) = matV B p (fun j => (pt V d j : Pt V n d)) := by
@@ -309,7 +309,6 @@ theorem mem_kerM_iff (B : FB V d O) {n : ℕ} (p : Matrix (Fin n) (Fin n) O) {α
     exact e1.symm
 
 end GlobalTheory.PlaceInt.ShiftPf
-
 
 open GlobalTheory.PlaceInt.ShiftPf in
 theorem GlobalTheory.PlaceInt.shift_kerM : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (maximalIdeal V) V] [CharZero V] (d : ℕ) (O : Type) [CommRing O] [StarRing O] (B : FB V d O) (n : ℕ) (p : Matrix (Fin n) (Fin n) O), (0 ∈ kerM B p) ∧ (∀ f : PS V n d, shift B.G.F 0 f = f) ∧ ∀ α β : Fin n → Fin d → V, (∀ b, Small (α b)) → (∀ b, Small (β b)) → (∃ ψ : PS V n d ≃ₐ[V] PS V n d, ∀ f, shift B.G.F α f = ψ f) ∧ (α ∈ kerM B p ↔ ∀ f, shift B.G.F α (pullM B p f) = pullM B p f) ∧ ((∀ f, shift B.G.F α f = shift B.G.F β f) → α = β) ∧ ∃ δ : Fin n → Fin d → V, (∀ b, Small (δ b)) ∧ (∀ b, (cpt (δ b) : Pt V 0 d) = addV B.G.F (cpt (α b)) (cpt (β b))) ∧ (∀ f, shift B.G.F α (shift B.G.F β f) = shift B.G.F δ f) ∧ (α ∈ kerM B p → β ∈ kerM B p → δ ∈ kerM B p) := by

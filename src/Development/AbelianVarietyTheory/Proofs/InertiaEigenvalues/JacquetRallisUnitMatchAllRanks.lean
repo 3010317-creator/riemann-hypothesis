@@ -490,7 +490,6 @@ private lemma isClosedEmbedding_uHom {F E : Type} [NontriviallyNormedField F]
     (isClosed_unitary (R := Matrix (Fin r) (Fin r) E)).isClosedEmbedding_subtypeVal
   exact (IsClosedEmbedding.of_comp_iff hval).1 ⟨hemb, hclosed⟩
 
-
 open Matrix MeasureTheory Filter Topology in
 theorem _root_.GlobalTheory.JR.TorusCutOff.exists_unitary_cutoff : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [_root_.GlobalTheory.JR.Unram F E] (A : _root_.GlobalTheory.JR.Et F E) (r : ℕ) (τ : A.K) (p : Fin r → F), A.IsGen τ p → ∀ (x : A.K) (j : A.L ≃ₗ[E] (Fin r → E)) (hx : A.IsIsom x j) (Ax : selfAdjoint (Matrix (Fin r) (Fin r) E)), (∀ z, j (algebraMap A.K A.L τ * z) = Ax.1 *ᵥ j z) → ∀ (ν : Measure (unitary A.L)), ν.IsHaarMeasure → ∀ Z : Set (Matrix (Fin r) (Fin r) E), IsCompact Z → ∃ α : Matrix.unitaryGroup (Fin r) E → ℝ, IsLocallyConstant α ∧ HasCompactSupport α ∧ (∀ g, 0 ≤ α g) ∧ ∀ g : Matrix.unitaryGroup (Fin r) E, g.1 * Ax.1 * star g.1 ∈ Z → ∫ t, α (g * (A.uHom hx t)⁻¹) ∂ν = 1 := by
   intro F E _ _ _ _ _ A r τ p hτ x j hx Ax hAx ν _ Z hZ
@@ -1334,10 +1333,6 @@ noncomputable section
 
 namespace GlobalTheory.JR.SizeOne
 
-theorem eta_one' {F : Type} [NormedField F] : eta (1 : F) = 1 := by
-  unfold eta
-  rw [ite_eq_left ⟨1, by simp⟩]
-
 theorem unitMatch_zero : UnitMatch 0 := by
   intro F E _ _ _ _ _ M a _
   letI := M.mG; letI := M.mU
@@ -1348,7 +1343,7 @@ theorem unitMatch_zero : UnitMatch 0 := by
   have hw : ∀ Y : Gl 0 F, omega Y = 1 := by
     intro Y
     have : lastDet Y = 1 := by simp [lastDet, Fin.last]
-    rw [omega, this, eta_one']
+    rw [omega, this, GlobalTheory.JR.LinDesc.valuationParitySign_one]
   refine ⟨fun X hX => ?_, fun hn => (hn ⟨(0, 0, a.2.2), ?_⟩).elim⟩
   · have hl : X.2.2 = a.2.2 := (algebraMap F E).injective (congrArg (fun t => t.2.2) hX)
     by_cases hb : ‖a.2.2‖ ≤ 1 <;>
