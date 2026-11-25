@@ -60,12 +60,6 @@ public import Formalism.SharedLemmas.PrecompleteFinite
 
 open Formalism.BasicNotions Formalism.BasicNotions.Loc ReciprocityTheory.Gal Module UpperTheory.V.Loc UpperTheory.V.U3 UpperTheory.V.Alg IsLocalRing Polynomial
 
-private theorem isPrecomplete_pi {R : Type} [CommRing R] (I : Ideal R) [IsPrecomplete I R] (r : ℕ) :
-    IsPrecomplete I (Fin r → R) := by
-  first
-  | exact _root_.Formalism.SharedLemmas.isPrecomplete_fin_pi
-  | (apply _root_.Formalism.SharedLemmas.isPrecomplete_fin_pi <;> assumption)
-
 private theorem finOfHaus {l : ℕ} [Fact l.Prime] {V M : Type} [AddCommGroup V] [Module ℚ_[l] V] [Module ℤ_[l] V]
     [IsScalarTower ℤ_[l] ℚ_[l] V] [Module.Finite ℚ_[l] V] [AddCommGroup M] [Module ℤ_[l] M]
     (i : M →ₗ[ℤ_[l]] V) (hi : Function.Injective i) [IsHausdorff (maximalIdeal ℤ_[l]) M] :
@@ -98,7 +92,7 @@ private theorem finOfHaus {l : ℕ} [Fact l.Prime] {V M : Type} [AddCommGroup V]
   obtain ⟨n, p, hp⟩ := Module.Finite.exists_fin' ℤ_[l] (M ⧸ (maximalIdeal ℤ_[l] • ⊤ : Submodule ℤ_[l] M))
   obtain ⟨q, hq⟩ := Module.projective_lifting_property (Submodule.mkQ (maximalIdeal ℤ_[l] • ⊤ : Submodule ℤ_[l] M)) p
     (Submodule.mkQ_surjective _)
-  haveI := isPrecomplete_pi (maximalIdeal ℤ_[l]) n
+  haveI := Formalism.SharedLemmas.isPrecomplete_fin_pi (maximalIdeal ℤ_[l]) n
   have : Function.Surjective q := surjective_of_mkQ_comp_surjective (I := maximalIdeal ℤ_[l]) (by rw [hq]; exact hp)
   exact Module.Finite.of_surjective q this
 
