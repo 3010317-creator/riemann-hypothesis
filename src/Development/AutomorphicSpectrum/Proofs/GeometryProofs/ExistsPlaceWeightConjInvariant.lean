@@ -238,12 +238,8 @@ theorem exists_smooth_sep {A E : Type} [Finite A] [NormedAddCommGroup E] [Normed
   let T : A → Set E := fun a => ⋃ b ∈ {b | b ≠ a}, S b
   have hT : ∀ a, IsClosed (T a) := fun a =>
     (Set.toFinite {b | b ≠ a}).isClosed_biUnion fun b _ => hS b
-  have hdis : ∀ a, Disjoint (S a) (T a) := by
-    intro a
-    rw [Set.disjoint_left]
-    intro x hxa hx
-    obtain ⟨b, hb, hxb⟩ := Set.mem_iUnion₂.mp hx
-    exact Set.disjoint_left.mp (hd b a hb) hxb hxa
+  have hdis : ∀ a, Disjoint (S a) (T a) := fun a =>
+    Set.disjoint_iUnion₂_right.2 fun b hb => (hd b a hb).symm
   have hsep : ∀ a, ∃ f : E → ℝ, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) f ∧
       (∀ᶠ x in 𝓝ˢ (S a), f x = 1) ∧ ∀ᶠ x in 𝓝ˢ (T a), f x = 0 := fun a => by
     obtain ⟨f, h0, h1, -⟩ := exists_contMDiffMap_zero_one_nhds_of_isClosed 𝓘(ℝ, E) (n := ⊤)
