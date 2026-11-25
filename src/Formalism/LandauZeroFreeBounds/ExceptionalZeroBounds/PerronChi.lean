@@ -43,10 +43,6 @@ lemma vonMangoldtCharIm_bound (n : ℕ) : |vonMangoldtCharIm χ n| ≤ 1 * Λ n 
   first
   | exact Complex.abs_im_le_norm _
 
-lemma vonMangoldtCharRe_zero : vonMangoldtCharRe χ 0 = 0 := by simp [vonMangoldtCharRe]
-
-lemma vonMangoldtCharIm_zero : vonMangoldtCharIm χ 0 = 0 := by simp [vonMangoldtCharIm]
-
 lemma chebyshev_character_re_im (x : ℝ) :
     Schi χ x = (Formalism.Sa (vonMangoldtCharRe χ) x : ℂ) + I * (Formalism.Sa (vonMangoldtCharIm χ) x : ℂ) := by
   unfold Schi Formalism.Sa vonMangoldtCharRe vonMangoldtCharIm
@@ -139,17 +135,17 @@ end
 section
 variable {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
 
-lemma summatory_function_continuousAt {a : ℕ → ℝ} (ha0 : a 0 = 0) (y : ℝ) :
+lemma summatory_function_continuousAt (a : ℕ → ℝ) (y : ℝ) :
     ContinuousAt (fun x => (Formalism.Sa a x : ℂ)) y :=
-  (Complex.continuous_ofReal.comp (Formalism.Sa_continuous a ha0)).continuousAt
+  (Complex.continuous_ofReal.comp (Formalism.Sa_continuous a)).continuousAt
 
 lemma chebyshev_character_continuousAt (y : ℝ) : ContinuousAt (fun x => Schi χ x) y := by
   have h : (fun x => Schi χ x) =
       fun x => (Formalism.Sa (vonMangoldtCharRe χ) x : ℂ) + I * (Formalism.Sa (vonMangoldtCharIm χ) x : ℂ) :=
     funext (chebyshev_character_re_im χ)
   rw [h]
-  exact (summatory_function_continuousAt (vonMangoldtCharRe_zero χ) y).add
-    (continuousAt_const.mul (summatory_function_continuousAt (vonMangoldtCharIm_zero χ) y))
+  exact (summatory_function_continuousAt (vonMangoldtCharRe χ) y).add
+    (continuousAt_const.mul (summatory_function_continuousAt (vonMangoldtCharIm χ) y))
 
 lemma summatory_rpow_integrableOn {a : ℕ → ℝ} (ha : ∀ n, |a n| ≤ 1 * Λ n) {w : ℂ} (hw : 1 < w.re) :
     IntegrableOn (fun x : ℝ => (Formalism.Sa a x : ℂ) * (x : ℂ) ^ (-w - 1)) (Ioi 1) := by
