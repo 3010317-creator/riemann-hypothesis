@@ -1,6 +1,5 @@
 module
 
-import all Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HidaCompleteRings.FinCompl
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.BlockMatrixPlaces.BlockDiagonalOrdinaryGSpRep
 public import Mathlib.Basic.Finite.Defs
 public import Mathlib.Order.SetNotation
@@ -757,7 +756,13 @@ private theorem isPrecomplete_pi {R : Type} [CommRing R] (I : Ideal R) [IsPrecom
 
 private theorem isPrecomplete_finite {R M : Type} [CommRing R] [AddCommGroup M] [Module R M]
     [Module.Finite R M] (I : Ideal R) [IsPrecomplete I R] : IsPrecomplete I M := by
-  apply _root_.isPrecomplete_finite <;> assumption
+  obtain ⟨r, π, hπ⟩ := Module.Finite.exists_fin' R M
+  haveI := isPrecomplete_pi I r
+  rw [← AdicCompletion.of_surjective_iff]
+  intro y
+  obtain ⟨z, rfl⟩ := AdicCompletion.map_surjective I hπ y
+  obtain ⟨w, rfl⟩ := AdicCompletion.of_surjective I (Fin r → R) z
+  exact ⟨π w, (AdicCompletion.map_of I π w).symm⟩
 
 private theorem lift_seq {A : Type} [CommRing A] [IsLocalRing A] {T : Type} [AddCommGroup T] [Module A T]
     [IsPrecomplete (maximalIdeal A) T] (x : ∀ n, T ⧸ lev A T n) (hx : ∀ n, redn A T n (x (n + 1)) = x n) :

@@ -1,5 +1,6 @@
 module
 
+import all Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.SwapOne
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HkDefs
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.EqOneOfStrictMono
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HkBern
@@ -7,7 +8,6 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTool
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HkDedekind
 import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HkInd
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.SwapOne
-import all Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.SwapOne
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
