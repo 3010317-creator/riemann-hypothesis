@@ -543,7 +543,6 @@ variable {A D}
 
 theorem map_gen {k : Type} [CommRing k] (ψ : A →+* k) (z : Var σ D → k) (b : Bool) :
     MvPolynomial.map (eval₂Hom ψ z) (gen A D b) = ∑ m : Mon σ D, monomial m.1 (z (Sum.inl (b, m))) := by
-  set_option synthInstance.maxHeartbeats 100000 in
     simp [gen, map_sum, map_monomial]
 
 theorem totalDegree_sum_le {k : Type} [CommRing k] (c : Mon σ D → k) :
@@ -939,7 +938,6 @@ theorem optionEquivLeft_map (A : Type) [CommRing A] (n : ℕ) {k : Type} [Field 
   refine MvPolynomial.ringHom_ext (fun a => ?_) (fun i => ?_)
   · simp [optionEquivLeft_C]
   · rcases i with _ | j <;> simp [optionEquivLeft_X_none, optionEquivLeft_X_some]
-
 
 open MvPolynomial in
 theorem standardEtale_mvPolynomial_hypersurface :
