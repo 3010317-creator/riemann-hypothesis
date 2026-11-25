@@ -206,12 +206,7 @@ private theorem norm_eq (α : A E) : Algebra.norm (A F) α =
   simp only [Algebra.leftMulMatrix_eq_repr_mul, ← one_eq D, ← theta_eq D, mul_one]
   rfl
 
-private theorem nu_aE (α : (A E)ˣ) : nu F (aE α) = ideleNorm F E α := by
-  have : Matrix.GeneralLinearGroup.det (aE α) = α := by
-    apply Units.ext
-    change Matrix.det !![(α : A E), 0; 0, 1] = α
-    simp [Matrix.det_fin_two]
-  rw [nu, this]
+private theorem nu_aE (α : (A E)ˣ) : nu F (aE α) = ideleNorm F E α := by simp [nu]
 
 private theorem c_eq (ρ : GL (Fin 2) (A E) →* GL (Fin 4) (A F))
     (hq : ∀ h v, q4 D.δ (D.act h v) = (nu F h : A F) * q4 D.δ v) (α : (A E)ˣ) :

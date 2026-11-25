@@ -49,8 +49,6 @@ noncomputable section
 section A
 open Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.BasicNotions NumberField
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 namespace Formalism.MainNotions.S.Lem.Comparison₂
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E} {r : ℕ}
@@ -77,8 +75,6 @@ end A
 section B
 open Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.BasicNotions NumberField
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 namespace Formalism.MainNotions.S.Lem.Comparison₂
 
 end Formalism.MainNotions.S.Lem.Comparison₂
@@ -89,7 +85,6 @@ open scoped Classical
 namespace Formalism.MainNotions.S.Lem.Cnt
 open NumberField IsDedekindDomain Module Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.Cnt
 open scoped ENNReal
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem cntSW_eq (D : D7) {T : D.host.E} (T' : D.host.E) (F : LFlag (D.sp.Y 0) D.R.rS T) (Λ : LatV D) (Z : GramM D) :
     cntSW D T' F Λ Z =

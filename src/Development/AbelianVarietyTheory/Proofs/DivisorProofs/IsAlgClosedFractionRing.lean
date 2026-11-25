@@ -1,5 +1,6 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MonicPolynomialsHaveRootsIffIntegrallyClosedAlgC
 import Development.EtaleCohomology.EtaleSheaves.DomOpenPf
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
 import Mathlib.Algebra.Order.Floor.Extended
