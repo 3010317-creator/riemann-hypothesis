@@ -47,10 +47,8 @@ theorem gk_mem_c (kv : Σ k : Fin 2, D.nd.PlG k) :
 
 theorem not_both (P : Ideal (𝓞 X.B.I.E)) (hP : P ≠ ⊤) (h0 : ((D.host.g 0 : ℕ) : 𝓞 X.B.I.E) ∈ P)
     (h1 : ((D.host.g 1 : ℕ) : 𝓞 X.B.I.E) ∈ P) : False := by
-  have hcop : IsCoprime ((D.host.g 0 : ℕ) : 𝓞 X.B.I.E) ((D.host.g 1 : ℕ) : 𝓞 X.B.I.E) := by
-    have h' : IsCoprime ((D.host.g 0 : ℕ) : ℤ) ((D.host.g 1 : ℕ) : ℤ) :=
-      Nat.isCoprime_iff_coprime.2 ((Nat.coprime_primes (D.host.g_prime 0) (D.host.g_prime 1)).2 D.host.g_ne)
-    simpa using h'.map (Int.castRingHom (𝓞 X.B.I.E))
+  have hcop : IsCoprime ((D.host.g 0 : ℕ) : 𝓞 X.B.I.E) ((D.host.g 1 : ℕ) : 𝓞 X.B.I.E) :=
+    ((Nat.coprime_primes (D.host.g_prime 0) (D.host.g_prime 1)).2 D.host.g_ne).cast
   obtain ⟨a, b, hab⟩ := hcop
   have := P.add_mem (P.mul_mem_left a h0) (P.mul_mem_left b h1)
   rw [hab] at this
@@ -144,10 +142,8 @@ theorem mem_g_of_all {a : 𝓞 X.B.I.E}
     exact ha P' (g_mem_of_gk X hgP)
   obtain ⟨u, hu⟩ := Ideal.mem_span_singleton'.1 (hk 0)
   obtain ⟨v, hv⟩ := Ideal.mem_span_singleton'.1 (hk 1)
-  have hcop : IsCoprime ((D.host.g 0 : ℕ) : 𝓞 X.B.I.E) ((D.host.g 1 : ℕ) : 𝓞 X.B.I.E) := by
-    have h' : IsCoprime ((D.host.g 0 : ℕ) : ℤ) ((D.host.g 1 : ℕ) : ℤ) :=
-      Nat.isCoprime_iff_coprime.2 ((Nat.coprime_primes (D.host.g_prime 0) (D.host.g_prime 1)).2 D.host.g_ne)
-    simpa using h'.map (Int.castRingHom (𝓞 X.B.I.E))
+  have hcop : IsCoprime ((D.host.g 0 : ℕ) : 𝓞 X.B.I.E) ((D.host.g 1 : ℕ) : 𝓞 X.B.I.E) :=
+    ((Nat.coprime_primes (D.host.g_prime 0) (D.host.g_prime 1)).2 D.host.g_ne).cast
   obtain ⟨α, β, hαβ⟩ := hcop
   refine ⟨α * v + β * u, ?_⟩
   rw [g_eq_cast]
