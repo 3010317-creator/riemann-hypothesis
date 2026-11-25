@@ -127,16 +127,8 @@ theorem filt_abstract [ContinuousMul K] (π : K) (hπ0 : π ≠ 0) (hπ : Tendst
         (∀ n, IsOpen (H n : Set X)) ∧ (∀ n, IsCompact (H n : Set X)) ∧
         (∀ N' ∈ 𝓝 (0 : X), ∃ n, (H n : Set X) ⊆ N') ∧ (∀ n, (Λ n).map D = H n) ∧
         ∀ n, ∀ Z ∈ Λ 0, ∀ W ∈ Λ n, G (y + Z + W) - G (y + Z) - D W ∈ H (n + 1) := by
-  have hβ0 : ∀ w, β 0 w = 0 := fun w => by
-    have h := hβ1 0 0 w
-    rw [add_zero] at h
-    simpa using h
-  have hβ0' : ∀ u, β u 0 = 0 := fun u => by
-    have h := hβ2 u 0 0
-    rw [add_zero] at h
-    simpa using h
-  let Dm : V → V →+ X := fun u =>
-    { toFun := β u, map_zero' := hβ0' u, map_add' := hβ2 u }
+  have hβ0 : ∀ w, β 0 w = 0 := fun w => (AddMonoidHom.mk' (β · w) fun u u' => hβ1 u u' w).map_zero
+  let Dm : V → V →+ X := fun u => AddMonoidHom.mk' (β u) (hβ2 u)
   have hDm : ∀ u w, Dm u w = β u w := fun _ _ => rfl
   have hDmc : ∀ u, Continuous (Dm u) := fun u =>
     hβc.comp (Continuous.prodMk continuous_const continuous_id)
