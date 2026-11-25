@@ -14,21 +14,15 @@ namespace PIQnLT
 
 open Formalism.REAL Formalism.QuantumDeterminants
 
+open scoped Matrix.Norms.Operator
+
 variable {k i r' : ℕ}
 
-set_option backward.isDefEq.respectTransparency false in
 theorem exp_Lz (hL : LevHom) (Y : Matrix (Fin (2 * r' + k + 1)) (Fin (2 * r' + k + 1)) ℂ) :
     NormedSpace.exp (Lz k i r' Y) = ιLev k i r' (NormedSpace.exp Y) := by
   have h0 : ιLev k i r' 0 = 1 - Lz k i r' 1 := by
     rw [← Lz_one (k := k) (i := i) (r' := r') hL]
     abel
-  letI : NormedRing (Matrix (Fin (2 * r' + k + 1)) (Fin (2 * r' + k + 1)) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin (2 * r' + k + 1)) (Fin (2 * r' + k + 1)) ℂ) :=
-    Matrix.linftyOpNormedAlgebra
-  letI : NormedRing (Matrix (Fin (2 * (i + r') + k + 1)) (Fin (2 * (i + r') + k + 1)) ℂ) :=
-    Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin (2 * (i + r') + k + 1)) (Fin (2 * (i + r') + k + 1)) ℂ) :=
-    Matrix.linftyOpNormedAlgebra
   have h1 := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) Y
   have h3 := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) (Lz k i r' Y)
   have hc : Continuous (LzL k i r') := (LzL k i r').continuous_of_finiteDimensional

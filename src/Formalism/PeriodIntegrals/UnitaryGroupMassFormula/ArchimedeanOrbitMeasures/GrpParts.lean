@@ -14,7 +14,6 @@ open MeasureTheory Topology Filter Metric Matrix Formalism.BasicNotions Formalis
   Formalism.L2.SG.Sub Formalism.L2.SG.TypedSets Formalism.L2.SG.Pf.NcReal
 open scoped TensorProduct
 
-set_option backward.isDefEq.respectTransparency false in
 theorem continuous_matExp (n : ℕ) : Continuous (NormedSpace.exp : Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ) :=
   open scoped Norms.Operator in NormedSpace.exp_continuous
 
@@ -156,7 +155,6 @@ theorem grpPiecesStd_of (h0 : BlockEx) (hS : ChiStab) (hD : GrpDens) (hH : GrpHa
     ring
 
 
-set_option backward.isDefEq.respectTransparency false in
 theorem exp_mul_of_mul_eq_zero {n : ℕ} (M P : Matrix (Fin n) (Fin n) ℂ) (hMP : M * P = 0) :
     NormedSpace.exp M * P = P := by
   open scoped Norms.Operator in
