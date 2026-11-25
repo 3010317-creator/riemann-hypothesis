@@ -10,8 +10,6 @@ open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt Filt
 
 noncomputable section
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 namespace Formalism.FourierDecayAlt.P.DifferentialOperatorClasses
 
 section ops

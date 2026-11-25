@@ -19,8 +19,6 @@ namespace Formalism.MainNotions.G.GLWeightTheory
 
 open Formalism.MainNotions.G Formalism.MainNotions.CovariantDegrees
 
-attribute [local instance 100] LieRing.ofAssociativeRing
-
 variable {n : ℕ} {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
 
 theorem mem_weightSpace_iff_diag_eigen {E : GLOps n K V} {mu : Fin n → ℤ} {x : V} :

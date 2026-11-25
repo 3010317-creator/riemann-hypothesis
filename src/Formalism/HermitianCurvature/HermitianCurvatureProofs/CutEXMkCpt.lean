@@ -17,8 +17,6 @@ open scoped ContDiff
 
 namespace Formalism.FourierDecayAlt.P.CutEX.MkCptPf
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 section casts
 
 variable {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
@@ -62,8 +60,6 @@ theorem gf_eq_ggl {k ρ : ℕ} (hρ : ρ = 0) (z z' : Fin (2 * ρ + k + 1) → �
 end Formalism.FourierDecayAlt.P.CutEX.MkCptPf
 
 namespace Formalism.FourierDecayAlt.P.CutEX.MkCptPf
-
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 section top
 
