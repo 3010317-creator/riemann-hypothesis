@@ -427,12 +427,8 @@ theorem valAt_up {R : Type} [CommRing R] [IsLocalRing R] (z : Spec (CommRingCat.
 def curvePush {ϖ l : Ω} (Γ : FibreCurve ξ' ϖ) (hz : ValAt (ξ' ≫ g) (Γ.η ≫ g) l 0) : FibreCurve (ξ' ≫ g) l where
   k := Γ.k
   κ := Γ.κ
-  fg := Γ.fg
-  trdeg := Γ.trdeg
   C := Γ.C
   w_pos := Γ.w_pos
-  triv := Γ.triv
-  all := Γ.all
   η := Γ.η ≫ g
   η_spec := hz.1
   η_zero := hz
