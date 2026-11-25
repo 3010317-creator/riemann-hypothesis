@@ -26,16 +26,8 @@ section Smith
 variable {R : Type*} [CommRing R] [IsDomain R] {n : ℕ}
 
 theorem mulVecLin_injective_of_det_ne_zero {A : Matrix (Fin n) (Fin n) R} (hA : A.det ≠ 0) :
-    Function.Injective A.mulVecLin := by
-  intro v w h
-  have h' : A.mulVec v = A.mulVec w := h
-  have h2 := congrArg (fun x => A.adjugate.mulVec x) h'
-  simp only [Matrix.mulVec_mulVec, Matrix.adjugate_mul, Matrix.smul_mulVec,
-    Matrix.one_mulVec] at h2
-  funext i
-  have := congrFun h2 i
-  simp only [Pi.smul_apply, smul_eq_mul] at this
-  exact mul_left_cancel₀ hA this
+    Function.Injective A.mulVecLin :=
+  Matrix.mulVec_injective_of_det_ne_zero hA
 
 theorem exists_smith_data [IsPrincipalIdealRing R] (A : Matrix (Fin n) (Fin n) R) (hA : A.det ≠ 0) :
     ∃ (b : Module.Basis (Fin n) R (Fin n → R)) (a : Fin n → R)
