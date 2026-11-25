@@ -1141,8 +1141,7 @@ theorem dualStackedExcLeadForm : GroundTheory.Heights₂.Heights.DualStackedExcL
   have hsv : ∀ (μ : 𝓞 K) (v : dualLattice F'), ρ' ⟨am μ • (v : Fin i → K), dual_stable F' μ _ v.2⟩ = ρ μ * ρ' v :=
     fun μ v => hρ'l μ v _ rfl
   obtain ⟨j₀, hj₀⟩ : ∃ j₀, ρ' (pL j₀) ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     obtain ⟨v₀, hv₀⟩ := hρ's 1
     obtain ⟨y₀, hy₀⟩ := hcoordp v₀
     have h1 := hρ'sum y₀ pL ⟨am s • (v₀ : Fin i → K), dual_stable F' s _ v₀.2⟩ hy₀
@@ -1387,7 +1386,7 @@ theorem lineOfLargeDegree_of_use :
       (fun F _ K _ ι _ => Targets.ExistsUnique.full F ι)
       DualStdBasePtFree.proof DualStdImageBot.proof hStdGenDeg DualStdMetricPull.proof
   exact LineOfLargeDegreeFromZ.ofOpen hVRI hSN hEnergy hBasis hStacked hSDeg hBC
-    (GrassLinesProj.proof (_root_.GlobalTheory.CompanionTheory.Relay.coordinate_projection_of_arith_system hAIS))
+    (GrassLinesProj.proof (_root_.PositivityTheory.HtPt.Aig.pfCoord_of_system hAIS))
     (DualGeomDegCharts.proof ChartDensityIntegrable.proof) GrassGeomDegChart.proof ChartMassInvariant.proof
     (degree_of_system hAIS) hInd hU.z1 hZ2 hI
 

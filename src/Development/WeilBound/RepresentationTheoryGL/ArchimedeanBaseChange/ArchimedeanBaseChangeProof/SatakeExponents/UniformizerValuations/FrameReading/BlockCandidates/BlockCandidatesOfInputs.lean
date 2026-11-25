@@ -73,8 +73,6 @@ noncomputable section
 open NumberField IsDedekindDomain
 open GlobalTheory.CuspRep GlobalTheory.UnitaryBC PositivityTheory.Rg.Rs
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
 namespace PositivityTheory.Rg.BcB.SpectralAccumulation.PreOfTreePf
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
@@ -432,13 +430,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-namespace PositivityTheory.Rg.BcB.F.Eig.CSD
-
-open PositivityTheory.Rg.BcB.F.Eig
-
-theorem splitDict : SplitDict := _root_.GlobalTheory.CompanionTheory.SplitPlace.splitDict
-
-end PositivityTheory.Rg.BcB.F.Eig.CSD
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FixedSpaceRankOne.SplitDict =====
@@ -453,8 +444,6 @@ noncomputable section
 open NumberField IsDedekindDomain Matrix
 open GlobalTheory.CuspRep GlobalTheory.PRep Formalism.UG Formalism.BasicNotions GlobalTheory.UnitaryBC GlobalTheory.BCT GlobalTheory.LFun Formalism.L2.Host
 open PositivityTheory.Rg.Rs PositivityTheory.Rg.BcB.E PositivityTheory.Rg.BcB.SpectralAccumulation PositivityTheory.Rg.BcB.G8
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace PositivityTheory.Rg.BcB.F.RS
 
@@ -490,8 +479,6 @@ section -- clump:auto
 @[expose] public section
 
 noncomputable section
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace PositivityTheory.Rg.BcB.F.RS.FockSupport
 
@@ -532,8 +519,6 @@ noncomputable section
 open NumberField IsDedekindDomain Matrix
 open GlobalTheory.CuspRep GlobalTheory.PRep Formalism.UG Formalism.BasicNotions GlobalTheory.UnitaryBC Formalism.L2.Host GlobalTheory.BCT GlobalTheory.LFun
 open PositivityTheory.Rg.BcB.F.RS
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace PositivityTheory.Rg.BcB.F.FG
 
