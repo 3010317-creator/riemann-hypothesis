@@ -52,44 +52,11 @@ theorem jetK_spec_deg (dg : X.Tau → ℕ) (hrat : A.JetsRatDeg a b Sall D dg) (
   unfold Amb.jetK
   rw [← hk, desc_map]
 
-theorem jetAddDeg_of (dg : X.Tau → ℕ) (hfin : LatFin (X := X) a b Sall) (hadd : A.IndAdd a b Sall D) (hsm : A.IndSmooth a b Sall D)
-    (hrat : A.JetsRatDeg a b Sall D dg) : A.JetAddDeg a b Sall D dg := by
-  intro N N' c c' x hc hc' hR m hm
-  have := hfin N N' c c' hR.1 hR.2.1 hc hc'
-  let _ := Fintype.ofFinite (↥(mulLat c (homAt Sall N N')) ⧸ (mulLat (c * c') (homAt Sall N N')).comap (mulLat c (homAt Sall N N')).subtype)
-  unfold latSum
-  rw [finsum_eq_sum_of_fintype]
-  set rep := fun z : ↥(mulLat c (homAt Sall N N')) ⧸ (mulLat (c * c') (homAt Sall N N')).comap (mulLat c (homAt Sall N N')).subtype =>
-    ((Function.surjInv (Submodule.Quotient.mk_surjective ((mulLat (c * c') (homAt Sall N N')).comap (mulLat c (homAt Sall N N')).subtype)) z :
-      ↥(mulLat c (homAt Sall N N'))) : HomE X.E a b) with hrep
-  have hRz : ∀ z, InRange Sall D (c * c') N N' (x + rep z) := fun z => hR.add (Subtype.coe_prop _)
-  have h1 : A.thInd Sall N N' c x = fun w => ∑ z, A.thInd Sall N N' (c * c') (x + rep z) w := by
-    funext w
-    rw [hadd N N' c c' x hc hc' hR w]
-    unfold latSum
-    rw [finsum_eq_sum_of_fintype]
-  have h2 : derivAt0 (A.thInd Sall N N' c x) m = ∑ z, derivAt0 (A.thInd Sall N N' (c * c') (x + rep z)) m := by
-    unfold derivAt0
-    rw [h1, iteratedFDeriv_sum (fun z _ => hsm N N' (c * c') (x + rep z) (hRz z) _)]
-    rw [Finset.sum_apply, _root_.sum_apply]
-  choose k hk using fun z => hrat N N' (c * c') (x + rep z) (hRz z) m hm
-  have h3 : (A.chiF a b N N')⁻¹ * jetC A.cD (A.thInd Sall N N' c x) m = A.σ₀ (∑ z, k z) := by
-
-    rw [map_sum]
-    simp only [hk]
-    unfold jetC
-    rw [h2, Finset.mul_sum, Finset.mul_sum]
-  unfold Amb.jetK
-  rw [h3, desc_map]
-  refine Finset.sum_congr rfl fun z _ => ?_
-  show k z = desc A.σ₀ ((A.chiF a b N N')⁻¹ * jetC A.cD (A.thInd Sall N N' (c * c') (x + rep z)) m)
-  rw [← hk z, desc_map]
-
 variable (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (mU : HeightOneSpectrum (𝓞 X.E) → X.Kˣ) (mI : SB → X.E → X.K)
   (lam : X.Tau → DomWeight a) (lam' : X.Tau → DomWeight b) (n : X.Tau → ℕ)
 
 theorem thDistC_ok_deg (hD : 0 < D) (rho : UF X.E a →* Module.End X.K (DIV.VV X.K lam)) (rho' : UF X.E b →* Module.End X.K (DIV.VV X.K lam'))
-    (sS sT : SB → X.E → X.K) (hfin : LatFin (X := X) a b Sall) (hadd : A.JetAddDeg a b Sall D (opDeg lam n))
+    (sS sT : SB → X.E → X.K)
     (heq : ThEquivP (thDistC A Sall SB D sel mU mI lam lam' n) Sall D rho rho')
     (ha : MuDetLaw a mI sS) (hb : MuDetLaw b mI sS) (hi : UnitInv sS sT) :
     ThDist.Ok (thDistC A Sall SB D sel mU mI lam lam' n) Sall D rho rho' sS sT :=
@@ -106,29 +73,22 @@ variable {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (Ch : Ch
   (mu : Tup X.F X.E X.K S) (cst : LocCst X (rowSG Pr sel mu)) (L : ChIdx X Pr R (QE sel (mu : Chr X.F X.E X.K)))
   (A : Amb X) (u : Pr.Word) (m2 : ℕ)
 
-theorem jetAddDeg_of_ana {a b : ℕ} {Sall : Finset (HeightOneSpectrum (𝓞 X.E))} {D : ℕ} {dg : X.Tau → ℕ} (hD : 0 < D) (h : A.AnaStepD a b Sall D dg) :
-    A.JetAddDeg a b Sall D dg :=
-  jetAddDeg_of A Sall D dg (lattice_classes_finite_refinement X a b Sall) (indAdd_of A a b Sall D hD (lattice_classes_finite_refinement X a b Sall) (indTieD_of_la A a b Sall D hD h.1))
-    (indSmooth_of A _ _ _ _ h.2.1) h.2.2
-
 theorem stepC_ok_deg (i : ℕ) (hi : i < R.m) {b : ℕ} (lam' : X.Tau → DomWeight b) (hT : 0 < Pr.T u)
     (rho : UF X.E (R.N i) →* Module.End X.K (DIV.VV X.K (W.lamTrue u i))) (rho' : UF X.E b →* Module.End X.K (DIV.VV X.K lam'))
     (hq : MuqTie Ch sel mu cst)
-    (hs : A.AnaStepD (R.N i) b (Sall sel mu u) (cAof sel mu cst * cBof sel mu cst u) (stepDeg W u i))
     (heqT : ThEquivP (stepT W Ch sel mu cst A u i lam') (Sall sel mu u) (cAof sel mu cst * cBof sel mu cst u) rho rho') :
     ThDist.Ok (stepC W Ch sel mu cst A u i lam') (Sall sel mu u) (cAof sel mu cst * cBof sel mu cst u) rho rho'
       (rhoS Ch sel mu i) (rhoT Ch sel mu i) :=
   have heq : ThEquivP (stepC W Ch sel mu cst A u i lam') (Sall sel mu u) (cAof sel mu cst * cBof sel mu cst u) rho rho' := by
     rw [stepC_eq_stepT W Ch sel mu cst hq A u i hi lam']; exact heqT
   thDistC_ok_deg A (Sall sel mu u) (rowSG Pr sel mu) _ sel (mUof Ch mu i) (muAt Ch sel mu cst i) (W.lamTrue u i) lam' (nuLast W u i)
-    (modulus_pos sel mu cst u hT) rho rho' _ _ (lattice_classes_finite_refinement X _ _ _)
-    (jetAddDeg_of_ana A (modulus_pos sel mu cst u hT) hs) heq
+    (modulus_pos sel mu cst u hT) rho rho' _ _ heq
     (muDetLaw_chain Ch sel mu cst i _) (muDetLaw_chain Ch sel mu cst i _) (unitInv_rho Ch sel mu i)
 
 theorem chTh_ok_ambD (hm : m2 + 1 < R.m) (hT : 0 < Pr.T u) (hq : MuqTie Ch sel mu cst) (h : ThHypD W Ch sel mu cst A u m2) :
     ChTh.Ok (Ch := Ch) cst (chTh W Ch sel mu cst A u m2) :=
-  { th i hi := stepC_ok_deg W Ch sel mu cst A u i (by omega) _ hT _ _ hq (h.1 i hi) (h.2.2.1 i hi)
-    top := stepC_ok_deg W Ch sel mu cst A u (m2 + 1) hm _ hT _ _ hq h.2.1 h.2.2.2 }
+  { th i hi := stepC_ok_deg W Ch sel mu cst A u i (by omega) _ hT _ _ hq (h.1 i hi)
+    top := stepC_ok_deg W Ch sel mu cst A u (m2 + 1) hm _ hT _ _ hq h.2 }
 
 end Chain
 
