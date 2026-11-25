@@ -112,11 +112,15 @@ theorem case2b (l : ℕ) (hl : 11 ≤ l) (b wm w S η b₀ : ℕ) (hb : 1 ≤ b)
   obtain ⟨hES, n1, n2, n3, n4, hlg, hHc⟩ := real_bounds_logb_and_nonneg_inv_mul_of_eleven_le l hl b wm S η hb
   have hL : (11:ℝ) ≤ l := by exact_mod_cast hl
   have hl0 : (0:ℝ) < l := by linarith
+  have hb1 : (1:ℝ) ≤ b := by exact_mod_cast hb
+  have hη0 : (0:ℝ) ≤ η := by positivity
+  have hS0 : (0:ℝ) ≤ S := by positivity
   have hw1r : (1:ℝ) ≤ w := by exact_mod_cast hw1
   have hwwm : (w:ℝ) ≤ wm := by exact_mod_cast hw
   have hwmb : 20 * (wm:ℝ) ≤ b := by exact_mod_cast hwm
   have hbb0 : (b:ℝ) ≤ b₀ := by exact_mod_cast hb₀
   have hb0b : (b₀:ℝ) ≤ b + η := by exact_mod_cast hb₀'
+  have hE1 : 1 ≤ Sg l (b + η + S) wm S η := by linarith
   simp only [div_eq_mul_inv] at hA ⊢
   constructor
   · have hlogw : Real.logb l (w:ℝ) ≤ Real.logb l (2 * ((b + η + S : ℕ) : ℝ)) :=
@@ -137,6 +141,7 @@ theorem case2b (l : ℕ) (hl : 11 ≤ l) (b wm w S η b₀ : ℕ) (hb : 1 ≤ b)
     have iA : (l:ℝ) * (((b₀:ℝ) + S + η) * (l:ℝ)⁻¹) = b₀ + S + η := by
       linear_combination ((b₀:ℝ) + S + η) * e0
     have hSl : (S:ℝ) ≤ l * S := by nlinarith
+    have key : (l:ℝ) * η - 2 * η < 2 * ((l:ℝ) * Sg l (b + η + S) wm S η) := by linarith
     by_contra hc
     push_neg at hc
     linarith [mul_le_mul_of_nonneg_left hc (show (0:ℝ) ≤ (l:ℝ) - 2 by linarith),
@@ -261,10 +266,14 @@ theorem le_band_add_errorScale (l : ℕ) (hl : 11 ≤ l) (b wm w S η b₁ : ℕ
   obtain ⟨hES, n1, n2, n3, n4, hlg, hHc⟩ := real_bounds_logb_and_nonneg_inv_mul_of_eleven_le l hl b wm S η hb
   have hL : (11:ℝ) ≤ l := by exact_mod_cast hl
   have hl0 : (0:ℝ) < l := by linarith
+  have hb1 : (1:ℝ) ≤ b := by exact_mod_cast hb
   have hη0 : (0:ℝ) ≤ η := by positivity
+  have hS0 : (0:ℝ) ≤ S := by positivity
+  have hw0 : (0:ℝ) ≤ w := by positivity
   have hb₁r : (b:ℝ) ≤ b₁ := by exact_mod_cast hb₁
   have hb₁r' : (b₁:ℝ) ≤ b + η := by exact_mod_cast hb₁'
   have hE1 : 1 ≤ Sg l (b + η + S) wm S η := by linarith
+  have hηP := mul_le_mul_of_nonneg_left p11 hη0
   simp only [div_eq_mul_inv] at hA hs
   split_ifs with hc
   · rcases le_max_iff.mp hs with h' | h' <;> linarith
@@ -285,6 +294,8 @@ theorem le_band_add_errorScale (l : ℕ) (hl : 11 ≤ l) (b wm w S η b₁ : ℕ
       have hσ' := mul_le_mul_of_nonneg_left hσ hl0.le
       have hLE := mul_le_mul_of_nonneg_left hE1 hl0.le
       have hSl : (S:ℝ) ≤ l * S := by nlinarith
+      have key : (l:ℝ) * η - 2 * η < 21 / 2 * ((l:ℝ) * Sg l (b + η + S) wm S η) := by
+        linarith
       have hηb : (η:ℝ) ≤ 77 / 6 * Sg l (b + η + S) wm S η := by
         by_contra hcc
         push_neg at hcc

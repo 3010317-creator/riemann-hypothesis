@@ -1,6 +1,5 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ConstantCoeffEv
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.CIndBC
 
 @[expose] public section
@@ -24,7 +23,17 @@ theorem map_ev {m n : ℕ} (a : Fin m → Pt S n d) (ha : ∀ j i, constantCoeff
 
 theorem const_ev {m n : ℕ} (a : Fin m → Pt S n d) (ha : ∀ j i, constantCoeff (a j i) = 0) (f : PS S m d) :
     constantCoeff (ev a f) = constantCoeff f := by
-  apply _root_.GlobalTheory.GaugeAdjoint.constantCoeff_ev <;> assumption
+  have hs := hasSubst_pts ha
+  simp only [ev]
+  rw [MvPowerSeries.constantCoeff_subst hs, finsum_eq_single _ (0 : Fin m × Fin d →₀ ℕ)]
+  · simp
+  · intro e he
+    obtain ⟨s, hs'⟩ : ∃ s, e s ≠ 0 := by
+      by_contra h
+      push_neg at h
+      exact he (Finsupp.ext h)
+    simp only [Finsupp.prod, map_prod, map_pow, ha]
+    rw [Finset.prod_eq_zero (Finsupp.mem_support_iff.mpr hs') (zero_pow hs'), smul_zero]
 
 theorem map_pderiv {σ : Type} (i : σ) (f : MvPowerSeries σ S) :
     map ψ (pderiv i f) = pderiv i (map ψ f) := by
