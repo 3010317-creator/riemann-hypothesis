@@ -165,9 +165,9 @@ theorem qmBorderFull_of (hES : PI.QmBorderES) (hCol : PI.QmColExp) (hRow : PI.Qm
   obtain ⟨hE, hS⟩ := hES
   obtain ⟨hFC, hLC⟩ := hCol
   obtain ⟨hFR, hLR⟩ := hRow
-  obtain ⟨hS1, hS2⟩ := hSkip
+  obtain ⟨hS1, -⟩ := hSkip
   exact UnitaryGroupMassFormula.QmBorderFull.borderFull_of hFC hS
-    (bfMid_of_expLastCol_expLastRow_skipSucc_bfCross hLC hLR hS1 (UnitaryGroupMassFormula.QmBorderFull.Four.bfCross_of ⟨hFR, hLR⟩ ⟨hS1, hS2⟩))
+    (bfMid_of_expLastCol_expLastRow_skipSucc_bfCross hLC hLR hS1 (UnitaryGroupMassFormula.QmBorderFull.Four.bfCross_of ⟨hFR, hLR⟩))
 
 end PI
 end -- clump:auto
