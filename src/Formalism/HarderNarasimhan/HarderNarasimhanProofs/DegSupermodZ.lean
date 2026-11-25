@@ -123,15 +123,8 @@ theorem covol_eq_relIndex_mul_covol (N N' : Submodule ℤ E) [DiscreteTopology N
   exact Or.inl rfl
 
 theorem orthogonal_starProjection_comp_of_le {U W : Submodule ℝ E} (hUW : U ≤ W) (x : E) :
-    Wᗮ.starProjection (Uᗮ.starProjection x) = Wᗮ.starProjection x := by
-  have h1 := U.starProjection_add_starProjection_orthogonal x
-  have h2 : Wᗮ.starProjection (U.starProjection x) = 0 := by
-    rw [Submodule.starProjection_apply_eq_zero_iff, Submodule.orthogonal_orthogonal]
-    exact hUW (U.starProjection_apply_mem x)
-  calc Wᗮ.starProjection (Uᗮ.starProjection x)
-      = Wᗮ.starProjection (U.starProjection x) + Wᗮ.starProjection (Uᗮ.starProjection x) := by
-        rw [h2, zero_add]
-    _ = Wᗮ.starProjection x := by rw [← map_add (f := _), h1]
+    Wᗮ.starProjection (Uᗮ.starProjection x) = Wᗮ.starProjection x :=
+  DFunLike.congr_fun (Submodule.starProjection_comp_starProjection_of_le (Submodule.orthogonal_le hUW)) x
 
 theorem mem_of_orthogonal_starProjection_eq_zero {W : Submodule ℝ E} {x : E}
     (h : Wᗮ.starProjection x = 0) : x ∈ W := by
