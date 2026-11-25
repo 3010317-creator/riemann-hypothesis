@@ -185,10 +185,7 @@ theorem exists_zonal {π : Representation ℂ G V} (hπ : IsSmooth π) {K : Subg
     (hK : IsCommensurated K) {y : V} (hy : y ∈ fixed π K) (hy0 : y ≠ 0) :
     ∃ ω : G → ℂ, GlobalTheory.SmGL.IsZonal π K ω ∧ ∀ (g : G) (a : ℂ), heckeVec π K (dosetInd ℂ K g) y = a • y →
       a = ((P.finite_cosets_in_doset hK g).toFinset.card : ℂ) * ω g := by
-  obtain ⟨l₀, hl₀⟩ : ∃ l₀ : Module.Dual ℂ V, l₀ y ≠ 0 := by
-    by_contra hcon
-    push Not at hcon
-    exact hy0 ((Module.forall_dual_apply_eq_zero_iff ℂ _).1 hcon)
+  obtain ⟨l₀, hl₀⟩ := Module.Projective.exists_dual_ne_zero ℂ hy0
   let l : Module.Dual ℂ V := ((l₀ y)⁻¹ • l₀) ∘ₗ idem hπ hc
   have hl1 : l y = 1 := by
     simp [l, idem_of_mem hπ hc hy, hl₀]
