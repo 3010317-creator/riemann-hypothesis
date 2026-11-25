@@ -432,9 +432,6 @@ theorem capVal_main : CapValStatement := by
 
 end ReciprocityTheory.ChartRestriction.DS.Lap.CapelliClosureMembership
 
-namespace ReciprocityTheory.ChartRestriction.DS.Lap
-
-end ReciprocityTheory.ChartRestriction.DS.Lap
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

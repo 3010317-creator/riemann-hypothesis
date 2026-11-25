@@ -129,17 +129,6 @@ def torusE (γ : V ≃ₗ[E] V) : Subgroup (V ≃ₗ[E] V) :=
 
 def TorusE (γ : V ≃ₗ[E] V) : Type _ := torusE γ
 
-namespace TorusE
-
-variable {γ : V ≃ₗ[E] V}
-
-
-
-
-variable [Fact (IsRegularSemisimple γ)]
-
-end TorusE
-
 end Stable
 
 end GroundTheory.Automorphic

@@ -69,7 +69,3 @@ theorem eq_on_units (y : IrrGL (k := k)) (h : 1 = y.1) (μ μ' : kˣ →* ℂˣ)
   exact Units.ext this
 
 end UpperTheory.TNZ.ProductIrreducible₂
-
-namespace UpperTheory.TNZ
-
-end UpperTheory.TNZ

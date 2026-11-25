@@ -1670,9 +1670,6 @@ theorem omVZ_holdsX : Formalism.L2.SG.Pf.NcVal.OmV X u' ψ :=
 
 end Formalism.L2.SG.Pf.NcX.OmVSt
 
-namespace Formalism.L2.SG.Pf.NcVal.OmVSt.OmVZ
-
-end Formalism.L2.SG.Pf.NcVal.OmVSt.OmVZ
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
