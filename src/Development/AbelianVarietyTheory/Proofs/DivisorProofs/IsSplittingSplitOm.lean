@@ -78,14 +78,6 @@ variable [Fintype α] [DecidableEq α] [Fintype β] [DecidableEq β] [Fintype κ
 
 
 
-def dblNum (σ : κ ≃ α × β) : κ ⊕ κ ≃ α × (β ⊕ β) := (σ.sumCongr σ).trans (Equiv.prodSumDistrib α β β).symm
-
-omit [Fintype α] [DecidableEq α] [Fintype β] [DecidableEq β] [Fintype κ] in
-theorem flat_fromCols (σ : κ ≃ α × β) (X Y : Matrix α β R) :
-    flat (dblNum σ) (fromCols X Y) = Sum.elim (flat σ X) (flat σ Y) := by
-  funext k
-  cases k <;> rfl
-
 end GlobalTheory.WeilM
 
 end

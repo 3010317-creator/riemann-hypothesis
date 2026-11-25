@@ -101,12 +101,6 @@ theorem cohomologyπ_galUnits_eq_zero_of_coboundary (z : cocycles (galUnits.{0} 
   exact cohomologyπ_toCycles _ 1 2 _
 
 
-omit [IsGalois Kv Ωv] in
-theorem toMul_galUnitsZ_coboundary (σ : Gal(Ωv/Kv)) (a b c : Additive Ωvˣ) :
-    Additive.toMul ((galUnitsZ Kv Ωv).ρ σ a - b + c) =
-      σ • Additive.toMul a / Additive.toMul b * Additive.toMul c :=
-  rfl
-
 end CoboundaryUnits
 
 section ClassZero

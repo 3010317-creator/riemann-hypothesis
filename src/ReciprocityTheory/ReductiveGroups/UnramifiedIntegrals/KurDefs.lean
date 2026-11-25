@@ -34,8 +34,4 @@ structure FrobField (K : Type) [NormedField K] (l : ℕ) (σ : K →+* K) : Prop
   frob : ∀ x : K, ‖x‖ ≤ 1 → ‖σ x - x ^ l‖ ≤ ‖(l : K)‖
   discrete : ∀ x : K, ‖x‖ < 1 → ‖x‖ ≤ ‖(l : K)‖
 
-def ResClosed (K : Type) [NormedField K] (l : ℕ) : Prop :=
-  ∀ P : Polynomial K, P.Monic → 0 < P.natDegree → (∀ i, ‖P.coeff i‖ ≤ 1) →
-    ∃ x : K, ‖x‖ ≤ 1 ∧ ‖P.eval x‖ ≤ ‖(l : K)‖
-
 end ReciprocityTheory.ChartRestriction.L1

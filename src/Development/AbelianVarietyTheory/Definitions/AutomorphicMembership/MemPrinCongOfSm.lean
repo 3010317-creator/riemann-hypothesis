@@ -298,31 +298,6 @@ theorem exists_near (c : ℕ) {x : GL (Fin n) (AfE F E)} (hx : x ∈ UAd hc n) :
   choose f h1 h2 using fun P : Q => exists_frame x P.1 c
   exact ⟨⟨(⟨_, decorated_lattice_exists hc n ST SG x hx⟩, f), h1⟩, rfl, h2⟩
 
-theorem near_one (c : ℕ) : Near c (1 : GL (Fin n) (AfE F E)) (DecoF.base E n ST SG Q) :=
-  ⟨decoRaw_one ST SG, fun P i j => by
-    rw [inv_one, locM_one, show (DecoF.base E n ST SG Q).fr P = 1 from rfl, ratM_one, Matrix.mul_one, sub_self]
-    simp⟩
-
-theorem Near.exists_smul {x : GL (Fin n) (AfE F E)} {p p' : DecoF E n ST SG Q} (h : Near c x p) (h' : Near c x p') :
-    ∃ k : GLQ E n Q, (∀ P, k P ∈ prinCong n P.1 c) ∧ p' = ((1, 1, k) : UF E n × GLG (E := E) (n := n) (SG := SG) × GLQ E n Q) • p := by
-  have hd : p'.deco = p.deco := Subtype.ext (h'.deco.symm.trans h.deco)
-  let k : GLQ E n Q := fun P => ⟨(p'.fr P)⁻¹ * p.fr P, fun w => by
-    have h1 := p'.2 P (((p'.fr P)⁻¹ * p.fr P) w)
-    have h2 : p'.1.2 P (((p'.fr P)⁻¹ * p.fr P) w) = p.1.2 P w := LinearEquiv.apply_symm_apply _ _
-    rw [h2, show p'.1.1 = p.1.1 from hd] at h1
-    exact h1.symm.trans (p.2 P w)⟩
-  refine ⟨k, fun P => mem_prinCong_of_sm _ ?_, Subtype.ext (Prod.ext ?_ (funext fun P => ?_))⟩
-  · have h1 := (h.fr P).sub (by simpa using (h'.fr P).mul (sm_glint (k P)))
-    have e : ratM P.1 (p.fr P) = ratM P.1 (p'.fr P) * ratM P.1 (k P).1 := by
-      rw [← ratM_mul]
-      exact congrArg _ (mul_inv_cancel_left _ _).symm
-    rw [e] at h1
-    convert h1 using 1
-    noncomm_ring
-  · exact hd.trans (one_smul (UF E n × GLG (E := E) (n := n) (SG := SG)) p.1.1).symm
-  · show p'.fr P = 1 * p.fr P * ((p'.fr P)⁻¹ * p.fr P)⁻¹
-    group
-
 theorem Near.left {x : GL (Fin n) (AfE F E)} {p : DecoF E n ST SG Q} (h : Near c x p) (γ : URat hc n) :
     Near c (Formalism.UG.bc ι (γ : GL (Fin n) E) * x) (((ratHom hc n γ, 1, 1) : UF E n × GLG (E := E) (n := n) (SG := SG) × GLQ E n Q) • p) := by
   refine ⟨?_, fun P => ?_⟩
@@ -368,33 +343,6 @@ def CongOne (a : 𝓞 E) (k : GL (Fin n) (AfE F E)) : Prop :=
   ∀ i j, ι (algebraMap (𝓞 E) E a)⁻¹ * ((k : Matrix (Fin n) (Fin n) (AfE F E)) i j - (1 : Matrix (Fin n) (Fin n) (AfE F E)) i j) ∈
     Formalism.L2.Herm.intAf F E
 
-
-variable (ST SG Q) in
-theorem exists_cong (c : ℕ) : ∃ a : 𝓞 E, a ≠ 0 ∧ ∀ k ∈ UAd hc n, CongOne a k → CongOne a k⁻¹ →
-    ∀ (x : GL (Fin n) (AfE F E)) (p : DecoF E n ST SG Q), Near c x p → Near c (x * k) p := by
-  classical
-  obtain ⟨b, hb0, hb⟩ := rlt_exists_a (ST ∪ SG)
-  have hq : ∀ P : HeightOneSpectrum (𝓞 E), ((qOf P : ℕ) : 𝓞 E) ≠ 0 := fun P h => qOf_ne_zero (P := P) (by exact_mod_cast h)
-  set a : 𝓞 E := b * ∏ P ∈ Q, ((qOf P : ℕ) : 𝓞 E) ^ c with ha
-  have ha0 : a ≠ 0 := mul_ne_zero hb0 (Finset.prod_ne_zero_iff.2 fun P _ => pow_ne_zero _ (hq P))
-  have hca : ι (algebraMap (𝓞 E) E a) * ι (algebraMap (𝓞 E) E a)⁻¹ = 1 := by
-    rw [← map_mul, mul_inv_cancel₀ (by simpa using ha0), map_one]
-  refine ⟨a, ha0, fun k hk h1 h2 x p h => h.right hc ?_ fun P hP i j => ?_⟩
-  · refine mem_kOne_of_congruent_one hc n ST SG a (fun P hP => Ideal.mul_mem_right _ _ (hb P (Finset.mem_union_left _ hP)))
-      (fun P hP => Ideal.mul_mem_right _ _ (hb P (Finset.mem_union_right _ hP))) hk (fun i j => ⟨_, h1 i j⟩) fun i j => ?_
-    show _ = _ + ι (algebraMap (𝓞 E) E a) * (ι (algebraMap (𝓞 E) E a)⁻¹ * _)
-    rw [← mul_assoc, hca, one_mul]
-    ring
-  · have h3 := (mem_rInt_iff F E _).1 (h2 i j) P
-    have e : (locM P k⁻¹ - 1) i j = adAt F P (ι (algebraMap (𝓞 E) E a) * (ι (algebraMap (𝓞 E) E a)⁻¹ *
-        (((k⁻¹ : GL (Fin n) (AfE F E)) : Matrix (Fin n) (Fin n) (AfE F E)) i j - (1 : Matrix (Fin n) (Fin n) (AfE F E)) i j))) := by
-      rw [← mul_assoc, hca, one_mul, map_sub, ← locM_one (F := F)]
-      rfl
-    rw [e, map_mul, map_mul, adAt_inclE, valued_algebraMap]
-    refine (mul_le_of_le_one_right' h3).trans ?_
-    obtain ⟨r, hr⟩ : ((qOf P : ℕ) : 𝓞 E) ^ c ∣ a := (Finset.dvd_prod_of_mem _ hP).mul_left _
-    rw [hr, map_mul, map_mul, map_pow, map_natCast]
-    exact mul_le_of_le_one_right' (HeightOneSpectrum.valuation_le_one (K := E) P r)
 
 
 variable {hc} in
@@ -475,9 +423,6 @@ theorem near_of_isPtOf {g : GL (Fin n) (AfE F E)} {p : DecoF E n ST SG Q} (h : I
 
 variable (ST SG Q) in
 def ptOf (c : ℕ) (x : GL (Fin n) (AfE F E)) : DecoF E n ST SG Q := Classical.epsilon (Near c x)
-
-theorem near_ptOf (c : ℕ) {x : GL (Fin n) (AfE F E)} (hx : x ∈ UAd hc n) : Near c x (ptOf ST SG Q c x) :=
-  Classical.epsilon_spec (exists_near hc c hx)
 
 end Near
 

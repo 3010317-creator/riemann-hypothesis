@@ -106,10 +106,6 @@ theorem Localization.Away.exists_algebraMap_eq_pow_mul (t : R) (x : Localization
   refine ⟨m, a, ?_⟩
   rw [← hs, ← hm, map_pow, mul_comm]
 
-theorem map_pow_mul_pow (g : S →+* R) {c : S} {c' : R} (hc : g c = c') (n m : ℕ) (t : S) :
-    g ((c ^ n * t) ^ m) = (c' ^ n * g t) ^ m := by
-  rw [map_pow, map_mul, map_pow, hc]
-
 theorem map_eq_zero_of_pow_mul_eq_zero [IsDomain T] (g : S →+* T) {c z : S} {d : ℕ}
     (h : c ^ d * z = 0) (hc : g c ≠ 0) : g z = 0 := by
   have h1 := congrArg g h
@@ -317,13 +313,6 @@ theorem exists_iterate_phiB_eq (m : ℕ) (x : BCris hε)
       exists_algebraMap_eq_periodTCris_pow_mul_phiB hε hζ (x := z) (m := d) (y := y) hy
         (thetaField_iotaPlus_iterate_eq_zero hε hζ (K := K) (x := z) hz (m := d) (y := y) hy)
   exact exists_eq_iterate_of_step g φ t fixed hfixed hstep m x hx hxy
-
-theorem iterate_phiPlus_algebraMap_padic (n : ℕ) (q : ℚ_[p]) :
-    (phiPlus ℂ_[p] p)^[n] (algebraMap ℚ_[p] (BCrisPlus ℂ_[p] p) q) =
-      algebraMap ℚ_[p] (BCrisPlus ℂ_[p] p) q := by
-  induction n with
-  | zero => rfl
-  | succ n ih => rw [Function.iterate_succ_apply', ih, phiPlus_algebraMap_padic]
 
 
 include hζ in

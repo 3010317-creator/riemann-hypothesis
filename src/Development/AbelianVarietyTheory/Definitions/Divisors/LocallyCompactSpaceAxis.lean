@@ -131,25 +131,6 @@ theorem semiLat_ne_zero {G : Type} [Group G] [TopologicalSpace G] [MeasurableSpa
     (f := fun x : Λ.subgroupOf N => (⟨x.1.1, x.2⟩ : Λ)) fun a b h => Subtype.ext (Subtype.ext (congrArg (·.1) h))
   exact H.domN.measure_ne_zero (NeZero.ne ν)
 
-theorem fd_one {H : Type} [Group H] [MeasurableSpace H] [MeasurableSingletonClass H] (Λ : Subgroup H) (hΛ : ∀ g, g ∈ Λ)
-    (μ : Measure H) : IsFundamentalDomain Λ ({1} : Set H) μ :=
-  IsFundamentalDomain.mk' (measurableSet_singleton _).nullMeasurableSet fun x =>
-    ⟨⟨x⁻¹, hΛ _⟩, inv_mul_cancel x, fun _ hy => Subtype.ext (eq_inv_of_mul_eq_one_left hy)⟩
-
-theorem haar_count {H : Type} [Group H] [Finite H] [TopologicalSpace H] [DiscreteTopology H] [MeasurableSpace H]
-    [BorelSpace H] : (Measure.count : Measure H).IsHaarMeasure :=
-  { toIsFiniteMeasureOnCompacts := inferInstance, toIsMulLeftInvariant := inferInstance,
-    open_pos := fun U _ hU h => hU.ne_empty (Measure.count_eq_zero_iff.1 h) }
-
-theorem semiLat_finite {G : Type} [Group G] [Finite G] [TopologicalSpace G] [DiscreteTopology G] [MeasurableSpace G]
-    [BorelSpace G] (N M : Subgroup G) [hN : N.Normal] (hd : ∀ g ∈ N, g ∈ M → g = 1) (hs : ∀ g, ∃ u ∈ N, ∃ m ∈ M, g = u * m) :
-    SemiLat N M ⊤ Measure.count Measure.count {1} {1} :=
-  ⟨isClosed_discrete _, isClosed_discrete _, fun m _ u hu => hN.conj_mem u hu m, hd,
-    fun γ _ => let ⟨u, hu, m, hm, e⟩ := hs γ; ⟨u, hu, m, hm, trivial, trivial, e⟩, haar_count, haar_count,
-    fd_one _ (fun _ => Subgroup.mem_subgroupOf.2 (Subgroup.mem_top _)) _,
-    fd_one _ (fun _ => Subgroup.mem_subgroupOf.2 (Subgroup.mem_top _)) _, by simp, by simp,
-    inferInstance, inferInstance, inferInstance⟩
-
 end Inhab
 
 end GlobalTheory.ResLine

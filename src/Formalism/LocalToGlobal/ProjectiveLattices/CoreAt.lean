@@ -139,18 +139,6 @@ section Build
 
 variable {Q : Par D}
 
-theorem pkgEx (hRs : LawsRest Q) (hfam : ∀ j, InR D j → ∀ σ, GoodEmb Q.c σ → FamOK Q j σ) (j : ℕ)
-    (σ : Q.c.F →+* ℂ) : ∃ p : PkgT Q j σ, InR D j → GoodEmb Q.c σ → PkgOK Q j σ p.1 p.2.1 p.2.2 := by
-  by_cases hj : InR D j
-  · by_cases hσ : GoodEmb Q.c σ
-    · obtain ⟨U, dict, mu, h⟩ := hRs.pkg j hj σ hσ (hfam j hj σ hσ)
-      exact ⟨⟨U, dict, mu⟩, fun _ _ => h⟩
-    · exact ⟨Classical.choice (hRs.dataAll j σ), fun _ h => absurd h hσ⟩
-  · exact ⟨Classical.choice (hRs.dataAll j σ), fun h => absurd h hj⟩
-
-def pkgOf (hRs : LawsRest Q) (hfam : ∀ j, InR D j → ∀ σ, GoodEmb Q.c σ → FamOK Q j σ) (j : ℕ)
-    (σ : Q.c.F →+* ℂ) : PkgT Q j σ := (pkgEx hRs hfam j σ).choose
-
 end Build
 
 theorem datHolds (D : D7) : ∀ j, InR D j → ∃ hI : DatInt D j, DatLaws D j hI :=

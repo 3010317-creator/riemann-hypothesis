@@ -342,12 +342,6 @@ theorem d_eq (c : Pr N →₀ ℤ) : Pr.d N c = D₁ N c + E N (D₂ N c) := by
   | add f g hf hg => simp only [map_add (f := _), hf, hg]; abel
   | single z c => simp [d_single, D₁_single, D₂_single, E_d₂]
 
-theorem E_E (c : Pr N →₀ ℤ) : E N (E N c) = c := by
-  induction c using Finsupp.induction_linear with
-  | zero => simp
-  | add f g hf hg => simp only [map_add (f := _), hf, hg]
-  | single z c => rw [E_single, map_zsmul, E_single, smul_smul, ← mul_pow]; simp
-
 theorem D₂_E (c : Pr N →₀ ℤ) : D₂ N (E N c) = E N (D₂ N c) := by
   induction c using Finsupp.induction_linear with
   | zero => simp

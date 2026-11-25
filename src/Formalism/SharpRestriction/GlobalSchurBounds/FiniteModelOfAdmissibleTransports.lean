@@ -480,18 +480,6 @@ end Unf
 
 variable (D u)
 
-def FiSt : Prop :=
-  ∀ i, i ≤ D.R.m → ∀ v, ∀ φ ∈ (D.fm u).Fi i,
-    Uop D u i v φ ∈ (D.fm u).Fi i ∧ Dop D u i v φ ∈ (D.fm u).Fi i ∧ ∀ a, dia D u i v a φ ∈ (D.fm u).Fi i
-
-def CrossDia : Prop :=
-  ∀ i, i ≤ D.R.m → ∀ v v', v ≠ v' → ∀ φ ∈ (D.fm u).Fi i, ∀ a,
-    dia D u i v' a (Uop D u i v φ) = Uop D u i v (dia D u i v' a φ) ∧
-    dia D u i v' a (Dop D u i v φ) = Dop D u i v (dia D u i v' a φ) ∧
-    ∀ b, dia D u i v' a (dia D u i v b φ) = dia D u i v b (dia D u i v' a φ)
-
-def UnfAll : Prop := ∀ i, i ≤ D.R.m → ∀ v, Nonempty (Unf D u i v)
-
 variable {D u}
 
 lemma ipC_sum_left {i : ℕ} {ι : Type} [Fintype ι] (s : ι → ℂ) (F : ι → Fn D u i) (ψ : Fn D u i) :
@@ -655,20 +643,6 @@ lemma emb_mem (i : ℕ) (x : Vl D u i) : (D.fm u).emb i x ∈ (D.fm u).Fi i := b
 
 def Ul (D : D7) (u : D.what₂.Word) (i : ℕ) (l : List (D.mem u).A.vT) : Fn D u i →ₗ[ℂ] Fn D u i :=
   l.foldr (fun v g => (Uop D u i v).comp g) LinearMap.id
-
-def chL (D : D7) (u : D.what₂.Word) : (j : ℕ) → (Fn D u 0 →ₗ[ℂ] Fn D u j)
-  | 0 => LinearMap.id
-  | j + 1 => (KT D u j).comp (chL D u j)
-
-lemma colT_eq (φ : Fn D u 0) : colT D u φ = chL D u D.R.m φ := by
-  have : ∀ j, Formalism.ThetaLiftIndependence.chainOpM (D.mem u).C.wt (D.mem u).C.Kmap j φ = chL D u j φ := by
-    intro j
-    induction j with
-    | zero => rfl
-    | succ j ih =>
-      show (D.mem u).C.K j (Formalism.ThetaLiftIndependence.chainOpM (D.mem u).C.wt (D.mem u).C.Kmap j φ) = KT D u j (chL D u j φ)
-      rw [ih]; rfl
-  exact this _
 
 lemma rat_of_into {i j : ℕ} (w : D.what₂.places.Pl) (f : Fn D u i →ₗ[ℂ] Fn D u j)
     (A : Submodule (Ow D w) (Vl D u i)) (B : Submodule (Ow D w) (Vl D u j)) (h : Into D u w f A B)

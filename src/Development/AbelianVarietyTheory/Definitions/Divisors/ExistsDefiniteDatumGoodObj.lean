@@ -175,8 +175,6 @@ structure IntModel (D : Datum F) (p N : ℕ) where
 def Good (F : Type) [Field F] [NumberField F] (p N : ℕ) : Prop :=
   p.Prime ∧ ¬ (p : ℤ) ∣ NumberField.discr F ∧ 3 ≤ N ∧ N.Coprime p
 
-def Datum.Definite (D : Datum F) : Prop := ∃ τ : F →+* ℂ, D.sig τ = 0
-
 section Host
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
@@ -241,18 +239,6 @@ theorem sum_mult_eq (D : Geo.Tor.Datum H) (a : E) :
   dom := by
     obtain ⟨J, h₁, h₂, h₃, h₄⟩ := D.dom
     exact ⟨J, h₁, h₂, h₃, fun a A hA => h₄ a A _ hA (by convert sum_mult_eq D (a : E))⟩
-
-theorem definite_ofHost_iff (D : Geo.Tor.Datum H) : (Datum.ofHost D).Definite ↔ D.p = 0 ∨ D.q = 0 := by
-  obtain ⟨τ₀, h₀⟩ := HostModel.exists_embedding_rt_eq H
-  constructor
-  · rintro ⟨τ, hτ⟩
-    change D.mult τ = 0 at hτ
-    unfold Geo.Tor.Datum.mult at hτ
-    split_ifs at hτ
-    exacts [Or.inl hτ, Or.inr hτ]
-  · rintro (h | h)
-    · exact ⟨τ₀, (if_pos h₀).trans h⟩
-    · exact ⟨(starRingEnd ℂ).comp τ₀, (if_neg fun h' => (conj_mem_type_iff H τ₀).1 h' h₀).trans h⟩
 
 
 end Host

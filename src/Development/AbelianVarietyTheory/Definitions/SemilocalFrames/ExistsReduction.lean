@@ -75,10 +75,6 @@ def tensAlg {ι : Type} [Fintype ι] {G : ι → Type} [∀ i, Group (G i)] [∀
     (a : ∀ i, MonoidAlgebra ℂ (G i)) : MonoidAlgebra ℂ (∀ i, G i) :=
   MonoidAlgebra.ofCoeff (Finsupp.equivFunOnFinite.symm fun h : ∀ i, G i => ∏ i, (a i).coeff (h i))
 
-def IsSeries {Q Lab : Type} [Group Q] (z : Lab → MonoidAlgebra ℂ Q) : Prop :=
-  (∀ f, z f * z f = z f) ∧ (∀ f a, z f * a = a * z f) ∧ (∀ f f', f ≠ f' → z f * z f' = 0) ∧
-    ∃ T : Finset Lab, (∀ f, f ∉ T → z f = 0) ∧ ∑ f ∈ T, z f = 1
-
 def extId (I : AutInst) (𝔞 : Ideal (𝓞 I.E)) : Ideal (IntAf I.F I.E) :=
   Ideal.span {z : IntAf I.F I.E | ∃ a ∈ 𝔞, (z : TensorProduct I.F I.E (Af I.F)) = Formalism.UG.inclE (F := I.F) (Af I.F) (a : I.E)}
 
@@ -156,9 +152,6 @@ theorem lift_of_notMem (μf : Measure I.Gf) (a : MonoidAlgebra ℂ Q) {x : I.Gf}
   simp [hx]
 
 end Red
-
-theorem tensAlg_coeff {ι : Type} [Fintype ι] {G : ι → Type} [∀ i, Group (G i)] [∀ i, Finite (G i)]
-    (a : ∀ i, MonoidAlgebra ℂ (G i)) (h : ∀ i, G i) : (tensAlg a).coeff h = ∏ i, (a i).coeff (h i) := rfl
 
 namespace Inhab
 
@@ -407,29 +400,6 @@ theorem exists_choice (I : AutInst) (g : Fin 2 → ℕ) (hg : ∀ k, (g k).Prime
     rcases lt_or_gt_of_ne (hcne k u hu) with h | h
     · exact ⟨⟨cj u, hcm k u hu, by rw [hcc]; exact h⟩, Or.inr ((hconj _ _).2 (hcc u).symm)⟩
     · exact ⟨⟨u, hu, h⟩, Or.inl rfl⟩
-
-def negOne (I : AutInst) : I.Gf := ⟨-1, by
-  show cT (sigR I.cm.sig (Af I.F)) (Units.val (-1 : GL (Fin I.n) (I.E ⊗[I.F] Af I.F))) * _ *
-    Units.val (-1 : GL (Fin I.n) (I.E ⊗[I.F] Af I.F)) = _
-  have : cT (sigR I.cm.sig (Af I.F)) (-1 : Matrix (Fin I.n) (Fin I.n) (I.E ⊗[I.F] Af I.F)) = -1 := by
-    rw [cT, Matrix.map_neg _ (map_neg _), Matrix.transpose_neg]
-    exact congrArg Neg.neg (cT_one _)
-  rw [Units.val_neg, Units.val_one, this]
-  simp⟩
-
-theorem fmat_negOne (I : AutInst) : I.fmat (negOne I) = -1 := rfl
-
-theorem negOne_mem (I : AutInst) : negOne I ∈ I.Kset := fun y => by
-  show _ ↔ I.fmat (negOne I) *ᵥ y ∈ I.Lf
-  rw [fmat_negOne, Matrix.neg_mulVec, Matrix.one_mulVec, neg_mem_iff]
-
-theorem actsAs_negOne {I : AutInst} {N p : ℕ} {w : HeightOneSpectrum (𝓞 I.E)} (fr : PlFrame I N p w) :
-    fr.ActsAs (negOne I) (-1) := by
-  intro y hy
-  rw [Matrix.neg_mulVec, Matrix.one_mulVec, ← map_neg]
-  exact congrArg fr.c (Subtype.ext (by
-    show I.fmat (negOne I) *ᵥ (y : Fin I.n → _) = -(y : Fin I.n → _)
-    rw [fmat_negOne, Matrix.neg_mulVec, Matrix.one_mulVec]))
 
 end Inhab
 

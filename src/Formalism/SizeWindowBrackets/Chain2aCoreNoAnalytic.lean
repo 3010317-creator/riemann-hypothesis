@@ -67,8 +67,6 @@ instance decFinPl (K : Type) [Field K] [NumberField K] : DecidableEq (slopeLatti
 section Places
 variable {K : Type} [Field K] [NumberField K]
 
-def ramE (w : slopeLatticeData.FinPl K) : ℝ := (w.1.ramificationIdx ℤ : ℝ)
-
 end Places
 
 structure Fam (I : Type) (m : ℕ) where

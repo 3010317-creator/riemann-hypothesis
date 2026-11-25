@@ -27,10 +27,6 @@ theorem norm_eq_one_of_unitCC {N : ℕ} {X : Type} [AddCommGroup X] [Module ℂ 
   obtain ⟨v, hv⟩ := exists_ne (0 : X)
   rw [smul_left_injective ℂ hv ((hc v).symm.trans (hω z v)), h1]
 
-theorem hasCentralChar_nu_u (x : IrrGL (k := k)) {ω : kˣ →* ℂˣ} (h : HasCentralChar x.rep ω) (s : ℂ) :
-    HasCentralChar (x.nu s).rep (ω * absPow k s ^ x.1) :=
-  hasCentralChar_nu x h s
-
 private theorem sum_range_mul_two_u (l : ℕ) : (∑ i ∈ Finset.range l, (i : ℝ)) * 2 = l * ((l : ℝ) - 1) := by
   induction l with
   | zero => simp

@@ -153,16 +153,6 @@ section Position
 
 variable {Pr : Primes X} {u : Pr.Word} {SG : Finset (HeightOneSpectrum (𝓞 X.E))} {n : ℕ}
 
-theorem moveHyp_of_notMem (hPr : Pr.Ok) (h : ∀ w ∈ SG, (Pr.T u : 𝓞 X.E) ∉ w.asIdeal) (P : Pr.vT u) :
-    MoveHyp (Pr.vT u) SG P := by
-  refine ⟨(moveHyp_of_ok hPr u P).ne, (moveHyp_of_ok hPr u P).st, fun w => ⟨fun e => ?_, fun e => ?_⟩⟩
-  · apply h w.1 w.2
-    rw [e]
-    exact T_mem hPr u P
-  · apply h w.1 w.2
-    rw [e, mem_conjP, map_natCast]
-    exact T_mem hPr u P
-
 theorem above_finite_nonempty (hX : X.Ok) (hPr : Pr.Ok) {P : Pr.vT u} (hP : MoveHyp (Pr.vT u) SG P)
     (d' : DecoSet (E := X.E) (n := n) (ST := Pr.vT u) (SG := SG)) :
     {d₁ : DecoSet (E := X.E) (n := n) (ST := Pr.vT u) (SG := SG) | d'.1.IsUp P (Pr.T u : 𝓞 X.E) d₁.1}.Finite ∧

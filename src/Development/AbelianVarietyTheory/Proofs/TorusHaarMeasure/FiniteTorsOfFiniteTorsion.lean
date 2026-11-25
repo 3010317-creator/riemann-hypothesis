@@ -93,13 +93,6 @@ theorem evalTerm_finite [Finite σ] (F : MvPowerSeries σ A) (x : σ → R)
   have h0 : x i ^ d i = 0 := pow_eq_zero_of_le hi.le (hN i)
   rw [Finsupp.prod, Finset.prod_eq_zero (f := fun a => x a ^ d a) hi0 h0, smul_zero]
 
-def evalNil [Finite σ] (F : MvPowerSeries σ A) (x : σ → R) (hx : ∀ i, IsNilpotent (x i)) : R :=
-  ∑ d ∈ (evalTerm_finite F x hx).toFinset, evalTerm F x d
-
-theorem evalNil_eq_finsum [Finite σ] (F : MvPowerSeries σ A) (x : σ → R)
-    (hx : ∀ i, IsNilpotent (x i)) : evalNil F x hx = ∑ᶠ d, evalTerm F x d :=
-  (finsum_eq_sum _ (evalTerm_finite F x hx)).symm
-
 end Eval
 
 

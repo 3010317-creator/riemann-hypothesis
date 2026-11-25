@@ -84,18 +84,9 @@ def SplitEq : Prop :=
     splitCentre E a t =
       Reduction.centralSection E a ⟨Real.exp (a * Module.finrank ℚ E * t), Real.exp_pos _⟩
 
-def QuotMk : Prop :=
-  ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (g : GA E a),
-    quotMap E a (mk (latticeGL E a) g) = RightCosetSpace.mk (Γ1 E a) (retractOne g)
-
 def MuHaar : Prop :=
   ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (μ : Measure (GA E a)) [μ.IsHaarMeasure],
     (muOne μ).IsHaarMeasure
-
-def BandDom : Prop :=
-  ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (D : Set (G1 E a)),
-    (∀ x : G1 E a, ∃! γ : Γ1 E a, γ • x ∈ D) →
-    ∀ g : GA E a, ∃! γ : latticeGL E a, γ • g ∈ retractOne ⁻¹' D ∩ band E a
 
 def QuotPres : Prop :=
   ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (μ : Measure (GA E a)) [μ.IsHaarMeasure],
@@ -162,40 +153,6 @@ def AbsIrr : Prop :=
     ∀ X : Submodule ℂ L, X ≤ LinearMap.range J.toLinearMap → IsIrredSubrep ρ X →
     ∃ (_ : CompleteSpace (X.comap J.toLinearMap)) (hV : π.IsInvariant (X.comap J.toLinearMap)),
       (π.restrict (X.comap J.toLinearMap) hV).IsIrreducible
-
-def AbsApprox : Prop :=
-  ∀ (ι H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] (A : ι → H →L[ℂ] H),
-    (∀ i, ∃ j, ContinuousLinearMap.adjoint (A i) = A j) → ∀ (W N : Submodule ℂ H), FiniteDimensional ℂ N →
-    (∀ w ∈ W, ∃ Y ≤ W, FiniteDimensional ℂ Y ∧ w ∈ Y ∧ ∀ i, ∀ y ∈ Y, A i y ∈ Y) →
-    ∀ v ∈ W.topologicalClosure,
-      (∀ P : H →L[ℂ] H, (∀ i x, P (A i x) = A i (P x)) → (∀ x, P x ∈ W) → P v ∈ N) → v ∈ W
-
-def HomFin : Prop :=
-  ∀ (C M X : Type) [Group C] [TopologicalSpace C] [IsTopologicalGroup C] [CompactSpace C] [T2Space C]
-    [AddCommGroup M] [Module ℂ M] [AddCommGroup X] [Module ℂ X] [FiniteDimensional ℂ X]
-    (σ : Representation ℂ C M) (hσ : CompactRep.IsKFinite σ) (τ : Representation ℂ C X),
-    Representation.HasContinuousCoeff τ → ∀ F : Submodule ℂ M,
-    (∀ (c : Submodule (MonoidAlgebra ℂ C) σ.asModule) (hc : c ∈ isotypicComponents (MonoidAlgebra ℂ C) σ.asModule),
-      FiniteDimensional ℂ (LinearMap.range (CompactRep.kProj hσ hc ∘ₗ F.subtype))) →
-    ∃ N : Submodule ℂ M, FiniteDimensional ℂ N ∧
-      ∀ f : X →ₗ[ℂ] M, (∀ k x, f (τ k x) = σ k (f x)) → (∀ x, f x ∈ F) → ∀ x, f x ∈ N
-
-def StabFin : Prop :=
-  ∀ (K : Type) [Field K] [NumberField K] (n : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] (M : AdelicGKModule K n V),
-    GroundTheory.Automorphic.IsSmooth M.τ → ∀ U : Subgroup (AdelicGLn.FiniteAdelicGL K n),
-    IsCompact (U : Set (AdelicGLn.FiniteAdelicGL K n)) → ∀ v : V,
-    ∃ Y : Submodule ℂ V, FiniteDimensional ℂ Y ∧ v ∈ Y ∧ (∀ k, ∀ y ∈ Y, M.gk.σ k y ∈ Y) ∧ ∀ u ∈ U, ∀ y ∈ Y, M.τ u y ∈ Y
-
-def PvFin : Prop :=
-  ∀ (K : Type) [Field K] [NumberField K] (n : ℕ) (μ₁ : Measure (G1 K n)) [μ₁.IsHaarMeasure]
-    (π : CuspidalAutomorphicRepresentation K n) (U : Subgroup (AdelicGLn.FiniteAdelicGL K n)),
-    IsCompact (U : Set (AdelicGLn.FiniteAdelicGL K n)) → IsOpen (U : Set (AdelicGLn.FiniteAdelicGL K n)) →
-    ∀ v : CuspL2 μ₁, (∀ u ∈ U, cuspRepT μ₁ (retractOne (finEmb K n u)) v = v) →
-    FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k : archCompact K n => archRepT μ₁ (k : archGroup K n) v)) →
-    ∃ N : Submodule ℂ (CuspL2 μ₁), FiniteDimensional ℂ N ∧ ∀ P : CuspL2 μ₁ →L[ℂ] CuspL2 μ₁,
-      (∀ (k : archCompact K n) x, P (archRepT μ₁ (k : archGroup K n) x) = archRepT μ₁ (k : archGroup K n) (P x)) →
-      (∀ u ∈ U, ∀ x, P (cuspRepT μ₁ (retractOne (finEmb K n u)) x) = cuspRepT μ₁ (retractOne (finEmb K n u)) (P x)) →
-      (∀ x, P x ∈ π.carrier.map (cuspVecL μ₁)) → P v ∈ N
 
 def KFinMem : Prop :=
   ∀ (K : Type) [Field K] [NumberField K] (n : ℕ) (μ₁ : Measure (G1 K n)) [μ₁.IsHaarMeasure]

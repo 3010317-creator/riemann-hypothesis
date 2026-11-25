@@ -198,20 +198,6 @@ theorem pure_eq (f : SInf F κ) (φ : ∀ u : HeightOneSpectrum (𝓞 F), (κ �
 theorem ev_int (y : κ → Af F) : ∀ᶠ u in cofinite, ∀ i, evalV F u (y i) ∈ u.adicCompletionIntegers F :=
   eventually_all.2 fun i => (y i).2
 
-theorem cont_evalV (u : HeightOneSpectrum (𝓞 F)) : Continuous (evalV F u) :=
-  (continuous_apply u).comp RestrictedProduct.continuous_coe
-
-theorem isOpen_intAf : IsOpen {a : Af F | ∀ v, evalV F v a ∈ v.adicCompletionIntegers F} :=
-  RestrictedProduct.isOpen_forall_mem
-    (A := fun v : HeightOneSpectrum (𝓞 F) => (v.adicCompletionIntegers F : Set (v.adicCompletion F)))
-    (fun v => Valued.isOpen_valuationSubring _)
-
-theorem isCompact_intV (u : HeightOneSpectrum (𝓞 F)) :
-    IsCompact {x : κ → Fv F u | ∀ i, x i ∈ u.adicCompletionIntegers F} := by
-  have h : IsCompact (u.adicCompletionIntegers F : Set (Fv F u)) := isCompact_iff_compactSpace.2
-    (GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F u)
-  simpa [Set.pi] using isCompact_univ_pi fun _ : κ => h
-
 theorem isCompact_box (C : ∀ u : HeightOneSpectrum (𝓞 F), Set (Fv F u)) (hC : ∀ u, IsCompact (C u))
     (h : ∀ᶠ u in cofinite, C u ⊆ u.adicCompletionIntegers F) : IsCompact {a : Af F | ∀ u, evalV F u a ∈ C u} := by
   apply PositivityTheory.ThKEst.FiniteAdelicSupportCompactness.isCompact_box <;> assumption

@@ -153,16 +153,6 @@ def StepX.type {I : LocId L p nV W Qq} {Z : Type} [CommGroup Z] {T f i : ℕ} (S
     awayG sp.cm.sig (sp.X i).gram Sx.lev.Uloc p →* Z :=
   Sx.atG.typeX hg Sx.lamG p hp * lamQG sp.cm.sig (sp.X i).gram Sx.lev.Uloc Sx.Q Sx.typQ p Sx.Q_p
 
-def StepX.toStepAt {I : LocId L p nV W Qq} {O : Type} [CommRing O] {T f i : ℕ} (Sx : StepX I Oˣ T f i)
-    (hg : ∀ a, gp a ≠ 0) (hp : ∀ a, Nat.Coprime p (gp a)) : StepAt I O (sp.X i).rank where
-  J := (sp.X i).gram
-  Lb := Sx.lev.Lb
-  Uloc := Sx.lev.Uloc
-  fr := Sx.fr
-  ψ := (Sx.type hg hp)⁻¹
-  eps := 1
-  fin := finite_compG sp.cm.sig (sp.X i).gram Sx.lev.Uloc p Sx.lev.U (fun x hx => (Sx.lev.U_eq x).1 hx) Sx.fin
-
 end Generic
 
 section Record
@@ -177,19 +167,6 @@ theorem rank_step (D : D7) (i : ℕ) (hi : i < D.R.m) :
   have := k_pred D.R
   simp only [Ranks.N]
   omega
-
-abbrev levelsRec (D : D7) (u : D.what₂.Word) (h : D.R.MA)
-    (hS : HidaSetting p (orderOf (zPsi D.R.toFrame h)) W Qq O Kf ι σ j w) (r : ℕ)
-    (L : ColLevel D.R D.host.F D.host.E D.sp D.host.g (D.mem u).C (D.mem u).A (D.clsLat u))
-    (I : LocId L p (nOrb (zPsi D.R.toFrame h)) W Qq) (ψ : Formalism.L2.Herm.awayFrom₂ L p →* Oˣ)
-    (y : compL L p → UPts D.sp.cm.sig D.sp.gram0 (Formalism.L2.Herm.Af D.host.F)) (e : ℕ) (c : ℕ) (hc : CloudBound D u c)
-    (hg : ∀ a, D.host.g a ≠ 0) (hp : ∀ a, Nat.Coprime p (D.host.g a))
-    (Cb : ∀ i, i < D.R.m → Type) [∀ i hi, Finite (Cb i hi)]
-    (Sx : ∀ i (hi : i < D.R.m), Cb i hi → StepX I Oˣ (D.mem u).A.T D.R.f (i + 1)) :
-    Levels (fillsRec D u h hS r L I ψ y e c hc) :=
-  levelsOfCh hS r (fun v s => lamRec D u (posG (zPsi D.R.toFrame h) ⟨v, s⟩)) (fun _ _ => lamRec_anti D u _) (k_pred D.R) I ψ y e
-    (fillsRec D u h hS r L I ψ y e c hc) D.R.m (fun i => (D.sp.X (i + 1)).rank) (fun i hi => rank_step D i hi) Cb
-    (fun i hi β => (Sx i hi β).toStepAt hg hp)
 
 structure StepMore (D : D7) {inQ : D.what₂.Tup → HeightOneSpectrum (𝓞 D.host.F) → Prop} (T : Formalism.L2.Herm.TwChTied D inQ)
     (u : D.what₂.Word) (μ : D.what₂.Tup)

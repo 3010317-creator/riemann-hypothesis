@@ -23,15 +23,6 @@ open MvPolynomial MeasureTheory ReciprocityTheory.AnForm.M Topology Filter Set
 variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
   {P J : Ideal (MRing ι)} {e : ℕ} (R : AnLogRes P J e)
 
-theorem brFib_finite' (Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ))
-    (hP : IsArithVar P (e + 1)) (hΨ : IsGoodProj P Ψ) (y : Fin e → ℂ) :
-    (brQ R Ψ ⁻¹' {y} ∩ {x | R.lift x x ∉ mcPts J ∧ Ψ (segre (R.lift x x)) 0 ≠ 0}).Finite := by
-  exact GroundTheory.Heights₂.Heights.HilbertSamuel.AnResBridge.brFib_finite' R.toAnRes Ψ hP hΨ y
-
-theorem lift_mem_iff {x z : R.X} (hz : z ∈ R.U x) :
-    R.lift z z ∈ mcPts J ↔ R.lift x z ∈ mcPts J := by
-  exact GroundTheory.Heights₂.Heights.HilbertSamuel.AnResBridge.lift_mem_iff R.toAnRes hz
-
 theorem psi_lift_eq {x z : R.X} (hz : z ∈ R.U x)
     (Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ)) :
     ∃ μ : ℂ, μ ≠ 0 ∧ Ψ (segre (R.lift z z)) = μ • Ψ (segre (R.lift x z)) := by

@@ -54,13 +54,6 @@ open Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.Weakl
 
 namespace GlobalTheory.Per.FontaineAll
 
-noncomputable def extRep {G : Type} [Group G] {LL : Type} [Field LL] (LL' : Type) [Field LL']
-    [Algebra LL LL'] {V : Type} [AddCommGroup V] [Module LL V] (ρ : Representation LL G V) :
-    Representation LL' G (LL' ⊗[LL] V) where
-  toFun g := (ρ g).baseChange LL'
-  map_one' := by rw [map_one]; exact LinearMap.baseChange_one LL V
-  map_mul' g h := by rw [map_mul]; exact LinearMap.baseChange_mul _ _
-
 theorem fontCore_of_tied (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P)
     (hT : LocTied l P AI) (K : FinExt l) : Formalism.MainNotions.LocalSituation.fontCore (P.PD K) := by
   apply GlobalTheory.FontaineExtensionCriteria.fontCore_of_tied <;> assumption

@@ -133,7 +133,6 @@ theorem cD_mul (t : (A F)ˣ) (g h : G1 F) : cD t (g * h) = cD t g * cD t h :=
   gl_injective (by simp only [gl_cD, gl_mul]; group)
 @[simp] theorem cD_one (t : (A F)ˣ) : cD t (1 : G1 F) = 1 := gl_injective (by rw [gl_cD, gl_one]; simp)
 
-theorem cD_nU (t : (A F)ˣ) (b : A F) : cD t (nU b) = nU (b * ((t⁻¹ : (A F)ˣ) : A F)) := by (apply Subtype.ext; simp only [cD_val]; ext i j; fin_cases i <;> fin_cases j <;> simp [nU])
 theorem cD_sq (t : (A F)ˣ) (g : G1 F) : cD (t ^ 2) g = (mD t)⁻¹ * g * mD t := by
   apply gl_injective
   have h : dM (t ^ 2) = (gl (mD t))⁻¹ * Matrix.GeneralLinearGroup.scalar (Fin 2) t := by

@@ -103,22 +103,10 @@ variable {D : D7} {X : Fields} (s : Seam D X)
 
 def Seam.oE : 𝓞 X.E ≃+* 𝓞 D.host.E := RingOfIntegers.mapRingEquiv s.iE
 
-theorem oE_symm_coe (r : 𝓞 D.host.E) : ((s.oE.symm r : 𝓞 X.E) : X.E) = s.iE.symm (r : D.host.E) := rfl
-
 def Seam.PrimeTo (I : Ideal (𝓞 D.host.E)) (P : HeightOneSpectrum (𝓞 X.E)) : Prop := ∃ t ∈ I, s.oE.symm t ∉ P.asIdeal
 
 theorem primeTo_top (P : HeightOneSpectrum (𝓞 X.E)) : s.PrimeTo ⊤ P :=
   ⟨1, Submodule.mem_top, by rw [map_one]; exact fun h => P.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h)⟩
-
-theorem primeTo_mono {I J : Ideal (𝓞 D.host.E)} (h : I ≤ J) {P : HeightOneSpectrum (𝓞 X.E)} (hI : s.PrimeTo I P) : s.PrimeTo J P := by
-  obtain ⟨t, ht, hn⟩ := hI
-  exact ⟨t, h ht, hn⟩
-
-theorem primeTo_half {P : HeightOneSpectrum (𝓞 X.E)} (h : s.PrimeTo (differentIdeal (𝓞 D.host.K) (𝓞 D.host.E)) P) : s.PrimeTo D.host.𝔟 P := by
-  refine primeTo_mono s ?_ h
-  have h1 : differentIdeal (𝓞 D.host.K) (𝓞 D.host.E) = D.host.𝔟 * (D.host.conj • D.host.𝔟) := D.host.𝔟_spec.1
-  rw [h1]
-  exact (Ideal.mul_le_left : D.host.𝔟 * (D.host.conj • D.host.𝔟) ≤ D.host.𝔟)
 
 theorem half_ne_bot (D : D7) : D.host.𝔟 ≠ ⊥ := by
   intro h

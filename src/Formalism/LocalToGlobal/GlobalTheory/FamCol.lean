@@ -8,7 +8,8 @@ import Formalism.SizeWindowBrackets.ErrorFormsWeakWindowsFalse
 import Formalism.SizeWindowBrackets.FirstPrimeNeSecondPrime
 import Formalism.SizeWindowBrackets.GrowthBoundGivesRiemannHypothesis
 import Formalism.SizeWindowBrackets.QuotientSlopeBoundsWith
-import Formalism.SizeWindowBrackets.RealSlopeBoundsSplit
+import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Basic.Real.Basic
 import Formalism.SizeWindowBrackets.SChain
 import Formalism.ThickAverageLoss.PartnersToFactorsAt
 

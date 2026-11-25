@@ -80,13 +80,6 @@ open GlobalTheory.PlaceInt
 
 namespace GlobalTheory.PlaceInt
 
-def letterEquiv {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (Dw : Datum H) (n : ℕ) :
-    Lt1 Dw × Fin n ≃ LtN Dw n where
-  toFun p := ⟨p.1.1, p.1.2, p.2⟩
-  invFun ℓ := (⟨ℓ.1, ℓ.2.1⟩, ℓ.2.2)
-  left_inv _ := rfl
-  right_inv _ := rfl
-
 theorem toK_prod_evV (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V]
     [IsAdicComplete (maximalIdeal V) V] [CharZero V] (K : Type) [CommRing K] [Algebra V K] {d n : ℕ}
     (f : Fin n → PS V 1 d) :

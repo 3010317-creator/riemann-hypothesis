@@ -30,9 +30,6 @@ variable {K : Type*} [Field K] [NumberField K]
 
 section TotallyReal
 
-abbrev realEmb (hreal : ∀ w : InfinitePlace K, w.IsReal) (w : InfinitePlace K) : K →+* ℝ :=
-  embedding_of_isReal (hreal w)
-
 end TotallyReal
 
 section Form

@@ -70,12 +70,6 @@ def ExQuadR : Prop :=
       ∃ (v : HeightOneSpectrum (𝓞 F)) (A : ValuationSubring Ω), S v ∧ IsPlaceOver A v ∧
         ∃ s ∈ Ine (F := F) A, s ∉ (res F Ω K).range
 
-def NoTwistRam : Prop :=
-  ∀ (F E Ω : Type) [Field F] [NumberField F] [IsTotallyReal F] [Field E] [NumberField E] [Field Ω] [Algebra F E] [Algebra F Ω]
-    [Algebra E Ω] [IsScalarTower F E Ω] [IsAlgClosure E Ω] (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ), Module.finrank F E = 2 →
-    ∀ (n : ℕ), 1 ≤ n → ∀ (r : G F Ω →* GL (Fin n) (Qbar l)) (π : TR.CuspSub F n), Continuous r → AttR ι r π →
-      (∃ s, s ∉ (res F Ω E).range ∧ r s = 1) → ∀ η : HChar F, IsQuadCharOf E η → ¬ IsoTwist π η
-
 def SSRes : Prop :=
   ∀ (Γ Γ' k : Type) [Group Γ] [Group Γ'] [Field k] (n : ℕ) (r : Γ →* GL (Fin n) k) (φ : Γ' →* Γ), φ.range.Normal →
     IsSSRep r → IsSSRep (r.comp φ)

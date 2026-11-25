@@ -63,19 +63,6 @@ abbrev SelS (𝒜 : FamClass) (sel : Formalism.L2.TSel 𝒜) :=
   ∀ {eps : ℝ} (Fm : FamP eps) (hc : 𝒜 Fm) (x : ℝ) (hx : Fm.x1 < x) (h : (sel Fm hc).1 ≤ x) (i : Fm.Ix x),
     Formalism.L2.SG.SpectralTiesReal.STiesR ((sel Fm hc).2 x hx h i)
 
-def ZscAt {𝒜 : FamClass} (sel : Formalism.L2.TSel 𝒜) (selP : BaseLevelCompatibleSelection 𝒜 sel) (selDH : SelDH 𝒜 sel) {eps : ℝ} (Fm : FamP eps) (hc : 𝒜 Fm)
-    (x : ℝ) (hx : Fm.x1 < x) (h : (sel Fm hc).1 ≤ x) (i : Fm.Ix x) :
-    Formalism.L2.Indef.DefSub (selP Fm hc x hx h i).1.A3.fam3.amb3 → Formalism.L2.Indef.IndefScale (selP Fm hc x hx h i).1.A3.fam3.base3 :=
-  fun Zs =>
-    let z := Formalism.L2.DIV.ZscOfNum3 (selP Fm hc x hx h i).1.A3 (selP Fm hc x hx h i).1.P0 (selP Fm hc x hx h i).1.ψ0
-      (Formalism.L2.DIV.ofRecord (Fm.D x i) (Fm.L x i) (selDH Fm hc x hx h i).1.1 (selDH Fm hc x hx h i).1.2) (Equiv.refl _) (Fm.L x i).Nc Zs
-    { z with l6m := fun j => z.l6m j - Fm.Csz * z.l6u, l6u := 0 }
-
-abbrev SelB (𝒜 : FamClass) (sel : Formalism.L2.TSel 𝒜) (selS : SelS 𝒜 sel) (selP : BaseLevelCompatibleSelection 𝒜 sel) (selDH : SelDH 𝒜 sel) (selC : ColumnCompatibleSelection 𝒜 sel selP) :=
-  ∀ {eps : ℝ} (Fm : FamP eps) (hc : 𝒜 Fm) (x : ℝ) (hx : Fm.x1 < x) (h : (sel Fm hc).1 ≤ x) (i : Fm.Ix x),
-    Formalism.IndefR.RealTB ((sel Fm hc).2 x hx h i) (selP Fm hc x hx h i).1 (selC Fm hc x hx h i).c.face (selC Fm hc x hx h i).Sp
-      (ZscAt sel selP selDH Fm hc x hx h i) (selS Fm hc x hx h i)
-
 def EvSel {𝒜 : FamClass} (sel : Formalism.L2.TSel 𝒜) {eps : ℝ} (Fm : FamP eps) (hc : 𝒜 Fm)
     (Q : ∀ (x : ℝ) (hx : Fm.x1 < x) (h : (sel Fm hc).1 ≤ x) (i : Fm.Ix x), Prop) : Prop :=
   ∃ x0 : ℝ, ∀ x (hx : Fm.x1 < x) (h : (sel Fm hc).1 ≤ x), x0 ≤ x → ∀ i : Fm.Ix x, Q x hx h i
@@ -115,8 +102,6 @@ def selP : BaseLevelCompatibleSelection 𝒜 (sel σ) := fun Fm hc x hx _ i => �
 def selDH : SelDH 𝒜 (sel σ) := fun Fm hc x hx _ i => (σ Fm hc x hx i).DH
 
 def selC : ColumnCompatibleSelection 𝒜 (sel σ) (selP σ) := fun Fm hc x hx _ i => (σ Fm hc x hx i).C
-
-def selB : SelB 𝒜 (sel σ) (selS σ) (selP σ) (selDH σ) (selC σ) := fun Fm hc x hx _ i => (σ Fm hc x hx i).B
 
 end GlobalTheory.Fc
 

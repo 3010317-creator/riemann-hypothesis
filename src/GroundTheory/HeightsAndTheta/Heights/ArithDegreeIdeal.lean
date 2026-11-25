@@ -93,55 +93,6 @@ theorem finrank_ideal {I : Ideal (𝓞 K)} (hI : I ≠ ⊥) : Module.finrank (�
     simpa using hli.fintype_card_le_finrank
   omega
 
-theorem arithDegree_ideal {I : Ideal (𝓞 K)} (hI : I ≠ ⊥) :
-    (HermitianBundle.ideal I).arithDegree = -Real.log (Ideal.absNorm I) := by
-  obtain ⟨a, haI, ha⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI
-  set s : I := ⟨a, haI⟩
-  have hs : s ≠ 0 := by simpa [s] using ha
-  change arithDegree (HermitianMetric.ideal I) = _
-  rw [arithDegree_line _ (finrank_ideal hI) hs]
-
-  set T : Ideal (𝓞 K) := Ideal.span {a}
-  have hTI : T ≤ I := (Ideal.span_singleton_le_iff_mem I).mpr haI
-  have hcard : Nat.card (I ⧸ Submodule.span (𝓞 K) {s}) * Ideal.absNorm I =
-      (Algebra.norm ℤ a).natAbs := by
-    rw [← Ideal.absNorm_span_singleton, Ideal.absNorm_apply, Ideal.absNorm_apply,
-      Submodule.cardQuot_apply, Submodule.cardQuot_apply,
-      ← Submodule.card_quotient_mul_card_quotient I T hTI]
-    congr 1
-    have hker : LinearMap.ker (T.mkQ ∘ₗ I.subtype) = Submodule.span (𝓞 K) {s} := by
-      ext x
-      simp only [LinearMap.mem_ker, LinearMap.coe_comp, Function.comp_apply, Submodule.mkQ_apply,
-        Submodule.Quotient.mk_eq_zero, Submodule.subtype_apply, T, Ideal.mem_span_singleton',
-        Submodule.mem_span_singleton]
-      constructor
-      · rintro ⟨c, hc⟩; exact ⟨c, Subtype.ext hc⟩
-      · rintro ⟨c, hc⟩; exact ⟨c, congrArg Subtype.val hc⟩
-    have hrange : Submodule.map T.mkQ I = LinearMap.range (T.mkQ ∘ₗ I.subtype) := by
-      rw [LinearMap.range_comp, Submodule.range_subtype]
-    rw [← hker, hrange]
-    exact Nat.card_congr (LinearMap.quotKerEquivRange _).toEquiv
-
-  have hnorm : ∀ σ : K →+* ℂ, ‖fibreVec (HermitianMetric.ideal I) σ s‖ = ‖σ (a : K)‖ := by
-    intro σ
-    have h1 := norm_fibreVec_sq (HermitianMetric.ideal I) σ s
-    rw [HermitianMetric.ideal, HermitianMetric.comap_inner] at h1
-    erw [HermitianMetric.integers_inner] at h1
-    simp only [Submodule.subtype_apply, s, LinearMap.id_apply, map_one, mul_one] at h1
-    rw [mul_comm, Complex.mul_conj, Complex.ofReal_re, Complex.normSq_eq_norm_sq] at h1
-    exact (pow_left_inj₀ (norm_nonneg _) (norm_nonneg _) two_ne_zero).mp h1
-  simp only [hnorm, sum_log_norm_embedding a ha]
-  have hN : (0 : ℝ) < Ideal.absNorm I := by
-    exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr hI)
-  have hc : (Nat.card (I ⧸ Submodule.span (𝓞 K) {s}) : ℝ) =
-      (Algebra.norm ℤ a).natAbs / Ideal.absNorm I := by
-    rw [eq_div_iff hN.ne', ← hcard]
-    push_cast; ring
-  rw [hc, Real.log_div]
-  · ring
-  · exact_mod_cast Int.natAbs_ne_zero.mpr (Algebra.norm_ne_zero_iff.mpr ha)
-  · exact hN.ne'
-
 theorem HermitianBundle.degree_eq_arithDegree (E : HermitianBundle K)
     (F : Submodule (𝓞 K) E.carrier) :
     E.degree F = GroundTheory.Heights₂.Heights.arithDegree (E.metric.comap F.subtype F.injective_subtype) := by
