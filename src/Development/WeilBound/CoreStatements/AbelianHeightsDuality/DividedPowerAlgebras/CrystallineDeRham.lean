@@ -642,14 +642,6 @@ theorem nil_ker {γ : DividedPowers I} (T : Thick γ s) : IsNilpotent (RingHom.k
   rw [this]
   exact GlobalTheory.AnPer.TaylorCore.isNilpotent_of_isNilDP T.nil
 
-theorem res_etale {U V : X.affineOpens} (h : V.1 ≤ U.1) : (Sec.res s h : Sec s U.1 →+* Sec s V.1).Etale := by
-  have e : V.1 ≤ (𝟙 X : X ⟶ X) ⁻¹ᵁ U.1 := h
-  have H := (𝟙 X : X ⟶ X).etale_appLE U.2 V.2 e
-  have key : ((𝟙 X : X ⟶ X).appLE U.1 V.1 e).hom = (Sec.res s h : Sec s U.1 →+* Sec s V.1) := by
-    simp only [Scheme.Hom.appLE, Scheme.Hom.id_app]
-    rfl
-  rw [key] at H
-  exact H
 
 theorem sec_smooth (hs : Smooth s) (U : X.affineOpens) : Algebra.Smooth R (Sec s U.1) := by
   have e : U.1 ≤ s ⁻¹ᵁ (⊤ : (Sp R).Opens) := le_top
