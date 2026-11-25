@@ -531,18 +531,6 @@ theorem rsParLam_minus (k r : ℕ) (v : Fin (k - 1) → ℝ) (b : Fin (2 * r + 2
   have h2 : a.val - (k - 1) < 2 * r + 2 := by have := a.isLt; omega
   simp only [parLam, rsExt, dite_eq_right h1, dite_eq_left h2]
 
-private lemma strictAnti_lt_of_succ_lt (g : ℕ → ℝ) (n : ℕ) (hg : ∀ x, x + 1 < n → g (x + 1) < g x) :
-    ∀ x y, x < y → y < n → g y < g x := by
-  intro x y hxy hy
-  induction y with
-  | zero => omega
-  | succ y ih =>
-    rcases Nat.lt_or_ge x y with h1 | h1
-    · exact lt_trans (hg y hy) (ih h1 (by omega))
-    · have : x = y := by omega
-      subst this
-      exact hg x hy
-
 private lemma gap_lemma_2 (g : ℕ → ℝ) (n c : ℕ) (h : ℝ)
     (hanti : ∀ x y, x < y → y < n → g y < g x)
     (hgap : ∀ x, x + 1 < n → c ≤ x → h ≤ g x - g (x + 1))
@@ -606,8 +594,8 @@ theorem raiseStep : RaiseStepStatement := by
     fun m hm x hx => rsF_step k r (rsExt u) (rsExt b) h t j m x hk hm hBlt hBgap hUlt hUhalf hx
   have hanti : ∀ m, m ≤ j * t → ∀ x y, x < y → y < 2 * r + k + 1 →
       rsF k (rsExt u) (rsExt b) t j m y < rsF k (rsExt u) (rsExt b) t j m x :=
-    fun m hm => strictAnti_lt_of_succ_lt (fun z => rsF k (rsExt u) (rsExt b) t j m z) (2 * r + k + 1)
-      (fun x hx => (hstep m hm x hx).1)
+    fun m hm _ _ hxy hy => strictAntiOn_of_add_one_lt Set.ordConnected_Iio
+      (fun _ _ _ hz => (hstep m hm _ hz).1) (hxy.trans hy) hy hxy
   have hepsc : ∀ x y : Fin (2 * r + k + 1), x.val < y.val → parEps k r x ≠ parEps k r y →
       k - 1 < y.val := by
     intro x y hxy hne

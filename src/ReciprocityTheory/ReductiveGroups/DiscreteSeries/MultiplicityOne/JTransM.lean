@@ -3,6 +3,7 @@ module
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 public import Mathlib.Analysis.Matrix.Spectrum
+import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
 public import Mathlib.Algebra.Star.Unitary
 public import Mathlib.Analysis.Complex.Exponential
 public import Formalism.HermitianCurvature.StatementB
@@ -40,27 +41,10 @@ private theorem exists_orthonormal_eigenvectors :
       fun i => i.elim0, fun i => i.elim0⟩
   | n + 1, E, _, _, _, hfin, T, hT => by
     have : Nontrivial E := Module.nontrivial_of_finrank_pos (R := ℂ) (by omega)
-    obtain ⟨μ, x, hx0, hTx⟩ : ∃ (μ : ℂ) (x : E), x ≠ 0 ∧ T x = μ • x := by
-      have hint : IsIntegral ℂ T := Algebra.IsIntegral.isIntegral T
-      obtain ⟨μ, hμ⟩ := IsAlgClosed.exists_root (minpoly ℂ T) (minpoly.degree_pos hint).ne'
-      obtain ⟨q, hq⟩ := Polynomial.dvd_iff_isRoot.mpr hμ
-      have hqm : q.Monic := by
-        simpa [Polynomial.Monic, hq, Polynomial.leadingCoeff_mul,
-          Polynomial.monic_X_sub_C μ] using minpoly.monic hint
-      have hqne : Polynomial.aeval T q ≠ 0 := fun hq0 => by
-        have hlt : q.degree < (minpoly ℂ T).degree := by
-          rw [hq, Polynomial.degree_mul, Polynomial.degree_X_sub_C,
-            Polynomial.degree_eq_natDegree hqm.ne_zero]
-          exact_mod_cast Nat.lt_add_of_pos_left Nat.one_pos
-        exact hlt.not_ge (minpoly.min ℂ T hqm hq0)
-      obtain ⟨y, hy⟩ : ∃ y : E, Polynomial.aeval T q y ≠ 0 := by
-        by_contra h; push Not at h; exact hqne (LinearMap.ext h)
-      refine ⟨μ, Polynomial.aeval T q y, hy, ?_⟩
-      have h0 : (T - μ • (1 : Module.End ℂ E)) (Polynomial.aeval T q y) = 0 := by
-        have := congrArg (fun f : Module.End ℂ E => f y) (minpoly.aeval ℂ T)
-        rwa [hq, map_mul, map_sub, Polynomial.aeval_X, Polynomial.aeval_C,
-          Algebra.algebraMap_eq_smul_one] at this
-      exact sub_eq_zero.mp (by simpa using h0)
+    obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue T
+    obtain ⟨x, hx⟩ := hμ.exists_hasEigenvector
+    have hx0 : x ≠ 0 := hx.2
+    have hTx : T x = μ • x := hx.apply_eq_smul
     let u : E := (‖x‖⁻¹ : ℂ) • x
     have hu : ‖u‖ = 1 := by
       simp [u, norm_smul, inv_mul_cancel₀ (norm_ne_zero_iff.mpr hx0)]

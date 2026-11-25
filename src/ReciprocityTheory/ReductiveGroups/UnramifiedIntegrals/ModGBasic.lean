@@ -30,33 +30,11 @@ theorem mem_Aio {d l : ℕ} [Fact l.Prime] (ι : ℂ ≃+* ℂ_[l]) (x : Om d) :
 
 theorem mem_nonunits_Aio {d l : ℕ} [Fact l.Prime] (ι : ℂ ≃+* ℂ_[l]) (x : Om d) :
     x ∈ (Aio d l ι).nonunits ↔ ‖ι (x : ℂ)‖ < 1 := by
-  rw [ValuationSubring.mem_nonunits_iff_exists_mem_maximalIdeal (A := Aio d l ι)]
-  constructor
-  · rintro ⟨h1, h2⟩
-    have hle : ‖ι (x : ℂ)‖ ≤ 1 := (mem_Aio ι x).1 h1
-    refine lt_of_le_of_ne hle fun heq => ?_
-    rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at h2
-    apply h2
-    have hx0 : x ≠ 0 := by
-      rintro rfl
-      simp at heq
-    have hinv : x⁻¹ ∈ Aio d l ι :=
-      (mem_Aio ι x⁻¹).2 (le_of_eq (by rw [IntermediateField.coe_inv, map_inv₀, norm_inv, heq, inv_one]))
-    have hm : (⟨x, h1⟩ : Aio d l ι) * ⟨x⁻¹, hinv⟩ = 1 := Subtype.ext (mul_inv_cancel₀ hx0)
-    exact ⟨⟨_, _, hm, (mul_comm _ _).trans hm⟩, rfl⟩
-  · intro h
-    refine ⟨(mem_Aio ι x).2 h.le, ?_⟩
-    rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    rintro ⟨u, hu⟩
-    have hy := (mem_Aio ι (((u⁻¹ : (Aio d l ι)ˣ) : Aio d l ι) : Om d)).1 ((u⁻¹ : (Aio d l ι)ˣ) : Aio d l ι).2
-    have h0 : ((u : Aio d l ι) : Om d) * (((u⁻¹ : (Aio d l ι)ˣ) : Aio d l ι) : Om d) = 1 :=
-      congrArg Subtype.val u.mul_inv
-    rw [hu] at h0
-    have hmul : (x : ℂ) * ((((u⁻¹ : (Aio d l ι)ˣ) : Aio d l ι) : Om d) : ℂ) = 1 :=
-      congrArg (fun t : Om d => (t : ℂ)) h0
-    have hn : ‖ι (x : ℂ)‖ * ‖ι ((((u⁻¹ : (Aio d l ι)ˣ) : Aio d l ι) : Om d) : ℂ)‖ = 1 := by
-      simpa using congrArg (fun t => ‖ι t‖) hmul
-    nlinarith [norm_nonneg (ι (x : ℂ)), mul_le_mul_of_nonneg_left hy (norm_nonneg (ι (x : ℂ)))]
+  rw [ValuationSubring.mem_nonunits_iff_or, mem_Aio, IntermediateField.coe_inv, map_inv₀,
+    norm_inv, not_le, one_lt_inv_iff₀]
+  exact ⟨fun h => h.elim (fun hx => by subst hx; simp) And.right, fun h =>
+    (eq_or_ne x 0).imp_right fun hx => ⟨norm_pos_iff.2 ((map_ne_zero ι).2
+      (fun e => hx (Subtype.ext e))), h⟩⟩
 
 theorem mem_of_isIntegral {Ω : Type*} [Field Ω] (A : ValuationSubring Ω) {x : Ω} (hx : IsIntegral ℤ x) : x ∈ A := by
   have h2 : IsIntegral A x := hx.tower_top

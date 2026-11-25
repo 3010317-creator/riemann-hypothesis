@@ -11,17 +11,11 @@ namespace ReciprocityTheory.MultiplicativeHeights
 
 open Finset InnerProductSpace
 
-private theorem exists_eq_gramSchmidt_add_sum_Iio {E : Type*} [NormedAddCommGroup E]
-    [InnerProductSpace ℂ E] (n : ℕ) (v : Fin n → E) :
-    ∃ c : Fin n → Fin n → ℂ,
-      ∀ j, v j = gramSchmidt ℂ v j + ∑ i ∈ Iio j, c j i • gramSchmidt ℂ v i :=
-  ⟨_, fun j => gramSchmidt_def'' (𝕜 := ℂ) v j⟩
-
 theorem det_gram_eq_prod_gramSchmidt {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     (n : ℕ) (v : Fin n → E) :
     (Matrix.gram ℂ v).det = ∏ k, (((‖gramSchmidt ℂ v k‖ ^ 2 : ℝ)) : ℂ) := by
   classical
-  obtain ⟨c, hc⟩ := exists_eq_gramSchmidt_add_sum_Iio n v
+  let c := fun j i => inner ℂ (gramSchmidt ℂ v i) (v j) / (‖gramSchmidt ℂ v i‖ : ℂ) ^ 2
   let A : Matrix (Fin n) (Fin n) ℂ := fun i j => if i = j then 1 else if i < j then c j i else 0
   have hA : ∀ j, v j = ∑ i, A i j • gramSchmidt ℂ v i := by
     intro j
@@ -36,7 +30,7 @@ theorem det_gram_eq_prod_gramSchmidt {E : Type*} [NormedAddCommGroup E] [InnerPr
         · simp [A, h, h']
     rw [Finset.sum_congr rfl (fun i _ => h1 i), Finset.sum_add_distrib]
     simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
-    rw [← Finset.sum_filter, hc j]
+    rw [← Finset.sum_filter, gramSchmidt_def'' (𝕜 := ℂ) v j]
     congr 1
     refine Finset.sum_congr ?_ (fun _ _ => rfl)
     ext i
@@ -77,12 +71,11 @@ theorem prod_le_re_det_gram {E : Type*} [NormedAddCommGroup E] [InnerProductSpac
   classical
   rw [det_gram_eq_prod_gramSchmidt, ← Complex.ofReal_prod, Complex.ofReal_re]
   refine Finset.prod_le_prod₀ (fun k _ => hδ k) (fun k _ => ?_)
-  obtain ⟨c, hc⟩ := exists_eq_gramSchmidt_add_sum_Iio n v
-  have hmem : ∑ i ∈ Iio k, c k i • gramSchmidt ℂ v i ∈ Submodule.span ℂ (v '' Set.Iio k) := by
-    rw [← span_gramSchmidt_Iio (𝕜 := ℂ) v k]
+  have hc := gramSchmidt_def'' (𝕜 := ℂ) v k
+  have hmem : v k - gramSchmidt ℂ v k ∈ Submodule.span ℂ (v '' Set.Iio k) := by
+    rw [hc, add_sub_cancel_left, ← span_gramSchmidt_Iio (𝕜 := ℂ) v k]
     exact Submodule.sum_mem _ fun i hi => Submodule.smul_mem _ _
       (Submodule.subset_span ⟨i, Finset.mem_Iio.mp hi, rfl⟩)
-  have h1 := h k _ hmem
-  rwa [← eq_sub_of_add_eq (hc k).symm] at h1
+  simpa only [sub_sub_cancel] using h k _ hmem
 
 end ReciprocityTheory.MultiplicativeHeights

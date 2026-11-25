@@ -35,34 +35,15 @@ section general
 
 variable {R S : Type*} [CommRing R] [CommRing S]
 
-theorem ord_ringEquiv (e : R ≃+* S) (x : R) : Ring.ord R x = Ring.ord S (e x) := by
-  unfold Ring.ord
-  haveI : RingHomInvPair (e : R →+* S) (e.symm : S →+* R) := RingHomInvPair.of_ringEquiv e
-  haveI : RingHomInvPair (e.symm : S →+* R) (e : R →+* S) := RingHomInvPair.symm _ _
-  let q := Ideal.quotientEquiv (Ideal.span {x}) (Ideal.span {e x}) e
-    (by rw [Ideal.map_span, Set.image_singleton]; rfl)
-  let g : (R ⧸ Ideal.span {x}) ≃ₛₗ[(e : R →+* S)] (S ⧸ Ideal.span {e x}) :=
-    { q.toAddEquiv with
-      map_smul' := fun r m => by
-        obtain ⟨m', rfl⟩ := Ideal.Quotient.mk_surjective m
-        simp only
-        rw [Algebra.smul_def, Algebra.smul_def, Ideal.Quotient.algebraMap_eq, Ideal.Quotient.algebraMap_eq,
-          ← map_mul]
-        show q (Ideal.Quotient.mk _ (r * m')) = Ideal.Quotient.mk _ (e r) * q (Ideal.Quotient.mk _ m')
-        simp [q] }
-  have iso : Submodule R (R ⧸ Ideal.span {x}) ≃o Submodule S (S ⧸ Ideal.span {e x}) :=
-    Submodule.orderIsoMapComap g
-  have h : Order.krullDim (Submodule R (R ⧸ Ideal.span {x})) =
-      Order.krullDim (Submodule S (S ⧸ Ideal.span {e x})) := by
-    first
-      | exact le_antisymm (Order.krullDim_le_of_strictMono iso iso.strictMono)
-          (Order.krullDim_le_of_strictMono iso.symm iso.symm.strictMono)
-  unfold Module.length
-  first
-    | simp only [h]
-
 theorem length_self_ringEquiv (e : R ≃+* S) : Module.length R R = Module.length S S := by
   apply GroundTheory.Heights₂.Heights.ObjectsChow.VerticalPartMultiplicity.length_self_eq_of_ringEquiv <;> assumption
+
+theorem ord_ringEquiv (e : R ≃+* S) (x : R) : Ring.ord R x = Ring.ord S (e x) := by
+  rw [Ring.ord, Ring.ord,
+    Module.length_eq_of_surjective (Ideal.Quotient.mk_surjective (I := Ideal.span {x})),
+    Module.length_eq_of_surjective (Ideal.Quotient.mk_surjective (I := Ideal.span {e x}))]
+  exact length_self_ringEquiv (Ideal.quotientEquiv (Ideal.span {x}) (Ideal.span {e x}) e
+    (by rw [Ideal.map_span, Set.image_singleton]; rfl))
 
 end general
 
@@ -187,31 +168,8 @@ theorem ordMod_quot (a b : A) (P : PrimeSpectrum (A ⧸ Ideal.span {a})) :
 
 theorem length_quot_restrict (a : A) (N : Type v) [AddCommGroup N] [Module (A ⧸ Ideal.span {a}) N]
     [Module A N] [IsScalarTower A (A ⧸ Ideal.span {a}) N] :
-    length (A ⧸ Ideal.span {a}) N = length A N := by
-  have hsmul : ∀ (r : A) (n : N), Ideal.Quotient.mk (Ideal.span {a}) r • n = r • n := fun r n => by
-    rw [← Ideal.Quotient.algebraMap_eq, algebraMap_smul (A ⧸ Ideal.span {a})]
-  let g : Submodule A N → Submodule (A ⧸ Ideal.span {a}) N := fun p =>
-    { carrier := p
-      add_mem' := p.add_mem
-      zero_mem' := p.zero_mem
-      smul_mem' := fun c n hn => by
-        obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective c
-        rw [hsmul]
-        exact p.smul_mem r hn }
-  let iso : Submodule (A ⧸ Ideal.span {a}) N ≃o Submodule A N :=
-    { toFun := fun p => p.restrictScalars A
-      invFun := g
-      left_inv := fun p => by ext; rfl
-      right_inv := fun p => by ext; rfl
-      map_rel_iff' := by
-        intro p q
-        exact Submodule.restrictScalars_le A }
-  have h : Order.krullDim (Submodule (A ⧸ Ideal.span {a}) N) = Order.krullDim (Submodule A N) :=
-    le_antisymm (Order.krullDim_le_of_strictMono iso iso.strictMono)
-      (Order.krullDim_le_of_strictMono iso.symm iso.symm.strictMono)
-  unfold Module.length
-  first
-    | simp only [h]
+    length (A ⧸ Ideal.span {a}) N = length A N :=
+  (Module.length_eq_of_surjective Ideal.Quotient.mk_surjective).symm
 
 end ReciprocityTheory.ChartRestriction.G.AI
 end -- clump:auto

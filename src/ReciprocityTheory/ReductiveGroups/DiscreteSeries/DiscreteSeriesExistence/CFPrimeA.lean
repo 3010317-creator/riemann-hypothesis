@@ -114,11 +114,6 @@ theorem sg_ιMulti (ε : Fin n → Bool) (c : Fin n) {k : ℕ} (v : Fin k → Fi
   rw [ExteriorAlgebra.ιMulti_apply, hl, sg_prod_list, List.map_ofFn, List.sum_ofFn]
   rfl
 
-private theorem sum_orderEmbOfFin_eq_sum (s : Finset (Fin (n * n))) (f : Fin (n * n) → ℝ) :
-    ∑ i : Fin s.card, f (s.orderEmbOfFin rfl i) = ∑ k ∈ s, f k := by
-  rw [← Finset.sum_coe_sort s f]
-  exact Fintype.sum_equiv (s.orderIsoOfFin rfl).toEquiv _ _ (fun i => by simp)
-
 theorem fockBasis_wt (ε : Fin n → Bool) (s : Finset (Fin (n * n))) (c : Fin n) :
     sgE ε cpFock cmFock c c (fockBasis n s) = ((fockWt ε s c : ℝ) : ℂ) • fockBasis n s := by
   have hb : fockBasis n s = ExteriorAlgebra.ιMulti ℂ s.card
@@ -132,7 +127,8 @@ theorem fockBasis_wt (ε : Fin n → Bool) (s : Finset (Fin (n * n))) (c : Fin n
   rw [hb, sg_ιMulti]
   congr 2
   rw [fockWt, Finset.sum_apply]
-  exact sum_orderEmbOfFin_eq_sum s (fun k => modeWt ε (finProdFinEquiv.symm k) c)
+  conv_rhs => rw [← Finset.map_orderEmbOfFin_univ s rfl, Finset.sum_map]
+  rfl
 
 theorem cfa_rho_coord (ε : Fin n → Bool) (c : Fin n) :
     (rhoHol ε - rhoN ε) c = ∑ b, ((if ε c = true ∧ ε b = false ∧ b < c then (1 : ℝ) else 0) -

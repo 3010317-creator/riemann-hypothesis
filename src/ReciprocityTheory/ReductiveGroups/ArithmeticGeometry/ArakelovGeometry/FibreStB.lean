@@ -192,38 +192,6 @@ theorem Gen.deh_zOf_Θ (hw : G.Good w) {ρ : ℂ} (hρ : G.P.eval₂ (deh w 0) �
   rw [G.deh_zOf hw hρ]
   exact sub_eq_zero.mp h2
 
-private theorem deh_eq_zero_of_mem_pts_of_deh_eq_zero (hx0 : x (e 0) ≠ 0) (F : MvPolynomial ι ℤ) (hF : deh x (e 0) F = 0)
-    {z : ι → ℂ} (hz : z ∈ pts (coordIdeal ℤ x)) (hz0 : z (e 0) ≠ 0) : deh z (e 0) F = 0 := by
-  have hz' : z ≠ 0 ∧ ∀ f ∈ coordIdeal ℤ x,
-      MvPolynomial.eval z (MvPolynomial.map (Int.castRingHom ℂ) f) = 0 := hz
-  have hmem : (∑ m ∈ F.support, MvPolynomial.C (AddMonoidAlgebra.coeff F m) *
-      X (e 0) ^ (F.totalDegree - ∑ i ∈ m.support, m i) * ∏ i ∈ m.support, X i ^ m i) ∈ coordIdeal ℤ x := by
-    show _ ∈ RingHom.ker (coneMap ℤ x)
-
-    rw [RingHom.mem_ker, coneMap, map_sum]
-    have h1 : ∀ m ∈ F.support, (aeval fun i => Polynomial.C (x i) * Polynomial.X)
-        (MvPolynomial.C (AddMonoidAlgebra.coeff F m) * X (e 0) ^ (F.totalDegree - ∑ i ∈ m.support, m i) *
-          ∏ i ∈ m.support, X i ^ m i) =
-        Polynomial.C (((AddMonoidAlgebra.coeff F m : ℤ) : Ω) * x (e 0) ^ (F.totalDegree - ∑ i ∈ m.support, m i) *
-          ∏ i ∈ m.support, x i ^ m i) * Polynomial.X ^ F.totalDegree := by
-      intro m hm
-      have hs : ∑ i ∈ m.support, m i ≤ F.totalDegree := MvPolynomial.le_totalDegree hm
-      obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_le hs
-      rw [hk, Nat.add_sub_cancel_left]
-      simp only [map_mul, map_pow, map_prod, MvPolynomial.aeval_X, mul_pow,
-        Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum, eq_intCast, map_intCast]
-      ring
-
-    rw [Finset.sum_congr rfl h1, ← Finset.sum_mul, ← map_sum Polynomial.C,
-    sum_coeff_homogenize_eq_pow_mul_eval₂ F (fun i => x i / x (e 0)) x (x (e 0)) (fun i => rfl) hx0 _ le_rfl, ← deh_apply, hF,
-    mul_zero, map_zero, zero_mul]
-  have h2 := hz'.2 _ hmem
-  rw [MvPolynomial.eval_map] at h2
-  simp only [MvPolynomial.eval₂_sum, MvPolynomial.eval₂_mul, MvPolynomial.eval₂_C, MvPolynomial.eval₂_pow,
-    MvPolynomial.eval₂_X, MvPolynomial.eval₂_prod, Int.coe_castRingHom] at h2
-  rw [sum_coeff_homogenize_eq_pow_mul_eval₂ F (fun i => z i / z (e 0)) z (z (e 0)) (fun i => rfl) hz0 _ le_rfl, ← deh_apply] at h2
-  exact (mul_eq_zero.mp h2).resolve_left (pow_ne_zero _ hz0)
-
 private theorem deh_rename' {S : Type*} [Field S] (v : ι → S) (F : MvPolynomial (Fin (D + 1)) ℤ) :
     deh v (e 0) (rename e F) = deh (v ∘ e) 0 F := by
   rw [deh_apply, deh_apply, MvPolynomial.eval₂_rename]
@@ -237,16 +205,16 @@ theorem Gen.of_mem (hx0 : x (e 0) ≠ 0) (hw : G.Good w) {z : ι → ℂ}
     exact hw.w0
   have hze' : z ∘ e = w := funext hze
   constructor
-  · have h := deh_eq_zero_of_mem_pts_of_deh_eq_zero hx0
-      (G.P.eval₂ (rename e : MvPolynomial _ ℤ →ₐ[ℤ] MvPolynomial ι ℤ).toRingHom G.Θ)
-      (by rw [deh_eval₂_rename]; exact G.root) hz hz0
+  · have h := deh_eq_zero_of_deh_eq_zero x z (e 0) hx0 hz0 hz.2
+      (G := G.P.eval₂ (rename e : MvPolynomial _ ℤ →ₐ[ℤ] MvPolynomial ι ℤ).toRingHom G.Θ)
+      (by rw [deh_eval₂_rename]; exact G.root)
     rw [deh_eval₂_rename, hze'] at h
     exact h
   · funext i
-    have h := deh_eq_zero_of_mem_pts_of_deh_eq_zero hx0
-      ((G.Q i).eval₂ (rename e : MvPolynomial _ ℤ →ₐ[ℤ] MvPolynomial ι ℤ).toRingHom G.Θ -
+    have h := deh_eq_zero_of_deh_eq_zero x z (e 0) hx0 hz0 hz.2
+      (G := (G.Q i).eval₂ (rename e : MvPolynomial _ ℤ →ₐ[ℤ] MvPolynomial ι ℤ).toRingHom G.Θ -
         rename e G.dd * X i)
-      (by rw [map_sub, deh_eval₂_rename, map_mul, deh_rename', ← G.hQ i, sub_self]) hz hz0
+      (by rw [map_sub, deh_eval₂_rename, map_mul, deh_rename', ← G.hQ i, sub_self])
     rw [map_sub, deh_eval₂_rename, map_mul, deh_rename', hze', deh_X, sub_eq_zero] at h
     have h0 := hw.w0
     have h1 := hw.dd

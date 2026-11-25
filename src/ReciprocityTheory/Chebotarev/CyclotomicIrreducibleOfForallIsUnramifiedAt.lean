@@ -27,14 +27,8 @@ private theorem setOf_prime_ramified_finite (K : Type*) [Field K] [NumberField K
       {p : ℕ | p.Prime ∧ (p : 𝓞 K) ∈ v.asIdeal}.Subsingleton := by
     intro v p ⟨hp, hpv⟩ q ⟨hq, hqv⟩
     by_contra hne
-    have hcop : Nat.Coprime p q := (Nat.coprime_primes hp hq).mpr hne
-    have hc : IsCoprime (p : 𝓞 K) (q : 𝓞 K) := by
-      have := (Nat.isCoprime_iff_coprime.mpr hcop).map (Int.castRingHom (𝓞 K))
-      simpa using this
-    obtain ⟨a, b, hab⟩ := hc
-    have h1 : (1 : 𝓞 K) ∈ v.asIdeal := hab ▸
-      v.asIdeal.add_mem (v.asIdeal.mul_mem_left a hpv) (v.asIdeal.mul_mem_left b hqv)
-    exact v.isPrime.ne_top ((Ideal.eq_top_iff_one _).mpr h1)
+    exact v.isPrime.notMem_of_isCoprime_of_mem
+      (((Nat.coprime_primes hp hq).mpr hne).cast (R := 𝓞 K)) hpv hqv
   refine (hF.biUnion (fun v _ => (hsub v).finite)).subset ?_
   rintro p ⟨hp, P, hPp, hpP, hnr⟩
   have hP0 : P ≠ ⊥ := fun h => by
@@ -140,13 +134,10 @@ theorem cyclotomic_irreducible_of_forall_isUnramifiedAt {K : Type*} [Field K] [N
     {l : ℕ} (hl : l.Prime)
     (h : ∀ (P : Ideal (𝓞 K)) [P.IsPrime], (l : 𝓞 K) ∈ P → Algebra.IsUnramifiedAt ℤ P) :
     Irreducible (cyclotomic l K) := by
-  have hnu : ¬ IsUnit (l : 𝓞 K) := by
-    intro hu
+  have hnu : ¬ IsUnit (l : 𝓞 K) := fun hu => hl.one_lt.ne' <| by
     have h1 := hu.map (Algebra.norm ℤ (S := 𝓞 K))
-    rw [show (l : 𝓞 K) = algebraMap ℤ (𝓞 K) (l : ℤ) by simp, Algebra.norm_algebraMap,
-      isUnit_pow_iff Module.finrank_pos.ne', Int.isUnit_iff_natAbs_eq] at h1
-    simp at h1
-    exact hl.one_lt.ne' h1
+    rw [Algebra.norm_natCast, isUnit_pow_iff Module.finrank_pos.ne', Int.isUnit_iff] at h1
+    omega
   obtain ⟨M, hM, hlM⟩ := Ideal.exists_le_maximal (Ideal.span {(l : 𝓞 K)})
     (by rwa [Ne, Ideal.span_singleton_eq_top])
   have hlM' : (l : 𝓞 K) ∈ M := hlM (Ideal.mem_span_singleton_self _)

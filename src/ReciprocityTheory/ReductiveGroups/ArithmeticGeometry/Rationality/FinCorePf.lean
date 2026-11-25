@@ -235,16 +235,13 @@ lemma lift_ball (P : MvPolynomial ι K) (hP : ∀ μ, ‖AddMonoidAlgebra.coeff 
     refine ⟨⟨AddMonoidAlgebra.coeff P μ, ?_⟩, rfl⟩
     rw [Valuation.mem_valuationSubring_iff, NormedField.valuation_apply]
     exact_mod_cast hP μ
-  obtain ⟨PO, hPO⟩ := hmem
-  exact ⟨PO, hPO⟩
+  exact hmem
 
 lemma eval_lift (PO : MvPolynomial ι (unitBallRing K)) (σ : ι → unitBallRing K) :
     eval (fun i => (σ i : K)) (MvPolynomial.map (unitBallRing K).subtype PO) =
       ((eval σ PO : unitBallRing K) : K) := by
-  induction PO using MvPolynomial.induction_on with
-  | C a => simp
-  | add p q hp hq => simp [hp, hq]
-  | mul_X p i hp => simp [hp]
+  exact (MvPolynomial.eval_map _ _ _).trans
+    (MvPolynomial.hom_eval₂ PO (RingHom.id _) (unitBallRing K).subtype σ).symm
 
 theorem exists_unit_point (K₀ : Subfield K) (hK₀ : ResidueFieldInfiniteOn (K₀ : Set K))
     (P δ : MvPolynomial ι K) (hP : ∀ μ, ‖AddMonoidAlgebra.coeff P μ‖ ≤ 1) (hP1 : ∃ μ, ‖AddMonoidAlgebra.coeff P μ‖ = 1)
@@ -291,10 +288,8 @@ theorem exists_unit_point (K₀ : Subfield K) (hK₀ : ResidueFieldInfiniteOn (K
         eval (fun i => IsLocalRing.residue (unitBallRing K) (u i))
           (MvPolynomial.map (IsLocalRing.residue (unitBallRing K)) Q) := by
     intro Q u
-    induction Q using MvPolynomial.induction_on with
-    | C a => simp
-    | add p q hp hq => simp [hp, hq]
-    | mul_X p i hp => simp [hp]
+    exact (MvPolynomial.hom_eval₂ Q (RingHom.id _) (IsLocalRing.residue (unitBallRing K)) u).trans
+      (MvPolynomial.eval_map _ _ _).symm
   have hbar : ∀ (Q : MvPolynomial ι (unitBallRing K)) (R : MvPolynomial ι K),
       MvPolynomial.map (unitBallRing K).subtype Q = R → (∃ μ, ‖AddMonoidAlgebra.coeff R μ‖ = 1) →
         MvPolynomial.map (IsLocalRing.residue (unitBallRing K)) Q ≠ 0 := by

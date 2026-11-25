@@ -193,11 +193,6 @@ open ReciprocityTheory.PGsh.L2
 
 variable {C : Type} [Field C] {v : Valuation C NNReal}
 
-private theorem mulVec_single_one_apply {ι : Type} [Fintype ι] [DecidableEq ι] (M : Matrix ι ι C)
-    (i k : ι) : (M *ᵥ Pi.single k 1) i = M i k := by
-  rw [Matrix.mulVec_single_one]
-  rfl
-
 private theorem valuation_inv_mulVec_le_one_of_mem_pts {ι : Type} [Fintype ι] [DecidableEq ι] (L : Lat v ι) {x : ι → C}
     (hx : x ∈ L.pts) (i : ι) : v ((L.B⁻¹ *ᵥ x) i) ≤ 1 := by
   obtain ⟨c, hc, rfl⟩ := hx
@@ -322,7 +317,7 @@ theorem colength_sq_mul_le {n : ℕ} (a : Fin n → C) (hinj : Function.Injectiv
     intro τ
     ext i j
     have e := congrFun (hwY τ j) i
-    rw [mulVec_single_one_apply] at e
+    rw [Matrix.mulVec_single_one, Matrix.col_apply] at e
     rw [← e, Matrix.mul_apply]
     simp only [Matrix.of_apply, phiMap]
   have hGYτ : ∀ τ, Gτ τ * Yτ τ = 1 := by
@@ -357,7 +352,7 @@ theorem colength_sq_mul_le {n : ℕ} (a : Fin n → C) (hinj : Function.Injectiv
   have hΦW : Φ * W = M'.B := by
     ext y k
     have e := congrFun (hwW k) y
-    rw [mulVec_single_one_apply] at e
+    rw [Matrix.mulVec_single_one, Matrix.col_apply] at e
     rw [← e, hΦ, hW, Matrix.mul_apply, Fintype.sum_prod_type, Fintype.sum_eq_single y.1]
     · simp [phiMap]
     · intro τ hτ
@@ -456,7 +451,8 @@ theorem colength_sq_mul_le {n : ℕ} (a : Fin n → C) (hinj : Function.Injectiv
           simp [h1, h2, hyx]
       · have hyx : y ≠ x := fun e => h1 (by rw [e])
         simp [h1, hyx]
-    rw [hcv, Matrix.mulVec_smul, Pi.smul_apply, mulVec_single_one_apply, smul_eq_mul] at key
+    rw [hcv, Matrix.mulVec_smul, Pi.smul_apply, Matrix.mulVec_single_one, Matrix.col_apply,
+      smul_eq_mul] at key
     rw [hDh, Matrix.mul_diagonal, mul_comm]
     exact key
   have hQint : ∀ y x, v (((1 : Matrix (Fin n × Fin h) (Fin n × Fin h) C) - Y * G) y x) ≤ 1 := by
@@ -1110,17 +1106,13 @@ private lemma prime_rpow_neg_succ_eq_inv_mul_inv_pow {p : ℕ} [Fact p.Prime] (n
   rw [Real.rpow_neg hp0.le, hn, Real.rpow_natCast, ← inv_pow, pow_succ]
   ring
 
-private lemma prime_inv_lt_one {p : ℕ} [Fact p.Prime] : (p : ℝ)⁻¹ < 1 := by
-  have hp : (1 : ℝ) < p := by exact_mod_cast (Fact.out : p.Prime).one_lt
-  have h1 := one_div_lt_one_div_of_lt one_pos hp
-  simpa using h1
-
 private lemma summable_prime_rpow_neg_succ {p : ℕ} [Fact p.Prime] :
     Summable fun n : ℕ => (p : ℝ) ^ (-((n : ℝ) + 1)) := by
   have e : (fun n : ℕ => (p : ℝ) ^ (-((n : ℝ) + 1))) =
       fun n : ℕ => (p : ℝ)⁻¹ * ((p : ℝ)⁻¹) ^ n := funext fun n => prime_rpow_neg_succ_eq_inv_mul_inv_pow n
   rw [e]
-  exact (summable_geometric_of_lt_one (inv_nonneg.mpr (Nat.cast_nonneg p)) prime_inv_lt_one).mul_left _
+  exact (summable_geometric_of_lt_one (inv_nonneg.mpr (Nat.cast_nonneg p))
+    (inv_lt_one_of_one_lt₀ (Nat.one_lt_cast.mpr (Fact.out : p.Prime).one_lt))).mul_left _
 
 lemma tsum_geom_p {p : ℕ} [Fact p.Prime] :
     ∑' n : ℕ, (p : ℝ) ^ (-((n : ℝ) + 1)) = 1 / ((p : ℝ) - 1) := by
@@ -1128,7 +1120,8 @@ lemma tsum_geom_p {p : ℕ} [Fact p.Prime] :
   have hp0 : (p : ℝ) ≠ 0 := by linarith
   have hp1 : (p : ℝ) - 1 ≠ 0 := sub_ne_zero.mpr hp.ne'
   rw [tsum_congr (fun n : ℕ => prime_rpow_neg_succ_eq_inv_mul_inv_pow (p := p) n), tsum_mul_left,
-    tsum_geometric_of_lt_one (inv_nonneg.mpr (Nat.cast_nonneg p)) prime_inv_lt_one]
+    tsum_geometric_of_lt_one (inv_nonneg.mpr (Nat.cast_nonneg p))
+      (inv_lt_one_of_one_lt₀ (Nat.one_lt_cast.mpr (Fact.out : p.Prime).one_lt))]
   field_simp
 
 lemma summable_geom_p {p : ℕ} [Fact p.Prime] (f : ℕ → ℝ) (hf0 : ∀ n, 0 ≤ f n) (B : ℝ)
