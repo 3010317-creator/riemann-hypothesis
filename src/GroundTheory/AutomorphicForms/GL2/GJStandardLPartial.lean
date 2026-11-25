@@ -24,8 +24,6 @@ namespace GJStandardL
 
 open GodementJacquet GLnLocal
 
-set_option linter.unusedSectionVars false
-
 section Continuity
 
 variable {K : Type*} [Field K] [NumberField K] {n : ℕ}
