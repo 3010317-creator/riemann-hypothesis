@@ -22,10 +22,10 @@ theorem ell_col (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (g : Mat k r) :
   unfold ell
   refine Finset.sum_congr rfl fun a _ => ?_
   by_cases h : a.val + 1 < r
-  · rw [dif_pos h]
+  · rw [dite_eq_left h]
     first
       | simp [fvec, h, bvec]
-  · rw [dif_neg h]
+  · rw [dite_eq_right h]
     simp [fvec, h]
 
 section Lv2
@@ -89,7 +89,7 @@ theorem herm_lv (v w : Fin (2 * r' + k + 1) → ℂ) :
   refine (sum_eq_sum_sh_of_zero_at_edges _ ?_).trans ?_
   · intro p hp
     have h0 : ¬(1 ≤ p.val ∧ p.val < 2 * r' + k + 1 + 1) := by omega
-    simp only [liftVec, dif_neg h0, mul_zero]
+    simp only [liftVec, dite_eq_right h0, mul_zero]
   · simp only [lv_in]
 
 theorem hermitianForm_liftVec_firstVector (v : Fin (2 * r' + k + 1) → ℂ) : herm (Hpk k (1 + r')) (liftVec k 1 r' v) (e0 k r') = 0 := by
@@ -130,11 +130,11 @@ theorem fvec_lift (z1 : Fin (2 * r' + k + 1) → ℂ) (a : Fin (1 + r')) :
     fvec k (1 + r') (liftVec k 1 r' z1) ⟨a.val + 1, by omega⟩ = liftVec k 1 r' (fvec k r' z1 ⟨a.val, by omega⟩) := by
   by_cases ha : a.val < r'
   · have h1 : a.val + 1 < 1 + r' := by omega
-    simp only [fvec, dif_pos h1, dif_pos ha]
+    simp only [fvec, dite_eq_left h1, dite_eq_left ha]
     rw [eI_succ a.val h1]
     exact bvec_lv _
   · have h1 : ¬ a.val + 1 < 1 + r' := by omega
-    simp only [fvec, dif_neg h1, dif_neg ha]
+    simp only [fvec, dite_eq_right h1, dite_eq_right ha]
 
 private lemma liftVec_apply_eI_zero_eq_zero (v : Fin (2 * r' + k + 1) → ℂ) (h : 0 < 1 + r') :
     liftVec k 1 r' v (eI k (1 + r') ⟨0, h⟩) = 0 := by
@@ -174,7 +174,7 @@ theorem z_lift (z : Fin (2 * (1 + r') + k + 1) → ℂ) (hz : inWb k (1 + r') z)
   by_cases hp : p.val = 0 ∨ p.val = 2 * (1 + r') + k
   · have h0 : ¬(1 ≤ p.val ∧ p.val < 2 * r' + k + 1 + 1) := by omega
     rw [hz p (by omega)]
-    simp only [liftVec, dif_neg h0]
+    simp only [liftVec, dite_eq_right h0]
   · have hp' : p = sh ⟨p.val - 1, by have := p.isLt; omega⟩ := by
       ext
       simp only [sh, Fin.val_mk]
