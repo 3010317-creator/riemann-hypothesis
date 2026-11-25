@@ -90,9 +90,9 @@ theorem autCsd0_comp_galEmb_of_isPair_of_isIrr_of_isAut (hP : _root_.UpperTheory
     (hPr : Sd.IsPair σ r (cycBar K Ω l ^ (1 - (n : ℤ))) P) (hirr : Af.IsIrr (r.comp (galEmb K L Ω)))
     (haut : Af.IsAut ι r) : AutCsd0 ι (r.comp (galEmb K L Ω)) := by
   obtain ⟨j, hj⟩ := hσ
-  haveI : IsAlgClosure K Ω := algClo K Ω
-  haveI : IsAlgClosure L Ω := algClo L Ω
-  haveI : IsAlgClosure (maximalRealSubfield K) Ω := algClo (maximalRealSubfield K) Ω
+  have : IsAlgClosure K Ω := algClo K Ω
+  have : IsAlgClosure L Ω := algClo L Ω
+  have : IsAlgClosure (maximalRealSubfield K) Ω := algClo (maximalRealSubfield K) Ω
   let c : G (maximalRealSubfield K) Ω := AlgEquiv.ofRingEquiv (f := σ.toRingEquiv) fun x => by
     apply j.injective
     refine (hj _).trans ?_
@@ -152,7 +152,7 @@ theorem isAutCsdA_twist_comp_galEmb_of_repIso_of_flagged (hH : _root_.UpperTheor
     (haut : _root_.UpperTheory.V.Z.Win.IsAutCsdA ι (Af.tw ρ₀ (cycBar K Ω l)⁻¹)) :
     _root_.UpperTheory.V.Z.Win.IsAutCsdA ι (Af.tw (ρ.comp (galEmb K L Ω)) (cycBar L Ω l)⁻¹) := by
   obtain ⟨_, hsol⟩ := Db.galKL K L hab
-  haveI : Group.IsSolvable (L ≃ₐ[K] L) := hsol
+  have : Group.IsSolvable (L ≃ₐ[K] L) := hsol
   obtain ⟨h', hiso⟩ := hiso
   have et : Af.tw (ρ.comp (galEmb K L Ω)) (cycBar L Ω l)⁻¹ = (Af.tw ρ (cycBar K Ω l)⁻¹).comp (galEmb K L Ω) :=
     MonoidHom.ext fun s => Units.ext <| by
@@ -165,7 +165,7 @@ theorem isAutCsdA_twist_comp_galEmb_of_repIso_of_flagged (hH : _root_.UpperTheor
       rwa [Af.tw_val, Matrix.smul_mulVec, W.smul_mem_iff ((cycBar L Ω l)⁻¹ g).ne_zero] at h
   have hiT := Db.irr_of_matIrr (show 1 ≤ 3 by decide) ⊤ _ htw (MonoidHom.id _) (fun g _ => ⟨g, rfl⟩) _ fun _ => rfl
   rw [et] at hiT ⊢
-  haveI := algClo K Ω
+  have := algClo K Ω
   have hcT : Continuous (Af.tw ρ (cycBar K Ω l)⁻¹) := Af.Bc.irrBasic.2 _ _ _ _ _ hρc (cyc_cont K Ω l).inv
   have hisoT : Af.RepIso (Af.tw ρ₀ (cycBar K Ω l)⁻¹) (Af.tw ρ (cycBar K Ω l)⁻¹) := ⟨h', fun s => Units.ext (by
     rw [Af.tw_val, hiso, Units.val_mul, Units.val_mul, Units.val_mul, Units.val_mul, Af.tw_val, Matrix.mul_smul,
@@ -212,8 +212,8 @@ theorem UpperTheory.V.Z.Win.Dn.rigEnd3_alt :
     _root_.UpperTheory.V.Af.HypothesesH' → _root_.UpperTheory.V.Th.AdjointLiftingTheorem → _root_.UpperTheory.V.Th.RigEnd3Alt := by
   intro hH hAd Ω _ _ _ l _ ι c _ N _ e ψ η σ g₁ B M H hΨ hF A _ _ r hr hirr K _ _ _ _ hK2 hker ρ hρ haut hfree
   obtain ⟨L, _, _, _, _, g₂, Φ, C₀, ⟨k⟩, hok, hbig, hseed⟩ := hF
-  haveI := algClo K Ω
-  haveI := algClo L Ω
+  have := algClo K Ω
+  have := algClo L Ω
   obtain ⟨hcpl, hloc, hcont⟩ := sub_facts c A
   have hl : l ∣ M := (dvd_mul_right l N).trans H.dvd
   have hσ : σ * σ = 1 := Db.cc_sq H.cc
