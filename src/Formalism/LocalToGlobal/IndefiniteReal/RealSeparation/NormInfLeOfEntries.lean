@@ -17,7 +17,6 @@ namespace Formalism.IndefR.Mi
 
 
 
-attribute [-instance] CStarMatrix.instHMulOfFintypeOfMulOfAddCommMonoid
 
 variable {D : D7}
 
