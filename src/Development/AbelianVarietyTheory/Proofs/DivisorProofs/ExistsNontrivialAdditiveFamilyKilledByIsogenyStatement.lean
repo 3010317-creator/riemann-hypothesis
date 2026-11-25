@@ -473,7 +473,6 @@ lemma app_map_homOfLE (p : X ⟶ Y) {U V : Y.Opens} (h : V ≤ U) (a : Γ(Y, U))
 
 end Descent
 
-
 open ReciprocityTheory.ChartRestriction.G.DVR.TG in
 theorem triv_of_isPullGen_of_invariant : ∀ (X Y : Scheme.{0}) (p : X ⟶ Y), Flat p → Surjective p → IsAffineHom p → ∀ (M : LB Y) (e : ∀ k, Γ(X, p ⁻¹ᵁ M.U k)ˣ), IsPullGen p M e → (∀ (Z : Scheme.{0}) (y₁ y₂ : Z ⟶ X), y₁ ≫ p = y₂ ≫ p → ∀ (k : M.ι) (W : Z.Opens) (h₁ : W ≤ y₁ ⁻¹ᵁ (p ⁻¹ᵁ M.U k)) (h₂ : W ≤ y₂ ⁻¹ᵁ (p ⁻¹ᵁ M.U k)), res h₁ (pullU y₁ _ (e k)) = res h₂ (pullU y₂ _ (e k))) → Triv M := by
   intro X Y p _ _ _ M e he hinv
@@ -556,7 +555,6 @@ theorem prodMapPairTimesIdentity_eq_comp_whiskers {A A' : Over S} (q : A ⟶ A')
 
 end GlobalTheory.CharKer.PmapTwo
 
-
 open GlobalTheory.CharKer.PmapTwo in
 theorem GlobalTheory.CharKer.pmap2_flat_surjective_isAffineHom :
     ∀ (S : Scheme.{0}) (A A' T : Over S) (q : A ⟶ A'), Flat q.left → Surjective q.left → IsAffineHom q.left →
@@ -619,12 +617,6 @@ open GlobalTheory.CharKer
 noncomputable section
 
 namespace GlobalTheory.CharKer
-
-theorem pullTop_comp_apply {X Y Z : Scheme.{0}} (f : X ⟶ Y) (g : Y ⟶ Z) (u : Γ(Z, ⊤)ˣ) :
-    pullTop (f ≫ g) u = pullTop f (pullTop g u) := by
-  ext
-  simp only [pullTop, Units.coe_map, Scheme.Hom.comp_appTop, CommRingCat.hom_comp]
-  rfl
 
 section Tri
 
@@ -711,9 +703,9 @@ theorem triOverlap : ∀ (S : Scheme.{0}) (A N T : Over S) [GrpObj A] [GrpObj N]
     (tri_isPullback_over A N T i).map (Over.forget S), ?_, ?_, ?_⟩
   · rw [← Over.comp_left, ← Over.comp_left, triM₁₃_prMap]
   · rw [← Over.comp_left, ← Over.comp_left, triM₁₃_actMap]
-  · rw [← pullTop_comp_apply, ← pullTop_comp_apply, ← pullTop_comp_apply, ← Over.comp_left, ← Over.comp_left, ← Over.comp_left,
-      triM₁₃_snd, triM₁₂_snd, triM₂₃_snd, Over.comp_left, Over.comp_left, Over.comp_left, pullTop_comp_apply, pullTop_comp_apply,
-      pullTop_comp_apply]
+  · rw [← GlobalTheory.CharExists.pullTop_comp, ← GlobalTheory.CharExists.pullTop_comp, ← GlobalTheory.CharExists.pullTop_comp, ← Over.comp_left, ← Over.comp_left, ← Over.comp_left,
+      triM₁₃_snd, triM₁₂_snd, triM₂₃_snd, Over.comp_left, Over.comp_left, Over.comp_left, GlobalTheory.CharExists.pullTop_comp, GlobalTheory.CharExists.pullTop_comp,
+      GlobalTheory.CharExists.pullTop_comp]
     unfold IsCharacter at hχ
     rw [hχ, map_mul]
 
@@ -769,16 +761,13 @@ section Tensor
 
 variable {R B : Type} [CommRing R] [CommRing B] [Algebra R B]
 
-
 variable (R B) in
 noncomputable def m₁₂ : B ⊗[R] B →ₐ[R] B ⊗[R] (B ⊗[R] B) :=
   Algebra.TensorProduct.map (AlgHom.id R B) Algebra.TensorProduct.includeLeft
 
-
 variable (R B) in
 noncomputable def m₁₃ : B ⊗[R] B →ₐ[R] B ⊗[R] (B ⊗[R] B) :=
   Algebra.TensorProduct.map (AlgHom.id R B) Algebra.TensorProduct.includeRight
-
 
 variable (R B) in
 noncomputable def m₂₃ : B ⊗[R] B →ₐ[R] B ⊗[R] (B ⊗[R] B) :=
@@ -938,10 +927,6 @@ noncomputable section
 
 namespace GlobalTheory.CharKer
 
-theorem appLE_eq_of_eq' {X Y : Scheme.{0}} {f g : X ⟶ Y} (h : f = g) (U : Y.Opens) (V : X.Opens)
-    (e : V ≤ f ⁻¹ᵁ U) (e' : V ≤ g ⁻¹ᵁ U) : f.appLE U V e = g.appLE U V e' := by
-  subst h; rfl
-
 theorem app_map_eq_appLE {X Y : Scheme.{0}} (f : X ⟶ Y) (U : Y.Opens) (V : X.Opens)
     (h : V ≤ f ⁻¹ᵁ U) (x : Γ(Y, U)) :
     (X.presheaf.map (homOfLE h).op).hom ((f.app U).hom x) = (f.appLE U V h).hom x := by
@@ -1001,7 +986,7 @@ theorem exists_local_charUnit : ∀ (X Y Z W : Scheme.{0}) (p : X ⟶ Y) (a b : 
   have E₂ : a.app (p ⁻¹ᵁ V) ≫ m₁₃.appLE _ _ h13 = a.app (p ⁻¹ᵁ V) ≫ m₂₃.app _ := by
     rw [Scheme.Hom.app_eq_appLE a, Scheme.Hom.app_eq_appLE m₂₃, Scheme.Hom.appLE_comp_appLE,
       Scheme.Hom.appLE_comp_appLE]
-    exact appLE_eq_of_eq' e₁₃a _ _ _ _
+    exact GlobalTheory.SS.FrobField.appLE_congr_hom e₁₃a _ _ _ _
   have FF := _root_.GlobalTheory.faithfullyFlat_app_of_isAffineHom_flat_surjective X Y p V hpA hpF hpS hV
   let c : Γ(Z, a ⁻¹ᵁ (p ⁻¹ᵁ V))ˣ := res le_top χ
   have hc : (m₁₃.appLE _ _ h13).hom (c : Γ(Z, a ⁻¹ᵁ (p ⁻¹ᵁ V))) =
@@ -1067,7 +1052,7 @@ namespace GlobalTheory.CharKer
 
 theorem exists_nhds_charUnit : ∀ (S : Scheme.{0}) (A A' N T : Over S) [GrpObj A] [GrpObj A'] [GrpObj N] (i : N ⟶ A) (q : A ⟶ A') (χ : Γ((N ⊗ T).left, ⊤)ˣ), IsMonHom i → IsMonHom q → IsFinite q.left → Flat q.left → Surjective q.left → IsPullback i (toUnit N) q η[A'] → IsCharacter χ → ∀ y : (A' ⊗ T).left, ∃ V : (A' ⊗ T).left.Opens, y ∈ V ∧ ∃ e : Γ((A ⊗ T).left, (pmap q T).left ⁻¹ᵁ V)ˣ, ∀ (W : (A ⊗ (N ⊗ T)).left.Opens) (h₁ : W ≤ (actMap i T).left ⁻¹ᵁ ((pmap q T).left ⁻¹ᵁ V)) (h₂ : W ≤ (prMap A N T).left ⁻¹ᵁ ((pmap q T).left ⁻¹ᵁ V)), res h₁ (pullU (actMap i T).left _ e) = res le_top (pullTop (snd A (N ⊗ T)).left χ) * res h₂ (pullU (prMap A N T).left _ e) := by
   intro S A A' N T _ _ _ i q χ hi hq hfin hflat hsurj hk hχ y
-  have hpb := GlobalTheory.T.kernelAction_isPullback_prodMap_torsor S A A' N T i q hi hq hk
+  have hpb := GlobalTheory.CharKer.pmap_isPullback_actMap S A A' N T i q hi hq hk
   have hpb' : IsPullback (prMap A N T).left (actMap i T).left (pmap q T).left (pmap q T).left :=
     hpb.map (Over.forget S)
   obtain ⟨W, m₁₂, m₂₃, m₁₃, h1, h2, h3, h4⟩ := _root_.GlobalTheory.CharKer.triOverlap S A N T i χ hi hχ
@@ -1126,7 +1111,7 @@ theorem exists_equivGen : ∀ (S : Scheme.{0}) (A A' N T : Over S) [GrpObj A] [G
   have : Surjective (pmap q T).left := by rw [pmap_eq_whiskerRight]; infer_instance
   have : QuasiCompact (pmap q T).left := by rw [pmap_eq_whiskerRight]; infer_instance
   have hpb : IsPullback (prMap A N T).left (actMap i T).left (pmap q T).left (pmap q T).left :=
-    isPullback_over_left (GlobalTheory.T.kernelAction_isPullback_prodMap_torsor S A A' N T i q hi hq hker)
+    isPullback_over_left (GlobalTheory.CharKer.pmap_isPullback_actMap S A A' N T i q hi hq hker)
   have hw : ∀ z, (pmap q T).left ((actMap i T).left z) = (pmap q T).left ((prMap A N T).left z) := fun z => by
     rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, hpb.w]
   have inj : ∀ U : (A' ⊗ T).left.Opens, Function.Injective (pullU (pmap q T).left U) := fun U x y hxy =>

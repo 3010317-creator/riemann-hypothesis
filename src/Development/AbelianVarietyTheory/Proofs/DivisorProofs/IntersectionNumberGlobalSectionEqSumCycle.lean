@@ -69,13 +69,6 @@ theorem coheight_eq_one_of_dim_closure {X : Scheme.{0}} {n : ℕ}
 
 open scoped Pointwise
 
-theorem mult_divOfSec_eq_length_cut {X : Scheme.{0}} [IsIntegral X] [IsLocallyNoetherian X]
-    {M : LB X} (hM : M.IsLB) (s : M.Sec) (hs : genericPoint X ∈ nonzeroLocus s) {w : X}
-    (hw : Order.coheight w = 1) :
-    (divOfSec hM s hs).mult w = ((Module.length (X.presheaf.stalk w)
-      ((cut (structureModule X) hM s).presheaf.stalk w :)).toNat : ℤ) :=
-  _root_.GlobalTheory.CompanionTheory.Ar.IntersectionMultiplicitySection.mult_divOfSec_eq_length_cut hM s hs hw
-
 theorem mult_divOfSec_ne_zero {X : Scheme.{0}} [IsIntegral X] [IsLocallyNoetherian X]
     {M : LB X} (hM : M.IsLB) (s : M.Sec) (hs : genericPoint X ∈ nonzeroLocus s) {w : X}
     (hw : Order.coheight w = 1) (hws : w ∉ nonzeroLocus s) : (divOfSec hM s hs).mult w ≠ 0 := by

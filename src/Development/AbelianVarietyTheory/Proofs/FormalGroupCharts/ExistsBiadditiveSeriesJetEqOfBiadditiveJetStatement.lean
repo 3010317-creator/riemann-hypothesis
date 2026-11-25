@@ -188,10 +188,6 @@ theorem ev_ev {n l r : ℕ} (a : Fin l → Pt k n d) (b : Fin n → Pt k r d)
 theorem const_pt {n : ℕ} (j : Fin n) (i : Fin d) : MvPowerSeries.constantCoeff (pt k d j i) = 0 :=
   MvPowerSeries.constantCoeff_X _
 
-theorem ev_id {n : ℕ} (f : PS k n d) : ev (fun j => pt k d j) f = f := by
-  have := MvPowerSeries.subst_self (σ := Fin n × Fin d) (R := k)
-  exact congrFun this f
-
 def degIn (j : Fin 2) (e : Fin 2 × Fin d →₀ ℕ) : ℕ := ∑ i, e (j, i)
 
 theorem coeff_double (j : Fin 2) (g : PS k 2 d) (e : Fin 2 × Fin d →₀ ℕ) :
@@ -311,7 +307,7 @@ theorem jeq_bilSer_of_biadditive : ∀ (k : Type) [CommRing k] [Algebra ℚ k] (
   intro k _ _ d m g h1 h2
   have hsub := (GlobalTheory.ChartCmp.JCalc.jeq_calculus k m).2.2.2.1
   have hid : ev (n := 2) ![pt k (n := 2) d 0, pt k (n := 2) d 1] g = g := by
-    refine Eq.trans ?_ (ev_id g)
+    refine Eq.trans ?_ (GlobalTheory.AdditiveSeries.ev_pt g)
     congr 1
     funext j
     fin_cases j <;> rfl

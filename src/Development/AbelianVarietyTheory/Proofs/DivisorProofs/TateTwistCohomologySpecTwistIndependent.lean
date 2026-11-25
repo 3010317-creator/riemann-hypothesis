@@ -58,7 +58,7 @@ theorem res_X_isZero {R : Type} [CommRing R] (F : Shv R) (n : ℤ) (hn : n < 0) 
     change (i : ℤ) = n at hi; omega)
 
 theorem sec_res_neg {R : Type} [CommRing R] (F : Shv R) {n : ℤ} (hn : n < 0) {U : Scheme.{0}} (y z : Sec ((res R F).X n) U) :
-    y = z := (_root_.GlobalTheory.EtC.Sec.eq_zero_of_isZero (res_X_isZero F n hn) y).trans (_root_.GlobalTheory.EtC.Sec.eq_zero_of_isZero (res_X_isZero F n hn) z).symm
+    y = z := (_root_.GlobalTheory.EtC.TensUniv.sec_zero_of_isZero (res_X_isZero F n hn) y).trans (_root_.GlobalTheory.EtC.TensUniv.sec_zero_of_isZero (res_X_isZero F n hn) z).symm
 
 theorem cocycle_ext_zero {R : Type} [CommRing R] {X : Scheme.{0}} {F : Shv R}
     (α β : Cocycle ((chains R).obj (sch.obj X)) (res R F) 0)
@@ -152,7 +152,6 @@ noncomputable def twistEquiv {q : ℕ} [NeZero q] {X : Scheme.{0}} (ζ : Prim q 
       map_add' := fun a b => by simp only [map_add (f := _), cast_add] }
 
 end GlobalTheory.EtC.Untwist
-
 
 open GlobalTheory.EtC.Untwist in
 theorem GlobalTheory.EtC.untwist : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], IsUnit (q : A) →
