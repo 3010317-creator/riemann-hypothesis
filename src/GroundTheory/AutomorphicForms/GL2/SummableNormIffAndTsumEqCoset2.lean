@@ -124,12 +124,7 @@ instance (I : Fin 2 → (FractionalIdeal (𝓞 K)⁰ K)ˣ) : IsZLattice ℝ (ide
     rw [← Submodule.span_image] at hmap
     refine Submodule.span_mono ?_ hmap
     rintro _ ⟨y, hy, rfl⟩
-    rw [SetLike.mem_coe, mem_idealLattice2]
-    intro j
-    by_cases hj : j = i
-    · subst hj
-      simpa using hy
-    · simp [Pi.single_eq_of_ne hj]
+    exact Submodule.le_comap_single_pi (fun j => idealLattice K (I j)) hy
 
 theorem isAddFundamentalDomain_idealLattice2 (I : Fin 2 → (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
     IsAddFundamentalDomain (idealLattice2 I)
@@ -209,12 +204,8 @@ theorem dualLattice_euclidLattice2 (I : Fin 2 → (FractionalIdeal (𝓞 K)⁰ K
     rw [mem_idealLattice_traceDualIdeal_iff]
     intro x hx
     have hmem : toEuclid2 K (Pi.single i x) ∈ euclidLattice2 I := by
-      rw [mem_euclidLattice2, ContinuousLinearEquiv.symm_apply_apply, mem_idealLattice2]
-      intro j
-      by_cases hj : j = i
-      · subst hj
-        simpa using hx
-      · simp [Pi.single_eq_of_ne hj]
+      rw [mem_euclidLattice2, ContinuousLinearEquiv.symm_apply_apply]
+      exact Submodule.le_comap_single_pi (fun j => idealLattice K (I j)) hx
     obtain ⟨k, hk⟩ := h _ hmem
     refine ⟨k, ?_⟩
     rw [hμ, real_inner_comm, ← mixedPairing2_eq_inner, mixedPairing2_single_left] at hk
