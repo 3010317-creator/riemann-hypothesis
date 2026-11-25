@@ -88,45 +88,27 @@ theorem EulerVar.proof (hSq : KH.CechDSqStatement) (hE : EulerSES.Statement) : E
   set U := V ⊔ Ideal.span {x} with hU
   set e : K → ℤ := Pi.single v.1 1 with he
 
-  have hWV : W ≤ Submodule.comap (LinearMap.mulLeft (MvPolynomial (Σ k, ι k) F) x) V := fun p hp => by
-    rw [hW, Submodule.mem_colon_span_singleton, smul_eq_mul] at hp
-    rw [Submodule.mem_comap, LinearMap.mulLeft_apply, mul_comm]
-    exact hp
+  have hWV : W = Submodule.comap (LinearMap.mulLeft (MvPolynomial (Σ k, ι k) F) x) V := by
+    ext p
+    rw [hW, Submodule.mem_colon_span_singleton, smul_eq_mul, Submodule.mem_comap,
+      LinearMap.mulLeft_apply, mul_comm p x]
   let g : (MvPolynomial (Σ k, ι k) F ⧸ W) →ₗ[MvPolynomial (Σ k, ι k) F] (MvPolynomial (Σ k, ι k) F ⧸ V) :=
-    Submodule.mapQ W V (LinearMap.mulLeft _ x) hWV
+    Submodule.mapQ W V (LinearMap.mulLeft _ x) hWV.le
   let h : (MvPolynomial (Σ k, ι k) F ⧸ V) →ₗ[MvPolynomial (Σ k, ι k) F] (MvPolynomial (Σ k, ι k) F ⧸ U) :=
     Submodule.factor (le_sup_left : V ≤ U)
-  have hg_mk : ∀ p, g (Ideal.Quotient.mk W p) = Ideal.Quotient.mk V (x * p) := fun p => rfl
-  have hh_mk : ∀ p, h (Ideal.Quotient.mk V p) = Ideal.Quotient.mk U p := fun p => rfl
   have hinj : Function.Injective g := by
-    refine (injective_iff_map_eq_zero g).2 fun a ha => ?_
-    obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective a
-    rw [hg_mk, Ideal.Quotient.eq_zero_iff_mem] at ha
-    rw [Ideal.Quotient.eq_zero_iff_mem, hW, Submodule.mem_colon_span_singleton, smul_eq_mul, mul_comm]
-    exact ha
-  have hsurj : Function.Surjective h := fun b => by
-    obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective b
-    exact ⟨Ideal.Quotient.mk V p, hh_mk p⟩
+    rw [← LinearMap.ker_eq_bot]
+    dsimp only [g]
+    rw [Submodule.ker_mapQ, ← hWV, Submodule.mkQ_map_self]
+  have hsurj : Function.Surjective h := Submodule.factor_surjective le_sup_left
   have hex : LinearMap.range g = LinearMap.ker h := by
-    ext b
-    obtain ⟨q, rfl⟩ := Ideal.Quotient.mk_surjective b
-    rw [LinearMap.mem_range, LinearMap.mem_ker, hh_mk, Ideal.Quotient.eq_zero_iff_mem]
-    constructor
-    · rintro ⟨a, ha⟩
-      obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective a
-      rw [hg_mk, Ideal.Quotient.eq] at ha
-      have h1 : x * p ∈ U := Ideal.mem_sup_right (Ideal.mul_mem_right p _ (Ideal.subset_span rfl))
-      have h2 : x * p - q ∈ U := Ideal.mem_sup_left ha
-      have := U.sub_mem h1 h2
-      rwa [sub_sub_cancel] at this
-    · intro hq
-      obtain ⟨a, ha, b, hb, rfl⟩ := Submodule.mem_sup.1 hq
-      obtain ⟨r, rfl⟩ := Ideal.mem_span_singleton'.1 hb
-      refine ⟨Ideal.Quotient.mk W r, ?_⟩
-      rw [hg_mk, Ideal.Quotient.eq]
-      have : x * r - (a + r * x) = -a := by ring
-      rw [this]
-      exact V.neg_mem ha
+    have hmul : LinearMap.mulLeft (MvPolynomial (Σ k, ι k) F) x =
+        LinearMap.toSpanSingleton _ _ x :=
+      LinearMap.ext fun p => mul_comm x p
+    dsimp only [g, h, Submodule.factor]
+    rw [Submodule.range_mapQ, Submodule.ker_mapQ, Submodule.comap_id, hmul,
+      LinearMap.range_toSpanSingleton, Ideal.submodule_span_eq, hU, Submodule.map_sup,
+      Submodule.mkQ_map_self, bot_sup_eq]
 
   have hVW : NumbersDVR.IsMultiHomogIdeal W := snapper_colon_X hV v
   have hVU : NumbersDVR.IsMultiHomogIdeal U :=
