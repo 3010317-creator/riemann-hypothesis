@@ -5,8 +5,6 @@ import Mathlib.Algebra.Order.Star.Int
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.RestTerms
 
 open MvPolynomial Finset
