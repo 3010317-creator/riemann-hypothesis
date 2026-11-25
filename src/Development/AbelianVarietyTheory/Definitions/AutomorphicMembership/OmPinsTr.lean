@@ -47,8 +47,6 @@ open Formalism.IndefR.FWT GlobalTheory.RealGeo
 
 namespace GlobalTheory.Mem.R3.Tr
 
-set_option backward.isDefEq.lazyProjDelta false
-set_option backward.isDefEq.lazyWhnfCore false
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
