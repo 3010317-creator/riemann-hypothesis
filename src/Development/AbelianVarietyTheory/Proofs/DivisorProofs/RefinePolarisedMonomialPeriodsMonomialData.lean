@@ -288,7 +288,7 @@ theorem exists_sqrt_one (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (b 
   have hg : g.Monic := monic_X_pow_sub_C b two_ne_zero
   have hdeg : g.natDegree = 2 := natDegree_X_pow_sub_C _
   have hinj : Function.Injective (AdjoinRoot.of g) := by
-    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+    rw [injective_iff_map_eq_zero]
     intro r hr
     by_contra hne
     have hdvd : g ∣ C r := by

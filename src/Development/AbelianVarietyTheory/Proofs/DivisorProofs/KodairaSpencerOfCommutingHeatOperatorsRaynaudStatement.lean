@@ -1246,7 +1246,7 @@ theorem isKS_of_heat : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     _root_.GlobalTheory.FormalOrigin.exists_formalPoint R Y.H hsm hint n vH dd hdd ⇑D (h.W i0) (h.d i0) (h.lift i0) hi0
   set e := Scheme.ΓSpecIso (CommRingCat.of R) with he
   have hφ : Function.Injective φ := by
-    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+    rw [injective_iff_map_eq_zero]
     intro r hr
     have h1 : valR x ⊤ (Y.H.hom.appTop.hom (e.inv.hom r)) = φ r := by
       refine (GlobalTheory.ZH.EvCrd.valR_comp x Y.H.hom ⊤ (by simp) _).trans ?_

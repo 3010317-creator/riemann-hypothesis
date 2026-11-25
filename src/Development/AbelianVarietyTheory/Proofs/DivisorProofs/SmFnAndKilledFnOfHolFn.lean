@@ -58,7 +58,6 @@ namespace GlobalTheory.HolDict.HolTo
 
 variable {n : ℕ} {ι : Type} [Fintype ι] [DecidableEq ι]
 
-set_option backward.isDefEq.respectTransparency false in
 theorem contDiff_exp_entry (X : Mt n) (a b : Fin n) :
     ContDiff ℝ ∞ fun t : ℝ => NormedSpace.exp (t • X) a b := by
   letI : NormedRing (Mt n) := Matrix.linftyOpNormedRing
@@ -74,7 +73,6 @@ theorem contDiff_exp_entry (X : Mt n) (a b : Fin n) :
   exact (AnalyticAt.comp (f := fun s : ℝ => NormedSpace.exp (s • X))
     ((LinearMap.toContinuousLinearMap L).analyticAt _) he).contDiffAt
 
-set_option backward.isDefEq.respectTransparency false in
 theorem hasDerivAt_exp_entry (X : Mt n) (a b : Fin n) :
     HasDerivAt (fun t : ℝ => NormedSpace.exp (t • X) a b) (X a b) 0 := by
   letI : NormedRing (Mt n) := Matrix.linftyOpNormedRing

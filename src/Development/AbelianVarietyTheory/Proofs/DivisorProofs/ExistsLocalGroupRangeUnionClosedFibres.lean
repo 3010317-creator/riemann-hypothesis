@@ -467,7 +467,6 @@ open GlobalTheory GlobalTheory.Cartier GlobalTheory.Toroidal GlobalTheory.LocM G
 open scoped CategoryTheory.Obj
 open GlobalTheory.Desc
 
-set_option backward.isDefEq.respectTransparency false
 
 namespace GlobalTheory.Desc
 

@@ -1427,7 +1427,7 @@ noncomputable section
 namespace GlobalTheory.EtC.GmPhiBij
 
 theorem inj (q : ℕ) [NeZero q] (R : Type) [CommRing R] (hq : IsUnit (q : R)) (i : ℤ) : Function.Injective (gmPhi q R i) := by
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+  rw [injective_iff_map_eq_zero]
   intro a ha
   refine _root_.GlobalTheory.EtC.GeomZero.eq_zero_of_geom q R hq (i - 1) a fun K _ _ f => ?_
   have hqK : IsUnit (q : K) := by simpa using hq.map f
