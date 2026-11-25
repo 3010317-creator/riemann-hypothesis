@@ -201,7 +201,19 @@ theorem cay_norm (s : E) (hs : star s = -s) (t : ℕ) : star (cay s t) * cay s t
   ring
 
 theorem cay_inj (s : E) (hs : star s = -s) (hs0 : s ≠ 0) : Function.Injective (cay s) := by
-  apply _root_.Formalism.L2.PairingIndexBounds.Eq.J.cay_inj <;> assumption
+  intro a b hab
+  unfold cay at hab
+  have ha1 := one_sub_ne s hs a
+  have hb1 := one_sub_ne s hs b
+  rw [div_eq_div_iff ha1 hb1] at hab
+  have h0 : ((a:E) - b) * s * 2 = 0 := by linear_combination hab
+  have hab' : ((a:E) - b) = 0 := by
+    rcases mul_eq_zero.mp h0 with h | h
+    · rcases mul_eq_zero.mp h with h | h
+      · exact h
+      · exact absurd h hs0
+    · exact absurd h two_ne_zero
+  exact_mod_cast sub_eq_zero.mp hab'
 
 theorem exists_norm_one (s : E) (hs : star s = -s) (hs0 : s ≠ 0) (p : E[X]) (hp : p ≠ 0) :
     ∃ z : E, star z * z = 1 ∧ z ≠ 1 ∧ p.eval z ≠ 0 := by
