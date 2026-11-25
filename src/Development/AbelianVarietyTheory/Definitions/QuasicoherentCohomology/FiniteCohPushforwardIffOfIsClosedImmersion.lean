@@ -123,10 +123,6 @@ theorem multiDiff_comp_equiv {ι κ : Type*} [Fintype ι] [Fintype κ] (e : κ �
   simp only [multiDiff_eq_shiftAct, Function.comp]
   rw [Equiv.prod_comp e (fun i ↦ diffElt (g i))]
 
-theorem multiDiff_add {ι : Type*} [Fintype ι] (g : ι → G) (φ ψ : G → M) :
-    multiDiff g (φ + ψ) = multiDiff g φ + multiDiff g ψ := by
-  simp [multiDiff_eq_shiftAct]
-
 theorem multiDiff_sub {ι : Type*} [Fintype ι] (g : ι → G) (φ ψ : G → M) :
     multiDiff g (φ - ψ) = multiDiff g φ - multiDiff g ψ := by
   simp [multiDiff_eq_shiftAct]
