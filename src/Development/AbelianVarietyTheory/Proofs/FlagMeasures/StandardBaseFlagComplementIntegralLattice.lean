@@ -69,25 +69,6 @@ variable {K V : Type} [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [M
   [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V]
 
 
-omit [StarRing K] [NumberField K] [Module K V] [IsScalarTower (𝓞 K) K V] in
-theorem idxN_of_gen {D M : Submodule (𝓞 K) V} {w : V} (hw : w ∈ D) (J : Ideal (𝓞 K))
-    (h1 : ∀ a : 𝓞 K, a • w ∈ M ↔ a ∈ J) (h2 : ∀ y ∈ D, ∃ a : 𝓞 K, y - a • w ∈ M) :
-    idxN D M = Nat.card (𝓞 K ⧸ J) := by
-  let φ : 𝓞 K →ₗ[𝓞 K] (↥D ⧸ M.comap D.subtype) :=
-    (M.comap D.subtype).mkQ ∘ₗ LinearMap.toSpanSingleton (𝓞 K) D ⟨w, hw⟩
-  have hs : Function.Surjective φ := by
-    intro q
-    obtain ⟨y, rfl⟩ := (M.comap D.subtype).mkQ_surjective q
-    obtain ⟨a, ha⟩ := h2 y y.2
-    exact ⟨a, ((Submodule.Quotient.eq (M.comap D.subtype)).2
-      (show y - a • (⟨w, hw⟩ : D) ∈ M.comap D.subtype from ha)).symm⟩
-  have hk : LinearMap.ker φ = J := by
-    ext a
-    rw [LinearMap.mem_ker, ← h1]
-    exact Submodule.Quotient.mk_eq_zero _
-  exact Nat.card_congr
-    ((φ.quotKerEquivOfSurjective hs).symm.trans (Submodule.quotEquivOfEq _ _ hk)).toEquiv
-
 variable [FiniteDimensional K V]
 
 theorem span_eq_top_of_unimodular (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm)

@@ -32,10 +32,6 @@ theorem contDiffOn_Rd (X : Mat n) {f : Mat n → V} (hf : ContDiffOn ℝ ∞ f (
     (LinearMap.toContinuousLinearMap (LinearMap.mulRight ℝ X : Mat n →ₗ[ℝ] Mat n)).contDiff
   exact (hf.fderiv_of_isOpen isOpen_GLs (by simp)).clm_apply hm.contDiffOn
 
-theorem contDiffOn_Eu (s : Bool) (a b : Fin n) {f : Mat n → V} (hf : ContDiffOn ℝ ∞ f (GLs n)) :
-    ContDiffOn ℝ ∞ (Eu s a b f) (GLs n) :=
-  ((contDiffOn_Rd _ hf).add ((contDiffOn_Rd _ hf).const_smul _)).const_smul _
-
 theorem contDiffOn_Epow (s : Bool) (m : ℕ) : ∀ (a b : Fin n) {f : Mat n → V}, ContDiffOn ℝ ∞ f (GLs n) →
     ContDiffOn ℝ ∞ (Epow s m a b f) (GLs n) := by
   intros

@@ -51,14 +51,6 @@ theorem prod_map_pow_single {M : Type*} [Monoid M] {ι : Type*} [DecidableEq ι]
 def Dfun (e : Fin m × Fin n × Bool → ℕ) : Module.End ℂ (PX m n) :=
   ((Finset.univ : Finset (Fin m × Fin n × Bool)).toList.map fun k => (pderiv (R := ℂ) k).toLinearMap ^ (e k)).prod
 
-theorem pderiv_commute (i j : Fin m × Fin n × Bool) :
-    Commute ((pderiv (R := ℂ) i).toLinearMap : Module.End ℂ (PX m n)) (pderiv (R := ℂ) j).toLinearMap :=
-  LinearMap.ext fun f => by simp [pderiv_comm' i j f]
-
-theorem Dfun_add_single (e : Fin m × Fin n × Bool → ℕ) (k : Fin m × Fin n × Bool) :
-    Dfun (fun i => e i + if i = k then 1 else 0) = Dfun e * ((pderiv (R := ℂ) k).toLinearMap : Module.End ℂ (PX m n)) :=
-  prod_map_pow_single _ pderiv_commute e k _ (Finset.nodup_toList _) (Finset.mem_toList.2 (Finset.mem_univ _))
-
 theorem Dfun_zero : Dfun (m := m) (n := n) (fun _ => 0) = 1 := by
   simp [Dfun]
 

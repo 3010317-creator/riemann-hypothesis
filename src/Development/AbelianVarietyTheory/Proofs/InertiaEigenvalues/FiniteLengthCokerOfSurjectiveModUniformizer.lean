@@ -654,15 +654,6 @@ section Bounds
 
 variable {K : Type} [NormedField K] [IsUltrametricDist K]
 
-theorem norm_coeff_sum_le {s : Type} (t : Finset s) (f : s → K⟦X⟧) {C : ℝ} (hC : 0 ≤ C)
-    (hf : ∀ k n, ‖coeff n (f k)‖ ≤ C) (n : ℕ) : ‖coeff n (∑ k ∈ t, f k)‖ ≤ C := by
-  classical
-  induction t using Finset.induction_on with
-  | empty => simpa using hC
-  | insert k t hk ih =>
-    rw [Finset.sum_insert hk, map_add (f := _)]
-    exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (hf k n) ih)
-
 theorem bdd_frob (l : ℕ) [Fact l.Prime] {f : K⟦X⟧} (hf : ∃ c : ℝ, ∀ n, ‖coeff n f‖ ≤ c) :
     ∃ c : ℝ, ∀ n, ‖coeff n (frob K l f)‖ ≤ c := by
   obtain ⟨c, hc⟩ := hf

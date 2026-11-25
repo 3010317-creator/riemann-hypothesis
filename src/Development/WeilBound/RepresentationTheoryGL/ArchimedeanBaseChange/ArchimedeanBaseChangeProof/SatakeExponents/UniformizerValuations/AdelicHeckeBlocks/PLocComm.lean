@@ -79,53 +79,6 @@ theorem isHecke_sum {G ι : Type} [Group G] [TopologicalSpace G] (K : Subgroup G
 
 variable {m : ℕ} {w : Pl E}
 
-theorem dcos_mul_left (t g k : GLw m w) (hk : k ∈ iwGL m w) : dcos m w t (k * g) = dcos m w t g := by
-  unfold dcos
-  refine if_congr ⟨?_, ?_⟩ rfl rfl
-  · rintro ⟨x, hx, z, hz, e⟩
-    exact ⟨k⁻¹ * x, mul_mem (inv_mem hk) hx, z, hz, by
-      calc g = k⁻¹ * (k * g) := by group
-        _ = _ := by rw [e]; group⟩
-  · rintro ⟨x, hx, z, hz, e⟩
-    exact ⟨k * x, mul_mem hk hx, z, hz, by rw [e]; group⟩
-
-theorem dcos_mul_right (t g k : GLw m w) (hk : k ∈ iwGL m w) : dcos m w t (g * k) = dcos m w t g := by
-  unfold dcos
-  refine if_congr ⟨?_, ?_⟩ rfl rfl
-  · rintro ⟨x, hx, z, hz, e⟩
-    exact ⟨x, hx, z * k⁻¹, mul_mem hz (inv_mem hk), by
-      calc g = (g * k) * k⁻¹ := by group
-        _ = _ := by rw [e]; group⟩
-  · rintro ⟨x, hx, z, hz, e⟩
-    exact ⟨x, hx, z * k, mul_mem hz hk, by rw [e]; group⟩
-
-theorem isCompact_iwGL : IsCompact (iwGL m w : Set (GLw m w)) :=
-  (GlobalTheory.CompanionTheory.IwLevels.isCompact_KGL w m).of_isClosed_subset
-    (Subgroup.isClosed_of_isOpen _ (GlobalTheory.SmGL.IwahoriOnto.isOpen_iwahori _ _)) (GlobalTheory.CompanionTheory.IwLevels.iwGL_le_KGL w m)
-
-theorem dcos_supp (t : GLw m w) : ∃ C : Set (GLw m w), IsCompact C ∧ ∀ g ∉ C, dcos m w t g = 0 := by
-  have hc : Continuous fun p : GLw m w × GLw m w => p.1 * t * p.2 :=
-    (continuous_fst.mul continuous_const).mul continuous_snd
-  refine ⟨(fun p : GLw m w × GLw m w => p.1 * t * p.2) '' ((iwGL m w : Set (GLw m w)) ×ˢ (iwGL m w : Set (GLw m w))),
-    (isCompact_iwGL.prod isCompact_iwGL).image hc, fun g hg => ?_⟩
-  unfold dcos
-  rw [ite_eq_right]
-  rintro ⟨x, hx, z, hz, e⟩
-  exact hg ⟨(x, z), ⟨hx, hz⟩, e.symm⟩
-
-theorem isHecke_pair_double_coset {a b : ℕ} (ϖ : (w.adicCompletion E)ˣ) (x : Fin a → ℤ) (y : Fin b → ℤ) :
-    IsHecke (I2 a b w) (dc2 w ϖ x y) := by
-  obtain ⟨A, hA, hA0⟩ := dcos_supp (m := a) (w := w) (tdiag ϖ x)
-  obtain ⟨B, hB, hB0⟩ := dcos_supp (m := b) (w := w) (tdiag ϖ y)
-  refine ⟨HasCompactSupport.intro (hA.prod hB) fun g hg => ?_, fun k hk g => ?_⟩
-  · simp only [Set.mem_prod, not_and_or] at hg
-    rcases hg with h | h
-    · simp [dc2, hA0 _ h]
-    · simp [dc2, hB0 _ h]
-  · obtain ⟨h1, h2⟩ := Subgroup.mem_prod.1 hk
-    refine ⟨?_, ?_⟩ <;> simp only [dc2, Prod.fst_mul, Prod.snd_mul, dcos_mul_left _ _ _ h1, dcos_mul_left _ _ _ h2,
-      dcos_mul_right _ _ _ h1, dcos_mul_right _ _ _ h2]
-
 end Hk
 
 section Frame
@@ -254,9 +207,6 @@ theorem hecke_qT {a : ℕ} (w : Pl E) (s : Finset (Fin (n / 2))) : IsHecke (I2 a
   apply _root_.PositivityTheory.Rg.BcB.F.LocOk.qT_H <;> assumption
 
 theorem rearr {G : Type} [CommMonoid G] (s p q r t : G) : s * (p * q) * (r * t) = s * q * t * (p * r) := by
-  simp only [mul_comm, mul_left_comm]
-
-theorem rearr' {G : Type} [CommMonoid G] (s p q r t : G) : s * (q * p) * (t * r) = s * q * t * (p * r) := by
   simp only [mul_comm, mul_left_comm]
 
 theorem hecke_mac (h3 : LocOpUniformizer E) (hd : d.Ok) {a : ℕ} (ha : a ≤ n) {w : Pl E} (hw : w ∈ d.S₀) {x y : GLw n w}
