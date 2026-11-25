@@ -149,11 +149,8 @@ theorem tunedSheaf_eq_top_of_orderAtLeastLocus_eq_empty (k : Type u) [Field k] [
         rw [htop, ← Scheme.IdealSheafData.one_eq_top, one_pow]
       · rw [ite_eq_right hj, pow_zero]
     rw [h1, Scheme.IdealSheafData.one_eq_top]
-  rw [tunedSheaf_eq_iSup]
-  exact top_le_iff.mp (le_trans (le_of_eq hprod.symm)
-    (le_iSup (fun c : {c : ℕ → ℕ // s ≤ ∑ j ∈ Finset.range m, (m - j) * c j} =>
-      ((List.range m).map (fun j => derivIdealSheafIterate k p j I ^ (c.1 j))).prod)
-      ⟨fun j => if j = m - 1 then s else 0, hsum⟩))
+  exact top_le_iff.mp (hprod.ge.trans (prod_pow_derivIdealSheafIterate_le_tunedSheaf k p I m s
+    (fun j => if j = m - 1 then s else 0) hsum))
 
 theorem balancedTunedSheaf_eq_top_of_orderAtLeastLocus_eq_empty (k : Type u) [Field k] [CharZero k]
     [IsNoetherianRing k] {X : Scheme.{u}} (p : X ⟶ Spec (CommRingCat.of k))
