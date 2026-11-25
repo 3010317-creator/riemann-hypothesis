@@ -1,5 +1,6 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OneSubTwoOmegaSq
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LinkedUnramifiedChains.RedDefs
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.ArtinRees
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.CoB
@@ -1261,19 +1262,7 @@ open NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.
 
 private theorem int_of_norm {l : ℕ} [Fact l.Prime] (z : Qbar l) (hz : ‖z‖ ≤ 1) :
     ∃ f : Polynomial ℤ_[l], f.Monic ∧ Polynomial.aeval z f = 0 := by
-  have hi : IsIntegral ℚ_[l] z := Algebra.IsIntegral.isIntegral z
-  have hm : (minpoly ℚ_[l] z).Monic := minpoly.monic hi
-  have h1 : spectralValue (minpoly ℚ_[l] z) ≤ 1 := by
-    rw [← PadicAlgCl.spectralNorm_eq l z] at hz
-    exact hz
-  have h2 := (spectralValue_le_one_iff hm).1 h1
-  have hl : minpoly ℚ_[l] z ∈ Polynomial.lifts (algebraMap ℤ_[l] ℚ_[l]) := by
-    rw [Polynomial.lifts_iff_coeff_lifts]
-    intro n
-    exact ⟨⟨_, h2 n⟩, rfl⟩
-  obtain ⟨f, hf, -, hfm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hl hm
-  refine ⟨f, hfm, ?_⟩
-  rw [← Polynomial.aeval_map_algebraMap ℚ_[l], hf, minpoly.aeval]
+  apply _root_.GlobalTheory.ResidueUnr.exists_monic <;> assumption
 
 private theorem int_pt {l : ℕ} [Fact l.Prime] {D : Type} [CommRing D] (ξ : D →+* Qbar l) (h : ∀ a, ‖ξ a‖ ≤ 1)
     (φ : ℤ_[l] →+* D) (hφ : ∀ t, ξ (φ t) = algebraMap ℤ_[l] (Qbar l) t) (a : D) :
