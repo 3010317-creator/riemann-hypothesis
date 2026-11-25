@@ -68,12 +68,8 @@ theorem muS_swap {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < T
   have hsk : MeasurePreserving (fun p : Mt k r × Mt k r => (p.1, conjM (Matrix.of p.1) p.2))
       (μW.prod μN) (μW.prod μN) :=
     (MeasurePreserving.id μW).skew_product hcm (haeW.mono fun x hx => hconj _ hx)
-  have hae : ∀ᵐ p ∂(μW.prod μN), Matrix.of p.1 ∈ UWset k r z := by
-    rw [ae_iff]
-    refine measure_mono_null (show {p : Mt k r × Mt k r | ¬ (Matrix.of p.1 ∈ UWset k r z)} ⊆
-        {x : Mt k r | Matrix.of x ∉ UWset k r z} ×ˢ (Set.univ : Set (Mt k r)) from
-      fun p hp => ⟨hp, Set.mem_univ _⟩) ?_
-    rw [Measure.prod_prod, hW.2.2.1, zero_mul]
+  have hae : ∀ᵐ p ∂(μW.prod μN), Matrix.of p.1 ∈ UWset k r z :=
+    Measure.quasiMeasurePreserving_fst.ae haeW
   calc (μN.prod μW).map (fun p => (Matrix.of.symm (Matrix.of p.1 * Matrix.of p.2) : Mt k r))
       = ((μW.prod μN).map Prod.swap).map (fun p => (Matrix.of.symm (Matrix.of p.1 * Matrix.of p.2) : Mt k r)) := by
         rw [Measure.prod_swap]
