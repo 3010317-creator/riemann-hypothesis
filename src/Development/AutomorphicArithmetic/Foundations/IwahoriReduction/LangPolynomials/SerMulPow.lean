@@ -63,12 +63,21 @@ private theorem ng_dvd {l m : ℕ} [Fact l.Prime] (x : (ZMod (l ^ (m + 1)))ˣ) (
     rw [Int.cast_sub, Int.cast_natCast, h, Int.cast_one, sub_self]
   exact_mod_cast (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).1 this
 
+private theorem ng_dvd_geom_sum₂_self {R : Type*} [CommRing R] {n : ℕ} {x y : R}
+    (h : (n : R) ∣ x - y) :
+    (n : R) ∣ ∑ i ∈ Finset.range n, x ^ i * y ^ (n - 1 - i) := by
+  rw [← Ideal.mem_span_singleton, ← Ideal.Quotient.eq] at h
+  rw [← Ideal.mem_span_singleton, ← Ideal.Quotient.eq_zero_iff_mem]
+  simp only [RingHom.map_geom_sum₂, h, geom_sum₂_self]
+  rw [← map_natCast (Ideal.Quotient.mk _), Ideal.Quotient.eq_zero_iff_mem.2
+    (Ideal.mem_span_singleton_self _), zero_mul]
+
 private theorem ng_pow {l m : ℕ} [Fact l.Prime] (hm : 1 ≤ m) (x : (ZMod (l ^ (m + 1)))ˣ) (hx : red l m x = 1) :
     x ^ l = 1 := by
   haveI : NeZero (l ^ (m + 1)) := ⟨(pow_pos (Fact.out : l.Prime).pos _).ne'⟩
   have h1 := ng_dvd x hx
   have h2 : ((l : ℕ) : ℤ) ∣ (((x : ZMod (l ^ (m + 1))).val : ℕ) : ℤ) - 1 := (dvd_pow_self _ (by omega)).trans h1
-  have h3 := mul_dvd_mul (dvd_geom_sum₂_self h2) h1
+  have h3 := mul_dvd_mul (ng_dvd_geom_sum₂_self h2) h1
   rw [Commute.geom_sum₂_mul (Commute.all _ _), one_pow, ← pow_succ'] at h3
   have h4 : ((((((x : ZMod (l ^ (m + 1))).val : ℕ) : ℤ) ^ l - 1 : ℤ)) : ZMod (l ^ (m + 1))) = 0 :=
     (ZMod.intCast_zmod_eq_zero_iff_dvd _ (l ^ (m + 1))).2 (by exact_mod_cast h3)
