@@ -437,7 +437,6 @@ def chartIso (hL : L.IsLB) (i : L.ι) :
   Descent.freeIso (Descent.bijective_smul_stalk (bijective_smul_chartSec hL i))
 
 
-set_option backward.isDefEq.respectTransparency false in
 def chartOverIso (hL : L.IsLB) (i : L.ι) :
     SheafOfModules.free (R := X.ringCatSheaf.over (L.U i)) PUnit.{1} ≅ (toMod L).over (L.U i) :=
   let e := Scheme.Modules.overEquiv (L.U i)
