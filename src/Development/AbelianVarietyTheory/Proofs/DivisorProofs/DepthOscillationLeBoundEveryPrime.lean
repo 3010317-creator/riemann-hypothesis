@@ -38,6 +38,7 @@ public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralChart
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ColengthBoundSplitPlaceChart
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.LamLetters
 import Mathlib.Tactic.Linter.Style
+import Mathlib.Data.EReal.BigOperators
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.WtSubOneLe
 import Std.Tactic.BVDecide.Normalize.Prop
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.PtOrderProdSub
