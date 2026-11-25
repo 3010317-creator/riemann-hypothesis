@@ -5,6 +5,7 @@ public import Mathlib.Algebra.Polynomial.BigOperators
 public import Mathlib.Algebra.Polynomial.Roots
 public import Formalism.WindowSums.AnnihilatorPolynomials.ZpowVal
 import Std.Tactic.BVDecide.Normalize.Prop
+import Mathlib.Data.Int.CardIntervalMod
 import Formalism.WindowSums.AnnihilatorPolynomials.ValProd
 
 -- This file was produced by scripts/clump.py from the modules listed below.
