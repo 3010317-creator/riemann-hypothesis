@@ -28,26 +28,13 @@ namespace GlobalTheory.CompanionTheory.SW.ThetaStage
 
 section Alg
 
-theorem hform_eq_dot {A : Type} [CommRing A] (s : A →+* A) {M : ℕ} (J : Matrix (Fin M) (Fin M) A)
-    (x y : Fin M → A) : hform s J x y = (fun i => s (x i)) ⬝ᵥ (J *ᵥ y) := by
-  simp [hform, dotProduct, Matrix.mulVec, Finset.mul_sum, mul_assoc]
-
-theorem hform_act {A : Type} [CommRing A] (s : A →+* A) {M : ℕ} (J g : Matrix (Fin M) (Fin M) A)
-    (hg : cT s g * J * g = J) (x y : Fin M → A) : hform s J (g *ᵥ x) (g *ᵥ y) = hform s J x y := by
-  have h1 : (fun i => s ((g *ᵥ x) i)) = (fun i => s (x i)) ᵥ* cT s g := by
-    funext i
-
-    simp [Matrix.vecMul, dotProduct, Matrix.mulVec, cT, map_sum, mul_comm]
-  rw [hform_eq_dot, hform_eq_dot, h1, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec,
-    Matrix.mulVec_mulVec, hg]
-
 variable {F E : Type} [Field F] [Field E] [Algebra F E]
 
 theorem gramE_act (σ : E →ₐ[F] E) {M n : ℕ} (J : Matrix (Fin M) (Fin M) E)
     (g : UJ (σ : E →+* E) J) (X : Fin n → Fin M → E) :
     gramE σ J (fun a => ((g : GL (Fin M) E) : Matrix (Fin M) (Fin M) E) *ᵥ X a) = gramE σ J X := by
   ext a b
-  exact hform_act (σ : E →+* E) J _ g.2 (X a) (X b)
+  exact (TopH.hform_mulVec (σ : E →+* E) J _ (X a) (X b)).trans (congrArg (hform _ · _ _) g.2)
 
 variable (R : Type) [CommRing R] [Algebra F R]
 
