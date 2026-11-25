@@ -2,6 +2,7 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.FixedIntegersIsUnitOfNotMemPrimeSpan
 public import Mathlib.RingTheory.ZMod.UnitsCyclic
+public import Mathlib.NumberTheory.Multiplicity
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.DvdOfNormLe
 public import Lean.Meta.ExprDefEq
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntegralLimitCompatibleModPrimePow
