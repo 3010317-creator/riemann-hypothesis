@@ -128,21 +128,13 @@ theorem fockInner_neg_left (P Q : MvPolynomial σ ℂ) :
 
 theorem fockInner_sum_right {ι : Type*} (s : Finset ι) (P : MvPolynomial σ ℂ)
     (f : ι → MvPolynomial σ ℂ) :
-    fockInner P (∑ i ∈ s, f i) = ∑ i ∈ s, fockInner P (f i) := by
-  classical
-  refine Finset.induction_on s ?_ ?_
-  · rw [Finset.sum_empty, Finset.sum_empty, fockInner_zero_right]
-  · intro a t ha ih
-    rw [Finset.sum_insert ha, Finset.sum_insert ha, fockInner_add_right, ih]
+    fockInner P (∑ i ∈ s, f i) = ∑ i ∈ s, fockInner P (f i) :=
+  map_sum (AddMonoidHom.mk' (fockInner P) (fockInner_add_right P)) f s
 
 theorem fockInner_sum_left {ι : Type*} (s : Finset ι) (f : ι → MvPolynomial σ ℂ)
     (Q : MvPolynomial σ ℂ) :
-    fockInner (∑ i ∈ s, f i) Q = ∑ i ∈ s, fockInner (f i) Q := by
-  classical
-  refine Finset.induction_on s ?_ ?_
-  · rw [Finset.sum_empty, Finset.sum_empty, fockInner_zero_left]
-  · intro a t ha ih
-    rw [Finset.sum_insert ha, Finset.sum_insert ha, fockInner_add_left, ih]
+    fockInner (∑ i ∈ s, f i) Q = ∑ i ∈ s, fockInner (f i) Q :=
+  map_sum (AddMonoidHom.mk' (fockInner · Q) fun P₁ P₂ => fockInner_add_left P₁ P₂ Q) f s
 
 theorem wt_conj (α : σ →₀ ℕ) : (starRingEnd ℂ) (wt α) = wt α := by
   unfold wt Finsupp.prod
