@@ -96,12 +96,7 @@ theorem height_H1_of_data {rU : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ rU
       (nuOf c nus) ip wsize DF PN PQ tableDegreeThreeBase PP0' Pd Gc PI4 Pet tableLineDegreeFive tableLineDegreeTwo Prw PO f r).FinitePlaceHyp := by
   classical
   refine ⟨fun la => mul_nonneg (Nat.cast_nonneg _) (hnu.1 la), ?_, hnu.2.2, ?_⟩
-  · refine hnu.2.1.subset fun la hla => ?_
-    rw [Function.mem_support] at hla ⊢
-    intro h0
-    apply hla
-    show (ramOverZ la : ℝ) * nus la = 0
-    rw [h0, mul_zero]
+  · exact hnu.2.1.subset (Function.support_mul_subset_right (fun la => (ramOverZ la : ℝ)) nus)
   · intro Z v la hadm hover
     show ((⨅ j : {j // valC h uL.1 uL.2 (wR j) Z ≠ 0},
         ordC (δ Z v) v (wtZ uL.1 uL.2) (valC h uL.1 uL.2 (wR j) Z) : ℤ) : ℝ) ≤
