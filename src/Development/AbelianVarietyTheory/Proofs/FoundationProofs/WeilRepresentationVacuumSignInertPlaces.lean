@@ -125,8 +125,6 @@ theorem exists_int_smul_mem {K : Type u_1} {V : Type u_2} [Field K] [NumberField
     rw [key]
     exact L.smul_mem r hmx
 
-alias main := _root_.GlobalTheory.IntegerScalarIntegral.exists_int_smul_mem
-
 end GlobalTheory.IntegerScalarIntegral
 end -- clump:auto
 end -- clump:auto

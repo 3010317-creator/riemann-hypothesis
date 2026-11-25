@@ -62,15 +62,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.ChainMatrices GlobalTheory.StdFrame
 
 variable {D : D7}
 
-def normalFrameVectorSequences (D : D7) : ∀ j : ℕ, (ℕ → (D.sp.Y j).V) × (ℕ → (D.sp.Y j).V) × (D.sp.Y j).V
-  | 0 => (fun i => if h : i < D.R.rS then D.sp.hypE ⟨i, h⟩ else 0,
-      fun i => if h : i < D.R.rS then D.sp.hypF ⟨i, h⟩ else 0, D.sp.zm)
-  | j + 1 => if h : j + 1 < D.R.m then
-      (Classical.choose (GlobalTheory.StandardGramVectors.exists_auxiliaryHyperbolicVectors D (j + 1) h),
-        Classical.choose (Classical.choose_spec (GlobalTheory.StandardGramVectors.exists_auxiliaryHyperbolicVectors D (j + 1) h)),
-        Classical.choose (Classical.choose_spec (Classical.choose_spec (GlobalTheory.StandardGramVectors.exists_auxiliaryHyperbolicVectors D (j + 1) h))))
-    else (0, 0, 0)
-
 theorem crdLat_eq_l0X (V : HSp D) : Formalism.L2.Herm.crdLat V V.L0 = l0X V := by
   ext x
   simp only [Formalism.L2.Herm.crdLat, l0X, Submodule.mem_map, Submodule.mem_comap, Formalism.L2.Herm.crd,
@@ -312,12 +303,6 @@ theorem hT_swap {j : ℕ} (x y : (D.sp.Y j).V) {c : D.host.E} (h : (D.sp.Y j).hT
     (D.sp.Y j).hT x y = c := by
   rw [← (D.sp.Y j).herm.eq y x, h]
   exact hc
-
-end GlobalTheory.NormalFramesLevels
-
-namespace GlobalTheory.NormalFramesLevels
-
-open GlobalTheory.IndefiniteRowSideFullHecke.ChainMatrices GlobalTheory.StdFrames Formalism.IndefR.Mi
 
 end GlobalTheory.NormalFramesLevels
 

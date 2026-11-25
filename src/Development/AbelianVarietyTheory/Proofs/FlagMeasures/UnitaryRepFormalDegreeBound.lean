@@ -140,7 +140,6 @@ theorem cauchy_schwarz (I : V →ₗ⋆[ℂ] V →ₗ[ℂ] ℂ) (hI : ∀ x : V,
 
 end GlobalTheory.HermitianCauchySchwarz
 
-alias GlobalTheory.HermitianCauchySchwarz.main := _root_.GlobalTheory.HermitianCauchySchwarz.cauchy_schwarz
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.CauchySchwarz =====

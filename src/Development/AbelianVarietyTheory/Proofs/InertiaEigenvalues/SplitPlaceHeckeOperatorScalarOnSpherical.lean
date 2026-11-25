@@ -83,7 +83,6 @@ alias mem_GLint_iff := _root_.GlobalTheory.HeckeStdFacts.mem_GLint_iff
 alias proj_mem := _root_.GlobalTheory.HeckeStdFacts.proj_mem
 alias loc_mem_GLint_iff := _root_.GlobalTheory.HeckeStdFacts.loc_mem_GLint_iff
 alias exists_tSet_eq := _root_.GlobalTheory.HeckeStdFacts.exists_tSet_eq
-alias exists_cong_conj := _root_.GlobalTheory.HeckeStdFacts.exists_cong_conj
 alias exists_reps := _root_.GlobalTheory.HeckeStdFacts.exists_reps
 alias finite_dc := _root_.GlobalTheory.HeckeStdFacts.finite_dc
 alias exists_repsU := _root_.GlobalTheory.HeckeStdFacts.exists_repsU
