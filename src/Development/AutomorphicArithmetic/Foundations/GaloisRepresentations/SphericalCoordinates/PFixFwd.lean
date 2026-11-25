@@ -61,11 +61,6 @@ private theorem coordA_of_dvd {p : ℕ} [Fact p.Prime] {D : Datum p} {G : HTGrou
   refine ⟨k • w, AddSubgroup.nsmul_mem _ hw k, ?_⟩
   rw [hw', smul_smul]
 
-private theorem eq_of_nsmul_eq_of_ne_zero {g m : ℕ} (hm : m ≠ 0) {a b : Fin g → ℂ} (h : m • a = m • b) : a = b := by
-  have hm' : (m : ℂ) ≠ 0 := by exact_mod_cast hm
-  rw [← Nat.cast_smul_eq_nsmul ℂ m a, ← Nat.cast_smul_eq_nsmul ℂ m b] at h
-  exact smul_right_injective _ hm' h
-
 private theorem fix_line_ext {p : ℕ} [Fact p.Prime] {D : Datum p} {G : HTGroup p} (L : Link D G)
     {β : G.Cˣ} (y : GlobalTheory.LKCx.grp G β) {D' : PLat D.O D.inv} {j : D'.La →+ VQ D}
     (hdiv : ∀ w, ∃ (m : ℕ) (u : D'.La), m ≠ 0 ∧ m • w = j u)
@@ -76,7 +71,7 @@ private theorem fix_line_ext {p : ℕ} [Fact p.Prime] {D : Datum p} {G : HTGroup
   rw [LinearMap.toMatrix'_mulVec]
   show Q (actY L y w) = hh (Q w)
   obtain ⟨m, u, hm, hmu⟩ := hdiv w
-  apply eq_of_nsmul_eq_of_ne_zero hm
+  apply (nsmul_right_inj hm).1
   have e1 : m • Q (actY L y w) = Q (actY L y (j u)) := by
     rw [← hmu, map_nsmul, map_nsmul]
   have e2 : m • hh (Q w) = hh (Q (j u)) := by
@@ -110,7 +105,7 @@ theorem UpperTheory.Gal.W2.fixFwd_of :
       rw [← map_nsmul, ← map_nsmul, ← hdu, hjinc]
     have e2 : d • P'' u'' = P u := by
       rw [← map_nsmul, ← hdu, hPinc]
-    apply eq_of_nsmul_eq_of_ne_zero hd0
+    apply (nsmul_right_inj hd0).1
     rw [e1, e2, hQP]
   have hl : ∀ u, Q (actY L Y (j u)) = hh (Q (j u)) := by
     intro u
