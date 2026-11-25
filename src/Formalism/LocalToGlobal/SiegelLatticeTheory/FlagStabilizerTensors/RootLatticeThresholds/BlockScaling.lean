@@ -110,7 +110,7 @@ theorem orbVecAt_carrierOf (sc : ℝ) (i0 i0' : ∀ _ : InfinitePlace X.B.I.F, F
             Formalism.FourierDecayAlt.D.vecV ((PP).T ((PP).τ.symm v)).base ((PP).ν' ((PP).τ.symm v)) ((PP).m₀ ((PP).τ.symm v)) F
               (Formalism.FourierDecayAlt.D.toStd (PP).S.G.r (PP).S.g 1 (Formalism.FourierDecayAlt.C.loc ((PP).S.emb ((PP).τ.symm v)) p)) := by
   intro hsc hFX hB hemb p w hp hw h h' hD v μRv hH hpin F
-  have hData := orbVec_data X u u' e he hv C CA de de' l grid grid1 T hT fc χ sg ν' m₀ top A₀ Mo sc hsc
+  have hData := orbVec_data X u u' e he hv C CA de de' l grid grid1 T hT fc χ sg ν' m₀ top A₀ sc hsc
     i0 i0' hFX hB hemb hbase p w hp hw h h' hD v
   obtain ⟨hZ, hG, hloc, hGV⟩ := hData
   have hloc' : Formalism.FourierDecayAlt.D.IsLocPt (Formalism.FourierDecayAlt.D.toStd (PP).S.G.r (PP).S.g 1
