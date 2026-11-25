@@ -196,7 +196,9 @@ private theorem tr_pos {K : Type} [Field K] {Δ τ : K} (σ : K →+* ℝ) (hΔ 
   exact hy (by ext <;> simp [e1.1, e1.2, e2.1, e2.2])
 
 private theorem sig_mul {K : Type} [Field K] {Δ τ : K} (x y : EL Δ τ) : sigL (x * y) = sigL x * sigL y := by
-  ext <;> simp [sigL]
+  have hs : star (algebraMap K (Lsq K Δ) τ) = algebraMap K (Lsq K Δ) τ :=
+    QuadraticAlgebra.ext (by rw [re_star, algebraMap_im, mul_zero, add_zero]) (by rw [im_star, algebraMap_im, neg_zero])
+  refine QuadraticAlgebra.ext ?_ ?_ <;> simp only [sigL, re_mul, im_mul, star_add, star_mul', star_neg, star_one, hs]
 
 private theorem sig_sig {K : Type} [Field K] {Δ τ : K} (x : EL Δ τ) : sigL (sigL x) = x := by
   ext <;> simp [sigL]
