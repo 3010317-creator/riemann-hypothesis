@@ -41,10 +41,7 @@ theorem exists_norm_congr (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (
   obtain ⟨P, hP, hPp⟩ := exists_maximal_over hK hF h𝔭
   have hcP : ι c ∉ P := fun h => hc (hPp ▸ Ideal.mem_comap.2 h)
   have hN := IdealNormInequalities.one_lt_absNorm hP
-  have hfixed : conjO K (ι c) = ι c := by
-    apply RingOfIntegers.coe_injective
-    change star (κ (ι c)) = κ (ι c)
-    exact (hF _).2 ⟨(c : F), rfl⟩
+  have hfixed : conjO K (ι c) = ι c := RingOfIntegers.coe_injective (star_ι hF c)
   have key : ∃ α : 𝓞 K, conjO K α * α - ι c ∈ P := by
     obtain ⟨h1, h2⟩ := localDensity K hK P hP 1 1 le_rfl le_rfl (ι c) hfixed hcP
     by_cases hc' : Formalism.HermitianLatticesTheory.conjIdeal (K := K) P = P
@@ -185,10 +182,7 @@ theorem exists_alpha (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : 
     obtain ⟨t₂, ht₂⟩ := (conjO_eq_iff_mem_range hF (conjO K τ * τ)).1 (by
       rw [map_mul, conjO_conjO, mul_comm])
     refine ⟨α₀ * (1 + ι a * τ), ν₀ * (1 + a + a * a * t₂), ?_, ?_, ?_⟩
-    · have hfixed : conjO K (ι a) = ι a := by
-        apply RingOfIntegers.coe_injective
-        change star (κ (ι a)) = κ (ι a)
-        exact (hF _).2 ⟨(a : F), rfl⟩
+    · have hfixed : conjO K (ι a) = ι a := RingOfIntegers.coe_injective (star_ι hF a)
       rw [map_mul, map_add (f := _), map_mul, map_one, hfixed, map_mul ι, map_add ι, map_add ι, map_mul ι,
         map_mul ι, map_one, ← hν₀, ht₂]
       rw [map_one] at hτ
