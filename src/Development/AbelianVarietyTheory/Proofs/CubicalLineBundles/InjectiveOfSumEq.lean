@@ -178,6 +178,10 @@ section Linear
 
 variable {K V J : Type} [Field K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Fintype J]
 
+private instance finite_directSum_submodule (N : J → Submodule K V) :
+    Module.Finite K (DirectSum J fun i => N i) :=
+  Module.Finite.equiv DFinsupp.linearEquivFunOnFintype.symm
+
 theorem finrank_le_sum {N : J → Submodule K V} (h : ⨆ i, N i = ⊤) :
     Module.finrank K V ≤ ∑ i, Module.finrank K (N i) := by
   classical
