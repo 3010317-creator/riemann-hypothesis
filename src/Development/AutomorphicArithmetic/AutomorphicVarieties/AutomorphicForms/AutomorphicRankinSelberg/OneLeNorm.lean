@@ -158,21 +158,11 @@ theorem UpperTheory.V.Af.Rs.zDiff :
   set g : (Fin 2 → ℤ) → ℝ := fun x => if cls L x = v then ker s x z else 0 with hg
   set g' : (Fin 2 → ℤ) → ℝ := fun x => if cls L x = v then ker s (x + a) z else 0 with hg'
   have hgs : Summable g := by
-    refine Summable.of_nonneg_of_le (fun x => ?_) (fun x => ?_) hker
-    · simp only [hg]
-      split_ifs
-      exacts [h2 x z, le_rfl]
-    · simp only [hg]
-      split_ifs
-      exacts [le_rfl, h2 x z]
+    refine (hker.indicator {x | cls L x = v}).congr fun x => ?_
+    simp only [hg, Set.indicator_apply, Set.mem_ofPred_eq]
   have hgs' : Summable g' := by
-    refine Summable.of_nonneg_of_le (fun x => ?_) (fun x => ?_) hker'
-    · simp only [hg']
-      split_ifs
-      exacts [h2 _ z, le_rfl]
-    · simp only [hg']
-      split_ifs
-      exacts [le_rfl, h2 _ z]
+    refine (hker'.indicator {x | cls L x = v}).congr fun x => ?_
+    simp only [hg', Set.indicator_apply, Set.mem_ofPred_eq]
   have hZ : Zc L v s z = ∑' x, g x := rfl
   have hZ' : Zc L v' s z = ∑' x, g' x := by
     show (∑' x, if cls L x = v' then ker s x z else 0) = _
@@ -206,10 +196,8 @@ theorem UpperTheory.V.Af.Rs.zDiff :
   rw [hZ, hZ', ← hgs.tsum_sub hgs']
   calc |∑' x, (g x - g' x)|
       ≤ ∑' x : Fin 2 → ℤ, C * L * z.im ^ 3 * (‖x‖ ^ (-3 : ℝ) + ‖x + a‖ ^ (-3 : ℝ)) := by
-        rw [abs_le]
-        constructor
-        · rw [← tsum_neg]
-          exact Summable.tsum_le_tsum (fun x => neg_le_of_abs_le (hd x)) hh.neg (hgs.sub hgs')
-        · exact Summable.tsum_le_tsum (fun x => le_of_abs_le (hd x)) (hgs.sub hgs') hh
+        simpa only [Real.norm_eq_abs] using
+          tsum_of_norm_bounded (f := fun x => g x - g' x) hh.hasSum
+            (by simpa only [Real.norm_eq_abs] using hd)
     _ = C * L * z.im ^ 3 * (2 * S) := hsum
     _ = C * L * (2 * S) * z.im ^ 3 := by ring
