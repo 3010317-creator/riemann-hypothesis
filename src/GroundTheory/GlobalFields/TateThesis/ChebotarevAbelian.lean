@@ -688,15 +688,6 @@ theorem finite_setOf_exists_ramificationIdx_ne_one :
 
 end Ramified
 
-section Chebotarev
-
-variable {K L : Type*} [Field K] [NumberField K] [Field L] [NumberField L] [Algebra K L]
-  [IsGalois K L] [IsMulCommutative Gal(L/K)]
-
-attribute [local instance] galCommGroup
-
-end Chebotarev
-
 section ChebotarevDensity
 
 variable {K L : Type u} [Field K] [NumberField K] [Field L] [NumberField L] [Algebra K L]

@@ -46,12 +46,6 @@ open ReciprocityTheory.ChartRestriction.DS
 
 variable {n : ℕ}
 
-section AlgGen
-
-variable {X : Type*} [AddCommGroup X] [Module ℂ X] {ε : Fin n → Bool}
-
-end AlgGen
-
 section Slots
 
 variable {M : Type*} [NormedAddCommGroup M] [InnerProductSpace ℂ M] {ε : Fin n → Bool}

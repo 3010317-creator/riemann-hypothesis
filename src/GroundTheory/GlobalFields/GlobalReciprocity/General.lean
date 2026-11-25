@@ -157,12 +157,6 @@ namespace Cyclotomic
 
 open GroundTheory.LocalField.Abstract
 
-section Padic
-
-variable {ℓ : ℕ} [hℓ : Fact ℓ.Prime]
-
-end Padic
-
 section ProfiniteInteger
 
 def factorialPNat (n : ℕ) : ℕ+ := ⟨(n + 1).factorial, Nat.factorial_pos _⟩
