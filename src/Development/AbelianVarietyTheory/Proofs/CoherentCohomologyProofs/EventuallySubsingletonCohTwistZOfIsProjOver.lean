@@ -366,7 +366,6 @@ open MvPolynomial QCoh.Qcqs Cartier
 variable {R : Type} [CommRing R] {N : ℕ} {X : Scheme.{0}} {L : LB X}
 
 
-set_option backward.isDefEq.respectTransparency.types false in
 theorem isFinite_iff_pullRatio (φ : X ⟶ PSpace R N) {U : Fin (N + 1) → X.Opens}
     (hU : ∀ i, φ ⁻¹ᵁ chart R N i = U i) :
     IsFinite φ ↔ ∀ i, IsAffineOpen (U i) ∧ RingHom.Finite
