@@ -73,12 +73,7 @@ lemma eig_of_wt {act : Mat p q →ₗ[ℂ] Module.End ℂ V} (c : Ix p q → ℂ
   rw [mem_wt] at hv
   rw [Module.End.mem_eigenspace_iff]
   have : (Matrix.diagonal c : Mat p q) = ∑ a, c a • Eab a a := by
-    ext i j
-    simp only [Matrix.sum_apply, Eab, Matrix.smul_apply, Matrix.single_apply, Matrix.diagonal_apply]
-    rw [Finset.sum_eq_single i]
-    · simp
-    · intro b _ hb; simp [hb]
-    · simp
+    simp only [Eab, Matrix.smul_single, smul_eq_mul, mul_one, Matrix.sum_single_eq_diagonal]
   rw [this]
 
   simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, hv, Finset.sum_smul,
