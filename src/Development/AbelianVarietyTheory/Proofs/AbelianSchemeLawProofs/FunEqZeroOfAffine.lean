@@ -317,22 +317,6 @@ theorem exists_isActOf (hL : L.IsLB) {k : ℤ} {T : Over S} (θ : ThetaGrp A L k
     (s : LB.Sec (LPow A L k T)) : ∃ s', IsActOf A L k θ s s' :=
   exists_isTwistPull A hL θ.isGen s
 
-section Pull
-
-variable {A} {a : ℤ} {T T' T'' : Over S}
-
-end Pull
-
-section VV
-
-variable (P : PolAV S) (N m : ℕ) {T T' : Over S}
-
-variable {κ : Type} [Fintype κ]
-
-variable {P N m}
-
-end VV
-
 variable (P : PolAV S) (N m : ℕ)
 
 end GlobalTheory.VVCompare

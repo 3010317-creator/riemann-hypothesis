@@ -309,12 +309,6 @@ abbrev sysOf {L : LB Y.X} (hL : L.IsLB) {n : ℕ} (s : Fin n → L.Sec) : LinSys
 
 
 
-section LinSys
-
-variable {Δ : Y.Dv} {n : ℕ} (b : Fin n → Y.H0 Δ)
-
-end LinSys
-
 section Hyperplane
 
 open ProjSpace
