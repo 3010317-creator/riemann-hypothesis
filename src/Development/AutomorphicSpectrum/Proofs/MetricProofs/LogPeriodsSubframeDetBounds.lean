@@ -53,13 +53,8 @@ theorem frame_compact_nhd {g k : ℕ} (M₀ : Matrix (Fin g) (Fin k) ℂ) (h : M
 
 theorem continuousAt_matrix_inv {X : Type*} [TopologicalSpace X] {g : ℕ}
     (A : X → Matrix (Fin g) (Fin g) ℂ) (x : X) (hA : ContinuousAt A x) (h : (A x).det ≠ 0) :
-    ContinuousAt (fun y => (A y)⁻¹) x := by
-  have hd : ContinuousAt (fun y => (A y).det) x :=
-    (continuous_id.matrix_det).continuousAt.comp hA
-  have ha : ContinuousAt (fun y => (A y).adjugate) x :=
-    (continuous_id.matrix_adjugate).continuousAt.comp hA
-  simp only [Matrix.inv_def, Ring.inverse_eq_inv']
-  exact (hd.inv₀ h).smul ha
+    ContinuousAt (fun y => (A y)⁻¹) x :=
+  (_root_.continuousAt_matrix_inv (A x) (by rw [Ring.inverse_eq_inv']; exact continuousAt_inv₀ h)).comp hA
 
 theorem chartRadius_le_log_sum {n a : ℕ} (h : a ≤ n) (z : Fin n → ℂ) (h1 : ∀ k, ‖z k‖ < 1)
     (h0 : ∀ i : Fin n, i.val < a → z i ≠ 0) :
