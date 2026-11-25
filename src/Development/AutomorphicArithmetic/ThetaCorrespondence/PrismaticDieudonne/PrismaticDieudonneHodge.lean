@@ -1392,25 +1392,11 @@ theorem GlobalTheory.PDivLat.iota_natural : ∀ (p : ℕ) [Fact p.Prime] (C : Ty
       rw [epsPairing, epsPairing, pairing_tateMap]
     rw [h1, hu, ← h2, dlog_tateMap]
   obtain ⟨c, hc, hcw⟩ := _root_.GlobalTheory.PDivLat.exists_smul_mem_span_dlog p C v O hv ε hε H hH
-  have hspan : ∀ x ∈ Submodule.span O (Set.range (dlog H)),
-      u (ι' x) = ι (omegaMap G H f x) := by
-    intro x hx
-    induction hx using Submodule.span_induction with
-    | mem x hx => obtain ⟨χ, rfl⟩ := hx; exact key χ
-    | zero => simp
-    | add x y _ _ hx hy => simp [hx, hy]
-    | smul a x _ hx => simp [hx]
-  have h := hspan _ (hcw w)
-  simp only [map_smul] at h
-  have h' : c • (u (ι' w) - ι (omegaMap G H f w)) = 0 := by rw [smul_sub, h, sub_self]
-  have tf : ∀ x : M, c • x = 0 → x = 0 := by
-    intro x hx
-    let b := Module.Free.chooseBasis O M
-    refine b.repr.injective (Finsupp.ext fun i => ?_)
-    have h3 := congrArg (fun y => b.repr y i) hx
-    simp only [map_smul, Finsupp.smul_apply, smul_eq_mul, map_zero, Finsupp.coe_zero, Pi.zero_apply] at h3
-    simpa using (mul_eq_zero.1 h3).resolve_left hc
-  exact sub_eq_zero.1 (tf _ h')
+  have h := LinearMap.eqOn_span (f := u.comp ι') (g := ι.comp (omegaMap G H f))
+    (s := Set.range (dlog H)) (by
+      rintro _ ⟨χ, rfl⟩
+      exact key χ) (hcw w)
+  exact smul_right_injective M hc (by simpa only [LinearMap.comp_apply, map_smul] using h)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupHodgeTateFirstMapNatural =====
