@@ -21,13 +21,7 @@ theorem exists_haar_map {G H : Type} [Group G] [TopologicalSpace G] [IsTopologic
     (e : G ≃ₜ* H) (S : Subgroup G) (ν : Measure S) [ν.IsHaarMeasure] [ν.IsInvInvariant] (T : Subgroup H)
     (hT : S.map e.toMonoidHom = T) : ∃ ν' : Measure T, ν'.IsHaarMeasure ∧ ν'.IsInvInvariant := by
   subst hT
-  have hinv : ∀ y : S.map e.toMonoidHom, e.symm y ∈ S := by
-    intro y
-    obtain ⟨x, hx, hxy⟩ := Subgroup.mem_map.1 y.2
-    rw [← hxy]
-    change e.symm (e x) ∈ S
-    rw [e.symm_apply_apply]
-    exact hx
+  have hinv : ∀ y : S.map e.toMonoidHom, e.symm y ∈ S := fun y => Subgroup.mem_map_equiv.1 y.2
   let ψ : S ≃ₜ* S.map e.toMonoidHom :=
     { toFun := fun x => ⟨e x, Subgroup.mem_map.2 ⟨x, x.2, rfl⟩⟩
       invFun := fun y => ⟨e.symm y, hinv y⟩
@@ -75,13 +69,8 @@ theorem pf_Glob2 : PositivityTheory.Rg.BcB.D4.SplitAt2 → PositivityTheory.Rg.B
   have hmem : ∀ g, g ∈ adCent d ↔ e g ∈ ((twCent (thC n) (locGL v₁ d)).prod (twCent (thC n) (locGL v₂ d))).prod
       (twCent θ' (e (ratGL E n d)).2) := by
     intro g
-    rw [← hcent d, Subgroup.mem_map]
-    constructor
-    · intro h; exact ⟨g, h, rfl⟩
-    · rintro ⟨x, hx, hxg⟩
-      change e x = e g at hxg
-      have : x = g := by rw [← e.symm_apply_apply x, hxg, e.symm_apply_apply]
-      rwa [← this]
+    rw [← hcent d]
+    exact (Subgroup.mem_map_iff_mem (f := e.toMonoidHom) e.injective).symm
   have hE1 : ∀ t ∈ twCent (thC n) (locGL v₁ d), embInf n v₁ t ∈ adCent d := fun t ht =>
     (hmem _).2 (by rw [hev1]; exact Subgroup.mem_prod.2 ⟨Subgroup.mem_prod.2 ⟨ht, one_mem _⟩, one_mem _⟩)
   have hE2 : ∀ t ∈ twCent (thC n) (locGL v₂ d), embInf n v₂ t ∈ adCent d := fun t ht =>
