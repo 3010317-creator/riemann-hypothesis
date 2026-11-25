@@ -446,10 +446,6 @@ private def hM (p : ℕ) : Option (Fin p) → Matrix (Fin 2) (Fin 2) ℤ
 private theorem hM_det (p : ℕ) (x : Option (Fin p)) : (hM p x).det = p := by
   cases x <;> simp [hM, Matrix.det_fin_two_of]
 
-private def hG {p : ℕ} (hp : p.Prime) (x : Option (Fin p)) : GL (Fin 2) ℝ :=
-  Matrix.GeneralLinearGroup.mkOfDetNeZero ((Int.castRingHom ℝ).mapMatrix (hM p x)) (by
-    rw [← RingHom.map_det, hM_det]; simpa using hp.ne_zero)
-
 end UpperTheory.V.Sd
 
 theorem UpperTheory.V.Sd.heckeEx :
