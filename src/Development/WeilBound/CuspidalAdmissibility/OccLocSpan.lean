@@ -55,46 +55,23 @@ theorem span_core {ι : Type} {W : ι → Type} [∀ v, AddCommGroup (W v)] [∀
     (h : ∀ a (x : ∀ v, W v) (hx : IsRestricted ξ x),
       inner ℂ (Φ (E.symm (a ⊗ₜ Te.symm ⟨PiTensorProduct.tprod ℂ x, tprod_mem_restrictedTensor hx⟩))) u = 0)
     (c : C) : inner ℂ (Φ c) u = 0 := by
-  let Z : Submodule ℂ C :=
-    { carrier := {c | inner ℂ (Φ c) u = 0}
-      add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
-        rw [map_add (f := _), inner_add_left, ha, hb, add_zero]
-      zero_mem' := by
-        simp only [Set.mem_setOf_eq]
-        rw [map_zero, inner_zero_left]
-      smul_mem' := fun c x hx => by
-        simp only [Set.mem_setOf_eq] at hx ⊢
-        rw [map_smul, inner_smul_left, hx, mul_zero] }
-  have hZ : ∀ c, c ∈ Z ↔ inner ℂ (Φ c) u = 0 := fun c => Iff.rfl
-  have h2 : ∀ a (r : restrictedTensor ξ), E.symm (a ⊗ₜ Te.symm r) ∈ Z := by
-    intro a r
-    obtain ⟨r, hr⟩ := r
-    induction hr using Submodule.span_induction with
-    | mem y hy =>
-        obtain ⟨x, hx, rfl⟩ := hy
-        exact (hZ _).2 (h a x hx)
-    | zero =>
-        have e : (⟨0, Submodule.zero_mem _⟩ : restrictedTensor ξ) = 0 := rfl
-        rw [e, map_zero, TensorProduct.tmul_zero, map_zero]
-        exact Z.zero_mem
-    | add y z hy hz ihy ihz =>
-        have e : (⟨y + z, add_mem hy hz⟩ : restrictedTensor ξ) = ⟨y, hy⟩ + ⟨z, hz⟩ := rfl
-        rw [e, map_add (f := _), TensorProduct.tmul_add, map_add (f := _)]
-        exact Z.add_mem ihy ihz
-    | smul c y hy ihy =>
-        have e : (⟨c • y, Submodule.smul_mem _ c hy⟩ : restrictedTensor ξ) = c • ⟨y, hy⟩ := rfl
-        rw [e, map_smul, TensorProduct.tmul_smul, map_smul]
-        exact Z.smul_mem c ihy
-  have h3 : ∀ t : W₁ ⊗[ℂ] W₂, E.symm t ∈ Z := by
-    intro t
-    induction t using TensorProduct.induction_on with
-    | zero => rw [map_zero]; exact Z.zero_mem
-    | tmul a b =>
-        have := h2 a (Te b)
-        rwa [LinearEquiv.symm_apply_apply] at this
-    | add s t hs ht => rw [map_add (f := _)]; exact Z.add_mem hs ht
-  have := h3 (E c)
-  rwa [LinearEquiv.symm_apply_apply] at this
+  let ψ : W₁ ⊗[ℂ] W₂ →ₗ[ℂ] ℂ :=
+    (innerₛₗ ℂ u).comp (Φ.comp E.symm.toLinearMap)
+  suffices hψ : ψ = 0 from inner_eq_zero_symm.mp <| by
+    simpa [ψ, LinearEquiv.coe_toLinearMap, LinearEquiv.symm_apply_apply] using
+      LinearMap.congr_fun hψ (E c)
+  refine TensorProduct.ext' fun a b => ?_
+  let L : restrictedTensor ξ →ₗ[ℂ] ℂ :=
+    ψ.comp ((TensorProduct.mk ℂ W₁ W₂ a).comp Te.symm.toLinearMap)
+  obtain ⟨r, hr, hre⟩ :=
+    (Submodule.span_le (p := (LinearMap.ker L).map (restrictedTensor ξ).subtype)).2
+      (by
+        rintro _ ⟨x, hx, rfl⟩
+        exact ⟨⟨_, tprod_mem_restrictedTensor hx⟩,
+          LinearMap.mem_ker.2 (inner_eq_zero_symm.mpr (h a x hx)), rfl⟩)
+      (Te b).2
+  have hL := LinearMap.mem_ker.1 hr
+  rw [Subtype.ext hre] at hL
+  simpa [L, LinearEquiv.coe_toLinearMap, LinearEquiv.symm_apply_apply] using hL
 
 end PositivityTheory.TfC.OccursIff.Span

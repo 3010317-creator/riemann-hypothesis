@@ -86,18 +86,14 @@ theorem le_mCoordIdeal {Ω : Type} [Field Ω] {P : Ideal (MRing J)} (hP : IsMult
   exact Gf.mem_mCoordIdeal hd (h g (Ideal.subset_span hg))
 
 theorem aeval_hom {A B : Type} [CommRing A] [CommRing B] (σ : A →+* B) (z : (Σ k, J k) → A) (g : MRing J) :
-    σ (aeval z g) = aeval (fun p => σ (z p)) g := by
-  induction g using MvPolynomial.induction_on with
-  | C a => simp
-  | add p q hp hq => simp [hp, hq]
-  | mul_X p q hp => simp [hp]
+    σ (aeval z g) = aeval (fun p => σ (z p)) g :=
+  RingHom.congr_fun (MvPolynomial.ringHom_ext (f := σ.comp (aeval z).toRingHom)
+    (g := (aeval fun p => σ (z p)).toRingHom) (fun _ => by simp) fun _ => by simp) g
 
 theorem hom_eq_aeval {B : Type} [CommRing B] (F : MRing J →+* B) (z : (Σ k, J k) → B) (h : ∀ p, F (X p) = z p)
-    (g : MRing J) : F g = aeval z g := by
-  induction g using MvPolynomial.induction_on with
-  | C a => simp
-  | add p q hp hq => simp [hp, hq]
-  | mul_X p q hp => simp [hp, h]
+    (g : MRing J) : F g = aeval z g :=
+  RingHom.congr_fun (MvPolynomial.ringHom_ext (f := F) (g := (aeval z).toRingHom)
+    (fun _ => by simp) fun _ => by simp [h]) g
 
 variable {K' : Type} [Fintype K'] {J' : K' → Type} [∀ k, Fintype (J' k)]
 

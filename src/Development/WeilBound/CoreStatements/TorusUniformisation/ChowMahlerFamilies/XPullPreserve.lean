@@ -28,13 +28,13 @@ variable {O : Type} [CommRing O] {Ω : Type} [Field Ω] [Algebra O Ω] {V : Type
 theorem smul_mem (R : Subalgebra O Ω) (L : AddSubgroup V) (b : Ω) (hb : b ∈ R) (v : V)
     (hv : v ∈ AddSubgroup.closure {v | ∃ a ∈ R, ∃ e ∈ L, v = a • e}) :
     b • v ∈ AddSubgroup.closure {v | ∃ a ∈ R, ∃ e ∈ L, v = a • e} := by
-  induction hv using AddSubgroup.closure_induction with
-  | mem v hv =>
-    obtain ⟨a, ha, e, he, rfl⟩ := hv
-    exact AddSubgroup.subset_closure ⟨b * a, R.mul_mem hb ha, e, he, by rw [mul_smul]⟩
-  | zero => rw [smul_zero]; exact zero_mem _
-  | add v w _ _ hv hw => rw [smul_add]; exact add_mem hv hw
-  | neg v _ hv => rw [smul_neg]; exact neg_mem hv
+  have hle : AddSubgroup.closure {v | ∃ a ∈ R, ∃ e ∈ L, v = a • e} ≤
+      (AddSubgroup.closure {v | ∃ a ∈ R, ∃ e ∈ L, v = a • e}).comap
+        (DistribSMul.toAddMonoidHom V b) :=
+    (AddSubgroup.closure_le _).2 fun x hx => by
+      rcases hx with ⟨a, ha, e, he, rfl⟩
+      exact AddSubgroup.subset_closure ⟨b * a, R.mul_mem hb ha, e, he, (mul_smul b a e).symm⟩
+  exact hle hv
 
 theorem le_closure (R : Subalgebra O Ω) (L L' : AddSubgroup V) (h : L ≤ L') :
     AddSubgroup.closure {v | ∃ a ∈ R, ∃ e ∈ L, v = a • e} ≤
@@ -72,29 +72,18 @@ theorem scaled_closure (R : Subalgebra O Ω) (L L' : AddSubgroup V) (c : Ω)
     (h : ∀ v, v ∈ L' ↔ ∃ e ∈ L, v = c • e) (v : V) :
     v ∈ AddSubgroup.closure {v | ∃ a ∈ R, ∃ e ∈ L', v = a • e} ↔
       ∃ e ∈ AddSubgroup.closure {v | ∃ a ∈ R, ∃ e ∈ L, v = a • e}, v = c • e := by
-  constructor
-  · intro hv
-    induction hv using AddSubgroup.closure_induction with
-    | mem v hv =>
-      obtain ⟨a, ha, e, he, rfl⟩ := hv
-      obtain ⟨e', he', rfl⟩ := (h e).1 he
-      exact ⟨a • e', AddSubgroup.subset_closure ⟨a, ha, e', he', rfl⟩, smul_comm _ _ _⟩
-    | zero => exact ⟨0, zero_mem _, (smul_zero _).symm⟩
-    | add v w _ _ hv hw =>
-      obtain ⟨e, he, rfl⟩ := hv
-      obtain ⟨f, hf, rfl⟩ := hw
-      exact ⟨e + f, add_mem he hf, (smul_add _ _ _).symm⟩
-    | neg v _ hv =>
-      obtain ⟨e, he, rfl⟩ := hv
-      exact ⟨-e, neg_mem he, (smul_neg _ _).symm⟩
-  · rintro ⟨e, he, rfl⟩
-    induction he using AddSubgroup.closure_induction with
-    | mem v hv =>
-      obtain ⟨a, ha, e, he, rfl⟩ := hv
-      exact AddSubgroup.subset_closure ⟨a, ha, c • e, (h _).2 ⟨e, he, rfl⟩, smul_comm _ _ _⟩
-    | zero => rw [smul_zero]; exact zero_mem _
-    | add v w _ _ hv hw => rw [smul_add]; exact add_mem hv hw
-    | neg v _ hv => rw [smul_neg]; exact neg_mem hv
+  let f : V →+ V := DistribSMul.toAddMonoidHom V c
+  have himg : {x | ∃ a ∈ R, ∃ e ∈ L', x = a • e} =
+      f '' {x | ∃ a ∈ R, ∃ e ∈ L, x = a • e} := by
+    ext x
+    refine ⟨?_, ?_⟩
+    · rintro ⟨a, ha, e', he', rfl⟩
+      obtain ⟨e, he, rfl⟩ := (h e').1 he'
+      exact ⟨a • e, ⟨a, ha, e, he, rfl⟩, smul_comm c a e⟩
+    · rintro ⟨_, ⟨a, ha, e, he, rfl⟩, rfl⟩
+      exact ⟨a, ha, c • e, (h _).2 ⟨e, he, rfl⟩, smul_comm c a e⟩
+  rw [himg, ← AddMonoidHom.map_closure, AddSubgroup.mem_map]
+  exact exists_congr fun _ => and_congr_right fun _ => eq_comm
 
 end PositivityTheory.Xgn.A_pull_preserve
 

@@ -116,14 +116,8 @@ theorem GlobalTheory.CompanionTheory.SDPadic.exists_selfDual : ∀ (V : Type) [A
       · simp [hf, hx, (L n).add_mem hx hm]
       · have : x + m ∉ L n := fun h => hx (by simpa using (L n).sub_mem h hm)
         simp [hf, hx, this]
-    have hfl : IsLocallyConstant f := by
-      rw [IsLocallyConstant.iff_eventually_eq]
-      intro x
-      have : (fun y => y - x) ⁻¹' (L n : Set V) ∈ 𝓝 x :=
-        ((hLD n).1.preimage (by fun_prop)).mem_nhds (by simp)
-      filter_upwards [this] with y hy
-      have := hfi x _ hy
-      simpa using this
+    have hfl : IsLocallyConstant f :=
+      ((LocallyConstant.const V (1 : ℂ)).indicator hcl).isLocallyConstant
     have e1 := GlobalTheory.JR.AbsInv.fourB_fourB μ χ hB hs ha (L n) (D n) (hLD n).1 (hLD n).2.2.1 (hLD n).2.2.2
       (hD n) (hL n) f hfc hfs hfi 0
     rw [hinv f ⟨hfl, hfs⟩ 0] at e1

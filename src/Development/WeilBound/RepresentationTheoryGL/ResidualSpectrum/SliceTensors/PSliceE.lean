@@ -239,37 +239,25 @@ theorem E_lift {X Y : Type*} (L : ℝ → (X → ℂ) →ₗ[ℂ] (X → ℂ)) (
   have hf₀ : f₀ ∈ W := by
     have h0 : L 0 f₀ ∈ W := Submodule.subset_span ⟨0, rfl⟩
     rwa [hL0] at h0
-  have hW : ∀ t, ∀ w ∈ W, L t w ∈ W := by
-    intro t w hw
-    induction hw using Submodule.span_induction with
-    | mem x hx =>
-      obtain ⟨u, rfl⟩ := hx
-      rw [hLL]
-      exact Submodule.subset_span ⟨u + t, rfl⟩
-    | zero => rw [map_zero]; exact W.zero_mem
-    | add x y _ _ hx hy => rw [map_add (f := _)]; exact W.add_mem hx hy
-    | smul a x _ hx => rw [map_smul]; exact W.smul_mem a hx
+  have hW (t : ℝ) : ∀ w ∈ W, L t w ∈ W := (Submodule.span_le (p := W.comap (L t))).2 <| by
+    rintro _ ⟨u, rfl⟩
+    change L t (L u f₀) ∈ W
+    rw [hLL]
+    exact Submodule.subset_span ⟨u + t, rfl⟩
   have hL : ∀ s t, ∀ w ∈ W, L s (L t w) = L t (L s w) := fun s t w _ => by rw [hLL, hLL, add_comm]
-  have hB0 : B 0 = 0 := by
-    have := hsmul 0 0 W.zero_mem
-    rwa [zero_smul, zero_smul] at this
-  have key : ∀ x ∈ Submodule.span ℂ (Set.range fun t => L' t (B f₀)), ∃ w ∈ W, B w = x := by
-    intro x hx
-    induction hx using Submodule.span_induction with
-    | mem x hx =>
-      obtain ⟨t, rfl⟩ := hx
-      refine ⟨Complex.exp (-(d * t)) • L t f₀, W.smul_mem _ (Submodule.subset_span ⟨t, rfl⟩), ?_⟩
-      rw [hsmul _ _ (Submodule.subset_span ⟨t, rfl⟩), hB t f₀ hf₀, smul_smul, ← Complex.exp_add, neg_add_cancel,
-        Complex.exp_zero, one_smul]
-    | zero => exact ⟨0, W.zero_mem, hB0⟩
-    | add x y _ _ hx hy =>
-      obtain ⟨v, hv, rfl⟩ := hx
-      obtain ⟨w, hw, rfl⟩ := hy
-      exact ⟨v + w, W.add_mem hv hw, hadd v hv w hw⟩
-    | smul a x _ hx =>
-      obtain ⟨v, hv, rfl⟩ := hx
-      exact ⟨a • v, W.smul_mem a hv, hsmul a v hv⟩
-  obtain ⟨w₀, hw₀, hBw₀⟩ := key F' hF'
+  let Bₗ : W →ₗ[ℂ] (Y → ℂ) :=
+    { toFun := fun w => B w
+      map_add' := fun u v => hadd u u.2 v v.2
+      map_smul' := fun a w => hsmul a w w.2 }
+  obtain ⟨⟨w₀, hw₀⟩, hBw₀⟩ := (Submodule.span_le (p := LinearMap.range Bₗ)).2
+    (by
+      rintro _ ⟨t, rfl⟩
+      refine ⟨⟨Complex.exp (-(d * t)) • L t f₀, W.smul_mem _ (Submodule.subset_span ⟨t, rfl⟩)⟩, ?_⟩
+      change B _ = _
+      rw [hsmul _ _ (Submodule.subset_span ⟨t, rfl⟩), hB t f₀ hf₀, smul_smul, ← Complex.exp_add,
+        neg_add_cancel, Complex.exp_zero, one_smul])
+    hF'
+  change B w₀ = F' at hBw₀
   exact eig_lift W L hL hW L' B hadd hsmul c d hB w₀ hw₀ (hBw₀ ▸ hne) (hBw₀ ▸ heig)
 
 variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E]
