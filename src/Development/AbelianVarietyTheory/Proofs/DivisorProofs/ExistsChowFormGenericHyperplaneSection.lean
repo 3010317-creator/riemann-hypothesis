@@ -67,7 +67,6 @@ def lastSubst {A : Type} [CommRing A] {N : ℕ} (D : ℕ) (t : Fin N → A) :
   fun v => Fin.lastCases (motive := fun _ => MvPolynomial (Fin D × Fin N) A)
     (C (t v.2)) (fun i => X (i, v.2)) v.1
 
-set_option autoImplicit false in
 open MvPolynomial Filter in
 open scoped ENNReal in
 attribute [local instance] MvPolynomial.gradedAlgebra MvPolynomial.algebraMvPolynomial in
@@ -75,7 +74,6 @@ attribute [local instance] MvPolynomial.gradedAlgebra MvPolynomial.algebraMvPoly
     (t : Fin N → A) (j : Fin N) : _root_.GlobalTheory.ChowSpec.lastSubst D t (Fin.last D, j) = C (t j) := by
   simp [_root_.GlobalTheory.ChowSpec.lastSubst]
 
-set_option autoImplicit false in
 open MvPolynomial Filter in
 open scoped ENNReal in
 attribute [local instance] MvPolynomial.gradedAlgebra MvPolynomial.algebraMvPolynomial in
@@ -98,7 +96,6 @@ def lastEquiv (K : Type) [CommRing K] (N D : ℕ) :
       rintro ⟨i, j⟩
       refine Fin.lastCases ?_ (fun i => ?_) i <;> simp)
 
-set_option autoImplicit false in
 open MvPolynomial Filter in
 open scoped ENNReal in
 attribute [local instance] MvPolynomial.gradedAlgebra MvPolynomial.algebraMvPolynomial in
@@ -122,7 +119,6 @@ private theorem isWeightedHomogeneous_aeval_of_forall {R S σ τ Γ Δ : Type} [
     (IsWeightedHomogeneous.prod _ _ _ fun v _ => (hφ v).pow _)
 
 
-set_option autoImplicit false in
 open MvPolynomial Filter in
 open scoped ENNReal in
 attribute [local instance] MvPolynomial.gradedAlgebra MvPolynomial.algebraMvPolynomial in

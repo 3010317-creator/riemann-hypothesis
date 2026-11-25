@@ -93,7 +93,6 @@ def pushLet {n : ℕ} (γ : Matrix (Fin n) (Fin n) E) :
     MvPolynomial (LtN Dw n) c.F →ₐ[c.F] MvPolynomial (LtN Dw n) c.F :=
   aeval fun ℓ : LtN Dw n => letB c ℓ.1 ℓ.2.1 fun k => γ k ℓ.2.2
 
-set_option autoImplicit false in
 open NumberField MvPolynomial in
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Datum H}
   {l : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H} in

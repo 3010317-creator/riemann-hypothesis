@@ -204,7 +204,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ GlobalTheory.PtTie IsDedekindDomain
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.PlaceInt
-set_option autoImplicit false
 noncomputable section
 
 namespace GlobalTheory.SupFull
@@ -366,7 +365,6 @@ open MonoidalCategory CartesianMonoidalCategory MonObj IsLocalRing Limits
 open ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out Formalism.MainNotions.ModuliIntegralCharts.H1 ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ GlobalTheory.PtTie
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.PlaceInt GlobalTheory.PlaceInt.ShortTriv GlobalTheory.IntCuspLat GlobalTheory.ShortBound
-set_option autoImplicit false
 
 noncomputable section
 
@@ -586,7 +584,6 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ GlobalTheory.PtTie IsDede
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.PlaceInt
 
-set_option autoImplicit false
 noncomputable section
 
 namespace GlobalTheory.LatticeIndex
@@ -686,8 +683,6 @@ open GlobalTheory.BadCount
 open scoped TensorProduct
 open GlobalTheory.CovInt IsDedekindDomain
 
-set_option autoImplicit false
-
 attribute [local instance] CategoryTheory.Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.RawSpan
@@ -756,8 +751,6 @@ open GlobalTheory.BadCount
 open scoped TensorProduct
 open GlobalTheory.CovInt IsDedekindDomain
 open scoped GlobalTheory.CompHt
-
-set_option autoImplicit false
 
 noncomputable section
 
@@ -944,7 +937,6 @@ open MonoidalCategory CartesianMonoidalCategory MonObj IsLocalRing Limits
 open ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out Formalism.MainNotions.ModuliIntegralCharts.H1 ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ GlobalTheory.PtTie
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.PlaceInt GlobalTheory.PlaceInt.ShortTriv GlobalTheory.IntCuspLat GlobalTheory.ShortBound
-set_option autoImplicit false
 
 noncomputable section
 
@@ -1119,7 +1111,6 @@ open GlobalTheory.BadCount
 open scoped TensorProduct
 open GlobalTheory.CovInt IsDedekindDomain
 
-set_option autoImplicit false
 set_option synthInstance.maxHeartbeats 400000
 
 noncomputable section
@@ -1385,7 +1376,6 @@ open GlobalTheory.BadCount
 open scoped TensorProduct
 open GlobalTheory.CovInt IsDedekindDomain
 
-set_option autoImplicit false
 set_option synthInstance.maxHeartbeats 400000
 
 noncomputable section

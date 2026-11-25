@@ -170,7 +170,6 @@ namespace GlobalTheory.HeightOneCompletion
 open IsLocalRing
 
 
-set_option autoImplicit false in
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry in
 open NumberField IsDedekindDomain in
 open scoped CategoryTheory.Obj CategoryTheory.MonObj TensorProduct NNReal in
