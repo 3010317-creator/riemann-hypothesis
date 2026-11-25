@@ -703,11 +703,11 @@ theorem liftF_descends : ∀ (l : ℕ) [Fact l.Prime] {G : Type} [Group G] [Topo
     refine Submodule.sum_mem _ fun i _ => ?_
     have := T.L.T.smul_mem (⟨r (x i), hint _ (hx i)⟩ : ↥(OL LL)) (hb.1 i)
     rwa [← algebraMap_smul ↥LL.1] at this
-  refine liftF_of_retract PD F (extHom hL hb₁ hb₂ F) (emb (incl hL) b₂) (ret r b₁) (ret r b₂)
-    (fun g x => emb_map (incl hL) b₂ b₂ (T₂.ρ g) x) ?_ ?_
-    (fun g x => ret_map (incl hL) r hr b₁ b₁ (T₁.ρ g) x) ?_ (retT hb₁)
-    (fun g x => ret_map (incl hL) r hr b₂ b₂ (T₂.ρ g) x) (retT hb₂)
-    (ret_emb (incl hL) r hr h1 b₂) (fun x => ret_map (incl hL) r hr b₁ b₂ F.f x) e h
+  refine liftF_of_retract PD F (extHom hL hb₁ hb₂ F) (emb (incl hL : ↥LL.1 →ₐ[ℚ_[l]] ↥LL'.1) b₂) (ret r b₁) (ret r b₂)
+    (fun g x => emb_map (incl hL : ↥LL.1 →ₐ[ℚ_[l]] ↥LL'.1) b₂ b₂ (T₂.ρ g) x) ?_ ?_
+    (fun g x => ret_map (incl hL : ↥LL.1 →ₐ[ℚ_[l]] ↥LL'.1) r hr b₁ b₁ (T₁.ρ g) x) ?_ (retT hb₁)
+    (fun g x => ret_map (incl hL : ↥LL.1 →ₐ[ℚ_[l]] ↥LL'.1) r hr b₂ b₂ (T₂.ρ g) x) (retT hb₂)
+    (ret_emb (incl hL : ↥LL.1 →ₐ[ℚ_[l]] ↥LL'.1) r hr h1 b₂) (fun x => ret_map (incl hL : ↥LL.1 →ₐ[ℚ_[l]] ↥LL'.1) r hr b₁ b₂ F.f x) e h
   · exact continuous_pi fun i => hincl.comp (IsModuleTopology.continuous_of_linearMap (b₂.coord i))
   · intro x hx i
     exact incl_integral hL (hb₂.2 x hx i)
