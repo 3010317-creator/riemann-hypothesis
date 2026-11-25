@@ -25,10 +25,8 @@ theorem valued_natCast_eq_one {R K : Type} [CommRing R] [IsDedekindDomain R] [Fi
 
 theorem natCast_ne_zero_of {R K : Type} [CommRing R] [IsDedekindDomain R] [Field K] [Algebra R K]
     [IsFractionRing R K] {v : HeightOneSpectrum R} {N : ℕ} (hN : (N : R) ∉ v.asIdeal) :
-    (N : v.adicCompletion K) ≠ 0 := fun h => by
-  have := valued_natCast_eq_one (K := K) hN
-  rw [h, map_zero] at this
-  exact zero_ne_one this
+    (N : v.adicCompletion K) ≠ 0 :=
+  ne_zero_of_map (f := Valued.v) ((valued_natCast_eq_one (K := K) hN).symm ▸ one_ne_zero)
 
 theorem inv_natCast_mem {R K : Type} [CommRing R] [IsDedekindDomain R] [Field K] [Algebra R K]
     [IsFractionRing R K] {v : HeightOneSpectrum R} {N : ℕ} (hN : (N : R) ∉ v.asIdeal) :
