@@ -101,21 +101,14 @@ theorem isPosDef_toReal_of_pos {X : Type} [AddCommGroup X] [Module.Free ℤ X] [
       exact (mul_nonneg_iff_of_pos_left (mul_self_pos.mpr hd1)).mp h3
   have hdef : ∀ c : Module.Free.ChooseBasisIndex ℤ X → ℝ, c ≠ 0 → 0 < c ⬝ᵥ (G *ᵥ c) := by
     intro c hc
-    have h0 := hpsd.dotProduct_mulVec_nonneg c
-    rw [star_trivial] at h0
-    refine h0.lt_of_ne fun h1 => ?_
-    have h2 : G *ᵥ c = 0 := by
-      have := (hpsd.dotProduct_mulVec_zero_iff (x := c)).1
-      rw [star_trivial] at this
-      exact this h1.symm
-    have h3 : G.det = 0 := Matrix.exists_mulVec_eq_zero_iff.1 ⟨c, hc, h2⟩
-    have h4 : GZ.det = 0 := by
-      have : ((GZ.det : ℤ) : ℝ) = G.det := (Int.castRingHom ℝ).map_det GZ
-      exact_mod_cast this.trans h3
-    obtain ⟨v, hv, hv0⟩ := Matrix.exists_mulVec_eq_zero_iff.2 h4
-    have := hp _ (hx v hv)
-    rw [hval, hv0, dotProduct_zero] at this
-    exact lt_irrefl _ this
+    have h4 : GZ.det ≠ 0 := fun h4 => by
+      obtain ⟨v, hv, hv0⟩ := Matrix.exists_mulVec_eq_zero_iff.2 h4
+      have := hp _ (hx v hv)
+      rw [hval, hv0, dotProduct_zero] at this
+      exact lt_irrefl _ this
+    have e : ((GZ.det : ℤ) : ℝ) = G.det := (Int.castRingHom ℝ).map_det GZ
+    have h3 : G.det ≠ 0 := by rw [← e]; exact_mod_cast h4
+    simpa only [star_trivial] using (hpsd.posDef_iff_det_ne_zero.2 h3).dotProduct_mulVec_pos hc
   refine (isPosDef_iff_basis b _).2 fun c hc => (hdef c hc).trans_eq ?_
   have hGij : ∀ i j, G i j = ((β (b i) (b j) : ℤ) : ℝ) := fun _ _ => rfl
   simp only [dotProduct, mulVec, hGij, toReal_apply, Finset.mul_sum]
