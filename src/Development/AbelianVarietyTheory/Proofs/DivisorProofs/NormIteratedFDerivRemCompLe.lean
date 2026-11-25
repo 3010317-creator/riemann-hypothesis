@@ -294,17 +294,16 @@ end GlobalTheory.CharFormDeriv
 
 namespace GlobalTheory.CharFormDeriv
 
-theorem charForm_kills_linear_mul : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V]
-    [FiniteDimensional ℝ V] (T : SchwartzMap V ℂ →L[ℂ] ℂ),
-    (∀ (L : V →L[ℝ] ℝ) (f f' : SchwartzMap V ℂ),
-      (∀ x, f' x = Complex.exp (Complex.I * (L x : ℂ)) * f x) → T f' = T f) →
-    ∀ (L : V →L[ℝ] ℝ) (f g : SchwartzMap V ℂ), (∀ x, g x = (L x : ℂ) * f x) → T g = 0 := by
-  intro V _ _ _ T hT L f g hg
+theorem charForm_kills_linear_mul {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
+    (T : SchwartzMap V ℂ →L[ℂ] ℂ) (L : V →L[ℝ] ℝ)
+    (hT : ∀ (t : ℝ) (f f' : SchwartzMap V ℂ), (∀ x, f' x = Complex.exp (Complex.I * ((t • L) x : ℂ)) * f x) →
+      T f' = T f)
+    (f g : SchwartzMap V ℂ) (hg : ∀ x, g x = (L x : ℂ) * f x) : T g = 0 := by
   let ft : ℝ → SchwartzMap V ℂ := fun t =>
     SchwartzMap.smulLeftCLM ℂ (fun x : V => Complex.exp ((I * t) * (L x : ℂ))) f
   have hft : ∀ t x, ft t x = Complex.exp ((I * t) * (L x : ℂ)) * f x := fun t x => by
     simp only [ft, SchwartzMap.smulLeftCLM_apply_apply (hasTemperateGrowth_char L t), smul_eq_mul]
-  have hTft : ∀ t : ℝ, T (ft t) = T f := fun t => hT (t • L) f (ft t) (fun x => by
+  have hTft : ∀ t : ℝ, T (ft t) = T f := fun t => hT t f (ft t) (fun x => by
     rw [hft, ContinuousLinearMap.smul_apply, smul_eq_mul, Complex.ofReal_mul, mul_assoc])
   let u : ℝ → SchwartzMap V ℂ := fun t => (t : ℂ)⁻¹ • (ft t - f) - I • g
   have hu : ∀ t : ℝ, ∀ x, u t x = rem t (L x) * f x := fun t x => by
