@@ -271,7 +271,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 open ReciprocityTheory.ChartRestriction.G.TB (dLin transF IsInvPair dAct)
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.ChartCmp
 
 end -- clump:auto
@@ -480,7 +479,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 open ReciprocityTheory.ChartRestriction.G.TB (dLin transF IsInvPair dAct)
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.ChartCmp
 
 end -- clump:auto
@@ -738,7 +736,7 @@ theorem comb_eq (hx : IsChartG t (𝟙 (Sp V)) d G.F act tg uv x) {u : Fin d →
     funext q
     rw [Finset.sum_apply]
     simp only [Pi.smul_apply, smul_eq_mul, hq, mul_ite, _root_.mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-      if_true]
+      ite_true]
   rw [← hs, tanPt_sum hx, ← hprod, hw']
 
 theorem tanPt_rel {x x' : ∀ m, jOG (𝟙 (Sp V)) d m 1 ⟶ t.G} {φ : Pt V 1 d}
@@ -1383,7 +1381,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 open ReciprocityTheory.ChartRestriction.G.TB (dLin transF IsInvPair dAct)
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.ChartCmp
 
 end -- clump:auto
