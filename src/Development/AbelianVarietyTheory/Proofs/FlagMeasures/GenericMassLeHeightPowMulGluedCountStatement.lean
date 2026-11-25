@@ -560,11 +560,6 @@ theorem locP_gmap (n : V ≃ₗ[K] V) (p : Ideal (𝓞 K)) [p.IsPrime] (L : Subm
   show (∃ s ∈ p.primeCompl, s • x ∈ Formalism.HermitianLatticesTheory.gmap n L) ↔ ∃ s ∈ p.primeCompl, s • n.symm x ∈ L
   simp only [_root_.Formalism.HermitianLattices.Ext.L3.RankOne.mem_gmap, linearEquiv_map_smul_ringOfIntegers]
 
-theorem mem_dual (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (𝓞 K) V) (x : V) :
-    x ∈ Formalism.HermitianLatticesTheory.dual h L ↔ ∀ y ∈ L, h y x ∈ (1 : Submodule (𝓞 K) K) := by
-  simp only [Formalism.HermitianLatticesTheory.dual, Formalism.E.hdual, Submodule.mem_iInf, Submodule.mem_comap,
-    LinearMap.coe_restrictScalars]
-
 theorem dual_gmap (h : V →ₗ⋆[K] V →ₗ[K] K) (n : V ≃ₗ[K] V) (hn : n ∈ Formalism.HermitianLatticesTheory.isom h)
     (L : Submodule (𝓞 K) V) :
     Formalism.HermitianLatticesTheory.dual h (Formalism.HermitianLatticesTheory.gmap n L) = Formalism.HermitianLatticesTheory.gmap n (Formalism.HermitianLatticesTheory.dual h L) := by

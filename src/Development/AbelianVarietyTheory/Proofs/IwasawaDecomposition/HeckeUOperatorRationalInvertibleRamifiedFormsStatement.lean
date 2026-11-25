@@ -346,14 +346,6 @@ theorem rel_inj (hs : Function.Surjective res) (ht : res t = 0) (htf : ∀ x : V
     · exact (A y hy).2.symm
     · rw [ho.off y hy, ho'.off y (fun h => hy (B y h).1)]
 
-theorem rel_ne (ht : res t = 0) (htf : ∀ x : V, t • x = 0 → x = 0)
-    (hsat : ∀ s x, res s ≠ 0 → s • x ∈ Λ → x ∈ Λ) (hr : Red res t Λ π) (q : Pr R V k) :
-    ¬ Rel res t Λ π q 0 := by
-  rintro ⟨ho, hk, e, he, h⟩
-  have := ((hk _).1 (mem_of_pi htf hsat hr (te_mem ht ho hk (mem_of_one ho he)) h)).2
-  rw [he] at this
-  exact one_ne_zero this
-
 theorem rel_ex (hs : Function.Surjective res) {q : Pr R V k} (ho : q.Ok res) (hk : q.IsKer Λ) :
     ∃ w, Rel res t Λ π q w := by
   obtain ⟨x, hx⟩ := ho.ne
