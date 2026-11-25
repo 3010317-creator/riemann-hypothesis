@@ -11,7 +11,6 @@ import Mathlib.Tactic.Linter.Style
 
 noncomputable section
 
-attribute [-instance] CStarMatrix.instHMulOfFintypeOfMulOfAddCommMonoid
 
 namespace PositivityTheory.ThKF0.Chr
 
