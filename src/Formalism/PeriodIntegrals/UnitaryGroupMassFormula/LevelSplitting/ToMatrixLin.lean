@@ -130,13 +130,31 @@ private theorem spanR_of_last_not_mem (s : Set (Fin (r + 1))) (hs : Fin.last r �
 
 private theorem mapX_lin_of_mem_Ssub {g : HA R σ J} (hg : g ∈ Ssub R σ J P) :
     (datR R σ J P T).MapX (lin R σ J g) := by
-  intros
-  apply _root_.PI.LevelKSplit.W.SemiA.mapX_S <;> assumption
+  intro a
+  have key := (show UniC R σ J (F0 P) g from hg) (Fin.castSucc a)
+  have hle := spanR_of_last_not_mem (R := R) (σ := σ) (J := J) (P := P) (T := T) hσσ hJ hP {b | b < Fin.castSucc a}
+    (fun h => lt_asymm h (Fin.castSucc_lt_last a))
+  have h2 := Submodule.add_mem _ (hle key)
+    (Submodule.subset_span (⟨a, rfl⟩ : (datR R σ J P T).e a ∈ Set.range (datR R σ J P T).e))
+  have hF : ratV (F := F) R (F0 P (Fin.castSucc a)) = (datR R σ J P T).e a := by
+    simp [F0, datR]
+  rw [hF, sub_add_cancel] at h2
+  exact h2
 
 private theorem mapW_lin_of_mem_Ssub {g : HA R σ J} (hg : g ∈ Ssub R σ J P) :
     (datR R σ J P T).MapW (lin R σ J g) := by
-  intros
-  apply _root_.PI.LevelKSplit.W.SemiA.mapW_S <;> assumption
+  have hgi : g⁻¹ ∈ Ssub R σ J P := (Ssub R σ J P).inv_mem hg
+  refine SemiG.Dat.mapW_of_inv (D := datR R σ J P T) (Si := lin R σ J g⁻¹)
+    (fun v => by rw [lin_lin_inv]) (fun x y => by
+      show hR R σ J (lin R σ J g x) (lin R σ J g y) = hR R σ J x y
+      rw [hR_lin]) (mapX_lin_of_mem_Ssub hσσ hJ hP hgi) ?_
+  have key := (show UniC R σ J (F0 P) g⁻¹ from hgi) (Fin.last r)
+  have hle := spanR_of_last_not_mem (R := R) (σ := σ) (J := J) (P := P) (T := T) hσσ hJ hP {b | b < Fin.last r}
+    (fun h => lt_irrefl (Fin.last r) h)
+  have hF : ratV (F := F) R (F0 P (Fin.last r)) = (datR R σ J P T).z := by
+    simp [F0, datR]
+  rw [hF] at key
+  exact hle key
 
 theorem Pi_lin_mul {g g' : HA R σ J} (hg : g ∈ Ssub R σ J P) (hg' : g' ∈ Ssub R σ J P) :
     (datR R σ J P T).Pi (lin R σ J (g * g')) =

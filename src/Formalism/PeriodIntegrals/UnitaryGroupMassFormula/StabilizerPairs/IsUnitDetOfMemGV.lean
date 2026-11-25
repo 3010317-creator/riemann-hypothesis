@@ -152,7 +152,17 @@ theorem herm_e (v : Fin (2 * r + k + 1) → ℂ) (a : Fin r) :
 
 theorem herm_es (v : Fin (2 * r + k + 1) → ℂ) (a : Fin r) :
     herm (Hpk k r) v (bvec (esI k r a)) = v (eI k r a) := by
-  apply _root_.Formalism.FourierDecayAlt.P.Qx7.herm_es_right <;> assumption
+  have ha := a.isLt
+  rw [herm_bvec, hpk_mulVec]
+  have h1 : ¬ (esI k r a).val = r + k := by simp [esI]; omega
+  rw [if_neg h1, one_mul]
+  have h2 : sgI k r (2 * r + k - a.val) = a.val := by
+    unfold sgI
+    rw [if_pos (Or.inr (by omega))]
+    omega
+  congr 1
+  ext
+  simp [esI, eI, h2]
 
 theorem herm_sum_left (v : Fin (r + 1) → Fin (2 * r + k + 1) → ℂ) (c : Fin (r + 1) → ℂ)
     (w : Fin (2 * r + k + 1) → ℂ) :
