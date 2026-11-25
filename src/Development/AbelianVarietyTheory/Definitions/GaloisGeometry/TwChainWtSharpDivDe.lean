@@ -202,11 +202,6 @@ def levPt : ∀ (i : ℕ) (β : (levFam W sel mu cst L u m2 b hY Λ Θ i).β),
   | _, .cpl rfl => fun p => p.1.1
   | _, .top rfl => fun p => p
 
-def levG : ∀ (i : ℕ) (_ : (levFam W sel mu cst L u m2 b hY Λ Θ i).β), LevFam X.E X.K (R.N i) Pr.vGs
-  | i, .mat al _ => L.levG i al
-  | _, .cpl rfl => L.levG (m2 + 1) b
-  | _, .top rfl => Λ
-
 def levQ : ∀ (i : ℕ) (_ : (levFam W sel mu cst L u m2 b hY Λ Θ i).β), LevQFam X.E X.K (R.N i) (QE sel (mu : Chr X.F X.E X.K))
   | i, .mat al _ => L.levQ i al
   | _, .cpl rfl => L.levQ (m2 + 1) b
@@ -272,18 +267,6 @@ def TwEquiv : Prop :=
     TopEquiv W Ch sel mu cst L (chTh W Ch sel mu cst A u m2) b hY P c
 
 variable {W Ch sel mu cst L A u m2 b hY P c}
-
-def twistedKernelPointCoset (h : TwEquiv W Ch sel mu cst L A u m2 b hY P c) (al : L.β m2) :
-    ClsKer ((chF W sel mu L u m2).mem al) (cplMem W sel mu cst L u m2 b hY).gsd :=
-  cplKer1 (topCpl h.2.1 h.2.2 al)
-
-def twistedKernelCosetPoint (h : TwEquiv W Ch sel mu cst L A u m2 b hY P c) :
-    ClsKer (cplMem W sel mu cst L u m2 b hY).gsd (frmMem W sel mu L u (topLevG Ch P) (topLevQ R sel mu c.pos)).gsd where
-  k d p' := topDegreeKTwo W Ch sel mu cst (chTh W Ch sel mu cst A u m2) d.1.1 d.1.2 p'
-  equiv g g₁ d p' := h.2.2 g g₁ d.1.1 d.1.2 p'
-
-def twKer (h : TwEquiv W Ch sel mu cst L A u m2 b hY P c) : KerFam (twFam W Ch sel mu cst L u m2 b hY P c) :=
-  spKer (matFam h.1) (twistedKernelPointCoset h) (twistedKernelCosetPoint h)
 
 section Laws
 
