@@ -1200,9 +1200,6 @@ theorem toralGal_of_holds : UpperTheory.Gal.ToralGalois.Inq → SphericalLevelCo
 
 end GlobalTheory.RoadU
 
-section
-
-end
 end GalTw -- clump:auto
 end -- clump:auto
 end -- clump:auto

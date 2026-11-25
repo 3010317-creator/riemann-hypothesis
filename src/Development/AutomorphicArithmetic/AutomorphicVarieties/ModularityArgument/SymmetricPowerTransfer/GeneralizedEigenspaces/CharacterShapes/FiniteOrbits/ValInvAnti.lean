@@ -71,12 +71,6 @@ open UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc UpperTheory.V.Z.Sym.Glob UpperT
 
 namespace UpperTheory.V.Z.Sym.So.CS
 
-section One
-
-variable {G : Type} [CommGroup G]
-
-end One
-
 section Main
 
 variable {I : Type}
@@ -111,12 +105,6 @@ end X
 end D
 
 end Main
-
-section Ord
-
-variable (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-
-end Ord
 
 end UpperTheory.V.Z.Sym.So.CS
 

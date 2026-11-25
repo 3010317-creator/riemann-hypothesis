@@ -340,15 +340,6 @@ def HidaSetting : Prop :=
 
 end HidaSetting
 
-section Enlarge
-
-variable (N : NData R H what₂) (i : N.Loc) (N₁ : NData R H what₂) (i₁ : N₁.Loc)
-  (σ : N.Om ≃ₐ[H.E] N₁.Om) (φ : N.O i →+* N₁.O i₁) (β : N.X i ≃ N₁.X i₁)
-
-variable {N i N₁ i₁}
-
-end Enlarge
-
 end GlobalTheory.IndefiniteRowSideFullHecke.CharPolyRootsConstruction
 
 end
@@ -542,24 +533,6 @@ theorem sameSS_of_charpoly_eq (hBN : GlobalTheory.ConstituentsCompare.BrauerNesb
   exact (hf.trans (SameFactors.of_equiv hf.finiteLength_right e')).trans hf'.symm
 
 end Factors
-
-section Distinct
-open Matrix
-
-end Distinct
-
-section BaseChange
-open GlobalTheory.IndefiniteRowSideFullHecke.CongruenceModuleMatrices GlobalTheory.SpanRing
-
-variable {Γ X A B : Type} [Group Γ] [CommRing A] [CommRing B] {n r t : ℕ}
-
-variable [Algebra A B]
-
-variable [IsDomain A] [IsDomain B]
-
-variable [IsLocalRing A] [IsLocalRing B]
-
-end BaseChange
 
 end GlobalTheory.ConsCompare
 end

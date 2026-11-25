@@ -282,16 +282,6 @@ open scoped TensorProduct ComplexConjugate
 
 namespace GlobalTheory.FrameEquiv.GenMove
 
-section Classical
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E]
-
-variable {H : Geo.Tor.Host E} {Dw : Datum H} {l : Geo.Tor.Level H} {Xo : Moduli Dw l} {c : Coeff l} [Algebra c.F ℂ]
-  {r g : ℕ}
-
-
-end Classical
-
 section Adelic
 
 open GlobalTheory.IndefiniteRowSideFullHecke.ColumnDataLaws

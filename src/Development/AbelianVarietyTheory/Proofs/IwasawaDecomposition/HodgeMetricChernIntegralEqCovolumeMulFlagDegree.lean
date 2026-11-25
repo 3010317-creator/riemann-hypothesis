@@ -247,12 +247,6 @@ namespace GlobalTheory.PoincareLower
 
 open Topology Filter
 
-section General
-
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
-
-end General
-
 variable {ι : Type} [Fintype ι] {p q : ℕ}
 
 theorem isOpen_domFlat : IsOpen (DomFlat ι p q) := by

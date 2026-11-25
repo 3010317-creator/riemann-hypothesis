@@ -1039,12 +1039,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 noncomputable section
 namespace GlobalTheory.SysFin
 open GlobalTheory.CoefDuty
-section Places
-variable {R : Ranks} {H : Host R}
-end Places
-section Eig
-variable {D : D7}
-end Eig
 
 
 open Classical in

@@ -1684,15 +1684,6 @@ namespace GlobalTheory.CompanionTheory.StokesCompare
 open MvPolynomial ReciprocityTheory.ChartRestriction.G.Geo Filter Topology MeasureTheory
 open GroundTheory.Heights₂.Heights.LowerBoundFree
 
-section Clauses
-
-variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
-  {II : IntersectionSystem} {Ψ : Type} [Fintype Ψ] {Ω : Type} [Field Ω] [Algebra ℚ Ω]
-  {E : Ψ → Type} [∀ τ, AddCommGroup (E τ)] [∀ τ, Module Ω (E τ)]
-  {D : ComponentData II Ψ K ι Ω E} {O Lt : Type} [CommRing O] [AddCommGroup Lt] [Module O Lt]
-
-end Clauses
-
 section Mass
 
 open ReciprocityTheory.AnForm ReciprocityTheory.AnForm.M GlobalTheory.CompanionTheory.Ar.Giv.MuLimit

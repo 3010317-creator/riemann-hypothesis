@@ -231,13 +231,6 @@ def bd (n : ℕ) {a b : ℕ} (u : Mt g a) (v : Mt g b) : Mt g n := fun i j =>
 def Good (b : ℕ) {n : ℕ} (M : Mt g n) : Prop :=
   IsUniUp M ∧ ∀ i j : ℕ, i < b → b ≤ j → j < n → entN M i j = 0
 
-section
-variable {a b : ℕ} {σ : Equiv.Perm (Fin (a + b))}
-  (hσ : ∀ j : Fin (a + b), (σ j : ℕ) = if (j : ℕ) < a then b + j else j - a)
-include hσ
-
-end
-
 open Polynomial in
 open scoped Classical in
 variable {g : ℕ} [Fact g.Prime] in

@@ -749,12 +749,6 @@ theorem posDef_iff_norm_lt_one (Z : Matrix m n ℂ) : (1 - Zᴴ * Z).PosDef ↔ 
 
 end general
 
-section hermitian
-
-variable {n : Type*} [Fintype n] [DecidableEq n]
-
-end hermitian
-
 section boost
 
 variable {p q : Type*} [Fintype p] [Fintype q] [DecidableEq p] [DecidableEq q]
@@ -765,12 +759,6 @@ def invSqrt {n : Type*} [Fintype n] [DecidableEq n] (M : Matrix n n ℂ) : Matri
 def boost (Z : Matrix p q ℂ) : Matrix (p ⊕ q) (p ⊕ q) ℂ :=
   fromBlocks (invSqrt (1 - Z * Zᴴ)) (Z * invSqrt (1 - Zᴴ * Z))
     (Zᴴ * invSqrt (1 - Z * Zᴴ)) (invSqrt (1 - Zᴴ * Z))
-
-section invSqrt
-
-variable {n : Type*} [Fintype n] [DecidableEq n] {M : Matrix n n ℂ}
-
-end invSqrt
 
 variable {Z : Matrix p q ℂ}
 

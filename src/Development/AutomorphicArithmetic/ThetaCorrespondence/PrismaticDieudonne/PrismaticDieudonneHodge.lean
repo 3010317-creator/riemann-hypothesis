@@ -1706,14 +1706,6 @@ theorem isPrimitiveSystem_of_one {ε : PreTilt O p} (h : IsPrimitiveRoot (zeta �
 
 end Eps
 
-section Mu
-
-variable {O A : Type} [CommRing O] [CommRing A] [Bialgebra O A]
-
-variable {p : ℕ} [Fact p.Prime]
-
-end Mu
-
 end GlobalTheory.PrismModel
 end -- clump:auto
 end -- clump:auto

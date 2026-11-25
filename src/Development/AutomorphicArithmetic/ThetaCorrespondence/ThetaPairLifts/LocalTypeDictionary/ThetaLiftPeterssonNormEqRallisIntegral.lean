@@ -600,12 +600,6 @@ open Formalism.MainNotions.SchurIrreducible (IsSplit)
 open Formalism.L2.Host (HChar aboveF)
 open GlobalTheory.CMVal (eulerFactor IsHeckeL)
 
-section Seg
-
-variable {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) (n : ℕ)
-
-end Seg
-
 variable {D : D7}
 
 section Char
@@ -623,18 +617,6 @@ theorem unrAt_inv (ν : HChar E) (w : HeightOneSpectrum (𝓞 E)) : (ν⁻¹).Un
 alias val_inv := _root_.Formalism.L2.Host.HChar.val_inv
 
 end Char
-
-section Global
-
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-
-end Global
-
-section Bottom
-
-open GlobalTheory.FunObj.SqNum (botBig botSmall)
-
-end Bottom
 
 end GlobalTheory.UnrCharZeta
 

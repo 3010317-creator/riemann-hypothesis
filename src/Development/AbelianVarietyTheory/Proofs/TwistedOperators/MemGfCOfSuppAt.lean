@@ -453,14 +453,6 @@ noncomputable section
 
 namespace GlobalTheory.Ker.DCos
 
-section Generic
-
-variable {R : Type} [CommRing R] {k : ℕ}
-
-variable {E : Type} [Field E] [NumberField E]
-
-end Generic
-
 section Adelic
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E] {k : ℕ}

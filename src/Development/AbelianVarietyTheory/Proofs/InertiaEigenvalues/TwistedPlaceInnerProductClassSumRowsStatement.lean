@@ -88,36 +88,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.NJoin.Inh
 
-section Frame
-
-variable {D : D7} {V : HSp D} {n : ℕ} (P : RowPsi V n)
-
-variable (c : CoefA V)
-
-variable (β : GL (Fin V.rank) (EAf D)) (L : LevDat D.host.E ℂ V.rank)
-
-variable {W : Type} [AddCommGroup W] [Module ℂ W] (e : c.W ≃ₗ[ℂ] W)
-
-variable (hc : ∀ h ∈ GfC V, c.ρ h = 1) (ρ : Representation ℂ (ReciprocityTheory.Aut.GQ D.host.E n) W)
-  (rat : ∀ h, h ∈ ReciprocityTheory.Aut.GQ D.host.E n ↔ ∃ γ ∈ Formalism.L2.Theta.GQ V, finHom V γ = finHom V (P.ψ h))
-  (wt : ∀ (h : ReciprocityTheory.Aut.GQ D.host.E n), ∀ γ ∈ Formalism.L2.Theta.GQ V, finHom V γ = finHom V (P.ψ h) →
-    ∀ v, e (c.ρ γ v) = ρ h (e v))
-include hc rat wt
-
-
-end Frame
-
-section Algebraic
-
-open MvPolynomial ReciprocityTheory.Aut
-open scoped Matrix
-
-variable {ι : Type} [Fintype ι] {n : ℕ}
-
-variable {L : Type} [Field L] [NumberField L] [IsCMField L]
-
-end Algebraic
-
 section Weight
 
 variable {D : D7}
@@ -165,33 +135,6 @@ theorem rat_unit {V : HSp D} (hg : V.gram = 1) (h : Formalism.AUTREP.GAf D.host.
 variable {V : HSp D} (c : CoefA V)
 
 end Weight
-
-section Agreement
-
-variable {D : D7} {cf : CharFrame D} {nch : NChoice D} {tp : TupTied D cf nch} (X : RealAt D cf nch tp)
-
-end Agreement
-
-section Reading
-
-variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m}
-  {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {cf : CharFrame D} {nch : NChoice D}
-
-
-end Reading
-
-section Record
-
-open Formalism.MainNotions Formalism.L2.Rows
-
-variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {K : Formalism.MainNotions.G.Consts} {Y : DivX D}
-  {cX : ExtraC} {ex : Extra D L hT Gi Gl K Y cX} {Rc : Formalism.L2.RecT ex} {P : RowSideFamily ex}
-  {Dcf : ∀ Zs : Indef.DefSub P.A3.fam3.amb3, Indef.DefCols (P.A3.side3 P.Ps P.ψs Zs)}
-  {Spf : ∀ Zs : Indef.DefSub P.A3.fam3.amb3, Indef.SPer (Dcf Zs)} {Zscf : Indef.DefSub P.A3.fam3.amb3 → Indef.IndefScale P.A3.fam3.base3}
-  {S : Formalism.L2.SG.SpectralTiesReal.STiesR Rc} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL]
-  {Q : RealT Rc P Dcf Spf Zscf S Ks}
-
-end Record
 
 end GlobalTheory.NJoin.Inh
 

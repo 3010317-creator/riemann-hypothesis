@@ -198,20 +198,6 @@ theorem br_lift_lift (T S : Module.End ℂ V) :
 
 end Car
 
-section Coefficients
-
-variable {n : ℕ}
-
-end Coefficients
-
-section Units
-
-variable {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
-
-variable {E1 E2 : Fin n → Fin n → Module.End ℂ V}
-
-end Units
-
 end GlobalTheory.CompanionTheory.RealMult.TorC
 end -- clump:auto
 end -- clump:auto

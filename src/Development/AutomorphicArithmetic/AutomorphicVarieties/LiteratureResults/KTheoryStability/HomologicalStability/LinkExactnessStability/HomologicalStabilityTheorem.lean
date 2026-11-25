@@ -332,8 +332,6 @@ theorem kStability_main : UpperTheory.V.Published.KStability := by
 
 end GlobalTheory.HomStab
 
-section
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.HomologicalStabilityTheorem =====

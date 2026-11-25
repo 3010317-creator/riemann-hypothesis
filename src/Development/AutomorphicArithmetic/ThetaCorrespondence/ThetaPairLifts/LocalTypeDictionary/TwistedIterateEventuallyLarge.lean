@@ -604,12 +604,6 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow
 
 variable {D : D7}
 
-section Lin
-
-variable {ψ : AddChar (AF D.host.F) ℂ} {T₀ : HSp D}
-
-end Lin
-
 theorem unitN_unique {S : HSp D} {ρ : ℕ} {e : Matrix (Fin S.rank) (Fin ρ) D.host.E} (he : IsIsoSub S e)
     {ν ν' : Measure (NFlag S e)} {𝓝 𝓝' : Set (NFlag S e)} (h : GlobalTheory.Per.IsUnitN S e ν 𝓝) (h' : GlobalTheory.Per.IsUnitN S e ν' 𝓝') :
     ν = ν' := by
@@ -905,10 +899,6 @@ open IsDedekindDomain NumberField MeasureTheory Matrix GlobalTheory.ChiGrid Glob
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.RowUnf GlobalTheory.RowChain GlobalTheory.SeeSaw GlobalTheory.RowVal GlobalTheory.RowReal
 noncomputable section
 namespace GlobalTheory.RowVal
-section Lin
-variable {T : Type} {D : D7} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil} {M : Vol G}
-  {ρ : RealMatch W} {t : T}
-end Lin
 theorem placeValuation_linAt_large : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.CuspAlongSmoothLifts.LiftsCuspidal → Big fun ch => LinAt ch := by
   intro hP hL
   obtain ⟨a0, ha⟩ := Big.and (Big.and (_root_.GlobalTheory.FlipRun.cuspStep_of_large_flipRun hL hP) (_root_.GlobalTheory.EndCusp.leadingForm_mem_cuspList hP)) colFn_cont_left

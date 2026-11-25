@@ -100,9 +100,6 @@ open Formalism.BasicNotions Formalism.MainNotions NumberField IsDedekindDomain
 open Formalism.L2 Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links
 open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
 namespace GlobalTheory.BigTop.Fun.SizeProof
-section Sizes
-variable {D : D7} {L : SizeData₂ D}
-end Sizes
 section Main
 variable {D : D7} {L : SizeData₂ D}
 theorem sizeAt_alt : _root_.GlobalTheory.BigTop.Fun.SizeAtAlt :=

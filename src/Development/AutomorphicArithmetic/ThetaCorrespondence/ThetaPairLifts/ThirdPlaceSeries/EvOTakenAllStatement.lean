@@ -1481,9 +1481,6 @@ section -- clump:auto
 section
 noncomputable section
 section
-open Formalism Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal
-end
-section
 open NumberField IsDedekindDomain Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations Formalism.ConjugateSelfDual ReciprocityTheory.Gal
 namespace GlobalTheory.CrysFromGTwo
 end GlobalTheory.CrysFromGTwo
@@ -1540,8 +1537,6 @@ theorem residual_charpoly_eq_alt_alt (hC : GlobalTheory.TwSys.Cheb) (D : D7) (h3
   exact mul_right_cancel₀ hP e1
 end GlobalTheory.AbsoluteIrreducibilityOfTraceSpan
 end
-section
-end
 end
 end
 end -- clump:auto
@@ -1557,9 +1552,6 @@ section -- clump:auto
 
 section
 noncomputable section
-section
-open Formalism Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal
-end
 section
 open NumberField IsDedekindDomain Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations Formalism.ConjugateSelfDual ReciprocityTheory.Gal
 namespace GlobalTheory.CrysFromGTwo
@@ -1624,8 +1616,6 @@ theorem setting_of_live_alt_alt : GlobalTheory.TwSys.Cheb → ∀ (D : D7), _roo
     rw [mat_mapRep, mat_mapRep, Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff,
       _root_.GlobalTheory.AbsoluteIrreducibilityOfTraceSpan.residual_charpoly_eq_alt_alt hC D h32 i rep hr x π (ρ x) ρ0 (hρ x hx) r0 hr0 h0 g]
 end GlobalTheory.AbsoluteIrreducibilityOfTraceSpan
-end
-section
 end
 end
 end

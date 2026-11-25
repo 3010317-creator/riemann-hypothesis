@@ -511,8 +511,6 @@ theorem exactAt_of_links_cone : ∀ (V : Type) (F : Set (List V)) (S : Set V) (y
 
 end GlobalTheory
 
-section
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExactAtOfLinksOutsideExactAtOfConed =====
@@ -863,8 +861,6 @@ theorem GlobalTheory.SeqCx.linkExact_of_stableRangeLe : ∀ (R : Type) [CommRing
           subst hy
           exact Or.inr hx, by simpa using hvx⟩
 
-section
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.LinksUnimodularSeqExactInStableRange =====

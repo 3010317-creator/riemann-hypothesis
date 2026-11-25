@@ -374,15 +374,6 @@ theorem log_card_le (p : PtAt ex Csz) (i : Fin D.R.m) (Y : Cov p i) (hY : GoodCo
 
 end Point
 
-section Main
-
-open CategoryTheory AlgebraicGeometry NumberField
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Theta
-open GlobalTheory GlobalTheory.CompHS GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.HSApp GlobalTheory.DegVal GlobalTheory.DegCmp
-open GlobalTheory.LevDesc (TypeFrame grpHR latN)
-
-end Main
-
 end GlobalTheory.CovTop.TypeLattice
 end -- clump:auto
 end -- clump:auto

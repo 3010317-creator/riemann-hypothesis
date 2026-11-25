@@ -123,32 +123,6 @@ open GlobalTheory.AutomorphicL2Unitary GlobalTheory.AdelicU GlobalTheory.Doublin
 namespace GlobalTheory.RegSch.Inhab
 variable {D : D7}
 
-section Generic
-
-open Matrix Formalism.UG
-
-variable {A B : Type} [CommRing A] [CommRing B] (σ : A →+* A) {n m k : Type}
-
-variable [Fintype n] [Fintype m] [Fintype k] [DecidableEq n] [DecidableEq m] [DecidableEq k]
-
-end Generic
-
-section Lattice
-
-variable {T T' : HSp D} {t : ℕ} (d : HypDec T T' t)
-
-variable {L' : Submodule (𝓞 D.host.E) (Fin T'.rank → D.host.E)}
-
-end Lattice
-
-section Frame
-
-variable {T T' : HSp D} {t : ℕ} (d : HypDec T T' t)
-
-variable (c : Mx D T'.rank T'.rank)
-
-end Frame
-
 theorem exists_good (V : HSp D) : ∃ l : Lvl V, l.Good :=
   let ⟨a, ha⟩ := GlobalTheory.Doubling.exists_isMaj V
   ⟨⟨frameLat V, a⟩, isLattice_frameLat_host V, SelfDual.isSelfDualAt_frameLat D V, ha⟩
@@ -700,21 +674,6 @@ theorem hasIw_of_good {V V₀ : HSp D} {r : ℕ} (d : HypDec V V₀ r) (l : Lvl 
   have e2 : (Kmax (relat V l hl) l.c : Subgroup (GA D V)) = l.K :=
     congrArg (fun L => levelAll D.sp.cm.sig V.gram L l.c) (frameLat_relat V l hl)
   exact ⟨⟨q.1, q.2⟩, k, e2 ▸ hk, e⟩
-
-section Arch
-
-variable {m k r : ℕ} {X Y : Matrix (Fin m) (Fin r) ℂ} {Z : Matrix (Fin m) (Fin k) ℂ} {P R : Matrix (Fin r) (Fin m) ℂ}
-  {Q : Matrix (Fin k) (Fin m) ℂ} {G : Matrix (Fin m) (Fin m) ℂ} {G₀ s₀ B B' : Matrix (Fin k) (Fin k) ℂ}
-
-end Arch
-
-section Standard
-
-variable {V V₀ : HSp D} {r : ℕ} (d : HypDec V V₀ r)
-
-variable {L₀ : Submodule (𝓞 D.host.E) (Fin V₀.rank → D.host.E)}
-
-end Standard
 
 end GlobalTheory.Published.SiegelSectionIwasawa
 

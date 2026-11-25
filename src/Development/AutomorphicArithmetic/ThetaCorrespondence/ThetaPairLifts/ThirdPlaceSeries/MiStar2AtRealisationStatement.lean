@@ -908,15 +908,6 @@ theorem lift_postOn (T : MMap M) (z : GA D V) (v : SmT M) :
 
 end General
 
-section Main
-
-open GlobalTheory.MiTop.CentralShift
-
-variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
-  {Yd : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Yd cX}
-
-end Main
-
 end GlobalTheory.MiTop.CentralShift
 
 namespace GlobalTheory.MiTop
@@ -948,9 +939,6 @@ noncomputable section
 
 open Formalism.BasicNotions.TH Formalism.IndefR.Lev
 namespace GlobalTheory.MiTop.CentralShift
-section General
-variable {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} {M : DSModel V S}
-end General
 section Main
 open GlobalTheory.MiTop.CentralShift
 variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
@@ -1040,9 +1028,6 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.MiS
 open GlobalTheory.MiTop
 noncomputable section
 namespace GlobalTheory.MiTop.AtReal
-section Gen
-variable {K : Type} [Field K] [NumberField K] [StarRing K] {Bs : DefBase K}
-end Gen
 variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
   {Yd : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Yd cX}
 theorem dc_heq_alt (W : _root_.GlobalTheory.MiS.RealPackAlt ex) : HEq (W.Q.F.fc (_root_.GlobalTheory.MiS.packageCoefficientSpace W).zs).Dc W.P.Dc :=

@@ -324,10 +324,6 @@ noncomputable section
 
 namespace GlobalTheory.ThK.EvAt0.PlaneQ
 
-section Complex
-
-end Complex
-
 section Adelic
 
 open scoped Classical

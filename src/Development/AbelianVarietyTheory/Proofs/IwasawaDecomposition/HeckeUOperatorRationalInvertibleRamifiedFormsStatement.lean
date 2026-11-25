@@ -937,10 +937,6 @@ namespace GlobalTheory.LevelIndexCompare
 
 open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.IndefiniteRowSideFullHecke.IndexAtLevelRanks
 
-section General
-
-end General
-
 variable (D : D7) (u : D.what₂.Word)
 
 def incl (w : D.what₂.places.Pl) : LT.Sram D u w →ₗ[LT.Ow D w] (D.fm u).ramSub where

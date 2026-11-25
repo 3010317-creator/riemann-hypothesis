@@ -111,24 +111,6 @@ def IsDatOwn (ε : Bool) (S T : Node D) (e : AE D) (f₀ : WO S.V T.V → ℂ)
 
 end Models
 
-section Grid
-
-variable {G₀ : Type} [Group G₀] [Fintype G₀] {Pl0 T : Type} {A : FamIn D.what₂.LL G₀ Pl0 T D.R.m}
-  {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat D A Ks} (G : GridDat R)
-
-
-
-
-
-end Grid
-
-section Basic₂
-
-variable {G₀ : Type} [Group G₀] [Fintype G₀] {Pl0 T : Type} {A : FamIn D.what₂.LL G₀ Pl0 T D.R.m}
-  {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat D A Ks} {G : GridDat R}
-
-end Basic₂
-
 end GlobalTheory.IndefiniteRowSideFullHecke.IwahoriMembership
 
 end
@@ -152,14 +134,6 @@ open scoped Pointwise TensorProduct InnerProductSpace
 namespace GlobalTheory.FlipPath
 
 variable {D : D7}
-
-section Local
-
-variable (e : AE D) (I : Ideal (𝓞 D.host.E)) (ν : (AE D)ˣ →* Circle)
-
-variable {e I}
-
-end Local
 
 theorem isSelfDualC_sgn (ε : Bool) {S : HSp D} {Λ : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)} (h : IsSelfDualC S Λ) :
     IsSelfDualC (sgn ε S) Λ := by

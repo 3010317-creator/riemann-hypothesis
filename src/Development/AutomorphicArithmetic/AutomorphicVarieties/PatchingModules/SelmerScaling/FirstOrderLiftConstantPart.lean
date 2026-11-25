@@ -508,12 +508,6 @@ private theorem alg_eq (c : A) : algebraMap A (DD X g) c = DD.C (algebraMap A X 
 
 end SlopeTestRemainingChoices
 
-section Conj
-
-variable {l : ℕ} [Fact l.Prime] {F : GFrame l} {n : ℕ} {x : NP F n} (k : Kap x) (X : Type) [CommRing X] [Algebra x.A X]
-
-end Conj
-
 end UpperTheory.V.Pa
 
 private theorem dd_ep_finset_sum {X : Type} [CommRing X] {g : ℕ} {ι : Type} (s : Finset ι) (f : ι → DD X g) (m : Fin g) :

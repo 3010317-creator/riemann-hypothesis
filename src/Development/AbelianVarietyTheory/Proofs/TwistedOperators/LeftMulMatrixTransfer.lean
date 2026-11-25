@@ -246,38 +246,11 @@ theorem exists_cyclic {A : Type} [CommRing A] [IsArtinianRing A] {r : ℕ}
 
 end Cyclic
 
-section Transfer
-
-variable {R S A B : Type} [CommRing R] [CommRing S] [CommRing A] [CommRing B] [Algebra R S]
-  [Algebra A B] {ι : Type} [Fintype ι] [DecidableEq ι]
-
-end Transfer
-
 section Forms
 
 variable {A : Type} [CommRing A] {r : ℕ} (σ : A →+* A)
 
 end Forms
-
-section Core
-
-variable {A B : Type} [CommRing A] [CommRing B] [Algebra A B] {r : ℕ}
-
-variable {σ : A →+* A} {τ : B →+* B} {α : B} {b : Module.Basis (Fin r) A B}
-  {J : Matrix (Fin r) (Fin r) A}
-
-end Core
-
-section Concrete
-
-open GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialInclusion
-
-attribute [local instance] algLk
-
-variable {F E : Type} [Field F] [Field E] [Algebra F E] {c : E ≃ₐ[F] E} {r : ℕ} {P : E[X]}
-  (k : Type) [Field k] [Algebra F k]
-
-end Concrete
 
 end GlobalTheory.ClassParam
 end -- clump:auto
