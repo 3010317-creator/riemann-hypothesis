@@ -49,7 +49,7 @@ variable {M}
 
 
 
-structure ValuationAtPrimes {bad : Set (HeightOneSpectrum (𝓞 D.host.F))} (K : ClassesAtPrimes M bad) (okW : D.what₂.places.Pl → Prop) where
+structure ValuationAtPrimes {bad : Set (HeightOneSpectrum (𝓞 D.host.F))} (K : ClassesAtPrimes M bad) (_okW : D.what₂.places.Pl → Prop) where
 
   sg : ∀ τ (i : Fin (D.R.N D.R.m - 1)),
     ((M.sg τ).w i : ℚ) = sgHC D.R (D.hcW u τ) i - rhoVec (D.R.N D.R.m - 1) i
@@ -67,12 +67,6 @@ structure ValuationAtPrimes {bad : Set (HeightOneSpectrum (𝓞 D.host.F))} (K :
 
   rat : ∀ z, (∃ x, M.ptEmb x = z) ↔
     z ∈ M.ptC ∧ ∀ c, ∃ Pc ∈ RatSpan D M.sg, eW z c = fnOf _ (shiftOf (sgTG M)) 1 Pc
-
-  lat : ∀ w, okW w → ∀ x : M.ptLat.V, x ∈ M.SP w ↔
-    ∀ (c : M.clsP) (B : GL (Fin (D.R.N D.R.m - 1)) D.host.E),
-      IsLocBasis (D.what₂.places.resChar w) (K.lat c : Set _) B →
-      ∃ Pc ∈ IntSpan D w M.sg, eW (M.ptEmb x) c =
-        fnOf _ (shiftOf (sgTG M)) (atInf (embT D) (B⁻¹ : GL (Fin (D.R.N D.R.m - 1)) D.host.E).1) Pc
 
 def NormPTieG {bad : Set (HeightOneSpectrum (𝓞 D.host.F))} {K : ClassesAtPrimes M bad} {okW : D.what₂.places.Pl → Prop}
     (W : ValuationAtPrimes K okW) : Prop :=
