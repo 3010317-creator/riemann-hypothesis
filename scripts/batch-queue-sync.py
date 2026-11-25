@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
-"""Assemble queued pull requests into a batch pull request and keep the labels in step.
+"""Keep the labels of the batch queue in step with the batches being built.
 
 The batch-queue workflow runs this from its trusted checkout. Everything goes through GitHub's
 API: GitHub performs the merges, and nothing from a pull request is checked out or run here.
+
+The batch queue is a list of approvals, and maintainers assemble batches from it by hand. This
+script assembles no batch of its own: the code that does is kept, switched off by `ASSEMBLE`, in
+case we want a batch assembled by the queue again, and the comment there says what that needs.
+What follows about the batch being assembled, the order queued commits go in and the note in its
+pull request describes that code as it works with `ASSEMBLE` on. With it off, a branch this
+script started is removed once its pull request is merged or closed, as before, and one without a
+pull request, such as `batch/2026-11-24-142233`, is left alone.
 
 Which commit goes into a batch. A maintainer queues one commit of a pull request by commenting
 `batch`: the commit that was its head when the comment was posted, or one named in the comment.
@@ -69,24 +77,55 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import importlib.util
 import json
 from pathlib import Path
 import re
-import subprocess
 import sys
 
-QUEUED, BUILDING = "batch queue", "building"
+_REST_SPEC = importlib.util.spec_from_file_location("rh_github_rest", Path(__file__).with_name("github-rest.py"))
+_rest = importlib.util.module_from_spec(_REST_SPEC)
+_REST_SPEC.loader.exec_module(_rest)
+_labels = _rest.load("batch-labels.py")
+
+QUEUED, BUILDING = _labels.QUEUED, _labels.BUILDING
 # A maintainer's label: pull requests that carry it go into a batch before the others.
-PRIORITY = "priority"
-PREFIX = "batch/"
+PRIORITY = _labels.PRIORITY
+PREFIX = _labels.PREFIX
 # The name `start` gives a batch branch. Any other `batch/...` branch is not this script's.
 OWN_BATCH = re.compile(r"batch/[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}(?:-[0-9]+)?")
 BOT = "github-actions[bot]"
-# Stop early when fewer requests than this are left for the hour, so other workflows keep working.
-RESERVE = 150
+# Stop early when fewer requests than this are left for the hour (see `github-rest.py`).
+RESERVE = _rest.RESERVE
 # What was read from a pull request is remembered only once the pull request has been quiet for
 # this long. GitHub's update times are whole seconds, so two changes in one second look like one.
 SETTLE = datetime.timedelta(seconds=120)
+
+# Whether the sync assembles a batch of its own from the queue: starts a `batch/<date-time>`
+# branch, merges each queued commit into it, opens and describes its pull request, and rebuilds it
+# on top of a batch assembled by hand (`start`, `recall`, `restack`, `publish` and the end of
+# `sync`). It does not: the queue is a list of approvals, which maintainers assemble batches from
+# by hand. The code is kept, and tested with this on, in case we want a batch assembled by the
+# queue again. Running it taught us what that needs:
+#
+# - GitHub Actions may not create pull requests in this repository. That is a repository setting:
+#   Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests". So
+#   the queue's branch `batch/2026-11-24-142233` never got a pull request, and every sync run
+#   ended in `Refused` at `publish`: the job failed, its summary showed only the refusal, and
+#   anything that runs after `publish` would not run. Run 45503694341 shows it.
+# - The batches maintainers assemble by hand already take every open pull request that is not a
+#   draft, touches `src/` and merges cleanly, queued or not, so a second batch assembled from the
+#   queue largely builds them again.
+# - Batches assembled by hand are stacked: #1739 (`batch/b10b-on-1410`) is built on #1410, and
+#   takes each new head of #1410 while #1410 is being repaired. A batch of the queue would have
+#   to go on the outermost of them and be rebuilt whenever a batch below it moves. `restack`
+#   follows one batch assembled by hand into main, and goes back to main when there are more.
+# - Requests: a sync run that assembled cost about 300 REST requests. Run 45503694341 ended with
+#   "304 requests to GitHub; 4721 left this hour".
+#
+# To revive it: allow GitHub Actions to create pull requests, decide how a batch of the queue
+# relates to stacked batches assembled by hand, and set this back to True.
+ASSEMBLE = False
 
 # Comments the workflow's label job leaves when a maintainer queues or unqueues a pull request.
 # They count only at the very start of a comment written by the workflow itself.
@@ -108,83 +147,39 @@ ADDED = re.compile(r"Add #(\d+) to the batch\n\nMerged at ([0-9a-f]{40})\.")
 UPDATED = "Bring #{number} up to date\n\nMerged at {sha}."
 
 
-class Refused(Exception):
-    """GitHub would not do something this script cannot work around."""
+Refused = _rest.Refused
+quoted = _rest.quoted
 
 
-class GitHub:
-    """The repository's REST API through `gh`. With `dry_run`, writes are printed, not sent."""
+class GitHub(_rest.GitHub):
+    """The repository's REST API through `gh` (see `github-rest.py`), with a clock that the tests
+    can set."""
 
     def __init__(self, repo, dry_run=False):
-        self.repo, self.dry_run = repo, dry_run
-        self.calls, self.remaining = 0, None
-
-    def call(self, method, path, payload=None):
-        """One request. Returns (HTTP status, decoded body or None)."""
-        args = ["gh", "api", "--include", "--method", method, f"repos/{self.repo}/{path}".rstrip("/")]
-        data = None
-        if payload is not None:
-            args += ["--input", "-"]
-            data = json.dumps(payload).encode()
-        done = subprocess.run(args, input=data, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        head, _, body = done.stdout.decode("utf-8", "replace").replace("\r\n", "\n").partition("\n\n")
-        try:
-            status = int(head.split()[1])
-        except (IndexError, ValueError):
-            sys.stderr.write(done.stderr.decode("utf-8", "replace"))
-            raise RuntimeError(f"no answer from GitHub for {method} {path}") from None
-        self.calls += 1
-        for line in head.splitlines()[1:]:
-            name, _, value = line.partition(":")
-            if name.strip().lower() == "x-ratelimit-remaining" and value.strip().isdigit():
-                self.remaining = int(value)
-        return status, (json.loads(body) if body.strip() else None)
-
-    def get(self, path):
-        status, data = self.call("GET", path)
-        if status != 200:
-            raise RuntimeError(f"GET {path} answered {status}")
-        return data
-
-    def pages(self, path):
-        """Every item of a paginated list."""
-        items, page = [], 1
-        while True:
-            batch = self.get(f"{path}{'&' if '?' in path else '?'}per_page=100&page={page}")
-            items += batch
-            if len(batch) < 100:
-                return items
-            page += 1
-
-    def write(self, method, path, payload=None):
-        if self.dry_run:
-            print(f"would {method} {path} {json.dumps(payload) if payload else ''}".rstrip())
-            return 0, None
-        return self.call(method, path, payload)
-
-    def short(self):
-        """Whether the hour's allowance is nearly used up."""
-        return self.remaining is not None and self.remaining < RESERVE
+        super().__init__(repo, dry_run)
+        # Lines saying which label changes GitHub refused (see `relabel`).
+        self.refused = []
 
     def now(self):
         return datetime.datetime.now(datetime.timezone.utc)
-
-
-def quoted(label):
-    return label.replace(" ", "%20")
 
 
 def open_pulls(gh):
     """Every open pull request, by number. Two requests cover a couple of hundred of them."""
     found = {}
     for info in gh.pages("pulls?state=open"):
-        head = info["head"]
         found[info["number"]] = {
-            "number": info["number"], "sha": head["sha"], "ref": head["ref"],
-            "own": (head.get("repo") or {}).get("full_name") == gh.repo, "base": info["base"]["ref"],
+            "number": info["number"], "sha": info["head"]["sha"], "ref": info["head"]["ref"],
+            "batch": holds_batch(gh, info), "base": info["base"]["ref"],
             "labels": {label["name"] for label in info["labels"]},
             "updated": info["updated_at"], "body": info.get("body") or ""}
     return found
+
+
+def holds_batch(gh, info):
+    """Whether a pull request, as GitHub's REST API gives it, holds a batch (see `batch-labels.py`)."""
+    head = info["head"]
+    return _labels.holds_batch(gh.repo, (head.get("repo") or {}).get("full_name"), head["ref"])
 
 
 def own_batch(ref):
@@ -193,24 +188,39 @@ def own_batch(ref):
 
 
 def is_batch(pr):
-    return pr["own"] and own_batch(pr["ref"])
+    """Whether a pull request holds a batch that `start` began."""
+    return pr["batch"] and own_batch(pr["ref"])
 
 
 def by_hand(pr):
     """Whether a pull request holds a batch assembled by hand: a `batch/...` branch of this
     repository under another name than the ones `start` gives."""
-    return pr["own"] and pr["ref"].startswith(PREFIX) and not own_batch(pr["ref"])
+    return pr["batch"] and not own_batch(pr["ref"])
 
 
 def relabel(gh, pr_or_number, add=None, remove=None):
-    """Change labels on GitHub, and on our own copy of the pull request when we hold one."""
+    """Change labels on GitHub, and on our own copy of the pull request when we hold one.
+
+    Returns whether GitHub took every change. A change it refused, other than for the rate limit,
+    which stops the run, is added to `gh.refused`: the run's log ends with those lines, since the
+    line its caller logs says the label changed.
+    """
     number = pr_or_number["number"] if isinstance(pr_or_number, dict) else pr_or_number
+    done = True
     if add:
-        gh.write("POST", f"issues/{number}/labels", {"labels": [add]})
+        status = gh.write("POST", f"issues/{number}/labels", {"labels": [add]})[0]
+        if status not in (0, 200):
+            gh.refused.append(f"#{number}: GitHub answered {status} to adding `{add}`, so it was not added")
+            done, add = False, None
     if remove:
-        gh.write("DELETE", f"issues/{number}/labels/{quoted(remove)}")
+        # A label that is not there any more answers 404, which is what was wanted.
+        status = gh.write("DELETE", f"issues/{number}/labels/{quoted(remove)}")[0]
+        if status not in (0, 200, 404):
+            gh.refused.append(f"#{number}: GitHub answered {status} to removing `{remove}`, so it is still on")
+            done, remove = False, None
     if isinstance(pr_or_number, dict):
         pr_or_number["labels"] = (pr_or_number["labels"] | ({add} if add else set())) - {remove}
+    return done
 
 
 def by_workflow(comment):
@@ -315,9 +325,7 @@ def finished(gh, closed_building, known):
         if "pull_request" not in item or str(item["number"]) in known:
             continue
         info = gh.get(f"pulls/{item['number']}")
-        head = info["head"]
-        if ((head.get("repo") or {}).get("full_name") != gh.repo or not head["ref"].startswith(PREFIX)
-                or own_batch(head["ref"])):
+        if not holds_batch(gh, info) or own_batch(info["head"]["ref"]):
             continue
         note = read_record(gh, info["number"])[1]
         batch = {"number": info["number"], "fate": "merged" if info.get("merged") else "closed",
@@ -446,12 +454,60 @@ def read_record(gh, number):
     for comment in gh.pages(f"issues/{number}/comments"):
         match = BY_HAND.match(comment.get("body") or "") if by_workflow(comment) else None
         if match:
-            try:
-                note = json.loads(match.group(1))
-            except ValueError:
-                note = {}
-            return comment, note if isinstance(note, dict) else {}
+            return comment, load_note(match.group(1))
     return None, {}
+
+
+# The note of a batch assembled by hand: what `hold` remembers from one run to the next. `hold`
+# writes it into this script's record comment on the batch's pull request, with `dump_note`, and
+# `read_record` reads it back, with `load_note`. In memory, numbers are strings, and a key may be
+# missing from a note written before it was:
+#
+#   head      the branch's head when `members` was found.
+#   members   what the batch contains, as {number: the commit of it that is in the branch}.
+#   queued    the members that were labelled `batch queue` before the batch took them. They go
+#             back to the queue if the batch is closed without being merged. A note without it
+#             is from before it was written down, and held only queued pull requests.
+#
+# On GitHub, where a comment holds at most 65,536 characters, the note is compact JSON, and
+# `queued` is kept as a list of numbers or as the list of the members it leaves out (`unqueued`),
+# whichever is shorter. `load_note` also reads notes written before `dump_note`, which kept every
+# key as it is in memory.
+
+
+def dump_note(note):
+    """A note as it is kept on GitHub: compact JSON, with only the keys the note has."""
+    found = note.get("members") or {}
+    kept = {name: note[name] for name in ("head", "members") if name in note}
+    if "queued" in note:
+        queued = {key for key in note["queued"] if key in found}
+        rest = {key for key in found if key not in queued}
+        if len(rest) < len(queued):
+            kept["unqueued"] = sorted(int(key) for key in rest)
+        else:
+            kept["queued"] = sorted(int(key) for key in queued)
+    return json.dumps(kept, sort_keys=True, separators=(",", ":"))
+
+
+def load_note(text):
+    """A note as `dump_note` wrote it, or as notes were written before it, in memory. Anything
+    that is not a note reads as an empty one."""
+    try:
+        kept = json.loads(text)
+    except ValueError:
+        return {}
+    if not isinstance(kept, dict):
+        return {}
+    note = {"head": kept["head"]} if "head" in kept else {}
+    if isinstance(kept.get("members"), dict):
+        note["members"] = {str(key): value for key, value in kept["members"].items()}
+    found = note.get("members", {})
+    if isinstance(kept.get("unqueued"), list):
+        rest = {str(key) for key in kept["unqueued"]}
+        note["queued"] = sorted((key for key in found if key not in rest), key=int)
+    elif isinstance(kept.get("queued"), list):
+        note["queued"] = sorted({str(key) for key in kept["queued"]}, key=int)
+    return note
 
 
 def members(note):
@@ -554,7 +610,8 @@ def hold(gh, batch, pulls, held, log):
     long as the commit it was found at is still there, even after its author has pushed again.
     Whatever has left loses `building` unless another batch contains it, and goes back to
     `batch queue` if it was queued before. `held` says, for each pull request, which batches
-    contain it. Returns whether anything was queued again.
+    contain it. The note's keys are described above `dump_note`. Returns whether anything was
+    queued again.
     """
     note, number, requeued = batch["note"], batch["number"], False
     found, queued, new = members(note), queued_before(note), set()
@@ -608,7 +665,7 @@ def hold(gh, batch, pulls, held, log):
 def describe_by_hand(note):
     """The comment that records what a batch assembled by hand contains."""
     listed = ", ".join(f"#{key}" for key in sorted(note["members"], key=int)) or "nothing yet"
-    return (f"<!-- batch-queue-by-hand {json.dumps(note, sort_keys=True)} -->\n"
+    return (f"<!-- batch-queue-by-hand {dump_note(note)} -->\n"
             "While this pull request is open, the batch-queue workflow takes it to be a batch that is being built. "
             "It adds nothing to a batch assembled by hand and leaves its description alone, but it keeps the labels "
             f"in step: each open pull request whose head commit is in this branch is now `{BUILDING}`, in place of "
@@ -765,10 +822,9 @@ def reopened(gh, number):
     `building` again is decided by the next sync, as for any other queued pull request.
     """
     info = gh.get(f"pulls/{number}")
-    head = info["head"]
     if info["state"] != "open":
         return [f"#{number} is not open: nothing to put back"]
-    if (head.get("repo") or {}).get("full_name") == gh.repo and head["ref"].startswith(PREFIX):
+    if holds_batch(gh, info):
         return [f"#{number} holds a batch: nothing to put back"]
     if {label["name"] for label in info["labels"]} & {QUEUED, BUILDING}:
         return [f"#{number} already carries `{QUEUED}` or `{BUILDING}`"]
@@ -820,6 +876,10 @@ def sync(gh, now=None):
         requeued |= hold(gh, batch, pulls, held, log)
     held = holders(hand)
 
+    if not ASSEMBLE:
+        # A batch of this script's own whose pull request was merged or closed was tidied up
+        # after above. One that has none is left alone (see `ASSEMBLE`).
+        return log or ["nothing to do"]
     if requeued:
         # Leave time to take the pull request that broke the build out of the queue first.
         log.append("not starting a new batch in this run: the next `batch` or `-batch` comment does")
@@ -948,6 +1008,8 @@ def main():
         log = reopened(gh, args.reopened) if args.reopened else sync(gh)
     except Refused as error:
         log, failure = [str(error)], 1
+    log += gh.refused
+    failure = failure or (1 if gh.refused else None)
     left = f"; {gh.remaining} left this hour" if gh.remaining is not None else ""
     log.append(f"{gh.calls} requests to GitHub{left}")
     text = "".join(f"- {line}\n" for line in log)
