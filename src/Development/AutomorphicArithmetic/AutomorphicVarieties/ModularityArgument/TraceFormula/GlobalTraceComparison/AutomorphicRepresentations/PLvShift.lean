@@ -45,33 +45,13 @@ import Mathlib.Tactic.ReduceModChar
 noncomputable section
 
 open GlobalTheory.BCT GlobalTheory.PRep
+open GlobalTheory.TraceLevel (mem_fixed_iff support_out_finite levOp_id_apply)
 
 namespace UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi
 
 section SlopeTestRemainingChoices
 
 variable {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V]
-
-private theorem mem_fixed_iff (ρ : Representation ℂ G V) (K : Subgroup G) (y : V) :
-    y ∈ fixed ρ K ↔ ∀ k ∈ K, ρ k y = y := by
-  constructor
-  · intro hy k hk
-    have := hy ⟨k, hk⟩
-    simpa using this
-  · intro hy k
-    simpa using hy k k.2
-
-private theorem lv_apply (ρ : Representation ℂ G V) (K : Subgroup G) (f : G → ℂ) (y : V)
-    (hf : (Function.support fun q : G ⧸ K => f q.out).Finite) :
-    Lv ρ K f y = ∑ᶠ q : G ⧸ K, f q.out • ρ q.out y := by
-  have hs : (Function.support fun q : G ⧸ K =>
-      f q.out • (ρ q.out ∘ₗ (LinearMap.id : V →ₗ[ℂ] V))).Finite := hf.subset (by
-    intro q hq hz
-    apply hq
-    simp [hz])
-  simp only [Lv, levOp, Subgroup.relIndex_self, Nat.cast_one, inv_one, one_smul]
-  have := map_finsum (LinearMap.applyₗ y : (V →ₗ[ℂ] V) →ₗ[ℂ] V) hs
-  simpa using this
 
 private theorem reindex (K : Subgroup G) (σ : G ⧸ K ≃ G ⧸ K) (a : G → G)
     (hσ : ∀ g : G, σ (g : G ⧸ K) = (a g : G ⧸ K)) (ψ₁ ψ₂ : G → V)
@@ -110,11 +90,6 @@ private def rEquiv (K : Subgroup G) (u : G) (h₁ : ∀ x ∈ K, u * x * u⁻¹ 
     | H g =>
       show ((g * u⁻¹ * u : G) : G ⧸ K) = g
       rw [inv_mul_cancel_right]
-
-private theorem fin_supp [TopologicalSpace G] [IsTopologicalGroup G] (K : Subgroup G)
-    (hK : IsOpen (K : Set G)) (f : G → ℂ) (hf : HasCompactSupport f) :
-    (Function.support fun q : G ⧸ K => f q.out).Finite := by
-  apply _root_.GlobalTheory.TraceLevel.support_out_finite <;> assumption
 
 end SlopeTestRemainingChoices
 
@@ -168,29 +143,32 @@ theorem lvShift_pf : LvShift := by
   have hinv : ∀ (f : G → ℂ), (∀ k ∈ K, ∀ x, f (x * k) = f x) → ∀ g, ∀ k ∈ K,
       f (g * k) • ρ (g * k) y = f g • ρ g y := fun f hf g k hk => by
     rw [hf k hk, hm, hy' k hk]
+  have h_lv : ∀ (f : G → ℂ), HasCompactSupport f → ∀ v : V,
+      Lv ρ K f v = ∑ᶠ q : G ⧸ K, f q.out • ρ q.out v := fun f hf v => by
+    simpa [Lv, Subgroup.relIndex_self] using
+      levOp_id_apply ρ K K f (support_out_finite K hKo f hf) v
   refine ⟨(mem_fixed_iff ρ K _).2 fun k hk => ?_, ?_, ?_, ?_⟩
   · have e : k * u = u * (u⁻¹ * k * u) := by group
     rw [← hm, e, hm, hy' _ (hc' k hk)]
-  · rw [lv_apply ρ K _ y (fin_supp K hKo _ H1.1), lv_apply ρ K h _ (fin_supp K hKo _ hh.1)]
+  · rw [h_lv _ H1.1 y, h_lv h hh.1 _]
     refine reindex K (rEquiv K u hc hc') (· * u) (fun g => rfl)
       (fun g => h (g * u⁻¹) • ρ g y) (fun g => h g • ρ g (ρ u y))
       (hinv (fun g => h (g * u⁻¹)) fun k hk x => (H1.2 k hk x).2) fun g => ?_
     show h (g * u * u⁻¹) • ρ (g * u) y = h g • ρ g (ρ u y)
     rw [mul_inv_cancel_right, hm]
   · have hs : (Function.support fun q : G ⧸ K => h q.out • ρ q.out y).Finite :=
-      (fin_supp K hKo _ hh.1).subset (by
+      (support_out_finite K hKo _ hh.1).subset (by
         intro q hq hz
         apply hq
         simp [hz])
-    rw [lv_apply ρ K _ y (fin_supp K hKo _ H2.1), lv_apply ρ K h y (fin_supp K hKo _ hh.1),
-      map_finsum (ρ u) hs]
+    rw [h_lv _ H2.1 y, h_lv h hh.1 y, map_finsum (ρ u) hs]
     simp only [map_smul]
     refine reindex K (MulAction.toPerm u) (u * ·) (fun g => rfl)
       (fun g => h (u⁻¹ * g) • ρ g y) (fun g => h g • ρ u (ρ g y))
       (hinv (fun g => h (u⁻¹ * g)) fun k hk x => (H2.2 k hk x).2) fun g => ?_
     show h (u⁻¹ * (u * g)) • ρ (u * g) y = h g • ρ u (ρ g y)
     rw [inv_mul_cancel_left, hm]
-  · rw [lv_apply ρ K _ y (fin_supp K hKo _ H3.1)]
+  · rw [h_lv _ H3.1 y]
     have h1 : ((1 : G) : G ⧸ K).out ∈ (K : Set G) := by
       have : ((((1 : G) : G ⧸ K).out : G) : G ⧸ K) = ((1 : G) : G ⧸ K) := QuotientGroup.out_eq' _
       have := QuotientGroup.eq.1 this

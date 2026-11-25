@@ -17,44 +17,23 @@ theorem UpperTheory.V.Pa.BC.nonSS_mono :
   let ψ : MonoidAlgebra κ G' →+* J.ringCon.Quotient :=
     J.ringCon.mk'.comp (MonoidAlgebra.mapDomainRingHom κ p)
   have hψs : Function.Surjective ψ := by
-    have h1 : Function.Surjective (MonoidAlgebra.mapDomainRingHom κ p) := by
-      intro x
-      induction x using MonoidAlgebra.induction_linear with
-      | zero => exact ⟨0, map_zero _⟩
-      | add a b ha hb =>
-        obtain ⟨a', rfl⟩ := ha
-        obtain ⟨b', rfl⟩ := hb
-        exact ⟨a' + b', map_add _ _ _⟩
-      | single g c =>
-        obtain ⟨g', rfl⟩ := hp g
-        exact ⟨MonoidAlgebra.single g' c, by simp⟩
-    exact (RingCon.mk'_surjective _).comp h1
-  have hcomm : ∀ w : MonoidAlgebra S G',
-      MonoidAlgebra.mapDomainRingHom κ p (MonoidAlgebra.mapRingHom G' f w) =
-        MonoidAlgebra.mapRingHom G f (MonoidAlgebra.mapDomainRingHom S p w) := by
-    intro w
-    induction w using MonoidAlgebra.induction_linear with
-    | zero => simp
-    | add a b ha hb => simp only [map_add (f := _), ha, hb]
-    | single g c => simp
-  have hcomp : ∀ (T H : Type) [CommRing T] [Group H] (θ : T →+* S) (z : MonoidAlgebra T H),
-      MonoidAlgebra.mapRingHom H (f.comp θ) z =
-        MonoidAlgebra.mapRingHom H f (MonoidAlgebra.mapRingHom H θ z) := by
-    intro T H _ _ θ z
-    induction z using MonoidAlgebra.induction_linear with
-    | zero => simp
-    | add a b ha hb => simp only [map_add (f := _), ha, hb]
-    | single g c => simp
+    refine (RingCon.mk'_surjective _).comp fun x => ?_
+    obtain ⟨y, hy⟩ := Finsupp.mapDomain_surjective hp x.coeff
+    exact ⟨MonoidAlgebra.ofCoeff y, MonoidAlgebra.coeff_injective hy⟩
   have hle : TwoSidedIdeal.span (MonoidAlgebra.mapRingHom G φ '' I) ≤
       J.comap (MonoidAlgebra.mapRingHom G f) := by
     rw [TwoSidedIdeal.span_le]
     rintro _ ⟨y, hy, rfl⟩
-    rw [SetLike.mem_coe, TwoSidedIdeal.mem_comap, ← hcomp]
+    rw [SetLike.mem_coe, TwoSidedIdeal.mem_comap, ← RingHom.comp_apply,
+      ← MonoidAlgebra.mapRingHom_comp]
     exact TwoSidedIdeal.subset_span ⟨y, hy, rfl⟩
   have hle' : J' ≤ J.comap (MonoidAlgebra.mapDomainRingHom κ p) := by
     rw [hJ', TwoSidedIdeal.span_le]
     rintro _ ⟨z, hz, rfl⟩
-    rw [SetLike.mem_coe, TwoSidedIdeal.mem_comap, hcomp, hcomm, ← TwoSidedIdeal.mem_comap]
+    rw [SetLike.mem_coe, TwoSidedIdeal.mem_comap, MonoidAlgebra.mapRingHom_comp,
+      RingHom.comp_apply, ← RingHom.comp_apply (MonoidAlgebra.mapDomainRingHom κ p),
+      ← MonoidAlgebra.mapRingHom_comp_mapDomainRingHom, RingHom.comp_apply,
+      ← TwoSidedIdeal.mem_comap]
     exact hle (hI z hz)
   have hker : J'.ringCon ≤ RingCon.ker ψ := by
     intro a b hab

@@ -4,6 +4,7 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebr
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.DcSumEqOfMk
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.GlBridge
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.SphComm
+import Mathlib.RepresentationTheory.Stabilizer
 
 @[expose] public section
 
@@ -25,16 +26,7 @@ theorem mem_fixd_lev {A M : Type} [CommRing A] [AddCommGroup M] [Module A M] (ρ
     v ∈ fixd ρ (H.lev K) ↔ (∀ u ∈ H.UQ, ρ u v = v) ∧ ∀ q, ∀ g ∈ K.1 q, ρ (H.sec (H.wq q) g) v = v := by
   refine ⟨fun h => ⟨fun u hu => h u (Subgroup.mem_sup_left hu), fun q g hg => h _
     (Subgroup.mem_sup_right (Subgroup.mem_iSup_of_mem q ⟨g, hg, rfl⟩))⟩, fun h u hu => ?_⟩
-  let S : Subgroup H.X.Ub :=
-    { carrier := {u | ρ u v = v}
-      one_mem' := by simp
-      mul_mem' := fun {a b} ha hb => by
-        change ρ (a * b) v = v
-        rw [map_mul, Module.End.mul_apply, hb, ha]
-      inv_mem' := fun {a} ha => by
-        change ρ a⁻¹ v = v
-        conv_lhs => rw [← ha]
-        rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
+  let S : Subgroup H.X.Ub := Representation.stabilizer ρ v
   have : H.lev K ≤ S := sup_le h.1 (iSup_le fun q => by
     rintro _ ⟨g, hg, rfl⟩
     exact h.2 q g hg)

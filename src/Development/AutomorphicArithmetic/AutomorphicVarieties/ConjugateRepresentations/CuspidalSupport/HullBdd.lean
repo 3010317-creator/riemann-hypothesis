@@ -30,14 +30,6 @@ private theorem smEq_aeval {E : Type} [Field E] [NumberField E] [_root_.NumberFi
     | zero => rfl
     | succ n ih => rw [pow_succ', pow_succ', Module.End.mul_apply, Module.End.mul_apply, ih, UpperTheory.V.Cm.smEq_uTC]
 
-private theorem commute_aeval {A : Type} [Ring A] [Algebra ℂ A] {T z : A} (h : Commute T z) (p : Polynomial ℂ) :
-    Commute T (Polynomial.aeval z p) := by
-  induction p using Polynomial.induction_on' with
-  | add p q hp hq => rw [map_add (f := _)]; exact hp.add_right hq
-  | monomial n c =>
-    rw [Polynomial.aeval_monomial]
-    exact (Algebra.commute_algebraMap_right c T).mul_right (h.pow_right n)
-
 theorem UpperTheory.V.Cj.S.hullBdd :
     UpperTheory.V.Cj.S.TypesComm → UpperTheory.V.Cj.S.HullBdd := by
   intro hTC E _ _ _ a S hS L hL
@@ -72,6 +64,8 @@ theorem UpperTheory.V.Cj.S.hullBdd :
       rw [Submodule.mem_bot, LinearEquiv.coe_coe, smEq_aeval] at h1
       have h1 : Polynomial.aeval (Cm.uTC E a z) p ψ = 0 :=
         (Cm.smEq E a).injective (h1.trans (Cm.smEq E a).map_zero.symm)
-      rw [LinearMap.mem_ker, ← Module.End.mul_apply, ← (commute_aeval (hT.2.1 z hz) p).eq, Module.End.mul_apply, h1,
-        map_zero]
+      rw [LinearMap.mem_ker, ← Module.End.mul_apply,
+        ← (Algebra.commute_of_mem_adjoin_singleton_of_commute
+          (Polynomial.aeval_mem_adjoin_singleton ℂ (Cm.uTC E a z)) (hT.2.1 z hz)).eq,
+        Module.End.mul_apply, h1, map_zero]
     rw [Submodule.mem_bot, LinearEquiv.coe_coe, smEq_aeval, LinearMap.mem_ker.1 h0, (Cm.smEq E a).map_zero]

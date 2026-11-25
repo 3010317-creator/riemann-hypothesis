@@ -72,11 +72,6 @@ private theorem local_of_near {P S : Type} [CommRing P] [IsLocalRing P] [CommRin
     convert this using 1
     rw [map_sub, map_one]; ring
 
-private theorem nil_mem_max {S : Type} [CommRing S] [IsLocalRing S] {x : S} (h : IsNilpotent x) :
-    x ∈ maximalIdeal S := fun hu => by
-  obtain ⟨n, hn⟩ := h
-  exact not_isUnit_zero (hn ▸ hu.pow n)
-
 private theorem bound_fin {R : Type} [CommRing R] (S : Subalgebra (PowerSeries R) (LaurentSeries R))
     [Module.Finite (PowerSeries R) S] :
     ∃ N : ℕ, ∀ y ∈ S, ∃ q : PowerSeries R,
@@ -146,7 +141,7 @@ theorem UpperTheory.V.Ws.sxLaur :
     obtain ⟨p, hp⟩ := hnear x
     obtain ⟨a, ha⟩ := IsCO.res_surj (O := Λ) p
     refine ⟨a, ?_⟩
-    have := (maximalIdeal S).add_mem (nil_mem_max hp) (hin _ ha)
+    have := (maximalIdeal S).add_mem ((mem_maximalIdeal _).2 hp.not_isUnit) (hin _ ha)
     convert this using 1
     rw [map_sub, ← IsScalarTower.algebraMap_apply]; ring
   have hXmax : (PowerSeries.X : PowerSeries R) ∈ maximalIdeal (PowerSeries R) := fun hu => by
@@ -174,7 +169,7 @@ theorem UpperTheory.V.Ws.sxLaur :
       have h2 := S.mul_mem (S.algebraMap_mem (PowerSeries.C 1 * PowerSeries.X ^ k)) (h1 x (hs ▸ hx))
       rw [alg_monomial, HahnSeries.single_mul_single, one_mul, ← hk, add_neg_cancel_right] at h2
       obtain ⟨j, hj⟩ := hnils n x hx
-      exact ⟨⟨_, h2⟩, nil_mem_max ⟨j, Subtype.ext hj⟩, rfl⟩
+      exact ⟨⟨_, h2⟩, (mem_maximalIdeal _).2 (IsNilpotent.not_isUnit ⟨j, Subtype.ext hj⟩), rfl⟩
   · intro n
     obtain ⟨N, hN⟩ := bound_fin S
     have hrad : maximalIdeal S ≤ (Ideal.span {algebraMap (PowerSeries R) S PowerSeries.X}).radical := by

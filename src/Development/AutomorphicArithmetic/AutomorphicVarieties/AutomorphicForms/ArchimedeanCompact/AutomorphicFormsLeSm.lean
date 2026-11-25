@@ -8,6 +8,7 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.Automorphic
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.SiegelSetHeightBound
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.SiegelSetInterTranslateFinite
 import GroundTheory.AutomorphicForms.AutomorphicFormSpaces.Translation
+import Mathlib.RepresentationTheory.Stabilizer
 import Mathlib.RingTheory.Finiteness.Lattice
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
@@ -55,17 +56,9 @@ theorem kfin_of {φ : Sm E a} (h : IsKFinite φ.1) :
 
 theorem level_of {φ : Sm E a} (hs : IsSmooth φ.1) (h : IsKFinite φ.1) : IsOpen {k | GlobalTheory.CuspRep.finRep E a k φ = φ} := by
   obtain ⟨U, -, hU⟩ := exists_openSubgroup_rightInvariant hs h
-  let S : Subgroup (GL (Fin a) (Af E)) :=
-    { carrier := {k | GlobalTheory.CuspRep.finRep E a k φ = φ}
-      one_mem' := by simp
-      mul_mem' := fun {k l} hk hl => by
-        change GlobalTheory.CuspRep.finRep E a (k * l) φ = φ
-        rw [map_mul, Module.End.mul_apply, hl, hk]
-      inv_mem' := fun {k} hk => by
-        change GlobalTheory.CuspRep.finRep E a k⁻¹ φ = φ
-        conv_lhs => rw [← show GlobalTheory.CuspRep.finRep E a k φ = φ from hk, ← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one]
-        rfl }
-  refine Subgroup.isOpen_mono (H₁ := U.toSubgroup) (H₂ := S) (fun u hu => Subtype.ext (funext fun g => ?_)) U.isOpen
+  refine Subgroup.isOpen_mono (H₁ := U.toSubgroup)
+    (H₂ := Representation.stabilizer (GlobalTheory.CuspRep.finRep E a) φ)
+    (fun u hu => Subtype.ext (funext fun g => ?_)) U.isOpen
   exact (congrArg (fun f : GL (Fin a) (Af E) →* GA E a => φ.1 (g * f u)) Fb.finEmb_eq).symm.trans (hU g u hu)
 
 theorem isSmooth_of_level {φ : Sm E a} (h : IsOpen {k | GlobalTheory.CuspRep.finRep E a k φ = φ}) : IsSmooth φ.1 := by
@@ -89,20 +82,7 @@ theorem isKFinite_of {φ : Sm E a} (hopen : IsOpen {k | GlobalTheory.CuspRep.fin
     (hfin : FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k => cptRep E a k φ))) : IsKFinite φ.1 := by
   let Kf := AdelicGLn.integralFiniteGL E a
   let V : Subgroup Kf :=
-    { carrier := {v | GlobalTheory.CuspRep.finRep E a v.1 φ = φ}
-      one_mem' := by
-        show GlobalTheory.CuspRep.finRep E a 1 φ = φ
-        rw [map_one]; rfl
-      mul_mem' := fun {v w} hv hw => by
-        have hv' : GlobalTheory.CuspRep.finRep E a v.1 φ = φ := hv
-        have hw' : GlobalTheory.CuspRep.finRep E a w.1 φ = φ := hw
-        show GlobalTheory.CuspRep.finRep E a (v.1 * w.1) φ = φ
-        rw [map_mul, Module.End.mul_apply, hw', hv']
-      inv_mem' := fun {v} hv => by
-        have hv' : GlobalTheory.CuspRep.finRep E a v.1 φ = φ := hv
-        show GlobalTheory.CuspRep.finRep E a (v.1⁻¹) φ = φ
-        conv_lhs => rw [← hv']
-        rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one]; rfl }
+    (Representation.stabilizer (GlobalTheory.CuspRep.finRep E a) φ).comap Kf.subtype
   have hV : IsOpen (V : Set Kf) := hopen.preimage continuous_subtype_val
   haveI : CompactSpace Kf := isCompact_iff_compactSpace.1 (AdelicGLn.isCompact_integralFiniteGL E a)
   haveI : Finite (Kf ⧸ V) := Subgroup.quotient_finite_of_isOpen V hV

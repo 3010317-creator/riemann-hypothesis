@@ -14,17 +14,13 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 
 private theorem up_mul {k : Type} [Field k] {A B : M4 k} (hA : IsUp A) (hB : IsUp B) :
     IsUp (A * B) ∧ ∀ i, (A * B) i i = A i i * B i i := by
-  refine ⟨fun i j hij => ?_, fun i => ?_⟩
-  · rw [Matrix.mul_apply]
-    refine Finset.sum_eq_zero fun m _ => ?_
-    rcases lt_or_ge m i with h | h
-    · rw [hA i m h, zero_mul]
-    · rw [hB m j (lt_of_lt_of_le hij h), mul_zero]
-  · rw [Matrix.mul_apply]
-    refine Finset.sum_eq_single i (fun m _ hm => ?_) (fun h => absurd (Finset.mem_univ i) h)
-    rcases lt_or_gt_of_ne hm with h | h
-    · rw [hA i m h, zero_mul]
-    · rw [hB m i h, mul_zero]
+  refine ⟨fun _ _ h => Matrix.BlockTriangular.mul (b := id)
+    (fun _ _ => hA _ _) (fun _ _ => hB _ _) h, fun i => ?_⟩
+  rw [Matrix.mul_apply]
+  refine Finset.sum_eq_single i (fun m _ hm => ?_) (fun h => absurd (Finset.mem_univ i) h)
+  rcases lt_or_gt_of_ne hm with h | h
+  · rw [hA i m h, zero_mul]
+  · rw [hB m i h, mul_zero]
 
 private theorem up_inv {k : Type} [Field k] {A B : M4 k} (hA : IsUp A) (h : A * B = 1) : IsUp B := by
   have hA' : Matrix.BlockTriangular A id := fun i j hij => hA i j hij

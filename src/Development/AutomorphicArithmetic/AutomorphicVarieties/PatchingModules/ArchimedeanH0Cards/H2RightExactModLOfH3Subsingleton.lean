@@ -56,15 +56,7 @@ theorem UpperTheory.V.Pa.B2.H2_right_exact_mod_l_of_H3_subsingleton :
     intro g m hm
     simp only [N, LinearMap.mem_ker] at hm ⊢
     rw [hu, hm, map_zero]
-  let ρK : Representation A G N :=
-    { toFun := fun g => (M.ρ g).restrict (hN g)
-      map_one' := by
-        ext m
-        simp
-      map_mul' := by
-        intro g g'
-        ext m
-        simp }
+  let ρK : Representation A G N := Representation.subrepresentation M.ρ N hN
   have hcont : ContAction ρK :=
     continuous_induced_rng.2 (M.cont.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)))
   let K : FRep A G := FRep.mk N ρK hcont

@@ -430,12 +430,6 @@ section -- clump:auto
 
 open QuadraticAlgebra UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc
 
-private theorem map_two_add_smul_eq (O K : Type) [CommRing O] [Field K] [Algebra O K] (π : O)
-    (X : Matrix (Fin 2) (Fin 2) O) :
-    (1 + 1 + π • X).map (algebraMap O K) = 1 + 1 + algebraMap O K π • X.map (algebraMap O K) := by
-  ext a b
-  fin_cases a <;> fin_cases b <;> simp <;> rw [Algebra.smul_def]
-
 theorem UpperTheory.V.Z.Sym.Loc.stabG : UpperTheory.V.Z.Sym.Loc.StabG := by
   classical
   intro O K _ _ _ _ _ Δ τ L hτ j hj y
@@ -585,7 +579,8 @@ theorem UpperTheory.V.Z.Sym.Loc.stabG : UpperTheory.V.Z.Sym.Loc.StabG := by
     rw [Matrix.map_apply, hX, Matrix.smul_apply, Algebra.smul_def, smul_eq_mul]
   let km : Matrix (Fin 2) (Fin 2) O := 1 + 1 + π • X
   have hkm : km.map (algebraMap O K) = 1 + 1 + algebraMap O K π • X.map (algebraMap O K) := by
-    exact map_two_add_smul_eq O K π X
+    rw [Matrix.map_add _ (map_add _), Matrix.map_add _ (map_add _),
+      Matrix.map_one _ (map_zero _) (map_one _), Matrix.map_smul' _ _ _ (map_mul _)]
   have hdet : km.det = 4 + π * (2 * X 0 0 + 2 * X 1 1 + π * (X 0 0 * X 1 1 - X 0 1 * X 1 0)) := by
     simp [km, Matrix.det_fin_two]
     ring

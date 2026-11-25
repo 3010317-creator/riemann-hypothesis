@@ -15,25 +15,6 @@ open UpperTheory.V UpperTheory.V.Af.Smo
 open UpperTheory.V.TR (Rinf Lie chart infGL pInf sInf toL lmul oneL invSet CuspSub)
 open scoped SchwartzMap FourierTransform RealInnerProductSpace ContDiff Topology
 
-private theorem mul_inv_lt_mul_inv_mul_inv_of_le_of_lt_one {G : Type} [LinearOrderedCommGroupWithZero G] (ua g ux p : G) (hua : ua ≠ 0)
-    (hg : 0 < g) (hgx : g ≤ ux) (hp : p < 1) (hp0 : p ≠ 0) :
-    ua * ux⁻¹ < ua * g⁻¹ * p⁻¹ := by
-  have h1 : ux⁻¹ ≤ g⁻¹ := inv_anti₀ hg hgx
-  have h2 : ua * ux⁻¹ ≤ ua * g⁻¹ := by gcongr
-  have h3 : 1 < p⁻¹ := one_lt_inv₀ (zero_lt_iff.mpr hp0) |>.mpr hp
-  have h4 : 0 < ua * g⁻¹ := by
-    apply zero_lt_iff.mpr
-    exact mul_ne_zero hua (inv_ne_zero hg.ne')
-  calc ua * ux⁻¹ ≤ ua * g⁻¹ := h2
-    _ = ua * g⁻¹ * 1 := (mul_one _).symm
-    _ < ua * g⁻¹ * p⁻¹ := mul_lt_mul_of_pos_left h3 h4
-
-private theorem mul_lt_of_lt_mul_inv_of_lt {G : Type} [LinearOrderedCommGroupWithZero G] (q y r g1 : G) (hr : 0 < r)
-    (hy : y < r) (hq : q < g1 * r⁻¹) : q * y < g1 := by
-  calc q * y ≤ q * r := by gcongr
-    _ < g1 * r⁻¹ * r := mul_lt_mul_of_pos_right hq hr
-    _ = g1 := by rw [mul_assoc, inv_mul_cancel₀ hr.ne', mul_one]
-
 theorem UpperTheory.V.Af.Smo.locDual :
     UpperTheory.V.Af.Smo.LocDual := by
   intro E _ _ w ψ hψ V hV
@@ -77,8 +58,8 @@ theorem UpperTheory.V.Af.Smo.locDual :
     refine ⟨(π₀ : HeightOneSpectrum.adicCompletion E w) ^ n * y, hγ₁ ?_, ?_⟩
     · show Valued.v.restrict ((π₀ : HeightOneSpectrum.adicCompletion E w) ^ n * y) < γ₁
       rw [map_mul, map_pow]
-      refine mul_lt_of_lt_mul_inv_of_lt _ _ _ _ (zero_lt_iff.mpr R.ne_zero) hy ?_
-      simpa using hn
+      exact (mul_le_mul_of_nonneg_left hy.le zero_le).trans_lt
+        ((lt_mul_inv_iff₀ (zero_lt_iff.mpr R.ne_zero)).1 (by simpa using hn))
     · exact inv_mul_cancel_left₀ (pow_ne_zero n hπ0) y
   · intro x hx
     by_contra hxV
@@ -93,7 +74,10 @@ theorem UpperTheory.V.Af.Smo.locDual :
       rw [← SetLike.mem_coe, Valuation.coe_ltAddSubgroup]
       show Valued.v.restrict (a * x⁻¹) < R
       rw [map_mul, map_inv₀, hR, Units.val_mk0, Units.val_inv_eq_inv_val]
-      exact mul_inv_lt_mul_inv_mul_inv_of_le_of_lt_one _ _ _ _ hua (zero_lt_iff.mpr γ.ne_zero) hxg hπ1 hπn
+      exact (mul_le_mul_of_nonneg_left (inv_anti₀ (zero_lt_iff.mpr γ.ne_zero) hxg)
+        zero_le).trans_lt (lt_mul_of_one_lt_right
+        (zero_lt_iff.mpr (mul_ne_zero hua (inv_ne_zero γ.ne_zero)))
+        ((one_lt_inv₀ (zero_lt_iff.mpr hπn)).2 hπ1))
     have h1 := hx _ hy
     rw [mul_comm a, ← mul_assoc, mul_inv_cancel₀ hx0, one_mul] at h1
     exact ha h1

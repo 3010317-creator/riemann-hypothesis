@@ -87,54 +87,32 @@ theorem UpperTheory.filtBy_restrictScalars_of_residual_characters :
         ((RingHom.ker (π : B →+* E)) ^ (p + 1) • (⊤ : Submodule B V))
       rw [map_smul, smul_comm ((κ j g : Eˣ) : E) a, ← smul_sub, pow_succ, Submodule.mul_smul]
       exact Submodule.smul_mem_smul (hsub a ha) (hstep g j))
-    have claim : ∀ n ∈ Submodule.span B (Set.range x), ∀ a ∈ (RingHom.ker (π : B →+* E)) ^ p,
-        a • n ∈ Submodule.span E (Set.image2 (fun a j => a • x j) s (Set.univ : Set ι)) := by
-      intro n hn
-      induction hn using Submodule.span_induction with
-      | mem y hy =>
-        obtain ⟨j, rfl⟩ := hy
-        intro a ha
-        have ha' : a ∈ Submodule.span E s := by
-          rw [hs]
-          exact ha
-        clear ha
-        induction ha' using Submodule.span_induction with
-        | mem b hb => exact Submodule.subset_span ⟨b, hb, j, trivial, rfl⟩
-        | zero => simp
-        | add b c _ _ hb hc =>
-          rw [add_smul]
-          exact add_mem hb hc
-        | smul c b _ hb =>
-          rw [smul_assoc]
-          exact Submodule.smul_mem _ c hb
-      | zero => intro a _; simp
-      | add y z _ _ hy hz =>
-        intro a ha
-        rw [smul_add]
-        exact add_mem (hy a ha) (hz a ha)
-      | smul b y _ hy =>
-        intro a ha
-        rw [smul_smul]
-        exact hy (a * b) (Ideal.mul_mem_right b _ ha)
-    have e : M p = M (p + 1) ⊔ Submodule.span E (Set.image2 (fun a j => a • x j) s (Set.univ : Set ι)) := by
-      apply le_antisymm
-      · intro v hv
-        apply Submodule.mem_sup_right
-        rw [hMm] at hv
-        refine Submodule.smul_induction_on hv ?_ ?_
-        · intro a ha n _
-          exact claim n (by rw [hx]; trivial) a ha
-        · intro y z hy hz
-          exact add_mem hy hz
-      · refine sup_le ?_ ?_
-        · intro v hv
-          rw [hMm] at hv ⊢
-          exact Submodule.smul_mono_left (Ideal.pow_le_pow_right (Nat.le_succ p)) hv
-        · rw [Submodule.span_le]
-          rintro y ⟨a, ha, j, -, rfl⟩
-          show a • x j ∈ M p
-          rw [hMm]
-          exact Submodule.smul_mem_smul (hsub a ha) trivial
+    let T : Submodule E V :=
+      Submodule.span E (Set.image2 (fun a j => a • x j) s (Set.univ : Set ι))
+    let U₀ : Submodule B V :=
+      { carrier := {n | ∀ a ∈ (RingHom.ker (π : B →+* E)) ^ p, a • n ∈ T}
+        zero_mem' := fun a _ => by simp
+        add_mem' := fun hy hz a ha => by rw [smul_add]; exact add_mem (hy a ha) (hz a ha)
+        smul_mem' := fun b _ hy a ha => by
+          rw [smul_smul]; exact hy (a * b) (Ideal.mul_mem_right b _ ha) }
+    have claim : (⊤ : Submodule B V) ≤ U₀ := by
+      rw [← hx, Submodule.span_le]
+      rintro _ ⟨j, rfl⟩ a ha
+      refine (Submodule.span_le (p := T.comap
+        ((LinearMap.toSpanSingleton B V (x j)).restrictScalars E))).2
+        (fun b hb => Submodule.subset_span ⟨b, hb, j, trivial, rfl⟩) ?_
+      change a ∈ ((RingHom.ker (π : B →+* E)) ^ p).restrictScalars E at ha
+      rwa [← hs] at ha
+    have e : M p = M (p + 1) ⊔ T := by
+      refine le_antisymm (fun v hv => Submodule.mem_sup_right ?_) (sup_le ?_ ?_)
+      · rw [hMm] at hv
+        exact Submodule.smul_induction_on hv (fun a ha n _ => claim (x := n) trivial a ha)
+          fun _ _ => add_mem
+      · exact fun v hv => (hMm p v).2 <|
+          Submodule.smul_mono_left (Ideal.pow_le_pow_right (Nat.le_succ p)) ((hMm _ v).1 hv)
+      · rw [Submodule.span_le]
+        rintro y ⟨a, ha, j, -, rfl⟩
+        exact (hMm p _).2 (Submodule.smul_mem_smul (hsub a ha) trivial)
     rw [e]
     exact hr
   have base : M N = ⊥ := by

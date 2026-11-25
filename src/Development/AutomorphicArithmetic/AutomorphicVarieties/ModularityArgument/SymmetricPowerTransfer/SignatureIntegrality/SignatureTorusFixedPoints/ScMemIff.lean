@@ -59,13 +59,6 @@ private theorem sc_eq (z : kˣ) : GeneralLinearGroup.scalar (Fin n) z = dg (fun 
   ext i j
   simp [dg, val_diagT, GeneralLinearGroup.scalar, Matrix.diagonal_apply]
 
-private theorem sc_comm (z : kˣ) (g : GL (Fin n) k) :
-    GeneralLinearGroup.scalar (Fin n) z * g = g * GeneralLinearGroup.scalar (Fin n) z := by
-  apply Units.ext
-  rw [Units.val_mul, Units.val_mul, sc_eq, dg, val_diagT]
-  ext i j
-  simp [Matrix.diagonal_mul, Matrix.mul_diagonal, mul_comm]
-
 private theorem sc_mem_iff (V : Lev k) (hn : 0 < n) (z : kˣ) :
     GeneralLinearGroup.scalar (Fin n) z ∈ V.J n ↔ z ∈ V.H := by
   constructor
@@ -94,7 +87,8 @@ private theorem H_of_mem (V : Lev k) (hn : 0 < n) {d : Fin n → kˣ} (hd : SDom
     calc
       GeneralLinearGroup.scalar (Fin n) z * (j⁻¹ * g * j)
           = j⁻¹ * (GeneralLinearGroup.scalar (Fin n) z * g) * j := by
-        rw [← mul_assoc, ← mul_assoc, sc_comm z j⁻¹]; simp only [mul_assoc]
+        rw [← mul_assoc, ← mul_assoc, GeneralLinearGroup.scalar_commute z j⁻¹]
+        simp only [mul_assoc]
       _ = _ := by rw [e2]; group
   have h1 : dg ((fun _ => z) * t * d) ∈ V.DC d := ⟨_, mul_mem (inv_mem hj) ha, _, mul_mem hb hj, e3⟩
   have h2 := (diagDC k V n d _ (dom_of d hd)).1 h1 ⟨0, hn⟩
@@ -106,7 +100,7 @@ private theorem mem_ZJ (V : Lev k) (u : GL (Fin n) k) :
     u ∈ V.ZJ n ↔ ∃ z : kˣ, ∃ j ∈ V.J n, u = GeneralLinearGroup.scalar (Fin n) z * j := by
   haveI : (GeneralLinearGroup.scalar (Fin n) : kˣ →* GL (Fin n) k).range.Normal := ⟨by
     rintro _ ⟨z, rfl⟩ g
-    exact ⟨z, by rw [← sc_comm z g]; simp⟩⟩
+    exact ⟨z, by rw [← GeneralLinearGroup.scalar_commute z g]; simp⟩⟩
   rw [← SetLike.mem_coe, Lev.ZJ, Subgroup.normal_mul, Set.mem_mul]
   constructor
   · rintro ⟨_, ⟨z, rfl⟩, j, hj, rfl⟩
@@ -125,7 +119,7 @@ private theorem fZ_eq (V : Lev k) (ω : kˣ →* ℂˣ) (hω : ∀ u ∈ V.H, ω
   have h1 : z / c ∈ V.H := H_of_mem V hn hd h (g := (GeneralLinearGroup.scalar (Fin n) z)⁻¹ * g) (by
     convert hc using 1
     simp only [map_div, div_eq_mul_inv, map_mul, map_inv]
-    rw [sc_comm z, ← mul_assoc, mul_assoc _ _ g]
+    rw [GeneralLinearGroup.scalar_commute z, ← mul_assoc, mul_assoc _ _ g]
     group)
   have h2 := hω _ h1
   rw [map_div, div_eq_one] at h2
@@ -138,7 +132,8 @@ private theorem dc_tr (V : Lev k) {d : Fin n → kˣ} {c : kˣ} {g u u' : GL (Fi
   refine ⟨u * a, mul_mem hu ha, b * u', mul_mem hb hu', ?_⟩
   have : (GeneralLinearGroup.scalar (Fin n) c)⁻¹ * (u * g * u') =
       u * ((GeneralLinearGroup.scalar (Fin n) c)⁻¹ * g) * u' := by
-    rw [← map_inv, ← mul_assoc, ← mul_assoc, sc_comm c⁻¹ u]; simp only [mul_assoc]
+    rw [← map_inv, ← mul_assoc, ← mul_assoc, GeneralLinearGroup.scalar_commute c⁻¹ u]
+    simp only [mul_assoc]
   rw [this, e]; group
 
 end
@@ -164,7 +159,7 @@ theorem UpperTheory.V.Z.Sym.Sig.eqZ :
     rw [← map_mul]
     refine wd _ _ _ _ (hJ (u * v)) (mul_mem (hJ u) (hJ v)) ?_
     rw [← eZ (u * v), Subgroup.coe_mul, eZ u, eZ v, map_mul, mul_assoc, mul_assoc,
-      ← mul_assoc (Jf u), ← sc_comm, mul_assoc]
+      ← mul_assoc (Jf u), ← GeneralLinearGroup.scalar_commute, mul_assoc]
   · intro z j u hj e
     exact wd _ _ _ _ (hJ u) hj ((eZ u).symm.trans e)
   · intro d hd
@@ -211,11 +206,11 @@ theorem UpperTheory.V.Z.Sym.Sig.eqZ :
           y.out = GeneralLinearGroup.scalar (Fin n) c *
               ((GeneralLinearGroup.scalar (Fin n) c)⁻¹ * y.out) := by group
           _ = GeneralLinearGroup.scalar (Fin n) c * (a * dg d * b) := by rw [e]
-          _ = _ := by rw [← mul_assoc, sc_comm c (a * dg d), mul_assoc]
+          _ = _ := by rw [← mul_assoc, GeneralLinearGroup.scalar_commute c (a * dg d), mul_assoc]
       rw [hj, ← QuotientGroup.out_eq' y, QuotientGroup.eq, e1]
       refine (mem_ZJ V _).2 ⟨c, (j : GL (Fin n) k)⁻¹ * b, mul_mem (inv_mem j.2) hb, ?_⟩
       calc (a * dg d * (j : GL (Fin n) k))⁻¹ * (a * dg d * (GeneralLinearGroup.scalar (Fin n) c * b))
           = (j : GL (Fin n) k)⁻¹ * GeneralLinearGroup.scalar (Fin n) c * b := by group
-        _ = _ := by rw [← sc_comm, mul_assoc]
+        _ = _ := by rw [← GeneralLinearGroup.scalar_commute, mul_assoc]
 
 end
