@@ -1042,7 +1042,7 @@ theorem first_theorem_tools_admitted (h70 : ExtremalProjectorTools) (h : Loc8All
   obtain ⟨⟨⟨_, hT12, hT13, _, hC15⟩, _, _, _, _⟩, ⟨hA1, hA3, _, _, _, _, _⟩, hA2⟩ := tool_statements_hold h70 D
   exact ⟨Joints.invariant_denominator_gives_exponent_data D hT12, Joints.integral_invariants_give_exponent_data D ⟨hT13, hC15⟩, h70.extremalProjectorAlt D,
     ⟨h.tKP1 D, h.tKP2 D, h.tKP3 D, h.tRES D⟩, Joints.degree_bounds_give_exponent_data D ⟨hA1, hA2, hA3⟩,
-    ⟨ColumnFamilies.Top.b9 D, ColumnFamilies.Top.b10 D, ColumnFamilies.Top.b11 D, _root_.Formalism.MainNotions.G.ColumnFamilies.admissible_lattice_biduality D⟩, ⟨h.tCartanDomain, h.tCartanOnto⟩,
+    ⟨h.tCartanDomain, h.tCartanOnto⟩,
     ⟨h.lWitt, h.tFlatTop, h.tFlatHH⟩, ⟨h.hyperLatticeBasis, h.hyperDualInclusion, h.tBePerfect, h.tHLSpans⟩, h.tTestSide,
     h.tLPOneEvery, ⟨h.windowClauseThree D, h.lWeylV⟩⟩
 

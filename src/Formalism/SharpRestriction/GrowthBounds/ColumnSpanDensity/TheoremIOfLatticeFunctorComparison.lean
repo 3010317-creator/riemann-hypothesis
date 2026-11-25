@@ -1440,7 +1440,7 @@ theorem second_estimate_of_restrictions (D : Formalism.BasicNotions.D7) (hR : LP
     SecondPartClosed D := by
   intro hA
   have hT := tools_of_admitted_statements D hA
-  have h16 : PairedPathIndependence D := hT.2.2.2.2.2.2.2.2.2.2.2
+  have h16 : PairedPathIndependence D := hT.2.2.2.2.2.2.2.2.2.2
   have hD : RestDims := restDims_of D h16.1 h16.2
   exact theorem_I_of_intermediate_bounds D FM hR (midLP_of rho_lower_bound_large_conductor h62 h63)
     (fun K hK => midMean_of D h61a rho_upper_bound_small_depth restEdge hD K hK) thrLP thrFM hA
@@ -1448,14 +1448,14 @@ theorem second_estimate_of_restrictions (D : Formalism.BasicNotions.D7) (hR : LP
 theorem theorem_I_of_finer_open_statements (D : Formalism.BasicNotions.D7) (hR : LPRingIndep) (h61 : LatticeFunctorComparison) (hC : RestCloudMaps) : SecondPartClosed D := by
   intro hA
   have hT := tools_of_admitted_statements D hA
-  have h16 : PairedPathIndependence D := hT.2.2.2.2.2.2.2.2.2.2.2
-  have h13 : TypeDecompositionsCommute D := hT.2.2.2.2.2.2.2.2.1
+  have h16 : PairedPathIndependence D := hT.2.2.2.2.2.2.2.2.2.2
+  have h13 : TypeDecompositionsCommute D := hT.2.2.2.2.2.2.2.1
   exact second_estimate_of_restrictions D hR (rho_sum_bound_of_maps_splitting (lattice_maps_of_functor_comparison h61) blockSplit') (cloud_bound_of_maps hC h13.2.2.1 h13.1 h16.2)
     (tensor_bound_of_order_bound restTensor restOrdBound h13.1 h13.2.1) hA
 
 theorem theorem_I_of_lattice_functor_comparison (D : Formalism.BasicNotions.D7) (h61 : LatticeFunctorComparison) (hC : RestCloudMaps) : SecondPartClosed D := by
   intro hA
-  have h12 : NestedTypeBound D := (tools_of_admitted_statements D hA).2.2.2.2.2.2.2.1
+  have h12 : NestedTypeBound D := (tools_of_admitted_statements D hA).2.2.2.2.2.2.1
   exact theorem_I_of_finer_open_statements D (lpRingIndep_of'' h12.1 restOIso) h61 hC hA
 
 theorem theorem_I_of_model_identification (D : Formalism.BasicNotions.D7) (hTie : TwoLetterModelIdentification) (hC : RestCloudMaps) : SecondPartClosed D :=
