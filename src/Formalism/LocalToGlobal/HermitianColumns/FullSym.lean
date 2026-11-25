@@ -54,11 +54,7 @@ def FullTiedS.cols {D : D7} (X : FullTiedS D) : ColsHermS D where
   base := X.base.toHermColsCh
   atT := X.atT
   levelZeroCompatibility := X.levelZeroCompatibility
-  ad := X.ad
-  cof := X.cof
   piG := X.piG
-  stabMap := X.stabMap
-  fvI := X.fvI
   std := X.std
   baseL := X.baseL
 
