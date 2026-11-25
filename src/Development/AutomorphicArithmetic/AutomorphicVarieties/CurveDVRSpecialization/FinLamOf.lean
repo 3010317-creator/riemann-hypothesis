@@ -170,13 +170,7 @@ private theorem flo_max {A R : Type} [CommRing A] [IsLocalRing A] [CommRing R] (
     have h1 : Ideal.comap ((Ideal.Quotient.mk P).comp f) ⊥ = Ideal.comap f P := by
       rw [← Ideal.comap_comap, ← RingHom.ker_eq_comap_bot, Ideal.mk_ker]
     rw [h1]
-    apply le_antisymm
-    · apply IsLocalRing.le_maximalIdeal
-      intro htop
-      have h1' : (1 : A) ∈ Ideal.comap f P := htop ▸ Submodule.mem_top
-      rw [Ideal.mem_comap, map_one] at h1'
-      exact ‹P.IsPrime›.ne_top ((Ideal.eq_top_iff_one P).2 h1')
-    · exact h
+    exact le_antisymm (IsLocalRing.le_maximalIdeal (Ideal.comap_ne_top f ‹P.IsPrime›.ne_top)) h
   have hb := Ideal.isMaximal_of_isIntegral_of_isMaximal_comap' _ hfin.to_isIntegral
     (⊥ : Ideal (R ⧸ P)) (by rw [hc]; exact IsLocalRing.maximalIdeal.isMaximal A)
   have hm := Ideal.comap_isMaximal_of_surjective (Ideal.Quotient.mk P)
@@ -249,19 +243,11 @@ theorem UpperTheory.V.Pr.finLamOf :
   have hM : Ideal.comap Φ (maximalIdeal ↥T.S.B) = Ideal.comap Φ Q := by
     symm
     apply hPmax.eq_of_le
-    · intro h1
-      apply (IsLocalRing.maximalIdeal.isMaximal ↥T.S.B).ne_top
-      rw [Ideal.eq_top_iff_one] at h1 ⊢
-      rw [Ideal.mem_comap, map_one] at h1
-      exact h1
+    · exact Ideal.comap_ne_top Φ (IsLocalRing.maximalIdeal.isMaximal ↥T.S.B).ne_top
     · exact Ideal.comap_mono hQle
   have hQmax : Q = maximalIdeal ↥T.S.B :=
     calc Q = Ideal.map Φ (Ideal.comap Φ Q) := (Ideal.map_comap_of_surjective Φ hsurj Q).symm
       _ = Ideal.map Φ (Ideal.comap Φ (maximalIdeal ↥T.S.B)) := by rw [hM]
       _ = maximalIdeal ↥T.S.B := Ideal.map_comap_of_surjective Φ hsurj _
   rw [hQmax]
-  apply IsLocalRing.le_maximalIdeal
-  intro h
-  have h1 : (1 : ↥T.S.B) ∈ T.S.mB := h ▸ Submodule.mem_top
-  rw [Fr.Space.mB, Ideal.mem_comap, map_one] at h1
-  exact (IsLocalRing.maximalIdeal.isMaximal T.S.R).ne_top ((Ideal.eq_top_iff_one _).2 h1)
+  exact IsLocalRing.le_maximalIdeal (Ideal.comap_ne_top _ (IsLocalRing.maximalIdeal.isMaximal T.S.R).ne_top)
