@@ -3,6 +3,7 @@ module
 public import Mathlib.Algebra.Algebra.Operations
 public import Mathlib.RingTheory.Noetherian.Defs
 public import Mathlib.RingTheory.Ideal.Operations
+public import Mathlib.RingTheory.Finiteness.Ideal
 
 @[expose] public section
 
