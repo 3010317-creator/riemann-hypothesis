@@ -338,7 +338,7 @@ private theorem pseudo_character_sum_comp_perm {M A : Type*} [Monoid M] [CommRin
 open Polynomial in
 theorem _root_.GlobalTheory.PsChar.cayleyHamilton (k R : Type) [Field k] [CharZero k] [Ring R] [Algebra k R]
     (d : ℕ) (T : R →ₗ[k] k) (h : _root_.GlobalTheory.PsChar.IsPsChar d (fun x => T x)) (x : R) :
-    ∃ p : Polynomial k, p.Monic ∧ p.natDegree = d ∧ ∀ y : R, T (Polynomial.aeval x p * y) = 0 := by
+    ∃ p : Polynomial k, p.Monic ∧ ∀ y : R, T (Polynomial.aeval x p * y) = 0 := by
   have hc : ∀ a b : R, T (a * b) = T (b * a) := h.comm
   have hupd : ∀ (m : ℕ) (i : Fin (m + 1)) (w : R),
       _root_.GlobalTheory.PsChar.alt (fun r : R => T r) (m + 1) (Function.update (fun _ => x) i w) =
@@ -396,24 +396,22 @@ theorem _root_.GlobalTheory.PsChar.cayleyHamilton (k R : Type) [Field k] [CharZe
     exact mul_ne_zero (pow_ne_zero _ (by norm_num)) (by exact_mod_cast Nat.factorial_ne_zero d)
   have hdeg : (∑ i : Fin d, C (c i / c d) * X ^ (i : ℕ)).degree < (d : WithBot ℕ) :=
     Polynomial.degree_sum_fin_lt _
-  refine ⟨X ^ d + ∑ i : Fin d, C (c i / c d) * X ^ (i : ℕ), Polynomial.monic_X_pow_add hdeg, ?_,
+  refine ⟨X ^ d + ∑ i : Fin d, C (c i / c d) * X ^ (i : ℕ), Polynomial.monic_X_pow_add hdeg,
     fun y => ?_⟩
-  · rw [Polynomial.natDegree_add_eq_left_of_degree_lt (by rwa [Polynomial.degree_X_pow]),
-      Polynomial.natDegree_X_pow]
-  · have e := hzero y
-    rw [Finset.sum_range_succ] at e
+  have e := hzero y
+  rw [Finset.sum_range_succ] at e
 
-    simp only [map_add (f := _), map_pow, Polynomial.aeval_X, map_sum, map_mul, Polynomial.aeval_C,
+  simp only [map_add (f := _), map_pow, Polynomial.aeval_X, map_sum, map_mul, Polynomial.aeval_C,
     add_mul, Finset.sum_mul, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul,
     map_smul, smul_eq_mul]
-    rw [Fin.sum_univ_eq_sum_range (fun i => c i / c d * T (x ^ i * y)) d, hc]
-    have hs : ∑ i ∈ Finset.range d, c i / c d * T (x ^ i * y) =
-        (∑ i ∈ Finset.range d, c i * T (y * x ^ i)) / c d := by
-      rw [Finset.sum_div]
-      exact Finset.sum_congr rfl fun i _ => by rw [hc]; ring
-    rw [hs]
-    field_simp
-    linear_combination e
+  rw [Fin.sum_univ_eq_sum_range (fun i => c i / c d * T (x ^ i * y)) d, hc]
+  have hs : ∑ i ∈ Finset.range d, c i / c d * T (x ^ i * y) =
+      (∑ i ∈ Finset.range d, c i * T (y * x ^ i)) / c d := by
+    rw [Finset.sum_div]
+    exact Finset.sum_congr rfl fun i _ => by rw [hc]; ring
+  rw [hs]
+  field_simp
+  linear_combination e
 
 end GlobalTheory.PsChar
 end -- clump:auto
@@ -1145,7 +1143,7 @@ theorem finite_semisimple (k R : Type) [Field k] [CharZero k] [IsAlgClosed k] [R
     (hnd : ∀ x, (∀ y, T (x * y) = 0) → x = 0) :
     Module.Finite k R ∧ IsSemisimpleRing R := by
   refine _root_.GlobalTheory.AlgRing.finite_and_isSemisimpleRing k R d (fun x => ?_) (fun x hx => ?_) (fun m e he hne => ?_)
-  · obtain ⟨p, hp, -, hT⟩ := cayleyHamilton k R d T h x
+  · obtain ⟨p, hp, hT⟩ := cayleyHamilton k R d T h x
     exact ⟨p, hp, hnd _ hT⟩
   · refine hnd x fun y => ?_
     rw [show T (x * y) = T (y * x) from h.comm x y]
