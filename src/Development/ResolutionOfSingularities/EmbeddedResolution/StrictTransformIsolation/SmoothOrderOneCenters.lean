@@ -94,13 +94,8 @@ private theorem irreducibleComponents_opens_not_subset_preimage {V : VanishingAs
     exact Set.inter_subset_right
   have hPirr : IsIrreducible (U.ι.base ⁻¹' (Zc ∩ (U : Set ↥W))) :=
     FunctorialResolution.EmbeddedResolution.isIrreducible_preimage_of_isEmbedding (hV.isEmbedding_ι W U) hZUirr hsubr
-  have hPeq : U.ι.base ⁻¹' (Zc ∩ (U : Set ↥W)) = U.ι.base ⁻¹' Zc := by
-    ext y
-    constructor
-    · intro hy
-      exact hy.1
-    · intro hy
-      exact ⟨hy, hmemU y⟩
+  have hPeq : U.ι.base ⁻¹' (Zc ∩ (U : Set ↥W)) = U.ι.base ⁻¹' Zc :=
+    Set.ext fun y => and_iff_left (hmemU y)
   rw [hPeq] at hPirr
   have hpreimageSub : U.ι.base ⁻¹' Zc ⊆ E := hE.2 hPirr hEZ
   have hZT : Zc ∩ (U : Set ↥W) ⊆ T := by
@@ -170,9 +165,7 @@ theorem false_of_smoothOrderOneCentersIsolated_opens {V : VanishingAssignment.{u
       (one_le_orderAt_iff_mem_support (Z.comap U.ι) y0).mpr hmem
     rw [hV.orderAt_comap W U Z y0, hy0] at h1
     exact (one_le_orderAt_iff_mem_support Z C.xi).mp h1
-  · rw [Set.disjoint_left]
-    intro y hy hy2
-    exact (Set.disjoint_left.mp hdisj hy) hy2
+  · exact hdisj.preimage _
   · intro y hy
     have h1 := hV.agreeNear_comap W U I (V W ⟨C.S, C.closedS⟩) y (hagree _ hy)
     rw [hV.comap_vanishing W ⟨C.S, C.closedS⟩ U ⟨U.ι.base ⁻¹' C.S, hS'closed⟩ rfl] at h1
@@ -292,10 +285,8 @@ private theorem false_of_isSmoothDivisor_of_smoothOrderOneCentersIsolated {V : V
       rw [hy1]
       exact hpt
     have hdisj' : Disjoint ((H.subschemeι ≫ U.ι).base ⁻¹' C.S)
-        ((H.subschemeι ≫ U.ι).base ⁻¹' Mem) := by
-      rw [Set.disjoint_left]
-      intro x hx hx2
-      exact (Set.disjoint_left.mp hdisj hx) hx2
+        ((H.subschemeι ≫ U.ι).base ⁻¹' Mem) :=
+      hdisj.preimage _
     have hsmooth : Smooth (H.subschemeι ≫ (U.ι ≫ p)) :=
       ((isSmoothDivisor_iff (U.ι ≫ p) H).mp hH).2
     have hsmV : Smooth ((V H.subscheme
