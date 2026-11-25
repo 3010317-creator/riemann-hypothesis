@@ -402,25 +402,12 @@ private def stdU (n j : ℕ) (κ : Type) [Field κ] : Submodule κ (Fin n → κ
     simp [hx a ha]
 
 private theorem finrank_stdU (hj : j ≤ n) : Module.finrank κ (stdU n j κ) = j := by
-  let e : stdU n j κ ≃ₗ[κ] (Fin j → κ) :=
-    { toFun := fun x b => x.1 (Fin.castLE hj b)
-      map_add' := fun _ _ => rfl
-      map_smul' := fun _ _ => rfl
-      invFun := fun y => ⟨fun a => if h : (a : ℕ) < j then y ⟨a, h⟩ else 0, by
-        intro a ha
-        simp [not_lt.2 ha]⟩
-      left_inv := by
-        intro x
-        apply Subtype.ext
-        funext a
-        by_cases h : (a : ℕ) < j
-        · simp [h, Fin.castLE]
-        · simp [h, x.2 a (not_lt.1 h)]
-      right_inv := by
-        intro y
-        funext b
-        simp [Fin.castLE] }
-  rw [e.finrank_eq]
+  have h : stdU n j κ = Pi.spanSubset κ (Set.range (Fin.castLE hj)) := by
+    ext x
+    rw [Pi.mem_spanSubset_iff, Fin.range_castLE]
+    change (∀ a : Fin n, j ≤ (a : ℕ) → x a = 0) ↔ _
+    simp only [Set.mem_setOf_eq, not_lt]
+  rw [h, Pi.dim_spanSubset, Set.ncard_range_of_injective (Fin.castLE_injective hj)]
   simp
 
 private theorem stdU_map_le (g : GL (Fin n) κ) (j : ℕ)
