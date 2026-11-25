@@ -822,7 +822,7 @@ theorem mem_Om_of_theta : GlobalTheory.Published.HarishChandraFinite → GlobalT
         ‖((u : (R.MW i (sg0 D A3.A)).sm τ) : (R.MW i (sg0 D A3.A)).H τ)‖ = 1 : ↥(lowT (R.MW i (sg0 D A3.A)) τ)) :
           (R.MW i (sg0 D A3.A)).sm τ)) := by
       simp [yv, kUnit, PiTensorProduct.map_tprod, PiTensorProduct.lift.tprod]
-    obtain ⟨haut, hcu⟩ := GlobalTheory.T.multiplicitySpaceAllLevels_values_smooth_cuspidal R.θ (Y.PW i) (R.MW i (sg0 D A3.A)) _ hey
+    obtain ⟨haut, hcu⟩ := _root_.GlobalTheory.MinfCusp.minf_val_autCusp R.θ (Y.PW i) (R.MW i (sg0 D A3.A)) _ hey
       (fun τ => ((Classical.epsilon fun u : ↥(lowT (R.MW i (sg0 D A3.A)) τ) =>
         ‖((u : (R.MW i (sg0 D A3.A)).sm τ) : (R.MW i (sg0 D A3.A)).H τ)‖ = 1 : ↥(lowT (R.MW i (sg0 D A3.A)) τ)) :
           (R.MW i (sg0 D A3.A)).sm τ))

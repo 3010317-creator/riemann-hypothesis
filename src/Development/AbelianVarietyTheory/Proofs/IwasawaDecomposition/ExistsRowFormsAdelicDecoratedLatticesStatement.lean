@@ -627,7 +627,7 @@ theorem eta_isT_std (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)) (
     isTEnv V pl ok x g := by
   intro hx2
   obtain ⟨α₀, hα₀, hfin⟩ := GlobalTheory.T.exists_adelicPoint_finitePart_eq_realOne V g
-  obtain ⟨e, he⟩ := GlobalTheory.T.exists_splitIdempotent_at_conjugatePrime Pb Ut
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.SplitEtaIdem.exists_isIdemAt_conjP Pb Ut
   obtain ⟨h1, h2⟩ := _root_.GlobalTheory.Mem.UnifConj.conj_unif_isUnif Pb Ut
   have hdict := _root_.GlobalTheory.Mem.SDFrameStd.lamHat_iff_int V Λ hβ
   have heps := _root_.GlobalTheory.IdemSupp.idem_mul_eq_zero v Pb e hv he

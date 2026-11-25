@@ -1354,7 +1354,7 @@ theorem levels_invariant (S : GridChoice W U) {t : T} {Φ : G.Datum} {β : CosFa
       pairPts S τ (Function.update x D.R.m (finEmb G.sp.topDec (y D.R.m * k))) (Function.update y D.R.m (y D.R.m * k))
         (Ψ (Function.update x D.R.m (finEmb G.sp.topDec (y D.R.m * k)) 0)) (F (Function.update y D.R.m (y D.R.m * k) 0)) =
       pairPts S τ x y (Ψ (x 0)) (F (y 0))) :=
-  ⟨GlobalTheory.T.expansionPairing_invariant_inner_vertex_level S hL hde hc ht hβ hτ hv Ψ F, _root_.GlobalTheory.TopZeroInv.pairPts_update_top_zero S hL hde hc ht hβ hτ hv Ψ F,
+  ⟨_root_.GlobalTheory.ExpansionInvariance.pairPts_update_top S hL hde hc ht hβ hτ hv Ψ F, _root_.GlobalTheory.TopZeroInv.pairPts_update_top_zero S hL hde hc ht hβ hτ hv Ψ F,
     GlobalTheory.T.expansionPairing_invariant_innerVertex_level S hL hde hc ht hβ hτ hv Ψ F, GlobalTheory.T.expansion_pairing_invariant_last_vertex_level S hL hde hc ht hβ hτ hv Ψ F⟩
 
 end GlobalTheory.ExpansionInvariance

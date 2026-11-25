@@ -615,7 +615,7 @@ theorem jointB_of_large : ∀ eps ez C₂ A : ℝ, 0 < eps → 0 < ez → ∃ x0
   have hR : Roomy L (max 100 (2 * C₂)) := h1 D L Pm hE hA (le_trans (le_max_left _ _) hx)
   have h11 : 11 ≤ D.nd.l i :=
     h2 D L (D.nd.l i) hZ (le_trans (le_max_right _ _) hx) Fact.out hin
-  refine ⟨GlobalTheory.T.placeCompletion_le_maxUnramified_away_2qd D.nbr i w hw hin.1 hin.2.1 hin.2.2.1, ?_⟩
+  refine ⟨_root_.GlobalTheory.bridge_field_le_unramified D.nbr i w hw hin.1 hin.2.1 hin.2.2.1, ?_⟩
   intro Cx hG
   obtain ⟨ε, g, hg, hB⟩ := _root_.GlobalTheory.HTW.Rec.recS_wordBase_natural L _ HW i r ρ π w hw Cx hG hR hadm hfont hJ hPt hin.1 hin.2.1 hin.2.2.1
   have hWB : WordsB L (D.nd.l i) C₂ (recWord L (liftIdx D i) ε g) := by
@@ -1144,7 +1144,7 @@ theorem jointCD_of_large : ∀ eps ez A : ℝ, 0 < eps → 0 < ez → ∃ x0 : �
   have h11 : 11 ≤ D.nd.l i := h2 D L _ hZ (le_trans (le_max_right _ _) hx) Fact.out hin
   have hn2 := hin.ne_two
   have hj := hin.2.2.2
-  refine ⟨GlobalTheory.T.placeCompletion_le_maxUnramified_away_2qd D.nbr i w hw hin.1 hin.2.1 hin.2.2.1, ?_⟩
+  refine ⟨_root_.GlobalTheory.bridge_field_le_unramified D.nbr i w hw hin.1 hin.2.1 hin.2.2.1, ?_⟩
   intro Cx hG
   obtain ⟨ε, g, hg, hB⟩ := _root_.GlobalTheory.HTW.Rec.recS_wordBase_natural L 100 HW i r ρ π w hw Cx hG hR hadm hfont hja hpt hin.1 hin.2.1 hin.2.2.1
   have hs := (_root_.GlobalTheory.FrobSign.frobG_isArithFrob_and_sign D (D.nd.l i) hin.1 hin.2.1 hin.2.2.1).2
