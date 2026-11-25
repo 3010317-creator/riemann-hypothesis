@@ -1330,7 +1330,7 @@ private lemma smul_left_cancel_of_ip_self_eq_one {n g : ℕ} {v : TF n g} (hv : 
   rw [h1, _root_.mul_one] at ha hb
   rw [← ha, ← hb, h]
 
-theorem vac_multiplier_cocycle : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r) (g : ℕ) (bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ) (idx : Fin g ≃ X.Ψ × Fin r) (n : ℕ), IsSympl X bas → Even n → ∀ D : SW.Level X, ∀ v₀ : Lt E r → TF n g, (∀ L ∈ D.lats, IsVac X bas D.w (tens (stdL E n) (D.sh L)) (v₀ L)) → ∀ mu : GL (Fin r) E → Lt E r → ℂ, (∀ ga ∈ D.grp, ∀ L ∈ D.lats, ∀ k : D.J, D.Red (fun i => (ga : Matrix (Fin r) (Fin r) E) *ᵥ D.β i) k → wG X bas idx ga (v₀ L) = (mu ga L * (D.lam k : ℂˣ)) • v₀ (mapL ga L)) → (∀ ga ∈ D.grp, ∀ L ∈ D.lats, ‖mu ga L‖ = 1) ∧ (∀ L ∈ D.lats, mu 1 L = 1) ∧ ∀ ga ∈ D.grp, ∀ ga' ∈ D.grp, ∀ L ∈ D.lats, mu (ga * ga') L = mu ga (mapL ga' L) * mu ga' L := by
+theorem vac_multiplier_cocycle : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r) (g : ℕ) (bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ) (idx : Fin g ≃ X.Ψ × Fin r) (n : ℕ), IsSympl X bas → Even n → ∀ D : SW.Level X, ∀ v₀ : Lt E r → TF n g, (∀ L ∈ D.lats, IsVac X bas D.w (tens (stdL E n) (D.sh L)) (v₀ L)) → ∀ mu : GL (Fin r) E → Lt E r → ℂ, (∀ ga ∈ D.grp, ∀ L ∈ D.lats, ∀ k : D.J, D.Red (fun i => (ga : Matrix (Fin r) (Fin r) E) *ᵥ D.β i) k → wG X bas idx ga (v₀ L) = (mu ga L * (D.lam k : ℂˣ)) • v₀ (mapL ga L)) → (∀ ga ∈ D.grp, ∀ L ∈ D.lats, ‖mu ga L‖ = 1) ∧ ∀ ga ∈ D.grp, ∀ ga' ∈ D.grp, ∀ L ∈ D.lats, mu (ga * ga') L = mu ga (mapL ga' L) * mu ga' L := by
   intro E _ _ _ r X g bas idx n hs hn D v₀ hvac mu hmu
   have hsd : SelfD X X.Λ := Lev.selfD_of_sympl hs
   have hlat : ∀ L ∈ D.lats, ∀ ga ∈ D.grp, mapL ga L ∈ D.lats := fun L hL ga hga =>
@@ -1418,17 +1418,7 @@ theorem vac_multiplier_cocycle : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
       mul_ne_zero (Units.ne_zero _) (Units.ne_zero _)
     apply mul_right_cancel₀ hk0
     linear_combination hc
-  refine ⟨hnorm, ?_, hcoc⟩
-
-  intro L hL
-  have h1 := hcoc 1 (Subgroup.one_mem _) 1 (Subgroup.one_mem _) L hL
-  rw [_root_.mul_one, mapL_one'] at h1
-  have hn1 := hnorm 1 (Subgroup.one_mem _) L hL
-  have hne : mu 1 L ≠ 0 := by
-    intro h
-    rw [h, norm_zero] at hn1
-    exact zero_ne_one hn1
-  exact mul_left_cancel₀ hne (h1.symm.trans (_root_.mul_one _).symm)
+  exact ⟨hnorm, hcoc⟩
 
 end GlobalTheory.Dict
 end -- clump:auto
@@ -1464,7 +1454,7 @@ theorem GlobalTheory.Dict.stabForms_eq_sum_thP : ∀ (E : Type) [Field E] [Numbe
   intro E _ _ _ r X g q0 hr bas idx n hS hE hn4 D hn M 𝔐 𝔍 hM hMm hmf hcop v₀ hv mu hmu k k' Jx _ L Q
     hL hinj hfix hQ
 
-  obtain ⟨hnorm, -, hcoc⟩ := _root_.GlobalTheory.Dict.vac_multiplier_cocycle E r X g bas idx n hS hE D v₀ hv mu hmu
+  obtain ⟨hnorm, hcoc⟩ := _root_.GlobalTheory.Dict.vac_multiplier_cocycle E r X g bas idx n hS hE D v₀ hv mu hmu
 
   have hsys := _root_.GlobalTheory.SW.isSystem_level E r X g bas idx n hS hE hn4 D hn M hM hMm v₀ hv mu hmu
 
