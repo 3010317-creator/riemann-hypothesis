@@ -134,11 +134,11 @@ theorem eci (v w : Var r) : euler v (coord w)⁻¹ = if v = w then -(coord w)⁻
 theorem euler_GG_z (TT : ℝ) : euler vz (gg TT : Fn r) = coord vz * coord vzb := by
   unfold gg
   rw [map_sub, eulerLeibniz, (eulerCoord r vz vz 0).1, (eulerCoord r vz vzb 0).1, (eulerCoord r vz vz _).2,
-    if_pos rfl, if_neg vz_ne]; simp
+    ite_eq_left rfl, ite_eq_right vz_ne]; simp
 theorem euler_gg_zb (TT : ℝ) : euler vzb (gg TT : Fn r) = coord vz * coord vzb := by
   unfold gg
   rw [map_sub, eulerLeibniz, (eulerCoord r vzb vz 0).1, (eulerCoord r vzb vzb 0).1, (eulerCoord r vzb vz _).2,
-    if_pos rfl, if_neg vz_ne.symm]; simp
+    ite_eq_left rfl, ite_eq_right vz_ne.symm]; simp
 
 theorem gg_ne (TT : ℝ) : (gg TT : Fn r) ≠ 0 := by
   intro h
@@ -167,7 +167,7 @@ theorem mk_comm (X Xs Y Ys : Op r) (h1 : X * Y = Y * X) (h2 : Xs * Ys = Ys * Xs)
 
 theorem rho_eq (P : Par) (π : Ty P) (i : ℕ) (h : 1 ≤ i ∧ i ≤ P.k - 1) :
     rho P π i = P.lo i + (((π ⟨i - 1, by omega⟩ : Fin _) : ℕ) : ℝ) := by
-  simp only [rho, dif_pos h]
+  simp only [rho, dite_eq_left h]
 
 theorem tyInterlaces : TyInterlaces := by
   intro P hP π i hi
@@ -276,7 +276,7 @@ theorem nrm_pos (P : Par) (hP : P.OK) (l : ℕ) (hl : l ∈ Icc 1 (P.k - 1)) (π
   have hI := tyInterlaces P hP π
   have hI' := tyInterlaces P hP π'
   have hr := rhoUp P l π π' hU l hl
-  rw [if_pos rfl] at hr
+  rw [ite_eq_left rfl] at hr
   have b' := hI' l hl
   rw [hr] at b'
   have b := hI l hl
@@ -307,19 +307,19 @@ theorem nrm_down (P : Par) (l : ℕ) (hl : l ∈ Icc 1 (P.k - 1)) (π π' : Ty P
     NrmDown P l π' = Nrm P l π := by
   have hr := rhoUp P l π π' hU
   have hrl := hr l hl
-  rw [if_pos rfl] at hrl
+  rw [ite_eq_left rfl] at hrl
   unfold NrmDown Nrm
   rw [hrl]
   have e1 : ∏ j ∈ (Icc 1 (P.k - 1)).erase l, (rho P π' j - (rho P π l + 1) + 1) =
       ∏ j ∈ (Icc 1 (P.k - 1)).erase l, (rho P π j - rho P π l) := by
     refine Finset.prod_congr rfl ?_
     intro j hj
-    rw [hr j (Finset.mem_of_mem_erase hj), if_neg (Finset.ne_of_mem_erase hj)]; ring
+    rw [hr j (Finset.mem_of_mem_erase hj), ite_eq_right (Finset.ne_of_mem_erase hj)]; ring
   have e2 : ∏ j ∈ (Icc 1 (P.k - 1)).erase l, (rho P π' j - (rho P π l + 1)) =
       ∏ j ∈ (Icc 1 (P.k - 1)).erase l, (rho P π j - rho P π l - 1) := by
     refine Finset.prod_congr rfl ?_
     intro j hj
-    rw [hr j (Finset.mem_of_mem_erase hj), if_neg (Finset.ne_of_mem_erase hj)]; ring
+    rw [hr j (Finset.mem_of_mem_erase hj), ite_eq_right (Finset.ne_of_mem_erase hj)]; ring
   rw [e1, e2]
   congr 3
   ring
@@ -400,10 +400,10 @@ theorem up_square (P : Par) (l j : ℕ) (hjl : j ≠ l) (π π1 π2 : Ty P) (h1 
     have b := h2 i
     by_cases hj : (i : ℕ) + 1 = j
     · have hl : (i : ℕ) + 1 ≠ l := fun h => hjl (hj.symm.trans h)
-      simp only [if_pos hj, if_neg hl] at a b ⊢; omega
+      simp only [ite_eq_left hj, ite_eq_right hl] at a b ⊢; omega
     · by_cases hl : (i : ℕ) + 1 = l
-      · simp only [if_neg hj, if_pos hl] at a b ⊢; omega
-      · simp only [if_neg hj, if_neg hl] at a b ⊢; omega
+      · simp only [ite_eq_right hj, ite_eq_left hl] at a b ⊢; omega
+      · simp only [ite_eq_right hj, ite_eq_right hl] at a b ⊢; omega
 
 theorem up_mixed1 (P : Par) (l j : ℕ) (hjl : j ≠ l) (π π1 π2 : Ty P) (h1 : Up P j π π1) (h2 : Up P l π2 π1) :
     ∃ π3, Up P l π3 π ∧ Up P j π3 π2 := by
@@ -413,10 +413,10 @@ theorem up_mixed1 (P : Par) (l j : ℕ) (hjl : j ≠ l) (π π1 π2 : Ty P) (h1 
     have b := h2 i
     by_cases hj : (i : ℕ) + 1 = j
     · have hl : (i : ℕ) + 1 ≠ l := fun h => hjl (hj.symm.trans h)
-      simp only [if_pos hj, if_neg hl] at a b ⊢; omega
+      simp only [ite_eq_left hj, ite_eq_right hl] at a b ⊢; omega
     · by_cases hl : (i : ℕ) + 1 = l
-      · simp only [if_neg hj, if_pos hl] at a b ⊢; omega
-      · simp only [if_neg hj, if_neg hl] at a b ⊢; omega
+      · simp only [ite_eq_right hj, ite_eq_left hl] at a b ⊢; omega
+      · simp only [ite_eq_right hj, ite_eq_right hl] at a b ⊢; omega
 
 theorem up_mixed2 (P : Par) (l j : ℕ) (hjl : j ≠ l) (π π2 π3 : Ty P) (h1 : Up P l π3 π) (h2 : Up P j π3 π2) :
     ∃ π1, Up P j π π1 ∧ Up P l π2 π1 := by
@@ -426,22 +426,22 @@ theorem up_mixed2 (P : Par) (l j : ℕ) (hjl : j ≠ l) (π π2 π3 : Ty P) (h1 
     have b := h2 i
     by_cases hj : (i : ℕ) + 1 = j
     · have hl : (i : ℕ) + 1 ≠ l := fun h => hjl (hj.symm.trans h)
-      simp only [if_pos hj, if_neg hl] at a b ⊢; omega
+      simp only [ite_eq_left hj, ite_eq_right hl] at a b ⊢; omega
     · by_cases hl : (i : ℕ) + 1 = l
-      · simp only [if_neg hj, if_pos hl] at a b ⊢; omega
-      · simp only [if_neg hj, if_neg hl] at a b ⊢; omega
+      · simp only [ite_eq_right hj, ite_eq_left hl] at a b ⊢; omega
+      · simp only [ite_eq_right hj, ite_eq_right hl] at a b ⊢; omega
 
 theorem nrm_shift (P : Par) (l j : ℕ) (hl : l ∈ Icc 1 (P.k - 1)) (hj : j ∈ Icc 1 (P.k - 1)) (hjl : j ≠ l)
     (π πj : Ty P) (hU : Up P j π πj) (hp : rho P π j - rho P π l + 1 ≠ 0) (hm : rho P π j - rho P π l - 1 ≠ 0) :
     Nrm P l πj * (rho P π j - rho P π l + 1) = Nrm P l π * (rho P π j - rho P π l - 1) := by
   have hr := rhoUp P j π πj hU
-  have hrl : rho P πj l = rho P π l := by rw [hr l hl, if_neg hjl.symm, add_zero]
-  have hrj : rho P πj j = rho P π j + 1 := by rw [hr j hj, if_pos rfl]
+  have hrl : rho P πj l = rho P π l := by rw [hr l hl, ite_eq_right hjl.symm, add_zero]
+  have hrj : rho P πj j = rho P π j + 1 := by rw [hr j hj, ite_eq_left rfl]
   have hjm : j ∈ (Icc 1 (P.k - 1)).erase l := Finset.mem_erase.2 ⟨hjl, hj⟩
   have hother : ∀ i ∈ ((Icc 1 (P.k - 1)).erase l).erase j, rho P πj i = rho P π i := by
     intro i hi
     have h1 := Finset.mem_erase.1 hi
-    rw [hr i (Finset.mem_of_mem_erase h1.2), if_neg h1.1, add_zero]
+    rw [hr i (Finset.mem_of_mem_erase h1.2), ite_eq_right h1.1, add_zero]
   have p1 : ∏ i ∈ (Icc 1 (P.k - 1)).erase l, (rho P πj i - rho P πj l) =
       (rho P π j - rho P π l + 1) * ∏ i ∈ ((Icc 1 (P.k - 1)).erase l).erase j, (rho P π i - rho P π l) := by
     rw [← Finset.mul_prod_erase _ _ hjm, hrj, hrl]
@@ -480,7 +480,7 @@ theorem gap (P : Par) (hP : P.OK) (l j : ℕ) (hl : l ∈ Icc 1 (P.k - 1)) (hj :
     have o := (ord P.k P.u P.u' (rho P π) hI l hl).2.2.1 j hj h
     have b := tyInterlaces P hP πl l hl
     have e := rhoUp P l π πl h1 l hl
-    rw [if_pos rfl] at e
+    rw [ite_eq_left rfl] at e
     rw [e] at b
     linarith [o.1, b.1]
   · right
@@ -488,7 +488,7 @@ theorem gap (P : Par) (hP : P.OK) (l j : ℕ) (hl : l ∈ Icc 1 (P.k - 1)) (hj :
     have o := (ord P.k P.u P.u' (rho P πj) hIj l hl).2.2.2 j hj h
     have b := hI l hl
     have e := rhoUp P j π πj h2 j hj
-    rw [if_pos rfl] at e
+    rw [ite_eq_left rfl] at e
     rw [e] at o
     linarith [o.1, b.2.2.1]
 
@@ -534,10 +534,10 @@ theorem kap_eq (P : Par) (f : Ty P → ℂ) :
   rfl
 
 theorem sR_pos {P : Par} {l : ℕ} {π π' : Ty P} (h : Up P l π π') : sR P l π' π = Real.sqrt (Nrm P l π) := by
-  unfold sR; rw [Matrix.of_apply, if_pos h]
+  unfold sR; rw [Matrix.of_apply, ite_eq_left h]
 
 theorem sR_neg {P : Par} {l : ℕ} {π π' : Ty P} (h : ¬ Up P l π π') : sR P l π' π = 0 := by
-  unfold sR; rw [Matrix.of_apply, if_neg h]
+  unfold sR; rw [Matrix.of_apply, ite_eq_right h]
 
 theorem r_norm (P : Par) (hP : P.OK) (l : ℕ) (hl : l ∈ Icc 1 (P.k - 1)) :
     (sR P l).transpose * sR P l = Matrix.diagonal (Nrm P l) := by
@@ -654,7 +654,7 @@ theorem aC_up (P : Par) (l : ℕ) (hl : l ∈ Icc 1 (P.k - 1)) (π π' : Ty P) (
     aC P π' = aC P π - 1 := by
   unfold aC
   have : ∑ i ∈ Icc 1 (P.k - 1), rho P π' i = ∑ i ∈ Icc 1 (P.k - 1), rho P π i + 1 := by
-    rw [Finset.sum_congr rfl (rhoUp P l π π' hU), Finset.sum_add_distrib, Finset.sum_ite_eq', if_pos hl]
+    rw [Finset.sum_congr rfl (rhoUp P l π π' hU), Finset.sum_add_distrib, Finset.sum_ite_eq', ite_eq_left hl]
   rw [this]; ring
 
 end Formalism.FourierDecayAlt.P.Mx4

@@ -87,8 +87,6 @@ noncomputable section
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.LocGL GlobalTheory.WeilDeligne GlobalTheory.LocLanglands
 open GlobalTheory.CuspRep GlobalTheory.HeightCounting
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
 namespace GlobalTheory.RecT
 
 abbrev RecFam : Type 1 :=
@@ -178,43 +176,6 @@ def GoodSplitU {n : ℕ} (U : Submodule ℂ (UA H.E n → ℂ)) : Prop :=
     IsCompAlong U (locU n w) ((cLoc w).comp (locU n w).subtype) σ.ρ → Good (GlobalTheory.BCSupport.clsOf σ)
 
 end Statements
-
-section Frozen
-
-open Formalism.MainNotions
-
-end Frozen
-
-section LawsSpeh
-
-open GlobalTheory.SmGL GlobalTheory.LocGL GlobalTheory.WeilDeligne GlobalTheory.LocLanglands Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.NuShift
-
-end LawsSpeh
-
-section RecordLaws
-
-open GlobalTheory.LocGL GlobalTheory.WeilDeligne Formalism.ConjugateSelfDual ReciprocityTheory.Gal
-
-variable {A : NAut N} (T : GlobalTheory.RowTie.WDTie N A)
-  {rec : ∀ w : PlE H, IrrGL (k := w.adicCompletion H.E) → WD (E := H.E) (A := N.plOm.1 w) (w := w) (N.plOm.2 w)}
-
-open GlobalTheory.RecLaws GlobalTheory.SmGL GlobalTheory.LocGL GlobalTheory.WeilDeligne GlobalTheory.LocLanglands Formalism.ConjugateSelfDual ReciprocityTheory.Gal
-
-end RecordLaws
-
-section Top
-
-open GlobalTheory.LocGL GlobalTheory.WeilDeligne Formalism.ConjugateSelfDual ReciprocityTheory.Gal
-
-end Top
-
-section RecordLawsFam
-
-open GlobalTheory.LocGL GlobalTheory.WeilDeligne Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.SmGL GlobalTheory.LocLanglands GlobalTheory.RecLaws
-
-variable {A : NAut N} (T : GlobalTheory.RowTie.WDTie N A) {rc : GlobalTheory.RecT.RecFam}
-
-end RecordLawsFam
 
 end GlobalTheory.DefiniteBCGood
 
