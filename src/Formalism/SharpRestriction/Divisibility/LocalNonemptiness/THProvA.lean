@@ -297,6 +297,8 @@ open MvPolynomial
 
 variable {p q r s : ℕ}
 
+abbrev Xm (l : Ln p q r s) : Module.End ℂ (Pol p q r s) := LinearMap.mulLeft ℂ (X l)
+
 end Checks
 
 section Skew
