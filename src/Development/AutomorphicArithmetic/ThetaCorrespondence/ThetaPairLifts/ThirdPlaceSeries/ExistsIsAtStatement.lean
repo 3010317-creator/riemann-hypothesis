@@ -1477,7 +1477,7 @@ theorem rowChi_conj_of_mem_alt (W : _root_.GlobalTheory.MiS.RealPackAlt ex) (hW 
     (hmem : ∀ k ∈ levS (D.sp.Y 0) β Lz, s * k * s⁻¹ ∈ rowJ W.S.X W.Q.instEq) :
     ∀ k ∈ levS (D.sp.Y 0) β Lz, rowChi W.S.X W.Q.instEq (s * k * s⁻¹) = levChi (D.sp.Y 0) β Lz k := by
   obtain ⟨kk, i1, i2, i3, i4, ι, v, o, n, G, pl, hcis, hvis, htie, hshape, hpin, hread, hbot⟩ := hPl
-  have hBot := _root_.GlobalTheory.LevZero.bot_of_placedBy_alt W hW u f B kk ι v o n G pl ⟨hcis, hvis, htie, hshape, hpin, hread, hbot⟩
+  have hBot := _root_.GlobalTheory.LevZero.bot_of_placedBy_alt W hW u f B kk ι v o n G pl ⟨hvis, htie, hread⟩
   have h0 : 0 + 2 * D.R.rS + 2 = D.R.m := by
     obtain ⟨b, hb⟩ := D.R.m_even
     have := D.R.two_le_m
