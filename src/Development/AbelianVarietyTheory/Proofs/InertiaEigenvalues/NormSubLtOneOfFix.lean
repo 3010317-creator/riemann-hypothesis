@@ -285,14 +285,8 @@ theorem mem_OC {x : ℂ_[l]} : x ∈ PadicComplexInt l ↔ ‖x‖ ≤ 1 := Glob
 
 theorem eq_of_coeff_zero {m : ℕ} (hm : 0 < m) {y y' : OCb l} (hy : y ^ l ^ m = y)
     (hy' : y' ^ l ^ m = y') (h : PreTilt.coeff 0 y = PreTilt.coeff 0 y') : y = y' := by
-  have key : ∀ (z : OCb l) (n : ℕ), PreTilt.coeff n z ^ l ^ n = PreTilt.coeff 0 z := by
-    intro z n
-    induction n with
-    | zero => simp
-    | succ n ih =>
-      rw [pow_succ', pow_mul, ← ih]
-      congr 1
-      exact Perfection.coeff_pow_p' (R := ModP (OC l) l) z n
+  have key : ∀ (z : OCb l) (n : ℕ), PreTilt.coeff n z ^ l ^ n = PreTilt.coeff 0 z := fun z n => by
+    rw [← map_pow, ← iterate_frobenius l n z, PreTilt.coeff_iterate_frobenius' z le_rfl, Nat.sub_self]
   have key2 : ∀ (z : OCb l), z ^ l ^ m = z → ∀ n : ℕ,
       PreTilt.coeff n z = PreTilt.coeff 0 z ^ l ^ ((m - 1) * n) := by
     intro z hz n
