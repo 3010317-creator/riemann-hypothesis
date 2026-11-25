@@ -298,21 +298,8 @@ def S1 (T : Subalgebra O (Xs → O)) (m : ℕ) : Subring (Xs → MvPolynomial (F
     intro f g hf hg α
     show (fun x => ((f * g) x).coeff α) ∈ MainNotions T
     simp only [Pi.mul_apply, MvPolynomial.coeff_mul]
-    have key : ∀ s : Finset ((Fin m →₀ ℕ) × (Fin m →₀ ℕ)),
-        (fun x => ∑ p ∈ s, (f x).coeff p.1 * (g x).coeff p.2) ∈ MainNotions T := by
-      intro s
-      induction s using Finset.induction_on with
-      | empty =>
-        have e : (fun x => ∑ p ∈ (∅ : Finset ((Fin m →₀ ℕ) × (Fin m →₀ ℕ))),
-            (f x).coeff p.1 * (g x).coeff p.2) = 0 := by funext x; simp
-        rw [e]; exact (MainNotions T).zero_mem
-      | insert a s ha ih =>
-        have e : (fun x => ∑ p ∈ insert a s, (f x).coeff p.1 * (g x).coeff p.2) =
-            (fun x => (f x).coeff a.1) * (fun x => (g x).coeff a.2) +
-              (fun x => ∑ p ∈ s, (f x).coeff p.1 * (g x).coeff p.2) := by
-          funext x; simp [Finset.sum_insert ha]
-        rw [e]; exact (MainNotions T).add_mem ((MainNotions T).mul_mem (hf _) (hg _)) ih
-    exact key _
+    rw [← Finset.sum_fn]
+    exact Subring.sum_mem _ fun p _ => (MainNotions T).mul_mem (hf p.1) (hg p.2)
   one_mem' := by
     intro α
     show (fun x => ((1 : Xs → MvPolynomial (Fin m) K) x).coeff α) ∈ MainNotions T
