@@ -94,14 +94,6 @@ private theorem isIntegral_natCast_lemma (q : ℕ) : IsIntegral ℤ (q : ℂ) :=
   have h := (isIntegral_algebraMap : IsIntegral ℤ (algebraMap ℤ ℂ (q : ℤ)))
   simpa using h
 
-private theorem unitOff_one_lemma {q : ℕ} : UnitOff q 1 := by
-  unfold UnitOff
-  refine ⟨one_ne_zero, 0, ?_, ?_⟩
-  · rw [pow_zero, mul_one]
-    exact isIntegral_one
-  · rw [pow_zero, inv_one, mul_one]
-    exact isIntegral_one
-
 private theorem unitOff_conj_lemma {q : ℕ} {u : ℂ} (hu : UnitOff q u) : UnitOff q (starRingEnd ℂ u) := by
   unfold UnitOff at hu ⊢
   obtain ⟨hu0, m, hu1, hu2⟩ := hu
@@ -127,7 +119,7 @@ theorem unitOff_div_norm {q : ℕ} {z : ℂ} (hz : UnitOff q z) : UnitOff q (z /
 
 private theorem unitOff_prod_lemma {q : ℕ} {I : Type} (s : Finset I) (f : I → ℂ)
     (hf : ∀ i ∈ s, UnitOff q (f i)) : UnitOff q (∏ i ∈ s, f i) :=
-  Finset.prod_induction f (UnitOff q) (fun _ _ => _root_.GlobalTheory.ChiUnit.unitOff_mul) unitOff_one_lemma hf
+  Finset.prod_induction f (UnitOff q) (fun _ _ => _root_.GlobalTheory.ChiUnit.unitOff_mul) (unitOff_one q) hf
 
 private theorem unitOff_val_lemma {L : Type} [Field L] [NumberField L] (φ : L →+* ℂ) (b c : 𝓞 L) (q N : ℕ)
     (hb : b ≠ 0) (hc : c * b = (q : 𝓞 L) ^ N) : UnitOff q (φ (algebraMap (𝓞 L) L b)) := by
