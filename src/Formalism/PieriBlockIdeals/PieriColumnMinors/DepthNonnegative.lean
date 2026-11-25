@@ -178,12 +178,6 @@ theorem application_window : ApplicationWindow := by
   push_cast
   linarith
 
-section SizeData₂
-
-open Formalism.RankGapBounds.ChebyshevFactorialBounds
-
-end SizeData₂
-
 section Subquotients
 
 open CategoryTheory CategoryTheory.Limits

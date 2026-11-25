@@ -269,10 +269,6 @@ theorem struct (TT : Finset (ZMod (2 * ν))) (colN : ZMod (2 * ν) → ℕ)
 
 end Struct
 
-section Reduce
-
-end Reduce
-
 end EGauss
 
 open EGauss

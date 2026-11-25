@@ -53,15 +53,6 @@ theorem integralSeries_uncurry_one {χ : PS C 1 dd} (h : IntS V χ) : IntS V (un
 end ChG
 
 
-section Chart
-
-open Formalism.L2.Pj NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
-variable (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)]
-
-end Chart
-
 end Formalism.L2.FormalSeriesBounds
 end -- clump:auto
 end -- clump:auto
@@ -376,15 +367,6 @@ theorem charGermSelf_holds : CharGermSelfSt := by
   refine ⟨upG (I := fun _ => I0) g γ0, ?_, ?_⟩
   · exact IntS.subst (fun _ => cc_X _) (fun _ => IntS_X _) hI
   · rw [AbstractGermZero.upG_subst (I := fun _ => I0) t ht0 g, key]
-
-section Chart
-
-open Formalism.L2.Pj NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
-variable (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)]
-
-end Chart
 
 end Formalism.L2.FormalSeriesBounds
 end -- clump:auto

@@ -43,12 +43,6 @@ namespace Formalism.L2.Col
 
 open Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.L2.DIV
 
-section Fix
-
-variable {κ : Type} [CommRing κ]
-
-end Fix
-
 section EntY
 
 variable {κ : Type} [CommRing κ]

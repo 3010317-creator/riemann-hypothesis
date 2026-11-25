@@ -613,16 +613,6 @@ lemma partner_inPhi {g : E0 × H} (t : H) (hg : ¬ InPhi (g + topPl t)) : InPhi 
 
 end
 
-section
-variable {H : Type} [AddCommGroup H] [Fintype H] [DecidableEq H]
-
-end
-
-section
-variable {H : Type} [AddCommGroup H] [Fintype H] [DecidableEq H]
-
-end
-
 end CR
 
 theorem proposition_size_bound : GrowthSizeBound := by

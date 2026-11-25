@@ -33,13 +33,6 @@ noncomputable section
 
 namespace Formalism.NG
 
-section HomQuotAux
-
-variable {R O M NN : Type*} [Ring R] [CommRing O] [AddCommGroup M] [Module R M] [Module O M]
-  [SMulCommClass R O M] [AddCommGroup NN] [Module R NN] {g : Type} [Fintype g]
-
-end HomQuotAux
-
 section KerHomAux
 
 variable {R : Type*} [Ring R] {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
@@ -57,13 +50,6 @@ def uncurryEquiv : (g → LatQ O d ρ) ≃ₗ[O] (g × d → KO O) where
 variable [SMulCommClass R O (LatQ O d ρ)]
 
 end KerHomAux
-
-section LenCokerAux
-
-variable {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
-  {ι : Type} [Fintype ι] [DecidableEq ι]
-
-end LenCokerAux
 
 end Formalism.NG
 end -- clump:auto

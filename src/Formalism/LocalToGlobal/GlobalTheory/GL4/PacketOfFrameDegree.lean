@@ -158,12 +158,6 @@ theorem mean_over_places_comap (φ : E →+* K) (G : InfinitePlace E → ℝ) :
 
 end Places
 
-section Cols
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (Ch : Chars X Pr R.m)
-
-end Cols
-
 end Formalism.L2.Col
 end -- clump:auto
 end -- clump:auto
@@ -184,12 +178,6 @@ namespace Formalism.L2.Col
 
 open Formalism.BasicNotions Formalism.L2.DIV Formalism.L2.GlobalTheoryTheory.HLatOps Formalism.HermitianLatticesTheory Formalism.HN Formalism.L2.Forms
 
-section Main
-
-variable (K : Type) [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K] {ι : Type} [Fintype ι] {n : ℕ} (lam : ι → DomWeight n)
-
-end Main
-
 section Mono
 
 theorem fock_norm_rational_eq {σ : Type} (P : MvPolynomial σ ℚ) : fockN (map (algebraMap ℚ ℂ) P) = ((Formalism.GradedWeylDivisibility.fockQ P P : ℚ) : ℝ) := by
@@ -208,14 +196,6 @@ theorem fock_norm_rational_eq {σ : Type} (P : MvPolynomial σ ℚ) : fockN (map
 variable {ι : Type} [Fintype ι] {n : ℕ}
 
 end Mono
-
-section Gen
-
-open Formalism.HermitianLattices.TraceIntegrality
-
-variable (K : Type) [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K] {ι : Type} [Fintype ι]
-
-end Gen
 
 end Formalism.L2.Col
 end -- clump:auto
@@ -444,12 +424,6 @@ theorem max_slope_line_neg_log (b : Basis ι K V) (X : InfinitePlace K → Matri
   linarith
 
 end F3
-
-section F3b
-
-variable {K : Type} [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K]
-
-end F3b
 
 end Formalism.L2.Col
 end -- clump:auto
@@ -967,10 +941,6 @@ theorem brp_lidx_colLat (M : Submodule (𝓞 K) (Fin n → K)) (w : HeightOneSpe
     rfl
 
 end LocDel
-
-section Sum
-
-end Sum
 
 section Weyl
 

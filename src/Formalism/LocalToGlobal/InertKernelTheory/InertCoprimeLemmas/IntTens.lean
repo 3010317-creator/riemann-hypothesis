@@ -59,12 +59,6 @@ namespace Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.RestC
 
 open NumberField Formalism.BasicNotions Formalism.MainNotions.TaylorLogMetric Formalism.L2.Ker Classical
 
-section Pd
-
-variable {σ : Type*} {p : ℕ} [Fact p.Prime]
-
-end Pd
-
 section Der
 
 variable {D : D7} {N N' : ℕ} {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p])
@@ -154,13 +148,6 @@ theorem atLog_eq (F : MvPowerSeries (D.what₂.Tau × Fin N' × Fin N) ℂ_[p]) 
   rw [MvPowerSeries.coe_substAlgHom]; rfl
 
 end Subst
-
-section Clauses
-
-variable {D : D7} (T : Tor D) {N N' : ℕ} {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p])
-  (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E))
-
-end Clauses
 
 end Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.RestC
 end -- clump:auto

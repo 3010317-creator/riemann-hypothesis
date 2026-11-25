@@ -360,13 +360,6 @@ theorem cmpLiftOf_of_raw (S : StepIn M i hi G) (e : D.what₂.LL →+* G.Kf) (hV
 
 end Rec
 
-section Card
-
-variable {D : D7} {Tw : TwForms D} {u : D.what₂.Word} {μ : D.what₂.Tup} {w : D.what₂.places.Pl}
-  {h : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)} {Fl : Fills (D.gat u w h)} {Lv : Levels Fl}
-
-end Card
-
 end Formalism.MainNotions.G.CmpJ.PCmpLiftTw
 end -- clump:auto
 end -- clump:auto
@@ -469,13 +462,6 @@ theorem cmpLiftOf_of_evVal (S : StepIn M i hi G) (e : D.what₂.LL →+* G.Kf) (
   cmpLiftOf_of_raw S e hV (cmpInvRaw_holds S e)
 
 end Rec
-
-section Card
-
-variable {D : D7} {Tw : TwForms D} {u : D.what₂.Word} {μ : D.what₂.Tup} {w : D.what₂.places.Pl}
-  {h : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)} {Fl : Fills (D.gat u w h)} {Lv : Levels Fl}
-
-end Card
 
 end Formalism.MainNotions.G.CmpJ.PCmpLiftInv
 end -- clump:auto
@@ -656,13 +642,6 @@ theorem cmpLiftOf_holds (S : StepIn M i hi G) (e : D.what₂.LL →+* G.Kf) : Cm
   exact cmpLiftOf_of_evVal S e (fun β => evValLe_of_wt S β (H β).wt) hS H X
 
 end Rec
-
-section Card
-
-variable {D : D7} {Tw : TwForms D} {u : D.what₂.Word} {μ : D.what₂.Tup} {w : D.what₂.places.Pl}
-  {h : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)} {Fl : Fills (D.gat u w h)} {Lv : Levels Fl}
-
-end Card
 
 end Formalism.MainNotions.G.CmpJ.PEvValChain
 end -- clump:auto
@@ -1307,12 +1286,6 @@ theorem HypTies.hyp {Z : AtIn X0 Tw u μ w h Lv} (A : HypTies Z Gt c) (K : CmpTi
 theorem HypTies.atHyp {Z : AtIn X0 Tw u μ w h Lv} (A : HypTies Z Gt c) (_K : CmpTied D X0 T Gt c) : AtHyp Z Gt c :=
   { ties := fun j hj => (A.step j hj).ties
     hypC := fun j hj => (A.step j hj).hypC }
-
-section Fam
-
-variable {L : SizeData₂ D} {hT : GatTies D} {Gi : G.Inst D L} {Gl : G.LatInst D} {Kc : G.Consts} {Dx : DivX D} {cX : ExtraC}
-
-end Fam
 
 end Formalism.MainNotions.G.ChF
 

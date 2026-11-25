@@ -54,25 +54,6 @@ theorem ld_biHom_of_euler [CharZero k] {a b : ℕ} {g : MvPolynomial σ k}
 
 end
 
-section fockSec
-open Formalism.GM.M
-
-variable {p : ℕ} [Fact p.Prime] {σ : Type}
-
-end fockSec
-
-section
-variable {k σ : Type} [Field k] {r : ℕ} {w e : Fin r → σ}
-
-end
-
-section fockSec
-open Formalism.GM.M
-
-variable {p : ℕ} [Fact p.Prime] {σ : Type} {r : ℕ} {w e : Fin r → σ}
-
-end fockSec
-
 end Formalism.GM
 end -- clump:auto
 end -- clump:auto

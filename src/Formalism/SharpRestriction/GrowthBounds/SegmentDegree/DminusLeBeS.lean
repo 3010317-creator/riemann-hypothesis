@@ -52,12 +52,6 @@ open Finset
 
 namespace Formalism.InvariantFactorPaths.BranchingDimensions
 
-section Digits
-
-variable {I1 I2 : Type}
-
-end Digits
-
 section Residue
 
 def cnt (T Q r c : ℕ) : ℕ :=
@@ -237,10 +231,6 @@ theorem residueClassLowerBound : ResidueClassLowerBound := by
     exact le_trans hle (Nat.cast_nonneg _)
 
 end Residue
-
-section Exact
-
-end Exact
 
 end Formalism.InvariantFactorPaths.BranchingDimensions
 end -- clump:auto

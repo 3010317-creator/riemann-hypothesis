@@ -69,18 +69,6 @@ theorem eG_mulVec (M : Matrix (Fin (r + t)) (Fin (r + t)) K)
 
 end GlobalTheory
 
-section Pts
-
-variable {O Y : Type} [CommRing O] [IsDomain O] (t : ℕ) (P : Y → O[X])
-
-end Pts
-
-section EE
-
-variable {A : Type} [CommRing A] {d : Type} [Fintype d] [DecidableEq d]
-
-end EE
-
 section Gen2
 
 variable {r t : ℕ} {A : Type} [CommRing A]

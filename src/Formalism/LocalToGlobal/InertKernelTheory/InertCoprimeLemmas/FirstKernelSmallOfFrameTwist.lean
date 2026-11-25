@@ -1225,12 +1225,6 @@ theorem sum_beta_even : SumBeEven := by
 
 end Even2
 
-section Iff
-
-variable {p : ℕ} [Fact p.Prime]
-
-end Iff
-
 end Formalism.L2.KerInert.K1
 end -- clump:auto
 end -- clump:auto
@@ -1433,15 +1427,6 @@ namespace Formalism.L2.KerInert.RepLt
 open Formalism.MainNotions.FormalGroupSystem Formalism.L2.KerInert.RepFrame Formalism.L2.KerInert.RepTwLat
 open Formalism.L2.G.Pend (Frm)
 open NumberField Formalism.BasicNotions Formalism.MainNotions.TaylorLogMetric Formalism.L2.Ker
-
-section Lat
-
-variable {p : ℕ} [Fact p.Prime] (X : Sys p) [IsFractionRing X.G.O X.G.Kf] (hfin : ∀ j c, (X.Lv.lev j c).FinClasses) (D : D7)
-  (M : ∀ j, X.Lt j → ∀ v : X.Pl, Matrix (Fin ((X.Pj j).m + 1)) (Fin ((X.Pj j).m + 1)) (X.G.P.Qq v))
-  (large₂ : ∀ j, X.Lt j → X.Lt (j + 1) → Submodule (𝓞 D.host.E) (Fin ((X.Pj j).m + 1) → D.host.E))
-  (Lg' : ∀ j, X.Lt j → X.Lt (j + 1) → Submodule (𝓞 D.host.E) (Fin ((X.Pj (j + 1)).m + 1) → D.host.E))
-
-end Lat
 
 section Int
 
