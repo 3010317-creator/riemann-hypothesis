@@ -1764,8 +1764,7 @@ theorem Formalism.FourierDecayAlt.P.rtt_sandwich : Formalism.FourierDecayAlt.Q.R
   exact rtt_sandwich'
 
 theorem Formalism.FourierDecayAlt.P.level_group_image : Formalism.FourierDecayAlt.Q.GlevImage := by
-  obtain ⟨hH, hU, -⟩ := level_basics
-  exact _root_.QnGlevImageW.glevImage_of hH hU
+  exact _root_.QnGlevImageW.glevImage_of level_basics.2.1
 
 theorem Formalism.FourierDecayAlt.P.level_transfer : Formalism.FourierDecayAlt.Q.LevelTransfer := by
   exact level_transfer_of_levHom level_basics.1
