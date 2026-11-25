@@ -18,13 +18,7 @@ theorem readT_integral (i : T.Tw) (b : Bool) (x : ↥D.LL0) (hx : IsIntegral ℤ
   have key : ∀ e : ↥D.LL0 →+* FractionRing (T.O0 i),
       ∃ y : T.O0 i, algebraMap (T.O0 i) (FractionRing (T.O0 i)) y = e x := by
     intro e
-    have h1 : IsIntegral ℤ (e x) := by
-      obtain ⟨p, hp, hpx⟩ := hx
-      refine ⟨p, hp, ?_⟩
-      have h3 := congrArg e hpx
-      rw [map_zero, Polynomial.hom_eval₂] at h3
-      rwa [RingHom.ext_int (e.comp (algebraMap ℤ _)) (algebraMap ℤ _)] at h3
-    have h2 : IsIntegral (T.O0 i) (e x) := h1.tower_top
+    have h2 : IsIntegral (T.O0 i) (e x) := hx.map_of_comp_eq (Int.castRingHom _) e (RingHom.ext_int _ _)
     exact IsIntegrallyClosed.isIntegral_iff.mp h2
   obtain ⟨y, hy⟩ := key (if b then T.emb0 i else T.emb0b i)
   refine ⟨algebraMap (T.O0 i) (T.O i) y, ?_⟩
