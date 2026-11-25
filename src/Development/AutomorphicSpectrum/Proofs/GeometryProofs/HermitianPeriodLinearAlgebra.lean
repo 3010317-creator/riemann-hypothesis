@@ -37,11 +37,8 @@ theorem star_hermForm {g : ℕ} {Hm : Matrix (Fin g) (Fin g) ℂ} (hH : Hm.IsHer
   rw [← star_dotProduct_star, Matrix.star_mulVec, star_star, hH.eq, Matrix.dotProduct_mulVec]
 
 theorem coef_unique {r g : ℕ} {V : Fin r → Fin g → ℂ} (hV : LinearIndependent ℂ V)
-    (c d : Fin r → ℂ) (h : ∑ i, c i • V i = ∑ i, d i • V i) : c = d := by
-  have := Fintype.linearIndependent_iff.mp hV (fun i => c i - d i)
-    (by simp [sub_smul, Finset.sum_sub_distrib, h])
-  funext i
-  exact sub_eq_zero.mp (this i)
+    (c d : Fin r → ℂ) (h : ∑ i, c i • V i = ∑ i, d i • V i) : c = d :=
+  funext (Fintype.linearIndependent_iffₛ.1 hV c d h)
 
 theorem exists_rightInverse {p : ℕ} {κ : Type*} [Fintype κ] [DecidableEq κ]
     (A : Matrix (Fin p) κ ℂ) (hA : A.rank = p) : ∃ C : Matrix (Fin p) κ ℂ, A * Cᵀ = 1 := by
