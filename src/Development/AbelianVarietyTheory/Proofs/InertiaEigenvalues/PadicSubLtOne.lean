@@ -201,12 +201,6 @@ theorem res_eq {F1 : Subfield E} (h : F1 = maximalRealSubfield E) (s : SplitPlac
 
 end Res
 
-section Padic
-
-variable {F : Type} [Field F] [NumberField F] {v : HeightOneSpectrum (𝓞 F)} {g : ℕ} [Fact g.Prime]
-
-end Padic
-
 end GlobalTheory.RowGood
 
 end

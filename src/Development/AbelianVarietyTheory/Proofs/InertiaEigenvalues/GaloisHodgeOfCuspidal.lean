@@ -37,15 +37,6 @@ open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.LocLanglands Glo
 open GlobalTheory.RowTie (WDTie)
 open Matrix (GeneralLinearGroup)
 
-section CharUnr
-
-open GlobalTheory.WeilDeligne GlobalTheory.LocLanglands GlobalTheory.SmGL GlobalTheory.PRep GlobalTheory.SplitWeil ValuativeRel
-
-variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] [_root_.NumberField.IsTotallyComplex E]
-  {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)}
-
-end CharUnr
-
 section Twist
 
 variable {Γ k : Type} [Group Γ] [Field k] {a : ℕ}

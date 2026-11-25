@@ -11,13 +11,6 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 namespace UpperTheory.V.X
 
-section Dat
-
-variable {k Ω : Type} [Field k] [NumberField k] [Field Ω] [Algebra k Ω] (l : ℕ) [Fact l.Prime]
-  {O : Type} [CommRing O] [Algebra ℤ_[l] O]
-
-end Dat
-
 section Lev
 
 variable {O : Type} [CommRing O]

@@ -52,18 +52,6 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 namespace GlobalTheory.DualSide
 
-section Anti
-
-variable {R : Type*} [CommRing R] {G : Type*} [Group G] [TopologicalSpace G]
-  {M : Type*} [AddCommGroup M] [Module R M] [TopologicalSpace M]
-  [IsTopologicalAddGroup M] [ContinuousConstSMul R M]
-  {M' : Type*} [AddCommGroup M'] [Module R M'] [TopologicalSpace M']
-  [IsTopologicalAddGroup M'] [ContinuousConstSMul R M']
-  {P : Type*} [AddCommGroup P] [Module R P] [TopologicalSpace P]
-  [IsTopologicalAddGroup P] [ContinuousConstSMul R P]
-
-end Anti
-
 section Dual
 
 variable {R : Type*} [CommRing R] {Γ : Type*} [Group Γ] {M : Type*} [AddCommGroup M] [Module R M]

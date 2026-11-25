@@ -35,8 +35,6 @@ structure GalSideAlt (D : D7) : Type 1 where
   lamTie : GlobalTheory.LamTie.IsLamTie D.ntw lam
   rank : 100 ≤ D.R.r
   primes : ∀ k, 2 * D.R.r ≤ D.host.g k
-section Abstract
-end Abstract
 end GlobalTheory.TwInputs
 end
 end

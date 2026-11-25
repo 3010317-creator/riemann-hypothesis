@@ -27,8 +27,6 @@ def SRest.toRealSpectralMatching (Rc : _root_.Formalism.L2.RecTAlt ex) {P : SPac
   G := P.G
   rowTie := fun _ => S.rowTie
   locTied := S.locTied
-section
-end
 end GlobalTheory.Mem.SRe
 end
 end

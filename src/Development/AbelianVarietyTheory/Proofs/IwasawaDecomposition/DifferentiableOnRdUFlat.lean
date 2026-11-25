@@ -132,15 +132,4 @@ variable {σ : c.F →+* ℂ} {r : ℕ} {U : Unf Xo c σ r}
 
 end Hol
 
-section Main
-
-open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField Matrix
-open Formalism.DegreeFormula Formalism.MJ Formalism.UG Formalism.L2.Geo Formalism.L2.PjFree
-open ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.G.PullbackSections
-open GlobalTheory GlobalTheory.HodgeDomain GlobalTheory.LieMet GlobalTheory.CxPts GlobalTheory.TrueCx
-open GlobalTheory.AllWt (Psi)
-attribute [local instance] Over.cartesianMonoidalCategory
-
-end Main
-
 end GlobalTheory.TrueCx.FlatConst

@@ -24,20 +24,6 @@ open GlobalTheory.SymBridge GlobalTheory.SplitWeil GlobalTheory.RootEx GlobalThe
 noncomputable section
 namespace GlobalTheory.Fam.MidLoc
 open Formalism.L2.Col (IntAt redP qOf)
-section Loc
-variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-variable [MeasurableSpace k] [BorelSpace k]
-end Loc
-section Comparison₂
-variable {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-end Comparison₂
-section Mat
-variable {E k : Type} [Field E] [NumberField E] [StarRing E] [Field k] [ValuativeRel k] [TopologicalSpace k]
-  [IsNonarchimedeanLocalField k]
-end Mat
-section Tuple
-open Formalism.L2.Col
-end Tuple
 section World
 variable {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B X} {l : I.Laws} {Z : TC.Later B (I.cols l)} {L : SizeData₂ (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G)}
   {hT : GatTies (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G)} {Gi : Formalism.MainNotions.G.Inst (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G) L} {Gl : Formalism.MainNotions.G.LatInst (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G)} {Kc : Formalism.MainNotions.G.Consts}

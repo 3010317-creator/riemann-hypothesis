@@ -35,14 +35,6 @@ def IsDeltaInv (ρ : Setup D.ntw) (u : ∀ i : D.ntw.Tw, Bool → PlE D.host →
 
 end Delta
 
-section Pin
-
-variable (Rl cG S) (YS : NX.NExpRealS Rl cG S)
-
-
-
-end Pin
-
 section Read
 
 variable (YS : NX.NExpRealS Rl cG S) (v₀ : ∀ (j : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (Rl.MW j σ).Vec)

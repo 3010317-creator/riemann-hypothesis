@@ -51,12 +51,6 @@ def ch (B : V →L[ℝ] T →L[ℝ] ℝ) (l : V) (t : T) : ℂ := Complex.exp (2
 
 end Torus
 
-section Cube
-
-variable {ι : Type} [Fintype ι]
-
-end Cube
-
 end PositivityTheory.Member.ZakTransform.Z
 end
 end
@@ -1068,22 +1062,6 @@ theorem evalPoints_add {κ : Type} (w w' : (κ → AF F) × (κ → AF F)) : evP
   Prod.ext (funext fun _ => map_add (evFin F v) _ _) (funext fun _ => map_add (evFin F v) _ _)
 
 end PartB
-
-section PartA
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.MainNotions.StandardLattice GlobalTheory.ChiGrid GlobalTheory.FunObj
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation (skewGram mulG colV adjV₁ incM boxB IsDatumB)
-open Formalism.IndefR.Datum.Brg (GG GI cA_inc GG_herm GI_GG)
-open scoped ContDiff
-
-variable {D : D7}
-
-end PartA
-
-section Datum
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.MainNotions.StandardLattice GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.StdFrames
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation (boxB IsDatumB)
-
-end Datum
 
 end PositivityTheory.Member.ZakTransform
 end

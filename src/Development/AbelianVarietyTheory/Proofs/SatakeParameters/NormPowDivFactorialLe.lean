@@ -88,16 +88,6 @@ variable [NeZero d]
 
 end Field
 
-section Padic
-
-open Formalism.G
-
-variable {l : ℕ} [hl : Fact l.Prime] {d : ℕ} {τ : Type}
-
-variable [NeZero d]
-
-end Padic
-
 section Main
 
 open GlobalTheory.ThStr Formalism.BasicNotions Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.GL3Theta

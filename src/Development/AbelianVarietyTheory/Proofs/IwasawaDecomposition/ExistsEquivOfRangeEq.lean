@@ -118,18 +118,6 @@ theorem majAt_eq_of_normAt [_root_.NumberField.IsTotallyComplex K] {V ι W κ : 
 
 end Polar
 
-section Block
-
-variable {K : Type} [Field K] [NumberField K] [StarRing K] {G : Type} [Group G] [Fintype G] {Pl0 : Type}
-  (B : BlockDat K G Pl0) (ℓ : Lvl K G)
-
-variable {B ℓ} {v0 : InfinitePlace K} (hv0 : IsConjAt v0) {s : ℕ} (h : B.Ok s) (hX : ∀ χ ∈ ℓ.X, IsAbsIrrChar χ)
-
-
-
-
-end Block
-
 end GlobalTheory.Mem.RowSides
 
 end
