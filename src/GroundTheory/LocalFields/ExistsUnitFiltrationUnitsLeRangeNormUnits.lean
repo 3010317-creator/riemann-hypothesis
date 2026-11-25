@@ -241,11 +241,7 @@ variable (K L) [Algebra.IsSeparable K L]
 
 
 theorem exists_trace_integer_ne_zero : ∃ z : 𝒪[L], Algebra.trace 𝒪[K] 𝒪[L] z ≠ 0 := by
-  obtain ⟨w, hw⟩ : ∃ w : L, Algebra.trace K L w ≠ 0 := by
-    by_contra h
-    refine one_ne_zero ((traceForm_nondegenerate K L).1 1 fun w ↦ ?_)
-    simp only [not_exists, not_not] at h
-    simpa using h w
+  obtain ⟨w, hw⟩ : ∃ w : L, Algebra.trace K L w ≠ 0 := DFunLike.exists_ne (Algebra.trace_ne_zero K L)
   have hw0 : w ≠ 0 := by rintro rfl; simp at hw
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible 𝒪[K]
   have h1 : valuation L (algebraMap K L (ϖ : K)) < 1 :=
