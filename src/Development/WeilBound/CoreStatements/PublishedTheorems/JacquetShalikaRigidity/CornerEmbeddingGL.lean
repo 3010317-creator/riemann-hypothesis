@@ -222,12 +222,8 @@ theorem closedEmb_emb (h : k ≤ m) (hι : IsEmb ι) : IsClosedEmbedding ι := b
       obtain ⟨g, hg⟩ := surj_emb h hι x hx
       exact ⟨g, hg.symm⟩
   rw [e]
-  refine isClosed_iInter fun i => isClosed_iInter fun c => ?_
-  by_cases hp : (k ≤ (i : ℕ) ∨ k ≤ (c : ℕ))
-  · simp only [hp, true_implies]
-    exact isClosed_eq ((Units.continuous_val (M := Matrix (Fin m) (Fin m) R)).matrix_elem i c) continuous_const
-  · simp only [hp, false_implies, Set.setOf_true]
-    exact isClosed_univ
+  exact isClosed_iInter fun i => isClosed_iInter fun c => isClosed_imp isOpen_const
+    (isClosed_eq ((Units.continuous_val (M := Matrix (Fin m) (Fin m) R)).matrix_elem i c) continuous_const)
 
 end Top
 
