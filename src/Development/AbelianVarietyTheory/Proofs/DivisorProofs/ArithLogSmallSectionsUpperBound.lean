@@ -239,8 +239,8 @@ theorem encard_finset_le_pow_mul {G : Type} [AddCommGroup G] [IsAddTorsionFree G
       apply (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).1
       push_cast
       exact sub_eq_zero.2 e
-    have hvx : v x = b.equivFun ⟨x, hx⟩ := dif_pos hx
-    have hvy : v y = b.equivFun ⟨y, hy⟩ := dif_pos hy
+    have hvx : v x = b.equivFun ⟨x, hx⟩ := dite_eq_left hx
+    have hvy : v y = b.equivFun ⟨y, hy⟩ := dite_eq_left hy
     have e : q • (b.equivFun.symm (fun i => (v x i - v y i) / (q : ℤ)) : L) = ⟨x, hx⟩ - ⟨y, hy⟩ := by
       apply b.equivFun.injective
       rw [map_nsmul, LinearEquiv.apply_symm_apply, map_sub, ← hvx, ← hvy]
@@ -821,7 +821,7 @@ theorem levels_le_selfInter (hC : GlobalTheory.Published.ArCalc) (hA : AmpleHS) 
     by_cases hJ : ∀ j, n j = 0
     · simp only [hJ, Nat.cast_zero, Finset.sum_const_zero, mul_zero]
       exact selfInter_nonneg_of_isFS hC hA hS hX hM hw0 hμ
-    push_neg at hJ
+    push Not at hJ
     obtain ⟨j₀, hj₀⟩ := hJ
     let J' := {j // 1 ≤ n j}
     let e' : J' → X.functionField := fun j => e j.1
@@ -1028,7 +1028,7 @@ theorem exists_idealSheaf_principalises_of_ne_zero : ∀ (X : Scheme.{0}) [IsInt
       ∃ f ∈ I.ideal ⟨V₀, hV₀⟩, genericPoint X ∈ X.basicOpen f := by
     intro I
     rw [Scheme.IdealSheafData.mem_support_iff_of_mem (U := ⟨V₀, hV₀⟩) hηV₀, Scheme.mem_zeroLocus_iff]
-    push_neg
+    push Not
     rfl
   have hmul : ∀ I I' : X.IdealSheafData, genericPoint X ∉ I.support → genericPoint X ∉ I'.support →
       genericPoint X ∉ (I * I').support := by

@@ -1406,7 +1406,7 @@ theorem dimLe_of_local : ∀ (S : Scheme.{0}) (A B : Over S), Surjective A.hom �
       ⟨x, by rw [Scheme.Hom.mem_preimage, hx]; exact hy⟩
     rw [e]
     exact smoothDim_restrict_pullback B.hom t (V i) (hB i)
-  · push_neg at hne
+  · push Not at hne
     exact ⟨fun x => (hne _ x.2).elim⟩
 
 end GlobalTheory.DualCon

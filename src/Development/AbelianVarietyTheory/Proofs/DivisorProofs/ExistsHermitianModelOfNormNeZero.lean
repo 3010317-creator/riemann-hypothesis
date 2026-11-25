@@ -321,7 +321,7 @@ theorem exists_model : ∀ (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheory.Uni
   have hcol : ∀ i z, B.herm x (b i) z = K.c (b.repr z i) := by
     intro i z
     rw [hsym, hexp z (b i)]
-    simp only [hb, hv, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [hb, hv, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   refine ⟨LinearMap.toMatrix b b (LinearMap.mulLeft K.E B.g), b.equivFun, hσx, fun y => ?_, fun y z => ?_⟩
   · rw [Module.Basis.equivFun_apply, Module.Basis.equivFun_apply, LinearMap.toMatrix_mulVec_repr]
     rfl

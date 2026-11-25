@@ -277,7 +277,7 @@ theorem GlobalTheory.HTFaith.faithful : ∀ (p : ℕ) [Fact p.Prime] (D : Global
     by_cases hij : i = j <;> simp [Matrix.scalar_apply, hij]
   have hne' : Φ x' ≠ 0 := fun h => hx' (hker x' h)
   obtain ⟨i, j, hij⟩ : ∃ i j, Φ x' i j ≠ 0 := by
-    by_contra h; push_neg at h; exact hne' (Matrix.ext h)
+    by_contra h; push Not at h; exact hne' (Matrix.ext h)
   choose E hE using fun k l => hsurj (Matrix.single k l 1)
   let y := ∑ k, E k i * x' * E j k
   have hy : Φ y = Matrix.scalar _ (Φ x' i j) := by

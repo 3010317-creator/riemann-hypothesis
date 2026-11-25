@@ -397,7 +397,7 @@ private theorem reduced_of_etale_proj (R S : Type) [CommRing R] [CommRing S] [Al
   have hnil : φ s ∉ nilradical R := by
     rw [nilradical_eq_zero]; simpa using hφ
   rw [nilradical_eq_sInf, Ideal.mem_sInf] at hnil
-  push_neg at hnil
+  push Not at hnil
   obtain ⟨p, hp, hsp⟩ := hnil
   haveI : p.IsPrime := hp
   let κ := p.ResidueField

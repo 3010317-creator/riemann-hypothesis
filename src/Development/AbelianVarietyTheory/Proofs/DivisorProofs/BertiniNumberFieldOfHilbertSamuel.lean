@@ -583,9 +583,9 @@ theorem homogeneous_components_of_integral_equation (F K : Type) [Field F] [Fiel
       = MvPolynomial.eval₂ φ w (homogeneousComponent (e * (m - k)) (b k)) * τ ^ (k : ℕ) := by
     intro k
     have hle : e * (k : ℕ) ≤ e * m := Nat.mul_le_mul_left e k.is_lt.le
-    rw [hpow, ← mul_assoc, Polynomial.coeff_mul_X_pow', if_pos hle, Polynomial.coeff_mul_C,
+    rw [hpow, ← mul_assoc, Polynomial.coeff_mul_X_pow', ite_eq_left hle, Polynomial.coeff_mul_C,
       ← Nat.mul_sub, coeff_eval₂_C_mul_X]
-  rw [hpow, Polynomial.coeff_C_mul_X_pow, if_pos rfl] at hc
+  rw [hpow, Polynomial.coeff_C_mul_X_pow, ite_eq_left rfl] at hc
   simpa only [hterm] using hc
 
 end GlobalTheory
@@ -1372,7 +1372,7 @@ theorem line_natDegree_le_and_coeff (F R : Type) [CommRing F] [CommRing R] [Alge
   have hdeg : ∀ p, (v p).natDegree ≤ w p := by
     rintro ⟨i, j⟩
     refine Fin.lastCases ?_ (fun i => ?_) i
-    · simp only [hv, w, join, if_true, Fin.lastCases_last]
+    · simp only [hv, w, join, ite_true, Fin.lastCases_last]
       rw [add_comm]
       exact Polynomial.natDegree_linear_le
     · simp [hv, w, join]
@@ -1526,9 +1526,9 @@ theorem coeffDeg_line {D N δ : ℕ} (f : MvPolynomial (Fin (D + 1) × Fin N) F)
         (fun j => Polynomial.C (C (ξ₀ j)) + Polynomial.C (C (ξ₁ j)) * Polynomial.X) p) := by
     rintro ⟨i, j⟩
     refine Fin.lastCases ?_ (fun i => ?_) i
-    · simp only [join, Fin.lastCases_last, if_true]
+    · simp only [join, Fin.lastCases_last, ite_true]
       exact (coeffDeg_C (totalDegree_C _).le).add ((coeffDeg_C (e := 0) (totalDegree_C _).le).mul coeffDeg_X)
-    · simp only [join, Fin.lastCases_castSucc, if_neg (Fin.castSucc_ne_last i)]
+    · simp only [join, Fin.lastCases_castSucc, ite_eq_right (Fin.castSucc_ne_last i)]
       exact coeffDeg_C (totalDegree_X _).le
   refine (hc.mul (coeffDeg_prod Finset.univ _ _ fun p _ => (hw p).pow (d p))).mono (le_of_eq ?_)
   rw [zero_add, Fintype.sum_prod_type, Fin.sum_univ_castSucc]

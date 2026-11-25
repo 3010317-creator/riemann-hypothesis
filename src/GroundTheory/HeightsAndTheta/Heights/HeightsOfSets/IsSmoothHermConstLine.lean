@@ -289,7 +289,7 @@ theorem inter_nonneg (hV : CurveDivVertical.Statement) (hI : IsIntersectionFamil
   unfold recR
   rw [sub_nonneg]
   refine le_trans h2 (finsum_nonneg fun V ↦ finsum_nonneg fun hV' ↦ ?_)
-  rw [if_neg (hV K ι W _ d hW (isMultiHomog_chartMon c d) hc V hV')]
+  rw [ite_eq_right (hV K ι W _ d hW (isMultiHomog_chartMon c d) hc V hV')]
   exact mul_nonneg (Nat.cast_nonneg _)
     (mul_nonneg (Int.cast_nonneg (geoNum_zero_nonneg _ _)) (Real.log_natCast_nonneg _))
 

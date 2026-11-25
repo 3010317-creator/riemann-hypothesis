@@ -671,7 +671,7 @@ theorem retype : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O →+*
   let F : (Fin m → ℂ) → (S →ₐ[ℂ] Matrix (Fin g) (Fin g) ℂ) := fun b =>
     if hb : b ∈ B' then restr (V b) (R b) S (hVR b hb) (hSV b hb.1)
     else restr (V b₀) (R b₀) S (hVR b₀ hb₀') (hSV b₀ hb₀)
-  have hF : ∀ b (hb : b ∈ B'), F b = restr (V b) (R b) S (hVR b hb) (hSV b hb.1) := fun b hb => dif_pos hb
+  have hF : ∀ b (hb : b ∈ B'), F b = restr (V b) (R b) S (hVR b hb) (hSV b hb.1) := fun b hb => dite_eq_left hb
   have hFd : ∀ a i j, DifferentiableOn ℂ (fun b => F b a i j) B' := by
     intro a i j
     refine DifferentiableOn.congr (f := fun b => (V b * a.1 * R b) i j) ?_ ?_

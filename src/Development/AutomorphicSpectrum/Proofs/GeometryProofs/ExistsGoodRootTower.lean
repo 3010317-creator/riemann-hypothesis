@@ -365,9 +365,9 @@ theorem tele (F : ℕ → ℤ) (k M : ℕ) (hk : k ≤ M) :
     rw [Finset.sum_eq_zero]
     · simp
     · intro n hn
-      rw [if_neg (by simpa using hn)]
+      rw [ite_eq_right (by simpa using hn)]
   | succ M hM ih =>
-    rw [Finset.sum_range_succ, ih, if_pos hM]
+    rw [Finset.sum_range_succ, ih, ite_eq_left hM]
     ring
 
 theorem abel (N : ℕ) (f x : Fin N → ℤ) :
@@ -555,7 +555,7 @@ theorem exists_eff : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsC
         by_contra h
         exact ha ⟨τ, i, by have := i.2; omega, rfl⟩
       have := hν τ i ⟨i + 1, hi⟩ (by simp [Fin.lt_def])
-      simp only [gapN, dif_pos hi]
+      simp only [gapN, dite_eq_left hi]
       omega
   obtain ⟨-, h2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.nefPol hIn _ _ A.Sys Fl hFl G.K G.J G.Ω G.y A.Re A.J_top hb
     (fun V _ L => GroundTheory.Heights₂.Heights.NumbersDVR.intNum ℚ V L) (GroundTheory.Heights₂.Heights.NumbersDVR.IntNumIsFieldIntersection.full ℚ G.K G.J) (gapN ν) hn

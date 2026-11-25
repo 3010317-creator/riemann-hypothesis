@@ -624,12 +624,12 @@ section Loc1
 theorem ite_congrB {α : Type} {c c' : Prop} {i : Decidable c} {i' : Decidable c'} {a a' b : α} (h : c ↔ c') (hv : c' → a = a') :
     @ite α c i a b = @ite α c' i' a' b := by
   by_cases hc : c'
-  · rw [if_pos hc, if_pos (h.2 hc), hv hc]
-  · rw [if_neg hc, if_neg (mt h.1 hc)]
+  · rw [ite_eq_left hc, ite_eq_left (h.2 hc), hv hc]
+  · rw [ite_eq_right hc, ite_eq_right (mt h.1 hc)]
 
 theorem ite_neB {α : Type} {c : Prop} {i : Decidable c} {a b : α} (h : @ite α c i a b ≠ b) : c := by
   by_contra hc
-  exact h (if_neg hc)
+  exact h (ite_eq_right hc)
 
 variable {E K : Type} [Field E] [NumberField E] [StarRing E] [Field K] {P : HeightOneSpectrum (𝓞 E)}
 
@@ -646,14 +646,14 @@ theorem eN_inB (N p : ℕ) (hp : p < N) : Loc.eN E N p = Pi.single (⟨p, hp⟩ 
   unfold Loc.eN
   by_cases h : l.1 = p
   · have hl : l = ⟨p, hp⟩ := Fin.ext h
-    rw [if_pos h, hl, Pi.single_eq_same]
+    rw [ite_eq_left h, hl, Pi.single_eq_same]
   · have hl : l ≠ ⟨p, hp⟩ := fun e => h (congrArg Fin.val e)
-    rw [if_neg h, Pi.single_eq_of_ne hl]
+    rw [ite_eq_right h, Pi.single_eq_of_ne hl]
 
 theorem eN_outB (N p : ℕ) (hp : ¬ p < N) : Loc.eN E N p = 0 := by
   funext l
   unfold Loc.eN
-  rw [if_neg fun h : l.1 = p => hp (h ▸ l.2)]
+  rw [ite_eq_right fun h : l.1 = p => hp (h ▸ l.2)]
   rfl
 
 theorem entB_inB (q k₀ n' n : ℕ) (ex' ex : ℕ → ℕ) (x : HomE E (n' + 0) (n + 0)) {p p' : ℕ} (hp : p < n + 0) (hp' : p' < n' + 0) :
@@ -662,10 +662,10 @@ theorem entB_inB (q k₀ n' n : ℕ) (ex' ex : ℕ → ℕ) (x : HomE E (n' + 0)
   rw [fIdx_zeroB, fIdx_zeroB]
   have s1 : LocE.scE n' ex' p' = 0 := by
     unfold LocE.scE
-    rw [if_pos (by omega)]
+    rw [ite_eq_left (by omega)]
   have s2 : LocE.scE n ex p = 0 := by
     unfold LocE.scE
-    rw [if_pos (by omega)]
+    rw [ite_eq_left (by omega)]
   rw [s1, s2, sub_zero, zpow_zero, mul_one, eN_inB _ _ hp']
   unfold Loc.atN
   rw [dite_eq_left hp]
@@ -788,9 +788,9 @@ theorem coupling_index_scaled_mem_local {n : ℕ} {N : Submodule (𝓞 X.E) (Sp 
     exact zero_mem _
   · intro a ha
     have h1 := (mem_locLat _ _ _ _).1 hy0 w
-    simp only [if_neg hw, zpow_neg, zpow_natCast, inv_inv] at h1
+    simp only [ite_eq_right hw, zpow_neg, zpow_natCast, inv_inv] at h1
     have h2 := (mem_locLat _ _ _ (a - y0)).1 ha w
-    simp only [if_neg hw, zpow_natCast] at h2
+    simp only [ite_eq_right hw, zpow_natCast] at h2
     have hq0 : (qOf w.1 : X.E) ^ cst.M ≠ 0 := pow_ne_zero _ (by exact_mod_cast (qOf_pos w.1).ne')
     have e : ((qOf w.1 : X.E) ^ cst.M) • a = ((qOf w.1 : X.E) ^ cst.M) • y0 +
         ((qOf w.1 ^ cst.M * qOf w.1 ^ cst.M : ℕ) : X.E) • (((qOf w.1 : X.E) ^ cst.M)⁻¹ • (a - y0)) := by

@@ -234,8 +234,8 @@ theorem diag_sign_of_pos_eigenvector : ∀ {n : ℕ} (A h g : Matrix (Fin n) (Fi
     have := congrFun this i
     simp at this
   have hneg := re_form_neg_of_orth_of_sigPosH_eq_one A hA hdet hsig (M *ᵥ Pi.single i₀ 1)
-    (M *ᵥ Pi.single i 1) (by rw [hval]; simpa using hd0) (by rw [hval, if_neg (Ne.symm hi)]) hne
-  rw [hval, if_pos rfl, Complex.ofReal_re] at hneg
+    (M *ᵥ Pi.single i 1) (by rw [hval]; simpa using hd0) (by rw [hval, ite_eq_right (Ne.symm hi)]) hne
+  rw [hval, ite_eq_left rfl, Complex.ofReal_re] at hneg
   exact hneg
 
 end GlobalTheory
@@ -1270,7 +1270,7 @@ theorem move_definite : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a = 1 �
   intro p _ G ha hn P0 μ v hv hirr hμ
   by_cases hex : (∃ Q : DPair G, Q.pol = P0) ∨ (∃ P : Pair G, P.pol = P0 ∧ P.Mark μ)
   swap
-  · push_neg at hex
+  · push Not at hex
     exact ⟨1, fun Q hQ => absurd hQ (hex.1 Q), fun P hP hm => absurd hm (hex.2 P hP)⟩
   obtain ⟨c0, γ0, hγ0, hreg, hc0⟩ : ∃ (c0 : ℚˣ) (γ0 : G.C), minpoly G.F γ0 = P0 ∧
       ((minpoly G.F γ0).natDegree = G.n ∧ (minpoly G.F γ0).Separable) ∧

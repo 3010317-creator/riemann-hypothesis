@@ -827,7 +827,7 @@ theorem smul_eX_mem_iff (X : HidaSetting D) (i : Fin D.R.rS) (c : D.host.E) :
   constructor
   · intro hc
     have := hT_fY_mem X i hc
-    rwa [map_smul, smul_eq_mul, _root_.Formalism.L2.SG.Pf.LatDict.hT_herm, X.ef, if_pos rfl, star_one, mul_one] at this
+    rwa [map_smul, smul_eq_mul, _root_.Formalism.L2.SG.Pf.LatDict.hT_herm, X.ef, ite_eq_left rfl, star_one, mul_one] at this
   · intro hc
     rw [X.Lam_split]
     exact Submodule.mem_sup_left (Submodule.mem_sup_left (Submodule.subset_span ⟨i, c, hc, rfl⟩))
@@ -837,7 +837,7 @@ theorem smul_fY_mem_iff (X : HidaSetting D) (i : Fin D.R.rS) (c : D.host.E) :
   constructor
   · intro hc
     have := hT_eX_mem X i hc
-    rwa [map_smul, smul_eq_mul, X.ef, if_pos rfl, mul_one] at this
+    rwa [map_smul, smul_eq_mul, X.ef, ite_eq_left rfl, mul_one] at this
   · intro hc
     rw [X.Lam_split]
     exact Submodule.mem_sup_right (Submodule.subset_span ⟨i, c, hc, rfl⟩)

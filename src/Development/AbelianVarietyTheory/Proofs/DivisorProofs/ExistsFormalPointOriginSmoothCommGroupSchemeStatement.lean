@@ -615,7 +615,7 @@ theorem degree_eq_one {n : ℕ} {D : Fin n →₀ ℕ} (h : D.degree = 1) : ∃ 
     simp only [Finsupp.single_eq_same]
     omega
   · have := hle t ht
-    simp only [Finsupp.single_apply, if_neg (Ne.symm ht)]
+    simp only [Finsupp.single_apply, ite_eq_right (Ne.symm ht)]
     omega
 
 section Rel
@@ -1054,7 +1054,7 @@ def evHom (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) : Γ(X, U) �
 theorem valR_eq_evHom (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) (f : Γ(X, U)) :
     valR x U f = evHom x U h f := by
   unfold valR
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   rfl
 
 theorem top_le_fromSpecStalk {x : X} {U : X.Opens} (hU : x ∈ U) : ⊤ ≤ X.fromSpecStalk x ⁻¹ᵁ U := fun w _ => by
@@ -1070,7 +1070,7 @@ theorem valR_fromSpecStalk {x : X} {U : X.Opens} (hU : x ∈ U) (a : Γ(X, U)) :
     exact congrArg (_ ≫ ·) ((congrArg (_ ≫ ·) ((Spec (X.presheaf.stalk x)).presheaf.map_id _)).trans
       (Category.comp_id _))
   unfold valR
-  refine (dif_pos h).trans ?_
+  refine (dite_eq_left h).trans ?_
   change ((X.fromSpecStalk x).appLE U ⊤ h ≫ (Scheme.ΓSpecIso _).hom).hom a = _
   rw [e, Category.assoc, Iso.inv_hom_id, Category.comp_id]
 

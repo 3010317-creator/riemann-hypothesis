@@ -125,10 +125,10 @@ theorem continuous_single {m n : ℕ} (i : Fin m) (j : Fin n) :
   refine continuous_pi fun a => continuous_pi fun b => ?_
   by_cases h : i = a ∧ j = b
   · obtain ⟨rfl, rfl⟩ := h
-    simp only [Matrix.single_apply, and_self, if_true]
+    simp only [Matrix.single_apply, and_self, ite_true]
     exact continuous_id
   · have : ∀ v : AE D, (Matrix.single i j v : Matrix (Fin m) (Fin n) (AE D)) a b = 0 := fun v => by
-      rw [Matrix.single_apply, if_neg h]
+      rw [Matrix.single_apply, ite_eq_right h]
     simpa only [this] using continuous_const
 
 def singleHom {m n : ℕ} (i : Fin m) (j : Fin n) : AE D →+ Matrix (Fin m) (Fin n) (AE D) where

@@ -393,7 +393,7 @@ theorem bottom_ram : GBig fun {D} {T} {Lc} {sc} G _ _ _ _ => ∀ (W : G.Weil) (i
         · exact _root_.GlobalTheory.RamifiedOnLargePlaces.not_unramAt G μ₀ hμ t v e he h1 i j
       · exact _root_.GlobalTheory.SqTop.not_unramAt_twist G μ₀ hμ t v e he h0 PP hPP hPv i j
   · left
-    push_neg at hS
+    push Not at hS
     obtain ⟨h1, h2⟩ := GlobalTheory.T.grid_characters_unramified G μ₀ hμ t v e he hS.1 i
     exact ⟨unramAt_mul (GlobalTheory.T.level_character_unramified_mu G μ₀ hμ t v e he hS.1 hS.2 j) (unramAt_pow h2 _), unramAt_mul h1 (unramAt_pow h2 _)⟩
 

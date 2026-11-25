@@ -166,7 +166,7 @@ theorem comp_mem {y : (Σ k, ι k) → Ω} {g : MRing ι} (hg : g ∈ mCoordIdea
     rw [MvPolynomial.coeff_sum, MvPolynomial.coeff_zero] at h2
     simp only [MvPolynomial.coeff_C_mul, MvPolynomial.coeff_monomial, mul_ite, mul_one, mul_zero,
       EmbeddingLike.apply_eq_iff_eq] at h2
-    rw [Finset.sum_ite_eq' _ _ _, if_pos hδ] at h2
+    rw [Finset.sum_ite_eq' _ _ _, ite_eq_left hδ] at h2
     exact h2
   · rw [comp_eq_zero hδ, map_zero]
 

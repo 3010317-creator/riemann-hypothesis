@@ -1020,7 +1020,7 @@ theorem GlobalTheory.rapidDecay_real : ∀ (a : ℕ) (t : ℝ), 0 < t → ∀ (l
     have := key a lam L N hL C0 hC0 r hr 1 le_rfl hb
     simpa using this
   · right
-    push_neg at hall
+    push Not at hall
     obtain ⟨i, j, hij, hlt⟩ := hall
     set S := (Finset.univ : Finset (Fin a × Fin a)).filter (fun p => (p.2 : ℕ) = p.1 + 1) with hS
     have hne : S.Nonempty := ⟨(i, j), by simp [hS, hij]⟩
@@ -1247,11 +1247,11 @@ lemma upperCone_conj_diag_eq {E : Type} [Field E] (a : ℕ) (r : Fin a → ℝ) 
   rw [Matrix.mul_diagonal, Matrix.diagonal_mul]
   simp only [upperConeRescale, Matrix.of_apply, Pi.mul_apply]
   by_cases hpq : p ≤ q
-  · rw [if_pos hpq]
+  · rw [ite_eq_left hpq]
     have : (r p : ℂ) ≠ 0 := by exact_mod_cast (hr p).ne'
     push_cast
     field_simp
-  · rw [if_neg hpq]
+  · rw [ite_eq_right hpq]
     have h0 : M p q = 0 := hM (lt_of_not_ge hpq)
     simp [h0]
 
@@ -1279,9 +1279,9 @@ theorem GlobalTheory.upperCone_conj_compact : ∀ (E : Type) [Field E] [NumberFi
     intro p _ q _
     rw [Set.mem_Icc]
     by_cases hpq : p ≤ q
-    · simp only [if_pos hpq]
+    · simp only [ite_eq_left hpq]
       exact ⟨div_nonneg (hr q).le (hr p).le, hC r hr hcone p q hpq⟩
-    · simp only [if_neg hpq]
+    · simp only [ite_eq_right hpq]
       exact ⟨le_rfl, hC0⟩
   have hbinv : (b⁻¹).val.BlockTriangular id := by
     have := Units.invertible b

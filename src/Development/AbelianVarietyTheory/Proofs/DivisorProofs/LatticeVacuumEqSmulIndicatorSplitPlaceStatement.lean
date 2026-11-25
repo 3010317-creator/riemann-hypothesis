@@ -258,8 +258,8 @@ theorem span_eq_top_left {m n : ℕ} (hn : 0 < n) {X : Set (Fin m → k)} {Y : S
     have hφ : Continuous φ := by
       refine continuous_pi fun i => continuous_pi fun j => ?_
       by_cases h : i = i₀ ∧ j = j₀
-      · simp only [φ, Matrix.of_apply, if_pos h]; exact continuous_id
-      · simp only [φ, Matrix.of_apply, if_neg h]; exact continuous_const
+      · simp only [φ, Matrix.of_apply, ite_eq_left h]; exact continuous_id
+      · simp only [φ, Matrix.of_apply, ite_eq_right h]; exact continuous_const
     have h0 : φ 0 ∈ closure (Submodule.span 𝒪[k] (prods X Y) : Set (Matrix (Fin m) (Fin n) k)) := by
       have : φ 0 = 0 := by ext i j; simp [φ]
       rw [this]; exact subset_closure (zero_mem _)
@@ -312,8 +312,8 @@ theorem span_eq_top_right {m n : ℕ} (hm : 0 < m) {X : Set (Fin m → k)} {Y : 
     have hφ : Continuous φ := by
       refine continuous_pi fun i => continuous_pi fun j => ?_
       by_cases h : i = i₀ ∧ j = j₀
-      · simp only [φ, Matrix.of_apply, if_pos h]; exact continuous_id
-      · simp only [φ, Matrix.of_apply, if_neg h]; exact continuous_const
+      · simp only [φ, Matrix.of_apply, ite_eq_left h]; exact continuous_id
+      · simp only [φ, Matrix.of_apply, ite_eq_right h]; exact continuous_const
     have h0 : φ 0 ∈ closure (Submodule.span 𝒪[k] (prods X Y) : Set (Matrix (Fin m) (Fin n) k)) := by
       have : φ 0 = 0 := by ext i j; simp [φ]
       rw [this]; exact subset_closure (zero_mem _)

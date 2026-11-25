@@ -333,7 +333,7 @@ theorem exists_weights : ∀ (K : Type) [Field K] [NumberField K] [_root_.Number
     exact hw (by simp [hne])
   · intro ρ
     rw [← Finset.sum_mul, Finset.sum_ite_eq]
-    simp only [Finset.mem_univ, if_true]
+    simp only [Finset.mem_univ, ite_true]
     field_simp
 
 end GlobalTheory.PlaceWeights

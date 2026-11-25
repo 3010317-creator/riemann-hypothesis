@@ -139,7 +139,7 @@ theorem scalar_of_irred {V : Type} [AddCommGroup V] [Module ℂ V] (P : Submodul
     · exact h
     · exact absurd (sub_eq_zero.mp (LinearMap.ker_eq_top.mp h)) (hne c)
   obtain ⟨v₀, hv₀⟩ : ∃ v : V, v ≠ 0 := by
-    by_contra h; push_neg at h
+    by_contra h; push Not at h
     exact hne 0 (LinearMap.ext fun v => (h _).trans (h _).symm)
   have hsurj : ∀ c : ℂ, Function.Surjective ⇑(T - c • (1 : Module.End ℂ V)) := by
     intro c

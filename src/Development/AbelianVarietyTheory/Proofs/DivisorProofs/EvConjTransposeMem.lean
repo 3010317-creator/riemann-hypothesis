@@ -279,7 +279,7 @@ lemma mem_avgSpan {T : Mat n → (W →L[ℂ] W)} (hT : Formalism.MainNotions.S.
   haveI := FiniteDimensional.complete ℂ W
   by_contra hv
   rw [← Submodule.orthogonal_orthogonal (avgSpan ε T v), Submodule.mem_orthogonal] at hv
-  push_neg at hv
+  push Not at hv
   obtain ⟨u, hu, huv⟩ := hv
   have hg : Continuous (fun h : KG ε => ⟪u, T (toMK h) v⟫_ℂ) := continuous_const.inner (cont_orbit hT v)
   have h0 : ∀ P : Poly n, ∫ h, ev (toMK h) P * ⟪u, T (toMK h) v⟫_ℂ ∂(muK ε) = 0 := by

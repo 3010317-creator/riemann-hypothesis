@@ -125,7 +125,7 @@ theorem UpperTheory.V.Pr.linClosedOfAdic :
       funext q
       rw [Finset.sum_apply]
       simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Pi.single_apply, mul_ite, mul_one,
-        mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have hmem : K.mkQ (y g - y g0) ∈
         (maximalIdeal A ^ N • ⊤ : Submodule A ((Fin n × Fin n → A) ⧸ K)) := by
 

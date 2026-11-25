@@ -219,7 +219,7 @@ theorem genVal_flag (w w' e : Module.Basis (Fin N) Ω E) (hsame : ∀ i j : Fin 
     rw [hχ]
   · have h0 : flagCoord w e t (k + 1) j = 0 := by
       unfold flagCoord
-      rw [if_neg hj]
+      rw [ite_eq_right hj]
     rw [h0, zero_mul, zero_mul]
 
 theorem flagLineCoord_ne_zero (w w' e : Module.Basis (Fin N) Ω E)
@@ -233,10 +233,10 @@ theorem flagLineCoord_ne_zero (w w' e : Module.Basis (Fin N) Ω E)
     rw [Finset.sum_eq_single ⟨k, hk⟩]
     · rw [Module.Basis.repr_self, Finsupp.single_eq_same, map_one, mul_one]
       unfold flagCoord
-      rw [if_pos (Nat.lt_succ_self k)]
+      rw [ite_eq_left (Nat.lt_succ_self k)]
       exact Finset.sum_congr rfl fun i _ => by rw [Algebra.smul_def, mul_comm]
     · intro j _ hj
-      rw [Module.Basis.repr_self, Finsupp.single_apply, if_neg hj, map_zero, mul_zero]
+      rw [Module.Basis.repr_self, Finsupp.single_apply, ite_eq_right hj, map_zero, mul_zero]
     · simp
   rw [h2] at h1
   have hz := Fintype.linearIndependent_iff.mp ht.linearIndependent _ h1

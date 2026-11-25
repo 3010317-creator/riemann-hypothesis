@@ -505,7 +505,7 @@ theorem prod_zpow_neg_ind {G : Type} [CommGroup G] (σ : E →+* ℂ) (m : Fin (
     · simp [ind]
     · have : ind σ m (some ⟨τ, j⟩) = 0 := by
         simp only [ind, Option.elim]
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨rfl, hj⟩
         exact hb ⟨⟨j, Nat.lt_succ_of_le hj⟩, rfl⟩
       rw [this, zpow_zero]

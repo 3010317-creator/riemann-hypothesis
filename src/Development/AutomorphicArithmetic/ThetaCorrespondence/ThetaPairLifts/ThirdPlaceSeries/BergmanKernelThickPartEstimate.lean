@@ -199,7 +199,7 @@ theorem le_bergOn : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRestricti
     (fun _ _ _ _ _ => rfl)
   rw [Finset.sum_eq_single y.1 (f := fun k => ∫⁻ z in FF k, (if k = y.1 then (1 : ℝ≥0∞) else 0)
       ∂(muF ((U σ).X k) (x0 k))) (fun k _ hk => by simp [hk]) (fun h => absurd (Finset.mem_univ _) h),
-    if_pos rfl, setLIntegral_one] at hM
+    ite_eq_left rfl, setLIntegral_one] at hM
   set Cl := classesOver (D.sp.W j) (dict σ) (framesOn (U σ) Z) with hCl
   have hm : ∫⁻ q : AutQ (D.sp.W j), (if (dict σ q.out).1 = y.1 then (1 : ℝ≥0∞) else 0) ∂(muQ1 (D.sp.W j)) ≤
       muQ1 (D.sp.W j) Cl := by

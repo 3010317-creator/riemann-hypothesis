@@ -902,7 +902,7 @@ theorem UpperTheory.V.Cu.yCoin : YCoin := by
   by_contra hc
   rw [not_or] at hc
   obtain ⟨h1, h2⟩ := hc
-  push_neg at h1 h2
+  push Not at h1 h2
   obtain ⟨x, hx, hx'⟩ := h1
   obtain ⟨y, hy, hy'⟩ := h2
   obtain ⟨-, -, ex⟩ := hpt x hx

@@ -262,9 +262,9 @@ theorem _root_.GlobalTheory.OrbitScalar.exists_smul_of_orbits : ∀ (E : Type) [
   have hupd : Continuous upd := by
     refine continuous_pi fun τ => continuous_pi fun a => continuous_pi fun c => ?_
     by_cases h : τ = τ0 ∧ c = i0
-    · simp only [upd, h, and_self, if_true]
+    · simp only [upd, h, and_self, ite_true]
       exact continuous_apply a
-    · simp only [upd, h, if_false]
+    · simp only [upd, h, ite_false]
       exact continuous_const
   have hupdx : upd (col x τ0) = x := by
     funext τ a c

@@ -721,7 +721,7 @@ def decHom (hN : GradedFam c₀ N) : ring hN →+ DirectSum ℕ (fun k => piece 
 instance gradedMonoid (hN : GradedFam c₀ N) : SetLike.GradedMonoid (piece hN) where
   one_mem j hj := by
     change (1 : F[X]).coeff j = 0
-    rw [coeff_one, if_neg hj]
+    rw [coeff_one, ite_eq_right hj]
   mul_mem i j a b ha hb := by
     rw [mem_piece_iff] at ha hb
     intro l hl

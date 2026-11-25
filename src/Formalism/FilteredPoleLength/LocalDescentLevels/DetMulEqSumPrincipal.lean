@@ -210,7 +210,7 @@ theorem cauchyBinetMax : CauchyBinetMax := by
     intro S hS
     have hc := (Finset.mem_powersetCard.1 hS).2
     rw [principal_minor_factor M Mᴴ S hc]
-    simp only [g, dif_pos hc]
+    simp only [g, dite_eq_left hc]
     have e : Mᴴ.submatrix (S.orderEmbOfFin hc) id = (M.submatrix id (S.orderEmbOfFin hc))ᴴ := by
       ext a b
       simp [Matrix.conjTranspose_apply]
@@ -224,7 +224,7 @@ theorem cauchyBinetMax : CauchyBinetMax := by
   have hlt : ∀ S ∈ (Finset.univ : Finset (Fin N)).powersetCard i, g S < (2 : ℝ) ^ (-(r : ℝ)) := by
     intro S hS
     have hc := (Finset.mem_powersetCard.1 hS).2
-    simp only [g, dif_pos hc]
+    simp only [g, dite_eq_left hc]
     have h4 := hcon _ (S.orderEmbOfFin hc).strictMono
     have h5 : ‖(M.submatrix id (S.orderEmbOfFin hc)).det‖ ^ 2 < ((2 : ℝ) ^ (-(r : ℝ) / 2)) ^ 2 :=
       pow_lt_pow_left₀ h4 (norm_nonneg _) (by norm_num)

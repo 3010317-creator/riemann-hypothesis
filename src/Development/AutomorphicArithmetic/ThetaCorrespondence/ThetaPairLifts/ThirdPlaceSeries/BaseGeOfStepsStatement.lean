@@ -621,9 +621,9 @@ theorem traceRat : TraceRat := by
     translate_all R F hcore hU i v₀ hext hker h y u hu x hx g v, LinearMap.smul_apply, smul_smul, ← map_mul]
   congr 2
   by_cases hg : g ∈ U
-  · simp only [c', dif_pos hg]
+  · simp only [c', dite_eq_left hg]
     rw [← Units.val_mul, mul_assoc, inv_mul_cancel, mul_one]
-  · simp only [c', dif_neg hg, zero_mul, map_zero]
+  · simp only [c', dite_eq_right hg, zero_mul, map_zero]
 
 end GlobalTheory.TraceRatPf
 end -- clump:auto

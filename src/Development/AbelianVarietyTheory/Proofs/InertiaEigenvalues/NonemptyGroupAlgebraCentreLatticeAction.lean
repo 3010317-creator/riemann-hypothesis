@@ -187,7 +187,7 @@ theorem mem_span (R G : Type) [CommRing R] [Group G] [Finite G] (z : MonoidAlgeb
     ext x
     rw [coeff_sum, Finsupp.finsetSum_apply]
     simp only [coeff_smul, Finsupp.smul_apply, hmap, smul_eq_mul, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     refine coeff_conj_eq z hz ?_
     rw [← ConjClasses.mk_eq_mk_iff_isConj, hrep]
   rw [hz']

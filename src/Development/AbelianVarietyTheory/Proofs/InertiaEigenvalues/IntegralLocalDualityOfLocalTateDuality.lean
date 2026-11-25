@@ -488,7 +488,7 @@ theorem exists_pairKO_eq_inv_unif : ∀ {O : Type} [CommRing O] [IsDomain O] [Is
     ext
     simp [hff']
   have hnot' : ¬ ∀ x ∈ D.T, D.bT x f' ∈ (1 : Submodule O (FractionRing O)) := hnot
-  push_neg at hnot'
+  push Not at hnot'
   obtain ⟨v, hvT, hu⟩ := hnot'
   set u := D.bT v f' with hu_def
   have hu0 : u ≠ 0 := by

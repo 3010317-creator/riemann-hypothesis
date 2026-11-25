@@ -261,7 +261,7 @@ theorem dot_swap (x g : Fin n → ℝ) {i j : Fin n} (hij : i ≠ j) :
         ring
       · simp [h1, h2, Equiv.swap_apply_of_ne_of_ne]
   have h3 : dot (x ∘ Equiv.swap i j) g - dot x g = (x j - x i) * g i + (x i - x j) * g j := by
-    simp only [dot, Function.comp, ← sum_sub_distrib, h, sum_add_distrib, sum_ite_eq', mem_univ, if_true]
+    simp only [dot, Function.comp, ← sum_sub_distrib, h, sum_add_distrib, sum_ite_eq', mem_univ, ite_true]
   linarith
 
 theorem domC_anti (x : Fin n → ℝ) : Antitone (domC x) := by

@@ -74,7 +74,7 @@ theorem exists_embeddings_agree_on_subfield_ne (L Ω : Type) [Field L] [Field Ω
   have hn : ¬ IsNilpotent (a ⊗ₜ[L] (1 : Ω) - (1 : Ω) ⊗ₜ[L] a : Ω ⊗[L] Ω) :=
     fun h => he h.eq_zero
   rw [nilpotent_iff_mem_prime] at hn
-  push_neg at hn
+  push Not at hn
   obtain ⟨J, hJ, heJ⟩ := hn
   haveI := hJ
   let g : (Ω ⊗[L] Ω) →+* FractionRing ((Ω ⊗[L] Ω) ⧸ J) :=

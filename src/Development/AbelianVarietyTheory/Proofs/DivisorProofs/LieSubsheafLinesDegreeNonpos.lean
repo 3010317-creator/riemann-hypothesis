@@ -720,11 +720,11 @@ theorem isRat_of_ann (φ : PowerSeries F) (q : F[X]) (hq : q ≠ 0)
     have := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p 0) h0
     simp only [R, Polynomial.finsetSum_coeff, coeff_C_mul_X_pow, coeff_zero] at this
     rw [Finset.sum_eq_single q.natDegree] at this
-    · simp only [Nat.sub_self, if_true] at this
+    · simp only [Nat.sub_self, ite_true] at this
       exact hq (leadingCoeff_eq_zero.1 this)
     · intro k hk hkd
       have := Finset.mem_range.1 hk
-      rw [if_neg (by omega)]
+      rw [ite_eq_right (by omega)]
     · intro hk; exact absurd (Finset.self_mem_range_succ _) hk
   · ext n
     rw [Polynomial.coeff_coe, PowerSeries.coeff_trunc]
@@ -741,7 +741,7 @@ theorem isRat_of_ann (φ : PowerSeries F) (q : F[X]) (hq : q ≠ 0)
       rw [hR, Finset.sum_mul, map_sum, ← h m, ev_X_pow_mul]
       refine Finset.sum_congr rfl fun k hk => ?_
       have hk' := Finset.mem_range.1 hk
-      rw [mul_assoc, PowerSeries.coeff_C_mul, PowerSeries.coeff_X_pow_mul', if_pos (by omega)]
+      rw [mul_assoc, PowerSeries.coeff_C_mul, PowerSeries.coeff_X_pow_mul', ite_eq_left (by omega)]
       rw [show m + q.natDegree - (q.natDegree - k) = m + k by omega]
 
 end GlobalTheory.Nef.Kron

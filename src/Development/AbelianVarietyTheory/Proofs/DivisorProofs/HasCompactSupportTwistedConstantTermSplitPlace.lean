@@ -112,7 +112,7 @@ theorem hasCompactSupport_ctMu_split : ∀ (E : Type) [Field E] [NumberField E] 
     (μ : (w.adicCompletion E)ˣ →* ℂˣ) (f : UL n w → ℂ), IsSplitAt w → HasCompactSupport f →
     HasCompactSupport (ctMu h w μ f) := by
   intro E _ _ _ a b n h w μ f hw hf
-  have hUL : ∀ y : GLw n w, y ∈ UL n w := fun y => by rw [UL, if_pos hw]; trivial
+  have hUL : ∀ y : GLw n w, y ∈ UL n w := fun y => by rw [UL, ite_eq_left hw]; trivial
   set S : Set (GLw n w) := Subtype.val '' tsupport f with hSdef
   have hS : IsCompact S := hf.image continuous_subtype_val
   have hK := (GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL w n).2

@@ -661,12 +661,12 @@ def aaF (D : D7) (a : Fin (D.R.rS + 1)) : FractionalIdeal (nonZeroDivisors (𝓞
 
 theorem aaF_castSucc (a : Fin D.R.rS) : aaF D (Fin.castSucc a) = ddS D ^ (-((D.R.rS : ℤ) - (a : ℕ))) := by
   unfold aaF
-  rw [if_pos (by simp)]
+  rw [ite_eq_left (by simp)]
   simp
 
 theorem aaF_last : aaF D (Fin.last D.R.rS) = 1 := by
   unfold aaF
-  rw [if_neg (by simp)]
+  rw [ite_eq_right (by simp)]
 
 theorem ddS_ne_zero : ddS D ≠ 0 := by
   unfold ddS

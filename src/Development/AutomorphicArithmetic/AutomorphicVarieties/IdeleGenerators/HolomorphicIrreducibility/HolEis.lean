@@ -96,7 +96,7 @@ theorem UpperTheory.eisenstein_norm_eq_abs_pow :
       rw [e0, dist_zero_right, dist_zero_right, Real.norm_of_nonneg (hy w).le] at this
       exact this
     rw [logNorm, h1, logFin_one, sub_zero, logInf, h2]
-    simp only [h3, InfinitePlace.mult, IsTotallyReal.isReal, if_true, Nat.cast_one, one_mul]
+    simp only [h3, InfinitePlace.mult, IsTotallyReal.isReal, ite_true, Nat.cast_one, one_mul]
     rw [← Real.log_prod (fun w _ => (hy w).ne'), Real.rpow_def_of_pos (Finset.prod_pos fun w _ => hy w),
       Complex.ofReal_exp, Complex.ofReal_mul, mul_comm]
   · refine (H.2.1 w).trans ?_
@@ -446,10 +446,10 @@ private theorem core {K : Type} [Field K] (A : ValuationSubring K) (p : Kˣ) (π
       rw [Units.val_mul, aff_val, aff_val]
       ext i j
       fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_succ]
-    rw [if_pos hc, sum1, e, hD, ← add_smul] at this
+    rw [ite_eq_left hc, sum1, e, hD, ← add_smul] at this
     exact (canc h1 this).symm
   · intro hc
-    simp only [if_neg hc, add_zero] at hU
+    simp only [ite_eq_right hc, add_zero] at hU
     by_cases hl : lam = 0
     · exact Or.inl hl
     right

@@ -120,10 +120,10 @@ theorem GlobalTheory.FlagMod.FieldFlag.atlas_isCover : ∀ (E : Type) [Field E] 
       rw [(A.k b).wu]
       by_cases hij : i = j
       · subst hij; simp
-      · rw [Matrix.one_apply_ne hij, if_neg]
+      · rw [Matrix.one_apply_ne hij, ite_eq_right]
         intro h'
         exact hij (eq_of_heq (Sigma.mk.inj_iff.1 h').2)
-    · rw [eCh_w_mul_u _ hs, Matrix.zero_apply, if_neg]
+    · rw [eCh_w_mul_u _ hs, Matrix.zero_apply, ite_eq_right]
       intro h'
       exact hs (congrArg Sigma.fst h')
   · have h0 : ⊤ ≤ (spMap φ ≫ (A.V b).2.fromSpec) ⁻¹ᵁ (A.k b).V := le_preimage_comp _ (tau_le (A.aff b) le_rfl)

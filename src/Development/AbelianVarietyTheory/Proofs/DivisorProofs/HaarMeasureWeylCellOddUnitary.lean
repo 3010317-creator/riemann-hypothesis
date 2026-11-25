@@ -222,7 +222,7 @@ theorem inBlock_blockU (σ : L →+* L) (A : Fin n) (hA : A.rev.val = A.val + 2)
   · rw [blockU_val]
     by_cases h : ∀ a, i ≠ three A hA a
     · rw [blockHom_out _ _ (Or.inl h), Matrix.one_apply_eq]
-    · push_neg at h
+    · push Not at h
       obtain ⟨a, rfl⟩ := h
       rw [blockHom_apply]
       exact h2 a
