@@ -425,14 +425,6 @@ theorem Red.cG_pull1 : Function.Bijective (h.cG U).pull1 := by
     exact (((h.cH U).comp (h.cG U)).pullCohomologyOne_eq_of_natTrans (CoefMap.id _) (h.ε U) (fun _ b ↦ (rfl : b = b)) c).trans
       (CoefMap.pullCohomologyOne_id c)
 
-theorem Red.cG_pull2 : Function.Bijective (h.cG U).pull2 := by
-  refine Function.bijective_iff_has_inverse.2 ⟨(h.cH U).pull2, fun c ↦ ?_, fun c ↦ ?_⟩
-  · rw [← CoefMap.pullCohomologyTwo_comp]
-    exact ((CoefMap.id _).pullCohomologyTwo_eq_of_natTrans ((h.cG U).comp (h.cH U)) (h.η U) (fun _ b ↦ (rfl : b = b)) c).symm.trans
-      (CoefMap.pullCohomologyTwo_id c)
-  · rw [← CoefMap.pullCohomologyTwo_comp]
-    exact (((h.cH U).comp (h.cG U)).pullCohomologyTwo_eq_of_natTrans (CoefMap.id _) (h.ε U) (fun _ b ↦ (rfl : b = b)) c).trans
-      (CoefMap.pullCohomologyTwo_id c)
 
 end FubiniStudyChowHeightFormula₂.Adr
 end -- clump:auto
