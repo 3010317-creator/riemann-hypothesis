@@ -886,25 +886,11 @@ namespace GlobalTheory.CompanionTheory.SW.IsoBox
 
 variable {F E : Type} [Field F] [Field E] [Algebra F E]
 
-theorem hform_eq_dot {A : Type} [CommRing A] {n : Type} [Fintype n] [DecidableEq n] (s : A →+* A)
-    (J : Matrix n n A) (x y : n → A) :
-    hform s J x y = (fun i => s (x i)) ⬝ᵥ (J *ᵥ y) := by
-  simp only [hform, dotProduct, Matrix.mulVec, Finset.mul_sum, mul_assoc]
-
-theorem hform_mulVec {A : Type} [CommRing A] {n : Type} [Fintype n] [DecidableEq n] (s : A →+* A)
-    (J g : Matrix n n A) (x y : n → A) :
-    hform s J (g *ᵥ x) (g *ᵥ y) = hform s (cT s g * J * g) x y := by
-  rw [hform_eq_dot, hform_eq_dot, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
-    Matrix.dotProduct_mulVec (fun i => s (x i)) (cT s g)]
-  congr 1
-  ext i
-  simp [cT, Matrix.vecMul, Matrix.mulVec, dotProduct, mul_comm]
-
 theorem gramE_mulVec (σ : E →ₐ[F] E) {M n : ℕ} (J g : Matrix (Fin M) (Fin M) E)
     (X : Fin n → Fin M → E) :
     gramE σ J (fun a => g *ᵥ X a) = gramE σ (cT (σ : E →+* E) g * J * g) X := by
   funext a c
-  exact hform_mulVec (σ : E →+* E) J g (X a) (X c)
+  exact TopH.hform_mulVec (σ : E →+* E) J g (X a) (X c)
 
 theorem isotropic_preimage (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E)
     (g : GL (Fin M) E) :

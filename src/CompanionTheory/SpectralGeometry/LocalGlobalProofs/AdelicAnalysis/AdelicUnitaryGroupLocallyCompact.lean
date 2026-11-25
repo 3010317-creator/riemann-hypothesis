@@ -13,21 +13,19 @@ namespace GlobalTheory.CompanionTheory.SW.TopH
 open HeckeCharacterZeroLocus.SiegelWeilU GlobalTheory.CompanionTheory.SW NumberField IsDedekindDomain MeasureTheory Topology
 open scoped TensorProduct ENNReal NNReal Matrix
 
-theorem hform_mulVec {A : Type} [CommRing A] {m : ℕ} (σ : A →+* A) (J g : Matrix (Fin m) (Fin m) A)
-    (hg : cT σ g * J * g = J) (x y : Fin m → A) :
-    hform σ J (g *ᵥ x) (g *ᵥ y) = hform σ J x y := by
-  have key : ∀ x y : Fin m → A, hform σ J x y = (fun i => σ (x i)) ⬝ᵥ (J *ᵥ y) := by
-    intro x y
-    simp [hform, dotProduct, Matrix.mulVec, Finset.mul_sum, mul_assoc]
-  have hs : (fun i => σ ((g *ᵥ x) i)) = (g.map σ) *ᵥ (fun i => σ (x i)) := by
-    funext i
+theorem hform_eq_dot {A : Type} [CommRing A] {n : Type} [Fintype n] [DecidableEq n] (s : A →+* A)
+    (J : Matrix n n A) (x y : n → A) :
+    hform s J x y = (fun i => s (x i)) ⬝ᵥ (J *ᵥ y) := by
+  simp only [hform, dotProduct, Matrix.mulVec, Finset.mul_sum, mul_assoc]
 
-    simp [Matrix.mulVec, dotProduct, map_sum, map_mul]
-  rw [key, key, hs]
-  conv_lhs => rw [dotProduct_comm, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, dotProduct_comm]
+theorem hform_mulVec {A : Type} [CommRing A] {n : Type} [Fintype n] [DecidableEq n] (s : A →+* A)
+    (J g : Matrix n n A) (x y : n → A) :
+    hform s J (g *ᵥ x) (g *ᵥ y) = hform s (cT s g * J * g) x y := by
+  rw [hform_eq_dot, hform_eq_dot, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
+    Matrix.dotProduct_mulVec (fun i => s (x i)) (cT s g)]
   congr 1
-  change cT σ g *ᵥ (J *ᵥ (g *ᵥ y)) = J *ᵥ y
-  rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, hg]
+  ext i
+  simp [cT, Matrix.vecMul, Matrix.mulVec, dotProduct, mul_comm]
 
 section
 
@@ -83,6 +81,6 @@ theorem topH_props : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     exact (Matrix.mulVec_mulVec _ _ _).symm
   · intro h X
     funext a b
-    exact hform_mulVec (sigR R σ) (JR R J) _ h.2 (X a) (X b)
+    exact (hform_mulVec (sigR R σ) (JR R J) _ (X a) (X b)).trans (congrArg (hform _ · _ _) h.2)
 
 end GlobalTheory.CompanionTheory.SW.TopH
