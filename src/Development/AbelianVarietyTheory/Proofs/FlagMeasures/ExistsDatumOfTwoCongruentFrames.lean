@@ -667,9 +667,6 @@ lemma prF_inW (v : V) : InW Fr (Fr.prF v) := by
 lemma prF_e (b : Fin r) : Fr.prF (Fr.f b.castSucc) = 0 := by
   rw [prF_eq]; simp [Fr.h_es, e_e]
 
-lemma prF_es (b : Fin r) : Fr.prF (Fr.es b) = 0 := by
-  rw [prF_eq]; simp [Fr.h_ss, es_e]
-
 lemma prF_of_inW {w : V} (hw : InW Fr w) : Fr.prF w = w := by
   rw [prF_eq]; simp [fun a => (hw a).1, fun a => (hw a).2]
 
@@ -719,7 +716,7 @@ lemma Nl_e (b : Fin r) : Nl Fr y (Fr.f b.castSucc) = 0 := by
   rw [Nl_apply, prF_e]; simp [e_e, HermSp.h_zero_left]
 
 lemma Nl_es (b : Fin r) : Nl Fr y (Fr.es b) = y b - Fr.es b := by
-  rw [Nl_apply, prF_es]; simp [es_e, HermSp.h_zero_left]
+  rw [Nl_apply, GlobalTheory.HL.CoordInnerSnd.prF_es]; simp [es_e, HermSp.h_zero_left]
 
 lemma Nl_perp {v : V} (hv : ∀ b : Fin r, H.h v (Fr.f b.castSucc) = 0) :
     Nl Fr y v = -∑ j, H.h (Fr.prF v) (y j) • Fr.f j.castSucc := by
