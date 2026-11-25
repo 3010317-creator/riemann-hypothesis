@@ -209,20 +209,7 @@ theorem coord_mul_partialDeriv_map_eq_map_sum
         · subst h
           simp
         · simp [h]
-      rw [Finset.sum_congr rfl hterm]
-      by_cases hj : j ∈ T
-      · rw [Finset.sum_eq_single j]
-        · simp [hj]
-        · intro i _ hij
-          rw [ite_eq_right hij]
-        · intro h
-          exact absurd hj h
-      · rw [ite_eq_right hj]
-        refine Finset.sum_eq_zero fun i hi => ?_
-        have hij : i ≠ j := by
-          rintro rfl
-          exact hj hi
-        rw [ite_eq_right hij]
+      rw [Finset.sum_congr rfl hterm, Finset.sum_ite_eq']
     rw [hsum]
     by_cases hjs : j = s
     · subst hjs
