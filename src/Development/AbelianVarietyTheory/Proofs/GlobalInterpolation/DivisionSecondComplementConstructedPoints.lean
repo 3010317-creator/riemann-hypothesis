@@ -1061,43 +1061,53 @@ open Formalism.MainNotions.G GlobalTheory.HCEntries GlobalTheory.FockDegreeGap G
 
 variable {D : D7} {L : SizeData₂ D}
 
-theorem offDiagonalRamified_bound_const_four (h : SizesAt L) (P : ParameterChoice' D L) (hx : 2 ≤ L.sc.x) : Formalism.MainNotions.WeightDegreeSizes.DiscriminantOffsetBound D L 4 := by
+theorem offDiagonalRamified_bound_sqrt (h : SizesAt L) (P : ParameterChoice' D L) (hx : 2 ≤ L.sc.x) :
+    Formalism.MainNotions.WeightDegreeSizes.DiscriminantOffsetBound D L (3 / Real.sqrt L.sc.x) := by
   intro j hj
-  have hp : D.host.d.Prime := D.host.hyp.2.1
-  have hb := one_le_b L
-  have hL := one_le_scL L
-  have hn := one_le_n D
-  have hf : (1 : ℝ) ≤ D.R.f := by linarith [f_eq D, one_le_n D]
-  have hm : (1 : ℝ) ≤ D.R.m := by exact_mod_cast (by have := D.R.two_le_m; omega : 1 ≤ D.R.m)
-  have hE := abs_EatD_le h P hx j hj
-  have hlog : Real.log D.host.d ≤ L.sc.L := by
-    obtain ⟨-, -, -, -, -, -, hQ, -⟩ := h
-    refine hQ.2.2.2.2.1.trans (Real.rpow_le_rpow_of_exponent_le L.sc.one_lt_alt.le ?_)
-    unfold szTh
-    linarith [L.sc.eps_pos]
-  have hlog0 : 0 ≤ Real.log (D.host.d : ℝ) := Real.log_natCast_nonneg _
-  have hE2 : |EatD D j| ≤ 2 * ((D.R.f : ℝ) * L.sc.b) := by
-    obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, -, -, hS, -⟩ := h
-    have a1 : (D.host.TT.card : ℝ) ≤ D.R.n := by
+  have hE₀ := abs_EatD_le h P hx j hj
+  obtain ⟨-, hM, -, -, -, -, hQ, -, -, -, -, -, -, -, -, hS, -⟩ := h
+  have hx₀ : 0 < L.sc.x := lt_trans zero_lt_one L.sc.one_lt_alt
+  have hb : 0 ≤ L.sc.b := (Real.exp_pos _).le
+  have hf : (0 : ℝ) ≤ D.R.f := Nat.cast_nonneg _
+  have hcard : (D.host.TT.card : ℝ) ≤ (D.R.f : ℝ) / 2 := by
+    have hcard' : (D.host.TT.card : ℝ) ≤ D.R.n := by
       rw [← card_HH]
       exact_mod_cast Finset.card_le_univ _
-    have a2 : (D.host.TT.card : ℝ) * L.sc.b ≤ D.R.f * L.sc.b :=
-      mul_le_mul_of_nonneg_right (by linarith [f_eq D]) (by linarith)
-    have a3 : (D.R.f : ℝ) * (D.R.k * L.sc.b') ≤ D.R.f * L.sc.b :=
-      mul_le_mul_of_nonneg_left (k_b'_le hS) (by linarith)
-    linarith
-  have hB : L.B0 = D.R.f * D.R.m * L.sc.b * L.sc.L := rfl
-  have hB1 : D.R.f * L.sc.b * L.sc.L ≤ L.B0 := by
-    rw [hB, show (D.R.f : ℝ) * D.R.m * L.sc.b * L.sc.L = D.R.m * (D.R.f * L.sc.b * L.sc.L) by ring]
-    exact le_mul_of_one_le_left (by positivity) hm
-  have h1 : Real.log (D.host.d : ℝ) * |EatD D j| ≤ L.sc.L * (2 * ((D.R.f : ℝ) * L.sc.b)) :=
-    mul_le_mul hlog hE2 (abs_nonneg _) (by linarith)
-  linarith
+    linarith only [hcard', f_eq D]
+  have hE : |EatD D j| ≤ (3 / 2 : ℝ) * D.R.f * L.sc.b := by
+    nlinarith only [hE₀, mul_le_mul_of_nonneg_right hcard hb, mul_le_mul_of_nonneg_left (k_b'_le hS) hf]
+  have hscale : Real.log (D.host.d : ℝ) * Real.sqrt L.sc.x ≤ (D.R.m : ℝ) * L.sc.L := calc
+    _ ≤ L.sc.x ^ (L.sc.eps / 5 + szTh L) * Real.sqrt L.sc.x :=
+      mul_le_mul_of_nonneg_right hQ.2.2.2.2.1 (Real.sqrt_nonneg _)
+    _ = L.sc.x ^ (L.sc.eps / 5 + szTh L + (1 / 2 : ℝ)) := by
+      rw [Real.sqrt_eq_rpow, Real.rpow_add hx₀ (L.sc.eps / 5 + szTh L) (1 / 2)]
+    _ ≤ L.sc.x ^ (-szTh L + (1 / 2 - L.sc.eps / 16) + L.sc.eps) :=
+      Real.rpow_le_rpow_of_exponent_le L.sc.one_lt_alt.le (by unfold szTh; linarith [L.sc.eps_pos])
+    _ ≤ _ := by
+      rw [Real.rpow_add hx₀]
+      exact mul_le_mul_of_nonneg_right (_root_.Formalism.MainNotions.Lnk.m_ge hM) (Real.rpow_nonneg hx₀.le _)
+  rw [div_mul_eq_mul_div, le_div_iff₀ (Real.sqrt_pos.2 hx₀)]
+  have hproduct := mul_le_mul hscale hE (abs_nonneg _) (by unfold Scale.L; positivity)
+  change _ ≤ 3 * ((D.R.f : ℝ) * D.R.m * L.sc.b * L.sc.L)
+  nlinarith only [hproduct]
 
-theorem offDiagonalRamified_bound_along_family : ∀ {eps : ℝ} (Fm : FamP eps), 0 < eps → eps < 1 / 52 → ∃ C x0 : ℝ, 0 ≤ C ∧ ∀ x, x0 ≤ x → ∀ hx : Fm.x1 < x, ∀ i : Fm.Ix x, Formalism.MainNotions.WeightDegreeSizes.DiscriminantOffsetBound (Fm.D x i) (Fm.L x i) C := by
-  intro eps Fm _ _
-  refine ⟨4, 2, by norm_num, fun x hx0 hx i => ?_⟩
-  exact offDiagonalRamified_bound_const_four (Fm.sizes x hx i) (Fm.params x hx i) (by rw [Fm.L_x x i hx]; exact hx0)
+theorem offDiagonalRamified_bound_along_family {eps : ℝ} (Fm : FamP eps) {C : ℝ} (hC : 0 < C)
+    {x : ℝ} (hx₀ : max 2 ((3 / C) ^ 2) ≤ x) (hx : Fm.x1 < x) (i : Fm.Ix x) :
+    Formalism.MainNotions.WeightDegreeSizes.DiscriminantOffsetBound (Fm.D x i) (Fm.L x i) C := by
+  have hx₂ : 2 ≤ x := (le_max_left _ _).trans hx₀
+  have hxpos : 0 < x := by linarith
+  have hs : 3 / C ≤ Real.sqrt x := by
+    simpa only [Real.sqrt_sq (by positivity : 0 ≤ 3 / C)] using Real.sqrt_le_sqrt ((le_max_right _ _).trans hx₀)
+  have hcoef : 3 / Real.sqrt x ≤ C := by
+    rw [div_le_iff₀ (Real.sqrt_pos.2 hxpos)]
+    simpa only [mul_comm] using (div_le_iff₀ hC).1 hs
+  have h := offDiagonalRamified_bound_sqrt (Fm.sizes x hx i) (Fm.params x hx i) (by rwa [Fm.L_x x i hx])
+  rw [Fm.L_x x i hx] at h
+  intro j hj
+  refine (h j hj).trans (mul_le_mul_of_nonneg_right hcoef ?_)
+  unfold SizeData₂.B0 sizeBudget bSize
+  rw [Fm.L_x x i hx]
+  positivity
 
 end GlobalTheory.RamifiedOffD
 
@@ -1309,22 +1319,15 @@ theorem familySecondComplementInputs_of_tuSize_of_dGamSize : ∀ {eps : ℝ} (Fm
   obtain ⟨Cg, xg, hCg, hsz⟩ := _root_.GlobalTheory.TypeSize.typePrimeSizeBound_of_eps_lt_one_div_fiftyTwo Fm h0 h1 hG Cdeg
   obtain ⟨CT, xT, -, hoT⟩ := _root_.GlobalTheory.LevelBudget.admissible_off_type_level_budget Fm h0 h1 hT
   obtain ⟨CG, xG, -, hoG⟩ := _root_.GlobalTheory.exists_nonneg_const_discriminant_term_le_budget_family Fm h0 h1 hT hG
-  obtain ⟨Cd, xD, -, hoD⟩ := _root_.GlobalTheory.RamifiedOffD.offDiagonalRamified_bound_along_family Fm h0 h1
   obtain ⟨CI, xI, -, hoI⟩ := _root_.GlobalTheory.InertLossAdm.inertPrimes_loss_log_sum_admissible Fm h0 h1
-  refine ⟨Cdeg, Cg, CT, CG, Cd, CI, max xd (max xg (max xT (max xG (max xD xI)))), hCg, ?_⟩
+  refine ⟨Cdeg, Cg, CT, CG, 1, CI, max 9 (max xd (max xg (max xT (max xG xI)))), hCg, ?_⟩
   intro x hx0 hx i
-  have a1 : xd ≤ x := (le_max_left _ _).trans hx0
-  have r1 := (le_max_right _ _).trans hx0
-  have a2 : xg ≤ x := (le_max_left _ _).trans r1
-  have r2 := (le_max_right _ _).trans r1
-  have a3 : xT ≤ x := (le_max_left _ _).trans r2
-  have r3 := (le_max_right _ _).trans r2
-  have a4 : xG ≤ x := (le_max_left _ _).trans r3
-  have r4 := (le_max_right _ _).trans r3
-  have a5 : xD ≤ x := (le_max_left _ _).trans r4
-  have a6 : xI ≤ x := (le_max_right _ _).trans r4
-  exact ⟨fun u j h => (Fm.D x i).T_ne_g u j h.symm, _root_.GlobalTheory.TypeValNN.typePrime_valuationSum_eq_logGap_family Fm x hx i, hdeg x a1 hx i, hsz x a2 hx i,
-    hoT x a3 hx i, hoG x a4 hx i, hoD x a5 hx i, hoI x a6 hx i⟩
+  simp only [max_le_iff] at hx0
+  obtain ⟨hxD, hxd, hxg, hxT, hxG, hxI⟩ := hx0
+  have hoD := _root_.GlobalTheory.RamifiedOffD.offDiagonalRamified_bound_along_family Fm (C := 1) one_pos
+    (x := x) (by convert hxD using 1; norm_num [max_def]) hx i
+  exact ⟨fun u j h => (Fm.D x i).T_ne_g u j h.symm, _root_.GlobalTheory.TypeValNN.typePrime_valuationSum_eq_logGap_family Fm x hx i,
+    hdeg x hxd hx i, hsz x hxg hx i, hoT x hxT hx i, hoG x hxG hx i, hoD, hoI x hxI hx i⟩
 
 end GlobalTheory
 end -- clump:auto
