@@ -1226,8 +1226,8 @@ theorem GlobalTheory.FlatValZero.flat_val_zero_at_integral_point_stalk : _root_.
     rw [← hb, ← Spec.map_comp] at h1
     exact ⟨b.hom a, congrArg (fun q => CommRingCat.Hom.hom q a) (Spec.map_injective h1)⟩
   have ha' : io a ≠ 0 := (map_ne_zero io).2 ha
-  have h1 := (GlobalTheory.KeyValZero.mem_range_iff T _).1 (ho a)
-  have h2 := (GlobalTheory.KeyValZero.mem_range_iff T _).1 (ho a⁻¹)
+  have h1 := (GlobalTheory.ThetaSteep.mem_range_iff T _).1 (ho a)
+  have h2 := (GlobalTheory.ThetaSteep.mem_range_iff T _).1 (ho a⁻¹)
   have h3 := vV_mul (V := T.V) ha' ((map_ne_zero io).2 (inv_ne_zero ha))
   rw [← map_mul, mul_inv_cancel₀ ha, map_one, show vV T.V (1 : T.Fr) = 0 by simp [vV]] at h3
   omega
