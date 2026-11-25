@@ -76,39 +76,21 @@ import Mathlib.Tactic.NormNum.RealSqrt
 section
 namespace GlobalTheory.FunPr
 structure ThetaLocalInputs : Prop where
-  greenSeriesSt : GlobalTheory.Published.GreenSeriesSt
-  complexMultiplicationJSt : GlobalTheory.Published.ComplexMultiplicationJSt
-  bernsteinUnitaryProductIrreducible : GlobalTheory.Published.BernsteinUnitaryProductIrreducible
-  zelevinskyPolynomialRing : GlobalTheory.Published.ZelevinskyPolynomialRing
-  bernsteinZelevinskyFiniteness : GlobalTheory.Published.BernsteinZelevinskyFiniteness
-  cuspTraceClass : GlobalTheory.Published.CuspTraceClass
   weilSiegelFormulaUnitary : GlobalTheory.Published.WeilSiegelFormulaUnitary
   doublingMethod : _root_.GlobalTheory.Published.DoublingMethodLocalZetaIntegrals
   unramifiedDoublingGL : GlobalTheory.Published.UnramifiedDoublingGL
-  borelCasselman : GlobalTheory.Published.BorelCasselman
-  radfordShufflePolynomial : GlobalTheory.Published.RadfordShufflePolynomial
-  dixmierMalliavinFactorisation : GlobalTheory.Published.DixmierMalliavinFactorisation
-  schurOrthogonalitySquareIntegrable : GlobalTheory.Published.SchurOrthogonalitySquareIntegrable
-  heckeLPartialContinuation : GlobalTheory.Published.HeckeLPartialContinuation
   kFiniteVectorsUnitary : GlobalTheory.Published.KFiniteVectorsUnitary
-  discreteSeriesLowestKType : GlobalTheory.Published.DiscreteSeriesLowestKType
   cuspBounded : GlobalTheory.Published.CuspBounded
   strongApproxSU : GlobalTheory.Published.StrongApproxSU
-  heckeLEntireAndNonzeroAtOne : GlobalTheory.Published.HeckeLEntireAndNonzeroAtOne
   realMetaplecticRepresentation : GlobalTheory.Published.RealMetaplecticRepresentation
   cuspDecayBound : GlobalTheory.Published.CuspDecayBound
-  gLHoweDuality : GlobalTheory.Published.GLHoweDuality
   harishChandraModules : GlobalTheory.Published.HarishChandraModules
   discreteSeriesCover : GlobalTheory.Published.DiscreteSeriesCover
-  hermitianHassePrinciple : GlobalTheory.Published.HermitianHassePrinciple
   discreteSeriesUpqExists : GlobalTheory.Published.DiscreteSeriesUpqExists
-  formalDegreeCompactDual : GlobalTheory.Published.FormalDegreeCompactDual
   discreteSeriesHermitianUnique : GlobalTheory.Published.DiscreteSeriesHermitianUnique
-  discreteSeriesExists : GlobalTheory.Published.DiscreteSeriesExists
   harishChandraFinite : GlobalTheory.Published.HarishChandraFinite
   cuspRapidDecay : GlobalTheory.Published.CuspRapidDecay
   weilRepresentationUnitaryPair : GlobalTheory.Published.WeilRepresentationUnitaryPair
-  discreteSeriesCoverExists : GlobalTheory.Published.DiscreteSeriesCoverExists
   cuspDecaySobolev : GlobalTheory.Published.CuspDecaySobolev
   casselmanWallach : GlobalTheory.Published.CasselmanWallach
   howeDualityReal : GlobalTheory.Published.HoweDualityReal
