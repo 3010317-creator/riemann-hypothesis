@@ -1045,12 +1045,23 @@ theorem args_pinned_heq_zsOf_mem_eq (t : RowsT K w Z Wt ex.p0) (a : TwArgs ex t)
       HEq a.x.F.Sp a.Sp) ∧
     ∃ Zs : DefSub (famT t).fam3.amb3, HEq (zsOf a.x.R a.x.F) Zs ∧ HEq (a.x.F.Dc (zsOf a.x.R a.x.F)) (a.Dc Zs) ∧
       HEq (a.x.F.Sp (zsOf a.x.R a.x.F)) (a.Sp Zs) ∧ (a.x.F.Dc (zsOf a.x.R a.x.F)).Mem = (a.Dc Zs).Mem := by
-  cases a with
-  | mk _ _ _ _ _ _ x hpack =>
-    cases x
-    cases hpack
+  let P : (Σ' (G : Type) (_ : Group G) (_ : Fintype G) (Pl0 I0 T0 : Type)
+      (A3 : FamIn3 (w.st Z).toD7.what₂.LL G Pl0 I0 (List ℕ) T0 (w.st Z).toD7.R.m)
+      (C : Formalism.L2.Pj.CoreJ (w.st Z).toD7) (_ : Algebra C.Q.c.F (w.st Z).toD7.what₂.LL)
+      (R : RealDat3 (w.st Z).toD7 A3 C.Q.c.F) (_ : Face3 (w.st Z).toD7 A3),
+      G0 R.Pg (w.st Z).toD7.R.r ≃* G0g (w.st Z).toD7.nd) → Prop :=
+    fun ⟨G, grp, _, Pl0, I0, T0, A3, _, _, R, F, _⟩ =>
+      (G = Gc B w.px ∧ HEq grp (inferInstance : Group (Gc B w.px)) ∧ Pl0 = PlS B w.px ∧ I0 = PlI B w.px ∧
+        T0 = TupU w.I (usedOf w.I T Wt) ∧ HEq A3 (famC w.I t.hX (usedOf w.I T Wt) t.r.z.Xg t.r.z.tr)) ∧
+      (HEq F.P0 (lev0 w.I) ∧ HEq F.ψ0 (chr0 w.I) ∧ HEq F.P1 (lev1 w.I) ∧ HEq F.ψ1 (chr1 w.I) ∧ HEq F.Dc a.Dc ∧
+        HEq F.Sp a.Sp) ∧
+      ∃ Zs : DefSub (famT t).fam3.amb3, HEq (zsOf R F) Zs ∧ HEq (F.Dc (zsOf R F)) (a.Dc Zs) ∧
+        HEq (F.Sp (zsOf R F)) (a.Sp Zs) ∧ (F.Dc (zsOf R F)).Mem = (a.Dc Zs).Mem
+  have hP : P ⟨a.x.G, a.x.grp, a.x.fin, a.x.Pl0, a.x.I0, a.x.T, a.x.A3, a.x.core, a.x.alg, a.x.R, a.x.F, a.x.cG⟩ := by
+    rw [a.pack]
     exact ⟨⟨rfl, HEq.rfl, rfl, rfl, rfl, HEq.rfl⟩, ⟨HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl⟩,
       _, HEq.rfl, HEq.rfl, HEq.rfl, rfl⟩
+  exact hP
 
 theorem exists_square_integrable_columns_of_data (t : RowsT K w Z Wt ex.p0) (pin : ColPin w) (S : _root_.Formalism.L2.TiedDataSKAlt ex) (hS : TC.StdKer w.I w.l Z S.ker)
     (a : TwArgs ex t) (hD : a.Dc = (colRecK w.ok w.pins w.l Z pin.isTw pin.jets t.hX (usedOf w.I T Wt) t.r.z.Xg t.r.z.tr S.ker).face)
