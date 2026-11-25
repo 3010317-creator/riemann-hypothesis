@@ -693,17 +693,8 @@ theorem lam_open_compact (e : ι ≃ Fin a ⊕ Fin b) (K' : Subgroup (GL ι K)) 
   intro X hX
   exact ⟨uGL e X, hX, coord_uGL e X⟩
 
-theorem continuous_of_linear (f : (Fin a → Fin b → K) →ₗ[K] (Fin a → Fin b → K)) : Continuous f := by
-  have h : ∀ X : Fin a → Fin b → K, f X = ∑ i, ∑ j, X i j • f (Pi.single i (Pi.single j 1)) := by
-    intro X
-    have hX : X = ∑ i, ∑ j, X i j • (Pi.single i (Pi.single j (1 : K)) : Fin a → Fin b → K) := by
-      ext k l
-      simp [Finset.sum_apply, Pi.single_apply, ite_apply]
-    conv_lhs => rw [hX]
-
-    simp only [map_sum, map_smul]
-  rw [show (f : _ → _) = fun X => ∑ i, ∑ j, X i j • f (Pi.single i (Pi.single j 1)) from funext h]
-  fun_prop
+theorem continuous_of_linear (f : (Fin a → Fin b → K) →ₗ[K] (Fin a → Fin b → K)) : Continuous f :=
+  IsModuleTopology.continuous_of_linearMap f
 
 end Unip
 

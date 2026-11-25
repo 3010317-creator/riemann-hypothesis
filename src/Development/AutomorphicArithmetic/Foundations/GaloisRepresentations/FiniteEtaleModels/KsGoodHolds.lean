@@ -665,31 +665,8 @@ private theorem exists_geomPoint (P : Scheme.{0}) (p : P) :
 
 private theorem eq_of_geomPoints {P Y B : Scheme.{0}} [IsReduced P] (a b : P ⟶ Y) (g : Y ⟶ B) [IsSeparated g]
     (hab : a ≫ g = b ≫ g)
-    (h : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (t : Sp Ω ⟶ P), t ≫ a = t ≫ b) : a = b := by
-  let d : P ⟶ pullback g g := pullback.lift a b hab
-  let k₀ : pullback d (pullback.diagonal g) ⟶ P := pullback.fst d (pullback.diagonal g)
-  have hd₁ : d ≫ pullback.fst g g = a := pullback.lift_fst _ _ _
-  have hd₂ : d ≫ pullback.snd g g = b := pullback.lift_snd _ _ _
-  have hc : k₀ ≫ d = pullback.snd d (pullback.diagonal g) ≫ pullback.diagonal g := pullback.condition
-  have hk : k₀ ≫ a = k₀ ≫ b := by
-    have h1 : k₀ ≫ a = pullback.snd d (pullback.diagonal g) := by
-      calc k₀ ≫ a = (k₀ ≫ d) ≫ pullback.fst g g := by rw [Category.assoc, hd₁]
-        _ = _ := by rw [hc]; simp
-    have h2 : k₀ ≫ b = pullback.snd d (pullback.diagonal g) := by
-      calc k₀ ≫ b = (k₀ ≫ d) ≫ pullback.snd g g := by rw [Category.assoc, hd₂]
-        _ = _ := by rw [hc]; simp
-    rw [h1, h2]
-  have hsur : Surjective k₀ := ⟨fun p => by
-    obtain ⟨Ω, _, _, t, q, rfl⟩ := exists_geomPoint P p
-    have hd : t ≫ d = (t ≫ a) ≫ pullback.diagonal g := by
-      apply pullback.hom_ext
-      · rw [Category.assoc, hd₁]; simp
-      · rw [Category.assoc, hd₂, ← h Ω t]; simp
-    refine ⟨(pullback.lift t (t ≫ a) hd : Sp Ω ⟶ _) q, ?_⟩
-    rw [← Scheme.Hom.comp_apply]
-    exact congrArg (fun m : Sp Ω ⟶ P => m q) (pullback.lift_fst _ _ _)⟩
-  have : IsDominant k₀ := inferInstance
-  exact ext_of_isDominant_of_isSeparated g hab k₀ hk
+    (h : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (t : Sp Ω ⟶ P), t ≫ a = t ≫ b) : a = b :=
+  (GlobalTheory.hom_eq_iff_forall_isAlgClosed g hab).mpr h
 
 theorem UpperTheory.Gal.FiniteEtaleModels.descExt_of :
     NormExt → DescExt := by
