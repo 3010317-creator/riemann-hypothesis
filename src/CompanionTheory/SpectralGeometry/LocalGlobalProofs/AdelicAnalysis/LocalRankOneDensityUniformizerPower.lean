@@ -239,10 +239,8 @@ theorem dilation : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
   have hnorm := norm_natCast v a e ha h1 h2
   have hq : (Ideal.absNorm v.asIdeal : ℝ) ≠ 0 :=
     Nat.cast_ne_zero.2 fun h => v.ne_bot (Ideal.absNorm_eq_zero_iff.1 h)
-  have ht : (a : Fv F v) ≠ 0 := by
-    intro h
-    rw [h, norm_zero] at hnorm
-    exact (pow_ne_zero e (inv_ne_zero hq)) hnorm.symm
+  have ht : (a : Fv F v) ≠ 0 :=
+    norm_ne_zero_iff.1 (by rw [hnorm]; exact pow_ne_zero e (inv_ne_zero hq))
   have ht2 : (a : Fv F v) ^ 2 ≠ 0 := pow_ne_zero 2 ht
   have hnorm2 : ‖(a : Fv F v) ^ 2‖ = ((Ideal.absNorm v.asIdeal : ℝ))⁻¹ ^ (2 * e) := by
     rw [norm_pow, hnorm, ← pow_mul, mul_comm]
