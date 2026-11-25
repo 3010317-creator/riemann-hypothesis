@@ -184,10 +184,7 @@ attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebr
 
 theorem hasSum_exp_entry {τ : Type} [Fintype τ] [DecidableEq τ] (Y : Matrix τ τ ℂ) (a c : τ) :
     HasSum (fun n : ℕ => ((n.factorial : ℂ))⁻¹ * (Y ^ n) a c) (NormedSpace.exp Y a c) := by
-  have h := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) Y
-  have h1 := h.map (Matrix.entryAddMonoidHom ℂ a c) (continuous_id.matrix_elem a c)
-  simp only [Function.comp_def, Matrix.entryAddMonoidHom_apply, Matrix.smul_apply, smul_eq_mul] at h1
-  exact h1
+  exact UpperTheory.TP.RP.hasSum_exp_entry Y a c
 
 end Mat
 
