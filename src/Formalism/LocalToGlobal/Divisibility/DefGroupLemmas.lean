@@ -1249,12 +1249,6 @@ theorem reduction_surjective_bis : RedSurj := by
   rw [redFn_frGL]
   exact hzy PP
 
-section Emb
-
-variable {κ : Type} [CommRing κ] {r n : ℕ}
-
-end Emb
-
 section FrAlg
 
 variable {R K : Type} [CommRing R] [IsDedekindDomain R] [Field K] [Algebra R K] [IsFractionRing R K]
@@ -1655,14 +1649,6 @@ theorem reduction_local : RedLocal := by
 
 end LocalA
 
-section LocalB
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E]
-
-variable {gp : Fin 2 → ℕ} {pb : Fin 2 → 𝓞 E}
-
-end LocalB
-
 section LocalC
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ}
@@ -1794,18 +1780,6 @@ theorem lc_one_coe (i j : Fin n) :
   · simp [h]
 
 end LocalD
-
-section TypeD
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E]
-
-end TypeD
-
-section TypeE
-
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E]
-
-end TypeE
 
 section Tests
 

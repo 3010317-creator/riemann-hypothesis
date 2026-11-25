@@ -668,8 +668,4 @@ theorem ipFr_evV (emb : ι → E →+* K) (J : Matrix (Fin n) (Fin n) E) (lam : 
 
 end Metric2
 
-section Examples
-
-end Examples
-
 end Formalism.L2.Col

@@ -36,35 +36,6 @@ section -- clump:auto
 
 namespace Formalism.HermitianLattices.CumulantEstimateDefs.CumulantEstimates
 
-section A
-open Finset
-
-end A
-
-section B
-open Finset
-open scoped ComplexOrder
-
-end B
-
-section C
-open Finset MeasureTheory
-open scoped ComplexOrder
-
-
-end C
-
-section D
-open Finset
-open scoped Nat
-
-end D
-
-section E
-open Finset Matrix Unitary
-
-end E
-
 section F
 open Finset
 
@@ -927,12 +898,6 @@ theorem volume_eq_mass_of_definite (D : D7) (h2 : Conclusion2 D) (hv : DefiniteV
     have hpos := massI_pos D (P + Q)
     field_simp at hr
     exact hr
-
-section Landherr
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E]
-
-end Landherr
 
 end Formalism.MainNotions.StandardLattice
 

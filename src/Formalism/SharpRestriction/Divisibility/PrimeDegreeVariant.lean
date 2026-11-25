@@ -175,14 +175,6 @@ def DegreeKernelLowerBound (A : HLat K) (e : Module.End K A.V) (n : ℕ) : Prop 
 
 end Lemma2
 
-section Lemma4
-
-open NumberField IsDedekindDomain
-
-variable {K : Type} [Field K] [NumberField K] [StarRing K] {G : Type} [Group G] [Fintype G]
-
-end Lemma4
-
 section Lemma8
 
 structure GMap (K : Type) [Field K] (σ : K →+* ℂ) (G : Type) [Group G] [Fintype G] (T : GoodSet K G)
@@ -462,27 +454,5 @@ def frg (D : D7) : ℝ := (D.R.f : ℝ) * D.R.r / (min (D.host.g 0) (D.host.g 1)
 def LevelRatioBound (D : D7) : Prop := 4 * D.R.f * D.R.r ≤ min (D.host.g 0) (D.host.g 1)
 
 end Record
-
-section Herm
-
-open NumberField IsDedekindDomain
-
-variable {K : Type} [Field K] [NumberField K] [StarRing K] {G : Type} [Group G] [Fintype G]
-
-end Herm
-
-section Whole
-
-variable {D : D7} {X : BaseLevelRowSide D}
-
-end Whole
-
-section Family
-
-open Formalism.MainNotions
-
-variable {ε : ℝ}
-
-end Family
 
 end Formalism.MainNotions.PrimeDegreeVariant
