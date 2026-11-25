@@ -68,18 +68,11 @@ private theorem fin_supp {G : Type} [Group G] [TopologicalSpace G] [IsTopologica
 private theorem lv_ind {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ G V)
     (K : Subgroup G) (f : G → ℂ) (hf : ∀ g, f g = if g ∈ K then 1 else 0) (y : V) (hy : y ∈ fixed ρ K) :
     Lv ρ K f y = y := by
-  have hout : ((1 : G) : G ⧸ K).out ∈ K := by
-    obtain ⟨h, hh⟩ := QuotientGroup.mk_out_eq_mul K (1 : G)
-    rw [hh, one_mul]
-    exact h.2
+  have hout : ((1 : G) : G ⧸ K).out ∈ K := QuotientGroup.out_mem_iff.2 rfl
   have hz : ∀ q : G ⧸ K, q ≠ ((1 : G) : G ⧸ K) →
       f q.out • (ρ q.out ∘ₗ (LinearMap.id : V →ₗ[ℂ] V)) = 0 := by
     intro q hq
-    have hn : q.out ∉ K := by
-      intro hm
-      apply hq
-      rw [← QuotientGroup.out_eq' q]
-      exact (QuotientGroup.eq.2 (by simpa using hm))
+    have hn : q.out ∉ K := fun hm => hq (QuotientGroup.out_mem_iff.1 hm)
     rw [hf, ite_eq_right hn, zero_smul]
   have hfix : ρ ((1 : G) : G ⧸ K).out y = y := by
     have := hy ⟨_, hout⟩
