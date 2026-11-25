@@ -195,14 +195,7 @@ theorem lattice_ext {L L' : PeriodPair} (h : ∀ z, z ∈ L.lattice ↔ z ∈ L'
 
 theorem cmL_swap (hc : 0 < c) (h : 4 * (a : ℤ) * c = b ^ 2 + d) :
     ∃ (lam' : ℂ) (hlam' : lam' ≠ 0), (cmL c.toNat (-b) d (by omega) hd lam' hlam').lattice = (cmL a b d ha hd lam hlam).lattice := by
-  have hind := (Formalism.L2.Th1.F.cmPair a b d ha hd).indep
-  rw [LinearIndependent.pair_iff] at hind
-  have hθ : Formalism.L2.Th1.F.cmTheta b d ≠ 0 := by
-    intro h0
-    have := (hind 0 1 (by
-      show (0 : ℝ) • (a : ℂ) + (1 : ℝ) • Formalism.L2.Th1.F.cmTheta b d = 0
-      rw [h0]; simp)).2
-    norm_num at this
+  have hθ : Formalism.L2.Th1.F.cmTheta b d ≠ 0 := (Formalism.L2.Th1.F.cmPair a b d ha hd).indep.ne_zero 1
   have hc' : (c : ℂ) ≠ 0 := by exact_mod_cast hc.ne'
   have hcc : (c : ℂ) * (c : ℂ)⁻¹ = 1 := mul_inv_cancel₀ hc'
   have hct : ((c.toNat : ℕ) : ℂ) = (c : ℂ) := by
@@ -353,12 +346,7 @@ private theorem exists_cmL_lattice_eq_of_cm_action (d : ℕ) (hd : 0 < d) (L : P
 theorem exists_form (d : ℕ) (hd : 0 < d) (L : PeriodPair) (hst : ∀ x ∈ L.lattice, Formalism.L2.Th1.F.cmTheta 1 d * x ∈ L.lattice) :
     ∃ (a : ℕ) (b c : ℤ) (ha : 0 < a) (lam : ℂ) (hlam : lam ≠ 0), 4 * (a : ℤ) * c = b ^ 2 + d ∧
       (cmL a b d ha hd lam hlam).lattice = L.lattice := by
-  have hw1 : L.ω₁ ≠ 0 := by
-    intro h0
-    have hind := L.indep
-    rw [LinearIndependent.pair_iff] at hind
-    have := (hind 1 0 (by rw [h0]; simp)).1
-    norm_num at this
+  have hw1 : L.ω₁ ≠ 0 := L.indep.ne_zero 0
   obtain ⟨p, q, hpq⟩ := PeriodPair.mem_lattice.mp (hst _ L.ω₁_mem_lattice)
   obtain ⟨r, s, hrs⟩ := PeriodPair.mem_lattice.mp (hst _ L.ω₂_mem_lattice)
   have hq0 : q ≠ 0 := by
