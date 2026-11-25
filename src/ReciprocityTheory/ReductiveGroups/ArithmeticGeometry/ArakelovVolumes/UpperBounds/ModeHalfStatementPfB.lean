@@ -22,25 +22,20 @@ def Nid (r : ℕ) : Fin r → Fin r → ℂ := fun a b => if a = b then 1 else 0
 
 theorem chosenFrame_isOrthogonal (X : Data E r) : IsOrth X (x0F X) := fun τ => (X.signature τ).choose_spec.2
 
-private theorem sum_castLE_lemma {p0 : ℕ} (hp : p0 ≤ r) (f : Fin r → ℝ) :
-    ∑ a : Fin p0, f (Fin.castLE hp a) = ∑ k : Fin r, if (k : ℕ) < p0 then f k else 0 := by
-  first
-    | exact _root_.ReciprocityTheory.AnForm.P.sum_castLE
-    | apply _root_.ReciprocityTheory.AnForm.P.sum_castLE <;> first | assumption | rfl | infer_instance
+theorem Ag_Nid (p0 : ℕ) (hp : p0 ≤ r) : Ag p0 hp (Nid r) = 1 := by
+  ext a b
+  simp only [Ag, Matrix.of_apply, sf, cl, Nid, Matrix.one_apply]
+  rw [Finset.sum_eq_single (Fin.castLE hp a)]
+  · have hs : sgn p0 ((Fin.castLE hp a : Fin r) : ℕ) = 1 := by simp [sgn, a.2]
+    by_cases hab : a = b
+    · subst hab; simp [sgn, a.2]
+    · have : Fin.castLE hp a ≠ Fin.castLE hp b := fun h => hab (Fin.castLE_injective hp h)
+      simp [hab, this]
+  · intro k _ hk; simp [hk]
+  · simp
 
 theorem Ms_id (X : Data E r) (τ : X.Ψ) (v : Fin r → ℂ) :
     Ms X.p0 X.p0_le (Nid r) v = ∑ k, ‖v k‖ ^ 2 := by
-  have hA : Ag X.p0 X.p0_le (Nid r) = 1 := by
-    ext a b
-    simp only [Ag, Matrix.of_apply, sf, cl, Nid, Matrix.one_apply]
-    rw [Finset.sum_eq_single (Fin.castLE X.p0_le a)]
-    · have hs : sgn X.p0 ((Fin.castLE X.p0_le a : Fin r) : ℕ) = 1 := by simp [sgn, a.2]
-      by_cases hab : a = b
-      · subst hab; simp [sgn, a.2]
-      · have : Fin.castLE X.p0_le a ≠ Fin.castLE X.p0_le b := fun h => hab (Fin.castLE_injective X.p0_le h)
-        simp [hab, this]
-    · intro k _ hk; simp [hk]
-    · simp
   have hsf : ∀ c : Fin r, sf X.p0 v (cl (Nid r) c) = ((sgn X.p0 c : ℝ) : ℂ) * v c := by
     intro c
     simp only [sf, cl, Nid]
@@ -66,10 +61,10 @@ theorem Ms_id (X : Data E r) (τ : X.Ψ) (v : Fin r → ℂ) :
     simp only [sf, Complex.re_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [mul_assoc, Complex.mul_conj, ← Complex.ofReal_mul, Complex.ofReal_re]
-  simp only [Ms, hA, inv_one]
+  simp only [Ms, Ag_Nid, inv_one]
   rw [hin, hvv, Complex.re_sum]
   simp only [Complex.ofReal_re]
-  rw [sum_castLE_lemma X.p0_le (fun k => Complex.normSq (v k)), Finset.mul_sum, ← Finset.sum_sub_distrib]
+  rw [_root_.ReciprocityTheory.AnForm.P.sum_castLE r X.p0 X.p0_le (fun k => Complex.normSq (v k)), Finset.mul_sum, ← Finset.sum_sub_distrib]
   simp only [Complex.sq_norm]
   refine Finset.sum_congr rfl fun k _ => ?_
   simp only [sgn]
@@ -131,18 +126,6 @@ theorem Ag_cont (p0 : ℕ) (hp : p0 ≤ r) : Continuous (Ag p0 hp) := by
   simp only [Ag, Matrix.of_apply]
   exact continuous_sf p0 (continuous_pi fun k => (continuous_apply _).comp (continuous_apply k))
     (continuous_pi fun k => (continuous_apply _).comp (continuous_apply k))
-
-theorem Ag_Nid (p0 : ℕ) (hp : p0 ≤ r) : Ag p0 hp (Nid r) = 1 := by
-  ext a b
-  simp only [Ag, Matrix.of_apply, sf, cl, Nid, Matrix.one_apply]
-  rw [Finset.sum_eq_single (Fin.castLE hp a)]
-  · have hs : sgn p0 ((Fin.castLE hp a : Fin r) : ℕ) = 1 := by simp [sgn, a.2]
-    by_cases hab : a = b
-    · subst hab; simp [sgn, a.2]
-    · have : Fin.castLE hp a ≠ Fin.castLE hp b := fun h => hab (Fin.castLE_injective hp h)
-      simp [hab, this]
-  · intro k _ hk; simp [hk]
-  · simp
 
 theorem Ms_contAt (p0 : ℕ) (hp : p0 ≤ r) (v0 : Fin r → ℂ) :
     ContinuousAt (fun p : (Fin r → Fin r → ℂ) × (Fin r → ℂ) => Ms p0 hp p.1 p.2) (Nid r, v0) := by
