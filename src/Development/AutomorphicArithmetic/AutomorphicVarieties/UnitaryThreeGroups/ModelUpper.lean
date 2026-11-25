@@ -290,10 +290,6 @@ private theorem spans_of_der {O A K ι : Type} [CommRing O] [IsDomain O] [CommRi
   rw [hz, hδ0 f hfx', h1] at this
   exact zero_ne_one this
 
-private theorem norm_lt_one_of_mem {l : ℕ} [Fact l.Prime] (c : Coef l) (a : c.O) (ha : ¬ IsUnit a) :
-    ‖(a : PadicAlgCl l)‖ < 1 := by
-  apply _root_.norm_lt_one_of_nonunit <;> assumption
-
 private theorem local_of_res {O R : Type} [CommRing O] [IsLocalRing O] [CommRing R] [Algebra O R] [IsCO O R]
     (x : R →ₐ[O] O) (y : R) (hy : y ∈ maximalIdeal R) : ¬ IsUnit (x y) := by
   intro hu
@@ -362,7 +358,7 @@ theorem UpperTheory.V.U3.gradedModel_spansCot_of_rigid_weights :
       M2 M.𝒜 M.Q.ideal → (∀ j : ℤ, j ≤ 0 → RigidWt j S.r.hom (toBar M.x₀)) → M1 M.Q := by
   intro l _ c Γ H _ _ _ _ _ _ η Ψ N ι hι U I cc g₁ S M hl hm h2 hrig
   have hi : Function.Injective (algebraMap c.O (PadicAlgCl l)) := Subtype.val_injective
-  have hloc : IsLocPt (toBar M.x₀) := fun y hy => norm_lt_one_of_mem c _ (local_of_res M.x₀ y hy)
+  have hloc : IsLocPt (toBar M.x₀) := fun y hy => norm_lt_one_of_nonunit c _ (local_of_res M.x₀ y hy)
   have hq : (toBar M.x₀).comp M.q = (Algebra.ofId c.O (PadicAlgCl l)).comp M.x := by
     rw [← M.x₀_q]; rfl
   let Ψ' : Γ →* (PadicAlgCl l)ˣ := (Units.map (algebraMap c.O (PadicAlgCl l)).toMonoidHom).comp Ψ

@@ -1278,11 +1278,6 @@ section SlopeTestRemainingChoices
 
 variable {F : Type} [Field F] {n : ℕ}
 
-private theorem dA_ev {a : ℕ} (N : Matrix (Fin n) (Fin n) F) :
-    N ∈ Ev F F n a ↔ ∀ i j : Fin n, ¬ (((i : ℕ) < a) ↔ ((j : ℕ) < a)) → N i j = 0 := by
-  change (∀ i j : Fin n, _) ↔ _
-  simp
-
 private theorem dA_od {a : ℕ} (N : Matrix (Fin n) (Fin n) F) :
     N ∈ Od F F n a ↔ ∀ i j : Fin n, (((i : ℕ) < a) ↔ ((j : ℕ) < a)) → N i j = 0 := by
   change (∀ i j : Fin n, _) ↔ _
@@ -1291,7 +1286,7 @@ private theorem dA_od {a : ℕ} (N : Matrix (Fin n) (Fin n) F) :
 private theorem dA_oo {a : ℕ} {N N' : Matrix (Fin n) (Fin n) F} (h : N ∈ Od F F n a)
     (h' : N' ∈ Od F F n a) : N * N' ∈ Ev F F n a := by
   rw [dA_od] at h h'
-  rw [dA_ev]
+  rw [evP_iff]
   intro i j e
   rw [Matrix.mul_apply]
   refine Finset.sum_eq_zero fun k _ => ?_
@@ -1302,7 +1297,7 @@ private theorem dA_oo {a : ℕ} {N N' : Matrix (Fin n) (Fin n) F} (h : N ∈ Od 
 private theorem dA_eo {a : ℕ} {N N' : Matrix (Fin n) (Fin n) F} (h : N ∈ Ev F F n a)
     (h' : N' ∈ Od F F n a) : N * N' ∈ Od F F n a := by
   rw [dA_od] at h' ⊢
-  rw [dA_ev] at h
+  rw [evP_iff] at h
   intro i j e
   rw [Matrix.mul_apply]
   refine Finset.sum_eq_zero fun k _ => ?_
@@ -1313,7 +1308,7 @@ private theorem dA_eo {a : ℕ} {N N' : Matrix (Fin n) (Fin n) F} (h : N ∈ Ev 
 private theorem dA_oe {a : ℕ} {N N' : Matrix (Fin n) (Fin n) F} (h : N ∈ Od F F n a)
     (h' : N' ∈ Ev F F n a) : N * N' ∈ Od F F n a := by
   rw [dA_od] at h ⊢
-  rw [dA_ev] at h'
+  rw [evP_iff] at h'
   intro i j e
   rw [Matrix.mul_apply]
   refine Finset.sum_eq_zero fun k _ => ?_

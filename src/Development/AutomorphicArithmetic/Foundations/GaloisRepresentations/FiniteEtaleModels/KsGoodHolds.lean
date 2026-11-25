@@ -264,18 +264,6 @@ open UpperTheory.Gal.crystallineComparison.Mod (Std TjD KerAt)
 open scoped TensorProduct
 open UpperTheory.Gal.FiniteEtaleModels
 
-private theorem ev_nsmul {G : GDatum} {k : Type} [Field k] {Q : Type} [Group Q] {act : G.O → Q → Q}
-    {e : ℕ → Q → Q → kˣ → Prop} (I : GTateIso G k Q act e) (n c : ℕ) (x : G.La) :
-    I.ev n (c • x) = I.ev n x ^ c := by
-  induction c with
-  | zero =>
-    rw [zero_nsmul, pow_zero]
-    have h := I.add n 0 0
-    rw [add_zero] at h
-    exact mul_eq_left.mp h.symm
-  | succ c ih =>
-    rw [succ_nsmul, I.add, ih, pow_succ]
-
 theorem UpperTheory.Gal.FiniteEtaleModels.etaPtB_holds :
     EtaPtB := by
   unfold UpperTheory.Gal.FiniteEtaleModels.EtaPtB
@@ -295,11 +283,11 @@ theorem UpperTheory.Gal.FiniteEtaleModels.etaPtB_holds :
     ((N : ℕ) • x) ((N' : ℕ) • y)).2 hv
   have ex : I'.ev ((N' : ℕ) * N) ((N : ℕ) • x) = I'.ev N' x := by
     have t1 := I'.tower (N' : ℕ) N hN' hN x
-    have t2 := ev_nsmul I' ((N' : ℕ) * N) N x
+    have t2 := GlobalTheory.W2.gTateIso_ev_nsmul I' ((N' : ℕ) * N) N x
     exact t2.trans t1
   have ey : I''.ev ((N' : ℕ) * N) ((N' : ℕ) • y) = I''.ev N y := by
     have t1 := I''.tower (N : ℕ) N' hN hN' y
-    have t2 := ev_nsmul I'' ((N' : ℕ) * N) N' y
+    have t2 := GlobalTheory.W2.gTateIso_ev_nsmul I'' ((N' : ℕ) * N) N' y
     rw [mul_comm] at t1
     exact t2.trans t1
   have key2 := (ex ▸ ey ▸ key : I'.ev N' x ≫ ψ = I''.ev N y)
@@ -540,9 +528,6 @@ private theorem lbIso_move {Y Y₁ Z Z₁ : Scheme.{0}} {P : LB Y} {P₁ : LB Y�
     rw [← GlobalTheory.CechPic.pull_comp, IsIso.inv_hom_id, GlobalTheory.CechPic.pull_id]
   rw [← inj (c • _), h, inj]
 
-private theorem inAf_mem {p : ℕ} [Fact p.Prime] (D : Datum p) (x : D.La) : inAf D x ∈ LaHat D :=
-  AddSubgroup.subset_closure ⟨1, x, fun v => by rw [map_one]; exact one_mem _, rfl⟩
-
 end UpperTheory.Gal.FiniteEtaleModels
 
 theorem UpperTheory.Gal.FiniteEtaleModels.isogG_of :
@@ -589,7 +574,7 @@ theorem UpperTheory.Gal.FiniteEtaleModels.isogG_of :
   · intro x
     have hE : o'.eta (c' • x) ≫ ψ = o.eta (c • x) := by
       refine hTE p D G L R' gb (h * u) X s N' N o' o ψ hψ N₀ c' c hN' hN x x ?_
-      exact Link.CongOne.mul L (hTj.away N₀ hN₀) hu.1 (inAf D x) (inAf_mem D x)
+      exact Link.CongOne.mul L (hTj.away N₀ hN₀) hu.1 (inAf D x) (GlobalTheory.LKGeo.MultScale.inAf_mem D x)
     have a1 : o₁.eta x = o'.eta (c' • x) ≫ e₁.hom := (heta₁ x).symm
     have a2 : o₂.eta x = o.eta (c • x) ≫ e₂.hom := (heta₂ x).symm
     rw [a1, a2]
@@ -1612,9 +1597,6 @@ private theorem conj_congOne {p : ℕ} [Fact p.Prime] {D : Datum p} {G : HTGroup
       rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply]
     rw [map_mul, map_mul, Module.End.mul_apply, Module.End.mul_apply, e2, map_add (f := _), map_nsmul, key]
 
-private theorem inAf_mem' {p : ℕ} [Fact p.Prime] (D : Datum p) (x : D.La) : inAf D x ∈ LaHat D :=
-  AddSubgroup.subset_closure ⟨1, x, fun v => by rw [map_one]; exact one_mem _, rfl⟩
-
 private theorem cl_cast {p : ℕ} [Fact p.Prime] {D : Datum p} {G : HTGroup p} {L : Link D G} {E : Type} [Field E] [NumberField E]
     {gb : GBase D.toG E} {w : HeightOneSpectrum (𝓞 E)} {q : ℕ} [Fact q.Prime] {r : ℤ} {𝔴 𝔫 : Ideal (𝓞 D.F)}
     (S : Site gb w q r 𝔴 𝔫) {k : ℕ} (T : KS L gb k) (M : Lv p) {c c' : ℕ} {a a' : 𝓞 D.F} (hc : c' = c) (ha : a' = a)
@@ -1644,7 +1626,7 @@ theorem UpperTheory.Gal.FiniteEtaleModels.quotOf_holds :
     have h1 : g ∈ L.KN 1 := KN_anti (one_dvd _) hg
     have hcrt := hCRT p D G L q r S.N₀ S.𝔞 hcop hup g (integ_of_mem h1)
     have h2 : L.CongOne S.N₀ g := (KN_anti hdvd hg).1
-    have h3 : CongId L S.𝔞 g := (hcrt.2 a M.1 hMpos M.2.2 hGen).2 fun y => hg.1 _ (inAf_mem' D _)
+    have h3 : CongId L S.𝔞 g := (hcrt.2 a M.1 hMpos M.2.2 hGen).2 fun y => hg.1 _ (GlobalTheory.LKGeo.MultScale.inAf_mem D _)
     exact (hK g).2 ⟨h1, by rw [S.lev]; exact hcrt.1.2 ⟨h2, h3⟩⟩
   have hX : T.X.K (T.lev M) = L.KN M.1 := T.K_eq M
   have hX0 : T.X.K (T.lev N0) = L.KN S.N₀ := T.K_eq N0
