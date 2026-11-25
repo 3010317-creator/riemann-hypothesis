@@ -22,7 +22,6 @@ def RightOK (ε : Fin n → Bool) (X : GMod n) (c : X.V →ₗ[ℂ] (Matrix (Fin
   ∀ (u : X.V) (Y : Matrix (Fin n) (Fin n) ℂ), Formalism.REAL.inG ε Y → ∀ g, Formalism.REAL.inUJ ε g →
     HasDerivAt (fun t : ℝ => c u (g * NormedSpace.exp ((t : ℂ) • Y))) (c (∑ a, ∑ b, Y a b • X.E a b u) g) 0
 
-set_option backward.isDefEq.respectTransparency false in
 theorem exp_entry (Y : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) :
     HasDerivAt (fun t : ℝ => NormedSpace.exp ((t : ℂ) • Y) i j) (Y i j) 0 := by
   have e1 : (fun t : ℝ => NormedSpace.exp ((t : ℂ) • Y) i j) =
