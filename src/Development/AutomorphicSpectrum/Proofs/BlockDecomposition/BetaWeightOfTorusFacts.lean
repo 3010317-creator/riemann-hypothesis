@@ -147,13 +147,8 @@ lemma exists_tor (ε : Fin n → Bool) (θ : Fin n → ℝ) : ∃ k : KG ε, toM
   exact ⟨⟨g, hK⟩, rfl⟩
 
 lemma inner_op_op {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (k : KG ε) (u v : T.V) :
-    inner ℂ (T.op k u) (T.op k v) = inner ℂ u v := by
-  have hu : star (T.op k) * T.op k = 1 := Unitary.star_mul_self_of_mem (T.τ k).2
-  rw [← ContinuousLinearMap.adjoint_inner_right, ← ContinuousLinearMap.star_eq_adjoint]
-  have : star (T.op k) (T.op k v) = v := by
-    have h : (star (T.op k) * T.op k) v = v := by rw [hu]; rfl
-    exact h
-  rw [this]
+    inner ℂ (T.op k u) (T.op k v) = inner ℂ u v :=
+  ContinuousLinearMap.inner_map_map_of_mem_unitary (T.τ k).2 u v
 
 lemma wt_eq (hR : RhoTorus) (hT : TorW) {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) {m : ℕ}
     {η : Fin n → ℝ} {a : AS T m}
