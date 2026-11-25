@@ -243,14 +243,6 @@ theorem h_pX_right (H : D.Hyp) {y : n → A} (hy : ∀ b, D.h (D.e b) y = 0) (u 
     D.h y (D.pX u) = 0 := by
   rw [h_symm H (D.pX u) y, h_pX_left hy, map_zero]
 
-theorem h_span_left {x y : n → A} (hx : x ∈ Submodule.span A (Set.range D.e))
-    (hy : ∀ b, D.h (D.e b) y = 0) : D.h x y = 0 := by
-  induction hx using Submodule.span_induction with
-  | mem x hx => obtain ⟨a, rfl⟩ := hx; exact hy a
-  | zero => simp [Dat.h, hform]
-  | add x x' _ _ h1 h2 => rw [h_add_left, h1, h2, add_zero]
-  | smul c x _ h1 => rw [h_smul_left, h1, mul_zero]
-
 theorem pW_span (H : D.Hyp) {x : n → A} (hx : x ∈ Submodule.span A (Set.range D.e)) :
     D.pW x = 0 := by
   induction hx using Submodule.span_induction with
@@ -376,16 +368,6 @@ theorem Pi_of_N (H : D.Hyp) {S : (n → A) →ₗ[A] (n → A)}
   simp only [Pi, LinearMap.add_apply, LinearMap.comp_apply, h1]
   simp only [pW, LinearMap.sub_apply, LinearMap.id_apply]
   abel
-
-theorem mapW_of_inv {S Si : (n → A) →ₗ[A] (n → A)} (hSSi : ∀ v, S (Si v) = v) (hU : D.Uni S)
-    (hXi : D.MapX Si) (hZi : Si D.z - D.z ∈ Submodule.span A (Set.range D.e)) : D.MapW S := by
-  intro w hw
-  refine ⟨fun b => ?_, ?_⟩
-  · rw [← hSSi (D.e b), hU]
-    exact h_span_left (hXi b) hw.1
-  · rw [← hSSi D.z, hU]
-    have hz : Si D.z = D.z + (Si D.z - D.z) := by abel
-    rw [hz, h_add_left, hw.2.2, h_span_left hZi hw.1, add_zero]
 
 theorem N_part (H : D.Hyp) {S : (n → A) →ₗ[A] (n → A)} (hX : D.MapX S) (hW : D.MapW S)
     (hZ : S D.z - D.z ∈ Submodule.span A (Set.range D.e)) (v : n → A)
