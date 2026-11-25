@@ -3,8 +3,6 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PlaceModelImp
 
 @[expose] public section
-set_option backward.isDefEq.lazyProjDelta false
-set_option backward.isDefEq.lazyWhnfCore false
 set_option smartUnfolding false
 
 noncomputable section
