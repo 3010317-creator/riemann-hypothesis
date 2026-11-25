@@ -14,7 +14,7 @@ namespace GlobalTheory.CompPart
 
 theorem isIrreducible_generizations {Z : Scheme.{0}} (hd : ∀ x : Z, IsDomain (Z.presheaf.stalk x)) (x : Z) :
     IsIrreducible {y : Z | y ⤳ x} := by
-  haveI := hd x
+  have := hd x
   rw [← Scheme.range_fromSpecStalk, ← Set.image_univ]
   exact (IrreducibleSpace.isIrreducible_univ (Spec (Z.presheaf.stalk x))).image _
     (Z.fromSpecStalk x).continuous.continuousOn
