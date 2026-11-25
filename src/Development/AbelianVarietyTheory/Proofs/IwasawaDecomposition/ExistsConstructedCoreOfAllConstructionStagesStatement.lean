@@ -579,7 +579,6 @@ section Cob
 
 variable {E : Type} [Field E] {s : E →+* E} {Γ : Type} [CommGroup Γ]
 
-
 open Classical in
 def pot (s : E →+* E) (C : ∀ n : ℕ, E → Matrix (Fin n) (Fin n) E → Γ) :
     ∀ n : ℕ, Matrix (Fin n) (Fin n) E → Γ :=
@@ -1078,10 +1077,6 @@ section Alg
 
 variable {F E : Type} [Field F] [Field E] [Algebra F E]
 
-theorem sigR_inclR (R : Type) [CommRing R] [Algebra F R] (σ : E →ₐ[F] E) (e : E) :
-    sigR R σ (inclR R e) = inclR R (σ e) := by
-  simp [sigR, inclR]
-
 theorem hform_eq {A : Type} [CommRing A] (τ : A →+* A) {M : ℕ} (J : Matrix (Fin M) (Fin M) A)
     (x y : Fin M → A) : Formalism.UG.hform τ J x y = (τ ∘ x) ⬝ᵥ J.mulVec y := by
   simp [Formalism.UG.hform, dotProduct, Matrix.mulVec, Finset.mul_sum, mul_assoc]
@@ -1106,25 +1101,12 @@ theorem qR_mulVec (R : Type) [CommRing R] [Algebra F R] (σ : E →ₐ[F] E) {M 
     have hc : (Formalism.UG.cT (σ : E →+* E) P).map (inclR (F := F) R) =
         Formalism.UG.cT (sigR R σ) (P.map (inclR R)) := by
       ext i j
-      exact (sigR_inclR R σ _).symm
+      exact (GlobalTheory.GaugeEx.FibProp.sig_incl R σ _).symm
     rw [hc]
   unfold qR hR
   rw [hform_mulVec, h]
 
 end Alg
-
-section Proj
-
-variable {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E]
-
-theorem prInf_inclR (e : E) : prInf (inclR (AF F) e) = inclR (Ainf F) e := by
-  simp [prInf, inclR]
-
-theorem prV_inclR (v : HeightOneSpectrum (𝓞 F)) (e : E) :
-    prV v (inclR (AF F) e) = inclR (Fv F v) e := by
-  simp [prV, inclR]
-
-end Proj
 
 theorem fibAt_basis (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R]
@@ -1162,12 +1144,12 @@ theorem isStdX_basis : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have hI : ((P : Matrix (Fin M) (Fin M) E).map (inclR (F := F) (AF F))).map prInf =
       (P : Matrix (Fin M) (Fin M) E).map (inclR (Ainf F)) := by
     ext i j
-    exact prInf_inclR _
+    exact GlobalTheory.AdelicWitt.prInf_inclR _
   have hV : ∀ v, ((P : Matrix (Fin M) (Fin M) E).map (inclR (F := F) (AF F))).map (prV v) =
       (P : Matrix (Fin M) (Fin M) E).map (inclR (Fv F v)) := by
     intro v
     ext i j
-    exact prV_inclR v _
+    exact GlobalTheory.AdelicWitt.prV_inclR v _
   have h1I : (1 : Matrix (Fin 1) (Fin 1) (AF F ⊗[F] E)).map prInf = 1 :=
     Matrix.map_one _ (map_zero _) (map_one _)
   have h1V : ∀ v, (1 : Matrix (Fin 1) (Fin 1) (AF F ⊗[F] E)).map (prV v) = 1 := fun v =>
@@ -1196,16 +1178,10 @@ open scoped TensorProduct NNReal ENNReal
 namespace GlobalTheory.GaugeEx.StepTr
 
 open Formalism.UG in
-theorem hform_eq {A : Type} [CommRing A] (σ : A →+* A) {n : ℕ} (J : Matrix (Fin n) (Fin n) A)
-    (u w : Fin n → A) : hform σ J u w = (fun i => σ (u i)) ⬝ᵥ J.mulVec w := by
-  unfold Formalism.UG.hform
-  simp only [dotProduct, Matrix.mulVec, Finset.mul_sum, mul_assoc]
-
-open Formalism.UG in
 theorem hform_basis {A : Type} [CommRing A] (σ : A →+* A) {n m : ℕ} (J : Matrix (Fin n) (Fin n) A)
     (P : Matrix (Fin n) (Fin m) A) (u w : Fin m → A) :
     hform σ (cT σ P * J * P) u w = hform σ J (P.mulVec u) (P.mulVec w) := by
-  rw [hform_eq, hform_eq]
+  rw [GlobalTheory.GaugeEx.GramPair.hform_eq_dot, GlobalTheory.GaugeEx.GramPair.hform_eq_dot]
   have h1 : Matrix.vecMul (fun i => σ (u i)) (Formalism.UG.cT σ P) = fun i => σ (P.mulVec u i) := by
     unfold Formalism.UG.cT
     funext i
@@ -1264,10 +1240,10 @@ theorem stepData_basis (hσ : ∀ z, σ (σ z) = z) {M : ℕ} {J : Matrix (Fin (
     have hz : Matrix.vecMul (fun i => (σ : E →+* E) (x 0 i)) (J * B) = 0 := by
       funext k
       have h0 := hB0 k
-      rw [hE, hform_eq, Matrix.dotProduct_mulVec] at h0
+      rw [hE, GlobalTheory.GaugeEx.GramPair.hform_eq_dot, Matrix.dotProduct_mulVec] at h0
       rw [← Matrix.vecMul_vecMul]
       exact h0
-    rw [hcol, hform_eq, Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, hz, zero_dotProduct]
+    rw [hcol, GlobalTheory.GaugeEx.GramPair.hform_eq_dot, Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, hz, zero_dotProduct]
   · rw [hJ']
     have e1 := cT_mul_lemma (σ : E →+* E) B (Q : Matrix (Fin M) (Fin M) E)
     have e2 := cT_mul_lemma (σ : E →+* E) (P : Matrix (Fin (M + 1)) (Fin (M + 1)) E) B₂
@@ -1320,7 +1296,6 @@ theorem frame_alg {S : Type} [CommRing S] {n m : ℕ} {g g₂ P : Matrix (Fin n)
     _ = B * k := by rw [Matrix.mul_assoc (B * k), Units.mul_inv, Matrix.mul_one]
 
 end GlobalTheory.GaugeEx.StepTr
-
 
 open GlobalTheory.GaugeEx.StepTr in
 theorem GlobalTheory.GaugeEx.stepRel_basis : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (s : StdMeas b) (M : ℕ) (J J₂ : Matrix (Fin (M + 1)) (Fin (M + 1)) E) (x : Fin 1 → Fin (M + 1) → E) (a : F) (B : Matrix (Fin (M + 1)) (Fin M) E) (J' : Matrix (Fin M) (Fin M) E) (x₂ : Fin 1 → Fin (M + 1) → E) (B₂ : Matrix (Fin (M + 1)) (Fin M) E) (J₂' : Matrix (Fin M) (Fin M) E) (P : GL (Fin (M + 1)) E) (Q : GL (Fin M) E) (eP : HA (AF F) σ J ≃* HA (AF F) σ J₂) (eQ : HA (AF F) σ J' ≃* HA (AF F) σ J₂') (μ : Measure (HA (AF F) σ J)) (μ' : Measure (HA (AF F) σ J')), StepData σ J x a B J' → J₂ = Formalism.UG.cT (σ : E →+* E) (P : Matrix (Fin (M + 1)) (Fin (M + 1)) E) * J * (P : Matrix (Fin (M + 1)) (Fin (M + 1)) E) → J₂' = Formalism.UG.cT (σ : E →+* E) (Q : Matrix (Fin M) (Fin M) E) * J' * (Q : Matrix (Fin M) (Fin M) E) → (P : Matrix (Fin (M + 1)) (Fin (M + 1)) E).mulVec (x₂ 0) = x 0 → (P : Matrix (Fin (M + 1)) (Fin (M + 1)) E) * B₂ = B * (Q : Matrix (Fin M) (Fin M) E) → (∀ g, FrameRel J J₂ (P : Matrix (Fin (M + 1)) (Fin (M + 1)) E) g (eP g)) → (∀ g, FrameRel J' J₂' (Q : Matrix (Fin M) (Fin M) E) g (eQ g)) → StepRel s σ J x a B J' μ μ' → StepData σ J₂ x₂ a B₂ J₂' ∧ StepRel s σ J₂ x₂ a B₂ J₂' (μ.map eP) (μ'.map eQ) := by
@@ -1632,7 +1607,6 @@ theorem exists_isGauge_of_isCMExt (hσ : IsCMExt F E σ) : ∃ G : GaugeFam F E 
       simp only [Measure.map_smul _ hm.aemeasurable, smul_smul]
 
 end GlobalTheory.GaugeEx
-
 
 open Formalism.BasicNotions Formalism.MainNotions.G in
 theorem GlobalTheory.GaugeEx.exists_isGauge : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E] (cm : CMData F E), ∃ G : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.GaugeFam F E cm.sig, G.IsGauge := by

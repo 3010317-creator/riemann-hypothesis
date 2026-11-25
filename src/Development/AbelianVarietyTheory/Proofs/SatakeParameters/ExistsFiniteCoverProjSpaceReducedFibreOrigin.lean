@@ -633,13 +633,9 @@ namespace GlobalTheory.PD.XCover.Integ
 attribute [local instance] MvPolynomial.gradedAlgebra
 variable {d : ℕ}
 
-theorem ratioSec_eq_ratio (i j : Fin (d + 1)) : ratioSec d i j = GlobalTheory.ProjSpace.ratio ℂ d i j := by
-  rw [ratioSec, GlobalTheory.ProjFrac.awayToSection_mk]
-  exact GlobalTheory.ProjFrac.frac_eq (by ring)
-
 theorem basicOpen_ratioSec (a i : Fin (d + 1)) :
     (PSpace ℂ d).basicOpen (ratioSec d a i) = chart d a ⊓ chart d i := by
-  rw [ratioSec_eq_ratio]
+  rw [GlobalTheory.PD.XCover.ratioSec_eq]
   exact GlobalTheory.ProjSpace.basicOpen_ratioOn
 
 variable {Z : Scheme.{0}} [IsIntegral Z]
@@ -684,7 +680,7 @@ theorem germ_mem_adjoin (p : Z ⟶ Sp ℂ) [inst : Algebra ℂ Z.functionField] 
   | C c => rw [aeval_C, germ_const p hinst φ hφ a ha c]; exact Subalgebra.algebraMap_mem _ c
   | add q r hq hr => rw [map_add (f := _), map_add (f := _), map_add (f := _)]; exact add_mem hq hr
   | mul_X q j hq =>
-    rw [map_mul, map_mul, map_mul, aeval_X, ← ratioSec_eq_ratio, ← rat_eq φ a j ha]
+    rw [map_mul, map_mul, map_mul, aeval_X, ← GlobalTheory.PD.XCover.ratioSec_eq, ← rat_eq φ a j ha]
     exact mul_mem hq (Algebra.subset_adjoin ⟨j, rfl⟩)
 
 theorem rat_eq_crd [Algebra ℂ Z.functionField] (φ : Z ⟶ PSpace ℂ d) (a j : Fin (d + 1))
@@ -694,7 +690,6 @@ theorem rat_eq_crd [Algebra ℂ Z.functionField] (φ : Z ⟶ PSpace ℂ d) (a j 
   exact (rat_overlap d Z φ 0 a j h0 ha).2
 
 end GlobalTheory.PD.XCover.Integ
-
 
 open GlobalTheory.PD.XCover.Integ in
 theorem GlobalTheory.PD.XCover.germ_mem_rB : ∀ (d : ℕ) (Z : Scheme.{0}) [IsIntegral Z] (p : Z ⟶ Sp ℂ) [SmoothOfRelativeDimension d p] [inst : Algebra ℂ Z.functionField], inst = ffAlg p → ∀ (φ : Z ⟶ PSpace ℂ d) [IsFinite φ], φ ≫ PSpace.str ℂ d = p → (∀ i, genericPoint Z ∈ φ ⁻¹ᵁ chart d i) → ∀ (I : Finset (Fin (d + 1))), I.Nonempty → ∀ (h : genericPoint Z ∈ I.inf fun i => φ ⁻¹ᵁ chart d i) (f : Γ(Z, I.inf fun i => φ ⁻¹ᵁ chart d i)), (Z.presheaf.germ _ (genericPoint Z) h).hom f ∈ rB ℂ Z.functionField (crd φ) I := by
@@ -852,8 +847,7 @@ theorem rat_formMap [IsIntegral X] (j : Fin (d + 1)) (hg : genericPoint X ∈ fO
       (X.presheaf.germ (fOpen ι (f 0)) (genericPoint X) hg).hom (fRatio ι (f j) (f 0) (hf j) (hf 0)) := by
   have hmem : genericPoint X ∈ formMap ι f hf p hcov ⁻¹ᵁ XCover.chart d 0 :=
     (formMap_preimage ι f hf p hcov 0).ge hg
-  rw [XCover.rat, dite_eq_left hmem, ← pullRatio_formMap ι f hf p hcov 0 j, pullRatio, germ_appLE, _root_.GlobalTheory.PD.XCover.Integ.ratioSec_eq_ratio]
-
+  rw [XCover.rat, dite_eq_left hmem, ← pullRatio_formMap ι f hf p hcov 0 j, pullRatio, germ_appLE, _root_.GlobalTheory.PD.XCover.ratioSec_eq]
 
 open XCover in
 theorem exists_finCover_of_isFinite {X : Scheme.{0}} [IsIntegral X] (p : X ⟶ Sp ℂ) (d : ℕ) [SmoothOfRelativeDimension d p]

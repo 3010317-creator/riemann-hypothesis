@@ -181,7 +181,6 @@ noncomputable section
 
 namespace GlobalTheory.LocalH2Injective
 
-
 open GlobalTheory.TateTop in
 theorem cob_of_gen {l : ℕ} [Fact l.Prime] {Γ : Type} [Group Γ] [TopologicalSpace Γ]
     [ContinuousMul Γ] [CompactSpace Γ] {χ : Γ →* ℤ_[l]ˣ} (hχ : Continuous fun g => (χ g : ℤ_[l]))
@@ -742,19 +741,13 @@ theorem eq_zero_of_forall_eigen {k : Type} [Field k] {r : ℕ} (hr : 2 ≤ r) (m
 
 variable {D : Formalism.BasicNotions.D7} {N : NData D.R D.host D.what₂} {X : NTw D.R D.host D.what₂ D.LL0 N}
 
-theorem red_apply (i : X.Tw) (K : Type) [Field K] [Algebra (X.O0 i) K] (ρ : GE N →* GL (Fin D.R.r) (X.O0 i)) (g : GE N)
-    (m : Fin D.R.r → K) :
-    red i K ρ g m = (((ρ g : GL (Fin D.R.r) (X.O0 i)) : Matrix _ _ (X.O0 i)).map (algebraMap (X.O0 i) K)).mulVec m := by
-  funext a
-  simp [repOn, matAct, Matrix.mulVec, dotProduct]
-
 theorem dot_equiv {i : X.Tw} {s : X.Sig i} (K : Type) [Field K] [Algebra (X.O0 i) K] {ρ : GE N →* GL (Fin D.R.r) (X.O0 i)}
     (hρ : IsDual i s ρ) (g : GE N) (x y : Fin D.R.r → K) :
     dotProductBilin K K (red i K (Tgl i s) g x) (red i K ρ g y) =
       algebraMap (X.O0 i) K ((eps0 X i g : (X.O0 i)ˣ) : X.O0 i) * dotProductBilin K K x y := by
   have h3 : IsUnit (Tmat i s g).det := by
     rw [← Tgl_coe]; exact Matrix.isUnits_det_units _
-  rw [red_apply, red_apply, hρ, Tgl_coe, Tdual, dotProductBilin_apply_apply, dotProductBilin_apply_apply,
+  rw [GlobalTheory.ResOrth.red_apply, GlobalTheory.ResOrth.red_apply, hρ, Tgl_coe, Tdual, dotProductBilin_apply_apply, dotProductBilin_apply_apply,
     Matrix.map_smul' _ _ _ (map_mul _), Matrix.smul_mulVec, dotProduct_smul, smul_eq_mul, Matrix.transpose_map,
     Matrix.mulVec_transpose, dotProduct_comm, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, ← Matrix.map_mul,
     Matrix.nonsing_inv_mul _ h3, Matrix.map_one _ (map_zero _) (map_one _), Matrix.one_mulVec, dotProduct_comm]
@@ -783,7 +776,7 @@ theorem h0_red : H0 (red i (IsLocalRing.ResidueField (X.O0 i)) (Tgl i s)) = ⊥ 
   | mem A hA =>
     obtain ⟨g, rfl⟩ := hA
     have e := hm g
-    rw [red_apply, Tgl_coe, IsLocalRing.ResidueField.algebraMap_eq, Tmat_map_residue, Matrix.smul_mulVec] at e
+    rw [GlobalTheory.ResOrth.red_apply, Tgl_coe, IsLocalRing.ResidueField.algebraMap_eq, Tmat_map_residue, Matrix.smul_mulVec] at e
     rw [← Submodule.smul_mem_iff _ (residue_unit_ne_zero (chiS i s g)⁻¹), e]
     exact Submodule.mem_span_singleton_self m
   | zero => simp
@@ -803,7 +796,7 @@ theorem h0_red_dual {ρ : GE N →* GL (Fin D.R.r) (X.O0 i)} (hρ : IsDual i s �
   | mem A hA =>
     obtain ⟨g, rfl⟩ := hA
     have e := hm g⁻¹
-    rw [red_apply, hρ, Tdual, GlobalTheory.PrimeToInertia.Tmat_inv, inv_inv, Matrix.map_smul' _ _ _ (map_mul _),
+    rw [GlobalTheory.ResOrth.red_apply, hρ, Tdual, GlobalTheory.PrimeToInertia.Tmat_inv, inv_inv, Matrix.map_smul' _ _ _ (map_mul _),
       Matrix.transpose_map, IsLocalRing.ResidueField.algebraMap_eq, Tmat_map_residue, Matrix.transpose_smul,
       Matrix.smul_mulVec, Matrix.smul_mulVec] at e
     rw [← Submodule.smul_mem_iff _ (residue_unit_ne_zero (chiS i s g)⁻¹),
@@ -861,8 +854,6 @@ theorem nrComplexPlaces_host (D : Formalism.BasicNotions.D7) [_root_.NumberField
     rw [D.host.finrank_cmField, Formalism.BasicNotions.Ranks.f, Formalism.BasicNotions.Ranks.n]
     ring
   omega
-
-
 
 theorem card_eq (hPT : PoitouTateTotallyComplex) (hLF : LocalFiniteness) (hLD : LocalTateDuality) (hLE : LocalEulerChar)
     (hGF : GlobalFiniteness) (hGE : GlobalEulerChar) (h4 : Gen.ArchimedeanSignatureMatching) (bkP : BKPh X) (i : X.Tw) (s : X.Sig i)
@@ -926,7 +917,7 @@ theorem card_eq (hPT : PoitouTateTotallyComplex) (hLF : LocalFiniteness) (hLD : 
     (fun y hy => funext fun a => by simpa using hy (Pi.single a 1))
     (dot_equiv (IsLocalRing.ResidueField (X.O0 i)) hρ) (Sl ∪ Sp) N.plOm (fun v hv => Finset.mem_union_left _ ((hSl v).2 hv))
     (fun v hv B hB σ hσ => LinearMap.ext fun m => by
-      rw [red_apply, Tgl_coe, Tmat_eq_one h (hnot v hv).1 (hnot v hv).2 B hB σ hσ,
+      rw [GlobalTheory.ResOrth.red_apply, Tgl_coe, Tmat_eq_one h (hnot v hv).1 (hnot v hv).2 B hB σ hσ,
         Matrix.map_one _ (map_zero _) (map_one _), Matrix.one_mulVec, Module.End.one_apply])
     _ _ (cu (Tgl i s)) (cu ρ) (fun v hv y => by
       rcases Finset.mem_union.1 hv with hv | hv

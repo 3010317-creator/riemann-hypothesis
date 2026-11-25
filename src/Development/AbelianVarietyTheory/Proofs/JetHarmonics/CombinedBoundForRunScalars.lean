@@ -639,8 +639,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.G
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.MainNotions.Gaps.EtaleWeightGaps
 open GlobalTheory.PtTie
 
-theorem _root_.GlobalTheory.T.combinedValuationBound_algebraicPoints : (∀ (p : ℕ) [Fact p.Prime], Pdiv.ChartF.HTFSt p) → ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D j) (hinj : Function.Injective D.what₂.OtoLL) (EX : ErrX D) (w : WeightFamilies.Wt D j) (c : ℝ), Oriented T EX → RunNum D w c → ∀ (ka wF : WeightFamilies.Wt D j) (S : WeightAlgebra.Scal (recB h.toLawsCore)) (G : GlobalFamilyData (recPJ h j hj) ka w wF), S.sW = sWt (recB h.toLawsCore) hinj EX w → (j < D.R.m → 0 < G.iet ∧ EtVal h j hj G.iet G.et) → CombBound G S c (nusOf (recB h.toLawsCore) w (nuWt T w)) := by
-  first | exact @GlobalTheory.PtTie.combBound_alg
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.CombinedValuationBoundAlgebraicPointsStatement =====
@@ -815,13 +813,10 @@ theorem PageOK.runNum {D : D7} {B : WeightFamilies.Prov D} {P : ModuliIntegralCh
     unfold cc
     positivity
 
-
-
-
 theorem combBound_run : (∀ (p : ℕ) [Fact p.Prime], Pdiv.ChartF.HTFSt p) → ∀ (D : D7) (T : Top D) (h : LawsP T) (hinj : Function.Injective D.what₂.OtoLL) (EX : ErrX D) (p j : ℕ) (hj : InR D j) (large₂ : SizeData₂ D) (H : KHyp) (C2 A2 CT : ℝ) (ka wL wF : WeightFamilies.Wt D j) (Tn nP nW : ℕ) (h0 : ℝ), GlobalTheory.PtTie.Oriented T EX → PageOK large₂ (recPJ h j hj) H C2 A2 CT ka wL wF Tn nP nW h0 → ∀ G : GlobalFamilyData (recPJ h j hj) ka wL wF, (j < D.R.m → EtaOK h j hj large₂ wL G.iet G.et) → CombBound G (scalOfP (recB h.toLawsCore) hinj EX p ka wL wF Tn) (cc D large₂ C2 A2 7 wL) (nusR h j wL) ∧ 0 < (cc D large₂ C2 A2 7 wL) := by
   intro hH D T h hinj EX p j hj large₂ H C2 A2 CT ka wL wF Tn nP nW h0 hO hP G hG
   obtain ⟨hR, hc⟩ := hP.runNum hj
-  exact ⟨GlobalTheory.T.combinedValuationBound_algebraicPoints hH D T h j hj hinj EX wL _ hO hR ka wF _ G rfl (fun hm => ⟨(hG hm).1, (hG hm).2.2.1⟩), hc⟩
+  exact ⟨GlobalTheory.PtTie.combBound_alg hH D T h j hj hinj EX wL _ hO hR ka wF _ G rfl (fun hm => ⟨(hG hm).1, (hG hm).2.2.1⟩), hc⟩
 
 end GlobalTheory.RunJoin
 end -- clump:auto

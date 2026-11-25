@@ -270,7 +270,6 @@ open MvPowerSeries ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ Reciprocity
 
 namespace GlobalTheory
 
-
 open CrudeValue SymbolCols in
 theorem sum_prod_nabVal_leading_minors_of_column_jets : ∀ (R : Type) [CommRing R] (d : ℕ) (O : Type) [CommRing O] [StarRing O] (k : Type) [CommRing k] [Algebra ℚ k] [Algebra R k] (B : FB R d O) (h : PS k 2 d), constantCoeff h = 0 → ∀ (w0 : O) (q : ℕ) (T : Type) [Fintype T] [DecidableEq T] (r : T → ℕ) (n : ℕ) (col : ∀ τ, Fin (r τ) → Fin n) (m : ∀ τ, Fin (r τ) → ℕ), (∀ τ, Function.Injective (col τ)) → ∀ (P : MvPolynomial ((Σ τ : T, Fin (r τ)) × Fin n) k) (al : (Σ τ : T, Fin (r τ)) × Fin n →₀ ℕ), P = (∏ τ, ∏ s : Fin (r τ), (Matrix.of fun a i : Fin (s.val + 1) => (MvPolynomial.X ((⟨τ, Fin.castLE s.isLt a⟩ : Σ τ : T, Fin (r τ)), col τ (Fin.castLE s.isLt i)) : MvPolynomial ((Σ τ : T, Fin (r τ)) × Fin n) k)).det ^ m τ s) → al = ∑ τ, ∑ s : Fin (r τ), m τ s • ∑ a : Fin (s.val + 1), Finsupp.single ((⟨τ, Fin.castLE s.isLt a⟩ : Σ τ : T, Fin (r τ)), col τ (Fin.castLE s.isLt a)) 1 → ∀ (u : (Σ τ : T, Fin (r τ)) → Fin d → k) (lam : Fin n → (Σ τ : T, Fin (r τ)) → Fin d → k), (∀ b l l', (∃ i, col l.1 i = b) → (∃ i, col l'.1 i = b) → ∑ i, lam b l i * u l' i = if l = l' then 1 else 0) → ∀ (c : Fin n → k) (f : Fin n → PS k 1 d), (∀ b (mo : Fin 1 × Fin d →₀ ℕ), mo.degree ≤ (colM al b).degree → coeff mo (f b) = c b * coeff mo (∏ l, (∑ i, C (lam b l i) * (X ((0 : Fin 1), i) : PS k 1 d)) ^ al (l, b))) → ∑ mo ∈ P.support, P.coeff mo * ∏ b, B.nabVal k h w0 q (f b) u (MvPolynomial.monomial (colM mo b) 1) = (∏ b, c b) * ∏ p, ((al p).factorial : k) := by
   intro R _ d O _ _ k _ _ _ B h hh w0 q T _ _ r n col m hcol P al hP hal u lam hpair c f hf
@@ -329,29 +328,12 @@ namespace GlobalTheory.DirScale
 
 variable {R : Type} [CommRing R] {d : ℕ}
 
-theorem dof_smul_dir (F : Fin d → PS R 2 d) (c : R) (u : Fin d → R) (f : PS R 1 d) :
-    Dof F (c • u) f = C c * Dof F u f := by
-  unfold Dof
-  rw [Finset.mul_sum]
-  refine Finset.sum_congr rfl fun j _ => ?_
-  rw [← mul_assoc, Finset.mul_sum]
-  congr 1
-  refine Finset.sum_congr rfl fun i _ => ?_
-  rw [Pi.smul_apply, smul_eq_mul, map_mul, mul_assoc]
-
-theorem dof_iter_C_mul (F : Fin d → PS R 2 d) (u : Fin d → R) (n : ℕ) (r : R) (f : PS R 1 d) :
-    (Dof F u)^[n] (C r * f) = C r * (Dof F u)^[n] f := by
-  induction n generalizing f with
-  | zero => rfl
-  | succ n ih =>
-    rw [Function.iterate_succ_apply, Function.iterate_succ_apply, GE.dof_C_mul, ih]
-
 theorem dof_iter_smul_dir (F : Fin d → PS R 2 d) (c : R) (u : Fin d → R) (n : ℕ) (f : PS R 1 d) :
     (Dof F (c • u))^[n] f = C (c ^ n) * (Dof F u)^[n] f := by
   induction n generalizing f with
   | zero => simp
   | succ n ih =>
-    rw [Function.iterate_succ_apply, Function.iterate_succ_apply, ih, dof_smul_dir, dof_iter_C_mul,
+    rw [Function.iterate_succ_apply, Function.iterate_succ_apply, ih, GlobalTheory.DerivEndo.dof_smul_dir, GlobalTheory.DerivEndo.iterate_dof_C_mul,
       pow_succ, map_mul, mul_assoc]
 
 theorem foldr_smul_dir (F : Fin d → PS R 2 d) {ι : Type} (c : ι → R) (u : ι → Fin d → R)
@@ -362,7 +344,7 @@ theorem foldr_smul_dir (F : Fin d → PS R 2 d) {ι : Type} (c : ι → R) (u : 
   | nil => simp
   | cons l L ih =>
     simp only [List.foldr_cons, List.map_cons, List.prod_cons]
-    rw [ih, dof_iter_smul_dir, dof_iter_C_mul, map_mul, mul_assoc]
+    rw [ih, dof_iter_smul_dir, GlobalTheory.DerivEndo.iterate_dof_C_mul, map_mul, mul_assoc]
 
 theorem dmonOf_smul_dir : ∀ (R : Type) [CommRing R] (d : ℕ) (F : Fin d → PS R 2 d) (ι : Type)
     [Fintype ι] (c : ι → R) (u : ι → Fin d → R) (m : ι →₀ ℕ) (f : PS R 1 d),

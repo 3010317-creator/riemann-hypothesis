@@ -72,16 +72,6 @@ noncomputable section
 
 namespace GlobalTheory.SerOSys
 
-theorem nontrivial_of_simpleRep {Γ : Type} [Group Γ] [Fintype Γ] (V : FDRep ℂ Γ) (h : Simple V) :
-    Nontrivial V := by
-  rw [FDRep.simple_iff_char_is_norm_one] at h
-  by_contra hn
-  rw [not_nontrivial_iff_subsingleton] at hn
-  have h0 : ∀ g, V.character g = 0 := fun g => by
-    rw [FDRep.character, Subsingleton.elim (V.ρ g) 0, map_zero]
-  simp only [h0, mul_zero, Finset.sum_const_zero] at h
-  exact (Nat.cast_ne_zero.mpr Nat.card_pos.ne' : (Nat.card Γ : ℂ) ≠ 0) h.symm
-
 theorem invariant_eq_bot_or_top_of_simple {Γ : Type} [Group Γ] [Fintype Γ] (τ : FDRep ℂ Γ)
     [Simple τ] (U : Submodule ℂ τ) (hU : ∀ g, ∀ x ∈ U, τ.ρ g x ∈ U) : U = ⊥ ∨ U = ⊤ := by
   let A : Subrepresentation τ.ρ := ⟨U, fun g v hv => hU g v hv⟩
@@ -108,8 +98,8 @@ theorem invariant_eq_bot_or_top_of_simple {Γ : Type} [Group Γ] [Fintype Γ] (�
 theorem zIdem_mul_eq_zero_of_ne : ∀ {Γ : Type} [Group Γ] [Fintype Γ] (τ τ' : FDRep ℂ Γ),
     Simple τ → Simple τ' → zIdem τ ≠ zIdem τ' → zIdem τ * zIdem τ' = 0 := by
   intro Γ _ _ τ τ' hτ hτ' hne
-  haveI := nontrivial_of_simpleRep τ hτ
-  haveI := nontrivial_of_simpleRep τ' hτ'
+  haveI := PI.GreenLabelSurjWork.nontrivial_of_simple τ hτ
+  haveI := PI.GreenLabelSurjWork.nontrivial_of_simple τ' hτ'
   rw [GlobalTheory.SerOSys.ZSum.zIdem_eq_centralIdem, GlobalTheory.SerOSys.ZSum.zIdem_eq_centralIdem]
   exact Formalism.IrreducibleCountingLemmas.GaloisIrreducibility.central_idempotents_orthogonal Γ τ τ' τ.ρ τ'.ρ
     (invariant_eq_bot_or_top_of_simple τ) (invariant_eq_bot_or_top_of_simple τ')
@@ -132,9 +122,6 @@ open Polynomial CategoryTheory
 noncomputable section
 
 namespace GlobalTheory.SerOSys
-
-theorem zIdem_idem_central {Γ : Type} [Group Γ] [Fintype Γ] (τ : FDRep ℂ Γ) (h : Simple τ) :
-    zIdem τ * zIdem τ = zIdem τ ∧ ∀ a, zIdem τ * a = a * zIdem τ := _root_.GlobalTheory.SerOSys.zIdem_centralIdempotent τ h
 
 section Main
 

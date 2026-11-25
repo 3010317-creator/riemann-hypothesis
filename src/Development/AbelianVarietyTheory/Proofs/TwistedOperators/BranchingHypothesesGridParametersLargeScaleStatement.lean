@@ -829,11 +829,6 @@ theorem b_abs_of_gaps {H : ℝ} (hH : 0 ≤ H) (hb : ∀ l, 1 ≤ l → l < G.m 
   · have := b_sep_of_gaps hH hb hl' hlm' hl hlm h
     exact le_abs.2 (Or.inl (by linarith))
 
-theorem b_one_le {l : ℕ} (hl : 1 ≤ l) (hlm : l ≤ G.m) : G.b 1 ≤ G.b l := by
-  rcases hl.eq_or_lt with rfl | h
-  · exact le_rfl
-  · exact (G.b_mono 1 l le_rfl h hlm).le
-
 theorem a_real (i : ℕ) : ((G.a i : ℚ) : ℝ) = (G.v 2 : ℝ) + 1 / 2 + ((G.m : ℝ) + 1 - i) * G.ga := by
   simp only [GridData.a]; push_cast; ring
 
@@ -917,7 +912,7 @@ theorem two_le_sub_of_mem_parD0_of_lt {H : ℝ} (hH : 2 ≤ H) (hv : ∀ i, 2 �
   have cl : ∀ i l, 2 ≤ i → i ≤ G.k → 1 ≤ l → l ≤ G.m → (2 : ℝ) ≤ (G.v i : ℝ) + G.b l := by
     intro i l hi hik hl hlm
     have h1 := (v_le_v_two (G := G) hi hik).1
-    have h2 := b_one_le (G := G) hl hlm
+    have h2 := GlobalTheory.WordSep.b_ge (G := G) hl hlm
     have : (2 : ℤ) ≤ G.v i + G.b l := by omega
     exact_mod_cast this
   rcases mem_discrete_parameter_iff.1 hx with ⟨hx1, -⟩ | ⟨l, hl, hlm, rfl⟩ <;>

@@ -88,8 +88,6 @@ theorem map_conj_eq_one {R S : Type} [CommRing R] [CommRing S] {m k : ℕ} (f : 
     (b * K * b').map f = 1 := by
   rw [Matrix.map_mul, Matrix.map_mul, hK, Matrix.mul_one, ← Matrix.map_mul, hb, Matrix.map_one _ (map_zero f) (map_one f)]
 
-
-
 theorem evAt_swapCast_symm (D : D7) (hF : D.host.F = maximalRealSubfield D.host.E)
     (v : HeightOneSpectrum (𝓞 (maximalRealSubfield D.host.E))) (x : ReciprocityTheory.Aut.AL D.host.E) :
     evAt D v ((swapCast hF).symm x) =
@@ -352,9 +350,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Form
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-
-theorem _root_.GlobalTheory.T.normalised_subgroup_column_matrices_entry_zero : ∀ (k : Type) [CommRing k], IsField k → ∀ n r : ℕ, 2 ≤ r → r < n → ∀ (H : Subgroup (GL (Fin n) k)) (b : GL (Fin n) k), (∀ u ∈ unip k n, ∀ h ∈ H, u * h * u⁻¹ ∈ H) → (∀ (h : GL (Fin n) k) (m : Fin n) (v : Fin n → k), r ≤ (m : ℕ) → v m = 0 → h.val = colMat v m → h ∈ H) → (∀ (h : GL (Fin n) k) (m : Fin n) (v : Fin n → k), r ≤ (m : ℕ) → v m = 0 → (b * h * b⁻¹).val = colMat v m → h ∈ H) → (∀ i j : Fin n, (i : ℕ) + 1 = j → (j : ℕ) < r → ∃ (c : k) (h : GL (Fin n) k), h.val = Matrix.transvection i j c ∧ h ∉ H) → ∀ a c : Fin n, r ≤ (a : ℕ) → (c : ℕ) < r → b.val a c = 0 := by
-  first | exact @GlobalTheory.PosAgree.entry_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormalisedSubgroupColumnMatricesEntryZeroStatement =====
@@ -718,7 +713,7 @@ theorem para_of_colMat_fixed : ∀ (L : Type) [Field L] [NumberField L] [IsCMFie
       rcases smul_eq_zero.1 h0 with h | h
       · exact hψx (sub_eq_zero.1 h)
       · exact hz h
-  exact GlobalTheory.T.normalised_subgroup_column_matrices_entry_zero k hk n r hr hrn H b hnorm hcol
+  exact GlobalTheory.PosAgree.entry_zero k hk n r hr hrn H b hnorm hcol
     (fun h m v hm hv e κ y hκ hy ey x => hb κ y hκ hy m v hm hv (by rw [ey]; exact e) x) hroot
 
 end GlobalTheory.ParaForce
@@ -938,8 +933,6 @@ theorem t_pos (D : D7) : 0 < D.R.t := by have := D.R.rank_add_five_le; omega
 
 theorem r_lt_nV (D : D7) : D.R.r < D.R.nV := by have := t_pos D; unfold Ranks.nV; omega
 
-
-
 theorem local_red (hL : R.toLevCh.Is A.μ0) (hPg : ∀ PP ∈ R.Pg, ∃ kv : (Σ k : Fin 2, D.nd.PlG k), PP = D.naut.plGw kv.1 kv.2)
     (i : Fin D.R.m) (t : T) (Pl : LevelP R.Pg D.R.r ℂ) {hF : D.host.F = maximalRealSubfield D.host.E}
     (P : principalLevelFrame.RowPsi (Vc D i) D.R.nV) (hP : R3.StdFrame hF P) {W : Type} [AddCommGroup W] [Module ℂ W]
@@ -1009,8 +1002,6 @@ section Main
 
 variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m} {Ks : Type}
   [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat3 D A3 Ks} {F : Face3 D A3} {X0 : BaseLevelRowSide D}
-
-
 
 theorem cen_used (Y : R3.Read (A3 := A3) R.toRealDat F.lv2 X0) (cG : G0 R.Pg D.R.r ≃* G0g D.nd) (hB : R.toRealDat.BaseW F.lv2)
     (hK : Keep (A3 := A3) R.toRealDat F.lv2 cG) (hO : A3.A.fam.Ok 1) (hC : CenRead Y cG) (M : MtFam D) (ad : MtAd Y M)
@@ -1128,7 +1119,6 @@ theorem cen_heq {K : Type} [Field K] [NumberField K] [StarRing K] {G : Type} [Gr
   rw [eq_of_heq (he _), eq_of_heq (he _)]
   exact (tL μ).cen z a ha x
 
-
 open Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR.Cx GlobalTheory.Mem.R3.Tr in
 
 theorem cenRead_state {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} {w : ColW B f T} {P : Pre2 K w} (x : St P) :
@@ -1145,16 +1135,10 @@ theorem cenRead_state {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} {w : C
     (congrFun x.r.tup t) (x.m.t.hL i t) (fun y => x.r.Y.eMt i t ((y))) (x.r.eMt i t) z' (a) (ha') (v)
   exact h1.trans h2
 
-
-
-
-
 theorem labTie_withLoc {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} {w : ColW B f T} {P : Pre2 K w}
     (x : St P) (Lc : LocAll (lay0 (Dof x))) :
     GlobalTheory.SerSys.LabTie (withLoc Lc) fun k => GlobalTheory.Mem.TypePl.labDat ((withLoc Lc).host.g k) :=
   fun k => ⟨(x.fits.grp.teich k).symm, x.fits.grp.ser k⟩
-
-
 
 end GlobalTheory.SerThird
 

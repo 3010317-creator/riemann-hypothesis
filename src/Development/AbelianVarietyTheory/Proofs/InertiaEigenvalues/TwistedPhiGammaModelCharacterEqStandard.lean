@@ -597,15 +597,6 @@ alias exists_ker := _root_.GlobalTheory.Models.SubModel.exists_ker
 
 alias exists_coker := _root_.GlobalTheory.Models.SubModel.exists_coker
 
-theorem simple_chr (χ : G →* kˣ) : IsSimpleModule (MonoidAlgebra k G) (chr χ).ρ.asModule := by
-  rw [← Representation.irreducible_iff_isSimpleModule_asModule]
-  have h : IsSimpleModule k (Fin 1 → k) := isSimpleModule_iff_finrank_eq_one.mpr (by simp)
-  refine { exists_pair_ne := ⟨⊥, ⊤, fun h' => ?_⟩, eq_bot_or_eq_top := fun S => ?_ }
-  · exact bot_ne_top (α := Submodule k (Fin 1 → k)) (congrArg Subrepresentation.toSubmodule h')
-  · rcases eq_bot_or_eq_top S.toSubmodule with h' | h'
-    · exact Or.inl (Subrepresentation.toSubmodule_injective h')
-    · exact Or.inr (Subrepresentation.toSubmodule_injective h')
-
 theorem sameSS_three {s t u : ℕ} {M : Type} [AddCommGroup M] [Module k M] {π : Representation k G M}
     (C : (Fin s ⊕ Unit) ⊕ Fin t → Ob k G) (e : Fin u ≃ (Fin s ⊕ Unit) ⊕ Fin t)
     (h : SameSS π (((piRep fun a => (C (.inl (.inl a))).ρ).prod (C (.inl (.inr ()))).ρ).prod
@@ -624,7 +615,6 @@ theorem sameSS_three {s t u : ℕ} {M : Type} [AddCommGroup M] [Module k M] {π 
   rfl
 
 end GlobalTheory.Models.ThroughLine
-
 
 open GlobalTheory.Models.ThroughLine in
 theorem GlobalTheory.Models.ModTh.exists_jordanHolder_through_line : ∀ {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact l.Prime] [CharP k l] [NeZero n] {R : RingPG k l} (F : DFun R n G) {r : ℕ} {Dt : TopData n r} (M : ModTh F Dt) (B A₁ : Ob k G) (χ : G →* kˣ) (j : (Fin A₁.m → k) →ₗ[k] (Fin B.m → k)) (p : (Fin A₁.m → k) →ₗ[k] (Fin 1 → k)) (N : Lats k n B.m), M.Model B N → IsHom A₁ B j → Function.Injective j → IsHom A₁ (chr χ) p → Function.Surjective p → ∃ (s : ℕ) (C : Fin s → Ob k G) (L : ∀ a, Lats k n (C a).m) (a₀ : Fin s), (∀ a, M.Model (C a) (L a)) ∧ (∀ a, IsSimpleModule (MonoidAlgebra k G) (C a).ρ.asModule) ∧ SameSS B.ρ (piRep fun a => (C a).ρ) ∧ (∀ i x, sen ((F.D B).γ i) (N i) x = ∑ a, sen ((F.D (C a)).γ i) (L a i) x) ∧ (⟨C a₀, L a₀⟩ : Σ A : Ob k G, Lats k n A.m) = ⟨chr χ, F.push A₁ (chr χ) p (F.pre A₁ B j N)⟩ := by
@@ -652,7 +642,7 @@ theorem GlobalTheory.Models.ModTh.exists_jordanHolder_through_line : ∀ {k G : 
     exacts [c1 b, hL, d1 b]
   · show IsSimpleModule (MonoidAlgebra k G) (S (e a)).1.ρ.asModule
     rcases e a with (b | b) | b
-    exacts [c2 b, simple_chr χ, d2 b]
+    exacts [c2 b, GlobalTheory.JHMatch.chr_simple χ, d2 b]
   · refine sameSS_three (fun a => (S a).1) e ?_
     exact (SameSS.of_exact hj hq hji hqs hqe (hfl _)).trans
       (((SameSS.of_exact hf hp hfi hps hfe (hfl _)).trans (c3.prod (SameSS.refl _ (hfl _)))).prod d3)

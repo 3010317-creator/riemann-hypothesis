@@ -150,7 +150,6 @@ theorem isEmb_conj_blockW {m r : ℕ} {J Q Qi : Matrix (Fin (2 * r + m + 1)) (Fi
 
 end UpperTheory.Lit.Bur.BlockEmb
 
-
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -221,7 +220,6 @@ theorem isCWCont_of_sobCont {k r : ℕ} {H : Type} [NormedAddCommGroup H] [Inner
   exact ⟨C, Ws, hW, fun v hv => by rw [hB v hv]; exact hb v hv⟩
 
 end UpperTheory.Lit.Bur.CWCombo
-
 
 end -- clump:auto
 end -- clump:auto
@@ -364,7 +362,6 @@ theorem unitarize : ∀ {k : ℕ} {W : Type} [AddCommGroup W] [Module ℂ W] [Fi
 
 end UpperTheory.Lit.Bur.Unitarize
 
-
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -445,7 +442,6 @@ theorem isContIrred_contra_conj : ∀ {m : ℕ} {W : Type} [AddCommGroup W] [Mod
 
 end UpperTheory.Lit.Bur.BesselContra
 
-
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.BesselModels.ContragredientConjDefiniteUnitaryIsContIrred =====
@@ -458,7 +454,6 @@ section -- clump:auto
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
 namespace UpperTheory.Lit.Bur.HermCongr
-
 
 open scoped ComplexOrder in
 theorem posDef_of_herm_re_pos {m : ℕ} {J₀ : Matrix (Fin m) (Fin m) ℂ} (hH : J₀ᴴ = J₀)
@@ -533,7 +528,6 @@ theorem exists_congr_one {m : ℕ} {J₀ : Matrix (Fin m) (Fin m) ℂ} (hH : J�
       _ = 1 := by rw [hUU, Matrix.mul_one, Matrix.mul_one, htdt]
 
 end UpperTheory.Lit.Bur.HermCongr
-
 
 end -- clump:auto
 end -- clump:auto
@@ -794,7 +788,6 @@ theorem exists_frame_matrix {m r : ℕ} {J : Matrix (Fin (2 * r + m + 1)) (Fin (
 
 end UpperTheory.Lit.Bur.BesselFrame
 
-
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -808,7 +801,6 @@ section -- clump:auto
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
 namespace UpperTheory.Lit.Bur.DualCols
-
 
 open scoped ComplexOrder in
 theorem exists_right_inv {n r : ℕ} {J : Matrix (Fin n) (Fin n) ℂ} {e : Matrix (Fin n) (Fin r) ℂ}
@@ -906,7 +898,6 @@ theorem exists_dual_cols {n m r : ℕ} {J : Matrix (Fin n) (Fin n) ℂ} {J₀ : 
 
 end UpperTheory.Lit.Bur.DualCols
 
-
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.BesselModels.IsFrameExistsIsotropicDualColumns =====
@@ -957,7 +948,6 @@ theorem conj_mem_unipRad : ∀ {n r : ℕ} {J G Q Qi : Matrix (Fin n) (Fin n) �
     rw [hw1, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, ha, Matrix.mulVec_mulVec, he]
 
 end UpperTheory.Lit.Bur.UnipRadConj
-
 
 end -- clump:auto
 end -- clump:auto
@@ -1058,7 +1048,6 @@ theorem mem_unipRad_of_mem_Nset {k r : ℕ} {u : Matrix (Fin (2 * r + k + 1)) (F
 
 end UpperTheory.Lit.Bur.BesselRadical
 
-
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.BesselModels.MemBesselUnipotentRadicalOfMemCoordGroup =====
@@ -1158,7 +1147,6 @@ theorem smoothVec_conj_iff (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H))
 
 end UpperTheory.Lit.Bur.SmoothConj
 
-
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1216,7 +1204,6 @@ theorem smoothVec_translate : ∀ {n : ℕ} {H : Type} [NormedAddCommGroup H] [I
 
 end UpperTheory.Lit.Bur.SmoothTranslate
 
-
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1255,7 +1242,6 @@ theorem sobCont_conj {n : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSp
 
 end UpperTheory.Lit.Bur.SobConj
 
-
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.BesselModels.SobolevContOfConjGramForm =====
@@ -1279,7 +1265,6 @@ theorem card_plus_of_congr_Hpk : ∀ {m r : ℕ} (ε : Fin (2 * r + m + 1) → B
   exact (ReciprocityTheory.ChartRestriction.DS.Lap.TransportIntA.cayley_signature' hc).1
 
 end UpperTheory.Lit.Bur.Inertia
-
 
 end -- clump:auto
 end -- clump:auto

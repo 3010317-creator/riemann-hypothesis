@@ -585,11 +585,6 @@ open NumberField IsDedekindDomain Formalism.L2.Col
 noncomputable section
 namespace GlobalTheory.GprimUnder
 
-theorem conjO_conjO (X : Fields) (a : 𝓞 X.E) : X.conjO (X.conjO a) = a := by
-  apply RingOfIntegers.ext
-  show star (star (a : X.E)) = (a : X.E)
-  exact star_star _
-
 theorem conjO_algebraMap (X : Fields) (hX : X.Ok) (x : 𝓞 X.F) :
     X.conjO (algebraMap (𝓞 X.F) (𝓞 X.E) x) = algebraMap (𝓞 X.F) (𝓞 X.E) x := by
   apply RingOfIntegers.ext
@@ -605,11 +600,11 @@ def conjPrime (X : Fields) (P : HeightOneSpectrum (𝓞 X.E)) : HeightOneSpectru
     obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot P.ne_bot
     intro h
     have h1 : X.conjO x ∈ P.asIdeal.comap X.conjO := by
-      rw [Ideal.mem_comap, conjO_conjO]
+      rw [Ideal.mem_comap, Formalism.L2.Col.Fields.conjO_invol]
       exact hx
     rw [h, Ideal.mem_bot] at h1
     apply hx0
-    rw [← conjO_conjO X x, h1, map_zero]
+    rw [← Formalism.L2.Col.Fields.conjO_invol X x, h1, map_zero]
 
 theorem mem_conjPrime (X : Fields) (P : HeightOneSpectrum (𝓞 X.E)) (a : 𝓞 X.E) :
     a ∈ (conjPrime X P).asIdeal ↔ X.conjO a ∈ P.asIdeal := Ideal.mem_comap
@@ -657,7 +652,6 @@ noncomputable section
 namespace GlobalTheory.UnitCut
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-
 
 open Classical in
 def cutA (z : FiniteAdeleRing (𝓞 E) E) (hz : ∀ P : HeightOneSpectrum (𝓞 E), Valued.v (z P) ≤ 1)
@@ -889,8 +883,6 @@ noncomputable section
 
 namespace GlobalTheory.TieUnr
 
-
-
 theorem mt_eq_one_of_intUnit : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀ i < D.R.m, ∀ y : (letI := D.host.cmStar; Formalism.L2.Herm.unitaryOneFiniteAdeles D.sp.cm), Matrix.GeneralLinearGroup.det y.1 ∈ intU D.host.F D.host.E → (∀ v, UnderSB t μ v → Formalism.UG.prV (E := D.host.E) v ((Matrix.GeneralLinearGroup.det y.1 : (AfE D.host.F D.host.E)ˣ) : AfE D.host.F D.host.E) = 1) → (t.O u μ).mt (i + 1) (dtU y) = 1) := by
   intro D L hT Gi Gl Kc Y cX ex t u μ St A dtU a H T i hi y hint hsupp
   classical
@@ -1048,8 +1040,6 @@ section D2
 variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : G.Inst D L} {Gl : G.LatInst D} {Kc : G.Consts} {Y : DivX D} {cX : ExtraC}
   {ex : Extra D L hT Gi Gl Kc Y cX} {t : KerEntTied ex} {u : D.what₂.Word} {μ : D.what₂.Tup}
   (dtU : Formalism.L2.Herm.unitaryOneFiniteAdeles D.sp.cm →* D.Dt)
-
-
 
 theorem muOf_det_mul (j : ℕ) (x y : Formalism.L2.Herm.unitaryOneFiniteAdeles D.sp.cm) :
     muOf t u μ dtU j (Matrix.GeneralLinearGroup.det x.1 * Matrix.GeneralLinearGroup.det y.1) =

@@ -838,16 +838,10 @@ theorem ThZA_map (X : Sys p) (K : Type) [Field K] [Algebra (K0 p) K] (j : ℕ)
   funext s
   exact (map_coordZA X K j s).symm
 
-theorem p_ne_zero (K : Type) [Field K] [Algebra (K0 p) K] : (p : K) ≠ 0 := by
-  have h : (p : WW p) ≠ 0 := WittVector.p_nonzero p (kb p)
-  have h2 := (map_ne_zero_iff _ (IsFractionRing.injective (WW p) (K0 p))).mpr h
-  have h3 := (map_ne_zero (algebraMap (K0 p) K)).mpr h2
-  simpa using h3
-
 theorem geC_of_mem {X : Sys p} (Y : Pend X) (g : ℝ) (y : Y.Kc) (hy : y ∈ Y.Oc) :
     Y.geC ((p : Y.Kc) ^ ⌈g⌉ * y) g := by
   intro a b hb hab
-  have hp := p_ne_zero (p := p) Y.Kc
+  have hp := Formalism.MainNotions.FormalGroupSystem.Pf.pK'_ne (p := p) Y.Kc
   have h1 : a ≤ ⌈g⌉ * b := by
     have : (a : ℝ) ≤ (⌈g⌉ : ℝ) * b := hab.trans (mul_le_mul_of_nonneg_right (Int.le_ceil g) (Nat.cast_nonneg b))
     exact_mod_cast this
@@ -1496,13 +1490,6 @@ theorem errF_posPl {L : SizeData₂ D} (K : Consts) (ce : ErrC) (j p : ℕ) (r :
 theorem posPl_true_one {p : ℕ} (hs : ¬ IsSg D p) (t : HH D) : posPl D p (true, t) 1 = (true, t + hP D p) := by
   simp [posPl, partner, hs]
 
-theorem notSg {T p : ℕ} (hg : GIdx D.host T p) : ¬ IsSg D p := by
-  intro h
-  have h1 : D.host.cls p = PrimeClass.inertClass := hg.2.2.1
-  unfold IsSg at h
-  rw [h1] at h
-  exact absurd h (by decide)
-
 theorem sysTw_sites : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (X : Inst D L) (Y : LatInst D) (K : Consts) (Dx : DivX D) (lev : LevelData D) (Xe : ErrX D) (ce : ErrC) (E : OrbitPlaces.Ent D) (LC : D.what₂.Tup → ∀ u (w : D.what₂.places.Pl) (hg : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)), Σ Lv : Levels (Y.Fl u w hg), Chain Lv), LatTied hT X Y → FillsAll hT Y → L.FDef → OrbitPlaces.OrbitLetterBoundsAll 11 1 → OrbitPlaces.Shape D L X E → OrbitPlaces.CLarge 11 1 K ce → (∀ μ, DV.Used D μ → ∀ u (w : D.what₂.places.Pl) (hg : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)), D.what₂.places.resChar w ∉ Dx.Qp μ → SiteAdm D u w hg (Y.Fl u w hg) (LC μ u w hg).1 (LC μ u w hg).2) → SysTw D L X K Dx (reW Y LC) lev Xe ce 1 := by
   intro D L hT X Y K Dx lev Xe ce E LC hty hfa hF hadm hSh hCL hS hE μ hμ hT' hty' u w hg hQ
   obtain ⟨i, std, vp, unif, eO, eO_spec, dG, dG_spec, om, Y5, hA, h0, hj⟩ := hS μ hμ u w hg hQ
@@ -1524,7 +1511,7 @@ theorem sysTw_sites : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (X : Ins
     refine (hr2 (fun t => if ((D.what₂.places.resChar w : ℕ) : ℝ) ≤ L.sc.X'' D.R.n then
       FOrb D j (D.what₂.places.resChar w) (true, t) - OrbitPlaces.errF L K ce j (D.what₂.places.resChar w) (true, t) else 0) ?_).symm
     intro t
-    have h1 := posPl_true_one (notSg hg) t
+    have h1 := posPl_true_one (Formalism.MainNotions.FormalGroupSystem.Pf.nc_notSg hg) t
     have h2 := FOrb_step D j (D.what₂.places.resChar w) (true, t) 1
     have h3 := errF_posPl (L := L) K ce j (D.what₂.places.resChar w) (true, t) 1
     rw [h1] at h2 h3
