@@ -66,8 +66,6 @@ open Classical
 
 noncomputable section
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.UPoinc.GSetup
 
 theorem finite_stalkMap_field {K Ω : Type} [Field K] [Field Ω] (f : K →+* Ω) (hf : f.Finite) (x : Sp Ω) :
