@@ -129,10 +129,7 @@ theorem IsIrreducible.isEquivalent_of_mem_intertwiners (hπ : IsIrreducible (π 
     have e2 : ⟪T v, T v⟫_ℂ = (‖T v‖ : ℂ) ^ 2 := by rw [inner_self_eq_norm_sq_to_K]; rfl
     rw [e1, e2] at h1
     exact h1.symm
-  obtain ⟨v₀, hv₀⟩ : ∃ v, T v ≠ 0 := by
-    by_contra h
-    push Not at h
-    exact hT0 (ContinuousLinearMap.ext h)
+  obtain ⟨v₀, hv₀⟩ : ∃ v, T v ≠ 0 := DFunLike.exists_ne hT0
   have hv₀' : v₀ ≠ 0 := fun h => hv₀ (by rw [h, map_zero])
   set r : ℝ := ‖T v₀‖ / ‖v₀‖ with hr
   have hrpos : 0 < r := div_pos (norm_pos_iff.mpr hv₀) (norm_pos_iff.mpr hv₀')
