@@ -145,12 +145,9 @@ theorem proof : FnDegRelDeg.Statement.{u} := by
 
   let ρ := Ideal.Quotient.liftₐ (ReciprocityTheory.ChartRestriction.G.AI.I1.chartIdeal P' i') (IntNumPoint.dehom P' i')
     (fun a ha => IntNumPoint.dehom_eq_zero_of_mem_chartIdeal i' hi hP'.multiHomog ha)
-  have hρ : ∀ f, ρ (Ideal.Quotient.mk _ f) = IntNumPoint.dehom P' i' f := fun f => rfl
-  have hρinj : Function.Injective ρ := by
-    refine (injective_iff_map_eq_zero ρ).2 fun a ha => ?_
-    obtain ⟨f, rfl⟩ := Ideal.Quotient.mk_surjective a
-    rw [hρ] at ha
-    exact Ideal.Quotient.eq_zero_iff_mem.2 (IntNumPoint.mem_chartIdeal_of_dehom_eq_zero i' hi ha)
+  have hρinj : Function.Injective ρ :=
+    RingHom.lift_injective_of_ker_le_ideal _ _ fun _ ha =>
+      IntNumPoint.mem_chartIdeal_of_dehom_eq_zero i' hi (RingHom.mem_ker.1 ha)
   let _ := (ReciprocityTheory.ChartRestriction.G.AI.I1.chartMap v P' i').toAlgebra
   have hτ : ∀ p : MRing ι F, ρ (ReciprocityTheory.ChartRestriction.G.AI.I1.chartMap v P' i' (Ideal.Quotient.mk _ p)) =
       IntNumPoint.dehom P' i' (rename v p) := fun p => rfl
