@@ -178,11 +178,7 @@ theorem split {m : ℕ} (E : Fin n → Fin n → Module.End ℂ M) (col : Fin m 
   have hcoe_one : ((1 : Algebra.adjoin ℂ S) : Module.End ℂ (TV n M (Fin m))) = 1 := rfl
   have hlist : ∀ l : List (Algebra.adjoin ℂ S),
       ((l.prod : Algebra.adjoin ℂ S) : Module.End ℂ (TV n M (Fin m))) =
-        (l.map Subtype.val).prod := by
-    intro l
-    induction l with
-    | nil => exact hcoe_one
-    | cons a l ih => rw [List.prod_cons, List.map_cons, List.prod_cons, hcoe_mul, ih]
+        (l.map Subtype.val).prod := fun l => SubmonoidClass.coe_list_prod l
   have hcolD : colD E col = ((∏ q, ∏ p, F p q : Algebra.adjoin ℂ S) : Module.End ℂ _) := by
     simp only [colD, ← List.prod_ofFn, hlist, List.map_ofFn, Function.comp_def, hF]
   have hjmem : j ∈ (Finset.univ : Finset (Fin m)).erase i :=
