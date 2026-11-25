@@ -1516,7 +1516,7 @@ theorem lmulC_split_near_one :
     funext τ a c
     rfl
   obtain ⟨⟨hyd, hyΔ⟩, hyz⟩ := hball hM
-  refine ⟨zF X x (g M), hyz, bF X x (g M), bF_mem hyd hyΔ, ?_⟩
+  refine ⟨zF X x (g M), hyz, bF X x (g M), bF_mem hyΔ, ?_⟩
   rw [hgM]
   exact split_eq hx (g M)
 
