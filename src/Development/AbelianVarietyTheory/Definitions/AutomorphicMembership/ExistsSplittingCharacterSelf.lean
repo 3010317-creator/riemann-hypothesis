@@ -1109,36 +1109,6 @@ variable {θ : InfF D} {X : ThetaX D} {T : ThetaTied D X} {W : WeilTied D X T} {
 
 end Lift
 
-structure WeilThetaCompatibility {X : ThetaX D} {T : ThetaTied D X} (W : WeilTied D X T) : Prop where
-  range : ∀ V V' : HSp D, V.rank = V'.rank → Set.range (W.evS V V') = {f | IsThetaFun W.ψ V V' f}
-  Heisenberg₂ : ∀ (V V' : HSp D) χ χ', V.rank = V'.rank → ResEta D (T.eChr χ) V.rank → ResEta D (T.eChr χ') V'.rank →
-    ∀ g h w₀ Φ Φ', W.evS V V' Φ' = Heisenberg₂ W.ψ V V' w₀ (W.evS V V' Φ) →
-      W.evS V V' (W.om V V' χ χ' (g, h) Φ') =
-        Formalism.L2.Theta.Heisenberg₂ W.ψ V V' (actHom V V' g h w₀) (W.evS V V' (W.om V V' χ χ' (g, h) Φ))
-  aut : ∀ (V V' : HSp D) χ χ', V.rank = V'.rank → ResEta D (T.eChr χ) V.rank → ResEta D (T.eChr χ') V'.rank →
-    ∀ γ ∈ GQ V, ∀ γ' ∈ GQ V', ∀ Φ, W.evS V V' (W.om V V' χ χ' (γ, γ') Φ) 0 = W.evS V V' Φ 0
-  cont : ∀ (V V' : HSp D) χ χ', V.rank = V'.rank → ResEta D (T.eChr χ) V.rank → ResEta D (T.eChr χ') V'.rank →
-    ∀ Φ w, Continuous fun p : GA D V × GA D V' => W.evS V V' (W.om V V' χ χ' p Φ) w
-  unit : ∀ (V V' : HSp D) χ χ', V.rank = V'.rank → ResEta D (T.eChr χ) V.rank → ResEta D (T.eChr χ') V'.rank →
-    ∀ (μ : Measure (WA V V')) (𝓕 : Set (WA V V')), μ.IsAddHaarMeasure → IsAddFundamentalDomain (ratL V V') 𝓕 μ →
-    ∀ p Φ, ∫ w in 𝓕, ‖W.evS V V' (W.om V V' χ χ' p Φ) w‖ ^ 2 ∂μ = ∫ w in 𝓕, ‖W.evS V V' Φ w‖ ^ 2 ∂μ
-  split : ∀ (V V' : HSp D) χ χ', V.rank = V'.rank → ResEta D (T.eChr χ) V.rank → ResEta D (T.eChr χ') V'.rank →
-    ∀ e, IsSplitIdem D e → ∀ g h, SuppAt e V g → SuppAt e V' h → ∀ x y, IsDetAt e V g x → IsDetAt e V' h y →
-    ∃ r : ℝ, 0 < r ∧ ∀ ℓ : X.Sch V V' →ₗ[ℂ] ℂ,
-      (∀ u : WA V V', (∀ i j, cA D e * u i j = u i j) → ∀ Φ Φ',
-        W.evS V V' Φ' = Formalism.L2.Theta.Heisenberg₂ W.ψ V V' u (W.evS V V' Φ) → ℓ Φ' = ℓ Φ) →
-      ∀ Φ, ℓ (W.om V V' χ χ' (g, h) Φ) = (r : ℂ) * (splitFac V V' (T.eChr χ) (T.eChr χ') x y : ℂ) * ℓ Φ
-  twW : ∀ (V V' : HSp D) χ χ' ν, V.rank = V'.rank → ResEta D (T.eChr χ) V.rank → ResEta D (T.eChr χ') V'.rank →
-    ResEta D (T.eChr ν) 0 → ∀ g h x, IsDetRoot V g x →
-      W.om V V' χ (χ' * ν) (g, h) = (((T.eChr ν x)⁻¹ : Circle) : ℂ) • W.om V V' χ χ' (g, h)
-  twV : ∀ (V V' : HSp D) χ χ' ν, V.rank = V'.rank → ResEta D (T.eChr χ) V.rank → ResEta D (T.eChr χ') V'.rank →
-    ResEta D (T.eChr ν) 0 → ∀ g h x, IsDetRoot V' h x →
-      W.om V V' (χ * ν) χ' (g, h) = ((T.eChr ν x : Circle) : ℂ) • W.om V V' χ χ' (g, h)
-  th : ∀ (V V' : HSp D) χ χ', V.rank = V'.rank → ResEta D (T.eChr χ) V.rank → ResEta D (T.eChr χ') V'.rank → V.SigOK →
-    ∀ μ 𝓕, IsVolPair D V μ 𝓕 → ∀ (Φ : X.Sch V V') (F : X.cusp V) (h : GA D V'),
-      T.ev V' (X.th V V' χ χ' Φ F) h =
-        (T.petC V : ℂ) * ∫ g in 𝓕, W.evS V V' (W.om V V' χ χ' (g, h) Φ) 0 * T.ev V (F : X.AF V) g ∂μ
-
 namespace RealisesE
 
 variable {θ : InfF D} {X : ThetaX D} {T : ThetaTied D X} {W : WeilTied D X T} {B : BesselTied D X T W}
@@ -1165,48 +1135,6 @@ theorem typTied (ht : TypAdd D) : TypTied T := ⟨⟨θ, h.inf⟩, fun _ h' V hV
   have : T.ev V F ∈ Set.range (T.ev V) := ⟨F, rfl⟩
   rw [h.forms V] at this
   exact ⟨fun k => k.2, fun k => ⟨this, k⟩⟩⟩
-
-def schEquiv (V V' : HSp D) : X.Sch V V' ≃ₗ[ℂ] ThS W.ψ V V' :=
-  LinearEquiv.ofBijective ((W.evS V V').codRestrict _ fun Φ => mem_ThS.2 (by
-      have hf : W.evS V V' Φ ∈ Set.range (W.evS V V') := ⟨Φ, rfl⟩
-      rwa [h.sch] at hf))
-    ⟨fun _ _ e => W.evS_inj V V' (congrArg Subtype.val e), fun f => by
-      have hf : f.1 ∈ Set.range (W.evS V V') := by rw [h.sch]; exact mem_ThS.1 f.2
-      exact hf.imp fun _ e => Subtype.ext e⟩
-
-theorem schEquiv_om (V V' : HSp D) (χ χ') (p) (Φ : X.Sch V V') :
-    h.schEquiv V V' (W.om V V' χ χ' p Φ) = Wf.om V V' (T.eChr χ) (T.eChr χ') p (h.schEquiv V V' Φ) :=
-  Subtype.ext (h.om V V' χ χ' p Φ _ rfl)
-
-theorem eqTied : WeilThetaCompatibility W := by
-  have hc : ∀ χ, IsHC D (T.eChr χ) := fun χ => by
-    have : T.eChr χ ∈ Set.range T.eChr := ⟨χ, rfl⟩
-    rwa [T.eChr_range] at this
-  have ha : ∀ {V V' : HSp D} {χ χ'}, V.rank = V'.rank → ResEta D (T.eChr χ) V.rank → ResEta D (T.eChr χ') V'.rank →
-      AdmE V V' (T.eChr χ) (T.eChr χ') := fun hr h1 h2 => ⟨hr, hc _, hc _, h1, h2⟩
-  have ho := fun V V' χ χ' p Φ => h.om V V' χ χ' p Φ (h.schEquiv V V' Φ) rfl
-  refine ⟨fun V V' _ => h.sch V V', fun V V' χ χ' hr h1 h2 g x w₀ Φ Φ' e => ?_, fun V V' χ χ' hr h1 h2 γ hγ γ' hγ' Φ => ?_,
-    fun V V' χ χ' hr h1 h2 Φ w => ?_, fun V V' χ χ' hr h1 h2 μ 𝓕 hμ h𝓕 p Φ => ?_,
-    fun V V' χ χ' hr h1 h2 e he g x hg hx a b k1 k2 => ?_, fun V V' χ χ' ν hr h1 h2 h3 g x a k => ?_,
-    fun V V' χ χ' ν hr h1 h2 h3 g x a k => ?_, fun V V' χ χ' hr h1 h2 => h.thEq V V' χ χ' (ha hr h1 h2)⟩
-  · rw [ho, ho]; exact (h.eqRank.weil _ _ _ _ (ha hr h1 h2)).Heisenberg₂ g x w₀ _ _ e
-  · rw [ho]; exact (h.eqRank.weil _ _ _ _ (ha hr h1 h2)).aut γ hγ γ' hγ' _
-  · simp only [ho]; exact (h.eqRank.weil _ _ _ _ (ha hr h1 h2)).cont _ w
-  · rw [ho]; exact (h.eqRank.weil _ _ _ _ (ha hr h1 h2)).unit μ 𝓕 hμ h𝓕 p _
-  · obtain ⟨r, hr0, k⟩ := (h.eqRank.weil _ _ _ _ (ha hr h1 h2)).split e he g x hg hx a b k1 k2
-    refine ⟨r, hr0, fun ℓ hℓ Φ => ?_⟩
-    have := k (ℓ ∘ₗ (h.schEquiv V V').symm.toLinearMap) (fun u hu f f' e' => by
-      obtain ⟨Ψ, rfl⟩ := (h.schEquiv V V').surjective f
-      obtain ⟨Ψ', rfl⟩ := (h.schEquiv V V').surjective f'
-      simpa using hℓ u hu Ψ Ψ' e') (h.schEquiv V V' Φ)
-    rw [← h.schEquiv_om] at this
-    simpa using this
-  · refine LinearMap.ext fun Φ => (h.schEquiv V V').injective ?_
-    rw [LinearMap.smul_apply, map_smul, h.schEquiv_om, h.schEquiv_om, map_mul,
-      h.eqRank.twW _ _ _ _ _ (ha hr h1 h2) (hc ν) h3 g x a k, LinearMap.smul_apply]
-  · refine LinearMap.ext fun Φ => (h.schEquiv V V').injective ?_
-    rw [LinearMap.smul_apply, map_smul, h.schEquiv_om, h.schEquiv_om, map_mul,
-      h.eqRank.twV _ _ _ _ _ (ha hr h1 h2) (hc ν) h3 g x a k, LinearMap.smul_apply]
 
 theorem petC_eq (V : HSp D) : T.petC V = Rc.petC V := by
   unfold ThetaTied.petC RecFun.petC; rw [h.petF, h.petR]
