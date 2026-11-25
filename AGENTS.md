@@ -101,13 +101,14 @@ by rebuilding the batch without it and force-pushing. Don't revert the merge com
 it in: GitHub marks a pull request merged once its head commit is in `main`, so a reverted one
 would be marked merged although its changes did not land.
 
-If a pull request conflicts with `main` or a batch earlier in the queue, you may merge `main` or the earlier batch into its branch when the conflict
-is mechanical, such as one side deleting a file the other edited. Check that the changed files
-still compile and push the merge to the pull request's branch, so that the batch holds nothing
-the pull request doesn't, and merge that new head into the batch. Otherwise leave it out. A pull
-request in a batch should not get new commits: if you push to one yourself, also merge its new
-head into the batch, so that the batch lands what the pull request holds. Don't settle conflicts
-in the batch branch.
+If a pull request conflicts with `main` or a batch earlier in the queue, you may merge `main` or
+the earlier batch into its branch when the conflict is mechanical, such as one side deleting a
+file the other edited. Check that the changed files still compile and push the merge to the pull
+request's branch, so that the batch holds nothing the pull request doesn't, and merge that new
+head into the batch. If you merge an earlier batch into it, also add `- [ ] depends on: #N`,
+naming that batch, to its description. Otherwise leave it out. A pull request in a batch should
+not get new commits: if you push to one yourself, also merge its new head into the batch, so that
+the batch lands what the pull request holds. Don't settle conflicts in the batch branch.
 
 If the batch fails to build because of how two pull requests combine, you may fix the module in
 a commit on the batch branch. Say in the commit message what you changed and why.
