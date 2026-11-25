@@ -1,5 +1,7 @@
 module
 
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverBasePointRegular
+
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ConjugateHermitianLineIsometries
@@ -101,20 +103,7 @@ theorem sum_mapDomain {κ : K → K'} {v : (Σ k, ι k) → Σ k, ι' k} (hv : �
 
 theorem isMultiHomog_rename {κ : K → K'} {v : (Σ k, ι k) → Σ k, ι' k} (hb : IsBlockMap κ v) {f : MRing ι}
     {b : K → ℕ} (hf : IsMultiHomog f b) : IsMultiHomog (rename v f) (Function.extend κ b 0) := by
-  classical
-  intro m hm k'
-  rw [support_rename_of_injective hb.2.1, Finset.mem_image] at hm
-  obtain ⟨m₀, hm₀, rfl⟩ := hm
-  rw [sum_mapDomain hb.2.2.1, Fintype.sum_sigma]
-  by_cases hk : ∃ k, κ k = k'
-  · obtain ⟨k, rfl⟩ := hk
-    rw [hb.1.extend_apply, Finset.sum_eq_single k]
-    · simpa using hf m₀ hm₀ k
-    · intro k₂ _ hne
-      exact Finset.sum_eq_zero fun i _ => if_neg (hb.1.ne hne)
-    · simp
-  · rw [Function.extend_apply' _ _ _ hk]
-    exact Finset.sum_eq_zero fun k _ => Finset.sum_eq_zero fun i _ => if_neg fun h => hk ⟨k, h⟩
+  apply _root_.GlobalTheory.CompanionTheory.Ar.PB.CovGraph.RegPhi.isMultiHomog_rename_block <;> assumption
 
 end Forms
 
@@ -296,7 +285,7 @@ theorem assemble (hPB : PullbackStatement) {κ₁ : K₁ → K} {v₁ : (Σ k, �
     rw [(hr₁ a).1, (hr₂ a).1, (hjb.2.2 K₁ ι₁ K ι K' ι' κ₁ v₁ κ v hb₁ hb).2,
       (hjb.2.2 K₂ ι₂ K ι K' ι' κ₂ v₂ κ v hb₂ hb).2]
     exact (_root_.GlobalTheory.CompanionTheory.Ar.Cmp.lineIso_algebra K ι _ har.2.1).2.2.2.2 K' ι' κ v _ hb e₀ _ _ _ _ (hfg a).1
-  choose w hw hinv hsm using fun a => _root_.GlobalTheory.CompanionTheory.Ar.Cmp.defect_exists_smooth K' ι' _ J D R (r₁ a) (r₂ a) (rename v (f₀ a))
+  choose w hw hinv hsm using fun a => _root_.PositivityTheory.UnitarySelfGeneration.i_defect K' ι' _ J D R (r₁ a) (r₂ a) (rename v (f₀ a))
     (rename v (g₀ a)) har'.2.1 (hiso a) (sm₁ a) (sm₂ a)
   have hmain : ∀ a x, x ∉ bdry s → S₁.ph a (π₁ x) = S₂.ph a (π₂ x) + w a (R.lift x x) := by
     intro a x hx
@@ -359,10 +348,6 @@ theorem joint_system : Inputs → ReciprocityTheory.ChartRestriction.G.Geo.ResK.
   exact ⟨K', _, ι', _, κ, v, y', S, Re, f, g, d, hb, hy, hfield, h⟩
 
 end GlobalTheory.CompanionTheory.Ar.Cmp.BuildK
-
-namespace PositivityTheory.UnitarySelfGeneration
-
-end PositivityTheory.UnitarySelfGeneration
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -414,11 +399,6 @@ theorem side_eq (II : IntersectionSystem) (hPF : HasPFCoord II)
   exact key.symm
 
 end GlobalTheory.CompanionTheory.Ar.Cmp.CoordK
-
-namespace PositivityTheory.UnitarySelfGeneration
-
-
-end PositivityTheory.UnitarySelfGeneration
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
