@@ -1,5 +1,6 @@
 module
 
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.TopFirstOfParts
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.GramLocSetCApp
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RatioBound
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.BlockOfChoices
@@ -7,47 +8,6 @@ import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComponentFamilySett
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.PBFVnice
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.PBGWave
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.SliceCompactSupportCoefficient
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -81,15 +41,7 @@ theorem cpt_zero : KB.CptCoef Bs (fun _ : B.Mat k ρ => (0 : Wq →L[ℂ] Wp)) :
 
 theorem cpt_add {F G : B.Mat k ρ → (Wq →L[ℂ] Wp)} (hF : KB.CptCoef Bs F) (hG : KB.CptCoef Bs G) :
     KB.CptCoef Bs (fun g => F g + G g) := by
-  obtain ⟨h1, ⟨R, hR⟩, ⟨ε, hε, hGε⟩⟩ := hF
-  obtain ⟨h1', ⟨R', hR'⟩, ⟨ε', hε', hGε'⟩⟩ := hG
-  refine ⟨Formalism.FourierDecayAlt.P.BetaSesquilinearity.CkOn_add h1 h1', ⟨max R R', fun g hg hne => ?_⟩, ⟨min ε ε', lt_min hε hε', fun g hg hne => ?_⟩⟩
-  · by_cases h0 : F g = 0
-    · exact (hR' g hg (by simpa [h0] using hne)).trans (le_max_right _ _)
-    · exact (hR g hg h0).trans (le_max_left _ _)
-  · by_cases h0 : F g = 0
-    · exact (min_le_right _ _).trans (hGε' g hg (by simpa [h0] using hne))
-    · exact (min_le_left _ _).trans (hGε g hg h0)
+  apply _root_.Formalism.FourierDecayAlt.P.PBN.cpt_add <;> assumption
 
 theorem cpt_smul (c : ℂ) {F : B.Mat k ρ → (Wq →L[ℂ] Wp)} (hF : KB.CptCoef Bs F) :
     KB.CptCoef Bs (fun g => c • F g) := by

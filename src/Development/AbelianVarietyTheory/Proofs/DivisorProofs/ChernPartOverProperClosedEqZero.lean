@@ -73,14 +73,11 @@ import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 open scoped TensorProduct
 
 namespace GlobalTheory.WeilIntegral
 
 
-set_option autoImplicit false in
 open scoped TensorProduct in
 theorem _root_.GlobalTheory.WeilIntegral.isAlgebraic_of_etale (S B : Type) [CommRing S] [IsDomain S] [CommRing B] [Algebra S B]
     [Algebra.Etale S B] (f : B) : IsAlgebraic S f := by

@@ -12,7 +12,6 @@ public import Mathlib.RingTheory.MvPolynomial.Ideal
 
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open MvPowerSeries
 
@@ -53,8 +52,6 @@ section Chart
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 variable {T : Type} [CommRing T] {d : ℕ}
 
@@ -131,8 +128,6 @@ section Forms
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry TensorProduct
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Pdiv.AvDefs IsLocalRing
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 def actMap {T O : Type} [CommRing T] [CommRing O] (iota : T →+* O) {d : ℕ} {F : FGLaw T d} {OE : Type}
     [CommRing OE] (act : OAct OE F) (a : OE) : Fin d → PS O 1 d :=

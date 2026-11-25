@@ -35,7 +35,6 @@ public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 public import Mathlib.Topology.MetricSpace.Ultra.Basic
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.UltrametricDetNormLe
 public import Development.WeilBound.CoreStatements.SesquilinearFractions.DTrans
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.ExistsExtensionEmbeddingAlgClosed
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ExistsTransitionMatrixGram
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GramDetNeZeroLocalBasisCofinite
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GramDeterminantLogDifferent
@@ -120,6 +119,31 @@ import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 import Mathlib.Tactic.Linter.Style
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TangentVectorsBaseChange
+
+section
+@[expose] public section
+
+open NumberField GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Fl
+
+namespace GlobalTheory.CompanionTheory.Ar.Fl
+
+theorem exists_comp_eq_of_numberField (k k' A : Type) [Field k] [NumberField k] [Field k']
+    [NumberField k'] [Field A] [CharZero A] [IsAlgClosed A] (f : k →+* k') (j : k →+* A) :
+    ∃ j' : k' →+* A, j'.comp f = j := by
+  let _ : Algebra k k' := f.toAlgebra
+  let _ : Algebra k A := j.toAlgebra
+  have : IsScalarTower ℚ k k' := IsScalarTower.of_algebraMap_eq fun q => by
+    rw [RingHom.algebraMap_toAlgebra, eq_ratCast (algebraMap ℚ k') q, eq_ratCast (algebraMap ℚ k) q,
+      map_ratCast]
+  have : Module.Finite k k' := Module.Finite.of_restrictScalars_finite ℚ k k'
+  have : Algebra.IsAlgebraic k k' := Algebra.IsAlgebraic.of_finite k k'
+  refine ⟨(IsAlgClosed.lift : k' →ₐ[k] A).toRingHom, ?_⟩
+  ext x
+  exact (IsAlgClosed.lift : k' →ₐ[k] A).commutes x
+
+end GlobalTheory.CompanionTheory.Ar.Fl
+end
+
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HermitianLogNormLocalSum, Development.AutomorphicSpectrum.Proofs.AdelicProofs.HermitianMetricLogNormFormula, Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChowlaSelbergPeriod, Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.PointShiftStOfPlaceShiftSt, Development.WeilBound.CoreStatements.SesquilinearFractions.DTransUnit, Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PadicNormTransitionDetOne, Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameFunctionCmHeight, Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ImportsAlt, Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualBasisHermitianSum, Development.WeilBound.CoreStatements.SesquilinearFractions.GGramPush, Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeGramInvariantPullback, Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieNormSqBaseChange, Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmPackPeriodProduct, Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameFunctionCmNumberField, Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameFunctionCmValue, Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatDegreeHolds
@@ -357,7 +381,7 @@ theorem exists_curve0_hasPeriod : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     have := j.2
     simp only
     omega⟩
-  exact ⟨Z, x, _root_.GlobalTheory.CompanionTheory.Ar.Fl.curve0_z_ne_zero E H ρ Z, hper, hx⟩
+  exact ⟨Z, x, _root_.PositivityTheory.Xgf.curve_z_ne_zero E H ρ Z, hper, hx⟩
 
 end GlobalTheory.CompanionTheory.Ar.Fl
 end -- clump:auto
@@ -369,8 +393,6 @@ end -- clump:auto
 -- clump-header: {"m": "Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.PointShiftStOfPlaceShiftSt", "h": "module\n\npublic import Mathlib.Analysis.Normed.Field.Instances\npublic import Mathlib.NumberTheory.NumberField.Basic\npublic import Mathlib.NumberTheory.Padics.Complex\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.LogAbsVpOfNormalised\npublic import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ValuationCoeEqNorm\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.Divisors.AevalEqZeroOfMemConeIdeal\n\n"}
 section -- clump:auto
 @[expose] public section
-
-set_option autoImplicit false
 
 noncomputable section
 
@@ -611,8 +633,8 @@ theorem flatGen_finNorm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     have hφ'0 := hline.ne X.K X.β X.y v' w' hF'
     have horth : ∀ a b, sesq (FU.Di i) (x (.inl a)) (x (.inr b)) = 0 := fun a b =>
       (_root_.GlobalTheory.CompanionTheory.Ar.PureOrth.sesq_eq_zero_of_opposite_pure E H (FU.Di i) g ty P hP _ _ (hx.1 a) (hx.2 b)).1
-    obtain ⟨hG0, hGlog⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.orthogonalBlock_gram_det_log_norm E H (FU.Di i) D.p D.q x ℓ hxl horth
-    have hzt : (Z true).z ^ D.p ≠ 0 := pow_ne_zero _ (_root_.GlobalTheory.CompanionTheory.Ar.Fl.curve0_z_ne_zero E H _ (Z true))
+    obtain ⟨hG0, hGlog⟩ := _root_.PositivityTheory.Xgf.local_basis_gram_det_log_norm E H (FU.Di i) D.p D.q x ℓ hxl horth
+    have hzt : (Z true).z ^ D.p ≠ 0 := pow_ne_zero _ (_root_.PositivityTheory.Xgf.curve_z_ne_zero E H _ (Z true))
     have hC : ((φ X.K X.y v w : X.K) : ℂ) * τ T.det = (r : ℂ) * τ (gramE (FU.Di i) (x ∘ Sum.inr)).det := by
       apply mul_right_cancel₀ hzt
       rw [hφ, ← hz]
@@ -1547,7 +1569,7 @@ theorem hasInfNorm_value : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       s' (X.β (tauE c (ComplexEmbedding.conjugate τ) ((H.rt : E) * sesq (FU.Di i) (x (.inr a)) (x (.inr a')))))) (fun _ _ => rfl)
   rw [hσ'] at hlΔ
 
-  have hz := _root_.GlobalTheory.CompanionTheory.Ar.Fl.curve0_z_ne_zero E H _ (Z true)
+  have hz := _root_.PositivityTheory.Xgf.curve_z_ne_zero E H _ (Z true)
   have hval2 : ((φ X.K X.y v w : X.K) : ℂ) * τ T.det = (r : ℂ) * τ (gramE (FU.Di i) (x ∘ Sum.inr)).det := by
     apply mul_right_cancel₀ (pow_ne_zero D.p hz)
     rw [hval, ← hrz]
@@ -1627,7 +1649,7 @@ theorem const_algebraic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   have hT0 : T.det ≠ 0 := hdet hloc.1
   have horth : ∀ a b, sesq (FU.Di i) (x (.inl a)) (x (.inr b)) = 0 := fun a b =>
     (_root_.GlobalTheory.CompanionTheory.Ar.PureOrth.sesq_eq_zero_of_opposite_pure E H (FU.Di i) g ty P hP _ _ (hx.1 a) (hx.2 b)).1
-  have hG0 := (_root_.GlobalTheory.CompanionTheory.Ar.Fl.orthogonalBlock_gram_det_log_norm E H (FU.Di i) D.p D.q x ⟨2, Nat.prime_two⟩ hloc horth).1
+  have hG0 := (_root_.PositivityTheory.Xgf.local_basis_gram_det_log_norm E H (FU.Di i) D.p D.q x ⟨2, Nat.prime_two⟩ hloc horth).1
   obtain ⟨hfm, hval⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.CMValue.value_on_cmFrame E H D l Xo c g ty FU i Z P hP X x hx U τ φ e ρ T v w hty hrt hmem hline he
     hconst hloc.1 hT hfr
   have hφ : φ X.K X.y v w ≠ 0 := hline.ne X.K X.β X.y v w hfm

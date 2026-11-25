@@ -121,18 +121,6 @@ theorem range_toF {G : Type} [Group G] [Fintype G] {Pl0 : Type} (B : BlockDat K 
 
 variable {Bs : DefBase K} {A : DefAmb Bs} (X : CxData A) {fc : DefSub A → DefFace Bs} (cr : Crd A fc) (b : Bool)
 
-theorem iC_cpt (t : Bs.Tup) (x : Fin ((lv (fc X.zs) b).dQ t) → K) :
-    X.iC cr b t (cpt Bs.v0.embedding x) = X.Θ t (X.jR t (cr.toR X.zs b t x)) := by
-  classical
-  conv_rhs => rw [← Finset.univ_sum_single x]
-
-  rw [CxData.iC, lin_apply, map_sum, map_sum, map_sum]
-  refine Finset.sum_congr rfl fun k _ => ?_
-  have : (Pi.single k (x k) : Fin _ → K) = x k • Pi.single k 1 := by
-    funext i; by_cases hi : i = k <;> simp [hi]
-  rw [this, map_smul, map_smulₛₗ, map_smul]
-  rfl
-
 end Coordinates
 
 section Family
@@ -156,7 +144,6 @@ end Family
 section Concrete
 
 open Formalism.BasicNotions Formalism.IndefR.Links
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m}
   {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL]

@@ -2,55 +2,8 @@ module
 
 public import Formalism.PieriBlockIdeals.IntegralQuotient
 public import Mathlib.CategoryTheory.Category.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
 public import Mathlib.GroupTheory.Perm.DomMulAct
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -312,7 +265,6 @@ theorem integral_quotient_holds : IntegralQuotient := by
 
 end Formalism.CohomologicalDescent.Symmetrization
 
-open Polynomial
 
 namespace Formalism.CohomologicalDescent.Symmetrization
 
@@ -675,7 +627,6 @@ theorem AAComm_of (h1 : SymCommAbstract) (h2 : JMCommAbstract) : AAComm := by
 
 end Formalism.CohomologicalDescent.Symmetrization
 
-open Polynomial
 
 namespace Formalism.CohomologicalDescent.Symmetrization
 
@@ -1233,7 +1184,6 @@ theorem one_step_invariance_holds : OneStepInv := by
 
 end Formalism.CohomologicalDescent.Symmetrization
 
-open Polynomial
 
 namespace Formalism.CohomologicalDescent.Symmetrization
 
@@ -1241,8 +1191,6 @@ section
 variable {k R P M : Type*} [CommRing k] [AddCommGroup M] [Module k M] {n : ℕ}
 
 theorem permOnTensor_apply (σ : Equiv.Perm (Fin n)) (z : Tens R P M n) (g) : perm k σ z g = z (g ∘ σ) := rfl
-theorem permSecond_apply_formula (σ : Equiv.Perm (Fin n)) (z : Tens R P M n) (g) :
-    permY k σ z g = z (fun s => ((g (σ s)).1, (g s).2)) := rfl
 theorem contract_apply_eq_insertNth (j : Fin (n + 1)) (v : R × P) (z : Tens R P M (n + 1)) (g) :
     contr k j v z g = z (j.insertNth v g) := rfl
 theorem contract_last_apply_snoc (v : R × P) (z : Tens R P M (n + 1)) (g) :
@@ -1274,7 +1222,7 @@ theorem jucysMurphy_apply (EM : R → R → Module.End k M) (j : Fin n) (z : Ten
       ∑ j' ∈ Finset.univ.filter (· < j), z (fun s => ((g (Equiv.swap j' j s)).1, (g s).2)) := by
   unfold xJM
   simp only [LinearMap.add_apply, LinearMap.sum_apply, Pi.add_apply, Finset.sum_apply, mixedCasimir_apply,
-    permSecond_apply_formula]
+    permSecond_apply]
 
 theorem filter_lt_castSucc_eq_map (j : Fin n) :
     (Finset.univ.filter (· < j.castSucc) : Finset (Fin (n + 1))) =
@@ -1430,7 +1378,6 @@ theorem Iteration_of (h1 : OneStepInv) (h2 : AAComm) (h3 : MuEquivariant) : Iter
 
 end Formalism.CohomologicalDescent.Symmetrization
 
-open Polynomial
 
 namespace Formalism.CohomologicalDescent.Symmetrization
 
@@ -1637,7 +1584,6 @@ end Fld
 
 end Formalism.CohomologicalDescent.Symmetrization
 
-open Polynomial
 
 namespace Formalism.CohomologicalDescent.Symmetrization
 
@@ -1808,7 +1754,6 @@ theorem coefficient_operators_hold : CoeffOps := by
 
 end Formalism.CohomologicalDescent.Symmetrization
 
-open Polynomial
 
 namespace Formalism.CohomologicalDescent.Symmetrization
 
@@ -1972,7 +1917,6 @@ theorem ActLattice_of (h3 : MuEquivariant) (h4 : WordSpec) : ActLattice := by
 
 end Formalism.CohomologicalDescent.Symmetrization
 
-open Polynomial
 
 namespace Formalism.CohomologicalDescent.Symmetrization
 
@@ -2027,7 +1971,6 @@ theorem casimir_content_holds : CasimirContent := by
 
 end Formalism.CohomologicalDescent.Symmetrization
 
-open Polynomial
 
 namespace Formalism.CohomologicalDescent.Symmetrization
 
@@ -2120,7 +2063,6 @@ theorem LemmaDSkeleton_of (hCo : CoeffOps) (hXL : XLattice) (hXW : XWeight) (hIW
 
 end Formalism.CohomologicalDescent.Symmetrization
 
-open Polynomial
 
 namespace Formalism.CohomologicalDescent.Symmetrization
 

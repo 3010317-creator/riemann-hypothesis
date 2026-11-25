@@ -116,26 +116,6 @@ theorem inGeo_transfer (h : InGeo z.geo) : InGeo (z.transfer s).geo := (by with_
 
 end Dat
 
-section Rows
-
-variable {ix : C.Tup ≃ I.ι} {p0 : BaseLevelRowSide a.D}
-
-def RowsAre.tr (c : Refill a) (r : RowsAre a.st I hX T Wt ix p0) : RowsAre c.to.st I hX T Wt ix (baseLevelRowSideTransport c p0) :=
-  @RowsAre.mk c.to.st px I hX T Wt ix (baseLevelRowSideTransport c p0)
-    (z := r.z.transfer c.same)
-    (intersectionNumber_baseChange := Dat.holds_transfer c.same r.intersectionNumber_baseChange)
-    (Y := (by with_unfolding_all exact ((read c r.Y) :)))
-    (Z := (by with_unfolding_all exact ((readL c r.Z) :)))
-    (tup_ix := (by with_unfolding_all exact (r.tup_ix :)))
-
-namespace RowsAre
-
-variable (c : Refill a) (r : RowsAre a.st I hX T Wt ix p0)
-
-end RowsAre
-
-end Rows
-
 end GlobalTheory.Mem.R3
 
 end
@@ -276,18 +256,6 @@ abbrev cfD (x : St P) (L : LocAll (lay0 (Dof x))) : CharFrame (DL x L) := TC.cf 
 
 -- Keep the target indices on the constructors. Record updates can eta-reduce
 -- to the source with its original indices during elaboration.
-def chD : NChoice (DL x L) :=
-  let c := chL L l.c.ch
-  @NChoice.mk (DL x L) c.twI c.twI_l c.sd c.Q c.k' c.psi' c.Oe
-    c.crOe c.domOe c.dvrOe c.algOe c.algOOe c.towOe c.Oe_inj c.Oe_fin c.Oe_loc
-    c.embW c.embW_w c.eMt c.eMt_basis c.eMt_lat
-
-def tpD : TupTied (DL x L) (cfD x L) (chD L l) :=
-  let tp := tpL L l.c.tp
-  @TupTied.mk (DL x L) (cfD x L) (chD L l) tp.xi tp.xi_inj tp.xi_fin tp.xi_triv tp.xi_tame
-    tp.psi tp.trueColumnChoices_heckeChar_reference_eq_one tp.xi_star tp.xi_star' tp.xi_tw
-    tp.psi_is tp.psi_un
-
 def expD (X : NExpTied (withLoc L)) : NExpTied (DL x L) :=
   (DL_eq x L).symm ▸ X
 

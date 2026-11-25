@@ -12,8 +12,6 @@ open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Fo
 
 namespace Formalism.L2.SG.NGData
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 section Def
 
 variable {D : D7}
@@ -59,10 +57,6 @@ def NOf2 (νL νB : X.B.I.Ginf → Measure X.B.I.Ginf) (ng : PN.Pts D.host.E D.R
   ND := NDPt D.host.rdE
   Hh := HPt D.host.rdE (X.B.g : ℝ) ((Tu D u : ℕ) * (Tu D u' : ℕ))
   ngen := ng
-
-theorem grp_eq (νL νB : X.B.I.Ginf → Measure X.B.I.Ginf) (ng : PN.Pts D.host.E D.R.rS → ℝ)
-    (c : Set (TauC Y u u')) (γ : PN.Pts D.host.E D.R.rS) (ν : NuC D) :
-    PN.grp (Y.tO u u') (NOf2 Y u u' νL νB ng) c γ ν = grpC Y u u' c γ ν := rfl
 
 def AmpVanish (νL : X.B.I.Ginf → Measure X.B.I.Ginf) : Prop :=
   ∀ c γ ν, J2of Y u u' νL γ = 0 → grpC Y u u' c γ ν = 0

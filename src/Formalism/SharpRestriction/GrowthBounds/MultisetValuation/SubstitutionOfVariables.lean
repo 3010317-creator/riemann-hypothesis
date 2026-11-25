@@ -5,43 +5,6 @@ public import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.CyclicPower
 public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.InParamMap
 import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.IntRPsubst
 import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.NatCastInvMemRp
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -114,14 +77,9 @@ theorem th_tOf_const {K' σ τ : Type} [Field K'] (vp : K') (μ : PowerSeries K'
   refine cc_subst_lemma_2 (hL0 i) ?_
   rw [map_mul, h0, mul_zero]
 
-private theorem hasSubst_of_constantCoeff_eq_zero' {κ τ S : Type} [CommRing S] [Finite κ] {a : κ → MvPowerSeries τ S}
-    (h : ∀ s, MvPowerSeries.constantCoeff (a s) = 0) : MvPowerSeries.HasSubst a := by
-  first
-  | exact MvPowerSeries.hasSubst_of_constantCoeff_zero h
-
 theorem th_hasSubst_lX {σ : Type} [Finite σ] : MvPowerSeries.HasSubst
     (fun i : σ => PowerSeries.subst (MvPowerSeries.X i : MvPowerSeries σ (K0 p)) (logF p)) := by
-  refine hasSubst_of_constantCoeff_eq_zero' fun i => ?_
+  refine MvPowerSeries.hasSubst_of_constantCoeff_zero fun i => ?_
   exact cc_subst_lemma_2 (MvPowerSeries.constantCoeff_X i) (constantCoeff_logF_eq_zero p)
 
 private theorem constantCoeff_subst_eq_zero' {κ τ S : Type} [CommRing S] [Finite κ] {a : κ → MvPowerSeries τ S}
@@ -143,7 +101,7 @@ private theorem constantCoeff_subst_eq_zero' {κ τ S : Type} [CommRing S] [Fini
         rw [Finsupp.prod, map_prod]
         exact Finset.prod_eq_zero (Finsupp.mem_support_iff.mpr hs) (by rw [map_pow, h s, zero_pow hs])
       rw [h0, smul_zero]
-  rw [MvPowerSeries.constantCoeff_subst (hasSubst_of_constantCoeff_eq_zero' h)]
+  rw [MvPowerSeries.constantCoeff_subst (MvPowerSeries.hasSubst_of_constantCoeff_zero h)]
   simp only [key, finsum_zero]
 
 theorem th_inParam_const {σ : Type} [Finite σ] {f : MvPowerSeries σ (K0 p)}
@@ -172,7 +130,7 @@ theorem th_inParam_sum {σ α : Type} [Finite σ] (s : Finset α) (f : α → Mv
 
 theorem th_ren_hasSubst {κ σ R : Type} [Finite κ] [CommRing R] (φ : κ → σ) :
     MvPowerSeries.HasSubst (fun k => (MvPowerSeries.X (φ k) : MvPowerSeries σ R)) :=
-  hasSubst_of_constantCoeff_eq_zero' fun k => MvPowerSeries.constantCoeff_X (φ k)
+  MvPowerSeries.hasSubst_of_constantCoeff_zero fun k => MvPowerSeries.constantCoeff_X (φ k)
 
 theorem th_ren_sub {κ σ R : Type} [Finite κ] [CommRing R] (φ : κ → σ) (f g : MvPowerSeries κ R) :
     ren φ (f - g) = ren φ f - ren φ g := by

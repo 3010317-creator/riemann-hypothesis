@@ -78,7 +78,6 @@ section -- clump:auto
 open CategoryTheory AlgebraicGeometry TopologicalSpace ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory GlobalTheory.ArInt GlobalTheory.Cartier GlobalTheory.CxPts GlobalTheory.Points GlobalTheory.FibreProj
 open MeasureTheory
 open scoped ENNReal
-set_option autoImplicit false
 noncomputable section
 
 namespace GlobalTheory.ChernLinRel
@@ -424,8 +423,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open ReciprocityTheory.ChartRestriction.G.Out (nonzeroLocus)
 open GlobalTheory GlobalTheory.CechPic GlobalTheory.CxPts GlobalTheory.Cartier GlobalTheory.ArInt GlobalTheory.MixHt
 
-set_option autoImplicit false
-
 namespace GlobalTheory.MixFun
 
 theorem exists_linear_of_rel {α V : Type} [AddCommGroup V] [Module ℝ V] (v : α → V) (f : α → ℝ)
@@ -492,8 +489,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry TopologicalSpace MvPolynomial
@@ -544,7 +539,7 @@ theorem mixArch_add_diag : ArchInteg → ∀ (k : Type) [CommRing k] (Y : Scheme
   refine ⟨fun e he A B L => ?_, fun e he N => ?_⟩
   · let F : Bool ⊕ Fin e → HermLB q := Sum.elim (fun b => cond b A B) L
     obtain ⟨Ψ, hΨ⟩ := _root_.GlobalTheory.MixFun.exists_functional_archInt k Y q hq (e + 1) _ F M r hr
-      fun n => GlobalTheory.T.archIntegrable_of_projArithAmbient hI k Y q hq (e + 1) he M _ r hr
+      fun n => _root_.GlobalTheory.MixHt.archIntegrable_of_isAmb hI k Y q hq (e + 1) he M _ r hr
     let u : Bool ⊕ Fin e → Bool ⊕ Fin e → ℤ := fun j => Pi.single j 1
     have key (C : HermLB q) (c : Bool ⊕ Fin e → ℤ) (hc : (comb F c).Isometric C) :
         mixArch (Fin.cons C L : Fin (e + 1) → HermLB q) M hr =
@@ -558,7 +553,7 @@ theorem mixArch_add_diag : ArchInteg → ∀ (k : Type) [CommRing k] (Y : Scheme
     have hB : (comb F (u (Sum.inl false))).Isometric B := isometric_comb_single F (Sum.inl false)
     rw [key A _ hA, key B _ hB, key _ _ ((isometric_comb_add F _ _).trans (hA.tens hB)), lin_add, add_mul, map_add (f := _)]
   · let F : Unit → HermLB q := fun _ => N
-    obtain ⟨Ψ, hΨ⟩ := _root_.GlobalTheory.MixFun.exists_functional_archInt k Y q hq e _ F M r hr fun n => GlobalTheory.T.archIntegrable_of_projArithAmbient hI k Y q hq e he M _ r hr
+    obtain ⟨Ψ, hΨ⟩ := _root_.GlobalTheory.MixFun.exists_functional_archInt k Y q hq e _ F M r hr fun n => _root_.GlobalTheory.MixHt.archIntegrable_of_isAmb hI k Y q hq e he M _ r hr
     have hN : (comb F (Pi.single () 1)).Isometric N := isometric_comb_single F ()
     rw [mixArch_eq F M hr Ψ hΨ _ (fun _ => Pi.single () 1) fun _ => hN, Finset.prod_const, Finset.card_univ,
       Fintype.card_fin, hΨ]

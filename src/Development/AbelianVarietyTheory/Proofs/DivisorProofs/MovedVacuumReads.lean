@@ -70,7 +70,6 @@ section Entire
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR.Datum Formalism.IndefR.Links
 open IsDedekindDomain NumberField Matrix MvPolynomial
 open GlobalTheory.SignedHC GlobalTheory.ChiGrid Formalism.L2.DIV Formalism.L2.Ker GlobalTheory.FunObj
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.FockCompare GlobalTheory.VacUnique GlobalTheory.FockPos
 
 namespace GlobalTheory.VacLine
@@ -292,8 +291,6 @@ open GlobalTheory.NormDict GlobalTheory.NormExact
 open GlobalTheory.BotFormula (IsFinPt)
 open GlobalTheory.IndefiniteRowSideFullHecke.ClassFunctionSumIntegral (IsDefiniteSpace IsOpenCompactLevel)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 namespace GlobalTheory.VacLine
 
 variable {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} {r : D.host.E} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D}
@@ -367,7 +364,7 @@ theorem moved_vacuum_reads : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ :
     intro F f' hF z
     exact (GlobalTheory.NormExact.heisO_finPt_reads ψ θ S T hS hT cc δ r hset F f' hF z).smul _
   obtain ⟨c, hc⟩ := eq_smul_of_lift hset.crv he.1 W x y hG (fun z hz => by
-    obtain ⟨n, hn, hL⟩ := GlobalTheory.T.weilPair_moves_phasedHeisenbergTranslate ψ θ S T hS hT cc δ r hset χS χT om hom x y g h hg hh f₀ hf₀.1 z
+    obtain ⟨n, hn, hL⟩ := _root_.GlobalTheory.MovedTr.moved_translate ψ θ S T hS hT cc δ r hset χS χT om hom x y g h hg hh f₀ hf₀.1 z
     refine ⟨n, hn, fun z' hz' => ?_⟩
     have h1 := hRt e0 f₀ hf₀ z
     rw [hz] at h1

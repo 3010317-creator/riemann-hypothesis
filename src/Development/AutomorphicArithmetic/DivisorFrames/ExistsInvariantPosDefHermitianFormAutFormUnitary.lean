@@ -67,8 +67,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open Formalism.IndefR.Mult Formalism.UG GlobalTheory.SphPar GlobalTheory.CuspRep GlobalTheory.UnitaryBC GlobalTheory.DefTransfer
 open scoped TensorProduct
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 noncomputable section
 
 open MeasureTheory
@@ -92,7 +90,6 @@ end GlobalTheory.MultPetersson
 
 namespace GlobalTheory.MultPetersson
 
-open MeasureTheory
 
 end GlobalTheory.MultPetersson
 end -- clump:auto
@@ -107,7 +104,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain TensorProduct
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formalism.IndefR GlobalTheory.UnitaryBC GlobalTheory.FrameAut Formalism.CohomologicalDescent.DepthNonnegative
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 open MeasureTheory in
 theorem UpperTheory.exists_invariant_posDef_hermitian_form_autForm_unitary :

@@ -45,8 +45,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits MonoidalCategory CartesianMonoidalCategory MonObj
@@ -87,9 +85,6 @@ structure Level (P : PolAV S) (k : ℕ) (ζ : Γ(S, ⊤)ˣ) where
 namespace Level
 
 variable {P : PolAV S} {k : ℕ} {ζ : Γ(S, ⊤)ˣ}
-
-def pt (ℓ : Level P k ζ) (v : Fin P.g ⊕ Fin P.g → ZMod k) : 𝟙_ (Over S) ⟶ P.A :=
-  ℓ.hom (Multiplicative.ofAdd v)
 
 def ptKer (ℓ : Level P k ζ) (v : Fin P.g ⊕ Fin P.g → ZMod k) :
     𝟙_ (Over S) ⟶ pullback (mulBy P.A k) η[P.A] :=

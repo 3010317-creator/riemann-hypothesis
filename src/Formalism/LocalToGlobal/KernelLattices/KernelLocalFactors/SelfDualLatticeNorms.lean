@@ -110,13 +110,6 @@ namespace GM
 
 variable (p : ℕ) [Fact p.Prime]
 
-theorem norm_divisor_twelve_power_eq_one (h5 : 5 ≤ p) {N k : ℕ} (hN : N ∣ 12 ^ k) : ‖(N : ℂ_[p])‖ = 1 := by
-  refine Formalism.L2.Th1.E.ScaledModelNorms.norm_nat p fun h => ?_
-  have hp : p.Prime := Fact.out
-  have h12 : p ∣ 12 := hp.dvd_of_dvd_pow (h.trans hN)
-  have hle : p ≤ 12 := Nat.le_of_dvd (by norm_num) h12
-  interval_cases p <;> first | omega | exact absurd hp (by norm_num)
-
 end GM
 
 theorem good_model_exists_all_primes : GoodModelAll := by
@@ -235,8 +228,8 @@ theorem intCurve_base (hcc : TaylorLogMetric.IsCurveIdeal D cc) (hδ : TaylorLog
     IntCurve (curveL p B.L ι) := by
   have hcm : Formalism.L2.Th1.CM.HasCMBy D.host.d B.L := by
     intro ω hω
-    have := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SO.hst B ω hω
-    rwa [Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SO.theta_val] at this
+    have := GlobalTheory.FourthRootStd.hst B ω hω
+    rwa [GlobalTheory.FourthRootStd.theta_val] at this
   have hd8 : D.host.d % 8 = 7 := dMod8 D
   obtain ⟨c, hc, hI⟩ := Formalism.L2.Th1.Top.good_model_exists_all_primes D.host.d B.L D.host.hyp.2.1.squarefree (by omega) hcm p hp ι
   refine intCurve_of_scale p ι B.L c hc hI ?_
@@ -1547,7 +1540,7 @@ theorem kerStdLatOn_of (Q : D7 → ℕ → Prop) (hK : ∀ D, KappaOn Q D) : Ker
 theorem kerStdExOn_of (Q : D7 → ℕ → Prop) (hK : ∀ D, KappaOn Q D) : KerStdExOn Q := by
   intro D X s cc δ B χ cD hok hcc hδ hχ
   have hd : 0 < D.host.d := D.host.hyp.2.1.pos
-  obtain ⟨a₀, b₀, c₀, ha, lam, hlam, hcm, hL⟩ := KS.exists_cmOK D.host.d hd (dMod8 D) D.host.hyp.2.1 B.L (Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SO.hst B)
+  obtain ⟨a₀, b₀, c₀, ha, lam, hlam, hcm, hL⟩ := KS.exists_cmOK D.host.d hd (dMod8 D) D.host.hyp.2.1 B.L (GlobalTheory.FourthRootStd.hst B)
   have hl : (cmL a₀ b₀ D.host.d ha hd lam hlam).lattice.toAddSubgroup = TaylorLogMetric.lamOf D cc δ := by rw [hL]; exact B.lat
   refine ⟨a₀, b₀, c₀, ha, hd, lam, hlam, hcm, hl, ?_⟩
   intro a b N N' p _ ι hae hbe hN hN' hsN hsN' hdisc hcD hp hQ

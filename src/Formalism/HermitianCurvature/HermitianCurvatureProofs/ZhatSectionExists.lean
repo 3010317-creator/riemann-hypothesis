@@ -1,54 +1,12 @@
 module
 
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.RootSubgroupHaar.ContinuousGS
 public import Formalism.HermitianCurvature.FiniteOrderIntersectionInSmooth
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FlagSpanVanishing
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.HermitianFormFlagVector
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.HermitianXiVector
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentSums
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -58,43 +16,6 @@ open scoped ComplexConjugate
 namespace Formalism.FourierDecayAlt.P
 
 open C2x5 C2x6 FlagSpanVanishing HermitianXiVector UnipotentSums
-
-private lemma mul_mem_Nset' {k r : ℕ} {A B : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
-    (hA : A ∈ Nset k r) (hB : B ∈ Nset k r) : A * B ∈ Nset k r := by
-  obtain ⟨hAu, hAc, hAw⟩ := hA
-  obtain ⟨hBu, hBc, hBw⟩ := hB
-  refine ⟨?_, ?_, ?_⟩
-  · have hAu' : Aᴴ * Hpk k r * A = Hpk k r := hAu
-    have hBu' : Bᴴ * Hpk k r * B = Hpk k r := hBu
-    show (A * B)ᴴ * Hpk k r * (A * B) = Hpk k r
-    rw [Matrix.conjTranspose_mul,
-      show Bᴴ * Aᴴ * Hpk k r * (A * B) = Bᴴ * (Aᴴ * Hpk k r * A) * B by
-        simp only [Matrix.mul_assoc], hAu', hBu']
-  · intro a i hai
-    rw [Matrix.mul_apply, Finset.sum_eq_single (eI k r a)]
-    · rw [hBc a (eI k r a) (le_refl a.val), if_pos rfl, mul_one]
-      exact hAc a i hai
-    · intro j _ hj
-      by_cases hja : a.val ≤ j.val
-      · rw [hBc a j hja, if_neg hj, mul_zero]
-      · rw [not_le] at hja
-        have hjr : j.val < r := lt_trans hja a.isLt
-        have h1 := hAc ⟨j.val, hjr⟩ i (show j.val ≤ i.val by omega)
-        rw [show eI k r ⟨j.val, hjr⟩ = j from Fin.ext rfl] at h1
-        rw [h1, if_neg (by rintro rfl; omega), zero_mul]
-    · intro h; exact absurd (Finset.mem_univ _) h
-  · intro i j hj1 hj2 hi
-    rw [Matrix.mul_apply, Finset.sum_eq_single j]
-    · rw [hBw j j hj1 hj2 hj1, if_pos rfl, mul_one]
-      exact hAw i j hj1 hj2 hi
-    · intro l _ hl
-      by_cases hlr : r ≤ l.val
-      · rw [hBw l j hj1 hj2 hlr, if_neg hl, mul_zero]
-      · rw [not_le] at hlr
-        have h1 := hAc ⟨l.val, hlr⟩ i (show l.val ≤ i.val by omega)
-        rw [show eI k r ⟨l.val, hlr⟩ = l from Fin.ext rfl] at h1
-        rw [h1, if_neg (by rintro rfl; omega), zero_mul]
-    · intro h; exact absurd (Finset.mem_univ _) h
 
 private lemma dite_lt_eq_sum_smul_bvec {k r : ℕ} (g : Fin r → ℂ) :
     (fun p : Fin (2 * r + k + 1) => if hp : p.val < r then g ⟨p.val, hp⟩ else 0) =
@@ -193,6 +114,6 @@ theorem c2_tau_mem : C2.TauMem := by
       exact (dite_lt_eq_sum_smul_bvec (k := k) (fun c => vX c b')).trans rfl
   refine ⟨?_, hact, uMap_eq hz _ v hact⟩
   rw [htau]
-  exact mul_mem_Nset' (HermitianXiVector.nEich_mem hz ξ) (mX_mem vX hvX_mem)
+  exact _root_.PI.AmpRootHaarW.nset_mul' (HermitianXiVector.nEich_mem hz ξ) (mX_mem vX hvX_mem)
 
 end Formalism.FourierDecayAlt.P

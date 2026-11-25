@@ -45,8 +45,6 @@ import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValRSpMapFro
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open AlgebraicGeometry CategoryTheory ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.ZH GlobalTheory.Cartier GlobalTheory.FlagBundle
@@ -64,7 +62,6 @@ def pull (y : Y) : X.presheaf.stalk (j y) →+* Y.functionField :=
   (algebraMap (Y.presheaf.stalk y) Y.functionField).comp (j.stalkMap y).hom
 
 
-set_option autoImplicit false in
 open AlgebraicGeometry CategoryTheory in
 open TopologicalSpace Opposite in
 variable {X : Scheme.{0}} in
@@ -75,7 +72,6 @@ theorem _root_.GlobalTheory.BoundaryDivisor.stalkMap_bijective (y : Y) : Functio
 
 end Pull
 
-set_option autoImplicit false in
 open AlgebraicGeometry CategoryTheory in
 open TopologicalSpace Opposite in
 variable {X : Scheme.{0}} in
@@ -96,7 +92,6 @@ private lemma pull_germ_eq_pull_germ (V : X.Opens) (s : Γ(X, V)) (y z : Y)
     exact Y.presheaf.germ_stalkSpecializes_apply hw _ _
   rw [e y hy, e z hz]
 
-set_option autoImplicit false in
 open AlgebraicGeometry CategoryTheory in
 open TopologicalSpace Opposite in
 variable {X : Scheme.{0}} in
@@ -116,7 +111,6 @@ private lemma mem_closed_iff_not_isUnit_germ (T : Closeds X) (U : X.affineOpens)
     rw [X.basicOpen_mul] at hzf
     exact H hzf.2
 
-set_option autoImplicit false in
 open AlgebraicGeometry CategoryTheory in
 open TopologicalSpace Opposite in
 variable {X : Scheme.{0}} in
@@ -135,7 +129,6 @@ private lemma mem_vanishingIdeal_of_not_isUnit_germ (T : Closeds X) (W : X.affin
   rw [← W.2.fromSpec_preimage_basicOpen] at h1
   exact hs _ hz hp ((X.mem_basicOpen s _ hz).1 h1)
 
-set_option autoImplicit false in
 open AlgebraicGeometry CategoryTheory in
 open TopologicalSpace Opposite in
 variable {X : Scheme.{0}} in
@@ -162,7 +155,6 @@ private lemma exists_germ_eq_mul_of_not_isUnit_on_closed (T : Closeds X) (U : X.
   congr 1
   exact X.presheaf.germ_res_apply _ x hxW h
 
-set_option autoImplicit false in
 open AlgebraicGeometry CategoryTheory in
 open TopologicalSpace Opposite in
 variable {X : Scheme.{0}} in
@@ -195,7 +187,6 @@ private lemma exists_eq_mul_of_pow_eq_mul_germ (T : Closeds X) (U : X.affineOpen
   exact ⟨c, by rw [← hc, X.presheaf.germ_res_apply]⟩
 
 
-set_option autoImplicit false in
 open AlgebraicGeometry CategoryTheory in
 open TopologicalSpace Opposite in
 variable {X : Scheme.{0}} in

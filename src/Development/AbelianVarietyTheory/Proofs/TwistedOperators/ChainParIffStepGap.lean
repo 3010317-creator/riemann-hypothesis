@@ -50,11 +50,9 @@ import Std.Tactic.BVDecide.Normalize.Prop
 noncomputable section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum
-open GlobalTheory.IndefiniteRowSideFullHecke.WeilSignShift (NcGapGt NcGapGe minSig shiftPar alV alW lamS lamT StepGap StepWeil VacVec fockOf)
+open GlobalTheory.IndefiniteRowSideFullHecke.WeilSignShift (NcGapGt NcGapGe minSig shiftPar alV alW lamS lamT StepGap)
 
 namespace GlobalTheory.Chain.ItPairCompare
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem mem_signed {l₁ l₂ : List ℚ} {c x : ℚ} {s : Bool} :
     (x, s) ∈ signed l₁ l₂ c ↔ (s = true ∧ x - c ∈ l₁) ∨ (s = false ∧ x - c ∈ l₂) := by

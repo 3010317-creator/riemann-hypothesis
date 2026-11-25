@@ -83,8 +83,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory Limits AlgebraicGeometry
@@ -105,8 +103,6 @@ def HdgIso : Prop := ∀ (K : Type) [Field K] [CharZero K],
 section Proj
 
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor
-
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 theorem isProper_pstr (R : Type) [CommRing R] (N : ℕ) : IsProper (PSpace.str R N) := by
   have : IsScalarTower R (MvPolynomial.homogeneousSubmodule (Fin (N + 1)) R 0) (MvPolynomial (Fin (N + 1)) R) :=

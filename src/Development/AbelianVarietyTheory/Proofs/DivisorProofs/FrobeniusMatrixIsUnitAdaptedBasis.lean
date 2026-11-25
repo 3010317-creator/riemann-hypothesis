@@ -212,8 +212,6 @@ section -- clump:auto
 
 open MvPowerSeries GlobalTheory GlobalTheory.Katz GlobalTheory.QLog GlobalTheory.PDivGroup GlobalTheory.Sandwich GlobalTheory.IndefiniteRowSideFullHecke.EpsilonPairingZeta GlobalTheory.PDivLat
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.FrobCongr
@@ -481,8 +479,6 @@ section -- clump:auto
 
 open MvPowerSeries GlobalTheory GlobalTheory.Katz GlobalTheory.QLog GlobalTheory.PDivGroup GlobalTheory.Sandwich GlobalTheory.IndefiniteRowSideFullHecke.EpsilonPairingZeta GlobalTheory.PDivLat
 
-set_option autoImplicit false
-
 namespace GlobalTheory.SmallSecond.ToO
 
 theorem frob_eq_expand {Q τ : Type} [CommRing Q] (p : ℕ) (hp : p ≠ 0) (s : Q →+* Q)
@@ -629,8 +625,6 @@ section -- clump:auto
 
 open MvPowerSeries GlobalTheory GlobalTheory.Katz GlobalTheory.QLog GlobalTheory.PDivGroup GlobalTheory.Sandwich GlobalTheory.IndefiniteRowSideFullHecke.EpsilonPairingZeta GlobalTheory.PDivLat
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.FrobComb
@@ -699,8 +693,6 @@ section -- clump:auto
 @[expose] public section
 
 open MvPowerSeries GlobalTheory GlobalTheory.Katz GlobalTheory.QLog GlobalTheory.PDivGroup GlobalTheory.Sandwich GlobalTheory.IndefiniteRowSideFullHecke.EpsilonPairingZeta GlobalTheory.PDivLat
-
-set_option autoImplicit false
 
 noncomputable section
 
@@ -975,20 +967,12 @@ section -- clump:auto
 
 open MvPowerSeries GlobalTheory GlobalTheory.Katz GlobalTheory.QLog GlobalTheory.PDivGroup GlobalTheory.Sandwich GlobalTheory.IndefiniteRowSideFullHecke.EpsilonPairingZeta GlobalTheory.PDivLat
 
-set_option autoImplicit false
-
 namespace GlobalTheory.BasisTrans
 
 variable {B Q : Type} [CommRing B] [CommRing Q] [Algebra B Q] {σ : Type}
 
 theorem in_zero : In (⊤ : Ideal B) (0 : MvPowerSeries σ Q) :=
   fun _ => ⟨0, trivial, by simp⟩
-
-theorem in_add {g h : MvPowerSeries σ Q} (hg : In (⊤ : Ideal B) g) (hh : In (⊤ : Ideal B) h) :
-    In (⊤ : Ideal B) (g + h) := fun α => by
-  obtain ⟨a, -, ha⟩ := hg α
-  obtain ⟨b, -, hb⟩ := hh α
-  exact ⟨a + b, trivial, by rw [map_add (f := _), ha, hb, map_add (f := _)]⟩
 
 theorem in_smul (c : B) {g : MvPowerSeries σ Q} (hg : In (⊤ : Ideal B) g) :
     In (⊤ : Ideal B) (algebraMap B Q c • g) := fun α => by
@@ -1002,7 +986,7 @@ theorem in_sum {κ : Type} (s : Finset κ) (g : κ → MvPowerSeries σ Q)
   | empty => simpa using in_zero
   | insert a s ha ih =>
     rw [Finset.sum_insert ha]
-    exact in_add (hg a (Finset.mem_insert_self _ _)) (ih fun j hj => hg j (Finset.mem_insert_of_mem hj))
+    exact GlobalTheory.QLogBasis.in_top_add (hg a (Finset.mem_insert_self _ _)) (ih fun j hj => hg j (Finset.mem_insert_of_mem hj))
 
 theorem comb_one {ι : Type} [Fintype ι] [DecidableEq ι] (e : ι → MvPowerSeries σ Q) (i : ι) :
     comb ((1 : Matrix ι ι B) i) e = e i := by
@@ -1028,7 +1012,7 @@ theorem mul_eq_one {d : ℕ} (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) B) 
   obtain ⟨b, -, hb⟩ := he.2 (e i) (he.1 i)
   have hA : In (⊤ : Ideal B) (e i - comb ((Matrix.of P * Matrix.of P') i) e) := by
     rw [comb_mul e f P P' i]
-    exact in_add (h1 i) (in_sum _ _ fun j _ => in_smul _ (h2 j))
+    exact GlobalTheory.QLogBasis.in_top_add (h1 i) (in_sum _ _ fun j _ => in_smul _ (h2 j))
   have hB : In (⊤ : Ideal B) (e i - comb ((1 : Matrix ι ι B) i) e) := by
     rw [comb_one, sub_self]; exact in_zero
   exact (hb _ hA).trans (hb _ hB).symm
@@ -1049,8 +1033,6 @@ section -- clump:auto
 
 open MvPowerSeries GlobalTheory GlobalTheory.Katz GlobalTheory.QLog GlobalTheory.PDivGroup GlobalTheory.Sandwich GlobalTheory.IndefiniteRowSideFullHecke.EpsilonPairingZeta GlobalTheory.PDivLat
 
-set_option autoImplicit false
-
 namespace GlobalTheory.TangentComb
 
 theorem in_top_add_smul {O Q σ : Type} [CommRing O] [CommRing Q] [Algebra O Q]
@@ -1066,19 +1048,8 @@ theorem ql_add_smul {O Q : Type} [CommRing O] [CommRing Q] [Algebra O Q] {d : �
     {μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) O} (hμ : ∀ i, constantCoeff (μ i) = 0)
     {f g : MvPowerSeries (Fin d) Q} (hf : QL μ ⊤ f) (hg : QL μ ⊤ g) (a : O) :
     QL μ ⊤ (f + algebraMap O Q a • g) := by
-  have hμ' : ∀ i, constantCoeff (up Q μ i) = 0 := fun i => by
-    rw [up, ← coeff_zero_eq_constantCoeff_apply, coeff_map, coeff_zero_eq_constantCoeff_apply,
-      hμ, map_zero]
-  refine ⟨?_, fun i => ?_, ?_⟩
-  · rw [← coeff_zero_eq_constantCoeff_apply, map_add (f := _), map_smul, coeff_zero_eq_constantCoeff_apply,
-      coeff_zero_eq_constantCoeff_apply, hf.1, hg.1, smul_zero, add_zero]
-  · obtain ⟨b, -, hb⟩ := hf.2.1 i
-    obtain ⟨b', -, hb'⟩ := hg.2.1 i
-    refine ⟨b + a * b', trivial, ?_⟩
-    simp only [lin] at hb hb' ⊢
-    rw [map_add (f := _), map_smul, hb, hb', map_add (f := _), map_mul, smul_eq_mul]
-  · rw [formalCoboundary_add hμ', formalCoboundary_smul hμ']
-    exact in_top_add_smul hf.2.2 hg.2.2 a
+  intros
+  apply _root_.GlobalTheory.TangentIndep.QL_comb <;> assumption
 
 theorem ql_zero {O Q : Type} [CommRing O] [CommRing Q] [Algebra O Q] {d : ℕ}
     {μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) O} (hμ : ∀ i, constantCoeff (μ i) = 0) :

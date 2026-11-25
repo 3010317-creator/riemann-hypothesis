@@ -80,8 +80,6 @@ section -- clump:auto
 
 open GlobalTheory GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.PD.ResEv
@@ -190,8 +188,6 @@ namespace GlobalTheory
 
 open IsLocalRing Module nonZeroDivisors IsLocalization.AtPrime
 
-attribute [local instance] Ideal.Quotient.field
-
 theorem trace_quotient_eq_of_projective (R S : Type) [CommRing R] [IsDomain R]
     [IsIntegrallyClosed R] [CommRing S] [IsDomain S] [IsIntegrallyClosed S] [Algebra R S]
     [Module.IsTorsionFree R S] [Module.Finite R S] [Module.Projective R S] (p : Ideal R)
@@ -240,8 +236,6 @@ section -- clump:auto
 @[expose] public section
 
 open GlobalTheory GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
-
-set_option autoImplicit false
 
 noncomputable section
 
@@ -331,8 +325,6 @@ section -- clump:auto
 open GlobalTheory GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 open scoped TensorProduct
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.PD.FibTrace
@@ -392,8 +384,6 @@ section -- clump:auto
 @[expose] public section
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory GlobalTheory.CechDR GlobalTheory.PD KaehlerDifferential
-
-set_option autoImplicit false
 
 noncomputable section
 

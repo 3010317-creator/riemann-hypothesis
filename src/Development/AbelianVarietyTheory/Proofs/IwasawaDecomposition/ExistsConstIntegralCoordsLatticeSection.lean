@@ -42,8 +42,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open Topology
@@ -51,7 +49,6 @@ open Topology
 namespace GlobalTheory.ShFam.Hor.LogCh
 
 open Topology in
-set_option autoImplicit false in
 private theorem exists_pos_int_combination_eq_zero_near_of_linearIndependent {g r : ℕ} {l₁ : Fin r → Fin g → ℂ}
     (hl : LinearIndependent ℝ l₁) :
     ∃ δ > 0, ∀ l : Fin r → Fin g → ℂ, ‖l - l₁‖ < δ → ∀ c : Fin r → ℤ,
@@ -121,7 +118,6 @@ private theorem exists_pos_int_combination_eq_zero_near_of_linearIndependent {g 
 
 
 open Topology in
-set_option autoImplicit false in
 theorem _root_.GlobalTheory.ShFam.Hor.LogCh.exists_const_coords (n g r : ℕ) (B : Set (Fin n → ℂ))
     (K : (Fin n → ℂ) → Set (Fin g → ℂ))
     (lam : (Fin n → ℂ) → Fin r → Fin g → ℂ) (ζ : (Fin n → ℂ) → Fin g → ℂ) (b₀ : Fin n → ℂ)

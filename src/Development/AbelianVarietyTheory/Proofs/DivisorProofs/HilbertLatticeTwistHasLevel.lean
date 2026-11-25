@@ -47,14 +47,11 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
 
 @[expose] public section
 
-set_option autoImplicit false
-
 open NumberField UpperHalfPlane GlobalTheory.HilbFam GlobalTheory.QFam
 open scoped Classical MatrixGroups nonZeroDivisors
 
 namespace GlobalTheory.HilbFam
 
-set_option autoImplicit false in
 open NumberField UpperHalfPlane in
 open scoped Classical MatrixGroups nonZeroDivisors in
 private theorem mulMat_stdLat_le {F : Type} [Field F] [NumberField F]
@@ -74,7 +71,6 @@ private theorem mulMat_stdLat_le {F : Type} [Field F] [NumberField F]
   exact Submodule.smul_mem _ _ (hy j (Set.mem_univ j))
 
 
-set_option autoImplicit false in
 open NumberField UpperHalfPlane in
 open scoped Classical MatrixGroups nonZeroDivisors in
 theorem _root_.GlobalTheory.HilbFam.hasLevel_twist_of_hasLevel : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (N : ℕ)

@@ -1,5 +1,6 @@
 module
 
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentCost.ContinuousBlockMatrixThree
 public import Formalism.HermitianCurvature.StatementD
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ConjugationInvarianceEverySetting
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.OppositeWeylSubgroupClosed
@@ -28,61 +29,10 @@ import Formalism.HermitianCurvature.HermitianCurvatureProofs.ConjugationContinuo
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.PeriodLatticeFactsSplitOfGeneral
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.TwistedIsRealOrderLattice
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.TwoByOneBlock
-import Mathlib.Algebra.Module.StablyFree.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.CategoryTheory.Countable
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.Complex
 import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
-import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -887,7 +837,6 @@ theorem haar_norm {a : ℕ} {U : Set (B.Mat k a)} {μ : Measure (Mt k a)} (hμ :
     rw [hμ.conc, add_zero] at h1
     exact lt_of_le_of_lt h1 (hμ.finite_compact U hU)
   have h0 : μ Set.univ ≠ 0 := Measure.measure_univ_ne_zero.mpr hμ.ne_zero
-  have hc0 : (μ Set.univ)⁻¹ ≠ 0 := ENNReal.inv_ne_zero.mpr hfin.ne
   have hct : (μ Set.univ)⁻¹ ≠ ⊤ := ENNReal.inv_ne_top.mpr h0
   have hn : ((μ Set.univ)⁻¹ • μ) Set.univ = 1 := by
     rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 hfin.ne]
@@ -1411,8 +1360,6 @@ theorem YB_gram (hz : inWb k r z') (hν : inWb k r ν') (hs : 0 < s)
     herm (Hpk k r) (YB π d z' ν' s κ i) (YB π d z' ν' s κ j) =
       herm (Hpk k r) (uB z' ν' i) (uB z' ν' j) := by
   have hs' : (s : ℂ) ≠ 0 := by exact_mod_cast hs.ne'
-  have hne : ∀ b : Fin r, π b.castSucc ≠ Fin.last r := by
-    intro b h; rw [← hB] at h; exact Fin.castSucc_ne_last b (π.injective h)
   have hzν := herm_zν hνz
   rcases i with ((b | b) | i) <;> rcases j with ((c | c) | j)
   all_goals try fin_cases i
@@ -1934,12 +1881,21 @@ private theorem exists_frame_of_moves_last {Wp Wq : Type} [NormedAddCommGroup Wp
       · simp only [YA]; (try split_ifs) <;> simp [Matrix.mulVec_add, Matrix.mulVec_sub, Matrix.mulVec_smul, Matrix.mulVec_neg, (hge _).1, (hge _).2, hgz, hgν]
       · fin_cases i <;> simp [YA, Matrix.mulVec_add, Matrix.mulVec_sub, Matrix.mulVec_smul, Matrix.mulVec_neg, (hge _).1, (hge _).2, hgz, hgν]
 
-private theorem exists_frame_of_fixes_last {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
+noncomputable def frameFixLast (z z' ν' : Fin (2 * r + k + 1) → ℂ)
+    (π : Equiv.Perm (Fin (r + 1))) (d0 : Fin (r + 1) → ℂ) : B.Mat k r :=
+  let s := Real.sqrt (Tz k r z')
+  let μ := Real.sqrt (Tz k r z' / Tz k r z)
+  let d' : Fin (r + 1) → ℂ := fun b => if π b = Fin.last r then (μ : ℂ) * d0 b else d0 b
+  let κ := Real.sqrt (1 / s ^ 2 - s ^ 2 / Complex.normSq (d' (Fin.last r)))
+  smat (Hpk k r) (uB z' ν') (wB z' ν' s) (YB π d' z' ν' s κ)
+
+theorem frameFixLast_spec {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
     [InnerProductSpace ℂ Wq] (S : B.RealPlaceData k r Wp Wq) (ν' : Fin (2 * r + k + 1) → ℂ) (m₀ : B.Mat k r)
     (hbase : Formalism.FourierDecayAlt.D.IsBaseFrame S ν' m₀) (π : Equiv.Perm (Fin (r + 1))) (d0 : Fin (r + 1) → ℂ)
     (hd0 : ∀ a, d0 a ≠ 0) (hB : π (Fin.last r) = Fin.last r)
     (hG : Tz k r S.z * Tz k r S.z' < Complex.normSq (d0 (Fin.last r))) :
-    ∃ σ : B.Mat k r, m₀ * σ ∈ B.GV k r ∧ Zhat k r S.z S.z' (m₀ * σ) = C2.monoP π d0 ∧
+    let σ := frameFixLast S.z S.z' ν' π d0
+    m₀ * σ ∈ B.GV k r ∧ Zhat k r S.z S.z' (m₀ * σ) = C2.monoP π d0 ∧
       Formalism.FourierDecayAlt.D.IsDFrame S ν' m₀ (m₀ * σ) ∧ σ ∈ UH (Hpk k r) ∧
       (∀ x, inWb k r x → herm (Hpk k r) x S.z' = 0 → herm (Hpk k r) x ν' = 0 → σ *ᵥ x = x) ∧
       (∀ g ∈ UH (Hpk k r), (∀ a : Fin r, g *ᵥ ee k r a = ee k r a ∧ g *ᵥ es k r a = es k r a) →
@@ -2028,7 +1984,9 @@ private theorem exists_frame_of_fixes_last {Wp Wq : Type} [NormedAddCommGroup Wp
   have hm0u : IsUnit m₀.det := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit _ hmU
   have hDl : d0 (Fin.last r) ≠ 0 := hd0 _
   have hDc : conj (d0 (Fin.last r)) ≠ 0 := by simpa using hDl
-  refine ⟨σ, hγ, hZ, ⟨?_, ?_, ?_⟩, hσU, ?_, ?_⟩
+  dsimp only
+  rw [show frameFixLast S.z S.z' ν' π d0 = σ from rfl]
+  refine ⟨hγ, hZ, ⟨?_, ?_, ?_⟩, hσU, ?_, ?_⟩
   ·
     refine ⟨μ * κ, mul_pos hμ hκ0, ?_⟩
     have hcof : Formalism.FourierDecayAlt.D.cofR S (m₀ * σ) =
@@ -2168,6 +2126,18 @@ private theorem exists_frame_of_fixes_last {Wp Wq : Type} [NormedAddCommGroup Wp
       · simp only [YB]; (try split_ifs) <;> simp [Matrix.mulVec_add, Matrix.mulVec_sub, Matrix.mulVec_smul, Matrix.mulVec_neg, (hge _).1, (hge _).2, hgz, hgν]
       · fin_cases i <;> simp [YB, Matrix.mulVec_add, Matrix.mulVec_sub, Matrix.mulVec_smul, Matrix.mulVec_neg, (hge _).1, (hge _).2, hgz, hgν]
 
+private theorem exists_frame_of_fixes_last {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
+    [InnerProductSpace ℂ Wq] (S : B.RealPlaceData k r Wp Wq) (ν' : Fin (2 * r + k + 1) → ℂ) (m₀ : B.Mat k r)
+    (hbase : Formalism.FourierDecayAlt.D.IsBaseFrame S ν' m₀) (π : Equiv.Perm (Fin (r + 1))) (d0 : Fin (r + 1) → ℂ)
+    (hd0 : ∀ a, d0 a ≠ 0) (hB : π (Fin.last r) = Fin.last r)
+    (hG : Tz k r S.z * Tz k r S.z' < Complex.normSq (d0 (Fin.last r))) :
+    ∃ σ : B.Mat k r, m₀ * σ ∈ B.GV k r ∧ Zhat k r S.z S.z' (m₀ * σ) = C2.monoP π d0 ∧
+      Formalism.FourierDecayAlt.D.IsDFrame S ν' m₀ (m₀ * σ) ∧ σ ∈ UH (Hpk k r) ∧
+      (∀ x, inWb k r x → herm (Hpk k r) x S.z' = 0 → herm (Hpk k r) x ν' = 0 → σ *ᵥ x = x) ∧
+      (∀ g ∈ UH (Hpk k r), (∀ a : Fin r, g *ᵥ ee k r a = ee k r a ∧ g *ᵥ es k r a = es k r a) →
+        g *ᵥ S.z' = S.z' → g *ᵥ ν' = ν' → σ * g = g * σ) :=
+  ⟨frameFixLast S.z S.z' ν' π d0, frameFixLast_spec S ν' m₀ hbase π d0 hd0 hB hG⟩
+
 theorem caseA {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
     [InnerProductSpace ℂ Wq] (S : B.RealPlaceData k r Wp Wq) (ν' : Fin (2 * r + k + 1) → ℂ) (m₀ : B.Mat k r)
     (hbase : Formalism.FourierDecayAlt.D.IsBaseFrame S ν' m₀) (π : Equiv.Perm (Fin (r + 1))) (d0 : Fin (r + 1) → ℂ)
@@ -2192,7 +2162,6 @@ end Formalism.FourierDecayAlt.P.Dx2.DF
 
 namespace Formalism.FourierDecayAlt.P.Dx2
 
-open Formalism.QuantumDeterminants Formalism.FourierDecayAlt
 
 section final
 
@@ -3242,7 +3211,6 @@ theorem measurePreserving_coord_permutation : MeasurePreserving (perm8 (k := k) 
   have s6 := ((MeasurePreserving.id (μc.prod μCL)).prod (middle_four_swap_measure_preserving μq1 μq2 μQ1L μQ2L)).prod
     (MeasurePreserving.id (μU0.prod μu))
   have hall := s6.comp (s5.comp (s4.comp (s3.comp (s2.comp s1))))
-  have e : (perm8 (k := k) (j := j) (ρ := ρ)) = _ := funext fun q => rfl
   exact hall
 
 def tgt (q : Bs k j ρ × Fs k j ρ) : U.RC k (j + 1) ρ × (G.UT (j + 1) → ℂ) :=
@@ -3422,17 +3390,7 @@ theorem continuous_block3_matrix {X : Type*} [TopologicalSpace X] {j ρ : ℕ}
     (h22 : Continuous f22) (h23 : Continuous f23) (h31 : Continuous f31) (h32 : Continuous f32)
     (h33 : Continuous f33) :
     Continuous (fun x => U.blk3 (f11 x) (f12 x) (f13 x) (f21 x) (f22 x) (f23 x) (f31 x) (f32 x) (f33 x)) := by
-  refine continuous_pi fun p => continuous_pi fun q => ?_
-  obtain ⟨a, rfl⟩ := (U.eB k j ρ).surjective p
-  obtain ⟨b, rfl⟩ := (U.eB k j ρ).surjective q
-  simp only [Ux3.block3_apply]
-  rcases a with ((a | a) | a) <;> rcases b with ((b | b) | b) <;>
-    simp only [Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂, Matrix.fromBlocks_apply₂₁,
-      Matrix.fromBlocks_apply₂₂, Matrix.fromRows_apply_inl, Matrix.fromRows_apply_inr, Matrix.fromCols_apply_inl,
-      Matrix.fromCols_apply_inr] <;>
-    first | exact h11.matrix_elem _ _ | exact h12.matrix_elem _ _ | exact h13.matrix_elem _ _ |
-      exact h21.matrix_elem _ _ | exact h22.matrix_elem _ _ | exact h23.matrix_elem _ _ |
-      exact h31.matrix_elem _ _ | exact h32.matrix_elem _ _ | exact h33.matrix_elem _ _
+  apply _root_.PI.UnitaryGroupMassFormula.UsCost.continuous_block_matrix_three <;> assumption
 
 theorem rn_cont (j ρ : ℕ) : Continuous (fun x : U.RC k j ρ => U.Rn k j ρ x) := by
   have hof : Continuous fun x : U.RC k j ρ => (Matrix.of x.1 : Matrix (Fin (2 * ρ + k + 1)) (Fin j) ℂ) := continuous_fst
@@ -4231,7 +4189,6 @@ theorem herm_basis_isotropic_perp (b : Fin r) (j : Fin (2 * r + k + 1)) (hj1 : r
   simp only [bvec, Pi.single_apply]
   rw [if_neg]; · simp
   intro e
-  have h1 := congrArg Fin.val e
   have h2 : (esI k r (sX hB b)).val = 2 * r + k - (sX hB b).val := rfl
   have := (sX hB b).isLt
   omega
@@ -4266,7 +4223,6 @@ theorem rhoD'_N (x : C2.Lstidx w → ℂ) : γ⁻¹ * rhoD γ hB d x * γ ∈ Ns
       rw [show herm (Hpk k r) (bvec j) (DF.ee k r ((sX hB).symm a)) = 0 by
         rw [DF.herm_ee]; simp only [bvec, Pi.single_apply]; rw [if_neg]
         intro e
-        have h1 := congrArg Fin.val e
         have h2 : (esI k r ((sX hB).symm a)).val = 2 * r + k - ((sX hB).symm a).val := rfl
         have := ((sX hB).symm a).isLt
         omega]
@@ -4397,7 +4353,6 @@ include hγ hd hZ hB
 theorem trivial_of_u_one {ρ : B.Mat k r} (hρ : ρ ∈ C6.Rset γ) (hu1 : C2.uMap k r D.z ρ = 1) : ρ = 1 := by
   have hu := isUnit_G hγ
   have hP := Formalism.FourierDecayAlt.P.C2x2.isUnit_det_monomialMatrix w d hd
-  have hγ' : γᴴ * Hpk k r * γ = Hpk k r := hγ
   have hρU : ρᴴ * Hpk k r * ρ = Hpk k r := hρ.1.1
 
   have hF := ((Formalism.FourierDecayAlt.P.unipotent_map_frame k r D.z ⟨D.z_mem, D.T_pos⟩).1 ρ (N_sub_S D.z hρ.1)).1
@@ -5391,9 +5346,7 @@ theorem frame_fix (ν' : Fin (2 * r + k + 1) → ℂ) (m₀ : B.Mat k r) (hbase 
   have vA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hnA
   have vB := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hnB
   have sA : IsUnit (hA * nA).det := by rw [Matrix.det_mul]; exact uA.mul vA
-  have sB : IsUnit (hB * nB).det := by rw [Matrix.det_mul]; exact uB.mul vB
   have uγ := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hγe
-  have um := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hmU
   have hsfA := mul_fix hhA hfA
   have hsfB := mul_fix hhB hfB
   obtain ⟨hAiU, hAie, hAis, hAiz⟩ := uw_parts (WeylGroupFacts.uw_inv hhA)
@@ -6349,8 +6302,6 @@ theorem card_UT (m : ℕ) : 2 * Fintype.card (G.UT m) = m * (m - 1) := by
     have e := Fintype.card_congr (utEquiv (ph := m) (n := 0))
     have h1 : Fintype.card (G.UT (0 + 1)) = 0 := by
       rw [Fintype.card_eq_zero_iff]; exact ⟨fun q => absurd q.2 (by
-        have a := q.1.1.isLt
-        have b := q.1.2.isLt
         have e : q.1.1 = q.1.2 := Fin.ext (by omega)
         rw [e]; exact lt_irrefl _)⟩
     simp only [Fintype.card_sum, Fintype.card_prod, Fintype.card_fin, h1, add_zero] at e
@@ -6415,7 +6366,6 @@ theorem core (σ : Equiv.Perm (Fin ph)) (d : Fin ph → ℂ) (t : ℂ)
   let Φ : U.Xi k (ph + (n + 1)) 0 ρ (sigP σ) ≃ᵐ RR × (U.XiH ph (n + 1) σ × (G.UT (n + 1) → ℂ)) :=
     MeasurableEquiv.prodCongr (MeasurableEquiv.refl RR) (xiE σ)
   have sX : SFinite (U.muXiH (ph + (n + 1)) 0 (sigP σ)) := by
-    have hT := probT (ph + (n + 1))
     have b1 : SigmaFinite (volume : Measure (U.LW (sigP (n := n) σ) → ℂ)) := inferInstance
     have b2 : SigmaFinite (volume : Measure (G.UT (ph + (n + 1)) → ℂ)) := inferInstance
     have b3 : SigmaFinite (volume : Measure ((U.LW (sigP (n := n) σ) → ℂ) × (G.UT (ph + (n + 1)) → ℂ))) := by
@@ -6456,8 +6406,6 @@ theorem core (σ : Equiv.Perm (Fin ph)) (d : Fin ph → ℂ) (t : ℂ)
     have c3 : SigmaFinite (volume : Measure (U.LW σ → ℂ)) := inferInstance
     have c4 : SigmaFinite (volume : Measure (G.UT ph → ℂ)) := inferInstance
     have c5 : SigmaFinite (volume : Measure ((Fin (n + 1) → Fin ph → ℂ) × (Fin ph → Fin (n + 1) → ℂ))) := by
-      rw [Measure.volume_eq_prod]; infer_instance
-    have c6 : SigmaFinite (volume : Measure ((U.LW σ → ℂ) × (G.UT ph → ℂ))) := by
       rw [Measure.volume_eq_prod]; infer_instance
     rw [Measure.volume_eq_prod]; infer_instance
   have hA : MeasurePreserving (MeasurableEquiv.prodAssoc : (RR × U.XiH ph (n + 1) σ) × (G.UT (n + 1) → ℂ) ≃ᵐ _)

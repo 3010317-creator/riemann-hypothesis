@@ -1,5 +1,6 @@
 module
 
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.IsOpenAdelicUnipotentTimesIntegralOutsideSet
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RestrictionIrrelevantDoubleLevelOperator
 public import Formalism.HermitianCurvature.StatementQ
 public import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds
@@ -8,54 +9,9 @@ public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedP
 import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CartanInvolutionConjTransposeMul
 import Formalism.RealPlaceAnalysis.RealPlaceTaylor.ComplexifiedDerivativeCommutator
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 public import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -98,39 +54,19 @@ def mulVecL (v : Fin (2 * r + k + 1) → ℂ) : Mx k r →L[ℝ] (Fin (2 * r + k
       map_smul' := fun c A => Matrix.smul_mulVec c A v }
 
 theorem exp_fix {X : Mx k r} {v : Fin (2 * r + k + 1) → ℂ} (h : X *ᵥ v = 0) (t : ℝ) :
-    NormedSpace.exp ((t : ℂ) • X) *ᵥ v = v := by
-  have hd : ∀ s : ℝ, HasDerivAt (fun s : ℝ => mulVecL v ((1 : Mx k r) * NormedSpace.exp ((s : ℂ) • X))) 0 s := by
-    intro s
-    have h1 := B5.curve_hasDerivAt (1 : Mx k r) X s
-    have h2 := (mulVecL v).hasFDerivAt.comp_hasDerivAt s h1
-    refine h2.congr_deriv ?_
-    show ((1 : Mx k r) * NormedSpace.exp ((s : ℂ) • X) * X) *ᵥ v = 0
-    rw [← Matrix.mulVec_mulVec, h, Matrix.mulVec_zero]
-  have hc := is_const_of_deriv_eq_zero (fun s => (hd s).differentiableAt) (fun s => (hd s).deriv) t 0
-  simpa [mulVecL, NormedSpace.exp_zero] using hc
+    NormedSpace.exp ((t : ℂ) • X) *ᵥ v = v :=
+  _root_.Formalism.FourierDecayAlt.P.Qx8.exp_fix h t
 
 def LieLev (i : Fin (r + 1)) (X : Mx k r) : Prop := ∀ t : ℝ, NormedSpace.exp ((t : ℂ) • X) ∈ Glev k r i
 
 theorem lieLev_of {i : Fin (r + 1)} {X : Mx k r} (hX : inLieLev k r i X) : LieLev i X :=
   fun t => ⟨B5.exp_mem hX.1 t, fun a ha => ⟨exp_fix (hX.2 a ha).1 t, exp_fix (hX.2 a ha).2 t⟩⟩
 
-theorem hpk_e (a : Fin r) : Hpk k r *ᵥ bvec (eI k r a) = bvec (esI k r a) := by
-  funext p
-  simp only [bvec, Matrix.mulVec_single_one, Matrix.col_apply, Pi.single_apply]
-  unfold Hpk eI esI
-  simp only [Fin.ext_iff]
-  have := p.isLt
-  have := a.isLt
-  split_ifs <;> first | rfl | (exfalso; omega)
+theorem hpk_e (a : Fin r) : Hpk k r *ᵥ bvec (eI k r a) = bvec (esI k r a) :=
+  _root_.Formalism.FourierDecayAlt.P.Qx8.hpk_e a
 
-theorem hpk_es (a : Fin r) : Hpk k r *ᵥ bvec (esI k r a) = bvec (eI k r a) := by
-  funext p
-  simp only [bvec, Matrix.mulVec_single_one, Matrix.col_apply, Pi.single_apply]
-  unfold Hpk eI esI
-  simp only [Fin.ext_iff]
-  have := p.isLt
-  have := a.isLt
-  split_ifs <;> first | rfl | (exfalso; omega)
+theorem hpk_es (a : Fin r) : Hpk k r *ᵥ bvec (esI k r a) = bvec (eI k r a) :=
+  _root_.Formalism.FourierDecayAlt.P.Qx8.hpk_es a
 
 theorem hpk_herm : (Hpk k r)ᴴ = Hpk k r := (hermitian_pos_facts_hold k r).1
 
@@ -142,12 +78,8 @@ theorem single_bvec {p q c : Fin (2 * r + k + 1)} (h : q ≠ c) :
   simp [bvec, h]
 
 theorem posL_ne_e (i : Fin (r + 1)) (a : Fin (mdim k r i)) (b : Fin r) (hb : b.val < i.val) :
-    posL k r i a ≠ eI k r b ∧ posL k r i a ≠ esI k r b := by
-  have h1 := a.isLt
-  have h2 := i.isLt
-  unfold mdim at h1
-  simp only [posL, eI, esI, ne_eq, Fin.ext_iff]
-  omega
+    posL k r i a ≠ eI k r b ∧ posL k r i a ≠ esI k r b :=
+  _root_.Formalism.FourierDecayAlt.P.Qx8.posL_ne_e i a b hb
 
 theorem hpart_skew {n : ℕ} (H Z : Matrix (Fin n) (Fin n) ℂ) (hsq : H * H = 1) (hh : Hᴴ = H) :
     (hpart1 H Z)ᴴ * H + H * hpart1 H Z = 0 ∧ (hpart2 H Z)ᴴ * H + H * hpart2 H Z = 0 := by
@@ -198,26 +130,12 @@ theorem sf_zero : SmoothFam k r i U₀ (fun _ _ => (0 : E)) :=
   fun _ _ _ => ⟨Set.univ, fun _ => 0, isOpen_univ, trivial, contDiffOn_const, fun _ _ _ => rfl⟩
 
 theorem sf_add {Φ Ψ : Fn k r E} (h : SmoothFam k r i U₀ Φ) (h' : SmoothFam k r i U₀ Ψ) :
-    SmoothFam k r i U₀ (fun c g => Φ c g + Ψ c g) := by
-  intro x₀ hx₀ hg₀
-  obtain ⟨U, F, hU, hxU, hF, hΦ⟩ := h x₀ hx₀ hg₀
-  obtain ⟨U', F', hU', hxU', hF', hΦ'⟩ := h' x₀ hx₀ hg₀
-  exact ⟨U ∩ U', fun x => F x + F' x, hU.inter hU', ⟨hxU, hxU'⟩,
-    (hF.mono Set.inter_subset_left).add (hF'.mono Set.inter_subset_right),
-    fun x hx hxG => by
-      show Φ x.1 x.2 + Ψ x.1 x.2 = F x + F' x
-      rw [hΦ x hx.1 hxG, hΦ' x hx.2 hxG]⟩
+    SmoothFam k r i U₀ (fun c g => Φ c g + Ψ c g) :=
+  _root_.Formalism.FourierDecayAlt.P.Qx8.sf_add h h'
 
 theorem sf_smul {a : Fn k r ℂ} {Φ : Fn k r E} (h : SmoothFam k r i U₀ a) (h' : SmoothFam k r i U₀ Φ) :
-    SmoothFam k r i U₀ (fun c g => a c g • Φ c g) := by
-  intro x₀ hx₀ hg₀
-  obtain ⟨U, F, hU, hxU, hF, hΦ⟩ := h x₀ hx₀ hg₀
-  obtain ⟨U', F', hU', hxU', hF', hΦ'⟩ := h' x₀ hx₀ hg₀
-  exact ⟨U ∩ U', fun x => F x • F' x, hU.inter hU', ⟨hxU, hxU'⟩,
-    (hF.mono Set.inter_subset_left).smul (hF'.mono Set.inter_subset_right),
-    fun x hx hxG => by
-      show a x.1 x.2 • Φ x.1 x.2 = F x • F' x
-      rw [hΦ x hx.1 hxG, hΦ' x hx.2 hxG]⟩
+    SmoothFam k r i U₀ (fun c g => a c g • Φ c g) :=
+  _root_.Formalism.FourierDecayAlt.P.Qx8.sf_smul h h'
 
 theorem sf_const (s : ℂ) : SmoothFam k r i U₀ (fun _ _ => s) :=
   fun _ _ _ => ⟨Set.univ, fun _ => s, isOpen_univ, trivial, contDiffOn_const, fun _ _ _ => rfl⟩
@@ -306,32 +224,12 @@ theorem uh_inv_eq {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g⁻¹ = Hpk k r * g�
     _ = 1 := by rw [hg', WeylGroupFacts.hpk_sq]
 
 theorem sf_yv (z : Fin (2 * r + k + 1) → ℂ) (j : Fin (mdim k r i)) :
-    SmoothFam k r i U₀ (fun _ g => yv k r z i g j) := by
-  refine sf_lin
-    { toFun := fun g => ((Hpk k r * gᴴ * Hpk k r) *ᵥ fvec k r z i) (posL k r i j)
-      map_add' := ?_
-      map_smul' := ?_ } ?_
-  · intro x y
-    simp [Matrix.conjTranspose_add, Matrix.mul_add, Matrix.add_mul, Matrix.add_mulVec]
-  · intro c x
-    simp [Matrix.conjTranspose_smul, Matrix.smul_mulVec]
-  · intro g hg
-    show (g⁻¹ *ᵥ fvec k r z i) (posL k r i j) = _
-    rw [uh_inv_eq hg.1]
-    rfl
+    SmoothFam k r i U₀ (fun _ g => yv k r z i g j) :=
+  _root_.Formalism.FourierDecayAlt.P.Qx8.sf_yv z j
 
 theorem sf_ybv (z : Fin (2 * r + k + 1) → ℂ) (j : Fin (mdim k r i)) :
-    SmoothFam k r i U₀ (fun _ g => ybv k r z i g j) := by
-  refine sf_lin
-    { toFun := fun g => herm (Hpk k r) (g *ᵥ bvec (posL k r i j)) (fvec k r z i)
-      map_add' := ?_
-      map_smul' := ?_ } ?_
-  · intro x y
-    simp [herm, Matrix.add_mulVec, Matrix.mulVec_add, dotProduct_add]
-  · intro c x
-    simp [herm, Matrix.smul_mulVec, Matrix.mulVec_smul, dotProduct_smul]
-  · intro g _
-    rfl
+    SmoothFam k r i U₀ (fun _ g => ybv k r z i g j) :=
+  _root_.Formalism.FourierDecayAlt.P.Qx8.sf_ybv z j
 
 theorem pres_chatL (u : ℂ) (a β : Mx k r → Fin (mdim k r i) → ℂ)
     (ha : ∀ j, SmoothFam k r i U₀ (fun _ g => a g j)) (hβ : ∀ j, SmoothFam k r i U₀ (fun _ g => β g j)) :
@@ -409,18 +307,8 @@ theorem fam_hasFDerivAt {Φ : Fn k r E} {U : Set (XX k r)} {F : XX k r → E} (h
     (hxG : x.2 ∈ Glev k r i) :
     HasFDerivAt (fun c' => Φ c' x.2)
       ((fderiv ℝ F x).comp (ContinuousLinearMap.inl ℝ (Fin r → ℂ) (Mx k r))) x.1 := by
-  have hFd : DifferentiableAt ℝ F x :=
-    (hF.differentiableOn (by simp)).differentiableAt (hU.mem_nhds hx)
-  have h1 : HasFDerivAt (fun c' : Fin r → ℂ => ((c', x.2) : XX k r))
-      (ContinuousLinearMap.inl ℝ (Fin r → ℂ) (Mx k r)) x.1 := hasFDerivAt_prodMk_left x.1 x.2
-  have h2 : HasFDerivAt (fun c' : Fin r → ℂ => F (c', x.2))
-      ((fderiv ℝ F x).comp (ContinuousLinearMap.inl ℝ (Fin r → ℂ) (Mx k r))) x.1 :=
-    HasFDerivAt.comp x.1 (f := fun c' : Fin r → ℂ => ((c', x.2) : XX k r)) (g := F) hFd.hasFDerivAt h1
-  refine h2.congr_of_eventuallyEq ?_
-  have hmem : ∀ᶠ c' : Fin r → ℂ in 𝓝 x.1, ((c', x.2) : XX k r) ∈ U :=
-    h1.continuousAt.preimage_mem_nhds (hU.mem_nhds hx)
-  filter_upwards [hmem] with c' hc'
-  exact hΦ _ hc' hxG
+  intros
+  apply _root_.Formalism.FourierDecayAlt.P.Qx8.slice_hasFDeriv <;> assumption
 
 theorem sf_fderiv (v : Fin r → ℂ) {Φ : Fn k r E} (h : SmoothFam k r i U₀ Φ) :
     SmoothFam k r i U₀ (fun c g => fderiv ℝ (fun c' => Φ c' g) c v) := by
@@ -662,12 +550,7 @@ theorem reflection_fixes_basis_vector (l : Fin r) (c : ℂ) {q : Fin (2 * r + k 
   rw [w1_apply, sw_o l h1 h2, dd_o l c h1 h2]
 
 theorem weyl_cell_mem_level_group (l : Fin r) {c : ℂ} (hc : c ≠ 0) : w1 k r l c ∈ Glev k r l.castSucc := by
-  refine ⟨weyl_cell_mem_unitary l hc, fun a ha => ?_⟩
-  have ha' : a.val < l.val := ha
-  have hl := l.isLt
-  constructor
-  · apply reflection_fixes_basis_vector <;> simp only [eI, esI, ne_eq, Fin.ext_iff] <;> omega
-  · apply reflection_fixes_basis_vector <;> simp only [eI, esI, ne_eq, Fin.ext_iff] <;> omega
+  apply _root_.Formalism.FourierDecayAlt.P.Qx4.weyl_cell_mem_level_group <;> assumption
 
 theorem tau_e (l : Fin r) : WeylGroupFacts.tau k r (eI k r l) = esI k r l := by
   have := l.isLt
@@ -685,42 +568,7 @@ theorem tau_es (l : Fin r) : WeylGroupFacts.tau k r (esI k r l) = eI k r l := by
 
 theorem w1_commute_of_mem_Glev (l : Fin r) (c : ℂ) {g : Mx k r} (hg : g ∈ Glev k r l.succ) :
     w1 k r l c * g = g * w1 k r l c := by
-  have hne := e_ne_es (k := k) l
-  have hl : l.val < (l.succ : Fin (r + 1)).val := by simp
-  have ce : ∀ p, g p (eI k r l) = if p = eI k r l then 1 else 0 := WeylGroupFacts.col_of_fix (hg.2 l hl).1
-  have ces : ∀ p, g p (esI k r l) = if p = esI k r l then 1 else 0 := WeylGroupFacts.col_of_fix (hg.2 l hl).2
-  have res : ∀ j, g (esI k r l) j = if esI k r l = j then 1 else 0 := by
-    have := WeylGroupFacts.row_of_fixed_col hg.1 (eI k r l) ce
-    rwa [tau_e] at this
-  have re : ∀ j, g (eI k r l) j = if eI k r l = j then 1 else 0 := by
-    have := WeylGroupFacts.row_of_fixed_col hg.1 (esI k r l) ces
-    rwa [tau_es] at this
-  ext p q
-  rw [mul_weyl_cell_apply, weyl_cell_mul_apply]
-  rcases tri l p with h | h | ⟨h1, h2⟩
-  · subst h
-    rw [sw_e, dd_es, res, re]
-    rcases tri l q with h' | h' | ⟨h1', h2'⟩
-    · subst h'
-      simp [sw_e, hne, hne.symm]
-    · subst h'
-      simp [sw_es, dd_es]
-    · simp [sw_o l h1' h2', Ne.symm h1', Ne.symm h2']
-  · subst h
-    rw [sw_es, dd_e, res, re]
-    rcases tri l q with h' | h' | ⟨h1', h2'⟩
-    · subst h'
-      simp [sw_e, dd_e]
-    · subst h'
-      simp [sw_es, hne, hne.symm]
-    · simp [sw_o l h1' h2', Ne.symm h1', Ne.symm h2']
-  · rw [sw_o l h1 h2, dd_o l c h1 h2]
-    rcases tri l q with h' | h' | ⟨h1', h2'⟩
-    · subst h'
-      simp [sw_e, ce, ces, h1, h2]
-    · subst h'
-      simp [sw_es, ce, ces, h1, h2]
-    · simp [sw_o l h1' h2', dd_o l c h1' h2']
+  apply _root_.Formalism.FourierDecayAlt.P.Qx4.w1_commute_of_mem_Glev <;> assumption
 
 end W1
 

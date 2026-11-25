@@ -2,10 +2,9 @@ module
 
 public import Mathlib.Algebra.Group.Subgroup.Map
 public import Mathlib.Order.Filter.AtTopBot.Defs
+public import Mathlib.Order.Filter.AtTopBot.Basic
 import Mathlib.Algebra.Group.Subgroup.Ker
 import Mathlib.Tactic.Choose
-import Mathlib.Tactic.TypeStar
-public import Mathlib.Order.Filter.AtTopBot.Basic
 
 @[expose] public section
 
@@ -143,14 +142,10 @@ theorem surjective_of_graded_surjective {F : ℕ → Subgroup G} {E : ℕ → Su
     (hF0 : F 0 = ⊤) (hE0 : E (φ 0) = ⊤) (hmap : ∀ n, ∀ g ∈ F n, f g ∈ E (φ n))
     (hgr : ∀ n, ∀ h ∈ E (φ n), ∃ g ∈ F n, h / f g ∈ E (φ (n + 1))) :
     Function.Surjective f := by
-  apply MonoidHom.range_eq_top.mp
-  simpa only [hF0, hE0, Subgroup.map_top] using
-    map_eq_of_graded_surjective hF hE hG hH f hφ 0 (fun n _ => hmap n) (fun n _ => hgr n)
+  rw [← MonoidHom.range_eq_top, ← Subgroup.map_top, ← hF0, ← hE0]
+  exact map_eq_of_graded_surjective hF hE hG hH f hφ 0
+    (fun n _ => hmap n) (fun n _ => hgr n)
 
 end Surjectivity
-
-section Topological
-
-end Topological
 
 end GroundTheory.LocalField

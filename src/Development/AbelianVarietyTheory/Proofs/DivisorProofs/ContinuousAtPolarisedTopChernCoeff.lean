@@ -40,8 +40,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
-set_option autoImplicit false
-
 open MeasureTheory Filter Topology GlobalTheory GlobalTheory.Cartier GlobalTheory.ProjVar GlobalTheory.CxPts GlobalTheory.ChartGlue GlobalTheory.FlagBundle GlobalTheory.HermFrame GlobalTheory.GoodMetric GlobalTheory.GoodTop
 open ReciprocityTheory.L2DbarEstimates (V)
 open scoped ContDiff Matrix
@@ -49,7 +47,6 @@ open scoped ContDiff Matrix
 namespace GlobalTheory.GoodTop
 
 
-set_option autoImplicit false in
 open MeasureTheory Filter Topology in
 open scoped ContDiff Matrix in
 theorem _root_.GlobalTheory.GoodTop.continuousAt_mixTop :

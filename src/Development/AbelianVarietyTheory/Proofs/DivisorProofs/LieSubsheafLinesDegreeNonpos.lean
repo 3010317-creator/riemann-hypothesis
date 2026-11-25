@@ -85,8 +85,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.T
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry TopologicalSpace Limits MonoidalCategory CartesianMonoidalCategory MonObj
@@ -226,8 +224,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.VB GlobalTheory.LieVB GlobalTheory.QCoh GlobalTheory.CechPic GlobalTheory.NeronCurve GlobalTheory.Nef
 open GlobalTheory.Twist (resM)
 open scoped CategoryTheory.Obj RatFunc
-
-set_option autoImplicit false
 
 noncomputable section
 
@@ -584,8 +580,6 @@ section -- clump:auto
 open scoped IntermediateField Polynomial RatFunc
 open GlobalTheory.Nef
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.Nef.Kron
@@ -776,8 +770,6 @@ section -- clump:auto
 open scoped IntermediateField Polynomial RatFunc
 open GlobalTheory.Nef
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.RatCrit
@@ -929,8 +921,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.VB GlobalTheory.LieVB GlobalTheory.QCoh GlobalTheory.CechPic GlobalTheory.NeronCurve GlobalTheory.Nef
 open GlobalTheory.Twist (resM)
 open scoped CategoryTheory.Obj RatFunc
-
-set_option autoImplicit false
 
 namespace GlobalTheory.Nef
 
@@ -1255,8 +1245,6 @@ open GlobalTheory GlobalTheory.VB GlobalTheory.LieVB GlobalTheory.QCoh GlobalThe
 open GlobalTheory.Twist (resM)
 open scoped CategoryTheory.Obj RatFunc
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.Nef
@@ -1264,13 +1252,6 @@ namespace GlobalTheory.Nef
 theorem comp_grpMul {S : Scheme.{0}} {G T T' : Over S} [GrpObj G] (x : T' ⟶ T) (f g : T ⟶ G) :
     x ≫ (f * g) = (x ≫ f) * (x ≫ g) := by
   rw [Hom.mul_def, Hom.mul_def, ← Category.assoc, comp_lift]
-
-theorem unitSec_comp_sqr {S : Scheme.{0}} (G : Over S) [GrpObj G] : unitSec G ≫ sqr G = unitSec G := by
-  have h1 : (η[G] : 𝟙_ (Over S) ⟶ G) = 1 := by
-    rw [Hom.one_def, Subsingleton.elim (toUnit (𝟙_ (Over S))) (𝟙 _), Category.id_comp]
-  have : (η[G] : 𝟙_ (Over S) ⟶ G) ≫ (𝟙 G * 𝟙 G) = η[G] := by
-    rw [comp_grpMul, Category.comp_id, h1, _root_.one_mul]
-  exact congrArg (·.left) this
 
 theorem triv_isPath {S : Scheme.{0}} (G : Over S) [GrpObj G] {R : Type} [CommRing R] (c : R) (b : Sp R ⟶ S) :
     IsPath G c b (triv G b) := by
@@ -1538,8 +1519,6 @@ open GlobalTheory.Twist (resM)
 open scoped CategoryTheory.Obj RatFunc
 open ReciprocityTheory.ChartRestriction.G.Semi.Rosenlicht
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.Nef
@@ -1619,21 +1598,9 @@ open GlobalTheory GlobalTheory.VB GlobalTheory.LieVB GlobalTheory.QCoh GlobalThe
 open GlobalTheory.Twist (resM)
 open scoped CategoryTheory.Obj RatFunc
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.Nef.TorExt
-
-theorem algebraMap_comp_C (Ω : Type) [Field Ω] :
-    (algebraMap (RatFunc Ω) (LaurentSeries Ω)).comp RatFunc.C =
-      (algebraMap (PowerSeries Ω) (LaurentSeries Ω)).comp PowerSeries.C := by
-  refine RingHom.ext fun c => ?_
-  simp only [RingHom.comp_apply]
-  rw [← RatFunc.algebraMap_C]
-  have := RatFunc.coe_coe (Polynomial.C c)
-  simp only [Polynomial.coe_C] at this
-  exact this.symm
 
 theorem unitSec_comp {S : Scheme.{0}} {G H : Over S} [GrpObj G] [GrpObj H] (f : G ⟶ H) [IsMonHom f] :
     unitSec G ≫ f.left = unitSec H := by
@@ -1691,7 +1658,7 @@ theorem ratRigid_of_torusExtension : ∀ (Ω : Type) [Field Ω] [CharZero Ω] (G
   set ι₀ := algebraMap (PowerSeries Ω) (LaurentSeries Ω)
   have ha : Function.Injective a := a.injective
   have hC : spMap a ≫ spMap RatFunc.C = spMap ι₀ ≫ spMap (PowerSeries.C (R := Ω)) := by
-    rw [← Geo.Tor.spMap_comp, ← Geo.Tor.spMap_comp, algebraMap_comp_C]
+    rw [← Geo.Tor.spMap_comp, ← Geo.Tor.spMap_comp, GlobalTheory.Nef.ratFunc_C_laurent]
   have hq : ξ ≫ E.q.left = spMap (PowerSeries.C (R := Ω)) ≫ unitSec E.B := by
     have := _root_.GlobalTheory.Nef.ratRigid_of_isProper_of_charZero Ω E.B inferInstance (ξ ≫ E.q.left) ((bc2 _ G E.B E.q Ω 2 (𝟙 _) ξ).1 hξ)
       ⟨β ≫ E.q.left, by rw [← Category.assoc, hβ, Category.assoc]⟩
@@ -1760,8 +1727,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.VB GlobalTheory.LieVB GlobalTheory.QCoh GlobalTheory.CechPic GlobalTheory.NeronCurve GlobalTheory.Nef
 open GlobalTheory.Twist (resM)
 open scoped CategoryTheory.Obj RatFunc
-
-set_option autoImplicit false
 
 namespace GlobalTheory.Nef
 

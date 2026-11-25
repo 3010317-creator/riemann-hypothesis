@@ -128,11 +128,6 @@ open scoped TensorProduct
 
 noncomputable section
 namespace GlobalTheory.CovTop.FlatSz
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
-  {Y0 : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y0 cX} {Csz : ℝ}
-end GlobalTheory.CovTop.FlatSz
-namespace GlobalTheory.CovTop.FlatSz
 theorem flatDegVal_covers_alt : _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.CoversCondition fun Fm x _ ι p i Y PP _ =>
     |GlobalTheory.FlatLine.flatDegVal (dat p i) (Formalism.L2.DIV.ofRecord (Fm.D x ι) (Fm.L x ι) p.Del p.h0).logOm| ≤
       9 * (Fm.D x ι).R.r * (Fm.L x ι).sc.L := by
@@ -779,7 +774,6 @@ noncomputable section
 
 namespace GlobalTheory.CovTop.WtSz
 
-open GlobalTheory.CompHS
 
 theorem abs_ofGaps_le {N : ℕ} (a : ℕ) (g : ℕ → ℤ) (hg : ∀ k, N ≤ k → g k = 0) (j : Fin N) :
     |((ofGaps a g j : ℤ) : ℝ)| ≤ 2 * ∑ k ∈ Finset.range N, |(g k : ℝ)| := by
@@ -851,7 +845,6 @@ end GlobalTheory.CovTop.WtSz
 
 namespace GlobalTheory.CovTop.WtSz
 
-open GlobalTheory.CompHS
 
 theorem gap_sub_const {N : ℕ} (w : Fin N → ℤ) (c : ℤ) (k : ℕ) : gap (fun j => w j - c) k = gap w k := by
   unfold gap; split_ifs <;> ring
@@ -1203,10 +1196,8 @@ open scoped TensorProduct
 open scoped GlobalTheory.CompHt
 noncomputable section
 namespace GlobalTheory.CovTop.WtSz
-open GlobalTheory.CompHS
 end GlobalTheory.CovTop.WtSz
 namespace GlobalTheory.CovTop.WtSz
-open GlobalTheory.CompHS
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
 end GlobalTheory.CovTop.WtSz
 namespace GlobalTheory.CovTop.WtSz
