@@ -767,10 +767,10 @@ theorem exists_galRep_csd_twist_alt_alt : _root_.UpperTheory.GalS.CuspUAlt → G
   · have hw : ((l : ℕ) : 𝓞 E) ∈ w.asIdeal := hj.mem_placesOver h
     obtain ⟨σ, hσ, hsp⟩ := hsph w hw
     have HA := H.above PP AI T w A h O Bw hj
-    refine ⟨HA.crys _ (hσ.twist _) (GlobalTheory.T.isSpherical_twist_absDetPow_GL E a w σ s hsp), fun τ LL' τ' hτ' => ?_⟩
+    refine ⟨HA.crys _ (hσ.twist _) (_root_.GlobalTheory.TwistSph.isSpherical_twist_absPow E a w σ s hsp), fun τ LL' τ' hτ' => ?_⟩
     rw [← hHT]
     have hrc := _root_.GlobalTheory.CuspRep.ParLawsT.isRecT_locRecT hLL h
-    exact HA.jumps (_root_.UpperTheory.GalS.nice_of_spherical' hrc (hσ.twist _) (GlobalTheory.T.isSpherical_twist_absDetPow_GL E a w σ s hsp)) τ LL' τ' hτ'
+    exact HA.jumps (_root_.UpperTheory.GalS.nice_of_spherical' hrc (hσ.twist _) (_root_.GlobalTheory.TwistSph.isSpherical_twist_absPow E a w σ s hsp)) τ LL' τ' hτ'
   · intro w _ hl σ hσ S hS B g hB hg
     obtain ⟨rc, hrc⟩ : ∃ rc, _root_.UpperTheory.Zero.LLC.IsRecT hB rc := ⟨_, _root_.GlobalTheory.CuspRep.ParLawsT.isRecT_locRecT hLL hB⟩
     have e0 := H.aw hl hrc (hσ.twist (GlobalTheory.HeckeGal.Model.absPow E s))

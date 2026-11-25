@@ -662,7 +662,7 @@ theorem ext_values : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Typ
         funext x
         obtain ⟨ℓ, hℓ, hℓT⟩ := hTm.cont ρ v x
         have hDerivAt :=
-          GlobalTheory.T.hasDerivAt_sobolevContinuous_orbit _ _ _ _ hH hU hRep _ hs ℓ hℓ X hX
+          _root_.GlobalTheory.SobOrbit.hasDerivAt_sobCont_orbit _ _ _ _ hH hU hRep _ hs ℓ hℓ X hX
         rw [← hℓT]
         have e : (fun t : ℝ => T v (x * oneP R.θ V ρ X t)) =
             fun t : ℝ => ℓ (M.rep ρ (NormedSpace.exp (t • X)) (v ρ : M.H ρ)) := by

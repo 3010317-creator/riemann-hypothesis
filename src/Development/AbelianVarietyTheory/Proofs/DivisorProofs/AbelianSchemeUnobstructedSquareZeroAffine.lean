@@ -516,7 +516,7 @@ theorem injective_baseChange {R : Type} [CommRing R] (A : Over (Sp R)) [GrpObj A
 theorem retract : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ U : AffOp A.left, ∃ r : Ω[Sec A.hom U.unop.1⁄R] →ₗ[Sec A.hom U.unop.1] (Sec A.hom U.unop.1 ⊗[R] GlobalTheory.InvForm.InvForm A), ∀ w : GlobalTheory.InvForm.InvForm A, r (evForm A.hom U w.1) = 1 ⊗ₜ w := by
   intro R _ A _ g hab hdim U
   have hsurj : Function.Surjective (LinearMap.liftBaseChange (Sec A.hom U.unop.1) (evForm A.hom U ∘ₗ (InvForm A).subtype)) := by
-    rw [← LinearMap.range_eq_top, eq_top_iff, ← GlobalTheory.T.span_invariantOneForms_affineOpen_abelianScheme_eq_top R A g hab hdim U, Submodule.span_le]
+    rw [← LinearMap.range_eq_top, eq_top_iff, ← _root_.GlobalTheory.InvSpan.span_invForm_eq_top R A g hab hdim U, Submodule.span_le]
     rintro _ ⟨w, rfl⟩
     exact ⟨1 ⊗ₜ w, by simp⟩
   let e := LinearEquiv.ofBijective _ ⟨injective_baseChange A hab U, hsurj⟩
@@ -679,7 +679,7 @@ theorem isBaseChange_invForm : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [Gr
   let f := evForm A.hom U ∘ₗ (InvForm A).subtype
   let L := f.liftBaseChange (Sec A.hom U.unop.1)
   have hs : Function.Surjective L := by
-    rw [← LinearMap.range_eq_top, eq_top_iff, ← GlobalTheory.T.span_invariantOneForms_affineOpen_abelianScheme_eq_top R A g hab hdim U]
+    rw [← LinearMap.range_eq_top, eq_top_iff, ← _root_.GlobalTheory.InvSpan.span_invForm_eq_top R A g hab hdim U]
     refine Submodule.span_le.2 ?_
     rintro _ ⟨w, rfl⟩
     exact ⟨1 ⊗ₜ w, by simp [L, f]⟩

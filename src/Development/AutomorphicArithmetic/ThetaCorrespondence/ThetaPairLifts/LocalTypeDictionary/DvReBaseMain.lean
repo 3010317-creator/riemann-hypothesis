@@ -1767,8 +1767,8 @@ theorem rebase_finite_scalar (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs) {
         have h' : (splitPrime (B.τ v)).under (𝓞 F) ∈ (X.T : Set (Pl F)) := h
         rwa [splitPrime_under] at h')
       have hk := valuation_kap hM.triple.geo hM₂.triple.geo v
-      have h1 := (GlobalTheory.T.splitPlaceCharacterComponent_smooth_unitary_conductor F E X.α hc.heckeα v.1 (B.τ v)).2.2.2 (hc.unrα _ hw) _ hk
-      have h2 := (GlobalTheory.T.splitPlaceCharacterComponent_smooth_unitary_conductor F E X.β hc.heckeβ v.1 (B.τ v)).2.2.2 (hc.unrβ _ hw) _ hk
+      have h1 := (_root_.GlobalTheory.ChrWLocal.chrW_local F E X.α hc.heckeα v.1 (B.τ v)).2.2.2 (hc.unrα _ hw) _ hk
+      have h2 := (_root_.GlobalTheory.ChrWLocal.chrW_local F E X.β hc.heckeβ v.1 (B.τ v)).2.2.2 (hc.unrβ _ hw) _ hk
       have h0 : chrW X.ν (B.τ v) (kap G V V' Z v.1) =
           chrW X.α (B.τ v) (kap G V V' Z v.1) / chrW X.β (B.τ v) (kap G V V' Z v.1) := by
         simp only [Chars.ν, chrW, locChar, MonoidHom.comp_apply, MonoidHom.div_apply, map_div]

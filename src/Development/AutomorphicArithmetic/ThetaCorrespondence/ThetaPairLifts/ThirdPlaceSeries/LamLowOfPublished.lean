@@ -608,7 +608,7 @@ theorem lowTop_ofCore : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : T
     exact hinj (a1.trans (a3.symm.trans a2.symm))
   have hid := GlobalTheory.LiftScalarCompare.eC_idem (R := R) h.grp.record
   have hu := GlobalTheory.gW_norm_eq R h.models.HW h.models.gW h.models.νW i (sg0 D A)
-  have htop := GlobalTheory.T.principalLevel_eigenparts_and_conjugate_characters.1 R F (GlobalTheory.Core5.of_core h) i (sg0 D A)
+  have htop := _root_.GlobalTheory.FiveClauseParts.parts_conj_five.1 R F (GlobalTheory.Core5.of_core h) i (sg0 D A)
     (GlobalTheory.LiftLower.schurMult_of_models R h.models.HW i (sg0 D A))
   have htop' : (⨆ c : GlobalTheory.IndefiniteRowSideFullHecke.PolarisedDualSystem.Sys D, GlobalTheory.LiftLower.partH R i (sg0 D A) c) = ⊤ :=
     top_le_iff.1 (htop.ge.trans (iSup_mono fun c => iSup_le fun _ => le_rfl))
@@ -1036,8 +1036,8 @@ theorem projH_adjoint_six (h : GlobalTheory.Hk3.Core R F) (i : Fin D.R.m) (σ : 
 theorem isConjChars_at_six (h : GlobalTheory.Hk3.Core R F) (i : Fin D.R.m) {σ : D.what₂.LL →+* ℂ} {s : ℂ ≃+* ℂ} (hσ : IsEmbOverK D σ s)
     {μ' η' : (AE D)ˣ →* Circle} (hμ : ChiAt R i σ μ') (hη : GlobalTheory.IndefiniteRowSideFullHecke.WeilGramSignature.IsEtaConj σ R.eta η') :
     IsConjChars R i A.μ0 s μ' η' (conjChar s (blkChar R i)) := by
-  obtain ⟨μH, a1, a2⟩ := GlobalTheory.T.principalLevel_eigenparts_and_conjugate_characters.2.2.1 R F (GlobalTheory.Core5.of_core h) i σ s hσ μ' hμ
-  obtain ⟨ηH, b1, b2⟩ := GlobalTheory.T.principalLevel_eigenparts_and_conjugate_characters.2.2.2 R F (GlobalTheory.Core5.of_core h) σ s hσ η' hη
+  obtain ⟨μH, a1, a2⟩ := _root_.GlobalTheory.FiveClauseParts.parts_conj_five.2.2.1 R F (GlobalTheory.Core5.of_core h) i σ s hσ μ' hμ
+  obtain ⟨ηH, b1, b2⟩ := _root_.GlobalTheory.FiveClauseParts.parts_conj_five.2.2.2 R F (GlobalTheory.Core5.of_core h) σ s hσ η' hη
   obtain ⟨μB, -, c1, -, -, -, c2⟩ := GlobalTheory.LowTopCore.isConjChars_base_ofCore R h i A.μ0
   refine ⟨μH, ηH, a1, b1, a2, b2, fun PP hP a k u hk hu => Units.ext ?_⟩
   have e1 := a1 PP k
@@ -1132,7 +1132,7 @@ theorem conjLift_lower_six (hA : GlobalTheory.LowRow.AdelC R F) (h : GlobalTheor
   refine (exists_full_lift_six hA h i hb ht hσ hv hd).elim fun T hT => ?_
   have p1 := projH_adjoint_six h i σ
   have p2 := projH_idem_six h i σ
-  have p3 := GlobalTheory.T.principalLevel_eigenparts_and_conjugate_characters.1 R F (GlobalTheory.Core5.of_core h) i σ (schurMult_of_models R h.models.HW i σ)
+  have p3 := _root_.GlobalTheory.FiveClauseParts.parts_conj_five.1 R F (GlobalTheory.Core5.of_core h) i σ (schurMult_of_models R h.models.HW i σ)
   have p4 := parts_scalar_six h i σ (b := b) hlog T hT.2
   exact lower_of_parts T th (projH R i σ) (partH R i σ) (IsNormSys R i) _ p1 p2 p3 p4 hT.1
 
@@ -1248,7 +1248,7 @@ namespace GlobalTheory.LowRow
 
 theorem lamLow_of_weak : ConjRatLift5 → ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T0 : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T0 D.R.m} (T : CoreJ D) [Algebra T.Q.c.F D.what₂.LL] (R : RealDat3 D A3 T.Q.c.F) (F : Face3 D A3) (κ : ∀ i : Fin D.R.m, WeightFamilies.Wt D ((i : ℕ) + 1)) (v₀ : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (R.toRealDat.MW i σ).Vec) (O : ∀ i, OMDat T.toCore R.toRealDat i Unit (fun _ => A3.A.μ0)) (s : ℕ) (b C CH : ℝ), A3.fam3.Ok3 s → A3.fam3.TypesSep3 → R.WeakCharacterisation F → R.toRealDat.ExAt → PrimRows3 R F → (∀ i, R.phs i = 1) → IsStdChar D R.ψ (-1) → ∀ fw : FWTie T R.toRealDat κ v₀, BarTie fw → IoExt R.toRealDat → (∀ i, OMPins T R.toRealDat κ v₀ O i) → (∀ i, OneMapRow0 T R.toRealDat κ v₀ O i) → (∀ i, R.toRealDat.LUnif → PhaseTie T R.toRealDat κ v₀ O (fun i => cj (twAt D.what₂.embLL A3.A.v0) (R.phs i)) i) → (∀ j, Sizes D j b) → (∀ j, (F.Zsc (R.toCx3 F).zs).l6m j ≤ lowB D j b) → (∀ j, (R.num F C CH).l6 j ≤ (F.Zsc (R.toCx3 F).zs).l6m j) → AdelC R.toRealDat F.lv2 → PrimeToHost R.toRealDat A3.A.μ0 → ((R.toCx3 F).data F.cr true).L6 (R.num F C CH) := by
   intro hCR D G _ _ Pl0 I0 T0 A3 T _ R F κ v₀ O s b C CH hOk hsep hC hEx prim hph hstd fw hbar hio hpins hrow0 htie hsz hlow hnum hAd hPH
-  obtain ⟨hcore, hok, hlinks⟩ := GlobalTheory.T.splitPart_baseLinks_of_primitiveRows R F s hOk hsep hC hEx prim hph
+  obtain ⟨hcore, hok, hlinks⟩ := _root_.GlobalTheory.LowRow.baseLinks_of_prims R F s hOk hsep hC hEx prim hph
   have hgal : ∀ i, GalOut R.toRealDat i 1 := fun i =>
     hCR D G Pl0 T0 A3.A T R.toRealDat F.lv2 κ v₀ O 1 (GlobalTheory.Core5.of_core hcore) hstd fw hbar hio prim.unif hpins i (by
       have h1 := htie i prim.unif (hrow0 i)
@@ -1310,10 +1310,10 @@ theorem lamLow_closing_alt : GlobalTheory.Published.CuspRapidDecay → GlobalThe
     hOk hSep hChar hEx hPrim hPhs hStd fw hBar hIo hPins hOne hTie hSizes hLow hNum hPar hStdV
   have hAd : AdelC R.toRealDat F.lv2 :=
     _root_.GlobalTheory.T.adelC_of_parameter_choice_stdV hCusp hWS hSWC hDM hUD hBZ hFD R.toRealDat F.lv2 hPar hStdV
-  have hCore := (GlobalTheory.T.splitPart_baseLinks_of_primitiveRows R F s hOk hSep hChar hEx hPrim hPhs).1
+  have hCore := (_root_.GlobalTheory.LowRow.baseLinks_of_prims R F s hOk hSep hChar hEx hPrim hPhs).1
   have hPT : PrimeToHost R.toRealDat A3.A.μ0 :=
     GlobalTheory.T.badPlacesPrimeToHost_baseTuple R.toRealDat F.lv2 (GlobalTheory.Core5.of_core hCore)
-  exact GlobalTheory.T.liftEigenvalueLowerBound_of_weakCharacterisation GlobalTheory.T.conjugatesOfRationalThetaLift_from_characterisation T R F κ v₀ O s b C CH hOk hSep hChar hEx hPrim hPhs hStd fw hBar
+  exact GlobalTheory.T.liftEigenvalueLowerBound_of_weakCharacterisation _root_.GlobalTheory.ConjRatLiftFive.conjRatLift5 T R F κ v₀ O s b C CH hOk hSep hChar hEx hPrim hPhs hStd fw hBar
     hIo hPins hOne hTie hSizes hLow hNum hAd hPT
 end GlobalTheory.LowRow
 end

@@ -421,8 +421,8 @@ theorem GlobalTheory.ConsEta.exists_open_subgroup_eta_consistent : ∀ (E : Type
         (GlobalTheory.GalOfCusp.quadChar E).1 b =
           ψ (Neutral.B1.diagUnits E k * GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.ideleMap (maximalRealSubfield E) E b * u) := by
   intro E _ _ _ hUnr
-  obtain ⟨w0, hw0⟩ := GlobalTheory.T.exists_splitPlaceBelowCMField E
-  obtain ⟨V, hVo, hV⟩ := GlobalTheory.T.exists_isOpen_subgroup_adicUnits_no_rootsOfUnity E w0
+  obtain ⟨w0, hw0⟩ := _root_.GlobalTheory.SplitPlaceExists.exists_isSplitAt E
+  obtain ⟨V, hVo, hV⟩ := _root_.GlobalTheory.RootOpen.exists_open_subgroup_no_roots E w0
   have hC : Continuous (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.ideleConj (maximalRealSubfield E) E) :=
     @GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.continuous_ideleMap E E _ _ _ _ (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.conj (maximalRealSubfield E) E).toRingEquiv.toRingHom.toAlgebra
   refine ⟨GlobalTheory.Mem.Chr.unitIdl E ⊓ (GlobalTheory.Mem.Chr.unitIdl E).comap (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.ideleConj (maximalRealSubfield E) E) ⊓
@@ -432,12 +432,12 @@ theorem GlobalTheory.ConsEta.exists_open_subgroup_eta_consistent : ∀ (E : Type
   intro k b u hu hx
   obtain ⟨⟨hx1, hx2⟩, hx3⟩ := hx
   have hu1 := nsUnits_le_unitIdl hu
-  have hCu := GlobalTheory.T.cmExtensionIdeleConj_mem_finiteUnitIdeles E u hu1
+  have hCu := _root_.GlobalTheory.ConjUnit.ideleConj_mem_unitIdl E u hu1
   set C := GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.ideleConj (maximalRealSubfield E) E with hCdef
   set I := GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.ideleMap (maximalRealSubfield E) E b with hI
   set c : Eˣ →* Eˣ := Units.map (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.conj (maximalRealSubfield E) E).toRingEquiv.toRingHom.toMonoidHom with hc
   have hCx : C (Neutral.B1.diagUnits E k * I * u) = Neutral.B1.diagUnits E (c k) * I * C u := by
-    rw [map_mul, map_mul, hI, GlobalTheory.T.cmExtensionIdeleConj_ideleMap_maxRealSubfield]
+    rw [map_mul, map_mul, hI, _root_.GlobalTheory.ConjIdeleReal.ideleConj_ideleMap]
     congr 2
     exact GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.ideleConj_principalIdele (maximalRealSubfield E) E k
   set x := Neutral.B1.diagUnits E k * I * u with hxdef
@@ -479,7 +479,7 @@ theorem GlobalTheory.ConsEta.exists_open_subgroup_eta_consistent : ∀ (E : Type
   have hb'E : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.ideleMap (maximalRealSubfield E) E b' ∈ GlobalTheory.Mem.Chr.unitIdl E := by
     have : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.ideleMap (maximalRealSubfield E) E b' = x * u⁻¹ := by rw [hxb, mul_inv_cancel_right]
     rw [this]; exact mul_mem hx1 (inv_mem hu1)
-  rw [hηb, eta_eq_infSign hUnr b' (GlobalTheory.T.mem_finiteUnitIdeles_of_map_maxRealSubfield E b' hb'E), hxb, (infSign E).map_mul _ u, infSign_nsUnits hu, mul_one]
+  rw [hηb, eta_eq_infSign hUnr b' (_root_.GlobalTheory.UnitDown.unit_down E b' hb'E), hxb, (infSign E).map_mul _ u, infSign_nsUnits hu, mul_one]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryHeckeCharacterNorm =====

@@ -767,11 +767,11 @@ namespace GlobalTheory.LowRowAdel
 theorem deltaNorm_all (D : D7) : DeltaNorm D := by
   intro i σ
   have h := GlobalTheory.T.fockForm_minorProduct_eq_prod_hookProducts D (Wc D i).rank (Vc D i).rank (pW D i) (qW D i) (aPlAt D i σ) (aMiAt D i σ)
-    (fun ρ => (GlobalTheory.T.liftRows_antitone_signature_rank D i σ ρ).2.2.1.le)
+    (fun ρ => (_root_.GlobalTheory.LowRow.lift_rows_antitone D i σ ρ).2.2.1.le)
     (fun ρ => by
-      obtain ⟨-, -, hpq, hWV⟩ := GlobalTheory.T.liftRows_antitone_signature_rank D i σ ρ
+      obtain ⟨-, -, hpq, hWV⟩ := _root_.GlobalTheory.LowRow.lift_rows_antitone D i σ ρ
       exact ⟨by omega, by omega⟩)
-    (fun ρ => ⟨(GlobalTheory.T.liftRows_antitone_signature_rank D i σ ρ).1, (GlobalTheory.T.liftRows_antitone_signature_rank D i σ ρ).2.1⟩)
+    (fun ρ => ⟨(_root_.GlobalTheory.LowRow.lift_rows_antitone D i σ ρ).1, (_root_.GlobalTheory.LowRow.lift_rows_antitone D i σ ρ).2.1⟩)
   simpa [deltaAtEmb] using h
 
 end GlobalTheory.LowRowAdel
@@ -1285,7 +1285,7 @@ theorem formalDegreeUpperC_of_hypotheses : GlobalTheory.Published.FormalDegreeCo
   dsimp only
   obtain ⟨hanti, hhalf, hwid⟩ := GlobalTheory.T.liftModelParameter_decreasing_halfIntegral_width R F h5 i σ s hσ ρ
   have hsig : ∀ ρ', ((Wc D i).sig (tauE D ρ')).1 + ((Wc D i).sig (tauE D ρ')).2 = (Wc D i).rank :=
-    fun ρ' => (GlobalTheory.T.liftRows_antitone_signature_rank D i σ ρ').2.2.1
+    fun ρ' => (_root_.GlobalTheory.LowRow.lift_rows_antitone D i σ ρ').2.2.1
   have hrk : (Wc D i).rank = D.R.r := D.sp.W_rank _ (Nat.le_add_left _ _) i.2
   have h1 : 1 ≤ (Wc D i).rank := by
     rw [hrk]; have := D.R.m_add_three_le_k; have := D.R.two_le_m
@@ -1631,7 +1631,7 @@ theorem adelC_of_siegelWeil_of_doubling_alt : GlobalTheory.Published.CuspRapidDe
     GlobalTheory.HarmModule.harmonicModule_of GlobalTheory.FockDecay.harmonicDecay GlobalTheory.CartanInt.coshIntegral
   have hLoc : GlobalTheory.IndefiniteRowSideFullHecke.LocalIntegralGL.LocalIntegralSingleBlock := GlobalTheory.SingleBlock.localIntegralSingleBlock
   have hPM : GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting.PlaceModels D := GlobalTheory.PlaceTensor.placeModels D
-  exact GlobalTheory.T.adelicLift_scalar_of_innerProductFormula R F (GlobalTheory.T.adelicLift_mem_cuspForm_multiplicitySpace hCusp R F) (GlobalTheory.T.finiteDatum_sourceLevelCharacter_law hLoc R F hPM)
+  exact GlobalTheory.T.adelicLift_scalar_of_innerProductFormula R F (_root_.GlobalTheory.LowRow.CuspLift.liftIsCuspC hCusp R F) (GlobalTheory.T.finiteDatum_sourceLevelCharacter_law hLoc R F hPM)
     (GlobalTheory.T.twistedThetaLift_innerProductFormula_of_hypotheses hCusp hWS (_root_.ResidueKilled.sec_of_dm hDbl) R F hL)
     (GlobalTheory.T.fockVector_matrixCoefficient_formula hHM R F hPM) (deltaNorm_all D)
     (GlobalTheory.T.finiteZetaIntegral_eulerProduct_of_partialL R F (GlobalTheory.T.finiteZetaIntegral_thetaLift_eq_partialLValue hCusp hBZ hUnr R F)) (GlobalTheory.T.thetaLevelIndex_mul_schwartzNorm_formula hLoc R F hPM)

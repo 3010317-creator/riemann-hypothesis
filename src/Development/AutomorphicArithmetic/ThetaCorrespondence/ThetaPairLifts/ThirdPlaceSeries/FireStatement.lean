@@ -72,7 +72,7 @@ theorem geoAct : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} {
 
   have hpb : T.pb = R.C.P.pb :=
     GlobalTheory.CoverHalf.primes_eq_of_halfIs T.toCore R fw.laws.toLawsM hL ((hpins i).2.tuple ()).half
-  exact hall i σ hσ hV (GlobalTheory.T.exists_equivariant_unit_constants_goodEmbedding T R κ v₀ O hL ht hpb hpins i σ hσ hV)
+  exact hall i σ hσ hV (_root_.GlobalTheory.EquivConst.exists_equivariant_constants T R κ v₀ O hL ht hpb hpins i σ hσ hV)
 
 end GlobalTheory.GeometricAction
 end -- clump:auto

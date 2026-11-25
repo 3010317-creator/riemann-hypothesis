@@ -1175,8 +1175,6 @@ end
 
 section
 
-theorem _root_.GlobalTheory.PsCo.Plug.parabolicT : GlobalTheory.IndefiniteRowSideFullHecke.ConstantTermVanishing.ParabolicAndConstTermX := by
-  first | exact @GlobalTheory.Proof.parabolic_and_constant_term.parabolicAndConstTermX
 end
 
 section
@@ -1237,8 +1235,6 @@ end
 
 section
 
-theorem _root_.GlobalTheory.PsCo.Plug.nonFieldT : GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.NonFieldTypeVanishingX := by
-  first | exact @GlobalTheory.NonFieldType.nonFieldTypeVanishingX
 end
 
 section
