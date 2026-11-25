@@ -324,9 +324,6 @@ theorem simplexClampedFaceHom_one_comp_simplexConeMap_zero {a : ℕ} (α : Simpl
     apply Fin.ext; rw [fc_apply, faceFun_lt (by simp)]; simp
   rw [this, cone_zero, idc_apply]; simp
 
-theorem face_zero_cone_identity {a : ℕ} (α : SimplexCategory.mk 0 ⟶ SimplexCategory.mk a) : fc 1 0 0 ≫ cone α = α :=
-  simplexClampedFaceHom_zero_comp_simplexConeMap (p := 0) α
-
 theorem bisimplicialTotalDifferentialOperator_one_zero_eq_sum (q : ℕ) : dT 1 q 0 q = ∑ i ∈ Finset.range (0 + 1 + 1), ((-1 : ℤ) ^ i) • bop (fc 1 0 i) (idc q q) :=
   dT_h 0 q
 
@@ -1372,7 +1369,6 @@ lemma ev_awO (X : SimplicialObject Spc) (n a : ℕ) (ha : a ≤ n) :
   exact ((free R).map_comp _ _).symm
 
 end Sheaves
-
 
 set_option backward.isDefEq.respectTransparency false in
 theorem homotopyEquiv_chains_totChains : ∀ (R : Type) [CommRing R] (X : SimplicialObject GlobalTheory.EtC.Spc), (∃ e : HomotopyEquiv (diagCx ((freeBi R).obj X)) (tot ((freeBi R).obj X)), ∀ n : ℕ, e.hom.f n = awF _ n) → ∃ e : HomotopyEquiv ((GlobalTheory.EtC.chains R).obj (GlobalTheory.EtC.bidiag.obj X)) (totChains R X), ∀ n : ℕ, e.hom.f (-(n : ℤ)) = awZ R X n := by
