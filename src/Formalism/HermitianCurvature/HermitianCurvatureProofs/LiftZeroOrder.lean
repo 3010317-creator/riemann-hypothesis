@@ -63,8 +63,8 @@ theorem lift_zero_order : TL.LiftZero := by
     intro T hT
     rw [List.mem_singleton] at hT
     subst hT
-    exact ⟨MinorPolynomials.ckOn_cv Bs fib (fun j => (hfib j).1) hgood,
-      hadj (MinorPolynomials.ckOn_cv Bs fib (fun j => (hfib j).1) hgood)⟩
+    have hck := MinorPolynomials.ckOn_cv Bs fib (fun j => (hfib j).1) hgood
+    exact ⟨hck, hadj hck⟩
   have hop : ∀ (F : B.Mat P.k P.r → Wq →L[ℂ] Wp) g, B.opApply [T0] F g = cf g (F g) := by
     intro F g
     simp only [B.opApply, List.map_cons, List.map_nil, List.sum_cons, List.sum_nil, add_zero]
