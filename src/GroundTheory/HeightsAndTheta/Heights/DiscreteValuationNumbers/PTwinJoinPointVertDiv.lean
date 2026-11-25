@@ -36,41 +36,14 @@ theorem isMultiHomog_rename {R : Type} [CommRing R] {f : MvPolynomial (Σ k, ι 
   exact isMultiHomog_joinForm hf
 
 
-omit [Fintype K'] [∀ k, Fintype (ι k)] [∀ k, Fintype (ι' k)] in
-theorem rename_weightedHomogeneousComponent [DecidableEq K] [DecidableEq K'] {R : Type} [CommRing R]
-    (b : K → ℕ) (h : MvPolynomial (Σ k, ι k) R) :
-    rename (liftVar ι') (weightedHomogeneousComponent (blockWeight ι) b h) =
-      weightedHomogeneousComponent (blockWeight (Sum.elim ι ι')) (Sum.elim b 0)
-        (rename (liftVar ι') h) := by
-  induction h using MvPolynomial.induction_on' with
-  | monomial d r =>
-    have hm : IsMultiHomog (monomial d r : MRing ι R) (Finsupp.weight (blockWeight ι) d) :=
-      isWeightedHomogeneous_monomial _ _ _ rfl
-    have hj : IsMultiHomog (rename (liftVar ι') (monomial d r : MRing ι R))
-        (Sum.elim (Finsupp.weight (blockWeight ι) d) 0) := isMultiHomog_joinForm hm
-    by_cases hb : b = Finsupp.weight (blockWeight ι) d
-    · subst hb
-      rw [IsWeightedHomogeneous.weightedHomogeneousComponent_same hm,
-        IsWeightedHomogeneous.weightedHomogeneousComponent_same hj]
-    · have hb' : (Sum.elim b 0 : K ⊕ K' → ℕ) ≠ Sum.elim (Finsupp.weight (blockWeight ι) d) 0 :=
-        fun e => hb (funext fun k => congrFun e (Sum.inl k))
-      rw [IsWeightedHomogeneous.weightedHomogeneousComponent_ne b hm hb,
-        IsWeightedHomogeneous.weightedHomogeneousComponent_ne _ hj hb', map_zero]
-  | add p q hp hq => simp only [map_add (f := _), hp, hq]
-
 theorem comap_isMultiProjPrime {R : Type} [CommRing R]
     {Q : Ideal (MvPolynomial (Σ k : K ⊕ K', Sum.elim ι ι' k) R)}
     (hQ : ReciprocityTheory.ChartRestriction.G.Geo.IsMultiProjPrime Q) :
     ReciprocityTheory.ChartRestriction.G.Geo.IsMultiProjPrime (Q.comap (rename (liftVar (ι := ι) ι'))) := by
   classical
-  rw [← Objects.isMultiProjPrime_iff] at hQ ⊢
-  have := hQ.isPrime
-  refine ⟨Ideal.comap_isPrime _ Q, fun h hh b => ?_, fun k => ?_⟩
-  · rw [Ideal.mem_comap] at hh ⊢
-    rw [rename_weightedHomogeneousComponent]
-    exact hQ.multiHomog _ hh _
-  · obtain ⟨i, hi⟩ := hQ.relevant (Sum.inl k)
-    exact ⟨i, by rw [Ideal.mem_comap, rename_X]; exact hi⟩
+  exact Objects.comap_isMultiProjPrime_of_rename (E := fun a => Sum.elim a 0)
+    (fun a b e => funext fun k => congrFun e (Sum.inl k))
+    (fun _ _ hf => isMultiHomog_joinForm hf) hQ (fun k => hQ.2.2 (Sum.inl k))
 
 end JoinPointVerticalDivisor
 
