@@ -75,6 +75,10 @@ cleanly with `main` and with the pull requests already in the batch. Take them i
 request number, and merge each one with its own merge commit, so that its commits and their
 authors stay in the history.
 
+Try to include every pull request labelled `batch queue`: a maintainer has approved it for a
+batch. If one can't go in, because it conflicts with `main` or breaks the build, leave it out
+and say why in the batch's description.
+
 Leave out:
 
 - every pull request labelled `deferred` or `awaiting-author`. `deferred` means it should not be
