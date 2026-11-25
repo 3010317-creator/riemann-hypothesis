@@ -335,7 +335,6 @@ theorem relDet_std (hI : I.Ok) (hS : I.StdC l Z C) : Formalism.L2.Herm.Symmetric
 /-- Full data over given columns, once the compatibilities not recorded in `ColsHermS` are supplied. -/
 theorem exists_colsFullS_of_compat (hI : I.Ok) (hS : I.StdC l Z C)
     (g : Formalism.L2.Herm.SymmetricGroupCompatibility (I.rec7 l Z) C.herm.base)
-    (ad : Formalism.L2.Herm.SymmetricAdelicCompatibility (I.rec7 l Z) C.herm.base C.herm.atT)
     (cof : Formalism.L2.Herm.SymmetricCofactorCompatibility (I.rec7 l Z) C.herm.base C.herm.atT)
     (stabMap : Formalism.L2.Herm.SymmetricStabilizerMapCompatibility (I.rec7 l Z) C.herm.base C.herm.atT)
     (fvI : Formalism.L2.Herm.SymmetricResidueFieldLevels (I.rec7 l Z) C.herm.base C.herm.atT) :
@@ -345,7 +344,6 @@ theorem exists_colsFullS_of_compat (hI : I.Ok) (hS : I.StdC l Z C)
       atT := C.herm.atT
       levelZeroCompatibility := C.herm.levelZeroCompatibility
       g := g
-      ad := ad
       cof := cof
       piG := C.herm.piG
       stabMap := stabMap
@@ -363,7 +361,7 @@ level-prime data is chosen again: the new columns have the same base and the sam
 `hB` is `GlobalTheory.T.hermitianColumns_generators_baseLattices_functionals I hI hP l Z C.herm.base C.forms`. -/
 theorem exists_colsFullS : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (C : ColsTiedSym (I.rec7 l Z)) (g : Formalism.L2.Herm.SymmetricGroupCompatibility (I.rec7 l Z) C.herm.base), I.StdC l Z C → (∀ u, I.StdLvC l Z u (C.forms u)) →
     ∀ (_hA : (∀ u, I.StdF l Z u (C.forms u) ∧ I.StdLvC l Z u (C.forms u)) → CarH C.herm.base C.forms →
-        ∃ A, CarT C.herm.base C.forms A ∧ Formalism.L2.Herm.SymmetricAdelicCompatibility (I.rec7 l Z) C.herm.base A ∧
+        ∃ A, CarT C.herm.base C.forms A ∧
           Formalism.L2.Herm.SymmetricStabilizerMapCompatibility (I.rec7 l Z) C.herm.base A)
       (_hB : ∀ A : ∀ u, Formalism.L2.Herm.AtT (I.rec7 l Z) u (C.herm.base.vT u) (C.herm.base.Fv u),
         (∀ u, I.StdF l Z u (C.forms u) ∧ I.StdLvC l Z u (C.forms u)) → CarH C.herm.base C.forms → CarT C.herm.base C.forms A →
@@ -386,7 +384,7 @@ theorem exists_colsFullS : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I
       carM := C.carM
       sp := C.sp
       fr0 := C.fr0 }
-  obtain ⟨A, hT, hAd, hSt⟩ := hA hF hH
+  obtain ⟨A, hT, hSt⟩ := hA hF hH
   have hpi : ∀ u, (A u).piU = (C.herm.atT u).piU := fun u => (hT.piU u).symm.trans (C.piU u)
   obtain ⟨hCof, hBase, ⟨hFv⟩, X0, hX0⟩ := hB A hF hH hT
     (fun u w h a ha m => (C.herm.levelZeroCompatibility u).fM_pi w h a (by rw [ha, hpi u]) m)
@@ -419,7 +417,7 @@ theorem exists_colsFullS : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I
       chi := C.chi
       frame_level_zero_const := C.frame_level_zero_const
       frP_const := C.frP_const }
-  exact ⟨C', rfl, hS, hL,exists_colsFullS_of_compat I l Z C' hI hS g hAd hCof hSt hFv⟩
+  exact ⟨C', rfl, hS, hL,exists_colsFullS_of_compat I l Z C' hI hS g hCof hSt hFv⟩
 
 end Main
 
