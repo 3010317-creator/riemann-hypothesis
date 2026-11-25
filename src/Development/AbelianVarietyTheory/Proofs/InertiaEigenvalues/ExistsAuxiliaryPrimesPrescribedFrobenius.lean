@@ -95,19 +95,8 @@ theorem norm_mod [IsAlgClosure F Ω] {A : ValuationSubring Ω} {v : HeightOneSpe
   have h1 : σ ζ = ζ ^ q := apply_root hA hn0 hn hσ.2 hζ.pow_eq_one
   have h2 : σ ζ = ζ := (show ∀ ζ : Ω, ζ ^ n = 1 → σ ζ = ζ from h) ζ hζ.pow_eq_one
   have h3 : ζ ^ q = ζ ^ 1 := by rw [← h1, h2, pow_one]
-  have hζ0 : ζ ≠ 0 := hζ.ne_zero hn0
-  rcases Nat.eq_zero_or_pos q with hq | hq
-  ·
-    subst hq
-    have hd : n ∣ 1 := (hζ.pow_eq_one_iff_dvd 1).mp (by rw [← h3, pow_zero])
-    have := Nat.le_of_dvd one_pos hd
-    omega
-  · have h4 : ζ ^ (q - 1) = 1 := by
-      apply mul_right_cancel₀ hζ0
-      rw [← pow_succ, Nat.sub_add_cancel hq, h3, pow_one, one_mul]
-    have h5 : 1 ≡ q [MOD n] := (Nat.modEq_iff_dvd' hq).mpr ((hζ.pow_eq_one_iff_dvd _).mp h4)
-    rw [Nat.ModEq, Nat.mod_eq_of_lt hn1] at h5
-    exact h5.symm
+  have h4 := (hζ.isOfFinOrder hn0).pow_inj_mod.1 h3
+  rwa [← hζ.eq_orderOf, Nat.mod_eq_of_lt hn1] at h4
 
 theorem dec_le [IsAlgClosure F Ω] {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 F)} (hA : IsPlaceOver A v)
     {H : Subgroup (G F Ω)} (hH : IsOpen (H : Set (G F Ω))) (hI : Ine (F := F) A ≤ H) {σ : G F Ω}
