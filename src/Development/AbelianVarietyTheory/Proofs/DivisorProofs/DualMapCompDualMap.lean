@@ -173,13 +173,6 @@ theorem IsRep.sum {J I : Type} {W : J → X.Opens} (t : Finset I) {c : I → Z1 
     rw [Finset.sum_insert ha, Finset.sum_insert ha]
     exact (h a (Finset.mem_insert_self a t)).add (ih fun k hk ↦ h k (Finset.mem_insert_of_mem hk))
 
-theorem IsRep.refine {J J' : Type} {W : J → X.Opens} {W' : J' → X.Opens} (τ : J' → J) (hτ : ∀ j, W' j ≤ W (τ j))
-    {c : Z1 (O (dp0 R) s)} {F : J → J → PtFn s} (h : IsRep W c F) :
-    IsRep W' c fun j j' ↦ F (τ j) (τ j') := by
-  obtain ⟨G, hG, hF⟩ := h
-  exact ⟨fun j ↦ G (τ j), fun j P Q φ hP ↦ hG (τ j) P Q φ (hP.mono (hτ j)),
-    fun j j' P hj hj' ↦ hF (τ j) (τ j') P (hj.mono (hτ j)) (hj'.mono (hτ j'))⟩
-
 theorem IsRep.congr {J : Type} {W : J → X.Opens} {c : Z1 (O (dp0 R) s)} {F F' : J → J → PtFn s}
     (h : IsRep W c F) (e : ∀ j j' (P : Pt s), P.In (W j) → P.In (W j') → F j j' P = F' j j' P) : IsRep W c F' := by
   obtain ⟨G, hG, hF⟩ := h

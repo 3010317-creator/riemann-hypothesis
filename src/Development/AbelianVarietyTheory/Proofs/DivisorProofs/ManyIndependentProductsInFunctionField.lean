@@ -595,8 +595,6 @@ theorem main {R F K : Type} [CommRing R] [IsDomain R] [Field F] [Algebra R F] [I
     rw [AddMonoidAlgebra.coeff_smul_apply, coeff_C_mul, Algebra.smul_def]
   rw [← aeval_map_algebraMap F, hmap, map_mul, aeval_C, ← IsScalarTower.algebraMap_apply]
 
-alias target := _root_.GlobalTheory.TargetInequalityLemmas.main
-
 end GlobalTheory.TargetInequalityLemmas
 end -- clump:auto
 end -- clump:auto

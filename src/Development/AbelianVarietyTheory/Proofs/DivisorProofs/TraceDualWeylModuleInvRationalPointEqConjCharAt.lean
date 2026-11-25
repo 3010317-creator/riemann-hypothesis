@@ -178,8 +178,6 @@ theorem exists_common_eigenvector {k ι V : Type} [Field k] [IsAlgClosed k] [Add
     obtain ⟨x, hx, hx0, hxe⟩ := ih _ hdlt W' rfl hW'ne hinv'
     exact ⟨x, hx.1, hx0, hxe⟩
 
-alias target := _root_.GlobalTheory.CommonEigenvectorExistenceInertiaEigenvalues.exists_common_eigenvector
-
 end GlobalTheory.CommonEigenvectorExistenceInertiaEigenvalues
 end -- clump:auto
 end -- clump:auto

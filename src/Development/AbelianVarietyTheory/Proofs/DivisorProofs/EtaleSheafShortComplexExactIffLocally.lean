@@ -49,11 +49,6 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 
 namespace GlobalTheory.EtC
 
-theorem exactIff_loc_mono {U : Scheme.{0}} {P Q : ∀ V : Scheme.{0}, (V ⟶ U) → Prop} (h : Loc U P)
-    (hPQ : ∀ V g, P V g → Q V g) : Loc U Q := by
-  obtain ⟨S, hS, hP⟩ := h
-  exact ⟨S, hS, fun V g hg => hPQ V g (hP V g hg)⟩
-
 theorem exactIff_map_comp {R : Type} [CommRing R] {F G K : Shv R} (φ : F ⟶ G) (ψ : G ⟶ K) {U : Scheme.{0}}
     (x : Sec F U) : Sec.map (φ ≫ ψ) x = Sec.map ψ (Sec.map φ x) := rfl
 

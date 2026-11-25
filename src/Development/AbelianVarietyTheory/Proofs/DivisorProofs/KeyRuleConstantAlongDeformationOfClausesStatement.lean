@@ -365,13 +365,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.MBLow.BddPS
 
-def bdd (C : Type) [NontriviallyNormedField C] [IsUltrametricDist C] : Subring (PowerSeries C) :=
-  GlobalTheory.BoundedPowerSeriesDisc.boundedSeries C
-
 variable {C : Type} [NontriviallyNormedField C] [IsUltrametricDist C]
-
-noncomputable def ev [CompleteSpace C] (π : C) (h : ‖π‖ < 1) : bdd C →+* C :=
-  GlobalTheory.BoundedPowerSeriesDisc.evalBounded π h
 
 alias main := _root_.GlobalTheory.SummableSeriesBounds.main
 

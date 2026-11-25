@@ -1108,8 +1108,6 @@ theorem eq_zero_of_intertwine_of_isCoprime_charpoly {K : Type} [Field K] {a b : 
     _ = aeval B u * (aeval B A.charpoly * C) := Matrix.mul_assoc _ _ _
     _ = 0 := by rw [h2, Matrix.mul_zero]
 
-alias main := _root_.GlobalTheory.IntertwinerCoprimeCharpoly.eq_zero_of_intertwine_of_isCoprime_charpoly
-
 end GlobalTheory.IntertwinerCoprimeCharpoly
 end -- clump:auto
 end -- clump:auto
