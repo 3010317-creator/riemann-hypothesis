@@ -20,12 +20,7 @@ namespace GlobalTheory.St.G.IntAd
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
 theorem levelafC_natCast (m : ℕ) : levelafC (F := F) E (m : 𝓞 F) = (m : E ⊗[F] Ad F) := by
-  induction m with
-  | zero => simp only [levelafC, Nat.cast_zero, map_zero, TensorProduct.tmul_zero]
-  | succ k ih =>
-    simp only [levelafC] at ih ⊢
-    rw [Nat.cast_succ, Nat.cast_succ, map_add (f := _), map_one, TensorProduct.tmul_add, ih,
-      Algebra.TensorProduct.one_def]
+  rw [levelafC, map_natCast, Algebra.TensorProduct.natCast_def']
 
 private theorem sum_afsplitI_one_apply_of_mem (S : Finset (HeightOneSpectrum (𝓞 F))) (w : HeightOneSpectrum (𝓞 F))
     (hw : w ∈ S) : (∑ v ∈ S, afsplitI v (1 : v.adicCompletion F)) w = 1 := by
