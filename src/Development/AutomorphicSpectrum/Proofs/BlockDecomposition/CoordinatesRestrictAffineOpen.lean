@@ -5,7 +5,6 @@ public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCoh
 
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry TensorProduct GlobalTheory.LogCris DividedPowers CrystallineSemistableComparison CrystallineSemistableComparison.Pb
 
 namespace GlobalTheory.CompanionTheory.CoordRes
@@ -14,14 +13,16 @@ theorem etale_rs {X : Scheme.{0}} {V W : X.Opens} (h : W ≤ V) (hV : IsAffineOp
     (rs h).Etale := by
   have key := HasRingHomProperty.appLE @Etale (𝟙 X) inferInstance ⟨V, hV⟩ ⟨W, hW⟩ h
   have e : Scheme.Hom.appLE (𝟙 X) V W h = X.presheaf.map (homOfLE h).op := by
-    simp [Scheme.Hom.appLE]
+    simp [Scheme.Hom.appLE]; exact Category.id_comp _
   rw [e] at key
   exact key
 
 theorem rs_comp_strV {O : Type} [CommRing O] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of O)) {V W : X.Opens}
     (h : W ≤ V) : (rs h).comp (strV q V) = strV q W := by
-  simp only [rs, strV]
-  rw [← CommRingCat.hom_comp, Category.assoc, Scheme.Hom.appLE_map]
+  dsimp only [rs, strV]
+  rw [← CommRingCat.hom_comp, Category.assoc]
+  exact congrArg (fun f => CommRingCat.Hom.hom ((Scheme.ΓSpecIso (CommRingCat.of O)).inv ≫ f))
+    (Scheme.Hom.appLE_map q _ (homOfLE h).op)
 
 theorem main : ∀ {O : Type} [CommRing O] {X : Scheme.{0}} {q : X ⟶ Spec (CommRingCat.of O)} {V W : X.Opens} {d : ℕ}
     (c : Coord q V d) (h : W ≤ V) (_ : IsAffineOpen W), ∃ c' : Coord q W d, ∀ i, c'.t i = rs h (c.t i) := by

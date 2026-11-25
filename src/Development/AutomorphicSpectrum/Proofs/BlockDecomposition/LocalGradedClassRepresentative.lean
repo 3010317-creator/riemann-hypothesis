@@ -8,7 +8,6 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFil
 
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry GlobalTheory.LogCris CrystallineSemistableComparison CrystallineSemistableComparison.Pb GlobalTheory.CompanionTheory.ConeLocal
 open GlobalTheory.CatH (face toLast)
 
@@ -29,7 +28,10 @@ theorem loc_coef : ∀ {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X
   refine ⟨fun c => ?_, fun y hy => ?_⟩
   · obtain ⟨x, -, hx⟩ := ha c
     refine ⟨fun I => ε.symm (x I), ?_⟩
-    simpa only [RingEquiv.apply_symm_apply] using hx
+    have hfun : (fun u => ∑ I : Idx m d, E.form σ I.1 (ε (ε.symm (x I))) u) =
+        fun u => ∑ I : Idx m d, E.form σ I.1 (x I) u :=
+      funext fun u => Finset.sum_congr rfl fun I _ => congrArg (fun a => E.form σ I.1 a u) (ε.apply_symm_apply (x I))
+    exact hfun.symm ▸ hx
   · have h0 : ∀ I, ε (y I) ∈ (sFil (KS q s {W}) ((0 : ℕ) : ℤ)).S E.D := fun I => by
       have e : (sFil (KS q s {W}) ((0 : ℕ) : ℤ)).S E.D = ⊤ := E.D.obj.pdPow_zero
       rw [e]
