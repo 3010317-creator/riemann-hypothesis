@@ -235,17 +235,7 @@ theorem _root_.GlobalTheory.ChowSpec.exists_isChowFormInt_generic_section : ∀ 
     have hPhom : Ideal.IsHomogeneous (homogeneousSubmodule (Fin N) K) P := by
       intro i r hr
       convert hP r hr i using 1
-      conv_lhs => rw [← sum_homogeneousComponent r]
-      rw [DirectSum.decompose_sum, DFinsupp.finsetSum_apply, AddSubmonoidClass.coe_finsetSum,
-        Finset.sum_eq_single i]
-      · exact DirectSum.decompose_of_mem_same _ (homogeneousComponent_mem i r)
-      · intro b _ hb
-        exact DirectSum.decompose_of_mem_ne _ (homogeneousComponent_mem b r) hb
-      · intro hi
-        have h0 : homogeneousComponent i r = 0 :=
-          homogeneousComponent_eq_zero i r (by simp at hi; omega)
-        rw [h0, DirectSum.decompose_zero]
-        rfl
+      exact decomposition.decompose'_apply r i
     have hideal : ∀ y : Fin N → AlgebraicClosure L,
         (∀ g ∈ P.map (MvPolynomial.map (algebraMap K L) : MvPolynomial (Fin N) K →+* MvPolynomial (Fin N) L) ⊔
           Ideal.span {(∑ j : Fin N, C (t j) * X j : MvPolynomial (Fin N) L)}, aeval y g = 0) ↔
