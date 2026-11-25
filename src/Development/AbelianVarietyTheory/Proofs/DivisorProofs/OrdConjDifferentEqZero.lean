@@ -162,14 +162,21 @@ theorem le_lineDeg_root : ∀ (K E : Type) [Field K] [NumberField K] [Field E] [
   rw [h1, h2, mul_div_assoc, add_div]
   linarith
 
-/-- One key-root construction controls both valuation endpoints and their width. -/
-theorem exists_twSec_keyRoot_bounds : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (x : ℝ), (∀ σ, GoodEmb c σ → IsUnf (U σ)) → (∀ σ, GoodEmb c σ → ∀ k (τ : E →+* ℂ), ‖τ ((U σ).X k).ξ0‖ = x) → FnAlgClosed (Xo := Xo) (c := c) → 1 ≤ Dw.p + Dw.q → (∀ p : ℕ, p.Prime → l.GoodAt p) → UnramPts Xo c (badPrimes H l) →
-    Nonempty (KeySec Xo c) ∧
-    ∀ Z : Comp Xo c, ∃ t : TwSec U x Z (wtOf Dw 0 1),
-      IntOff (badPrimes H l) t.lo ∧ IntOff (badPrimes H l) t.hi ∧
-      -(((Module.finrank ℚ E / 2 * (Dw.p + Dw.q) : ℕ) : ℝ) * (Real.log (2 * Real.pi) / 2 + lrd E)) ≤ t.degLo ∧
-      ∀ w, t.hi w - t.lo w = ∑ τ : E →+* ℂ, (Dw.mult τ : ℝ) * (ord_vw w (conjDifferent (embF c τ)) : ℝ) := by
-  intro E _ _ _ H Dw l Xo c r U x hU hx hF hpq hg hun
+/-- Core key-root twisted section construction retaining the evaluation rule, degree bound, and width. -/
+theorem exists_twSec_keyRoot_core : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (x : ℝ), (∀ σ, GoodEmb c σ → IsUnf (U σ)) → (∀ σ, GoodEmb c σ → ∀ k (τ : E →+* ℂ), ‖τ ((U σ).X k).ξ0‖ = x) → FnAlgClosed (Xo := Xo) (c := c) → 1 ≤ Dw.p + Dw.q → (∀ p : ℕ, p.Prime → l.GoodAt p) →
+    ∃ (κ : GlobalTheory.KeyCl.Rule)
+      (e : Fin (Fintype.card (Σ τ : E →+* ℂ, Fin (Dw.mult τ))) ≃ Σ τ : E →+* ℂ, Fin (Dw.mult τ))
+      (K ρ : (Rul Xo c)ˣ),
+      GlobalTheory.IndefiniteRowSideFullHecke.FibreFramesOnModels.IsKeyRule κ ∧
+      (∀ (F : Type) [Field F] [CharZero F] [Algebra c.F F] (y : FrPt Xo c F) (Φ : FibKey Xo F y.x),
+        Tied e y.s y.u Φ → evR Xo c (K : Rul Xo c) y = (κ F Φ.key : F)) ∧
+      (ρ : Rul Xo c) ∈ secZ Xo c (keyEx Dw) ∧
+      ∀ Z : Comp Xo c, ∃ (t : TwSec U x Z (wtOf Dw 0 1)) (a : c.F),
+        a ≠ 0 ∧ idem Z * (ρ : Rul Xo c) ^ 4 = a • (idem Z * (K : Rul Xo c)) ∧
+        t.sig = idem Z * ((ρ⁻¹ : (Rul Xo c)ˣ) : Rul Xo c) ∧
+        -(((Module.finrank ℚ E / 2 * (Dw.p + Dw.q) : ℕ) : ℝ) * (Real.log (2 * Real.pi) / 2 + lrd E)) ≤ t.degLo ∧
+        ∀ w, t.hi w - t.lo w = ∑ τ : E →+* ℂ, (Dw.mult τ : ℝ) * (ord_vw w (conjDifferent (embF c τ)) : ℝ) := by
+  intro E _ _ _ H Dw l Xo c r U x hU hx hF hpq hg
   obtain ⟨κ, k₁, k₂, k₃, k₄, k₅, k₆, -, -⟩ := GlobalTheory.KeyFamClosing.keyFam_one
   let e : Fin (Fintype.card (Σ τ : E →+* ℂ, Fin (Dw.mult τ))) ≃ Σ τ : E →+* ℂ, Fin (Dw.mult τ) :=
     (Fintype.equivFin _).symm
@@ -197,7 +204,7 @@ theorem exists_twSec_keyRoot_bounds : ∀ (E : Type) [Field E] [NumberField E] [
       exact hwt 1 τ i i.2
   have hadd : wtOf Dw 0 1 + wtOf Dw 0 (-1) = 0 := by
     rw [← wtOf_add, add_zero, add_neg_cancel, wtOf_zero]
-  refine ⟨⟨⟨ρ, hρmem⟩⟩, fun Z => ?_⟩
+  refine ⟨κ, e, K, ρ, hkr, hKval, hρmem, fun Z => ?_⟩
   obtain ⟨a, ha, haK⟩ := hρ Z
   have hP : HasPts U Z := hasPts U hpq hg hU Z
   set s : Rul Xo c := idem Z * ((ρ⁻¹ : (Rul Xo c)ˣ) : Rul Xo c) with hs
@@ -279,30 +286,7 @@ theorem exists_twSec_keyRoot_bounds : ∀ (E : Type) [Field E] [NumberField E] [
         apply hw
         simp [hn]
       pts := hP }
-  have hBzero (w : HeightOneSpectrum (𝓞 c.F))
-      (hw : ∀ p ∈ badPrimes H l, ((p : ℕ) : 𝓞 c.F) ∉ w.asIdeal) : B w = 0 := by
-    refine Finset.sum_eq_zero fun τ _ => ?_
-    rw [ord_conjDifferent_eq_zero c.F E (embF c τ) w fun p hp hd =>
-      hw p (mem_badPrimes.2 ⟨hp, Or.inr (Or.inr (Or.inl hd))⟩)]
-    simp
-  have hhi : IntOff (badPrimes H l) t.hi := by
-    intro w hw
-    obtain ⟨v, hv, hint⟩ := hun Z w hw
-    obtain ⟨h1, h2⟩ := hbnd w v hv
-    rw [hBzero w hw, sub_zero] at h1
-    rcases hint s with h | ⟨n, hn⟩
-    · rw [h] at h2
-      exact absurd h2 (by simp)
-    · refine ⟨n, ?_⟩
-      show -(vAdd w a : ℝ) / 4 = n
-      rw [hn] at h1 h2
-      exact le_antisymm (EReal.coe_le_coe_iff.1 h1) (EReal.coe_le_coe_iff.1 h2)
-  refine ⟨t, ?_, hhi, ?_, fun w => ?_⟩
-  · intro w hw
-    obtain ⟨n, hn⟩ := hhi w hw
-    refine ⟨n, ?_⟩
-    show -(vAdd w a : ℝ) / 4 - B w = n
-    rwa [hBzero w hw, sub_zero]
+  refine ⟨t, a, ha, haK, hs, ?_, fun w => ?_⟩
   · have h8 := le_lineDeg_root c.F E (fun τ => Dw.mult τ) (fun τ => embF c τ) _
       a C ha hCpos hClog hsum
     show _ ≤ lineDeg _ _
@@ -310,6 +294,42 @@ theorem exists_twSec_keyRoot_bounds : ∀ (E : Type) [Field E] [NumberField E] [
     exact h8
   · show -(vAdd w a : ℝ) / 4 - (-(vAdd w a : ℝ) / 4 - B w) = B w
     ring
+
+/-- One key-root construction controls both valuation endpoints and their width. -/
+theorem exists_twSec_keyRoot_bounds : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (x : ℝ), (∀ σ, GoodEmb c σ → IsUnf (U σ)) → (∀ σ, GoodEmb c σ → ∀ k (τ : E →+* ℂ), ‖τ ((U σ).X k).ξ0‖ = x) → FnAlgClosed (Xo := Xo) (c := c) → 1 ≤ Dw.p + Dw.q → (∀ p : ℕ, p.Prime → l.GoodAt p) → UnramPts Xo c (badPrimes H l) →
+    Nonempty (KeySec Xo c) ∧
+    ∀ Z : Comp Xo c, ∃ t : TwSec U x Z (wtOf Dw 0 1),
+      IntOff (badPrimes H l) t.lo ∧ IntOff (badPrimes H l) t.hi ∧
+      -(((Module.finrank ℚ E / 2 * (Dw.p + Dw.q) : ℕ) : ℝ) * (Real.log (2 * Real.pi) / 2 + lrd E)) ≤ t.degLo ∧
+      ∀ w, t.hi w - t.lo w = ∑ τ : E →+* ℂ, (Dw.mult τ : ℝ) * (ord_vw w (conjDifferent (embF c τ)) : ℝ) := by
+  intro E _ _ _ H Dw l Xo c r U x hU hx hF hpq hg hun
+  obtain ⟨_, _, _, ρ, _, _, hρmem, hsecs⟩ := exists_twSec_keyRoot_core E H Dw l Xo c r U x hU hx hF hpq hg
+  refine ⟨⟨⟨ρ, hρmem⟩⟩, fun Z => ?_⟩
+  obtain ⟨t, _, _, _, _, hdeg, hdiff⟩ := hsecs Z
+  have hBzero (w : HeightOneSpectrum (𝓞 c.F))
+      (hw : ∀ p ∈ badPrimes H l, ((p : ℕ) : 𝓞 c.F) ∉ w.asIdeal) :
+      ∑ τ : E →+* ℂ, (Dw.mult τ : ℝ) * (ord_vw w (conjDifferent (embF c τ)) : ℝ) = 0 := by
+    refine Finset.sum_eq_zero fun τ _ => ?_
+    rw [ord_conjDifferent_eq_zero c.F E (embF c τ) w fun p hp hd =>
+      hw p (mem_badPrimes.2 ⟨hp, Or.inr (Or.inr (Or.inl hd))⟩)]
+    simp
+  have hhi : IntOff (badPrimes H l) t.hi := by
+    intro w hw
+    obtain ⟨v, hv, hint⟩ := hun Z w hw
+    have h1 := t.lo_le w v hv
+    have h2 := t.le_hi w v hv
+    have hEq : t.lo w = t.hi w := by linarith [hdiff w, hBzero w hw]
+    rw [hEq] at h1
+    rcases hint t.sig with h | ⟨n, hn⟩
+    · rw [h] at h2
+      exact absurd h2 (by simp)
+    · refine ⟨n, ?_⟩
+      rw [hn] at h1 h2
+      exact le_antisymm (EReal.coe_le_coe_iff.1 h1) (EReal.coe_le_coe_iff.1 h2)
+  refine ⟨t, ?_, hhi, hdeg, hdiff⟩
+  intro w hw
+  obtain ⟨n, hn⟩ := hhi w hw
+  exact ⟨n, by linarith [hdiff w, hBzero w hw]⟩
 
 theorem exists_twSec_keyRoot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (x : ℝ), (∀ σ, GoodEmb c σ → IsUnf (U σ)) → (∀ σ, GoodEmb c σ → ∀ k (τ : E →+* ℂ), ‖τ ((U σ).X k).ξ0‖ = x) → FnAlgClosed (Xo := Xo) (c := c) → 1 ≤ Dw.p + Dw.q → (∀ p : ℕ, p.Prime → l.GoodAt p) → UnramPts Xo c (badPrimes H l) → Nonempty (KeySec Xo c) ∧ ∀ Z : Comp Xo c, ∃ t : TwSec U x Z (wtOf Dw 0 1), IntOff (badPrimes H l) t.lo ∧ -(((Module.finrank ℚ E / 2 * (Dw.p + Dw.q) : ℕ) : ℝ) * (Real.log (2 * Real.pi) / 2 + lrd E)) ≤ t.degLo := by
   intro E _ _ _ H Dw l Xo c r U x hU hx hF hpq hg hun
