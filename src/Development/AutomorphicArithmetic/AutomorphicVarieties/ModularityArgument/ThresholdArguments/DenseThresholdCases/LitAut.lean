@@ -54,18 +54,13 @@ structure LitLocAlt : Prop where
   cos : StandardCosocleGL
   chev : ChevalleyUnits
 structure LiteratureAutomorphyHypothesis : Prop where
-  decay : CuspRapidDecay
-  hc : HarishChandraFinite
   fin : AutomorphicFormsFiniteGL
   js : JacquetShalika
-  cusp : CuspidalSpectrumGL
   bc : _root_.PositivityTheory.Rg.BcN.BaseChangeIsobaricN
   gk : GelfandKazhdanDual
   gal : _root_.UpperTheory.V.Z.Win.RowT
-  pur : ClozelPurity
   coh : ClozelCohomological
   art : GlobalArtinReciprocity
-  ray : RayClassFieldSt
   chA : HeckeLAdicCharacterAbove
   chW : AlgebraicCharacterWD
   berger : DeRhamPotSemistable
