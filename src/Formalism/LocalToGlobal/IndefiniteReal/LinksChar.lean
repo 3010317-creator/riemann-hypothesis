@@ -362,31 +362,6 @@ abbrev scal_kap : Prop :=
   ∀ κ : ℝ, Lift.IsKap D.R.m (fun t => R.Th t ∘ₗ LinearMap.adjoint (R.Th t)) R.EEp R.lamN κ →
     (∃ t p, R.EEp p ≠ ⊥ ∧ ∏ j ∈ Finset.Icc 1 D.R.m, R.lamN t j p ≠ 0) → R.kap = κ
 
-abbrev scal_lam_off : Prop :=
-  ∀ b i p v (l : ℝ), v ≠ A.v0 → R.PartAt F b i p v → (b = false ∨ ¬ R.PartAt F false i p v) →
-    (∀ x, (R.toCx F).tC F.cr b i A.μ0 (cpt A.v0.embedding x) ∈ (R.toCx F).Wp i p → ∀ y,
-      inner ℂ ((R.toCx F).wC b i v (cpt v.embedding (((R.toCx F).liftMat F.cr b i A.μ0).mulVec x)))
-          ((R.toCx F).wC b i v (cpt v.embedding (((R.toCx F).liftMat F.cr b i A.μ0).mulVec y))) =
-        ((l : ℝ) : ℂ) * Formalism.HermitianLatticesTheory.majAt (Pi.basisFun D.what₂.LL _) ((lv (F.fc (R.toCx F).zs) b).XT i A.μ0) v x y) →
-    R.lam i A.μ0 p v = l
-
-abbrev eigenvalue_at_base_default_of_eq_bot : Prop :=
-  ∀ i t p, R.Wp i p = ⊥ → R.lam i t p A.v0 = Real.exp ((F.Zsc (R.toCx F).zs).l6m i)
-
-abbrev scal_lam_abs : Prop :=
-  ∀ i p v, v ≠ A.v0 → (∀ b, ¬ R.PartAt F b i p v) → R.lam i A.μ0 p v = Real.exp ((F.Zsc (R.toCx F).zs).l6m i)
-
-abbrev scal_lam_tup : Prop :=
-  ∀ i t p v, v ≠ A.v0 → R.lam i t p v = R.lam i A.μ0 p v
-
-structure IsScal : Prop where
-  lam0 : R.eigenvalue_at_base_of_scalar
-  kap : R.scal_kap
-  lam_off : R.scal_lam_off F
-  zero_part_eigenvalue_abs : R.eigenvalue_at_base_default_of_eq_bot F
-  lam_abs : R.scal_lam_abs F
-  lam_tup : R.scal_lam_tup
-
 abbrev tup_tw : Prop :=
   ∀ w, R.NonzeroIndexPlace F w → w ∈ R.twPl
 
@@ -407,9 +382,7 @@ abbrev tup_mu_on : Prop :=
     Formalism.L2.Host.IsPsi (H := D.host) (Formalism.EigenvalueLevelCeiling.plc w) Qw ψw ∧ R.xiH (R.mu w) = R.C.delAt (Formalism.EigenvalueLevelCeiling.plc w) * ψw
 
 structure IsTup : Prop where
-  tw : R.tup_tw F
   mu_off : R.tup_mu_off
-  mu_used : R.tup_mu_used
   mu_ne : R.tup_mu_ne
   mu_conj : R.tup_mu_conj
   mu_on : R.tup_mu_on
@@ -421,8 +394,7 @@ structure Char : Prop where
   models : R.IsModels
   chain : R.IsChain
   thP : R.IsThP
-  scal : R.IsScal F
-  tup : R.IsTup F
+  tup : R.IsTup
 
 variable {R F}
 
