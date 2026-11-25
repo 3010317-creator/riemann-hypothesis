@@ -211,7 +211,7 @@ theorem proj_sec (q : SplitPt D k) {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S�
   refine ⟨?_, ?_, ?_⟩
   · change rat d.qX *ᵥ _ = _
     rw [GlobalTheory.CoreFrameLat.rat_mulVec_sec, ← hP, Matrix.mulVec_add, Matrix.mulVec_add, Matrix.mulVec_mulVec,
-      Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, m, m, m, GlobalTheory.SeeSaw.SplitLat.qX_i₀, GlobalTheory.SeeSaw.SplitLat.qX_e, GlobalTheory.SeeSaw.SplitLat.qX_e']
+      Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, m, m, m, GlobalTheory.SeeSaw.SplitLat.qX_i₀, GlobalTheory.MixPer.qX_e, GlobalTheory.SeeSaw.SplitLat.qX_e']
     simp only [z, o, Matrix.zero_mulVec, Matrix.one_mulVec, zero_add, add_zero]
   · change rat d.qY *ᵥ _ = _
     rw [GlobalTheory.CoreFrameLat.rat_mulVec_sec, ← hP, Matrix.mulVec_add, Matrix.mulVec_add, Matrix.mulVec_mulVec,

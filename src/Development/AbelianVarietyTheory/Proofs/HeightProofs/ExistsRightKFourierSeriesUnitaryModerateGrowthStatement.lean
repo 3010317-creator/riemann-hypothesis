@@ -552,14 +552,9 @@ def polyAlg (ε : Fin n → Bool) : StarSubalgebra ℂ C(KG ε, ℂ) where
     convert star_mem ha using 1
     funext k; rfl
 
-theorem toMK_injective (ε : Fin n → Bool) : Function.Injective (fun k : KG ε => toMK k) := by
-  intro a b h
-  have h1 : ((a : UJ ε) : (Matrix (Fin n) (Fin n) ℂ)ˣ) = ((b : UJ ε) : (Matrix (Fin n) (Fin n) ℂ)ˣ) := Units.ext h
-  exact Subtype.ext (Subtype.ext h1)
-
 theorem polyAlg_separatesPoints (ε : Fin n → Bool) : (polyAlg ε).SeparatesPoints := by
   intro x y hxy
-  have hne : toMK x ≠ toMK y := fun h => hxy (toMK_injective ε h)
+  have hne : toMK x ≠ toMK y := fun h => hxy (GlobalTheory.KFourier.toMK_injective_of_gap ε h)
   obtain ⟨i, j, hij⟩ : ∃ i j, toMK x i j ≠ toMK y i j := by
     by_contra! hc
     exact hne (Matrix.ext hc)

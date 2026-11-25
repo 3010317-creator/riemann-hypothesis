@@ -461,9 +461,6 @@ theorem weierstrassP_two_mul (L : PeriodPair) {P : ℂ} (hP : P ∉ L.lattice) (
 
 variable {p : ℕ} [Fact p.Prime]
 
-theorem lamC_coe (lam : Qbar →+* ℂ_[p]) (x : Qbar) : lamC lam (x : ℂ) = lam x := by
-  simp [lamC, x.2]
-
 theorem lamC_ne_zero (lam : Qbar →+* ℂ_[p]) {x : Qbar} (hx : x ≠ 0) : lam x ≠ 0 :=
   (map_ne_zero lam).mpr hx
 
@@ -479,12 +476,12 @@ theorem tangent_law : ∀ {p : ℕ} [Fact p.Prime] (g : GL3Theta.G1 p) (P : ℂ)
   have hd0 : d ≠ 0 := fun h => hd (congrArg Subtype.val h)
   have he : wpF g.abelian₂ (2 * P) = (((((3 * a ^ 2 - G / 4) / d) ^ 2 - 2 * a : Qbar)) : ℂ) := by
     rw [hdup]; simp [a, d, G]; norm_cast
-  have lX : lamC g.lam (wpF g.abelian₂ P) = g.lam a := lamC_coe _ a
-  have lD : lamC g.lam (wpD g.abelian₂ P) = g.lam d := lamC_coe _ d
+  have lX : lamC g.lam (wpF g.abelian₂ P) = g.lam a := GlobalTheory.ThetaPar.ModelPoint.lamC_coe _ a
+  have lD : lamC g.lam (wpD g.abelian₂ P) = g.lam d := GlobalTheory.ThetaPar.ModelPoint.lamC_coe _ d
   have l2 : lamC g.lam (wpF g.abelian₂ (2 * P)) = ((3 * g.lam a ^ 2 - g.lam G / 4) / g.lam d) ^ 2 - 2 * g.lam a := by
-    rw [he, lamC_coe]; simp [map_div₀, map_ofNat]
+    rw [he, GlobalTheory.ThetaPar.ModelPoint.lamC_coe]; simp [map_div₀, map_ofNat]
   have lA : lamC g.lam (-(g2 g.abelian₂) / 4) = -(g.lam G) / 4 := by
-    rw [show -(g2 g.abelian₂) / 4 = ((-G / 4 : Qbar) : ℂ) by simp [G]; norm_cast, lamC_coe]; simp [map_div₀, map_ofNat]
+    rw [show -(g2 g.abelian₂) / 4 = ((-G / 4 : Qbar) : ℂ) by simp [G]; norm_cast, GlobalTheory.ThetaPar.ModelPoint.lamC_coe]; simp [map_div₀, map_ofNat]
   have lD0 : g.lam d ≠ 0 := lamC_ne_zero _ hd0
   have ε0 : ((g.C.u⁻¹ : ℂ_[p]ˣ) : ℂ_[p]) ≠ 0 := Units.ne_zero _
   simp only [GlobalTheory.EvenTheta.xAt, GlobalTheory.ThetaPar.yAt, GL3Theta.G1.W, variableChange_a₁, variableChange_a₂,

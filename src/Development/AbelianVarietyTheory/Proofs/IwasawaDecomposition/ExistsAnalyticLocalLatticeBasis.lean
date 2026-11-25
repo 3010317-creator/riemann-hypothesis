@@ -185,8 +185,6 @@ theorem IsLatFam.eventually_intComb {n g r : ℕ} {B : Set (Fin n → ℂ)} {K :
     filter_upwards [ho] with q hq h
     exact absurd h hq.2
 
-alias isLatBasis_of_ball := _root_.GlobalTheory.LatticeBasisClosedBall.isLatBasis_of_closedBall
-
 theorem IsLatFam.exists_analytic_locBasis : ∀ (n g : ℕ) (B : Set (Fin n → ℂ)) (K : (Fin n → ℂ) → Set (Fin g → ℂ))
     (b₀ : Fin n → ℂ), IsLatFam B K → b₀ ∈ B → Submodule.span ℝ (K b₀) = ⊤ →
     ∃ lam : (Fin n → ℂ) → Fin (2 * g) → Fin g → ℂ, AnalyticAt ℂ lam b₀ ∧ ∀ᶠ b in 𝓝 b₀, IsLatBasis (K b) (lam b) := by
@@ -229,7 +227,7 @@ theorem IsLatFam.exists_analytic_locBasis : ∀ (n g : ℕ) (B : Set (Fin n → 
   filter_upwards [hball, hli, hnorm, hlK, hK.1.mem_nhds hb₀] with b h1 h2 h3 h4 h5
   obtain ⟨H, hH⟩ := hK.2.1 b h5
   rw [← hH]
-  refine isLatBasis_of_ball H _ R h2 (fun j => ?_) (Finset.sum_le_sum fun j _ => h3 j) fun w hw hwH => ?_
+  refine GlobalTheory.LatticeBasisClosedBall.isLatBasis_of_closedBall H _ R h2 (fun j => ?_) (Finset.sum_le_sum fun j _ => h3 j) fun w hw hwH => ?_
   · show ζ j b ∈ (H : Set (Fin g → ℂ)); rw [hH]; exact h4 j
   · exact h1 w hw (by rw [← hH]; exact hwH)
 

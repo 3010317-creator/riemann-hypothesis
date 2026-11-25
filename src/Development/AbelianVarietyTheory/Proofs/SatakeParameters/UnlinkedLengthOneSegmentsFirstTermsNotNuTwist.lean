@@ -80,7 +80,7 @@ theorem unlinked_first_of_len_one : ∀ {E Ω : Type} [Field E] [NumberField E] 
   obtain ⟨j, -, rfl⟩ := Multiset.mem_map.1 hz
   have hne : (Δ j).first ≠ (Δ j).first.nu 1 := by
     intro e0
-    refine GlobalTheory.UnlinkedMono.lpTw_one_ne (rc (Δ j).first) (by rw [L.dim]; exact (Δ j).isCusp_first.1) ?_
+    refine GlobalTheory.WeilDeligne.WD.lpTw_one_ne (rc (Δ j).first) (by rw [L.dim]; exact (Δ j).isCusp_first.1) ?_
     calc (rc (Δ j).first).lpTw 1 = rc ((Δ j).first.nu ((1 : ℝ) : ℂ)) := (L.nu _ 1).symm
       _ = rc (Δ j).first := by rw [Complex.ofReal_one, ← e0]
   have eΔ : ∀ k, Δ k = Segment.single (Δ k).first (Δ k).isCusp_first := fun k =>

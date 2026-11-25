@@ -171,13 +171,11 @@ theorem fibre_iff (X : HidaSetting D) {red : X.B.I.Gf → G0g D.nd} (hr : IsRedH
     rw [mul_inv_cancel_left, hr1, mul_one] at h3
     exact h3
 
-theorem kg_open (X : HidaSetting D) : IsOpen (X.B.I.Kg X.B.g) := X.B.I.topf_open X.B.g (_root_.Formalism.L2.SG.PoincareInHH.Cut.one_le_g X)
-
 theorem kg_pos_fin (X : HidaSetting D) : 0 < X.B.μf (X.B.I.Kg X.B.g) ∧ X.B.μf (X.B.I.Kg X.B.g) < ⊤ := by
   have hne : (X.B.I.Kg X.B.g).Nonempty := ⟨1, by
     refine ⟨kset_one X, fun y _ => ⟨0, zero_mem _, ?_⟩⟩
     simp [Formalism.MainNotions.S.AutInst.fmat]⟩
-  refine ⟨(kg_open X).measure_pos X.B.μf hne, ?_⟩
+  refine ⟨(Formalism.L2.SG.Pf.DstarIdxPf.isOpen_Kg X).measure_pos X.B.μf hne, ?_⟩
   exact lt_of_le_of_lt (measure_mono fun x hx => hx.1) (PI.WAU.Cpt.isCompact_Kset X.B.I).measure_lt_top
 
 theorem fibre_meas (X : HidaSetting D) {red : X.B.I.Gf → G0g D.nd} (hr : IsRedHom X red) {s : X.B.I.Gf}
@@ -187,7 +185,7 @@ theorem fibre_meas (X : HidaSetting D) {red : X.B.I.Gf → G0g D.nd} (hr : IsRed
   have e : {x | x ∈ X.B.I.Kset ∧ red x = red s} = (fun x => s⁻¹ * x) ⁻¹' (X.B.I.Kg X.B.g) := by
     ext x; exact fibre_iff X hr hs x
   rw [e]
-  refine ⟨((kg_open X).preimage (continuous_const_mul s⁻¹)).measurableSet, ?_⟩
+  refine ⟨((Formalism.L2.SG.Pf.DstarIdxPf.isOpen_Kg X).preimage (continuous_const_mul s⁻¹)).measurableSet, ?_⟩
   exact measure_preimage_mul X.B.μf s⁻¹ _
 
 open scoped InnerProductSpace in
@@ -1802,7 +1800,7 @@ theorem exists_sRest_top : GlobalTheory.Dec.DSInfChar → GlobalTheory.Published
   intro hDS hHC hCusp hDSU hRF D G' _ _ Pl0 T A Ks _ _ _ R F F0 P eE hGap hph hL hR hDs hLev hGrp hPin hE0 hM hRange hNorm hDall
   obtain ⟨t, ht⟩ := GlobalTheory.T.exists_finiteAdelicPoint_carries_rowLevel D G' Pl0 T A Ks R F P.X P.inst P.pin hLev hGrp hPin hE0
   obtain ⟨v₀, hv, c, hc, hev⟩ :=
-    GlobalTheory.T.lowestVector_evaluation_identifies_levelRows_conj hDS hCusp hDSU hRF D G' Pl0 T A Ks R F P.X P.inst t P.pin hGap hLev hM.inf hM.ν0 ht
+    GlobalTheory.Mem.SRe.evalOn_all hDS hCusp hDSU hRF D G' Pl0 T A Ks R F P.X P.inst t P.pin hGap hLev hM.inf hM.ν0 ht
   have hg := GlobalTheory.T.evaluation_goodRows_to_conjugate_goodRows D G' Pl0 T A Ks R F P.X P.inst P.G t v₀ c hLev hM.inf hv ht hev
   have hle := (GlobalTheory.T.levelColumnsGoodRows_le_principal_and_finiteDimensional hHC hCusp D G' Pl0 T A Ks R F hLev hM.inf hM.ν0).1
   obtain ⟨hfr, j, hj⟩ :=

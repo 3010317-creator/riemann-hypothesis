@@ -1278,10 +1278,6 @@ namespace GlobalTheory.KerJ.CharVal
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.GL3Theta NumberField
 
-theorem lamC_mem' {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) {x : ℂ} (h : x ∈ Qbar) :
-    lamC lam x = lam ⟨x, h⟩ := by
-  unfold lamC; rw [dite_eq_left h]
-
 theorem embT_mem (D : D7) (τ : D.what₂.Tau) (x : D.host.E) : embT D τ x ∈ Qbar := by
   have hx : IsAlgebraic ℚ x := Algebra.IsAlgebraic.isAlgebraic x
   have : IsAlgebraic ℚ ((embT D τ).toRatAlgHom x) := hx.algHom _
@@ -1311,9 +1307,9 @@ theorem chiVal_holds (D : D7) : chiVal D := by
     apply Subtype.ext
     push_cast
     exact chi_pow D t h z hp
-  rw [lamC_mem' lam hm, ← norm_pow, ← map_pow, e, map_prod, norm_prod]
+  rw [Formalism.L2.KerInert.ie_lamC_of_mem lam hm, ← norm_pow, ← map_pow, e, map_prod, norm_prod]
   refine Finset.prod_congr rfl fun τ _ => ?_
-  rw [map_inv₀, norm_inv, lamC_mem' lam (embT_mem D τ _)]
+  rw [map_inv₀, norm_inv, Formalism.L2.KerInert.ie_lamC_of_mem lam (embT_mem D τ _)]
 
 theorem key_norm {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) {ι : Type*} [Fintype ι] (y κ : Qbar) (w : ι → Qbar)
     (s : ι → ℤ) (h n : ℕ) (hn : 0 < n) (e : y ^ h = (∏ τ, w τ ^ s τ) * κ) (hκ : κ ^ n = 1) :
@@ -1346,8 +1342,8 @@ theorem val_of (D : D7) (ρ : D.Dt →* ℂˣ) (s : D.what₂.Tau → ℤ) {p : 
       apply (algebraMap Qbar ℂ).injective
       simp only [map_pow, map_one]
       exact h1')
-  rw [lamC_mem' lam ha, this]
-  exact Finset.prod_congr rfl fun τ _ => by rw [lamC_mem' lam (embT_mem D τ _)]
+  rw [Formalism.L2.KerInert.ie_lamC_of_mem lam ha, this]
+  exact Finset.prod_congr rfl fun τ _ => by rw [Formalism.L2.KerInert.ie_lamC_of_mem lam (embT_mem D τ _)]
 
 theorem rhoVal_holds (D : D7) {u : D.what₂.Word} (C : ColumnChain D.R D.what₂.Tau (D.hcW u)) (mt : ℕ → D.Dt →* ℂˣ)
     (hR : rhoThreeOf D C mt) : rhoValOf D C mt := by
@@ -1421,7 +1417,7 @@ noncomputable def psiT (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[
   lam.comp ((embT D τ).codRestrict Qbar (embT_mem D τ))
 
 theorem lamC_embT (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) (τ : D.what₂.Tau) (x : D.host.E) :
-    lamC lam (embT D τ x) = psiT D lam τ x := lamC_mem' lam (embT_mem D τ x)
+    lamC lam (embT D τ x) = psiT D lam τ x := Formalism.L2.KerInert.ie_lamC_of_mem lam (embT_mem D τ x)
 
 theorem nrmId_pow (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) (τ : D.what₂.Tau) (𝔞 : IdE D) (h : ℕ) (h0 : h ≠ 0)
     (z : D.host.E) (e : 𝔞 ^ h = Submodule.span (𝓞 D.host.E) {z}) :

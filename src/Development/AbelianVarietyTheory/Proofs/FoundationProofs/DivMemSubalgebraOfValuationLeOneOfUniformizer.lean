@@ -59,10 +59,6 @@ namespace GlobalTheory.K5.IntFrac
 
 open Polynomial
 
-theorem mem_adjoin_inv_of_isIntegral' {R K : Type*} [CommRing R] [Field K] [Algebra R K] {z : K}
-    (hz : z ≠ 0) (hi : IsIntegral R z) : z ∈ Algebra.adjoin R {z⁻¹} := by
-  apply GlobalTheory.K5.LevClosed.mem_adjoin_inv_of_isIntegral <;> assumption
-
 theorem mem_of_div_le_one : ∀ (O Ω : Type) [CommRing O] [Field Ω] [Algebra O Ω] (v : Valuation Ω NNReal), (∀ x : Ω, v x ≤ 1 ↔ IsIntegral O x) →
   ∀ (B : Subalgebra O Ω), (∀ x ∈ B, v x ≤ 1) → ∀ π ∈ B, π ≠ 0 → v π < 1 → (∀ x ∈ B, v x < 1 → x / π ∈ B) →
   ∀ a ∈ B, ∀ b ∈ B, v (a / b) ≤ 1 → a / b ∈ B := by
@@ -123,7 +119,7 @@ theorem mem_of_div_le_one : ∀ (O Ω : Type) [CommRing O] [Field Ω] [Algebra O
     exact zero_ne_one hvw
   have hwinv : (b / π ^ n)⁻¹ ∈ B := by
     have hint : IsIntegral O (b / π ^ n)⁻¹ := (hv _).mp (by rw [map_inv₀, hvw, inv_one])
-    have hmem := mem_adjoin_inv_of_isIntegral' (inv_ne_zero hw0) hint
+    have hmem := GlobalTheory.K5.LevClosed.mem_adjoin_inv_of_isIntegral (inv_ne_zero hw0) hint
     rw [inv_inv] at hmem
     exact Algebra.adjoin_le (Set.singleton_subset_iff.mpr hwB) hmem
   have haπ : a / π ^ n ∈ B := by

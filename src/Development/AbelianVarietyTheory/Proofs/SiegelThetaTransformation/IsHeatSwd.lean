@@ -361,13 +361,6 @@ end Lines
 
 variable {E : Type} [Field E] (Ψ : Finset (E →+* ℂ)) {n N : ℕ}
 
-theorem imH_isHermitian (Z : Matrix (Fin N) (Fin N) ℂ) : (imH Z).IsHermitian := by
-  unfold imH IsHermitian
-  rw [conjTranspose_smul, conjTranspose_sub, conjTranspose_conjTranspose, ← neg_sub Z, smul_neg,
-    ← neg_smul]
-  congr 1
-  simp
-
 theorem eventually_posDef (δ : ℝ) {p : CF Ψ N N × CF Ψ n N × CF Ψ n N}
     (hp : ∀ τ, (imH (p.1 τ) - (δ : ℂ) • (1 : Matrix (Fin N) (Fin N) ℂ)).PosDef) :
     ∀ᶠ q : CF Ψ N N × CF Ψ n N × CF Ψ n N in 𝓝 p,
@@ -378,7 +371,7 @@ theorem eventually_posDef (δ : ℝ) {p : CF Ψ N N × CF Ψ n N × CF Ψ n N}
   · change Continuous fun q : CF Ψ N N × CF Ψ n N × CF Ψ n N =>
       (2 * I)⁻¹ * (q.1 τ i j - star (q.1 τ j i)) - ((δ : ℂ) • (1 : Matrix (Fin N) (Fin N) ℂ)) i j
     fun_prop
-  · refine (imH_isHermitian _).sub ?_
+  · refine (GlobalTheory.SW.ExpSum.imH_isHermitian _).sub ?_
     unfold IsHermitian
     rw [conjTranspose_smul, conjTranspose_one]
     simp
@@ -530,10 +523,10 @@ theorem GlobalTheory.SW.isHeat_eis : ∀ (E : Type) [Field E] [NumberField E] [I
   refine isHeat_tsum Ψ (D := fun U : Lag E N => eisTerm Ψ U.2.choose φ)
     (fun U => isHeat_const_mul Ψ (isHeat_hFac_inv E Ψ n N _ U.2.choose_spec.1) _) fun p hp => ?_
   obtain ⟨B, hB⟩ := (_root_.GlobalTheory.SW.ip_self_nonneg_and_bounds E _ _ R φ hR hφ).2.2.2.2.1
-  obtain ⟨δ₀, hδ₀, hI⟩ := EisTrans.exists_mem_HnGe Ψ (Base.I_mem_Hn (N := N) Ψ)
+  obtain ⟨δ₀, hδ₀, hI⟩ := GlobalTheory.PosSemidefShiftByScalar.exists_pos_mem_HnGe Ψ (Base.I_mem_Hn (N := N) Ψ)
   obtain ⟨C, hC⟩ := _root_.GlobalTheory.SW.theta_eis_bounded E Ψ hΨ n N hn hN R δ₀ hR hδ₀
   have hs := (hC φ hφ B hB _ hI).1
-  obtain ⟨δ, hδ, hp'⟩ := EisTrans.exists_mem_HnGe Ψ hp
+  obtain ⟨δ, hδ, hp'⟩ := GlobalTheory.PosSemidefShiftByScalar.exists_pos_mem_HnGe Ψ hp
   have h1 := eventually_posDef Ψ (δ / 2) (p := p) fun τ => by
     have h : (((δ / 2 : ℝ) : ℂ) • (1 : Matrix (Fin N) (Fin N) ℂ)).PosDef :=
       PosDef.one.smul (by exact_mod_cast half_pos hδ)

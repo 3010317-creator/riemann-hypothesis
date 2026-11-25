@@ -714,9 +714,6 @@ open GlobalTheory.Sieg GlobalTheory.QFam GlobalTheory.KummerEisensteinGalois
 
 namespace GlobalTheory.Sieg.EisQ
 
-theorem ee_int_mul' (n : ℤ) (z : ℂ) : ee (n * z) = ee z ^ n := by
-  simp only [ee, ← Complex.exp_int_mul]; congr 1; ring
-
 theorem hasSum_point {M : ℕ} (hM : 0 < M) (a A e : ℤ) (w : ℤ → ℤ → ℂ) :
     HasSum (fun p : ℤ × ℤ => if p.2 = e ∧ a + M * p.1 = A then w (a + M * p.1) p.2 else 0)
       (if A ≡ a [ZMOD M] then w A e else 0) := by
@@ -790,7 +787,7 @@ theorem fTerm_eq (j : ℕ) {M : ℕ} (hM : 0 < M) (a b : ℤ) (τ : ℍ) (p : �
   unfold fTerm
   simp only [Matrix.cons_val_zero, Matrix.cons_val_one, hc]
   split_ifs with h
-  · rw [← ee_int_mul', mul_right_comm]
+  · rw [← GlobalTheory.Sieg.DlogOne.ee_int_mul, mul_right_comm]
     congr 1
     · congr 1
       · congr 2
@@ -850,7 +847,7 @@ theorem eisensteinFxConstantTerm_rationalIndex_eq (j : ℕ) {M : ℕ} (hM : 0 < 
     unfold frc
     rw [div_eq_zero_iff, or_iff_left hQ, Int.cast_eq_zero, Int.dvd_iff_emod_eq_zero]
   have he : ee ((((b : ℚ) / M : ℚ)) : ℂ) = ee (1 / (M : ℂ)) ^ b := by
-    rw [← ee_int_mul']; congr 1; push_cast; ring
+    rw [← GlobalTheory.Sieg.DlogOne.ee_int_mul]; congr 1; push_cast; ring
   unfold f0 const0
   simp only [Matrix.cons_val_zero, Matrix.cons_val_one, fract_eq, h0, he]
   split_ifs

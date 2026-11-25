@@ -123,8 +123,6 @@ end GlobalTheory.StarCover
 namespace GlobalTheory.StarCover
 open GlobalTheory.MinkWeylReal
 
-alias toReal_apply' := _root_.GlobalTheory.PolFan.toReal_apply
-
 theorem comb_apply {X : Type} [AddCommGroup X] {m : ℕ} (r : Fin m → ℝ) (γ : Fin m → LinearMap.BilinForm ℤ X)
     (x y : X) : (∑ j, r j • toReal (γ j)) x y = ∑ j, r j * (γ j x y : ℝ) := by
   simp [LinearMap.sum_apply]
@@ -153,7 +151,7 @@ theorem star_cover : ∀ (X : Type) [AddCommGroup X] (m : ℕ) (γ : Fin m → L
   have hcomb : ∀ r : Fin m → ℝ, (∑ j, r j • castR (u j)) = fun k => ∑ j, r j * (γ j (p k).1 (p k).2 : ℝ) :=
     fun r => by funext k; simp [castR, u, Finset.sum_apply]
   have hv_app : ∀ x y, (v x y : ℝ) = ∑ j, c j * (γ j x y : ℝ) := fun x y => by
-    rw [← toReal_apply', hvc, comb_apply]
+    rw [← GlobalTheory.PolFan.toReal_apply, hvc, comb_apply]
   have hB_app : ∀ x y, B x y = ∑ j, t j * (γ j x y : ℝ) := fun x y => by rw [hBt, comb_apply]
   set Ev : Fin n → ℝ := ∑ j, c j • castR (u j) with hEv
   set EB : Fin n → ℝ := ∑ j, t j • castR (u j) with hEB
@@ -270,7 +268,7 @@ theorem star_cover : ∀ (X : Type) [AddCommGroup X] (m : ℕ) (γ : Fin m → L
     have k1 := key x y
     rw [hexp (x, y)] at k1
     rw [hB_app]
-    simp only [LinearMap.add_apply, LinearMap.smul_apply, smul_eq_mul, toReal_apply', hv_app, comb_apply]
+    simp only [LinearMap.add_apply, LinearMap.smul_apply, smul_eq_mul, GlobalTheory.PolFan.toReal_apply, hv_app, comb_apply]
     linarith
 
 end GlobalTheory.StarCover

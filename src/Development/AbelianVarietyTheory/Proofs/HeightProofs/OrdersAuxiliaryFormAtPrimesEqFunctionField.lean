@@ -944,7 +944,7 @@ theorem exists_equiv_pts_places_baseChange : ∀ (R R' F F' : Type) [CommRing R]
       exact ⟨⟨(a, g), ha⟩, rfl⟩
     · intro z
       change residue (Loc ζ) (algebraMap (As R' A) (Loc ζ) z.1.1) = 0 ↔ residue (vRing w) z.1.2 = 0
-      rw [residue_eq_zero_iff, residue_eq_zero_iff, mem_maximalIdeal_vRing,
+      rw [residue_eq_zero_iff, residue_eq_zero_iff, ReciprocityTheory.ChartRestriction.G.T0.ValuationResidueLemmas.mem_max_iff,
         IsLocalization.AtPrime.to_map_mem_maximal_iff (Loc ζ) ζ.asIdeal, ← CoverPlaces.ord_pos_iff hϖ, hord, ← hι]
       refine ⟨pos_of_sub_pos u ?_, pos_of_sub_pos u (hT z)⟩
       rw [← neg_sub, u.map_neg]

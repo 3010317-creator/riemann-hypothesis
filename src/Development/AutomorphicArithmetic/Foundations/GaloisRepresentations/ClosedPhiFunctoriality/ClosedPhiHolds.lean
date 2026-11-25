@@ -1276,7 +1276,7 @@ theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.linkA_holds :
   have hev : ∀ s, inclW l (bk.ev s) = bk.evW s := fun s => rfl
   refine ⟨?_, ?_⟩
   · intro i j
-    apply GlobalTheory.HTBound.pow_dvd_of_inclW
+    apply GlobalTheory.CoefDescent.pow_dvd_of_pow_dvd_inclW
     have e1 : (Pi.map (Per.zA l)).map (inclW l) = zW Pi := by
       refine Matrix.ext fun a b => ?_
       exact (inclWA l).commutes _
@@ -1305,7 +1305,7 @@ theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.linkA_holds :
     rw [hmap] at key
     intro i j
     apply pow_dvd_of_ev
-    apply GlobalTheory.HTBound.pow_dvd_of_inclW
+    apply GlobalTheory.CoefDescent.pow_dvd_of_pow_dvd_inclW
     simpa only [Matrix.map_apply, hev] using key i j
 end -- clump:auto
 end -- clump:auto

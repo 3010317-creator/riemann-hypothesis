@@ -83,7 +83,7 @@ theorem sec_mul_pr (a : k) (o : AE D) : q.sec (a * q.pr o) = q.sec a * o := by
   have h := q.sec_pr (q.sec a * o)
   rw [map_mul, q.pr_sec] at h
   rw [h, ← mul_assoc]
-  exact congrArg (· * o) (GlobalTheory.LocChar.e_mul_ι (ofSplit q) a)
+  exact congrArg (· * o) (GlobalTheory.LocMod.Witness.e_ι (ofSplit q) a)
 
 theorem sec_mem_idAt (a : k) : q.sec a ∈ idAt D (· = q.v) := by
   obtain ⟨ε, hε, hsum⟩ := q.above
@@ -91,7 +91,7 @@ theorem sec_mem_idAt (a : k) : q.sec a ∈ idAt D (· = q.v) := by
   have he : q.e ∈ idAt D (· = q.v) := by
     refine ((_root_.GlobalTheory.FinPl.placeIdem_acts D q.v ε hε).1 q.e).2 ?_
     rw [← hsum, add_mul, hee, mul_comm (cA D q.e), hec, add_zero]
-  have h : q.e * q.sec a = q.sec a := GlobalTheory.LocChar.e_mul_ι (ofSplit q) a
+  have h : q.e * q.sec a = q.sec a := GlobalTheory.LocMod.Witness.e_ι (ofSplit q) a
   rw [← h]
   exact Ideal.mul_mem_right _ _ he
 

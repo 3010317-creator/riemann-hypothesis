@@ -603,11 +603,6 @@ theorem permOf_injective : Function.Injective (permOf hc) := by
     exact congrArg Prod.fst ((idx hc).injective this)
   exact inv_inj.mp (Equiv.ext h)
 
-theorem graph_apply' {n : ℕ} (g : Fin n → Fin n) (x y : Fin n) :
-    (∑ a, Finsupp.single (a, g a) 1 : Fin n × Fin n →₀ ℕ) (x, y) = if g x = y then 1 else 0 := by
-  rw [Finsupp.finsetSum_apply, Finset.sum_eq_single x (fun c _ hc => by simp [Finsupp.single_apply, hc]) (by simp)]
-  simp [Finsupp.single_apply]
-
 theorem graph_permOf (τ : Fin q → Equiv.Perm (Fin p)) :
     (∑ a, Finsupp.single (a, permOf hc τ a) 1 : Fin (p * q) × Fin (p * q) →₀ ℕ) =
       (blockGraph τ).mapDomain (blockEmb hc) := by
@@ -622,7 +617,7 @@ theorem mem_range_of_graph (w : Equiv.Perm (Fin (p * q))) (u : Fin q × Fin p ×
   have hr : ∀ x : Fin p × Fin q, ((idx hc).symm (w (idx hc x))).2 = x.2 := by
     intro x
     have h0 : (∑ a, Finsupp.single (a, w a) 1 : Fin (p * q) × Fin (p * q) →₀ ℕ) (idx hc x, w (idx hc x)) ≠ 0 := by
-      rw [graph_apply' (fun a => w a)]
+      rw [GlobalTheory.GoodMetric.LinSubst.graph_apply (fun a => w a)]
       simp
     rw [← h] at h0
     by_contra hne

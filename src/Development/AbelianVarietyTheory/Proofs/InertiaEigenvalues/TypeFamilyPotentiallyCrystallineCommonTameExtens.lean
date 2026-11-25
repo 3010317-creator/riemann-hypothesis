@@ -132,7 +132,7 @@ variable {G : Type} [Group G] {Qp K₀ K K₀' K' : Type} [Field Qp] [Field K₀
 theorem actVB_pow (g : G) (n : ℕ) (x : V ⊗[Qp] B) :
     (actVB PC.PD ρ g ^ n) x = actVB PC.PD ρ (g ^ n) x := by
   induction n generalizing x with
-  | zero => simp [GlobalTheory.PassPoly.actVB_one']
+  | zero => simp [GlobalTheory.actVB_one_apply]
   | succ n ih => rw [pow_succ, Module.End.mul_apply, ih, pow_succ, GlobalTheory.PassPoly.actVB_mul']
 
 theorem aeval_index_kill (g : G) : ∀ x ∈ PC.Dpcris ρ,
@@ -182,7 +182,7 @@ theorem inertiaThrough_of_poly_pow [CharZero LL] (Sig : Finset (PC.Iner →* LL�
     have hn : ∀ n : ℕ, actVB PC.PD ρ ((γ : G) ^ n) x = ((a γ : LLˣ) : LL) ^ n • x := by
       intro n
       induction n with
-      | zero => simp [GlobalTheory.PassPoly.actVB_one']
+      | zero => simp [GlobalTheory.actVB_one_apply]
       | succ n ih => rw [pow_succ, GlobalTheory.PassPoly.actVB_mul', hγ, map_smul, ih, smul_smul, pow_succ, mul_comm]
     simp only [Submodule.coe_iInf, Set.mem_iInter, SetLike.mem_coe, LinearMap.mem_ker,
       LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.id_apply, sub_eq_zero]

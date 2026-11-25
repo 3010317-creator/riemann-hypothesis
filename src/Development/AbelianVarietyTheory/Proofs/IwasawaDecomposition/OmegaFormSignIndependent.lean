@@ -557,7 +557,7 @@ theorem heis_root_zak {r g : ℕ} (hr : T.rank = r) {ψ : AddChar (AF D.host.F) 
   have hL' : SelfD X' (latG T g') := ⟨hL.1, by simpa only [hEF] using hL.2⟩
   let C := ctxOf hS.1 hS.2.1 hS.2.2.2.1 X' m hq' bas' idx' hsy
   have hz := (GlobalTheory.T.adelicTheta_of_testFunction_exists_laws_fockVectors D S T _ g rfl ψ θ X eT bas idx hS Z hZ).1
-  have hsb := Const.isSB_smul_tf a hv.1
+  have hsb := GlobalTheory.Dict.ShortVal.isSB_smul a hv.1
   have hlat : IsLatVac (heisO ψ S T) (hatA S T (tens (stdL D.host.E S.rank) (latG T g'))) f := by
     refine (SignVac.isLatVac_iff D S T C w hw hw' hw2 1 _ (Base.stdL_mem_Vset _ 1) _ hL' f hf.1).2 fun y hy => ?_
     obtain ⟨u1, -, -, -, u5, -⟩ := (hz _ hsb).2 f hf
@@ -599,7 +599,7 @@ theorem zak_sum {r g : ℕ} {hr : T.rank = r} {ψ : AddChar (AF D.host.F) ℂ} {
       have h1 := ((heisG_laws _ _ X g bas idx S.rank hS.2.2.2.2.2.2.2 hS.2.2.2.1).2.2.2 (Y q) _ hφ).1
       have h2 := ((hz φ hφ).2 f hf).2.2.2.2.1 (-Y q)
       rw [neg_neg] at h2
-      have h3 := Const.isSB_smul_tf (W q) h1
+      have h3 := GlobalTheory.Dict.ShortVal.isSB_smul (W q) h1
       exact ⟨(isSB_algebra_haar_linear ℚ _ _ _ _ h3 ih.1).1,
         ((hz _ h3).2 _ (((hz _ h1).2 _ h2).2.2.1 (W q))).2.2.2.1 _ _ ih.1 ih.2⟩
   exact ((hz _ (key _).1).2 _ (key _).2).2.2.1 c

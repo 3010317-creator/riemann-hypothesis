@@ -641,7 +641,7 @@ theorem thC_left_stab : ∀ (D : D7) (X : Fields) (s : Seam D X) (cc : Ideal (�
     (fun x hx => by
       obtain ⟨m, hm⟩ := hq (reidx s a b x) ((hlam x).1 hx)
       exact alV_eq s B x hm)
-    (isHerm_formV _ _ _ _) f3 f4).1
+    (GlobalTheory.ThetaMove.Moved.isHerm_formV _ _ _ _) f3 f4).1
   have hfg : (lam (ambOf s B χ cD) N N').FG := by
     have e : lam (ambOf s B χ cD) N N' =
         (TaylorLogMetric.La D B.tor (s.lat N) (s.lat N')).map (reidx s a b).symm.toLinearMap.toAddMonoidHom := by

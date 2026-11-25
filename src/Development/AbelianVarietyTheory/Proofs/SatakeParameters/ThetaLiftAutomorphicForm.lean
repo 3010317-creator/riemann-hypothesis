@@ -138,8 +138,6 @@ theorem integral_zero_right (μ : Measure (GA D V)) (𝓕 : Set (GA D V)) (T U :
 
 end Unit
 
-alias lift_post := _root_.GlobalTheory.ThetaFireLift.lift_postOn
-
 section Row
 
 variable {D : D7} {cf : CharFrame D} {nch : NChoice D} {tp : TupTied D cf nch} (X : GlobalTheory.NJoin.RealAt D cf nch tp)
@@ -166,7 +164,7 @@ theorem ipM_theta {μ : D.what₂.Tup} (hμ : Used0 D μ) (j : Fin D.R.m) (x : D
   have hT'U : T' = postOn (X.R.MW j (sg0 D X.A)) (X.R.eWf j (sg0 D X.A)) U := by
     apply PiTensorProduct.lift.injective
     rw [hT', hth, ← hUw']
-    exact (lift_post (X.R.MW j (sg0 D X.A)) _ U).symm
+    exact (GlobalTheory.ThetaFireLift.lift_postOn (X.R.MW j (sg0 D X.A)) _ U).symm
   have hin : ∀ g, (∫ h in X.R.fdV j (X.tupT μ), thetaKO (X.R.ωP j (X.tupT μ)) h g
       (X.R.ptP j (X.tupT μ) (X.R.ioP j (kUnit (X.R.MW j (sg0 D X.A))) (X.fn hμ j x h))) ∂(X.R.νV j (X.tupT μ))) =
       PiTensorProduct.lift U (emb _ (kUnit (X.R.MW j (sg0 D X.A)))) g := by

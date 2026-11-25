@@ -441,10 +441,6 @@ theorem sigmaOf_mul (g h : R.GG) : H.sigmaOf (g * h) = H.sigmaOf g * H.sigmaOf h
   unfold Host.sigmaOf
   exact map_mul _ g h
 
-theorem sigmaOf_one : H.sigmaOf 1 = 1 := by
-  unfold Host.sigmaOf
-  exact map_one _
-
 theorem galE_sigmaOf (g : R.GG) : H.galE (H.sigmaOf g) = g := by
   unfold Host.sigmaOf
   exact MulEquiv.apply_symm_apply _ _
@@ -514,10 +510,6 @@ open Formalism.FrobeniusOrbits Formalism.TwoAdicCyclotomicDecomposition
 open Formalism.L2.Th1.CM (MaximalUnramifiedExtension)
 open Formalism.MainNotions.G (plGG)
 
-theorem embT_tauPl (D : D7) (z : Bool × HH D) : TaylorLogMetric.embT D (tauPl D z) = D.host.emb (plGG D z) := by
-  unfold TaylorLogMetric.embT tauPl
-  rw [Equiv.apply_symm_apply]
-
 theorem eTau_tauPl (D : D7) (z : Bool × HH D) : (D.eTau (tauPl D z) : D.R.GG) = plGG D z := by
   unfold tauPl
   rw [Equiv.apply_symm_apply]
@@ -553,7 +545,7 @@ theorem inertia_pairs : ∀ (D : D7) (p : ℕ) [Fact p.Prime], p = D.host.d → 
     rw [← AlgEquiv.mul_apply, ← sigmaOf_mul]
     have : sInv D.R * sInv D.R = 1 := by
       refine Prod.ext (Prod.ext ?_ ?_) ?_ <;> simp [sInv]
-    rw [this, sigmaOf_one]
+    rw [this, GlobalTheory.InducedType.sigmaOf_one]
     rfl
   · intro y
     change D.host.sigmaOf (sInv D.R) (D.host.sigmaOf (D.R.cc) y) = D.host.sigmaOf (D.R.cc) (D.host.sigmaOf (sInv D.R) y)
@@ -561,7 +553,7 @@ theorem inertia_pairs : ∀ (D : D7) (p : ℕ) [Fact p.Prime], p = D.host.d → 
   · intro z z' h
     have h' : ∀ x, D.host.φ₀ (D.host.sigmaOf (plGG D z) x) = D.host.φ₀ (D.host.sigmaOf (plGG D z') x) := fun x => by
       have := RingHom.congr_fun h x
-      simp only [embT_tauPl] at this
+      simp only [GlobalTheory.InertCompare.embT_tauPl] at this
       exact this
     have hs : D.host.sigmaOf (plGG D z) = D.host.sigmaOf (plGG D z') :=
       AlgEquiv.ext fun x => D.host.φ₀.injective (h' x)
@@ -629,12 +621,6 @@ theorem exists_common_smul {R V : Type*} [CommRing R] [AddCommGroup V] [Module R
   | add x y _ _ hx hy => rw [smul_add]; exact N.add_mem hx hy
   | smul a x _ hx => rw [smul_comm]; exact N.smul_mem _ hx
 
-theorem norm_natCast_of_coprime {p : ℕ} [Fact p.Prime] {s : ℕ} (h : Nat.Coprime s p) :
-    ‖(s : ℂ_[p])‖ = 1 := by
-  have h1 : (s : ℂ_[p]) = algebraMap ℚ_[p] ℂ_[p] (s : ℚ_[p]) := by simp
-  rw [h1, norm_algebraMap']
-  exact Padic.norm_natCast_eq_one_iff.2 h.symm
-
 theorem general {E : Type*} [Field E] {p : ℕ} [Fact p.Prime] (ρ : E →+* ℂ_[p]) {N N' : ℕ}
     (L L₁ : Submodule (𝓞 E) (Fin N → E)) (L' L₁' : Submodule (𝓞 E) (Fin N' → E))
     (P : Matrix (Fin N) (Fin N) E) (P' : Matrix (Fin N') (Fin N') E) (hfg : L₁.FG)
@@ -654,7 +640,7 @@ theorem general {E : Type*} [Field E] {p : ℕ} [Fact p.Prime] (ρ : E →+* ℂ
   have hn : ∀ n : ℕ, Nat.Coprime n p → ‖ρ (((n : 𝓞 E)) : E)‖ = 1 := by
     intro n hn
     rw [RingOfIntegers.coe_eq_algebraMap, map_natCast, map_natCast]
-    exact norm_natCast_of_coprime hn
+    exact GlobalTheory.HeckeVal.norm_natCast_eq_one hn
   have hsm : ∀ {k : ℕ} (n : ℕ) (x : Fin k → E), (n : 𝓞 E) • x = (n : E) • x := by
     intro k n x
     rw [Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul]

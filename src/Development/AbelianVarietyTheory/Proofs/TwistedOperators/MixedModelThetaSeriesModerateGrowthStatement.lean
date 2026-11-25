@@ -405,13 +405,6 @@ namespace GlobalTheory.LevelHeight
 open GlobalTheory.HolDict.ShortVec (intRing finPr)
 open GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies (finCoord)
 
-theorem openSub (D : D7) (V W : HSp D) (U : AddSubgroup (WO V W)) (hU : IsOpen (U : Set (WO V W))) :
-    ∃ M₀ : ℕ, 0 < M₀ ∧ ∀ a : Fin W.rank → Fin V.rank → Fin (Module.finrank D.host.F D.host.E) → Af D.host.F,
-      (∀ i j k, a i j k ∈ intRing D.host.F) →
-      (Matrix.of fun i j => ∑ k, pairA D.host.F 0 ((M₀ : Af D.host.F) * a i j k) ⊗ₜ[D.host.F]
-        Module.finBasis D.host.F D.host.E k : WO V W) ∈ U :=
-  GlobalTheory.T.exists_natMul_integralMatrices_subset_openAddSubgroup D V W U hU
-
 theorem eq_sum_of_infPart (D : D7) (z : AE D) (hz : infPart D z = 0) :
     z = ∑ k, pairA D.host.F 0 (finCoord D (finPr D z) k) ⊗ₜ[D.host.F] Module.finBasis D.host.F D.host.E k :=
   GlobalTheory.T.eq_sum_finiteCoords_of_infinitePart_zero D z hz
@@ -475,7 +468,7 @@ theorem entry_of_map_eq {m n : ℕ} {R S : Type} [CommRing R] [CommRing S] (f : 
 theorem openSubY (D : D7) (V W : HSp D) (U : AddSubgroup (WO V W)) (hU : IsOpen (U : Set (WO V W))) :
     ∃ M₀ : ℕ, 0 < M₀ ∧ ∀ y : WO V W, y.map (infPart D) = 0 →
       (∀ i j k, ∃ b ∈ intRing D.host.F, finCoord D (finPr D (y i j)) k = (M₀ : Af D.host.F) * b) → y ∈ U := by
-  obtain ⟨M₀, hM₀, hsub⟩ := openSub D V W U hU
+  obtain ⟨M₀, hM₀, hsub⟩ := GlobalTheory.T.exists_natMul_integralMatrices_subset_openAddSubgroup D V W U hU
   refine ⟨M₀, hM₀, fun y hy hc => ?_⟩
   choose b hb hbe using hc
   convert hsub b hb using 1

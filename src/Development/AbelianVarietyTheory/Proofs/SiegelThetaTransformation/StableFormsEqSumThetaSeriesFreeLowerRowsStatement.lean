@@ -1228,14 +1228,6 @@ namespace GlobalTheory.Dict.DiagFree
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r g n : ℕ} {X : Data E r}
   {bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ}
 
-theorem vset_one {M : ℕ} {Λ : Lt E n} (h : Λ ∈ Vset E n M) : Λ ∈ Vset E n 1 := by
-  obtain ⟨hfg, hdual, s, hs, -, h1, h2⟩ := h
-  exact ⟨hfg, hdual, s, hs, Nat.coprime_one_right s, h1, h2⟩
-
-theorem conjI_mono {P Q : Ideal (𝓞 E)} (h : P ≤ Q) : conjI P ≤ conjI Q := by
-  unfold conjI
-  exact Ideal.span_mono fun _ ⟨b, hb, e⟩ => ⟨b, h hb, e⟩
-
 theorem isSB_smul (c : ℂ) {φ : TF n g} (h : IsSB φ) : IsSB (c • φ) := by
   obtain ⟨R, hR, h1, h2⟩ := h
   refine ⟨R, hR, fun x hx => h1 x fun h0 => hx ?_, fun x y hy => ?_⟩
@@ -1286,7 +1278,7 @@ theorem thP_phi_eq_thP_phiF : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   have hcopJ : IsCoprime 𝔍 (conjI 𝔍) := by
     have h1 := D.cop
     rw [Ideal.isCoprime_iff_sup_eq] at h1 ⊢
-    exact top_unique (h1.symm.le.trans (sup_le_sup hle (conjI_mono hle)))
+    exact top_unique (h1.symm.le.trans (sup_le_sup hle (GlobalTheory.Dict.SumFree.conjI_mono hle)))
   obtain ⟨α, 𝔞, hα, hspan, hcopa⟩ := GlobalTheory.T.exists_cmField_generator_at_primes_dividing E 𝔍 M h𝔍 hM
   set H : Matrix (Fin n) (Fin n) E :=
     Matrix.diagonal (fun k : Fin n => if (k : ℕ) < r then 1 else cc (α : E) / (α : E)) with hHdef
@@ -1295,7 +1287,7 @@ theorem thP_phi_eq_thP_phiF : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   obtain ⟨t, ht0, ht⟩ := GlobalTheory.T.sum_moved_vacuum_translates_eq_freeRow_testFunction E r X g bas idx n hs hn D hrn M 𝔐 𝔍 𝔞 α hM hMm hsplit hcop hα
     hspan hcopa v₀ hv₀ H hHdef Λ hΛ Λ' hΛ' Λ'' hΛ'' hmv hle1 hle2
   obtain ⟨t', ht'1, ht'⟩ := GlobalTheory.T.thetaVacuum_unitary_column_change_unit_factor E r X g bas idx n hs hn D.w D.w_int D.w_tr H hunit Λ
-    (vset_one hΛ) Λ'' hΛ'' hmv
+    (GlobalTheory.Dict.SumFree.mem_Vset_one hΛ) Λ'' hΛ'' hmv
   obtain ⟨P', hP', hPd⟩ := GlobalTheory.T.exists_rowHighest_harmonic_polyDeriv_unitaryAction E r X g q0 hr bas idx n hs hn H hunit k k' P hP
   have ht'0 : t' ≠ 0 := by
     intro h0

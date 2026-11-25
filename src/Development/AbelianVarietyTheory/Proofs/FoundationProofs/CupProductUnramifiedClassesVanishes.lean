@@ -298,9 +298,6 @@ theorem natMul_memJ (n q : ℕ) {y : Qbar l} (hy : ‖y‖ ≤ 1) : ((l ^ n * q 
   calc _ ≤ ‖((l : ℕ) : Qbar l) ^ n‖ * 1 * 1 := by gcongr
     _ = _ := by ring
 
-theorem eps_mul' (s t : G ℚ Ω) : eps l (s * t) = eps l s * eps l t := by
-  simp [eps, map_mul]
-
 theorem eps_pow' (s : G ℚ Ω) (i : ℕ) : eps l (s ^ i) = eps l s ^ i := by
   simp [eps, map_pow]
 
@@ -453,7 +450,7 @@ theorem twoCocycleModPow_coboundary_of_frobenius_split (l : ℕ) [Fact l.Prime] 
       exact mul_le_one₀ (pow_le_one₀ (norm_nonneg _) (CupCob.norm_le_one_of_mem c (CupCob.eps_mem c g)))
         (norm_nonneg _) (CupCob.norm_le_one_of_mem c (Tr_mem c ξ g hint b))
     have em := mul_memJ hn1 he
-    have eeps : eps l s = eps l g ^ a * eps l κ1 := by rw [← es, eps_mul', eps_pow']
+    have eeps : eps l s = eps l g ^ a * eps l κ1 := by rw [← es, GlobalTheory.Ord2.OpenInv.eps_mul, eps_pow']
     rw [eeps]
     have e : ξ s t - (eps l g ^ a * eps l κ1 * T b - T ((a + b) % (m * l ^ n)) + T a) =
         (ξ s t - ξ (g ^ a) t) + (ξ (g ^ a) t - ξ (g ^ a) (g ^ b)) +

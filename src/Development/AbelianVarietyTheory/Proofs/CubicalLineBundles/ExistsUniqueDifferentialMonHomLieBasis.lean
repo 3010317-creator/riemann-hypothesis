@@ -59,16 +59,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.GeometryOfNumbersTheory
 open scoped CategoryTheory.Obj
 open GlobalTheory GlobalTheory.CM
-
-namespace GlobalTheory.DerivZero
-
-theorem exists_lift_isMonHom {S S' : Scheme.{0}} {j : S' ⟶ S} {G H : Over S} {G' H' : Over S'} [GrpObj G] [GrpObj H]
-    [GrpObj G'] [GrpObj H'] {φ : G'.left ⟶ G.left} {ψ : H'.left ⟶ H.left} (hG : IsGrpPullback G' G j φ)
-    (hH : IsGrpPullback H' H j ψ) (f : G ⟶ H) [IsMonHom f] :
-    ∃ f' : G' ⟶ H', IsMonHom f' ∧ f'.left ≫ ψ = φ ≫ f.left := by
-  apply GlobalTheory.NormHom.exists_monHom_lift <;> assumption
-
-end GlobalTheory.DerivZero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EqOfLieBasisComplex =====
@@ -111,7 +101,7 @@ theorem existsUnique_isDiffOf : ∀ (K : Type) [Field K] [NumberField K] (P : Ou
     ∃ f₀ : F.P₀.A ⟶ F'.P₀.A, IsMonHom f₀ ∧ f₀.left ≫ F'.φ = F.φ ≫ f.left ∧
       ∀ M, F.IsDiffOf F' f M → ∀ c w, IsLieComb c F.v w → IsLieComb (M c) F'.v (w ≫ f₀) := by
   intro K _ _ P F P' F' f hf
-  obtain ⟨f₀, hf₀, e⟩ := DerivZero.exists_lift_isMonHom F.fib.2.1 F'.fib.2.1 f
+  obtain ⟨f₀, hf₀, e⟩ := GlobalTheory.NormHom.exists_monHom_lift F.fib.2.1 F'.fib.2.1 f
   have := F'.P₀.isAb.comm
   obtain ⟨M, hM⟩ := exists_linearMap f₀ F.basis F'.basis
   have hd : F.IsDiffOf F' f M := by

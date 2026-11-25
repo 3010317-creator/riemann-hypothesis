@@ -775,8 +775,8 @@ theorem _root_.UpperTheory.Gal.Int.Inp.holdsS_good_phi : UpperTheory.Gal.Int.Inp
     simpa [GlobalTheory.TripleGal.rk1, Function.comp_def] using this
   have hdR := (GlobalTheory.Published.heckeLAdicCharacterAbove_iff.1 hI.hk E Ω l P AI ⟨T⟩ ι art hart κ m μ hκ' hμc hL w A h O Bw hj).1
   have hPμ := GlobalTheory.Published.DeRhamPotSemistable.isPstAt hI.pst T Bw _ hcμ hdR
-  have hP := isPstAt_of_isSstAt P AI ⟨T⟩ Bw _ hsst
-  have hP' := isPstAt_of_isSstAt P AI ⟨T⟩ Bw _ c1s
+  have hP := GlobalTheory.GalCut.IwaAll.isPstAt_of_isSstAt P AI ⟨T⟩ Bw _ hsst
+  have hP' := GlobalTheory.GalCut.IwaAll.isPstAt_of_isSstAt P AI ⟨T⟩ Bw _ c1s
   rw [htw] at hP'
   have hWD : wdAt P ι Bw h hj ((tw r μ).comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) =
       (wdAt P ι Bw h hj (r.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype)).lpTwist ((κ.loc w).comp a') (ha'.smooth hc.1) := by

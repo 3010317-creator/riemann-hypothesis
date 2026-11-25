@@ -143,9 +143,6 @@ theorem finrank_eigenSub {K : Type} [Field K] [NumberField K] {P : Out.PolAV (Sp
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host E)
 
-theorem bar_rt : H.bar H.rt = -H.rt := by
-  apply GlobalTheory.QuadTrace.bar_rt
-
 theorem card_half {K : Type} [Field K] [NumberField K] {ρ : 𝓞 K} (hs : Splits E K) (hρ : ρ ^ 2 = -(H.d : 𝓞 K)) :
     (∀ τ : 𝓞 E →+* 𝓞 K, ¬ τ H.rt = ρ ↔ τ H.rt = -ρ) ∧
     Nat.card {τ : 𝓞 E →+* 𝓞 K // τ H.rt = ρ} = Module.finrank ℚ E / 2 ∧
@@ -174,7 +171,7 @@ theorem card_half {K : Type} [Field K] [NumberField K] {ρ : 𝓞 K} (hs : Split
       exact (key τ).resolve_left h
     · intro h h'
       exact hne (h'.symm.trans h)
-  have hbar : H.bar H.rt = -H.rt := bar_rt H
+  have hbar : H.bar H.rt = -H.rt := GlobalTheory.HostModel.bar_rt H
   let e : {τ : 𝓞 E →+* 𝓞 K // τ H.rt = ρ} ≃ {τ : 𝓞 E →+* 𝓞 K // τ H.rt = -ρ} :=
     { toFun := fun τ => ⟨τ.1.comp H.bar.toRingHom, by simp [hbar, τ.2]⟩
       invFun := fun τ => ⟨τ.1.comp H.bar.toRingHom, by simp [hbar, τ.2]⟩

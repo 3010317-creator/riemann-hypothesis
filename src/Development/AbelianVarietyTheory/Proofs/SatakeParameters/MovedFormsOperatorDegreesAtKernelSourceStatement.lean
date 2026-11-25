@@ -989,13 +989,6 @@ namespace GlobalTheory.TwV.DelA
 
 open MvPolynomial
 
-theorem transpC_eval_aeval {σ κ : Type} (x : κ → ℂ) (g : σ → MvPolynomial κ ℂ) (Q : MvPolynomial σ ℂ) :
-    eval x (aeval g Q) = eval (fun i => eval x (g i)) Q := by
-  induction Q using MvPolynomial.induction_on with
-  | C c => simp
-  | add p q hp hq => rw [map_add (f := _), map_add (f := _), hp, hq, map_add (f := _)]
-  | mul_X p v hp => rw [map_mul, map_mul, hp, map_mul, aeval_X, eval_X]
-
 theorem transpC_map_eval {σ Kc : Type} [CommRing Kc] (ι : ℂ →+* Kc) (x : σ → ℂ) (R : MvPolynomial σ ℂ) :
     eval (fun i => ι (x i)) (map ι R) = ι (eval x R) := by
   induction R using MvPolynomial.induction_on with
@@ -1018,7 +1011,7 @@ theorem evFr_scalar_of_wtPol (D : D7) {N : ℕ} (ν : D.what₂.Tau → Fin N �
     ⟨fun r c hcr => by simp [Matrix.one_apply_ne hcr.ne'], fun r => by simp [hs τ]⟩
   have h1 : colSub (fun τ => s τ • (1 : Matrix (Fin N) (Fin N) ℂ)) Q = _ := hQ _ hB
   have h2 := congrArg (eval (fun k : GL3Theta.FrV D N => y k.1 k.2.1 k.2.2)) h1
-  simp only [colSub, transpC_eval_aeval, smul_eval] at h2
+  simp only [colSub, GlobalTheory.TwV.DelA.BlockHom.eval_aeval_gen, smul_eval] at h2
   have h3 : (∏ τ, ∏ r, (s τ • (1 : Matrix (Fin N) (Fin N) ℂ)) r r ^ ν τ r) = ∏ τ, ∏ r, s τ ^ ν τ r := by simp
   rw [h3] at h2
   unfold GL3Theta.evFr

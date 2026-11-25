@@ -796,13 +796,6 @@ open GlobalTheory.KFourier MeasureTheory
 
 namespace GlobalTheory.KGap
 
-theorem entry_sq_le_hs {n : ℕ} (Y : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) : ‖Y i j‖ ^ 2 ≤ Formalism.REAL.hs Y := by
-  unfold Formalism.REAL.hs
-  calc ‖Y i j‖ ^ 2 ≤ ∑ j', ‖Y i j'‖ ^ 2 :=
-        Finset.single_le_sum (f := fun j' => ‖Y i j'‖ ^ 2) (fun _ _ => by positivity) (Finset.mem_univ j)
-    _ ≤ ∑ i', ∑ j', ‖Y i' j'‖ ^ 2 :=
-        Finset.single_le_sum (f := fun i' => ∑ j', ‖Y i' j'‖ ^ 2) (fun _ _ => by positivity) (Finset.mem_univ i)
-
 theorem hs_nonneg' {n : ℕ} (Y : Matrix (Fin n) (Fin n) ℂ) : 0 ≤ Formalism.REAL.hs Y := by
   unfold Formalism.REAL.hs; positivity
 
@@ -811,7 +804,7 @@ theorem sup_norm_sq_le_hs {n : ℕ} (Y : Matrix (Fin n) (Fin n) ℂ) :
   have h : ‖(Matrix.of.symm Y : Fin n → Fin n → ℂ)‖ ≤ Real.sqrt (Formalism.REAL.hs Y) := by
     refine (pi_norm_le_iff_of_nonneg (Real.sqrt_nonneg _)).2 fun i => ?_
     refine (pi_norm_le_iff_of_nonneg (Real.sqrt_nonneg _)).2 fun j => ?_
-    exact Real.le_sqrt_of_sq_le (entry_sq_le_hs Y i j)
+    exact Real.le_sqrt_of_sq_le (Formalism.REAL.f1auxiliary_entry_le Y i j)
   calc ‖(Matrix.of.symm Y : Fin n → Fin n → ℂ)‖ ^ 2 ≤ Real.sqrt (Formalism.REAL.hs Y) ^ 2 :=
         pow_le_pow_left₀ (norm_nonneg _) h 2
     _ = Formalism.REAL.hs Y := Real.sq_sqrt (hs_nonneg' Y)

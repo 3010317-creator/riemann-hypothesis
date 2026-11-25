@@ -213,8 +213,6 @@ theorem abstract {S R A F : Type} [CommRing S] [CommRing A] [IsDomain A] [CommRi
   rw [det_mul, h, mul_zero, ← RingHom.mapMatrix_apply, ← RingHom.map_det] at this
   exact hB (heb (by rw [← this, map_zero]))
 
-alias lim_of_complete := _root_.GlobalTheory.ModularLimit.exists_limit
-
 variable {l : ℕ} [hl : Fact l.Prime] {K : FinExt l} (bk : BK K)
 
 theorem lim_S (f : ℕ → bk.S) (hf : ∀ k, (l : bk.S) ^ k ∣ f (k + 1) - f k) :
@@ -222,7 +220,7 @@ theorem lim_S (f : ℕ → bk.S) (hf : ∀ k, (l : bk.S) ^ k ∣ f (k + 1) - f k
   haveI : IsAdicComplete (Ideal.span {(l : Wq l bk.a)}) (Wq l bk.a) := WittVector.isAdicCompleteIdealSpanP
   have hC : ∀ k, (l : bk.S) ^ k = C ((l : Wq l bk.a) ^ k) := fun k => by rw [map_pow, map_natCast]
   have : ∀ i, ∃ z, ∀ k, (l : Wq l bk.a) ^ k ∣ z - coeff i (f k) := fun i =>
-    lim_of_complete _ _ fun k => by
+    GlobalTheory.ModularLimit.exists_limit _ _ fun k => by
       obtain ⟨q, hq⟩ := hf k
       exact ⟨coeff i q, by rw [← map_sub, hq, hC, coeff_C_mul]⟩
   choose z hz using this

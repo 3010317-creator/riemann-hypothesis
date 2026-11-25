@@ -260,8 +260,6 @@ theorem exists_const (X : Data E r) (la : Wt X.Ψ r) (ρ : ℝ) (hρ : 0 < ρ)
   rw [(h3 x hx b hb).2, mul_eq_zero, or_iff_right (bchar_ne_zero_of_mem_bor la hb)] at h6
   rw [h5 x hx, h6, mul_zero, mul_zero]
 
-alias isSB_smul_tf := _root_.GlobalTheory.Dict.ShortVal.isSB_smul
-
 theorem isSB_gphi {X : Data E r} {bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ} (idx : Fin g ≃ X.Ψ × Fin r)
     (hs : IsSympl X bas) (hn : Even n) {w : E} (hw : IsIntegral ℤ w) (hw' : w + cc w = 1) {L : Lt E r}
     (hL : SelfD X L) {M : ℕ} {Λ : Lt E n} (hΛ : Λ ∈ Vset E n M) {v : TF n g} (hv : IsSB v) {Q : Type}
@@ -269,9 +267,9 @@ theorem isSB_gphi {X : Data E r} {bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.
   obtain ⟨⟨v', hv'⟩, -, h, -⟩ := TensVac.vacua E r X g bas idx n hs hn w hw hw' L hL M Λ hΛ
   refine finsum_induction (fun φ : TF n g => IsSB φ) isSB_zero
     (fun φ ψ h h' => (isSB_algebra_haar_linear ℚ _ _ φ ψ h h').1) fun q =>
-    isSB_smul_tf _ ((heisG_laws E r X g bas idx n hs hn).2.2.2 _ _ ?_).1
+    GlobalTheory.Dict.ShortVal.isSB_smul _ ((heisG_laws E r X g bas idx n hs hn).2.2.2 _ _ ?_).1
   rw [h v hv v' hv']
-  exact isSB_smul_tf _ hv'.1
+  exact GlobalTheory.Dict.ShortVal.isSB_smul _ hv'.1
 
 end GlobalTheory.ClsVal.Const
 

@@ -402,15 +402,6 @@ open scoped MatrixGroups NNReal
 open Polynomial GlobalTheory.KZ GlobalTheory.Glue GlobalTheory.K5 GlobalTheory.KummerEisensteinGalois
 
 
-theorem _root_.GlobalTheory.T.residue_linear_disjointness_coeff_lt_one :
-    ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 p) Ω],
-      IsClo p Ω → ∀ (v : Valuation Ω ℝ≥0), (∀ x : Ω, v x ≤ 1 ↔ IsInt (p := p) x) →
-      v (p : Ω) < 1 → ∀ (T : GlobalTheory.K5.Tower p Ω) (n : ℕ) (ψ : O0 p →+* Ω),
-      IsReb T n ψ → ∀ (d : ℕ) (e : Fin d → Ω) (a : Fin d → Lau p),
-      (∀ t, IsInt (p := p) (e t) ∧ IsAlgZp (p := p) (e t)) →
-      v (∑ t, e t * ψ (algebraMap (Lau p) (O0 p) (a t))) < 1 →
-      ∀ r : ℤ, v (∑ t, e t * zp Ω ((a t).coeff r)) < 1 := by
-  apply _root_.GlobalTheory.K5.ResDisj.coeff_lt_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FoundationProofs.ResidueLinearDisjointnessCoeffLtOneStatement =====
@@ -582,7 +573,7 @@ theorem GlobalTheory.Glue.ev_cong_iff_and_unit :
     have LeviInductionForms : ∀ b : Fin F → Lau p, v (∑ j, κ j * ψ (algebraMap (Lau p) (O0 p) (b j))) < 1 →
         ∀ j, (p : Lau p) ∣ b j := by
       intro b hb j
-      have hr := GlobalTheory.T.residue_linear_disjointness_coeff_lt_one p Ω hC v hv hp1 T n ψ hψ F κ b (fun j => hκ j) hb
+      have hr := GlobalTheory.K5.ResDisj.coeff_lt_one p Ω hC v hv hp1 T n ψ hψ F κ b (fun j => hκ j) hb
       rw [← pow_one (p : Lau p), GlobalTheory.K5.Basic.natCast_pow_dvd_iff]
       intro r
       by_contra hnd
@@ -624,7 +615,7 @@ theorem GlobalTheory.Glue.ev_cong_iff_and_unit :
       exact (inv_le_one₀ (pos_iff_ne_zero.2 h0)).1 h1
     have hx1 : v x = 1 := by
       refine le_antisymm hxv (not_lt.1 fun hlt => ?_)
-      have h3 := GlobalTheory.T.residue_linear_disjointness_coeff_lt_one p Ω hC v hv hp1 T n ψ hψ d e a he (by rwa [← hx]) r
+      have h3 := GlobalTheory.K5.ResDisj.coeff_lt_one p Ω hC v hv hp1 T n ψ hψ d e a he (by rwa [← hx]) r
       rw [← hc r, hcr] at h3
       exact lt_irrefl _ h3
     have hx0 : x ≠ 0 := by

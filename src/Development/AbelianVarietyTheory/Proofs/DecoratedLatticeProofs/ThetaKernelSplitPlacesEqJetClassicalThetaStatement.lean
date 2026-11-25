@@ -352,15 +352,6 @@ theorem selfDualC_of (V : HSp D) (hV : V.gram = 1) (N : Submodule (𝓞 D.host.E
     simp [Formalism.L2.Col.hStd, Matrix.one_apply]
   rw [e]
 
-theorem noConj {e : AE D} {SS : Finset (Formalism.L2.DIV.Pl D.host.E)} (hE : IsIdemSum e SS) :
-    ∀ P ∈ SS, Formalism.L2.Col.conjPrime₂ P ∉ SS := by
-  obtain ⟨⟨es, hes, he⟩, hc⟩ := hE
-  intro P hP hP'
-  have hv : Formalism.IndefR.Fin.belowPl P = Formalism.IndefR.Fin.belowPl (Formalism.L2.Col.conjPrime₂ P) :=
-    HeightOneSpectrum.ext (congrArg HeightOneSpectrum.asIdeal (GlobalTheory.GridPlaces.under_conjP P)).symm
-  have h := Formalism.IndefR.Fin.LevelGroupLemmas.idemSum_below_inj hes he hc hP hP' hv
-  exact GlobalTheory.ModulusNorm.conjPl_ne_of_isIdemAt (hes P hP) ((GlobalTheory.PlaceDict.conjP_eq_conjPl D P).symm.trans h.symm)
-
 end GlobalTheory.HalfBInt
 
 
@@ -370,7 +361,7 @@ theorem GlobalTheory.HalfBInt.trace_int : ∀ (D : D7) (ψ : AddChar (AF D.host.
   subst hS hT
   obtain rfl : ΛS = N := SetLike.coe_injective eS
   obtain rfl : ΛT = N' := SetLike.coe_injective eT
-  have hnc := noConj hE
+  have hnc := GlobalTheory.PerLift.conjP_notMem_of_isIdemSum hE
   have hyT : y ∈ perO (D.host.AA0 : Submodule (𝓞 D.host.E) D.host.E) ΛS (twist₂ ΛT c (expS SS)) := by
     rw [← Formalism.L2.Ker.twist_homomorphism _ _ _ _ ΛS ΛT c _ dS.1.fg hc]
     exact hy

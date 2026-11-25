@@ -134,13 +134,6 @@ variable {D : D7} {Z : LocDat D} {T T' : D.host.E} {F0 : LFlag (D.sp.Y 0) D.R.rS
 theorem grp_mul (ρ a b : (VS D).V ≃ₗ[D.host.E] (VS D).V) : c.grp ρ (a * b) = c.grp ρ a * c.grp ρ b := by
   ext x; simp [GCoord.grp]
 
-theorem grp_one (ρ : (VS D).V ≃ₗ[D.host.E] (VS D).V) : c.grp ρ 1 = 1 := by
-  ext x; simp [GCoord.grp]
-
-theorem grp_inv (ρ a : (VS D).V ≃ₗ[D.host.E] (VS D).V) : c.grp ρ a⁻¹ = (c.grp ρ a)⁻¹ := by
-  refine eq_inv_of_mul_eq_one_left ?_
-  rw [← grp_mul, inv_mul_cancel, grp_one]
-
 theorem grp_conj (ρ τ a : (VS D).V ≃ₗ[D.host.E] (VS D).V) : c.grp (ρ * τ) a = c.grp ρ (τ * a * τ⁻¹) := by
   ext x; simp [GCoord.grp, LinearEquiv.mul_eq_trans]
 
@@ -215,10 +208,10 @@ theorem term_eq_iff_lRel : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' :
         _ = t₀.lin * (m' * m⁻¹) * t₀.lin⁻¹ := by group
     refine ⟨c.grp ρ (n' * n⁻¹), ?_, ?_⟩
     · have h1 : c.grp ρ (n' * n⁻¹) ∈ G.N := by
-        rw [grp_mul, grp_inv]
+        rw [grp_mul, GlobalTheory.HL.TermSurj.grp_inv]
         exact G.N.mul_mem ((hN n').1 hn') (G.N.inv_mem ((hN n).1 hn))
       have h2 : c.grp ρ (n' * n⁻¹) ∈ G.N' := by
-        rw [key, ← grp_conj, grp_mul, grp_inv]
+        rw [key, ← grp_conj, grp_mul, GlobalTheory.HL.TermSurj.grp_inv]
         exact G.N'.mul_mem ((hN' m').1 hm') (G.N'.inv_mem ((hN' m).1 hm))
       exact mem_rat_inf _ _ _ h1 h2
     · rw [lat_map_grp]
@@ -235,7 +228,7 @@ theorem term_eq_iff_lRel : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' :
     set a := n'⁻¹ * σ * n with ha_def
     set b := m⁻¹ * t₀.lin⁻¹ * σ⁻¹ * t₀.lin * m' with hb_def
     have haN : a ∈ NRat (lf D (X.Fu u)) := by
-      rw [hN, ha_def, grp_mul, grp_mul, grp_inv, hsσ]
+      rw [hN, ha_def, grp_mul, grp_mul, GlobalTheory.HL.TermSurj.grp_inv, hsσ]
       exact G.N.mul_mem (G.N.mul_mem (G.N.inv_mem ((hN n').1 hn')) hsN) ((hN n).1 hn)
     have hσ' : c.grp (ρ * t₀.lin) (t₀.lin⁻¹ * σ * t₀.lin) = s := by
       rw [grp_conj, ← hsσ]
@@ -243,7 +236,7 @@ theorem term_eq_iff_lRel : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' :
       group
     have hbN : b ∈ NRat (lf D (X.Fu u')) := by
       have eb : b = m⁻¹ * (t₀.lin⁻¹ * σ * t₀.lin)⁻¹ * m' := by rw [hb_def]; group
-      rw [hN', eb, grp_mul, grp_mul, grp_inv, grp_inv, hσ']
+      rw [hN', eb, grp_mul, grp_mul, GlobalTheory.HL.TermSurj.grp_inv, GlobalTheory.HL.TermSurj.grp_inv, hσ']
       exact G.N'.mul_mem (G.N'.mul_mem (G.N'.inv_mem ((hN' m).1 hm)) (G.N'.inv_mem hsN')) ((hN' m').1 hm')
     have haΛ : Formalism.HermitianLatticesTheory.gmap a t.lam = t.lam := by
       rw [ha_def, mul_assoc, gmap_mul, hΛ, ← gmap_mul, inv_mul_cancel, gmap_one]

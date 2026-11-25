@@ -530,8 +530,6 @@ open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions F
 open scoped TensorProduct
 attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.couplingCosetsInFrames_eq_iff_reductions : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)} {S : Set ℕ} {mu : Tup X.F X.E X.K S} {cst : LocCst X (rowSG Pr sel mu)} {u : Pr.Word} {j : ℕ}, (∀ P ∈ QE sel (mu : Chr X.F X.E X.K), P ∉ Pr.vGs) → (∀ w ∈ Pr.vGs, ((Formalism.L2.Col.qOf w : ℕ) : 𝓞 X.E) ∉ w.asIdeal ^ 2) → ∀ (r r' : PtAt R sel mu cst u j), cosetIn r = cosetIn r' ↔ bar r = bar r' ∧ GlobalTheory.Mem.Col2.ChEx.cqOf r = GlobalTheory.Mem.Col2.ChEx.cqOf r' := by
-  exact @GlobalTheory.Mem.Col2.ChEx.cosetIn_eq_iff_bar_cq
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetsInFramesEqIffReductionsStatement =====
@@ -1165,9 +1163,6 @@ open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions F
 open scoped TensorProduct
 attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.localLevelCharacter_finiteOrder : ∀ {F E K : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E] [Field K] (hc : Formalism.BasicNotions.CMData F E) {n : ℕ} [NeZero n] {Q : Finset (Pl E)} (Θ : LevQFam E K n Q) (hQ : ∀ P : Q, conjPrime₂ P.1 ≠ P.1) (hΘ : ThetaOpen Θ) (P : Q), ∃ m : ℕ, 0 < m ∧ ∀ k, (qbLoc hc Θ hQ hΘ).chr P k ^ m = 1 := by
-  intro F E K _ _ _ _ _ _ _ hc n _ Q Θ hQ hΘ P
-  exact GlobalTheory.Mem.Col2.ChEx.qbLoc_chr_exp hc Θ hQ hΘ P
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalLevelCharacterFiniteOrderStatement =====
@@ -1388,7 +1383,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarR
 
 theorem qb_chr_root {K : Type} [Field K] (Θ : LevQFam E K n Q) (hQ : ∀ P : Q, conjPrime₂ P.1 ≠ P.1) (hΘ : ThetaOpen Θ) (P : Q) :
     ∃ m : ℕ, 0 < m ∧ ∀ k, (qbLoc hc Θ hQ hΘ).chr P k ^ m = 1 :=
-  GlobalTheory.T.localLevelCharacter_finiteOrder hc Θ hQ hΘ P
+  GlobalTheory.Mem.Col2.ChEx.qbLoc_chr_exp hc Θ hQ hΘ P
 
 theorem thetaOpen_cutQ {K : Type} [Field K] (Θ : LevQFam E K n Q) (hΘ : ThetaOpen Θ) (C : ∀ P : Q, Set (Sp E n))
     (hC : ∀ P : Q, C P = ∅ ∨ ∃ (z : Sp E n) (c : E), c ≠ 0 ∧ C P = {x | c⁻¹ • (x - z) ∈ stdAt E n P.1}) : ThetaOpen (cutQ Θ C) :=
@@ -1431,11 +1426,6 @@ section PtL
 
 variable {X : Fields} {Pr : Primes X} {R : Ranks} {sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)} {S : Set ℕ}
   {mu : Tup X.F X.E X.K S} {cst : LocCst X (rowSG Pr sel mu)} {u : Pr.Word} {j : ℕ}
-
-theorem cosetIn_iff (hd : ∀ P ∈ QE sel (mu : Chr X.F X.E X.K), P ∉ Pr.vGs)
-    (hq : ∀ w ∈ Pr.vGs, ((Formalism.L2.Col.qOf w : ℕ) : 𝓞 X.E) ∉ w.asIdeal ^ 2) (r r' : PtAt R sel mu cst u j) :
-    cosetIn r = cosetIn r' ↔ bar r = bar r' ∧ cqOf r = cqOf r' :=
-  GlobalTheory.T.couplingCosetsInFrames_eq_iff_reductions hd hq r r'
 
 alias exists_pt_inv := _root_.GlobalTheory.Mem.Col2.ChEx.TwLift.exists_ptAt_bar_cq_eq
 
@@ -1496,7 +1486,7 @@ theorem inv_norm (hI : I.Ok) (hPr : (B.primes X).Ok) (u : B.Word) (a : I.ι) (i 
     bar (rpT I u a i ((I.stp u a i).cl b q)) = bar (rpT I u a i ((I.stp u a i).cl b q')) ∧
     cqOf (rpT I u a i ((I.stp u a i).cl b q)) = cqOf (rpT I u a i ((I.stp u a i).cl b q')) := by
   have hd := q_disj I hI a
-  rw [← cosetIn_iff hd (hqG hPr)]
+  rw [← GlobalTheory.Mem.Col2.ChEx.cosetIn_eq_iff_bar_cq hd (hqG hPr)]
   by_cases hi : i + 1 = B.R.m
   swap
   · exact cos_of_neT I hi _ _
@@ -1508,7 +1498,7 @@ theorem inv_norm (hI : I.Ok) (hPr : (B.primes X).Ok) (u : B.Word) (a : I.ι) (i 
   funext r
   refine propext (exists_congr fun g => ?_)
   have : cosetIn (ya (lvG I a i b) (lvQ I a i b) g q) = cosetIn (ya (lvG I a i b) (lvQ I a i b) g q') := by
-    rw [cosetIn_iff hd (hqG hPr)]
+    rw [GlobalTheory.Mem.Col2.ChEx.cosetIn_eq_iff_bar_cq hd (hqG hPr)]
     refine ⟨?_, ?_⟩
     · funext w
       rw [bar_ya, bar_ya, h]
@@ -1649,7 +1639,7 @@ theorem lev_at (hI : I.Ok) (hPr : (B.primes X).Ok) {u : B.Word} {a : I.ι} {i : 
   subst hb
   have hd := q_disj I hI a
   refine (_root_.GlobalTheory.Mem.Col2.ChEx.lev_iff_frames B.sp.cm cqOf (_root_.GlobalTheory.Mem.Col2.ChEx.invActs_cqOf hd) (lvG I a i c.1) (lvQ I a i c.1) (rpT I u a i c) C hC D hD q hg hx p e e').trans ?_
-  exact exists_congr fun κ => and_congr Iff.rfl (and_congr Iff.rfl (cosetIn_iff hd (hqG hPr) _ _).symm)
+  exact exists_congr fun κ => and_congr Iff.rfl (and_congr Iff.rfl (GlobalTheory.Mem.Col2.ChEx.cosetIn_eq_iff_bar_cq hd (hqG hPr) _ _).symm)
 
 
 theorem chr_at {u : B.Word} {a : I.ι} {i : ℕ} (c : (I.stp u a i).Cl) (b : (I.stp u a i).β) (hb : c.1 = b)
@@ -1682,7 +1672,7 @@ theorem exists_charts : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok →
   choose s hs using onto
   have hp : ∀ β c, GlobalTheory.Mem.Col2.TC.ChTw.chartOf I u a i c = β ↔
       c.1 = (s β).1 ∧ bar (rpT I u a i c) = bar (rpT I u a i (s β)) ∧ cqOf (rpT I u a i c) = cqOf (rpT I u a i (s β)) := fun β c => by
-    rw [← cosetIn_iff hd hq]
+    rw [← GlobalTheory.Mem.Col2.ChEx.cosetIn_eq_iff_bar_cq hd hq]
     conv_lhs => rw [← hs β]
     exact key c (s β)
   choose g hg using fun c : (I.stp u a i).Cl => GlobalTheory.T.exists_adelicPoint_decoratedLattice_allTwists I hI u _ (extTo I.SQ ((I.stp u a i).rep c).1.1)

@@ -613,16 +613,6 @@ noncomputable section
 
 namespace GlobalTheory.CMFam
 
-open IntermediateField
-
-theorem even_finrank (E Ω : Type) [Field E] [NumberField E] [IsCMField E] [Field Ω] [Algebra E Ω]
-    (Q : GlobalTheory.RealGal.QCM E Ω) : Even (Module.finrank ℚ (maximalRealSubfield Q.K)) :=
-  _root_.GlobalTheory.RealGal.QCM.even_finrank_maximalRealSubfield E Ω Q
-
-end GlobalTheory.CMFam
-
-namespace GlobalTheory.CMFam
-
 theorem dvd_of_mem {K : Type} [Field K] [NumberField K] (w : HeightOneSpectrum (𝓞 K)) {q n : ℕ} (hq : q.Prime)
     (hqw : (q : 𝓞 K) ∈ w.asIdeal) (hn : (n : 𝓞 K) ∈ w.asIdeal) : q ∣ n := by
   by_contra h
@@ -727,7 +717,7 @@ theorem GlobalTheory.GalCut.infinite_qcm_split_good : AutomorphicFormsFiniteGL �
       refine ⟨w, GlobalTheory.SqrtNegRam.not_isUnramifiedAt_of_sq_eq_neg E ↥Q.K p hp.1 (hdisc p hp) y hy2 w hw, ?_⟩
       by_contra hB
       exact hp.2.1 (hTS p hp.1 _ hB ((natCast_mem_under w p).2 hw))
-    · refine ⟨⟨y, p, hp.1.pos, by rw [hy2]⟩, even_finrank E Ω Q, fun w hw => ?_⟩
+    · refine ⟨⟨y, p, hp.1.pos, by rw [hy2]⟩, GlobalTheory.RealGal.QCM.even_finrank_maximalRealSubfield E Ω Q, fun w hw => ?_⟩
       obtain ⟨q, hq, hqw⟩ := exists_prime_mem w
       have hqT : q ∉ T := fun h => hw (hsplit q h w hqw)
       refine ⟨fun hl => hqT (prime_eq_of_mem w (Fact.out : l.Prime) hq hl hqw ▸ hTl), ?_, ?_⟩

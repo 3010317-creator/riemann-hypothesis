@@ -135,9 +135,6 @@ theorem xiL_map (hH : ∀ x y, H (T x) (T y) = H x y) (hα : ∀ x, α (T x) = �
   refine Finset.sum_congr rfl fun y _ => ?_
   rw [hatS_map H T hH, hα, hα, hH, hH, ← map_add (f := _), opU_map H T hH]
 
-alias isReps_image := _root_.GlobalTheory.TransportLemma.transport
-
-
 omit [DecidableEq V] in
 theorem repsOf_of_exists {Λ₁ Λ₂ : AddSubgroup V} (h : ∃ S, IsReps Λ₁ Λ₂ S) : IsReps Λ₁ Λ₂ (repsOf Λ₁ Λ₂) := by
   unfold repsOf
@@ -152,12 +149,12 @@ theorem xiL_transport {A B Λ A₁ B₁ Λ₁ : AddSubgroup V} (hyp : SplitHyp H
   have hΛA : ∀ x, T x ∈ Λ ⊓ A ↔ x ∈ Λ₁ ⊓ A₁ := fun x => by
     rw [AddSubgroup.mem_inf, AddSubgroup.mem_inf, hΛ, hA]
   rw [← xiL_map H α T hH hα]
-  exact twist_representatives V H α A B Λ hyp SX SA SB _ _ _ hSX hSA hSB (isReps_image T hSX₁ hΛ hA)
-    (isReps_image T hSA₁ hB hΛA) (isReps_image T hSB₁ hΛ hB) vol θ hθ Φ hΦ (T z)
+  exact twist_representatives V H α A B Λ hyp SX SA SB _ _ _ hSX hSA hSB (GlobalTheory.TransportLemma.transport T hSX₁ hΛ hA)
+    (GlobalTheory.TransportLemma.transport T hSA₁ hB hΛA) (GlobalTheory.TransportLemma.transport T hSB₁ hΛ hB) vol θ hθ Φ hΦ (T z)
 
 theorem exists_reps_symm {Λ₁ Λ₂ M₁ M₂ : AddSubgroup V} {S : Finset V} (hS : IsReps M₁ M₂ S) (h1 : ∀ x, T x ∈ M₁ ↔ x ∈ Λ₁)
     (h2 : ∀ x, T x ∈ M₂ ↔ x ∈ Λ₂) : ∃ S₁, IsReps Λ₁ Λ₂ S₁ := by
-  refine ⟨S.image T.symm, isReps_image T.symm hS (fun x => ?_) (fun x => ?_)⟩
+  refine ⟨S.image T.symm, GlobalTheory.TransportLemma.transport T.symm hS (fun x => ?_) (fun x => ?_)⟩
   · rw [← h1, AddEquiv.apply_symm_apply]
   · rw [← h2, AddEquiv.apply_symm_apply]
 

@@ -1426,18 +1426,10 @@ theorem embA_add' (x y : Fin (D.R.N 0) → D.host.E ⊗[D.host.F] Ad D.host.F) :
     embA X wt ιA (x + y) = embA X wt ιA x + embA X wt ιA y := by
   simp [embA, add_smul, Finset.sum_add_distrib]
 
-theorem embA_smul' (a : D.host.E ⊗[D.host.F] Ad D.host.F)
-    (x : Fin (D.R.N 0) → D.host.E ⊗[D.host.F] Ad D.host.F) :
-    embA X wt ιA (a • x) = ιA.symm a • embA X wt ιA x := by
-  simp [embA, Finset.smul_sum, mul_smul]
-
 theorem embA_nat (c : ℕ) (x : Fin (D.R.N 0) → D.host.E ⊗[D.host.F] Ad D.host.F) :
     embA X wt ιA ((c : D.host.E ⊗[D.host.F] Ad D.host.F) • x) =
       (c : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) • embA X wt ιA x := by
-  rw [embA_smul', map_natCast]
-
-theorem embA_zero' : embA X wt ιA 0 = 0 := by
-  simp [embA]
+  rw [GlobalTheory.St.G.FrameFull.embA_smul, map_natCast]
 
 theorem embA_neg' (x : Fin (D.R.N 0) → D.host.E ⊗[D.host.F] Ad D.host.F) :
     embA X wt ιA (-x) = -embA X wt ιA x := by
@@ -1476,14 +1468,14 @@ theorem proj_span (hι : IsAdeleIso X ιA) {Fr : FrQ D wt} (hL : FrLink X u wt �
   let W : Submodule (IntAf X.B.I.F X.B.I.E) (VA X.B.I) :=
     { carrier := {v | ∃ x, InModL (hat D.host.F (Mq wt)) X.B.g (Fr.b '' {j | j.1 < i.1}) x ∧
         embA X wt ιA x = (c : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) • p (X.B.I.fmat (X.xu u) *ᵥ v)}
-      zero_mem' := ⟨0, inModL_zero, by simp [embA_zero']⟩
+      zero_mem' := ⟨0, inModL_zero, by simp [GlobalTheory.St.G.FrameFull.embA_zero]⟩
       add_mem' := by
         rintro a b ⟨x, hx, ex⟩ ⟨y, hy, ey⟩
         exact ⟨x + y, inModL_add hx hy, by rw [embA_add', ex, ey, Matrix.mulVec_add, map_add (f := _), smul_add]⟩
       smul_mem' := by
         rintro r a ⟨x, hx, ex⟩
         refine ⟨ιA r • x, inModL_smul (⟨ιA r, (hι.2 r).1 r.2⟩ : OAd D.host.F D.host.E) hx, ?_⟩
-        rw [embA_smul', RingEquiv.symm_apply_apply, ex, Subring.smul_def, Matrix.mulVec_smul, map_smul,
+        rw [GlobalTheory.St.G.FrameFull.embA_smul, RingEquiv.symm_apply_apply, ex, Subring.smul_def, Matrix.mulVec_smul, map_smul,
           smul_comm] }
   have hgen : ∀ l ∈ X.B.I.Lf, ∃ z ∈ hat D.host.F (Mq wt), embA X wt ιA z =
       (c : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) • p (X.B.I.fmat (X.xu u) *ᵥ l) :=
@@ -1602,7 +1594,7 @@ theorem third_bwd (hι : IsAdeleIso X ιA) {Fr : FrQ D wt} (hL : FrLink X u wt �
   have hspan : X.B.I.fmat (X.xu u)⁻¹ *ᵥ embA X wt ιA s ∈ Wb := by
     refine span_ind (fun s => X.B.I.fmat (X.xu u)⁻¹ *ᵥ embA X wt ιA s ∈ Wb) ?_ ?_ ?_ ?_ hs
     · show _ ∈ Wb
-      rw [embA_zero', Matrix.mulVec_zero]; exact Wb.zero_mem
+      rw [GlobalTheory.St.G.FrameFull.embA_zero, Matrix.mulVec_zero]; exact Wb.zero_mem
     · intro a b ha hb
       show _ ∈ Wb
       rw [embA_add', Matrix.mulVec_add]; exact Wb.add_mem ha hb
@@ -1610,7 +1602,7 @@ theorem third_bwd (hι : IsAdeleIso X ιA) {Fr : FrQ D wt} (hL : FrLink X u wt �
       have hr : ιA.symm (r : D.host.E ⊗[D.host.F] Ad D.host.F) ∈ IntAf X.B.I.F X.B.I.E :=
         (hι.2 _).2 (by rw [RingEquiv.apply_symm_apply]; exact r.2)
       show _ ∈ Wb
-      rw [embA_smul', Matrix.mulVec_smul]
+      rw [GlobalTheory.St.G.FrameFull.embA_smul, Matrix.mulVec_smul]
       exact Wb.smul_mem (⟨_, hr⟩ : IntAf X.B.I.F X.B.I.E) ha
     · rintro _ ⟨j, hj, rfl⟩
       obtain ⟨l, hl, e⟩ := (mem_mL _).1 (hL.2.1 j)

@@ -580,8 +580,6 @@ abbrev jz (z : (VS D).V) : ((D.sp.X 0).V × D.host.E) →ₗ[𝓞 D.host.E] (VS 
 theorem jz_apply (z : (VS D).V) (p : (D.sp.X 0).V × D.host.E) :
     jz D z p = D.sp.iXY 0 p.1 + p.2 • z := rfl
 
-alias mem_Wb := _root_.GlobalTheory.LoopC.GlueCount.mem_Wb
-
 theorem jz_mem_Wb (u : D.what₂.Word) (p : (D.sp.X 0).V × D.host.E) : jz D (D.zmOf u) p ∈ Wb D := by
   rw [jz_apply]
   exact (Wb D).add_mem (_root_.GlobalTheory.LoopC.GlueCount.iXY_mem_Wb D _) ((Wb D).smul_mem _ (_root_.GlobalTheory.LoopC.GlueCount.zmOf_mem_Wb D u))
@@ -595,7 +593,7 @@ theorem exists_jz (u : D.what₂.Word) (F0 : Fb D u) (hT : Tu D u ≠ 0) (he : F
   have h1 : v - c • D.zmOf u ∈ orth (hS D) (Xplus (lf D F0)) := by
     rw [Formalism.MainNotions.mem_orth_iff]
     refine Formalism.MainNotions.hT_zero_of_mem_Xplus F0 (fun a => ?_) ?_
-    · rw [he]; exact ((mem_Wb D _).1 hvz).1 a
+    · rw [he]; exact ((GlobalTheory.LoopC.GlueCount.mem_Wb D _).1 hvz).1 a
     · rw [← hz, map_sub, map_smul, F0.z_norm, smul_eq_mul, hc]
       field_simp
       ring

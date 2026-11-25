@@ -296,9 +296,6 @@ theorem ιV_mem_DdRE (hs : Function.Surjective (algebraMap K₀ K)) (τ : K →�
   rw [← ιV_mul, h2 a, map_smul]
   simp
 
-theorem FilV_anti : Antitone fun a : ℤ => FilV PD (LL := LL) (V := V) a :=
-  antitone_int_of_succ_le (Formalism.MainNotions.N.Pv.LocalLengthBound.rk_filV_succ PD)
-
 end General
 
 end GlobalTheory.Per.CharJumps
@@ -352,7 +349,7 @@ theorem jumps_of_exact_degree : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (A
     fun c => ⟨⟨c.1, c.2, hA.1 c.2⟩, rfl⟩
   obtain ⟨w, hwD, hin, hout⟩ := hw τ
   have hx := ιV_mem_DdRE (P.PD K) (charRep μ) hs τ hwD
-  have key := inf_of_line _ h1 _ (FilV_anti (P.PD K)) hx (d τ) hin hout
+  have key := inf_of_line _ h1 _ (Formalism.MainNotions.N.Pv.LocalLengthBound.rk_filV_anti (P.PD K)) hx (d τ) hin hout
   have fk : ∀ c : ℤ, (finrank ↥LL.1 ↥(FildR (P.PD K) (charRep μ) τ c) : ℤ) = if c ≤ d τ then 1 else 0 := by
     intro c
     unfold FildR

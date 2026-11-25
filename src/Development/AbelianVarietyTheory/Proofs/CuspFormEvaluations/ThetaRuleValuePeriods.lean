@@ -415,8 +415,6 @@ theorem tyAct_natCast {E : Type} [Field E] [NumberField E] {g : ℕ} (ty : Fin g
   funext k
   simp [tyAct]
 
-alias hermForm_smul_left' := _root_.GlobalTheory.AnValThPow.herm_smul_left
-
 theorem hermForm_two_right {g : ℕ} (Hm : Matrix (Fin g) (Fin g) ℂ) (z w : Fin g → ℂ) :
     hermForm Hm z ((2 : ℂ) • w) = 2 * hermForm Hm z w := by
   simp [hermForm, Matrix.mulVec_smul]
@@ -588,7 +586,7 @@ theorem GlobalTheory.AnVal.rd_vt_levPt : ∀ (E : Type) [Field E] [NumberField E
     have h4 : (hermForm Φ.Hm a (x' - a)).im = ((l.M : ℝ) ^ 2)⁻¹ * (2 * m) := by
       rw [← hm]
       nth_rewrite 1 [ha]
-      rw [hermForm_smul_left', ← Complex.im_ofReal_mul]
+      rw [GlobalTheory.AppellHumbertTrivial.hermForm_smul_left, ← Complex.im_ofReal_mul]
       push_cast
       rfl
     rw [h4, ← Complex.exp_int_mul_two_pi_mul_I m]

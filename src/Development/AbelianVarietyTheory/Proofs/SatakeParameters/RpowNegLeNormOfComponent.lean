@@ -924,9 +924,6 @@ section Completion
 
 variable {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E))
 
-theorem finite_residue : Finite (IsLocalRing.ResidueField (w.adicCompletionIntegers E)) :=
-  Formalism.UG.P.tjcosets_finite w
-
 theorem qRes_eq_normV [Finite (IsLocalRing.ResidueField (w.adicCompletionIntegers E))] :
     qRes (w.adicCompletionIntegers E) = normV w := by
   unfold qRes normV
