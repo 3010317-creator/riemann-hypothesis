@@ -99,12 +99,8 @@ private theorem etaleChart_map_appTop_coord {Y : Scheme.{u}} {K : Type u} [Field
 
 private theorem appLE_top_top_eq_appTop {A B : Scheme.{u}} (f : A ⟶ B)
     (e : (⊤ : A.Opens) ≤ f ⁻¹ᵁ (⊤ : B.Opens)) :
-    f.appLE (⊤ : B.Opens) (⊤ : A.Opens) e = Scheme.Hom.appTop f := by
-  have h1 : A.presheaf.map (homOfLE e).op = 𝟙 Γ(A, ⊤) := A.presheaf.map_id (op (⊤ : A.Opens))
-  calc f.appLE (⊤ : B.Opens) (⊤ : A.Opens) e
-      = f.app (⊤ : B.Opens) ≫ A.presheaf.map (homOfLE e).op := rfl
-    _ = f.app (⊤ : B.Opens) ≫ 𝟙 Γ(A, ⊤) := by rw [h1]
-    _ = Scheme.Hom.appTop f := Category.comp_id _
+    f.appLE (⊤ : B.Opens) (⊤ : A.Opens) e = Scheme.Hom.appTop f :=
+  f.appLE_eq_app
 
 theorem restrictIdeal_comap_subschemeι_eq_coordIdeal (c : EtaleChart p U m)
     (hU : IsAffineOpen U) (Z H : X.IdealSheafData) (S : Finset (Fin m)) (a : Fin m)
