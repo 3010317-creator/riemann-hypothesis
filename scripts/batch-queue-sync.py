@@ -38,15 +38,45 @@ out until the batch is rebuilt or a new commit of it is queued, labelled `priori
 A batch assembled by hand is being built for as long as its pull request is open and its branch
 holds the head commit of an open pull request, and this script labels its pull request
 `building` to say so. One that is labelled `batch queue` itself waits in the queue like any
-other pull request instead. What it contains is every open pull request whose head commit is in
-its branch, queued or not, into main or into another branch. They are labelled `building`, in
-place of `batch queue` for those that had it. This script records them in a comment of its own
-on the batch's pull request, and looks through the branch again when its head moves. A pull
-request that has left the branch by then loses `building`, and so does everything in it once
-the batch is merged or closed. Those that had `batch queue` before get it back, unless the
-batch was merged.
+other pull request instead.
 
-The batch being assembled is built on top of the batch assembled by hand that is being built,
+Batches assembled by hand can be stacked: the branch of the upper batch merges the branch of the
+one it is stacked on, so it holds that batch's commits too, and it is to be merged right after
+it. A batch says which batch it is stacked on with a line of its description such as
+
+    - [ ] depends on: #1739
+
+the same `depends on` line any pull request uses (read by `pr-dependencies.py`), ticked or not.
+Until its description has one that names an open batch that is being built, its branch name is
+read instead: `batch/<anything>-on-<number>`, such as `batch/b11-on-1739`, is stacked on that
+number if it is such a batch. A batch can be stacked on more than one. Batches that say they are
+stacked on each other in a circle are taken to be stacked on none. Only git checks the claim:
+when a batch's branch shares no commit beyond main with the branch of a batch it says it is
+stacked on, the run warns about it.
+
+What a batch contains of its own is every open pull request whose head commit is in its branch,
+queued or not, into main or into another branch, unless a batch it is stacked on, directly or
+not, contains it: a pull request belongs to the lowest batch of a stack that holds it. A pull
+request that holds a batch is never part of another batch. Everything a batch contains is
+labelled `building`, in place of `batch queue` for those that had it, whichever batch of a stack
+it is in. This script records what each batch contains of its own in a comment of its own on the
+batch's pull request, and looks through the branch again when its head moves, or when a batch
+under it moves or the batches under it change. A pull request that has left the branch by then
+loses `building` unless another batch holds it, and so does everything in it once the batch is
+merged or closed. Those that had `batch queue` before get it back, unless the batch was merged.
+
+The outermost batch of each stack, the one that no other open batch assembled by hand is stacked
+on, is labelled `latest batch` as well. A batch that is stacked on nothing and has nothing
+stacked on it is a stack of its own. The label comes off when another batch is stacked on it, or
+when it is merged or closed.
+
+When the batch underneath is merged, GitHub marks what it contained as merged, and the batch on
+top simply stops being stacked on it. When it is closed without being merged, the batch on top is
+told so once, in a comment: its branch still carries the commits of the closed batch, so the open
+pull requests among them are now its own and stay `building`, and whoever assembles it should
+rebuild it on main or on another batch and change its `depends on` line or branch name to match.
+
+The batch being assembled is built on top of the batch assembled by hand labelled `latest batch`,
 when exactly one into main is: its branch starts at that batch's head, and its pull request is
 to be merged after that batch's. When the batch underneath moves on, its new head is merged in.
 When it is rebuilt, closed without being merged, or replaced by another, the batch being
@@ -67,8 +97,8 @@ request is reopened, `batch queue` comes back if this workflow was the last to t
 and the pull request was not taken out of the queue with `-batch` meanwhile. A label a person
 took off stays off.
 
-The workflow's token may make 1,000 requests an hour, shared with every other workflow here. A
-note in each batch pull request's text therefore remembers what was merged and which pull
+The workflow's token has an hourly allowance of requests, shared with every other workflow here
+(see `github-rest.py`). A note in each batch pull request's text therefore remembers what was merged and which pull
 requests were already looked at. The note is a cache: it is used only while the batch's head
 and each pull request's update time are what they were, and everything in it can be read again
 from the branch and the comments.
@@ -87,13 +117,17 @@ _REST_SPEC = importlib.util.spec_from_file_location("rh_github_rest", Path(__fil
 _rest = importlib.util.module_from_spec(_REST_SPEC)
 _REST_SPEC.loader.exec_module(_rest)
 _labels = _rest.load("batch-labels.py")
+_deps = _rest.load("pr-dependencies.py")
 
-QUEUED, BUILDING = _labels.QUEUED, _labels.BUILDING
+QUEUED, BUILDING, LATEST = _labels.QUEUED, _labels.BUILDING, _labels.LATEST
 # A maintainer's label: pull requests that carry it go into a batch before the others.
 PRIORITY = _labels.PRIORITY
 PREFIX = _labels.PREFIX
 # The name `start` gives a batch branch. Any other `batch/...` branch is not this script's.
 OWN_BATCH = re.compile(r"batch/[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}(?:-[0-9]+)?")
+# The name of a batch assembled by hand that says which batch it is stacked on, such as
+# `batch/b11-on-1739`, when its description does not say so in a `depends on` line.
+ON_BATCH = re.compile(r"batch/.+-on-([0-9]+)")
 BOT = "github-actions[bot]"
 # Stop early when fewer requests than this are left for the hour (see `github-rest.py`).
 RESERVE = _rest.RESERVE
@@ -119,12 +153,13 @@ SETTLE = datetime.timedelta(seconds=120)
 # - Batches assembled by hand are stacked: #1739 (`batch/b10b-on-1410`) is built on #1410, and
 #   takes each new head of #1410 while #1410 is being repaired. A batch of the queue would have
 #   to go on the outermost of them and be rebuilt whenever a batch below it moves. `restack`
-#   follows one batch assembled by hand into main, and goes back to main when there are more.
+#   now follows the batch labelled `latest batch` when a single one into main is, and goes back
+#   to main when there are more.
 # - Requests: a sync run that assembled cost about 300 REST requests. Run 45503694341 ended with
 #   "304 requests to GitHub; 4721 left this hour".
 #
-# To revive it: allow GitHub Actions to create pull requests, decide how a batch of the queue
-# relates to stacked batches assembled by hand, and set this back to True.
+# To revive it: allow GitHub Actions to create pull requests, check that going on the
+# `latest batch` is still what we want, and set this back to True.
 ASSEMBLE = False
 
 # Comments the workflow's label job leaves when a maintainer queues or unqueues a pull request.
@@ -136,6 +171,8 @@ REFUSAL = "<!-- batch-queue-refused {branch} {sha} -->"
 REFUSAL_ON = "<!-- batch-queue-refused {branch} {sha} on #{base} -->"
 MOVED = "<!-- batch-queue-moved {sha} -->"
 STAYS = "<!-- batch-queue-stays {branch} -->"
+# On a batch assembled by hand, when a batch it is stacked on is closed without being merged.
+STRANDED = "<!-- batch-queue-stranded {number} -->"
 # The comment on a batch assembled by hand that records what it contains.
 BY_HAND = re.compile(r"<!-- batch-queue-by-hand (\{.*\}) -->")
 # In a batch pull request's text: the part this script writes, and its note to itself.
@@ -289,8 +326,8 @@ def batches(gh, pulls):
 
 def finished(gh, closed_building, known):
     """Batches assembled by hand that were merged or closed and not yet tidied up after, with a
-    `fate`, the pull requests they contained as `members`, {number: commit}, and those of them
-    that were labelled `batch queue` before as `queued`.
+    `fate`, the pull requests they contained as `members`, {number: commit}, those of them that
+    were labelled `batch queue` before as `queued`, and their own `labels`.
 
     They are found by their pull requests, which keep `building` until `finish` is done with
     them. That works whether or not someone has already deleted the branch. `closed_building`
@@ -310,7 +347,8 @@ def finished(gh, closed_building, known):
             continue
         note = read_record(gh, info["number"])[1]
         batch = {"number": info["number"], "fate": "merged" if info.get("merged") else "closed",
-                 "members": members(note), "queued": queued_before(note)}
+                 "members": members(note), "queued": queued_before(note),
+                 "labels": {label["name"] for label in info["labels"]}}
         known |= set(batch["members"])
         found.append(batch)
     return found
@@ -439,16 +477,21 @@ def read_record(gh, number):
     return None, {}
 
 
-# The note of a batch assembled by hand: what `hold` remembers from one run to the next. `hold`
-# writes it into this script's record comment on the batch's pull request, with `dump_note`, and
-# `read_record` reads it back, with `load_note`. In memory, numbers are strings, and a key may be
-# missing from a note written before it was:
+# The note of a batch assembled by hand: what `look_through` remembers from one run to the next.
+# `keep_in_step` writes it into this script's record comment on the batch's pull request, with
+# `dump_note`, and `read_record` reads it back, with `load_note`. In memory, numbers are strings,
+# and a key may be missing from a note written before it was:
 #
 #   head      the branch's head when `members` was found.
-#   members   what the batch contains, as {number: the commit of it that is in the branch}.
+#   members   what the batch contains of its own, as {number: the commit of it that is in the
+#             branch}: not what a batch it is stacked on contains.
 #   queued    the members that were labelled `batch queue` before the batch took them. They go
 #             back to the queue if the batch is closed without being merged. A note without it
 #             is from before it was written down, and held only queued pull requests.
+#   below     the batches this one is stacked on, directly or not, as {number: the head of that
+#             batch when its own members were found}. Missing when there are none. When it
+#             changes, the branch is looked through again, because what this batch contains of
+#             its own changes with it.
 #
 # On GitHub, where a comment holds at most 65,536 characters, the note is compact JSON, and
 # `queued` is kept as a list of numbers or as the list of the members it leaves out (`unqueued`),
@@ -460,6 +503,8 @@ def dump_note(note):
     """A note as it is kept on GitHub: compact JSON, with only the keys the note has."""
     found = note.get("members") or {}
     kept = {name: note[name] for name in ("head", "members") if name in note}
+    if note.get("below"):
+        kept["below"] = note["below"]
     if "queued" in note:
         queued = {key for key in note["queued"] if key in found}
         rest = {key for key in found if key not in queued}
@@ -488,6 +533,8 @@ def load_note(text):
         note["queued"] = sorted((key for key in found if key not in rest), key=int)
     elif isinstance(kept.get("queued"), list):
         note["queued"] = sorted({str(key) for key in kept["queued"]}, key=int)
+    if isinstance(kept.get("below"), dict) and kept["below"]:
+        note["below"] = {str(key): value for key, value in kept["below"].items()}
     return note
 
 
@@ -523,11 +570,10 @@ def branch_commits(gh, base, head, pages=20):
 
 def inside(batch, pulls, commits):
     """The open pull requests whose head commit is one of a batch's `commits`, as {number: commit}.
-    The batch itself and batches this script started are left out. A pull request into another
-    branch counts too: it is built along with the batch, even though GitHub will not mark it
-    merged when the batch is."""
-    return {str(pr["number"]): pr["sha"] for pr in pulls.values()
-            if pr["number"] != batch["number"] and not is_batch(pr) and pr["sha"] in commits}
+    No pull request that holds a batch is ever in another batch: one batch is stacked on another
+    instead (see `stack`). A pull request into another branch counts too: it is built along with
+    the batch, even though GitHub will not mark it merged when the batch is."""
+    return {str(pr["number"]): pr["sha"] for pr in pulls.values() if not pr["batch"] and pr["sha"] in commits}
 
 
 def built_by_hand(gh, pulls, log):
@@ -565,6 +611,64 @@ def built_by_hand(gh, pulls, log):
     return found
 
 
+def stacked_on(gh, pr, batches):
+    """Which of `batches`, a set of numbers, the batch held by `pr` says it is stacked on, and
+    where it says so: (set of numbers, "a `depends on` line" or "its branch name" or None).
+
+    A `depends on` line of its description that names one of them counts, ticked or not (see
+    `pr-dependencies.py`). When none does, a branch named `batch/<anything>-on-<number>` is
+    stacked on that number, if it is one of them. A batch is never stacked on itself.
+    """
+    others = set(batches) - {pr["number"]}
+    named = _deps.dependencies(pr["body"], gh.repo) & others
+    if named:
+        return named, "a `depends on` line"
+    match = ON_BATCH.fullmatch(pr["ref"])
+    if match and int(match.group(1)) in others:
+        return {int(match.group(1))}, "its branch name"
+    return set(), None
+
+
+def stack(gh, hand, pulls, log):
+    """Put the open batches assembled by hand that are being built in order, the lowest first.
+
+    Sets on each `under`, the batches it is stacked on directly, `how`, where it says so, and
+    `below`, every batch under it, directly or not, all as numbers of batches in `hand`. Batches
+    that say they are stacked on each other in a circle are taken to be stacked on none, and the
+    run says so. Each batch comes after every batch under it.
+    """
+    numbers = {batch["number"] for batch in hand}
+    by = {batch["number"]: batch for batch in hand}
+    for batch in hand:
+        batch["under"], batch["how"] = stacked_on(gh, pulls[batch["number"]], numbers)
+
+    def close():
+        for batch in hand:
+            seen, todo = set(), list(batch["under"])
+            while todo:
+                number = todo.pop()
+                if number not in seen:
+                    seen.add(number)
+                    todo += by[number]["under"]
+            batch["below"] = seen
+
+    close()
+    circle = sorted(batch["number"] for batch in hand if batch["number"] in batch["below"])
+    if circle:
+        log.append("the batches " + ", ".join(f"#{number}" for number in circle) + " say they are stacked on "
+                   "each other in a circle: none of them is taken to be stacked on another batch")
+        for number in circle:
+            by[number]["under"], by[number]["how"] = set(), None
+        close()
+    # A batch has more batches under it than any batch under it has.
+    return sorted(hand, key=lambda batch: (len(batch["below"]), batch["number"]))
+
+
+def outermost(hand):
+    """The numbers of the batches in `hand`, put in order by `stack`, that no other is stacked on."""
+    return {batch["number"] for batch in hand} - set().union(*(batch["under"] for batch in hand))
+
+
 def holders(hand):
     """Which batches assembled by hand contain each pull request, as {number: {batch numbers}}."""
     held = {}
@@ -582,51 +686,108 @@ def contains(gh, head, commit):
     return data["ahead_by"] == 0
 
 
-def hold(gh, batch, pulls, held, log):
-    """Find what a batch assembled by hand contains, record it, and label it `building`.
+def merge_base(gh, one, other):
+    """The commit that GitHub takes as the merge base of two commits, or None if it did not say."""
+    status, data = gh.call("GET", f"compare/{one}...{other}?per_page=1")
+    if status != 200 or not isinstance(data, dict):
+        return None
+    return (data.get("merge_base_commit") or {}).get("sha")
 
-    It contains each open pull request whose head commit is in its branch, queued or not. When
-    the branch's head has moved since the note was written, its commits are listed again, a
-    request for each hundred of them. What has arrived is added. What was found before stays as
-    long as the commit it was found at is still there, even after its author has pushed again.
-    Whatever has left loses `building` unless another batch contains it, and goes back to
-    `batch queue` if it was queued before. `held` says, for each pull request, which batches
-    contain it. The note's keys are described above `dump_note`. Returns whether anything was
-    queued again.
+
+def shares(gh, batch, other, by, commits):
+    """Whether a batch, whose branch holds `commits` beyond main, shares a commit beyond main with
+    the batch `other` that it says it is stacked on. Usually it holds the head of `other`, or the
+    commit of a pull request that `other` or a batch under it contains. Otherwise GitHub is asked
+    for the merge base of the two. When GitHub does not say, they are taken to share one."""
+    if other["sha"] in commits:
+        return True
+    for number in other["below"] | {other["number"]}:
+        if any(commit in commits for commit in members(by[number]["note"]).values()):
+            return True
+    base = merge_base(gh, other["sha"], batch["sha"])
+    return base is None or base in commits
+
+
+def look_through(gh, batch, by, pulls, before, log):
+    """Find what a batch assembled by hand contains of its own.
+
+    It contains each open pull request whose head commit is in its branch, queued or not, that
+    no batch under it contains: a pull request in several batches of one stack belongs to the
+    lowest. `by` is the batches being built, by number; those under this one have been looked
+    through already. When the branch's head, or a batch under it, has moved since the note was
+    written, the branch's commits are listed again, a request for each hundred of them. What has
+    arrived is added. What was found before stays as long as the commit it was found at is still
+    there, even after its author has pushed again. `before` is the pull requests that some note
+    says were labelled `batch queue` before a batch took them.
+
+    Sets the batch's new `note`, and `old`, the note it had. Nothing is set when the branch could
+    not be listed: the note keeps its old head, so the next run looks again. The note's keys are
+    described above `dump_note`.
     """
-    note, number, requeued = batch["note"], batch["number"], False
-    found, queued, new = members(note), queued_before(note), set()
-    if note.get("head") != batch["sha"]:
+    note, number = batch["note"], batch["number"]
+    found, queued = members(note), queued_before(note)
+    below = {str(other): by[other]["note"].get("head", "") for other in sorted(batch["below"])}
+    taken = set().union(*(members(by[other]["note"]) for other in batch["below"]))
+    if note.get("head") != batch["sha"] or note.get("below", {}) != below:
         commits = batch.get("commits")
         if commits is None:
             if gh.short():
-                # The note keeps the old head, so the next run looks again.
                 log.append(f"only {gh.remaining} requests left this hour: did not look through the batch #{number}, "
                            "and the next run does")
-                return False
+                return
             commits = branch_commits(gh, batch["base"], batch["sha"])
         if commits is None:
             log.append(f"GitHub did not list every commit of the batch #{number}: the next run looks again")
-            return False
+            return
         now = {key: commit for key, commit in found.items() if commit in commits}
         for key, commit in inside(batch, pulls, commits).items():
             now.setdefault(key, commit)
-        for key in sorted(set(found) - set(now), key=int):
-            pr = pulls.get(int(key))
-            if pr and BUILDING in pr["labels"] and not held.get(key, set()) - {number}:
-                back = key in queued
-                relabel(gh, pr, add=QUEUED if back else None, remove=BUILDING)
-                requeued |= back
-                log.append(f"#{key} is no longer in the batch #{number}: "
-                           + (f"`{QUEUED}` again" if back else f"no longer `{BUILDING}`"))
-        new, found = set(now) - set(found), now
-    queued = {key for key in found if key in queued or QUEUED in (pulls.get(int(key)) or {}).get("labels", ())}
+        found = now
+        if set(below) != set(note.get("below", {})):
+            log.append(f"#{number} is stacked on " + ", ".join(f"#{other}" for other in sorted(batch["under"]))
+                       + f", as {batch['how']} says" if batch["under"] else
+                       f"#{number} is no longer stacked on another batch")
+        for other in sorted(batch["under"]):
+            if not shares(gh, batch, by[other], by, commits):
+                log.append(f"warning: #{number} says in {batch['how']} that it is stacked on #{other}, but its branch "
+                           f"shares no commit with that of #{other} beyond `main`")
+    found = {key: commit for key, commit in found.items()
+             if key not in taken and not (pulls.get(int(key)) or {}).get("batch")}
+    queued = {key for key in found
+              if key in queued or key in before or QUEUED in (pulls.get(int(key)) or {}).get("labels", ())}
+    batch["old"] = note
     batch["note"] = {"head": batch["sha"], "members": found, "queued": sorted(queued, key=int)}
+    if below:
+        batch["note"]["below"] = below
+
+
+def keep_in_step(gh, batch, pulls, held, log):
+    """Record what `look_through` found in a batch assembled by hand, and label it `building`.
+
+    Whatever has left the batch loses `building` unless another batch contains it, and goes back
+    to `batch queue` if it was queued before. `held` says, for each pull request, which batches
+    contain it now. Returns whether anything was queued again.
+    """
+    if "old" not in batch:
+        return False
+    number, requeued = batch["number"], False
+    old, found = members(batch["old"]), batch["note"]["members"]
+    queued = queued_before(batch["old"])
+    for key in sorted(set(old) - set(found), key=int):
+        pr = pulls.get(int(key))
+        # A batch that a note written before batches were stacked lists as a member carries
+        # `building` for being built itself.
+        if pr and BUILDING in pr["labels"] and not held.get(key) and not pr["batch"]:
+            back = key in queued
+            relabel(gh, pr, add=QUEUED if back else None, remove=BUILDING)
+            requeued |= back
+            log.append(f"#{key} is no longer in the batch #{number}: "
+                       + (f"`{QUEUED}` again" if back else f"no longer `{BUILDING}`"))
 
     # The record first and the labels second, so that whatever carries `building` because of
     # this batch is in the record when the batch is finished with. A label taken off by hand is
     # not put back, except that a pull request queued again swaps `batch queue` for it.
-    text = describe_by_hand(batch["note"])
+    text = describe_by_hand(batch["note"], batch.get("under", ()), batch.get("how"))
     if batch["comment"] is None:
         gh.write("POST", f"issues/{number}/comments", {"body": text})
     elif text != batch["comment"].get("body"):
@@ -635,7 +796,7 @@ def hold(gh, batch, pulls, held, log):
         pr = pulls.get(int(key))
         if pr and QUEUED in pr["labels"]:
             relabel(gh, pr, add=BUILDING, remove=QUEUED)
-        elif pr and key in new and BUILDING not in pr["labels"]:
+        elif pr and key not in old and BUILDING not in pr["labels"]:
             relabel(gh, pr, add=BUILDING)
         else:
             continue
@@ -643,16 +804,65 @@ def hold(gh, batch, pulls, held, log):
     return requeued
 
 
-def describe_by_hand(note):
-    """The comment that records what a batch assembled by hand contains."""
+def describe_by_hand(note, under=(), how=None):
+    """The comment that records what a batch assembled by hand contains. `under` is the batches
+    it is stacked on directly, and `how` where it says so."""
     listed = ", ".join(f"#{key}" for key in sorted(note["members"], key=int)) or "nothing yet"
+    stacked = ""
+    if under:
+        names = ", ".join(f"#{number}" for number in sorted(under))
+        stacked = (f"This batch is stacked on {names}, as {how} says. A pull request that a batch under this one "
+                   "contains is listed there, not here.\n\n")
     return (f"<!-- batch-queue-by-hand {dump_note(note)} -->\n"
             "While this pull request is open, the batch-queue workflow takes it to be a batch that is being built. "
             "It adds nothing to a batch assembled by hand and leaves its description alone, but it keeps the labels "
-            f"in step: each open pull request whose head commit is in this branch is now `{BUILDING}`, in place of "
-            f"`{QUEUED}` if it had that. When this is merged they lose `{BUILDING}`. If it is closed without being "
-            f"merged they lose it too, and the ones that were queued go back to `{QUEUED}`.\n\n"
-            f"In this batch: {listed}.\n")
+            f"in step: each open pull request whose head commit is in this branch, and in no batch this one is "
+            f"stacked on, is now `{BUILDING}`, in place of `{QUEUED}` if it had that. When this is merged they lose "
+            f"`{BUILDING}`. If it is closed without being merged they lose it too, and the ones that were queued go "
+            f"back to `{QUEUED}`, except those that a batch stacked on this one still holds.\n\n"
+            f"{stacked}In this batch: {listed}.\n")
+
+
+def stranded(gh, done, hand, pulls, log):
+    """Tell each open batch assembled by hand that is stacked on a batch closed without being
+    merged, once. Its branch still carries the commits of that batch, whose pull requests are now
+    its own (see `look_through`), and whoever assembles it should rebuild it."""
+    open_ = {batch["number"] for batch in hand}
+    for gone in done:
+        if gone["fate"] != "closed":
+            continue
+        for batch in hand:
+            claimed, how = stacked_on(gh, pulls[batch["number"]], open_ | {gone["number"]})
+            if gone["number"] not in claimed:
+                continue
+            if tell(gh, batch["number"], None, STRANDED.format(number=gone["number"]),
+                    f"#{gone['number']}, which this batch is stacked on as {how} says, was closed without being "
+                    f"merged. This batch's branch still carries the commits of #{gone['number']}, so the open pull "
+                    f"requests of #{gone['number']} whose head commit is in this branch now count as part of this "
+                    f"batch and stay `{BUILDING}`.\n\n"
+                    "Whoever assembles this batch should rebuild it on `main` or on another batch, and update its "
+                    "`depends on` line or its branch name to match."):
+                log.append(f"told #{batch['number']} that #{gone['number']}, which it is stacked on, was closed "
+                           "without merging")
+
+
+def mark_latest(gh, hand, pulls, log):
+    """Label `latest batch` the outermost batch of each stack, and take the label off every
+    other open pull request. A batch that was merged or closed loses it in `finish`."""
+    tops = outermost(hand)
+    for number in sorted(tops):
+        pr = pulls[number]
+        if LATEST in pr["labels"]:
+            continue
+        if not gh.label_exists(LATEST):
+            log.append(f"there is no `{LATEST}` label in this repository: was it renamed?")
+            break
+        relabel(gh, pr, add=LATEST)
+        log.append(f"#{number} is the outermost batch of its stack: now `{LATEST}`")
+    for pr in sorted(pulls.values(), key=lambda pr: pr["number"]):
+        if LATEST in pr["labels"] and pr["number"] not in tops:
+            relabel(gh, pr, remove=LATEST)
+            log.append(f"#{pr['number']} is not the outermost batch of a stack: `{LATEST}` removed")
 
 
 # ---------------------------------------------------------------------------------------------
@@ -714,11 +924,11 @@ def restack(gh, batch, state, base, main_sha, log):
 
 def on_top(state, crowded=()):
     """What a batch's description says about the batch it is built on. `crowded` lists the
-    batches assembled by hand that are being built, when there are too many to choose one."""
+    outermost batches assembled by hand into main, when there are too many to choose one."""
     base = state.get("base")
     if not base:
         if crowded:
-            return ["Built on `main`, because more than one batch assembled by hand is being built: "
+            return [f"Built on `main`, because more than one batch assembled by hand into `main` is `{LATEST}`: "
                     + ", ".join(f"#{number}" for number in crowded) + "."]
         return []
     number = base["number"]
@@ -730,9 +940,11 @@ def on_top(state, crowded=()):
 # One run.
 
 
-def finish(gh, pulls, held, leftover, main_sha, closed_building, log):
-    """Tidy up after batches that were merged or closed. `held` is what the open batches
-    assembled by hand contain, and a pull request one of them contains keeps `building`.
+def finish(gh, pulls, held, leftover, main_sha, done, log):
+    """Tidy up after batches that were merged or closed. `done` is the batches assembled by hand
+    among them, as `finished` gives them. `held` is what the open batches assembled by hand
+    contain, and a pull request one of them contains keeps `building`. That includes what a
+    batch closed without being merged contained, when a batch stacked on it still holds it.
 
     The branch of a batch this script assembled is removed once its pull request is merged or
     closed. When it was merged, GitHub marks what it contained as merged too, except a pull
@@ -742,10 +954,14 @@ def finish(gh, pulls, held, leftover, main_sha, closed_building, log):
     Returns whether anything was queued again, and the numbers whose `building` was taken off.
     """
     requeued, cleared = False, set()
-    for batch in finished(gh, closed_building, held):
+    for batch in done:
         cleared.add(batch["number"])
         for key in batch["members"]:
             pr = pulls.get(int(key))
+            if pr and pr["batch"]:
+                # Listed by a note written before batches were stacked: an open batch keeps
+                # `building` for being built itself.
+                continue
             if batch["fate"] == "merged":
                 # A pull request that GitHub marked as merged is no longer in `pulls`.
                 if pr is None or (BUILDING in pr["labels"] and key not in held):
@@ -758,6 +974,8 @@ def finish(gh, pulls, held, leftover, main_sha, closed_building, log):
                 requeued |= back
                 log.append(f"batch #{batch['number']} was closed without merging: #{key} is "
                            + (f"`{QUEUED}` again" if back else f"no longer `{BUILDING}`"))
+        if LATEST in batch["labels"]:
+            relabel(gh, batch["number"], remove=LATEST)
         # Taking the label off the batch itself marks it as dealt with.
         relabel(gh, batch["number"], remove=BUILDING)
         log.append(f"tidied up after batch #{batch['number']}, which was assembled by hand")
@@ -840,22 +1058,26 @@ def sync(gh, now=None):
     main_sha = gh.get(f"git/ref/heads/{main}")["object"]["sha"]
     pulls = open_pulls(gh)
     found, leftover = batches(gh, pulls)
-    # A batch assembled by hand that another one contains carries `building` for that reason
-    # alone. It is built as part of the other one, which contains what it contains too.
     hand = built_by_hand(gh, pulls, log)
-    contained = holders(hand)
-    hand = [batch for batch in hand if str(batch["number"]) not in contained]
-    held = holders(hand)
     closed_building = gh.pages(f"issues?state=closed&labels={quoted(BUILDING)}")
-    requeued, cleared = finish(gh, pulls, held, leftover, main_sha, closed_building, log)
-    unlabel_closed(gh, closed_building, cleared, log)
-    # One that was inside a batch closed just now has gone back to `batch queue`.
-    hand = [batch for batch in hand if BUILDING in pulls[batch["number"]]["labels"]]
-    held = holders(hand)
-
+    done = finished(gh, closed_building, holders(hand))
+    # The lowest batch first, so that what a batch contains of its own is found after what the
+    # batches under it contain. A batch stacked on one closed just now takes over what that one
+    # contained and its branch still holds, and the labels are changed once all are known.
+    hand = stack(gh, hand, pulls, log)
+    before = set().union(*(queued_before(batch["note"]) for batch in hand), *(batch["queued"] for batch in done))
+    by = {batch["number"]: batch for batch in hand}
     for batch in hand:
-        requeued |= hold(gh, batch, pulls, held, log)
+        look_through(gh, batch, by, pulls, before, log)
     held = holders(hand)
+    requeued = False
+    for batch in hand:
+        requeued |= keep_in_step(gh, batch, pulls, held, log)
+    more, cleared = finish(gh, pulls, held, leftover, main_sha, done, log)
+    requeued |= more
+    unlabel_closed(gh, closed_building, cleared, log)
+    stranded(gh, done, hand, pulls, log)
+    mark_latest(gh, hand, pulls, log)
 
     if not ASSEMBLE:
         # A batch of this script's own whose pull request was merged or closed was tidied up
@@ -866,12 +1088,13 @@ def sync(gh, now=None):
         log.append("not starting a new batch in this run: the next `batch` or `-batch` comment does")
         return log
 
-    # The batch being assembled goes on top of the batch assembled by hand that is being built,
-    # when there is just one into main. With more than one it is not clear which comes first, so
-    # it goes on main.
-    under = [item for item in hand if item["base"] == main]
+    # The batch being assembled goes on top of the outermost batch assembled by hand, the one
+    # labelled `latest batch`, when just one into main is. With more than one it is not clear
+    # which comes first, so it goes on main.
+    tops = outermost(hand)
+    under = [item for item in hand if item["number"] in tops and item["base"] == main]
     base = {"number": under[0]["number"], "sha": under[0]["sha"]} if len(under) == 1 else None
-    crowded = [item["number"] for item in under] if len(under) > 1 else []
+    crowded = sorted(item["number"] for item in under) if len(under) > 1 else []
 
     # The batch being assembled takes each commit a maintainer queued.
     assembling = sorted(found, key=lambda item: item["ref"])

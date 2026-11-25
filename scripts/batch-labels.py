@@ -16,6 +16,9 @@ PRIORITY = "priority"
 # On the pull request of a batch assembled by hand that is being built, and on each open pull
 # request whose head commit is in that batch.
 BUILDING = "building"
+# On the pull request of a batch assembled by hand that is being built and that no other such
+# batch is stacked on: the outermost batch of its stack.
+LATEST = "latest batch"
 # Handed back to the pull request's author.
 WAITING = "awaiting-author"
 
