@@ -86,14 +86,8 @@ variable {V : Type} [AddCommGroup V] [TopologicalSpace V] [IsTopologicalAddGroup
 theorem isOpen_inf_iInf (Λ₀ : AddSubgroup V) (h₀o : IsOpen (Λ₀ : Set V)) {ι : Type}
     (t : Finset ι) (L : ι → AddSubgroup V) (hLo : ∀ i, IsOpen (L i : Set V)) :
     IsOpen ((Λ₀ ⊓ ⨅ i ∈ t, L i : AddSubgroup V) : Set V) := by
-  refine AddSubgroup.isOpen_of_mem_nhds _ (g := (0 : V)) ?_
-  have h1 : (Λ₀ : Set V) ∈ 𝓝 (0 : V) := h₀o.mem_nhds Λ₀.zero_mem
-  have h2 : (⋂ i ∈ t, (L i : Set V)) ∈ 𝓝 (0 : V) :=
-    (Filter.biInter_finset_mem t).2 fun i _ => (hLo i).mem_nhds (L i).zero_mem
-  filter_upwards [h1, h2] with x hx1 hx2
-  simp only [Set.mem_iInter, SetLike.mem_coe] at hx1 hx2
-  simp only [SetLike.mem_coe, AddSubgroup.mem_inf, AddSubgroup.mem_iInf]
-  exact ⟨hx1, fun i hi => hx2 i hi⟩
+  simpa only [AddSubgroup.coe_inf, AddSubgroup.coe_iInf] using
+    h₀o.inter (isOpen_biInter_finset fun i _ => hLo i)
 
 theorem exists_sub_osc (hNA : HasCOSub V) {φ : V → ℝ} (hc : Continuous φ)
     (hs : HasCompactSupport φ) {ε : ℝ} (hε : 0 < ε) (Λ₀ : AddSubgroup V)
