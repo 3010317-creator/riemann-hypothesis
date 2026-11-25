@@ -57,24 +57,8 @@ theorem mah_sum {ι : Type*} (s : Finset ι) (F : ι → ℕ → ℚ) (j : ℕ) 
       ext n; simp [Finset.sum_insert ha]
     rw [this, mah_add, ih, Finset.sum_insert ha]
 
-theorem mah_choose (l j : ℕ) : mah (fun n => (n.choose l : ℚ)) j = if j = l then 1 else 0 := by
-  induction j generalizing l with
-  | zero =>
-    rw [mah_zero]
-    cases l with
-    | zero => simp
-    | succ l => simp
-  | succ j ih =>
-    rw [mah_succ]
-    cases l with
-    | zero =>
-      have : fwdDiff 1 (fun n : ℕ => (n.choose 0 : ℚ)) = fun _ => 0 := by
-        ext n; simp [fwdDiff]
-      rw [this, mah_zero_fn]; simp
-    | succ l =>
-      have : fwdDiff 1 (fun n : ℕ => (n.choose (l + 1) : ℚ)) = fun n => (n.choose l : ℚ) := by
-        ext n; simp [fwdDiff, Nat.choose_succ_succ']
-      rw [this, ih]; simp
+theorem mah_choose (l j : ℕ) : mah (fun n => (n.choose l : ℚ)) j = if j = l then 1 else 0 :=
+  fwdDiff_iter_choose_zero l j
 
 theorem mah_leibniz (f g : ℕ → ℚ) :
     fwdDiff 1 (f * g) = fwdDiff 1 f * g + f * fwdDiff 1 g + fwdDiff 1 f * fwdDiff 1 g := by
