@@ -26,13 +26,8 @@ section Charts
 variable {X Y : Scheme.{0}} {Ω Ω' : Type} [Field Ω] [Field Ω']
 
 theorem map_adjoin_mem (i : Ω →+* Ω') (R : Subring Ω') {S : Set Ω} (h : ∀ a ∈ S, i a ∈ R) :
-    ∀ a ∈ Algebra.adjoin ℤ S, i a ∈ R := by
-  intro a ha
-  induction ha using Algebra.adjoin_induction with
-  | mem y hy => exact h y hy
-  | algebraMap n => simp
-  | add _ _ _ _ h1 h2 => rw [map_add]; exact add_mem h1 h2
-  | mul _ _ _ _ h1 h2 => rw [map_mul]; exact mul_mem h1 h2
+    ∀ a ∈ Algebra.adjoin ℤ S, i a ∈ R :=
+  fun _ ha => Algebra.adjoin_le (S := subalgebraOfSubring (R.comap i)) h ha
 
 theorem exists_isCtrOf {ξ : Spec (CommRingCat.of Ω) ⟶ X} {ξ' : Spec (CommRingCat.of Ω') ⟶ Y} {f : Y ⟶ X} {i : Ω →+* Ω'}
     (hf : Dominates ξ' ξ f i) (hg : IsCptGen ξ') (q : Cpt ξ') : ∃ h : genPt ξ ⤳ f q.1, IsCtrOf i ⟨f q.1, h⟩ q := by
