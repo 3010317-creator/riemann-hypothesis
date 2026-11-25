@@ -37,7 +37,7 @@ theorem selfIntersection_le_volNm_of_moriwakiBig : MoriwakiBigStatement → Bira
   have hN : NefOnGeneric (mCoordIdeal y) A :=
     GroundTheory.Heights₂.Heights.HilbertSamuel.NefOnGenericOfSemipos.proof K ι (mCoordIdeal y) P0 A hP hS
   have hb := h K ι Ω y D A P0 II hII hV hB hP hS hC hF hN
-  obtain ⟨hfin, C, hC'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Small.packing K ι Ω y D A (chartLatNm y A.a) hV hB hS.1 (fun _ => le_rfl)
+  obtain ⟨hfin, C, hC'⟩ := _root_.MultiProjectiveCoordinates.packing_statement K ι Ω y D A (chartLatNm y A.a) hV hB hS.1 (fun _ => le_rfl)
   refine hb.trans ?_
   unfold arVolP
   have h0 : ∀ (La : ℕ → AddSubgroup Ω) (τ : ℕ), 0 ≤ smallSectionCount (IsSmallH (mCoordIdeal y) y A) La τ := by
