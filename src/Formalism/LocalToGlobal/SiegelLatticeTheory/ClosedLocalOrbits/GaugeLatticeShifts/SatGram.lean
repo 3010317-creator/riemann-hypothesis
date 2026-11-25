@@ -1004,7 +1004,6 @@ end Formalism.L2.SG.Pf.SatGram
 namespace Formalism.L2.SG.Pf
 
 alias typed_count := SatGram.typed_count
-alias tt_eq := SatGram.tt_eq
 alias gamma_one_eq_prod_typed_places := SatGram.gamma_one_eq_prod_typed_places
 
 end Formalism.L2.SG.Pf
