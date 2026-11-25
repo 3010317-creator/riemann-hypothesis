@@ -19,17 +19,8 @@ variable {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) 
 theorem mem_of_inv_mem (S : Subring Ω) {w : Ω} (hw0 : w ≠ 0) (hinv : w⁻¹ ∈ S)
     (hi : IsIntegral ℤ w) : w ∈ S := by
   obtain ⟨P, hm, hP⟩ := hi
-  have hdeg : P.natDegree ≠ 0 := by
-    intro h0
-    have c0 : P.coeff 0 = 1 := by
-      have := hm.coeff_natDegree
-      rwa [h0] at this
-    have h1 : P = 1 := by
-      have := Polynomial.eq_C_of_natDegree_eq_zero h0
-      rw [c0] at this
-      simpa using this
-    simp [h1] at hP
-  obtain ⟨n, hn⟩ := Nat.exists_eq_succ_of_ne_zero hdeg
+  obtain ⟨n, hn⟩ :=
+    Nat.exists_eq_succ_of_ne_zero (hm.natDegree_pos.mpr fun h1 => by simp [h1] at hP).ne'
   have hlead : P.coeff (n + 1) = 1 := by
     have := hm.coeff_natDegree
     rwa [hn] at this
@@ -286,23 +277,11 @@ theorem coordTie_int_of_finite : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ
     obtain ⟨r, hr⟩ := hwo m
     rw [← hr]
     exact (Algebra.IsIntegral.isIntegral (R := ℤ) r).map (algebraMap o Ω).toIntAlgHom
-  have hgen : ∀ S : Subring Ω, (∀ m, w m ∈ S) → ∀ r : o, algebraMap o Ω r ∈ S := by
-    intro S hS r
-    have hr : r ∈ Submodule.span ℤ (Set.range g) := by
-      rw [hg]
-      exact Submodule.mem_top
-    refine Submodule.span_induction (p := fun r _ => algebraMap o Ω r ∈ S) ?_ ?_ ?_ ?_ hr
-    · rintro _ ⟨i, rfl⟩
-      exact hS (some i)
-    · rw [map_zero]
-      exact S.zero_mem
-    · intro a b _ _ ha hb
-      rw [map_add (f := _)]
-      exact S.add_mem ha hb
-    · intro k a _ ha
-      have e : algebraMap o Ω (k • a) = k • algebraMap o Ω a := map_zsmul _ _ _
-      rw [e]
-      exact zsmul_mem ha k
+  have hgen : ∀ S : Subring Ω, (∀ m, w m ∈ S) → ∀ r : o, algebraMap o Ω r ∈ S := fun S hS r =>
+    have hle : Submodule.span ℤ (Set.range g) ≤
+        S.toAddSubgroup.toIntSubmodule.comap (algebraMap o Ω).toIntAlgHom.toLinearMap :=
+      Submodule.span_le.mpr fun _ ⟨i, hx⟩ => hx ▸ hS (some i)
+    hle (hg ▸ Submodule.mem_top)
   obtain ⟨c, -⟩ := hT.cover ⟨genPt ξ, specializes_rfl⟩
   haveI : Nonempty (κ × Option (Fin n)) := ⟨(c, none)⟩
   have hcard : 0 < Nat.card (κ × Option (Fin n)) := Nat.card_pos

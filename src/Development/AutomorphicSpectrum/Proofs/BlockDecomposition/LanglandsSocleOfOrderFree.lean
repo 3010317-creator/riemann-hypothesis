@@ -24,6 +24,7 @@ import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurable
 import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPartStable
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.LeviEmbMemNormalizerLower
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EvAtParabNeZero
+import Mathlib.RepresentationTheory.Stabilizer
 import Mathlib.Tactic.Linter.Style
 import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyCosocles.LUnlinkedComm
 
@@ -215,34 +216,7 @@ theorem isSmooth_of_surjective {ρ : Representation ℂ G V} {σ : Representatio
     (f : ρ.IntertwiningMap σ) (hf : Function.Surjective f) : IsSmooth σ := by
   intro w
   obtain ⟨v, rfl⟩ := hf w
-  let S : Subgroup G :=
-    { carrier := {g | σ g (f v) = f v}
-      one_mem' := by simp
-      mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
-        rw [map_mul, Module.End.mul_apply, hb, ha]
-      inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
-        have h1 : σ a⁻¹ (σ a (f v)) = f v := by
-          rw [← Module.End.mul_apply, ← map_mul]; simp
-        rwa [ha] at h1 }
-  let T : Subgroup G :=
-    { carrier := {g | ρ g v = v}
-      one_mem' := by simp
-      mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
-        rw [map_mul, Module.End.mul_apply, hb, ha]
-      inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
-        have h1 : ρ a⁻¹ (ρ a v) = v := by
-          rw [← Module.End.mul_apply, ← map_mul]; simp
-        rwa [ha] at h1 }
-  have hT : IsOpen (T : Set G) := hρ v
-  have hTS : T ≤ S := fun g hg => by
-    have hg' : ρ g v = v := hg
-    show σ g (f v) = f v
-    rw [← f.isIntertwining, hg']
-  exact Subgroup.isOpen_mono hTS hT
+  exact Subgroup.isOpen_mono (f.stabilizer_le v) (hρ v)
 
 end General
 

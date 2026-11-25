@@ -158,21 +158,14 @@ theorem charVal_comp {A A' : Type} [CommRing A] [CommRing A'] {a : Sp A ⟶ S} {
 
 theorem exists_factor {M : Type} [CommMonoid M] (Y : AddSubgroup X) (f : X → M) (h0 : f 0 = 1)
     (hadd : ∀ x y, f (x + y) = f x * f y) (hY : ∀ y ∈ Y, f y = 1) :
-    ∃ v : Multiplicative (X ⧸ Y) →* M, ∀ χ : X, v (Multiplicative.ofAdd (χ : X ⧸ Y)) = f χ := by
-  have key : ∀ x x' : X, (x : X ⧸ Y) = x' → f x = f x' := by
-    intro x x' e
-    have hm : -x + x' ∈ Y := QuotientAddGroup.eq.1 e
-    have : x' = x + (-x + x') := by abel
-    rw [this, hadd, hY _ hm, _root_.mul_one]
-  refine ⟨{ toFun := fun q => f (Quotient.out (Multiplicative.toAdd q))
-            map_one' := ?_
-            map_mul' := ?_ }, fun χ => ?_⟩
-  · rw [← h0]
-    exact key _ _ (by simp)
-  · intro p q
-    rw [← hadd]
-    exact key _ _ (by simp)
-  · exact key _ _ (by simp)
+    ∃ v : Multiplicative (X ⧸ Y) →* M, ∀ χ : X, v (Multiplicative.ofAdd (χ : X ⧸ Y)) = f χ :=
+  ⟨AddMonoidHom.toMultiplicativeLeft
+    (QuotientAddGroup.lift Y {
+      toFun := fun x => Additive.ofMul (f x)
+      map_zero' := congrArg Additive.ofMul h0
+      map_add' := fun x y => congrArg Additive.ofMul (hadd x y) }
+      fun {_} hy => congrArg Additive.ofMul (hY _ hy)),
+    fun _ => rfl⟩
 
 theorem comp_one_over {T T' M : Over S} [GrpObj M] (f : T' ⟶ T) : f ≫ (1 : T ⟶ M) = 1 := by
   rw [Hom.one_def, Hom.one_def, ← Category.assoc, toUnit_unique (f ≫ toUnit T) (toUnit T')]

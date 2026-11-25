@@ -99,20 +99,13 @@ private theorem fix_gen_lemma_2 {E : Type} [Field E] [NumberField E] [IsCMField 
     rw [map_mul, map_ofNat, map_add (f := _), map_one] at h2
     exact h2.symm
 
-private theorem fix_adj_lemma_3 {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (g : HostAut H) (a : 𝓞 E) (ha : a ∈ Algebra.adjoin ℤ ({H.w0} : Set (𝓞 E))) : g.s a = a ∧ g.s (H.bar a) = H.bar a := by
-  obtain ⟨h1, h2⟩ := fix_gen_lemma_2 g
-  induction ha using Algebra.adjoin_induction with
-  | mem x hx =>
-    rw [Set.mem_singleton_iff.mp hx]
-    exact ⟨h1, h2⟩
-  | algebraMap r =>
-    simp
-  | add x y _ _ hx hy =>
-    simp only [map_add (f := _), hx.1, hy.1, hx.2, hy.2]
-    exact ⟨trivial, trivial⟩
-  | mul x y _ _ hx hy =>
-    simp only [map_mul, hx.1, hy.1, hx.2, hy.2]
-    exact ⟨trivial, trivial⟩
+private theorem fix_adj_lemma_3 {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
+    (g : HostAut H) (a : 𝓞 E) (ha : a ∈ Algebra.adjoin ℤ ({H.w0} : Set (𝓞 E))) :
+    g.s a = a ∧ g.s (H.bar a) = H.bar a := by
+  rw [Algebra.adjoin_int] at ha
+  exact (Subring.closure_le (t := (g.s : 𝓞 E →+* 𝓞 E).eqLocus (RingHom.id _) ⊓
+    ((g.s : 𝓞 E →+* 𝓞 E).comp (H.bar : 𝓞 E →+* 𝓞 E)).eqLocus (H.bar : 𝓞 E →+* 𝓞 E))).2
+    (Set.singleton_subset_iff.2 (fix_gen_lemma_2 g)) ha
 
 theorem tw_mb : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (l : Level H) (g : HostAut H), l.Mb.map (g.s : 𝓞 E →+* 𝓞 E) = l.Mb ∧ (l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E)).map (g.s : 𝓞 E →+* 𝓞 E) = l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E) := by
   intro E _ _ _ H l g
@@ -121,26 +114,10 @@ theorem tw_mb : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host
   constructor
   · rw [hS, Ideal.map_span]
     congr 1
-    ext x
-    constructor
-    · rintro ⟨y, hy, rfl⟩
-      simp only [RingEquiv.coe_toRingHom]
-      rw [(fix_adj_lemma_3 g y hy.2).1]
-      exact hy
-    · intro hx
-      exact ⟨x, hx, by simp only [RingEquiv.coe_toRingHom]; exact (fix_adj_lemma_3 g x hx.2).1⟩
+    exact Set.EqOn.image_eq_self fun y hy => (fix_adj_lemma_3 g y hy.2).1
   · rw [hS, Ideal.map_span, Ideal.map_span, Set.image_image]
     congr 1
-    ext x
-    constructor
-    · rintro ⟨y, hy, rfl⟩
-      refine ⟨y, hy, ?_⟩
-      simp only [RingEquiv.coe_toRingHom]
-      exact ((fix_adj_lemma_3 g y hy.2).2).symm
-    · rintro ⟨y, hy, rfl⟩
-      refine ⟨y, hy, ?_⟩
-      simp only [RingEquiv.coe_toRingHom]
-      exact (fix_adj_lemma_3 g y hy.2).2
+    exact Set.image_congr fun y hy => (fix_adj_lemma_3 g y hy.2).2
 
 end PositivityTheory.UnitarySelfGeneration
 end -- clump:auto

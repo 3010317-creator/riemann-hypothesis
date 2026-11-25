@@ -46,16 +46,9 @@ theorem exists_monic_aeval_apply_eq_zero (E : Type) [Field E] [NumberField E] [_
   obtain ⟨-, V, hV, hcov⟩ := hJ
   obtain ⟨p, hp, hI⟩ := exists_monic_aeval_mem_of_le_sup (Zalg E a) V _ hcov z hz
   refine ⟨p, hp, fun φ hφ => ?_⟩
-  have key : ∀ y ∈ Submodule.span ℂ {y | ∃ x ∈ Zalg E a, ∃ j ∈ J, y = x * j}, y φ = 0 := by
-    intro y hy
-    induction hy using Submodule.span_induction with
-    | mem y hy =>
-      obtain ⟨x, -, j, hj, rfl⟩ := hy
-      simp [hφ j hj]
-    | zero => simp
-    | add u v _ _ hu hv => simp [hu, hv]
-    | smul c u _ hu => simp [hu]
-  exact key _ hI
+  exact (Submodule.span_le (p := LinearMap.ker (LinearMap.applyₗ (R := ℂ) φ))).2 (by
+    rintro _ ⟨x, -, j, hj, rfl⟩
+    simp [SetLike.mem_coe, LinearMap.mem_ker, hφ j hj]) hI
 
 theorem minpoly_on_killed : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ),
     ∀ J : Set (Module.End ℂ (Sm E a)), Cofin J → ∀ z ∈ Zalg E a, ∃ p : Polynomial ℂ, p.Monic ∧

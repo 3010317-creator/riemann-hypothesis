@@ -52,16 +52,14 @@ variable {x : (Σ k, ι k) → Ω} {z : (Σ k, ι k) → ℂ}
 theorem reg_sum (hz : z ∈ mcPts (mCoordIdeal x)) {σ : Type} (s : Finset σ) (f : σ → Ω)
     (hf : ∀ i ∈ s, RegAt x (mCoordIdeal z) (f i)) :
     RegAt x (mCoordIdeal z) (∑ i ∈ s, f i) ∧ valAt x (∑ i ∈ s, f i) z = ∑ i ∈ s, valAt x (f i) z := by
-  revert hf
-  refine Finset.induction_on s ?_ (fun a s ha ih hf => ?_)
-  · intro _
-    simp only [Finset.sum_empty]
-    exact ⟨(ValRing.regAt_valAt_ring K ι Ω x z hz).1, (ValRing.regAt_valAt_ring K ι Ω x z hz).2.2.1⟩
-  · rw [Finset.sum_insert ha, Finset.sum_insert ha]
-    have hfa := hf a (Finset.mem_insert_self a s)
-    obtain ⟨h1, h2⟩ := ih (fun i hi => hf i (Finset.mem_insert_of_mem hi))
-    obtain ⟨-, hadd, -, hval⟩ := (ValRing.regAt_valAt_ring K ι Ω x z hz).2.2.2.2 _ _ hfa h1
-    exact ⟨hadd, by rw [hval, h2]⟩
+  let S : regRing x z := ∑ i ∈ s.attach, ⟨f i.1, hf i.1 i.2⟩
+  have hS : ∑ i ∈ s, f i = (S : Ω) := by simpa [S] using (Finset.sum_attach s f).symm
+  rw [hS]
+  refine ⟨S.2, ?_⟩
+  change regVal x hz S = ∑ i ∈ s, valAt x (f i) z
+  dsimp [S]
+  rw [map_sum]
+  exact Finset.sum_attach s fun i => valAt x (f i) z
 
 theorem reg_mul (hz : z ∈ mcPts (mCoordIdeal x)) {s t : Ω} (hs : RegAt x (mCoordIdeal z) s)
     (ht : RegAt x (mCoordIdeal z) t) :
@@ -72,19 +70,18 @@ theorem reg_mul (hz : z ∈ mcPts (mCoordIdeal x)) {s t : Ω} (hs : RegAt x (mCo
 theorem regMat_mul {N : ℕ} (hz : z ∈ mcPts (mCoordIdeal x)) {A B : Matrix (Fin N) (Fin N) Ω}
     (hA : ∀ a b, RegAt x (mCoordIdeal z) (A a b)) (hB : ∀ a b, RegAt x (mCoordIdeal z) (B a b)) :
     (∀ a b, RegAt x (mCoordIdeal z) ((A * B) a b)) ∧ valMat x z (A * B) = valMat x z A * valMat x z B := by
-  have key : ∀ a b, RegAt x (mCoordIdeal z) ((A * B) a b) ∧
-      valAt x ((A * B) a b) z = ∑ c, valAt x (A a c) z * valAt x (B c b) z := by
-    intro a b
-    rw [Matrix.mul_apply]
-    obtain ⟨h1, h2⟩ := reg_sum hz Finset.univ (fun c => A a c * B c b)
-      (fun c _ => (reg_mul hz (hA a c) (hB c b)).1)
-    refine ⟨h1, ?_⟩
-    rw [h2]
-    exact Finset.sum_congr rfl fun c _ => (reg_mul hz (hA a c) (hB c b)).2
-  refine ⟨fun a b => (key a b).1, ?_⟩
+  let A' : Matrix (Fin N) (Fin N) (regRing x z) := fun a b => ⟨A a b, hA a b⟩
+  let B' : Matrix (Fin N) (Fin N) (regRing x z) := fun a b => ⟨B a b, hB a b⟩
+  have hM : A * B = (A' * B').map (regRing x z).subtype := by
+    ext a b
+    rw [Matrix.mul_apply, Matrix.map_apply, Matrix.mul_apply, map_sum]
+    exact Finset.sum_congr rfl fun j _ => by rw [map_mul]; rfl
+  refine ⟨fun a b => hM ▸ ((A' * B') a b).2, ?_⟩
   ext a b
-  simp only [valMat, Matrix.of_apply, Matrix.mul_apply]
-  exact (key a b).2
+  rw [valMat, Matrix.of_apply, hM]
+  change regVal x hz ((A' * B') a b) = (valMat x z A * valMat x z B) a b
+  rw [Matrix.mul_apply, map_sum, Matrix.mul_apply]
+  exact Finset.sum_congr rfl fun j _ => by rw [map_mul]; rfl
 
 theorem reg_minor {N : ℕ} (hz : z ∈ mcPts (mCoordIdeal x)) {A : Matrix (Fin N) (Fin N) Ω}
     (hA : ∀ a b, RegAt x (mCoordIdeal z) (A a b)) (I J : Finset (Fin N)) :

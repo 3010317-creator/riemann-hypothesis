@@ -44,21 +44,9 @@ theorem Lat.restrict_isVBOn : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : 
   · intro p hp
     obtain ⟨U, hpU, b, hb, hq⟩ := h p hp
     obtain ⟨_, hsp⟩ := hq p hp hpU
-    have hle : ∀ e ∈ L p, e ∈ V := by
-      intro e he
-      rw [hsp] at he
-      have : Submodule.span (regAt ξ p) (Set.range b) ≤ V.restrictScalars (regAt ξ p) := by
-        rw [Submodule.span_le]
-        rintro _ ⟨i, rfl⟩
-        exact hb ▸ Submodule.subset_span ⟨i, rfl⟩
-      exact this he
-    show ((L p).comap (V.subtype.restrictScalars (regAt ξ p))).map (V.subtype.restrictScalars (regAt ξ p)) = L p
-    ext e
-    simp only [Submodule.mem_map, Submodule.mem_comap]
-    constructor
-    · rintro ⟨v, hv, rfl⟩
-      exact hv
-    · intro he
-      exact ⟨⟨e, hle e he⟩, he, rfl⟩
+    change Submodule.map (V.subtype.restrictScalars (regAt ξ p)) (Submodule.comap _ (L p)) = L p
+    refine Submodule.map_comap_eq_self (hsp ▸ Submodule.span_le.2 ?_)
+    rintro _ ⟨i, rfl⟩
+    exact ⟨⟨b i, hb ▸ Submodule.subset_span ⟨i, rfl⟩⟩, rfl⟩
 
 end GlobalTheory.CompanionTheory.Ar

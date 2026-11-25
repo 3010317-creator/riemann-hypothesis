@@ -34,17 +34,9 @@ private lemma exists_retr {C D : Type*} [CommRing C] [CommRing D] [Algebra C D] 
   have key : ∀ d : D, d ∈ J • (⊤ : Submodule C D) := by
     intro d
     have hd : d = ∑ i, g d i • f (Pi.single i 1) := by
-      have e1 : d = f (g d) := by
-        have := LinearMap.congr_fun hfg d
-        simpa using this.symm
-      conv_lhs => rw [e1, ← Finset.univ_sum_single (g d)]
-
-      rw [map_sum]
-      refine Finset.sum_congr rfl fun i _ => ?_
-      rw [← map_smul]
-      congr 1
-      ext j
-      simp [Pi.single_apply]
+      have e1 : d = f (g d) := by simpa using (LinearMap.congr_fun hfg d).symm
+      conv_lhs => rw [e1, pi_eq_sum_univ' (g d), map_sum]
+      simp only [map_smul]
     rw [hd]
     refine Submodule.sum_mem _ fun i _ => Submodule.smul_mem_smul ?_ trivial
     refine LinearMap.mem_range.2 ⟨(LinearMap.proj i).comp (g.comp (LinearMap.mulLeft C d)), ?_⟩
@@ -99,11 +91,8 @@ theorem ker_fg_of_projective {P C M : Type*} [CommRing P] [CommRing C] [Algebra 
   have hker : (LinearMap.ker π).FG := Module.FinitePresentation.fg_ker π hπ
   let b : Fin n → M := fun i => π (Pi.single i 1)
   have hπb : ∀ x, π x = ∑ i, x i • b i := fun x => by
-    rw [LinearMap.pi_apply_eq_sum_univ π x]
-    refine Finset.sum_congr rfl fun i _ => ?_
-    congr 2
-    ext j
-    simp [Pi.single_apply, eq_comm]
+    conv_lhs => rw [pi_eq_sum_univ' x, map_sum]
+    simp only [map_smul]; rfl
   have hπC : ∀ x, π x = ∑ i, algebraMap P C (x i) • b i := fun x => by
     rw [hπb]
     simp only [algebraMap_smul]
@@ -174,14 +163,9 @@ theorem ker_fg_of_projective {P C M : Type*} [CommRing P] [CommRing C] [Algebra 
       · rw [Pi.single_eq_of_ne hk, map_zero, zero_smul]
     have := key3 _ hx j
     simpa [E, Pi.single_apply] using this
-  have key6 : ∀ a ∈ RingHom.ker (algebraMap P C), ∀ t ∈ T, a * t ∈ I₀ := by
-    intro a ha t ht
-    induction ht using Submodule.span_induction with
-    | mem t ht => obtain ⟨p, rfl⟩ := ht; exact key5 a ha p
-    | zero => simp
-    | add x y _ _ hx hy => rw [mul_add]; exact I₀.add_mem hx hy
-    | smul c x _ hx =>
-      rw [smul_eq_mul, mul_left_comm]; exact I₀.mul_mem_left c hx
+  have key6 : ∀ a ∈ RingHom.ker (algebraMap P C), ∀ t ∈ T, a * t ∈ I₀ := fun a ha _ ht =>
+    (Submodule.span_le (p := Submodule.comap (LinearMap.mulLeft P a) (I₀ : Submodule P P))).2
+      (by rintro _ ⟨p, rfl⟩; exact key5 a ha p) ht
   have hI₀le : I₀ ≤ RingHom.ker (algebraMap P C) := by
     refine Ideal.span_le.2 ?_
     rintro _ ⟨⟨g, j⟩, ⟨hg, -⟩, rfl⟩

@@ -8,7 +8,7 @@ public import Mathlib.MeasureTheory.Group.Measure
 @[expose] public section
 
 open Matrix
-open scoped Topology
+open scoped Topology Pointwise
 
 namespace GlobalTheory.CompanionTheory.HaarIndex
 
@@ -19,45 +19,22 @@ theorem measure_eq_relIndex_mul : ∀ (G : Type) [AddGroup G] [MeasurableSpace G
   intro G _ _ _ μ _ H K hHK hH hn
   classical
   set H' := H.addSubgroupOf K
-  have hidx : H.relIndex K = H'.index := rfl
-  have : H'.FiniteIndex := ⟨by rw [← hidx]; exact hn⟩
-  have : Finite (K ⧸ H') := inferInstance
-  letI := Fintype.ofFinite (K ⧸ H')
-  let o : K ⧸ H' → G := fun q => ((Quotient.out q : K) : G)
-  let S : K ⧸ H' → Set G := fun q => (fun x => -o q + x) ⁻¹' (H : Set G)
-  have hS : ∀ q, MeasurableSet (S q) := fun q => (measurable_const_add (-o q)) hH
-  have hcover : (K : Set G) = ⋃ q, S q := by
+  have : H'.FiniteIndex := ⟨hn⟩
+  obtain ⟨s, hs, -⟩ := H'.exists_isComplement_left 0
+  have hs' : Finite s := hs.finite_left_iff.mpr inferInstance
+  have hcover : (K : Set G) = ⋃ a : s, (a.1 : G) +ᵥ (H : Set G) := by
     ext x
-    simp only [Set.mem_iUnion, SetLike.mem_coe]
-    constructor
-    · intro hx
-      refine ⟨((⟨x, hx⟩ : K) : K ⧸ H'), ?_⟩
-      have h1 := QuotientAddGroup.eq.mp (QuotientAddGroup.out_eq' ((⟨x, hx⟩ : K) : K ⧸ H'))
-      rw [AddSubgroup.mem_addSubgroupOf] at h1
-      simpa [S, o] using h1
-    · rintro ⟨q, hq⟩
-      have hq' : -o q + x ∈ H := hq
-      have hoK : o q ∈ K := (Quotient.out q).2
-      have hx : x = o q + (-o q + x) := (add_neg_cancel_left (o q) x).symm
-      rw [hx]
-      exact K.add_mem hoK (hHK hq')
-  have hdisj : Pairwise (Function.onFun Disjoint S) := by
-    intro q r hqr
-    rw [Function.onFun, Set.disjoint_left]
-    intro x hxq hxr
-    apply hqr
-    have hq' : -o q + x ∈ H := hxq
-    have hr' : -o r + x ∈ H := hxr
-    have h2 : -o q + o r ∈ H := by
-      have := H.add_mem hq' (H.neg_mem hr')
-      simpa [neg_add_rev, add_assoc] using this
-    rw [← QuotientAddGroup.out_eq' q, ← QuotientAddGroup.out_eq' r]
-    apply QuotientAddGroup.eq.mpr
-    rw [AddSubgroup.mem_addSubgroupOf]
-    simpa [o] using h2
-  have hμ : ∀ q, μ (S q) = μ (H : Set G) := fun q => MeasureTheory.measure_preimage_add μ (-o q) _
-  rw [hcover, MeasureTheory.measure_iUnion hdisj hS, tsum_fintype]
-  simp only [hμ, Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
-  rw [hidx, AddSubgroup.index_eq_card, Nat.card_eq_fintype_card]
+    refine ⟨fun hx => ?_, fun hx => ?_⟩
+    · obtain ⟨⟨a, y⟩, hxy⟩ := hs.2 ⟨x, hx⟩
+      exact Set.mem_iUnion.2 ⟨a, y.1.1, y.2, congrArg Subtype.val hxy⟩
+    · rcases Set.mem_iUnion.1 hx with ⟨a, y, hy, hxy⟩
+      exact hxy ▸ K.add_mem a.1.2 (hHK hy)
+  have hdisj : Pairwise fun a b : s =>
+      Disjoint ((a.1 : G) +ᵥ (H : Set G)) ((b.1 : G) +ᵥ (H : Set G)) :=
+    fun a b hab => Set.disjoint_left.2 fun _ ⟨y, hy, h1⟩ ⟨z, hz, h2⟩ =>
+      hab (Prod.ext_iff.1 (hs.1 (a₁ := (a, ⟨⟨y, hHK hy⟩, hy⟩))
+        (a₂ := (b, ⟨⟨z, hHK hz⟩, hz⟩)) (Subtype.ext (h1.trans h2.symm)))).1
+  rw [hcover, MeasureTheory.measure_iUnion hdisj fun _ => hH.const_vadd _]
+  simp [MeasureTheory.measure_vadd, hs.encard_left, AddSubgroup.relIndex, H']
 
 end GlobalTheory.CompanionTheory.HaarIndex

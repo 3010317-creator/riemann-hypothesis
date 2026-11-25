@@ -10,16 +10,8 @@ public import Mathlib.RingTheory.Ideal.GoingUp
 namespace GlobalTheory.CompanionTheory.Domination
 
 theorem isUnit_subring_iff {K : Type} [Field K] (D : Subring K) (d : D) :
-    IsUnit d ↔ (d : K) ≠ 0 ∧ (d : K)⁻¹ ∈ D := by
-  constructor
-  · rintro ⟨u, rfl⟩
-    have h : ((u : D) : K) * (((u⁻¹ : Dˣ) : D) : K) = 1 := by
-      exact_mod_cast congrArg Subtype.val u.mul_inv
-    refine ⟨left_ne_zero_of_mul_eq_one h, ?_⟩
-    rw [inv_eq_of_mul_eq_one_right h]
-    exact ((u⁻¹ : Dˣ) : D).2
-  · rintro ⟨h0, h⟩
-    exact isUnit_iff_exists_inv.2 ⟨⟨_, h⟩, Subtype.ext (by simp [h0])⟩
+    IsUnit d ↔ (d : K) ≠ 0 ∧ (d : K)⁻¹ ∈ D :=
+  Submonoid.isUnit_iff_and
 
 theorem isMaximal_of_comap {K : Type} [Field K] (R T : Subring K) (hRT : R ≤ T)
     (hint : ∀ t ∈ T, IsIntegral R t) (P : Ideal T) [P.IsPrime]

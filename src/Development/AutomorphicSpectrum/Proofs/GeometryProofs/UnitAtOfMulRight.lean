@@ -144,25 +144,9 @@ theorem unitAt_of_mul_right {p : Cpt ξ} {a b : Ω} (h : unitAt ξ p (a * b)) (h
 theorem not_unitAt_add (hξ : IsCptGen ξ) {p : Cpt ξ} {a b : Ω} (ha : a ∈ regAt ξ p) (hb : b ∈ regAt ξ p)
     (hna : ¬ unitAt ξ p a) (hnb : ¬ unitAt ξ p b) : ¬ unitAt ξ p (a + b) := by
   haveI : IsLocalRing (regAt ξ p) := (regAt_isLocalRing_isFractionRing_stalk X Ω ξ hξ p).1
-  have key : ∀ {c : Ω} (hc : c ∈ regAt ξ p), IsUnit (⟨c, hc⟩ : regAt ξ p) ↔ unitAt ξ p c := by
-    intro c hc
-    constructor
-    · rintro ⟨u, hu⟩
-      have hu1 : ((u : regAt ξ p) : Ω) = c := congrArg Subtype.val hu
-      have h1 : ((u : regAt ξ p) : Ω) * (((u⁻¹ : (regAt ξ p)ˣ) : regAt ξ p) : Ω) = 1 := by
-        rw [← Subring.coe_mul, Units.mul_inv, Subring.coe_one]
-      have hc0 : c ≠ 0 := by
-        intro h0
-        rw [hu1, h0, zero_mul] at h1
-        exact zero_ne_one h1
-      refine ⟨hc0, hc, ?_⟩
-      have : c⁻¹ = (((u⁻¹ : (regAt ξ p)ˣ) : regAt ξ p) : Ω) := by
-        rw [hu1] at h1
-        exact (eq_inv_of_mul_eq_one_right h1).symm
-      rw [this]
-      exact Subtype.property _
-    · rintro ⟨h0, -, hi⟩
-      exact IsUnit.of_mul_eq_one ⟨c⁻¹, hi⟩ (Subtype.ext (by simp [h0]))
+  have key : ∀ {c : Ω} (hc : c ∈ regAt ξ p),
+      IsUnit (⟨c, hc⟩ : regAt ξ p) ↔ unitAt ξ p c := fun hc =>
+    Submonoid.isUnit_iff_and.trans ⟨fun ⟨h0, hi⟩ => ⟨h0, hc, hi⟩, fun h => ⟨h.1, h.2.2⟩⟩
   intro hab
   have hsum : IsUnit ((⟨a, ha⟩ : regAt ξ p) + ⟨b, hb⟩) := (key ((regAt ξ p).add_mem ha hb)).2 hab
   rcases IsLocalRing.isUnit_or_isUnit_of_isUnit_add hsum with h | h
