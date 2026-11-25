@@ -28,7 +28,7 @@ instance : CharZero (WW p) := by
     have h2 : p ∣ q := (CharP.cast_eq_zero_iff (kb p) p q).mp h1
     have h3 : p = q := (Nat.prime_dvd_prime_iff_eq (Fact.out : p.Prime) h).mp h2
     have h4 : ((p : ℕ) : WW p) = ((q : ℕ) : WW p) := congrArg (Nat.cast) h3
-    exact WittVector.p_nonzero p (kb p) (h4.trans h0)
+    exact WittVector.p_ne_zero p (kb p) (h4.trans h0)
   · subst h
     exact CharP.charP_to_charZero (WW p)
 
