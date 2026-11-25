@@ -76,28 +76,12 @@ theorem iSup_proj_basicOpen_reesGenerator_eq_top (I : Ideal R) :
 
 theorem exists_mem_range_affineBlowupChart (I : Ideal R) (x : ↥(affineBlowup I)) :
     ∃ a : ↥I, x ∈ Set.range (affineBlowupChart I a).base := by
-  have h2 : (⋃ a : ↥I,
-      ((AlgebraicGeometry.Proj.basicOpen (reesGrading I) (reesGenerator I a) :
-          (AlgebraicGeometry.Proj (reesGrading I)).Opens) :
-        Set ↥(AlgebraicGeometry.Proj (reesGrading I)))) = Set.univ := by
-    rw [← TopologicalSpace.Opens.coe_iSup, iSup_proj_basicOpen_reesGenerator_eq_top]
-    simp
-  have hx : x ∈ (⋃ a : ↥I,
-      ((AlgebraicGeometry.Proj.basicOpen (reesGrading I) (reesGenerator I a) :
-          (AlgebraicGeometry.Proj (reesGrading I)).Opens) :
-        Set ↥(AlgebraicGeometry.Proj (reesGrading I)))) := by
-    rw [h2]
-    exact Set.mem_univ _
-  obtain ⟨a, ha⟩ := Set.mem_iUnion.mp hx
-  refine ⟨a, ?_⟩
-  have hs : Set.range (affineBlowupChart I a).base =
-      ((AlgebraicGeometry.Proj.basicOpen (reesGrading I) (reesGenerator I a) :
-          (AlgebraicGeometry.Proj (reesGrading I)).Opens) :
-        Set ↥(AlgebraicGeometry.Proj (reesGrading I))) :=
-    congrArg (fun U : (affineBlowup I).Opens => (U : Set ↥(affineBlowup I)))
-      (opensRange_affineBlowupChart_eq_basicOpen I a)
-  rw [hs]
-  exact ha
+  have hx : x ∈ ⨆ a : ↥I, AlgebraicGeometry.Proj.basicOpen (reesGrading I) (reesGenerator I a) := by
+    rw [iSup_proj_basicOpen_reesGenerator_eq_top]
+    trivial
+  obtain ⟨a, ha⟩ := TopologicalSpace.Opens.mem_iSup.mp hx
+  rw [← opensRange_affineBlowupChart_eq_basicOpen] at ha
+  exact ⟨a, ha⟩
 
 noncomputable def affineBlowupAffineOpenCover (I : Ideal R) : (affineBlowup I).AffineOpenCover where
   I₀ := ↥I
