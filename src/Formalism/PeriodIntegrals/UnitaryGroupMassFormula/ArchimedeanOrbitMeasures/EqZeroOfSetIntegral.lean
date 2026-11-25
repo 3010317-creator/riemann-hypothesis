@@ -94,16 +94,10 @@ theorem fib_set [IsFiniteMeasureOnCompacts μ] [IsFiniteMeasureOnCompacts ν]
     hρs.comp_left (g := fun t : ℝ => max t 0) (by simp)
   have hns : HasCompactSupport fun v => max (-ρ v) 0 :=
     hρs.comp_left (g := fun t : ℝ => max (-t) 0) (by simp)
-  have hpU : tsupport (fun v => max (ρ v) 0) ⊆ U := by
-    refine (closure_mono fun v hv => ?_).trans hρU
-    intro h0
-    apply hv
-    simp [h0]
-  have hnU : tsupport (fun v => max (-ρ v) 0) ⊆ U := by
-    refine (closure_mono fun v hv => ?_).trans hρU
-    intro h0
-    apply hv
-    simp [h0]
+  have hpU : tsupport (fun v => max (ρ v) 0) ⊆ U :=
+    (tsupport_comp_subset (g := fun t : ℝ => max t 0) (by simp) ρ).trans hρU
+  have hnU : tsupport (fun v => max (-ρ v) 0) ⊆ U :=
+    (tsupport_comp_subset (g := fun t : ℝ => max (-t) 0) (by simp) ρ).trans hρU
   have hp3 := hfib.2.2 _ hpc hps hpU
   have hn3 := hfib.2.2 _ hnc hns hnU
   have hsplit : ∀ v, ρ v = max (ρ v) 0 - max (-ρ v) 0 := fun v =>
