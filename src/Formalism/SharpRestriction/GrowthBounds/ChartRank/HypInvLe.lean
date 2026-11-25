@@ -118,19 +118,9 @@ theorem whc_map {σ M : Type} [AddCommMonoid M] [DecidableEq M] (w : σ → M) (
   split_ifs <;> simp
 
 theorem isWH_iff {σ M R : Type} [CommSemiring R] [AddCommMonoid M] [DecidableEq M] (w : σ → M) (n : M) (f : MvPolynomial σ R) :
-    MvPolynomial.IsWeightedHomogeneous w f n ↔ MvPolynomial.weightedHomogeneousComponent w n f = f := by
-  constructor
-  · intro h
-    ext d
-    rw [MvPolynomial.coeff_weightedHomogeneousComponent]
-    split_ifs with hd
-    · rfl
-    · by_contra hc
-      exact hd (h (Ne.symm hc))
-  · intro h d hd
-    rw [← h, MvPolynomial.coeff_weightedHomogeneousComponent] at hd
-    by_contra hc
-    exact hd (ite_eq_right hc)
+    MvPolynomial.IsWeightedHomogeneous w f n ↔ MvPolynomial.weightedHomogeneousComponent w n f = f :=
+  ⟨fun h => h.weightedHomogeneousComponent_same,
+    fun h => h ▸ MvPolynomial.weightedHomogeneousComponent_isWeightedHomogeneous n f⟩
 
 theorem colAddGen_map {r n : ℕ} (l j : Fin n) (Q : MvPolynomial (Fin r × Fin n) LL) :
     MvPolynomial.map e (Formalism.GradedWeylDivisibility.colAddGen LL l j Q) = Formalism.GradedWeylDivisibility.colAddGen Kf l j (MvPolynomial.map e Q) := by
