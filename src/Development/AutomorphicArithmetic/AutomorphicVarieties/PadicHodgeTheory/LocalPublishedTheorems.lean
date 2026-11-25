@@ -97,11 +97,6 @@ section admitted
 variable {l : ℕ} [Fact l.Prime] {G A V : Type} [Group G] [CommRing A] [Algebra ℚ_[l] A] [AddCommGroup V] [Module A V]
   [Module ℚ_[l] V] [IsScalarTower ℚ_[l] A V] (φ : G →* GQ l) (ρ : Representation A G V)
 
-/-- **Fontaine's theorem on crystalline representations**: every crystalline $p$-adic Galois
-representation is de Rham, and the functor $D_{\mathrm{cris}}$ induces an equivalence with weakly admissible filtered isocrystals.
-
-Proposed reference:
-[J.-M. Fontaine, *Le corps des p\'eriodes p-adiques*][fontaine1994corps]. -/
 def IsCr : Prop :=
   finrank ℚ_[l] ↥(Dcr φ (resCoef ℚ_[l] ρ)) = (φ.range ⊔ Iq l).index * finrank ℚ_[l] V
 
