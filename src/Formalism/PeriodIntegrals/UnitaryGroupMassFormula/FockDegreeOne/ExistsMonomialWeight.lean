@@ -17,15 +17,11 @@ namespace PI.FockOneDegW.Core
 open PI.FockOneDegW PI.FockOneDegW.Inner
 open PI.FockWtDegWork (W1 coeff_of_diag fockAct1_monomial lw wt_of_isHW)
 
-theorem pd_comm {σ : Type*} (i j : σ) (P : MvPolynomial σ ℂ) :
-    pderiv i (pderiv j P) = pderiv j (pderiv i P) := by
-  apply +allowSynthFailures _root_.PositivityTheory.Rg.Sw.LC.CoreBb.pderiv_comm' <;> assumption
-
 theorem key {σ : Type*} (v : MvPolynomial σ ℂ) (ac ad bc bd : σ) (hne : bc ≠ ad) :
     fockInner (pderiv ac (pderiv ad v)) (pderiv bc (pderiv bd v)) =
       fockInner (X bc * pderiv ac v) (X ad * pderiv bd v) := by
   rw [fockInner_mul_X, pderiv_mul, pderiv_X_of_ne hne, zero_mul, zero_add, fockInner_X_mul,
-    pd_comm ad ac]
+    MvPolynomial.pderiv_comm ad ac]
 
 theorem coeff_zero_of_dd {σ : Type*} (v : MvPolynomial σ ℂ) (i j : σ) (hij : i ≠ j)
     (h : pderiv i (pderiv j v) = 0) (α : σ →₀ ℕ) (hα : AddMonoidAlgebra.coeff v α ≠ 0) :
