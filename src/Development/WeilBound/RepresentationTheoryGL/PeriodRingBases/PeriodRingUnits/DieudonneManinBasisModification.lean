@@ -16,8 +16,6 @@ variable (l : ℕ) [Fact l.Prime]
 
 abbrev GQ : Type := PadicAlgCl l ≃ₐ[ℚ_[l]] PadicAlgCl l
 
-abbrev Fld : Type := IntermediateField ℚ_[l] (PadicAlgCl l)
-
 abbrev B : Type := Bcris l
 
 def φ : B l →+* B l := φB l
@@ -43,8 +41,6 @@ def qB : ℚ_[l] →+* B l := IsLocalization.lift (M := nonZeroDivisors ℤ_[l])
 
 def t : B l := cB l (tA l)
 
-def aB : AInf ℂ_[l] l →+* B l := (cB l).comp (algebraMap (AInf ℂ_[l] l) (ACris.ACris ℂ_[l] l))
-
 def Plus : Subring (BdR l) := (algebraMap (BdRp l) (BdR l)).range
 
 
@@ -58,9 +54,6 @@ def σB (g : GQ l) : B l →+* B l := Formalism.Per6.σB g
 def σC (g : GQ l) : ℂ_[l] ≃+* ℂ_[l] := galCp (toBot g)
 
 def χ (g : GQ l) : ℚ_[l] := ((DeRhamTwist.Twist.chi0 l g : ℤ_[l]) : ℚ_[l])
-
-def κ (g : GQ l) : ℚ_[l] :=
-  (kummerC (untilt_epsilon (p := l)) untilt_frobeniusEquiv_symm_epsilon_ne_one (toBot g) : ℤ_[l])
 
 structure Base (l : ℕ) [Fact l.Prime] : Prop where
   ι_σ : ∀ (g : GQ l) x, ι l (σB g x) = σD g (ι l x)
