@@ -103,8 +103,8 @@ theorem prY_mul_Y (d : Fin r → A) : prY s J X Y d * Y = Y * diagonal d := by
 end Frame
 
 theorem diagonal_add' (d e : Fin r → A) : diagonal (d + e) = diagonal d + diagonal e := (diagonal_add d e).symm
-theorem diagonal_sub' (d e : Fin r → A) : diagonal (d - e) = diagonal d - diagonal e := by
-  ext i j; by_cases h : i = j <;> simp [h]
+theorem diagonal_sub' (d e : Fin r → A) : diagonal (d - e) = diagonal d - diagonal e :=
+  (diagonal_sub d e).symm
 theorem prX_add (d e : Fin r → A) : prX s J X Y (d + e) = prX s J X Y d + prX s J X Y e := by
   simp only [prX, diagonal_add', Matrix.mul_add, Matrix.add_mul]
 theorem prX_sub (d e : Fin r → A) : prX s J X Y (d - e) = prX s J X Y d - prX s J X Y e := by
@@ -154,11 +154,8 @@ theorem onPart_one_left : onPart (1 : Matrix (Fin n) (Fin n) A) G = G := by simp
 
 theorem onPart_one_right : onPart Q (1 : Matrix (Fin n) (Fin n) A) = 1 := by simp [onPart]
 
-theorem comm_inv (hc : G * Q = Q * G) (hGH : G * H = 1) (hHG : H * G = 1) : H * Q = Q * H := by
-  calc H * Q = H * Q * (G * H) := by rw [hGH, Matrix.mul_one]
-    _ = H * (Q * G) * H := by simp only [Matrix.mul_assoc]
-    _ = H * (G * Q) * H := by rw [hc]
-    _ = Q * H := by rw [← Matrix.mul_assoc H G, hHG, Matrix.one_mul]
+theorem comm_inv (hc : G * Q = Q * G) (hGH : G * H = 1) (hHG : H * G = 1) : H * Q = Q * H :=
+  Commute.units_inv_left (u := ⟨G, H, hGH, hHG⟩) hc
 
 theorem onPart_inv (hQ : Q * Q = Q) (hc : G * Q = Q * G) (hGH : G * H = 1) (hHG : H * G = 1) :
     onPart Q G * onPart Q H = 1 := by
