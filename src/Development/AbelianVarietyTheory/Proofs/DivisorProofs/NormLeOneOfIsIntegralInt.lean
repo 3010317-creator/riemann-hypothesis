@@ -160,9 +160,3 @@ theorem exists_embedding (w : HeightOneSpectrum (𝓞 K)) (hw : (p : 𝓞 K) ∈
   nlinarith [norm_nonneg (p : PadicAlgCl p), norm_nonneg ((m : ℤ) : PadicAlgCl p)]
 
 end GlobalTheory.CongW.PlaceEmb
-
-namespace GlobalTheory.CongW
-
-open Formalism.ConjugateSelfDual
-
-end GlobalTheory.CongW

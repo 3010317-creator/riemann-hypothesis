@@ -98,10 +98,4 @@ theorem hasDerivAt_along (X : Lie E a) (ψ : Sm E a) (g : GA E a) (t : ℝ) :
 
 end GlobalTheory.ExpDeriv
 
-namespace GlobalTheory.ExpDeriv
-
-open Filter Topology GlobalTheory.CuspRep
-
-end GlobalTheory.ExpDeriv
-
 end

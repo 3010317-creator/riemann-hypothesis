@@ -45,14 +45,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 open CategoryTheory TensorProduct MvPowerSeries GlobalTheory GlobalTheory.PDiv GlobalTheory.PDivGroup GlobalTheory.Katz
 
-namespace GlobalTheory.Katz.RedCob
-
-variable {p : ℕ} [Fact p.Prime] {k : Type} [Field k] [CharP k p] {σ τ : Type} {d : ℕ}
-
-variable [PerfectRing k p]
-
-end GlobalTheory.Katz.RedCob
-
 open MvPowerSeries in
 variable {p : ℕ} [Fact p.Prime] {k : Type} [Field k] in
 private theorem red_lift_self [CharP k p] {σ : Type} (f : MvPowerSeries σ k) :

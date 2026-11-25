@@ -92,9 +92,6 @@ theorem app_restrict {X X₀ : Scheme.{0}} (i : X₀ ⟶ X) {U V : X.Opens} (h :
 
 end GlobalTheory.CechPic
 
-namespace GlobalTheory.CechPic
-
-end GlobalTheory.CechPic
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

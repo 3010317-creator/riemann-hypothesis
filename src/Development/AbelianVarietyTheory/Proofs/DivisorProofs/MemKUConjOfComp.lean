@@ -85,9 +85,3 @@ theorem mem_KGL_of_thAt (u : Pl E) (k : GLw n (cPl E u)) (hk : thAt u k ∈ Glob
     rwa [hv, Fin.rev_rev, Fin.rev_rev] at this
 
 end GlobalTheory.EulerTw.IntRead
-
-namespace GlobalTheory.EulerTw.IntRead
-
-open GlobalTheory.EulerTw
-
-end GlobalTheory.EulerTw.IntRead

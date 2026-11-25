@@ -662,9 +662,6 @@ theorem exists_level (X₁ : USetup C) (K : ℕ) (hK : 0 < K) (hKu : IsUnit (K :
 
 end GlobalTheory.UPoinc.UDeepEx
 
-namespace GlobalTheory.UPoinc.UDeepEx
-
-end GlobalTheory.UPoinc.UDeepEx
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

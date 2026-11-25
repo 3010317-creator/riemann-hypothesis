@@ -808,32 +808,6 @@ section
 
 noncomputable section
 
-namespace GlobalTheory.GalOne.PhaseAt
-
-section General
-
-open MvPolynomial Formalism.BasicNotions Formalism.L2.DIV
-
-end General
-
-section Letters
-
-open NumberField Matrix Complex
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.FD GlobalTheory GlobalTheory.ThFr GlobalTheory.Dict GlobalTheory.AdTh GlobalTheory.ClsVal
-open ReciprocityTheory.ChartRestriction.G.Geo.Tor hiding Level Host
-open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Datum Formalism.IndefR.FWT Formalism.L2.Pj
-open scoped TensorProduct Classical ComplexConjugate
-open GlobalTheory.AdTh.PhaseMap
-
-variable {D : D7} {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E} {Dw : Datum H} {m n : ℕ} {l : Geo.Tor.Level H} (c : Coeff l)
-  (φ : c.F →+* ℂ) {e : D.what₂.Tau → D.what₂.Tau}
-
-variable {lt : LtN Dw n → FVar D m n}
-
-end Letters
-
-end GlobalTheory.GalOne.PhaseAt
-
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.FWT Formalism.L2.Pj
 open MeasureTheory IsDedekindDomain NumberField Matrix
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.FD GlobalTheory.ThFr GlobalTheory.Dict GlobalTheory.ClsVal

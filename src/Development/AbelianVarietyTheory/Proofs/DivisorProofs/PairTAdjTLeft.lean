@@ -111,11 +111,6 @@ variable [Algebra ℤ_[p] C] [IsScalarTower ℤ_[p] O C] (e : P.T ≃ₗ[ℤ_[p]
 
 end GlobalTheory.CompHt.IndepPoint
 
-namespace GlobalTheory.CompHt
-
-open IndepPoint
-
-end GlobalTheory.CompHt
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

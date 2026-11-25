@@ -489,9 +489,6 @@ theorem glue_units {Z : Scheme.{0}} [IsReduced Z] (V : Z.Opens) (P : Z.Opens →
 
 end GlobalTheory.KeyOpen
 
-namespace GlobalTheory.KeyOpen
-
-end GlobalTheory.KeyOpen
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

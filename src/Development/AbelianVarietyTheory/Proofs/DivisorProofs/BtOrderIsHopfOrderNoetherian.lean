@@ -135,7 +135,3 @@ theorem roots_eig_any (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : InfinitePlac
   exact hR0 (Polynomial.leadingCoeff_eq_zero.1 (by rw [Polynomial.leadingCoeff, hRd]; exact hc))
 
 end GlobalTheory.LKCx.PolyArch
-
-namespace GlobalTheory.LKCx
-
-end GlobalTheory.LKCx

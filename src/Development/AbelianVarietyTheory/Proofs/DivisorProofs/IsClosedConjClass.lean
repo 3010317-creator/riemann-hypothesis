@@ -177,9 +177,6 @@ theorem exists_compact_mod_sim (Z S : Type) [Group Z] [TopologicalSpace Z] [IsTo
 
 end GlobalTheory.OrbFinAf.TorusNorm
 
-namespace GlobalTheory.OrbFinAf.TorusNorm
-
-end GlobalTheory.OrbFinAf.TorusNorm
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -431,9 +428,6 @@ end Step
 
 end GlobalTheory.OrbFinAf.KottAlmost
 
-namespace GlobalTheory.OrbFinAf.KottAlmost
-
-end GlobalTheory.OrbFinAf.KottAlmost
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -967,9 +961,6 @@ end GlobalTheory.ClosedClass
 open Matrix NumberField IsDedekindDomain GlobalTheory.LKTrip GlobalTheory.LKMid GlobalTheory.OrbFinAf
 open scoped TensorProduct Classical
 
-namespace GlobalTheory.OrbFinAf
-
-end GlobalTheory.OrbFinAf
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalConjugacyClassClosed =====
@@ -1565,11 +1556,6 @@ theorem kottwitz_almost' (G : HTGroup p) (y : G.Cˣ) (hdeg : (minpoly G.F (y : G
 
 end GlobalTheory.OrbFinAf.AwayIrr
 
-namespace GlobalTheory.OrbFinAf.AwayIrr
-
-open scoped Pointwise
-
-end GlobalTheory.OrbFinAf.AwayIrr
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

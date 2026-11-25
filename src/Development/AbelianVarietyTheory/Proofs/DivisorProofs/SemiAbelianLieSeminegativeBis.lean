@@ -1015,9 +1015,6 @@ def lieBaseIso {C C' : Scheme.{0}} [IsIntegral C] (π : C' ⟶ C) (G : Over C) [
 
 end GlobalTheory.NeronCurve.LieDescent
 
-namespace GlobalTheory.NeronCurve
-
-end GlobalTheory.NeronCurve
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

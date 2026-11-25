@@ -1030,10 +1030,6 @@ open MvPowerSeries GlobalTheory GlobalTheory.Katz GlobalTheory.QLog GlobalTheory
 
 noncomputable section
 
-namespace GlobalTheory.QLog.FrobPeriod
-
-end GlobalTheory.QLog.FrobPeriod
-
 namespace GlobalTheory.QLog
 
 open MvPowerSeries in
