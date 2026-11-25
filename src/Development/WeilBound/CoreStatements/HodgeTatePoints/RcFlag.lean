@@ -57,14 +57,8 @@ lemma colen_trivial [IsAlgClosed C] [CharZero C] (hv : v.Integers R) {T : Type} 
     (hc : HasColen R v A.carrier c) : c = 1 := by
   obtain ⟨B, hB, rfl⟩ := hc
   rw [Matrix.det_eq_elem_of_subsingleton B 0]
-  have hr : Set.range (fun (j x : T) => B x j) = {fun x => B x 0} := by
-    ext g
-    simp only [Set.mem_range, Set.mem_singleton_iff]
-    constructor
-    · rintro ⟨j, rfl⟩
-      rw [Subsingleton.elim j 0]
-    · rintro rfl
-      exact ⟨0, rfl⟩
+  have hr : Set.range (fun (j x : T) => B x j) = {fun x => B x 0} :=
+    letI := uniqueOfSubsingleton (0 : T); Set.range_unique
   have h1 : (1 : T → C) ∈ Submodule.span R {fun x => B x 0} := by
     rw [← hr, ← hB]
     exact A.one_mem
