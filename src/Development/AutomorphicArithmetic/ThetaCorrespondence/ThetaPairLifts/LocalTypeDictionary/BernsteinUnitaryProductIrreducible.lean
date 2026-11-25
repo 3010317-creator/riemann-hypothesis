@@ -79,7 +79,6 @@ section
 namespace GlobalTheory.FunPr
 structure ThetaLocalInputs : Prop where
   greenSeriesSt : GlobalTheory.Published.GreenSeriesSt
-  linnik : GlobalTheory.Published.Linnik
   complexMultiplicationJSt : GlobalTheory.Published.ComplexMultiplicationJSt
   bernsteinUnitaryProductIrreducible : GlobalTheory.Published.BernsteinUnitaryProductIrreducible
   zelevinskyPolynomialRing : GlobalTheory.Published.ZelevinskyPolynomialRing
@@ -93,7 +92,6 @@ structure ThetaLocalInputs : Prop where
   dixmierMalliavinFactorisation : GlobalTheory.Published.DixmierMalliavinFactorisation
   schurOrthogonalitySquareIntegrable : GlobalTheory.Published.SchurOrthogonalitySquareIntegrable
   heckeLPartialContinuation : GlobalTheory.Published.HeckeLPartialContinuation
-  logDerOne : GlobalTheory.Mem.An.LogDerOne
   kFiniteVectorsUnitary : GlobalTheory.Published.KFiniteVectorsUnitary
   discreteSeriesLowestKType : GlobalTheory.Published.DiscreteSeriesLowestKType
   cuspBounded : GlobalTheory.Published.CuspBounded
