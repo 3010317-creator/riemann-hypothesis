@@ -115,11 +115,7 @@ theorem smul_regular_mod_of_pow_le (y : B)
     simp only [LinearMap.mem_ker, LinearMap.coe_comp, Function.comp_apply,
       LinearMap.mulRight_apply, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at hr
     by_contra hrm
-    rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, not_not] at hrm
-    obtain ⟨r', rfl⟩ := hrm
-    apply haJ
-    have := J.mul_mem_left (↑r'⁻¹ : A) hr
-    rwa [← mul_assoc, Units.inv_mul, one_mul] at this
+    exact haJ ((Ideal.unit_mul_mem_iff_mem J (IsLocalRing.notMem_maximalIdeal.1 hrm)).1 hr)
   have hu := h0 u (Submodule.smul_mono_left hK (mem_colon_smul_top_of_flat J a hau))
   refine add_mem hw ?_
   refine Submodule.smul_induction_on hu (fun r hr m _ => ?_) (fun x x' hx hx' => ?_)
