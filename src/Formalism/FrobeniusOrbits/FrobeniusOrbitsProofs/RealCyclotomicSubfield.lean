@@ -17,12 +17,8 @@ open Formalism.TwoAdicCyclotomicDecomposition
 
 namespace RealCyclotomicSubfield
 
-lemma conj_root {z : ℂ} {m : ℕ} (hm : m ≠ 0) (hz : z ^ m = 1) : starRingEnd ℂ z = z⁻¹ := by
-  have hn : ‖z‖ = 1 :=
-    (pow_eq_one_iff_of_nonneg (norm_nonneg z) hm).mp
-      (by simpa only [norm_pow, norm_one] using congrArg norm hz)
-  rw [Complex.inv_def, Complex.normSq_eq_norm_sq, hn]
-  simp
+lemma conj_root {z : ℂ} {m : ℕ} (hm : m ≠ 0) (hz : z ^ m = 1) : starRingEnd ℂ z = z⁻¹ :=
+  (Complex.inv_eq_conj (Complex.norm_eq_one_of_pow_eq_one hz hm)).symm
 
 lemma real_theta {K : Type*} [Field K] {m : ℕ} (hm : m ≠ 0) {ζ : K} (hζ : IsPrimitiveRoot ζ m)
     (ψ : K →+* ℂ) : starRingEnd ℂ (ψ (ζ + ζ⁻¹)) = ψ (ζ + ζ⁻¹) := by
@@ -36,10 +32,7 @@ lemma not_real_zeta {K : Type*} [Field K] {m : ℕ} (hm : m ≠ 0) (h2 : ¬ m �
   intro h
   have h1 : (ψ ζ) ^ m = 1 := by rw [← map_pow, hζ.pow_eq_one, map_one]
   have heq : ψ ζ = (ψ ζ)⁻¹ := h.symm.trans (conj_root hm h1)
-  have hne : ψ ζ ≠ 0 := by
-    intro h0
-    rw [h0, zero_pow hm] at h1
-    exact zero_ne_one h1
+  have hne : ψ ζ ≠ 0 := (map_ne_zero ψ).2 (hζ.ne_zero hm)
   have hsq : ψ (ζ ^ 2) = ψ 1 := by
     rw [map_pow, map_one, sq]
     calc ψ ζ * ψ ζ = ψ ζ * (ψ ζ)⁻¹ := congrArg (ψ ζ * ·) heq
