@@ -548,7 +548,3 @@ theorem phNormOKInert_of : Formalism.L2.KerInert.PhNormOKInert := by
 end Main
 
 end Formalism.L2.KerInert.PN
-
-namespace Formalism.L2.KerInert
-
-end Formalism.L2.KerInert

@@ -588,22 +588,6 @@ namespace JetIntegrality
 
 open NumberField Formalism.BasicNotions Formalism.MainNotions.TaylorLogMetric Formalism.L2.Ker
 
-section Good
-
-variable {p : ℕ} [Fact p.Prime] {σ ι : Type*}
-
-variable (δ : ι → MvPowerSeries σ ℂ_[p] →+ MvPowerSeries σ ℂ_[p])
-
-def Wd (l : List ι) (G : MvPowerSeries σ ℂ_[p]) : MvPowerSeries σ ℂ_[p] :=
-  l.foldr (fun j H => δ j H) G
-
-def Good (G : MvPowerSeries σ ℂ_[p]) : Prop :=
-  ∀ l : List ι, IsIntP (MvPowerSeries.constantCoeff (Wd δ l G))
-
-variable {δ}
-
-end Good
-
 section Ring
 
 variable {p : ℕ} [Fact p.Prime]
@@ -1341,10 +1325,6 @@ theorem fourProd_main : FourProd := by
     integralMv_rename _ ((hH I J).2 C wq hC hW)
 
 end Formalism.L2.KerInert.MMFour
-
-namespace Formalism.L2.KerInert
-
-end Formalism.L2.KerInert
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
