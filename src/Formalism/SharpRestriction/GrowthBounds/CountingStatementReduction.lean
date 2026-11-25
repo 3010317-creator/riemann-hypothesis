@@ -1555,7 +1555,6 @@ theorem cap_le (hp : 1 ≤ p) (hE0 : 0 ≤ S.E0) (B : ℝ) (hB : ∀ i, (S.bTop 
     refine Finset.sum_le_sum fun i _ => ?_
     split_ifs
     · have h2 : ((coarseA p S b i : ℕ) : ℝ) ≤ S.bTop i := by exact_mod_cast coarseA_le S b i
-      have h3 : (0 : ℝ) ≤ (oEff S b i : ℝ) := Nat.cast_nonneg _
       linarith [hB i]
     · exact hB0 i
   rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] at h1
@@ -1567,10 +1566,8 @@ theorem oPlus_le (hK : Kept p r S aTop b) (hp : 1 ≤ p) (hE0 : 0 ≤ S.E0) (hLa
     (hBp : (S.bPlus : ℝ) ≤ B) : (b.oPlus : ℝ) ≤ S.a + s * B + 2 * S.a * s + B := by
   have h := hK.2.2.2
   unfold Oplus at h
-  have ha : (0 : ℝ) ≤ S.a := Nat.cast_nonneg _
   have hr : (0 : ℝ) < (r : ℝ) + 1 := by positivity
   have h4 : (0 : ℝ) ≤ 4 / (p : ℝ) ^ 2 := by positivity
-  have hc0 : 0 ≤ S.La / ((r : ℝ) + 1) := div_nonneg hLa0 hr.le
   have hsum0 : (0 : ℝ) ≤ ∑ i, 2 * (S.a : ℝ) / (S.P p i : ℝ) :=
     Finset.sum_nonneg fun i _ => by positivity
   have hsum : (∑ i, 2 * (S.a : ℝ) / (S.P p i : ℝ)) ≤ 2 * S.a * s := by
@@ -1714,14 +1711,10 @@ theorem final_num (a m s p : ℝ) (ha : 1 ≤ a) (hm : 4 ≤ m) (hs0 : 0 ≤ s) 
   have h6 : m ^ 2 ≤ p ^ 2 := le_trans h4 (le_self_pow₀ h5 (by norm_num))
   have h7 : 64 * a ≤ (8 * a + m) ^ 2 := by
     have ha2 : a ≤ a ^ 2 := le_self_pow₀ ha (by norm_num)
-    have he : (8 * a + m) ^ 2 = 64 * a ^ 2 + 16 * (a * m) + m ^ 2 := by ring
     have ham : 0 ≤ a * m := by positivity
     have hm2 : 0 ≤ m ^ 2 := sq_nonneg m
     linarith
   have h8 : m ^ 2 * (64 * a) ≤ p ^ 2 * (8 * a + m) ^ 2 := mul_le_mul h6 h7 (by positivity) (by positivity)
-  have he1 : m * (a * (3 * m)) = 3 * (m ^ 2 * a) := by ring
-  have he2 : m ^ 2 * (64 * a) = 64 * (m ^ 2 * a) := by ring
-  have hpos : 0 ≤ m ^ 2 * a := by positivity
   linarith
 
 theorem degIn_le_sum {ι : Type} [Fintype ι] (d : ι → ℕ) (S : Set ι) : degIn d S ≤ ∑ l, d l := by
@@ -1745,7 +1738,6 @@ theorem block_size (C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ) (X : flipOneThree.Inst
   have hp1 : 1 ≤ X.p := by
     have : (1 : ℝ) ≤ (X.L.p : ℝ) := by linarith
     exact_mod_cast this
-  have ha0 : (0 : ℝ) ≤ (X.L.a : ℝ) := Nat.cast_nonneg _
   have hb10 : 5 / 2 * X.L.b' ≤ (X.L.a : ℝ) / 10 := by
     have := mul_le_mul_of_nonneg_right hp25 hF.b0.le
     linarith [hF.b_lt]
@@ -1755,7 +1747,6 @@ theorem block_size (C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ) (X : flipOneThree.Inst
     have h1 := hF.La0
     have h2 := hF.b0.le
     have h3 : (0 : ℝ) ≤ X.L.k := by show (0 : ℝ) ≤ (X.L.m : ℝ) + 1; positivity
-    have h4 : (0 : ℝ) ≤ X.L.Q := by show (0 : ℝ) ≤ (X.L.p : ℝ) ^ X.L.G'; positivity
     positivity
   have hLa : (X.S C0 CE1 CE2).La / ((X.r : ℝ) + 1) + 4 / (X.p : ℝ) ^ 2 ≤ 1 := by
     show X.L.La C0 / ((X.L.m : ℝ) + 1) + 4 / (X.L.p : ℝ) ^ 2 ≤ 1
@@ -3444,7 +3435,6 @@ theorem Kflat_num (A k Y La b' xa pp Yb N : ℝ) (r s : ℕ) (hkr : k = (r : ℝ
     (hs : (s : ℝ) ≤ Y) :
     ((((⌊A + A / (k * Y) + xa⌋₊ : ℕ) : ℝ) / A) ^ r) ^ s ≤ Real.exp 3 := by
   have hr0 : (0 : ℝ) ≤ (r : ℝ) := Nat.cast_nonneg _
-  have hs0' : (0 : ℝ) ≤ (s : ℝ) := Nat.cast_nonneg _
   have hk1 : (1 : ℝ) ≤ k := by rw [hkr]; linarith
   have hLk : La ≤ k := by
     have h2 : (1 : ℝ) ≤ 2 * Yb * N := by
@@ -3513,7 +3503,6 @@ theorem Kflat_le {CYb Cde Ck CD Cb Cc : ℝ} (hCYb : 1 ≤ CYb) (hH : flipOneThr
     have h1 : (1 : ℝ) ≤ X.L.N * X.L.Y := one_le_mul_of_one_le_of_one_le hN hY
     have := Real.log_nonneg h1
     linarith
-  have hp0 : (0 : ℝ) ≤ (X.L.p : ℝ) := Nat.cast_nonneg _
   have hA : (0 : ℝ) < (X.L.a : ℝ) := by
     by_contra h
     have hz : (X.L.a : ℝ) = 0 := le_antisymm (not_lt.1 h) (Nat.cast_nonneg _)
@@ -3564,7 +3553,6 @@ theorem remaining_of_segment_bound (C0 CYb Cde Ck CD Cb CE1 CE2 Cc C : ℝ) (X :
   have hs : (X.s : ℝ) ≤ X.L.Y := by
     have h1 : (X.s : ℝ) ≤ (X.N₁ : ℝ) := by exact_mod_cast hsN
     have h2 : (0 : ℝ) ≤ (X.N₁ : ℝ) := Nat.cast_nonneg _
-    have h3 : (0 : ℝ) ≤ ((X.S C0 CE1 CE2).t : ℝ) := Nat.cast_nonneg _
     have h4 : (1 : ℝ) ≤ C * (((X.S C0 CE1 CE2).t : ℝ) + 1) := one_le_mul_of_one_le_of_one_le hC (by linarith)
     have h5 : (X.N₁ : ℝ) ≤ C * (((X.S C0 CE1 CE2).t : ℝ) + 1) * X.N₁ := le_mul_of_one_le_left h2 h4
     linarith
