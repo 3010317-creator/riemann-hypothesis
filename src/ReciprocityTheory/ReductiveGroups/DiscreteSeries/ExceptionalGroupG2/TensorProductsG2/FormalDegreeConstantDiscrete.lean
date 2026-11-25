@@ -51,71 +51,6 @@ namespace ReciprocityTheory.ChartRestriction.DS
 
 variable {n : ℕ}
 
-theorem cns_shift_inj (dual : Bool) (μ : Fin n → ℝ) : Function.Injective (shiftF dual μ) := by
-  intro s s' h
-  have h1 : (Pi.single s (1 : ℝ) : Fin n → ℝ) = Pi.single s' 1 := by
-    cases dual
-    · exact add_left_cancel (a := μ) h
-    · exact sub_right_injective (b := μ) h
-  by_contra hne
-  have h2 := congrFun h1 s
-  rw [Pi.single_eq_same, Pi.single_eq_of_ne hne] at h2
-  exact one_ne_zero h2
-
-theorem cns_coefV {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
-    (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (g : Matrix (Fin n) (Fin n) ℂ) (v w : H) (x y : Fin n → ℂ) :
-    inner ℂ w (σ g v) * (star y ⬝ᵥ (g *ᵥ x)) =
-      ∑ c, inner ℂ (y c • w) (tensGrp false σ g (fun d => x d • v) c) := by
-  simp only [tensGrp, Bool.cond_false, map_smul, inner_sum, inner_smul_left, inner_smul_right, dotProduct,
-    Matrix.mulVec, Pi.star_apply, Finset.mul_sum, RCLike.star_def]
-  refine Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun d _ => ?_
-  ring
-
-theorem cns_coefVd {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
-    (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (g : Matrix (Fin n) (Fin n) ℂ) (v w : H) (x y : Fin n → ℂ) :
-    inner ℂ w (σ g v) * (star y ⬝ᵥ (g⁻¹ *ᵥ x)) =
-      ∑ c, inner ℂ (star (x c) • w) (tensGrp true σ g (fun d => star (y d) • v) c) := by
-  simp only [tensGrp, Bool.cond_true, map_smul, inner_sum, inner_smul_left, inner_smul_right, dotProduct,
-    Matrix.mulVec, Pi.star_apply, Finset.mul_sum, RCLike.star_def, Complex.conj_conj]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun d _ => ?_
-  ring
-
-theorem cns_expandV {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
-    (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (g : Matrix (Fin n) (Fin n) ℂ) (f w : Fin n → H) :
-    ∑ c, inner ℂ (w c) (tensGrp false σ g f c) =
-      ∑ p : Fin n × Fin n, inner ℂ (w p.1) (σ g (f p.2)) *
-        (star (Pi.single p.1 1 : Fin n → ℂ) ⬝ᵥ (g *ᵥ (Pi.single p.2 1 : Fin n → ℂ))) := by
-  rw [Fintype.sum_prod_type]
-  refine Finset.sum_congr rfl fun c _ => ?_
-  simp only [tensGrp, Bool.cond_false, inner_sum, inner_smul_right]
-  refine Finset.sum_congr rfl fun d _ => ?_
-  rw [← Pi.single_star, star_one, Matrix.mulVec_single_one, single_one_dotProduct, mul_comm]
-  rfl
-
-theorem cns_expandVd {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
-    (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (g : Matrix (Fin n) (Fin n) ℂ) (f w : Fin n → H) :
-    ∑ c, inner ℂ (w c) (tensGrp true σ g f c) =
-      ∑ p : Fin n × Fin n, inner ℂ (w p.1) (σ g (f p.2)) *
-        (star (Pi.single p.2 1 : Fin n → ℂ) ⬝ᵥ (g⁻¹ *ᵥ (Pi.single p.1 1 : Fin n → ℂ))) := by
-  rw [Fintype.sum_prod_type]
-  refine Finset.sum_congr rfl fun c _ => ?_
-  simp only [tensGrp, Bool.cond_true, inner_sum, inner_smul_right]
-  refine Finset.sum_congr rfl fun d _ => ?_
-  rw [← Pi.single_star, star_one, Matrix.mulVec_single_one, single_one_dotProduct, mul_comm]
-  rfl
-
-theorem cns_kfin_map {ε : Fin n → Bool} {H₁ H₂ : Type*} [NormedAddCommGroup H₁]
-    [InnerProductSpace ℂ H₁] [NormedAddCommGroup H₂] [InnerProductSpace ℂ H₂]
-    {σ₁ : Matrix (Fin n) (Fin n) ℂ → (H₁ →L[ℂ] H₁)} {σ₂ : Matrix (Fin n) (Fin n) ℂ → (H₂ →L[ℂ] H₂)}
-    (U : H₁ ≃ₗᵢ[ℂ] H₂) (hU : ∀ g ∈ UJset ε, ∀ x, U (σ₁ g x) = σ₂ g (U x))
-    {x : H₁} (hx : PI.UpqRep.IsKFin ε σ₁ x) : PI.UpqRep.IsKFin ε σ₂ (U x) := by
-  obtain ⟨S, hf, hxS, hst⟩ := hx
-  haveI := hf
-  refine ⟨S.map (U.toLinearEquiv : H₁ →ₗ[ℂ] H₂), (U.toLinearEquiv.submoduleMap S).finiteDimensional, ⟨x, hxS, rfl⟩, ?_⟩
-  rintro g hg _ ⟨z, hz, rfl⟩
-  exact ⟨σ₁ g z, hst g hg z hz, hU g (puniq_kset hg) z⟩
-
 theorem cns_kfin_smul {ε : Fin n → Bool} {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} {x : H} (a : ℂ) (hx : PI.UpqRep.IsKFin ε σ x) :
     PI.UpqRep.IsKFin ε σ (a • x) := by
@@ -126,36 +61,6 @@ section NC
 
 variable {ε : Fin n → Bool} {lam : Fin n → ℝ} {T : S7.KType ε (lowK ε lam)}
   {Ψ : Matrix (Fin n) (Fin n) ℂ → (T.V →L[ℂ] T.V)} {v₀ : T.V}
-
-theorem cns_gen_mem_Hlam {x : smD ε (rreg ε)} (hx : x ∈ genSub (smE ε (rreg ε)) (datumV ε Ψ v₀)) :
-    ((x : smD ε (rreg ε)) : L2 ε) ∈ Hlam ε Ψ v₀ := by
-  unfold Hlam closGen
-  exact Submodule.le_topologicalClosure _ (Submodule.mem_map_of_mem hx)
-
-theorem cns_kfin_gen (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ : v₀ ≠ 0) {x : smD ε (rreg ε)}
-    (hx : x ∈ genSub (smE ε (rreg ε)) (datumV ε Ψ v₀)) :
-    PI.UpqRep.IsKFin ε (sigLam ε Ψ v₀) (⟨(x : L2 ε), cns_gen_mem_Hlam hx⟩ : Hlam ε Ψ v₀) := by
-  have hσ := rreg_isURepOn ε
-  have hD : IsDerivedOn ε (rreg ε) (smD ε (rreg ε)) (smE ε (rreg ε)) := isDerivedOn_smE hσ
-  have hV := datumV_isKIrrHW hP hv₀
-  have hinj : Function.Injective (Hlam ε Ψ v₀).subtype := Subtype.val_injective
-  have hx' := hx
-  rw [genSub_eq_iSup_layer (ε := ε) hD.glRep hV.2.1] at hx'
-  obtain ⟨j, hj⟩ := (Submodule.mem_iSup_of_directed _ (Monotone.directed_le fun _ _ h => layer_mono h)).1 hx'
-  haveI := finiteDimensional_layer (ε := ε) (E := smE ε (rreg ε)) hV.1 j
-  let L : Submodule ℂ (L2 ε) := (layer ε (smE ε (rreg ε)) (datumV ε Ψ v₀) j).map (smD ε (rreg ε)).subtype
-  haveI hLf : FiniteDimensional ℂ L := inferInstance
-  refine ⟨L.comap (Hlam ε Ψ v₀).subtype, ?_, ⟨x, hj, rfl⟩, ?_⟩
-  · have hle : (L.comap (Hlam ε Ψ v₀).subtype).map (Hlam ε Ψ v₀).subtype ≤ L := Submodule.map_comap_le _ _
-    have := Submodule.finiteDimensional_of_le hle
-    exact (Submodule.equivMapOfInjective _ hinj _).symm.finiteDimensional
-  · rintro g hg v ⟨y, hy, hyv⟩
-    have hgK : g ∈ Kset ε := hg
-    obtain ⟨z, hz, hzy⟩ := layer_k_stable hσ hD hV.2.1 (datumV_kStable hP v₀) j g hgK y hy
-    refine ⟨z, hz, ?_⟩
-    show (z : L2 ε) = ((sigLam ε Ψ v₀ g v : Hlam ε Ψ v₀) : L2 ε)
-    rw [sigLam_coe hgap hP hv₀ (puniq_kset hg), hzy]
-    exact congrArg (rreg ε g) hyv
 
 theorem cns_kfin_rep (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ : v₀ ≠ 0) {x : Hlam ε Ψ v₀}
     (hx : PI.UpqRep.IsKFin ε (sigLam ε Ψ v₀) x) :
@@ -173,17 +78,6 @@ theorem cns_transport (dual : Bool) (hgap : StdGap ε lam) (hP : IsPsiFor ε lam
   simp only [tensGrp, inner_sum, inner_smul_right]
   refine Finset.sum_congr rfl fun d _ => ?_
   rw [← hU g hg, LinearIsometryEquiv.inner_map_map, Submodule.coe_inner, sigLam_coe hgap hP hv₀ hg]
-
-theorem cns_tens_sum (dual : Bool) {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
-    (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (g : Matrix (Fin n) (Fin n) ℂ) {D : Submodule ℂ H}
-    (η : Fin n → H) {β : Type*} (B : Finset β) (F : β → Fin n → D) :
-    ∑ c, inner ℂ (η c) (tensGrp dual σ g (fun d => (((∑ b ∈ B, F b) d : D) : H)) c) =
-      ∑ b ∈ B, ∑ c, inner ℂ (η c) (tensGrp dual σ g (fun d => ((F b d : D) : H)) c) := by
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun c _ => ?_
-  delta tensGrp
-  simp only [Finset.sum_apply, Submodule.coe_sum, map_sum, Finset.smul_sum, inner_sum]
-  rw [Finset.sum_comm]
 
 theorem cns_emb (dual : Bool) (hok : cns_Ok ε lam T Ψ) {lam' : Fin n → ℝ} {T' : S7.KType ε (lowK ε lam')}
     {Ψ' : Matrix (Fin n) (Fin n) ℂ → (T'.V →L[ℂ] T'.V)} (hok' : cns_Ok ε lam' T' Ψ') (s : Fin n)
@@ -304,8 +198,8 @@ theorem cns_nc_data (dual : Bool) {ε : Fin n → Bool} (hq : 1 ≤ S7.q0 ε) {�
     choose x hx z hz hxz using fun i => (cns_emb dual hok (hoks (sI i)) (sI i) (hsh (sI i) (hF i).1)).1 η hη (F i)
       (hF i).2.1 (hF i).2.2
     refine ⟨κ, hκ, sI, fun i => ⟨_, cns_gen_mem_Hlam (hx i)⟩, fun i => ⟨_, cns_gen_mem_Hlam (hz i)⟩,
-      fun i => ⟨(hF i).1, cns_kfin_gen (hoks _).2.1 (hoks _).2.2.1 (hoks _).2.2.2.1 (hx i),
-        cns_kfin_gen (hoks _).2.1 (hoks _).2.2.1 (hoks _).2.2.2.1 (hz i)⟩, fun g hg => ?_⟩
+      fun i => ⟨(hF i).1, cns_kfin (hoks _).2.1 (hoks _).2.2.1 (hoks _).2.2.2.1 (hx i) _ rfl,
+        cns_kfin (hoks _).2.1 (hoks _).2.2.1 (hoks _).2.2.2.1 (hz i) _ rfl⟩, fun g hg => ?_⟩
     have ht := cns_transport dual hok.2.1 hok.2.2.1 hok.2.2.2.1 U hU (fun c => U.symm (a c)) (fun c => U.symm (b c)) hg
     simp only [LinearIsometryEquiv.apply_symm_apply, ← hfe, ← hηe] at ht
     rw [ht, hfF, cns_tens_sum]
@@ -317,77 +211,11 @@ theorem cns_nc_data (dual : Bool) {ε : Fin n → Bool} (hq : 1 ≤ S7.q0 ε) {�
     obtain ⟨η, hη, f, hf, hηf⟩ := (cns_emb dual hok (hoks s) s (hsh s hs)).2 z hz x hx
     rw [tset_mem] at hη hf
     refine ⟨fun c => U ⟨_, cns_gen_mem_Hlam (hf c)⟩, fun c => U ⟨_, cns_gen_mem_Hlam (hη c)⟩,
-      fun c => cns_kfin_map U hU (cns_kfin_gen hok.2.1 hok.2.2.1 hok.2.2.2.1 (hf c)),
-      fun c => cns_kfin_map U hU (cns_kfin_gen hok.2.1 hok.2.2.1 hok.2.2.2.1 (hη c)), fun g hg => ?_⟩
+      fun c => cns_kfin_map U hU (cns_kfin hok.2.1 hok.2.2.1 hok.2.2.2.1 (hf c) _ rfl),
+      fun c => cns_kfin_map U hU (cns_kfin hok.2.1 hok.2.2.1 hok.2.2.2.1 (hη c) _ rfl), fun g hg => ?_⟩
     rw [cns_transport dual hok.2.1 hok.2.2.1 hok.2.2.2.1 U hU (fun c => ⟨_, cns_gen_mem_Hlam (hf c)⟩)
       (fun c => ⟨_, cns_gen_mem_Hlam (hη c)⟩) hg, ← hηf g hg, Submodule.coe_inner,
       sigLam_coe (hoks s).2.1 (hoks s).2.2.1 (hoks s).2.2.2.1 hg, hxe, hze]
-
-theorem cns_zuck_nc {ε : Fin n → Bool} (hq : 1 ≤ S7.q0 ε) {μ : Fin n → ℝ} {H : Type}
-    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)}
-    (hμ : PI.UpqRep.IsHCParam μ) (hd : PI.UpqRep.IsDS ε μ σ) {h : ℝ} (hG : PI.ZuckTensor.GapAtLeast ε μ h)
-    (hth : thrStar ε + 1 < h) :
-    ∃ X : PI.ZuckTensor.TensorDS n ε μ H σ, ∀ s, s ∈ X.Sm ↔ PI.UpqRep.IsHCParam (μ + Pi.single s 1) := by
-  classical
-  obtain ⟨lamS, Ts, Ψs, hsh, hDS, hne, hto, hof⟩ := cns_nc_data false hq hμ hd hG hth
-  refine ⟨{ Sm := univ.filter (fun s => S7.IsHCParam (shiftF false μ s))
-            Hs := fun s => Hlam ε (Ψs s) (Ts s).w
-            σs := fun s => sigLam ε (Ψs s) (Ts s).w
-            ds := ?_, inequiv := ?_, toSum := ?_, ofSum := ?_ }, ?_⟩
-  · intro s hs
-    have hs' := (mem_filter.1 hs).2
-    refine ⟨hs', ?_⟩
-    have e : (μ + Pi.single s 1) = lamS s := (hsh s hs').symm
-    rw [e]
-    exact hDS s
-  · intro s hs s' hs' hss
-    exact hne s s' (mem_filter.1 hs).2 (mem_filter.1 hs').2 hss
-  · intro v w x y hv hw
-    obtain ⟨κ, hκ, sI, vI, wI, h1, h2⟩ := hto (fun d => x d • v) (fun c => y c • w)
-      (fun d => cns_kfin_smul _ hv) (fun c => cns_kfin_smul _ hw)
-    refine ⟨κ, hκ, sI, vI, wI, fun i => ⟨mem_filter.2 ⟨mem_univ _, (h1 i).1⟩, (h1 i).2⟩, fun g hg => ?_⟩
-    rw [cns_coefV]
-    exact h2 g hg
-  · intro s hs v w hv hw
-    obtain ⟨a, b, ha, hb, hab⟩ := hof s (mem_filter.1 hs).2 v w hv hw
-    refine ⟨Fin n × Fin n, inferInstance, fun p => a p.2, fun p => b p.1,
-      fun p => Pi.single p.2 1, fun p => Pi.single p.1 1, fun p => ⟨ha _, hb _⟩, fun g hg => ?_⟩
-    rw [hab g hg, cns_expandV]
-  · intro s
-    exact ⟨fun hs => (mem_filter.1 hs).2, fun hs => mem_filter.2 ⟨mem_univ _, hs⟩⟩
-
-theorem cns_zuckd_nc {ε : Fin n → Bool} (hq : 1 ≤ S7.q0 ε) {μ : Fin n → ℝ} {H : Type}
-    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)}
-    (hμ : PI.UpqRep.IsHCParam μ) (hd : PI.UpqRep.IsDS ε μ σ) {h : ℝ} (hG : PI.ZuckTensor.GapAtLeast ε μ h)
-    (hth : thrStar ε + 1 < h) :
-    ∃ X : PI.ZuckTensor.TensorDSd n ε μ H σ, ∀ s, s ∈ X.Sm ↔ PI.UpqRep.IsHCParam (μ - Pi.single s 1) := by
-  classical
-  obtain ⟨lamS, Ts, Ψs, hsh, hDS, hne, hto, hof⟩ := cns_nc_data true hq hμ hd hG hth
-  refine ⟨{ Sm := univ.filter (fun s => S7.IsHCParam (shiftF true μ s))
-            Hs := fun s => Hlam ε (Ψs s) (Ts s).w
-            σs := fun s => sigLam ε (Ψs s) (Ts s).w
-            ds := ?_, inequiv := ?_, toSum := ?_, ofSum := ?_ }, ?_⟩
-  · intro s hs
-    have hs' := (mem_filter.1 hs).2
-    refine ⟨hs', ?_⟩
-    have e : (μ - Pi.single s 1) = lamS s := (hsh s hs').symm
-    rw [e]
-    exact hDS s
-  · intro s hs s' hs' hss
-    exact hne s s' (mem_filter.1 hs).2 (mem_filter.1 hs').2 hss
-  · intro v w x y hv hw
-    obtain ⟨κ, hκ, sI, vI, wI, h1, h2⟩ := hto (fun d => star (y d) • v) (fun c => star (x c) • w)
-      (fun d => cns_kfin_smul _ hv) (fun c => cns_kfin_smul _ hw)
-    refine ⟨κ, hκ, sI, vI, wI, fun i => ⟨mem_filter.2 ⟨mem_univ _, (h1 i).1⟩, (h1 i).2⟩, fun g hg => ?_⟩
-    rw [cns_coefVd]
-    exact h2 g hg
-  · intro s hs v w hv hw
-    obtain ⟨a, b, ha, hb, hab⟩ := hof s (mem_filter.1 hs).2 v w hv hw
-    refine ⟨Fin n × Fin n, inferInstance, fun p => a p.2, fun p => b p.1,
-      fun p => Pi.single p.1 1, fun p => Pi.single p.2 1, fun p => ⟨ha _, hb _⟩, fun g hg => ?_⟩
-    rw [hab g hg, cns_expandVd]
-  · intro s
-    exact ⟨fun hs => (mem_filter.1 hs).2, fun hs => mem_filter.2 ⟨mem_univ _, hs⟩⟩
 
 end ReciprocityTheory.ChartRestriction.DS
 end
