@@ -22,14 +22,9 @@ open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.Q Fo
 theorem norm_wl_le (A B : ℂ) : ‖wl A B‖ ≤ ‖A‖ + ‖B‖ := by
   unfold wl
   refine le_trans (norm_add_le _ _) (add_le_add ?_ ?_)
-  · refine le_trans (norm_smul_le _ _) ?_
-    calc ‖A‖ * ‖ContinuousLinearMap.id ℝ ℂ‖ ≤ ‖A‖ * 1 :=
-          mul_le_mul_of_nonneg_left ContinuousLinearMap.norm_id_le (norm_nonneg _)
-      _ = ‖A‖ := mul_one _
-  · refine le_trans (norm_smul_le _ _) ?_
-    calc ‖B‖ * ‖Complex.conjCLE.toContinuousLinearMap‖ ≤ ‖B‖ * 1 :=
-          mul_le_mul_of_nonneg_left (le_of_eq Complex.conjCLE_norm) (norm_nonneg _)
-      _ = ‖B‖ := mul_one _
+  · exact (norm_smul_le _ _).trans
+      (mul_le_of_le_one_right (norm_nonneg _) ContinuousLinearMap.norm_id_le)
+  · exact (norm_smul_le _ _).trans (mul_le_of_le_one_right (norm_nonneg _) Complex.conjCLE_norm.le)
 
 theorem integral_wl {α : Type*} [MeasurableSpace α] {ν : Measure α} {f g : α → ℂ} (hf : Integrable f ν)
     (hg : Integrable g ν) : ∫ x, wl (f x) (g x) ∂ν = wl (∫ x, f x ∂ν) (∫ x, g x ∂ν) := by
