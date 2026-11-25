@@ -130,12 +130,7 @@ theorem linearIndependent_gen {Vs : Fin (N + 1) → Submodule Ω E} (mono : Mono
   have hcard := hli'.fintype_card_le_finrank
   rw [dim] at hcard
   simp only [Fintype.card_subtype, Fin.val_castSucc] at hcard
-  have hfl : (Finset.univ.filter fun j : Fin N => j ≤ i) =
-      Finset.univ.filter fun j : Fin N => (j : ℕ) < (i : ℕ) + 1 := by
-    ext j
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fin.le_def]
-    omega
-  rw [hfl, Fin.card_filter_val_lt, min_eq_right (Nat.succ_le_of_lt i.isLt)] at hcard
+  rw [Finset.filter_ge_eq_Iic, Fin.card_Iic] at hcard
   omega
 
 theorem eval_ne_zero {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra O Ω]
