@@ -21,19 +21,9 @@ lemma perron_Sz_eq_Sa : Formalism.Sz = Formalism.Sa (fun n => (Λ n : ℝ)) := r
 
 lemma perron_Sz_eq_zero_of_le_one {x : ℝ} (hx : x ≤ 1) : Formalism.Sz x = 0 := by
   unfold Formalism.Sz
-  apply Finset.sum_eq_zero
-  intro n hn
+  refine Finset.sum_eq_zero fun n hn => ?_
   rw [Finset.mem_Icc] at hn
-  have hx0 : 0 ≤ x := by
-    by_contra! h
-    have h1 := Nat.floor_of_nonpos h.le
-    omega
-  have hnx : (n : ℝ) ≤ x := (Nat.le_floor_iff hx0).1 hn.2
-  have hn1 : n = 1 := by
-    have h1 : (n : ℝ) ≤ 1 := hnx.trans hx
-    have h2 : n ≤ 1 := by exact_mod_cast h1
-    omega
-  subst hn1
+  obtain rfl : n = 1 := le_antisymm (hn.2.trans (Nat.floor_le_one_of_le_one hx)) hn.1
   simp [ArithmeticFunction.vonMangoldt_apply_one]
 
 lemma perron_Sz_continuousAt (y : ℝ) : ContinuousAt (fun x => (Formalism.Sz x : ℂ)) y := by
