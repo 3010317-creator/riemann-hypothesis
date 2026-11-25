@@ -163,11 +163,8 @@ theorem stableCompl_B : StableCompl := by
     letI : InnerProductSpace ℂ (nablaSq ℂ N lam) := InnerProductSpace.ofCore (coreB lam).toCore
     haveI : FiniteDimensional ℂ (nablaSq ℂ N lam) := fd_B N lam
     let K : Submodule ℂ (nablaSq ℂ N lam) := W.comap (nablaSq ℂ N lam).subtype
-    have h1 := Submodule.finrank_sup_add_finrank_inf_eq K K.orthogonal
-    rw [Submodule.inf_orthogonal_eq_bot, finrank_bot, add_zero, Submodule.finrank_add_finrank_orthogonal] at h1
-    have hs : K ⊔ K.orthogonal = ⊤ := Submodule.eq_top_of_finrank_eq h1
     have hmem : (⟨f, hf⟩ : nablaSq ℂ N lam) ∈ K ⊔ K.orthogonal := by
-      rw [hs]
+      rw [Submodule.sup_orthogonal_of_hasOrthogonalProjection]
       exact Submodule.mem_top
     obtain ⟨a, ha, b, hb, hab⟩ := Submodule.mem_sup.mp hmem
     rw [Submodule.mem_sup]
