@@ -1197,8 +1197,6 @@ namespace GlobalTheory.UPel.HT.LieLin
 
 open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G.PullbackSections
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 section
 
 variable {p : ℕ} [Fact p.Prime] {D : Datum p} {S : Scheme.{0}}
@@ -1508,7 +1506,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 
 noncomputable section
 namespace GlobalTheory.UPel.HT.LieLin.LieAlgebraMultiplication
-attribute [local instance] Over.cartesianMonoidalCategory
 open ReciprocityTheory.ChartRestriction.G.PullbackSections Formalism.L2.Pj
 
 variable {S : Scheme.{0}} {G : Over S} [GrpObj G] {k : Type} [Field k] (t : Sp k ⟶ S)
@@ -1558,7 +1555,6 @@ theorem tang_iff (v : epsPt t ⟶ G) :
 end GlobalTheory.UPel.HT.LieLin.LieAlgebraMultiplication
 
 namespace GlobalTheory.UPel.HT.LieLin.LieAlgebraMultiplication
-attribute [local instance] Over.cartesianMonoidalCategory
 open ReciprocityTheory.ChartRestriction.G.PullbackSections Formalism.L2.Pj
 
 variable {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] {k : Type} [Field k] (t : Sp k ⟶ S)

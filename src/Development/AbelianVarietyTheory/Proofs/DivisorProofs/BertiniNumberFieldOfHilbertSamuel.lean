@@ -111,8 +111,6 @@ open ReciprocityTheory.ChartRestriction.G.Out (nonzeroLocus)
 
 namespace GlobalTheory.ChowDegree
 
-attribute [local instance] MvPolynomial.gradedAlgebra
-
 theorem degree_eq_hilbertDegree_of_isChowForm : ∀ (F : Type) [Field F] [CharZero F] (D N δ : ℕ) (I : Ideal (MvPolynomial (Fin N) F)) (f : MvPolynomial (Fin (D + 1) × Fin N) F), IsChowForm I D δ f → I.IsPrime → (∀ g ∈ I, ∀ n : ℕ, homogeneousComponent n g ∈ I) → δ = hilbertDegree I := by
   intro F _ _ D N δ I f hf hp hI
   haveI := hp
@@ -130,7 +128,6 @@ section -- clump:auto
 @[expose] public section
 
 open MvPolynomial GlobalTheory.ChowHt
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 namespace GlobalTheory.ChowSection
 
@@ -155,8 +152,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open ReciprocityTheory.ChartRestriction.G.Out (nonzeroLocus)
 
 namespace GlobalTheory.HSElim
-
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 theorem aeval_eq_zero_of_point {F K : Type} [Field F] [Field K] [Algebra F K] [IsAlgClosure F K]
     {N e δ : ℕ} {P : Ideal (MvPolynomial (Fin N) F)} {f : MvPolynomial (Fin (e + 1) × Fin N) F}

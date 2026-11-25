@@ -456,8 +456,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open Formalism.L2.Pj
 open scoped Classical
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.FlagTan
 
 open GlobalTheory.DeRham GlobalTheory.Cris GlobalTheory.Published
@@ -537,8 +535,6 @@ noncomputable section
 open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
 open AlgebraicGeometry CategoryTheory GlobalTheory.DeRham GlobalTheory.Cris
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.KSExist
 
 open FrameLift
@@ -591,7 +587,6 @@ section -- clump:auto
 
 open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
 open AlgebraicGeometry CategoryTheory GlobalTheory.DeRham GlobalTheory.Cris
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.KSRing
 
@@ -670,7 +665,6 @@ section -- clump:auto
 
 open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
 open AlgebraicGeometry CategoryTheory GlobalTheory.DeRham GlobalTheory.Cris
-attribute [local instance] Over.cartesianMonoidalCategory
 
 noncomputable section
 
@@ -771,7 +765,6 @@ section -- clump:auto
 
 open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
 open AlgebraicGeometry CategoryTheory GlobalTheory.DeRham GlobalTheory.Cris
-attribute [local instance] Over.cartesianMonoidalCategory
 
 noncomputable section
 
