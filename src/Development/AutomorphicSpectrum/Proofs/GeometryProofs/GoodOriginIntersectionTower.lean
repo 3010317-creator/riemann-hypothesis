@@ -1442,7 +1442,7 @@ theorem position_zero {I : Ideal (MRing J) → (n : ℕ) → (Fin n → HermLine
     linarith
   · filter_upwards [hsm, hw] with t h1 h2
     refine ⟨?_, h2.2.2⟩
-    obtain ⟨w', a1, -, a2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.defect_exists_smooth K J P B e R (A₁ t) (A₂ t) f g hP.2.1 h2.1 h1.1 h1.2
+    obtain ⟨w', a1, -, a2⟩ := _root_.PositivityTheory.UnitarySelfGeneration.i_defect K J P B e R (A₁ t) (A₂ t) f g hP.2.1 h2.1 h1.1 h1.2
     refine (OneModel.continuous_of_smooth R.A a2).congr fun x => ?_
     have hz := R.mem x x (R.mem_U x)
     obtain ⟨u, v, huv, hu, -⟩ := OneModel.exists_pair_ne h2.1.2 hz

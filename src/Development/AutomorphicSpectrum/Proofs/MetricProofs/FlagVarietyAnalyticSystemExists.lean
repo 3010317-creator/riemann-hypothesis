@@ -32,8 +32,8 @@ theorem flagVarieties_flagSys : Inputs → ∀ (Ψ : Type) [Fintype Ψ] [Decidab
       Re.deg = 1 ∧ (∀ p, Re.ref p = yLineFl Ψ N p) ∧ (∀ p t, Re.line p t = yLineFl Ψ N p) ∧
       Nonempty (FlagSys Re N) := by
   intro hIn Ψ _ _ _ N hN
-  obtain ⟨M, BM, hhom, hdy, hbd⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.flagModel_over_point Ψ N hN
-  have hA := _root_.GlobalTheory.CompanionTheory.Ar.PB.pFl_isArithVar Ψ N hN
+  obtain ⟨M, BM, hhom, hdy, hbd⟩ := _root_.PositivityTheory.Xgp.t_c_fl_model Ψ N hN
+  have hA := _root_.PositivityTheory.Xgp.t_c_fl_arith Ψ N hN
   have hpos : 0 < antisymDegree Ψ N := by
     have h1 : 0 < Fintype.card Ψ := Fintype.card_pos
     have h2 : 0 < N.choose 2 := Nat.choose_pos hN

@@ -518,7 +518,7 @@ theorem anCore (hR : Replace) (hB : BaseSide) (hI : PB.Inputs) (hK : ResK.ResKSt
     rw [hcr.1, ← hSa, hc₁.2, ← hL₁.1, ← ht.2.1, (hMt t).1, hc₂.2, muReg, smoothRep_a]
     have := (_root_.GlobalTheory.CompanionTheory.Ar.Cmp.lineIso_algebra K₃ ρ _ har.2.1).2.2.2.2 K' ρ' κ v _ hb e₀ _ _ _ _ hfg
     rwa [hL₂.1] at this
-  obtain ⟨w, hw, -, hws⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.defect_exists_smooth K' ρ' _ J' d R _ ref _ _ har'.2.1 hfg' ((_root_.GlobalTheory.CompanionTheory.Ar.Top.combLine_smooth_conj K' ρ' σ r m).1 hrs) hrefs
+  obtain ⟨w, hw, -, hws⟩ := _root_.PositivityTheory.UnitarySelfGeneration.i_defect K' ρ' _ J' d R _ ref _ _ har'.2.1 hfg' ((_root_.GlobalTheory.CompanionTheory.Ar.Top.combLine_smooth_conj K' ρ' σ r m).1 hrs) hrefs
   obtain ⟨B₀, hB₀⟩ := isCompact_univ.exists_bound_of_continuousOn (OneModel.continuous_of_smooth R.A hws).continuousOn
   have hB₀' : ∀ x, |w (R.lift x x)| ≤ |B₀| := fun x => (hB₀ x trivial).trans (le_abs_self _)
   have hmain : ∀ x ∉ bdry s, (fun p => R.lift x x ((v ∘ v₂) p)) ∉ D.Bd ∧ w (R.lift x x) = ∑ a, (m a : ℝ) * S.ph a (π x) +
