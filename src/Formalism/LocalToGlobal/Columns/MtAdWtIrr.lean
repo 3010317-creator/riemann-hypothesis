@@ -290,11 +290,7 @@ theorem hwInStable_of (h1 : HwFixedEx) (h2 : HwFixedLine) : HwInStable := by
   intro ι _ n lam S hS hst
   obtain ⟨v, hv, hv0, hfix⟩ := h1 ι n lam S hS hst
   obtain ⟨c, rfl⟩ := h2 ι n lam v hfix
-  have hc : c ≠ 0 := by
-    rintro rfl
-    exact hv0 (zero_smul _ _)
-  have := S.smul_mem c⁻¹ hv
-  rwa [smul_smul, inv_mul_cancel₀ hc, one_smul] at this
+  exact (S.smul_mem_iff (left_ne_zero_of_smul hv0)).1 hv
 
 theorem tenIrr_of' (h1 : HwFixedEx) (h2 : HwFixedLine) {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ}
     {ι : Type} [Fintype ι] (emb : ι → L →+* ℂ) (hinj : Function.Injective emb)
