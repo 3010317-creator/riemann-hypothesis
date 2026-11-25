@@ -9,7 +9,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 open scoped TensorProduct
 

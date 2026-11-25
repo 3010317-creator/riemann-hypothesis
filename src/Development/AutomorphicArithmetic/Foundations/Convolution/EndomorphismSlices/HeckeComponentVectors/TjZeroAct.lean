@@ -27,8 +27,6 @@ open scoped Classical
 
 open UpperTheory.Zero.ConvolutionTheory.EB PositivityTheory.Rg.BcB.F.RS
 
-attribute [local instance] borelG borelF borelA borelH
-
 section SlopeTestRemainingChoices
 
 open GlobalTheory.LGrp GlobalTheory.LFun.SatCompare GlobalTheory.LocGL GlobalTheory.WeylGL

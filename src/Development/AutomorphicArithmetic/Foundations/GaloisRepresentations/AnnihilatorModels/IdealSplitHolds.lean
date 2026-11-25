@@ -136,8 +136,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
-attribute [local instance] Over.cartesianMonoidalCategory
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.divC_of :
@@ -174,7 +172,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.adjoint_of :
@@ -252,7 +249,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.algOf_of :
@@ -298,7 +294,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.caseE_of :
@@ -362,7 +357,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 open GlobalTheory GlobalTheory.PointQuot
 
@@ -497,7 +491,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.etInj_of :
@@ -535,7 +528,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.frobHom_of :
@@ -600,7 +592,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.frobRing_of :
@@ -673,7 +664,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 private lemma closed_iff {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] {ϖ : O}
@@ -719,7 +709,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.grCard_of :
@@ -745,7 +734,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 private theorem exists_coprime_mul_le {A : Type} [CommRing A] [IsDedekindDomain A] (𝔞 J : Ideal A) (hJ : J ≠ ⊥) :
@@ -799,7 +787,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.imgEq_of :
@@ -829,7 +816,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 private theorem comp_pow' {C : Type*} [Category C] [CartesianMonoidalCategory C] {X Y Z : C} [MonObj Z]
@@ -881,7 +867,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.levPull_of :
@@ -901,7 +886,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.liftFF_of :
@@ -953,7 +937,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.objTri_of :
@@ -978,7 +961,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 open GlobalTheory.AbDual GlobalTheory.CechPic GlobalTheory.AbLaw in
@@ -1099,7 +1081,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 set_option backward.isDefEq.respectTransparency.types false in
@@ -1175,7 +1156,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 private theorem pt_core {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRing R] {b : Base D R} {N : ℕ}
@@ -1244,7 +1224,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.pulledEx_of :
@@ -1268,7 +1247,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.pulledRead_of :
@@ -1316,8 +1294,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
-attribute [local instance] Over.cartesianMonoidalCategory
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.quasiInv_of :
@@ -1437,7 +1413,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.repOfFF_of :
@@ -1468,7 +1443,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.resClosed_of :
@@ -1571,7 +1545,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.sameE_of :
@@ -1594,7 +1567,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.secCard_of :
@@ -1654,7 +1626,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.tjEEx_of :
@@ -1713,7 +1684,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.torsFree_of :
@@ -1751,7 +1721,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 theorem UpperTheory.Gal.crystallineComparison.Mod.valPtsX_of :
@@ -1789,7 +1758,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 open GlobalTheory.IwLevel (InSub IsIsogDeg)
 open GlobalTheory.AbDual (evc IsAdditive swap)
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 private def killedSub {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRing R] {b : Base D R} {N : ℕ}

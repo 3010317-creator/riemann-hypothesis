@@ -137,7 +137,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory CategoryTheory.Limits MonoidalCategory CartesianMonoidalCategory MonObj
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open scoped NumberField CategoryTheory.Obj
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.FiniteGroupSchemeLength
 
@@ -1623,7 +1622,6 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp spMap IsGrpPullback)
 open ReciprocityTheory.ChartRestriction.G.Semi (IsAbelianScheme LB mulN)
 open GlobalTheory GlobalTheory.PDiv GlobalTheory.PDivGroup
 open GlobalTheory.DeRham (spOver)
-attribute [local instance] Over.cartesianMonoidalCategory
 
 noncomputable section
 
@@ -1699,8 +1697,6 @@ open CategoryTheory AlgebraicGeometry Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Pdiv ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory GlobalTheory.PDiv GlobalTheory.PDivGroup GlobalTheory.DeRham GlobalTheory.AbDual GlobalTheory.Cris GlobalTheory.CurveRootGeometry GlobalTheory.ConjSeq
 open scoped CategoryTheory.Obj
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.FrobAdjoint
 

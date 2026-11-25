@@ -20,7 +20,6 @@ import Mathlib.Tactic.Linter.HaveILetI
 noncomputable section
 open CategoryTheory AlgebraicGeometry TensorProduct Opposite MonoidalCategory CartesianMonoidalCategory MonObj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Semi GlobalTheory.CatCoh GlobalTheory.Cris GlobalTheory.CechDR MainStatements.Hodge Limits
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.CompanionTheory.HopfSys
 variable {R : Type} [CommRing R]

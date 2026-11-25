@@ -21,8 +21,6 @@ open scoped Classical
 
 namespace UpperTheory.Zero.ConvolutionTheory.EB
 
-attribute [local instance] borelG borelF borelA borelH
-
 abbrev Pred : Type 1 := ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (N : ℕ), CD E N → ((E →+* ℂ) → Multiset ℂ) → Prop
 
 def CuspReadP (P : Pred) : Prop := ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (N : ℕ) (K : Subgroup (GL (Fin N) (Af E))) (W : Submodule ℂ (Kinf E N → ℂ))

@@ -78,7 +78,6 @@ open MeasureTheory Matrix Finset
 open scoped ContDiff ComplexConjugate InnerProductSpace
 open PositivityTheory.RgBcC GlobalTheory.CompanionTheory.WaveSpd
 open PositivityTheory.RgTw (Mat G)
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 namespace GlobalTheory.CompanionTheory.OneParam
 
@@ -154,7 +153,6 @@ open MeasureTheory Matrix Finset
 open scoped ContDiff ComplexConjugate InnerProductSpace
 open PositivityTheory.RgBcC GlobalTheory.CompanionTheory.WaveSpd
 open PositivityTheory.RgTw (Mat G)
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 end -- clump:auto
 end -- clump:auto

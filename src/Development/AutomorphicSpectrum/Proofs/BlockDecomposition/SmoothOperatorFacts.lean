@@ -69,7 +69,6 @@ open MeasureTheory Matrix Finset Filter Topology
 open scoped ContDiff ComplexConjugate InnerProductSpace ZeroAtInfty ENNReal
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc
 open PositivityTheory.RgTw (Mat G)
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 namespace GlobalTheory.CompanionTheory.FcSmooth
 
@@ -612,7 +611,6 @@ open MeasureTheory Matrix Finset Filter Topology
 open scoped ContDiff ComplexConjugate InnerProductSpace ZeroAtInfty ENNReal
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc
 open PositivityTheory.RgTw (Mat G)
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 namespace GlobalTheory.CompanionTheory.SobComplete
 
@@ -704,8 +702,6 @@ open scoped ContDiff ComplexConjugate InnerProductSpace ZeroAtInfty ENNReal
 
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc
 open PositivityTheory.RgTw (Mat G)
-
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 namespace GlobalTheory.CompanionTheory.FcSmooth
 

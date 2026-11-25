@@ -75,8 +75,6 @@ open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.WaveMult
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 namespace GlobalTheory.CompanionTheory.WaveMult
 
 private theorem sum_amat_first_index_eq {n : ℕ} (l : Fin n → ℂ) (j : Fin n) :
@@ -195,8 +193,6 @@ open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.WaveMult
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 namespace GlobalTheory.CompanionTheory.WaveMult.CoshMul
 
 theorem bump_mul_integrable {g : ℝ → ℝ} {T : ℝ} (h : IsBump g T) {f : ℝ → ℂ} (hf : Continuous f) :
@@ -313,7 +309,6 @@ open scoped ContDiff ComplexConjugate InnerProductSpace
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.WaveMult
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 end -- clump:auto
 end -- clump:auto
@@ -329,7 +324,6 @@ open scoped ContDiff ComplexConjugate InnerProductSpace
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.WaveMult
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 namespace GlobalTheory.CompanionTheory.WaveMult
 
@@ -549,7 +543,6 @@ open scoped ContDiff ComplexConjugate InnerProductSpace
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.WaveMult
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 namespace GlobalTheory.CompanionTheory.WaveMult
 
@@ -593,7 +586,6 @@ open scoped ContDiff ComplexConjugate InnerProductSpace
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.WaveMult
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 namespace GlobalTheory.CompanionTheory.WaveMult
 
@@ -682,7 +674,6 @@ open scoped ContDiff ComplexConjugate InnerProductSpace
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.WaveMult
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 namespace GlobalTheory.CompanionTheory.WaveMult
 
@@ -918,7 +909,6 @@ open scoped ContDiff ComplexConjugate InnerProductSpace
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.WaveMult
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 end -- clump:auto
 end -- clump:auto

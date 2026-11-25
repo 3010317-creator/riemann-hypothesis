@@ -15,7 +15,6 @@ open GlobalTheory.LFun (KGL)
 open UpperTheory.Gal.CertificateRingHomMap (GUf Plc GLw AfQ sim comp loc SameK IsCen cj)
 open UpperTheory.Gal.W2.Seed (Arith Setup)
 open UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Pl UpperTheory.Gal.Int.Geo.Pl.Tj
-attribute [local instance] Ideal.Quotient.field
 
 open GroundTheory.Global.AdeleBaseChange (finiteAdeleMap below)
 open GroundTheory.Global.SemiLocal (completionMap valued_completionMap)

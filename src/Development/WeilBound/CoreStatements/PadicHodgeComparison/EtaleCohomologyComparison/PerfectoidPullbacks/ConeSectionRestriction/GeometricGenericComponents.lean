@@ -327,7 +327,6 @@ section -- clump:auto
 
 set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor CrystallineSemistableComparison.Pb
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 namespace GlobalTheory.CompanionTheory.CoordCard
 
@@ -408,7 +407,6 @@ section -- clump:auto
 
 set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor CrystallineSemistableComparison.Pb
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 namespace GlobalTheory.CompanionTheory.GeoCoord
 
@@ -454,7 +452,6 @@ section -- clump:auto
 
 set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor CrystallineSemistableComparison.Pb
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 end -- clump:auto
 end -- clump:auto
@@ -472,8 +469,6 @@ noncomputable section
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
 namespace CrystallineSemistableComparison.Pb
-
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 theorem exists_etale_away_pf {K A : Type} [Field K] [CharZero K] [CommRing A] [IsDomain A] [Algebra K A]
     [Algebra.FiniteType K A] {d : ℕ} (s : Fin d → A) (hs : AlgebraicIndependent K s)
@@ -810,8 +805,6 @@ open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.T
 
 namespace CrystallineSemistableComparison.Pb
 
-attribute [local instance] MvPolynomial.gradedAlgebra
-
 theorem isIntegral_of_smooth_pf {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of K))
     [ConnectedSpace X] (n : ℕ) [SmoothOfRelativeDimension n q] : IsIntegral X := by
   have hsm : Smooth q := SmoothOfRelativeDimension.smooth n q
@@ -885,7 +878,6 @@ section -- clump:auto
 
 set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor CrystallineSemistableComparison.Pb
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 namespace GlobalTheory.CompanionTheory.GeoFT
 
@@ -917,7 +909,6 @@ section -- clump:auto
 
 set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor CrystallineSemistableComparison.Pb
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 end -- clump:auto
 end -- clump:auto

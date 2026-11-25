@@ -40,8 +40,6 @@ open scoped Classical
 
 namespace UpperTheory.Zero.ConvolutionTheory.EB
 
-attribute [local instance] borelG borelF borelA borelH
-
 open PositivityTheory.Rg.Tf.Loc (twConj)
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}

@@ -39,7 +39,6 @@ open GlobalTheory.LFun (KGL)
 open UpperTheory.Gal.CertificateRingHomMap (GUf Plc GLw AfQ sim comp loc SameK IsCen cj)
 open UpperTheory.Gal.W2.Seed (Arith Setup)
 open UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Pl UpperTheory.Gal.Int.Geo.Pl.Tj
-attribute [local instance] Ideal.Quotient.field
 
 namespace UpperTheory.Gal.Int.Geo.Pl.Tj.TorusKilling
 
@@ -205,7 +204,6 @@ open GlobalTheory.LFun (KGL)
 open UpperTheory.Gal.CertificateRingHomMap (GUf Plc GLw AfQ sim comp loc SameK IsCen cj)
 open UpperTheory.Gal.W2.Seed (Arith Setup)
 open UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Pl UpperTheory.Gal.Int.Geo.Pl.Tj
-attribute [local instance] Ideal.Quotient.field
 
 section SlopeTestRemainingChoices
 
@@ -657,7 +655,6 @@ open GlobalTheory.LFun (KGL)
 open UpperTheory.Gal.CertificateRingHomMap (GUf Plc GLw AfQ sim comp loc SameK IsCen cj)
 open UpperTheory.Gal.W2.Seed (Arith Setup)
 open UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Pl UpperTheory.Gal.Int.Geo.Pl.Tj
-attribute [local instance] Ideal.Quotient.field
 
 namespace UpperTheory.Gal.Int.Geo.Pl.Tj
 
@@ -939,7 +936,6 @@ open GlobalTheory.LFun (KGL)
 open UpperTheory.Gal.CertificateRingHomMap (GUf Plc GLw AfQ sim comp loc SameK IsCen cj)
 open UpperTheory.Gal.W2.Seed (Arith Setup)
 open UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Pl UpperTheory.Gal.Int.Geo.Pl.Tj
-attribute [local instance] Ideal.Quotient.field
 
 namespace UpperTheory.Gal.Int.Geo.Pl.Tj
 
@@ -1255,7 +1251,6 @@ open GlobalTheory.LFun (KGL)
 open UpperTheory.Gal.CertificateRingHomMap (GUf Plc GLw AfQ sim comp loc SameK IsCen cj)
 open UpperTheory.Gal.W2.Seed (Arith Setup)
 open UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Pl UpperTheory.Gal.Int.Geo.Pl.Tj
-attribute [local instance] Ideal.Quotient.field
 
 namespace UpperTheory.Gal.Int.Geo.Pl
 

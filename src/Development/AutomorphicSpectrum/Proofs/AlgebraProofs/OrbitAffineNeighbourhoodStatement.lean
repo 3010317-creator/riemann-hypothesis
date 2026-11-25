@@ -33,7 +33,6 @@ section -- clump:auto
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory AlgebraicGeometry Opposite
 open scoped CategoryTheory.MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.CompanionTheory.FreeQuotProof GlobalTheory.CompanionTheory.Hypotheses₂ GlobalTheory.CompanionTheory.Hypotheses₂.FreeQuot
 
 namespace GlobalTheory.CompanionTheory.PrimesToPts
@@ -78,7 +77,6 @@ section -- clump:auto
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory AlgebraicGeometry Opposite
 open scoped CategoryTheory.MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.CompanionTheory.FreeQuotProof GlobalTheory.CompanionTheory.Hypotheses₂ GlobalTheory.CompanionTheory.Hypotheses₂.FreeQuot
 
 noncomputable section
@@ -151,7 +149,6 @@ section -- clump:auto
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory AlgebraicGeometry Opposite
 open scoped CategoryTheory.MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.CompanionTheory.FreeQuotProof GlobalTheory.CompanionTheory.Hypotheses₂ GlobalTheory.CompanionTheory.Hypotheses₂.FreeQuot
 
 namespace GlobalTheory.CompanionTheory.PrimeAvoid
@@ -223,7 +220,6 @@ section -- clump:auto
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory AlgebraicGeometry Opposite
 open scoped CategoryTheory.MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.CompanionTheory.FreeQuotProof GlobalTheory.CompanionTheory.Hypotheses₂ GlobalTheory.CompanionTheory.Hypotheses₂.FreeQuot
 
 namespace GlobalTheory.CompanionTheory.FreeQuotProof
@@ -255,7 +251,6 @@ section -- clump:auto
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory AlgebraicGeometry Opposite
 open scoped CategoryTheory.MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.CompanionTheory.FreeQuotProof GlobalTheory.CompanionTheory.Hypotheses₂ GlobalTheory.CompanionTheory.Hypotheses₂.FreeQuot
 
 namespace GlobalTheory.CompanionTheory.NormPrime
@@ -355,7 +350,6 @@ section -- clump:auto
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory AlgebraicGeometry Opposite
 open scoped CategoryTheory.MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.CompanionTheory.FreeQuotProof GlobalTheory.CompanionTheory.Hypotheses₂ GlobalTheory.CompanionTheory.Hypotheses₂.FreeQuot
 
 namespace GlobalTheory.CompanionTheory.FreeQuotProof.Nbhd
@@ -418,7 +412,6 @@ section -- clump:auto
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory AlgebraicGeometry Opposite
 open scoped CategoryTheory.MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.CompanionTheory.FreeQuotProof GlobalTheory.CompanionTheory.Hypotheses₂ GlobalTheory.CompanionTheory.Hypotheses₂.FreeQuot
 
 namespace GlobalTheory.CompanionTheory.PullbackRestrict
@@ -448,7 +441,6 @@ section -- clump:auto
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory AlgebraicGeometry Opposite
 open scoped CategoryTheory.MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.CompanionTheory.FreeQuotProof GlobalTheory.CompanionTheory.Hypotheses₂ GlobalTheory.CompanionTheory.Hypotheses₂.FreeQuot
 
 noncomputable section
@@ -487,7 +479,6 @@ section -- clump:auto
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory AlgebraicGeometry Opposite
 open scoped CategoryTheory.MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.CompanionTheory.FreeQuotProof GlobalTheory.CompanionTheory.Hypotheses₂ GlobalTheory.CompanionTheory.Hypotheses₂.FreeQuot
 
 noncomputable section

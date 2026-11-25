@@ -12,7 +12,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.T
 set_option backward.isDefEq.respectTransparency false
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor CrystallineSemistableComparison.Pb
-attribute [local instance] MvPolynomial.gradedAlgebra
 
 namespace GlobalTheory.CompanionTheory.Geo
 

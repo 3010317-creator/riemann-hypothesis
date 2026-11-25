@@ -123,8 +123,6 @@ open Formalism.BasicNotions Formalism.GradedWeylDivisibility
 
 namespace GlobalTheory.CompanionTheory.RmHol.HW
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 variable {n : ℕ}
 
 def hv (lam : Fin n → ℤ) : nablaSq ℂ n (dw lam) :=
@@ -473,8 +471,6 @@ open PositivityTheory.RgBcC GlobalTheory.CompanionTheory.RmHol
 open PositivityTheory.RgTw (Mat)
 
 namespace GlobalTheory.CompanionTheory.RmHol
-
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 variable {n : ℕ}
 

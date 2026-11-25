@@ -24,8 +24,6 @@ open scoped Classical
 
 namespace UpperTheory.Zero.ConvolutionTheory.EB
 
-attribute [local instance] borelG borelF borelA borelH
-
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}
 
 private theorem mem_Kg {S : Set (Pl E)} {L : ∀ w : Pl E, Subgroup (GLw n w)} {g : GL (Fin n) (Af E)} :

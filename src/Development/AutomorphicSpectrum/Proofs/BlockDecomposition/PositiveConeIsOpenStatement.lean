@@ -22,8 +22,6 @@ open PositivityTheory.RgTw (Mat G hb)
 open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.ConeHaar
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 namespace GlobalTheory.CompanionTheory.ConeHaar.OpenCone
 
 variable {n : ℕ}
@@ -116,7 +114,6 @@ open scoped ContDiff ENNReal ComplexOrder Pointwise
 open PositivityTheory.RgTw (Mat G hb)
 open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.ConeHaar
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 theorem _root_.GlobalTheory.T.positive_cone_isOpen : ∀ n : ℕ, IsOpen (PositivityTheory.RgBcC.cone n) := by
   first | exact @GlobalTheory.CompanionTheory.ConeHaar.isOpen_cone

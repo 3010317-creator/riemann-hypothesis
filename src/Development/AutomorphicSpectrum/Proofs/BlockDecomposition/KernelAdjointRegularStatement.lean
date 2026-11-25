@@ -20,8 +20,6 @@ open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.WaveMult
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 namespace GlobalTheory.CompanionTheory.WaveMult
 
 theorem continuousOn_inv_GLs {n : ℕ} : ContinuousOn (fun y : Mat n => y⁻¹) (GLs n) := by
@@ -91,7 +89,6 @@ open scoped ContDiff ComplexConjugate InnerProductSpace
 open PositivityTheory.RgTw (Mat G)
 open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.WaveMult
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 end -- clump:auto
 end -- clump:auto

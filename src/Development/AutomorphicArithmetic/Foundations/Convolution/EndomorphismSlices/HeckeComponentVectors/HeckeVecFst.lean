@@ -23,8 +23,6 @@ open scoped Classical
 
 open UpperTheory.Zero.ConvolutionTheory.EB PositivityTheory.Rg.BcB.F.RS
 
-attribute [local instance] borelG borelF borelA borelH
-
 private theorem heckeVec_fst {G₁ G₂ V : Type} [Group G₁] [Group G₂] [AddCommGroup V] [Module ℂ V]
     (ρ : Representation ℂ (G₁ × G₂) V) (K₁ : Subgroup G₁) (K₂ : Subgroup G₂) {x : V}
     (hx : x ∈ fixed ρ (K₁.prod K₂)) (f : G₁ → ℂ) (h : G₂ → ℂ)

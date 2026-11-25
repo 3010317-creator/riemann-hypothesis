@@ -22,7 +22,6 @@ open GlobalTheory.LFun (KGL)
 open UpperTheory.Gal.CertificateRingHomMap (GUf Plc GLw AfQ sim comp loc SameK IsCen cj)
 open UpperTheory.Gal.W2.Seed (Arith Setup)
 open UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Pl UpperTheory.Gal.Int.Geo.Pl.Tj
-attribute [local instance] Ideal.Quotient.field
 
 private theorem val_sim_inv {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} (g : GUf E n) (w : Plc E) :
     Valued.v (GroundTheory.Global.AdeleBaseChange.finiteAdeleMap ℚ E ((sim g⁻¹ : AfQˣ) : AfQ) w) *
@@ -109,7 +108,6 @@ open GlobalTheory.LFun (KGL)
 open UpperTheory.Gal.CertificateRingHomMap (GUf Plc GLw AfQ sim comp loc SameK IsCen cj)
 open UpperTheory.Gal.W2.Seed (Arith Setup)
 open UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Pl UpperTheory.Gal.Int.Geo.Pl.Tj
-attribute [local instance] Ideal.Quotient.field
 
 namespace UpperTheory.Gal.Int.Geo.Pl.Tj
 

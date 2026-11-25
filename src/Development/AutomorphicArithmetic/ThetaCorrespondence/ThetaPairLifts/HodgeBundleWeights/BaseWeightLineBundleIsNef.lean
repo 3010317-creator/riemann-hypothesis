@@ -772,8 +772,6 @@ open GlobalTheory.QCoh (pullbackSections)
 open ReciprocityTheory.ChartRestriction.G.Pdiv (specO ptMap LieG dualScale)
 open scoped CategoryTheory.Obj
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.LocM.TanPair
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {X : Scheme.{0}}

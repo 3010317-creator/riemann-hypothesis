@@ -62,8 +62,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.Serre
 open scoped CategoryTheory.Obj UpperHalfPlane TensorProduct
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.TensorFinite
 
 variable {S : Scheme.{0}}
@@ -97,8 +95,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj CategoryTheory.MonObj
 open GlobalTheory.CechPic GlobalTheory.AbDual
 open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqToBase toBase)
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace PositivityTheory.PrwZar.XB
 

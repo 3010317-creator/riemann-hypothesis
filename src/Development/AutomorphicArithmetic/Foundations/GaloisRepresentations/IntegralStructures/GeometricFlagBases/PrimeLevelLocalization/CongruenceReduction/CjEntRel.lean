@@ -10,7 +10,6 @@ open GlobalTheory.LFun (KGL)
 open UpperTheory.Gal.CertificateRingHomMap (GUf Plc GLw AfQ sim comp loc SameK IsCen cj)
 open UpperTheory.Gal.W2.Seed (Arith Setup)
 open UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Pl UpperTheory.Gal.Int.Geo.Pl.Tj
-attribute [local instance] Ideal.Quotient.field
 
 private theorem cjEnt_rel {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} (k : GUf E n) (u : Plc E) :
     ((comp (cj u) k).val.map (conjLoc (GlobalTheory.SplitPts.conjE E) u))ᵀ * (comp u k).val =

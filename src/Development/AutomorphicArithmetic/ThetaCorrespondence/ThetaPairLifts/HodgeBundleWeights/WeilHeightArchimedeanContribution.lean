@@ -759,8 +759,6 @@ open TopologicalSpace Limits ReciprocityTheory.ChartRestriction.G ReciprocityThe
 open GlobalTheory.FlagMod.LowRank (ECh Proj str)
 open MonoidalCategory CartesianMonoidalCategory MonObj
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l} {c : Coeff l}
 
@@ -1036,7 +1034,6 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
   {Xo : Moduli D l} {c : Coeff l} {r : ℕ} {σ : c.F →+* ℂ}
 
 open Limits GlobalTheory.CxPts Filter Topology GlobalTheory.ShFam GlobalTheory.ShFam.BdArc GlobalTheory.Toroidal MonoidalCategory CartesianMonoidalCategory
-attribute [local instance] Over.cartesianMonoidalCategory
 
 
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.GeometryOfNumbersTheory Formalism.BasicNotions MonObj GlobalTheory GlobalTheory.CechPic GlobalTheory.Vanishing GlobalTheory.HermTools GlobalTheory.Adelic GlobalTheory.CovTop GlobalTheory.HSApp in
@@ -1174,7 +1171,6 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
 section ThetaShiftProofs
 
 open Limits GlobalTheory.CxPts Filter Topology GlobalTheory.ShFam GlobalTheory.ShFam.BdArc GlobalTheory.Toroidal MonoidalCategory CartesianMonoidalCategory
-attribute [local instance] Over.cartesianMonoidalCategory
 
 
 
