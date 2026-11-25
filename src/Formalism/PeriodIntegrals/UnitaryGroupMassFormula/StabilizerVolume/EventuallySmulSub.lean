@@ -65,14 +65,9 @@ theorem reach_of_approx (π : K) (hπ : Tendsto (fun k : ℕ => π ^ k) atTop (�
     (P : AddSubgroup X) (hPc : IsCompact (P : Set X))
     (hbase : ∀ p ∈ P, ∃ l ∈ L, p - D l ∈ smulSub π P) :
     ∀ p ∈ P, ∃ l ∈ L, D l = p := by
-  have hπkL : ∀ k : ℕ, ∀ w ∈ L, π ^ k • w ∈ L := by
-    intro k
-    induction k with
-    | zero => intro w hw; simpa using hw
-    | succ k ih =>
-      intro w hw
-      rw [pow_succ, mul_smul]
-      exact ih _ (hπL w hw)
+  have hπkL : ∀ k : ℕ, ∀ w ∈ L, π ^ k • w ∈ L := fun k w hw => by
+    rw [← smul_iterate_apply]
+    exact Set.MapsTo.iterate (f := (π • · : V → V)) (s := (L : Set V)) hπL k hw
   have hstep : ∀ k : ℕ, ∀ p ∈ P, ∃ l ∈ L, p - D l ∈ smulSub (π ^ k) P := by
     intro k
     induction k with
@@ -142,14 +137,9 @@ theorem filt_abstract [ContinuousMul K] (π : K) (hπ0 : π ≠ 0) (hπ : Tendst
     intro p hp
     obtain ⟨l, hl, rfl⟩ := AddSubgroup.mem_map.1 hp
     exact AddSubgroup.mem_map.2 ⟨π • l, hπL l hl, by rw [hDm, hDm, hβs]⟩
-  have hπkP : ∀ k : ℕ, ∀ p ∈ P, π ^ k • p ∈ P := by
-    intro k
-    induction k with
-    | zero => intro p hp; simpa using hp
-    | succ k ih =>
-      intro p hp
-      rw [pow_succ, mul_smul]
-      exact ih _ (hπP p hp)
+  have hπkP : ∀ k : ℕ, ∀ p ∈ P, π ^ k • p ∈ P := fun k p hp => by
+    rw [← smul_iterate_apply]
+    exact Set.MapsTo.iterate (f := (π • · : X → X)) (s := (P : Set X)) hπP k hp
   set πP := smulSub π P with hπPdef
   have hπPo : IsOpen (πP : Set X) := isOpen_smulSub π hπ0 P hPo
   have hN1 : ∀ᶠ u in 𝓝 (0 : V), ∀ w ∈ (L : Set V), β u w ∈ (πP : Set X) := by
