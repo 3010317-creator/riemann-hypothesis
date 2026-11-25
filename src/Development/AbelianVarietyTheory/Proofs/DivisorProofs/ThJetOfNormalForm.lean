@@ -160,7 +160,6 @@ end GlobalTheory.MBLow.Cl.MulFrame
 
 namespace GlobalTheory.MBLow.Cl
 
-
 open GlobalTheory.ThetaFn GlobalTheory.CubeValues GlobalTheory.SymmetricSemicharacter MulFrame in
 theorem exists_normalised_mulPull_fnT : ∀ (g : ℕ) (x : KeyIn ℂ) (hg : x.P.g = g) (u : HolUnif x.P.A x.P.L g) (τ : Matrix (Fin g) (Fin g) ℂ) (a b : Fin g → ℂ) (c : ℂ) (W : Fin g → Fin g → ℂ), NF x hg u τ a b c W → ∀ (m : ℕ) (th : LB.Sec (LPow x.P.A x.P.L ((1 : ℕ) : ℤ) (baseOver (Sp ℂ)))) (f : (Fin g → ℂ) → ℂ), FnT u 1 th f → ∃ (α : LB.Gen (LB.LinComb x.P.L (K := Fin 2) ![(snd (baseOver (Sp ℂ)) x.P.A).left, (snd (baseOver (Sp ℂ)) x.P.A ^ m).left] ![((m ^ 2 : ℕ) : ℤ), -((1 : ℕ) : ℤ)])) (s₁ : LB.Sec (LPow x.P.A x.P.L ((m ^ 2 : ℕ) : ℤ) (baseOver (Sp ℂ)))), α.IsGen ∧ LB.Gen.Corr x.P.L _ _ _ _ (LB.pullGen x.P.L _ _ α (ptSecT x.P.A 1).left) (rigT x.P.A x.P.L x.rig (baseOver (Sp ℂ)) (((m ^ 2 : ℕ) : ℤ) - 1)) ∧ IsTwistPull x.P.A x.P.L (mulT x.P.A (baseOver (Sp ℂ)) m) (snd (baseOver (Sp ℂ)) x.P.A ^ m) (lift_snd _ _) ((m ^ 2 : ℕ) : ℤ) ((1 : ℕ) : ℤ) α th s₁ ∧ FnT u (m ^ 2) s₁ fun z => f ((m : ℂ) • z) := by
   intro g x hg u τ a b c W hNF m th f hf
@@ -237,9 +236,6 @@ variable {g : ℕ}
 
 theorem cv_dot (M N : Fin g → ℤ) : cv N ⬝ᵥ cv M = ((N ⬝ᵥ M : ℤ) : ℂ) := by
   simp [cv, dotProduct]
-
-theorem half_dot {a : Fin g → ℂ} (ha : Half a) (M : Fin g → ℤ) : ∃ n : ℤ, 2 * (a ⬝ᵥ cv M) = n := by
-  apply _root_.GlobalTheory.MBLow.Cl.MulFrame.exists_two_mul_dot <;> assumption
 
 theorem perV_neg (τ : Matrix (Fin g) (Fin g) ℂ) (M N : Fin g → ℤ) : perV τ (-M) (-N) = -perV τ M N := by
   have h : ∀ K : Fin g → ℤ, cv (-K) = -cv K := fun K => funext fun i => by simp [cv]
@@ -383,10 +379,6 @@ theorem Reads.act (hL : L.IsLB) (hx : p ≫ Θ.pt = u.ex x) (hr : Reads u p Θ.�
   refine mul_right_cancel₀ (zpow_ne_zero k (u.fr_ne (![i, i'] 0) _ hi)) ?_
   linear_combination -e - θ (z + x) * e'
 
-theorem fnT_iff {P : PolAV (Sp ℂ)} (u : HolUnif P.A P.L g) (k : ℕ) (t : LB.Sec (LPow P.A P.L (k : ℤ) (baseOver (Sp ℂ))))
-    (f : (Fin g → ℂ) → ℂ) : FnT u k t f ↔ IsFnAt u basePt k t f := by
-  apply _root_.GlobalTheory.MBLow.Cl.MulFrame.fnT_iff <;> assumption
-
 variable {τ : Matrix (Fin g) (Fin g) ℂ} {a b : Fin g → ℂ}
 
 theorem exists_reads_neg (hL : L.IsLB) (ha : Half a) (hb : Half b) (hΛ : ∀ z, z ∈ u.Λ ↔ ∃ M N, z = perV τ M N)
@@ -397,8 +389,8 @@ theorem exists_reads_neg (hL : L.IsLB) (ha : Half a) (hb : Half b) (hΛ : ∀ z,
     obtain ⟨M, N, rfl⟩ := (hΛ l).1 hl
     rw [Reads.period hL (w := fun z => -z) hr hl (l' := perV τ (-M) (-N)) ((hΛ _).2 ⟨_, _, rfl⟩)
       (by rw [perV_neg, neg_add]) (hfr M N · z) (hfr (-M) (-N) · (-z))]
-    obtain ⟨n, hn⟩ := half_dot ha M
-    obtain ⟨n', hn'⟩ := half_dot hb N
+    obtain ⟨n, hn⟩ := GlobalTheory.MBLow.Cl.MulFrame.exists_two_mul_dot ha M
+    obtain ⟨n', hn'⟩ := GlobalTheory.MBLow.Cl.MulFrame.exists_two_mul_dot hb N
     have h : ∀ K : Fin g → ℤ, cv (-K) = -cv K := fun K => funext fun i => by simp [cv]
     rw [exp_eq_of_int (t := 0) (k * (n - n')), Complex.exp_zero, _root_.one_mul]
     simp only [h, dotProduct_neg, neg_dotProduct, Matrix.mulVec_neg, neg_neg]
@@ -453,7 +445,6 @@ end GlobalTheory.MBLow.Cl.SymLiftCl
 
 namespace GlobalTheory.MBLow.Cl
 
-
 open GlobalTheory.ThetaFn GlobalTheory.CubeValues SymLiftCl in
 theorem exists_symLift_act_classical : ∀ (g : ℕ) (x : KeyIn ℂ) (hg : x.P.g = g) (u : HolUnif x.P.A x.P.L g) (τ : Matrix (Fin g) (Fin g) ℂ) (a b : Fin g → ℂ) (c : ℂ) (W : Fin g → Fin g → ℂ), NF x hg u τ a b c W → ∀ m : ℕ, Odd m → ∀ (M N : Fin g → ℤ) (pt : (baseOver (Sp ℂ)) ⟶ x.P.A), pt.left = (u.ex (((m : ℂ) ^ 2)⁻¹ • perV τ M N)).left → ∃ U : ThetaGrp x.P.A x.P.L ((m ^ 2 : ℕ) : ℤ) (baseOver (Sp ℂ)), SymLift x.P.A x.P.L ((m ^ 2 : ℕ) : ℤ) (m ^ 2) pt U ∧ ∀ s f, FnT u (m ^ 2) s f → ∃ t, IsActOf x.P.A x.P.L ((m ^ 2 : ℕ) : ℤ) U s t ∧ FnT u (m ^ 2) t fun z => trFac τ a b m M N z * f (z + ((m : ℂ) ^ 2)⁻¹ • perV τ M N) := by
   intro g x hg u τ a b c W hNF m hm M N pt hpt
@@ -491,10 +482,10 @@ theorem exists_symLift_act_classical : ∀ (g : ℕ) (x : KeyIn ℂ) (hg : x.P.g
   refine ⟨U, hU, fun s f hf => ?_⟩
   obtain ⟨t, ht⟩ := GlobalTheory.ThetaPtExist.exists_isTwistPull x.P.isLB (translT x.P.A U.pt) (translPt x.P.A U.pt) (lift_snd _ _)
     _ _ U.φ U.isGen s
-  refine ⟨t, ht, (fnT_iff u _ t _).2 ?_⟩
-  convert hξ.act x.P.isLB hx ht ((fnT_iff u _ s f).1 hf) using 3 with z
-  obtain ⟨n, hn⟩ := half_dot ha M
-  obtain ⟨n', hn'⟩ := half_dot hb N
+  refine ⟨t, ht, (GlobalTheory.MBLow.Cl.MulFrame.fnT_iff u _ t _).2 ?_⟩
+  convert hξ.act x.P.isLB hx ht ((GlobalTheory.MBLow.Cl.MulFrame.fnT_iff u _ s f).1 hf) using 3 with z
+  obtain ⟨n, hn⟩ := GlobalTheory.MBLow.Cl.MulFrame.exists_two_mul_dot ha M
+  obtain ⟨n', hn'⟩ := GlobalTheory.MBLow.Cl.MulFrame.exists_two_mul_dot hb N
   rw [h3, ← Complex.exp_add, trFac]
   refine exp_eq_of_int ((j + 1) * ((N ⬝ᵥ M) + n - n')) ?_
   have hy' : cv N ⬝ᵥ cv M / (m : ℂ) ^ 2 + cv N ⬝ᵥ τ *ᵥ cv N / (m : ℂ) ^ 2 = cv N ⬝ᵥ y := by

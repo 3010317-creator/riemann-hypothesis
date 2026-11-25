@@ -563,7 +563,6 @@ theorem isPullback_jT : IsPullback (jT S g hg (D := D)).left (fst (TF (R := V) F
   rw [← jT_snd S g hg, ← Over.w (ιT S g hg)] at H₀
   exact H₀.of_right (jT_fst S g hg) H₁
 
-
 include hg in
 theorem span_gen (hloc : IsLocalHom g) {k : ℕ} (hk : 1 ≤ k) {α : D.toPre.X}
     (s : LB.Sec (LB.LinComb D.toPre.P.L (DegPre.famφ D.toPre F α) (DegPre.famε k))) :
@@ -660,10 +659,6 @@ noncomputable section
 
 namespace GlobalTheory.IntGaugePull
 
-theorem top_le_of_redE {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp (DualNumber A) ⟶ X) (U : X.Opens)
-    (h : ⊤ ≤ (redE A ≫ x) ⁻¹ᵁ U) : ⊤ ≤ x ⁻¹ᵁ U := by
-  apply _root_.GlobalTheory.MBLow.TranslBound.top_le_of_redE <;> assumption
-
 theorem sep_unique {C : Type} [Field C] (S : ValuationSubring C) {X Y : Scheme.{0}} (p : X ⟶ Y) [IsSeparated p]
     (x₁ x₂ : Sp S ⟶ X) (h₁ : x₁ ≫ p = x₂ ≫ p) (h : spMap S.subtype ≫ x₁ = spMap S.subtype ≫ x₂) : x₁ = x₂ := by
   have hU : ValuativeCriterion.Uniqueness p := IsSeparated.valuativeCriterion p
@@ -688,12 +683,6 @@ theorem spMap_subtype_cancel {C : Type} [Field C] (S : ValuationSubring C) {A : 
 end GlobalTheory.IntGaugePull
 
 namespace GlobalTheory.IntGaugePull
-
-theorem redE_dual {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) :
-    redE B ≫ spMap (dualMap f) = spMap f ≫ redE A := by
-  simp only [redE, _root_.Formalism.L2.Pj.spMap_comp_ring]
-  congr 1
-  ext z <;> simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
 
 theorem dualMap_comp {A B E : Type} [CommRing A] [CommRing B] [CommRing E] (f : B →+* E) (g : A →+* B) :
     spMap (dualMap f) ≫ spMap (dualMap g) = spMap (dualMap (f.comp g)) := by
@@ -734,11 +723,11 @@ theorem sE_norm_le_one_of_pull : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDis
     have hxy : spMap S.subtype ≫ x₀ = spMap S.subtype ≫ (spMap toS ≫ redE V ≫ Q ≫ D.toPre.famφB β i) := by
       rw [hx₀]
       simp only [xi, Over.homMk_left]
-      rw [← Category.assoc (spMap S.subtype), _root_.Formalism.L2.Pj.spMap_comp_ring, htoS, ← Category.assoc, redE_dual, Category.assoc]
+      rw [← Category.assoc (spMap S.subtype), _root_.Formalism.L2.Pj.spMap_comp_ring, htoS, ← Category.assoc, GlobalTheory.MBLow.TranslBound.redE_dualMap, Category.assoc]
     have heq : x₀ = spMap toS ≫ redE V ≫ Q ≫ D.toPre.famφB β i :=
       sep_unique S D.toPre.P.A.hom _ _ (spMap_subtype_cancel S _ _ (by simp only [← Category.assoc] at hxy ⊢; rw [hxy])) hxy
-    apply top_le_of_redE
-    rw [← Category.assoc, redE_dual, Category.assoc, ← heq]
+    apply GlobalTheory.MBLow.TranslBound.top_le_of_redE
+    rw [← Category.assoc, GlobalTheory.MBLow.TranslBound.redE_dualMap, Category.assoc, ← heq]
     exact hU
 
   have hj : ∀ i, ν.J (redE C ≫ r ≫ D.toPre.famφ C β i) =
@@ -822,9 +811,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.LieHt GlobalTheory.Cartier GlobalTheory.ThetaOnto GlobalTheory.KeyCl GlobalTheory.Ex GlobalTheory.MBLow GlobalTheory.SecJet
 open scoped CategoryTheory.Obj
 
-theorem _root_.GlobalTheory.T.pulledBackSection_integralValue_dualPoint : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] (D : DegData V (IsLocalRing.maximalIdeal V)) (C : Type) [NontriviallyNormedField C] [Algebra (FractionRing V) C], CExt V (IsLocalRing.maximalIdeal V) C → ∀ (N : NumD C) (ν : NumOf D.toPre C N), ν.IntN → ∀ (k : ℕ) (β : D.toPre.X) (σ : D.toPre.SecB k β) (σF : LB.Sec (LB.LinComb D.toPre.P.L (DegPre.famφ D.toPre C β) (DegPre.famε k))), GeneratorPullback.SecScal D.toPre.P.L (DegPre.famφ D.toPre C β) (DegPre.famε k) σF (D.toPre.famφB β) (DegPre.famε k) σ (DegPre.prB D.toPre C).left 1 → ∀ (Q : Sp (DualNumber V) ⟶ D.toPre.P.A.left), Q ≫ D.toPre.P.A.hom = spMap (algebraMap V (DualNumber V)) → ∀ (r : Sp (DualNumber C) ⟶ (DegPre.BF D.toPre C).left), r ≫ (DegPre.prB D.toPre C).left = spMap (dualMap (toF V C)) ≫ Q → ‖(sE σF r ν.J).fst‖ ≤ 1 ∧ ‖(sE σF r ν.J).snd‖ ≤ 1 := by
-  intro V _ _ _ D C _ _ hC N ν hI k β σ σF hS Q hQ r hr
-  exact GlobalTheory.IntGaugePull.sE_norm_le_one_of_pull V D C hC N ν hI k β σ σF hS Q hQ r hr
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PulledBackSectionIntegralValueDualPointStatement =====
@@ -906,7 +892,7 @@ theorem trVal_bounded : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValu
   refine ⟨∑ i, ‖a i‖, fun mu => ?_⟩
   obtain ⟨h1, h2, h3⟩ := _root_.GlobalTheory.MBLow.trF_dualPoint_of_isPull V D.toPre C gm₀ gm hpull (ν.eX mu)
   have e := _root_.GlobalTheory.DualLin.sE_comb V D.toPre C k (ν.eX α) (s.s (ν.eX α)) n a σF hsum _ ν.J ν.good h3
-  have hb := fun i => GlobalTheory.T.pulledBackSection_integralValue_dualPoint V D C hC N ν ⟨S, hS, hint⟩ k _ (σ i) (σF i) (hsc i) _ h2 _ h1
+  have hb := fun i => GlobalTheory.IntGaugePull.sE_norm_le_one_of_pull V D C hC N ν ⟨S, hS, hint⟩ k _ (σ i) (σF i) (hsc i) _ h2 _ h1
   have hv : trVal ν s gm α mu = ∑ i, TrivSqZeroExt.inl (a i) * sE (σF i)
       ((lift (Over.homMk (spMap (algebraMap C (DualNumber C))) rfl : TE V C ⟶ TF (R := V) C) gm.b).left ≫
         (DegPre.trF D.toPre C (ν.eX mu)).left) ν.J := e
