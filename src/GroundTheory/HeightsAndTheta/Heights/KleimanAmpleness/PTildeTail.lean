@@ -151,10 +151,7 @@ end Cocycles
 theorem TildeTail.proof (h : SerreTail.Statement.{u, w}) : TildeTail.Statement.{u, w} := by
   classical
   intro S _ _ Ω _ _ N x M hx c₁
-  obtain ⟨i₀, hi₀⟩ : ∃ i, x i ≠ 0 := by
-    by_contra hne
-    push Not at hne
-    exact hx (funext hne)
+  obtain ⟨i₀, hi₀⟩ : ∃ i, x i ≠ 0 := Function.ne_iff.1 hx
   let K₀ : Cech.Idx (Finset.univ : Finset (Fin (N + 1))) 0 :=
     ⟨⟨{i₀}, Finset.singleton_nonempty i₀, Finset.subset_univ _⟩, Finset.card_singleton i₀⟩
   have hK₀ : K₀.1.1 ⊆ support x := Finset.singleton_subset_iff.mpr ((mem_support x).mpr hi₀)
