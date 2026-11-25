@@ -1543,14 +1543,14 @@ theorem comm_of_gen : ∀ {R K : Type} [CommRing R] [Field K] {X Y : Scheme.{0}}
     · simp only [d2]; rw [hdl.add _ le_top, pbT_add]
     · simp only [d2]; rw [hdl.mul _ le_top, pbT_add, pbT_mul, pbT_mul, app2, app2]
     · simp only [d2]
-      rw [hdl.res _ _ h le_top, pbT_rsT T₀ (pre_le m h) (pe V'), rsT_pbT T₀ (pe V) (pre_le (m ≫ T) h)]
+      rw [hdl.res _ _ h le_top, pbT_rsT T₀ (m.preimage_mono h) (pe V'), rsT_pbT T₀ (pe V) ((m ≫ T).preimage_mono h)]
     · simp only [d2]; rw [hdl.base _ le_top, pbT_constFn q T₀ (pe V), hq]
   have key : ∀ i, ∀ V, V ≤ U i → d1 V = d2 V := fun i V hV =>
     GlobalTheory.LocDerExtK.locDerK_unique (hA i) d1 d2 (locDerK_mono h1 le_top) (locDerK_mono h2 le_top)
       (eq_of_gen (locDerK_mono h1 le_top) (locDerK_mono h2 le_top) (r i) (hs i) (fun j => hg i j)) V hV
   intro W f
   show d1 W f = d2 W f
-  refine eq_of_rsT_eq (fun k => (m ≫ T) ⁻¹ᵁ (W ⊓ U k)) (fun k => pre_le _ inf_le_left) ?_ _ _ ?_
+  refine eq_of_rsT_eq (fun k => (m ≫ T) ⁻¹ᵁ (W ⊓ U k)) (fun k => Scheme.Hom.preimage_mono _ inf_le_left) ?_ _ _ ?_
   · intro y hy
     have : (m ≫ T).base y ∈ ⨆ i, U i := by rw [hU]; trivial
     obtain ⟨k, hk⟩ := TopologicalSpace.Opens.mem_iSup.1 this

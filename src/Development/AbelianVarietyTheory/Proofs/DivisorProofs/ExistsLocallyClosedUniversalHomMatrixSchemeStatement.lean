@@ -306,8 +306,6 @@ namespace GlobalTheory.HomFixUnivVals
 
 open TopologicalSpace Opposite
 
-theorem comp_base_pt {X Y Z : Scheme.{0}} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f ≫ g).base x = g.base (f.base x) := rfl
-
 theorem glue_fn {X : Scheme.{0}} {J : Type} (W : J → X.Opens) (hc : (⊤ : X.Opens) ≤ iSup W) (a : ∀ i, Γ(X, W i))
     (h : ∀ i j x, x ∈ W i → x ∈ W j → gs (𝟙 X) x (W i) (a i) = gs (𝟙 X) x (W j) (a j)) :
     ∃ α : Γ(X, ⊤), ∀ i x, x ∈ W i → gs (𝟙 X) x ⊤ α = gs (𝟙 X) x (W i) (a i) := by
@@ -329,11 +327,11 @@ theorem vals (Rg : Type) [CommRing Rg] (A : Over (Sp Rg)) [GrpObj A] (L : LB A.l
     constructor
     · intro h
       have h0 := Set.mem_iInter.1 h 0
-      rw [Set.mem_preimage, ← comp_base_pt, he] at h0
+      rw [Set.mem_preimage, ← Scheme.Hom.comp_apply, he] at h0
       exact h0
     · intro h
       refine Set.mem_iInter.2 fun t => ?_
-      rw [Subsingleton.elim t 0, Set.mem_preimage, ← comp_base_pt, he]
+      rw [Subsingleton.elim t 0, Set.mem_preimage, ← Scheme.Hom.comp_apply, he]
       exact h
   let W : L.ι → S.Opens := fun i => e ⁻¹ᵁ (LPow A L (k : ℤ) (topS Rg)).U (fun _ => i) ⊓ (L.pull (eSec A)).U (fun _ => i)
   have memW : ∀ (z : S) (i : L.ι), z ∈ W i ↔ eSec A z ∈ L.U i := by
@@ -356,7 +354,7 @@ theorem vals (Rg : Type) [CommRing Rg] (A : Over (Sp Rg)) [GrpObj A] (L : LB A.l
     have hxj := (memW x j).1 hy
     have hx' : e x ∈ (LPow A L (k : ℤ) (topS Rg)).U (fun _ => i) ⊓ (LPow A L (k : ℤ) (topS Rg)).U (fun _ => j) := ⟨hx.1, hy.1⟩
     have mem : (snd (topS Rg) A).left (e x) ∈ L.U i ⊓ L.U j := by
-      rw [← comp_base_pt, he]; exact ⟨hxi, hxj⟩
+      rw [← Scheme.Hom.comp_apply, he]; exact ⟨hxi, hxj⟩
     have hg : gm e x ((LPow A L (k : ℤ) (topS Rg)).U (fun _ => i) ⊓ (LPow A L (k : ℤ) (topS Rg)).U (fun _ => j)) ((LPow A L (k : ℤ) (topS Rg)).g (fun _ => i) (fun _ => j)) =
         (gm (eSec A) x _ (L.g i j)) ^ k := by
       show gm e x _ (∏ _t : Fin 1, (res _ (pullU (snd (topS Rg) A).left _ (L.g i j))) ^ (k : ℤ)) = _
