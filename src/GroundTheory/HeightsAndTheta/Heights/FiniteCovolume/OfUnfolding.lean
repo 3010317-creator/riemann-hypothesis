@@ -44,6 +44,7 @@ public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.PComplementLat
 public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.PCoordEmbedBasis
 public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.PLineNormalForm
 public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.PReducedBasisBound
+import Mathlib.NumberTheory.NumberField.Discriminant.Defs
 
 section -- clump:auto
 @[expose] public section
