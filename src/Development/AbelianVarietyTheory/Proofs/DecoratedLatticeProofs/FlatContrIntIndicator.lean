@@ -60,11 +60,8 @@ open GlobalTheory.RootEx.Unram GlobalTheory.LocFlat
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem coe_psi_sum {ι : Type} (ψ : AddChar k Circle) (s : Finset ι) (f : ι → k) :
-    (ψ (∑ i ∈ s, f i) : ℂ) = ∏ i ∈ s, (ψ (f i) : ℂ) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp [AddChar.map_zero_eq_one]
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.prod_insert ha, AddChar.map_add_eq_mul, Circle.coe_mul, ih]
+    (ψ (∑ i ∈ s, f i) : ℂ) = ∏ i ∈ s, (ψ (f i) : ℂ) :=
+  map_prod (Circle.coeHom.comp ψ.toMonoidHom) (fun i => Multiplicative.ofAdd (f i)) s
 
 theorem intM_add_of_disj {m m' : Type} {A B : Matrix m m' k} (h : ∀ r s, B r s = 0 ∨ A r s = 0) :
     IntM (A + B) ↔ IntM A ∧ IntM B := by
