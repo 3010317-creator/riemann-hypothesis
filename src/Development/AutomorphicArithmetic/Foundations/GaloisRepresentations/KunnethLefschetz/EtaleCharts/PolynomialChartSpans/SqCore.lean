@@ -525,7 +525,6 @@ private lemma loc_coord (U : W.Opens) (x : Fin (M + 1) → Γ(W, U)) (m l : Fin 
   rw [this, CategoryTheory.Functor.map_id]
   rfl
 
-set_option backward.isDefEq.respectTransparency false in
 private lemma appLE_ι {Y : Scheme.{0}} (f : W ⟶ Y) (O : Y.Opens) (U : W.Opens)
     (h : U ≤ f ⁻¹ᵁ O) (e : ⊤ ≤ (U.ι ≫ f) ⁻¹ᵁ O) (y : Γ(Y, O)) :
     (U.ι ≫ f).appLE O ⊤ e y = U.topIso.inv (f.appLE O U h y) := by
