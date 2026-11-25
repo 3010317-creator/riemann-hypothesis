@@ -219,7 +219,6 @@ section -- clump:auto
 @[expose] public section
 
 section
-set_option autoImplicit false
 noncomputable section
 open CategoryTheory AlgebraicGeometry NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Theta
@@ -322,7 +321,6 @@ section -- clump:auto
 
 
 section
-set_option autoImplicit false
 noncomputable section
 open CategoryTheory AlgebraicGeometry NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Theta
@@ -358,7 +356,6 @@ section -- clump:auto
 
 section
 section
-set_option autoImplicit false
 noncomputable section
 open CategoryTheory AlgebraicGeometry NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Theta

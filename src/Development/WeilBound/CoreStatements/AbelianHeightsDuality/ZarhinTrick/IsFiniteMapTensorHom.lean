@@ -70,7 +70,6 @@ variable {S : Scheme.{0}}
 
 
 
-set_option autoImplicit false in
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField in
 open scoped CategoryTheory.Obj UpperHalfPlane TensorProduct in
 attribute [local instance] Over.cartesianMonoidalCategory in
