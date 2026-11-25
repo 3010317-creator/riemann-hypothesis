@@ -187,12 +187,6 @@ theorem cupPairing_h0Class (μ : A ⊗ B ⟶ C) (b : B) (hb : ∀ g : K, B.ρ g 
 
 end ZeroClasses
 
-section ZModZero
-
-variable {K : Type u} [Group K] {n : ℕ} [NeZero n] (D' : Rep.{u} (ULift.{u} ℤ) K) (hD : ∀ d : D', n • d = 0)
-
-end ZModZero
-
 section Instances
 
 instance isDiscreteRep_zmodRep_base {W : Type u} [Group W] [TopologicalSpace W] (n : ℕ) :

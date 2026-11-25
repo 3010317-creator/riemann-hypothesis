@@ -243,12 +243,6 @@ theorem isCompactModCenter_matrixCoeff (hπ : IsSmooth π) (hsc : IsSupercuspida
 
 end Compact
 
-section Converse
-
-variable {π : Representation ℂ (GL (Fin n) F) V}
-
-end Converse
-
 end Parabolic
 
 end GroundTheory.Automorphic

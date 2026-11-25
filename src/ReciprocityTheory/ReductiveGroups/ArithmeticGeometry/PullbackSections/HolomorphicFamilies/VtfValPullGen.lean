@@ -73,10 +73,4 @@ theorem vtf_isGen_val (φ : K → (Y ⟶ X)) (ε : K → ℤ) (t : LB.Gen (LB.Li
 
 end LC
 
-section Liou
-
-variable {g : ℕ}
-
-end Liou
-
 end ReciprocityTheory.ChartRestriction.G.PullbackSections
