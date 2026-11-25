@@ -92,11 +92,7 @@ theorem oneLetterR_of (hS : LemmaS.{u}) (hG : GenLogWeight.{u, 0}) (hB : LogBrid
   classical
   have h2n : 1 ≤ ‖(2 : K)‖ := asmOne_one_le_norm_two hodd hpi
   set π : ℝ := ‖(l : K)‖ with hπdef
-  have hl3 : 3 ≤ l := by
-    obtain ⟨m, rfl⟩ := hodd
-    rcases m with _ | m
-    · exact absurd hl Nat.not_prime_one
-    · omega
+  have hl3 : 3 ≤ l := hl.odd_iff.1 hodd
   have hπ0 : 0 < π := by
     rw [hπdef, norm_pos_iff]
     exact_mod_cast hl.ne_zero
