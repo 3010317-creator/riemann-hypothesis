@@ -121,21 +121,6 @@ def Zhat : Subring Af where
 
 abbrev Adelic (V : Type) [AddCommGroup V] [Module ℚ V] : Type := Af ⊗[ℚ] V
 
-section Groups
-
-variable (E : Type) [Field E] [NumberField E]
-variable {W : Type} [AddCommGroup W] [Module ℚ W] [Module E W] [IsScalarTower ℚ E W]
-
-def IsHermitian [IsCMField E] (h : W →ₗ[ℚ] W →ₗ[ℚ] E) : Prop :=
-  (∀ (a : E) (x y : W), h (a • x) y = a * h x y) ∧
-    ∀ x y : W, h y x = IsCMField.complexConj E (h x y)
-
-
-
-variable [Module (𝓞 E) W] [IsScalarTower (𝓞 E) E W]
-
-end Groups
-
 end GlobalTheory.IndefiniteRowSideFullHecke.IdeleNormTraceForm
 end -- clump:auto
 end -- clump:auto
