@@ -16,17 +16,8 @@ namespace GlobalTheory.EtaJoin.TypeSum
 
 theorem orth_ker_eq_range_adjoint {V W : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
     [FiniteDimensional ℂ V] [NormedAddCommGroup W] [InnerProductSpace ℂ W] [FiniteDimensional ℂ W]
-    (A : V →ₗ[ℂ] W) : (LinearMap.ker A)ᗮ = LinearMap.range (LinearMap.adjoint A) := by
-  have h : (LinearMap.range (LinearMap.adjoint A))ᗮ = LinearMap.ker A := by
-    ext x
-    simp only [Submodule.mem_orthogonal, LinearMap.mem_range, LinearMap.mem_ker, forall_exists_index,
-      forall_apply_eq_imp_iff, LinearMap.adjoint_inner_left]
-    constructor
-    · intro hx
-      exact ext_inner_left ℂ (fun y => by rw [hx y, inner_zero_right])
-    · intro hx y
-      rw [hx, inner_zero_right]
-  rw [← h, Submodule.orthogonal_orthogonal]
+    (A : V →ₗ[ℂ] W) : (LinearMap.ker A)ᗮ = LinearMap.range (LinearMap.adjoint A) :=
+  A.orthogonal_ker
 
 variable {D : D7}
 
