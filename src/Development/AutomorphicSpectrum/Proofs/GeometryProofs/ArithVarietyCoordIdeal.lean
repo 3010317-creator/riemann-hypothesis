@@ -145,10 +145,7 @@ theorem const_closure : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     have htop := subfield_eq_top hdiv (IntermediateField.adjoin ℚ
       ((Finset.univ.image fun j : (k : K) → J k => (∏ k, y ⟨k, j k⟩) / ∏ k, y ⟨k, c₀ k⟩ : Finset Ω) : Set Ω)).toSubfield
       fun j => IntermediateField.subset_adjoin _ _ (by simp)
-    refine eq_top_iff.2 fun ω _ => ?_
-    have hω : ω ∈ (⊤ : Subfield Ω) := Subfield.mem_top ω
-    rw [← htop] at hω
-    exact hω
+    exact IntermediateField.toSubfield_injective htop
   have hconst : HasConstants ℤ A y := fun c' hc' a =>
     (𝔐.tie.ring c' hc' _).2 fun p _ =>
       IntReg.mem_regAt_of_isIntegral_of_stalk _ _ _ _ 𝔐.tie.gen (𝔐.normal p.1).2 _
