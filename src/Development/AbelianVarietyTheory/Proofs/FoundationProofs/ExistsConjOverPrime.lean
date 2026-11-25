@@ -15,6 +15,7 @@ import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
 import Development.AbelianVarietyTheory.Definitions.Foundations.Integral
 public import Mathlib.Data.Nat.Prime.Int
 public import Mathlib.FieldTheory.Galois.GaloisClosure
+public import Mathlib.FieldTheory.Galois.Profinite
 
 @[expose] public section
 
