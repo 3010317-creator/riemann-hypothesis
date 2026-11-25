@@ -253,17 +253,11 @@ private theorem surj_productMap {Y : Scheme.{0}} [Y.IsSeparated] {A B C : CommRi
       rfl
   rw [hJe] at hJ
   have hs := (IsClosedImmersion.isAffine_surjective_of_isAffine (Spec.map (CommRingCat.ofHom φ))).2
-  have nat := Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom φ)
-  intro c
-  obtain ⟨t, ht⟩ := hs ((Scheme.ΓSpecIso C).inv.hom c)
-  refine ⟨(Scheme.ΓSpecIso (.of (A ⊗[ℤ] B))).hom.hom t, ?_⟩
-  have h3 := congrArg (fun f => f.hom ((Scheme.ΓSpecIso (.of (A ⊗[ℤ] B))).hom.hom t)) nat
-  simp only [CommRingCat.hom_comp, RingHom.comp_apply] at h3
-  have h4 : (Scheme.ΓSpecIso (.of (A ⊗[ℤ] B))).inv.hom ((Scheme.ΓSpecIso (.of (A ⊗[ℤ] B))).hom.hom t) = t := by
-    simp
-  rw [h4] at h3
-  have h5 := (ConcreteCategory.injective_of_mono_of_preservesPullback (Scheme.ΓSpecIso C).inv)
-  exact h5 (h3.trans ht)
+  have hcomp := (Scheme.ΓSpecIso C).commRingCatIsoToRingEquiv.surjective.comp hs
+  change Function.Surjective ((Spec.map (CommRingCat.ofHom φ)).appTop ≫ (Scheme.ΓSpecIso C).hom) at hcomp
+  rw [Scheme.ΓSpecIso_naturality] at hcomp
+  exact Function.Surjective.of_comp
+    (show Function.Surjective (φ ∘ (Scheme.ΓSpecIso (.of (A ⊗[ℤ] B))).hom) from hcomp)
 
 private theorem pb_aff {Y : Scheme.{0}} [Y.IsSeparated] {W1 W2 : Y.Opens} (h1 : IsAffineOpen W1) (h2 : IsAffineOpen W2) :
     IsPullback (Spec.map (Y.presheaf.map (homOfLE (inf_le_left : W1 ⊓ W2 ≤ W1)).op))
