@@ -1408,7 +1408,6 @@ private theorem sep (hEV : EvVal) (hVB : ValBc) (hSep : SepPoly) {F E : Type} [F
   · rw [(hVB F E n y.1 _ (tF y) P fun z hz => ((hLF y hy).2 _ fun h => h1 _ (h2.1 z hz) ((hS _).mpr h)).1).1]
     exact h4 (Sum.inr ⟨y, Finset.mem_filter.mpr ⟨hy, hy'⟩⟩) y.1
 
-set_option maxHeartbeats 16000000 in
 theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.cixOf :
     ParEx → TrExp → EvVal → ValBc → KillEx2 → KfBc → TruncSpec → SepPoly → OneSide → OneSideX → EvEx → Kill → KillExempt → FamEx → CIx := by
     intro hPar hTr hEV hVB hK2 hKf hTS hSep hOS hOSX hEv hKill hKX hFam F E _ _ _ _ _ _ _ μE _ μF _ θ 𝔢 𝔣 c hG 𝔵 hoff
