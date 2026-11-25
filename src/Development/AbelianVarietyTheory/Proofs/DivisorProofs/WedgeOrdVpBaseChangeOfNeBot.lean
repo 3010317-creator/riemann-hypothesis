@@ -45,16 +45,12 @@ import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
-set_option autoImplicit false
-
 
 noncomputable section
 
 open AlgebraicGeometry CategoryTheory Limits NumberField TensorProduct
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj GlobalTheory.Frames GlobalTheory.AllWt
 open scoped Classical
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.DeRham
 
@@ -179,7 +175,7 @@ theorem IsKSValue.baseChange (P : AbelianDeRham) {A' : Over (Sp (DualNumber R))}
     rw [GrpMor.pull_pull (liftMor (epsDP R) h) m n (fun _ => rfl) rfl c,
       ← GrpMor.pull_pull (bcMor hφ') (liftMor (epsDP R') h') n (fun _ => rfl) sq c]
     exact ex c
-  refine ⟨k', ⟨d', mem_Fil_of_corr (hφ := hφ') hF₁ ex hd, fun c => ?_⟩,
+  refine ⟨k', ⟨d', (mem_Fil_of_corr (hφ := hφ') hF₁ ex hd :), fun c => ?_⟩,
     hk.baseChange (hφ := hφ) hF₀ (PH R' B g b₀.1 b₀.2).1 ek ev⟩
   obtain ⟨z, rfl⟩ := bc₀.2 c
   induction z using TensorProduct.induction_on with

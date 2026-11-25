@@ -45,8 +45,6 @@ import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry IsLocalRing
@@ -56,8 +54,6 @@ open ReciprocityTheory.ChartRestriction.G.DVR (pGl fGl)
 open Formalism.L2.Pj GlobalTheory.RayEv GlobalTheory.FormalPoint GlobalTheory.AdicColimit
 open GlobalTheory.TorusInvariance (wVal)
 open GlobalTheory.EndRosati (push)
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.RayEv.Transport
 

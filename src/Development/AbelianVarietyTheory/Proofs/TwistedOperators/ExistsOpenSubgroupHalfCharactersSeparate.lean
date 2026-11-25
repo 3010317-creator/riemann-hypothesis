@@ -56,7 +56,6 @@ public import Mathlib.Topology.Baire.LocallyCompactRegular
 noncomputable section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum MeasureTheory GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition GlobalTheory.HalfAverage
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.HalfSeparate
 
@@ -182,8 +181,7 @@ theorem exists_open_separated : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), I
       _ ≤ ‖y‖ * (‖y1‖ / ρ + 1) := by nlinarith [norm_nonneg y]
       _ < ε0 := hy'
   have hLGsmall : ∀ y ∈ LG, ‖y‖ < ρ := fun y hy => (pi_norm_lt_iff hρ).2 fun p => by
-    by_contra hn
-    push_neg at hn
+    by_contra! hn
     have hp : 0 < ‖y p‖ := hρ.trans_le hn
     have h := hy p (y1 / y p) (by rw [norm_div]; exact div_le_div_of_nonneg_left (norm_nonneg _) hρ hn)
     rw [div_mul_cancel₀ _ (norm_pos_iff.1 hp)] at h

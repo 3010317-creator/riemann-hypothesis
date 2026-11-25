@@ -56,8 +56,6 @@ import Mathlib.Algebra.Azumaya.Basic
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 section SlopeTestRemainingChoices
@@ -69,8 +67,6 @@ open GlobalTheory.ArcQ GlobalTheory.FlagBundle Filter Topology
 namespace GlobalTheory.FrameLift
 
 open GlobalTheory.ShFam.Hor.LogCh
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F} {Z : Model Xo c β} {σ : c.F →+* ℂ} {r : ℕ}

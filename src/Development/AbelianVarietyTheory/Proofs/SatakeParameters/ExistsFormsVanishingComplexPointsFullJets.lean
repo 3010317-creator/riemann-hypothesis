@@ -65,8 +65,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory GlobalTheory.CechDR GlobalTheory.PD
 
-set_option autoImplicit false
-
 noncomputable section
 
 attribute [local instance] MvPolynomial.gradedAlgebra
@@ -264,8 +262,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory GlobalTheory.CechDR GlobalTheory.PD
 
-set_option autoImplicit false
-
 noncomputable section
 
 open TopologicalSpace
@@ -284,8 +280,7 @@ theorem lin_mem (c : Fin (N + 1) → ℂ) : lin c ∈ ProjSpace.grading ℂ N 1 
 
 theorem exists_X_notMem (z : PSpace ℂ N) :
     ∃ l, (MvPolynomial.X l : MvPolynomial (Fin (N + 1)) ℂ) ∉ z.asHomogeneousIdeal.toIdeal := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have hle : Ideal.span (Set.range (MvPolynomial.X : Fin (N + 1) → MvPolynomial (Fin (N + 1)) ℂ)) ≤
       z.asHomogeneousIdeal.toIdeal := by
     rw [Ideal.span_le]
@@ -334,9 +329,6 @@ theorem ev₀_algebraMap (z : ℂ) : ev₀ ι g₀ hy (algebraMap ℂ (Sec p (fO
   first
   | exact (CxPts.ev_eq hy _).symm.trans (CxPts.ev_algX hy z)
 
-theorem ev₀_smul (z : ℂ) (a : Sec p (fOpen ι g₀)) : ev₀ ι g₀ hy (z • a) = z * ev₀ ι g₀ hy a := by
-  rw [Algebra.smul_def, map_mul, ev₀_algebraMap]
-
 theorem mkQ_eq_mkQ (a b : Sec p (fOpen ι g₀)) :
     (sqQ ι g₀ hy).mkQ a = (sqQ ι g₀ hy).mkQ b ↔ a - b ∈ RingHom.ker (ev₀ ι g₀ hy) ^ 2 := by
   rw [Submodule.mkQ_apply, Submodule.mkQ_apply, Submodule.Quotient.eq]
@@ -380,8 +372,6 @@ section -- clump:auto
 @[expose] public section
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory GlobalTheory.CechDR GlobalTheory.PD
-
-set_option autoImplicit false
 
 noncomputable section
 

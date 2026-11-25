@@ -6,8 +6,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.T
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace ReciprocityTheory.ChartRestriction.G.Geo.Tor
@@ -292,8 +290,6 @@ end Germs
 section GermsRig
 
 open MonoidalCategory CartesianMonoidalCategory
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 variable {S S' Z : Scheme.{0}} {G : Over S} {G' : Over S'} [GrpObj G] [IsCommMonObj G] [GrpObj G'] [IsCommMonObj G']
 

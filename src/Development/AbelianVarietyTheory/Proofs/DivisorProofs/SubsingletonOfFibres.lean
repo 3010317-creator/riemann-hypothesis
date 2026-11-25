@@ -46,8 +46,6 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDeRhamSheaf
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open Module TensorProduct GlobalTheory.DeRham
@@ -122,8 +120,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.Published GlobalTheory.Published.AbelianDeRham GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase GlobalTheory.DeRhamSheaf
 open Limits (pullback)
 open scoped CategoryTheory.Obj
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 section Affine
 

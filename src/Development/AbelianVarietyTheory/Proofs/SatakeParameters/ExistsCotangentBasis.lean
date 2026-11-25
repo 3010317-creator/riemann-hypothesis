@@ -47,8 +47,6 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.CupPair
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory GlobalTheory.CechDR GlobalTheory.PD
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.CotDim
@@ -160,8 +158,7 @@ theorem GlobalTheory.CotDim.exists_cotangent_basis : ∀ (X : Scheme.{0}) (p : X
   obtain ⟨s, hs, h⟩ := (RingHom.locally_iff_isLocalization
     RingHom.isStandardSmoothOfRelativeDimension_respectsIso _).1 h
   obtain ⟨t, hts, ht⟩ : ∃ t : Sec p U, t ∈ s ∧ e t ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hle : Ideal.span (↑s : Set Γ(X, U)) ≤ RingHom.ker (e : Γ(X, U) →+* ℂ) :=
       Ideal.span_le.2 fun t ht => hcon t ht
     have h1 : (1 : Γ(X, U)) ∈ RingHom.ker (e : Γ(X, U) →+* ℂ) := hle (by rw [hs]; exact Submodule.mem_top)

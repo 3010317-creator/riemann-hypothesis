@@ -51,8 +51,6 @@ import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.JetVal
@@ -61,8 +59,6 @@ open AlgebraicGeometry CategoryTheory Opposite Limits MonoidalCategory Cartesian
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.PullbackSections Formalism.L2.Pj Formalism.MainNotions.ModuliIntegralCharts.H1 GlobalTheory.AnVal
 open ReciprocityTheory.ChartRestriction.G.TB.ValAt
 open scoped ContDiff
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 section Pt
 

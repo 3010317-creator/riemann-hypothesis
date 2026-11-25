@@ -44,14 +44,11 @@ import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory Limits AlgebraicGeometry NumberField MonObj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj GlobalTheory.LineNorm
 open ReciprocityTheory.ChartRestriction.G.PullbackSections (TanM tv actR)
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.FlatModel.Proj
 

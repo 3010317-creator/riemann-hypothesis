@@ -55,7 +55,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan GlobalTheory.ZM GlobalTheory.SiegelTor GlobalTheory.TorRef GlobalTheory.PolDeg GlobalTheory.TChart GlobalTheory.UT GlobalTheory.Mum.Two
 open scoped CategoryTheory.Obj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.TInj
 
 namespace GlobalTheory.TInj
@@ -90,13 +89,11 @@ theorem cone_gen_mem_of_common {O : Type} [CommRing O] {bar : O → O} {φ : Inv
     simp only [map_nsmul, hfG, smul_ite, smul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true, nsmul_eq_mul,
       _root_.mul_one] at h1
     have hk'' : (0 : ℤ) < k' := by exact_mod_cast hk'
-    by_contra hneg
-    push_neg at hneg
+    by_contra! hneg
     have : (k' : ℤ) * f l (G' i) < 0 := mul_neg_of_pos_of_neg hk'' hneg
     linarith [Int.natCast_nonneg (e l)]
   have hex : ∃ i, 0 < d i := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     have h0 : k • ζ j = 0 := by
       rw [hd]
       exact Finset.sum_eq_zero fun i _ => by rw [Nat.le_zero.1 (hno i), zero_smul]
@@ -159,29 +156,5 @@ theorem cone_gen_mem_of_common {O : Type} [CommRing O] {bar : O → O} {φ : Inv
   have h3 := LinearMap.congr_fun₂ (congrArg Subtype.val hEj) x y
   simp only [G, G'] at h3
   exact (mul_left_cancel₀ (by exact_mod_cast hk'.ne' : (k' : ℤ) ≠ 0) h3).symm
-
-theorem coneSum_eq : ∀ (φ : InvFun ℤ) (X : Type) [AddCommGroup X] [Module.Finite ℤ X] (m m' : ℕ)
-    (δ : Fin m → LinearMap.BilinForm ℤ X) (δ' : Fin m' → LinearMap.BilinForm ℤ X), IsCone id φ δ → IsCone id φ δ' →
-    ∀ (c : Fin m → ℕ) (c' : Fin m' → ℕ), (∀ k, 0 < c k) → (∀ k, 0 < c' k) →
-    ∑ k, c k • δ k = ∑ k, c' k • δ' k → ∑ k, δ k = ∑ k, δ' k := by
-  intro φ X _ _ m m' δ δ' hδ hδ' c c' hc hc' he
-  classical
-  have h1 : ∀ k, ∃ j, δ k = δ' j := cone_gen_mem_of_common hδ hδ' c c' hc he
-  have h2 : ∀ j, ∃ k, δ' j = δ k := cone_gen_mem_of_common hδ' hδ c' c hc' he.symm
-  have himg : Finset.univ.image δ = Finset.univ.image δ' := by
-    ext x
-    simp only [Finset.mem_image, Finset.mem_univ, true_and]
-    constructor
-    · rintro ⟨k, rfl⟩
-      obtain ⟨j, hj⟩ := h1 k
-      exact ⟨j, hj.symm⟩
-    · rintro ⟨j, rfl⟩
-      obtain ⟨k, hk⟩ := h2 j
-      exact ⟨k, hk.symm⟩
-  have e1 : ∑ x ∈ Finset.univ.image δ, x = ∑ k, δ k :=
-    Finset.sum_image fun a _ b _ h => hδ.injective h
-  have e2 : ∑ x ∈ Finset.univ.image δ', x = ∑ k, δ' k :=
-    Finset.sum_image fun a _ b _ h => hδ'.injective h
-  rw [← e1, ← e2, himg]
 
 end GlobalTheory.TInj

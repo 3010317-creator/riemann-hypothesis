@@ -4,43 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.IntegralGLSuccEmbeddingMemParahoricTimesPrincipa
 public import Formalism.LocalToGlobal.Columns.RowFormsSym
 public import Mathlib.Topology.Sheaves.Presheaf
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -338,48 +302,6 @@ section Ok
 
 variable (hPr : Pr.Ok) (hQ : ∀ (u : Pr.Word) (Q : QE sel (mu : Chr X.F X.E X.K)), Pr.piT u ∉ Q.1.asIdeal)
 include hPr hQ
-
-theorem topLevAt_ok (c : ℕ) : (topLevAt Ch sel mu P c).Ok := by
-  constructor
-  case idx => exact topLevAt_finiteIndex Ch sel mu P c
-  case root =>
-    intro j Q g
-    obtain ⟨m, h, h'⟩ := topLevAt_root Ch sel mu P c j Q
-    exact ⟨m, h, h' g⟩
-  case levG_top =>
-    intro a ha
-    rw [topLevAt_levG_m] at ha
-    obtain ⟨h, -, e⟩ := (mem_levGTop_grp Ch P a).1 ha
-    exact ⟨h, e⟩
-  case levQ_last =>
-    intro Q k hk x hx
-    rw [topLevAt_levQ_m] at hk
-    obtain ⟨g, -, e⟩ := sup_prinCong_le _ _ _ _ hk
-    have h2 := congrFun (redV_redGL k hx) (Br.iL (N_m_succ R))
-    rw [← e] at h2
-    refine h2.trans ?_
-    simp only [Matrix.mulVec, dotProduct, diagEmb_val]
-    have hh : ¬ (Br.iL (N_m_succ R)).1 < R.N R.m - 1 := lt_irrefl (R.N R.m - 1)
-    simp only [diagMat_of_not_left _ _ hh]
-    simp [Matrix.one_apply, redV]
-  case levQ_ini =>
-    intro Q k hk i
-    rw [topLevAt_levQ_m] at hk
-    obtain ⟨g, -, e⟩ := sup_prinCong_le _ _ _ _ hk
-    have h2 := congrFun (redV_redGL k (single_mem_stdAt (Br.iL (N_m_succ R)))) (Br.iC (N_m_succ R) i)
-    rw [← e, redV_single, Matrix.mulVec_single_one] at h2
-    refine h2.trans ?_
-    show diagMat _ _ _ _ _ = 0
-    have hh : ¬ (Br.iL (N_m_succ R)).1 < R.N R.m - 1 := lt_irrefl (R.N R.m - 1)
-    rw [diagMat_of_not_right _ _ hh, Matrix.one_apply_ne]
-    exact fun h => absurd (congrArg Fin.val h) i.2.ne
-  case pref_off => exact fun u j h p h' => absurd h' h
-  case pref_top =>
-    intro u p h
-    obtain ⟨d, rfl⟩ : ∃ d, p = tilF sel mu u d := h rfl
-    exact ⟨d.deco, tilF_deco sel mu hPr u (hQ u) d⟩
-
-theorem topLev_ok : (topLev Ch sel mu cst P).Ok := topLevAt_ok Ch sel mu P hPr hQ _
 
 end Ok
 

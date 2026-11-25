@@ -52,7 +52,6 @@ import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsSplitChartSpli
 
 open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes GlobalTheory.AdelicU GlobalTheory.SmGL GlobalTheory.PRep GlobalTheory.SplitWeil GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
   GlobalTheory.UAut GlobalTheory.SiegelSet GlobalTheory.ThK.SquareIntegrability GlobalTheory.LFun.SplitTie
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open scoped TensorProduct
 open scoped TensorProduct
 
@@ -139,8 +138,7 @@ theorem map_star_of_continuous {ι : Type} [Fintype ι] (ψ : (ι → ℂ) →+*
     (z : ι → ℂ) : ψ (star z) = star (ψ z) := by
   classical
   obtain ⟨i, hi⟩ : ∃ i, ψ (Pi.single i 1) ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h1 : ψ 1 = ∑ i, ψ (Pi.single i 1) := by
 
       rw [← map_sum]

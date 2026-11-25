@@ -44,7 +44,6 @@ import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj IsLocalRing NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open scoped CategoryTheory.Obj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan GlobalTheory.ZM GlobalTheory.SiegelTor GlobalTheory.TorRef GlobalTheory.PolDeg GlobalTheory.TChart GlobalTheory.Mum
 open GlobalTheory.Mum.TensPos GlobalTheory.PsiScalUnit
 
@@ -78,9 +77,5 @@ theorem val_mem {A : Over (Spec (CommRingCat.of R))} {L : LB A.left} (z : (TK R)
 theorem mem_unitsK (z : (TK R).left) {x : (FractionRing R)ˣ} (h : Units.map (ev z).toMonoidHom x ∈ unitsS z) : x ∈ unitsK R := by
   obtain ⟨y, hy, e⟩ := h
   exact (Units.map_injective (ev_inj z) e) ▸ hy
-
-theorem gm_unitOn (z : (TK R).left) (k : (FractionRing R)ˣ) :
-    gm (𝟙 (TK R).left) z ⊤ (unitOn k) = Units.map (ev z).toMonoidHom k :=
-  Units.ext ((gs_unit _ z ⊤ trivial _).symm.trans (ev_eq z k))
 
 end GlobalTheory.Mum.TensPol

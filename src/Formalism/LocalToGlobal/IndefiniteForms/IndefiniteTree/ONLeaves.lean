@@ -244,8 +244,7 @@ theorem row_ne_zero (n : ℕ) (h : GL (Fin (n + 1)) k) :
 theorem exists_row (n : ℕ) (v : Fin (n + 1) → k) (hv : v ≠ 0) :
     ∃ g : GL (Fin (n + 1)) k, (g : Matrix (Fin (n + 1)) (Fin (n + 1)) k) (Fin.last n) = v := by
   obtain ⟨p, hp⟩ : ∃ p, v p ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact hv (funext hcon)
   let σ : Equiv.Perm (Fin (n + 1)) := Equiv.swap p (Fin.last n)
   let M : Matrix (Fin (n + 1)) (Fin (n + 1)) k := fun i j =>
@@ -624,12 +623,6 @@ theorem card_Pm (hG : IsLevelGroups kf n Pm Uv) (v : ι) :
     Nat.card (Pm v) = Nat.card (Uv v) * ∏ i ∈ Finset.Ico 1 (n + 1), (Fintype.card (kf v) ^ i - 1) := by
   rw [card_Uv_uni hG v, ← _root_.PI.MirabolicIndex₂.mirabIndex (kf v) n]
   exact Nat.card_congr (Equiv.subtypeEquivRight (hG.1 v))
-
-theorem index_Uv (hG : IsLevelGroups kf n Pm Uv) (v : ι) :
-    (Uv v).index = ∏ i ∈ Finset.Ico 1 (n + 1), (Fintype.card (kf v) ^ i - 1) := by
-  have h1 := Subgroup.card_mul_index (Uv v)
-  rw [card_Pm hG v] at h1
-  exact Nat.eq_of_mul_eq_mul_left Nat.card_pos h1
 
 theorem card_piU : Nat.card (Subgroup.pi Set.univ Uv) = ∏ v, Nat.card (Uv v) := by
   rw [← Nat.card_pi]

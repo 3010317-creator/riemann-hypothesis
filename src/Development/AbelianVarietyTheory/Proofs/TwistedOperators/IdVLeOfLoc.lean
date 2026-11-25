@@ -53,7 +53,6 @@ import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TowerEx
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links MeasureTheory IsDedekindDomain NumberField Matrix
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Unf GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.SepRows GlobalTheory.Asc
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.FinPl (Lat idAt idOff intAt grpAt grpOff MxAt latV latA InK MonoAt OrthAt PrimAt ColsAt)
 open scoped nonZeroDivisors ContDiff Pointwise
 
@@ -184,8 +183,7 @@ theorem exists_modul {T : Type} {L : LevCh D T} (P : Places L) (sc : Consts) {v 
   classical
   have hu : ∀ u ∈ P.S0, ∃ t : 𝓞 D.host.F, t ∈ u.asIdeal ∧ t ∉ v.asIdeal := by
     intro u hu
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have e : u = v := IsDedekindDomain.HeightOneSpectrum.ext
       (u.isMaximal.eq_of_le v.isPrime.ne_top hcon)
     exact hv (e ▸ hu)

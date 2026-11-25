@@ -50,8 +50,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry TopologicalSpace Limits MonoidalCategory CartesianMonoidalCategory MonObj
@@ -125,8 +123,7 @@ theorem finite_centre_not_mem (k K E : Type) [Field k] [IsAlgClosed k] [CharZero
     · exact (_root_.GlobalTheory.Nef.finite_support_and_sum_ord_eq_zero k E hE (f a) h0).1.subset fun p hp h1 => hp h1.le
   · rintro p ⟨b, hb1, hb2⟩
     simp only [Set.mem_iUnion, Set.mem_setOf_eq]
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     have hall := key p fun a ha => hno a ha
     have hmem : ∀ g, f g ∈ p.O := fun g => (Valuation.mem_valuationSubring_iff _ _).2 (hall g)
     let φ : Γ(C, V') →+* p.O := f.codRestrict p.O hmem

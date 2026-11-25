@@ -47,8 +47,6 @@ namespace GlobalTheory.Mem.Df
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV GlobalTheory.Mem GlobalTheory.Mem.Col2
 
-attribute [local instance] GlobalTheory.Mem.Col2.starE
-
 
 
 theorem inner_eq_of_norm_sq {K V E M : Type} [Field K] [AddCommGroup V] [Module ℂ V] [NormedAddCommGroup E] [InnerProductSpace ℂ E]
@@ -91,8 +89,7 @@ theorem inner_eq_of_norm_sq {K V E M : Type} [Field K] [AddCommGroup V] [Module 
 theorem exists_embLL_im_ne {B : Base} (hX : B.fields.Ok) : ∃ k : B.LL, (B.embLL k).im ≠ 0 := by
   have hc : (InfinitePlace.mk (B.embLL : B.fields.K →+* ℂ)).IsComplex := hX.cplxK.isComplex _
   rw [← InfinitePlace.not_isReal_iff_isComplex, InfinitePlace.isReal_mk_iff] at hc
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   apply hc
   rw [ComplexEmbedding.isReal_iff]
   ext x

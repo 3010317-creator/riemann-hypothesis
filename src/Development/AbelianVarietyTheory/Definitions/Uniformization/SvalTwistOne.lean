@@ -41,8 +41,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
-set_option autoImplicit false
-
 open CategoryTheory CategoryTheory.Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open scoped CategoryTheory.Obj
@@ -122,15 +120,6 @@ def PreU.ProdExp (U : PreU I D A G) (T : Over (Spec (CommRingCat.of R))) {k l : 
         (∑ α ∈ s, sval (f α) rB z J * (val ((U.gt e).t α) x z J).val) *
           ∑ α ∈ s', sval (g α) rB z J * (val ((U.gt e).t α) x z J).val
 section Inhabitants
-
-theorem sval_twist {W : Type} [CommRing W] [Algebra R W] {k : ℕ} (a : Multiplicative D.X →* Wˣ)
-    (f : ∀ α, SecBT D (TA R W) k α) (α : D.X) {Z : Scheme.{0}} (r : Z ⟶ (TA R W ⊗ D.P.A).left) (z : Z) {J}
-    (hJ : Good D.P.L z J) :
-    sval (twist a f α) r z J =
-      gs r z ⊤ (scal (R := W) (fst (TA R W) D.P.A).left (a (Multiplicative.ofAdd α)).val) * sval (f α) r z J := by
-  unfold twist sval DVR.SecOps.secScale
-  have hm := hJ.mem (famφT D (TA R W) α) r
-  exact (gs_mul r z _ hm _ _).trans (congrArg (· * _) (gs_res r z le_top hm _))
 
 end Inhabitants
 end GlobalTheory.UU

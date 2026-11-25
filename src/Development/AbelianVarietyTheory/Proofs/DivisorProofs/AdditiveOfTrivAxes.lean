@@ -56,13 +56,7 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.ZM GlobalTheory.SiegelTor
 open GlobalTheory.AbDual GlobalTheory.CechPic GlobalTheory.AbLaw
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
-set_option autoImplicit false
-
 noncomputable section
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.CubeAxes
 

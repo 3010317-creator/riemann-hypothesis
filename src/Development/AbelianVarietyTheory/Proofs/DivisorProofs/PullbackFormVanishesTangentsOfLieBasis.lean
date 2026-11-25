@@ -43,15 +43,11 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.OneFormMapEqKaehler
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry TensorProduct
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Semi GlobalTheory.CatCoh GlobalTheory.Cris GlobalTheory.DeRham GlobalTheory.CechDR
 open MonObj
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.LieDual
 

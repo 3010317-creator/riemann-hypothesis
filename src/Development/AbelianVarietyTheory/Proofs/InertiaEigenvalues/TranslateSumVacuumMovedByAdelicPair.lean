@@ -66,7 +66,6 @@ open GlobalTheory.SW hiding Level IsSB
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Datum Formalism.IndefR.FWT Formalism.L2.Pj
 open GlobalTheory.ExportSeries (Base Twist Weight PairRep GLR detChar detFam fockGL harm harmLat IsCoefRing finPt series idem)
 open scoped TensorProduct Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.SingleDatum
 
 
@@ -187,7 +186,7 @@ theorem step_pow (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-1)) (V
   obtain ⟨-, -, m4, -, m5, -⟩ := GlobalTheory.MovedLat.moved_lattices D V W ΛV ΛW a1 a2 a3 a4 1 k
   rw [show fin V 1 = 1 from map_one _, m5, a5] at m4
   obtain ⟨-, e', P', he', hP', hs'⟩ := hh
-  have horth := GlobalTheory.T.idempotentSum_conjSum_orthogonal_dvd D e e' P P' bad he he' hbad hP'
+  have horth := _root_.GlobalTheory.IdemOrth.idemSum_orth D e e' P P' bad he he' hbad hP'
   have hee := GlobalTheory.PlaceDatum.idemSum_mul_self he
   have hec := he.2
   have hcc : cA D e * cA D e = cA D e := by rw [← RingHom.map_mul, hee]
@@ -238,7 +237,7 @@ theorem step_pow (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-1)) (V
           (Bridge.hLat W (fin W k) : Set (Fin W.rank → D.host.E)) fun _ => True := by
     intro s hs
     rw [smul_moved]
-    refine GlobalTheory.T.finite_adelic_matrix_mem_lattice_of_columns D V W hV k _ (infPart_moved V W k _) fun b => ?_
+    refine _root_.GlobalTheory.ColsInLat.mem_latO_of_cols D V W hV k _ (infPart_moved V W k _) fun b => ?_
     obtain ⟨z, hz⟩ := hs b
     rw [finPart_moved]
     convert hιm (δ • z) using 3
@@ -256,7 +255,7 @@ theorem step_pow (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-1)) (V
     choose v hv hv' using fun b => hj b s (Ideal.pow_le_pow_right
       ((Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ b)).trans (Nat.le_succ _)) hs)
     refine ⟨GlobalTheory.LatVac.finTens 1 (Matrix.of fun a b => (δ • v b) a),
-      GlobalTheory.T.finite_adelic_matrix_mem_lattice_of_columns D V W hV k _ (infPart_finTens _) fun b =>
+      _root_.GlobalTheory.ColsInLat.mem_latO_of_cols D V W hV k _ (infPart_finTens _) fun b =>
         finVec_mem W k _ (Submodule.smul_of_tower_mem _ δ (hR _ (hv b))), ?_⟩
     rw [hu', smul_finTens, ← incA_nat, smul_finTens]
     congr 1
@@ -269,7 +268,7 @@ theorem step_pow (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-1)) (V
   have h1 : u - Formalism.L2.Theta.mt W k * GlobalTheory.LatVac.finTens (D := D) 1 ρ ∈
       latO V W (Formalism.L2.Pj.stdLat D.host.E V.rank : Set (Fin V.rank → D.host.E))
         (Bridge.hLat W (fin W k) : Set (Fin W.rank → D.host.E)) fun _ => True := by
-    refine GlobalTheory.T.finite_adelic_matrix_mem_lattice_of_columns D V W hV k _ ?_ fun b => ?_
+    refine _root_.GlobalTheory.ColsInLat.mem_latO_of_cols D V W hV k _ ?_ fun b => ?_
     · rw [Matrix.map_sub _ (RingHom.map_sub _), hu.1, infPart_moved, sub_zero]
     obtain ⟨a, ha, haq, hYa⟩ := (hY q b).1
     obtain ⟨z, hz⟩ := sub_sep_mem l (q b) a ha haq

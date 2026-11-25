@@ -259,7 +259,7 @@ theorem exists_psiTied {n : ℕ} {J : Matrix (Fin n) (Fin n) E} {T f : ℕ} {bad
 
 end Gen
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar Formalism.BasicNotions.factResChar
+attribute [local instance] Formalism.BasicNotions.factResChar
 
 
 
@@ -297,7 +297,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.G Formal
 
 namespace GlobalTheory.Mem.LocalPack
 
-attribute [local instance] Formalism.BasicNotions.factResChar Formalism.BasicNotions.Host.cmStar
+attribute [local instance] Formalism.BasicNotions.factResChar
 
 section Ext
 
@@ -308,16 +308,6 @@ variable {Os Ks O Kf O' Kf' : Type} [CommRing Os] [Field Ks] [Algebra Os Ks] [Co
 end Ext
 
 section Ties
-
-abbrev RingTie := @Formalism.L2.G.RingCompatibleAt
-
-abbrev LocalIs := @Formalism.L2.G.GatIs
-
-alias standardSub_of_ringTie := Formalism.L2.G.stdSubAt_of_ring
-
-alias localIs_of_hyperspecial := Formalism.L2.G.gatIs_recG
-
-alias ringTie_record := Formalism.L2.G.ringTied_recC
 
 end Ties
 
@@ -351,8 +341,6 @@ variable (D : D7) (sc : Scale) (Ce : ℝ)
     (epSc D.R sc Ce (D.what₂.places.resChar w))).d = Module.finrank ℂ (D.mem u).A.Mu0)
 
 end Record
-
-abbrev IsConcrete := @Formalism.L2.G.IsRecC
 
 end GlobalTheory.Mem.LocalPack
 end -- clump:auto
@@ -689,7 +677,7 @@ theorem exists_basis_HtupW (G : GAtP p) [IsFractionRing G.O G.Kf] [CharZero G.Kf
     exists_basis_Dl0 hinj G.P.m (lamAt (G.P.lam0 v) s) (lamAt_antitone' _ (G.P.dom v) s) _
       (LatticeSystems.je_extO_lat G v s.val (L v) (hL v))
   choose B b1 b2 using hB
-  have := LatticeSystems.jr_KK G.Kf
+  have := instIsFractionRing (R := G.Kf)
   obtain ⟨hli, -⟩ := tensorBasis G.Kf G.Kf (Σ v : Fin G.P.nV, Fin (G.P.n' v)) (G.P.m + 1) (G.P.m + 1) _
     (fun x => Submodule.span G.Kf (Set.range (B x.1 x.2))) (fun x => B x.1 x.2) (fun x => b1 x.1 x.2) (fun _ => rfl)
   have hli2 := hli.map' (rename (LatticeSystems.jr_psi G) : _ →ₐ[G.Kf] G.P.Xsp).toLinearMap
@@ -797,7 +785,7 @@ section Record
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.L2.G Formalism.L2.Forms GlobalTheory.Mem.LocalPack
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar Formalism.BasicNotions.factResChar
+attribute [local instance] Formalism.BasicNotions.factResChar
 
 
 
@@ -1126,8 +1114,6 @@ end General
 
 section Host
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {R : Ranks} {H : Host R} {p n : ℕ} [hp : Fact p.Prime] {h : R.MA}
 
 theorem sigmaOf_mul (g g' : R.GG) (x : H.E) : H.sigmaOf (g * g') x = H.sigmaOf g (H.sigmaOf g' x) := by
@@ -1364,8 +1350,6 @@ theorem exists_locId_of_completions {R : Ranks} {F E : Type} [Field F] [NumberFi
   exact ⟨⟨pl, eQ, heW, spl, hs1, hs2, fr, hfr⟩, rfl, fun v x =>
     (eQ v).symm_apply_eq.2 (eq_of_heq (hs3 _ (pl v).2 v rfl x))⟩
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem exists_locId_host {R : Ranks} {H : Host R} {p : ℕ} [hp : Fact p.Prime] {h : R.MA}
     (hun : ∀ Q : HeightOneSpectrum (𝓞 H.E), (p : 𝓞 H.E) ∈ Q.asIdeal → Algebra.IsUnramifiedAt ℤ Q.asIdeal)
     (hfr : ∀ Q : HeightOneSpectrum (𝓞 H.E), (p : 𝓞 H.E) ∈ Q.asIdeal → ∀ σ : H.E ≃ₐ[ℚ] H.E, IsArithFrobAt ℤ σ Q.asIdeal →
@@ -1493,7 +1477,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.G Formal
 
 namespace GlobalTheory.Mem.ConcreteRecord
 
-attribute [local instance] Formalism.BasicNotions.factResChar Formalism.BasicNotions.Host.cmStar
+attribute [local instance] Formalism.BasicNotions.factResChar
 
 variable (D : D7) (L0 : LevelData D)
 

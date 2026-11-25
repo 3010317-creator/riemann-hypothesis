@@ -28,7 +28,6 @@ variable [_root_.NumberField.IsTotallyComplex K]
 
 end Formalism.L2.Geo.Rec.DualLatticeEmbeddings
 
-open NumberField NumberField.InfinitePlace Module Matrix
 
 noncomputable section
 
@@ -45,7 +44,6 @@ variable [StarRing K]
 
 end Formalism.L2.Geo.Rec.DualLatticeEmbeddings
 
-open NumberField NumberField.InfinitePlace Module Matrix
 
 noncomputable section
 
@@ -110,11 +108,6 @@ def ePl : D.what₂.Tau ≃ InfinitePlace D.host.E :=
   Equiv.ofBijective _ ((Fintype.bijective_iff_injective_and_card _).2
     ⟨mk_tauEmb_injective D, (card_places D).symm⟩)
 
-theorem finrank_E_eq : finrank ℚ D.host.E = 2 * D.R.f := by
-  have h2 : D.R.f = 2 * D.R.ord := rfl
-  rw [D.host.finrank_cmField, h2]
-  ring
-
 @[instance_reducible] def starE : StarRing D.host.E := starRingOfComm
 
 attribute [local instance] starE
@@ -123,7 +116,6 @@ variable {D}
 
 end Formalism.L2.Geo.Rec.StarEmbeddingNorm
 
-open NumberField NumberField.InfinitePlace Module Matrix Formalism.BasicNotions
 open scoped ComplexOrder
 
 noncomputable section
@@ -136,8 +128,6 @@ variable {D : D7} {n : ℕ}
 
 end Formalism.L2.Geo.Rec.StarEmbeddingNorm
 
-open NumberField NumberField.InfinitePlace Module Matrix Formalism.BasicNotions
-open scoped ComplexOrder
 
 noncomputable section
 

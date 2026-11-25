@@ -309,7 +309,7 @@ theorem exists_maxT (hf : X.IsBddSec (Xa.Fp + T • Xa.L) f)
     exact (hsm j z hz).2
   obtain ⟨d, hd, hfar⟩ := sumSq_far X Xa Fl hU hxs hsat
   obtain ⟨δ, hδ, hsmall⟩ := quotT_far X Xa Fl T f hf hrate (A := Uᶜ) hd hfar hε
-  obtain ⟨Kc, hKc, hKsub, hrep⟩ := reductionTheory_holds r X δ hδ
+  obtain ⟨Kc, hKc, hKsub, hrep⟩ := GlobalTheory.FlagMahler.mahler_compactness r X δ hδ
   have hSpos : ∀ x ∈ Kc \ U, 0 < sumSq X Xa Fl x := fun x hx =>
     lt_of_lt_of_le (by positivity) (hfar x (hKsub hx.1) hx.2)
   have hmove : ∀ x ∈ X.dom, quotT X Xa Fl T f x1 ≤ quotT X Xa Fl T f x →
@@ -459,8 +459,7 @@ theorem upper_shift : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r 
     rw [show Xa.T + (nd X + 4) + nd X + 6 + nd X = Xa.T + 3 * nd X + 10 by ring]; omega)
   have hg := isBddSec_sum X hf u
   have hg0 : ∃ x ∈ X.dom, ∑ q, u q * f q x ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hu (hind u h)
   obtain ⟨k, hk⟩ := exists_s_ne Fl
   have d1 := hg.1.1
@@ -1076,8 +1075,6 @@ section -- clump:auto
 
 open NumberField Module ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.G.AR.Inst ReciprocityTheory.ChartRestriction.G.AR.Up GlobalTheory.IndefiniteRowSideFullHecke.FrameWeightGapBounds GlobalTheory.ShareOn
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.ShareRanks
@@ -1274,8 +1271,7 @@ theorem compT (X : DataX E r) {Ψ : Finset (E →+* ℂ)} (hΨ : X.Ψ = Ψ) (G :
 theorem exists_pull_ne {U' C : Type} [Group U'] [Fintype U'] [DecidableEq U'] [MulAction U' C]
     (M : TwoLevels E r U' C) {F : C → Frame M.Ψ r → ℂ} {c : C} {x : Frame M.Ψ r} (h : M.detTr F c x ≠ 0) :
     ∃ g : U', M.pull g F c x ≠ 0 := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   apply h
   unfold TwoLevels.detTr
   have e : (Matrix.of fun g g' : U' => M.pull (g * g') F c x) = 0 := by

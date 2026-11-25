@@ -42,8 +42,6 @@ import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField IsDedekindDomain
@@ -51,7 +49,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.GalV (HTower Splits)
 open UpperTheory.Gal.crystallineComparison.Mod (Std TjD TjE KSOKE)
 open scoped TensorProduct
-attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.Int.Geo
 
 namespace UpperTheory.TraceConjugationCover

@@ -263,8 +263,7 @@ theorem _root_.GlobalTheory.exists_low_coeff_not_dvd_of_congr_mul : ∀ (O : Typ
     rw [(IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).1 hϖ,
       Ideal.mem_span_singleton] at hmax
     exact hmax
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hDg : ∀ i ≤ (v + 1) * m₀, ϖ ^ (v + 1) ∣ PowerSeries.coeff i (D * g) := by
     intro i hi
     have h1 := dvd_trans (pow_dvd_pow ϖ hv) (hf i (hi.trans hM))
@@ -1116,12 +1115,6 @@ theorem conj_conj (H : Host R) (x : H.E) : H.conj (H.conj x) = x := by
   show starRingEnd ℂ (H.φ₀ (H.conj x)) = _
   rw [h2, Complex.conj_conj]
 
-theorem conj_int (H : Host R) (x : 𝓞 H.E) : ∃ y : 𝓞 H.E, (y : H.E) = H.conj (x : H.E) :=
-  ⟨⟨H.conj (x : H.E), (x.isIntegral_coe).map (H.conj.toAlgHom.restrictScalars ℤ)⟩, rfl⟩
-
-theorem isConjPl_symm {w w' : PlE H} (h : IsConjPl H w w') : IsConjPl H w' w :=
-  fun x y hy => (h y x (by rw [hy, conj_conj])).symm
-
 end Places
 
 variable {D : Formalism.BasicNotions.D7} {N : NData D.R D.host D.what₂} {X : NTw D.R D.host D.what₂ D.LL0 N}
@@ -1156,7 +1149,7 @@ theorem conjCl_of_isQ {ι : Type} {P : ι → PlE D.host} {Q : Finset (PlE D.hos
   intro v hv v' h
   obtain ⟨q, hq⟩ := (hQ v).1 hv
   refine (hQ v').2 ⟨q, ?_⟩
-  exact _root_.GlobalTheory.ToricFactor.over_over hq (Or.inr (isConjPl_symm h))
+  exact _root_.GlobalTheory.ToricFactor.over_over hq (Or.inr (GlobalTheory.ToricFactor.isConjPl_symm h))
 
 theorem l_ne_zero_Ok (i : X.Tw) (k : ℕ) : ((X.l i : ℕ) : X.Ok i k) ≠ 0 ∧ ((X.l i : ℕ) : X.O i) ≠ 0 ∧
     ((X.l i : ℕ) : X.O0 i) ≠ 0 := by

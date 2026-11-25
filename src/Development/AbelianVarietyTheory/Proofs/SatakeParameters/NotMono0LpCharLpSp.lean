@@ -49,7 +49,6 @@ import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetSubLeftO
 
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.LocGL
 open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.LocLanglands GlobalTheory.GalOfCusp
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 noncomputable section
 open scoped TensorProduct
@@ -79,8 +78,7 @@ theorem not_mono0_lpChar_lpSp {x : WD h} (hx : IsIrrWD x) {n : ℕ} (hn : 2 ≤ 
   rw [WD.lpSp, WD.lpChar_mk, WD.monodromyZero_ofWeilDeligneRepClass_iff, WDRep.tensor_N, h0, WDRep.sp_N, LinearMap.rTensor_zero, zero_add]
   intro hN
   obtain ⟨u, hu⟩ : ∃ u, shiftEnd n u ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact shiftEnd_ne_zero hn (LinearMap.ext hc)
   have := LinearMap.congr_fun hN (v ⊗ₜ u)
   rw [LinearMap.lTensor_tmul, LinearMap.zero_apply] at this

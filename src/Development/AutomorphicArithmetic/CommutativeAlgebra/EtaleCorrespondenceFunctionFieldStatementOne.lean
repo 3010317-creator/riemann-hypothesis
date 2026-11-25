@@ -45,19 +45,11 @@ import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.CoeEqAlgebraM
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory GlobalTheory.HodgeCoh GlobalTheory.CechDR GlobalTheory.PD KaehlerDifferential GlobalTheory.W1 GlobalTheory.WH
 
-set_option autoImplicit false
-
 private theorem isIntegral_map_iff {K L : Type} [Field K] [Field L] [Algebra ℂ K] [Algebra ℂ L] [Algebra K L]
     [IsScalarTower ℂ K L] (B : Subalgebra ℂ K) (y : L) :
     IsIntegral (B.map (IsScalarTower.toAlgHom ℂ K L)) y ↔ IsIntegral B y := by
   let j := IsScalarTower.toAlgHom ℂ K L
-  let e : B →+* B.map j := (B.equivMapOfInjective j j.toRingHom.injective).toAlgHom.toRingHom
-  letI : Algebra B (B.map j) := e.toAlgebra
-  haveI : IsScalarTower B (B.map j) L := .of_algebraMap_eq fun a => rfl
-  haveI : Algebra.IsIntegral B (B.map j) := ⟨fun b => by
-    obtain ⟨a, rfl⟩ := (B.equivMapOfInjective j j.toRingHom.injective).surjective b
-    exact isIntegral_algebraMap (x := a)⟩
-  exact ⟨fun h => isIntegral_trans y h, fun h => h.tower_top⟩
+  exact ((B.equivMapOfInjective j j.toRingHom.injective).toRingEquiv.isIntegral_iff rfl y).symm
 
 private theorem dualNumberPoint_preimage_top_of_reduction {d : ℕ} {Z Y : Scheme.{0}} [IsIntegral Z] [IsIntegral Y] {s : Z ⟶ Sp ℂ} {s' : Y ⟶ Sp ℂ}
     [SmoothOfRelativeDimension d s] [SmoothOfRelativeDimension d s'] {c : Y ⟶ Z} (hc : c ≫ s = s') [IsFinite c] [Etale c]

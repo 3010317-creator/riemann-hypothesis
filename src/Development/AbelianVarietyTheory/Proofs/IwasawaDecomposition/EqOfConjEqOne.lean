@@ -43,8 +43,6 @@ import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open AlgebraicGeometry CategoryTheory Limits NumberField Matrix
@@ -55,8 +53,6 @@ open ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.
 open MonoidalCategory CartesianMonoidalCategory MonObj ReciprocityTheory.ChartRestriction.G.PullbackSections
 
 namespace GlobalTheory.HodgeOnDomain
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 section Main
 

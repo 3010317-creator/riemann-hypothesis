@@ -247,8 +247,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory Opposite Matrix GlobalTheory GlobalTheory.PDivGroup GlobalTheory.Sandwich GlobalTheory.IndefiniteRowSideFullHecke.EpsilonPairingZeta GlobalTheory.PDivLat
@@ -571,8 +569,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory GlobalTheory GlobalTheory.PDiv GlobalTheory.PDivGroup Coalgebra Bialgebra WithConv
@@ -599,8 +595,7 @@ theorem exists_eq_apply_of_algHom {O : Type} [CommRing O] [IsDomain O] {N : ℕ}
     ext j
     simp [Finset.sum_apply, Pi.single_apply]
   obtain ⟨k, hk⟩ : ∃ k, f (Pi.single k 1) = 1 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     have h0 : ∑ k, f (Pi.single k 1) = 0 :=
       Finset.sum_eq_zero fun k _ => (hid k).resolve_right (hne k)
     exact zero_ne_one (h0.symm.trans hsum)
@@ -873,8 +868,7 @@ theorem isLocalRing_of_integers {C : Type} [Field C] {v : Valuation C NNReal} {O
     [CommRing O] [Algebra O C] (hv : v.Integers O) : IsLocalRing O := by
   haveI : Nontrivial O := (algebraMap O C).domain_nontrivial
   refine IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => ?_
-  by_contra h
-  push_neg at h
+  by_contra! h
   have h1 : v (algebraMap O C a) < 1 :=
     lt_of_le_of_ne (hv.map_le_one a) (fun e => h.1 (hv.isUnit_of_one' e))
   have h2 : v (algebraMap O C (1 - a)) < 1 :=
@@ -989,8 +983,6 @@ section -- clump:auto
 @[expose] public section
 
 open CategoryTheory Opposite Matrix GlobalTheory GlobalTheory.PDivGroup GlobalTheory.Sandwich GlobalTheory.IndefiniteRowSideFullHecke.EpsilonPairingZeta GlobalTheory.PDivLat
-
-set_option autoImplicit false
 
 noncomputable section
 

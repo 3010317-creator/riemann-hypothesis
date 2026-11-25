@@ -54,7 +54,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef
 open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx Formalism.IndefR.Links
 open scoped TensorProduct InnerProductSpace
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.RawLift
 
@@ -137,13 +136,6 @@ section Inhabitants
 variable {ψ : AddChar (AF D.host.F) ℂ} {V W : HSp D} {χV χW : (AE D)ˣ →* Circle}
   {om : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)}
 
-
-open scoped ComplexOrder in
-theorem SWSetup.posDef {νV 𝓗 νW 𝓖 μ 𝓕 fr} (h : SWSetup ψ V W χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr) (τ : D.host.E →+* ℂ) :
-    (V.gram.map τ).PosDef := by
-  have h1 := h.sigOK τ
-  rw [h.pos τ] at h1
-  exact Formalism.IndefR.Fin.Lifts.posDef_of_sig _ h1
 
 theorem exists_lagFrame (W : HSp D) (Y : Lag W) : ∃ C, IsLagFrame W Y C := by
   let b := Module.finBasisOfFinrankEq D.host.E Y.1 Y.2.1

@@ -133,8 +133,7 @@ theorem real_eq_zero (χ : A → G → ℂ) (hc : ∀ a, Continuous (χ a)) (hx 
   have hsepA : (Al.map (BoundedContinuousFunction.toContinuousMapStarₐ ℂ)).SeparatesPoints := by
     intro x y hxy
     obtain ⟨a, hax⟩ : ∃ a, χ a (x - y) ≠ 1 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hxy (sub_eq_zero.mp (hsep _ hcon))
     refine ⟨_, ⟨BoundedContinuousFunction.toContinuousMapStarₐ ℂ (B a),
       StarSubalgebra.mem_map.mpr ⟨B a, hmem a, rfl⟩, rfl⟩, ?_⟩
@@ -251,7 +250,6 @@ end
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum MeasureTheory NumberField Matrix
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 

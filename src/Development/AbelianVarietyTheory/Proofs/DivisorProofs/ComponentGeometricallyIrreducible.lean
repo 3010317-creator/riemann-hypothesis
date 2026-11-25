@@ -211,7 +211,6 @@ open NumberField IsDedekindDomain
 open scoped CategoryTheory.Obj CategoryTheory.MonObj TensorProduct NNReal
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Pdiv ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD
 open Formalism.L2.Pj GlobalTheory.HTLat GlobalTheory.HTLat.OmegaRank GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.CompHt GlobalTheory.FlatCore GlobalTheory.LineNorm
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.FlatModel
 
 noncomputable section
@@ -249,12 +248,6 @@ theorem irreducibleSpace_pullback_of_isDomain {F : Type} [Field F] {X : Scheme.{
     letI : Algebra F k := f.toAlgebra
     IsDomain (k ⊗[F] Γ(X, V)) → IrreducibleSpace ↑(pullback (V.ι ≫ g) (spMap f)) :=
   GlobalTheory.T.irreducibleSpace_pullback_affine_open_of_isDomain_tensor g V hV k f
-
-theorem irreducibleSpace_pullback_of_cover {F : Type} [Field F] {X : Scheme.{0}} (h : X ⟶ Sp F)
-    (k : Type) [Field k] (f : F →+* k) (U : X.Opens) (hU : IsIrreducible (U : Set X))
-    (hV : ∀ y ∈ U, ∃ V : X.Opens, V ≤ U ∧ y ∈ V ∧ IrreducibleSpace ↑(pullback (V.ι ≫ h) (spMap f))) :
-    IrreducibleSpace ↑(pullback (U.ι ≫ h) (spMap f)) :=
-  _root_.GlobalTheory.irreducibleSpace_pullback_of_cover h k f U hU hV
 
 theorem irreducibleSpace_pullback_affine {F : Type} [Field F] [CharZero F] {X : Scheme.{0}} [IsReduced X]
     (g : X ⟶ Sp F) [LocallyOfFiniteType g] (x : X)

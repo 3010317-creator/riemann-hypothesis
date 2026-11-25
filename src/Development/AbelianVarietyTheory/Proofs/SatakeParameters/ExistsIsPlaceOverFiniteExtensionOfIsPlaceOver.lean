@@ -65,7 +65,6 @@ import ReciprocityTheory.NeutralLocalFields.Reciprocity
 
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N
 open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.Pst GlobalTheory.LocLanglands GlobalTheory.HeckeGal GlobalTheory.LocGL GlobalTheory.GalOfCusp
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open GlobalTheory.AboveL
 
 namespace GlobalTheory.AboveL
@@ -96,8 +95,7 @@ theorem exists_isPlaceOver_of_tower : ∀ (K L Ω : Type) [Field Ω] [Field K] [
       rw [hmem, hmem] at *
       have e : ((x * y : 𝓞 L) : L) = (x : L) * y := rfl
       rw [e, map_mul, map_mul] at hxy
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact absurd hxy (not_lt.mpr (one_le_mul hc.1 hc.2))
   have hK : ∀ x : 𝓞 K, (algebraMap (𝓞 K) (𝓞 L) x ∈ m ↔ x ∈ v.asIdeal) := by
     intro x

@@ -1383,15 +1383,6 @@ theorem key_inj {i j : NC ε} (h : key i = key j) : i = j := by
 
 def tw (i j : NC ε) : ℂ := if key j < key i then -1 else 1
 
-theorem tw_self (i : NC ε) : tw i i = 1 := by
-  simp [tw]
-
-theorem tw_mul_self (i j : NC ε) : tw i j * tw i j = 1 :=
-  _root_.CompanionTheory.FinsetCAR.tw_mul_self key i j
-
-theorem tw_swap {i j : NC ε} (h : i ≠ j) : tw j i = -tw i j :=
-  _root_.CompanionTheory.FinsetCAR.tw_swap key (fun _ _ h => key_inj h) h
-
 theorem sg_mul_self (i : NC ε) (A : Finset (NC ε)) : sg i A * sg i A = 1 :=
   _root_.CompanionTheory.FinsetCAR.sg_mul_self key i A
 
@@ -1772,7 +1763,6 @@ section -- clump:auto
 
 namespace CompanionTheory.D.DSIC
 
-theorem hCAR : CAR := GlobalTheory.CompanionTheory.ChainCAR.car
 theorem hFRel : FRel := _root_.GlobalTheory.CompanionTheory.DSICFRel.frel_of_car _root_.GlobalTheory.CompanionTheory.ChainCAR.car
 theorem hBdFacts : BdFacts := GlobalTheory.CompanionTheory.KoszulBd.bdFacts _root_.GlobalTheory.CompanionTheory.ChainCAR.car
 theorem hKoszul : Koszul := GlobalTheory.CompanionTheory.DSICKoszul.koszul _root_.GlobalTheory.CompanionTheory.ChainCAR.car
@@ -1785,14 +1775,13 @@ theorem hPRV : PRV := GlobalTheory.CompanionTheory.ChainHighest.aux₃ hFRel _ro
 theorem hAlgCore : AlgCore := algCore_of hFRel hBdFacts hCO _root_.GlobalTheory.CompanionTheory.ZetaHighest.zetaHW hWLem _root_.GlobalTheory.CompanionTheory.DSNormLt.normLt _root_.GlobalTheory.CompanionTheory.DSChainAdj.adj hPRV
 theorem hAlgCoreSub : AlgCoreSub := GlobalTheory.CompanionTheory.DSCoreSub.algCoreSub_of_algCore hAlgCore
 theorem hSmMod : SmMod := GlobalTheory.CompanionTheory.SmoothModule.smMod _root_.GlobalTheory.CompanionTheory.DSSmLin.smLin _root_.GlobalTheory.CompanionTheory.SmBracket.smBracket
-theorem hActQ : ActQ := GlobalTheory.CompanionTheory.DSCapelliAction.actQ
 theorem hStabLink : StabLink := GlobalTheory.CompanionTheory.DSStabLink.stabLink _root_.GlobalTheory.CompanionTheory.DSICKExp.kExp
 alias hWtLink := _root_.GlobalTheory.CompanionTheory.WtLinkPf.wtLink
 theorem hHWofType : HWofType := GlobalTheory.CompanionTheory.DSHighestOfKType.hwOfType hStabLink hWtLink
 theorem hTypeOfHW : TypeOfHW := GlobalTheory.CompanionTheory.DSKType.typeOfHW hLowSpan hStabLink hWtLink
 
 theorem discrete_series_infinitesimal_character : PI.DSInfCharCap.DSInfCharCap :=
-  dsInfCharCap_of hAlgCoreSub hSmMod hActQ _root_.CompanionTheory.D.DSIC.capelli_spread CompanionTheory.D.gk.admitted.kFin_mem_smoothVecs _root_.UpperTheory.Reformulated.B.Gc1.kFinStab hStabLink
+  dsInfCharCap_of hAlgCoreSub hSmMod _root_.GlobalTheory.CompanionTheory.DSCapelliAction.actQ _root_.CompanionTheory.D.DSIC.capelli_spread CompanionTheory.D.gk.admitted.kFin_mem_smoothVecs _root_.UpperTheory.Reformulated.B.Gc1.kFinStab hStabLink
     hHWofType hTypeOfHW
 
 end CompanionTheory.D.DSIC

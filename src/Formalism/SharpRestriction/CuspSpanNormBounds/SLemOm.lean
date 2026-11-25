@@ -3,50 +3,6 @@ module
 public import Formalism.PeriodIntegrals.StabBig
 public import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds
 public import Formalism.SharpRestriction.CuspSpanNormBounds.RootMeasBig
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LargeStabilizerInverse.GLeftInv, Formalism.SharpRestriction.CuspSpanNormBounds.SLemOm
@@ -93,38 +49,13 @@ theorem hpk_col (m q : Fin (2 * r + k + 1)) :
     simp only [Fin.ext_iff, ht]
     split_ifs <;> first | rfl | (exfalso; omega)
 
-private theorem tau_tau_lemma (i : Fin (2 * r + k + 1)) : tau k r (tau k r i) = i := by
-  have h1 := tau_val (k := k) (r := r) i
-  have h2 := tau_val (k := k) (r := r) (tau k r i)
-  have hi := i.isLt
-  ext
-  by_cases hc : i.val < r ∨ r + k < i.val
-  · rw [if_pos hc] at h1
-    have hc2 : (tau k r i).val < r ∨ r + k < (tau k r i).val := by omega
-    rw [if_pos hc2] at h2
-    omega
-  · rw [if_neg hc] at h1
-    have hc2 : ¬ ((tau k r i).val < r ∨ r + k < (tau k r i).val) := by omega
-    rw [if_neg hc2] at h2
-    omega
-
-private theorem sgn_tau' (i : Fin (2 * r + k + 1)) : sgn k r (tau k r i) = sgn k r i := by
-  have h1 := tau_val (k := k) (r := r) i
-  have hi := i.isLt
-  unfold sgn
-  by_cases hc : i.val < r ∨ r + k < i.val
-  · rw [if_pos hc] at h1
-    rw [if_neg (by omega : ¬ (tau k r i).val = r + k), if_neg (by omega : ¬ i.val = r + k)]
-  · rw [if_neg hc] at h1
-    rw [h1]
-
 private theorem Hpk_apply_eq_ite_tau (p m : Fin (2 * r + k + 1)) :
     Hpk k r p m = if m = tau k r p then sgn k r p else 0 := by
   rw [hpk_col]
   by_cases h : m = tau k r p
-  · have h2 : p = tau k r m := by rw [h, tau_tau_lemma]
-    rw [if_pos h2, if_pos h, h, sgn_tau']
-  · have h2 : ¬ p = tau k r m := fun h' => h (by rw [h', tau_tau_lemma])
+  · have h2 : p = tau k r m := by rw [h, tau_tau]
+    rw [if_pos h2, if_pos h, h, sgn_tau]
+  · have h2 : ¬ p = tau k r m := fun h' => h (by rw [h', tau_tau])
     rw [if_neg h2, if_neg h]
 
 private theorem Hpk_mul_self' : Hpk k r * Hpk k r = 1 := by
@@ -132,9 +63,9 @@ private theorem Hpk_mul_self' : Hpk k r * Hpk k r = 1 := by
   have e1 : ∀ m, Hpk k r m q = if m = tau k r q then sgn k r q else 0 := fun m => hpk_col m q
   rw [Matrix.mul_apply]
   simp only [e1, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte]
-  rw [hpk_col, tau_tau_lemma, Matrix.one_apply]
+  rw [hpk_col, tau_tau, Matrix.one_apply]
   split_ifs with h
-  · rw [sgn_tau']
+  · rw [sgn_tau]
     unfold sgn
     split_ifs <;> norm_num
   · simp
@@ -305,9 +236,9 @@ theorem g_row_out (c : Fin r → ℂ) (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) �
   by_cases hm : m.val < r ∨ r + k < m.val
   · rw [g_col_out c μ i m hm]
     by_cases h : m = tau k r i
-    · have h' : i = tau k r m := by rw [h, tau_tau_lemma]
+    · have h' : i = tau k r m := by rw [h, tau_tau]
       rw [if_pos h', if_pos h, h]
-    · have h' : ¬ i = tau k r m := fun h'' => h (by rw [h'', tau_tau_lemma])
+    · have h' : ¬ i = tau k r m := fun h'' => h (by rw [h'', tau_tau])
       rw [if_neg h', if_neg h]
   · have hne : ¬ m = tau k r i := fun h => by have := congrArg Fin.val h; omega
     rw [if_neg hne]
@@ -384,7 +315,7 @@ theorem g_left_inv {c : Fin r → ℂ} (hc : ∀ a, c a ≠ 0) {μ L : Matrix (F
   · have ht := tau_val (k := k) (r := r) j
     rw [if_pos hj] at ht
     have hto : (tau k r j).val < r ∨ r + k < (tau k r j).val := by omega
-    rw [mul_g_out _ _ _ i j hj, g_col_out _ _ i (tau k r j) hto, tau_tau_lemma, ite_mul, zero_mul,
+    rw [mul_g_out _ _ _ i j hj, g_col_out _ _ i (tau k r j) hto, tau_tau, ite_mul, zero_mul,
       dd_tau hc j hj]
   · have ej : j = wI k r ⟨j.val - r, by omega⟩ := Fin.ext (by simp only [wI_val]; omega)
     rw [ej, mul_g_mid]
@@ -425,7 +356,7 @@ theorem eq_one_of {c : Fin r → ℂ} {μ L : Matrix (Fin (k + 1)) (Fin (k + 1))
     rw [if_pos hm] at htm
     have hjo : (tau k r m).val < r ∨ r + k < (tau k r m).val := by omega
     have E1 := congrFun (congrFun E i) (tau k r m)
-    rw [mul_g_out _ _ _ i _ hjo, tau_tau_lemma] at E1
+    rw [mul_g_out _ _ _ i _ hjo, tau_tau] at E1
     have hd := dd_ne hc (tau k r m) hjo
     by_cases hi : i.val < r ∨ r + k < i.val
     · rw [g_mul_out _ _ _ i _ hi] at E1

@@ -151,7 +151,7 @@ theorem exists_compact : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   obtain ⟨B, hB⟩ : ∃ B : ℝ, B = max (K ^ a * K' / δ / (2 * (i - a * c))) 1 := ⟨_, rfl⟩
   have hB0 : 0 < B := by rw [hB]; exact lt_of_lt_of_le one_pos (le_max_right _ _)
   have hε : 0 < min ε0 (Real.sqrt (ca / B)) := lt_min hε0 (Real.sqrt_pos.2 (div_pos hca hB0))
-  obtain ⟨C, hC, hCd, hmeet⟩ := reductionTheory_holds (E := E) r X _ hε
+  obtain ⟨C, hC, hCd, hmeet⟩ := GlobalTheory.FlagMahler.mahler_compactness (E := E) r X _ hε
   refine ⟨C, hC, hCd, fun x hx h3 => hmeet x hx ?_⟩
   by_cases hsmall : X.la1 x < ε0
   · refine (min_le_right _ _).trans ?_
@@ -1113,8 +1113,7 @@ theorem trdeg_ratios_record : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (
     have hg : evC hG Z (G.w i1).1 ≠ 0 := fun h0' => hi1 ((hk _ _).mp h0' x1 hx1)
     have het : evC hG Z G.et.1 ≠ 0 := evC_ne_zero_of_nonZeroComp h hj hG G.et hnz Z (G.w i1) hg
     have het0 : ∃ x ∈ ((T.U j σ).X k).dom, rdU (T.U j σ) G.et.1 k x ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact het ((hk _ _).mpr hcon)
     have hr : 0 < g0 D := by
       have hr0 : 0 < D.R.r := by

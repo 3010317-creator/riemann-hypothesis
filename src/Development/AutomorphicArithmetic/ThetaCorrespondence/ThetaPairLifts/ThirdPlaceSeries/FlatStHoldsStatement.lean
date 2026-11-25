@@ -114,7 +114,6 @@ import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BesselDatumA
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -125,7 +124,6 @@ open GlobalTheory.FlatVecSum (princ)
 open scoped TensorProduct
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Classical
 open GlobalTheory.BigOn.Exp.TupLe.Swap
 
@@ -211,7 +209,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -222,7 +219,6 @@ open GlobalTheory.FlatVecSum (princ)
 open scoped TensorProduct
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Classical
 open GlobalTheory.BigOn.Exp.TupLe.Swap
 
@@ -568,7 +564,7 @@ theorem X_det : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type) (A
       (∀ PP ∈ Q, χ.TameAt PP ∧ IsRes χ PP (ρ PP)) → (∀ PP ∈ Q, GlobalTheory.IndefiniteRowSideFullHecke.CentralInvolutionRing.UnitOff N ((χ.locK PP u : ℂˣ) : ℂ)) →
       GlobalTheory.IndefiniteRowSideFullHecke.CentralInvolutionRing.UnitOff N ((c x : Circle) : ℂ) := by
     intro c χ ρ hc h1 h2
-    have e1 := GlobalTheory.T.heckeCharacter_conjHalfIdele_eq_prod_local D _ _ (isIdemSum_conj he) (u ^ m) y (by rw [Formalism.L2.Theta.cA_cA]; exact hy) c χ hc
+    have e1 := _root_.GlobalTheory.IdemSumChar.char_eq_prod D _ _ (isIdemSum_conj he) (u ^ m) y (by rw [Formalism.L2.Theta.cA_cA]; exact hy) c χ hc
     have e2 := GlobalTheory.TameSplitChar.char_eq_prod_res D c χ Q e ρ hc he h1 (y⁻¹ * x) a ⟨d, hd⟩ (fun PP => (hun PP).unit) hx' ha.symm
       fun _ _ => rfl
     rw [← mul_inv_cancel_left y x, map_mul, Circle.coe_mul, e1, e2]
@@ -854,7 +850,7 @@ theorem om_model {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χ
     by_cases h0 : ((Real.sqrt (Rr.card : ℝ) : ℝ) : ℂ) = 0
     · rw [h0]; simp
     · field_simp
-  exact GlobalTheory.T.weilRep_apply_eq_smul_of_halfIndicator_base D ψ S T _ _ _ hW ΛS ΛT hS hT _ _ he' f hθ hfix' Tm hTm (g, 1) _ (isSBHalf_actPull hN l3 l4) hvac Φ hΦ
+  exact _root_.GlobalTheory.PullModelLaw.om_apply_eq_smul_pull D ψ S T _ _ _ hW ΛS ΛT hS hT _ _ he' f hθ hfix' Tm hTm (g, 1) _ (isSBHalf_actPull hN l3 l4) hvac Φ hΦ
 
 section Real
 
@@ -1018,7 +1014,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -1046,7 +1041,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -1057,7 +1051,6 @@ open GlobalTheory.FlatVecSum (princ)
 open scoped TensorProduct
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Classical
 open GlobalTheory.BigOn.Exp.TupLe.Swap
 
@@ -1072,7 +1065,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -1083,7 +1075,6 @@ open GlobalTheory.FlatVecSum (princ)
 open scoped TensorProduct
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Classical
 open GlobalTheory.BigOn.Exp.TupLe.Swap
 
@@ -1137,7 +1128,7 @@ theorem adjDat_union {Sa St : Finset (Pl D.host.E)} {ea et : AE D} (hg : IsIdemS
     · obtain ⟨i1, i2⟩ := (hA x hx).1 hi
       obtain ⟨r1, r2⟩ := hB x hx hi
       rw [if_pos (And.intro hx hi), if_pos (And.intro (hcQ x) i2), if_pos (And.intro (hcg x) i1), omegaQ_union hd, mul_comm]
-      congr 1
+      refine congrArg₂ (· * ·) ?_ ?_
       · exact GlobalTheory.PlaceVec.omegaQ_congr St _ ξ _ fun PP hPP => (r2 PP hPP).symm
       · exact GlobalTheory.PlaceVec.omegaQ_congr Sa _ ξ _ fun PP hPP => (r1 PP hPP).symm
     · have c1 : ¬ (IsHalf (cA D (ea + et)) x ∧ IsIntM (frMapAdj _ _ (R.βV i) (R.βW i) x)) := fun h => hi h.2
@@ -1212,7 +1203,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -1240,7 +1230,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -1268,7 +1257,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -1279,7 +1267,6 @@ open GlobalTheory.FlatVecSum (princ)
 open scoped TensorProduct
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Classical
 
 namespace GlobalTheory.BigOn.Exp.TupLe.Swap
@@ -1324,7 +1311,6 @@ section -- clump:auto
 
 
 section
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -1335,7 +1321,6 @@ open GlobalTheory.FlatVecSum (princ)
 open scoped TensorProduct
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Classical
 namespace GlobalTheory.BigOn.Exp.TupLe.Swap
 end GlobalTheory.BigOn.Exp.TupLe.Swap

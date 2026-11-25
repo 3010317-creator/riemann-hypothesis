@@ -1,5 +1,6 @@
 module
 
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASAPairLQOf
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatJDCapAGrp
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatJDACapToda
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatJDACapTodaV
@@ -56,61 +57,18 @@ public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutGCoreCut
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutGCFinal
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJABddOp
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.JAdjTrQQOfThree
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatPolyOK
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutEnFibMem
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutAsm
 import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ReduceModChar
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.BigCellHermitian
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.BigCellZetaMinors
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDJDJComm
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.OrbitalIntegralIdentities
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.PositiveOrbitOpen
-import Mathlib.Tactic.Linter.Style
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.NFRadRedA
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RestrictionIrrelevantDoubleLevelOperator
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.WeylCellConjTransposeMulApply
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Polynomial.Basic
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.NFRadRedF
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.NFRadRedLocSec
 import Mathlib.Analysis.SpecialFunctions.Sqrt
@@ -118,7 +76,6 @@ import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 import Mathlib.Topology.UniformSpace.Uniformizable
 import Mathlib.Tactic.TypeStar
-import Std.Tactic.BVDecide.Normalize.Prop
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatJDCapAAll, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatJDGaugeQQHatQQ, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatOpRFinal, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASAPairLZero, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASAPairLAsm, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASAPairLLocal, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASASecAsm, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASASecRad, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASASecFinal, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAStarOpFundQ, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAStarOpModelAdj, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAStarOpOfPair, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAStarOp, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDQQAsm, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutERAsm, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutEnergyReal, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutEnAdmLen, Formalism.HermitianCurvature.HermitianCurvatureProofs.L2BoundAtBuiltPlaceHolds, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutEnergyTr, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutTop, Formalism.HermitianCurvature.HermitianCurvatureProofs.ModelPlaceBuilt2OfHat, Formalism.HermitianCurvature.HermitianCurvatureProofs.ModelPlaceBuilt2OfBdd
@@ -390,21 +347,12 @@ namespace Formalism.FourierDecayAlt.P.CutMP.JA.SA
 
 open NumberField Formalism.FourierDecayAlt.P.CutMP Formalism.FourierDecayAlt.P.CutMP.JA
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 def qOf (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (g : B.Mat k r) : (Fin r → ℂ) × ℂ :=
   (fun a => Formalism.QuantumDeterminants.cmin k r z z' g a, Formalism.QuantumDeterminants.zeta k r z z' g)
 
 theorem qOf_contOn (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) :
     ContinuousOn (qOf k r z z') (Q.OmPlus k r z z') := by
-  refine ContinuousOn.prodMk ?_ ?_
-  · refine continuousOn_pi.2 fun a => ?_
-    unfold Formalism.QuantumDeterminants.cmin
-    exact (Formalism.FourierDecayAlt.P.PositiveOrbitOpen.dmin_cont z z' _).continuousOn.div (Formalism.FourierDecayAlt.P.PositiveOrbitOpen.dmin_cont z z' _).continuousOn
-      (fun g hg => hg.1 _ (Nat.le_of_lt a.isLt))
-  · unfold Formalism.QuantumDeterminants.zeta
-    exact (Formalism.FourierDecayAlt.P.PositiveOrbitOpen.dmin_cont z z' _).continuousOn.div (Formalism.FourierDecayAlt.P.PositiveOrbitOpen.dmin_cont z z' _).continuousOn
-      (fun g hg => hg.1 _ le_rfl)
+  apply _root_.Formalism.FourierDecayAlt.P.CutMP.JA.SA.QO.qOf_contOn <;> assumption
 
 theorem qOf_sgs {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
     [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] (D : B.RealPlaceData k r Wp Wq) {p : B.SS k r} (hp : D.inSS p)
@@ -564,8 +512,6 @@ open scoped ContDiff
 namespace Formalism.FourierDecayAlt.P.CutMP.JA.SA
 
 open Formalism.FourierDecayAlt.P.CutMP.Gauge.GC.SSTr
-
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 theorem radial_section_holds : SARadSec := by
   intro Wp Wq _ _ _ _ _ _ P Bs hpl e he U

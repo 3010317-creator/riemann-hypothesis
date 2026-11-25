@@ -798,7 +798,7 @@ theorem decompletion : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAi
     (GlobalTheory.EtaleExact.sep_RW LL)
     hl.2.2
     (series_EE R (P.PD_p K))
-    (GlobalTheory.IoInj.ioE_injective_saturated_inter l P AI K s LL h Γ R I hI).2.1
+    (GlobalTheory.IoInj.ioE_injective_saturated_inter l P AI K s LL Γ R I).2.1
     F
     (fun i j => (mem_fixSub_iff AI K _).2 (hF i j))
     hu
@@ -1010,8 +1010,7 @@ theorem exists_det_ne_zero {A C Q ι : Type} [CommRing A] [Field C] [Fintype Q] 
     congr 1
     ext i k
     simp [Matrix.sum_apply]
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have h0 : F = 0 := by
     refine MvPolynomial.funext_set (fun _ => S) (fun _ => hS) fun x hx => ?_
     choose a ha using fun i => hSA (x i) (hx i trivial)

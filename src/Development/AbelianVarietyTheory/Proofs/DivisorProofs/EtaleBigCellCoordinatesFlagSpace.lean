@@ -121,16 +121,12 @@ open ReciprocityTheory.ChartRestriction.G.DVR.FlatBC (algX)
 open GlobalTheory.LogPole
 open scoped Classical
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.LogPole.CellSection
 
 open GlobalTheory.Reg GlobalTheory.FlagMod MonoidalCategory CartesianMonoidalCategory MonObj
 open ReciprocityTheory.ChartRestriction.G.PullbackSections (TanM tv mkT tanM_ext tv_mem actR)
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 section Basic
 
@@ -966,8 +962,6 @@ open ReciprocityTheory.ChartRestriction.G.DVR.FlatBC (algX)
 open GlobalTheory.LogPole
 open scoped Classical
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.LogPole.CellQF
@@ -976,7 +970,6 @@ open GlobalTheory.FlagMod (initSpan initSpan_le_of_tri)
 open ReciprocityTheory.ChartRestriction.G.PullbackSections (TanM)
 
 open MonoidalCategory CartesianMonoidalCategory MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
 
 section Lin
 
@@ -1176,8 +1169,6 @@ open ReciprocityTheory.ChartRestriction.G.PullbackSections (tv)
 open ReciprocityTheory.ChartRestriction.G.DVR.FlatBC (algX)
 open GlobalTheory.LogPole
 open scoped Classical
-
-set_option autoImplicit false
 
 noncomputable section
 

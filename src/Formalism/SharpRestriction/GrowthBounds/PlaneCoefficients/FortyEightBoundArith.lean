@@ -4,49 +4,10 @@ public import Formalism.SharpRestriction.GrowthBounds.PlaneCoefficients.PlaneCoe
 public import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.FrMemLetters
 public import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.LeCubeMul
 public import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.PosULeIff
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Presheaf
 import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.TwiceValuationFactorialProduct
 import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.SlackBoundJoint
 import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.SlackBoundReal
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.SharpRestriction.GrowthBounds.PlaneCoefficients.OldestFar, Formalism.SharpRestriction.GrowthBounds.PlaneCoefficients.FortyEightBoundArith
@@ -139,8 +100,7 @@ theorem first_gap (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (j : ℤ) : Fr.fr (j 
   have hfin := hgap _ hyl hxI.1.1 ?_
   · omega
   intro z hz hzx
-  by_contra hzy
-  push_neg at hzy
+  by_contra! hzy
   unfold Frames.letters at hz
   rw [Finset.mem_filter, Finset.mem_Icc] at hz
   apply hmin z _ hzx
@@ -165,8 +125,7 @@ private theorem llPos_zero_le_of_mem (j : ℤ) (hc : 0 < (Fr.LLset j).card) :
     ∀ z ∈ Fr.LLset j, llPos Fr j 0 ≤ z := by
   classical
   intro z hz
-  by_contra hzx
-  push_neg at hzx
+  by_contra! hzx
   have hx := llPos_mem_LLset (Fr := Fr) j 0 hc
   have hf := filt_card (Fr := Fr) j 0 hc
   have hsub : ({z, llPos Fr j 0} : Finset ℤ) ⊆ (Fr.LLset j).filter (· ≤ llPos Fr j 0) := by
@@ -189,8 +148,7 @@ private theorem lt_sort_getD_of_le_card_filter_gt (S : Finset ℤ) (c : ℤ) (k 
   have hpw : s.Pairwise (· ≤ ·) := Finset.pairwise_sort _ _
   have hi : s.length - k < s.length := by omega
   rw [List.getD_eq_getElem _ _ hi]
-  by_contra hle
-  push_neg at hle
+  by_contra! hle
   have hsub : S.filter (c < ·) ⊆ (s.drop (s.length - k + 1)).toFinset := by
     intro z hz
     rw [Finset.mem_filter] at hz
@@ -198,8 +156,7 @@ private theorem lt_sort_getD_of_le_card_filter_gt (S : Finset ℤ) (c : ℤ) (k 
     obtain ⟨m, hm, rfl⟩ := List.getElem_of_mem hzs
     rw [List.mem_toFinset]
     have hmk : s.length - k < m := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       have h1 : s[m] ≤ s[s.length - k] := by
         rcases hc.lt_or_eq with hlt | heq
         · exact List.pairwise_iff_getElem.mp hpw m _ hm hi hlt

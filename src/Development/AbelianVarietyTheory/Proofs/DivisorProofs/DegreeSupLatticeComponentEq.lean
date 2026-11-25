@@ -184,8 +184,7 @@ theorem deg_eq_neg_log_ht : ∀ (K V : Type) [Field K] [NumberField K] [AddCommG
       rw [majAt_self_re, hnorm, HermFam.nrm, Real.sq_sqrt (form_self_re_nonneg nm _ x)]
     · have hc : v.IsComplex := IsTotallyComplex.isComplex v
       rw [InfinitePlace.isComplex_iff, ComplexEmbedding.isReal_iff] at hc
-      by_contra hall
-      push_neg at hall
+      by_contra! hall
       apply hc
       ext a
       rw [ComplexEmbedding.conjugate_coe_eq]
@@ -241,8 +240,6 @@ section -- clump:auto
 @[expose] public section
 
 open CategoryTheory AlgebraicGeometry TopologicalSpace Limits NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj GlobalTheory.CechPic GlobalTheory.Vanishing GlobalTheory.CompHS
-
-set_option autoImplicit false
 
 noncomputable section
 

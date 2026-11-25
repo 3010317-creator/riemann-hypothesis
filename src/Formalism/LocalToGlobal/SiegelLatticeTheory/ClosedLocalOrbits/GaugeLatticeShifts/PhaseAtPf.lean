@@ -17,8 +17,6 @@ namespace Formalism.L2.SG.NormCut
 
 section NCongS
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D)
 
 def NCong (x : X.B.I.Gf) : Prop :=
@@ -53,16 +51,7 @@ end NCongS
 
 section K2iff
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSetting D} (TR : TypedRed X)
-
-theorem res_ew_one (v : TR.Pl) : TR.res v ⟨X.ew, X.ew_int⟩ = 1 := by
-  have h := TR.res_ew v 1
-  rw [map_one] at h
-  rw [← h]
-  congr 1
-  exact Subtype.ext (by simp)
 
 theorem res_of_Z_delta (v : TR.Pl) {c : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F} (hc : c ∈ IntAf X.B.I.F X.B.I.E) (b : Prop)
     [Decidable b] (hZ : ZMod' X.B.I X.B.g (c - if b then X.ew else 0)) :
@@ -116,25 +105,10 @@ private theorem leviM_apply_of_le_of_mem_K2 {x : X.B.I.Gf} (hk : x ∈ X.K2) (v 
   rw [dif_pos hint]
   exact res_of_Z_delta TR v hint (i = j) ⟨t, ht, hct⟩
 
-private theorem coe_levi_eq_leviM_of_mem_K2 {x : X.B.I.Gf} (hk : x ∈ X.K2) (v : TR.Pl) :
-    ((levi TR x v : GL (Fin D.R.k) (TR.Fq v)) : Matrix (Fin D.R.k) (Fin D.R.k) (TR.Fq v)) =
-      leviM TR x v := by
-  have hent := leviM_apply_of_le_of_mem_K2 TR hk v
-  have hup : (leviM TR x v).BlockTriangular id := fun i j hij => by
-    rw [hent i j hij.le, if_neg (ne_of_gt (show j < i from hij))]
-  have hdet : (leviM TR x v).det = 1 := by
-    rw [Matrix.det_of_upperTriangular hup]
-    exact Finset.prod_eq_one (fun i _ => by rw [hent i i le_rfl, if_pos rfl])
-  have hunit : IsUnit (leviM TR x v).det := by
-    rw [hdet]
-    exact isUnit_one
-  simp only [levi, dif_pos hunit]
-  rfl
-
 theorem unitriangular_reduction_of_mem_level {x : X.B.I.Gf} (hx : Good X x) (hk : x ∈ X.K2) (v : TR.Pl) :
     Formalism.L2.SG.GGMirabolic.IsUni D.R.k (levi TR x v) := by
   have hent := leviM_apply_of_le_of_mem_K2 TR hk v
-  have hlevi := coe_levi_eq_leviM_of_mem_K2 TR hk v
+  have hlevi := levi_coe TR hx v
   refine ⟨fun i => ?_, fun i j hji => ?_⟩
   · rw [hlevi, hent i i le_rfl, if_pos rfl]
   · rw [hlevi, hent i j hji.le, if_neg (ne_of_gt hji)]
@@ -232,8 +206,6 @@ end K2iff
 
 section ChiL
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSetting D} (TR : TypedRed X)
 
 theorem chiL_eq_psiG {x : X.B.I.Gf} (hx : Good X x) (hk : x ∈ X.K2) : chiL X x = psiG TR (levi TR x) := by
@@ -292,7 +264,7 @@ theorem chiL_eq_psiG {x : X.B.I.Gf} (hx : Good X x) (hk : x ∈ X.K2) : chiL X x
     unfold Formalism.L2.SG.GGMirabolic.psiNat
     rw [if_pos (unitriangular_reduction_of_mem_level TR hx hk v)]
     unfold Formalism.L2.SG.GGMirabolic.psiU
-    rw [coe_levi_eq_leviM_of_mem_K2 TR hk v, hsum v]
+    rw [levi_coe TR hx v, hsum v]
     congr 1
     unfold Formalism.L2.SG.GGMirabolic.superdiag
     refine Finset.sum_congr rfl (fun i _ => ?_)
@@ -309,8 +281,6 @@ theorem chiL_eq_psiG {x : X.B.I.Gf} (hx : Good X x) (hk : x ∈ X.K2) : chiL X x
 end ChiL
 
 section PhaseAtPf
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSetting D} (TR : TypedRed X) {u u' : D.what₂.Word}
   {F0 : FlagG (VS D) D.R.rS ((Tu D u : ℕ) : D.host.E)} {F0' : FlagG (VS D) D.R.rS ((Tu D u' : ℕ) : D.host.E)}

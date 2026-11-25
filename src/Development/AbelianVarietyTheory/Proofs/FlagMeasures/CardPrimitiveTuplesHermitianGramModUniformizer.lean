@@ -183,7 +183,7 @@ theorem sum_char_unit_mul_ip_eq_zero {B : Type} [CommRing B] [Fintype B] (c : B 
   exact AddChar.sum_eq_zero_of_ne_one hψ
 
 theorem norm_gauss_sum_ip_le {B : Type} [CommRing B] [Fintype B] (c : B →+* B)
-    (hc : ∀ u, c (c u) = u) (q : ℕ) (_hq : 2 ≤ q) (hB : Fintype.card B = q ^ 2)
+    (hc : ∀ u, c (c u) = u) (q : ℕ) (hB : Fintype.card B = q ^ 2)
     (χ : AddChar B ℂ) (hχ : χ.IsPrimitive) (hinv : ∀ u, χ (c u) = χ u) (n : ℕ) (a : B)
     (ha : IsUnit (a + c a)) (v : Fin n → B) :
     ‖∑ y : Fin n → B, χ (a * ip c y y + ip c y v)‖ ≤ (q : ℝ) ^ n := by
@@ -354,7 +354,7 @@ theorem quad_count {B : Type} [CommRing B] [Fintype B] (c : B →+* B) (hc : ∀
       positivity
     · have hu : IsUnit (a + c a) := hf _ (by rw [map_add (f := _), hc, add_comm])
         (fun h => ha (by linear_combination h))
-      have h1 := _root_.GlobalTheory.GramCount.norm_gauss_sum_ip_le c hc q hq hB χ hχ hχc n a hu (∑ i, c (s i) • x i)
+      have h1 := _root_.GlobalTheory.GramCount.norm_gauss_sum_ip_le c hc q hB χ hχ hχc n a hu (∑ i, c (s i) • x i)
       have h2 : F (a, s) = χ (-(a * t + ∑ i, s i * g i)) *
           ∑ y : Fin n → B, χ (a * ip c y y + ip c y (∑ i, c (s i) • x i)) := by
         simp only [F, hv, Finset.mul_sum, ← AddChar.map_add_eq_mul]
@@ -413,8 +413,7 @@ theorem exists_isPrimitive_invol_invariant {B : Type} [CommRing B] [Fintype B] (
   refine ⟨ψ.compAddMonoidHom T, ?_, ?_⟩
   · intro a ha h
     have hex : ∃ u, a * u + c (a * u) ≠ 0 := by
-      by_contra hne
-      push_neg at hne
+      by_contra! hne
       have h1 := hne 1
       have h2 := hne ω
       rw [mul_one] at h1
@@ -473,8 +472,7 @@ theorem exists_dot_eq_of_indep {B : Type} [CommRing B] [Fintype B] (χ : AddChar
     (hχ : χ.IsPrimitive) {k n : ℕ} (x : Fin k → Fin n → B)
     (hx : ∀ s : Fin k → B, ∑ a, s a • x a = 0 → s = 0) (u : Fin k → B) :
     ∃ z : Fin n → B, ∀ a, ∑ i, x a i * z i = u a := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have h1 : ∑ z : Fin n → B, ∑ s : Fin k → B, χ (∑ a, s a * (∑ i, x a i * z i - u a)) = 0 := by
     refine Finset.sum_eq_zero fun z _ => ?_
     refine sum_char_dot_eq_zero χ hχ (fun a => ∑ i, x a i * z i - u a) ?_

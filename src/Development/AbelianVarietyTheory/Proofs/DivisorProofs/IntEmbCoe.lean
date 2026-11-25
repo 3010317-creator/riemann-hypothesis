@@ -43,15 +43,11 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.IsEquivariantToBidu
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry Limits NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory.VB GlobalTheory.LieVB
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.CurveRootGeometry
 

@@ -62,7 +62,7 @@ open scoped InnerProductSpace ComplexOrder ContDiff
 
 namespace GlobalTheory
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
+open scoped Matrix.Norms.Elementwise
 
 private lemma hs_mul_sub_one_comm_of_mem_Kset {n : ℕ} (ε : Fin n → Bool) {k : Matrix (Fin n) (Fin n) ℂ}
     (hk : k ∈ Kset ε) (y : Matrix (Fin n) (Fin n) ℂ) :
@@ -149,8 +149,7 @@ theorem exists_conjInvariant_bump (n : ℕ) (ε : Fin n → Bool) (U : Set (UJ �
     apply hVU
     apply hrV
     apply hball
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hg (Real.smoothTransition.zero_of_nonpos
       (div_nonpos_of_nonpos_of_nonneg (by linarith) hr2.le))
   · intro k hk y

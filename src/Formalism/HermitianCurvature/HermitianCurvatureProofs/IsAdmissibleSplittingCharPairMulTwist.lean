@@ -25,57 +25,8 @@ import Formalism.HermitianCurvature.HermitianCurvatureProofs.RuleGD
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RuleInv
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RuleSS
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.ScalarCommuteTransposedRMatrixEntry
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
 public import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.BitVec
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -2045,11 +1996,6 @@ section Act
 
 variable (P : M.Par)
 
-def fstH : (DQ P).Pr →+ (DQ P).Op where
-  toFun x := x.1
-  map_zero' := rfl
-  map_add' _ _ := rfl
-
 alias actA_mul := _root_.Formalism.FourierDecayAlt.P.MAx2.R2.act_mul
 
 end Act
@@ -3747,7 +3693,6 @@ theorem prodRatio {ι : Type} (T : Finset ι) (lam : ι → ℝ) (α β L Y s : 
     |∏ t ∈ T, (Y + lam t)| ≤ Real.exp 3 * |∏ t ∈ T, (Y + s + lam t)| := by
   have hI : 0 < β - α := by linarith
   rw [Finset.abs_prod, Finset.abs_prod]
-  have hx0 : 0 ≤ 3 * L / (β - α) := by positivity
   have hfac : ∀ t ∈ T, |Y + lam t| ≤ (1 + 3 * L / (β - α)) * |Y + s + lam t| := by
     intro t ht
     have hdist : (β - α) / 3 ≤ |Y + s + lam t| := by
@@ -4610,7 +4555,6 @@ theorem Side.deriv_bounds (h : Side k l a b α β) (hl1 : 1 ≤ l) (hlk : l ≤ 
     (hT1 : α + (β - α) / 3 ≤ T) (hT2 : T ≤ β - (β - α) / 3) :
     1 + ∑ j ∈ Icc 1 (k - 1), resA (Icc 1 k) (Icc 1 (k - 1)) a b j / (T - b j) ^ 2 ≤
       6 / (β - α) * |ratF (Icc 1 k) (Icc 1 (k - 1)) a b T| := by
-  have hD : 0 < (β - α) / 3 := by linarith
   have ha : ∀ i ∈ Icc 1 k, T ≠ a i := fun i hi e => by
     have := h.dist_a hl1 hlk hαβ T hT1 hT2 i hi; rw [e, sub_self, abs_zero] at this; linarith
   have hb : ∀ j ∈ Icc 1 (k - 1), T ≠ b j := fun j hj e => by
@@ -4656,14 +4600,12 @@ theorem g_far (hk : 1 ≤ k) (hl1 : 1 ≤ l) (hlk : l ≤ k) (hαβ : α < β) (
     (hZ : ∀ j ∈ Icc 1 (k - 1), 1 ≤ |Z - bg j|) :
     |ratF (Icc 1 k) (Icc 1 (k - 1)) ag bg Z| ≤ |ratF (Icc 1 k) (Icc 1 (k - 1)) ag bg T| *
       (1 + 6 * |Z - T| * (1 + |Z - T|) / (β - α)) := by
-  have hI : 0 < β - α := by linarith
   have hTb : ∀ j ∈ Icc 1 (k - 1), T ≠ bg j := fun j hj e => by
     have := hg.dist_b hl1 hlk hαβ T hT1 hT2 j hj; rw [e, sub_self, abs_zero] at this; linarith
   have hZb : ∀ j ∈ Icc 1 (k - 1), Z ≠ bg j := fun j hj e => by
     have := hZ j hj; rw [e, sub_self, abs_zero] at this; linarith
   have htwo := ratF_two _ _ ag bg (Side.card hk) hg.inj T Z hTb hZb
   set S := ∑ j ∈ Icc 1 (k - 1), resA (Icc 1 k) (Icc 1 (k - 1)) ag bg j / (T - bg j) ^ 2 with hS
-  have hS0 : 0 ≤ S := sum_nonneg fun j hj => div_nonneg (hg.resA_nonneg hk j hj) (sq_nonneg _)
   have hSd := hg.deriv_bounds hl1 hlk hαβ T hT1 hT2
   set d := |Z - T| with hd
   have hsum : |∑ j ∈ Icc 1 (k - 1), resA (Icc 1 k) (Icc 1 (k - 1)) ag bg j / ((Z - bg j) * (T - bg j))| ≤
@@ -4682,7 +4624,6 @@ theorem g_far (hk : 1 ≤ k) (hl1 : 1 ≤ l) (hlk : l ≤ k) (hαβ : α < β) (
     rw [abs_div, abs_of_nonneg hA, abs_mul, div_le_iff₀ (by positivity)]
     have hsq : (T - bg j) ^ 2 = |T - bg j| ^ 2 := (sq_abs _).symm
     rw [mul_div_assoc', div_mul_eq_mul_div, le_div_iff₀ (by rw [hsq]; positivity), hsq]
-    have hp : 0 < |T - bg j| := abs_pos.2 hTbj
     calc resA (Icc 1 k) (Icc 1 (k - 1)) ag bg j * |T - bg j| ^ 2
         = resA (Icc 1 k) (Icc 1 (k - 1)) ag bg j * |T - bg j| * |T - bg j| := by ring
       _ ≤ resA (Icc 1 k) (Icc 1 (k - 1)) ag bg j * ((1 + d) * |Z - bg j|) * |T - bg j| := by gcongr
@@ -4726,7 +4667,6 @@ variable {k l : ℕ} {af bf ag bg : ℕ → ℝ} {α β : ℝ}
 theorem term_bound (A Gz F G d e I : ℝ) (hA : 0 ≤ A) (hF : 0 < F) (hG : 0 < G) (hI : 0 < I) (hd2 : 2 ≤ d)
     (hdI : I ≤ 3 * d) (he : d / 2 ≤ e) (hGz : Gz ≤ G * (1 + 6 * d * (1 + d) / I)) (hGz0 : 0 ≤ Gz) :
     A * Gz / (F * G * d ^ 3 * e) ≤ 22 / (I * F) * (A / d ^ 2) := by
-  have hd : 0 < d := by linarith
   have he0 : 0 < e := by linarith
   have h11 : 1 + 6 * d * (1 + d) / I ≤ 11 * d ^ 2 / I := by
     rw [show 1 + 6 * d * (1 + d) / I = (I + 6 * d * (1 + d)) / I by field_simp, div_le_div_iff_of_pos_right hI]
@@ -4816,7 +4756,6 @@ theorem Side.ratio (h : Side k l a b α β) (hl1 : 1 ≤ l) (hlk : l ≤ k) (hα
     (h1 : Z₁ ∈ Set.Icc (α + (β - α) / 3) (β - (β - α) / 3)) (h2 : Z₂ ∈ Set.Icc (α + (β - α) / 3) (β - (β - α) / 3)) :
     |ratF (Icc 1 k) (Icc 1 (k - 1)) a b Z₁| ≤ Real.exp 2 * |ratF (Icc 1 k) (Icc 1 (k - 1)) a b Z₂| := by
   set M := Set.Icc (α + (β - α) / 3) (β - (β - α) / 3)
-  have hI : 0 < β - α := by linarith
   have hne : ∀ x ∈ M, ratF (Icc 1 k) (Icc 1 (k - 1)) a b x ≠ 0 := fun x hx => by
     apply ratF_ne
     · intro i hi e
@@ -5731,7 +5670,6 @@ theorem multR_bounds (ρm Iw : ℝ) (hI : 6 ≤ Iw) : ∀ (v : List (Letter ℂ 
   | [] => fun e _ _ => by simp [multR]
   | b :: v => fun e h hlen => by
     have hb := h b List.mem_cons_self
-    have hlen' : (v.length : ℝ) ≤ Iw := by simp at hlen; linarith
     have hI0 : 0 < Iw := by linarith
     have hd : 0 < |b.pt.re + ρm + 1| := by linarith
     have hfac : |sgR (e b.intersection_update_fsHerm_neg_one) / (b.pt.re + ρm + 1)| ≤ 3 / Iw := by
@@ -5777,7 +5715,6 @@ theorem ss_weight (x0s x0t q0R : ℝ → ℝ) (ρm L Iw Y : ℝ) (hL2 : 2 < L) (
       csR x0s q0R v e0 * (q0R Y * psR v Y) / (x0s (Y + 1) * phR v e0 (Y + 1)) *
         (Real.exp 7 * x0t Y * x0s (Y + 1) / q0R Y) := by
   have hL : 2 ≤ L := hL2.le
-  have hI0 : 0 < Iw := by linarith
   have hordsep : v.Pairwise fun b c => 2 < |b.pt.re - c.pt.re| :=
     hord.imp fun h => by rw [abs_of_pos (by linarith)]; linarith
   obtain ⟨hm0, hm1⟩ := multR_bounds ρm Iw hI v e1 hρfar hlenI
@@ -5787,7 +5724,6 @@ theorem ss_weight (x0s x0t q0R : ℝ → ℝ) (ρm L Iw Y : ℝ) (hL2 : 2 < L) (
     intro b hb
     have hd : b.pt.re + ρm + 1 ≠ 0 := fun h0 => by
       have := hρfar b hb; rw [h0, abs_zero] at this; linarith
-    have hd0 := hρ0 b hb
     obtain ⟨p1, p2, p3⟩ := hpos b hb
     refine ⟨fun he => ⟨?_, p2.ne'⟩, fun he => ?_, ?_⟩
     · have hr := hrel (b.pt.re + 1)
@@ -6505,8 +6441,6 @@ theorem Ctx.ss_entry (h : Ctx P l α β Lb Ntot w Y s) (q : Qp P.r P.TT) (i i' :
     rw [hρt]
 
   obtain ⟨hf, hg⟩ := h.sides πs
-  have hdist := hf.dist_b h.hl1 h.hlk h.hαβ Y h.hYm.1 h.hYm.2 mm hmm
-  have hdist' := hg.dist_b h.hl1 h.hlk h.hαβ Y h.hYm.1 h.hYm.2 mm hmm
 
   have hNrm : 0 ≤ M.Nrm P mm πs := ((_root_.Formalism.FourierDecayAlt.P.Mx4.nrmFacts P h.hOK mm hmm πs).1 πt hup).1.le
 
@@ -7056,7 +6990,6 @@ theorem Ctx.ss_bound (h : Ctx P l α β Lb Ntot w Y s) (q : Qp P.r P.TT) (v : Io
       have h1 : (1 : ℝ) ≤ Ntot := by exact_mod_cast h.hNpos
       nlinarith [h.h6, h.hL2]
     have hI0 : 0 < β - α := by linarith
-    have hsn : 0 ≤ ∑ x ∈ V, summand P πs Y x := sum_nonneg fun x hx => h.summand_nonneg πs x (hV hx)
     set C := ((univ : Finset (Fin (P.k - 1))).card : ℝ)
     have hC0 : 0 ≤ C := Nat.cast_nonneg _
     have hL0 : 0 ≤ Lb := by linarith [h.hL2]
@@ -7137,7 +7070,6 @@ theorem Ctx.let_bound (h : Ctx P l α β Lb Ntot w Y s) (q : Qp P.r P.TT) (v : I
       rw [hwl']
       have : (w.length : ℝ) + 1 ≤ Ntot := by exact_mod_cast h.hlen
       linarith [h.hNL]
-    have h0 : (0 : ℝ) ≤ (wordP w).length := Nat.cast_nonneg _
     have hsq : ((wordP w).length : ℝ) * (wordP w).length ≤ Lb ^ 2 := by nlinarith
     calc ((wordP w).length : ℝ) * ((wordP w).length * (Real.exp 14 / Lb ^ 2))
         = ((wordP w).length * (wordP w).length) * Real.exp 14 / Lb ^ 2 := by ring
@@ -15890,10 +15822,7 @@ noncomputable section
 
 theorem actA_finsum {P : M.Par} {ι : Type} (s : Finset ι) (x : ι → A P (DQ P)) (j : M.Ty P → SmQ P.r P.TT) :
     actA P (∑ e ∈ s, x e) j = ∑ e ∈ s, actA P (x e) j := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp [F.actA_zero]
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, F.actA_add, ih]
+  apply _root_.Formalism.FourierDecayAlt.P.MAx3.F.actA_sum <;> assumption
 
 theorem ipA_sum_left {P : M.Par} {ι : Type} (s : Finset ι) (f : ι → M.Ty P → SmQ P.r P.TT) (g : M.Ty P → SmQ P.r P.TT)
     (h : ∀ e ∈ s, ∀ π, Integrable (fun q => evQ P (f e π) q * conj (evQ P (g π) q)) (mu0 P.r P.TT)) :
@@ -16089,28 +16018,14 @@ theorem ipA_add_right {f g1 g2 : M.Ty P → SmQ P.r P.TT}
     (h1 : ∀ π, Integrable (fun q => evQ P (f π) q * conj (evQ P (g1 π) q)) (mu0 P.r P.TT))
     (h2 : ∀ π, Integrable (fun q => evQ P (f π) q * conj (evQ P (g2 π) q)) (mu0 P.r P.TT)) :
     ipA P f (g1 + g2) = ipA P f g1 + ipA P f g2 := by
-  rw [ipA_eq, ipA_eq, ipA_eq, ← Finset.sum_add_distrib]
-  refine Finset.sum_congr rfl fun π _ => ?_
-  rw [← integral_add (h1 π) (h2 π)]
-  congr 1; funext q
-  show evQ P (f π) q * conj (evQ P (g1 π) q + evQ P (g2 π) q) = _
-  rw [map_add (f := _)]; ring
+  apply _root_.Formalism.FourierDecayAlt.P.MAx3.Z.ipA_add_right <;> assumption
 
 theorem ipA_smul_right (c : ℂ) (f g : M.Ty P → SmQ P.r P.TT) :
     ipA P f (fun π => c • g π) = conj c * ipA P f g := by
-  rw [ipA_eq, ipA_eq, Finset.mul_sum]
-  refine Finset.sum_congr rfl fun π _ => ?_
-  rw [← integral_const_mul]
-  congr 1; funext q
-  show evQ P (f π) q * conj (c * evQ P (g π) q) = _
-  rw [map_mul]; ring
+  apply _root_.Formalism.FourierDecayAlt.P.MAx3.Z.ipA_smul_right <;> assumption
 
 theorem ipA_zero_right (f : M.Ty P → SmQ P.r P.TT) : ipA P f 0 = 0 := by
-  rw [ipA_eq]
-  refine Finset.sum_eq_zero fun π _ => ?_
-  have : (fun q => evQ P (f π) q * conj (evQ P ((0 : M.Ty P → SmQ P.r P.TT) π) q)) = fun _ => 0 := by
-    funext q; show _ * conj (0 : ℂ) = 0; simp
-  rw [this, integral_zero]
+  apply _root_.Formalism.FourierDecayAlt.P.MAx3.Z.ipA_zero_right <;> assumption
 
 variable {L : LevelData (A P (DQ P)) P.r} {j : M.Ty P → SmQ P.r P.TT}
 variable (hTTp : 0 < P.TT) (hL : IsModelLevel P (DQ P) L) (hLaw : (DQ P).Laws P.TT)
@@ -16141,8 +16056,6 @@ include hTTp hL hLaw
 theorem W_eq : L.ζ * L.ζb * L.GGi = L.D * L.Db * G.Gs P (-1) := by
   have h := WDD hTTp hL hLaw
   obtain ⟨hD, hDi, hDb, hDbi, -⟩ := fnP_D hL
-  have hW : IsFnP (L.ζ * L.ζb * L.GGi) :=
-    isFnP_mul (isFnP_mul (fns_fnP hL (m_ζ L)) (fns_fnP hL (m_ζb L))) (fns_fnP hL (m_GGi L))
   calc L.ζ * L.ζb * L.GGi = L.ζ * L.ζb * L.GGi * ((L.Di * L.D) * (L.Dbi * L.Db)) := by
         rw [Di_D, Dbi_Db, mul_one, mul_one]
     _ = L.ζ * L.ζb * L.GGi * (L.Di * L.Dbi) * (L.D * L.Db) := by

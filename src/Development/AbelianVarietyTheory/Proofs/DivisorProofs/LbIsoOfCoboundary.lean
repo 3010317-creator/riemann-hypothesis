@@ -45,8 +45,6 @@ import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry TopologicalSpace Limits NumberField
@@ -56,8 +54,6 @@ open ReciprocityTheory.ChartRestriction.G.PullbackSections (TanM tv)
 open MonoidalCategory CartesianMonoidalCategory MonObj
 
 namespace GlobalTheory.FlagHodge
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem ev_cocycle {Z : Scheme.{0}} {L : LB Z} (hL : L.IsLB) {S : Type} [CommRing S] (z : Sp S ⟶ Z) (i j k : L.ι)
     (hij : ⊤ ≤ z ⁻¹ᵁ (L.U i ⊓ L.U j)) (hjk : ⊤ ≤ z ⁻¹ᵁ (L.U j ⊓ L.U k)) (hik : ⊤ ≤ z ⁻¹ᵁ (L.U i ⊓ L.U k)) :

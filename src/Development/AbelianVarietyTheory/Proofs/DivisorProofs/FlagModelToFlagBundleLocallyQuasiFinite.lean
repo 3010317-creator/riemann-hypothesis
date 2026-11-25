@@ -46,8 +46,6 @@ import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 open CategoryTheory AlgebraicGeometry TopologicalSpace Limits NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.VarFlag.LQF
@@ -110,7 +108,6 @@ open GlobalTheory.ShFam (EigFrame FlagCpt)
 open ReciprocityTheory.ChartRestriction.G.PullbackSections (TanM tv)
 
 open MonoidalCategory CartesianMonoidalCategory MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l} {c : Coeff l}

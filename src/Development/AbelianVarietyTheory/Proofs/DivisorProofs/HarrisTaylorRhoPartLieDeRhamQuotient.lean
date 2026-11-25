@@ -55,7 +55,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory.UPel.Sm GlobalTheory.Cris GlobalTheory.DeRham
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.HTLieRho
 
@@ -98,8 +97,7 @@ theorem nm_eq_mul (b : GlobalTheory.UPel.HT.Base D R) (β : R →+* k) :
 
 theorem exists_sep (b : GlobalTheory.UPel.HT.Base D R) (β : R →+* k) {i j : Fin D.a} (hij : i ≠ j) :
     ∃ c : 𝓞 D.F, β (b.t i c) ≠ β (b.t j c) := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have hle : Ideal.span (Set.range fun x => b.t i x - b.t j x) ≤ RingHom.ker β := by
     rw [Ideal.span_le]
     rintro _ ⟨x, rfl⟩

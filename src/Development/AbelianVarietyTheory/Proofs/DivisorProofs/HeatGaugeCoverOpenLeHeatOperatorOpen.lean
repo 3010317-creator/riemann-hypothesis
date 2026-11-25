@@ -40,16 +40,12 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory.KS (rsT pbT)
 open GlobalTheory.LogKS (IsField)
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.Heat.Gauge
 

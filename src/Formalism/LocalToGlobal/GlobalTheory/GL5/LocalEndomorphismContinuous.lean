@@ -307,7 +307,6 @@ theorem iwProG : Formalism.L2.G.Triv.IwProG := by
 
 end Iw
 
-open Formalism.UG.P
 
 theorem isProGrp_transfer {G₁ G₂ : Type} [Group G₁] [TopologicalSpace G₁] [Group G₂] [TopologicalSpace G₂]
     (g : ℕ) (θ : G₁ →* G₂) (hθ : Continuous θ) (ψ : G₂ → G₁) (hψ : Continuous ψ)
@@ -534,8 +533,6 @@ theorem split_cont_of_homeo (hE : LocalEndHomeo) (F E : Type) [Field F] [NumberF
         map_smul' := fun c p => by
           rw [Algebra.smul_def, Algebra.smul_def, map_mul, hsym] }
     exact IsModuleTopology.continuous_of_linearMapₛₗ hτ'c L
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem colProG (hE : LocalEndHomeo) {R : Ranks} {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
     [StarRing E] [Algebra F E] {sp : Spaces R F E} {gp : Fin 2 → ℕ}

@@ -42,8 +42,6 @@ import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.IndefiniteRowSideFullHecke.CoefficientSpaceWeights
@@ -98,11 +96,6 @@ def coefRep : GL (Fin n) E →* Module.End c.F (CoefSp Dw c n ha d) :=
 open Classical in
 def coefAct (γ : Matrix (Fin n) (Fin n) E) : CoefSp Dw c n ha d →ₗ[c.F] CoefSp Dw c n ha d :=
   if h : IsUnit γ then coefRep Dw c n ha d h.unit else 0
-
-theorem coefAct_coe (g : GL (Fin n) E) :
-    coefAct Dw c n ha d (g : Matrix (Fin n) (Fin n) E) = coefRep Dw c n ha d g := by
-  unfold coefAct
-  rw [dite_eq_left g.isUnit, IsUnit.unit_of_val_units]
 
 def vacChar (γ : Matrix (Fin n) (Fin n) E) : c.F := ∏ τ : Psi H, embPsi c τ γ.det ^ (-(d τ))
 

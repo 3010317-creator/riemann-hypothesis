@@ -49,7 +49,6 @@ open ReciprocityTheory.ChartRestriction.G.DVR.FlatBC (algX)
 open GlobalTheory.LogPole
 open scoped Classical
 
-set_option autoImplicit false
 noncomputable section
 
 namespace GlobalTheory.LogPole
@@ -73,8 +72,7 @@ theorem ksMatrix_eq_zero_of_ne_conj : ∀ (E : Type) [Field E] [NumberField E] [
   have hd := ((LogKS.mem_balanced_diagonal H.bar
     (fun j x => algX TF.Y.s U.1 (embK c (e.symm j).1 x)) Θ).1 hmem).2
   obtain ⟨x, hx⟩ : ∃ x : 𝓞 E, embK c (e.symm i).1 x ≠ embK c ((starRingEnd ℂ).comp (e.symm k).1) x := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hik
     apply IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E))
     ext y

@@ -60,8 +60,6 @@ import Development.AbelianVarietyTheory.Definitions.ThetaValues.LeCovCoeff
 open NumberField MeasureTheory Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.L2.Theta Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.G.AR.Inst ReciprocityTheory.ChartRestriction.G.AR.Up GlobalTheory.AllWt GlobalTheory.LevGeo GlobalTheory.LevPull GlobalTheory.FieldBC
 open scoped ENNReal
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.LevRead
@@ -119,8 +117,7 @@ theorem exists_open_ne_zero {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V
     obtain ⟨W, hWo, hWU, hWn, hW⟩ := ih
     by_cases h : ∃ x ∈ U, P i x ≠ 0
     · have hw : ∃ w ∈ W, P i w ≠ 0 := by
-        by_contra hno
-        push_neg at hno
+        by_contra! hno
         obtain ⟨x₀, hx₀⟩ := hWn
         have hz := ReciprocityTheory.ChartRestriction.G.PullbackSections.Pf.eq_zero_of_eventually hU hc (hP i) (hWU hx₀)
           (Filter.eventuallyEq_of_mem (hWo.mem_nhds hx₀) (fun y hy => hno y hy))

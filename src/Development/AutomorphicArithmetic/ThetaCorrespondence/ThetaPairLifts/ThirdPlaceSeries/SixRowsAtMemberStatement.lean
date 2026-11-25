@@ -127,8 +127,6 @@ namespace GlobalTheory.Fc.Cv
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.Fc.Cv NumberField
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem colView_of_built {𝒮 : GlobalTheory.Mem.Top.Bl.Slots} {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} {w : ColW B f T} {Z : w.Lt}
     {c : V4.Core K (w.st Z) f T} (b : GlobalTheory.Mem.Top.Bl.Built 𝒮 K w Z c) : ColView w Z c.O.tw c.O.nch :=
   { jets := b.pin.jets
@@ -161,8 +159,6 @@ noncomputable section
 namespace GlobalTheory.Fc.Cv
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.Fc.Cv NumberField
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem overCols_goodE : ∀ (𝒮 : Slots) (R : V4.Slot), OverCols (IsGoodE 𝒮) ∧ OverCols (sAnd (IsGoodE 𝒮) R) := by
   intro 𝒮 R
@@ -197,7 +193,6 @@ section -- clump:auto
 @[expose] public section
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.Fc.Cv NumberField
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.Fc.PeriodEntriesOverColumns
 
@@ -837,8 +832,7 @@ theorem root_mem_intW (D : D7) (w : D.what₂.places.Pl) (r : D.what₂.LL) (n :
   show (0 : WithTop ℤ) ≤ D.what₂.places.val w r
   have h1 : D.what₂.places.val w (r ^ n) = 0 := by rw [h, AddValuation.map_one]
   rw [AddValuation.map_pow] at h1
-  by_contra hneg
-  push_neg at hneg
+  by_contra! hneg
   have : n • D.what₂.places.val w r < 0 := by
     obtain ⟨k, hk⟩ : ∃ k : ℤ, D.what₂.places.val w r = k := by
       rcases h2 : D.what₂.places.val w r with _ | k
@@ -862,8 +856,7 @@ theorem exists_integralPendingObject_symmetricFormsLevel : ∀ (D : D7) (u : D.w
     fun w c => ((B w c : GL (Fin (D.R.N D.R.m - 1)) D.host.E) : Matrix (Fin (D.R.N D.R.m - 1)) (Fin (D.R.N D.R.m - 1)) D.host.E) with hBm
   have hBu : ∀ w c, IsUnit (Bm w c).det := fun w c => (Matrix.isUnit_iff_isUnit_det _).1 (B w c).isUnit
   have hL : Formalism.L2.GlobalTheoryTheory.Br.LowerSymmetricCompatible Tf := ⟨hBe, hMap⟩
-  refine Formalism.L2.GlobalTheoryTheory.Br.brExists_of_rest4S Tf hL Bm hBu (gPof Bm hBu o) ⟨?_, ?_,
-    Formalism.L2.GlobalTheoryTheory.Br.ipV_co_ofS Tf Bm hBu o ho, Formalism.L2.GlobalTheoryTheory.Br.weightedInner_self_eq_sum_coords_of_orthonormal' Tf Bm hBu o (fun τ => Or.inl (ho τ))⟩
+  refine Formalism.L2.GlobalTheoryTheory.Br.brExists_of_rest4S Tf hL Bm hBu (gPof Bm hBu o) ⟨?_, ?_⟩
   · intro w x hx c
     obtain ⟨B', hB'eq, hB'⟩ := exists_isLocBasis_dual D u Ch chOf Tf w c (B w c) (hB w c)
     obtain ⟨n, hn, hχ'⟩ := hχ
@@ -928,7 +921,6 @@ section -- clump:auto
 @[expose] public section
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC Matrix
-attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.Mem.Col2.TC
 
@@ -970,7 +962,6 @@ section -- clump:auto
 @[expose] public section
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.Fc.Cv NumberField
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 
@@ -1014,23 +1005,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC Matrix
 attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Host.cmStar
-
-namespace GlobalTheory.PerDecAtRef
-
-
-open Formalism.BasicNotions in
-theorem vAdd_nonneg_of_int {K : Type} [Field K] [NumberField K] (la : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers K))
-    (a : NumberField.RingOfIntegers K) : 0 ≤ vAdd la (a : K) := by
-  have h : la.valuation K (a : K) ≤ 1 := la.valuation_le_one a
-  unfold vAdd
-  rcases eq_or_ne (la.valuation K (a : K)) 0 with h0 | h0
-  · rw [h0, WithZero.log_zero]; simp
-  · have h1 : WithZero.log (la.valuation K (a : K)) ≤ 0 := by
-      rw [WithZero.log_le_iff_le_exp h0]
-      simpa using h
-    exact neg_nonneg.mpr h1
-
-end GlobalTheory.PerDecAtRef
 
 
 
@@ -1082,7 +1056,7 @@ theorem GlobalTheory.PerDecAtRef.perDec0At_std : ∀ {B : Base} {X : PreX B.toPr
       (funext fun c' => by by_cases h : c' = c <;> simp [h])
   · intro w
     right
-    exact GlobalTheory.PerDecAtRef.vAdd_nonneg_of_int _ a
+    exact Formalism.MainNotions.ThetaNormsAndLinks.vAdd_nonneg_int _ a
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.VAddNonnegOfInt =====
@@ -1124,7 +1098,6 @@ section -- clump:auto
 @[expose] public section
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.Fc.Cv NumberField
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem GlobalTheory.Fc.PeriodEntriesOverColumns.row_aPer0_of_overCols :
     ∀ (Q : V4.Slot), OverCols Q → ∀ (Bd : BdT) (Lk : LkT Bd), PeriodEntriesOverColumns.PeriodAtZeroAtBundlePoints Q Lk := by
@@ -1218,7 +1191,6 @@ section -- clump:auto
 @[expose] public section
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC Matrix
-attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.PerTwClose
 
@@ -1439,7 +1411,6 @@ section -- clump:auto
 @[expose] public section
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC Matrix
-attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.PerTwClose
 
@@ -1477,7 +1448,6 @@ section -- clump:auto
 @[expose] public section
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.Fc.Cv NumberField
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.Fc.PeriodEntriesOverColumns
 
@@ -1520,7 +1490,6 @@ section -- clump:auto
 
 section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.Fc.Cv NumberField
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.Fc
 theorem six_rows_at_member_alt : ∀ (𝒮 : Slots) (Lk : LkT _root_.GlobalTheory.Fc.BundleCondition),
     (Lg1 KPx (IsBuiltE 𝒮) (IsGoodE 𝒮) fun S => PeriodEntriesOverColumns.ReferenceChainEvaluationAtBundlePoints S Lk) ∧

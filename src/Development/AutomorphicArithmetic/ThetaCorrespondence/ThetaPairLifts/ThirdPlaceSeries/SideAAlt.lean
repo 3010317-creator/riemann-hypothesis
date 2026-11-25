@@ -42,7 +42,6 @@ import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Strict
 
 section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl NumberField IsDedekindDomain
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.HeightCounting.Up GlobalTheory.Mem.SRe GlobalTheory.Mem.R3.Rw
 open GlobalTheory.HeightCounting GlobalTheory.Mem.R3.Tr
 noncomputable section
@@ -111,12 +110,9 @@ def Mv.sideA_alt {cf : CharFrame D} {jE : D.host.E →+* Qb} (A : _root_.GlobalT
       (cls := (by with_unfolding_all exact (A.au.cls :)))
       (surj := (by with_unfolding_all exact (A.au.surj :)))
       (iso := (by with_unfolding_all exact (A.au.iso :)))
-      (mult := (by with_unfolding_all exact (A.au.mult :)))
       (sph := (by with_unfolding_all exact (A.au.sph :)))
       (sat := (by with_unfolding_all exact (A.au.sat :)))
       (clsWt := (by with_unfolding_all exact (A.au.clsWt :)))
-      (surjWt := (by with_unfolding_all exact (A.au.surjWt :)))
-      (isoWt := (by with_unfolding_all exact (A.au.isoWt :)))
       (wt := (by with_unfolding_all exact (A.au.wt :)))
       (infW := (by with_unfolding_all exact (A.au.infW :)))
       (locUnr := (by with_unfolding_all exact (A.au.locUnr :)))

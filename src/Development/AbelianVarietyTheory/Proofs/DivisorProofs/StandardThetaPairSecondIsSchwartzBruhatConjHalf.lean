@@ -55,7 +55,6 @@ noncomputable section
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.DivisionValues
 open Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle StandardFirstTheta.GlobalTheory.CompanionTheory.StdFstTheta
 
 variable {D : D7}
@@ -119,11 +118,6 @@ private theorem dualCoord_add (A WW : HSp D) (βA : GL (Fin A.rank) (EAf D)) (β
   unfold dualCoord
   rw [GlobalTheory.PlaceVec.frMapAdj_add, smul_add]
 
-private theorem mul_nsmul_mul_eq_nsmul_mul_nsmul {R : Type} [CommRing R] (k l : ℕ) (x y : R) : (k * l) • (x * y) = (k • x) * (l • y) := by
-  simp only [nsmul_eq_mul]
-  push_cast
-  ring
-
 private theorem inv_aux {R : Type} [CommRing R] (k : ℕ) {x x' : R} (h : x' * x = 1) (y : R) :
     k • y = (k • x') * (x * y) := by
   simp only [nsmul_eq_mul]
@@ -136,7 +130,7 @@ private theorem dualCoord_up (A WW : HSp D) (βA : GL (Fin A.rank) (EAf D)) (βW
   obtain ⟨d, hd, hx⟩ := GlobalTheory.PlaceVec.exists_nsmul_mem_int (eToEAf D D.host.xi0)
   refine ⟨d * k, mul_pos hd hk, fun x hi i j => ?_⟩
   change (d * k) • (eToEAf D D.host.xi0 * frMapAdj A WW βA βW x i j) ∈ OO
-  rw [mul_nsmul_mul_eq_nsmul_mul_nsmul]
+  rw [mul_smul_mul_comm]
   exact mul_mem hx (h x hi i j)
 
 
@@ -219,7 +213,5 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open Formalism.L2.Host (HChar)
 open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 alias _root_.GlobalTheory.T.standardThetaPair_second_isSchwartzBruhat_conjHalf := _root_.GlobalTheory.StdSndSB.main

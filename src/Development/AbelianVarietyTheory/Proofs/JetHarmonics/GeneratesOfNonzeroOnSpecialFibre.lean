@@ -1,10 +1,9 @@
 module
 
-import Mathlib
+import Mathlib.Algebra.Category.AlgCat.Monoidal
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Polynomial.Basic
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.SecTieBaseChange
 public import Formalism.LocalToGlobal.ProjectiveLattices.ChartDirectionsIntegral
 public import Formalism.LocalToGlobal.ProjectiveLattices.FrameCharts
 public import Formalism.LocalToGlobal.ProjectiveLattices.ArcTheta
@@ -297,16 +296,7 @@ theorem isoMaps_iff {X X' : Scheme.{0}} {L : LB X} {L' : LB X'} {F : X' ⟶ X} (
     (σ : LB.Sec L') (s : LB.Sec (L.pull F)) :
     IsoMaps w σ s ↔ ∀ (Z : Scheme.{0}) (r : Z ⟶ X') (z : Z) (j : L.ι) (k : L'.ι), F (r z) ∈ L.U j → r z ∈ L'.U k →
       gs r z _ (s.f (fun _ => j)) = (gw w r z j k).val * gs r z _ (σ.f k) := by
-  constructor
-  · intro h Z r z j k hj hk
-    have hz : r z ∈ (L.pull F).U (fun _ => j) ⊓ L'.U k := ⟨mem_pull.2 hj, hk⟩
-    have a := congrArg (gs r z _) (h (fun _ => j) k)
-    exact (gs_res _ z _ hz _).symm.trans (a.trans ((gs_mul _ z _ hz _ _).trans
-        (congrArg₂ (· * ·) (gs_unit _ z _ hz _) (gs_res _ z _ hz _))))
-  · intro h (i : PUnit → L.ι) k
-    exact fn_ext fun p hp =>
-      (gs_res _ p _ hp _).trans ((h _ (𝟙 _) p (i PUnit.unit) k (mem_pull.1 hp.1) hp.2).trans
-        (Eq.symm ((gs_mul _ p _ hp _ _).trans (congrArg₂ (· * ·) (gs_unit (𝟙 _) p _ hp _) (gs_res _ p _ hp _)))))
+  apply _root_.GlobalTheory.LamT.TieCalc.isoMaps_iff <;> assumption
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l}
@@ -422,15 +412,6 @@ theorem flat_of_injective {A V : Type} [CommRing A] [IsDomain A] [IsPrincipalIde
   have : FaithfulSMul A V := (faithfulSMul_iff_algebraMap_injective A V).2 hf
   show Module.Flat A V
   infer_instance
-
-theorem isTan_iff_isTangent {V : Type} [CommRing V] {G : Over (Sp V)} [GrpObj G] (w : epsR V ⟶ G) :
-    IsTan (V := V) (R := V) (G := G) w ↔ IsTangent w := by
-  have : (1 : ptOver V V ⟶ G).left = η[G].left := by
-    show spMap (algebraMap V V) ≫ _ = _
-    rw [show spMap (algebraMap V V) = 𝟙 _ from Spec.map_id _]
-    exact Category.id_comp _
-  unfold IsTan IsTangent
-  rw [this]
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
 

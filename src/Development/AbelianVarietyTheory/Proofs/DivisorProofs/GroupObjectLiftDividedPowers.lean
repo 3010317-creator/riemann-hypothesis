@@ -44,14 +44,10 @@ import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsHolFormC
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Semi GlobalTheory.Cris GlobalTheory.DeRham GlobalTheory.RealMult GlobalTheory.LatVal GlobalTheory.LatJet
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.RMDeform
 

@@ -84,8 +84,7 @@ theorem exists_transcendental_norm_gt (p : ℕ) [Fact p.Prime] :
   have htr : ∀ y : ℂ_[p], y ∉ algebraicClosure ℚ ℂ_[p] → Transcendental ℚ y :=
     fun y hy h => hy (mem_algebraicClosure_iff.2 h)
   obtain ⟨x, hx⟩ : ∃ x : ℂ_[p], x ∉ algebraicClosure ℚ ℂ_[p] := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have h1 : #ℂ_[p] ≤ #(algebraicClosure ℚ ℂ_[p]) :=
       Cardinal.mk_le_of_injective (f := fun y : ℂ_[p] => (⟨y, h y⟩ : algebraicClosure ℚ ℂ_[p]))
         (fun a b hab => congrArg Subtype.val hab)
@@ -106,8 +105,7 @@ theorem exists_transcendental_norm_gt (p : ℕ) [Fact p.Prime] :
       have : x = (x + (p : ℂ_[p])⁻¹) - (p : ℂ_[p])⁻¹ := by ring
       rw [this]
       exact sub_mem hm (inv_mem (natCast_mem _ p))
-    · by_contra hle
-      push_neg at hle
+    · by_contra! hle
       have e : (p : ℂ_[p])⁻¹ = (x + (p : ℂ_[p])⁻¹) + -x := by ring
       have := IsUltrametricDist.norm_add_le_max (x + (p : ℂ_[p])⁻¹) (-x)
       rw [← e, norm_neg] at this
@@ -181,12 +179,6 @@ open Formalism.MainNotions.GL3Theta Formalism.L2.G.Pend PowerSeries
 section Gen
 
 variable {p : ℕ} [Fact p.Prime]
-
-theorem mem_Wp_of_kur {x : ℂ_[p]} (hx : x ∈ Formalism.L2.Th1.CM.MaximalUnramifiedExtension p) (h1 : ‖x‖ ≤ 1) : x ∈ Wp p := by
-  apply _root_.Formalism.L2.KerInert.GenusOneDatumExistence.mem_Wp_of_kur <;> assumption
-
-theorem logF_eq : logF p = Formalism.L2.Th1.CM.ltLog ℂ_[p] p := by
-  apply _root_.Formalism.L2.KerInert.GenusOneDatumExistence.logF_eq
 
 theorem datum_of_short (h5 : 5 ≤ p) (lam : Formalism.MainNotions.TaylorLogMetric.Qbar →+* ℂ_[p]) (Λ : AddSubgroup ℂ)
     (C : WeierstrassCurve.VariableChange ℂ_[p]) (g2 g3 : ℂ_[p])

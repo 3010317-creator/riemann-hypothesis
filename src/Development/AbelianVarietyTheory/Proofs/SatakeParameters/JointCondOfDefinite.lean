@@ -52,7 +52,6 @@ import Formalism.LocalToGlobal.IndefiniteReal.DoubleCosetOperators.ImaginaryGene
 @[expose] public section
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace GlobalTheory.DesignBC
 
@@ -77,9 +76,6 @@ theorem conj_conj (x : D.host.E) : D.host.conj (D.host.conj x) = x := by
 
 theorem mem_F_iff (x : D.host.E) : x ∈ D.host.F ↔ D.host.conj x = x :=
   D.host.conjE_mem_hostF_iff x
-
-theorem d_ne_zero : ((D.host.d : ℕ) : D.host.E) ≠ 0 :=
-  Nat.cast_ne_zero.mpr D.host.hyp.2.1.ne_zero
 
 end GlobalTheory.DesignBC
 

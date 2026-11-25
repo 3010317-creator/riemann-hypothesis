@@ -304,7 +304,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.Cartier GlobalTheory.TopForm GlobalTheory.Discrepancy
 open IsLocalRing
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.EtaleKlt
 
@@ -361,7 +360,6 @@ open CategoryTheory AlgebraicGeometry TopologicalSpace
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory GlobalTheory.Cartier GlobalTheory.TopForm GlobalTheory.Discrepancy
 
-set_option autoImplicit false
 noncomputable section
 
 namespace GlobalTheory.EtaleKlt
@@ -431,7 +429,6 @@ open CategoryTheory AlgebraicGeometry TopologicalSpace
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory GlobalTheory.Cartier GlobalTheory.TopForm GlobalTheory.Discrepancy
 
-set_option autoImplicit false
 noncomputable section
 
 namespace GlobalTheory.EtaleKlt
@@ -1177,8 +1174,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.Cartier GlobalTheory.TopForm GlobalTheory.Discrepancy
 open scoped TensorProduct
 
-set_option autoImplicit false
-
 namespace GlobalTheory.FunctionFieldEtale
 
 theorem finiteDimensional_fractionRing_of_etale {R S K L : Type} [CommRing R] [IsDomain R]
@@ -1331,7 +1326,6 @@ open CategoryTheory AlgebraicGeometry TopologicalSpace
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory GlobalTheory.Cartier GlobalTheory.TopForm GlobalTheory.Discrepancy
 
-set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.RestrictOrd
 
@@ -1424,8 +1418,7 @@ theorem dvrSubring_factor {V : Type} [CommRing V] [IsDomain V] [IsDiscreteValuat
   have hinf := Ideal.iInf_pow_eq_bot_of_isLocalRing (maximalIdeal V)
     (maximalIdeal.isMaximal V).ne_top
   have : ∃ N : ℕ, s ∉ (maximalIdeal V) ^ N := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have : s ∈ ⨅ i : ℕ, (maximalIdeal V) ^ i := Ideal.mem_iInf.2 hc
     rw [hinf, Ideal.mem_bot] at this
     exact h0 this
@@ -1631,7 +1624,6 @@ open CategoryTheory AlgebraicGeometry TopologicalSpace
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory GlobalTheory.Cartier GlobalTheory.TopForm GlobalTheory.Discrepancy
 
-set_option autoImplicit false
 noncomputable section
 
 namespace GlobalTheory.EtaleKlt
@@ -1707,7 +1699,6 @@ open CategoryTheory AlgebraicGeometry TopologicalSpace
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory GlobalTheory.Cartier GlobalTheory.TopForm GlobalTheory.Discrepancy
 
-set_option autoImplicit false
 noncomputable section
 
 namespace GlobalTheory.EtaleKlt
@@ -1801,7 +1792,6 @@ open CategoryTheory AlgebraicGeometry TopologicalSpace Limits
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory GlobalTheory.Cartier GlobalTheory.TopForm GlobalTheory.Discrepancy
 
-set_option autoImplicit false
 noncomputable section
 
 namespace GlobalTheory.EtaleKlt

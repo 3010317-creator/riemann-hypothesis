@@ -54,10 +54,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.G
 
 open scoped CategoryTheory.Obj
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.LieProj

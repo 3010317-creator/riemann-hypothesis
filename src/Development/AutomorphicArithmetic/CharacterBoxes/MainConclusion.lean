@@ -581,8 +581,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory GlobalTheory.HodgeCoh GlobalTheory.CechDR KaehlerDifferential GlobalTheory.W1
 
-set_option autoImplicit false
-
 namespace UpperTheory.Core
 
 private theorem isClosed_part {X : Scheme.{0}} {M : Type} (W : M → X.Opens)
@@ -957,9 +955,7 @@ theorem UpperTheory.FinalTheorems.everyCharacter_of_row
     (h : UpperTheory.GalStar.Row0b fun h rc => UpperTheory.Zero.LLC.IsRecT h rc) :
     UpperTheory.EveryCharacter :=
   UpperTheory.LiteratureTheorems.every_character_of_literature_of_vWin
-    { caraianiLocalGlobalDual := h
-      localLanglandsExists := UpperTheory.Zero.LLC.recTExists
-      galoisRepOfPolarizedPairLit := h }
+    h UpperTheory.Zero.LLC.recTExists
     (UpperTheory.One.vwin_of_row h)
 
 theorem UpperTheory.FinalTheorems.everyCharacter : UpperTheory.EveryCharacter :=

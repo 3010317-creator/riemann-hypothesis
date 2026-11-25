@@ -87,8 +87,6 @@ open scoped TensorProduct
 open GlobalTheory.AV GlobalTheory.AV.AbVar
 open scoped CategoryTheory.Obj CategoryTheory.MonObj
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.AV.AbVar.DegNorm
@@ -275,8 +273,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped TensorProduct
 open GlobalTheory.AV GlobalTheory.AV.AbVar
 open scoped CategoryTheory.Obj CategoryTheory.MonObj
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.KerUnram
 
@@ -508,7 +504,6 @@ open scoped CategoryTheory.Obj CategoryTheory.MonObj
 namespace GlobalTheory.AVCount
 
 section
-attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem deg_eq_card_ker_of_unram : ∀ (K : Type) [Field K] (A B : AbVar K) (f : A ⟶ B), IsIsogeny f → FormallyUnramified (pullback.snd (Hom.hom f).left η[B.X].left) → deg f = Nat.card (ptMap f).ker := by
   intro K _ A B f hiso hpfu

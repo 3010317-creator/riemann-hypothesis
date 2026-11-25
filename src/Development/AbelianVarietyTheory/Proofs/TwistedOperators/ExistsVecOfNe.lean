@@ -44,7 +44,6 @@ import Formalism.LocalToGlobal.IndefiniteReal.RecTie
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx
 open scoped TensorProduct InnerProductSpace
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3
 
 noncomputable section
@@ -114,8 +113,7 @@ theorem exists_vec_of_ne {M : DSModel V S} {T : MMap M} (hT : T ≠ 0) :
   classical
 
   obtain ⟨v, hv⟩ : ∃ v : M.Vec, T v ≠ 0 := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     exact hT (MultilinearMap.ext fun x => by simp [hno x])
   refine ⟨v, Finset.prod_ne_zero_iff.mpr fun τ _ => ?_⟩
   have hvt : v τ ≠ 0 := fun h0 => hv (T.map_coord_zero τ h0)

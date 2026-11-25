@@ -128,8 +128,7 @@ theorem pull_law : ∀ Λ : AddSubgroup ℂ, IsLat Λ → ∀ t₀ : ℂ, 2 * t�
     ring_nf
     simp
   have hne : ∃ z, sgStar Λ z ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have hd := (GlobalTheory.OddTheta.sgStar_laws Λ hΛ).1.2.1
     rw [show sgStar Λ = fun _ => 0 from funext h] at hd
     simp at hd
@@ -234,8 +233,6 @@ theorem i_ofNat (n : ℕ) [n.AtLeastTwo] : ‖(OfNat.ofNat n : K)‖ ≤ 1 := by
   rwa [Nat.cast_ofNat] at this
 
 theorem i_neg {a : K} (ha : ‖a‖ ≤ 1) : ‖-a‖ ≤ 1 := by rwa [norm_neg]
-
-theorem i_one : ‖(1 : K)‖ ≤ 1 := by simp
 
 theorem b_le (W : WeierstrassCurve K) (h1 : ‖W.a₁‖ ≤ 1) (h2 : ‖W.a₂‖ ≤ 1) (h3 : ‖W.a₃‖ ≤ 1)
     (h4 : ‖W.a₄‖ ≤ 1) (h6 : ‖W.a₆‖ ≤ 1) :

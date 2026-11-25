@@ -209,8 +209,6 @@ end Sig
 
 section SettingDef
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem phi_hform (I : AutInst) (v : InfinitePlace I.F) (x y : Fin I.n → I.E) :
     I.φ v (Formalism.UG.hform (starRingEnd I.E) I.J x y) = hJ (I.ε v) (rv I v x) (rv I v y) := by
   have hP := I.P_spec v
@@ -318,8 +316,7 @@ theorem wuDefinite_holds : WuDefinite X u := by
     rw [← phi_hform, ← ha, X.B.I.φ_over v a, hemb]; rfl
   have hre : ι a = (hJ (X.B.I.ε v) (rv X.B.I v x) (rv X.B.I v x)).re := by rw [← hval]; simp
   rw [hre]
-  by_contra hle
-  push_neg at hle
+  by_contra! hle
 
   let nv : Fin (D.R.rS + 1) → Fin X.B.I.n → ℂ := fun j =>
     if h : j.1 < D.R.rS then rv X.B.I v (X.eR ⟨j.1, h⟩) - rv X.B.I v (X.fR ⟨j.1, h⟩) else rv X.B.I v (X.zR u)

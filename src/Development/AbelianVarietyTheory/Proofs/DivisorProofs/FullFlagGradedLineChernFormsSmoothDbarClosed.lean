@@ -58,8 +58,6 @@ open ReciprocityTheory.L2DbarEstimates (V)
 open GlobalTheory GlobalTheory.Cartier GlobalTheory.ProjVar GlobalTheory.CxPts GlobalTheory.FlagBundle GlobalTheory.HermFrame GlobalTheory.GoodMetric GlobalTheory.CxForm GlobalTheory.LineForm GlobalTheory.ChernCalc
 open scoped Matrix ContDiff ComplexOrder
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.ChernCalc.GradedForm
@@ -92,7 +90,7 @@ theorem isGramPair_lineGram (h : IsMetricFr E H) (x : Root m) :
   set A := (E.nonempty (under y)).choose with hA
   set B := (E.nonempty (under z)).choose with hB
   have hP := (Fr.mem_iff hyz).1 hz
-  have hhol := GlobalTheory.T.isHolomorphicUnitMatrixAt_rational_matrix_values F σ X _ ((B * A⁻¹) x.1) z (fun i j => mem_O_ratOf.1 ((hP x.1).1 i j)) (hP x.1).2.1
+  have hhol := _root_.GlobalTheory.ChernCalc.holUnitAt_ratVal F σ X _ ((B * A⁻¹) x.1) z (fun i j => mem_O_ratOf.1 ((hP x.1).1 i j)) (hP x.1).2.1
     (mem_O_ratOf.1 (hP x.1).2.2.1)
   have hval : ∀ w : CxPts X.str σ, A ∈ E.S (under w) → B ∈ E.S (under w) →
       Par m ⊤ ((B * A⁻¹).map (ratVal · w)) := fun w h1 h2 => by

@@ -150,8 +150,7 @@ private lemma leading_polynomial_eq_zero_iff_lt_weightedOrder {k : Type} [Field 
     · intro h; exact absurd he h
   constructor
   · intro h0
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have heq : MvPowerSeries.weightedOrder (![m, n] : Fin 2 → ℕ) f = D := le_antisymm hlt hD
     obtain ⟨e, hne, hwe⟩ := MvPowerSeries.exists_coeff_ne_zero_and_weightedOrder
       (![m, n] : Fin 2 → ℕ) (f := f) (by rw [heq]; rfl)
@@ -1104,10 +1103,9 @@ theorem infinite_torsion_or_cocharacter : ∀ (k : Type) [Field k] [IsAlgClosed 
   refine (dichotomy_alg (a := a') p hG ?_).imp_left fun (hI : Infinite {x : (algOver k k ⟶ G) // x ^ p = 1}) => ?_
   · rintro ⟨b, hb⟩
     exact hna ⟨b.left, congrArg (fun x => x.left) hb⟩
-  · let e : 𝟙_ (Over (Sp k)) ≅ algOver k k := Over.isoMk (Iso.refl _) (by
-      change 𝟙 _ ≫ spMap (RingHom.id k) = 𝟙 _
-      rw [Category.id_comp]
-      exact Spec.map_id _)
+  · -- `selfIso` is built from `Iso.refl (Sp k)`; with `Iso.refl _` here the kernel is slow to
+    -- identify the underlying schemes of `𝟙_ (Over (Sp k))` and `algOver k k`.
+    let e : 𝟙_ (Over (Sp k)) ≅ algOver k k := (selfIso k).symm
     refine @Infinite.of_injective _ _ hI (fun x : {x : (algOver k k ⟶ G) // x ^ p = 1} =>
       (⟨e.hom ≫ x.1, by rw [← MonObj.comp_pow, x.2, MonObj.comp_one]⟩ : {x : (𝟙_ (Over (Sp k)) ⟶ G) // x ^ p = 1})) ?_
     intro x y hxy

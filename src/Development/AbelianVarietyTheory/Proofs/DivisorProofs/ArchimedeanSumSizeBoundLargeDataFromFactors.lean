@@ -61,7 +61,6 @@ open IsDedekindDomain NumberField Matrix GlobalTheory.ChiGrid GlobalTheory.FunOb
 open Formalism.DivisionValues (vw lw)
 noncomputable section
 namespace GlobalTheory.CompanionTheory.InfAssembly
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.UG
 
 theorem exists_ratFin {D : D7} (V : HSp D) (γ : UR D.sp.cm V.gram) :
@@ -310,8 +309,7 @@ theorem denseRange_embedding {K : Type} [Field K] [NumberField K] [_root_.Number
   have hc : p.IsComplex := IsTotallyComplex.isComplex p
   have hr : ¬ ComplexEmbedding.IsReal p.embedding := InfinitePlace.isComplex_iff.1 hc
   obtain ⟨a, ha⟩ : ∃ a, (starRingEnd ℂ) (p.embedding a) ≠ p.embedding a := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hr (RingHom.ext fun x => h x)
   set α := p.embedding a with hα
   have him : α.im ≠ 0 := fun h0 => ha (Complex.conj_eq_iff_im.2 h0)
@@ -626,7 +624,6 @@ open IsDedekindDomain NumberField Matrix GlobalTheory.ChiGrid GlobalTheory.FunOb
 open Formalism.DivisionValues (vw lw)
 noncomputable section
 namespace GlobalTheory.CompanionTheory.InfAssembly
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.UG
 
 section Place

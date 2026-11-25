@@ -53,7 +53,6 @@ import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsSplitChartSpli
 
 open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes GlobalTheory.AdelicU GlobalTheory.SmGL GlobalTheory.PRep GlobalTheory.SplitWeil GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
   GlobalTheory.UAut GlobalTheory.SiegelSet GlobalTheory.ThK.SquareIntegrability GlobalTheory.LFun.SplitTie
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 noncomputable section
 
@@ -204,8 +203,7 @@ theorem mem_levi_of (hcm : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : GlobalTheo
   simp only [GlobalTheory.StdPar.levi, Subgroup.mem_iInf, Subgroup.mem_inf]
   intro k hk
   have hcase : k.val < l ∨ l + d ≤ k.val + 1 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hS k hc.1 (by omega) hk
   have hYX := yx_eq_one hcm hJ hW
   constructor

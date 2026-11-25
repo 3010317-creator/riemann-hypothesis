@@ -51,7 +51,6 @@ open CategoryTheory AlgebraicGeometry TopologicalSpace Filter Topology
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory GlobalTheory.ArInt GlobalTheory.CxPts GlobalTheory.Cartier GlobalTheory.VolBr
 
-set_option autoImplicit false
 noncomputable section
 open ReciprocityTheory.ChartRestriction.G.DVR.FlatBC (algX)
 
@@ -96,8 +95,7 @@ theorem exists_continuous_read : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [I
     obtain ⟨σ₀, hσ₀⟩ : ∃ σ₀, x₀.comp (algX p U) = σ₀ := ⟨_, rfl⟩
     have hN : {x : Γ(X, U) →+* ℂ | x.comp (algX p U) = σ₀} ∈ 𝓝 x₀ := by
       have hex : ∀ τ : k →+* ℂ, τ ≠ σ₀ → ∃ a, τ a ≠ σ₀ a := fun τ h => by
-        by_contra hc
-        push_neg at hc
+        by_contra! hc
         exact h (RingHom.ext hc)
       choose! a ha using hex
       have hopen : ∀ τ : k →+* ℂ,

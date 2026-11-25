@@ -42,8 +42,6 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.IsEtCoord
 
 @[expose] public section
 
-set_option autoImplicit false
-
 open CategoryTheory Limits AlgebraicGeometry TopologicalSpace Filter
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.AnForm.R
 open ReciprocityTheory.ChartRestriction.G.Out (nonzeroLocus)
@@ -51,7 +49,6 @@ open GlobalTheory GlobalTheory.Cartier GlobalTheory.TopForm GlobalTheory.CechPic
 
 namespace GlobalTheory.Discrepancy
 
-set_option autoImplicit false in
 open CategoryTheory Limits AlgebraicGeometry TopologicalSpace Filter in
 private theorem regAt_functionFieldMap_of_regAt {X Y : Scheme} [IsIntegral X]
     [IsIntegral Y] (s : Y ⟶ X) [IsDominant s] {y : Y} {f : X.functionField}
@@ -62,7 +59,6 @@ private theorem regAt_functionFieldMap_of_regAt {X Y : Scheme} [IsIntegral X]
     rw [← _root_.GlobalTheory.functionFieldMap_algebraMap, ha]⟩
 
 
-set_option autoImplicit false in
 open CategoryTheory Limits AlgebraicGeometry TopologicalSpace Filter in
 theorem _root_.GlobalTheory.Discrepancy.pullCart_supp_and_eff : ∀ (X Y : Scheme.{0}) [IsIntegral X]
     [IsIntegral Y] (s : Y ⟶ X) [IsDominant s] (D : _root_.GlobalTheory.Cartier.CartierDiv X),

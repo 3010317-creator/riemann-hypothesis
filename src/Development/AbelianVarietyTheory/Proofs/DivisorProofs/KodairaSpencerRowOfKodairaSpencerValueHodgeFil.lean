@@ -57,13 +57,9 @@ open ReciprocityTheory.ChartRestriction.G.DVR.FlatBC (algX)
 open GlobalTheory.LogPole
 open scoped Classical
 
-set_option autoImplicit false
-
 noncomputable section
 
 open scoped CategoryTheory.MonObj
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.KSRowsFil
 

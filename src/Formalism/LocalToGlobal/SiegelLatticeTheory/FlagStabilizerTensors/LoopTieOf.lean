@@ -15,8 +15,6 @@ open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions Form
 
 namespace Formalism.L2.SG.LoopTieOf
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 section Pins
 
 variable {D : D7} {X : HidaSetting D}
@@ -357,8 +355,7 @@ theorem rowsSC_at (T : TermTie D) (hJ : JtPin hF hI T) (hW : WRowPin hF hI T) (h
   have hC0p : 0 < C0 := by linarith [hwin.1]
   have hdu0 : 0 ≤ (D.duS u : ℝ) := le_trans (div_pos (mul_pos (zpow_pos hGs _) hDs) hC0p).le hwu
   have hR : 0 ≤ Formalism.MainNotions.BridgeLemma.rDD D u' := by
-    by_contra hneg
-    push_neg at hneg
+    by_contra! hneg
     have : C0 * Formalism.MainNotions.BridgeLemma.rDD D u' * GamS D large₂ ^ 2 < 0 :=
       mul_neg_of_neg_of_pos (mul_neg_of_pos_of_neg hC0p hneg) (pow_pos hGs 2)
     linarith
@@ -447,7 +444,6 @@ end Fam
 
 section Parts
 
-open MeasureTheory
 
 structure LoopRowsDat (D : D7) (T : TermTie D) (u u' : D.what₂.Word) where
   F0 : FlagG (VS D) D.R.rS (Tu D u : D.host.E)

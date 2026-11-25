@@ -53,8 +53,6 @@ public import Mathlib.RingTheory.WittVector.Identities
 
 open CategoryTheory TensorProduct MvPowerSeries GlobalTheory GlobalTheory.PDiv GlobalTheory.PDivGroup GlobalTheory.Katz
 
-set_option autoImplicit false
-
 namespace GlobalTheory.LazardOne
 
 theorem choose_pow_mul_add_modEq_one (p : ℕ) [hp : Fact p.Prime] :
@@ -211,8 +209,7 @@ theorem exists_lift : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP k
       refine ⟨1, one_pos, Or.inl rfl, fun _ _ _ => one_dvd _, ?_⟩
       refine exists_scalar p N a hsym hrel 1 one_pos (fun _ _ _ => one_dvd _) r m hNe hm2 ?_ ?_
       · intro u hu huK
-        by_contra h
-        push_neg at h
+        by_contra! h
         have := Nat.dvd_add h.2 h.1
         rw [Nat.sub_add_cancel huK.le] at this
         exact hm this

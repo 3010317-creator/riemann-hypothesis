@@ -59,7 +59,6 @@ import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.Ha
 @[expose] public section
 
 open NumberField IsDedekindDomain ValuativeRel Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.LocGL GlobalTheory.WeilDeligne GlobalTheory.LocLanglands
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 open Pointwise
 noncomputable section
@@ -189,8 +188,7 @@ theorem ramificationIdx_eq_one {K Ω L : Type} [Field K] [NumberField K] [Field 
     rw [h0] at hpos
     simp at hpos
   have hle : w.asIdeal.ramificationIdx (𝓞 K) ≤ 1 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have : 2 * P.ramificationIdx (𝓞 L) ≤ w.asIdeal.ramificationIdx (𝓞 K) * P.ramificationIdx (𝓞 L) :=
       Nat.mul_le_mul_right _ hc
     omega

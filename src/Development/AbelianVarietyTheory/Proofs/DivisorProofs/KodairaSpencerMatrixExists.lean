@@ -49,16 +49,12 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
-set_option autoImplicit false
-
 
 noncomputable section
 
 open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
 open AlgebraicGeometry CategoryTheory GlobalTheory.DeRham GlobalTheory.Cris
 open scoped Classical
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.KSExist
 

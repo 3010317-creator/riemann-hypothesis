@@ -66,7 +66,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Unf GlobalTheory.LatPair GlobalTheory.SplitWeil ValuativeRel IsLocalRing
 open GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter (compFin ExtUnramAt CharUnramAt)
 open scoped TensorProduct Pointwise
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.FinPl.SrcExact
 
@@ -82,8 +81,7 @@ theorem length_residue : Module.length 𝒪[k] 𝓀[k] = 1 := by
 theorem fn_surjective (P : Pair k n') : Function.Surjective P.fn := by
   intro a
   obtain ⟨x, hx⟩ : ∃ x, P.fn x ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact P.fn_ne (LinearMap.ext h)
   obtain ⟨s, hs⟩ := residue_surjective (R := 𝒪[k]) (a * (P.fn x)⁻¹)
   refine ⟨s • x, ?_⟩

@@ -55,8 +55,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.C
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry Limits NumberField TopologicalSpace
@@ -65,8 +63,6 @@ open ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestrictio
 namespace GlobalTheory.ShFam.Cell
 
 open scoped CategoryTheory.MonObj
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 section Mat
 

@@ -5,7 +5,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.
 
 @[expose] public section
 
-set_option autoImplicit false
 set_option linter.unusedSimpArgs false
 
 noncomputable section
@@ -71,8 +70,7 @@ private theorem cc_ev_lemma {m n : ℕ} {a : Fin m → Pt R n d} (ha : CZ a) (f 
   · simp
   · intro e he
     obtain ⟨p, hp⟩ : ∃ p, e p ≠ 0 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact he (Finsupp.ext hc)
     rw [Finsupp.prod, map_prod, Finset.prod_eq_zero (Finsupp.mem_support_iff.2 hp), smul_zero]
     simp [ha p.1 p.2, hp]

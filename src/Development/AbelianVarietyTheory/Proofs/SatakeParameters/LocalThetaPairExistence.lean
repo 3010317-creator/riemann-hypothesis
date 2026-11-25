@@ -49,7 +49,6 @@ open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.DivisionVa
 open Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx
 open scoped TensorProduct InnerProductSpace
 open GlobalTheory.Hk3
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.Hk3
 
@@ -338,8 +337,7 @@ theorem locVac_rel_indep : ∀ (L : Type) [Field L] [CharZero L] [Valued L (With
       (fun y => ρ y.out s) (fun y u => heig s hvac y.out u u.2) I
       (by
         intro y _ y' _ hyy
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         apply hyy
         have hm := hdist y.out y'.out (fun u hu => hcon ⟨u, hu⟩)
         rw [← QuotientAddGroup.out_eq' y, ← QuotientAddGroup.out_eq' y', QuotientAddGroup.eq_iff_sub_mem]

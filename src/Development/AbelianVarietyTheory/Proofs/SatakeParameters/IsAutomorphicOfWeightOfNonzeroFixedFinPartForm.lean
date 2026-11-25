@@ -44,7 +44,6 @@ noncomputable section
 
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N
 open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.Pst GlobalTheory.LocLanglands GlobalTheory.HeckeGal GlobalTheory.LocGL GlobalTheory.GalOfCusp
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open GlobalTheory.GalCut GlobalTheory.UnitaryBC GlobalTheory.Cong GlobalTheory.DefU GlobalTheory.CuspRep GlobalTheory.PRep
 
 open GlobalTheory.DefU
@@ -67,8 +66,7 @@ theorem ofType_of_finPart_fixed : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       exact h2
   · have hne : f.1 ≠ 0 := fun h => hf0 (Subtype.ext h)
     obtain ⟨v, hv⟩ : ∃ v, f.1 v ≠ 0 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact hne (LinearMap.ext hc)
     refine ⟨f.1 v, AutSub.mem_finPart.1 hf v, hv, fun x hx => ?_⟩
     funext g

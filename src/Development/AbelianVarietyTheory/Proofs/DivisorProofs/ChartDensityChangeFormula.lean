@@ -43,8 +43,6 @@ import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open MeasureTheory Set Topology
@@ -72,7 +70,6 @@ variable {A B ι κ : Type} [TopologicalSpace A] [TopologicalSpace B] [T2Space A
   {e' : κ → OpenPartialHomeomorph B (V n)} {ρ' : κ → B → ℝ≥0∞} {m : B → A}
 
 
-set_option autoImplicit false in
 open MeasureTheory Set Topology in
 open scoped ENNReal in
 variable {n : ℕ} in

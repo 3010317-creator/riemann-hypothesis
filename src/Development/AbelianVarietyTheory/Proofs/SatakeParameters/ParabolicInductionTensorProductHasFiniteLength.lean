@@ -57,7 +57,6 @@ import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
 @[expose] public section
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil
 
 
@@ -94,8 +93,7 @@ theorem exists_mem_adjoin_eq {G V : Type} [Group G] [AddCommGroup V] [Module ℂ
     rw [isSimpleModule_iff]
     refine { exists_pair_ne := ?_, eq_bot_or_eq_top := fun U => ?_ }
     · obtain ⟨x, hx⟩ : ∃ x : V, x ≠ 0 := by
-        by_contra h
-        push_neg at h
+        by_contra! h
         apply (bot_ne_top : (⊥ : Subrepresentation π) ≠ ⊤)
         ext v
         simp [h v]
@@ -222,8 +220,7 @@ theorem piTensor_isIrreducible_of_schur {α : Type} [Finite α] {Γ X : α → T
     let b := fun a => Module.Free.chooseBasis ℂ (X a)
     let B := Basis.piTensorProduct b
     obtain ⟨p, hp⟩ : ∃ p, B.repr x p ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hx0 (B.repr.map_eq_zero_iff.1 (Finsupp.ext hcon))
     let f : ∀ a, Module.End ℂ (X a) := fun a => ((b a).coord (p a)).smulRight (v a)
     have hT : ∀ a, ∃ T ∈ Asub a, ∀ y ∈ (B.repr x).support.image (fun q => b a (q a)), T y = f a y :=

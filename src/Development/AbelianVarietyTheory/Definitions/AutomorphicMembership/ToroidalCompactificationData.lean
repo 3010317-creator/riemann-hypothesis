@@ -41,8 +41,6 @@ import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
@@ -51,8 +49,6 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestric
 open scoped ComplexOrder
 
 namespace GlobalTheory.ShFam
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 section Domain
 
@@ -146,14 +142,6 @@ def ToroidalCompactificationData.gramOm (k : s.Comp) (f : (s.fd k).dom) (t : D.w
   ((hodgeC (s.fd k) (s.lab L k) t : ℂ) ^ 2) •
     (dualGram (x.gram (s.framePt k f) (s.lieFrame k f) (conjEmb (L.ψ t).1))).submatrix
       (fun a => Fin.cast (S.mult_conj L t).symm a.rev) (fun a => Fin.cast (S.mult_conj L t).symm a.rev)
-
-def ToroidalCompactificationData.metW (k : s.Comp) (z : Pt D.what₂.Tau j (N - j)) (t : D.what₂.Tau) : Matrix (Fin j) (Fin j) ℂ :=
-  ((coW (s.fd k) s.j_le (s.frameOver L k z).1 (s.lab L k t))⁻¹)ᴴ * x.gramW L k (s.frameOver L k z) t *
-    (coW (s.fd k) s.j_le (s.frameOver L k z).1 (s.lab L k t))⁻¹
-
-def ToroidalCompactificationData.metOm (k : s.Comp) (z : Pt D.what₂.Tau j (N - j)) (t : D.what₂.Tau) : Matrix (Fin (N - j)) (Fin (N - j)) ℂ :=
-  ((coOm (s.fd k) s.j_le (s.frameOver L k z).1 (s.lab L k t))⁻¹)ᴴ * x.gramOm L k (s.frameOver L k z) t *
-    (coOm (s.fd k) s.j_le (s.frameOver L k z).1 (s.lab L k t))⁻¹
 
 structure IsBdOf (B : s.Bd L) : Prop where
   m_eq : ∀ k, (B k).m = x.m

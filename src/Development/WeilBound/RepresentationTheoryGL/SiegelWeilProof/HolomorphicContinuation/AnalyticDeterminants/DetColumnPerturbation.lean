@@ -60,7 +60,7 @@ open scoped ContDiff
 
 namespace PositivityTheory.Rg.Sw.LVs.CK
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
+open scoped Matrix.Norms.Elementwise
 
 variable {N : ℕ}
 
@@ -75,14 +75,6 @@ def colQ (X : Matrix (Fin N) (Fin (N + 1)) ℂ) (c : Fin N) : Matrix (Fin N) (Fi
 
 @[simp] theorem phiF_succ_row (X : Matrix (Fin N) (Fin (N + 1)) ℂ) (k : Fin N) (j : Fin (N + 1)) :
     phiF X k.succ j = X k j := rfl
-
-def phiL (N : ℕ) : Matrix (Fin N) (Fin (N + 1)) ℂ →L[ℂ] Matrix (Fin (N + 1)) (Fin (N + 1)) ℂ :=
-  LinearMap.toContinuousLinearMap
-    { toFun := phiF
-      map_add' := fun X Y => by
-        ext i j; refine Fin.cases ?_ (fun k => ?_) i <;> simp
-      map_smul' := fun a X => by
-        ext i j; refine Fin.cases ?_ (fun k => ?_) i <;> simp }
 
 def piL (N : ℕ) : Matrix (Fin N) (Fin (N + 1)) ℂ →L[ℂ] Matrix (Fin N) (Fin N) ℂ :=
   LinearMap.toContinuousLinearMap

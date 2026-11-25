@@ -42,8 +42,6 @@ import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open AlgebraicGeometry CategoryTheory Limits NumberField IsDedekindDomain
@@ -52,8 +50,6 @@ open Formalism.MainNotions.DIV.Cons (intO)
 open MonObj
 
 namespace GlobalTheory.LineNorm
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 section Models
 

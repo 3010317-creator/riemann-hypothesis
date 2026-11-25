@@ -665,10 +665,10 @@ theorem decomp (Ξ : Sub1 k m) (hΞ : IsLat Ξ) (y : V)
   have hL : ∀ t, t ∈ L ↔ ∀ ξ ∈ Ξ, ψ (ξ ⬝ᵥ t) = 1 := fun t => forall₂_congr fun ξ _ => by rw [dotProduct_comm]
   have hUo : IsOpen ((L ⊓ A : Sub1 k m) : Set (V1 k m)) := by
     rw [AddSubgroup.coe_inf]; exact (annLat ψ hψ hψ1 hΞ).2.inter hA.2
-  obtain ⟨T, hT, hTr⟩ := GlobalTheory.T.exists_finite_coset_representatives A (L ⊓ A) hA.1 hUo inf_le_right
+  obtain ⟨T, hT, hTr⟩ := GlobalTheory.T.exists_finite_coset_representatives A (L ⊓ A) hA.1 hUo
   have hΞ'o : IsOpen ((Ξ ⊓ ann ψ A : Sub1 k m) : Set (V1 k m)) := by
     rw [AddSubgroup.coe_inf]; exact hΞ.2.inter (annLat ψ hψ hψ1 hA).2
-  obtain ⟨R, hR, hRtr⟩ := GlobalTheory.T.exists_finite_coset_representatives Ξ (Ξ ⊓ ann ψ A) hΞ.1 hΞ'o inf_le_left
+  obtain ⟨R, hR, hRtr⟩ := GlobalTheory.T.exists_finite_coset_representatives Ξ (Ξ ⊓ ann ψ A) hΞ.1 hΞ'o
   have hdata : ∀ ξ ∈ R, AvgData ψ h π ξ A y (L ⊓ A, T) := fun ξ hξ =>
     ⟨inf_le_right, hUo, fun a ha => hy a ((hL a).1 (AddSubgroup.mem_inf.1 ha).1),
       fun a ha => (hL a).1 (AddSubgroup.mem_inf.1 ha).1 ξ (hR ξ hξ), hT, hTr⟩
@@ -704,7 +704,7 @@ theorem decomp (Ξ : Sub1 k m) (hΞ : IsLat Ξ) (y : V)
 theorem annulus_null {A₀ : Sub1 k m} {B' : SForm V} (hA₀ : IsLat A₀) (hd : IsDens ψ h π A₀ B B')
     (hB'0 : ∀ v, B' v v = 0) (Ξ : Sub1 k m) (hΞ : IsLat Ξ) (v : V)
     (hv : ∀ t, (∀ ξ ∈ Ξ, ψ (ξ ⬝ᵥ t) = 1) → π (cE h t) v = v) {A : Sub1 k m} (hA : IsLat A) (ξ : V1 k m)
-    (_hξΞ : ξ ∈ Ξ) (hξA : ξ ∉ ann ψ A) : avg ψ h π ξ A v ∈ LinearMap.ker B := by
+    (hξA : ξ ∉ ann ψ A) : avg ψ h π ξ A v ∈ LinearMap.ker B := by
   classical
   have havgK : ∀ (η : V1 k m) {L : Sub1 k m}, IsLat L → ∀ {x : V}, x ∈ LinearMap.ker B →
       avg ψ h π η L x ∈ LinearMap.ker B := fun η {_} hL {_} hx => by
@@ -779,7 +779,7 @@ theorem diag_eq {A₀ : Sub1 k m} {B' : SForm V} (hA₀ : IsLat A₀) (hd : IsDe
     have := (AddSubgroup.mem_inf.1 hξ₀H).2; rw [zero_sub] at this; simpa using (ann ψ A).neg_mem this
   have hn : ∑ ξ ∈ R.erase ξ₀, avg ψ h π ξ A v ∈ LinearMap.ker B := by
     refine Submodule.sum_mem _ fun ξ hξ => ?_; obtain ⟨hξne, hξR⟩ := Finset.mem_erase.1 hξ
-    refine annulus_null hψ hψ1 hπ hpsd hB hA₀ hd hB'0 _ hΞ v hv hA ξ (hR ξ hξR) fun hξA => hξne ?_
+    refine annulus_null hψ hψ1 hπ hpsd hB hA₀ hd hB'0 _ hΞ v hv hA ξ fun hξA => hξne ?_
     exact huniq ξ ⟨hξR, by rw [zero_sub]; exact AddSubgroup.mem_inf.2 ⟨neg_mem (hR ξ hξR), neg_mem hξA⟩⟩
   have hP : avg ψ h π ξ₀ A v = P0 h π A v := by
     rw [avg_congr_char h π ψ hψ hπ hA (ξ' := 0) (fun a ha => by rw [hξ₀A a ha, zero_dotProduct,

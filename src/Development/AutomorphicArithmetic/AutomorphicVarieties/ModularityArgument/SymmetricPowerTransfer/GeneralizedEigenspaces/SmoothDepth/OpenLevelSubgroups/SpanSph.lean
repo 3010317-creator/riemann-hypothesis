@@ -50,7 +50,6 @@ open NumberField IsDedekindDomain ValuativeRel GlobalTheory.CuspRep GlobalTheory
 open UpperTheory.V.W (Plc Lp)
 open UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Dict
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open UpperTheory.V.Z.Sym.Al
 
 namespace UpperTheory.V.Z.Sym.Al.SphericalSpanAlt
@@ -142,8 +141,7 @@ theorem UpperTheory.V.Z.Sym.Al.spanSph :
   obtain ⟨ψ, hψ, hψ0, hψK⟩ := hw
   obtain ⟨g0, hg0⟩ := Function.ne_iff.1 h0
   obtain ⟨f, hf⟩ : ∃ f : V →ₗ[ℂ] ℂ, f (φ g0) ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact hg0 ((Module.forall_dual_apply_eq_zero_iff ℂ _).1 hcon)
   have hhπ : f ∘ φ ∈ π := hc f
   have hh0 : f ∘ φ ≠ 0 := fun e => hf (congrFun e g0)

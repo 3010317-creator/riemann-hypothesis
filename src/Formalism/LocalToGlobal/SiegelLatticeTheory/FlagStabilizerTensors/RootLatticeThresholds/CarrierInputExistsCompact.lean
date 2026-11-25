@@ -268,7 +268,6 @@ end Formalism.FourierDecayAlt.P
 
 namespace Formalism.FourierDecayAlt.P
 
-open Formalism.FourierDecayAlt
 open scoped ComplexOrder
 
 theorem theorem_P_module_compact_support : Formalism.FourierDecayAlt.JC.ThmPModuleOfActualCpt := by
@@ -580,7 +579,6 @@ end Formalism.FourierDecayAlt.P.RealInputsCompactSupport
 
 namespace Formalism.FourierDecayAlt.P
 
-open Formalism.FourierDecayAlt
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto
@@ -647,7 +645,7 @@ namespace Formalism.L2.SG.Pf.CarrierT
 
 open Formalism.L2.SG.RealObj
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar instCMT2
+attribute [local instance] instCMT2
 
 end Formalism.L2.SG.Pf.CarrierT
 

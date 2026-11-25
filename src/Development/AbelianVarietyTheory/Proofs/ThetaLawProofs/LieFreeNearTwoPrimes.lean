@@ -48,8 +48,6 @@ import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.LieTwo
@@ -63,8 +61,6 @@ open ReciprocityTheory.ChartRestriction.G.Chart (sp spMap spMap_comp spMap_id co
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp epsR IsTangent IsLieComb IsLieBasis)
 open TrivSqZeroExt (inl inr)
 open GlobalTheory.SqZero GlobalTheory.LieBaseChange
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 variable {R : Type} [CommRing R] {G : Over (Spec (CommRingCat.of R))} [GrpObj G] [IsCommMonObj G]
   {n : ℕ} {S T : Type} [CommRing S] [Algebra R S] [CommRing T] [Algebra R T]
@@ -290,7 +286,6 @@ end SlopeTestRemainingChoices
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open scoped CategoryTheory.Obj TensorProduct
-attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem lie_free_near_two_primes :
     ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (n : ℕ),

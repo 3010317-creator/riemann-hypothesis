@@ -1,5 +1,6 @@
 module
 
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.RecursionWithDensities
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.KernelNonzeroModulusDeterminantEq
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FirstKernelExplicitFormula
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.GramKernelHermitian
@@ -8,64 +9,15 @@ import Formalism.DoubleCosetMeasures.LowerUnipotentOrbits.IsOpenIsIntSet
 import Formalism.DoubleCosetMeasures.LowerUnipotentOrbits.MulInvBlockDiagApplySameBlock
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.IntegralLatticeRefinementIdentity
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.KernelQuotientFinite
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Presheaf
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
 noncomputable section
 
-open Matrix Formalism.DoubleCosetMeasures Formalism.FourierDecayAlt.A5 Formalism.FourierDecayAlt.A6 Formalism.FourierDecayAlt.P.A5x5 Formalism.FourierDecayAlt.P.A5x8 Formalism.FourierDecayAlt.P.A6x8 Filter Topology
+open Matrix Formalism.DoubleCosetMeasures Formalism.FourierDecayAlt.A5 Formalism.FourierDecayAlt.A6 Formalism.FourierDecayAlt.P.A5x5 Formalism.FourierDecayAlt.P.A5x8 Formalism.FourierDecayAlt.P.A6x8 Filter Topology Formalism.FourierDecayAlt.P.AdicNeighbourhood
 
 namespace Formalism.FourierDecayAlt.P.OrbitalIntegralReduction
 
@@ -426,7 +378,7 @@ theorem tk_fin_box {ι : Type} [Finite ι] (Λ : AddSubgroup K) (hΛ : IsOpen (�
   intro y hy i
   exact hy i
 
-theorem bx_sum (_hD : LocalDatum K R ψ) {ι κ : Type} [Fintype ι] [Fintype κ] {Λ L : AddSubgroup K}
+theorem bx_sum {ι κ : Type} [Fintype ι] [Fintype κ] {Λ L : AddSubgroup K}
     (hΛ : IsLat Λ) (hL : IsLat L) (f : (ι ⊕ κ → K) → ℂ) (hs : BSupp L f) :
     bx R Λ (ι ⊕ κ) f = bx R Λ ι (fun a => bx R Λ κ (fun b => f (Sum.elim a b))) := by
   unfold bx
@@ -530,14 +482,7 @@ theorem tk_out_subG (M : AddSubgroup V) (x : V) : (Quotient.out (x : V ⧸ M) : 
   rw [hh]; simp
 
 theorem tk_mk_eqG (M : AddSubgroup V) (x y : V) : ((x : V ⧸ M) = (y : V ⧸ M)) ↔ x - y ∈ M := by
-  rw [QuotientAddGroup.eq]
-  constructor
-  · intro h
-    have := M.neg_mem h
-    simpa [sub_eq_add_neg, add_comm] using this
-  · intro h
-    have := M.neg_mem h
-    simpa [sub_eq_add_neg, add_comm] using this
+  apply _root_.Formalism.FourierDecayAlt.P.RecursionWithDensities.A1.mk_eq_iff <;> assumption
 
 theorem tk_out_sub_mem {M' M : AddSubgroup V} (h : M' ≤ M) (y : V ⧸ M') :
     (Quotient.out (AddSubgroup.quotientEquivProdOfLE h y).1 : V) - (Quotient.out y : V) ∈ M := by
@@ -3169,12 +3114,12 @@ theorem fa_main (hD : LocalDatum K R ψ) (hC : Cst R ϖ L₀ Λ₀ Q a b) (hL₀
     rintro (i | p)
     · exact (h1 i).1
     · exact h2 p
-  have h7 := bx_sum hD (ι := Pr (m + 1)) (κ := Fin m) hlatt hL₀ (fun w => Jh (fun k => w (ee k))) (by
+  have h7 := bx_sum (R := R) (ι := Pr (m + 1)) (κ := Fin m) hlatt hL₀ (fun w => Jh (fun k => w (ee k))) (by
     intro w hw j
     obtain ⟨k, rfl⟩ := fa_ee_bij.2 j
     exact hsJh (fun k => w (ee k)) hw k)
   have h8 := bx_equiv (R := R) (Equiv.ofBijective ee (fa_ee_bij (m := m))).symm Λt Jh
-  have h9 := bx_sum hD (ι := Fin m) (κ := Pr (m + 1)) hlatt hL₀ Jh hsJh
+  have h9 := bx_sum (R := R) (ι := Fin m) (κ := Pr (m + 1)) hlatt hL₀ Jh hsJh
   have e7 : bx R Λt (Pr (m + 1)) f = bx R Λt (Fin m ⊕ Pr (m + 1)) Jh := by
     rw [h8]
     exact h7.symm

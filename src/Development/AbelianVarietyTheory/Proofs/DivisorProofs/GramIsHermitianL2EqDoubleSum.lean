@@ -43,8 +43,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open Filter Topology MeasureTheory GlobalTheory.HSAmp
@@ -52,7 +50,6 @@ open scoped ComplexOrder Matrix
 
 namespace GlobalTheory.HSAmp
 
-set_option autoImplicit false in
 open Filter Topology MeasureTheory in
 open scoped ComplexOrder Matrix in
 private lemma ofReal_norm_sum_mul_sq_eq_double_sum_conj {ι : Type} [Fintype ι] (c w : ι → ℂ) :
@@ -65,7 +62,6 @@ private lemma ofReal_norm_sum_mul_sq_eq_double_sum_conj {ι : Type} [Fintype ι]
   ring
 
 
-set_option autoImplicit false in
 open Filter Topology MeasureTheory in
 open scoped ComplexOrder Matrix in
 theorem _root_.GlobalTheory.HSAmp.gram_isHermitian_and_l2_eq_quadratic_form (S : Type) (Y : S → Type)

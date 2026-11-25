@@ -9,15 +9,11 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.Siegel
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits MonoidalCategory CartesianMonoidalCategory MonObj
   AlgebraicGeometry
 open scoped CategoryTheory.Obj
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace ReciprocityTheory.ChartRestriction.G.Out.GtBCPf
 
@@ -101,8 +97,6 @@ instance commB : IsCommMonObj E.B := E.isAbelian.comm
 instance commB' : IsCommMonObj ((Over.pullback f).obj E.B) := Functor.isCommMonObj_obj
 
 def mB : CubeMap ((Over.pullback f).obj E.B) E.B := cubeMapOf (isGrpPullback_pullback E.B f)
-
-theorem mB_F : (mB f E).F = pullback.fst E.B.hom f := rfl
 
 def O' (χ : E.X) : RigLB ((Over.pullback f).obj E.B) :=
   (mB f E).rigLB (E.O χ) (LB.isLB_pull (E.O χ).isLB _)

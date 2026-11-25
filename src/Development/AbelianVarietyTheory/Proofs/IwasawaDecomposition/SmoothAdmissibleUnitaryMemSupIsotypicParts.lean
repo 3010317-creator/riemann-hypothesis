@@ -50,7 +50,6 @@ import Formalism.LocalToGlobal.IndefiniteReal.RecTie
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx
 open scoped TensorProduct InnerProductSpace
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3
 
 noncomputable section
@@ -216,8 +215,7 @@ theorem irr_le_isotIn {D : D7} {n : ℕ} {A : Type} [AddCommGroup A] [Module ℂ
   classical
   obtain ⟨s₀, hs₀, hs₀0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hW0
   obtain ⟨l, hl⟩ : ∃ l : Module.Dual ℂ A, l s₀ ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact hs₀0 ((Module.forall_dual_apply_eq_zero_iff ℂ s₀).1 hcon)
   let m : A →ₗ[ℂ] (GAf D.host.E n → ℂ) :=
     { toFun := fun a g => l (ρ g a)

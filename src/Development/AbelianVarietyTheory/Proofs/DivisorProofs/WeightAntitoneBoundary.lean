@@ -53,8 +53,6 @@ open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
 open scoped GlobalTheory.CompHt
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.LiftGaps
@@ -83,8 +81,6 @@ theorem isQuot_u₁ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Reci
     WtPar.T₁, dimFlag_eq]
 
 section Pt
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
   {Y0 : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y0 cX} {Csz : ℝ} (p : PtAt ex Csz) (i : Fin D.R.m)
@@ -189,8 +185,7 @@ theorem gapsAt (PP A M : ℝ) (hi : (i : ℕ) + 1 < D.R.m) (hw : WtNum p i PP) (
     by_cases hbp : (b : ℕ) = (dat p i).p
     · have g := (g2 hbp).1
       have hT0 : (0 : ℤ) < 2 * (lenT p i PP : ℤ) := by omega
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       have := mul_neg_of_pos_of_neg hT0 hc
       nlinarith
     · have g := g1 hbp
@@ -204,8 +199,7 @@ theorem gapsAt (PP A M : ℝ) (hi : (i : ℕ) + 1 < D.R.m) (hw : WtNum p i PP) (
     have g := (g2 hbp).2
     have hT0 : (0 : ℤ) < 4 * (lenT p i PP : ℤ) := by omega
     have hle : (lenT p i PP : ℤ) ≤ P.u₁ τ a - P.u₁ τ b - 3 * (((dat p i).p + (dat p i).q : ℕ) : ℤ) := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       have := mul_lt_mul_of_pos_left hc hT0
       nlinarith
     have : (0 : ℤ) ≤ (((dat p i).p + (dat p i).q : ℕ) : ℤ) := by positivity

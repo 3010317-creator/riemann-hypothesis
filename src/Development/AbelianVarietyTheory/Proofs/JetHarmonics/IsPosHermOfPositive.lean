@@ -73,8 +73,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.Non
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.PointStepCompare
@@ -244,15 +242,13 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.PointStepCompare
 
 open NumberField IsLocalRing ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.DVR
 open GlobalTheory.IndefiniteRowSideFullHecke.PairingFromOuterAgreement
-open GlobalTheory.IndefiniteRowSideFullHecke.BalancedHermitianSpace (Bil leastExponent IsIntegralFn IsPositiveFn IsBalancedSpace evalSum)
+open GlobalTheory.IndefiniteRowSideFullHecke.BalancedHermitianSpace (Bil IsIntegralFn IsPositiveFn IsBalancedSpace evalSum)
 
 section Lattice
 
