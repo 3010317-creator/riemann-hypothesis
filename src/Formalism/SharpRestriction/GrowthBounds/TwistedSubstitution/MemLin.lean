@@ -111,12 +111,8 @@ theorem sumSupp_add {σ R M : Type*} [CommSemiring R] [AddCommMonoid M] (g : (σ
 
 theorem sumSupp_smul {σ R S M : Type*} [CommSemiring R] [Semiring S] [Module S R] [AddCommMonoid M] [Module S M]
     (g : (σ →₀ ℕ) → R →ₗ[S] M) (c : S) (F : MvPolynomial σ R) :
-    ∑ mo ∈ (c • F).support, g mo ((c • F).coeff mo) = c • ∑ mo ∈ F.support, g mo (F.coeff mo) := by
-  rw [Finset.smul_sum]
-  refine (Finset.sum_subset MvPolynomial.support_smul fun mo _ hmo => ?_).trans
-    (Finset.sum_congr rfl fun mo _ => ?_)
-  · rw [MvPolynomial.notMem_support_iff.mp hmo, map_zero]
-  · rw [MvPolynomial.coeff_smul, map_smul]
+    ∑ mo ∈ (c • F).support, g mo ((c • F).coeff mo) = c • ∑ mo ∈ F.support, g mo (F.coeff mo) :=
+  Finsupp.sum_smul_index_linearMap' (v := F.coeff) (c := c) (h := g)
 
 def mono2 {σ τ : Type} (a : σ →₀ ℕ) (b : τ →₀ ℕ) : Kf →ₗ[Kf] MvPolynomial σ (MvPolynomial τ Kf) where
   toFun x := monomial a (monomial b x)
