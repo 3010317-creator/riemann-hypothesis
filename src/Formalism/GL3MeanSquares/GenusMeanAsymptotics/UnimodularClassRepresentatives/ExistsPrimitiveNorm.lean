@@ -41,15 +41,7 @@ theorem exists_primitive (hS : IsHermSemilocal S) (hd : ∀ x, h x x = 0 → x =
     ∃ l : K, l ≠ 0 ∧ l • ξ ∈ M ∧ ∀ c : K, c • ξ ∈ M → c * l⁻¹ ∈ S := by
   obtain ⟨t, ht0, htM⟩ := hM.span ξ hξ
   have hξξ : h ξ ξ ≠ 0 := fun h0 => hξ0 (hd ξ h0)
-  let A : AddSubgroup K :=
-    { carrier := {c | c • ξ ∈ M}
-      add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, add_smul] at *
-        exact M.add_mem ha hb
-      zero_mem' := by simp only [Set.mem_setOf_eq, zero_smul]; exact M.zero_mem
-      neg_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq, neg_smul] at *
-        exact M.neg_mem ha }
+  let A : AddSubgroup K := M.comap (LinearMap.toSpanSingleton K V ξ).toAddMonoidHom
   have hA : ∀ c, c ∈ A ↔ c • ξ ∈ M := fun c => Iff.rfl
   obtain ⟨α, hαA, hα0, hα⟩ := hS.principal A
     (fun s hs a ha => (hA _).2 (by rw [mul_smul]; exact hM.smul_mem s hs _ ((hA a).1 ha)))
