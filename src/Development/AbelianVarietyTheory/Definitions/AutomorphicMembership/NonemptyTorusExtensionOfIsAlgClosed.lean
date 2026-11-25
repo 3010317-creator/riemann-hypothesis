@@ -174,15 +174,6 @@ theorem eval_bijective (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.F
 
 variable [Module.Free ℤ X] [Module.Finite ℤ X]
 
-def charEquivOfTorus (i : splitTorus S X ⟶ G) [IsMonHom i] (hi : Function.Bijective (ofTorus i)) :
-    X ≃+ Char G :=
-  (AddEquiv.ofBijective _ (eval_bijective X)).trans
-    (AddEquiv.addMonoidHomCongrLeft (AddEquiv.ofBijective _ hi))
-
-def charEquivSplitTorus (S : Scheme.{0}) [ConnectedSpace S] (X : Type) [AddCommGroup X]
-    [Module.Free ℤ X] [Module.Finite ℤ X] : X ≃+ Char (splitTorus S X) :=
-  charEquivOfTorus (𝟙 _) ofTorus_id_bijective
-
 end Torus
 
 section Unif
