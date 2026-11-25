@@ -628,13 +628,6 @@ theorem KsExact.lower (h : B.KsExact D C) :
   obtain ⟨-, h1, h2, -, h3, h4⟩ := (listField_le_iff D C).1 h.ge
   exact ⟨h2, h1, h3, h4⟩
 
-namespace FieldsOK
-
-variable (h : B.FieldsOK D C c M)
-include h
-
-end FieldsOK
-
 end GlobalTheory.Mem.Base
 
 end

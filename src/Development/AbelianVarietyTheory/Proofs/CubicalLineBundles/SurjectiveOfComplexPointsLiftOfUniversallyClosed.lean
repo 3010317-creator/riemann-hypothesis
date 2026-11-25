@@ -268,7 +268,3 @@ theorem _root_.GlobalTheory.ComplexPoints.iSup_eq_top_of_complexPoints (p : X ‚ü
   exact (le_iSup U i) hi
 
 end GlobalTheory.ComplexPoints
-
-namespace GlobalTheory
-
-end GlobalTheory

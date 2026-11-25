@@ -92,7 +92,3 @@ theorem intAt_iff (x : E) : Formalism.L2.Col.IntAt Q x ↔ Q.valuation E x ≤ 1
 end GlobalTheory.UnramCompletion
 
 open Formalism.MainNotions.G Formalism.L2.Col Formalism.BasicNotions
-
-namespace GlobalTheory.UnramCompletion
-
-end GlobalTheory.UnramCompletion

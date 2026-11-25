@@ -274,9 +274,3 @@ theorem _root_.GlobalTheory.CapelliCentral.eabEnd_glRel : _root_.Formalism.REAL.
   split_ifs <;> simp [hF]
 
 end GlobalTheory.CapelliCentral
-
-namespace GlobalTheory
-
-open Formalism.REAL Formalism.QuantumDeterminants CapelliCentral
-
-end GlobalTheory

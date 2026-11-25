@@ -136,11 +136,6 @@ theorem lemma_b_any_measure_from_normalised : Formalism.FourierDecayAlt.B2.Lemma
 
 end Formalism.FourierDecayAlt.P
 
-namespace Formalism.FourierDecayAlt.P.HaarScaling
-
-open Formalism.FourierDecayAlt.B Formalism.FourierDecayAlt.B2
-
-end Formalism.FourierDecayAlt.P.HaarScaling
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1285,21 +1280,10 @@ namespace Formalism.FourierDecayAlt.P.Sz3
 
 open Finset Formalism.FourierDecayAlt.Sz
 
-end Formalism.FourierDecayAlt.P.Sz3
-
-namespace Formalism.FourierDecayAlt.P.Sz3
-
-open Finset Formalism.FourierDecayAlt.Sz
-
 noncomputable def hs (n : ℕ) : ℝ := ∑ d ∈ Ioc 0 n, 1 / (d : ℝ)
 
 end Formalism.FourierDecayAlt.P.Sz3
 
-namespace Formalism.FourierDecayAlt.P
-
-open Finset Formalism.FourierDecayAlt.Sz Sz3
-
-end Formalism.FourierDecayAlt.P
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.VandermondeRatioHarmonic =====

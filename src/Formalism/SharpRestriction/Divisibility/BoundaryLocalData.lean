@@ -168,16 +168,6 @@ attribute [instance] LocB.xAdd LocB.xMod LocB.iRr LocB.iRd LocB.iRl LocB.iRn Loc
 structure Prov (D : Formalism.BasicNotions.D7) (X : ModuliIntegralCharts.Prov D) where
   loc : ∀ w p, p.Prime → LocB D (X.loc w p)
 
-namespace LocB
-
-variable {D : Formalism.BasicNotions.D7} {r j p : ℕ} {L : ModuliIntegralCharts.Loc D r j p} (B : LocB D L)
-
-variable {y : L.Pt L.Xm} {nW : ℕ}
-
-variable (y nW)
-
-end LocB
-
 variable (D : Formalism.BasicNotions.D7) (X : ModuliIntegralCharts.Prov D)
 
 section Family

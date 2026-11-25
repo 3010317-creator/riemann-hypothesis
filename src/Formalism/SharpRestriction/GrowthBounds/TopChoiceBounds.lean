@@ -1117,14 +1117,6 @@ end Formalism.MainNotions.G.TopChoiceBounds
 
 end
 
-namespace Formalism.MainNotions.G.TopChoiceBounds
-
-end Formalism.MainNotions.G.TopChoiceBounds
-
-namespace Formalism.MainNotions.G.TopChoiceBounds
-
-end Formalism.MainNotions.G.TopChoiceBounds
-
 noncomputable section
 
 open scoped BigOperators
@@ -1719,10 +1711,6 @@ theorem family_band_ratio_holds {eps : ℝ} (Fm : FamP eps) : CornerGLContinuity
 end Formalism.MainNotions.G.TopChoiceBounds
 
 end
-
-namespace Formalism.MainNotions.G.TopChoiceBounds
-
-end Formalism.MainNotions.G.TopChoiceBounds
 
 noncomputable section
 

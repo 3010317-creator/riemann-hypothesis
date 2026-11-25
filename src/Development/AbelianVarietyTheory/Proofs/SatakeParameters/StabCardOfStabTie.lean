@@ -89,16 +89,6 @@ structure ChainData (D : D7) (u : D.what₂.Word) (μ : D.what₂.Tup) where
   rep : ∀ i, (D.chTw u μ).cls i →
     Option (L.β i) × DecoF X.E (D.R.N i) (Pr.vT w) ∅ (rowSG Pr sel xi) × Set (Sp X.E (D.R.N i))
 
-namespace ChainData
-
-variable {D : D7} {u : D.what₂.Word} {μ : D.what₂.Tup} (T : ChainData D u μ)
-
-
-
-
-
-end ChainData
-
 end GlobalTheory.IndefiniteRowSideFullHecke.WeightedChainData
 end -- clump:auto
 end -- clump:auto

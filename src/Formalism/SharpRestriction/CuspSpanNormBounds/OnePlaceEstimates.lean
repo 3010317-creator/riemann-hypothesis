@@ -166,25 +166,6 @@ attribute [instance] TensorDSd.nH TensorDSd.iH TensorDSd.cH
 
 end Formalism.MainNotions.OnePlaceEstimates
 
-section ShortGrids
-
-open Filter Topology NumberField
-open scoped ContDiff ComplexOrder nonZeroDivisors
-
-namespace Formalism.MainNotions.OnePlaceEstimates
-
-open Formalism.BasicNotions Formalism.QuantumDeterminants Formalism.MainNotions.S Formalism.MainNotions.S.TopsChoicePartA
-
-section Raw
-
-variable {D : D7} {k0 : ℕ} (Gm : GramWordSpace.GramMap k0 D.R.rS) (X : GramWordSpace.Dat D k0) (Pst : D.what₂.Tau → ℝ → ℝ)
-
-end Raw
-
-end Formalism.MainNotions.OnePlaceEstimates
-
-end ShortGrids
-
 namespace Formalism.MainNotions.OnePlaceEstimates
 
 open Formalism.QuantumDeterminants Formalism.MainNotions.S Formalism.MainNotions.S.ThB Formalism.BasicNotions Formalism.MainNotions.S.TopsChoicePartA Formalism.MainNotions.S.LevR

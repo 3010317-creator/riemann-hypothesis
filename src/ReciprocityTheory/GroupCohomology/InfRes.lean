@@ -170,11 +170,3 @@ theorem inf_inj (M : TRep R G) (N : Subgroup G) [N.Normal] (Q : TRep R (G ⧸ N)
 end
 
 end ReciprocityTheory.Coh.InflationRestrictionInvariants
-
-namespace ReciprocityTheory.Coh
-
-open InflationRestrictionInvariants
-
-universe u
-
-end ReciprocityTheory.Coh

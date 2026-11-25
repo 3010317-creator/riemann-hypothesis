@@ -345,13 +345,6 @@ structure RowT (D : D7) (fr : CharFrame D) (xi : D.what₂.Tup → HChar D.host.
 
 attribute [instance] RowT.grp RowT.fin RowT.alg
 
-namespace RowT
-
-variable {D : D7} {fr : CharFrame D} {xi : D.what₂.Tup → HChar D.host.E} (r : RowT D fr xi)
-
-
-end RowT
-
 end GlobalTheory.Mem.Top
 
 end

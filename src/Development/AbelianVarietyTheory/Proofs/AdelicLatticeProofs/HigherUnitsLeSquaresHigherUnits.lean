@@ -55,10 +55,6 @@ open scoped WithZero
 
 namespace GlobalTheory.QNorm
 
-namespace DeepSquares
-
-end DeepSquares
-
 open NumberField IsDedekindDomain in
 open scoped WithZero in
 private lemma exp_neg_two_mul_le_mul_of_lt {e : ℕ} {a b : ℤᵐ⁰}

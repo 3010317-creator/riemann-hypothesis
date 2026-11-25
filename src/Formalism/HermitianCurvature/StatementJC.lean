@@ -307,20 +307,6 @@ end Formalism.FourierDecayAlt.JC
 
 end Decay
 
-section Data
-
-namespace Formalism.FourierDecayAlt.JC
-
-open Finset NumberField
-
-noncomputable section
-
-end
-
-end Formalism.FourierDecayAlt.JC
-
-end Data
-
 section Needs
 
 namespace Formalism.FourierDecayAlt.JC
