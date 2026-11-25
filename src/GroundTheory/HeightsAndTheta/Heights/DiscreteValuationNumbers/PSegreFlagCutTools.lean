@@ -268,13 +268,8 @@ theorem cycEval_sub_fun (n₁ n₂ Z : Ideal (MRing ι O) → ℤ) (hZ : (Functi
   ring
 
 theorem eq_C_of_isHomogeneous_zero {σ : Type*} {A : MvPolynomial σ ℤ} (hA : A.IsHomogeneous 0) :
-    A = C (A.coeff 0) := by
-  classical
-  ext μ
-  rw [coeff_C]
-  split_ifs with h
-  · rw [h]
-  · exact hA.coeff_eq_zero (by rwa [Ne, Finsupp.degree_eq_zero_iff, eq_comm])
+    A = C (A.coeff 0) :=
+  MvPolynomial.totalDegree_eq_zero_iff_eq_C.1 ((MvPolynomial.totalDegree_zero_iff_isHomogeneous _).2 hA)
 
 theorem classNum_of_isHomogeneous_zero {σ : Type*} (z z' : σ → K → ℤ) {A : MvPolynomial σ ℤ}
     (hA : A.IsHomogeneous 0) (Q : List (K → ℤ)) (W : Ideal (MRing ι O)) :
