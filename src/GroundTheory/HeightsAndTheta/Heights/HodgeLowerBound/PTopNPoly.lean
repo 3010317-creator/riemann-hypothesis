@@ -51,13 +51,14 @@ theorem hermOfFun_h_smul {a : K → ℤ} {F : ((Σ k, ι k) → ℂ) → ℝ} {z
   conv_lhs => rw [hzc]
   exact ((hermOfFun ι a F).smul c (orbitRep z) hc).trans (by rw [h1]; rfl)
 
-theorem prod_norm_zpow_add {c : K → ℂ} (hc : ∀ k, c k ≠ 0) (a b : K → ℤ) (q : ℕ) :
-    (∏ k, ‖c k‖ ^ ((q : ℤ) • a + ((1 : ℕ) : ℤ) • b) k) = (∏ k, ‖c k‖ ^ a k) ^ q * ∏ k, ‖c k‖ ^ b k := by
-  rw [← Finset.prod_pow, ← Finset.prod_mul_distrib]
+theorem prod_norm_zpow_comb {c : K → ℂ} (hc : ∀ k, c k ≠ 0) (a b : K → ℤ) (q p : ℕ) :
+    (∏ k, ‖c k‖ ^ ((q : ℤ) • a + (p : ℤ) • b) k) = (∏ k, ‖c k‖ ^ a k) ^ q * (∏ k, ‖c k‖ ^ b k) ^ p := by
+  rw [← Finset.prod_pow, ← Finset.prod_pow, ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun k _ => ?_
   have h0 : ‖c k‖ ≠ 0 := norm_ne_zero_iff.mpr (hc k)
-  simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul, Nat.cast_one, one_mul]
-  rw [zpow_add₀ h0, show (q : ℤ) * a k = a k * q by ring, zpow_mul, zpow_natCast]
+  simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+  rw [zpow_add₀ h0, show (q : ℤ) * a k = a k * q by ring, show (p : ℤ) * b k = b k * p by ring,
+    zpow_mul, zpow_mul, zpow_natCast, zpow_natCast]
 
 theorem smoothRep_smooth_of {P : Ideal (MRing ι)} {A Z : HermLine ι} (ha : Z.a = A.a) (hZ : IsSmoothHerm Z)
     (hh : ∀ z ∈ mcPts P, Z.h z = A.h z) : IsSmoothHerm (smoothRep P A) := by
@@ -73,9 +74,9 @@ variable {II : IntersectionSystem} {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] {Ω
 
 
 omit [DecidableEq Ψ] in
-theorem NbarQ_h_eq (hV : VertFactorPos.Statement) (X : ComponentSetting D O Lt) (B q : ℕ) (t : ℝ)
+theorem NbarQ_h_eq (hV : VertFactorPos.Statement) (X : ComponentSetting D O Lt) (B p q : ℕ) (t : ℝ)
     {z : (Σ k, ι k) → ℂ} (hz : z ∈ mcPts (mCoordIdeal D.y)) :
-    (X.NbarQ B 1 q t).h z = (muReg X.H X.S B t).h z ^ q * D.A'.h z := by
+    (X.NbarQ B p q t).h z = (muReg X.H X.S B t).h z ^ q * D.A'.h z ^ p := by
   obtain ⟨c, hc, hzc⟩ := exists_eq_smul_orbitRep z
   have hz0 := hz.1
   have hw0 := orbitRep_blocks hz0
@@ -97,9 +98,9 @@ theorem NbarQ_h_eq (hV : VertFactorPos.Statement) (X : ComponentSetting D O Lt) 
     unfold muReg
     rw [smoothRep_h _ hz]
     exact hermOfFun_h_smul hc hzc hz0 (by rw [hreg]; exact mul_pos hG0 hvf)
-  have hN : (X.NbarQ B 1 q t).h z = (∏ k, ‖c k‖ ^ ((q : ℤ) • muTwDeg X.H B + ((1 : ℕ) : ℤ) • D.a') k) *
+  have hN : (X.NbarQ B p q t).h z = (∏ k, ‖c k‖ ^ ((q : ℤ) • muTwDeg X.H B + (p : ℤ) • D.a') k) *
       ((X.S.ref.h (orbitRep z) * Real.exp (X.S.regWeight t (X.M.proj (orbitRep z)))) ^ q *
-        (∏ p' ∈ D.SB B, D.vertFactor p' (orbitRep z)) ^ q * D.A'.h (orbitRep z) ^ 1) := by
+        (∏ p' ∈ D.SB B, D.vertFactor p' (orbitRep z)) ^ q * D.A'.h (orbitRep z) ^ p) := by
     unfold ComponentSetting.NbarQ
     rw [smoothRep_h _ hz]
     exact hermOfFun_h_smul hc hzc hz0
@@ -107,7 +108,7 @@ theorem NbarQ_h_eq (hV : VertFactorPos.Statement) (X : ComponentSetting D O Lt) 
   have hA : D.A'.h z = (∏ k, ‖c k‖ ^ D.a' k) * D.A'.h (orbitRep z) := by
     conv_lhs => rw [hzc]
     exact (D.A'.smul c (orbitRep z) hc).trans (by rw [D.A'_deg])
-  rw [hN, hM, hA, hreg, prod_norm_zpow_add hc]
+  rw [hN, hM, hA, hreg, prod_norm_zpow_comb hc]
   ring
 
 end TopNPoly
@@ -129,7 +130,7 @@ theorem TopNPoly.proof (hIso : HilbertSamuel.IsomInvariance.Statement) (hV : Ver
   have hZ : IsSmoothHerm Z := HilbertSamuel.ZCombLimit.isSmoothHerm_zcomb_int ht hA _ _
   have hagree : ∀ z ∈ mcPts (mCoordIdeal D.y), Z.h z = (X.NbarQ B 1 q t).h z := by
     intro z hz
-    rw [NbarQ_h_eq hV X B q t hz]
+    rw [NbarQ_h_eq hV X B 1 q t hz]
     show (muReg X.H X.S B t).h z ^ (q : ℤ) * D.A'.h z ^ ((1 : ℕ) : ℤ) = _
     simp
   have hdeg : Z.a = (X.NbarQ B 1 q t).a := by
