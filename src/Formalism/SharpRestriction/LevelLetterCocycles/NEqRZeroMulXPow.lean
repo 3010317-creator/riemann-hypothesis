@@ -219,7 +219,6 @@ def Den : ℝ := (D.R.n : ℝ) * (D.R.t : ℝ) ^ 2 * ((D.R.N D.R.m : ℝ) + D.R.
 theorem Den_ge : (D.R.k : ℝ) * (D.R.n : ℝ) ^ 2 * large₂ L ≤ Den L := by
   have hS := L.Sc_pos
   have hLg := L_ge_one L
-  have ht : (0 : ℝ) ≤ D.R.t := Nat.cast_nonneg _
   have hA : 0 ≤ (D.R.n : ℝ) * (D.R.t : ℝ) ^ 2 * ((D.R.N D.R.m : ℝ) + D.R.t) * large₂ L ^ 2 := by positivity
   have hkn : 0 ≤ (D.R.k : ℝ) * (D.R.n : ℝ) ^ 2 := by positivity
   have h1 : (D.R.k : ℝ) * (D.R.n : ℝ) ^ 2 * large₂ L ≤ (D.R.k : ℝ) * (D.R.n : ℝ) ^ 2 * (L.Sc + D.R.t + large₂ L) :=
@@ -264,7 +263,6 @@ theorem lStar_part1 : lStar L * ((D.R.n : ℝ) * (D.R.t : ℝ) ^ 2 * ((D.R.N D.R
   apply mul_le_mul_of_nonneg_left _ (lStar_pos L).le
   have hS := L.Sc_pos
   have hLg := L_ge_one L
-  have ht : (0 : ℝ) ≤ D.R.t := Nat.cast_nonneg _
   have h0 : 0 ≤ (D.R.k : ℝ) * (D.R.n : ℝ) ^ 2 * (L.Sc + D.R.t + large₂ L) :=
     mul_nonneg (by positivity) (by linarith)
   unfold Den
@@ -447,7 +445,6 @@ theorem log_x_ge_one : 1 ≤ Real.log L.sc.x := by
     _ ≤ Real.log L.sc.x := Real.log_le_log (Real.exp_pos 1) (by linarith)
 
 theorem b'_le : L.sc.b' ≤ L.sc.b / 8 := by
-  have hx := L.sc.one_lt_alt
   have hb : 0 < L.sc.b := by
     rw [b_eq]
     exact Real.exp_pos _
@@ -552,7 +549,6 @@ theorem band_small : C * (4 * L.etaSz + L.Sc + large₂ L) ≤ L.sc.w'' D.R.n / 
     div_le_div_of_nonneg_left hw hs hxs
   have hc := hL.c48
   have : 4 * L.etaSz + L.Sc + large₂ L ≤ 6 * (L.sc.w'' D.R.n / L.sc.x ^ ((1 : ℝ) / 2)) := by linarith
-  have hq : 0 ≤ L.sc.w'' D.R.n / L.sc.x ^ ((1 : ℝ) / 2) := div_nonneg hw hs.le
   calc C * (4 * L.etaSz + L.Sc + large₂ L) ≤ C * (6 * (L.sc.w'' D.R.n / L.sc.x ^ ((1 : ℝ) / 2))) :=
         mul_le_mul_of_nonneg_left this hC.le
     _ = 6 * C * L.sc.w'' D.R.n / L.sc.x ^ ((1 : ℝ) / 2) := by ring
@@ -822,7 +818,6 @@ theorem rowd_sum (T : Finset ℕ) (hT : ∀ l ∈ T, 2 ≤ l ∧ Odd l ∧ ordH 
       _ ≤ L.sc.x ^ L.sc.eps := hlg
   have t2 : (D.R.r : ℝ) * (2 * (Real.log R + 2) / (R * M)) ≤ 4 * D.R.m * o := by
     have hRM0 : 0 < R * M := by positivity
-    have ho0 : 0 < o := by linarith
     rw [show (D.R.r : ℝ) * (2 * (Real.log R + 2) / (R * M)) =
       2 * (Real.log R + 2) * (D.R.r : ℝ) / (R * M) by ring, div_le_iff₀ hRM0]
     have h3 : (Real.log R + 2) * ((D.R.r : ℝ) * L.sc.x ^ L.sc.eps) ≤
@@ -953,10 +948,8 @@ theorem lenB_split {C : ℝ} (hC : 0 < C) {l : ℕ} (hl : 2 ≤ l) :
       (if cC L l then 4 * D.R.f * C * D.R.r * hB L * (Real.log l / (l : ℝ) ^ 2) else 0) +
       (if cD L l then 4 * D.R.f * C * D.R.r * hB L * (Real.log l / (l : ℝ) ^ 2) else 0) +
       4 * D.R.f * C * D.R.r * (Real.log l * flatB L C l) := by
-  have hlog : 0 ≤ Real.log (l : ℝ) := Real.log_natCast_nonneg l
   have hf : (0 : ℝ) ≤ D.R.f := by positivity
   have hm := m_ge_one D
-  have hr : (0 : ℝ) ≤ D.R.r := by positivity
   have he := eP_nonneg L hC.le l
   have hle := log_mul_eP L (C := C) hl
   have hfl := flatB_nonneg L C l
@@ -965,8 +958,6 @@ theorem lenB_split {C : ℝ} (hC : 0 < C) {l : ℕ} (hl : 2 ≤ l) :
   have hA : 0 ≤ (3 + 2 * C) * D.R.f * D.R.m * (C * (Real.log l + hB L * (Real.log l / l) + Real.log (hB L))) := by
     rw [← hle]; positivity
   have hF : 0 ≤ 4 * D.R.f * C * D.R.r * (Real.log l * flatB L C l) := by positivity
-  have hq : 0 ≤ 4 * D.R.f * C * D.R.r * hB L * (Real.log l / (l : ℝ) ^ 2) := by positivity
-  have hbq : 0 ≤ 4 * D.R.f * C * D.R.r * (Real.log l * rowBr L l) := by positivity
 
   have hcoef : Real.log l * ((2 * (D.R.f : ℝ) * D.R.m + D.R.f) * eP L C l) ≤
       (3 + 2 * C) * D.R.f * D.R.m * (C * (Real.log l + hB L * (Real.log l / l) + Real.log (hB L))) := by
@@ -1223,7 +1214,6 @@ theorem sum_rowb (T : Finset ℕ) (hT : ∀ l ∈ T, 5 ≤ l ∧ (l : ℝ) < lA 
     have hhA : 0 ≤ hB L / lA L := div_nonneg (by linarith [one_le_hB L]) (by linarith)
     exact add_le_add (mul_le_mul_of_nonneg_left hs1 hhA) (mul_le_mul_of_nonneg_left hs2 hK0)
 
-  have hr0 : (0 : ℝ) ≤ D.R.r := by positivity
   have hsq := logA_sq L hC P hPar hL
   have hrA := r_div_lA L
   have hh := hB_le L hC P hPar hL
@@ -1250,7 +1240,6 @@ theorem sum_rowb (T : Finset ℕ) (hT : ∀ l ∈ T, 5 ≤ l ∧ (l : ℝ) < lA 
         hLb.trans (le_mul_of_one_le_right (b'_pos L).le (by linarith))
       linarith
     have hlA3 : Real.log (lA L) ≤ 3 + Real.log (lA L) := by linarith
-    have hA0 : 0 < lA L := lA_pos L
     have e : (D.R.r : ℝ) * (K * (lA L * Real.log (lA L))) ≤
         12 * ((D.R.r : ℝ) * L.sc.b' * lA L) * (3 + Real.log (lA L)) ^ 2 := by
       have hK0 : 0 ≤ K := by have := b'_ge_one L; have := Lg_nonneg L; rw [hK]; positivity
@@ -1268,7 +1257,6 @@ theorem sum_rowb (T : Finset ℕ) (hT : ∀ l ∈ T, 5 ≤ l ∧ (l : ℝ) < lA 
           have : 0 ≤ (D.R.r : ℝ) * L.sc.b' * lA L := by have := b'_pos L; positivity
           gcongr
       _ = 12 * D.R.m * L.sc.b * large₂ L := by ring
-  have hf : (0 : ℝ) ≤ D.R.f := by positivity
   rw [← Finset.mul_sum]
   calc 4 * D.R.f * C * D.R.r * ∑ l ∈ T, Real.log l * rowBr L l
       ≤ 4 * D.R.f * C * D.R.r * (hB L / lA L * (2 * (1 + Real.log (lA L)) ^ 2) + K * (lA L * Real.log (lA L))) :=
@@ -1297,7 +1285,6 @@ theorem sum_rowc (T : Finset ℕ) (hT : ∀ l ∈ T, lA L ≤ l) :
     linarith only [hsq, sq_nonneg (Real.log (lA L)), hA1]
   have hrA := r_div_lA L
   have hh := hB_le L hC P hPar hL
-  have hf : (0 : ℝ) ≤ D.R.f := by positivity
   have hm := m_ge_one D
   have hb := one_le_b L
   rw [← Finset.mul_sum]
@@ -1316,7 +1303,6 @@ theorem sum_rowd (T : Finset ℕ) (hT : ∀ l ∈ T, 2 ≤ l ∧ Odd l ∧ ordH 
       32 * C * D.R.f * D.R.m * L.sc.b * large₂ L ^ 2 := by
   have h := rowd_sum L hC P hPar hL T hT
   have hh := hB_le L hC P hPar hL
-  have hf : (0 : ℝ) ≤ D.R.f := by positivity
   rw [← Finset.mul_sum]
   calc 4 * D.R.f * C * D.R.r * hB L * ∑ l ∈ T, Real.log l / (l : ℝ) ^ 2
       = 4 * D.R.f * C * hB L * ((D.R.r : ℝ) * ∑ l ∈ T, Real.log l / (l : ℝ) ^ 2) := by ring
@@ -1446,7 +1432,6 @@ theorem sum_flat (T : Finset ℕ) (hT : ∀ l ∈ T, 2 ≤ l ∧ (l : ℝ) ≤ l
       have hp2 := lStar_part2 L
       have hn2 : (1 : ℝ) ≤ (D.R.n : ℝ) ^ 2 := one_le_pow₀ (n_ge_one D)
       have hk := r_le_two_k D
-      have ht : (0 : ℝ) ≤ D.R.t := by positivity
       have hS := L.Sc_pos
       have hls0 := lStar_pos L
       have hA : (D.R.r : ℝ) * (L.Sc + large₂ L) * lStar L ≤ 2 * D.R.m * L.sc.b := by
@@ -1495,7 +1480,6 @@ theorem sum_flat (T : Finset ℕ) (hT : ∀ l ∈ T, 2 ≤ l ∧ (l : ℝ) ≤ l
             gcongr
             exact hs.trans (mul_le_mul_of_nonneg_left hlY (by linarith))
         _ = 4 * (2 * C + 1) ^ 2 * D.R.m * L.sc.b := by ring
-    have hmb : 0 ≤ (D.R.m : ℝ) * L.sc.b := by positivity
     have hL2 : 1 ≤ large₂ L ^ 2 := one_le_pow₀ hL1
     have e4' : 4 * (2 * C + 1) ^ 2 * D.R.m * L.sc.b ≤ 4 * (2 * C + 1) ^ 2 * D.R.m * L.sc.b * large₂ L ^ 2 := by
       exact le_mul_of_one_le_right (by positivity) hL2
@@ -1503,7 +1487,6 @@ theorem sum_flat (T : Finset ℕ) (hT : ∀ l ∈ T, 2 ≤ l ∧ (l : ℝ) ≤ l
         36 * D.R.m * L.sc.b * large₂ L ^ 2 + 2 * D.R.m * L.sc.b * large₂ L ^ 2 + 64 * D.R.m * L.sc.b * large₂ L ^ 2 +
         4 * (2 * C + 1) ^ 2 * D.R.m * L.sc.b * large₂ L ^ 2 := by ring
     linarith
-  have hf : (0 : ℝ) ≤ D.R.f := by positivity
   calc ∑ l ∈ T, 4 * D.R.f * C * D.R.r * (Real.log l * flatB L C l)
       = 4 * D.R.f * C * ∑ l ∈ T, (D.R.r : ℝ) * (Real.log l * flatB L C l) := by
         rw [Finset.mul_sum]; refine Finset.sum_congr rfl (fun l _ => by ring)
