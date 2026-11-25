@@ -43,11 +43,3 @@ theorem sum_map_univ {s n : ℕ} {d : Fin s → ℕ} (e : (Σ a, Fin (d a)) ≃ 
     _ = _ := (map_univ_eq_sum _).symm
 
 end UpperTheory.TNZ.Grp.P_spPiSub
-
-namespace UpperTheory.TNZ.Grp
-
-open P_spPiSub
-
-variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-
-end UpperTheory.TNZ.Grp

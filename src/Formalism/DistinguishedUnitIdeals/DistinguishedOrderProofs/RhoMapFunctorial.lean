@@ -428,8 +428,4 @@ theorem rho_map_linear : RhoLin := by
   · intro i
     exact sub_mem (hz' i) (Submodule.smul_mem _ _ (hz i))
 
-namespace IdempotentNormalFormsRhoFacts
-
-end IdempotentNormalFormsRhoFacts
-
 end Formalism.ExponentWindows.E

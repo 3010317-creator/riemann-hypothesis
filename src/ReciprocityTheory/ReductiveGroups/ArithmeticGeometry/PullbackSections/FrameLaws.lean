@@ -347,11 +347,6 @@ theorem rdIndep_laws (hS : ReciprocityTheory.ChartRestriction.G.Out.SecBaseChang
 
 end ReciprocityTheory.ChartRestriction.G.PullbackSections
 
-namespace ReciprocityTheory.ChartRestriction.G.PullbackSections
-
-open Formalism.L2.Pj
-
-end ReciprocityTheory.ChartRestriction.G.PullbackSections
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

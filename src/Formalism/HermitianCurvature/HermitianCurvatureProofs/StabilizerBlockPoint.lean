@@ -53,9 +53,3 @@ theorem subSum_blk {m : ℕ} (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℂ) (b a :
   · rw [Fin.succ_last, blk_lc]
 
 end Formalism.FourierDecayAlt.P.G4
-
-namespace Formalism.FourierDecayAlt.P
-
-open G4
-
-end Formalism.FourierDecayAlt.P
