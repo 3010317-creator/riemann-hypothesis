@@ -52,13 +52,8 @@ theorem cone_add {x y : LinearMap.BilinForm ℤ X} (hx : InRCone γ x) (hy : InR
     ← Finset.sum_add_distrib]
   exact Finset.sum_congr rfl fun i _ => by simp [add_mul]
 
-theorem cone_sum {S : Finset (LinearMap.BilinForm ℤ X)} (h : ∀ x ∈ S, InRCone γ x) : InRCone γ (∑ x ∈ S, x) := by
-  classical
-  revert h
-  refine Finset.induction_on S (fun _ => by simpa using (cone_zero : InRCone γ 0)) ?_
-  intro a S ha ih h
-  rw [Finset.sum_insert ha]
-  exact cone_add (h a (Finset.mem_insert_self a S)) (ih fun x hx => h x (Finset.mem_insert_of_mem hx))
+theorem cone_sum {S : Finset (LinearMap.BilinForm ℤ X)} (h : ∀ x ∈ S, InRCone γ x) : InRCone γ (∑ x ∈ S, x) :=
+  Finset.sum_induction _ (InRCone γ) (fun _ _ => cone_add) cone_zero h
 
 theorem cone_smul_iff {g : ℕ} (hg : 0 < g) {x : LinearMap.BilinForm ℤ X} : InRCone γ ((g : ℤ) • x) ↔ InRCone γ x := by
   intros
