@@ -183,7 +183,6 @@ import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnderEqIffCo
 import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.BernsteinZelevinskyGL.TopAdm
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Mathlib.Tactic.Linter.HaveILetI
-import Lean.Exception
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Wp3ApplyEqSqMulSubSqMul
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ConcreteLevelAdelicSubset
 
@@ -1158,7 +1157,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.Has3NeoOfSteps =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicRowsDivisionOverReplacedLaterStages =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicRowsDivisionOverReplacedLaterStages", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReplacementValuesBaseLevelTypePartsEq\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMovedRowLiftDataToFittingStages\nimport Lean.Exception\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicRowsDivisionOverReplacedLaterStages", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReplacementValuesBaseLevelTypePartsEq\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMovedRowLiftDataToFittingStages\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1172,25 +1171,6 @@ noncomputable section
 
 namespace GlobalTheory.Mem.R3.Rw.Mv
 
--- Use the kernel to compare fully elaborated types across the two stages.
-open Lean Elab Tactic in
-local elab "exact_by_kernel " term:term : tactic =>
-  closeMainGoalUsing `exact_by_kernel fun target _ => do
-    let value ← elabTerm term none
-    Term.synthesizeSyntheticMVarsNoPostponing
-    let value ← instantiateMVars value
-    let actual ← instantiateMVars (← Meta.inferType value)
-    let target ← instantiateMVars target
-    let lctx ← instantiateLCtxMVars (← getLCtx)
-    match Kernel.isDefEq (← getEnv) lctx actual target with
-    | .ok true => pure value
-    | .ok false => throwError "expected{indentExpr target}\nbut the term has type{indentExpr actual}"
-    | .error error => throwError (error.toMessageData (← getOptions))
-
--- Named `kcEx%` (not `kc%`): the clump imports LayerUpStatement, whose global `kc%`
--- macro would make every `kc%` here ambiguous and elaborate the slow fallback too.
-local macro "kcEx%" t:term:max : term => `(by first | exact_by_kernel $t | with_unfolding_all exact ($t :))
-
 
 section
 variable {B : Base} {C : Cols B} {a : Late B C} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type}
@@ -1198,22 +1178,22 @@ variable {B : Base} {C : Cols B} {a : Late B C} {G : Type} [Group G] [Fintype G]
   {R : RealDat3 a.D A Ks} {F : Face3 a.D A} {X0 : BaseLevelRowSide a.D} {Y : Read (A3 := A) R.toRealDat F.lv2 X0} (Z : ReadL R F X0 Y)
   (u : Parts R)
 
-theorem jWu_heq : HEq (jWu Z u) Z.jW := by exact_by_kernel (HEq.refl Z.jW)
+theorem jWu_heq : HEq (jWu Z u) Z.jW := by unfold jWu; exact HEq.refl Z.jW
 
-theorem eRRu_heq : HEq (eRRu Z u) Z.eRR := by exact_by_kernel (HEq.refl Z.eRR)
+theorem eRRu_heq : HEq (eRRu Z u) Z.eRR := by unfold eRRu; exact HEq.refl Z.eRR
 
-theorem eRR0u_heq : HEq (riemannRochSpaceCoordinateEquiv Z u) Z.eRR0 := by exact_by_kernel (HEq.refl Z.eRR0)
+theorem eRR0u_heq : HEq (riemannRochSpaceCoordinateEquiv Z u) Z.eRR0 := by unfold riemannRochSpaceCoordinateEquiv; exact HEq.refl Z.eRR0
 
 variable (c : Refill a)
 
 theorem readL_jW : HEq (letI := alg c.to iK; (readL c Z).jW) Z.jW := by
-  exact_by_kernel (jWu_heq Z (partsB c R))
+  dsimp only [readL]; exact jWu_heq Z (partsB c R)
 
 theorem readL_eRR : HEq (letI := alg c.to iK; (readL c Z).eRR) Z.eRR := by
-  exact_by_kernel (eRRu_heq Z (partsB c R))
+  dsimp only [readL]; exact eRRu_heq Z (partsB c R)
 
 theorem transportedReading_baseRowLatticeCoordinates : HEq (letI := alg c.to iK; (readL c Z).eRR0) Z.eRR0 := by
-  exact_by_kernel (eRR0u_heq Z (partsB c R))
+  dsimp only [readL]; exact eRR0u_heq Z (partsB c R)
 
 end
 
@@ -1222,23 +1202,23 @@ end
 theorem rowsAre_refill : ∀ (B : Base) (C : Cols B) (a : Late B C) (c : Refill a) (px : PreX B.toPre) (I : ColIn B px) (hX : B.fields.Ok) (T : TwDat B) (Wt : Set B.places.Pl) (ix : C.Tup ≃ I.ι) (p0 : BaseLevelRowSide a.D) (r : RowsAre a.st I hX T Wt ix p0), ∃ r' : RowsAre c.to.st I hX T Wt ix (Tr.baseLevelRowSideTransport c p0), r'.z = Mv.cpDat c.to c.same r.z ∧ HEq r'.Y.tup r.Y.tup ∧ HEq r'.Y.tupT r.Y.tupT ∧ HEq r'.Y.PY.ψ r.Y.PY.ψ ∧ HEq (fun i => (r'.Y.PW i).ψ) (fun i => (r.Y.PW i).ψ) ∧ HEq (fun π => principalLevelFrame.rowRepR r'.z.R.θ (r'.Y.eFT π)) (fun π => principalLevelFrame.rowRepR r.z.R.θ (r.Y.eFT π)) ∧ HEq (fun x => (r'.Y.Ish.jE x).1) (fun x => (r.Y.Ish.jE x).1) ∧ HEq (fun x => (r'.Y.Iz.jE x).1) (fun x => (r.Y.Iz.jE x).1) ∧ HEq r'.Y.eE r.Y.eE ∧ HEq r'.Y.jA r.Y.jA ∧ HEq r'.Y.jA0 r.Y.jA0 ∧ HEq r'.Y.eMt r.Y.eMt ∧ HEq r'.Y.mj.eW r.Y.mj.eW ∧ HEq r'.Z.jW r.Z.jW ∧ HEq r'.Z.eRR r.Z.eRR ∧ HEq r'.Z.eRR0 r.Z.eRR0 := by
   intro B C a c px I hX T Wt ix p0 r
   letI := r.z.alg
-  refine ⟨⟨Mv.cpDat c.to c.same r.z, (kcEx% (holds_tr c.to r.intersectionNumber_baseChange)), (kcEx% (read c r.Y)), (kcEx% (readL c r.Z)),
-    (kcEx% r.tup_ix)⟩, rfl, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact_by_kernel (HEq.refl r.Y.tup)
-  · exact (kcEx% (HEq.refl r.Y.tupT))
-  · exact (kcEx% (HEq.refl r.Y.PY.ψ))
-  · exact (kcEx% (HEq.refl (fun i => (r.Y.PW i).ψ)))
-  · exact (kcEx% (heq_of_eq (funext fun π => (rep_eq c r.Y π).symm)))
-  · exact_by_kernel (HEq.refl (fun x => (r.Y.Ish.jE x).1))
-  · exact_by_kernel (HEq.refl (fun x => (r.Y.Iz.jE x).1))
-  · exact (kcEx% (HEq.refl r.Y.eE))
-  · exact (kcEx% (HEq.refl r.Y.jA))
-  · exact (kcEx% (HEq.refl r.Y.jA0))
-  · exact (kcEx% (HEq.refl r.Y.eMt))
-  · exact (kcEx% (HEq.refl r.Y.mj.eW))
-  · exact (kcEx% (readL_jW r.Z c))
-  · exact (kcEx% (readL_eRR r.Z c))
-  · exact (kcEx% (transportedReading_baseRowLatticeCoordinates r.Z c))
+  refine ⟨⟨Mv.cpDat c.to c.same r.z, ((holds_tr c.to r.intersectionNumber_baseChange)), ((read c r.Y)), ((readL c r.Z)),
+    (r.tup_ix)⟩, rfl, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact (HEq.refl r.Y.tup)
+  · exact ((HEq.refl r.Y.tupT))
+  · exact ((HEq.refl r.Y.PY.ψ))
+  · exact ((HEq.refl (fun i => (r.Y.PW i).ψ)))
+  · exact ((heq_of_eq (funext fun π => (rep_eq c r.Y π).symm)))
+  · exact (HEq.refl (fun x => (r.Y.Ish.jE x).1))
+  · exact (HEq.refl (fun x => (r.Y.Iz.jE x).1))
+  · exact ((HEq.refl r.Y.eE))
+  · exact ((HEq.refl r.Y.jA))
+  · exact ((HEq.refl r.Y.jA0))
+  · exact ((HEq.refl r.Y.eMt))
+  · exact ((HEq.refl r.Y.mj.eW))
+  · exact ((readL_jW r.Z c))
+  · exact ((readL_eRR r.Z c))
+  · exact ((transportedReading_baseRowLatticeCoordinates r.Z c))
 
 end GlobalTheory.Mem.R3.Rw.Mv
 
