@@ -83,6 +83,7 @@ import Development.AbelianVarietyTheory.Proofs.HeightProofs.QuadraticExtNormForm
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteResidueFieldAdicCompletionIntegers
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ArchimedeanOrbitMeasures.PushInv
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnramifiedQuadraticConditionFive
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalIsotropicOrbitOfE0, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalRankOneZeroFibreVolume, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalUnitScalingLatticeMeasure, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HyperbolicPairUnitaryTransitive, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalOrderQuadraticAlmostAll, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SplitQuadraticOrderPrincipal, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnramifiedQuadraticOrderPrincipal, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PrimitiveVectorsContentDecomposition, Development.WeilBound.RepresentationTheoryGL.SiegelWeil.ArchimedeanSiegelWeil.PlaceIntegrals.InvOneSubBounds
@@ -761,17 +762,7 @@ theorem quad_ring : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     apply τ.injective
     rw [h.2.2.2, h.2.2.2, star_star]
   have hne : ∃ x, σ x ≠ x := by
-    by_contra hc
-    push_neg at hc
-    obtain ⟨w⟩ := (inferInstance : Nonempty (NumberField.InfinitePlace E))
-    have hreal : w.IsReal := by
-      rw [← NumberField.InfinitePlace.mk_embedding w, NumberField.InfinitePlace.isReal_mk_iff,
-        NumberField.ComplexEmbedding.isReal_iff]
-      refine RingHom.ext fun x ↦ ?_
-      rw [NumberField.ComplexEmbedding.conjugate_coe_eq]
-      change star (w.embedding x) = w.embedding x
-      rw [← h.2.2.2, hc]
-    exact NumberField.InfinitePlace.not_isReal_iff_isComplex.2 (h.2.1.isComplex w) hreal
+    apply _root_.GlobalTheory.CompanionTheory.GunrInert.sig_moves <;> assumption
   obtain ⟨D, b₂, hsq, hb0, hσ1, hD⟩ := GlobalTheory.QuadNormBase.exists_basis F E σ h.2.2.1 hinv hne
   have hD0 : D ≠ 0 := fun h0 => hsq (h0 ▸ IsSquare.zero)
   have I := GlobalTheory.CompanionTheory.SW.GoodInt.rational_integral_units F E σ h
