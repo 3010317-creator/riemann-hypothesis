@@ -703,7 +703,6 @@ open UpperTheory.Gal.CertificateRingHomMap (GUf Gam0 Plc GLw AfQ sim mat comp ra
 open UpperTheory.Gal.W2.Seed (Arith Setup)
 open scoped TensorProduct Classical
 open GlobalTheory.CongL GlobalTheory.RoadWGeo Formalism.MainNotions.N Formalism.BasicNotions Formalism.ConjugateSelfDual UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Pl
-attribute [local instance] Ideal.Quotient.field
 open Neutral.B1 ReciprocityTheory.Gal
 
 namespace UpperTheory.Gal.Int.Geo.Pl

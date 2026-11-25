@@ -21,7 +21,6 @@ open ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 open ReciprocityTheory.ChartRestriction.G.TB (colM dAct)
 open IsLocalRing
-attribute [local instance] Over.cartesianMonoidalCategory
 namespace GlobalTheory.PowGerm
 
 section Jets

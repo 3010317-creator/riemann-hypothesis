@@ -665,8 +665,6 @@ section Unitary
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7} (V W : HSp D)
 
 def height (g : GA D V) : ℝ := heightGL D.host.F (Formalism.L2.Theta.matHom V g)

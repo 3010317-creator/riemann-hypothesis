@@ -19,8 +19,6 @@ open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S
 
 namespace Formalism.L2.SG.Pf.Carrier
 
-attribute [local instance] instCM
-
 variable {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSetting D} {u u' : D.what₂.Word}
 
 def Parts.Gam0 (P : Parts X u u') : ℝ :=
@@ -63,8 +61,6 @@ open scoped ENNReal
 namespace Formalism.L2.SG.Pf.Carrier.EnergyPf
 
 open Formalism.L2.SG.RealObj Formalism.L2.SG.RealObj.EnergyCut Formalism.L2.SG.Pf.Carrier
-
-attribute [local instance] instCM
 
 variable {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSetting D} {u u' : D.what₂.Word}
 

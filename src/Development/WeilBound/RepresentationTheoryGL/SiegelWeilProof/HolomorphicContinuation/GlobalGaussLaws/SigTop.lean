@@ -84,8 +84,6 @@ noncomputable section
 open scoped Matrix ComplexConjugate nonZeroDivisors
 open NumberField ReciprocityTheory.ChartRestriction.G.FD Formalism.BasicNotions Formalism.BasicNotions.TH
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 namespace PositivityTheory.Rg.Sw.Glob.WEq
 
 section Gen
@@ -198,8 +196,6 @@ noncomputable section
 
 open scoped Matrix ComplexConjugate nonZeroDivisors
 open NumberField Formalism.BasicNotions Formalism.BasicNotions.TH
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace PositivityTheory.Rg.Sw.Glob.WEq
 
@@ -767,8 +763,6 @@ noncomputable section
 
 open scoped Matrix ComplexConjugate
 open Matrix Formalism.BasicNotions Formalism.BasicNotions.TH GlobalTheory.Inertia NumberField
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace PositivityTheory.Rg.Sw.Glob
 

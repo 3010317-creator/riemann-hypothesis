@@ -53,8 +53,6 @@ open TrivSqZeroExt (inl inr)
 
 namespace GlobalTheory.SqZero
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 variable {R : Type} [CommRing R] {G : Over (Spec (CommRingCat.of R))} [GrpObj G] [IsCommMonObj G]
   {n : ℕ} {S S' A : Type} [CommRing S] [Algebra R S] [CommRing S'] [Algebra R S']
   [CommRing A] [Algebra R A]

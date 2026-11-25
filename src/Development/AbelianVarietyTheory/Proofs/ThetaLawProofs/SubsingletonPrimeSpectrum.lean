@@ -60,8 +60,6 @@ open TrivSqZeroExt (inl inr)
 
 namespace GlobalTheory.UnifDifferential
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 section Pull
 
 variable {R : Type} [CommRing R] {A : Over (Spec (CommRingCat.of R))}

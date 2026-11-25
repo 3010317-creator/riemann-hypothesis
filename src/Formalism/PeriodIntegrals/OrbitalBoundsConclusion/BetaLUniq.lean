@@ -399,8 +399,6 @@ section D7
 
 open PI.BetaLUniq
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem betaLUniq_of' (h1 : GramNondeg) (h2 : AgreeOnH) (h3 : WAniso) (h4 : LineReduce')
     (h5 : EigenvalueLastLineOne) : PI.BetaLUniq := by
   intro D u u' Λ F F' F'' β₁ β₂ hF hT' hT'' hG' hG'' hP1 hP2 hs1 hs2
@@ -454,8 +452,6 @@ noncomputable section
 open NumberField Formalism.BasicNotions
 
 namespace PI.UnitaryGroupMassFormula.BetaLUniq
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem cm_norm_eq_one (D : D7) (μ : D.host.E) (h : star μ * μ = 1) (φ : D.host.E →+* ℂ) :
     ‖φ μ‖ = 1 := by
@@ -653,8 +649,6 @@ end Gen
 section D7
 
 open PI.BetaLUniq
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem gS_ge_three (D : D7) : 3 ≤ gS D := by
   have h0 := (D.host.g_prime 0).two_le

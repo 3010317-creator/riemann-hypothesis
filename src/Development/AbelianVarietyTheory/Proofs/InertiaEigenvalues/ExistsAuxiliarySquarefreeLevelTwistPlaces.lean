@@ -372,10 +372,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open Formalism.L2.Host (embLL0)
 open scoped TensorProduct
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-
-
 noncomputable section
 
 namespace GlobalTheory.SeriesTie.UnivRat

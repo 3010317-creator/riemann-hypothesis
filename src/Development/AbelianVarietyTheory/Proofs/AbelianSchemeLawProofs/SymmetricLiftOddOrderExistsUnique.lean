@@ -56,8 +56,6 @@ open CategoryTheory CategoryTheory.Limits MonoidalCategory CartesianMonoidalCate
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open scoped CategoryTheory.Obj
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.SymLiftOdd
 
 theorem defect_pow {G U : Type} [CommGroup G] [CommGroup U] (f n : G → U) (X : G) (k : ℕ) (hX : X ^ k = 1)

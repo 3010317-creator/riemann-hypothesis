@@ -52,7 +52,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.P
 
 open CategoryTheory CategoryTheory.Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Semi
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.AbLaw
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (gs gm gs_eq gs_res gs_pull gs_mul gs_unit fn_ext sec_trans ChartPull chartPullSame
   gm_pull_g gm_linComb mem_pull LBIso iso_linComb isGen_iff)
