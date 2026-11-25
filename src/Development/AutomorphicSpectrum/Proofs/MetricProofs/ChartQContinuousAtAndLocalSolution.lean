@@ -351,11 +351,7 @@ theorem M_det_centre (hC : IsChart L bas A T0 B c ρ) (hK : IsKerProj (∑ j, B 
       (B j).map (fun x : ℤ => (x : ℂ)) = T0 0 := by simp
   rw [e, h] at hl
   have h5 : 0 ≤ v ⬝ᵥ v := Finset.sum_nonneg fun i _ => mul_self_nonneg _
-  have h6 : v ⬝ᵥ v ≤ 0 := by
-    by_contra hh
-    have := mul_pos hC.c_pos (not_le.1 hh)
-    linarith
-  exact dotProduct_self_eq_zero.1 (le_antisymm h6 h5)
+  exact dotProduct_self_eq_zero.1 (le_antisymm (nonpos_of_mul_nonpos_right hl hC.c_pos) h5)
 
 theorem chartQ_cont (hC : IsChart L bas A T0 B c ρ) (hK : IsKerProj (∑ j, B j) Pr) :
     ContinuousAt (chartQ Pr A T0) 0 := by
