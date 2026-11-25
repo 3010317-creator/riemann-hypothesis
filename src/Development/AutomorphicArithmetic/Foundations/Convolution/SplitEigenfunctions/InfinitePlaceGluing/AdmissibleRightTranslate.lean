@@ -255,14 +255,6 @@ open scoped Classical
 private theorem gln_val {E : Type} [Field E] [NumberField E] (b : A E) :
     (gl (nU b) : GL (Fin 2) (A E)).val = !![1, b; 0, 1] := rfl
 
-private theorem nU_inv {E : Type} [Field E] [NumberField E] (b : A E) :
-    (gl (nU b) : GL (Fin 2) (A E))⁻¹ = gl (nU (-b)) := by
-  rw [inv_eq_iff_mul_eq_one]
-  refine Units.ext ?_
-  rw [Units.val_mul, gln_val, gln_val]
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
-
 private alias cont_n := _root_.UpperTheory.ConvolutionTheory.R2.Pp.cont_n
 
 private theorem map_unipotent_eq_one {E S : Type} [Field E] [NumberField E] [CommRing S] (p : A E →+* S) (z : A E) (hz : p z = 0) :

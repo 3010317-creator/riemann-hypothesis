@@ -1337,8 +1337,6 @@ open UpperTheory.ConvolutionTheory.R2.G (FS2 Rw nE row)
 open UpperTheory.V.Af.Smo (EigAt)
 open scoped ComplexOrder
 
-private theorem ψ_zero' : ψ (0 : A ℚ) = 1 := by simp [ψ]
-
 private theorem congE_mono {E : Type} [Field E] [NumberField E] {M L : ℕ} (h : M ∣ L) {κ : GL (Fin 2) (A E)}
     (hκ : CongE L κ) : CongE M κ := by
   obtain ⟨e, rfl⟩ := h

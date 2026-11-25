@@ -273,13 +273,6 @@ theorem exists_pullGen (hL : D.toPre.P.L.IsLB) (oa : D.toPre.OAct O) (w0 : O)
   have c5 := corr_mulGen_one r
   exact corr_trans hL c1 (corr_trans hL c2 (corr_trans hL c3 c5))
 
-private lemma res_res_lemma {Y : Scheme.{0}} {U W Z : Y.Opens} (h₁ : W ≤ U) (h₂ : Z ≤ W) (x : Γ(Y, U)ˣ) :
-    res h₂ (res h₁ x) = res (h₂.trans h₁) x := by
-  ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
-  rw [← RingHom.comp_apply, ← CommRingCat.hom_comp, ← Functor.map_comp]
-  rfl
-
 
 section PullFam
 
