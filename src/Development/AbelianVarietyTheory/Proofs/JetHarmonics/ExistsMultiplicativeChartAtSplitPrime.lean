@@ -92,10 +92,6 @@ noncomputable section
 
 namespace GlobalTheory.IndefiniteRowSideFullHecke.NodalSeriesPeriods
 
-abbrev Qbar : Type := ↥(algebraicClosure ℚ ℂ)
-
-abbrev Place (p : ℕ) [Fact p.Prime] : Type := Qbar →+* ℂ_[p]
-
 abbrev incl (p : ℕ) [Fact p.Prime] : 𝓞_ℂ_[p] →+* ℂ_[p] := algebraMap 𝓞_ℂ_[p] ℂ_[p]
 
 section Expansion

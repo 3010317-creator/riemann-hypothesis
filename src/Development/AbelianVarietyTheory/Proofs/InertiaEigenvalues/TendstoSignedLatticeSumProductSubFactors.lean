@@ -995,8 +995,6 @@ theorem clear_denominators (K : UQ) {V : Type} [AddCommGroup V] [Module (UQ.E K)
     rw [mul_comm, mul_smul, key, smul_smul, mul_comm, ← smul_smul]
     exact M.smul_mem _ h
 
-alias main := _root_.GlobalTheory.ClearDenominatorsIntegral.clear_denominators
-
 end GlobalTheory.ClearDenominatorsIntegral
 end -- clump:auto
 end -- clump:auto

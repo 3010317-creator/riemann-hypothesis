@@ -60,14 +60,6 @@ namespace GlobalTheory.FockCompactW
 
 open GlobalTheory.RealLift
 
-def liftI {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
-    (t : κ → mixedEmbedding.mixedSpace F) : κ → AF F :=
-  GlobalTheory.ArchLocalAct.liftI t
-
-alias evI_add' := GlobalTheory.ArchLocalAct.evI_add'
-alias evI_mul' := GlobalTheory.ArchLocalAct.evI_mul'
-alias comm_offI := GlobalTheory.ArchLocalAct.comm_offI
-alias schr_trans' := GlobalTheory.ArchLocalAct.schr_trans'
 alias exists_op_of_UAt := GlobalTheory.ArchLocalAct.exists_op_of_UAt
 
 section Der

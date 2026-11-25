@@ -102,8 +102,6 @@ theorem prod_sub_prod_le {K Γ : Type} [Field K] [LinearOrderedCommGroupWithZero
       calc v (a j - b j) * v (∏ i ∈ s, b i) ≤ c * 1 := mul_le_mul' (hab j) hB
         _ = c := mul_one c
 
-alias main := _root_.GlobalTheory.ProdSubProdBound.prod_sub_prod_le
-
 end GlobalTheory.ProdSubProdBound
 end -- clump:auto
 end -- clump:auto

@@ -237,16 +237,6 @@ variable (c : (K →+* ℂ) → ℝ) (hc : ∀ σ, 0 < c σ) (σ : K →+* ℂ)
 
 end Scale
 
-noncomputable def scaleNormExp (t : (K →+* ℂ) → ℝ) : ArchMetric K V :=
-  { form := fun σ => (Real.exp (2 * t σ) : ℂ) • h.form σ
-    form_symm := fun σ x y => by
-      change (Real.exp (2 * t σ) : ℂ) * h.form σ y x =
-        conj ((Real.exp (2 * t σ) : ℂ) * h.form σ x y)
-      rw [h.form_symm]
-      simp only [map_mul, Complex.conj_ofReal]
-    posDef := fun σ _ e he =>
-      (h.posDef σ e he).smul (a := (Real.exp (2 * t σ) : ℂ)) (by exact_mod_cast Real.exp_pos _) }
-
 end Field
 
 end ArchMetric

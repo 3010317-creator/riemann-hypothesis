@@ -1338,8 +1338,6 @@ theorem main {E : Type} [Field E] [NumberField E] {V : Type} [AddCommGroup V] [M
     ∃ c : RingOfIntegers E, c ≠ 0 ∧ c • y ∈ L := by
   apply Formalism.IndefR.LatticeTransfer.Lat.exists_smul_mem <;> assumption
 
-alias target := _root_.GlobalTheory.TargetStatementSixOneSixtyEight.main
-
 end GlobalTheory.TargetStatementSixOneSixtyEight
 end -- clump:auto
 end -- clump:auto

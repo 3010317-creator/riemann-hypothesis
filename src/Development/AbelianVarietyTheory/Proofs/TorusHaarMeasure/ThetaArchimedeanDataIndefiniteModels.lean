@@ -161,8 +161,6 @@ theorem conj_halfIntegralGenerator (H : ReciprocityTheory.ChartRestriction.G.Geo
   apply mul_left_cancel₀ (two_ne_zero : (2 : E) ≠ 0)
   rw [h3, mul_sub, h2]; ring
 
-alias main := _root_.GlobalTheory.CMConjugationOfSquareRoot.conj_halfIntegralGenerator
-
 end GlobalTheory.CMConjugationOfSquareRoot
 end -- clump:auto
 end -- clump:auto
