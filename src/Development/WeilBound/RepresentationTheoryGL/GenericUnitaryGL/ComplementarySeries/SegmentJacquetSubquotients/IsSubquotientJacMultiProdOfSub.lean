@@ -26,7 +26,9 @@ theorem isSubquotient_jac_multiProd_of_sub {d l : ℕ} (σ : IrrRep (GL (Fin d) 
     {X : Type} [AddCommGroup X] [Module ℂ X] {π : Representation ℂ (Levi k fun _ : Fin l => Fin d) X}
     (h : IsSubquotient π (jac (consecBlocks l d) S.toRepresentation)) :
     IsSubquotient π (jac (consecBlocks l d) (multiProd (consecBlocks l d) (segTerm σ.ρ l))) :=
-  CompanionTheory.Pf1.SegRepC.Lift.isSubquotient_jac_multiProd_of_sub σ S h
+  h.trans (GlobalTheory.JacquetExact.isSubquotient_jac _ (isSmooth_multiProd_segTerm σ l)
+    (.of_injective (⟨S.toSubmodule.subtype, fun _ => rfl⟩ :
+      S.toRepresentation.IntertwiningMap _) Subtype.val_injective))
 
 theorem perm_eq_one_of_lt_succ {l : ℕ} (w : Equiv.Perm (Fin l))
     (h : ∀ (i : ℕ) (hi : i + 1 < l), w.symm ⟨i, by omega⟩ < w.symm ⟨i + 1, hi⟩) : w = 1 := by
