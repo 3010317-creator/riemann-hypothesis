@@ -79,9 +79,6 @@ def LogIffHomGa : Prop :=
   ∀ (R : Type u) [CommRing R] (F : FormalGroup R) (f : PowerSeries R),
     IsLog F f ↔ (IsHom F FormalGroup.𝔾ₐ f ∧ coeff 1 f = 1)
 
-def LogExistsUnique : Prop :=
-  ∀ (R : Type u) [CommRing R] [Algebra ℚ R] (F : FormalGroup R), ∃! f : PowerSeries R, IsLog F f
-
 section FunEq
 
 variable {K : Type u} [NormedField K]
