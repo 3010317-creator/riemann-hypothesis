@@ -74,10 +74,6 @@ theorem cont_kills {l : ℕ} [Fact l.Prime] {Ω : Type} [Field Ω] [Algebra ℚ 
 
 end GlobalTheory.Ord2.VanishKato
 
-namespace GlobalTheory.Ord2
-
-end GlobalTheory.Ord2
-
 end
 end -- clump:auto
 end -- clump:auto

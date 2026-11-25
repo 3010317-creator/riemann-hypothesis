@@ -163,11 +163,6 @@ theorem length_psiPar (D : D7) (C : ℝ) (τ : D.what₂.Tau) : (rowEntries D C 
 
 end GlobalTheory.RowReal.WeightsX
 
-namespace GlobalTheory.RowReal
-
-open GlobalTheory.SignedHC GlobalTheory.RowReal.WeightsX
-
-end GlobalTheory.RowReal
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ChiGridHighestWeightEqCompactChainParameter =====

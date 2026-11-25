@@ -942,10 +942,6 @@ open scoped TensorProduct
 
 noncomputable section
 
-namespace GlobalTheory.TriStepMem
-
-end GlobalTheory.TriStepMem
-
 namespace GlobalTheory.TriStep
 
 variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {σ : ℕ} {S : Dbl2 ψ σ}

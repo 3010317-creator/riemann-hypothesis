@@ -726,10 +726,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 open scoped TensorProduct
 noncomputable section
 namespace GlobalTheory.HeightCounting.RowRhoInt
-end GlobalTheory.HeightCounting.RowRhoInt
-namespace GlobalTheory.HeightCounting.RowRhoInt
-end GlobalTheory.HeightCounting.RowRhoInt
-namespace GlobalTheory.HeightCounting.RowRhoInt
 theorem core_data_of_point (hA : GlobalTheory.Published.GlobalArtinReciprocity) (D : D7) (cf : CharFrame D) (jE : D.host.E →+* Qb)
     (A : _root_.GlobalTheory.HeightCounting.CharFrameHostEmbedding D cf jE) (hG : GalEx D) (hR : RowCusp D A.row) (hC : GlobalTheory.RowTie.ChebSplit D.nd)
     (l : ℕ) [Fact l.Prime] (j : ↥D.LL0 →+* PadicAlgCl l) (σ : D.what₂.FT)

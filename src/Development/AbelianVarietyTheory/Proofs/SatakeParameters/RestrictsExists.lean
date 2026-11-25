@@ -125,8 +125,4 @@ def resRep (h : IsPlaceOver A v) (h' : IsPlaceOver A v') {n : ℕ} (a : WDRep h 
 
 end GlobalTheory.AboveL.ResEx
 
-namespace GlobalTheory.AboveL
-
-end GlobalTheory.AboveL
-
 end

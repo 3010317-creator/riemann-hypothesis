@@ -93,7 +93,3 @@ theorem smul_submatrix_sq {m n : Type} (a : ℂ) (M : Matrix n n ℂ) (e : m →
     (a • M).submatrix e e = a • M.submatrix e e := rfl
 
 end GlobalTheory.HodgeOnDomain
-
-namespace GlobalTheory.HodgeOnDomain
-
-end GlobalTheory.HodgeOnDomain

@@ -1187,10 +1187,6 @@ end GlobalTheory.JR.WeilQuad
 
 namespace GlobalTheory.JR.WeilQuad
 
-end GlobalTheory.JR.WeilQuad
-
-namespace GlobalTheory.JR.WeilQuad
-
 variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E]
 
 theorem omega_sq (A : Et F E) {ψ : AddChar F ℂ} {x : A.Kˣ} {μ : Measure A.L} {ω : A.K → ℂ}

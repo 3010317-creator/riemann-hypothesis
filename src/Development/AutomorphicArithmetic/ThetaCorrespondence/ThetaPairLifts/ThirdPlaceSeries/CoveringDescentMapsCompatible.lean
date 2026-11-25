@@ -513,10 +513,6 @@ theorem mapsCore {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Geo.Tor
 
 end GlobalTheory.CovTop.DescentMaps
 
-namespace GlobalTheory.CovTop.DescentMaps
-
-
-end GlobalTheory.CovTop.DescentMaps
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapsBoundOfDeepGood =====
@@ -714,8 +710,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.LevelStructureAutomorphisms (LevelA
 open GlobalTheory.BadCount
 open scoped TensorProduct
 open ReciprocityTheory.ChartRestriction.G.FD Formalism.BasicNotions.TH
-namespace GlobalTheory.CovTop.DescentMaps
-end GlobalTheory.CovTop.DescentMaps
 namespace GlobalTheory.CovTop.DescentMaps
 
 theorem covering_descent_maps_compatible_alt : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → GlobalTheory.Published.GrothendieckDeformation → GlobalTheory.HSCore.Quoted → GlobalTheory.Published.ToroidalForFanKS → GlobalTheory.Published.SemiAbelianLieSeminegative → _root_.GlobalTheory.CovTop.GramCondition → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.CovTop.MapsCondition := by

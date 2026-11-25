@@ -82,10 +82,6 @@ noncomputable section
 
 namespace GlobalTheory.CapelliLowest
 
-end GlobalTheory.CapelliLowest
-
-namespace GlobalTheory.CapelliLowest
-
 theorem single_comm {N : ℕ} (a b c d : Fin N) :
     Matrix.single a b (1 : ℂ) * Matrix.single c d 1 - Matrix.single c d 1 * Matrix.single a b 1 =
       (if b = c then Matrix.single a d 1 else 0) - (if d = a then Matrix.single c b 1 else 0) := by

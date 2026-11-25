@@ -1001,8 +1001,6 @@ open GlobalTheory.CMVal (IsHeckeL)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 open GlobalTheory.SqTop
 open GlobalTheory.ConstRatio (NegIdx Factor)
-namespace GlobalTheory.SqStepBig
-end GlobalTheory.SqStepBig
 noncomputable section
 namespace GlobalTheory.SqStepBig
 open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.ThK GlobalTheory.LFun

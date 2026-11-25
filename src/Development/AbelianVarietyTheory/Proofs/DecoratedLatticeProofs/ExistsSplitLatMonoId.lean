@@ -176,8 +176,4 @@ theorem isSelfDualC_splitL (h𝔟 : ∀ i, 𝔟 i ≠ 0) (hL₀ : IsSelfDualC S�
 
 end GlobalTheory.SeeSaw.SplitLat
 
-namespace GlobalTheory.SeeSaw
-
-end GlobalTheory.SeeSaw
-
 end

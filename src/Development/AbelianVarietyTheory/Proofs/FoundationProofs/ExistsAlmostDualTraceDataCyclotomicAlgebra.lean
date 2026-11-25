@@ -200,10 +200,6 @@ theorem valuation_lt_one {A : ValuationSubring Ω} (h : OverL l A) : A.valuation
 
 end GlobalTheory.Ord2.VanishNarrow
 
-namespace GlobalTheory.Ord2
-
-end GlobalTheory.Ord2
-
 end
 end -- clump:auto
 end -- clump:auto

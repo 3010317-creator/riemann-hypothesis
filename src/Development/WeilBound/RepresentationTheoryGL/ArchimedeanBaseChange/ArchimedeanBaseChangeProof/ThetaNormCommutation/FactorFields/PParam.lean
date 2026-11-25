@@ -57,9 +57,6 @@ theorem locEl_eventually_mem (n : ℕ) (δ : GL (Fin n) E) :
 
 end GlobalTheory.BCT.FinFib
 
-namespace GlobalTheory.BCT.FinFib
-
-end GlobalTheory.BCT.FinFib
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocElEventuallyMem =====
@@ -284,10 +281,6 @@ theorem param_main (h1 : SkewEx) (h2 : Struct) (h3 : QuadField) (h4 : LocDict) (
     rw [← mul_assoc, inv_mul_cancel₀ (show (tc ⟨_, hmem⟩ : ∀ j, K j) i ≠ 0 from (ev i (tc ⟨_, hmem⟩)).ne_zero), one_mul]
 
 end PositivityTheory.Rg.BcB.G3.ParamP
-
-namespace PositivityTheory.Rg.BcB.G3
-
-end PositivityTheory.Rg.BcB.G3
 
 end
 end -- clump:auto

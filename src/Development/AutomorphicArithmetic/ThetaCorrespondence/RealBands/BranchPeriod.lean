@@ -993,10 +993,6 @@ theorem exists_kf {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} (
 
 end GlobalTheory.PeriodNePf
 
-namespace GlobalTheory.PeriodNePf
-
-end GlobalTheory.PeriodNePf
-
 end
 end -- clump:auto
 end -- clump:auto

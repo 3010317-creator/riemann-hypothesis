@@ -49,10 +49,6 @@ variable (μ : Measure (GA D V)) (𝓕 : Set (GA D V)) {ι : Type} [Fintype ι] 
 
 end GlobalTheory.MultPetersson
 
-namespace GlobalTheory.MultPetersson
-
-
-end GlobalTheory.MultPetersson
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

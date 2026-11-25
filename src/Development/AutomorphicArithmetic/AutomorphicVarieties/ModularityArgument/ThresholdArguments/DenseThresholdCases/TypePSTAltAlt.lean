@@ -126,11 +126,6 @@ theorem exists_isGeneric_subrep {E : Type} [Field E] [NumberField E] [_root_.Num
 
 end GlobalTheory.CuspDetBlocks
 
-namespace GlobalTheory.CuspDetBlocks
-
-open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.CuspRep GlobalTheory.Whittaker
-
-end GlobalTheory.CuspDetBlocks
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

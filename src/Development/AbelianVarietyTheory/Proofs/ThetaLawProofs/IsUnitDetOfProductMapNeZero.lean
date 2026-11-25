@@ -630,7 +630,3 @@ theorem _root_.GlobalTheory.DiscrJacobian.associated_discr_norm_jacobian (R : Ty
 end Series
 
 end GlobalTheory.DiscrJacobian
-
-namespace GlobalTheory
-
-end GlobalTheory

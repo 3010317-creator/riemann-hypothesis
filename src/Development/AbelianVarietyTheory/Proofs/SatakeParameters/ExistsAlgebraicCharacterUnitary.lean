@@ -85,7 +85,3 @@ theorem exists_place (E : Type) [Field E] [NumberField E] (l : ℕ) [Fact l.Prim
   simpa using this
 
 end GlobalTheory.LadicInf
-
-namespace GlobalTheory.LadicInf
-
-end GlobalTheory.LadicInf

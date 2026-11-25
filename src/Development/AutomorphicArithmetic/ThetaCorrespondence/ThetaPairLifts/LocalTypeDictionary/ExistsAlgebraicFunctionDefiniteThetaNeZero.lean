@@ -171,11 +171,6 @@ end Darboux
 
 end GlobalTheory.DefThetaNZ
 
-namespace GlobalTheory.DefThetaNZ
-
-open scoped Matrix
-
-end GlobalTheory.DefThetaNZ
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

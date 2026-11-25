@@ -1041,9 +1041,6 @@ theorem exists_type_surj : ∀ (E : Type) [Field E] [NumberField E] (w : HeightO
 
 end GlobalTheory.CongW.TypeExists
 
-namespace GlobalTheory.CongW
-
-end GlobalTheory.CongW
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorsionFreeSurjZmod =====

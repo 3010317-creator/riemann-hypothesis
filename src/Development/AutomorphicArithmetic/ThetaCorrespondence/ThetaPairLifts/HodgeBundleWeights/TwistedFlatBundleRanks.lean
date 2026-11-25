@@ -182,9 +182,6 @@ end Gen
 
 end GlobalTheory.TwistRank
 
-namespace GlobalTheory.TwistRank
-
-end GlobalTheory.TwistRank
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -344,8 +341,6 @@ open GlobalTheory.BadCount
 open scoped TensorProduct
 
 noncomputable section
-namespace GlobalTheory.TwistRank
-end GlobalTheory.TwistRank
 namespace GlobalTheory.TwistRank
 theorem flat_twist_rank_eq : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j : ℕ, 1 ≤ (T.Q.Dw j).p → 1 ≤ (T.Q.Dw j).q → 2 < Module.finrank ℚ D.host.E / 2 → InR D j → ∀ (Y : Deep T.toCore j) (e : ℕ) (o : ℝ), Y.Good e o → ∀ c₁ : ℝ, GlobalTheory.FlatLine.FlatExistsAt Y.U (xiR D) c₁ → (∀ (la : AllWt.Weight (T.Q.Dw j)) (w : Psi T.Q.H → ℤ) Z, Y.rkC (la + GlobalTheory.FlatLine.parWt (T.Q.Dw j) w) Z = Y.rkC la Z) ∧ ∀ (a : (D.host.E →+* ℂ) × ℕ → ℕ) (n kc : ℕ) (s : ℤ), Dom a n → Even n → Y.GoodAt (shiftG (T.Q.Dw j) a n s) → (Y.rk (shiftG (T.Q.Dw j) a n s) : ℝ) = ∑ᶠ Z, Y.rkC (uWt (T.Q.Dw j) a n kc + s • hodgeWt (T.Q.Dw j)) Z := by
   intro hP D T hL j hp hq hE hj Y e o hY c₁ hF

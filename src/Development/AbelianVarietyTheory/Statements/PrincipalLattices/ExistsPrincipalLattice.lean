@@ -71,11 +71,5 @@ def CMExistsSt : Prop :=
       ∀ (j : Fin D.p ⊕ Fin D.q) (z : Fin (gA j.isLeft) → ℂ) (x : Sp ℂ ⟶ t₀.G.left), x ≫ t₀.G.hom = spMap (algebraMap K₁ ℂ) →
         x ≫ m'.φ = (e _ z ≫ X.φ j).left → x ≫ m.φ = (FU.ex i Pe (F j z)).left
 
-namespace ExSt
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
-
-end ExSt
-
 end GlobalTheory.CM
 end

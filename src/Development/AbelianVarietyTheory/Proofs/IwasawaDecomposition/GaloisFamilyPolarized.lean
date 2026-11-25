@@ -111,7 +111,3 @@ theorem not_mem_bad (D : D7) (cf : CharFrame D) (C : NChoice D) (tp : TupTied D 
       rw [hd x hx, hpsi x hx, one_mul]
 
 end GlobalTheory.SphNonSplit
-
-namespace GlobalTheory.SphNonSplit
-
-end GlobalTheory.SphNonSplit

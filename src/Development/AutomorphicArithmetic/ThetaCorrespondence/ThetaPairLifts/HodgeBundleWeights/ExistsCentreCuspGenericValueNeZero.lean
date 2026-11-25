@@ -1582,8 +1582,6 @@ section -- clump:auto
 section
 
 noncomputable section
-namespace GlobalTheory.CentreCusp
-end GlobalTheory.CentreCusp
 open NumberField GlobalTheory.AllWt GlobalTheory.CompHt GlobalTheory.DegCmp GlobalTheory.DegVal GlobalTheory.CovTop ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.L2.Pj Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta
 open scoped ENNReal NNReal
 namespace GlobalTheory.CentreCusp

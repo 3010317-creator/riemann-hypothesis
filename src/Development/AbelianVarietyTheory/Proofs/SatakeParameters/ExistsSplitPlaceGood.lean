@@ -81,7 +81,3 @@ theorem isSplitPl_of_isSplit (D : D7) (w : PlE D.host)
     ext1; exact hP
 
 end GlobalTheory.OffBad
-
-namespace GlobalTheory.OffBad
-
-end GlobalTheory.OffBad

@@ -239,9 +239,6 @@ end Descent
 
 end GlobalTheory.SqTower
 
-namespace GlobalTheory.SqTower
-
-end GlobalTheory.SqTower
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1301,8 +1298,6 @@ open GlobalTheory.CMVal (IsHeckeL)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 open GlobalTheory.SqTop
 open GlobalTheory.ConstRatio (NegIdx Factor)
-namespace GlobalTheory.SqTower
-end GlobalTheory.SqTower
 namespace GlobalTheory.SqTower
 open GlobalTheory.SqTower
 theorem tower_alt_bis : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching → LNe → Tower := by

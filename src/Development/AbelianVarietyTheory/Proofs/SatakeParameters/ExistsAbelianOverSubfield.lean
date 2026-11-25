@@ -89,7 +89,3 @@ theorem exists_place_between {F K Ω : Type} [Field F] [NumberField F] [Field K]
   exact ⟨⟨P, inferInstance, hne⟩, hP⟩
 
 end GlobalTheory.AbOverSubfield
-
-namespace GlobalTheory.AbOverSubfield
-
-end GlobalTheory.AbOverSubfield

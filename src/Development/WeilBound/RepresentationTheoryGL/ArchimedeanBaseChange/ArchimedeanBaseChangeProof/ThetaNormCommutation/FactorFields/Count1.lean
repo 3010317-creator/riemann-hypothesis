@@ -179,9 +179,6 @@ noncomputable section
 open NumberField IsDedekindDomain Matrix Polynomial Filter GlobalTheory.CuspRep GlobalTheory.PRep Formalism.UG Formalism.BasicNotions GlobalTheory.UnitaryBC Formalism.L2.Host GlobalTheory.BCT PositivityTheory.Rg.BcB.G3
 open scoped Classical TensorProduct
 
-namespace PositivityTheory.Rg.BcB.G3.AbsSumP
-end PositivityTheory.Rg.BcB.G3.AbsSumP
-
 theorem PositivityTheory.Rg.BcB.G3.absSum_pf : PositivityTheory.Rg.BcB.G3.AbsSum := by
   intro V C S L A o f D loc m N hA ho hf hD hN hcard
   set T : Set V := {v | ¬ ∀ l ∈ A v, f v l = if l = o v then 1 else 0} with hTdef

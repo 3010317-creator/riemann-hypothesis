@@ -122,7 +122,3 @@ def opL (s : UA E n →₀ ℂ) : Module.End ℂ (UA E n → ℂ) where
   map_smul' c φ := by simp [opOf, Finsupp.sum, Finset.smul_sum, smul_comm c]
 
 end GlobalTheory.CongSc
-
-namespace GlobalTheory.CongSc
-
-end GlobalTheory.CongSc

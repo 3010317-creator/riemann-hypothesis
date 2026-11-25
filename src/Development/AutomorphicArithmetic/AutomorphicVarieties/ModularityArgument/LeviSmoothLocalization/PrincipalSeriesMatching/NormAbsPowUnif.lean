@@ -133,9 +133,6 @@ end Glob
 
 end GlobalTheory.SphUnr
 
-namespace GlobalTheory.SphUnr
-
-end GlobalTheory.SphUnr
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

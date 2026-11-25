@@ -80,11 +80,3 @@ theorem ipM_smul_measure {D : D7} {V : Formalism.BasicNotions.TH.HSp D} {S : D.w
   exact hasPeterssonInner_unique M _ 𝓕 T T' w hv0 h3 h2
 
 end GlobalTheory.RowModCanon
-
-namespace GlobalTheory.RowModCanon
-
-open MeasureTheory Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Lev
-  Formalism.IndefR.Links Formalism.IndefR.RecTie
-
-
-end GlobalTheory.RowModCanon

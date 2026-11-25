@@ -363,10 +363,6 @@ theorem up_core (hV : VolSt) (hS : StabSt) (hN : NumSt) (D : D7) (Tu : Type) (C 
 
 end MainStatements.Tam.A
 
-namespace MainStatements.Tam
-
-end MainStatements.Tam
-
 end
 end -- clump:auto
 end -- clump:auto
@@ -383,8 +379,6 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestric
 open MeasureTheory Formalism.IndefR.Lev Formalism.IndefR.Datum Formalism.IndefR.Mult Formalism.BasicNotions.TH Formalism.L2.Theta
 open scoped ENNReal
 noncomputable section
-namespace MainStatements.Tam.A
-end MainStatements.Tam.A
 namespace MainStatements.Tam
 theorem tamagawa_number_upper_bound : VolSt → StabSt → NumSt → _root_.MainStatements.Tam.ArchimedeanTamagawaUpperBound := fun hV hS hN hP D Tu C t0 hC i P μ 𝓕 hF L hL =>
   MainStatements.Tam.A.up_core hV hS hN D Tu C t0 hC i P μ 𝓕 hF L hL (_root_.GlobalTheory.CovTop.LevelIndex.level_index_le_bound hP D Tu C t0 hC i P)

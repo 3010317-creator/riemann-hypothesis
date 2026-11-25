@@ -835,9 +835,6 @@ end Translate
 
 end GlobalTheory.FinPl
 
-namespace GlobalTheory.FinPl
-
-end GlobalTheory.FinPl
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

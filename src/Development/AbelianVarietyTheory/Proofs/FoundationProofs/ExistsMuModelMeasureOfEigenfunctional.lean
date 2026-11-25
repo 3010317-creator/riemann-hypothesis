@@ -119,10 +119,6 @@ theorem zs_norm_hat_le_one {l : ℕ} [Fact l.Prime] (ι : PadicAlgCl l ≃+* ℂ
 
 end GlobalTheory
 
-namespace GlobalTheory
-
-end GlobalTheory
-
 end
 end -- clump:auto
 end -- clump:auto

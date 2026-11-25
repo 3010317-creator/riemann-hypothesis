@@ -135,10 +135,4 @@ theorem wdAt_conj [NumberField E] [IsAlgClosure E Ω] (ι : Om l ≃+* ℂ) {A :
 
 end GlobalTheory.AboveL.RepConj
 
-namespace GlobalTheory.AboveL
-
-open GlobalTheory.AboveL.RepConj
-
-end GlobalTheory.AboveL
-
 end

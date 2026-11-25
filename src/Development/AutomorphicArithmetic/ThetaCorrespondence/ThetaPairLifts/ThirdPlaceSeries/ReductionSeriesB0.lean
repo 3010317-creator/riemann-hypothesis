@@ -947,11 +947,6 @@ theorem exists_iC_of_clC (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDom
 
 end GlobalTheory.Mem.Df
 
-namespace GlobalTheory.Mem.Df
-
-open Formalism.L2.TwC
-
-end GlobalTheory.Mem.Df
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

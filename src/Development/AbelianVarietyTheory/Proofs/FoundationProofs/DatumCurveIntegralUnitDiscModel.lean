@@ -926,12 +926,6 @@ namespace GlobalTheory
 
 open WeierstrassCurve WeierstrassCurve.Affine
 
-namespace TorsionUnit
-
-variable {K : Type} [NormedField K] [IsUltrametricDist K]
-
-end TorsionUnit
-
 open WeierstrassCurve WeierstrassCurve.Affine in
 variable {K : Type} [NormedField K] [IsUltrametricDist K] in
 private lemma short_negY_eq (A B x y : K) :

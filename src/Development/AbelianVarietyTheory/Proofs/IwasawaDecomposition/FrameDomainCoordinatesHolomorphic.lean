@@ -131,9 +131,3 @@ theorem differentiable_frameAt [Fintype Tau] (τ : X.Ψ) (a b : Fin r) :
     fun c _ => (hM c).const_mul _
 
 end GlobalTheory.ShFam.SecFrame
-
-namespace GlobalTheory.ShFam
-
-open ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.G.AR.Inst ReciprocityTheory.ChartRestriction.G.AR.Up
-
-end GlobalTheory.ShFam

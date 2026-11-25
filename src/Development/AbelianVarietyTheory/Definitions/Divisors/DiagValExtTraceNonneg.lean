@@ -256,30 +256,6 @@ theorem IsConj.quot {h' : Met p σ' S.X₂ (r + s)} (H : h.IsConj h') :
 
 end Met
 
-namespace Met
-
-variable {E F : X.Modules} {r s : ℕ} (h : Met p σ E r) {i : F ⟶ E}
-
-variable {h}
-
-end Met
-
-namespace Met
-
-variable {S : ShortComplex X.Modules} {r s : ℕ} (h : Met p σ S.X₂ (r + s)) (hS : S.ShortExact)
-  (h₁ : IsVB S.X₁ r) (h₃ : IsVB S.X₃ s) {y : CxPts p σ} (a a' : AdaptedChart S r s)
-  {D : ℕ} (c c' : AlgChart p σ D)
-
-
-variable {h}
-
-
-variable (h) (c c' : AlgChart p σ 1)
-
-variable {h}
-
-end Met
-
 namespace VMetric
 
 section Seq

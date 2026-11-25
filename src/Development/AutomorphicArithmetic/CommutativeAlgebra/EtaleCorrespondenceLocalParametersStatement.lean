@@ -227,10 +227,6 @@ open GlobalTheory GlobalTheory.PD
 
 noncomputable section
 
-namespace UpperTheory
-
-end UpperTheory
-
 theorem UpperTheory.finite_fiber_of_finiteType_parameter_ring :
     ∀ (F K : Type) [Field F] [Field K] [Algebra ℂ F] [Algebra ℂ K] [Algebra F K] [IsScalarTower ℂ F K]
       (d : ℕ) (x : Fin (d + 1) → F), IsPd ℂ x → Algebra.FiniteType ℂ (rB ℂ K x {0}) →

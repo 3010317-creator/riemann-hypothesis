@@ -129,10 +129,4 @@ theorem applyAt0_comb {ι : Type} (s : Finset ι) (c : ι → ℂ) (f : ι → V
 
 end GlobalTheory.LiftTypePrime.Jets
 
-namespace GlobalTheory.LiftTypePrime
-
-open NumberField Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.GL3Theta GlobalTheory.IndefiniteRowSideFullHecke.IntegralityWeylConditions GlobalTheory.GalTheta Jets
-
-end GlobalTheory.LiftTypePrime
-
 end

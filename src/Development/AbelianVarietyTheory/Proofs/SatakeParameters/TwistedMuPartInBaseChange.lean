@@ -105,11 +105,3 @@ theorem exists_split_not_mem (hC : ∀ Sg : Set (PlE H), Sg.Finite →
   exact Set.empty_ne_univ h
 
 end GlobalTheory.MuBlock
-
-namespace GlobalTheory.MuBlock
-
-end GlobalTheory.MuBlock
-
-namespace GlobalTheory.MuBlock
-
-end GlobalTheory.MuBlock

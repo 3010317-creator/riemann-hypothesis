@@ -45,9 +45,6 @@ theorem isAffineOpen_preimage_inf_of_isSeparated_over {Y X S : Scheme.{0}} (g : 
 
 end GlobalTheory.FinNear
 
-namespace GlobalTheory.FinNear
-
-end GlobalTheory.FinNear
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAffineOpenPreimageInfOfIsSeparatedOver =====

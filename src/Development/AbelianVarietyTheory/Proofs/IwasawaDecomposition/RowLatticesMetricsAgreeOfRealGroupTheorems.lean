@@ -164,13 +164,6 @@ structure Chain (m : ℕ) (A B : Type) [NormedAddCommGroup A] [InnerProductSpace
 
 attribute [instance] Chain.inst1 Chain.inst2 Chain.inst3
 
-namespace Chain
-
-variable {m : ℕ} {A B : Type} [NormedAddCommGroup A] [InnerProductSpace ℂ A]
-  [NormedAddCommGroup B] [InnerProductSpace ℂ B] (C : Chain m A B)
-
-end Chain
-
 end GlobalTheory.CompanionTheory.Mem
 
 end

@@ -95,11 +95,6 @@ theorem isFin_finPart {L : Type} [Field L] [NumberField L] (a : Ideles L) : IsFi
 
 end GlobalTheory.KerJ.RatPts
 
-namespace GlobalTheory.KerJ
-
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.GL3Theta Formalism.L2.Host NumberField Classical Formalism.FrobeniusOrbits GlobalTheory.KerJ.RatPts
-
-end GlobalTheory.KerJ
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

@@ -1604,9 +1604,6 @@ theorem exists_rep_alt (P : _root_.UpperTheory.V.Af.Hypotheses') [IsAlgClosure â
   Â· filter_upwards [ev_not_mem f.M f.pos.ne'] with w hwM
     exact hsat w (not_dvd_of_not_mem hwM)
 end GlobalTheory.Ord2.SrcForm
-namespace GlobalTheory.Ord2
-open TwDet SrcForm
-end GlobalTheory.Ord2
 end
 end
 end

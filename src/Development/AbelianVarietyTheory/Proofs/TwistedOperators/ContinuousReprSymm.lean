@@ -468,7 +468,3 @@ theorem _root_.GlobalTheory.AscFin.exists_bump_le {m n : ℕ} (x : Mx D m n) (A 
     exact hball (by rw [mem_ball, dist_eq_norm]; exact h1)
 
 end GlobalTheory.AscFinInhab
-
-namespace GlobalTheory.AscFin
-
-end GlobalTheory.AscFin

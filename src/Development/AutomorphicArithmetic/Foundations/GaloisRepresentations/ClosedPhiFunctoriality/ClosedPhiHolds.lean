@@ -1334,11 +1334,6 @@ theorem eig_pow_of_rep {K Ω : Type} [Field Ω] [Field K] [NumberField K] [Algeb
 
 end GlobalTheory.AboveL
 
-namespace GlobalTheory.AboveL
-
-open Pointwise
-
-end GlobalTheory.AboveL
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.MapNormEqOfMapPowEq =====

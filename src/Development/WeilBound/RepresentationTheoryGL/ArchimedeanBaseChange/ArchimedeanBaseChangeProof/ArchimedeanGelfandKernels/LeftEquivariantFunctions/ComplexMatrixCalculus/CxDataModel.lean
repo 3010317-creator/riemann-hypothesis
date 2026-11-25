@@ -1009,9 +1009,6 @@ theorem atDer' : AtDer := by
 
 end PositivityTheory.RgBcC.Cxd2.Der
 
-namespace PositivityTheory.RgBcC.Cxd2
-
-end PositivityTheory.RgBcC.Cxd2
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

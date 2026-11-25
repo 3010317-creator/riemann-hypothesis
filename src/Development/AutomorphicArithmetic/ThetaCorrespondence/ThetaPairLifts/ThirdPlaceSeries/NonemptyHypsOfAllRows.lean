@@ -472,10 +472,6 @@ theorem exists_du_nat (eps : ℝ) (h0 : 0 < eps) (h1 : eps < 1 / 52) : ∃ x0 : 
     fun i => h s P.R _ hs hx hok.rank (hok.val.2.2.2.2.1 i).1
   exact ⟨du, hpos, hdu⟩
 
-namespace Inh
-
-end Inh
-
 end GlobalTheory.Mem.Top
 
 end

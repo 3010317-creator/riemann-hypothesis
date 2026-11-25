@@ -973,9 +973,6 @@ end Final
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.NefVolume
 
-namespace GlobalTheory.CompanionTheory.Hypotheses₂
-
-end GlobalTheory.CompanionTheory.Hypotheses₂
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GlobalProofs.TendstoFinrankVeryAmple =====

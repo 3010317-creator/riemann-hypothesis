@@ -122,9 +122,3 @@ theorem map_eq_sum_frame {E k : Type} [Field E] [CommRing k] {n : ℕ} (φ : E �
   rw [map_smul, Pi.smul_apply, smul_eq_mul, map_mul, mul_comm]
 
 end GlobalTheory.Fam.MovedJoin
-
-namespace GlobalTheory.Fam
-open GlobalTheory.AdForm GlobalTheory.Fam.MovedJoin
-
-
-end GlobalTheory.Fam

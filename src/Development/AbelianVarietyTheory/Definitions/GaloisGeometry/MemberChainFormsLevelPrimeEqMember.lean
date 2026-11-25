@@ -534,13 +534,5 @@ def ChartBaseLatticeEqSelfDualAtP (Fo : FormsIn M (i + 1) hi) (p : ℕ) : Prop :
 
 end GlobalTheory.Port
 end
-section
-namespace GlobalTheory.Port
-open Formalism Formalism.MainNotions Formalism.MainNotions.G Formalism.BasicNotions Formalism.L2.G Formalism.L2.G.Cmp Formalism.L2.Forms Formalism.UG NumberField IsDedekindDomain Matrix Formalism.MainNotions.G.CmpJ Formalism.MainNotions.G.CmpJ.AgreeLv
-variable {D : D7} {u : D.what₂.Word} {Ch : ℕ → Type} {chOf : ∀ i, (D.mem u).C.cls i → Ch i}
-
-
-end GlobalTheory.Port
-end
 
 end

@@ -102,7 +102,3 @@ theorem mem_span_singleton_of_forall_height_le_one {B : Type} [CommRing B] [IsDo
   rw [← mul_div_assoc, div_eq_iff hfK, ← map_mul, ← map_mul, hc]
 
 end GlobalTheory.PrincipalHartogs
-
-namespace GlobalTheory.PrincipalHartogs
-
-end GlobalTheory.PrincipalHartogs

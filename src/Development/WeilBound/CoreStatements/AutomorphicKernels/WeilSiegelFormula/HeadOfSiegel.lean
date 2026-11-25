@@ -1281,10 +1281,6 @@ end PositivityTheory.PfWsf.Top
 
 namespace PositivityTheory.PfWsf.Top
 
-end PositivityTheory.PfWsf.Top
-
-namespace PositivityTheory.PfWsf.Top
-
 theorem head_of_three (h4 : PositivityTheory.GramSchwartzFunctions.BC.PoissonHerm) (h5 : PositivityTheory.GramSchwartzFunctions.BC.SiegelND)
     (h6 : PositivityTheory.GramSchwartzFunctions.BC.SiegelDeg) : GlobalTheory.Published.WeilSiegelFormula :=
   head_of_two GlobalTheory.CompanionTheory.EisCellsChapter.eisCells (big_of_three h4 h5 h6)
