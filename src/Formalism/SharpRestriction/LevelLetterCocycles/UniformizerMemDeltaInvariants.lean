@@ -1,5 +1,6 @@
 module
 
+import Formalism.SharpRestriction.LevelLetterCocycles.RepresentationCongruences.Pi0MemADelta
 public import Formalism.SharpRestriction.LevelLetterCocycles.LatticeBoundsOfThreeParts
 import Mathlib.Tactic.Lemma
 
@@ -30,22 +31,7 @@ def QhP (i : ZMod n) (h : ℕ) : Submodule O (W.DD T) :=
   (PhiPullΔ W T i).map ((Formalism.MainNotions.LiftingTheory.qp W ^ h) • (LinearMap.id : W.DD T →ₗ[O] W.DD T))
 
 theorem uniformizer_mem_delta_invariants : W.π₀ ∈ W.AΔ := by
-  show ∀ δ ∈ W.DelF, W.γA δ W.π₀ = W.π₀
-  intro δ hδ
-  have hδt := (W.DelF_def δ).1 hδ
-  funext i
-  show W.γ₀ δ W.π₀₁ = W.π₀₁
-
-  simp only [Formalism.BasicNotions.LocWach.π₀₁, map_add (f := _), map_sub, map_one, map_natCast, map_sum]
-  congr 1
-  refine Finset.sum_equiv (Equiv.mulLeft δ) ?_ ?_
-  · intro g
-    simp only [Equiv.coe_mulLeft]
-    rw [W.DelF_def g, W.DelF_def (δ * g), ← isOfFinOrder_iff_pow_eq_one, ← isOfFinOrder_iff_pow_eq_one]
-    have hδo := isOfFinOrder_iff_pow_eq_one.2 hδt
-    exact ⟨hδo.mul, fun hg => by simpa only [inv_mul_cancel_left] using hδo.inv.mul hg⟩
-  · intro g _
-    simp only [Equiv.coe_mulLeft, map_mul, AlgHom.mul_apply]
+  apply _root_.Formalism.MainNotions.N.FrobeniusPowerSeries.TypesA.pi0_mem_ADelta <;> assumption
 
 end Setup
 
