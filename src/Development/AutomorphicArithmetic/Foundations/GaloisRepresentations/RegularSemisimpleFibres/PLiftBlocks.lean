@@ -48,13 +48,6 @@ open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.Loc
 open GroundTheory.Global GroundTheory.Global.SemiLocal UpperTheory.V.Published UpperTheory.CBC UpperTheory.Gal.InertialTypesAlt
 open scoped Classical
 
-private lemma geo_mul (x l : ℕ) (hx : 1 ≤ x) :
-    (∑ i ∈ Finset.range l, x ^ i) * (x - 1) = x ^ l - 1 := by
-  obtain ⟨y, rfl⟩ : ∃ y, x = y + 1 := ⟨x - 1, by omega⟩
-  have := geom_sum_mul_add y l
-  simp only [Nat.add_sub_cancel]
-  omega
-
 private lemma div_id (N a b S : ℕ) (ha : 0 < a) (hS : S * a = b) (hb : b ∣ N) (hb0 : 0 < b) :
     S * (N / b) = N / a := by
   obtain ⟨c, rfl⟩ := hb
@@ -141,7 +134,7 @@ private lemma lbk_ndvd (Q q l f m k : ℕ) (hq : 2 ≤ q) (hl : l.Prime) (hQ : Q
   have hqm : 1 < q ^ m := Nat.one_lt_pow hm.ne' (by omega)
   have hql : 1 < (q ^ l) ^ m := Nat.one_lt_pow hm.ne' (Nat.one_lt_pow hl.ne_zero (by omega))
   have hT : (∑ i ∈ Finset.range l, q ^ (m * i)) * (q ^ m - 1) = (q ^ l) ^ m - 1 := by
-    have := geo_mul (q ^ m) l hqm.le
+    have := geom_sum_mul_of_one_le hqm.le l
     simp only [← pow_mul] at this ⊢
     rw [this, Nat.mul_comm l m]
   have hd1 : (q ^ l) ^ m - 1 ∣ Q - 1 := by
@@ -229,7 +222,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.liftBlocks :
   have hdiv' : ∀ p ∈ liftAll q l L, p.1 ∣ f := hdiv
   have hL0 : ∀ p ∈ L, 0 < p.1 := fun p hp => (hL p hp).1
   refine ⟨⟨l * f, Nat.mul_pos hl.pos hf, by rw [hQ', pow_mul], splitsL q l f hl L hdiv'⟩, ?_⟩
-  have hS := geo_mul q l (by omega)
+  have hS := geom_sum_mul_of_one_le (show 1 ≤ q by omega) l
   have hql : 1 < q ^ l := Nat.one_lt_pow hl.ne_zero (by omega)
   have hDid : (∑ i ∈ Finset.range l, q ^ i) * ((Q - 1) / (q ^ l - 1)) = (Q - 1) / (q - 1) :=
     div_id (Q - 1) (q - 1) (q ^ l - 1) _ (by omega) hS (by rw [hQ']; exact _root_.Nat.sub_one_dvd_pow_sub_one _ f) (by omega)
