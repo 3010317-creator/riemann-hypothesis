@@ -93,13 +93,8 @@ private theorem trace_ne [MeasurableSpace G] [BorelSpace G] (m : Measure G) [m.I
     rw [(hA v (l ∘ₗ τ h)).2, (hA v l).2]
     refine Eq.trans ?_ (integral_mul_left_eq_self (μ := m) (fun g => (J : Set G).indicator (1 : G → ℂ) g * l (τ g v)) h)
     refine integral_congr_ae (Filter.Eventually.of_forall fun g => ?_)
-    have hi : (J : Set G).indicator (1 : G → ℂ) (h * g) = (J : Set G).indicator (1 : G → ℂ) g := by
-      by_cases hg : g ∈ J
-      · rw [Set.indicator_of_mem (show h * g ∈ (J : Set G) from J.mul_mem hh hg),
-          Set.indicator_of_mem (show g ∈ (J : Set G) from hg)]
-        rfl
-      · rw [Set.indicator_of_notMem (show h * g ∉ (J : Set G) from fun e => hg ((Subgroup.mul_mem_cancel_left J hh).1 e)),
-          Set.indicator_of_notMem (show g ∉ (J : Set G) from hg)]
+    have hi : (J : Set G).indicator (1 : G → ℂ) (h * g) = (J : Set G).indicator (1 : G → ℂ) g :=
+      Set.indicator_eq_indicator (Subgroup.mul_mem_cancel_left J hh) rfl
     show (J : Set G).indicator (1 : G → ℂ) g * l (τ h (τ g v)) = (J : Set G).indicator (1 : G → ℂ) (h * g) * l (τ (h * g) v)
     rw [hi, map_mul, Module.End.mul_apply]
   obtain ⟨x, hxf, hx0⟩ := (Submodule.ne_bot_iff _).1 hx
@@ -124,19 +119,9 @@ theorem UpperTheory.ConvolutionTheory.T.unitTrace :
   haveI := hm
   have hcl : IsClosed (J : Set (Gw n w)) := J.isClosed_of_isOpen hJ.2
   have hind : ∀ u ∈ J, ∀ g, (J : Set (Gw n w)).indicator (1 : Gw n w → ℂ) (u * g) = (J : Set (Gw n w)).indicator 1 g ∧
-      (J : Set (Gw n w)).indicator (1 : Gw n w → ℂ) (g * u) = (J : Set (Gw n w)).indicator 1 g := by
-    intro u hu g
-    have h1 : u * g ∈ J ↔ g ∈ J := Subgroup.mul_mem_cancel_left J hu
-    have h2 : g * u ∈ J ↔ g ∈ J := Subgroup.mul_mem_cancel_right J hu
-    by_cases hg : g ∈ J
-    · rw [Set.indicator_of_mem (show u * g ∈ (J : Set (Gw n w)) from h1.2 hg),
-        Set.indicator_of_mem (show g * u ∈ (J : Set (Gw n w)) from h2.2 hg),
-        Set.indicator_of_mem (show g ∈ (J : Set (Gw n w)) from hg)]
-      exact ⟨rfl, rfl⟩
-    · rw [Set.indicator_of_notMem (show u * g ∉ (J : Set (Gw n w)) from fun e => hg (h1.1 e)),
-        Set.indicator_of_notMem (show g * u ∉ (J : Set (Gw n w)) from fun e => hg (h2.1 e)),
-        Set.indicator_of_notMem (show g ∉ (J : Set (Gw n w)) from hg)]
-      exact ⟨rfl, rfl⟩
+      (J : Set (Gw n w)).indicator (1 : Gw n w → ℂ) (g * u) = (J : Set (Gw n w)).indicator 1 g :=
+    fun u hu g => ⟨Set.indicator_eq_indicator (Subgroup.mul_mem_cancel_left J hu) rfl,
+      Set.indicator_eq_indicator (Subgroup.mul_mem_cancel_right J hu) rfl⟩
   have htest : Test ((J : Set (Gw n w)).indicator (1 : Gw n w → ℂ)) := by
     refine ⟨(IsLocallyConstant.iff_exists_open _).2 fun x => ?_, HasCompactSupport.intro hJ.1 fun x hx => Set.indicator_of_notMem hx _⟩
     by_cases hx : x ∈ (J : Set (Gw n w))
