@@ -43,83 +43,16 @@ theorem strictTransform_eq_ker_strictTransformι {X X₁ : Scheme.{u}} (π : X�
     (Z D : X.IdealSheafData) :
     Blowup.strictTransform π Z D = (strictTransformι π Z D).ker := rfl
 
-private theorem ker_ideal_eq_ker_app {W Z : Scheme.{u}} (g : W ⟶ Z) [QuasiCompact g]
-    (U : Z.affineOpens) :
-    (Scheme.Hom.ker g).ideal U = RingHom.ker (CommRingCat.Hom.hom (g.app U.1)) := by
-  simp
-
 theorem ker_eq_ker_of_isIso_comp {A B T : Scheme.{u}} (f : A ⟶ T) (g : B ⟶ T) (e : A ⟶ B)
     [IsIso e] (h : e ≫ g = f) : f.ker = g.ker := by
   subst h; exact Scheme.Hom.ker_comp_of_isIso e g
 
-private theorem image_preimage_ι_of_le {X : Scheme.{u}} (U O : X.Opens) (h : O ≤ U) :
-    Scheme.Opens.ι U ''ᵁ (Scheme.Opens.ι U ⁻¹ᵁ O) = O := by
-  refine le_antisymm ?_ ?_
-  · rintro x ⟨y, hy, rfl⟩
-    exact hy
-  · intro x hx
-    exact ⟨⟨x, h hx⟩, hx, rfl⟩
-
 theorem ker_comap_ι_eq_ker_morphismRestrict {W T : Scheme.{u}} (m : W ⟶ T) [QuasiCompact m]
     (V : T.Opens) :
     (Scheme.Hom.ker m).comap (Scheme.Opens.ι V) = Scheme.Hom.ker (m ∣_ V) := by
-  refine Scheme.IdealSheafData.ext ?_
-  funext P
-  have hQaff : IsAffineOpen (Scheme.Opens.ι V ''ᵁ P.1) :=
-    P.2.image_of_isOpenImmersion (Scheme.Opens.ι V)
-  have hpre : Scheme.Opens.ι V ⁻¹ᵁ (Scheme.Opens.ι V ''ᵁ P.1) = P.1 :=
-    (Scheme.Opens.ι V).preimage_image_eq P.1
-  have e : P.1 ≤ Scheme.Opens.ι V ⁻¹ᵁ (Scheme.Opens.ι V ''ᵁ P.1) := hpre.ge
-  have hpre2 : ((m ∣_ V) ⁻¹ᵁ P.1)
-      = Scheme.Opens.ι (m ⁻¹ᵁ V) ⁻¹ᵁ (m ⁻¹ᵁ (Scheme.Opens.ι V ''ᵁ P.1)) := by
-    rw [← Scheme.Hom.comp_preimage, ← morphismRestrict_ι, Scheme.Hom.comp_preimage, hpre]
-  have hQV : (Scheme.Opens.ι V ''ᵁ P.1) ≤ V := Scheme.Opens.ι_image_le V P.1
-  have hle : m ⁻¹ᵁ (Scheme.Opens.ι V ''ᵁ P.1) ≤ m ⁻¹ᵁ V := fun x hx => hQV hx
-  have himg : Scheme.Opens.ι (m ⁻¹ᵁ V) ''ᵁ ((m ∣_ V) ⁻¹ᵁ P.1)
-      = m ⁻¹ᵁ (Scheme.Opens.ι V ''ᵁ P.1) := by
-    rw [hpre2]
-    exact image_preimage_ι_of_le (m ⁻¹ᵁ V) (m ⁻¹ᵁ (Scheme.Opens.ι V ''ᵁ P.1)) hle
-  have hbij := IsOpenImmersion.bijective_appLE_of_image_eq (Scheme.Opens.ι V)
-    (Scheme.Opens.ι V ''ᵁ P.1) P.1 e rfl
-  have hinj := (IsOpenImmersion.bijective_appLE_of_image_eq (Scheme.Opens.ι (m ⁻¹ᵁ V))
-    (m ⁻¹ᵁ (Scheme.Opens.ι V ''ᵁ P.1)) ((m ∣_ V) ⁻¹ᵁ P.1) hpre2.le himg).1
-  have hsq : Scheme.Hom.appLE (Scheme.Opens.ι V) (Scheme.Opens.ι V ''ᵁ P.1) P.1 e ≫
-        (m ∣_ V).app P.1
-      = m.app (Scheme.Opens.ι V ''ᵁ P.1) ≫
-        Scheme.Hom.appLE (Scheme.Opens.ι (m ⁻¹ᵁ V))
-          (m ⁻¹ᵁ (Scheme.Opens.ι V ''ᵁ P.1)) ((m ∣_ V) ⁻¹ᵁ P.1) hpre2.le := by
-    rw [Scheme.Hom.app_eq_appLE (m ∣_ V), Scheme.Hom.app_eq_appLE m,
-      Scheme.Hom.appLE_comp_appLE (m ∣_ V) (Scheme.Opens.ι V) (Scheme.Opens.ι V ''ᵁ P.1) P.1
-        ((m ∣_ V) ⁻¹ᵁ P.1) e le_rfl,
-      Scheme.Hom.appLE_comp_appLE (Scheme.Opens.ι (m ⁻¹ᵁ V)) m (Scheme.Opens.ι V ''ᵁ P.1)
-        (m ⁻¹ᵁ (Scheme.Opens.ι V ''ᵁ P.1)) ((m ∣_ V) ⁻¹ᵁ P.1) le_rfl hpre2.le]
-    exact Scheme.Hom.appLE_congr_hom (morphismRestrict_ι m V) ..
-  have hsqr : ∀ x, (CommRingCat.Hom.hom ((m ∣_ V).app P.1))
-        ((CommRingCat.Hom.hom
-          (Scheme.Hom.appLE (Scheme.Opens.ι V) (Scheme.Opens.ι V ''ᵁ P.1) P.1 e)) x)
-      = (CommRingCat.Hom.hom (Scheme.Hom.appLE (Scheme.Opens.ι (m ⁻¹ᵁ V))
-          (m ⁻¹ᵁ (Scheme.Opens.ι V ''ᵁ P.1)) ((m ∣_ V) ⁻¹ᵁ P.1) hpre2.le))
-        ((CommRingCat.Hom.hom (m.app (Scheme.Opens.ι V ''ᵁ P.1))) x) := by
-    intro x
-    have h' := congrArg (fun mm => (CommRingCat.Hom.hom mm) x) hsq
-    simpa only [CommRingCat.hom_comp, RingHom.comp_apply] using h'
-  rw [Scheme.IdealSheafData.comap_ideal_eq_map_appLE _ (Scheme.Opens.ι V)
-      ⟨Scheme.Opens.ι V ''ᵁ P.1, hQaff⟩ P e,
-    ker_ideal_eq_ker_app m ⟨Scheme.Opens.ι V ''ᵁ P.1, hQaff⟩, ker_ideal_eq_ker_app (m ∣_ V) P]
-  dsimp only
-  refine le_antisymm ?_ ?_
-  · rw [Ideal.map_le_iff_le_comap]
-    intro x hx
-    rw [Ideal.mem_comap, RingHom.mem_ker, hsqr x]
-    rw [RingHom.mem_ker] at hx
-    rw [hx, map_zero]
-  · intro y hy
-    rw [RingHom.mem_ker] at hy
-    obtain ⟨x, rfl⟩ := hbij.2 y
-    refine Ideal.mem_map_of_mem _ ?_
-    rw [RingHom.mem_ker]
-    apply hinj
-    rw [← hsqr x, hy, map_zero]
+  refine Scheme.IdealSheafData.ext (funext fun P => ?_)
+  rw [Scheme.IdealSheafData.ideal_comap_of_isOpenImmersion,
+    Scheme.ker_ideal_of_isPullback_of_isOpenImmersion m (m ∣_ V) _ _ (isPullback_morphismRestrict m V)]
 
 theorem ker_comap_ι_eq_ker_of_isIso_comp {W T S : Scheme.{u}} (m : W ⟶ T) [QuasiCompact m]
     (V : T.Opens) (n : S ⟶ V.toScheme) (e : S ⟶ (m ⁻¹ᵁ V).toScheme) [IsIso e]
