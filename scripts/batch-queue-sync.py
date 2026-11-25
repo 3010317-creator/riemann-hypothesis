@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
-"""Assemble queued pull requests into a batch pull request and keep the labels in step.
+"""Keep the labels of the batch queue in step with the batches being built.
 
 The batch-queue workflow runs this from its trusted checkout. Everything goes through GitHub's
 API: GitHub performs the merges, and nothing from a pull request is checked out or run here.
+
+The batch queue is a list of approvals, and maintainers assemble batches from it by hand. This
+script assembles no batch of its own: the code that does is kept, switched off by `ASSEMBLE`, in
+case we want a batch assembled by the queue again, and the comment there says what that needs.
+What follows about the batch being assembled, the order queued commits go in and the note in its
+pull request describes that code as it works with `ASSEMBLE` on. With it off, a branch this
+script started is removed once its pull request is merged or closed, as before, and one without a
+pull request, such as `batch/2026-11-24-142233`, is left alone.
 
 Which commit goes into a batch. A maintainer queues one commit of a pull request by commenting
 `batch`: the commit that was its head when the comment was posted, or one named in the comment.
@@ -92,6 +100,32 @@ RESERVE = _rest.RESERVE
 # What was read from a pull request is remembered only once the pull request has been quiet for
 # this long. GitHub's update times are whole seconds, so two changes in one second look like one.
 SETTLE = datetime.timedelta(seconds=120)
+
+# Whether the sync assembles a batch of its own from the queue: starts a `batch/<date-time>`
+# branch, merges each queued commit into it, opens and describes its pull request, and rebuilds it
+# on top of a batch assembled by hand (`start`, `recall`, `restack`, `publish` and the end of
+# `sync`). It does not: the queue is a list of approvals, which maintainers assemble batches from
+# by hand. The code is kept, and tested with this on, in case we want a batch assembled by the
+# queue again. Running it taught us what that needs:
+#
+# - GitHub Actions may not create pull requests in this repository. That is a repository setting:
+#   Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests". So
+#   the queue's branch `batch/2026-11-24-142233` never got a pull request, and every sync run
+#   ended in `Refused` at `publish`: the job failed, its summary showed only the refusal, and
+#   anything that runs after `publish` would not run. Run 45503694341 shows it.
+# - The batches maintainers assemble by hand already take every open pull request that is not a
+#   draft, touches `src/` and merges cleanly, queued or not, so a second batch assembled from the
+#   queue largely builds them again.
+# - Batches assembled by hand are stacked: #1739 (`batch/b10b-on-1410`) is built on #1410, and
+#   takes each new head of #1410 while #1410 is being repaired. A batch of the queue would have
+#   to go on the outermost of them and be rebuilt whenever a batch below it moves. `restack`
+#   follows one batch assembled by hand into main, and goes back to main when there are more.
+# - Requests: a sync run that assembled cost about 300 REST requests. Run 45503694341 ended with
+#   "304 requests to GitHub; 4721 left this hour".
+#
+# To revive it: allow GitHub Actions to create pull requests, decide how a batch of the queue
+# relates to stacked batches assembled by hand, and set this back to True.
+ASSEMBLE = False
 
 # Comments the workflow's label job leaves when a maintainer queues or unqueues a pull request.
 # They count only at the very start of a comment written by the workflow itself.
@@ -823,6 +857,10 @@ def sync(gh, now=None):
         requeued |= hold(gh, batch, pulls, held, log)
     held = holders(hand)
 
+    if not ASSEMBLE:
+        # A batch of this script's own whose pull request was merged or closed was tidied up
+        # after above. One that has none is left alone (see `ASSEMBLE`).
+        return log or ["nothing to do"]
     if requeued:
         # Leave time to take the pull request that broke the build out of the queue first.
         log.append("not starting a new batch in this run: the next `batch` or `-batch` comment does")

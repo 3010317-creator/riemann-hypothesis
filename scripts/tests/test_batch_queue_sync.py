@@ -9,8 +9,10 @@ import json
 from pathlib import Path
 import re
 import unittest
+from unittest import mock
 
 SCRIPT = Path(__file__).resolve().parents[1] / "batch-queue-sync.py"
+WORKFLOW = Path(__file__).resolve().parents[2] / ".github" / "workflows" / "batch-queue.yml"
 spec = importlib.util.spec_from_file_location("batch_queue_sync", SCRIPT)
 batch = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(batch)
@@ -336,7 +338,23 @@ def merges(gh):
     return [payload["head"] for method, path, payload in gh.writes if path == "merges"]
 
 
-class QueuedCommits(unittest.TestCase):
+def assembling():
+    """The code that assembles a batch of the queue's own, switched on, as it was before
+    `ASSEMBLE`."""
+    return mock.patch.object(batch, "ASSEMBLE", True)
+
+
+class WithAssembly(unittest.TestCase):
+    """Tests written while the sync assembled a batch of its own. `ASSEMBLE` now switches that
+    off, and they run with it on, so that the code stays tested and can be revived."""
+
+    def setUp(self):
+        patch = assembling()
+        patch.start()
+        self.addCleanup(patch.stop)
+
+
+class QueuedCommits(WithAssembly):
     """A batch takes the commit a maintainer queued, and nothing else."""
 
     def test_a_push_after_queuing_is_not_merged(self):
@@ -434,7 +452,7 @@ class QueuedCommits(unittest.TestCase):
         self.assertEqual(merges(gh), [sha("head11"), sha("head12")])
 
 
-class Assembling(unittest.TestCase):
+class Assembling(WithAssembly):
     def test_first_batch_is_started_opened_and_lists_what_went_in(self):
         gh = Fake()
         queue(gh, 12, 11)
@@ -540,7 +558,7 @@ class Assembling(unittest.TestCase):
         self.assertIn(f"- #11 at `{short('head11')}`\n- #13 at `{short('head13')}`", batch_pull(gh)["body"])
 
 
-class BranchNames(unittest.TestCase):
+class BranchNames(WithAssembly):
     def test_a_name_already_taken_is_not_reused(self):
         gh = Fake()
         gh.refs[FIRST] = MAIN  # made a moment ago, after the batch branches were listed
@@ -565,7 +583,7 @@ class BranchNames(unittest.TestCase):
         self.assertEqual(merges(gh), [])
 
 
-class Growing(unittest.TestCase):
+class Growing(WithAssembly):
     """The batch being assembled takes every queued commit while its pull request is open."""
 
     def test_a_build_of_it_does_not_stop_it(self):
@@ -582,7 +600,7 @@ class Growing(unittest.TestCase):
         self.assertNotIn("freeze", gh.pulls[111]["body"])
 
 
-class FinishedBatches(unittest.TestCase):
+class FinishedBatches(WithAssembly):
     def assembled(self):
         gh = Fake()
         queue(gh, 11, 12)
@@ -656,7 +674,7 @@ class FinishedBatches(unittest.TestCase):
         self.assertNotIn(sha("head12"), gh.inside[gh.refs["batch/2026-11-23-051230"]])
 
 
-class LeavingTheQueue(unittest.TestCase):
+class LeavingTheQueue(WithAssembly):
     def test_commits_already_in_the_batch_stay_and_the_batch_says_so(self):
         gh = Fake()
         queue(gh, 11, 12)
@@ -703,7 +721,7 @@ class LeavingTheQueue(unittest.TestCase):
         self.assertIn(f"- #11 at `{short('head11')}`\n\nAlso in this branch:\n\n- #12, no longer queued", gh.pulls[112]["body"])
 
 
-class OtherBatchBranches(unittest.TestCase):
+class OtherBatchBranches(WithAssembly):
     """A `batch/...` branch this script did not start, such as one assembled by hand, is left alone."""
 
     def by_hand(self, gh):
@@ -788,7 +806,7 @@ def by_hand(gh, *numbers, number=1018, ref=HAND, name="kim"):
     return head
 
 
-class BuiltByHand(unittest.TestCase):
+class BuiltByHand(WithAssembly):
     """A batch assembled by hand hands `building` to every open pull request it contains."""
 
     def built(self):
@@ -1065,7 +1083,7 @@ class Notes(unittest.TestCase):
         self.assertEqual(gh.writes, [])
 
 
-class StackedOnABatchByHand(unittest.TestCase):
+class StackedOnABatchByHand(WithAssembly):
     """The batch being assembled sits on top of the batch assembled by hand that is being built."""
 
     def stacked(self):
@@ -1212,7 +1230,7 @@ class StackedOnABatchByHand(unittest.TestCase):
         self.assertEqual(len(gh.said(13)), 2)
 
 
-class Priority(unittest.TestCase):
+class Priority(WithAssembly):
     """Pull requests labelled `priority` go into a batch before the others."""
 
     def test_it_goes_in_first_and_the_one_it_conflicts_with_is_left_out(self):
@@ -1247,7 +1265,7 @@ class Priority(unittest.TestCase):
         self.assertIn("Left out, because GitHub could not merge them into this branch: #11.", body)
 
 
-class ClosedPullRequests(unittest.TestCase):
+class ClosedPullRequests(WithAssembly):
     """A closed pull request is neither waiting for a build nor in one."""
 
     def test_closing_takes_the_label_off(self):
@@ -1299,7 +1317,7 @@ class ClosedPullRequests(unittest.TestCase):
                                          "issues/12/labels/building"])
 
 
-class Reopening(unittest.TestCase):
+class Reopening(WithAssembly):
     def closed(self, queued=True):
         gh = Fake()
         if queued:
@@ -1366,7 +1384,7 @@ class Reopening(unittest.TestCase):
                           and not write[1].startswith("issues/111")], [])
 
 
-class Requests(unittest.TestCase):
+class Requests(WithAssembly):
     """The workflow's token is allowed 1,000 requests an hour, shared with every other workflow."""
 
     def big(self, count=33):
@@ -1406,7 +1424,7 @@ class Requests(unittest.TestCase):
         self.assertEqual(len(merges(gh)), 3)
 
 
-class OpeningThePullRequest(unittest.TestCase):
+class OpeningThePullRequest(WithAssembly):
     def test_when_workflows_may_not_open_pull_requests_the_branch_waits_for_a_person(self):
         gh = Fake()
         gh.allow_pulls = False
@@ -1425,7 +1443,7 @@ class OpeningThePullRequest(unittest.TestCase):
         self.assertIn(f"- #11 at `{short('head11')}`\n- #12 at `{short('head12')}`", gh.pulls[50]["body"])
 
 
-class DryRun(unittest.TestCase):
+class DryRun(WithAssembly):
     def test_reads_but_sends_no_change(self):
         gh = Fake(dry_run=True)
         queue(gh, 11, 12)
@@ -1436,6 +1454,148 @@ class DryRun(unittest.TestCase):
         self.assertEqual((gh.said(11), gh.said(12)), ([], []))
         self.assertIn(f"would add #11 at `{short('head11')}` to `{FIRST}`", log)
         self.assertIn(f'would POST merges {{"base": "{FIRST}", "head": "{sha("head11")}"', printed.getvalue())
+
+
+class ApprovalList(unittest.TestCase):
+    """With `ASSEMBLE` off, as it is: the queue is a list of approvals, and the sync assembles no
+    batch of its own. It keeps the labels in step with batches assembled by hand, closed and
+    reopened pull requests as before."""
+
+    def test_assembly_is_switched_off(self):
+        self.assertIs(batch.ASSEMBLE, False)
+
+    def test_queuing_starts_no_branch_and_merges_nothing(self):
+        gh = Fake()
+        queue(gh, 11)
+        queue(gh, 12)
+        gh.label(12, add=PRIORITY)
+        writes_before = list(gh.writes)
+        log = sync(gh)
+        self.assertEqual(log, ["nothing to do"])
+        self.assertEqual(gh.writes, writes_before)
+        self.assertEqual(gh.refs, {})
+        self.assertEqual(merges(gh), [])
+        self.assertNotIn("POST pulls", {f"{method} {path}" for method, path, _ in gh.writes})
+        # The approvals the label job recorded, and its labels, stay as they are.
+        self.assertEqual((gh.pulls[11]["labels"], gh.pulls[12]["labels"]), ({QUEUED}, {QUEUED, PRIORITY}))
+        self.assertEqual([batch.APPROVED.match(item["body"]).group(1) for item in gh.comments[12]], [sha("head12")])
+
+    def test_a_dry_run_shows_no_batch_of_its_own(self):
+        gh = Fake(dry_run=True)
+        queue(gh, 11, 12)
+        printed = io.StringIO()
+        with contextlib.redirect_stdout(printed):
+            log = sync(gh)
+        self.assertEqual(log, ["nothing to do"])
+        self.assertEqual(printed.getvalue(), "")
+
+    def test_a_batch_assembled_by_hand_is_kept_in_step(self):
+        gh = Fake()
+        queue(gh, 11, 12, 13)
+        gh.add_pull(14, "head14")
+        by_hand(gh, 11, 12, 14)
+        log = sync(gh)
+        self.assertEqual([gh.pulls[n]["labels"] for n in (11, 12, 13, 14)], [{BUILDING}, {BUILDING}, {QUEUED}, {BUILDING}])
+        self.assertEqual(gh.pulls[1018]["labels"], {"large", BUILDING})
+        self.assertIn("#1018 is a batch assembled by hand with open pull requests in it: now `building`", log)
+        self.assertEqual(note(gh.said(1018)[0])["queued"], ["11", "12"])
+        # Nothing is built on top of it.
+        self.assertEqual((merges(gh), gh.refs), ([], {HAND: sha("kim")}))
+        # Closed without merging, what was queued goes back to the queue, and nothing is started.
+        gh.close(1018)
+        log = sync(gh)
+        self.assertEqual([gh.pulls[n]["labels"] for n in (11, 12, 13, 14)], [{QUEUED}, {QUEUED}, {QUEUED}, set()])
+        self.assertIn("tidied up after batch #1018, which was assembled by hand", log)
+        self.assertNotIn("not starting a new batch in this run: the next `batch` or `-batch` comment does", log)
+        self.assertEqual((merges(gh), gh.refs), ([], {HAND: sha("kim")}))
+
+    def test_a_merged_batch_assembled_by_hand_takes_building_off(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        by_hand(gh, 11, 12)
+        sync(gh)
+        for number in (11, 12, 1018):
+            gh.close(number, merged=True)
+        log = sync(gh)
+        self.assertEqual((gh.pulls[11]["labels"], gh.pulls[12]["labels"], gh.pulls[1018]["labels"]), (set(), set(), {"large"}))
+        self.assertIn("#11 landed with batch #1018: `building` removed", log)
+        self.assertEqual(sync(gh), ["nothing to do"])
+
+    def test_a_closed_pull_request_loses_its_label_and_gets_it_back_when_reopened(self):
+        gh = Fake()
+        queue(gh, 11)
+        gh.close(11)
+        self.assertIn("#11 is closed: `batch queue` removed", sync(gh))
+        gh.reopen(11)
+        self.assertEqual(batch.reopened(gh, 11), ["#11 was reopened: `batch queue` put back"])
+        self.assertEqual(gh.pulls[11]["labels"], {QUEUED})
+        self.assertEqual((sync(gh), gh.refs), (["nothing to do"], {}))
+
+    def test_a_branch_of_its_own_without_a_pull_request_is_left_alone(self):
+        # Like `batch/2026-11-24-142233`, which the queue started and could not open a pull
+        # request for.
+        gh = Fake()
+        queue(gh, 11, 12)
+        with assembling():
+            gh.allow_pulls = False
+            with self.assertRaises(batch.Refused):
+                sync(gh)
+        left = dict(gh.refs)
+        self.assertEqual(list(left), [FIRST])
+        queue(gh, 13)
+        gh.writes = []
+        self.assertEqual(sync(gh), ["nothing to do"])
+        self.assertEqual((gh.writes, gh.refs), ([], left))
+
+    def test_a_branch_of_its_own_whose_pull_request_was_merged_is_still_removed(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        with assembling():
+            sync(gh)
+        gh.push(12, "head12-later")  # so GitHub does not mark #12 merged along with the batch
+        gh.close(11, merged=True)
+        gh.close(112, merged=True)
+        log = sync(gh)
+        self.assertEqual((gh.pulls[11]["labels"], gh.pulls[12]["labels"]), (set(), set()))
+        self.assertIn("#12 landed with batch #112 at the commit that was queued: `batch queue` removed", log)
+        self.assertIn(f"removed the branch `{FIRST}`", log)
+        self.assertEqual(gh.refs, {})
+        self.assertEqual(sync(gh), ["nothing to do"])
+
+    def test_a_branch_of_its_own_whose_pull_request_was_closed_is_removed_and_not_started_again(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        with assembling():
+            sync(gh)
+        gh.close(112)
+        log = sync(gh, hours=1)
+        self.assertIn(f"removed the branch `{FIRST}`", log)
+        self.assertEqual((gh.refs, merges(gh)[2:]), ({}, []))
+        self.assertEqual((gh.pulls[11]["labels"], gh.pulls[12]["labels"]), ({QUEUED}, {QUEUED}))
+
+
+class Workflow(unittest.TestCase):
+    """What the workflow's other jobs do on `batch` and `p`, which the sync's switch leaves alone."""
+
+    def job(self, name):
+        """The text of one job of the workflow, up to the next one."""
+        return re.search(rf"^  {name}:\n(.*?)(?=^  [a-z]+:\n|\Z)", WORKFLOW.read_text(), re.M | re.S).group(1)
+
+    def test_batch_and_p_record_the_commit_and_label_it(self):
+        label = self.job("label")
+        self.assertIn("<!-- batch-queue-approved %s -->", label)
+        self.assertIn('labels=(-f "labels[]=$LABEL")', label)
+        self.assertIn('labels+=(-f "labels[]=$PRIORITY")', label)
+        self.assertIn('echo "queued=true" >> "$GITHUB_OUTPUT"', label)
+
+    def test_queuing_still_compares_with_the_rest_of_the_queue(self):
+        conflicts = self.job("conflicts")
+        self.assertIn("needs.label.outputs.queued == 'true'", conflicts)
+        self.assertIn("scripts/batch-queue-conflicts.py", conflicts)
+        spec = importlib.util.spec_from_file_location("batch_queue_conflicts", SCRIPT.with_name("batch-queue-conflicts.py"))
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertIn(QUEUED, module.LABELS)
 
 
 if __name__ == "__main__":
