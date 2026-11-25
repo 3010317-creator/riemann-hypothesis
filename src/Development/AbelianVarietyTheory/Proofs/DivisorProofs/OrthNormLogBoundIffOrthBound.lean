@@ -115,7 +115,6 @@ theorem last_ineq {ι : Type} [Fintype ι] {N n : ℕ} (hN : N = n + 1) (lam : �
   have hd' : (0 : ℝ) ≤ ((OrthogonalNormSquareSum.dOne hN (lam τ) (sg τ) : ℤ) : ℝ) := by exact_mod_cast hd
   have hs' : (1 : ℝ) ≤ (((lam τ).spread : ℤ) : ℝ) := by exact_mod_cast hs
   have hl : 0 ≤ Real.log (2 * a) := Real.log_nonneg (hs'.trans (ha τ))
-  have hN0 : (0 : ℝ) ≤ N := Nat.cast_nonneg N
   rw [← mul_assoc]
   refine mul_le_mul_of_nonneg_right ?_ hl
   nlinarith [sq_nonneg (N : ℝ)]

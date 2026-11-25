@@ -224,7 +224,6 @@ theorem exists_extension : ∀ (A Ω : Type) [CommRing A] [IsRegularLocalRing A]
 
   let ub : ResidueField A →+* Ω := Ideal.Quotient.lift (maximalIdeal A) u
     (fun x hx => (RingHom.mem_ker).1 (hker ▸ hx))
-  have hub : ∀ x, ub (residue A x) = u x := fun x => rfl
   letI : Algebra (ResidueField A) Ω := ub.toAlgebra
   have hpu : p.map u = (p.map (residue A)).map ub := by
     rw [Polynomial.map_map]; congr 1

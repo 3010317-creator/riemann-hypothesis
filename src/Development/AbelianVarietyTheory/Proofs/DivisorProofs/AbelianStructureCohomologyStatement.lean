@@ -80,10 +80,6 @@ theorem wedge_of_isBaseChange {S R M N M₂ N₂ : Type} [CommRing S] [CommRing 
     intro r a b
     have := iw.map_update_smul ![a, b] 1 r b
     rwa [← u1 a b (r • b), ← u1 a b b] at this
-  have zero0 : ∀ b : N, iw ![0, b] = 0 := fun b => by
-    simpa using smul0 0 0 b
-  have zero1 : ∀ a : N, iw ![a, 0] = 0 := fun a => by
-    simpa using smul1 0 a 0
   intro a b
   induction a using hφ.inductionOn with
   | add x y hx hy => simp only [iw] at add0; rw [add0, map_add (f := _), hx, hy, map_add (f := _), LinearMap.add_apply]

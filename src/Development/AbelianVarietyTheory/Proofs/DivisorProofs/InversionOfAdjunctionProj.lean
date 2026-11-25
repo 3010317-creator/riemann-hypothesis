@@ -1107,7 +1107,6 @@ theorem span_pair_isPrime_and_height_eq_two : ∀ (R : Type) [CommRing R] [IsReg
       exact hba (he ▸ Ideal.subset_span (by simp))
     have hlt1 := Ideal.height_strict_mono_of_isPrime h1
     have hlt2 := Ideal.height_strict_mono_of_isPrime h2
-    have hne : (Ideal.span {a}).height ≠ ⊤ := Ideal.height_ne_top_of_isPrime
     have e1 : (⊥ : Ideal R).height + 1 ≤ (Ideal.span {a}).height := Order.add_one_le_of_lt hlt1
     have e2 : (Ideal.span {a}).height + 1 ≤ (Ideal.span {a, b}).height := Order.add_one_le_of_lt hlt2
     calc (2 : ℕ∞) = 0 + 1 + 1 := by norm_num

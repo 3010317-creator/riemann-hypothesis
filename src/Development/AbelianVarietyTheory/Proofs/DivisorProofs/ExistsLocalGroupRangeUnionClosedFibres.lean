@@ -1420,7 +1420,6 @@ theorem Emb.exists_locGrp : ∀ (σ : Setup) (E : Emb σ), σ.Common → ∀ x :
     ((HasRingHomProperty.Spec_iff (P := @Flat)).2 (σ.flat x))
   obtain ⟨V, hs, hq, hA, hU, e, he, pb⟩ := exists_open σ E hC x ξ' hξ
   have := E.sep
-  have hιA : IsOpenImmersion E.ιA := MorphismProperty.of_isPullback (P := @IsOpenImmersion) E.cartA.flip inferInstance
   let i : σ.A.left ⟶ V.toScheme := IsOpenImmersion.lift V.ι E.ιA (by rwa [Scheme.Opens.range_ι])
   have hi : i ≫ V.ι = E.ιA := IsOpenImmersion.lift_fac _ _ _
   have pA : IsPullback i σ.A.hom (V.ι ≫ E.p) (awayMap σ.f) := isPullback_of_mono (hi ▸ E.cartA)

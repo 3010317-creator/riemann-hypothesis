@@ -459,7 +459,6 @@ theorem exists_algHom_quot_pow : ∀ (A R C : Type) [CommRing A] [IsDomain A] [I
     exact hx
   have hinj : Function.Injective (algebraMap B L0) := IsLocalization.injective L0 hM0
   let ι : B →ₐ[R] L0 := IsScalarTower.toAlgHom R B L0
-  have hι : ∀ b, ι b = algebraMap B L0 b := fun b => rfl
   have hRL : ∀ r : R, algebraMap R L0 r = algebraMap B L0 (Ideal.Quotient.mk _ r) := fun r =>
     IsScalarTower.algebraMap_apply R B L0 r
   have hHart := _root_.GlobalTheory.GoodEtaleSection.hart_quot A R ρ hρ t hker ht n

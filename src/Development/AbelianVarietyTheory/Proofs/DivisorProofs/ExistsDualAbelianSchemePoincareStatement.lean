@@ -1064,8 +1064,6 @@ theorem hasRep_quot {R R' : Type} [CommRing R] [CommRing R'] (a : R →+* R')
   intro J' hJ'
   set J := J'.comap a
   let q : R ⧸ J →+* R' ⧸ J' := Ideal.quotientMap J' a le_rfl
-  have hq : q.comp (Ideal.Quotient.mk J) = (Ideal.Quotient.mk J').comp a := by
-    ext x; rfl
   have w : spMap q ≫ spMap (Ideal.Quotient.mk J) = (Over.mk (spMap (Ideal.Quotient.mk J') ≫ spMap a)).hom := by
     show Spec.map _ ≫ Spec.map _ = Spec.map _ ≫ Spec.map _
     rw [← Spec.map_comp, ← Spec.map_comp]

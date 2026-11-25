@@ -227,7 +227,6 @@ theorem exists_dotProduct_eq {K : Type} [NormedField K] [IsUltrametricDist K] {�
       map_zero_eq_one' := by simp
       map_add_eq_mul' := fun y y' => by
         rw [AddSubgroup.coe_add, dotProduct_add, AddChar.map_add_eq_mul] }
-  have he : ∀ a (y : L), e a y = ψ₀ (a ⬝ᵥ (y : κ → K)) := fun _ _ => rfl
   have hχ0 : χ 0 = 1 := htriv 0 L.zero_mem L'.zero_mem
   let χL : AddChar L ℂ :=
     { toFun := fun y => χ y

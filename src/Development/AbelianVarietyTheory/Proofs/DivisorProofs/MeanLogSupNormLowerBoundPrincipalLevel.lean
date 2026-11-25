@@ -70,8 +70,6 @@ theorem lamSup_of_laws : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRest
   have hsp := _root_.GlobalTheory.LamSpread.sum_spread_laU_le D j H Dw l Xo c U dict h σ₀ hσ₀ a n k
   set s : ℝ := ((absA Dw a : ℕ) : ℝ) with hs
   set t : ℝ := ((fdeg D.host.E * D.R.r * n : ℕ) : ℝ) with ht
-  have hs0 : 0 ≤ s := Nat.cast_nonneg _
-  have ht0 : 0 ≤ t := Nat.cast_nonneg _
   have hw : (∑ τ, ((U σ₀).X k).spread (laU (U σ₀) a n k) τ) ≤ s + t + 1 := by linarith
   have hw1 : (1 : ℝ) ≤ s + t + 1 := by linarith
   obtain ⟨x, lam, hx, hLB, hPx⟩ := Formalism.L2.Pj.abelian₂.cm_frame_of_eq Xx ((U σ₀).X k) hX _ _ z0 M (s + t + 1) (hSS k) hM

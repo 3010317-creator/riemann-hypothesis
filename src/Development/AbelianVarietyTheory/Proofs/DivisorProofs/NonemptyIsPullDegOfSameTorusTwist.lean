@@ -201,7 +201,6 @@ theorem nonempty_isPullDeg_of_isTwist : ∀ (R : Type) [CommRing R] [IsDomain R]
       rintro a b rfl; rfl
     exact this _ _ (hxe χ)
   obtain ⟨z₀⟩ : Nonempty (TK R).left := inferInstanceAs (Nonempty (PrimeSpectrum (FractionRing R)))
-  have red : IsReduced (𝟙_ (Over (Spec (CommRingCat.of R)))).left := inferInstanceAs (IsReduced (Spec (CommRingCat.of R)))
   have hr : PMaps w (K := PUnit) (fun _ => eSec D₂.toPre.P.A) (fun _ => eSec D₀.toPre.P.A) (fun _ => 1)
       D₂.toPre.rig D₀.toPre.rig (𝟙 _) := by
     refine pmaps_of_dense (Z₀ := (TK R).left) (jK R) z₀ (TauPull.jK_mem z₀) hE fun p q hp hq => ?_

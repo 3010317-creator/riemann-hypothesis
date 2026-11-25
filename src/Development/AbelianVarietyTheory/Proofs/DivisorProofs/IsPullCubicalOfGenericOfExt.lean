@@ -84,8 +84,6 @@ theorem isPullCubical_of_generic_of_ext (hE : ExtendGenAt T K) {S : Scheme.{0}} 
   obtain ⟨w', g', r', q'⟩ := H'
   obtain ⟨w'', g'', r'', q''⟩ := H''
   have := hG.smooth
-  have a₁ : eSec G ≫ G.hom = 𝟙 _ := Over.w η[G]
-  have a₂ : eSec GK ≫ GK.hom = 𝟙 _ := Over.w η[GK]
   obtain ⟨κ, κ', hκ, hκ'⟩ : ∃ (κ : pullback G.hom (spMap (algebraMap T K)) ⟶ GK.left)
       (κ' : GK.left ⟶ pullback G.hom (spMap (algebraMap T K))),
       κ ≫ m.F = pullback.fst G.hom (spMap (algebraMap T K)) ∧ κ' ≫ κ = 𝟙 _ :=

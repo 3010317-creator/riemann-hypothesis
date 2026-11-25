@@ -422,7 +422,6 @@ namespace GlobalTheory
 theorem lowerBound_along_residues : ∀ (d n : ℕ) (u : ℕ → ℝ) (γ : ℝ), 0 < n → (∀ r < n, ∀ ε : ℝ, 0 < ε → ∀ᶠ q : ℕ in atTop, (γ - ε) * (q : ℝ) ^ d ≤ u (n * q + r)) → ∀ ε : ℝ, 0 < ε → ∀ᶠ M : ℕ in atTop, (γ / (n : ℝ) ^ d - ε) * (M : ℝ) ^ d ≤ u M := by
   intro d n u γ hn h ε hε
   have hnR : (0:ℝ) < n := Nat.cast_pos.mpr hn
-  have hnd : (0:ℝ) < (n:ℝ)^d := pow_pos hnR d
   set ε' := ε * (n:ℝ)^d / 2 with hε'
   have hε'pos : 0 < ε' := by positivity
   have h1 : ∀ᶠ q : ℕ in atTop, ∀ r ∈ Set.Iio n, (γ - ε') * (q:ℝ)^d ≤ u (n*q + r) :=
@@ -604,7 +603,6 @@ theorem tendsto_log_sq_div {X : ℕ → ℝ} {D : ℕ} {L : ℝ} (h1 : ∀ m, 1 
     (hX : Tendsto (fun m : ℕ => X m / (m : ℝ) ^ (D + 1)) atTop (𝓝 L)) :
     Tendsto (fun m : ℕ => Real.log (X m ^ 2) / m) atTop (𝓝 0) := by
   set C : ℝ := max (L + 1) 1 with hC
-  have hC1 : 1 ≤ C := le_max_right _ _
   have hev : ∀ᶠ m : ℕ in atTop, X m / (m : ℝ) ^ (D + 1) < C :=
     hX.eventually (gt_mem_nhds (lt_of_lt_of_le (lt_add_one L) (le_max_left _ _)))
   have hup : Tendsto (fun m : ℕ => 2 * Real.log C / m + (2 * ((D : ℝ) + 1)) * (Real.log m / m)) atTop (𝓝 0) := by
@@ -692,7 +690,6 @@ theorem eventually_le_of_bound : ∀ (D : ℕ) (u β g : ℕ → ℝ) (a γ : �
   intro D u β g a γ hβ0 hg0 hβ hg hu ε hε
   set F : ℝ := ((D + 1).factorial : ℝ) with hFdef
   have hF : 0 < F := by rw [hFdef]; exact_mod_cast Nat.factorial_pos _
-  have ha : 0 ≤ a := ge_of_tendsto' hβ (fun m => div_nonneg (hβ0 m) (by positivity))
   set K : ℝ := Real.log 2 * a / (F * ε) with hK
   obtain ⟨n, hn⟩ := exists_nat_gt (2 * Real.exp K)
   set q : ℕ := max n 3 with hqdef

@@ -209,7 +209,6 @@ def diagBlock (b : Fin r → ℕ) (c : ℕ) : blockTri (κ := F) b →* Matrix (
     split_ifs with h
     · rfl
     · have hi := i.2
-      have hk := k.2
       rcases lt_or_gt_of_ne h with h1 | h1
       · rw [mem_blockTri.1 p.2 i l (by omega), zero_mul]
       · rw [mem_blockTri.1 q.2 l k (by omega), mul_zero]

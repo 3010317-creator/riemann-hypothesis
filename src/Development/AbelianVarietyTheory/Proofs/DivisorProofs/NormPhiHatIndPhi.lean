@@ -389,7 +389,6 @@ theorem homN_raw_le : ∃ C : ℝ, 0 ≤ C ∧ ∀ (D : D7) (T : CoreJ D) (j : �
   have hsize := sizeK_eq (T.Q.Dw j) a n
   rw [hcard, ← hpq] at hsize
   have hn2 : (n : ℝ) = 2 * ((n / 2 : ℕ) : ℝ) := by exact_mod_cast (Nat.two_mul_div_two_of_even hev).symm
-  have hd0 : (0 : ℝ) ≤ (Formalism.L2.Pj.DF (T.Q.Dw j) a : ℕ) := Nat.cast_nonneg _
   have hh0 : (0 : ℝ) ≤ ((n / 2 : ℕ) : ℝ) * (D.R.f * D.R.r : ℕ) := by positivity
   have hdκ : ((Formalism.L2.Pj.DF (T.Q.Dw j) a : ℕ) : ℝ) ≤ sizeK (T.Q.Dw j) a n := by linarith
   have hnκ : (D.R.f : ℝ) * D.R.r * n ≤ 2 * sizeK (T.Q.Dw j) a n := by
@@ -440,7 +439,6 @@ theorem homN_raw_le : ∃ C : ℝ, 0 ≤ C ∧ ∀ (D : D7) (T : CoreJ D) (j : �
       push_cast
       linarith
     · rw [hfd]
-      have h1 : (1 : ℝ) ≤ D.R.f := by exact_mod_cast hf1
       have h2 : (1 : ℝ) ≤ D.R.r := by exact_mod_cast hr1
       have := hpow (D.R.f * D.R.r) 1 (by positivity) (by simpa using hfr)
       rw [pow_one] at this

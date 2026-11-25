@@ -191,7 +191,6 @@ theorem seminorm_rem_mul_le {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V
       (2 ^ (k + 2) * ((Finset.Iic (k + 2, n)).sup fun m => SchwartzMap.seminorm ℂ m.1 m.2) f)) := by
   set S := 2 ^ (k + 2) * ((Finset.Iic (k + 2, n)).sup fun m => SchwartzMap.seminorm ℂ m.1 m.2) f
     with hS
-  have hS0 : 0 ≤ S := mul_nonneg (by positivity) (apply_nonneg _ _)
   have hL0 : 0 ≤ ‖L‖ := norm_nonneg L
   refine SchwartzMap.seminorm_le_bound ℂ k n u (by positivity) fun x => ?_
   have hu' : (⇑u) = fun x => rem t (L x) * f x := funext hu
@@ -217,7 +216,6 @@ theorem seminorm_rem_mul_le {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V
     have hA : ‖iteratedFDeriv ℝ i (rem t ∘ ⇑L) x‖
         ≤ 3 * |t| * ((1 + ‖L‖) ^ 2 * (1 + ‖x‖) ^ 2) * (1 + ‖L‖) ^ n :=
       h1.trans (by gcongr)
-    have hc0 : (0 : ℝ) ≤ n.choose i := Nat.cast_nonneg _
     calc ‖x‖ ^ k * ((n.choose i : ℝ) * ‖iteratedFDeriv ℝ i (rem t ∘ ⇑L) x‖ *
           ‖iteratedFDeriv ℝ (n - i) f x‖)
         = (n.choose i : ℝ) * (‖x‖ ^ k * ‖iteratedFDeriv ℝ i (rem t ∘ ⇑L) x‖ *

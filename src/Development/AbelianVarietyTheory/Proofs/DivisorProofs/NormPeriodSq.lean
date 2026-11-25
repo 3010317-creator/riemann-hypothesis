@@ -32,14 +32,11 @@ theorem area_pos (h : Formalism.MainNotions.StandardLatticesGL3.Crv D cc δ) : 0
   have h1 : (0 : ℝ) < Ideal.absNorm cc := by
     exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.2 h.1.1)
   have h2 := Complex.normSq_pos.2 (delta_ne_zero h)
-  have h3 : (0 : ℝ) < Real.sqrt D.host.d := by linarith
   positivity
 
 theorem xiR_pos (D : D7) : 0 < Formalism.L2.Pj.xiR D := by
   obtain ⟨hxi, hN, hd⟩ := ReciprocityTheory.ChartRestriction.G.PullbackSections.PfModelDataX.xiR_facts D
   rw [hxi]
-  have h1 : (0 : ℝ) < Ideal.absNorm D.host.ccK := by linarith
-  have h3 : (0 : ℝ) < Real.sqrt D.host.d := by linarith
   positivity
 
 theorem normSq_scale (hc : cc ≠ ⊥) (h : IsScale D cc r) (δ : ℂ) (τ : D.what₂.Tau) :
@@ -67,7 +64,6 @@ theorem IsScale.ne_zero (hc : cc ≠ ⊥) (h : IsScale D cc r) : r ≠ 0 := by
 theorem norm_period_sq (hc : cc ≠ ⊥) (h : IsScale D cc r) (δ : ℂ) (τ : D.what₂.Tau) :
     ‖period D δ r τ‖ ^ 2 = area (lamOf D cc δ) / Real.pi := by
   have hx := xiR_pos D
-  have hp := Real.pi_pos
   rw [period, norm_div, div_pow, ← Complex.normSq_eq_norm_sq, normSq_scale hc h, Complex.norm_real,
     Real.norm_of_nonneg (Real.sqrt_nonneg _), Real.sq_sqrt (by positivity)]
   field_simp

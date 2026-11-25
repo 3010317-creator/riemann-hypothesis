@@ -285,7 +285,6 @@ theorem mul_dvd_pow_of_quadratic_bound_dvr {V : Type} [CommRing V] [IsDomain V]
       have := congrArg (addVal V) e
       simp only [addVal_mul, hn, addVal_eq_zero_iff.2 hu, zero_add] at this
       exact_mod_cast this) y
-  have key' : n (h y) ≤ C * n y := by exact_mod_cast key
   rw [← addVal_le_iff_dvd, addVal_mul, addVal_pow, hn, hn, nsmul_eq_mul]
   have : n y + n (h y) ≤ N * n y := by nlinarith [Nat.mul_le_mul_right (n y) hN]
   exact_mod_cast this
@@ -345,7 +344,6 @@ theorem int_cauchy_schwarz {X : Type} [AddCommGroup X] (F : X →+ X →+ ℤ)
     exact h1
   rcases (hpos u).lt_or_eq with ht | ht
   · have h2 := key (-(F u v)) (F u u)
-    have h3 : 0 ≤ F u u * (F u u * F v v - F u v ^ 2) := by linarith [h2]
     have h4 : 0 ≤ F u u * F v v - F u v ^ 2 := by
       by_contra! hc
       linarith [mul_neg_of_pos_of_neg ht hc]

@@ -63,8 +63,6 @@ theorem _root_.GlobalTheory.CompHt.growth_of_eventually_eq_eval :
   have hg_eq : ∀ᶠ k : ℕ in atTop, g k = (D.factorial : ℝ) * (a : ℝ) ^ D *
       (Q.eval ((a * k : ℕ) : ℝ) / ((a * k : ℕ) : ℝ) ^ D) := by
     filter_upwards [hval, eventually_ge_atTop 1] with k hk hk1
-    have hk0 : (k : ℝ) ≠ 0 := by exact_mod_cast (show k ≠ 0 by omega)
-    have ha0 : (a : ℝ) ≠ 0 := by exact_mod_cast (show a ≠ 0 by omega)
     simp only [hg]
     rw [hk]
     push_cast

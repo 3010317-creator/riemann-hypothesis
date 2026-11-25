@@ -973,8 +973,6 @@ theorem closedPoint_mem_abLocus_of_fixedTorsion : ∀ (R : Type) [CommRing R] [I
   obtain ⟨A', ψ, hψ⟩ := GlobalTheory.UnifProperOpen.exists_polGeneric_pullback R A G U.gen U.gen_hom V φ hφ
   obtain ⟨W, _, _, _, io, em, D₈, Q, H₈, _, _, U₈, i, r, hW, hfin, hinj, hem, hc, hH₈, htot, hr, hir, hmono⟩ :=
     _root_.GlobalTheory.SplitPowEight.exists_unif_pow8 V hV A' _ hG' ψ hψ
-  have hem' : ∀ w : W, w ≠ 0 → IsUnit (em w) := fun w hw =>
-    IsUnit.mk0 _ ((map_ne_zero_iff em hem).2 hw)
   letI : Algebra (FractionRing W) (AlgebraicClosure (FractionRing V)) :=
     (IsFractionRing.lift (A := W) (K := FractionRing W) (g := em) hem).toAlgebra
   have hlift : ∀ w : W, algebraMap (FractionRing W) (AlgebraicClosure (FractionRing V)) (algebraMap W _ w) = em w :=

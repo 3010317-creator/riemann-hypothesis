@@ -84,7 +84,6 @@ theorem add_mul_le_of_pow_le : ∀ (p L m : ℕ), 2 ≤ p → ∃ M0 : ℕ, ∀ 
   have h2 : 2 ^ v ≤ p ^ v := Nat.pow_le_pow_left hp v
   have hsq := sq_le_two_pow_add_one v
   have hag := two_mul_le_sq_add_sq v L
-  have hx : 2 * ((v + m) * L) ≤ n + n := by nlinarith
   linarith
 
 end GlobalTheory.VSubArith

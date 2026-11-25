@@ -108,7 +108,6 @@ theorem chart_near_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     linarith [abs_nonneg ((la τ ⟨0, hr⟩ : ℝ) - ((⨆ k, (la τ k : ℝ)) + ⨅ k, (la τ k : ℝ)) / 2)]
   have hw0 : 0 ≤ w := le_trans (Finset.sum_nonneg fun τ _ => hsp τ) hw
   set δ := chartRad E r w with hδdef
-  have hwf : 0 < w + fdeg E := by linarith
   have hδ0 : 0 < δ := by rw [hδdef, chartRad]; positivity
   have key : (r : ℝ) ^ 3 * δ * (w + fdeg E) * 200 = 1 := by
     rw [hδdef, chartRad]
@@ -125,7 +124,6 @@ theorem chart_near_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   change cpt X x z ∈ X.dom at hdom
   change ∀ τ i, dmin X.Gm (cpt X x z) τ i ≠ 0 ∧ |Real.log ‖dmin X.Gm (cpt X x z) τ i‖| ≤ 9 * ((r : ℝ) ^ 2 * δ) at hd
   set t := 9 * ((r : ℝ) ^ 2 * δ) with ht
-  have ht0 : 0 ≤ t := by positivity
   refine ⟨hdom, ?_, ?_⟩
   ·
     have hne : ∀ τ i, dmin X.Gm (cpt X x z) τ i ≠ 0 := fun τ i => (hd τ i).1

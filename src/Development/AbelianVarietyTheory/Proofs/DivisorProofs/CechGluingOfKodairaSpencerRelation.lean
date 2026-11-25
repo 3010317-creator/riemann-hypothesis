@@ -401,7 +401,6 @@ theorem exists_isChartPt : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E
     rw [e1] at this
     rw [this]
     rfl
-  have hdΩ := hd.2.1 Ω.1 hΩ
   obtain ⟨ψ, hψ⟩ := exists_ringHom_add_eps_mul (ev (x ≫ m) Ω.1 hxm) (fun a => ev (transl (baseMap K B) x (u a) ≫ m) Ω.1 (hwm a)) he
     (d Ω.1) (hd.1 Ω.1 hΩ) (hd.2.1 Ω.1 hΩ) (fun a => ∑ b, baseMap K B (θ a b) * dlogAt (baseMap K B) x (u b) Wo g)
     (algebraMap (DualNumber K) B DualNumber.eps) (by rw [← map_mul, DualNumber.eps_mul_eps, map_zero])

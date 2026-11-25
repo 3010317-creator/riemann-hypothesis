@@ -143,7 +143,6 @@ theorem stdLoc_product {q : ℝ} (hq : 1 < q) (c a a' : ℕ) :
     (∏ i ∈ Finset.Icc 1 a, (1 - (q ^ (a' + i))⁻¹))⁻¹ * blockIdx q c a a' * ((q ^ (c * a * a'))⁻¹ * glVol q a) = 1 := by
   have h1 := glVol_pos hq a
   have h2 := glVol_pos hq a'
-  have h3 : (0 : ℝ) < q ^ (c * a * a') := pow_pos (by linarith) _
   have h4 : 0 < ∏ i ∈ Finset.Icc 1 a, (1 - (q ^ (a' + i))⁻¹) := by
     have := glVol_add q a' a
     have h5 := glVol_pos hq (a' + a)

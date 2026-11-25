@@ -691,7 +691,6 @@ private lemma two_nsq (k : ℚ⟮s⟯) : k ^ 2 ≠ 2 := by
     rw [map_pow, map_ofNat] at this
     rw [map_ofNat]
     exact this
-  have hd' : (3 : ℚ) < d := by exact_mod_cast h3
   rcases sq_cases s _ (hs' s d hs) (d_nsq s d h3 hs) k k.2 _ h1 with ⟨a, ha⟩ | ⟨b, hb⟩
   · refine rat_nsq 2 1 Nat.prime_two one_pos one_lt_two (a / 2) ?_
     push_cast
@@ -822,7 +821,6 @@ theorem det_interp_gen {E : Type} [Field E] [NumberField E] {r : ℕ} (n : ℕ) 
       ((e * δ + (1 - e) + n * y : 𝓞 E) : E) := by
   classical
   let K := AlgebraicClosure E
-  have hinj := (algebraMap E K).injective
   have hn' : (n : K) ≠ 0 := Nat.cast_ne_zero.mpr hn
   have hint : ∀ x : 𝓞 E, IsIntegral ℤ (algebraMap E K (x : E)) := fun x =>
     x.isIntegral_coe.algebraMap

@@ -83,9 +83,7 @@ theorem seminorm_smulLeft_phase_le : ∀ {V : Type} [NormedAddCommGroup V] [Norm
   refine ⟨(n + 1) * B, fun t ht f => ?_⟩
   rw [phase_eq L c t]
   set S := ∑ m ∈ Finset.range (n + 1), SchwartzMap.seminorm ℂ k m f with hS
-  have hS0 : 0 ≤ S := Finset.sum_nonneg fun m _ => apply_nonneg _ _
   have hL0 : 0 ≤ 2 * Real.pi * ‖L‖ := by positivity
-  have hB0 : 0 ≤ B := by positivity
   refine SchwartzMap.seminorm_le_bound ℂ k n _ (by positivity) fun x => ?_
   have happ : (⇑(SchwartzMap.smulLeftCLM ℂ (phaseLine c t ∘ ⇑L) f))
       = fun y => (phaseLine c t ∘ ⇑L) y * f y := by

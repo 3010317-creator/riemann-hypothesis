@@ -37,10 +37,6 @@ theorem valued_finiteCompletionMap (w : HeightOneSpectrum (𝓞 E)) (x : (w.unde
   · rw [map_zero, map_zero, map_zero, zero_pow he]
   have hx0 : Valued.v x ≠ 0 := by simpa using hx
   obtain ⟨π, hπ⟩ := HeightOneSpectrum.valuation_exists_uniformizer K (w.under (𝓞 K))
-  have hπ0 : π ≠ 0 := by
-    rintro rfl
-    rw [map_zero] at hπ
-    exact WithZero.exp_ne_zero hπ.symm
   set m := WithZero.log (Valued.v x)
   set k : K := π ^ (-m)
   have hvk : (w.under (𝓞 K)).valuation K k = Valued.v x := by

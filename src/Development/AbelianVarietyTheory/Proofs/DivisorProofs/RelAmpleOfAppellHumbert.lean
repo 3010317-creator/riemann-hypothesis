@@ -152,7 +152,6 @@ theorem exists_shift_of_semichar : ∀ (g : ℕ) (Λ Λ₁ : Submodule ℤ (Fin 
   intro g Λ Λ₁ Hm χ χ₁ h hdisc hsp _hH hpos hχ hχ₁ hc hc₁
   haveI := hdisc
   have hne : ∀ l, χ₁ l ≠ 0 := fun l e => by simpa [e] using hχ₁ l
-  have hne' : ∀ l, χ l ≠ 0 := fun l e => by simpa [e] using hχ l
   let ρ : Λ → ℂ := fun l => χ l / χ₁ (Submodule.inclusion h l)
   have hn : ∀ l, ‖ρ l‖ = 1 := fun l => by simp [ρ, hχ, hχ₁]
   have hmul : ∀ l m, ρ (l + m) = ρ l * ρ m := by

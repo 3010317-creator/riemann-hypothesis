@@ -1223,7 +1223,6 @@ theorem nonneg_shift {X : Type} [AddCommGroup X] (g : LinearMap.BilinForm ℤ X)
     simp [h0]
   · have h1 : -(g mu α) ≤ ((g mu α).natAbs : ℤ) := by rw [Int.natCast_natAbs]; exact neg_le_abs _
     have h2 : ((g mu α).natAbs : ℤ) ≤ e := by exact_mod_cast he
-    have h3 : (1 : ℤ) ≤ n := by exact_mod_cast hpos
     nlinarith
 
 theorem gs_zero' {Y Z : Scheme.{0}} (f : Z ⟶ Y) (z : Z) : gs f z ⊤ (0 : Γ(Y, ⊤)) = 0 := by

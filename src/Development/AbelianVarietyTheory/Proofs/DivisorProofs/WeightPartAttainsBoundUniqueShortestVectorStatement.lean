@@ -407,11 +407,6 @@ theorem main : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [ArithBa
     ϖ Q v (-Real.log ‖π‖) hϖ hv ⟨hlog, hQ, fun χ => by rw [hq, mul_comm],
       fun x r => by rw [WeightBound.norm_le_of_val hnv, hE], fun x r => by rw [hnv.2.2, hE]⟩ w₀ th₀ ϑ₀ c hw₀ hexp hprim hr))
     (WeightBound.norm_le_delta hLL hT hVR hTW hUU hϖ hQ hv hnv Φ hw₀ hexp hprim (c := c) hr hint hU)
-  have hm0 : m ≠ 0 := by
-    rintro rfl
-    have := S.N_ge
-    rw [hNm] at this
-    norm_num at this
   have hsq : ∀ x : u.D.toPre.X, l.q (m • x) = (m : ℝ) ^ 2 * l.q x := fun x => by
     rw [← natCast_zsmul, QuadraticMap.map_smul, zsmul_eq_mul]
     push_cast
@@ -423,11 +418,6 @@ theorem main : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [ArithBa
     by_cases h0 : m • v₀ = 0
     · rw [h0, add_zero]
     · exact (hν v₀ h0).le
-  have hexpo : -(l.q (m • ν) / (S.N : ℝ)) = -l.q ν := by
-    rw [hsq, hNm]
-    have : ((m : ℝ)) ≠ 0 := Nat.cast_ne_zero.2 hm0
-    push_cast
-    field_simp
   by_cases hc0 : c = 0
   · refine ⟨0, AddMonoidHom.mem_ker.2 (map_zero _), by simp, ?_⟩
     have hle := WeightBound.main hL hL2 hU o Ω S ρ p y₀ u l hint (m • ν) hα 0 (AddMonoidHom.mem_ker.2 (map_zero _)) ρ.i₀

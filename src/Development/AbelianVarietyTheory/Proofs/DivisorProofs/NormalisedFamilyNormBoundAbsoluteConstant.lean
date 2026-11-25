@@ -64,7 +64,6 @@ theorem im_conj_mul (ω τ : ℂ) (m n m' n' : ℤ) :
 theorem areaEq : AreaEq := by
   intro ω₁ τ h
   have hy : 0 < τ.im := τ.2
-  have hω : 0 < ‖ω₁‖ := norm_pos_iff.2 h
   have hc : 0 < ‖ω₁‖ ^ 2 * τ.im := by positivity
   unfold area
   apply IsLeast.csInf_eq
@@ -87,7 +86,6 @@ theorem areaEq : AreaEq := by
 
 theorem periodEta : PeriodEta := by
   intro ω₁ τ h
-  have hω : 0 < ‖ω₁‖ := norm_pos_iff.2 h
   have hπ : 0 < Real.pi := Real.pi_pos
   unfold period
   rw [discrEta ω₁ τ h, areaEq ω₁ τ h]

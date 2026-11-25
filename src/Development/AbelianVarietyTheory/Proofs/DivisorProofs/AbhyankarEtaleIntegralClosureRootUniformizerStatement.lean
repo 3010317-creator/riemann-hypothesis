@@ -835,13 +835,6 @@ theorem _root_.GlobalTheory.abhyankar_ramificationIdx_eq_one : ∀ (S K L : Type
   have hmax := maximalIdeal_eq_span_of_kummer_tower _ (Localization.AtPrime Q)
     (_root_.GlobalTheory.AbhyankarLocal.locHom Q) ϖ u _ k hϖ hmu hk0 y _ hym hyk ht htnz
     (_root_.GlobalTheory.AbhyankarLocal.exists_frac_closure S K L π e D ψ hπ he0 Q)
-  have hunder : Ideal.under D Q = maximalIdeal D := by
-    refine IsLocalRing.eq_maximalIdeal (Ideal.IsPrime.isMaximal inferInstance ?_)
-    intro h
-    have h1 : ψ.symm (AdjoinRoot.root (Polynomial.X ^ e - Polynomial.C π)) ∈ Ideal.under D Q := htQ
-    rw [h, Ideal.mem_bot] at h1
-    rw [h1, map_zero] at htnz
-    exact zero_notMem_nonZeroDivisors htnz
   have hmapmax : Ideal.map (algebraMap D (Localization.AtPrime Q)) (Ideal.under D Q) =
       maximalIdeal (Localization.AtPrime Q) := by
     refine le_antisymm ?_ ?_

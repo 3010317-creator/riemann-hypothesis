@@ -553,7 +553,6 @@ theorem card_ker_eq_norm_pow : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsC
         ⟨fun a b hab => hinj (congrArg Subtype.val hab),
          fun g => by obtain ⟨a, ha⟩ := hsurj g.1 (by rw [pow_one]; exact g.2); exact ⟨a, Subtype.ext ha⟩⟩
     rw [← Nat.card_congr eq, Nat.card_fun, hcardQ, Nat.card_eq_fintype_card, Fintype.card_fin, ← pow_mul, mul_comm]
-  have hℓ1 : 1 < ℓ := hℓ.one_lt
   have hdim : 2 * B.dim = h * Module.finrank ℚ F := by
     have := htors.symm.trans hL2
     exact Nat.pow_right_injective hℓ.two_le this

@@ -38,8 +38,6 @@ theorem map_linearEquiv_haar : ∀ (F : Type) [Field F] [CharZero F] [ValuativeR
 
   let E : V ≃L[F] (Fin n → F) := { e with continuous_toFun := hec, continuous_invFun := hes }
   let Em : V ≃ᵐ (Fin n → F) := E.toHomeomorph.toMeasurableEquiv
-  have hEm : (Em : V → Fin n → F) = e := rfl
-  have hEms : (Em.symm : (Fin n → F) → V) = e.symm := rfl
   let P : Measure (Fin n → F) := Measure.pi fun _ => (Measure.addHaar : Measure F)
   set X := μ.map Em with hX
   haveI : X.IsAddHaarMeasure := E.isAddHaarMeasure_map μ

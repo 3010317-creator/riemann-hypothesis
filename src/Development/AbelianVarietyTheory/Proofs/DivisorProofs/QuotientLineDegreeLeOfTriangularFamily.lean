@@ -961,8 +961,6 @@ theorem riemann_cofinal : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k
       · have h1 := Finset.single_le_sum (f := fun v => (D v).natAbs) (fun _ _ => Nat.zero_le _) hw
         have h2 : D w ≤ ((D w).natAbs : ℤ) := Int.le_natAbs
         rw [hM]
-        have h3 : (((D w).natAbs : ℕ) : ℤ) ≤ ((∑ v ∈ D.support, (D v).natAbs : ℕ) : ℤ) :=
-          Nat.cast_le.2 h1
         omega
       · rw [Finsupp.notMem_support_iff.1 hw]; positivity
     by_cases ht1 : w.1 t ≤ 1
@@ -994,7 +992,6 @@ theorem riemann_cofinal : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k
         omega
       rw [hPpole w ht1]
       push_cast
-      have hM0 : (0 : ℤ) ≤ M := by positivity
       nlinarith
   ·
     exact hli.map' (LinearMap.mulRight k h⁻¹)
@@ -1540,7 +1537,6 @@ theorem GlobalTheory.Nef.deg_le_two_mul_of_triangular : ∀ (k F : Type) [Field 
     have hint : (N : ℤ) * deg g ≤ (m + 1) * (e + 1 + γ) := by linarith
     have hreal : ((N : ℤ) : ℝ) * (deg g : ℝ) ≤ ((m : ℝ) + 1) * ((e : ℝ) + 1 + γ) := by exact_mod_cast hint
     push_cast at hreal
-    have hm1 : (0 : ℝ) ≤ (m : ℝ) + 1 := by positivity
     nlinarith
   by_contra! hlt
   have hpos : (0 : ℝ) < (deg g : ℝ) - 2 * b := by linarith

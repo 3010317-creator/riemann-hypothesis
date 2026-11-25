@@ -203,8 +203,6 @@ theorem isSymmetric_of_exists_gen {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCo
         · exact mem_pull.1 hy.1
         · exact hy.2
     · intro y p q hp hq
-      have hp1 := mem_pull.1 hp.1
-      have hq1 := mem_pull.1 hq.1
       have hm : ∀ (p : (L.L.pull (ι[G]).left).ι × L.L.ι),
           y ∈ (LB.div (L.L.pull (ι[G]).left) L.L).U p →
           y ∈ LB.wchart L.L ![(ι[G]).left, 𝟙 G.left] ![p.1 PUnit.unit, p.2] := by

@@ -957,7 +957,6 @@ theorem expansion_of_jetInt : JetInt → Expansion := by
     rw [div_mul_eq_div_div, div_eq_mul_inv (_ / _)]
   rw [e]
   refine sz_mono ?_ (GlobalTheory.LatValRam.sz_mul h1 h2)
-  have hK : (0 : ℝ) ≤ ((∑ i, κ i : ℕ) : ℝ) := Nat.cast_nonneg _
   split_ifs <;> nlinarith
 
 end GlobalTheory.JetExp

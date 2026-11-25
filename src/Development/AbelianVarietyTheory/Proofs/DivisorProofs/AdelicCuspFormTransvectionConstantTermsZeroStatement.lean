@@ -159,7 +159,6 @@ theorem zCusp_adel : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau
   let κ : D.what₂.Tau → ℝ := fun ρ => (X (dict g).1).c (e ρ) * N ^ 2
   have hκ : ∀ ρ, κ ρ ≠ 0 := fun ρ => by
     have h1 : (e ρ).1 (X (dict g).1).ξ0 ≠ 0 := (map_ne_zero _).2 (X (dict g).1).ξ0_ne
-    have h2 : (N : ℝ) ≠ 0 := Nat.cast_ne_zero.2 hN.ne'
     simp only [κ, Data.c]
     positivity
   have hAT : ∀ ρ (s : ℝ), archM V (θ ρ) γ * T ρ (κ ρ * s) = (X (dict g).1).flowMat ξ' (e ρ) s * archM V (θ ρ) γ := by

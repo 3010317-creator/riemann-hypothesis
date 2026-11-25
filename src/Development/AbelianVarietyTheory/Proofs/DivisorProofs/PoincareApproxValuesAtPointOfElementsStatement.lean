@@ -40,8 +40,6 @@ theorem exists_abs_apply_le (ha : Submodule.span ℤ (Set.range a) = ⊤) (x y :
       |β x y| ≤ C * ∑ i, β (a i) (a i) := by
   have hx : x ∈ Submodule.span ℤ (Set.range a) := ha ▸ Submodule.mem_top
   have hy : y ∈ Submodule.span ℤ (Set.range a) := ha ▸ Submodule.mem_top
-  have hl : ∀ β : LinearMap.BilinForm ℤ X, (∀ y, 0 ≤ β y y) → 0 ≤ ∑ i, β (a i) (a i) :=
-    fun β hp => Finset.sum_nonneg fun i _ => hp _
   induction hx using Submodule.span_induction with
   | mem x hx =>
     obtain ⟨i, rfl⟩ := hx
@@ -167,7 +165,6 @@ theorem exists_gap : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [CharZero 
     have h5 : 0 ≤ L - d * n - 1 := by omega
     have h6 : (C : ℤ) * d * n ≤ C * d * M := mul_le_mul_of_nonneg_left h3' (by positivity)
     have h7 : (0 : ℤ) ≤ C * d * M := by positivity
-    have h8 : (0 : ℤ) ≤ (K.natAbs : ℕ) := by positivity
     have h9 : 0 ≤ ((D : ℤ) - C) * (L - d * n - 1) := mul_nonneg (by linarith) h5
     have : (D * d : ℤ) * n + (K.natAbs : ℕ) ≤ D * L + lam ρ := by nlinarith
     have h10 := (Int.cast_le (R := ℝ)).2 this

@@ -28,8 +28,6 @@ theorem preservesFilteredColimits_modules_iff_elements :
     · intro h
       constructor
       intro J _ _
-      have hR : ReflectsColimitsOfShape J (forget₂ (ModuleCat.{1} Λ) AddCommGrpCat.{1}) :=
-        ModuleCat.reflectsColimitsOfShape.{1, 1, 0, 0} Λ J
       constructor
       intro K
       exact preservesColimit_of_reflects_of_preserves N (forget₂ (ModuleCat.{1} Λ) AddCommGrpCat.{1})

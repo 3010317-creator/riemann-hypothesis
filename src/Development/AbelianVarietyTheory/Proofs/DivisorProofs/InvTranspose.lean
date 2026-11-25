@@ -68,8 +68,6 @@ theorem inv_transpose : ((s.1⁻¹ : (Matrix (Fin r) (Fin r) ℤ)ˣ) : Matrix (F
     ((s.1⁻¹ : (Matrix (Fin r) (Fin r) ℤ)ˣ) : Matrix (Fin r) (Fin r) ℤ) := by
   have h1 : ((s.1⁻¹ : (Matrix (Fin r) (Fin r) ℤ)ˣ) : Matrix (Fin r) (Fin r) ℤ) * (s.1 : Matrix (Fin r) (Fin r) ℤ) = 1 :=
     Units.inv_mul s.1
-  have h2 : (s.1 : Matrix (Fin r) (Fin r) ℤ) * ((s.1⁻¹ : (Matrix (Fin r) (Fin r) ℤ)ˣ) : Matrix (Fin r) (Fin r) ℤ) = 1 :=
-    Units.mul_inv s.1
   have h3 := congrArg Matrix.transpose h1
   rw [Matrix.transpose_mul, s.2, Matrix.transpose_one] at h3
   calc _ = (((s.1⁻¹ : (Matrix (Fin r) (Fin r) ℤ)ˣ) : Matrix (Fin r) (Fin r) ℤ) * (s.1 : Matrix (Fin r) (Fin r) ℤ)) *

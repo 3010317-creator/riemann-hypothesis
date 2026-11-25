@@ -116,8 +116,6 @@ theorem full_and_isCompl : CrystallineSmoothLift → AbelianHodgeDeRham → ∀ 
   have hw : i' ≫ A'.hom = (A₀.hom ≫ spMap π) ≫ spMap (RingHom.id R) := by
     rw [Cris.spMap_id, Category.comp_id]; exact hpb.w
   let m : IsMor (dp0 R) A'.hom (divided₂ hI) (A₀.hom ≫ spMap π) (RingHom.id R) i' := IsMor.of_dividedPowersZeroIdeal _ hw
-  have hm := (H.toCrystallineDeRham R I (divided₂ hI) (isDPNilpotent_squareZero hI) R₀ π hπ hk A'.left A₀.left A'.hom A₀.hom i'
-    hsm hsep hqc hpb m).1
   have hc := H.bijective_cechDeRhamComparison_degreeOne A'.hom hsm hsep hqc
   obtain ⟨-, -, -, ⟨-, hproj, -⟩, ⟨-, -, hto⟩, hbc⟩ := HD R A' g hA hg
   have key : ∀ c, S.r hI (m.pull1 c) = e (toHO1 A'.hom (cmp1 A'.hom c)) := fun c ↦ (he1 m c).symm

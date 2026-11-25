@@ -33,7 +33,6 @@ theorem mul_norm_sq_le_norm_adjoint_sq_of_spanning_parts
     intro μ hμ
     obtain ⟨v, hv⟩ := hμ.exists_hasEigenvector
     by_contra hlt
-    have hlt : μ < m := not_le.mp hlt
     have hSv : S v = (μ : ℂ) • v := hv.apply_eq_smul
     have hle : ∀ k, P k ≤ (ℂ ∙ v)ᗮ := by
       intro k y hy

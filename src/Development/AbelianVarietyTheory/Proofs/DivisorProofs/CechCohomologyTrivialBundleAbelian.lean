@@ -557,7 +557,6 @@ theorem ideal_eq_span_fin : ∀ (K : Type) [Field K] [IsAlgClosed K] (A : Over (
   obtain ⟨p, hp⟩ := hx₀
   have hx' : q.left.base x₀ ∈ Set.range (η[A']).left.base := ⟨p, by
     rw [← hp, ← hη]; rfl⟩
-  have hAs := hA.smooth
   have hAp := hA.proper
   have hA's := hA'.smooth
   have hA'p := hA'.proper

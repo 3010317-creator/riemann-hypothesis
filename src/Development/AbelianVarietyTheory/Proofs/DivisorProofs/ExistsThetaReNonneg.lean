@@ -204,7 +204,6 @@ theorem rational_proj_section_of_span : ∀ (F : Type) [Field F] [NumberField F]
   let Φ : ((κ → F) × (κ → F)) →ₗ[F] ((κ → AF F) × (κ → AF F)) :=
     LinearMap.prodMap ((Algebra.linearMap F (AF F)).compLeft κ) ((Algebra.linearMap F (AF F)).compLeft κ)
   let T : Submodule F ((κ → F) × (κ → F)) := (S.restrictScalars F).comap Φ
-  have hT : ∀ y z, (y, z) ∈ T ↔ ((fun i => ι (y i)), (fun i => ι (z i))) ∈ S := fun y z => Iff.rfl
   let f : T →ₗ[F] (κ → F) := LinearMap.fst F _ _ ∘ₗ T.subtype
   let L₁ := LinearMap.range f
   obtain ⟨C, hC⟩ := Submodule.exists_isCompl L₁

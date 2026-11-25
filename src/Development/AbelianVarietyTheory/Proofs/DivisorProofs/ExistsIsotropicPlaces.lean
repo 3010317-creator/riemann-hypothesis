@@ -95,7 +95,6 @@ theorem exists_mul_sq_le (Q : (Fin n → K) → (Fin m → K)) (hc : Continuous 
   have hns : ∀ (c : K) y, ‖Q (c • y)‖ = ‖c‖ * ‖c‖ * ‖Q y‖ := fun c y => by
     rw [hs, norm_smul, norm_mul]
   obtain ⟨c, hc1⟩ := NormedField.exists_one_lt_norm K
-  have hc0 : 0 < ‖c‖ := lt_trans one_pos hc1
   let S : Set (Fin n → K) := {y | 1 / ‖c‖ ≤ ‖y‖ ∧ ‖y‖ ≤ 1}
   have hSc : IsCompact S := (isCompact_closedBall (0 : Fin n → K) 1).of_isClosed_subset
     ((isClosed_le continuous_const continuous_norm).inter
@@ -251,7 +250,6 @@ theorem exists_isCompact_entries_of_anisotropic :
     rw [hform_mulVec, hg]
   let e : Fin M → Fin (Module.finrank K (Fin M → K ⊗[F] E)) → K := fun j => φ (Pi.single j 1)
   let D := ∑ j, ‖e j‖ ^ 2
-  have hD0 : 0 ≤ D := Finset.sum_nonneg fun j _ => sq_nonneg _
   let r := B / a * D + 1
   refine ⟨⋃ i : Fin M, (fun y => φ.symm y i) '' closedBall 0 r,
     isCompact_iUnion fun i => (isCompact_closedBall _ _).image ((continuous_apply i).comp hφs), ?_⟩
@@ -259,7 +257,6 @@ theorem exists_isCompact_entries_of_anisotropic :
   refine Set.mem_iUnion.2 ⟨i, φ (g *ᵥ Pi.single j 1), ?_, ?_⟩
   · rw [mem_closedBall_zero_iff]
     set t := ‖φ (g *ᵥ Pi.single j 1)‖
-    have ht : 0 ≤ t := norm_nonneg _
     have h1 := hlow (φ (g *ᵥ Pi.single j 1))
     have hQeq : Q (φ (g *ᵥ Pi.single j 1)) = Q (e j) := by
       simp only [Q, e, LinearEquiv.symm_apply_apply, hunit g hg]
@@ -270,7 +267,6 @@ theorem exists_isCompact_entries_of_anisotropic :
     have h3 : t ^ 2 ≤ B / a * D := by
       rw [div_mul_eq_mul_div, le_div_iff₀ ha]
       nlinarith
-    have h4 : 0 ≤ B / a * D := mul_nonneg (div_nonneg hB ha.le) hD0
     nlinarith [sq_nonneg (t - 1)]
   · simp only [LinearEquiv.symm_apply_apply]
     rw [Matrix.mulVec_single_one]

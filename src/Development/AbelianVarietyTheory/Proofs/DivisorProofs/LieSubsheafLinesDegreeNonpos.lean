@@ -511,7 +511,6 @@ theorem hankel_integral : ∀ (O F : Type) [CommRing O] [Field F] (ι : O →+* 
     · intro i j hij
       have hij' : i < j := hij
       have h1 : ¬ j ≤ i := not_le.mpr hij'
-      have h2 : ¬ ((j : ℕ) ≤ i) := h1
       simp [T, h1]
   refine ⟨N.det, ?_⟩
   rw [RingHom.map_det, RingHom.mapMatrix_apply, hent, Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose, hT]
@@ -843,9 +842,7 @@ theorem isRat_of_adelic : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k
   have hn' : 2 * δ + 1 ≤ (n : ℤ) := by
     have := Int.self_le_toNat (2 * δ)
     omega
-  have hD1 : 1 ≤ D := hdeg
   push_cast at hsum
-  have h6 : (n + 1 : ℤ) * (n * D - 2 * δ) ≤ 0 := by linarith [hsum]
   have h7 : (n : ℤ) * D - 2 * δ ≤ 0 := by
     by_contra! h8
     have : (0 : ℤ) < (n + 1 : ℤ) * (n * D - 2 * δ) := mul_pos (by positivity) h8

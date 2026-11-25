@@ -735,7 +735,6 @@ theorem _root_.GlobalTheory.local_maximum_principle_weight_finite_mvPolynomial_a
             rw [mul_assoc, ← Real.exp_add]
         _ ≤ R * Real.exp (δ * N) := by
             gcongr
-            have hN : (0 : ℝ) ≤ N := Nat.cast_nonneg N
             nlinarith
         _ = Real.exp (δ * N) * R := mul_comm _ _
     · intro x w hw hx
@@ -749,7 +748,6 @@ theorem _root_.GlobalTheory.local_maximum_principle_weight_finite_mvPolynomial_a
           rw [mul_assoc, ← Real.exp_add, neg_add_cancel, Real.exp_zero, mul_one]
         rw [h1]
         exact mul_le_mul_of_nonneg_right hf (Real.exp_pos _).le
-      have hN : (0 : ℝ) ≤ N := Nat.cast_nonneg N
       rw [hG, norm_mul, norm_pow]
       rcases hQx with ⟨h1, h2⟩ | ⟨j, hj⟩
       · have hΦ := hnear hy2 h1

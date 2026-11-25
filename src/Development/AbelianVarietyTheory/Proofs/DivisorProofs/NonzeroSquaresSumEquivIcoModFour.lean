@@ -20,7 +20,6 @@ theorem neg_one_not_isSquare {p : ℕ} [Fact p.Prime] (h3 : p % 4 = 3) : ¬ IsSq
 
 theorem isSquare_neg_of_not {p : ℕ} [Fact p.Prime] (h3 : p % 4 = 3) {a : ZMod p} (ha : a ≠ 0)
     (hs : ¬ IsSquare a) : IsSquare (-a) := by
-  have hc := _root_.Formalism.FrobeniusOrbits.Cond.ringChar_ne_two h3
   have h1 : quadraticChar (ZMod p) a = -1 := (quadraticChar_neg_one_iff_not_isSquare).2 hs
   have h2 : quadraticChar (ZMod p) (-1) = -1 :=
     (quadraticChar_neg_one_iff_not_isSquare).2 (neg_one_not_isSquare h3)

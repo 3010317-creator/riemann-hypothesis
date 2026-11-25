@@ -1471,7 +1471,6 @@ theorem finrank_kaehler_eq_of_universal_tangent :
     have := congrArg TrivSqZeroExt.snd (RingHom.congr_fun hR r)
     simpa [TrivSqZeroExt.algebraMap_eq_inl] using this
   have hsA : ∀ (a : A) (x : k), a • x = φ a * x := fun a x => rfl
-  have hsR : ∀ (r : R) (x : k), r • x = φ (algebraMap R A r) * x := fun r x => rfl
 
   let E : Derivation R A (Fin d → k) := Derivation.mk'
     { toFun := fun a => (ψ a).snd

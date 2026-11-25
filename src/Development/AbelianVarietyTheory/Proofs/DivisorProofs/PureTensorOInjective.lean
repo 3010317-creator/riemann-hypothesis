@@ -186,8 +186,6 @@ theorem pureTensorO_injective : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (�
   choose ε' hε' hG' hs' using hBW
   have sq : ∀ τ a, (ε τ a : ℂ) * ε τ a = 1 := fun τ a => by
     rcases hε τ a with h | h <;> simp [h.1]
-  have sq' : ∀ τ a, (ε' τ a : ℂ) * ε' τ a = 1 := fun τ a => by
-    rcases hε' τ a with h | h <;> simp [h.1]
   have hdet : ∀ τ, IsUnit (BV τ).det := fun τ => by
     have e : (diagonal (fun a => (ε τ a : ℂ)) * ((BV τ)ᴴ * gramAt D V τ)) * BV τ = 1 := by
       rw [Matrix.mul_assoc, hG, Matrix.diagonal_mul_diagonal]

@@ -110,10 +110,6 @@ theorem theta_eq_fibre (P₀ : Out.PolAV (Sp K)) {n : ℕ} (u : Fin n → (epsR 
       have E2 := hh p' W₂ (hW₂.trans l2) f
       have E3 := hP p.1 p'.1 W₂ (fun z hz => ⟨(l1 (hW₂ hz)).1, (l2 (hW₂ hz)).1⟩) f
       have E4 := hP' p.2 p'.2 W₂ (fun z hz => ⟨(l1 (hW₂ hz)).2, (l2 (hW₂ hz)).2⟩) f
-      have k1' : m ⁻¹ᵁ W₂ ≤ m ⁻¹ᵁ Wp p := k1.trans k2
-      have k1'' : m ⁻¹ᵁ W₂ ≤ m ⁻¹ᵁ Wp p' := k1.trans k3
-      have k4' : m ⁻¹ᵁ W₂ ≤ m ⁻¹ᵁ L.U (j p.1) ⊓ m ⁻¹ᵁ L.U (j p'.1) := k1.trans k4
-      have k5' : m ⁻¹ᵁ W₂ ≤ m ⁻¹ᵁ L.U (j' p.2) ⊓ m ⁻¹ᵁ L.U (j' p'.2) := k1.trans k5
       simp (disch := assumption) only [y₁, rsT_sub, rsT_sum, rsT_mul, rsT_rsT, rsT_constFn, sub_mul,
         Finset.sum_sub_distrib, Finset.sum_mul] at E1 E2 E3 E4 ⊢
       simp only [map_sub] at E1 E2 E3 E4
@@ -165,8 +161,6 @@ theorem theta_eq_fibre (P₀ : Out.PolAV (Sp K)) {n : ℕ} (u : Fin n → (epsR 
           m ⁻¹ᵁ L.U (j' p.2) ⊓ m ⁻¹ᵁ L.U (j p'.1) := fun _ h => ⟨h.1.1, h.2⟩
       simpa (disch := assumption) only [rsT_add, rsT_rsT] using this
     have E := cmp p p' a
-    have k8 : m ⁻¹ᵁ Wp p ⊓ m ⁻¹ᵁ Wp p' ≤ m ⁻¹ᵁ L.U (j' p.2) ⊓ m ⁻¹ᵁ L.U (j p.1) := k2.trans k6
-    have k9 : m ⁻¹ᵁ Wp p ⊓ m ⁻¹ᵁ Wp p' ≤ m ⁻¹ᵁ L.U (j' p'.2) ⊓ m ⁻¹ᵁ L.U (j p'.1) := k3.trans k7
     have k10 : m ⁻¹ᵁ Wp p ⊓ m ⁻¹ᵁ Wp p' ≤ m ⁻¹ᵁ L.U (j p.1) ⊓ m ⁻¹ᵁ L.U (j p'.1) := k4
     simp (disch := assumption) only [lc, rsT_sub, rsT_neg, rsT_sum, rsT_mul, rsT_rsT, rsT_constFn]
     have E' : ∑ b, (constFn P₀.A.hom (m ⁻¹ᵁ Wp p ⊓ m ⁻¹ᵁ Wp p') (θ a b) *

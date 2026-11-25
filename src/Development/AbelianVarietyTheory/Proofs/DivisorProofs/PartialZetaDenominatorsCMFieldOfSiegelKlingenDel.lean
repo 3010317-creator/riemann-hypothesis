@@ -506,7 +506,6 @@ theorem ceSum_term_le (f X l : ℕ) (hX : X ≠ 0) (hp : l.Prime) :
     · exact le_rfl
   by_cases h2 : l = 2
   · subst h2
-    have hlog2 : 0 ≤ Real.log (2 : ℝ) := Real.log_nonneg (by norm_num)
     have hm : mE 2 X = 2 + padicValNat 2 X := by simp [mE]
     have h22 : padicValNat 2 2 = 1 := by
       rw [Nat.padicValNat_def, Nat.multiplicity_self (by norm_num : 1 < 2)]
