@@ -47,14 +47,7 @@ theorem mem_fib {v : HeightOneSpectrum (𝓞 F)} {P : HeightOneSpectrum (𝓞 E)
   simp [fib]
 
 theorem natCast_pow_cpow (q f : ℕ) (s : ℂ) : ((q ^ f : ℕ) : ℂ) ^ s = ((q : ℂ) ^ s) ^ f := by
-  induction f with
-  | zero => simp
-  | succ n ih =>
-    have h := Complex.mul_cpow_ofReal_nonneg (a := ((q ^ n : ℕ) : ℝ)) (b := (q : ℝ)) (by positivity) (by positivity) s
-    have e1 : ((q ^ (n + 1) : ℕ) : ℂ) = (((q ^ n : ℕ) : ℝ) : ℂ) * ((q : ℝ) : ℂ) := by
-      push_cast; ring
-    rw [e1, h, pow_succ, ← ih]
-    simp only [Complex.ofReal_natCast]
+  rw [Nat.cast_pow, ← Complex.natCast_cpow_natCast_mul, mul_comm, Complex.cpow_mul_nat]
 
 private theorem inertiaDeg_eq_ramIdx_mul_of_ramIdx_eq_one {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
     [Algebra F E] (p : Ideal (𝓞 F)) (P : HeightOneSpectrum (𝓞 E))

@@ -316,17 +316,10 @@ theorem notMem_basicOpen_of_mem_vanishingIdeal (B : Closeds Y) (U : Y.affineOpen
 
 theorem exists_notMem_basicOpen_of_prod {U : Y.Opens} {ι : Type} (J : Finset ι) (f : ι → Γ(Y, U))
     {y : Y} (hy : y ∈ U) (h : y ∉ Y.basicOpen (∏ i ∈ J, f i)) : ∃ i ∈ J, y ∉ Y.basicOpen (f i) := by
-  classical
-  induction J using Finset.induction_on with
-  | empty =>
-    rw [Finset.prod_empty, Scheme.basicOpen_of_isUnit _ isUnit_one] at h
-    exact (h hy).elim
-  | insert a J ha ih =>
-    rw [Finset.prod_insert ha, Scheme.basicOpen_mul] at h
-    by_cases h' : y ∈ Y.basicOpen (f a)
-    · obtain ⟨i, hi, hi'⟩ := ih fun h'' => h ⟨h', h''⟩
-      exact ⟨i, Finset.mem_insert_of_mem hi, hi'⟩
-    · exact ⟨a, Finset.mem_insert_self a J, h'⟩
+  by_contra! hall
+  exact h <| Finset.prod_induction f (fun s => y ∈ Y.basicOpen s)
+    (fun _ _ ha hb => by rw [Scheme.basicOpen_mul]; exact ⟨ha, hb⟩)
+    (by rw [Scheme.basicOpen_one]; exact hy) hall
 
 end GlobalTheory.SncComp
 

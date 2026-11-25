@@ -55,21 +55,13 @@ private theorem gen_mem (a b : Fin n) : E a b ∈ U E 1 := by
 
 private theorem mul_mem_U {j k : ℕ} {x y : Module.End ℂ V} (hx : x ∈ U E j) (hy : y ∈ U E k) :
     x * y ∈ U E (j + k) := by
-  induction hx using Submodule.span_induction with
-  | mem x hx =>
-    induction hy using Submodule.span_induction with
-    | mem y hy =>
-      obtain ⟨l, hl, rfl⟩ := hx
-      obtain ⟨m, hm, rfl⟩ := hy
-      refine Submodule.subset_span ⟨l ++ m, ?_, ?_⟩
-      · simp only [List.length_append]; omega
-      · simp
-    | zero => simp
-    | add a b _ _ ha hb => rw [mul_add]; exact add_mem ha hb
-    | smul c a _ ha => rw [mul_smul_comm]; exact Submodule.smul_mem _ c ha
-  | zero => simp
-  | add a b _ _ ha hb => rw [add_mul]; exact add_mem ha hb
-  | smul c a _ ha => rw [smul_mul_assoc]; exact Submodule.smul_mem _ c ha
+  refine (show U E j * U E k ≤ U E (j + k) from ?_) (Submodule.mul_mem_mul hx hy)
+  unfold U
+  rw [Submodule.span_mul_span, Submodule.span_le]
+  rintro z ⟨a, ⟨l, hl, rfl⟩, b, ⟨m, hm, rfl⟩, rfl⟩
+  refine Submodule.subset_span ⟨l ++ m, ?_, ?_⟩
+  · simp only [List.length_append]; omega
+  · simp [List.map_append, List.prod_append]
 
 private theorem gen_comm_mem (hE : IsGlRep E) (a b c d : Fin n) :
     E a b * E c d - E c d * E a b ∈ U E 1 := by

@@ -122,13 +122,10 @@ theorem gauge {V Λ : Type} [NormedCommRing V] [CommRing Λ] [TopologicalSpace �
   classical
   let d : R → ℝ := fun x => ‖p x‖ + if q x ∈ L then 0 else 1
   have d0 : ∀ x, 0 ≤ d x := fun x => add_nonneg (norm_nonneg _) (by split_ifs <;> simp)
-  have dc : Continuous d := hp.norm.add ((IsLocallyConstant.continuous (f := fun z : Λ => if z ∈ L then (0 : ℝ) else 1)
-    ((IsLocallyConstant.iff_eventually_eq _).2 fun z => by
-      by_cases hz : z ∈ L
-      · filter_upwards [Lo.mem_nhds hz] with w hw
-        simp [hz, show w ∈ L from hw]
-      · filter_upwards [(L.isClosed_of_isOpen Lo).isOpen_compl.mem_nhds hz] with w hw
-        simp [hz, show w ∉ L from hw])).comp hq)
+  have dc : Continuous d := hp.norm.add ((Continuous.if (fun _ h => False.elim <| by
+      rw [show {x : Λ | x ∈ L} = (L : Set Λ) from rfl,
+        IsClopen.frontier_eq ⟨L.isClosed_of_isOpen Lo, Lo⟩] at h
+      exact h) continuous_const continuous_const).comp hq)
   have dt : ∀ x y, q (x - y) ∈ L → |d x - d y| ≤ ‖p (x - y)‖ := fun x y h => by
     have : q x ∈ L ↔ q y ∈ L := by
       rw [map_sub] at h

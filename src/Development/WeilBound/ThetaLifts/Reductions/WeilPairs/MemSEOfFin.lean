@@ -81,32 +81,33 @@ theorem small (T : Set (AF F ⊗[F] E)) (hT : T ∈ 𝓝 0) : ∃ N : ℕ, 0 < N
       first
         | fun_prop
     exact h1.comp (hP.comp (continuous_apply i))
+  let K : AddSubgroup (Module.Free.ChooseBasisIndex ℤ (𝓞 E) → Af F) :=
+    AddSubgroup.pi Set.univ fun _ => ⨅ v : HeightOneSpectrum (𝓞 F),
+      (v.adicCompletionIntegers F).toSubring.toAddSubgroup.comap
+        (AddMonoidHom.mk' (fun a : Af F => a v) fun _ _ => rfl)
   have hrep : ∀ s ∈ SE F E, ∃ c : Module.Free.ChooseBasisIndex ℤ (𝓞 E) → Af F,
       (∀ i v, c i v ∈ v.adicCompletionIntegers F) ∧ fI F E * s = Φ c := by
     intro s hs
-    induction hs using AddSubgroup.closure_induction with
-    | mem g hg =>
+    obtain ⟨c, hc, e⟩ := (AddSubgroup.closure_le
+      ((K.map Φ).comap (AddMonoidHom.mulLeft (fI F E)))).2 (by
+      intro g hg
       obtain ⟨t, ⟨c0, h0, e0⟩, o, rfl⟩ := hg
       rw [one_smul] at e0
-      refine ⟨fun i => b.repr o i • c0, fun i v => zsmul_mem (h0 v) _, ?_⟩
+      refine ⟨fun i => b.repr o i • c0, (AddSubgroup.mem_pi Set.univ).2 fun i _ =>
+        AddSubgroup.mem_iInf.2 fun v => zsmul_mem (h0 v) _, ?_⟩
       have e1 : incAF F E o = ∑ i, b.repr o i • incAF F E (b i) := by
         have := congrArg ((incAF F E).comp (algebraMap (𝓞 E) E)) (b.sum_repr o).symm
 
         rw [map_sum] at this
         simp only [map_zsmul] at this
         exact this
+      change Φ _ = fI F E * _
       rw [hΦ, fI, ← mul_assoc, ← map_mul, uFin_mul, e0, e1, Finset.mul_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [map_zsmul, smul_assoc, mul_smul_comm, Algebra.smul_def (P c0)]
-      rfl
-    | zero => exact ⟨0, fun _ _ => zero_mem _, by rw [mul_zero, map_zero]⟩
-    | add x y _ _ hx hy =>
-      obtain ⟨c, h1, e1⟩ := hx
-      obtain ⟨c', h2, e2⟩ := hy
-      exact ⟨c + c', fun i v => add_mem (h1 i v) (h2 i v), by rw [mul_add, map_add (f := _), e1, e2]⟩
-    | neg x _ hx =>
-      obtain ⟨c, h1, e1⟩ := hx
-      exact ⟨-c, fun i v => neg_mem (h1 i v), by rw [mul_neg, map_neg, e1]⟩
+      rfl) hs
+    exact ⟨c, fun i v =>
+      AddSubgroup.mem_iInf.1 ((AddSubgroup.mem_pi Set.univ).1 hc i trivial) v, e.symm⟩
   have h1 : Φ ⁻¹' T ∈ 𝓝 0 := hc.continuousAt.preimage_mem_nhds (by rw [map_zero]; exact hT)
   rw [nhds_pi, Filter.mem_pi] at h1
   obtain ⟨I, -, W, hW, hsub⟩ := h1
@@ -166,24 +167,16 @@ theorem exists_level (η : (AF F ⊗[F] E)ˣ →* Circle) (hη : Continuous η) 
   simpa using this
 
 theorem mem_SE_of_fin {z : AF F ⊗[F] E} (hz : finPartF F E z ∈ intAEF F E) : z ∈ SE F E := by
-  have h1 : ∀ y ∈ intAEF F E, ∃ s ∈ SE F E, finPartF F E s = y := by
-    intro y hy
-    induction hy using AddSubgroup.closure_induction with
-    | mem g hg =>
+  obtain ⟨s, hs, (e : finPartF F E s = _)⟩ :=
+    (AddSubgroup.closure_le ((SE F E).map (finPartF F E).toAddMonoidHom)).2 (by
+      intro g hg
       obtain ⟨a, ha, x, rfl⟩ := hg
-      refine ⟨_, AddSubgroup.subset_closure ⟨pairA F 0 a, ⟨a, ha, by rw [one_smul]; rfl⟩, x, rfl⟩, ?_⟩
+      refine ⟨_, AddSubgroup.subset_closure ⟨pairA F 0 a, ⟨a, ha, by rw [one_smul]; rfl⟩, x, rfl⟩,
+        ?_⟩
+      change finPartF F E _ = _
       rw [map_mul, fin_j]
       show (a ⊗ₜ[F] (1 : E)) * ((1 : Af F) ⊗ₜ[F] (x : E)) = _
-      rw [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]
-    | zero => exact ⟨0, zero_mem _, map_zero _⟩
-    | add x y _ _ hx hy =>
-      obtain ⟨s, h1, rfl⟩ := hx
-      obtain ⟨t, h2, rfl⟩ := hy
-      exact ⟨s + t, add_mem h1 h2, map_add _ _ _⟩
-    | neg x _ hx =>
-      obtain ⟨s, h1, rfl⟩ := hx
-      exact ⟨-s, neg_mem h1, map_neg _ _⟩
-  obtain ⟨s, hs, e⟩ := h1 _ hz
+      rw [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]) hz
   have h2 : At (evI F) (z - s) := by
     intro u hu
     have hu1 : u.1 = 0 := (map_eq_zero_iff _ (InfiniteAdeleRing.ringEquiv_mixedSpace F).injective).1 hu
@@ -243,11 +236,13 @@ theorem phi_inc {v : HeightOneSpectrum (𝓞 F)} (τ : E →ₐ[F] Fv F v) (x : 
   rw [phi, Algebra.TensorProduct.lift_tmul, map_one, one_mul]
 
 theorem phi_mem {v : HeightOneSpectrum (𝓞 F)} (τ : E →ₐ[F] Fv F v) {z : AF F ⊗[F] E} (hz : z ∈ SE F E) :
-    phi τ z ∈ v.adicCompletionIntegers F := by
-  induction hz using AddSubgroup.closure_induction with
-  | mem g hg =>
+    phi τ z ∈ v.adicCompletionIntegers F :=
+  (AddSubgroup.closure_le ((v.adicCompletionIntegers F).toSubring.toAddSubgroup.comap
+    (phi τ).toRingHom.toAddMonoidHom)).2 (by
+    intro g hg
     obtain ⟨t, ⟨c0, h0, e0⟩, o, rfl⟩ := hg
     rw [one_smul] at e0
+    change phi τ _ ∈ v.adicCompletionIntegers F
     rw [map_mul, phi_j, phi_inc, e0]
     refine mul_mem (h0 v) ?_
     have h2 : IsIntegral (v.adicCompletionIntegers F) (τ (o : E)) := by
@@ -257,10 +252,7 @@ theorem phi_mem {v : HeightOneSpectrum (𝓞 F)} (τ : E →ₐ[F] Fv F v) {z : 
       exact (congrArg (fun g => Polynomial.eval₂ g (τ (o : E)) p) (RingHom.ext_int _ _)).trans e
     obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 h2
     rw [← hy]
-    exact y.2
-  | zero => rw [map_zero]; exact zero_mem _
-  | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
-  | neg x _ hx => rw [map_neg]; exact neg_mem hx
+    exact y.2) hz
 
 theorem exists_idem {σ : E →ₐ[F] E} (hcm : IsCMExt F E σ) {v : HeightOneSpectrum (𝓞 F)} (τ : E →ₐ[F] Fv F v) :
     ∃ e, IsSplitIdemF σ e ∧ IsSplitIdemF σ (cAF σ e) ∧ cAF σ (cAF σ e) = e ∧ phi τ e = 1 := by

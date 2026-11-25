@@ -118,19 +118,12 @@ private theorem exists_finrank_family_mod_smul {R : Type} [CommRing R] [IsDedeki
     calc I • (⊤ : Submodule R M) = I • (N ⊔ J • ⊤) := by rw [hJ]
       _ = I • N ⊔ I • J • ⊤ := Submodule.smul_sup _ _ _
       _ ≤ N ⊔ I • J • ⊤ := sup_le_sup_right (Submodule.smul_le_right) _
-  have hfac : ∀ s : Multiset (Ideal R), (∀ P ∈ s, P ∈ F) → N ⊔ s.prod • (⊤ : Submodule R M) = ⊤ := by
-    intro s
-    induction s using Multiset.induction_on with
-    | empty => intro _; simp
-    | cons P s ih =>
-      intro h
-      rw [Multiset.prod_cons]
-      exact key _ _ (hcov P (h P (Multiset.mem_cons_self _ _)))
-        (ih fun Q hQ => h Q (Multiset.mem_cons_of_mem hQ))
   have hN : N = ⊤ := by
-    have := hfac (UniqueFactorizationMonoid.normalizedFactors (Ideal.span {a}))
-      (fun P hP => Multiset.mem_toFinset.mpr hP)
-    rwa [Ideal.prod_normalizedFactors_eq_self (by simpa using ha), sup_eq_left.mpr le_sup_right] at this
+    have := Multiset.prod_induction (fun I : Ideal R => N ⊔ I • (⊤ : Submodule R M) = ⊤)
+      (UniqueFactorizationMonoid.normalizedFactors (Ideal.span {a})) key (by simp)
+      fun P hP => hcov P (Multiset.mem_toFinset.mpr hP)
+    rwa [Ideal.prod_normalizedFactors_eq_self (by simpa using ha),
+      sup_eq_left.mpr le_sup_right] at this
   refine ⟨u, fun x => ?_⟩
   have hx : x ∈ N := hN ▸ Submodule.mem_top
   obtain ⟨y, hy, z, hz, rfl⟩ := Submodule.mem_sup.mp hx
