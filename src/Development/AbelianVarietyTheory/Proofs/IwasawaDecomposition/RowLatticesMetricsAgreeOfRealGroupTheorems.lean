@@ -125,12 +125,6 @@ end GlobalTheory.CompanionTheory.MemQ
 end
 
 section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.DivisionValues Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows
-open scoped Matrix
-
-end
-
-section
 
 open NumberField
 open scoped Matrix MatrixOrder ComplexOrder
@@ -332,12 +326,6 @@ end GlobalTheory.CompanionTheory.MemQ
 end
 
 section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.DivisionValues Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows
-open scoped Matrix
-
-end
-
-section
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.DivisionValues Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows
 open scoped Matrix
@@ -435,12 +423,6 @@ section
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.DivisionValues Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows
 open scoped Matrix
 
-end
-
-section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.DivisionValues Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows
-open scoped Matrix
-
 namespace GlobalTheory.CompanionTheory.MemQ
 
 private theorem mem_glued_lemma_10 (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (m : ℕ) (A : FamIn D.what₂.LL G Pl0 T m)
@@ -502,12 +484,6 @@ theorem rrDef_iff_glued : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T :
     exact (key x).symm
 
 end GlobalTheory.CompanionTheory.MemQ
-
-end
-
-section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.DivisionValues Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows
-open scoped Matrix
 
 end
 

@@ -272,37 +272,6 @@ theorem hasVal_zero_of {a : K → ℤ} {s : Ω} {w : 𝕜} (h : Small.HasVal y a
 
 end Vals
 
-section Coef
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E}
-
-end Coef
-
-section Fin
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
-  {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {r : ℕ}
-
-end Fin
-
-section Arch
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
-  {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {r : ℕ}
-
-end Arch
-
-section ArchD
-
-variable {D : D7} {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l}
-  {c : Coeff l}
-
-end ArchD
-
-section Emb
-
-end Emb
-
 end GlobalTheory.CompanionTheory.Ar.Rec.OS
 
 namespace GlobalTheory.CompanionTheory.Ar.Rec

@@ -748,12 +748,6 @@ theorem keepsDiag_of_mul_stkRows_one {R : Type} [CommRing R] {n : ℕ} {M : Matr
 
 variable {D : D7}
 
-section Core
-
-variable {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ)
-
-end Core
-
 end GlobalTheory.Core.Rk.SW
 end -- clump:auto
 end -- clump:auto

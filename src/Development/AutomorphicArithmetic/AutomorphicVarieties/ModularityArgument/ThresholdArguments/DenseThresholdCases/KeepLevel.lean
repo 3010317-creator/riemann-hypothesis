@@ -98,9 +98,6 @@ noncomputable section
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N Polynomial
 open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.Pst GlobalTheory.LocLanglands GlobalTheory.LocGL GlobalTheory.GalOfCusp
 namespace UpperTheory.V.Af
-section Defs
-variable {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω]
-end Defs
 def LocFixedAlt : Prop :=
   ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (n M : ℕ), 1 ≤ M →
     ∀ (w : HeightOneSpectrum (𝓞 F)) (A : ValuationSubring Ω) (h : IsPlaceOver A w)
@@ -568,10 +565,6 @@ theorem levelPA_alt (P : _root_.UpperTheory.V.Af.Hypotheses') : LevelPA := by
     obtain ⟨χ, -, h2, -⟩ := hκ
     exact Or.inl (A4.unlOfOne K Ω l n r w A hA κ h2 hu)) hW hreg hpol ha
   exact ⟨⟨h.1, hpol, h.2.1⟩, h.2.2⟩
-section
-variable {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] {n : ℕ}
-variable [IsAlgClosure F Ω] {l : ℕ} [Fact l.Prime] {r : G F Ω →* GL (Fin n) (Qbar l)}
-end
 theorem levelKA_alt (P : _root_.UpperTheory.V.Af.Hypotheses') : LevelKA := by
   intro K _ _ _ n hn m _ M hM l _ hl Ω _ _ _ ι r π hL hU hW hreg hd ha
   have hpol : GlobalTheory.ContraPair.PolarizedPair π (quadChar K ^ n) :=

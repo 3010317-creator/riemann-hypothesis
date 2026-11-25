@@ -731,14 +731,6 @@ def RealisedExE (D : D7) : Prop := ∀ θ : InfF D, IsInfFam θ → ∀ ψ, IsSt
     ∃ (X : ThetaX D) (T : ThetaTied D X) (W : WeilTied D X T) (B : BesselTied D X T W) (h : W.ψ = ψ),
       RealisesE (θ := θ) B (h ▸ Wf) Tw (h ▸ Rc)
 
-section Lift
-
-variable {θ : InfF D} {X : ThetaX D} {T : ThetaTied D X} {W : WeilTied D X T} {B : BesselTied D X T W}
-  {Wf : WeilFun D W.ψ} {Tw : Tow D} {Rc : RecFun D θ W.ψ}
-
-
-end Lift
-
 namespace RealisesE
 
 variable {θ : InfF D} {X : ThetaX D} {T : ThetaTied D X} {W : WeilTied D X T} {B : BesselTied D X T W}

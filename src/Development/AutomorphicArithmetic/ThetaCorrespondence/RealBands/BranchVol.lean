@@ -28,12 +28,6 @@ open scoped Matrix.Norms.L2Operator ComplexOrder
 
 namespace GlobalTheory
 
-section LogDet
-
-variable {n : Type*} [Fintype n] [DecidableEq n]
-
-end LogDet
-
 section Exp
 
 open NormedSpace

@@ -160,12 +160,6 @@ namespace GlobalTheory.GO
 
 open NumberField IsDedekindDomain Formalism.L2.Col Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.L2.DIV Formalism.L2.Forms Formalism.L2.Ker
 
-section Aut
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ}
-
-end Aut
-
 section Stab
 
 variable {X : Fields} {n : ℕ} {ST SG Q : Finset (HeightOneSpectrum (𝓞 X.E))}
@@ -276,13 +270,6 @@ variable {chi : ∀ n : ℕ, Submodule (𝓞 X.E) (Sp X.E n) → ℂ} {hX : X.Ok
 end Laws
 
 
-section Col
-
-variable {chi : ∀ n : ℕ, Submodule (𝓞 X.E) (Sp X.E n) → ℂ} {hX : X.Ok} {hm : R.m = m2 + 2} {hF : ∀ j, (chF W sel mu L u j).Ok}
-  {hK : TwEquiv W Ch sel mu cst L A u m2 b hY P c} {hρ : RhoUnit Ch sel mu cst A.σ₀ chi} {G : ChGlob X R.m}
-
-end Col
-
 end Chain
 
 end GlobalTheory.GO
@@ -350,13 +337,6 @@ namespace GlobalTheory.GO
 
 open NumberField IsDedekindDomain Formalism.L2.Col Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.MainNotions Formalism.L2.DIV Formalism.L2.Forms Formalism.L2.Ker GlobalTheory.TopStep
 open GlobalTheory.IndefiniteRowSideFullHecke.BadPrimesPeriodBound (JetsRatDeg)
-
-section Dat
-
-variable {X : Fields} (A : Amb X) {a b : ℕ} (S : Finset (HeightOneSpectrum (𝓞 X.E))) {cA cB : ℕ}
-  {N : Submodule (𝓞 X.E) (Sp X.E a)} {N' : Submodule (𝓞 X.E) (Sp X.E b)}
-
-end Dat
 
 section Range
 
@@ -489,22 +469,6 @@ variable (hT : 0 < Pr.T u) (hχ : ChiSplit chi A) (hs : ∀ i < R.m, A.ESmooth (
 include hT hχ hs hJ
 
 end Laws
-
-section Same
-
-variable {chi : ∀ n : ℕ, Submodule (𝓞 X.E) (Sp X.E n) → ℂ} {hX : X.Ok} {hm : R.m = m2 + 2} {hF : ∀ j, (chF W sel mu L u j).Ok}
-  {hK : TwEquiv W Ch sel mu cst L A u m2 b hY P c} {hρ : RhoUnit Ch sel mu cst A.σ₀ chi}
-
-end Same
-
-section Of
-
-variable {D : D7} {s : Seam D X} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} {B : Base D cc δ} {χ : TaylorLogMetric.IdE D → ℂ} {cD : D.what₂.Tau → ℂ}
-  {e : Fin R.m → X.Tau → ℚ} {eta : Formalism.L2.Host.HChar X.E} {hX : X.Ok} {hPr : Pr.Ok} {hsel : IsSel X sel}
-  {hS : ∀ i, Pr.g i ∈ S} {ht : Ch.Tied s.σ₀ e G.mu0 eta} {hL : L.Ok Ch sel mu cst G m2} {hG : G.σ₀ = s.σ₀} {hs : s.Ok}
-  {hχ : TaylorLogMetric.IsChi D χ} {hF : ∀ j, (chF W sel mu L u j).Ok} {hK : TwEquiv W Ch sel mu cst L (ambOf s B χ cD) u m2 b hY P c}
-
-end Of
 
 end Chain
 

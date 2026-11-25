@@ -262,13 +262,6 @@ theorem thExprUniqSt_iff_top : Formalism.MainNotions.ModuliIntegralCharts.H1.ThE
   rw [thExprUniqSt_iff_span]
   exact forall₅_congr fun E _ _ _ H => forall₄_congr fun Dw l Xo c => uniqueOn_span_iff Xo c _
 
-section Reframe
-
-
-
-
-end Reframe
-
 end GlobalTheory.NabUniqCompare
 end -- clump:auto
 end -- clump:auto

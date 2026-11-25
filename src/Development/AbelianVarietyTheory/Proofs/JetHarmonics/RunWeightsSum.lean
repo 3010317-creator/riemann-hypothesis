@@ -203,12 +203,6 @@ theorem dimY_eq_flag {j : ℕ} (hj : InR D j) : WeightFamilies.dimY D j = D.R.f 
 
 variable {L : SizeData₂ D} {P : ParameterChoice' D L}
 
-section Record
-
-variable {B : WeightFamilies.Prov D} {Q : ModuliIntegralCharts.Prov D} {j : ℕ} (X : WeightAlgebra.PJ D B Q j)
-
-end Record
-
 end GlobalTheory.DepthBoundTest
 end -- clump:auto
 end -- clump:auto

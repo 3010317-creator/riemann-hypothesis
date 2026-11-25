@@ -451,12 +451,6 @@ open scoped ENNReal nonZeroDivisors
 
 namespace GlobalTheory.SelBaseChange
 
-section Coord
-
-variable {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] [IsDomain R'] [Algebra R R']
-
-end Coord
-
 section Coh
 
 variable {R R' : Type} [CommRing R] [CommRing R'] [Algebra R R']
@@ -884,16 +878,6 @@ variable {S}
 
 variable (S)
 
-section Coh
-
-variable [TopologicalSpace A] [DiscreteTopology A] [IsTopologicalAddGroup A] [ContinuousConstSMul O A]
-  [TopologicalSpace A'] [DiscreteTopology A'] [IsTopologicalAddGroup A'] [ContinuousConstSMul O' A']
-  {Γ : Type} [Group Γ] [TopologicalSpace Γ] {ρ : Representation O Γ A} {ρ' : Representation O' Γ A'}
-  (he : ∀ a g m, S.p a (ρ' g m) = ρ g (S.p a m))
-include he
-
-end Coh
-
 end Comp
 
 end Comp
@@ -944,24 +928,6 @@ theorem frac_compat : (fracComp b).Compat (LinearMap.range (Algebra.linearMap O 
 open Formalism.MainNotions.BlochKatoReduction
 
 end Frac
-
-section Len
-
-variable {O O' : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CommRing O'] [IsDomain O']
-  [IsDiscreteValuationRing O'] [Algebra O O'] [FaithfulSMul O O'] [Module.Finite O O']
-  {ι : Type} [Fintype ι] {b : Module.Basis ι O O'}
-
-end Len
-
-section Main
-
-open Formalism.MainNotions.BlochKatoReduction Formalism.MainNotions.BlochKatoReduction.Gen Formalism.GaloisCohomology
-
-variable {D : D7} {N : NData D.R D.host D.what₂} {X : NTw D.R D.host D.what₂ D.LL0 N} (bkP : BKPh X)
-  (i : X.Tw) (s : X.Sig i)
-
-
-end Main
 
 end GlobalTheory.SelmerLevel
 

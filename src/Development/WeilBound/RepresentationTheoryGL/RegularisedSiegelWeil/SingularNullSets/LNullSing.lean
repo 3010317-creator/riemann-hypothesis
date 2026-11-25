@@ -71,12 +71,6 @@ theorem absE_eq_ideleModule (x : (_root_.GlobalTheory.IndefiniteRowSideFullHecke
 
 end Transfer
 
-section OnE
-
-variable {E : Type} [Field E] [NumberField E]
-
-end OnE
-
 end GlobalTheory.IdeleLogHom
 end -- clump:auto
 end -- clump:auto

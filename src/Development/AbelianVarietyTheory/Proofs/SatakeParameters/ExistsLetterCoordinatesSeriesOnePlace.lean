@@ -57,14 +57,6 @@ open NumberField Formalism.BasicNotions Formalism.MainNotions Formalism.MainNoti
 
 namespace GlobalTheory.CompareInert
 
-section Letters
-
-variable (D : D7) (p : ℕ) [Fact p.Prime]
-
-variable {D p}
-
-end Letters
-
 section Rings
 
 open Formalism.MainNotions.GL3Theta
@@ -114,60 +106,6 @@ theorem norm_l_lt : ‖(l : ℂ_[l])‖ < 1 := by
   exact Padic.norm_p_lt_one
 
 end Rings
-
-section Props
-
-open Formalism.MainNotions.GL3Theta MvPowerSeries
-
-variable {l d : ℕ} [Fact l.Prime] [NeZero d]
-
-end Props
-
-section Sign
-
-open Formalism.MainNotions.GL3Theta MvPowerSeries
-
-variable {l d : ℕ} [Fact l.Prime] [NeZero d]
-
-end Sign
-
-section Reps
-
-variable (D : D7) (p : ℕ)
-
-end Reps
-
-section Hyp
-
-end Hyp
-
-section Statements
-
-variable {D : D7} {Dx : DivX D} {Tw : TwForms D}
-
-end Statements
-
-section Units
-
-open MvPowerSeries
-
-variable {D : D7} {p : ℕ} [Fact p.Prime]
-
-end Units
-
-section Direction
-
-open GlobalTheory.InertCompare GlobalTheory.Proof.IdempotentLatticeSequence
-
-variable (D : D7) {l : ℕ} [Fact l.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[l])
-
-end Direction
-
-section Main
-
-variable (D : D7) {Dx : DivX D} {Tw : TwForms D}
-
-end Main
 
 end GlobalTheory.CompareInert
 end -- clump:auto
@@ -1194,12 +1132,6 @@ theorem subst_psubst {κ' : Type} {a : κ → MvPowerSeries κ' ℂ_[l]} (ha : H
 
 theorem cc_lg (k : κ) : constantCoeff (lg k : MvPowerSeries κ ℂ_[l]) = 0 :=
   PowerSeries.constantCoeff_subst_eq_zero (constantCoeff_X k) _ cc_logF
-
-section Frob
-
-variable {σ : ℂ_[l] →+* ℂ_[l]}
-
-end Frob
 
 end GlobalTheory.ThBe0.Inhab
 end -- clump:auto

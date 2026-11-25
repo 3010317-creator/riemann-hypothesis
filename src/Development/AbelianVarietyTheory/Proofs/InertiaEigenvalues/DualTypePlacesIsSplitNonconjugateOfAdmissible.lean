@@ -531,12 +531,6 @@ theorem om_tgt_of_red (hB : B.Good) (hS : S.SigOK) {Q : Finset (Pl D.host.E)} (h
 
 end Target
 
-section TargetSeries
-
-variable {B : Base S T}
-
-end TargetSeries
-
 section TargetSeriesAll
 
 variable {B : Base S T}
@@ -569,12 +563,6 @@ theorem gen_mul_right_of_red (hB : B.Good) (hS : S.SigOK) {ψ : Twist D Circle} 
         rw [mul_assoc, ← mul_assoc ((detChar T ψ.chi κ : Circle) : ℂ), e1, one_mul]
 
 end TargetSeriesAll
-
-section TargetLattice
-
-variable {B : Base S T}
-
-end TargetLattice
 
 section Xi
 

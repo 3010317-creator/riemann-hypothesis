@@ -786,12 +786,6 @@ theorem ιMulti_ne_zero {r : ℕ} {e : Fin r → E} (h : LinearIndependent Ω e)
 
 end General
 
-section Int
-
-open CptModel
-
-end Int
-
 end GlobalTheory.CompanionTheory.Ar.Flat.GenModel
 end -- clump:auto
 end -- clump:auto

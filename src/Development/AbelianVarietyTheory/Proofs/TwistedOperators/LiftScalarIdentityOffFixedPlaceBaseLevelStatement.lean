@@ -148,26 +148,6 @@ variable {Bs : DefBase K} {A : DefAmb Bs} (X : CxData A) {fc : DefSub A → DefF
 
 end Abstract
 
-section Concrete
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} {A : FamIn D.what₂.LL G Pl0 T0 D.R.m}
-  {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A)
-
-end Concrete
-
-section Comparison₂
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-open Formalism.IndefR.FWT Formalism.L2.Pj Formalism.MainNotions
-
-variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} {A : FamIn D.what₂.LL G Pl0 T0 D.R.m}
-
-
-end Comparison₂
-
 end GlobalTheory.ScalarConjugation
 end -- clump:auto
 end -- clump:auto

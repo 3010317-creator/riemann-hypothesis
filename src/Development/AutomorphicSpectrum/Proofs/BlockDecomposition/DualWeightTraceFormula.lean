@@ -593,17 +593,6 @@ open scoped ComplexConjugate Kronecker InnerProductSpace
 
 namespace GlobalTheory.CompanionTheory.CxAvg
 
-section Abstract
-
-variable {K E : Type*} [Group K] [TopologicalSpace K] [IsTopologicalGroup K] [CompactSpace K]
-  [SecondCountableTopology K] [MeasurableSpace K] [BorelSpace K]
-  [NormedAddCommGroup E] [InnerProductSpace ℂ E] [FiniteDimensional ℂ E] [CompleteSpace E]
-  (μ : Measure K) [μ.IsHaarMeasure] (F : K →* (E →L[ℂ] E))
-
-variable {F}
-
-end Abstract
-
 section Concrete
 
 open PositivityTheory.RgTw (Mat hb)

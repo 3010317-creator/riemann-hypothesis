@@ -171,21 +171,6 @@ theorem pull_norm (c : E → E) (c' : E' → E') (h : ∀ x, e (c x) = c' (e x))
 
 end Pull
 
-section Vp
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E]
-
-
-end Vp
-
-section Val
-
-variable {K : Type} [Field K] [NumberField K] (σ : K →+* ℂ)
-
-
-
-end Val
-
 section Chi
 
 variable {D : D7} {X : Fields} (s : Seam D X) {χ : TaylorLogMetric.IdE D → ℂ}

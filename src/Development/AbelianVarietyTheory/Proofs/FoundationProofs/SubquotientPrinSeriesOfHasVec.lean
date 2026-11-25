@@ -312,11 +312,6 @@ open MeasureTheory ValuativeRel Matrix GlobalTheory.SplitWeil GlobalTheory.RootE
 noncomputable section
 namespace GlobalTheory.PairingOne
 
-section Alg
-variable {k : Type*} [Field k] {m : Type*} [Fintype m] [DecidableEq m]
-
-end Alg
-
 variable {k : Type*} [Field k] [ValuativeRel k] {m : Type*} [Fintype m] [DecidableEq m]
 
 variable [TopologicalSpace k] [IsNonarchimedeanLocalField k]

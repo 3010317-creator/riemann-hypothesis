@@ -126,20 +126,6 @@ namespace GlobalTheory.HeisCoords
 
 open Matrix
 
-section Cplx
-
-variable {n : ℕ} (J : Matrix (Fin n) (Fin n) ℂ)
-
-variable {J}
-
-end Cplx
-
-section Coords
-
-variable {n : ℕ} {J : Matrix (Fin n) (Fin n) ℂ}
-
-end Coords
-
 section Transfer
 
 open Formalism.UG (cT bc UJ)

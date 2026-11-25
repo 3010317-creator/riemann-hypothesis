@@ -1086,11 +1086,6 @@ def LLoc : Prop := ∀ {Y X : Scheme.{0}} (a : Y ⟶ X), IsFinite a → Etale a 
 def LTau : Prop := ∀ (R : Type) [CommRing R] {Y X : Scheme.{0}} (a : Y ⟶ X), IsFinite a → Etale a →
   ∃ τ : fr R X ⟶ fr R Y, IsTr R a τ
 
-section Glue
-variable (l : ℕ) [Fact l.Prime]
-
-end Glue
-
 end LateralTheory.EtaleTrace.Tr
 
 end

@@ -502,12 +502,6 @@ theorem good_of_unitary (hU : IsUnramInv ϖ σ q) {π : v.adicCompletion K} (hπ
 
 end Completion
 
-section Par
-
-open GlobalTheory.IndefiniteRowSideFullHecke.InertPlaceSetting
-
-end Par
-
 end GlobalTheory.InertThetaCompare
 
 end

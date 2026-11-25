@@ -140,22 +140,6 @@ theorem conj_mem_MirUin {n : ℕ} (h : Mir k n) (u : MirUin k n) : h * (u : Mir 
 
 end Alg
 
-section Seq
-
-variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-
-section Beta
-
-variable {V : Type} [AddCommGroup V] [Module ℂ V] (ψ : AddChar k Circle) {n : ℕ}
-  (τ : Representation ℂ (Mir k (n + 1)) V)
-
-end Beta
-
-variable (hI : BetaInd k) (hS : BetaSmooth k) (hC : BetaCompact k)
-
-
-end Seq
-
 end GlobalTheory.CompanionTheory.BZMirSeq
 
 end

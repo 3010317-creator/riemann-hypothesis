@@ -780,13 +780,6 @@ theorem measurable_piecewise_mass {Wp : Type} [NormedAddCommGroup Wp] [InnerProd
 
 end prelim
 
-section main
-
-open BranchingSupport GlobalTheory.CellAmp GlobalTheory.Amp GlobalTheory.TypeAsm Formalism.BasicNotions Formalism.MainNotions.S Formalism.QuantumDeterminants Matrix MeasureTheory Finset
-open scoped InnerProductSpace ENNReal
-
-end main
-
 end GlobalTheory.LowTypeMass
 end -- clump:auto
 end -- clump:auto

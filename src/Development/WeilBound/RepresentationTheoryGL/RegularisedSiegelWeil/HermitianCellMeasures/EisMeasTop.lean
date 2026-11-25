@@ -1518,12 +1518,6 @@ open IsDedekindDomain NumberField
 
 namespace GlobalTheory.CompanionTheory.EisM
 
-section Abstract
-
-variable {X H : Type}
-
-end Abstract
-
 variable {D : D7} {N r t n : ℕ}
 
 abbrev XS (e : AE D) (N r t : ℕ) : Type := {z : Mx D N r × Mx D N t // e • z.1 = z.1 ∧ e • z.2 = z.2}
