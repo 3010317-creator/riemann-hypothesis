@@ -235,13 +235,7 @@ theorem cmp_eq (Ξ : B.Mat k r) (Bs : Fin k → Fin (2 * r + k + 1) → ℂ) (a 
   show Matrix.trace (Ξ * Q.unitB (Hpk k r) Bs a b) = _
   rw [unitB_eq, trace_vmv]
 
-theorem le_two_pow (n : ℕ) : n ≤ 2 ^ n := by
-  induction n with
-  | zero => simp
-  | succ n ih =>
-    have h1 : 0 < 2 ^ n := by positivity
-    rw [pow_succ]
-    omega
+theorem le_two_pow (n : ℕ) : n ≤ 2 ^ n := Nat.lt_two_pow_self.le
 
 theorem skew_nil_zero {m : ℕ} (M : Matrix (Fin m) (Fin m) ℂ) (hs : Mᴴ = -M) (N : ℕ) (hN : M ^ N = 0) :
     M = 0 := by
