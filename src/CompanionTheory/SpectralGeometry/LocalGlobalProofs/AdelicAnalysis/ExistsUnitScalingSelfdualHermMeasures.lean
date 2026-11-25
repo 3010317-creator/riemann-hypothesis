@@ -50,12 +50,6 @@ section Alg
 
 variable {F E : Type} [Field F] [Field E] [Algebra F E]
 
-theorem trace_tmul [FiniteDimensional F E] (R : Type) [CommRing R] [Algebra F R] (r : R) (x : E) :
-    Algebra.trace R (R ⊗[F] E) (r ⊗ₜ[F] x) = r * algebraMap F R (Algebra.trace F E x) := by
-  have : r ⊗ₜ[F] x = r • ((1 : R) ⊗ₜ[F] x) := by simp [TensorProduct.smul_tmul']
-  rw [this, map_smul, smul_eq_mul, Algebra.trace_apply, Algebra.trace_apply, ← Algebra.baseChange_lmul,
-    LinearMap.trace_baseChange]
-
 theorem trace_sigma {σ : E →ₐ[F] E} (hinv : ∀ x, σ (σ x) = x) (x : E) :
     Algebra.trace F E (σ x) = Algebra.trace F E x :=
   Algebra.trace_eq_of_algEquiv
@@ -217,8 +211,8 @@ theorem pair_eq [FiniteDimensional F E] [CharZero F] {σ : E →ₐ[F] E} (hinv 
     obtain ⟨r, hr⟩ := HaarCoord.fixed_eq_tmul R hinv h2 hδ hσδ _ (S.2 a a)
     obtain ⟨s, hs⟩ := HaarCoord.fixed_eq_tmul R hinv h2 hδ hσδ _ (T.2 a a)
     simp only [hermVec, toVec, HaarCoord.hermCoord, Sum.elim_inl]
-    rw [hr, hs, Algebra.TensorProduct.tmul_mul_tmul, one_mul, HaarCoord.half_trace_tmul R h2,
-      HaarCoord.half_trace_tmul R h2, HaarCoord.half_trace_tmul R h2]
+    rw [hr, hs, Algebra.TensorProduct.tmul_mul_tmul, one_mul, half_trace_tmul R h2,
+      half_trace_tmul R h2, half_trace_tmul R h2]
   · refine Finset.sum_congr rfl fun p _ => ?_
     rw [hT p.1.1 p.1.2, hS p.1.1 p.1.2, off_diag R hinv b]
     simp only [hermVec, toVec, HaarCoord.hermCoord, Sum.elim_inr]

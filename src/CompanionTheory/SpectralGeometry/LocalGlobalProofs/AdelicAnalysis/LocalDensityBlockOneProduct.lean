@@ -74,16 +74,6 @@ theorem det_eq_corner_mul {K : Type} [CommRing K] {n : ℕ} (S : Matrix (Fin (n 
 
 variable {F E : Type} [Field F] [Field E] [Algebra F E] {R : Type} [CommRing R] [Algebra F R]
 
-theorem half_trace_tmul (h2F : (2 : F) ≠ 0) (b : Module.Basis (Fin 2) F E) (r : R) :
-    algebraMap F R (1 / 2) * Algebra.trace R (R ⊗[F] E) (r ⊗ₜ[F] (1 : E)) = r := by
-  have h : (r ⊗ₜ[F] (1 : E) : R ⊗[F] E) = algebraMap R (R ⊗[F] E) r := by
-    simp [Algebra.TensorProduct.algebraMap_apply]
-  rw [h, Algebra.trace_algebraMap_of_basis (Algebra.TensorProduct.basis R b)]
-  have h2 : algebraMap F R (1 / 2) * 2 = 1 := by
-    rw [← map_ofNat (algebraMap F R) 2, ← map_mul, one_div, inv_mul_cancel₀ h2F, map_one]
-  simp only [Fintype.card_fin, nsmul_eq_mul, Nat.cast_ofNat]
-  rw [← mul_assoc, h2, one_mul]
-
 theorem corner_mul_inv {t : F} (ht : t ≠ 0) (u : Rˣ) :
     (((u : R) ^ 2 * algebraMap F R t) ⊗ₜ[F] (1 : E)) *
       ((((u⁻¹ : Rˣ) : R) ⊗ₜ[F] (algebraMap F E t⁻¹)) * inclR R (algebraMap F E t) *
@@ -114,7 +104,7 @@ theorem isUnit_det_of_mem_Bset : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   have hH : ∀ i j, sigR R σ (T j i) = T i j := S.2
   obtain ⟨x, hx⟩ := hfix (T 0 0) (hH 0 0)
   have hs0 : s0 R T = x := by
-    rw [s0, hx]; exact half_trace_tmul two_ne_zero b₂ x
+    rw [s0, hx]; exact half_trace_tmul R hfr x
   have hxB : x ∈ B₀ := by
     have h : s0 R T ∈ B₀ := hS.1
     rwa [hs0] at h

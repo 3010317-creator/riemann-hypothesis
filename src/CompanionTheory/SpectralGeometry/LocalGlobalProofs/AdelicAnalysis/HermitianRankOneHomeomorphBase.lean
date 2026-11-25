@@ -1,6 +1,7 @@
 module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.RegularLocalRing.Defs
@@ -105,19 +106,9 @@ section Ring
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
   {σ : E →ₐ[F] E} (R : Type) [CommRing R] [Algebra F R]
 
-theorem trace_tmul (r : R) (e : E) :
-    Algebra.trace R (R ⊗[F] E) (r ⊗ₜ[F] e) = r * algebraMap F R (Algebra.trace F E e) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  have h1 : r ⊗ₜ[F] e = r • ((1 : R) ⊗ₜ[F] e) := by simp [TensorProduct.smul_tmul']
-  have h2 : Algebra.lmul R (R ⊗[F] E) ((1 : R) ⊗ₜ[F] e) = (Algebra.lmul F E e).baseChange R := by
-    ext z
-    simp
-  rw [h1, map_smul, smul_eq_mul, Algebra.trace_apply, Algebra.trace_apply]
-  show r * LinearMap.trace R _ (Algebra.lmul R (R ⊗[F] E) ((1 : R) ⊗ₜ[F] e)) = _
-  rw [h2, LinearMap.trace_baseChange]
-
 theorem add_sigR_eq_trace (hcm : IsCMExt F E σ) (z : R ⊗[F] E) :
     z + sigR R σ z = (Algebra.trace R (R ⊗[F] E) z) ⊗ₜ[F] (1 : E) := by
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   induction z using TensorProduct.induction_on with
   | zero => simp
   | tmul r e =>
@@ -140,6 +131,7 @@ def tH (σ : E →ₐ[F] E) (S : HermR R σ 1) : R :=
   algebraMap F R (1 / 2) * Algebra.trace R (R ⊗[F] E) ((S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)) 0 0)
 
 theorem tH_hermScal (hcm : IsCMExt F E σ) (r : R) : tH R σ (hermScal R σ r) = r := by
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have h1 : Algebra.trace F E (1 : E) = 2 := by
     have := Algebra.trace_algebraMap (R := F) (S := E) (1 : F)
     simpa [hcm.2.2.1] using this

@@ -167,16 +167,6 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 variable (R : Type) [Field R] [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R]
   [LocallyCompactSpace R] [SecondCountableTopology R] [T2Space R] [MeasurableSpace R] [BorelSpace R]
 
-theorem half_trace_tmul (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (s : R) :
-    algebraMap F R (1 / 2) * Algebra.trace R (R ⊗[F] E) (s ⊗ₜ[F] (1 : E)) = s := by
-  have e : s ⊗ₜ[F] (1 : E) = algebraMap R (R ⊗[F] E) s := by
-    simp [Algebra.TensorProduct.algebraMap_apply]
-  have h2 : algebraMap F R (1 / 2) * 2 = 1 := by
-    rw [← map_ofNat (algebraMap F R) 2, ← map_mul]
-    norm_num
-  rw [e, Algebra.trace_algebraMap, Module.finrank_baseChange, hσ.2.2.1, two_nsmul, ← two_mul,
-    ← mul_assoc, h2, one_mul]
-
 theorem coordHerm_map (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {d : ℕ} (b : Module.Basis (Fin d) F E)
     (lam : Measure R) [lam.IsAddHaarMeasure] (t : R) (ht : t ≠ 0) (c : ℝ≥0)
     (h : lam.map (fun y => t * y) = c • lam) (τ : HermR R σ 1 → HermR R σ 1) (hτm : Measurable τ)
@@ -209,7 +199,7 @@ theorem coordHerm_map (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {d : ℕ} (b :
     refine ⟨hermScal R σ (y 0), Prod.ext ?_ ?_⟩
     · funext i
       rw [Subsingleton.elim i 0]
-      exact half_trace_tmul R σ hσ (y 0)
+      exact half_trace_tmul R hσ.2.2.1 (y 0)
     · funext p
       exact (hemp p).elim
   have hD : P.map ((mulPi R (Fin 1) t ht).prodCongr (MeasurableEquiv.refl _)) = c • P := by

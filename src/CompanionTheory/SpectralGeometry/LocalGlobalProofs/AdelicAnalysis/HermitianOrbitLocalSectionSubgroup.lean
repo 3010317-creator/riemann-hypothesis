@@ -731,22 +731,6 @@ namespace GlobalTheory.CompanionTheory.SW
 
 open GlobalTheory.CompanionTheory.SW.Tri
 
-theorem half_trace_tmul {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E]
-    (h2 : Module.finrank F E = 2) (R : Type) [CommRing R] [Algebra F R] (r : R) :
-    algebraMap F R (1 / 2) * Algebra.trace R (R ⊗[F] E) (r ⊗ₜ[F] (1 : E)) = r := by
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
-  have hb := Algebra.TensorProduct.basis R (Module.finBasis F E)
-  have h1 : (r ⊗ₜ[F] (1 : E) : R ⊗[F] E) = algebraMap R (R ⊗[F] E) r := by
-    simp [Algebra.TensorProduct.algebraMap_apply]
-  rw [h1, Algebra.trace_algebraMap_of_basis hb]
-  simp only [Fintype.card_fin, h2]
-  rw [nsmul_eq_mul, ← mul_assoc]
-  have : algebraMap F R (1 / 2) * ((2 : ℕ) : R) = 1 := by
-    have : ((2 : ℕ) : R) = algebraMap F R 2 := by rw [map_ofNat, Nat.cast_ofNat]
-    rw [this, ← map_mul]
-    simp
-  rw [this, one_mul]
-
 theorem tri_slice : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R], IsLocR R → ∀ (n : ℕ) (S : HermR R σ n), IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det → ∃ (Q : Subgroup (GL (Fin n) (R ⊗[F] E))) (o : Q → HermR R σ n), LocallyCompactSpace Q ∧ SecondCountableTopology Q ∧ IsOpenEmbedding o ∧ ∀ x : Q, (o x : Matrix (Fin n) (Fin n) (R ⊗[F] E)) = cT (sigR R σ) ((x : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E)) * (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) * ((x : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E)) := by
   intro F E _ _ _ _ _ σ hCM R _ _ _ _ _ hR n S hS
   have hR' := hR
@@ -779,7 +763,7 @@ theorem tri_slice : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     exact (continuous_id : Continuous fun r : R => r).smul (continuous_const : Continuous fun _ : R => (1 : R ⊗[F] E))
   let π : R ⊗[F] E → R := fun k => algebraMap F R (1 / 2) * Algebra.trace R (R ⊗[F] E) k
   have hπ : Continuous π := continuous_const.mul htr
-  have hπι : ∀ r, π (ι r) = r := fun r => half_trace_tmul hCM.2.2.1 R r
+  have hπι : ∀ r, π (ι r) = r := fun r => half_trace_tmul R hCM.2.2.1 r
   have hs : ∀ r, sigR R σ (ι r) = ι r := fun r => by simp [hιa, sigR]
   let Ψ := triHomeo (n := n) ι hι π hπ hπι hval.isInducing U
   have hP := sq_open (K := R ⊗[F] E) U hU d

@@ -110,16 +110,6 @@ theorem fixed_tmul (h : IsCMExt F E σ) (y : R ⊗[F] E) (hy : sigR R σ y = y) 
   have h3 : t ⊗ₜ[F] w = 0 := (smul_eq_zero.mp h2).resolve_left two_ne_zero
   rw [h3, add_zero]
 
-theorem half_trace_tmul (h : IsCMExt F E σ) (r : R) :
-    algebraMap F R (1 / 2) * Algebra.trace R (R ⊗[F] E) (r ⊗ₜ[F] (1 : E)) = r := by
-  have h1 : r ⊗ₜ[F] (1 : E) = algebraMap R (R ⊗[F] E) r := by
-    simp [Algebra.TensorProduct.algebraMap_apply]
-  have h2 : (algebraMap F R 2) = 2 := map_ofNat _ 2
-  rw [h1, Algebra.trace_algebraMap, Module.finrank_baseChange, h.2.2.1]
-  have h3 : algebraMap F R (1 / 2) * 2 = 1 := by
-    rw [← h2, ← map_mul]; simp
-  rw [two_nsmul, ← two_mul, ← mul_assoc, h3, one_mul]
-
 variable {M : ℕ} {J : Matrix (Fin M) (Fin M) E}
 
 theorem sigR_hR_self (h : IsCMExt F E σ) (hJ : IsHermND σ J) (x : Fin M → R ⊗[F] E) :
@@ -147,7 +137,7 @@ def qS (σ : E →ₐ[F] E) (S : HermR R σ 1) : R :=
   algebraMap F R (1 / 2) * Algebra.trace R (R ⊗[F] E) ((S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)) 0 0)
 
 theorem qS_hermScal (h : IsCMExt F E σ) (r : R) : qS R σ (hermScal R σ r) = r :=
-  half_trace_tmul R h r
+  half_trace_tmul R h.2.2.1 r
 
 theorem hermScal_qS (h : IsCMExt F E σ) (S : HermR R σ 1) : hermScal R σ (qS R σ S) = S := by
   have hfix : sigR R σ ((S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)) 0 0) =
@@ -156,7 +146,7 @@ theorem hermScal_qS (h : IsCMExt F E σ) (S : HermR R σ 1) : hermScal R σ (qS 
   have hq : qS R σ S = r := by
     unfold qS
     rw [hr]
-    exact half_trace_tmul R h r
+    exact half_trace_tmul R h.2.2.1 r
   apply Subtype.ext
   funext a c
   obtain rfl : a = 0 := Subsingleton.elim _ _
@@ -168,7 +158,7 @@ theorem gram_entry (h : IsCMExt F E σ) (hJ : IsHermND σ J) (X : Fin 1 → Fin 
     gramR R σ J X 0 0 =
       (algebraMap F R (1 / 2) * Algebra.trace R (R ⊗[F] E) (gramR R σ J X 0 0)) ⊗ₜ[F] (1 : E) := by
   obtain ⟨r, hr⟩ := fixed_tmul R h (gramR R σ J X 0 0) (sigR_hR_self R h hJ (X 0))
-  rw [hr, half_trace_tmul R h r]
+  rw [hr, half_trace_tmul R h.2.2.1 r]
 
 theorem isUnit_tmul {r : R} (hr : r ≠ 0) : IsUnit (r ⊗ₜ[F] (1 : E)) := by
   have h1 : r ⊗ₜ[F] (1 : E) = algebraMap R (R ⊗[F] E) r := by

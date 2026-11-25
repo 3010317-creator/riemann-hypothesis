@@ -116,7 +116,7 @@ theorem coord_psi [CharZero F] (h2 : Module.finrank F E = 2) (σ : E →ₐ[F] E
   ext i
   rcases i with i | ⟨⟨⟨a, c⟩, h⟩, k⟩
   · simp only [coordOf, Sum.elim_inl, psi_eq]
-    exact HaarCoord.half_trace_tmul R h2 _
+    exact half_trace_tmul R h2 _
   · have h' : a < c := h
     simp only [coordOf, Sum.elim_inr, psi_lt R σ b x h', offE]
     have : (∑ k, x (Sum.inr (⟨(a, c), h⟩, k)) ⊗ₜ[F] b k) =
@@ -142,7 +142,7 @@ theorem psi_coord [CharZero F] {σ : E →ₐ[F] E} (hinv : ∀ x, σ (σ x) = x
     obtain ⟨r, hr⟩ := HaarCoord.fixed_eq_tmul R hinv h2 hδ hσδ (S a a) (hS a a)
     rw [psi_eq]
     simp only [coordOf, Sum.elim_inl]
-    rw [hr, HaarCoord.half_trace_tmul R h2]
+    rw [hr, half_trace_tmul R h2]
   · rw [psi_gt R σ b _ h, hoff]
     exact hS a c
 
