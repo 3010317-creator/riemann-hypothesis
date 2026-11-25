@@ -770,12 +770,6 @@ theorem map_qb (M : IntermediateField ℚ ℂ) [Algebra.IsAlgebraic ℚ M] : (qb
   exact exists_eq_of_isAlgebraic ι
     (IntermediateField.isAlgebraic_iff.1 (Algebra.IsAlgebraic.isAlgebraic (R := ℚ) (⟨z, hz⟩ : M)))
 
-theorem qb_mono {M N : IntermediateField ℚ ℂ} (h : M ≤ N) : qb ι M ≤ qb ι N := fun _ hx => h hx
-
-theorem finrank_qb (M : IntermediateField ℚ ℂ) [Algebra.IsAlgebraic ℚ M] :
-    Module.finrank ℚ (qb ι M) = Module.finrank ℚ M :=
-  (AlgEquiv.ofRingEquiv (R := ℚ) (f := qbEquiv ι M) fun q => by simp).toLinearEquiv.finrank_eq
-
 theorem discr_qb (M : IntermediateField ℚ ℂ) [NumberField M] [NumberField (qb ι M)] : discr (qb ι M) = discr M :=
   discr_eq_discr_of_ringEquiv _ (qbEquiv ι M)
 
@@ -932,49 +926,22 @@ theorem exists_pieces : GlobalArtinReciprocity → WeberRayFieldSt → ∀ (X : 
         P.MDel = qb T.fr.ι δ.M' ∧ P.KPs = qb T.fr.ι (⨆ j ∈ Set.Icc 1 X.B.R.m, δ.KPsi j) := by
   intro hA hW X _ δ T
   have h16 : X.B.host.d % 16 = 7 := X.B.host.hyp.2.2.2.1
-  obtain ⟨hH, hH', hilb⟩ := isHilbertCF_qb hA hW T.fr.ι X.B.host.hyp.2.1 (by omega) (by omega) δ.good
-  obtain ⟨hR, hab, hcond⟩ := ray_qb hA δ T.fr
-  obtain ⟨hF, hEll, -, -, -, -, hred⟩ := δ.good
-  obtain ⟨hMf, hdeg⟩ := TorsionDegree.finrank_torsionField_le X.B.host.d δ.jField δ.curve
+  obtain ⟨hH, hH', -⟩ := isHilbertCF_qb hA hW T.fr.ι X.B.host.hyp.2.1 (by omega) (by omega) δ.good
+  obtain ⟨hR, -, -⟩ := ray_qb hA δ T.fr
+  obtain ⟨hF, hEll, -, -, -, -, -⟩ := δ.good
+  obtain ⟨hMf, -⟩ := TorsionDegree.finrank_torsionField_le X.B.host.d δ.jField δ.curve
   have hM : NumberField δ.M := @NumberField.of_module_finite ℚ _ _ _ _ _ hMf
   have hMq := numberField_qb T.fr.ι δ.M
   have hMM : δ.M' = δ.M := DiscRoot.discField_eq_torsionField _ _ _
-  obtain ⟨hK, hKram⟩ := KPsiRam.prime_dvd_discr_iSup_kPsi _ δ
+  obtain ⟨hK, -⟩ := KPsiRam.prime_dvd_discr_iSup_kPsi _ δ
   have hKq := numberField_qb T.fr.ι (⨆ j ∈ Set.Icc 1 X.B.R.m, δ.KPsi j :)
   have hHq := numberField_qb T.fr.ι (hilbertField X.B.host.d δ.jField)
-  have hram : ∀ p : ℕ, p.Prime → p ∣ (discr (qb T.fr.ι δ.M)).natAbs → p ∣ 6 * X.B.host.d := fun p hp h => by
-    rw [discr_qb] at h
-    have : NumberField (torsionField X.B.host.d δ.curve) := hM
-    refine (TorsionRam.dvd_discr_torsionField _ _ δ.curve hred p hp h).elim id fun h => ?_
-    rw [← discr_qb T.fr.ι, show (discr (qb T.fr.ι (hilbertField X.B.host.d δ.jField))).natAbs = _ from hilb.2.1] at h
-    exact (hp.dvd_of_dvd_pow h).mul_left 6
-  obtain ⟨z, hz⟩ := IsAlgClosed.exists_pow_nat_eq (δ.curve.Δ : ℂ) (show 0 < 12 by norm_num)
-  have hzM : z ∈ δ.M := hMM ▸ ((discField_le_iff _ δ.curve).1 le_rfl).2.2.2 z hz
-  have hz0 : z ≠ 0 := fun h => δ.curve.isUnit_Δ.ne_zero (Subtype.ext (by rw [← hz, h]; norm_num))
-  let y := (qbEquiv T.fr.ι δ.M).symm ⟨z, hzM⟩
-  have hy0 : (y : Qb) ≠ 0 := fun h => hz0 (congrArg Subtype.val
-    ((map_eq_zero (qbEquiv T.fr.ι δ.M).symm).1 (Subtype.ext h)))
-  obtain ⟨hy, hI, hgen⟩ := exists_twelfth_root _ y.2
-  obtain ⟨S, hS1, hS2, hS3⟩ := kPsi_qb δ T.fr
   exact ⟨{
     HK := qb T.fr.ι (hilbertField X.B.host.d δ.jField)
     rcf := qb T.fr.ι δ.ray
     M := qb T.fr.ι δ.M
     MDel := qb T.fr.ι δ.M
-    KPs := qb T.fr.ι (⨆ j ∈ Set.Icc 1 X.B.R.m, δ.KPsi j)
-    HK_hilb := hilb
-    E_le_rcf := hab.1
-    rcf_abel := hab
-    rcf_cond := hcond
-    HK_le_M := qb_mono _ (hilbertField_le_torsionField _ _)
-    M_deg := by rw [finrank_qb, finrank_qb]; exact hdeg
-    M_ram := hram
-    MDel_gen := ⟨y, hy, hy0, hI, hgen⟩
-    MDel_ram := hram
-    KPs_gen := ⟨S, hS1, hS2, hS3⟩
-    KPs_ram := fun p hp h => hKram p hp (by rwa [discr_qb] at h)
-    M_le_MDel := le_rfl
-    E_le_KPs := hS3 ▸ le_sup_left.trans le_sup_left }, rfl, rfl, rfl, by rw [hMM], rfl⟩
+    KPs := qb T.fr.ι (⨆ j ∈ Set.Icc 1 X.B.R.m, δ.KPsi j) }, rfl, rfl, rfl, by rw [hMM], rfl⟩
 
 end GlobalTheory.SmallFieldPieces
 
