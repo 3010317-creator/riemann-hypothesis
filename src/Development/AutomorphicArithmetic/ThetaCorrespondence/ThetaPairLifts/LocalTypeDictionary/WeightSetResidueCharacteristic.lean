@@ -818,8 +818,7 @@ theorem jX_injective_of_models {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T 
 
 theorem exists_rowPart_ne_bot_positiveDimension : GlobalTheory.Hk3.HoweUnram → GlobalTheory.Published.CuspRapidDecay → ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) {s : ℕ}, A3.fam3.Ok3 s → R.WeakCharacterisation F → R.toRealDat.ExAt → ((∀ t (k : A3.okI t × List ℕ), A3.heckeRI t k = 0 ∨ ∃ y, Formalism.L2.Col.InertTypeOk (A3.A.fam.R t).n y ∧ A3.heckeRI t k = A3.heckeRI t (k.1, y)) ∧ ∀ j t (k : A3.okI t × List ℕ), A3.heckeLI j t k = 0 ∨ ∃ y, Formalism.L2.Col.InertTypeOk (A3.A.fam.L j t).n y ∧ A3.heckeLI j t k = A3.heckeLI j t (k.1, y)) → R.PGEquiv F → (∀ b, (lv (F.fc (R.toCx3 F).zs) b).Pos) → ∃ p, R.EEp3 p ≠ ⊥ := by
   intro hH hP D G _ _ Pl0 I0 T A3 Ks _ _ _ R F s hOk hC hEx hIn hGE hPos
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hcar := GlobalTheory.Hk3.carries_of_rows_top hP hH R F (GlobalTheory.Chain.LiftConv.liftInteg_of_cuspRapidDecay hP D) hOk hC hEx hIn hGE hPos
   have hc0 : ∀ c, R.EEc c = ⊥ := by
     intro c
@@ -933,7 +932,7 @@ theorem theta_Z_mem_range_iC {K : Type} [Field K] [NumberField K] [StarRing K] {
   have h1 : z ∈ (A3.A.fam.R t).ZHg A3.A.fam.X := hIB.1 t hz
   obtain ⟨x, hx⟩ := GlobalTheory.PrincipalRows.mem_range_toF_full (A3.A.fam.R t) A3.A.fam.X (X.zs.Z t) z hz h1.2
   refine ⟨cpt A3.A.v0.embedding x, ?_⟩
-  have h3 := GlobalTheory.OneForm.iC_cpt X (crdOf3 A3 ⊥ 1 P1 ψ1 Dc Sp Zsc) false t x
+  have h3 := Formalism.IndefR.Cx.CxData.iC_cpt_eq X (crdOf3 A3 ⊥ 1 P1 ψ1 Dc Sp Zsc) false t x
   refine h3.trans ?_
   exact congrArg (fun y => X.Θ t (X.jR t y)) hx
 
@@ -1103,7 +1102,7 @@ theorem primRows3_typesSep3_alt : _root_.GlobalTheory.PrimIn.PublishedThetaCondi
   obtain ⟨_hGiven, hGS, hCD, hLI, _hTR, _hUI, _hUIW⟩ := _root_.GlobalTheory.PrimBase.base_of_ties_alt P R F hT hM
   obtain ⟨hOk, hGU, hGE, _hBlk, hA, hB⟩ := _root_.GlobalTheory.Stage1.stage1_alt P R F hT hM
   obtain ⟨hPos, hK, hH2⟩ := hx₀ R F L hLe hLx hSz hPar hT hM hRT
-  obtain ⟨hLT, hLTB, hML⟩ := GlobalTheory.T.liftTests_modularLattice_of_coreCompatibility T R F κ v₀ O hT hG
+  obtain ⟨hLT, hLTB, hML⟩ := _root_.GlobalTheory.PrimIn.liftTests_and_mLat_of_ties T R F κ v₀ O hT hG
   have hU : R.toRealDat.LUnif := hG.unif
   obtain ⟨_hLev, _hW, hHk, hTS, htr⟩ := _root_.GlobalTheory.Stage3.stage3_alt P R F hT hM hU hLT hPos hK
   obtain ⟨hGal, hPP⟩ := _root_.GlobalTheory.Stage4.stage4_alt P hHL T R F κ v₀ O hT hG hM hRT hPos hK
@@ -1188,7 +1187,7 @@ theorem atDat_holds_alt (hP : _root_.GlobalTheory.PrimIn.PublishedThetaCondition
   have hT : TypesTrue (w.st Z').toD7.ntypes y.R.C.P y.R.C.W := by
     rw [y.lev.C, w.C_eq]
     exact g1'
-  have hIo : IoExt y.R.toRealDat := GlobalTheory.T.ioExt_of_weakCharacterisation_of_orthonormal_frames _ _ _ _ _ _ _ y.R y.F hch hEx' hV
+  have hIo : IoExt y.R.toRealDat := _root_.GlobalTheory.IoExtStd.thetaIoExtension_of_weakCharacterisation_frames _ _ _ _ _ _ _ y.R y.F hch hEx' hV
   have hOM : ∀ i, OneMapRowR y.core y.R.toRealDat y.geo.κ y.geo.v₀ y.geo.O (fun _ => 1) i := fun i =>
     GlobalTheory.OneMapRow3.oneFormMapRow_threeLevel_of_characterisation _ _ _ _ _ _ y.core y.R y.F y.geo.κ y.geo.v₀ y.geo.O (fun _ => 1) hn hch hEx' ⟨y.geo.fw⟩ hIo i
       (y.geo.pins i) (y.geo.phase i hU')

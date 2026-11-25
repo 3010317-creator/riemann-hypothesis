@@ -844,8 +844,7 @@ private lemma trace_idem {Y : Type} [AddCommGroup Y] [Module ℂ Y] [FiniteDimen
     (f : Module.End ℂ Y) (hf : f * f = f) (hx : ∀ x, ∃ c : ℂ, f * x * f = c • f) (h0 : f ≠ 0) :
     LinearMap.trace ℂ Y f = 1 := by
   obtain ⟨y, hy⟩ : ∃ y, f y ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact h0 (LinearMap.ext h)
   have hidem : ∀ v, f (f v) = f v := fun v => by
     have := congrArg (fun g : Module.End ℂ Y => g v) hf
@@ -1001,8 +1000,6 @@ open scoped Classical
 open UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi
 
 namespace UpperTheory.V.Z.Mult.Pi
-
-attribute [local instance] borelG borelF borelA borelH
 
 private theorem lev_mono {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} (S : Set (Pl E))
     {N N' : ∀ w : Pl E, Subgroup (GLw n w)} (h : ∀ w, N w ≤ N' w) : Lev S N ≤ Lev S N' := by

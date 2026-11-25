@@ -33,8 +33,6 @@ open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNo
 
 namespace Formalism.L2.SG.Pf.PairValG
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7} {u u' : D.what₂.Word} {F0 : FlagG (VS D) D.R.rS ((Tu D u : ℕ) : D.host.E)}
   {what₂ : Finset (Submodule (𝓞 D.host.E) (VS D).V)}
 
@@ -227,8 +225,6 @@ open scoped Classical
 open NumberField Matrix Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.L2.SG.TermOp Formalism.L2.SG.PairVal Formalism.L2.SG.Pf.StabilizerIndexVolumes
 
 namespace Formalism.L2.SG.Pf.VolPinAsm
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 section Basic
 
@@ -752,8 +748,6 @@ open NumberField Matrix Formalism.BasicNotions Formalism.MainNotions.S Formalism
 
 namespace Formalism.L2.SG.Pf.VolPinAsm
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 section GlobalTheory
 
 variable {K : Type*} [Zero K]
@@ -873,8 +867,7 @@ theorem conjW_blk {w : Point D.host.E (D.R.rS + 1)} {β : GLR D} (hβ : β ∈ S
   have e1 := hWi c c' h1
   have e2 := hWb d' d h2
   have hlt : c' < d' := by
-    by_contra hle
-    push_neg at hle
+    by_contra! hle
     have := blkOf_mono w.1 d'.1 c'.1 hle
     omega
   rw [(hlo c' d').1 hlt, mul_zero, zero_mul]
@@ -1185,8 +1178,7 @@ theorem Alin_shear {N : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) ℂ} (hN : 
       have h2 : d.val ≤ p.1.2.val := hdb
       have h3 : c.val < d.val := hcd.1
       have h4 : c.val ≠ p.1.1.val ∨ d.val ≠ p.1.2.val := by
-        by_contra hh
-        push_neg at hh
+        by_contra! hh
         exact hne (Prod.ext (Fin.ext hh.1) (Fin.ext hh.2))
       show d.val - c.val < p.1.2.val - p.1.1.val
       omega

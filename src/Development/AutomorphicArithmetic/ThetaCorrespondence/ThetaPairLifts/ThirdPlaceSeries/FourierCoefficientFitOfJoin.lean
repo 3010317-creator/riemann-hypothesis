@@ -833,8 +833,7 @@ theorem ker_mulVecLin_eq_U_of_formulaAt {p : PtAt ex Csz} (hp : p.PointCondition
       simp at h2
     obtain ⟨i, hi⟩ : ∃ i, psiK a.ch i (p.R.Th p.P.A3.fam3.base3.μ0
         (p.R.jX p.P.A3.fam3.base3.μ0 (eV0 p p.P.A3.fam3.base3.μ0 y))) ≠ 0 := by
-      by_contra hall
-      push_neg at hall
+      by_contra! hall
       exact hne (hI _ hall)
     exact FormulaAt.ne_zero ⟨hz, hf⟩ hc (_root_.GlobalTheory.BigTop.Fun.eV0_mem_goodF_alt p hp _ y) hi
   ext y
@@ -943,7 +942,6 @@ end
 end LeafFixedPointPairing
 section
 open GlobalTheory.BigTop GlobalTheory.BigTop.Fun GlobalTheory.SumSize
-alias _root_.GlobalTheory.Adopt.leafFixedPoint_of_finK_awayK := _root_.LeafFixedPointPairing.GlobalTheory.CompanionTheory.LeafFixedPointPlaceNorm.fp_tie_alt
 end
 end
 end -- clump:auto

@@ -75,7 +75,6 @@ namespace GlobalTheory.ChartJet
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj MvPowerSeries
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Chart ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ ReciprocityTheory.ChartRestriction.G.TB.LogPf
 open scoped CategoryTheory.Obj
-attribute [local instance] Over.cartesianMonoidalCategory
 
 section Points
 
@@ -453,29 +452,6 @@ theorem exists_series [IsCommMonObj G] {O : Type} [CommRing O] (a : Geo.Tor.OAct
       ptJ_inj hx fun m => by rw [hA0, a.one, Category.comp_id]
     exact congrArg Subtype.val E
 
-private theorem prod_ofFn_eq_one_of_forall_eq_one {M : Type*} [Monoid M] (n : ℕ) :
-    ∀ g : Fin n → M, (∀ j, g j = 1) → (List.ofFn g).prod = 1 := by
-  induction n with
-  | zero => intro g _; simp
-  | succ n ih =>
-    intro g h
-    rw [List.ofFn_succ, List.prod_cons, h 0, _root_.one_mul]
-    exact ih _ fun j => h _
-
-private theorem prod_ofFn_eq_apply_of_forall_ne_eq_one {M : Type*} [Monoid M] (n : ℕ) :
-    ∀ (f : Fin n → M) (i : Fin n), (∀ j, j ≠ i → f j = 1) → (List.ofFn f).prod = f i := by
-  induction n with
-  | zero => intro f i; exact i.elim0
-  | succ n ih =>
-    intro f i h
-    rw [List.ofFn_succ, List.prod_cons]
-    cases i using Fin.cases with
-    | zero =>
-      rw [prod_ofFn_eq_one_of_forall_eq_one hx n _ fun j => h _ (Fin.succ_ne_zero j), _root_.mul_one]
-    | succ i =>
-      rw [h 0 (Fin.succ_ne_zero i).symm, _root_.one_mul]
-      exact ih (fun j => f j.succ) i fun j hj => h _ fun e => hj (Fin.succ_injective _ e)
-
 theorem comb_single {v : Fin d → (Geo.Tor.epsR R ⟶ G)} (hv : ∀ j, v j = spMap (dualLift (Pi.single j 1)) ≫ x 1) (i : Fin d) :
     Geo.Tor.IsLieComb (Pi.single i 1) v (v i) := by
   apply ReciprocityTheory.ChartRestriction.G.Chart.comb_single <;> assumption
@@ -494,7 +470,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj ReciprocityTheory.ChartRestriction.G.Chart
 open scoped CategoryTheory.MonObj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp epsR IsTangent IsLieComb IsLieBasis)
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.JetOnto
 
@@ -617,7 +592,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj ReciprocityTheory.ChartRestriction.G.Chart
 open scoped CategoryTheory.MonObj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp epsR IsTangent IsLieComb IsLieBasis)
-attribute [local instance] Over.cartesianMonoidalCategory
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsJetChartCoordinatesNilpotentStatement =====
@@ -632,7 +606,6 @@ noncomputable section
 open CategoryTheory Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj ReciprocityTheory.ChartRestriction.G.Chart
 open scoped CategoryTheory.MonObj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp epsR IsTangent IsLieComb IsLieBasis)
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.JetPoint
 
@@ -720,7 +693,6 @@ noncomputable section
 open CategoryTheory Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj ReciprocityTheory.ChartRestriction.G.Chart
 open scoped CategoryTheory.MonObj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp epsR IsTangent IsLieComb IsLieBasis)
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory
 
@@ -816,7 +788,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj ReciprocityTheory.ChartRestriction.G.Chart
 open scoped CategoryTheory.MonObj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp epsR IsTangent IsLieComb IsLieBasis)
-attribute [local instance] Over.cartesianMonoidalCategory
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.JetChartCoordinatesUniqueCommGroupStatement =====
@@ -829,7 +800,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj ReciprocityTheory.ChartRestriction.G.Chart
 open scoped CategoryTheory.MonObj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp epsR IsTangent IsLieComb IsLieBasis)
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory
 
@@ -861,7 +831,6 @@ noncomputable section
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj Formalism.MainNotions.ModuliIntegralCharts.H1
-attribute [local instance] Over.cartesianMonoidalCategory
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ (FGLaw)
 open scoped CategoryTheory.Obj
 
