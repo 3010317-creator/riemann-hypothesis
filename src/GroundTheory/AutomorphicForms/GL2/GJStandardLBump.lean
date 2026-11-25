@@ -112,19 +112,8 @@ section Arch
 variable {K : Type*} [Field K] [NumberField K] {n : ℕ}
 
 theorem isUnit_infiniteAdeleRing_iff {x : InfiniteAdeleRing K} :
-    IsUnit x ↔ ∀ w : InfinitePlace K, x w ≠ 0 := by
-  constructor
-  · rintro ⟨u, rfl⟩ w hw
-    have h := congrFun u.mul_inv w
-    change (u : InfiniteAdeleRing K) w * (↑u⁻¹ : InfiniteAdeleRing K) w = 1 at h
-    rw [hw, zero_mul] at h
-    exact zero_ne_one h
-  · intro h
-    refine ⟨⟨x, fun w ↦ (x w)⁻¹, ?_, ?_⟩, rfl⟩
-    · funext w
-      exact mul_inv_cancel₀ (h w)
-    · funext w
-      exact inv_mul_cancel₀ (h w)
+    IsUnit x ↔ ∀ w : InfinitePlace K, x w ≠ 0 :=
+  Pi.isUnit_iff.trans (forall_congr' fun _ ↦ isUnit_iff_ne_zero)
 
 def infInv (x : InfiniteAdeleRing K) : InfiniteAdeleRing K := fun w ↦ (x w)⁻¹
 
