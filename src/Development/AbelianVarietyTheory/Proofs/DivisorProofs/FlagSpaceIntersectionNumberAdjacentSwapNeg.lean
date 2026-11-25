@@ -551,6 +551,85 @@ theorem key {F : Type} [Field F] {X Y : Var F} {ι : Type} [Fintype ι] {m : ι 
   · rw [hab', i₁ ⟨τ, a⟩, i₂ ⟨τ, b⟩]
     rfl
 
+theorem exists_divisors : ∀ (F : Type) [Field F] (X Y : Var F) (ι : Type) [Fintype ι] (m : ι → ℕ)
+    (E : Fr (ratOf X) m 0) (E' : Fr (ratOf Y) m m) (φ : X.Fn →ₐ[F] Y.Fn) (f : Y.X ⟶ X.X), Refines E E' φ f →
+    ∀ (gr : Root m → Y.Dv), ∀ B ∈ E'.S (genericPoint Y.X),
+    (∀ (y : Y.X) (x : Root m), ∃ A ∈ E'.S y, ∃ t : Y.Fnˣ, (B * A⁻¹) x.1 x.2 x.2 = t ∧ (gr x).IsEqn y t) →
+    ∀ W : Dbl Y, (∀ u : X.Fn, W.α₁ (φ u) = W.α₂ (φ u)) → ∀ (τ : ι) (a b : Fin (m τ)), (b : ℕ) = a + 1 →
+    AlmostLow τ a b (B.map W.α₁ * (B.map W.α₂)⁻¹) →
+    ∃ (D₁ D₂ : Root m → CartierDiv W.Z) (Θ : CartierDiv W.Z),
+      (∀ x, IsPull W.p₁ (D₁ x) (gr x)) ∧ (∀ x, IsPull W.p₂ (D₂ x) (gr x)) ∧
+      (∀ x, x ≠ ⟨τ, a⟩ → x ≠ ⟨τ, b⟩ → toPic (D₁ x) = toPic (D₂ x)) ∧
+      toPic (D₁ ⟨τ, a⟩) + toPic (D₁ ⟨τ, b⟩) = toPic (D₂ ⟨τ, a⟩) + toPic (D₂ ⟨τ, b⟩) ∧
+      toPic Θ = toPic (D₂ ⟨τ, b⟩) - toPic (D₁ ⟨τ, a⟩) ∧ Θ.Eff ∧ (Θ.supp : Set W.Z) = Set.range W.δ := by
+  intro F _ X Y ι _ m E E' φ f hR gr B hB hBg W hα τ a b hab hlow
+  choose D₁ hD₁ using fun x => _root_.GlobalTheory.FlagPush.exists_isPull W.Z Y.X W.p₁ (gr x)
+  choose D₂ hD₂ using fun x => _root_.GlobalTheory.FlagPush.exists_isPull W.Z Y.X W.p₂ (gr x)
+  have hk0 := fun z : W.Z => key hR hB hBg W hα hab hlow hD₁ hD₂ z
+    (E'.nonempty (W.p₁ z)).choose_spec (E'.nonempty (W.p₂ z)).choose_spec
+  set C := B.map W.α₁ * (B.map W.α₂)⁻¹ with hC
+  have hne : a ≠ b := fun h => by rw [h] at hab; omega
+  have hcx : ∀ x : Root m, x ≠ ⟨τ, a⟩ → x ≠ ⟨τ, b⟩ → C x.1 x.2 x.2 ≠ 0 := fun x ha hb h0 => by
+    obtain ⟨t₁, t₂, -, -, -, hu, -⟩ := hk0 (genericPoint W.Z)
+    exact (hu x ha hb).ne_zero (by rw [h0, mul_zero, zero_mul])
+  have hmn : minor τ a b C ≠ 0 := fun h0 => by
+    obtain ⟨t₁, t₂, -, -, -, -, hu, -⟩ := hk0 (genericPoint W.Z)
+    exact hu.ne_zero (by rw [h0, mul_zero, zero_mul])
+  have hε : C τ a b ≠ 0 := hlow.2.1
+  set Θ : CartierDiv W.Z := D₂ ⟨τ, b⟩ - D₁ ⟨τ, a⟩ + CartierDiv.principal (Units.mk0 _ hε) with hΘ
+  have hΘe : ∀ z, ∀ A₁ (_ : A₁ ∈ E'.S (W.p₁ z)) A₂ (_ : A₂ ∈ E'.S (W.p₂ z)),
+      ∃ g : W.Z.functionFieldˣ, Θ.IsEqn z g ∧ AlmostLow τ a b (A₁.map W.α₁ * (A₂.map W.α₂)⁻¹) ∧
+        (g : W.Z.functionField) = (A₁.map W.α₁ * (A₂.map W.α₂)⁻¹) τ a b ∧
+        RegAt z ((A₁.map W.α₁ * (A₂.map W.α₂)⁻¹) τ a b) := by
+    intro z A₁ hA₁ A₂ hA₂
+    obtain ⟨t₁, t₂, h1, h2, hal, -, -, he, hr⟩ := key hR hB hBg W hα hab hlow hD₁ hD₂ z hA₁ hA₂
+    refine ⟨_, ((h2 ⟨τ, b⟩).sub (h1 ⟨τ, a⟩)).add (CartierDiv.isEqn_principal _ z), hal, ?_, hr⟩
+    rw [he, ← hC]
+    simp only [Units.val_mul, Units.val_mk0, div_eq_mul_inv, Units.val_inv_eq_inv_val]
+    ring
+  refine ⟨D₁, D₂, Θ, hD₁, hD₂, ?_, ?_, ?_, ?_, ?_⟩
+  · intro x ha hb
+    have e : D₁ x = D₂ x + CartierDiv.principal (Units.mk0 _ (hcx x ha hb)) := by
+      refine CartierDiv.ext_of_isEqn fun z => ?_
+      obtain ⟨t₁, t₂, h1, h2, -, hu, -⟩ := hk0 z
+      refine ⟨t₁ x, h1 x, ((h2 x).add (CartierDiv.isEqn_principal _ z)).iff_unitAt.2 ?_⟩
+      convert (hu x ha hb).inv using 1
+      simp only [Units.val_mul, Units.val_mk0, mul_inv, inv_inv, div_eq_mul_inv]
+      ring
+    rw [e, map_add, toPic_principal, add_zero]
+  · have e : D₁ ⟨τ, a⟩ + D₁ ⟨τ, b⟩ =
+        D₂ ⟨τ, a⟩ + D₂ ⟨τ, b⟩ + CartierDiv.principal (Units.mk0 _ hmn) := by
+      refine CartierDiv.ext_of_isEqn fun z => ?_
+      obtain ⟨t₁, t₂, h1, h2, -, -, hu, -⟩ := hk0 z
+      refine ⟨t₁ ⟨τ, a⟩ * t₁ ⟨τ, b⟩, (h1 _).add (h1 _),
+        (((h2 _).add (h2 _)).add (CartierDiv.isEqn_principal _ z)).iff_unitAt.2 ?_⟩
+      convert hu.inv using 1
+      simp only [Units.val_mul, Units.val_mk0, mul_inv, inv_inv, div_eq_mul_inv]
+      ring
+    rw [← map_add, ← map_add, e, map_add, toPic_principal, add_zero]
+  · rw [hΘ, map_add, toPic_principal, add_zero, map_sub]
+  · intro z
+    obtain ⟨g, hg, -, he, hr⟩ :=
+      hΘe z _ (E'.nonempty (W.p₁ z)).choose_spec _ (E'.nonempty (W.p₂ z)).choose_spec
+    exact ⟨g, hg, by rw [one_mul, he]; exact hr⟩
+  · ext z
+    constructor
+    · intro hz
+      obtain ⟨g, hg, hal, he, -⟩ :=
+        hΘe z _ (E'.nonempty (W.p₁ z)).choose_spec _ (E'.nonempty (W.p₂ z)).choose_spec
+      have hn := hg.mem_supp_iff.1 hz
+      rw [he] at hn
+      exact _root_.GlobalTheory.FlagPush.mem_range_section_of_not_unitAt F X Y ι m E E' φ f hR W hα τ a b z _
+        (E'.nonempty (W.p₁ z)).choose_spec _ (E'.nonempty (W.p₂ z)).choose_spec hal hn
+    · rintro ⟨y, rfl⟩
+      obtain ⟨A, hA⟩ := E'.nonempty y
+      have e1 : W.p₁ (W.δ y) = y := by rw [← Scheme.Hom.comp_apply, W.δ₁]; rfl
+      have e2 : W.p₂ (W.δ y) = y := by rw [← Scheme.Hom.comp_apply, W.δ₂]; rfl
+      obtain ⟨g, hg, -, he, -⟩ := hΘe (W.δ y) A (by rw [e1]; exact hA) A (by rw [e2]; exact hA)
+      refine hg.mem_supp_iff.2 ?_
+      rw [he]
+      exact _root_.GlobalTheory.FlagPush.not_unitAt_section F X Y ι m E E' φ f hR W hα τ a b hne y A hA
+
 end GlobalTheory.FlagPush.DivOn
 end -- clump:auto
 end -- clump:auto
@@ -1744,7 +1823,7 @@ theorem interPoly_swap_adjacent : ∀ (F : Type) [Field F] (X Y : Var F) (ι : T
     refine _root_.GlobalTheory.FlagPush.almostLow_of_shear ι m τ a b hab _ _ j RatFunc.X RatFunc.X_ne_zero _ ?_
     rw [Mat.map_mul, Mat.map_inv, m1, m2]
     exact hpar
-  obtain ⟨D₁, D₂, Θ, h⟩ := GlobalTheory.FlagPush.DivOn.exists_divisors F X Y ι m E E' φ f hR gr B hB hBg W hα τ a b hab hlow
+  obtain ⟨D₁, D₂, Θ, h⟩ := _root_.GlobalTheory.FlagPush.DivOn.exists_divisors F X Y ι m E E' φ f hR gr B hB hBg W hα τ a b hab hlow
   have hne : (⟨τ, a⟩ : Root m) ≠ ⟨τ, b⟩ := fun h => hlt.ne (eq_of_heq (Sigma.mk.inj h).2)
   have := _root_.GlobalTheory.FlagPush.Dbl.interPoly_rename_swap F Y W hs (Root m) _ _ hne gr D₁ D₂ Θ h Q
   convert this
