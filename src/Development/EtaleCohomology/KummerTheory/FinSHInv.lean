@@ -456,7 +456,7 @@ theorem SHInv_of (hAlgExt : AlgExt) (hInsep : Insep) : SHInv := by
       ((pullbackLeftPullbackSndIso pA res alg).hom ≫ (pullbackLeftPullbackSndIso p (Spec.map s) (alg ≫ res)).hom) ≫
         pullback.fst p ((alg ≫ res) ≫ Spec.map s) := by
     rw [Category.assoc, pullbackLeftPullbackSndIso_hom_fst p (Spec.map s) (alg ≫ res)]
-    erw [← Category.assoc (pullbackLeftPullbackSndIso pA res alg).hom, pullbackLeftPullbackSndIso_hom_fst pA res alg]
+    rw [← Category.assoc (pullbackLeftPullbackSndIso pA res alg).hom, pullbackLeftPullbackSndIso_hom_fst pA res alg]
     rw [Category.assoc]
   have hall : Eqv _ (sch.map (pullback.fst (pullback.snd pA res) alg) ≫ sch.map (pullback.fst pA res) ≫
       sch.map (pullback.fst p (Spec.map s))) (tw q i) := by
