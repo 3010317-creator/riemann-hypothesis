@@ -173,7 +173,10 @@ theorem normSq_eq_petersson : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Glob
     simp only [GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.Tri.I, GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.Tri.ker]
     congr 1
     funext g
-    exact GlobalTheory.ThetaMean.leftInv_theta hW hΦ ((GlobalTheory.Grid.ofSgn true A).symm g) γ hγ y
+    have h := GlobalTheory.ThetaMean.leftInv_theta hW hΦ ((GlobalTheory.Grid.ofSgn true A).symm g) γ hγ y
+    simp only [thetaKO, GlobalTheory.Grid.WRep.toSgn, MonoidHom.comp_apply, MonoidHom.coe_prodMap, Prod.map_apply',
+      MulEquiv.coe_toMonoidHom, MulEquiv.apply_symm_apply, MonoidHom.id_apply] at h
+    exact h
   haveI := hν
   simp only [petersson, pet]
   rw [integral_quotMeasure h𝓕]
