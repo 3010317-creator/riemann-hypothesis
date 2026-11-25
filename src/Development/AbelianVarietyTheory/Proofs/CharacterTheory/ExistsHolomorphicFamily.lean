@@ -58,7 +58,6 @@ namespace GlobalTheory.SmoothPointFamily
 open KaehlerDifferential
 
 
-set_option backward.isDefEq.respectTransparency.types false in
 theorem exists_basis_away {R S : Type} [CommRing R] [CommRing S] [Algebra R S] [Algebra.Smooth R S]
     (p : Ideal S) [p.IsPrime] :
     ∃ (g : S) (m : ℕ) (s : Fin m → S)
