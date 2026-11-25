@@ -28,7 +28,6 @@ public import ReciprocityTheory.ResidueCardinality.ArtinOntoB
 public import ReciprocityTheory.Automorphisms.SplitCoeAlgebraMap
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSplitPlaceEq
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitExEveryDatum
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RankOneBaseWeightEqCmTheta
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSplitPlOfNotIsConjPl
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HeckeOpen
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLevelGroupWithCharacterAtTypePlaces
@@ -1115,7 +1114,10 @@ theorem isConjPl_conjPlE {D : D7} (P : PlE D.host) : Formalism.BasicNotions.IsCo
   rw [GlobalTheory.SplitConjPlace.mem_conjPlE]
   have : IsCMField.ringOfIntegersComplexConj D.host.E y = x := by
     apply RingOfIntegers.ext
-    rw [IsCMField.coe_ringOfIntegersComplexConj, hxy, GlobalTheory.LocM.complexConj_eq_conj,
+    have hconj (a : D.host.E) : IsCMField.complexConj D.host.E a = D.host.conj a := by
+      apply D.host.φ₀.injective
+      rw [NumberField.IsCMField.complexEmbedding_complexConj, Formalism.HC.HostAx.conjE_apply]
+    rw [IsCMField.coe_ringOfIntegersComplexConj, hxy, hconj,
       GlobalTheory.FixedPlaceSplit.host_conj_conj]
   rw [this]
 
