@@ -94,7 +94,7 @@ theorem vc_eq_zero_of_list (T : Fin n → Fin n → Module.End ℂ U) (P : (Fin 
 theorem vc_eq_zero_of_mem_span (T : Fin n → Fin n → Module.End ℂ U) (P : (Fin n → ℝ) → Prop)
     {μ : Fin n → ℝ} (hμ : ¬ P μ) {x : U} (hx : ∀ a, T a a x = ((μ a : ℝ) : ℂ) • x)
     (hxs : x ∈ Submodule.span ℂ (vcGood T P)) : x = 0 := by
-  obtain ⟨l, hl, e⟩ := _root_.Bl.SmulListSum.goal1 (fun w hw c => vcGood_smul T P hw c) hxs
+  obtain ⟨l, hl, e⟩ := Submodule.exists_list_of_mem_span (vcGood_smul T P) hxs
   exact vc_eq_zero_of_list T P hμ l.length l rfl hl x hx e
 
 def vcMon (T : Fin n → Fin n → Module.End ℂ U) (v : U) : ℕ → Set U
