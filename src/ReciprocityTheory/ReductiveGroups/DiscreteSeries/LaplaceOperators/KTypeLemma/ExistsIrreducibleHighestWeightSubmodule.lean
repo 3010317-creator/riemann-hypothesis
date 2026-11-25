@@ -130,13 +130,8 @@ theorem exists_highest_weight_lift_pi (hU : IsKUnitary ε E) {Y : Type*} [AddCom
   set S' : Submodule ℂ (WithLp 2 (Fin n → D)) := S.comap e.toLinearMap with hS'_def
   have hmem : ∀ z, z ∈ S' ↔ e z ∈ S := fun z => Iff.rfl
   have hfd' : FiniteDimensional ℂ S' := by
-    have hinj : Function.Injective (e.toLinearMap.domRestrict S') := by
-      intro u v huv
-      apply Subtype.ext
-      exact e.injective (by simpa using huv)
-    exact Module.Finite.of_injective
-      ((e.toLinearMap.domRestrict S').codRestrict S (fun z => (hmem z).1 z.2)) (by
-        intro u v huv; apply hinj; simpa [LinearMap.codRestrict] using congrArg Subtype.val huv)
+    rw [hS'_def, Submodule.comap_equiv_eq_map_symm]
+    exact Module.Finite.map S _
   haveI : CompleteSpace S' := FiniteDimensional.complete ℂ S'
   have hU' := k3vdTA_isKUnitary (ε := ε) hU
   have hS' : IsKStableSub ε (coordinateTensorEndAction E) S' := by
