@@ -579,8 +579,6 @@ open NumberField IsDedekindDomain Matrix Polynomial Filter GlobalTheory.CuspRep 
 open scoped Classical TensorProduct ComplexOrder
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
-theorem _root_.GlobalTheory.T.isConjSelfReciprocal_of_dvd_elliptic_polynomial : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (P : E[X]), P ∈ Ell E n → ∀ Q : E[X], Q.Monic → Irreducible Q → Q ∣ P → GlobalTheory.IndefiniteRowSideFullHecke.SelfReciprocalLocalField.IsSelfRecip E Q.natDegree Q := by
-  first | exact @GlobalTheory.SelfRecipFactor.isSelfRecip_of_dvd_ell
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsConjSelfReciprocalOfDvdEllipticPolynomialStatement =====
@@ -624,21 +622,6 @@ noncomputable section
 namespace GlobalTheory.NormAssemble
 
 open GlobalTheory.IndefiniteRowSideFullHecke.SelfReciprocalLocalField
-
-theorem cT_aeval {K : Type} [Field K] (σ : K →+* K) {n : ℕ} (M : Matrix (Fin n) (Fin n) K) (p : K[X]) :
-    cT σ (aeval M p) = aeval (cT σ M) (p.map σ) := by
-  induction p using Polynomial.induction_on' with
-  | add p q hp hq =>
-    rw [map_add (f := _), Polynomial.map_add (f := _), map_add (f := _), ← hp, ← hq]
-    ext i j; simp [cT]
-  | monomial k a =>
-    rw [Polynomial.map_monomial, aeval_monomial, aeval_monomial, Algebra.algebraMap_eq_smul_one,
-      Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul, smul_mul_assoc, one_mul]
-    have hp : ((M ^ k).map σ)ᵀ = ((M.map σ)ᵀ) ^ k := by
-      rw [← Matrix.transpose_pow, ← RingHom.mapMatrix_apply, map_pow, RingHom.mapMatrix_apply]
-    simp only [cT]
-    ext i j; simp
-    left; rw [← hp]; rfl
 
 def toFld {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (Q : SelfRecip E r) : E[X] →+* Fld Q :=
   AdjoinRoot.mk Q.1
@@ -739,7 +722,7 @@ theorem exists_norm_of_factors : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   refine ⟨aeval γ.val f, ?_, ?_⟩
   · rw [show γ.val * aeval γ.val f = aeval γ.val (X * f) by simp,
       show aeval γ.val f * γ.val = aeval γ.val (f * X) by simp, mul_comm]
-  · rw [cT_aeval, hcTa, ← aeval_comp, ← map_mul]
+  · rw [GlobalTheory.NormInert.cT_aeval, hcTa, ← aeval_comp, ← map_mul]
     rw [hg, map_sub] at hg0
     exact sub_eq_zero.1 hg0
 
@@ -844,17 +827,6 @@ noncomputable section
 
 namespace GlobalTheory.NormHasseFixed
 
-theorem cT_aeval {K : Type} [Field K] (σ : K →+* K) {n : ℕ} (A : Matrix (Fin n) (Fin n) K) (p : K[X]) :
-    cT σ (aeval A p) = aeval (cT σ A) (p.map σ) := by
-  induction p using Polynomial.induction_on' with
-  | add p q hp hq =>
-    rw [map_add (f := _), Polynomial.map_add (f := _), map_add (f := _), ← hp, ← hq]
-    ext i j; simp [cT]
-  | monomial k a =>
-    rw [Polynomial.map_monomial, aeval_monomial, aeval_monomial, ← Algebra.smul_def, ← Algebra.smul_def]
-    unfold cT
-    rw [Matrix.map_smul' _ _ _ (fun x y => map_mul σ x y), Matrix.map_pow, Matrix.transpose_smul, Matrix.transpose_pow]
-
 theorem aeval_mulVec {K L : Type} [Field K] [Field L] [Algebra K L] {n : ℕ} (N : Matrix (Fin n) (Fin n) L)
     (μ : L) (v : Fin n → L) (hv : N *ᵥ v = μ • v) (p : K[X]) : (aeval N p) *ᵥ v = aeval μ p • v := by
   have hpow : ∀ k : ℕ, (N ^ k) *ᵥ v = μ ^ k • v := by
@@ -897,9 +869,8 @@ theorem aeval_inv_map_eq {E : Type} [Field E] (σ : E →+* E) {n : ℕ} (γ : G
     simpa [AlgHom.mapMatrix_apply, e] using h.symm
   have h1 : (cT σ (aeval γ.val m)).map (algebraMap E L) *ᵥ v = (aeval γ.val m).map (algebraMap E L) *ᵥ v := by
     rw [hm]
-  rw [cT_aeval, hU', hmap, hmap, aeval_mulVec _ _ v hBv, aeval_mulVec _ _ v hAv] at h1
+  rw [GlobalTheory.NormInert.cT_aeval, hU', hmap, hmap, aeval_mulVec _ _ v hBv, aeval_mulVec _ _ v hAv] at h1
   exact smul_left_injective L hv0 h1
-
 
 open GlobalTheory.IndefiniteRowSideFullHecke.SelfReciprocalLocalField in
 theorem invol_mk_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (γ : GL (Fin n) E), γ ∈ UE E n → γ.val.charpoly ∈ Ell E n → ∀ m : E[X], cT (IsCMField.complexConj E).toRingEquiv.toRingHom (aeval γ.val m) = aeval γ.val m → ∀ (r : ℕ) (Q : GlobalTheory.IndefiniteRowSideFullHecke.SelfReciprocalLocalField.SelfRecip E r), Q.1 ∣ γ.val.charpoly → GlobalTheory.IndefiniteRowSideFullHecke.SelfReciprocalLocalField.invol Q (AdjoinRoot.mk Q.1 m : GlobalTheory.IndefiniteRowSideFullHecke.SelfReciprocalLocalField.Fld Q) = (AdjoinRoot.mk Q.1 m : GlobalTheory.IndefiniteRowSideFullHecke.SelfReciprocalLocalField.Fld Q) := by
@@ -1287,7 +1258,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
   have hherm : cT σ (aeval γ.val m) = aeval γ.val m := by
     rw [← hm]; exact herm_of σ hσ h
   have hM : (h.val * cT σ h.val)⁻¹ = aeval γ.val m := by rw [GlobalTheory.UnitaryConj.inv_h_form, ← hN, hm]
-  have hsr := GlobalTheory.T.isConjSelfReciprocal_of_dvd_elliptic_polynomial E n _ hP
+  have hsr := GlobalTheory.SelfRecipFactor.isSelfRecip_of_dvd_ell E n _ hP
   have hfix := GlobalTheory.T.involution_fixes_polynomial_image E n γ hγ hP m hherm
   have hloc' : ∀ w : Pl E, ¬ IsSplitAt w → ∃ c : Matrix (Fin n) (Fin n) (w.adicCompletion E), c * (GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) γ).val = (GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) γ).val * c ∧ cT (cj w) c * c = (aeval γ.val m).map (algebraMap E (w.adicCompletion E)) := (fun w hw => by
     obtain ⟨c, hc1, hc2⟩ := hloc w hw
