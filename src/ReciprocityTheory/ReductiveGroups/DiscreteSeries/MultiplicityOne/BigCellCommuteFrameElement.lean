@@ -4,6 +4,7 @@ public import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHo
 public import Formalism.HermitianCurvature.WeylElementCommutesLevelOne
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.MultiplicityOne.StDefs
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.OppositeWeylSubgroupClosed
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.MultiplicityOne.JInvCCA
 import ReciprocityTheory.ReductiveGroups.DiscreteSeries.MultiplicityOne.JInvGroupA
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -28,92 +29,66 @@ abbrev mid (k r : ℕ) (i : Fin (2 * r + k + 1)) : Prop := r ≤ i.val ∧ i.val
 
 def midx {i : Fin (2 * r + k + 1)} (hi : mid k r i) : Fin (k + 1) := ⟨i.val - r, by have := hi; omega⟩
 
-lemma wI_midx {i : Fin (2 * r + k + 1)} (hi : mid k r i) : wI k r (midx hi) = i := by
-  have := hi
-  apply Fin.ext
-  simp only [wI, midx]
-  omega
+lemma wI_midx {i : Fin (2 * r + k + 1)} (hi : mid k r i) : wI k r (midx hi) = i :=
+  InvCC.wI_midx hi
 
-lemma mid_wI (m : Fin (k + 1)) : mid k r (wI k r m) := by
-  have := m.isLt
-  constructor <;> simp only [wI] <;> omega
+lemma mid_wI (m : Fin (k + 1)) : mid k r (wI k r m) :=
+  InvCC.mid_wI m
 
-lemma wI_inj {a b : Fin (k + 1)} (h : wI k r a = wI k r b) : a = b := by
-  have := congrArg Fin.val h
-  simp only [wI] at this
-  apply Fin.ext; omega
+lemma wI_inj {a b : Fin (k + 1)} (h : wI k r a = wI k r b) : a = b :=
+  InvCC.wI_inj h
 
 lemma emb_out_col (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (q j : Fin (2 * r + k + 1)) (hj : ¬ mid k r j) :
-    embWb k r μ q j = if q = j then 1 else 0 := by
-  unfold embWb
-  rw [dite_eq_right (fun h => hj h.2)]
-  by_cases h : q = j
-  · subst h; rw [if_pos ⟨rfl, hj⟩, if_pos rfl]
-  · rw [if_neg (fun h' => h h'.1), if_neg h]
+    embWb k r μ q j = if q = j then 1 else 0 :=
+  InvCC.emb_out_col μ q j hj
 
 lemma emb_out_row (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (q j : Fin (2 * r + k + 1)) (hq : ¬ mid k r q) :
-    embWb k r μ q j = if q = j then 1 else 0 := by
-  unfold embWb
-  rw [dite_eq_right (fun h => hq h.1)]
-  by_cases h : q = j
-  · rw [if_pos ⟨h, hq⟩, if_pos h]
-  · rw [if_neg (fun h' => h h'.1), if_neg h]
+    embWb k r μ q j = if q = j then 1 else 0 :=
+  InvCC.emb_out_row μ q j hq
 
 lemma emb_mid (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (q j : Fin (2 * r + k + 1)) (hq : mid k r q) (hj : mid k r j) :
-    embWb k r μ q j = μ (midx hq) (midx hj) := by
-  unfold embWb
-  rw [dite_eq_left ⟨hq, hj⟩]
-  rfl
+    embWb k r μ q j = μ (midx hq) (midx hj) :=
+  InvCC.emb_mid μ q j hq hj
 
 def Em (k r : ℕ) : Matrix (Fin (2 * r + k + 1)) (Fin (k + 1)) ℂ := fun i m => if i = wI k r m then 1 else 0
 
 lemma Em_mul_mid {X : Type*} (A : Matrix (Fin (k + 1)) X ℂ) (i : Fin (2 * r + k + 1)) (x : X) (hi : mid k r i) :
-    (Em k r * A) i x = A (midx hi) x := by
-  apply Formalism.FourierDecayAlt.P.B2x3.Em_mul_mid <;> assumption
+    (Em k r * A) i x = A (midx hi) x :=
+  InvCC.Em_mul_mid A i x hi
 
 lemma Em_mul_out {X : Type*} (A : Matrix (Fin (k + 1)) X ℂ) (i : Fin (2 * r + k + 1)) (x : X) (hi : ¬ mid k r i) :
-    (Em k r * A) i x = 0 := by
-  rw [Matrix.mul_apply]
-  apply Finset.sum_eq_zero
-  intro b _
-  rw [Em, if_neg, zero_mul]
-  intro h
-  exact hi (h ▸ mid_wI b)
+    (Em k r * A) i x = 0 :=
+  InvCC.Em_mul_out A i x hi
 
 lemma mul_EmT_mid {X : Type*} [Fintype X] (A : Matrix X (Fin (k + 1)) ℂ) (j : Fin (2 * r + k + 1)) (x : X) (hj : mid k r j) :
-    (A * (Em k r)ᵀ) x j = A x (midx hj) := by
-  apply Formalism.FourierDecayAlt.P.B2x3.mul_EmT_mid <;> assumption
+    (A * (Em k r)ᵀ) x j = A x (midx hj) :=
+  InvCC.mul_EmT_mid A j x hj
 
 lemma mul_EmT_out {X : Type*} [Fintype X] (A : Matrix X (Fin (k + 1)) ℂ) (j : Fin (2 * r + k + 1)) (x : X) (hj : ¬ mid k r j) :
-    (A * (Em k r)ᵀ) x j = 0 := by
-  rw [Matrix.mul_apply]
-  apply Finset.sum_eq_zero
-  intro b _
-  rw [Matrix.transpose_apply, Em, if_neg, mul_zero]
-  intro h
-  exact hj (h ▸ mid_wI b)
+    (A * (Em k r)ᵀ) x j = 0 :=
+  InvCC.mul_EmT_out A j x hj
 
-lemma EmT_Em : (Em k r)ᵀ * Em k r = 1 := by
-  apply Formalism.FourierDecayAlt.P.B2x3.EmT_Em
+lemma EmT_Em : (Em k r)ᵀ * Em k r = 1 :=
+  InvCC.EmT_Em
 
 lemma emb_eq (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) :
-    embWb k r μ = Em k r * μ * (Em k r)ᵀ + (1 - Em k r * (Em k r)ᵀ) := by
-  apply Formalism.FourierDecayAlt.P.B2x3.emb_eq
+    embWb k r μ = Em k r * μ * (Em k r)ᵀ + (1 - Em k r * (Em k r)ᵀ) :=
+  InvCC.emb_eq μ
 
-lemma EmT_Q : (Em k r)ᵀ * (1 - Em k r * (Em k r)ᵀ) = 0 := by
-  rw [Matrix.mul_sub, Matrix.mul_one, ← Matrix.mul_assoc, EmT_Em, Matrix.one_mul, sub_self]
+lemma EmT_Q : (Em k r)ᵀ * (1 - Em k r * (Em k r)ᵀ) = 0 :=
+  InvCC.EmT_Q
 
-lemma Q_Em : (1 - Em k r * (Em k r)ᵀ) * Em k r = 0 := by
-  rw [Matrix.sub_mul, Matrix.one_mul, Matrix.mul_assoc, EmT_Em, Matrix.mul_one, sub_self]
+lemma Q_Em : (1 - Em k r * (Em k r)ᵀ) * Em k r = 0 :=
+  InvCC.Q_Em
 
 lemma sandwich (a b N : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (M : Mat k r)
     (h1 : M * Em k r = Em k r * N) (h2 : (Em k r)ᵀ * M = N * (Em k r)ᵀ) :
     embWb k r a * M * embWb k r b =
-      Em k r * (a * N * b) * (Em k r)ᵀ + (1 - Em k r * (Em k r)ᵀ) * M * (1 - Em k r * (Em k r)ᵀ) := by
-  apply Formalism.FourierDecayAlt.P.B2x3.sandwich <;> assumption
+      Em k r * (a * N * b) * (Em k r)ᵀ + (1 - Em k r * (Em k r)ᵀ) * M * (1 - Em k r * (Em k r)ᵀ) :=
+  InvCC.sandwich a b N M h1 h2
 
-lemma emb_one : embWb k r 1 = 1 := by
-  rw [emb_eq, Matrix.mul_one, add_sub_cancel]
+lemma emb_one : embWb k r 1 = 1 :=
+  InvCC.emb_one
 
 lemma emb_mul (a b : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) : embWb k r (a * b) = embWb k r a * embWb k r b := by
   have h := sandwich (r := r) a b 1 1 (by rw [Matrix.one_mul, Matrix.mul_one]) (by rw [Matrix.one_mul, Matrix.mul_one])
