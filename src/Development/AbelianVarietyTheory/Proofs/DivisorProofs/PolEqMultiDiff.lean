@@ -67,7 +67,6 @@ open Classical in
 def pol (φ : (ι → ℤ) → ℝ) : ℝ := ∑ S : Finset ι, (-1 : ℝ) ^ S.card * φ fun i => if i ∈ S then -1 else 0
 
 
-set_option autoImplicit false in
 open MvPolynomial in
 variable {ι : Type} [Fintype ι] in
 theorem _root_.GlobalTheory.FibreProj.pol_sum {J : Type} (T : Finset J)
@@ -78,7 +77,6 @@ theorem _root_.GlobalTheory.FibreProj.pol_sum {J : Type} (T : Finset J)
   simp_rw [Finset.mul_sum]
   exact Finset.sum_comm
 
-set_option autoImplicit false in
 open MvPolynomial in
 variable {ι : Type} [Fintype ι] in
 open Classical in
@@ -151,7 +149,6 @@ private theorem sum_surjective_words_prod_eq_factorial_prod {R : Type} [CommRing
   rw [Finset.sum_congr rfl hprod, Finset.sum_const, hcard, nsmul_eq_mul]
   ring
 
-set_option autoImplicit false in
 open MvPolynomial in
 variable {ι : Type} [Fintype ι] in
 open Classical in
@@ -176,7 +173,6 @@ private theorem sum_neg_one_pow_card_mul_sum_pow_eq_factorial_prod {R : Type} [C
     _ = _ := sum_surjective_words_prod_eq_factorial_prod hD w
 
 
-set_option autoImplicit false in
 open MvPolynomial in
 variable {ι : Type} [Fintype ι] in
 open Classical in
