@@ -3,6 +3,7 @@ module
 public import ReciprocityTheory.GaloisValuations.Global
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharInertiaSurjective
 import Formalism.GaloisCohomology.StatementLoc
+import Mathlib.FieldTheory.Galois.Profinite
 
 @[expose] public section
 
