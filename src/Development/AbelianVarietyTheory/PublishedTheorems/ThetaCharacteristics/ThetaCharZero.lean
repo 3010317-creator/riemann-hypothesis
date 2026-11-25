@@ -50,12 +50,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.Published
 
-/-- **Mumford's theorem on theta characteristics**: for a smooth projective curve `C` over an
-algebraically closed field, the theta characteristics (square roots of the canonical bundle)
-partition into even and odd characteristics invariant under deformation.
-
-Proposed reference:
-[D. Mumford, *Theta characteristics on an algebraic curve*][mumford1971theta]. -/
 def CanonKeySt : Prop :=
   ∃ κ : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsPrincipalIdealRing R], KeyIn R → Rˣ,
     (∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsPrincipalIdealRing R], GlobalTheory.KeyPow.ClauseH R (fun _ => 1) 1 (κ R)) ∧
