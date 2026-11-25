@@ -74,11 +74,7 @@ namespace GlobalTheory.OmegaDensityScale
 
 theorem omegaDensity_unique {P Q : ℕ} {μ : Measure (UpqT P Q)} {c c' : ENNReal}
     (h : OmegaDensity μ c) (h' : OmegaDensity μ c') : c' = c := by
-  obtain ⟨l, hl, ht⟩ := h
-  obtain ⟨l', hl', ht'⟩ := h'
-  have e : l = l' := GlobalTheory.OmegaLebUnique.omegaLeb_unique P Q l l' hl hl'
-  subst e
-  exact tendsto_nhds_unique ht' ht
+  exact (GlobalTheory.CompactDualUnique.omegaDensity_unique h h').symm
 
 theorem omegaDensity_smul {P Q : ℕ} {μ : Measure (UpqT P Q)} {c : ENNReal}
     (h : OmegaDensity μ c) (a : NNReal) : OmegaDensity ((a : ENNReal) • μ) (a * c) := by

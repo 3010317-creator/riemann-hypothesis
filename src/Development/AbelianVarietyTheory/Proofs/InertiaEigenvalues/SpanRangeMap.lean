@@ -1524,12 +1524,7 @@ theorem map_id_comm {Z O W : Type} [CommRing Z] [CommRing O] [CommRing W] [Algeb
 
 theorem frob_comm_gal {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P) (LL : FinExt l) (g : GQ l)
     (x : RW LL) : φRW LL (AI.gRW LL g x) = AI.gRW LL g (φRW LL x) := by
-  refine map_id_comm _ _ (fun w => ?_) x
-  ext n
-  change (WittVector.map (frobenius (Cb l) l)
-      (WittVector.map (autCb l (AI.actT g)).toRingHom w)).coeff n =
-    (WittVector.map (autCb l (AI.actT g)).toRingHom (WittVector.map (frobenius (Cb l) l) w)).coeff n
-  simp [WittVector.map_coeff, frobenius_def]
+  exact (GlobalTheory.Decompl.FixL.frob_comm AI LL g x).symm
 
 theorem fixH_iff {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P) (K : FinExt l) {LL : FinExt l}
     (x : RW LL) : FixH AI K x ↔ ∀ g : ↥(GK K), P.χQ (g : GQ l) = 1 → AI.gRW LL (g : GQ l) x = x := by

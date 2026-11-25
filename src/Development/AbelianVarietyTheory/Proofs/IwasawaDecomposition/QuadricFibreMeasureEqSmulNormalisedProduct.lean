@@ -718,27 +718,12 @@ theorem sdW_change (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
 theorem psiInf_mul (F : Type) [Field F] [NumberField F] (ψ0 ψ : AddChar (AF F) ℂ) (a : F)
     (h : ∀ x, ψ x = ψ0 (algebraMap F (AF F) a * x)) (x : Ainf F) :
     psiInf F ψ x = psiInf F ψ0 (algebraMap F (Ainf F) a * x) := by
-  unfold psiInf
-  rw [h]
-  congr 1
-  exact Prod.ext rfl (mul_zero (algebraMap F (Af F) a))
+  exact GlobalTheory.GaugeEx.CharLoc.psiInf_twist h x
 
 theorem psiV_mul (F : Type) [Field F] [NumberField F] (ψ0 ψ : AddChar (AF F) ℂ) (a : F)
     (h : ∀ x, ψ x = ψ0 (algebraMap F (AF F) a * x)) (v : HeightOneSpectrum (𝓞 F)) (x : Fv F v) :
     psiV F ψ v x = psiV F ψ0 v (algebraMap F (Fv F v) a * x) := by
-  classical
-  unfold psiV
-  rw [h]
-  congr 1
-  refine Prod.ext (mul_zero (algebraMap F (Ainf F) a)) ?_
-  show algebraMap F (Af F) a * singleV F v x = singleV F v (algebraMap F (Fv F v) a * x)
-  apply Subtype.ext
-  funext w
-  show algebraMap F (Fv F w) a * Pi.single (M := fun w : HeightOneSpectrum (𝓞 F) => Fv F w) v x w =
-    Pi.single (M := fun w : HeightOneSpectrum (𝓞 F) => Fv F w) v (algebraMap F (Fv F v) a * x) w
-  by_cases hw : w = v
-  · subst hw; simp
-  · simp [Pi.single_eq_of_ne hw]
+  exact GlobalTheory.GaugeEx.CharLoc.psiV_twist h v x
 
 theorem exists_smul_haar {V : Type} [AddCommGroup V] [TopologicalSpace V] [IsTopologicalAddGroup V]
     [LocallyCompactSpace V] [SecondCountableTopology V] [MeasurableSpace V] [BorelSpace V]

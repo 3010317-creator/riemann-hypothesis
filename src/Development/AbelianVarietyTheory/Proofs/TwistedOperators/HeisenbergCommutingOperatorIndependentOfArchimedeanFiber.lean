@@ -245,8 +245,7 @@ theorem main (ψ : AddChar (AF F) ℂ) (T : Module.End ℂ ((κ → AF F) → �
       T (schr ψ (u • p, u • q) Φ) = schr ψ (u • p, u • q) (T Φ))
     (Φ : (κ → AF F) → ℂ) (hΦ : Φ ∈ schA F κ) (y : κ → AF F) (hy : ∀ z, At (evI F) z → Φ (y + z) = 0) :
     T Φ y = 0 := by
-  intros
-  apply _root_.GlobalTheory.ArchLocality.fibre <;> assumption
+  apply GlobalTheory.ArchLocality.fibre <;> assumption
 
 end GlobalTheory.FinFibre
 

@@ -819,10 +819,7 @@ theorem exists_eq_of_aeval_eq_zero {T K : Type} [CommRing T] [IsDomain T] [Field
 
 theorem isIntegrallyClosed_of_absIntClosed (T : Type) [CommRing T] [IsDomain T]
     (hT : GlobalTheory.LocAcyc.AbsIntClosed T) : IsIntegrallyClosed T := by
-  rw [isIntegrallyClosed_iff (FractionRing T)]
-  intro x hx
-  obtain ⟨f, hf, h⟩ := hx
-  exact exists_eq_of_aeval_eq_zero hT _ f hf rfl x (by rw [aeval_def]; exact h)
+  exact GlobalTheory.VertUnitsNoeth.isIntegrallyClosed_of_absIntClosed' T hT
 
 end GlobalTheory.LocAcycEmbed
 
