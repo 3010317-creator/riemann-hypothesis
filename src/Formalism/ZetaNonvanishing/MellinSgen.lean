@@ -58,13 +58,8 @@ lemma Sa_eq_tsum (ha0 : a 0 = 0) (x : ℝ) : Sa a x = ∑' n, a n * mxS n x := b
   refine Finset.sum_congr rfl fun n hn => ?_
   rw [Finset.mem_Icc] at hn
   have hn0 : (0 : ℝ) < n := by exact_mod_cast (by omega : 0 < n)
-  have hx : (n : ℝ) ≤ x := by
-    have hx0 : 0 ≤ x := by
-      by_contra hneg
-      push_neg at hneg
-      rw [Nat.floor_eq_zero.mpr (by linarith)] at hn
-      omega
-    exact (Nat.le_floor_iff hx0).mp hn.2
+  have hx : (n : ℝ) ≤ x :=
+    (Nat.le_floor_iff' (Nat.ne_of_gt hn.1)).mp hn.2
   have hnn : 0 ≤ x / n - 1 := by
     rw [sub_nonneg, le_div_iff₀ hn0]
     linarith
