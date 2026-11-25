@@ -415,11 +415,6 @@ theorem bind_fst (P : MvPolynomial (Fin 1 × Fin d) R) :
   change MvPolynomial.aeval (MvPolynomial.X : Fin 1 × Fin d → MvPolynomial (Fin 1 × Fin d) R) P = P
   rw [MvPolynomial.aeval_X_left_apply]
 
-theorem bind_zero {σ τ : Type} (P : MvPolynomial σ R) (h : MvPolynomial.constantCoeff P = 0) :
-    (MvPolynomial.bind₁ fun _ : σ => (0 : MvPolynomial τ R)) P = 0 := by
-  change MvPolynomial.aeval (fun _ : σ => (0 : MvPolynomial τ R)) P = 0
-  rw [MvPolynomial.aeval_zero', h, map_zero]
-
 theorem double_substitution_jet_inclusion (Qs : Fin d' → PS R 1 d) (m : ℕ) (i : Fin 2) :
     (sub2 Qs m).comp (jetCopy d' m i) = (jetCopy d m i).comp (sub1 Qs m) := by
   apply jet_hom_ext
