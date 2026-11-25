@@ -203,18 +203,8 @@ section Push
 variable {E F : Type} [Field E] [Field F] (φ : E →+* F)
 
 theorem span_image_span (S : Set E) :
-    Submodule.span (𝓞 F) (φ '' (Submodule.span (𝓞 E) S : Set E)) = Submodule.span (𝓞 F) (φ '' S) := by
-  refine le_antisymm (Submodule.span_le.2 ?_) (Submodule.span_mono (Set.image_mono Submodule.subset_span))
-  rintro _ ⟨x, hx, rfl⟩
-  induction hx using Submodule.span_induction with
-  | mem x hx => exact Submodule.subset_span ⟨x, hx, rfl⟩
-  | zero => simp
-  | add x y _ _ hx hy => rw [map_add (f := _)]; exact Submodule.add_mem _ hx hy
-  | smul b x _ hx =>
-    have : φ (b • x) = RingOfIntegers.mapRingHom φ b • φ x := by
-      change φ ((b : E) * x) = _
-      rw [map_mul]; rfl
-    rw [this]; exact Submodule.smul_mem _ _ hx
+    Submodule.span (𝓞 F) (φ '' (Submodule.span (𝓞 E) S : Set E)) = Submodule.span (𝓞 F) (φ '' S) :=
+  by apply _root_.GlobalTheory.BetaEx.span_image_span
 
 def extend : Submodule (𝓞 E) E →* Submodule (𝓞 F) F where
   toFun M := Submodule.span (𝓞 F) (φ '' M)

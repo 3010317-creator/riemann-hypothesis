@@ -376,25 +376,8 @@ theorem beta_m_alt (hT : w ∈ d.T) : (d.betaL a ha).m w = d.diag (fun x => d.qT
   simp [LocData.betaL, hT]
 
 theorem powers_diagonal_at_T (hT : w ∈ d.T) (k : ℕ) (x y : d.kap w) :
-    (pw (d.betaL a ha) k).m w x y = d.diag (fun x => MT.mpow w (d.qT a w x.1.1) (k + 1)) x y := by
-  induction k generalizing x y with
-  | zero =>
-    have h1 : ∀ s, MT.mpow w (d.qT a w s) 1 = d.qT a w s := fun s =>
-      GlobalTheory.CompanionTheory.FmPowP.mconv_idem_right (GlobalTheory.CompanionTheory.MatchPow.iwahori_pair_open a (n - a) w) (GlobalTheory.CompanionTheory.MatchPow.iwahori_pair_le_maximal a (n - a) w) _
-        fun u hu g => ((qT_hecke d s).2 u hu g).2
-    show (d.betaL a ha).m w x y = _
-    rw [beta_m_alt d ha hT]
-    simp only [zero_add, h1]
-  | succ k ih =>
-    show ∑ z, mconv ((d.betaL a ha).m w x z) ((pw (d.betaL a ha) k).m w z y) = _
-    rw [beta_m_alt d ha hT, sum_diag d _ (fun z => (pw (d.betaL a ha) k).m w z y), ih]
-    by_cases h : x = y
-    · have e1 : ∀ f : d.kap w → LF a (n - a) w, d.diag f x y = f x := fun f => if_pos h
-      rw [e1, e1]
-      rfl
-    · have e1 : ∀ f : d.kap w → LF a (n - a) w, d.diag f x y = 0 := fun f => if_neg h
-      rw [e1, e1]
-      exact GlobalTheory.CompanionTheory.FmPowP.mconv_zero_right _
+    (pw (d.betaL a ha) k).m w x y = d.diag (fun x => MT.mpow w (d.qT a w x.1.1) (k + 1)) x y :=
+  by apply _root_.GlobalTheory.CompanionTheory.MatchLMB2.powers_diagonal_at_T_block; assumption
 
 theorem trace_test_function_eq (hT : w ∈ d.T) (m : ℕ)
     (hH : ∀ s, ∀ u ∈ Tail.I2 a (n - a) w, ∀ g, MT.mpow w (d.qT a w s) (m + 1) (u * g) = MT.mpow w (d.qT a w s) (m + 1) g) :

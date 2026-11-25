@@ -318,19 +318,8 @@ theorem ringKrullDim_localRingAt_eq_one {I W : Ideal (MvPolynomial (Fin n) ℂ)}
   exact le_antisymm hup (Order.succ_le_of_lt (lt_of_not_ge hne))
 
 theorem exists_ringKrullDim_quotient_eq_nat (W : Ideal (MvPolynomial (Fin n) ℂ)) [W.IsPrime] :
-    ∃ e : ℕ, ringKrullDim (MvPolynomial (Fin n) ℂ ⧸ W) = (e : ℕ) := by
-  have h0 := ringKrullDim_nonneg_of_nontrivial (R := MvPolynomial (Fin n) ℂ ⧸ W)
-  have h1 : ringKrullDim (MvPolynomial (Fin n) ℂ ⧸ W) ≤ (n : ℕ) :=
-    (ringKrullDim_quotient_le W).trans (by simp)
-  generalize ringKrullDim (MvPolynomial (Fin n) ℂ ⧸ W) = d at h0 h1 ⊢
-  induction d using WithBot.recBotCoe with
-  | bot => simp at h0
-  | coe d =>
-    induction d using ENat.recTopCoe with
-    | top =>
-      rw [← WithBot.coe_natCast, WithBot.coe_le_coe] at h1
-      exact absurd h1 (not_le.2 (ENat.natCast_lt_top n))
-    | coe e => exact ⟨e, rfl⟩
+    ∃ e : ℕ, ringKrullDim (MvPolynomial (Fin n) ℂ ⧸ W) = (e : ℕ) :=
+  by apply _root_.GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets.exists_ringKrullDim_quotient_eq_nat; assumption
 
 theorem proof : CurveGermComponents.Statement := by
   intro n I q hdim

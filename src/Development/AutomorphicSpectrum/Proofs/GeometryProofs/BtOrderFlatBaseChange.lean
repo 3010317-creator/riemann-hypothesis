@@ -213,17 +213,8 @@ lemma ext_le_btOrder [Finite T] (Γ : QFGroup R T) (Γ' : QFGroup R' T) (F : Γ'
     (hbc : Γ'.IsBaseChange Γ (algebraMap R R') F)
     (κ : FractionRing R →+* FractionRing R')
     (hκ : κ.comp (algebraMap R _) = (algebraMap R' _).comp (algebraMap R R')) :
-    extOrder (algebraMap R R') (Γ.btOrder ⊤) ≤ Γ'.btOrder ⊤ := by
-  have hκ' : ∀ r, κ (algebraMap R _ r) = algebraMap R' (FractionRing R') (algebraMap R R' r) :=
-    fun r => congr($hκ r)
-  refine Algebra.adjoin_le ?_
-  rintro _ ⟨f, hf, rfl⟩
-  refine (mem_btOrder_iff Γ' _).2 fun t => ?_
-  obtain ⟨s, hs⟩ := (mem_btOrder_iff Γ f).1 hf t
-  refine ⟨(F.appLE ⊤ ⊤ (top_le_pre _)).hom s, fun h hh => ?_⟩
-  rw [← PositivityTheory.HtPt.Htat.ValuationInjectivePi.valAt_comp (Γ'.pt h).left F ⊤ ⊤ _ _ (top_le_pre _),
-    PositivityTheory.HtPt.Htat.ValuationInjectivePi.valAt_congr (_root_.GlobalTheory.CompanionTheory.Ar.BT.genericPoint_baseChange R T Γ R' Γ' F hbc κ hκ h) _ _ (top_le_pre _),
-    valAt_map κ _ _ (top_le_pre _), hs h, hκ']
+    extOrder (algebraMap R R') (Γ.btOrder ⊤) ≤ Γ'.btOrder ⊤ :=
+  by apply _root_.PositivityTheory.HtPt.Htat.ValuationInjectivePi.ext_le_btOrder <;> assumption
 
 end Sch
 

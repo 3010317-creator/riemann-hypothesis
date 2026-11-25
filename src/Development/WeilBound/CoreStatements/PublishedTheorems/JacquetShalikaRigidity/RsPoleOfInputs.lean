@@ -1560,16 +1560,8 @@ theorem mul_le_sq_add (a b : ℝ≥0∞) : a * b ≤ a ^ 2 + b ^ 2 :=
 theorem integ {X : Type} [MeasurableSpace X] {ν : Measure X} {f φ : X → ℂ}
     (hf : AEStronglyMeasurable f ν) (hφ : AEStronglyMeasurable φ ν)
     (h1 : ∫⁻ g, ‖f g‖ₑ ^ 2 ∂ν < ∞) (h2 : ∫⁻ g, ‖φ g‖ₑ ^ 2 ∂ν < ∞) :
-    Integrable (fun g => f g * conj (φ g)) ν := by
-  refine ⟨hf.mul (Complex.continuous_conj.comp_aestronglyMeasurable hφ), ?_⟩
-  show ∫⁻ g, ‖f g * conj (φ g)‖ₑ ∂ν < ∞
-  calc ∫⁻ g, ‖f g * conj (φ g)‖ₑ ∂ν ≤ ∫⁻ g, (‖f g‖ₑ ^ 2 + ‖φ g‖ₑ ^ 2) ∂ν := by
-        refine lintegral_mono fun g => ?_
-        have hc : ‖conj (φ g)‖ₑ = ‖φ g‖ₑ := by simp [enorm_eq_nnnorm]
-        rw [enorm_mul, hc]
-        exact mul_le_sq_add _ _
-    _ = ∫⁻ g, ‖f g‖ₑ ^ 2 ∂ν + ∫⁻ g, ‖φ g‖ₑ ^ 2 ∂ν := lintegral_add_left' (hf.enorm.pow_const 2) _
-    _ < ∞ := ENNReal.add_lt_top.2 ⟨h1, h2⟩
+    Integrable (fun g => f g * conj (φ g)) ν :=
+  by apply _root_.PositivityTheory.AdelicQuotientData.SquareIntegralBound.intMul <;> assumption
 
 theorem pre_of_good {E : Type} [Field E] [NumberField E] {k : ℕ} {ψ : AddChar (Ad E) ℂ} {m : ℕ}
     {f : GA E k → ℂ} (h : Good ψ m f) : Pre ψ m f :=
