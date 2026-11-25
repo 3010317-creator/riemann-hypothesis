@@ -5,6 +5,7 @@ public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.HasSumLo
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsVariableChangeEqLatticeCurve
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.WeierstrassPAddOfNeOfDerivNeZero
 import Std.Tactic.BVDecide.Normalize.Prop
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 @[expose] public section
 
