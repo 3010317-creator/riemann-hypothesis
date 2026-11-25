@@ -130,11 +130,8 @@ theorem pull_left (μ : Measure (MtM m)) (h : ∀ a ∈ G, μ.map (lmulQ a) = μ
       exact Matrix.nonsing_inv_mul_cancel_left (Matrix.of (inc g) : Mx m) (Matrix.of x : Mx m)
         (isUnit_det hG (inc_mem g))
 
-theorem pull_sigmaFinite (μ : Measure (MtM m)) [SigmaFinite μ] : SigmaFinite (pull hG μ) := by
-  refine ⟨⟨⟨fun n => inc ⁻¹' spanningSets μ n, fun _ => trivial, fun n => ?_, ?_⟩⟩⟩
-  · rw [pull, inc_memb.comap_apply]
-    exact lt_of_le_of_lt (measure_mono (Set.image_preimage_subset _ _)) (measure_spanningSets_lt_top μ n)
-  · rw [← Set.preimage_iUnion, iUnion_spanningSets, Set.preimage_univ]
+theorem pull_sigmaFinite (μ : Measure (MtM m)) [SigmaFinite μ] : SigmaFinite (pull hG μ) :=
+  .of_map _ inc_memb.measurable.aemeasurable (by rw [pull, inc_memb.map_comap]; infer_instance)
 
 theorem factor_pos_lt_top {X : Type*} [MeasurableSpace X] (μ ν : Measure X) [SigmaFinite μ] (h0 : μ ≠ 0)
     (c : ℝ≥0∞) (h : μ = c • ν) : 0 < c ∧ c < ⊤ := by
