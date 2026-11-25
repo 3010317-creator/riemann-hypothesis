@@ -98,13 +98,8 @@ theorem mem_AA_of_trace (D : D7) (z : D.host.E)
     have hs : star (D.host.conj ((c : D.host.E) * b)) = (c : D.host.E) * b :=
       (bridge_star_holds D.R D.host _).trans (conj_conj D _)
     rwa [hs, mul_assoc, mul_comm b] at this
-  have hle2 : FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E)) z ≤ D.host.AA := by
-    calc FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E)) z
-        = D.host.AAbar⁻¹ * (FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E))
-            z * D.host.AAbar) := by
-          rw [mul_comm _ D.host.AAbar, ← mul_assoc, inv_mul_cancel₀ hAb, one_mul]
-      _ ≤ D.host.AAbar⁻¹ * (D.host.AA * D.host.AAbar) := CovariantClass.elim D.host.AAbar⁻¹ hle
-      _ = D.host.AA := by rw [mul_comm D.host.AA, ← mul_assoc, inv_mul_cancel₀ hAb, one_mul]
+  have hle2 : FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E)) z ≤ D.host.AA :=
+    le_of_mul_le_mul_right hle (pos_iff_ne_zero.2 hAb)
   exact hle2 (FractionalIdeal.mem_spanSingleton_self _ _)
 
 theorem form_smul (T : HSp D) (e : D.host.E) (t y : Fin T.rank → D.host.E) :
