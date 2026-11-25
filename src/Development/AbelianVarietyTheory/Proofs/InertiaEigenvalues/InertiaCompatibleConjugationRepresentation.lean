@@ -27,11 +27,7 @@ theorem charpoly_smul_inv {n : ℕ} (M N : Matrix (Fin n) (Fin n) ℂ) (h : M * 
     rw [← Matrix.eval_charpoly, hM, eval_multiset_prod, Multiset.map_map]
     simp
   have h0 : (-M).det = (m.map fun β => -β).prod := by simpa using ev 0
-  have hne : (-M).det ≠ 0 := by
-    intro e
-    have : (-M * -N).det = 1 := by rw [neg_mul_neg, h, Matrix.det_one]
-    rw [Matrix.det_mul, e, zero_mul] at this
-    exact zero_ne_one this
+  have hne : (-M).det ≠ 0 := Matrix.det_ne_zero_of_right_inverse (B := -N) (by rw [neg_mul_neg, h])
   have hβ : ∀ β ∈ m, β ≠ 0 := by
     rintro β hβ rfl
     apply hne
