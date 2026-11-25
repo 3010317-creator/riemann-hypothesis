@@ -32,15 +32,11 @@ theorem coeff_le_gaussR (ρ : NNReal) (P : K[X]) (k : ℕ) : ‖P.coeff k‖₊ 
 
 theorem nnnorm_sum_mul_le {ι : Type*} (s : Finset ι) (f : ι → K) (r b : NNReal)
     (h : ∀ i ∈ s, ‖f i‖₊ * r ≤ b) : ‖∑ i ∈ s, f i‖₊ * r ≤ b := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp
-  | insert a s ha ih =>
-    rw [Finset.sum_insert ha]
-    calc ‖f a + ∑ i ∈ s, f i‖₊ * r ≤ max ‖f a‖₊ ‖∑ i ∈ s, f i‖₊ * r := by
-          gcongr; exact IsUltrametricDist.nnnorm_add_le_max _ _
-      _ = max (‖f a‖₊ * r) (‖∑ i ∈ s, f i‖₊ * r) := max_mul_of_nonneg _ _ r.2
-      _ ≤ b := max_le (h a (mem_insert_self a s)) (ih fun i hi => h i (mem_insert_of_mem hi))
+  rcases s.eq_empty_or_nonempty with rfl | hs
+  · simp
+  obtain ⟨i, hi, he⟩ := s.exists_mem_eq_sup hs (‖f ·‖₊)
+  exact (mul_le_mul_of_nonneg_right ((s.nnNorm_sum_le_sup_nnNorm f).trans he.le)
+    zero_le).trans (h i hi)
 
 theorem gaussR_sum_le {ι : Type*} (ρ : NNReal) (s : Finset ι) (f : ι → K[X]) (b : NNReal)
     (h : ∀ i ∈ s, gaussR ρ (f i) ≤ b) : gaussR ρ (∑ i ∈ s, f i) ≤ b := by
