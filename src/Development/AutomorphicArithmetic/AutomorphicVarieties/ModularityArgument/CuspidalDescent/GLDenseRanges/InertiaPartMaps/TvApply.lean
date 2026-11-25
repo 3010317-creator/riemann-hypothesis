@@ -60,10 +60,7 @@ section Rank
 variable {R : Type} [CommRing R] {n : ℕ}
 
 private theorem vv_sq (y w : Fin n → R) : vecMulVec y w * vecMulVec y w = (w ⬝ᵥ y) • vecMulVec y w := by
-  ext a b
-  simp only [Matrix.mul_apply, Matrix.vecMulVec_apply, Matrix.smul_apply, smul_eq_mul, dotProduct]
-  rw [Finset.sum_mul]
-  refine Finset.sum_congr rfl (fun x _ => by ring)
+  rw [Matrix.vecMulVec_mul_vecMulVec, Matrix.vecMulVec_smul]
 
 private theorem tv_mul (y w : Fin n → R) (c : R) (h : c * (1 + w ⬝ᵥ y) = 1) :
     (1 + vecMulVec y w) * (1 - c • vecMulVec y w) = 1 := by
