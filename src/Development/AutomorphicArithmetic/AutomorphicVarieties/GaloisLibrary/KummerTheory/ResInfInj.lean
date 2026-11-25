@@ -82,14 +82,7 @@ theorem UpperTheory.V.Kum.resInfInj :
     by_contra! hcon
     haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
     have hk : 0 < e.natAbs := Int.natAbs_pos.mpr he
-    have hall : ∀ g : G F Ω, cycZ F Ω l g ^ e.natAbs = 1 := by
-      intro g
-      have h0 := hcon g
-      rcases Int.natAbs_eq e with h' | h'
-      · rw [h', zpow_natCast] at h0
-        exact h0
-      · rw [h', zpow_neg, inv_eq_one, zpow_natCast] at h0
-        exact h0
+    have hall : ∀ g : G F Ω, cycZ F Ω l g ^ e.natAbs = 1 := fun g => pow_natAbs_eq_one.2 (hcon g)
     haveI : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : l.Prime).ne_zero⟩
     haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
     obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ (e.natAbs * Module.finrank ℚ F + 1))
@@ -112,10 +105,8 @@ theorem UpperTheory.V.Kum.resInfInj :
   have hDIV : ∀ a : ℤ_[l], a ≠ 0 → Function.Surjective (fun m : QZ l => a • m) := by
     intro a ha m
     obtain ⟨q, rfl⟩ := Submodule.Quotient.mk_surjective (ZlSub l) m
-    have ha' : algebraMap ℤ_[l] ℚ_[l] a ≠ 0 := by
-      intro h0
-      apply ha
-      exact (FaithfulSMul.algebraMap_injective ℤ_[l] ℚ_[l]) (by rw [h0, map_zero])
+    have ha' : algebraMap ℤ_[l] ℚ_[l] a ≠ 0 :=
+      (map_ne_zero_iff _ (FaithfulSMul.algebraMap_injective ℤ_[l] ℚ_[l])).2 ha
     refine ⟨Submodule.Quotient.mk ((algebraMap ℤ_[l] ℚ_[l] a)⁻¹ * q), ?_⟩
     show a • (Submodule.Quotient.mk _ : ℚ_[l] ⧸ ZlSub l) = _
     rw [← Submodule.Quotient.mk_smul, ← algebraMap_smul ℚ_[l] a, smul_eq_mul, ← mul_assoc, mul_inv_cancel₀ ha', one_mul]
