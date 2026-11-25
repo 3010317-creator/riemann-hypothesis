@@ -59,7 +59,7 @@ theorem leviChart_leftModulus_diag (μ : Fin n → ℤ) :
       (((leviCoord F n β).symm x : lieLevi F n β) : Matrix (Fin n) (Fin n) F)) s.1.1 s.1.2 = _
   rw [Cartan.coe_diagPow, Matrix.diagonal_mul]
   congr 1
-  simp [leviCoord, s.2]
+  exact congrFun ((leviCoord F n β).apply_symm_apply x) s
 
 theorem parabolicChart_leftModulus_diag (μ : Fin n → ℤ) :
     (parabolicChart F n β).leftModulus (leviIncl (leviDiag (F := F) β μ)) =
@@ -72,7 +72,7 @@ theorem parabolicChart_leftModulus_diag (μ : Fin n → ℤ) :
       (((parabolicCoord F n β).symm x : lieParabolic F n β) : Matrix (Fin n) (Fin n) F)) s.1.1 s.1.2 = _
   rw [Cartan.coe_diagPow, Matrix.diagonal_mul]
   congr 1
-  simp [parabolicCoord, s.2]
+  exact congrFun ((parabolicCoord F n β).apply_symm_apply x) s
 
 theorem localField_modulus_eq_modulus {x : F} (hx : x ≠ 0) :
     LocalField.modulus x = Measures.modulus x := by

@@ -17,6 +17,162 @@ set_option linter.unusedSectionVars false
 
 namespace Measures
 
+/-- A subgroup of the general linear group cut out by a transitive pattern of allowed entries. -/
+structure MatrixSupportChart {F : Type*} [Field F] {n : ℕ} (P : Fin n → Fin n → Prop)
+    (G : Subgroup (GL (Fin n) F)) where
+  /-- The matrices supported on the allowed positions. -/
+  space : Submodule F (Matrix (Fin n) (Fin n) F)
+  mem_space : ∀ A, A ∈ space ↔ ∀ i j, ¬ P i j → A i j = 0
+  mem_group : ∀ g : GL (Fin n) F, g ∈ G ↔ (g : Matrix (Fin n) (Fin n) F) ∈ space
+  trans : ∀ {i j k}, P i j → P j k → P i k
+
+namespace MatrixSupportChart
+
+variable {F : Type*} [Field F] {n : ℕ} {P : Fin n → Fin n → Prop}
+  {G : Subgroup (GL (Fin n) F)} (D : MatrixSupportChart P G)
+
+abbrev Index (P : Fin n → Fin n → Prop) := {ij : Fin n × Fin n // P ij.1 ij.2}
+
+theorem mul_mem {A B : Matrix (Fin n) (Fin n) F} (hA : A ∈ D.space)
+    (hB : B ∈ D.space) : A * B ∈ D.space := by
+  refine (D.mem_space _).2 fun i j hij => ?_
+  rw [Matrix.mul_apply]
+  refine Finset.sum_eq_zero fun k _ => ?_
+  by_cases hik : P i k
+  · rw [(D.mem_space _).1 hB k j (fun hkj => hij (D.trans hik hkj)), mul_zero]
+  · rw [(D.mem_space _).1 hA i k hik, zero_mul]
+
+variable [DecidableRel P]
+
+/-- Read the allowed entries, extending a coordinate vector by zero in the inverse direction. -/
+def coord : D.space ≃ₗ[F] (Index P → F) where
+  toFun A s := (A : Matrix (Fin n) (Fin n) F) s.1.1 s.1.2
+  invFun x := ⟨Matrix.of fun i j => if h : P i j then x ⟨(i, j), h⟩ else 0,
+    (D.mem_space _).2 fun i j h => by simp [h]⟩
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
+  left_inv A := by
+    ext i j
+    by_cases h : P i j
+    · simp [h]
+    · simp [h, (D.mem_space _).1 A.2 i j h]
+  right_inv x := by
+    funext s
+    simp [s.2]
+
+theorem coord_symm_single (t : Index P) :
+    ((D.coord.symm (Pi.single t 1) : D.space) : Matrix (Fin n) (Fin n) F) =
+      Matrix.single t.1.1 t.1.2 1 := by
+  obtain ⟨⟨a, b⟩, hab⟩ := t
+  change P a b at hab
+  ext i j
+  by_cases hi : a = i <;> by_cases hj : b = j <;>
+    simp [coord, Pi.single_apply, Subtype.ext_iff, Prod.ext_iff] <;> grind
+
+noncomputable def mulLeft (g : G) : D.space ≃ₗ[F] D.space :=
+  (Units.mulLeftLinearEquiv F _ (g : GL (Fin n) F)).ofSubmodules _ _ (by
+    refine le_antisymm ?_ fun A hA => ?_
+    · rintro _ ⟨A, hA, rfl⟩
+      exact D.mul_mem ((D.mem_group _).1 g.2) hA
+    · exact ⟨((g⁻¹ : G) : GL (Fin n) F) * A, D.mul_mem ((D.mem_group _).1 (g⁻¹).2) hA,
+        by simp [← mul_assoc]⟩)
+
+noncomputable def mulRight (g : G) : D.space ≃ₗ[F] D.space :=
+  (Units.mulRightLinearEquiv F (g : GL (Fin n) F)).ofSubmodules _ _ (by
+    refine le_antisymm ?_ fun A hA => ?_
+    · rintro _ ⟨A, hA, rfl⟩
+      exact D.mul_mem hA ((D.mem_group _).1 g.2)
+    · exact ⟨A * ((g⁻¹ : G) : GL (Fin n) F), D.mul_mem hA ((D.mem_group _).1 (g⁻¹).2),
+        by simp [mul_assoc]⟩)
+
+noncomputable def adjoint (g : G) : D.space ≃ₗ[F] D.space :=
+  (D.mulLeft g).trans (D.mulRight g⁻¹)
+
+variable [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F]
+
+include D in
+theorem isClosed : IsClosed (G : Set (GL (Fin n) F)) := by
+  have eq : (G : Set (GL (Fin n) F)) =
+      ⋂ i, ⋂ j, ⋂ (_ : ¬ P i j), (fun g : GL (Fin n) F => g i j) ⁻¹' {0} := by
+    ext g
+    simp only [SetLike.mem_coe, D.mem_group, D.mem_space, Set.mem_iInter, Set.mem_preimage,
+      Set.mem_singleton_iff]
+  rw [eq]
+  exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>
+    isClosed_singleton.preimage (GLnLocal.continuous_entry F n i j)
+
+def toSpace (g : G) : D.space := ⟨(g : GL (Fin n) F), (D.mem_group _).1 g.2⟩
+
+theorem isOpenEmbedding_toSpace : IsOpenEmbedding D.toSpace := by
+  have hemb : IsEmbedding D.toSpace :=
+    ((isOpenEmbedding_val F n).isEmbedding.comp IsEmbedding.subtypeVal).codRestrict
+      (D.space : Set (Matrix (Fin n) (Fin n) F)) fun g : G => (D.mem_group _).1 g.2
+  refine ⟨hemb, ?_⟩
+  have hr : Set.range D.toSpace = Subtype.val ⁻¹' Set.range
+      (Units.val : GL (Fin n) F → Matrix (Fin n) (Fin n) F) := by
+    ext A
+    constructor
+    · rintro ⟨g, rfl⟩
+      exact ⟨g, rfl⟩
+    · rintro ⟨u, hu⟩
+      exact ⟨⟨u, (D.mem_group _).2 (hu ▸ A.2)⟩, Subtype.ext hu⟩
+  rw [hr]
+  exact (isOpenEmbedding_val F n).isOpen_range.preimage continuous_subtypeVal
+
+def coordHomeomorph : D.space ≃ₜ (Index P → F) where
+  toEquiv := D.coord.toEquiv
+  continuous_toFun := continuous_pi fun s => continuous_subtypeVal.matrix_elem s.1.1 s.1.2
+  continuous_invFun := by
+    refine Continuous.subtype_mk (continuous_matrix fun i j => ?_) _
+    by_cases h : P i j
+    · simpa only [Matrix.of_apply, h, dite_true] using
+        (continuous_apply (⟨(i, j), h⟩ : Index P) : Continuous fun x : Index P → F => x _)
+    · simpa only [Matrix.of_apply, h, dite_false] using
+        (continuous_const : Continuous fun _ : Index P → F => (0 : F))
+
+noncomputable def chart : LinearChart F (Index P) G where
+  toFun g := D.coord (D.toSpace g)
+  isOpenEmbedding := D.coordHomeomorph.isOpenEmbedding.comp D.isOpenEmbedding_toSpace
+  left g := D.coord.symm.trans ((D.mulLeft g).trans D.coord)
+  right g := D.coord.symm.trans ((D.mulRight g).trans D.coord)
+  toFun_mul_left g x := by
+    simp only [LinearEquiv.trans_apply, LinearEquiv.symm_apply_apply]
+    rfl
+  toFun_mul_right g x := by
+    simp only [LinearEquiv.trans_apply, LinearEquiv.symm_apply_apply]
+    rfl
+
+theorem modularCharacter_eq [LocallyCompactSpace G] (g : G) :
+    modularCharacter g = distribHaarChar F (LinearEquiv.det (D.adjoint g)) := by
+  borelize F ↥G
+  rw [D.chart.modularCharacter_eq, LinearChart.leftModulus, LinearChart.rightModulus,
+    distribHaarChar_pi_eq, distribHaarChar_pi_eq]
+  have hr : D.mulRight g⁻¹ = (D.mulRight g)⁻¹ := by
+    refine eq_inv_of_mul_eq_one_left ?_
+    ext A : 2
+    show (A : Matrix (Fin n) (Fin n) F) * ((g : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) *
+      (((g⁻¹ : G) : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) = A
+    simp [mul_assoc]
+  change _ = distribHaarChar F (LinearEquiv.det (D.mulRight g⁻¹ * D.mulLeft g))
+  have hl : LinearEquiv.det (D.chart.left g) = LinearEquiv.det (D.mulLeft g) :=
+    LinearEquiv.det_conj (D.mulLeft g) D.coord
+  have hr' : LinearEquiv.det (D.chart.right g) = LinearEquiv.det (D.mulRight g) :=
+    LinearEquiv.det_conj (D.mulRight g) D.coord
+  rw [hl, hr', hr, map_mul, map_inv, map_mul, map_inv, div_eq_mul_inv, mul_comm]
+
+include D in
+theorem modularCharacter_eq_one_of_mem_integralGL [LocallyCompactSpace G] (g : G)
+    (hg : (g : GL (Fin n) F) ∈ GLnLocal.integralGL F n) : modularCharacter g = 1 := by
+  borelize F ↥G
+  let V : OpenSubgroup G := ⟨(GLnLocal.integralGL F n).subgroupOf G,
+    (GLnLocal.isOpen_integralGL F n).preimage continuous_subtypeVal⟩
+  have hV : IsCompact (V : Set G) :=
+    D.isClosed.isClosedEmbedding_subtypeVal.isCompact_preimage (GLnLocal.isCompact_integralGL F n)
+  obtain ⟨hl, hr⟩ := D.chart.modulus_eq_one_of_mem hV (v := g) hg
+  rw [D.chart.modularCharacter_eq, hl, hr, div_one]
+
+end MatrixSupportChart
+
 variable (F : Type*) [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F]
   (n : ℕ) {α : Type*} [LinearOrder α] (β : Fin n → α)
 
@@ -29,89 +185,23 @@ def lieParabolic : Submodule F (Matrix (Fin n) (Fin n) F) where
 
 abbrev ParabolicIndex : Type := {ij : Fin n × Fin n // ¬ β ij.2 < β ij.1}
 
-noncomputable def parabolicCoord : lieParabolic F n β ≃ₗ[F] (ParabolicIndex n β → F) where
-  toFun A s := (A : Matrix (Fin n) (Fin n) F) s.1.1 s.1.2
-  invFun x := ⟨Matrix.of fun i j => if h : ¬ β j < β i then x ⟨(i, j), h⟩ else 0,
-    fun i j hij => by simp [hij]⟩
-  map_add' A B := rfl
-  map_smul' c A := rfl
-  left_inv A := by
-    ext i j
-    by_cases h : β j < β i
-    · simp [A.2 h]
-    · simp [h]
-  right_inv x := by
-    funext s
-    simp [s.2]
+def blockUpperSupport : MatrixSupportChart (fun i j => ¬ β j < β i) (blockUpper F n β) where
+  space := lieParabolic F n β
+  mem_space _ := ⟨fun h _ _ hij => h (not_not.mp hij), fun h _ _ hij => h _ _ (not_not.mpr hij)⟩
+  mem_group _ := Iff.rfl
+  trans h₁ h₂ := not_lt.mpr (le_trans (not_lt.mp h₁) (not_lt.mp h₂))
 
-noncomputable def parabolicCoordHomeomorph : lieParabolic F n β ≃ₜ (ParabolicIndex n β → F) where
-  toEquiv := (parabolicCoord F n β).toEquiv
-  continuous_toFun := continuous_pi fun s =>
-    (continuous_subtype_val.matrix_elem s.1.1 s.1.2 :
-      Continuous fun A : lieParabolic F n β => (A : Matrix (Fin n) (Fin n) F) s.1.1 s.1.2)
-  continuous_invFun := by
-    refine Continuous.subtype_mk (continuous_matrix fun i j => ?_) _
-    by_cases h : β j < β i
-    · simp only [Matrix.of_apply, h, not_true_eq_false, dite_false]
-      exact continuous_const
-    · simp only [Matrix.of_apply, h, not_false_eq_true, dite_true]
-      exact continuous_apply _
+noncomputable def parabolicCoord : lieParabolic F n β ≃ₗ[F] (ParabolicIndex n β → F) :=
+  (blockUpperSupport F n β).coord
 
-def toLie (p : blockUpper F n β) : lieParabolic F n β :=
-  ⟨((p : GL (Fin n) F) : Matrix (Fin n) (Fin n) F), p.2⟩
-
-theorem isClosed_blockUpper : IsClosed (blockUpper F n β : Set (GL (Fin n) F)) := by
-  have : (blockUpper F n β : Set (GL (Fin n) F)) =
-      ⋂ i, ⋂ j, ⋂ (_ : β j < β i), (fun g : GL (Fin n) F => g i j) ⁻¹' {0} := by
-    ext g
-    simp only [SetLike.mem_coe, mem_blockUpper, Set.mem_iInter, Set.mem_preimage,
-      Set.mem_singleton_iff]
-    exact ⟨fun h i j hij => h hij, fun h i j hij => h i j hij⟩
-  rw [this]
-  exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>
-    isClosed_singleton.preimage (GLnLocal.continuous_entry F n i j)
+theorem isClosed_blockUpper : IsClosed (blockUpper F n β : Set (GL (Fin n) F)) :=
+  (blockUpperSupport F n β).isClosed
 
 instance locallyCompactSpace_blockUpper : LocallyCompactSpace (blockUpper F n β) :=
   (isClosed_blockUpper F n β).locallyCompactSpace
 
-theorem isOpenEmbedding_toLie : IsOpenEmbedding (toLie F n β) := by
-  have hemb : IsEmbedding (toLie F n β) :=
-    ((isOpenEmbedding_val F n).isEmbedding.comp IsEmbedding.subtypeVal).codRestrict
-      (lieParabolic F n β : Set (Matrix (Fin n) (Fin n) F)) fun p : blockUpper F n β => p.2
-  refine ⟨hemb, ?_⟩
-  have : Set.range (toLie F n β) = Subtype.val ⁻¹' Set.range
-      (Units.val : GL (Fin n) F → Matrix (Fin n) (Fin n) F) := by
-    ext A
-    constructor
-    · rintro ⟨p, rfl⟩
-      exact ⟨p, rfl⟩
-    · rintro ⟨u, hu⟩
-      refine ⟨⟨u, ?_⟩, Subtype.ext hu⟩
-      show (u : Matrix (Fin n) (Fin n) F).BlockTriangular β
-      rw [hu]
-      exact A.2
-  rw [this]
-  exact (isOpenEmbedding_val F n).isOpen_range.preimage continuous_subtype_val
-
-noncomputable def mulLeftLie (p : blockUpper F n β) : lieParabolic F n β ≃ₗ[F] lieParabolic F n β :=
-  (Units.mulLeftLinearEquiv F _ (p : GL (Fin n) F)).ofSubmodules _ _ (by
-    refine le_antisymm ?_ fun A hA => ?_
-    · rintro _ ⟨A, hA, rfl⟩
-      exact p.2.mul hA
-    · refine ⟨((p⁻¹ : blockUpper F n β) : GL (Fin n) F) * A, (p⁻¹).2.mul hA, ?_⟩
-      simp [← mul_assoc])
-
-noncomputable def mulRightLie (p : blockUpper F n β) :
-    lieParabolic F n β ≃ₗ[F] lieParabolic F n β :=
-  (Units.mulRightLinearEquiv F (p : GL (Fin n) F)).ofSubmodules _ _ (by
-    refine le_antisymm ?_ fun A hA => ?_
-    · rintro _ ⟨A, hA, rfl⟩
-      exact hA.mul p.2
-    · refine ⟨A * ((p⁻¹ : blockUpper F n β) : GL (Fin n) F), hA.mul (p⁻¹).2, ?_⟩
-      simp [mul_assoc])
-
 noncomputable def adLie (p : blockUpper F n β) : lieParabolic F n β ≃ₗ[F] lieParabolic F n β :=
-  (mulLeftLie F n β p).trans (mulRightLie F n β p⁻¹)
+  (blockUpperSupport F n β).adjoint p
 
 @[simp] theorem coe_adLie (p : blockUpper F n β) (A : lieParabolic F n β) :
     ((adLie F n β p A : lieParabolic F n β) : Matrix (Fin n) (Fin n) F) =
@@ -119,72 +209,21 @@ noncomputable def adLie (p : blockUpper F n β) : lieParabolic F n β ≃ₗ[F] 
         (((p : GL (Fin n) F)⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) :=
   rfl
 
-noncomputable def parabolicChart : LinearChart F (ParabolicIndex n β) (blockUpper F n β) where
-  toFun p := parabolicCoord F n β (toLie F n β p)
-  isOpenEmbedding := by
-    exact (parabolicCoordHomeomorph F n β).isOpenEmbedding.comp (isOpenEmbedding_toLie F n β)
-  left p := (parabolicCoord F n β).symm.trans ((mulLeftLie F n β p).trans (parabolicCoord F n β))
-  right p := (parabolicCoord F n β).symm.trans
-    ((mulRightLie F n β p).trans (parabolicCoord F n β))
-  toFun_mul_left g x := by
-    simp only [LinearEquiv.trans_apply, LinearEquiv.symm_apply_apply]
-    rfl
-  toFun_mul_right h x := by
-    simp only [LinearEquiv.trans_apply, LinearEquiv.symm_apply_apply]
-    rfl
+noncomputable def parabolicChart : LinearChart F (ParabolicIndex n β) (blockUpper F n β) :=
+  (blockUpperSupport F n β).chart
 
 variable {F n β}
 
-theorem parabolicChart_leftModulus (p : blockUpper F n β) :
-    (parabolicChart F n β).leftModulus p =
-      distribHaarChar F (LinearEquiv.det (mulLeftLie F n β p)) := by
-  rw [LinearChart.leftModulus, distribHaarChar_pi_eq]
-  congr 1
-  exact LinearEquiv.det_conj (mulLeftLie F n β p) (parabolicCoord F n β)
-
-theorem parabolicChart_rightModulus (p : blockUpper F n β) :
-    (parabolicChart F n β).rightModulus p =
-      distribHaarChar F (LinearEquiv.det (mulRightLie F n β p)) := by
-  rw [LinearChart.rightModulus, distribHaarChar_pi_eq]
-  congr 1
-  exact LinearEquiv.det_conj (mulRightLie F n β p) (parabolicCoord F n β)
-
-theorem mulRightLie_inv (p : blockUpper F n β) :
-    mulRightLie F n β p⁻¹ = (mulRightLie F n β p)⁻¹ := by
-  refine eq_inv_of_mul_eq_one_left ?_
-  ext A : 2
-  show (A : Matrix (Fin n) (Fin n) F) * ((p : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) *
-      (((p⁻¹ : blockUpper F n β) : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) = A
-  simp [mul_assoc]
-
 theorem modularCharacter_blockUpper (p : blockUpper F n β) :
-    modularCharacter p = distribHaarChar F (LinearEquiv.det (adLie F n β p)) := by
-  borelize F ↥(blockUpper F n β)
-  rw [(parabolicChart F n β).modularCharacter_eq p, parabolicChart_leftModulus,
-    parabolicChart_rightModulus]
-  have : adLie F n β p = mulRightLie F n β p⁻¹ * mulLeftLie F n β p := rfl
-  rw [this, mulRightLie_inv, map_mul, map_inv, map_mul, map_inv, div_eq_mul_inv, mul_comm]
+    modularCharacter p = distribHaarChar F (LinearEquiv.det (adLie F n β p)) :=
+  (blockUpperSupport F n β).modularCharacter_eq p
 
 section Triangular
 
 theorem coe_parabolicCoord_symm_single (t : ParabolicIndex n β) :
     (((parabolicCoord F n β).symm (Pi.single t 1) : lieParabolic F n β) :
-      Matrix (Fin n) (Fin n) F) = Matrix.single t.1.1 t.1.2 1 := by
-  ext i j
-  show (if h : ¬ β j < β i then (Pi.single t (1 : F) : ParabolicIndex n β → F) ⟨(i, j), h⟩
-    else 0) = _
-  rw [Matrix.single_apply]
-  by_cases hij : t.1.1 = i ∧ t.1.2 = j
-  · obtain ⟨h1, h2⟩ := hij
-    have ht : (⟨(i, j), h1 ▸ h2 ▸ t.2⟩ : ParabolicIndex n β) = t := by
-      ext <;> simp [← h1, ← h2]
-    rw [dite_eq_left (h1 ▸ h2 ▸ t.2), ite_eq_left ⟨h1, h2⟩, ht, Pi.single_eq_same]
-  · rw [ite_eq_right hij]
-    split_ifs with h
-    · rfl
-    · rw [Pi.single_apply, ite_eq_right]
-      rintro rfl
-      exact hij ⟨rfl, rfl⟩
+      Matrix (Fin n) (Fin n) F) = Matrix.single t.1.1 t.1.2 1 :=
+  (blockUpperSupport F n β).coord_symm_single t
 
 theorem mul_single_mul_apply (A B : Matrix (Fin n) (Fin n) F) (a b i j : Fin n) :
     (A * Matrix.single a b (1 : F) * B) i j = A i a * B b j := by
@@ -338,16 +377,8 @@ theorem mul_mul_apply_mem_integer {A M B : Matrix (Fin n) (Fin n) F} (hA : ∀ i
   exact Subring.sum_mem _ fun a _ => Subring.mul_mem _ (hA i a) (hM a b)
 
 theorem modularCharacter_eq_one_of_mem_integralGL (p : blockUpper F n β)
-    (hp : (p : GL (Fin n) F) ∈ GLnLocal.integralGL F n) : modularCharacter p = 1 := by
-  borelize F ↥(blockUpper F n β)
-  let V : OpenSubgroup (blockUpper F n β) :=
-    ⟨(GLnLocal.integralGL F n).subgroupOf (blockUpper F n β),
-      (GLnLocal.isOpen_integralGL F n).preimage continuous_subtype_val⟩
-  have hV : IsCompact (V : Set (blockUpper F n β)) :=
-    (isClosed_blockUpper F n β).isClosedEmbedding_subtypeVal.isCompact_preimage
-      (GLnLocal.isCompact_integralGL F n)
-  obtain ⟨h1, h2⟩ := (parabolicChart F n β).modulus_eq_one_of_mem hV (v := p) hp
-  rw [(parabolicChart F n β).modularCharacter_eq, h1, h2, div_one]
+    (hp : (p : GL (Fin n) F) ∈ GLnLocal.integralGL F n) : modularCharacter p = 1 :=
+  (blockUpperSupport F n β).modularCharacter_eq_one_of_mem_integralGL p hp
 
 end Unipotent
 
