@@ -382,9 +382,7 @@ abbrev tup_mu_on : Prop :=
     Formalism.L2.Host.IsPsi (H := D.host) (Formalism.EigenvalueLevelCeiling.plc w) Qw ψw ∧ R.xiH (R.mu w) = R.C.delAt (Formalism.EigenvalueLevelCeiling.plc w) * ψw
 
 structure IsTup : Prop where
-  tw : R.tup_tw F
   mu_off : R.tup_mu_off
-  mu_used : R.tup_mu_used
   mu_ne : R.tup_mu_ne
   mu_conj : R.tup_mu_conj
   mu_on : R.tup_mu_on
@@ -396,7 +394,7 @@ structure Char : Prop where
   models : R.IsModels
   chain : R.IsChain
   thP : R.IsThP
-  tup : R.IsTup F
+  tup : R.IsTup
 
 variable {R F}
 

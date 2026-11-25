@@ -57,7 +57,7 @@ theorem nP_pos (b : Bool) : 0 < nP F b := by
   unfold nP
   exact_mod_cast Nat.card_pos
 
-theorem h0 (h : R.IsTup F) : (R.toCx F).H0 := by
+theorem h0 (h : R.IsTup) : (R.toCx F).H0 := by
   refine ⟨h.mu_conj, fun w => ⟨fun hw => h.mu_ne w hw, fun hne => ?_⟩⟩
   by_contra hw
   exact hne (h.mu_off w hw)
