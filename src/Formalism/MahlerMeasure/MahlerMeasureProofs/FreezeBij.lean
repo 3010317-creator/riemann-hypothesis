@@ -88,6 +88,21 @@ lemma ev_monomial (ρ : Fin r) (m : Fin (N + 1) × Fin r →₀ ℕ) (a : ℚ_[p
     obtain ⟨c, hc, hc0⟩ := h
     rw [Finset.prod_eq_zero (Finset.mem_univ c) (by simp [hc, hc0]), mul_zero, mul_zero]
 
+lemma eq_ext_res (n : ℕ) (ρ : Fin r) (m : Fin (N + 1) × Fin r →₀ ℕ)
+    (hZ : ∀ c, c ≠ ρ → m (Fin.last N, c) = 0) (hrow : ∑ c, m (Fin.last N, c) = n) :
+    m = ext n ρ (res m) := by
+  ext ⟨i, c⟩
+  refine Fin.lastCases ?_ (fun j => ?_) i
+  · by_cases hc : c = ρ
+    · subst hc
+      rw [ext_last, ite_eq_left rfl, ← hrow, Finset.sum_eq_single c]
+      · intro b _ hb
+        exact hZ b hb
+      · intro h
+        exact absurd (Finset.mem_univ c) h
+    · rw [ext_last, ite_eq_right hc, hZ c hc]
+  · rw [ext_castSucc, res_apply]
+
 lemma coeff_ev (ρ : Fin r) (n : ℕ) (F : MvPolynomial (Fin (N + 1) × Fin r) ℚ_[p])
     (hF : ∀ m ∈ F.support, ∑ c, m (Fin.last N, c) = n) (m' : Fin N × Fin r →₀ ℕ) :
     AddMonoidAlgebra.coeff (ev p ρ F) m' = AddMonoidAlgebra.coeff F (ext n ρ m') := by
@@ -103,19 +118,7 @@ lemma coeff_ev (ρ : Fin r) (n : ℕ) (F : MvPolynomial (Fin (N + 1) × Fin r) �
     · rw [MvPolynomial.coeff_monomial, ite_eq_right]
       intro hres
       apply hne
-      have heq : m = ext n ρ (res m) := by
-        ext ⟨i, c⟩
-        refine Fin.lastCases ?_ (fun j => ?_) i
-        · by_cases hc : c = ρ
-          · subst hc
-            rw [ext_last, ite_eq_left rfl, ← hF m hm, Finset.sum_eq_single c]
-            · intro b _ hb
-              exact hcond b hb
-            · intro h
-              exact absurd (Finset.mem_univ c) h
-          · rw [ext_last, ite_eq_right hc, hcond c hc]
-        · rw [ext_castSucc, res_apply]
-      rw [heq, hres]
+      rw [eq_ext_res n ρ m hcond (hF m hm), hres]
     · simp only [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
   · intro hnot
     have h0 : AddMonoidAlgebra.coeff F (ext n ρ m') = 0 := by simpa using hnot
@@ -381,21 +384,6 @@ namespace Formalism.GM.M.FB
 open MvPolynomial Finset
 
 variable {p : ℕ} [Fact p.Prime] {N r : ℕ}
-
-lemma eq_ext_res (n : ℕ) (ρ : Fin r) (m : Fin (N + 1) × Fin r →₀ ℕ)
-    (hZ : ∀ c, c ≠ ρ → m (Fin.last N, c) = 0) (hrow : ∑ c, m (Fin.last N, c) = n) :
-    m = ext n ρ (res m) := by
-  ext ⟨i, c⟩
-  refine Fin.lastCases ?_ (fun j => ?_) i
-  · by_cases hc : c = ρ
-    · subst hc
-      rw [ext_last, ite_eq_left rfl, ← hrow, Finset.sum_eq_single c]
-      · intro b _ hb
-        exact hZ b hb
-      · intro h
-        exact absurd (Finset.mem_univ c) h
-    · rw [ext_last, ite_eq_right hc, hZ c hc]
-  · rw [ext_castSucc, res_apply]
 
 lemma mem_IntPol_iff {σ : Type} (x : MvPolynomial σ ℚ_[p]) :
     x ∈ IntPol p σ ↔ (x.coeffs : Set ℚ_[p]) ⊆ Set.range (algebraMap ℤ_[p] ℚ_[p]) := by
