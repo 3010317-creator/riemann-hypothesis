@@ -249,10 +249,7 @@ theorem relIndex_matrix_lattice : ∀ (F : Type) [Field F] [NumberField F] (v : 
     exact le_of_lt (by decide)
   set p : v.adicCompletionIntegers F := ⟨pK, hpmem⟩ with hp_def
   have hirr : Irreducible p := GlobalTheory.SplitUnif.irreducible_of_valued v p hpv
-  have hpK0 : pK ≠ 0 := by
-    intro h0
-    rw [h0, map_zero] at hpv
-    exact WithZero.zero_ne_coe hpv
+  have hpK0 : pK ≠ 0 := Valued.v.ne_zero_iff.1 (by rw [hpv]; exact WithZero.exp_ne_zero)
 
   have hP : ∀ z : 𝓞 F, z ∈ v.asIdeal ↔ Valued.v (algebraMap F (Fv F v) (z : F)) < 1 := by
     intro z
