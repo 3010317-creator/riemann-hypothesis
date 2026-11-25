@@ -52,8 +52,6 @@ open GlobalTheory.Twist (resM resM_resM resM_self app_resM)
 open GlobalTheory.QCoh (pullbackSections)
 open ReciprocityTheory.ChartRestriction.G.Pdiv (specO)
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.LocM
 
 section Free

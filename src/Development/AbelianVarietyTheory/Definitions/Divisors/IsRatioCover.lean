@@ -48,8 +48,6 @@ noncomputable section
 open CategoryTheory AlgebraicGeometry MonoidalCategory KaehlerDifferential Opposite
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Semi GlobalTheory.Cris GlobalTheory.CechDR
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.CechPer
 
 abbrev str (A : Over (Sp ℂ)) : A.left ⟶ Sp ℂ := A.hom ≫ 𝟙 _

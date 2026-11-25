@@ -73,8 +73,6 @@ open scoped ComplexOrder
 
 namespace GlobalTheory.ShFam
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 open ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.G.AR.Up GlobalTheory.ArcQ GlobalTheory.FrameNormLie
 
 section Free
