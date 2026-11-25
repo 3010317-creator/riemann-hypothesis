@@ -283,7 +283,7 @@ jobs:
           # The record first and the label second, so that a run which sees the label also sees
           # the record. The sync job trusts the record only at the start of a comment written by
           # this workflow.
-          say "$(printf '<!-- batch-queue-approved %s -->\nQueued at `%s`, %s.' "$commit" "$commit" "$why")"
+          say "$(printf '<!-- batch-queue-approved %s -->\nApproved for batching at `%s`, %s.' "$commit" "$commit" "$why")"
           echo "Recorded $commit as the queued commit."
           # Both labels in one request, so the sync job never sees the pull request queued
           # without its `priority`.
