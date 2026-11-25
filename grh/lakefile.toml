@@ -1,3 +1,7 @@
+# Added for the shared build cache (see ../CACHE.md). The rest of this file, up to the
+# next such comment, is unchanged from grh-lean commit 72fead1.
+platformIndependent = true
+
 name = "GRH"
 srcDir = "src"
 defaultTargets = ["Lib", "New", "Main"]
@@ -30,3 +34,19 @@ roots = ["Statements", "Main"]
 [[lean_lib]]
 name = "Challenge"
 srcDir = ".."
+
+# Added for the shared build cache. It is not part of the original project.
+[[lean_exe]]
+name = "cache"
+root = "scripts.Cache"
+srcDir = ".."
+
+# Stock Lake also reads this file as its cache-service configuration (LAKE_CONFIG).
+[cache]
+defaultService = "grh-lean"
+
+[[cache.service]]
+name = "grh-lean"
+kind = "s3"
+artifactEndpoint = "https://rh-cache.taucetiproject.org/artifacts"
+revisionEndpoint = "https://rh-cache.taucetiproject.org/grh-lean/revisions"
