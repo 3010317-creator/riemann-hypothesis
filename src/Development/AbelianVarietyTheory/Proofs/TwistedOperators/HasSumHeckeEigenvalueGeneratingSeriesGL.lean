@@ -315,7 +315,6 @@ open Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR.Links Formalism.IndefR
 open Formalism.IndefR.Lev (levG levChi IsBaseFrame)
 open Formalism.MainNotions.SchurIrreducible (IsSplit)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 open GlobalTheory.GLDoubling GlobalTheory.SplitWeil ValuativeRel MeasureTheory
 
