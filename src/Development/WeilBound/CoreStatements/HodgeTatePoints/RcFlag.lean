@@ -106,19 +106,9 @@ lemma flag_ind [IsAlgClosed C] [CharZero C] (hv : v.Integers R) [Fintype F] [Dec
         ext j
         simp
       rw [hu, Set.image_univ, b.span_eq]
-    haveI : Subsingleton Q := by
-      constructor
-      intro x y
+    haveI : Subsingleton Q := subsingleton_of_forall_eq 0 fun x => by
       obtain ⟨x', rfl⟩ := hψ x
-      obtain ⟨y', rfl⟩ := hψ y
-      have hx : x' ∈ LinearMap.ker ψ := by
-        rw [htop]
-        trivial
-      have hy : y' ∈ LinearMap.ker ψ := by
-        rw [htop]
-        trivial
-      rw [LinearMap.mem_ker] at hx hy
-      rw [hx, hy]
+      rw [LinearMap.ker_eq_top.1 htop, LinearMap.zero_apply]
     obtain ⟨AQ, hAQ⟩ := exists_quo hv AA ψ.toAddMonoidHom hψ
     have hc1 : c = 1 := colen_trivial hv AQ c (by rw [hAQ]; exact hc)
     have he : Finset.univ.filter (fun j : Fin n => i ≤ (j : ℕ)) = ∅ := by
