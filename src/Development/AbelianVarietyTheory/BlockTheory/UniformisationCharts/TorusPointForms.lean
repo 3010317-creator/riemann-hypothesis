@@ -124,13 +124,6 @@ variable {D F} {k : ℕ}
 
 def mk (p : QPair D F k) : Qk D F k := Quot.mk _ p
 
-def IsAdd (a b c : Qk D F k) : Prop :=
-  ∃ p p' p'' : QPair D F k, mk p = a ∧ mk p' = b ∧ mk p'' = c ∧
-    p''.1.1 = p.1.1 + p'.1.1 ∧ GtPt.IsAdd p.1.2 p'.1.2 p''.1.2
-
-def IsZero (a : Qk D F k) : Prop :=
-  ∃ p : QPair D F k, mk p = a ∧ p.1.1 = 0 ∧ p.1.2.IsZero
-
 end Qk
 
 end GlobalTheory.IndefiniteRowSideFullHecke.TorusPointForms
