@@ -245,13 +245,8 @@ theorem ddChar_diag (ψ : GL n R →* A) (g : GL n R)
     rw [Finset.prod_congr rfl fun k _ => ddChar_diag_single ψ k j0 (dv k)]
     rw [show (∏ k, ψ (ddCharDiag (Pi.mulSingle j0 (dv k) : n → Rˣ))) =
       φ (∏ k, (Pi.mulSingle j0 (dv k) : n → Rˣ)) from (map_prod φ _ _).symm]
-    have e2 : ∏ k, (Pi.mulSingle j0 (dv k) : n → Rˣ) = (Pi.mulSingle j0 (∏ k, dv k) : n → Rˣ) := by
-      funext i
-      rw [Finset.prod_apply]
-      by_cases hi : i = j0
-      · subst hi
-        simp
-      · simp [hi]
+    have e2 : ∏ k, (Pi.mulSingle j0 (dv k) : n → Rˣ) = (Pi.mulSingle j0 (∏ k, dv k) : n → Rˣ) :=
+      (map_prod (MonoidHom.mulSingle (fun _ : n => Rˣ) j0) dv Finset.univ).symm
     rw [e2, hprod, Pi.mulSingle_one, map_one]
 
 theorem ddChar_vecMulVec_sq {x y : n → R} (h : y ⬝ᵥ x = 0) :
