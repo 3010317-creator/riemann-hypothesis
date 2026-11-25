@@ -83,11 +83,7 @@ private theorem isDedekindDomain_valuationSubring_of_not_isUnit_natCast {K : Typ
   letI : Algebra (𝓞 K) V := f.toAlgebra
   have hcoe : ∀ x : 𝓞 K, ((algebraMap (𝓞 K) V x : V) : K) = algebraMap (𝓞 K) K x := fun _ => rfl
   let P : Ideal (𝓞 K) := (IsLocalRing.maximalIdeal V).comap (algebraMap (𝓞 K) V)
-  have hM : P.primeCompl ≤ nonZeroDivisors (𝓞 K) := by
-    intro s hs
-    refine mem_nonZeroDivisors_of_ne_zero ?_
-    rintro rfl
-    exact hs P.zero_mem
+  have hM : P.primeCompl ≤ nonZeroDivisors (𝓞 K) := P.primeCompl_le_nonZeroDivisors
   have hpP : ((p : 𝓞 K)) ∈ P := by
     show algebraMap (𝓞 K) V p ∈ IsLocalRing.maximalIdeal V
     rw [map_natCast]
