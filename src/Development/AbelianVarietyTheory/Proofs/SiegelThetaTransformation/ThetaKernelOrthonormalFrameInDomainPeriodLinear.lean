@@ -25,11 +25,7 @@ section Generic
 variable {k : ℕ} {G B s : Matrix (Fin k) (Fin k) ℂ}
 
 theorem isUnit_det (hs : s * s = 1) (h : Bᴴ * G * B = s) : IsUnit B.det := by
-  have hs0 : s.det ≠ 0 := by
-    intro h0
-    have h1 := congrArg Matrix.det hs
-    rw [Matrix.det_mul, h0, zero_mul, Matrix.det_one] at h1
-    exact zero_ne_one h1
+  have hs0 : s.det ≠ 0 := Matrix.det_ne_zero_of_left_inverse hs
   rw [← h, Matrix.det_mul, Matrix.det_mul] at hs0
   exact isUnit_iff_ne_zero.mpr (right_ne_zero_of_mul hs0)
 
