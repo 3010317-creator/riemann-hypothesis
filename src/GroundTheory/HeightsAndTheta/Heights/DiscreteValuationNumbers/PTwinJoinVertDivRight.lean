@@ -73,59 +73,23 @@ theorem weight_mapDomain_midVar [DecidableEq K] [DecidableEq K'] [DecidableEq K�
     rw [Objects.weight_blockWeight_apply]
     exact Finset.sum_congr rfl fun i _ => Finsupp.mapDomain_apply_of_injective midVar_injective d ⟨.inr k, i⟩
 
-theorem isMultiHomog_rename [DecidableEq K] [DecidableEq K'] [DecidableEq K₂] {R : Type} [CommRing R]
-    {f : MvPolynomial (Σ k : K ⊕ K', Sum.elim ι ι' k) R} {a : K ⊕ K' → ℕ} (hf : IsMultiHomog f a) :
-    IsMultiHomog (rename (midVar ι₂) f) (midNat a) := by
-  unfold IsMultiHomog at hf ⊢
-  induction hf using IsWeightedHomogeneous.induction_on with
-  | zero => simpa using isWeightedHomogeneous_zero R _ _
-  | add p q hp hq ihp ihq => simpa [map_add (f := _)] using ihp.add ihq
-  | monomial d r hr =>
-    rw [rename_monomial]
-    exact isWeightedHomogeneous_monomial _ _ _ (by rw [weight_mapDomain_midVar, hr])
-
 theorem isMultiHomog_rename' {R : Type} [CommRing R] {f : MvPolynomial (Σ k : K ⊕ K', Sum.elim ι ι' k) R}
     {a : K ⊕ K' → ℕ} (hf : ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog f a) :
     ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog (rename (midVar ι₂) f) (midNat a) := by
   classical
   rw [← Objects.isMultiHomog_iff] at hf ⊢
-  exact isMultiHomog_rename hf
-
-theorem rename_weightedHomogeneousComponent [DecidableEq K] [DecidableEq K'] [DecidableEq K₂] {R : Type}
-    [CommRing R] (b : K ⊕ K' → ℕ) (h : MvPolynomial (Σ k : K ⊕ K', Sum.elim ι ι' k) R) :
-    rename (midVar ι₂) (weightedHomogeneousComponent (blockWeight (Sum.elim ι ι')) b h) =
-      weightedHomogeneousComponent (blockWeight (Sum.elim ι (Sum.elim ι₂ ι'))) (midNat b)
-        (rename (midVar ι₂) h) := by
-  induction h using MvPolynomial.induction_on' with
-  | monomial d r =>
-    have hm : IsMultiHomog (monomial d r : MvPolynomial (Σ k : K ⊕ K', Sum.elim ι ι' k) R)
-        (Finsupp.weight (blockWeight (Sum.elim ι ι')) d) := isWeightedHomogeneous_monomial _ _ _ rfl
-    have hj := isMultiHomog_rename (ι₂ := ι₂) hm
-    by_cases hb : b = Finsupp.weight (blockWeight (Sum.elim ι ι')) d
-    · subst hb
-      rw [IsWeightedHomogeneous.weightedHomogeneousComponent_same hm,
-        IsWeightedHomogeneous.weightedHomogeneousComponent_same hj]
-    · rw [IsWeightedHomogeneous.weightedHomogeneousComponent_ne b hm hb,
-        IsWeightedHomogeneous.weightedHomogeneousComponent_ne _ hj (fun e => hb (midNat_injective e)),
-        map_zero]
-  | add p q hp hq => simp only [map_add (f := _), hp, hq]
+  exact Objects.isMultiHomog_rename_of_weight (weight_mapDomain_midVar (ι₂ := ι₂)) hf
 
 theorem comap_isMultiProjPrime {R : Type} [CommRing R]
     {Q : Ideal (MvPolynomial (Σ k : K ⊕ (K₂ ⊕ K'), Sum.elim ι (Sum.elim ι₂ ι') k) R)}
     (hQ : ReciprocityTheory.ChartRestriction.G.Geo.IsMultiProjPrime Q) :
     ReciprocityTheory.ChartRestriction.G.Geo.IsMultiProjPrime (Q.comap (rename (midVar (ι := ι) (ι' := ι') ι₂))) := by
   classical
-  rw [← Objects.isMultiProjPrime_iff] at hQ ⊢
-  have := hQ.isPrime
-  refine ⟨Ideal.comap_isPrime _ Q, fun h hh b => ?_, fun k => ?_⟩
-  · rw [Ideal.mem_comap] at hh ⊢
-    rw [rename_weightedHomogeneousComponent]
-    exact hQ.multiHomog _ hh _
-  · rcases k with k | k
-    · obtain ⟨i, hi⟩ := hQ.relevant (Sum.inl k)
-      exact ⟨i, by rw [Ideal.mem_comap, rename_X]; exact hi⟩
-    · obtain ⟨i, hi⟩ := hQ.relevant (Sum.inr (Sum.inr k))
-      exact ⟨i, by rw [Ideal.mem_comap, rename_X]; exact hi⟩
+  refine Objects.comap_isMultiProjPrime_of_rename midNat_injective
+    (fun _ _ hf => Objects.isMultiHomog_rename_of_weight (weight_mapDomain_midVar (ι₂ := ι₂)) hf) hQ ?_
+  rintro (k | k)
+  · exact hQ.2.2 (Sum.inl k)
+  · exact hQ.2.2 (Sum.inr (Sum.inr k))
 
 end JoinVerticalDivisorRight
 
