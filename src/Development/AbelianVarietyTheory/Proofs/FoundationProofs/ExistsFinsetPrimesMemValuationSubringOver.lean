@@ -1,6 +1,7 @@
 module
 
 public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Mathlib.RingTheory.Valuation.LocalSubring
 import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
 
