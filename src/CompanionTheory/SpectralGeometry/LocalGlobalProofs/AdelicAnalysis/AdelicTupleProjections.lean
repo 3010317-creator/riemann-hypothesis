@@ -1,6 +1,7 @@
 module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicTupleLocalGlobalProperties
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import GroundTheory.GlobalFields.LocalAtPlace
 
@@ -18,22 +19,13 @@ section Gen
 variable {F E : Type} [Field F] [Field E] [Algebra F E]
   {R S : Type} [CommRing R] [Algebra F R] [CommRing S] [Algebra F S]
 
-theorem repr_map {d : ℕ} (b : Module.Basis (Fin d) F E) (f : R →ₐ[F] S) (y : R ⊗[F] E) (k : Fin d) :
-    (Algebra.TensorProduct.basis S b).repr (Algebra.TensorProduct.map f (AlgHom.id F E) y) k =
-      f ((Algebra.TensorProduct.basis R b).repr y k) := by
-  induction y using TensorProduct.induction_on with
-  | zero => simp
-  | tmul r e =>
-    simp [Algebra.TensorProduct.basis_repr_tmul]
-  | add x y hx hy => simp [map_add (f := _), hx, hy]
-
 variable [TopologicalSpace R] [IsTopologicalRing R] [TopologicalSpace S] [IsTopologicalRing S]
 
 theorem continuous_mapTens {d : ℕ} (b : Module.Basis (Fin d) F E) (f : R →ₐ[F] S) (hf : Continuous f) :
     Continuous (Algebra.TensorProduct.map f (AlgHom.id F E) : R ⊗[F] E → S ⊗[F] E) := by
   rw [(TopK.isHomeomorph_coord S b).isInducing.continuous_iff]
   refine continuous_pi fun k => ?_
-  simp only [Function.comp_def, repr_map]
+  simp only [Function.comp_def, Glue.repr_map]
   exact hf.comp ((continuous_apply k).comp (TopK.isHomeomorph_coord R b).continuous)
 
 theorem continuous_mapTup {d n M : ℕ} (b : Module.Basis (Fin d) F E) (f : R →ₐ[F] S) (hf : Continuous f) :
@@ -65,19 +57,19 @@ theorem coord_projInf {d n M : ℕ} (b : Module.Basis (Fin d) F E) (X : Fin n �
     (a : Fin n) (i : Fin M) (k : Fin d) :
     (Algebra.TensorProduct.basis (Ainf F) b).repr (projInf X a i) k =
       ((Algebra.TensorProduct.basis (AF F) b).repr (X a i) k).1 :=
-  repr_map b (fstA F) _ k
+  Glue.repr_map (fstA F) b _ k
 
 theorem coord_projFin {d n M : ℕ} (b : Module.Basis (Fin d) F E) (X : Fin n → Fin M → AF F ⊗[F] E)
     (a : Fin n) (i : Fin M) (k : Fin d) :
     (Algebra.TensorProduct.basis (Af F) b).repr (projFin X a i) k =
       ((Algebra.TensorProduct.basis (AF F) b).repr (X a i) k).2 :=
-  repr_map b (sndA F) _ k
+  Glue.repr_map (sndA F) b _ k
 
 theorem coord_projV {d n M : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F))
     (X : Fin n → Fin M → Af F ⊗[F] E) (a : Fin n) (i : Fin M) (k : Fin d) :
     (Algebra.TensorProduct.basis (Fv F v) b).repr (projV v X a i) k =
       ((Algebra.TensorProduct.basis (Af F) b).repr (X a i) k) v :=
-  repr_map b (evalV F v) _ k
+  Glue.repr_map (evalV F v) b _ k
 
 theorem latV_eq {d n M : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) :
     (latV b v : Set (Fin n → Fin M → Fv F v ⊗[F] E)) =
