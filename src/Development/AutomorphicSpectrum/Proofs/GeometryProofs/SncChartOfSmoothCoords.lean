@@ -31,11 +31,8 @@ theorem exists_cover_basicOpen {Z : Scheme.{0}} {W : Z.Opens} (hW : IsAffineOpen
     obtain ⟨f, g, e, hxf⟩ := exists_basicOpen_le_affine_inter hW (V j).2 x ⟨hx, hj⟩
     exact Opens.mem_iSup.2 ⟨⟨f, j, g, e⟩, hxf⟩
   have h1 : (1 : Γ(Z, W)) ∈ Ideal.span s := hs ▸ Submodule.mem_top
-  obtain ⟨c, hc, hsum⟩ := Submodule.mem_span_set.1 h1
-  let e := c.support.equivFin.symm
-  refine ⟨c.support.card, fun l => (e l : Γ(Z, W)), fun l => c (e l), ?_, fun l => hc (e l).2⟩
-  rw [← hsum, Finsupp.sum, ← Finset.sum_coe_sort c.support]
-  exact Equiv.sum_comp e fun x : c.support => c x * (x : Γ(Z, W))
+  obtain ⟨m, c, u, hsum⟩ := Submodule.mem_span_set'.1 h1
+  exact ⟨m, fun l => u l, c, hsum, fun l => (u l).2⟩
 
 theorem smooth_secAlgebra {Z : Scheme.{0}} (g : Z ⟶ Sp ℚ) (e : ℕ)
     (hsm : SmoothOfRelativeDimension e g) {D : Z.Opens} (hD : IsAffineOpen D) :
