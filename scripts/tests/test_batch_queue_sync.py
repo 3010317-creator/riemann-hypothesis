@@ -5,6 +5,7 @@ import datetime
 import hashlib
 import importlib.util
 import io
+import json
 from pathlib import Path
 import re
 import unittest
@@ -324,6 +325,11 @@ def batch_pull(gh, ref=FIRST):
 
 def sync(gh, hours=0):
     return batch.sync(gh, NOW + datetime.timedelta(hours=hours))
+
+
+def note(record):
+    """The note in this script's record comment on a batch assembled by hand, as the script reads it."""
+    return batch.load_note(batch.BY_HAND.match(record).group(1))
 
 
 def merges(gh):
@@ -805,7 +811,7 @@ class BuiltByHand(unittest.TestCase):
         self.assertIn("#14 is in the batch #1018: now `building`", log)
         [record] = gh.said(1018)
         self.assertTrue(record.startswith("<!-- batch-queue-by-hand {"))
-        self.assertIn('"queued": ["11", "12"]', record)
+        self.assertEqual(note(record)["queued"], ["11", "12"])
         self.assertIn("In this batch: #11, #12, #14.", record)
         # Later runs change nothing.
         gh.writes = []
@@ -892,7 +898,7 @@ class BuiltByHand(unittest.TestCase):
         log = sync(gh)
         self.assertEqual(gh.pulls[14]["labels"], {BUILDING})
         self.assertIn("#14 is in the batch #1018: now `building`", log)
-        self.assertIn('"queued": ["11", "12", "14"]', gh.said(1018)[0])
+        self.assertEqual(note(gh.said(1018)[0])["queued"], ["11", "12", "14"])
         gh.close(1018)
         sync(gh)
         self.assertEqual(gh.pulls[14]["labels"], {QUEUED})
@@ -983,7 +989,8 @@ class BuiltByHand(unittest.TestCase):
         gh = self.built()
         sync(gh)
         [comment] = [item for item in gh.comments[1018] if item["body"].startswith("<!-- batch-queue-by-hand")]
-        comment["body"] = re.sub(r', "queued": \[[^]]*\]', "", comment["body"])
+        comment["body"] = re.sub(r',"unqueued":\[[^]]*\]', "", comment["body"])
+        self.assertNotIn("queued", note(comment["body"]))
         gh.close(1018)
         sync(gh)
         self.assertEqual([gh.pulls[n]["labels"] for n in (11, 12, 14)], [{QUEUED}] * 3)
@@ -1002,6 +1009,60 @@ class BuiltByHand(unittest.TestCase):
 
 def resets(gh):
     return [(path, payload["sha"]) for method, path, payload in gh.writes if method == "PATCH" and path.startswith("git/refs/")]
+
+
+class Notes(unittest.TestCase):
+    """The note of a batch assembled by hand, as it is kept in the record comment on GitHub."""
+
+    # A note as `hold` leaves it in memory, and as notes were kept on GitHub before `dump_note`.
+    OLD = {"head": sha("kim"), "members": {"11": sha("head11"), "12": sha("head12"), "14": sha("head14")},
+           "queued": ["11", "12"]}
+
+    def test_an_old_note_is_read_as_it_was_written(self):
+        self.assertEqual(batch.load_note(json.dumps(self.OLD, sort_keys=True)), self.OLD)
+
+    def test_queued_is_kept_as_the_shorter_list(self):
+        stored = json.loads(batch.dump_note(self.OLD))
+        self.assertEqual((stored.get("queued"), stored.get("unqueued")), (None, [14]))
+        self.assertEqual(batch.load_note(batch.dump_note(self.OLD)), self.OLD)
+        few = dict(self.OLD, queued=["12"])
+        stored = json.loads(batch.dump_note(few))
+        self.assertEqual((stored.get("queued"), stored.get("unqueued")), ([12], None))
+        self.assertEqual(batch.load_note(batch.dump_note(few)), few)
+        # A pull request that is not a member is not kept.
+        self.assertEqual(batch.load_note(batch.dump_note(dict(self.OLD, queued=["11", "12", "99"]))), self.OLD)
+
+    def test_a_key_the_note_lacks_stays_missing(self):
+        # A note from before `queued` was recorded holds only queued pull requests.
+        earliest = {"head": sha("kim"), "members": {"11": sha("head11")}}
+        self.assertEqual(batch.load_note(batch.dump_note(earliest)), earliest)
+        self.assertEqual(batch.load_note(json.dumps(earliest)), earliest)
+        self.assertEqual(batch.queued_before(batch.load_note(json.dumps(earliest))), {"11"})
+
+    def test_what_is_not_a_note_reads_as_an_empty_one(self):
+        for text in ("[1, 2]", "{not json", '"text"'):
+            with self.subTest(text=text):
+                self.assertEqual(batch.load_note(text), {})
+
+    def test_a_record_in_the_old_format_is_rewritten_once(self):
+        gh = Fake()
+        queue(gh, 11, 12)
+        gh.add_pull(14, "head14")
+        by_hand(gh, 11, 12, 14)
+        sync(gh)
+        record = next(item for item in gh.comments[1018] if item["body"].startswith("<!-- batch-queue-by-hand"))
+        kept = note(record["body"])
+        self.assertEqual(kept, {"head": sha("kim"), "members": {key: sha(f"head{key}") for key in ("11", "12", "14")},
+                                "queued": ["11", "12"]})
+        record["body"] = record["body"].replace(batch.dump_note(kept), json.dumps(kept, sort_keys=True))
+        self.assertIn('"queued": ["11", "12"]', record["body"])
+        gh.writes = []
+        sync(gh)
+        self.assertEqual(gh.writes, [("PATCH", f"issues/comments/{record['id']}", {"body": batch.describe_by_hand(kept)})])
+        self.assertEqual(note(record["body"]), kept)
+        gh.writes = []
+        self.assertEqual(sync(gh), ["nothing to do"])
+        self.assertEqual(gh.writes, [])
 
 
 class StackedOnABatchByHand(unittest.TestCase):

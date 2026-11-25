@@ -401,12 +401,60 @@ def read_record(gh, number):
     for comment in gh.pages(f"issues/{number}/comments"):
         match = BY_HAND.match(comment.get("body") or "") if by_workflow(comment) else None
         if match:
-            try:
-                note = json.loads(match.group(1))
-            except ValueError:
-                note = {}
-            return comment, note if isinstance(note, dict) else {}
+            return comment, load_note(match.group(1))
     return None, {}
+
+
+# The note of a batch assembled by hand: what `hold` remembers from one run to the next. `hold`
+# writes it into this script's record comment on the batch's pull request, with `dump_note`, and
+# `read_record` reads it back, with `load_note`. In memory, numbers are strings, and a key may be
+# missing from a note written before it was:
+#
+#   head      the branch's head when `members` was found.
+#   members   what the batch contains, as {number: the commit of it that is in the branch}.
+#   queued    the members that were labelled `batch queue` before the batch took them. They go
+#             back to the queue if the batch is closed without being merged. A note without it
+#             is from before it was written down, and held only queued pull requests.
+#
+# On GitHub, where a comment holds at most 65,536 characters, the note is compact JSON, and
+# `queued` is kept as a list of numbers or as the list of the members it leaves out (`unqueued`),
+# whichever is shorter. `load_note` also reads notes written before `dump_note`, which kept every
+# key as it is in memory.
+
+
+def dump_note(note):
+    """A note as it is kept on GitHub: compact JSON, with only the keys the note has."""
+    found = note.get("members") or {}
+    kept = {name: note[name] for name in ("head", "members") if name in note}
+    if "queued" in note:
+        queued = {key for key in note["queued"] if key in found}
+        rest = {key for key in found if key not in queued}
+        if len(rest) < len(queued):
+            kept["unqueued"] = sorted(int(key) for key in rest)
+        else:
+            kept["queued"] = sorted(int(key) for key in queued)
+    return json.dumps(kept, sort_keys=True, separators=(",", ":"))
+
+
+def load_note(text):
+    """A note as `dump_note` wrote it, or as notes were written before it, in memory. Anything
+    that is not a note reads as an empty one."""
+    try:
+        kept = json.loads(text)
+    except ValueError:
+        return {}
+    if not isinstance(kept, dict):
+        return {}
+    note = {"head": kept["head"]} if "head" in kept else {}
+    if isinstance(kept.get("members"), dict):
+        note["members"] = {str(key): value for key, value in kept["members"].items()}
+    found = note.get("members", {})
+    if isinstance(kept.get("unqueued"), list):
+        rest = {str(key) for key in kept["unqueued"]}
+        note["queued"] = sorted((key for key in found if key not in rest), key=int)
+    elif isinstance(kept.get("queued"), list):
+        note["queued"] = sorted({str(key) for key in kept["queued"]}, key=int)
+    return note
 
 
 def members(note):
@@ -509,7 +557,8 @@ def hold(gh, batch, pulls, held, log):
     long as the commit it was found at is still there, even after its author has pushed again.
     Whatever has left loses `building` unless another batch contains it, and goes back to
     `batch queue` if it was queued before. `held` says, for each pull request, which batches
-    contain it. Returns whether anything was queued again.
+    contain it. The note's keys are described above `dump_note`. Returns whether anything was
+    queued again.
     """
     note, number, requeued = batch["note"], batch["number"], False
     found, queued, new = members(note), queued_before(note), set()
@@ -563,7 +612,7 @@ def hold(gh, batch, pulls, held, log):
 def describe_by_hand(note):
     """The comment that records what a batch assembled by hand contains."""
     listed = ", ".join(f"#{key}" for key in sorted(note["members"], key=int)) or "nothing yet"
-    return (f"<!-- batch-queue-by-hand {json.dumps(note, sort_keys=True)} -->\n"
+    return (f"<!-- batch-queue-by-hand {dump_note(note)} -->\n"
             "While this pull request is open, the batch-queue workflow takes it to be a batch that is being built. "
             "It adds nothing to a batch assembled by hand and leaves its description alone, but it keeps the labels "
             f"in step: each open pull request whose head commit is in this branch is now `{BUILDING}`, in place of "
