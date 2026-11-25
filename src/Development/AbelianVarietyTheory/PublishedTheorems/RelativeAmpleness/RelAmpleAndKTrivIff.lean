@@ -209,13 +209,6 @@ def KernelFiniteFlatSt : Prop :=
     ∃ (Z : Over (Sp V)) (i : Z ⟶ A), IsClosedImmersion i.left ∧ IsFinite Z.hom ∧ Flat Z.hom ∧
       ∀ (T : Over (Sp V)) (x : T ⟶ A), MemKL A L x ↔ ∃ z : T ⟶ Z, z ≫ i = x
 
-/-- **Raynaud's Theorem on Polarization Extensions across Discrete Valuation Rings**.
-
-Let $V$ be a discrete valuation ring with fraction field $K$, and let $A$ be an abelian scheme over $V$.
-A polarization (ample rigidified symmetric line bundle) on the generic fiber $A_K$ extends uniquely to a
-polarization on the whole abelian scheme $A$, and the kernel of the associated polarization is finite and flat over $V$.
-
-Reference: [raynaud1970], Théorème XI 1.4. -/
 def PolExtSt : Prop := AmpleOfGenericSt ∧ KernelFiniteFlatSt
 
 theorem KernelFiniteFlatSt.kTriv_of_generic (hK : KernelFiniteFlatSt) {V K : Type} [CommRing V] [IsDomain V]

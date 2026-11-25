@@ -52,12 +52,6 @@ noncomputable section
 
 namespace GlobalTheory.Published
 
-/-- **Knapp–Zuckerman uniqueness of invariant Hermitian forms**: for any discrete series
-representation of a reductive group, the space of invariant Hermitian forms is one-dimensional
-and definite.
-
-Proposed reference:
-[A. W. Knapp and G. J. Zuckerman, *Classification of irreducible tempered representations of semisimple groups*][knappZuckerman1982]. -/
 def DiscreteSeriesHermitianUnique : Prop :=
   ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ), Formalism.QuantumDeterminants.IsHCParam lam →
     ∀ (J P P' : Matrix (Fin n) (Fin n) ℂ), IsUnit P → IsUnit P' →

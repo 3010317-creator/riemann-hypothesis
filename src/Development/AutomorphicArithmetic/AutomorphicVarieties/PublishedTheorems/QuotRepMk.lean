@@ -98,11 +98,6 @@ end Kato
 
 
 open Kato in
-/-- **Kato's Euler systems theorem**: there exists an Euler system attached to modular forms
-that bounds the Selmer group and proves the Bloch–Kato conjecture in analytic rank zero.
-
-Proposed reference:
-[K. Kato, *Euler systems, Iwasawa theory, and modular forms*][kato2004euler]. -/
 def Kato : Prop :=
   ∀ (k : ℕ), 2 ≤ k → ∀ (g : Newform k) (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω]
     (ι : Qbar l ≃+* ℂ), FiniteDimensional ℚ_[l] ↥(coefField g ι) ∧

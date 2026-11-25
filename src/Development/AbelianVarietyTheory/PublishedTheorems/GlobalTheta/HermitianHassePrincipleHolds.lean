@@ -479,11 +479,6 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.HermGlobal
 
-/-- **Shimura's Hasse principle for unitary groups**: the Galois cohomology set `H^1(F, U(V))`
-satisfies the Hasse principle (injective under localization to all places of `F`).
-
-Proposed reference:
-[G. Shimura, *Arithmetic of unitary groups*][shimura1964unitary]. -/
 def HermitianHassePrinciple : Prop :=
   ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     [Algebra.IsQuadraticExtension F E] (σ : E ≃ₐ[F] E), σ ≠ 1 →

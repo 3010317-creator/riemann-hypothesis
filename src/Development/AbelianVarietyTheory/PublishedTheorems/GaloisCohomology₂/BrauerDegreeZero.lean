@@ -54,13 +54,6 @@ open Classical in
 def indFun {G : Type} [Group G] [Fintype G] (H : Subgroup G) (f : H → ℂ) (g : G) : ℂ :=
   (Nat.card H : ℂ)⁻¹ * ∑ x : G, if hx : x⁻¹ * g * x ∈ H then f ⟨x⁻¹ * g * x, hx⟩ else 0
 
-/-- **Mackey--Brauer Induction Theorem for Finite Group Characters**.
-
-Let $G$ be a finite group and let $\rho$ be a finite-dimensional complex representation of $G$.
-The virtual character $\operatorname{Tr}(\rho) - \dim(\rho)$ can be written as an integer linear combination
-of characters induced from 1-dimensional representations of subgroups of $G$.
-
-Reference: [mackey1951]. -/
 def BrauerDegreeZero : Prop :=
   ∀ (G : Type) [Group G] [Fintype G] (V : Type) [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (ρ : Representation ℂ G V),

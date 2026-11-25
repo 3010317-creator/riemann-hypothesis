@@ -53,14 +53,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 noncomputable section
 namespace GlobalTheory.Published
 
-/-- **Grothendieck's Semistable Reduction Theorem for Abelian Varieties**.
-
-Let $K$ be a non-archimedean local field (a finite extension of $\mathbb{Q}_p$) and let $A$ be an
-abelian variety over $K$. Then there exists a finite extension $K'/K$ such that the base change
-$A_{K'}$ has semistable reduction over the ring of integers $\mathcal{O}_{K'}$, meaning its Néron model
-identity component is semi-abelian (an extension of an abelian variety by a torus).
-
-Reference: [grothendieck1972], Exposé IX. -/
 def SemistableReductionSt : Prop :=
   ∀ (p : ℕ) [Fact p.Prime] (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDimensional ℚ_[p] K]
     (P : Out.PolAV (Sp K)),

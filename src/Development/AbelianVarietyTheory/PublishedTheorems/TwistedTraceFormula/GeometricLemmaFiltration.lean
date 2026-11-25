@@ -45,12 +45,6 @@ import Mathlib.Topology.Sheaves.Init
 
 namespace GlobalTheory.Published
 
-/-- **Bernstein–Zelevinsky geometric filtration lemma**: the composition of Jacquet restriction
-and parabolic induction functors admits a canonical filtration indexed by double cosets of parabolic
-subgroups with subquotients given by twisted inductions.
-
-Proposed reference:
-[I. N. Bernstein and A. V. Zelevinsky, *Representations of the group $GL(n, F)$ where $F$ is a non-archimedean local field*][bernsteinZelevinsky1976filtration]. -/
 def GeometricLemmaFiltration : Prop :=
   ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k],
     GlobalTheory.SmGL.JacquetOfInducedFiltration k

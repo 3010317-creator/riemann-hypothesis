@@ -47,12 +47,6 @@ noncomputable section
 
 namespace GlobalTheory.Published
 
-/-- **Vogan's lowest K-type theorem for discrete series**: discrete series representations
-of real reductive groups have unique lowest $K$-types given by the Blattner parameter
-formula, appearing with multiplicity one.
-
-Proposed reference:
-[D. A. Vogan, Jr., *The algebraic structure of the representation of semisimple Lie groups. I*][vogan1979]. -/
 def DiscreteSeriesLowestKType : Prop :=
   ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ), Formalism.QuantumDeterminants.IsHCParam lam →
     (∀ (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H]

@@ -54,13 +54,6 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 namespace GlobalTheory.Published
 
-/-- **Chebotarev Density Theorem for Degree-One Places**.
-
-Let $L/F$ be a finite Galois extension of number fields and let $g \in \operatorname{Gal}(L/F)$.
-Then there exist infinitely many degree-one prime ideals $v$ of $F$ (avoiding any given finite set $S$)
-whose Frobenius substitution in $\operatorname{Gal}(L/F)$ restricts to $g$.
-
-Reference: [neukirch1999], Chapter VII, Theorem 13.4. -/
 def ChebotarevDegreeOne : Prop :=
   ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω]
     (L : IntermediateField F Ω) [FiniteDimensional F L] [IsGalois F L] (g : L ≃ₐ[F] L)

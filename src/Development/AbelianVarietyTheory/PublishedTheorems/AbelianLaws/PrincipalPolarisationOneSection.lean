@@ -49,13 +49,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.Published
 
-/-- **Mumford's Theorem on Global Sections of Principally Polarized Abelian Varieties**.
-
-Let $A$ be a principally polarized abelian variety over an algebraically closed field $K$ with
-principal polarization $\mathcal{L}$. Then the space of global sections $H^0(A, \mathcal{L})$
-is one-dimensional: $\dim_K H^0(A, \mathcal{L}) = 1$, which characterizes principal polarizations.
-
-Reference: [mumford1970], Section 23, Application 1. -/
 def principalPolarisationOneSection : Prop :=
   ∀ (K : Type) [Field K] [IsAlgClosed K] (P : PolAV (Spec (CommRingCat.of K))), Module.finrank Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤) (SecM P.A P.L 1 (baseOver (Spec (CommRingCat.of K)))) = 1
 
