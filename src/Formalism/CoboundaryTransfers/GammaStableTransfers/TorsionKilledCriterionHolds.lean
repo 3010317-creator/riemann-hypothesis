@@ -15,14 +15,9 @@ theorem gammaGradedStep_holds : GradedStep := by
   obtain ⟨t, ht⟩ := hu
   obtain ⟨n', hn', hγ⟩ := W.γ_N n hn
   have hw : ∀ k : ℕ, ∃ r : A, (algebraMap O A u + B.X * t) ^ k
-      = algebraMap O A (u ^ k) + B.X * r := by
-    intro k
-    induction k with
-    | zero => exact ⟨0, by simp⟩
-    | succ k ih =>
-      obtain ⟨r, hr⟩ := ih
-      refine ⟨r * (algebraMap O A u + B.X * t) + algebraMap O A (u ^ k) * t, ?_⟩
-      rw [pow_succ, hr, pow_succ, map_mul]; ring
+      = algebraMap O A (u ^ k) + B.X * r := fun k => by
+    obtain ⟨s, hs⟩ := sub_dvd_pow_sub_pow (algebraMap O A u + B.X * t) (algebraMap O A u) k
+    exact ⟨t * s, by rw [map_pow, ← sub_eq_iff_eq_add', hs]; ring⟩
   obtain ⟨r, hr⟩ := hw i
   have hγn : W.γ n = n + B.X • n' := by rw [← hγ]; abel
   refine ⟨r • n + (algebraMap O A u + B.X * t) ^ i • n', ?_, ?_⟩
