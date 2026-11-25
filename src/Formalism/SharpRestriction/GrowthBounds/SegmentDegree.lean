@@ -1,70 +1,24 @@
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.TauDegreeOnPathBound
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscriminantNonzeroModUniformiser
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DistAddTwoLeOfSameVec
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.FourHundredSixteenLeA
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.FrameZeroStrictMono
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.StrictMonoIntExists
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.RestLamOfRests
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.FiniteRestrictSupport
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.SelIsComplRestrictSupport
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.LamMZero
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.AllowedLettersOfLateRows
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscPowerTimesMonomial
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscPowerMonomialMemSupported
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.SegmentProductDegreeDetermined
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.CardFinRange
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DminusLeBeS
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.SumSingleApplyZero
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DivMulSubLeDivSubDiv
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.LamImgApply
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.NonemptyDvrSettingOfStandard
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.Coarse
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.RestCountOf
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.GoodPathWeight
-public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.GoodPathWeightAlt
+public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.CutColumns
+public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.Discriminant
+public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.Foundation
+public import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.RestLam
+import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Algebra.Order.Star.Real
-import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.PsiCutSupported
-import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.ReflectionMemGlevCastSucc
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.TotallySplit
-import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DplusLeBeS
-import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.SumPosOfPer
-import Mathlib.Algebra.Order.Star.Int
 
--- This file was produced by scripts/clump.py from the modules listed below.
--- Members: Formalism.ThetaLogCoordinates.ResidueClassEstimates.StatementN, Formalism.ThetaLogCoordinates.ResidueClassEstimates.VandermondeRankEstimates.AdmissibleSmallRatio, Formalism.SharpRestriction.GrowthBounds.SegmentDegree.BetaRatioBound, Formalism.SharpRestriction.GrowthBounds.SegmentDegree.LamSatRestrict, Formalism.SharpRestriction.GrowthBounds.SegmentDegree.RestLamOf, Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscPowerMonomialDegreeAtW, Formalism.SharpRestriction.GrowthBounds.SegmentDegree.M0LeBwOfIsW, Formalism.SharpRestriction.GrowthBounds.SegmentDegree.BfamAtWLetterEq, Formalism.SharpRestriction.GrowthBounds.SegmentDegree
-
--- ===== clump member: Formalism.ThetaLogCoordinates.ResidueClassEstimates.StatementN =====
--- clump-header: {"m": "Formalism.ThetaLogCoordinates.ResidueClassEstimates.StatementN", "h": "module\n\npublic import Mathlib.Analysis.SpecialFunctions.Log.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
 @[expose] public section
 
 noncomputable section
 
+section
 open scoped BigOperators
 open Finset
 
 namespace Formalism.InvariantFactorPaths.BranchingDimensions
-
-def Consequences : Prop :=
-  ∀ (r K Ns p E0 mS : ℕ) (a Y Q : ℝ), 2 ≤ r → 4 * r ≤ Ns → 13 ≤ p → 1 ≤ Y → 1 ≤ Q →
-    1088 * (Ns : ℝ) ^ 2 * Real.log a ≤ ((r + K : ℕ) : ℝ) →
-    32 * p * Y * ((r + K : ℕ) : ℝ) ^ 2 * Ns * Q ^ 2 * ((E0 : ℝ) + mS + 1) ≤ a →
-    8 ≤ Ns ∧ 416 ≤ a ∧ 1 ≤ Real.log a ∧ 1088 * Ns ^ 2 ≤ r + K ∧
-    160 * (Ns : ℝ) ≤ ((r + K : ℕ) : ℝ) ^ 2 * Y ∧ 5 * Ns ≤ r + K ∧ 32 * Y ≤ a ∧ 8 * (Ns : ℝ) ≤ a ∧
-    32 * (E0 : ℝ) ≤ a ∧ r + K ≤ 2 * (K - 2 * Ns) ∧ Ns + r ≤ K
-
-def PowMulFloorDivLe : Prop :=
-  ∀ (p k Dt Do ao : ℕ) (a Y : ℝ), 1 ≤ p → 1 ≤ k → 0 < Y → Dt ≤ Do → (ao : ℝ) ≤ 2 * a →
-    (p : ℝ) ^ Dt * (⌊((ao : ℝ) / (p : ℝ) ^ Do) / ((k : ℝ) ^ 2 * Y)⌋₊ : ℝ) ≤ 2 * a / ((k : ℝ) ^ 2 * Y)
-
-def ReducedDegree : Prop :=
-  ∀ (k Ns : ℕ) (a Y at' E' E0 Et : ℝ), 0 < Y → 1 ≤ k → 0 ≤ a → E' ≤ E0 → 32 * E0 ≤ a →
-    Et ≤ 4 * Ns * a / ((k : ℝ) ^ 2 * Y) → 160 * (Ns : ℝ) ≤ (k : ℝ) ^ 2 * Y → a ≤ at' →
-    (9 / 10 : ℝ) * at' ≤ at' - E' - Et
 
 def GeomDistinct : Prop :=
   ∀ (p m0 : ℕ) (s : Finset ℕ), 2 ≤ p → (∀ D ∈ s, m0 ≤ D) → ∑ D ∈ s, (1 / (p : ℝ) ^ D) ≤ 2 / (p : ℝ) ^ m0
@@ -77,24 +31,6 @@ def AdmissibleSmallRatio : Prop :=
     be / (Qn * (p : ℝ) ^ R' / (p : ℝ) ^ R) < 32 * Y * (k : ℝ) ^ 2 * Ns / (p : ℝ) ^ L1 ∧
     32 * Y * (k : ℝ) ^ 2 * Ns / (p : ℝ) ^ L1 ≤ 1 / (4 * p * Y) ∧
     be / (Qn * (p : ℝ) ^ R' / (p : ℝ) ^ R) ≤ 1 / (4 * Y)
-
-end Formalism.InvariantFactorPaths.BranchingDimensions
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.ThetaLogCoordinates.ResidueClassEstimates.StatementN =====
-
--- ===== clump member: Formalism.ThetaLogCoordinates.ResidueClassEstimates.VandermondeRankEstimates.AdmissibleSmallRatio =====
--- clump-header: {"m": "Formalism.ThetaLogCoordinates.ResidueClassEstimates.VandermondeRankEstimates.AdmissibleSmallRatio", "h": "module\n\npublic import Formalism.ThetaLogCoordinates.ResidueClassEstimates.StatementN\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
-open scoped BigOperators
-open Finset
-
-namespace Formalism.InvariantFactorPaths.BranchingDimensions
 
 theorem geom_range_le (p m0 n : ℕ) (hp : 2 ≤ p) :
     ∑ i ∈ Finset.range n, (1 / (p : ℝ) ^ (m0 + i)) ≤ 2 / (p : ℝ) ^ m0 - 2 / (p : ℝ) ^ (m0 + n) := by
@@ -174,17 +110,7 @@ theorem admissibleSmallRatio : AdmissibleSmallRatio := by
   exact ⟨s1, s2, by linarith⟩
 
 end Formalism.InvariantFactorPaths.BranchingDimensions
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.ThetaLogCoordinates.ResidueClassEstimates.VandermondeRankEstimates.AdmissibleSmallRatio =====
-
--- ===== clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree.BetaRatioBound =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.SegmentDegree.BetaRatioBound", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.TauDegreeOnPathBound\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscriminantNonzeroModUniformiser\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DistAddTwoLeOfSameVec\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.FourHundredSixteenLeA\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.FrameZeroStrictMono\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.PsiCutSupported\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.ReflectionMemGlevCastSucc\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.StrictMonoIntExists\npublic import Formalism.ThetaLogCoordinates.ResidueClassEstimates.VandermondeRankEstimates.AdmissibleSmallRatio\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
+end
 
 namespace Formalism.MainNotions.SelectionLemmas.Pf
 
@@ -326,22 +252,8 @@ theorem beta_ratio_bound : BetaRatioBound 1088 := by
   rw [div_le_div_iff₀ hQpos (by have := B.Y1; positivity)] at hcore
   linarith
 
-end Formalism.MainNotions.SelectionLemmas.Pf
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree.BetaRatioBound =====
-
--- ===== clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree.LamSatRestrict =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.SegmentDegree.LamSatRestrict", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.RestLamOfRests\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.FiniteRestrictSupport\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.SelIsComplRestrictSupport\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Etale.Weakly\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.TotallySplit\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
+section
 open MvPolynomial
-
-namespace Formalism.MainNotions.SelectionLemmas.Pf
 
 open Formalism.MainNotions.G Formalism.MainNotions.SelectionLemmas Formalism.MainNotions.G.Joints.StandardMonomialSpace
 
@@ -410,39 +322,15 @@ theorem restLamA_of (D : Formalism.BasicNotions.D7) (hAdm : AdmB D) : RestLamA :
     exact hϖ.not_isUnit
   rw [this, zero_mul]
 
-end Formalism.MainNotions.SelectionLemmas.Pf
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree.LamSatRestrict =====
-
--- ===== clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree.RestLamOf =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.SegmentDegree.RestLamOf", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.RestLamOfRests\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.LamMZero\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.LamSatRestrict\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-namespace Formalism.MainNotions.SelectionLemmas.Pf
+end
 
 open Formalism.MainNotions.G Formalism.MainNotions.SelectionLemmas
 
 theorem restLam_of (D : Formalism.BasicNotions.D7) (hAdm : AdmB D) (C₀ : ℝ) (hDeg : RestLamDeg C₀) : RestLam C₀ :=
   restLam_of_rests C₀ (restLamA_of D hAdm) (restLamInj C₀) hDeg
 
-end Formalism.MainNotions.SelectionLemmas.Pf
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree.RestLamOf =====
-
--- ===== clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscPowerMonomialDegreeAtW =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscPowerMonomialDegreeAtW", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.AllowedLettersOfLateRows\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscPowerTimesMonomial\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscPowerMonomialMemSupported\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DplusLeBeS\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.PsiCutSupported\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.SegmentProductDegreeDetermined\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
+section
 open MvPolynomial
-
-namespace Formalism.MainNotions.SelectionLemmas.Pf
 
 open Formalism.MainNotions.G Formalism.MainNotions.SelectionLemmas Formalism.MainNotions.G.Joints.StandardMonomialSpace
 
@@ -471,7 +359,6 @@ def discPowerMonomialDegree (j : ℤ) (b : ℤ → ℕ) (x : ℤ) : ℕ :=
   X.m0 K * (∑ a : Fin r, if X.F.fr (j - 1) a.val = x then 1 else 0) +
     ∑ i : Fin r, ((b (X.F.fr (j - 1) i.val) : ℤ) - X.Bw p K j (X.F.fr (j - 1) i.val)).toNat *
       (if X.F.fr (j - 1) i.val = x then 1 else 0)
-
 
 omit [NeZero n'] [NeZero r] in
 def memdMu (j : ℤ) (u : Fin r × Fin r → ℕ) (x : ℤ) : ℕ :=
@@ -590,22 +477,10 @@ theorem restMemB_of (D : Formalism.BasicNotions.D7) (hAdm : AdmB D) (C₀ : ℝ)
     rw [hs] at this
     simpa using this
 
-end Formalism.MainNotions.SelectionLemmas.Pf
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscPowerMonomialDegreeAtW =====
+end
 
--- ===== clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree.M0LeBwOfIsW =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.SegmentDegree.M0LeBwOfIsW", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscPowerMonomialDegreeAtW\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.CardFinRange\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscPowerMonomialMemSupported\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscriminantNonzeroModUniformiser\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DminusLeBeS\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DplusLeBeS\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.FourHundredSixteenLeA\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.PsiCutSupported\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.ReflectionMemGlevCastSucc\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.SegmentProductDegreeDetermined\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.SumSingleApplyZero\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
+section
 open MvPolynomial
-
-namespace Formalism.MainNotions.SelectionLemmas.Pf
 
 open Formalism.MainNotions.G Formalism.MainNotions.SelectionLemmas Formalism.MainNotions.G.Joints.StandardMonomialSpace
 
@@ -616,34 +491,21 @@ variable {p n' r K : ℕ} [NeZero n'] [NeZero r] [NeZero K] {X : Dat n' r}
 theorem m0_le_Bw_of_isW (hX : X.Hyp p K) (hLa : 1088 ≤ X.CLa) (hk : 1088 ≤ X.Ck) (j : ℤ) (b : ℤ → ℕ)
     (hA : X.AdmLL p K j b) (x : ℤ) (hx : x ∈ X.F.letters j) (hW : X.F.IsW j x) : (X.m0 K : ℤ) ≤ X.Bw p K j x := by
   classical
-  have hV := hX.valid
   have h41 := (top_count_lower_bounds 1088 (by norm_num) p n' r K X hX hLa hk).1
-  have hlt : x < X.F.fr j 0 := lt_of_le_of_lt (hW : x ≤ X.F.fr (j - 1) (r - 1)) (TE.fr_prev_lt hV j)
+  have hlt : x < X.F.fr j 0 := lt_of_le_of_lt hW (TE.fr_prev_lt hX.valid j)
   have hB := (TE.Bdeg_bounds hX j b hA x hx hlt).1
   have hc := (TE.c_bounds hX h41 j x hx).1
   have B := basics hX
-  have hp0 : (0 : ℝ) < p := by linarith [B.p1]
-  have hP : (0 : ℝ) < (p : ℝ) ^ (X.F.dist j x + X.Rj p K j) := by positivity
+  have hP : (0 : ℝ) < (p : ℝ) ^ (X.F.dist j x + X.Rj p K j) := pow_pos (by linarith [B.p1]) _
   have hc' : (36 / 5 : ℝ) * X.Y * Dat.k (r := r) K ^ 2 * (X.Ns : ℝ) ≤
-      (X.a' p K (posOf n' x) : ℝ) / (p : ℝ) ^ (X.F.dist j x + X.Rj p K j) := by
-    rw [le_div_iff₀ hP]; exact hc
-  have hk5 := B.k5
-  have hN1 := B.Ns1
-  have hY1 := B.Y1
-  have hkN : 0 < Dat.k (r := r) K * (X.Ns : ℝ) := by nlinarith
+      (X.a' p K (posOf n' x) : ℝ) / (p : ℝ) ^ (X.F.dist j x + X.Rj p K j) := (le_div_iff₀ hP).mpr hc
   have hbig : 2 * Dat.k (r := r) K * (X.Ns : ℝ) < (36 / 5 : ℝ) * X.Y * Dat.k (r := r) K ^ 2 * (X.Ns : ℝ) := by
-    have h1 : (36 / 5 : ℝ) * Dat.k (r := r) K ^ 2 * (X.Ns : ℝ) ≤
-        (36 / 5 : ℝ) * X.Y * Dat.k (r := r) K ^ 2 * (X.Ns : ℝ) := by
-      have : 0 ≤ (36 / 5 : ℝ) * Dat.k (r := r) K ^ 2 * (X.Ns : ℝ) := by positivity
-      nlinarith
-    have h2 : 2 * Dat.k (r := r) K * (X.Ns : ℝ) < (36 / 5 : ℝ) * Dat.k (r := r) K ^ 2 * (X.Ns : ℝ) := by
-      nlinarith
-    linarith
-  have hpos : (0 : ℝ) < (X.Bdeg p K j (X.restr j b) x : ℝ) := by linarith
-  have hpos' : 0 < X.Bdeg p K j (X.restr j b) x := by exact_mod_cast hpos
-  unfold Dat.Bdeg at hpos'
-  rw [ite_eq_left hW] at hpos'
-  omega
+    have hkN : 0 < Dat.k (r := r) K * (X.Ns : ℝ) := by nlinarith [B.k5, B.Ns1]
+    have : 0 ≤ (36 / 5 : ℝ) * Dat.k (r := r) K ^ 2 * (X.Ns : ℝ) := by positivity
+    nlinarith [B.k5, B.Y1]
+  have hpos' : 0 < X.Bdeg p K j (X.restr j b) x := by
+    exact_mod_cast (by linarith : (0 : ℝ) < (X.Bdeg p K j (X.restr j b) x : ℝ))
+  unfold Dat.Bdeg at hpos'; rw [ite_eq_left hW] at hpos'; omega
 
 theorem mem_degAt_ext {R : Type} [CommRing R] (j : ℤ) {n : ℕ} {bb : Fin (segN X.F j) → ℕ}
     {A : MvPolynomial (Fin (segN X.F j) × Fin n) R} (hA : A ∈ Pol R n bb) (x : ℤ) :
@@ -834,22 +696,10 @@ theorem restMem_of (D : Formalism.BasicNotions.D7) (hAdm : AdmB D) : RestMem 108
   restMem_of_rests 1088 (restMemA_of D hAdm 1088) (restMemB_of D hAdm 1088) (restMemC_of D hAdm)
     (restMemD_of D hAdm 1088)
 
-end Formalism.MainNotions.SelectionLemmas.Pf
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree.M0LeBwOfIsW =====
+end
 
--- ===== clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree.BfamAtWLetterEq =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.SegmentDegree.BfamAtWLetterEq", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.RestLamOfRests\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.CardFinRange\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DivMulSubLeDivSubDiv\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.FrameZeroStrictMono\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.LamMZero\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.ReflectionMemGlevCastSucc\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.SumPosOfPer\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.LamImgApply\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
+section
 open MvPolynomial
-
-namespace Formalism.MainNotions.SelectionLemmas.Pf
 
 open Formalism.MainNotions.G Formalism.MainNotions.SelectionLemmas Formalism.MainNotions.G.Joints.StandardMonomialSpace
 
@@ -878,38 +728,12 @@ theorem bfam_at_w_letter_eq {L₁ N₁ : ℕ} (hV : X.F.Valid L₁ N₁) (la : F
     (e : Fin X.F.J → Fin r → ℕ) (j : ℤ) (i : ℕ) (hi : i < r) :
     X.bfam p K la e j (X.F.fr (j - 1) i) =
       (X.nz p K la (j - 1) (X.F.fr (j - 1) i) - X.eZ e (j - 1) ⟨i, hi⟩) / X.Qc p K (j - 1) := by
-  have hmono : ∀ (k : ℤ) (a b : ℕ), a < b → b < r → X.F.fr k a < X.F.fr k b := by
-    intro k a b hab hb
-    induction b with
-    | zero => omega
-    | succ b ih =>
-      rcases Nat.lt_succ_iff_lt_or_eq.mp hab with h | h
-      · exact lt_trans (ih h (by omega)) (hV.2.2.1 k b (by omega))
-      · subst h
-        exact hV.2.2.1 k a (by omega)
-  have hle0 : X.F.fr (j - 1) 0 ≤ X.F.fr (j - 1) i := fr_zero_le hV (j - 1) i hi
-  have hleR : X.F.fr (j - 1) i ≤ X.F.fr (j - 1) (r - 1) :=
-    TE.fr_le hV (j - 1) i (r - 1) (Nat.le_pred_of_lt hi) (by omega)
-  have hlt : X.F.fr (j - 1) (r - 1) < X.F.fr j 0 := by
-    simpa using hV.2.2.2.1 (j - 1)
-  have hle2 : X.F.fr j 0 ≤ X.F.fr j (r - 1) := fr_zero_le hV j (r - 1) (by omega)
-  have hmem : X.F.fr (j - 1) i ∈ X.F.letters j := by
-    unfold Formalism.MainNotions.G.Frames.letters
-    rw [Finset.mem_filter, Finset.mem_Icc]
-    exact ⟨⟨hle0, by linarith⟩, (hV.2.2.2.2.1 (j - 1) i hi).1⟩
-  have hW : X.F.IsW j (X.F.fr (j - 1) i) := hleR
+  have hW : X.F.IsW j (X.F.fr (j - 1) i) := TE.fr_le hV (j - 1) i (r - 1) (Nat.le_pred_of_lt hi) (by omega)
+  have hmem : X.F.fr (j - 1) i ∈ X.F.letters j := TE.frp_mem hV j i hi
   unfold Dat.bfam
   rw [ite_eq_left hmem, ite_eq_left hW, Finset.sum_eq_single ⟨i, hi⟩]
   · simp
-  · intro b _ hb
-    rw [ite_eq_right]
-    intro h
-    apply hb
-    ext
-    by_contra hne
-    rcases lt_or_gt_of_ne hne with h' | h'
-    · exact absurd h (ne_of_gt (hmono _ _ _ h' hi))
-    · exact absurd h (ne_of_lt (hmono _ _ _ h' b.isLt))
+  · intro b _ hb; rw [ite_eq_right]; intro h; exact hb (fr_injective X.F hV (j - 1) h.symm)
   · simp
 
 end LD
@@ -917,40 +741,26 @@ end LD
 theorem lamd_Bw_pos {p n' r K : ℕ} [NeZero n'] [NeZero r] [NeZero K] {X : Dat n' r} (hX : X.Hyp p K)
     (hLa : 1088 ≤ X.CLa) (hk : 1088 ≤ X.Ck) (j y : ℤ) (hy : y ∈ X.F.letters j) : 1 ≤ X.Bw p K j y := by
   have h := sum_aP hX hLa hk j y hy
-  have hp := hX.prime.pos
-  have hPpos : 0 < p ^ (X.F.dist j y + X.Rj p K j) := pow_pos hp _
+  have hPpos : 0 < p ^ (X.F.dist j y + X.Rj p K j) := pow_pos hX.prime.pos _
   have hNs : (1 : ℝ) ≤ (X.Ns : ℝ) := by
-    have h1 : 0 < (X.F.letters j).card := Finset.card_pos.mpr ⟨y, hy⟩
-    have h2 := hX.card j
-    exact_mod_cast (show 1 ≤ X.Ns by omega)
-  have hY := hX.Y1
-  have hr := hX.r2
-  have hYN : (1 : ℝ) ≤ X.Y * (X.Ns : ℝ) := by nlinarith
+    have := Finset.card_pos.mpr ⟨y, hy⟩; have := hX.card j; exact_mod_cast (show 1 ≤ X.Ns by omega)
+  have hYN : (1 : ℝ) ≤ X.Y * (X.Ns : ℝ) := by nlinarith [hX.Y1]
   have hk2 : ((r + K + r + 2 : ℕ) : ℝ) ≤ 36 / 5 * (Dat.k (r := r) K) ^ 2 := by
-    unfold Dat.k
-    push_cast
-    have hr' : (2 : ℝ) ≤ r := by exact_mod_cast hr
+    unfold Dat.k; push_cast; have : (2 : ℝ) ≤ r := by exact_mod_cast hX.r2
     nlinarith
-  have hPr : (0 : ℝ) < ((p ^ (X.F.dist j y + X.Rj p K j) : ℕ) : ℝ) := by exact_mod_cast hPpos
+  have hPr : (0 : ℝ) < (p : ℝ) ^ (X.F.dist j y + X.Rj p K j) := by exact_mod_cast hPpos
   have hreal : ((r + K + r + 2 : ℕ) : ℝ) * ((p ^ (X.F.dist j y + X.Rj p K j) : ℕ) : ℝ) ≤
       (X.a' p K (posOf n' y) : ℝ) := by
-    have e1 : ((p ^ (X.F.dist j y + X.Rj p K j) : ℕ) : ℝ) = (p : ℝ) ^ (X.F.dist j y + X.Rj p K j) := by
-      push_cast; rfl
-    rw [e1] at hPr ⊢
-    calc ((r + K + r + 2 : ℕ) : ℝ) * (p : ℝ) ^ (X.F.dist j y + X.Rj p K j)
-        ≤ 36 / 5 * (Dat.k (r := r) K) ^ 2 * (p : ℝ) ^ (X.F.dist j y + X.Rj p K j) :=
-          mul_le_mul_of_nonneg_right hk2 hPr.le
-      _ ≤ 36 / 5 * (Dat.k (r := r) K) ^ 2 * (X.Y * (X.Ns : ℝ)) * (p : ℝ) ^ (X.F.dist j y + X.Rj p K j) := by
-          have := mul_le_mul_of_nonneg_left hYN (by positivity : (0 : ℝ) ≤ 36 / 5 * (Dat.k (r := r) K) ^ 2)
-          nlinarith
-      _ = 36 / 5 * (X.Y * Dat.k (r := r) K ^ 2 * (X.Ns : ℝ) * (p : ℝ) ^ (X.F.dist j y + X.Rj p K j)) := by ring
-      _ ≤ _ := h
-  have hnat : (r + K + r + 2) * p ^ (X.F.dist j y + X.Rj p K j) ≤ X.a' p K (posOf n' y) := by
-    exact_mod_cast hreal
+    rw [Nat.cast_pow]
+    have h1 : (36 / 5 : ℝ) * (Dat.k (r := r) K) ^ 2 ≤ 36 / 5 * (Dat.k (r := r) K) ^ 2 * (X.Y * (X.Ns : ℝ)) :=
+      le_mul_of_one_le_right (by positivity) hYN
+    have h2 : ((r + K + r + 2 : ℕ) : ℝ) * (p : ℝ) ^ (X.F.dist j y + X.Rj p K j) ≤
+        36 / 5 * (Dat.k (r := r) K) ^ 2 * (X.Y * (X.Ns : ℝ)) * (p : ℝ) ^ (X.F.dist j y + X.Rj p K j) :=
+      mul_le_mul_of_nonneg_right (hk2.trans h1) hPr.le
+    linarith
   have hdiv : r + K + r + 2 ≤ X.a' p K (posOf n' y) / p ^ (X.F.dist j y + X.Rj p K j) :=
-    (Nat.le_div_iff_mul_le hPpos).mpr hnat
-  unfold Dat.Bw
-  omega
+    (Nat.le_div_iff_mul_le hPpos).mpr (by exact_mod_cast hreal)
+  unfold Dat.Bw; omega
 
 theorem restLamDeg : RestLamDeg 1088 := by
   intro p n' r K _ _ _ X hX hLa hk la hla e he
@@ -1099,39 +909,17 @@ theorem restLamDeg : RestLamDeg 1088 := by
         exact ht (h ▸ (mem_letters_bounds hx).2.2)
       rw [h1, h2, ha]
 
-end Formalism.MainNotions.SelectionLemmas.Pf
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree.BfamAtWLetterEq =====
-
--- ===== clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.SegmentDegree", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.NonemptyDvrSettingOfStandard\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.Coarse\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.RestCountOf\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.GoodPathWeight\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.StrictMonoIntExists\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.SelIsComplRestrictSupport\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.FiniteRestrictSupport\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DiscriminantNonzeroModUniformiser\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DivMulSubLeDivSubDiv\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.SumSingleApplyZero\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.BetaRatioBound\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.GoodPathWeightAlt\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.RestLamOf\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.M0LeBwOfIsW\npublic import Formalism.SharpRestriction.GrowthBounds.SegmentDegree.BfamAtWLetterEq\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.DminusLeBeS\nimport Formalism.SharpRestriction.GrowthBounds.SegmentDegree.FrameZeroStrictMono\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-namespace Formalism.MainNotions.SelectionLemmas.Pf
+end
 
 open Formalism.MainNotions.G Formalism.MainNotions.SelectionLemmas
 
-theorem second_estimate_of_restrictions (D : Formalism.BasicNotions.D7) (h41 : DiscriminantNonzeroModUniformiser) (h45 : AdmB D → GeneratorModuloUniformiser 1088)
-    (hLam : AdmB D → RestLam 1088) (hPad : RestPad 1088) (hSum : RestSum 1088 1)
-    (hMem : AdmB D → RestMem 1088) (hInd : AdmB D → RestInd 1088)
-    (hT1 : AdmB D → GoodPathWeight 1088) (hMon : RestMon 1088) : SecondPartClosed D :=
-  second_estimate_of_rank_bound D 1088 1 (by norm_num) (by norm_num) restDeg restSel fun hA =>
-    restRank_of 1088 1 h41 (h45 hA)
-      (restCount_of 1088 1 (hLam hA) (restSeg_of 1088 (hMem hA) (hInd hA) restFin (hT1 hA) hMon) hPad hSum)
-
-theorem restMon : RestMon 1088 := restMon_of 1088 beta_ratio_bound tau_degree_on_path_bound residue_class_count
-
-theorem restInd (D : Formalism.BasicNotions.D7) (hAdm : AdmB D) : RestInd 1088 := restInd_of 1088 (restKey_of D hAdm 1088)
-
 theorem secondPartClosed (D : Formalism.BasicNotions.D7) : SecondPartClosed D :=
-  second_estimate_of_restrictions D discriminant_nonzero_mod_uniformiser (fun hA => generator_modulo_uniformiser_of_adm D hA 1088 (by norm_num))
-    (fun hA => restLam_of D hA 1088 restLamDeg)
-    restPad restSum (fun hA => restMem_of D hA) (fun hA => restInd D hA) (fun hA => good_path_weight D hA) restMon
+  second_estimate_of_rank_bound D 1088 1 (by norm_num) (by norm_num) restDeg restSel fun hA =>
+    restRank_of 1088 1 discriminant_nonzero_mod_uniformiser
+      (generator_modulo_uniformiser_of_adm D hA 1088 (by norm_num))
+      (restCount_of 1088 1 (restLam_of D hA 1088 restLamDeg)
+        (restSeg_of 1088 (restMem_of D hA) (restInd_of 1088 (restKey_of D hA 1088)) restFin
+          (good_path_weight D hA) (restMon_of 1088 beta_ratio_bound tau_degree_on_path_bound residue_class_count))
+        restPad restSum)
 
 end Formalism.MainNotions.SelectionLemmas.Pf
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.SegmentDegree =====
