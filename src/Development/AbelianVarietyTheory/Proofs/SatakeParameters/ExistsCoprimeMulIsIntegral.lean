@@ -36,18 +36,8 @@ theorem exists_coprime_mul_isIntegral {K : Type} [Field K] [NumberField K] {p : 
   obtain ⟨y, hy0, hyint⟩ := halg.exists_integral_multiple
   have hd0 : y.natAbs ≠ 0 := Int.natAbs_ne_zero.2 hy0
   have hdint : IsIntegral ℤ ((y.natAbs : K) * x) := by
-    rcases Int.natAbs_eq y with e | e
-    · have e2 : ((y.natAbs : ℤ) : K) = (y : K) := congrArg (fun z : ℤ => (z : K)) e.symm
-      have : (y.natAbs : K) * x = y • x := by
-        rw [zsmul_eq_mul, ← e2, Int.cast_natCast]
-      rw [this]; exact hyint
-    · have : (y.natAbs : K) * x = -(y • x) := by
-        rw [zsmul_eq_mul, ← neg_mul]; congr 1
-        have e' : (y : K) = -((y.natAbs : ℤ) : K) := by
-          have := congrArg (fun z : ℤ => (z : K)) e
-          simpa using this
-        rw [e', neg_neg, Int.cast_natCast]
-      rw [this]; exact hyint.neg
+    have := hyint.zsmul y.sign
+    rwa [smul_smul, Int.sign_mul_self_eq_natAbs, natCast_zsmul, nsmul_eq_mul] at this
   obtain ⟨e, M, hpM, hd⟩ := Nat.exists_eq_pow_mul_and_not_dvd hd0 p hp.ne_one
   refine ⟨M, (Nat.Prime.coprime_iff_not_dvd hp).2 hpM |>.symm, ?_⟩
   obtain ⟨r, hr⟩ := HeightOneSpectrum.mem_integers_of_valuation_le_one (R := 𝓞 K) K ((M : K) * x) fun w => by
