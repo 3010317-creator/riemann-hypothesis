@@ -131,17 +131,9 @@ theorem finrank_of_injective (hu : Function.Injective u) [u.range.FiniteIndex]
   rfl
 
 theorem surjective_of_surjective (hu : Function.Surjective u) :
-    Function.Surjective (mapDomainRingHom R u) := by
-  intro p
-  induction p using AddMonoidAlgebra.induction_linear with
-  | zero => exact ⟨0, map_zero _⟩
-  | add s t hs ht =>
-    obtain ⟨a, rfl⟩ := hs
-    obtain ⟨b, rfl⟩ := ht
-    exact ⟨a + b, map_add _ _ _⟩
-  | single x r =>
-    obtain ⟨y, rfl⟩ := hu x
-    exact ⟨single y r, mapDomain_single⟩
+    Function.Surjective (mapDomainRingHom R u) :=
+  AddMonoidAlgebra.coeffEquiv.symm.surjective.comp
+    ((Finsupp.mapDomain_surjective hu).comp AddMonoidAlgebra.coeffEquiv.surjective)
 
 theorem formallyUnramified_of_isUnit (n : ℕ) (hn : IsUnit (n : R)) (hX : ∀ x : X, n • x = 0) :
     Algebra.FormallyUnramified R R[X] := by
