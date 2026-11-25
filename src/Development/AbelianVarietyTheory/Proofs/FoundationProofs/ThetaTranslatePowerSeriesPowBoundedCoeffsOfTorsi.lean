@@ -46,12 +46,8 @@ theorem bdd_X : BddSer (PowerSeries.X : PowerSeries ℂ_[p]) :=
   ⟨1, (GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.2.2.1⟩
 
 theorem bdd_sum {ι : Type*} (s : Finset ι) (f : ι → PowerSeries ℂ_[p]) (h : ∀ i ∈ s, BddSer (f i)) :
-    BddSer (∑ i ∈ s, f i) := by
-  induction s using Finset.induction_on with
-  | empty => exact ⟨0, fun n => by simp⟩
-  | insert a s ha ih =>
-    rw [Finset.sum_insert ha]
-    exact bdd_add (h a (Finset.mem_insert_self a s)) (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
+    BddSer (∑ i ∈ s, f i) :=
+  Finset.sum_induction f (fun x => BddSer x) (fun _ _ => bdd_add) ⟨0, fun n => by simp⟩ h
 
 alias lamC_one := _root_.GlobalTheory.ThetaParam.lamC_one
 
