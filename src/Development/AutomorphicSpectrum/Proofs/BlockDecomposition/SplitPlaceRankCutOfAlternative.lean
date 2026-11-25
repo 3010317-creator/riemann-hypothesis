@@ -316,8 +316,6 @@ open IsDedekindDomain NumberField
 open PositivityTheory.Rg.Rsw PositivityTheory.Rg.Rsw.L
 open GlobalTheory.CompanionTheory.Jp
 
-theorem _root_.GlobalTheory.T.exists_global_hermitian_local_approximation : ∀ (D : D7) (n : ℕ) (v : Pl D) (τ : D.host.E →ₐ[D.host.F] Fv D.host.F v) (X : Matrix (Fin n) (Fin n) (Fv D.host.F v)), ∃ x : hermA D n, (∀ w i j, compInf D.host.F D.host.E w (x.1 i j) = 0) ∧ (∀ v' ≠ v, ∀ i j, cv D v' (x.1 i j) = 0) ∧ tauC τ x.1 = X ∧ ((∀ i j, X i j ∈ v.adicCompletionIntegers D.host.F) → ∀ i j, cv D v (x.1 i j) ∈ intLoc D.host.F D.host.E v) := by
-  first | exact @GlobalTheory.CompanionTheory.Jp.exists_herm_at
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsGlobalHermitianLocalApproximationStatement =====
@@ -1046,7 +1044,7 @@ theorem split_place_rank_cut_of_local_computation : JpCondition → SplitPlaceRa
   obtain ⟨ρ, hρ, hρs, hρm⟩ := _root_.GlobalTheory.CompanionTheory.Jp.RhoSplit.exists_rho D n v τ
   obtain ⟨c, hcd, hct, hcint⟩ := hA (Ov D v) (Lv D v) n r t hrt hr ψ₀ hψ₀ _ hβ
   choose f hinf hoff hfX _ using fun Y : Matrix (Fin n) (Fin n) (kv D v) =>
-    GlobalTheory.T.exists_global_hermitian_local_approximation D n v τ (((w⁻¹ : (Lv D v)ˣ) : Lv D v) • liftM (L := Lv D v) ℓ Y)
+    GlobalTheory.CompanionTheory.Jp.exists_herm_at D n v τ (((w⁻¹ : (Lv D v)ˣ) : Lv D v) • liftM (L := Lv D v) ℓ Y)
   have hfinj : Function.Injective f := by
     intro Y Y' hYY
     have h1 : ((w⁻¹ : (Lv D v)ˣ) : Lv D v) • liftM (L := Lv D v) ℓ Y =
@@ -1073,7 +1071,7 @@ theorem split_place_rank_cut_of_local_computation : JpCondition → SplitPlaceRa
     have hTint : ∀ i j, (β'.1.map τ) i j ∈ HeightOneSpectrum.adicCompletionIntegers D.host.F v := by
       apply _root_.GlobalTheory.CompanionTheory.Jp.DualInt.mem_of_dual_integral D ψ v hgood n
       intro X hX
-      obtain ⟨x, hinf', hoff', htx, hint'⟩ := GlobalTheory.T.exists_global_hermitian_local_approximation D n v τ X
+      obtain ⟨x, hinf', hoff', htx, hint'⟩ := GlobalTheory.CompanionTheory.Jp.exists_herm_at D n v τ X
       rw [← htx, ← _root_.GlobalTheory.CompanionTheory.Jp.SplitPair.pch_rat_split D n v τ ψ x hinf' hoff' β']
       apply hint
       unfold PositivityTheory.Rg.Rsw.L.IntAt
