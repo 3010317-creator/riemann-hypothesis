@@ -631,7 +631,7 @@ theorem resK_res (𝒱 : Set X.Opens) {s S : ℕ} (h : s ≤ S) (x : HdR q 2) :
 theorem restriction_bijective_above_dimension (d : ℕ) [SmoothOfRelativeDimension d q] (D : E.LineData X) (hD : IsTautologicalLine q D) :
     ∀ S, d < S → Function.Bijective (resK q (KS q S (𝒱D D)) 2) := by
   have hP : IsProper q := isProper_of_isO1 hD
-  obtain ⟨U, hU⟩ := (cov_ex q).2 d inferInstance
+  obtain ⟨U, hU⟩ := (_root_.GlobalTheory.CompanionTheory.CovEx.exists_cov q).2 d inferInstance
   have hcov : sSup (𝒱D D) = ⊤ := by
     obtain ⟨N, i, -, -, hi⟩ := hD
     exact sSup_𝒱D D N i hi

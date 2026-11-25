@@ -1008,8 +1008,6 @@ namespace CrystallineSemistableComparison.Pb
 
 alias vb_fin := _root_.GlobalTheory.CompanionTheory.VBGlue.finite_H_cx
 
-theorem serre_fg : ∀ (R : Type) [CommRing R] [IsNoetherianRing R], ∃ 𝒮 : Serre.{1} R,
-    ∀ (M : Type 1) [AddCommGroup M] [Module R M], 𝒮.P M ↔ Module.Finite R M := @_root_.GlobalTheory.CompanionTheory.SerreFin.exists_serre_finite
 
 end CrystallineSemistableComparison.Pb
 end -- clump:auto
@@ -1059,7 +1057,7 @@ theorem serre_red [IsNoetherianRing R] (F : Thick (nlFun γ p X q κ) ⥤ Module
     {ι : Type} (U : ι → X.Opens) (j : ℕ)
     (h : ∀ a b, a + b = j → Module.Finite R ((CrystallineSemistableComparison.Pb.cechH F (fun α => St Q {U α}) b).cx.H a)) :
     Module.Finite R (HU F (St Q (Set.range U)) j) := by
-  obtain ⟨𝒮, h𝒮⟩ := serre_fg R
+  obtain ⟨𝒮, h𝒮⟩ := _root_.GlobalTheory.CompanionTheory.SerreFin.exists_serre_finite R
   exact (h𝒮 _).1 (GlobalTheory.CompanionTheory.GlobSt.glob_st.2.1 F Q U 𝒮 j fun a b hab => (h𝒮 _).2 (h a b hab))
 
 
@@ -1203,7 +1201,7 @@ private lemma isHecke_div_and_resEtaPow_div {b : Base} {L : b.Fun} (Q : ObjectPr
     (hN : IsNoetherianRing b.R)
     (hgr : ∀ r j : ℕ, Module.Finite b.R (CH.H (sq (sFil Q ↑r) (sFil Q (↑r + 1))) j)) (j : ℕ) :
     Module.Finite b.R (HO Q j) := by
-  have hfin := _root_.GlobalTheory.CompanionTheory.LenDev.finite_H_sq (sFil Q) (fun r r' h T => (isFil Q).anti h T) (d + 1) (fun r _ j' => hgr r j') j
+  have hfin := _root_.GlobalTheory.CompanionTheory.LenDev.finite_H_sq (sFil Q) (fun r r' h T => (_root_.GlobalTheory.CompanionTheory.DPFil.isFil_sFil Q).anti h T) (d + 1) (fun r _ j' => hgr r j') j
   rw [Nat.cast_add, Nat.cast_one] at hfin
   have ha : ∀ T, (sFil Q 0).S T = ⊤ := fun T => (_root_.GlobalTheory.CompanionTheory.DPFil.isFil_sFil Q).top 0 le_rfl T
   have hb := _root_.GlobalTheory.CompanionTheory.LengthOneCochainExactness.pull_toSq_bijective (sFil Q 0) (sFil Q (↑d + 1)) ha ?hv j
@@ -1214,7 +1212,7 @@ private lemma isHecke_div_and_resEtaPow_div {b : Base} {L : b.Fun} (Q : ObjectPr
 theorem wittCohomology_finite_length {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP k l] [PerfectRing k l] {O : Type} [CommRing O]
     {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of O)) [IsProper q] [Smooth q] (ρ : O →+* k) (j : ℕ) :
     IsFiniteLength (WittVector l k) (CH.H (Wc.OM l (B.schFn q) ρ 1) j) := by
-  obtain ⟨U⟩ := (CrystallineSemistableComparison.Pb.cov_ex q).1 inferInstance
+  obtain ⟨U⟩ := (_root_.GlobalTheory.CompanionTheory.CovEx.exists_cov q).1 inferInstance
   refine _root_.GlobalTheory.CompanionTheory.LevelOne.finiteLength_level_one q ρ j ?_
   have hvan := _root_.GlobalTheory.CompanionTheory.WittLevel.Van.witt_level_one_filtration_vanish q ρ U (Finset.univ.sup U.d) (fun α => Finset.le_sup (Finset.mem_univ α))
   have hfin := isHecke_div_and_resEtaPow_div _ _ hvan ?hN ?hgr j

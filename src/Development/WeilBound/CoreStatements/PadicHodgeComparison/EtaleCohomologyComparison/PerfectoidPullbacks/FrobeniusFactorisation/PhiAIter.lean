@@ -1156,7 +1156,7 @@ theorem cov_of_sm (M : Model l K) (hM : M.Sm) : Nonempty (Cov M.p) := by
   have h2 : IsProper M.p := by
     have h3 : IsProper (i ≫ ReciprocityTheory.ChartRestriction.G.Geo.Tor.PSpace.str (OK l K) N) := inferInstance
     exact e ▸ h3
-  exact (cov_ex M.p).1 hM.2
+  exact (_root_.GlobalTheory.CompanionTheory.CovEx.exists_cov M.p).1 hM.2
 
 theorem l_nil (r : Res l K) (n : ℕ) : IsNilpotent (l : Wc.Wm l r.k n) :=
   ⟨n, by

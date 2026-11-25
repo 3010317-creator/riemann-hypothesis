@@ -325,7 +325,7 @@ theorem phiA_comp_gal (σ : Gal(PadicAlgCl l/K)) (N : ℕ) :
 
 theorem commute_phi_galBase (σ : Gal(PadicAlgCl l/K)) (n : ℕ) : Commute ((base l).phi n) (galBase σ n) :=
   RingHom.ext fun r => by
-    obtain ⟨a, rfl⟩ := (RL.base_acr (base l) isBase_base).2 n |>.1 r
+    obtain ⟨a, rfl⟩ := (_root_.GlobalTheory.CompanionTheory.BaseAcris.main (base l) isBase_base).2 n |>.1 r
     change (base l).phi n (galBase σ n ((base l).cris n a)) = galBase σ n ((base l).phi n ((base l).cris n a))
     rw [galBase_cris, (base l).phi_cris, (base l).phi_cris, galBase_cris]
     exact congrArg _ (ACris.phi_gal_smul σ a)
