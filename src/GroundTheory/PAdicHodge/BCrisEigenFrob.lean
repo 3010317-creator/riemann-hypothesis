@@ -241,14 +241,7 @@ theorem eq_one_of_degree_one (ρ : Gal(PadicAlgCl p/L) →* ℂ_[p]) (hρ : Cont
     (hI : ∀ σ, unramifiedDegree L (PadicAlgCl p) σ = 1 → ρ σ = 1) (σ : Gal(PadicAlgCl p/L)) :
     ρ σ = 1 := by
   have := isSepClosure_padicAlgCl (L := L)
-  let H : Subgroup Gal(PadicAlgCl p/L) :=
-    { carrier := {τ | ρ τ = 1}
-      mul_mem' := fun {a b} (ha : ρ a = 1) (hb : ρ b = 1) => show ρ (a * b) = 1 by
-        rw [map_mul, ha, hb, one_mul]
-      one_mem' := map_one ρ
-      inv_mem' := fun {a} (ha : ρ a = 1) => show ρ a⁻¹ = 1 by
-        calc ρ a⁻¹ = ρ a⁻¹ * ρ a := by rw [ha, mul_one]
-          _ = 1 := by rw [← map_mul, inv_mul_cancel, map_one] }
+  let H : Subgroup Gal(PadicAlgCl p/L) := ρ.ker
   have hclosed : IsClosed (H : Set Gal(PadicAlgCl p/L)) := isClosed_eq hρ continuous_const
   have hW : (weilSubgroup L (PadicAlgCl p) : Set Gal(PadicAlgCl p/L)) ⊆ H := by
     intro τ hτ

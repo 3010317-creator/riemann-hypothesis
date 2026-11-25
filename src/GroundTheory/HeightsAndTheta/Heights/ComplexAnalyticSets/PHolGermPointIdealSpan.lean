@@ -53,15 +53,8 @@ theorem hadamard_decomposition {σ : Type} [Fintype σ] {w : σ → ℂ} {f : (�
     have hwz : w + y = z := by rw [hy]; abel
     rw [hwz] at e
     have e2 : p.shift.sum y y = ∑ i, (z i - w i) * p.shift.sum y (Pi.single i 1) := by
-      have hyy : p.shift.sum y y = p.shift.sum y (∑ i, Pi.single i (y i)) := by
-        rw [Finset.univ_sum_single]
-
-      rw [hyy, map_sum]
-      refine Finset.sum_congr rfl fun i _ => ?_
-      rw [show (Pi.single i (y i) : σ → ℂ) = y i • Pi.single i 1 by
-        ext j; by_cases h : j = i
-        · subst h; simp
-        · simp [h], map_smul, smul_eq_mul, hy, Pi.sub_apply]
+      nth_rw 2 [pi_eq_sum_univ' y]
+      simp only [map_sum, map_smul, smul_eq_mul, hy, Pi.sub_apply]
     rw [← e2, ← e]
     ring
 

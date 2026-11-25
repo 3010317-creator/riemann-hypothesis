@@ -29,15 +29,8 @@ variable [MeasurableSpace F] [BorelSpace F]
 
 omit [MeasurableSpace F] [BorelSpace F] in
 theorem isLocallyConstant_indicator {X : Type*} [TopologicalSpace X] {S : Set X} (hS : IsClopen S)
-    {f : X → ℂ} (hf : IsLocallyConstant f) : IsLocallyConstant (S.indicator f) := by
-  rw [IsLocallyConstant.iff_exists_open] at hf ⊢
-  intro x
-  obtain ⟨V, hV, hxV, hfV⟩ := hf x
-  by_cases hx : x ∈ S
-  · refine ⟨V ∩ S, hV.inter hS.isOpen, ⟨hxV, hx⟩, fun y hy ↦ ?_⟩
-    rw [Set.indicator_of_mem hy.2, Set.indicator_of_mem hx, hfV y hy.1]
-  · refine ⟨V ∩ Sᶜ, hV.inter hS.compl.isOpen, ⟨hxV, hx⟩, fun y hy ↦ ?_⟩
-    rw [Set.indicator_of_notMem hy.2, Set.indicator_of_notMem hx]
+    {f : X → ℂ} (hf : IsLocallyConstant f) : IsLocallyConstant (S.indicator f) :=
+  ((⟨f, hf⟩ : LocallyConstant X ℂ).indicator hS).isLocallyConstant
 
 
 

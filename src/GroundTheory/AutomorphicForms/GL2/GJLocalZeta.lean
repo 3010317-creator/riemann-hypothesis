@@ -322,12 +322,8 @@ theorem one_mem_zetaIdeal (μ : Measure (GL (Fin n) F)) [μ.IsHaarMeasure] (hπ 
   have hKo : IsOpen (K : Set (GL (Fin n) F)) := isOpen_congruenceSubgroup F n m
   have hvK : v ∈ fixedVectors π K := fun k hk => hm hk
 
-  obtain ⟨f0, hf0⟩ : ∃ f0 : Module.Dual ℂ (fixedVectors π K), f0 ⟨v, hvK⟩ = 1 := by
-    have hne : (⟨v, hvK⟩ : fixedVectors π K) ≠ 0 := fun h => hv (congrArg Subtype.val h)
-    have hnot : ¬ ∀ g : Module.Dual ℂ (fixedVectors π K), g ⟨v, hvK⟩ = 0 := fun h =>
-      hne ((Module.forall_dual_apply_eq_zero_iff ℂ _).1 h)
-    obtain ⟨g, hg⟩ := not_forall.1 hnot
-    exact ⟨(g ⟨v, hvK⟩)⁻¹ • g, by simp [hg]⟩
+  obtain ⟨f0, hf0⟩ := Module.Projective.exists_dual_eq_one ℂ
+    (show (⟨v, hvK⟩ : fixedVectors π K) ≠ 0 from fun h => hv (congrArg Subtype.val h))
   set ℓ : Module.Dual ℂ V := f0 ∘ₗ fixedProj π hπ hKc hKo with hℓdef
   have hℓK : ∀ k ∈ K, ∀ x, ℓ (π k x) = ℓ x := fun k hk x => by
     simp only [ℓ, LinearMap.coe_comp, Function.comp_apply, fixedProj_apply_act hπ hKc hKo hk]
@@ -341,14 +337,9 @@ theorem one_mem_zetaIdeal (μ : Measure (GL (Fin n) F)) [μ.IsHaarMeasure] (hπ 
   have hSo : IsOpen S := (Measures.isOpenEmbedding_val F n).isOpenMap _ hKo
   have hSc : IsCompact S := hKc.image Units.continuous_val
   set Φ : Matrix (Fin n) (Fin n) F → ℂ := S.indicator 1 with hΦdef
-  have hΦ : IsSchwartzBruhat Φ := by
-    refine ⟨?_, HasCompactSupport.intro hSc fun X hX => Set.indicator_of_notMem hX _⟩
-    rw [IsLocallyConstant.iff_exists_open]
-    intro X
-    by_cases hX : X ∈ S
-    · exact ⟨S, hSo, hX, fun Y hY => by simp [Φ, Set.indicator_of_mem hY, Set.indicator_of_mem hX]⟩
-    · exact ⟨Sᶜ, hSc.isClosed.isOpen_compl, hX, fun Y hY => by
-        simp [Φ, Set.indicator_of_notMem hY, Set.indicator_of_notMem hX]⟩
+  have hΦ : IsSchwartzBruhat Φ :=
+    ⟨((LocallyConstant.const _ (1 : ℂ)).indicator ⟨hSc.isClosed, hSo⟩).isLocallyConstant,
+      HasCompactSupport.intro hSc fun X hX => Set.indicator_of_notMem hX _⟩
   have hΦg : ∀ g : GL (Fin n) F, Φ (g : Matrix (Fin n) (Fin n) F) =
       (K : Set (GL (Fin n) F)).indicator 1 g := fun g => by
     by_cases hg : g ∈ K

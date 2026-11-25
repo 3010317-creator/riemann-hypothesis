@@ -27,40 +27,34 @@ theorem chart_smul_eq {I : Chart x} (c : chartRing S x I) (z : E) : c • z = (c
 
 theorem smul_mem_twist_twist (G : SubSystem S x E) (P Q : SubSystem S x Ω) (I : Chart x) {q : Ω}
     (hq : q ∈ P.sub I) {z : E} (hz : z ∈ (G.twist Q).sub I) : q • z ∈ ((G.twist P).twist Q).sub I := by
-  change z ∈ Submodule.span _ _ at hz
-  refine Submodule.span_induction (p := fun z _ => q • z ∈ ((G.twist P).twist Q).sub I) ?_ ?_ ?_ ?_ hz
-  · rintro _ ⟨q', hq', y, hy, rfl⟩
-    refine Submodule.subset_span ⟨q', hq', q • y, Submodule.subset_span ⟨q, hq, y, hy, rfl⟩, ?_⟩
-    rw [smul_smul, smul_smul, mul_comm]
-  · rw [smul_zero]; exact Submodule.zero_mem _
-  · intro b c _ _ hb hc; rw [smul_add]; exact Submodule.add_mem _ hb hc
-  · intro c z _ hz
-    rw [chart_smul_eq, smul_smul, mul_comm, ← smul_smul, ← chart_smul_eq]
-    exact Submodule.smul_mem _ c hz
+  change z ∈ Submodule.span (chartRing S x I)
+    {z | ∃ q' ∈ Q.sub I, ∃ y ∈ G.sub I, z = q' • y} at hz
+  refine (Submodule.span_le (p := (((G.twist P).twist Q).sub I).comap
+    (DistribSMul.toLinearMap (chartRing S x I) E q))).2 ?_ hz
+  rintro _ ⟨q', hq', y, hy, rfl⟩
+  change q • (q' • y) ∈ ((G.twist P).twist Q).sub I
+  refine Submodule.subset_span ⟨q', hq', q • y, Submodule.subset_span ⟨q, hq, y, hy, rfl⟩, ?_⟩
+  rw [smul_smul, smul_smul, mul_comm]
 
 theorem smul_mem_twist_pow (G : SubSystem S x E) (H : SubSystem S x Ω) (I : Chart x) {c d : ℕ} {w : Ω}
     (hw : w ∈ (H.pow c).sub I) {z : E} (hz : z ∈ (G.twist (H.pow d)).sub I) :
     w • z ∈ (G.twist (H.pow (d + c))).sub I := by
-  change z ∈ Submodule.span _ _ at hz
-  refine Submodule.span_induction (p := fun z _ => w • z ∈ (G.twist (H.pow (d + c))).sub I) ?_ ?_ ?_ ?_ hz
-  · rintro _ ⟨q, hq, y, hy, rfl⟩
-    refine Submodule.subset_span ⟨q * w, AmpleTwistLocal.mul_mem_pow H I hq c hw, y, hy, ?_⟩
-    rw [smul_smul, mul_comm]
-  · rw [smul_zero]; exact Submodule.zero_mem _
-  · intro b e _ _ hb he; rw [smul_add]; exact Submodule.add_mem _ hb he
-  · intro c' z _ hz
-    rw [chart_smul_eq, smul_smul, mul_comm, ← smul_smul, ← chart_smul_eq]
-    exact Submodule.smul_mem _ c' hz
+  change z ∈ Submodule.span (chartRing S x I)
+    {z | ∃ q ∈ (H.pow d).sub I, ∃ y ∈ G.sub I, z = q • y} at hz
+  refine (Submodule.span_le (p := ((G.twist (H.pow (d + c))).sub I).comap
+    (DistribSMul.toLinearMap (chartRing S x I) E w))).2 ?_ hz
+  rintro _ ⟨q, hq, y, hy, rfl⟩
+  change w • (q • y) ∈ (G.twist (H.pow (d + c))).sub I
+  refine Submodule.subset_span ⟨q * w, AmpleTwistLocal.mul_mem_pow H I hq c hw, y, hy, ?_⟩
+  rw [smul_smul, mul_comm]
 
 theorem mem_twist_pow_add (G : SubSystem S x E) (H : SubSystem S x Ω) (I : Chart x) {a b : ℕ} {z : E}
     (hz : z ∈ ((G.twist (H.pow a)).twist (H.pow b)).sub I) : z ∈ (G.twist (H.pow (a + b))).sub I := by
-  change z ∈ Submodule.span _ _ at hz
-  refine Submodule.span_induction (p := fun z _ => z ∈ (G.twist (H.pow (a + b))).sub I) ?_ ?_ ?_ ?_ hz
-  · rintro _ ⟨q, hq, y, hy, rfl⟩
-    exact smul_mem_twist_pow G H I hq hy
-  · exact Submodule.zero_mem _
-  · intro b e _ _ hb he; exact Submodule.add_mem _ hb he
-  · intro c z _ hz; exact Submodule.smul_mem _ c hz
+  change z ∈ Submodule.span (chartRing S x I)
+    {z | ∃ q ∈ (H.pow b).sub I, ∃ y ∈ (G.twist (H.pow a)).sub I, z = q • y} at hz
+  refine (Submodule.span_le (p := (G.twist (H.pow (a + b))).sub I)).2 ?_ hz
+  rintro _ ⟨q, hq, y, hy, rfl⟩
+  exact smul_mem_twist_pow G H I hq hy
 
 theorem prod_mem_pow (H : SubSystem S x Ω) (I : Chart x) {r : ℕ} {h : Fin (r + 1) → Ω}
     (hh : ∀ l, h l ∈ H.sub I) (T : Finset (Fin (r + 1))) : ∏ l ∈ T, h l ∈ (H.pow T.card).sub I := by
@@ -86,15 +80,14 @@ theorem proof (hFam : VeryAmpleZFamily.Statement.{u, v, w}) : VeryAmpleZTwist.St
     intro y hy
     refine (Submodule.mem_iInf _).mpr fun I => ?_
     have hyI : y ∈ secsOnZChart F.toSubSystem H.toSubSystem h I J := (Submodule.mem_iInf _).mp hy I
-    refine Submodule.span_induction (p := fun y _ =>
-      h j ^ a • y ∈ secsOnZChart (F.twist (H.pow a)) H.toSubSystem h I J) ?_ ?_ ?_ ?_ hyI
-    · rintro y ⟨n, hn⟩
-      refine Submodule.subset_span ⟨n, ?_⟩
-      rw [smul_smul, mul_comm (xProd J ^ n), ← smul_smul]
-      exact smul_mem_twist_twist _ _ _ I (hpow I) hn
-    · rw [smul_zero]; exact Submodule.zero_mem _
-    · intro b e _ _ hb he; rw [smul_add]; exact Submodule.add_mem _ hb he
-    · intro s e _ he; rw [smul_comm]; exact Submodule.smul_mem _ s he
+    refine (Submodule.span_le (p :=
+      (secsOnZChart (F.twist (H.pow a)) H.toSubSystem h I J).comap
+        (DistribSMul.toLinearMap S E (h j ^ a)))).2 ?_ hyI
+    rintro y ⟨n, hn⟩
+    change h j ^ a • y ∈ secsOnZChart (F.twist (H.pow a)) H.toSubSystem h I J
+    refine Submodule.subset_span ⟨n, ?_⟩
+    rw [smul_smul, mul_comm (xProd J ^ n), ← smul_smul]
+    exact smul_mem_twist_twist _ _ _ I (hpow I) hn
 
   have bwd : ∀ e ∈ secsOnZ (F.twist (H.pow a)) H.toSubSystem h J,
       (h j ^ a)⁻¹ • e ∈ secsOnZ F.toSubSystem H.toSubSystem h J := by
@@ -110,22 +103,21 @@ theorem proof (hFam : VeryAmpleZFamily.Statement.{u, v, w}) : VeryAmpleZTwist.St
       omega
     have hua : u ^ a ∈ (H.pow ((J.1.erase j).card * a)).sub I :=
       AmpleTwistLocal.pow_mem_pow H.toSubSystem I (prod_mem_pow H.toSubSystem I (fun l => hmem l I) _) a
-    refine Submodule.span_induction (p := fun e _ =>
-      (h j ^ a)⁻¹ • e ∈ secsOnZChart F.toSubSystem H.toSubSystem h I J) ?_ ?_ ?_ ?_ heI
-    · rintro e ⟨n, hn⟩
-      refine Submodule.subset_span ⟨n + a, ?_⟩
-      have heq : xProd J ^ (n + a) • (h j ^ a)⁻¹ • e = u ^ a • (xProd J ^ n • e) := by
-        rw [smul_smul, smul_smul, hxu]
-        congr 1
-        field_simp
-        ring
-      have hdeg : a + J.1.card * n + (J.1.erase j).card * a = J.1.card * (n + a) := by
-        rw [hk]; ring
-      rw [heq, ← hdeg]
-      exact smul_mem_twist_pow _ _ I hua (mem_twist_pow_add _ _ I hn)
-    · rw [smul_zero]; exact Submodule.zero_mem _
-    · intro b e _ _ hb he; rw [smul_add]; exact Submodule.add_mem _ hb he
-    · intro s e _ he; rw [smul_comm]; exact Submodule.smul_mem _ s he
+    refine (Submodule.span_le (p :=
+      (secsOnZChart F.toSubSystem H.toSubSystem h I J).comap
+        (DistribSMul.toLinearMap S E (h j ^ a)⁻¹))).2 ?_ heI
+    rintro e ⟨n, hn⟩
+    change (h j ^ a)⁻¹ • e ∈ secsOnZChart F.toSubSystem H.toSubSystem h I J
+    refine Submodule.subset_span ⟨n + a, ?_⟩
+    have heq : xProd J ^ (n + a) • (h j ^ a)⁻¹ • e = u ^ a • (xProd J ^ n • e) := by
+      rw [smul_smul, smul_smul, hxu]
+      congr 1
+      field_simp
+      ring
+    have hdeg : a + J.1.card * n + (J.1.erase j).card * a = J.1.card * (n + a) := by
+      rw [hk]; ring
+    rw [heq, ← hdeg]
+    exact smul_mem_twist_pow _ _ I hua (mem_twist_pow_add _ _ I hn)
   have hq : h j ^ a ∈ twistMod S h (a : ℤ) J := by
     rw [twistMod_eq_span (a : ℤ) J hj, zpow_natCast]
     exact Submodule.mem_span_singleton_self _
