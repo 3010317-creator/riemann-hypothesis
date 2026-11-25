@@ -17,15 +17,7 @@ lemma gauss_strip (b c : ℝ) : ∃ C : ℝ, 0 ≤ C ∧ ∀ z : ℂ, b ≤ z.re
   set X := max |b| |c| with hX
   have hX0 : 0 ≤ X := le_trans (abs_nonneg _) (le_max_left _ _)
   refine ⟨8 * Real.exp ((1 + X) ^ 2 + X ^ 2), by positivity, fun z hb hc => ?_⟩
-  have hx : |z.re| ≤ X := by
-    rw [abs_le]
-    constructor
-    · have h1 := neg_abs_le b
-      have h2 := le_max_left |b| |c|
-      linarith
-    · have h1 := le_abs_self c
-      have h2 := le_max_right |b| |c|
-      linarith
+  have hx : |z.re| ≤ X := abs_le_max_abs_abs hb hc
   have hn : ‖Complex.exp (z ^ 2)‖ = Real.exp (z.re ^ 2 - z.im ^ 2) := by
     rw [Complex.norm_exp]
     congr 1
@@ -110,9 +102,7 @@ theorem differentiableOn_integral {T E : Type} [TopologicalSpace T] [CompactSpac
     have h1 : ‖w - z₀‖ ≤ 2 * ε := by simpa [dist_eq_norm] using hw
     have h2 : |(w - z₀).re| ≤ ‖w - z₀‖ := Complex.abs_re_le_norm _
     have h3 := abs_le.mp (h2.trans h1)
-    have h4 : ‖w‖ ≤ ‖z₀‖ + ‖w - z₀‖ := by
-      have := norm_add_le z₀ (w - z₀)
-      simpa using this
+    have h4 : ‖w‖ ≤ ‖z₀‖ + ‖w - z₀‖ := norm_le_norm_add_norm_sub' w z₀
     simp only [Complex.sub_re] at h3
     refine ⟨?_, ?_, ?_, ?_⟩ <;> linarith
   have hsub : closedBall z₀ (2 * ε) ⊆ {z : ℂ | z.re < 1 / 2} := fun w hw => (hball w hw).1
