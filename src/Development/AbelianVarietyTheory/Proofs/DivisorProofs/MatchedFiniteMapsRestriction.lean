@@ -316,8 +316,4 @@ theorem equiv_of_ker_eq' {κ : Type} [TopologicalSpace κ] {P Q : Type} [AddComm
 
 end Ker
 
-section Main
-
-end Main
-
 end GlobalTheory.FinUniq

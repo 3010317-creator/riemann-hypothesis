@@ -170,12 +170,6 @@ variable {g : ℕ} [Fact g.Prime] {r : ℕ}
 
 end Local
 
-section Global
-
-open GlobalTheory.IndefiniteRowSideFullHecke.BlockEmbeddingFactors
-
-end Global
-
 end GlobalTheory.GoodFamily
 end -- clump:auto
 end -- clump:auto

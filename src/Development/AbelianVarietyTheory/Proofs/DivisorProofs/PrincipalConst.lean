@@ -161,20 +161,6 @@ theorem presents_zpow {D : CartierDiv X} {L : LB X} {r : L.ι → X.functionFiel
 
 end Bundle
 
-section Comb
-
-variable {X : Scheme.{0}} [IsIntegral X] {ι : Type} (T : ι → LB X) (b : ι → ℤ)
-
-variable {k : Type} [CommRing k] {p : X ⟶ Sp k} {σ : k →+* ℂ}
-
-end Comb
-
-section Met
-
-variable {F : Type} [Field F] [NumberField F] {C : CxSt F} {Y : Var F}
-
-end Met
-
 end GlobalTheory.CombChern
 end -- clump:auto
 end -- clump:auto

@@ -537,11 +537,6 @@ open scoped CategoryTheory.Obj
 
 namespace GlobalTheory.Mum
 
-section
-variable {R : Type} [CommRing R] [IsLocalRing R] {S : Scheme.{0}}
-
-end
-
 
 open GlobalTheory.TorsionFormCompare in
 theorem isPullUnif_refl {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {D : DegData R I}

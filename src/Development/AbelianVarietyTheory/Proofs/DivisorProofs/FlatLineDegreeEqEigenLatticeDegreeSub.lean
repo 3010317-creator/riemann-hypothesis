@@ -973,12 +973,6 @@ open scoped TensorProduct
 open ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
 open Formalism.L2.PjFree (FrBaseChg ReFrame XoNumPt TanLin SClause IntRebase)
 
-section Dual
-
-variable {R R' : Type} [CommRing R] [CommRing R']
-
-end Dual
-
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
 variable {Xo : Moduli Dw l} {c : Coeff l}
 
@@ -1000,12 +994,6 @@ theorem isEigAt_of_isCombAt [Algebra c.F S] {x : Sp S ⟶ Xo.X} {m : ℕ}
   exact ReciprocityTheory.ChartRestriction.G.PullbackSections.wtfA_comb_eig x c τ (fun j => ReciprocityTheory.ChartRestriction.G.PullbackSections.wtfA_lt x (v j) (hv j)) he a
 
 end Comb
-
-section Gen
-
-variable {S : Type} [CommRing S] [Algebra c.F S]
-
-end Gen
 
 variable (Xo c)
 

@@ -71,27 +71,6 @@ def zHat : Subring Af where
 
 abbrev Idele (K : Type) [Field K] [NumberField K] : Type := (Af ⊗[ℚ] K)ˣ
 
-section Herm
-
-variable {E : Type} [Field E] [NumberField E] [NumberField.IsCMField E]
-  {W : Type} [AddCommGroup W] [Module ℚ W] [Module E W]
-
-
-
-end Herm
-
-section Groups
-
-variable {E : Type} [Field E] [NumberField E]
-  {W : Type} [AddCommGroup W] [Module ℚ W] [Module E W] [IsScalarTower ℚ E W]
-
-
-variable [Module (𝓞 E) W]
-
-
-
-end Groups
-
 end GlobalTheory.IndefiniteRowSideFullHecke.AdelicScalarMultiplier
 end -- clump:auto
 end -- clump:auto
@@ -228,63 +207,6 @@ theorem exists_adele_equiv :
   exact exists_adele_equiv_of_local primeCorr e he
 
 end Adeles
-
-section Transport
-
-variable {A A' : Type} [CommRing A] [Algebra ℚ A] [CommRing A'] [Algebra ℚ A'] (e : A ≃ₐ[ℚ] A')
-
-variable {V V' : Type} [AddCommGroup V] [Module ℚ V] [AddCommGroup V'] [Module ℚ V']
-
-end Transport
-
-section Adelic
-
-variable (e : IndefiniteRowSideFullHecke.IdeleNormTraceForm.Af ≃ₐ[ℚ] IndefiniteRowSideFullHecke.AdelicScalarMultiplier.Af)
-  (he : ∀ a, e a ∈ IndefiniteRowSideFullHecke.AdelicScalarMultiplier.zHat ↔ a ∈ IndefiniteRowSideFullHecke.IdeleNormTraceForm.Zhat)
-
-
-
-section Ideles
-
-variable {K : Type} [Field K] [NumberField K]
-
-
-
-
-end Ideles
-
-section Groups
-
-variable {E : Type} [Field E] [NumberField E]
-  {W : Type} [AddCommGroup W] [Module ℚ W] [Module E W] [IsScalarTower ℚ E W]
-
-
-include he
-
-
-
-variable [Module (𝓞 E) W] [IsScalarTower (𝓞 E) E W]
-
-end Groups
-
-end Adelic
-
-section Hypotheses
-
-variable {K : Type} [Field K] [NumberField K] {d : ℕ} {δ : K}
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] [Algebra K E]
-
-
-
-variable {W : Type} [AddCommGroup W] [Module ℚ W] [Module E W] [IsScalarTower ℚ E W]
-  [Module (𝓞 E) W] [IsScalarTower (𝓞 E) E W]
-
-
-
-
-
-end Hypotheses
 
 end GlobalTheory.NormLevelCompare
 end -- clump:auto

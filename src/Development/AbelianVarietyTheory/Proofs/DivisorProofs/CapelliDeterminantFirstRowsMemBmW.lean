@@ -78,10 +78,6 @@ variable {K}
 
 end Maps
 
-section Statement
-
-end Statement
-
 end GlobalTheory.IndefiniteRowSideFullHecke.InterlacingNumerators
 end -- clump:auto
 end -- clump:auto

@@ -78,19 +78,7 @@ namespace GlobalTheory.JointHarm
 
 open MvPolynomial Matrix
 
-section Minors
-
-variable {R : Type*} [CommRing R]
-
-variable {n l : ℕ}
-
-end Minors
-
 variable {n p q : ℕ}
-
-section Killed
-
-end Killed
 
 section Fock
 

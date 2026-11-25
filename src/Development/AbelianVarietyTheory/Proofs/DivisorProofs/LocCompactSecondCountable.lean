@@ -114,13 +114,6 @@ theorem distribHaarChar_eq [CompleteSpace L] [LocallyCompactSpace L] {ϖ : L} {�
   congr 1
   ring
 
-section Mat
-omit [Valued L (WithZero (Multiplicative ℤ))]
-
-variable (x y : Fin n → L) (z : L)
-
-end Mat
-
 variable {σ : L →+* L} (hσ : ∀ x, σ (σ x) = x) (hc : Continuous σ)
 
 
