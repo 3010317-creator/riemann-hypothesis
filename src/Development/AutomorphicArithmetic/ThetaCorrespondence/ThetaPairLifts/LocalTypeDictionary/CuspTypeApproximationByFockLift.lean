@@ -1417,7 +1417,7 @@ theorem gelfandKirillov_local_to_global : _root_.GlobalTheory.FunPr.ThetaLocalIn
     rw [hTE1 v u h, hT₀']
   have hMult : Formalism.IndefR.Mult.IsMultMap θ M ∅ 1 T := by
     refine ⟨?_, fun v => ((hrange _).1 ⟨TE v, rfl⟩).2.2.2.2.1, fun v k hk => by simp at hk, hequiv, hcont⟩
-    exact GlobalTheory.T.isSmoothAutomorphicForm_multMap_value hHC D θ hθ V S M T U N hU (fun v => by
+    exact _root_.GlobalTheory.EquivValues.isAutFunSm hHC D θ hθ V S M T U N hU (fun v => by
       have h := (hrange (ι (TE v))).1 ⟨TE v, rfl⟩
       exact ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.1, h.2.2.2.2.2⟩) hequiv hcont
   refine ⟨T, hMult, fun u => ?_⟩

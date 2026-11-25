@@ -1688,7 +1688,7 @@ theorem GlobalTheory.RunDepth.leafDepth2_run : (∀ (p : ℕ) [Fact p.Prime], Av
   obtain ⟨Ap, hAp0, hAp, hle⟩ := _root_.GlobalTheory.RunDepth.sizes_bound_two D L Pm Tp hK T.Q hM.pins hx hb O.C hPg.1 (ι j) (hR.inR j)
   haveI : Fact (resCharOf la).Prime := ⟨Crude.resCharOf_prime la⟩
   obtain ⟨hsp, h2, hvd, hup⟩ := _root_.GlobalTheory.CharDepth.twoPlaces_host D T.Q.H hM.pins.1.1 (resCharOf la) (hR.sm_eq ▸ hla)
-  refine ⟨_, ?_, GlobalTheory.T.unscaledDepth_le_placeOverTwo (resCharOf la) (hAv _) (hHT _) D.host.E T.Q.H (T.Q.Dw (ι j)) T.Q.l (T.Q.Xo (ι j)) T.Q.c
+  refine ⟨_, ?_, _root_.GlobalTheory.CharDepth.nuW_le_two (resCharOf la) (hAv _) (hHT _) D.host.E T.Q.H (T.Q.Dw (ι j)) T.Q.l (T.Q.Xo (ι j)) T.Q.c
     hR.star_eq D.R.f (D.host.vdH (resCharOf la)) hvd hsp h2 la rfl _ _ _ (fun τ _ _ h => (hL.wts _ (hR.inR j)).1 τ h)
     (DepthTie.card_of_laws T _ hL hM.pins (ι j) (hR.inR j)) Ap hAp0 hAp⟩
   unfold OnObj.sC OnObj.Se

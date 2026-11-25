@@ -195,7 +195,7 @@ theorem level_spreads : ∀ {o₁ Ω₁ : Type} [CommRing o₁] [Field Ω₁] [A
   have := GenSpread.isFractionRing_of_forall_div hfr₂
   have := GenSpread.isNoetherianRing_of_fg hR₂
   have := P₂.isAb.proper
-  obtain ⟨d, hd, Hi⟩ := GlobalTheory.T.exists_pointIndependence_spread_to_geometricFibres R₂ Ω₂ P₂.A Q.A φ₂ inferInstance hQ₂ _ K y lev.pt hy fun c c' h => by
+  obtain ⟨d, hd, Hi⟩ := _root_.GlobalTheory.GenSpread.exists_forall_linComb_injective R₂ Ω₂ P₂.A Q.A φ₂ inferInstance hQ₂ _ K y lev.pt hy fun c c' h => by
     refine lev.indep (AlgebraicClosure Ω₂) (spMap (algebraMap Ω₂ _)) c c' ?_
     rw [← GenSpread.comp_linComb, ← GenSpread.comp_linComb, h]
   obtain ⟨R₃, g₃, le₃, hR₃, c₃, u₃, -, -, -⟩ :=

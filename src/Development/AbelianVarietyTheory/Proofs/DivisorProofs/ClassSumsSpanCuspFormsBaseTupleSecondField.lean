@@ -170,7 +170,7 @@ theorem move_at_point : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndep
   obtain ⟨_, -, hproj⟩ := GlobalTheory.T.heisenbergVacuum_projection_rootOfUnity_phases E r X g bas idx n hs hn _ hwi hw L hL v₀ hv₀
   obtain ⟨hu1, -, hp1⟩ := hproj _ hΛ1
   obtain ⟨hu2, -, hp2⟩ := hproj _ hΛ1'
-  obtain ⟨⟨σ, hσ⟩, hmove⟩ := GlobalTheory.T.roots_levelPoints_same_vacuum_translates E H Dw l r X g bas n hs hn L hL mk hmk h hu _ hΛ _ hΛ' hmv N N' hN hN'
+  obtain ⟨⟨σ, hσ⟩, hmove⟩ := _root_.GlobalTheory.Dict.RootsMove.roots_move E H Dw l r X g bas n hs hn L hL mk hmk h hu _ hΛ _ hΛ' hmv N N' hN hN'
     Y Y' hY hY'
   obtain ⟨-, -, -, hz1, -⟩ := ZLat.exists_reps_sum E r X g bas idx n hs hn _ hwi hw L hL _ hΛ1 N hN.1
     (hN.2.2.trans inf_le_left)
@@ -192,7 +192,7 @@ theorem move_at_point : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndep
     have hsb' := ((heisG_laws E r X g bas idx n hs hn).2.2.2 (h * Y q) u' hu2.1).1
     have han := (theta_holomorphic_weight E r X g q0 hr bas idx n hs hn 0 0 _ hsb' 0 (zero_mem _)).2.2.2 x hx
     rw [hwq q _ (hσ q), hmove q _ (hσ q) u' hu2, thP, thP,
-      GlobalTheory.T.polyDeriv_letter_pushforward_eq_column_action E H Dw l c _ r g X idx e q0 n hr eL hdir hty h P _ han,
+      _root_.GlobalTheory.Phase.polyDeriv_pushLet_eq_hAct E H Dw l c _ r g X idx e q0 n hr eL hdir hty h P _ han,
       funext (thA_heisG_hAct E r X g bas idx n hs hn h hu u u' hu1.1 hu2.1 t x hx hcol (Y q)),
       mul_left_comm t, ← Jet.polyDeriv_smul_fun _ _ (ThetaHol.differentiable_thA idx hs hsb hx)]
     rfl

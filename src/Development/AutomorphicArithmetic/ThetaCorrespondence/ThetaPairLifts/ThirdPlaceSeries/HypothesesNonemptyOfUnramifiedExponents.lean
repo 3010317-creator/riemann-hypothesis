@@ -530,7 +530,7 @@ theorem genFam : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂
     simp [Gt, h0]
   have hrefl : ∀ t : TauC Y u u', t ∈ (Y.tO u u').genSet → t ∈ gCls Y u u' t := by
     intro t ht
-    obtain ⟨h1, h2⟩ := GlobalTheory.T.same_row_same_coset_scalar_corank_one D X Y u u' t t (hG t ht) rfl rfl
+    obtain ⟨h1, h2⟩ := _root_.GlobalTheory.SnFamCoset.scalar_of_same_coset D X Y u u' t t (hG t ht) rfl rfl
     exact ⟨ht, rfl, h1, h2⟩
 
   have hrow : ∀ t t' : TauC Y u u', t' ∈ gCls Y u u' t → (Y.tO u u').rowOf t' = (Y.tO u u').rowOf t :=
@@ -552,7 +552,7 @@ theorem genFam : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂
       have : t' ∈ gCls Y u u' t := he ▸ hrefl t' ht'
       exact (hrow t t' this).symm
     · intro hr
-      obtain ⟨hs, hc⟩ := GlobalTheory.T.same_row_same_coset_scalar_corank_one D X Y u u' t t' (hG t ht) hr hn
+      obtain ⟨hs, hc⟩ := _root_.GlobalTheory.SnFamCoset.scalar_of_same_coset D X Y u u' t t' (hG t ht) hr hn
       obtain ⟨hs', hc'⟩ := hsym t ht t' ht' hr hs hc
       exact Set.Subset.antisymm (hsub t' ht' t ht hr.symm hs' hc') (hsub t ht t' ht' hr hs hc)
   · intro t ht t' ht' he

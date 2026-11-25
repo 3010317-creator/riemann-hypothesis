@@ -1324,7 +1324,7 @@ theorem lip_value : GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7) (θ :
   set φ : GA D Y → ℂ := t (PiTensorProduct.tprod ℂ p.w) with hφ
   set α : GinfC Y → ℂ := fun h => coefR θ M (p.v θ) (p.v θ) (stabilizerEmbedding d (h : GA D Y)) with hα
   have hαi : Integrable α m := by simpa only [one_mul] using (hc.far 1).1
-  have hrep := GlobalTheory.T.integrable_scalar_action_multiplicityMap_values hCusp D θ hθ Y S' M₀ J χ t ht p.w m inferInstance α c hαi hc.act
+  have hrep := _root_.GlobalTheory.ValAct.integral_mul_multT_eq hCusp D θ hθ Y S' M₀ J χ t ht p.w m inferInstance α c hαi hc.act
 
   have hT := (mem_multT θ M₀ J χ t).1 ht
   have hcont : Continuous φ := by
@@ -1468,7 +1468,7 @@ theorem exists_cusp_form_theta_period_ne_zero : GlobalTheory.Published.HarishCha
     have hr1 : 1 ≤ (Yc D 0).rank := by rw [hrY]; exact (odd_r D).pos
     have hmin : ∀ τ, min (Finset.univ.filter fun a => p.A.ε τ a = true).card
         (Finset.univ.filter fun a => p.A.ε τ a = false).card ≤ D.R.m := fun τ => min_le_of_right_le (hmY p.A τ)
-    have h := GlobalTheory.T.norm_cuspForm_le_of_shortLine D W.θ hθ (Yc D 0) p.A (L.ΛY 0) hsdY (D.host.g 0 * D.host.g 1) D.R.m hg1 hm1 hr1 hmin (t (PiTensorProduct.tprod ℂ p.w))
+    have h := _root_.GlobalTheory.ShortLineCusp.norm_le_of_not_long D W.θ hθ (Yc D 0) p.A (L.ΛY 0) hsdY (D.host.g 0 * D.host.g 1) D.R.m hg1 hm1 hr1 hmin (t (PiTensorProduct.tprod ℂ p.w))
       hAutSm.toIsAutFun hCusp hInv (Real.exp (loss D C large₂.sc.b) * b) (by positivity) hLip x s hs0 hs1 hn
     rw [hrY] at h
     have : ‖t (PiTensorProduct.tprod ℂ p.w) x‖ ≤ b / 2 := by
@@ -1480,7 +1480,7 @@ theorem exists_cusp_form_theta_period_ne_zero : GlobalTheory.Published.HarishCha
   have hJ' : ∀ k ∈ GfC (Yc D 0), Lev.finE (G.V (.core 0)) (stabilizerEmbedding G.sp.dec0 k) ∈
       congLev D.sp.cm (G.V (.core 0)).gram (G.sp.dec0.lat (L.ΛY 0) fun _ => 1) G.modul → k ∈ (levRow L : Set (GA D (Yc D 0))) := by
     rw [← hlam]; exact hJ
-  obtain ⟨c, hc⟩ := GlobalTheory.T.unipotentPeriod_adelic_clauses_of_real hCRD D W.θ hθ (Yc D 0) (G.V (.core 0)) G.sp.dec0 _ _ M₀ MP p (loss D C large₂.sc.b) hp
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.SepPer.AdelicFromReal.adelicAt_of_real hCRD D W.θ hθ (Yc D 0) (G.V (.core 0)) G.sp.dec0 _ _ M₀ MP p (loss D C large₂.sc.b) hp
     (G.sp.dec0.lat (L.ΛY 0) fun _ => 1) G.modul hsdV hmod hz0 (levRow L : Set (GA D (Yc D 0))) hJ' t ht v.μ v.haar
   have hN1 : 2 * Real.exp (loss D C large₂.sc.b + (6 * ((G.V (.core 0)).rank : ℝ) + 9) * Fintype.card D.what₂.Tau) ≤
       s ^ Fintype.card D.what₂.Tau * Real.sqrt (Ideal.absNorm G.modul) := by
