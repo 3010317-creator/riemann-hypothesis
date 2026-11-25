@@ -254,7 +254,7 @@ theorem exists_section_form (y : (Σ k, ι k) → Ω) (B : ChartBundle F (segreV
         t i * eval₂ ((algebraMap Ω Φ).comp (algebraMap F Ω))
           (projCoord y w φ (truncCoord t ((i : ℕ) + 1))) (chartMono M c β) := by
   have hY : ∀ k, y ⟨k, c k⟩ ≠ 0 := fun k => (Finset.prod_ne_zero_iff.1 hsc) k (Finset.mem_univ _)
-  obtain ⟨ψ, hψint, hψlow, hψi⟩ := exists_flag_dual y B w b hfl c hsc i
+  obtain ⟨ψ, hψint, hψlow, hψi⟩ := FlagBundleSectionForms.exists_flag_dual_of_frame y B w b hfl c hsc i
   obtain ⟨u, hu, hψ⟩ := hφ.generate c hsc ψ hψint
   have hstar : t i * algebraMap Ω Φ (chartPow y c (b i))⁻¹ =
       ∑ l, algebraMap Ω Φ (u l * chartPow y c (-a)) *
