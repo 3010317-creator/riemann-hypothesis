@@ -1,41 +1,26 @@
 module
 
+public import Formalism.AdmissibleDesigns.Base
+public import Formalism.AdmissibleDesigns.Cohomology
+public import Formalism.AdmissibleDesigns.DeRham
 public import Formalism.AdmissibleDesigns.KernelLengthHigherColumns
-public import Formalism.AdmissibleDesigns.ExistsWildInertiaCyclotomicGenerator
-public import Formalism.AdmissibleDesigns.SelmerInequalityOfInputs
-public import Formalism.AdmissibleDesigns.CharacterTrivialWhereLattice
-public import Formalism.AdmissibleDesigns.SelfGood
-public import Formalism.AdmissibleDesigns.FiniteClassesLocalEq
-public import Formalism.AdmissibleDesigns.FiniteClassesContinuousLattice
-public import Formalism.AdmissibleDesigns.RankReductionIdempotentOne
-public import Formalism.SharpRestriction.LevelLetterCocycles.LargeLevelLemmas
-public import Formalism.AdmissibleDesigns.ColumnUnramifiedCharacter
-public import Formalism.AdmissibleDesigns.IsDROfWpIso
-public import Formalism.AdmissibleDesigns.MemIntegralSpanIffImage
-public import Formalism.AdmissibleDesigns.CohomZeroEquivContinuous
-public import Formalism.SharpRestriction.LevelLetterCocycles.GoodCongruenceDataOf
-public import Formalism.SharpRestriction.LevelLetterCocycles.SecondPropositionEveryLocalisation
-public import Formalism.AdmissibleDesigns.GlobalIndexTheoremPlacesOfRNAdm
+public import Formalism.AdmissibleDesigns.LocalCohom
+public import Formalism.AdmissibleDesigns.SelmerInputs
 public import Formalism.SharpRestriction.LevelLetterCocycles.DistinctEigenvalueCornerPerturbationOfBlocks
+public import Formalism.SharpRestriction.LevelLetterCocycles.GoodCongruenceDataOf
+public import Formalism.SharpRestriction.LevelLetterCocycles.LargeLevelLemmas
+public import Formalism.SharpRestriction.LevelLetterCocycles.SecondPropositionEveryLocalisation
 public import Formalism.WachLatticeTwists.RamifiedBlockRings.RamifiedBlockProofs.FinrankRangeEq
-public import Formalism.AdmissibleDesigns.UnramifiedInputOfAdmitted
-public import Formalism.AdmissibleDesigns.NormalizedRingData
 import Formalism.WachLatticeTwists.RealDisplaySplitting.SurjectionRankOneIdempotent
 import Formalism.WachLatticeTwists.SplitLocalLifts.Statement
 import Mathlib.Tactic.Linter.HaveILetI
-import Formalism.AdmissibleDesigns.EKSymmCont
-import Formalism.AdmissibleDesigns.TheoremN5OfNormalizedItems
-import Formalism.AdmissibleDesigns.PiEquiv2
 import Mathlib.Tactic.Linter.Style
 
--- This file was produced by scripts/clump.py from the modules listed below.
--- Members: Formalism.AdmissibleDesigns.SelmerInequalityOpen, Formalism.AdmissibleDesigns.TheoremFromNormalizedOpen, Formalism.AdmissibleDesigns.TheoremFromNormalizedOpenThree, Formalism.AdmissibleDesigns.ColLx, Formalism.AdmissibleDesigns.DesignOfAdmittedObjects, Formalism.AdmissibleDesigns.DesignNormalizedOfAdmitted, Formalism.AdmissibleDesigns.StatementOneBChangedOfOpen
-
--- ===== clump member: Formalism.AdmissibleDesigns.SelmerInequalityOpen =====
--- clump-header: {"m": "Formalism.AdmissibleDesigns.SelmerInequalityOpen", "h": "module\n\npublic import Formalism.AdmissibleDesigns.KernelLengthHigherColumns\npublic import Formalism.AdmissibleDesigns.ExistsWildInertiaCyclotomicGenerator\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.WachLatticeTwists.RealDisplaySplitting.SurjectionRankOneIdempotent\nimport Formalism.WachLatticeTwists.SplitLocalLifts.Statement\n\n"}
-section -- clump:auto
 @[expose] public section
 
+noncomputable section
+
+section
 variable [hT2Core : Fact ReciprocityTheory.ChartRestriction.T2.Core] [hH0Fin : Fact Formalism.MainNotions.N.K.H0.FinCore]
 
 noncomputable section
@@ -103,15 +88,9 @@ end Final
 end Formalism.MainNotions.N.K.St
 
 end
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.AdmissibleDesigns.SelmerInequalityOpen =====
+end
 
--- ===== clump member: Formalism.AdmissibleDesigns.TheoremFromNormalizedOpen =====
--- clump-header: {"m": "Formalism.AdmissibleDesigns.TheoremFromNormalizedOpen", "h": "module\n\npublic import Formalism.AdmissibleDesigns.SelmerInequalityOfInputs\npublic import Formalism.AdmissibleDesigns.CharacterTrivialWhereLattice\npublic import Formalism.AdmissibleDesigns.SelmerInequalityOpen\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
+section
 variable [hT2Core : Fact ReciprocityTheory.ChartRestriction.T2.Core] [hH0Fin : Fact Formalism.MainNotions.N.K.H0.FinCore]
 
 noncomputable section
@@ -270,15 +249,9 @@ end Final
 end Formalism.MainNotions.N.K.St
 
 end
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.AdmissibleDesigns.TheoremFromNormalizedOpen =====
+end
 
--- ===== clump member: Formalism.AdmissibleDesigns.TheoremFromNormalizedOpenThree =====
--- clump-header: {"m": "Formalism.AdmissibleDesigns.TheoremFromNormalizedOpenThree", "h": "module\n\npublic import Formalism.AdmissibleDesigns.SelfGood\npublic import Formalism.AdmissibleDesigns.SelmerInequalityOfInputs\npublic import Formalism.AdmissibleDesigns.FiniteClassesLocalEq\npublic import Formalism.AdmissibleDesigns.TheoremFromNormalizedOpen\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
+section
 variable [hT2Core : Fact ReciprocityTheory.ChartRestriction.T2.Core] [hH0Fin : Fact Formalism.MainNotions.N.K.H0.FinCore]
 
 noncomputable section
@@ -435,15 +408,9 @@ end Final
 end Formalism.MainNotions.N.K.St
 
 end
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.AdmissibleDesigns.TheoremFromNormalizedOpenThree =====
+end
 
--- ===== clump member: Formalism.AdmissibleDesigns.ColLx =====
--- clump-header: {"m": "Formalism.AdmissibleDesigns.ColLx", "h": "module\n\npublic import Formalism.AdmissibleDesigns.FiniteClassesContinuousLattice\npublic import Formalism.AdmissibleDesigns.KernelLengthHigherColumns\npublic import Formalism.AdmissibleDesigns.RankReductionIdempotentOne\npublic import Formalism.SharpRestriction.LevelLetterCocycles.LargeLevelLemmas\npublic import Formalism.AdmissibleDesigns.ColumnUnramifiedCharacter\nimport Formalism.AdmissibleDesigns.EKSymmCont\npublic import Formalism.AdmissibleDesigns.IsDROfWpIso\npublic import Formalism.AdmissibleDesigns.MemIntegralSpanIffImage\nimport Formalism.AdmissibleDesigns.TheoremN5OfNormalizedItems\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\npublic import Formalism.AdmissibleDesigns.CohomZeroEquivContinuous\nimport Formalism.AdmissibleDesigns.PiEquiv2\n\n"}
-section -- clump:auto
-@[expose] public section
-
+section
 variable [hT2Core : Fact ReciprocityTheory.ChartRestriction.T2.Core] [hH0Fin : Fact Formalism.MainNotions.N.K.H0.FinCore]
 
 noncomputable section
@@ -512,17 +479,9 @@ end Cols2
 end Formalism.MainNotions.N.K.StA
 
 end
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.AdmissibleDesigns.ColLx =====
+end
 
--- ===== clump member: Formalism.AdmissibleDesigns.DesignOfAdmittedObjects =====
--- clump-header: {"m": "Formalism.AdmissibleDesigns.DesignOfAdmittedObjects", "h": "module\n\npublic import Formalism.SharpRestriction.LevelLetterCocycles.GoodCongruenceDataOf\npublic import Formalism.SharpRestriction.LevelLetterCocycles.SecondPropositionEveryLocalisation\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
+section
 open Formalism.BasicNotions
 
 namespace Formalism.MainNotions.N.RepresentationBoundsCohomology.J8
@@ -733,19 +692,9 @@ open Formalism.NG
 end Comp
 
 end Formalism.MainNotions.N.RepresentationBoundsCohomology.J8
-
 end
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.AdmissibleDesigns.DesignOfAdmittedObjects =====
 
--- ===== clump member: Formalism.AdmissibleDesigns.DesignNormalizedOfAdmitted =====
--- clump-header: {"m": "Formalism.AdmissibleDesigns.DesignNormalizedOfAdmitted", "h": "module\n\npublic import Formalism.AdmissibleDesigns.GlobalIndexTheoremPlacesOfRNAdm\npublic import Formalism.SharpRestriction.LevelLetterCocycles.DistinctEigenvalueCornerPerturbationOfBlocks\npublic import Formalism.SharpRestriction.LevelLetterCocycles.LargeLevelLemmas\npublic import Formalism.AdmissibleDesigns.DesignOfAdmittedObjects\nimport Formalism.SharpRestriction.LevelLetterCocycles.SecondPropositionEveryLocalisation\npublic import Formalism.WachLatticeTwists.RamifiedBlockRings.RamifiedBlockProofs.FinrankRangeEq\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
+section
 open Formalism.BasicNotions
 
 namespace Formalism.MainNotions.N.K.Norm
@@ -1076,16 +1025,9 @@ theorem design_normalized_of_admitted (hA : LargeLevelLemmas.adm51 i r ρ π) (h
 end D51b
 
 end Formalism.MainNotions.N.K.Norm
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.AdmissibleDesigns.DesignNormalizedOfAdmitted =====
+end
 
--- ===== clump member: Formalism.AdmissibleDesigns.StatementOneBChangedOfOpen =====
--- clump-header: {"m": "Formalism.AdmissibleDesigns.StatementOneBChangedOfOpen", "h": "module\n\npublic import Formalism.AdmissibleDesigns.UnramifiedInputOfAdmitted\npublic import Formalism.AdmissibleDesigns.GlobalIndexTheoremPlacesOfRNAdm\npublic import Formalism.AdmissibleDesigns.TheoremFromNormalizedOpenThree\npublic import Formalism.AdmissibleDesigns.ColLx\nimport Formalism.AdmissibleDesigns.ColumnUnramifiedCharacter\npublic import Formalism.AdmissibleDesigns.DesignNormalizedOfAdmitted\npublic import Formalism.AdmissibleDesigns.NormalizedRingData\nimport Formalism.AdmissibleDesigns.TheoremN5OfNormalizedItems\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
+section
 variable [hT2Core : Fact ReciprocityTheory.ChartRestriction.T2.Core] [hH0Fin : Fact Formalism.MainNotions.N.K.H0.FinCore]
 
 noncomputable section
@@ -1320,6 +1262,4 @@ end StmtsB
 end Formalism.MainNotions.N.K.Final
 
 end
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.AdmissibleDesigns.StatementOneBChangedOfOpen =====
+end

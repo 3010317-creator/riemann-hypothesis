@@ -1,14 +1,17 @@
 module
 
-public import Formalism.AdmissibleDesigns.HigherColumnInvariantsBound
+public import Formalism.AdmissibleDesigns.Base
+public import Formalism.AdmissibleDesigns.Cohomology
+public import Formalism.AdmissibleDesigns.LocalCohom
 public import Formalism.SharpRestriction.LevelLetterCocycles.RingDataOfIdempotents
 public import Formalism.WachLatticeTwists.RamifiedBlockRings.DistinctEigenvalueCornerPerturbation
 public import Formalism.WachLatticeTwists.RealClassMaps.RealClassMapTheorem
-public import Formalism.AdmissibleDesigns.H1MapMemLcH1
-public import Formalism.AdmissibleDesigns.BlockTwistedCyclotomic
 
 @[expose] public section
 
+noncomputable section
+
+section
 variable [hT2Core : Fact ReciprocityTheory.ChartRestriction.T2.Core]
 
 noncomputable section
@@ -204,4 +207,5 @@ theorem theorem_of_display_and_g2 [hFin : Fact FinCore] {D : D7} (i : D.nd.Loc)
 
 end Formalism.MainNotions.N.K.H0
 
+end
 end
