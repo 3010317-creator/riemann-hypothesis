@@ -13,7 +13,8 @@ it is not read. For example:
 
 These are the forms that descriptions of dependent pull requests commonly use, beyond the
 `depends on` line that AGENTS.md asks for. Text that GitHub does not show as text is not read:
-HTML comments, fenced code blocks, and code spans such as `#123` in backticks. Pull requests of other repositories are left out.
+HTML comments, fenced code blocks, and code spans such as `#123` in backticks. Pull requests of
+other repositories are left out.
 """
 from __future__ import annotations
 
