@@ -105,7 +105,7 @@ theorem baseChangeAlgebraRepresentationAction_injective {C V : Type} [Ring C] [A
       rw [h1]
       simp [g, Algebra.smul_def]
     | add y z hy hz => simp only [map_add (f := _), Pi.add_apply, LinearMap.add_apply, hy, hz]
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+  rw [injective_iff_map_eq_zero]
   intro y hy
   apply hlg
   rw [map_zero]

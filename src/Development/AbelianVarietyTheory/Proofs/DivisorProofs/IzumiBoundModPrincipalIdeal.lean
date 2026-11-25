@@ -392,7 +392,7 @@ noncomputable def toCompletion (hpm : (p : C) ∈ maximalIdeal C) :
 
 theorem algebraMap_injective [IsNoetherianRing C] :
     Function.Injective (algebraMap C (AdicCompletion (maximalIdeal C) C)) := by
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+  rw [injective_iff_map_eq_zero]
   intro x hx
   have hmem : x ∈ ⨅ n : ℕ, maximalIdeal C ^ n := by
     rw [Submodule.mem_iInf]

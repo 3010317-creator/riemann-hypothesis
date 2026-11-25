@@ -940,7 +940,7 @@ theorem exists_denominator {A : Type} [CommRing A] [IsDomain A] [IsDiscreteValua
     isUnit_iff_ne_zero.2 ((map_ne_zero_iff _ hf).2 h0)
   obtain ⟨ψ, hψ⟩ := exists_away_lift (S := S) _ f hu
   have hψi : Function.Injective ψ := by
-    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+    rw [injective_iff_map_eq_zero]
     intro x hx
     obtain ⟨⟨a, m⟩, ha⟩ :=
       IsLocalization.surj (Submonoid.powers (PowerSeries.C ϖ * PowerSeries.X : PowerSeries A)) x
@@ -1497,7 +1497,7 @@ theorem extend_of_integral_at_dvr : ∀ (X : Scheme.{0}) (G W₀ : X.Opens) (hle
   have hN : ⊤ ≤ η ⁻¹ᵁ X.basicOpen s := generic_le hG (X.basicOpen_le s) ⟨p, hps⟩
   have inj : Function.Injective (ev η (X.basicOpen s) hN) := by
     haveI := hG.isLocalization_basicOpen s
-    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+    rw [injective_iff_map_eq_zero]
     intro x hx
     obtain ⟨⟨a, m⟩, e⟩ := IsLocalization.surj (Submonoid.powers s) x
     have h1 : algebraMap Γ(X, G) K a = 0 := by

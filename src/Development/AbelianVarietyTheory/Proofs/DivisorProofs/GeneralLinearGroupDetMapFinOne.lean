@@ -48,7 +48,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-set_option backward.isDefEq.respectTransparency false
 
 noncomputable section
 namespace GlobalTheory.EtC.PicSpec
@@ -79,7 +78,7 @@ theorem unitSec_res {V U : Scheme.{0}} (g : V ⟶ U) (u : (Γ(U, ⊤))ˣ) :
   unfold unitSec ofRings.sec
   have := (toSheafify Scheme.etaleTopology (Scheme.Γ ⋙ unitsF)).naturality g.op
   have h2 := congrArg (fun f => f.hom (show (Scheme.Γ ⋙ unitsF).obj (op U) from ULift.up (Additive.ofMul u))) this
-  simp only [ModuleCat.hom_comp, LinearMap.comp_apply] at h2
+  simp only [ModuleCat.hom_comp] at h2
   exact h2.symm
 
 theorem glMat_map {U V : Scheme.{0}} (g : V ⟶ U) (y : Sx (ofCat (glCat 1)) 1 U) :
