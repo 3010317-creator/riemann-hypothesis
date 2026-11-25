@@ -218,16 +218,6 @@ section -- clump:auto
 
 section
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.MainNotions.N Polynomial GlobalTheory.CuspRep GlobalTheory.HeckeGal GlobalTheory.GalOfCusp UpperTheory.V UpperTheory.V.Af UpperTheory.V.Af.Bc UpperTheory.V.Published UpperTheory.V.Af.Sol
-private theorem tendsto_under' {K K' : Type} [Field K] [NumberField K] [Field K'] [NumberField K'] [Algebra K K'] :
-    Filter.Tendsto (fun w : HeightOneSpectrum (𝓞 K') => w.under (𝓞 K)) Filter.cofinite Filter.cofinite := by
-  refine Filter.Tendsto.cofinite_of_finite_preimage_singleton fun v => ?_
-  have h0 : Ideal.map (algebraMap (𝓞 K) (𝓞 K')) v.asIdeal ≠ 0 :=
-    fun h => v.ne_bot ((Ideal.map_eq_bot_iff_of_injective (FaithfulSMul.algebraMap_injective _ _)).1 h)
-  refine (Ideal.finite_factors h0).subset fun w hw => ?_
-  have e : w.under (𝓞 K) = v := hw
-  show w.asIdeal ∣ _
-  rw [Ideal.dvd_iff_le, Ideal.map_le_iff_le_comap, ← e]
-  exact le_rfl
 theorem UpperTheory.norm_character_of_printed_char_frobenius :
     _root_.UpperTheory.V.Af.Hypotheses' → UpperTheory.V.Af.Sol.CharFrob → UpperTheory.V.Af.Sol.NormChar := by
   intro P hC K M Ω _ _ _ _ _ _ _ _ _ _ _ l _ ι η hη
@@ -240,7 +230,9 @@ theorem UpperTheory.norm_character_of_printed_char_frobenius :
   have hE := hC K Ω l ι η δ ⟨hδc, art, 0, ha, hA, hL⟩
   refine ⟨δ, ?_, hE.mono fun v hv => hv.2⟩
   have hw : ∀ᶠ w : HeightOneSpectrum (𝓞 M) in Filter.cofinite, CharEig ι (δ.comp (res K Ω M)) w 1 := by
-    filter_upwards [hN.2.2, (tendsto_under' (K := K) (K' := M)).eventually hE] with w h1 h2
+    have ht :=
+      GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.tendsto_under K M
+    filter_upwards [hN.2.2, ht.eventually hE] with w h1 h2
     have hf := _root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow (K := K) w
     have h3 := (UpperTheory.frobenius_power_compatibility K M Ω l ι w _ hf).2 δ _ h2.2
     rwa [← Units.val_pow_eq_pow_val, h1 _ hf, Units.val_one] at h3

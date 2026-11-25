@@ -42,6 +42,8 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
+import
+  Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermHeckeFormula
 
 @[expose] public section
 
@@ -131,16 +133,6 @@ private theorem intMat_le (w : Pl E) (Y : Multiplicative (Matrix (Fin a) (Fin b)
     intro i j
     simpa using hx i j
 
-private theorem avg_const {H : Type} [Group H] (c : ℂ) : avg (fun _ : H => c) = c := by
-  have hs : rStab (fun _ : H => c) = ⊤ := by
-    ext k
-    simp [rStab]
-  unfold avg
-  rw [hs, Subgroup.index_top]
-  haveI : Subsingleton (H ⧸ (⊤ : Subgroup H)) := QuotientGroup.subsingleton_quotient_top
-  rw [finsum_eq_single _ (1 : H ⧸ (⊤ : Subgroup H)) (fun x hx => absurd (Subsingleton.elim _ _) hx)]
-  simp
-
 private theorem supp_fin (h : a + b = n) (w : Pl E) (f : GLw n w → ℂ) (hf : HasCompactSupport f)
     (m : GLw a w × GLw b w) :
     (Function.support fun q : Multiplicative (Matrix (Fin a) (Fin b) (w.adicCompletion E)) ⧸ intMat a b w =>
@@ -200,7 +192,7 @@ theorem ctSph : CtSph := by
     have : (fun k : GlobalTheory.LFun.KGL w (n := n) => f ((k : GLw n w)⁻¹ * y * k)) = fun _ => f y := by
       funext k
       rw [(hinv k k.2 _).2, (hinv _ (inv_mem k.2) y).1]
-    rw [this, avg_const]
+    rw [this, _root_.GlobalTheory.CompanionTheory.CtS.avg_const]
   unfold ct
   simp only [havg]
   rw [hintSph _ (intMat a b w) (fun X => f (GlobalTheory.BCT.blk h w m (Multiplicative.toAdd X)))]

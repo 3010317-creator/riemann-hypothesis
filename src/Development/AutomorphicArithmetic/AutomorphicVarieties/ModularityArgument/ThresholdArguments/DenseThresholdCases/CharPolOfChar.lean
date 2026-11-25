@@ -97,10 +97,7 @@ theorem UpperTheory.V.Z.Sym.W.eigW_alt :
       (r (s : G L Ω)).val.charpoly.map ι.toRingHom := by
     rw [← hw]; exact hN.charPol_wdOf hl ht ι s
   obtain ⟨a', ha', H⟩ := hrc
-  obtain rfl : a' = a := by
-    obtain ⟨art, hart⟩ := Q.aut.art L Ω
-    have hinj := GlobalTheory.ArtinLocalInj.artin_localIdele_injective Q.loc.chev L Ω art hart w
-    exact MonoidHom.ext fun σ => hinj ((ha'.glob art hart _).trans (ha.glob art hart _).symm)
+  obtain rfl : a' = a := (UpperTheory.Zero.LLC.artEx L Ω A w h).unique ha' ha
   haveI : CharZero (w.adicCompletion L) := algebraRat.charZero _
   let τ' : IrrRep (GL (Fin n) (w.adicCompletion L)) := ⟨_, τ.ρ, τ.smooth, τ.irred⟩
   have h1 := (hasSupport_of_isSubquotient_prinSeries _ n _ hψ τ' hsub).of_equiv (IrrGL.equivOf τ.ρ τ.smooth τ.irred)

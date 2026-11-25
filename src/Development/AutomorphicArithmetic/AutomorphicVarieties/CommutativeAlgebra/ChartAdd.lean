@@ -209,13 +209,6 @@ private theorem chart_add_coeff {K τ τ' : Type} [CommRing K] (ε : τ ≃ τ')
   rw [h2, Finsupp.mapDomain_id] at h
   exact h
 
-private theorem chart_add_weight {τ τ' X : Type} [AddCommGroup X] (g : τ' → τ) (wt : τ → X) (n : τ' →₀ ℕ) :
-    Finsupp.weight wt (Finsupp.mapDomain g n) = Finsupp.weight (fun s => wt (g s)) n := by
-  induction n using Finsupp.induction_linear with
-  | zero => simp
-  | add a b ha hb => rw [Finsupp.mapDomain_add, map_add (f := _), map_add (f := _), ha, hb]
-  | single a b => simp [Finsupp.weight_single]
-
 private theorem chart_add_rename {O A X τ τ' : Type} [CommRing O] [IsDomain O] [CommRing A] [Algebra O A]
     [AddCommGroup X] {𝒜 : X → Submodule O A} {x : A →ₐ[O] O} {wt : τ → X}
     {φ : A →ₐ[O] MvPowerSeries τ (FractionRing O)} (h : IsChart 𝒜 x wt φ) (ε : τ ≃ τ') (wt' : τ' → X)
@@ -226,7 +219,7 @@ private theorem chart_add_rename {O A X τ τ' : Type} [CommRing O] [IsDomain O]
     show coeff n (rename ε (φ f)) = 0
     rw [chart_add_coeff]
     refine h.graded j f hf _ ?_
-    rwa [chart_add_weight, ← funext hw]
+    simpa [Finsupp.weight, Function.comp_def, funext hw] using hn
   · intro f
     show constantCoeff (rename ε (φ f)) = _
     rw [constantCoeff_rename, h.const]
