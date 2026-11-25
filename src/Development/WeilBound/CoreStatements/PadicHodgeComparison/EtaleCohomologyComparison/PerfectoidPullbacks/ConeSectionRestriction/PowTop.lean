@@ -85,7 +85,6 @@ import Mathlib.RingTheory.SimpleRing.Principal
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 noncomputable section
 
@@ -302,7 +301,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 noncomputable section
 
@@ -554,7 +552,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 noncomputable section
 
@@ -717,7 +714,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 noncomputable section
 
@@ -847,7 +843,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 noncomputable section
 
@@ -997,7 +992,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 noncomputable section
 
@@ -1161,7 +1155,7 @@ theorem infinityCoord_inv_mem (t : Fin (n + 1) → Rˣ) (j : Fin n) :
 theorem infinityCoord_algebraicIndependent (t : Fin (n + 1) → Rˣ) (ht : AlgebraicIndependent K fun k => (t k : R)) :
     Function.Injective (MvPolynomial.aeval fun k => (u0 t k : R) : MvPolynomial (Fin (n + 1)) K →ₐ[K] R) := by
   classical
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+  rw [injective_iff_map_eq_zero]
   intro f hf
   set N := f.totalDegree
   let deg : (Fin (n + 1) →₀ ℕ) → ℕ := fun α => ∑ i, α i
@@ -1331,7 +1325,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 noncomputable section
 
@@ -1508,7 +1501,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 noncomputable section
 
@@ -1635,7 +1627,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 noncomputable section
 

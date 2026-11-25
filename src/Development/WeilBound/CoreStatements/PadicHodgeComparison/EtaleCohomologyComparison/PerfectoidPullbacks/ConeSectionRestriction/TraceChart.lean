@@ -32,7 +32,6 @@ import Std.Tactic.BVDecide.Normalize.Prop
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 namespace GlobalTheory.CompanionTheory.TraceJac
 
@@ -253,7 +252,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 namespace GlobalTheory.CompanionTheory.TraceJac
 
@@ -643,7 +641,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 namespace GlobalTheory.CompanionTheory.TraceJac
 
@@ -840,7 +837,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 namespace GlobalTheory.CompanionTheory.TraceJac
 
@@ -1055,7 +1051,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 open MvPolynomial
 
 namespace GlobalTheory.CompanionTheory.TraceJac
@@ -1121,7 +1116,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 
 noncomputable section
 
