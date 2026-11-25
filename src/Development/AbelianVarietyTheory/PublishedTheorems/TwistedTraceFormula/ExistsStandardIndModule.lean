@@ -577,12 +577,6 @@ abbrev oppFns : Submodule ℂ (UJ ε → D.V) := indFun ⊤ D.j (opp ε D.W) D.�
 
 abbrev Nbar : Set (UJ ε) := flagN ε (opp ε D.W)
 
-/-- **Langlands positivity theorem for standard modules**: the parabolic induction of tempered
-representations twisted by an exponent in the positive Weyl chamber admits a unique irreducible
-quotient representation (Langlands quotient).
-
-Proposed reference:
-[R. P. Langlands, *On the classification of irreducible representations of real algebraic groups*][langlands1973classification]. -/
 def Positive : Prop := InChamber fun i => (D.s i).re
 
 def IsStandard {b : ℕ} (W₀ : Flag n b) : Prop := (∀ i, D.W i ∈ Set.range W₀) ∧ D.Positive
