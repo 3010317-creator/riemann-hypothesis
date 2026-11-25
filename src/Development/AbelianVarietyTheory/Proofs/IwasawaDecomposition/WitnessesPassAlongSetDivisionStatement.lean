@@ -331,8 +331,6 @@ def weilTiedTr {X : ThetaX (w.D Z)} {T : ThetaTied (w.D Z) X} (Wl : WeilTied (w.
 
 
 
-theorem weilTiedEq_tr {X : ThetaX (w.D Z)} {T : ThetaTied (w.D Z) X} {Wl : WeilTied (w.D Z) X T} (_e : WeilCompatibleEquivariance Wl) :
-    WeilCompatibleEquivariance (weilTiedTr w Z N h Wl) := ⟨⟩
 
 
 
@@ -362,7 +360,6 @@ theorem thT_setDiv {B : Base} {f : Fr B.toPre} {T : TwDat B}
   intro t
   exact ⟨{ provA := t.provA
            all := allTiedTr w Z N h t.all
-           weq := weilTiedEq_tr w Z N h t.weq
            chr := { t.chr with }
            same := { t.same with }
            std := t.std
