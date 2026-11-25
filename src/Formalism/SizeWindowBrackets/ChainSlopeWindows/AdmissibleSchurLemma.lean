@@ -1067,7 +1067,7 @@ theorem loss_bound : SecondKindLoss := by
   have hat32 : ∀ t ∈ TT, at_ t ≤ 3 / 2 * a := by
     intro t ht
     have := (hat t ht).2
-    nlinarith
+    linarith [mul_le_mul_of_nonneg_left hth ha0]
   have hTop : ∀ j ∈ J, ∀ t ∈ TT, ∀ p ∈ Ps,
       2 * Real.log p * vonMangoldtClassSum j t p ≤ 4 * a * Real.log p / p := by
     intro j hj t ht p hp
