@@ -839,22 +839,6 @@ open IsLocalRing Polynomial
 
 namespace GlobalTheory.KeyOriginNoeth
 
-theorem mem_originIdeal_iff {T : Type} [CommRing T] [IsLocalRing T] (f : Polynomial T) :
-    f ∈ GlobalTheory.KeyOriginCut.originIdeal T ↔ f.coeff 0 ∈ maximalIdeal T := by
-  apply GlobalTheory.VertUnitsNoeth.mem_originIdeal_iff'
-
-theorem comap_originIdeal (A T : Type) [CommRing A] [IsLocalRing A] [CommRing T] [IsLocalRing T]
-    (i : A →+* T) [IsLocalHom i] :
-    (GlobalTheory.KeyOriginCut.originIdeal T).comap (Polynomial.mapRingHom i) = GlobalTheory.KeyOriginCut.originIdeal A := by
-  ext f
-  rw [Ideal.mem_comap, mem_originIdeal_iff, mem_originIdeal_iff, Polynomial.coe_mapRingHom,
-    Polynomial.coeff_map, mem_maximalIdeal, mem_maximalIdeal, mem_nonunits_iff, mem_nonunits_iff,
-    isUnit_map_iff]
-
-theorem isIntegrallyClosed_of_absIntClosed (T : Type) [CommRing T] [IsDomain T]
-    (hT : GlobalTheory.LocAcyc.AbsIntClosed T) : IsIntegrallyClosed T :=
-  _root_.GlobalTheory.LocAcycEmbed.isIntegrallyClosed_of_absIntClosed T hT
-
 theorem norm_finiteType {T : Type} [CommRing T] [IsDomain T] [IsIntegrallyClosed T] (S : Finset T) :
     Algebra.FiniteType ℤ (GlobalTheory.NormalApprox.norm S) := by
   haveI := GlobalTheory.finite_integralClosure_of_essFiniteType_int (GlobalTheory.NormalApprox.gen S)
@@ -906,7 +890,7 @@ theorem exists_noetherian_model : ∀ (T O : Type) [CommRing T] [IsDomain T] [Is
           σ.comp (algebraMap (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) DA) = ψA →
           ∃ σ₁ : D₁ →+* GlobalTheory.LocAcyc.GenFib T O, σ₁.comp (algebraMap (GlobalTheory.LocAcyc.GenFib T (Localization.AtPrime Q)) D₁) = ψ := by
   intro T O _ _ _ _ _ _ _ _ hT q hq hqT E _ _ _ _ _ Q _ hQ j hj ψ hψ D₁ _ _ act₁ htor
-  have hTic : IsIntegrallyClosed T := isIntegrallyClosed_of_absIntClosed T hT
+  have hTic : IsIntegrallyClosed T := GlobalTheory.VertUnitsNoeth.isIntegrallyClosed_of_absIntClosed' T hT
   let 𝒜 : Finset T → Subring T := GlobalTheory.NormalApprox.loc
   have hmono : Monotone 𝒜 := GlobalTheory.NormalApprox.loc_mono
   have hcov : ∀ (S : Finset T), ∀ x ∈ S, x ∈ 𝒜 S := fun S x hx => GlobalTheory.NormalApprox.mem_loc_of_mem S hx
@@ -926,7 +910,7 @@ theorem exists_noetherian_model : ∀ (T O : Type) [CommRing T] [IsDomain T] [Is
   have hqA : IsUnit (q : 𝒜 S) := hU _ (by simpa using hqT)
   have horig : (Q.comap e).comap (algebraMap (Polynomial (𝒜 S)) EA) = GlobalTheory.KeyOriginCut.originIdeal (𝒜 S) := by
     rw [Ideal.comap_comap, he, ← Ideal.comap_comap, hQ]
-    exact comap_originIdeal (𝒜 S) T (𝒜 S).subtype
+    exact GlobalTheory.VertUnitsNoeth.comap_originIdeal' (𝒜 S) T (𝒜 S).subtype
   let jA : Localization.AtPrime (Q.comap e) →+* O := j.comp (Localization.localRingHom (Q.comap e) Q e rfl)
   have hjA : jA.comp (algebraMap (Polynomial (𝒜 S)) (Localization.AtPrime (Q.comap e))) =
       (algebraMap (Polynomial T) O).comp (Polynomial.mapRingHom (𝒜 S).subtype) := by

@@ -195,12 +195,6 @@ theorem nonempty_place' : Nonempty (HeightOneSpectrum (𝓞 F)) := by
 theorem nontrivial_Ep (A : Places F E sig) (p : HeightOneSpectrum (𝓞 F)) : Nontrivial (A.loc p).Ep :=
   Module.nontrivial_of_finrank_pos (R := (A.loc p).Fp) (by rw [(A.loc p).rank]; norm_num)
 
-theorem sig_sig (A : Places F E sig) (y : E) : sig (sig y) = y := by
-  obtain ⟨p⟩ := nonempty_place' (F := F)
-  haveI := nontrivial_Ep A p
-  apply (A.loc p).ιE.injective
-  rw [← (A.loc p).cj_ιE, ← (A.loc p).cj_ιE, ← A.L_cj, (A.L p).cj_cj]
-
 theorem sig_ne_id (A : Places F E sig) : ¬ ∀ y, sig y = y := by
   intro h
   obtain ⟨p⟩ := nonempty_place' (F := F)
@@ -271,14 +265,13 @@ theorem isIntegral_of_quadratic (y a b : E) (ha : IsIntegral ℤ a) (hb : IsInte
 
 end GlobalTheory.HL.GlueInt
 
-
 open GlobalTheory.HL.GlueInt in
 theorem GlobalTheory.HL.isIntegral_of_forall_mem_O : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
     [Algebra F E] {sig : E →ₐ[F] E} (A : Places F E sig), ∀ (y : E), (∀ p, (A.loc p).ιE y ∈ (A.L p).O) →
     IsIntegral ℤ y := by
   intro F E _ _ _ _ _ sig A y hy
-  obtain ⟨a, ha⟩ := fix_mem A (y + sig y) (by rw [map_add (f := _), sig_sig A, add_comm])
-  obtain ⟨b, hb⟩ := fix_mem A (y * sig y) (by rw [map_mul, sig_sig A, mul_comm])
+  obtain ⟨a, ha⟩ := fix_mem A (y + sig y) (by rw [map_add (f := _), GlobalTheory.HL.StrongApprox.sig_sig A, add_comm])
+  obtain ⟨b, hb⟩ := fix_mem A (y * sig y) (by rw [map_mul, GlobalTheory.HL.StrongApprox.sig_sig A, mul_comm])
   obtain ⟨a0, rfl⟩ := int_of_loc A a fun p => by
     rw [ha, map_add (f := _)]; exact (A.L p).O.add_mem (hy p) (sig_mem A y p (hy p))
   obtain ⟨b0, rfl⟩ := int_of_loc A b fun p => by

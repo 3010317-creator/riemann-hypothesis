@@ -91,13 +91,6 @@ section -- clump:auto
 open Matrix Finset Formalism.MainNotions.S
 open scoped InnerProductSpace
 
-namespace GlobalTheory.LowHW
-
-theorem cdom_antisymm {n : ℕ} {ε : Fin n → Bool} {μ Λ : Fin n → ℝ} (h1 : CDom ε μ Λ) (h2 : CDom ε Λ μ) :
-    μ = Λ := by
-  apply Formalism.MainNotions.BridgeLemma.cdom_antisymm <;> assumption
-
-end GlobalTheory.LowHW
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqLowKOfLeLowKSub =====
@@ -399,7 +392,6 @@ open MeasureTheory Matrix Finset Formalism.MainNotions.S Formalism.REAL Formalis
 open scoped InnerProductSpace ComplexOrder
 
 namespace GlobalTheory.SmoothKType
-
 
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace in
 theorem exists_garding_kMap (n : ℕ) (ε : Fin n → Bool) (μ : Fin n → ℝ) (H : Type) [NormedAddCommGroup H]
@@ -867,7 +859,7 @@ theorem orth_of_ne (hU : IsURepOn (Kset ε) σ) {Λ μ : Fin n → ℝ} {S T : S
   · rw [h] at hv
     exact hv0 hv
   · obtain ⟨w, hw, hw0, hww⟩ := hT.2.2.2.1
-    refine hne (GlobalTheory.LowHW.cdom_antisymm (ε := ε) (hR.2.2.2.2 μ w (h ▸ hw) hw0 hww)
+    refine hne (Formalism.MainNotions.BridgeLemma.cdom_antisymm (ε := ε) (hR.2.2.2.2 μ w (h ▸ hw) hw0 hww)
       (hT.2.2.2.2 Λ v (hle hv) hv0 hvw))
 
 theorem exists_orth (hU : IsURepOn (Kset ε) σ) {Λ : Fin n → ℝ} {S T : Submodule ℂ H}
