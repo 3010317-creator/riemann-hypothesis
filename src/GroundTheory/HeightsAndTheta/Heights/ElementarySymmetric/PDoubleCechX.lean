@@ -9,50 +9,6 @@ public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.ImportsBisFu
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.PCechDSq
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.DoubleSumEqZero
 import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.PCechDoubleStair
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ReduceModChar
-import Std.Tactic.BVDecide.Normalize.Prop
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.GraphEquiv, GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.UpdateEraseSubset, GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PDoubleCechX
@@ -139,11 +95,6 @@ def shift (X : DblData R) : DblData R where
 
 def up (X : DblData R) (n : ℕ) : X.D 0 n →ₗ[R] X.shift.C n := (X.v 0 n).rangeRestrict
 
-theorem up_surj (X : DblData R) (n : ℕ) (w : X.shift.C n) : ∃ z, X.up n z = w := by
-  have hw : (w : LinearMap.range (X.v 0 n)).1 ∈ LinearMap.range (X.v 0 n) := (w : LinearMap.range (X.v 0 n)).2
-  obtain ⟨z, hz⟩ := LinearMap.mem_range.mp hw
-  exact ⟨z, Subtype.ext hz⟩
-
 namespace Good
 
 theorem shift {X : DblData R} (hX : X.Good) : X.shift.Good :=
@@ -159,38 +110,6 @@ theorem shift {X : DblData R} (hX : X.Good) : X.shift.Good :=
       exact hX.rv 0 q
     rv := fun p q => hX.rv (p + 1) q }
 
-theorem a_d {X : DblData R} (hX : X.Good) (p : ℕ) (x : X.A p) :
-    X.a (p + 1) (X.dA p x) = X.v p 0 (X.a p x) :=
-  LinearMap.congr_fun (hX.ha p) x
-
-theorem c_d {X : DblData R} (hX : X.Good) (q : ℕ) (y : X.C q) :
-    X.c (q + 1) (X.dC q y) = X.h 0 q (X.c q y) :=
-  LinearMap.congr_fun (hX.hc q) y
-
-theorem a_injective {X : DblData R} (hX : X.Good) (p : ℕ) : Function.Injective (X.a p) :=
-  LinearMap.ker_eq_bot.mp (hX.ka p)
-
-theorem c_injective {X : DblData R} (hX : X.Good) (q : ℕ) : Function.Injective (X.c q) :=
-  LinearMap.ker_eq_bot.mp (hX.kc q)
-
-theorem ex_a {X : DblData R} (hX : X.Good) (p : ℕ) {z : X.D p 0} (hz : X.h p 0 z = 0) :
-    ∃ x, X.a p x = z := by
-  have hm : z ∈ LinearMap.ker (X.h p 0) := LinearMap.mem_ker.mpr hz
-  rw [hX.ra p] at hm
-  exact LinearMap.mem_range.mp hm
-
-theorem ex_h {X : DblData R} (hX : X.Good) (p q : ℕ) {z : X.D p (q + 1)} (hz : X.h p (q + 1) z = 0) :
-    ∃ w, X.h p q w = z := by
-  have hm : z ∈ LinearMap.ker (X.h p (q + 1)) := LinearMap.mem_ker.mpr hz
-  rw [hX.rh p q] at hm
-  exact LinearMap.mem_range.mp hm
-
-theorem ex_c {X : DblData R} (hX : X.Good) (q : ℕ) {z : X.D 0 q} (hz : X.v 0 q z = 0) :
-    ∃ y, X.c q y = z := by
-  have hm : z ∈ LinearMap.ker (X.v 0 q) := LinearMap.mem_ker.mpr hz
-  rw [hX.rc q] at hm
-  exact LinearMap.mem_range.mp hm
-
 theorem hh {X : DblData R} (hX : X.Good) (p q : ℕ) (z : X.D p q) : X.h p (q + 1) (X.h p q z) = 0 := by
   have hm : X.h p q z ∈ LinearMap.ker (X.h p (q + 1)) := by
     rw [hX.rh p q]; exact LinearMap.mem_range_self _ z
@@ -199,11 +118,6 @@ theorem hh {X : DblData R} (hX : X.Good) (p q : ℕ) (z : X.D p q) : X.h p (q + 
 theorem ha0 {X : DblData R} (hX : X.Good) (p : ℕ) (x : X.A p) : X.h p 0 (X.a p x) = 0 := by
   have hm : X.a p x ∈ LinearMap.ker (X.h p 0) := by
     rw [hX.ra p]; exact LinearMap.mem_range_self _ x
-  exact LinearMap.mem_ker.mp hm
-
-theorem vc0 {X : DblData R} (hX : X.Good) (q : ℕ) (y : X.C q) : X.v 0 q (X.c q y) = 0 := by
-  have hm : X.c q y ∈ LinearMap.ker (X.v 0 q) := by
-    rw [hX.rc q]; exact LinearMap.mem_range_self _ y
   exact LinearMap.mem_ker.mp hm
 
 end Good

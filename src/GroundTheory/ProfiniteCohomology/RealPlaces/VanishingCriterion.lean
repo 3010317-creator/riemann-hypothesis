@@ -2,45 +2,6 @@ module
 
 public import GroundTheory.ProfiniteCohomology.RealPlaces.ConeMap
 public import GroundTheory.ProfiniteCohomology.RealPlaces.LocalCohomologyIsoHomologyMapNormCochains
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -169,31 +130,28 @@ theorem eq_zero_tateCompactCohomologyRes_of_retract {A B : Rep.{u} k G} [IsDiscr
     [IsDiscreteRep B] (i : A ⟶ B) (p : B ⟶ A) (hip : i ≫ p = 𝟙 A) (n : ℕ)
     (hB : ∀ x : tateCompactCohomologyRes φ ψ B n, x = 0) (x : tateCompactCohomologyRes φ ψ A n) :
     x = 0 := by
-  have hi : ∀ v, 𝟙 (Rep.res (φ v).toMonoidHom A) ≫ (Rep.resFunctor (φ v).toMonoidHom).map i =
-      (Rep.resFunctor (φ v).toMonoidHom).map i ≫ 𝟙 _ := fun _ =>
-    (Category.id_comp _).trans (Category.comp_id _).symm
-  have hir : ∀ w, 𝟙 (Rep.res (ψ w).toMonoidHom A) ≫ (Rep.resFunctor (ψ w).toMonoidHom).map i =
-      (Rep.resFunctor (ψ w).toMonoidHom).map i ≫ 𝟙 _ := fun _ =>
-    (Category.id_comp _).trans (Category.comp_id _).symm
-  have hp : ∀ v, 𝟙 (Rep.res (φ v).toMonoidHom B) ≫ (Rep.resFunctor (φ v).toMonoidHom).map p =
-      (Rep.resFunctor (φ v).toMonoidHom).map p ≫ 𝟙 _ := fun _ =>
-    (Category.id_comp _).trans (Category.comp_id _).symm
-  have hpr : ∀ w, 𝟙 (Rep.res (ψ w).toMonoidHom B) ≫ (Rep.resFunctor (ψ w).toMonoidHom).map p =
-      (Rep.resFunctor (ψ w).toMonoidHom).map p ≫ 𝟙 _ := fun _ =>
-    (Category.id_comp _).trans (Category.comp_id _).symm
-  have hcomp := tateCompactCohomologyMap_comp φ ψ i (fun v => (Rep.resFunctor (φ v).toMonoidHom).map i)
-    (fun w => (Rep.resFunctor (ψ w).toMonoidHom).map i) hi hir p
-    (fun v => (Rep.resFunctor (φ v).toMonoidHom).map p) (fun w => (Rep.resFunctor (ψ w).toMonoidHom).map p)
-    hp hpr n
+  have hcomm : ∀ {K : Type u} [Group K] (m : K →* G) {X Y : Rep.{u} k G} (f : X ⟶ Y),
+      𝟙 (Rep.res m X) ≫ (Rep.resFunctor m).map f = (Rep.resFunctor m).map f ≫ 𝟙 _ := by
+    intro K _ m X Y f
+    exact (Category.id_comp _).trans (Category.comp_id _).symm
+  have hcomp := tateCompactCohomologyMap_comp φ ψ i
+    (fun v => (Rep.resFunctor (φ v).toMonoidHom).map i)
+    (fun w => (Rep.resFunctor (ψ w).toMonoidHom).map i)
+    (fun v => hcomm _ i) (fun w => hcomm _ i) p
+    (fun v => (Rep.resFunctor (φ v).toMonoidHom).map p)
+    (fun w => (Rep.resFunctor (ψ w).toMonoidHom).map p)
+    (fun v => hcomm _ p) (fun w => hcomm _ p) n
   rw [tateCompactCohomologyMap_eq_id φ ψ _ _ _ _ _ hip
-    (fun v => by rw [← CategoryTheory.Functor.map_comp, hip, CategoryTheory.Functor.map_id])
-    (fun w => by rw [← CategoryTheory.Functor.map_comp, hip, CategoryTheory.Functor.map_id])] at hcomp
+    (fun v => by
+      rw [← CategoryTheory.Functor.map_comp, hip, CategoryTheory.Functor.map_id])
+    (fun w => by
+      rw [← CategoryTheory.Functor.map_comp, hip, CategoryTheory.Functor.map_id])] at hcomp
   have hx := congrArg (fun f => f.hom x) hcomp
   change x = _ at hx
   rw [hx]
-  change (tateCompactCohomologyMap φ ψ p _ _ hp hpr n).hom
-    ((tateCompactCohomologyMap φ ψ i _ _ hi hir n).hom x) = 0
-  rw [hB ((tateCompactCohomologyMap φ ψ i _ _ hi hir n).hom x)]
+  change (tateCompactCohomologyMap φ ψ p _ _ (fun _ => hcomm _ p) (fun _ => hcomm _ p) n).hom
+    ((tateCompactCohomologyMap φ ψ i _ _ (fun _ => hcomm _ i) (fun _ => hcomm _ i) n).hom x) = 0
+  rw [hB ((tateCompactCohomologyMap φ ψ i _ _ (fun _ => hcomm _ i) (fun _ => hcomm _ i) n).hom x)]
   exact map_zero _
 
 end Res

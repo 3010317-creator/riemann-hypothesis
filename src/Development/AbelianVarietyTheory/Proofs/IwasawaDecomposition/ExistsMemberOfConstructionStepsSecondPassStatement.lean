@@ -896,8 +896,6 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl NumberField IsDedekindDomain
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.Mem.Top.Bl.OnePrimeEach
@@ -949,14 +947,8 @@ theorem sel_under (v : HeightOneSpectrum (𝓞 H.F)) : (sel H v).under (𝓞 H.F
 
 theorem sel_underK (v : HeightOneSpectrum (𝓞 H.F)) : (sel H v).under (𝓞 H.K) = primeK H (ratP H v) := (sel_mem H v).2
 
-theorem sel_mem_of {p : ℕ} (hp : p.Prime) (v : HeightOneSpectrum (𝓞 H.F)) (hv : (p : 𝓞 H.F) ∈ v.asIdeal) :
-    sel H v ∈ PvSet H (primeK H p) v := by
-  have h := sel_mem H v
-  rwa [ratP_eq H v hp hv] at h
-
 def splitPlacesTwoPrimes : PlacesOverCommonPrime H :=
-  ⟨primeK H H.pde, primeK H H.pde', primeK_mem H H.pde_prime, primeK_mem H H.pde'_prime, fun v _ => sel H v,
-    fun v _ => sel H v, fun v hv => sel_mem_of H H.pde_prime v hv, fun v hv => sel_mem_of H H.pde'_prime v hv⟩
+  ⟨primeK H H.pde, primeK H H.pde', fun v _ => sel H v, fun v _ => sel H v⟩
 
 end GlobalTheory.Mem.Top.Bl.OnePrimeEach
 
@@ -1084,10 +1076,10 @@ theorem memberE_of_steps2 : GlobalTheory.NT.RayField → GlobalTheory.Published.
   have hB : BaseCond KPx := KPxCond.baseCond_KPx hR hP hC h2b
   have h1 : FirstG KPx (IsBuiltE 𝒮) :=
     step_hasCore (MemberEx2.step_start h2b)
-      (MemberEx2.stepW_builtE (fun _ _ _ _ _ h => h.1) h4 (_root_.GlobalTheory.Mem.Top.Bl.CoreAsm.stepW_core h2b 𝒮 hA hD hT) h3)
+      (MemberEx2.stepW_builtE (fun _ _ _ _ _ h => h.1) h4 (_root_.GlobalTheory.Mem.Top.Bl.CoreAsm.stepW_core 𝒮 hA hD hT) h3)
   have hW : StepW (fun K B f T w => Start K B f T w ∧ Has3 𝒮' K B f T w)
       (HasC fun K B f T w Z c => GoodE 𝒮 K B f T w Z c ∧ DQ.TwAllAt (w.D Z) c.O.nch c.O.xd) :=
-    (MemberEx2.stepW_builtE (fun _ _ _ _ _ h => h.1.1) h4' (_root_.GlobalTheory.Mem.Top.Bl.CoreAsm.stepW_core h2b 𝒮' hA' hD' hT')
+    (MemberEx2.stepW_builtE (fun _ _ _ _ _ h => h.1.1) h4' (_root_.GlobalTheory.Mem.Top.Bl.CoreAsm.stepW_core 𝒮' hA' hD' hT')
       (StepW.of_all fun _ _ _ _ _ _ _ h => h.2)).trans
       (StepW.of_all fun _ _ _ _ _ _ _ H => let ⟨Z, c, hc⟩ := H; ⟨Z, c, hL _ _ _ _ _ _ _ hc⟩)
   have hS := step_hasCore (admitted := fun K B f T => ∃ w : ColW B f T, Start K B f T w ∧ Has3 𝒮' K B f T w)

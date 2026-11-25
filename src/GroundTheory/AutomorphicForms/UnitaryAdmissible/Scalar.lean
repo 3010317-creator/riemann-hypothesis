@@ -4,48 +4,10 @@ public import GroundTheory.AutomorphicForms.TensorProductTheorem.GKTensor
 public import GroundTheory.AutomorphicForms.GKModules.ZKFinite
 public import GroundTheory.AutomorphicForms.AutomorphicFormSpaces.GKStableLaplacian
 import Mathlib.Algebra.Module.StablyFree.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.LinearAlgebra.Charpoly.Basic
 import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -388,16 +350,12 @@ theorem finiteDimensional_toSub_of_isSimpleModule (M : h.GKModule K V)
   set O := Submodule.span ℂ (range fun k : K => M.σ k (M.σ.asModuleEquiv (s₀ : M.σ.asModule)))
     with hOdef
   have hOfin : FiniteDimensional ℂ O := M.locallyFinite _
-  have hOs : ∀ k, ∀ v ∈ O, M.σ k v ∈ O := by
-    intro k v hv
-    induction hv using Submodule.span_induction with
-    | mem x hx =>
-      obtain ⟨k', rfl⟩ := hx
+  have hOs : ∀ k, ∀ v ∈ O, M.σ k v ∈ O := fun k v hv =>
+    (Submodule.span_le (p := O.comap (M.σ k))).2 (by
+      rintro _ ⟨k', rfl⟩
+      simp only [SetLike.mem_coe, Submodule.mem_comap]
       rw [← Module.End.mul_apply, ← map_mul]
-      exact Submodule.subset_span ⟨k * k', rfl⟩
-    | zero => rw [map_zero]; exact O.zero_mem
-    | add x y _ _ hx hy => rw [map_add (f := _)]; exact O.add_mem hx hy
-    | smul a x _ hx => rw [map_smul]; exact O.smul_mem a hx
+      exact Submodule.subset_span ⟨k * k', rfl⟩) hv
   have hs₀O : M.σ.asModuleEquiv (s₀ : M.σ.asModule) ∈ O :=
     Submodule.subset_span ⟨1, show M.σ 1 _ = _ by rw [map_one, Module.End.one_apply]⟩
   have hatom : IsAtom S := (isSimpleModule_iff_isAtom).1 hS

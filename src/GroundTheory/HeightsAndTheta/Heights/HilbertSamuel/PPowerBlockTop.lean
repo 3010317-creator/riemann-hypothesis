@@ -7,53 +7,11 @@ public import GroundTheory.HeightsAndTheta.Heights.Intersections.ProjLineRankTwo
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.TableDegreeThreeBase
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.ArithSystem
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.ImageCoord
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedF
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPowerBlockArith
 
 @[expose] public section
 
@@ -153,33 +111,10 @@ theorem const_tensorPowH {I : AllFam} (hI : I.IsFamily) {P : Ideal (MRing ι)} {
 
 omit [∀ k, Fintype (ι k)] in
 theorem blockFnField_addBlock {Ω : Type} [Field Ω] [CharZero Ω] {y : (Σ k, ι k) → Ω}
-    {A : ReciprocityTheory.ChartRestriction.G.Geo.HermLine ι} {m N : ℕ} {v : Fin N → Ω} (c : ∀ k, ι k) (hc : ∀ k, y ⟨k, c k⟩ ≠ 0)
-    (hv : ∀ j, v j ∈ chartLat y A.a m) : blockFnField (addBlock y v) = blockFnField y := by
-  have hZ : ∀ s ∈ chartRingZ y c, s ∈ blockFnField y := by
-    intro s hs
-    have : chartRingZ y c ≤ (blockFnField y).toSubalgebra.restrictScalars ℤ := by
-      refine Algebra.adjoin_le ?_
-      rintro _ ⟨p, rfl⟩
-      exact IntermediateField.subset_adjoin ℚ _ ⟨p, ⟨p.1, c p.1⟩, rfl, rfl⟩
-    exact this hs
-  apply le_antisymm
-  · rw [blockFnField, IntermediateField.adjoin_le_iff]
-    rintro t ⟨⟨_ | k, i⟩, ⟨_ | k', i'⟩, hpq, rfl⟩
-    · have hP0 : (∏ k, y ⟨k, c k⟩ ^ (-((m : ℤ) * A.a k))) ≠ 0 :=
-        Finset.prod_ne_zero_iff.mpr fun k _ => zpow_ne_zero _ (hc k)
-      have e : addBlock y v ⟨none, i⟩ / addBlock y v ⟨none, i'⟩ =
-          (v i * ∏ k, y ⟨k, c k⟩ ^ (-((m : ℤ) * A.a k))) / (v i' * ∏ k, y ⟨k, c k⟩ ^ (-((m : ℤ) * A.a k))) := by
-        rw [mul_div_mul_right _ _ hP0]
-        rfl
-      rw [e]
-      exact div_mem (hZ _ (hv i c hc)) (hZ _ (hv i' c hc))
-    · exact absurd hpq (by simp)
-    · exact absurd hpq (by simp)
-    · obtain rfl : k = k' := Option.some_injective _ hpq
-      exact IntermediateField.subset_adjoin ℚ _ ⟨⟨k, i⟩, ⟨k, i'⟩, rfl, rfl⟩
-  · rw [blockFnField, IntermediateField.adjoin_le_iff]
-    rintro t ⟨p, q, hpq, rfl⟩
-    exact IntermediateField.subset_adjoin ℚ _ ⟨oldV N p, oldV N q, by simp [oldV, hpq], rfl⟩
+    {A : ReciprocityTheory.ChartRestriction.G.Geo.HermLine ι} {m N : ℕ} {v : Fin N → Ω}
+    (c : ∀ k, ι k) (hc : ∀ k, y ⟨k, c k⟩ ≠ 0) (hv : ∀ j, v j ∈ chartLat y A.a m) :
+    blockFnField (addBlock y v) = blockFnField y :=
+  PowerBlockArith.blockFnField_addBlock c hc hv
 
 end PowerBlockTop
 

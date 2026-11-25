@@ -3,42 +3,6 @@ module
 public import Formalism.LocalToGlobal.ProjectiveLattices.MulCMemSec
 public import Formalism.LocalToGlobal.ProjectiveLattices.VAddIntNonneg
 public import Formalism.LocalToGlobal.ProjectiveLattices.RulInst
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -208,23 +172,6 @@ def L2DefiniteCuspForms (h : CuspL2 U σ V dict mu) : Prop :=
   ∀ a n (hd : Dom a n), L2Definite V σ (rdC U σ a n) dict mu (h a n hd)
 
 variable {U σ V dict mu}
-
-theorem isNormOn_l2C (x₀ : ℝ) {h : CuspL2 U σ V dict mu} (h1 : L2DefiniteCuspForms U σ V dict mu h) {a n} (hd : Dom a n) :
-    IsNormOn (cusp Xo c U a n) σ (l2C U σ V dict mu x₀ a n (h a n hd)) := by
-  constructor
-  · intro f hf
-    rw [l2C, dite_eq_left hf]; exact mul_nonneg (lieFac_pos _ _ _).le (l2Norm_nonneg_bis _ _ _ _ _ _ _)
-  · intro f hf h0
-    rw [l2C, dite_eq_left hf] at h0
-    exact congrArg Subtype.val (h1 a n hd ⟨f, hf⟩ ((mul_eq_zero.mp h0).resolve_left (lieFac_pos _ _ _).ne'))
-  · intro x f hf
-    rw [l2C, l2C, dite_eq_left hf, dite_eq_left (Submodule.smul_mem _ x hf)]
-    have := l2Norm_smul_alt V σ (rdC U σ a n) dict mu (h a n hd) x ⟨f, hf⟩
-    exact (congrArg (lieFac Dw x₀ a * ·) this).trans (by ring)
-  · intro f hf g hg
-    rw [l2C, l2C, l2C, dite_eq_left hf, dite_eq_left hg, dite_eq_left (Submodule.add_mem _ hf hg), ← mul_add]
-    exact mul_le_mul_of_nonneg_left (L2Norm_add_le V σ (rdC U σ a n) dict mu (h a n hd) ⟨f, hf⟩ ⟨g, hg⟩)
-      (lieFac_pos _ _ _).le
 
 theorem l2C_le_supC (x : ℝ) (hσ : GoodEmb c σ) {a n} (h : JMemL2 V σ (rdC U σ a n) dict mu)
     (hd : ∀ g, (dict g).2 ∈ ((U σ).X (dict g).1).dom) (hm : MuUnit V dict mu) :

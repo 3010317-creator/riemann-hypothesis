@@ -1,51 +1,9 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.StatementsChartPointSeparable
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -98,34 +56,27 @@ theorem proof : ChartParAlgebraic.Statement := by
     have hm : η m = z m * η j₀ := by rw [hzm, inv_mul_cancel_right₀ hη0]
     rw [hm]
     exact (hmem _ (hzB m)).mul hη0alg
-  have hK : ∀ c : K, IsAlgebraic B (algebraMap K L c) := fun c => by
-    have hc : c ∈ IntermediateField.adjoin F (Set.range u) := by rw [hu]; trivial
-    induction hc using IntermediateField.adjoin_induction with
-    | mem x hx =>
-      obtain ⟨p, rfl⟩ := hx
-      exact hmem _ (huB p)
-    | algebraMap x =>
-      rw [← IsScalarTower.algebraMap_apply F K L]
-      exact hmem _ (hFB x)
-    | add x y _ _ hx hy =>
-      rw [map_add (f := _)]
-      exact hx.add hy
-    | inv x _ hx =>
-      rw [map_inv₀]
-      exact hx.inv
-    | mul x y _ _ hx hy =>
-      rw [map_mul]
-      exact hx.mul hy
-  refine ⟨fun y => ?_⟩
-  have hy : y ∈ IntermediateField.adjoin K (Set.range η) := by rw [hη]; trivial
-  induction hy using IntermediateField.adjoin_induction with
-  | mem x hx =>
-    obtain ⟨m, rfl⟩ := hx
-    exact hηalg m
-  | algebraMap x => exact hK x
-  | add x y _ _ hx hy => exact hx.add hy
-  | inv x _ hx => exact hx.inv
-  | mul x y _ _ hx hy => exact hx.mul hy
+  let S : Subfield L :=
+    { carrier := {y | IsAlgebraic B y}
+      mul_mem' := fun ha hb => ha.mul hb
+      one_mem' := isAlgebraic_one
+      add_mem' := fun ha hb => ha.add hb
+      zero_mem' := isAlgebraic_zero
+      neg_mem' := fun ha => ha.neg
+      inv_mem' := fun _ ha => ha.inv }
+  let SK : IntermediateField F K := IntermediateField.mk
+    (Subalgebra.mk (S.comap (algebraMap K L)).toSubsemiring fun c =>
+      show IsAlgebraic B (algebraMap K L (algebraMap F K c)) from by
+        rw [← IsScalarTower.algebraMap_apply F K L]; exact hmem _ (hFB c))
+    (fun _ hx => (S.comap (algebraMap K L)).inv_mem hx)
+  have hle : IntermediateField.adjoin F (Set.range u) ≤ SK :=
+    IntermediateField.adjoin_le_iff.mpr (Set.range_subset_iff.mpr fun p => hmem _ (huB p))
+  have hK : ∀ c : K, IsAlgebraic B (algebraMap K L c) := fun c => (hu ▸ hle) (trivial : c ∈ ⊤)
+  let SL : IntermediateField K L :=
+    IntermediateField.mk (Subalgebra.mk S.toSubsemiring hK) (fun _ hx => hx.inv)
+  have hle' : IntermediateField.adjoin K (Set.range η) ≤ SL :=
+    IntermediateField.adjoin_le_iff.mpr (Set.range_subset_iff.mpr hηalg)
+  exact ⟨fun y => (hη ▸ hle') (trivial : y ∈ ⊤)⟩
 
 end ChartParAlgebraic
 

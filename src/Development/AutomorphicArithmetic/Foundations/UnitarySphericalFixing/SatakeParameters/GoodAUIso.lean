@@ -45,8 +45,6 @@ noncomputable section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host GlobalTheory.HeightCounting NumberField IsDedekindDomain
 open UpperTheory.Zero.LLC
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
 namespace UpperTheory.One.M
 
 variable {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ}
@@ -76,7 +74,7 @@ namespace New
 
 def Sph0 (π : NG.AutRep L n) (v : HeightOneSpectrum (𝓞 (maximalRealSubfield L))) : Prop := π.SphAt v
 
-theorem sphGood (_ : TrivialCondition) {π : NG.AutRep L n} {v} (h : SphAtG π v) : NoSplit L v → GoodAU π := h.2
+theorem sphGood {π : NG.AutRep L n} {v} (h : SphAtG π v) : NoSplit L v → GoodAU π := h.2
 
 theorem sphMk {π : NG.AutRep L n} {v} (h : Sph0 π v) (hg : NoSplit L v → GoodAU π) : SphAtG π v := ⟨h, hg⟩
 

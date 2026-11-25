@@ -1,43 +1,6 @@
 module
 
 public import Formalism.LocalToGlobal.GroupLattices.ComparisonMaps.YvRatOfValRat
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -99,33 +62,6 @@ end Pl
 section Rec
 
 variable {D : D7} (c : LatCmp D)
-
-abbrev FormsRec u (w : D.what₂.places.Pl) (hg : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)) : Type :=
-  FormsLL (D.gat u w hg).P (D.gat u w hg).comp (c.embW u w hg) (D.gat u w hg).M
-
-def equivRec (h : ValRat c) u (w : D.what₂.places.Pl) (hg : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)) :
-    ((D.fm u).lat 0).V ≃ₗ[D.what₂.LL] FormsRec c u w hg :=
-  LinearEquiv.ofBijective
-    { toFun := fun x => ⟨c.cmp u w hg x, cmp_mem_span c u w hg x, h.all c u w hg x⟩
-      map_add' := fun x y => Subtype.ext (map_add (c.cmp u w hg) x y)
-      map_smul' := fun a x => Subtype.ext (c.cmp_smul u w hg a x) }
-    ⟨fun x y hxy => cmp_inj c u w hg (congrArg Subtype.val hxy), fun F => by
-      obtain ⟨x, hx⟩ := (range_cmp c h u w hg F.1).2 F.2
-      exact ⟨x, Subtype.ext hx⟩⟩
-
-theorem mRatSpan_rec (h : ValRat c) u (w : D.what₂.places.Pl) (hg : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)) :
-    MRatSpan (D.gat u w hg).P (D.gat u w hg).comp (c.embW u w hg) (D.gat u w hg).M := by
-  apply le_antisymm
-  · rw [Submodule.span_le]
-    rintro _ ⟨x, hx, rfl⟩
-    exact hx
-  · refine (c.cmp_M u w hg).symm.le.trans ?_
-    apply Submodule.span_mono
-    rintro _ ⟨x, hx, rfl⟩
-    refine ⟨equivRec c h u w hg x, ?_, rfl⟩
-    show c.cmp u w hg x ∈ (D.gat u w hg).M
-    rw [← c.cmp_M u w hg]
-    exact Submodule.subset_span ⟨x, hx, rfl⟩
 
 end Rec
 

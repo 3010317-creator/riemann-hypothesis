@@ -2,55 +2,12 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.StatementsClosedPointConeCoord
 import Mathlib.Algebra.AffineMonoid.UniqueSums
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.KrullDimension.NonZeroDivisors
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -66,18 +23,14 @@ theorem aeval_cone_of_isHomogeneous {F Ω : Type*} [Field F] [Field Ω] [Algebra
     (y : Fin n → Ω) {p : MvPolynomial (Fin n) F} (hp : p.IsHomogeneous d) :
     aeval (fun j => Polynomial.C (y j) * Polynomial.X) p =
       Polynomial.C (aeval y p) * Polynomial.X ^ d := by
-  classical
-  conv_lhs => rw [p.as_sum]
-  conv_rhs => rw [p.as_sum]
-
-  rw [map_sum, map_sum, map_sum, Finset.sum_mul]
-  refine Finset.sum_congr rfl fun m hm => ?_
-  have hdeg : ∑ j ∈ m.support, m j = d := by
-    have := hp (mem_support_iff.mp hm)
-    simpa [Finsupp.weight_apply, Finsupp.sum] using this
-  rw [aeval_monomial, aeval_monomial, Finsupp.prod, Finsupp.prod]
-  simp only [mul_pow, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum, hdeg, ← map_pow,
-    ← map_prod, Polynomial.algebraMap_apply, map_mul, mul_assoc]
+  have h := (hp.map (algebraMap F (Polynomial Ω))).eval_smul
+    Polynomial.X (fun j => Polynomial.C (y j))
+  rw [show (Polynomial.X • fun j => Polynomial.C (y j)) =
+      fun j => Polynomial.C (y j) * Polynomial.X from funext fun _ => mul_comm _ _,
+    ← eval₂_eq_eval_map, ← aeval_def] at h
+  rw [h, mul_comm, map_aeval, coe_eval₂Hom, eval₂_eq_eval_map,
+    show Polynomial.C.comp (algebraMap F Ω) = algebraMap F (Polynomial Ω) from
+      RingHom.ext fun _ => rfl]
 
 theorem ClosedPointConeCoord.proof : ClosedPointConeCoord.Statement := by
   intro F _ n I i hI hdim hXi Ω _ _ y hy hyI

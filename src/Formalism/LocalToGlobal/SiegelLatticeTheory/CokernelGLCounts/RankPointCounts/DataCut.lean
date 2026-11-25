@@ -11,50 +11,9 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements
 import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.SupportLoc
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.FamilySeparationBound
 import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.SmoothBigCellSectionsExist
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 public import Mathlib.Analysis.SpecialFunctions.Log.Summable
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.CategoryTheory.Countable
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -373,13 +332,6 @@ section RowsA
 
 variable {D : Formalism.BasicNotions.D7}
 
-private theorem posSemidef_outer_product {ι : Type*} [Fintype ι] (u : ι → ℂ) :
-    (Matrix.of fun x y => u x * star (u y)).PosSemidef := by
-  have h := Matrix.posSemidef_conjTranspose_mul_self (Matrix.of fun (_ : Unit) (j : ι) => star (u j))
-  convert h using 1
-  ext x y
-  simp [Matrix.mul_apply, Matrix.conjTranspose_apply]
-
 theorem psdOn_of_full {α : Type} (Y : Finset α) (K : α → α → ℂ) (c : ℕ → α → ℂ)
     (hfin : ∀ x, {ρ | c ρ x ≠ 0}.Finite)
     (hD : TB.PSDOn Y (fun p q => K p q - ∑' ρ, c ρ p * (starRingEnd ℂ) (c ρ q))) (R : Finset ℕ) :
@@ -404,12 +356,12 @@ theorem psdOn_of_full {α : Type} (Y : Finset α) (K : α → α → ℂ) (c : �
     have : ρ ∉ F := fun h => hρ (Finset.mem_inter.2 ⟨hρR, h⟩)
     simp [hmem x hx ρ this]
   simp only [TB.PSDOn] at hD ⊢
-  have hS : (∑ ρ ∈ F \ R, Matrix.of fun x y : Y => c ρ x * star (c ρ y)).PosSemidef :=
-    Finset.sum_induction _ Matrix.PosSemidef (fun A B hA hB => hA.add hB) Matrix.PosSemidef.zero
-      (fun ρ _ => posSemidef_outer_product (fun x : Y => c ρ x))
+  have hS := Matrix.posSemidef_sum (F \ R) fun ρ _ =>
+    Matrix.posSemidef_vecMulVec_self_star (fun x : Y => c ρ x)
   convert hD.add hS using 1
   ext x y
-  simp only [Matrix.add_apply, Matrix.of_apply, Matrix.sum_apply, starRingEnd_apply]
+  simp only [Matrix.add_apply, Matrix.of_apply, Matrix.sum_apply, Matrix.vecMulVec_apply,
+    Pi.star_apply, starRingEnd_apply]
   have h1 := hts x x.2 y y.2
   have h2 := hR x x.2 y y.2
   simp only [starRingEnd_apply] at h1 h2
@@ -584,21 +536,16 @@ theorem density_gram_matrix_sub_posSemidef {ι Θ : Type*} [Fintype ι] [Fintype
       (if 0 < n x ∧ 0 < n y then ((n x : ℂ) * ∑ θ, (dens θ : ℂ) * (a θ : ℂ) * v θ x * star (v θ y)) /
         ((Real.sqrt (n x * n y) : ℝ) : ℂ) else 0)).PosSemidef := by
   classical
-  have hsum : ∀ (M : Θ → Matrix ι ι ℂ), (∀ θ, (M θ).PosSemidef) → (∑ θ, M θ).PosSemidef := fun M hM =>
-    Finset.sum_induction _ Matrix.PosSemidef (fun A B hA hB => hA.add hB) Matrix.PosSemidef.zero
-      (fun θ _ => hM θ)
-  have h1 : (∑ θ, (((Dsup - dens θ) * a θ : ℝ) : ℂ) • Matrix.of fun x y =>
-      (if 0 < n x then v θ x else 0) * star (if 0 < n y then v θ y else 0)).PosSemidef :=
-    hsum _ fun θ => (posSemidef_outer_product (fun x => if 0 < n x then v θ x else 0)).smul
+  have h1 := Matrix.posSemidef_sum (Finset.univ : Finset Θ) fun θ _ =>
+    (Matrix.posSemidef_vecMulVec_self_star (fun x => if 0 < n x then v θ x else 0)).smul
       (Complex.zero_le_real.mpr (mul_nonneg (sub_nonneg.mpr (hd θ)) (ha θ)))
-  have h2 : (∑ θ, ((Dsup * a θ : ℝ) : ℂ) • Matrix.of fun x y =>
-      (if 0 < n x then 0 else v θ x) * star (if 0 < n y then 0 else v θ y)).PosSemidef :=
-    hsum _ fun θ => (posSemidef_outer_product (fun x => if 0 < n x then 0 else v θ x)).smul
+  have h2 := Matrix.posSemidef_sum (Finset.univ : Finset Θ) fun θ _ =>
+    (Matrix.posSemidef_vecMulVec_self_star (fun x => if 0 < n x then 0 else v θ x)).smul
       (Complex.zero_le_real.mpr (mul_nonneg hD0 (ha θ)))
   convert h1.add h2 using 1
   ext x y
-  simp only [Matrix.of_apply, Matrix.add_apply, Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul,
-    Finset.mul_sum]
+  simp only [Matrix.of_apply, Matrix.add_apply, Matrix.sum_apply, Matrix.smul_apply,
+    Matrix.vecMulVec_apply, Pi.star_apply, smul_eq_mul, Finset.mul_sum]
   by_cases hP : 0 < n x ∧ 0 < n y
   · rw [ite_eq_left hP, Finset.sum_div, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun θ _ => ?_

@@ -2,46 +2,7 @@ module
 
 public import GroundTheory.PAdicHodge.ThetaPlus
 public import GroundTheory.PAdicHodge.AInfGalois
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -106,14 +67,6 @@ theorem ker_evalB (n : ℕ) : RingHom.ker (evalB K p n) = maximalIdeal 𝔹 ^ n 
   rw [Ideal.map_pow] at h
   rw [← map_ker_fontaineThetaInvertP K p]
   exact h
-
-theorem map_mem_maximalIdeal_pow {F : 𝔹 →+* 𝔹} (hF : ∀ x ∈ maximalIdeal 𝔹, F x ∈ maximalIdeal 𝔹)
-    {x : 𝔹} {n : ℕ} (hx : x ∈ maximalIdeal 𝔹 ^ n) : F x ∈ maximalIdeal 𝔹 ^ n := by
-  have h1 : (maximalIdeal 𝔹).map F ≤ maximalIdeal 𝔹 := Ideal.map_le_iff_le_comap.2 hF
-  have h2 : (maximalIdeal 𝔹 ^ n).map F ≤ maximalIdeal 𝔹 ^ n := by
-    rw [Ideal.map_pow]
-    exact Ideal.pow_right_mono h1 n
-  exact h2 (Ideal.mem_map_of_mem F hx)
 
 theorem eq_zero_of_forall_mem_maximalIdeal_pow {x : 𝔹} (h : ∀ n : ℕ, x ∈ maximalIdeal 𝔹 ^ n) :
     x = 0 := by
@@ -318,27 +271,6 @@ theorem gal_smul_mem_maximalIdeal (σ : Gal(PadicAlgCl p/K)) {x : 𝔹} (hx : x 
     σ • x ∈ maximalIdeal 𝔹 := by
   rw [IsPerfectoidField.maximalIdeal_bDeRhamPlus, RingHom.mem_ker] at hx ⊢
   rw [thetaBDeRhamPlusField_gal_smul, hx, smul_zero]
-
-theorem gal_smul_mem_maximalIdeal_pow_iff (σ : Gal(PadicAlgCl p/K)) (x : 𝔹) (n : ℕ) :
-    σ • x ∈ maximalIdeal 𝔹 ^ n ↔ x ∈ maximalIdeal 𝔹 ^ n := by
-  have key : ∀ (τ : Gal(PadicAlgCl p/K)) (y : 𝔹), y ∈ maximalIdeal 𝔹 ^ n →
-      τ • y ∈ maximalIdeal 𝔹 ^ n := fun τ y hy =>
-    IsPerfectoidField.map_mem_maximalIdeal_pow (F := galBdRHom τ)
-      (fun z hz => gal_smul_mem_maximalIdeal τ hz) hy
-  refine ⟨fun h => ?_, key σ x⟩
-  have := key σ⁻¹ _ h
-  rwa [inv_smul_smul] at this
-
-theorem map_galBdR_maximalIdeal_pow (σ : Gal(PadicAlgCl p/K)) (n : ℕ) :
-    (maximalIdeal 𝔹 ^ n).map (galBdR σ) = maximalIdeal 𝔹 ^ n := by
-  ext x
-  rw [Ideal.mem_map_of_equiv]
-  constructor
-  · rintro ⟨y, hy, rfl⟩
-    exact (gal_smul_mem_maximalIdeal_pow_iff σ y n).2 hy
-  · intro hx
-    refine ⟨σ⁻¹ • x, (gal_smul_mem_maximalIdeal_pow_iff σ⁻¹ x n).2 hx, ?_⟩
-    rw [galBdR_apply, smul_inv_smul]
 
 end Galois
 

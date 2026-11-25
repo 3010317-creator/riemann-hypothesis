@@ -2,48 +2,7 @@ module
 
 import Formalism.DistinguishedUnitIdeals.DistinguishedOrderProofs.SplittingOfPositiveLevel
 public import Formalism.DistinguishedUnitIdeals.StatementE
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -100,33 +59,30 @@ section lat
 variable {O : Type} [CommRing O] {B : Base O} {n : ℕ} {V : Type} [AddCommGroup V]
   [Module (PowerSeries O) V] (L : Lat B n V)
 
-private theorem phiIt_succ_lemma (i : ZMod n) (k : ℕ) (v : V) :
-    L.phiIt i (k + 1) v = L.φ (i + ((k + 1 : ℕ) : ZMod n)) (L.phiIt i k v) := rfl
-
 private theorem phiIt_zero_lemma_2 (i : ZMod n) (v : V) : L.phiIt i 0 v = v := rfl
 
 theorem phiIt_zero (i : ZMod n) (k : ℕ) : L.phiIt i k 0 = 0 := by
   induction k with
   | zero => rfl
-  | succ k ih => rw [phiIt_succ_lemma, ih, map_zero]
+  | succ k ih => rw [Formalism.ExponentWindows.E.S1.phiIt_succ, ih, map_zero]
 
 theorem phiIt_add (i : ZMod n) (k : ℕ) (u v : V) :
     L.phiIt i k (u + v) = L.phiIt i k u + L.phiIt i k v := by
   induction k with
   | zero => rfl
-  | succ k ih => simp only [phiIt_succ_lemma, ih, map_add (f := _)]
+  | succ k ih => simp only [Formalism.ExponentWindows.E.S1.phiIt_succ, ih, map_add (f := _)]
 
 theorem phiIt_sub (i : ZMod n) (k : ℕ) (u v : V) :
     L.phiIt i k (u - v) = L.phiIt i k u - L.phiIt i k v := by
   induction k with
   | zero => rfl
-  | succ k ih => simp only [phiIt_succ_lemma, ih, map_sub]
+  | succ k ih => simp only [Formalism.ExponentWindows.E.S1.phiIt_succ, ih, map_sub]
 
 theorem phiIt_smul (i : ZMod n) (k : ℕ) (a : PowerSeries O) (v : V) :
     L.phiIt i k (a • v) = ((⇑B.φ)^[k] a) • L.phiIt i k v := by
   induction k with
   | zero => rfl
-  | succ k ih => simp only [phiIt_succ_lemma, ih, L.φ_semi, Function.iterate_succ_apply']
+  | succ k ih => simp only [Formalism.ExponentWindows.E.S1.phiIt_succ, ih, L.φ_semi, Function.iterate_succ_apply']
 
 theorem phiIt_C (i : ZMod n) (k : ℕ) (m : O) (v : V) :
     L.phiIt i k (C m • v) = C m • L.phiIt i k v := by
@@ -150,7 +106,7 @@ theorem γ_phiIt (i : ZMod n) (k : ℕ) (v : V) :
   induction k with
   | zero => simp only [phiIt_zero_lemma_2, Nat.cast_zero, add_zero]
   | succ k ih =>
-    rw [phiIt_succ_lemma, phiIt_succ_lemma, ← L.comm]
+    rw [Formalism.ExponentWindows.E.S1.phiIt_succ, Formalism.ExponentWindows.E.S1.phiIt_succ, ← L.comm]
     have hk : i + ((k + 1 : ℕ) : ZMod n) - 1 = i + (k : ZMod n) := by push_cast; ring
     rw [hk, ih]
 
@@ -360,7 +316,7 @@ variable {O : Type} [CommRing O] {B : Base O} {n : ℕ} {V V' : Type} [AddCommGr
 theorem hom_phiIt (i : ZMod n) (k : ℕ) (v : V) : h.f (L.phiIt i k v) = L'.phiIt i k (h.f v) := by
   induction k with
   | zero => rfl
-  | succ k ih => rw [phiIt_succ_lemma, phiIt_succ_lemma, h.φ_comm, ih]
+  | succ k ih => rw [Formalism.ExponentWindows.E.S1.phiIt_succ, Formalism.ExponentWindows.E.S1.phiIt_succ, h.φ_comm, ih]
 
 theorem hom_pull {i : ZMod n} {k : ℕ} {v : V} (hv : v ∈ L.pull i k) : h.f v ∈ L'.pull i k := by
   have hle : L.pull i k ≤ (L'.pull i k).comap h.f := by

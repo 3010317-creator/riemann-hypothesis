@@ -3,49 +3,8 @@ module
 public import Formalism.SharpRestriction.GrowthBounds.FormalGroupSystem
 public import Formalism.LocalToGlobal.GroupLattices.PerfectRings.CharZeroWittQuadratic
 import Formalism.LocalToGlobal.GroupLattices.PerfectRings.IsLocalRingOfComplete
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -87,35 +46,6 @@ theorem mem_Oc (x : Kc p) : x ∈ Oc p ↔ IsIntegral (WW p) x := Iff.rfl
 theorem witt_mem_integers_Cp (x : WW p) : algebraMap (K0 p) (Kc p) (algebraMap (WW p) (K0 p) x) ∈ Oc p := by
   rw [mem_Oc, ← IsScalarTower.algebraMap_apply]
   exact isIntegral_algebraMap
-
-theorem Oc_val (x : Kc p) : x ∈ Oc p ∨ x⁻¹ ∈ Oc p := by
-  have hx : IsIntegral (K0 p) x := Algebra.IsIntegral.isIntegral x
-  have : FiniteDimensional (K0 p) (K0 p)⟮x⟯ := adjoin.finiteDimensional hx
-  have hD : IsDiscreteValuationRing (integralClosure (WW p) (K0 p)⟮x⟯) :=
-    IntCl.isDVR (WW p) (K0 p) (K0 p)⟮x⟯ (completeWW p)
-  have hF : IsFractionRing (integralClosure (WW p) (K0 p)⟮x⟯) (K0 p)⟮x⟯ := IntCl.frac (WW p) (K0 p) (K0 p)⟮x⟯
-  have : IsScalarTower (WW p) (K0 p)⟮x⟯ (Kc p) := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  let x' : (K0 p)⟮x⟯ := ⟨x, mem_adjoin_simple_self _ _⟩
-  have key : ∀ y : (K0 p)⟮x⟯, IsLocalization.IsInteger (integralClosure (WW p) (K0 p)⟮x⟯) y →
-      IsIntegral (WW p) (y : Kc p) := by
-    rintro y ⟨b, rfl⟩
-    exact (b.2 : IsIntegral (WW p) (b : (K0 p)⟮x⟯)).map (IsScalarTower.toAlgHom (WW p) (K0 p)⟮x⟯ (Kc p))
-  rcases ValuationRing.isInteger_or_isInteger (integralClosure (WW p) (K0 p)⟮x⟯) x' with h | h
-  · exact Or.inl (key _ h)
-  · exact Or.inr (key _ h)
-
-theorem Oc_rank1 (x : Kc p) (_hx : x ≠ 0) : ∃ m : ℕ, (p : Kc p) ^ m / x ∈ Oc p := by
-  have halg : IsAlgebraic (WW p) x⁻¹ :=
-    (IsFractionRing.isAlgebraic_iff (WW p) (K0 p) (Kc p)).2 (Algebra.IsAlgebraic.isAlgebraic _)
-  obtain ⟨a, ha, hint⟩ := halg.exists_integral_multiple
-  obtain ⟨m, u, hu⟩ := WittVector.exists_eq_pow_p_mul' a ha
-  refine ⟨m, ?_⟩
-  rw [mem_Oc]
-  have h1 : (p : Kc p) ^ m / x = ((u⁻¹ : (WW p)ˣ) : WW p) • (a • x⁻¹) := by
-    rw [smul_smul, hu, mul_comm ((p : WW p) ^ m), ← mul_assoc, Units.inv_mul, one_mul, Algebra.smul_def, map_pow,
-      map_natCast, div_eq_mul_inv]
-  rw [h1]
-  exact hint.smul _
 
 theorem p_inv_notMem_Oc : (p : Kc p)⁻¹ ∉ Oc p := by
   rw [mem_Oc]
@@ -177,7 +107,7 @@ theorem gO_mem (z : OO p n) : gO p n z ∈ Oc p := by
   exact (Oc p).add_mem (gW_mem p n _) ((Oc p).mul_mem (gW_mem p n _) (sqrtPrime_mem p))
 
 theorem gO_injective : Function.Injective (gO p n) := by
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+  rw [injective_iff_map_eq_zero]
   intro z hz
   rw [gO_apply] at hz
   by_cases hb : z.im = 0

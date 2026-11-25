@@ -10,58 +10,11 @@ public import ReciprocityTheory.DualLattices.ProdDvdOfIso
 public import Mathlib.Basic.PEquiv
 public import Mathlib.Data.Matrix.PEquiv
 public import Mathlib.LinearAlgebra.Quotient.Pi
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.TotallySplit
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
 import ReciprocityTheory.DualLattices.UpSmith
-import Std.Tactic.BVDecide.Normalize.Prop
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: ReciprocityTheory.DualLattices.ExistsFromRowsMulVecIff, ReciprocityTheory.DualLattices.DualLenStatement, ReciprocityTheory.DualLattices.MatEquivApply
@@ -430,11 +383,6 @@ lemma hasLen_pi {C : Type} [Field C] (v : Valuation C NNReal) [Algebra R C] {d :
       (∏ j, v (algebraMap R C (a j))) :=
   ⟨d, a, ⟨Submodule.quotientPi _⟩, rfl⟩
 
-private lemma hasLen_of_linearEquiv' {C : Type} [Field C] {v : Valuation C NNReal} [Algebra R C]
-    {M M' : Type} [AddCommGroup M] [Module R M] [AddCommGroup M'] [Module R M'] {x : NNReal}
-    (h : HasLen v R M x) (e : M ≃ₗ[R] M') : HasLen v R M' x := by
-  obtain ⟨m, c, ⟨e0⟩, hc⟩ := h
-  exact ⟨m, c, ⟨e.symm.trans e0⟩, hc⟩
 
 theorem dualLen_fin {C : Type} [Field C] {v : Valuation C NNReal} [Algebra R C]
     (hv : v.Integers R) {d n : ℕ} (A : Matrix (Fin d) (Fin n) R) (c : R) (hc : c ≠ 0)
@@ -634,9 +582,9 @@ theorem dualLen_fin {C : Type} [Field C] {v : Valuation C NNReal} [Algebra R C]
               Matrix.transpose_one, Matrix.one_mulVec]
         _ = _ := by rw [h1, Matrix.mulVec_smul]
   have hA1 : HasLen v R ((Fin d → R) ⧸ LinearMap.range A.mulVecLin)
-      (∏ j, v (algebraMap R C (a j))) := hasLen_of_linearEquiv' (hasLen_pi v a) e1.symm
+      (∏ j, v (algebraMap R C (a j))) := hasLen_of_equiv e1 (hasLen_pi v a)
   have hc1 := hasLen_unique hv hc₁ hA1
-  refine ⟨∏ j, v (algebraMap R C (b j)), hasLen_of_linearEquiv' (hasLen_pi v b) e2.symm, ?_⟩
+  refine ⟨∏ j, v (algebraMap R C (b j)), hasLen_of_equiv e2 (hasLen_pi v b), ?_⟩
   rw [hc1, ← Finset.prod_mul_distrib]
   simp_rw [← map_mul, mul_comm (b _) (a _), hb]
   rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin]

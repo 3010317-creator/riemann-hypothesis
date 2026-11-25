@@ -5,45 +5,6 @@ public import Formalism.LocalToGlobal.GlobalTheory.GL4.PColLoc
 public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LFockbLemmas
 public import Formalism.LocalToGlobal.GlobalTheory.GL4.PColFin
 public import Formalism.LocalToGlobal.GlobalTheory.HLatOpsP
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Formalism.LocalToGlobal.Columns.PolyFnLemmas
 
 @[expose] public section
@@ -62,56 +23,24 @@ section NF
 
 variable {ι : Type} [Fintype ι] {n : ℕ} (lam : ι → DomWeight n)
 
-private theorem fockF_add_left_eq_add {σ : Type} (f f' g : MvPolynomial σ ℂ) :
-    fockF (f + f') g = fockF f g + fockF f' g := by
-  classical
-  rw [_root_.Formalism.L2.Col.fockF_eq_sum (f + f') g _ MvPolynomial.support_add,
-    _root_.Formalism.L2.Col.fockF_eq_sum f g (f.support ∪ f'.support) Finset.subset_union_left,
-    _root_.Formalism.L2.Col.fockF_eq_sum f' g (f.support ∪ f'.support) Finset.subset_union_right, ← Finset.sum_add_distrib]
-  refine Finset.sum_congr rfl fun m _ => ?_
-  rw [MvPolynomial.coeff_add]
-  ring
-
-private theorem fockF_add_right_lemma_3 {σ : Type} (f g g' : MvPolynomial σ ℂ) :
-    fockF f (g + g') = fockF f g + fockF f g' := by
-  unfold fockF
-  rw [← Finset.sum_add_distrib]
-  refine Finset.sum_congr rfl fun m _ => ?_
-  rw [MvPolynomial.coeff_add, star_add]
-  ring
-
-private theorem fockF_smul_left_eq_mul {σ : Type} (z : ℂ) (f g : MvPolynomial σ ℂ) :
-    fockF (z • f) g = z * fockF f g := by
-  rw [_root_.Formalism.L2.Col.fockF_eq_sum (z • f) g f.support MvPolynomial.support_smul,
-    _root_.Formalism.L2.Col.fockF_eq_sum f g f.support (Finset.Subset.refl _), Finset.mul_sum]
-  refine Finset.sum_congr rfl fun m _ => ?_
-  rw [MvPolynomial.coeff_smul, smul_eq_mul]
-  ring
-
-private theorem fockF_smul_right_eq_conj_mul {σ : Type} (z : ℂ) (f g : MvPolynomial σ ℂ) :
-    fockF f (z • g) = starRingEnd ℂ z * fockF f g := by
-  unfold fockF
-  rw [Finset.mul_sum]
-  refine Finset.sum_congr rfl fun m _ => ?_
-  rw [MvPolynomial.coeff_smul, smul_eq_mul, star_mul', starRingEnd_apply]
-  ring
-
 theorem nfAll_add_left (p p' q : MvPolynomial (ι × Fin n × Fin n) ℂ) : nfAll lam (p + p') q = nfAll lam p q + nfAll lam p' q := by
   unfold nfAll
-  rw [fockF_add_left_eq_add, add_div]
+  rw [Formalism.REAL.fischerInner_add_left, add_div]
 
 theorem nfAll_add_right (p q q' : MvPolynomial (ι × Fin n × Fin n) ℂ) : nfAll lam p (q + q') = nfAll lam p q + nfAll lam p q' := by
   unfold nfAll
-  rw [fockF_add_right_lemma_3, add_div]
+  rw [Formalism.REAL.fischerInner_add_right, add_div]
 
 theorem nfAll_smul_left (z : ℂ) (p q : MvPolynomial (ι × Fin n × Fin n) ℂ) : nfAll lam (z • p) q = z * nfAll lam p q := by
   unfold nfAll
-  rw [fockF_smul_left_eq_mul, mul_div_assoc]
+  rw [MvPolynomial.smul_eq_C_mul, Formalism.GradedWeylDivisibility.LFocks_C_mul_left,
+    mul_div_assoc]
 
 theorem nfAll_smul_right (z : ℂ) (p q : MvPolynomial (ι × Fin n × Fin n) ℂ) :
     nfAll lam p (z • q) = starRingEnd ℂ z * nfAll lam p q := by
   unfold nfAll
-  rw [fockF_smul_right_eq_conj_mul, mul_div_assoc]
+  rw [MvPolynomial.smul_eq_C_mul, Formalism.GradedWeylDivisibility.LFocks_C_mul_right,
+    starRingEnd_apply, mul_div_assoc]
 
 theorem nfAll_zero_left (q : MvPolynomial (ι × Fin n × Fin n) ℂ) : nfAll lam 0 q = 0 := by
   unfold nfAll fockF

@@ -1,49 +1,9 @@
 module
 
 public import ReciprocityTheory.CommutativeAlgebra.ChainConnInDim
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.CommutativeAlgebra.CohenMacaulay.Bridge
 public import ReciprocityTheory.CommutativeAlgebra.CohenMacaulay.Unmixed
 public import Mathlib.RingTheory.KrullDimension.Module
@@ -80,14 +40,6 @@ theorem isCM_of_quotient_span_singleton [IsNoetherianRing R] {x : R} (hx : x ∈
     (h : IsCM (R ⧸ Ideal.span {x})) : IsCM R := by
   exact isCM_iff_isCMMod.mpr (IsCMMod.of_quotSMulTop hx (isSMulRegular_of_mem_nonZeroDivisors' reg)
     ((isCMMod_congr (quotSMulTopEquivQuot' x)).mpr ((isCM_quotient_iff _).mp h)))
-
-theorem IsCM.quotient_ofList (h : IsCM R) {rs : List R} (hrs : ∀ r ∈ rs, r ∈ maximalIdeal R)
-    (reg : IsRegular R rs) [IsLocalRing (R ⧸ Ideal.ofList rs)] :
-    IsCM (R ⧸ Ideal.ofList rs) := by
-  haveI : IsNoetherianRing R := h.1
-  have h1 := (isCM_iff_isCMMod.mp h).quotient_ofList hrs reg
-  exact (isCM_quotient_iff _).mpr
-    ((isCMMod_congr (Submodule.quotEquivOfEq _ _ (smul_top_eq_self' _))).mp h1)
 
 theorem IsCM.isRegular_of_isArtinianRing_quotient (h : IsCM R) (xs : List R)
     (hxs : ∀ r ∈ xs, r ∈ maximalIdeal R) (hlen : (xs.length : WithBot ℕ∞) = ringKrullDim R)

@@ -20,54 +20,11 @@ public import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColDef
 public import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColsDef
 import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.SegmentStatementHolds
 import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.ThresholdLowerBounds
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Monotonicity.Lemmas
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Presheaf
-import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-import Mathlib.Tactic.TypeStar
 import Std.Tactic.BVDecide.Normalize.BitVec
 import Formalism.SharpRestriction.GrowthBounds.FrobeniusPaths.DividedPowerZeroOfGlActionZero
 import Formalism.SharpRestriction.GrowthBounds.ProjectionOfIsotypicDecomposition
-import Mathlib.Tactic.Polynomial.Basic
 import Formalism.SharpRestriction.GrowthBounds.CoarseMultiplicity.Lemma44IdentityOfRawTail
 import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.KGShift
 
@@ -253,7 +210,7 @@ theorem three_level_le_eps_prime {C0 Cde CE1 CE2 : ℝ} {X : Loc} (St : Std C0 C
   linarith
 
 theorem m1num_of_std {C0 Cde CE1 CE2 : ℝ} {X : Loc} (St : Std C0 Cde CE1 CE2 1 X) (mm : ℝ)
-    (hmm : mm = 0 ∨ mm = 12 * (X.c : ℝ)) (n : ℕ) (_hn1 : 1 ≤ n) (hnc : n ≤ X.c)
+    (hmm : mm = 0 ∨ mm = 12 * (X.c : ℝ)) (n : ℕ) (hnc : n ≤ X.c)
     (j : Fin (numSeg X.TT)) (b : SegBlock (segS X.TT j) X.m)
     (hb : BLk C0 Cde CE1 CE2 X (((X.c - n : ℕ) : ℝ) * ka1 X) j b) :
     (∑ l : Fin (segS X.TT j), (if (l : ℕ) < (X.seg C0 CE1 CE2 j).sigma then (b.sg l : ℤ) else 0)) ≤
@@ -368,8 +325,8 @@ theorem m1num_of_std {C0 Cde CE1 CE2 : ℝ} {X : Loc} (St : Std C0 Cde CE1 CE2 1
     linarith
 
 theorem column_numerics_holds : ColumnNumericsBeyond :=
-  TransportedAlt.mono (fun _ _ _ _ _ _ _ _ _ _ h X hD hH hc mm hmm n hn1 hnc j b hb =>
-    m1num_of_std (h X hD hH hc) mm hmm n hn1 hnc j b hb) threshold_standard_one
+  TransportedAlt.mono (fun _ _ _ _ _ _ _ _ _ _ h X hD hH hc mm hmm n _ hnc j b hb =>
+    m1num_of_std (h X hD hH hc) mm hmm n hnc j b hb) threshold_standard_one
 
 end Formalism.MainNotions.ColumnSystems.Pf.GenusGluing
 end -- clump:auto

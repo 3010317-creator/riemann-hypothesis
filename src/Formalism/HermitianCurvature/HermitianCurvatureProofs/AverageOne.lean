@@ -2,52 +2,7 @@ module
 
 public import Formalism.HermitianCurvature.LatticeHerglotzBound
 public import Mathlib.CategoryTheory.Category.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Lemma
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -97,9 +52,6 @@ lemma tendsto_lim_of_bdd (u : ℕ → ℂ) (B : ℝ) (hu : ∀ n, ‖u n‖ ≤ 
     rw [Ultrafilter.coe_map, le_principal_iff, Filter.mem_map]
     exact Filter.univ_mem' (fun n => by simpa using hu n))
   exact tendsto_nhds_limUnder ⟨x, hx⟩
-
-lemma hyper_le_atTop : (hyperfilter ℕ : Filter ℕ) ≤ atTop := by
-  rw [← Nat.cofinite_eq_atTop]; exact hyperfilter_le_cofinite
 
 def LIMf (e : ι → Λ) (c : ℕ → Λ) (g : Λ → ℂ) : ℂ :=
   limUnder (hyperfilter ℕ : Filter ℕ) (avg e c g)
@@ -278,7 +230,7 @@ lemma LIMf_shift_gen (e : ι → Λ) (c : ℕ → Λ) (g : Λ → ℂ) (hg : Bdd
   apply LIMf_eq_of_tendsto
   have h0 : Tendsto (fun n => avg e c (fun x => g (x + e j)) n - avg e c g n)
       (hyperfilter ℕ : Filter ℕ) (𝓝 0) := by
-    apply Tendsto.mono_left _ hyper_le_atTop
+    apply Tendsto.mono_left _ Nat.hyperfilter_le_atTop
     apply squeeze_zero_norm (avg_shift_small e c g B hB j)
     have := (tendsto_one_div_add_atTop_nhds_zero_nat (𝕜 := ℝ)).const_mul (2 * B)
     rw [mul_zero] at this
@@ -350,7 +302,7 @@ theorem exists_mean (e : ι → Λ) (he : AddSubgroup.closure (Set.range e) = �
     exact invAt_all e c he σ g hg
   · intro g hg hsmall
     apply LIMf_eq_of_tendsto
-    apply Tendsto.mono_left _ hyper_le_atTop
+    apply Tendsto.mono_left _ Nat.hyperfilter_le_atTop
     rw [Metric.tendsto_nhds]
     intro ε hε
     filter_upwards [hsmall (ε / 2) (by positivity)] with n hn

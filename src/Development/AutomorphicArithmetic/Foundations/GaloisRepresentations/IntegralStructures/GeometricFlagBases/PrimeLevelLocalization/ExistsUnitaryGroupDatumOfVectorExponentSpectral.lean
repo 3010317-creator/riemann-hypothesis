@@ -105,8 +105,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 open NumberField IsDedekindDomain GlobalTheory.UPel.HT GlobalTheory.LKTrip GlobalTheory.LKGeo
 open UpperTheory.Gal.CertificateRingHomMap (GUf Plc)
 open UpperTheory.Gal.W2.Seed (Arith Setup)
@@ -372,7 +370,6 @@ open GlobalTheory.LFun (KGL satEig)
 open UpperTheory.Gal.CertificateRingHomMap (GUf Gam0 Plc GLw AfQ sim mat comp rat loc lev SameK IsCen Shape IsForm IsKap mOf)
 open UpperTheory.Gal.W2.Seed (Arith Setup)
 open scoped TensorProduct Classical
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace UpperTheory.Gal.Int.Geo.Pl
 
@@ -706,7 +703,6 @@ open GlobalTheory.Cong (Apart)
 open UpperTheory.Gal.CertificateRingHomMap (GUf Gam0 Plc GLw AfQ sim mat comp rat loc lev SameK IsCen Shape IsForm IsKap mOf)
 open UpperTheory.Gal.W2.Seed (Arith Setup)
 open scoped TensorProduct Classical
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open GlobalTheory.CongL GlobalTheory.RoadWGeo Formalism.MainNotions.N Formalism.BasicNotions Formalism.ConjugateSelfDual UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Pl
 attribute [local instance] Ideal.Quotient.field
 open Neutral.B1 ReciprocityTheory.Gal

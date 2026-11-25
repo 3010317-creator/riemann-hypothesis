@@ -19,54 +19,9 @@ import Formalism.SharpRestriction.GrowthBounds.RootWeights.PolynomialMemWeightSp
 import Formalism.SharpRestriction.GrowthBounds.RootWeights.ValuationNonnegIffIntegral
 import Formalism.SharpRestriction.GrowthBounds.RootWeights.WeightConditionFromIntegralForm
 public import Lemmata.MiscLemmasE.Imports
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 public import Mathlib.Analysis.Normed.Group.Tannery
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.Padics.LocalField
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Lemma
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Connected.Separation
-import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
-import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -671,7 +626,7 @@ theorem harm_eq (P s : ℕ) : harm P s = ∑ y ∈ Ico 1 P, 1 / (y : ℚ) ^ s :=
   unfold harm
   exact Finset.sum_congr rfl fun y _ => (one_div _).symm
 
-theorem padic_val_harmonic_lower_bound (p : ℕ) [hp : Fact p.Prime] (_h5 : 5 ≤ p) (t : ℕ) :
+theorem padic_val_harmonic_lower_bound (p : ℕ) [hp : Fact p.Prime] (t : ℕ) :
     ∀ s : ℕ, 1 ≤ s → (s : ℤ) ≤ padicValRat p (((p ^ (t + 1) : ℕ) : ℚ) ^ s * harm (p ^ (t + 1)) s) := by
   intro s _
   rw [harm_eq]
@@ -721,19 +676,19 @@ theorem binomDecay_of_dec {p : ℕ} {f : ℕ → ℚ} (h : Dec p (1 / 4) 0 f) : 
   · refine Or.inr (le_trans (le_of_eq ?_) h1)
     ring
 
-theorem binomial_decay_unit_factor (p : ℕ) [hp : Fact p.Prime] (_h5 : 5 ≤ p) (t : ℕ) :
+theorem binomial_decay_unit_factor (p : ℕ) [hp : Fact p.Prime] (t : ℕ) :
     BinomDecay p (fun n => cUnit (p ^ (t + 1)) n) := by
   have := hDec_of hp.out (hdU_proved hp.out) ⟨t, 0, true, false⟩ (by simpa using Nat.pos_of_ne_zero (pow_ne_zero _ hp.out.ne_zero))
   rw [mah_unitFn_tf] at this
   exact binomDecay_of_dec this
 
-theorem binomial_decay_unit_factor_inv (p : ℕ) [hp : Fact p.Prime] (_h5 : 5 ≤ p) (t : ℕ) :
+theorem binomial_decay_unit_factor_inv (p : ℕ) [hp : Fact p.Prime] (t : ℕ) :
     BinomDecay p (fun n => (cUnit (p ^ (t + 1)) n)⁻¹) := by
   have := hDec_of hp.out (hdU_proved hp.out) ⟨t, 0, true, true⟩ (by simpa using Nat.pos_of_ne_zero (pow_ne_zero _ hp.out.ne_zero))
   rw [mah_unitFn_tt] at this
   exact binomDecay_of_dec this
 
-theorem binomial_decay_second_factor (p : ℕ) [hp : Fact p.Prime] (_h5 : 5 ≤ p) (t : ℕ) :
+theorem binomial_decay_second_factor (p : ℕ) [hp : Fact p.Prime] (t : ℕ) :
     ∀ rho : ℕ, rho < p ^ (t + 1) → BinomDecay p (fun n => dUnit (p ^ (t + 1)) n rho) ∧
       BinomDecay p (fun n => (dUnit (p ^ (t + 1)) n rho)⁻¹) := by
   intro rho hr
@@ -840,8 +795,8 @@ open Formalism.MainNotions.G Formalism.MainNotions.tableLineDegreeFive
 
 theorem coarse_units_lemma (D : Formalism.BasicNotions.D7) : Formalism.MainNotions.tableLineDegreeFive.adm22 D := by
   intro p _ h5 t
-  exact ⟨F2.coarse_unit_product_prime_power p t, F2.padic_log_unit_factor_series p (fun s f h => F1.plog_prod p s f h) t, F3.padic_val_harmonic_lower_bound p h5 t, F3.power_sum_polynomial_exists,
-    F3.padic_val_harmonic_term_bound p h5 t, F4.binomial_decay_unit_factor p h5 t, F4.binomial_decay_unit_factor_inv p h5 t, F4.binomial_decay_second_factor p h5 t, F5.binomial_basis_approximation p⟩
+  exact ⟨F2.coarse_unit_product_prime_power p t, F2.padic_log_unit_factor_series p (fun s f h => F1.plog_prod p s f h) t, F3.padic_val_harmonic_lower_bound p t, F3.power_sum_polynomial_exists,
+    F3.padic_val_harmonic_term_bound p h5 t, F4.binomial_decay_unit_factor p t, F4.binomial_decay_unit_factor_inv p t, F4.binomial_decay_second_factor p t, F5.binomial_basis_approximation p⟩
 
 end Formalism.MainNotions.G.Joints
 

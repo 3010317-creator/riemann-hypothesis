@@ -68,7 +68,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx
 open scoped TensorProduct InnerProductSpace
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3
 
 end -- clump:auto
@@ -103,7 +102,7 @@ section
 namespace GlobalTheory.HeightCounting.Up.RowsAtStates
 section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
+attribute [local instance] GlobalTheory.TypeRec.factG
 
 theorem adm8_and_lamUsed_of_rational_reading_and_parameters : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → _root_.GlobalTheory.NRows.GeometricGaloisRepCompatibility → OverRows fun _ _ _ _ w Z _ _ z p0 Y => RationalReadingWithoutCongruence z.R z.F p0 Y →
     (∃ L : SizeData₂ (w.st Z).toD7, Nonempty (ParameterChoice' (w.st Z).toD7 L)) → SumRepresentations.adm8 (w.st Z).toD7 ∧ GlobalTheory.NRows.LamUsed (w.st Z).toD7 := by
@@ -121,7 +120,7 @@ theorem adm8_and_lamUsed_of_rational_reading_and_parameters : _root_.GlobalTheor
   have hT : TypesTrue (w.st Z).toD7.ntypes z.R.C.P z.R.C.W := by
     rw [z.lev.C, w.C_eq]
     exact hGrp
-  have hME := _root_.GlobalTheory.MultEqFinal.twisted_multiplicity_eq hPX.ana hPX.dsc hN.decay hN.hc hPX.trc hPX.dm hPX.flath hN.zel
+  have hME := _root_.GlobalTheory.MultEqFinal.twisted_multiplicity_eq hPX.dsc hN.decay hN.hc hPX.trc hPX.dm hN.zel
     hN.what₂.geo hN.greenC z.R z.F hHo.ok z.pins.char hEx hH hp B.ccK_top z.pins.keep.guard
     (GlobalTheory.LiftRows.Inh.goodTypes_of_typesTrue z.pins.char.base.lev hT)
   have hIR : Formalism.BasicNotions.Rows.IsotRank (w.st Z).toD7.what₂ :=
@@ -131,7 +130,6 @@ theorem adm8_and_lamUsed_of_rational_reading_and_parameters : _root_.GlobalTheor
   exact ⟨h0.1 hIR, h0.2⟩
 end
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.IndefR.NX ReciprocityTheory.Aut Formalism.AUTREP NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem adm8_and_lamUsed_all_states_of_published_inputs : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → _root_.GlobalTheory.NRows.GeometricGaloisRepCompatibility → AllSt fun _ _ _ _ _ _ x =>
     SumRepresentations.adm8 (Dof x) ∧ GlobalTheory.NRows.LamUsed (Dof x) := by

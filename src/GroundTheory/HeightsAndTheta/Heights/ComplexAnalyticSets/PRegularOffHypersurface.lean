@@ -3,53 +3,12 @@ module
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StRegularOffHypersurface
 public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.StFrameGraphGeneric
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.OsgoodSeparate
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 public import Mathlib.Analysis.Calculus.FDeriv.Pi
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
 public import Mathlib.RingTheory.KrullDimension.Field
 public import Mathlib.RingTheory.KrullDimension.Polynomial
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -68,25 +27,17 @@ theorem exists_ringKrullDim_quotient_eq_nat {n : ℕ} (J : Ideal (MvPolynomial (
     refine (ringKrullDim_quotient_le J).trans ?_
     rw [MvPolynomial.ringKrullDim_of_isNoetherianRing_of_finite, ringKrullDim_eq_zero_of_field, Nat.card_eq_fintype_card,
       Fintype.card_fin, zero_add]
-  generalize ringKrullDim (MvPolynomial (Fin n) ℂ ⧸ J) = x at hge hle
-  induction x using WithBot.recBotCoe with
-  | bot => exact absurd hge (by simp)
-  | coe m =>
-    induction m using ENat.recTopCoe with
-    | top => exact absurd hle (by norm_cast)
-    | coe d => exact ⟨d, rfl⟩
+  obtain ⟨m, hm⟩ := WithBot.ne_bot_iff_exists.mp
+    (ne_bot_of_gt (lt_of_lt_of_le (WithBot.bot_lt_coe 0) hge))
+  have hmn : m ≤ (n : ℕ∞) := by exact_mod_cast (hm ▸ hle)
+  obtain ⟨d, rfl⟩ := ENat.ne_top_iff_exists.mp (lt_of_le_of_lt hmn (ENat.natCast_lt_top n)).ne
+  exact ⟨d, by exact_mod_cast hm.symm⟩
 
 theorem analyticOnNhd_of_differentiableOn_fin {d : ℕ} {σ : Type} [Fintype σ] {U : Set (Fin d → ℂ)}
-    {G : (Fin d → ℂ) → σ → ℂ} (hU : IsOpen U) (hG : DifferentiableOn ℂ G U) : AnalyticOnNhd ℂ G U := by
-  intro y hy
-  refine AnalyticAt.pi fun s => ?_
-  have hs : DifferentiableOn ℂ (fun x => G x s) U :=
-    (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : σ => ℂ) s).differentiable.comp_differentiableOn hG
-  refine analyticOnNhd_of_continuousOn_of_separately hU hs.continuousOn (fun z hz i => ?_) y hy
-  have h1 : DifferentiableAt ℂ (fun x => G x s) (Function.update z i (z i)) := by
-    rw [Function.update_eq_self]
-    exact hs.differentiableAt (hU.mem_nhds hz)
-  exact h1.comp (z i) (hasFDerivAt_update (𝕜 := ℂ) z (z i)).differentiableAt
+    {G : (Fin d → ℂ) → σ → ℂ} (hU : IsOpen U) (hG : DifferentiableOn ℂ G U) : AnalyticOnNhd ℂ G U :=
+  fun _ hy => AnalyticAt.pi fun s => ReciprocityTheory.AnForm.Osgood.osgood d U (fun x => G x s)
+    hU ((ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : σ => ℂ)
+      s).differentiable.comp_differentiableOn hG) _ hy
 
 theorem RegularOffHypersurface.proof (hG : FrameGraphGeneric.Statement) : RegularOffHypersurface.Statement := by
   intro σ _ I hI

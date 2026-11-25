@@ -15,50 +15,9 @@ public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PFrameJac
 public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PJacobianRankGeneric
 public import Mathlib.Analysis.Calculus.FDeriv.Pi
 public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Linter.Style
 import Mathlib.Topology.Separation.CompletelyRegular
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -223,17 +182,8 @@ theorem analyticAt_of_differentiableOn {σ : Type} [Fintype σ] {m : ℕ} {U : S
   have hH : DifferentiableOn ℂ H (E ⁻¹' U) :=
     P.differentiable.comp_differentiableOn
       (hG.comp E.differentiable.differentiableOn (Set.mapsTo_preimage _ _))
-  have hHa : AnalyticOnNhd ℂ H (E ⁻¹' U) := by
-    intro y hy
-    refine AnalyticAt.pi fun s => ?_
-    have hs : DifferentiableOn ℂ (fun x => H x s) (E ⁻¹' U) :=
-      (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin m => ℂ) s).differentiable.comp_differentiableOn hH
-    refine IndefiniteRowSideFullHecke.ComplexSets.analyticOnNhd_of_continuousOn_of_separately hV hs.continuousOn
-      (fun x hx i => ?_) y hy
-    have h1 : DifferentiableAt ℂ (fun x => H x s) (Function.update x i (x i)) := by
-      rw [Function.update_eq_self]
-      exact hs.differentiableAt (hV.mem_nhds hx)
-    exact h1.comp (x i) (hasFDerivAt_update (𝕜 := ℂ) x (x i)).differentiableAt
+  have hHa : AnalyticOnNhd ℂ H (E ⁻¹' U) := analyticOnNhd_pi_iff.2 fun s =>
+    ReciprocityTheory.AnForm.Osgood.osgood _ _ _ hV (differentiableOn_pi.1 hH s)
   have hGe : G = fun x => P.symm (H (E.symm x)) := by
     funext x
     simp [H]

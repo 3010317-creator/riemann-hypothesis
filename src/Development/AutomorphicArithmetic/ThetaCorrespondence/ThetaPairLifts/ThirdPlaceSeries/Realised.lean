@@ -45,7 +45,6 @@ noncomputable section
 open Formalism.BasicNotions Formalism.MainNotions NumberField IsDedekindDomain
 open Formalism.L2 Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx Formalism.L2.Pj Formalism.IndefR.FWT
 namespace GlobalTheory.BigTop
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
   {Y : DivX D} {cX : ExtraC}
 variable {ex : Extra D L hT Gi Gl Kc Y cX}
@@ -79,13 +78,8 @@ structure CompatibilityConditions : Prop where
   core : GlobalTheory.BigOn.CoreTies L ex.errX p.T p.R.toRealDat
   pb : p.T.pb = p.R.C.P.pb
   types : GlobalTheory.DimPartsCompare.TameTie D p.R.C.W.om
-  series : Nonempty (GlobalTheory.SeriesTie.ExportTie p.nexp p.v₀)
-  level : p.LevelTie
   data : p.DataTie
   psiVal : ∀ w, D.what₂.muAt w ≠ D.what₂.mu0 → (p.Tp.psi w).ValuesIn 0 D.what₂.embLL
-  ray : GlobalTheory.IndefiniteRowSideFullHecke.RationalRayLevels.RayIn D (D.host.g 0 * D.host.g 1 * D.host.pde * D.host.pde') (Formalism.L2.Host.embLL0 D).fieldRange
-  roots : ∀ (k : Fin 2) (z : ℂ), z ^ (D.host.g k * (D.host.g k - 1)) = 1 → z ∈ (Formalism.L2.Host.embLL0 D).fieldRange
-  rayQ : ∀ t, GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.ContainsRayField (GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.embK D) (GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.tupLevel p.R.toRealDat t)
   twist : GlobalTheory.EX.DQ.TwAllAt D ex.nch ex.xd
 structure PointConditions' : Prop where
   exAt : p.R.toRealDat.ExAt

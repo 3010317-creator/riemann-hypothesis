@@ -60,53 +60,6 @@ noncomputable section
 
 open Classical
 
-theorem cs_abs {V : Type} [AddCommGroup V] [Module ℂ V] (Dv : V → Prop) (β : V → V → ℂ)
-    (hadd : ∀ x y, Dv x → Dv y → Dv (x + y)) (hsmul : ∀ (c : ℂ) x, Dv x → Dv (c • x))
-    (hl : ∀ x₁ x₂ y (c : ℂ), Dv x₁ → Dv x₂ → Dv y → β (x₁ + c • x₂) y = β x₁ y + c * β x₂ y)
-    (hr : ∀ x y₁ y₂ (c : ℂ), Dv x → Dv y₁ → Dv y₂ → β x (y₁ + c • y₂) = β x y₁ + conj c * β x y₂)
-    (hpos : ∀ x, Dv x → 0 ≤ β x x) (x y : V) (hx : Dv x) (hy : Dv y) (hherm : β y x = conj (β x y)) :
-    ‖β x y‖ ^ 2 ≤ (β x x).re * (β y y).re := by
-  set b := β x y with hb
-  set a := (β x x).re
-  set c := (β y y).re
-  have hc : 0 ≤ c := (Complex.nonneg_iff.1 (hpos y hy)).1
-  have hB : ‖b‖ ^ 2 = Complex.normSq b := by rw [Complex.sq_norm]
-  have key : ∀ t : ℝ, 0 ≤ a - 2 * t * Complex.normSq b + t ^ 2 * Complex.normSq b * c := by
-    intro t
-    set μ : ℂ := -(t : ℂ) * b with hμ
-    have e1 : β x (x + μ • y) = β x x + conj μ * b := by rw [hr _ _ _ _ hx hx hy]
-    have e2 : β y (x + μ • y) = conj b + conj μ * β y y := by rw [hr _ _ _ _ hy hx hy, hherm]
-    have hz2 := hpos (x + μ • y) (hadd _ _ hx (hsmul _ _ hy))
-    rw [hl _ _ _ _ hx hy (hadd _ _ hx (hsmul _ _ hy)), e1, e2] at hz2
-    have hre := (Complex.nonneg_iff.1 hz2).1
-    have : (β x x + conj μ * b + μ * (conj b + conj μ * β y y)).re =
-        a - 2 * t * Complex.normSq b + t ^ 2 * Complex.normSq b * c := by
-      simp only [hμ, Complex.add_re, Complex.mul_re, Complex.neg_re, Complex.neg_im, Complex.ofReal_re,
-        Complex.ofReal_im, Complex.conj_re, Complex.conj_im, Complex.normSq_apply, map_mul, map_neg,
-        Complex.conj_ofReal, Complex.mul_im, Complex.add_im]
-      ring
-    linarith [this ▸ hre]
-  rw [hB]
-  rcases hc.eq_or_lt with hc0 | hc0
-  · have hb0 : Complex.normSq b = 0 := by
-      by_contra hne
-      have hpos' : 0 < Complex.normSq b := lt_of_le_of_ne (Complex.normSq_nonneg _) (Ne.symm hne)
-      have := key ((a + 1) / (2 * Complex.normSq b))
-      rw [← hc0] at this
-      field_simp at this
-      nlinarith
-    rw [hb0, ← hc0]; simp
-  · have := key (1 / c)
-    field_simp at this
-    nlinarith [Complex.normSq_nonneg b]
-
-section place
-
-variable {P : M.Par} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
-  [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq]
-
-end place
-
 theorem plusW_eq (ys : List ℝ) (w : List C.Letter) :
     KB.plusW ys w = ys.map (fun y => ((true, y) : C.Letter)) ++ w := by
   induction ys with
@@ -361,22 +314,19 @@ theorem lp_dual (ω₁ ω₂ : ℂ) (hω : (conj ω₁ * ω₂).im ≠ 0) (τ : 
     obtain ⟨a, b, rfl⟩ := (lp_mem ω₁ ω₂ hω z).1 hz
     simpa [lp_psi] using h a b
 
-theorem lp_ne : (2 * Real.pi * Complex.I : ℂ) ≠ 0 := by
-  simp [Real.pi_ne_zero, Complex.I_ne_zero]
-
 def lp_eqv (ω₁ ω₂ : ℂ) (hω : (conj ω₁ * ω₂).im ≠ 0) :
     {σ : ℂ // TBB.InDual ω₁ ω₂ σ} ≃ crystallineComparison.dualSet (Submodule.span ℤ (Set.range (lp_b ω₁ ω₂ hω))) where
   toFun σ := ⟨fun _ => σ.1 / (2 * Real.pi * Complex.I),
-    (lp_dual ω₁ ω₂ hω _).2 (by rw [mul_div_cancel₀ _ lp_ne]; exact σ.2)⟩
+    (lp_dual ω₁ ω₂ hω _).2 (by rw [mul_div_cancel₀ _ Complex.two_pi_I_ne_zero]; exact σ.2)⟩
   invFun τ := ⟨2 * Real.pi * Complex.I * τ.1 0, (lp_dual ω₁ ω₂ hω _).1 τ.2⟩
-  left_inv σ := Subtype.ext (mul_div_cancel₀ _ lp_ne)
+  left_inv σ := Subtype.ext (mul_div_cancel₀ _ Complex.two_pi_I_ne_zero)
   right_inv τ := by
     apply Subtype.ext
     funext i
     have hi : i = 0 := Subsingleton.elim _ _
     subst hi
     show 2 * Real.pi * Complex.I * τ.1 0 / (2 * Real.pi * Complex.I) = τ.1 0
-    rw [mul_div_cancel_left₀ _ lp_ne]
+    rw [mul_div_cancel_left₀ _ Complex.two_pi_I_ne_zero]
 
 theorem lp_fourier (E : ℂ → ℝ) (τ : Fin 1 → ℂ) :
     crystallineComparison.fourier (fun z => E (z 0)) τ = ∫ c : ℂ, P5.fsv (2 * Real.pi * Complex.I * τ 0) c * (E c : ℂ) := by

@@ -3,50 +3,9 @@ module
 public import Mathlib.NumberTheory.EllipticDivisibilitySequence
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.AffineMonoid.UniqueSums
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 public import Mathlib.Algebra.MvPolynomial.Basic
 public import Mathlib.Algebra.MvPolynomial.Eval
 
@@ -173,43 +132,6 @@ end Induction
 section Universal
 
 open MvPolynomial
-
-private theorem normEDS_two_three_two_nat (n : ℕ) : normEDS (2 : ℤ) 3 2 n = n := by
-  induction n using normEDSRec' with
-  | zero => simp [normEDS_zero]
-  | one => simp [normEDS_one]
-  | two => simp [normEDS_two]
-  | three => simp [normEDS_three]
-  | four => norm_num [normEDS_four]
-  | even m ih =>
-    have h := normEDS_even (2 : ℤ) 3 2 ((m : ℤ) + 3)
-    have e1 := ih (m + 2) (by omega)
-    have e2 := ih (m + 3) (by omega)
-    have e3 := ih (m + 5) (by omega)
-    have e4 := ih (m + 1) (by omega)
-    have e5 := ih (m + 4) (by omega)
-    push_cast at e1 e2 e3 e4 e5 ⊢
-    rw [show (m : ℤ) + 3 - 1 = m + 2 by ring, show (m : ℤ) + 3 + 2 = m + 5 by ring,
-      show (m : ℤ) + 3 - 2 = m + 1 by ring, show (m : ℤ) + 3 + 1 = m + 4 by ring,
-      e1, e2, e3, e4, e5] at h
-    have key : normEDS (2 : ℤ) 3 2 (2 * ((m : ℤ) + 3)) * 2 = 2 * (2 * ((m : ℤ) + 3)) := by
-      rw [h]; ring
-    linarith
-  | odd m ih =>
-    have h := normEDS_odd (2 : ℤ) 3 2 ((m : ℤ) + 2)
-    have e1 := ih (m + 4) (by omega)
-    have e2 := ih (m + 2) (by omega)
-    have e3 := ih (m + 1) (by omega)
-    have e4 := ih (m + 3) (by omega)
-    push_cast at e1 e2 e3 e4 ⊢
-    rw [show (m : ℤ) + 2 + 2 = m + 4 by ring, show (m : ℤ) + 2 - 1 = m + 1 by ring,
-      show (m : ℤ) + 2 + 1 = m + 3 by ring, e1, e2, e3, e4] at h
-    rw [h]; ring
-
-private theorem normEDS_two_three_two (n : ℤ) : normEDS (2 : ℤ) 3 2 n = n := by
-  rcases Int.eq_nat_or_neg n with ⟨k, rfl | rfl⟩
-  · exact normEDS_two_three_two_nat k
-  · rw [normEDS_neg, normEDS_two_three_two_nat]
 
 private noncomputable def uw (n : ℤ) : MvPolynomial (Fin 3) ℤ :=
   normEDS (X 0) (X 1) (X 2) n

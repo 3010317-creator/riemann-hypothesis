@@ -2,44 +2,6 @@ module
 
 public import Formalism.LocalToGlobal.IndefiniteReal.DoubleCosetOperators.GoodPartLeTypeSubspace
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataN
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -77,8 +39,6 @@ def incl : WL →ₗ[Ks] BCW Ks L0 L WL where
     change ((1 : L) ⊗ₜ[L0] (c • x) : L ⊗[L0] WL) = (algebraMap Ks L c • ((1 : L) ⊗ₜ[L0] x) : L ⊗[L0] WL)
     rw [← algebraMap_smul L0 c x, ← TensorProduct.smul_tmul, TensorProduct.smul_tmul', Algebra.smul_def,
       smul_eq_mul, mul_one, mul_one, ← IsScalarTower.algebraMap_apply]
-
-theorem incl_apply (x : WL) : incl Ks L0 L WL x = ((1 : L) ⊗ₜ[L0] x : L ⊗[L0] WL) := rfl
 
 theorem incl_injective : Function.Injective (incl Ks L0 L WL) := by
   obtain ⟨f, hf⟩ := LinearMap.exists_leftInverse_of_injective (Algebra.linearMap L0 L)
@@ -134,10 +94,6 @@ def jbc (jj : ∀ τ : L0 →+* ℂ, WL →ₛₗ[τ] W τ) (σ : L →+* ℂ) :
       rw [TensorProduct.smul_tmul', jAdd_tmul, jAdd_tmul, smul_eq_mul, map_mul, mul_smul]
     | add x y hx hy => rw [smul_add, map_add (f := _), map_add (f := _), hx, hy, smul_add]
 
-theorem jbc_tmul (jj : ∀ τ : L0 →+* ℂ, WL →ₛₗ[τ] W τ) (σ : L →+* ℂ) (a : L) (x : WL) :
-    jbc (Ks := Ks) jj σ (a ⊗ₜ[L0] x : L ⊗[L0] WL) = (σ a • jj (σ.comp (algebraMap L0 L)) x : W _) :=
-  jAdd_tmul jj σ a x
-
 end Gen
 
 section Forms
@@ -185,14 +141,6 @@ theorem bc_rho_tmul (g : G0) (a : L) (x : WL) :
 theorem bc_rho_incl (g : G0) (x : WL) : (bc L A).ρ g (incl Ks L0 L WL x) = incl Ks L0 L WL (A.ρ g x) :=
   bc_rho_tmul L A g 1 x
 
-theorem bc_j_tmul (σ : L →+* ℂ) (a : L) (x : WL) :
-    (bc L A).j σ (a ⊗ₜ[L0] x : L ⊗[L0] WL) = σ a • A.j (σ.comp (algebraMap L0 L)) x :=
-  jbc_tmul A.j σ a x
-
-theorem bc_j_incl (σ : L →+* ℂ) (x : WL) :
-    (bc L A).j σ (incl Ks L0 L WL x) = A.j (σ.comp (algebraMap L0 L)) x := by
-  rw [incl_apply, bc_j_tmul, map_one, one_smul]
-
 variable [Module (𝓞 L0) WL] [IsScalarTower (𝓞 L0) L0 WL] [Module (𝓞 Ks) WL] [IsScalarTower (𝓞 Ks) Ks WL]
   [Fintype G0]
 
@@ -215,19 +163,6 @@ def rdTw (tw : NTw R H what₂ LL0 N) (i : tw.Tw) (b : Bool) : ↥LL0 →+* Frac
 end Rec
 
 section Test
-
-def testA : Arith.FormsL ℚ ℚ ℚ (fun _ => ℂ) Unit where
-  WK := ⊤
-  Pt _ := Empty
-  nrm _ _ _ := 0
-  nrm_nonneg _ _ _ := le_rfl
-  nrm_zero _ _ := rfl
-  nrm_add _ _ _ _ := by simp
-  nrm_smul _ _ _ _ := by simp
-  towKs := inferInstance
-  ρ := 1
-  chi := 1
-  j σ := { toFun := σ, map_add' := map_add σ, map_smul' := fun c x => by simp [smul_eq_mul] }
 
 end Test
 

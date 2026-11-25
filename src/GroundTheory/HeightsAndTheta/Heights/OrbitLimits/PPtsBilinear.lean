@@ -4,51 +4,10 @@ public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.StPtsBilinear
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.StPtsAbsIntegrable
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.StPtsSumMeasurable
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PtsIntegrable
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.MdiscSt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterFib
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSheet
@@ -212,15 +171,8 @@ theorem integrable_fibreSum (hInt : PtsIntegrableStatement) {P : Ideal (MRing ι
   have hlog : logNorm (HermLine.ofWeight g hg.2) 1 = g := by
     funext z
     simp [logNorm, HermLine.ofWeight, Real.log_exp]
-  have h1 : (1 : MRing ι) ∉ P := fun h => hP.2.1.1.ne_top ((Ideal.eq_top_iff_one P).mpr h)
-  have hm : IsMultiHomog (1 : MRing ι) (fun _ => 0) := by
-    intro m hm k
-    rw [MvPolynomial.support_one] at hm
-    simp only [Finset.mem_singleton] at hm
-    subst hm
-    simp
   have hsec : IsSectionOn P (HermLine.ofWeight g hg.2) 1 :=
-    ⟨fun _ => 0, fun k => by simp [HermLine.ofWeight], hm, h1⟩
+    _root_.ReciprocityTheory.ChartRestriction.G.Geo.isSectionOn_one hP.2.1.1 rfl
   have := hInt K ι P (n + 1) Ψ _ _ 1 hP hΨ hLF hG hsec
   rwa [hpot, hlog] at this
 

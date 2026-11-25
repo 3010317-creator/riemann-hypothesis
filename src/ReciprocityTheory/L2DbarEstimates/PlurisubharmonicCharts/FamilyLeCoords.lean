@@ -3,46 +3,7 @@ module
 public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 public import Mathlib.Topology.Separation.CompletelyRegular
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -102,10 +63,6 @@ def IsSecOn (A : WeightedAtlas n Y ι La) (la : La) (U : Set Y) (s : ι → Y �
 def IsSec (A : WeightedAtlas n Y ι La) (la : La) (s : ι → Y → ℂ) : Prop :=
   A.IsSecOn la Set.univ s
 
-def IsSSec (A : WeightedAtlas n Y ι La) (la : La) (s : ι → Y → ℂ) : Prop :=
-  (∀ i, ContDiffOn ℝ ∞ (s i ∘ (A.chart i).symm) (A.chart i).target) ∧
-  ∀ i j y, y ∈ (A.chart i).source → y ∈ (A.chart j).source → s i y = A.g la i j y * s j y
-
 def IsFrameOn (A : WeightedAtlas n Y ι La) (la : La) (U : Set Y) (s : ι → Y → ℂ) : Prop :=
   A.IsSecOn la U s ∧ ∀ y ∈ U, s (A.pick y) y ≠ 0
 
@@ -142,10 +99,6 @@ def IsCoordAt (A : WeightedAtlas n Y ι La) (w0 : ι → Y → ℂ) (s : Fin n �
     Prop :=
   (fderiv ℂ (A.zLoc w0 s (A.pick P)) (A.chart (A.pick P) P)).det ≠ 0
 
-def VanishOrd (A : WeightedAtlas n Y ι La) (s : ι → Y → ℂ) (P : Y) (k : ℕ) : Prop :=
-  ∃ C : ℝ, ∀ᶠ v in 𝓝 (A.chart (A.pick P) P),
-    ‖s (A.pick P) ((A.chart (A.pick P)).symm v)‖ ≤ C * ‖v - A.chart (A.pick P) P‖ ^ k
-
 def Mset (A : WeightedAtlas n Y ι La) (w0 : ι → Y → ℂ) (s : Fin n → ι → Y → ℂ)
     (De : MvPolynomial (Fin n) ℂ) : Set Y :=
   {y | w0 (A.pick y) y ≠ 0 ∧ MvPolynomial.eval (fun k => A.zmap w0 s y k) De ≠ 0}
@@ -171,11 +124,6 @@ structure Flat (A : WeightedAtlas n Y ι La) (w0 : ι → Y → ℂ) (s : Fin n 
   localHomeo : IsLocalHomeomorph (fun y : A.Mset w0 s De => A.zmap w0 s y)
   proper : ∀ K : Set (V n), IsCompact K → (∀ v ∈ K, MvPolynomial.eval (fun k => v k) De ≠ 0) →
     IsCompact (A.Mset w0 s De ∩ A.zmap w0 s ⁻¹' K)
-
-def flatE (A : WeightedAtlas n Y ι La) (w0 : ι → Y → ℂ) (s : Fin n → ι → Y → ℂ)
-    (De : MvPolynomial (Fin n) ℂ) (y : Y) : ℝ :=
-  ((De.totalDegree : ℝ) + 1) * Real.log (1 + ‖A.zmap w0 s y‖ ^ 2) -
-    Real.log (‖MvPolynomial.eval (fun k => A.zmap w0 s y k) De‖ ^ 2)
 
 end WeightedAtlas
 

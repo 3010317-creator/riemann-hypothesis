@@ -1,52 +1,10 @@
 module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.RealObj
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Algebra.Group.Units
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -59,8 +17,6 @@ open Matrix
 namespace Formalism.L2.SG.RealObj.InfCut
 
 open Formalism.L2.SG.RealObj
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 def HaarDisintegrationReal : Prop :=
   ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.what₂.Word) (sc : ℝ), 0 < sc → DisintegrationConstantPositive X u u' sc
@@ -116,23 +72,18 @@ theorem OO_equiv {G : Type*} [Group G] [MeasurableSpace G] [MeasurableMul G] (μ
   rw [integral_smul, ContinuousLinearEquiv.integral_comp_comm]
   congr 1
 
-private theorem norm_sq_eq_sum_norm_inner_sq_orthonormalBasis {W : Type*} [NormedAddCommGroup W] [InnerProductSpace ℂ W] {ι : Type*} [Fintype ι]
-    (b : OrthonormalBasis ι ℂ W) (x : W) : ‖x‖ ^ 2 = ∑ i, ‖⟪b i, x⟫_ℂ‖ ^ 2 := by
-  first
-  | exact (b.sum_sq_norm_inner_right x).symm
-
 theorem hsb_eq_adj [FiniteDimensional ℂ V] [CompleteSpace V] [CompleteSpace V'] {ι : Type*} [Fintype ι]
     (b : OrthonormalBasis ι ℂ V') (A : V' →L[ℂ] V) :
     ∑ i, ‖A (b i)‖ ^ 2 = ∑ k, ‖(ContinuousLinearMap.adjoint A) (stdOrthonormalBasis ℂ V k)‖ ^ 2 := by
 
   calc ∑ i, ‖A (b i)‖ ^ 2 = ∑ i, ∑ k, ‖⟪(stdOrthonormalBasis ℂ V k), A (b i)⟫_ℂ‖ ^ 2 :=
-        Finset.sum_congr rfl fun i _ => norm_sq_eq_sum_norm_inner_sq_orthonormalBasis (stdOrthonormalBasis ℂ V) _
+        Finset.sum_congr rfl fun i _ => ((stdOrthonormalBasis ℂ V).sum_sq_norm_inner_right _).symm
     _ = ∑ k, ∑ i, ‖⟪(stdOrthonormalBasis ℂ V k), A (b i)⟫_ℂ‖ ^ 2 := Finset.sum_comm
     _ = ∑ k, ∑ i, ‖⟪b i, (ContinuousLinearMap.adjoint A) (stdOrthonormalBasis ℂ V k)⟫_ℂ‖ ^ 2 := by
         refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun i _ => ?_
         rw [ContinuousLinearMap.adjoint_inner_right, norm_inner_symm]
     _ = ∑ k, ‖(ContinuousLinearMap.adjoint A) (stdOrthonormalBasis ℂ V k)‖ ^ 2 :=
-        Finset.sum_congr rfl fun k _ => (norm_sq_eq_sum_norm_inner_sq_orthonormalBasis b _).symm
+        Finset.sum_congr rfl fun k _ => b.sum_sq_norm_inner_right _
 
 theorem hsb_indep [FiniteDimensional ℂ V] [FiniteDimensional ℂ V'] {ι κ : Type*} [Fintype ι] [Fintype κ]
     (b : OrthonormalBasis ι ℂ V') (c : OrthonormalBasis κ ℂ V') (A : V' →L[ℂ] V) :

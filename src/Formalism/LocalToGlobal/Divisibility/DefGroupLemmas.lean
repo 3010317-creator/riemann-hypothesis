@@ -16,53 +16,10 @@ public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.LevelSubgroupFiniteAde
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Stabstd
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Stdform
 public import Formalism.SatakeDualWeyl.KpqSubgroupCompact
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Formalism.SatakeDualWeyl.KpqSubgroupCompact
 
 @[expose] public section
@@ -1302,26 +1259,11 @@ section FrAlg
 
 variable {R K : Type} [CommRing R] [IsDedekindDomain R] [Field K] [Algebra R K] [IsFractionRing R K]
 
-theorem fr_li {S V V' V'' : Type} [CommRing S] [Algebra R S] [AddCommGroup V] [Module R V] [Module K V]
-    [IsScalarTower R K V] [AddCommGroup V'] [Module R V'] [Module S V'] [IsScalarTower R S V'] [AddCommGroup V'']
-    [Module R V''] (hRS : RingHom.ker (algebraMap R S) ≠ ⊤) (f : V'' →ₗ[R] V) (hf : Function.Injective f)
-    (f' : V'' →ₗ[R] V') {ι : Type} {b : ι → V''} (hb' : LinearIndependent S (f' ∘ b)) :
-    LinearIndependent K (f ∘ b) := by
-  apply (config := { allowSynthFailures := true }) GlobalTheory.latticeFrame.modLI_li <;> assumption
-
-theorem fr_gen_mod (P : Ideal R) [hP : P.IsMaximal] {n : ℕ} (L : Submodule R (Fin n → K)) (hfg : L.FG) :
-    ∃ g : Fin n → (Fin n → K), (∀ i, g i ∈ L) ∧ L ≤ Submodule.span R (Set.range g) ⊔ P • L := by
-  apply GlobalTheory.latticeFrame.modLI_gen <;> assumption
-
 end FrAlg
 
 section FrNF
 
 variable {E : Type} [Field E] [NumberField E] {n : ℕ}
-
-theorem fr_coprime (I : Ideal (𝓞 E)) (hI : I ≠ ⊥) (D : ℕ) (h : I ⊔ Ideal.span {(D : 𝓞 E)} = ⊤) :
-    Nat.Coprime (Ideal.absNorm I) D := by
-  apply GlobalTheory.latticeFrame.absNorm_coprime_of_sup <;> assumption
 
 theorem fr_good_basis (L : Submodule (𝓞 E) (Fin n → E)) (hfg : L.FG) (D : ℕ) (hD : D ≠ 0) (P0 : Pl E)
     (hP0 : (D : 𝓞 E) ∈ P0.asIdeal) :

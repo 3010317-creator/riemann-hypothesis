@@ -92,7 +92,6 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasBa
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.WeightSetResidueCharacteristic
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnlocalizedSaturatedState
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicDataExtendLargerFieldsOfPublishedStatement
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleCoefficientsAnalytic
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.CuspDiscreteDecompositionOfTraceClass
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsFactorisationCuspidal
@@ -221,7 +220,6 @@ section -- clump:auto
 @[expose] public section
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl NumberField IsDedekindDomain
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta GlobalTheory.Mem.Th MeasureTheory IsDedekindDomain NumberField Matrix
 open scoped TensorProduct
 
@@ -287,7 +285,7 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Cx Formalism.IndefR.RecTie
 open scoped TensorProduct InnerProductSpace ComplexOrder
-attribute [local instance] Formalism.BasicNotions.Host.cmStar Formalism.IndefR.principalLevelFrame.instCMHostI
+attribute [local instance] Formalism.IndefR.principalLevelFrame.instCMHostI
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.Mem.R3.Tr
 
 noncomputable section
@@ -300,10 +298,6 @@ theorem resChar_of_below {D D' : D7} {v : D.what₂.places.Pl} {v' : D'.what₂.
   simp only [map_natCast]
 
 end GlobalTheory.Mem.R3.Rw.Untw
-
-namespace GlobalTheory.Mem.R3.Rw
-
-end GlobalTheory.Mem.R3.Rw
 
 end
 end -- clump:auto
@@ -322,33 +316,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar Formalism.IndefR.p
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.Mem.R3.Tr
 
 noncomputable section
-
-namespace GlobalTheory.Mem.R3.Rw
-
-theorem exists_lt_grpTrue (hG : GlobalTheory.Published.GreenCuspidal) {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} (w : ColW B f T)
-    (hO : K.Over B.toPre) (hX : B.fields.Ok) (G : GJStage B w.C) :
-    ∃ Z : w.Lt, Z.G = G ∧ GrpTrue Z.N f ∧ GrpAt (w.st Z) w.I ∧ DV.KapDef (w.D Z) := by
-  obtain ⟨R⟩ := GlobalTheory.Mem.Df.rowsDef_nonempty w.I w.ok w.pins w.l hX
-  obtain ⟨kb, ks, hk⟩ := GlobalTheory.Mem.Df.Model.exists_ka B
-  let W' : RowsRest B w.C :=
-    { R.W with
-      eOp := fun _ => 0
-      eOp_idem := fun _ => LinearMap.comp_zero _
-      eOp_sa := fun _ => LinearMap.IsSymmetric.zero
-      kaBig := kb
-      kaSmall := ks }
-  obtain ⟨V, -⟩ := GlobalTheory.Mem.DivModel.exists_divStage B w.C W'
-  obtain ⟨S, -⟩ := GlobalTheory.Mem.SProv.exists_sStage_true K B w.C W' G.cd hO (GlobalTheory.Mem.Df.cols_pos w.I w.ok w.pins w.l hX)
-    (show R.W.Drows ≤ R.W.Dall by rw [R.std.drows, R.std.dall])
-  have hMt : ∀ (μ : w.C.Tup) (j : ℕ), W'.eMt μ j = 0 := fun μ j => by
-    haveI := R.std.mt μ j
-    exact LinearMap.ext fun _ => Subsingleton.elim _ _
-  obtain ⟨N, -, -, hN, -⟩ := GlobalTheory.Mem.Top.exists_nStage_grpTrue hG B w.C W' R.std.sha (fun j v _ _ => R.std.eta j v)
-    (fun _ => rfl) hMt f
-  refine ⟨⟨W', V, S, N, G⟩, rfl, hN, GlobalTheory.Mem.R3.Model.grpAt_of_grpTrue (w.st ⟨W', V, S, N, G⟩) w.I w.ok (by show GrpTrue N w.I.C; rw [w.C_eq]; exact hN),
-    hk w.C W' rfl rfl V S N G⟩
-
-end GlobalTheory.Mem.R3.Rw
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -362,7 +329,7 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Cx Formalism.IndefR.RecTie
 open scoped TensorProduct InnerProductSpace ComplexOrder
-attribute [local instance] Formalism.BasicNotions.Host.cmStar Formalism.IndefR.principalLevelFrame.instCMHostI
+attribute [local instance] Formalism.IndefR.principalLevelFrame.instCMHostI
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.Mem.R3.Tr
 
 noncomputable section
@@ -553,7 +520,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Cx Formalism.IndefR.RecTie
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw
 
 noncomputable section
@@ -621,7 +587,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Cx Formalism.IndefR.RecTie
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw
 
 namespace GlobalTheory.Mem.Top.Bl
@@ -652,7 +617,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Cx Formalism.IndefR.RecTie
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw
 
 theorem _root_.GlobalTheory.T.placesOverFixedField_same_coefficient_place : ∀ (D D' : D7), (∀ x : D.what₂.LL, ∃ y ∈ D'.LL0, D'.what₂.embLL y = D.what₂.embLL x) → ∀ (v : D.what₂.places.Pl) (v₁ v₂ : D'.what₂.places.Pl), GlobalTheory.TwistChoice.OverOne D' v₁ v₂ → Below D D' v v₁ → Below D D' v v₂ := by
@@ -668,7 +632,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Cx Formalism.IndefR.RecTie
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw
 
 namespace GlobalTheory.Mem.SatForced
@@ -706,7 +669,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Cx Formalism.IndefR.RecTie
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw
 
 noncomputable section
@@ -755,7 +717,7 @@ theorem dat_saturated_of_untw : GlobalTheory.Published.GreenCuspidal → DatExS 
     (StepW.of_all fun K B f T w hO _ H => ?_)
   obtain ⟨⟨⟨⟨⟨⟨pin⟩, hDS'⟩, hHL'⟩, hDE'⟩, G, hG2⟩, hf0, hsd⟩ := H
   intro hT
-  obtain ⟨Z, rfl, hGT, hGA, hKap⟩ := exists_lt_grpTrue hG w hO pin.hX G
+  obtain ⟨Z, rfl, hGT, hGA, hKap⟩ := GlobalTheory.Mem.R3.Rw.Second.exists_lt_of_stage hG w hO pin.hX G
   have hVol := (hG2 Z.W Z.V Z.S Z.N).1
   obtain ⟨z₁, hF₁⟩ := hDS' Z pin.hX hGT hGA hVol
   have hL₁ := hHL' Z pin.hX _ z₁ hGT hGA hF₁.1 hF₁.2.1
@@ -833,19 +795,6 @@ namespace GlobalTheory.Mem.R3.LiftsAt
 
 open GlobalTheory.Mem.Top.GroupRetwisting
 
-theorem serClause_of_typesTrue (hG : GlobalTheory.Published.GreenCuspidal) (D : D7) {P W} (h : TypesTrue D.ntypes P W) : SerClause D := by
-  intro k
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
-  have hζ : Formalism.L2.NT.IsGenSys (GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen := by
-    intro d hd
-    refine ⟨(GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen_order d hd, fun d' hdd hd' => ?_⟩
-    obtain ⟨e, rfl⟩ := hdd
-    exact (GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen_norm d e hd (Nat.pos_of_mul_pos_left hd')
-  obtain ⟨O, -, -, hO⟩ := GlobalTheory.CuspTwist.exists_labelMap_twist_cuspLabel (ZMod (D.host.g k)) _
-    (_root_.GlobalTheory.GreenParam.cuspParam_of_green hG (D.host.g k) (D.ntypes.teichC k) (D.ntypes.teichC_inj k) _ hζ)
-  have hr : 1 ≤ D.R.r := by unfold Ranks.r; have := D.R.two_le_m; omega
-  exact ⟨_, O, fun f => (h.ser k f).trans (_root_.GlobalTheory.SerCmp.eSerC_eq_eSerO hG _ _ _ _ _ (h.teich k) O hO D.R.r f hr)⟩
-
 def Closes (X : Stages) : Prop :=
   ∀ (px : PreX X.B.toPre) (I : ColIn X.B px) (hX : X.B.fields.Ok) (Tw : TwDat X.B) (Wt : Set X.B.places.Pl) (z : Dat X I hX Tw Wt),
     TiesB z.R z.F → TiesG z.core z.R z.geo.κ z.geo.v₀ z.geo.O → GlobalTheory.CuspMult.MultEq z.R.toRealDat → z.R.toRealDat.LIntegral →
@@ -867,7 +816,7 @@ theorem ties_at (hG : GlobalTheory.Published.GreenCuspidal) {B : Base} {f : Fr B
     exact hN
   have hch := z.pins.char
   refine ⟨⟨ok, hch, hEx, host, par, B.ccK_top, z.pins.keep.guard,
-    GlobalTheory.LiftRows.Inh.goodTypes_of_typesTrue hch.base.lev ty, serClause_of_typesTrue hG _ ty,
+    GlobalTheory.LiftRows.Inh.goodTypes_of_typesTrue hch.base.lev ty, GlobalTheory.Mem.R3.Rw.AtDatumEvaluation.serClause_of_typesTrue hG _ ty,
     _root_.GlobalTheory.Hk3.FamModel.inertJunk_col _ _ _ hX _ _ _ _ _ _, z.pins.trSem, z.pins.keep.std, z.pins.phs, hn⟩,
     TiesG.of_dat z hU hI (fun i => ?_) (CoverAt.coverField_of_weberLev hW w Z hX Wt z)⟩
   exact GlobalTheory.OneMapRow3.oneFormMapRow_threeLevel_of_characterisation _ _ _ _ _ _ z.core z.R z.F z.geo.κ z.geo.v₀ z.geo.O (fun _ => 1) hn hch hEx ⟨z.geo.fw⟩ hI i
@@ -893,8 +842,6 @@ open Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Lev Formalism
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Tr GlobalTheory.Mem.R3.Rw GlobalTheory.Mem.R3.DatCopy
 
 namespace GlobalTheory.Mem.R3.LiftCopy
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {B : Base} {C : Cols B} {a : Late B C} (b : Late B C) {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type}
 variable {Ks : Type} [Field Ks] [NumberField Ks] [iK : Algebra Ks a.D.what₂.LL]
@@ -995,7 +942,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.DivisionValues Polynomial
 open Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx
 open scoped TensorProduct InnerProductSpace
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Hk3 (Core Good IsSF SchurAll TwoSided FixAll EEc Wcc eH IsLab HoweUnram)
 
 theorem _root_.GlobalTheory.T.principalFormsSubspace_eq_good_forms : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) {s : ℕ}, A3.fam3.Ok3 s → R.WeakCharacterisation F → R.toRealDat.ExAt → (∀ i, (⨆ p, R.Wp3 i p) = LinearMap.range (eH R.toRealDat i)) → (0 < R.kap ∧ ∀ i t p, 0 < R.lam3 i t p A3.A.v0) → R.PThmA → Formalism.IndefR.Rat.LiftTest (R.toCx3 F) → (R.toCx3 F).zs.InBlock → ∀ i, principalFormsSubspace A3 (R.toCx3 F) (P1 := F.P1) (ψ1 := F.ψ1) (Dc := F.Dc) (Sp := F.Sp) (Zsc := F.Zsc) i = Tw.sub (twAt D.what₂.embLL A3.A.v0) (LinearMap.range (eH R.toRealDat i)) := by
@@ -1014,7 +960,6 @@ noncomputable section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.DivisionValues Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx Formalism.L2.Pj Formalism.IndefR.FWT
 open scoped TensorProduct InnerProductSpace
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.PrimIn GlobalTheory.LiftRows
 open GlobalTheory.Hk3 (Core Good IsSF SchurAll TwoSided FixAll EEc Wcc eH IsLab HoweUnram)
 
@@ -1036,7 +981,7 @@ theorem carries_of_upInj (hCusp : GlobalTheory.Published.CuspRapidDecay) (hHowe 
   have hSch : SchurAll R.toRealDat := GlobalTheory.Hk3.schurAll_of_cuspRapidDecay hCusp R.toRealDat
   have hTw := GlobalTheory.VmTwo.twoSided_goodInert hHowe R F hLI hCW hEx hSch
   have hHk := (GlobalTheory.Hk3.inertJunk_iff A3).1 hJ
-  obtain ⟨Tc, hTc, hx⟩ := GlobalTheory.T.operatorFamily_adjointLift_single_eigensystem R F hLI hOk hCW hEx hSch hTw hHk
+  obtain ⟨Tc, hTc, hx⟩ := _root_.GlobalTheory.UpSystem.up_sys R F hLI hOk hCW hEx hSch hTw hHk
   obtain ⟨x, hxc⟩ := hx c
   obtain ⟨w, hw, hw0⟩ := (Submodule.ne_bot_iff _).1 hc
   have hne : LinearMap.adjoint (R.Th A3.A.μ0) w ≠ 0 := fun h => hw0 (hUp A3.A.μ0 (h.trans (map_zero _).symm))
@@ -1060,7 +1005,7 @@ theorem carries_of_upInj (hCusp : GlobalTheory.Published.CuspRapidDecay) (hHowe 
     rintro (i | k)
     · exact (hOk.ok2.what₂ A3.A.μ0).split i
     · exact (hOk.what₂ A3.A.μ0).split k
-  have hZ := (GlobalTheory.T.range_adjoint_le_span_jX_image_ZHg R F hLI hOk hCW hEx hSch hPG).1 A3.A.μ0
+  have hZ := (_root_.GlobalTheory.AdjBlockSpan.range_adjoint_le_span_good_block R F hLI hOk hCW hEx hSch hPG).1 A3.A.μ0
   obtain ⟨s', hxs, heig, f, hf0, hfZ, hfE⟩ := GlobalTheory.Div.exists_sys_of_mem_span D.what₂.embLL j b op Tc
     ((A3.A.fam.R A3.A.μ0).ZHg A3.A.X) hli hjX.2.2 hcomm hpc hso x (LinearMap.adjoint (R.Th A3.A.μ0) w) (hxc w hw) hne
     (hZ ⟨w, rfl⟩)
@@ -1159,7 +1104,6 @@ noncomputable section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.DivisionValues Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx Formalism.L2.Pj Formalism.IndefR.FWT
 open scoped TensorProduct InnerProductSpace
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.PrimIn GlobalTheory.LiftRows
 open GlobalTheory.Hk3 (Core Good IsSF SchurAll TwoSided FixAll EEc Wcc eH IsLab HoweUnram)
 namespace GlobalTheory.LiftsOnly
@@ -1192,7 +1136,7 @@ theorem holdsL_of_ties_alt (P : _root_.GlobalTheory.PrimIn.PublishedThetaConditi
   obtain ⟨hScal, hMatch, -, -⟩ := GlobalTheory.T.thetaLift_scalarIdentity_matching_adjointInjective P.q5 P.q3 P.q4 P.q6 P.q2 P.q1 P.q7 P.q8
     (_root_.ResidueKilled.sec_of_dm P.q9) P.q10 P.q11 R.toRealDat F.lv2 hGiven hT.ccK hT.char.allPl
     (GlobalTheory.FixAllGood.fixAll_of_good R F hT.char hT.ex) R.SF hcore.2.1 hTR
-  have hK := GlobalTheory.PosAtBase.pos_at_base R F hT.ok hT.char hT.ex hScal hMatch
+  have hK := GlobalTheory.PosAtBase.pos_at_base R F hT.char hScal hMatch
     (GlobalTheory.CarriesOne.parts_eq_of_carries P.q1 P.q2 R F hT.ok hT.char hT.ex hJ hUp)
     (exists_rowPart_ne_bot_positiveDimension P.q2 R F hT.char hT.ex hCar hRows)
   have hLev := levW_of_span P.q2 R F hT.ok hT.char hT.ex hGS hCD hM hBlk hCar hK hA hLT hU
@@ -1222,7 +1166,6 @@ section
 noncomputable section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx Formalism.L2.Pj Formalism.IndefR.FWT
 open scoped TensorProduct InnerProductSpace Matrix
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.PrimIn
 open GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.Col2
 open GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw
@@ -1271,7 +1214,6 @@ end
 section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx Formalism.L2.Pj Formalism.IndefR.FWT
 open scoped TensorProduct InnerProductSpace Matrix
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.PrimIn
 open GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.Col2
 open GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw
@@ -1291,7 +1233,6 @@ section -- clump:auto
 section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Cx Formalism.IndefR.RecTie
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw
 open GlobalTheory.Mem.R3.Tr
 open scoped TensorProduct InnerProductSpace ComplexOrder
@@ -1360,7 +1301,6 @@ section -- clump:auto
 
 section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl NumberField IsDedekindDomain
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.HeightCounting.Up GlobalTheory.Mem.SRe GlobalTheory.Mem.R3.Rw
 noncomputable section
 namespace GlobalTheory.HeightCounting.Up
@@ -1375,24 +1315,23 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.CompatibleSystemWeightOneSaturated =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistedLocalMultiplicityEq =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistedLocalMultiplicityEq", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleCoefficientsAnalytic\npublic import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.DiscreteSeriesClassificationIff\npublic import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite\npublic import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.CuspDiscreteDecompositionOfTraceClass\npublic import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsFactorisationCuspidal\npublic import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsCellOfIsSubquotient\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HoldsUIff\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBare\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LargeCoefficientFieldContainsTwistValuesStatement\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StandardLatticesDiagonal\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqualMultiplicitiesRowTestOfSameGroupTransferStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GoodTypesOfTypesTrue\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistedMultiplicityOne\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.WeakCharInertPartRealAdelicDataTransport\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CopyLIntegral\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistedLocalMultiplicityEq", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.DiscreteSeriesClassificationIff\npublic import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite\npublic import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.CuspDiscreteDecompositionOfTraceClass\npublic import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsFactorisationCuspidal\npublic import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsCellOfIsSubquotient\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HoldsUIff\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBare\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LargeCoefficientFieldContainsTwistValuesStatement\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StandardLatticesDiagonal\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqualMultiplicitiesRowTestOfSameGroupTransferStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GoodTypesOfTypesTrue\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistedMultiplicityOne\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.WeakCharInertPartRealAdelicDataTransport\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CopyLIntegral\n\n"}
 section -- clump:auto
 @[expose] public section
 
 section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH NumberField IsDedekindDomain Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.Col2 GlobalTheory.Mem.R3
 noncomputable section
 namespace GlobalTheory.Mem.R3.Rw.MultAt
 open GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.R3.Rw
 
-theorem twisted_local_multiplicity_eq : GlobalTheory.Published.HarishChandraAnalyticity → GlobalTheory.Published.DiscreteSeriesClassification → GlobalTheory.Published.CuspRapidDecay →
+theorem twisted_local_multiplicity_eq : GlobalTheory.Published.DiscreteSeriesClassification → GlobalTheory.Published.CuspRapidDecay →
     GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspTraceClass → GlobalTheory.Published.DixmierMalliavinFactorisation →
-    GlobalTheory.Published.FlathFactorisation → GlobalTheory.Published.ZelevinskyPolynomialRing →
+    GlobalTheory.Published.ZelevinskyPolynomialRing →
     GlobalTheory.Published.GeometricLemma → GlobalTheory.Published.GreenCuspidal →
     AtDat fun _ _ _ _ _ _ _ _ z => GlobalTheory.CuspMult.MultEq z.R.toRealDat := by
-  intro h1 h2 h3 h4 h5 h6 h7 h12 h13 hG
+  intro h2 h3 h4 h5 h6 h12 h13 hG
   have e1 := (evG_of_ev LedRec.ev_exists_sizeData).inter (evG_of_ev GlobalTheory.Mem.HostFrames.hostHyp_frames_ev)
   have s1 : Step KPx (fun _ _ _ _ => True) _ := Step.of_evLgG (evLgG_of_evLg GlobalTheory.T.valsIn_and_fam3_ok_of_coefficientField)
   refine s1.trans (Step.of_evG (e1.imp ?_))
@@ -1408,7 +1347,7 @@ theorem twisted_local_multiplicity_eq : GlobalTheory.Published.HarishChandraAnal
     have hT : TypesTrue (w.st Z').toD7.ntypes y.R.C.P y.R.C.W := by
       rw [y.lev.C, w.C_eq]
       exact g1'
-    exact _root_.GlobalTheory.MultEqFinal.twisted_multiplicity_eq h1 h2 h3 h4 h5 h6 h7 h12 h13 hG y.R y.F
+    exact _root_.GlobalTheory.MultEqFinal.twisted_multiplicity_eq h2 h3 h4 h5 h6 h12 h13 hG y.R y.F
       ((hOk w.px w.I hX w.ok w.C_eq w.xi_range).2 _ y.Xg y.tr y.good.irr) hch hEx' hhost ⟨L, hpar⟩ B.ccK_top
       y.pins.keep.guard (GlobalTheory.LiftRows.Inh.goodTypes_of_typesTrue hch.base.lev hT)
   exact (GlobalTheory.T.equalMultiplicities_rowTest_of_sameGroupTransfer
@@ -1517,7 +1456,7 @@ namespace GlobalTheory.Mem
 theorem member_hodgeHyp_of_localInputs_rationalWeights : _root_.GlobalTheory.Mem.LiteralAutomorphy.MemberHypotheses → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.WeilSiegelFormulaUnitary → GlobalTheory.Published.SiegelWeilUnitarySchrodinger → GlobalTheory.Published.SiegelEisensteinContinuation → _root_.GlobalTheory.Published.UnusedSlot72 → GlobalTheory.Published.UnramifiedDoublingGL → GlobalTheory.Published.BernsteinZelevinskyFiniteness → GlobalTheory.Published.SchurOrthogonalitySquareIntegrable → RowRatW → _root_.GlobalTheory.Mem.Top.Bl.MultiplicityCoverHypotheses :=
   fun m hm dc cw ws sw e1 e2 ud bz so r =>
     _root_.GlobalTheory.Mem.LiteralAutomorphy.condition_of_memberHypotheses dc (_root_.GlobalTheory.twisted_siegel_weil_identity_of_siegel_weil_formula GlobalTheory.Hk3.howeUnram_holds m.m3 m.m4 hm dc cw ws sw e1 e2 ud bz m.m14 so) GlobalTheory.Published.HeckeLPartialContinuation_holds
-      (_root_.GlobalTheory.Mem.R3.Rw.MultAt.twisted_local_multiplicity_eq m.m1 m.m2 m.m3 m.m4 m.m5 m.m6 m.m7 m.m12 m.m13 m.m14) r
+      (_root_.GlobalTheory.Mem.R3.Rw.MultAt.twisted_local_multiplicity_eq m.m2 m.m3 m.m4 m.m5 m.m6 m.m12 m.m13 m.m14) r
 end GlobalTheory.Mem
 end
 
@@ -1535,7 +1474,6 @@ section -- clump:auto
 section
 noncomputable section
 open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.RowEx GlobalTheory.Mem.LiteralAutomorphy
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.Mem.LiteralAutomorphy
 def witDropA_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL} {S : SExt} {A : AtP} {K : Ctx} {B : Base}
     {f : Fr B.toPre} {T : TwDat B} {w : ColW B f T} {Z : w.Lt} {O : Obj2 (w.D Z)}
@@ -1564,7 +1502,6 @@ section
 section
 noncomputable section
 open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.RowEx GlobalTheory.Mem.LiteralAutomorphy
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.Mem.LiteralAutomorphy
 theorem exists_weilBlock_ne_at_member_alt : _root_.GlobalTheory.Mem.Top.Bl.HypAAlt → _root_.GlobalTheory.Mem.Top.Bl.MultiplicityCoverHypotheses → _root_.GlobalTheory.Mem.LiteralAutomorphy.MemberHypotheses → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (A : AtP),
     (∀ K B f T w Z Wt p0 t nch n xd c, N K B f T w Z Wt p0 t nch n xd c →
@@ -1575,13 +1512,12 @@ theorem exists_weilBlock_ne_at_member_alt : _root_.GlobalTheory.Mem.Top.Bl.HypAA
   intro ha hh pm hL N A hb hs
   exact _root_.GlobalTheory.Mem.Top.Bl.exBL_isLinked_prmR_alt pm.m14 hh.cover ha.a5 ha.a7 ha.a8 ha.a9 ha.a10 ha.a6 ha.a22 ha.a23 ha.a1 hL (_root_.GlobalTheory.Mem.LiteralAutomorphy.extensionWithAtProperty hL N A) _ rfl
     (fun K B f T w Z Wt p0 t nch n xd c e => hb K B f T w Z Wt p0 t nch n xd c e.1) (_root_.GlobalTheory.Mem.LiteralAutomorphy.slot_mv_extension_with_at_property A hs)
-    (_root_.GlobalTheory.Mem.Top.Bl.MultQClose.multiplicative_closure_prime_mem_alt pm.m1 pm.m2 pm.m3 pm.m4 pm.m5 pm.m6 pm.m7 pm.m12 pm.m13 pm.m14 hL _ _)
+    (_root_.GlobalTheory.Mem.Top.Bl.MultQClose.multiplicative_closure_prime_mem_alt pm.m2 pm.m3 pm.m4 pm.m5 pm.m6 pm.m12 pm.m13 pm.m14 hL _ _)
 end GlobalTheory.Mem.LiteralAutomorphy
 end
 end
 section
 open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.RowEx GlobalTheory.Mem.LiteralAutomorphy
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 alias _root_.GlobalTheory.T.compatibleSystem_weilBlock_ne_alt := _root_.GlobalTheory.Mem.LiteralAutomorphy.exists_weilBlock_ne_at_member_alt
 end
@@ -1599,7 +1535,6 @@ section -- clump:auto
 
 section
 open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.RowEx GlobalTheory.Mem.LiteralAutomorphy
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.Mem.LiteralAutomorphy
 variable {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL} {S : SExt} {A : AtP}
 def builtA_drop_alt {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} {w : ColW B f T} {Z : w.Lt} {c : V4.Core K (w.st Z) f T}
@@ -1653,7 +1588,6 @@ section -- clump:auto
 @[expose] public section
 
 open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.RowEx GlobalTheory.Mem.LiteralAutomorphy
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 end -- clump:auto
 end -- clump:auto
@@ -1684,17 +1618,17 @@ theorem member_bundles_large_unramified_exponents_alt : _root_.GlobalTheory.Fc.S
     P.harishChandraModules P.cuspRapidDecay P.casselmanWallach P.harishChandraFinite
     P.discreteSeriesClassification P.discreteSeriesCoverExists
     P.formalDegreeCompactDual sw
-  have hPM : _root_.GlobalTheory.Mem.LiteralAutomorphy.MemberHypotheses := ⟨P.harishChandraAnalyticity, P.discreteSeriesClassification, P.cuspRapidDecay,
-    P.harishChandraFinite, P.cuspTraceClass, P.dixmierMalliavinFactorisation, P.flathFactorisation,
+  have hPM : _root_.GlobalTheory.Mem.LiteralAutomorphy.MemberHypotheses := ⟨P.discreteSeriesClassification, P.cuspRapidDecay,
+    P.harishChandraFinite, P.cuspTraceClass, P.dixmierMalliavinFactorisation,
     P.zelevinskyPolynomialRing, P.geometricLemma, P.greenCuspidal⟩
   have hH := _root_.GlobalTheory.Mem.member_hodgeHyp_of_localInputs_rationalWeights hPM P.harishChandraModules P.discreteSeriesCover P.casselmanWallach
     P.weilSiegelFormulaUnitary P.siegelWeilUnitarySchrodinger P.siegelEisensteinContinuation
     P.siegelEisensteinSimplePole P.unramifiedDoublingGL P.bernsteinZelevinskyFiniteness
     P.schurOrthogonalitySquareIntegrable hR
   have hW := _root_.GlobalTheory.HeightCounting.Up.weightOne_saturated_of_hypotheses hA hH
-  have hM := _root_.GlobalTheory.Mem.Top.Bl.MultQClose.multiplicative_closure_prime_mem_alt P.harishChandraAnalyticity P.discreteSeriesClassification
+  have hM := _root_.GlobalTheory.Mem.Top.Bl.MultQClose.multiplicative_closure_prime_mem_alt P.discreteSeriesClassification
     P.cuspRapidDecay P.harishChandraFinite P.cuspTraceClass P.dixmierMalliavinFactorisation
-    P.flathFactorisation P.zelevinskyPolynomialRing P.geometricLemma
+    P.zelevinskyPolynomialRing P.geometricLemma
     P.greenCuspidal hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithOrigin hL cDep) SExt.none
   obtain ⟨hE, -, -, hL', hN⟩ := _root_.GlobalTheory.MemberClose.exists_hyp_n_of_geometric_galois_compat P.litN P.toHypothesesX
   have hMember :=

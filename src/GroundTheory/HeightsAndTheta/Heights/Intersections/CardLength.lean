@@ -2,46 +2,6 @@ module
 
 public import Mathlib.RingTheory.Length
 public import Mathlib.RingTheory.LocalRing.ResidueField.Defs
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -66,9 +26,8 @@ theorem card_eq_pow_of_length_eq (n : ℕ) : ∀ (M : Type v) [AddCommGroup M] [
   induction n with
   | zero =>
     intro M _ _ h
-    have : Subsingleton M := Module.length_eq_zero_iff.mp (by exact_mod_cast h)
-    rw [pow_zero]
-    exact Nat.card_eq_one_iff_unique.mpr ⟨this, ⟨0⟩⟩
+    have : Subsingleton M := Module.length_eq_zero_iff.mp h
+    simpa only [pow_zero] using Nat.card_of_subsingleton (0 : M)
   | succ n ih =>
     intro M _ _ h
     have hfin : IsFiniteLength R M := Module.length_ne_top_iff.mp (by rw [h]; exact ENat.natCast_ne_top _)
@@ -80,15 +39,8 @@ theorem card_eq_pow_of_length_eq (n : ℕ) : ∀ (M : Type v) [AddCommGroup M] [
       (LinearMap.exact_subtype_mkQ N)
     rw [h, Module.length_eq_one] at hlen
     have hq : Module.length R (M ⧸ N) = n := by
-      have hne : Module.length R (M ⧸ N) ≠ ⊤ := by
-        intro ht
-        rw [ht] at hlen
-        exact ENat.natCast_ne_top _ (hlen.trans (add_top _))
-      obtain ⟨m, hm⟩ := ENat.ne_top_iff_exists.mp hne
-      rw [← hm] at hlen ⊢
-      have : n + 1 = 1 + m := by exact_mod_cast hlen
-      congr 1
-      omega
+      apply ENat.add_right_injective_of_ne_top (n := 1) (by simp)
+      simpa only [Nat.cast_add, Nat.cast_one, add_comm (n : ℕ∞) 1] using hlen.symm
     rw [Submodule.card_eq_card_quotient_mul_card N, card_eq_card_residueField_of_isSimpleModule (R := R) N, ih (M ⧸ N) hq,
       pow_succ, mul_comm]
 

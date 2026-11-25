@@ -1,49 +1,6 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.StRationalUnipotent
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -73,12 +30,10 @@ omit [NumberField E] in
 theorem unipMap_apply (h : HermitianForm F E W) (x₀ y : W) (c : E) (x : W) :
     unipMap h x₀ y c x = x + (h.toSesq x₀ x * c - h.toSesq y x) • x₀ + h.toSesq x₀ x • y := rfl
 
-
 omit [NumberField E] in
 theorem sesq_swap (h : HermitianForm F E W) (u v : W) :
     h.toSesq u v = conj F E (h.toSesq v u) :=
   (h.isSymm.eq v u).symm
-
 
 omit [NumberField E] in
 theorem sesq_smul_left (h : HermitianForm F E W) (r : E) (u v : W) :
@@ -139,7 +94,6 @@ theorem unipMap_mem (h : HermitianForm F E W) {La : AddSubgroup W}
   refine add_mem (add_mem hx (smul_mem ?_ hx₀)) (smul_mem (hint x₀ hx₀ x hx) hy)
   exact sub_mem (mul_mem (hint x₀ hx₀ x hx) hc) (hint y hy x hx)
 
-
 omit [NumberField E] in
 theorem conj_mem_integralClosure {c : E} (hc : c ∈ integralClosure ℤ E) :
     conj F E c ∈ integralClosure ℤ E :=
@@ -147,7 +101,6 @@ theorem conj_mem_integralClosure {c : E} (hc : c ∈ integralClosure ℤ E) :
     (((mem_integralClosure_iff ℤ E).1 hc).map (conj F E).toAlgHom.toRingHom.toIntAlgHom)
 
 end RationalUnipotent
-
 
 open RationalUnipotent in
 theorem RationalUnipotent.proof (h : HermitianForm F E W) : RationalUnipotent.Statement h := by

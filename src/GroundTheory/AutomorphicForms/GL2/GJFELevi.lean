@@ -5,54 +5,11 @@ public import GroundTheory.AutomorphicForms.GL2.IsAddHaarMeasureMatrixMeasureFin
 public import GroundTheory.AutomorphicForms.GL2.GJFELeviMulti
 import GroundTheory.AutomorphicForms.GL2.GJLocalZeta
 import GroundTheory.AutomorphicForms.LocallyProfinite
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.CategoryTheory.Countable
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Connected.Separation
 import Mathlib.Topology.ExtremallyDisconnected
-import Mathlib.Topology.Sheaves.Init
 import Mathlib.Topology.UniformSpace.Uniformizable
 public import GroundTheory.AutomorphicForms.GL2.GJFELeviConv
 
@@ -439,9 +396,12 @@ theorem exists_leviFE (hσ : IsAdmissible σ) [σ.IsIrreducible] (hc : IsCuspida
   have _ : ∀ a : Set.range β, NeZero (blockSize β a) := fun a => ⟨(blockSize_pos β a).ne'⟩
   set μb : ∀ a : Set.range β, Measure (GL (Fin (blockSize β a)) F) := fun a => Measure.haar
     with hμb
-  obtain ⟨γ, hmain⟩ := multiFEStatement_all.{uF, u, w} hψ hψ1
+  obtain ⟨γ, _, hmain⟩ := multiFEStatement_all.{uF, u, w} (M := Unit) (PH := fun _ _ => True)
+    (Shape := fun _ _ => True) (wt := fun _ _ _ => ()) trivial (fun _ _ => trivial)
+    (fun _ _ _ _ _ _ _ => trivial) (fun _ _ _ _ _ => trivial) hψ hψ1
+    (fun _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ => trivial)
     (Fintype.card (Set.range β)) (Set.range β) rfl (fun a => blockSize β a) μb
-    PUnit.{max u uF + 1} ρ hadm hirr αc hα0 hα hsupp
+    PUnit.{max u uF + 1} trivial ρ hadm hirr αc hα0 hα hsupp
   obtain ⟨s₀, hconv⟩ := exists_integrable_multi ρ hadm.1 hα0 hα hsupp μb
 
   set em := e.toHomeomorph.toMeasurableEquiv with hem

@@ -4,54 +4,9 @@ public import Formalism.LocalRingCardinality.DataHost
 public import Formalism.SatakeDualWeyl.Statement
 public import Mathlib.RingTheory.Henselian
 public import Formalism.HermitianLattices.HermitianLatticesProofs.UnimodUnramUnique
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
 public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 public import Mathlib.RingTheory.DedekindDomain.Factorization
 
 @[expose] public section
@@ -74,11 +29,6 @@ theorem wz_lt_one_iff (γ : ℤᵐ⁰) : γ < 1 ↔ γ ≤ exp (-1 : ℤ) := by
   · first
     | (rw [← WithZero.exp_log hγ, ← WithZero.exp_zero, WithZero.exp_lt_exp, WithZero.exp_le_exp]; omega)
 
-theorem adicInt_integers :
-    Valuation.Integers (Valued.v : Valuation (v.adicCompletion K) ℤᵐ⁰) (v.adicCompletionIntegers K) := by
-  first
-  | exact Valuation.integer.integers _
-
 theorem adicInt_exists_unif :
     ∃ π : v.adicCompletionIntegers K, Valued.v (π : v.adicCompletion K) = exp (-1 : ℤ) := by
   obtain ⟨π, hπ⟩ : ∃ π : K, v.valuation K π = exp (-1 : ℤ) := by
@@ -96,7 +46,7 @@ theorem adicInt_exists_unif :
 
 theorem adicInt_mem_max_iff (x : v.adicCompletionIntegers K) :
     x ∈ maximalIdeal (v.adicCompletionIntegers K) ↔ Valued.v (x : v.adicCompletion K) < 1 := by
-  have hI := adicInt_integers (K := K) v
+  have hI := IsDedekindDomain.HeightOneSpectrum.adicCompletionIntegers.integers (K := K) v
   rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, hI.isUnit_iff_valuation_eq_one]
   exact (hI.map_le_one x).lt_iff_ne.symm
 
@@ -113,7 +63,7 @@ local notation "Ov" => v.adicCompletionIntegers K
 theorem adicInt_dvd_iff (x y : Ov) :
     x ∣ y ↔ Valued.v (y : Kv) ≤ Valued.v (x : Kv) := by
   first
-  | exact (adicInt_integers (K := K) v).dvd_iff_le
+  | exact (IsDedekindDomain.HeightOneSpectrum.adicCompletionIntegers.integers (K := K) v).dvd_iff_le
 
 theorem adicInt_max_eq_span (π : Ov) (hπ : Valued.v (π : Kv) = exp (-1 : ℤ)) :
     maximalIdeal Ov = Ideal.span {π} := by
@@ -134,16 +84,12 @@ theorem adicInt_mem_pow_iff (n : ℕ) (x : Ov) :
   rw [adicInt_max_eq_span v π hπ, Ideal.span_singleton_pow, Ideal.mem_span_singleton,
     adicInt_dvd_iff v, hpow]
 
-theorem wz_exists_nat_lt (γ : ℤᵐ⁰) (h : γ ≠ 0) : ∃ N : ℕ, exp (-(N : ℤ)) < γ := by
-  obtain ⟨m, rfl⟩ : ∃ m : ℤ, exp m = γ := ⟨_, WithZero.exp_log h⟩
-  exact ⟨m.natAbs + 1, by rw [WithZero.exp_lt_exp]; omega⟩
-
 theorem adicInt_eq_zero_of_forall (x : Kv) (h : ∀ n : ℕ, Valued.v x ≤ exp (-(n : ℤ))) : x = 0 := by
   by_contra hx
   have h0 : Valued.v x ≠ 0 := by
     first
     | exact (Valuation.ne_zero_iff _).mpr hx
-  obtain ⟨N, hN⟩ := wz_exists_nat_lt (Valued.v x) h0
+  obtain ⟨N, hN⟩ := @WithZero.exists_exp_neg_natCast_lt (Valued.v x) h0
   exact absurd (h N) (not_le.mpr hN)
 
 theorem adicCompl_isClosed_le (r : ℤᵐ⁰) : IsClosed {x : Kv | Valued.v x ≤ r} := by
@@ -182,7 +128,7 @@ theorem adicInt_isAdicComplete : IsAdicComplete (maximalIdeal Ov) Ov := by
       intro γ _
       have hne : MonoidWithZeroHom.ValueGroup₀.embedding γ.1 ≠ 0 := fun h =>
         γ.ne_zero (MonoidWithZeroHom.ValueGroup₀.embedding_injective (h.trans (map_zero _).symm))
-      obtain ⟨N, hN⟩ := wz_exists_nat_lt _ hne
+      obtain ⟨N, hN⟩ := @WithZero.exists_exp_neg_natCast_lt _ hne
       refine ⟨N, fun m hm n hn => ?_⟩
       simp only [Set.mem_ofPred_eq, Valuation.restrict_lt_iff_lt_embedding]
       have hle : ∀ a b, N ≤ a → a ≤ b →
@@ -272,7 +218,7 @@ theorem adicInt_residue_finite [Finite (R ⧸ v.asIdeal)] : Finite (ResidueField
     (Ideal.Quotient.lift_surjective_of_surjective v.asIdeal hf (adicInt_residue_surj v))
 
 theorem adicInt_isUnit_of_not_mem (r : R) (hr : r ∉ v.asIdeal) : IsUnit (algebraMap R Ov r) := by
-  rw [(adicInt_integers (K := K) v).isUnit_iff_valuation_eq_one]
+  rw [(IsDedekindDomain.HeightOneSpectrum.adicCompletionIntegers.integers (K := K) v).isUnit_iff_valuation_eq_one]
   have h1 : algebraMap Ov Kv (algebraMap R Ov r) = algebraMap K Kv (algebraMap R K r) := by
     first
     | rfl

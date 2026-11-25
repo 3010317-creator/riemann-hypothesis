@@ -3,53 +3,8 @@ module
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsGeneratedNonzeroSection
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGenOnFibres
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGenTwistGenerated
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -158,33 +113,21 @@ theorem res_eq_pair {M : Type} [AddCommGroup M] [Module (MRingOver S ι) M] (c :
       KH.cellRes S M (chartCell (Function.update c k₀ b)).1 (pairCell c k₀ b hb).1
         (f (chartCell (Function.update c k₀ b))) := by
   classical
+  have hface : ∀ (d : ∀ k, ι k) {u v : ι k₀}, u ≠ v → d k₀ = v → (∀ l ≠ k₀, d l = c l) →
+      ({c k₀, b} : Finset (ι k₀)) = {u, v} → (chartCell d).1 =
+        Function.update (pairCell c k₀ b hb).1 k₀ ((pairCell c k₀ b hb).1 k₀ |>.erase u) := by
+    intro d u v huv hdv hdl hpair
+    funext l
+    by_cases hl : l = k₀
+    · subst hl
+      simp only [chartCell, pairCell, Function.update_self, hdv, hpair]
+      exact (Finset.erase_insert (by simpa using huv)).symm
+    · simp only [chartCell, pairCell, Function.update_of_ne hl, hdl l hl]
   refine (res_eq_of_faces (pairCell c k₀ b hb) k₀ hb.symm (by simp [pairCell])
     (fun l hl => by simp only [pairCell]; rw [Function.update_of_ne hl, Finset.card_singleton])
-    (chartCell (Function.update c k₀ b)) (chartCell c) ?_ ?_ h0).symm
-  · funext l
-    by_cases hl : l = k₀
-    · subst hl
-      simp only [chartCell, pairCell, Function.update_self]
-      ext i
-      simp only [Finset.mem_singleton, Finset.mem_erase, Finset.mem_insert]
-      constructor
-      · rintro rfl; exact ⟨hb, Or.inr rfl⟩
-      · rintro ⟨h1, h2 | h2⟩
-        · exact absurd h2 h1
-        · exact h2
-    · simp only [chartCell, pairCell, Function.update_of_ne hl]
-  · funext l
-    by_cases hl : l = k₀
-    · subst hl
-      simp only [chartCell, pairCell, Function.update_self]
-      ext i
-      simp only [Finset.mem_singleton, Finset.mem_erase, Finset.mem_insert]
-      constructor
-      · rintro rfl; exact ⟨hb.symm, Or.inl rfl⟩
-      · rintro ⟨h1, h2 | h2⟩
-        · exact h2
-        · exact absurd h2 h1
-    · simp only [chartCell, pairCell, Function.update_of_ne hl]
+    (chartCell (Function.update c k₀ b)) (chartCell c)
+    (hface (Function.update c k₀ b) hb.symm (by simp) (fun _ h => by simp [h]) rfl)
+    (hface c hb rfl (fun _ _ => rfl) (Finset.pair_comm _ _)) h0).symm
 
 end Faces
 
@@ -353,18 +296,16 @@ theorem val_update (z : KH.CechC ℚ ι (MRingOver ℚ ι ⧸ KH.genIdeal y) 0)
         · exact hb
       · simp only [pairCell, Function.update_of_ne hk, Finset.mem_singleton] at hi
         rw [hi]; exact hc k
-    have hs1 : ∀ k, (chartCell c).1 k ⊆ (pairCell c k₀ b hbc).1 k := by
-      intro k
+    have hsub : ∀ (d : ∀ k, ι k), (∀ k ≠ k₀, d k = c k) → d k₀ ∈ ({c k₀, b} : Finset (ι k₀)) →
+        ∀ k, (chartCell d).1 k ⊆ (pairCell c k₀ b hbc).1 k := by
+      intro d hd hk₀ k
       by_cases hk : k = k₀
-      · subst hk; simp [chartCell, pairCell]
-      · simp [chartCell, pairCell, Function.update_of_ne hk]
-    have hs2 : ∀ k, (chartCell (Function.update c k₀ b)).1 k ⊆ (pairCell c k₀ b hbc).1 k := by
-      intro k
-      by_cases hk : k = k₀
-      · subst hk; simp [chartCell, pairCell]
-      · simp [chartCell, pairCell, Function.update_of_ne hk]
+      · subst hk; simp [chartCell, pairCell, hk₀]
+      · simp [chartCell, pairCell, Function.update_of_ne hk, hd k hk]
     have h1 := congrArg (evHom y _ hI) (res_eq_pair c k₀ b hbc hz)
-    rw [evHom_cellRes y hs1 hI (nonzeroOn_chart y hc), evHom_cellRes y hs2 hI (nonzeroOn_chart y hc')] at h1
+    rw [evHom_cellRes y (hsub c (fun _ _ => rfl) (by simp)) hI (nonzeroOn_chart y hc),
+      evHom_cellRes y (hsub (Function.update c k₀ b) (fun _ h => by simp [h]) (by simp))
+        hI (nonzeroOn_chart y hc')] at h1
     rw [val_eq y z hc', val_eq y z hc]
     exact h1.symm
 

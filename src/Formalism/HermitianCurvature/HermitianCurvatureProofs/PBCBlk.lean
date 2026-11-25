@@ -13,51 +13,7 @@ public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TheoremPInte
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.TwistedIsRealOrderLattice
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentCoordinatesMeasurePreserving
 public import Formalism.LatticeRigidity.HeightMinimum.SqrtAbsNormLeProd
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LevelSizesJointMean
 
 @[expose] public section
@@ -352,7 +308,7 @@ theorem mfac_le_one (K : ℕ) (L a : ℝ) : crystallineComparison.mfac K L a ≤
   · exact le_rfl
   · exact min_le_left _ _
 
-theorem min_scale (c y : ℝ) (hc : 1 ≤ c) (_hy : 0 ≤ y) : min 1 (c * y) ≤ c * min 1 y := by
+theorem min_scale (c y : ℝ) (hc : 1 ≤ c) : min 1 (c * y) ≤ c * min 1 y := by
   rcases le_total y 1 with h | h
   · rw [min_eq_right h]
     exact min_le_right _ _
@@ -376,9 +332,7 @@ theorem mL_le_prof (S : C.HidaSetting E Wp Wq) (K : ℕ) (Λ : Fin S.f → ℝ) 
     rfl
   unfold crystallineComparison.mfac
   rw [ha, ite_eq_right hpos.ne']
-  have hy : 0 ≤ (Λ v / 3 / (S.pl v) l) ^ K :=
-    pow_nonneg (div_nonneg (div_nonneg (hΛ v) (by norm_num)) hpos.le) K
-  have key := min_scale ((3 : ℝ) ^ K) ((Λ v / 3 / (S.pl v) l) ^ K) (one_le_pow₀ (by norm_num)) hy
+  have key := min_scale ((3 : ℝ) ^ K) ((Λ v / 3 / (S.pl v) l) ^ K) (one_le_pow₀ (by norm_num))
   calc min 1 ((Λ v / (S.pl v) l) ^ K) = min 1 ((3 : ℝ) ^ K * (Λ v / 3 / (S.pl v) l) ^ K) := by
         rw [← mul_pow]
         congr 2

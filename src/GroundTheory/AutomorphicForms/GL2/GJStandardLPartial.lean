@@ -8,47 +8,8 @@ public import GroundTheory.AutomorphicForms.CuspidalDiscreteness.CuspFormsSiegel
 public import GroundTheory.AutomorphicForms.GL2.GJGlobalHaar
 public import GroundTheory.AutomorphicForms.GL2.GJGlobalMellin
 import GroundTheory.GlobalFields.Adele.Topology
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Compactness.Paracompact
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -110,21 +71,11 @@ end Continuity
 theorem hasProd_compl_of_hasProd {ι : Type*} {f : ι → ℂ} {a : ℂ} (h : HasProd f a) (S : Finset ι)
     (hS : ∀ i ∈ S, f i ≠ 0) :
     HasProd (fun i : {i // i ∉ S} ↦ f i) (a / ∏ i ∈ S, f i) := by
-  set g : ι → ℂ := (S : Set ι).mulIndicator fun i ↦ (f i)⁻¹ with hg
-  have hgp : HasProd g (∏ i ∈ S, (f i)⁻¹) := by
-    have : HasProd g (∏ i ∈ S, g i) := hasProd_prod_of_ne_finset_one fun i hi ↦ by
-      rw [hg, Set.mulIndicator_of_notMem (by simpa using hi)]
-    rwa [Finset.prod_congr rfl fun i hi ↦ by rw [hg, Set.mulIndicator_of_mem (by simpa using hi)]] at this
-  have hfg := h.mul hgp
-  have heq : (fun i ↦ f i * g i) = ({i | i ∉ S} : Set ι).mulIndicator f := by
-    funext i
-    by_cases hi : i ∈ S
-    · rw [hg, Set.mulIndicator_of_mem (by simpa using hi),
-        Set.mulIndicator_of_notMem (by simpa using hi), mul_inv_cancel₀ (hS i hi)]
-    · rw [hg, Set.mulIndicator_of_notMem (by simpa using hi),
-        Set.mulIndicator_of_mem (by simpa using hi), mul_one]
-  rw [heq, Finset.prod_inv_distrib, ← div_eq_mul_inv] at hfg
-  exact (hasProd_subtype_iff_mulIndicator (s := {i | i ∉ S})).2 hfg
+  have hg := h.congr_cofinite₀ (s := S) (g := ({i | i ∉ S} : Set ι).mulIndicator f) hS
+    fun i hi ↦ (Set.mulIndicator_of_mem hi f).symm
+  rw [Finset.prod_eq_one fun i hi ↦ Set.mulIndicator_of_notMem (by simpa using hi) f,
+    ← div_eq_mul_one_div] at hg
+  exact (hasProd_subtype_iff_mulIndicator (s := {i | i ∉ S})).2 hg
 
 section Partial
 

@@ -2,44 +2,6 @@ module
 
 public import Formalism.LocalToGlobal.NormalizedHeckeFactors.HeckeStdTwOfStd
 public import Formalism.LocalToGlobal.NormalizedHeckeFactors.CoverThm
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -56,9 +18,6 @@ variable {O K V : Type} [CommRing O] [Field K] [Algebra O K]
 
 def E (T : Subalgebra O (End K V)) (ψ : T →ₐ[O] O) : Submodule K V :=
   ⨅ t : T, (t : End K V).eigenspace (pt ψ t)
-
-def eSum (T : Subalgebra O (End K V)) (Y : Set (T →ₐ[O] O)) : Submodule K V :=
-  ⨆ ψ ∈ Y, E T ψ
 
 theorem E_le_W_pt (T : Subalgebra O (End K V)) (ψ : T →ₐ[O] O) : E T ψ ≤ W T (pt ψ) :=
   iInf_mono fun _ => eigenspace_le_maxGenEigenspace
@@ -208,25 +167,6 @@ theorem map_psiO_rs (T : NormalizedLocalCompatibility D M) {j : ℕ} {w : D.what
   · intro hz
     obtain ⟨y, rfl⟩ := hq z hz
     exact ⟨y, (hpq y).2 hz, rfl⟩
-
-theorem eSum_eq (T : NormalizedLocalCompatibility D M) {j : ℕ} {w : D.what₂.places.Pl} {i : D.nd.Loc} (h : i ∈ D.nd.locs j w)
-    (G : Set (heckeAlg T.B j w →ₐ[T.B.Oc j w] T.B.Oc j w)) :
-    NCov.eSum (heckeAlg T.B j w) {ψ | ψ ∈ G ∧ NCov.cls ψ = T.mx j w i} =
-      ⨆ x ∈ {x | (T.ptX j w i h x).1 ∈ G}, NCov.E (heckeAlg T.B j w) (T.ptX j w i h x).1 := by
-  apply le_antisymm
-  · refine iSup₂_le fun ψ hψ => ?_
-    by_cases hE : NCov.E (heckeAlg T.B j w) ψ = ⊥
-    · rw [hE]; exact bot_le
-    · have hW : NCov.W (heckeAlg T.B j w) (NCov.pt ψ) ≠ ⊥ := fun h0 =>
-        hE (eq_bot_iff.2 ((NCov.E_le_W_pt _ ψ).trans h0.le))
-      set x := (T.ptX j w i h).symm ⟨ψ, hψ.2, hW⟩
-      have hxψ : (T.ptX j w i h x).1 = ψ := by simp [x]
-      refine le_iSup₂_of_le (f := fun x (_ : x ∈ {x | (T.ptX j w i h x).1 ∈ G}) =>
-        NCov.E (heckeAlg T.B j w) (T.ptX j w i h x).1) x (by simp only [Set.mem_ofPred_eq, hxψ]; exact hψ.1) ?_
-      rw [hxψ]
-  · refine iSup₂_le fun x hx => ?_
-    exact le_iSup₂_of_le (f := fun ψ (_ : ψ ∈ {ψ | ψ ∈ G ∧ NCov.cls ψ = T.mx j w i}) =>
-      NCov.E (heckeAlg T.B j w) ψ) (T.ptX j w i h x).1 ⟨hx, (T.ptX j w i h x).2.1⟩ le_rfl
 
 end Formalism.L2
 

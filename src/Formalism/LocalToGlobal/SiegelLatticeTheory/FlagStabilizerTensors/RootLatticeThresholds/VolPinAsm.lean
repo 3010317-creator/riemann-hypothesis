@@ -7,49 +7,7 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.Gaug
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.TermDefPf
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FormTransp
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CovolIdx
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -59,8 +17,6 @@ open scoped Classical ENNReal
 open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.L2.SG.HidaSetting Formalism.L2.SG.Full Formalism.L2.SG.PackageTie2
 
 namespace Formalism.L2.SG.Pf.VolPinAsm
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : D7}
 
@@ -191,11 +147,6 @@ theorem gval_of_normRep (t : TT Y u u') (w : Point D.host.E (D.R.rS + 1))
   rw [e] at hG
   exact hG
 
-private theorem relIndex_map_of_injective' {G G' : Type*} [Group G] [Group G'] (f : G →* G')
-    (hf : Function.Injective f) (H K : Subgroup G) : (H.map f).relIndex (K.map f) = H.relIndex K := by
-  first
-  | exact Subgroup.relIndex_map_map_of_injective H K hf
-
 private theorem H_affine_combination_eq_of_quadratic_relation (t : TT Y u u') (w : Point D.host.E (D.R.rS + 1))
     (F' : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (L : Formalism.L2.SG.PairVal.MatR D)
     (γw s c : X.B.I.Ginf) (Φ : StG w →* X.B.I.Ginf) (hDict : DictProps t w F' L γw s c Φ)
@@ -262,10 +213,12 @@ private theorem H_affine_combination_eq_of_quadratic_relation (t : TT Y u u') (w
       rw [hr1e, hr1s]
   have hBA : B.relIndex A = (Formalism.L2.SG.PairVal.stabAut D u u' (X.Fu u) (Y.what₂ u) t.toTerm F' L).relIndex
       (Formalism.L2.SG.PairVal.stabInt D u u' Y.δ Y.M w) := by
-    rw [hA, hB, relIndex_map_of_injective' Φ hDict.1, Subgroup.relIndex_subgroupOf hInt]
+    rw [hA, hB, Subgroup.relIndex_map_map_of_injective _ _ hDict.1,
+      Subgroup.relIndex_subgroupOf hInt]
   have hAB : A.relIndex B = (Formalism.L2.SG.PairVal.stabInt D u u' Y.δ Y.M w).relIndex
       (Formalism.L2.SG.PairVal.stabAut D u u' (X.Fu u) (Y.what₂ u) t.toTerm F' L) := by
-    rw [hA, hB, relIndex_map_of_injective' Φ hDict.1, Subgroup.relIndex_subgroupOf hAut]
+    rw [hA, hB, Subgroup.relIndex_map_map_of_injective _ _ hDict.1,
+      Subgroup.relIndex_subgroupOf hAut]
   have hcomm := Formalism.L2.SG.Pf.CovolIdx.covol_commens (μR.map (fun y => c * y * c⁻¹)) R' hc0 A B
     (fun s hs => hinv s (hAsub s hs)) (fun s hs => hinv s (hBsub s hs))
     (fun s hs r hr => hmulR s (hAsub s hs) r hr) (fun s hs r hr => hmulR s (hBsub s hs) r hr)

@@ -1,52 +1,9 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TanSRestrict
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.RankLie
 
 @[expose] public section
-
-set_option autoImplicit false
 
 noncomputable section
 
@@ -62,6 +19,11 @@ section Dual
 variable {S : Type} [CommRing S] (s : S)
 
 abbrev dAway : DualNumber S →+* DualNumber (Localization.Away s) := dualMapR (algebraMap S (Localization.Away s))
+
+theorem dualMapS_ofId_toRingHom :
+    (dualMapS (Algebra.ofId S (Localization.Away s))).toRingHom = dAway s := by
+  ext x <;> simp [dualMapS_fst, dualMapS_snd, dAway, dualMapR,
+    TrivSqZeroExt.algebraMap_eq_inl']
 
 theorem eq_inl_add_inr {R : Type} [CommRing R] (x : DualNumber R) :
     x = TrivSqZeroExt.inl x.fst + TrivSqZeroExt.inl x.snd * TrivSqZeroExt.inr 1 := by
@@ -219,8 +181,11 @@ theorem glue_tan {n : ℕ} (s : Fin n → S) (hs : Ideal.span (Set.range s) = �
     refine RingHom.ext fun r => ?_
     simp [TrivSqZeroExt.algebraMap_eq_inl', dAway_inl]
   let v : sp (R₀ := S) (DualNumber S) ⟶ G := Over.homMk g hover
-  have hres : ∀ k, spMap (dualMapS (Algebra.ofId S (Localization.Away (s k)))) ≫ v = w k := fun k =>
-    Over.OverMorphism.ext (hg k)
+  have hres : ∀ k, spMap (dualMapS (Algebra.ofId S (Localization.Away (s k)))) ≫ v = w k := by
+    intro k
+    apply Over.OverMorphism.ext
+    simpa only [Over.comp_left, spMap_left, dualMapS_ofId_toRingHom, v, Over.homMk_left]
+      using hg k
   refine ⟨v, ?_, hres⟩
   apply Over.OverMorphism.ext
   let 𝒱 := (Scheme.affineOpenCoverOfSpanRangeEqTop (R := CommRingCat.of S) _ hs).openCover

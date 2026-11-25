@@ -45,8 +45,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.T
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry
@@ -235,15 +233,6 @@ section Eig
 
 variable {R S O : Type} [CommRing R] [CommRing S] [CommRing O] (f : R →+* S)
   {G G' : Over (Sp R)} [GrpObj G] [IsCommMonObj G] [GrpObj G'] [IsCommMonObj G']
-
-abbrev LieAt (a : OAct O G) : Type := Lie (a.pullback (spMap f))
-
-def lieMap {a : OAct O G} {a' : OAct O G'} {φ : G ⟶ G'} (h : IsLinearHom a a' φ) : LieAt f a →ₗ[S] LieAt f a' :=
-  haveI := h.isMonHom
-  Lie.map _ _ ((Over.pullback (spMap f)).map φ)
-
-def tanPt {a : OAct O G} (v : LieAt f a) : Over.mk ((epsR S).hom ≫ spMap f) ⟶ G :=
-  HTLat.pushEquiv (isGrpPullback_pullback G (spMap f)) _ v.hom
 
 end Eig
 

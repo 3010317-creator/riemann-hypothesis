@@ -11,8 +11,6 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsS
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.WeilRepresentationExists
 public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.ExistsMemIdealInvariants
 public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.HermitianHassePrincipleHolds
-public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.PlaneFormNondegenerate
-public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.ThetaRationalInvarianceHolds
 public import Development.AbelianVarietyTheory.PublishedTheorems.PublishedFoundations.GreenSeriesSt
 public import Development.AbelianVarietyTheory.PublishedTheorems.PublishedFoundations.PrimesInProgressionNonempty
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
@@ -85,7 +83,6 @@ structure ThetaLocalInputs : Prop where
   zelevinskyPolynomialRing : GlobalTheory.Published.ZelevinskyPolynomialRing
   bernsteinZelevinskyFiniteness : GlobalTheory.Published.BernsteinZelevinskyFiniteness
   cuspTraceClass : GlobalTheory.Published.CuspTraceClass
-  flathFactorisation : GlobalTheory.Published.FlathFactorisation
   weilSiegelFormulaUnitary : GlobalTheory.Published.WeilSiegelFormulaUnitary
   doublingMethod : _root_.GlobalTheory.Published.DoublingMethodLocalZetaIntegrals
   unramifiedDoublingGL : GlobalTheory.Published.UnramifiedDoublingGL

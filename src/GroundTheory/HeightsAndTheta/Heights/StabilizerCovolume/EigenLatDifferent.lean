@@ -4,47 +4,8 @@ public import Mathlib.NumberTheory.NumberField.CMField
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.EqZeroOfIsIsoSub
 public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
 public import Mathlib.RingTheory.DedekindDomain.Different
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.CStarAlgebra.Classes
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.TypeStar
 import Mathlib.Algebra.AffineMonoid.Basic
 
@@ -78,26 +39,9 @@ def ζ : Em := IsCyclotomicExtension.zeta 4 ℚ Em
 
 theorem hζ : IsPrimitiveRoot ζ 4 := IsCyclotomicExtension.zeta_spec 4 ℚ Em
 
-theorem ζ_sq : ζ ^ 2 = -1 := by
-  have h4 : ζ ^ 4 = 1 := hζ.pow_eq_one
-  have h2 : ζ ^ 2 ≠ 1 := hζ.pow_ne_one_of_pos_of_lt (l := 2) (by norm_num) (by norm_num)
-  have h : (ζ ^ 2 - 1) * (ζ ^ 2 + 1) = ζ ^ 4 - 1 := by ring
-  rw [h4, sub_self] at h
-  rcases mul_eq_zero.1 h with h | h
-  · exact absurd (sub_eq_zero.1 h) h2
-  · exact eq_neg_of_add_eq_zero_left h
-
 abbrev cc : Em ≃ₐ[maximalRealSubfield Em] Em := IsCMField.complexConj Em
 
 def φ₀ : Em →+* ℂ := Classical.choice inferInstance
-
-theorem emb_ζ (σ : Em →+* ℂ) : σ ζ = Complex.I ∨ σ ζ = -Complex.I := by
-  have hs : σ ζ ^ 2 = -1 := by rw [← map_pow, ζ_sq, map_neg, map_one]
-  have h : (σ ζ - Complex.I) * (σ ζ + Complex.I) = σ ζ ^ 2 - Complex.I ^ 2 := by ring
-  rw [hs, Complex.I_sq, sub_self] at h
-  rcases mul_eq_zero.1 h with h | h
-  · exact Or.inl (sub_eq_zero.1 h)
-  · exact Or.inr (eq_neg_of_add_eq_zero_left h)
 
 theorem ringHom_ext {σ σ' : Em →+* ℂ} (h : σ ζ = σ' ζ) : σ = σ' := by
   have : σ.toRatAlgHom = σ'.toRatAlgHom :=
@@ -105,13 +49,6 @@ theorem ringHom_ext {σ σ' : Em →+* ℂ} (h : σ ζ = σ' ζ) : σ = σ' := b
       (fun x hx => by rw [Set.mem_singleton_iff] at hx; subst hx; exact h)
   ext x
   exact congrArg (fun f : Em →ₐ[ℚ] ℂ => f x) this
-
-theorem conj_emb_ζ (σ : Em →+* ℂ) : conj (σ ζ) = -σ ζ := by
-  rcases emb_ζ σ with h | h <;> rw [h] <;> simp [Complex.conj_I]
-
-theorem cc_ζ : cc ζ = -ζ := by
-  apply φ₀.injective
-  rw [IsCMField.complexEmbedding_complexConj, map_neg, conj_emb_ζ]
 
 end GroundTheory.Heights₂.Heights.NineStatements.Gauss
 end -- clump:auto
@@ -167,37 +104,6 @@ def TorusIndex.Statement : Prop :=
 namespace Gauss
 
 open Gauss
-
-theorem split (ι σ : Em →+* ℂ) : ∃ t : Em →+* Em, ι.comp t = σ := by
-  have hcc : (ι.comp (cc : Em →+* Em)) ζ = -ι ζ := by
-    rw [RingHom.comp_apply]
-    change ι (cc ζ) = -ι ζ
-    rw [cc_ζ, map_neg]
-  rcases emb_ζ σ with h | h <;> rcases emb_ζ ι with h0 | h0
-  · exact ⟨RingHom.id _, ringHom_ext (by rw [RingHom.comp_id, h, h0])⟩
-  · exact ⟨_, ringHom_ext (by rw [hcc, h, h0, neg_neg])⟩
-  · exact ⟨_, ringHom_ext (by rw [hcc, h, h0])⟩
-  · exact ⟨RingHom.id _, ringHom_ext (by rw [RingHom.comp_id, h, h0])⟩
-
-def isoVec : Fin 2 → Em := fun _ => 1
-
-def isoLine : Submodule (𝓞 Em) (Fin 2 → Em) := Submodule.span (𝓞 Em) {isoVec}
-
-def isoFam : Fin 1 → Fin 2 → Em := fun _ => isoVec
-
-theorem span_isoFam : Submodule.span (𝓞 Em) (Set.range isoFam) = isoLine := by
-  show Submodule.span (𝓞 Em) (Set.range fun _ : Fin 1 => isoVec) = isoLine
-  rw [Set.range_const]
-  rfl
-
-theorem isoFam_nz : IsNzFamily isoLine 1 isoFam := by
-  refine ⟨le_rfl, fun _ => Submodule.subset_span rfl, ?_, ?_⟩
-  · refine linearIndependent_unique_iff.2 ?_
-    intro h
-    have := congrFun h 0
-    simp [isoFam, isoVec] at this
-  · rw [span_isoFam, AddSubgroup.relIndex_self]
-    exact one_ne_zero
 
 end Gauss
 

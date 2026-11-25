@@ -4,52 +4,10 @@ public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.CutDimLowerS
 public import GroundTheory.ArithmeticGeometry.AbelianVarieties.JacobianSmoothness.RingKrullDimLeRingKrullDimQuotientAddOne
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.PZeroIdealChart
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.TwistBundleToSubSystem
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.RingTheory.TotallySplit
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -222,23 +180,15 @@ theorem CutDimLower.proof : CutDimLower.Statement.{u, w} := by
   have key := GroundTheory.Arith.Abelian.Jacobian.height_add_ringKrullDim_quotient k
     (qq.map (Ideal.Quotient.mk pp))
   rw [ringKrullDim_eq_of_ringEquiv (DoubleQuot.quotQuotEquivQuotOfLE hppq), hW.dim] at key
-  have hnn : (0 : WithBot ℕ∞) ≤ ringKrullDim (Poly k N ⧸ qq) := ringKrullDim_nonneg_of_nontrivial
-  generalize ringKrullDim (Poly k N ⧸ qq) = D at key hnn ⊢
-  generalize (qq.map (Ideal.Quotient.mk pp)).height = H at key hQ
-  induction D using WithBot.recBotCoe with
-  | bot => exact absurd hnn (by simp)
-  | coe d =>
-    have key' : H + d = ((n + 1 + 1 : ℕ) : ℕ∞) := by exact_mod_cast key
-    suffices ((n + 1 : ℕ) : ℕ∞) ≤ d by exact_mod_cast this
-    induction d using ENat.recTopCoe with
-    | top => exact le_top
-    | coe m =>
-      induction H using ENat.recTopCoe with
-      | top => simp at hQ
-      | coe h =>
-        have h1 : h ≤ 1 := by exact_mod_cast hQ
-        have h2 : h + m = n + 1 + 1 := by exact_mod_cast key'
-        exact_mod_cast (by omega : n + 1 ≤ m)
+  by_contra! hlt
+  have h1 : ((n + 1 + 1 : ℕ) : WithBot ℕ∞) ≤ ((n + 1 : ℕ) : WithBot ℕ∞) := calc
+    ((n + 1 + 1 : ℕ) : WithBot ℕ∞)
+      = (qq.map (Ideal.Quotient.mk pp)).height + ringKrullDim (Poly k N ⧸ qq) := key.symm
+    _ ≤ 1 + ringKrullDim (Poly k N ⧸ qq) := by gcongr; exact_mod_cast hQ
+    _ = ringKrullDim (Poly k N ⧸ qq) + 1 := add_comm _ _
+    _ ≤ ((n + 1 : ℕ) : WithBot ℕ∞) := ENat.WithBot.add_one_le_natCast_iff.mpr hlt
+  have h2 : n + 1 + 1 ≤ n + 1 := by exact_mod_cast h1
+  omega
 
 end
 

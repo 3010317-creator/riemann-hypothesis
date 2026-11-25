@@ -2,50 +2,8 @@ module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.DataInst
 public import Mathlib.Algebra.Order.Field.GeomSum
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -154,15 +112,9 @@ theorem card_res_le (L : Formalism.MainNotions.S.Loc.LocAt F E sig p) :
     intro w
     obtain ⟨y, rfl⟩ := IsLocalRing.residue_surjective w
     have hU : IsOpen {z : L.Fp | valuation L.Fp (z - (y : L.Fp)) < 1} := by
-      rw [isOpen_iff_mem_nhds]
-      intro z0 hz0
-      rw [IsValuativeTopology.mem_nhds_iff]
-      refine ⟨1, ?_⟩
-      rintro _ ⟨z, hz, rfl⟩
-      simp only [Set.mem_setOf_eq, Units.val_one] at hz hz0 ⊢
-      have : z0 + z - (y : L.Fp) = (z0 - y) + z := by ring
-      rw [this]
-      exact Valuation.map_add_lt _ hz0 hz
+      have hB : IsOpen {x : L.Fp | valuation L.Fp x < 1} := by
+        simpa only [Valuation.restrict_lt_one_iff] using (valuation L.Fp).isOpen_ball 1
+      exact hB.preimage (continuous_sub_right _)
     obtain ⟨x, hx⟩ := L.dense.exists_mem_open hU ⟨(y : L.Fp), by simp⟩
     simp only [Set.mem_setOf_eq] at hx
     have hxI : valuation L.Fp (L.ιF x) ≤ 1 := by

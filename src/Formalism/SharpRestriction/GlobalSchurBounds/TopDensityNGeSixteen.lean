@@ -20,53 +20,12 @@ public import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClas
 public import Formalism.SizeWindowBrackets.ChainSlopeWindows.WeightedSlopeExcessDecomposition
 public import Lemmata.GeneralBFactLeftBisAlt.Imports
 public import Mathlib.NumberTheory.LSeries.PrimesInAP
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 import Development.AutomorphicArithmetic.PrimitiveCosets.ToEBij
 import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DualPl
 import Formalism.SizeWindowBrackets.ChainSlopeWindows.GaloisMapComplexConjugation
 import Formalism.SizeWindowBrackets.ChainSlopeWindows.JointDModelAppliesUnitLattice
-import Mathlib.NumberTheory.NumberField.Discriminant.Different
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Formalism.SizeWindowBrackets.SecondKindBucket
 import Formalism.SizeWindowBrackets.WindowSettingSatisfiable
 
@@ -821,9 +780,9 @@ theorem matRealF_of {eps : ℝ} (Fm : FamP eps) (CH : ℝ) (hCH : 0 ≤ CH) (h :
     linarith
   have hs1 : Real.sqrt (E ^ 2) = E := Real.sqrt_sq hE0.le
   have hs2 : Real.sqrt (2 * E ^ 2) ≤ 2 * E := by
-    calc Real.sqrt (2 * E ^ 2) ≤ Real.sqrt ((2 * E) ^ 2) := Real.sqrt_le_sqrt (by nlinarith [sq_nonneg E])
+    calc Real.sqrt (2 * E ^ 2) ≤ Real.sqrt ((2 * E) ^ 2) := Real.sqrt_le_sqrt (by linarith [sq_nonneg E])
       _ = 2 * E := Real.sqrt_sq (by positivity)
-  refine ⟨E ^ 2, 2 * E ^ 2, by positivity, by nlinarith, by positivity, by nlinarith, ?_, fun i => ?_⟩
+  refine ⟨E ^ 2, 2 * E ^ 2, by positivity, by linarith [sq_le_sq' (by linarith) hE18], by positivity, by linarith [sq_le_sq' (by linarith) hE18], ?_, fun i => ?_⟩
   · rw [hs1]
     calc (3 * E + 4 * Real.sqrt (2 * E ^ 2)) * x ^ CH ≤ (3 * E + 4 * (2 * E)) * x ^ CH :=
           mul_le_mul_of_nonneg_right (by linarith) hxC.le
@@ -860,7 +819,7 @@ theorem matS_at_of (D : D7) (η0 η1 e0 de : ℝ) (hd0 : 0 ≤ D.what₂.delp)
   have hle : D.what₂.Drows ≤ D.what₂.Dall := by
     have h1 := D.what₂.D_eq
     have h2 : (0 : ℝ) ≤ (D.what₂.Dall : ℝ) := Nat.cast_nonneg _
-    have h3 : (D.what₂.Drows : ℝ) ≤ (D.what₂.Dall : ℝ) := by rw [h1]; nlinarith
+    have h3 : (D.what₂.Drows : ℝ) ≤ (D.what₂.Dall : ℝ) := by rw [h1]; linarith [mul_nonneg hd0 h2]
     exact_mod_cast h3
   have hα : Fintype.card (D.div.RR.ι ⊕ Fin (D.what₂.Dall - D.what₂.Drows)) = D.what₂.Dall := by
     rw [Fintype.card_sum, Fintype.card_fin, hκ]; omega
@@ -988,7 +947,7 @@ theorem ramShareF_of {eps : ℝ} (Fm : FamP eps) (hTu : TuSize Fm) (hR : RamRank
     rw [← Real.rpow_add hx0]; congr 1; ring
   have hd0 : 0 < x ^ (eps / 8) := Real.rpow_pos_of_pos hx0 _
   have h4x : 4 * x ^ (eps / 8) ≤ x ^ eps := by
-    rw [hsplit]; nlinarith
+    rw [hsplit]; linarith [mul_le_mul_of_nonneg_left h4 hd0.le]
   have hb3 : 3 ≤ (Fm.L x i).sc.b := by
     rw [hb]
     have h1 : x ^ eps + 1 ≤ Real.exp (x ^ eps) := Real.add_one_le_exp _
@@ -1007,7 +966,7 @@ theorem ramShareF_of {eps : ℝ} (Fm : FamP eps) (hTu : TuSize Fm) (hR : RamRank
     have h5p : 0 < x ^ (5 : ℝ) := Real.rpow_pos_of_pos hx0 _
     have := hev x e2' (by linarith)
     rw [h6] at this
-    nlinarith
+    linarith [mul_le_mul_of_nonneg_left hx2 h5p.le]
   refine ⟨2 * ((Fm.D x i).R.f : ℝ) / (Fm.L x i).sc.b, by positivity, ?_,
     ramShare_at_of (Fm.L x i) (hTu x e0' i).1 (hR x e1' i) hb3⟩
   have hE0 : 0 ≤ Real.exp (-(x ^ (eps / 8))) := (Real.exp_pos _).le
@@ -1379,7 +1338,7 @@ theorem unfolding_constant_pos_of_diagonal (D : D7) (u : D.what₂.Word) (e0 : �
     unfold hsDiagFull at h2
     rw [hK, hs_neg_id] at h2
     have hd' : (0 : ℝ) < (D.duS u : ℝ) := by exact_mod_cast hd
-    nlinarith
+    linarith [mul_lt_mul_of_pos_right he hd']
 
 theorem matKF_of {eps : ℝ} (Fm : FamP eps) (Cabs CH C0 : ℝ) (hC0 : 0 < C0) (lS : LinkS Fm C0)
     (cPr : ChosenProviso Fm C0) (lD : LinkDIV Fm Cabs CH) : MatKF Fm := by
@@ -1455,7 +1414,7 @@ theorem dall_pos {D : D7} (u : D.what₂.Word) (e0 : ℝ) (he : e0 < 1) (hd : 0 
     simp [hfin]
   rw [hval] at h
   have hd' : (0 : ℝ) < (D.duS u : ℝ) := by exact_mod_cast hd
-  nlinarith
+  linarith [mul_lt_mul_of_pos_right he hd']
 
 theorem rrRankF_of {eps : ℝ} (Fm : FamP eps) (Cabs CH C0 : ℝ) (hC0 : 0 < C0) (lS : LinkS Fm C0)
     (cPr : ChosenProviso Fm C0) (lI : LinkIRR Fm) (lD : LinkDIV Fm Cabs CH) : RRRankF Fm := by
@@ -1484,7 +1443,7 @@ theorem rrRankF_of {eps : ℝ} (Fm : FamP eps) (Cabs CH C0 : ℝ) (hC0 : 0 < C0)
   have he1 : e0 < 1 := by
     have h1 := Real.sq_sqrt he0
     have h2 := Real.sqrt_nonneg e0
-    nlinarith
+    linarith [sq_lt_sq' (by linarith : -1 < Real.sqrt e0) hs1]
   have hdu : 0 < (Fm.D x i).duS (Fm.D x i).u₀ := by
     by_contra hcon
     have hz : (Fm.D x i).duS (Fm.D x i).u₀ = 0 := by omega

@@ -1,46 +1,7 @@
 module
 
 public import Mathlib.LinearAlgebra.Quotient.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 public import Mathlib.RingTheory.Ideal.Defs
 
 @[expose] public section
@@ -83,14 +44,6 @@ lemma towerComp_apply_of_mem {x : ∀ n, E n} (hx : x ∈ towerLimit τ) (n k : 
     rw [hx (n + k)]
     exact ih
 
-theorem towerLimit_eq_bot {c : ℕ} (hc : ∀ n, towerComp τ n c = 0) : towerLimit τ = ⊥ := by
-  rw [eq_bot_iff]
-  intro x hx
-  rw [Submodule.mem_bot]
-  funext n
-  rw [← towerComp_apply_of_mem τ hx n c, hc n, LinearMap.zero_apply]
-  rfl
-
 end Tower
 
 section Exact
@@ -109,50 +62,6 @@ variable {A : Type u} [CommRing A]
 variable (hinj : ∀ n, Function.Injective (ι n))
   (hex : ∀ n, LinearMap.range (ι n) = LinearMap.ker (π n))
 
-def towerLimitMap : towerLimit τP →ₗ[A] towerLimit τE where
-  toFun x := ⟨fun n => ι n (x.1 n), fun n => by
-    have := congrArg (fun f => f (x.1 (n + 1))) (hι n)
-    simp only [LinearMap.comp_apply] at this
-    rw [this, x.2 n]⟩
-  map_add' x y := by
-    ext n
-    exact map_add (ι n) _ _
-  map_smul' a x := by
-    ext n
-    exact map_smul (ι n) _ _
-
-
-include hι hπ hinj hex in
-theorem bijective_towerLimitMap (hinj : ∀ n, Function.Injective (ι n))
-    (hex : ∀ n, LinearMap.range (ι n) = LinearMap.ker (π n))
-    (hπ : ∀ n, (τQ n).comp (π (n + 1)) = (π n).comp (τE n))
-    {c : ℕ} (hc : ∀ n, towerComp τQ n c = 0) :
-    Function.Bijective (towerLimitMap τP τE ι hι) := by
-  constructor
-  · intro x y hxy
-    ext n
-    exact hinj n (congrArg (fun z : towerLimit τE => z.1 n) hxy)
-  · intro e
-    have hQ : ∀ n, π n (e.1 n) = 0 := by
-      have hmem : (fun n => π n (e.1 n)) ∈ towerLimit τQ := fun n => by
-        have := congrArg (fun f => f (e.1 (n + 1))) (hπ n)
-        simp only [LinearMap.comp_apply] at this
-        rw [this, e.2 n]
-      rw [towerLimit_eq_bot τQ hc] at hmem
-      intro n
-      exact congrFun ((Submodule.mem_bot A).1 hmem) n
-    have hp : ∀ n, ∃ p, ι n p = e.1 n := fun n => by
-      have : e.1 n ∈ LinearMap.range (ι n) := by
-        rw [hex n]
-        exact hQ n
-      exact this
-    choose p hp using hp
-    refine ⟨⟨p, fun n => hinj n ?_⟩, ?_⟩
-    · have := congrArg (fun f => f (p (n + 1))) (hι n)
-      simp only [LinearMap.comp_apply] at this
-      rw [← this, hp, hp, e.2 n]
-    · ext n
-      exact hp n
 
 end Exact
 
@@ -160,9 +69,6 @@ section Adic
 
 variable {A : Type u} [CommRing A] (I : Ideal A) {H : Type u} [AddCommGroup H] [Module A H]
   (K : ℕ → Submodule A H) (hK : Antitone K)
-
-def quotTower : ∀ n, (H ⧸ K (n + 1)) →ₗ[A] (H ⧸ K n) :=
-  fun n => Submodule.factor (hK (Nat.le_succ n))
 
 variable {I K}
 

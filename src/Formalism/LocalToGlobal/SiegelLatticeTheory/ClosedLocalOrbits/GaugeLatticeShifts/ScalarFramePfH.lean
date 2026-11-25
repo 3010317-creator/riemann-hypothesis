@@ -4,43 +4,6 @@ import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCou
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.ScalarFramePfG
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ScalarPairOrthogonal.MemThPairs
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ScalarPairOrthogonal.XLeOrthXplus
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -53,8 +16,6 @@ namespace Formalism.L2.SG.Pf.ScalarFramePf
 open NumberField IsDedekindDomain Module Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.LocalSplitGroups Formalism.L2.SG.TermLoc
 open PI.ScalarPairDr.W (mem_orth hT_swap orth_orth finrank_orth fvec_castSucc fvec_last mem_orth_Xplus
   X_le_orth_Xplus mem_ThPairs hT_add_left hT_sub_left hT_smul_left)
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 section Lat
 
@@ -106,37 +67,21 @@ theorem Xflag_top (F : LFlag S r T) : Xflag F r = Xsp F := by
 theorem hT_X_X (F : FlagG S r T) {x y : S.V} (hx : x ∈ F.X) (hy : y ∈ F.X) : S.hT x y = 0 := by
   apply Formalism.L2.SG.NGCut.NormalVectorPairings.hT_X_X <;> assumption
 
-theorem hT_z_X (F : FlagG S r T) {y : S.V} (hy : y ∈ F.X) : S.hT F.z y = 0 := by
-  have key : ∀ w : S.V, (∀ a, S.hT (F.e a) w = 0) → ∀ x ∈ F.X, S.hT x w = 0 := by
-    intro w hw x hx
-    have hx' : x ∈ Submodule.span E (Set.range F.e) := hx
-    clear hx
-    induction hx' using Submodule.span_induction with
-    | mem x h =>
-      obtain ⟨a, rfl⟩ := h
-      exact hw a
-    | zero =>
-      have h0 := hT_sub_left (S := S) w w w
-      rwa [sub_self, sub_self] at h0
-    | add x y _ _ ihx ihy => rw [hT_add_left, ihx, ihy, add_zero]
-    | smul c x _ ihx => rw [hT_smul_left, ihx, mul_zero]
-  rw [hT_swap, key F.z F.z_orth y hy, star_zero]
-
 theorem hT_X_alt (F : FlagG S r T) {x : S.V} (hx : x ∈ F.X) : S.hT x F.z = 0 := by
-  have key : ∀ w : S.V, (∀ a, S.hT (F.e a) w = 0) → ∀ x ∈ F.X, S.hT x w = 0 := by
-    intro w hw x hx
-    have hx' : x ∈ Submodule.span E (Set.range F.e) := hx
-    clear hx
-    induction hx' using Submodule.span_induction with
-    | mem x h =>
-      obtain ⟨a, rfl⟩ := h
-      exact hw a
-    | zero =>
-      have h0 := hT_sub_left (S := S) w w w
-      rwa [sub_self, sub_self] at h0
-    | add x y _ _ ihx ihy => rw [hT_add_left, ihx, ihy, add_zero]
-    | smul c x _ ihx => rw [hT_smul_left, ihx, mul_zero]
-  exact key F.z F.z_orth x hx
+  have hx' : x ∈ Submodule.span E (Set.range F.e) := hx
+  clear hx
+  induction hx' using Submodule.span_induction with
+  | mem x h =>
+    obtain ⟨a, rfl⟩ := h
+    exact F.z_orth a
+  | zero =>
+    have h0 := hT_sub_left (S := S) F.z F.z F.z
+    rwa [sub_self, sub_self] at h0
+  | add x y _ _ ihx ihy => rw [hT_add_left, ihx, ihy, add_zero]
+  | smul c x _ ihx => rw [hT_smul_left, ihx, mul_zero]
+
+theorem hT_z_X (F : FlagG S r T) {y : S.V} (hy : y ∈ F.X) : S.hT F.z y = 0 := by
+  rw [hT_swap, hT_X_alt F hy, star_zero]
 
 theorem theta_eq (Λ : Submodule (𝓞 E) S.V) (k : ℕ) (F : LFlag S r T) (F' F'' : LFlag S r T')
     (β : S.V ≃ₗ[E] S.V) (hn : finrank E S.V = k + 2 * r + 1)

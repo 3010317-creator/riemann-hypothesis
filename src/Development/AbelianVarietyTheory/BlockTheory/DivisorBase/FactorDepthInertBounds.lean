@@ -39,8 +39,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.IndefiniteRowSideFullHecke.FactorDepthInertBounds
@@ -54,9 +52,6 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 def boundAll (p i k : ℕ) : ℝ := (i : ℝ) * k / ((p : ℝ) - 1)
 
 def boundInert (p j' i k : ℕ) : ℝ := 2 * (i : ℝ) * k / ((p : ℝ) * ((p : ℝ) - 1)) + 2 * (j' : ℝ) * k / ((p : ℝ) - 1)
-
-def upperInert (p N j' k : ℕ) : ℝ :=
-  (k : ℝ) * ((j' : ℝ) / ((p : ℝ) - 1) + ((N : ℝ) - 2 * j') * p / ((p : ℝ) ^ 2 - 1))
 
 def boundFine (p N j' i k : ℕ) : ℝ :=
   (k : ℝ) * ((N : ℝ) - 2 * j' - i) * p / ((p : ℝ) ^ 2 - 1) +

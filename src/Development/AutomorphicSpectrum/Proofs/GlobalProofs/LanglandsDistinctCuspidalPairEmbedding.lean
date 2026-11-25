@@ -15,48 +15,8 @@ import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducible
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.EqOfSubsingletonStep
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IsSubquotientCompMulSingle
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -86,10 +46,10 @@ theorem cell_antidiag (d : Fin 2 → ℕ) (σ : ∀ i, Irr k (d i))
   simp only [Fin.sum_univ_two, Fintype.card_fin, Equiv.swap_apply_left, Equiv.swap_apply_right] at r0 r1 c0 c1
   have hrz : ∀ i j, j ≠ Equiv.swap 0 1 i → b.1 i j = 0 := by
     intro i j hj
-    fin_cases i <;> fin_cases j <;> simp_all
+    fin_cases i <;> fin_cases j <;> first | exact absurd (by decide) hj | assumption
   have hcz : ∀ j i, i ≠ Equiv.swap 0 1 j → b.1 i j = 0 := by
     intro j i hi
-    fin_cases i <;> fin_cases j <;> simp_all
+    fin_cases i <;> fin_cases j <;> first | exact absurd (by decide) hi | assumption
   have hrf : ∀ i, b.1 i (Equiv.swap 0 1 i) = d i := by
     intro i
     fin_cases i <;> simp <;> omega
@@ -376,7 +336,7 @@ theorem exists_jac_map_of_eq (hG : GeometricLemma) (hBZ : BernsteinZelevinskyFin
   have hsm : IsSmooth (piTensor fun i => (σ i).π) := isSmooth_piTensor fun i => (σ i).smooth
   obtain ⟨f₁, g₁, ⟨E₁⟩⟩ := GlobalTheory.CompanionTheory.Hypotheses₂.TD.cell_diag (k := k) (b (b.symm G1)) (fun i j hj => by
     rw [Equiv.apply_symm_apply, hG1]
-    fin_cases i <;> fin_cases j <;> simp_all) (piTensor fun i => (σ i).π) hsm
+    fin_cases i <;> fin_cases j <;> first | exact absurd rfl hj | rfl) (piTensor fun i => (σ i).π) hsm
   have F₀ := (h4 (b.symm G0) f₀ g₀).some.trans E₀
   have F₁ := (h4 (b.symm G1) f₁ g₁).some.trans E₁
   have : Nontrivial (⨂[ℂ] i, (σ (Equiv.swap 0 1 i)).V) := GlobalTheory.ProdSupport.nontrivial_piTensor _

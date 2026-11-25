@@ -3,45 +3,6 @@ module
 public import Formalism.SharpRestriction.CuspSpanNormBounds.ThinScalesBound
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.ThetaModuleTransport.HeadColumnCoordinates.SharpSpanCounting.HSumRight
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.ThetaModuleTransport.HeadColumnCoordinates.SharpSpanCounting.MemPerpSpanIff
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.LsDatumA
 
 @[expose] public section
@@ -80,52 +41,5 @@ theorem adj_last (f f' : Fin (r + 1) → V) :
   ext i j
   simp [Matrix.submatrix_apply, Fin.succAbove_last]
   rfl
-
-theorem h_om'_f' (f f' : Fin (r + 1) → V) (T' : F) (hF' : Formalism.MainNotions.ThinScalesBound.FrameK H f' T')
-    (hD0 : H.Dl f f' r = 0) (b : Fin (r + 1)) : H.h (H.om' f f') (f' b) = 0 := by
-  unfold HermSp.om'
-  rw [h_sum_left]
-  apply Finset.sum_eq_zero
-  intro c _
-  by_cases hc : c = Fin.last r ∧ b = Fin.last r
-  · obtain ⟨rfl, rfl⟩ := hc
-    rw [adj_last, hD0, zero_mul]
-  · rw [hF'.1 c b (not_and_or.mp hc), mul_zero]
-
-theorem mem_X_of (f f' : Fin (r + 1) → V) (T T' : F) (hF : Formalism.MainNotions.ThinScalesBound.FrameK H f T)
-    (hF' : Formalism.MainNotions.ThinScalesBound.FrameK H f' T') (hD : IsUnit (H.Dl f f' (r + 1))) (hD0 : H.Dl f f' r = 0)
-    (v : V) (hv : v ∈ Submodule.span E (Set.range (Sum.elim f f')))
-    (h1 : ∀ a, H.h v (f a) = 0) (h2 : H.h (H.om' f f') v = 0) : v ∈ H.X f := by
-  obtain ⟨c, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun E).1 hv
-  rw [Fintype.sum_sum_type] at h1 h2 ⊢
-  simp only [Sum.elim_inl, Sum.elim_inr] at h1 h2 ⊢
-
-  have hl : c (Sum.inl (Fin.last r)) = 0 := by
-    rw [h_add_right, h_sum_right, h_sum_right] at h2
-    simp only [h_om'_f' H f f' T' hF' hD0, mul_zero, Finset.sum_const_zero, add_zero, h_om'_f] at h2
-    rw [Finset.sum_eq_single (Fin.last r) (fun b _ hb => by rw [ite_eq_right hb, mul_zero])
-      (by simp), ite_eq_left rfl, ← dl_full] at h2
-    have h3 : M.L.cj (c (Sum.inl (Fin.last r))) = 0 := (hD.mul_left_eq_zero).1 h2
-    have := congrArg M.L.cj h3
-    rwa [M.L.cj_cj, map_zero] at this
-
-  have hZ : (H.Zhat f f').mulVec (fun b => c (Sum.inr b)) = 0 := by
-    funext a
-    have := h1 a
-    rw [H.h_add_left, h_sum_left, h_sum_left] at this
-    simp only [h_frame H f T hF] at this
-    rw [Finset.sum_eq_single (Fin.last r) (fun b _ hb => by simp [hb]) (by simp)] at this
-    simp only [hl, zero_mul, zero_add] at this
-    rw [Pi.zero_apply, Matrix.mulVec, dotProduct, ← this]
-    refine Finset.sum_congr rfl fun b _ => ?_
-    rw [mul_comm]; rfl
-  have hp' : (fun b => c (Sum.inr b)) = 0 := by
-    have hu : IsUnit (H.Zhat f f').det := by rw [← dl_full]; exact hD
-    have := congrArg (fun w => (H.Zhat f f')⁻¹.mulVec w) hZ
-    simpa [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hu] using this
-  have hp'' : ∀ b, c (Sum.inr b) = 0 := fun b => congrFun hp' b
-  simp only [hp'', zero_smul, Finset.sum_const_zero, add_zero]
-  rw [Fin.sum_univ_castSucc, hl, zero_smul, add_zero]
-  exact Submodule.sum_mem _ fun a _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨a, rfl⟩)
 
 end Formalism.L2.SG.LocalCountModules.LocCntCommon

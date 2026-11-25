@@ -9,46 +9,6 @@ public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ExistsNormBo
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.PBCutInside
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.SizeAtMinusW
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.SliceCompactSupportCoefficient
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.AeNeZeroComplex
 
 @[expose] public section
@@ -72,19 +32,8 @@ theorem psd_of_rep {α ι H : Type} [Fintype ι] [NormedAddCommGroup H] [InnerPr
   exact Matrix.posSemidef_sum _ fun k _ => (Matrix.posSemidef_gram ℂ _).transpose
 
 theorem psd_smul {α : Type} (Y : Finset α) (k : α → α → ℂ) (a : ℝ) (ha : 0 ≤ a) (hk : TB.PSDOn Y k) :
-    TB.PSDOn Y (fun x y => (a : ℂ) * k x y) := by
-  rw [PBA.psd_iff_qf] at hk ⊢
-  refine ⟨fun x hx y hy => ?_, fun c => ?_⟩
-  · rw [hk.1 x hx y hy, map_mul, Complex.conj_ofReal]
-  · have : PBA.qf Y (fun x y => (a : ℂ) * k x y) c = (a : ℂ) * PBA.qf Y k c := by
-      unfold PBA.qf
-      rw [Finset.mul_sum]
-      refine Finset.sum_congr rfl fun x _ => ?_
-      rw [Finset.mul_sum]
-      refine Finset.sum_congr rfl fun y _ => ?_
-      ring
-    rw [this, Complex.re_ofReal_mul]
-    exact mul_nonneg ha (hk.2 c)
+    TB.PSDOn Y (fun x y => (a : ℂ) * k x y) :=
+  by apply _root_.Formalism.FourierDecayAlt.P.RecursionWithDensities.B1.psd_smul <;> assumption
 
 section top
 

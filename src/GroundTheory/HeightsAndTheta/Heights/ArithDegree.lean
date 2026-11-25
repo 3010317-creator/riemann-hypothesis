@@ -2,57 +2,15 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.HermitianTensor
 public import Mathlib.Analysis.InnerProductSpace.GramMatrix
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
 public import Mathlib.GroupTheory.FiniteAbelian.Basic
-import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.RingTheory.TotallySplit
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 public import Mathlib.LinearAlgebra.FreeModule.Finite.CardQuotient
 public import Mathlib.NumberTheory.NumberField.Norm
 public import Mathlib.RingTheory.Flat.Basic
@@ -442,36 +400,6 @@ def HermitianMetric.scale (h : HermitianMetric K E) (c : ℝ) (hc : 0 < c) : Her
   form σ := coreScale (h.form σ) c hc
   form_conj σ x y := by
     rw [coreScale_inner, coreScale_inner, h.form_conj, map_mul, Complex.conj_ofReal]
-
-theorem gramDet_scale (h : HermitianMetric K E) (c : ℝ) (hc : 0 < c) (σ : K →+* ℂ) {ι : Type*}
-    [Fintype ι] [DecidableEq ι] (s : ι → E) :
-    gramDet (h.scale c hc) σ s = c ^ (2 * Fintype.card ι) * gramDet h σ s := by
-  simp only [gramDet]
-  have : (gram ℂ fun i ↦ fibreVec (h.scale c hc) σ (s i)) =
-      ((c ^ 2 : ℝ) : ℂ) • gram ℂ fun i ↦ fibreVec h σ (s i) := by
-    ext i j
-    rfl
-  rw [this, det_smul, ← Complex.ofReal_pow, Complex.re_ofReal_mul, pow_mul]
-
-theorem arithDegree_scale (h : HermitianMetric K E) (c : ℝ) (hc : 0 < c) :
-    arithDegree (h.scale c hc) =
-      arithDegree h - Module.finrank (𝓞 K) E * Module.finrank ℚ K * Real.log c := by
-  obtain ⟨s, hs⟩ := exists_linearIndependent_fin (K := K) (E := E)
-  rw [arithDegree_eq (h.scale c hc) hs (Fintype.card_fin _), arithDegree_eq h hs (Fintype.card_fin _)]
-  simp only [degreeWith, gramDet_scale, Fintype.card_fin]
-  have hlog : ∀ σ : K →+* ℂ, Real.log (c ^ (2 * Module.finrank (𝓞 K) E) * gramDet h σ s) =
-      2 * Module.finrank (𝓞 K) E * Real.log c + Real.log (gramDet h σ s) := fun σ ↦ by
-    rw [Real.log_mul (pow_pos hc _).ne' (gramDet_pos h σ hs).ne', Real.log_pow]
-    push_cast; ring
-  simp only [hlog]
-  rw [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, NumberField.Embeddings.card,
-    nsmul_eq_mul]
-  ring
-
-theorem arithDegree_ratIntegers_scale (c : ℝ) (hc : 0 < c) :
-    arithDegree ((HermitianMetric.integers ℚ).scale c hc) = -Real.log c := by
-  rw [arithDegree_scale, arithDegree_integers, Module.finrank_self, Module.finrank_self]
-  simp
 
 end
 

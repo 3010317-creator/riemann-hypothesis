@@ -1,5 +1,7 @@
 module
 
+import Formalism.ZeroFreeRegion.PerronKernelBounds
+
 public import Formalism.LandauZeroFreeBounds.LogDerivRegionChiOf
 public import Mathlib.NumberTheory.LSeries.Nonvanishing
 public import Formalism.LandauZeroFreeBounds.NoZeroComplexOf
@@ -19,55 +21,7 @@ public import Formalism.LandauZeroFreeBounds.ExceptionalZeroBounds.PerronChi
 public import Formalism.LandauZeroFreeBounds.ExceptionalZeroBounds.RectShiftChi
 public import Formalism.LandauZeroFreeBounds.FinalSiegel
 public import Formalism.LandauZeroFreeBounds.NoZeroComplex
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Formalism.LandauZeroFreeBounds.ExceptionalZeroBounds.LogTwoLeLogAnalyticConductor
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Tactic.Monotonicity.Lemmas
-import Mathlib.Topology.Sheaves.Presheaf
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.Tactic.Linter.Style
 import Formalism.LandauZeroFreeBounds.ExceptionalZeroBounds.LGrowth
@@ -1313,34 +1267,8 @@ theorem perron_contour_decomposition (hP : PerronChi) {q : ℕ} [NeZero q] (χ :
       + ‖∫ x in σ₁..σ₀, Fchi χ y ((x : ℂ) + (T : ℂ) * I)‖
       + ‖∫ u in (-T)..T, Fchi χ y ((σ₁ : ℂ) + u * I)‖ := by
   obtain ⟨hint, hS⟩ := hP q χ y hy σ₀ hσ₀
-  have hsplit := integral_add_compl (s := Set.Ioc (-T) T) measurableSet_Ioc hint
-  have hIoc : ∫ t in Set.Ioc (-T) T, Fchi χ y ((σ₀ : ℂ) + t * I) =
-      ∫ t in (-T)..T, Fchi χ y ((σ₀ : ℂ) + t * I) :=
-    (intervalIntegral.integral_of_le (by linarith)).symm
-  unfold Formalism.ZF.rectInt at hrect
-  set Cp := ∫ t in (Set.Ioc (-T) T)ᶜ, Fchi χ y ((σ₀ : ℂ) + t * I) with hCp
-  set Bt := ∫ x in σ₁..σ₀, Fchi χ y ((x : ℂ) + ((-T : ℝ) : ℂ) * I) with hBt
-  set Tp := ∫ x in σ₁..σ₀, Fchi χ y ((x : ℂ) + (T : ℂ) * I) with hTp
-  set Lf := ∫ u in (-T)..T, Fchi χ y ((σ₁ : ℂ) + u * I) with hLf
-  set Rt := ∫ t in (-T)..T, Fchi χ y ((σ₀ : ℂ) + t * I) with hRt
-  have hpi : (2 * (Real.pi : ℂ)) ≠ 0 :=
-    mul_ne_zero two_ne_zero (Complex.ofReal_ne_zero.mpr Real.pi_pos.ne')
-  have hinv : (2 * (Real.pi : ℂ)) * (1 / (2 * Real.pi)) = 1 := by field_simp
-  have hI : I * I = -1 := Complex.I_mul_I
-  have key : (2 * (Real.pi : ℂ)) * (Schi χ y - R) = Cp + I * (Bt - Tp) + Lf := by
-    rw [hS, ← hsplit, hIoc]
-    linear_combination (-I) * hrect + (Rt + Cp) * hinv + (Rt - Lf - 2 * Real.pi * R) * hI
-  have hn : ‖(2 * (Real.pi : ℂ))‖ = 2 * Real.pi := by
-    rw [show (2 * (Real.pi : ℂ)) = ((2 * Real.pi : ℝ) : ℂ) by push_cast; ring,
-      Complex.norm_of_nonneg (by positivity)]
-  have hsub := norm_sub_le Bt Tp
-  calc 2 * Real.pi * ‖Schi χ y - R‖ = ‖(2 * (Real.pi : ℂ)) * (Schi χ y - R)‖ := by
-        rw [norm_mul, hn]
-    _ = ‖Cp + I * (Bt - Tp) + Lf‖ := by rw [key]
-    _ ≤ ‖Cp‖ + ‖I * (Bt - Tp)‖ + ‖Lf‖ := norm_add₃_le
-    _ ≤ ‖Cp‖ + ‖Bt‖ + ‖Tp‖ + ‖Lf‖ := by
-        rw [norm_mul, Complex.norm_I, one_mul]
-        linarith
+  apply Formalism.ZF.norm_sub_le_of_rectangle_identity _ _ _ _ _ _ _ ?_ hrect
+  rw [hS, Formalism.ZF.integral_eq_intervalIntegral_add_compl _ hint T hT]
 
 end Formalism.ZeroFreeDirichlet
 end -- clump:auto
@@ -1481,7 +1409,7 @@ theorem chebyshev_character_explicit_general (hP : PerronChi) (hRS : RectShiftCh
     refine Formalism.ZF.norm_integral_compl_le (fun t : ℝ => Fchi χ y ((σ₀ : ℂ) + t * I)) _ T hAnn hT0 (fun t ht => ?_)
     show ‖Fchi χ y ((σ₀ : ℂ) + t * I)‖ ≤ _
     rw [hσ₀e]
-    exact perron_right_line_bound χ C₀ hR y T t hy1' hT0 ht
+    exact PerronKernel.norm_right_le (negLD χ) hy1' (hT0.trans_le ht) hR
 
   have hHnn : 0 ≤ (C * L ^ 2 + 1) * (Real.exp 1 * y) / T ^ 2 := by
     have hCL : 0 ≤ C * L ^ 2 + 1 := by

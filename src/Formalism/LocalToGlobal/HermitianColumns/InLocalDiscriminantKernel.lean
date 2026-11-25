@@ -1,46 +1,6 @@
 module
 
 public import Formalism.LocalRingCardinality.DataLevel
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -130,18 +90,12 @@ structure StepLevel (hc : CMData F E) (S : HSpace E) (gp : Fin 2 → ℕ) (T f :
   U : Subgroup (GL (Fin S.rank) (E ⊗[F] Af F))
   U_eq : ∀ x, x ∈ U ↔ x ∈ UAf hc S ∧ ∀ v, bc (prV (E := E) v) x ∈ Uloc v
 
-structure StepLevel0 (hc : CMData F E) (S : HSpace E) (gp : Fin 2 → ℕ)
-    (Lb : Submodule (𝓞 E) (Fin S.rank → E)) where
+structure StepLevel0 (_hc : CMData F E) (S : HSpace E) (_gp : Fin 2 → ℕ)
+    (_Lb : Submodule (𝓞 E) (Fin S.rank → E)) where
 
   Uloc : ∀ v : HeightOneSpectrum (𝓞 F), Subgroup (GL (Fin S.rank) (E ⊗[F] v.adicCompletion F))
-  Uloc_lev : ∀ v, Uloc v ≤ levelVL hc.sig S.gram v Lb
-  Uloc_hyp : ∀ v : HeightOneSpectrum (𝓞 F), ((gp 0 : 𝓞 F) ∉ v.asIdeal) →
-    ((gp 1 : 𝓞 F) ∉ v.asIdeal) → Uloc v = levelVL hc.sig S.gram v Lb
-  Uloc_g : ∀ (i : Fin 2) (v : HeightOneSpectrum (𝓞 F)), (gp i : 𝓞 F) ∈ v.asIdeal →
-    ∀ x, InPrinc hc S v (gp i) Lb x → x ∈ Uloc v
 
   U : Subgroup (GL (Fin S.rank) (E ⊗[F] Af F))
-  U_eq : ∀ x, x ∈ U ↔ x ∈ UAf hc S ∧ ∀ v, bc (prV (E := E) v) x ∈ Uloc v
 
 structure ClassTie (hc : CMData F E) (S : HSpace E) (Lb : Submodule (𝓞 E) (Fin S.rank → E))
     (U : Subgroup (GL (Fin S.rank) (E ⊗[F] Af F))) {cls : Type} (stab : cls → Type)

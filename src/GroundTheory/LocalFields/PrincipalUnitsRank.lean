@@ -4,55 +4,11 @@ public import GroundTheory.LocalFields.PrincipalUnitsModule
 public import GroundTheory.LocalFields.ExamplesCharZero
 public import GroundTheory.LocalFields.PadicLogHom
 public import GroundTheory.LocalFields.Integers
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import GroundTheory.LocalFields.Examples
 import GroundTheory.LocalFields.PadicExp
 import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: GroundTheory.LocalFields.PadicLogLinear, GroundTheory.LocalFields.PrincipalUnitsRank
@@ -219,12 +175,6 @@ theorem finite_and_finrank_integer :
     (fun r m ↦ rfl)
   exact congrArg Cardinal.toNat this
 
-theorem padicIntHom_mem_valBall_zero (a : ℤ_[p]) :
-    padicIntHom (K := K) p a ∈ valBall (K := K) 0 := by
-  change normalizedValuation K (padicIntHom K p a) ≤ WithZero.exp (-(0 : ℤ))
-  rw [neg_zero, WithZero.exp_zero, normalizedValuation_le_one_iff]
-  exact padicIntHom_mem p a
-
 
 variable (K) in
 noncomputable def valBallSubmodule (m : ℤ) : Submodule ℤ_[p] K where
@@ -239,10 +189,6 @@ noncomputable def valBallSubmodule (m : ℤ) : Submodule ℤ_[p] K where
     change normalizedValuation K (padicIntHom K p a * x) ≤ WithZero.exp (-m)
     rw [map_mul]
     simpa only [one_mul] using mul_le_mul' ha hx
-
-theorem mem_valBallSubmodule {m : ℤ} {x : K} :
-    x ∈ valBallSubmodule (K := K) p m ↔ x ∈ valBall (K := K) m :=
-  Iff.rfl
 
 
 variable (K) in

@@ -6,49 +6,6 @@ public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.StatementsHaar
 public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.StatementsStabilizerCovolume
 public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.PArchLatticeDiscrete
 public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.PScalingLaw
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -63,7 +20,6 @@ variable {F E : Type*} [Field F] [Field E] [NumberField F] [NumberField E] [Alge
   [Algebra.IsQuadraticExtension F E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E]
 variable {W : Type*} [AddCommGroup W] [Module E W] {ι : Type*} [Fintype ι] [DecidableEq ι]
 
-
 omit [NumberField F] [NumberField E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] in
 theorem invApply_mul {h : HermitianForm F E W} {v : Basis ι E W} (a b : archUnitary h v)
     (y : InfinitePlace E → ι → ℂ) : invApply (a * b) y = invApply b (invApply a y) := by
@@ -71,12 +27,10 @@ theorem invApply_mul {h : HermitianForm F E W} {v : Basis ι E W} (a b : archUni
   simp only [invApply, _root_.mul_inv_rev, Subgroup.coe_mul, Pi.mul_apply, Units.val_mul,
     Matrix.mulVec_mulVec]
 
-
 omit [NumberField F] [NumberField E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] in
 theorem invApply_of_mem_vecFixGroup {h : HermitianForm F E W} {v : Basis ι E W} {x₀ : W}
     {x : archUnitary h v} (hx : x ∈ vecFixGroup h v x₀) : invApply x (vecAt v x₀) = vecAt v x₀ :=
   funext fun w => mem_vecFixGroup.1 (inv_mem hx) w
-
 
 omit [NumberField F] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] in
 theorem len_invApply_of_mem_stab {h : HermitianForm F E W} {v : Basis ι E W} (M : Majorant h v)
@@ -94,7 +48,6 @@ theorem len_invApply_of_mem_stab {h : HermitianForm F E W} {v : Basis ι E W} (M
   simp only [invApply]
   rw [← hA_def, Matrix.star_mulVec, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec,
     Matrix.mulVec_mulVec, hA']
-
 
 omit [NumberField F] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] in
 theorem vecStabGroup_le_vecFixGroup [NumberField F] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E]

@@ -5,40 +5,6 @@ public import Formalism.LocalToGlobal.IndefiniteReal.LinksW
 public import Formalism.LocalRingCardinality.DataRRMetric
 public import Formalism.LocalToGlobal.IndefiniteReal.ConjSubConjSub
 public import Formalism.LocalToGlobal.Divisibility.DefGroupLemmas
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -52,8 +18,6 @@ open scoped TensorProduct InnerProductSpace
 open IsDedekindDomain NumberField MeasureTheory
 
 namespace Formalism.IndefR.RecTie
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 section Zero
 
@@ -183,34 +147,20 @@ structure RecReal (R : RealDat D A Ks) (F : Face D A) (tupT : D.what₂.Tup → 
     (labPi : E.Pi → A.fam.base.Ix) {n : ℕ} (PY : principalLevelFrame.RowPsi (Yc D 0) n) (PW : ∀ i, principalLevelFrame.RowPsi (Wc D i) n)
     (eFT : D.what₂.FT ≃ principalLevelFrame.FTR R.θ PY (R.MY 0) (fun b => levS _ (R.βY 0) (R.dat0 (R.levR F b)))
       (fun b => levChi _ (R.βY 0) (R.dat0 (R.levR F b))) (fun _ => R.e0))
-    (piOf : E.Pi → HeightOneSpectrum (𝓞 D.host.E) → List ℤ → ℂ) (ι : ∀ i, ↥(GfC (Yc D 0)) →* ↥(GfC (Wc D i))) (nch : NChoice D)
+    (piOf : E.Pi → HeightOneSpectrum (𝓞 D.host.E) → List ℤ → ℂ) (_ι : ∀ i, ↥(GfC (Yc D 0)) →* ↥(GfC (Wc D i))) (nch : NChoice D)
     (Tp : Formalism.L2.Host.TupTied D R.C nch) : Prop where
 
   base : R.BaseW F
 
   tied : RecTied D X0 (toChainReal R F tupT hm hTop) Ish I0 (toLiftReal R F tupT hm hTop hinj) IL K
 
-  prtE : ∀ π, Ish.prt π = (principalLevelFrame.isotE R.θ PY (R.MY 0) (levS _ (R.βY 0) (R.dat0 (R.levR F true)))
-    (levChi _ (R.βY 0) (R.dat0 (R.levR F true))) R.e0 (principalLevelFrame.rowRepR R.θ (eFT π))).map
-      (PiTensorProduct.lift : Mult.MMap (R.MY 0) ≃ₗ[ℂ] _).toLinearMap
-
-  prtE0 : ∀ π, I0.prt π = (principalLevelFrame.isotE R.θ PY (R.MY 0) (levS _ (R.βY 0) (R.dat0 (R.levR F false)))
-    (levChi _ (R.βY 0) (R.dat0 (R.levR F false))) R.e0 (principalLevelFrame.rowRepR R.θ (eFT π))).map
-      (PiTensorProduct.lift : Mult.MMap (R.MY 0) ≃ₗ[ℂ] _).toLinearMap
-
   prtWE : ∀ i π, IL.prtW i π = (principalLevelFrame.isotL R.θ (PW i) (R.MW i (sg0 D A))
     (levS _ (R.βW i) (R.datWp i (R.levL F false (sg0 D A)))) (levChi _ (R.βW i) (R.datWp i (R.levL F false (sg0 D A))))
     (R.eWf i (sg0 D A)) (principalLevelFrame.rowRepR R.θ (eFT π))).map (PiTensorProduct.lift : Mult.MMap (R.MW i (sg0 D A)) ≃ₗ[ℂ] _).toLinearMap
 
-  xi : ∀ μ, Used0 D μ → K.xi μ = R.toLevCh.xi (tupT μ)
-
   tupXi : ∀ μ, Used0 D μ → R.toLevCh.xiH (tupT μ) = Tp.xi μ
 
   tupAt : ∀ w, tupT (D.what₂.muAt w) = R.mu (D.plEq w)
-
-  isomFin : ∀ i, principalLevelFrame.IsIsomFin (ι i)
-
-  frameMatch : ∀ i, principalLevelFrame.FrameMatch PY (PW i) (ι i)
 
 end FromLinks
 

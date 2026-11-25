@@ -2,48 +2,7 @@ module
 
 public import GroundTheory.AutomorphicForms.HilbertSchmidt
 public import Mathlib.Analysis.Normed.Operator.Compact.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -58,20 +17,6 @@ variable {𝕜 : Type*} [RCLike 𝕜]
   {H : Type*} [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H]
   {K : Type*} [NormedAddCommGroup K] [InnerProductSpace 𝕜 K] [CompleteSpace K]
 
-
-omit [CompleteSpace H] [CompleteSpace K] in
-theorem isCompactOperator_innerSL_smulRight (e : H) (y : K) :
-    IsCompactOperator ((innerSL 𝕜 e).smulRight y) := by
-  refine ⟨(fun c : 𝕜 => c • y) '' Metric.closedBall 0 ‖e‖,
-    (isCompact_closedBall 0 ‖e‖).image (continuous_id.smul continuous_const), ?_⟩
-  refine Filter.mem_of_superset (Metric.ball_mem_nhds (0 : H) one_pos) fun x hx => ?_
-  refine ⟨⟪e, x⟫_𝕜, ?_, by simp⟩
-  rw [Metric.mem_closedBall, dist_zero_right]
-  rw [Metric.mem_ball, dist_zero_right] at hx
-  calc ‖⟪e, x⟫_𝕜‖ ≤ ‖e‖ * ‖x‖ := norm_inner_le_norm e x
-    _ ≤ ‖e‖ * 1 := by gcongr
-    _ = ‖e‖ := mul_one _
-
 def hsTruncation {ι : Type*} (b : HilbertBasis ι 𝕜 H) (T : H →L[𝕜] K) (F : Finset ι) :
     H →L[𝕜] K :=
   ∑ i ∈ F, (innerSL 𝕜 (b i)).smulRight (T (b i))
@@ -79,13 +24,9 @@ def hsTruncation {ι : Type*} (b : HilbertBasis ι 𝕜 H) (T : H →L[𝕜] K) 
 omit [CompleteSpace H] [CompleteSpace K] in
 theorem isCompactOperator_hsTruncation {ι : Type*} (b : HilbertBasis ι 𝕜 H) (T : H →L[𝕜] K)
     (F : Finset ι) : IsCompactOperator (hsTruncation b T F) := by
-  classical
-  unfold hsTruncation
-  induction F using Finset.induction_on with
-  | empty => simpa using isCompactOperator_zero
-  | insert a F haF ih =>
-    rw [Finset.sum_insert haF, FunLike.coe_add]
-    exact (isCompactOperator_innerSL_smulRight _ _).add ih
+  exact (compactOperator (RingHom.id 𝕜) H K).sum_mem fun i _ =>
+    (isCompactOperator_of_locallyCompactSpace_dom (innerSL 𝕜 (b i))).continuous_comp
+      (continuous_id.smul continuous_const)
 
 omit [CompleteSpace H] [CompleteSpace K] in
 theorem sub_hsTruncation_apply_basis {ι : Type*} [DecidableEq ι] (b : HilbertBasis ι 𝕜 H)

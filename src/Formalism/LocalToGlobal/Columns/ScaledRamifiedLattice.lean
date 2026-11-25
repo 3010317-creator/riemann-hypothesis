@@ -3,44 +3,6 @@ module
 public import Formalism.LocalToGlobal.Columns.ColForms
 public import Formalism.LocalToGlobal.Columns.DecoFin
 public import Formalism.LocalToGlobal.Columns.AlgebraMapMemMaximalIdealPowIff
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -72,40 +34,6 @@ theorem Deco.IsDnA.act {P : ST} {q : 𝓞 E} {a : 𝓞 E ⧸ P.1.asIdeal} {d d' 
     rw [equiv_osmul]
     exact h2 _ ((mem_gmap _ _ _).1 he) hfe
 
-def DecoSet.dnSetA (P : ST) (q : 𝓞 E) (a : 𝓞 E ⧸ P.1.asIdeal) (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) :
-    Set (DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) :=
-  {d' | Deco.IsDnA P q a d.1 d'.1}
-
-theorem DecoSet.smul_mem_dnSetA (x : UF E n × GLG (E := E) (n := n) (SG := SG)) (P : ST) (q : 𝓞 E) (a : 𝓞 E ⧸ P.1.asIdeal)
-    (d d' : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) : x • d' ∈ (x • d).dnSetA P q a ↔ d' ∈ d.dnSetA P q a := by
-  constructor
-  · intro h
-    have := Deco.IsDnA.act h (x⁻¹).1.2 (x⁻¹).2
-    have e1 : ((x • d).1.act (x⁻¹).1.1 (x⁻¹).2) = (x⁻¹ • x • d).1 := rfl
-    have e2 : ((x • d').1.act (x⁻¹).1.1 (x⁻¹).2) = (x⁻¹ • x • d').1 := rfl
-    rw [e1, e2, inv_smul_smul, inv_smul_smul] at this
-    exact this
-  · intro h
-    exact Deco.IsDnA.act h x.1.2 x.2
-
-theorem DecoSet.dnSetA_finite (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) (P : ST) (q : 𝓞 E) (a : 𝓞 E ⧸ P.1.asIdeal) :
-    (d.dnSetA P q a).Finite := by
-  by_cases h : (d.1.dnN P).FG
-  · refine (DecoSet.finite_fibre (ST := ST) (SG := SG) (d.1.dnN P) h).subset ?_
-    intro d' hd'
-    have := congrArg Deco.N hd'.1
-    exact this
-  · have he : d.dnSetA P q a = ∅ := by
-      ext d'
-      simp only [Set.mem_empty_iff_false, iff_false]
-      intro hd'
-      apply h
-      have h1 : d'.1.N = d.1.dnN P := congrArg Deco.N hd'.1
-      rw [← h1]
-      exact d'.2.lat.fg
-    rw [he]
-    exact Set.finite_empty
-
 end MovesA
 
 section Ops
@@ -131,15 +59,6 @@ def UG (P : ST) (q : 𝓞 X.E) : Module.End X.K (formGSD C Λ).EqFun :=
     (fun g d' d => by
       rw [Set.Finite.mem_toFinset, Set.Finite.mem_toFinset]
       exact DecoSet.smul_mem_upSet (FormG.incl Λ g) P q d' d) (fun _ _ => rfl)).op
-
-def DaG (P : ST) (q : 𝓞 X.E) (a : 𝓞 X.E ⧸ P.1.asIdeal) : Module.End X.K (formGSD C Λ).EqFun :=
-  (LocOp.ofNbr (S := formGSD C Λ) (S' := formGSD C Λ) (MonoidHom.id _)
-    (fun d => (DecoSet.dnSetA_finite d P q a).toFinset) LinearMap.id
-    (fun g d' d => by
-      rw [Set.Finite.mem_toFinset, Set.Finite.mem_toFinset]
-      exact DecoSet.smul_mem_dnSetA (FormG.incl Λ g) P q a d' d) (fun _ _ => rfl)).op
-
-def DG (P : ST) (q : 𝓞 X.E) : Module.End X.K (formGSD C Λ).EqFun := DaG C Λ P q 1
 
 end Ops
 

@@ -5,47 +5,6 @@ public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.ImportsMoreL
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.ImportsTerBis
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.ImportsExtraBis
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.ImportsMoreMore
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -57,26 +16,13 @@ variable {S : Type} [CommRing S] {K : Type} {ι : K → Type} {Ω : Type} [Field
 
 theorem cellSec_mono [∀ k, Fintype (ι k)] (y : (Σ k, ι k) → Ω) (γ : K → ℤ) {I I' : ∀ k, Finset (ι k)} (h : ∀ k, I k ⊆ I' k)
     (hI' : CellMeets y I') : cellSec S y γ I ≤ cellSec S y γ I' := by
-  classical
-  unfold cellSec
-  rw [ite_eq_left hI']
-  split_ifs with hI
-  · refine Submodule.span_mono ?_
-    rintro z ⟨g, t, a, ht, hta, hγ, hg, rfl⟩
-    refine ⟨g, t, a, ?_, hta, hγ, hg, rfl⟩
-    refine Submonoid.closure_mono ?_ ht
-    rintro f ⟨k, i, hi, rfl⟩
-    exact ⟨k, i, h k hi, rfl⟩
-  · exact bot_le
+  apply RowLocCover.cellSec_mono <;> assumption
 
 variable [LinearOrder K] [∀ k, LinearOrder (ι k)]
 
 theorem subset_baseCell (k₀ : K) {N : ℕ} (e : ι k₀ ≃ Fin (N + 1)) (J : Finset (Fin (N + 1)))
     (I : ∀ k, Finset (ι k)) (k : K) : I k ⊆ baseCell k₀ e J I k := by
-  unfold baseCell
-  by_cases hk : k = k₀
-  · subst hk; rw [Function.update_self]; exact Finset.subset_union_left
-  · rw [Function.update_of_ne hk]
+  apply RowLocCover.subset_baseCell
 
 theorem baseCell_mono (k₀ : K) {N : ℕ} (e : ι k₀ ≃ Fin (N + 1)) {J J' : Finset (Fin (N + 1))}
     {I I' : ∀ k, Finset (ι k)} (hJ : J ⊆ J') (hI : ∀ k, I k ⊆ I' k) (k : K) :

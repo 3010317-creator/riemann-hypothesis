@@ -16,7 +16,6 @@ public import Mathlib.GroupTheory.FiniteAbelian.Basic
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TateIsoPullbackEquiv
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliFiniteSurjectiveOverGenericFamily
-public import Development.AutomorphicSpectrum.Statements.GeometryStatements.LevelCoverSt
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointNormalCoords
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -70,6 +69,27 @@ import Mathlib.Tactic.Linter.Style
 import Mathlib.RingTheory.Henselian
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveOverRestrictInt
+
+section
+@[expose] public section
+
+namespace GlobalTheory.CompanionTheory.Ar.XR
+
+open AlgebraicGeometry CategoryTheory MonObj NumberField
+open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.CompanionTheory.Ar
+
+def LevelCoverSt : Prop :=
+  ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Geo.Tor.Level H)
+    (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (e : Y.X), e ∈ genericPoints Y.X →
+    ∀ N : ℕ, 1 ≤ N → ∃ (Ω : Type) (_ : Field Ω) (_ : CharZero Ω) (n : ℕ) (x : Fin n → Ω) (M : PModel ℤ x)
+      (f : M.X ⟶ Y.X) (y : Sp Ω ⟶ Xo.XF c) (t : SAB H M.X) (_ : SABMap t Y.t f) (z : Ωˣ)
+      (ev : D.La → (Over.mk M.ξ ⟶ t.G)),
+      Flat.NormalCpt M.ξ ∧ IsFinite f ∧ f (GlobalTheory.CompanionTheory.Ar.genPt M.ξ) = e ∧ M.ξ ≫ f = y ≫ Y.j ∧ IsFullLevelAt D t M.ξ N z ev ∧
+      FullTorsion t.G M.ξ N ∧ ∀ q : Cpt M.ξ, unitAt M.ξ q (z : Ω)
+
+end GlobalTheory.CompanionTheory.Ar.XR
+end
+
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsPrimitiveRootOfLevel, Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFiniteNormalModelOfResidueFinite, Development.WeilBound.CoreStatements.HodgeTatePoints.MgTate, Development.AutomorphicSpectrum.Proofs.GeometryProofs.TateIsoBaseChange, Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFullLevelFiniteExtension, Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullLevelStructureProperties, Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullLevelStructurePullback, Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullLevelGenericCover, Development.AutomorphicSpectrum.Proofs.GeometryProofs.LevelCoverStHolds, Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFiniteExtensionPrimes
@@ -471,7 +491,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.TateIsoBaseChange =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFullLevelFiniteExtension =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFullLevelFiniteExtension", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFullLevelAt\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TateIsoBaseChange\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TateIsoPullbackEquiv\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.GroupTheory.FiniteAbelian.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFullLevelFiniteExtension", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFullLevelAt\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TateIsoBaseChange\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TateIsoPullbackEquiv\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.GroupTheory.FiniteAbelian.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.SpMapComp\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -526,10 +546,6 @@ theorem exists_finite_subfield {F k : Type} [Field F] [Field k] [Algebra F k] [A
   change Spec.map _ ≫ Spec.map f' ≫ hU.fromSpec = _
   rw [← hf, ← Spec.map_comp_assoc]
   rfl
-
-theorem spMap_comp_spMap {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) := by
-  simp only [spMap, ← Spec.map_comp]; rfl
 
 theorem exists_reps (M : Type) [AddCommGroup M] [Module.Finite ℤ M] (N : ℕ) (hN : 0 < N) :
     ∃ (T : Type) (_ : Finite T) (r : M → T) (u : T → M), ∀ a, ∃ b, a = u (r a) + N • b := by
@@ -603,11 +619,11 @@ theorem exists_of_tateIso {D : Datum H} {l : Geo.Tor.Level H} {Xo : Moduli D l} 
   have heΩ : ∀ τ, spMap (algebraMap Ω L) ≫ eΩ τ = g (u τ) := fun τ => by
     rw [← he τ]
     simp only [eΩ]
-    rw [← Category.assoc, spMap_comp_spMap]
+    rw [← Category.assoc, GlobalTheory.LevCover.spMap_comp'']
     rfl
   haveI := _root_.PositivityTheory.HtPt.Mg.epi_spMap (algebraMap Ω L)
   have hover : ∀ τ, eΩ τ ≫ q = spMap (algebraMap K Ω) := fun τ => by
-    rw [← cancel_epi (spMap (algebraMap Ω L)), ← Category.assoc, heΩ, hg, spMap_comp_spMap]
+    rw [← cancel_epi (spMap (algebraMap Ω L)), ← Category.assoc, heΩ, hg, GlobalTheory.LevCover.spMap_comp'']
     rfl
   have hpull : ∀ τ, eΩ τ ≫ pullback.fst _ _ ≫ Y.oF.t.G.hom = spMap (algebraMap K Ω) ≫ y := fun τ => by
     calc eΩ τ ≫ pullback.fst _ _ ≫ Y.oF.t.G.hom = eΩ τ ≫ q ≫ y := congrArg (eΩ τ ≫ ·) pullback.condition
@@ -633,7 +649,7 @@ theorem exists_of_tateIso {D : Datum H} {l : Geo.Tor.Level H} {Xo : Moduli D l} 
   have hx : spMap i ≫ spMap (algebraMap K Ω) ≫ y ≫ Y.j =
       (spMap i' ≫ spMap (algebraMap K L) ≫ y) ≫ (Y.jQ ≫ pullback.fst _ _) := by
     have h1 : spMap i ≫ spMap (algebraMap K Ω) = spMap i' ≫ spMap (algebraMap K L) := by
-      rw [spMap_comp_spMap, spMap_comp_spMap, ← hcomp]
+      rw [GlobalTheory.LevCover.spMap_comp'', GlobalTheory.LevCover.spMap_comp'', ← hcomp]
       rfl
     rw [← Category.assoc, h1]
     simp only [Category.assoc]
@@ -653,7 +669,7 @@ theorem exists_of_tateIso {D : Datum H} {l : Geo.Tor.Level H} {Xo : Moduli D l} 
     rw [← hev, (hI' N hN0).2 a, h2]
     show _ = spMap i ≫ eΩ (r a) ≫ pullback.fst _ _ ≫ Y.m.φ
     simp only [Category.assoc]
-    rw [← Category.assoc (spMap i'), spMap_comp_spMap, hcomp]
+    rw [← Category.assoc (spMap i'), GlobalTheory.LevCover.spMap_comp'', hcomp]
 
 end GlobalTheory.CompanionTheory.Ar.XR.LevelPt
 

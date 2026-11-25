@@ -1,46 +1,7 @@
 module
 
 public import Mathlib.MeasureTheory.Function.LpSeminorm.Defs
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 public import Mathlib.Basic.Real.ConjExponents
 public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 
@@ -49,7 +10,7 @@ public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 namespace GroundTheory.Automorphic.L2Kernel
 
 open MeasureTheory
-open scoped ENNReal InnerProductSpace ComplexConjugate
+open scoped ENNReal
 
 noncomputable section
 
@@ -70,26 +31,13 @@ theorem lintegral_mul_sq_le {α : Type*} [MeasurableSpace α] (μ : Measure α) 
 
 theorem eLpNorm_two_sq {α E : Type*} [MeasurableSpace α] [NormedAddCommGroup E] (μ : Measure α)
     (g : α → E) : eLpNorm' g 2 μ ^ 2 = ∫⁻ a, ‖g a‖ₑ ^ 2 ∂μ := by
-  rw [eLpNorm'_eq_lintegral_eNorm, ← ENNReal.rpow_natCast, ← ENNReal.rpow_mul]
-  norm_num [ENNReal.rpow_two]
+  simpa only [ENNReal.rpow_two] using
+    (lintegral_rpow_eNorm_eq_rpow_eLpNorm' (f := g) (μ := μ) zero_lt_two).symm
 
 theorem lt_top_of_sq_lt_top {a : ℝ≥0∞} (h : a ^ 2 < ∞) : a < ∞ := by
-  by_contra hc
-  rw [not_lt, top_le_iff] at hc
-  rw [hc, ENNReal.top_pow two_ne_zero] at h
-  exact lt_irrefl _ h
+  simpa only [ENNReal.pow_lt_top_iff, OfNat.ofNat_ne_zero, or_false] using h
 
 end SlopeTestRemainingChoices
-
-variable {𝕜 : Type*} [RCLike 𝕜]
-  {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y] {μ : Measure X} {ν : Measure Y}
-  [SFinite μ] [SFinite ν]
-
-section Kernel
-
-variable (k : Lp 𝕜 2 (μ.prod ν))
-
-end Kernel
 
 end
 

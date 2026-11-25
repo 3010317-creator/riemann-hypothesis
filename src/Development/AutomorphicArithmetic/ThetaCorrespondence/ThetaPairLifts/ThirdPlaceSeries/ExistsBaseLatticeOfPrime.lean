@@ -687,9 +687,6 @@ variable {hL : _root_.UpperTheory.Zero.LLC.RecTExists} (hF : GlobalTheory.Publis
   (C : _root_.GlobalTheory.HeightCounting.CGTrueT hL D T)
 end True
 end GlobalTheory.HeightCounting.Blocks
-namespace GlobalTheory.HeightCounting
-open Formalism.BasicNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.L2.Host GlobalTheory.CuspRep GlobalTheory.WeilDeligne NumberField IsDedekindDomain Polynomial
-end GlobalTheory.HeightCounting
 section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
@@ -764,7 +761,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 section G
 variable {E Ω : Type} [Field E] [NumberField E] [IsCMField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] {l : ℕ} [Fact l.Prime] {a : ℕ}
 end G
-theorem galHodge0_of_cgTrue (sw : _root_.UpperTheory.One.M.TrivialCondition) (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (hF : GlobalTheory.Published.AutomorphicFormsFiniteGL)
+theorem galHodge0_of_cgTrue (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (hF : GlobalTheory.Published.AutomorphicFormsFiniteGL)
     (hG : _root_.UpperTheory.GalS.CuspUAlt) (hB : GlobalTheory.Published.DeRhamPotSemistable) (hGL : _root_.UpperTheory.GalS.CarUAlt)
     {D : D7} {T : WDTie D.nd D.naut} (C : _root_.GlobalTheory.HeightCounting.CGTrueT hL D T) : UpperTheory.GalS.GalHodge0 D T := by
   intro l _ ι π s hc hr
@@ -848,7 +845,7 @@ theorem galHodge0_of_cgTrue (sw : _root_.UpperTheory.One.M.TrivialCondition) (hL
       exact UpperTheory.GalS.ncW_of_nc T hm
     have hgood : UpperTheory.Zero.LLC.Good (⟨D.R.r, ParLaws.toCl ((CG.mk π₀).loc w)⟩ : IrrGL (k := w.adicCompletion D.host.E)) := by
       rw [hmk]
-      exact _root_.UpperTheory.One.M.New.cgGood sw C _ π w
+      exact _root_.UpperTheory.One.M.New.cgGood C _ π w
     have hs2 : 2 * s = ((D.R.r : ℤ) - 1 - wt : ℤ) := by
       push_cast
       linarith
@@ -926,7 +923,7 @@ open GlobalTheory GlobalTheory.WeilDeligne GlobalTheory.CuspRep GlobalTheory.Loc
 open GlobalTheory.Mem.Chr hiding HChar
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 namespace UpperTheory.GalS
-theorem sep_conj_g_alt (sw : _root_.UpperTheory.One.M.TrivialCondition) (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (hF : GlobalTheory.Published.AutomorphicFormsFiniteGL) {D : D7}
+theorem sep_conj_g_alt (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (hF : GlobalTheory.Published.AutomorphicFormsFiniteGL) {D : D7}
     {T : GlobalTheory.RowTie.WDTie D.nd D.naut} (C : _root_.GlobalTheory.HeightCounting.CGTrueT hL D T) {a : ℕ} (π : D.naut.CG a) (hc : D.naut.csd π) {w w' : PlE D.host}
     (hw : IsConjPl D.host w w') (k : Sep D.nd D.naut (D.naut.locG π w)) : Sep D.nd D.naut (D.naut.locG π w') := by
   have := host_isCMField D.host
@@ -949,7 +946,7 @@ theorem sep_conj_g_alt (sw : _root_.UpperTheory.One.M.TrivialCondition) (hL : _r
   obtain ⟨σ, hσ, -⟩ := LocEx.exists_isLocComp hF _ a π₀ w
   have good : ∀ (v : PlE D.host) (τ : SmIrr (GL (Fin a) (v.adicCompletion D.host.E))), π₀.IsLocComp v τ →
       UpperTheory.Zero.LLC.Good (cls (ParLaws.toRep τ)) := fun v τ hτ => by
-    have g := _root_.UpperTheory.One.M.New.cgGood sw C _ π v
+    have g := _root_.UpperTheory.One.M.New.cgGood C _ π v
     have h1 : (CG.mk π₀).IsLoc v (Quotient.mk _ τ) := hτ
     rw [← hmk, CG.IsLoc.unique _ a _ v _ _ h1.loc h1] at g
     exact g
@@ -1087,7 +1084,7 @@ end G
 theorem _root_.UpperTheory.GalS.ghOf'_alt (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (hF : GlobalTheory.Published.AutomorphicFormsFiniteGL)
     (hG : _root_.UpperTheory.GalS.CuspUAlt) (hB : GlobalTheory.Published.DeRhamPotSemistable) (hGL : _root_.UpperTheory.GalS.CarUAlt)
     (D : D7) (T : GlobalTheory.RowTie.WDTie D.nd D.naut) (C : _root_.GlobalTheory.HeightCounting.CGTrueT hL D T) (hl : LabTrue D T) : UpperTheory.GalS.GalHodgeN D T :=
-  ⟨(_root_.GlobalTheory.HodgeOfTrue.galHodge0_of_cgTrue trivial) hL hF hG hB hGL C, GlobalTheory.T.full_degree_label_forces_trivial_wild_inertia D T hl, fun π hc _ _ hw k => (_root_.UpperTheory.GalS.sep_conj_g_alt trivial) hL hF C π hc hw k,
+  ⟨_root_.GlobalTheory.HodgeOfTrue.galHodge0_of_cgTrue hL hF hG hB hGL C, _root_.GlobalTheory.WildFull.main D T hl, fun π hc _ _ hw k => _root_.UpperTheory.GalS.sep_conj_g_alt hL hF C π hc hw k,
     fun _ S π w ht => _root_.UpperTheory.GalS.tm_rankOne_alt hL C S π w ht⟩
 end GlobalTheory.HodgeOfTrue
 namespace GlobalTheory.GalAway
@@ -1372,17 +1369,6 @@ open scoped TensorProduct InnerProductSpace ComplexOrder
 attribute [local instance] Formalism.BasicNotions.Host.cmStar Formalism.IndefR.principalLevelFrame.instCMHostI
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.Mem.R3.Tr
 
-theorem _root_.GlobalTheory.T.liftHermitianLattices_replacedStages_eq :
-    ∀ (K : Ctx) (B : Base) (f : Fr B.toPre) (T : TwDat B) (w : ColW B f T)
-      (Z : w.Lt) (hX : B.fields.Ok) (Wt : Set B.places.Pl) (p0 : BaseLevelRowSide (w.D Z))
-      (r : RowsAre (w.st Z) w.I hX T Wt (Equiv.refl _) p0) (S' : SStage B w.C Z.W)
-      (N : ∀ u, Submodule (𝓞 B.LL) (Z.V.div.Nu u).V) (h : B.Word → ℝ)
-      (r' : RowsAre (w.st (SRe.upL Z S' N h)) w.I hX T Wt (Equiv.refl _)
-        (Tr.baseLevelRowSideTransport (Up.refUp Z S' N h) p0)),
-      r'.z = GlobalTheory.Mem.R3.Rw.Mv.cpDat (Up.refUp Z S' N h).to (Up.refUp Z S' N h).same r.z →
-        HEq r'.Z.jW r.Z.jW → ∀ Y : DivX (w.D (SRe.upL Z S' N h)),
-          MjAre r'.Z Y → MjAre r.Z (Up.divBack Y) :=
-  @GlobalTheory.Mem.R3.Rw.Up.mjAre_back
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftHermitianLatticesReplacedStagesEqStatement =====
@@ -1537,7 +1523,7 @@ theorem rows_up_at : ∀ (K : Ctx) (B : Base) (f : Fr B.toPre) (T : TwDat B) (w 
       etaF := t.etaF
       rowInt := rowInt_up S' N h t.rowInt
       idx := fun Y hY => idxDefs_up (Z := Z) (S' := S') (N := N) (h := h) Y
-        (t.idx (divBack Y) (GlobalTheory.T.liftHermitianLattices_replacedStages_eq K B f T w Z t.hX Wt p0 t.r S' N h r' rfl h13 Y hY)) }
+        (t.idx (divBack Y) (GlobalTheory.Mem.R3.Rw.Up.mjAre_back K B f T w Z t.hX Wt p0 t.r S' N h r' rfl h13 Y hY)) }
   have hs : RowsSame t t' :=
     ⟨rfl, rfl, HEq.rfl, HEq.rfl, (HEq.refl t.r.z.cG), h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12, h13, h14, h15⟩
   refine ⟨t', hs, (by with_unfolding_all exact ((HEq.refl (geoHalf (a := ⟨Z.W, Z.V, Z.S, Z.N, Z.G⟩) (SRe.upL Z S' N h) (iK := t.r.z.alg) t.r.z.geo)) :)), ?_, GlobalTheory.T.rowCompatibilities_transport_replacedStages K B f T w Z Wt p0 t S' N h t' hs⟩

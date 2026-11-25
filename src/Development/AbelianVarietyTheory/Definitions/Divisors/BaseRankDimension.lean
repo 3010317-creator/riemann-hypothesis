@@ -47,8 +47,6 @@ open GlobalTheory.EX GlobalTheory.EX.OB
 
 namespace GlobalTheory.Fc.Ind
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 protected abbrev zsc {D : D7} {O : Obj D} (P : RowSideFamily O.ex) (Del h0 : ℕ) (c : ℝ) :
     DefSub P.A3.fam3.amb3 → IndefScale P.A3.fam3.base3 :=
   GlobalTheory.Fc.zsc P Del h0 c
@@ -75,10 +73,6 @@ structure Part (D : D7) (O : Obj D) (c : ℝ) : Type 1 where
 def PFire : BdP Part := fun _ _ _ b =>
   b.B.Q.Rl.toRealDat.ExAt ∧ JEvBar b.B.T b.B.Q.Rl.toRealDat b.B.κ ∧ GeoAct b.B.T b.B.Q.Rl.toRealDat b.B.κ b.B.v₀ ∧
     EvInj b.B.T b.B.Q.Rl.toRealDat b.B.v₀
-
-def PRB : BdP Part := fun _ _ _ b => RowsB b.B
-
-def PNmj : BdP Part := fun _ O _ b => NX.NMjT b.B.Q b.B.Q.cG b.B.Q.Sx b.B.Q.nexp O.ex.nch
 
 def L3 (C CH : ℝ) : BdP Part := fun _ _ _ b => ((b.B.Q.Rl.toCx3 b.B.Q.F).data b.B.Q.F.cr false).L3 (b.B.Q.Rl.num b.B.Q.F C CH)
 

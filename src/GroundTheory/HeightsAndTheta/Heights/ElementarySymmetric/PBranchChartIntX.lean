@@ -21,55 +21,12 @@ public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PDiscrimi
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PFibreBound
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PPrimitiveElementFibres
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PRankDeficientFibreInfinite
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Separation.CompletelyRegular
-import Mathlib.Topology.Sheaves.Init
 import Mathlib.Analysis.Calculus.FDeriv.OfCompLeft
 import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
 import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-import Mathlib.Tactic.Linter.Style
 import ReciprocityTheory.AnalyticForms.AnalyticCharts.NullZero
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Order.CompletePartialOrder
@@ -94,14 +51,9 @@ noncomputable section
 namespace BranchChartInt
 
 theorem analyticOnNhd_of_differentiableOn {k m : ℕ} {U : Set (Fin k → ℂ)} {f : (Fin k → ℂ) → Fin m → ℂ}
-    (hU : IsOpen U) (hf : DifferentiableOn ℂ f U) : AnalyticOnNhd ℂ f U := by
-  refine analyticOnNhd_pi_iff.2 fun j => ?_
-  have hj : DifferentiableOn ℂ (fun t => f t j) U := differentiableOn_pi.1 hf j
-  refine IndefiniteRowSideFullHecke.ComplexSets.analyticOnNhd_of_continuousOn_of_separately hU hj.continuousOn fun w hw i => ?_
-  have hw : DifferentiableAt ℂ (fun t => f t j) (Function.update w i (w i)) := by
-    rw [Function.update_eq_self]
-    exact (hj w hw).differentiableAt (hU.mem_nhds hw)
-  exact hw.comp (w i) (hasFDerivAt_update w (w i)).differentiableAt
+    (hU : IsOpen U) (hf : DifferentiableOn ℂ f U) : AnalyticOnNhd ℂ f U :=
+  analyticOnNhd_pi_iff.2 fun j =>
+    ReciprocityTheory.AnForm.Osgood.osgood k U _ hU (differentiableOn_pi.1 hf j)
 
 theorem differentiable_mulVec {d n : ℕ} (A : Matrix (Fin d) (Fin n) ℂ) :
     Differentiable ℂ (fun x : Fin n → ℂ => A *ᵥ x) :=

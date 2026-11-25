@@ -50,7 +50,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Number
 
 structure NAllC (D : D7) (C : NChoice D) where
   gal : NGalTied D
-  n : NormalizedHeckeDataPlaceholder D
   loc : LocTied D
   data : NormalizedDataCompatibility D
   cover : NormalizedLocalCompatibility D gal.mt
@@ -108,16 +107,6 @@ def GoodCl (D : D7) (C : NChoice D) (I : TwIn D) : Prop :=
     ExpGood D I (avD D (avDesign D) (C.twI w)) (C.twI w) ⟨C.Q w, C.k' w, BlochKatoReduction.Gen.psiAt (C.sd w) (C.psi' w)⟩
 
 variable {D : D7} {C : NChoice D} {I : TwIn D}
-
-def NAllC.toAll (A : NAllC D C) (h : GoodCl D C I) : NormalizedTwistCompatibility D C I :=
-  { A with
-    choice := ⟨A.choice.twI_conj, A.choice.sd_place, A.choice.emb_side, A.choice.sd_conj, A.choice.one, h, A.choice.conj⟩ }
-
-def NAllC.ofAll (A : NormalizedTwistCompatibility D C I) : NAllC D C :=
-  { A with
-    choice := ⟨A.choice.twI_conj, A.choice.sd_place, A.choice.emb_side, A.choice.sd_conj, A.choice.one, A.choice.conj⟩ }
-
-theorem goodCl_of_all (A : NormalizedTwistCompatibility D C I) : GoodCl D C I := A.choice.good
 
 end
 

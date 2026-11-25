@@ -3,53 +3,12 @@ module
 public import GroundTheory.HeightsAndTheta.Heights.ChowForms.Statements
 public import GroundTheory.ArithmeticGeometry.AbelianVarieties.JacobianSmoothness.RingKrullDimLeRingKrullDimQuotientAddOne
 public import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.LowerBoundConditional
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.GradedAlgebra.Radical
 import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -109,27 +68,11 @@ theorem ConeDimComponent.proof_closed : ConeDimComponent.Statement := by
   rw [hquot] at hform hdrop
   change ringKrullDim B = _ at hdim
   rw [hdim] at hform hdrop
-  obtain ⟨y, hy⟩ : ∃ y : ℕ∞, ringKrullDim (MvPolynomial (Fin n) F ⧸ W) = y := by
-    cases h : ringKrullDim (MvPolynomial (Fin n) F ⧸ W) with
-    | bot =>
-      have := ringKrullDim_nonneg_of_nontrivial (R := MvPolynomial (Fin n) F ⧸ W)
-      rw [h] at this
-      exact absurd this (by simp)
-    | coe y => exact ⟨y, rfl⟩
-  rw [hy] at hform hdrop ⊢
-  have h1 : y + 1 ≤ ((e + 1 : ℕ) : ℕ∞) := by exact_mod_cast hdrop
-  have h2 : W'.height + y = ((e + 1 : ℕ) : ℕ∞) := by exact_mod_cast hform
-  have hyle : y ≤ e := by
-    have : y + 1 ≤ (e : ℕ∞) + 1 := by exact_mod_cast h1
-    exact (ENat.add_le_add_iff_right ENat.one_ne_top).mp this
-  obtain ⟨m, rfl⟩ : ∃ m : ℕ, (m : ℕ∞) = y := ENat.ne_top_iff_exists.mp (ne_top_of_le_ne_top
-    (ENat.natCast_ne_top e) hyle)
-  have h3 : ((e + 1 : ℕ) : ℕ∞) ≤ 1 + m := by rw [← h2]; gcongr
-  have h4 : e + 1 ≤ 1 + m := by exact_mod_cast h3
-  have h5 : m ≤ e := by exact_mod_cast hyle
-  have : m = e := by omega
-  subst this
-  rfl
+  refine le_antisymm
+    (ENat.WithBot.add_le_add_one_right_iff.mp (hdrop.trans_eq (Nat.cast_succ e)))
+    (ENat.WithBot.add_le_add_one_right_iff.mp ?_)
+  rw [← Nat.cast_succ e, ← hform, add_comm (W'.height : WithBot ℕ∞), ← WithBot.coe_one]
+  exact add_le_add le_rfl (WithBot.coe_le_coe.mpr hht)
 
 theorem ConeDimComponent.proof (_h₁ : MinimalPrimeHomog.Statement) : ConeDimComponent.Statement :=
   ConeDimComponent.proof_closed

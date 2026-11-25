@@ -1,52 +1,8 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 public import Mathlib.Algebra.GroupWithZero.Indicator
 public import Mathlib.RingTheory.Ideal.MinimalPrime.Noetherian
 
@@ -270,26 +226,12 @@ theorem exists_expansion {n : ℕ} (A : MvPolynomial (Fin n) ℤ) :
 theorem homogeneousComponent_linear_mul {σ : Type*} {L : MvPolynomial σ ℤ} (hL : L.IsHomogeneous 1)
     (P : MvPolynomial σ ℤ) (t : ℕ) :
     homogeneousComponent t (L * P) = if t = 0 then 0 else L * homogeneousComponent (t - 1) P := by
-
-  conv_lhs => rw [← sum_homogeneousComponent P, Finset.mul_sum, map_sum]
-  have h : ∀ j, homogeneousComponent t (L * homogeneousComponent j P) =
-      if j = t - 1 ∧ t ≠ 0 then L * homogeneousComponent j P else 0 := by
-    intro j
-    have hm := hL.mul (homogeneousComponent_isHomogeneous j P)
-    rw [homogeneousComponent_of_mem ((mem_homogeneousSubmodule _ _).mpr hm)]
-    by_cases hjt : j = t - 1 ∧ t ≠ 0
-    · rw [ite_eq_left (by omega), ite_eq_left hjt]
-    · rw [ite_eq_right (by omega), ite_eq_right hjt]
-  simp only [h]
-  by_cases ht : t = 0
-  · simp [ht]
-  · simp only [ht, ne_eq, not_false_eq_true, and_true, ite_false]
-    rw [Finset.sum_ite_eq']
-    split_ifs with hmem
-    · rfl
-    · rw [homogeneousComponent_eq_zero, mul_zero]
-      rw [Finset.mem_range] at hmem
-      omega
+  have h : homogeneousComponent t (L * P) = if 1 ≤ t then L * homogeneousComponent (t - 1) P else 0 := by
+    let _ := MvPolynomial.gradedAlgebra (σ := σ) (R := ℤ)
+    simp_rw [← decomposition.decompose'_apply]
+    exact DirectSum.coe_decompose_mul_of_left_mem (homogeneousSubmodule σ ℤ) t (b := P)
+      ((mem_homogeneousSubmodule 1 L).mpr hL)
+  rw [h]; by_cases ht : t = 0 <;> simp [ht, Nat.one_le_iff_ne_zero]
 
 theorem exists_isPairExpansion {n m : ℕ} {A : MvPolynomial (Fin n) ℤ} (hA : A.IsHomogeneous m) :
     ∃ Gs, IsPairExpansion m A Gs := by

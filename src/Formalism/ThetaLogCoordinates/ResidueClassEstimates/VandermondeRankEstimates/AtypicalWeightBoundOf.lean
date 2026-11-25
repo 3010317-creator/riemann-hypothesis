@@ -1,53 +1,7 @@
 module
 
 public import Formalism.ThetaLogCoordinates.ResidueClassEstimates.StatementT
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Lemma
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Bool
 import Std.Tactic.BVDecide.Normalize.Prop
 
@@ -109,18 +63,10 @@ namespace TTyp
 
 def lat (q : ℕ → Bool) (B : ℕ → ℕ) (i : ℕ) : List ℕ := (((List.range' 1 i).filter q).reverse).map B
 
-private theorem list_range'_succ_eq_append_singleton (s n : ℕ) : List.range' s (n + 1) = List.range' s n ++ [s + n] := by
-  induction n generalizing s with
-  | zero => rfl
-  | succ n ih =>
-    show s :: List.range' (s + 1) (n + 1) = (s :: List.range' (s + 1) n) ++ [s + (n + 1)]
-    rw [ih (s + 1), show s + 1 + n = s + (n + 1) by omega]
-    rfl
-
 lemma lat_succ (q : ℕ → Bool) (B : ℕ → ℕ) (i : ℕ) :
     lat q B (i + 1) = if q (i + 1) = true then B (i + 1) :: lat q B i else lat q B i := by
   unfold lat
-  rw [list_range'_succ_eq_append_singleton, show (1 : ℕ) + i = i + 1 from Nat.add_comm 1 i, List.filter_append]
+  rw [List.range'_1_concat, show (1 : ℕ) + i = i + 1 from Nat.add_comm 1 i, List.filter_append]
   by_cases hq : q (i + 1) = true
   · simp [hq]
   · simp [hq]

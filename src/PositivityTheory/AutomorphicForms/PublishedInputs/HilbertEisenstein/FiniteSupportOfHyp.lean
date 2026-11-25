@@ -6,42 +6,6 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 import Formalism.SharpRestriction.GrowthBounds.MonomialOrderSegments.BrData
 public import GroundTheory.GlobalFields.TateThesis.AdelePoisson
 public import GroundTheory.GlobalFields.TateThesis.AdelePoissonUniform
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.SelmerTransport.RestrictionMemInvariantH1
 import Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.ConstSmall
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PublishedTheorems.GelfandKazhdanReal
@@ -58,20 +22,6 @@ open MeasureTheory GroundTheory.Global GroundTheory.Global.IdeleGroup UpperTheor
 namespace UpperTheory.HilbertEisensteinWeightOne.EisensteinSmoothness
 
 variable {F : Type} [Field F] [NumberField F] [IsTotallyReal F]
-
-theorem finite_support_of_hyp {χ : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ} (H : Hyp χ c) :
-    {w | c w ≠ 0}.Finite := by
-  obtain ⟨m, hm, h⟩ := (isOfFinOrder_iff_pow_eq_one).mp H.fin
-  have ho := GlobalTheory.HeckeGal.isOpen_ker_of_pow χ.1 χ.2.1 hm fun x => congrArg (fun ξ : HChar F => ξ.1 x) h
-  obtain ⟨S, M, hS, key⟩ := GlobalTheory.OpenIdeleCongr.localIdele_mem_of_isOpen χ.1.ker ho
-  refine hS.subset fun w hw => ?_
-  by_contra hwS
-  apply hw
-  have h0 : (0 : ℕ) ∈ {n : ℕ | ∀ x : (w.adicCompletion F)ˣ, IsUnitAt w x →
-      Valued.v ((x : w.adicCompletion F) - 1) ≤ WithZero.exp (-(n : ℤ)) → χ.loc w x = 1} := by
-    intro x hx _
-    exact key w x hx fun h => absurd h hwS
-  exact Nat.le_zero.mp ((H.cond w).2 h0)
 
 omit [IsTotallyReal F] in
 theorem exists_int_of_val (x : F)

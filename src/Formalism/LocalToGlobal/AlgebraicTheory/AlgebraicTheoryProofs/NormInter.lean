@@ -6,50 +6,6 @@ public import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters
 public import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.QuadraticSemicharacterIdentityReformulated2
 public import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.QuadraticSemicharactersFactTer
 public import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.SelfDualCovolume
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 public import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.GaussDegenerate
 
 @[expose] public section
@@ -204,62 +160,18 @@ theorem representatives_fourth_power {Λ₁ Λ₂ : AddSubgroup (n → ℂ)} {S 
 theorem relative_index_fourth_power {Λ₁ Λ₂ : AddSubgroup (n → ℂ)} (h12 : relIdx Λ₁ Λ₂ ≠ 0) :
     relIdx (pow4 Λ₁) (pow4 Λ₂) = relIdx Λ₁ Λ₂ ^ 4 := by
   classical
-  have hfin : Finite (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) := Nat.finite_of_card_ne_zero h12
-  letI := Fintype.ofFinite (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂)
-  let S : Finset (n → ℂ) := Finset.univ.image fun q : Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂ => ((Quotient.out q : Λ₂) : n → ℂ)
-  have hS : IsReps Λ₁ Λ₂ S := by
-    refine ⟨?_, ?_, ?_⟩
-    · intro x hx
-      obtain ⟨q, -, rfl⟩ := Finset.mem_image.1 hx
-      exact (Quotient.out q).2
-    · intro x hx y hy hxy
-      obtain ⟨q, -, rfl⟩ := Finset.mem_image.1 hx
-      obtain ⟨q', -, rfl⟩ := Finset.mem_image.1 hy
-      have hq : q = q' := by
-        rw [← QuotientAddGroup.out_eq' q, ← QuotientAddGroup.out_eq' q']
-        apply (QuotientAddGroup.eq).2
-        rw [AddSubgroup.mem_addSubgroupOf]
-        have := Λ₁.neg_mem hxy
-        simpa [sub_eq_add_neg, add_comm] using this
-      rw [hq]
-    · intro y hy
-      let q : Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂ := QuotientAddGroup.mk ⟨y, hy⟩
-      refine ⟨((Quotient.out q : Λ₂) : n → ℂ), Finset.mem_image_of_mem _ (Finset.mem_univ _), ?_⟩
-      have h1 : (QuotientAddGroup.mk (Quotient.out q) : Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) = QuotientAddGroup.mk ⟨y, hy⟩ :=
-        QuotientAddGroup.out_eq' q
-      have h2 := (QuotientAddGroup.eq).1 h1
-      rw [AddSubgroup.mem_addSubgroupOf] at h2
-      simpa [sub_eq_add_neg, add_comm] using h2
+  obtain ⟨S, hS⟩ := (Formalism.L2.Th1.H.repsExist _ Λ₁ Λ₂ h12).1
   rw [relIdx_eq_card (representatives_fourth_power hS), relIdx_eq_card hS,
-    Finset.card_image_of_injective _ asm_injective, Fintype.card_piFinset, Finset.prod_const, Finset.card_univ,
-    Fintype.card_fin]
+    Finset.card_image_of_injective _ asm_injective, Fintype.card_piFinset, Finset.prod_const,
+    Finset.card_univ, Fintype.card_fin]
 
 theorem alternating_form_fourth_block (h : Matrix n n ℂ) (x y : Fin 4 × n → ℂ) :
     altE (matH (blk4 h)) x y = ∑ a, altE (matH h) (slice a x) (slice a y) := by
-  have key : matH (blk4 h) x y = ∑ a, matH h (slice a x) (slice a y) := by
-    simp only [matH, LinearMap.mk₂'ₛₗ_apply, blk4, slice]
-    rw [Fintype.sum_prod_type]
-    refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun i _ => ?_
-    rw [Fintype.sum_prod_type, Finset.sum_eq_single a]
-    · simp
-    · intro b _ hb
-      simp [Ne.symm hb]
-    · simp
-  simp only [altE, key, Complex.im_sum]
+  simp only [altE, (_root_.Formalism.L2.Th1.H.heisenbergFourfold n h).1 x y, Complex.im_sum]
 
 theorem hermitian_fourth_block (h : Matrix n n ℂ) (hH : IsHerm (matH h)) : IsHerm (matH (blk4 h)) := by
-  have key : ∀ x y : Fin 4 × n → ℂ, matH (blk4 h) x y = ∑ a, matH h (slice a x) (slice a y) := by
-    intro x y
-    simp only [matH, LinearMap.mk₂'ₛₗ_apply, blk4, slice]
-    rw [Fintype.sum_prod_type]
-    refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun i _ => ?_
-    rw [Fintype.sum_prod_type, Finset.sum_eq_single a]
-    · simp
-    · intro b _ hb
-      simp [Ne.symm hb]
-    · simp
   intro x y
-
+  have key := (_root_.Formalism.L2.Th1.H.heisenbergFourfold n h).1
   rw [key, key, map_sum]
   exact Finset.sum_congr rfl fun a _ => hH _ _
 

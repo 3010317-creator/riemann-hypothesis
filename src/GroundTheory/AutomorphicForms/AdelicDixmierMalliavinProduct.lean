@@ -5,52 +5,8 @@ public import GroundTheory.AutomorphicForms.HeckeAlgebra
 public import GroundTheory.AutomorphicForms.RealGroupsLie
 public import GroundTheory.AutomorphicForms.DixmierMalliavin
 public import GroundTheory.AutomorphicForms.GKModules.Garding
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Algebra.Group.Units
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -151,33 +107,13 @@ theorem secondCountableTopology_right [SecondCountableTopology G] (e : G ≃ₜ*
 
 theorem locallyCompactSpace_left [LocallyCompactSpace G] (e : G ≃ₜ* A × B) :
     LocallyCompactSpace A := by
-  have : T2Space B := t2Space_right e
-  have hce : IsClosedEmbedding (fun a : A => e.symm (a, 1)) := by
-    refine ⟨e.symm.toHomeomorph.isEmbedding.comp (isEmbedding_prodMkLeft (1 : B)), ?_⟩
-    have : range (fun a : A => e.symm (a, 1)) = e.symm '' (univ ×ˢ {1}) := by
-      ext x
-      simp only [mem_range, mem_image, mem_prod, mem_univ, mem_singleton_iff, true_and]
-      constructor
-      · rintro ⟨a, rfl⟩; exact ⟨(a, 1), rfl, rfl⟩
-      · rintro ⟨⟨a, b⟩, hb, rfl⟩; exact ⟨a, by simp only at hb; rw [hb]⟩
-    rw [this]
-    exact e.symm.toHomeomorph.isClosedMap _ (isClosed_univ.prod isClosed_singleton)
-  exact hce.locallyCompactSpace
+  have : Nonempty B := ⟨1⟩
+  exact (isOpenQuotientMap_fst.comp e.toHomeomorph.isOpenQuotientMap).locallyCompactSpace
 
 theorem locallyCompactSpace_right [LocallyCompactSpace G] (e : G ≃ₜ* A × B) :
     LocallyCompactSpace B := by
-  have : T2Space A := t2Space_left e
-  have hce : IsClosedEmbedding (fun b : B => e.symm (1, b)) := by
-    refine ⟨e.symm.toHomeomorph.isEmbedding.comp (isEmbedding_prodMkRight (1 : A)), ?_⟩
-    have : range (fun b : B => e.symm (1, b)) = e.symm '' ({1} ×ˢ univ) := by
-      ext x
-      simp only [mem_range, mem_image, mem_prod, mem_univ, mem_singleton_iff, and_true]
-      constructor
-      · rintro ⟨b, rfl⟩; exact ⟨(1, b), rfl, rfl⟩
-      · rintro ⟨⟨a, b⟩, ha, rfl⟩; exact ⟨b, by simp only at ha; rw [ha]⟩
-    rw [this]
-    exact e.symm.toHomeomorph.isClosedMap _ (isClosed_singleton.prod isClosed_univ)
-  exact hce.locallyCompactSpace
+  have : Nonempty A := ⟨1⟩
+  exact (isOpenQuotientMap_snd.comp e.toHomeomorph.isOpenQuotientMap).locallyCompactSpace
 
 end Factors
 

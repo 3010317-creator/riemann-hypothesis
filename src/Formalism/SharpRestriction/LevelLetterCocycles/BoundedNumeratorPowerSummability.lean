@@ -9,55 +9,9 @@ public import Formalism.TruncatedSeriesCounting.AprimeArith
 public import Formalism.SharpRestriction.LevelLetterCocycles.WachCoordinates
 public import Formalism.DistinguishedUnitIdeals.DistinguishedOrderProofs.AevalApplySubEvalOneMem
 public import Formalism.DistinguishedUnitIdeals.DistinguishedOrderProofs.AprimeCuts
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.Tactic.Basify
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Lemma
 import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.TypeStar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.GaussValuationBounds.GaussValueContraction.KapBoundProof, Formalism.SharpRestriction.LevelLetterCocycles.ArcIffLocalOfAdmissible, Formalism.TruncatedSeriesCounting.TruncatedSeriesProofs.RrBound, Formalism.TruncatedSeriesCounting.TruncatedSeriesProofs.ThmEExp, Formalism.SharpRestriction.LevelLetterCocycles.BoundedNumeratorPowerSummability
@@ -523,15 +477,15 @@ theorem rr_arith (l d G h y C L s r q : ℝ) (hld : l = d + 1) (hd2 : 2 ≤ d) (
   have ht0 : 0 ≤ (d + 1) / ((d - 1) * d) := div_nonneg hl0.le hdd.le
   have htc : (d + 1) / ((d - 1) * d) ≤ 3 / 2 := by
     have key : d + 1 ≤ 3 / 2 * ((d - 1) * d) := by
-      nlinarith [mul_nonneg (by linarith : (0:ℝ) ≤ d - 2) (by linarith : (0:ℝ) ≤ 3 * d + 1)]
+      nlinarith only [hd2]
     exact (div_le_iff₀ hdd).mpr key
   have htG : (d + 1) / ((d - 1) * d) ≤ 10 / (d + 1) := by
     have key : (d + 1) * (d + 1) ≤ 10 * ((d - 1) * d) := by
-      nlinarith [mul_nonneg (by linarith : (0:ℝ) ≤ d - 2) (by linarith : (0:ℝ) ≤ 9 * d + 6)]
+      nlinarith only [hd2]
     exact (div_le_div_iff₀ hdd hl0).mpr key
   have hth : (d + 1) / ((d - 1) * d) ≤ 3 / d := by
     have key : (d + 1) * d ≤ 3 * ((d - 1) * d) := by
-      nlinarith [mul_nonneg hd0.le (by linarith : (0:ℝ) ≤ d - 2)]
+      nlinarith only [hd2, hd0]
     exact (div_le_div_iff₀ hdd hd0).mpr key
   have e1 : 2 * G * ((d + 1) / ((d - 1) * d)) ≤ 20 * (G / (d + 1)) := by
     calc 2 * G * ((d + 1) / ((d - 1) * d)) ≤ 2 * G * (10 / (d + 1)) :=
@@ -563,7 +517,7 @@ theorem remainder_bound_of_tsum : RrBound := by
     exact (Real.logb_le_logb hb (by norm_num) (by linarith)).mpr hL3
   have hlogmul : Real.logb ℓ (2 * h + 1) ≤ Real.logb ℓ 3 + Real.logb ℓ h := by
     rw [← Real.logb_mul (by norm_num) (by linarith)]
-    exact (Real.logb_le_logb hb (by linarith) (by nlinarith)).mpr (by linarith)
+    exact (Real.logb_le_logb hb (by linarith) (by positivity)).mpr (by linarith)
   have hL0 : 0 ≤ Real.logb ℓ h := Real.logb_nonneg hb hh1
   have hC0 : (0:ℝ) ≤ (⌈1 + Real.logb ℓ (2 * h + 1)⌉₊ : ℝ) := Nat.cast_nonneg _
   have hCL : (⌈1 + Real.logb ℓ (2 * h + 1)⌉₊ : ℝ) ≤ 3 + Real.logb ℓ h := by linarith
@@ -647,7 +601,7 @@ private lemma sigma_exponent_le_real (ℓ : ℕ) (hℓ : 3 ≤ ℓ) (g h j : ℕ
   have hM0 : (0 : ℝ) ≤ (Mpar ℓ g h : ℝ) := by positivity
   have hr : (ℓ : ℝ) / ((ℓ : ℝ) - 1) ^ 2 ≤ 3 / 4 := by
     rw [div_le_iff₀ hq2]
-    nlinarith
+    linarith [hq, mul_nonneg (show (0 : ℝ) ≤ 3 * ℓ - 1 by linarith) (sub_nonneg.mpr hL)]
   have hr0 : (0 : ℝ) ≤ (ℓ : ℝ) / ((ℓ : ℝ) - 1) ^ 2 := by positivity
   have hX0 : (0 : ℝ) ≤ ((3 * g : ℝ) + (Mpar ℓ g h : ℝ) / (ℓ : ℝ) ^ m) * ℓ / ((ℓ : ℝ) - 1) ^ 2 + 1 := by
     positivity
@@ -656,7 +610,7 @@ private lemma sigma_exponent_le_real (ℓ : ℕ) (hℓ : 3 ≤ ℓ) (g h j : ℕ
       3 * g * ((ℓ : ℝ) / ((ℓ : ℝ) - 1) ^ 2) +
         (Mpar ℓ g h : ℝ) * ((ℓ : ℝ) / ((ℓ : ℝ) - 1) ^ 2) / (ℓ : ℝ) ^ m := by
     field_simp
-  have t1 : 3 * g * ((ℓ : ℝ) / ((ℓ : ℝ) - 1) ^ 2) ≤ 9 / 4 * g := by nlinarith
+  have t1 : 3 * g * ((ℓ : ℝ) / ((ℓ : ℝ) - 1) ^ 2) ≤ 9 / 4 * g := by linarith [mul_le_mul_of_nonneg_left hr hg0]
   have t2 : (Mpar ℓ g h : ℝ) * ((ℓ : ℝ) / ((ℓ : ℝ) - 1) ^ 2) / (ℓ : ℝ) ^ m ≤
       3 / 2 * ((h : ℝ) + 2 * g) / ((ℓ : ℝ) - 1) ^ (m + 1 + 1) + 3 / 4 := by
     have hB : (0 : ℝ) < ((ℓ : ℝ) - 1) ^ (m + 1 + 1) := by positivity
@@ -679,10 +633,10 @@ private lemma sigma_exponent_le_real (ℓ : ℕ) (hℓ : 3 ≤ ℓ) (g h j : ℕ
       have k2 := mul_le_mul_of_nonneg_left k1 (mul_nonneg hA0 hq2.le)
       have e2 : ((ℓ : ℝ) - 1) ^ (m + 1 + 1) = ((ℓ : ℝ) - 1) ^ m * ((ℓ : ℝ) - 1) ^ 2 := by ring
       rw [e2]
-      nlinarith [k2]
+      linarith [k2]
     have s4 : ((ℓ : ℝ) / ((ℓ : ℝ) - 1) ^ 2) / (ℓ : ℝ) ^ m ≤ 3 / 4 := by
       rw [div_le_iff₀ hP0]
-      nlinarith
+      linarith [hM0, hr0, le_mul_of_one_le_right (by norm_num : (0 : ℝ) ≤ 3 / 4) hP1]
     linarith
   rw [e1] at hceil ⊢
   linarith
@@ -695,7 +649,7 @@ theorem total_exponent_le_eight_hundred : ExponentBoundOfRankAndKappaBounds := b
   have hq : (2 : ℝ) ≤ (ℓ : ℝ) - 1 := by linarith
   have hB4 : (4 : ℝ) ≤ ((ℓ : ℝ) - 1) ^ (j + 1) := by
     have := pow_le_pow_right₀ (by linarith : (1 : ℝ) ≤ (ℓ : ℝ) - 1) (by omega : 2 ≤ j + 1)
-    nlinarith
+    linarith [pow_le_pow_left₀ (by norm_num) hq 2]
   have hB0 : (0 : ℝ) < ((ℓ : ℝ) - 1) ^ (j + 1) := by linarith
   have hg1 : (1 : ℝ) ≤ g := by exact_mod_cast hg
   have hGg : (G : ℝ) ≤ g := by exact_mod_cast hG
@@ -712,21 +666,21 @@ theorem total_exponent_le_eight_hundred : ExponentBoundOfRankAndKappaBounds := b
     rwa [Real.logb_self_eq_one (by linarith)] at this
   have hGL : (G : ℝ) / ℓ ≤ g / 3 := by
     rw [div_le_div_iff₀ (by positivity) (by norm_num)]
-    nlinarith
+    exact mul_le_mul hGg hL (by norm_num) (by linarith)
   have hgB : (g : ℝ) / ((ℓ : ℝ) - 1) ^ (j + 1) ≤ g / 4 :=
     div_le_div_of_nonneg_left (by positivity) (by norm_num) hB4
   have h4g : 4 * (g : ℝ) / ((ℓ : ℝ) - 1) ≤ 2 * g := by
     rw [div_le_iff₀ (by linarith)]
-    nlinarith
+    linarith [mul_le_mul_of_nonneg_left hq (show (0 : ℝ) ≤ g by linarith)]
   have eσ : 3 / 2 * ((h : ℝ) + 2 * g) / ((ℓ : ℝ) - 1) ^ (j + 1) =
       3 / 2 * ((h : ℝ) / ((ℓ : ℝ) - 1) ^ (j + 1)) + 3 * ((g : ℝ) / ((ℓ : ℝ) - 1) ^ (j + 1)) := by
     ring
   rw [eσ] at hσ
   rw [hlog2] at hkap
-  have hge : (g : ℝ) ≤ g * ell := by nlinarith
-  have hee : (ell : ℝ) ≤ g * ell := by nlinarith
-  have h1e : (1 : ℝ) ≤ g * ell := by nlinarith
-  nlinarith
+  have hge : (g : ℝ) ≤ g * ell := le_mul_of_one_le_right (by linarith) hell1
+  have hee : (ell : ℝ) ≤ g * ell := le_mul_of_one_le_left (by linarith) hg1
+  have h1e : (1 : ℝ) ≤ g * ell := one_le_mul_of_one_le_of_one_le hg1 hell1
+  linarith [hB0, hgh', hT, hΛ, hl2, hGL, hgB, h4g, hrr, hkap]
 
 end Formalism.TruncatedSeriesCounting.WachCoordinates
 end -- clump:auto
@@ -1126,7 +1080,7 @@ theorem aprimeConfig_holds : ∃ C : ℝ, 1 ≤ C ∧ AprimeConfig C := by
     refine le_trans ?_ hCb
     apply mul_le_mul_of_nonneg_right _ hGpos
     have h1 : (1 : ℝ) ≤ max C₀ 1 := le_max_right _ _
-    nlinarith
+    nlinarith only [hjR, h1]
   have hb2 : 2 * (w + S + η + 1) ≤ b := by exact_mod_cast hb2R
   obtain ⟨cuts, ell, hne, hc⟩ := hcore l hl n j sz b w S η
     (20 * (((w + S + η : ℕ) : ℝ) / l + ((b + η + S : ℕ) : ℝ) / ((l : ℝ) - 1) ^ (j + 1) +
@@ -1218,7 +1172,7 @@ theorem aprimeConfig_holds : ∃ C : ℝ, 1 ≤ C ∧ AprimeConfig C := by
           rw [hg, hh, sigPar_eq]
           push_cast at hellR hrr ⊢
           have hgn : (0 : ℝ) ≤ 2 * max ((w : ℝ) + S + η) 1 := by positivity
-          nlinarith [mul_le_mul_of_nonneg_left hellR hgn]
+          linarith only [hellR, hrr, hgn, mul_le_mul_of_nonneg_left hellR hgn]
         have : (2 : ℝ) * (initialExponentBound l n j (gPar (w + S + η) S η) (hA b w S η sz) H₁ H₂ cuts ell : ℕ) <
             sz (c - (s₁ : ZMod n)) := by linarith
         exact_mod_cast this
@@ -1270,7 +1224,7 @@ theorem eA_le (C₁ : ℝ) (hC₁ : 0 ≤ C₁) (hE : ThmEBound C₁) (l : ℕ) 
   have hone : (1 : ℝ) ≤ (((w + S + η : ℕ) : ℝ) + 1) * ((j : ℝ) + 1) := by
     have h1 : (0 : ℝ) ≤ ((w + S + η : ℕ) : ℝ) := by positivity
     have h2 : (0 : ℝ) ≤ (j : ℝ) := by positivity
-    nlinarith
+    nlinarith only []
   have hX1 : (1 : ℝ) ≤ ((l : ℝ) - 1) ^ (j + 1) := one_le_pow₀ (by linarith)
   have hAdef : hA b w S η sz = max (hCor b w S η sz) 1 := rfl
   rw [hAdef]

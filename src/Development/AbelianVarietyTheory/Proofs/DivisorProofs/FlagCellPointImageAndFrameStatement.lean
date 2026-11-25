@@ -83,7 +83,7 @@ theorem cellpt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Hos
     rw [key, uC, Matrix.map_mul, Matrix.submatrix_map, Matrix.map_map]
     congr 1
     · congr 1
-      ext i j
+      ext i
       simp [cC]
     · ext i j
       simp only [cellMat, Matrix.map_apply, Matrix.of_apply, cell]
@@ -109,8 +109,6 @@ open ReciprocityTheory.ChartRestriction.G.PullbackSections (TanM tv mkT tanM_ext
 attribute [local instance] Over.cartesianMonoidalCategory
 
 
-theorem _root_.GlobalTheory.T.flagCellPoint_image_and_frame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (Y : Model Xo c (RingHom.id c.F)) (p : Proj (RingHom.id c.F)) (A : Atlas Y p) (Z : Scheme.{0}) (π : Z ⟶ Y.X) (g : ∀ en : En Dw.mult, Z ⟶ PSpace c.F (plN A.N en.1)) (κ : ∀ b, Pm Dw.mult → (Sp (CR Dw.mult (A.V b)) ⟶ Z)) [∀ b w, IsOpenImmersion (κ b w)] (hZ : Cells A π g κ) (ht : FlagCellFrameChangeTriangular hZ) (b : A.B) (w : Pm Dw.mult) (S : Type) [CommRing S] (ψ₀ : Γ(Y.X, (A.V b).1) →+* S) (xc : CellVar Dw.mult → S) (z : Sp S ⟶ Z), z = spMap (MvPolynomial.eval₂Hom ψ₀ xc) ≫ κ b w → z ≫ π = spMap ψ₀ ≫ (A.V b).2.fromSpec ∧ ∃ hz : ⊤ ≤ z ⁻¹ᵁ (cellFrames hZ ht).U ((b, w) : A.B × Pm Dw.mult), ∀ σ, (cellFrames hZ ht).uAt ((b, w) : A.B × Pm Dw.mult) z hz σ = (((A.k b).u σ).map ψ₀).submatrix id (w σ) * Matrix.of (cell xc σ) := by
-  first | exact @GlobalTheory.FlagMod.FieldFlag.cellpt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellPointImageAndFrameStatement =====

@@ -5,51 +5,7 @@ public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DirectionsIn
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.PhiBoundPartsOfRadicalParametrisation
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.SymmetricScalarBlockMatrixMul
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentCoordinatesMeasurePreserving
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -485,11 +441,11 @@ theorem M1 (x : U.RC k j (1 + ρ)) (y : U.RC k 1 ρ) :
     | last =>
       simp only [qE, qV, Ux3.block3_apply,
         Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₂₂, Matrix.fromBlocks_apply₁₂]
-      rw [radical_unipotent_first_middle, qmul_last, reversed_adjoint_block_apply, rev_last', cXH_zero]
+      rw [radical_unipotent_first_middle, qmul_last, reversed_adjoint_block_apply, Fin.rev_last, cXH_zero]
     | cast a =>
       simp only [qX, qV, Ux3.block3_apply,
         Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂]
-      rw [reversed_adjoint_block_apply, cH_V, qmul_cs, reversed_adjoint_block_apply, reversed_adjoint_block_apply, rev_castSucc', rev_last', cXH_succ, cXH_zero]
+      rw [reversed_adjoint_block_apply, cH_V, qmul_cs, reversed_adjoint_block_apply, reversed_adjoint_block_apply, Fin.rev_castSucc, Fin.rev_last, cXH_succ, cXH_zero]
       simp [aC] <;> ring
   ·
     cases a using Fin.lastCases with
@@ -498,12 +454,12 @@ theorem M1 (x : U.RC k j (1 + ρ)) (y : U.RC k 1 ρ) :
       | zero =>
         simp only [qE, qE', Ux3.block3_apply,
           Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₂₂, Matrix.fromBlocks_apply₁₂, Matrix.fromRows_apply_inl]
-        rw [radical_unipotent_first_last, qmul_last, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, rev_last', Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, cXHcX_00]
+        rw [radical_unipotent_first_last, qmul_last, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, Fin.rev_last, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, cXHcX_00]
         simp [SX]
       | succ b' =>
         simp only [qE, qS, Ux3.block3_apply,
           Matrix.fromBlocks_apply₁₂, Matrix.fromRows_apply_inr, Matrix.fromRows_apply_inl]
-        rw [rc_E, qmul_last, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, rev_last', Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, cXHcX_0s]
+        rw [rc_E, qmul_last, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, Fin.rev_last, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, cXHcX_0s]
         simp only [SX, Fin.cases_zero, Fin.cases_succ, first_coordinate_apply]
         ring
     | cast a =>
@@ -511,14 +467,14 @@ theorem M1 (x : U.RC k j (1 + ρ)) (y : U.RC k 1 ρ) :
       | zero =>
         simp only [qX, qE', Ux3.block3_apply,
           Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂, Matrix.fromRows_apply_inl]
-        rw [reversed_adjoint_block_apply, cH_E', qmul_cs, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, rev_castSucc', rev_last']
+        rw [reversed_adjoint_block_apply, cH_E', qmul_cs, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, Fin.rev_castSucc, Fin.rev_last]
         simp only [Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, cXHcX_00, hermitian_form_column_succ_zero, SX, Fin.cases_zero,
           Fin.cases_succ, star_first_coordinate_eq, aC, star_neg]
         ring
       | succ b' =>
         simp only [qX, qS, Ux3.block3_apply,
           Matrix.fromBlocks_apply₁₂, Matrix.fromRows_apply_inl]
-        rw [_root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, qmul_cs, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, rev_castSucc', rev_last']
+        rw [_root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, qmul_cs, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, Fin.rev_castSucc, Fin.rev_last]
         simp only [Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, cHc, cXHcX_0s, cXHcX_ss, SX, Fin.cases_zero,
           Fin.cases_succ, first_coordinate_apply, dlt_apply, aC, star_neg, star_uu']
         ring
@@ -585,22 +541,22 @@ theorem M1 (x : U.RC k j (1 + ρ)) (y : U.RC k 1 ρ) :
       | zero =>
         simp only [qE', Ux3.block3_apply,
           Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₂₂]
-        rw [conj_inverse_block_apply, rev_zero', block_two_apply_last_last]; simp [radical_unipotent_rank_one_apply]
+        rw [conj_inverse_block_apply, Fin.rev_zero, block_two_apply_last_last]; simp [radical_unipotent_rank_one_apply]
       | succ b' =>
         simp only [qE', qS, Ux3.block3_apply,
           Matrix.fromBlocks_apply₁₂, Matrix.fromRows_apply_inr, Matrix.fromBlocks_apply₂₂]
-        rw [rc_E', conj_inverse_block_apply, rev_zero', rev_succ', block_two_apply_last_castSucc]
+        rw [rc_E', conj_inverse_block_apply, Fin.rev_zero, Fin.rev_succ, block_two_apply_last_castSucc]
         simp [aC]
     | succ b =>
       cases b' using Fin.cases with
       | zero =>
         simp only [qS, qE', Ux3.block3_apply,
           Matrix.fromBlocks_apply₂₁, Matrix.fromCols_apply_inr, Matrix.fromBlocks_apply₂₂]
-        rw [conj_inverse_block_apply, rev_zero', rev_succ', block_two_apply_castSucc_last]; simp
+        rw [conj_inverse_block_apply, Fin.rev_zero, Fin.rev_succ, block_two_apply_castSucc_last]; simp
       | succ b' =>
         simp only [qS, Ux3.block3_apply,
           Matrix.fromBlocks_apply₂₂]
-        rw [conj_inverse_block_apply, rev_succ', rev_succ', block_two_apply_castSucc_castSucc]
+        rw [conj_inverse_block_apply, Fin.rev_succ, Fin.rev_succ, block_two_apply_castSucc_castSucc]
         simp [Matrix.one_apply, Fin.rev_inj]
 
 end M1b
@@ -657,7 +613,7 @@ theorem M2 (H : Matrix (Fin j) (Fin j) ℂ) (hH : IsUnit H.det) (c : ℂ) (hc : 
       Matrix.fromBlocks_apply₁₂, Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂,
       Matrix.fromRows_apply_inl, Matrix.fromRows_apply_inr, Matrix.fromCols_apply_inl,
       Matrix.fromCols_apply_inr, Matrix.zero_apply] <;>
-      simp only [mul_w_apply, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, rev_zero', rev_succ', block_two_apply_last_last,
+      simp only [mul_w_apply, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_apply, Fin.rev_zero, Fin.rev_succ, block_two_apply_last_last,
         block_two_apply_castSucc_last, block_two_apply_last_castSucc,
         block_two_apply_castSucc_castSucc, Fin.last_zero] <;>
       simp [Z1]
@@ -693,15 +649,6 @@ theorem M3 {n : ℕ} (q q' Z : Matrix (Fin n) (Fin n) ℂ) (hq : IsUnit q.det) (
   · rw [← Matrix.conjTranspose_nonsing_inv, Matrix.nonsing_inv_nonsing_inv _ hq]
     simp only [Matrix.mul_assoc]
     rw [← Matrix.mul_assoc (G.wMat n) (G.wMat n), Ux3.wMat_mul_self, Matrix.one_mul]
-
-theorem block_two_zero_size_eq {p : ℕ} (A : Matrix (Fin p) (Fin p) ℂ) (B' : Matrix (Fin p) (Fin 0) ℂ) (C : Matrix (Fin 0) (Fin p) ℂ)
-    (D' : Matrix (Fin 0) (Fin 0) ℂ) : U.blk2 A B' C D' = A := by
-  ext i l
-  have hi : i = Fin.castAdd 0 i := rfl
-  have hl : l = Fin.castAdd 0 l := rfl
-  simp only [U.blk2, Matrix.reindex_apply, Matrix.submatrix_apply]
-  rw [hi, hl, finSumFinEquiv_symm_apply_castAdd, finSumFinEquiv_symm_apply_castAdd]
-  rfl
 
 theorem mMap_sand {n ρ' : ℕ} (Z : Matrix (Fin n) (Fin n) ℂ) (A M C : B.Mat k ρ') :
     U.mMap k n ρ' Z (A * M * C) = U.embG k n ρ' A * U.mMap k n ρ' Z M * U.embG k n ρ' C := by

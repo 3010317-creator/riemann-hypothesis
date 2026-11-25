@@ -10,69 +10,26 @@ public import GroundTheory.GlobalFields.TateThesis.RootNumberLocalPlace
 public import PositivityTheory.AutomorphicForms.PublishedInputs.HilbertEisenstein.QuasiCharConductorLoc
 public import GroundTheory.AutomorphicForms.GL2.GodementSectionSplit
 import Aesop.Main
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.MeasureTheory.Integral.Pi
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.ConstSmall
 import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.SelmerTransport.RestrictionMemInvariantH1
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PublishedTheorems.GelfandKazhdanReal
-import Mathlib.Tactic.Polynomial.Basic
 import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
 import GroundTheory.LocalFields.ExistsUnitFiltrationUnitsLeRangeNormUnits
 import GroundTheory.LocalFields.LocalZetaShell
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Algebra.Group.Units
 import Mathlib.Topology.Algebra.Nonarchimedean.TotallyDisconnected
 import Mathlib.Topology.Compactness.Paracompact
 import Mathlib.Topology.Separation.Connected
-import Mathlib.Topology.Sheaves.Init
 import GroundTheory.LocalFields.LocalFourierMult
 import PositivityTheory.AutomorphicForms.PublishedInputs.HilbertEisenstein.UnitaryTransvectionZeroSecondMemClosure
 import Formalism.LocalToGlobal.IndefiniteReal.PHeisFCA
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.AdeleLC
 import Formalism.SharpRestriction.GrowthBounds.MonomialOrderSegments.BrData
 import GroundTheory.GlobalFields.CompletionAtPlace.Integers
+import PositivityTheory.AutomorphicForms.PublishedInputs.HilbertEisenstein.InvMulVecScalarMul
+import PositivityTheory.AutomorphicForms.PublishedInputs.JacquetLanglands.TorusKernels.FinalH
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: PositivityTheory.AutomorphicForms.PublishedInputs.HilbertEisenstein.ArchimedeanIntegralHolds, PositivityTheory.AutomorphicForms.PublishedInputs.HilbertEisenstein.CharacterPositiveHolds, PositivityTheory.AutomorphicForms.PublishedInputs.HilbertEisenstein.CharacterProductHolds, PositivityTheory.AutomorphicForms.PublishedInputs.HilbertEisenstein.CoefficientDivisorHolds, PositivityTheory.AutomorphicForms.PublishedInputs.HilbertEisenstein.SecondCountableTopologyUnits, PositivityTheory.AutomorphicForms.PublishedInputs.HilbertEisenstein.InverseSubstitutionHolds, PositivityTheory.AutomorphicForms.PublishedInputs.HilbertEisenstein.LocalIntegralOfSubstitution, PositivityTheory.AutomorphicForms.PublishedInputs.HilbertEisenstein.LocalExpansionHolds
@@ -1143,7 +1100,7 @@ theorem locF_subst (ω : HChar F) (c : HeightOneSpectrum (𝓞 F) → ℕ) (yf :
 
 theorem norm_loc {ω : HChar F} (hfin : IsOfFinOrder ω) (v : HeightOneSpectrum (𝓞 F)) (x : (v.adicCompletion F)ˣ) :
     ‖((ω.loc v x : ℂˣ) : ℂ)‖ = 1 :=
-  L2.norm_omega_eq_one hfin _
+  Esk.HyperbolicKernelContinuity.norm_omega hfin _
 
 theorem continuous_chiPsi (ω : HChar F) (v : HeightOneSpectrum (𝓞 F)) :
     Continuous fun x : (v.adicCompletion F)ˣ =>
@@ -1447,7 +1404,7 @@ theorem fin_int (hLI : LocInt) (hFS : FinSplit) (hOP : OmegaProd) (hCD : CoefDiv
   classical
   have hfin0 : {w : HeightOneSpectrum (𝓞 F) | c w ≠ 0 ∨ dd w ≠ 0}.Finite := by
     change ({w | c w ≠ 0} ∪ {w | dd w ≠ 0}).Finite
-    refine (L2.finite_support H).union ((Ideal.finite_factors (differentIdeal_ne_bot (A := ℤ) (B := 𝓞 F))).subset ?_)
+    refine (EisensteinIntegrability.finite_c H).union ((Ideal.finite_factors (differentIdeal_ne_bot (A := ℤ) (B := 𝓞 F))).subset ?_)
     intro w hw
     have hw' : ordI w (differentIdeal ℤ (𝓞 F)) ≠ 0 := by
       intro h0

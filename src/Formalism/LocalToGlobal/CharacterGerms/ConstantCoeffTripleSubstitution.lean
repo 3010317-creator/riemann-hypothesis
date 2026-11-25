@@ -3,46 +3,6 @@ module
 public import Formalism.LocalToGlobal.CharacterGerms.RowTieFB
 public import Formalism.LocalToGlobal.CharacterGerms.IntSProd
 public import Formalism.LocalToGlobal.CharacterGerms.SubstSubst
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 import Formalism.LocalToGlobal.ProjectiveLattices.SubConstMemOrig
 
 @[expose] public section
@@ -130,7 +90,7 @@ theorem cc_actAt (x : O) {a : Fin dd → MvPowerSeries τ C} (ha : ∀ i, MvPowe
   unfold actAt
   exact VP.cc_subst (fun q : Fin 1 × Fin dd => ha q.2) (Y.B.A.const x i)
 
-theorem eval_two_points_eq_subst {n m : ℕ} (a b : Pt C n dd) (f : PS C 2 dd) (_hm : m = 2) : ev ![a, b] f = MvPowerSeries.subst (P2 a b) f := by
+theorem eval_two_points_eq_subst {n : ℕ} (a b : Pt C n dd) (f : PS C 2 dd) : ev ![a, b] f = MvPowerSeries.subst (P2 a b) f := by
   unfold ev
   congr 1
   funext q
@@ -161,7 +121,7 @@ theorem sy_at : MvPowerSeries.subst (P2 a b) Y.B.sy = mvExp (hAt Y b a - hAt Y a
   have hP10 : ∀ q, MvPowerSeries.constantCoeff (P2 (pt C dd 1) (pt C dd 0) q : PS C 2 dd) = 0 :=
     constantCoeff_pair_substitution (cc_pt 1) (cc_pt 0)
   have hswap : MvPowerSeries.subst (P2 a b) (ev ![pt C dd 1, pt C dd 0] Y.h) = hAt Y b a := by
-    rw [eval_two_points_eq_subst (m := 2) _ _ _ rfl, VP.subst_subst hP10 (constantCoeff_pair_substitution ha hb)]
+    rw [eval_two_points_eq_subst _ _ _, VP.subst_subst hP10 (constantCoeff_pair_substitution ha hb)]
     unfold hAt
     congr 1
     funext q
@@ -174,7 +134,7 @@ theorem sy_at : MvPowerSeries.subst (P2 a b) Y.B.sy = mvExp (hAt Y b a - hAt Y a
       rw [pair_subst_coordinate ha hb]
       rfl
   have hcc : MvPowerSeries.constantCoeff (ev ![pt C dd 1, pt C dd 0] Y.h - Y.h) = 0 := by
-    rw [map_sub, eval_two_points_eq_subst (m := 2) _ _ _ rfl, VP.cc_subst hP10 (cc_h Y), cc_h Y, sub_zero]
+    rw [map_sub, eval_two_points_eq_subst _ _ _, VP.cc_subst hP10 (cc_h Y), cc_h Y, sub_zero]
   rw [hsy, expS_eq _ hcc, subst_exp (constantCoeff_pair_substitution ha hb) hcc, subst_sub' (constantCoeff_pair_substitution ha hb), hswap]
   rfl
 
@@ -200,7 +160,7 @@ theorem ad_at (x : O) :
   have hQ2 : ∀ q, MvPowerSeries.constantCoeff (P2 (pt C dd 0) (actAt Y (star x) (pt C dd 1)) q : PS C 2 dd) = 0 :=
     constantCoeff_pair_substitution (cc_pt (n := 2) 0) hA1
   have e1 : MvPowerSeries.subst (P2 a b) (ev ![actAt Y x (pt C dd 0), pt C dd 1] Y.h) = hAt Y (actAt Y x a) b := by
-    rw [eval_two_points_eq_subst (m := 2) _ _ _ rfl, VP.subst_subst hQ1 (constantCoeff_pair_substitution ha hb)]
+    rw [eval_two_points_eq_subst _ _ _, VP.subst_subst hQ1 (constantCoeff_pair_substitution ha hb)]
     unfold hAt
     congr 1
     funext q
@@ -214,7 +174,7 @@ theorem ad_at (x : O) :
       rfl
   have e2 : MvPowerSeries.subst (P2 a b) (ev ![pt C dd 0, actAt Y (star x) (pt C dd 1)] Y.h) =
       hAt Y a (actAt Y (star x) b) := by
-    rw [eval_two_points_eq_subst (m := 2) _ _ _ rfl, VP.subst_subst hQ2 (constantCoeff_pair_substitution ha hb)]
+    rw [eval_two_points_eq_subst _ _ _, VP.subst_subst hQ2 (constantCoeff_pair_substitution ha hb)]
     unfold hAt
     congr 1
     funext q
@@ -228,7 +188,7 @@ theorem ad_at (x : O) :
       rfl
   have hcc : MvPowerSeries.constantCoeff (ev ![actAt Y x (pt C dd 0), pt C dd 1] Y.h -
       ev ![pt C dd (0 : Fin 2), actAt Y (star x) (pt C dd (1 : Fin 2))] Y.h) = 0 := by
-    rw [map_sub, eval_two_points_eq_subst (m := 2) _ _ _ rfl, eval_two_points_eq_subst (m := 2) _ _ _ rfl, VP.cc_subst hQ1 (cc_h Y),
+    rw [map_sub, eval_two_points_eq_subst _ _ _, eval_two_points_eq_subst _ _ _, VP.cc_subst hQ1 (cc_h Y),
       VP.cc_subst hQ2 (cc_h Y), sub_zero]
   rw [hx, expS_eq _ hcc, subst_exp (constantCoeff_pair_substitution ha hb) hcc, subst_sub' (constantCoeff_pair_substitution ha hb), e1, e2]
 

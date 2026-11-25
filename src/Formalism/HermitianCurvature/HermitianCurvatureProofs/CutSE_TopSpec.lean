@@ -28,49 +28,7 @@ public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSETopHer
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RadialIdentityOfSpectralData
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.NormDiagonalEntryDilationGeneratorLeOne
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedPairingViaPhase
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RadialAdjointOfParts
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.ReduceModChar
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.ConjugationContinuousOnInvertible
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.LevelsOfBuiltSetting
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.QNFAsm
@@ -78,14 +36,11 @@ import Formalism.HermitianCurvature.HermitianCurvatureProofs.SiteTransport
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.BXiAsm
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.JfBetaAdjCOfLemmaBNorm
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.LevelFormSesquilinearFiniteClass
-import Mathlib.Topology.UniformSpace.Matrix
-import Mathlib.Topology.UniformSpace.Uniformizable
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.FsvMulFsvNeg
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.LiftMemMatrixAlgebra
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.PositionInsertionDiagonalCompat
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.SfiniteOfIsHaarOn
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.ThmPActualCptOfStepForm
-import Mathlib.Tactic.Polynomial.Basic
 import Std.Tactic.BVDecide.Normalize.Bool
 import Std.Tactic.BVDecide.Normalize.Prop
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.TendstoIntUv
@@ -754,9 +709,6 @@ theorem action_elementary_unit_apply (a : S) (i j : Fin 2) (u : Ix S → RadSp k
   · intro b _ hb; simp [hb, pfst_zero]
   · simp
 
-theorem fin_two_eq_one_of_ne_zero {q : Fin 2} (h : q ≠ 0) : q = 1 := by
-  fin_cases q <;> simp_all
-
 theorem sum_split (a : S) {M : Type} [AddCommMonoid M] (f : Ix S → M) :
     ∑ y, f y = ∑ y, if y a = 0 then f y + f (Function.update y a 1) else 0 := by
   rw [Finset.sum_ite, Finset.sum_const_zero, add_zero, Finset.sum_add_distrib,
@@ -767,7 +719,7 @@ theorem sum_split (a : S) {M : Type} [AddCommMonoid M] (f : Ix S → M) :
   · intro y _; simp
   · intro y hy
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hy
-    have h1 := fin_two_eq_one_of_ne_zero hy
+    have h1 := Fin.eq_one_of_ne_zero _ hy
     funext b
     by_cases hb : b = a
     · subst hb; simp [h1]
@@ -780,7 +732,7 @@ theorem sum_split (a : S) {M : Type} [AddCommMonoid M] (f : Ix S → M) :
     · simp [Function.update_of_ne hb]
   · intro y hy
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hy
-    have h1 := fin_two_eq_one_of_ne_zero hy
+    have h1 := Fin.eq_one_of_ne_zero _ hy
     congr 1
     funext b
     by_cases hb : b = a
@@ -1115,7 +1067,7 @@ theorem split_y (a : S) (y : Ix S) : ∃ y0 : Ix S, y0 a = 0 ∧ (y = y0 ∨ y =
   by_cases h : y a = 0
   · left; rw [upd_self y a h]
   · right
-    rw [upd_upd, ← fin_two_eq_one_of_ne_zero h]
+    rw [upd_upd, ← Fin.eq_one_of_ne_zero _ h]
     exact (Function.update_eq_self a y).symm
 
 theorem act_letter_lc (X : ActualOps k r z z' π π') (L : R.LevelData (Pr (RadSp k r z z' π π')) r)

@@ -6,46 +6,6 @@ import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.Generi
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.ConcreteLevelAdelicSubset
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.AutLzFinite
 public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.DifferentIdealMapNeBot
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Formalism.SharpRestriction.CuspSpanNormBounds.LatticeGluingRadicals
 
 @[expose] public section
@@ -59,8 +19,6 @@ open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNo
 set_option linter.unusedVariables false
 
 namespace Formalism.L2.SG.Pf.FinXP
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 section Reps
 
@@ -115,12 +73,8 @@ theorem stabF_of_fix {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (c : (VS D).V �
 theorem fix_X {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (c : (VS D).V ≃ₗ[D.host.E] (VS D).V)
     (he : ∀ a, c (F0.e a) = F0.e a) : ∀ x ∈ F0.X, c x = x := by
   intro x hx
-  unfold FlagG.X at hx
-  induction hx using Submodule.span_induction with
-  | mem y hy => obtain ⟨a, rfl⟩ := hy; exact he a
-  | zero => simp
-  | add y w _ _ hy hw => rw [map_add (f := _), hy, hw]
-  | smul k y _ hy => rw [map_smul, hy]
+  exact (Submodule.span_le (p := LinearMap.eqLocus c.toLinearMap LinearMap.id)).2
+    (by rintro _ ⟨a, rfl⟩; exact he a) hx
 
 end Reps
 
@@ -499,12 +453,10 @@ theorem xplus_nlam {Λ : Submodule (𝓞 E) S.V} {G : LFlag S r T'} {n : S.V ≃
 
 theorem map_X_of_e {G K : LFlag S r T'} {φ : S.V ≃ₗ[E] S.V} (he : ∀ a, φ (G.fl.e a) = K.fl.e a) {x : S.V}
     (hx : x ∈ G.fl.X) : φ x ∈ K.fl.X := by
-  unfold FlagG.X at hx ⊢
-  induction hx using Submodule.span_induction with
-  | mem y hy => obtain ⟨a, rfl⟩ := hy; rw [he]; exact Submodule.subset_span ⟨a, rfl⟩
-  | zero => simp
-  | add y w _ _ hy hw => rw [map_add (f := _)]; exact add_mem hy hw
-  | smul k y _ hy => rw [map_smul]; exact Submodule.smul_mem _ k hy
+  refine (Submodule.span_le (p := K.fl.X.comap φ.toLinearMap)).2 ?_ hx
+  rintro _ ⟨a, rfl⟩
+  rw [SetLike.mem_coe, Submodule.mem_comap, LinearEquiv.coe_coe, he]
+  exact Submodule.subset_span ⟨a, rfl⟩
 
 theorem xplus_frame {G K : LFlag S r T'} {φ : S.V ≃ₗ[E] S.V} (hf : ∀ a, frame K a = φ (frame G a))
     {w : S.V} (hw : w ∈ Xplus G) : φ w ∈ Xplus K := by

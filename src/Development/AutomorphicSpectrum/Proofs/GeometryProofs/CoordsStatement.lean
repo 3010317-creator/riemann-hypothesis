@@ -8,54 +8,12 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoordi
 public import Mathlib.RingTheory.Kaehler.Basic
 public import Mathlib.RingTheory.Localization.AtPrime.Basic
 public import Mathlib.RingTheory.Localization.Away.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 import Mathlib.Topology.Sheaves.Presheaf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 import Mathlib.AlgebraicGeometry.Modules.Sheaf
-import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.TypeStar
-import Mathlib
-import Mathlib.Tactic.Basify
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.GlobalProofs.KaehlerBasisSpreadsToNeighbourhood, Development.AutomorphicSpectrum.Proofs.GlobalProofs.SmoothLocalRingFreeDifferentials, Development.AutomorphicSpectrum.Proofs.GlobalProofs.RegularSequenceGermsRegularLocal, Development.AutomorphicSpectrum.Proofs.GlobalProofs.KaehlerBasisOnLocalizationAway, Development.AutomorphicSpectrum.Proofs.GlobalProofs.HasSncCoordsOfLocal, Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsStatement
@@ -333,25 +291,6 @@ theorem relDim_of_dense {X S : Scheme.{0}} (f : X ⟶ S) [Smooth f] (D : ℕ) (W
   refine IsZariskiLocalAtSource.of_iSup_eq_top (P := @SmoothOfRelativeDimension D) V
     (top_le_iff.1 fun x _ => TopologicalSpace.Opens.mem_iSup.2 ⟨x, hV x⟩) fun x => ?_
   rw [← hall x]; exact hd x
-
-theorem basis_spread (K A : Type) [Field K] [CommRing A] [Algebra K A] [Algebra.FinitePresentation K A]
-    (P : Ideal A) [P.IsPrime] {n : ℕ} (x : Fin n → A)
-    (hx : LinearIndependent (Localization.AtPrime P)
-        (fun i => KaehlerDifferential.D K (Localization.AtPrime P) (algebraMap A _ (x i))) ∧
-      Submodule.span (Localization.AtPrime P)
-        (Set.range fun i => KaehlerDifferential.D K (Localization.AtPrime P) (algebraMap A _ (x i))) = ⊤) :
-    ∃ s ∉ P, ∀ (B : Type) [CommRing B] [Algebra A B] [Algebra K B] [IsScalarTower K A B]
-      [IsLocalization.Away s B],
-      LinearIndependent B (fun i => KaehlerDifferential.D K B (algebraMap A B (x i))) ∧
-        Submodule.span B (Set.range fun i => KaehlerDifferential.D K B (algebraMap A B (x i))) = ⊤ := _root_.GlobalTheory.CompanionTheory.KaehlerSpread.spread K A P x hx
-
-theorem stalk_transfer (Y : Scheme.{0}) (U : Y.affineOpens) (y : Y) (hy : y ∈ U.1)
-    (hreg : IsRegularLocalRing (Y.presheaf.stalk y)) (m : ℕ) (f : Fin m → Γ(Y, U.1))
-    (hf : FinalTheorems.Rsp (Y.presheaf.stalk y) m (fun i => Y.presheaf.germ U.1 y hy (f i))) :
-    IsRegularLocalRing (Localization.AtPrime (U.2.primeIdealOf ⟨y, hy⟩).asIdeal) ∧
-      FinalTheorems.Rsp (Localization.AtPrime (U.2.primeIdealOf ⟨y, hy⟩).asIdeal) m
-        (fun i => algebraMap Γ(Y, U.1) _ (f i)) ∧
-      ∀ s : Γ(Y, U.1), y ∈ Y.basicOpen s ↔ s ∉ (U.2.primeIdealOf ⟨y, hy⟩).asIdeal := _root_.GlobalTheory.CompanionTheory.ResKCoords.stalk_to_localization Y U y hy hreg m f hf
 
 theorem coords_at_point (K : Type) [Field K] [CharZero K] (D : ℕ) (Y : Scheme.{0}) (g : Y ⟶ Sp K)
     (hD : SmoothOfRelativeDimension D g) (U : Y.affineOpens) (y : Y) (hy : y ∈ U.1)

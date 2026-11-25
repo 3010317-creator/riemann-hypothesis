@@ -30,57 +30,7 @@ public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ExistsShintani
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.PartialZetaTwistedEntireDifference
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.RayClassConeParametrization
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.RayClassGroupFiniteRepresentatives
-import Mathlib.Algebra.AffineMonoid.UniqueSums
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Algebra.Order.Star.Rat
-import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
-import Mathlib.Analysis.Convex.Contractible
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Lemma
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -197,16 +147,10 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 open NumberField Formalism.MainNotions.ShortIntervalPrimes GlobalTheory.RayZeta GlobalTheory.CompanionTheory.Hypotheses₂.Shintani
 open Polynomial
 
 namespace GlobalTheory.CompanionTheory.Hypotheses₂.Shintani
-
-theorem exists_large_prime_dvd_eval (f : ℤ[X]) (hf : 0 < f.natDegree) (N : ℕ) :
-    ∃ (p : ℕ) (m : ℤ), p.Prime ∧ N < p ∧ (p : ℤ) ∣ f.eval m :=
-  _root_.UpperTheory.Reformulated.B.P6.LargePrimeDivisors.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.exists_large_prime_dvd_eval f hf N
 
 theorem exists_exponent_ne_zero (F : Type) [Field F] [NumberField F] :
     ∃ θ : 𝓞 F, RingOfIntegers.exponent θ ≠ 0 := by
@@ -568,8 +512,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 open NumberField Formalism.MainNotions.ShortIntervalPrimes GlobalTheory.RayZeta GlobalTheory.CompanionTheory.Hypotheses₂.Shintani
 
 namespace GlobalTheory.CompanionTheory.Hypotheses₂.Shintani
@@ -577,7 +519,7 @@ namespace GlobalTheory.CompanionTheory.Hypotheses₂.Shintani
 theorem classWeight_relation (F : Type) [Field F] [NumberField F] (𝔣 𝔠 A B : Ideal (𝓞 F)) (hc : (Ideal.absNorm 𝔠).Prime)
     (e : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I A} ≃
       {I : Ideal (𝓞 F) // (CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I B) ∧ I ≤ 𝔠}) (he : ∀ J, (e J).1 = 𝔠 * J.1)
-    (s : ℂ) (t : ℂ) (_hs : 1 < s.re)
+    (s : ℂ) (t : ℂ)
     (hA : Summable (fun I : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I A} => ((Ideal.absNorm I.1 : ℕ) : ℂ) ^ (-s)))
     (hB : Summable (fun I : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I B} => ((Ideal.absNorm I.1 : ℕ) : ℂ) ^ (-s)))
     (ht : HasSum (fun I : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I B} =>
@@ -657,8 +599,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 open NumberField Formalism.MainNotions.ShortIntervalPrimes GlobalTheory.RayZeta
 
 namespace GlobalTheory.CompanionTheory.Hypotheses₂.Shintani
@@ -693,8 +633,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open NumberField Formalism.MainNotions.ShortIntervalPrimes GlobalTheory.RayZeta GlobalTheory.CompanionTheory.Hypotheses₂.Shintani
@@ -707,8 +645,8 @@ theorem rayRel_of_mul_left {F : Type} [Field F] [NumberField F] {𝔣 𝔠 I J :
   refine ⟨a, b, ha, hb, ha', hb', hp, mul_left_cancel₀ h𝔠 ?_⟩
   rw [mul_left_comm, e, mul_left_comm]
 
-theorem shift_perm (F : Type) [Field F] [NumberField F] (𝔣 𝔠 : Ideal (𝓞 F)) (S : Finset (Ideal (𝓞 F))) (_h𝔣 : 𝔣 ≠ ⊥)
-    (_hp : 𝔠.IsPrime) (h0 : 𝔠 ≠ ⊥) (hs : 𝔠 ⊔ 𝔣 = ⊤)
+theorem shift_perm (F : Type) [Field F] [NumberField F] (𝔣 𝔠 : Ideal (𝓞 F)) (S : Finset (Ideal (𝓞 F)))
+    (h0 : 𝔠 ≠ ⊥) (hs : 𝔠 ⊔ 𝔣 = ⊤)
     (hS : ∀ a ∈ S, CoprimeTo F 𝔣 a) (hu : ∀ a ∈ S, ∀ b ∈ S, RayRel F 𝔣 a b → a = b)
     (hr : ∀ I, CoprimeTo F 𝔣 I → ∃ a ∈ S, RayRel F 𝔣 I a) :
     ∃ τ : Equiv.Perm S, ∀ c : S,
@@ -756,7 +694,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField Formalism.MainNotions.ShortIntervalPrimes GlobalTheory.RayZeta GlobalTheory.CompanionTheory.Hypotheses₂.Shintani
 
@@ -829,11 +766,11 @@ theorem exists_classZeta (𝔣 : Ideal (𝓞 F)) (h𝔣 : 𝔣 ≠ ⊥) (S : Fin
       rintro rfl
       simp only [Ideal.absNorm_bot] at hl
       exact Nat.not_prime_zero hl
-    obtain ⟨τ, hτ⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.shift_perm F 𝔣 𝔠 S h𝔣 hpr h𝔠0 hcop hS hd hc
+    obtain ⟨τ, hτ⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.shift_perm F 𝔣 𝔠 S h𝔠0 hcop hS hd hc
     choose T hTd hTs hTq using hWt 𝔠 hpr hl hav
     refine ⟨𝔠, hl, hB, τ, T, hTd, fun c s hs => ?_, hTq⟩
     obtain ⟨e, he⟩ := hτ c
-    exact _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.classWeight_relation F 𝔣 𝔠 (τ c).1 c.1 hl e he s _ hs (hsum _ s hs) (hsum _ s hs) (hTs c s hs)
+    exact _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.classWeight_relation F 𝔣 𝔠 (τ c).1 c.1 hl e he s _ (hsum _ s hs) (hsum _ s hs) (hTs c s hs)
   obtain ⟨𝔠, hl, -, τ, T, hTd, hTr, hTq⟩ := key 0
   obtain ⟨𝔠', hl', hB', τ', T', hTd', hTr', -⟩ := key (Ideal.absNorm 𝔠)
   obtain ⟨Z, hZd, hZD, hZq⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.TwoRelations.continuation_of_two_relations S (fun c => classSeries 𝔣 c.1) T T' _ _ τ τ' hl hl' hB'.ne hTd hTd' hTr hTr'

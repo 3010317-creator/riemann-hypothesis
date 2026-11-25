@@ -3,50 +3,7 @@ module
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
 import GroundTheory.HeightsAndTheta.Heights.ArithDegreeIdeal
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -137,27 +94,19 @@ theorem mul_le_detIdeal {r : ℕ} (E : Submodule (𝓞 K) (Fin (r + 1) → 𝓞 
   rw [Ideal.mul_le]
   intro a ha d hd
   obtain ⟨w, hw, rfl⟩ := Submodule.mem_map.mp ha
-  induction hd using Submodule.span_induction with
-  | mem d hd =>
-    obtain ⟨v', hv', rfl⟩ := hd
-    let v : Fin (r + 1) → Fin (r + 1) → 𝓞 K := Fin.cons w (fun k ↦ consZero r (v' k))
-    have hv : ∀ i, v i ∈ E := by
-      intro i
-      refine Fin.cases ?_ (fun k ↦ ?_) i
-      · exact hw
-      · exact hv' k
-    have hdet : (Matrix.of v).det = w 0 * (Matrix.of v').det := by
-      rw [det_succ_column_zero, Fin.sum_univ_succ]
-      simp only [v, of_apply, Fin.cons_zero, Fin.cons_succ, consZero_zero, Fin.succAbove_zero,
-        Fin.val_zero, pow_zero, one_mul, mul_zero, zero_mul, Finset.sum_const_zero, add_zero]
-      congr 2
-    rw [LinearMap.proj_apply, ← hdet]
-    exact det_mem_detIdeal E v hv
-  | zero => rw [mul_zero]; exact Ideal.zero_mem _
-  | add x y _ _ hx hy => rw [mul_add]; exact Ideal.add_mem _ hx hy
-  | smul c x _ hx =>
-    rw [smul_eq_mul, mul_left_comm]
-    exact Ideal.mul_mem_left _ c hx
+  change _ ∈ Submodule.span (𝓞 K) _ at hd
+  refine (Submodule.span_le.mpr ?_ :
+    _ ≤ Submodule.comap (LinearMap.mulLeft (𝓞 K) (LinearMap.proj 0 w)) (detIdeal E)) hd
+  rintro _ ⟨v', hv', rfl⟩
+  let v : Fin (r + 1) → Fin (r + 1) → 𝓞 K := Fin.cons w (fun k ↦ consZero r (v' k))
+  have hdet : (Matrix.of v).det = w 0 * (Matrix.of v').det := by
+    rw [det_succ_column_zero, Fin.sum_univ_succ]
+    simp only [v, of_apply, Fin.cons_zero, Fin.cons_succ, consZero_zero, Fin.succAbove_zero,
+      Fin.val_zero, pow_zero, one_mul, mul_zero, zero_mul, Finset.sum_const_zero, add_zero]
+    congr 2
+  rw [SetLike.mem_coe, Submodule.mem_comap, LinearMap.mulLeft_apply, LinearMap.proj_apply,
+    ← hdet]
+  exact det_mem_detIdeal E v (Fin.cases (motive := fun i => v i ∈ E) hw hv')
 
 theorem detIdeal_le_mul {r : ℕ} (E : Submodule (𝓞 K) (Fin (r + 1) → 𝓞 K)) :
     detIdeal E ≤ E.map (LinearMap.proj 0) * detIdeal (E.comap (consZero r)) := by

@@ -4,57 +4,6 @@ public import Formalism.LocalToGlobal.Columns.StdLatUnimodular
 public import Formalism.LocalToGlobal.Columns.GenericUnipotentCharacter
 public import Formalism.GL3MeanSquares.HookFormulaTorsion.LengthQuotientBoundGeneral
 public import Formalism.HermitianLattices.HermitianLatticesProofs.AutFinite
-import Mathlib.Algebra.Module.StablyFree.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Coalgebra.IsFrobenius
-import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -610,28 +559,6 @@ theorem DecoSet.eq_one_of_fst_eq_one (d : DecoSet (E := E) (n := n) (ST := ST) (
   rw [h1] at this
   have e : (a.2 w').1.mulVec (d.1.be w' x) = d.1.be w' x := this
   simpa using e
-
-theorem DecoSet.prime_le_of_dvd_card (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) (Γ : Subgroup (UF E n × GLG (E := E) (n := n) (SG := SG)))
-    (hΓ : Γ ≤ MulAction.stabilizer (UF E n × GLG (E := E) (n := n) (SG := SG)) d) [Finite Γ] {p : ℕ} (hp : p.Prime)
-    (hdvd : p ∣ Nat.card Γ) : p ≤ finrank ℚ E * n + 1 := by
-  have : Fact p.Prime := ⟨hp⟩
-  obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card' p hdvd
-  have h0 : (x : UF E n × GLG (E := E) (n := n) (SG := SG)) ^ p = 1 := by
-    have := pow_orderOf_eq_one x
-    rw [hx] at this
-    exact_mod_cast congrArg Subtype.val this
-  have h1 : ((x : UF E n × GLG (E := E) (n := n) (SG := SG)).1 : Sp E n ≃ₗ[E] Sp E n) ^ p = 1 := by
-    have := congrArg (fun a : UF E n × GLG (E := E) (n := n) (SG := SG) => (a.1 : Sp E n ≃ₗ[E] Sp E n)) h0
-    simpa using this
-  have h2 : ((x : UF E n × GLG (E := E) (n := n) (SG := SG)).1 : Sp E n ≃ₗ[E] Sp E n) ≠ 1 := by
-    intro h
-    have h3 : (x : UF E n × GLG (E := E) (n := n) (SG := SG)) = 1 :=
-      DecoSet.eq_one_of_fst_eq_one d (hΓ x.2) (Subtype.ext h)
-    have : x = 1 := Subtype.ext h3
-    rw [this, orderOf_one] at hx
-    exact hp.one_lt.ne hx
-  have := primeOrder_le hp h1 h2
-  rwa [Module.finrank_fin_fun] at this
 
 end DecoInst
 

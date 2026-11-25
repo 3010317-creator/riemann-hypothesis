@@ -56,22 +56,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 import Formalism.SharpRestriction.GlobalSchurBounds.QuadraticLogDerivCongr
 
 -- This file was produced by scripts/clump.py from the modules listed below.
--- Members: Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSqStatement, Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGramRepresentativeSizeLeHHSq, Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGramRepresentativeSizeLeHHSqStatement, Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountTermsGramClassOverSublattice, Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountTermsGramClassOverSublatticeStatement
-
--- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSqStatement =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSqStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSq\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-open NumberField Module Matrix Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.Cnt GlobalTheory.LoopC
-open scoped ENNReal Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.definiteLattice_discriminantModule_card_det_sq : ∀ (D : D7) (M : LatW D), M.FG → IsPosDef (D.sp.X 0).hT → Formalism.HermitianLatticesTheory.IsIntegralLat (D.sp.X 0).hT M → 1 ≤ idxW D (dualInH (D.sp.X 0).hT M) M ∧ (idxW D (dualInH (D.sp.X 0).hT M) M : ℝ) = detW D M ^ 2 ∧ ∀ P : LatW D, P ≤ M → rkW D P = rkW D M → 1 ≤ idxW D M P ∧ detW D P = detW D M * idxW D M P := by
-  first | exact @GlobalTheory.LoopC.DetCard.main
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSqStatement =====
+-- Members: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGramRepresentativeSizeLeHHSq, Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountTermsGramClassOverSublattice, Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountTermsGramClassOverSublatticeStatement
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGramRepresentativeSizeLeHHSq =====
 -- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGramRepresentativeSizeLeHHSq", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRoot\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\npublic import Mathlib.LinearAlgebra.Matrix.Permutation\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.Monotonicity.Lemmas\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Presheaf\n\n"}
@@ -369,7 +354,7 @@ theorem frameExp_le (r l : ℕ) (hl : l ≤ r + 1) : 2 * frameExp r l ≤ (2 * r
     Finset.sum_le_sum (fun a _ => Nat.sub_le _ _)
   rw [Finset.sum_const, Nat.card_Icc, smul_eq_mul, show l + 1 - 1 = l by omega] at h1
   have h3 : l * (r + 1) ≤ (r + 1) * (r + 1) := Nat.mul_le_mul_right _ hl
-  nlinarith [h1, h3]
+  grind
 
 noncomputable def locSize (D : D7) (b C : ℝ) (Z : GramM D) (τ : D.what₂.Tau) : ℝ :=
   ∏ l ∈ Finset.Icc 1 (D.R.rS + 1), max 1 (absDl D Z l τ / b ^ (C * (D.R.m : ℝ) ^ 2))
@@ -392,7 +377,7 @@ theorem lead_le (D : D7) (b C : ℝ) (hb : 1 ≤ b) (hC : 0 ≤ C) (hrd : D.host
       rw [dite_eq_left (Nat.zero_le _)]
       exact Matrix.det_isEmpty
     rw [h1, map_one, norm_one]
-    nlinarith
+    exact one_le_mul_of_one_le_of_one_le hB1 hloc
   · have hmem : l ∈ Finset.Icc 1 (D.R.rS + 1) := Finset.mem_Icc.mpr ⟨hl0, hl⟩
     have hP0 : 0 < b ^ (C * (D.R.m : ℝ) ^ 2) := Real.rpow_pos_of_pos hb0 _
     have hfac : max 1 (absDl D Z l τ / b ^ (C * (D.R.m : ℝ) ^ 2)) ≤ locSize D b C Z τ := by
@@ -402,10 +387,10 @@ theorem lead_le (D : D7) (b C : ℝ) (hb : 1 ≤ b) (hC : 0 ≤ C) (hrd : D.host
           max 1 (absDl D Z x τ / b ^ (C * (D.R.m : ℝ) ^ 2)) :=
         GlobalTheory.LoopC.GramSize.one_le_prod'' _ _ (fun _ _ => le_max_left _ _)
       have hm1 := le_max_left 1 (absDl D Z l τ / b ^ (C * (D.R.m : ℝ) ^ 2))
-      nlinarith
+      exact le_mul_of_one_le_right (by linarith) hrest
     have hA : absDl D Z l τ ≤ b ^ (C * (D.R.m : ℝ) ^ 2) * locSize D b C Z τ := by
       have h1 := (div_le_iff₀ hP0).mp (le_max_right 1 (absDl D Z l τ / b ^ (C * (D.R.m : ℝ) ^ 2)))
-      nlinarith
+      linarith [mul_le_mul_of_nonneg_left hfac hP0.le]
     have hx : ‖embS D τ (leadMinorE Z l)‖ =
         absDl D Z l τ * D.host.rdE ^ (2 * (frameExp D.R.rS l : ℝ)) := by
       unfold absDl absReal
@@ -457,13 +442,13 @@ theorem prod_le_HH (D : D7) (b C x : ℝ) (hb : 1 ≤ b) (Z : GramM D) (hx : x �
 private theorem exists_ne_zero_smul_mem_of_mem_span' (C CT m : ℝ) (hC : 2 * |CT| + 3 ≤ C) (hm : 1 ≤ m) :
     2 * ((C + 1) * m ^ 2) + 4 * |CT| * m ≤ 2 * C ^ 2 * m ^ 3 := by
   have ha := abs_nonneg CT
-  have hm2 : m ≤ m ^ 2 := by nlinarith
-  have hm3 : m ^ 2 ≤ m ^ 3 := by nlinarith
-  have h1 : 2 * (C + 1) + 4 * |CT| ≤ 2 * C ^ 2 := by nlinarith
-  calc 2 * ((C + 1) * m ^ 2) + 4 * |CT| * m ≤ 2 * (C + 1) * m ^ 2 + 4 * |CT| * m ^ 2 := by nlinarith
+  have hm2 : m ≤ m ^ 2 := le_self_pow₀ hm (by norm_num)
+  have hm3 : m ^ 2 ≤ m ^ 3 := pow_le_pow_right₀ hm (by norm_num)
+  have h1 : 2 * (C + 1) + 4 * |CT| ≤ 2 * C ^ 2 := by linarith [mul_le_mul_of_nonneg_right (show (3 : ℝ) ≤ C by linarith) (by linarith : (0 : ℝ) ≤ C), sq C]
+  calc 2 * ((C + 1) * m ^ 2) + 4 * |CT| * m ≤ 2 * (C + 1) * m ^ 2 + 4 * |CT| * m ^ 2 := by linarith [mul_le_mul_of_nonneg_left hm2 (mul_nonneg (show (0 : ℝ) ≤ 4 by norm_num) ha)]
     _ = (2 * (C + 1) + 4 * |CT|) * m ^ 2 := by ring
-    _ ≤ 2 * C ^ 2 * m ^ 2 := by nlinarith
-    _ ≤ 2 * C ^ 2 * m ^ 3 := by nlinarith
+    _ ≤ 2 * C ^ 2 * m ^ 2 := mul_le_mul_of_nonneg_right h1 (sq_nonneg m)
+    _ ≤ 2 * C ^ 2 * m ^ 3 := mul_le_mul_of_nonneg_left hm3 (mul_nonneg (by norm_num) (sq_nonneg C))
 
 private theorem main_lemma_2 {b : ℝ} (hb : 1 ≤ b) (y : ℝ) : (b ^ y) ^ 2 = b ^ (2 * y) := by
   rw [sq, ← Real.rpow_add (by linarith : (0 : ℝ) < b), two_mul]
@@ -511,12 +496,12 @@ theorem main : ∀ Cg cb Cu cT CT C0 A : ℝ, ∃ C₀ : ℝ, ∀ C ≥ C₀, �
       rw [← Real.rpow_mul hb0]
       apply Real.rpow_le_rpow_of_exponent_le hb1
       have hf : (0 : ℝ) ≤ D.R.f := Nat.cast_nonneg _
-      have hC2 : 1 ≤ C ^ 2 := by nlinarith
-      have hm3' : (D.R.m : ℝ) ≤ (D.R.m : ℝ) ^ 3 := by nlinarith
+      have hC2 : 1 ≤ C ^ 2 := one_le_pow₀ (by linarith)
+      have hm3' : (D.R.m : ℝ) ≤ (D.R.m : ℝ) ^ 3 := le_self_pow₀ hm1 (by norm_num)
       have hm3 : (D.R.m : ℝ) ≤ C ^ 2 * (D.R.m : ℝ) ^ 3 := by
-        nlinarith [mul_le_mul_of_nonneg_right hC2 (by positivity : (0 : ℝ) ≤ (D.R.m : ℝ) ^ 3)]
+        linarith [mul_le_mul_of_nonneg_right hC2 (by positivity : (0 : ℝ) ≤ (D.R.m : ℝ) ^ 3)]
       push_cast
-      nlinarith [mul_le_mul_of_nonneg_right hmr hf, mul_le_mul_of_nonneg_right hm3 hf]
+      linarith [mul_le_mul_of_nonneg_right hmr hf, mul_le_mul_of_nonneg_right hm3 hf]
     have e3 : (large₂.sc.b ^ (C * (D.R.m : ℝ) ^ 2 * D.R.f)) ^ (C * (D.R.m : ℝ)) ≤ HHZ D large₂.sc.b C Z := by
       unfold HHZ
       exact le_mul_of_one_le_right (by linarith) (one_le_pow₀ hsz)
@@ -569,8 +554,8 @@ theorem main : ∀ Cg cb Cu cT CT C0 A : ℝ, ∃ C₀ : ℝ, ∀ C ≥ C₀, �
     have hn2 := norm_nonneg (embS D τ (leadMinorE Z D.R.rS))
     have hTT : (1 : ℝ) + (Tu D u : ℝ) * (Tu D u' : ℝ) ≤ ((Tu D u : ℝ) * (Tu D u' : ℝ)) ^ 2 := by
       have h9 : (9 : ℝ) ≤ (Tu D u : ℝ) * (Tu D u' : ℝ) := by
-        nlinarith [mul_le_mul t1 t2 (by norm_num) (by linarith)]
-      nlinarith [h9]
+        linarith [mul_le_mul t1 t2 (by norm_num) (by linarith)]
+      linarith [mul_le_mul_of_nonneg_right h9 (by linarith : 0 ≤ (Tu D u : ℝ) * (Tu D u' : ℝ)), sq ((Tu D u : ℝ) * (Tu D u' : ℝ))]
     have hTT2 : ((Tu D u : ℝ) * (Tu D u' : ℝ)) ^ 2 ≤ large₂.sc.b ^ (4 * |CT| * (D.R.m : ℝ)) := by
       have e : large₂.sc.b ^ (4 * |CT| * (D.R.m : ℝ)) = ((large₂.sc.b ^ (|CT| * (D.R.m : ℝ))) ^ 2) ^ 2 := by
         rw [main_lemma_2 hb1, main_lemma_2 hb1]; ring_nf
@@ -596,23 +581,8 @@ end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGramRepresentativeSizeLeHHSq =====
 
--- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGramRepresentativeSizeLeHHSqStatement =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGramRepresentativeSizeLeHHSqStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGramRepresentativeSizeLeHHSq\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-open NumberField Module Matrix Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.Cnt GlobalTheory.LoopC
-open scoped ENNReal Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.exists_gram_representative_size_le_HH_sq : ∀ Cg cb Cu cT CT C0 A : ℝ, ∃ C₀ : ℝ, ∀ C ≥ C₀, ∀ (D : D7) (large₂ : SizeData₂ D) (u u' : D.what₂.Word) (C' Cl : ℝ), 1 ≤ Cl → Hyp D large₂ u u' C' Cl Cg cb Cu cT CT C0 A → ∀ (F0 : Fb D u) (Λ : LatV D), IsBase D u F0 → IsRowLat D F0 Λ → ∀ (Z : GramM D) (F' : FlagU D u'), RelZ D Z → IsTermF D Λ (lf D F0) F' → ZEquiv (ZhatL (lf D F0) F') Z → ∃ Z₁, ZEquiv Z Z₁ ∧ QOK D u u' Z₁ (HHZ D large₂.sc.b C Z ^ 2) := by
-  first | exact @GlobalTheory.LoopC.GramSize.main
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGramRepresentativeSizeLeHHSqStatement =====
-
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountTermsGramClassOverSublattice =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountTermsGramClassOverSublattice", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSqStatement\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGramRepresentativeSizeLeHHSqStatement\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameTermCountSublatticeBoundStatement\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.SharpRestriction.GlobalSchurBounds.QuadraticLogDerivCongr\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountTermsGramClassOverSublattice", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSq\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGramRepresentativeSizeLeHHSq\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameTermCountSublatticeBoundStatement\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.SharpRestriction.GlobalSchurBounds.QuadraticLogDerivCongr\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -783,14 +753,14 @@ theorem subOK_of (D : D7) (L P : LatW D) (hL : L.FG) (hpos : IsPosDef (D.sp.X 0)
     rw [hspan]
   have hintS : Formalism.HermitianLatticesTheory.IsIntegralLat (D.sp.X 0).hT (sat D L P) :=
     fun x hx y hy => hint x (hsatL hx) y (hsatL hy)
-  obtain ⟨hd1, hd2, hsub⟩ := GlobalTheory.T.definiteLattice_discriminantModule_card_det_sq D (sat D L P) hfg hpos hintS
+  obtain ⟨hd1, hd2, hsub⟩ := _root_.GlobalTheory.LoopC.DetCard.main D (sat D L P) hfg hpos hintS
   obtain ⟨hi1, hdet⟩ := hsub P hPsat hrk
   have hdS0 : 0 ≤ detW D (sat D L P) := Real.sqrt_nonneg _
   have hdS1 : 1 ≤ detW D (sat D L P) := by
     have : (1 : ℝ) ≤ detW D (sat D L P) ^ 2 := by
       rw [← hd2]
       exact_mod_cast hd1
-    nlinarith
+    exact le_of_sq_le_sq (by linarith : (1 : ℝ) ^ 2 ≤ detW D (sat D L P) ^ 2) hdS0
   refine ⟨hP, hr, hi1, ?_, hd⟩
   calc (idxW D (sat D L P) P : ℝ) ≤ detW D (sat D L P) * idxW D (sat D L P) P :=
         le_mul_of_one_le_left (Nat.cast_nonneg _) hdS1
@@ -834,7 +804,7 @@ theorem frB_le (D : D7) (s : ℕ) (N De Q Hh : ℝ) (hN0 : 0 ≤ N) (hDe : 1 ≤
 
 theorem main : ∀ Cg cb Cu cT CT C0 A : ℝ, ∃ C₀ : ℝ, ∀ C ≥ C₀, ∀ (D : D7) (large₂ : SizeData₂ D) (u u' : D.what₂.Word) (C' Cl : ℝ), 1 ≤ Cl → Hyp D large₂ u u' C' Cl Cg cb Cu cT CT C0 A → ∀ F0 : FlagG (VS D) D.R.rS ((Tu D u : ℕ) : D.host.E), F0.e = D.sp.hypE → F0.z = D.zmOf u → ∀ Λ : LatV D, IsRowLat D F0 Λ → ∀ Z : GramM D, RelZ D Z → ∀ s : ℕ, 1 ≤ s → s ≤ D.R.k → ∀ P : LatW D, P ≤ L0X D Λ (lf D F0) → rkW D P = D.R.k - s → ∀ De Hh : ℝ, 1 ≤ De → detW D P ≤ De → HHZ D large₂.sc.b C Z ≤ Hh → De ≤ Hh ^ 3 → (cntCl (FrSet D Λ (lf D F0) ((Tu D u' : ℕ) : D.host.E) Z P) (TEqv D Λ (lf D F0)) : ℝ≥0∞) ≤ ENNReal.ofReal (NT D u ^ (2 * D.R.rS) * De ^ D.R.rS * 9 ^ (s * D.R.f) * Hh ^ (9 * s + 9 * s * D.R.rS + 16 * D.R.rS ^ 2)) := by
   intro Cg cb Cu cT CT C0 A
-  obtain ⟨C₁, hC₁⟩ := GlobalTheory.T.exists_gram_representative_size_le_HH_sq Cg cb Cu cT CT C0 A
+  obtain ⟨C₁, hC₁⟩ := _root_.GlobalTheory.LoopC.GramSize.main Cg cb Cu cT CT C0 A
   refine ⟨max C₁ (max 1 (2 * |CT|)), ?_⟩
   intro C hC D large₂ u u' C' Cl hCl hH F0 hF0e hF0z Λ hΛ Z hZ s hs1 hsk P hP hr De Hh hDe hd hHZ hDH
   have hbase : IsBase D u F0 := ⟨hF0e, hF0z⟩
@@ -854,7 +824,7 @@ theorem main : ∀ Cg cb Cu cT CT C0 A : ℝ, ∃ C₀ : ℝ, ∀ C ≥ C₀, �
   have hHh1 : 1 ≤ Hh := by
     by_contra hlt'
     have hlt := lt_of_not_ge hlt'
-    have : Hh ^ 3 < 1 := by nlinarith [mul_nonneg hHh0 hHh0]
+    have : Hh ^ 3 < 1 := by simpa using pow_lt_pow_left₀ hlt hHh0 (by norm_num : 3 ≠ 0)
     linarith
   have hNT0 : 0 ≤ NT D u := by
     show (0 : ℝ) ≤ ((D.mem u).A.T : ℝ) ^ D.R.f
@@ -865,7 +835,7 @@ theorem main : ∀ Cg cb Cu cT CT C0 A : ℝ, ∃ C₀ : ℝ, ∀ C ≥ C₀, �
   · obtain ⟨F', hF'⟩ := hne
     obtain ⟨Z₁, hZZ₁, hQ⟩ := hC₁ C hCC₁ D large₂ u u' C' Cl hCl hH F0 Λ hbase hΛ Z F' hZ hF'.1 hF'.2.1
     rw [frSet_congr D Λ (lf D F0) _ hZZ₁ P]
-    exact (GlobalTheory.T.frameTermCount_sublattice_bound D u u' F0 Λ hstand hbase hΛ P Z₁ s De _ hs1 hsk hsub hQ).trans
+    exact (_root_.GlobalTheory.LoopC.FrCount.main D u u' F0 Λ hstand hbase hΛ P Z₁ s De _ hs1 hsk hsub hQ).trans
       (ENNReal.ofReal_le_ofReal hbound)
   · rw [Set.not_nonempty_iff_eq_empty] at hne
     rw [hne]
@@ -885,8 +855,6 @@ open NumberField Module Matrix Formalism.BasicNotions Formalism.MainNotions.S Fo
 open scoped ENNReal Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.count_terms_gramClass_over_sublattice : ∀ Cg cb Cu cT CT C0 A : ℝ, ∃ C₀ : ℝ, ∀ C ≥ C₀, ∀ (D : D7) (large₂ : SizeData₂ D) (u u' : D.what₂.Word) (C' Cl : ℝ), 1 ≤ Cl → Hyp D large₂ u u' C' Cl Cg cb Cu cT CT C0 A → ∀ F0 : FlagG (VS D) D.R.rS ((Tu D u : ℕ) : D.host.E), F0.e = D.sp.hypE → F0.z = D.zmOf u → ∀ Λ : LatV D, IsRowLat D F0 Λ → ∀ Z : GramM D, RelZ D Z → ∀ s : ℕ, 1 ≤ s → s ≤ D.R.k → ∀ P : LatW D, P ≤ L0X D Λ (lf D F0) → rkW D P = D.R.k - s → ∀ De Hh : ℝ, 1 ≤ De → detW D P ≤ De → HHZ D large₂.sc.b C Z ≤ Hh → De ≤ Hh ^ 3 → (cntCl (FrSet D Λ (lf D F0) ((Tu D u' : ℕ) : D.host.E) Z P) (TEqv D Λ (lf D F0)) : ℝ≥0∞) ≤ ENNReal.ofReal (NT D u ^ (2 * D.R.rS) * De ^ D.R.rS * 9 ^ (s * D.R.f) * Hh ^ (9 * s + 9 * s * D.R.rS + 16 * D.R.rS ^ 2)) := by
-  first | exact @GlobalTheory.LoopC.TermsOver.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountTermsGramClassOverSublatticeStatement =====

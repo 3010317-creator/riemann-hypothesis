@@ -3,49 +3,7 @@ module
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 public import Mathlib.Topology.Separation.CompletelyRegular
 public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 public import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 @[expose] public section
@@ -153,10 +111,6 @@ theorem injOn_source_of_chart (n : ℕ) (z : M → V n) (e : OpenPartialHomeomor
   intro a ha b hb hab
   exact e.injOn ha hb (by rw [← he ha, ← he hb]; exact hab)
 
-private theorem encard_eq_count {X : Type*} [MeasurableSpace X] (S : Set X) (hS : MeasurableSet S) :
-    ((S.encard : ℕ∞) : ℝ≥0∞) = Measure.count S := by
-  rw [Measure.count_apply hS]
-
 theorem measurable_encard_fiber (n : ℕ) (z : M → V n) (hz : IsLocalHomeomorph z) (A : Set M)
     (hA : MeasurableSet A) :
     Measurable fun y => (((A ∩ z ⁻¹' {y}).encard : ℕ∞) : ℝ≥0∞) := by
@@ -181,14 +135,14 @@ theorem measurable_encard_fiber (n : ℕ) (z : M → V n) (hz : IsLocalHomeomorp
     intro y
     have h3 : A ∩ z ⁻¹' {y} = ⋃ i, (A ∩ disjointed T i) ∩ z ⁻¹' {y} := by
       rw [← Set.iUnion_inter, ← Set.inter_iUnion, hDU, Set.inter_univ]
-    rw [encard_eq_count _ (hA.inter (hmz y)), h3,
+    rw [← Measure.count_apply (hA.inter (hmz y)), h3,
       measure_iUnion (fun i j hij => ((show Disjoint (disjointed T i) (disjointed T j) from hDd hij).mono
         (Set.inter_subset_left.trans Set.inter_subset_right)
         (Set.inter_subset_left.trans Set.inter_subset_right)))
         (fun i => (hA.inter (hDm i)).inter (hmz y))]
     congr 1
     funext i
-    rw [← encard_eq_count _ ((hA.inter (hDm i)).inter (hmz y)),
+    rw [Measure.count_apply ((hA.inter (hDm i)).inter (hmz y)),
       encard_inter_fiber_of_injOn n z _ (injA i) y]
   have h4 : (fun y => ((A ∩ z ⁻¹' {y}).encard : ℝ≥0∞)) =
       fun y => ∑' i, (z '' (A ∩ disjointed T i)).indicator 1 y := funext key
@@ -207,12 +161,12 @@ theorem volAdditive {M : Type*} [TopologicalSpace M] [SecondCountableTopology M]
   have h1 : ∀ y, (((⋃ i, f i) ∩ z ⁻¹' {y}).encard : ℝ≥0∞) =
       ∑' i, ((f i ∩ z ⁻¹' {y}).encard : ℝ≥0∞) := by
     intro y
-    rw [encard_eq_count _ ((MeasurableSet.iUnion hf).inter (hmz y)), Set.iUnion_inter,
+    rw [← Measure.count_apply ((MeasurableSet.iUnion hf).inter (hmz y)), Set.iUnion_inter,
       measure_iUnion (fun i j hij => ((show Disjoint (f i) (f j) from hd hij).mono
         Set.inter_subset_left Set.inter_subset_left)) (fun i => (hf i).inter (hmz y))]
     congr 1
     funext i
-    rw [encard_eq_count _ ((hf i).inter (hmz y))]
+    rw [← Measure.count_apply ((hf i).inter (hmz y))]
   simp_rw [h1]
   exact lintegral_tsum (fun i => (measurable_encard_fiber n z hz (f i) (hf i)).aemeasurable)
 

@@ -3,41 +3,6 @@ module
 public import Formalism.LocalToGlobal.HermitianForms.TiedTwGen
 public import Formalism.LocalToGlobal.HermitianColumns.TiedQC
 public import Formalism.LocalToGlobal.HermitianForms.RankEqFirstLevel
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -48,8 +13,6 @@ open scoped TensorProduct
 
 namespace Formalism.L2.Forms
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7}
 
 structure TwAtT (Tw : TwForms D) (u : D.what₂.Word) (μ : D.what₂.Tup) where
@@ -57,16 +20,6 @@ structure TwAtT (Tw : TwForms D) (u : D.what₂.Word) (μ : D.what₂.Tup) where
   eVT : (Tw.A u μ).vT ≃ (D.mem u).A.vT
 
   eFv : ∀ v, (Tw.A u μ).Fv v ≃+* (D.mem u).A.Fv (eVT v)
-  psiT : ∀ v x, (Tw.A u μ).psiT v x = (D.mem u).A.psiT (eVT v) (eFv v x)
-  rhoT : ∀ v a φ, (Tw.A u μ).rhoT v a (D.e0Tw u μ φ) =
-    D.e0Tw u μ ((D.mem u).A.rhoT (eVT v) (Units.map ((eFv v : (Tw.A u μ).Fv v ≃+* (D.mem u).A.Fv (eVT v)) : (Tw.A u μ).Fv v →* (D.mem u).A.Fv (eVT v)) a) φ)
-  Mu0 : (Tw.A u μ).Mu0 = (D.mem u).A.Mu0.map (D.e0Tw u μ : _ →ₗ[ℂ] _)
-  duStar : (Tw.A u μ).duStar = (D.mem u).A.duStar
-  Dstar : (Tw.A u μ).Dstar = (D.mem u).A.Dstar
-  GamP : (Tw.A u μ).GamP = (D.mem u).A.GamP
-
-  tauOf : ∀ w, D.what₂.places.resChar w = (D.mem u).A.T → ∀ v, (Tw.fm u μ).tauOf w v = (D.fm u).tauOf w (eVT v)
-  seenP : ∀ w, D.what₂.places.resChar w = (D.mem u).A.T → (Tw.fm u μ).seenP w = (D.fm u).seenP w
 
 def TwAtT.eV {Tw : TwForms D} {u : D.what₂.Word} {μ : D.what₂.Tup} (a : TwAtT Tw u μ) (At : AtTTied u) :
     (Tw.A u μ).vT ≃ PlT D u := a.eVT.trans At.eV

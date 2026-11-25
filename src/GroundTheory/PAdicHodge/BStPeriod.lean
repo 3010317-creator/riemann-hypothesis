@@ -3,45 +3,7 @@ module
 public import GroundTheory.PAdicHodge.BdRAlgCl
 public import GroundTheory.PAdicHodge.UntiltFrobeniusEquivSymmEpsilonNeOne
 public import GroundTheory.PAdicHodge.LogMul
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -155,27 +117,6 @@ theorem untilt_kummerEta (σ : Gal(PadicAlgCl p/K)) : PreTilt.untilt (kummerEta 
   apply Subtype.ext
   rw [OneMemClass.coe_one]
   exact (mul_eq_left₀ natCast_p_ne_zero_cp).1 h.symm
-
-theorem gal_smul_logOnePlus (σ : Gal(PadicAlgCl p/K)) {z : 𝔹} (hz : z ∈ 𝔪) :
-    σ • logOnePlus 𝔪 z hz = logOnePlus 𝔪 (σ • z) (gal_smul_mem_maximalIdeal σ hz) := by
-  rw [gal_smul_bdR_def, logOnePlus, logOnePlus]
-  exact map_seriesEval (galBdRHom σ)
-    (Ideal.map_le_iff_le_comap.2 fun x hx => by
-      have h := gal_smul_mem_maximalIdeal σ hx
-      rw [gal_smul_bdR_def] at h
-      exact h) _ _ _
-
-theorem one_add_gal_smul_qBdR (σ : Gal(PadicAlgCl p/K)) :
-    1 + σ • qBdR (p := p) = (1 + qBdR) * (1 + muBdR p (kummerEta σ)) := by
-  have h1 : σ • (1 + qBdR (p := p)) = 1 + σ • qBdR := by rw [smul_add, smul_one]
-  rw [← h1, one_add_qBdR, muBdR_eq, add_sub_cancel, smul_mul', gal_smul_wittToBDeRhamPlus,
-    AInf.gal_smul_teichmuller, pFlat_mul_kummerEta, map_mul, map_mul, gal_smul_bdR_def (x := algebraMap _ _ _),
-    RingHom.map_rat_algebraMap, mul_assoc]
-
-theorem gal_smul_uBdR (σ : Gal(PadicAlgCl p/K)) :
-    σ • uBdR p = uBdR p + fontaineT (kummerEta σ) (untilt_kummerEta σ) := by
-  rw [uBdR, gal_smul_logOnePlus, fontaineT]
-  exact logOnePlus_mul qBdR_mem (muBdR_mem (untilt_kummerEta σ)) _ (one_add_gal_smul_qBdR σ)
 
 end Cp
 

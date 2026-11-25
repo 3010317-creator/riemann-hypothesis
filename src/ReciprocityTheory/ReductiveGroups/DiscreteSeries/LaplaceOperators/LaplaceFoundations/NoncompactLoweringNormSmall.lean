@@ -1,48 +1,6 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.LaplaceFoundations.RaisingLoweringNormIdentities
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
-import Mathlib.Algebra.Order.Star.Real
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.LaplaceFoundations.DoubleSumDiagSplit, ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.LaplaceFoundations.NoncompactLoweringNormSmall
@@ -256,10 +214,10 @@ theorem one_le_highestWeightBoundConst {n : ℕ} (ε : Fin n → Bool) (d Λ₀ 
 theorem le_mul_of_sq_le_mul_sq {x C s : ℝ} (_hx : 0 ≤ x) (hC : 1 ≤ C) (hs : 1 ≤ s) (h : x ^ 2 ≤ C * s ^ 2) :
     x ≤ C * s := by
   have h1 : C * s ^ 2 ≤ (C * s) ^ 2 := by
-    nlinarith [mul_nonneg (mul_nonneg (by linarith : (0:ℝ) ≤ C - 1) (by linarith : (0:ℝ) ≤ C))
+    linarith [hs, mul_nonneg (mul_nonneg (by linarith : (0:ℝ) ≤ C - 1) (by linarith : (0:ℝ) ≤ C))
       (sq_nonneg s)]
   have h2 : 0 ≤ C * s := by positivity
-  nlinarith
+  exact (sq_le_sq₀ _hx h2).mp (h.trans h1)
 
 section Datum
 
@@ -324,22 +282,22 @@ theorem highest_weight_datum_bounds {d Λ₀ : Fin n → ℝ} {t : ℝ} (ht : 1 
     have e6 : t * |d b| ≤ t * S := mul_le_mul_of_nonneg_left (hdS b) ht0
     have e7 := hΛT a
     have e8 := hΛT b
-    have e9 : T ≤ T * t := by nlinarith
-    nlinarith
+    have e9 : T ≤ T * t := le_mul_of_one_le_right hT0 ht
+    linarith
   have hsqb : ∀ a b, a ≠ b → ‖E a b w‖ ^ 2 ≤ C * t := by
     intro a b hab
-    have hKt : |K0| ≤ |K0| * t := by nlinarith
+    have hKt : |K0| ≤ |K0| * t := le_mul_of_one_le_right hK0a ht
     rcases lt_or_gt_of_ne hab with h | h <;> by_cases he : ε a = ε b
     · rw [hup a b h he]; simp; positivity
     · have h1 := hI2 a b h he
       have h2 := noncompact_lowering_norm_small hw h he
       have h3 := hdiff a b
-      rw [h1]; nlinarith
+      rw [h1, hCe]; linarith
     · have h1 := hI1 b a h he.symm
       have h3 := hdiff b a
-      rw [h1]; nlinarith
+      rw [h1, hCe]; linarith [hK0a]
     · have h2 := noncompact_lowering_norm_small hw h (Ne.symm he)
-      nlinarith
+      rw [hCe]; linarith [mul_nonneg hS0 ht0, mul_nonneg hT0 ht0]
   have hsq1 : 1 ≤ Real.sqrt t := by
     rw [show (1:ℝ) = Real.sqrt 1 from Real.sqrt_one.symm]; exact Real.sqrt_le_sqrt ht
   have hsq2 : Real.sqrt t ^ 2 = t := Real.sq_sqrt ht0
@@ -354,7 +312,7 @@ theorem highest_weight_datum_bounds {d Λ₀ : Fin n → ℝ} {t : ℝ} (ht : 1 
     · subst hab
       rw [ite_eq_left rfl, hdg]
       have := hΛT a
-      nlinarith
+      linarith [hS0, hT0, hK0a, le_mul_of_one_le_right (show 0 ≤ C by linarith) hsq1]
     · rw [ite_eq_right hab, zero_smul, sub_zero]
       exact le_mul_of_sq_le_mul_sq (norm_nonneg _) hC1 hsq1 (by rw [hsq2]; exact hsqb a b hab)
   refine ⟨?_, ?_, ?_⟩
@@ -362,7 +320,7 @@ theorem highest_weight_datum_bounds {d Λ₀ : Fin n → ℝ} {t : ℝ} (ht : 1 
     rcases hab with ⟨h, he, -⟩ | ⟨h, he⟩
     · rw [hup a b h he, norm_zero]; linarith
     · have h2 := noncompact_lowering_norm_small hw h (Ne.symm he)
-      have := le_mul_of_sq_le_mul_sq (norm_nonneg (E a b w)) hC1 le_rfl (by nlinarith)
+      have := le_mul_of_sq_le_mul_sq (norm_nonneg (E a b w)) hC1 le_rfl (by linarith [hS0, hT0])
       linarith
   · intro a b hab
     obtain ⟨he, hd⟩ := hab
@@ -380,7 +338,7 @@ theorem highest_weight_datum_bounds {d Λ₀ : Fin n → ℝ} {t : ℝ} (ht : 1 
         have e8 := hΛT b
         have e3 := neg_abs_le (Λ₀ a)
         have e4 := le_abs_self (Λ₀ b)
-        have := le_mul_of_sq_le_mul_sq (norm_nonneg (E a b w)) hC1 le_rfl (by rw [h1]; nlinarith)
+        have := le_mul_of_sq_le_mul_sq (norm_nonneg (E a b w)) hC1 le_rfl (by rw [h1]; linarith [hS0, hK0a])
         linarith
   · intro X
     have key : actM E X w - ((t : ℂ) * trace (dMat d * X)) • w =

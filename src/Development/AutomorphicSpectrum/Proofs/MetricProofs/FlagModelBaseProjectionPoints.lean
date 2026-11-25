@@ -18,50 +18,8 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverBasePointRegular
 import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PCoordConeArithVar
 import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals.MemMCoordIdealOfAevalEqZero
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -86,30 +44,12 @@ theorem sum_mapDomain_block {κ : K → K'} {v : (Σ k, ι k) → Σ k, ι' k} (
   apply GlobalTheory.CompanionTheory.Ar.PB.CovGraph.RegPhi.sum_mapDomain_block <;> assumption
 
 theorem isMultiHomog_rename_block {κ : K → K'} {v : (Σ k, ι k) → Σ k, ι' k} (hb : IsBlockMap κ v) {f : MRing ι}
-    {b : K → ℕ} (hf : IsMultiHomog f b) : IsMultiHomog (rename v f) (Function.extend κ b 0) := by
-  intro m hm k'
-  rw [support_rename_of_injective hb.2.1, Finset.mem_image] at hm
-  obtain ⟨m₀, hm₀, rfl⟩ := hm
-  rw [sum_mapDomain_block hb.2.2.1, Fintype.sum_sigma]
-  by_cases hk : ∃ k, κ k = k'
-  · obtain ⟨k, rfl⟩ := hk
-    rw [hb.1.extend_apply, Finset.sum_eq_single k]
-    · simpa using hf m₀ hm₀ k
-    · intro k₂ _ hne
-      exact Finset.sum_eq_zero fun i _ => ite_eq_right (hb.1.ne hne)
-    · simp
-  · rw [Function.extend_apply' _ _ _ hk]
-    exact Finset.sum_eq_zero fun k _ => Finset.sum_eq_zero fun i _ => ite_eq_right fun h => hk ⟨k, h⟩
+    {b : K → ℕ} (hf : IsMultiHomog f b) : IsMultiHomog (rename v f) (Function.extend κ b 0) :=
+  _root_.GlobalTheory.CompanionTheory.Ar.PB.CovGraph.RegPhi.isMultiHomog_rename_block hb hf
 
 theorem mConeMap_rename {Ω : Type} [Field Ω] {κ : K → K'} {v : (Σ k, ι k) → Σ k, ι' k} (hb : IsBlockMap κ v)
-    (y : (Σ k, ι' k) → Ω) (g : MRing ι) : mConeMap y (rename v g) = rename κ (mConeMap (y ∘ v) g) := by
-  induction g using MvPolynomial.induction_on with
-  | C a => simp [mConeMap]
-  | add p q hp hq => simp only [map_add (f := _), hp, hq]
-  | mul_X p n hp =>
-    simp only [map_mul, hp, rename_X]
-    congr 1
-    simp [mConeMap, hb.2.2.1 n]
+    (y : (Σ k, ι' k) → Ω) (g : MRing ι) : mConeMap y (rename v g) = rename κ (mConeMap (y ∘ v) g) :=
+  _root_.GlobalTheory.CompanionTheory.Ar.PB.CovGraph.RegPhi.mConeMap_rename hb y g
 
 theorem mConeMap_comp {Ω Ω' : Type} [Field Ω] [Field Ω'] (φ : Ω →+* Ω') (x : (Σ k, ι k) → Ω) (g : MRing ι) :
     mConeMap (φ ∘ x) g = map φ (mConeMap x g) := by

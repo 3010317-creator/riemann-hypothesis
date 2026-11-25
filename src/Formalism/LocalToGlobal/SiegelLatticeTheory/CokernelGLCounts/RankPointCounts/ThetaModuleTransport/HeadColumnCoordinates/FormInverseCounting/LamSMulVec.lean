@@ -3,47 +3,7 @@ module
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.ThetaModuleTransport.HeadColumnCoordinates.FormInverseCounting.DetSmulMk
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.ThetaModuleTransport.HeadColumnCoordinates.FormInverseCounting.AlgDefs
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.ThetaModuleTransport.HeadColumnCoordinates.FormInverseCounting.AlgInj
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -155,36 +115,9 @@ theorem lamS_b (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) O) (hO : ∀ x ∈ O, cj 
     rfl
   rw [key, h1, map_one]
 
-theorem lamS_e (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) O)
-    (hκ : (Z.map O.subtype)⁻¹ (Fin.last r) (Fin.last r) = 0) :
-    lamS O cj Z (Pi.single (Fin.last r) 1) = 0 := by
-  unfold lamS lamStarC
-  rw [Finset.sum_eq_single (Fin.last r)]
-  · rw [hκ, map_zero, zero_mul]
-  · intro b _ hb
-    simp [hb]
-  · simp
-
 variable (hcj : ∀ x, cj (cj x) = x) (hO : ∀ x ∈ O, cj x ∈ O)
 variable {Z₁ Z₂ : Matrix (Fin (r + 1)) (Fin (r + 1)) O}
 include hcj
-
-theorem pair_e (hu₁ : IsUnit (Z₁.map O.subtype).det) (hu₂ : IsUnit (Z₂.map O.subtype).det)
-    (hκ₁ : (Z₁.map O.subtype)⁻¹ (Fin.last r) (Fin.last r) = 0)
-    (hκ₂ : (Z₂.map O.subtype)⁻¹ (Fin.last r) (Fin.last r) = 0)
-    (p : PairSet O cj hO Z₁ Z₂) : p.1.2 (eCl (cjT O cj hO Z₁)) = eCl (cjT O cj hO Z₂) := by
-  obtain ⟨y₂', hy⟩ := Submodule.Quotient.mk_surjective _ (p.1.2 (eCl (cjT O cj hO Z₁)))
-  rw [← hy, eCl, ← sub_eq_zero, ← Submodule.Quotient.mk_sub]
-  apply mk_eq_zero_of O cj hcj hO Z₂ hu₂
-  · intro y
-    obtain ⟨y₁, hy₁⟩ := Submodule.Quotient.mk_surjective _ (p.1.1.symm (Submodule.Quotient.mk y))
-    have e1 : p.1.1 (Submodule.Quotient.mk y₁) = Submodule.Quotient.mk y := by
-      rw [hy₁]; exact p.1.1.apply_symm_apply _
-    have A := p.2.2.2 y₁ (Pi.single (Fin.last r) 1) y y₂' e1 hy.symm
-    rw [bRaw_e O cj Z₁, ← lam_keep O hu₁ hu₂ p.1.1.toLinearMap p.2.1.1 y₁ y e1] at A
-    rw [bRaw_sub_right, bRaw_e]
-    exact A
-  · rw [lamS_sub, p.2.2.1 _ y₂' hy.symm, lamS_e O cj Z₁ hκ₁, lamS_e O cj Z₂ hκ₂, sub_zero]
 
 theorem pair_b (hu₁ : IsUnit (Z₁.map O.subtype).det) (hu₂ : IsUnit (Z₂.map O.subtype).det)
     (p : PairSet O cj hO Z₁ Z₂) : p.1.2 (bCls (cjT O cj hO Z₁)) = bCls (cjT O cj hO Z₂) := by

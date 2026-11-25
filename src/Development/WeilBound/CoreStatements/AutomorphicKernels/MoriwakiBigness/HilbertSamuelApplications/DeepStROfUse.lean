@@ -73,61 +73,16 @@ public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBi
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.LineOfLargeDegreeOfUse
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsOpenOfRangeGenericSubset
-import Mathlib.Algebra.Module.StablyFree.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
-import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Tactic.Linter.Style
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBLocalB
-import Mathlib.Tactic.Basify
 import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.DefiniteFormStabilizerFiniteAwayFromP
 import Formalism.LocalRingCardinality.DataTheta
 import Formalism.LocalToGlobal.BesselHermitianTheta.NoncompactGapAtLeastRange
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.ArakelovInstances.IsStrictDom
-import Mathlib.AlgebraicGeometry.QuasiAffine
-import Mathlib.Tactic.TypeStar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
-import Mathlib.Topology.Sheaves.Init
 import Development.AutomorphicSpectrum.Definitions.MetricPeriods.PairRelationOfScaledRatio
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.PolyGrowthStatementPfB
@@ -146,7 +101,6 @@ import Formalism.LocalToGlobal.ProjectiveLattices.IntAllProofFree
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ModuliExistsNumberFieldPoint
 import Formalism.LocalToGlobal.ProjectiveLattices.IntAllProof
-import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsFiniteExtAllModelsUniformised, Development.AbelianVarietyTheory.Proofs.JetHarmonics.TypingsAgree, Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsIntIffOfNatural, Development.AutomorphicSpectrum.Proofs.GeometryProofs.CostTwoLogBound, Development.AutomorphicSpectrum.Proofs.GeometryProofs.CostTwoLogBoundStatement, Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsIsGlobal, Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPPowerLevelFromPrimesAboveP, Development.AutomorphicSpectrum.Proofs.GeometryProofs.SplitComponentsOfAlgClosed, Development.AutomorphicSpectrum.Proofs.GeometryProofs.SplitComponentsOfAlgClosedStatement, Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullIntersectionGoodLevel, Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianCmCompLawsBound, Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianCmCompLawsBoundStatement, Development.AutomorphicSpectrum.Proofs.GeometryProofs.FieldOfDatumAbelian, Development.AutomorphicSpectrum.Proofs.GeometryProofs.CardLower, Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodDatumParameters, Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodDatumParametersStatement, Development.AutomorphicSpectrum.Proofs.GeometryProofs.DeepStROfVolume, Development.AutomorphicSpectrum.Proofs.GeometryProofs.FinalTheoremOfInputsLeft, Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.GivenOfUse, Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.DeepStROfUse
@@ -346,7 +300,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Filter Topology
 open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.BasicNotions Formalism.MainNotions
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
-attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 namespace GlobalTheory.CompanionTheory.Ar.Plug
 
@@ -509,7 +462,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Filter Topology
 open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.BasicNotions Formalism.MainNotions
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
-attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 end -- clump:auto
 end -- clump:auto
@@ -694,7 +646,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Filter Topology
 open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.BasicNotions Formalism.MainNotions
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
-attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 namespace GlobalTheory.CompanionTheory.Ar.Plug
 
@@ -716,7 +667,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Filter Topology
 open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.BasicNotions Formalism.MainNotions
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
-attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 theorem _root_.GlobalTheory.T.split_components_of_alg_closed : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)), FnAlgClosed (Xo := Xo) (c := c) → SplitComps Y := by
   first | exact @GlobalTheory.CompanionTheory.Ar.Plug.splitComps_of_fnAlgClosed_model
@@ -732,7 +682,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Filter Topology
 open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.BasicNotions Formalism.MainNotions
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
-attribute [-instance] GlobalTheory.CompHt.fintypePsi
 namespace GlobalTheory.CompanionTheory.Ar.Plug
 
 theorem vs_tower : _root_.GlobalTheory.CompanionTheory.Ar.Top.Given →
@@ -783,7 +732,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Filter Topology
 open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.BasicNotions Formalism.MainNotions
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
-attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 namespace GlobalTheory.CompanionTheory.Ar.Plug.MeanTop
 
@@ -919,7 +867,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Filter Topology
 open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.BasicNotions Formalism.MainNotions
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
-attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 end -- clump:auto
 end -- clump:auto
@@ -952,6 +899,7 @@ open NumberField IsDedekindDomain MeasureTheory Filter Topology
 open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.G.AR.Up ReciprocityTheory.ChartRestriction.G.AR.Inst Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec
 open scoped Matrix
+open scoped GlobalTheory.CompHt
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
@@ -983,7 +931,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Filter Topology
 open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.BasicNotions Formalism.MainNotions
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
-attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 namespace GlobalTheory.CompanionTheory.Ar.Plug
 
@@ -1080,7 +1027,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Filter Topology
 open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.BasicNotions Formalism.MainNotions
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
-attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 end -- clump:auto
 end -- clump:auto
@@ -1094,7 +1040,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Filter Topology
 open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.BasicNotions Formalism.MainNotions
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
-attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 namespace GlobalTheory.CompanionTheory.Ar.Plug
 
@@ -1193,7 +1138,6 @@ section -- clump:auto
 open NumberField Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Indef.Tree
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 namespace GlobalTheory.CompanionTheory.Ar.Plug
 

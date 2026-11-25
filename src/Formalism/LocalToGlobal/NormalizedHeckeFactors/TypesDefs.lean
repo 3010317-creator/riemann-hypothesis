@@ -3,48 +3,9 @@ module
 public import Formalism.LocalToGlobal.UnitaryNorms.RealCyclotomicTwoPower
 public import Formalism.CyclotomicNorms.StatementT
 public import Mathlib.Order.CompletePartialOrder
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -169,56 +130,17 @@ def IsIrrChar {G : Type} [Group G] [Fintype G] (χ : G → ℂ) : Prop :=
 
 variable {F : Type} [Field F] [Fintype F] [DecidableEq F]
 
-def unipBlock (d a : ℕ) : Set (GL (Fin d) F) :=
-  {u | ∀ i j : Fin d, (u : Matrix (Fin d) (Fin d) F) i j = (if i = j then 1 else 0) ∨ (i.val < a ∧ a ≤ j.val)}
-
-def IsCuspChar {d : ℕ} (χ : GL (Fin d) F → ℂ) : Prop :=
-  IsIrrChar χ ∧ ∀ a, 0 < a → a < d →
-    ∑ u : GL (Fin d) F, (open Classical in if u ∈ (unipBlock d a : Set (GL (Fin d) F)) then χ u else 0) = 0
-
 def offs {m : ℕ} (c : Fin m → ℕ) (i : Fin m) : ℕ := ∑ j : Fin m, if j < i then c j else 0
-
-def IsBaseBlockVar {m : ℕ} (c : Fin m → ℕ) (i : Fin m) (x : ℕ) : Prop := offs c i ≤ x ∧ x < offs c i + c i
-
-def IsParab {m r : ℕ} (c : Fin m → ℕ) (p : GL (Fin r) F) : Prop :=
-  ∀ (x y : Fin r) (i j : Fin m), IsBaseBlockVar c i x.val → IsBaseBlockVar c j y.val → j < i →
-    (p : Matrix (Fin r) (Fin r) F) x y = 0
 
 def blkOf {m r : ℕ} (c : Fin m → ℕ) (i : Fin m) (M : Matrix (Fin r) (Fin r) F) :
     Matrix (Fin (c i)) (Fin (c i)) F :=
   fun a b => if h : offs c i + a.val < r ∧ offs c i + b.val < r then M ⟨_, h.1⟩ ⟨_, h.2⟩ else 0
 
-def onMat {n : ℕ} (χ : GL (Fin n) F → ℂ) (M : Matrix (Fin n) (Fin n) F) : ℂ :=
-  open Classical in if h : IsUnit M then χ h.unit else 0
-
-def eOf {G : Type} [Group G] [Fintype G] (χ : G → ℂ) : MonoidAlgebra ℂ G :=
-  MonoidAlgebra.ofCoeff (Finsupp.equivFunOnFinite.symm fun x => χ 1 / (Fintype.card G : ℂ) * χ x⁻¹)
-
 variable {g : ℕ} [Fact g.Prime]
-
-def GreenAt (teich : Formalism.CyclotomicNorms.Fbar g →* ℂ) {d : ℕ} (χ : GL (Fin d) (ZMod g) → ℂ) (k : ℕ) : Prop :=
-  ∀ x : GL (Fin d) (ZMod g), Irreducible (Matrix.charpoly (x : Matrix (Fin d) (Fin d) (ZMod g))) →
-    χ x = (-1) ^ (d - 1) *
-      ((Formalism.CyclotomicNorms.rootsBar (Matrix.charpoly (x : Matrix (Fin d) (Fin d) (ZMod g)))).map fun α => teich α ^ k).sum
 
 def IsGenSys (ζ : ℕ → Formalism.CyclotomicNorms.Fbar g) : Prop :=
   ∀ d, 0 < d → orderOf (ζ d) = g ^ d - 1 ∧
     ∀ d', d ∣ d' → 0 < d' → ζ d' ^ ((g ^ d' - 1) / (g ^ d - 1)) = ζ d
-
-def labCusp (ζ : ℕ → Formalism.CyclotomicNorms.Fbar g) (d k : ℕ) : (ZMod g)[X] := minpoly (ZMod g) (ζ d ^ k)
-
-def InSeries (teich : Formalism.CyclotomicNorms.Fbar g →* ℂ) (ζ : ℕ → Formalism.CyclotomicNorms.Fbar g) {r : ℕ} (χ : GL (Fin r) (ZMod g) → ℂ)
-    (f : (ZMod g)[X]) : Prop :=
-  ∃ (m : ℕ) (c : Fin m → ℕ) (χs : ∀ i, GL (Fin (c i)) (ZMod g) → ℂ) (ks : Fin m → ℕ),
-    (∀ i, 0 < c i) ∧ ∑ i, c i = r ∧
-    (∀ i, IsCuspChar (χs i) ∧ GreenAt teich (χs i) (ks i) ∧ (labCusp ζ (c i) (ks i)).natDegree = c i) ∧
-    ∏ i, labCusp ζ (c i) (ks i) = f ∧
-    ∑ p : GL (Fin r) (ZMod g),
-      (open Classical in if IsParab c p then χ p * star (∏ i, onMat (χs i) (blkOf (r := r) c i (p : Matrix (Fin r) (Fin r) (ZMod g)))) else 0) ≠ 0
-
-def eSerC (teich : Formalism.CyclotomicNorms.Fbar g →* ℂ) (ζ : ℕ → Formalism.CyclotomicNorms.Fbar g) (r : ℕ) (f : (ZMod g)[X]) :
-    MonoidAlgebra ℂ (GL (Fin r) (ZMod g)) :=
-  ∑ᶠ (χ : GL (Fin r) (ZMod g) → ℂ) (_ : IsIrrChar χ ∧ InSeries teich ζ χ f), eOf χ
 
 end Series
 

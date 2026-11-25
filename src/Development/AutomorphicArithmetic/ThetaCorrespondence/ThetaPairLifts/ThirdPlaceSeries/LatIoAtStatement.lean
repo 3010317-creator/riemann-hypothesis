@@ -79,7 +79,6 @@ import Mathlib.Tactic.ReduceModChar
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -88,8 +87,6 @@ open GlobalTheory.BigOn GlobalTheory.BigOn.Exp Formalism.L2.Theta GlobalTheory.E
 open Formalism.L2.Host (embLL0)
 open scoped TensorProduct
 
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.BigOn.Exp.SerBase
 
@@ -176,7 +173,6 @@ section -- clump:auto
 
 
 section
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -186,7 +182,6 @@ open Formalism.L2.Host (embLL0)
 open scoped TensorProduct
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.BigOn.Exp.SerBase
 section BaseChange
 variable {E K₀ K ι : Type} [Field E] [NumberField E] [Field K₀] [NumberField K₀] [Field K] [NumberField K] [Fintype ι]

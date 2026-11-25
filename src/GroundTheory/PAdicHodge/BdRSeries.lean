@@ -2,48 +2,7 @@ module
 
 public import Mathlib.RingTheory.AdicCompletion.RingHom
 public import Mathlib.RingTheory.PowerSeries.Log
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 public import Mathlib.Algebra.Algebra.Rat
 
 @[expose] public section
@@ -294,17 +253,6 @@ theorem logOnePlus_sub_sum_mem {z : B} (hz : z ∈ I) (n : ℕ) :
         RingHom.id_apply]
   rw [hs]
   exact seriesEval_sub_sum_mem hz (log ℚ) n
-
-theorem logOnePlus_eq_mul {z : B} (hz : z ∈ I) : ∃ u, u - 1 ∈ I ∧ logOnePlus I z hz = z * u := by
-  set h : ℚ⟦X⟧ := mk fun n => coeff (n + 1) (log ℚ)
-  have hlog : log ℚ = X * h := by
-    conv_lhs => rw [eq_X_mul_shift_add_const (log ℚ)]
-    rw [constantCoeff_log, map_zero, add_zero]
-  refine ⟨seriesEval I z hz h, ?_, ?_⟩
-  · have h1 := seriesEval_sub_sum_mem hz h 1
-    rwa [Finset.sum_range_one, pow_zero, mul_one, pow_one, coeff_mk, zero_add, coeff_one_log,
-      map_one] at h1
-  · rw [logOnePlus, hlog, map_mul, seriesEval_X]
 
 theorem logOnePlus_pow {z : B} (hz : z ∈ I) (k : ℕ) (hk : (1 + z) ^ k - 1 ∈ I) :
     logOnePlus I ((1 + z) ^ k - 1) hk = k * logOnePlus I z hz := by

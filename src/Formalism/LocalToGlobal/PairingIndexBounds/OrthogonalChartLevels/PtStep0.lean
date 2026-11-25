@@ -1,43 +1,6 @@
 module
 
 public import Formalism.LocalToGlobal.PairingIndexBounds.OrthogonalChartLevels.IsOrthCo
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -81,23 +44,5 @@ def PtD.re {N n : ℕ} (h : N = n) (Λ : Submodule (𝓞 E) (Fin N → E)) (g : 
   dt := dt
 
 variable {I : LocId L p nV W Qq} {N m : ℕ}
-
-def ptStep (S : StepG I N) (hk : m + 1 = N) (a : 𝓞 E) (bad : Finset (HeightOneSpectrum (𝓞 F))) (i : S.comp)
-    (Lt : Fin nV → Submodule W (Fin (m + 1) → Qq)) : PtD F E (m + 1) :=
-  PtD.re hk.symm (kerLat (sp := sp) S hk a i Lt)
-    ((toLE (gamAd S.Uloc bad (ptAd S hk i Lt))).trans (stdCo (sp.cm.sig : E →+* E) S.J))
-    (Matrix.GeneralLinearGroup.det (ptAd S hk i Lt))
-
-def ptAd0 (hdet : IsUnit sp.gram0.det) (hk : m + 1 = R.k) (y : compL L p → UPts sp.cm.sig sp.gram0 (Formalism.L2.Herm.Af F))
-    (i : compL L p) (Lt : Fin nV → Submodule W (Fin (m + 1) → Qq)) : GL (Fin R.k) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
-  ((y i * jQ I hdet hk (gOf Lt) : GA sp) : GL (Fin R.k) (E ⊗[F] FiniteAdeleRing (𝓞 F) F))
-
-def ptStep0 (hdet : IsUnit sp.gram0.det) (hk : m + 1 = R.k) (y : compL L p → UPts sp.cm.sig sp.gram0 (Formalism.L2.Herm.Af F))
-    (a : 𝓞 E) (bad : Finset (HeightOneSpectrum (𝓞 F))) (i : compL L p) (Lt : Fin nV → Submodule W (Fin (m + 1) → Qq)) :
-    PtD F E (m + 1) :=
-  PtD.re hk.symm
-    (toStd (sp.cm.sig : E →+* E) sp.gram0 (compan (sp := sp) sp.gram0 a (latAd (ptAd0 (I := I) hdet hk y i Lt) L.Lb)))
-    ((toLE (gamAd L.Uloc bad (ptAd0 (I := I) hdet hk y i Lt))).trans (stdCo (sp.cm.sig : E →+* E) sp.gram0))
-    (Matrix.GeneralLinearGroup.det (ptAd0 (I := I) hdet hk y i Lt))
 
 end Formalism.L2.PairingIndexBounds.F

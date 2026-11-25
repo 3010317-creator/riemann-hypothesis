@@ -232,7 +232,6 @@ open NumberField IsDedekindDomain ValuativeRel GlobalTheory.CuspRep GlobalTheory
 open UpperTheory.V.W (Plc Lp)
 open UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Dict
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open UpperTheory.V.Z.Sym.Al
 
 theorem UpperTheory.V.Z.Sym.Al.contE :
@@ -264,7 +263,6 @@ open NumberField IsDedekindDomain ValuativeRel GlobalTheory.CuspRep GlobalTheory
 open UpperTheory.V.W (Plc Lp)
 open UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Dict
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open UpperTheory.V.Z.Sym.Al
 
 theorem UpperTheory.V.Z.Sym.Al.eigTS :
@@ -272,8 +270,6 @@ theorem UpperTheory.V.Z.Sym.Al.eigTS :
   intro L _ _ _ V _ _ φ w W ψ h t ht
   have hd : Sig.SDom ![t, t⁻¹] := by
     intro i j hij
-    haveI : Nontrivial (ValueGroupWithZero (Kw w)) :=
-      (inferInstance : LinearOrderedCommGroupWithZero (ValueGroupWithZero (Kw w))).toNontrivial
     have h0 : valuation (Kw w) (t : Kw w) ≠ 0 := (Valuation.ne_zero_iff _).2 t.ne_zero
     fin_cases i <;> fin_cases j <;> simp at hij ⊢
     exact ht.trans ((one_lt_inv₀ (zero_lt_iff.2 h0)).2 ht)
@@ -293,7 +289,6 @@ open NumberField IsDedekindDomain ValuativeRel GlobalTheory.CuspRep GlobalTheory
 open UpperTheory.V.W (Plc Lp)
 open UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Dict
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open UpperTheory.V.Z.Sym.Al
 
 namespace UpperTheory.V.Z.Sym.Al.ExtChar
@@ -442,7 +437,6 @@ open NumberField IsDedekindDomain ValuativeRel GlobalTheory.CuspRep GlobalTheory
 open UpperTheory.V.W (Plc Lp)
 open UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Dict
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open UpperTheory.V.Z.Sym.Al
 
 section SlopeTestRemainingChoices
@@ -659,7 +653,6 @@ open NumberField IsDedekindDomain ValuativeRel GlobalTheory.CuspRep GlobalTheory
 open UpperTheory.V.W (Plc Lp)
 open UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Dict
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open UpperTheory.V.Z.Sym.Al
 
 namespace UpperTheory.V.Z.Sym.Al
@@ -667,8 +660,6 @@ namespace UpperTheory.V.Z.Sym.Al
 private theorem sdom_pair {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (t : kˣ) (ht : valuation k (t : k) < 1) : Sig.SDom ![t, t⁻¹] := by
   intro i j hij
-  haveI : Nontrivial (ValueGroupWithZero k) :=
-    (inferInstance : LinearOrderedCommGroupWithZero (ValueGroupWithZero k)).toNontrivial
   have h0 : valuation k (t : k) ≠ 0 := (Valuation.ne_zero_iff _).2 t.ne_zero
   have h1 : valuation k (t : k) < (valuation k (t : k))⁻¹ :=
     ht.trans (one_lt_inv₀ (zero_lt_iff.2 h0) |>.2 ht)
@@ -697,8 +688,6 @@ private theorem loc_char {k M : Type} [Field k] [ValuativeRel k] [TopologicalSpa
     ∃ ψ : Fin 2 → kˣ →* ℂˣ, (∀ i, ∀ x ∈ Hi.Uo k, ψ i x = 1) ∧ ψ 0 / ψ 1 = b ∧
       ∀ d, Sig.SDom d → u d v = expo ψ d • v := by
   classical
-  haveI : Nontrivial (ValueGroupWithZero k) :=
-    (inferInstance : LinearOrderedCommGroupWithZero (ValueGroupWithZero k)).toNontrivial
   choose! χ hχ using heig
   have uniq : ∀ c c' : ℂ, c • v = c' • v → c = c' := fun c c' h => smul_left_injective ℂ hv h
   have hmulχ : ∀ d d', AlgebraTools.Dom d → AlgebraTools.Dom d' → χ (d * d') = χ d * χ d' := by
@@ -836,7 +825,6 @@ open NumberField IsDedekindDomain ValuativeRel GlobalTheory.CuspRep GlobalTheory
 open UpperTheory.V.W (Plc Lp)
 open UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Dict
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open UpperTheory.V.Z.Sym.Al
 
 theorem UpperTheory.V.Z.Sym.Al.smoothDepth :
@@ -1289,7 +1277,6 @@ section
 open NumberField IsDedekindDomain ValuativeRel GlobalTheory.CuspRep GlobalTheory.PRep GlobalTheory.UnitaryBC GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.LocGL Formalism.BasicNotions
 open UpperTheory.V.W (Plc Lp)
 open UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Dict
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open UpperTheory.V.Z.Sym.Al
 private theorem compD :
     _root_.GlobalTheory.Mem.LiteralAutomorphy.LiteratureRankNHypothesis → ∀ (L : Type) [Field L] [NumberField L] [IsCMField L], Unr L → ∀ n : ℕ, 1 ≤ n → ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (π : Submodule ℂ (UA L n → ℂ)), IsAutRepU π → ∀ w, IsSplitAt w → ∀ W : Sig.Lev (Kw w),

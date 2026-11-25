@@ -3,57 +3,14 @@ module
 public import GroundTheory.HeightsAndTheta.Heights.FieldsOfNumbers.Statements
 public import GroundTheory.ArithmeticGeometry.AbelianVarieties.JacobianSmoothness.RingKrullDimLeRingKrullDimQuotientAddOne
 public import GroundTheory.HeightsAndTheta.Heights.FieldsOfNumbers.PHilbExactDivide
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Sub.Prod
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
 public import Mathlib.RingTheory.MvPolynomial.Ideal
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.RingTheory.TotallySplit
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Presheaf
 public import Mathlib.Order.Filter.AtTopBot.Group
 
@@ -171,22 +128,11 @@ theorem isMultiHomogIdeal_sup_span {P : Ideal (MRing ι F)} (hP : IsMultiHomogId
     {c : K → ℕ} {s : MRing ι F} (hs : IsMultiHomog s c) :
     IsMultiHomogIdeal (P ⊔ Ideal.span {s}) := by
   classical
-  intro f hf b
-  obtain ⟨a, ha, t', ht', rfl⟩ := Submodule.mem_sup.mp hf
-  obtain ⟨t, rfl⟩ := Ideal.mem_span_singleton'.mp ht'
-  have hcomponent : weightedHomogeneousComponent (blockWeight ι) b (t * s) =
-      if c ≤ b then weightedHomogeneousComponent (blockWeight ι) (b - c) t * s else 0 := by
-    letI := MvPolynomial.weightedGradedAlgebra F (blockWeight ι)
-    have hs' : s ∈ weightedHomogeneousSubmodule F (blockWeight ι) c :=
-      (mem_weightedHomogeneousSubmodule _ _ _ _).mpr hs
-    rw [← weightedDecomposition.decompose'_apply, ← weightedDecomposition.decompose'_apply]
-    exact DirectSum.coe_decompose_mul_of_right_mem
-      (𝒜 := weightedHomogeneousSubmodule F (blockWeight ι)) b (a := t) hs'
-  rw [map_add (f := _), hcomponent]
-  refine Ideal.add_mem _ (Ideal.mem_sup_left (hP a ha b)) ?_
-  split_ifs
-  · exact Ideal.mem_sup_right (Ideal.mul_mem_left _ _ (Ideal.mem_span_singleton_self s))
-  · exact Ideal.zero_mem _
+  let _ := MvPolynomial.weightedGradedAlgebra F (blockWeight ι)
+  have hP' : P.IsHomogeneous (weightedHomogeneousSubmodule F (blockWeight ι)) := fun b r hr => by
+    have := hP r hr b; rwa [← weightedDecomposition.decompose'_apply] at this
+  exact fun f hf b => weightedHomogeneousComponent_mem_of_mem F (blockWeight ι)
+    (hP'.sup (Ideal.homogeneous_span _ _ (by rintro _ rfl; exact ⟨c, hs⟩))) hf b
 
 
 omit [DecidableEq K] in

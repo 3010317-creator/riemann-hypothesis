@@ -2,55 +2,13 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.ChowForms.Imports
 public import GroundTheory.ArithmeticGeometry.AbelianVarieties.JacobianSmoothness.RingKrullDimLeRingKrullDimQuotientAddOne
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.KrullDimension.Field
 import Mathlib.RingTheory.KrullDimension.Polynomial
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -109,17 +67,11 @@ theorem ChowFormExists.proof (h₁ : IncIdealDim.Statement) (h₂ : IncIdealPrim
     ⟨_, rfl, by generalize k * n = N at hkn ⊢; omega⟩
   rw [hm1, ← hm2] at hsum
   have hht : (incIdeal P k).height = 1 := by
-    generalize (incIdeal P k).height = h at hsum
-    have h' : (h + m : ℕ∞) = ((m + 1 : ℕ) : ℕ∞) := by
-      have : ((h + m : ℕ∞) : WithBot ℕ∞) = (((m + 1 : ℕ) : ℕ∞) : WithBot ℕ∞) := by
-        push_cast at hsum ⊢
-        exact hsum
-      exact_mod_cast this
-    induction h using ENat.recTopCoe with
-    | top => exact (ENat.natCast_ne_top (m + 1) h'.symm).elim
-    | coe a =>
-      norm_cast at h' ⊢
-      omega
+    have h' : (incIdeal P k).height + m = 1 + m := by
+      rw [add_comm 1 (m : ℕ∞), ← Nat.cast_succ]
+      exact WithBot.coe_inj.mp (by push_cast at hsum ⊢; exact hsum)
+    exact le_antisymm ((ENat.add_le_add_iff_right (ENat.natCast_ne_top m)).mp h'.le)
+      ((ENat.add_le_add_iff_right (ENat.natCast_ne_top m)).mp h'.ge)
   have hne : incIdeal P k ≠ ⊥ := Ideal.ne_bot_of_height_eq_one hht
   obtain ⟨g, hgmem, hgp⟩ := Ideal.IsPrime.exists_mem_prime_of_ne_bot hQ hne
   have hspan := Ideal.eq_span_singleton_of_height_eq_one hht hgmem hgp

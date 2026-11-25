@@ -7,48 +7,11 @@ import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLattic
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.NcRealXPS
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.Complex
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Mathlib.RingTheory.PicardGroup
 
 @[expose] public section
@@ -186,8 +149,6 @@ namespace Formalism.L2.SG.Pf.NcReal.JX.FR
 open Formalism.QuantumDeterminants Formalism.MainNotions.S Formalism.L2.SG.HidaSetting Formalism.L2.SG.RealObj Formalism.L2.SG.Pf.WFL Formalism.L2.SG.Pf Formalism.L2.SG.Pf.NcReal.JX
   Formalism.L2.SG.RealObj.InfCut
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 section HidaSetting
 
 variable {D : D7} (X : HidaSetting D)
@@ -231,8 +192,6 @@ namespace Formalism.L2.SG.Pf.NcReal.JX.FR
 
 open Formalism.QuantumDeterminants Formalism.MainNotions.S Formalism.L2.SG.HidaSetting Formalism.L2.SG.RealObj Formalism.L2.SG.Pf.WFL Formalism.L2.SG.Pf Formalism.L2.SG.Pf.NcReal.JX
   Formalism.L2.SG.RealObj.InfCut
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 section HidaSetting
 
@@ -360,12 +319,8 @@ def Lmap (M : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) : (CIdx r k → ℝ) →�
     (Psi r k).toLinearMap
 
 theorem det_vecMulLinear (M : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) : LinearMap.det (Matrix.vecMulLinear M) = M.det := by
-  have h : Matrix.vecMulLinear M = Matrix.toLin' Mᵀ := by
-    apply LinearMap.ext
-    intro v
-    funext i
-    simp [Matrix.vecMul, Matrix.mulVec, dotProduct, mul_comm]
-  rw [h, LinearMap.det_toLin', Matrix.det_transpose]
+  rw [← Matrix.mulVecLin_transpose, ← Matrix.toLin'_apply', LinearMap.det_toLin',
+    Matrix.det_transpose]
 
 theorem det_Lmap (M : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) :
     LinearMap.det (Lmap (r := r) M) = Complex.normSq M.det ^ r := by
@@ -383,8 +338,6 @@ namespace Formalism.L2.SG.Pf.NcReal.JX.FR
 
 open Formalism.QuantumDeterminants Formalism.MainNotions.S Formalism.L2.SG.HidaSetting Formalism.L2.SG.RealObj Formalism.L2.SG.Pf.WFL Formalism.L2.SG.Pf Formalism.L2.SG.Pf.NcReal.JX
   Formalism.L2.SG.RealObj.InfCut Formalism.L2.SG.Pf.LsNc5
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 section Final
 

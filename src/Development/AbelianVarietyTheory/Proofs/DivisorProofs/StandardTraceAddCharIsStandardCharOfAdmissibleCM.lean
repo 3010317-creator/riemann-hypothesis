@@ -76,36 +76,14 @@ theorem psi_pairA {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (x : Ainf F) :
       (Algebra.trace ℝ (mixedEmbedding.mixedSpace F) (InfiniteAdeleRing.ringEquiv_mixedSpace F x) : ℝ)) :=
   hψ.2.2 _ (at_pairA x)
 
-theorem norm_exp_real (r : ℝ) : ‖Complex.exp (-(2 * Real.pi * Complex.I) * (r : ℂ))‖ = 1 := by
-  have : -(2 * Real.pi * Complex.I) * (r : ℂ) = ((-(2 * Real.pi * r) : ℝ) : ℂ) * Complex.I := by
-    push_cast; ring
-  rw [this, Complex.norm_exp_ofReal_mul_I]
-
 theorem norm_psi_inf {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (x : Ainf F) : ‖ψ (pairA F x 0)‖ = 1 := by
-  rw [psi_pairA hψ]; exact norm_exp_real _
-
-theorem pairA_split (x : AF F) : x = pairA F x.1 0 + pairA F 0 x.2 := by
-  show x = ((x.1 + 0 : Ainf F), (0 + x.2 : Af F))
-  rw [add_zero, zero_add]
-  rfl
+  rw [psi_pairA hψ]; exact PositivityTheory.ThKEst.W.norm_exp_real _
 
 theorem norm_psi_fin {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (y : Af F) : ‖ψ (pairA F 0 y)‖ = 1 := by
-  have hc : Continuous fun y : Af F => ‖ψ (pairA F 0 y)‖ :=
-    (hψ.1.comp (continuous_const.prodMk continuous_id)).norm
-  have hcl : IsClosed {y : Af F | ‖ψ (pairA F 0 y)‖ = 1} := isClosed_eq hc continuous_const
-  have hrange : Set.range (algebraMap F (Af F)) ⊆ {y : Af F | ‖ψ (pairA F 0 y)‖ = 1} := by
-    rintro _ ⟨a, rfl⟩
-    have h1 := hψ.2.1 a
-    rw [GlobalTheory.AdeleCharTwist.algebraMap_eq_pairA, AddChar.map_add_eq_mul] at h1
-    have h2 := congrArg norm h1
-    rw [norm_mul, norm_psi_inf hψ, one_mul, norm_one] at h2
-    exact h2
-  have := hcl.closure_subset_iff.2 hrange
-  rw [GlobalTheory.AdeleCharTwist.denseRange_fin.closure_range] at this
-  exact this (Set.mem_univ y)
+  apply _root_.PositivityTheory.ThKEst.W.norm_psi_fin <;> assumption
 
 theorem norm_psi {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (x : AF F) : ‖ψ x‖ = 1 := by
-  rw [pairA_split x, AddChar.map_add_eq_mul, norm_mul, norm_psi_inf hψ, norm_psi_fin hψ, one_mul]
+  rw [PositivityTheory.ThKEst.W.pairA_split x, AddChar.map_add_eq_mul, norm_mul, norm_psi_inf hψ, norm_psi_fin hψ, one_mul]
 
 theorem exists_ne_one {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) : ∃ x, ψ x ≠ 1 := by
   apply _root_.PositivityTheory.ThKEst.W.exists_ne_one <;> assumption

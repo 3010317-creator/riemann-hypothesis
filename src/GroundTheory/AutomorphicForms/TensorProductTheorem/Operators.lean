@@ -3,48 +3,10 @@ module
 public import Mathlib.Algebra.Algebra.Subalgebra.Lattice
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
 public import Mathlib.RepresentationTheory.AlgebraRepresentation.Basic
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 public import Mathlib.LinearAlgebra.Dimension.Constructions
 public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 
@@ -83,15 +45,6 @@ theorem IsStable.adjoin {T : Set (End ℂ M)} {p : Submodule ℂ M} (h : IsStabl
     intro x hx
     rw [Module.End.mul_apply]
     exact ha _ (hb x hx)
-
-theorem commute_of_mem_adjoin {T : Set (End ℂ M)} {a : End ℂ M} (ha : ∀ t ∈ T, Commute a t) :
-    ∀ b ∈ Algebra.adjoin ℂ T, Commute a b := by
-  intro b hb
-  induction hb using Algebra.adjoin_induction with
-  | mem t ht => exact ha t ht
-  | algebraMap c => exact (Algebra.commutes' c a).symm
-  | add b c _ _ hb hc => exact hb.add_right hc
-  | mul b c _ _ hb hc => exact hb.mul_right hc
 
 theorem IsStable.mono {T₁ T₂ : Set (End ℂ M)} {p : Submodule ℂ M} (h : IsStable T₂ p)
     (hT : T₁ ⊆ T₂) : IsStable T₁ p :=
@@ -152,7 +105,7 @@ theorem eq_zero_of_forall_mem {T₁ T₂ : Set (End ℂ M)} (h : IsSimpleUnder (
       rw [Submodule.mem_comap]
       rcases ht with ht | ht
       · have hcomm : Commute t (b : End ℂ M) :=
-          commute_of_mem_adjoin (fun s hs => hc t ht s hs) b b.2
+          Algebra.commute_of_mem_adjoin_of_forall_mem_commute b.2 (fun s hs => hc t ht s hs)
         have : t ((b : End ℂ M) n) = (b : End ℂ M) (t n) := by
           rw [← Module.End.mul_apply, hcomm.eq, Module.End.mul_apply]
         rw [this]
@@ -172,7 +125,7 @@ theorem eq_zero_of_forall_mem {T₁ T₂ : Set (End ℂ M)} (h : IsSimpleUnder (
     refine iSup_le fun b => ?_
     rintro _ ⟨n, hn, rfl⟩
     rw [LinearMap.mem_ker]
-    have hcomm : Commute a (b : End ℂ M) := commute_of_mem_adjoin ha b b.2
+    have hcomm : Commute a (b : End ℂ M) := Algebra.commute_of_mem_adjoin_of_forall_mem_commute b.2 ha
     rw [← Module.End.mul_apply, hcomm.eq, Module.End.mul_apply, h0 n hn, map_zero]
   ext x
   have : x ∈ LinearMap.ker a := hker (hPtop ▸ Submodule.mem_top)

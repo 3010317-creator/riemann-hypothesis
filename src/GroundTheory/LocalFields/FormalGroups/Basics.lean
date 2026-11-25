@@ -2,48 +2,9 @@ module
 
 public import GroundTheory.LocalFields.FormalGroups.Inverse
 import GroundTheory.LocalFields.FormalGroups.Truncation
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -367,22 +328,6 @@ end Ring
 
 end Hom
 
-theorem two_le_order_subst_higher (F : FormalGroup R) {τ : Type*} {a b : MvPowerSeries τ R}
-    (ha : constantCoeff a = 0) (hb : constantCoeff b = 0) :
-    (2 : ℕ∞) ≤ order (subst ![a, b] (higher F)) := by
-  have := le_order_subst_sub_subst (f := higher F) (g := 0) (hasSubst_pair ha hb)
-    (fun i => by fin_cases i <;> simp [ha, hb]) (by simpa using two_le_order_higher F)
-  rwa [← subst_sub (hasSubst_pair ha hb), sub_zero] at this
-
-theorem coeff_one_subst_pair (F : FormalGroup R) {f g : PowerSeries R}
-    (hf : PowerSeries.constantCoeff f = 0) (hg : PowerSeries.constantCoeff g = 0) :
-    PowerSeries.coeff 1 (subst ![f, g] F.toPowerSeries : PowerSeries R) =
-      PowerSeries.coeff 1 f + PowerSeries.coeff 1 g := by
-  change coeff (Finsupp.single () 1) (subst ![f, g] F.toPowerSeries) =
-    coeff (Finsupp.single () 1) f + coeff (Finsupp.single () 1) g
-  rw [subst_eq_add_add_subst_higher F (hasSubst_pair hf hg), map_add (f := _), map_add (f := _),
-    coeff_of_lt_order (lt_of_lt_of_le (by simp) (two_le_order_subst_higher F hf hg)), add_zero]
-
 theorem coeff_one_subst {f g : PowerSeries R} (hf : PowerSeries.constantCoeff f = 0)
     (hg : PowerSeries.constantCoeff g = 0) :
     PowerSeries.coeff 1 (PowerSeries.subst g f) =
@@ -408,29 +353,8 @@ theorem coeff_one_subst {f g : PowerSeries R} (hf : PowerSeries.constantCoeff f 
 
 namespace Hom
 
-theorem coeff_one_comp (g : Hom G H) (f : Hom F G) :
-    PowerSeries.coeff 1 (g.comp f).toPowerSeries =
-      PowerSeries.coeff 1 g.toPowerSeries * PowerSeries.coeff 1 f.toPowerSeries :=
-  coeff_one_subst g.constantCoeff_eq_zero f.constantCoeff_eq_zero
-
-theorem coeff_one_add [G.IsComm] (f g : Hom F G) :
-    PowerSeries.coeff 1 (f + g).toPowerSeries =
-      PowerSeries.coeff 1 f.toPowerSeries + PowerSeries.coeff 1 g.toPowerSeries :=
-  coeff_one_subst_pair G f.constantCoeff_eq_zero g.constantCoeff_eq_zero
-
-theorem coeff_one_id : PowerSeries.coeff 1 (id F).toPowerSeries = 1 := by
-  simp [toPowerSeries_id]
-
 end Hom
 
-
-variable (F) in
-noncomputable def linearCoeff (F : FormalGroup R) [F.IsComm] : Hom F F →+* R where
-  toFun f := PowerSeries.coeff 1 f.toPowerSeries
-  map_one' := Hom.coeff_one_id
-  map_mul' g f := Hom.coeff_one_comp g f
-  map_zero' := by simp [Hom.toPowerSeries_zero]
-  map_add' f g := Hom.coeff_one_add f g
 
 
 variable (F G) in

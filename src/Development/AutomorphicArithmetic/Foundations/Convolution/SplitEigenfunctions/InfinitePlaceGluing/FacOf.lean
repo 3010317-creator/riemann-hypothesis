@@ -309,9 +309,6 @@ private theorem norm_chi' {ω χ : HChar ℚ} (hω : Unit1 ω) (h : ∀ a, (χ.1
   simp only [Units.val_pow_eq_pow_val, Units.val_mul, norm_pow, norm_mul, Units.val_one, norm_one, hω a, mul_one] at h1
   exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) two_ne_zero).1 h1
 
-private theorem ab_mul' (a b : (A ℚ)ˣ) : ab (a * b) = ab a * ab b := by
-  simp [ab, map_mul]
-
 private theorem mul_sg (v : H.P ℚ) (y : A ℚ) (x : H.Kv v) : y * H.sg v x = H.sg v (H.cp v y * x) := by
   refine Prod.ext ?_ (FiniteAdeleRing.ext (K := ℚ) fun w => ?_)
   · show y.1 * 0 = 0
@@ -435,7 +432,7 @@ theorem UpperTheory.has_sum_twisted_zeta_integral_dirichlet_series :
     have h1 : χ.1 τ = 1 := hχ τ hτ.1 hτ.2
     have h2 : ab τ = 1 := hab3 τ hτ.1
     simp only [hf]
-    rw [hW, hW y, hG.tor τ hτ.1 hτ.2 y X, map_mul, h1, mul_one, ab_mul', h2, mul_one]
+    rw [hW, hW y, hG.tor τ hτ.1 hτ.2 y X, map_mul, h1, mul_one, ab_mul, h2, mul_one]
   have hsupp : ∀ y : IdeleGroup ℚ, f y ≠ 0 → ∃ (n : ℕ) (r : ℝ) (τ : (A ℚ)ˣ), 0 < n ∧ n.Coprime N ∧ r ≠ 0 ∧ τ ∈ TT L ∧ y = iy r * pin n * τ := by
     intro y hy
     have hne : Wo D φ (em E (aE y) * infGL E 2 X) ≠ 0 := by
@@ -485,7 +482,7 @@ theorem UpperTheory.has_sum_twisted_zeta_integral_dirichlet_series :
     have hn0 : (0 : ℝ) < (n : ℕ) := by exact_mod_cast n.2.1
     have hn1 : 0 < ((n : ℕ) : ℝ)⁻¹ := inv_pos.2 hn0
     have hab : ab (iy r * pin n) = |r| * ((n : ℕ) : ℝ)⁻¹ := by
-      rw [ab_mul', hab1 r hr, hab2 n n.2.1]
+      rw [ab_mul, hab1 r hr, hab2 n n.2.1]
     have hc : (((((n : ℕ) : ℝ)⁻¹ : ℝ)) : ℂ) ^ (s - 1) = (((n : ℕ)) : ℂ) ^ (1 - s) := by
       rw [Complex.ofReal_inv, Complex.ofReal_natCast, Complex.inv_cpow _ _ (by simp [Complex.natCast_arg, Real.pi_ne_zero.symm]), ← Complex.cpow_neg]
       congr 1
@@ -512,7 +509,7 @@ theorem UpperTheory.has_sum_twisted_zeta_integral_dirichlet_series :
     have hn0 : (0 : ℝ) < (n : ℕ) := by exact_mod_cast n.2.1
     have hn1 : 0 < ((n : ℕ) : ℝ)⁻¹ := inv_pos.2 hn0
     have hab : ab (iy r * pin n) = |r| * ((n : ℕ) : ℝ)⁻¹ := by
-      rw [ab_mul', hab1 r hr, hab2 n n.2.1]
+      rw [ab_mul, hab1 r hr, hab2 n n.2.1]
     have h1 := core hs (W := Wo D φ (em E (aE (iy r * pin n) * rot t))) (c := ((χ.1 (iy r * pin n) : ℂˣ) : ℂ)) hr hn1 (nχ _)
       (by simpa only [hab4 r n hr n.2.1] using hb (iy r * pin n))
     simp only [hf]
@@ -1123,13 +1120,6 @@ private theorem em_nU {E : Type} [Field E] [NumberField E] (D : Dat ℚ E) (x : 
   simp only [UpperTheory.ConvolutionTheory.RankTwoDescent.em, nE, Matrix.GeneralLinearGroup.map_apply, gl_val]
   fin_cases i <;> fin_cases j <;> simp [nU, Dat.mkE]
 
-private theorem em_sc {E : Type} [Field E] [NumberField E] (z : (A ℚ)ˣ) :
-    em E (Matrix.GeneralLinearGroup.scalar (Fin 2) z) = Matrix.GeneralLinearGroup.scalar (Fin 2) (ideleEmbedding ℚ E z) := by
-  refine Units.ext ?_
-  ext i j
-  simp only [UpperTheory.ConvolutionTheory.RankTwoDescent.em, Matrix.GeneralLinearGroup.map_apply, sc_val, coe_ideleEmbedding]
-  by_cases e : i = j <;> simp [e, Matrix.diagonal]
-
 private theorem Wo_lev {E : Type} [Field E] [NumberField E] (D : Dat ℚ E) {φ : GL (Fin 2) (A E) → ℂ} {N : ℕ}
     (hl : ∀ k, Lev N k → ∀ g, φ (g * em E k) = φ g) {κ : GL (Fin 2) (A ℚ)} (hκ : Lev N κ) (h : GL (Fin 2) (A E)) :
     Wo D φ (h * em E κ) = Wo D φ h := by
@@ -1153,7 +1143,7 @@ theorem UpperTheory.whittaker_diagTorus_mul_iwasawa_eq :
       _ = _ := by rw [aE_mD]; simp only [mul_assoc]
   have hN : ideleNorm ℚ E (ideleEmbedding ℚ E ζ⁻¹) = ζ⁻¹ ^ 2 := by
     rw [ideleNorm_ideleEmbedding, Module.finrank_eq_card_basis D.b, Fintype.card_fin]
-  rw [e, map_mul, Wo_lev D hl hκ, map_mul, map_mul, em_nU D, em_sc, hn, hz, hN, map_pow]
+  rw [e, map_mul, Wo_lev D hl hκ, map_mul, map_mul, em_nU D, UpperTheory.ConvolutionTheory.RankTwoDescent.Nz.em_scalar, hn, hz, hN, map_pow]
   simp
 end -- clump:auto
 end -- clump:auto

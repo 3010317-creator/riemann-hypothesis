@@ -1,5 +1,6 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergOperatorFPreservesIsThetaFunction
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Formalism.LocalToGlobal.IndefiniteReal.DatumF
 import Mathlib.Algebra.Order.Floor.Extended
@@ -40,6 +41,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
+public import Development.WeilBound.ThetaLifts.LeviDeterminants.GrowSplit
 
 @[expose] public section
 
@@ -56,29 +58,15 @@ open Formalism.IndefR.DatumF
 
 theorem continuous_mixed (K : Type) [Field K] [NumberField K] :
     Continuous (InfiniteAdeleRing.ringEquiv_mixedSpace K) := by
-  have : (InfiniteAdeleRing.ringEquiv_mixedSpace K : InfiniteAdeleRing K → mixedEmbedding.mixedSpace K) =
-      fun x => ((fun v : {w : InfinitePlace K // InfinitePlace.IsReal w} =>
-          InfinitePlace.Completion.extensionEmbeddingOfIsReal v.2 (x v)),
-        (fun v : {w : InfinitePlace K // InfinitePlace.IsComplex w} =>
-          InfinitePlace.Completion.extensionEmbedding v.1 (x v))) := by
-    funext x; exact InfiniteAdeleRing.ringEquiv_mixedSpace_apply K x
-  rw [this]
-  refine Continuous.prodMk (continuous_pi fun v => ?_) (continuous_pi fun v => ?_)
-  · exact (InfinitePlace.Completion.isometry_extensionEmbeddingOfIsReal v.2).continuous.comp
-      (continuous_apply _)
-  · exact (InfinitePlace.Completion.isometry_extensionEmbedding v.1).continuous.comp
-      (continuous_apply _)
+  first
+  | exact _root_.PositivityTheory.ThKF0.Split.continuous_toMixed
+  | (apply _root_.PositivityTheory.ThKF0.Split.continuous_toMixed <;> assumption)
 
 theorem continuous_mixed_symm (K : Type) [Field K] [NumberField K] :
     Continuous (InfiniteAdeleRing.ringEquiv_mixedSpace K).symm := by
-  refine continuous_pi fun v => ?_
-  rcases v.isReal_or_isComplex with hv | hv
-  · rw [(InfinitePlace.Completion.isometry_extensionEmbeddingOfIsReal hv).isEmbedding.continuous_iff]
-    exact ((continuous_apply _).comp continuous_fst).congr fun y =>
-      (congrFun (congrArg Prod.fst ((InfiniteAdeleRing.ringEquiv_mixedSpace K).apply_symm_apply y)) ⟨v, hv⟩).symm
-  · rw [(InfinitePlace.Completion.isometry_extensionEmbedding v).isEmbedding.continuous_iff]
-    exact ((continuous_apply _).comp continuous_snd).congr fun y =>
-      (congrFun (congrArg Prod.snd ((InfiniteAdeleRing.ringEquiv_mixedSpace K).apply_symm_apply y)) ⟨v, hv⟩).symm
+  first
+  | exact _root_.PositivityTheory.ThKF0.Split.continuous_ofMixed
+  | (apply _root_.PositivityTheory.ThKF0.Split.continuous_ofMixed <;> assumption)
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
@@ -95,22 +83,7 @@ def sigLin (σ : E →ₐ[F] E) : AEF F E →ₗ[AF F] AEF F E :=
   TensorProduct.AlgebraTensorModule.map (LinearMap.id : AF F →ₗ[AF F] AF F) σ.toLinearMap
 
 theorem continuous_cAF (σ : E →ₐ[F] E) : Continuous (cAF σ) := by
-  haveI := finiteFE (F := F) (E := E)
-  haveI := modTop (F := F) (E := E)
-  haveI := topRing (F := F) (E := E)
-  have h := IsModuleTopology.continuous_of_linearMap (sigLin σ)
-  have e : (sigLin σ : AEF F E → AEF F E) = cAF σ := by
-    funext x
-    induction x using TensorProduct.induction_on with
-    | zero => simp
-    | tmul a b =>
-      show (TensorProduct.AlgebraTensorModule.map (LinearMap.id : AF F →ₗ[AF F] AF F) σ.toLinearMap)
-        (a ⊗ₜ[F] b) = Algebra.TensorProduct.map (AlgHom.id F (AF F)) σ (a ⊗ₜ[F] b)
-      rw [TensorProduct.AlgebraTensorModule.map_tmul, Algebra.TensorProduct.map_tmul]
-      rfl
-    | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
-  rw [e] at h
-  exact h
+  apply _root_.GlobalTheory.HeisKeepF.continuous_cAF <;> assumption
 
 theorem continuous_symplOHF (σ : E →ₐ[F] E) {nS nT : ℕ} (JS : Matrix (Fin nS) (Fin nS) E)
     (JT : Matrix (Fin nT) (Fin nT) E) (ξ : E) {X : Type} [TopologicalSpace X] {x y : X → WOF F E nS nT}

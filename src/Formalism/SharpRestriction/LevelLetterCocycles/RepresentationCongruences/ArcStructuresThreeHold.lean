@@ -13,48 +13,7 @@ public import Formalism.SharpRestriction.LevelLetterCocycles.AdmBoundsBOfAdm
 public import Formalism.SharpRestriction.LevelLetterCocycles.PsCoprimeOf
 public import Formalism.SharpRestriction.LevelLetterCocycles.ArcCoordinatesOfFrame
 public import Formalism.SharpRestriction.LevelLetterCocycles.RepresentationCongruences.ExistsGaloisExtendingAlgHom
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.Tactic.Linter.Style
 import Formalism.SharpRestriction.LevelLetterCocycles.SaturationUnramifiedOfRingCondition
-import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Algebra.Order.Star.Rat
 
@@ -117,16 +76,8 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 
 theorem exists_horizontal_solutions (hH : Formalism.MainNotions.LiftingTheory.coreH W) (hA : Formalism.MainNotions.LiftingTheory.CaseA W) (T : LocLat G Qp LL O)
     (hT : IsCrys PD T.ρ) (i : ZMod n) {d : ℕ} (b : Fin d → W.DD T)
-    (hb : Formalism.MainNotions.LiftingTheory.IsFrameΔ W T i b) : ∃ sol, IsHor W T i b sol := by
-  have h3 := (hH hA T hT i).2.2.1 d b hb 0
-    ⟨0, Formalism.MainNotions.UnusedSlot80.Relay2.InNΔi_zero W T i, (smul_zero _).symm⟩
-  choose sol hsol using fun k : Fin d => (h3 (Pi.single k 1)).1
-  refine ⟨sol, hb, fun k => ⟨(hsol k).1, ?_⟩⟩
-  rw [(hsol k).2]
-  funext m
-  by_cases h : m = k
-  · subst h; simp
-  · simp [h]
+    (hb : Formalism.MainNotions.LiftingTheory.IsFrameΔ W T i b) : ∃ sol, IsHor W T i b sol :=
+  by apply _root_.Formalism.MainNotions.UnusedSlot80.UnivF.hor_exists <;> assumption
 
 theorem horizontal_frame_structure (hH : Formalism.MainNotions.LiftingTheory.coreH W) (hP9 : Formalism.MainNotions.DeltaInvariantLattices.P9W W) :
     Formalism.MainNotions.N.FrobeniusPowerSeries.HorFrameCore W := by

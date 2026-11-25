@@ -5,49 +5,6 @@ public import Formalism.SatakeDualWeyl.DefsCS
 public import Formalism.LocalRingCardinality.SpanPowerMembership.Spaces
 public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsApprox
 public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsGlob
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -502,15 +459,6 @@ theorem redFn_frGL (β : GL (Fin n) (E ⊗[F] Af F)) (PP : Pl E) (y : GL (Fin n)
   show bc (resS F PP) (pullFr β ⟨frGL β y, ⟨y, rfl⟩⟩) = _
   rw [pullFr_frGL]
 
-theorem redFn_int (PP : Pl E) (g : GL (Fin n) (𝓞 E)) :
-    redFn (1 : GL (Fin n) (E ⊗[F] Af F)) PP (intGL F E n (bc (oToS F E) g)) = bc (Ideal.Quotient.mk PP.asIdeal) g := by
-  have h : intGL F E n (bc (oToS F E) g) = frGL 1 (bc (oToS F E) g) := by
-    simp [frGL]
-  rw [h, redFn_frGL]
-  apply Units.ext
-  ext i j
-  exact resS_oToS PP _
-
 def IsFrame (β : GL (Fin n) (E ⊗[F] Af F)) (Λ : Submodule (𝓞 E) (Fin n → E)) : Prop :=
   ∀ x : Fin n → E ⊗[F] Af F, x ∈ hatL (F := F) Λ ↔
     ∀ i, ((β⁻¹ : GL (Fin n) (E ⊗[F] Af F)) : Matrix (Fin n) (Fin n) (E ⊗[F] Af F)).mulVec x i ∈ intAf F E
@@ -814,18 +762,6 @@ theorem Kg_le_lev {T : Finset (Pl E)} (hg : D.Pg ⊆ T) (hq : D.Q ⊆ T) : Kg hc
     show rTup β D x ∈ D.P.H
     rw [this]; exact Subgroup.one_mem _
 
-def datX (r t m : ℕ) (Pg Q : Finset (Pl E)) (P : LevelP Pg r LL) (χ : ℕ → ∀ PP : Pl E, (kP PP)ˣ →* LLˣ)
-    (ξ : ∀ PP : Pl E, (kP PP)ˣ →* LLˣ) : LevDat E LL (r + m * t) where
-  r := r
-  hr := Nat.le_add_right _ _
-  t := t
-  s := m
-  Pg := Pg
-  Q := Q
-  P := P
-  cg := χ
-  xq := fun PP => (ξ PP)⁻¹
-
 def datV (r t j : ℕ) (Pg Q : Finset (Pl E)) (P : LevelP Pg r LL) (χ : ℕ → ∀ PP : Pl E, (kP PP)ˣ →* LLˣ)
     (ξ : ∀ PP : Pl E, (kP PP)ˣ →* LLˣ) : LevDat E LL (r + t) where
   r := r
@@ -837,18 +773,6 @@ def datV (r t j : ℕ) (Pg Q : Finset (Pl E)) (P : LevelP Pg r LL) (χ : ℕ →
   P := P.conj
   cg := fun _ PP => (χ j PP)⁻¹
   xq := ξ
-
-abbrev levX (hc : CMData F E) (r t m : ℕ) (J : Matrix (Fin (r + m * t)) (Fin (r + m * t)) E)
-    (β : GL (Fin (r + m * t)) (E ⊗[F] Af F)) (Pg Q : Finset (Pl E)) (P : LevelP Pg r LL)
-    (χ : ℕ → ∀ PP : Pl E, (kP PP)ˣ →* LLˣ) (ξ : ∀ PP : Pl E, (kP PP)ˣ →* LLˣ) :
-    Subgroup (GL (Fin (r + m * t)) (E ⊗[F] Af F)) :=
-  lev hc J β (datX r t m Pg Q P χ ξ)
-
-abbrev levV (hc : CMData F E) (r t j : ℕ) (J : Matrix (Fin (r + t)) (Fin (r + t)) E)
-    (β : GL (Fin (r + t)) (E ⊗[F] Af F)) (Pg Q : Finset (Pl E)) (P : LevelP Pg r LL)
-    (χ : ℕ → ∀ PP : Pl E, (kP PP)ˣ →* LLˣ) (ξ : ∀ PP : Pl E, (kP PP)ˣ →* LLˣ) :
-    Subgroup (GL (Fin (r + t)) (E ⊗[F] Af F)) :=
-  lev hc J β (datV r t j Pg Q P χ ξ)
 
 end Lev
 

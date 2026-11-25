@@ -13,51 +13,9 @@ public import GroundTheory.ProfiniteCohomology.PoincareDuality.Torsion
 public import GroundTheory.ProfiniteCohomology.LocalClassFormation.FiniteVanishing
 import GroundTheory.ProfiniteCohomology.CyclicCupBrauer
 import GroundTheory.ProfiniteCohomology.GaloisCohomology.Kummer
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
 import GroundTheory.LocalFields.UnitsPowers
 import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import GroundTheory.LocalFields.LocalAxiomDictionary
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -549,34 +507,8 @@ theorem natCast_fixedField_ne_zero (hn : (n : K) ≠ 0) (W : Subgroup Gal(Ksep/K
   exact (map_ne_zero_iff _ (algebraMap K (fixedField W)).injective).2 hn
 
 theorem finite_cohomology_one_res_galRootsOfUnity (hn : (n : K) ≠ 0) (U : OpenSubgroup Gal(Ksep/K)) :
-    Finite (cohomology (Rep.res (U : Subgroup Gal(Ksep/K)).subtype (galRootsOfUnity.{0} K Ksep n)) 1) := by
-  let := GroundTheory.LocalField.algebraicValuativeRel K Ksep
-  let := GroundTheory.LocalField.algebraicTopology K Ksep
-  have := GroundTheory.LocalField.algebraicTopology_isValuativeTopology K Ksep
-  have := GroundTheory.LocalField.algebraicValuativeRel_valuativeExtension K Ksep
-  have hfinE : Finite ((fixedField (U : Subgroup Gal(Ksep/K)))ˣ ⧸
-      (powMonoidHom n : (fixedField (U : Subgroup Gal(Ksep/K)))ˣ →* _).range) :=
-    GroundTheory.LocalField.finite_quotient_range_pow (natCast_fixedField_ne_zero hn _)
-  let κ : (fixedField (U : Subgroup Gal(Ksep/K)))ˣ →*
-      Multiplicative (cohomology (Rep.res (U : Subgroup Gal(Ksep/K)).subtype
-        (galRootsOfUnity.{0} K Ksep n)) 1) :=
-    { toFun := fun a => Multiplicative.ofAdd ((δ (kummerSeqOpen_shortExact hn (U : Subgroup Gal(Ksep/K)))
-        0 1 rfl).hom ((H0Iso _).inv.hom (unitsInvariantOpen (U : Subgroup Gal(Ksep/K)) a)))
-      map_one' := by
-        have h := unitsInvariantOpen_pow (U : Subgroup Gal(Ksep/K)) 1 0
-        rw [pow_zero, zero_smul] at h
-        rw [h, map_zero, map_zero, ofAdd_zero]
-      map_mul' := fun a b => by
-        rw [unitsInvariantOpen_mul, map_add (f := _), map_add (f := _), ofAdd_add] }
-  have hle : (powMonoidHom n : (fixedField (U : Subgroup Gal(Ksep/K)))ˣ →* _).range ≤ κ.ker := by
-    rintro _ ⟨b, rfl⟩
-    rw [MonoidHom.mem_ker]
-    change Multiplicative.ofAdd ((δ (kummerSeqOpen_shortExact hn (U : Subgroup Gal(Ksep/K))) 0 1 rfl).hom
-      ((H0Iso _).inv.hom (unitsInvariantOpen (U : Subgroup Gal(Ksep/K)) (b ^ n)))) = 1
-    rw [δ_unitsInvariantOpen_pow_eq_zero hn, ofAdd_zero]
-  refine Finite.of_surjective (fun q => Multiplicative.toAdd (QuotientGroup.lift _ κ hle q)) fun y => ?_
-  obtain ⟨a, rfl⟩ := exists_δ_unitsInvariantOpen_eq hn U y
-  exact ⟨(a : _ ⧸ (powMonoidHom n : (fixedField (U : Subgroup Gal(Ksep/K)))ˣ →* _).range), rfl⟩
+    Finite (cohomology (Rep.res (U : Subgroup Gal(Ksep/K)).subtype (galRootsOfUnity.{0} K Ksep n)) 1) :=
+  by apply _root_.GroundTheory.ProfCoh.finite_cohomology_one_rootsOfUnity_open; assumption
 
 theorem eq_zero_of_forall_cupPairing_zmodMul_eq_zero_left (hn : (n : K) ≠ 0)
     (U : OpenSubgroup Gal(Ksep/K)) (x : cohomology (zmodRep.{0} (U : Subgroup Gal(Ksep/K)) n) 1)

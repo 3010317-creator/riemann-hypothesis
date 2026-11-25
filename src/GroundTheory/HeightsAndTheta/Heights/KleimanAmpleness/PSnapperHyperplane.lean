@@ -6,44 +6,6 @@ public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.SnapperHyper
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.SnapperQuotAddSt
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.SnapperQuotDevissageSt
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.PIdealTwistFamily
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -110,15 +72,11 @@ theorem sup_span_X_homogeneous {R : Type u} [CommRing R] {N : ℕ} (pp : Ideal (
     (hh : ∀ f ∈ pp, ∀ d : ℕ, homogeneousComponent d f ∈ pp) (i : Fin (N + 1)) :
     ∀ f ∈ pp ⊔ Ideal.span {(X i : Poly R N)}, ∀ d : ℕ,
       homogeneousComponent d f ∈ pp ⊔ Ideal.span {(X i : Poly R N)} := by
-  intro f hf d
-  obtain ⟨g, hg, y, hy, rfl⟩ := Submodule.mem_sup.mp hf
-  obtain ⟨r, rfl⟩ := Ideal.mem_span_singleton'.mp hy
-  rw [map_add (f := _)]
-  refine Ideal.add_mem _ (Ideal.mem_sup_left (hh g hg d)) (Ideal.mem_sup_right ?_)
-  have hspan := IdealTwistFamily.homogeneousComponent_mul_form r (X i) (isHomogeneous_X R i) d
-  refine (Submodule.span_le.mpr ?_ : _ ≤ (Ideal.span {(X i : Poly R N)}).restrictScalars R) hspan
-  rintro _ ⟨z, d', -, -, rfl⟩
-  exact Ideal.mul_mem_left _ _ (Ideal.mem_span_singleton_self _)
+  let _ := MvPolynomial.gradedAlgebra (σ := Fin (N + 1)) (R := R)
+  have hpp : pp.IsHomogeneous (homogeneousSubmodule (Fin (N + 1)) R) := fun d f hf => by
+    have := hh f hf d; rwa [← decomposition.decompose'_apply] at this
+  exact fun f hf d => homogeneousComponent_mem_of_mem
+    (hpp.sup (Ideal.homogeneous_span _ _ (by rintro _ rfl; exact ⟨1, isHomogeneous_X R i⟩))) hf d
 
 theorem SnapperHyperplane.proof (hA : SnapperQuotAdd.Statement.{u, w, w})
     (hD : SnapperQuotDevissage.Statement.{u, w, w}) (hM : SnapperHyperplaneMid.Statement.{u, w}) :

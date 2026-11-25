@@ -30,44 +30,6 @@ import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.Hos
 import Formalism.SubspaceCounting.ChoiceOfTopsRefined
 import Formalism.SubspaceCounting.SubspaceCountingProofs.SubspaceCount
 public import Lemmata.GeneralBFactUpperBis.Imports
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Presheaf
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -384,7 +346,7 @@ theorem svBound_of (X : Inst D L) (K : Consts) (hK : K.Nonneg) (P : ParameterCho
     have h4 : L.sc.a / ((D.R.k : ℝ) * L.sc.x ^ (Scale.A / 2)) ≤ L.sc.a / 5 := by
       apply div_le_div_of_nonneg_left (by linarith) (by norm_num)
       have : 1 ≤ L.sc.x ^ (Scale.A / 2) := Real.one_le_rpow L.sc.one_lt_alt.le (by unfold Scale.A; norm_num)
-      nlinarith
+      nlinarith only [hk, this]
     unfold al cG
     rw [h1]
     constructor <;> linarith
@@ -433,7 +395,7 @@ theorem svBound_of (X : Inst D L) (K : Consts) (hK : K.Nonneg) (P : ParameterCho
     · exact mul_nonneg (Nat.cast_nonneg _)
         (add_nonneg (mul_nonneg (Nat.cast_nonneg _) (by linarith)) (mul_nonneg (Nat.cast_nonneg _) hbase))
   have hgam : 0 ≤ gam p ∧ gam p * L.sc.a ≤ 4 / 3 * (L.sc.a / p) := by
-    have hp4 : (4 : ℝ) ≤ (p : ℝ) ^ 2 := by nlinarith
+    have hp4 : (4 : ℝ) ≤ (p : ℝ) ^ 2 := by nlinarith only [hp2]
     have hd : (0 : ℝ) < (p : ℝ) ^ 2 - 1 := by linarith
     unfold gam
     refine ⟨div_nonneg hp0.le hd.le, ?_⟩
@@ -518,7 +480,7 @@ theorem cmp_expand (hs : ∀ a x, cmp (a • x) = φ a • cmp x) (x : V) :
 
 theorem cmp_inj (hs : ∀ a x, cmp (a • x) = φ a • cmp x) (hli : LinearIndependent Kf (fun a => cmp (b a))) :
     Function.Injective cmp := by
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+  rw [injective_iff_map_eq_zero]
   intro x hx
   rw [cmp_expand b φ cmp hs x] at hx
   have h := Fintype.linearIndependent_iff.1 hli _ hx
@@ -858,7 +820,6 @@ def FirstTheoremAtFamily {eps : ℝ} (Fm : FamP eps) : Prop :=
 
 section Tools
 
-open Formalism.BasicNotions
 
 structure ExtremalProjectorTools : Prop where
 
@@ -873,7 +834,6 @@ end Tools
 
 section TheoremII
 
-open Formalism.BasicNotions
 
 def SecondTheoremReduced (D : D7) : Prop :=
   ∀ CLa Ck Crk Cdeg : ℝ, tableLineDegreeFive.admitted D CLa Ck Crk Cdeg →
@@ -998,7 +958,6 @@ end TheoremII
 
 section TheoremI
 
-open Formalism.BasicNotions
 
 structure Loc8All : Prop where
 
@@ -1198,7 +1157,6 @@ end TheoremI
 
 section Sizes
 
-open Formalism.BasicNotions
 
 theorem log_cube_le (M δ : ℝ) (hδ : 0 < δ) : ∃ x0 : ℝ, ∀ x ≥ x0, M * Real.log x ^ 3 ≤ x ^ δ := by
   have h := (isLittleO_log_rpow_rpow_atTop (3 : ℝ) hδ).def (c := 1 / (|M| + 1)) (by positivity)
@@ -1270,7 +1228,7 @@ theorem sizes_bound_of_log_estimates (K : Consts) (δ Ce : ℝ) (hLa : 0 < K.La)
       rw [div_le_iff₀ hLa] at hC
       linarith
     have h2 : (1 : ℝ) ≤ (N1 L.sc : ℝ) ^ 2 := one_le_pow₀ hN1
-    have h3 : xe ≤ (N1 L.sc : ℝ) ^ 2 * (l + xe) := by nlinarith
+    have h3 : xe ≤ (N1 L.sc : ℝ) ^ 2 * (l + xe) := by nlinarith only [h2, hl1, hxe1]
     calc xe ≤ (N1 L.sc : ℝ) ^ 2 * (l + xe) := h3
       _ ≤ (K.La * xd) * ((N1 L.sc : ℝ) ^ 2 * (l + xe)) := le_mul_of_one_le_left (by positivity) h1
       _ = K.La * (N1 L.sc : ℝ) ^ 2 * (l + xe) * xd := by ring
@@ -1278,7 +1236,7 @@ theorem sizes_bound_of_log_estimates (K : Consts) (δ Ce : ℝ) (hLa : 0 < K.La)
     unfold La
     rw [hloga]
     have h1 : (N1 L.sc : ℝ) ^ 2 ≤ (Ce * l) ^ 2 := pow_le_pow_left₀ (by positivity) hN 2
-    have h2 : l + xe ≤ 2 * l * xe := by nlinarith
+    have h2 : l + xe ≤ 2 * l * xe := by nlinarith only [hl1, hxe1]
     calc K.La * (N1 L.sc : ℝ) ^ 2 * (l + xe) ≤ K.La * (Ce * l) ^ 2 * (2 * l * xe) := by gcongr
       _ = xe * (2 * K.La * Ce ^ 2 * l ^ 3) := by ring
       _ ≤ xe * xd := mul_le_mul_of_nonneg_left hA (by positivity)
@@ -1318,7 +1276,7 @@ theorem sizes_bound_of_log_estimates (K : Consts) (δ Ce : ℝ) (hLa : 0 < K.La)
     unfold Qp
     rw [Real.log_pow, hsplit]
     have h5 : Ce * l ≤ xd := by
-      have : Ce * l ≤ 38 * Ce * l ^ 3 := by nlinarith
+      have : Ce * l ≤ 38 * Ce * l ^ 3 := by nlinarith only [hCe, hl1, hl13]
       linarith
     calc (Gp L.sc : ℝ) * Real.log p ≤ (Ce * l * x ^ (e / 8)) * x ^ (e / 3) := by gcongr
       _ = x ^ (e / 8) * x ^ (e / 3) * (Ce * l) := by ring
@@ -1528,7 +1486,7 @@ theorem numCmpF_fixed {eps : ℝ} (Fm : FamP eps) : NumCmpF Fm := by
   exact ⟨x0, fun x hx i => FormalGroupSystem.Pf.numeric_comparison_of_constants _ _ _ _ Fm.GK Fm.fixed.2.1.ge Fm.fixed.2.2.1.ge Fm.fixed.1.ge
     (hx0 x hx i).1.2 (by rw [Fm.L_x x i (hx0 x hx i).1.1]; exact (hx0 x hx i).2) (Fm.sizes x (hx0 x hx i).1.1 i)⟩
 
-theorem num_closed (𝒞 : FamClass) (_hN : FormalGroupSystem.NumericalComparisonUniform) : Closed 𝒞 fun Fm _ => NumCmpF Fm :=
+theorem num_closed (𝒞 : FamClass) : Closed 𝒞 fun Fm _ => NumCmpF Fm :=
   ⟨1, one_pos, fun _ _ _ => ⟨⟨0, fun _ => 0, fun _ => 0, fun _ => 0⟩, fun Fm _ _ _ => numCmpF_fixed Fm⟩⟩
 
 theorem cb_closed (𝒞 : FamClass) : Closed 𝒞 fun Fm _ => Ev Fm fun x i => CbLarge Fm.GK (Fm.L x i).sc := by

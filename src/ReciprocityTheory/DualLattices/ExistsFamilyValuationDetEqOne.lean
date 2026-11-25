@@ -1,51 +1,6 @@
 module
 
 public import ReciprocityTheory.DualLattices.ValuationDetLeOneOfEntriesIntegral
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -151,14 +106,6 @@ private theorem valuation_sub_eq_one_of_eq_one_of_lt_one {a b : C} (ha : v a = 1
     exact hb
   rw [sub_eq_add_neg, v.map_add_eq_of_lt_left h, ha]
 
-private theorem nnreal_pow_lt_one_of_lt_one_of_ne_zero {a : NNReal} (hlt : a < 1) {m : ℕ} (hm : m ≠ 0) :
-    a ^ m < 1 := by
-  have h0 : (0 : NNReal) ≤ a := by positivity
-  obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hm
-  rw [pow_succ]
-  refine lt_of_le_of_lt (mul_le_of_le_one_left h0 ?_) hlt
-  exact pow_le_one₀ h0 hlt.le
-
 theorem exists_family_valuation_det_eq_one (hv : v.Integers R) (AA : HopfOrder (C := C) R N) (K : AddSubgroup N)
     [DecidablePred (· ∈ K)] (β : Matrix K K C) (hβ : IsUnit β.det)
     (hAK : AA.carrier.map (resK (R := R) K) = Submodule.span R (Set.range fun j k => β k j)) :
@@ -221,7 +168,7 @@ theorem exists_family_valuation_det_eq_one (hv : v.Integers R) (AA : HopfOrder (
       rw [hvn, hS z hz, one_pow]
     have hnx : v (n x) < 1 := by
       rw [hvn]
-      exact nnreal_pow_lt_one_of_lt_one_of_ne_zero (lt_of_le_of_ne (hDle x) hGx) hcard
+      exact pow_lt_one₀ (by positivity) (lt_of_le_of_ne (hDle x) hGx) hcard
     obtain ⟨a, ha_def⟩ : ∃ a : N → C, a = fun y => n x - n y := ⟨_, rfl⟩
     obtain ⟨b, hb_def⟩ : ∃ b : N → C, b = fun y => ∏ w ∈ S, (n w - n y) := ⟨_, rfl⟩
     obtain ⟨g, hg_def⟩ : ∃ g : K → N → C, g = fun j y => f0 j (y + -x) := ⟨_, rfl⟩

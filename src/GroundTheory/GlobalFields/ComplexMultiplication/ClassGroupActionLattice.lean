@@ -5,58 +5,12 @@ public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
 public import Mathlib.NumberTheory.NumberField.FractionalIdeal
 public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
 public import Mathlib.RingTheory.ClassGroup.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -318,15 +272,17 @@ theorem exists_idealLattice_of_latticeEnd_eq (L : PeriodPair) (hL : periodLattic
     refine ⟨a, b, σ.injective ?_⟩
     apply mul_right_cancel₀ hω
     rw [← hab, map_add (f := _), map_mul, map_intCast, map_intCast, add_mul, mul_assoc, hy]
+  have hlin (a b : ℤ) : (a + b * y : K) ∈ Submodule.span (𝓞 K) {1, y} := by
+    refine add_mem ?_ ?_
+    · rw [← mul_one (a : K), ← zsmul_eq_mul]
+      exact Submodule.smul_of_tower_mem _ a (Submodule.subset_span (by simp))
+    · rw [← zsmul_eq_mul]
+      exact Submodule.smul_of_tower_mem _ b (Submodule.subset_span (by simp))
   have hspan : M = Submodule.span (𝓞 K) {1, y} := by
     apply le_antisymm
     · intro x hx
       obtain ⟨a, b, rfl⟩ := hM x hx
-      refine add_mem ?_ ?_
-      · rw [← mul_one (a : K), ← zsmul_eq_mul]
-        exact Submodule.smul_of_tower_mem _ a (Submodule.subset_span (by simp))
-      · rw [← zsmul_eq_mul]
-        exact Submodule.smul_of_tower_mem _ b (Submodule.subset_span (by simp))
+      exact hlin a b
     · rw [Submodule.span_le]
       rintro z (rfl | rfl)
       · exact h1
@@ -348,12 +304,7 @@ theorem exists_idealLattice_of_latticeEnd_eq (L : PeriodPair) (hL : periodLattic
     obtain ⟨a, b, rfl⟩ := PeriodPair.mem_lattice.1 hz
     refine ⟨σ (a + b * y), map_mem_idealLattice σ (x := a + b * y) ?_, ?_⟩
     · show (a + b * y : K) ∈ M
-      rw [hspan]
-      refine add_mem ?_ ?_
-      · rw [← mul_one (a : K), ← zsmul_eq_mul]
-        exact Submodule.smul_of_tower_mem _ a (Submodule.subset_span (by simp))
-      · rw [← zsmul_eq_mul]
-        exact Submodule.smul_of_tower_mem _ b (Submodule.subset_span (by simp))
+      exact hspan ▸ hlin a b
     · rw [map_add (f := _), map_mul, map_intCast, map_intCast]
       linear_combination (b : ℂ) * hy
   · rintro ⟨w, hw, rfl⟩

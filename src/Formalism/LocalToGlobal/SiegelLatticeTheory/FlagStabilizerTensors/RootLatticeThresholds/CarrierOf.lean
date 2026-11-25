@@ -1,42 +1,6 @@
 module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierParts
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -46,7 +10,7 @@ open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S
 
 namespace Formalism.L2.SG.Pf.Carrier
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar instCM
+attribute [local instance] instCM
 
 structure CarrierIn {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.what₂.Word) : Type 1 where
   Wp : InfinitePlace D.host.E → Type
@@ -109,22 +73,7 @@ def sOf (I : CarrierIn X u u') : Formalism.FourierDecayAlt.C.HidaSetting D.host.
   hv := I.hv
   hT := I.hT
 
-structure ModelsFor {Wp Wq : InfinitePlace D.host.E → Type} [∀ x, NormedAddCommGroup (Wp x)]
-    [∀ x, InnerProductSpace ℂ (Wp x)] [∀ x, NormedAddCommGroup (Wq x)] [∀ x, InnerProductSpace ℂ (Wq x)]
-    (S : Formalism.FourierDecayAlt.C.HidaSetting D.host.E Wp Wq) where
-  L : ∀ v : Fin S.f, Formalism.FourierDecayAlt.R.LevelData (Formalism.FourierDecayAlt.MA.A (Formalism.FourierDecayAlt.D.parOf S v)
-    (Formalism.FourierDecayAlt.MA.DQ (Formalism.FourierDecayAlt.D.parOf S v))) (Formalism.FourierDecayAlt.D.parOf S v).r
-  j : ∀ v : Fin S.f, Formalism.FourierDecayAlt.M.Ty (Formalism.FourierDecayAlt.D.parOf S v) →
-    Formalism.FourierDecayAlt.MA.SmQ (Formalism.FourierDecayAlt.D.parOf S v).r (Formalism.FourierDecayAlt.D.parOf S v).TT
-  lam : ∀ v : Fin S.f, Fin ((Formalism.FourierDecayAlt.D.parOf S v).k + 2 * (Formalism.FourierDecayAlt.D.parOf S v).r + 1) → ℝ
-  c : Formalism.FourierDecayAlt.LE.Cut
-  Cm : Fin S.f → ℝ
-  σ : Fin S.f → ℝ
-  Lw : ℕ → Fin S.f → ℝ
-  Ll : ℕ → ℕ → Fin S.f → ℝ
-  Ll' : ℕ → ℕ → Fin S.f → ℝ
-
-def CarrierOf (I : CarrierIn X u u') (Mo : ModelsFor (sOf I)) : Parts X u u' where
+def CarrierOf (I : CarrierIn X u u') : Parts X u u' where
   Wp := I.Wp
   Wq := I.Wq
   S := sOf I
@@ -140,14 +89,5 @@ def CarrierOf (I : CarrierIn X u u') (Mo : ModelsFor (sOf I)) : Parts X u u' whe
   Qi := I.Qi
   eP := I.eP
   eQ := I.eQ
-  L := Mo.L
-  j := Mo.j
-  lam := Mo.lam
-  c := Mo.c
-  Cm := Mo.Cm
-  σ := Mo.σ
-  Lw := Mo.Lw
-  Ll := Mo.Ll
-  Ll' := Mo.Ll'
 
 end Formalism.L2.SG.Pf.Carrier

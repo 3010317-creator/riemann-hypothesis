@@ -3,46 +3,7 @@ module
 public import Formalism.HermitianCurvature.LetterProductDoubleDegreeCount
 public import Formalism.FormalDegreeBessel.StatementDS
 public import CompanionTheory.AutomorphicTheory.BesselWaveGrids.NqMovedExample
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -135,19 +96,6 @@ theorem HypLam.lamN_gap (h : HypLam P.k P.r lam c g b) :
   rw [show lamN lam (t + 1) = lam ⟨t, by omega⟩ from lamN_succ lam ⟨t, by omega⟩,
     show lamN lam (t + 1 + 1) = lam ⟨t + 1, by omega⟩ from lamN_succ lam ⟨t + 1, by omega⟩]
   exact h.gap _ _ rfl
-
-theorem lamData_of_hyp (h : HypLam P.k P.r lam c g b) (hu : HypType P.k P.r lam P.u b)
-    (hu' : HypType P.k P.r lam P.u' b) : LamData P (lamN lam) c g b := by
-  exact
-    { c_pos := by linarith [h.c_ge]
-      g_ge := by linarith [h.c_ge, h.g_ge]
-      b_ge_three := h.b_ge_three
-      b_ge_k := h.k_le
-      b_ge_c := h.b_ge_c
-      lam_le := h.lamN_le
-      gap := h.lamN_gap
-      inter := fun s h1 h2 => ⟨inter_half h.hc hu s h1 h2, inter_half h.hc hu' s h1 h2⟩
-      u_le := fun i h1 h2 => ⟨hu.u_le i h1 h2, hu'.u_le i h1 h2⟩ }
 
 theorem movedData_of_hyp (h : HypLam P.k P.r lam c g b) (hu : HypType P.k P.r lam P.u b) {l : ℕ} (hl1 : 1 ≤ l)
     (hlk : l ≤ P.k) (hmv : ∀ i, i ≠ l → P.u' i = P.u i) (hl : |P.u' l| ≤ b) : MovedData P l (lamN lam) c g b := by

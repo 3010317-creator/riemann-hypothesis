@@ -4,44 +4,6 @@ public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrin
 public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedOrderReduction.OrderReductionAlgorithm
 public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MonomialCase.LocallyMonomial
 import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.OrderPullback
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedOrderReduction.OrderPullbackInvariance, Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedOrderReduction.MarkedPullbackSquare
@@ -78,35 +40,6 @@ theorem orderAtPullbackInvariant_of_smooth (T : MarkedIdealWithBoundary.{u}) (_h
     MorphismProperty.IsStableUnderBaseChange.of_isPullback
       (P := @AlgebraicGeometry.Smooth) hpb.flip inferInstance
   exact orderAt_comap T.base pB q A y
-
-theorem orderAtPullbackInvariant_baseChange_field (hG : PrincipalizationGeometryHypotheses.{u}) (T : MarkedIdealWithBoundary.{u})
-    (_hT : T.IsAdmissible) (L : Type u) [Field L] [CharZero L] (f : T.base →+* L) :
-    OrderAtPullbackInvariant T (pullback.fst T.structMap (specMapOfFieldHom T.base L f)) := by
-  intro B b pB IB EB hB hcomm Q q p hpb A y
-  have hbig : IsPullback q (p ≫ pullback.snd T.structMap (specMapOfFieldHom T.base L f)) pB
-      (specMapOfFieldHom T.base L f) := by
-    rw [← hcomm]
-    exact hpb.paste_vert (IsPullback.of_hasPullback T.structMap (specMapOfFieldHom T.base L f))
-  have he : hbig.isoPullback.hom ≫ pullback.fst pB (specMapOfFieldHom T.base L f) = q :=
-    hbig.isoPullback_hom_fst
-  have : IsOpenImmersion hbig.isoPullback.hom := inferInstance
-  have hkey := hG.orderAt_baseChange (MarkedIdealWithBoundary.mk T.base B pB IB T.mult EB) hB L f A
-      (hbig.isoPullback.hom.base y)
-  have hq : (pullback.fst pB (specMapOfFieldHom T.base L f)).base (hbig.isoPullback.hom.base y)
-      = q.base y := congrArg (fun m : Q ⟶ B => m.base y) he
-  calc orderAt (A.comap q) y
-      = orderAt (A.comap (hbig.isoPullback.hom ≫
-          pullback.fst pB (specMapOfFieldHom T.base L f))) y := by
-        rw [he]
-    _ = orderAt ((A.comap (pullback.fst pB (specMapOfFieldHom T.base L f))).comap
-          hbig.isoPullback.hom) y := by
-        rw [Scheme.IdealSheafData.comap_comp]
-    _ = orderAt (A.comap (pullback.fst pB (specMapOfFieldHom T.base L f)))
-          (hbig.isoPullback.hom.base y) :=
-        orderAt_comap_of_isOpenImmersion _ _ y
-    _ = orderAt A ((pullback.fst pB (specMapOfFieldHom T.base L f)).base
-          (hbig.isoPullback.hom.base y)) := hkey
-    _ = orderAt A (q.base y) := by rw [hq]
 
 end FunctorialResolution.EmbeddedResolution
 
@@ -176,11 +109,6 @@ theorem orderAt_comap_verticalMap_le (S : MarkedPullbackSquare T g) (hT : T.IsAd
     orderAt (A.comap S.left) y ≤ c := by
   rw [S.orderAt_comap_verticalMap hT hg A y]
   exact hA (S.left.base y)
-
-theorem flat_verticalMap (S : MarkedPullbackSquare T g) [AlgebraicGeometry.Flat g] :
-    AlgebraicGeometry.Flat S.left :=
-  MorphismProperty.IsStableUnderBaseChange.of_isPullback
-    (P := @AlgebraicGeometry.Flat) S.isPullback.flip ‹AlgebraicGeometry.Flat g›
 
 end MarkedPullbackSquare
 

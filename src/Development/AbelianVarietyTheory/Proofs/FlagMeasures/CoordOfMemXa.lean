@@ -1,5 +1,6 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormFlagZeroMiddleInverseMinorOrthogonal
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsFundOne
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairCommonUnipotentStabiliserSummary
 public import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds
@@ -49,6 +50,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
+public import Formalism.SharedLemmas.HpkSq
 
 @[expose] public section
 
@@ -62,15 +64,7 @@ variable {K V : Type} [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [M
   {H : HermSpace K V} {k r : ℕ} {σ : K →+* ℂ} {Φ : V → Fin (2 * r + k + 1) → ℂ}
 
 theorem herm_eI (u : Fin (2 * r + k + 1) → ℂ) (a : Fin r) : herm (Hpk k r) u (bvec (eI k r a)) = u (esI k r a) := by
-  have ha := a.2
-  have ht : WeylGroupFacts.tau k r (eI k r a) = esI k r a := by
-    apply Fin.ext; exact ite_eq_left (Or.inl ha)
-  have hs : WeylGroupFacts.sgn k r (eI k r a) = 1 := by
-    exact ite_eq_right (by show ¬ a.val = r + k; omega)
-  unfold herm bvec
-  rw [← Pi.single_star, star_one, single_one_dotProduct]
-  simp only [mulVec, dotProduct, WeylGroupFacts.hpk_row, ht, hs]
-  simp
+  apply _root_.GlobalTheory.Amp.NfMid.herm_e <;> assumption
 
 theorem herm_add_left (M : Mat k r) (u v w : Fin (2 * r + k + 1) → ℂ) : herm M (u + v) w = herm M u w + herm M v w := by
   simp [herm, mulVec_add, dotProduct_add]
@@ -338,11 +332,9 @@ theorem inN_of_nset (h : IsReal H k r σ Φ) (ht : ∀ a, t a ≠ 0)
 end Flag
 
 theorem hpk_sq : Hpk k r * Hpk k r = 1 := by
-  ext i j
-  rw [WeylGroupFacts.hpk_mul_apply, WeylGroupFacts.hpk_row, WeylGroupFacts.tau_tau, Matrix.one_apply]
-  unfold WeylGroupFacts.sgn WeylGroupFacts.tau
-  simp only [Fin.ext_iff]
-  split_ifs <;> first | (exfalso; omega) | simp
+  first
+  | exact _root_.Formalism.SharedLemmas.upq_hpk_mul_self
+  | (apply _root_.Formalism.SharedLemmas.upq_hpk_mul_self <;> assumption)
 
 theorem isUnit_det {g : Mat k r} (hg : g ∈ UH (Hpk k r)) : IsUnit g.det := by
   have : (Hpk k r * gᴴ * Hpk k r) * g = 1 := by

@@ -2,48 +2,7 @@ module
 
 public import Mathlib.Analysis.Normed.Field.Instances
 public import Mathlib.NumberTheory.Padics.Complex
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
+import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Multiset
 
 @[expose] public section
 
@@ -65,20 +24,10 @@ theorem exists_root_near (P : ℂ_[l][X]) (hP : P.Monic) (x : ℂ_[l]) (h : ‖P
     prod_multiset_X_sub_C_of_monic_of_roots_card_eq hP IsAlgClosed.card_roots_eq_natDegree
   by_contra hcon
   push Not at hcon
-  have key : ∀ s : Multiset ℂ_[l], (∀ a ∈ s, 1 ≤ ‖x - a‖) →
-      1 ≤ ‖((s.map fun a => X - C a).prod).eval x‖ := by
-    intro s
-    induction s using Multiset.induction_on with
-    | empty => intro _; simp
-    | cons a s ih =>
-      intro hs
-      rw [Multiset.map_cons, Multiset.prod_cons, eval_mul, norm_mul]
-      simp only [eval_sub, eval_X, eval_C]
-      exact one_le_mul_of_one_le_of_one_le (hs a (Multiset.mem_cons_self _ _))
-        (ih fun b hb => hs b (Multiset.mem_cons_of_mem hb))
-  have := key P.roots (fun a ha => hcon a ((mem_roots hP.ne_zero).1 ha))
-  rw [hsplit] at this
-  linarith
+  apply h.not_ge
+  rw [← hsplit, eval_multiset_prod, Multiset.norm_prod_map, Multiset.map_map]
+  simp only [Function.comp_apply, eval_sub, eval_X, eval_C]
+  exact Multiset.one_le_prod_map fun a ha => hcon a ((mem_roots hP.ne_zero).1 ha)
 
 theorem norm_pow_sub_one_le {y : ℂ_[l]} (hy : ‖y‖ = 1) (k : ℕ) : ‖y ^ k - 1‖ ≤ ‖y - 1‖ := by
   induction k with

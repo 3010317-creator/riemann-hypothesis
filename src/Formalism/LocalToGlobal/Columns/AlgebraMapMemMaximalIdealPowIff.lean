@@ -5,52 +5,11 @@ public import Formalism.SizeWindowBrackets.SlopesHypothesisFinitePlaces
 public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation
 public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
 public import Mathlib.RingTheory.RamificationInertia.Ramification
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.Ideal.Int
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Presheaf
 
 @[expose] public section
@@ -509,53 +468,6 @@ theorem lenW_inf (w : HeightOneSpectrum (𝓞 K)) (A B : Submodule (𝓞 K) V) :
   rw [this]
 
 abbrev idLat (I : Ideal (𝓞 K)) : Submodule (𝓞 K) K := IsLocalization.coeSubmodule K I
-
-theorem mem_atW_idLat_pow_iff (w : HeightOneSpectrum (𝓞 K)) (n : ℕ) (r : Ow w) :
-    algebraMap (Ow w) K r ∈ atW w (idLat (w.asIdeal ^ n)) ↔ r ∈ IsLocalRing.maximalIdeal (Ow w) ^ n := by
-  constructor
-  · intro h
-    obtain ⟨s, hs, hx⟩ := mem_atW_iff.1 h
-    obtain ⟨a, ha, hax⟩ := (IsLocalization.mem_coeSubmodule K _).1 hx
-    have h1 : algebraMap (𝓞 K) (Ow w) a = algebraMap (𝓞 K) (Ow w) s * r := by
-      apply algebraMap_ow_injective w
-      rw [map_mul, ← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply, hax,
-        Algebra.smul_def]
-    have h2 : algebraMap (𝓞 K) (Ow w) s * r ∈ IsLocalRing.maximalIdeal (Ow w) ^ n :=
-      h1 ▸ (algebraMap_mem_maximalIdeal_pow_iff w a n).2 ha
-    have hu : IsUnit (algebraMap (𝓞 K) (Ow w) s) :=
-      IsLocalization.map_units (Ow w) (⟨s, hs⟩ : w.asIdeal.primeCompl)
-    exact (Ideal.unit_mul_mem_iff_mem _ hu).1 h2
-  · intro h
-    rw [maximalIdeal_ow, ← Ideal.map_pow] at h
-    obtain ⟨⟨b, s⟩, hbs⟩ := (IsLocalization.mem_map_algebraMap_iff w.asIdeal.primeCompl (Ow w)).1 h
-    refine mem_atW_iff.2 ⟨s, s.2, (IsLocalization.mem_coeSubmodule K _).2 ⟨b, b.2, ?_⟩⟩
-    rw [Algebra.smul_def, IsScalarTower.algebraMap_apply (𝓞 K) (Ow w) K,
-      IsScalarTower.algebraMap_apply (𝓞 K) (Ow w) K, ← map_mul, mul_comm]
-    exact congrArg _ hbs.symm
-
-theorem lenW_one_pow (w : HeightOneSpectrum (𝓞 K)) (n : ℕ) :
-    lenW w (1 : Submodule (𝓞 K) K) (idLat (w.asIdeal ^ n)) = n := by
-  unfold lenW
-  rw [← IsDiscreteValuationRing.length_quotient_pow_maximalIdeal (R := Ow w) n]
-  have hmem : ∀ r : Ow w, algebraMap (Ow w) K r ∈ atW w (1 : Submodule (𝓞 K) K) := fun r =>
-    (mem_atW_one_iff w _).2 ((mem_range_ow_iff w _).1 ⟨r, rfl⟩)
-  let f : Ow w →ₗ[Ow w] atW w (1 : Submodule (𝓞 K) K) :=
-    (Algebra.linearMap (Ow w) K).codRestrict _ hmem
-  have hf : Function.Bijective f := by
-    constructor
-    · intro a b hab
-      exact algebraMap_ow_injective w (congrArg Subtype.val hab)
-    · rintro ⟨x, hx⟩
-      obtain ⟨r, rfl⟩ := (mem_range_ow_iff w x).2 ((mem_atW_one_iff w x).1 hx)
-      exact ⟨r, rfl⟩
-  refine (LinearEquiv.length_eq (Submodule.Quotient.equiv _ _ (LinearEquiv.ofBijective f hf) ?_)).symm
-  ext x
-  constructor
-  · rintro ⟨r, hr, rfl⟩
-    exact (mem_atW_idLat_pow_iff w n r).2 hr
-  · intro hx
-    obtain ⟨r, rfl⟩ := hf.2 x
-    exact ⟨r, (mem_atW_idLat_pow_iff w n r).1 hx, rfl⟩
 
 theorem eW_ne_zero_rat (w : HeightOneSpectrum (𝓞 K)) : (eW w : ℚ) ≠ 0 :=
   Nat.cast_ne_zero.2 (eW_pos w).ne'

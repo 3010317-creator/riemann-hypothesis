@@ -3,59 +3,11 @@ module
 public import Formalism.LocalToGlobal.ProjectiveLattices.RowDeg
 public import Mathlib.CategoryTheory.Category.Basic
 public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
-
-set_option autoImplicit false
 
 noncomputable section
 
@@ -140,21 +92,6 @@ theorem crPderiv_supported {R : Type} [CommRing R] {s : Set (Letter T r n)} (i :
     rw [Derivation.leibniz, smul_eq_mul, smul_eq_mul]
     exact add_mem (mul_mem hx' hy) (mul_mem hy' hx)
 
-private theorem crPderiv_zero_lemma {R : Type} [CommRing R] {s : Set (Letter T r n)} (i : Letter T r n)
-    (hi : i ∉ s) {p : MvPolynomial (Letter T r n) R} (hp : p ∈ supported R s) : pderiv i p = 0 := by
-  classical
-  have hp' : p ∈ Algebra.adjoin R ((X : Letter T r n → MvPolynomial (Letter T r n) R) '' s) := hp
-  clear hp
-  induction hp' using Algebra.adjoin_induction with
-  | mem x hx =>
-    obtain ⟨j, hj, rfl⟩ := hx
-    rw [pderiv_X, Pi.single_apply, ite_eq_right]
-    rintro rfl
-    exact hi hj
-  | algebraMap c => exact Derivation.map_algebraMap _ _
-  | add x y _ _ hx hy => rw [map_add (f := _), hx, hy, add_zero]
-  | mul x y _ _ hx hy => rw [Derivation.leibniz, hx, hy, smul_zero, smul_zero, add_zero]
-
 theorem crP_mem_harmK (k : Type) [Field k] (β : (Σ σ : T, Fin (r σ)) → Fin n) (a : T → ℕ → ℕ) (cc : T → T)
     (isX : T → Prop) (hcc : ∀ τ, isX τ → cc τ ≠ τ) (hβ : Function.Injective β) :
     crP r n k β a ∈ harmK r n k cc isX (fun _ => 1) := by
@@ -172,8 +109,9 @@ theorem crP_mem_harmK (k : Type) [Field k] (β : (Σ σ : T, Fin (r σ)) → Fin
         obtain ⟨i0, hi0⟩ := hg
         have := hβ (hi0.trans hj.symm)
         exact hcc τ hτ (Sigma.mk.inj this).1.symm
-      rw [crPderiv_zero_lemma _ hg' (crP_mem_supported k β a), map_zero, smul_zero]
-    · rw [crPderiv_zero_lemma _ hg hsup, smul_zero]
+      rw [pderiv_eq_zero_of_notMem_vars
+        (fun hv => hg' (mem_supported.mp (crP_mem_supported k β a) hv)), map_zero, smul_zero]
+    · rw [pderiv_eq_zero_of_notMem_vars (fun hv => hg (mem_supported.mp hsup hv)), smul_zero]
   · rw [Matrix.one_apply_ne hbb, zero_smul]
 
 end Part1

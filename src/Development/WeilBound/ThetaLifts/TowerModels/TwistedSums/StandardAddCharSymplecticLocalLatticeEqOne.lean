@@ -88,16 +88,8 @@ theorem symp_smul_smul {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
     (JB : Matrix (Fin d) (Fin d) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) (ξ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) (a a' : AF F)
     (x y : Matrix (Fin n) (Fin d) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) :
     GlobalTheory.WeilM.symp (R := AF F) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA σ) ξ JA JB (a • x) (a' • y) =
-      a * a' * GlobalTheory.WeilM.symp (R := AF F) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA σ) ξ JA JB x y := by
-  unfold GlobalTheory.WeilM.symp GlobalTheory.WeilM.hTens
-  have h : ξ * ∑ i, ∑ j, ∑ k, ∑ l, (a • x) i j * JA i k * JB j l * (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA σ) ((a' • y) k l)
-      = (a * a') • (ξ * ∑ i, ∑ j, ∑ k, ∑ l, x i j * JA i k * JB j l * (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA σ) (y k l)) := by
-    simp only [Matrix.smul_apply, map_smul, Finset.mul_sum, Finset.smul_sum]
-    refine Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ =>
-      Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => ?_
-    simp only [Algebra.smul_def, map_mul]
-    ring
-  rw [h, map_smul, smul_eq_mul]
+      a * a' * GlobalTheory.WeilM.symp (R := AF F) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA σ) ξ JA JB x y :=
+  by apply _root_.GlobalTheory.LatVac.symp_smul_smul
 
 end Tw.LatVac
 
@@ -264,30 +256,8 @@ theorem psi_symp_latAtV : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
     GlobalTheory.AdelicU.evFin F v b ∈ v.adicCompletionIntegers F →
     ∀ γ ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.latAtV X Y v, ∀ γ' ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.latAtV X Y v,
       B.ψ (b * GlobalTheory.WeilM.symp (R := AF F) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA σ) (inclR (F := F) (AF F) (θ : E))
-        (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F X.J) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F Y.J) γ γ') = 1 := by
-  intro F E _ _ _ _ _ σ B n d X Y r s r' s' hB hX hY v θ b hb γ hγ γ' hγ'
-  have step : ∀ z' ∈ {z | ∃ a : AF F, At (GlobalTheory.AdelicU.evFin F v) a ∧ GlobalTheory.AdelicU.evFin F v a ∈ v.adicCompletionIntegers F ∧
-      ∃ x ∈ X.L, ∃ y ∈ Y.L, z = a • GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F (Matrix.vecMulVec x y)},
-      ∀ γ ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.latAtV X Y v, B.ψ (b * GlobalTheory.WeilM.symp (R := AF F) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA σ) (inclR (F := F) (AF F) (θ : E))
-        (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F X.J) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F Y.J) γ z') = 1 := by
-    intro z' hz' γ hγ
-    obtain ⟨a', -, ha', x', hx', y', hy', rfl⟩ := hz'
-    induction hγ using AddSubgroup.closure_induction with
-    | mem z hz =>
-      obtain ⟨a, ha, hav, x, hx, y, hy, rfl⟩ := hz
-      exact psi_gen σ B X Y hX hY hB.std v θ b hb ha hav ha' hx hx' hy hy'
-    | zero => rw [symp_zero_left, mul_zero, AddChar.map_zero_eq_one]
-    | add x y _ _ hx hy =>
-      rw [symp_add_left, mul_add, AddChar.map_add_eq_mul, hx, hy, one_mul]
-    | neg x _ hx =>
-      rw [symp_neg_left, mul_neg, AddChar.map_neg_eq_inv, hx, inv_one]
-  induction hγ' using AddSubgroup.closure_induction with
-  | mem z hz => exact step z hz γ hγ
-  | zero => rw [symp_zero_right, mul_zero, AddChar.map_zero_eq_one]
-  | add x y _ _ hx hy =>
-    rw [symp_add_right, mul_add, AddChar.map_add_eq_mul, hx, hy, one_mul]
-  | neg x _ hx =>
-    rw [symp_neg_right, mul_neg, AddChar.map_neg_eq_inv, hx, inv_one]
+        (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F X.J) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F Y.J) γ γ') = 1 :=
+  _root_.GlobalTheory.LatVacArith.psi_symp_latAtV
 
 end Final
 

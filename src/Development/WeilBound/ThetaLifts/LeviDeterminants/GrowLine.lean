@@ -2,46 +2,7 @@ module
 
 import Development.WeilBound.ThetaLifts.LeviDeterminants.NormIteratedFDerivIdLeOneAdd
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -180,23 +141,7 @@ end Line
 
 variable {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
 
-theorem evI_add (a b : AF F) : evI F (a + b) = evI F a + evI F b :=
-  map_add (InfiniteAdeleRing.ringEquiv_mixedSpace F) a.1 b.1
-
-theorem evI_mul (a b : AF F) : evI F (a * b) = evI F a * evI F b :=
-  map_mul (InfiniteAdeleRing.ringEquiv_mixedSpace F) a.1 b.1
-
 theorem evI_zero : evI F 0 = 0 := map_zero (InfiniteAdeleRing.ringEquiv_mixedSpace F)
-
-theorem evI_sum {ι : Type} (s : Finset ι) (g : ι → AF F) : evI F (∑ i ∈ s, g i) = ∑ i ∈ s, evI F (g i) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simpa using evI_zero
-  | insert i s hi ih => rw [Finset.sum_insert hi, Finset.sum_insert hi, evI_add, ih]
-
-theorem evI_realAd (t : ℝ) : evI F (realAd F t) = algebraMap ℝ (mixedEmbedding.mixedSpace F) t := by
-  change (InfiniteAdeleRing.ringEquiv_mixedSpace F) ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm _) = _
-  exact (InfiniteAdeleRing.ringEquiv_mixedSpace F).apply_symm_apply _
 
 def linForm (B : κ → mixedEmbedding.mixedSpace F) : (κ → mixedEmbedding.mixedSpace F) →L[ℝ] ℝ :=
   LinearMap.toContinuousLinearMap
@@ -214,7 +159,6 @@ theorem phase_line (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) (a b x : κ → AF
         t ^ 2 * Algebra.trace ℝ (mixedEmbedding.mixedSpace F) (evI F ⅟(2 : AF F) * ∑ i, evI F (a i) * evI F (b i)) : ℝ) : ℂ)) := by
   apply PositivityTheory.ThKF0.Lib.phase_line <;> assumption
 
-
 omit [Fintype κ] in
 theorem snd_eq_zero {z : κ → AF F} (hz : At (evI F) z) (i : κ) : (z i).2 = 0 := by
   let w : AF F := LinearMap.inr F (Ainf F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) 1
@@ -222,7 +166,6 @@ theorem snd_eq_zero {z : κ → AF F} (hz : At (evI F) z) (i : κ) : (z i).2 = 0
   have h : w * z i = 0 := congrFun (hz w e0) i
   have h2 : (1 : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) * (z i).2 = 0 := congrArg Prod.snd h
   simpa using h2
-
 
 open scoped Classical in
 theorem schr_line (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) (a b : κ → AF F) (ha : At (evI F) a) (hb : At (evI F) b)
@@ -235,7 +178,7 @@ theorem schr_line (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) (a b : κ → AF F)
     rw [smul_comm, ha s hs, smul_zero]
   have e : (fun i => evI F ((x + realAd F t • a) i)) = (fun i => evI F (x i)) + t • fun i => evI F (a i) := by
     funext i
-    simp [evI_add, evI_mul, evI_realAd, Algebra.smul_def]
+    simp [PositivityTheory.ThKF0.Lib.evI_add, PositivityTheory.ThKF0.Lib.evI_mul, PositivityTheory.ThKF0.Lib.evI_realAd, Algebra.smul_def]
   have e2 : (fun i => ((x + realAd F t • a) i).2) = fun i => (x i).2 := by
     funext i
     have h := snd_eq_zero hat i

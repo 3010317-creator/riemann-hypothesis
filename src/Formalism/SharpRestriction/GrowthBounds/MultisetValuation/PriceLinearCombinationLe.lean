@@ -4,44 +4,6 @@ public import Formalism.SharpRestriction.GrowthBounds.FormalGroupSystem
 public import Formalism.LocalRingCardinality.ColumnWeightSpreadOffTop
 public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.PriceBoundLargePrimes
 public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.PriceBoundSmallPrimes
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.NcCGNonneg
 import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.NcIotaInj
 
@@ -167,11 +129,6 @@ theorem ne_b_top (hS : Formalism.MainNotions.SizesAt L) (s : Fin ((D.gat u w hg)
 
 end Orbit
 
-def priceThreshold : ℝ := 9
-
-theorem price_threshold_ge_nine : 9 ≤ priceThreshold := by norm_num [priceThreshold]
-
-
 open Classical in
 theorem price_bound_small_primes : PriceBoundSmallPrimes := by
   intro D L X Y K hK hS hT hL u w hg hp t0 ht0 j hj
@@ -226,15 +183,6 @@ theorem price_bound_small_primes : PriceBoundSmallPrimes := by
       ((D.gat u w hg).P.n' (Y.vOf u w hg t0) : ℝ) * (Formalism.MainNotions.G.rG L.sc : ℝ) * ((j : ℝ) * ((D.R.t : ℝ) + 1) / 2) := by ring
   rw [e]
   exact hfin
-
-theorem priceBoundLargePrimes_priceThreshold : PriceBoundLargePrimes priceThreshold :=
-  fun D L X Y K hK => price_bound_large_primes D L X Y K (by linarith [price_threshold_ge_nine])
-
-theorem ne_priceThreshold : PriceBound priceThreshold :=
-  priceBound_of_largePrimes_of_smallPrimes priceThreshold priceBoundLargePrimes_priceThreshold price_bound_small_primes
-
-theorem numericalComparisonUniform_of_size (hS : nd_NeedSize) : Formalism.MainNotions.FormalGroupSystem.NumericalComparisonUniform :=
-  numerical_closed_of_threshold priceThreshold price_threshold_ge_nine (nc_need3_of priceThreshold hS ne_priceThreshold)
 
 end Formalism.MainNotions.FormalGroupSystem.Pf
 end -- clump:auto

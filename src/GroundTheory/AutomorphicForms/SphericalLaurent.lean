@@ -3,55 +3,9 @@ module
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.RingTheory.FiniteType
 public import Mathlib.RingTheory.IntegralClosure.Algebra.Defs
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.FieldTheory.PurelyInseparable.Exponent
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Coalgebra.IsFrobenius
-import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
+import Mathlib.Analysis.Complex.Polynomial.Basic
+import Mathlib.LinearAlgebra.LinearIndependent.Basic
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 public import Mathlib.Analysis.Complex.Norm
 public import Mathlib.Analysis.Normed.Field.Basic
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
@@ -95,10 +49,8 @@ theorem monomialChar_add (l l' : Fin n → ℤ) (w : Fin n → ℂˣ) :
 
 def pointHom (w : Fin n → ℂˣ) : Multiplicative (Fin n → ℤ) →* ℂ where
   toFun l := monomialChar (Multiplicative.toAdd l) w
-  map_one' := by simp [monomialChar_apply]
-  map_mul' l l' := by
-    simp only [toAdd_mul, monomialChar_apply, Pi.add_apply, zpow_add, Units.val_mul,
-      Finset.prod_mul_distrib]
+  map_one' := monomialChar_zero w
+  map_mul' l l' := monomialChar_add (Multiplicative.toAdd l) (Multiplicative.toAdd l') w
 
 def evalAt (w : Fin n → ℂˣ) : LaurentRing n →ₐ[ℂ] ℂ :=
   AddMonoidAlgebra.lift ℂ ℂ (Fin n → ℤ) (pointHom w)
@@ -165,9 +117,6 @@ theorem exists_eq_evalAt (ψ : LaurentRing n →ₐ[ℂ] ℂ) : ∃ w : Fin n �
     simp only [map_zpow]
     rfl
   rw [evalAt, ← hM, Equiv.apply_symm_apply]
-
-instance : Algebra.FiniteType ℂ (LaurentRing n) := by
-  infer_instance
 
 theorem exists_ker_evalAt_comp_eq {A : Type*} [CommRing A] [Algebra ℂ A]
     (Φ : A →ₐ[ℂ] LaurentRing n) (hΦ : Function.Injective Φ)

@@ -2,40 +2,7 @@ module
 
 public import PositivityTheory.AutomorphicForms.PublishedInputs.NonzeroTypes.NonzeroLeviEigenvectorExists
 import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
+import PositivityTheory.AutomorphicForms.PublishedInputs.NonzeroTypes.PIndExt
 
 @[expose] public section
 
@@ -105,44 +72,6 @@ theorem mem_KC_iff (n r : ℕ) (g : GL (Fin n) k) : g ∈ KC k n r ↔ g ∈ H k
 theorem coe_H (n r : ℕ) : (H k n r : Set (GL (Fin n) k)) = KC k n r :=
   Set.ext fun g => (mem_KC_iff n r g).symm
 
-theorem isOpen_inPow (r : ℕ) : IsOpen {x : k | InPow r x} := by
-  let A : AddSubgroup k :=
-    (IsLocalRing.maximalIdeal 𝒪[k] ^ r).toAddSubgroup.map (algebraMap 𝒪[k] k).toAddMonoidHom
-  have hA : (A : Set k) = {x : k | InPow r x} := by
-    ext x
-    simp only [A, AddSubgroup.coe_map, Set.mem_image, SetLike.mem_coe, Set.mem_ofPred_eq, InPow]
-    rfl
-  rw [← hA]
-  obtain ⟨w, hw, hw0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
-    (IsDiscreteValuationRing.not_a_field 𝒪[k])
-  have hc : (algebraMap 𝒪[k] k w) ^ r ≠ 0 := by
-    refine pow_ne_zero _ ?_
-    intro h
-    exact hw0 (Subtype.val_injective h)
-  refine A.isOpen_of_mem_nhds (g := 0) ?_
-  rw [mem_nhds_iff]
-  refine ⟨(fun x => (algebraMap 𝒪[k] k w) ^ r * x) '' (𝒪[k] : Set k), ?_, ?_, ?_⟩
-  · rintro _ ⟨y, hy, rfl⟩
-    refine ⟨w ^ r * ⟨y, hy⟩, Ideal.mul_mem_right _ _ (Ideal.pow_mem_pow hw r), ?_⟩
-    show algebraMap 𝒪[k] k (w ^ r * ⟨y, hy⟩) = algebraMap 𝒪[k] k w ^ r * y
-    rw [map_mul, map_pow]
-    rfl
-  · have := (Homeomorph.mulLeft₀ _ hc).isOpenMap _ (Valuation.isOpen_integer (v := valuation k))
-    simpa using this
-  · exact ⟨0, zero_mem _, mul_zero _⟩
-
-theorem isOpen_KC (n r : ℕ) : IsOpen (KC k n r) := by
-  have e : KC k n r = (KO k (Fin n) : Set (GL (Fin n) k)) ∩
-      ⋂ i, ⋂ j, (fun g : GL (Fin n) k => (g : Matrix (Fin n) (Fin n) k) i j - if i = j then 1 else 0) ⁻¹'
-        {x : k | InPow r x} := by
-    ext g
-    simp only [KC, Set.mem_ofPred_eq, Set.mem_inter_iff, SetLike.mem_coe, Set.mem_iInter, Set.mem_preimage]
-  rw [e]
-  refine GlobalTheory.SplitFlip.isOpen_KO.inter (isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
-    (isOpen_inPow r).preimage ?_)
-  have := Units.continuous_val (M := Matrix (Fin n) (Fin n) k)
-  fun_prop
-
 end UpperTheory.TNZ.Grp.P_KC
 
 namespace UpperTheory.TNZ.Grp
@@ -153,7 +82,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem step_KC {n : ℕ} (G : Grp k n) : CompactOpenKernelProp G := by
   intro hB r
-  refine ⟨?_, ?_, isOpen_KC n r, fun g hg => hg.1, ?_⟩
+  refine ⟨?_, ?_, P_indExt.isOpen_KC n r, fun g hg => hg.1, ?_⟩
   · show ((Subgroup.closure (KC k n r) : Subgroup (GL (Fin n) k)) : Set (GL (Fin n) k)) = KC k n r
     rw [← coe_H, Subgroup.closure_eq]
   · intro g hg u hu

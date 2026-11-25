@@ -4,44 +4,6 @@ public import GroundTheory.LocalFields.LocalArtinMap
 public import GroundTheory.LocalFields.SeparableClosure
 import GroundTheory.LocalFields.AbstractLocalReciprocity.IsoCyclic
 public import GroundTheory.LocalFields.LocalArtinUniqueness
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
 
 @[expose] public section
@@ -302,16 +264,6 @@ variable {K : Type*} [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchi
   (E : IntermediateField K Ω) [FiniteDimensional K E]
 
 attribute [local instance] isDiscreteModule_units
-
-omit [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K] [ValuativeRel Ω]
-  [TopologicalSpace Ω] [IsValuativeTopology Ω] [ValuativeExtension K Ω] [IsSepClosure K Ω]
-  [FiniteDimensional K E] in
-theorem abelianization_of_injective_of_comm {G : Type*} [Group G] [IsMulCommutative G] :
-    Function.Injective (Group.Abelianization.of : G →* Group.Abelianization G) := by
-  refine (injective_iff_map_eq_one _).2 fun σ hσ => ?_
-  rw [← MonoidHom.mem_ker, Group.Abelianization.ker_of, commutator,
-    Subgroup.commutator_eq_bot_iff_le_centralizer.2 (fun x _ y _ => mul_comm' y x)] at hσ
-  exact hσ
 
 theorem restrictAb_baseChangeArtinMap_uniformizer {ϖ : Eˣ} (hϖ : ord (ϖ : E) = 1) :
     restrictAb (maximalUnramifiedExtension E Ω) maximalUnramifiedExtension_le_maximalAbelianExtension

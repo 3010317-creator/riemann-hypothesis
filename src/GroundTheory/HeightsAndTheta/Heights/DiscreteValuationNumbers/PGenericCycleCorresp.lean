@@ -2,50 +2,9 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.IsMultiHomogIdealSpanSingleton
 public import Mathlib.Order.CompletePartialOrder
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -254,15 +213,9 @@ theorem GenericCycleCorresp.proof : GenericCycleCorresp.Statement.{u} := by
     by_cases hr : IsRelevant W
     · rw [dite_eq_left ⟨hWm, hr⟩, dite_eq_left ⟨hmin W hWm hWϖ, hrel.mpr hr⟩, hl]
     · rw [dite_eq_right (fun h => hr h.2), dite_eq_right (fun h => hr (hrel.mp h.2))]
-  have hsupp : ∀ (Q : Ideal (MRing ι (FractionRing O))) (x) (W : Ideal (MRing ι (FractionRing O))),
+  have hsupp : ∀ {R : Type u} [CommRing R] (Q : Ideal (MRing ι R)) (x) (W : Ideal (MRing ι R)),
       divCycle Q x W ≠ 0 → W ∈ (Q ⊔ Ideal.span {x}).minimalPrimes := by
-    intro Q x W h
-    unfold divCycle at h
-    split_ifs at h with hh
-    · exact hh.1
-    · exact absurd rfl h
-  have hsupp0 : ∀ W : Ideal (MRing ι O), divCycle P s W ≠ 0 → W ∈ J.minimalPrimes := by
-    intro W h
+    intro R _ Q x W h
     unfold divCycle at h
     split_ifs at h with hh
     · exact hh.1
@@ -270,30 +223,23 @@ theorem GenericCycleCorresp.proof : GenericCycleCorresp.Statement.{u} := by
   unfold cycEval
   let A : Set (Ideal (MRing ι O)) := {W | W ∈ J.minimalPrimes ∧ (C ϖ : MRing ι O) ∉ W}
   let B : Set (Ideal (MRing ι (FractionRing O))) := (genFib P ⊔ Ideal.span {s'}).minimalPrimes
+  have hmem : ∀ {R : Type u} [CommRing R] (S : Set (Ideal (MRing ι R)))
+      (f : Ideal (MRing ι R) → ℤ) (hf : ∀ W ∉ S, f W = 0), ∑ᶠ W, f W = ∑ᶠ W ∈ S, f W := by
+    intro R _ S f hf
+    rw [finsum_mem_def]
+    congr 1
+    funext W
+    exact (Set.indicator_apply_eq_self.mpr (hf W)).symm
   have hA : (∑ᶠ W, divCycle P s W * (if (C ϖ : MRing ι O) ∈ W then 0 else n (genFib W))) =
       ∑ᶠ W ∈ A, divCycle P s W * (if (C ϖ : MRing ι O) ∈ W then 0 else n (genFib W)) := by
-    rw [finsum_mem_def]
-    congr 1
-    funext W
-    symm
-    rw [Set.indicator_apply_eq_self]
-    intro hW
+    refine hmem A _ fun W hW => ?_
     by_cases hϖW : (C ϖ : MRing ι O) ∈ W
     · rw [ite_eq_left hϖW, mul_zero]
-    · have : divCycle P s W = 0 := by
-        by_contra h
-        exact hW ⟨hsupp0 W h, hϖW⟩
+    · have : divCycle P s W = 0 := by by_contra h; exact hW ⟨hsupp P s W h, hϖW⟩
       rw [this, zero_mul]
   have hB : (∑ᶠ W, divCycle (genFib P) s' W * n W) = ∑ᶠ W ∈ B, divCycle (genFib P) s' W * n W := by
-    rw [finsum_mem_def]
-    congr 1
-    funext W
-    symm
-    rw [Set.indicator_apply_eq_self]
-    intro hW
-    have : divCycle (genFib P) s' W = 0 := by
-      by_contra h
-      exact hW (hsupp _ _ W h)
+    refine hmem B _ fun W hW => ?_
+    have : divCycle (genFib P) s' W = 0 := by by_contra h; exact hW (hsupp _ _ W h)
     rw [this, zero_mul]
   rw [hA, hB]
   refine finsum_mem_eq_of_bijOn genFib ⟨?_, ?_, ?_⟩ ?_

@@ -3,53 +3,10 @@ module
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.KTypeLemma.QuotientHighestWeightTensorStandard
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.IsKUnitaryOfIsInfUnitary
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.KhwWeightEqOfIrr
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.LinearAlgebra.Eigenspace.Minpoly
 import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -65,19 +22,11 @@ variable {n : ℕ}
 
 section Wt
 
-theorem partialSum_finset_sum_eq {ι : Type*} (s : Finset ι) (f : ι → Fin n → ℝ) (k : ℕ) :
-    kirrPs k (∑ i ∈ s, f i) = ∑ i ∈ s, kirrPs k (f i) := by
-  simp only [kirrPs, Finset.sum_apply]
-  exact Finset.sum_comm
-
 theorem rootCone_entry_int (k : ℕ) (μ ν : Fin n → ℝ) : kirrPs k (μ + ν) = kirrPs k μ + kirrPs k ν := by
   simp only [kirrPs, Pi.add_apply, Finset.sum_add_distrib]
 
 theorem partialSum_sub (k : ℕ) (μ ν : Fin n → ℝ) : kirrPs k (μ - ν) = kirrPs k μ - kirrPs k ν := by
   simp only [kirrPs, Pi.sub_apply, Finset.sum_sub_distrib]
-
-theorem partialSum_smul (k : ℕ) (c : ℝ) (μ : Fin n → ℝ) : kirrPs k (c • μ) = c * kirrPs k μ := by
-  simp only [kirrPs, Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
 
 theorem partialSum_single (k : ℕ) (a : Fin n) :
     kirrPs k (Pi.single a (1 : ℝ)) = if a.val < k then 1 else 0 := by

@@ -62,6 +62,7 @@ import Mathlib.Topology.Algebra.ProperAction.Basic
 import Mathlib.Topology.Compactness.Paracompact
 import Mathlib.Topology.Connected.Separation
 import Development.AutomorphicArithmetic.AutomorphicVarieties.TheoremsMuLinked.OrdZero
+public import Formalism.SharedLemmas.TotDiscQuot
 
 @[expose] public section
 
@@ -165,21 +166,6 @@ private theorem log_le_of_norm {l : ℕ} [Fact l.Prime] {n : ℤ} (hn : n ≠ 0)
   rw [Real.log_mul (abs_ne_zero.2 (by exact_mod_cast hn)) hp.ne'] at this
   rw [e]
   linarith
-private theorem totDisc_quot {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
-    [TotallyDisconnectedSpace G] (N : Subgroup G) [N.Normal] (hN : IsClosed (N : Set G)) :
-    TotallyDisconnectedSpace (G ⧸ N) := by
-  rw [totallyDisconnectedSpace_iff_connectedComponent_one]
-  refine Set.eq_singleton_iff_unique_mem.2 ⟨mem_connectedComponent, fun y hy => ?_⟩
-  obtain ⟨x, rfl⟩ := QuotientGroup.mk_surjective y
-  by_contra hx
-  have hx' : x ∉ N := fun h => hx ((QuotientGroup.eq_one_iff x).2 h)
-  have ho : IsOpen {g : G | g * x ∉ N} := hN.isOpen_compl.preimage (continuous_mul_const x)
-  obtain ⟨U, hU⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one ho (by simpa using hx')
-  let V : Subgroup (G ⧸ N) := U.toSubgroup.map (QuotientGroup.mk' N)
-  have hVo : IsOpen (V : Set (G ⧸ N)) := QuotientGroup.isOpenMap_coe _ U.isOpen'
-  have hV : IsClopen (V : Set (G ⧸ N)) := ⟨V.isClosed_of_isOpen hVo, hVo⟩
-  obtain ⟨u, hu, hux⟩ := hV.connectedComponent_subset V.one_mem hy
-  exact hU (U.toSubgroup.inv_mem hu) (QuotientGroup.eq.1 hux)
 section Host
 variable {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} {N : ℕ} [NeZero N]
   {e : ℕ} {ψ : DirichletCharacter c.O N} {o₁ : ℕ} {S : Finset Pl} {A : S → ValuationSubring Ω}
@@ -193,7 +179,7 @@ private theorem cont_pt (hd : HostData l e ψ o₁) (hF : IsHostFrame Ω c e ψ 
   haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
   haveI hcl := isClosed_NS Ω (S : Set Pl)
   haveI : CompactSpace (Gam Ω S) := inferInstance
-  haveI : TotallyDisconnectedSpace (Gam Ω S) := totDisc_quot _ hcl
+  haveI : TotallyDisconnectedSpace (Gam Ω S) := Formalism.SharedLemmas.totDisc_quot _ hcl
   exact (isCharZeroPt_basic F (hostFrame_ok Ω c e ψ o₁ hd S A F hF) g₁ hg r hr).2.2.1
 private theorem trace_rz (hF : IsHostFrame Ω c e ψ S A F) (ι : Qbar l ≃+* ℂ) {σ : Formalism.ConjugateSelfDual.G ℚ Ω} {q : ℕ}
     (hσ : ((cycZ ℚ Ω l σ : ℤ_[l]ˣ) : ℤ_[l]) = q) :
@@ -278,7 +264,7 @@ private theorem admissible_unitary_three_point (hP : _root_.UpperTheory.V.Af.Hyp
     have hN := hP.litN
     have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
     have hcl := isClosed_NS Ω (S : Set Pl)
-    have : TotallyDisconnectedSpace (Gam Ω S) := totDisc_quot _ hcl
+    have : TotallyDisconnectedSpace (Gam Ω S) := Formalism.SharedLemmas.totDisc_quot _ hcl
     have ok := hostFrame_ok Ω c e ψ o₁ hd S A F hF
     obtain ⟨hmu, -, -, -⟩ := isCharZeroPt_basic F ok g₁ hg r hr
     have : IsLocalHom (algebraMap ℤ_[l] c.O) := by

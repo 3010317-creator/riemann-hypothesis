@@ -28,80 +28,20 @@ public import Formalism.LocalToGlobal.Columns.BrpStarLatLattice
 public import Formalism.LocalToGlobal.Columns.CoefficientsModP
 public import Formalism.LocalToGlobal.GlobalTheory.GL4.CoeffMemOfIntSpanAt
 public import Formalism.LocalToGlobal.Columns.FockNormSubstitutionBound
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 import Formalism.HermitianLattices.StatementLat
 import Formalism.LocalToGlobal.GlobalTheory.HLatOps
 import Formalism.LocalToGlobal.LatticeGeometry.OperatorNormFibers.StExtInv
 import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
-import Mathlib.Tactic.ENatToNat
 import Formalism.GL3MeanSquares.ConcavityEquidistribution
-import Mathlib.Algebra.Order.Star.Rat
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Formalism.HarderNarasimhan.HarderNarasimhanProofs.FrameHermSharpB
 import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SlopeIneqMean
 import Formalism.HarderNarasimhan.ShiftInvariance
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.TypeStar
-import Mathlib.RingTheory.PiTensorProduct
 import Formalism.LocalToGlobal.Columns.CoefficientsModP.LatticeBasisExistsHolds
 import Formalism.LocalToGlobal.Columns.LocWLemmas
 import Formalism.LocalToGlobal.Columns.StdLatUnimodular
-import Mathlib.RingTheory.Coalgebra.IsFrobenius
-import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.TotallySplit
 import Formalism.LocalToGlobal.Columns.PolyFnLemmas
 import Formalism.LocalToGlobal.GlobalTheory.GL4.PZBasis
 import Formalism.LocalToGlobal.GlobalTheory.HLatOpsP
-import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.LocalToGlobal.LatticeGeometry.OperatorNormFibers.PExtInvMuB, Formalism.LocalToGlobal.Columns.MaxSlopeSummandOfFock, Formalism.LocalToGlobal.Columns.MultiFactorialEqTripleProd, Formalism.LocalToGlobal.GlobalTheory.GL4.FockNExtCNu, Formalism.LocalToGlobal.Columns.MaxSlopeOrthogonalNegLog, Formalism.LocalToGlobal.GlobalTheory.GL4.MuMaxLeMon, Formalism.LocalToGlobal.GlobalTheory.GL4.ShortAtMeanLog, Formalism.LocalToGlobal.GlobalTheory.GL4.ThirdLinkOfArchimedean, Formalism.LocalToGlobal.Columns.BrpColLatOneSpan, Formalism.LocalToGlobal.Columns.TwistedLocalisationComparable, Formalism.LocalToGlobal.GlobalTheory.GL4.CfMemTwId, Formalism.LocalToGlobal.GlobalTheory.GL4.NfAllSelfEq, Formalism.LocalToGlobal.GlobalTheory.GL4.PacketOfFrameDegree
@@ -591,7 +531,8 @@ theorem muMax_le_mon {V κ : Type} [AddCommGroup V] [Module K V] [Module (𝓞 K
     · rw [monH_norm, Finset.sum_eq_single m (fun b _ hb => by simp [Pi.single_apply, hb]) (by simp)]
       simpa using hc m
   have hmain := Formalism.BranchingDeterminantCap.OrthogonalSumAlt.main (Pi.basisFun K (MonI lam)) (fun _ : InfinitePlace K => (monD lam)⁻¹) hX'
-    (fun m => 𝓞 K ∙ (Pi.single m (1 : K) : MonI lam → K)) (fun m => Submodule.fg_span_singleton _) horth
+    (fun m => 𝓞 K ∙ (Pi.single m (1 : K) : MonI lam → K)) (fun m => Submodule.fg_span_singleton _)
+    (fun s t h => Formalism.BranchingDeterminantCap.OrthogonalSumAlt.orth_inner _ _ (horth s t h))
     Finset.univ
   rw [← hL0] at hmain
   have hL0ne : L0 ≠ ⊥ := by

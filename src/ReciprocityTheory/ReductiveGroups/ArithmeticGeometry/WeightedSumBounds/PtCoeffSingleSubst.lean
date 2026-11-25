@@ -1,48 +1,6 @@
 module
 
 public import ReciprocityTheory.DualLattices.VEqZeroOfPowEqOne
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Presheaf
 
@@ -189,10 +147,6 @@ private theorem vmul_lemma {ρ K : Type*} [CommRing K] {P Q : MvPowerSeries ρ K
   · rw [hP _ h1, zero_mul]
   · rw [hQ _ (by omega), mul_zero]
 
-private theorem vzero_lemma_2 {ρ : Type*} {e : ρ →₀ ℕ} (h : e.degree = 0) : e = 0 := by
-  first
-  | exact (Finsupp.degree_eq_zero_iff _).mp h
-
 private theorem vpow_lemma_3 {ρ K : Type*} [CommRing K] {A : MvPowerSeries ρ K}
     (hA : constantCoeff A = 0) (k : ℕ) :
     ∀ e : ρ →₀ ℕ, e.degree < k → coeff e (A ^ k) = 0 := by
@@ -202,7 +156,7 @@ private theorem vpow_lemma_3 {ρ K : Type*} [CommRing K] {A : MvPowerSeries ρ K
     rw [pow_succ]
     refine vmul_lemma ih ?_
     intro e he
-    have h0 : e = 0 := vzero_lemma_2 (by omega)
+    have h0 : e = 0 := (Finsupp.degree_eq_zero_iff e).mp (by omega)
     rw [h0, coeff_zero_eq_constantCoeff_apply, hA]
 
 private theorem vprod_lemma_4 {ι ρ K : Type*} [CommRing K] {A : ι → MvPowerSeries ρ K}
@@ -234,7 +188,7 @@ theorem pt_coeff_single_subst {σ τ : Type*} [Fintype σ]
     · rw [hd0, coeff_zero_eq_constantCoeff_apply, hf, zero_smul]
     · have hdeg : 2 ≤ d.degree := by
         by_contra hlt
-        have hne : d.degree ≠ 0 := fun h0 => hd0 (vzero_lemma_2 h0)
+        have hne : d.degree ≠ 0 := fun h0 => hd0 ((Finsupp.degree_eq_zero_iff d).mp h0)
         have h1 : d.degree = 1 := by omega
         obtain ⟨s, hs⟩ := pt_degree_eq_one h1
         apply hns

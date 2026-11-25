@@ -1,48 +1,6 @@
 module
 
 public import Formalism.LocalToGlobal.Divisibility.ClassSum
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -165,12 +123,6 @@ def intOf (N : S.D → Submodule (𝓞 K) S.V) : Submodule (𝓞 K) S.EqFun wher
 def intNab : Submodule (𝓞 K) S.EqFun := S.intOf S.Nab
 
 def intDel : Submodule (𝓞 K) S.EqFun := S.intOf S.Del
-
-theorem mem_intNab (φ : S.EqFun) : φ ∈ S.intNab ↔ ∀ d, (φ : S.D → S.V) d ∈ S.Nab d := by
-  exact Iff.rfl
-
-theorem mem_intDel (φ : S.EqFun) : φ ∈ S.intDel ↔ ∀ d, (φ : S.D → S.V) d ∈ S.Del d := by
-  exact Iff.rfl
 
 @[reducible] def toCSDOf (h : S.Ok) (s : S.Sec) : CSD K where
   Cl := S.Cl
@@ -624,9 +576,6 @@ def resOf (h : F.Ok) (s : ∀ b, (F.mem b).Sec) : F.Forms ≃ₗ[K] (F.toCSDOf h
       invFun := fun f b => ⟨fun c => f.1 ⟨b, c⟩, fun c γ => f.2 ⟨b, c⟩ γ⟩
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl }
-
-theorem resOf_apply (h : F.Ok) (s : ∀ b, (F.mem b).Sec) (φ : F.Forms) (c : F.Cl) :
-    (F.resOf h s φ).1 c = ((φ c.1 : (F.mem c.1).EqFun) : F.D c.1 → F.V) ((s c.1).rep c.2) := rfl
 
 def ipOf (h : F.Ok) (s : ∀ b, (F.mem b).Sec) (φ ψ : F.Forms) : K :=
   ∑ b, (F.mem b).ipOf (h b) (s b) (φ b) (ψ b)

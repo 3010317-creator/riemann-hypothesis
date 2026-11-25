@@ -15,57 +15,11 @@ public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.
 public import Mathlib.LinearAlgebra.Dual.Lemmas
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HeckeBackwardStable
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HeckeNonScalar
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.Tactic.Linter.Style
 import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.CapelliIdentity.RowCol
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.TypeStar
-import Std.Tactic.BVDecide.Normalize.Prop
-import Mathlib.Tactic.Polynomial.Basic
 import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.CapelliIdentity.Tensor
 import Mathlib.RingTheory.SimpleRing.Principal
 import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.CapelliIdentity.Central
-import Mathlib.Tactic.Linter.HaveILetI
 import Formalism.RealPlaceAnalysis.ThirdArithmeticHolds
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Module.StablyFree.Basic
@@ -897,7 +851,7 @@ theorem fwdPath (hQ : QdetEq) (hC : StepChar) (hOS : OmScal) (hF : FwdSimple) (h
       have hI1 := hRefl (step X' (χ s)) hS1' (hC n X' χ s hH') hI
       exact hR n X X' χ s hSc hSc' hf hd hI1
 
-theorem hecke_of' (hQ : QdetEq) (hC : StepChar) (_hCH : CayleyHam) (hV : NonVan) (hNS : NonScal) (hB : Back)
+theorem hecke_of' (hQ : QdetEq) (hC : StepChar) (hV : NonVan) (hNS : NonScal) (hB : Back)
     (hOS : OmScal) (hF : FwdSimple) (hR : Reflect) : Hecke := by
   unfold CompanionTheory.RgExh.Hecke
   intro m X χ ss hG hS hH hSc
@@ -1938,7 +1892,7 @@ theorem forward_simple_module : FwdSimple :=
 theorem infinitesimal_character_shift : CompanionTheory.RgExh.StepChar := _root_.GlobalTheory.CompanionTheory.RgExhHecke.StepCharPf.stepChar
 
 theorem hecke_algebra_exhaustion : CompanionTheory.RgExh.Hecke :=
-  hecke_of' GlobalTheory.T.QuantumDeterminantEquality _root_.GlobalTheory.CompanionTheory.RgExhHecke.StepCharPf.stepChar _root_.GlobalTheory.CompanionTheory.RgExhHecke.CayleyOm.cayleyHam _root_.GlobalTheory.CompanionTheory.RgExhHecke.NonVanProof.nonVan _root_.GlobalTheory.CompanionTheory.RgExhHecke.NonScalProof.nonScal _root_.GlobalTheory.CompanionTheory.RgExhHecke.BackProof.back _root_.GlobalTheory.CompanionTheory.RgExhHecke.OmScalP.omScal
+  hecke_of' GlobalTheory.T.QuantumDeterminantEquality _root_.GlobalTheory.CompanionTheory.RgExhHecke.StepCharPf.stepChar _root_.GlobalTheory.CompanionTheory.RgExhHecke.NonVanProof.nonVan _root_.GlobalTheory.CompanionTheory.RgExhHecke.NonScalProof.nonScal _root_.GlobalTheory.CompanionTheory.RgExhHecke.BackProof.back _root_.GlobalTheory.CompanionTheory.RgExhHecke.OmScalP.omScal
     forward_simple_module reflection_symmetry
 
 end CompanionTheory.RgExh.Hk

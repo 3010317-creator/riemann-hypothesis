@@ -1,5 +1,7 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledWeilInertPlaceVacuumEigenfunction
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearFormEqZeroOfKillsProductSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromColsMemLatDbl
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLocalImageLatticeSupportedAtPlace
@@ -10,7 +12,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiCols
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertSphericalStabilizerPreservesLattice
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallySelfDualLatticeIndicatorIsVacuum
+public import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.EventuallySelfDualLatticeIndicatorIsVacuum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzRestrictFinitePlaceMemSchwartzBruhStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzSpaceTranslateMemOfMemStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMemAdelicSchwartzSpaceNumberFieldOfMem
@@ -327,17 +329,7 @@ theorem schr_boxFun (ψ : AddChar R ℂ) (hψ : ∀ t, ‖ψ t‖ = 1) {κ : Typ
     (φ₁ φ₂ : (κ → R) → ℂ) :
     schr ψ (Sum.elim w₁.1 w₂.1, Sum.elim w₁.2 (-w₂.2)) (boxFun φ₁ fun x => star (φ₂ x)) =
       boxFun (schr ψ w₁ φ₁) fun x => star (schr ψ w₂ φ₂ x) := by
-  funext x
-  have e : x = Sum.elim (x ∘ Sum.inl) (x ∘ Sum.inr) := (Sum.elim_comp_inl_inr x).symm
-  have e1 : (x + Sum.elim w₁.1 w₂.1) ∘ Sum.inl = x ∘ Sum.inl + w₁.1 := rfl
-  have e2 : (x + Sum.elim w₁.1 w₂.1) ∘ Sum.inr = x ∘ Sum.inr + w₂.1 := rfl
-  have e3 : x ⬝ᵥ Sum.elim w₁.2 (-w₂.2) = (x ∘ Sum.inl) ⬝ᵥ w₁.2 - (x ∘ Sum.inr) ⬝ᵥ w₂.2 := by
-    conv_lhs => rw [e]
-    rw [sumElim_dotProduct_sumElim, dotProduct_neg, sub_eq_add_neg]
-  simp only [schr, boxFun, e1, e2, e3, sumElim_dotProduct_sumElim, dotProduct_neg, star_mul', star_apply_eq_neg ψ hψ]
-  rw [mul_mul_mul_comm, ← AddChar.map_add_eq_mul]
-  congr 2
-  ring
+  apply _root_.GlobalTheory.DblVacLine.schr_box <;> assumption
 
 end Alg
 
@@ -368,7 +360,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenDoubledCoordsProductFunction =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalIdentityOfTensorHeisenbergEigen =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalIdentityOfTensorHeisenbergEigen", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallySelfDualLatticeIndicatorIsVacuum\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromColsMemLatDbl\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalIdentityOfTensorHeisenbergEigen", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable\npublic import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.EventuallySelfDualLatticeIndicatorIsVacuum\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromColsMemLatDbl\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -393,23 +385,23 @@ theorem local_identity_of_tens_eigen : ∀ {F : Type} [Field F] [NumberField F] 
     simpa [LinearEquiv.map_smul] using h
   set z : κ → AF F := fun k => GlobalTheory.LatVac.liftV v (ξ k - evFin F v (x₀ k)) with hz
   have hzat : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (evFin F v) z :=
-    GlobalTheory.VacIndic.at_pi fun k => GlobalTheory.LatVac.at_liftV v _
+    Tw.VacIndic.at_pi fun k => GlobalTheory.LatVac.at_liftV v _
   set x : κ → AF F := x₀ + z with hx
   have hevx : (fun i => evFin F v (x i)) = ξ := by
     funext i
     simp [hx, hz, GlobalTheory.LatVac.evFin_liftV]
   have hrx : R x = R x₀ := hR x₀ z hzat
-  have hrx1 : R (x + (co.e γ).1) = R x := hR x _ (GlobalTheory.VacIndic.at_pi hx1)
+  have hrx1 : R (x + (co.e γ).1) = R x := hR x _ (Tw.VacIndic.at_pi hx1)
   have key := congrFun hA x
   simp only [GlobalTheory.WeilM.Darboux.rho, GlobalTheory.WeilM.schr, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens, Pi.smul_apply, smul_eq_mul] at key
   have hAt : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (evFin F v)
       (x ⬝ᵥ (co.e γ).2 + ⅟(2 : AF F) * ((co.e γ).1 ⬝ᵥ (co.e γ).2)) := by
-    refine GlobalTheory.VacIndic.at_add ?_ (GlobalTheory.VacIndic.at_mul_left ?_)
-    · exact GlobalTheory.VacIndic.at_sum _ _ fun i => GlobalTheory.VacIndic.at_mul_left (hy1 i)
-    · exact GlobalTheory.VacIndic.at_sum _ _ fun i => GlobalTheory.VacIndic.at_mul_left (hy1 i)
-  rw [GlobalTheory.VacIndic.psi_of_at ψ hAt, hrx1] at key
+    refine Tw.VacIndic.at_add ?_ (Tw.VacIndic.at_mul_left ?_)
+    · exact Tw.VacIndic.at_sum _ _ fun i => Tw.VacIndic.at_mul_left (hy1 i)
+    · exact Tw.VacIndic.at_sum _ _ fun i => Tw.VacIndic.at_mul_left (hy1 i)
+  rw [Tw.VacIndic.psi_of_at ψ hAt, hrx1] at key
   have hhalf : evFin F v (⅟(2 : AF F)) = (2 : Fv F v)⁻¹ := by
-    rw [GlobalTheory.VacIndic.invOf_two_eq, GlobalTheory.VacIndic.evFin_algebraMap]
+    rw [Tw.VacIndic.invOf_two_eq, Tw.VacIndic.evFin_algebraMap]
     simp [map_ofNat]
   have hdot : ∀ a b : κ → AF F, evFin F v (a ⬝ᵥ b) = (fun i => evFin F v (a i)) ⬝ᵥ (fun i => evFin F v (b i)) := by
     intro a b
@@ -448,17 +440,7 @@ open MeasureTheory
 theorem sb_boxFun {k : Type} [CommRing k] [TopologicalSpace k] [T2Space k] {κ κ' : Type}
     {φ₁ : (κ → k) → ℂ} {φ₂ : (κ' → k) → ℂ} (h₁ : φ₁ ∈ SB (κ → k)) (h₂ : φ₂ ∈ SB (κ' → k)) :
     boxFun φ₁ φ₂ ∈ SB (κ ⊕ κ' → k) := by
-  have cl : Continuous fun x : κ ⊕ κ' → k => x ∘ Sum.inl := continuous_pi fun i => continuous_apply _
-  have cr : Continuous fun x : κ ⊕ κ' → k => x ∘ Sum.inr := continuous_pi fun i => continuous_apply _
-  refine ⟨(h₁.1.comp_continuous cl).mul (h₂.1.comp_continuous cr), ?_⟩
-  let e := (Homeomorph.sumArrowHomeomorphProdArrow (X := k) (ι := κ) (ι' := κ'))
-  refine HasCompactSupport.intro ((h₁.2.prod h₂.2).image e.symm.continuous) fun x hx => ?_
-  have hx' : e x ∉ tsupport φ₁ ×ˢ tsupport φ₂ := fun h => hx ⟨e x, h, e.symm_apply_apply x⟩
-  rw [Homeomorph.sumArrowHomeomorphProdArrow_apply, Set.mem_prod, not_and_or] at hx'
-  simp only [boxFun]
-  rcases hx' with h | h
-  · rw [image_eq_zero_of_notMem_tsupport h, zero_mul]
-  · rw [image_eq_zero_of_notMem_tsupport h, mul_zero]
+  apply _root_.GlobalTheory.BoxSpan.boxFun_mem_SB' <;> assumption
 
 theorem sb_star {X : Type} [TopologicalSpace X] {φ : X → ℂ} (h : φ ∈ SB X) : (fun x => star (φ x)) ∈ SB X :=
   ⟨h.1.comp (fun z : ℂ => star z), h.2.comp_left (g := fun z : ℂ => star z) (star_zero _)⟩

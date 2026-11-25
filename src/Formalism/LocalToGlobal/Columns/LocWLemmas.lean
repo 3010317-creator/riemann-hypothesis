@@ -8,55 +8,9 @@ public import Formalism.LocalRingCardinality.SpanPowerMembership.Places
 public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
 public import Formalism.HermitianLattices.HermitianLatticesProofs.IndexBasic
 public import Formalism.LocalRingCardinality.Lemmas
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.TotallySplit
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
 import Mathlib.Topology.Sheaves.Presheaf
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -199,46 +153,7 @@ end Len
 section Rec
 variable [StarRing K]
 
-theorem mem_intW_iff (w : HeightOneSpectrum (𝓞 K)) (x : K) :
-    x ∈ Formalism.BasicNotions.intW (Formalism.BasicNotions.Examples₂.placesOf K) w ↔ x ∈ (algebraMap (Ow w) K).range := by
-  rw [mem_range_ow_iff]
-  show (0 : WithTop ℤ) ≤ Formalism.BasicNotions.Examples₂.PlacesToy.valW w x ↔ _
-  by_cases hx : x = 0
-  · subst hx
-    simp
-  · rw [Formalism.BasicNotions.Examples₂.PlacesToy.valW_of_ne w hx]
-    have h0 : w.valuation K x ≠ 0 := (Valuation.ne_zero_iff _).2 hx
-    unfold Formalism.BasicNotions.vAdd
-    rw [← WithTop.coe_zero, WithTop.coe_le_coe, neg_nonneg, ← WithZero.log_one,
-      WithZero.log_le_log h0 one_ne_zero]
-
 variable {V : Type} [AddCommGroup V] [Module K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V]
-
-theorem mem_locW_iff (w : HeightOneSpectrum (𝓞 K)) (L : Submodule (𝓞 K) V) (x : V) :
-    x ∈ Formalism.BasicNotions.locW (Formalism.BasicNotions.Examples₂.placesOf K) w L ↔ x ∈ atW w L := by
-  constructor
-  · intro hx
-    induction hx using Submodule.span_induction with
-    | mem x hx => exact Submodule.subset_span hx
-    | zero => exact Submodule.zero_mem _
-    | add x y _ _ hx hy => exact Submodule.add_mem _ hx hy
-    | smul r x _ hx =>
-      obtain ⟨r', hr'⟩ := (mem_intW_iff w r.1).1 r.2
-      have : r • x = r' • x := by
-        rw [ow_smul_def, hr']; rfl
-      rw [this]
-      exact Submodule.smul_mem _ _ hx
-  · intro hx
-    induction hx using Submodule.span_induction with
-    | mem x hx => exact Submodule.subset_span hx
-    | zero => exact Submodule.zero_mem _
-    | add x y _ _ hx hy => exact Submodule.add_mem _ hx hy
-    | smul r x _ hx =>
-      have hr : algebraMap (Ow w) K r ∈ Formalism.BasicNotions.intW (Formalism.BasicNotions.Examples₂.placesOf K) w :=
-        (mem_intW_iff w _).2 ⟨r, rfl⟩
-      have : r • x = (⟨algebraMap (Ow w) K r, hr⟩ : Formalism.BasicNotions.intW (Formalism.BasicNotions.Examples₂.placesOf K) w) • x := rfl
-      rw [this]
-      exact Submodule.smul_mem _ _ hx
 
 end Rec
 

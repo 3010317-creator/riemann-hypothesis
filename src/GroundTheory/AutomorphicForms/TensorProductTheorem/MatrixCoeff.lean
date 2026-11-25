@@ -2,50 +2,7 @@ module
 
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.RepresentationTheory.Irreducible
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -94,14 +51,7 @@ theorem mem_span_orbit {ρ : Representation ℂ G V} [ρ.IsIrreducible] {v : V} 
 theorem eq_zero_of_forall_apply {ρ : Representation ℂ G V} [ρ.IsIrreducible] {v : V} (hv : v ≠ 0)
     {l : Module.Dual ℂ V} (h : ∀ g, l (ρ g v) = 0) : l = 0 := by
   ext x
-  have hx := mem_span_orbit (ρ := ρ) hv x
-  induction hx using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨g, rfl⟩ := hx
-    exact h g
-  | zero => simp
-  | add x y _ _ hx hy => simp [hx, hy]
-  | smul c x _ hx => simp [hx]
+  exact LinearMap.eqOn_span (Set.forall_mem_range.2 h) (mem_span_orbit hv x)
 
 theorem eq_zero_of_forall_apply_act {ρ : Representation ℂ G V} [ρ.IsIrreducible]
     {l : Module.Dual ℂ V} (hl : l ≠ 0) {x : V} (h : ∀ g, l (ρ g x) = 0) : x = 0 := by
@@ -121,10 +71,8 @@ theorem orbitMap_single (ρ : Representation ℂ G V) (v : V) (g : G) (a : ℂ) 
 
 theorem orbitMap_mapDomain (ρ : Representation ℂ G V) (v : V) (h : G) (c : G →₀ ℂ) :
     orbitMap ρ v (Finsupp.mapDomain (h * ·) c) = ρ h (orbitMap ρ v c) := by
-  induction c using Finsupp.induction_linear with
-  | zero => simp [orbitMap]
-  | add c d hc hd => rw [Finsupp.mapDomain_add, map_add (f := _), hc, hd, map_add (f := _), map_add (f := _)]
-  | single g a => simp [Finsupp.mapDomain_single, orbitMap_single, map_mul]
+  simp only [orbitMap, Finsupp.linearCombination_mapDomain,
+    Finsupp.apply_linearCombination, Function.comp_def, map_mul, mul_apply_eq_comp]
 
 theorem range_orbitMap (ρ : Representation ℂ G V) (v : V) :
     LinearMap.range (orbitMap ρ v) = Submodule.span ℂ (range fun g => ρ g v) := by

@@ -1,48 +1,7 @@
 module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.PairVal
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -60,20 +19,9 @@ variable {K : Type*} [CommRing K] {n : ℕ}
 
 theorem mul_single_mul (l ρ : Matrix (Fin n) (Fin n) K) (i j k m : Fin n) (c : K) :
     (l * Matrix.single i j c * ρ) k m = l k i * c * ρ j m := by
-  have h1 : l * Matrix.single i j c = Matrix.of fun k x => if x = j then l k i * c else 0 := by
-    ext k x
-    rw [Matrix.mul_apply, Matrix.of_apply]
-    by_cases hx : x = j
-    · subst hx
-      rw [ite_eq_left rfl, Finset.sum_eq_single i]
-      · simp
-      · intro y _ hy; simp [Ne.symm hy]
-      · simp
-    · rw [ite_eq_right hx]
-      exact Finset.sum_eq_zero fun y _ => by simp [Ne.symm hx]
-  rw [h1, Matrix.mul_apply, Finset.sum_eq_single j]
-  · simp [mul_assoc]
-  · intro y _ hy; simp [hy]
+  rw [Matrix.mul_apply, Finset.sum_eq_single j]
+  · rw [Matrix.mul_single_apply_same]
+  · intro x _ hx; rw [Matrix.mul_single_apply_of_ne c i j k x hx l, zero_mul]
   · simp
 
 theorem pair_unique (l ρ l' ρ' : Matrix (Fin n) (Fin n) K) (hρ : ∀ j, ρ j j = 1) (hρ' : ∀ j, ρ' j j = 1)
@@ -206,8 +154,6 @@ end ModeG
 section Record
 
 open Formalism.L2.SG.PairVal Formalism.L2.SG.CntLocal
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : D7} (δ : ∀ p : PlF D, (D.s.atP p).Fp)
   (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep)

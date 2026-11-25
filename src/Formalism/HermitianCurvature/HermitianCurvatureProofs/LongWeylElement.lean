@@ -8,53 +8,8 @@ public import Formalism.HermitianCurvature.HermitianCurvatureProofs.HeisenbergLe
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.HermitianLeviVectorBaseOrthogonal
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.OppositeWeylSubgroupClosed
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentHeisenbergDecomposition
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Lemma
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Separation.CompletelyRegular
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -137,7 +92,6 @@ end PartL
 
 section PartW
 
-open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Formalism.FourierDecayAlt.B2
 
 variable {k r' : ℕ}
 
@@ -262,7 +216,6 @@ end PartW
 
 section PartU
 
-open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Formalism.FourierDecayAlt.B2
 
 variable {k r' : ℕ}
 
@@ -320,8 +273,6 @@ lemma long_weyl_element_sq_one (k r' : ℕ) : w0 k r' 1 * w0 k r' 1 = 1 := by
   ext i j
   rw [weylMatrix_mul_apply]
   simp only [w0_apply_eq_ite_first_index]
-  have hi := i.isLt
-  have hj := j.isLt
   simp only [iL, iZ, Matrix.one_apply, Fin.ext_iff, Fin.val_mk, star_one, inv_one, one_mul]
   split_ifs <;> first | rfl | (exfalso; omega)
 
@@ -394,7 +345,6 @@ lemma fin_cases' (a : Fin (1 + r')) : a = a0 r' ∨ ∃ a' : Fin r', a = Fin.nat
     omega
 
 lemma Hpk_Z (q : Fin (2 * (1 + r') + k + 1)) : Hpk k (1 + r') (iZ k r') q = if q = iL k r' then 1 else 0 := by
-  have hq := q.isLt
   simp only [Hpk, iZ, iL, Fin.ext_iff, Fin.val_mk]
   split_ifs <;> first | rfl | (exfalso; omega)
 
@@ -489,7 +439,6 @@ end PartU
 
 section PartF
 
-open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Formalism.FourierDecayAlt.B2
 
 variable {k r : ℕ}
 
@@ -514,14 +463,11 @@ lemma emb_mid (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (q j : Fin (2 * r + 
 lemma bc_mid_col (c : Fin r → ℂ) (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (i j : Fin (2 * r + k + 1)) (hj : midW k r j) :
     bigCell k r c μ i j = if hi : midW k r i then μ ⟨i.val - r, by have := hi; omega⟩ ⟨j.val - r, by have := hj; omega⟩
       else 0 := by
-  have h1 := hj.1
   have h2 := hj.2
   simp only [bigCell, dite_eq_right (show ¬ j.val < r by omega), dite_eq_left h2]
 
 lemma bc_mid_row_out (c : Fin r → ℂ) (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (i j : Fin (2 * r + k + 1))
     (hi : midW k r i) (hj : ¬ midW k r j) : bigCell k r c μ i j = 0 := by
-  have h1 := hi.1
-  have h2 := hi.2
   have hj' : ¬ (r ≤ j.val ∧ j.val ≤ r + k) := hj
   simp only [bigCell, esI, Fin.ext_iff]
   split_ifs <;> first | rfl | (exfalso; omega)
@@ -534,9 +480,6 @@ lemma bc_out_col (c : Fin r → ℂ) (μ ν : Matrix (Fin (k + 1)) (Fin (k + 1))
 
 lemma bc_one_mid (c : Fin r → ℂ) (i j : Fin (2 * r + k + 1)) (hi : midW k r i) (hj : midW k r j) :
     bigCell k r c 1 i j = if i = j then 1 else 0 := by
-  have h1 := hi.1
-  have h2 := hi.2
-  have h3 := hj.1
   have h4 := hj.2
   simp only [bigCell, Matrix.one_apply, Fin.ext_iff]
   split_ifs <;> first | rfl | (exfalso; omega)

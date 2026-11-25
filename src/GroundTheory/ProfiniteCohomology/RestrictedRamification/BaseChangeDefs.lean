@@ -8,50 +8,9 @@ public import GroundTheory.ProfiniteCohomology.RestrictedRamification.IsUnramifi
 import GroundTheory.ProfiniteCohomology.RestrictedRamification.Ramification
 import GroundTheory.ProfiniteCohomology.RestrictedRamification.Unramified
 import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -205,25 +164,6 @@ theorem exists_le_of_algebraMap_mem (hL : ∀ x : L, algebraMap L Ω x ∈ (maxU
     ∃ E : IntermediateField F Ω, FiniteDimensional F E ∧ IsUnramifiedOutside S E ∧
       ∀ x : L, algebraMap L Ω x ∈ E := by
   classical
-  have mem_iff {x : Ω} : x ∈ maxUnramifiedOutside (F := F) (Ω := Ω) S ↔
-      ∃ E : IntermediateField F Ω, FiniteDimensional F E ∧
-        IsUnramifiedOutside S E ∧ x ∈ E := by
-    constructor
-    · intro hx
-      have hne : Nonempty {E : IntermediateField F Ω // FiniteDimensional F E ∧
-          IsUnramifiedOutside S E} := ⟨⟨⊥, inferInstance, isUnramifiedOutside_bot S⟩⟩
-      have hdir : Directed (· ≤ ·) (fun E : {E : IntermediateField F Ω //
-          FiniteDimensional F E ∧ IsUnramifiedOutside S E} => E.1) := by
-        intro E₁ E₂
-        have := E₁.2.1
-        have := E₂.2.1
-        exact ⟨⟨E₁.1 ⊔ E₂.1, inferInstance, E₁.2.2.sup E₂.2.2⟩, le_sup_left, le_sup_right⟩
-      rw [maxUnramifiedOutside_eq_iSup, ← SetLike.mem_coe,
-        IntermediateField.coe_iSup_of_directed hdir, Set.mem_iUnion] at hx
-      obtain ⟨E, hE⟩ := hx
-      exact ⟨E.1, E.2.1, E.2.2, hE⟩
-    · rintro ⟨E, hf, hu, hx⟩
-      exact le_maxUnramifiedOutside S hu hx
   have exists_subset (s : Finset Ω)
       (hs : ∀ x ∈ s, x ∈ maxUnramifiedOutside (F := F) (Ω := Ω) S) :
       ∃ E : IntermediateField F Ω, FiniteDimensional F E ∧ IsUnramifiedOutside S E ∧
@@ -231,7 +171,8 @@ theorem exists_le_of_algebraMap_mem (hL : ∀ x : L, algebraMap L Ω x ∈ (maxU
     induction s using Finset.induction_on with
     | empty => exact ⟨⊥, inferInstance, isUnramifiedOutside_bot S, by simp⟩
     | insert a s _ ih =>
-      obtain ⟨E₁, hf₁, hu₁, ha⟩ := mem_iff.1 (hs a (Finset.mem_insert_self a s))
+      obtain ⟨E₁, hf₁, hu₁, ha⟩ :=
+        (mem_maxUnramifiedOutside_iff S).1 (hs a (Finset.mem_insert_self a s))
       obtain ⟨E₂, hf₂, hu₂, hs₂⟩ := ih fun x hx => hs x (Finset.mem_insert_of_mem hx)
       refine ⟨E₁ ⊔ E₂, inferInstance, hu₁.sup hu₂, fun x hx => ?_⟩
       rcases Finset.mem_insert.1 hx with rfl | hx
@@ -308,56 +249,16 @@ theorem restrictScalars_maxUnramifiedOutside_eq
     ((maxUnramifiedOutside (F := L) (Ω := Ω) (placesOver S))).restrictScalars F = (maxUnramifiedOutside (F := F) (Ω := Ω) S) := by
   have hLu := isUnramifiedIn_of_algebraMap_mem S hL
   have : IsGalois L Ω := IsGalois.tower_top_of_isGalois F L Ω
-  have mem_iff {x : Ω} : x ∈ maxUnramifiedOutside (F := L) (Ω := Ω) (placesOver S) ↔
-      ∃ M : IntermediateField L Ω, FiniteDimensional L M ∧
-        IsUnramifiedOutside (placesOver S) M ∧ x ∈ M := by
-    constructor
-    · intro hx
-      have hne : Nonempty {M : IntermediateField L Ω // FiniteDimensional L M ∧
-          IsUnramifiedOutside (placesOver S) M} := ⟨⟨⊥, inferInstance,
-            isUnramifiedOutside_bot (placesOver S)⟩⟩
-      have hdir : Directed (· ≤ ·) (fun M : {M : IntermediateField L Ω //
-          FiniteDimensional L M ∧ IsUnramifiedOutside (placesOver S) M} => M.1) := by
-        intro M₁ M₂
-        have := M₁.2.1
-        have := M₂.2.1
-        exact ⟨⟨M₁.1 ⊔ M₂.1, inferInstance,
-          M₁.2.2.sup M₂.2.2⟩, le_sup_left, le_sup_right⟩
-      rw [maxUnramifiedOutside_eq_iSup, ← SetLike.mem_coe,
-        IntermediateField.coe_iSup_of_directed hdir, Set.mem_iUnion] at hx
-      obtain ⟨M, hM⟩ := hx
-      exact ⟨M.1, M.2.1, M.2.2, hM⟩
-    · rintro ⟨M, hf, hu, hx⟩
-      exact le_maxUnramifiedOutside (placesOver S) hu hx
-  have mem_iff_F {x : Ω} : x ∈ maxUnramifiedOutside (F := F) (Ω := Ω) S ↔
-      ∃ E : IntermediateField F Ω, FiniteDimensional F E ∧
-        IsUnramifiedOutside S E ∧ x ∈ E := by
-    constructor
-    · intro hx
-      have hne : Nonempty {E : IntermediateField F Ω // FiniteDimensional F E ∧
-          IsUnramifiedOutside S E} := ⟨⟨⊥, inferInstance, isUnramifiedOutside_bot S⟩⟩
-      have hdir : Directed (· ≤ ·) (fun E : {E : IntermediateField F Ω //
-          FiniteDimensional F E ∧ IsUnramifiedOutside S E} => E.1) := by
-        intro E₁ E₂
-        have := E₁.2.1
-        have := E₂.2.1
-        exact ⟨⟨E₁.1 ⊔ E₂.1, inferInstance, E₁.2.2.sup E₂.2.2⟩, le_sup_left, le_sup_right⟩
-      rw [maxUnramifiedOutside_eq_iSup, ← SetLike.mem_coe,
-        IntermediateField.coe_iSup_of_directed hdir, Set.mem_iUnion] at hx
-      obtain ⟨E, hE⟩ := hx
-      exact ⟨E.1, E.2.1, E.2.2, hE⟩
-    · rintro ⟨E, hf, hu, hx⟩
-      exact le_maxUnramifiedOutside S hu hx
   ext x
   rw [IntermediateField.mem_restrictScalars]
   constructor
   · intro hx
-    obtain ⟨M, hf, hu, hxM⟩ := mem_iff.1 hx
+    obtain ⟨M, hf, hu, hxM⟩ := (mem_maxUnramifiedOutside_iff (F := L) (placesOver S)).1 hx
     have : FiniteDimensional F (M.restrictScalars F) := FiniteDimensional.trans F L M
     exact le_maxUnramifiedOutside S
       ((isUnramifiedOutside_restrictScalars_iff_of_isUnramifiedIn S hLu M).2 hu) hxM
   · intro hx
-    obtain ⟨E, hf, hu, hxE⟩ := mem_iff_F.1 hx
+    obtain ⟨E, hf, hu, hxE⟩ := (mem_maxUnramifiedOutside_iff S).1 hx
     obtain ⟨E₀, hf₀, hu₀, hE₀⟩ := exists_le_of_algebraMap_mem S hL
     let E' : IntermediateField F Ω := E₀ ⊔ E
     have hE' : ∀ y : L, algebraMap L Ω y ∈ E'.toSubfield := fun y =>

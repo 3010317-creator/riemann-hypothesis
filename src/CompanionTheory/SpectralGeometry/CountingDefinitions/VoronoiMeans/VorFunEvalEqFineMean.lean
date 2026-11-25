@@ -4,49 +4,11 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Exist
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsStrictIff
 public import Mathlib.NumberTheory.Zsqrtd.GaussianInt
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFinRepsProjectiveFinrankLeNumberField
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.ClassNumber.AdmissibleAbs
 import Mathlib.NumberTheory.ClassNumber.Finite
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt
 
 @[expose] public section
-
-set_option autoImplicit false
 
 noncomputable section
 
@@ -117,26 +79,6 @@ theorem classes (h : CMOrd O bar) : ∀ q : ℕ, ∃ (n : ℕ) (R : Fin n → Mo
 theorem int : CMOrd ℤ id :=
   ⟨fun σ a => by simp, ⟨Int.castRingHom ℂ, Int.cast_injective⟩, inferInstance, inferInstance⟩
 
-theorem gauss : CMOrd GaussianInt star := by
-  have d : ∀ a : GaussianInt, a = (a.re : GaussianInt) + (a.im : GaussianInt) * Zsqrtd.sqrtd := fun a => by
-    ext <;> simp
-  refine ⟨fun σ a => ?_, ⟨GaussianInt.toComplex, fun _ _ h => GaussianInt.toComplex_inj.1 h⟩, inferInstance, ?_⟩
-  · have d' : star a = (a.re : GaussianInt) - (a.im : GaussianInt) * Zsqrtd.sqrtd := by ext <;> simp
-    have s : (Zsqrtd.sqrtd : GaussianInt) * Zsqrtd.sqrtd = -1 := by ext <;> simp
-    have h : σ Zsqrtd.sqrtd ^ 2 = Complex.I ^ 2 := by
-      rw [sq, ← map_mul, s]; simp
-    have h2 : starRingEnd ℂ (σ Zsqrtd.sqrtd) = - σ Zsqrtd.sqrtd := by
-      rcases sq_eq_sq_iff_eq_or_eq_neg.1 h with e | e <;> simp [e]
-    rw [d']
-    conv_rhs => rw [d a]
-    simp only [map_add (f := _), map_sub, map_mul, map_intCast, h2]
-    ring
-  · refine ⟨⟨{1, Zsqrtd.sqrtd}, ?_⟩⟩
-    rw [eq_top_iff]
-    intro a _
-    rw [Finset.coe_pair, Submodule.mem_span_pair]
-    exact ⟨a.re, a.im, by ext <;> simp⟩
-
 end CMOrd
 
 def IsTwG {O : Type} [CommRing O] (w : O) (φ : InvFun O) : Prop :=
@@ -165,12 +107,5 @@ def IsSpanned {O : Type} [CommRing O] (bar : O → O) [Module O X] (K : Set (X �
 
 theorem zero_mem_contact {O : Type} [CommRing O] (bar : O → O) [Module O X] {ι : Type} (a : ι → X) :
     (0 : X →ₗ[ℤ] X →ₗ[ℤ] ℝ) ∈ contact bar a := ⟨zero_mem_psdCone, fun _ _ => le_rfl⟩
-
-theorem vorFun_eval_eq_fineMean {O : Type} [CommRing O] [Module.Finite ℤ O] (g : ℕ) {X : Type} [AddCommGroup X] [Module O X]
-    [Module.Finite O X] [Module.Finite ℤ X] (B : X → X → ℝ) :
-    (vorFun O g).eval X B = 2 ^ g * (fineMean 1).eval X B := by
-  rw [vorFun, eval_baseFun]
-  have : zeroFun.eval X B = 0 := rfl
-  simp [this, fineDen]
 
 end GlobalTheory.CompanionTheory.Ar.Fan

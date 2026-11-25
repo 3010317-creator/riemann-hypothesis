@@ -1,51 +1,11 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.PmatIsHermitian
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.CategoryTheory.Countable
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
 public import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.EigenvectorUnitaryMulStar
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.KSchur
 import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.KinstSecondCountable
@@ -134,36 +94,15 @@ theorem continuous_potential_conj {ε : Fin n → Bool} (lam : Fin n → ℝ) (z
   refine continuous_potential_comp lam ?_ (fun k => ⟨adK k⁻¹ z, conj_pmat_eq_adK k z⟩)
   exact (((continuous_toMK_formal_degree ε).comp continuous_inv).mul continuous_const).mul (continuous_toMK_formal_degree ε)
 
-private theorem continuous_pmat {ε : Fin n → Bool} : Continuous (fun y : PCoord ε → ℂ => pmat y) := by
-  refine continuous_pi fun a => continuous_pi fun b => ?_
-  by_cases h1 : b < a ∧ ε a ≠ ε b
-  · simp only [pmat, dite_eq_left h1]
-    exact continuous_apply _
-  · by_cases h2 : a < b ∧ ε b ≠ ε a
-    · simp only [pmat, dite_eq_right h1, dite_eq_left h2]
-      exact (continuous_apply _).star
-    · simp only [pmat, dite_eq_right h1, dite_eq_right h2]
-      exact continuous_const
-
 theorem continuous_potential_conj_prod {ε : Fin n → Bool} (lam : Fin n → ℝ) :
     Continuous (fun p : (PCoord ε → ℂ) × KG ε => Ph lam (toMK p.2⁻¹ * pmat p.1 * toMK p.2)) := by
   refine continuous_potential_comp lam ?_ (fun p => ⟨adK p.2⁻¹ p.1, conj_pmat_eq_adK p.2 p.1⟩)
-  exact (((continuous_toMK_formal_degree ε).comp continuous_snd.inv).mul (continuous_pmat.comp continuous_fst)).mul
-    ((continuous_toMK_formal_degree ε).comp continuous_snd)
+  exact (((continuous_toMK_formal_degree ε).comp continuous_snd.inv).mul
+    ((pmat_continuous ε).comp continuous_fst)).mul ((continuous_toMK_formal_degree ε).comp continuous_snd)
 
 theorem continuous_potential_pmat {ε : Fin n → Bool} (lam : Fin n → ℝ) :
-    Continuous (fun y : PCoord ε → ℂ => Ph lam (pmat y)) := by
-  have hpm : Continuous (fun y : PCoord ε → ℂ => pmat y) := by
-    refine continuous_pi fun a => continuous_pi fun b => ?_
-    by_cases h1 : b < a ∧ ε a ≠ ε b
-    · simp only [pmat, dite_eq_left h1]
-      exact continuous_apply _
-    · by_cases h2 : a < b ∧ ε b ≠ ε a
-      · simp only [pmat, dite_eq_right h1, dite_eq_left h2]
-        exact (continuous_apply _).star
-      · simp only [pmat, dite_eq_right h1, dite_eq_right h2]
-        exact continuous_const
-  exact continuous_potential_comp lam hpm (fun y => ⟨y, rfl⟩)
+    Continuous (fun y : PCoord ε → ℂ => Ph lam (pmat y)) :=
+  continuous_potential_comp lam (pmat_continuous ε) (fun y => ⟨y, rfl⟩)
 
 theorem continuous_exp_neg_potential_conj {ε : Fin n → Bool} (lam : Fin n → ℝ) (z : PCoord ε → ℂ) :
     Continuous (fun k : KG ε => Real.exp (-Ph lam (toMK k⁻¹ * pmat z * toMK k))) := by

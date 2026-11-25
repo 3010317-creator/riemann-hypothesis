@@ -4,51 +4,8 @@ public import Mathlib.Algebra.QuadraticAlgebra.Basic
 public import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
 public import GroundTheory.AutomorphicForms.QuadraticConj
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.StrongApproximation.SAOpenStatement
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Rat
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -326,25 +283,6 @@ section Inhabitants
 
 open QuadraticAlgebra GroundTheory.Heights₂.Theta GroundTheory.Automorphic
 
-def placeOf (p : ℕ) (hp : p.Prime) : HeightOneSpectrum (𝓞 ℚ) where
-  asIdeal := Ideal.comap (Rat.ringOfIntegersEquiv : 𝓞 ℚ →+* ℤ) (Ideal.span {(p : ℤ)})
-  isPrime := by
-    have : (Ideal.span {(p : ℤ)}).IsPrime :=
-      (Ideal.span_singleton_prime (by exact_mod_cast hp.ne_zero)).2 (Nat.prime_iff_prime_int.1 hp)
-    exact Ideal.comap_isPrime _ _
-  ne_bot := by
-    intro h
-    have hmem : Rat.ringOfIntegersEquiv.symm (p : ℤ) ∈
-        Ideal.comap (Rat.ringOfIntegersEquiv : 𝓞 ℚ →+* ℤ) (Ideal.span {(p : ℤ)}) := by
-      rw [Ideal.mem_comap, RingEquiv.coe_toRingHom, RingEquiv.apply_symm_apply]
-      exact Ideal.mem_span_singleton_self (p : ℤ)
-    rw [h, Ideal.mem_bot] at hmem
-    have := congrArg Rat.ringOfIntegersEquiv hmem
-    rw [RingEquiv.apply_symm_apply, map_zero, Nat.cast_eq_zero] at this
-    exact hp.ne_zero this
-
-def v5 : HeightOneSpectrum (𝓞 ℚ) := placeOf 5 (by norm_num)
-
 @[instance_reducible] def topAE : TopologicalSpace (AE ℚ GaussQ) := moduleTopology (FiniteAdeleRing (𝓞 ℚ) ℚ) (AE ℚ GaussQ)
 
 attribute [local instance] topAE
@@ -352,20 +290,6 @@ attribute [local instance] topAE
 theorem isModuleTopology_AE : IsModuleTopology (FiniteAdeleRing (𝓞 ℚ) ℚ) (AE ℚ GaussQ) := ⟨rfl⟩
 
 attribute [local instance] isModuleTopology_AE
-
-theorem sigV_inclV (v : HeightOneSpectrum (𝓞 ℚ)) (x : GaussQ) :
-    sigV (conj ℚ GaussQ) v (inclV GaussQ v x) = inclV GaussQ v (conj ℚ GaussQ x) := by
-  simp [sigV, inclV, Algebra.TensorProduct.map_tmul]
-
-theorem sigA_inclA (x : GaussQ) :
-    sigA (conj ℚ GaussQ) (inclA ℚ GaussQ x) = inclA ℚ GaussQ (conj ℚ GaussQ x) := by
-  simp [sigA, inclA, Algebra.TensorProduct.map_tmul]
-
-theorem compAt_tmul (a : FiniteAdeleRing (𝓞 ℚ) ℚ) (y : GaussQ) :
-    compAt GaussQ v5 (a ⊗ₜ[ℚ] y) = a v5 ⊗ₜ[ℚ] y := rfl
-
-theorem singleV_tmul (x : v5.adicCompletion ℚ) (y : GaussQ) :
-    singleV GaussQ v5 (x ⊗ₜ[ℚ] y) = singleF ℚ v5 x ⊗ₜ[ℚ] y := rfl
 
 
 

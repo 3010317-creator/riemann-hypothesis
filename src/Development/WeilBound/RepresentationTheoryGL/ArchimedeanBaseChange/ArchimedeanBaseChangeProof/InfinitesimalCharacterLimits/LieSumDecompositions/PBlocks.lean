@@ -26,51 +26,10 @@ public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PBlocksFgC
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommuteRtOfMemZalg
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermAuxiliaryStatementA
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PBlocksCapA
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DiscreteSpectrumOfResidual
 import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PProjA
-import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
 import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.IsSliceMap
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUnipLevIntegral
@@ -295,7 +254,7 @@ theorem d_pos : (0 : ℝ) < (Module.finrank ℚ E : ℝ) := by
   have : 0 < Module.finrank ℚ E := Module.finrank_pos
   exact_mod_cast this
 
-theorem LS_exp (hU : IsAutSt U) (hNP : NonPos U) (hT : IsSliceMap U c T) :
+theorem LS_exp (hNP : NonPos U) (hT : IsSliceMap U c T) :
     ∀ φ ∈ LS U T, ∀ r', 0 < r' → r' < r → ∀ c' ∈ Exp r' φ.1,
       c'.re ≤ (Module.finrank ℚ E : ℝ) * ((r' : ℝ) * (((r + s : ℕ) : ℝ) - r')) / 2 := by
   refine BlockExponential.exp_span _ _ (fun φ hφ => BlockSlices.LS_aut hT φ (Submodule.subset_span hφ)) ?_
@@ -313,7 +272,7 @@ theorem LS_exp (hU : IsAutSt U) (hNP : NonPos U) (hT : IsSliceMap U c T) :
       (r' : ℝ) * (((r + s : ℕ) : ℝ) - r') / 2 * (Module.finrank ℚ E : ℝ) := by ring
   linarith
 
-theorem RS_exp (hU : IsAutSt U) (hNP : NonPos U) (hT : IsSliceMap U c T) :
+theorem RS_exp (hNP : NonPos U) (hT : IsSliceMap U c T) :
     ∀ φ ∈ RS U T, ∀ r₂, 0 < r₂ → r₂ < s → ∀ c₂ ∈ Exp r₂ φ.1,
       c₂.re ≤ (Module.finrank ℚ E : ℝ) * (((r + r₂ : ℕ) : ℝ) * (((r + s : ℕ) : ℝ) - ((r + r₂ : ℕ) : ℝ))) / 2 - c.re := by
   refine BlockExponential.exp_span _ (fun r₂ => (Module.finrank ℚ E : ℝ) * (((r + r₂ : ℕ) : ℝ) *
@@ -537,7 +496,7 @@ theorem hyp_left (hU : IsAutSt U) (hNP : NonPos U) (hT : IsSliceMap U c T) (hpE 
   refine BlockTwistCharacters.hyp_tw (-(s : ℂ) / 2) ⟨isStable_map (BlockSlices.LS_stable hU hT) hzc, haut⟩ (finGen_map hzc S₁ hS₁ hgen)
     ⟨_, hinf τ⟩ (fun τ' => ⟨_, hinf τ'⟩) ?_ (BlockTwistCharacters.centIm_left _ hpE fun φ hφ => LS_cent hT φ (hXle hφ))
   refine BlockTwistCharacters.nonPos_tw _ _ haut fun φ hφ r' hr' hrr c' hc' => ?_
-  have hb := LS_exp hU hNP hT φ (hXle hφ) r' hr' hrr c' hc'
+  have hb := LS_exp hNP hT φ (hXle hφ) r' hr' hrr c' hc'
   have hd := d_pos (E := E)
   have h2 : c'.re / (Module.finrank ℚ E : ℝ) ≤ (r' : ℝ) * (((r + s : ℕ) : ℝ) - r') / 2 := by
     rw [div_le_iff₀ hd]
@@ -567,7 +526,7 @@ theorem hyp_right (hU : IsAutSt U) (hNP : NonPos U) (hT : IsSliceMap U c T) (hpE
   refine BlockTwistCharacters.hyp_tw ((r : ℂ) / 2) ⟨isStable_map (BlockSlices.RS_stable hU hT) hzc, haut⟩ (finGen_map hzc S₁ hS₁ hgen)
     ⟨_, hinf τ⟩ (fun τ' => ⟨_, hinf τ'⟩) ?_ (BlockTwistCharacters.centIm_right _ hpE fun φ hφ => RS_cent hT φ (hXle hφ))
   refine BlockTwistCharacters.nonPos_tw _ _ haut fun φ hφ r₂ hr₂ hrs c₂ hc₂ => ?_
-  have hb := RS_exp hU hNP hT φ (hXle hφ) r₂ hr₂ hrs c₂ hc₂
+  have hb := RS_exp hNP hT φ (hXle hφ) r₂ hr₂ hrs c₂ hc₂
   have hd := d_pos (E := E)
   have hc := BlockTwistCharacters.re_of_pE (E := E) hpE
   have h2 : c₂.re / (Module.finrank ℚ E : ℝ) ≤
@@ -1367,7 +1326,7 @@ theorem stepB_right (hU : IsAutSt U) (hexp : HExp U T) {φ : Sm E (r + s)} (hφ 
     Submodule.span_le.2 fun β hβ => hQ β (Finset.mem_coe.1 hβ) m₁
   exact hle hmem
 
-theorem right_inv_of_stab (_hU : IsAutSt U) {c : ℂ} (hT : IsSliceMap U c T) {ψ₀ : Sm E (r + s)} (hψ₀ : ψ₀ ∈ U)
+theorem right_inv_of_stab {c : ℂ} (hT : IsSliceMap U c T) {ψ₀ : Sm E (r + s)} (hψ₀ : ψ₀ ∈ U)
     {l : GL (Fin (r + s)) (Af E)} (hl : l ∈ JFinTr.stabFin ψ₀) (y : GA E (r + s)) :
     (T ψ₀).1 (y * finGL E (r + s) l) = (T ψ₀).1 y := by
   have h1 : act (.fin l) ψ₀ = ψ₀ := hl
@@ -1396,7 +1355,7 @@ theorem stepC_left (hU : IsAutSt U) {c : ℂ} (hT : IsSliceMap U c T) (hexp : HE
   refine ⟨F, hF, fun W hW hFW k g m₂ => ?_⟩
   obtain ⟨x, a, b, t, l, ht, hl, rfl⟩ := hTf g
   rw [T_rt_yp hU.1 hT.equiv k _ hψ₀,
-    slice_decomp_left (T ψ₀) (hT.unipInv ψ₀ hψ₀) l (right_inv_of_stab hU hT hψ₀ hl) k x a b t m₂]
+    slice_decomp_left (T ψ₀) (hT.unipInv ψ₀ hψ₀) l (right_inv_of_stab hT hψ₀ hl) k x a b t m₂]
   refine hW (.fin a) _ ?_
   rw [← T_rt_yp hU.1 hT.equiv k t hψ₀, rt_yp_eq]
   exact Submodule.span_le.2 hFW (hQ t ht k _)
@@ -1420,7 +1379,7 @@ theorem stepC_right (hU : IsAutSt U) {c : ℂ} (hT : IsSliceMap U c T) (hexp : H
   refine ⟨F, hF, fun W hW hFW k g m₁ => ?_⟩
   obtain ⟨x, a, b, t, l, ht, hl, rfl⟩ := hTf g
   rw [T_rt_yp hU.1 hT.equiv k _ hψ₀,
-    slice_decomp_right (T ψ₀) (hT.unipInv ψ₀ hψ₀) l (right_inv_of_stab hU hT hψ₀ hl) k x a b t m₁]
+    slice_decomp_right (T ψ₀) (hT.unipInv ψ₀ hψ₀) l (right_inv_of_stab hT hψ₀ hl) k x a b t m₁]
   refine hW (.fin b) _ ?_
   rw [← T_rt_yp hU.1 hT.equiv k t hψ₀, rt_yp_eq]
   exact Submodule.span_le.2 hFW (hQ t ht k _)

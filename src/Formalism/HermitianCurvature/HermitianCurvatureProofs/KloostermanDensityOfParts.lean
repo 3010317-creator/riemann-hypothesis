@@ -7,54 +7,7 @@ public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComponentFam
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DerivativeBoundInBanachSpace
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FubiniHeadLastPart
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.InnerAveragingInputOfSliceData
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.DirectionsInParabolic
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.RingTheory.SimpleRing.Principal
 import Std.Tactic.BVDecide.Normalize.Prop
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -97,10 +50,6 @@ theorem p_sum_le {V : Type*} [AddCommGroup V] [Module ℂ V] (p : Seminorm ℂ V
   | cons a S ha ih =>
     rw [Finset.sum_cons, Finset.sum_cons]
     exact (map_add_le_add p _ _).trans (add_le_add_right ih _)
-
-theorem nexp (x : ℝ) : ‖Complex.exp (Complex.I * (x : ℂ))‖ = 1 := by
-  rw [mul_comm]
-  exact Complex.norm_exp_ofReal_mul_I x
 
 theorem geom_bound (q : ℂ) (hq : ‖q‖ = 1) (hq1 : q ≠ 1) (M : ℕ) :
     ‖∑ m ∈ range M, q ^ m‖ ≤ 2 / ‖q - 1‖ := by
@@ -159,14 +108,14 @@ theorem averaging_vanishes : C6.AveragingZero := by
   set q : Fin s → ℂ := fun j => Complex.exp (Complex.I * ((t * (c j * u).re : ℝ) : ℂ)) with hqdef
   have hq1 : ∀ j ∈ Finset.univ.erase j0, q j ≠ 1 := fun j hj =>
     exp_ne_one (mul_ne_zero htpos.ne' (hu j hj)) (hphase j)
-  have hqn : ∀ j, ‖q j‖ = 1 := fun j => nexp _
+  have hqn : ∀ j, ‖q j‖ = 1 := fun j => Complex.norm_exp_I_mul_ofReal _
   have hpsi : ∀ j (x : ℂ), G.psi β (-(w j0) * x) * G.psi β (w j * x) =
       Complex.exp (Complex.I * (((c j * x).re : ℝ) : ℂ)) := by
     intro j x
     rw [show c j * x = β * (-(w j0) * x) + β * (w j * x) by simp only [hcdef]; ring, Complex.add_re,
       Complex.ofReal_add, mul_add, Complex.exp_add]
     rfl
-  have hpsin : ∀ x : ℂ, ‖G.psi β x‖ = 1 := fun x => nexp _
+  have hpsin : ∀ x : ℂ, ‖G.psi β x‖ = 1 := fun x => Complex.norm_exp_I_mul_ofReal _
   set Kc : ℝ := ∑ j ∈ Finset.univ.erase j0, 2 / ‖q j - 1‖ * p (a j) with hKc
   have hC' : 0 ≤ C' := by
     obtain ⟨N, hN⟩ := exists_nat_gt (|x₁| / ‖u‖ + 1)
@@ -216,7 +165,7 @@ theorem averaging_vanishes : C6.AveragingZero := by
         congr 1
         push_cast
         ring
-      simp only [hcoef, hterm, ← Finset.mul_sum, norm_mul, nexp, one_mul]
+      simp only [hcoef, hterm, ← Finset.mul_sum, norm_mul, Complex.norm_exp_I_mul_ofReal, one_mul]
       exact geom_bound (q j) (hqn j) (hq1 j hj) N
     have hsplit : ∑ j, coef j • a j = coef j0 • a j0 + ∑ j ∈ Finset.univ.erase j0, coef j • a j :=
       (Finset.add_sum_erase _ _ (Finset.mem_univ j0)).symm

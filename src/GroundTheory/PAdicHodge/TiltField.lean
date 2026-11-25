@@ -2,53 +2,11 @@ module
 
 public import GroundTheory.PAdicHodge.PerfectoidField
 public import GroundTheory.PAdicHodge.TiltValuation
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Mathlib.RingTheory.LocalProperties.Reduced
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: GroundTheory.PowerSubgroups.CountableNeighbourhoods.TiltCountableNeighbourhoods, GroundTheory.PAdicHodge.TiltField
@@ -69,18 +27,6 @@ variable {K : Type*} [NontriviallyNormedField K] [IsUltrametricDist K]
 private lemma mem_integers_iff (x : K) : x ∈ (normInteger K) ↔ ‖x‖ ≤ 1 := by
   change NormedField.valuation x ≤ 1 ↔ _
   rw [NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnnorm, NNReal.coe_one]
-
-private lemma norm_eq_of_norm_sub_lt {u z : K} (h : ‖u - z‖ < ‖z‖) : ‖u‖ = ‖z‖ := by
-  have h1 : ‖u‖ ≤ max ‖u - z‖ ‖z‖ := by
-    simpa using IsUltrametricDist.norm_add_le_max (u - z) z
-  have h2 : ‖z‖ ≤ max ‖z - u‖ ‖u‖ := by
-    simpa using IsUltrametricDist.norm_add_le_max (z - u) u
-  rw [norm_sub_rev] at h2
-  apply le_antisymm
-  · exact h1.trans (max_le h.le le_rfl)
-  · rcases le_max_iff.mp h2 with h3 | h3
-    · exact absurd h3 (not_le.mpr h)
-    · exact h3
 
 private lemma norm_le_of_mem_span {x : (normInteger K)} {p : ℕ}
     (hx : x ∈ Ideal.span {((p : (normInteger K)))}) : ‖(x : K)‖ ≤ ‖(p : K)‖ := by
@@ -107,7 +53,8 @@ private lemma exists_untilt_norm_of_lt
   have hdiff : ‖((PreTilt.untilt a : (normInteger K)) : K) - x‖ ≤ ‖(p : K)‖ := by
     have hmem := Ideal.Quotient.eq.mp h0
     simpa [x'] using norm_le_of_mem_span hmem
-  exact norm_eq_of_norm_sub_lt (lt_of_le_of_lt hdiff hpx)
+  have hlt := lt_of_le_of_lt hdiff hpx
+  simpa [max_eq_right hlt.le] using IsUltrametricDist.norm_add_eq_max_of_norm_ne_norm hlt.ne
 
 private lemma exists_untilt_norm
     (hsurj : Function.Surjective fun x : ModP (normInteger K) p => x ^ p)

@@ -8,50 +8,7 @@ public import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.W
 public import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.WeierstrassSubstitution.EqWSerSubst
 import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.WeierstrassSubstitution.Laurent
 import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.WeierstrassSubstitution.ToLTDenMulInv
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.FlowTwoTorsionWp
 import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.WeierstrassSubstitution.FlowTwo
 
@@ -190,15 +147,6 @@ theorem subst_tS (xP : K) : (tS W xP).subst (expSer W)
   rw [tS, ← PowerSeries.coe_substAlgHom (he W), map_mul, map_pow, PowerSeries.coe_substAlgHom,
     PowerSeries.subst_X (he W)]
 
-private theorem cc_subst_lemma {R : Type*} [CommRing R] {e : R⟦X⟧} (he : HasSubst e)
-    (he0 : constantCoeff e = 0) (f : R⟦X⟧) : constantCoeff (f.subst e) = constantCoeff f := by
-  have hC : (C (constantCoeff f) : R⟦X⟧).subst e = C (constantCoeff f) := by
-    rw [← PowerSeries.coe_substAlgHom he]
-    exact (PowerSeries.substAlgHom he).commutes _
-  conv_lhs => rw [PowerSeries.eq_shift_mul_X_add_const f]
-  rw [← PowerSeries.coe_substAlgHom he, map_add (f := _), map_mul, PowerSeries.coe_substAlgHom,
-    PowerSeries.subst_X he, hC, map_add, map_mul, he0, mul_zero, zero_add, PowerSeries.constantCoeff_C]
-
 theorem inv_subst_cc (xP : K) :
     constantCoeff ((invOfUnit (tDen W xP) 1).subst (expSer W)) = 1 := by
   have hc : constantCoeff (tDen W xP) = 1 := by
@@ -207,8 +155,9 @@ theorem inv_subst_cc (xP : K) :
     PowerSeries.mul_invOfUnit _ _ (by simpa using hc)
   have h1 : (tDen W xP).subst (expSer W) * (invOfUnit (tDen W xP) 1).subst (expSer W) = 1 := by
     rw [← PowerSeries.coe_substAlgHom (he W), ← map_mul, hm, map_one]
-  have h2 := congrArg constantCoeff h1
-  rw [map_mul, map_one, cc_subst_lemma (he W) (e0 W) (tDen W xP), hc, one_mul] at h2
+  have h2 := congrArg MvPowerSeries.constantCoeff h1
+  rw [map_mul, map_one, PowerSeries.constantCoeff_subst_of_constantCoeff_zero (e0 W)] at h2
+  simp only [Algebra.algebraMap_self, RingHom.id_apply, ← PowerSeries.constantCoeff_eq, hc, one_mul] at h2
   exact h2
 
 theorem sq_dvd_tS (xP : K) : X ^ 2 ∣ (tS W xP).subst (expSer W) := by
@@ -371,22 +320,10 @@ theorem wpInU_of (hS : WpShape.{u}) : WpInU.{u} := by
   have h := Two.wpInZ W hS
   have hl : PowerSeries.HasSubst (logSer W) := PowerSeries.HasSubst.of_constantCoeff_zero' (logSpec K W).1
   have hel : (expSer W).subst (logSer W) = X := (expSpec K W).2.2.2.1
-  have hself : ∀ f : K⟦X⟧, f.subst (X : K⟦X⟧) = f := fun f => by
-    show MvPowerSeries.subst (fun _ => (PowerSeries.X : K⟦X⟧)) f = f
-    have e : (fun _ : Unit => (PowerSeries.X : K⟦X⟧)) = MvPowerSeries.X := funext fun _ => rfl
-    rw [e, MvPowerSeries.subst_self]
-    rfl
   have h2 := congrArg (PowerSeries.substAlgHom hl) h
   simp only [map_mul, map_pow, map_add (f := _), map_one, PowerSeries.coe_substAlgHom, PowerSeries.subst_X hl] at h2
-  have e1 : PowerSeries.substAlgHom hl (expSer W) = X := by rw [PowerSeries.coe_substAlgHom]; exact hel
-  have e2 : PowerSeries.substAlgHom hl (wpReg W) = (wpReg W).subst (logSer W) := by
-    rw [PowerSeries.coe_substAlgHom]
-  have e3 : PowerSeries.substAlgHom hl ((xS W).subst (expSer W)) = xS W := by
-    rw [PowerSeries.coe_substAlgHom, PowerSeries.subst_comp_subst_apply (Two.he W) hl, hel, hself]
-  have e4 : PowerSeries.substAlgHom hl (C (W.b₂ / 12)) = C (W.b₂ / 12) :=
-    (PowerSeries.substAlgHom hl).commutes _
   have e3' : PowerSeries.subst (logSer W : K⟦X⟧) (PowerSeries.subst (expSer W : K⟦X⟧) (xS W)) = xS W := by
-    rw [PowerSeries.subst_comp_subst_apply (Two.he W) hl, hel, hself]
+    rw [PowerSeries.subst_comp_subst_apply (Two.he W) hl, hel, PowerSeries.X_subst]
   have e4' : PowerSeries.subst (logSer W : K⟦X⟧) (C (W.b₂ / 12) : K⟦X⟧) = C (W.b₂ / 12) := by
     rw [← PowerSeries.coe_substAlgHom hl]
     exact (PowerSeries.substAlgHom hl).commutes _

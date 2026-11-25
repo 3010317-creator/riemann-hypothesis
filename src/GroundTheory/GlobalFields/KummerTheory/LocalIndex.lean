@@ -5,52 +5,9 @@ public import GroundTheory.LocalFields.UnitsBasic
 public import GroundTheory.LocalFields.FilteredSurj
 public import Mathlib.RingTheory.RootsOfUnity.Basic
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -384,24 +341,6 @@ theorem index_range_powMonoidHom (hn : (n : K) ≠ 0) :
 end Units
 
 section Open
-
-theorem uniformizer_pow_succ_dvd_of_valuation_lt {ϖ : 𝒪[K]} (hϖ : Irreducible ϖ) {k : ℕ}
-    {z : 𝒪[K]} (h : valuation K (z : K) < valuation K ((ϖ : K) ^ k)) : ϖ ^ (k + 1) ∣ z := by
-  rcases eq_or_ne z 0 with rfl | hz
-  · exact dvd_zero _
-  obtain ⟨m, w, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hz hϖ
-  have hzK : (((w : 𝒪[K]) * ϖ ^ m : 𝒪[K]) : K) ≠ 0 := by exact_mod_cast hz
-  have hϖk : (ϖ : K) ^ k ≠ 0 := pow_ne_zero _ (by exact_mod_cast hϖ.ne_zero)
-  rw [← normalizedValuation_lt_iff, normalizedValuation_eq_exp_ord hzK,
-    normalizedValuation_eq_exp_ord hϖk, WithZero.exp_lt_exp, neg_lt_neg_iff,
-    ord_uniformizer_pow hϖ] at h
-  have hord : ord ((((w : 𝒪[K]) * ϖ ^ m : 𝒪[K])) : K) = m := by
-    have hw : ((w : 𝒪[K]) : K) ≠ 0 := by exact_mod_cast w.ne_zero
-    have hϖm : (ϖ : K) ^ m ≠ 0 := pow_ne_zero _ (by exact_mod_cast hϖ.ne_zero)
-    push_cast
-    rw [ord_mul hw hϖm, ord_unit, ord_uniformizer_pow hϖ, zero_add]
-  rw [hord] at h
-  exact Dvd.dvd.mul_left (pow_dvd_pow ϖ (by omega)) _
 
 theorem isOpen_range_powMonoidHom {n : ℕ} (hn : (n : K) ≠ 0) :
     IsOpen ((powMonoidHom n : Kˣ →* Kˣ).range : Set Kˣ) := by

@@ -49,56 +49,12 @@ public import Formalism.LocalToGlobal.GroupLattices.ComparisonMaps.TiedRec
 public import Formalism.LocalToGlobal.GroupLattices.StdSubAtOfRing
 public import Formalism.LocalToGlobal.GroupLattices.TrivialTransfer.GramTotallyDefinite
 import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LDlatLemmas
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Formalism.SharpRestriction.GrowthBounds.ColumnSpanDensity.Tensor
-import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.TotallySplit
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.ReduceModChar
 import Formalism.SharpRestriction.GrowthBounds.PolynomialLevels.FrRevInj
 import Formalism.SharpRestriction.GrowthBounds.RootWeights.DerivativeValuationBounds
 import Formalism.SharpRestriction.GrowthBounds.ValuationLowestDegreeMapFractionField
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
 import Std.Tactic.BVDecide.Normalize.Prop
-import Mathlib.Data.Finsupp.Pointwise
 import Formalism.SharpRestriction.GrowthBounds.AevalValuation.RestSpec
 import Formalism.SharpRestriction.GrowthBounds.PlaneCoefficients.TensZeroRight
 import Formalism.LocalToGlobal.GroupLattices.FockModels.ElementaryDivisorBasis
@@ -1207,20 +1163,6 @@ theorem compPh : CompPh := by
   simp only [key]
   split_ifs <;> rfl
 
-private theorem fdig_eq_sum_C_coeff_mul_prod_of_support_subset {p : ℕ} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] {r J : ℕ}
-    (Dt : SignedChainData p O r J) (rho : (ZMod J × Fin r) × Fin r → ℕ)
-    (F : MvPolynomial (TL J Dt.nL r × Fin r) (KK O)) (S : Finset (TL J Dt.nL r × Fin r →₀ ℕ))
-    (hS : F.support ⊆ S) :
-    Dt.Fdig rho F = ∑ mo ∈ S with Dt.digOK rho mo,
-      C (AddMonoidAlgebra.coeff F mo) * ∏ v ∈ mo.support, X (Dt.liftVar v) ^ Dt.liftExp mo v := by
-  unfold SignedChainData.Fdig
-  refine Finset.sum_subset (Finset.filter_subset_filter _ hS) ?_
-  intro mo h1 h2
-  have h0 : AddMonoidAlgebra.coeff F mo = 0 := by
-    by_contra h
-    exact h2 (Finset.mem_filter.2 ⟨mem_support_iff.2 h, (Finset.mem_filter.1 h1).2⟩)
-  simp [h0]
-
 theorem fdigSum : FdigSum := by
   intro p O _ _ _ r J Dt rho α s f
   classical
@@ -1256,11 +1198,6 @@ theorem digOK_phExp (hP : ∀ j m, 0 < Dt.P j m) (rho : (ZMod J × Fin r) × Fin
 theorem liftMon_notin (mo : TL J Dt.nL r × Fin r →₀ ℕ) (w : ML J Dt.nL r × Fin r)
     (hw : w ∉ Set.range Dt.liftVar) : liftMon Dt mo w = 0 :=
   Finsupp.mapDomain_notin_range _ _ hw
-
-private theorem liftE_apply_eq_liftExp {p : ℕ} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
-    {r J : ℕ} (Dt : SignedChainData p O r J) (γ : TL J Dt.nL r × Fin r →₀ ℕ) (v : TL J Dt.nL r × Fin r) :
-    liftE Dt γ v = Dt.liftExp γ v := by
-  rcases v with ⟨⟨j, l | m⟩, a⟩ <;> simp [liftE, Pof, SignedChainData.liftExp]
 
 theorem liftMon_phExp (hP : ∀ j m, 0 < Dt.P j m) (β : TL J Dt.nL r × Fin r →₀ ℕ) (M : ML J Dt.nL r × Fin r →₀ ℕ)
     (hM : ∀ v ∈ M.support, IsLW v.1) : liftMon Dt (β + phExp Dt M) = liftMon Dt β + M := by

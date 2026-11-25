@@ -2,45 +2,6 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.AnalyticResolutionHypothesesProjectiveLine
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.IsVerticalDivOfIsVerticalDivisorAlt
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.AnalyticForms.RegularLocalRings.IntToRat
 
 @[expose] public section
@@ -86,24 +47,7 @@ theorem isProjVarQ_of_isArithVar {P : Ideal (ReciprocityTheory.ChartRestriction.
         ((e + 1 + Fintype.card K : ℕ) : WithBot ℕ∞) := by
       rw [← hdim]
       exact hd
-    show ringKrullDim (MvPolynomial (Σ k, ι k) ℚ ⧸ P.map (MvPolynomial.map (Int.castRingHom ℚ))) =
-      ((e + Fintype.card K : ℕ) : WithBot ℕ∞)
-    generalize ringKrullDim (MvPolynomial (Σ k, ι k) ℚ ⧸
-      P.map (MvPolynomial.map (Int.castRingHom ℚ))) = d at hd'
-    induction d using WithBot.recBotCoe with
-    | bot =>
-      rw [WithBot.bot_add] at hd'
-      exact absurd hd' (WithBot.bot_ne_coe)
-    | coe d =>
-      induction d using ENat.recTopCoe with
-      | top =>
-        have h3 : (⊤ : ℕ∞) + 1 = ((e + 1 + Fintype.card K : ℕ) : ℕ∞) := by exact_mod_cast hd'
-        rw [top_add] at h3
-        exact absurd h3.symm (ENat.natCast_ne_top _)
-      | coe n =>
-        have h1 : n + 1 = e + 1 + Fintype.card K := by exact_mod_cast hd'
-        have h2 : n = e + Fintype.card K := by omega
-        rw [h2]
-        rfl
+    rw [Nat.add_right_comm e 1 (Fintype.card K), Nat.cast_add, Nat.cast_one] at hd'
+    exact ENat.WithBot.add_one_cancel.mp hd'
 
 end GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.Inter

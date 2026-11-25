@@ -4,50 +4,9 @@ public import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 public import Mathlib.Analysis.Complex.Polynomial.Basic
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.Tactic.ENatToNat
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.AlgebraicGeometry.Modules.Sheaf
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -121,19 +80,6 @@ theorem valHom_eq [LocallyOfFiniteType s] (x : S) (hx : IsClosed ({x} : Set S)) 
   unfold valHom
   rw [dite_eq_left hex, valHom_unique s x hx _ hex.choose_spec]
 
-theorem evaluation_res {U V : S.Opens} (h : V ≤ U) (f : Γ(S, U)) (x : S) (hx : x ∈ V) :
-    S.evaluation V x hx (S.presheaf.map (homOfLE h).op f) = S.evaluation U x (h hx) f := by
-  have key : S.presheaf.map (homOfLE h).op ≫ S.evaluation V x hx = S.evaluation U x (h hx) := by
-    simp only [Scheme.evaluation, TopCat.Presheaf.germ_res_assoc]
-  rw [← key]
-  rfl
-
-theorem constSec_res (U : S.Opens) (c : ℂ) :
-    constSec s U c = S.presheaf.map (homOfLE (le_top : U ≤ ⊤)).op (constSec s ⊤ c) := by
-  simp only [constSec, RingHom.comp_apply]
-  rw [← s.appLE_map (U := ⊤) (V := ⊤) le_top (homOfLE (le_top : U ≤ ⊤)).op]
-  rfl
-
 theorem isClosed_image_of_closed {T : Scheme.{0}} (t : T ⟶ Spec (CommRingCat.of ℂ)) (g : S ⟶ T)
     (hg : g ≫ t = s) [LocallyOfFiniteType s] [LocallyOfFiniteType t] (x : S)
     (hc : IsClosed ({x} : Set S)) : IsClosed ({g.base x} : Set T) := by
@@ -159,31 +105,6 @@ theorem residueFieldMap_constRes {T : Scheme.{0}} (t : T ⟶ Spec (CommRingCat.o
   rw [Scheme.evaluation_naturality g x (V := ⊤) trivial, ← hg, Scheme.Hom.comp_appTop,
     Category.assoc]
   rfl
-
-theorem val_ringHom [LocallyOfFiniteType s] (U : S.Opens) (x : S) (hx : x ∈ U)
-    (hc : IsClosed ({x} : Set S)) :
-    ∃ φ : Γ(S, U) →+* ℂ, ∀ f, φ f = val s f x hx := by
-  refine ⟨(residueFieldIsoBase s x hc).hom.hom.comp (S.evaluation U x hx).hom, fun f => ?_⟩
-  unfold val
-  rw [valHom_eq s x hc]
-  rfl
-
-theorem val_const [LocallyOfFiniteType s] (U : S.Opens) (x : S) (hx : x ∈ U)
-    (hc : IsClosed ({x} : Set S)) (c : ℂ) : val s (constSec s U c) x hx = c := by
-  unfold val
-  rw [constSec_res s U c, evaluation_res le_top _ x hx, valHom_eq s x hc]
-  exact DFunLike.congr_fun (valHom_spec s x hc) c
-
-theorem val_restrict {U V : S.Opens} (hVU : V ≤ U) (f : Γ(S, U)) (x : S) (hx : x ∈ V) :
-    val s (S.presheaf.map (homOfLE hVU).op f) x hx = val s f x (hVU hx) := by
-  unfold val
-  rw [evaluation_res hVU f x hx]
-
-theorem val_eq_zero_iff [LocallyOfFiniteType s] {U : S.Opens} (f : Γ(S, U)) (x : S) (hx : x ∈ U)
-    (hc : IsClosed ({x} : Set S)) : val s f x hx = 0 ↔ S.evaluation U x hx f = 0 := by
-  unfold val
-  rw [valHom_eq s x hc]
-  exact map_eq_zero_iff _ (residueFieldIsoBase s x hc).commRingCatIsoToRingEquiv.injective
 
 theorem val_comp {T : Scheme.{0}} (t : T ⟶ Spec (CommRingCat.of ℂ)) (g : S ⟶ T) (hg : g ≫ t = s)
     [LocallyOfFiniteType s] [LocallyOfFiniteType t] {U : T.Opens} {V : S.Opens} (hVU : V ≤ g ⁻¹ᵁ U)

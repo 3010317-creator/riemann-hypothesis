@@ -147,17 +147,6 @@ theorem toPi_E (a i j : ι) (x : N) : U.toPi a (U.E i j x) = Pi.single i (U.toPi
 
 end MatrixUnits
 
-def stdUnits (M : Type*) [AddCommGroup M] [Module R M] : MatrixUnits R (ι → M) ι where
-  E i j := LinearMap.single R (fun _ => M) i ∘ₗ LinearMap.proj j
-  mul_eq i j k l := by
-    ext x m
-    by_cases h : j = k
-    · subst h; simp [Pi.single_apply]
-    · simp [h, Pi.single_apply]
-  sum_diag := by
-    ext x m
-    simp [Finset.sum_apply, Pi.single_apply]
-
 end GlobalTheory.Morita
 
 namespace GlobalTheory.Morita
@@ -393,7 +382,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField GlobalTheory.UPel.HT GlobalTheory.UPel.HT.EtLev
 open scoped TensorProduct

@@ -10,46 +10,6 @@ public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PlkFlagPt
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PluckerNonvanishingOrbitInvariant
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseVectorProperties
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.PullbackPullback
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -69,19 +29,6 @@ theorem orbit_symm {z z' : (Σ k, ι k) → ℂ} (h : SameOrbit z z') : SameOrbi
   funext p
   simp [hc p.1]
 
-theorem orbit_trans {z z' z'' : (Σ k, ι k) → ℂ} (h : SameOrbit z z') (h' : SameOrbit z' z'') :
-    SameOrbit z z'' := by
-  obtain ⟨c, hc, rfl⟩ := h
-  obtain ⟨c', hc', rfl⟩ := h'
-  refine ⟨fun k => c k * c' k, fun k => mul_ne_zero (hc k) (hc' k), ?_⟩
-  funext p
-  simp [mul_assoc]
-
-theorem orbit_basePart {σ : Type} (blk : σ → Option K) {z z' : (Σ k, ι k) → ℂ} (h : SameOrbit z z') :
-    SameOrbit (basePart blk z) (basePart blk z') := by
-  obtain ⟨c, hc, rfl⟩ := h
-  exact ⟨fun k => c k.1, fun k => hc k.1, rfl⟩
-
 theorem analytic_minorIJ {m N : ℕ} {V : Set (Fin m → ℂ)} {h : (Fin m → ℂ) → Matrix (Fin N) (Fin N) ℂ}
     (hh : ∀ r s, AnalyticOnNhd ℂ (fun u => h u r s) V) (I J : Finset (Fin N)) :
     AnalyticOnNhd ℂ (fun u => minorIJ (h u) I J) V := by
@@ -96,7 +43,6 @@ theorem analytic_minorIJ {m N : ℕ} {V : Set (Fin m → ℂ)} {h : (Fin m → �
 end GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.DensR
 
 namespace GlobalTheory.CompanionTheory.Ar.PB.WSq.FC
-
 
 open DensR in
 theorem dens_r : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (Φ : Type) [Field Φ] (y : (Σ k, ι k) → Φ) (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N j : ℕ) (M : FlagModel y Ψ N j) (n d : ℕ) (BM : BaseMetric M n) (FA : FlagAn BM d) (l : Fin BM.q) (x : FA.Re.R.X), FA.pr (FA.Re.π x) ∈ BM.O l → ∀ V, IsOpen V → x ∈ V → ∃ x' ∈ V, FA.pr (FA.Re.π x') ∈ BM.O l \ bdry BM.s ∧ ∀ p, FC.plk M (BM.F l) (FC.bvec BM l (FA.pr (FA.Re.π x'))) (FA.Re.R.lift x' x') p ≠ 0 := by
@@ -128,7 +74,7 @@ theorem dens_r : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (�
   have hg' := hgood b' hb'.1
   have hpr : FA.pr (FA.Re.π x') = b' := by
     refine BM.Rb.inj _ _ (fun hc => by simpa using hc.2 1 Submodule.mem_top) ?_
-    refine orbit_trans (orbit_symm (FA.pr_eq x')) (orbit_trans (orbit_basePart M.blk hso') ?_)
+    refine GlobalTheory.CompanionTheory.Ar.PB.Cj.sameOrbit_trans (orbit_symm (FA.pr_eq x')) (GlobalTheory.CompanionTheory.Ar.PB.Cj.sameOrbit_trans (GlobalTheory.CompanionTheory.Ar.PB.CovMap.ImgBase.sameOrbit_basePart M.blk hso') ?_)
     rw [FC.basePart_flagPt]
     exact hg'.2.2.2
   refine ⟨x', hx'V, hpr ▸ hb', fun p => ?_⟩

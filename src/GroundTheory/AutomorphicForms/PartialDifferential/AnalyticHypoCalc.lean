@@ -1,51 +1,10 @@
 module
 
 public import GroundTheory.AutomorphicForms.PartialDifferential.AnalyticHypoBasic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
 public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -112,15 +71,6 @@ theorem pdT_snoc {f : 𝔼 → ℂ} (hf : ContDiff ℝ ∞ f) {k : ℕ} (J : Fin
     funext l
     refine Fin.lastCases ?_ (fun j ↦ ?_) l <;> simp
   rw [pdT, h, dT_snoc hf]
-  rfl
-
-theorem pdT_cons {f : 𝔼 → ℂ} (hf : ContDiff ℝ ∞ f) {k : ℕ} (i : Fin n) (J : Fin k → Fin n) :
-    pdT (Fin.cons i J) f = pd i (pdT J f) := by
-  have h : (fun l ↦ ev (Fin.cons (α := fun _ ↦ Fin n) i J l)) =
-      Fin.cons (ev i : 𝔼) (fun l ↦ ev (J l)) := by
-    funext l
-    refine Fin.cases ?_ (fun j ↦ ?_) l <;> simp
-  rw [pdT, h, dT_cons hf]
   rfl
 
 theorem fderiv_fderiv_apply_comm {g : 𝔼 → ℂ} (hg : ContDiff ℝ ∞ g) (x a b : 𝔼) :

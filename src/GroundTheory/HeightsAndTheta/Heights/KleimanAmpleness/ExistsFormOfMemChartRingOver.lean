@@ -1,52 +1,7 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.ImportsSideMore
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -65,57 +20,38 @@ omit [Fintype K] in
 theorem RowSub.isMultiHomog_mul {f g : MRingOver S ι} {a b : K → ℕ} (hf : IsMultiHomog f a)
     (hg : IsMultiHomog g b) : IsMultiHomog (f * g) (a + b) := by
   classical
-  intro m hm k
-  obtain ⟨m1, hm1, m2, hm2, rfl⟩ := Finset.mem_add.mp (MvPolynomial.support_mul f g hm)
-  simp only [Finsupp.add_apply, Finset.sum_add_distrib, Pi.add_apply, hf m1 hm1 k, hg m2 hm2 k]
+  exact (Bridge.isMultiHomog_iff _ _).mp
+    (IsWeightedHomogeneous.mul ((Bridge.isMultiHomog_iff _ _).mpr hf)
+      ((Bridge.isMultiHomog_iff _ _).mpr hg))
 
 
 omit [Fintype K] in
 theorem RowSub.isMultiHomog_C (r : S) : IsMultiHomog (C r : MRingOver S ι) 0 := by
   classical
-  intro m hm k
-  rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_C] at hm
-  split_ifs at hm with h
-  · subst h; simp
-  · exact absurd rfl hm
+  exact (Bridge.isMultiHomog_iff _ _).mp (isWeightedHomogeneous_C (NumbersDVR.blockWeight ι) r)
 
 
 omit [Fintype K] in
 theorem RowSub.isMultiHomog_X [DecidableEq K] (k : K) (i : ι k) :
-    IsMultiHomog (X ⟨k, i⟩ : MRingOver S ι) (Pi.single k 1) := by
-  classical
-  intro m hm k'
-  rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_X'] at hm
-  split_ifs at hm with h
-  · subst h
-    by_cases hk : k' = k
-    · subst hk
-      simp [Finsupp.single_apply]
-    · have : ∀ j : ι k', (⟨k, i⟩ : Σ k, ι k) ≠ ⟨k', j⟩ := fun j e => hk (congrArg Sigma.fst e).symm
-      simp [hk]
-  · exact absurd rfl hm
+    IsMultiHomog (X ⟨k, i⟩ : MRingOver S ι) (Pi.single k 1) :=
+  (Bridge.isMultiHomog_iff _ _).mp (isWeightedHomogeneous_X S (NumbersDVR.blockWeight ι) ⟨k, i⟩)
 
 
 omit [Fintype K] in
 theorem RowSub.isMultiHomog_pow {f : MRingOver S ι} {a : K → ℕ} (hf : IsMultiHomog f a) (n : ℕ) :
     IsMultiHomog (f ^ n) (n • a) := by
-  induction n with
-  | zero => simpa using RowSub.isMultiHomog_C (ι := ι) (1 : S)
-  | succ n ih =>
-    rw [pow_succ, succ_nsmul]
-    exact RowSub.isMultiHomog_mul ih hf
+  classical
+  exact (Bridge.isMultiHomog_iff _ _).mp
+    (IsWeightedHomogeneous.pow ((Bridge.isMultiHomog_iff _ _).mpr hf) n)
 
 
 omit [Fintype K] in
 theorem RowSub.isMultiHomog_prod {β : Type} (s : Finset β) (f : β → MRingOver S ι) (a : β → K → ℕ)
     (h : ∀ b ∈ s, IsMultiHomog (f b) (a b)) : IsMultiHomog (∏ b ∈ s, f b) (∑ b ∈ s, a b) := by
   classical
-  induction s using Finset.induction_on with
-  | empty => simpa using RowSub.isMultiHomog_C (ι := ι) (1 : S)
-  | insert b s hb ih =>
-    rw [Finset.prod_insert hb, Finset.sum_insert hb]
-    exact RowSub.isMultiHomog_mul (h b (Finset.mem_insert_self b s))
-      (ih fun b' hb' => h b' (Finset.mem_insert_of_mem hb'))
+  exact (Bridge.isMultiHomog_iff _ _).mp
+    (IsWeightedHomogeneous.prod (w := NumbersDVR.blockWeight ι) s f a fun b hb =>
+      (Bridge.isMultiHomog_iff _ _).mpr (h b hb))
 
 theorem RowSub.isMultiHomog_coordProd (c : ∀ k, ι k) (d : K → ℕ) :
     IsMultiHomog (∏ k, (X ⟨k, c k⟩ : MRingOver S ι) ^ d k) d := by

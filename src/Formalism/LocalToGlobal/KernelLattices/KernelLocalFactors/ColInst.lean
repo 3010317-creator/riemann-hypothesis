@@ -8,49 +8,13 @@ import Formalism.LocalToGlobal.Columns.BaseLemmas
 public import Formalism.LocalToGlobal.GlobalTheory.GL3.PSelfDual
 public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.PeriodLatticeFinitelyGenerated
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.ThDistC
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Rat
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Presheaf
 public import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleRanksRankComplement
 public import Formalism.LocalToGlobal.Columns.CyclotomicIsCyclotomicExtension
@@ -608,13 +572,6 @@ theorem kerFin {E : Type} [Field E] [NumberField E] [StarRing E] {a b : ℕ} (Sa
     (fun x hx j hj => homAt_div Sall N N' (cA * cB) (Nat.mul_pos hA hB) x hx j hj)
   exact finite_div_quot _ cA cB hA F hF hFM
 
-theorem jetLin_smul {K : Type} [Field K] {ι : Type} [Fintype ι] {a b : ℕ} (c : K) (J : (DVar ι a b →₀ ℕ) → K) :
-    jetLin (fun m => c * J m) = c • jetLin J := by
-  apply (basisMonomials ((ι × Fin b × Fin b) ⊕ DVar ι a b) K).ext
-  intro m
-  rw [LinearMap.smul_apply]
-  simp only [coe_basisMonomials, jetLin_monomial, one_mul, smul_monomial, smul_eq_mul]
-
 variable {X : Fields} (A : Amb X) {a b : ℕ} (Sall SB : Finset (HeightOneSpectrum (𝓞 X.E)))
 
 end Tab
@@ -846,14 +803,6 @@ end Unram
 section Red
 
 variable {E : Type} [Field E] [NumberField E] {P : HeightOneSpectrum (𝓞 E)} {q : ℕ}
-
-theorem xqIntAt_zero : IntAt P (0 : E) := by
-  have := IntAt.coe P 0
-  rwa [map_zero] at this
-
-theorem xqIntAt_one : IntAt P (1 : E) := by
-  have := IntAt.coe P 1
-  rwa [map_one] at this
 
 theorem reduction_zero₂ : redP P (0 : E) = 0 := by
   have := reduction_coe P 0

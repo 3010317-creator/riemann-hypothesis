@@ -2,53 +2,10 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.HeightsOfSets.CoordCurveDegree
 public import GroundTheory.HeightsAndTheta.Heights.HeightsOfSets.PCoordCurveAlgebraic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -235,16 +192,9 @@ theorem exists_ptOf {y : (Σ k, ι k) → Ω} (hP : IsArithVar (mCoordIdeal y) 1
   have hker : ∀ g ∈ RingHom.ker ev, aeval (fun p ↦ z p / z ⟨p.1, d p.1⟩) g = 0 := fun g hg ↦
     aeval_pt_eq_zero hP d hyd hz hd (by rw [← hval, RingHom.mem_ker.mp hg]; rfl)
   let φ : blockFnField y →ₐ[ℚ] ℂ :=
-    (Ideal.Quotient.liftₐ (RingHom.ker ev) (aeval fun p ↦ z p / z ⟨p.1, d p.1⟩) hker).comp
-      (Ideal.quotientKerAlgEquivOfSurjective hsurj).symm.toAlgHom
-  have hφ : ∀ g, φ (ev g) = aeval (fun p ↦ z p / z ⟨p.1, d p.1⟩) g := fun g ↦ by
-    have : (Ideal.quotientKerAlgEquivOfSurjective hsurj).symm (ev g) = Ideal.Quotient.mk _ g := by
-      rw [AlgEquiv.symm_apply_eq]
-      rfl
-    change (Ideal.Quotient.liftₐ (RingHom.ker ev) _ hker)
-      ((Ideal.quotientKerAlgEquivOfSurjective hsurj).symm (ev g)) = _
-    rw [this]
-    rfl
+    ev.liftOfSurjective hsurj (aeval fun p ↦ z p / z ⟨p.1, d p.1⟩) hker
+  have hφ : ∀ g, φ (ev g) = aeval (fun p ↦ z p / z ⟨p.1, d p.1⟩) g :=
+    AlgHom.liftOfSurjective_apply ev hsurj _ hker
   have hpt : ∀ p, ptOf y c φ p = z p / z ⟨p.1, c p.1⟩ := fun p ↦ by
     have e : ratioF y c p = ev (X p) / ev (X ⟨p.1, c p.1⟩) := by
       apply Subtype.ext

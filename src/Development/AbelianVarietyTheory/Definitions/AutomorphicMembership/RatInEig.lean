@@ -50,8 +50,6 @@ namespace GlobalTheory.Mem.Top.Bl
 open Formalism.BasicNotions Formalism.MainNotions Formalism.L2 Formalism.L2.Host Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.NX ReciprocityTheory.Gal
   NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.HeightCounting
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 
 
 def ratL {D : D7} (L : LocAll (lay0 D)) (S : RatDat D.ntw) : RatDat (withLoc L).ntw := { S with }
@@ -102,7 +100,7 @@ structure NRow {hL : GlobalTheory.Published.LocalLanglandsGL} {cf : CharFrame D}
   nexp : NExpRealS R cG (ratDatR R cG kKs hk)
   hecke : NExpRealH R cG (ratDatR R cG kKs hk) nexp
   grp : GrpTie D A3.A F.P0 F.ψ0 F.P1 F.ψ1 (R.eG.trans cG)
-  rowLoc : principalLevelFrame.RowLocPin a.all.gal.lp R.θ Y.PY (R.MY 0) (fun b => levS _ (R.βY 0) (R.dat0 (R.toRealDat.levR F.lv2 b)))
+  rowLoc : principalLevelFrame.RowLocPin R.θ Y.PY (R.MY 0) (fun b => levS _ (R.βY 0) (R.dat0 (R.toRealDat.levR F.lv2 b)))
     (fun b => levChi _ (R.βY 0) (R.dat0 (R.toRealDat.levR F.lv2 b))) (fun _ => R.e0) Y.eFT
   S_eq : HEq (ratL a.nt.L a.nt.S) (ratDatR R cG kKs hk)
   hL_eq : HEq a.nt.hL hecke.hL

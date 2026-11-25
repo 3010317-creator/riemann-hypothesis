@@ -13,45 +13,6 @@ public import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.Unif
 public import Formalism.LocalToGlobal.TorsionIntegrality.GaussianEigenFrames.IsPairFrame
 public import Formalism.LocalToGlobal.TorsionIntegrality.GaussianEigenFrames.StatementC
 public import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.StatementW
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.Data.Nat.Choose.Multinomial
 import Formalism.GaussJetBounds.StatementH
 import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.OddLogRelation
 import Formalism.LocalToGlobal.TorsionIntegrality.GaussianEigenFrames.StatementG
@@ -259,24 +220,6 @@ open Formalism.L2.Th1.Top (IsHypPair inHyp IsLTNorm IsLatH IsFrameH thetaH)
 open Formalism.L2.Th1.H (cmL CmOK matH stdH stdLat blk4 pow4 imgLat relIdx IsIsom IsSelfDual Th alphaQ kernel4)
 open Formalism.L2.Th1.E (IntCurve curveL Unif)
 open Formalism.L2.Th1.GD (LocNorm thetaLin frameM InMul IsPairFrame)
-
-def PlaceSeriesJetsCyclicOrbits : Prop :=
-  ∀ (l : ℕ) [Fact l.Prime] (Q : OrbSys ℂ_[l] → ℝ → Prop) (g2 g3 s2 ε : MaximalUnramifiedExtension l) (σ : MaximalUnramifiedExtension l →+* MaximalUnramifiedExtension l)
-    (F : MvPowerSeries (Fin 2) (MaximalUnramifiedExtension l)), CurveAt l g2 g3 s2 ε σ F →
-  ∀ (N0 N1 : ℕ) (ιr P : Type) (e : PV ιr N0 N1 → P) (S : OrbSys ℂ_[l]) (x : P → MvPowerSeries S.ι ℂ_[l])
-    (Ψ : MvPowerSeries P ℂ_[l]) (β : ℝ),
-    IsHostA l Q σ (cob F (phFF l g2 g3 s2 ε)) N0 N1 ιr P e S x Ψ β → IsSysW l Q S β
-
-def IntegralSeriesCyclicOrbits : Prop :=
-  ∀ (l : ℕ) [Fact l.Prime] (Q : OrbSys ℂ_[l] → ℝ → Prop) (g2 g3 s2 ε : MaximalUnramifiedExtension l) (σ : MaximalUnramifiedExtension l →+* MaximalUnramifiedExtension l)
-    (F : MvPowerSeries (Fin 2) (MaximalUnramifiedExtension l)), CurveAt l g2 g3 s2 ε σ F →
-  ∀ (N0 N1 : ℕ) (ιr : Type) [Fintype ιr] [DecidableEq ιr] (P : Type) (e : PV ιr N0 N1 → P) (S : OrbSys ℂ_[l])
-    (x : P → MvPowerSeries S.ι ℂ_[l]) (Ψ : MvPowerSeries P ℂ_[l]) (β : ℝ),
-    IsHostA l Q σ (cob F (phFF l g2 g3 s2 ε)) N0 N1 ιr P e S x Ψ β →
-  ∀ (n : Type) [Fintype n] (f f' : ιr × Fin N0 × Fin N1 → n → MaximalUnramifiedExtension l), IsHypPair σ f f' →
-  ∀ Θ : MvPowerSeries n ℂ_[l], HostInt l g2 g3 s2 ε Θ →
-    ∃ U : MvPowerSeries S.ι ℂ_[l], Integral U ∧
-      MvPowerSeries.subst x (serAlong e (inHyp l f f' Θ)) = MvPowerSeries.subst S.g U * S.E
 
 def HostIntFree : Prop :=
   ∀ (a₀ : ℕ) (b₀ c₀ : ℤ) (dK : ℕ) (ha : 0 < a₀) (hdK : 0 < dK), CmOK a₀ b₀ c₀ dK →

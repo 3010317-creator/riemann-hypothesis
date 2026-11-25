@@ -10,48 +10,8 @@ public import GroundTheory.ProfiniteCohomology.CupProducts.ExistsCocycleMapFEqD
 public import GroundTheory.ProfiniteCohomology.CyclicCupBrauer
 import GroundTheory.ProfiniteCohomology.FilteredHomology
 public import GroundTheory.ProfiniteCohomology.GaloisCohomology.Kummer
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Algebra.Order.Star.Rat
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -325,10 +285,10 @@ theorem charCocycle_eq_bockInt [NeZero n] (χ : G → ZMod n) (ψ : Additive G �
   constructor
   · rw [le_div_iff₀ hn]
     have : (0 : ℚ) ≤ r := by positivity
-    nlinarith
+    linarith only []
   · rw [div_lt_iff₀ hn]
     have : (r : ℚ) < n := by exact_mod_cast hlt
-    nlinarith
+    linarith only [this]
 
 theorem exists_cocycle_cupPairing_δ_bockSeq (hn : n ≠ 0) (A : Rep.{0} (ULift.{0} ℤ) G)
     [IsDiscreteRep A] (z : cocycles (zmodRep.{0} G n) 1) (a : A.ρ.invariants) :

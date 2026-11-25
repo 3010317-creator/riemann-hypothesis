@@ -4,49 +4,8 @@ public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.RepresentationTheory.Coinduced
 public import Mathlib.RepresentationTheory.Homological.GroupCohomology.Functoriality
 public import GroundTheory.TateCohomology.DimensionShift
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RepresentationTheory.Homological.GroupCohomology.Shapiro
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -92,6 +51,14 @@ def revInv (x : Fin n → G) : Fin n → G := fun i => (x i.rev)⁻¹
 
 theorem revInv_apply (x : Fin n → G) (i : Fin n) : revInv x i = (x i.rev)⁻¹ := rfl
 
+theorem init_revInv (x : Fin (n + 1) → G) : Fin.init (revInv x) = revInv (Fin.tail x) := by
+  funext i
+  simp only [Fin.init, Fin.tail, revInv_apply]
+  congr 2
+  ext
+  simp only [Fin.val_rev, Fin.val_succ, Fin.val_castSucc]
+  omega
+
 theorem partialProd_last_revInv (x : Fin n → G) :
     Fin.partialProd (revInv x) (Fin.last n) = (Fin.partialProd x (Fin.last n))⁻¹ := by
   induction n with
@@ -100,25 +67,9 @@ theorem partialProd_last_revInv (x : Fin n → G) :
     have h1 := Fin.partialProd_succ (revInv x) (Fin.last n)
     have h2 := Fin.partialProd_succ' x (Fin.last n)
     rw [Fin.succ_last] at h1 h2
-    rw [h1, h2, ← Fin.partialProd_init]
-    have : Fin.init (revInv x) = revInv (Fin.tail x) := by
-      funext i
-      simp only [Fin.init, Fin.tail, revInv_apply]
-      congr 2
-      ext
-      simp only [Fin.val_rev, Fin.val_succ, Fin.val_castSucc]
-      omega
-    rw [this, ih, revInv_apply, mul_inv_rev, Fin.rev_last]
+    rw [h1, h2, ← Fin.partialProd_init, init_revInv, ih, revInv_apply, mul_inv_rev, Fin.rev_last]
 
 theorem tail_revInv (x : Fin (n + 1) → G) : Fin.tail (revInv x) = revInv (Fin.init x) := by
-  funext i
-  simp only [Fin.init, Fin.tail, revInv_apply]
-  congr 2
-  ext
-  simp only [Fin.val_rev, Fin.val_succ, Fin.val_castSucc]
-  omega
-
-theorem init_revInv (x : Fin (n + 1) → G) : Fin.init (revInv x) = revInv (Fin.tail x) := by
   funext i
   simp only [Fin.init, Fin.tail, revInv_apply]
   congr 2

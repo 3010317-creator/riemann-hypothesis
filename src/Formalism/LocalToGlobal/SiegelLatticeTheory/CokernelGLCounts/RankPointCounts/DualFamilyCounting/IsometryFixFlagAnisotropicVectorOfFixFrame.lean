@@ -18,48 +18,8 @@ public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SplitRow
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WittExtensionTheorem
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.TransMemUnipotentIntegral
 public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.GenusMassPosOfMassLowerBound
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.CellDef
 import Formalism.SharpRestriction.CuspSpanNormBounds.LatticeGluingRadicals
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -673,8 +633,6 @@ instance Nsub.normal (Λ : Submodule (𝓞 D.host.E) (VS D).V) : (Nsub (F0 := F0
 
 end Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
 
-open NumberField Module Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.LocalSplitGroups Formalism.L2.SG.CntLocal Formalism.L2.SG.Saturated
-open Classical
 
 noncomputable section
 
@@ -779,8 +737,6 @@ theorem eq_one_of_fix (g : G0 F0) {Λ : Submodule (𝓞 D.host.E) (VS D).V}
 
 end Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
 
-open NumberField Module Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.LocalSplitGroups Formalism.L2.SG.CntLocal Formalism.L2.SG.Saturated
-open Classical
 
 noncomputable section
 
@@ -910,8 +866,6 @@ theorem card_quot (u : D.what₂.Word) (F0 : FlagG (VS D) D.R.rS (Tn u)) (Λ : S
 
 end Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
 
-open NumberField Module Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.LocalSplitGroups Formalism.L2.SG.CntLocal Formalism.L2.SG.Saturated
-open Classical
 
 noncomputable section
 
@@ -979,8 +933,6 @@ theorem row_count (u u' : D.what₂.Word) (F0 : FlagG (VS D) D.R.rS (Tn u)) (Λ 
 
 end Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
 
-open NumberField Module Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.LocalSplitGroups Formalism.L2.SG.CntLocal Formalism.L2.SG.Saturated
-open Classical
 
 noncomputable section
 
@@ -1086,8 +1038,6 @@ theorem isomFix_iff {T' : D.host.E} (F' : LFlag (D.sp.Y 0) D.R.rS T') (hzt : F'.
 
 end Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
 
-open NumberField Module Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.LocalSplitGroups Formalism.L2.SG.CntLocal Formalism.L2.SG.Saturated
-open Classical
 
 noncomputable section
 
@@ -1276,8 +1226,6 @@ theorem class_red (u : D.what₂.Word) (F0 : FlagG (VS D) D.R.rS (Tn u)) {Λ Λ'
 
 end Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
 
-open NumberField Module Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.LocalSplitGroups Formalism.L2.SG.CntLocal Formalism.L2.SG.Saturated
-open Classical
 
 noncomputable section
 

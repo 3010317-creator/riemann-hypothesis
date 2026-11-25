@@ -6,61 +6,13 @@ public import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
 public import Mathlib.RingTheory.Polynomial.Eisenstein.Distinguished
 public import Mathlib.RingTheory.PowerSeries.Derivative
 public import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 public import Mathlib.Data.Fin.Tuple.Sort
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
 public import Mathlib.NumberTheory.Padics.Hensel
-import Mathlib.NumberTheory.SelbergSieve
 public import Mathlib.NumberTheory.Wilson
-import Mathlib.RingTheory.PiTensorProduct
 public import Mathlib.RingTheory.PowerSeries.Expand
 public import Mathlib.RingTheory.PowerSeries.WeierstrassPreparation
-import Mathlib.RingTheory.Radical.NatInt
 public import Mathlib.RingTheory.RootsOfUnity.Lemmas
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Lemma
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 public import Mathlib.FieldTheory.Finite.Basic
 public import Mathlib.RingTheory.MvPowerSeries.Expand
@@ -189,8 +141,6 @@ end Ode
 
 section Act
 
-theorem subst_X_eq_self {R : Type*} [CommRing R] (f : R⟦X⟧) : f.subst (X : R⟦X⟧) = f := PowerSeries.X_subst f
-
 theorem coeff_one_add_X_pow_alt (R : Type*) [CommRing R] (d n : ℕ) :
     coeff n ((1 + X : R⟦X⟧) ^ d) = (d.choose n : R) := by
   have e : ((1 + X : R⟦X⟧)) ^ d = (((1 + Polynomial.X) ^ d : Polynomial R) : R⟦X⟧) := by
@@ -232,7 +182,7 @@ theorem action_laws_holds : ActLaws := by
   intro l _ O _ _
   refine ⟨binomialAction_binomialSeriesSubOne l O, binomialAction_comp_eq_mul l O, ?_, phi_eq_act_l l O, ?_, ?_, ?_⟩
   · intro f
-    rw [act, binomialSeriesSubOne_one, subst_X_eq_self]
+    rw [act, binomialSeriesSubOne_one, PowerSeries.X_subst]
   · intro c f
     rw [phi_eq_act_l, phi_eq_act_l, binomialAction_comp_eq_mul, binomialAction_comp_eq_mul, mul_comm]
   · intro c f g

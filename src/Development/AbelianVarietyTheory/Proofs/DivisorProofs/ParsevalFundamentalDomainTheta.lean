@@ -50,6 +50,7 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTenso
 import Formalism.LocalRingCardinality.DataTheta
 import Formalism.LocalToGlobal.BesselHermitianTheta.NoncompactGapAtLeastRange
 import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.WeilBound.ThetaLifts.LeviDeterminants.GrowSplit
 
 @[expose] public section
 
@@ -57,8 +58,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open IsDedekindDomain NumberField MeasureTheory
 open scoped TensorProduct GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels Matrix Formalism.IndefR.Datum
 open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (Base Spc Model Chr incM)
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 
@@ -69,12 +68,9 @@ open scoped Classical
 
 theorem continuous_infToMixed (F : Type) [Field F] [NumberField F] :
     Continuous (InfiniteAdeleRing.ringEquiv_mixedSpace F) := by
-  change Continuous fun x : InfiniteAdeleRing F =>
-    ((fun (v : {w : InfinitePlace F // w.IsReal}) => InfinitePlace.Completion.extensionEmbeddingOfIsReal v.2 (x v)),
-     (fun (v : {w : InfinitePlace F // w.IsComplex}) => InfinitePlace.Completion.extensionEmbedding v.1 (x v)))
-  refine Continuous.prodMk (continuous_pi fun v => ?_) (continuous_pi fun v => ?_)
-  · exact (InfinitePlace.Completion.isometry_extensionEmbeddingOfIsReal v.2).continuous.comp (continuous_apply _)
-  · exact (InfinitePlace.Completion.isometry_extensionEmbedding v.1).continuous.comp (continuous_apply _)
+  first
+  | exact _root_.PositivityTheory.ThKF0.Split.continuous_toMixed
+  | (apply _root_.PositivityTheory.ThKF0.Split.continuous_toMixed <;> assumption)
 
 theorem adele_nontrivial (F : Type) [Field F] [NumberField F] : Nontrivial (AdeleRing (𝓞 F) F) :=
   inferInstanceAs (Nontrivial (InfiniteAdeleRing F × FiniteAdeleRing (𝓞 F) F))

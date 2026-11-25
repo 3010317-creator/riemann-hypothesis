@@ -2,43 +2,9 @@ module
 
 public import PositivityTheory.AutomorphicForms.PublishedInputs.NonzeroTypes.ScalarOnInertiaProp
 import Mathlib.Algebra.AffineMonoid.UniqueSums
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Finiteness.Lattice
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EpsilonFactorRecCompatible
 
 @[expose] public section
 
@@ -327,8 +293,6 @@ theorem iso_sum (a : WDRep h V) (hN : a.N = 0) (U W : Submodule ℂ V) (hU : ∀
       simp only [Submodule.coe_prodEquivOfIsCompl', WDRep.sum_ρ, LinearMap.prodMap_apply, res_ρ_apply, map_add (f := _)],
     fun x => by simp [hN, res]⟩
 
-theorem sumList_cons (x : WD h) (l : List (WD h)) : sumList (x :: l) = x.lpSum (sumList l) := rfl
-
 theorem key : ∀ (s : ℕ) {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V] (a : WDRep h V),
     a.N = 0 → ∀ (d : Fin s → ℕ) (ψ : Fin s → Weil h →* ℂˣ), (∀ b, IsSmooth (ψ b)) →
     (∀ b c, b ≠ c → ∃ t : Ine (F := E) A, ψ b (ineIncl h t) ≠ ψ c (ineIncl h t)) →
@@ -422,7 +386,7 @@ theorem key : ∀ (s : ℕ) {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteD
       · simpa only [Fin.cons_succ] using hv' b
     · rw [List.ofFn_succ]
       simp only [Fin.cons_zero, Fin.cons_succ]
-      rw [sumList_cons, ← hmk, WD.lpSum_mk]
+      rw [SatakeLaw.sumList_cons, ← hmk, WD.lpSum_mk]
       exact (WD.sound hiso).symm
 
 end Isotypic₂

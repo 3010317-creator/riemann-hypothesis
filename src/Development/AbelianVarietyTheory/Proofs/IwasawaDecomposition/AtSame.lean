@@ -39,7 +39,6 @@ import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Strict
 @[expose] public section
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl NumberField IsDedekindDomain
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.HeightCounting.Up GlobalTheory.Mem.SRe GlobalTheory.Mem.R3.Rw
 open GlobalTheory.HeightCounting GlobalTheory.Mem.R3.Tr
 
@@ -54,7 +53,6 @@ def Mv.all {C : NChoice D} (a : NAllC D C) : NAllC m.D (m.ch C) := @_root_.Globa
         (jE := (by with_unfolding_all exact (a.gal.fr.jE :)))
         (eOm := (by with_unfolding_all exact (a.gal.fr.eOm :)))
         (comm := (by with_unfolding_all exact (a.gal.fr.comm :))))
-      (lp := @_root_.Formalism.L2.LPTiedPlaceholder.mk (_))
       (mt := @fun x1 => @fun x2 => @fun x3 => @fun x4 => @_root_.Formalism.L2.MtReal.mk (_) (_) (_)
         (wt := (by with_unfolding_all exact ((@_root_.Formalism.L2.NGalTied.mt (_) a.gal ((x1)) ((x2)) ((x3)) ((x4))).wt : _)))
         (J := (by with_unfolding_all exact ((@_root_.Formalism.L2.NGalTied.mt (_) a.gal ((x1)) ((x2)) ((x3)) ((x4))).J : _)))
@@ -77,7 +75,7 @@ def Mv.all {C : NChoice D} (a : NAllC D C) : NAllC m.D (m.ch C) := @_root_.Globa
         (surj := (by with_unfolding_all exact (a.gal.av.surj :)))
         (typeV := (by with_unfolding_all exact (a.gal.av.typeV :)))
         (ptV := (by with_unfolding_all exact (a.gal.av.ptV :))))
-      (au := @_root_.Formalism.L2.AUTied.mk (_) (_) (_) (_)
+      (au := @_root_.Formalism.L2.AUTied.mk (_) (_) (_)
         (cls := (by with_unfolding_all exact (a.gal.au.cls :)))
         (surj := (by with_unfolding_all exact (a.gal.au.surj :)))
         (iso := (by with_unfolding_all exact (a.gal.au.iso :)))
@@ -98,7 +96,6 @@ def Mv.all {C : NChoice D} (a : NAllC D C) : NAllC m.D (m.ch C) := @_root_.Globa
         (uni := (by with_unfolding_all exact (a.gal.level.uni :)))
         (wt := (by with_unfolding_all exact (a.gal.level.wt :)))
         (hyp := (by with_unfolding_all exact (a.gal.level.hyp :)))))
-    (n := @_root_.Formalism.L2.NormalizedHeckeDataPlaceholder.mk (_))
     (loc := @_root_.Formalism.L2.LocTied.mk (_)
       (arith := (by with_unfolding_all exact (a.loc.arith :)))
       (nbr := (by with_unfolding_all exact (a.loc.nbr :)))
@@ -165,8 +162,7 @@ def Mv.all {C : NChoice D} (a : NAllC D C) : NAllC m.D (m.ch C) := @_root_.Globa
       (lamG := (by with_unfolding_all exact (a.chi.lamG :))))
     (rho := @_root_.Formalism.L2.NR.NRhoTied.mk (_)
       (rbarSS := (by with_unfolding_all exact (a.rho.rbarSS :)))
-      (rbar := (by with_unfolding_all exact (a.rho.rbar :)))
-      (rhoS := (by with_unfolding_all exact (a.rho.rhoS :))))
+      (rbar := (by with_unfolding_all exact (a.rho.rbar :))))
     (types := @_root_.Formalism.L2.NormalizedTypesCompatibility.mk (_) (_)
       (eM := (by with_unfolding_all exact (a.types.eM :)))
       (eM_K := (by with_unfolding_all exact (a.types.eM_K :)))

@@ -4,42 +4,6 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.
 public import Formalism.HermitianCurvature.StatementJCT
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.EnergyCut
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.MassDataConc
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierEnergy, Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierEnergyPf
@@ -64,8 +28,18 @@ def Parts.Gam0 (P : Parts X u u') : ℝ :=
     (Formalism.FourierDecayAlt.D.deG P.S.g (Formalism.FourierDecayAlt.S6.rd D.host.E)) 0
 
 def Parts.EnergyModel (P : Parts X u u') : Prop :=
-  P.Built → (∀ v, Formalism.FourierDecayAlt.JC.IsModelPlace P.S P.T P.f P.χ v (P.L v) (P.j v) (P.lam v) P.c (P.Cm v) (P.σ v)) →
-    ∀ v, Formalism.FourierDecayAlt.JCT.jvModel P.S P.j P.Cm v = (Formalism.FourierDecayAlt.B.normSq (P.T v).base (P.f v)).toReal / P.Gam0
+  P.Built → ∀ (L : ∀ v : Fin P.S.f, Formalism.FourierDecayAlt.R.LevelData
+        (Formalism.FourierDecayAlt.MA.A (Formalism.FourierDecayAlt.D.parOf P.S v)
+          (Formalism.FourierDecayAlt.MA.DQ (Formalism.FourierDecayAlt.D.parOf P.S v)))
+        (Formalism.FourierDecayAlt.D.parOf P.S v).r)
+      (j : ∀ v : Fin P.S.f, Formalism.FourierDecayAlt.M.Ty (Formalism.FourierDecayAlt.D.parOf P.S v) →
+        Formalism.FourierDecayAlt.MA.SmQ (Formalism.FourierDecayAlt.D.parOf P.S v).r
+          (Formalism.FourierDecayAlt.D.parOf P.S v).TT)
+      (lam : ∀ v : Fin P.S.f, Fin ((Formalism.FourierDecayAlt.D.parOf P.S v).k +
+        2 * (Formalism.FourierDecayAlt.D.parOf P.S v).r + 1) → ℝ)
+      (c : Formalism.FourierDecayAlt.LE.Cut) (Cm σ : Fin P.S.f → ℝ),
+    (∀ v, Formalism.FourierDecayAlt.JC.IsModelPlace P.S P.T P.f P.χ v (L v) (j v) (lam v) c (Cm v) (σ v)) →
+    ∀ v, Formalism.FourierDecayAlt.JCT.jvModel P.S j Cm v =(Formalism.FourierDecayAlt.B.normSq (P.T v).base (P.f v)).toReal / P.Gam0
 
 def Parts.EnergyNorm (P : Parts X u u') (jn : ℝ) : Prop :=
   (∏ v, (Formalism.FourierDecayAlt.B.normSq (P.T v).base (P.f v)).toReal / P.Gam0) = jn

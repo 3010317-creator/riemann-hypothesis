@@ -2,49 +2,10 @@ module
 
 public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinTypeQE
 public import ReciprocityTheory.AnalyticForms.RegularLocalRings.SegreIdealIsHomogeneous
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.AlgebraicGeometry.Modules.Sheaf
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 public import ReciprocityTheory.AnalyticForms.RegularLocalRings.ProjDehom
 
 @[expose] public section
@@ -67,83 +28,6 @@ theorem iSup_chartOpen_eq_top {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : 
 theorem isNoetherianRing_gammaChart {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMultiHomogIdeal P)
     (p : (k : K) → ι k) : IsNoetherianRing Γ(projX P hP, (chartOpen hP p).1) :=
   isNoetherianRing_of_ringEquiv _ (gammaChart hP p).symm
-
-theorem isReduced_away {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMultiHomogIdeal P)
-    (hrad : P.IsRadical) (p : (k : K) → ι k) :
-    letI := segreGraded hP
-    _root_.IsReduced (HomogeneousLocalization.Away (segreGrading P) (segreW P p)) := by
-  letI := segreGraded hP
-  have : _root_.IsReduced (MvPolynomial ((k : K) → ι k) ℂ ⧸ segreIdeal P) :=
-    (Ideal.isRadical_iff_quotient_reduced _).mp (hrad.comap _)
-  exact isReduced_of_injective (algebraMap _ (Localization.Away (segreW P p)))
-    (HomogeneousLocalization.val_injective _)
-
-theorem isReduced_gammaChart {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMultiHomogIdeal P)
-    (hrad : P.IsRadical) (p : (k : K) → ι k) :
-    _root_.IsReduced Γ(projX P hP, (chartOpen hP p).1) := by
-  letI := segreGraded hP
-  letI := isReduced_away hP hrad p
-  exact isReduced_of_injective _ ((gammaChart hP p).trans (awayEquiv hP p)).injective
-
-theorem qeRing_gammaChart {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMultiHomogIdeal P)
-    (hQE : FinalTheorems.FinTypeQE) (p : (k : K) → ι k) : FinalTheorems.QERing Γ(projX P hP, (chartOpen hP p).1) := by
-  letI : Algebra ℂ Γ(projX P hP, (chartOpen hP p).1) :=
-    ((gammaChart hP p).symm.toRingHom.comp (algebraMap ℂ (chartRing P p))).toAlgebra
-  let e : chartRing P p ≃ₐ[ℂ] Γ(projX P hP, (chartOpen hP p).1) :=
-    AlgEquiv.ofRingEquiv (f := (gammaChart hP p).symm) (fun c => rfl)
-  haveI : Algebra.FiniteType ℂ Γ(projX P hP, (chartOpen hP p).1) :=
-    Algebra.FiniteType.equiv inferInstance e
-  exact hQE Γ(projX P hP, (chartOpen hP p).1)
-
-theorem isRegularLocalRing_stalk_fromSpec_iff {X : Scheme.{0}} {U : X.Opens} (hU : IsAffineOpen U)
-    (y : PrimeSpectrum Γ(X, U)) (hy : hU.fromSpec y ∈ U) :
-    IsRegularLocalRing (X.presheaf.stalk (hU.fromSpec y)) ↔
-      IsRegularLocalRing (Localization.AtPrime y.asIdeal) := by
-  letI := TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨hU.fromSpec y, hy⟩
-  haveI : IsLocalization y.asIdeal.primeCompl (X.presheaf.stalk (hU.fromSpec y)) :=
-    hU.isLocalization_stalk' y hy
-  let e := IsLocalization.algEquiv y.asIdeal.primeCompl (Localization.AtPrime y.asIdeal)
-    (X.presheaf.stalk (hU.fromSpec y))
-  exact ⟨fun h => IsRegularLocalRing.of_ringEquiv e.symm.toRingEquiv,
-    fun h => IsRegularLocalRing.of_ringEquiv e.toRingEquiv⟩
-
-theorem isOpen_regularLocus_of_cover {X : Scheme.{0}} {J : Type} (U : J → X.affineOpens)
-    (hcov : ∀ x, ∃ i, x ∈ (U i).1)
-    (h : ∀ i, IsOpen {Q : PrimeSpectrum Γ(X, (U i).1) |
-      IsRegularLocalRing (Localization.AtPrime Q.asIdeal)}) :
-    IsOpen {x : X | IsRegularLocalRing (X.presheaf.stalk x)} := by
-  rw [isOpen_iff_forall_mem_open]
-  intro x hx
-  obtain ⟨i, hi⟩ := hcov x
-  have hU : IsAffineOpen (U i).1 := (U i).2
-  refine ⟨(⇑hU.fromSpec) '' {Q : PrimeSpectrum Γ(X, (U i).1) |
-    IsRegularLocalRing (Localization.AtPrime Q.asIdeal)}, ?_, ?_, ?_⟩
-  · rintro _ ⟨q, hq, rfl⟩
-    have hq' : hU.fromSpec q ∈ (U i).1 := hU.range_fromSpec.le ⟨q, rfl⟩
-    exact (isRegularLocalRing_stalk_fromSpec_iff hU q hq').mpr hq
-  · exact (IsAffineOpen.fromSpec hU).isOpenEmbedding.isOpenMap _ (h i)
-  · refine ⟨hU.primeIdealOf ⟨x, hi⟩, ?_, hU.fromSpec_primeIdealOf ⟨x, hi⟩⟩
-    have h1 := hU.fromSpec_primeIdealOf ⟨x, hi⟩
-    have h2 := isRegularLocalRing_stalk_fromSpec_iff hU (hU.primeIdealOf ⟨x, hi⟩) (by rw [h1]; exact hi)
-    rw [h1] at h2
-    exact h2.mp hx
-
-theorem eval₂_smul_of_isMultiHomog' {R : Type} [CommRing R] (g : ℂ →+* R)
-    {f : MvPolynomial (Σ k, ι k) ℂ} {a : K → ℕ} (hf : IsMultiHomog f a) (c : K → R)
-    (y : (Σ k, ι k) → R) :
-    eval₂ g (fun q => c q.1 * y q) f = (∏ k, c k ^ a k) * eval₂ g y f := by
-  classical
-  rw [f.as_sum, MvPolynomial.eval₂_sum, MvPolynomial.eval₂_sum, Finset.mul_sum]
-  refine Finset.sum_congr rfl fun mo hmo => ?_
-  rw [MvPolynomial.eval₂_monomial, MvPolynomial.eval₂_monomial,
-    Finsupp.prod_fintype _ _ (fun _ => pow_zero _), Finsupp.prod_fintype _ _ (fun _ => pow_zero _)]
-  simp_rw [mul_pow, Finset.prod_mul_distrib]
-  rw [Fintype.prod_sigma]
-  have hk : ∀ k, ∏ i, c k ^ mo ⟨k, i⟩ = c k ^ a k := by
-    intro k
-    rw [Finset.prod_pow_eq_pow_sum, hf mo hmo k]
-  simp only [hk]
-  ring
 
 theorem isUnit_mapId_mk_iff {A : Type} [CommRing A] [Algebra ℂ A]
     (𝒜 : ℕ → Submodule ℂ A) [GradedAlgebra 𝒜] (f : A) (x : ProjectiveSpectrum 𝒜)

@@ -23,54 +23,8 @@ public import Mathlib.NumberTheory.LSeries.Injectivity
 public import Formalism.ZeroFreeRegion.ZetaLogDerivativeBounds.NormCpowSubLePoint
 public import Formalism.ZeroFreeRegion.ZetaLogDerivativeBounds.RiemannZetaOneEqOneSubOfRePos
 public import Formalism.ZeroFreeRegion.ZetaLogDerivativeBounds.DzDifferentiableOn
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Tactic.Linter.HaveILetI
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -198,17 +152,6 @@ theorem dirichlet_product_coefficients : BqCoeff := by
     (toArithmeticFunction (fun m : ℕ => χ₂ (m : ZMod q₂)) *
       toArithmeticFunction (fun m : ℕ => ψ (m : ZMod (q₁ * q₂)))) with hf
 
-  have hvals : ∀ {N : ℕ} (χ : DirichletCharacter ℂ N), χ ^ 2 = 1 →
-      ∀ x, χ x = 0 ∨ χ x = 1 ∨ χ x = -1 := by
-    intro N χ hχ x
-    by_cases hx : IsUnit x
-    · have h := congrArg (fun φ : DirichletCharacter ℂ N => φ x) hχ
-      simp only [MulChar.pow_apply' χ two_ne_zero, MulChar.one_apply hx] at h
-      have h' : χ x * χ x = 1 := by rw [← sq]; exact h
-      rcases (mul_self_eq_one_iff).mp h' with h' | h'
-      · exact Or.inr (Or.inl h')
-      · exact Or.inr (Or.inr h')
-    · exact Or.inl (MulChar.map_nonunit χ hx)
   have hmul : f.IsMultiplicative :=
     (DirichletCharacter.isMultiplicative_zetaMul χ₁).mul
       ((DirichletCharacter.isMultiplicative_toArithmeticFunction χ₂).mul
@@ -223,10 +166,10 @@ theorem dirichlet_product_coefficients : BqCoeff := by
     rw [hψ n, mul_comm]
   have hpp : ∀ p k : ℕ, p.Prime → 0 ≤ f (p ^ k) := by
     intro p k hp
-    rcases hvals χ₂ h2 (p : ZMod q₂) with h | h | h
+    rcases MulChar.isQuadratic_iff_sq_eq_one.mpr h2 (p : ZMod q₂) with h | h | h
     · exact prime_power_coefficient_nonneg h1 hψ hp (Or.inl h) k
     · exact prime_power_coefficient_nonneg h1 hψ hp (Or.inr (Or.inl h)) k
-    · rcases hvals χ₁ h1 (p : ZMod q₁) with h' | h' | h'
+    · rcases MulChar.isQuadratic_iff_sq_eq_one.mpr h1 (p : ZMod q₁) with h' | h' | h'
       · rw [hswap]; exact prime_power_coefficient_nonneg h2 hψ' hp (Or.inl h') k
       · rw [hswap]; exact prime_power_coefficient_nonneg h2 hψ' hp (Or.inr (Or.inl h')) k
       · exact prime_power_coefficient_nonneg h1 hψ hp (Or.inr (Or.inr ⟨h, h'⟩)) k
@@ -969,14 +912,9 @@ theorem changeLevel_eq_of_agree_coprime {q₁ q : ℕ} [NeZero q₁] [NeZero q] 
 
 theorem euler_factor_term_norm_le {M : ℕ} (φ : DirichletCharacter ℂ M) (p : ℕ) :
     ‖φ (p : ZMod M) * (p : ℂ) ^ (-(1 : ℂ))‖ ≤ 1 / (p : ℝ) := by
-  rw [norm_mul]
-  rcases Nat.eq_zero_or_pos p with rfl | hp
-  · simp
-  · have h1 : ‖(p : ℂ) ^ (-(1 : ℂ))‖ = 1 / (p : ℝ) := by
-      rw [Complex.norm_natCast_cpow_of_pos hp]
-      simp [Real.rpow_neg_one]
-    rw [h1]
-    exact mul_le_of_le_one_left (by positivity) (DirichletCharacter.norm_le_one φ _)
+  rw [norm_mul, Complex.cpow_neg_one, norm_inv, Complex.norm_natCast, one_div]
+  exact mul_le_of_le_one_left (by positivity) (DirichletCharacter.norm_le_one φ _)
+
 
 theorem euler_factor_product_upper {M : ℕ} (φ : DirichletCharacter ℂ M) (S : Finset ℕ) :
     ‖∏ p ∈ S, (1 - φ (p : ZMod M) * (p : ℂ) ^ (-(1 : ℂ)))‖ ≤ ∏ p ∈ S, (1 + 1 / (p : ℝ)) := by

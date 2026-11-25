@@ -3,47 +3,6 @@ module
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.WuBesselLoc
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ContinuousMulMt
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.EnergyIntTor
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -160,16 +119,6 @@ theorem sigC_norm (C : Choice X θ) (τ : D.what₂.Tau)
   rw [sigC_eq]
   exact (Formalism.L2.SG.Pf.WuBL.sigB_rep C τ).2 _ (conj_mem_lemma D ha) x
 
-private theorem mul_mem_UH_Hpk' (D : D7) {a b : Matrix (Fin (2 * D.R.rS + D.R.k + 1)) (Fin (2 * D.R.rS + D.R.k + 1)) ℂ}
-    (ha : a ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS)) (hb : b ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS)) :
-    a * b ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS) := by
-  have ha' : aᴴ * Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS * a = Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS := ha
-  have hb' : bᴴ * Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS * b = Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS := hb
-  show (a * b)ᴴ * Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS * (a * b) = Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS
-  calc (a * b)ᴴ * Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS * (a * b) = bᴴ * (aᴴ * Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS * a) * b := by
-        simp only [Matrix.conjTranspose_mul, Matrix.mul_assoc]
-    _ = Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS := by rw [ha', hb']
-
 theorem dd_sub (C : Choice X θ) (τ : D.what₂.Tau)
     {yc : Matrix (Fin (2 * D.R.rS + D.R.k + 1)) (Fin (2 * D.R.rS + D.R.k + 1)) ℂ}
     (hyc : yc ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS)) :
@@ -183,13 +132,17 @@ theorem dd_sub (C : Choice X θ) (τ : D.what₂.Tau)
   rintro _ ⟨g, hg, rfl⟩
   beta_reduce
   rw [sigC_mul C τ hg hyc, sigC_eq]
-  have hg'm : torS (muT D) D.R.k D.R.rS * (g * yc) * torS (muT D)⁻¹ D.R.k D.R.rS ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS) := conj_mem_lemma D (mul_mem_UH_Hpk' D hg hyc)
+  have hg'm : torS (muT D) D.R.k D.R.rS * (g * yc) * torS (muT D)⁻¹ D.R.k D.R.rS ∈
+      Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS) :=
+    conj_mem_lemma D (Inh.mul_mem_UH_Hpk_nonempty_parameter_models _ _ hg hyc)
   have e : sigB X (C.Q τ) (C.Qi τ) τ (torS (muT D) D.R.k D.R.rS * (g * yc) * torS (muT D)⁻¹ D.R.k D.R.rS * (C.y τ)⁻¹) (v0Of C τ)
       = sigB X (C.Q τ) (C.Qi τ) τ (torS (muT D) D.R.k D.R.rS * (g * yc) * torS (muT D)⁻¹ D.R.k D.R.rS) (X.B.w (vOf X τ)) := by
     unfold v0Of
-    rw [← ContinuousLinearMap.comp_apply, ← hrep.1.2 _ (mul_mem_UH_Hpk' D hg'm hyi) _ hy,
+    rw [← ContinuousLinearMap.comp_apply,
+      ← hrep.1.2 _ (Inh.mul_mem_UH_Hpk_nonempty_parameter_models _ _ hg'm hyi) _ hy,
       Matrix.mul_assoc, hyy, Matrix.mul_one]
   rw [← e]
-  exact Submodule.subset_span ⟨_, mul_mem_UH_Hpk' D hg'm hyi, rfl⟩
+  exact Submodule.subset_span
+    ⟨_, Inh.mul_mem_UH_Hpk_nonempty_parameter_models _ _ hg'm hyi, rfl⟩
 
 end Formalism.L2.SG.RealObj.EnergyIntLoc

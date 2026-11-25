@@ -1,53 +1,9 @@
 module
 
 public import ReciprocityTheory.SemistableReduction.SphereLogIntegrableStatement
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.MeasureTheory.Measure.RegularityCompacts
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 public import Mathlib.Topology.Algebra.MvPolynomial
-import Mathlib.Topology.Sheaves.Init
 import Mathlib.Topology.UniformSpace.Uniformizable
 public import ReciprocityTheory.SemistableReduction.AeBlockSphereEvalNeZero
 public import ReciprocityTheory.SemistableReduction.RestBlockSubstIsMultiHomogeneous
@@ -69,22 +25,10 @@ theorem hint_mpSplit (D n : ℕ) (hn : 0 < n) :
   unfold blockSphereProb
   exact measurePreserving_piFinSuccAbove (fun _ : Fin (D + 1) => sphereProb n) 0
 
-private theorem isProbabilityMeasure_sphereProb' (n : ℕ) (hn : 0 < n) : IsProbabilityMeasure (sphereProb n) := by
-  haveI : NeZero n := ⟨hn.ne'⟩
-  unfold sphereProb
-  have hpos : 0 < Module.finrank ℝ (EuclideanSpace ℂ (Fin n)) := Module.finrank_pos
-  have h1 : (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere Set.univ ≠ 0 := by
-    rw [Measure.toSphere_apply_univ]
-    exact mul_ne_zero (Nat.cast_ne_zero.mpr hpos.ne') (Metric.measure_ball_pos _ _ one_pos).ne'
-  have h2 : (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere Set.univ ≠ ⊤ := by
-    rw [Measure.toSphere_apply_univ]
-    exact ENNReal.mul_ne_top (ENNReal.natCast_ne_top _) measure_ball_lt_top.ne
-  exact ProbabilityTheory.cond_isProbabilityMeasure_of_finite h1 h2
-
 theorem hint_mpTail (D n : ℕ) (hn : 0 < n) :
     MeasurePreserving (fun z : BlockSphere (D + 1) n => fun i : Fin D => z i.succ)
       (blockSphereProb (D + 1) n) (blockSphereProb D n) := by
-  haveI := isProbabilityMeasure_sphereProb' n hn
+  haveI := sphereMeasure_isProbability hn
   haveI : SFinite (blockSphereProb D n) := by
     unfold blockSphereProb
     infer_instance

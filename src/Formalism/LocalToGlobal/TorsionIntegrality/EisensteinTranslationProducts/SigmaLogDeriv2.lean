@@ -8,55 +8,10 @@ public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationPr
 public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.Legendre
 public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.SigmaBasic
 public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.SigmaConv
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Separation.CompletelyRegular
-import Mathlib.Topology.Sheaves.Init
 import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.SigmaLog
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -303,9 +258,6 @@ namespace Formalism.L2.Th1.F
 
 namespace PeriodLatticeBasisLemmas
 
-private theorem mem_lattice_iff_exists_int_comb' (L : PeriodPair) {x : ℂ} :
-    x ∈ L.lattice ↔ ∃ m n : ℤ, (m : ℂ) * L.ω₁ + (n : ℂ) * L.ω₂ = x := L.mem_lattice
-
 private theorem basis_equivFun_real_comb_periods (L : PeriodPair) (s t : ℝ) :
     L.basis.equivFun ((s : ℂ) * L.ω₁ + (t : ℂ) * L.ω₂) = ![s, t] := by
   have e : ((s : ℂ) * L.ω₁ + (t : ℂ) * L.ω₂) = L.basis.equivFun.symm ![s, t] := by
@@ -319,7 +271,7 @@ private theorem lattice_eq_iInter_preimage_int_coords (L : PeriodPair) :
   simp only [SetLike.mem_coe, Set.mem_iInter, Set.mem_preimage]
   constructor
   · intro hx i
-    obtain ⟨m, n, rfl⟩ := (mem_lattice_iff_exists_int_comb' L).mp hx
+    obtain ⟨m, n, rfl⟩ := (PeriodPair.mem_lattice (L := L)).mp hx
     have h : L.basis.equivFun ((m : ℂ) * L.ω₁ + (n : ℂ) * L.ω₂) = ![(m : ℝ), (n : ℝ)] := by
       exact_mod_cast basis_equivFun_real_comb_periods L m n
     rw [h]
@@ -329,7 +281,7 @@ private theorem lattice_eq_iInter_preimage_int_coords (L : PeriodPair) :
   · intro h
     obtain ⟨m, hm⟩ := h 0
     obtain ⟨n, hn⟩ := h 1
-    refine (mem_lattice_iff_exists_int_comb' L).mpr ⟨m, n, ?_⟩
+    refine (PeriodPair.mem_lattice (L := L)).mpr ⟨m, n, ?_⟩
     have hs := L.basis.sum_equivFun x
     rw [Fin.sum_univ_two, _root_.PeriodPair.basis_zero, _root_.PeriodPair.basis_one, ← hm, ← hn] at hs
     rw [← hs]
@@ -349,7 +301,7 @@ lemma isPreconnected_compl (L : PeriodPair) : IsPreconnected ((L.lattice : Set �
   have hc : (L.lattice : Set ℂ).Countable := by
     refine (Set.countable_range (fun p : ℤ × ℤ => (p.1 : ℂ) * L.ω₁ + (p.2 : ℂ) * L.ω₂)).mono ?_
     intro x hx
-    obtain ⟨m, n, rfl⟩ := (mem_lattice_iff_exists_int_comb' L).mp hx
+    obtain ⟨m, n, rfl⟩ := (PeriodPair.mem_lattice (L := L)).mp hx
     exact ⟨(m, n), rfl⟩
   have hr : 1 < Module.rank ℝ ℂ := by
     rw [← Module.finrank_eq_rank, Complex.finrank_real_complex]
@@ -482,7 +434,7 @@ lemma coords_half (L : PeriodPair) {a b a' b' : ℤ}
 
 private theorem int_comb_periods_mem_lattice (L : PeriodPair) (a b : ℤ) :
     (a : ℂ) * L.ω₁ + (b : ℂ) * L.ω₂ ∈ L.lattice :=
-  (mem_lattice_iff_exists_int_comb' L).mpr ⟨a, b, rfl⟩
+  (PeriodPair.mem_lattice (L := L)).mpr ⟨a, b, rfl⟩
 
 private theorem semiChar_zero_eq_one (L : PeriodPair) : Formalism.L2.Th1.F.semiChar L 0 = 1 := by
   unfold Formalism.L2.Th1.F.semiChar
@@ -510,7 +462,7 @@ lemma qp_coords (hq : ZetaQuasi) (hl : SigmaLogDeriv) (ho : SigmaOdd) (hz : Sigm
   | succ n ih =>
     intro a b h
     by_cases h2 : ((a : ℂ) * L.ω₁ + (b : ℂ) * L.ω₂) / 2 ∈ L.lattice
-    · obtain ⟨a', b', hab⟩ := (mem_lattice_iff_exists_int_comb' L).mp h2
+    · obtain ⟨a', b', hab⟩ := (PeriodPair.mem_lattice (L := L)).mp h2
       obtain ⟨rfl, rfl⟩ := coords_half L hab
       have e2 : (2 : ℤ).natAbs = 2 := rfl
       rw [Int.natAbs_mul, Int.natAbs_mul, e2] at h
@@ -532,10 +484,10 @@ end PeriodLatticeBasisLemmas
 
 
 open PeriodLatticeBasisLemmas in
-theorem sigmaQuasi_of (hq : ZetaQuasi) (hl : SigmaLogDeriv) (_he : SigmaEntire) (ho : SigmaOdd)
+theorem sigmaQuasi_of (hq : ZetaQuasi) (hl : SigmaLogDeriv) (ho : SigmaOdd)
     (hz : SigmaZero) : SigmaQuasi := by
   intro L ω z hω
-  obtain ⟨a, b, rfl⟩ := (_root_.Formalism.L2.Th1.F.PeriodLatticeBasisLemmas.mem_lattice_iff_exists_int_comb' L).mp hω
+  obtain ⟨a, b, rfl⟩ := (PeriodPair.mem_lattice (L := L)).mp hω
   exact Formalism.L2.Th1.F.PeriodLatticeBasisLemmas.qp_coords hq hl ho hz L _ a b le_rfl z
 
 
@@ -673,7 +625,7 @@ theorem zetaQuasi : ZetaQuasi := zetaQuasi_of zetaHasDeriv _root_.Formalism.L2.T
 theorem sigmaEntire : SigmaEntire := sigmaEntire_of _root_.Formalism.L2.Th1.F.sigma_product_locally_uniform
 theorem sigmaZero : SigmaZero := sigmaZero_of _root_.Formalism.L2.Th1.F.sigma_summable
 theorem sigmaLogDeriv : SigmaLogDeriv := sigmaLogDeriv_of _root_.Formalism.L2.Th1.F.sigma_product_locally_uniform _root_.Formalism.L2.Th1.F.sigma_summable _root_.Formalism.L2.Th1.F.zeta_summable
-theorem sigmaQuasi : SigmaQuasi := sigmaQuasi_of zetaQuasi sigmaLogDeriv sigmaEntire _root_.Formalism.L2.Th1.F.sigma_odd sigmaZero
+theorem sigmaQuasi : SigmaQuasi := sigmaQuasi_of zetaQuasi sigmaLogDeriv _root_.Formalism.L2.Th1.F.sigma_odd sigmaZero
 theorem sigmaSimple : SigmaSimple := sigmaSimple_of sigmaQuasi sigmaEntire (sigmaDerivZero_of _root_.Formalism.L2.Th1.F.sigma_product_locally_uniform)
 theorem etaEisenstein : EtaEisenstein := etaEisenstein_of _root_.Formalism.L2.Th1.F.zeta_summable _root_.Formalism.L2.Th1.F.zeta_odd
 theorem legendre : Legendre := legendre_of etaEisenstein

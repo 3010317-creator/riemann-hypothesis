@@ -1,46 +1,6 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.NoCommonComponentCoordinatesPlane
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedF
 
 @[expose] public section
@@ -79,21 +39,17 @@ theorem De_eq_zero_of_semiPos_off (hAdd : DeSlotAdd.Statement) (hTw : SemiPosTwi
     obtain ⟨T, hT, hTp, hLTp⟩ := hTw K ι (L j) (hL j)
     have hadd := hAdd K ι P n L j (L j) T A A' s s' hP hL (hL j) hT hA hA' hs hs' hnc
     rw [Function.update_eq_self] at hadd
-    have hsm : ∀ X : HermLine ι, IsSmoothHerm X → ∀ i, IsSmoothHerm (Function.update L j X i) := by
-      intro X hX i
+    have hupd (P : HermLine ι → Prop) (Q : Fin n → Prop) {X : HermLine ι}
+        (hQ : ∀ i, Q i → i ≠ j → P (L i)) (hX : P X) (i : Fin n) (hi : Q i) :
+        P (Function.update L j X i) := by
       rcases eq_or_ne i j with rfl | hij
       · simpa using hX
-      · rw [Function.update_of_ne hij]
-        exact hL i
-    have hpos : ∀ X : HermLine ι, IsSemiPosHerm X → ∀ i, i ∉ S →
-        IsSemiPosHerm (Function.update L j X i) := by
-      intro X hX i hi
-      rcases eq_or_ne i j with rfl | hij
-      · simpa using hX
-      · rw [Function.update_of_ne hij]
-        exact hLp i (by simp [Finset.mem_insert, hij, hi])
-    rw [ih _ (hsm _ (isSmoothHerm_tensor (hL j) hT)) (hpos _ hLTp),
-      ih _ (hsm _ hT) (hpos _ hTp)] at hadd
+      · rw [Function.update_of_ne hij]; exact hQ i hi hij
+    rw [ih _ (fun i => hupd IsSmoothHerm (fun _ => True) (fun i _ _ => hL i)
+          (isSmoothHerm_tensor (hL j) hT) i trivial)
+        (hupd IsSemiPosHerm (· ∉ S) (fun i hi hij => hLp i (by simp [hij, hi])) hLTp),
+      ih _ (fun i => hupd IsSmoothHerm (fun _ => True) (fun i _ _ => hL i) hT i trivial)
+        (hupd IsSemiPosHerm (· ∉ S) (fun i hi hij => hLp i (by simp [hij, hi])) hTp)] at hadd
     linarith
 
 theorem ProjectiveLineTwo.proof (hAdd : DeSlotAdd.Statement) (hTw : SemiPosTwist.Statement)

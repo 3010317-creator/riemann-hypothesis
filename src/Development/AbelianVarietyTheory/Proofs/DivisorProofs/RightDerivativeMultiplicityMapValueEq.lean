@@ -47,7 +47,6 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothReal
 
 open NumberField IsDedekindDomain Matrix MeasureTheory ReciprocityTheory.ChartRestriction.G.FD Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Pj Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.FWT GlobalTheory.HolRead
 open scoped TensorProduct InnerProductSpace Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.HolRead.MultDer
 
@@ -82,7 +81,7 @@ theorem rder_eq : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau �
   refine ⟨⟨_, Submodule.subset_span (h3 X hX).1⟩, rfl, ?_⟩
   funext x
   obtain ⟨ℓ, hℓ, hℓT⟩ := hT.cont τ v x
-  have hd := GlobalTheory.T.hasDerivAt_sobolevContinuous_orbit _ _ _ _ hH hU hπ _ hs ℓ hℓ X hX
+  have hd := _root_.GlobalTheory.SobOrbit.hasDerivAt_sobCont_orbit _ _ _ _ hH hU hπ _ hs ℓ hℓ X hX
   rw [← hℓT]
   have e : (fun t : ℝ => T v (x * oneP θ V τ X t)) =
       fun t : ℝ => ℓ (M.rep τ (NormedSpace.exp (t • X)) (v τ : M.H τ)) := by

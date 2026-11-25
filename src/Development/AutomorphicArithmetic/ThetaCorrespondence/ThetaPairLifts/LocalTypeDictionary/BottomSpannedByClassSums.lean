@@ -102,13 +102,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
 open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
 noncomputable section
 open scoped ComplexOrder
@@ -164,12 +157,7 @@ open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
 
 theorem _root_.GlobalTheory.T.exists_open_fixing_seesaw_vacuum_definite_bottom : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
     {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, IsBottomTri W i j X → ∀ t : T,
@@ -188,13 +176,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
 open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
 open scoped TensorProduct
 
@@ -249,12 +230,7 @@ open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
 
 theorem _root_.GlobalTheory.T.exists_level_unitaryHeckeCharacter_trivial_congruence : ∀ (D : D7) (ν : (AE D)ˣ →* Circle), IsHeckeChar D ν → ∃ N₀ : ℕ, 0 < N₀ ∧ ∀ N : ℕ, N₀ ∣ N → ∀ u : (AE D)ˣ, infPart D (u : AE D) = 1 → (∃ w ∈ Formalism.L2.Herm.intAf D.host.F D.host.E, toEAf D (u : AE D) = 1 + (N : Lev.EAf D) * w) → (∃ w ∈ Formalism.L2.Herm.intAf D.host.F D.host.E, toEAf D ((u⁻¹ : (AE D)ˣ) : AE D) = 1 + (N : Lev.EAf D) * w) → ν u = 1 := by
   first | exact @GlobalTheory.HeckeLevel.exists_level
@@ -269,7 +245,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
 open IsDedekindDomain NumberField MeasureTheory
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open scoped TensorProduct Topology
 
 noncomputable section
@@ -443,12 +418,7 @@ open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
 
 theorem _root_.GlobalTheory.T.exists_open_frame_congruence_unitaryAdelic : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (N : ℕ), 0 < N → ∃ U : Subgroup (GA D V), IsOpen (U : Set (GA D V)) ∧ ∀ κ ∈ U, ∃ z : GL (Fin V.rank) (Formalism.L2.Herm.intAf D.host.F D.host.E), Formalism.L2.DIV.frGL β z = Lev.finE V κ ∧ ∀ a b, ∃ w ∈ Formalism.L2.Herm.intAf D.host.F D.host.E, ((z.1 a b : Formalism.L2.Herm.intAf D.host.F D.host.E) : Lev.EAf D) - (1 : Matrix (Fin V.rank) (Fin V.rank) (Lev.EAf D)) a b = (N : Lev.EAf D) * w := by
   first | exact @GlobalTheory.FrameCongOpen.exists_open_cong
@@ -465,13 +435,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
 open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
 
 noncomputable section
@@ -560,51 +523,8 @@ theorem nu_eq {ν : (AE D)ˣ →* Circle} {e : AE D} {S : Finset (Pl D.host.E)} 
     (hl : ∀ x, Formalism.L2.Pj.FinUnit x → (∃ y ∈ intAE D, finPart D (x : AE D) - 1 = n • y) → ν x = 1) {k : ℕ}
     {N N' Z : Matrix (Fin k) (Fin k) (EAf D)} (hN : IsIntM N) (hZ : IsIntM Z)
     (h : ∀ i j, N' i j = N i j + ((n * c : ℕ) : EAf D) * Z i j) {x x' : (AE D)ˣ} (hx : IsUnitDet e N x)
-    (hx' : IsUnitDet e N' x') : ν x = ν x' := by
-  obtain ⟨a1, a2, a3⟩ := hx
-  obtain ⟨b1, b2, b3⟩ := hx'
-  have hE := toEAf_mem he
-  obtain ⟨hd, hd', z, hz⟩ := det_cong_int hN hZ h
-  have hzv : N'.det = N.det + (n : EAf D) * (c : EAf D) * (z : EAf D) := by
-    have := congrArg Subtype.val hz
-    rw [← Nat.cast_mul, ← coe_nat (OO) (n * c)]
-    exact this
-  have hX : toEAf D (x : AE D) ∈ OO := by
-    rw [a2]
-    exact add_mem (sub_mem (one_mem _) hE) (mul_mem hE hd)
-  have hX' : toEAf D (x' : AE D) ∈ OO := by
-    rw [b2]
-    exact add_mem (sub_mem (one_mem _) hE) (mul_mem hE hd')
-  have hm : toEAf D (x : AE D) * toEAf D ((x⁻¹ : (AE D)ˣ) : AE D) = 1 := by
-    rw [← RingHom.map_mul, Units.mul_inv, RingHom.map_one]
-  have hinv : infPart D ((x⁻¹ : (AE D)ˣ) : AE D) = 1 := by
-    have := congrArg (infPart D) (Units.mul_inv x)
-    rwa [RingHom.map_mul, a1, one_mul, RingHom.map_one] at this
-  have hinv' : ((x' * x⁻¹ : (AE D)ˣ) : AE D) = (x' : AE D) * ((x⁻¹ : (AE D)ˣ) : AE D) := rfl
-  have hinv2 : (((x' * x⁻¹)⁻¹ : (AE D)ˣ) : AE D) = (x : AE D) * ((x'⁻¹ : (AE D)ˣ) : AE D) := by
-    rw [_root_.mul_inv_rev, inv_inv]
-    rfl
-  have hr : Formalism.L2.Pj.FinUnit (x' * x⁻¹) := by
-    refine ⟨?_, GlobalTheory.PlaceDatum.finPart_mem_of_toEAf ?_, GlobalTheory.PlaceDatum.finPart_mem_of_toEAf ?_⟩
-    · rw [hinv', RingHom.map_mul, b1, hinv, one_mul]
-    · rw [hinv', RingHom.map_mul]
-      exact mul_mem hX' a3
-    · rw [hinv2, RingHom.map_mul]
-      exact mul_mem hX b3
-  obtain ⟨w, -, hw⟩ := toEAf_surj (toEAf D e * ((c : EAf D) * (z : EAf D)) * toEAf D ((x⁻¹ : (AE D)ˣ) : AE D))
-  have hwI : toEAf D w ∈ OO := by
-    rw [hw]
-    exact mul_mem (mul_mem hE (mul_mem (natCast_mem _ _) z.2)) a3
-  have key : finPart D ((x' * x⁻¹ : (AE D)ˣ) : AE D) - 1 = n • finPart D w := by
-    have e1 : finPart D (((x' * x⁻¹ : (AE D)ˣ) : AE D) - 1) = finPart D (n • w) :=
-      finPart_eq_of_toEAf (by
-        rw [RingHom.map_sub, RingHom.map_one, hinv', RingHom.map_mul, hom_nsmul, hw, nsmul_eq_mul]
-        exact ring_id a2 b2 hzv hm)
-    rw [RingHom.map_sub, RingHom.map_one, hom_nsmul] at e1
-    exact e1
-  have h1 := hl _ hr ⟨_, GlobalTheory.PlaceDatum.finPart_mem_of_toEAf hwI, key⟩
-  rw [map_mul, map_inv] at h1
-  exact (mul_inv_eq_one.1 h1).symm
+    (hx' : IsUnitDet e N' x') : ν x = ν x' :=
+  _root_.StandardFirstTheta.GlobalTheory.CompanionTheory.StdFstTheta.nu_eq he hl hN hZ h hx hx'
 
 end
 
@@ -659,7 +579,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
 open IsDedekindDomain NumberField
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 
@@ -823,12 +742,7 @@ open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
 
 theorem _root_.GlobalTheory.T.standardPairFirst_invariant_congruenceOne : ∀ (D : D7) (A WW : HSp D) (ν : (AE D)ˣ →* Circle) (e : AE D) (Sf : Finset (Formalism.L2.DIV.Pl D.host.E)), IsIdemSum e Sf → ∀ (I : Ideal (𝓞 D.host.E)) (βA : GL (Fin A.rank) (Lev.EAf D)) (βW : GL (Fin WW.rank) (Lev.EAf D)) (N : ℕ), 0 < N → ((N : ℕ) : 𝓞 D.host.E) ∈ I → (∀ w ∈ Sf, ((N : ℕ) : 𝓞 D.host.E) ∈ w.asIdeal) → (∀ u : (AE D)ˣ, infPart D (u : AE D) = 1 → (∃ w ∈ Formalism.L2.Herm.intAf D.host.F D.host.E, toEAf D (u : AE D) = 1 + (N : Lev.EAf D) * w) → (∃ w ∈ Formalism.L2.Herm.intAf D.host.F D.host.E, toEAf D ((u⁻¹ : (AE D)ˣ) : AE D) = 1 + (N : Lev.EAf D) * w) → ν u = 1) → ∀ (κ : GA D WW) (z : GL (Fin WW.rank) (Formalism.L2.Herm.intAf D.host.F D.host.E)), Formalism.L2.DIV.frGL βW z = Lev.finE WW κ → (∀ a b, ∃ w ∈ Formalism.L2.Herm.intAf D.host.F D.host.E, ((z.1 a b : Formalism.L2.Herm.intAf D.host.F D.host.E) : Lev.EAf D) - (1 : Matrix (Fin WW.rank) (Fin WW.rank) (Lev.EAf D)) a b = (N : Lev.EAf D) * w) → ∀ x, GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.stdFst ν e I A WW βA βW (actO (GlobalTheory.Grid.neg A) WW 1 κ x) = GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.stdFst ν e I A WW βA βW x := by
   first | exact @GlobalTheory.StdFstInv.stdFst_actO
@@ -845,13 +759,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
 open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
 
 noncomputable section
@@ -923,12 +830,7 @@ open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
 
 theorem _root_.GlobalTheory.T.definiteBottom_exists_open_fixes_finiteVector : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
     {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, IsBottomTri W i j X → ∀ t : T,
@@ -948,13 +850,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
 open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
 
 noncomputable section
@@ -984,13 +879,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
 open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
 noncomputable section
 namespace GlobalTheory.BottomLevel
@@ -1038,13 +926,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
 open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
 open GlobalTheory.Grid
 namespace GlobalTheory.RowTest.BottomRat
@@ -1086,13 +967,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
 open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
 open Formalism.IndefR.Datum GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting
 open scoped ComplexOrder
@@ -1163,7 +1037,6 @@ end GlobalTheory.RealRatAct
 
 namespace GlobalTheory.RealRatAct
 
-open Formalism.L2.Theta
 
 variable {D : D7}
 
@@ -1196,7 +1069,6 @@ end GlobalTheory.RealRatAct
 
 namespace GlobalTheory.RealRatAct
 
-open Formalism.L2.Theta
 
 variable {D : D7}
 
@@ -1228,7 +1100,6 @@ end GlobalTheory.RealRatAct
 
 namespace GlobalTheory.RealRatAct
 
-open Formalism.L2.Theta
 
 variable {D : D7}
 
@@ -1339,7 +1210,6 @@ end GlobalTheory.RealRatAct
 
 namespace GlobalTheory.RealRatAct
 
-open Formalism.L2.Theta
 
 variable {D : D7}
 
@@ -1405,7 +1275,6 @@ end GlobalTheory.RealRatAct
 
 namespace GlobalTheory.RealRatAct
 
-open Formalism.L2.Theta
 
 end GlobalTheory.RealRatAct
 end -- clump:auto
@@ -1423,13 +1292,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
 open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
 open Formalism.IndefR.Datum GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting
 open scoped ComplexOrder
@@ -1445,7 +1307,6 @@ end GlobalTheory.RealRatAct
 namespace GlobalTheory.RealRatAct
 end GlobalTheory.RealRatAct
 namespace GlobalTheory.RealRatAct
-open Formalism.L2.Theta
 theorem rationalAction_real_translate : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
     {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
     IsBottomTri W i j X →
@@ -1538,13 +1399,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
 open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
 noncomputable section
 namespace GlobalTheory.BotSpan

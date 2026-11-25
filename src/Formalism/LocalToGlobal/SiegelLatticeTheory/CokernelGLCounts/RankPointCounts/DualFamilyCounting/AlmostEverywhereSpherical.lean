@@ -7,49 +7,7 @@ public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepre
 public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.IsUnimodularAtIffVd
 public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.StarAlgebraMap
 import Formalism.HermitianLattices.HermitianLatticesProofs.LocDual
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.FiniteDimensionalOfOrtho
 
 @[expose] public section
@@ -141,25 +99,12 @@ theorem exists_unif_fin (hF : IsFixF K F) {P : Ideal (𝓞 K)} (hP : P.IsMaximal
   refine ⟨π, hπ, fun a ha => ?_⟩
   have inj := IsFractionRing.injective (𝓞 K) K
   have hπ0 : π ≠ 0 := hπ.ne
-  have hP1 : (1 : 𝓞 K) ∉ P := fun h => hP.ne_top ((Ideal.eq_top_iff_one _).mpr h)
 
   have hc : ∀ s ∈ Formalism.HermitianLatticesTheory.hcompl (K := K) P, s ∉ P ∧
-      ∀ s' : 𝓞 K, algebraMap (𝓞 K) K s' = star (algebraMap (𝓞 K) K s) → s' ∉ P := by
-    intro s hs
-    induction hs using Submonoid.closure_induction with
-    | mem s hs => exact hs
-    | one =>
-      refine ⟨hP1, fun s' hs' => ?_⟩
-      have e : s' = 1 := inj (by rw [hs', map_one, star_one])
-      rw [e]
-      exact hP1
-    | mul x y _ _ hx hy =>
-      refine ⟨fun h => (hP.isPrime.mem_or_mem h).elim hx.1 hy.1, fun s' hs' => ?_⟩
-      obtain ⟨x', hx'⟩ := _root_.Formalism.HermitianLattices.Ext.L3.StandardSymmetricSums.star_int x
-      obtain ⟨y', hy'⟩ := _root_.Formalism.HermitianLattices.Ext.L3.StandardSymmetricSums.star_int y
-      have e : s' = x' * y' := inj (by rw [hs', map_mul, map_mul, star_mul', hx', hy'])
-      rw [e]
-      exact fun h => (hP.isPrime.mem_or_mem h).elim (hx.2 x' hx') (hy.2 y' hy')
+      ∀ s' : 𝓞 K, algebraMap (𝓞 K) K s' = star (algebraMap (𝓞 K) K s) → s' ∉ P := fun s hs =>
+    have hm := (mem_hcompl_iff hP.isPrime s).1 hs
+    ⟨hm.1, fun s' hs' h => hm.2 ((mem_conjIdeal_iff P s).2
+      (RingOfIntegers.ext (hs'.trans (algebraMap_conjO s).symm) ▸ h))⟩
 
   have hπmem : π ∈ Formalism.HermitianLatticesTheory.locR (K := K) P := hπ.mem
   obtain ⟨s0, hs0, hu⟩ := (Formalism.HermitianLatticesTheory.locDual_mem_locR (K := K) P π).mp hπmem

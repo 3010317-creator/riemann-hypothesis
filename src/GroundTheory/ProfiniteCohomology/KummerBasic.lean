@@ -3,54 +3,9 @@ module
 public import Mathlib.FieldTheory.Galois.Notation
 public import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
 public import Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -109,15 +64,9 @@ def kummerGroup : Subgroup (UnitsModPow K n) :=
 variable {K n L} in
 lemma mk_mem_kummerGroup {a : Kˣ} :
     (a : UnitsModPow K n) ∈ kummerGroup K n L ↔ ∃ α : L, α ^ n = algebraMap K L a := by
-  rw [← mem_unitsPowIn]
-  constructor
-  · rintro ⟨b, hb, hba⟩
-    obtain ⟨c, hc⟩ := mem_unitsPow.mp (QuotientGroup.eq.mp hba)
-    have : a = b * c ^ n := by rw [hc]; group
-    rw [this]
-    exact mul_mem hb (unitsPow_le_unitsPowIn K n L (mem_unitsPow.mpr ⟨c, rfl⟩))
-  · intro ha
-    exact ⟨a, ha, rfl⟩
+  change a ∈ (kummerGroup K n L).comap (QuotientGroup.mk' (unitsPow K n)) ↔ _
+  rw [kummerGroup, Subgroup.comap_map_eq_self, mem_unitsPowIn]
+  simpa only [QuotientGroup.ker_mk'] using unitsPow_le_unitsPowIn K n L
 
 end Defs
 
@@ -128,7 +77,7 @@ variable {L : Type*} [Field L] [Algebra K L]
 
 lemma exists_algebraMap_eq_of_pow_eq_one {x : L} (hx : x ^ n = 1) :
     ∃ ζ : rootsOfUnity n K, algebraMap K L ((ζ : Kˣ) : K) = x := by
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K n
   obtain ⟨i, -, hi⟩ := (hζ.map_of_injective (algebraMap K L).injective).eq_pow_of_pow_eq_one hx
   refine ⟨⟨(hζ.isUnit (NeZero.ne n)).unit ^ i, ?_⟩, ?_⟩
   · rw [mem_rootsOfUnity', Units.val_pow_eq_pow_val, IsUnit.unit_spec, ← pow_mul, mul_comm,

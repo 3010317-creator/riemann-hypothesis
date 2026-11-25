@@ -6,51 +6,10 @@ public import Formalism.LocalToGlobal.Columns.ChainInstS
 public import Formalism.LocalToGlobal.Columns.ChainOneOkL
 import Formalism.LocalToGlobal.Columns.OcbPhiFIdxFPos
 public import Formalism.LocalToGlobal.Columns.RecLevelSym
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 public import Formalism.LocalToGlobal.Columns.ChainOneB
 
 @[expose] public section
@@ -153,12 +112,12 @@ theorem ookRedPsi (hX : X.Ok) (hPr : Pr.Ok) (c : LocCst X (rowSG Pr sel mu)) (hs
           redP P (LocE.entB q k₀ (c + 1) n' c n (fun i => i + 1) (fun i => i + 1) y p p') := by
       intro p p' hp hp'
       rw [ocbBEnt_entB]
-      exact hred _ _ (ocbPhi_fIdx_lt hk hp) (ocbPhi_fIdx_lt hk' hp')
+      exact hred _ _ (ocbPhi_fIdx_lt hp) (ocbPhi_fIdx_lt hp')
     have hI : ∀ p p', p < n + c → p' < n' + (c + 1) →
         IntAt P (LocE.entB q k₀ (c + 1) n' c n (fun i => i + 1) (fun i => i + 1) y p p') := by
       intro p p' hp hp'
       rw [ocbBEnt_entB]
-      exact hint _ _ (ocbPhi_fIdx_lt hk hp) (ocbPhi_fIdx_lt hk' hp')
+      exact hint _ _ (ocbPhi_fIdx_lt hp) (ocbPhi_fIdx_lt hp')
     have hz : ∀ x : E, IntAt P x → (redP P x = 0 ↔ IntAt P (x / (q : E))) := by
       intro x hx
       constructor

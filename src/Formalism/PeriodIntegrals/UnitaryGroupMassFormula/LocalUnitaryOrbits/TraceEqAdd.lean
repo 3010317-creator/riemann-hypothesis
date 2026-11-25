@@ -2,44 +2,7 @@ module
 
 import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.NcValVolOrdTr
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.LocVol
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.HRSumSmulRight
 
 @[expose] public section
 
@@ -68,7 +31,7 @@ theorem trace_inclR (x : E) :
   have e : Algebra.lmul (Fv F v) (Fv F v ⊗[F] E) (inclR (F := F) (Fv F v) x) =
       (Algebra.lmul F E x).baseChange (Fv F v) := by
     apply TensorProduct.AlgebraTensorModule.curry_injective
-    ext a e
+    ext a
     simp [inclR]
   rw [Algebra.trace_apply, e, LinearMap.trace_baseChange]
   rfl
@@ -116,20 +79,7 @@ theorem b_sc_mem {c : Fv F v} (hc : c ∈ v.adicCompletionIntegers F) : sc (E :=
 
 theorem b_mul_mem {x y : Fv F v ⊗[F] E} (hx : x ∈ OEv (E := E) v) (hy : y ∈ OEv (E := E) v) :
     x * y ∈ OEv (E := E) v := by
-  induction hx using Submodule.span_induction with
-  | mem a ha =>
-    obtain ⟨a, -, rfl⟩ := ha
-    induction hy using Submodule.span_induction with
-    | mem b hb =>
-      obtain ⟨b, -, rfl⟩ := hb
-      have := b_inclR_mem (E := E) v (a * b)
-      simpa using this
-    | zero => rw [mul_zero]; exact Submodule.zero_mem _
-    | add y1 y2 _ _ h1 h2 => rw [mul_add]; exact Submodule.add_mem _ h1 h2
-    | smul c y _ h => rw [mul_smul_comm]; exact Submodule.smul_mem _ c h
-  | zero => rw [zero_mul]; exact Submodule.zero_mem _
-  | add x1 x2 _ _ h1 h2 => rw [add_mul]; exact Submodule.add_mem _ h1 h2
-  | smul c x _ h => rw [smul_mul_assoc]; exact Submodule.smul_mem _ c h
+  first | exact _root_.PI.OmLocU.oEv_mul | (apply _root_.PI.OmLocU.oEv_mul <;> assumption)
 
 theorem b_trace_mem {x : Fv F v ⊗[F] E} (hx : x ∈ OEv (E := E) v) :
     Algebra.trace (Fv F v) (Fv F v ⊗[F] E) x ∈ v.adicCompletionIntegers F := by

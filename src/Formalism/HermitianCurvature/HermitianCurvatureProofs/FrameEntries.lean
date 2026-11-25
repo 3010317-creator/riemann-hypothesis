@@ -4,50 +4,9 @@ import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.TorusInvariance.Transfe
 public import Formalism.HermitianCurvature.StatementQr
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.OperatorRepresentations
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RestrictionIrrelevantDoubleLevelOperator
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
+public import Formalism.SharedLemmas.HpkSq
 
 @[expose] public section
 
@@ -119,32 +78,9 @@ section Grp
 variable {k r : ℕ}
 
 private theorem Hpk_mul_self_eq_one (k r : ℕ) : Hpk k r * Hpk k r = 1 := by
-  ext i j
-  rw [Matrix.mul_apply, Matrix.one_apply]
-  have hi := i.2
-  have hj := j.2
-  let p : ℕ → ℕ := fun a => if a < r ∨ r + k < a then 2 * r + k - a else a
-  have hp : ∀ a < 2 * r + k + 1, p a < 2 * r + k + 1 := by
-    intro a ha
-    simp only [p]
-    split_ifs <;> omega
-  have hent : ∀ a b : Fin (2 * r + k + 1),
-      Hpk k r a b = if (b : ℕ) = p a then (if (a : ℕ) = r + k then -1 else 1) else 0 := by
-    intro a b
-    have := a.2
-    have := b.2
-    simp only [Hpk, p, Fin.ext_iff]
-    split_ifs <;> first | rfl | omega
-  rw [Finset.sum_eq_single ⟨p i, hp i hi⟩]
-  · rw [hent, hent]
-    simp only [p, Fin.ext_iff]
-    split_ifs <;> first | omega | norm_num
-  · intro b _ hb
-    rw [hent i b]
-    have hb' : (b : ℕ) ≠ p i := fun h => hb (Fin.ext h)
-    simp [hb']
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  first
+  | exact _root_.Formalism.SharedLemmas.upq_hpk_mul_self
+  | (apply _root_.Formalism.SharedLemmas.upq_hpk_mul_self <;> assumption)
 
 theorem mul_inv_uh {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g * g⁻¹ = 1 := by
   have hg' : gᴴ * Hpk k r * g = Hpk k r := hg

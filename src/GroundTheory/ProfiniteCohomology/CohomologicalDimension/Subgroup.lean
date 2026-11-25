@@ -17,56 +17,11 @@ public import GroundTheory.ProfiniteCohomology.CohomologicalDimension.Closed
 public import GroundTheory.ProfiniteCohomology.CohomologicalDimension.PrimaryComponentCohomologyEqBotOfScdpLt
 public import GroundTheory.ProfiniteCohomology.Shapiro
 public import GroundTheory.ProfiniteCohomology.CohomologicalDimension.CdpOpenSubgroupLe
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Mathlib.Topology.Compactness.Paracompact
 import Mathlib.Topology.Separation.Connected
 import GroundTheory.ProfiniteCohomology.CohomologicalDimension.SubsingletonCohomologyOfPrimaryOfFinite
 import GroundTheory.ProfiniteCohomology.Colimit
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: GroundTheory.ProfiniteCohomology.Supernatural, GroundTheory.ProfiniteCohomology.OfNatRelIndexSupAntitone, GroundTheory.ProfiniteCohomology.NotDvdSuperIndexIffMap, GroundTheory.ProfiniteCohomology.CohomologicalDimension.Subgroup
@@ -662,6 +617,13 @@ theorem rho_eq_of_inv_mul_mem (hfix : ∀ h : H, (h : G) ∈ V → ∀ a : A, A.
   rw [e, map_mul, Module.End.mul_apply, hfix (h₁⁻¹ * h₂) (by simpa using h)]
 
 
+private theorem inv_mul_supSection_mem {G : Type u} [Group G] {H V : Subgroup G} [V.Normal] (y : ↥(H ⊔ V)) :
+    (supSection (H := H) (V := V) y : G)⁻¹ * (y : G) ∈ V := by
+  have hex : ∃ g ∈ H, g⁻¹ * (y : G) ∈ V := by
+    obtain ⟨g, hg, w, hw, heq⟩ := Subgroup.mem_sup_of_normal_right.1 y.2
+    exact ⟨g, hg, by rwa [← heq, inv_mul_cancel_left]⟩
+  exact (Classical.choose_spec hex).2
+
 variable (H V) in
 noncomputable def summandFun (a : A) (x : G) : A := by
   classical
@@ -677,13 +639,8 @@ theorem summandFun_mul_left (hfix : ∀ h : H, (h : G) ∈ V → ∀ a : A, A.ρ
     simp only [summandFun, dite_eq_left hx, dite_eq_left hx']
     rw [← Module.End.mul_apply, ← map_mul]
     apply rho_eq_of_inv_mul_mem hfix
-    have hsection (y : ↥(H ⊔ V)) : (supSection (H := H) (V := V) y : G)⁻¹ * (y : G) ∈ V := by
-      have hex : ∃ g ∈ H, g⁻¹ * (y : G) ∈ V := by
-        obtain ⟨g, hg, w, hw, heq⟩ := Subgroup.mem_sup_of_normal_right.1 y.2
-        exact ⟨g, hg, by rwa [← heq, inv_mul_cancel_left]⟩
-      exact (Classical.choose_spec hex).2
-    refine inv_mul_mem_trans (hsection ⟨_, hx'⟩) ?_
-    have := inv_mul_mem_symm (hsection ⟨x, hx⟩)
+    refine inv_mul_mem_trans (inv_mul_supSection_mem (H := H) (V := V) ⟨_, hx'⟩) ?_
+    have := inv_mul_mem_symm (inv_mul_supSection_mem (H := H) (V := V) ⟨x, hx⟩)
     simpa [mul_assoc] using this
   · have hx' : (h : G) * x ∉ H ⊔ V := fun h' => hx (hmem.1 h')
     simp only [summandFun, dite_eq_right hx, dite_eq_right hx', map_zero]
@@ -698,13 +655,8 @@ theorem summandFun_mul_right (hfix : ∀ h : H, (h : G) ∈ V → ∀ a : A, A.�
     simp only [summandFun, dite_eq_left hx, dite_eq_left hx']
     rw [← Module.End.mul_apply, ← map_mul]
     apply rho_eq_of_inv_mul_mem hfix
-    have hsection (y : ↥(H ⊔ V)) : (supSection (H := H) (V := V) y : G)⁻¹ * (y : G) ∈ V := by
-      have hex : ∃ g ∈ H, g⁻¹ * (y : G) ∈ V := by
-        obtain ⟨g, hg, w, hw, heq⟩ := Subgroup.mem_sup_of_normal_right.1 y.2
-        exact ⟨g, hg, by rwa [← heq, inv_mul_cancel_left]⟩
-      exact (Classical.choose_spec hex).2
-    refine inv_mul_mem_trans (hsection ⟨_, hx'⟩) ?_
-    have h1 := inv_mul_mem_symm (hsection ⟨x, hx⟩)
+    refine inv_mul_mem_trans (inv_mul_supSection_mem (H := H) (V := V) ⟨_, hx'⟩) ?_
+    have h1 := inv_mul_mem_symm (inv_mul_supSection_mem (H := H) (V := V) ⟨x, hx⟩)
     have h2 : (k' : G)⁻¹ * (x⁻¹ * (supSection (H := H) (V := V) ⟨x, hx⟩ : G)) * k' ∈ V := by
       have := hVn.conj_mem _ h1 (k' : G)⁻¹
       simpa using this
@@ -721,13 +673,8 @@ theorem summandFun_mul_right_of_mem (hfix : ∀ h : H, (h : G) ∈ V → ∀ a :
   · have hx' : x * v ∈ H ⊔ V := hmem.2 hx
     simp only [summandFun, dite_eq_left hx, dite_eq_left hx']
     apply rho_eq_of_inv_mul_mem hfix
-    have hsection (y : ↥(H ⊔ V)) : (supSection (H := H) (V := V) y : G)⁻¹ * (y : G) ∈ V := by
-      have hex : ∃ g ∈ H, g⁻¹ * (y : G) ∈ V := by
-        obtain ⟨g, hg, w, hw, heq⟩ := Subgroup.mem_sup_of_normal_right.1 y.2
-        exact ⟨g, hg, by rwa [← heq, inv_mul_cancel_left]⟩
-      exact (Classical.choose_spec hex).2
-    refine inv_mul_mem_trans (hsection ⟨_, hx'⟩) ?_
-    have h1 := inv_mul_mem_symm (hsection ⟨x, hx⟩)
+    refine inv_mul_mem_trans (inv_mul_supSection_mem (H := H) (V := V) ⟨_, hx'⟩) ?_
+    have h1 := inv_mul_mem_symm (inv_mul_supSection_mem (H := H) (V := V) ⟨x, hx⟩)
     have h2 : v⁻¹ * (x⁻¹ * (supSection (H := H) (V := V) ⟨x, hx⟩ : G)) ∈ V :=
       V.mul_mem (V.inv_mem hv) h1
     simpa [mul_assoc] using h2
@@ -740,12 +687,7 @@ theorem summandFun_one (hfix : ∀ h : H, (h : G) ∈ V → ∀ a : A, A.ρ h a 
   have h1 : (1 : G) ∈ H ⊔ V := one_mem _
   simp only [summandFun, dite_eq_left h1]
   rw [← rho_eq_of_inv_mul_mem hfix (h₁ := 1) ?_ a, map_one, Module.End.one_apply]
-  have hsection (y : ↥(H ⊔ V)) : (supSection (H := H) (V := V) y : G)⁻¹ * (y : G) ∈ V := by
-    have hex : ∃ g ∈ H, g⁻¹ * (y : G) ∈ V := by
-      obtain ⟨g, hg, w, hw, heq⟩ := Subgroup.mem_sup_of_normal_right.1 y.2
-      exact ⟨g, hg, by rwa [← heq, inv_mul_cancel_left]⟩
-    exact (Classical.choose_spec hex).2
-  have := V.inv_mem (hsection ⟨1, h1⟩)
+  have := V.inv_mem (inv_mul_supSection_mem (H := H) (V := V) ⟨1, h1⟩)
   simpa using this
 
 end Coinduction

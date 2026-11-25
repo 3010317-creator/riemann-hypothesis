@@ -794,13 +794,6 @@ theorem eigenvalues_at_member_tripleLayer_alt : _root_.GlobalTheory.HeightCounti
 end GlobalTheory.RowTriple.Lay.EigCopy
 end
 end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-
-theorem _root_.GlobalTheory.T.compatibleSystem_tripleLayer_eigenvalues_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ _ _ _ c => ∀ (S : RatDat (w.D Z).ntw) (hL' : ∀ j, ℕ → PlE (w.D Z).host → Module.End (w.D Z).what₂.LL (S.WL j)) (eig : ℕ → (w.D Z).what₂.FT → ℕ → PlE (w.D Z).host → ↥(w.D Z).LL0) (θ : ∀ kk : Fin 2, Multiplicative (ZMod ((w.D Z).host.g kk)) →* (↥(w.D Z).LL0)ˣ), HEq S (ratL c.a.nt.L c.a.nt.S) → HEq hL' c.a.nt.hL → HEq eig c.a.nt.eig → HEq θ c.a.nt.θ → ∃ Sb : Finset (PlE (w.D Z).host), (∀ i, Sb ⊆ (w.D Z).ntw.S0 i) ∧ ∀ Rw : RowSide (w.D Z), HEq Rw.locR c.a.nt.A.row.locR → GlobalTheory.TwInputs.EigTrue (w.D Z) (TC.cf w.I w.l Z) Rw Sb eig ∧ GlobalTheory.TwInputs.EigOcc (w.D Z) S θ hL' Sb eig := by
-  first | exact @_root_.GlobalTheory.RowTriple.Lay.EigCopy.eigenvalues_at_member_tripleLayer_alt
-end
 end
 end -- clump:auto
 end -- clump:auto
@@ -869,7 +862,7 @@ theorem sideB_built_alt (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D' : D7) 
   obtain rfl : hL0 = hL' := (eq_of_heq hhL).symm
   obtain rfl : eig0 = eig := (eq_of_heq heig).symm
   obtain rfl : θ0 = θ := (eq_of_heq hθ).symm
-  obtain ⟨Rw, hRw, Bs', -⟩ := GlobalTheory.T.twist_second_step_kept_with_localisations D cf0 A.row low Pq S0 hL0 eig0 θ0 Bs L ψ hψ
+  obtain ⟨Rw, hRw, Bs', -⟩ := _root_.GlobalTheory.TwInputs.SideBLoc.exists_sideB_withLoc D cf0 A.row low Pq S0 hL0 eig0 θ0 Bs L ψ hψ
   refine ⟨Rw, hRw, ⟨Bs'⟩, fun a σ v _ => ?_⟩
   have e : Rw.locR = A.row.locR := eq_of_heq hRw
   rw [e]
@@ -1513,7 +1506,7 @@ theorem lambdaAdic_components_over_base_alt : _root_.GlobalTheory.HeightCounting
   have hT : TypesTrue (w.st Z).toD7.ntypes z.R.C.P z.R.C.W := by
     rw [z.lev.C, w.C_eq]
     exact hGrp
-  have hME := _root_.GlobalTheory.MultEqFinal.twisted_multiplicity_eq hPX.ana hPX.dsc hN.decay hN.hc hPX.trc hPX.dm hPX.flath hN.zel
+  have hME := _root_.GlobalTheory.MultEqFinal.twisted_multiplicity_eq hPX.dsc hN.decay hN.hc hPX.trc hPX.dm hN.zel
     hN.what₂.geo hN.greenC z.R z.F hHo.ok z.pins.char hEx hH hp B.ccK_top z.pins.keep.guard
     (GlobalTheory.LiftRows.Inh.goodTypes_of_typesTrue z.pins.char.base.lev hT)
   have hIR : Formalism.BasicNotions.Rows.IsotRank (w.st Z).toD7.what₂ :=

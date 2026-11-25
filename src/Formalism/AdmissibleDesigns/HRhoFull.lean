@@ -15,45 +15,7 @@ public import Formalism.AdmissibleDesigns.FgTopContinuousLinearMap
 public import Formalism.WachLatticeTwists.RealDisplaySplitting.RealDisplayProofs.SurjectionOfRankOneIdempotent
 public import Formalism.AdmissibleDesigns.GlobalIndexTheoremPlacesOfRNAdm
 public import Formalism.SharpRestriction.LevelLetterCocycles.LargeLevelLemmas
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 import Mathlib.Tactic.Linter.Style
-import Mathlib.RingTheory.Coalgebra.IsFrobenius
-import Mathlib.RingTheory.HopfAlgebra.Basic
 import Formalism.WeaklyAdmissibleFiltrations.CrystallineStableLifts.Galois
 import Mathlib.Tactic.Linter.HaveILetI
 
@@ -183,6 +145,9 @@ variable {D : D7} (i : D.nd.Loc) (dc : TruncatedSeriesCountingIdentities.Decl D 
 
 
 
+omit hH0Fin
+  [∀ k, SMulCommClass Dd.R' (D.nd.O i)
+    (blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk D.R) Dd.ρk k)] in
 theorem isoV_of (r : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV) (D.nd.O i))) (g0 : GE D.nd)
     (eB e₁ s : D.nd.X i → MatN D.nd i)
     (hD : Formalism.RepresentationBoundsCohomology.ringDataObjects.RingDef (D.nd.O i) (D.nd.T i) (RepresentationBoundsCohomology.repX D.nd r) π (chiU D.nd i 1) (epsU D.nd i) g0 eB e₁ s Dd)
@@ -216,6 +181,7 @@ theorem isoV_of (r : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV) (D.nd.O i))) (g0
   rw [Algebra.smul_def, map_mul, KHf.eK_apply, Br.toLLK_alg, K.H0.unipotent_block_zero_entry hD hN _ a b]
   rfl
 
+omit hH0Fin in
 theorem rankFf_normAt (r : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV) (D.nd.O i))) (g0 : GE D.nd)
     (eB e₁ s : D.nd.X i → MatN D.nd i)
     (hD : Formalism.RepresentationBoundsCohomology.ringDataObjects.RingDef (D.nd.O i) (D.nd.T i) (RepresentationBoundsCohomology.repX D.nd r) π (chiU D.nd i 1) (epsU D.nd i) g0 eB e₁ s Dd)
@@ -255,6 +221,9 @@ variable {D : D7} (i : D.nd.Loc) (dc : TruncatedSeriesCountingIdentities.Decl D 
   (Dd : Formalism.RepresentationBoundsCohomology.ringDataObjects.RingData (D.nd.O i) (D.nd.X i) (Fin D.R.nV) (GE D.nd) D.R.t (RepresentationBoundsCohomology.blk D.R))
   [∀ k, SMulCommClass Dd.R' (D.nd.O i) (blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk D.R) Dd.ρk k)]
 
+omit hH0Fin
+  [∀ k, SMulCommClass Dd.R' (D.nd.O i)
+    (blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk D.R) Dd.ρk k)] in
 theorem toKOG_surjective : Function.Surjective (H0.toKOG (D := D) i Dd) := by
   intro y
   refine ⟨fun b => (H0.kogEq _ y) (H0.e0.symm b), ?_⟩
@@ -267,6 +236,7 @@ def phi0 : blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk
 
 
 variable {i r ρ π g0 eB e₁ s Dd} in
+omit hH0Fin in
 theorem invariants_map_equivariant
     (hD : Formalism.RepresentationBoundsCohomology.ringDataObjects.RingDef (D.nd.O i) (D.nd.T i) (RepresentationBoundsCohomology.repX D.nd r) π (chiU D.nd i 1) (epsU D.nd i) g0 eB e₁ s Dd)
     (hN : RepresentationBoundsCohomology.NormAt D.nd r ρ π) (g : GE D.nd) (m : blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk D.R) Dd.ρk 0) :
@@ -275,6 +245,7 @@ theorem invariants_map_equivariant
 
 
 variable {i r ρ π g0 eB e₁ s Dd} in
+omit hH0Fin in
 theorem tieSel1_rec
     (hD : Formalism.RepresentationBoundsCohomology.ringDataObjects.RingDef (D.nd.O i) (D.nd.T i) (RepresentationBoundsCohomology.repX D.nd r) π (chiU D.nd i 1) (epsU D.nd i) g0 eB e₁ s Dd)
     (hN : RepresentationBoundsCohomology.NormAt D.nd r ρ π)
@@ -287,6 +258,7 @@ theorem tieSel1_rec
 
 
 variable {i r ρ π g0 eB e₁ s Dd} in
+omit hH0Fin in
 theorem tieSel1_rec_loc
     (hD : Formalism.RepresentationBoundsCohomology.ringDataObjects.RingDef (D.nd.O i) (D.nd.T i) (RepresentationBoundsCohomology.repX D.nd r) π (chiU D.nd i 1) (epsU D.nd i) g0 eB e₁ s Dd)
     (hN : RepresentationBoundsCohomology.NormAt D.nd r ρ π)
@@ -323,26 +295,6 @@ section Phi
 
 variable (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.host.E)) (hw : w ∈ placesOver D.host.E (D.nd.l i))
 
-
-set_option synthInstance.maxHeartbeats 400000 in
-theorem phi_injective (k : ℕ) : Function.Injective (Br.phi (D.nbr i w hw) k) := by
-  rw [← LinearMap.ker_eq_bot (τ₁₂ := (D.nbr i w hw).eO.toRingHom), eq_bot_iff]
-  intro x hx
-  obtain ⟨u, rfl⟩ := Submodule.mkQ_surjective _ x
-  rw [LinearMap.mem_ker] at hx
-  rw [Submodule.mem_bot, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-  have h1 : Br.vecS (D.nbr i w hw) k u ∈ stdG (Br.Ow (D.nbr i w hw)) (Br.LLw (D.nbr i w hw)) k := by
-    rw [← Submodule.Quotient.mk_eq_zero]
-    exact hx
-  obtain ⟨c, hc⟩ := h1
-  refine ⟨fun j => (D.nbr i w hw).eO.symm (c j), ?_⟩
-  funext j
-  apply (Br.toLLK (D.nbr i w hw)).injective
-  have := congrFun hc j
-  simp only [LinearMap.compLeft_apply, Function.comp_apply, Algebra.linearMap_apply] at this
-  show Br.toLLK (D.nbr i w hw) (algebraMap _ _ ((D.nbr i w hw).eO.symm (c j))) = Br.toLLK (D.nbr i w hw) (u j)
-  rw [Br.toLLK_alg, RingEquiv.apply_symm_apply]
-  exact this
 
 
 
@@ -410,6 +362,7 @@ variable {D : D7} (i : D.nd.Loc) (dc : TruncatedSeriesCountingIdentities.Decl D 
   (hφ : ∀ g m, φ (uRep (D.nd.O i) (M := M) r χ g m) = Br.WKO i ρ π g (φ m))
 
 
+omit [Algebra (D.nd.O i) A] in
 set_option synthInstance.maxHeartbeats 400000 in
 set_option maxHeartbeats 4000000 in
 theorem bkLoc_col (n : ℕ) (hw : plOf i dc n ∈ placesOver D.host.E (D.nd.l i))
@@ -535,16 +488,25 @@ def psiB {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ placesOver D.host.E
       c * eK (D.nbr i w hw) ((show VB i Dd from v) (H0.e0 a))
     rw [map_mul, RingEquiv.apply_symm_apply]
 
+omit hH0Fin
+  [∀ k, SMulCommClass Dd.R' (D.nd.O i)
+    (blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk D.R) Dd.ρk k)] in
 theorem psiB_apply {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ placesOver D.host.E (D.nd.l i))
     (v : TrV (eK (D.nbr i w hw)) (VB i Dd)) (a : Fin D.R.r) :
     psiB i Dd hw v a = eK (D.nbr i w hw) ((show VB i Dd from v) (H0.e0 a)) := rfl
 
+omit hH0Fin
+  [∀ k, SMulCommClass Dd.R' (D.nd.O i)
+    (blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk D.R) Dd.ρk k)] in
 theorem psiB_cont {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ placesOver D.host.E (D.nd.l i)) :
     Continuous (psiB i Dd hw) :=
   IsModuleTopology.continuous_of_linearMap (psiB i Dd hw)
 
 
 
+omit hH0Fin
+  [∀ k, SMulCommClass Dd.R' (D.nd.O i)
+    (blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk D.R) Dd.ρk k)] in
 theorem psiB_comp {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ placesOver D.host.E (D.nd.l i))
     (v : VB i Dd) :
     Br.phi (D.nbr i w hw) D.R.r (phi0 i Dd (qB i Dd v)) = Submodule.Quotient.mk (psiB i Dd hw v) := by
@@ -570,6 +532,9 @@ variable {D : D7} {i : D.nd.Loc} (dc : TruncatedSeriesCountingIdentities.Decl D 
 
 
 
+omit hH0Fin
+  [∀ k, SMulCommClass Dd.R' (D.nd.O i)
+    (blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk D.R) Dd.ρk k)] in
 theorem psiB_equiv
     (hD : Formalism.RepresentationBoundsCohomology.ringDataObjects.RingDef (D.nd.O i) (D.nd.T i) (RepresentationBoundsCohomology.repX D.nd r) π (chiU D.nd i 1) (epsU D.nd i) g0 eB e₁ s Dd)
     (hN : RepresentationBoundsCohomology.NormAt D.nd r ρ π) (n : ℕ) (hw : plOf i dc n ∈ placesOver D.host.E (D.nd.l i))
@@ -610,6 +575,10 @@ variable {D : D7} (i : D.nd.Loc) (dc : TruncatedSeriesCountingIdentities.Decl D 
   [∀ w, Module (FractionRing (D.nd.O i)) (ReciprocityTheory.Gal.H1 (Dat w).ρT')]
   [∀ w, IsScalarTower (D.nd.O i) (FractionRing (D.nd.O i)) (ReciprocityTheory.Gal.H1 (Dat w).ρT')]
 
+omit hH0Fin [∀ w, IsScalarTower (D.nd.O i) (FractionRing (D.nd.O i)) (VT' w)]
+  [∀ w, IsScalarTower (D.nd.O i) (FractionRing (D.nd.O i)) (ReciprocityTheory.Gal.H1 (Dat w).ρT')]
+  [∀ w, Module (FractionRing (D.nd.O i)) (VT' w)]
+  [∀ w, Module (FractionRing (D.nd.O i)) (ReciprocityTheory.Gal.H1 (Dat w).ρT')] in
 theorem hfW_rep (n : ℕ) [ContinuousConstSMul (FractionRing (D.nd.O i)) (VT n)] (h : ReciprocityTheory.Gal.H1 (Dat n).ρT)
     (hh : h ∈ HfW i dc VT VT' Dat n) :
     ∃ c : ReciprocityTheory.Gal.Z1 (Dat n).ρT,
@@ -638,6 +607,10 @@ theorem hfW_rep (n : ℕ) [ContinuousConstSMul (FractionRing (D.nd.O i)) (VT n)]
 
 
 
+omit hH0Fin [∀ w, IsScalarTower (D.nd.O i) (FractionRing (D.nd.O i)) (VT' w)]
+  [∀ w, IsScalarTower (D.nd.O i) (FractionRing (D.nd.O i)) (ReciprocityTheory.Gal.H1 (Dat w).ρT')]
+  [∀ w, Module (FractionRing (D.nd.O i)) (VT' w)]
+  [∀ w, Module (FractionRing (D.nd.O i)) (ReciprocityTheory.Gal.H1 (Dat w).ρT')] in
 theorem frow_le_col (n : ℕ) [ContinuousConstSMul (FractionRing (D.nd.O i)) (VT n)]
     {M : Type} [AddCommGroup M] [Module (D.nd.O i) M] (ρM : Representation (D.nd.O i) ↥(Γn i dc n) M)
     (u : M ≃ₗ[D.nd.O i] (VT n ⧸ (Dat n).T)) (hu : ∀ g m, u (ρM g m) = (Dat n).ρA g (u m))
@@ -695,6 +668,7 @@ def idV (w : ℕ) :
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
+omit hH0Fin in
 theorem idV_equiv (w : ℕ) (g : decs Ek Aw w) (v : KLat.VT (O := O) bl w) :
     idV bl ρk w ((KLat.Dat r χ bl ρk ε Aw hK hε hM w).ρT g v) =
       resRep (uRep O (M := LatM O (FractionRing O) {a // bl a = 0} (ρk 0).toRingHom) r χ) (decs Ek Aw w) g
@@ -702,6 +676,7 @@ theorem idV_equiv (w : ℕ) (g : decs Ek Aw w) (v : KLat.VT (O := O) bl w) :
   funext a
   exact KLat.matK_mulVec _ _ a
 
+omit hH0Fin in
 theorem uD_symm_mk (w : ℕ) (x : KLat.VT (O := O) bl w) :
     (KLat.uD r χ bl ρk ε Aw hK hε hM w).symm (Submodule.Quotient.mk x) =
       qVM O {a // bl a = 0} (ρk 0).toRingHom (idV bl ρk w x) := by
@@ -751,6 +726,10 @@ def FK (n : ℕ) : Submodule (D.nd.O i) (H1z (rhoM i dc Dd n)) :=
 
 
 
+omit hH0Fin
+  [∀ w, IsScalarTower (D.nd.O i) (FractionRing (D.nd.O i))
+    (ReciprocityTheory.Gal.H1 (DatK i dc Dd hK hε hM w).ρT')]
+  [∀ w, Module (FractionRing (D.nd.O i)) (ReciprocityTheory.Gal.H1 (DatK i dc Dd hK hε hM w).ρT')] in
 theorem fK_le (n : ℕ) : FK i dc Dd hK hε hM n ≤ FcolK i dc Dd n := by
   unfold FK Fρ
   split_ifs
@@ -765,6 +744,10 @@ theorem fK_le (n : ℕ) : FK i dc Dd hK hε hM n ≤ FcolK i dc Dd n := by
 
 
 
+omit hH0Fin
+  [∀ w, IsScalarTower (D.nd.O i) (FractionRing (D.nd.O i))
+    (ReciprocityTheory.Gal.H1 (DatK i dc Dd hK hε hM w).ρT')]
+  [∀ w, Module (FractionRing (D.nd.O i)) (ReciprocityTheory.Gal.H1 (DatK i dc Dd hK hε hM w).ρT')] in
 theorem bkLoc_rec
     (hD : Formalism.RepresentationBoundsCohomology.ringDataObjects.RingDef (D.nd.O i) (D.nd.T i) (RepresentationBoundsCohomology.repX D.nd r) π (chiU D.nd i 1) (epsU D.nd i) g0 eB e₁ s Dd)
     (hN : RepresentationBoundsCohomology.NormAt D.nd r ρ π) :
@@ -775,6 +758,10 @@ theorem bkLoc_rec
     (psiB i Dd hw) (psiB_cont i Dd hw) (psiB_equiv dc hD hN n hw) (psiB_comp i Dd hw) y
     (fK_le i dc Dd hK hε hM n hy)
 
+omit hH0Fin
+  [∀ w, IsScalarTower (D.nd.O i) (FractionRing (D.nd.O i))
+    (ReciprocityTheory.Gal.H1 (DatK i dc Dd hK hε hM w).ρT')]
+  [∀ w, Module (FractionRing (D.nd.O i)) (ReciprocityTheory.Gal.H1 (DatK i dc Dd hK hε hM w).ρT')] in
 theorem tieSel1_K
     (hD : Formalism.RepresentationBoundsCohomology.ringDataObjects.RingDef (D.nd.O i) (D.nd.T i) (RepresentationBoundsCohomology.repX D.nd r) π (chiU D.nd i 1) (epsU D.nd i) g0 eB e₁ s Dd)
     (hN : RepresentationBoundsCohomology.NormAt D.nd r ρ π) :

@@ -13,53 +13,8 @@ public import Mathlib.Algebra.Polynomial.Basic
 public import Mathlib.Algebra.Polynomial.BigOperators
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.PieriRules.KTypeIntDomStatement
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.PieriRules.WeylPos
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
-import Mathlib.Tactic.Polynomial.Basic
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.PieriRules.BlockSum, ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.PieriRules.WeylRatio, ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.PieriRules.WeylVanish, ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.PieriRules.WeylSum
@@ -183,31 +138,8 @@ namespace ReciprocityTheory.ChartRestriction.DS.HW
 open ReciprocityTheory.ChartRestriction.DS ReciprocityTheory.ChartRestriction.DS.S7
 
 theorem weylRatio_rhoC_sub_ge_one {n : ℕ} (ε : Fin n → Bool) {a b : Fin n} (hab : a < b)
-    (he : ε a = ε b) : 1 ≤ rhoC ε a - rhoC ε b := by
-  have h1 : (univ.filter fun x => b < x ∧ ε x = ε b).card + 1 ≤
-      (univ.filter fun x => a < x ∧ ε x = ε a).card := by
-    apply Nat.succ_le_of_lt
-    apply Finset.card_lt_card
-    rw [Finset.ssubset_iff_of_subset]
-    · exact ⟨b, by simp [hab, he], by simp⟩
-    · intro x hx
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hx ⊢
-      exact ⟨hab.trans hx.1, hx.2.trans he.symm⟩
-  have h2 : (univ.filter fun x => x < a ∧ ε x = ε a).card + 1 ≤
-      (univ.filter fun x => x < b ∧ ε x = ε b).card := by
-    apply Nat.succ_le_of_lt
-    apply Finset.card_lt_card
-    rw [Finset.ssubset_iff_of_subset]
-    · exact ⟨a, by simp [hab, he], by simp⟩
-    · intro x hx
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hx ⊢
-      exact ⟨hx.1.trans hab, hx.2.trans he⟩
-  have h1' : ((univ.filter fun x => b < x ∧ ε x = ε b).card : ℝ) + 1 ≤
-      ((univ.filter fun x => a < x ∧ ε x = ε a).card : ℝ) := by exact_mod_cast h1
-  have h2' : ((univ.filter fun x => x < a ∧ ε x = ε a).card : ℝ) + 1 ≤
-      ((univ.filter fun x => x < b ∧ ε x = ε b).card : ℝ) := by exact_mod_cast h2
-  simp only [rhoC]
-  linarith
+    (he : ε a = ε b) : 1 ≤ rhoC ε a - rhoC ε b :=
+  by apply _root_.ReciprocityTheory.ChartRestriction.DS.HW.rhoC_sub_ge_one <;> assumption
 
 theorem weylRatio_prodW {n : ℕ} (ε : Fin n → Bool) (s : Fin n) (h : Fin n → ℝ) :
     ∏ a, ∏ b ∈ univ.filter (fun b => a < b ∧ ε a = ε b),

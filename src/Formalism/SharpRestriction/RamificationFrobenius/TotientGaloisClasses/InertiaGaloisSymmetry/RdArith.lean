@@ -3,51 +3,7 @@ module
 public import Mathlib.Data.Nat.Totient
 public import Mathlib.Data.ZMod.Units
 public import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 public import Mathlib.Algebra.BigOperators.Field
 
@@ -72,13 +28,6 @@ private theorem totient_ne_zero_of_ne_zero {n : ℕ} (hn : n ≠ 0) : n.totient 
   first
   | exact (Nat.totient_pos.mpr (Nat.pos_of_ne_zero hn)).ne'
 
-private theorem isPrimePow_of_dvd_isPrimePow_of_ne_one {n k : ℕ} (hn : IsPrimePow n) (hk : k ∣ n) (hk1 : k ≠ 1) :
-    IsPrimePow k := by
-  rw [isPrimePow_nat_iff] at hn ⊢
-  obtain ⟨q, e, hq, he, rfl⟩ := hn
-  obtain ⟨i, hi, rfl⟩ := (Nat.dvd_prime_pow hq).1 hk
-  exact ⟨q, i, hq, Nat.pos_of_ne_zero (by rintro rfl; exact hk1 (pow_zero q)), rfl⟩
-
 private theorem exists_eq_prime_pow_mul_not_dvd {n p : ℕ} (hn : n ≠ 0) (hp : p.Prime) :
     ∃ v M : ℕ, ¬ p ∣ M ∧ n = p ^ v * M := by
   first
@@ -97,7 +46,7 @@ theorem weight_sum {N m : ℕ} (hN : N ≠ 0) (hm : m ∣ N) (hm1 : m ≠ 1) :
     refine Finset.sum_eq_zero fun m' hm' => ?_
     rw [Finset.mem_filter] at hm'
     have h0 : vonMangoldt m' = 0 :=
-      vonMangoldt_eq_zero_iff.mpr fun h => hpp (isPrimePow_of_dvd_isPrimePow_of_ne_one h hm'.2 hm1)
+      vonMangoldt_eq_zero_iff.mpr fun h => hpp (IsPrimePow.dvd h hm'.2 hm1)
     rw [h0, zero_mul]
   obtain ⟨p, j, hp, hj, rfl⟩ := (isPrimePow_nat_iff _).mp hpp
   have hex : ∃ v M : ℕ, ¬ p ∣ M ∧ N = p ^ v * M := exists_eq_prime_pow_mul_not_dvd hN hp
@@ -173,9 +122,6 @@ theorem weight_sum {N m : ℕ} (hN : N ≠ 0) (hm : m ∣ N) (hm1 : m ≠ 1) :
 
 variable {N : ℕ} [NeZero N]
 
-private theorem natCast_val_zmod_eq_self (x : ZMod N) : ((x.val : ℕ) : ZMod N) = x :=
-  ZMod.natCast_zmod_val x
-
 private theorem intCast_zmod_eq_zero_iff_dvd' (a : ℤ) : ((a : ZMod N) = 0) ↔ (N : ℤ) ∣ a := by
   first
   | exact CharP.intCast_eq_zero_iff (ZMod N) N a
@@ -189,7 +135,7 @@ theorem order_dvd_iff {m : ℕ} (hm : m ∣ N) (u : ZMod N) : addOrderOf (u - 1)
     rw [hd, Nat.mul_div_cancel_left _ (Nat.pos_of_ne_zero hm0)]
   have key : m • (u - 1) = (((m : ℤ) * ((u.val : ℤ) - 1) : ℤ) : ZMod N) := by
     rw [nsmul_eq_mul, Int.cast_mul, Int.cast_natCast, Int.cast_sub, Int.cast_natCast, Int.cast_one,
-      natCast_val_zmod_eq_self]
+      ZMod.natCast_zmod_val]
   have hN : (N : ℤ) = (m : ℤ) * d := by exact_mod_cast hd
   rw [hdm, addOrderOf_dvd_iff_nsmul_eq_zero, key, intCast_zmod_eq_zero_iff_dvd', hN,
     mul_dvd_mul_iff_left (by exact_mod_cast hm0), Nat.modEq_iff_dvd, Nat.cast_one, dvd_sub_comm]

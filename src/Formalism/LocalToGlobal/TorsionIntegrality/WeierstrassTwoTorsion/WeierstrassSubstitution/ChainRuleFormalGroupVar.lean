@@ -9,47 +9,6 @@ public import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.W
 import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.WeierstrassSubstitution.CurveSer
 import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.WeierstrassSubstitution.Laurent
 import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.WeierstrassSubstitution.LogExp
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -107,36 +66,12 @@ theorem iterate_derivative_subst {K : Type u} [Field K] [CharZero K] (W : Weiers
 
 end More
 
-private theorem constantCoeff_powerSeries_subst_eq_zero {R : Type u} [CommRing R] {a : R⟦X⟧} (ha : HasSubst a)
-    (ha0 : constantCoeff a = 0) (g : R⟦X⟧) :
-    constantCoeff (g.subst a) = constantCoeff g := by
-  obtain ⟨h, hh⟩ := (PowerSeries.X_dvd_iff).mpr
-    (show constantCoeff (g - C (constantCoeff g)) = 0 by simp)
-  have hg : g = X * h + (constantCoeff g) • (1 : R⟦X⟧) := by
-    rw [PowerSeries.smul_eq_C_mul, mul_one, ← hh]; ring
-  rw [hg, ← PowerSeries.coe_substAlgHom ha, map_add (f := _), map_mul, map_smul, map_one,
-    PowerSeries.coe_substAlgHom ha, PowerSeries.subst_X ha]
-  simp [ha0, PowerSeries.smul_eq_C_mul]
-
-private theorem factorial_mul_coeff_eq_coeff_zero_iterate_derivative {R : Type u} [CommRing R] (n : ℕ) (g : R⟦X⟧) :
-    (n.factorial : R) * coeff n g = coeff 0 ((derivative (R := R))^[n] g) := by
-  induction n generalizing g with
-  | zero => simp
-  | succ n ih =>
-    rw [Function.iterate_succ_apply, ← ih, PowerSeries.coeff_derivative, Nat.factorial_succ]
-    push_cast
-    ring
-
 theorem jet_integral : JetZ.{u} := by
   intro K _ _ W f n
-  have hE0 : constantCoeff (expSer W) = 0 := by
-    first
-    | exact (expSpec_of integration_spec composition_inverse_spec invariant_differential_units K W).1
-  have hs : HasSubst (expSer W) := by
-    first
-    | exact HasSubst.of_constantCoeff_zero' hE0
-  rw [factorial_mul_coeff_eq_coeff_zero_iterate_derivative, More.iterate_derivative_subst, PowerSeries.coeff_zero_eq_constantCoeff_apply,
-    constantCoeff_powerSeries_subst_eq_zero hs hE0]
+  have hE0 : constantCoeff (expSer W) = 0 :=
+    (expSpec_of integration_spec composition_inverse_spec invariant_differential_units K W).1
+  rw [← constantCoeff_iterate_derivative, More.iterate_derivative_subst]
+  simpa [constantCoeff_eq] using constantCoeff_subst_of_constantCoeff_zero hE0 ((D W)^[n] f)
 
 namespace More
 

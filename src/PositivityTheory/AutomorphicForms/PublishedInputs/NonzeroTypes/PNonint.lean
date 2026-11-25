@@ -1,41 +1,7 @@
 module
 
 public import PositivityTheory.AutomorphicForms.PublishedInputs.NonzeroTypes.NonzeroLeviEigenvectorExists
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Std.Tactic.BVDecide.Normalize.Prop
+import PositivityTheory.AutomorphicForms.PublishedInputs.NonzeroTypes.PJone
 
 @[expose] public section
 
@@ -313,10 +279,6 @@ theorem conj_mat {n : ℕ} (y : GL (Fin n) k) (p q : Fin n) (t : k) :
     ring
   · simp [hpj, Ne.symm hpj]
 
-theorem inPow_zero (c : ℕ) : InPow c (0 : k) := by
-  unfold UpperTheory.TNZ.InPow
-  exact ⟨0, Ideal.zero_mem _, map_zero _⟩
-
 theorem inPow_mul {c c' : ℕ} (hc : c' ≤ c) {z : 𝒪[k]} (hz : z ∈ IsLocalRing.maximalIdeal 𝒪[k] ^ (c - 1))
     {x : k} (hx : valuation k x < 1) : InPow c' ((z : k) * x) := by
   unfold UpperTheory.TNZ.InPow
@@ -379,9 +341,9 @@ theorem memJ_left {n : ℕ} (G : Grp k n) (g : GL (Fin n) k) (q : Fin n) (c : �
     · subst hiq
       by_cases hrj : r j = 0
       · rw [hrj, mul_zero]
-        exact inPow_zero _
+        exact P_Jone.inPow_zero _
       · exact inPow_mul (hcc j hij hrj) hz (hrlt j hij)
-    · exact inPow_zero _
+    · exact P_Jone.inPow_zero _
 
 theorem memJ_right {n : ℕ} (G : Grp k n) (g : GL (Fin n) k) (p : Fin n) (c : ℕ) {z : 𝒪[k]}
     (hz : z ∈ IsLocalRing.maximalIdeal 𝒪[k] ^ (c - 1)) (s : Fin n → k)
@@ -411,9 +373,9 @@ theorem memJ_right {n : ℕ} (G : Grp k n) (g : GL (Fin n) k) (p : Fin n) (c : �
     · subst hjp
       by_cases hsi : s i = 0
       · rw [hsi, mul_zero]
-        exact inPow_zero _
+        exact P_Jone.inPow_zero _
       · exact inPow_mul (hcc i hij hsi) hz (hslt i hij)
-    · exact inPow_zero _
+    · exact P_Jone.inPow_zero _
 
 end P_nonint
 

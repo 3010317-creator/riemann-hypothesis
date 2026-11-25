@@ -4,48 +4,8 @@ public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.CutComponent
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.CutZeroNotLeSt
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.CutNonemptySt
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.CutDimLowerSt
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 public import Mathlib.RingTheory.GradedAlgebra.Radical
 public import Mathlib.RingTheory.KrullDimension.NonZeroDivisors
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -104,22 +64,7 @@ theorem CutComponent.proof (hZ : CutZeroNotLe.Statement.{u, w}) (hE : CutNonempt
       exact hJq (Ideal.mem_sup_right hfZ)
   refine ⟨qq, hq, hqp, hhom, hW.le.trans hppq, ⟨j, hj⟩, ?_⟩
 
-  rw [← WithBot.coe_one, ← WithBot.coe_natCast] at hup
-  generalize ringKrullDim (Poly k N ⧸ qq) = D at hup hlo ⊢
-  induction D using WithBot.recBotCoe with
-  | bot => exact absurd hlo (by simp)
-  | coe D =>
-    induction D using ENat.recTopCoe with
-    | top =>
-      rw [← WithBot.coe_add, WithBot.coe_le_coe, top_add] at hup
-      exact absurd hup (by simp)
-    | coe m =>
-      rw [← WithBot.coe_add, WithBot.coe_le_coe] at hup
-      have h1 : n + 1 ≤ m := by exact_mod_cast hlo
-      have h2 : ((m + 1 : ℕ) : ℕ∞) ≤ ((n + 1 + 1 : ℕ) : ℕ∞) := by exact_mod_cast hup
-      have h3 := Nat.cast_le.mp h2
-      have : m = n + 1 := by omega
-      subst this
-      rfl
+  exact le_antisymm
+    (ENat.WithBot.add_le_add_one_right_iff.mp (hup.trans_eq (Nat.cast_succ (n + 1)))) hlo
 
 end GroundTheory.Heights₂.Heights.Kleiman

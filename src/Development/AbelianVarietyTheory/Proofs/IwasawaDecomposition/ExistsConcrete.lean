@@ -309,16 +309,6 @@ end Ext
 
 section Ties
 
-abbrev RingTie := @Formalism.L2.G.RingCompatibleAt
-
-abbrev LocalIs := @Formalism.L2.G.GatIs
-
-alias standardSub_of_ringTie := Formalism.L2.G.stdSubAt_of_ring
-
-alias localIs_of_hyperspecial := Formalism.L2.G.gatIs_recG
-
-alias ringTie_record := Formalism.L2.G.ringTied_recC
-
 end Ties
 
 section Bridge
@@ -351,8 +341,6 @@ variable (D : D7) (sc : Scale) (Ce : ℝ)
     (epSc D.R sc Ce (D.what₂.places.resChar w))).d = Module.finrank ℂ (D.mem u).A.Mu0)
 
 end Record
-
-abbrev IsConcrete := @Formalism.L2.G.IsRecC
 
 end GlobalTheory.Mem.LocalPack
 end -- clump:auto
@@ -689,7 +677,7 @@ theorem exists_basis_HtupW (G : GAtP p) [IsFractionRing G.O G.Kf] [CharZero G.Kf
     exists_basis_Dl0 hinj G.P.m (lamAt (G.P.lam0 v) s) (lamAt_antitone' _ (G.P.dom v) s) _
       (LatticeSystems.je_extO_lat G v s.val (L v) (hL v))
   choose B b1 b2 using hB
-  have := LatticeSystems.jr_KK G.Kf
+  have := instIsFractionRing (R := G.Kf)
   obtain ⟨hli, -⟩ := tensorBasis G.Kf G.Kf (Σ v : Fin G.P.nV, Fin (G.P.n' v)) (G.P.m + 1) (G.P.m + 1) _
     (fun x => Submodule.span G.Kf (Set.range (B x.1 x.2))) (fun x => B x.1 x.2) (fun x => b1 x.1 x.2) (fun _ => rfl)
   have hli2 := hli.map' (rename (LatticeSystems.jr_psi G) : _ →ₐ[G.Kf] G.P.Xsp).toLinearMap

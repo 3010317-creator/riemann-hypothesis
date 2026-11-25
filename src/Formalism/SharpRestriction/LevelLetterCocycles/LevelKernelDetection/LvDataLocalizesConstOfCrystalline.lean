@@ -9,48 +9,8 @@ public import Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetectio
 public import Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.GaloisActionFrobeniusComm
 public import Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.PfLvEquiv
 public import Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.PfLvRhoC
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Formalism.DistinguishedUnitIdeals.DistinguishedOrderProofs.Graded
 import Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.CrystallineToDeRhamInjective
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.ConstantCoeffPi0EqZeroOfP9ring, Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.RhoFfEqUnitMul, Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.LvDataLocalizesConstOfCrystalline
@@ -185,22 +145,6 @@ theorem comparison_of_reduction {T : LocLat G Qp LL O} (C : Coord W (baseIdOf hR
     rw [h0, lvBasis_cmp_smul_const hz W.π₀ 0 (constantCoeff_pi0_eq_zero_of_p9ring hp9) hm, map_zero, zero_smul]
   rw [hX, add_zero, Finset.sum_congr rfl (fun k _ => hC k)] at hF
   exact hF
-
-theorem gamma_reduction_pi0_pow {T : LocLat G Qp LL O} (C : Coord W (baseIdOf hR) T) (i : ZMod n) (hs1 : W.s = 1)
-    (hp2 : PD.p ≠ 2) (x : C.V) (hx : x ∈ (latOf C).N i) (M : ℕ)
-    (hγ : (latOf C).γ i x - x ∈ E.sm ((PowerSeries.X : PowerSeries O) ^ M) ((latOf C).N i)) :
-    ∃ (y : ↥(W.N T)) (_ : W.γD T W.gam (C.t i x) ∈ W.N T),
-      W.γD T W.gam (C.t i x) - C.t i x = W.π₀ ^ M • (y : W.DD T) := by
-  obtain ⟨z, hz, hzeq⟩ := Submodule.mem_map.1 hγ
-  rw [LinearMap.lsmul_apply] at hzeq
-  have hg : W.gamK = W.gam := W.gamK_eq_one hs1 hp2
-  have h1 : C.t i ((latOf C).γ i x) = W.γD T W.gam (C.t i x) := by rw [t_γ, hg]
-  have h2 : W.γD T W.gam (C.t i x) - C.t i x = W.π₀ ^ M • C.t i z := by
-    rw [← h1, ← C.t_sub, ← hzeq, C.t_smul, map_pow, BaseId.d_X]
-  refine ⟨⟨C.t i z, hz⟩, ?_, h2⟩
-  have h3 : W.γD T W.gam (C.t i x) = W.π₀ ^ M • C.t i z + C.t i x := by rw [← h2]; abel
-  rw [h3]
-  exact (W.N T).add_mem ((W.N T).smul_mem _ hz) hx
 
 end Formalism.MainNotions.N.Ln03.Pf
 end -- clump:auto

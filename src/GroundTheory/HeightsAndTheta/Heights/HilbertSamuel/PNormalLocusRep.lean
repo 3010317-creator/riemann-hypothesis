@@ -5,54 +5,11 @@ public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PLocalRep
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PNmSectionsRational
 public import GroundTheory.HeightsAndTheta.Heights.IntegralModels.FiniteIntegralClosureCharZero
 public import GroundTheory.HeightsAndTheta.Heights.WeightedHomogeneous.PConeTrdeg
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.PiTensorProduct
 import Mathlib.RingTheory.PicardGroup
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.ProjDefs
 
 @[expose] public section
@@ -121,29 +78,15 @@ theorem exists_conductor [CharZero Ω] (y : (Σ k, ι k) → Ω) (hbir : Biratio
   have hb0 : ((b : A) : Ω) ≠ 0 := by
     intro h0
     exact nonZeroDivisors.coe_ne_zero b (Subtype.ext h0)
+  have hle : Submodule.span A (S : Set (integralClosure A Ω)) ≤
+      (LinearMap.range (Algebra.linearMap A Ω)).comap
+        ((LinearMap.mulLeft A ((b : A) : Ω)).comp (integralClosure A Ω).val.toLinearMap) :=
+    Submodule.span_le.mpr fun x hx => by
+      obtain ⟨r, hr⟩ := hb (x : Ω) (Finset.mem_image_of_mem _ hx)
+      exact ⟨r, hr.trans (Algebra.smul_def (b : A) (x : Ω))⟩
   refine ⟨((b : A) : Ω), (b : A).2, hb0, fun t ht => ?_⟩
-  have htop : (⟨t, ht⟩ : integralClosure A Ω) ∈ Submodule.span A (S : Set (integralClosure A Ω)) := by
-    rw [hS]; trivial
-  suffices key : ∀ x ∈ Submodule.span A (S : Set (integralClosure A Ω)), ((b : A) : Ω) * (x : Ω) ∈ A from
-    key _ htop
-  intro x hx
-  set_option synthInstance.maxHeartbeats 200000 in
-  induction hx using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨r, hr⟩ := hb (x : Ω) (Finset.mem_image_of_mem _ hx)
-    rw [show ((b : A) : Ω) * (x : Ω) = (b : A) • (x : Ω) by rw [Algebra.smul_def]; rfl, ← hr]
-    exact r.2
-  | zero => simp
-  | add x z _ _ hx hz =>
-    simp only [Subalgebra.coe_add, mul_add]
-    exact add_mem hx hz
-  | smul r x _ hx =>
-    have : ((b : A) : Ω) * (((r : A) • x : integralClosure A Ω) : Ω) = (r : Ω) * (((b : A) : Ω) * (x : Ω)) := by
-      rw [Subalgebra.coe_smul, Algebra.smul_def]
-      show _ * ((r : Ω) * _) = _
-      ring
-    rw [this]
-    exact mul_mem r.2 hx
+  obtain ⟨r, hr⟩ := hle (hS.symm ▸ Submodule.mem_top (x := (⟨t, ht⟩ : integralClosure A Ω)))
+  exact (show (r : Ω) = ((b : A) : Ω) * t from hr) ▸ r.2
 
 
 omit [Fintype K] in

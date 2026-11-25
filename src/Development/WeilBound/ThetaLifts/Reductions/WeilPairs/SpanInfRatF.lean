@@ -10,47 +10,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardTrac
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StdCharHalfSymplecticFormRealCoordinates
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.ContinuousTheta
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepC
-import Mathlib.Algebra.Module.StablyFree.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.SumFourEqTrace
 
 @[expose] public section
@@ -125,11 +86,6 @@ theorem piWF_iotaVF (hι : IsChartF θ ι) (v : IxF F nS nT → ℂ) : piWF θ (
   funext p
   exact hι.comp _ p.2
 
-theorem piWF_ratWF (C : Ctx σ B JS JT ξ₀ θ ι) (y : Matrix (Fin nT) (Fin nS) E) :
-    piWF θ (ratWF (F := F) y) = infRatF (tauB B) y := by
-  funext p
-  exact PositivityTheory.ThKW.RealC.theta_inc (C.inf p.2) _
-
 theorem finIdem_add_iota (hι : IsChartF θ ι) (x : WOF F E nS nT) : x = finIdem F E • x + iotaVF ι (piWF θ x) := by
   funext i j
   show x i j = finIdem F E * x i j + ι (fun w => θ w (infPartF F E (x i j)))
@@ -175,17 +131,6 @@ theorem infRatF_injective (B : Base F E) : Function.Injective (infRatF (nS := nS
   obtain ⟨w⟩ : Nonempty (InfinitePlace F) := inferInstance
   funext i j
   exact (tauB B w).injective (congrFun hxy ((i, j), w))
-
-theorem sum3 {α β γ M : Type} [Fintype α] [Fintype β] [Fintype γ] [AddCommMonoid M] (f : α → β → γ → M) :
-    ∑ b, ∑ c, ∑ d, f b c d = ∑ d, ∑ c, ∑ b, f b c d :=
-  calc ∑ b, ∑ c, ∑ d, f b c d = ∑ c, ∑ b, ∑ d, f b c d := Finset.sum_comm
-    _ = ∑ c, ∑ d, ∑ b, f b c d := Finset.sum_congr rfl fun _ _ => Finset.sum_comm
-    _ = ∑ d, ∑ c, ∑ b, f b c d := Finset.sum_comm
-
-theorem hOF_trace (x y : WOF F E nS nT) :
-    hOF σ JS JT x y = Matrix.trace (JS⁻¹.map (incAF F E) * (y.map (cAF σ))ᵀ * JT.map (incAF F E) * x) := by
-  simp only [hOF, Matrix.trace, Matrix.diag, Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, Finset.sum_mul]
-  exact Finset.sum_congr rfl fun a _ => sum3 _
 
 theorem symplOF_eq_add (x y : WOF F E nS nT) :
     symplOF σ JS JT ξ₀ x y = symplOHF σ JS JT ξ₀ x y + symplOHF σ JS JT ξ₀ x y := by

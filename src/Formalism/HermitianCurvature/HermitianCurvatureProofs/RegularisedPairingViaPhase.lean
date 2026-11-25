@@ -59,6 +59,7 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
+public import Formalism.SharedLemmas.HpkSq
 
 @[expose] public section
 
@@ -71,7 +72,7 @@ namespace Formalism.FourierDecayAlt.P.B5
 
 open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
+open scoped Matrix.Norms.Elementwise
 
 section basics
 
@@ -457,71 +458,6 @@ theorem _root_.Formalism.FourierDecayAlt.P.phase_function_bound : Formalism.Four
 section calculus
 
 variable {k r : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
-
-private theorem hpk_apply_of_mid_index {k r : ℕ} (i b : Fin (2 * r + k + 1)) (hi : r ≤ i.val ∧ i.val ≤ r + k) :
-    Hpk k r i b = if b = i then (if i.val = r + k then -1 else 1) else 0 := by
-  have e1 : ¬ (i.val < r ∧ i.val + b.val = 2 * r + k) := by omega
-  have e2 : ¬ (b.val < r ∧ i.val + b.val = 2 * r + k) := by omega
-  simp only [Hpk, ite_eq_right e1, ite_eq_right e2]
-  by_cases hb : b = i
-  · subst hb
-    simp [hi.1, hi.2]
-  · have e3 : ¬ (r ≤ i.val ∧ i.val ≤ r + k ∧ i = b) := fun h => hb h.2.2.symm
-    rw [ite_eq_right e3, ite_eq_right hb]
-
-private theorem hpk_apply_of_not_mid_index {k r : ℕ} (i b : Fin (2 * r + k + 1)) (hi : ¬(r ≤ i.val ∧ i.val ≤ r + k)) :
-    Hpk k r i b = if b.val = 2 * r + k - i.val then 1 else 0 := by
-  have hi1 := i.isLt
-  have hb1 := b.isLt
-  have e3 : ¬ (r ≤ i.val ∧ i.val ≤ r + k ∧ i = b) := fun h => hi ⟨h.1, h.2.1⟩
-  by_cases hb : b.val = 2 * r + k - i.val
-  · rw [ite_eq_left hb]
-    by_cases h1 : i.val < r
-    · have e1 : i.val < r ∧ i.val + b.val = 2 * r + k := ⟨h1, by omega⟩
-      simp only [Hpk, ite_eq_left e1]
-    · have e1 : ¬ (i.val < r ∧ i.val + b.val = 2 * r + k) := fun h => h1 h.1
-      have e2 : b.val < r ∧ i.val + b.val = 2 * r + k := by omega
-      simp only [Hpk, ite_eq_right e1, ite_eq_left e2]
-  · rw [ite_eq_right hb]
-    have e1 : ¬ (i.val < r ∧ i.val + b.val = 2 * r + k) := by omega
-    have e2 : ¬ (b.val < r ∧ i.val + b.val = 2 * r + k) := by omega
-    simp only [Hpk, ite_eq_right e1, ite_eq_right e2, ite_eq_right e3]
-
-private theorem hpk_mul_self' {k r : ℕ} : Hpk k r * Hpk k r = 1 := by
-  ext i j
-  rw [Matrix.mul_apply, Matrix.one_apply]
-  have hi1 := i.isLt
-  by_cases hi : r ≤ i.val ∧ i.val ≤ r + k
-  · rw [Finset.sum_eq_single i]
-    · rw [hpk_apply_of_mid_index i i hi, hpk_apply_of_mid_index i j hi, ite_eq_left rfl]
-      by_cases hij : i = j
-      · subst hij
-        rw [ite_eq_left rfl, ite_eq_left rfl]
-        split_ifs <;> norm_num
-      · rw [ite_eq_right (Ne.symm hij), ite_eq_right hij, mul_zero]
-    · intro b _ hb
-      rw [hpk_apply_of_mid_index i b hi, ite_eq_right hb, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
-  · have hn : 2 * r + k - i.val < 2 * r + k + 1 := by omega
-    have hσ : ¬(r ≤ (⟨2 * r + k - i.val, hn⟩ : Fin (2 * r + k + 1)).val ∧
-        (⟨2 * r + k - i.val, hn⟩ : Fin (2 * r + k + 1)).val ≤ r + k) := by
-      show ¬(r ≤ 2 * r + k - i.val ∧ 2 * r + k - i.val ≤ r + k)
-      omega
-    have hσσ : 2 * r + k - (⟨2 * r + k - i.val, hn⟩ : Fin (2 * r + k + 1)).val = i.val := by
-      show 2 * r + k - (2 * r + k - i.val) = i.val
-      omega
-    rw [Finset.sum_eq_single ⟨2 * r + k - i.val, hn⟩]
-    · rw [hpk_apply_of_not_mid_index i _ hi, hpk_apply_of_not_mid_index _ j hσ, ite_eq_left rfl, one_mul, hσσ]
-      by_cases hij : i = j
-      · subst hij
-        simp
-      · rw [ite_eq_right hij, ite_eq_right (fun h => hij (Fin.ext h.symm))]
-    · intro b _ hb
-      have hb' : ¬ b.val = 2 * r + k - i.val := fun h => hb (Fin.ext h)
-      rw [hpk_apply_of_not_mid_index i b hi, ite_eq_right hb', zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
 
 theorem exp_mem {X : Mat k r} (hX : inLie k r X) (t : ℝ) : NormedSpace.exp ((t : ℂ) • X) ∈ GV k r := by
   apply PI.ComplexConjugateDerivative.exp_mem_GV <;> assumption

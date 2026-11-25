@@ -2,7 +2,6 @@ module
 
 import Development.AutomorphicSpectrum.Proofs.MembershipProofs.DenseHasCompactSupport
 import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.RLLieD
-import Mathlib.Analysis.Distribution.SchwartzSpace.CompactSupport
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FinPartIdemMulMemIff
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
@@ -11,60 +10,15 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyCon
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalComponentsNontrivialAdelicCharacter
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
-import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 public import Mathlib.Topology.MetricSpace.ProperSpace.Lemmas
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.Topology.UniformSpace.Uniformizable
 import Std.Tactic.BVDecide.Normalize.Prop
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
 public import Mathlib.Analysis.Calculus.BumpFunction.Basic
 public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-import Mathlib.Topology.Connected.Separation
-import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+public import Development.WeilBound.ThetaLifts.TowerModels.PlaneReal
 
 @[expose] public section
 
@@ -81,7 +35,6 @@ section Param
 variable {P T : Type} [NormedAddCommGroup P] [NormedSpace ℝ P] [FiniteDimensional ℝ P]
   [NormedAddCommGroup T] [NormedSpace ℝ T] [FiniteDimensional ℝ T] [MeasurableSpace T] [BorelSpace T]
 
-
 end Param
 
 section Torus
@@ -95,9 +48,6 @@ variable {V T : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensio
 include h𝓕 hS hν
 
 def ch (B : V →L[ℝ] T →L[ℝ] ℝ) (l : V) (t : T) : ℂ := Complex.exp (2 * Real.pi * Complex.I * (B l t : ℝ))
-
-
-
 
 end Torus
 
@@ -155,7 +105,6 @@ theorem trace_emb (a : F) : Algebra.trace ℝ (mixedSpace F) (mixedEmbedding F a
 
 variable {κ : Type} [Fintype κ]
 
-
 end PositivityTheory.Member.ZakTransform.Z
 end
 end
@@ -172,7 +121,6 @@ open NumberField.mixedEmbedding GlobalTheory.IndefiniteRowSideFullHecke.WeilTens
 section Coord
 
 variable {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
-
 
 end Coord
 
@@ -197,7 +145,6 @@ open Filter Topology
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
   {ψ : AddChar k ℂ} {κ : Type} [Fintype κ]
-
 
 variable [Invertible (2 : k)]
 
@@ -225,9 +172,7 @@ open GlobalTheory.SplitWeil hiding SB
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
-
 end LocD
-
 
 end PositivityTheory.Member.ZakTransform
 end
@@ -244,22 +189,6 @@ namespace S
 section Real
 open Complex
 open scoped Real ContDiff
-
-theorem hadamard_lemma : ∀ (n : ℕ) (f : (Fin n → ℝ) → ℂ), ContDiff ℝ ∞ f → f 0 = 0 → ∃ g : Fin n → (Fin n → ℝ) → ℂ, (∀ i, ContDiff ℝ ∞ (g i)) ∧ ∀ x, f x = ∑ i, (x i : ℂ) * g i x :=
-  GlobalTheory.CompanionTheory.DiracComb.hadamard_lemma
-
-theorem dense_hasCompactSupport : ∀ (n : ℕ), Dense {f : SchwartzMap (Fin n → ℝ) ℂ | HasCompactSupport (f : (Fin n → ℝ) → ℂ)} :=
-  fun _ => SchwartzMap.dense_hasCompactSupport
-
-theorem exists_quot : ∃ q : ℝ → ℂ, ContDiffOn ℝ ∞ q (Metric.ball 0 1) ∧
-    ∀ t ∈ Metric.ball (0 : ℝ) 1, (t : ℂ) = (cexp (2 * π * I * t) - 1) * q t :=
-  GlobalTheory.CompanionTheory.DiracComb.exists_quot
-
-theorem exists_div (n : ℕ) (f : SchwartzMap (Fin n → ℝ) ℂ)
-    (hf : tsupport (f : (Fin n → ℝ) → ℂ) ⊆ Metric.ball 0 1) (h0 : f 0 = 0) :
-    ∃ g : Fin n → SchwartzMap (Fin n → ℝ) ℂ, (∀ i, HasCompactSupport (g i : (Fin n → ℝ) → ℂ)) ∧
-      ∀ x, f x = ∑ i, (cexp (2 * π * I * x i) - 1) * g i x :=
-  GlobalTheory.CompanionTheory.DiracComb.exists_div n f hf h0
 
 theorem zero_of_ball (n : ℕ) (T : SchwartzMap (Fin n → ℝ) ℂ →L[ℂ] ℂ)
     (hχ : ∀ (i : Fin n) (f g : SchwartzMap (Fin n → ℝ) ℂ), (∀ x, g x = cexp (2 * π * I * x i) * f x) → T g = T f)
@@ -846,7 +775,6 @@ theorem lift_one (Φ : (κ → AF F) → ℂ) : lift v 1 Φ = Φ := funext fun x
   rw [lift_apply]
   exact congrArg Φ (funext fun i => off_add_at v _)
 
-
 variable (v) in
 def psv (ψ : AddChar (AF F) ℂ) : AddChar (Fv F v) ℂ := ψ.compAddMonoidHom (atPlace v).toAddMonoidHom
 
@@ -856,10 +784,8 @@ scoped instance invTwoV : Invertible (2 : Fv F v) :=
   ⟨evFin F v (⅟2), by rw [← map_ofNat (evFin F v) 2, ← map_mul, invOf_mul_self, map_one],
     by rw [← map_ofNat (evFin F v) 2, ← map_mul, mul_invOf_self, map_one]⟩
 
-
 variable (v) in
 def evP (w : (κ → AF F) × (κ → AF F)) : (κ → Fv F v) × (κ → Fv F v) := (fun i => evFin F v (w.1 i), fun i => evFin F v (w.2 i))
-
 
 variable (v) in
 def offP (w : (κ → AF F) × (κ → AF F)) : (κ → AF F) × (κ → AF F) := (fun i => off v (w.1 i), fun i => off v (w.2 i))
@@ -936,15 +862,9 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
   {v : HeightOneSpectrum (𝓞 F)}
 
 theorem hasSig_det {n r s : ℕ} {M : Matrix (Fin n) (Fin n) ℂ} (h : HasSig M r s) : M.det ≠ 0 := by
-  obtain ⟨rfl, A, hA⟩ := h
-  intro h0
-  have e : (A.submatrix id finSumFinEquiv.symm)ᵀ * M * (A.map star).submatrix id finSumFinEquiv.symm =
-      (fromBlocks 1 0 0 (-1) : Matrix (Fin r ⊕ Fin s) (Fin r ⊕ Fin s) ℂ).submatrix finSumFinEquiv.symm finSumFinEquiv.symm := by
-    rw [← hA]; rfl
-  have := congrArg det e
-  rw [det_mul, det_mul, h0, det_submatrix_equiv_self, det_fromBlocks_zero₂₁, det_neg] at this
-  simp only [mul_zero, zero_mul, det_one, one_mul, mul_one] at this
-  exact pow_ne_zero _ (neg_ne_zero.2 one_ne_zero) this.symm
+  first
+  | exact _root_.PositivityTheory.ThKG.Tow.Pln.det_ne_zero_of_hasSig
+  | (apply _root_.PositivityTheory.ThKG.Tow.Pln.det_ne_zero_of_hasSig <;> assumption)
 
 theorem hTens_tr {R E : Type} [CommRing R] [CommRing E] [Algebra R E] (c : E →ₐ[R] E) {α β : Type} [Fintype α] [Fintype β]
     (JA : Matrix α α E) (JB : Matrix β β E) (x y : Matrix α β E) :
@@ -998,7 +918,6 @@ theorem ev_trace (h : IsCMExt F E σ) (t : E →ₐ[F] Fv F v) (z : AE F E) :
   | tmul a x =>
     rw [trace_tmul, map_mul, AlgHom.commutes, piW_tmul, piW_tmul, ← t.commutes, trace_cm h, map_add (f := _), mul_add]
     rfl
-
 
 variable (v) in
 def ep : AF F := atPlace v 1
@@ -1106,8 +1025,6 @@ variable {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ] {v : Heig
 
 theorem cont_at : Continuous (atPlace (F := F) v) := continuous_const.prodMk (continuous_singleFin v)
 
-
-
 open Classical in
 theorem exists_bump : ∃ f : SInf F κ, HasCompactSupport f ∧ f 0 = 1 := by
   let b : ContDiffBump (0 : κ → mixedEmbedding.mixedSpace F) := ⟨1, 2, one_pos, one_lt_two⟩
@@ -1147,7 +1064,6 @@ theorem sub_mem {n d : ℕ} (γ : GL (Fin n) (Fv F v)) {f : Matrix (Fin n) (Fin 
       continuous_invFun := continuous_const.matrix_mul continuous_id }
   exact ⟨hf.1.comp_continuous h.continuous, hf.2.comp_homeomorph h⟩
 
-
 end Gen
 
 section PartB
@@ -1172,8 +1088,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation (skewGram mulG c
 open Formalism.IndefR.Datum.Brg (GG GI cA_inc GG_herm GI_GG)
 open scoped ContDiff
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7}
 
 end PartA
@@ -1181,8 +1095,6 @@ end PartA
 section Datum
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.MainNotions.StandardLattice GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.StdFrames
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation (boxB IsDatumB)
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 end Datum
 
@@ -1195,4 +1107,4 @@ open IsDedekindDomain NumberField MeasureTheory Matrix
 open scoped TensorProduct
 open GlobalTheory.FunObj GlobalTheory.ChiGrid GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.StdFrames Formalism.L2.DIV
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
+attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField

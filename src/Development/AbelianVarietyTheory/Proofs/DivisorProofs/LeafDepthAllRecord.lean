@@ -114,7 +114,7 @@ import Formalism.SharpRestriction.CuspSpanNormBounds.Point
 import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
 
 -- This file was produced by scripts/clump.py from the modules listed below.
--- Members: Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthDataExistsAtPointsProof, Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthDataExistsAtPointsProofStatement, Development.AbelianVarietyTheory.Proofs.JetHarmonics.LargePrimeDepthDataExistsAtPointsProof, Development.AbelianVarietyTheory.Proofs.JetHarmonics.SplitPrimeDepthDataExistsAtPointsProof, Development.AbelianVarietyTheory.Proofs.JetHarmonics.AllGoodPrimeDepthDataExistProof, Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsIntegralChartIntegralFramedPointStatement, Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlaceWeightRowGapMulBoundsSize, Development.AbelianVarietyTheory.Proofs.JetHarmonics.WeightRestDegreeAfterGapsBounds, Development.AbelianVarietyTheory.Proofs.JetHarmonics.GoodPrimeWeightHypothesesOfDepthParameters, Development.AbelianVarietyTheory.Proofs.JetHarmonics.ComapLiesOver, Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlacesMatchCmTypeFrobeniusOfParameters, Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthLeafGoodPrimesOfPointData, Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthTableGoodPrimesOfChartForm, Development.AbelianVarietyTheory.Proofs.JetHarmonics.KLeSubOneOfLt, Development.AbelianVarietyTheory.Proofs.JetHarmonics.SprimeNonnegTwo, Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthAtTwoOfUnscaledDepthBound, Development.AbelianVarietyTheory.Proofs.JetHarmonics.SizesBoundAtTwoFirstRowsWeights, Development.AbelianVarietyTheory.Proofs.JetHarmonics.LeafDepth2Run, Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthParamsPlusMinusCountsEqKappa, Development.AbelianVarietyTheory.Proofs.JetHarmonics.RamificationIndexGeOfResCharDvdLevel, Development.AbelianVarietyTheory.Proofs.JetHarmonics.LeafDepthLevelRun, Development.AbelianVarietyTheory.Proofs.JetHarmonics.LeafDepthAllRun, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeafDepthAllRecord
+-- Members: Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthDataExistsAtPointsProof, Development.AbelianVarietyTheory.Proofs.JetHarmonics.LargePrimeDepthDataExistsAtPointsProof, Development.AbelianVarietyTheory.Proofs.JetHarmonics.SplitPrimeDepthDataExistsAtPointsProof, Development.AbelianVarietyTheory.Proofs.JetHarmonics.AllGoodPrimeDepthDataExistProof, Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlaceWeightRowGapMulBoundsSize, Development.AbelianVarietyTheory.Proofs.JetHarmonics.WeightRestDegreeAfterGapsBounds, Development.AbelianVarietyTheory.Proofs.JetHarmonics.GoodPrimeWeightHypothesesOfDepthParameters, Development.AbelianVarietyTheory.Proofs.JetHarmonics.ComapLiesOver, Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlacesMatchCmTypeFrobeniusOfParameters, Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthLeafGoodPrimesOfPointData, Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthTableGoodPrimesOfChartForm, Development.AbelianVarietyTheory.Proofs.JetHarmonics.KLeSubOneOfLt, Development.AbelianVarietyTheory.Proofs.JetHarmonics.SprimeNonnegTwo, Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthAtTwoOfUnscaledDepthBound, Development.AbelianVarietyTheory.Proofs.JetHarmonics.SizesBoundAtTwoFirstRowsWeights, Development.AbelianVarietyTheory.Proofs.JetHarmonics.LeafDepth2Run, Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthParamsPlusMinusCountsEqKappa, Development.AbelianVarietyTheory.Proofs.JetHarmonics.RamificationIndexGeOfResCharDvdLevel, Development.AbelianVarietyTheory.Proofs.JetHarmonics.LeafDepthLevelRun, Development.AbelianVarietyTheory.Proofs.JetHarmonics.LeafDepthAllRun, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeafDepthAllRecord
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthDataExistsAtPointsProof =====
 -- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthDataExistsAtPointsProof", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmEmbeddingsIntegralAndDistinctModMaximal\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsClosedCompleteFieldOverPlace\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIdempotentFrobeniusOrbitUnramified\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlaceLabellingInertFrobeniusNotConj\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RestDegAdd\npublic import Development.AbelianVarietyTheory.Definitions.Jets.IsSelfOf\npublic import Formalism.LocalToGlobal.ProjectiveLattices.ConjNeSelfOfCM\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RowDataSuppliedAtPairsOfPlaces\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SupplyExtend\npublic import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CmHostIdempotentTraceEqOne\npublic import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsCanonGaugeMapFB\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
@@ -137,7 +137,7 @@ theorem not_inPsi_conjugate {E : Type} [Field E] [NumberField E] [IsCMField E] (
   rw [hr] at e3
   have e4 : r ^ 2 = -(H.d : ℝ) := by exact_mod_cast e3
   have : (0 : ℝ) < H.d := by exact_mod_cast H.d_prime.pos
-  nlinarith [sq_nonneg r]
+  linarith [sq_nonneg r]
 
 theorem zero_eq_bg_iff {d : ℕ} [NeZero d] (s : ZMod d) : (0 : Fin 2) = RF.bg s ↔ Even s.val := by
   unfold RF.bg
@@ -219,21 +219,6 @@ end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthDataExistsAtPointsProof =====
 
--- ===== clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthDataExistsAtPointsProofStatement =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthDataExistsAtPointsProofStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthDataExistsAtPointsProof\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
-section -- clump:auto
-@[expose] public section
-
-open scoped BigOperators TensorProduct
-open Classical NumberField IsDedekindDomain Formalism.L2.FormalSeriesBounds Formalism.IncomingBounds Formalism.L2.Pj Formalism.L2.DIV Formalism.BasicNotions GlobalTheory.RowLaw GlobalTheory.RowAt GlobalTheory.GoodDepth
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
-
-theorem _root_.GlobalTheory.T.inertPrimeDepthDataExistsAtPoints_proof : (∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF.UpFSt p) → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (lv : Level H) (Xo : Moduli Dw lv) (c : Coeff lv) [StarRing (𝓞 E)], PkgInertSt Xo c := by
-  first | exact @GlobalTheory.InertPackage.pkgInert
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthDataExistsAtPointsProofStatement =====
-
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.LargePrimeDepthDataExistsAtPointsProof =====
 -- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.JetHarmonics.LargePrimeDepthDataExistsAtPointsProof", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Jets.IsSelfOf\npublic import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF\npublic import Formalism.LocalToGlobal.CharacterGerms.HostTraceIdentity\npublic import Mathlib.NumberTheory.NumberField.Discriminant.Defs\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmEmbeddingsIntegralAndDistinctModMaximal\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmTypeFrobeniusOrbitsLabelAtSplitPrime\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsClosedCompleteFieldOverPlace\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIdempotentFrobeniusOrbitUnramified\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.GapParts\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlaceLabellingInertFrobeniusNotConj\npublic import Formalism.LocalToGlobal.ProjectiveLattices.ConjNeSelfOfCM\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RowDataSuppliedAtPairsOfPlaces\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SupplyExtend\npublic import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CmHostIdempotentTraceEqOne\npublic import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsCanonGaugeMapFB\npublic import Formalism.LocalRingCardinality.HostCls\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
 section -- clump:auto
@@ -255,7 +240,7 @@ theorem not_inPsi_conj {E : Type} [Field E] [NumberField E] [IsCMField E] (H : R
   rw [hr] at e
   have e4 : r ^ 2 = -(H.d : ℝ) := by exact_mod_cast e
   have : (0 : ℝ) < H.d := by exact_mod_cast H.d_prime.pos
-  nlinarith [sq_nonneg r]
+  linarith [sq_nonneg r]
 
 theorem pkg_of_supply (P : RF.Par) (l : ℕ) {C : Type} [Field C] (V : VF C) (hV : V.l = l) (Z : Finset P.Pl)
     (hZ : RF.IsReps P Z) (hw : ∀ z, 0 ≤ P.w z) (big : P.Pl → Fin 2 → ZMod P.d → Prop)
@@ -409,7 +394,7 @@ theorem not_inPsi_conjugate {E : Type} [Field E] [NumberField E] [IsCMField E] (
   rw [hr] at e3
   have e4 : r ^ 2 = -(H.d : ℝ) := by exact_mod_cast e3
   have : (0 : ℝ) < H.d := by exact_mod_cast hd
-  nlinarith [sq_nonneg r]
+  linarith [sq_nonneg r]
 
 theorem pkgSplit : (∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF.UpFSt p) → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (lv : Level H) (Xo : Moduli Dw lv) (c : Coeff lv) [StarRing (𝓞 E)], PkgSplitSt Xo c := by
   intro hU E _ _ _ H Dw lv Xo c _ hstar N j pl a hj1 hjm hpl hp hq hdom la h2 hq' hd' hM _ T io e hov y hy C3 nW ν hν
@@ -484,7 +469,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.SplitPrimeDepthDataExistsAtPointsProof =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.AllGoodPrimeDepthDataExistProof =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.JetHarmonics.AllGoodPrimeDepthDataExistProof", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthDataExistsAtPointsProofStatement\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LargePrimeDepthDataExistsAtPointsProof\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PackagesExistFrobeniusComplexConjugation\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SplitPrimeDepthDataExistsAtPointsProof\npublic import Development.AutomorphicArithmetic.OrbitLabellings.ExistsPkgCsOfDegreeBoundAtInertPrimes\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.JetHarmonics.AllGoodPrimeDepthDataExistProof", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthDataExistsAtPointsProof\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LargePrimeDepthDataExistsAtPointsProof\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PackagesExistFrobeniusComplexConjugation\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SplitPrimeDepthDataExistsAtPointsProof\npublic import Development.AutomorphicArithmetic.OrbitLabellings.ExistsPkgCsOfDegreeBoundAtInertPrimes\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -499,7 +484,7 @@ theorem goodPrime_packages :
       ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H)
         (lv : Level H) (Xo : Moduli Dw lv) (c : Coeff lv) [StarRing (𝓞 E)], PkgSt Xo c := by
   intro hU E _ _ _ H Dw lv Xo c _
-  exact ⟨GlobalTheory.T.inertPrimeDepthDataExistsAtPoints_proof hU E H Dw lv Xo c, (_root_.GlobalTheory.PkgConj.packages_conj hU E H Dw lv Xo c).1, _root_.GlobalTheory.SplitPackage.pkgSplit hU E H Dw lv Xo c,
+  exact ⟨_root_.GlobalTheory.InertPackage.pkgInert hU E H Dw lv Xo c, (_root_.GlobalTheory.PkgConj.packages_conj hU E H Dw lv Xo c).1, _root_.GlobalTheory.SplitPackage.pkgSplit hU E H Dw lv Xo c,
     _root_.GlobalTheory.LargePkg.pkgZero hU E H Dw lv Xo c, (_root_.GlobalTheory.PkgConj.packages_conj hU E H Dw lv Xo c).2,
     (UpperTheory.exists_pkgCs_of_degree_bound_at_inert_primes hU E H Dw lv Xo c).1, (UpperTheory.exists_pkgCs_of_degree_bound_at_inert_primes hU E H Dw lv Xo c).2⟩
 
@@ -507,23 +492,6 @@ end GlobalTheory
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.AllGoodPrimeDepthDataExistProof =====
-
--- ===== clump member: Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsIntegralChartIntegralFramedPointStatement =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsIntegralChartIntegralFramedPointStatement", "h": "module\n\npublic import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermCut\npublic import Formalism.LocalToGlobal.ProjectiveLattices.PlaceBelow\npublic import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsIntegralChartIntegralFramedPoint\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
-section -- clump:auto
-@[expose] public section
-
-open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj Formalism.MainNotions.ModuliIntegralCharts.H1
-attribute [local instance] Over.cartesianMonoidalCategory
-open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ (PS Pt ev pt comp1 FGLaw)
-open MvPolynomial (X)
-
-theorem _root_.GlobalTheory.T.exists_integral_chart_integral_framed_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], IntegralChartExists Xo c ∧ ((∀ a : 𝓞 E, star a = H.bar a) → IntChartEx Xo c) ∧ ((∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io), ∃ C : IntegralChartA3 Xo c T io y, FrTrunc C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.eT) := by
-  first | exact @GlobalTheory.IntChartExists.intChart_exists
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsIntegralChartIntegralFramedPointStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlaceWeightRowGapMulBoundsSize =====
 -- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlaceWeightRowGapMulBoundsSize", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq\npublic import Development.AbelianVarietyTheory.Definitions.Jets.CmQuadraticFormEqAlternatingForm\npublic import Development.AbelianVarietyTheory.Counterexamples.JetSurvey.OrientationExclusive\npublic import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension\npublic import Formalism.LocalToGlobal.LatticeGeometry.CmTypeMeetsConjugatePair\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\n\n"}
@@ -573,7 +541,7 @@ theorem real_bounds {T Dd G y w η t S S' η' w2 x : ℝ} (hT : 40 * (Dd + 2) �
   have hT0 : 0 < T := by linarith
   have htη0 : 0 < t * η := mul_pos (by linarith) (by linarith)
   have h4 : t * η * x ≤ w2 := (le_div_iff₀ (by linarith)).1 h3
-  have h5 : t * η ≤ w := by nlinarith
+  have h5 : t * η ≤ w := (le_mul_of_one_le_right htη0.le hx.le).trans (h4.trans hw)
   constructor
   · have e : (1 - (Dd + 4) / T) * w = (T - Dd - 4) * w / T := by field_simp; ring
     rw [e, div_le_iff₀ hT0]
@@ -584,9 +552,9 @@ theorem real_bounds {T Dd G y w η t S S' η' w2 x : ℝ} (hT : 40 * (Dd + 2) �
     have a4 : T * T ≤ t * η := mul_le_mul hTt (by linarith) hT0.le (by linarith)
     have a5 : 0 ≤ (Dd + 2) * η := mul_nonneg (by linarith) (by linarith)
     have a6 : 0 ≤ (Dd + 2) ^ 2 := by positivity
-    nlinarith
+    grind
   · have a1 : 0 ≤ (Dd + 2) * G := by positivity
-    nlinarith
+    linarith
 
 theorem le_two_floor {a : ℝ} (h : 1 ≤ a) : a ≤ 2 * (⌊a⌋₊ : ℝ) := by
   have h1 : (1 : ℝ) ≤ (⌊a⌋₊ : ℝ) := by exact_mod_cast (Nat.one_le_floor_iff a).2 h
@@ -702,13 +670,12 @@ theorem gap_bounds : ∀ (D : D7) (L : SizeData₂ D) (Pm : ParameterChoice' D L
     (by exact_mod_cast TO_le_t Tp) Pm.t_le_eta Pm.teta L.sc.one_lt_alt hw ?_ ?_ ?_
   · rw [L.Sc_eq]
     show _ ≤ 2 * ((D.R.k : ℝ) * (4 * ((⌊(D.s.Del : ℝ)⌋₊ : ℕ) : ℝ)))
-    have : (0 : ℝ) ≤ D.R.k := Nat.cast_nonneg _
-    nlinarith
+    linarith [mul_le_mul_of_nonneg_left hDel (mul_nonneg (Nat.cast_nonneg (α := ℝ) D.R.k) (by norm_num : (0 : ℝ) ≤ 4))]
   · unfold NumDatum.Sc; positivity
   · show _ ≤ 2 * ((D.R.m : ℝ) * ((⌊LevelStarExponents.h0 L⌋₊ : ℕ) : ℝ))
     have e : L.etaSz = D.R.m * LevelStarExponents.h0 L := by unfold LevelStarExponents.h0; field_simp
     rw [e]
-    nlinarith
+    linarith [mul_le_mul_of_nonneg_left hh hmR.le]
 
 end GlobalTheory.GoodDepth.Gap
 end -- clump:auto
@@ -752,7 +719,7 @@ theorem floor_le (T T' : ℕ) (hT : T ≤ T') (hT' : 0 < T') (c c' : ℤ) (h0 : 
   · rw [Int.toNat_of_nonpos h]; simpa using h0
   · rw [Int.toNat_of_nonneg h]
     have := Int.mul_ediv_self_le (x := c) hp.ne'
-    nlinarith
+    exact (mul_le_mul_of_nonneg_right hT2 h).trans (this.trans hc)
 
 theorem step {p : ℕ} (T : ℕ) (g κ : Fin p → ℕ) (h : ∀ i, (T : ℤ) * g i ≤ WeightAlgebra.gapZ κ i + 2) (i : ℕ) :
     (T : ℝ) * ((ext0 (ofGaps g) i : ℝ) - ext0 (ofGaps g) (i + 1)) ≤ (ext0 κ i : ℝ) - ext0 κ (i + 1) + 2 := by
@@ -805,7 +772,7 @@ theorem rest_bounds (A : ℕ → ℝ) (hA : Antitone A) (h0 : ∀ i, 0 ≤ A i) 
   simp only [nsmul_eq_mul] at a1 a2 a3
   push_cast at a1 a2
   have a5 : 0 ≤ ((n : ℝ) + 1) * A (n + 1) := mul_nonneg (by positivity) (h0 _)
-  constructor <;> nlinarith
+  constructor <;> grind
 
 section Place
 
@@ -933,7 +900,7 @@ theorem restAt_bounds (hj : InR D j) (τ : D.what₂.Tau) :
       (mul_le_mul_of_nonneg_right c3 (by linarith))
   have v1 := mul_le_mul_of_nonneg_left r2 hT
   have v2 := mul_le_mul_of_nonneg_left m1 hT
-  nlinarith
+  grind
 
 theorem le_two_floor {x : ℝ} (h : 1 ≤ x) : 1 ≤ (⌊x⌋₊ : ℝ) ∧ x ≤ 2 * (⌊x⌋₊ : ℝ) := by
   have h1 : 1 ≤ ⌊x⌋₊ := Nat.le_floor (by exact_mod_cast h)
@@ -947,15 +914,15 @@ theorem sizes_le : L.Sc ≤ 2 * (numOf D L).Sc ∧ L.etaSz ≤ 2 * (numOf D L).e
   have ht : (0 : ℝ) ≤ D.R.t := Nat.cast_nonneg _
   have hk : (0 : ℝ) ≤ D.R.k := Nat.cast_nonneg _
   have hm : (0 : ℝ) < D.R.m := by exact_mod_cast (by have := D.R.two_le_m; omega : 0 < D.R.m)
-  obtain ⟨d1, d2⟩ := le_two_floor (x := ((D.s.Del : ℚ) : ℝ)) (by have := Tp.Del_TO; nlinarith)
-  obtain ⟨-, e2⟩ := le_two_floor (x := LevelStarExponents.h0 L) (by have := Tp.heightBound_ge_order_sq; nlinarith)
+  obtain ⟨d1, d2⟩ := le_two_floor (x := ((D.s.Del : ℚ) : ℝ)) ((one_le_pow₀ hT).trans Tp.Del_TO)
+  obtain ⟨-, e2⟩ := le_two_floor (x := LevelStarExponents.h0 L) (by linarith [Tp.heightBound_ge_order_sq, one_le_pow₀ (n := 2) hT])
   have e3 : L.etaSz = D.R.m * LevelStarExponents.h0 L := by unfold LevelStarExponents.h0; field_simp
   have x1 : (numOf D L).Sc = D.R.k * (4 * (⌊((D.s.Del : ℚ) : ℝ)⌋₊ : ℝ)) := rfl
   have x2 : (numOf D L).eta = D.R.m * (⌊LevelStarExponents.h0 L⌋₊ : ℝ) := rfl
   rw [x1, x2, L.Sc_eq]
-  refine ⟨by nlinarith, ?_, by nlinarith⟩
+  refine ⟨by linarith [mul_le_mul_of_nonneg_left d2 (mul_nonneg hk (by norm_num : (0 : ℝ) ≤ 4))], ?_, by linarith [mul_le_mul_of_nonneg_left (show (1 : ℝ) ≤ 4 * (⌊((D.s.Del : ℚ) : ℝ)⌋₊ : ℝ) by linarith) hk]⟩
   rw [e3]
-  nlinarith
+  linarith [mul_le_mul_of_nonneg_left e2 hm.le]
 
 end Place
 
@@ -1046,7 +1013,7 @@ theorem goodPage_run : ∀ (D : D7) (L : SizeData₂ D) (Pm : ParameterChoice' D
     rw [← mul_div_assoc, div_le_iff₀ hTpos]
     have hD : (1 : ℝ) ≤ Tp.Dp := by exact_mod_cast hDp
     have hk : (1 : ℝ) ≤ D.R.k := by exact_mod_cast (by omega : 1 ≤ D.R.k)
-    nlinarith [mul_nonneg (sub_nonneg.2 hD) (sub_nonneg.2 hk)]
+    linarith [mul_nonneg (sub_nonneg.2 hD) (sub_nonneg.2 hk)]
   · refine le_trans ?_ Tp.nW_win.1
     show 10 * (D.R.r : ℝ) * (D.R.f + (D.R.f : ℝ) ^ 2 * ((D.R.k : ℝ) - 1) ^ 3 * L.sc.L ^ 2 / D.R.m) ≤ _
     unfold LevelStarExponents.nW
@@ -1264,7 +1231,7 @@ theorem placeTie_of_pins : ∀ (D : D7) (L : SizeData₂ D) (T : Core D), T.Q.Pi
             rw [hx] at hs
             have hs' : x ^ 2 = -(T.Q.H.d : ℝ) := by exact_mod_cast hs
             have hd : (0 : ℝ) < T.Q.H.d := by exact_mod_cast T.Q.H.d_prime.pos
-            nlinarith [sq_nonneg x]
+            linarith [sq_nonneg x]
           apply hc
           calc star T.Q.H.rt0 = star (τ (T.Q.H.rt : D.host.E)) := by rw [hτ']
             _ = τ (D.host.conj (T.Q.H.rt : D.host.E)) := h4.symm
@@ -1288,7 +1255,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlacesMatchCmTypeFrobeniusOfParameters =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthLeafGoodPrimesOfPointData =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthLeafGoodPrimesOfPointData", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq\npublic import Development.AbelianVarietyTheory.Definitions.Jets.CmQuadraticFormEqAlternatingForm\npublic import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsIntegralChartIntegralFramedPointStatement\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthTableGoodPrimeLeaf\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FirstRowsBoundAndSizesBounds\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.GoodPrimeWeightHypothesesOfDepthParameters\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlacesMatchCmTypeFrobeniusOfParameters\npublic import Formalism.LocalToGlobal.ProjectiveLattices.PartitionExtendByZeroAntitone\npublic import Formalism.LocalToGlobal.ProjectiveLattices.ThProps\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WeightExponentsEmbeddingsDegree\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthLeafGoodPrimesOfPointData", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq\npublic import Development.AbelianVarietyTheory.Definitions.Jets.CmQuadraticFormEqAlternatingForm\npublic import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermCut\npublic import Formalism.LocalToGlobal.ProjectiveLattices.PlaceBelow\npublic import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsIntegralChartIntegralFramedPoint\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthTableGoodPrimeLeaf\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FirstRowsBoundAndSizesBounds\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.GoodPrimeWeightHypothesesOfDepthParameters\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlacesMatchCmTypeFrobeniusOfParameters\npublic import Formalism.LocalToGlobal.ProjectiveLattices.PartitionExtendByZeroAntitone\npublic import Formalism.LocalToGlobal.ProjectiveLattices.ThProps\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WeightExponentsEmbeddingsDegree\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1349,7 +1316,7 @@ theorem leafGood_run : ∃ C0 : ℝ, ∀ (D : D7) (L : SizeData₂ D) (Pm : Para
   refine hC0 D.host.E T.Q.H T.Q.l T.Q.Dw T.Q.Xo T.Q.c (depOf T EX Tp hK) K Bs Df S P oc O ι Nm (numOf D L)
     (fun z => DV.tauEmb D (plOf D z)) hC R.E_eq R.σ_eq R.T_eq ⟨R.jets_eq_fact, R.g2_eq, R.cmQuadraticForm_eq_alternatingForm, R.dd_eq, R.sm_eq⟩
     (piSplit_depDataOf ..) (levelQ_depDataOf _ _ _ _ _ _ _ _ _ hT) R.star_eq
-    (fun j => (GlobalTheory.T.exists_integral_chart_integral_framed_point _ _ _ _ _ _).2.1 R.star_eq) hPk (_root_.GlobalTheory.GoodDepth.placeTie_of_pins D L T hT.pins) (fun j => ?_) ?_ hPg tF
+    (fun j => (_root_.GlobalTheory.IntChartExists.intChart_exists _ _ _ _ _ _).2.1 R.star_eq) hPk (_root_.GlobalTheory.GoodDepth.placeTie_of_pins D L T hT.pins) (fun j => ?_) ?_ hPg tF
     ⟨R.jets_eq_fact, R.g2_eq, R.cmQuadraticForm_eq_alternatingForm, R.dd_eq, R.sm_eq⟩
   · have hj := R.inR j
     have hd := hT.pins.2.2.2 _ hj
@@ -1365,7 +1332,7 @@ theorem leafGood_run : ∃ C0 : ℝ, ∀ (D : D7) (L : SizeData₂ D) (Pm : Para
       calc (∑ z, (numOf D L).w (ι j) z) ≤ ∑ _z : RPl D.R, 2 * L.sc.b := Finset.sum_le_sum fun z _ => (h z).2
         _ = 2 * (D.R.f : ℝ) * L.sc.b := by
           rw [Finset.sum_const, Finset.card_univ, card_RPl, nsmul_eq_mul]; ring
-    · rw [R.wt_eq, hb]; nlinarith
+    · rw [R.wt_eq, hb]; linarith [mul_le_mul_of_nonneg_right hf8 hb0.le]
     · have h := (_root_.GlobalTheory.WeightExponents.weight_exponents D T.Q hT.pins (ι j) (R.inR j) (lR Tp hK (ι j))).1
       have h2 := R.DF_ge j
       rw [← h] at h2
@@ -1555,7 +1522,7 @@ theorem leafDepthTwo_of_unscaled_bound : ∀ (E : Type) [Field E] [NumberField E
       rw [sub_div, hramR]
     unfold DepthTie.s1T DepthTie.sWT at hs1
     rw [he0]
-    nlinarith
+    rw [mul_add, mul_one] at hR; linarith
   intro w hw h2 j
   obtain ⟨h1, h1'⟩ := DepthTie.tieE Xo c Dd O ι hE hT hpr w hw
   exact ⟨key w j h2 h1, key (conjPl w) j (by rw [plc_conjPl]; exact h2) h1', content_zero_at_small_primes N O Nd ι hPg tF tP w h2 j⟩
@@ -1590,7 +1557,7 @@ theorem sizes_two_arith (T f q m v A S C b Sc η : ℝ) (hf : 0 ≤ f) (hq : 0 �
   have h1 : f * (1 + v / 2) * (2 * b + Sc) + T * S ≤ (2 + v) * (2 * f * b + f * (Sc + η)) := by
     have p1 : 0 ≤ f * (1 + v / 2) * (2 * b + Sc) := by positivity
     have p2 : 0 ≤ (1 + v) * (f * η) := by positivity
-    nlinarith
+    grind
   have h0 : 0 ≤ (2 + v) * (2 * f * b + f * (Sc + η)) := by positivity
   rw [e1]
   calc q * (f * (1 + v / 2) * (2 * b + Sc) + T * S) ≤ q * ((2 + v) * (2 * f * b + f * (Sc + η))) :=
@@ -1680,7 +1647,7 @@ theorem GlobalTheory.RunDepth.leafDepth2_run : (∀ (p : ℕ) [Fact p.Prime], Av
     intro j _
     show _ ≤ Tp.nWn
     refine le_trans ?_ Tp.nW_lo.1
-    nlinarith [Nat.mul_le_mul_left (D.R.f * D.R.r) (show 2 ≤ D.R.r + 1 by omega)]
+    rw [show 2 * D.R.f * D.R.r = D.R.f * D.R.r * 2 by ring]; exact Nat.mul_le_mul_left _ (by omega)
   have hL : LawsPi T (depOf T EX Tp hK) := lawsPi_depRun hM EX _ _ _ _ _ hn
   refine _root_.GlobalTheory.RunDepth.leafDepthTwo_of_unscaled_bound D.host.E T.Q.H T.Q.l T.Q.Dw T.Q.Xo T.Q.c (depOf T EX Tp hK) K Bs Df S P oc O ι N (numOf D L)
     hR.E_eq hR.σ_eq hR.T_eq ⟨hR.jets_eq_fact, hR.g2_eq, hR.cmQuadraticForm_eq_alternatingForm, hR.dd_eq, hR.sm_eq⟩ hL.piSplit hPg tF
@@ -1689,7 +1656,7 @@ theorem GlobalTheory.RunDepth.leafDepth2_run : (∀ (p : ℕ) [Fact p.Prime], Av
   obtain ⟨Ap, hAp0, hAp, hle⟩ := _root_.GlobalTheory.RunDepth.sizes_bound_two D L Pm Tp hK T.Q hM.pins hx hb O.C hPg.1 (ι j) (hR.inR j)
   haveI : Fact (resCharOf la).Prime := ⟨Crude.resCharOf_prime la⟩
   obtain ⟨hsp, h2, hvd, hup⟩ := _root_.GlobalTheory.CharDepth.twoPlaces_host D T.Q.H hM.pins.1.1 (resCharOf la) (hR.sm_eq ▸ hla)
-  refine ⟨_, ?_, GlobalTheory.T.unscaledDepth_le_placeOverTwo (resCharOf la) (hAv _) (hHT _) D.host.E T.Q.H (T.Q.Dw (ι j)) T.Q.l (T.Q.Xo (ι j)) T.Q.c
+  refine ⟨_, ?_, _root_.GlobalTheory.CharDepth.nuW_le_two (resCharOf la) (hAv _) (hHT _) D.host.E T.Q.H (T.Q.Dw (ι j)) T.Q.l (T.Q.Xo (ι j)) T.Q.c
     hR.star_eq D.R.f (D.host.vdH (resCharOf la)) hvd hsp h2 la rfl _ _ _ (fun τ _ _ h => (hL.wts _ (hR.inR j)).1 τ h)
     (DepthTie.card_of_laws T _ hL hM.pins (ι j) (hR.inR j)) Ap hAp0 hAp⟩
   unfold OnObj.sC OnObj.Se

@@ -22,52 +22,9 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderIsHop
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUniqueBtOrderEmbedding
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsFinOpenSubOfFinite
 import Development.WeilBound.CoreStatements.HodgeTatePoints.TwhopfSec
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealEqBotOfFlatQuotientOfMapMaximalIdeal
-import Mathlib.AlgebraicGeometry.Morphisms.Immersion
-import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsBaseChangeGroup
-import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.GeometryProofs.EmbeddingBaseChangeCompat, Development.WeilBound.CoreStatements.HodgeTatePoints.MiOpen, Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatLocalExtensionExists, Development.AutomorphicSpectrum.Proofs.GeometryProofs.HenselianQuasiFiniteFinitePart, Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderEmbeddingOpenImmersion
@@ -221,11 +178,6 @@ open CategoryTheory Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalC
 
 namespace GlobalTheory.CompanionTheory.Ar.BT
 
-theorem exists_isFinite_open_of_henselian : ∀ (R : Type) [CommRing R] [HenselianLocalRing R] (X : Scheme.{0}) (f : X ⟶ Spec (CommRingCat.of R)) [LocallyQuasiFinite f] [LocallyOfFiniteType f] [IsSeparated f] [QuasiCompact f], ∃ U : X.Opens, IsFinite (U.ι ≫ f) ∧ ∀ x : X, f x = IsLocalRing.closedPoint R → x ∈ U := by
-  intro R _ _ X f _ _ _ _
-  refine ⟨GlobalTheory.finitePart f, GlobalTheory.isFinite_finitePart f, fun x hx => ?_⟩
-  exact GlobalTheory.mem_finitePart_of_eq_closedPoint f x hx
-
 end GlobalTheory.CompanionTheory.Ar.BT
 end -- clump:auto
 end -- clump:auto
@@ -269,7 +221,7 @@ theorem btEmb_localData (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed
   haveI := Γ'.separated
   haveI := Γ'.quasiCompact
   haveI := Γ'.finPres
-  obtain ⟨U, hUfin, hUcl⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.exists_isFinite_open_of_henselian R' Γ'.G.left Γ'.G.hom
+  obtain ⟨U, hUfin, hUcl⟩ := PositivityTheory.HtPt.Twhopf.finite_part R' Γ'.G.left Γ'.G.hom
   have hU : Γ'.IsFinOpenSub U := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.isFinOpenSub_of_closedFibre R' T Γ' U hUfin hUcl
   obtain ⟨j', hj'⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.BT.exists_unique_emb_btOrder_top R' T Γ').exists
   have hbt := _root_.GlobalTheory.CompanionTheory.Ar.BT.FlatBC.btOrder_flat_baseChange R T Γ R' Γ' F hbc hflat

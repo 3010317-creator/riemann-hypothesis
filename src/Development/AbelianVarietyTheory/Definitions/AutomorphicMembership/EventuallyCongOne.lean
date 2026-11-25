@@ -184,8 +184,6 @@ end Val
 
 section Comp
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7} (θ : InfF D) (V : HSp D) {n : ℕ} (hn : V.rank = n) {ι : Type} (t : ι ≃ D.what₂.Tau)
 
 def finN : GA D V →* GL (Fin n) (AfE D.host.F D.host.E) := by
@@ -330,7 +328,7 @@ theorem isAniso_of_gram (hG : V.gram = 1) : IsAniso V := by
 theorem mem_cuspS (hθ : IsInfFam θ) (hG : V.gram = 1) (hs : V.SigOK) (hd : V.IsDefinite) {φ : GA D V → ℂ} (h : IsAutFunDef V φ) :
     φ ∈ CuspS θ V := by
   rw [CuspS_eq_of_aniso θ (isAniso_of_gram hG)]
-  exact Submodule.subset_span ((GlobalTheory.DefiniteForms.autFunDefIffSm D θ hθ V hs hd φ).1 h)
+  exact Submodule.subset_span (GlobalTheory.DefiniteForms.sm_of_kfin hθ hs hd h)
 
 end Comp
 

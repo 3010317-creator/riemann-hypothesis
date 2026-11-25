@@ -152,21 +152,6 @@ theorem biLift_move {A S A' : HSp D} (oma : Om A S) (omb : Om S A') (vA : Vol A)
   funext h
   simp only [biLift, Pi.smul_apply, smul_eq_mul, mul_assoc, integral_const_mul]
 
-theorem biLift_smul' {A S A' : HSp D} (oma : Om A S) (omb : Om S A') (vA : Vol A) (vS : Vol S) (φ : GA D A → ℂ) (a : ℂ)
-    (C : WO A S → WO S A' → ℂ) : biLift oma omb vA vS φ (a • C) = a • biLift oma omb vA vS φ C := by
-  funext h₂
-  have h2 : ∀ h₀ h₁, omb (h₁, h₂) (fun v => oma (h₀, h₁) (fun u => a * C u v) 0) 0 =
-      a * omb (h₁, h₂) (fun v => oma (h₀, h₁) (fun u => C u v) 0) 0 := by
-    intro h₀ h₁
-    have e : (fun v => oma (h₀, h₁) (fun u => a * C u v) 0) = a • (fun v => oma (h₀, h₁) (fun u => C u v) 0) :=
-      funext fun v => by
-        rw [show (fun u => a * C u v) = a • (fun u => C u v) from rfl, map_smul]
-        rfl
-    rw [e, map_smul]
-    rfl
-  simp only [biLift, Pi.smul_apply, smul_eq_mul, h2]
-  simp_rw [show ∀ x y : ℂ, x * (a * y) = a * (x * y) from fun x y => mul_left_comm x a y, integral_const_mul]
-
 theorem hand_smul_fun {ψ : AddChar (AF D.host.F) ℂ} {σ : ℕ} {B : BesLev D (σ + 1)} {J : JacLev D (σ + 1)} {B' : BesLev D σ}
     (s₁ : StepBF ψ B J) (s₂ : StepFB ψ J B') (l : Link B B'.L B'.ζ) (vL : VolM D B'.L.rank J.W₀.rank) (a : ℂ)
     (Φ₁ : WO B.V J.W → ℂ) (Φ₂ : WO J.W B'.V → ℂ) (φ : GA D B.A → ℂ) (g : GA D B.V) (h₁ : GA D J.W) (h₂ : GA D B'.V) :
@@ -202,7 +187,7 @@ theorem inner (s : ∀ j, t.Ch j → ℂ) (hs : ∀ j α, s j α ≠ 0) (w : VTu
         (biComb c.ψ _ _ _ (w.dQ j α γ) (w.dQ (j + 1) γ β) C) := by
   simp only [Finset.smul_sum]
   refine Finset.sum_congr rfl fun α _ => Finset.sum_congr rfl fun γ _ => ?_
-  simp only [resc, biComb_smul2, Comm.bl, biLift_smul', biLift_move, smul_smul]
+  simp only [resc, biComb_smul2, Comm.bl, GlobalTheory.SeeSawRhs.biLift_smul, biLift_move, smul_smul]
   congr 1
   have := hs (j + 1) γ
   field_simp
@@ -271,7 +256,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.QSuppTwo
 
@@ -374,7 +358,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.exists_finite_local_support_exchangeData_twistPlaces : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t) (F : QFam v t), F.Pins w → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m), ∃ A : ∀ i, Finset (GL ((F.Q i).X j ⊕ Fin (2 * σ + 2 + 1)) (F.Q i).k), ∀ α, ∀ g ∈ (w.ε j α).support, ∃ a : ∀ i, GL ((F.Q i).X j ⊕ Fin (2 * σ + 2 + 1)) (F.Q i).k, ∀ i, a i ∈ A i ∧ g * ((F.Q i).gl j (2 * σ + 2 + 1) (by have := (F.Q i).hs; omega) (a i))⁻¹ ∈ GlobalTheory.FinPl.grpOff (c.V j) (· = (F.Q i).q.v) := by
   first | exact @GlobalTheory.QSuppTwo.main
@@ -392,7 +375,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.SplitWeil ValuativeRel GlobalTheory.LocMod Filter
 open GlobalTheory.PlaceModel (half mem_half isHalf_iff heisL heisL_half heisL_comm hO_smul_left infPart_half)
 open scoped TensorProduct Topology
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 open GlobalTheory.LocMod.Inhab
 
@@ -428,8 +410,6 @@ alias up_add := _root_.GlobalTheory.LocMod.Witness.up_add
 theorem dual_add (x y : Matrix Y Y' k) : dual p FS FT (x + y) = dual p FS FT x + dual p FS FT y := by
   ext i j
   simp only [dual, Matrix.mul_add, Matrix.add_mul, Matrix.transpose_add, Matrix.map_apply, Matrix.add_apply, map_add (f := _)]
-
-theorem up_zero : p.up FS FT 0 = 0 := by simpa using up_add p FS FT 0 0
 
 theorem dual_zero : dual p FS FT 0 = 0 := by simpa using dual_add p FS FT 0 0
 
@@ -499,7 +479,6 @@ noncomputable section
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum MeasureTheory IsDedekindDomain NumberField Matrix
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Unf GlobalTheory.SplitWeil GlobalTheory.RootEx GlobalTheory.StepData GlobalTheory.SeeSaw GlobalTheory.LocMod ValuativeRel
 open GlobalTheory.Unf.Inhab GlobalTheory.QPl
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.QPl.Inhab
 
 section Vacua
@@ -557,11 +536,11 @@ theorem exists_fixed_vacSet {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D 
     (fun x => heisL S T ψ (p.up FS FT x)) (fun b => heisL S T ψ (dual p FS FT b))
     (fun x x' f => by rw [up_add, heisL_half S T ψ (by rw [mul_comm, hec]) _ (up_mem p FS FT x) _ (up_mem p FS FT x')])
     (fun x x' f => by rw [dual_add, heisL_half S T ψ (by rw [SeeSaw.cA_cA, hec]) _ (dual_mem p FS FT x) _ (dual_mem p FS FT x')])
-    (fun f => by rw [up_zero, h0]) (fun f => by rw [dual_zero, h0])
+    (fun f => by rw [GlobalTheory.LocModU.upZero, h0]) (fun f => by rw [dual_zero, h0])
     (fun x y f => by rw [heisL_comm, char_sympl p FS FT hk]) P
     (fun x => st _ (isHalf_add_left p (Witness.up_half p FS FT x)) (i1 x))
     (fun x => st _ (isHalf_add_right p ((isHalf_iff S T).2 (dual_mem p FS FT x))) (i2 x))
-    (sm _ (continuous_up p FS FT) (up_zero p FS FT) i1) (sm _ (continuous_dual p FS FT) (dual_zero p FS FT) i2)
+    (sm _ (continuous_up p FS FT) (GlobalTheory.LocModU.upZero p FS FT) i1) (sm _ (continuous_dual p FS FT) (dual_zero p FS FT) i2)
     ((mP f).2 ⟨hf, hfU⟩) f0
   have bx : ∀ x : Matrix Y Y' k, x ∈ GlobalTheory.LocMod.Inhab.box Y Y' (1 : kˣ) ↔ ∀ r q, x r q ∈ 𝒪[k] := fun x => by
     change (∀ r q, valuation k (x r q) ≤ valuation k ((1 : kˣ) : k)) ↔ _
@@ -640,7 +619,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k]
 variable {n n' : Type} [Fintype n] [DecidableEq n] [Fintype n'] [DecidableEq n'] {c : ℕ}
 
-
 omit [MeasurableSpace k] [BorelSpace k] in
 theorem exists_open_fix {Y : Type} [Fintype Y] [DecidableEq Y] (L : Level (GL Y k)) (hL : IsOpen (L.J : Set (GL Y k))) (α : GL Y k) :
     ∃ U : Subgroup (GL Y k), IsOpen (U : Set (GL Y k)) ∧ ∀ (A : Type) [AddCommGroup A] [Module ℂ A] (σ : Representation ℂ (GL Y k) A),
@@ -670,7 +648,6 @@ theorem exists_isOneComb {ψ : AddChar k Circle} (hψ : HasConductor ψ 1) {ν :
   rw [(he A σ hσ l _ hl (h A σ hσ v hv)).1, GlobalTheory.PosOne.comb, GlobalTheory.PosOne.comb,
     Finsupp.sum_mapDomain_index (by simp) (fun _ _ _ => add_mul _ _ _)]
   simp only [map_mul, Module.End.mul_apply]
-
 
 omit [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] in
 theorem exists_covers {ι V : Type} [Zero V] {p : ℕ} {J : Subgroup (GL (n ⊕ Fin c) k)} (s : Finset ι)
@@ -703,13 +680,11 @@ theorem exists_covers_flat {ψ : AddChar k Circle} (hψ : HasConductor ψ 1) (ν
   convert hT using 2 with h
   rw [GlobalTheory.StepData.flat, ← GlobalTheory.SplitWeil.om_mul, one_mul, mul_one]
 
-
 omit [BorelSpace k] in
 theorem xi_mem_SB (ψ : AddChar k Circle) (ν : Measure k) (μ : kˣ →* ℂˣ) (Φ : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k))
     (J : Subgroup (GL (n ⊕ Fin c) k)) (b : GL (n ⊕ Fin c) k) (h' : GL (n' ⊕ Fin (c + 1)) k) (h : GL (n ⊕ Fin c) k) :
     GlobalTheory.StepData.xi ψ ν μ Φ.1 J b h' h ∈ SB (Matrix n n' k) :=
   (SB _).smul_mem _ (GlobalTheory.RootEx.opE_mem_SB 1 ψ ν (GlobalTheory.SplitWeil.om_mem_SB μ h' h Φ.2))
-
 
 omit [MeasurableSpace k] [BorelSpace k] in
 theorem exists_isCombAt {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) (p : Place D k) {S T : HSp D}
@@ -721,12 +696,9 @@ theorem exists_isCombAt {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdCh
   rw [show Φ = ⟨Ξ, hΞ⟩ from Subtype.ext h, show Φ₀ = O from Subtype.ext (h₀.trans hO.symm)]
   exact h2 Tm hT
 
-
 end Local
 
 variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {σ : ℕ}
-
-
 
 theorem exists_qstep (hψ : IsStdChar D ψ (-1)) (S : Dbl2 ψ σ) {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ν : Measure k) (hν : IsUnitVol ν)
@@ -761,8 +733,6 @@ theorem exists_qstep (hψ : IsStdChar D ψ (-1)) (S : Dbl2 ψ σ) {k : Type} [Fi
   exact ⟨gl₀, gl₁, gl₂, l₀, l₁, l₂, D₁, D₂, dat₁, dat₂, A₁, A₂, cov₁ () (Finset.mem_univ _), cov₂, d₁, d₂, ent₁, ent₂, e₀, e₂,
     one₀, one₂, m₁, m₂, a₁, a₂, b₁, b₂, g₁, g₂, _, rfl⟩
 
-
-
 end GlobalTheory.QPl.Inhab
 end
 end -- clump:auto
@@ -780,12 +750,9 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 namespace GlobalTheory.QFinOneAt
-
-
 
 theorem core {D : D7} {c : Comm D} {v : VCom c} {t : Tup c} (hψ : IsStdChar D c.ψ (-1)) (hv : v.Is) (ht : t.Is)
     {χ : ℕ → (AE D)ˣ →* Circle} (Q' : QAt v χ) (χz : (AE D)ˣ →* Circle) (j σ : ℕ) (h : j + 2 * (σ + 1) + 2 = D.R.m)
@@ -877,7 +844,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.seeSaw_twistPlace_finitely_many_cells : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t) (F : QFam v t), c.Is → t.Is → v.Is → WeilOK (t := t) v → F.Pins w → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m) (i : Fin F.r) (a : GL ((F.Q i).X j ⊕ Fin (2 * σ + 2 + 1)) (F.Q i).k), ∃ T : Finset (GL ((F.Q i).X (j + 1) ⊕ Fin (2 * σ + 2)) (F.Q i).k), ∀ f₁, GlobalTheory.FinPl.Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (· = (F.Q i).q.v) f₁ → ∀ g ∈ GlobalTheory.FinPl.grpOff (c.V j) (· = (F.Q i).q.v), ∀ h₁ ∈ GlobalTheory.FinPl.grpOff (c.V (j + 1)) (· = (F.Q i).q.v), ∀ x, flatBF (t.sBF j (σ + 1) h) (t.om j (g * (F.Q i).gl j (2 * σ + 2 + 1) (by have := (F.Q i).hs; omega) a, h₁ * (F.Q i).gl (j + 1) (2 * σ + 2) (by have := (F.Q i).hs; omega) x) (comb c.ψ _ _ ((F.Q i).eL j) f₁)) ≠ 0 → ∃ τ ∈ T, ∃ r, (F.Q i).gl (j + 1) (2 * σ + 2) (by have := (F.Q i).hs; omega) r ∈ jacGrp (c.jac j (σ + 1) h).d ∧ ∃ κ ∈ ((F.Q i).T.lev (j + 1) (2 * σ + 2) (by have := (F.Q i).hs; omega)).J, x = r * τ * κ := by
   first | exact @GlobalTheory.QFinOneAt.finOne_pin
@@ -896,7 +862,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 
@@ -973,8 +938,6 @@ end GlobalTheory.TwistPlaceSplit
 
 namespace GlobalTheory.TwistPlaceSplit
 
-
-
 theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t) (F : QFam v t), c.Is → v.Is → F.Pins w → ∀ j, j + 1 < D.R.m → ∀ (i : Fin F.r) Ψ₁, GlobalTheory.FinPl.Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (· ∈ w.Q) Ψ₁ → ∃ f₁, GlobalTheory.FinPl.Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (· = (F.Q i).q.v) f₁ ∧ comb c.ψ _ _ (w.eQ j) Ψ₁ = comb c.ψ _ _ ((F.Q i).eL j) f₁ := by
   intro D c v t w F hc hv hP j hj i Ψ₁ hΨ
   classical
@@ -1036,7 +999,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.twistCombination_splits_singlePlace_vacuum : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t) (F : QFam v t), c.Is → v.Is → F.Pins w → ∀ j, j + 1 < D.R.m → ∀ (i : Fin F.r) Ψ₁, GlobalTheory.FinPl.Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (· ∈ w.Q) Ψ₁ → ∃ f₁, GlobalTheory.FinPl.Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (· = (F.Q i).q.v) f₁ ∧ comb c.ψ _ _ (w.eQ j) Ψ₁ = comb c.ψ _ _ ((F.Q i).eL j) f₁ := by
   first | exact @GlobalTheory.TwistPlaceSplit.main
@@ -1055,7 +1017,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 namespace GlobalTheory.QProd
@@ -1069,7 +1030,6 @@ open GlobalTheory.FinPl in
 theorem at_le_off' {D : D7} (V : HSp D) {P P' : Pl D → Prop} (h : ∀ p, P p → ¬ P' p) : grpAt V P ≤ grpOff V P' :=
   (GlobalTheory.FinPl.SetCut.grp_split D V ∅).2.2.2.2.2.2.1 P P' h
 
-
 open GlobalTheory.FinPl in
 theorem off_mono {D : D7} {V : HSp D} {R R' : Pl D → Prop} (hR : ∀ p, R' p → R p) {g : GA D V} (h : g ∈ grpOff V R) :
     g ∈ grpOff V R' := by
@@ -1081,7 +1041,6 @@ theorem off_mono {D : D7} {V : HSp D} {R R' : Pl D → Prop} (hR : ∀ p, R' p �
   rw [Submodule.mem_iInf] at this ⊢
   intro u
   exact this ⟨u.1, hR u.1 u.2⟩
-
 
 open GlobalTheory.FinPl in
 theorem off_of_each {D : D7} {V : HSp D} {R : Pl D → Prop} {g : GA D V} (h : ∀ p, R p → g ∈ grpOff V (· = p)) :
@@ -1180,7 +1139,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.twistPlaces_group_eq_product_local_groups : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t) (F : QFam v t), F.Pins w → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m), ∃ P : (∀ i, GL ((F.Q i).X (j + 1) ⊕ Fin (2 * σ + 2)) (F.Q i).k) →* GA D (c.V (j + 1)), (∀ (H : Subgroup (GA D (c.V (j + 1)))) y, (∀ i, (F.Q i).gl (j + 1) (2 * σ + 2) (by have := (F.Q i).hs; omega) (y i) ∈ H) → P y ∈ H) ∧ (∀ y, P y ∈ GlobalTheory.FinPl.grpAt _ (· ∈ w.Q)) ∧ ∀ x ∈ GlobalTheory.FinPl.grpAt _ (· ∈ w.Q), ∃ y, x = P y ∧ ∀ i, x * ((F.Q i).gl (j + 1) (2 * σ + 2) (by have := (F.Q i).hs; omega) (y i))⁻¹ ∈ GlobalTheory.FinPl.grpOff (c.V (j + 1)) (· = (F.Q i).q.v) := by
   first | exact @GlobalTheory.QProd.prod_local
@@ -1199,7 +1157,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.QFinSupp
 
@@ -1254,7 +1211,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.firstVariable_support_finite_cells_at_twist_places : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t) (F : QFam v t), c.Is → t.Is → v.Is → WeilOK (t := t) v → F.Pins w → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m), ∃ T₁ : Finset (GA D (c.V (j + 1))), (∀ q ∈ T₁, q ∈ GlobalTheory.FinPl.grpAt _ (· ∈ w.Q)) ∧ ∀ Ψ₁, GlobalTheory.FinPl.Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (· ∈ w.Q) Ψ₁ → ∀ α, ∀ g ∈ (w.ε j α).support, ∀ x ∈ GlobalTheory.FinPl.grpAt _ (· ∈ w.Q), flatBF (t.sBF j (σ + 1) h) (t.om j (g, x) (comb c.ψ _ _ (w.eQ j) Ψ₁)) ≠ 0 → ∃ r ∈ jacGrp (c.jac j (σ + 1) h).d, r ∈ GlobalTheory.FinPl.grpAt _ (· ∈ w.Q) ∧ ∃ q ∈ T₁, ∃ k ∈ GlobalTheory.QuotientFiniteLevel.qK F j σ h, x = r * q * k := by
   first | exact @GlobalTheory.QFinSupp.main
@@ -1273,7 +1229,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 end -- clump:auto
 end -- clump:auto
@@ -1290,7 +1245,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 namespace GlobalTheory.QFinGrp
@@ -1456,7 +1410,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.twistChainLevelProductOverPlaces_compact_open : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t) (F : QFam v t), F.Pins w → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m), GlobalTheory.QuotientFiniteLevel.qK F j σ h ≤ GlobalTheory.FinPl.grpAt _ (· ∈ w.Q) ∧ IsCompact (GlobalTheory.QuotientFiniteLevel.qK F j σ h : Set (GA D (c.V (j + 1)))) ∧ IsOpen (((GlobalTheory.QuotientFiniteLevel.qK F j σ h).subgroupOf (GlobalTheory.FinPl.grpAt _ (· ∈ w.Q)) : Subgroup _) : Set (GlobalTheory.FinPl.grpAt (c.V (j + 1)) (· ∈ w.Q))) := by
   first | exact @GlobalTheory.QFinGrp.qK_grp
@@ -1475,7 +1428,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.QFinMain
 
@@ -1502,7 +1454,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 end -- clump:auto
 end -- clump:auto
@@ -1516,7 +1467,6 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.L2.Forms MeasureTheory IsDedekindDomain NumberField Matrix
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Unf GlobalTheory.SplitWeil GlobalTheory.StepData GlobalTheory.SeeSaw GlobalTheory.LocMod GlobalTheory.QPl GlobalTheory.QTw GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.AdForm ValuativeRel
 open scoped TensorProduct Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.QTw
 
@@ -1538,7 +1488,6 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.L2.Forms MeasureTheory IsDedekindDomain NumberField Matrix
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Unf GlobalTheory.SplitWeil GlobalTheory.StepData GlobalTheory.SeeSaw GlobalTheory.LocMod GlobalTheory.QPl GlobalTheory.QTw GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.AdForm ValuativeRel
 open scoped TensorProduct Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 end -- clump:auto
 end -- clump:auto
@@ -1549,13 +1498,10 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-
-
 section
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Datum Formalism.L2.Forms MeasureTheory IsDedekindDomain NumberField Matrix
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.SeeSaw GlobalTheory.LocMod GlobalTheory.MiS GlobalTheory.QPl GlobalTheory.QTw GlobalTheory.AdForm GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Fam GlobalTheory.SeeSaw GlobalTheory.StepData GlobalTheory.SplitWeil
 open scoped TensorProduct Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 attribute [local instance] _root_.GlobalTheory.Fam.GeometricFamily.fld _root_.GlobalTheory.Fam.GeometricFamily.val _root_.GlobalTheory.Fam.GeometricFamily.top _root_.GlobalTheory.Fam.GeometricFamily.loc
 theorem GlobalTheory.QColLaws.laws_resc_alt : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B X} {l : I.Laws} {Z : TC.Later B (I.cols l)} {L : SizeData₂ (I.rec7 l Z)} {hT : GatTies (I.rec7 l Z)} {Gi : Formalism.MainNotions.G.Inst (I.rec7 l Z) L} {Gl : Formalism.MainNotions.G.LatInst (I.rec7 l Z)} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX (I.rec7 l Z)} {cX : ExtraC} {ex : Extra (I.rec7 l Z) L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex), _root_.GlobalTheory.Fam.AllFamilyConditions W → ∀ (u : B.Word) (a : _root_.GlobalTheory.Fam.GeometricFamily W u), a.Is → a.True → ∀ (row : ∀ t, RowCh (_root_.GlobalTheory.Fam.pk_z W) (_root_.GlobalTheory.Fam.complexLevelStructure W) u a.g t)
     (col : ∀ t : W.P.T, ColCh (D := I.rec7 l Z) u ((I.rec7 l Z).chTw u (W.P.I.tup t))), (a.fam row col).RowOK → (a.fam row col).ColOK →
@@ -1580,8 +1526,6 @@ end -- clump:auto
 -- clump-header: {"m": "Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LawsRescStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam\npublic import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.FamilyConstants\npublic import Development.AbelianVarietyTheory.Definitions.LatticeFrames.RescOne\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemSum\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LawsResc\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.LatticeFrames.MiStarOfMid\n\n"}
 section -- clump:auto
 @[expose] public section
-
-
 
 end -- clump:auto
 end -- clump:auto

@@ -2,54 +2,11 @@ module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.IdBlocks
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.Vanish
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Rat
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Separation.CompletelyRegular
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -377,7 +334,6 @@ theorem smat_inv (hJ2 : J * J = 1) (hJh : Jᴴ = J) (G : Matrix (Fin k) (Fin k) 
 
 end Formalism.L2.SG.Pf.IdBlocks2.UkEmb
 
-open scoped InnerProductSpace ComplexConjugate
 open Matrix Formalism.MainNotions.S
 
 namespace Formalism.L2.SG.Pf.IdBlocks2.HW
@@ -632,8 +588,6 @@ open Formalism.L2.SG.HidaSetting Formalism.L2.SG.PoincareInHH.PoincareSetting
 
 namespace Formalism.L2.SG.Pf.IdBlocks2.Geo
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 open Formalism.L2.SG.Pf.IdBlocks2.UkEmb Formalism.L2.SG.Pf.IdBlocks2.TensIrr
 
 theorem jm_allPos (k : ℕ) : Formalism.REAL.Jm (allPos k) = 1 := by
@@ -753,13 +707,9 @@ theorem piIrr : Formalism.L2.SG.TermOp.IdBlocks.PiIrr X u := by
 
 end Formalism.L2.SG.Pf.IdBlocks2.Geo
 
-open scoped Classical ComplexConjugate InnerProductSpace
-open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Matrix
 open Formalism.L2.SG.HidaSetting Formalism.L2.SG.PoincareInHH.PoincareSetting Formalism.L2.SG.TermOp
 
 namespace Formalism.L2.SG.Pf.IdBlocks2.Geo
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem uS_ne {D : D7} {u u' : D.what₂.Word} (hu : u ≠ u') (τ : D.what₂.Tau) : uS D u τ ≠ uS D u' τ := by
   obtain ⟨l, hl⟩ : ∃ l, D.s.letter u l ≠ D.s.letter u' l := by
@@ -791,13 +741,9 @@ theorem ro_of (hN : Formalism.L2.SG.TermOp.Vanish.NLamNinf) {D : D7} (X : HidaSe
 
 end Formalism.L2.SG.Pf.IdBlocks2.Geo
 
-open scoped Classical ComplexConjugate InnerProductSpace
 open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Matrix
-open Formalism.L2.SG.HidaSetting Formalism.L2.SG.PoincareInHH.PoincareSetting Formalism.L2.SG.TermOp
 
 namespace Formalism.L2.SG.Pf.IdBlocks2.Geo
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 open Formalism.L2.SG.Pf.IdBlocks2.Geo
 
@@ -822,8 +768,6 @@ theorem sAt_ne (v w : InfinitePlace X.B.I.F) (hw : w ≠ v) (g : Matrix (Fin D.R
 end Formalism.L2.SG.Pf.IdBlocks2.Geo
 
 namespace Formalism.L2.SG.Pf.IdBlocks2.Geo
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 open Formalism.L2.SG.Pf.IdBlocks2.Geo
 
@@ -863,10 +807,6 @@ end Formalism.L2.SG.Pf.IdBlocks2.Geo
 
 namespace Formalism.L2.SG.Pf
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-open scoped Classical
-open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat
 open Formalism.L2.SG.HidaSetting Formalism.L2.SG.PoincareInHH.PoincareSetting Formalism.L2.SG.TermOp Formalism.L2.SG.TermOp.IdBlocks Formalism.L2.SG.Full
   Formalism.L2.SG.PoincareInHH.Cut
 

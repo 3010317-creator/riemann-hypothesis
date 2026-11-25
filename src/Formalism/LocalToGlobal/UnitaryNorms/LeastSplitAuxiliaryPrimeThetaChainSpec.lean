@@ -3,45 +3,6 @@ module
 public import Formalism.LocalToGlobal.UnitaryNorms.RealCyclotomicTwoPower
 public import Formalism.SharpRestriction.Divisibility.AbsolutelyIrreducibleSpan
 public import Formalism.LocalRingCardinality.SpanPowerMembership.PlacesOverNcardOfSplitInj
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.LocalToGlobal.UnitaryNorms.ArtGCut, Formalism.LocalToGlobal.UnitaryNorms.LeastSplitAuxiliaryPrimeThetaChainSpec
@@ -128,24 +89,6 @@ theorem split_prime_mod_divisor_eq_one {m : ℕ} (hm : m ∣ AbsolutelyIrreducib
 
 theorem q0_mod_eq_one_of_dvd_condE {m : ℕ} (hm : m ∣ LevelStarExponents.condE D) (h2 : 2 ≤ m) : AbsolutelyIrreducibleSpan.q0 D % m = 1 := by
   exact split_prime_mod_divisor_eq_one D (Dvd.dvd.mul_left hm _) h2
-
-theorem leastSplitAuxiliaryPrime_ne_typePrimes : AbsolutelyIrreducibleSpan.q0 D ≠ D.host.pde ∧ AbsolutelyIrreducibleSpan.q0 D ≠ D.host.pde' := by
-  have h1 := (AbsolutelyIrreducibleSpan.auxiliary_prime_mem (D := D)).2.1
-  have hr := (AbsolutelyIrreducibleSpan.rPr_mem (D := D)).2
-  have hd : AbsolutelyIrreducibleSpan.rPr D ∣ AbsolutelyIrreducibleSpan.q0 D - 1 := by
-    have h := Nat.div_add_mod (AbsolutelyIrreducibleSpan.q0 D) (AbsolutelyIrreducibleSpan.rPr D * LevelStarExponents.condE D)
-    rw [h1] at h
-    have e : AbsolutelyIrreducibleSpan.q0 D - 1 = AbsolutelyIrreducibleSpan.rPr D * LevelStarExponents.condE D * (AbsolutelyIrreducibleSpan.q0 D / (AbsolutelyIrreducibleSpan.rPr D * LevelStarExponents.condE D)) := by
-      omega
-    rw [e, mul_assoc]
-    exact dvd_mul_right _ _
-  constructor
-  · intro he
-    rw [he] at hd
-    exact hr (dvd_mul_of_dvd_left (dvd_mul_of_dvd_left (dvd_mul_of_dvd_right hd _) _) _)
-  · intro he
-    rw [he] at hd
-    exact hr (dvd_mul_of_dvd_left (dvd_mul_of_dvd_right hd _) _)
 
 theorem q0_ne_two_and_ne_q_and_ne_d : AbsolutelyIrreducibleSpan.q0 D ≠ 2 ∧ AbsolutelyIrreducibleSpan.q0 D ≠ D.host.q ∧ AbsolutelyIrreducibleSpan.q0 D ≠ D.host.d := by
   have hb := D.host.qd_big

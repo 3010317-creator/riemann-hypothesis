@@ -58,7 +58,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef
 open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx Formalism.IndefR.Links
 open scoped TensorProduct InnerProductSpace
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.DownLift
 open GlobalTheory.DownLift.GenFinite
 open GlobalTheory.DownLift.SplitCoef
@@ -70,11 +69,6 @@ namespace GlobalTheory.DownLift.SplitSep
 open GlobalTheory.SplitScalar
 
 variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D}
-
-theorem symplO_nsmul_left (k : ℕ) (x y : WO S T) : symplO S T (k • x) y = k • symplO S T x y := by
-  induction k with
-  | zero => rw [zero_nsmul, zero_nsmul, symplO_zero_left]
-  | succ n ih => rw [succ_nsmul, succ_nsmul, GlobalTheory.LatVac.symplO_add_left, ih]
 
 theorem symplO_neg_left (x y : WO S T) : symplO S T (-x) y = -symplO S T x y := by
   have h := symplO_sub_left S T 0 x y

@@ -2,42 +2,6 @@ module
 
 public import Formalism.LocalToGlobal.LatticeGeometry.CompNe
 public import Formalism.LocalToGlobal.LatticeGeometry.CmTypeMeetsConjugatePair
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Formalism.DegreeFormula.PointDegree.PowSum
 
 @[expose] public section
@@ -122,8 +86,6 @@ structure CompatiblePlaces' (X : DivX D) (ePl : ∀ (p : ℕ) [Fact p.Prime], X.
   jc : ∀ (p : ℕ) [Fact p.Prime] (la : X.PlP p), X.jC p la = jC p (ePl p la)
   mp : ∀ (w : Dat D X.Lev), w.Indef → ∀ (p : ℕ) [Fact p.Prime] (la : X.PlP p),
     X.Mp w.S w.κ p la = (U w).pad.Mp p (ePl p la)
-  md : ∀ (w : Dat D X.Lev), w.Indef → ∀ (p : ℕ) [Fact p.Prime] (la : X.PlP p),
-    HEq (X.md w.S w.κ p la) ((U w).pad.md p (ePl p la))
   curveM : ∀ (w : Dat D X.Lev), w.Indef → ∀ (p : ℕ) [Fact p.Prime] (la : X.PlP p),
     HEq (X.CurveM w.S w.κ p la) ((U w).pad.CurveM p (ePl p la))
   degM : ∀ (w : Dat D X.Lev), w.Indef → ∀ (p : ℕ) [Fact p.Prime] (la : X.PlP p),
@@ -138,7 +100,6 @@ structure CompatiblePlaces' (X : DivX D) (ePl : ∀ (p : ℕ) [Fact p.Prime], X.
 structure CompatibleGeometry (X : DivX D) (κg : X.Lev) (U : ∀ w : Dat D X.Lev, ShimU D X.geo jC ng w)
     (eC : ∀ j, 1 ≤ j → j ≤ D.R.m → X.Comp j ≃ (U (datW D κg j)).Comp) : Prop where
   yv : ∀ j (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) c, X.Yv j c = (U (datW D κg j)).alg.Yv (eC j h1 h2 c)
-  ybd : ∀ j (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) c, HEq (X.Ybd j c) ((U (datW D κg j)).alg.Ybd (eC j h1 h2 c))
   lw : ∀ j (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) c (la : D.what₂.Tau → Fin D.R.r → ℤ),
     HEq (X.Lw j c la) ((U (datW D κg j)).alg.Lw (eC j h1 h2 c)
       (fun τ i => la τ (Fin.cast (datW_N D κg j) i)))

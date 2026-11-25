@@ -113,7 +113,6 @@ import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.Thir
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -121,8 +120,6 @@ open Formalism.IndefR.FWT Formalism.IndefR.Datum GlobalTheory.BigTop GlobalTheor
 open GlobalTheory.BigOn GlobalTheory.BigOn.Exp Formalism.L2.Theta GlobalTheory.ExportSeries GlobalTheory.ConjTwist GlobalTheory.FlatVecSum
 open scoped TensorProduct
 
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.BigOn.Exp.SerBase
 
@@ -295,8 +292,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 
 
 noncomputable section
@@ -305,7 +300,6 @@ open Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMas
 open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.BigOn.Exp GlobalTheory.BigOn.Exp.SerBase GlobalTheory.OnCmp GlobalTheory.RealIndexBound GlobalTheory.ConjTwist
 open GlobalTheory.OnTies
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.CentralLattice
 
@@ -363,7 +357,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -371,8 +364,6 @@ open Formalism.IndefR.FWT Formalism.IndefR.Datum GlobalTheory.BigTop GlobalTheor
 open GlobalTheory.BigOn GlobalTheory.BigOn.Exp Formalism.L2.Theta GlobalTheory.ExportSeries GlobalTheory.ConjTwist GlobalTheory.FlatVecSum GlobalTheory.BaseCmp
 open scoped TensorProduct
 
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.BigOn.Exp.SerBase
 
@@ -455,12 +446,9 @@ open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions F
 open Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.FWT Formalism.IndefR.Datum Formalism.IndefR.Lev
 open GlobalTheory.FormTies GlobalTheory.OnTies GlobalTheory.TraceClassRank
 open scoped TensorProduct Matrix
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.OnCmp GlobalTheory.BigOn GlobalTheory.RealIndexBound
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Datum Level Moduli Coeff)
 open GlobalTheory.BigTop GlobalTheory.BigOn.Exp GlobalTheory.BigOn.Exp.SerBase
-
-set_option autoImplicit false
 
 noncomputable section
 open Classical
@@ -708,7 +696,6 @@ section -- clump:auto
 
 
 section
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -717,7 +704,6 @@ open GlobalTheory.BigOn GlobalTheory.BigOn.Exp Formalism.L2.Theta GlobalTheory.E
 open scoped TensorProduct
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.BigOn.Exp.SerBase
 theorem kerOfAt_alt : _root_.GlobalTheory.BigOn.Exp.SerBase.KerOfAtAlt := by
   refine ⟨1, one_pos, fun _ _ _ => ⟨⟨0, fun _ => 0, fun _ => 0, fun _ => 0⟩, fun Fm _ _ _ => ⟨0, fun x hx _ i p hR hM w hw j => ?_⟩⟩⟩
@@ -779,7 +765,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -790,8 +775,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.ToricLatticeDenominators (FmExt eEx
 open GlobalTheory.BigOn.Exp.SerBase
 open scoped TensorProduct
 
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.BigOn.Exp
 
@@ -891,7 +874,6 @@ section -- clump:auto
 
 
 section
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -903,7 +885,6 @@ open GlobalTheory.BigOn.Exp.SerBase
 open scoped TensorProduct
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.BigOn.Exp
 section GenericCmp
 variable {O : Type} [CommRing O] [IsDomain O] {M : Type} [AddCommGroup M] [Module (FractionRing O) M] [Module O M]
@@ -1042,7 +1023,6 @@ section -- clump:auto
 
 section
 open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.BigOn.Exp GlobalTheory.BigOn.Exp.SerBase
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -1051,7 +1031,6 @@ open Formalism.L2.Theta GlobalTheory.ExportSeries GlobalTheory.ConjTwist GlobalT
 open scoped TensorProduct
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.BigOn.Exp.SerBase
 theorem traceOfAt_alt : _root_.GlobalTheory.BigOn.Exp.SerBase.TraceAt' := by
   refine _root_.GlobalTheory.BigOn.Exp.TwistConditions.of_forall fun Fm x hx i p hR hM w hw j => ?_
@@ -1107,7 +1086,6 @@ section -- clump:auto
 
 
 section
-set_option autoImplicit false
 noncomputable section
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
@@ -1116,7 +1094,6 @@ open GlobalTheory.BigOn GlobalTheory.BigOn.Exp Formalism.L2.Theta GlobalTheory.E
 open scoped TensorProduct
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.BigOn.Exp.SerBase
 section Point
 variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}

@@ -1,48 +1,6 @@
 module
 
-public import Mathlib.Analysis.RCLike.Basic
-public import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 public import Mathlib.Analysis.Matrix.Order
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Algebra.Star.UnitaryStarAlgAut
 
 @[expose] public section
 
@@ -56,39 +14,27 @@ open scoped MatrixOrder ComplexOrder
 variable {𝕜 : Type*} [RCLike 𝕜] {n m : Type*} [Fintype n] [DecidableEq n] [Fintype m]
 
 theorem det_eq_ofReal_re {A : Matrix n n 𝕜} (hA : A.PosSemidef) :
-    A.det = (RCLike.re A.det : 𝕜) := by
-  rw [hA.isHermitian.det_eq_prod_eigenvalues, ← RCLike.ofReal_prod, RCLike.ofReal_re]
+    A.det = (RCLike.re A.det : 𝕜) :=
+  (RCLike.conj_eq_iff_re.mp (IsSelfAdjoint.of_nonneg hA.det_nonneg)).symm
 
-theorem re_det_nonneg {A : Matrix n n 𝕜} (hA : A.PosSemidef) : 0 ≤ RCLike.re A.det := by
-  rw [hA.isHermitian.det_eq_prod_eigenvalues, ← RCLike.ofReal_prod, RCLike.ofReal_re]
-  exact Finset.prod_nonneg fun i _ => hA.eigenvalues_nonneg i
+theorem re_det_nonneg {A : Matrix n n 𝕜} (hA : A.PosSemidef) : 0 ≤ RCLike.re A.det :=
+  (RCLike.nonneg_iff.mp hA.det_nonneg).1
 
-theorem re_det_pos {A : Matrix n n 𝕜} (hA : A.PosDef) : 0 < RCLike.re A.det := by
-  rw [hA.isHermitian.det_eq_prod_eigenvalues, ← RCLike.ofReal_prod, RCLike.ofReal_re]
-  exact Finset.prod_pos fun i _ => hA.eigenvalues_pos i
+theorem re_det_pos {A : Matrix n n 𝕜} (hA : A.PosDef) : 0 < RCLike.re A.det :=
+  (RCLike.pos_iff.mp hA.det_pos).1
 
 theorem one_le_re_det_one_add {Q : Matrix n n 𝕜} (hQ : Q.PosSemidef) :
     1 ≤ RCLike.re (1 + Q).det := by
-  have hspec := hQ.isHermitian.spectral_theorem
-  set U := hQ.isHermitian.eigenvectorUnitary
-  have hUU : (U : Matrix n n 𝕜) * star (U : Matrix n n 𝕜) = 1 := Unitary.coe_mul_star_self U
-  have h1 : 1 + Q = (U : Matrix n n 𝕜) *
-      ((1 : Matrix n n 𝕜) + diagonal (RCLike.ofReal ∘ hQ.isHermitian.eigenvalues)) *
-        star (U : Matrix n n 𝕜) := by
-    conv_lhs => rw [hspec]
-    rw [Unitary.conjStarAlgAut_apply, Matrix.mul_add, Matrix.add_mul, Matrix.mul_one, hUU]
   have hdet : (1 + Q).det =
       ((1 : Matrix n n 𝕜) + diagonal (RCLike.ofReal ∘ hQ.isHermitian.eigenvalues)).det := by
-    rw [h1, det_mul, det_mul, mul_comm, ← mul_assoc, ← det_mul,
-      Unitary.coe_star_mul_self, det_one, one_mul]
+    conv_lhs =>
+      rw [hQ.isHermitian.spectral_theorem,
+        ← map_one (Unitary.conjStarAlgAut 𝕜 _ hQ.isHermitian.eigenvectorUnitary), ← map_add]
+    exact det_units_conj (Unitary.toUnits hQ.isHermitian.eigenvectorUnitary) _
   rw [hdet, ← diagonal_one, diagonal_add, det_diagonal]
-  have : ∏ i, ((1 : 𝕜) + (RCLike.ofReal ∘ hQ.isHermitian.eigenvalues) i) =
-      ((∏ i, (1 + hQ.isHermitian.eigenvalues i) : ℝ) : 𝕜) := by
-    rw [RCLike.ofReal_prod]
-    refine Finset.prod_congr rfl fun i _ => ?_
-    simp
-  rw [this, RCLike.ofReal_re]
-  exact Finset.one_le_prod₀ fun i _ => by linarith [hQ.eigenvalues_nonneg i]
+  simp only [Function.comp_apply, ← RCLike.ofReal_one (K := 𝕜), ← RCLike.ofReal_add,
+    ← RCLike.ofReal_prod, RCLike.ofReal_re]
+  exact Finset.one_le_prod₀ fun i _ => le_add_of_nonneg_right (hQ.eigenvalues_nonneg i)
 
 theorem re_det_le_re_det_add {A P : Matrix n n 𝕜} (hA : A.PosSemidef) (hP : P.PosSemidef) :
     RCLike.re A.det ≤ RCLike.re (A + P).det := by
@@ -118,15 +64,10 @@ theorem re_det_le_re_det_add {A P : Matrix n n 𝕜} (hA : A.PosSemidef) (hP : P
   have hdet : (A + P).det = A.det * (1 + Q).det := by
     rw [hAP, hB, det_mul, det_mul, det_mul]
     ring
-  have h1 := one_le_re_det_one_add hQ
-  have h2 := re_det_nonneg hA
-  obtain ⟨a, ha⟩ : ∃ a : ℝ, A.det = a := ⟨_, det_eq_ofReal_re hA⟩
-  obtain ⟨b, hb⟩ : ∃ b : ℝ, (1 + Q).det = b := ⟨_, det_eq_ofReal_re (PosSemidef.one.add hQ)⟩
-  rw [hdet, ha, hb, ← RCLike.ofReal_mul]
+  rw [hdet, det_eq_ofReal_re hA, det_eq_ofReal_re (PosSemidef.one.add hQ),
+    ← RCLike.ofReal_mul]
   simp only [RCLike.ofReal_re]
-  rw [ha, RCLike.ofReal_re] at h2
-  rw [hb, RCLike.ofReal_re] at h1
-  nlinarith
+  exact le_mul_of_one_le_right (re_det_nonneg hA) (one_le_re_det_one_add hQ)
 
 theorem re_det_mono {A B : Matrix n n 𝕜} (hA : A.PosSemidef) (hAB : (B - A).PosSemidef) :
     RCLike.re A.det ≤ RCLike.re B.det := by

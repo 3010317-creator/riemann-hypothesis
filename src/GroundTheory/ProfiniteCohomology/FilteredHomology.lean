@@ -4,46 +4,7 @@ public import Mathlib.Algebra.Category.ModuleCat.Abelian
 public import Mathlib.Algebra.Homology.ShortComplex.HomologicalComplex
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -68,27 +29,11 @@ theorem exists_iCycles_eq {i : ι} (x : K.X i) (hx : (K.d i (c.next i)).hom x = 
 
 theorem shortComplex_homologyπ_eq_zero_iff (S : ShortComplex (ModuleCat.{u} R)) (z : S.cycles) :
     S.homologyπ.hom z = 0 ↔ ∃ w : S.X₁, S.f.hom w = S.iCycles.hom z := by
-  have hinj : Function.Injective S.moduleCatHomologyIso.hom.hom :=
-    (ModuleCat.mono_iff_injective _).1 inferInstance
-  have h1 : S.moduleCatHomologyIso.hom.hom (S.homologyπ.hom z) =
-      S.moduleCatLeftHomologyData.π.hom (S.moduleCatCyclesIso.hom.hom z) :=
-    ShortComplex.π_moduleCatCyclesIso_hom_apply S z
-  have h2 : S.moduleCatLeftHomologyData.i.hom (S.moduleCatCyclesIso.hom.hom z) =
-      S.iCycles.hom z :=
-    ShortComplex.moduleCatCyclesIso_hom_i_apply S z
-  have h0 : S.homologyπ.hom z = 0 ↔ S.moduleCatHomologyIso.hom.hom (S.homologyπ.hom z) = 0 :=
-    ⟨fun h => by rw [h, map_zero], fun h => hinj (h.trans (map_zero _).symm)⟩
-  rw [h0, h1]
-  change Submodule.Quotient.mk (p := LinearMap.range S.moduleCatToCycles)
-    (S.moduleCatCyclesIso.hom.hom z) = 0 ↔ _
-  refine (Submodule.Quotient.mk_eq_zero (LinearMap.range S.moduleCatToCycles)
-    (x := (S.moduleCatCyclesIso.hom.hom z : LinearMap.ker S.g.hom))).trans ?_
-  constructor
-  · rintro ⟨w, hw⟩
-    exact ⟨w, (congrArg S.moduleCatLeftHomologyData.i.hom hw).trans h2⟩
-  · rintro ⟨w, hw⟩
-    exact ⟨w, (ModuleCat.mono_iff_injective S.moduleCatLeftHomologyData.i).1 inferInstance
-      (hw.trans h2.symm)⟩
+  rw [← map_eq_zero_iff S.homologyι.hom
+    ((ModuleCat.mono_iff_injective _).1 inferInstance)]
+  change (S.homologyπ ≫ S.homologyι) z = 0 ↔ _
+  rw [S.homology_π_ι, ModuleCat.comp_apply, S.moduleCat_pOpcycles_eq_zero_iff]
+  rfl
 
 theorem homologyπ_eq_zero_iff {i : ι} (z : K.cycles i) :
     (K.homologyπ i).hom z = 0 ↔

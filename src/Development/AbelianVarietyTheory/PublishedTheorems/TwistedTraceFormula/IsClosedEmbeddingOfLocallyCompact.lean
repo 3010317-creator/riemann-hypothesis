@@ -50,6 +50,10 @@ namespace GlobalTheory
 
 namespace Published
 
+/-- **Dixmier–Malliavin factorization theorem**: every compactly supported smooth test function
+`f ∈ C_c^∞(G)` on a real Lie group (or matrix group) can be factored as a finite sum of
+convolutions `∑ g_i * h_i` of test functions with arbitrarily small support neighborhoods around
+the identity. -/
 def DixmierMalliavinFactorisation : Prop :=
   ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [MeasurableSpace G] [BorelSpace G]
     (n : Type) [Fintype n] [DecidableEq n] (ι : G →* Matrix n n ℂ),

@@ -6,49 +6,7 @@ public import Formalism.LocalToGlobal.GroupLattices.TrivialTransfer.OneAddPowOfS
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.AdelstabL
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Afsplit
 public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.RationalPointsLeHolds
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -106,12 +64,6 @@ theorem gen_coprime (U : Subgroup (GL (Fin k) 𝒜)) (g : ℕ) (hg : g.Prime) (v
   have e := congrArg (fun A : GL (Fin k) (v.adicCompletion F) => A.1 i j) hγ1
   simpa [bc, Matrix.one_apply, apply_ite] using e
 
-private lemma inv_mul_mul_pow {G : Type} [Group G] (x y : G) (n : ℕ) :
-    (x⁻¹ * y * x) ^ n = x⁻¹ * y ^ n * x := by
-  induction n with
-  | zero => simp
-  | succ n ih => rw [pow_succ, ih, pow_succ]; group
-
 theorem gen_triv (σ : E →ₐ[F] E) (J : Matrix (Fin k) (Fin k) E)
     (hτ : ∀ τ : E →+* ℂ, τ.comp (σ : E →+* E) = (starRingEnd ℂ).comp τ)
     (hH : IsHerm (σ : E →+* E) J) (hdet : IsUnit J.det) (hdef : IsTotDef σ J)
@@ -129,10 +81,11 @@ theorem gen_triv (σ : E →ₐ[F] E) (J : Matrix (Fin k) (Fin k) E)
   have hyR : bc (inclE (F := F) 𝔸) γ ∈ ratPts σ J 𝔸 := ⟨γ, hγJ, rfl⟩
   have hyU : bc (inclE (F := F) 𝔸) γ ∈ UPts σ J 𝔸 :=
     Formalism.UG.P.rational_points_le_holds F E (Fin k) σ J 𝔸 hyR
-  have hpowU : ∀ m : ℕ, (x : GL (Fin k) 𝒜)⁻¹ * bc (inclE (F := F) 𝔸) γ ^ m * x ∈ U := by
-    intro m
-    rw [← inv_mul_mul_pow]
-    exact U.pow_mem hγ m
+  have hpowU : ∀ m : ℕ, (x : GL (Fin k) 𝒜)⁻¹ * bc (inclE (F := F) 𝔸) γ ^ m * x ∈ U := fun m => by
+    have h1 : MulAut.conj (x : GL (Fin k) 𝒜)⁻¹ (bc (inclE (F := F) 𝔸) γ ^ m) ∈ U := by
+      rw [map_pow]
+      simpa using U.pow_mem hγ m
+    simpa using h1
   have hfinS :
       Finite (stabAt ((ratPts σ J 𝔸).subgroupOf (UPts σ J 𝔸)) (U.subgroupOf (UPts σ J 𝔸)) x) := by
     have levelafC_int : ∀ m : ℤ, levelafC E (m : 𝓞 F) = inclE (F := F) 𝔸 (m : E) := by

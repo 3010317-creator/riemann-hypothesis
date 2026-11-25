@@ -1,47 +1,9 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.StHorizNotMem
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
 public import Mathlib.RingTheory.KrullDimension.NonZeroDivisors
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterDivSupp
 
 @[expose] public section
@@ -57,28 +19,11 @@ open MvPolynomial ReciprocityTheory.ChartRestriction.G.Geo
 theorem HorizNotMem.ringKrullDim_quotient_add_one_le {R : Type*} [CommRing R] {W₀ W : Ideal R}
     [hW₀ : W₀.IsPrime] [hW : W.IsPrime] (hlt : W₀ < W) :
     ringKrullDim (R ⧸ W) + 1 ≤ ringKrullDim (R ⧸ W₀) := by
-  rw [ringKrullDim_quotient, ringKrullDim_quotient]
-  have : Nonempty (PrimeSpectrum.zeroLocus (R := R) W) :=
-    ⟨⟨⟨W, hW⟩, fun _ h => h⟩⟩
-  rw [← Order.krullDim_withBot]
-  let f : WithBot (PrimeSpectrum.zeroLocus (R := R) W) → PrimeSpectrum.zeroLocus (R := R) W₀ :=
-    fun x => WithBot.recBotCoe ⟨⟨W₀, hW₀⟩, fun _ h => h⟩ (fun q => ⟨q.1, fun _ h => q.2 (hlt.le h)⟩) x
-  refine Order.krullDim_le_of_strictMono f ?_
-  intro a b hab
-  induction a using WithBot.recBotCoe with
-  | bot =>
-    induction b using WithBot.recBotCoe with
-    | bot => exact absurd hab (lt_irrefl _)
-    | coe q =>
-      change (⟨⟨W₀, hW₀⟩, _⟩ : PrimeSpectrum.zeroLocus (R := R) W₀) < ⟨q.1, _⟩
-      exact Subtype.mk_lt_mk.mpr ((PrimeSpectrum.asIdeal_lt_asIdeal _ _).mp
-        (hlt.trans_le (fun _ h => q.2 h)))
-  | coe p =>
-    induction b using WithBot.recBotCoe with
-    | bot => exact absurd hab (WithBot.not_lt_bot _)
-    | coe q =>
-      change (⟨p.1, _⟩ : PrimeSpectrum.zeroLocus (R := R) W₀) < ⟨q.1, _⟩
-      exact Subtype.mk_lt_mk.mpr (Subtype.mk_lt_mk.mp (WithBot.coe_lt_coe.mp hab))
+  have e : ∀ (P : Ideal R) [hP : P.IsPrime], Set.Ici (⟨P, hP⟩ : PrimeSpectrum R) =
+      PrimeSpectrum.zeroLocus (R := R) (P : Set R) := fun _ _ => Set.ext fun _ => Iff.rfl
+  rw [ringKrullDim_quotient, ringKrullDim_quotient, ← e W, ← e W₀,
+    ← Order.coheight_eq_krullDim_Ici, ← Order.coheight_eq_krullDim_Ici]
+  exact_mod_cast Order.coheight_add_one_le ((PrimeSpectrum.asIdeal_lt_asIdeal _ _).mp hlt)
 
 theorem HorizNotMem.proof : HorizNotMem.Statement := by
   intro K _ ι _ P d s s' W hP hsP hs'P hnc hW hWh hs'W

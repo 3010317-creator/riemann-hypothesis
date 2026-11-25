@@ -47,8 +47,6 @@ open scoped TensorProduct
 
 namespace GlobalTheory.IndefiniteRowSideFullHecke.SymplecticTensorMeasures
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7}
 
 abbrev cE (D : D7) : D.host.E →+* D.host.E := (D.sp.cm.sig : D.host.E →+* D.host.E)
@@ -155,10 +153,6 @@ def ConjIsom.ofOrth (V : HSp D) (Q : GL (Fin V.rank) D.host.E)
       _ = Formalism.UG.cT (cE D) (q.map (cE D) * b) * V.gram.map (cE D) * (q.map (cE D) * b) := by
           rw [hd2, Formalism.UG.cT_mul]; simp only [Matrix.mul_assoc]
       _ = V.gram.map (cE D) := by rw [hab, Formalism.UG.cT_one, Matrix.one_mul, Matrix.mul_one]
-
-def basConj {X : ThetaX D} {T : ThetaTied D X} {Wl : WeilTied D X T} (K : KfinTied Wl) (V : HSp D) (hV : V.SigOK) :
-    ConjIsom V :=
-  ConjIsom.ofOrth V (Matrix.nonsingInvUnit (K.bas V) (K.bas_unit V hV)) (K.bas_orth V hV)
 
 def hTens (V W : HSp D) (x y : WA V W) : AE D :=
   ∑ i, ∑ j, ∑ k, ∑ l, cA D (y i j) * incA D (V.gram i k) * incA D (W.gram j l) * x k l

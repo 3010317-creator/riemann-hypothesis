@@ -2,57 +2,13 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StHolomorphicFibreInfinite
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PImplicitCurve
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 public import Mathlib.Analysis.Calculus.ImplicitContDiff
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.RingTheory.TotallySplit
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -90,8 +46,10 @@ theorem kernel_eq_of_maximal {k d r : ℕ} (A : (Fin k → ℂ) →L[ℂ] (Fin d
     rw [hfun]
     exact hv.finCons hs
 
-theorem proof : HolomorphicFibreInfinite.Statement := by
-  intro k d U f hdk hU hUne hf
+theorem exists_infinite_fibre {k d : ℕ} {U : Set (Fin k → ℂ)} {f : (Fin k → ℂ) → Fin d → ℂ}
+    (hU : IsOpen U) (hUne : U.Nonempty) (hf : DifferentiableOn ℂ f U)
+    (hninj : ∀ t ∈ U, ¬ Function.Injective (fderiv ℂ f t)) :
+    ∃ y, (U ∩ f ⁻¹' {y}).Infinite := by
   classical
   have hfa : AnalyticOnNhd ℂ f U :=
     GroundTheory.Heights₂.Heights.ImplicitCurve.analyticOnNhd_of_differentiableOn hU hf
@@ -143,10 +101,10 @@ theorem proof : HolomorphicFibreInfinite.Statement := by
       exact (Pi.basisFun ℂ (Fin r)).linearIndependent
     exact hc.eventually h0.eventually
 
-  obtain ⟨w, hw, hw0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
-    (LinearMap.ker_ne_bot_of_finrank_lt (f := Λ ∘ₗ (fderiv ℂ f s : (Fin k → ℂ) →ₗ[ℂ] (Fin d → ℂ)))
-      (by simp; omega))
-  have hw' : Λ (fderiv ℂ f s w) = 0 := by simpa using hw
+  obtain ⟨w, hw, hw0⟩ : ∃ w, fderiv ℂ f s w = 0 ∧ w ≠ 0 := by
+    obtain ⟨x, y, hxy, hne⟩ := Function.not_injective_iff.1 (hninj s hs)
+    exact ⟨x - y, by rw [map_sub, hxy, sub_self], sub_ne_zero.2 hne⟩
+  have hw' : Λ (fderiv ℂ f s w) = 0 := by rw [hw, map_zero]
 
   let A' : ℂ × (Fin r → ℂ) →L[ℂ] (Fin k → ℂ) :=
     (ContinuousLinearMap.fst ℂ ℂ (Fin r → ℂ)).smulRight w +
@@ -156,7 +114,6 @@ theorem proof : HolomorphicFibreInfinite.Statement := by
     simp [A']
   have hLA : ∀ p : ℂ × (Fin r → ℂ), Λ (fderiv ℂ f s (A' p)) = p.2 := by
     intro p
-
     rw [hA', map_add (f := _), map_add (f := _), map_smul, map_smul, hw', smul_zero, zero_add, map_sum, map_sum]
     simp only [map_smul, hΛv]
     ext i
@@ -249,6 +206,14 @@ theorem proof : HolomorphicFibreInfinite.Statement := by
   refine (hinf.image hPinj.injOn).mono ?_
   rintro _ ⟨z, hz, rfl⟩
   exact ⟨hPU z hz, hconst z hz⟩
+
+theorem proof : HolomorphicFibreInfinite.Statement := by
+  intro k d U f hdk hU hUne hf
+  refine exists_infinite_fibre hU hUne hf fun t _ hinj => ?_
+  obtain ⟨w, hw, hw0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
+    (LinearMap.ker_ne_bot_of_finrank_lt (f := (fderiv ℂ f t : (Fin k → ℂ) →ₗ[ℂ] (Fin d → ℂ)))
+      (by simp; omega))
+  exact hw0 (hinj (by simpa [map_zero] using hw))
 
 end HolomorphicFibreInfinite
 

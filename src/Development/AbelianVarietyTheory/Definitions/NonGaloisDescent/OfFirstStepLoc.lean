@@ -41,8 +41,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.L2 Formalism.L2.Host Formalism.L2.DIV Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.NX GlobalTheory.HeightCounting GlobalTheory.SeriesTie NumberField IsDedekindDomain
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 
 
 
@@ -65,16 +63,6 @@ section Second
 variable {D : D7} (X : RealSide D) (S : RatDat D.ntw) {cf : CharFrame D} {Rw : RowSide D} {low : Finset ℕ} {Pq} {hL} {eig} {θ}
   (Bs : SideB D cf Rw low Pq S hL eig θ) (fi : ∀ i : Fin D.R.m, FormsIso (S.A ((i : ℕ) + 1)) (X.R.FW i))
   (geq : ∀ (i : Fin D.R.m) (g : S.G), X.cG (X.R.eG ((fi i).eG g)) = S.eG g)
-
-def formsOf : NExpRealS X.R X.cG S :=
-  ⟨fi, geq, Bs.rho, Bs.chiL, Bs.eF, fun i j b h1 h2 => ⟨1, one_ne_zero,
-    fun x hx => by rw [one_smul]; exact (Bs.bsup i j b h1 h2 x).1 hx,
-    fun x hx => by rw [one_smul]; exact (Bs.bsup i j b h1 h2 x).2 hx⟩, Bs.act⟩
-
-def heckeOf : NExpRealH X.R X.cG S (formsOf X S Bs fi geq) :=
-  { hL := hL, hs := Bs.hs, cHk := fun i b k P => algebraMap (D.ntw.O i) (FractionRing (D.ntw.O i)) (Bs.cHk i b P) ^ k
-    cHk_zero := fun _ _ _ => pow_zero _, cHk_unit := fun i b P => ((Bs.cHk i b P).isUnit.map _).pow _
-    cHk_pow := fun _ _ _ _ => by rw [pow_one], hkEq := Bs.hkEq }
 
 end Second
 

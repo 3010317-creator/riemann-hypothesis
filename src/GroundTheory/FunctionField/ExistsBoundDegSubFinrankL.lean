@@ -5,58 +5,13 @@ public import Mathlib.Order.CompletePartialOrder
 public import Mathlib.Order.Int.ConditionallyCompleteOrder
 public import GroundTheory.FunctionField.DivisorDegree
 import Mathlib.Algebra.Module.StablyFree.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.RingTheory.PicardGroup
-import Mathlib.Tactic.Polynomial.Basic
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: GroundTheory.FunctionField.Repartition, GroundTheory.FunctionField.ExistsBoundDegSubFinrankL
@@ -645,29 +600,8 @@ theorem eq_genusInt_of_le {D E : Divisor k K}
     deg E + 1 - (finrank k (L E) : ℤ) = genusInt k K :=
   le_antisymm (le_genusInt E) (by have := deg_sub_finrank_L_mono h; linarith)
 
-theorem finrank_L_zero_eq_one (hk : algebraicClosure k K = ⊥) :
-    finrank k (L (0 : Divisor k K)) = 1 := by
-  rw [finrank_L_zero, hk, IntermediateField.finrank_bot]
-
-theorem genusInt_nonneg (hk : algebraicClosure k K = ⊥) : 0 ≤ genusInt k K := by
-  have h := le_genusInt (0 : Divisor k K)
-  rw [finrank_L_zero_eq_one hk, map_zero] at h
-  simpa using h
-
-
-variable (k K) in
-noncomputable def genus : ℕ := (genusInt k K).toNat
-
-theorem genus_eq_genusInt (hk : algebraicClosure k K = ⊥) : (genus k K : ℤ) = genusInt k K :=
-  Int.toNat_of_nonneg (genusInt_nonneg hk)
 
 namespace Divisor
-
-theorem riemann_inequality (hk : algebraicClosure k K = ⊥) (D : Divisor k K) :
-    deg D + 1 - (genus k K : ℤ) ≤ finrank k (L D) := by
-  have := le_genusInt D
-  rw [← genus_eq_genusInt hk] at this
-  linarith
 
 theorem exists_mem_A (a : Repartition k K) : ∃ D : Divisor k K, a ∈ A D := by
   classical
@@ -720,19 +654,6 @@ instance finiteDimensional_quotient (D : Divisor k K) :
   have := finiteDimensional_relSpace_of_le (le_sup_left : D ≤ D ⊔ E)
   rw [h] at this
   exact Module.Finite.equiv Submodule.topEquiv
-
-noncomputable def indexOfSpeciality (D : Divisor k K) : ℕ :=
-  finrank k (Repartition k K ⧸ (A D ⊔ principal k K))
-
-theorem indexOfSpeciality_eq_genusInt (D : Divisor k K) :
-    (indexOfSpeciality D : ℤ) = finrank k (L D) - deg D - 1 + genusInt k K := by
-  obtain ⟨E, hE⟩ := exists_eq_genusInt (k := k) (K := K)
-  have h := relSpace_sup_eq_top D hE
-  have hr := finrank_relSpace (le_sup_left : D ≤ D ⊔ E)
-  rw [h, finrank_top] at hr
-  have hE' := eq_genusInt_of_le hE (le_sup_right : E ≤ D ⊔ E)
-  unfold indexOfSpeciality
-  linarith
 
 end Divisor
 

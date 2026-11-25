@@ -4,52 +4,10 @@ public import GroundTheory.ArithmeticGeometry.AbelianVarieties.FunctionFieldPoin
 public import GroundTheory.ArithmeticGeometry.AbelianVarieties.DivisionPoints
 public import Mathlib.FieldTheory.RatFunc.AsPolynomial
 public import GroundTheory.ArithmeticGeometry.AbelianVarieties.KernelCard
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.AlgebraicGeometry.EllipticCurve.DivisionPolynomial.Degree
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
 public import Mathlib.FieldTheory.RatFunc.IntermediateField
 public import Mathlib.FieldTheory.Relrank
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-import Mathlib.Topology.Sheaves.Init
-import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -173,11 +131,6 @@ theorem aeval_genX_ΨSq_ne_zero {n : ℤ} (hn : n ≠ 0) : aeval (genX E) (E.ΨS
   rw [ne_eq, aeval_genX_eq_zero_iff]
   exact ΨSq_ne_zero_of_ne_zero E hn
 
-omit [E.IsElliptic] in
-private theorem baseChange_eval (p : F[X]) :
-    (p.map (algebraMap F E.toAffine.FunctionField)).eval (genX E) = aeval (genX E) p :=
-  eval_map_algebraMap _ _
-
 theorem genericPoint_eq :
     genericPoint E = .some (genX E) (genY E) (equation_iff_nonsingular.mp (equation_gen E)) :=
   rfl
@@ -185,7 +138,7 @@ theorem genericPoint_eq :
 theorem zsmul_genericPoint_ne_zero {n : ℤ} (hn : n ≠ 0) : n • genericPoint E ≠ 0 := by
   rw [genericPoint_eq, ne_eq, zsmul_eq_zero_iff]
   show ¬((E.map (algebraMap F E.toAffine.FunctionField)).ΨSq n).eval (genX E) = 0
-  rw [map_ΨSq, baseChange_eval]
+  rw [map_ΨSq, eval_map_algebraMap]
   exact aeval_genX_ΨSq_ne_zero E hn
 
 theorem xOf_zsmul_genericPoint {n : ℤ} (hn : n ≠ 0) :
@@ -193,9 +146,9 @@ theorem xOf_zsmul_genericPoint {n : ℤ} (hn : n ≠ 0) :
   rw [genericPoint_eq, xOf_zsmul]
   · show ((E.map (algebraMap F E.toAffine.FunctionField)).Φ n).eval (genX E) /
       ((E.map (algebraMap F E.toAffine.FunctionField)).ΨSq n).eval (genX E) = _
-    rw [map_Φ, map_ΨSq, baseChange_eval, baseChange_eval]
+    rw [map_Φ, map_ΨSq, eval_map_algebraMap, eval_map_algebraMap]
   · show ((E.map (algebraMap F E.toAffine.FunctionField)).ΨSq n).eval (genX E) ≠ 0
-    rw [map_ΨSq, baseChange_eval]
+    rw [map_ΨSq, eval_map_algebraMap]
     exact aeval_genX_ΨSq_ne_zero E hn
 
 noncomputable def ratΦΨ (n : ℤ) : RatFunc F :=

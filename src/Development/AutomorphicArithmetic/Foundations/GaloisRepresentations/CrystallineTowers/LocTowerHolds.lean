@@ -78,7 +78,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomol
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientRingInvariance
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NeZeroOfDvd
-public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.EtaleDualityTraceIsomorphism
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.KunnethLefschetz.CoreHolds
 public import Development.EtaleCohomology.WeilConjectures.AdicFinPf
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.CrystallineTowers.BcCover
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.CrystallineTowers.GoodOf
@@ -404,7 +404,7 @@ private theorem hopSpec : UpperTheory.Gal.G3.HopSpec :=
     (UpperTheory.Gal.G3.pEtGood (UpperTheory.Gal.G3.pEtnGood (UpperTheory.Gal.G3.pFEtBasic UpperTheory.Gal.G3.pPtsOfSplits) UpperTheory.Gal.G3.pEtTr))
     (UpperTheory.Gal.G3.pBcGood bcSplits (UpperTheory.Gal.G3.pBcGal bcSplits))
     (UpperTheory.Gal.G3.pGalClos (UpperTheory.Gal.G3.pGalClosD (UpperTheory.Gal.G3.pSplitsPts UpperTheory.Gal.G3.pIsoPts)
-      (UpperTheory.Gal.G3.pOrdEx UpperTheory.Gal.G3.pOrdStep)))
+      (UpperTheory.Gal.G3.pOrdEx)))
     (UpperTheory.Gal.G3.pOpEx UpperTheory.Gal.G3.pOpTr) UpperTheory.Gal.G3.pOpTr UpperTheory.Gal.G3.pOpEt
     (UpperTheory.Gal.G3.pOpBc bcSplits (UpperTheory.Gal.G3.pBcGal bcSplits)) bcSplits
 
@@ -964,12 +964,6 @@ theorem comp (hA : A11) {l : ℕ} [Fact l.Prime] {E : Spc} {n i : ℤ} (y : Hl l
     rw [show red (l ^ (m + (d + 1))) (l ^ (m + d)) E n i (y.1 (m + (d + 1))) = y.1 (m + d) from y.2 (m + d)]
     exact ih
 
-theorem smul_pow {l : ℕ} [Fact l.Prime] {E : Spc} {n i : ℤ} (m b : ℕ) (v : HtL l m E n i) :
-    ((l : ℤ_[l]) ^ b) • v = (show Ht (l ^ m) E n i from (l ^ b : ℕ) • v) := by
-  change PadicInt.toZModPow m ((l : ℤ_[l]) ^ b) • (show Ht (l ^ m) E n i from v) = _
-  rw [map_pow, map_natCast, ← Nat.cast_pow, Nat.cast_smul_eq_nsmul]
-  rfl
-
 end LateralTheory.EWeil.AdicKerPf
 end -- clump:auto
 end -- clump:auto
@@ -1002,7 +996,7 @@ end -- clump:auto
 -- ===== end clump member: Development.EtaleCohomology.WeilConjectures.FinQCut =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.VFinHolds =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.VFinHolds", "h": "module\n\npublic import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.SplitsSelfOfIso\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyBijectiveOfSupportBijectiveStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientLongExactSequenceStatement\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientRingInvariance\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NeZeroOfDvd\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.EtaleDualityTraceIsomorphism\npublic import Development.EtaleCohomology.EtaleDuality.FinAdicFin\npublic import Development.EtaleCohomology.WeilConjectures.AdicFinPf\npublic import Development.EtaleCohomology.WeilConjectures.AdicKerPf\npublic import Development.EtaleCohomology.WeilConjectures.FinQCut\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.EtaleCohomology.KummerTheory.AdicLimPfKer\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.VFinHolds", "h": "module\n\npublic import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.SplitsSelfOfIso\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyBijectiveOfSupportBijectiveStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientLongExactSequenceStatement\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientRingInvariance\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NeZeroOfDvd\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.KunnethLefschetz.CoreHolds\npublic import Development.EtaleCohomology.EtaleDuality.FinAdicFin\npublic import Development.EtaleCohomology.WeilConjectures.AdicFinPf\npublic import Development.EtaleCohomology.WeilConjectures.AdicKerPf\npublic import Development.EtaleCohomology.WeilConjectures.FinQCut\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.EtaleCohomology.KummerTheory.AdicLimPfKer\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1015,7 +1009,7 @@ theorem vFin_holds : GlobalTheory.GalV.VFin := by
   intro l _ k _ _ hl X p _ n i
   have hT : ∀ a m, Finite (Ht (l ^ a) (sch.obj X) m i) := fun a m => by
     have : NeZero (l ^ a) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-    exact UpperTheory.Et.etale_finiteness_of_duality (l ^ a) k (by rw [Nat.cast_pow]; exact hl.pow a) p m i
+    exact UpperTheory.Gal.KunnethLefschetz.core_holds.e4 (l ^ a) k (by rw [Nat.cast_pow]; exact hl.pow a) p m i
   have hM : Module.Finite ℤ_[l] (Hl l (sch.obj X) n i) :=
     LateralTheory.EWeil.AdicFinPf.AdicFin_of l _ n i (fun a => hT a n)
       (_root_.LateralTheory.KummerTheory.AdicKer_holds GlobalTheory.EtC.RedCoef.a11 l _ i

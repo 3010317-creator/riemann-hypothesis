@@ -68,68 +68,20 @@ public import GroundTheory.HeightsAndTheta.Heights.Intersections.PConsequences
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PPtsAbsIntegrable
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PPtsAbsMeasurable
 public import GroundTheory.HeightsAndTheta.Heights.SemipositiveHeights.PtsIntegrable
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Separation.CompletelyRegular
-import Mathlib.Topology.Sheaves.Init
 import ReciprocityTheory.AnalyticForms.PotentialTheory.LocDens
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularChartDataProperties
 import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PNbarLeviChartReg
 import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PNbarSmooth
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.AnalyticForms.PotentialTheory.PshShiftA
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterBridgeB
 import Std.Tactic.BVDecide.Normalize.Prop
 import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.PermFinTwoUniv
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.NumberTheory.Height.NumberField
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.IsSemipositiveOn
 import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PHermExtend
 import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PHoloInjDerivInj
 import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PProjSmoothAlong
-import Mathlib.Tactic.TypeStar
 import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PCriticalFlatNotInjective
 import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PHolomorphicKernelFibre
 import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PInjectiveHolomorphicInverse
@@ -319,21 +271,12 @@ theorem ReHolAt.congr {A : FinHolAtlas e X} {f g : X → ℝ} {y₀ : X} (hg : R
     fun z hz => (hT hz.2).trans (hWG z hz.1)⟩
 
 theorem ReHolAt.add {A : FinHolAtlas e X} {f g : X → ℝ} {y₀ : X} (hf : ReHolAt A f y₀)
-    (hg : ReHolAt A g y₀) : ReHolAt A (fun y => f y + g y) y₀ := by
-  obtain ⟨W, hW, hy, G, hG, hWG⟩ := hf
-  obtain ⟨W', hW', hy', G', hG', hWG'⟩ := hg
-  refine ⟨W ∩ W', hW.inter hW', ⟨hy, hy'⟩, fun z => G z + G' z, fun j u hu => ?_, fun z hz => ?_⟩
-  · exact (hG j u ⟨hu.1, hu.2.1⟩).add (hG' j u ⟨hu.1, hu.2.2⟩)
-  · show f z + g z = (G z + G' z).re
-    rw [hWG z hz.1, hWG' z hz.2, Complex.add_re]
+    (hg : ReHolAt A g y₀) : ReHolAt A (fun y => f y + g y) y₀ :=
+  _root_.GlobalTheory.CompanionTheory.Ar.Giv.Push.DCont.ReHolAt.add hf hg
 
 theorem ReHolAt.const_mul {A : FinHolAtlas e X} {f : X → ℝ} {y₀ : X} (c : ℝ) (hf : ReHolAt A f y₀) :
-    ReHolAt A (fun y => c * f y) y₀ := by
-  obtain ⟨W, hW, hy, G, hG, hWG⟩ := hf
-  refine ⟨W, hW, hy, fun z => (c : ℂ) * G z, fun j u hu => ?_, fun z hz => ?_⟩
-  · exact analyticAt_const.mul (hG j u hu)
-  · show c * f z = ((c : ℂ) * G z).re
-    rw [hWG z hz, Complex.re_ofReal_mul]
+    ReHolAt A (fun y => c * f y) y₀ :=
+  _root_.GlobalTheory.CompanionTheory.Ar.Giv.Push.DCont.ReHolAt.const_mul c hf
 
 theorem ReHolAt.sub {A : FinHolAtlas e X} {f g : X → ℝ} {y₀ : X} (hf : ReHolAt A f y₀)
     (hg : ReHolAt A g y₀) : ReHolAt A (fun y => f y - g y) y₀ := by
@@ -342,38 +285,13 @@ theorem ReHolAt.sub {A : FinHolAtlas e X} {f g : X → ℝ} {y₀ : X} (hf : ReH
   ring
 
 theorem ReHolAt.sum {A : FinHolAtlas e X} {J : Type} (s : Finset J) {f : J → X → ℝ} {y₀ : X}
-    (hf : ∀ i ∈ s, ReHolAt A (f i) y₀) : ReHolAt A (fun y => ∑ i ∈ s, f i y) y₀ := by
-  classical
-  induction s using Finset.induction_on with
-  | empty =>
-    refine ⟨Set.univ, isOpen_univ, Set.mem_univ _, fun _ => 0, fun j u _ => analyticAt_const, ?_⟩
-    intro z _
-    simp
-  | insert a s ha ih =>
-    refine ((hf a (Finset.mem_insert_self _ _)).add
-      (ih fun i hi => hf i (Finset.mem_insert_of_mem hi))).congr (Eventually.of_forall fun y => ?_)
-    show ∑ i ∈ insert a s, f i y = f a y + ∑ i ∈ s, f i y
-    rw [Finset.sum_insert ha]
+    (hf : ∀ i ∈ s, ReHolAt A (f i) y₀) : ReHolAt A (fun y => ∑ i ∈ s, f i y) y₀ :=
+  _root_.GlobalTheory.CompanionTheory.Ar.Giv.Push.DCont.ReHolAt.sum s hf
 
 theorem reHolAt_log_norm {A : FinHolAtlas e X} {W : Set X} {f : X → ℂ} {y₀ : X} (hW : IsOpen W)
     (hf : A.HoloOn W f) (hy : y₀ ∈ W) (h0 : f y₀ ≠ 0) :
-    ReHolAt A (fun y => Real.log ‖f y‖) y₀ := by
-  have hS : IsOpen {w : ℂ | w / f y₀ ∈ Complex.slitPlane} :=
-    Complex.isOpen_slitPlane.preimage (continuous_id.div_const _)
-  have hW' := (_root_.GlobalTheory.CompanionTheory.Ar.Giv.Push.DCont.holoOn_continuousOn hf).isOpen_inter_preimage hW hS
-  refine ⟨_, hW', ⟨hy, ?_⟩, fun z => Complex.log (f z / f y₀) + (Real.log ‖f y₀‖ : ℂ),
-    fun j u hu => ?_, fun z hz => ?_⟩
-  · show f y₀ / f y₀ ∈ Complex.slitPlane
-    rw [div_self h0]
-    exact Complex.one_mem_slitPlane
-  · have h1 : AnalyticAt ℂ (f ∘ (A.chart j).symm) u := hf j u ⟨hu.1, hu.2.1⟩
-    exact ((h1.div_const (c := f y₀)).clog hu.2.2).add analyticAt_const
-  · have hz0 : f z ≠ 0 := fun h => by
-      have := Complex.slitPlane_ne_zero hz.2
-      simp [h] at this
-    rw [Complex.add_re, Complex.log_re, norm_div, Real.log_div (norm_ne_zero_iff.2 hz0) (norm_ne_zero_iff.2 h0),
-      Complex.ofReal_re]
-    ring
+    ReHolAt A (fun y => Real.log ‖f y‖) y₀ :=
+  _root_.GlobalTheory.CompanionTheory.Ar.Giv.Push.DCont.reHolAt_log_norm hW hf hy h0
 
 end General
 

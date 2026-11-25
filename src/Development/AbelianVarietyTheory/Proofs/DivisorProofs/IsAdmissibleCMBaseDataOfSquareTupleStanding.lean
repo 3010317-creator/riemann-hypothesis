@@ -63,7 +63,7 @@ open GlobalTheory.FunObj GlobalTheory.ChiGrid GlobalTheory.SplitFlip GlobalTheor
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation (spV spW spW₁ spV₁ alpha beta Num skewGram blk conjU)
 open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (Base Spc Model HasExp SplitsFully Chars)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
+attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace GlobalTheory.BaseGoodPlace
 
@@ -189,10 +189,10 @@ end GlobalTheory.BaseGoodPlace
 
 namespace GlobalTheory.FunObj
 
-theorem base_isGood_of_standing : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T} (_hL : L.Is μ₀) (W : G.Weil) (t : T),
+theorem base_isGood_of_standing : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} (W : G.Weil) (t : T),
     SquareStanding G t → ∀ B : Base D.host.F D.host.E, B.ψ = W.ψ →
       (∀ v ∈ B.P, ∃ w ∈ locPl G t, w.under (𝓞 D.host.F) = v) → B.IsGood D.sp.cm.sig := by
-  intro D T L sc G μ₀ _hL W t hS B hB hP
+  intro D T L sc G W t hS B hB hP
   have hψ : IsStdChar D B.ψ (-1) := hB ▸ W.ψ_std
   refine { cm := GlobalTheory.AdelicU.isCMExt_host D
            galois := D.host.hostE_isGalois

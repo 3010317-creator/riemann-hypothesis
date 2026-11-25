@@ -1,46 +1,6 @@
 module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.ThetaModuleTransport.HeadColumnCoordinates.SharpSpanCounting.Common
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -162,9 +122,9 @@ theorem piC_b (Z : M.Mat (r + 1)) : piC Z (bCls Z.Z) = 0 := by
 
 theorem piC_e (Z : M.Mat (r + 1)) : piC Z (eCl Z.Z) = M.eCls Z := rfl
 
-theorem ell_e (Z : M.Mat (r + 1)) (hD : headDet M Z.Z = 0) : ell Z (eCl Z.Z) = 0 := by
+theorem ell_e_mul_det (Z : M.Mat (r + 1)) :
+    ell Z (eCl Z.Z) * (Z.Z.map M.R.subtype).det = headDet M Z.Z := by
   unfold eCl
-  unfold headDet at hD
   rw [ell_mk, ellRaw_apply]
   have h1 : (fun j => (((Pi.single (Fin.last r) (1 : M.R) : Fin (r + 1) → M.R) j : M.R) : E)) =
       Pi.single (Fin.last r) (1 : E) := by
@@ -173,11 +133,12 @@ theorem ell_e (Z : M.Mat (r + 1)) (hD : headDet M Z.Z = 0) : ell Z (eCl Z.Z) = 0
     · subst hj
       simp
     · simp [hj]
-  have h2 : (Z.Z.map M.R.subtype).adjugate (Fin.last r) (Fin.last r) = 0 := by
-    rw [Matrix.adjugate_fin_succ_eq_det_submatrix, Fin.succAbove_last, hD, mul_zero]
-  rw [h1, Matrix.inv_def]
-  simp [Matrix.mulVec, dotProduct, Pi.single_apply]
-  exact mul_eq_zero_of_right _ h2
+  rw [h1, Matrix.inv_def, Matrix.mulVec_single_one]
+  change (Ring.inverse _ * (Z.Z.map M.R.subtype).adjugate (Fin.last r) (Fin.last r)) * _ = _
+  rw [mul_right_comm, Ring.inverse_mul_cancel _ Z.unit, one_mul,
+    Matrix.adjugate_fin_succ_eq_det_submatrix, Fin.succAbove_last, pow_add, ← mul_pow]
+  simp [headDet]
+
 
 theorem lam_piC (Z : M.Mat (r + 1)) (m : MbMod Z.Z) :
     M.lam Z (piC Z m) = M.Rsub.mkQ (ell Z m) := by
@@ -285,7 +246,7 @@ theorem symm_b (γ : MbMod Z₁.Z ≃ₗ[M.R] MbMod Z₂.Z) (hb : γ (bCls Z₁.
 
 def psiOf (γ : MbMod Z₁.Z ≃ₗ[M.R] MbMod Z₂.Z) (hb : γ (bCls Z₁.Z) = bCls Z₂.Z) :
     M.Cok Z₁ ≃ₗ[M.R] M.Cok Z₂ :=
-  LinearEquiv.ofLinear (ind γ.toLinearMap hb) (ind γ.symm.toLinearMap (symm_b γ hb))
+  LinearEquiv.ofLinearMap (ind γ.toLinearMap hb) (ind γ.symm.toLinearMap (symm_b γ hb))
     (by
       apply LinearMap.ext; intro x
       obtain ⟨m, rfl⟩ := piC_surj Z₂ x
@@ -338,7 +299,8 @@ theorem Phi_gamOf (ψ : M.Cok Z₁ ≃ₗ[M.R] M.Cok Z₂) (hl : ∀ v, M.lam Z�
   unfold gamOf
   rw [LinearEquiv.trans_apply, h1, LinearEquiv.trans_apply, LinearEquiv.ofSubmodules_apply, ePhi_coe]
 
-def isoEquiv (hD₁ : headDet M Z₁.Z = 0) (hD₂ : headDet M Z₂.Z = 0) :
+def isoEquiv (h : headDet M Z₁.Z * (Z₂.Z.map M.R.subtype).det =
+    headDet M Z₂.Z * (Z₁.Z.map M.R.subtype).det) :
     IsoMbe Z₁.Z Z₂.Z ≃ M.Iso Z₁ Z₂ where
   toFun γ := ⟨psiOf γ.1 γ.2.1, by rw [← piC_e, psiOf_piC, γ.2.2, piC_e], fun v => by
       obtain ⟨m, rfl⟩ := piC_surj Z₁ v
@@ -349,7 +311,11 @@ def isoEquiv (hD₁ : headDet M Z₁.Z = 0) (hD₂ : headDet M Z₂.Z = 0) :
       simp [Phi_apply, sig_apply, piC_b, ell_b], by
       apply Phi_inj Z₂
       rw [Phi_gamOf]
-      simp [Phi_apply, sig_apply, piC_e, ell_e Z₁ hD₁, ell_e Z₂ hD₂, ψ.2.1]⟩
+      have he : ell Z₁ (eCl Z₁.Z) = ell Z₂ (eCl Z₂.Z) := by
+        apply (Z₁.unit.mul Z₂.unit).mul_left_inj.mp
+        rw [← ell_e_mul_det, ← ell_e_mul_det] at h
+        linear_combination h
+      simp [Phi_apply, sig_apply, piC_e, he, ψ.2.1]⟩
   left_inv γ := by
     apply Subtype.ext; apply LinearEquiv.ext; intro m
     apply Phi_inj Z₂
@@ -361,11 +327,6 @@ def isoEquiv (hD₁ : headDet M Z₁.Z = 0) (hD₂ : headDet M Z₂.Z = 0) :
     have := congrArg Prod.fst (Phi_gamOf ψ.1 ψ.2.2 m)
     simp only [Phi_apply, sig_apply] at this
     exact (psiOf_piC _ _ m).trans this
-
-theorem modularBoundZero_holds (M : Model F E) (r : ℕ) : Mbe0 M r := by
-  unfold Mbe0
-  intro Z₁ Z₂ hD₁ hD₂
-  exact Nat.card_congr (isoEquiv hD₁ hD₂)
 
 end Mod
 

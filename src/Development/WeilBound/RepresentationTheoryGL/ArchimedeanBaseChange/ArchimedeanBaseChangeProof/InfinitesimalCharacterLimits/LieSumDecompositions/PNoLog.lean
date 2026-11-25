@@ -25,55 +25,7 @@ public import Mathlib.LinearAlgebra.Dual.Lemmas
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapS
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PNoLogSt
 public import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.ExponentialNegativity.NormalisedExistence.ExistsNormed
-import Mathlib.Algebra.CharP.Pi
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Algebra.Module.StablyFree.Basic
-import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.Tactic.Linter.HaveILetI
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CapCommuteRtInfGL
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CommuteCapOfCommuteEop
@@ -692,7 +644,7 @@ theorem IsSS.adjoin {s : Set A} (hs : ∀ x ∈ s, IsSS x) (hc : ∀ x ∈ s, �
 
 
 set_option linter.deprecated false in
-theorem isSS_coeff_fun (m : Multiset ℂ) (hm : m.Nodup) (r s : ℕ) (_hrs : Multiset.card m = r + s) (c₁ c₂ : ℂ)
+theorem isSS_coeff_fun (m : Multiset ℂ) (hm : m.Nodup) (r s : ℕ) (c₁ c₂ : ℂ)
     (a b : ℕ → A) (ha : a r = 1) (hb : b s = 1)
     (hcomm : ∀ i j, Commute (a i) (a j) ∧ Commute (a i) (b j) ∧ Commute (b i) (b j))
     (hrel : ∀ u : ℂ, (∑ k ∈ Finset.range (r + 1), (u + c₁) ^ k • a k) *
@@ -865,10 +817,10 @@ theorem Sl_mapsTo {T : Module.End ℂ (Sm E (r + s))} (hT : T ∈ Sl (r + s)) {�
   · rw [← Module.End.mul_apply, (Sl_comm_cap τ u hT).eq, Module.End.mul_apply, hΦ.2, map_smul]
 
 theorem capR_mem_Sl (τ : E →+* ℂ) (u : ℂ) : capR r s τ u ∈ Sl (E := E) (r + s) :=
-  qdet_mem _ _ (fun _ _ => Eop_mem_Sl τ _ _) _
+  qdet_mem (Sl (E := E) (r + s)) _ (fun _ _ => Eop_mem_Sl τ _ _) _
 
 theorem capS_mem_Sl (τ : E →+* ℂ) (u : ℂ) : capS r s τ u ∈ Sl (E := E) (r + s) :=
-  qdet_mem _ _ (fun _ _ => Eop_mem_Sl τ _ _) _
+  qdet_mem (Sl (E := E) (r + s)) _ (fun _ _ => Eop_mem_Sl τ _ _) _
 
 theorem capR_mem_Pa (τ : E →+* ℂ) (u : ℂ) : capR r s τ u ∈ Pa (Vsp r s m) (Isp r s m) :=
   ⟨fun _ hv => Sl_mapsTo r s m (capR_mem_Sl r s τ u) hv, fun _ hv =>
@@ -1005,7 +957,7 @@ theorem trace_ss (hm : ∀ τ, (m τ).Nodup ∧ Multiset.card (m τ) = r + s) (�
   have ha1' : π (aP r) = 1 := by
     rw [show aP r = 1 from Subtype.ext ha1, map_one]
   have hss : ∀ k ≤ r, IsSS (π (aP k)) := fun k hk =>
-    (isSS_coeff_fun (m τ) (hm τ).1 s r (by rw [(hm τ).2, add_comm]) 0 0 (fun k => π (bP k)) (fun k => π (aP k))
+    (isSS_coeff_fun (m τ) (hm τ).1 s r 0 0 (fun k => π (bP k)) (fun k => π (aP k))
       hb1' ha1' (fun i j => ⟨((hcab i j).2.2).map π, ((hcab j i).2.1).symm.map π, ((hcab i j).1).map π⟩)
       hrel k).2 hk
 

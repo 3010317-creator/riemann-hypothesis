@@ -1,5 +1,6 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilTransportAdelicSchwartzCmExtension
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.DecayZero
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
@@ -46,6 +47,7 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryCo
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtPlace
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenPtSubset
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLagrModelOfIsLin
+public import Development.WeilBound.ThetaLifts.LeviDeterminants.GrowSplit
 
 @[expose] public section
 
@@ -63,18 +65,7 @@ variable {F : Type} [Field F] [NumberField F]
 
 theorem comp_mem_schA {κ κ' : Type} [Fintype κ] [Fintype κ'] (σ : κ ≃ κ')
     {Φ : (κ → AF F) → ℂ} (hΦ : Φ ∈ schA F κ) : (fun x : κ' → AF F => Φ (x ∘ σ)) ∈ schA F κ' := by
-  induction hΦ using Submodule.span_induction with
-  | mem Φ h =>
-    obtain ⟨f, g, hg, rfl⟩ := h
-    let A : (κ' → mixedEmbedding.mixedSpace F) ≃L[ℝ] (κ → mixedEmbedding.mixedSpace F) :=
-      (LinearEquiv.funCongrLeft ℝ (mixedEmbedding.mixedSpace F) σ).toContinuousLinearEquiv
-    let B : (κ' → Af F) ≃ₜ (κ → Af F) := (Homeomorph.piCongrLeft (Y := fun _ => Af F) σ).symm
-    refine Submodule.subset_span ⟨SchwartzMap.compCLMOfContinuousLinearEquiv ℂ A f, g ∘ B,
-      ⟨hg.1.comp_continuous B.continuous, hg.2.comp_homeomorph B⟩, ?_⟩
-    rfl
-  | zero => exact Submodule.zero_mem _
-  | add Φ Ψ _ _ h1 h2 => exact Submodule.add_mem _ h1 h2
-  | smul c Φ _ h => exact Submodule.smul_mem _ c h
+  apply _root_.GlobalTheory.TransportF.comp_mem_schA <;> assumption
 
 theorem decay_majorant {N : ℕ} (hF : IsTotallyReal F)
     {Φ : (Fin N → AF F) → ℂ} (hΦ : Decay Φ) (ω : Set (Fin N → AF F)) (hω : IsCompact ω) :
@@ -115,14 +106,9 @@ theorem schA_majorant {κ : Type} [Fintype κ] (hF : IsTotallyReal F)
   rwa [e] at h
 
 theorem continuous_ofMixed : Continuous (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm := by
-  refine continuous_pi fun v => ?_
-  rcases v.isReal_or_isComplex with hv | hv
-  · rw [(InfinitePlace.Completion.isometry_extensionEmbeddingOfIsReal hv).isEmbedding.continuous_iff]
-    exact ((continuous_apply _).comp continuous_fst).congr fun y =>
-      (congrFun (congrArg Prod.fst ((InfiniteAdeleRing.ringEquiv_mixedSpace F).apply_symm_apply y)) ⟨v, hv⟩).symm
-  · rw [(InfinitePlace.Completion.isometry_extensionEmbedding v).isEmbedding.continuous_iff]
-    exact ((continuous_apply _).comp continuous_snd).congr fun y =>
-      (congrFun (congrArg Prod.snd ((InfiniteAdeleRing.ringEquiv_mixedSpace F).apply_symm_apply y)) ⟨v, hv⟩).symm
+  first
+  | exact _root_.PositivityTheory.ThKF0.Split.continuous_ofMixed
+  | (apply _root_.PositivityTheory.ThKF0.Split.continuous_ofMixed <;> assumption)
 
 theorem continuous_realAd : Continuous (realAd F) :=
   Continuous.prodMk (continuous_ofMixed.comp (continuous_algebraMap ℝ _)) continuous_const
@@ -206,7 +192,7 @@ open GlobalTheory.FunObj GlobalTheory.ChiGrid GlobalTheory.SplitFlip GlobalTheor
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation (spV spW spW₁ spV₁ Num IsTripleOf IsDatumA skewGram mulG colV adjV₁)
 open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (Base Spc Model Chars Rep IsTriple Acts SInf At latAtV realAd evI)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
+attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open GlobalTheory.BigDat
 
 theorem GlobalTheory.ThetaLineDeriv.hasDerivAt_thetaSum_rho : ∀ {F : Type} [Field F] [NumberField F] {U : Type} [AddCommGroup U] [Module (AF F) U] {B : U → U → AF F} {κ : Type} [Fintype κ]

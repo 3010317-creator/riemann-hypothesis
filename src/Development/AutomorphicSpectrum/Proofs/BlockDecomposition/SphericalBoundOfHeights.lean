@@ -103,7 +103,6 @@ section -- clump:auto
 open scoped NNReal Matrix TensorProduct Topology
 open Filter NumberField IsDedekindDomain Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.L2.Pj GlobalTheory.AdelicU GlobalTheory.Doubling GlobalTheory.Cont GlobalTheory.MixModel GlobalTheory.RegSW GlobalTheory.EisCont GlobalTheory.SiegelSet GlobalTheory.UAut GlobalTheory.EisLine
 open GlobalTheory.Core.Rk.SWLaw (dblDec zeroSp)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.doubled_space_maximal_level_lattice : ∀ (D : D7) (V : HSp D), siegel V = stab (dblDec V) ∧ (∀ (p : GA D (dblSp V)) (h : p ∈ siegel V) (h' : p ∈ stab (dblDec V)), aP V ⟨p, h⟩ = Matrix.GeneralLinearGroup.det (onX (dblDec V) ⟨p, h'⟩)) ∧ IsAniso (zeroSp D) ∧ ∀ a : GL (Fin V.rank) (AE D), IsMaj V a → ∃ (L : Submodule (𝓞 D.host.E) (Fin (dblSp V).rank → D.host.E)) (b : GL (Fin (dblSp V).rank) (AE D)), IsLevel (dblSp V) L b ∧ Khat V a = lev (dblSp V) L b := by
   first | exact @GlobalTheory.EisCont.siegel_eq_stab_dblDec
@@ -120,8 +119,6 @@ noncomputable section
 open scoped Matrix Classical TensorProduct
 open MeasureTheory NumberField IsDedekindDomain Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.L2.Pj Formalism.IndefR.Datum
 open GlobalTheory.AutomorphicL2Unitary GlobalTheory.AdelicU GlobalTheory.Doubling GlobalTheory.Cont GlobalTheory.Eis GlobalTheory.MixModel GlobalTheory.RegSW
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.RegSch.Inhab
 variable {D : D7}
@@ -326,7 +323,6 @@ noncomputable section
 open scoped Matrix NNReal TensorProduct Classical
 open MeasureTheory NumberField IsDedekindDomain Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.L2.Pj Formalism.IndefR.Datum
 open GlobalTheory.AutomorphicL2Unitary GlobalTheory.AdelicU GlobalTheory.Doubling GlobalTheory.Cont GlobalTheory.Eis GlobalTheory.MixModel GlobalTheory.RegSW GlobalTheory.RegSch
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.AnisotropicResidueNonvanishing
 
@@ -380,7 +376,6 @@ section -- clump:auto
 open scoped NNReal Matrix TensorProduct Topology
 open Filter NumberField IsDedekindDomain Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.L2.Pj GlobalTheory.AdelicU GlobalTheory.Doubling GlobalTheory.Cont GlobalTheory.MixModel GlobalTheory.RegSW GlobalTheory.EisCont GlobalTheory.SiegelSet GlobalTheory.UAut GlobalTheory.EisLine
 open GlobalTheory.Core.Rk.SWLaw (dblDec zeroSp)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.WittFrameOfDec
 
@@ -445,7 +440,6 @@ section -- clump:auto
 open scoped Matrix NNReal TensorProduct Classical
 open MeasureTheory NumberField IsDedekindDomain Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.L2.Pj Formalism.IndefR.Datum
 open GlobalTheory.AutomorphicL2Unitary GlobalTheory.AdelicU GlobalTheory.Doubling GlobalTheory.Cont GlobalTheory.Eis GlobalTheory.MixModel GlobalTheory.RegSW GlobalTheory.RegSch GlobalTheory.ResidueEisenstein
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.ResidueDictionary
 
@@ -554,11 +548,6 @@ theorem cT_cT_of_isCMExt {σ : E →ₐ[F] E} (hσ : IsCMExt F E σ) {a b : Type
     Formalism.UG.cT (σ : E →+* E) (Formalism.UG.cT (σ : E →+* E) M) = M := by
   ext i j; simp [Formalism.UG.cT, GlobalTheory.SiegelSet.sigma_sigma hσ]
 
-omit [NumberField F] [NumberField E] in
-theorem cT_eq_of_isHermND {σ : E →ₐ[F] E} {n : ℕ} {J : Matrix (Fin n) (Fin n) E} (hJ : IsHermND σ J) :
-    Formalism.UG.cT (σ : E →+* E) J = J := by
-  ext i j; simpa [Formalism.UG.cT] using hJ.1 i j
-
 end Swap
 
 end GlobalTheory.ResLine.Swap
@@ -593,7 +582,7 @@ theorem two_mul_le_and_exists_ratPts_swap : ∀ (F E : Type) [Field F] [NumberFi
   have hxx : Formalism.UG.cT (σ : E →+* E) X * J * X = 0 := hW.xx
   have hyy : Formalism.UG.cT (σ : E →+* E) Y * J * Y = 0 := hW.yy
   have hxy : Formalism.UG.cT (σ : E →+* E) X * J * Y = 1 := hW.xy
-  have hJ' := cT_eq_of_isHermND hJ
+  have hJ' := GlobalTheory.UAut.cT_form hJ
   have hyx : Formalism.UG.cT (σ : E →+* E) Y * J * X = 1 := by
     have h := congrArg (Formalism.UG.cT (σ : E →+* E)) hxy
     rw [Formalism.UG.cT_mul, Formalism.UG.cT_mul, cT_cT_of_isCMExt hσ, hJ', Formalism.UG.cT_one] at h
@@ -668,7 +657,6 @@ open scoped Matrix NNReal TensorProduct Classical ComplexOrder
 open MeasureTheory NumberField IsDedekindDomain Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.L2.Pj Formalism.IndefR.Datum
 open GlobalTheory.AutomorphicL2Unitary GlobalTheory.AdelicU GlobalTheory.Doubling GlobalTheory.Cont GlobalTheory.Eis GlobalTheory.MixModel GlobalTheory.RegSW
 open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RegSch
 
 namespace GlobalTheory.Published.SiegelSectionIwasawa
@@ -760,7 +748,6 @@ noncomputable section
 open scoped Matrix NNReal ENNReal TensorProduct Pointwise
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.L2.Pj Formalism.IndefR.Datum MeasureTheory Filter NumberField
 open GlobalTheory.AutomorphicL2Unitary GlobalTheory.AdelicU GlobalTheory.Doubling GlobalTheory.Cont GlobalTheory.MixModel GlobalTheory.StdUnn PositivityTheory.Rg.Rsw
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.CompanionTheory.SphPole
 
