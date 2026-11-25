@@ -92,13 +92,6 @@ theorem along (hT : Transport) (hSC : StepChar) (hTD : TensDecomp) (hFF : FamFil
       (fun k => ⟨(k.1.1, k.1.2 :: k.2), rfl⟩) (fun k => ⟨((k.1, k.2.headD s), k.2.tail), rfl⟩) A μ t) u
     exact (hF' t u).trans e
 
-theorem hasChar_path (hSC : StepChar) : ∀ (ss : List (Fin n)) (X : GMod n) (χ : Fin n → ℂ), HasChar X χ →
-    HasChar (path X χ ss) (pathEnd χ ss) := by
-  intro ss
-  induction ss with
-  | nil => intro X χ h; exact h
-  | cons s ss ih => intro X χ h; exact ih _ _ (hSC n X χ s h)
-
 theorem labels_of (hLF : LocFin) (hTD : TensDecomp) (hT : Transport) (hFF : FamFilt) (hSF : StepFam) (hBF : BaseFam)
     (hS1 : Start1) (hD : Degree) (hB : Basis) (hLT : LabelTrack) : Labels := by
   intro hSC n

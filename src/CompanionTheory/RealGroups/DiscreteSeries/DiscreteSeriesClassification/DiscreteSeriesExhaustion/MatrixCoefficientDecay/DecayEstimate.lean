@@ -304,16 +304,10 @@ namespace CompanionTheory.RgExh.Dec.L.SA
 
 open CompanionTheory.RgExh CompanionTheory.RgExh.Dec ReciprocityTheory.ChartRestriction.DS
 
-theorem hasChar_path (hS : StepChar) {n : ℕ} (X : GMod n) (χ : Fin n → ℂ) (ss : List (Fin n))
-    (h : HasChar X χ) : HasChar (path X χ ss) (pathEnd χ ss) := by
-  induction ss generalizing X χ with
-  | nil => exact h
-  | cons s ss ih => exact ih _ _ (hS n X χ s h)
-
 theorem assembly_of : Assembly := by
   intro hSC hAbs hGeo hLF hHaar hPoly hRR hLR hKR hGr hPk
   intro _ n ε H _ _ _ σ D E hK χ ss hU hSq hChar hN
-  have hXc : HasChar (path ⟨D, E, hK.gl⟩ χ ss) (pathEnd χ ss) := hasChar_path hSC _ χ ss hChar
+  have hXc : HasChar (path ⟨D, E, hK.gl⟩ χ ss) (pathEnd χ ss) := hasChar_path hSC ss _ χ hChar
   obtain ⟨m, A, τ, c₁, R₀, C, hc₁, hgrad, hτc, hτK, hline, hτadd, hcover, hhs, hcontr⟩ := hGeo n ε
   choose ν hν using fun j => hHaar n ε (A j) (hgrad j)
   choose p hpm hp using fun j => hPoly n ε (path ⟨D, E, hK.gl⟩ χ ss) (pathEnd χ ss) (A j) hXc (hgrad j)
