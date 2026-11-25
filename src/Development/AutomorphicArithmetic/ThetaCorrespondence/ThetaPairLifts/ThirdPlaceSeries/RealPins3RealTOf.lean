@@ -23,10 +23,9 @@ theorem realPins3_realTOf_alt : ∀ (K : Ctx) (B : Base) (f : Fr B.toPre) (T : T
   have hr := t.r.z.twisted_places_eq_complex_side_of_eq_nonzero_index (F0K K.s (w.D Z)) t.exact.symm t.r.z.R.kap a.lam a.err a.Dc a.Sp a.Zsc 0 0 (eq_of_heq h)
   show ∀ v, v ∈ a.x.R.twPl ↔ (a.x.R.toCx3 a.x.F).W1 a.x.F.cr (a.x.R.num a.x.F 0 0) v
   clear y h
-  obtain ⟨Dc, Sp, Zsc, lam, err, lam_eq, x, pack, _⟩ := a
-  dsimp only at hr ⊢
+  have pack := a.pack
+  generalize a.x = x at pack ⊢
   obtain ⟨G, grp, fin, Pl0, I0, T0, A3, core, alg, R, F, cG, _⟩ := x
-  dsimp only at pack ⊢
   cases pack
   exact hr
 end GlobalTheory.Mem.R3
