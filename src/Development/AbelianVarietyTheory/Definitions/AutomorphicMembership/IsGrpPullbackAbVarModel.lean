@@ -77,30 +77,7 @@ instance raynaudGrp : GrpObj (raynaud U) := (exists_comparison U).choose_spec.ch
 
 instance raynaudComm : IsCommMonObj (raynaud U) := (exists_comparison U).choose_spec.choose_spec.choose
 
-def raynaudPts : ∀ T, (T ⟶ raynaud U) ≃ GtPt D.toPre T := (exists_comparison U).choose_spec.choose_spec.choose_spec.choose
-
-def raynaudCmp : ∀ T, IsAdicColimit I T → ((T ⟶ raynaud U) ≃* (T ⟶ G)) :=
-  (exists_comparison U).choose_spec.choose_spec.choose_spec.choose_spec.choose
-
-theorem raynaud_spec : (splitExt D.toPre).IsGt (raynaud U) ∧ Represents (raynaudPts U) ∧
-    (∀ T hT w x, raynaudCmp U T hT w = x ↔ FormalPoint.IsPointOf U (raynaudPts U T w) x) ∧
-    ∀ T T' hT hT' (k : T' ⟶ T) (x : T ⟶ raynaud U), raynaudCmp U T' hT' (k ≫ x) = k ≫ raynaudCmp U T hT x :=
-  (exists_comparison U).choose_spec.choose_spec.choose_spec.choose_spec.choose_spec
-
 variable {Λ : Type} [CommRing Λ] [StarRing Λ] [Module Λ D.toPre.X] (ιD : D.toPre.OAct Λ)
-
-def raynaudAct : RingAct (raynaud U) Λ :=
-  (exists_ringAct GlobalTheory.allSixLaws.1.globalFns ιD (Φ := raynaudPts U) (raynaud_spec U).2.1).choose
-
-theorem raynaudAct_spec (a : Λ) (T : Over (Sp R)) (x : T ⟶ raynaud U) :
-    FormalPoint.IsSmulPt ιD a (raynaudPts U T x) (raynaudPts U T (x ≫ (raynaudAct U ιD).act a)) :=
-  (exists_ringAct GlobalTheory.allSixLaws.1.globalFns ιD (Φ := raynaudPts U) (raynaud_spec U).2.1).choose_spec a T x
-
-theorem raynaudCmp_act {ιA : A.OAct Λ} {ιG : RingAct G Λ} (hO : U.OLinear Λ ιD ιA ιG) (T : Over (Sp R))
-    (hT : IsAdicColimit I T) (x : T ⟶ raynaud U) (a : Λ) :
-    raynaudCmp U T hT (x ≫ (raynaudAct U ιD).act a) = raynaudCmp U T hT x ≫ ιG.act a :=
-  ((raynaud_spec U).2.2.1 _ hT _ _).2 ((((raynaud_spec U).2.2.1 _ hT x _).1 rfl).smul GlobalTheory.allSixLaws.1.globalFns hO a
-    (raynaudAct_spec U ιD a _ _))
 
 end Raynaud
 
@@ -111,60 +88,6 @@ open OmegaRank
 variable {p : ℕ} [Fact p.Prime] {C : Type} [Field C] {v : Valuation C ℝ≥0} {O : Type} [CommRing O]
   [Algebra O C] {Λ : Type} [CommRing Λ] [StarRing Λ] (P : Point p v O Λ)
   [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O]
-
-theorem existsUnique_corr_dual : (∀ y : specO O (DualNumber O) ⟶ P.G, ∃! x, Corr P x y) ∧
-    ∀ x : specO O (DualNumber O) ⟶ P.Gt, ∃! y, Corr P x y := by
-  haveI := P.isLocalRing
-  haveI := HodgeTateCompare.isLocalRing_dualNumber (O := O)
-  have hp₀ : ¬ IsUnit (p : O) := Fact.out
-  have hp : ¬ IsUnit (p : DualNumber O) := fun h => hp₀ (by
-    simpa using h.map (TrivSqZeroExt.fstHom O O O))
-  have hc : IsAdicComplete (Ideal.span {(p : DualNumber O)}) (DualNumber O) := by
-    have h : IsAdicComplete (Ideal.span {(p : O)}) O := inferInstance
-    refine { haus' := ?_, toIsPrecomplete := ?_ }
-    · intro x hx
-      simp only [SModEq.zero, mem_pow_iff, dual_dvd_iff] at hx
-      refine TrivSqZeroExt.ext (h.toIsHausdorff.haus' x.fst fun n => ?_)
-        (h.toIsHausdorff.haus' x.snd fun n => ?_)
-      · rw [SModEq.zero, mem_pow_iff]
-        exact (hx n).1
-      · rw [SModEq.zero, mem_pow_iff]
-        exact (hx n).2
-    · constructor
-      intro f hf
-      simp only [SModEq.sub_mem, mem_pow_iff, dual_dvd_iff] at hf ⊢
-      obtain ⟨a, ha⟩ := h.toIsPrecomplete.prec' (fun n => (f n).fst) fun {m n} hmn => by
-        rw [SModEq.sub_mem, mem_pow_iff]
-        exact (hf hmn).1
-      obtain ⟨b, hb⟩ := h.toIsPrecomplete.prec' (fun n => (f n).snd) fun {m n} hmn => by
-        rw [SModEq.sub_mem, mem_pow_iff]
-        exact (hf hmn).2
-      simp only [SModEq.sub_mem, mem_pow_iff] at ha hb
-      exact ⟨TrivSqZeroExt.inl a + TrivSqZeroExt.inr b, fun n => ⟨by simpa using ha n, by simpa using hb n⟩⟩
-  exact ⟨existsUnique_left (P := P) hp hc, existsUnique_right (P := P) hp hc⟩
-
-theorem exists_lieCmp : ∃ e : LieG P.Gt ≃ LieG P.G, ∀ x, Corr P x.1 (e x).1 := by
-  haveI := P.isLocalRing
-  have hp₀ : ¬ IsUnit (p : O) := Fact.out
-  obtain ⟨hl, hr⟩ := P.existsUnique_corr_dual
-  let f : LieG P.G → LieG P.Gt := fun y => ⟨(hl y.1).choose,
-    (existsUnique_left (P := P) hp₀ inferInstance 1).unique
-      (by
-        have h := (hl y.1).choose_spec.1.comp (TrivSqZeroExt.fstHom O O O)
-        rw [y.2] at h
-        exact h) Corr.one⟩
-  let g : LieG P.Gt → LieG P.G := fun x => ⟨(hr x.1).choose,
-    (existsUnique_right (P := P) hp₀ inferInstance 1).unique
-      (by
-        have h := (hr x.1).choose_spec.1.comp (TrivSqZeroExt.fstHom O O O)
-        rw [x.2] at h
-        exact h) Corr.one⟩
-  have hf : ∀ y, Corr P (f y).1 y.1 := fun y => (hl y.1).choose_spec.1
-  have hg : ∀ x, Corr P x.1 (g x).1 := fun x => (hr x.1).choose_spec.1
-  exact ⟨⟨g, f, fun x => Subtype.ext ((hl _).unique (hf _) (hg x)),
-    fun y => Subtype.ext ((hr _).unique (hg _) (hf y))⟩, hg⟩
-
-def lieCmp : LieG P.Gt ≃ LieG P.G := P.exists_lieCmp.choose
 
 end Point
 
@@ -243,42 +166,11 @@ end Roots
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F} {Y : Model Xo c β} {p : ℕ} {C : SCF p}
 
-def objAct {B : Type} [CommRing B] {b : Base l B} {S : Scheme.{0}} {s : S ⟶ Sp B} (o : Obj Dw l b s) :
-    letI := H.starRing; (Obj.toPolAV o).OAct (𝓞 E) :=
-  letI := H.starRing
-  { toRingAct := o.t.act.toRingAct, rosati := SAB.rosatiAdj o.t }
-
 section Fibre
 
 variable (P : PointsOfFlagModel.PtC Y C)
 
 def abVar : PolAV (Sp ↥C.S) := StrictPull.polPull (Obj.toPolAV Y.oF) P.y
-
-def abVarι : (abVar P).A.left ⟶ Y.oF.t.G.left := pullback.fst Y.oF.t.G.hom P.y
-
-theorem isGrpPullback_abVarι : IsGrpPullback (abVar P).A Y.oF.t.G P.y (abVarι P) := isGrpPullback_pullback _ _
-
-def abAct : letI := H.starRing; (abVar P).OAct (𝓞 E) :=
-  letI := H.starRing
-  (exists_oAct_polPull P.y _ (objAct Y.oF)).choose
-
-theorem abAct_ι (a : 𝓞 E) : letI := H.starRing
-    ((abAct P).act a).left ≫ abVarι P = abVarι P ≫ (Y.oF.t.act.act a).left :=
-  letI := H.starRing
-  (exists_oAct_polPull P.y _ (objAct Y.oF)).choose_spec a
-
-def embAt (τ : E →+* ℂ) : E →+* ↥C.S := P.fK.comp (embF c τ)
-
-def embInt (τ : E →+* ℂ) : 𝓞 E →+* ↥(intO ↥C.S) := embO (integers_intO C) (embAt P τ)
-
-theorem embAt_injective : Function.Injective (embAt P) := fun _ _ h =>
-  RingHom.ext fun x => congrArg Subtype.val (P.fK.injective (RingHom.congr_fun h x))
-
-theorem isSplitting_embInt : IsSplitting (embC ↥C.S (embInt P)) := by
-  classical
-  obtain ⟨b⟩ := nonempty_basis (E := E) (NumberField.Embeddings.card E ℂ)
-  refine isSplitting_of_isUnit_discr b ?_ (Int.cast_ne_zero.2 (NumberField.discr_ne_zero E)).isUnit
-  simpa only [embInt, RingHom.comp_apply, algebraMap_embO] using det_sq_eq_discr_of_field (embAt_injective P) b
 
 variable [Fact p.Prime]
 
@@ -288,65 +180,6 @@ end Fibre
 
 variable {P : PointsOfFlagModel.PtC Y C} (A : DatAt Y P)
 
-theorem dat_fac : spMap ((algebraMap ↥(intO ↥C.S) ↥C.S).comp A.f) ≫ A.ι = P.y ≫ Y.j := by
-  rw [spMap_comp_algebraMap, Category.assoc, A.fac]
-  exact P.ext
-
-theorem isGrpPullback_abVar_model : IsGrpPullback (abVar P).A Y.t.G
-    (spMap ((algebraMap ↥(intO ↥C.S) ↥C.S).comp A.f) ≫ A.ι) (abVarι P ≫ Y.m.φ) :=
-  ((isGrpPullback_abVarι P).comp Y.m.cart).congr (dat_fac A).symm rfl
-
-def abToDat : (abVar P).A.left ⟶ A.t.G.left :=
-  A.m.cart.1.lift (abVarι P ≫ Y.m.φ) ((abVar P).A.hom ≫ spMap ((algebraMap ↥(intO ↥C.S) ↥C.S).comp A.f))
-    (by rw [(isGrpPullback_abVar_model A).1.w, Category.assoc])
-
-theorem abToDat_φ : abToDat A ≫ A.m.φ = abVarι P ≫ Y.m.φ := A.m.cart.1.lift_fst _ _ _
-
-theorem abToDat_hom :
-    abToDat A ≫ A.t.G.hom = (abVar P).A.hom ≫ spMap ((algebraMap ↥(intO ↥C.S) ↥C.S).comp A.f) :=
-  A.m.cart.1.lift_snd _ _ _
-
-theorem isGrpPullback_abToDat :
-    IsGrpPullback (abVar P).A A.t.G (spMap ((algebraMap ↥(intO ↥C.S) ↥C.S).comp A.f)) (abToDat A) :=
-  A.m.cart.cancel ((isGrpPullback_abVar_model A).congr rfl (abToDat_φ A).symm) (abToDat_hom A)
-
-theorem abAct_abToDat (a : 𝓞 E) : letI := H.starRing
-    ((abAct P).act a).left ≫ abToDat A = abToDat A ≫ (A.t.act.act a).left := by
-  letI := H.starRing
-  apply A.m.cart.1.hom_ext
-  · have h₁ : abToDat A ≫ A.m.cm.F = abVarι P ≫ Y.m.cm.F := abToDat_φ A
-    rw [Category.assoc, Category.assoc, A.m.act, h₁, reassoc_of% h₁, ← Y.m.act, reassoc_of% abAct_ι P a]
-  · rw [Category.assoc, Category.assoc, Over.w, abToDat_hom, Over.w_assoc]
-
 variable [Fact p.Prime]
-
-theorem exists_pow_mem_span : ∃ n : ℕ, ∀ a ∈ maximalIdeal A.R ^ n, A.f a ∈ Ideal.span {(p : ↥(intO ↥C.S))} := by
-  have hO := integers_intO C
-  haveI := A.noeth
-  haveI := NormIntegers.isLocalRing hO
-  have hle : (maximalIdeal A.R).map A.f ≤ maximalIdeal _ :=
-    Ideal.map_le_iff_le_comap.2 fun a ha => (NormIntegers.mem_maximalIdeal_iff hO).2 (A.f_loc a ha)
-  have hp : 0 < ‖algebraMap ↥(intO ↥C.S) ↥C.S (p : ↥(intO ↥C.S))‖ := by
-    rw [map_natCast]
-    exact norm_pos_iff.2 (Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero)
-  obtain ⟨w, hw⟩ := NormIntegers.isPrincipal_of_fg hO ((maximalIdeal A.R).fg_of_isNoetherianRing.map A.f)
-  rw [Ideal.submodule_span_eq] at hw
-  obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one hp ((NormIntegers.mem_maximalIdeal_iff hO).1
-    (hle (hw ▸ Ideal.mem_span_singleton_self w)))
-  refine ⟨n, fun a ha => ?_⟩
-  have h := Ideal.mem_map_of_mem A.f ha
-  rw [Ideal.map_pow, hw, NormIntegers.mem_span_singleton_pow_iff hO] at h
-  rw [Ideal.mem_span_singleton, NormIntegers.dvd_iff_norm_le hO]
-  exact h.trans hn.le
-
-def htPoint : letI := H.starRing; Point p (fldVal C) ↥(intO ↥C.S) (𝓞 E) :=
-  letI := H.starRing
-  ofCompletion (integers_intO C) (epsAt P) A.f (exists_pow_mem_span A) A.t.semi A.t.act.toRingAct
-    (raynaud_spec A.U.U.toUnifPre).1.some (raynaudAct A.U.U.toUnifPre A.U.oD) (raynaudCmp A.U.U.toUnifPre)
-    (raynaud_spec A.U.U.toUnifPre).2.2.2 (raynaudCmp_act A.U.U.toUnifPre A.U.oD A.U.lin)
-    (abVar P) (abAct P) (abToDat A) (isGrpPullback_abToDat A) (abAct_abToDat A)
-
-def htToModel : letI := H.starRing; (htPoint A).G.left ⟶ Y.t.G.left :=
-  pullback.fst A.t.G.hom (spMap A.f) ≫ A.m.φ
 
 end GlobalTheory.LocM
