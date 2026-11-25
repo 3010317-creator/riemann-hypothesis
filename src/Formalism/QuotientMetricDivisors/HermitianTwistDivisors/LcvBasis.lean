@@ -25,16 +25,9 @@ theorem mem_locP' (p : Ideal (𝓞 K)) [p.IsPrime] (L : Submodule (𝓞 K) V) (x
     x ∈ localization₂ p L ↔ ∃ s, s ∉ p ∧ s • x ∈ L := Iff.rfl
 
 theorem len_zero_of_le (P Q : Submodule (𝓞 K) V) (h : P ≤ Q) :
-    Module.length (𝓞 K) (↥P ⧸ Q.comap P.subtype) = 0 := by
-  apply Module.length_eq_zero_iff.mpr
-  constructor
-  intro x y
-  induction x using Submodule.Quotient.induction_on with
-  | H x =>
-    induction y using Submodule.Quotient.induction_on with
-    | H y =>
-      rw [Submodule.Quotient.eq]
-      exact h (x - y).2
+    Module.length (𝓞 K) (↥P ⧸ Q.comap P.subtype) = 0 :=
+  Module.length_eq_zero_iff.mpr
+    (Submodule.Quotient.subsingleton_iff.mpr (Submodule.comap_subtype_eq_top.mpr h))
 
 theorem kill {N : Submodule (𝓞 K) V} {a : V} {p : Ideal (𝓞 K)} (hp : ∀ r, r ∈ p ↔ r • a ∈ N)
     {s : 𝓞 K} (hs : s ∈ p) {y : V} (hy : y ∈ N ⊔ Submodule.span (𝓞 K) {a}) : s • y ∈ N := by
