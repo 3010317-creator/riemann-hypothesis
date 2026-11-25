@@ -41,44 +41,13 @@ theorem UpperTheory.Comparison₂.toE_bij :
     ∀ φ : Frame, Function.Bijective (toE φ) ∧ toE φ φ.iod = Multiplicative.ofAdd sgc0 ∧ toE φ φ.cc = Multiplicative.ofAdd cconj ∧
       (∀ t, toE φ (φ.tau1 t) = Multiplicative.ofAdd ((0 : E0), t)) ∧ ∀ g : φ.GG, g ∈ φ.Psi ↔ InPhi (Multiplicative.toAdd (toE φ g)) := by
   intro φ
-  have hs := UpperTheory.Comparison₂.sign_character_bijective
-  refine ⟨⟨?_, ?_⟩, ?_, ?_, ?_, ?_⟩
-  · rintro ⟨⟨a1, a2⟩, m⟩ ⟨⟨b1, b2⟩, n⟩ h
-    have h' := congrArg Multiplicative.toAdd h
-    change ((Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 a2), Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 a1)), φ.iotaInv m) =
-      ((Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 b2), Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 b1)), φ.iotaInv n) at h'
-    simp only [Prod.mk.injEq] at h'
-    obtain ⟨⟨h2, h1⟩, h3⟩ := h'
-    have e1 : a1 = b1 := hs.1 (Multiplicative.toAdd.injective h1)
-    have e2 : a2 = b2 := hs.1 (Multiplicative.toAdd.injective h2)
-    have e3 : m = n := by
-      have h4 := congrArg φ.iota h3
-      rwa [Frame.iota_iotaInv, Frame.iota_iotaInv] at h4
-    simp [e1, e2, e3]
-  · intro y
-    obtain ⟨u1, hu1⟩ := hs.2 (Multiplicative.ofAdd (Multiplicative.toAdd y).1.2)
-    obtain ⟨u2, hu2⟩ := hs.2 (Multiplicative.ofAdd (Multiplicative.toAdd y).1.1)
-    refine ⟨((u1, u2), φ.iota (Multiplicative.toAdd y).2), ?_⟩
-    apply Multiplicative.toAdd.injective
-    change ((Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 u2), Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 u1)),
-      φ.iotaInv (φ.iota (Multiplicative.toAdd y).2)) = Multiplicative.toAdd y
-    rw [hu1, hu2, Frame.iotaInv_iota]
-    rfl
-  · apply Multiplicative.toAdd.injective
-    change ((Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 (-1)), Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 1)),
-      φ.iotaInv 1) = ((1, 0), 0)
-    rw [UpperTheory.Comparison₂.sign_character_neg_one, UpperTheory.Comparison₂.sign_character_one]
-    rfl
-  · apply Multiplicative.toAdd.injective
-    change ((Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 (-1)), Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 (-1))),
-      φ.iotaInv 1) = ((1, 1), 0)
-    rw [UpperTheory.Comparison₂.sign_character_neg_one]
-    rfl
+  let sign : ℤˣ ≃ ZMod 2 :=
+    Equiv.ofBijective (fun u => (LFunctionChainParameters.LHost.sgn2 u).toAdd)
+      (Multiplicative.toAdd.bijective.comp sign_character_bijective)
+  let signs := (Equiv.prodComm ℤˣ ℤˣ).trans (sign.prodCongr sign)
+  refine ⟨(signs.prodCongr (Equiv.refl φ.A)).bijective, ?_, ?_, ?_, ?_⟩
+  · rfl
+  · rfl
   · intro t
-    apply Multiplicative.toAdd.injective
-    change ((Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 1), Multiplicative.toAdd (Formalism.LFunctionChainParameters.LHost.sgn2 1)),
-      φ.iotaInv (φ.iota t)) = (((0 : ZMod 2), (0 : ZMod 2)), t)
-    rw [UpperTheory.Comparison₂.sign_character_one, Frame.iotaInv_iota]
-  · intro g
-    show φ.chD g = 1 ↔ _
-    exact UpperTheory.Comparison₂.sign_character_zero_iff g.1.2
+    rfl
+  · exact fun g => sign_character_zero_iff g.1.2

@@ -155,37 +155,19 @@ theorem exceptional_set_count : Formalism.CyclotomicNorms.BBCount := by
   refine ⟨key, fun N => ?_⟩
   induction N with
   | zero =>
-    have : Formalism.CyclotomicNorms.BB 0 g = {g} := by
-      ext ℓ
-      simp only [Formalism.CyclotomicNorms.BB, Set.mem_union, Set.mem_ofPred_eq]
-      constructor
-      · rintro (h | ⟨d, h1, h2, -⟩)
-        · exact h
-        · omega
-      · exact Or.inl
-    rw [this]
-    simp
+    simp [Formalism.CyclotomicNorms.BB]
   | succ N ih =>
-    have : Formalism.CyclotomicNorms.BB (N + 1) g = Formalism.CyclotomicNorms.BB N g ∪ {ℓ | Formalism.CyclotomicNorms.Exc g (N + 1) ℓ} := by
+    have step : Formalism.CyclotomicNorms.BB (N + 1) g =
+        Formalism.CyclotomicNorms.BB N g ∪ {ℓ | Formalism.CyclotomicNorms.Exc g (N + 1) ℓ} := by
       ext ℓ
       simp only [Formalism.CyclotomicNorms.BB, Set.mem_union, Set.mem_ofPred_eq]
-      constructor
-      · rintro (h | ⟨d, h1, h2, h3⟩)
-        · exact Or.inl (Or.inl h)
-        · rcases Nat.lt_or_ge N d with h | h
-          · obtain rfl : d = N + 1 := by omega
-            exact Or.inr h3
-          · exact Or.inl (Or.inr ⟨d, h1, h, h3⟩)
-      · rintro ((h | ⟨d, h1, h2, h3⟩) | h)
-        · exact Or.inl h
-        · exact Or.inr ⟨d, h1, by omega, h3⟩
-        · exact Or.inr ⟨N + 1, by omega, le_rfl, h⟩
-    rw [this]
-    obtain ⟨hf, hc⟩ := key (N + 1) (by omega)
+      grind [Nat.le_succ_iff]
+    rw [step]
+    obtain ⟨hf, hc⟩ := key (N + 1) (by lia)
     refine ⟨ih.1.union hf, ?_⟩
-    have := Set.ncard_union_le (Formalism.CyclotomicNorms.BB N g) {ℓ | Formalism.CyclotomicNorms.Exc g (N + 1) ℓ}
+    apply (Set.ncard_union_le _ _).trans
     have := ih.2
-    omega
+    lia
 
 end GlobalTheory
 end -- clump:auto

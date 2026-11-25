@@ -145,48 +145,31 @@ theorem pair_typ {a b : ℕ} {U₁ : Submodule ℂ (Sm E a)} {U₂ : Submodule �
     {K₁ : Subgroup (GL (Fin a) (Af E))} {K₂ : Subgroup (GL (Fin b) (Af E))} {W₁ : Submodule ℂ (Kinf E a → ℂ)}
     {W₂ : Submodule ℂ (Kinf E b → ℂ)} {F : H E a b → ℂ} (hF : F ∈ pairSpace U₁ U₂) (hT : TypeH K₁ K₂ W₁ W₂ F) :
     F ∈ pairSpace (TypSp K₁ W₁ U₁) (TypSp K₂ W₂ U₂) := by
+  have slices (f : Kinf E a × Kinf E b → ℂ)
+      (hf : f ∈ Submodule.span ℂ {z | ∃ u ∈ W₁, ∃ v ∈ W₂, z = fun k => u k.1 * v k.2}) :
+      (fun k => f (k, 1)) ∈ W₁ ∧ (fun k => f (1, k)) ∈ W₂ := by
+    induction hf using Submodule.span_induction with
+    | mem f hf =>
+      obtain ⟨u, hu, v, hv, rfl⟩ := hf
+      exact ⟨by simpa [Pi.smul_def, smul_eq_mul, mul_comm] using W₁.smul_mem (v 1) hu,
+        by simpa [Pi.smul_def, smul_eq_mul] using W₂.smul_mem (u 1) hv⟩
+    | zero => exact ⟨W₁.zero_mem, W₂.zero_mem⟩
+    | add _ _ _ _ h₁ h₂ => exact ⟨W₁.add_mem h₁.1 h₂.1, W₂.add_mem h₁.2 h₂.2⟩
+    | smul c _ _ h => exact ⟨W₁.smul_mem c h.1, W₂.smul_mem c h.2⟩
   rw [tensor_span_eq_pair_space] at hF ⊢
-  refine tens_typ hF (fun y => ⟨fun u hu g => ?_, fun g => ?_⟩) (fun x => ⟨fun u hu g => ?_, fun g => ?_⟩)
-  · have := hT.1 u hu 1 (one_mem _) (g, y)
-    simpa [map_one] using this
-  · let R : (Kinf E a × Kinf E b → ℂ) →ₗ[ℂ] (Kinf E a → ℂ) :=
-      { toFun := fun z k => z (k, 1), map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
-    have hR : (Submodule.span ℂ {f | ∃ w₁ ∈ W₁, ∃ w₂ ∈ W₂, f = fun k : Kinf E a × Kinf E b => w₁ k.1 * w₂ k.2}).map R ≤
-        W₁ := by
-      rw [Submodule.map_span_le]
-      rintro _ ⟨w₁, hw₁, w₂, hw₂, rfl⟩
-      have e : R (fun k : Kinf E a × Kinf E b => w₁ k.1 * w₂ k.2) = w₂ 1 • w₁ := by
-        funext k
-        simp [R, mul_comm]
-      rw [e]
-      exact W₁.smul_mem _ hw₁
-    have hm := hR (Submodule.mem_map_of_mem (f := R) (hT.2 (g, y)))
-    have e : R (fun k : Kinf E a × Kinf E b => F ((g, y) * (infGL E a (Unitary.toUnits k.1),
-        infGL E b (Unitary.toUnits k.2)))) = fun k => F (g * infGL E a (Unitary.toUnits k), y) := by
-      funext k
-      simp [R, map_one]
-    rw [e] at hm
-    exact hm
-  · have := hT.1 1 (one_mem _) u hu (x, g)
-    simpa [map_one] using this
-  · let R : (Kinf E a × Kinf E b → ℂ) →ₗ[ℂ] (Kinf E b → ℂ) :=
-      { toFun := fun z k => z (1, k), map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
-    have hR : (Submodule.span ℂ {f | ∃ w₁ ∈ W₁, ∃ w₂ ∈ W₂, f = fun k : Kinf E a × Kinf E b => w₁ k.1 * w₂ k.2}).map R ≤
-        W₂ := by
-      rw [Submodule.map_span_le]
-      rintro _ ⟨w₁, hw₁, w₂, hw₂, rfl⟩
-      have e : R (fun k : Kinf E a × Kinf E b => w₁ k.1 * w₂ k.2) = w₁ 1 • w₂ := by
-        funext k
-        simp [R]
-      rw [e]
-      exact W₂.smul_mem _ hw₂
-    have hm := hR (Submodule.mem_map_of_mem (f := R) (hT.2 (x, g)))
-    have e : R (fun k : Kinf E a × Kinf E b => F ((x, g) * (infGL E a (Unitary.toUnits k.1),
-        infGL E b (Unitary.toUnits k.2)))) = fun k => F (x, g * infGL E b (Unitary.toUnits k)) := by
-      funext k
-      simp [R, map_one]
-    rw [e] at hm
-    exact hm
+  apply tens_typ hF
+  · intro y
+    constructor
+    · intro u hu g
+      simpa [map_one] using hT.1 u hu 1 (one_mem _) (g, y)
+    · intro g
+      simpa [map_one] using (slices _ (hT.2 (g, y))).1
+  · intro x
+    constructor
+    · intro u hu g
+      simpa [map_one] using hT.1 1 (one_mem _) u hu (x, g)
+    · intro g
+      simpa [map_one] using (slices _ (hT.2 (x, g))).2
 
 end PositivityTheory.Rg.BcB.SpectralAccumulation.LV
 

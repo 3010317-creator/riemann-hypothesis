@@ -135,48 +135,26 @@ theorem lower_left_zero {H X D : Matrix (Fin N) (Fin N) ℂ} (hH : IsBlockDiag j
     (hb : (b : ℕ) < N - j) : X a b = 0 := by
   classical
   have hunit : IsUnit H.det := isUnit_iff_ne_zero.mpr hd
-  letI : Invertible H := Matrix.invertibleOfIsUnitDet _ hunit
-  have h1 : H.BlockTriangular (fun i : Fin N => if (i : ℕ) < N - j then 0 else 1) := by
+  let _ : Invertible H := Matrix.invertibleOfIsUnitDet _ hunit
+  let block (i : Fin N) : Bool := decide (N - j ≤ (i : ℕ))
+  have cross {r s : Fin N} (h : block s < block r) :
+      ¬ (r : ℕ) < N - j ∧ (s : ℕ) < N - j := by
+    exact ⟨not_lt_of_ge (of_decide_eq_true (Bool.lt_iff.mp h).2),
+      lt_of_not_ge (of_decide_eq_false (Bool.lt_iff.mp h).1)⟩
+  have triangular {M : Matrix (Fin N) (Fin N) ℂ} (hM : IsBlockDiag j M) :
+      M.BlockTriangular block := by
     intro r s hrs
-    apply hH
-    by_cases hr : (r : ℕ) < N - j <;> by_cases hs : (s : ℕ) < N - j <;> simp [hr, hs] at hrs ⊢
-  have h2 : H.BlockTriangular (fun i : Fin N => if (i : ℕ) < N - j then 1 else 0) := by
+    exact hM r s fun h => (cross hrs).1 (h.mpr (cross hrs).2)
+  have ht' : (H⁻¹ * (X * H + D)).BlockTriangular block := by
     intro r s hrs
-    apply hH
-    by_cases hr : (r : ℕ) < N - j <;> by_cases hs : (s : ℕ) < N - j <;> simp [hr, hs] at hrs ⊢
-  have g1 := Matrix.blockTriangular_inv_of_blockTriangular h1
-  have g2 := Matrix.blockTriangular_inv_of_blockTriangular h2
-  have hI : ∀ r s : Fin N, ¬((r : ℕ) < N - j ↔ (s : ℕ) < N - j) → H⁻¹ r s = 0 := by
-    intro r s hrs
-    by_cases hr : (r : ℕ) < N - j <;> by_cases hs : (s : ℕ) < N - j
-    · exact absurd (iff_of_true hr hs) hrs
-    · exact g2 (by simp [hr, hs])
-    · exact g1 (by simp [hr, hs])
-    · exact absurd (iff_of_false hr hs) hrs
-  have hY : ∀ c d : Fin N, N - j ≤ (c : ℕ) → (d : ℕ) < N - j → (H⁻¹ * X * H) c d = 0 := by
-    intro c d hc hdd
-    have hT := ht (show d < c from Fin.lt_def.mpr (by omega))
-    rw [Matrix.mul_add, Matrix.add_apply, ← Matrix.mul_assoc] at hT
-    have hHD : (H⁻¹ * D) c d = 0 := by
-      rw [Matrix.mul_apply]
-      refine Finset.sum_eq_zero (fun m _ => ?_)
-      by_cases hm : (m : ℕ) < N - j
-      · rw [hI c m (fun hiff => by have := hiff.mpr hm; omega), zero_mul]
-      · rw [hD m d (fun hiff => hm (hiff.mpr hdd)), mul_zero]
-    rw [hHD, add_zero] at hT
-    exact hT
-  have hX : X = H * (H⁻¹ * X * H) * H⁻¹ := by
-    simp only [← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hunit, Matrix.one_mul]
-    rw [Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hunit, Matrix.mul_one]
-  rw [hX, Matrix.mul_apply]
-  refine Finset.sum_eq_zero (fun m _ => ?_)
-  by_cases hm : (m : ℕ) < N - j
-  · rw [Matrix.mul_apply, Finset.sum_eq_zero, zero_mul]
-    intro c _
-    by_cases hc : (c : ℕ) < N - j
-    · rw [hH a c (fun hiff => by have := hiff.mpr hc; omega), zero_mul]
-    · rw [hY c m (by omega) hm, mul_zero]
-  · rw [hI m b (fun hiff => hm (hiff.mpr hb)), mul_zero]
+    obtain ⟨hr, hs⟩ := cross hrs
+    exact ht (show s < r from hs.trans_le (le_of_not_gt hr))
+  have hsum := (triangular hH).mul ht'
+  rw [← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hunit, Matrix.one_mul] at hsum
+  have hX := ((triangular hD).add_iff_left.mp hsum).mul
+    (Matrix.blockTriangular_inv_of_blockTriangular (triangular hH))
+  rw [Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hunit, Matrix.mul_one] at hX
+  exact hX (Bool.lt_iff.mpr ⟨decide_eq_false hb.not_ge, decide_eq_true ha⟩)
 
 theorem eq_zero_of_lower {L D : Matrix (Fin N) (Fin N) ℂ} (hL : IsLowerUni L) (hD : ∀ a b, a ≤ b → D a b = 0)
     (ht : (L⁻¹ * D).BlockTriangular id) : D = 0 := by

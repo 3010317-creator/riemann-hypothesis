@@ -49,55 +49,30 @@ theorem UpperTheory.V.Z.Sym.Sig.conjDiag : UpperTheory.V.Z.Sym.Sig.ConjDiag := b
   have hc : (dg s : GL (Fin n) k) * y = y * dg s' := by
     rw [← hy, ← mul_assoc, ← mul_assoc, mul_inv_cancel, one_mul]
   have hM := congrArg (fun g : GL (Fin n) k => (g : Matrix (Fin n) (Fin n) k)) hc
-  simp only [Units.val_mul, UpperTheory.V.Z.Sym.Sig.dg, val_diagT] at hM
-  have key : ∀ i j, (y : Matrix (Fin n) (Fin n) k) i j ≠ 0 → (s i : k) = s' j := by
+  simp only [Units.val_mul, dg, val_diagT] at hM
+  have key : ∀ i j, y.val i j ≠ 0 → (s i : k) = s' j := by
     intro i j hij
     have e := congrFun (congrFun hM i) j
     rw [Matrix.diagonal_mul, Matrix.mul_diagonal, mul_comm] at e
     exact mul_left_cancel₀ hij e
-  have hdet : (y : Matrix (Fin n) (Fin n) k).det ≠ 0 :=
-    ((Matrix.isUnit_iff_isUnit_det _).mp y.isUnit).ne_zero
-  have col : ∀ j, ∃ i, (y : Matrix (Fin n) (Fin n) k) i j ≠ 0 := by
+  have col : ∀ j, ∃ i, y.val i j ≠ 0 := by
     intro j
     by_contra! h
-    exact hdet (Matrix.det_eq_zero_of_column_eq_zero j h)
+    exact y.det_ne_zero (Matrix.det_eq_zero_of_column_eq_zero j h)
   choose σ hσ using col
   have hσs : ∀ j, (s (σ j) : k) = s' j := fun j => key _ _ (hσ j)
+  have increasing : StrictMono (fun i => valuation k (s i : k)) := fun _ _ => hs _ _
   have hmono : StrictMono σ := by
-    intro j j' hjj'
-    have h1 := hs' j j' hjj'
-    rw [← hσs, ← hσs] at h1
-    by_contra! hle
-    rcases hle.lt_or_eq with h2 | h2
-    · exact lt_irrefl _ (lt_trans h1 (hs _ _ h2))
-    · rw [h2] at h1
-      exact lt_irrefl _ h1
-  have hid : σ = id := hmono.eq_id
-  have hss : ∀ j, (s j : k) = s' j := by
-    intro j
-    have := hσs j
-    rwa [hid] at this
-  have inj : ∀ i j, (s i : k) = s j → i = j := by
-    intro i j h
-    rcases lt_trichotomy i j with hij | hij | hij
-    · have := hs i j hij
-      rw [h] at this
-      exact absurd this (lt_irrefl _)
-    · exact hij
-    · have := hs j i hij
-      rw [h] at this
-      exact absurd this (lt_irrefl _)
-  have hdiag : ∀ i j, i ≠ j → (y : Matrix (Fin n) (Fin n) k) i j = 0 := by
     intro i j hij
+    apply increasing.lt_iff_lt.mp
+    simpa only [hσs] using hs' i j hij
+  obtain rfl : σ = id := hmono.eq_id
+  have hdiag (i j) (hij : i ≠ j) : y.val i j = 0 := by
     by_contra h
-    exact hij (inj i j ((key i j h).trans (hss j).symm))
-  have hne : ∀ i, (y : Matrix (Fin n) (Fin n) k) i i ≠ 0 := by
-    intro i
-    have := hσ i
-    rwa [hid] at this
-  refine ⟨funext fun j => Units.ext (hss j), fun i => Units.mk0 _ (hne i), ?_⟩
+    exact hij (increasing.injective (congrArg (valuation k) ((key i j h).trans (hσs j).symm)))
+  refine ⟨funext fun j => Units.ext (hσs j), fun i => Units.mk0 _ (hσ i), ?_⟩
   apply Units.ext
-  simp only [UpperTheory.V.Z.Sym.Sig.dg, val_diagT, Units.val_mk0]
+  simp only [dg, val_diagT, Units.val_mk0]
   ext i j
   by_cases hij : i = j
   · subst hij

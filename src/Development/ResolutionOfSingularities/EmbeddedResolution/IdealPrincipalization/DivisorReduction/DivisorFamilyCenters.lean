@@ -135,64 +135,26 @@ theorem DivisorReduction.divisorReductionSeq_center_nonempty (hres : FunctorialR
       have hdlt : (DivisorReduction.restrictToDivisor T j hj).krullDimSucc < n :=
         lt_of_lt_of_le (hfacts.lowerTriple_dim_lt T hV hcsne j hj
           (DivisorReduction.lowerIdealWithoutBlowup T) (DivisorReduction.lowerBoundaryWithoutBlowup T)) hdim
-      have hlen : (DivisorReduction.ambientBlowupSeq hres blowupPreservesNoetherian T j hj
-          (DivisorReduction.lowerIdealWithoutBlowup T) (DivisorReduction.lowerBoundaryWithoutBlowup T)
-          (L (DivisorReduction.restrictToDivisor T j hj)) hpr).length
-          = (L (DivisorReduction.restrictToDivisor T j hj)).length := by
-        have h := ambientBlowupSequence_length (T.boundary.get ⟨j, hj⟩).subschemeι
-          (MarkedBlowupSequenceData.ofMarkedSequence (L (DivisorReduction.restrictToDivisor T j hj))).toBlowupSequenceData
-          hres blowupPreservesNoetherian hpr
-        calc (DivisorReduction.ambientBlowupSeq hres blowupPreservesNoetherian T j hj
-              (DivisorReduction.lowerIdealWithoutBlowup T) (DivisorReduction.lowerBoundaryWithoutBlowup T)
-              (L (DivisorReduction.restrictToDivisor T j hj)) hpr).length
-            = (MarkedBlowupSequenceData.ofMarkedSequence
-                (L (DivisorReduction.restrictToDivisor T j hj))).toBlowupSequenceData.length := h
-          _ = (L (DivisorReduction.restrictToDivisor T j hj)).length :=
-              MarkedBlowupSequenceData.ofMarkedSequence_length _
       rw [heq hmk]
       intro i hi
-      rw [MarkedBlowupSequenceData.toMarkedSequence_length, BlowupSequenceData.toMarkedBlowupSequenceData_length, hlen] at hi
-      have hcenter : (DivisorReduction.ambientBlowupSeq hres blowupPreservesNoetherian T j hj
-            (DivisorReduction.lowerIdealWithoutBlowup T) (DivisorReduction.lowerBoundaryWithoutBlowup T)
-            (L (DivisorReduction.restrictToDivisor T j hj)) hpr).center i
-          = _root_.FunctorialResolution.Blowup.schemeImageIdeal (embeddingIntoAmbientBlowupSequence (T.boundary.get ⟨j, hj⟩).subschemeι
-              (MarkedBlowupSequenceData.ofMarkedSequence
-                (L (DivisorReduction.restrictToDivisor T j hj))).toBlowupSequenceData
-              hres blowupPreservesNoetherian hpr i)
-            ((L (DivisorReduction.restrictToDivisor T j hj)).center i) := by
-        have h := ambientBlowupSequence_center (T.boundary.get ⟨j, hj⟩).subschemeι
-          (MarkedBlowupSequenceData.ofMarkedSequence (L (DivisorReduction.restrictToDivisor T j hj))).toBlowupSequenceData
-          hres blowupPreservesNoetherian hpr i
-        simp only [MarkedBlowupSequenceData.ofMarkedSequence_center] at h
-        exact h
-      simp only [MarkedBlowupSequenceData.toMarkedSequence_center, BlowupSequenceData.toMarkedBlowupSequenceData_center, hcenter]
+      rw [MarkedBlowupSequenceData.toMarkedSequence_length,
+        BlowupSequenceData.toMarkedBlowupSequenceData_length,
+        DivisorReduction.ambientBlowupSeq_length] at hi
+      rw [MarkedBlowupSequenceData.toMarkedSequence_center,
+        BlowupSequenceData.toMarkedBlowupSequenceData_center,
+        DivisorReduction.ambientBlowupSeq_center_eq_imageIdealSheaf]
       exact support_imageIdealSheaf_nonempty _
-        (isClosedImmersion_embeddingIntoAmbientBlowupSequence (T.boundary.get ⟨j, hj⟩).subschemeι
-          (MarkedBlowupSequenceData.ofMarkedSequence (L (DivisorReduction.restrictToDivisor T j hj))).toBlowupSequenceData
-          hres blowupPreservesNoetherian hpr i) _
+        (DivisorReduction.isClosedImmersion_embeddingIntoAmbient _ _ _ _ _ _ _ _ hpr i) _
         (hL.center_nonempty (DivisorReduction.restrictToDivisor T j hj) hvalid hdlt i hi)
     · have hvalid := hfacts.valid_lowerPre T hV hO hD j hj hZ
       have hdlt : (DivisorReduction.restrictTwistedToDivisor T j hj).krullDimSucc < n :=
         lt_of_lt_of_le (hfacts.lowerTriple_dim_lt T hV hcsne j hj
           (DivisorReduction.lowerIdealAfterBlowup T j hj) (DivisorReduction.lowerBoundaryAfterBlowup T j hj)) hdim
-      have hlen : (DivisorReduction.ambientBlowupSeq hres blowupPreservesNoetherian T j hj
-          (DivisorReduction.lowerIdealAfterBlowup T j hj) (DivisorReduction.lowerBoundaryAfterBlowup T j hj)
-          (L (DivisorReduction.restrictTwistedToDivisor T j hj)) hpr).length
-          = (L (DivisorReduction.restrictTwistedToDivisor T j hj)).length := by
-        have h := ambientBlowupSequence_length (T.boundary.get ⟨j, hj⟩).subschemeι
-          (MarkedBlowupSequenceData.ofMarkedSequence (L (DivisorReduction.restrictTwistedToDivisor T j hj))).toBlowupSequenceData
-          hres blowupPreservesNoetherian hpr
-        calc (DivisorReduction.ambientBlowupSeq hres blowupPreservesNoetherian T j hj
-              (DivisorReduction.lowerIdealAfterBlowup T j hj) (DivisorReduction.lowerBoundaryAfterBlowup T j hj)
-              (L (DivisorReduction.restrictTwistedToDivisor T j hj)) hpr).length
-            = (MarkedBlowupSequenceData.ofMarkedSequence
-                (L (DivisorReduction.restrictTwistedToDivisor T j hj))).toBlowupSequenceData.length := h
-          _ = (L (DivisorReduction.restrictTwistedToDivisor T j hj)).length :=
-              MarkedBlowupSequenceData.ofMarkedSequence_length _
       rw [heq hmk]
       intro i hi
-      rw [MarkedBlowupSequenceData.toMarkedSequence_length, BlowupSequenceData.toMarkedBlowupSequenceData_length,
-        BlowupSequenceData.prepend_length, hlen] at hi
+      rw [MarkedBlowupSequenceData.toMarkedSequence_length,
+        BlowupSequenceData.toMarkedBlowupSequenceData_length,
+        BlowupSequenceData.prepend_length, DivisorReduction.ambientBlowupSeq_length] at hi
       simp only [MarkedBlowupSequenceData.toMarkedSequence_center, BlowupSequenceData.toMarkedBlowupSequenceData_center]
       cases i with
       | zero =>
@@ -203,24 +165,9 @@ theorem DivisorReduction.divisorReductionSeq_center_nonempty (hres : FunctorialR
       | succ k =>
         rw [BlowupSequenceData.prepend_center_succ]
         have hk : k < (L (DivisorReduction.restrictTwistedToDivisor T j hj)).length := Nat.lt_of_succ_lt_succ hi
-        have hcenter : (DivisorReduction.ambientBlowupSeq hres blowupPreservesNoetherian T j hj
-              (DivisorReduction.lowerIdealAfterBlowup T j hj) (DivisorReduction.lowerBoundaryAfterBlowup T j hj)
-              (L (DivisorReduction.restrictTwistedToDivisor T j hj)) hpr).center k
-            = _root_.FunctorialResolution.Blowup.schemeImageIdeal (embeddingIntoAmbientBlowupSequence (T.boundary.get ⟨j, hj⟩).subschemeι
-                (MarkedBlowupSequenceData.ofMarkedSequence
-                  (L (DivisorReduction.restrictTwistedToDivisor T j hj))).toBlowupSequenceData
-                hres blowupPreservesNoetherian hpr k)
-              ((L (DivisorReduction.restrictTwistedToDivisor T j hj)).center k) := by
-          have h := ambientBlowupSequence_center (T.boundary.get ⟨j, hj⟩).subschemeι
-            (MarkedBlowupSequenceData.ofMarkedSequence (L (DivisorReduction.restrictTwistedToDivisor T j hj))).toBlowupSequenceData
-            hres blowupPreservesNoetherian hpr k
-          simp only [MarkedBlowupSequenceData.ofMarkedSequence_center] at h
-          exact h
-        rw [hcenter]
+        rw [DivisorReduction.ambientBlowupSeq_center_eq_imageIdealSheaf]
         exact support_imageIdealSheaf_nonempty _
-          (isClosedImmersion_embeddingIntoAmbientBlowupSequence (T.boundary.get ⟨j, hj⟩).subschemeι
-            (MarkedBlowupSequenceData.ofMarkedSequence (L (DivisorReduction.restrictTwistedToDivisor T j hj))).toBlowupSequenceData
-            hres blowupPreservesNoetherian hpr k) _
+          (DivisorReduction.isClosedImmersion_embeddingIntoAmbient _ _ _ _ _ _ _ _ hpr k) _
           (hL.center_nonempty (DivisorReduction.restrictTwistedToDivisor T j hj) hvalid hdlt k hk)
 
 theorem DivisorReduction.divisorReductionSeq_orderAt_le_mult (hres : FunctorialResolution.Blowup.StrictTransformIsBlowupOfClosedSubscheme.{u})
@@ -250,45 +197,20 @@ theorem DivisorReduction.divisorReductionSeq_orderAt_le_mult (hres : FunctorialR
   · rcases DivisorReduction.divisorReductionSeq_eq_ambientBlowupSeq_or_prepend hres hfacts L j T hV hj hO hD hcs with
       ⟨hZ, hpr, hmk, heq⟩ | ⟨hZ, hb, hpr, hmk, heq⟩
     · have hvalid := hfacts.valid_lowerTop T hV hO hD j hj hZ
-      have hlen : (DivisorReduction.ambientBlowupSeq hres blowupPreservesNoetherian T j hj
-          (DivisorReduction.lowerIdealWithoutBlowup T) (DivisorReduction.lowerBoundaryWithoutBlowup T)
-          (L (DivisorReduction.restrictToDivisor T j hj)) hpr).length
-          = (L (DivisorReduction.restrictToDivisor T j hj)).length := by
-        have h := ambientBlowupSequence_length (T.boundary.get ⟨j, hj⟩).subschemeι
-          (MarkedBlowupSequenceData.ofMarkedSequence (L (DivisorReduction.restrictToDivisor T j hj))).toBlowupSequenceData
-          hres blowupPreservesNoetherian hpr
-        calc (DivisorReduction.ambientBlowupSeq hres blowupPreservesNoetherian T j hj
-              (DivisorReduction.lowerIdealWithoutBlowup T) (DivisorReduction.lowerBoundaryWithoutBlowup T)
-              (L (DivisorReduction.restrictToDivisor T j hj)) hpr).length
-            = (MarkedBlowupSequenceData.ofMarkedSequence
-                (L (DivisorReduction.restrictToDivisor T j hj))).toBlowupSequenceData.length := h
-          _ = (L (DivisorReduction.restrictToDivisor T j hj)).length :=
-              MarkedBlowupSequenceData.ofMarkedSequence_length _
       rw [heq hmk]
       intro i hi x
-      rw [MarkedBlowupSequenceData.toMarkedSequence_length, BlowupSequenceData.toMarkedBlowupSequenceData_length, hlen] at hi
+      rw [MarkedBlowupSequenceData.toMarkedSequence_length,
+        BlowupSequenceData.toMarkedBlowupSequenceData_length,
+        DivisorReduction.ambientBlowupSeq_length] at hi
       simp only [MarkedBlowupSequenceData.toMarkedSequence_ideal, BlowupSequenceData.toMarkedBlowupSequenceData_ideal]
       exact hfacts.orderAt_ctrlIdeal_le_top T hV hO hD j hj hZ hvalid
         (L (DivisorReduction.restrictToDivisor T j hj)) hpr i hi x
     · have hvalid := hfacts.valid_lowerPre T hV hO hD j hj hZ
-      have hlen : (DivisorReduction.ambientBlowupSeq hres blowupPreservesNoetherian T j hj
-          (DivisorReduction.lowerIdealAfterBlowup T j hj) (DivisorReduction.lowerBoundaryAfterBlowup T j hj)
-          (L (DivisorReduction.restrictTwistedToDivisor T j hj)) hpr).length
-          = (L (DivisorReduction.restrictTwistedToDivisor T j hj)).length := by
-        have h := ambientBlowupSequence_length (T.boundary.get ⟨j, hj⟩).subschemeι
-          (MarkedBlowupSequenceData.ofMarkedSequence (L (DivisorReduction.restrictTwistedToDivisor T j hj))).toBlowupSequenceData
-          hres blowupPreservesNoetherian hpr
-        calc (DivisorReduction.ambientBlowupSeq hres blowupPreservesNoetherian T j hj
-              (DivisorReduction.lowerIdealAfterBlowup T j hj) (DivisorReduction.lowerBoundaryAfterBlowup T j hj)
-              (L (DivisorReduction.restrictTwistedToDivisor T j hj)) hpr).length
-            = (MarkedBlowupSequenceData.ofMarkedSequence
-                (L (DivisorReduction.restrictTwistedToDivisor T j hj))).toBlowupSequenceData.length := h
-          _ = (L (DivisorReduction.restrictTwistedToDivisor T j hj)).length :=
-              MarkedBlowupSequenceData.ofMarkedSequence_length _
       rw [heq hmk]
       intro i hi x
-      rw [MarkedBlowupSequenceData.toMarkedSequence_length, BlowupSequenceData.toMarkedBlowupSequenceData_length,
-        BlowupSequenceData.prepend_length, hlen] at hi
+      rw [MarkedBlowupSequenceData.toMarkedSequence_length,
+        BlowupSequenceData.toMarkedBlowupSequenceData_length,
+        BlowupSequenceData.prepend_length, DivisorReduction.ambientBlowupSeq_length] at hi
       simp only [MarkedBlowupSequenceData.toMarkedSequence_ideal, BlowupSequenceData.toMarkedBlowupSequenceData_ideal]
       exact hfacts.orderAt_ctrlIdeal_le_pre T hV hO hD j hj hZ hb hvalid
         (L (DivisorReduction.restrictTwistedToDivisor T j hj)) hpr i hi x

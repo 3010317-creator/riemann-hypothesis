@@ -236,27 +236,14 @@ theorem _root_.GlobalTheory.flat_coker_of_injective_mod_maximalIdeal : ∀ (V A 
   intro V A _ _ _ _ _ _ _ _ M N _ _ _ _ _ _ _ _ u hu
   have hmA : (IsLocalRing.maximalIdeal V).map (algebraMap V A) ≠ ⊤ :=
     (IsLocalRing.map_maximalIdeal_lt_top (algebraMap V A)).ne
-  have hgen : ∀ y ∈ IsLocalRing.maximalIdeal V • (⊤ : Submodule V N),
-      y ∈ (IsLocalRing.maximalIdeal V).map (algebraMap V A) • (⊤ : Submodule A N) := by
-    intro y hy
-    refine Submodule.smul_induction_on
-      (p := fun y => y ∈ (IsLocalRing.maximalIdeal V).map (algebraMap V A) • (⊤ : Submodule A N))
-      hy (fun r hr y _ => ?_) (fun x y hx hy => Submodule.add_mem _ hx hy)
-    rw [← algebraMap_smul A r y]
-    exact Submodule.smul_mem_smul (Ideal.mem_map_of_mem _ hr) Submodule.mem_top
-  have hgen2 : ∀ y ∈ (IsLocalRing.maximalIdeal V).map (algebraMap V A) • (⊤ : Submodule A M),
-      u y ∈ (IsLocalRing.maximalIdeal V).map (algebraMap V A) • LinearMap.range u := by
-    intro y hy
-    refine Submodule.smul_induction_on
-      (p := fun y => u y ∈ (IsLocalRing.maximalIdeal V).map (algebraMap V A) • LinearMap.range u)
-      hy (fun r hr y _ => ?_) (fun x y hx hy => ?_)
-    · rw [map_smul]
-      exact Submodule.smul_mem_smul hr (LinearMap.mem_range_self u y)
-    · rw [map_add (f := _)]; exact Submodule.add_mem _ hx hy
   have h0 : ∀ z ∈ LinearMap.range u, z ∈ IsLocalRing.maximalIdeal V • (⊤ : Submodule V N) →
       z ∈ (IsLocalRing.maximalIdeal V).map (algebraMap V A) • LinearMap.range u := by
     rintro _ ⟨x, rfl⟩ hx
-    exact hgen2 x (hu x (hgen _ hx))
+    rw [LinearMap.range_eq_map, ← Submodule.map_smul'']
+    apply Submodule.mem_map_of_mem
+    apply hu
+    rwa [← Submodule.restrictScalars_mem V, Ideal.smul_restrictScalars,
+      Submodule.restrictScalars_top]
   refine flat_quotient_of_mem_ideal_smul_imp_mem_map_smul (LinearMap.range u) fun I z hz hzI => ?_
   let K := LinearMap.range u
   let P : Submodule A K := (I.map (algebraMap V A) • K).comap K.subtype
@@ -278,12 +265,9 @@ theorem _root_.GlobalTheory.flat_coker_of_injective_mod_maximalIdeal : ∀ (V A 
       rw [← hlw]
       simpa using hl
     rw [heq]
-    have hle : ((IsLocalRing.maximalIdeal V).map (algebraMap V A) ^ p •
-        (⊤ : Submodule A K)).map P.mkQ ≤
-        (IsLocalRing.maximalIdeal V).map (algebraMap V A) ^ p • (⊤ : Submodule A (K ⧸ P)) := by
-      rw [Submodule.map_smul'']
-      exact Submodule.smul_mono le_rfl le_top
-    exact hle (Submodule.mem_map_of_mem hw'')
+    have hm := Submodule.mem_map_of_mem (f := P.mkQ) hw''
+    simpa only [Submodule.map_smul'', Submodule.map_top, Submodule.range_mkQ,
+      Submodule.mkQ_apply] using hm
   have hbot := Ideal.iInf_pow_smul_eq_bot_of_isLocalRing (M := K ⧸ P)
     ((IsLocalRing.maximalIdeal V).map (algebraMap V A)) hmA
   have hmem : Submodule.Quotient.mk (p := P) ⟨z, hz⟩ ∈
