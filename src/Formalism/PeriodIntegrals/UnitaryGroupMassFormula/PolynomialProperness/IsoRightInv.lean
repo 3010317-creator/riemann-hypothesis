@@ -33,11 +33,8 @@ theorem key_ineq (H : Matrix (Fin n) (Fin n) ℂ) (hH : Hᴴ = H) (c : ℝ) (hc 
   nlinarith
 
 theorem iso_right_inv (H s : Matrix (Fin n) (Fin n) ℂ) (hHH : H * H = 1) (hs : sᴴ * H * s = H) :
-    s * (H * sᴴ * H) = 1 := by
-  have h : H * sᴴ * H * s = 1 := by
-    rw [mul_assoc, mul_assoc, ← mul_assoc sᴴ, hs, hHH]
-  rw [← Matrix.inv_eq_left_inv h]
-  exact Matrix.mul_nonsing_inv s (Matrix.isUnit_det_of_left_inverse h)
+    s * (H * sᴴ * H) = 1 :=
+  mul_eq_one_comm.1 (by rw [mul_assoc, mul_assoc, ← mul_assoc sᴴ, hs, hHH])
 
 theorem psd_image (H s : Matrix (Fin n) (Fin n) ℂ) (hHH : H * H = 1) (hs : sᴴ * H * s = H)
     (m : ι → Fin n → ℂ) (hpsd : ∀ x, (∀ i, herm H x (m i) = 0) → 0 ≤ (herm H x x).re)
