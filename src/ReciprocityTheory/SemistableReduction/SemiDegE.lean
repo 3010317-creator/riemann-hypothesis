@@ -33,13 +33,8 @@ theorem exists_kBasisIn {K : Type} [Field K] [NumberField K] {r : ℕ}
   have hx' : x ∈ Submodule.span K s := by
     rw [hspan]
     exact Submodule.subset_span hx
-  have hr : Set.range (fun i => ((e.symm i : s) : Fin r → K)) = s := by
-    ext y
-    constructor
-    · rintro ⟨i, rfl⟩
-      exact (e.symm i).2
-    · intro hy
-      exact ⟨e ⟨y, hy⟩, by simp⟩
+  have hr : Set.range (fun i => ((e.symm i : s) : Fin r → K)) = s :=
+    (EquivLike.range_comp Subtype.val e.symm).trans Subtype.range_coe
   rw [hr]
   exact hx'
 
