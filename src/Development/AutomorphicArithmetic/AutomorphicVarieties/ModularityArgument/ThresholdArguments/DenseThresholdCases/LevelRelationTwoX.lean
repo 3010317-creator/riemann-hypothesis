@@ -37,7 +37,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
-set_option maxHeartbeats 800000
 
 section
 noncomputable section

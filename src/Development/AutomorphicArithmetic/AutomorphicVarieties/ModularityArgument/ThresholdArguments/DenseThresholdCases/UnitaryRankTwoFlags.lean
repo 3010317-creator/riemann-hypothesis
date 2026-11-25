@@ -933,7 +933,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option maxHeartbeats 800000
 
 section
 noncomputable section

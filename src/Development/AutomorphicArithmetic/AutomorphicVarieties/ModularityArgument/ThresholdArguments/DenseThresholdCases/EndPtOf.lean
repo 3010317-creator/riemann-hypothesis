@@ -1081,7 +1081,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option maxHeartbeats 800000
 
 section
 open NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.GalOfCusp IsLocalRing UpperTheory.V UpperTheory.V.HV UpperTheory.V.U3 UpperTheory.V.Base UpperTheory.V.Af UpperTheory.V.Pr UpperTheory.V.Alg UpperTheory.V.J
@@ -1418,7 +1417,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option maxHeartbeats 800000
 
 section
 open NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.GalOfCusp IsLocalRing UpperTheory.V UpperTheory.V.HV UpperTheory.V.U3 UpperTheory.V.Base UpperTheory.V.Af UpperTheory.V.Pr UpperTheory.V.Alg UpperTheory.V.J UpperTheory.V.Th
