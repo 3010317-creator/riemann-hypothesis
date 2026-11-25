@@ -1346,7 +1346,7 @@ theorem RootFieldNumerics.tower_rational_weight_bound : ReciprocityTheory.ChartR
     push_cast
     rfl
   have hnM : (T.M B c).NefGen (T.lamS lam s) s :=
-    (_root_.GlobalTheory.CompanionTheory.Ar.Top.curveDeg_linear_nef Ψ N (T.M B c) (T.lamS lam s) 0 s 0 0).2.2.2 hs' (h71 _ hd') h72
+    (_root_.RootFieldNumerics.curveDeg_linear_and_nef Ψ N (T.M B c) (T.lamS lam s) 0 s 0 0).2.2.2 hs' (h71 _ hd') h72
   have hnL : (T.M B c).NefGen lam ((0 : ℚ) : ℝ) := by simpa using h71 _ hd
   have hL : T.vol c * flagDeg lam = (T.M B c).geoFun (linA lam 0 ^ dimFl Ψ N) := by
     rw [flagDeg, ← hP.2.1 B c]

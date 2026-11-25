@@ -967,7 +967,7 @@ theorem der_unip_vanish (hθ : IsInfFam θ) {V : HSp D} {m : ℕ} {X Y : Matrix 
     rw [Matrix.nonsing_inv_mul _ hPu, Matrix.mul_one, ← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hPu, Matrix.one_mul]
   have hc1 : ∀ b c : Fin V.rank, (P⁻¹ * conjAt V τ Z * P) b c ≠ 0 →
       ∃ e : ℕ, (e = 0 ∨ e = 0 + a ∨ e + 0 + a = V.rank ∨ e + 0 = V.rank) ∧ b.val < e ∧ e ≤ c.val :=
-    fun b c h => GlobalTheory.T.adapted_basis_conjugate_zero_entries D V m X Y hW 0 a (by omega) C hC τ p q b c hcut h
+    fun b c h => _root_.GlobalTheory.CompanionTheory.Hypotheses₂.ConjAdapted.conj_strict D V m X Y hW 0 a (by omega) C hC τ p q b c hcut h
   have hc0 : ∀ b c : Fin V.rank, (P⁻¹ * Z * P) b c ≠ 0 →
       ∃ e : ℕ, (e = 0 ∨ e = 0 + a ∨ e + 0 + a = V.rank ∨ e + 0 = V.rank) ∧ b.val < e ∧ e ≤ c.val := by
     intro b c h
@@ -986,9 +986,9 @@ theorem der_unip_vanish (hθ : IsInfFam θ) {V : HSp D} {m : ℕ} {X Y : Matrix 
       simp only [Matrix.mul_add, Matrix.add_mul, Matrix.mul_smul, Matrix.smul_mul, Matrix.add_apply, Matrix.smul_apply, h0, h1,
         smul_zero, add_zero]
     · exact hc0 b c h0
-  have u1 := fun t => GlobalTheory.T.adapted_basis_block_entries D θ hθ V m X Y hW T 0 a (by omega) (by simpa using hk) (Or.inl rfl) C hC τ _ h1
+  have u1 := fun t => _root_.GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.UnipOne.oneP_mem_unip D θ hθ V m X Y hW T 0 a (by omega) (by simpa using hk) (Or.inl rfl) C hC τ _ h1
     (hA (1 / 2) (1 / 2) _ (by simp only [smul_add])) t
-  have u2 := fun t => GlobalTheory.T.adapted_basis_block_entries D θ hθ V m X Y hW T 0 a (by omega) (by simpa using hk) (Or.inl rfl) C hC τ _ h2
+  have u2 := fun t => _root_.GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.UnipOne.oneP_mem_unip D θ hθ V m X Y hW T 0 a (by omega) (by simpa using hk) (Or.inl rfl) C hC τ _ h2
     (hA (1 / (2 * Complex.I)) (-(1 / (2 * Complex.I))) _ (by rw [smul_sub, neg_smul, sub_eq_add_neg])) t
   rw [derEnd_coe']
   simp only [RderC, Pi.add_apply, Pi.smul_apply, rder_eq_zero hW u1 hF hg, rder_eq_zero hW u2 hF hg, smul_zero, add_zero]
@@ -1091,7 +1091,7 @@ theorem key_monic (hθ : IsInfFam θ) {V : HSp D} {m : ℕ} {X Y : Matrix (Fin V
   let M : Fin V.rank → Fin V.rank → Matrix (Fin V.rank) (Fin V.rank) ℂ := fun i j => P * Matrix.single i j (1 : ℂ) * P⁻¹
   have hM : Formalism.REAL.GlRel M := glRel_conj hQP
   let Xf : Fin V.rank → Fin V.rank → Module.End ℂ (GlobalTheory.Mem.AutSpace.SmFun θ V) := fun i j => GlobalTheory.Mem.RealTranslate.derEnd hθ τ (M i j)
-  have hX : Formalism.REAL.GlRel Xf := GlobalTheory.T.gl_relations_derivative_preserved D θ hθ V τ M hM
+  have hX : Formalism.REAL.GlRel Xf := _root_.GlobalTheory.CompanionTheory.DerGlRel.glRel_derEnd_family D θ hθ V τ M hM
   let Wn := leftSm θ V (unip D.sp.cm.sig V.gram X T)
   have hWn : ∀ p q, ∀ F ∈ Wn, Xf p q F ∈ Wn := fun p q F hF u hu g =>
     rderC_left τ _ (hF u hu) g
@@ -1206,7 +1206,7 @@ end Final
 theorem gelf_slices_monic : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)), IsInfFam θ → ∀ (V : HSp D) (U : Subgroup (GA D V)) (ε : D.what₂.Tau → Fin V.rank → Bool) (fr : D.what₂.Tau → Matrix (Fin V.rank) (Fin V.rank) ℂ) (W : D.what₂.Tau → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module ℂ (W τ)] (ρ : ∀ τ, Representation ℂ (Formalism.REAL.KG (ε τ)) (W τ)) (c : D.what₂.Tau → ℕ → ℂ) (m : ℕ) (X Y : Matrix (Fin V.rank) (Fin m) D.host.E), GlobalTheory.SiegelSet.IsWittFrame D.sp.cm.sig V.gram X Y → ∀ (T : Finset (Fin m)) (V' : HSp D) (ι : V'.V →ₗ[D.host.E] V.V), HSpace.IsIsomEmb V' V ι → (∀ v : V.V, v ∈ LinearMap.range ι ↔ ∀ i ∈ GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.upTo T, V.hT (V.frame.equivFun.symm fun j => X j i) v = 0 ∧ V.hT (V.frame.equivFun.symm fun j => Y j i) v = 0) → ∀ s : GA D V' →* GA D V, (∀ h, EmbRel V V' ι (s h) h) → ∃ A : D.what₂.Tau → ℕ → List ℂ, ∀ ψ ∈ formsOn θ V X Y T U ε fr ρ c, ∀ y ∈ levi D.sp.cm.sig V.gram X Y T, (∀ t ∈ uPart D.sp.cm.sig V.gram X Y T, t * y = y * t) → ∀ τ k, (A τ k).foldr (fun a f => gelf θ V' τ k f - a • f) (fun h => ψ (s h * y)) = 0 := by
   intro D θ hθ V U ε fr W _ _ ρ c m X Y hW T V' ι hι hr s hs
   classical
-  obtain ⟨C, hC⟩ := GlobalTheory.T.exists_adapted_witt_basis D V m X Y hW
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.AdaptedBasis.exists_isAdapted D V m X Y hW
   obtain ⟨a, ham, hup, hcut⟩ := exists_cut T
   obtain ⟨hdim, hB⟩ := mid_frame D V V' ι hι m X Y hW T hr C hC a ham hup
   have key : ∀ τ k, ∃ q : Polynomial ℂ, q.Monic ∧ ∀ F : GlobalTheory.Mem.AutSpace.SmFun θ V,

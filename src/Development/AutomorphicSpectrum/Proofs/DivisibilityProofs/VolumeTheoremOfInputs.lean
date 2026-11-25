@@ -365,7 +365,7 @@ theorem abs_le_coeff (d : ℕ) (Φ : RPA Ψ N →ₗ[ℝ] ℝ) (n k : ℕ) (hn :
     (h : ∀ (lam : Wt Ψ N) (s : ℝ), (n : ℝ) * Φ (linA lam s ^ d) = eval (PB.gapS (fun x => lam x.1 x.2) (s / k)) Q)
     (m : Option (Ψ × Fin N) →₀ ℕ) (hm : m.degree = d) :
     |Φ (monomial m 1)| ≤ |(PB.toWtS Q).coeff m| := by
-  obtain ⟨Pl, -, hev, -, hle⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Top.polarisation_functional (Option (Ψ × Fin N)) d Φ
+  obtain ⟨Pl, -, hev, -, hle⟩ := _root_.RootFieldNumerics.polarization_coefficients_bound (Option (Ψ × Fin N)) d Φ
   have hkR : (1 : ℝ) ≤ k := by exact_mod_cast hk
   have hnR : (1 : ℝ) ≤ n := by exact_mod_cast hn
   set u : ℝ := -(k : ℝ)⁻¹ with hu
