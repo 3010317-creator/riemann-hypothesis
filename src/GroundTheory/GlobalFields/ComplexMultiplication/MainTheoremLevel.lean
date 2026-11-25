@@ -767,12 +767,6 @@ theorem two_ne_zero_and_three_ne_zero_of_five_le_ringChar {k : Type*} [Field k]
   · have := Nat.le_of_dvd (by norm_num) ((ringChar.spec k 3).mp (by exact_mod_cast h3))
     omega
 
-section NumberField
-
-variable {L : Type*} [Field L] [NumberField L] (v : HeightOneSpectrum (𝓞 L))
-
-end NumberField
-
 end GroundTheory.Global
 end -- clump:auto
 end -- clump:auto
@@ -1130,25 +1124,6 @@ theorem eq_of_reductionHom_eq_of_nsmul {n : ℕ} (hn : (n : ResidueField 𝒪) �
     (by rw [← reductionHom_apply, map_sub, h, sub_self]))
 
 end Good
-
-section Localization
-
-open IsDedekindDomain
-
-variable {R : Type*} [CommRing R] [IsDedekindDomain R] {F : Type*} [Field F] [Algebra R F]
-  [IsFractionRing R F] (v : HeightOneSpectrum R)
-
-end Localization
-
-section NumberField
-
-open NumberField IsDedekindDomain
-
-variable {F : Type*} [Field F] [NumberField F] (𝔮 : HeightOneSpectrum (𝓞 F))
-  (W : WeierstrassCurve (𝔮.valuationSubringAtPrime F)) [W.IsElliptic] [DecidableEq F]
-  [DecidableEq (ResidueField (𝔮.valuationSubringAtPrime F))]
-
-end NumberField
 
 end
 

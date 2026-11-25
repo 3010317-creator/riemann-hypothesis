@@ -1449,12 +1449,6 @@ noncomputable def sUnitsInflPrimaryEquiv {r : ℕ} (hr : 4 ≤ r) :
   AddEquiv.ofBijective _
     ((isIsoModCoprime_sUnitsInfl K S hℓ hS hr).bijective_primaryComponentMap hℓ (isTorsion_cohomology _ (by omega)))
 
-section Odd
-
-
-
-end Odd
-
 section Real
 
 variable (ι : LocalEmbeddings K)

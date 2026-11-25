@@ -634,13 +634,6 @@ theorem coeff_factor (ω : ∀ v : HeightOneSpectrum (𝓞 K), GL (Fin n) (v.adi
 
 end Cusp
 
-section Conclusion
-
-open GodementJacquet GLnLocal GJStandardL NumberField.mixedEmbedding
-open scoped SchwartzMap Classical
-
-end Conclusion
-
 section Final
 
 open AutomorphicForm CuspidalSpectrum AdelicGLn GLnLocal RestrictedTensor
