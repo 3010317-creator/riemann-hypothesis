@@ -31,7 +31,7 @@ variable {D : D7} {n : ℕ}
 
 theorem summable_rat {θ : InfFam D} (hθ : IsInfFam θ) {m : ℕ} (φ : schwartzA θ m n) :
     Summable fun ξ : Matrix (Fin m) (Fin n) D.host.E => ‖φ.1 (ξ.map (incA D))‖ := by
-  obtain ⟨N, hN⟩ := GlobalTheory.T.exists_summable_bound_schwartz_majorant_rational_translates D θ hθ m n
+  obtain ⟨N, hN⟩ := GlobalTheory.Unf.MajLoc.summable_bound D θ hθ m n
   obtain ⟨-, K, hK, hC⟩ := GlobalTheory.T.schwartzBruhatAdelicMatrix_continuous_le_majorant D θ hθ m n φ.1
     (GlobalTheory.SchwartzPure.isSchwartzBruhat_of_mem_schwartzA D θ hθ m n φ.1 φ.2)
   obtain ⟨C, hC⟩ := hC N
@@ -105,7 +105,7 @@ theorem gramQ_eq (x y : Mx D V.rank n) : GramMatrixBlocks.gramQ V.gram x y = Std
 
 theorem isWeilSch_unique {μ : Measure (Mx D V.rank n)} {ω ω' : G D n →* Module.End ℂ (schwartzA θ V.rank n)}
     (h : IsWeilSch ψ χ θ V μ ω) (h' : IsWeilSch ψ χ θ V μ ω') : ω = ω' := by
-  have := GlobalTheory.T.unitaryUnn_subgroup_eq_top_of_leviUnipotentWeyl D n (ω.toHomUnits.eqLocus ω'.toHomUnits)
+  have := GlobalTheory.StdUnn.eq_top_of_levi_unip_weyl D n (ω.toHomUnits.eqLocus ω'.toHomUnits)
     (fun g a hg => Units.ext (LinearMap.ext fun Φ => Subtype.ext (funext fun x =>
       (h.levi g a hg Φ x).trans (h'.levi g a hg Φ x).symm)))
     (fun g b hg => Units.ext (LinearMap.ext fun Φ => Subtype.ext (funext fun x =>

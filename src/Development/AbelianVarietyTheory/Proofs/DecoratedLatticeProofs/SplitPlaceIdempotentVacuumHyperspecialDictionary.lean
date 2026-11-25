@@ -35,8 +35,6 @@ open Formalism.UG (IsUnifV qV IsUnramInv GU KU IsInertAt Hecke IsCommensurated T
 open Formalism.MainNotions.SchurIrreducible (IsSplit)
 open GlobalTheory.Hk3 (hyp IsVacAt UnrPl)
 
-theorem _root_.GlobalTheory.T.mem_hyperspecialSubgroupAtPlace_iff_local_stabilizer : ∀ (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F)) (w : HeightOneSpectrum (𝓞 D.host.E)), w.under (𝓞 D.host.F) = v → ∀ (V : HSp D) (g : GA D V), g ∈ hyp V w ↔ ∃ k ∈ Kv V v, g = embV V v k := by
-  first | exact @GlobalTheory.HypDict.mem_hyp_iff_embV
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHyperspecialSubgroupAtPlaceIffLocalStabilizerStatement =====
@@ -224,8 +222,6 @@ open Formalism.UG (IsUnifV qV IsUnramInv GU KU IsInertAt Hecke IsCommensurated T
 open Formalism.MainNotions.SchurIrreducible (IsSplit)
 open GlobalTheory.Hk3 (hyp IsVacAt UnrPl)
 
-theorem _root_.GlobalTheory.T.unramified_char_trivial_on_integral_units_at_place : ∀ (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F)) (w : HeightOneSpectrum (𝓞 D.host.E)), w.under (𝓞 D.host.F) = v → ∀ χ : (AE D)ˣ →* Circle, (∀ w' : HeightOneSpectrum (𝓞 D.host.E), w'.under (𝓞 D.host.F) = v → UnrAt χ w') → UnrPl w χ := by
-  first | exact @GlobalTheory.UnrPlDict.unrPl_of_unrAt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnramifiedCharTrivialOnIntegralUnitsAtPlaceStatement =====
@@ -278,7 +274,7 @@ theorem isSplit_iff_conjPl_ne (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F)) (
 
 theorem dictionary : ∀ (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F)) (w : HeightOneSpectrum (𝓞 D.host.E)), w.under (𝓞 D.host.F) = v → (IsSplit (E := D.host.E) v ↔ Formalism.DivisionValues.conjPl w ≠ w) ∧ (∀ χ : (AE D)ˣ →* Circle, (∀ w' : HeightOneSpectrum (𝓞 D.host.E), w'.under (𝓞 D.host.F) = v → UnrAt χ w') → UnrPl w χ) ∧ (∀ (V : HSp D) (g : GA D V), g ∈ hyp V w ↔ ∃ k ∈ Kv V v, g = embV V v k) ∧ (∀ (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (f : WO S T → ℂ), VacFin ψ S T v f → IsVacAt ψ S T w f) ∧ (IsSplit (E := D.host.E) v → ∀ χ : (AE D)ˣ →* Circle, UnrAt χ w → ∃ (e : AE D) (ϖ : 𝓞 D.host.E) (x : (AE D)ˣ), Formalism.L2.NTheta.IsIdemAt e w ∧ ϖ ∈ w.asIdeal ∧ ϖ ∉ w.asIdeal ^ 2 ∧ (x : AE D) = e * incA D (ϖ : D.host.E) + (1 - e) ∧ ∀ χ' : (AE D)ˣ →* Circle, UnrAt χ' w → ((χ' x : Circle) : ℂ) = ((val (F := D.host.F) χ' w : ℂˣ) : ℂ)) := by
   intro D v w hvw
-  refine ⟨isSplit_iff_conjPl_ne D v w hvw, GlobalTheory.T.unramified_char_trivial_on_integral_units_at_place D v w hvw, GlobalTheory.T.mem_hyperspecialSubgroupAtPlace_iff_local_stabilizer D v w hvw, fun ψ S T f hf => ?_, _root_.GlobalTheory.SplitUnifIdele.value_eq_val D v w hvw⟩
+  refine ⟨isSplit_iff_conjPl_ne D v w hvw, GlobalTheory.UnrPlDict.unrPl_of_unrAt D v w hvw, GlobalTheory.HypDict.mem_hyp_iff_embV D v w hvw, fun ψ S T f hf => ?_, _root_.GlobalTheory.SplitUnifIdele.value_eq_val D v w hvw⟩
   by_cases hc : Formalism.DivisionValues.conjPl w = w
   · exact _root_.GlobalTheory.VacInertAt.isVacAt_of_vacFin D v w hvw hc ψ S T f hf
   · exact _root_.GlobalTheory.VacSplit.isVacAt_of_vacFin D v w hvw hc ψ S T f hf

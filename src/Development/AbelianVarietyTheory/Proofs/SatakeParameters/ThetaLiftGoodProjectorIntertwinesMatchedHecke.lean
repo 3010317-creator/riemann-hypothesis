@@ -268,7 +268,7 @@ theorem thF_low (hC : Core R F) (i : Fin D.R.m) (t : T) {P : Pl D.host.E} (hP : 
   theta_form (hC.thP.ωP i t) (D.sp.V_sig _) (hC.models.vpos i) (hC.models.νV i t) hfix hM (R.cV i) (hC.models.cV i)
     (hC.lev.βV i) (L := R.datVt i t) hP ((hC.models.HV i t).2.1.le (LinearMap.mem_range_self _ y)) hy
     (pureTensorO R.ψ R.θ (Vc D i) (Wc D i) (fun _ => 1) (cart (R.MW i (sg0 D A))) (R.BV i) (onb (R.MW i (sg0 D A)))
-      (R.vP i t)) ((GlobalTheory.T.fockVectors_chain_isVacuum_off_thetaLevels R F hC t P hP).2.2 i) (R.ioP i (PiTensorProduct.tprod ℂ v))
+      (R.vP i t)) ((GlobalTheory.VacGood.fock_vacua_good R F hC t P hP).2.2 i) (R.ioP i (PiTensorProduct.tprod ℂ v))
     (thF_eq_integral hC.thP i t y v) (thF_eq_integral hC.thP i t y' v)
 
 theorem wall_laws (hC : Core R F) (i : Fin D.R.m) (t : T) {P : Pl D.host.E} (hP : Good R t P) (c : List ℤ →₀ ℂ)

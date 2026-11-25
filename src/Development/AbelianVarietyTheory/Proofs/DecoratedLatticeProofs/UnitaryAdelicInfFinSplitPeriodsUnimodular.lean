@@ -205,8 +205,6 @@ theorem map_real_eq {S : HSp D} {x y : GA D S} (h : infHom S x = infHom S y) :
 theorem map_finite_eq {S : HSp D} {x y : GA D S} (h : finHom S x = finHom S y) :
     (Formalism.L2.Theta.mt S x).map (finitePart D) = (Formalism.L2.Theta.mt S y).map (finitePart D) := congrArg Units.val h
 
-
-
 theorem mem_besGrp_of_parts {S S₀ A L : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (o : OrthDec S₀ A L) {x y z : GA D S}
     (hi : infHom S x = infHom S y) (hf : finHom S x = finHom S z) (hy : y ∈ besGrp d o) (hz : z ∈ besGrp d o) :
     x ∈ besGrp d o := by
@@ -531,10 +529,6 @@ theorem ofFin_projFin_of_mem (V : HSp D) {b : GA D V} (hb : b ∈ GfC V) :
   have h := ofInf_projInf_mul_ofFin_projFin D.sp.cm.sig V.gram b
   rwa [mem_finPts.1 hb, map_one, one_mul] at h
 
-theorem commute_GinfC_GfC (V : HSp D) {a b : GA D V} (ha : a ∈ GinfC V) (hb : b ∈ GfC V) : a * b = b * a := by
-  rw [← ofInf_projInf_of_mem V ha, ← ofFin_projFin_of_mem V hb]
-  exact commute_ofInf_ofFin _ _ _ _
-
 def splitEquiv (V : HSp D) : GinfC V × GfC V ≃ₜ* GA D V where
   toFun p := p.1.1 * p.2.1
   invFun g := (⟨ofInf D.sp.cm.sig V.gram (projInf D.sp.cm.sig V.gram g), mem_infPts.2 (by simp)⟩,
@@ -550,7 +544,7 @@ def splitEquiv (V : HSp D) : GinfC V × GfC V ≃ₜ* GA D V where
   right_inv g := ofInf_projInf_mul_ofFin_projFin D.sp.cm.sig V.gram g
   map_mul' p q := by
     change p.1.1 * q.1.1 * (p.2.1 * q.2.1) = p.1.1 * p.2.1 * (q.1.1 * q.2.1)
-    rw [mul_assoc, ← mul_assoc q.1.1, commute_GinfC_GfC V q.1.2 p.2.2, mul_assoc, mul_assoc]
+    rw [mul_assoc, ← mul_assoc q.1.1, GlobalTheory.PointAtPlaceHom.comm_of_mem V q.1.2 p.2.2, mul_assoc, mul_assoc]
   continuous_toFun := (continuous_subtype_val.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
   continuous_invFun :=
     (((continuous_ofInf _ _).comp (continuous_projInf _ _)).subtype_mk _).prodMk

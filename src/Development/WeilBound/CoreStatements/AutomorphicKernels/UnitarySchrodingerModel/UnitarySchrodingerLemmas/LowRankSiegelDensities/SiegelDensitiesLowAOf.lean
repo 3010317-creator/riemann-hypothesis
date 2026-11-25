@@ -364,7 +364,7 @@ theorem step_lt (hE1 : OneVecBinary) (hE2 : OneVecBinaryMass) : ∀ (F E : Type)
   refine ⟨hgood.1, hgood.2, ?_⟩
   obtain ⟨S₂, hS₂⟩ := Step.theta_hypothesis F E σ hCM M J hJ t ht n d b _ _ _ hE'
   have hG := _root_.GlobalTheory.CompanionTheory.SW.GoodMass.good_mass F E σ hCM M J hJ t ht n T hT hdet hT' d b
-  have hSG := GlobalTheory.T.local_measures_orthogonal_sum_almost_all_places F E σ hCM M J hJ t ht n T hT hdet d b
+  have hSG := GlobalTheory.CompanionTheory.SW.StageGood.stage_good F E σ hCM M J hJ t ht n T hT hdet d b
   refine ⟨S₁ ∪ S₂ ∪ S₃ ∪ (Filter.eventually_cofinite.1 hG).toFinset ∪ (Filter.eventually_cofinite.1 hSG).toFinset,
     fun S hS φinf φ hφinf hφ => ?_⟩
   have hS1 : S₁ ⊆ S := fun x hx => hS (by simp [hx])
@@ -387,7 +387,7 @@ theorem step_lt (hE1 : OneVecBinary) (hE2 : OneVecBinaryMass) : ∀ (F E : Type)
     Step.of_cofinite hSG hS5 hv _ _ (m' v) (hHv v).1 (hHv v).2 (hm' v) g)
   set τ' := ENNReal.ofReal (∏' v : {v // v ∉ S}, (m' v.1 (hermOf (Fv F v.1) σ T hT) (latV b v.1)).toReal) with hτ'
   have hPm : Measurable (pureL b S Ψinf Ψ) := _root_.GlobalTheory.CompanionTheory.SW.PureMeas.measurable_pureL F E σ hCM d b 1 (M + 1) S Ψinf Ψ hΨinfm hΨm
-  have hth := GlobalTheory.T.lintegral_thetaMeas_block_one_eq_rank_one F E σ hCM M J hJ t ht n T μ 𝓕 hμ h𝓕 μ₁ 𝓕₁ hμ₁ h𝓕₁ (pureL b S φinf φ)
+  have hth := GlobalTheory.CompanionTheory.SW.ThetaStage.theta_stage F E σ hCM M J hJ t ht n T μ 𝓕 hμ h𝓕 μ₁ 𝓕₁ hμ₁ h𝓕₁ (pureL b S φinf φ)
     (fun y => τ' * pureL b S Ψinf Ψ y) (_root_.GlobalTheory.CompanionTheory.SW.PureMeas.measurable_pureL F E σ hCM d b (n + 1) (M + 1) S φinf φ hφinf hφ)
     (hPm.const_mul τ') hHyp
   have hone := hS₁ S hS1 Ψinf Ψ hΨinfm hΨm
@@ -550,7 +550,7 @@ theorem siegelDensitiesLowA_of (hE1 : OneVecBinary) (hE2 : OneVecBinaryMass) (hB
   have hE := hSW d b laminf lam hli hlam μ 𝓕 hμ h𝓕 minf m hmi hm
   obtain ⟨hmeas, hint, hmul, hI⟩ := euler_int_integrable F E σ hCM d b n M _ _ _ hE (hfi _) (fun v => hf v _)
     Φ Φinf Φf Φv hcI (hiI _ (isUnit_det_hermOf (Ainf F) σ T hT hdet)) hpure hprod
-  have hθ := _root_.GlobalTheory.CompanionTheory.SW.ThetaMean.mean_thetaS_eq_integral F E σ hCM M J hJ μ 𝓕 hμ h𝓕 n _ Φ hmeas hint
+  have hθ := _root_.CompanionTheory.PlacePermOperatorBicommutantSpan.theta_int F E σ hCM M J hJ μ 𝓕 hμ h𝓕 n _ Φ hmeas hint
   obtain ⟨r1, r2⟩ := GlobalTheory.CompanionTheory.SW.TopDens.rescale_tprod (ci / ei) (fun v => c v / e v) hdiv.1 hdiv.2
     (∫ X, Φinf X ∂(minf (hermOf (Ainf F) σ T hT))) _ hmul
   refine ⟨fun S => (ci / ei) • ∫ X, Φinf X ∂(minf S), fun v S => (c v / e v) • ∫ X, Φv v X ∂(m v S),

@@ -64,7 +64,6 @@ theorem realSize_zero {D : D7} (θ : InfFam D) {m n : ℕ} : realSize θ (0 : Mx
   unfold realSize
   simp only [h, norm_zero, Finset.sum_const_zero]
 
-
 theorem tsum_maj_ne_top : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ m n : ℕ, ∃ N : ℕ, ∀ K : Set (Mx D m n), IsCompact K →
     (∑' y : ratMx D m n, ENNReal.ofReal (maj θ K N y)) ≠ ⊤ := by
   intro D θ hθ m n
@@ -73,8 +72,8 @@ theorem tsum_maj_ne_top : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ m n 
   haveI : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   let μ : Measure (Mx D m n) := Measure.addHaar
   have hcont : Continuous (realSize θ : Mx D m n → ℝ) :=
-    ((GlobalTheory.T.adelicMatrixSchwartzMajorant_measurable_rationalShift D θ hθ).1 m n ∅ isCompact_empty).2.1
-  obtain ⟨N, hN⟩ := GlobalTheory.T.integrable_majorant_coordinate_coset_measure D θ hθ m n (fun _ _ => True) 0 μ inferInstance
+    ((GlobalTheory.Unf.maj_measurable_rat D θ hθ).1 m n ∅ isCompact_empty).2.1
+  obtain ⟨N, hN⟩ := GlobalTheory.Unf.MajInt.maj_integrable D θ hθ m n (fun _ _ => True) 0 μ inferInstance
     (Filter.Eventually.of_forall fun x i j h => (h trivial).elim)
     (fun t _ => by
       have e : (fun x : Mx D m n => x + t) = fun x => t + x := funext fun x => add_comm x t

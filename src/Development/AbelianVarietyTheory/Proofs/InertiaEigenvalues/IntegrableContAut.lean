@@ -229,8 +229,6 @@ theorem map_piRep_proj {G U : Type} [Group G] [AddCommGroup U] [Module ℂ U] {�
     heckeVec (piRep ι π) K φ F j = heckeVec π K φ (F j) :=
   map_heckeVec hK hφ (LinearMap.proj j) (fun _ _ => rfl) F
 
-
-
 theorem param_down (hH : GlobalTheory.Hk3.HoweUnram) {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χT : (AE D)ˣ →* Circle}
     {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)} (hW : IsWeilDatumO ψ S T χS χT om) (hle : T.rank ≤ S.rank)
     {v : HeightOneSpectrum (𝓞 D.host.F)} {w : HeightOneSpectrum (𝓞 D.host.E)} (h : w.under (𝓞 D.host.F) = v)
@@ -470,7 +468,6 @@ section Coord
 
 variable {D : D7}
 
-
 open GlobalTheory.DownLift.Params in
 
 theorem paramFun_definite {V : HSp D} (c : CoefA V) (hc : c.Is)
@@ -517,7 +514,6 @@ theorem paramFun_definite {V : HSp D} (c : CoefA V) (hc : c.Is)
 variable {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m}
   {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL]
 
-
 open GlobalTheory.DownLift.Params in
 theorem paramV_coord (R : RealDat D A Ks) {F : Face D A} (hC : GlobalTheory.Hk3.Core R F) (i : Fin D.R.m) (t : T) (h)
     (hh : GlobalTheory.Hk3.IsOpsV R i t h) (s : GlobalTheory.DownLift.Sys D) (y : (R.HV i t).H) (hy : GlobalTheory.DownLift.IsEigV R i t h s y)
@@ -545,7 +541,6 @@ theorem thetaKO_sum {S T : HSp D} (om : GA D S × GA D T →* Module.End ℂ (WO
     thetaKO om h g (∑ k ∈ s, u k) = ∑ k ∈ s, thetaKO om h g (u k) := by
 
   simp [thetaKO, map_sum, Finset.sum_apply]
-
 
 open GlobalTheory.DownLift.Params in
 
@@ -585,7 +580,7 @@ theorem unrCorr_inert : GlobalTheory.Hk3.HoweUnram → ∀ (D : D7) (G : Type) [
     (cart (R.MW i (sg0 D A))) (R.BV i) (onb (R.MW i (sg0 D A))) (R.vP i t)) ∘ₗ R.ioP i (PiTensorProduct.tprod ℂ v0)
   have hL0 : ∀ x, R.ptP i t (R.ioP i (PiTensorProduct.tprod ℂ v0) x) = L0 x := fun _ => rfl
   have hvac : ∀ x, GlobalTheory.Hk3.IsVacAt R.ψ (Vc D i) (Wc D i) w (L0 x) := fun x =>
-    (GlobalTheory.T.fockVectors_chain_isVacuum_off_thetaLevels R F hC t w hgood).2.2 i _
+    (GlobalTheory.VacGood.fock_vacua_good R F hC t w hgood).2.2 i _
   have hpos : ∀ τ, (gramAt D (Vc D i) τ).PosDef := fun τ => by
     have hs : (Vc D i).SigOK := D.sp.V_sig _
     have := hs (tauE D τ)
@@ -665,7 +660,7 @@ theorem unrCorr_inert : GlobalTheory.Hk3.HoweUnram → ∀ (D : D7) (G : Type) [
       ∫ g in R.fdV i t, thetaKO (R.ωP i t) g (x * embV _ _ a') (u : WO (Vc D i) (Wc D i) → ℂ) *
         (z : GA D (Vc D i) → ℂ) g ∂(R.νV i t)
     simp_rw [GlobalTheory.ChainOnto.thetaKO_om_apply]
-    exact GlobalTheory.T.setIntegral_fundamentalDomain_right_translate_invariant D (Vc D i) _ _ hν.1.1 hν.2
+    exact GlobalTheory.ChainOnto.setIntegral_fd_mul_right D (Vc D i) _ _ hν.1.1 hν.2
       (fun g => thetaKO (R.ωP i t) g (x * embV _ _ a') (u : WO (Vc D i) (Wc D i) → ℂ) * (z : GA D (Vc D i) → ℂ) g)
       (fun γ hγ g => by simp only [GlobalTheory.ChainOnto.thetaKO_left hW u.2 γ hγ, z.2.2 γ hγ]) _
 

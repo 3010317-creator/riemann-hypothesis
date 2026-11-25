@@ -596,7 +596,7 @@ theorem density_main : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace
       rw [Set.indicator_of_notMem hu, mul_zero]
   have hint : Integrable fs lf := by
     obtain ⟨N, hN, hper⟩ := _root_.GlobalTheory.CompanionTheory.SW.FstarPer.fstar_periodic F lf hlf h1 ψ hψ ι M B ρ P hQ' (indL a) (indL_SB ι ha)
-    obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.norm_fstar_le_den F lf hlf h1 ψ hψ ι M B ρ P hQ' (indL a) (indL_SB ι ha)
+    obtain ⟨C, hC⟩ := _root_.CompanionTheory.PlacePermOperatorBicommutantSpan.fstar_decay F lf hlf h1 ψ hψ ι M B ρ P hQ' (indL a) (indL_SB ι ha)
     exact integrable_of_periodic lf hlf h1 fs hN (fun x hx y => (hper x hx).2 y) hM hC
   have hmh : mh = fun y => ((c : ℂ))⁻¹ * fs y := by
     funext y

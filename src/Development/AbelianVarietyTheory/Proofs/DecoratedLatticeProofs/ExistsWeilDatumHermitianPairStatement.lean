@@ -48,6 +48,3 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow
 open scoped TensorProduct
 open GlobalTheory.Unf
-
-theorem _root_.GlobalTheory.T.exists_weilDatum_hermitianPair : ∀ D : D7, GlobalTheory.IndefiniteRowSideFullHecke.WeilDatumExistenceCriterion.WeilDatumExists D := by
-  first | exact @GlobalTheory.WeilDatumExistence.weilDatumExists

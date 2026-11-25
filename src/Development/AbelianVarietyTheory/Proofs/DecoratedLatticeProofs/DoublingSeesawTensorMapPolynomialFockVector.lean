@@ -215,7 +215,7 @@ theorem isFockVec_delta : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : In
   intro D ψ θ A B sA sB hψ hθ Φ₁ Φ₂ ⟨t₁, N₁, k₁⟩ ⟨t₂, N₂, k₂⟩
   have hT : ∀ (S : HSp D) τ J z f, IsThetaFunO ψ S B f → IsThetaFunO ψ S B (annih (heisO ψ S B) θ τ J z f) :=
     fun S τ J z f hf => theta_add (theta_dRho hθ hψ τ z hf) (theta_smul _ (theta_dRho hθ hψ τ _ hf))
-  refine ⟨GlobalTheory.T.isThetaFunction_doublingSeesaw_of_standard_char D ψ A B hψ _ _ t₁ t₂, N₁ + N₂, ?_⟩
+  refine ⟨GlobalTheory.Core.Rk.DeltaTheta.main D ψ A B hψ _ _ t₁ t₂, N₁ + N₂, ?_⟩
   refine killed_of_leibniz (P := D.what₂.Tau × Matrix (Fin B.rank) (Fin A.rank) ℂ)
     (Q := D.what₂.Tau × Matrix (Fin B.rank) (Fin (dblSp A).rank) ℂ)
     (fun p f => annih (heisO ψ A B) θ p.1 (cplxO (sA p.1) (sB p.1)) p.2 f)
@@ -224,7 +224,7 @@ theorem isFockVec_delta : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : In
     (IsThetaFunO ψ A B) (IsThetaFunO ψ (dblSp A) B) (delta A B)
     (fun q => (q.1, q.2.submatrix id (colL A))) (fun q => (q.1, -q.2.submatrix id (colR A)))
     (fun p f hf => hT A _ _ _ f hf) (fun p f hf => hT _ _ _ _ f hf) (fun q f g hf hg => ?_) (fun q => ?_)
-    (GlobalTheory.T.isThetaFunction_doublingSeesaw_of_standard_char D ψ A B hψ) (fun g => ?_) (fun f => ?_) (fun q f g hf hg => annih_delta hθ hψ q.1 (sA q.1) (sB q.1) q.2 hf hg)
+    (GlobalTheory.Core.Rk.DeltaTheta.main D ψ A B hψ) (fun g => ?_) (fun f => ?_) (fun q f g hf hg => annih_delta hθ hψ q.1 (sA q.1) (sB q.1) q.2 hf hg)
     _ N₁ N₂ Φ₁ Φ₂ le_rfl t₁ t₂ k₁ k₂
   · simp only [annih]
     rw [dRho_add hθ hψ _ _ hf hg, dRho_add hθ hψ _ _ hf hg, smul_add]

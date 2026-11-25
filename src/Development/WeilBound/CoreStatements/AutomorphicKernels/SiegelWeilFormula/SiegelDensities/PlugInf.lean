@@ -186,7 +186,7 @@ theorem densEq_of_C (hB : PositivityTheory.PfSWUS.HMass.SchwartzDensInf) (hC : S
   obtain ⟨hmeas, hint, hmul, hI⟩ := PositivityTheory.PfSWUS.HMass.euler_int_integrable F E σ hCM d b M M _ _ _ hE1
     inferInstance hlf Φ Φinf Φf Φv hcI
     ((hiI _ (PositivityTheory.PfSWUS.HMass.isUnit_det_hermOf (Ainf F) σ T hT hdet)).smul_measure_nnreal) hpure hprod
-  have hθ := _root_.GlobalTheory.CompanionTheory.SW.ThetaMean.mean_thetaS_eq_integral F E σ hCM M J hJ μ 𝓕 hμ h𝓕 M _ Φ hmeas hint
+  have hθ := _root_.CompanionTheory.PlacePermOperatorBicommutantSpan.theta_int F E σ hCM M J hJ μ 𝓕 hμ h𝓕 M _ Φ hmeas hint
   have hz : Multipliable fun v => (cfac E v : ℝ≥0) • ∫ X, Φv v X ∂(m v (hermOf (Fv F v) σ T hT)) := by
     simpa only [integral_smul_nnreal_measure] using hmul
   obtain ⟨r1, r2⟩ := GlobalTheory.CompanionTheory.SW.TopDens.rescale_tprod (ci / ei) (fun v => c v / e v) hdiv.1 hdiv.2
@@ -893,7 +893,7 @@ theorem stepC_of (hE1 : PositivityTheory.PfSWUS.HMass.OneVecBinary) (hM : MassCA
   refine ⟨hgood.1, hgood.2, ?_⟩
   obtain ⟨S₂, hS₂⟩ := GlobalTheory.CompanionTheory.SW.StepC.theta_hypothesis_c F E σ hCM M J hJ t ht M d b _ _ _ _ hE'
   have hG := _root_.GlobalTheory.CompanionTheory.SW.GoodMass.good_mass F E σ hCM M J hJ t ht M T hT hdet hT' d b
-  have hSG := GlobalTheory.T.local_measures_orthogonal_sum_almost_all_places F E σ hCM M J hJ t ht M T hT hdet d b
+  have hSG := GlobalTheory.CompanionTheory.SW.StageGood.stage_good F E σ hCM M J hJ t ht M T hT hdet d b
   refine ⟨S₁ ∪ S₂ ∪ S₃ ∪ (Filter.eventually_cofinite.1 hG).toFinset ∪ (Filter.eventually_cofinite.1 hSG).toFinset,
     fun S hS φinf φ hφinf hφ => ?_⟩
   have hS1 : S₁ ⊆ S := fun x hx => hS (by simp [hx])
@@ -929,7 +929,7 @@ theorem stepC_of (hE1 : PositivityTheory.PfSWUS.HMass.OneVecBinary) (hM : MassCA
     smul_indicator_mass _ _ _ _ _ _ (GlobalTheory.CompanionTheory.SW.Step.of_cofinite hSG hS5 hv _ _ (m' v) (hHv v).1 (hHv v).2 (hm' v) g))
   set τ' := ENNReal.ofReal (∏' v : {v // v ∉ S}, ((cfac E v.1 • m' v.1 (hermOf (Fv F v.1) σ T hT)) (latV b v.1)).toReal) with hτ'
   have hPm : Measurable (pureL b S Ψinf Ψ₀) := _root_.GlobalTheory.CompanionTheory.SW.PureMeas.measurable_pureL F E σ hCM d b 1 (M + 1) S Ψinf Ψ₀ hΨinfm hΨm₀
-  have hth := GlobalTheory.T.lintegral_thetaMeas_block_one_eq_rank_one F E σ hCM M J hJ t ht M T μ 𝓕 hμ h𝓕 μ₁ 𝓕₁ hμ₁ h𝓕₁ (pureL b S φinf φ)
+  have hth := GlobalTheory.CompanionTheory.SW.ThetaStage.theta_stage F E σ hCM M J hJ t ht M T μ 𝓕 hμ h𝓕 μ₁ 𝓕₁ hμ₁ h𝓕₁ (pureL b S φinf φ)
     (fun y => ((c₀ : ℝ≥0∞) * τ') * pureL b S Ψinf Ψ₀ y) (_root_.GlobalTheory.CompanionTheory.SW.PureMeas.measurable_pureL F E σ hCM d b (M + 1) (M + 1) S φinf φ hφinf hφ)
     (hPm.const_mul _) hHyp
   have hone := hS₁ S hS1 Ψinf Ψ₀ hΨinfm hΨm₀

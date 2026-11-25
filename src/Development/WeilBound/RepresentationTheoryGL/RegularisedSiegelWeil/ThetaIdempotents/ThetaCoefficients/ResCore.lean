@@ -96,8 +96,6 @@ open GlobalTheory.StdUnn PositivityTheory.GramSchwartzFunctions PositivityTheory
 
 open IsDedekindDomain NumberField
 
-
-
 namespace PositivityTheory.Rg.Rsw.L.LToS
 
 variable {D : D7} {a b c r t : ℕ}
@@ -176,8 +174,6 @@ open GlobalTheory.StdUnn PositivityTheory.GramSchwartzFunctions PositivityTheory
 open IsDedekindDomain NumberField
 open GlobalTheory.RegSch (ikS projS Lvl)
 open PositivityTheory.Rg.Rsw.L.LToS
-
-
 
 namespace PositivityTheory.Rg.Rsw.L.LToS
 
@@ -465,7 +461,7 @@ theorem PositivityTheory.Rg.Rsw.L.muId : IdemEx → GoodEv → BumpEx → ThProd
       obtain ⟨κ, hκ⟩ := hU D W.rank t B b₀ hdet S e he ν _ hν hOrb (map_ne_zero ν₂ _ e (hS₅ S h5))
       refine ⟨((κ : ℝ) : ℂ), fun Φ Ω hΩ hcs hΦg hΩg => ?_⟩
       rw [hint Φ hΦg Ω hΩ hΩg hcs, hκ, integral_smul_nnreal_measure,
-        transfer hn ν₂ hyv Φ.1 (Ω 1) (GlobalTheory.T.schwartz_bound_finite_infinite D θ hθ _ _ Φ.1 Φ.2).1 (hΩc Ω hΩ) hΦg hΩg,
+        transfer hn ν₂ hyv Φ.1 (Ω 1) (GlobalTheory.CompanionTheory.WeilTheta.schwartzA_continuous_and_dominated D θ hθ _ _ Φ.1 Φ.2).1 (hΩc Ω hΩ) hΦg hΩg,
         NNReal.smul_def, Complex.real_smul]
     by_cases hex : ∃ (Φ₀ : schwartzA θ B.rank n) (Ω₀ : G D t → Mx D W.rank t → ℂ), IsTh ψ χ θ b₀ m.μ Ω₀ ∧
         HasCompactSupport (Ω₀ 1) ∧ ∫ z, Φ₀.1 (jn hn z.1 z.2) * conj (Ω₀ 1 (yv B b₀ z)) ∂ν₂ ≠ 0
@@ -816,7 +812,6 @@ theorem chn_shift (ψ : AddChar (AF D.host.F) ℂ) (β : HermE D n) (b x : hermA
   rw [show (b + x).1 = b.1 + x.1 from rfl, GlobalTheory.CompanionTheory.FourierN.pr_add_right]
   abel
 
-
 theorem fc_nb_mul {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) {nb : hermA D n → G D n}
     {lam : Measure (hermA D n)} {𝓖 : Set (hermA D n)} (hC : CoefData (D := D) (n := n) nb lam 𝓖) {F : G D n → ℂ}
     (hinv : LeftInv (GF D n) F) (β : HermE D n) (x : hermA D n) (g : G D n) :
@@ -838,7 +833,6 @@ theorem fc_nb_mul {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) 
   show F (nb b * (nb x * g)) * chn ψ β b = pch ψ x.1 (rat β.1) * (F (nb (b + x) * g) * chn ψ β (b + x))
   rw [GlobalTheory.CompanionTheory.FourierN.nb_add hnb, mul_assoc, chn_shift ψ β b x]
   ring
-
 
 theorem integrableOn_fc {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) {nb : hermA D n → G D n}
     {lam : Measure (hermA D n)} {𝓖 : Set (hermA D n)} (hC : CoefData (D := D) (n := n) nb lam 𝓖) {F : G D n → ℂ}
@@ -1045,7 +1039,6 @@ namespace PositivityTheory.Rg.Rsw.L
 
 open LFourierPt
 
-
 theorem fourierPt : FourierPt := by
   intro D n ψ hψ lam 𝓖 hC f hf hper hco
   obtain ⟨hlam, hFD, -⟩ := hC
@@ -1112,12 +1105,6 @@ section Lattice
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) {n r m : ℕ}
   (J : Matrix (Fin n) (Fin n) E)
-
-
-
-
-
-
 
 end Lattice
 
@@ -1474,7 +1461,6 @@ theorem real_eq {z : ℂ} (h : z.im = 0) : z = (z.re : ℂ) := Complex.ext (by s
 
 end PositivityTheory.Rg.Rsw.L.LRowTotal
 
-
 open PositivityTheory.Rg.Rsw.L.LRowTotal in
 theorem PositivityTheory.Rg.Rsw.L.rowTotal : IdemEx → BumpEx → RowTotal := by
   intro _ _ D θ hθ ρ p μ hμ u hu horth
@@ -1802,7 +1788,6 @@ end PositivityTheory.Rg.Rsw.L.UnitaryGroupMatrix
 
 namespace PositivityTheory.Rg.Rsw.L
 
-
 open UnitaryGroupMatrix in
 theorem geng : GenG := by
   intro D n A _ h1 hA
@@ -1814,7 +1799,7 @@ theorem geng : GenG := by
       one_mem' := ⟨fun x hx => by rwa [one_mul], fun x hx => by rwa [inv_one, one_mul]⟩
       inv_mem' := fun {g} hg => ⟨hg.2, fun x hx => by rw [inv_inv]; exact hg.1 x hx⟩ }
   have hS : S = ⊤ := by
-    refine GlobalTheory.T.unitaryUnn_subgroup_eq_top_of_leviUnipotentWeyl D n S ?_ ?_ ?_
+    refine GlobalTheory.StdUnn.eq_top_of_levi_unip_weyl D n S ?_ ?_ ?_
     · intro g a hg
       refine ⟨hA g (Or.inr (Or.inl ⟨a, hg⟩)), hA g⁻¹ (Or.inr (Or.inl ⟨a⁻¹, ?_⟩))⟩
       rw [inv_inv]

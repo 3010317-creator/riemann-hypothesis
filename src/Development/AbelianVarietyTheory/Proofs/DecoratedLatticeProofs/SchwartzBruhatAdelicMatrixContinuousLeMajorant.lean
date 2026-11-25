@@ -150,7 +150,7 @@ theorem hasMaj_of_mem {θ : InfFam D} (hθ : IsInfFam θ) {m n : ℕ} {φ : Mx D
 theorem continuous_and_le_maj : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (m n : ℕ) (φ : Mx D m n → ℂ),
     GlobalTheory.IndefiniteRowSideFullHecke.SchwartzBruhatMixedFamilies.IsSchwartzBruhat φ → Continuous φ ∧ ∃ K : Set (Mx D m n), IsCompact K ∧
       ∀ N : ℕ, ∃ C : ℝ, ∀ x, ‖φ x‖ ≤ C * GlobalTheory.Unf.maj θ K N x :=
-  fun D θ hθ m n φ hφ => hasMaj_of_mem hθ ((GlobalTheory.T.isSchwartzBruhat_iff_mem_adelicMatrixSchwartzSpace D θ hθ m n φ).1 hφ)
+  fun D θ hθ m n φ hφ => hasMaj_of_mem hθ ((GlobalTheory.SchwartzIff.isSchwartzBruhat_iff_mem_schwartzA D θ hθ m n φ).1 hφ)
 
 end GlobalTheory.SchwartzMaj
 

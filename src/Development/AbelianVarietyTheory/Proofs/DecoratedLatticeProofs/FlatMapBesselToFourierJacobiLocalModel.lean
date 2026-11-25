@@ -931,7 +931,6 @@ theorem flCol_translate [MeasurableSpace k] [BorelSpace k] (ψ : AddChar k Circl
     simp [ch, affPt, basePt]
   simp only [h1, h2]
 
-
 omit [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [DecidableEq n] [DecidableEq n'] in
 theorem mul_bigPt_mul {a b : Type} {c ρ : ℕ} (j₀ : Fin (c + 1)) (hj : j₀.val = ρ) (β : Matrix a (n ⊕ Fin c) k) (β₀ : Matrix a n k)
     (γ : Matrix (n' ⊕ Fin (c + 1)) b k) (γ₀ : Matrix (n' ⊕ Unit) b k) (hβ : ∀ r i, β r (Sum.inl i) = β₀ r i)
@@ -940,7 +939,6 @@ theorem mul_bigPt_mul {a b : Type} {c ρ : ℕ} (j₀ : Fin (c + 1)) (hj : j₀.
   ext r s
   have hj' : ∀ j : Fin (c + 1), j.val = ρ ↔ j = j₀ := fun j => by rw [← hj, Fin.val_inj]
   simp [Matrix.mul_apply, Fintype.sum_sum_type, bigPt, hβ, hγ, hj', hγ', Finset.sum_ite_irrel]
-
 
 omit [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
 theorem rows_of_inverse {N N₀ c : ℕ} (j₀ : Fin (c + 1)) (F : Frame k N (n' ⊕ Fin (c + 1))) (F₀ : Frame k N₀ (n' ⊕ Unit))
@@ -1064,11 +1062,6 @@ namespace GlobalTheory.FlatTransLaw
 
 variable {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
-theorem ι_mul (p : Place D k) (x : k) (z : AE D) : p.ι x * z = p.ι (x * p.π z) := by
-  have h := p.ι_π (p.ι x * z)
-  rw [map_mul, p.π_ι, ← mul_assoc, _root_.GlobalTheory.LocMod.Witness.e_ι] at h
-  exact h.symm
-
 theorem infPart_e (p : Place D k) : infPart D p.e = 0 := by
   obtain ⟨h1, h2, v, ε, ⟨α, rfl, -⟩, h4⟩ := p.split
   have h5 : infPart D (p.e + cA D p.e) = 0 := by
@@ -1100,7 +1093,7 @@ theorem sand (p : Place D k) {S T : HSp D} (FS : Frame k S.rank Y') (FT : Frame 
 
   simp only [Matrix.mul_apply, hU, Finset.sum_mul, Finset.mul_sum, map_sum, Matrix.map_apply]
   refine Finset.sum_congr rfl fun u _ => Finset.sum_congr rfl fun t _ => ?_
-  rw [mul_comm (N i t), ι_mul, ι_mul]
+  rw [mul_comm (N i t), GlobalTheory.FlatColLaw.iota_mul, GlobalTheory.FlatColLaw.iota_mul]
   congr 1
   ring
 
@@ -1397,7 +1390,7 @@ theorem trace_iso {hh : k} (hB : p.IsBesFrame B s FA FV) (hJ : p.IsJacFrame J s 
   have hc := hJ.1
   obtain ⟨j, hj⟩ : ∃ j : Fin (c + 1), j.val = ρ := ⟨⟨ρ, by omega⟩, rfl⟩
   have h1 := bes_yZero p hB j hj q ⟨l.val, hl⟩
-  rw [Matrix.trace_mul_comm, Matrix.mul_assoc, mul_comm (incA D _), ι_mul, ← map_neg, Matrix.trace,
+  rw [Matrix.trace_mul_comm, Matrix.mul_assoc, mul_comm (incA D _), GlobalTheory.FlatColLaw.iota_mul, ← map_neg, Matrix.trace,
     Finset.sum_eq_single ⟨l.val, hl⟩, Matrix.diag, sand, jac_low p hJ l hl, HypDec.pX_jX, Matrix.one_apply_eq, map_one]
   · refine congrArg p.ι ?_
     rw [show p.π (incA D D.host.xi0) = p.xi from rfl]

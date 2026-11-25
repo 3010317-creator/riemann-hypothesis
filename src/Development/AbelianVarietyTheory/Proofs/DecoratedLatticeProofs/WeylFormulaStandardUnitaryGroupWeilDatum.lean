@@ -136,7 +136,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 open GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift (RealMat IsFockVec)
 open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (swSec sZero)
 
-
 theorem _root_.GlobalTheory.T.standardUnitaryChart_weylElement_rational : ∀ (D : D7) (A : HSp D) (μ : D.host.E), IsSkew μ → ∀ κ : GA D (dblSp A) ≃* G D A.rank, IsChart A μ κ → ∀ g : GA D (dblSp A), mat (κ g) = blk4 0 1 (-1) 0 → IsWeyl A g ∧ mt (dblSp A) g ⬝ (dblDec A).jX = -(incA D μ • (dblDec A).jY) ∧ mt (dblSp A) g ⬝ (dblDec A).jY = incA D μ⁻¹ • (dblDec A).jX := by
   first | exact @GlobalTheory.StdUnn.chart_weyl
 end -- clump:auto
@@ -246,8 +245,8 @@ theorem swSec_weyl : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A B : HSp D)
       hemb.setIntegral_map, Set.preimage_image_eq _ e.injective]
     rfl
   refine hchange.trans ?_
-  exact integral_periodise hν _ _ (GlobalTheory.T.doubledPairSchrodingerFunction_continuous_integrable D ψ hω.std A B ν 𝓨 hν f hf).2
-    fun x => (GlobalTheory.T.doubledTheta_eq_sum_schrodingerFunction_periodisation D ψ hω.std A B ν 𝓨 hν f hf x).2
+  exact integral_periodise hν _ _ (GlobalTheory.Core.Rk.SchInt.sch_continuous_integrable D ψ hω.std A B ν 𝓨 hν f hf).2
+    fun x => (GlobalTheory.Core.Rk.SchPeriod.theta_eq_sum_sch D ψ hω.std A B ν 𝓨 hν f hf x).2
 
 end GlobalTheory.Core.Rk.WeylValue
 end -- clump:auto

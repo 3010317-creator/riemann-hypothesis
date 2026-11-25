@@ -164,7 +164,7 @@ theorem blockOne_step : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   refine ⟨hgood.1, hgood.2, ?_⟩
   obtain ⟨S₂, hS₂⟩ := theta_hypothesis F E σ hCM M J hJ t ht n d b _ _ _ hE'
   have hG := _root_.GlobalTheory.CompanionTheory.SW.GoodMass.good_mass F E σ hCM M J hJ t ht n T hT hdet hT' d b
-  have hSG := GlobalTheory.T.local_measures_orthogonal_sum_almost_all_places F E σ hCM M J hJ t ht n T hT hdet d b
+  have hSG := GlobalTheory.CompanionTheory.SW.StageGood.stage_good F E σ hCM M J hJ t ht n T hT hdet d b
   refine ⟨S₁ ∪ S₂ ∪ S₃ ∪ (Filter.eventually_cofinite.1 hG).toFinset ∪ (Filter.eventually_cofinite.1 hSG).toFinset,
     fun S hS φinf φ hφinf hφ => ?_⟩
   have hS1 : S₁ ⊆ S := fun x hx => hS (by
@@ -190,7 +190,7 @@ theorem blockOne_step : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     of_cofinite hSG hS5 hv _ _ (m' v) (hHv v).1 (hHv v).2 (hm' v) g)
   set τ' := ENNReal.ofReal (∏' v : {v // v ∉ S}, (m' v.1 (hermOf (Fv F v.1) σ T hT) (latV b v.1)).toReal) with hτ'
   have hPm : Measurable (pureL b S Ψinf Ψ) := _root_.GlobalTheory.CompanionTheory.SW.PureMeas.measurable_pureL F E σ hCM d b 1 (M + 1) S Ψinf Ψ hΨinfm hΨm
-  have hth := GlobalTheory.T.lintegral_thetaMeas_block_one_eq_rank_one F E σ hCM M J hJ t ht n T μ 𝓕 hμ h𝓕 μ₁ 𝓕₁ hμ₁ h𝓕₁ (pureL b S φinf φ)
+  have hth := GlobalTheory.CompanionTheory.SW.ThetaStage.theta_stage F E σ hCM M J hJ t ht n T μ 𝓕 hμ h𝓕 μ₁ 𝓕₁ hμ₁ h𝓕₁ (pureL b S φinf φ)
     (fun y => τ' * pureL b S Ψinf Ψ y) (_root_.GlobalTheory.CompanionTheory.SW.PureMeas.measurable_pureL F E σ hCM d b (n + 1) (M + 1) S φinf φ hφinf hφ)
     (hPm.const_mul τ') hHyp
   have hone := hS₁ S hS1 Ψinf Ψ hΨinfm hΨm

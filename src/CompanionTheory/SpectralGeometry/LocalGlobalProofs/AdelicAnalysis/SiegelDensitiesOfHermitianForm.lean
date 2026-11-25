@@ -96,7 +96,7 @@ theorem siegelDensities (F E : Type) [Field F] [NumberField F] [Field E] [Number
   have hE := _root_.GlobalTheory.CompanionTheory.SW.AllFrames.swMeas_all F E σ hCM n M J hJ hnM T hT hdet d b laminf lam hli hlam μ 𝓕 hμ h𝓕 minf m hmi hm
   obtain ⟨hmeas, hint, hmul, hI⟩ := _root_.GlobalTheory.CompanionTheory.SW.EulerInt.euler_int F E σ hCM d b n M _ _ _ hE (hfi _) (fun v => hf v _)
     Φ Φinf Φf Φv hc hsm.1 hpure hprod
-  have hθ := _root_.GlobalTheory.CompanionTheory.SW.ThetaMean.mean_thetaS_eq_integral F E σ hCM M J hJ μ 𝓕 hμ h𝓕 n _ Φ hmeas hint
+  have hθ := _root_.CompanionTheory.PlacePermOperatorBicommutantSpan.theta_int F E σ hCM M J hJ μ 𝓕 hμ h𝓕 n _ Φ hmeas hint
   obtain ⟨r1, r2⟩ := rescale_tprod (ci / ei) (fun v => c v / e v) hdiv.1 hdiv.2
     (∫ X, Φinf X ∂(minf (hermOf (Ainf F) σ T hT))) _ hmul
   refine ⟨fun S => (ci / ei) • ∫ X, Φinf X ∂(minf S), fun v S => (c v / e v) • ∫ X, Φv v X ∂(m v S),
