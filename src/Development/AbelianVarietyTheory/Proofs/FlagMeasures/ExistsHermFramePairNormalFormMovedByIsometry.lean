@@ -19,12 +19,8 @@ section Gen
 variable {G R M : Type*} [Group G] [Ring R] [AddCommGroup M] [Module R M] [DistribMulAction G M]
   [SMulCommClass G R M]
 
-theorem mem_iff (s : G) (A : Submodule R M) (x : M) : s • x ∈ s • A ↔ x ∈ A := by
-  rw [Submodule.mem_smul_pointwise_iff_exists]
-  constructor
-  · rintro ⟨b, hb, h⟩
-    rwa [← MulAction.injective s h]
-  · intro h; exact ⟨x, h, rfl⟩
+theorem mem_iff (s : G) (A : Submodule R M) (x : M) : s • x ∈ s • A ↔ x ∈ A :=
+  Set.smul_mem_smul_set_iff (s := (A : Set M))
 
 theorem ext_smul (s : G) {A B : Submodule R M} (h : ∀ x, s • x ∈ A ↔ x ∈ B) : A = s • B := by
   ext y
