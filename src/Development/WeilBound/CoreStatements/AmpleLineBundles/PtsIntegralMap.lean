@@ -141,13 +141,8 @@ theorem eval_ren (z : (Σ k, ι' k) → ℂ) (f : MRing ι) :
 
 omit [Fintype K] [∀ k, Fintype (ι k)] [∀ k, Fintype (ι' k)] in
 theorem nz_pull {F : Type} [Zero F] (z : (Σ k, ι' k) → F) :
-    (∀ k, ∃ i, pull e z ⟨k, i⟩ ≠ 0) ↔ ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0 := by
-  refine forall_congr' fun k => ⟨?_, ?_⟩
-  · rintro ⟨i, hi⟩
-    exact ⟨e k i, hi⟩
-  · rintro ⟨i, hi⟩
-    obtain ⟨j, rfl⟩ := (e k).surjective i
-    exact ⟨j, hi⟩
+    (∀ k, ∃ i, pull e z ⟨k, i⟩ ≠ 0) ↔ ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0 :=
+  forall_congr' fun k => ((e k).surjective.exists (p := fun i => z ⟨k, i⟩ ≠ 0)).symm
 
 omit [Fintype K] [∀ k, Fintype (ι k)] [∀ k, Fintype (ι' k)] in
 theorem mem_mcPts (V : Ideal (MRing ι)) (z : (Σ k, ι' k) → ℂ) :
