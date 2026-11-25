@@ -18,21 +18,13 @@ noncomputable section
 namespace GlobalTheory.SimilTheta
 open ReciprocityTheory.PTheta Matrix
 
-private theorem levelTheta_one_zero {g : ℕ} (a b : Fin g → ℝ) (τ : Matrix (Fin g) (Fin g) ℂ)
-    (z : Fin g → ℂ) : GlobalTheory.levelTheta a b 1 τ 0 z = theta a b z τ := by
-  unfold GlobalTheory.levelTheta
-  have e1 : ((fun i => ((0 : Fin g → ℤ) i : ℝ) / ((1 : ℕ) : ℝ)) + a) = a := by
-    funext i; simp
-  rw [e1]
-  simp
-
 theorem differentiableOn_thetaChar_comp {g : ℕ} {a b : Fin g → ℂ} (h : charHalf g a b)
     {w : (Fin g → Fin g → ℂ) → Fin g → ℂ} (hw : Differentiable ℂ w) :
     DifferentiableOn ℂ (fun p => thetaChar (per p) a b (w p)) (Key.phDom g) := by
   obtain ⟨ha, hb⟩ := h
   have hF := GlobalTheory.KeyKa.LevelBasis.holFam_levelTheta (fun i => (a i).re) (fun i => (b i).re) Nat.one_pos 0
   unfold GlobalTheory.KeyKa.HolFam at hF
-  simp only [levelTheta_one_zero] at hF
+  simp only [GlobalTheory.levelTheta_one] at hF
   have hm : Differentiable ℂ (fun p : Fin g → Fin g → ℂ => (p, w p)) := by fun_prop
   refine (hF.comp hm.differentiableOn (fun p hp => ⟨hp, Set.mem_univ _⟩)).congr (fun p _ => ?_)
   rw [GlobalTheory.TorusAlg.thetaChar_eq_theta _ ha hb]
