@@ -339,7 +339,7 @@ theorem real_bounds (f r m ρ w q : ℝ) (hf : 1 ≤ f) (hr : 1 ≤ r) (hm : 1 �
     have h8 : (f * r) * 16 ≤ (f * r) * ρ := by gcongr
     nlinarith
 
-theorem exists_run_bound : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r m : ℕ), 2 ≤ I2.PT.f E * r → 1 ≤ m → m ^ 4 ≤ I2.PT.f E → (I2.PT.f E : ℝ) ^ 2 ≤ I2.PT.rd E → 16 ≤ I2.PT.rd E → ∃ (q : ℕ) (R0 : ℝ), 1 ≤ q ∧ Real.log q ≤ 28 * Real.log (I2.PT.rd E) + 2 * Real.log (I2.PT.f E * r) + 7 ∧ RunOK E r 1 q R0 m := by
+theorem exists_run_bound : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r m : ℕ), 2 ≤ I2.PT.f E * r → 1 ≤ m → m ^ 4 ≤ I2.PT.f E → (I2.PT.f E : ℝ) ^ 2 ≤ I2.PT.rd E → 16 ≤ I2.PT.rd E → ∃ (q : ℕ) (R0 : ℝ), RunOK E r 1 q R0 m := by
   intro E _ _ _ r m hfr hm1 hmf hf2 hrd
   have hf : 1 ≤ I2.PT.f E := by
     rcases Nat.eq_zero_or_pos (I2.PT.f E) with h | h
@@ -374,13 +374,6 @@ theorem exists_run_bound : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   have hqR1 : (1 : ℝ) ≤ q := by nlinarith
   have hq1 : 1 ≤ q := by exact_mod_cast hqR1
   have hq0 : (0 : ℝ) < q := by linarith
-  have hhi : (q : ℝ) ≤ I2.PT.rd E ^ 28 * ((I2.PT.f E : ℝ) * r) ^ 2 * 540 := by
-    have h1 : (⌈B⌉₊ : ℝ) ≤ 2 * B := by
-      have := Nat.ceil_lt_add_one (show 0 ≤ B by linarith); linarith
-    have h2 : (r : ℝ) + 1 ≤ 2 * ((I2.PT.f E : ℝ) * r) := by nlinarith
-    calc (q : ℝ) = (⌈B⌉₊ : ℝ) * (r + 1) := hqR
-      _ ≤ (2 * B) * (2 * ((I2.PT.f E : ℝ) * r)) := by gcongr
-      _ = _ := by rw [hB, hS]; ring
   obtain ⟨c1, c2, c3, c5, c6⟩ := real_bounds (I2.PT.f E) r m (I2.PT.rd E) _ q hfR hrR hmR hmfR hf2 hrd
     (by positivity) hw hlo
   have hb0 : 2 ≤ I2.b0 (E := E) q (Real.sqrt S) := by
@@ -388,18 +381,7 @@ theorem exists_run_bound : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   have ht0 : (q : ℝ) * 2 ≤ I2.t0 (E := E) q (Real.sqrt S) := by
     unfold I2.t0; gcongr
   have hd : (I2.dstar (E := E) m : ℝ) = 2 * I2.PT.f E * m := by unfold I2.dstar; push_cast; ring
-  refine ⟨q, Real.sqrt S, hq1, ?_, ?_⟩
-  · have h7 : Real.log 540 ≤ 7 := by
-      rw [Real.log_le_iff_le_exp (by norm_num)]
-      have h1 : Real.exp 7 = Real.exp 1 ^ 7 := by rw [← Real.exp_nat_mul]; norm_num
-      have h2 : (2.7 : ℝ) ≤ Real.exp 1 := le_trans (by norm_num) Real.exp_one_gt_d9.le
-      have h3 : (2.7 : ℝ) ^ 7 ≤ Real.exp 1 ^ 7 := by gcongr
-      rw [h1]; exact le_trans (by norm_num) h3
-    have h1 := Real.log_le_log hq0 hhi
-    rw [Real.log_mul (by positivity) (by norm_num), Real.log_mul (by positivity) (by positivity),
-      Real.log_pow, Real.log_pow] at h1
-    push_cast at h1
-    linarith
+  refine ⟨q, Real.sqrt S, ?_⟩
   · intro X hX hdim
     subst hX
     refine ⟨⟨q, Real.sqrt S, m, hq1, le_rfl, hfr, hdim, hm1, hmf, hfrd, hf2, hrd, ?_, ?_, by linarith, ?_,
@@ -505,7 +487,7 @@ theorem exists_scalar_cusp_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [I
       have hr2 : 2 ≤ r := by omega
       have hf1 : 1 ≤ ReciprocityTheory.ChartRestriction.G.I2.PT.f E := le_trans (Nat.one_le_pow _ _ hm1) hm4
       have hfr : 2 ≤ ReciprocityTheory.ChartRestriction.G.I2.PT.f E * r := by nlinarith
-      obtain ⟨q', R0, -, -, hrunOK⟩ := GlobalTheory.RunParametersBound.exists_run_bound E r m hfr hm1 hm4 hf2 hrd
+      obtain ⟨q', R0, hrunOK⟩ := GlobalTheory.RunParametersBound.exists_run_bound E r m hfr hm1 hm4 hf2 hrd
       have hT : AllTest Xo c := GlobalTheory.Frames.allTest_of_secBaseChange GlobalTheory.firstFiveLaws.1.secBaseChange E H Dw l Xo c
       obtain ⟨i, J, _, cf, xs, f, hi, -, -, -, hf, -, hnz, -⟩ :=
         GlobalTheory.EtaAn.exists_etaRule_cusp_ne_zero_bounds E H Dw l Xo c r (fun σ => Formalism.L2.PjFree.Unf.ofPj (U σ)) σ
