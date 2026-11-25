@@ -641,12 +641,12 @@ theorem GlobalTheory.NL.CokerKill.X_pow_kills_coker : ∀ (D : Formalism.BasicNo
   have hj := (GlobalTheory.NL.JumpsSES.jumps_ses_and_one D HW l K s LL hG T₀ T₁ T₂ ι π c1 hses).1
   exact kills_of_cyclotomic _ π (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero) hu
     ((D.loc l).PD_p K) ((HW l).W_s K s LL hG) hφ hX hQ
-    ((GlobalTheory.NL.IoXQ.main D HW F l K s LL hG).2.2.2.2.2.2 0).2
+    ((GlobalTheory.NL.IoXQ.main D.loc D.locA HW F l K s LL hG).2.2.2.2.2.2 0).2
     (fun hl hs => Dvd.intro_left _ (GlobalTheory.TorsionCard.card_torsion_mul_finrank (D.loc l) K LL
       ((HW l).W K s LL hG) hl (hs ▸ hG.2.2.1)))
-    c1 c2 (GlobalTheory.NL.N_basis D HW F l K s LL hG T₂ c2) M h
-    (_root_.GlobalTheory.NL.Heights.heights_from_jumps D HW F Cm l K s LL hG T₁ M h c1)
-    (fun hJ => _root_.GlobalTheory.NL.Heights.heights_from_jumps D HW F Cm l K s LL hG T₂ M h c2 fun τ i hτ a ha =>
+    c1 c2 (GlobalTheory.NL.N_basis D.loc D.locA HW F l K s LL hG T₂ c2) M h
+    (_root_.GlobalTheory.NL.Heights.heights_from_jumps D.loc D.locA D.locT HW F Cm l K s LL hG T₁ M h c1)
+    (fun hJ => _root_.GlobalTheory.NL.Heights.heights_from_jumps D.loc D.locA D.locT HW F Cm l K s LL hG T₂ M h c2 fun τ i hτ a ha =>
       hJ τ i hτ a ((hj τ a).2 (Or.inr ha)))
     (_root_.GlobalTheory.NL.CokerFin.coker_killed D HW F Cm l K s LL hG T₀ T₁ T₂ ι π c0 c1 c2 hses)
 end -- clump:auto
@@ -1021,7 +1021,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.WachCrystallineComparison =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CmpIsoOfExpansions =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CmpIsoOfExpansions", "h": "module\n\npublic import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NotFullBot\npublic import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.WachCrystallineComparison\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineFrobeniusBijOnLettersDirectSum\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NBasisLoc\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachExpansionBasisDivisibility\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeEqStdPowerSeriesAtZero\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLevelExpansionAtRootOfUnity\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CmpIsoOfExpansions", "h": "module\n\npublic import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NotFullBot\npublic import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.WachCrystallineComparison\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineFrobeniusBijOnLettersDirectSum\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NBasisLoc\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachExpansionBasisDivisibility\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeEqStdPowerSeriesAtZero\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLevelExpansionAtRootOfUnity\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExpansionsLowAndPullback\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1035,14 +1035,6 @@ section Series
 
 variable {LL M : Type} [Field LL] [AddCommGroup M] [Module LL M]
 
-theorem conv_one (f : ℤ → M) : conv (1 : PowerSeries LL) f = f := by
-  funext k
-  unfold conv
-  rw [finsum_eq_single _ 0]
-  · simp
-  · intro j hj
-    simp [PowerSeries.coeff_one, hj]
-
 theorem conv_zero_coeff (e : PowerSeries LL) (f : ℤ → M) (hf : ∀ k < (0 : ℤ), f k = 0) :
     conv e f 0 = PowerSeries.constantCoeff e • f 0 := by
   unfold conv
@@ -1052,7 +1044,7 @@ theorem conv_zero_coeff (e : PowerSeries LL) (f : ℤ → M) (hf : ∀ k < (0 : 
     rw [hf _ (by omega), smul_zero]
 
 theorem mem_latSpan {ι : Type} (ex : ι → ℤ → M) (x : ι) : ex x ∈ latSpan (LL := LL) ex :=
-  Submodule.subset_span ⟨1, x, (conv_one _).symm⟩
+  Submodule.subset_span ⟨1, x, (GlobalTheory.NL.LowLevel.conv_one _).symm⟩
 
 theorem neg_eq_zero_of_std {ι : Type} {D : Submodule LL M} {ex : ι → ℤ → M}
     (h : Std D (latSpan (LL := LL) ex)) (x : ι) : ∀ k < (0 : ℤ), ex x k = 0 :=
@@ -1229,13 +1221,13 @@ theorem cmp_iso (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.l
     GlobalTheory.IndefiniteRowSideFullHecke.WachCrystallineComparison.CmpIso ((HW l).W K s LL h) ((D.loc l).PD K).p T := by
   have := ((D.loc l).PD K).finK₀
   have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
-  have hstd := _root_.GlobalTheory.NL.AtZero.lat_one_std D HW F Cm l K s LL h T hT
-  have hD := _root_.GlobalTheory.NL.PhiD.phi_letters D HW l K s LL h T hT
-  obtain ⟨nb⟩ := GlobalTheory.NL.N_basis D HW F l K s LL h T hT
+  have hstd := _root_.GlobalTheory.NL.AtZero.lat_one_std D.loc D.locA D.locT HW F Cm l K s LL h T hT
+  have hD := _root_.GlobalTheory.NL.PhiD.phi_letters D.loc D.locA D.locT HW l K s LL h T hT
+  obtain ⟨nb⟩ := GlobalTheory.NL.N_basis D.loc D.locA HW F l K s LL h T hT
   exact cmp_iso_of_expansions ((HW l).W K s LL h) Subtype.val_injective T
     (fun i => ex (Cm l) h T i 1) (fun i x => ((Cm l).C K s LL h).tie.cmp_eq T hT i x) hstd
     hD.2.1 hD.2.2.1 nb
-    (fun i y => (((_root_.GlobalTheory.NL.LevInj.expansion_basis D HW F Cm l K s LL h T hT i 1 (prim_one l)
+    (fun i y => (((_root_.GlobalTheory.NL.LevInj.expansion_basis D.loc D.locA D.locT HW F Cm l K s LL h T hT i 1 (prim_one l)
         (full_of_std (hstd i))).2 _ nb).2.2 y 1).1)
     (fun i x m hx => by
       have key := ((Cm l).C K s LL h).tie.levB_φ T hT i 1 (prim_one _) x m hx 0
@@ -1426,13 +1418,13 @@ theorem wach_used_clauses (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F :
     (Cm : CmpOf D.loc D.locA HW F) : DeltaInvariantNormBound D HW F Cm := by
   unfold DeltaInvariantNormBound
   refine ⟨GlobalTheory.NL.LetterFree.letters_free D HW F, GlobalTheory.NL.WachLatticeTrivialModUniformizer.wachLattice_galois_trivial_mod_uniformizer D HW F Cm,
-    GlobalTheory.NL.CmpCris.wachLattice_comparison_dcris D HW F Cm, _root_.GlobalTheory.NL.LatLevel.lattice_at_level D HW F Cm, _root_.GlobalTheory.NL.Heights.heights_from_jumps D HW F Cm,
+    GlobalTheory.NL.CmpCris.wachLattice_comparison_dcris D HW F Cm, _root_.GlobalTheory.NL.LatLevel.lattice_at_level D.loc D.locA D.locT HW F Cm, _root_.GlobalTheory.NL.Heights.heights_from_jumps D.loc D.locA D.locT HW F Cm,
     _root_.GlobalTheory.NL.Exact.exactness_of_N D HW F Cm, _root_.GlobalTheory.NL.PoleCrys.main D HW F, _root_.GlobalTheory.NL.NygaardFrobeniusPower.crystalline_extension_integral_cocycle_all_places D HW F Cm, _root_.GlobalTheory.NL.p9_statement D HW F,
     _root_.GlobalTheory.NL.FrobeniusMatrixUniqueness.main D HW F, _root_.GlobalTheory.NL.WachModulePoleQuotient.wachModule_consequences_poleQuotient D HW F Cm, GlobalTheory.NL.HerrComplexH1.herr_H1_description D HW F,
     GlobalTheory.NL.FiniteRestrictionH1f.mem_H1f_iff_res_mem D HW F, _root_.GlobalTheory.NL.IntComplex.main D HW F, _root_.GlobalTheory.NL.DefectTorsion.defect_torsion D HW F Cm,
     _root_.GlobalTheory.NL.CokerKill.X_pow_kills_coker D HW F Cm, ?_⟩
   unfold ConclusionE
-  exact ⟨GlobalTheory.NL.NygaardExtension.main D HW F, _root_.GlobalTheory.NL.SandJumps.main D HW F Cm⟩
+  exact ⟨GlobalTheory.NL.NygaardExtension.main D HW F, _root_.GlobalTheory.NL.SandJumps.main D.loc D.locA D.locT HW F Cm⟩
 
 end GlobalTheory.NL
 end -- clump:auto

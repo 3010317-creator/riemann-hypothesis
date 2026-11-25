@@ -9,54 +9,9 @@ public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PPai
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LineBundleModelDegree
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ClassListMapDomainPerm
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.OfSteps
-import Mathlib.Algebra.Order.Star.Int
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.TypeStar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XFormsExist, Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XVertdivCommensurable, Development.AutomorphicSpectrum.Proofs.AlgebraProofs.MonomialRatioIntegralModel, Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LineBundleChartGenericComparison
@@ -328,15 +283,6 @@ theorem map_zsmul_append {A : List (K → ℤ) → ℤ} (hp : PermInv A) (hA : H
       hp _ _ (List.perm_middle (a := u) (l₁ := l) (l₂ := r)), List.length_cons, List.cons_append]
     ring
 
-theorem length_classList (cls : σ → K → ℤ) {H : MvPolynomial σ ℤ} {n : ℕ}
-    (hH : H.IsHomogeneous n) {μ : σ →₀ ℕ} (hμ : μ ∈ H.support) :
-    (classList cls μ).length = n := by
-  have h1 := hH (mem_support_iff.mp hμ)
-  rw [← h1]
-  simp only [classList, Multiset.length_toList, Multiset.card_map, Finsupp.card_toMultiset,
-    Finsupp.weight_apply]
-  simp [Finsupp.sum]
-
 theorem polyVal_zsmul {A : List (K → ℤ) → ℤ} (hp : PermInv A) (hA : HeadAdd A) (m : ℤ)
     (cls : σ → K → ℤ) {H : MvPolynomial σ ℤ} {n : ℕ} (hH : H.IsHomogeneous n) :
     polyVal A (fun s => m • cls s) H = m ^ n * polyVal A cls H := by
@@ -348,7 +294,7 @@ theorem polyVal_zsmul {A : List (K → ℤ) → ℤ} (hp : PermInv A) (hA : Head
     rw [List.append_nil, ← Multiset.coe_eq_coe, ← Multiset.map_coe, Multiset.coe_toList,
       Multiset.coe_toList, Multiset.map_map]
     rfl
-  rw [hp _ _ hperm, map_zsmul_append hp hA, length_classList cls hH hμ, List.append_nil]
+  rw [hp _ _ hperm, map_zsmul_append hp hA, GroundTheory.Heights₂.Heights.NumbersDVR.classList_length_of_mem_support cls hH hμ, List.append_nil]
   ring
 
 end Lists
@@ -359,28 +305,12 @@ variable {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
 omit [Fintype K] [∀ k, Fintype (ι k)] in
 theorem isVerticalDivisor_swap {P : Ideal (MRing ι O)} {ϖ : O} {b : K → ℤ} {f g : MRing ι O}
     (hD : IsVerticalDivisor P ϖ b f g) : IsVerticalDivisor P ϖ (-b) g f := by
-  refine {
-    degrees := ?_
-    num_not_mem := hD.den_not_mem
-    den_not_mem := hD.num_not_mem
-    vertical := ?_
-    unit_off_special := ?_ }
+  refine IsVerticalDivisor.of_unit_off_special ?_ hD.den_not_mem hD.num_not_mem
+      fun W hW hPW hrel hϖ => ?_
   · obtain ⟨bf, bg, hf, hg, hb⟩ := hD.degrees
-    refine ⟨bg, bf, hg, hf, ?_⟩
-    rw [← hb]
-    funext k
-    simp
-  · intro W hW
-    apply hD.vertical W
-    intro h
-    apply hW
-    unfold ratDiv at h ⊢
-    linarith
-  · intro W hW hPW hrel hϖ
-    obtain ⟨u, v, hu, hv, h⟩ := hD.unit_off_special W hW hPW hrel hϖ
-    refine ⟨v, u, hv, hu, ?_⟩
-    rw [← neg_sub]
-    exact P.neg_mem h
+    exact ⟨bg, bf, hg, hf, funext fun k => by rw [← hb]; simp⟩
+  · obtain ⟨u, v, hu, hv, h⟩ := hD.unit_off_special W hW hPW hrel hϖ
+    exact ⟨v, u, hv, hu, by rw [← neg_sub]; exact P.neg_mem h⟩
 
 theorem exists_zpow {Ω : Type} [Field Ω] (φ : MRing ι O →+* Ω) {P : Ideal (MRing ι O)} [P.IsPrime]
     {ϖ : O} {b : K → ℤ} {f g : MRing ι O} (hD : IsVerticalDivisor P ϖ b f g) {u : Ω} (hu : u ≠ 0)
@@ -484,7 +414,7 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
   rw [h1 k hk1 hk2 q L Q hQ, h2 k hk1 hk2 q L Q hQ, Finset.mul_sum]
   refine Finset.sum_congr rfl fun μ hμ => ?_
   rw [pairNum_scale hϖ hW' hD m hr hk1
-    (by rw [length_classList L hQ hμ]; omega)]
+    (by rw [GroundTheory.Heights₂.Heights.NumbersDVR.classList_length_of_mem_support L hQ hμ]; omega)]
   ring
 
 end GlobalTheory.CompanionTheory.Ar.CkLinePow

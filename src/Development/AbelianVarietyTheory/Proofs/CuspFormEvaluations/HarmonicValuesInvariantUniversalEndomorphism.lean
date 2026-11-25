@@ -1,5 +1,6 @@
 module
 
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermBPf
 public import Formalism.LocalToGlobal.ProjectiveLattices.IsLevMove
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermBPrim
@@ -59,8 +60,6 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBPull
 
 @[expose] public section
-
-set_option autoImplicit false
 
 noncomputable section
 
@@ -300,7 +299,7 @@ end Val
 
 section Chart
 
-open GlobalTheory.FrameAdjSeries
+open Formalism.MainNotions.ModuliIntegralCharts.H1.GermB GlobalTheory.FrameAdjSeries
 
 variable {S : Type} [CommRing S] {x0 : Sp S ⟶ X} {x0' : Sp S ⟶ X'}
 

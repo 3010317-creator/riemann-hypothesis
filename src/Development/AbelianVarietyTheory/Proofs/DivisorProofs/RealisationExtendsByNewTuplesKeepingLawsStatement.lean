@@ -369,8 +369,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Form
 open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.ConjExt
@@ -450,8 +448,6 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.FWT Formalism.L2.Pj
 open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-set_option autoImplicit false
 
 noncomputable section
 
@@ -680,8 +676,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Form
 open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.TupExt
@@ -692,37 +686,6 @@ def SideLev : Prop := ∀ (D : D7) (G : Type) [Group G] [Fintype G] (V : HSp D) 
 
 variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T N : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m}
   {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat D A Ks} {V : NewLev D N}
-
-theorem extL_is (hL : R.toLevCh.Is A.μ0) (hV : ∀ n, TwLev R (V.xiH n) (V.xi n) (V.Q n) (V.xiR n)) (hi : Function.Injective V.xiH)
-    (hn : ∀ n t, V.xiH n ≠ R.xiH t)
-    (hQ : ∀ p ∈ ({D.host.pde, D.host.pde'} : Set ℕ), ∃ 𝔭 : HeightOneSpectrum (𝓞 D.host.K),
-      (∀ t, ∀ PP ∈ R.Q t, ((p : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal → PP.under (𝓞 D.host.K) = 𝔭) ∧
-        ∀ n, ∀ PP ∈ V.Q n, ((p : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal → PP.under (𝓞 D.host.K) = 𝔭) :
-    (extL R.toLevCh V).Is (.inl A.μ0) :=
-  { mu0 := hL.mu0
-    eta := hL.eta
-    xi := Sum.rec hL.xi fun n => (hV n).xi
-    xi_inj := by
-      rintro (t | n) (t' | n') h
-      · exact congrArg _ (hL.xi_inj h)
-      · exact absurd h.symm (hn n' t)
-      · exact absurd h (hn n t')
-      · exact congrArg _ (hi h)
-    xi_base := hL.xi_base
-    xi_fin := Sum.rec hL.xi_fin fun n => (hV n).xi_fin
-    xi_triv := Sum.rec hL.xi_triv fun n => (hV n).xi_triv
-    xi_tame := Sum.rec hL.xi_tame fun n => (hV n).xi_tame
-    Pg := hL.Pg
-    Q_pl := Sum.rec hL.Q_pl fun n => (hV n).Q_pl
-    Q_off := Sum.rec hL.Q_off fun n => (hV n).Q_off
-    Q_de p hp := (hQ p hp).imp fun _ h => Sum.rec h.1 h.2
-    Q_ram := Sum.rec hL.Q_ram fun n => (hV n).Q_ram
-    chi := hL.chi
-    xiR := Sum.rec hL.xiR fun n => (hV n).xiR
-    βY := hL.βY
-    βX := hL.βX
-    βV := hL.βV
-    βW := hL.βW }
 
 open Formalism.L2.Host Formalism.L2.Col GlobalTheory.RationalValues in
 theorem xiR_mem (hL : R.toLevCh.Is A.μ0) (hF : R.IsFam) {χ xi Q xiR} (h : TwLev R χ xi Q xiR) :
@@ -1678,8 +1641,6 @@ open Formalism.IndefR.FWT GlobalTheory.BigTop GlobalTheory.OntoChain GlobalTheor
 open GlobalTheory.BigOn GlobalTheory.BigOn.Exp Formalism.L2.Theta GlobalTheory.ExportSeries GlobalTheory.ConjTwist Formalism.IndefR.Lev
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-set_option autoImplicit false
-
 noncomputable section
 
 namespace GlobalTheory.TupExt
@@ -1757,7 +1718,7 @@ theorem extend_tuples : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.P
         βV := hL.βV
         βW := hL.βW }
   obtain ⟨X, Y0, h0⟩ := fam_stage (GlobalTheory.SideLevel.sideReal_moreLevel) hC hL' hV
-  obtain ⟨Y, hC', hT⟩ := core_ext h4 GlobalTheory.HcPort.print_harishChandraModules h1 h5 (GlobalTheory.Chain.ParOfNodeGap.chainPar_of_nodeGap D hH.nodeGap) hC hL' Y0 h0
+  obtain ⟨Y, hC', hT⟩ := core_ext h4 CompanionTheory.D.gk.HC.print_harishChandraModules h1 h5 (GlobalTheory.Chain.ParOfNodeGap.chainPar_of_nodeGap D hH.nodeGap) hC hL' Y0 h0
   have hg' : QGuard (extR R Y) := ⟨Sum.rec hg.1 fun n => (hV n).half, Sum.rec hg.2 fun n => (hV n).guard⟩
   exact ⟨T0 ⊕ N, extA A X, extR R Y, extF F X, v₀, fun i => omExt Y (O i),
     ⟨hC', inferInstance, ⟨fwExt Y hfw⟩, ioExt_ext R Y hio, hg', omPins_ext Y hT hp, phaseTie_ext Y hph, baseOf_ext Y hB⟩,

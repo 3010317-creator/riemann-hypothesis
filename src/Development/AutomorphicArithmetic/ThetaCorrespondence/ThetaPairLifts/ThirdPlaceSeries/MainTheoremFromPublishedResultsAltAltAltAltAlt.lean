@@ -956,9 +956,6 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.MiS
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.MiTop GlobalTheory.SeeSaw GlobalTheory.Fam ValuativeRel IsLocalRing GlobalTheory.FinPl
 namespace GlobalTheory.MiTop
-theorem servedQ_of_bot_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex), _root_.GlobalTheory.MiTop.BottomHypotheses W → _root_.Formalism.IndefR.IndefiniteRealisationRecursion W.Q → _root_.GlobalTheory.MiTop.FamilyServedCondition W := by
-  intro D L hT Gi Gl Kc Yd cX ex W _ _
-  exact _root_.GlobalTheory.MiTop.served' W
 end GlobalTheory.MiTop
 end
 end -- clump:auto
@@ -983,7 +980,7 @@ theorem miStar2_of_allTrue_alt_alt : GlobalTheory.Published.HarishChandraFinite 
   intro hHCF hCusp hDSC hHCM hCW hHowe hWeil hWSF hSWC hDbl hUDG hDSCl hSA B X I l Z L hT Gi Gl Kc Yd cX ex W hA hr hPu
   have hOnto := _root_.GlobalTheory.ChainOnto.ontoAll_of_hecke_alt hHCF hCusp hDSC hHCM hCW hHowe hWeil hWSF hSWC hDbl hUDG (I.rec7 l Z)
   have hFam : _root_.GlobalTheory.MiTop.FamilyAllConditions W := by apply _root_.GlobalTheory.MiTop.famAllQ_of_allTrue_alt <;> assumption
-  have hS := _root_.GlobalTheory.MiTop.servedQ_of_bot_alt W hA.pk.bot hA.rc.some
+  have hS : _root_.GlobalTheory.MiTop.FamilyServedCondition W := _root_.GlobalTheory.MiTop.served' W
   exact _root_.GlobalTheory.MiTop.miStar2_of_bot_lev_fam_served_puNZ hDSCl hCusp hHCM W hA.pk.bot hA.pk.lev hFam hS hPu
 end GlobalTheory.Fam
 end
@@ -1008,7 +1005,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.DivisionValues Forma
 open Formalism.IndefR.Mult Formalism.IndefR.Datum MeasureTheory NumberField IsDedekindDomain
 open Formalism.L2.SG.RowsJoinPinned Formalism.L2.SG.RowDict Formalism.L2.SG.PoincareInHH.PoincareSetting
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.MiS GlobalTheory.Core.Mi
-open GlobalTheory.MiTop
 namespace GlobalTheory.Fam
 theorem miAt_of_truePack_alt_alt : GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Hk3.HoweUnram → GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.WeilSiegelFormulaUnitary → GlobalTheory.Published.SiegelWeilUnitaryConvergent → _root_.GlobalTheory.Published.DoublingMethodLocalZetaIntegrals → GlobalTheory.Published.UnramifiedDoublingGL → GlobalTheory.Published.DiscreteSeriesClassification → GlobalTheory.Published.StrongApproxSU → ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex), _root_.GlobalTheory.Fam.TruePackAlt W → 1 ≤ D.R.rS → PuNZ D → _root_.GlobalTheory.Fam.RealPackageCondition W := by
   intro h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11 h12 h13 D L hT Gi Gl Kc Yd cX ex W hW hR hP

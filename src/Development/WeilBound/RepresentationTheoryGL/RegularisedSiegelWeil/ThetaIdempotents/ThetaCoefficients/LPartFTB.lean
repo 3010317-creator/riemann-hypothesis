@@ -53,8 +53,6 @@ open GlobalTheory.AutomorphicL2Unitary GlobalTheory.AdelicU GlobalTheory.Doublin
 open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 open GlobalTheory.StdUnn PositivityTheory.GramSchwartzFunctions PositivityTheory.GramSchwartzFunctions.BC PositivityTheory.PfSWUS
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 open PositivityTheory.GramSchwartzFunctions.EC GlobalTheory.CompanionTheory.EisCovar
 
 namespace PositivityTheory.Rg.Rsw.L.LPartFT
@@ -66,9 +64,7 @@ abbrev ee (hn : r + t = n) : Fin r ⊕ Fin t ≃ Fin n := finSumFinEquiv.trans (
 abbrev ff (hn : r + t = n) : Fin t ⊕ Fin r ≃ Fin n := finSumFinEquiv.trans (finCongr (by omega))
 
 theorem ee_inl_val (hn : r + t = n) (k : Fin r) : (ee hn (Sum.inl k) : ℕ) = k := by simp [ee]
-theorem ee_inr_val (hn : r + t = n) (k : Fin t) : (ee hn (Sum.inr k) : ℕ) = r + k := by simp [ee]
 theorem ff_inl_val (hn : r + t = n) (k : Fin t) : (ff hn (Sum.inl k) : ℕ) = k := by simp [ff]
-theorem ff_inr_val (hn : r + t = n) (k : Fin r) : (ff hn (Sum.inr k) : ℕ) = t + k := by simp [ff]
 
 theorem ext_ee (hn : r + t = n) {R : Type} {M N : Matrix (Fin n) (Fin n) R}
     (h : ∀ s s', M (ee hn s) (ee hn s') = N (ee hn s) (ee hn s')) : M = N := by
