@@ -873,9 +873,6 @@ open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheor
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 
-theorem _root_.GlobalTheory.T.test_places_prime_to_level : Big fun {D} _ _ _ _ _ _ _ _ _ _ _ ch => ∀ w ∈ ch.G.pl.W0,
-    ((D.host.QS * D.host.q * D.host.d * Ideal.absNorm D.host.ccK : ℕ) : 𝓞 D.host.E) ∉ w.asIdeal := by
-  first | exact @GlobalTheory.PlacesPrime.places_prime_to_level
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TestPlacesPrimeToLevelStatement =====
@@ -892,32 +889,6 @@ open GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.StdFrames
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
 
 noncomputable section
-
-namespace GlobalTheory.SmallConv
-
-theorem splitBound_ge : Big fun {D} _ _ _ _ _ _ _ _ _ _ _ _ => 11 ≤ D.host.splitBound := by
-  exact ⟨0, fun _ _ _ => ⟨0, fun D large₂ _ _ Γ _ _ Pl0 T A Ks _ _ _ R F hS _ _ _ => hS.size.2.1.eleven_le⟩⟩
-
-theorem standing : Big fun ch => ∀ t, SquareStanding ch.G t := by
-  obtain ⟨CF0, hH⟩ := splitBound_ge.and GlobalTheory.T.test_places_prime_to_level
-  refine ⟨CF0, fun ε CF hCF => ?_⟩
-  obtain ⟨x₀, hx⟩ := hH ε CF hCF
-  refine ⟨x₀, fun D large₂ he hx0 Γ _ _ Pl0 T A Ks _ _ _ R F hS ch hch hsc t => ?_⟩
-  obtain ⟨h11, hW⟩ := hx D large₂ he hx0 Γ Pl0 T A Ks R F hS ch hch hsc
-  refine ⟨h11, fun w hw => ?_⟩
-  classical
-  unfold locPl at hw
-  rcases Finset.mem_union.1 hw with hw | hw
-  · exact hW w hw
-  · intro hmem
-    have h1 := (hS.core.lev.Q_off t w hw).1
-    have h2 := hS.guard.2 t w hw
-    push_cast at hmem h1 h2
-    rcases w.isPrime.mem_or_mem hmem with h | h
-    · exact h1 (Ideal.mul_mem_right _ _ h)
-    · exact h2 (Ideal.mul_mem_left _ _ h)
-
-end GlobalTheory.SmallConv
 
 end
 end -- clump:auto
@@ -941,7 +912,7 @@ theorem small_convolution_exists_integrable_translates : _root_.GlobalTheory.Fun
       IsMatched ch.S.B t ch.rm i j Θ Θ' → ∀ g g₁,
     ∃ z, zdeg z ≠ 0 ∧ IntegrableOn (translates z (kerSmall ch.W Θ' g g₁)) (M.fd _) (M.ν _) := by
   intro _ hK _ _ _
-  obtain ⟨CF0, hH⟩ := standing
+  obtain ⟨CF0, hH⟩ := GlobalTheory.BigNZ.standing
   refine ⟨CF0, fun ε CF hCF => ?_⟩
   obtain ⟨x₀, hx⟩ := hH ε CF hCF
   refine ⟨x₀, fun D large₂ he hx0 Γ _ _ Pl0 T A Ks _ _ _ R F hS ch hch hsc => ?_⟩

@@ -391,17 +391,13 @@ namespace GlobalTheory.DimPartsFull
 section Tw
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℂ E] (s : Bool)
 
-theorem twSub_map (V : Submodule ℂ E) : V.map (Tw.mkL s E) = Tw.sub s V := by
-  ext x
-  exact ⟨fun ⟨y, hy, h⟩ => h ▸ hy, fun hx => ⟨Tw.out x, hx, rfl⟩⟩
-
 theorem twSub_iSup {C : Type} (S : C → Prop) (V : C → Submodule ℂ E) :
     Tw.sub s (⨆ (c : C) (_ : S c), V c) = ⨆ (c : C) (_ : S c), Tw.sub s (V c) := by
-  rw [← twSub_map, Submodule.map_iSup]
+  rw [← GlobalTheory.QPosCompare.tw_map_sub, Submodule.map_iSup]
   refine iSup_congr fun c => ?_
   rw [Submodule.map_iSup]
   refine iSup_congr fun _ => ?_
-  exact twSub_map s (V c)
+  exact GlobalTheory.QPosCompare.tw_map_sub s (V c)
 
 theorem twSub_finrank (V : Submodule ℂ E) : Module.finrank ℂ (Tw.sub s V) = Module.finrank ℂ V := by
   unfold Module.finrank

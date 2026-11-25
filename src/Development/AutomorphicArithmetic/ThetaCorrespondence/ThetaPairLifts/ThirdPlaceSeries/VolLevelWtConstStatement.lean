@@ -562,15 +562,10 @@ namespace GlobalTheory.TopVol.InKConj
 
 variable {D : D7}
 
-theorem idAt_le_of {P : Pl D → Prop} {v : Pl D} (hv : P v) : idAt D (· = v) ≤ idAt D P := by
-  intro a ha
-  rw [idAt, Submodule.mem_inf, Submodule.mem_iInf] at ha ⊢
-  exact ⟨ha.1, fun w => ha.2 ⟨w.1, fun h => w.2 (h ▸ hv)⟩⟩
-
 theorem moves_at {V : HSp D} {g : GA D V} {M : Lat V} {P : Pl D → Prop} (h : Moves V g M M P) {v : Pl D} (hv : P v) :
     Moves V g M M (· = v) := by
   intro y hy
-  have hy' : ∀ i, y i ∈ idAt D P := fun i => idAt_le_of hv (hy i)
+  have hy' : ∀ i, y i ∈ idAt D P := fun i => GlobalTheory.FinPl.PlacesAdeles.idAt_single_le hv (hy i)
   rw [KOpen.mem_latV_iff V M _ y hy, KOpen.mem_latV_iff V M _ _ (KOpen.supp_mulVec V _ g hy),
     ← KOpen.mem_latV_iff V M P y hy', ← KOpen.mem_latV_iff V M P _ (KOpen.supp_mulVec V P g hy')]
   exact h y hy'
@@ -603,10 +598,6 @@ theorem conj_mem_levG (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (Λ M : Lat
       show upperLeftBlock Ld.hr (redFn β PP.1 _) = 1
       rw [hred PP.1 PP.2]; exact blockDiagonalExtendByOnePrimeField_one _ _
     rw [e]; exact Subgroup.one_mem _
-
-end GlobalTheory.TopVol.InKConj
-
-namespace GlobalTheory.TopVol.InKConj
 
 end GlobalTheory.TopVol.InKConj
 end -- clump:auto
@@ -665,9 +656,6 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.See
 open scoped TensorProduct Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.TopVol GlobalTheory.FinPl
-namespace GlobalTheory.TopVol.InKConj
-variable {D : D7}
-end GlobalTheory.TopVol.InKConj
 namespace GlobalTheory.TopVol.InKConj
 theorem inK_mem_levSph_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B X} {l : I.Laws} {Z : TC.Later B (I.cols l)} {L : SizeData₂ (I.rec7 l Z)} {hT : GatTies (I.rec7 l Z)} {Gi : Formalism.MainNotions.G.Inst (I.rec7 l Z) L} {Gl : Formalism.MainNotions.G.LatInst (I.rec7 l Z)} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX (I.rec7 l Z)} {cX : ExtraC} {ex : Extra (I.rec7 l Z) L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex), _root_.GlobalTheory.Fam.AllFamilyConditions W → ∀ (u : B.Word) (a : _root_.GlobalTheory.Fam.GeometricFamily W u), a.Is → a.True → ∀ (t : W.P.T) (J : _root_.GlobalTheory.Fam.QuadraticExtensionData a t), J.Reads → ∀ κ, InK (I.rec7 l Z).sp.X' a.v.NT (fun p => ∃ i, (J.G i).q.v = p) κ → κ ∈ _root_.GlobalTheory.TopVol.sphericalLevelSubgroup W a.g.bT := by
   intro B X I l Z L hT Gi Gl Kc Yd cX ex W hW u a ha hat t J hJ κ hκ

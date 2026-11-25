@@ -259,13 +259,6 @@ private theorem map_smooth {k G V : Type} [Field k] [Group G] [AddCommGroup V] [
   show ρ g (f n) = f n
   rw [← hf, hg']
 
-private theorem smoothRep_smooth {k G V : Type} [Field k] [Group G] [AddCommGroup V] [Module k V]
-    [TopologicalSpace G] [IsTopologicalGroup G] (ρ : Representation k G V) : IsSmooth (smoothRep ρ) := by
-  intro v
-  have h : IsOpen {g : G | ρ g v.1 = v.1} := v.2
-  convert h using 3 with g
-  exact Subtype.ext_iff
-
 theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.repEigSum :
     ∀ {k G V : Type} [Field k] [Group G] [AddCommGroup V] [Module k V] {N : Type} [AddCommGroup N] [Module k N] [CharZero k] [TopologicalSpace G] [IsTopologicalGroup G] (ρ : Representation k G V) (σ : Representation k G N), IsSmooth σ → ∀ (Y : Submodule k V) (K : Subgroup G) (χ : K →* kˣ), IsCompact (K : Set G) → IsOpen {x : K | χ x = 1} → copies ρ Y σ ⊓ eig ρ K χ = ⨆ f : Into ρ Y σ, (eig σ K χ).map f.1 := by
   intro k G V _ _ _ _ N _ _ _ _ _ ρ σ hσ Y K χ hK hχ
@@ -276,7 +269,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.repEigSum :
     rw [← f.2.1, hn h, map_smul]
   refine le_antisymm ?_ hE
   have hC := (repEigCompl σ K χ hσ hK hχ).1
-  have hD := (repEigCompl (smoothRep ρ) K χ (smoothRep_smooth ρ) hK hχ).1
+  have hD := (repEigCompl (smoothRep ρ) K χ (GlobalTheory.SmGL.isSmooth_smoothRep ρ) hK hχ).1
   have hT : ∀ f : Into ρ Y σ, ∀ n ∈ twKer σ K χ,
       f.1 n ∈ (twKer (smoothRep ρ) K χ).map (smoothPart ρ).subtype := by
     intro f

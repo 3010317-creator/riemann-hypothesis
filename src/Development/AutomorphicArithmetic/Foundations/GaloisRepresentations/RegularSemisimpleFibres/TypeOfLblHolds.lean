@@ -814,17 +814,12 @@ private theorem inPar_one' {F : Type} [Field F] (a n : ℕ) : InPar a (1 : GL (F
   rw [h] at hi
   omega
 
-private theorem gal_id' {F : Type} [Field F] (n : ℕ) (y : GL (Fin n) F) :
-    gal (RingHom.id F) n y = y := by
-  ext i j
-  rfl
-
 theorem UpperTheory.Gal.InertialTypesAlt.hcOne :
     HcOne := by
   intro F _ _ a b n hn α β hα hβ
   subst hn
   unfold hc hcTw
-  simp only [gal_id', mul_one, inv_mul_cancel, inPar_one', ite_true, tlG_one', brG_one']
+  simp only [GlobalTheory.Shin.gal_id_eq, mul_one, inv_mul_cancel, inPar_one', ite_true, tlG_one', brG_one']
   haveI : Nonempty { p : GL (Fin (a + b)) F // InPar a p } := ⟨⟨1, inPar_one' a _⟩⟩
   haveI : Fintype (GL (Fin (a + b)) F) := Fintype.ofFinite _
   rw [finsum_eq_sum_of_fintype, Finset.sum_const, nsmul_eq_mul]

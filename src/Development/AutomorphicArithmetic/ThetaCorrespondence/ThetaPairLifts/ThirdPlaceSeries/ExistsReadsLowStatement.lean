@@ -409,13 +409,6 @@ theorem isRed_one_of_topPt (I : TC B X) (hI : I.Ok) (hP : TC.Pins B X) (l : I.La
   rw [e3] at hA
   exact isRed_one_of_inv hkl hA
 
-theorem exists_gfC {D : D7} (V : HSp D) {n : ℕ} (hn : V.rank = n)
-    (y : UPts (sigD D) (V.gram.reindex (finCongr hn) (finCongr hn)) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) :
-    ∃ g ∈ GfC V, GlobalTheory.AdForm.finM V hn g = y.1.1 := by
-  subst hn
-  obtain ⟨g, hg, e⟩ := GlobalTheory.DefFree.AdelCls.exists_fin V ⟨y.1, y.2⟩
-  exact ⟨g, hg, congrArg Units.val (congrArg Subtype.val e)⟩
-
 section Move
 
 variable {I : TC B X} {l : I.Laws} {Z : TC.Later B (I.cols l)} {u : B.Word} {a : I.ι} {Ch : ℕ → Type}
@@ -446,13 +439,13 @@ theorem mvEl_spec (hI : I.Ok) (hP : TC.Pins B X) (A : TwDat I l Z u a Ch) (hA : 
 
 def mvLift (hI : I.Ok) (hP : TC.Pins B X) (A : TwDat I l Z u a Ch) (hA : A.Is) (i : ℕ) (hi : i ≤ B.R.m) (β : Ch i) :
     GA (I.rec7 l Z) ((I.rec7 l Z).sp.X i) :=
-  (exists_gfC ((I.rec7 l Z).sp.X i) (rankN (I.rec7 l Z) i hi)
+  (GlobalTheory.Core.Mi.PinModel.exists_finM ((I.rec7 l Z).sp.X i) (rankN (I.rec7 l Z) i hi)
     ⟨(mvEl hI hP A hA i hi β).1, ((mem_basePts_iff _ _).1 (mvEl hI hP A hA i hi β).2).1⟩).choose
 
 theorem mvLift_spec (hI : I.Ok) (hP : TC.Pins B X) (A : TwDat I l Z u a Ch) (hA : A.Is) (i : ℕ) (hi : i ≤ B.R.m) (β : Ch i) :
     mvLift hI hP A hA i hi β ∈ GfC _ ∧
       finM _ (rankN (I.rec7 l Z) i hi) (mvLift hI hP A hA i hi β) = (mvEl hI hP A hA i hi β).1.1 :=
-  (exists_gfC ((I.rec7 l Z).sp.X i) (rankN (I.rec7 l Z) i hi)
+  (GlobalTheory.Core.Mi.PinModel.exists_finM ((I.rec7 l Z).sp.X i) (rankN (I.rec7 l Z) i hi)
     ⟨(mvEl hI hP A hA i hi β).1, ((mem_basePts_iff _ _).1 (mvEl hI hP A hA i hi β).2).1⟩).choose_spec
 
 end Move

@@ -801,17 +801,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.SqTop.SqField
 
-theorem gBig_and {Q Q' : GP} (h : GBig @Q) (h' : GBig @Q') :
-    GBig fun {_ _ _ _} G μ C x b => Q G μ C x b ∧ Q' G μ C x b := by
-  obtain ⟨a, ha⟩ := h
-  obtain ⟨a', ha'⟩ := h'
-  refine ⟨max a a', fun ε CF hCF => ?_⟩
-  obtain ⟨C0, x0, h1⟩ := ha ε CF (le_of_max_le_left hCF)
-  obtain ⟨C1, x1, h2⟩ := ha' ε CF (le_of_max_le_right hCF)
-  refine ⟨max C0 C1, max x0 x1, fun C hC D large₂ he hx hR T Lc μ hμ G => ⟨?_, ?_⟩⟩
-  · exact h1 C (le_of_max_le_left hC) D large₂ he (le_of_max_le_left hx) hR T Lc μ hμ G
-  · exact h2 C (le_of_max_le_right hC) D large₂ he (le_of_max_le_right hx) hR T Lc μ hμ G
-
 theorem isAlgebraic_norm {D : D7} {δ t0 : ℂ} {Q N : ℕ} {B : ℝ} {del : ℕ → ℝ} (hC : GlobalTheory.NormSum.CoordInt D N B Q del)
     (P : GlobalTheory.NormSum.Pair D ⊤ δ t0 Q) (hP : P.Small N B) : IsAlgebraic ℚ ((P.norm : ℝ) : ℂ) := by
   have hco : ∀ h T, P.coord h T ∈ Formalism.MainNotions.TaylorLogMetric.Qbar := fun h T => by
@@ -911,10 +900,6 @@ theorem sqIn_of {D : D7} {T : Type} {Lc : LevCh D T} {sc : Consts} (G : GridData
 
 end GlobalTheory.SqTop.SqField
 
-namespace GlobalTheory.BigTop.Fun
-
-end GlobalTheory.BigTop.Fun
-
 end
 end -- clump:auto
 end -- clump:auto
@@ -934,7 +919,7 @@ namespace GlobalTheory.Mem.LiteralAutomorphy
 
 theorem nfSq_of_fieldDat : GlobalTheory.NormSum.IntSt → GlobalTheory.SqTop.FieldDat → GlobalTheory.SqTop.TorEx → GlobalTheory.SqTop.BotSmall → NFSq := by
   intro hI hFD hTE hBS
-  obtain ⟨CF0, h⟩ := GlobalTheory.SqTop.SqField.gBig_and hFD (GlobalTheory.SqTop.SqField.gBig_and hTE hBS)
+  obtain ⟨CF0, h⟩ := GlobalTheory.SqTop.Model.gBig_and hFD (GlobalTheory.SqTop.Model.gBig_and hTE hBS)
   refine ⟨CF0, fun ε CF hCF => ?_⟩
   obtain ⟨C0, x₀, h⟩ := h ε CF hCF
   refine ⟨x₀, fun D large₂ he hx hR T L μ₀ hμ G => ?_⟩

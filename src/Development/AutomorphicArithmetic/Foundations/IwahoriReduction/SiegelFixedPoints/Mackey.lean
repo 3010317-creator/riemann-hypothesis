@@ -92,22 +92,6 @@ section -- clump:auto
 open scoped MatrixGroups Matrix
 open GlobalTheory.KZ GlobalTheory.K4 GlobalTheory.Glue GlobalTheory.KummerEisensteinGalois UpperTheory.Kd.L
 
-namespace UpperTheory.Kd.L
-
-section Series
-
-variable {K : Type} [Field K] [CharZero K]
-
-end Series
-
-section Root
-
-variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] [CharZero Ω]
-
-end Root
-
-end UpperTheory.Kd.L
-
 private theorem eps_eOm_eq_cexp {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] [CharZero Ω] (ε : Ω →+* ℂ) (x : ℚ) :
     ε (eOm ε x) = Complex.exp (2 * ↑Real.pi * Complex.I * ↑x) := by
   unfold eOm
@@ -658,28 +642,6 @@ section -- clump:auto
 open scoped MatrixGroups Matrix
 open GlobalTheory.KZ GlobalTheory.K4 GlobalTheory.Glue GlobalTheory.KummerEisensteinGalois UpperTheory.Kd.L
 
-private theorem hahnSeries_map_mul {Ω : Type} [Field Ω] [Algebra ℚ Ω] (s : Ω ≃ₐ[ℚ] Ω) (x y : HahnSeries ℚ Ω) :
-    HahnSeries.map (x * y) (s : Ω →+* Ω) = HahnSeries.map x (s : Ω →+* Ω) * HahnSeries.map y (s : Ω →+* Ω) := by
-  have e : ∀ z : HahnSeries ℚ Ω, HahnSeries.map z ((s : Ω →+* Ω) : Ω →ₙ+* Ω) = HahnSeries.map z (s : Ω →+* Ω) := by
-    intro z
-    ext r
-    simp [HahnSeries.map_coeff]
-    rfl
-  rw [← e, ← e, ← e]
-  exact HahnSeries.map_mul _
-
-private theorem theta_hahnSeries_map_comm {Ω : Type} [Field Ω] [Algebra ℚ Ω] (s : Ω ≃ₐ[ℚ] Ω) (q : ℚ) (x : HahnSeries ℚ Ω) :
-    theta q (HahnSeries.map x (s : Ω →+* Ω)) = HahnSeries.map (theta q x) (s : Ω →+* Ω) := by
-  ext r
-  show algebraMap ℚ Ω (q * r) * (HahnSeries.map x (s : Ω →+* Ω)).coeff r = (s : Ω →+* Ω) (algebraMap ℚ Ω (q * r) * x.coeff r)
-  rw [HahnSeries.map_coeff, map_mul (s : Ω →+* Ω),
-    show (s : Ω →+* Ω) (algebraMap ℚ Ω (q * r)) = algebraMap ℚ Ω (q * r) from s.commutes _]
-
-private theorem hahnSeries_map_sub {Ω : Type} [Field Ω] [Algebra ℚ Ω] (s : Ω ≃ₐ[ℚ] Ω) (x y : HahnSeries ℚ Ω) :
-    HahnSeries.map (x - y) (s : Ω →+* Ω) = HahnSeries.map x (s : Ω →+* Ω) - HahnSeries.map y (s : Ω →+* Ω) := by
-  ext r
-  simp [HahnSeries.map_coeff]
-
 private theorem prim_hahnSeries_map_of_prim_comap {Ω : Type} [Field Ω] [Algebra ℚ Ω] (A A' : ValuationSubring Ω) (s : Ω ≃ₐ[ℚ] Ω)
     (hA : ∀ x, x ∈ A' ↔ s x ∈ A) (x : HahnSeries ℚ Ω) (hx : Prim A' x) :
     Prim A (HahnSeries.map x (s : Ω →+* Ω)) := by
@@ -724,7 +686,7 @@ theorem UpperTheory.Kd.L.dlgal :
     exact prim_hahnSeries_map_of_prim_comap A A' s hA _ ha
   · rw [hM]
     exact prim_hahnSeries_map_of_prim_comap A A' s hA _ hb
-  · rw [hexpa, hM, theta_hahnSeries_map_comm, theta_hahnSeries_map_comm, ← hahnSeries_map_mul, ← hahnSeries_map_mul, ← hahnSeries_map_mul, ← hahnSeries_map_mul, ← hahnSeries_map_sub,
+  · rw [hexpa, hM, GlobalTheory.ThGal.theta_map, GlobalTheory.ThGal.theta_map, ← GlobalTheory.ThGal.map_mul_gal, ← GlobalTheory.ThGal.map_mul_gal, ← GlobalTheory.ThGal.map_mul_gal, ← GlobalTheory.ThGal.map_mul_gal, ← GlobalTheory.ThGal.map_sub_gal,
       HahnSeries.map_coeff, HahnSeries.map_coeff]
     obtain ⟨z, hz, e⟩ := hc r
     refine ⟨s z, (hA z).1 hz, ?_⟩

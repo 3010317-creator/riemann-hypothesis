@@ -830,14 +830,11 @@ open GlobalTheory.UnitaryEmbeddingProperties
 
 variable {D : D7} {A B : HSp D} {c : ℕ} {ε : D.host.E}
 
-theorem qM_mul_a (d : HermitianOrthogonalExtensionData A B c ε) : qM d * d.a = 0 := by
-  rw [qM, Matrix.mul_assoc, d.perp, Matrix.mul_zero]
-
 theorem qM_lat (d : HermitianOrthogonalExtensionData A B c ε) (Λ : Submodule (𝓞 D.host.E) (Fin A.rank → D.host.E))
     (𝔟 : Fin c → FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) : ∀ x ∈ d.lat Λ 𝔟, qM d *ᵥ x ∈ Λ := by
   intro x hx
   obtain ⟨y, hy, u, -, rfl⟩ := hx
-  rw [mulVec_add, mulVec_mulVec, mulVec_mulVec, qM_mul, qM_mul_a, one_mulVec, zero_mulVec, add_zero]
+  rw [mulVec_add, mulVec_mulVec, mulVec_mulVec, qM_mul, GlobalTheory.UnitaryEmbeddingGroup.qM_a, one_mulVec, zero_mulVec, add_zero]
   exact hy
 
 theorem frameMat_lat (d : HermitianOrthogonalExtensionData A B c ε) (Λ : Submodule (𝓞 D.host.E) (Fin A.rank → D.host.E))

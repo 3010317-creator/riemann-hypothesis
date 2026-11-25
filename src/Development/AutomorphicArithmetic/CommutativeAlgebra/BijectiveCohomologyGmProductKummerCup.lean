@@ -251,14 +251,6 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 namespace UpperTheory.Kun
 variable {R : Type} [CommRing R]
 
-private theorem sub_self_all {E : Spc} {N : ℕ} {U : Scheme.{0}} (x : Sx E N U) (h : 0 + N ≤ N) : x.sub 0 N h = x := by
-  have e : SimplexCategory.subinterval 0 N h = 𝟙 _ := by
-    ext i
-    simp [SimplexCategory.subinterval]
-  unfold Sx.sub
-  rw [e]
-  simp
-
 private theorem aw_conc {Q P I : Cx R} (μ : Pair Q P I) {X : Spc} {m n : ℤ} (h : m + 1 = n)
     (A : Cochain ((chains R).obj X) Q m) (B : Cochain ((chains R).obj X) P 1)
     (γ : Cochain ((chains R).obj X) I n) (hγ : μ.IsAW h A B γ)
@@ -276,7 +268,7 @@ private theorem aw_conc {Q P I : Cx R} (μ : Pair Q P I) {X : Spc} {m n : ℤ} (
       obtain rfl : u = 1 := by simpa using hu.symm
       obtain rfl : t = w + -1 := by omega
       simp only [if_true]
-      rw [sub_self_all]
+      rw [GlobalTheory.EtC.CupGen.sub_zero_full]
     · rw [hB]
       simp
   rw [hγ N w hw U x, Fin.sum_univ_castSucc, Finset.sum_eq_zero, zero_add]

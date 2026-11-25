@@ -744,18 +744,10 @@ private theorem map_cont {k k' : Type} [Field k] [TopologicalSpace k] [IsTopolog
     Continuous.matrix_map continuous_id hc
   exact Continuous.units_map (RingHom.mapMatrix (m := Fin n) c : Matrix (Fin n) (Fin n) k →+* Matrix (Fin n) (Fin n) k').toMonoidHom h
 
-private theorem irr_comp {H H' X : Type} [Group H] [Group H'] [AddCommGroup X] [Module ℂ X]
-    (ρ : Representation ℂ H X) (φ : H' →* H) (hφ : Function.Surjective φ) (h : ρ.IsIrreducible) :
-    Representation.IsIrreducible (ρ.comp φ) := by
-  obtain ⟨h0, h1⟩ := (GlobalTheory.CuspRep.isIrreducible_iff _).1 h
-  refine (GlobalTheory.CuspRep.isIrreducible_iff _).2 ⟨h0, fun W hW => h1 W fun g v hv => ?_⟩
-  obtain ⟨g', rfl⟩ := hφ g
-  exact hW g' v hv
-
 theorem UpperTheory.Gal.TP.Loc.pullGood :
     UpperTheory.Gal.TP.Loc.PullGood := by
   intro k k' _ _ _ _ _ _ c hc hs n V _ _ ρ
-  refine ⟨fun h => isSmooth_comp h _ (map_cont c hc n), fun h => irr_comp ρ _ (map_surj c hs n) h, ?_⟩
+  refine ⟨fun h => isSmooth_comp h _ (map_cont c hc n), fun h => GlobalTheory.FinGL.Transport.isIrreducible_comp ρ _ (map_surj c hs n) h, ?_⟩
   rintro ⟨B, h1, h2, h3⟩
   exact ⟨B, h1, h2, fun g v w => h3 _ v w⟩
 end -- clump:auto

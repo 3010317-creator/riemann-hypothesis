@@ -462,18 +462,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 
-namespace GlobalTheory.RowConvAll
-
-theorem multT_le_empty {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (θ : InfFam D) (M : DSModel V S) (J : Set (GA D V))
-    (χ : GA D V → ℂ) : MultT θ M J χ ≤ MultT θ M ∅ 1 := by
-  intro x hx
-  rw [mem_multT] at hx ⊢
-  refine Submodule.span_mono ?_ hx
-  intro T hT
-  exact ⟨hT.aut, hT.cusp, fun v k hk => absurd hk (Set.notMem_empty k), hT.equiv, hT.cont⟩
-
-end GlobalTheory.RowConvAll
-
 end
 end -- clump:auto
 end -- clump:auto
@@ -495,7 +483,7 @@ namespace GlobalTheory.RowConvAll
 theorem separating_family_converges : _root_.GlobalTheory.FunPr.ThetaLocalInputs → RowTower → RowConv := by
   intro hP hT D hq hS T L μ0 hL sc hc G W M hM M₀ hM₀ t ht w ρ ξ Ψ hΨ Φ
   obtain ⟨S, MB, -, -, vec, hv⟩ := hT D hq hS T L μ0 hL sc hc G W M hM M₀ hM₀ D.R.m le_rfl
-  obtain ⟨F', hF', hF⟩ := hv t (multT_le_empty _ _ _ _ ht) Φ
+  obtain ⟨F', hF', hF⟩ := hv t (GlobalTheory.SepRows.factor_multT_le_empty _ _ _ _ ht) Φ
   obtain ⟨hconv, hpart⟩ := hF ρ w
   have hrow : (fun i : Fin D.R.m => W.datum ρ Φ (Fin.castLE (le_refl D.R.m) i)) = W.datum ρ Φ := by
     funext i; simp
@@ -625,15 +613,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 
-namespace GlobalTheory.SepRows.RowRapidPf
-
-theorem multT_le_empty {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (θ : InfFam D) (M : DSModel V S) (J : Set (GA D V)) (χ : GA D V → ℂ) :
-    MultT θ M J χ ≤ MultT θ M ∅ 1 :=
-  Submodule.map_mono (Submodule.span_mono fun _ h =>
-    ⟨h.aut, h.cusp, fun _ _ hk => absurd hk (Set.notMem_empty _), h.equiv, h.cont⟩)
-
-end GlobalTheory.SepRows.RowRapidPf
-
 end
 end -- clump:auto
 end -- clump:auto
@@ -654,7 +633,7 @@ noncomputable section
 namespace GlobalTheory.SepRows.RowRapidPf
 theorem separating_family_rapid_decay : _root_.GlobalTheory.FunPr.ThetaLocalInputs → RowTower → RowRapid := by
   intro hP hT D hq hs T L μ0 hL sc hc G W M hM M₀ hM₀ t ht w
-  have ht' : t ∈ MultT W.θ M₀ ∅ 1 := multT_le_empty W.θ M₀ _ _ ht
+  have ht' : t ∈ MultT W.θ M₀ ∅ 1 := GlobalTheory.SepRows.factor_multT_le_empty W.θ M₀ _ _ ht
   have key : ∀ ρ Φ n (h : n ≤ D.R.m),
       PathConv W M (rowPath T 0 n) (rowFam 0 n fun i => W.datum ρ Φ (Fin.castLE h i)) (t w) ∧
         RapidDec (G.V (.grid n 0)) (part W M ρ Φ (t w) n h) := by

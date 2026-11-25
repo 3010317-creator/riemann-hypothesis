@@ -742,9 +742,6 @@ theorem conjIdeal_eq_cP (P : Pl D.host.E) : Formalism.HermitianLatticesTheory.co
     rwa [this, cO_cO]
   rw [Formalism.HermitianLatticesTheory.conjIdeal, this, Ideal.span_eq]
 
-theorem nat_mem_cP (P : Pl D.host.E) (n : ℕ) : (n : 𝓞 D.host.E) ∈ (cP P).asIdeal ↔ (n : 𝓞 D.host.E) ∈ P.asIdeal := by
-  rw [mem_cP, map_natCast]
-
 theorem asIdeal_cP (P : Pl D.host.E) : (cP P).asIdeal = P.asIdeal.map (cO D).symm :=
   (Ideal.map_symm (cO D)).symm
 
@@ -811,7 +808,7 @@ theorem twLev_of_conj {R : RealDat D A Ks} (hL : R.toLevCh.Is A.μ0) (hF : R.IsF
     have hne : cP P' ≠ P' := fun e => (hL.Q_pl t P' h).2 P' h ((isConjPl_iff _ _).2 e.symm)
     rcases e with rfl | rfl
     · exact ⟨P, h, fun _ => Iff.rfl, fun _ => Iff.rfl, rfl, hne⟩
-    · exact ⟨P', h, nat_mem_cP P', nat_mem_sq_cP P', card_cP P', by rw [cP_cP]; exact hne.symm⟩
+    · exact ⟨P', h, GlobalTheory.StdFrames.natCast_mem_cP P', nat_mem_sq_cP P', card_cP P', by rw [cP_cP]; exact hne.symm⟩
   refine ⟨xiR, h1, h2, h3, h4, fun P hP => ⟨?_, fun P' hP' hc' => ?_⟩, fun P hP => ?_, fun p hp => ?_, fun P => ?_,
     fun P _ => hxiR P, fun P hP => ?_, fun i P hP => ?_, fun P hP P' hP' => hch.one P (hQ P hP) P' (hQ P' hP'), fun P hP => ?_⟩
   · obtain ⟨P', h, -, e2, e3, -⟩ := kn P hP
@@ -1026,11 +1023,6 @@ theorem twLev_pow (hm : RecTies p) (hF : p.R.toRealDat.IsFam) (hG : QGuard p.R.t
 end Point
 
 end GlobalTheory.BigOn.Exp.TwConj.LevAt
-
-namespace GlobalTheory.BigOn.Exp.TwConj
-
-
-end GlobalTheory.BigOn.Exp.TwConj
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1054,23 +1046,6 @@ open Formalism.L2.Host (HChar IsDelta IsPsi)
 
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-namespace GlobalTheory.BigOn.Exp.TwConj.LevAt
-section Places
-variable {D : D7}
-end Places
-section Transfer
-variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} {A : FamIn D.what₂.LL G Pl0 T0 D.R.m}
-  {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL]
-end Transfer
-section Chars
-variable {D : D7}
-variable {q l : ℕ} {δ ψ : HChar D.host.E} {Q : Finset (Pl D.host.E)}
-end Chars
-section Point
-variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
-  {Y : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y cX} {Csz : ℝ} {p : PtAt ex Csz} {w : D.what₂.places.Pl}
-end Point
-end GlobalTheory.BigOn.Exp.TwConj.LevAt
 namespace GlobalTheory.BigOn.Exp.TwConj
 open LevAt in
 theorem twLevAt_holds_alt : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.Published.RayClassFieldSt → _root_.GlobalTheory.BigOn.Exp.TwAdmAlt → _root_.GlobalTheory.BigOn.Exp.TwistCharacter →
