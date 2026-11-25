@@ -127,7 +127,7 @@ theorem oStr_of_noetherian : OStr := by
   obtain ⟨e2, he2⟩ := hBC2 R A.left A.hom φ hAB
   have hp1 : IsBaseChange R (semiToLin (pullHO1 hAB.w)) := IsBaseChange.of_equiv e1 he1
   have hp2 : IsBaseChange R (semiToLin (pullHO2 hAB.w)) := IsBaseChange.of_equiv e2 he2
-  have hcomp := GlobalTheory.T.structureSheafCohomology_pullback_comp_cup_id
+  have hcomp := GlobalTheory.AbCoh.pull_comp_cup_id
   refine ⟨fp_of_tensor_equiv e1 hFP, ?_, ?_, ?_⟩
   · obtain ⟨eM, heM⟩ := hW
     exact wedge_of_isBaseChange hp1 hp2 (cup _) (cup _)

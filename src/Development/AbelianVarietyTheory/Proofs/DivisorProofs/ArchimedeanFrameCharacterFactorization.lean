@@ -145,13 +145,10 @@ theorem polar_inv {S U : Matrix ι ι ℂ} (h1 : S * S = 1) (h2 : Sᴴ = S) (hU 
 theorem jm_mul_self (R S : ℕ) : Jm R S * Jm R S = 1 := by
   simp [Jm, Formalism.UG.Jpq, Matrix.fromBlocks_multiply, Matrix.fromBlocks_one]
 
-theorem jm_conjTranspose (R S : ℕ) : (Jm R S)ᴴ = Jm R S := by
-  simp [Jm, Formalism.UG.Jpq, Matrix.fromBlocks_conjTranspose]
-
 theorem polar (R S : ℕ) (u : Mat R S) (hu : uᴴ * Jm R S * u = Jm R S) :
     ∃ k q : Mat R S, kᴴ * Jm R S * k = Jm R S ∧
       Jm R S * k = k * Jm R S ∧ qᴴ * Jm R S * q = Jm R S ∧ Jm R S * q * Jm R S * q = 1 ∧ u = k * q * q :=
-  polar_inv (jm_mul_self R S) (jm_conjTranspose R S) hu
+  polar_inv (jm_mul_self R S) (GlobalTheory.RealPar.KStabLie.Jm_ct R S) hu
 
 end GlobalTheory.UnitaryPolar
 end -- clump:auto
