@@ -8,10 +8,10 @@ public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsCh
 
 noncomputable section
 
-open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
+open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory
-open scoped CategoryTheory.Obj UpperHalfPlane
+open scoped CategoryTheory.Obj
 
 namespace GlobalTheory.LieMultiple
 
