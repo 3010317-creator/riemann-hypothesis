@@ -461,27 +461,16 @@ theorem isBaseChange_restrict {P Q U M V N : Type*} [CommRing P] [CommRing Q] [A
 theorem mem_span_of_mem_span {Q R N : Type*} [CommRing Q] [CommRing R] [Algebra Q R] [AddCommGroup N] [Module R N]
     [Module Q N] [IsScalarTower Q R N] (G : Set R) (hG : ∀ r : R, r ∈ Submodule.span Q G) (X : Set N)
     (hX : ∀ c ∈ G, ∀ x ∈ X, c • x ∈ X) {y : N} (hy : y ∈ Submodule.span R X) : y ∈ Submodule.span Q X := by
-  have h1 : ∀ (r : R), ∀ x ∈ X, r • x ∈ Submodule.span Q X := by
-    intro r x hx
-    have hr := hG r
-    induction hr using Submodule.span_induction with
-    | mem c hc => exact Submodule.subset_span (hX c hc x hx)
-    | zero => rw [zero_smul]; exact Submodule.zero_mem _
-    | add a b _ _ ha hb => rw [add_smul]; exact Submodule.add_mem _ ha hb
-    | smul q a _ ha => rw [smul_assoc]; exact Submodule.smul_mem _ q ha
-  induction hy using Submodule.span_induction with
-  | mem x hx => exact Submodule.subset_span hx
-  | zero => exact Submodule.zero_mem _
-  | add a b _ _ ha hb => exact Submodule.add_mem _ ha hb
-  | smul r x _ hx =>
-    have h2 : ∀ z ∈ Submodule.span Q X, r • z ∈ Submodule.span Q X := by
-      intro z hz
-      induction hz using Submodule.span_induction with
-      | mem x hx => exact h1 r x hx
-      | zero => rw [smul_zero]; exact Submodule.zero_mem _
-      | add a b _ _ ha hb => rw [smul_add]; exact Submodule.add_mem _ ha hb
-      | smul q a _ ha => rw [smul_comm r q a]; exact Submodule.smul_mem _ q ha
-    exact h2 x hx
+  let P := Submodule.span Q X
+  have hgen (r : R) (x : N) (hx : x ∈ X) : r • x ∈ P := by
+    have hle : Submodule.span Q G ≤ P.comap ((LinearMap.toSpanSingleton R N x).restrictScalars Q) :=
+      Submodule.span_le.2 fun c hc => Submodule.subset_span (hX c hc x hx)
+    exact hle (hG r)
+  have hstable (r : R) : P ≤ P.comap (DistribSMul.toLinearMap Q N r) :=
+    Submodule.span_le.2 (hgen r)
+  let P' : Submodule R N :=
+    { P.toAddSubmonoid with smul_mem' := fun r _ hz => hstable r hz }
+  exact (show Submodule.span R X ≤ P' from Submodule.span_le.2 Submodule.subset_span) hy
 
 theorem isBaseChange_core {P Q R₀ R M N U V : Type*} [CommRing P] [CommRing Q] [CommRing R₀] [CommRing R]
     [Algebra P Q] [Algebra P R₀] [Algebra P R] [Algebra Q R] [Algebra R₀ R] [IsScalarTower P Q R] [IsScalarTower P R₀ R]
