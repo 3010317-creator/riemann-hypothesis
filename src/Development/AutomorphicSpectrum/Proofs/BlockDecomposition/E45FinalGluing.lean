@@ -786,13 +786,6 @@ theorem limL_allLeaves_shift (P : ∀ M : ℕ, Submodule ℂ (Sm E M) → Prop) 
   | leaf V z' => exact Iff.rfl
   | node t₁ t₂ i₁ i₂ => exact and_congr i₁ i₂
 
-theorem limL_allLeaves_mono {P Q : ∀ M : ℕ, Submodule ℂ (Sm E M) → Prop} (h : ∀ M V, P M V → Q M V) :
-    ∀ {N : ℕ} {t : Tr E N}, t.AllLeaves P → t.AllLeaves Q := by
-  intro N t
-  induction t with
-  | leaf V z => exact h _ _
-  | node t₁ t₂ i₁ i₂ => exact fun a => ⟨i₁ a.1, i₂ a.2⟩
-
 theorem limL_disc_shift (z : ℂ) : ∀ {N : ℕ} {t : Tr E N}, t.AllLeaves (fun M _ => 0 < M) → t.Disc → (t.shift z).Disc := by
   intro N t
   induction t with
@@ -851,7 +844,7 @@ theorem limL_lim_one (hS : ConvStrip) (hSh : ConvShift) (hC : ConvComp) (hT : Tw
       (Complex.continuous_re.tendsto z₀).comp hlim
     simp only [hz, ] at h1
     exact (tendsto_nhds_unique h1 tendsto_const_nhds)
-  have hpos : t₀.AllLeaves (fun M _ => 0 < M) := limL_allLeaves_mono (fun _ _ h => h.1) hL
+  have hpos : t₀.AllLeaves (fun M _ => 0 < M) := GlobalTheory.CompanionTheory.EGlue.allLeaves_mono (fun _ _ h => h.1) hL
   have hposk : ∀ k, (tt k).AllLeaves (fun M _ => 0 < M) := fun k => by
     rw [← limL_allLeaves_strip, hst k, limL_allLeaves_strip]
     exact hpos
@@ -924,7 +917,7 @@ theorem limLists : ConvStrip → ConvShift → ConvComp → LimLists := by
     rwa [(hak k).1, (hak k).2] at h
   obtain ⟨φ, t, s, hφ, hc, hr, hg, hl, hd, he⟩ := limL_lim_one hS hSh hC hT hM hbody (fun k => V (a k))
     (fun k => z (a k)) R hR (fun k => hD _) (fun k => hz _) htyp (fun k => hI _) (fun k => hzR _)
-  refine ⟨fun k => a (φ k), t, s, ha.comp hφ, hc, hr, hg, limL_allLeaves_mono ?_ hl, hd, he⟩
+  refine ⟨fun k => a (φ k), t, s, ha.comp hφ, hc, hr, hg, GlobalTheory.CompanionTheory.EGlue.allLeaves_mono ?_ hl, hd, he⟩
   rintro M' V' ⟨-, K'', hK'', W'', hW'', h⟩
   refine Or.inr ⟨K'', ?_, W'', ?_, h⟩
   · simp only [Set.mem_iUnion]
