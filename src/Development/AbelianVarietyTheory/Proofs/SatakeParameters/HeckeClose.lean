@@ -12,7 +12,7 @@ public import Formalism.LocalToGlobal.IndefiniteReal.BaseLiftsPackageOfPrimitive
 public import Formalism.LocalToGlobal.Divisibility.InertPartitionLePartF
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjointInjectiveOnPart
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPartnerCombinationGoodInertLiftStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSeparatingInertPassageCarriedByFormsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSeparatingInertPassageCarriedByForms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurConstantsExistOnChainOfCuspRapidDecay
 public import Mathlib.Algebra.Module.Submodule.Lattice
 public import Mathlib.Basic.Complex.Basic
@@ -196,7 +196,7 @@ theorem typesSep3_of_pin : GlobalTheory.Published.CuspRapidDecay → HoweUnram �
   have hSchur : SchurAll R.toRealDat := schurAll_of_cuspRapidDecay hP R.toRealDat
   have hTwo := GlobalTheory.T.exists_partner_combination_good_inert_lift hH R F hL hCW hEx hSchur
   have hAdj := GlobalTheory.AdjPart.adjoint_injective_on_part R hPos hB
-  have hTr := GlobalTheory.T.exists_separating_inertPassage_carried_by_forms R F hL hOk hCW hEx hSchur hTwo hJ hAdj
+  have hTr := GlobalTheory.exists_inert_passage_separating R F hL hOk hCW hEx hSchur hTwo hJ hAdj
   have hI := (hPin hTr).2
   exact A3.fam3.typesSep3_of (hOk.ok2.what₂ A3.fam3.F.μ0).comm
     (GlobalTheory.FamSep.typesSep_of_ok_isFam R.toRealDat hOk.ok2 hCW.base.fam) hI
