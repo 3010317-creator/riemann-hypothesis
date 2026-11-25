@@ -105,7 +105,14 @@ theorem iota_surjective_spec :
   · intro h; simpa using p.asIdeal.sub_mem h hm
   · intro h; simpa using p.asIdeal.add_mem hm h
 
+theorem epsMul_fst {A : Type} [CommRing A] (c : A) (a : DualNumber A) : (epsMul c a).fst = a.fst := by
+  simp [epsMul]
+
 alias epsMul_snd := _root_.GlobalTheory.CompanionTheory.Ar.LieTangent.epsMul_snd
+
+theorem dualMap_fst {A A' : Type} [CommRing A] [CommRing A'] (f : A →+* A') (a : DualNumber A) :
+    (dualMap f a).fst = f a.fst := by
+  simp [dualMap]
 
 alias dualMap_snd := _root_.GlobalTheory.CompanionTheory.Ar.LieTangent.dualMap_snd
 

@@ -204,6 +204,10 @@ end
 section
 variable {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
 
+lemma summatory_eq_sum_range {a : ℕ → ℝ} (ha0 : a 0 = 0) {N : ℕ} {x : ℝ} (hx : x < N) :
+    Formalism.Sa a x = ∑ n ∈ Finset.range N, a n * Formalism.mxS n x :=
+  Formalism.Sa_eq_sum_range a ha0 hx
+
 lemma summatory_function_continuousAt {a : ℕ → ℝ} (ha0 : a 0 = 0) (y : ℝ) :
     ContinuousAt (fun x => (Formalism.Sa a x : ℂ)) y :=
   (Complex.continuous_ofReal.comp (Formalism.Sa_continuous a ha0)).continuousAt

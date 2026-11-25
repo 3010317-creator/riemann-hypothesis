@@ -63,6 +63,13 @@ noncomputable section
 
 namespace GlobalTheory.CompanionTheory.Ar.Approx
 
+theorem prop_snd_of_isPullback (P : MorphismProperty Scheme.{0}) [P.IsStableUnderBaseChange]
+    {X Y S' S : Scheme.{0}} {φ : X ⟶ Y} {a : X ⟶ S'} {b : Y ⟶ S} {f : S' ⟶ S}
+    (h : IsPullback φ a b f) (ha : P a) : P (pullback.snd b f) := by
+  have sq : IsPullback h.isoPullback.inv (pullback.snd b f) a (𝟙 S') :=
+    IsPullback.of_horiz_isIso ⟨by simp⟩
+  exact P.of_isPullback sq ha
+
 theorem isCommMonObj_of_isGrpPullback {S S' : Scheme.{0}} {G' : Over S'} {G : Over S} [GrpObj G'] [GrpObj G]
     [IsCommMonObj G] {b : S' ⟶ S} {φ : G'.left ⟶ G.left} (h : IsGrpPullback G' G b φ) : IsCommMonObj G' := by
   have key : ∀ {T : Over S'} (x y : T ⟶ G'), x * y = y * x := by

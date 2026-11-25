@@ -966,6 +966,10 @@ section -- clump:auto
 
 namespace GlobalTheory.NormPowerTwoUnity
 
+lemma norm_sq_sub_one_ge (w : ℂ) (h : ‖w - 1‖ < (1 / 2 : ℝ)) :
+    (3 / 2 : ℝ) * ‖w - 1‖ ≤ ‖w ^ 2 - 1‖ := by
+  apply _root_.GlobalTheory.PositiveFormRecursion.step <;> assumption
+
 theorem eq_one_of_norm_pow_two_pow_sub_one_lt (z : ℂ)
     (h : ∀ (m : ℕ), ‖z ^ (2 : ℕ) ^ m - (1 : ℂ)‖ < (1 / 2 : ℝ)) : z = (1 : ℂ) := by
   apply SchrodingerSchwartzBruhat.GlobalTheory.CompanionTheory.SchrSB.eq_one_of_pow_two_pow_near <;> assumption

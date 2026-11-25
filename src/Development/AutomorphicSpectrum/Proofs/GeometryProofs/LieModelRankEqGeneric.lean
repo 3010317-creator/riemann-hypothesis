@@ -64,6 +64,9 @@ namespace GlobalTheory.CompanionTheory.Ar.LieRank
 
 variable {S : Scheme.{0}}
 
+theorem dualMap_apply {R R' : Type} [CommRing R] [CommRing R'] (c : R →+* R') (a : DualNumber R) :
+    dualMap c a = TrivSqZeroExt.inl (c a.fst) + TrivSqZeroExt.inr (c a.snd) := rfl
+
 def epsPull {R R' : Type} [CommRing R] [CommRing R'] (c : R →+* R') (x : Sp R ⟶ S) :
     epsAt (spMap c ≫ x) ⟶ epsAt x :=
   Over.homMk (spMap (dualMap c)) (by
