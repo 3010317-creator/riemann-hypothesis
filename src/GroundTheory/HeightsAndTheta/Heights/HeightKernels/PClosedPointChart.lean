@@ -158,17 +158,10 @@ theorem ClosedPointChart.proof (hU : ClosedPointUnitSection.Statement) : ClosedP
   have hinv : y ⟨(), t⟩ ^ e / g ∈ W := hW W hBW hBunit t
   have hgt : g / y ⟨(), t⟩ ^ e ∈ W :=
     hchartW _ (ClosedPointAffineChart.div_pow_mem_of_mem_chartLat y hgL t hyt)
-  have hval : W.valuation (y ⟨(), t⟩ ^ e / g) = 1 := by
-    have h1 : W.valuation (y ⟨(), t⟩ ^ e / g) * W.valuation (g / y ⟨(), t⟩ ^ e) = 1 := by
-      rw [← map_mul, show y ⟨(), t⟩ ^ e / g * (g / y ⟨(), t⟩ ^ e) = 1 by
-        field_simp [pow_ne_zero e hyt]]
-      exact map_one _
-    have h2 := (W.valuation_le_one_iff _).mpr hinv
-    have h3 := (W.valuation_le_one_iff _).mpr hgt
-    by_contra hne
-    have h4 : W.valuation (y ⟨(), t⟩ ^ e / g) * W.valuation (g / y ⟨(), t⟩ ^ e) < 1 :=
-      lt_of_le_of_lt (mul_le_of_le_one_right' h3) (lt_of_le_of_ne h2 hne)
-    exact ne_of_lt h4 h1
+  have hval : W.valuation (y ⟨(), t⟩ ^ e / g) = 1 :=
+    (W.valuation_eq_one_iff ⟨_, hinv⟩).1 (IsUnit.of_mul_eq_one ⟨_, hgt⟩ (Subtype.ext (by
+      show y ⟨(), t⟩ ^ e / g * (g / y ⟨(), t⟩ ^ e) = 1
+      field_simp [pow_ne_zero e hyt])))
   have hmon : ∀ u t' : T, y ⟨(), t'⟩ ≠ 0 →
       y ⟨(), u⟩ * y ⟨(), t⟩ ^ (e - 1) / y ⟨(), t'⟩ ^ e ∈ chartRingZ y (fun _ => t') := by
     intro u t' ht'
