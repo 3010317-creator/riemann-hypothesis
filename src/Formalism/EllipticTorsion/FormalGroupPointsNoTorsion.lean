@@ -751,88 +751,6 @@ theorem norm_one_add {K : Type*} [NormedField K] [IsUltrametricDist K] {t : K} (
 
 end LegendreModelEllipticTorsion
 
-open LegendreModelEllipticTorsion Polynomial in
-theorem legendre_model : ModelLegendre := by
-  intro K _ _ _ h2 j hj
-  have h16 : ‖(16 : K)‖ = 1 := by
-    have : (16 : K) = 2 ^ 4 := by norm_num
-    rw [this, norm_pow, h2, one_pow]
-  have h256 : ‖(256 : K)‖ = 1 := by
-    have : (256 : K) = 2 ^ 8 := by norm_num
-    rw [this, norm_pow, h2, one_pow]
-  have h256ne : (256 : K) ≠ 0 := by
-    intro h; rw [h, norm_zero] at h256; exact zero_ne_one h256
-  have hdeg : (legPoly j).degree ≠ 0 := by
-    rw [degree_eq_natDegree, legPoly_natDegree h256ne]
-    · decide
-    · intro h0
-      have := legPoly_natDegree h256ne j
-      rw [h0, natDegree_zero] at this
-      exact absurd this (by decide)
-  obtain ⟨l, hl⟩ := IsAlgClosed.exists_root _ hdeg
-  have hroot : (256 : K) * (l ^ 2 - l + 1) ^ 3 = j * (l * (l - 1)) ^ 2 := by
-    have := hl.eq_zero
-    simp only [legPoly, eval_sub, eval_mul, eval_C, eval_pow, eval_add, eval_X, eval_one] at this
-    exact sub_eq_zero.mp this
-  set t := l * (l - 1) with ht
-  have hu : l ^ 2 - l + 1 = 1 + t := by rw [ht]; ring
-  rw [hu] at hroot
-  have hnorm := congrArg norm hroot
-  simp only [norm_mul, norm_pow, h256, one_mul] at hnorm
-
-  have htn : ‖t‖ = 1 := by
-    by_contra hne
-    have e := norm_one_add hne
-    rcases lt_or_gt_of_ne hne with hlt | hgt
-    · rw [e, max_eq_left hlt.le, one_pow] at hnorm
-      have : ‖j‖ * ‖t‖ ^ 2 < 1 := by
-        calc ‖j‖ * ‖t‖ ^ 2 ≤ 1 * ‖t‖ ^ 2 := by gcongr
-          _ < 1 := by rw [one_mul]; exact pow_lt_one₀ (norm_nonneg _) hlt (by norm_num)
-      linarith
-    · rw [e, max_eq_right hgt.le] at hnorm
-      have hpos : 0 < ‖t‖ ^ 2 := by positivity
-      have : ‖t‖ ^ 3 ≤ ‖t‖ ^ 2 := by
-        rw [hnorm]; calc ‖j‖ * ‖t‖ ^ 2 ≤ 1 * ‖t‖ ^ 2 := by gcongr
-          _ = ‖t‖ ^ 2 := one_mul _
-      have : ‖t‖ ^ 2 * ‖t‖ ≤ ‖t‖ ^ 2 * 1 := by nlinarith
-      have := le_of_mul_le_mul_left this hpos
-      linarith
-  have hprod : ‖l‖ * ‖l - 1‖ = 1 := by rw [← norm_mul, ← ht, htn]
-  have hle1 : ‖l - 1‖ ≤ max ‖l‖ 1 := by
-    have := IsUltrametricDist.norm_add_le_max l (-1 : K)
-    simpa [← sub_eq_add_neg] using this
-  have hle2 : ‖l‖ ≤ max ‖l - 1‖ 1 := by
-    have := IsUltrametricDist.norm_add_le_max (l - 1) (1 : K)
-    simpa using this
-  have hl1 : ‖l‖ = 1 := by
-    rcases lt_trichotomy ‖l‖ 1 with h | h | h
-    · exfalso
-      rw [max_eq_right h.le] at hle1
-      have : ‖l‖ * ‖l - 1‖ < 1 := by
-        calc ‖l‖ * ‖l - 1‖ ≤ ‖l‖ * 1 := by gcongr
-          _ < 1 := by rw [mul_one]; exact h
-      linarith
-    · exact h
-    · exfalso
-      have hpos : 0 < ‖l‖ := by linarith
-      have hlt : ‖l - 1‖ < 1 := by
-        by_contra hc
-        rw [not_lt] at hc
-        nlinarith
-      rw [max_eq_right hlt.le] at hle2
-      linarith
-  have hl2 : ‖l - 1‖ = 1 := by rw [hl1, one_mul] at hprod; exact hprod
-  obtain ⟨hΔ, hc4⟩ := legendre_invariant K l
-  refine ⟨l, hl1, hl2, ?_, ?_⟩
-  · rw [hΔ, hc4]
-    have : (l ^ 2 - l + 1) = 1 + t := hu
-    rw [this]
-    have e2 : (16 : K) * l ^ 2 * (l - 1) ^ 2 = 16 * t ^ 2 := by rw [ht]; ring
-    rw [e2]
-    linear_combination 16 * hroot
-  · rw [hΔ, norm_mul, norm_mul, h16, norm_pow, norm_pow, hl1, hl2]
-    norm_num
-
 end Formalism.ELL
 end -- clump:auto
 end -- clump:auto
@@ -1101,32 +1019,6 @@ lemma of_model {K : Type u} [NormedField K] (W : WeierstrassCurve K) (j : K)
   field_simp
 
 end Formalism.ELL.unitAtAlt
-
-namespace Formalism.ELL
-
-open Formalism.ELL.unitAtAlt
-
-theorem modelUnit_of (hL : Formalism.ELL.ModelLegendre.{u}) (hD : Formalism.ELL.ModelDeuring.{u}) :
-    Formalism.ELL.ModelUnit.{u} := by
-  intro K _ _ _ j hj
-  rcases two_or_three (K := K) with h2 | h3
-  · obtain ⟨l, hl, _hl1, hc, hΔ⟩ := hL K h2 j hj
-    refine of_model (legendre l) j ?_ hc hΔ
-    refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> simp only [legendre]
-    · simp
-    · rw [norm_neg]
-      refine (IsUltrametricDist.norm_add_le_max _ _).trans ?_
-      simp [hl]
-    · simp
-    · exact hl.le
-    · simp
-  · obtain ⟨a, ha, hc, hΔ⟩ := hD K h3 j hj
-    refine of_model (deuring a) j ?_ hc hΔ
-    refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> simp only [deuring]
-    · exact ha
-    all_goals simp
-
-end Formalism.ELL
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.EllipticTorsion.EllipticTorsionProofs.ModelUnitOf =====
@@ -1499,12 +1391,8 @@ universe u
 
 namespace Formalism.ELL
 
-theorem legendreInv : LegendreInv.{u} := legendre_invariant
 theorem deuringInv : DeuringInv.{u} := deuring_invariant
-theorem modelLegendre : ModelLegendre.{u} := legendre_model
 theorem modelDeuring : ModelDeuring.{u} := deuring_model
-theorem modelUnit : ModelUnit.{u} := by
-  apply modelUnit_of <;> first | exact modelLegendre | exact modelDeuring
 theorem intValuedZp : IntValuedZp.{u} := integer_valued_padic_integers
 theorem nAddSubgroup : NAddSubgroup.{u} := N_additive_subgroup
 theorem nPderiv : NPderiv.{u} := N_partial_derivative
@@ -1532,8 +1420,6 @@ theorem wFormalGroup : WFormalGroup.{u} := by
   apply wFormalGroup_of <;> first | exact wChordSeries | exact wChordSubst | exact wPoint
 
 theorem formal_group_points_param : FormalGroupPointsParametrisation.{u} := _root_.Formalism.ELL.formal_group_points_param_holds
-theorem formal_group_points_hom : FormalGroupPointsHomomorphism.{u} := by
-  apply formal_group_points_hom_of <;> first | exact wSubstUnique | exact wChordSubst | exact _root_.Formalism.ELL.formal_group_points_param_holds | exact wFormalGroup
 
 theorem veluIntegralModel : VeluIntegralModel.{u} := velu_integral_model
 theorem veluUSeries : VeluUSeries.{u} := velu_u_series
