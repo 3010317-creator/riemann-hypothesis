@@ -1,6 +1,7 @@
 module
 
 public import Mathlib.LinearAlgebra.Matrix.BilinearForm
+public import Mathlib.Tactic.LinearCombination
 
 @[expose] public section
 
