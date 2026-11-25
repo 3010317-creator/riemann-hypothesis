@@ -2,6 +2,9 @@ module
 
 public import Mathlib.Data.Fin.Tuple.NatAntidiagonal
 public import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Data.Finsupp.Multiset
+import Mathlib.Data.Nat.Choose.Sum
+import Mathlib.Data.Sym.Card
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.PeriodIntegrals.SumAntidiagonalTuple, Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SumAntidiagonalTuple
