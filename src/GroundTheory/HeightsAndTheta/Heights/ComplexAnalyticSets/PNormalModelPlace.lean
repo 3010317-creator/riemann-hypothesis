@@ -33,14 +33,9 @@ theorem ord_eq_of_ringEquiv {A C : Type*} [CommRing A] [CommRing C] (e : A ≃+*
 
 theorem not_isUnit_mk_of_mem_maximalIdeal {L : Type*} [CommRing L] [IsLocalRing L] {I : Ideal L} (hI : I ≠ ⊤)
     {z : L} (hz : z ∈ IsLocalRing.maximalIdeal L) : ¬ IsUnit (Ideal.Quotient.mk I z) := by
-  intro hu
-  obtain ⟨u, hu⟩ := hu.exists_right_inv
-  obtain ⟨u, rfl⟩ := Ideal.Quotient.mk_surjective u
-  rw [← map_mul, ← map_one (Ideal.Quotient.mk I), Ideal.Quotient.eq] at hu
-  have h1 := IsLocalRing.le_maximalIdeal hI hu
-  have h2 := (IsLocalRing.maximalIdeal L).mul_mem_right u hz
-  exact (IsLocalRing.maximalIdeal.isMaximal L).ne_top
-    ((Ideal.eq_top_iff_one _).2 (by simpa using (IsLocalRing.maximalIdeal L).sub_mem h2 h1))
+  have : Nontrivial (L ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hI
+  have := IsLocalHom.of_surjective _ (Ideal.Quotient.mk_surjective (I := I))
+  exact fun hu => (IsLocalRing.mem_maximalIdeal z).1 hz (IsUnit.of_map _ _ hu)
 
 variable {n : ℕ} {J : Ideal (MvPolynomial (Fin n) ℂ)} (M : IndefiniteRowSideFullHecke.ComplexSets.NormalModel J) (w : Fin n ⊕ Fin M.m → ℂ)
 
