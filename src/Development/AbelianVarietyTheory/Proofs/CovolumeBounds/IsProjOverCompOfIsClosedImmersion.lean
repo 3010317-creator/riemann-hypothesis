@@ -171,9 +171,9 @@ theorem span_range_comp_eq_top (ψ : A →+* B) : Ideal.span (Set.range (ψ ∘ 
 theorem fromSpec_chart (i : Fin (N + 1)) : (isAffineOpen_chart R N i).fromSpec =
     Spec.map (Proj.awayToSection (grading R N) (X i)) ≫
       Proj.awayι (grading R N) (X i) (X_mem R N i) one_pos := by
-  rw [IsAffineOpen.fromSpec, Iso.inv_comp_eq, Proj.awayι, ← Category.assoc, ← Category.assoc]
-  refine (Category.id_comp _).symm.trans (congrArg (· ≫ _) ?_)
-  exact (Proj.basicOpenIsoSpec (grading R N) (X i) (X_mem R N i) one_pos).hom_inv_id.symm
+  rw [← IsAffineOpen.isoSpec_inv_ι, Iso.inv_comp_eq, ← Category.assoc, IsAffineOpen.isoSpec_hom,
+    ← Proj.basicOpenToSpec, ← Proj.basicOpenIsoSpec_hom _ _ (X_mem R N i) one_pos, Proj.awayι,
+    Iso.hom_inv_id_assoc]
 
 theorem awayToSection_ratioAway (i j : Fin (N + 1)) :
     (Proj.awayToSection (grading R N) (X i)).hom (ratioAway R N i j) = ratio R N i j := by
