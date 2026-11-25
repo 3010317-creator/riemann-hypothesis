@@ -130,8 +130,6 @@ theorem isKC_smul {R S : ℕ} {X : Mat R S} (hX : IsKC X) (c : ℂ) : IsKC (c �
 
 theorem isKC_zero (R S : ℕ) : IsKC (0 : Mat R S) := fun a b _ => rfl
 
-theorem isKC_add {R S : ℕ} {X X' : Mat R S} (hX : IsKC X) (hX' : IsKC X') : IsKC (X + X') := fun a b h => by
-  simp [hX a b h, hX' a b h]
 
 theorem isKC_conjTranspose {R S : ℕ} {X : Mat R S} (hX : IsKC X) : IsKC Xᴴ := fun a b h => by
   have h' : ¬ sameBlock b a := by
