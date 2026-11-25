@@ -336,7 +336,3 @@ theorem phiSuppGOfParts : PhiSuppGOfParts := by
 end supp
 
 end Formalism.FourierDecayAlt.P.Ux8
-
-namespace Formalism.FourierDecayAlt.P
-
-end Formalism.FourierDecayAlt.P

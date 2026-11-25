@@ -384,13 +384,6 @@ def resNorm (m : Met Y σ Δ) (Δ' : Y.Dv) (m' : Met Y σ Δ') (s : Fin Y.dim �
 
 end GlobalTheory.ProjVar.Var
 
-namespace GlobalTheory.ProjVar
-
-open Var
-
-variable (F : Type) [Field F] (σ : F →+* ℂ) (n : ℕ)
-
-end GlobalTheory.ProjVar
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -514,13 +507,6 @@ structure CxSt (F : Type) [Field F] [NumberField F] : Type 1 where
   ofWeight_eq : HEq ofWeight fun (Y : Var F) σ Δ L r => Var.ofWeight Y σ Δ L r := by rfl
 
 attribute [instance] CxSt.fnCRing CxSt.fnCAlg
-
-namespace CxSt
-
-
-variable (C : CxSt F) (Y : Var F) (σ : F →+* ℂ) (Δ : Y.Dv) (m : C.Met Y σ Δ)
-
-end CxSt
 
 abbrev below {K : Type} [Field K] {Z : Scheme.{0}} (y : Sp K ⟶ Z) : Z := y (IsLocalRing.closedPoint K)
 

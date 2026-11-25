@@ -801,11 +801,6 @@ theorem existsUnique_mulEquiv {I J : FractionalIdeal R⁰ K} (hI : I ≠ 0)
 
 end GlobalTheory.Idele
 
-namespace GlobalTheory
-
-open NumberField GlobalTheory.Idele
-
-end GlobalTheory
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

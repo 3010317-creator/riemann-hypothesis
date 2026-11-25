@@ -795,7 +795,3 @@ theorem fockForm_raiseAug_pow_augLift [CharZero k] (hv : M.TieVars w e zv sv) (h
         j' j hgt.le, ite_eq_right (Ne.symm h), mul_zero, mul_zero]
 
 end Formalism.GM.ProjS
-
-namespace Formalism.GM
-
-end Formalism.GM

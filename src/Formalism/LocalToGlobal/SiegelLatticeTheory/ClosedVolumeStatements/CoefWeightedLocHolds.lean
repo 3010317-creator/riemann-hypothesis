@@ -1228,10 +1228,6 @@ theorem chkScPsiExists (h : PI.ScPsiExists.Target) (D : Formalism.BasicNotions.D
 
 end Formalism.L2.SG.Closed.ScPsi
 
-namespace Formalism.L2.SG.Closed.ScGap
-
-end Formalism.L2.SG.Closed.ScGap
-
 namespace Formalism.L2.SG.Closed.ScMu
 
 noncomputable section

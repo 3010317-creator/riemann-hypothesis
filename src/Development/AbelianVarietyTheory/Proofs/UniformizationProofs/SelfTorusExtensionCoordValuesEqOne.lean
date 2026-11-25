@@ -578,8 +578,3 @@ theorem exists_degData (hC : CubeSt) {R : Type} [CommRing R] [IsDomain R] [IsLoc
       ((val_mul hJ _ _ _).trans (congrArg₂ (· * ·) (vt _ _ y J hJ) (vt _ _ y J hJ))).symm
 
 end GlobalTheory.SelfUnif
-
-namespace GlobalTheory
-
-
-end GlobalTheory

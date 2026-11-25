@@ -459,32 +459,6 @@ theorem commuting_twist : CommTwist := by
   rw [extSpan_eq_range Z e h1 h2, extSpan_eq_range Z e h1 h2, heq]
 
 
-namespace FinitelyNonzeroLinear
-
-section Cx
-
-variable {n : ℕ} {Hc : Matrix (Fin n) (Fin n) ℂ}
-
-end Cx
-
-section Diag
-
-variable {K : Type} [Field K] {n : ℕ}
-
-end Diag
-
-end FinitelyNonzeroLinear
-
-namespace FinitelyNonzeroLinear
-
-section Dich
-
-variable {n : ℕ} {Hc : Matrix (Fin n) (Fin n) ℂ}
-
-end Dich
-
-end FinitelyNonzeroLinear
-
 
 
 end Formalism.DivisionValues

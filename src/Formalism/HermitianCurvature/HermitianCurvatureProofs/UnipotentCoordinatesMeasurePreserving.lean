@@ -3514,10 +3514,6 @@ theorem split_all : ∀ j ρ : ℕ, D.muN k (j + ρ) =
 
 end Formalism.FourierDecayAlt.P.Dx2.SplitF
 
-namespace Formalism.FourierDecayAlt.P
-
-end Formalism.FourierDecayAlt.P
-
 end
 
 section

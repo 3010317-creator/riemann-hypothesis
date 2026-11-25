@@ -151,12 +151,6 @@ structure SelData (M : TRep R G) (ι : Type u) where
 
 attribute [instance] SelData.grp SelData.top SelData.tgrp
 
-namespace SelData
-
-variable {M : TRep R G} {ι : Type u} (S : SelData M ι)
-
-end SelData
-
 end
 
 end ReciprocityTheory.Coh

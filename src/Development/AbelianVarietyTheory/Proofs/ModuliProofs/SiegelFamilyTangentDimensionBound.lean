@@ -98,12 +98,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj TensorProduct
 open GlobalTheory.ZM
 
-namespace GlobalTheory.ZM.SymmCommutant
-
-
-
-end GlobalTheory.ZM.SymmCommutant
-
 namespace GlobalTheory.ZM
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField in

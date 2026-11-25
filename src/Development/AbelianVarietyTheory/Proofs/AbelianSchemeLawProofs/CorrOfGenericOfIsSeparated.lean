@@ -54,10 +54,4 @@ theorem corr_of_generic_of_isSeparated
     (fun a b e => ?_) H
   exact ExtUnique.hom_ext_of_dominant (G.hom ≫ terminal.from _) (terminal.hom_ext _ _) _ e
 
-namespace DoubledPoint
-
-variable {X : Scheme.{0}} (U : X.Opens)
-
-end DoubledPoint
-
 end GlobalTheory
