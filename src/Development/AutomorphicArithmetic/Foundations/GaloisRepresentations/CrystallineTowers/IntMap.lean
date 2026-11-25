@@ -136,13 +136,8 @@ theorem intMap : IntMap := by
   have hν1 : ∀ x, ν x ≤ 1 := fun x => (hj _).1 (hmem x)
   have hνmul : ∀ x y, ν (x * y) = ν x * ν y := fun x y => by simp only [ν, map_mul, norm_mul]
   have hϖ0 : (algebraMap (Ow w) E ϖ) ≠ 0 := fun h => hϖ.ne_zero (Subtype.ext h)
-  have hϖw : w.valuation E (algebraMap (Ow w) E ϖ) < 1 := by
-    by_contra h
-    have h1 : w.valuation E (algebraMap (Ow w) E ϖ) = 1 :=
-      le_antisymm ((Valuation.mem_valuationSubring_iff _ _).1 ϖ.2) (not_lt.1 h)
-    have hinv : (algebraMap (Ow w) E ϖ)⁻¹ ∈ (w.valuation E).valuationSubring := by
-      rw [Valuation.mem_valuationSubring_iff, map_inv₀, h1, inv_one]
-    exact hϖ.not_isUnit (IsUnit.of_mul_eq_one ⟨_, hinv⟩ (Subtype.ext (mul_inv_cancel₀ hϖ0)))
+  have hϖw : w.valuation E (algebraMap (Ow w) E ϖ) < 1 :=
+    (Valuation.valuationSubring.integers _).valuation_irreducible_lt_one hϖ
   have hϖ1 : ν ϖ < 1 := (Induces.valuation_lt_one_iff hj _).1 (val_lt_one hA hϖw)
   have hϖp : 0 < ν ϖ := norm_pos_iff.2 ((map_ne_zero _).2 ((map_ne_zero _).2 hϖ0))
   have hbound : ∀ y : ↥(OK l Bw.Kw.1), M y < 1 → 0 < M y → M y ≤ ν ϖ := by
