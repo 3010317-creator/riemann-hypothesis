@@ -1053,7 +1053,7 @@ theorem exists_gridPre_of_sizes (hDS : GlobalTheory.Published.DiscreteSeriesUpqE
     (hsc : sc.cGap = 1) {G' : GlobalTheory.ChiGrid.GridData R.toLevCh sc} (W : G'.Weil) (hW : W.Over R) :
     ∃ G : GlobalTheory.Grid.GridPre R, G.Is ∧ Match G W := by
   obtain ⟨G₁, W₁, h₁, hL⟩ := exists_sameWeil W
-  obtain ⟨W₂, hW₂, -, -, ec, eo, ev, ek, e0, e1, -, oV, oP, oX, hc, hb⟩ := exists_weil_ordered hH hsc W₁ (h₁.over hW)
+  obtain ⟨W₂, hW₂, ec, eo, ev, ek, e0, e1, oV, oP, oX, hc, hb⟩ := exists_weil_ordered hH hsc W₁ (h₁.over hW)
   have eb : ∀ X : GlobalTheory.ChiGrid.Node, X.InRange D.R.m → X ≠ .top 0 → ∀ τ, ∃ σ : Equiv.Perm (Fin (G₁.V X).rank),
       W₂.onb X τ = (W₁.onb X τ).submatrix id σ := fun X hX h0 τ => by
     by_cases h : ∀ j, X ≠ .grid 0 j
