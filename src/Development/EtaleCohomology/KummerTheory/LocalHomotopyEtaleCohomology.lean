@@ -213,11 +213,11 @@ theorem leib' {I J K : Cx Λ} (μ : Pair I J K) (U : Scheme.{0}) (s t w : ℤ) (
 
 theorem rst_fst {X S : Scheme.{0}} (p : X ⟶ S) {V U : Over S} (g : V ⟶ U) :
     rst p g ≫ pullback.fst p U.hom = pullback.fst p V.hom := by
-  simp only [rst, pullback.map]; erw [pullback.lift_fst]; simp
+  simp only [rst, pullback.map]; rw [pullback.lift_fst]; simp
 
 theorem rst_snd {X S : Scheme.{0}} (p : X ⟶ S) {V U : Over S} (g : V ⟶ U) :
     rst p g ≫ pullback.snd p U.hom = pullback.snd p V.hom ≫ g.left := by
-  simp only [rst, pullback.map]; erw [pullback.lift_snd]
+  simp only [rst, pullback.map]; rw [pullback.lift_snd]
 
 theorem rst_comp {X S : Scheme.{0}} (p : X ⟶ S) {W V U : Over S} (g' : W ⟶ V) (g : V ⟶ U) :
     rst p (g' ≫ g) = rst p g' ≫ rst p g := by
@@ -422,8 +422,8 @@ theorem sym_tot {X S : Scheme.{0}} (p : X ⟶ S) {V U : Over S} (g : V ⟶ U) :
     pullback.lift (pullback.fst V.hom p ≫ g.left) (pullback.snd V.hom p)
       (by rw [Category.assoc, Over.w g]; exact pullback.condition)
   apply pullback.hom_ext <;> simp only [rst, Category.assoc, pullbackSymmetry_hom_comp_fst, pullbackSymmetry_hom_comp_snd]
-  · erw [pullback.lift_fst, pullbackSymmetry_hom_comp_fst_assoc]; simp only [pullback.map]; erw [pullback.lift_snd]
-  · erw [pullback.lift_snd, pullbackSymmetry_hom_comp_snd]; simp only [pullback.map, Category.comp_id]; erw [pullback.lift_fst]
+  · rw [pullback.lift_fst, pullbackSymmetry_hom_comp_fst_assoc]; simp only [pullback.map]; rw [pullback.lift_snd]
+  · rw [pullback.lift_snd, pullbackSymmetry_hom_comp_snd]; simp only [pullback.map, Category.comp_id]; rw [pullback.lift_fst]
 
 def prodSec {Λ : Type} [CommRing Λ] {S : Scheme.{0}} {ι : Type 1} (G : ι → SlShv Λ S) (U : Over S) :
     (∏ᶜ G).obj.obj (op U) →ₗ[ULift.{1} Λ] (∀ i, (G i).obj.obj (op U)) :=
