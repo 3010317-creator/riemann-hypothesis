@@ -89,11 +89,7 @@ theorem exists_smul_eq_mulVec (g : ℕ) (S : Matrix (Fin g) (Fin g) ℤ) (hS : S
   classical
   let Sq : Matrix (Fin g) (Fin g) ℚ := S.map (Int.cast : ℤ → ℚ)
   let uq : Fin g → ℚ := fun i => (u i : ℚ)
-  have hSq : Sqᵀ = Sq := by
-    ext i j
-    have := congrFun (congrFun hS i) j
-    simp only [Matrix.transpose_apply] at this
-    simp [Sq, this]
+  have hSq : Sqᵀ = Sq := Matrix.IsSymm.map hS _
 
   have hker : ∀ w : Fin g → ℚ, Sq *ᵥ w = 0 → uq ⬝ᵥ w = 0 := by
     intro w hw
