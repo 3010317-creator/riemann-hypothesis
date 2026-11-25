@@ -1030,9 +1030,6 @@ private theorem cp_rt' (c : F) : cp v (rt c) = algebraMap F (Kv v) c := rfl
 
 private theorem mk_add (u t u' t' : A F) : D.mkE u t + D.mkE u' t' = D.mkE (u + u') (t + t') :=
   (mkLaws F E D).2.1 u t u' t'
-private theorem mk_zero : D.mkE (0 : A F) 0 = 0 := by
-  have h := mk_add D (0 : A F) 0 0 0
-  simpa using h
 private alias mk_co := _root_.UpperTheory.ConvolutionTheory.R2.Dat.co_mkE
 
 private noncomputable def sB (k : Kv v) : A E := D.mkE (sg v (k / 2)) (sg v (-(k / (2 * θ))))
