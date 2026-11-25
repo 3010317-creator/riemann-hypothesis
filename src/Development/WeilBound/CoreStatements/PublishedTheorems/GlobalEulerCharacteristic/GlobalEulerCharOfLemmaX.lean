@@ -125,14 +125,11 @@ theorem coind_eq_infl_funRep (ℓ : ℕ) [Fact ℓ.Prime] (K : FiniteSubfield) (
   let eqv : (funDiagRep (galUnramifiedOutside K.1 ℚ̄ S ⧸ (gsOpenSubgroup S hL' : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) M).ρ.Equiv
       (W_killed_c.infl (gsOpenSubgroup S hL) (funRep ((galUnramifiedOutside K.1 ℚ̄ S ⧸ (gsOpenSubgroup S hL : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) ⧸ D) ρ)).ρ :=
     { toLinearEquiv :=
-        { toFun := fun F y => F (E.symm y)
-          invFun := fun F x => F (E x)
-          map_add' := fun F F' => rfl
+        { toEquiv := Equiv.arrowCongr E (Equiv.refl M)
+          map_add' := fun _ _ => rfl
           map_smul' := fun c F => by
             funext y
-            exact uliftInt_smul _ c (F (E.symm y))
-          left_inv := fun F => by funext x; simp
-          right_inv := fun F => by funext y; simp }
+            exact uliftInt_smul _ c (F (E.symm y)) }
       isIntertwining' := fun g => by
         refine LinearMap.ext fun F => funext fun y => ?_
         change M.ρ g (F (g⁻¹ • E.symm y)) = ρ (QuotientGroup.mk g) (F (E.symm ((QuotientGroup.mk g : galUnramifiedOutside K.1 ℚ̄ S ⧸ (gsOpenSubgroup S hL : Subgroup (galUnramifiedOutside K.1 ℚ̄ S)))⁻¹ • y)))
