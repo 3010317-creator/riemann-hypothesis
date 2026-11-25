@@ -59,7 +59,6 @@ section -- clump:auto
 @[expose] public section
 -- `Sheaf.H` and `HasExt` are stated for `sheafIsAbelian`; erase the definitionally equal
 -- `TopCat.Sheaf.instAbelian` so the kernel does not have to unfold both to compare them.
-attribute [-instance] TopCat.Sheaf.instAbelian
 
 open CategoryTheory Limits Opposite TopologicalSpace
 
@@ -293,7 +292,6 @@ section -- clump:auto
 @[expose] public section
 -- `Sheaf.H` and `HasExt` are stated for `sheafIsAbelian`; erase the definitionally equal
 -- `TopCat.Sheaf.instAbelian` so the kernel does not have to unfold both to compare them.
-attribute [-instance] TopCat.Sheaf.instAbelian
 
 open CategoryTheory Limits Opposite TopologicalSpace AlgebraicGeometry Topology
 
