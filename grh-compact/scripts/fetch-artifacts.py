@@ -24,7 +24,7 @@ import hashlib, json, os, re, resource, subprocess, sys, tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-PUBLIC = "https://rh-cache.taucetiproject.org/artifacts/leanprover-community/riemann-hypothesis/grh-lean/grh-compact/"
+PUBLIC = "https://rh-cache.taucetiproject.org/artifacts/leanprover-community/riemann-hypothesis-grh-lean/grh-compact/"
 PARALLEL = 500
 CURL_ERROR = re.compile(r"curl: \((\d+)\)")
 

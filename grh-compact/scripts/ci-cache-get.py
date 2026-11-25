@@ -4,7 +4,7 @@
 Adapted from scripts/ci-cache-get.py of leanprover-community/riemann-hypothesis (main). The
 differences are: this project is a subdirectory of its Git repository; records, maps, module
 manifests and artifacts are read from a namespace of their own (grh-lean/grh-compact/ and
-artifacts/<repo>/grh-lean/grh-compact/), never from that project's keys; and the only lookup is by
+artifacts/<repo>-grh-lean/grh-compact/), never from that project's keys; and the only lookup is by
 input fingerprint (no ancestor walk, no pinned baseline).
 
 The record's immutable map and module manifest are checked against its SHA-256 values and
@@ -40,7 +40,7 @@ import urllib.request
 PUBLIC_BASE = "https://rh-cache.taucetiproject.org"
 PROJECT = "grh-compact"
 REPOSITORY = "leanprover-community/riemann-hypothesis"
-SCOPE = f"{REPOSITORY}/grh-lean/{PROJECT}"  # artifacts/<SCOPE>/<hash>.art
+SCOPE = f"{REPOSITORY}-grh-lean/{PROJECT}"  # artifacts/<SCOPE>/<hash>.art
 PREFIX = f"grh-lean/{PROJECT}"  # records, maps and module manifests
 FIELDS = ("source_tree", "build_roots", "lakefile_sha256", "manifest_sha256", "toolchain")
 SHA40 = re.compile(r"[0-9a-f]{40}\Z")

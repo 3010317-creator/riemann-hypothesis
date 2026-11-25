@@ -30,7 +30,7 @@ build inputs; `lake exe cache get` then says that no cache matches.
 
 Each project has its own keys in the bucket behind https://rh-cache.taucetiproject.org :
 
-- `artifacts/leanprover-community/riemann-hypothesis/grh-lean/<project>/<hash>.art`: Lake's `.ltar`
+- `artifacts/leanprover-community/riemann-hypothesis-grh-lean/<project>/<hash>.art`: Lake's `.ltar`
   files, named by Lake's content hash;
 - `grh-lean/<project>/inputs/<fingerprint>.json`: the record for one set of build inputs (Git tree of
   `src`, `lakefile.toml`, `lake-manifest.json` and toolchain);
