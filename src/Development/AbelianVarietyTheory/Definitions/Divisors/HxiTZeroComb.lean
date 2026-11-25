@@ -73,9 +73,6 @@ abbrev HE (Y : Scheme.{0}) (n : ℤ) : Type 1 := E ⊗[ℚ_[l]] HQ l (sch.obj Y)
 
 variable {E}
 
-variable (E) in
-abbrev HEt (Y : Scheme.{0}) (n t : ℤ) : Type 1 := E ⊗[ℚ_[l]] HQ l (sch.obj Y) n t
-
 
 
 end GlobalTheory.KS

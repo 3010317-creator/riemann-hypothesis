@@ -52,7 +52,6 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Un
 open GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter (CharUnramAt)
 open GlobalTheory.IndefiniteRowSideFullHecke.AppendedVectorData (lastKer)
 open scoped TensorProduct Pointwise
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.FinPl
 
@@ -125,15 +124,6 @@ namespace OffDat
 def atT (v : Pl D) : Prop := ∃ i, v = (o.p i).v
 
 end OffDat
-
-def IsS (j : ℕ) (ε : ι → 𝓀[k]ˣ) : Prop :=
-  ∀ ψ ∈ d.Ram j, d.S j ψ ∈ d.Ram j ∧ ∀ y, d.rd j (d.S j ψ) y =
-    o.I.foldr (fun i φ => sOp (o.β j i) (o.Q j i) o.q (resChar (o.χ i) (o.hχ i) o.q) (ε i) φ) (d.rd j ψ y)
-
-theorem rank_pos_of_le (D : D7) {j : ℕ} (h : j ≤ D.R.m) : 0 < (D.sp.X j).rank := by
-  rw [D.sp.X_rank j h]
-  have hk : 0 < D.R.k := by have := D.R.m_add_three_le_k; omega
-  exact Nat.lt_of_lt_of_le hk (Nat.le_add_right _ _)
 
 variable {o} {Q : ∀ j, ι → Pair k (Fin (D.sp.X j).rank)}
 

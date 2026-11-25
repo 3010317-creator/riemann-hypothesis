@@ -153,8 +153,6 @@ open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLattice
 open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 
 noncomputable section
 
@@ -208,8 +206,6 @@ open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLattice
 open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 
 noncomputable section
 
@@ -257,8 +253,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx
 open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 noncomputable section
@@ -316,8 +310,6 @@ open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLattice
 open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 open GlobalTheory.RatMoveJets
 
 
@@ -345,8 +337,6 @@ open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLattice
 open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 
 noncomputable section
 
@@ -383,8 +373,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx
 open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 open GlobalTheory.RatMoveJets
@@ -964,8 +952,6 @@ open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLattice
 open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 open GlobalTheory.RatMoveJets
 
 noncomputable section
@@ -1246,8 +1232,6 @@ open GlobalTheory.RowEx
 open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3
 open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 open GlobalTheory.RatMoveJets
 noncomputable section
 namespace GlobalTheory.RatMoveIop
@@ -1294,8 +1278,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx
 open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 noncomputable section
@@ -1374,8 +1356,6 @@ open GlobalTheory.RowEx
 open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3
 open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 noncomputable section
 namespace GlobalTheory.MovedVacRoot
 private theorem mem_algebraic_of_root_of_unity {c : ℂ} {m : ℕ} (hm : 0 < m) (h : c ^ m = 1) : c ∈ Qbar :=
@@ -1424,10 +1404,6 @@ private theorem exists_pow_mem_open_subgroup {G : Type} [Group G] [TopologicalSp
   obtain ⟨m, hm, -, h⟩ := Subgroup.exists_pow_mem_of_index_ne_zero
     (H := U.subgroupOf K) Subgroup.index_ne_zero_of_finite ⟨k, hk⟩
   exact ⟨m, hm, h⟩
-private theorem selfDual_full {D : D7} (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E))
-    (hΛ : IsSelfDualC V Λ) : Submodule.IsFullLattice D.host.E Λ :=
-  Formalism.IndefR.Datum.IsSelfDualC.isFullLattice V Λ hΛ
-
 
 
 private theorem exists_pow_mem_principal_level {D : D7} (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E))
@@ -1462,11 +1438,11 @@ private theorem exists_root_of_unity_factor {D : D7} {ψ : AddChar (AF D.host.F)
     (hf' : IsVacO ψ θ S T sS sT ΛS ΛT (om (k, k') f)) :
     ∃ (c : ℂ) (m : ℕ), 0 < m ∧ c ^ m = 1 ∧ om (k, k') f = c • f := by
   obtain ⟨c, hc⟩ := GlobalTheory.LevelVac.vac_eq_smul hS hT hΛS hΛT hf hf'
-  obtain ⟨α, hα⟩ := GlobalTheory.latticeFrame.exists_frame D.host.F D.host.E _ ΛS (selfDual_full S ΛS hΛS)
-  obtain ⟨β, hβ⟩ := GlobalTheory.latticeFrame.exists_frame D.host.F D.host.E _ ΛT (selfDual_full T ΛT hΛT)
+  obtain ⟨α, hα⟩ := GlobalTheory.latticeFrame.exists_frame D.host.F D.host.E _ ΛS (Formalism.IndefR.Datum.IsSelfDualC.isFullLattice S ΛS hΛS)
+  obtain ⟨β, hβ⟩ := GlobalTheory.latticeFrame.exists_frame D.host.F D.host.E _ ΛT (Formalism.IndefR.Datum.IsSelfDualC.isFullLattice T ΛT hΛT)
   obtain ⟨N, hN, hfix⟩ := GlobalTheory.LevelVac.exists_level_fix hW hS hT hΛS hΛT hα hβ hf
-  obtain ⟨a, ha, hka⟩ := exists_pow_mem_principal_level S ΛS (selfDual_full S ΛS hΛS) hk h1 hN
-  obtain ⟨b, hb, hkb⟩ := exists_pow_mem_principal_level T ΛT (selfDual_full T ΛT hΛT) hk' h2 hN
+  obtain ⟨a, ha, hka⟩ := exists_pow_mem_principal_level S ΛS (Formalism.IndefR.Datum.IsSelfDualC.isFullLattice S ΛS hΛS) hk h1 hN
+  obtain ⟨b, hb, hkb⟩ := exists_pow_mem_principal_level T ΛT (Formalism.IndefR.Datum.IsSelfDualC.isFullLattice T ΛT hΛT) hk' h2 hN
   have e1 : k ^ (a * b) ∈ GlobalTheory.Member.PrincLevel.levelGroup S N := by
     rw [pow_mul]; exact pow_mem hka b
   have e2 : k' ^ (a * b) ∈ GlobalTheory.Member.PrincLevel.levelGroup T N := by
@@ -1599,8 +1575,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx
 open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 noncomputable section
