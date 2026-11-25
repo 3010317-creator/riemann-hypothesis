@@ -353,17 +353,21 @@ theorem kapL_eq {z : Fin (2 * r + k + 1) → ℂ} {T : ℝ} (hF : IsFrameJ ε e 
 
 end LocFrame
 
-theorem lebLoc {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Bool) (e f : Fin r → Fin n → ℂ)
-    (w : Fin k → Fin n → ℂ) (z : Fin n → ℂ) {T : ℝ} (hT : 0 < T)
+theorem lebLoc_core {r k : ℕ} (ε : Fin (2 * r + k + 1) → Bool) (e f : Fin r → Fin (2 * r + k + 1) → ℂ)
+    (w : Fin k → Fin (2 * r + k + 1) → ℂ) (z : Fin (2 * r + k + 1) → ℂ) {T : ℝ} (hT : 0 < T)
     (hee : ∀ a b, hJ ε (e a) (e b) = 0) (hff : ∀ a b, hJ ε (f a) (f b) = 0)
     (hef : ∀ a b, hJ ε (e a) (f b) = if a = b then 1 else 0)
     (hww : ∀ a b, hJ ε (w a) (w b) = if a = b then 1 else 0)
     (hew : ∀ c a, hJ ε (e c) (w a) = 0) (hfw : ∀ c a, hJ ε (f c) (w a) = 0)
     (hez : ∀ a, hJ ε (e a) z = 0) (hfz : ∀ a, hJ ε (f a) z = 0) (hzz : hJ ε z z = -(T : ℂ))
     (hzw : ∀ a, hJ ε z (w a) = 0) :
-    ∃ lam : Measure (Formalism.REAL.UJ ε), IsHaarLoc (NLoc ε e z) lam ∧ AEMeasurable (kapL ε e f w z) lam ∧
-      lam.map (kapL ε e f w z) = volume := by
-  subst hn
+    let Ψ := cM (ε := ε) (Qi ε e f w (z0v T z)) (Qm e f w (z0v T z))
+    let Φ : (WlocSk.NB.CI k r → ℂ) × (Fin r → ℝ) → Mt k r := fun t => WlocSk.NB.phi0 t.1 t.2
+    let ν := (volume : Measure ((WlocSk.NB.CI k r → ℂ) × (Fin r → ℝ))).map Φ
+    let lam0 := Measure.comap Ψ ν
+    IsHaarLoc (NLoc ε e z) lam0 ∧ AEMeasurable (kapL ε e f w z) lam0 ∧
+      lam0.map (kapL ε e f w z) =
+        ENNReal.ofReal |(LinearMap.det (LyM (k := k) (r := r) T))⁻¹| • volume := by
   have hFJ := isFrameJ_of hT hee hff hef hww hew hfw hez hfz hzz hzw
   have emb := embQ hFJ
   have hQz : Qm e f w (z0v T z) *ᵥ zBv k r T = z := Qm_zB hT z
@@ -470,23 +474,38 @@ theorem lebLoc {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Bool) (e f
       exact h1
     exact kapL_eq hFJ hT g (conj_mem_Nset hFJ hz0 (uMat_mem g) hg')
   have hdet := det_LyM_ne (k := k) (r := r) hT
-  set c : ℝ≥0∞ := ENNReal.ofReal |(LinearMap.det (LyM (k := k) (r := r) T))⁻¹| with hc
-  have hc0 : c ≠ 0 := by rw [hc]; exact (ENNReal.ofReal_pos.2 (abs_pos.2 (inv_ne_zero hdet))).ne'
-  have hcT : c ≠ ⊤ := ENNReal.ofReal_ne_top
   have hmeasK : AEMeasurable (kapL ε e f w z) lam0 :=
     ((Kc_cont T).measurable.comp emb.measurable).aemeasurable.congr (Filter.EventuallyEq.symm hkc)
-  refine ⟨c⁻¹ • lam0, isHaarLoc_smul hHaar (ENNReal.inv_ne_zero.2 hcT) (ENNReal.inv_ne_top.2 hc0),
-    hmeasK.smul_measure _, ?_⟩
+  refine ⟨hHaar, hmeasK, ?_⟩
   have hcomp : Kc T ∘ Φ = LyM (k := k) (r := r) T ∘ Rc := by
     funext t
     funext i
     rw [Function.comp_apply, Function.comp_apply, LyM_apply]
     exact chart_kappa_coordinates T t i
-  rw [Measure.map_smul, Measure.map_congr hkc, ← Measure.map_map (Kc_cont T).measurable emb.measurable, hmap, hν,
+  rw [Measure.map_congr hkc, ← Measure.map_map (Kc_cont T).measurable emb.measurable, hmap, hν,
     Measure.map_map (Kc_cont T).measurable hΦe.measurable, hcomp,
     ← Measure.map_map (LyM (k := k) (r := r) T).continuous_of_finiteDimensional.measurable Rc_cont.measurable,
-    map_Rc, Measure.map_linearMap_addHaar_eq_smul_addHaar _ hdet, ← hc, smul_smul, ENNReal.inv_mul_cancel hc0 hcT,
-    one_smul]
+    map_Rc, Measure.map_linearMap_addHaar_eq_smul_addHaar _ hdet]
+
+theorem lebLoc {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Bool) (e f : Fin r → Fin n → ℂ)
+    (w : Fin k → Fin n → ℂ) (z : Fin n → ℂ) {T : ℝ} (hT : 0 < T)
+    (hee : ∀ a b, hJ ε (e a) (e b) = 0) (hff : ∀ a b, hJ ε (f a) (f b) = 0)
+    (hef : ∀ a b, hJ ε (e a) (f b) = if a = b then 1 else 0)
+    (hww : ∀ a b, hJ ε (w a) (w b) = if a = b then 1 else 0)
+    (hew : ∀ c a, hJ ε (e c) (w a) = 0) (hfw : ∀ c a, hJ ε (f c) (w a) = 0)
+    (hez : ∀ a, hJ ε (e a) z = 0) (hfz : ∀ a, hJ ε (f a) z = 0) (hzz : hJ ε z z = -(T : ℂ))
+    (hzw : ∀ a, hJ ε z (w a) = 0) :
+    ∃ lam : Measure (Formalism.REAL.UJ ε), IsHaarLoc (NLoc ε e z) lam ∧ AEMeasurable (kapL ε e f w z) lam ∧
+      lam.map (kapL ε e f w z) = volume := by
+  subst hn
+  have hdet := det_LyM_ne (k := k) (r := r) hT
+  set c : ℝ≥0∞ := ENNReal.ofReal |(LinearMap.det (LyM (k := k) (r := r) T))⁻¹| with hc
+  have hc0 : c ≠ 0 := by rw [hc]; exact (ENNReal.ofReal_pos.2 (abs_pos.2 (inv_ne_zero hdet))).ne'
+  have hcT : c ≠ ⊤ := ENNReal.ofReal_ne_top
+  obtain ⟨hHaar, hmeasK, hlamK⟩ := lebLoc_core ε e f w z hT hee hff hef hww hew hfw hez hfz hzz hzw
+  refine ⟨c⁻¹ • _, isHaarLoc_smul hHaar (ENNReal.inv_ne_zero.2 hcT) (ENNReal.inv_ne_top.2 hc0),
+    hmeasK.smul_measure _, ?_⟩
+  rw [Measure.map_smul, hlamK, ← hc, smul_smul, ENNReal.inv_mul_cancel hc0 hcT, one_smul]
   exact hmeasK
 
 theorem map_uncurry_volume {ι κ : Type*} [Fintype ι] [Fintype κ] :
