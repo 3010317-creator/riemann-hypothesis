@@ -26,8 +26,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open Classical
 open ReciprocityTheory.ChartRestriction.G.Out
 
-set_option backward.isDefEq.respectTransparency false
-
 namespace GlobalTheory.TorsFrameInt
 
 section Pt
