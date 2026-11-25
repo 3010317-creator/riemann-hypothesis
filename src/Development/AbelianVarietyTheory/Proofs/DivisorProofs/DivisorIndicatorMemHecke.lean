@@ -117,8 +117,6 @@ theorem sameDiv_doubleCoset {n : ℕ} {O : Subring L}
         rw [e1, e2]; simp only [Matrix.mul_one, Matrix.mul_assoc]
     _ = _ := by simp only [Matrix.mul_assoc]
 
-alias main := _root_.GlobalTheory.DoubleCosetDivisors.sameDiv_doubleCoset
-
 end GlobalTheory.DoubleCosetDivisors
 end -- clump:auto
 end -- clump:auto

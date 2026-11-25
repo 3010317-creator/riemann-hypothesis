@@ -123,42 +123,6 @@ structure HSpace (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) wh
   L_span : Submodule.span E (L : Set (Fin r → E)) = ⊤
   L_dual : ∀ x, x ∈ L ↔ ∀ y ∈ L, IsIntegral ℤ (herm Gm x y)
 
-def HSpace.std (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) : HSpace E r where
-  Gm := 1
-  Gm_herm a b := by by_cases h : a = b <;> simp [cc, Matrix.one_apply, h, eq_comm]
-  Gm_det := by simp
-  L := Submodule.pi Set.univ fun _ => (1 : Submodule (𝓞 E) E)
-  L_fg := Submodule.fg_pi fun _ => by rw [Submodule.one_eq_span]; exact Submodule.fg_span_singleton _
-  L_span := by
-    refine eq_top_iff.2 fun x _ => ?_
-    rw [← Finset.univ_sum_single x]
-    refine Submodule.sum_mem _ fun i _ => ?_
-    have : (Pi.single i (x i) : Fin r → E) = x i • (Pi.single i 1 : Fin r → E) := by
-      rw [← Pi.single_smul, smul_eq_mul, mul_one]
-    rw [this]
-    refine Submodule.smul_mem _ _ (Submodule.subset_span fun k _ => ?_)
-    by_cases h : k = i
-    · subst h; simpa using Submodule.one_le.1 le_rfl
-    · simp [h]
-  L_dual x := by
-    have hi : ∀ z : E, z ∈ (1 : Submodule (𝓞 E) E) ↔ IsIntegral ℤ z := fun z => by
-      rw [Submodule.mem_one]
-      exact ⟨fun ⟨a, ha⟩ => ha ▸ a.2, fun h => ⟨⟨z, h⟩, rfl⟩⟩
-    have hh : ∀ y, herm (1 : Matrix (Fin r) (Fin r) E) x y = ∑ a, x a * cc (y a) := fun y => by
-      simp [herm, Matrix.one_apply]
-    constructor
-    · intro hx y hy
-      rw [hh]
-      refine IsIntegral.sum _ fun a _ => ((hi _).1 (hx a trivial)).mul ?_
-      exact ((hi _).1 (hy a trivial)).map (IsCMField.complexConj E : E →+* E).toIntAlgHom
-    · intro h a _
-      have := h (Pi.single a 1) fun k _ => by
-        by_cases hk : k = a
-        · subst hk; simpa using Submodule.one_le.1 le_rfl
-        · simp [hk]
-      rw [hh, Finset.sum_eq_single a (fun b _ hb => by simp [hb, cc]) (by simp)] at this
-      exact (hi _).2 (by simpa [cc] using this)
-
 variable {r : ℕ}
 
 variable (A : Type) [CommRing A] [Algebra F A]
@@ -309,16 +273,6 @@ def AutQ (V : HSpace E r) : Type := Quotient (QuotientGroup.rightRel (ratG F V))
 def autMk (V : HSpace E r) (g : GA F V) : AutQ F V := Quotient.mk _ g
 
 instance (V : HSpace E r) : MeasurableSpace (AutQ F V) := (@borel _ (topG F V)).map (autMk F V)
-
-def autRt (V : HSpace E r) (h : GA F V) : AutQ F V → AutQ F V :=
-  Quotient.map' (· * h) fun a b hab => by
-    rw [QuotientGroup.rightRel_apply] at hab ⊢
-    simpa [mul_assoc] using hab
-
-def IsAutProb (V : HSpace E r) (ν : Measure (AutQ F V)) : Prop :=
-  IsProbabilityMeasure ν ∧ ∀ h s, MeasurableSet s → ν (autRt F V h ⁻¹' s) = ν s
-
-def FinVol (V : HSpace E r) : Prop := ∃ ν, IsAutProb F V ν
 
 end Quot
 

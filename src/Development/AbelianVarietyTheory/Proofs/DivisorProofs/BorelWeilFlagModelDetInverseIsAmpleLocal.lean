@@ -570,8 +570,6 @@ theorem det_mul_expand {R : Type} [CommRing R] {i N : ℕ} (A : Matrix (Fin i) (
   rw [MultilinearMap.map_smul_univ, smul_eq_mul]
   rfl
 
-alias main := _root_.GlobalTheory.DeterminantProductExpansion.det_mul_expand
-
 end GlobalTheory.DeterminantProductExpansion
 end -- clump:auto
 end -- clump:auto

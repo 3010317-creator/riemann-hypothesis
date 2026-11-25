@@ -176,11 +176,6 @@ theorem exists_alg (D : Type) [CommRing D] [Algebra k D] {S : Type} [CommRing S]
     simp [GlobalTheory.HolHom.evalHom, Scheme.Hom.appLE]
 
 end GlobalTheory.TangentCob
-
-namespace GlobalTheory
-open TangentCob
-
-end GlobalTheory
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -213,7 +208,6 @@ section Group
 variable {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G] [IsCommMonObj G] {n : ℕ}
 
 alias exists_isLieBasis := _root_.GlobalTheory.Heat.TangentTranslation.exists_isLieBasis
-alias top_le_of_fst := _root_.GlobalTheory.Heat.TangentTranslation.top_le_of_fst
 alias valR_translate := _root_.GlobalTheory.Heat.TangentTranslation.valR_translate
 
 variable {B : Type} [CommRing B] [Algebra R B]

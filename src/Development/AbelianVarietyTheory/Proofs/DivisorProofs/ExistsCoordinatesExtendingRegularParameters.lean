@@ -87,8 +87,6 @@ theorem span_one_tmul_eq_top {R M : Type} [CommRing R] [IsLocalRing R] [AddCommG
     exact N.smul_mem a h1
   | add x y hx hy => exact add_mem hx hy
 
-alias main := _root_.GlobalTheory.TensorUnitSpanTop.span_one_tmul_eq_top
-
 end GlobalTheory.TensorUnitSpanTop
 end -- clump:auto
 end -- clump:auto
