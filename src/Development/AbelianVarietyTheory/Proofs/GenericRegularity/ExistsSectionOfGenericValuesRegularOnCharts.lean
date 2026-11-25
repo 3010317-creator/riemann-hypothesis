@@ -112,7 +112,7 @@ theorem zchar_map {J K S T : Type} [Fintype J] [Field K] [CommRing S] [CommRing 
 
 theorem wchar_eq_zchar {S : Type} [CommRing S] (e : Ix Dw → ℕ) (t : Ix Dw → Sˣ) :
     wchar e t = zchar (fun i => (e i : ℤ)) t := by
-  simp [wchar, zchar, Units.val_prod_eq_prod_val]
+  simp [wchar, zchar, Units.coe_prod]
 
 theorem wchar_mul {S : Type} [CommRing S] (e : Ix Dw → ℕ) (t t' : Ix Dw → Sˣ) :
     wchar e (t * t') = wchar e t * wchar e t' := by
