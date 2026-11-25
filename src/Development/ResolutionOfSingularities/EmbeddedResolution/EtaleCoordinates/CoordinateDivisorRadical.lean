@@ -35,22 +35,7 @@ private theorem isRadical_span_singleton_of_isRadical_map_atPrime {S : Type u} [
   obtain ⟨n, hn⟩ := Ideal.mem_radical_iff.mp hx
   by_contra hxI
   obtain ⟨K, hKmem⟩ : ∃ K : Ideal S, ∀ b : S, b ∈ K ↔ b * x ∈ Ideal.span ({a} : Set S) :=
-    ⟨{ carrier := {s : S | s * x ∈ Ideal.span ({a} : Set S)}
-       zero_mem' := by
-         show (0 : S) * x ∈ Ideal.span ({a} : Set S)
-         rw [zero_mul]
-         exact Ideal.zero_mem _
-       add_mem' := by
-         intro b c hb hc
-         show (b + c) * x ∈ Ideal.span ({a} : Set S)
-         rw [add_mul]
-         exact Ideal.add_mem _ hb hc
-       smul_mem' := by
-         intro c b hb
-         show (c • b) * x ∈ Ideal.span ({a} : Set S)
-         rw [smul_eq_mul, mul_assoc]
-         exact Ideal.mul_mem_left _ c hb },
-     fun b => Iff.rfl⟩
+    ⟨(Ideal.span ({a} : Set S)).colon {x}, fun _ => Submodule.mem_colon_singleton⟩
   have hKne : K ≠ ⊤ := by
     intro htop
     have h1 : (1 : S) ∈ K := by rw [htop]; exact Submodule.mem_top
