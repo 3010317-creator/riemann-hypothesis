@@ -152,14 +152,9 @@ theorem nsmul_mem_smul_top {R M : Type*} [CommRing R] [AddCommGroup M] [Module R
 end Ideals
 
 theorem map_nsmul_of_add {A Q : Type*} [AddCommGroup A] [Group Q] (f : A → Q) (hf : ∀ a c, f (a + c) = f a * f c)
-    (n : ℕ) (a : A) : f (n • a) = f a ^ n := by
-  induction n with
-  | zero =>
-    have := hf 0 0
-    rw [add_zero] at this
-    rw [zero_nsmul, pow_zero]
-    exact left_eq_mul.1 this
-  | succ n ih => rw [succ_nsmul, hf, ih, pow_succ]
+    (n : ℕ) (a : A) : f (n • a) = f a ^ n :=
+  map_pow (MonoidHom.mk' (fun x : Multiplicative A => f x.toAdd) fun x y => hf x.toAdd y.toAdd)
+    (Multiplicative.ofAdd a) n
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {l l₂ : Level H}
   {B : Type} [CommRing B] {b : Base l B} {b₂ : Base l₂ B} {S : Scheme.{0}} {s : S ⟶ Sp B}
