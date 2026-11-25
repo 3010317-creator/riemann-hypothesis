@@ -309,12 +309,10 @@ theorem norm_pFlat_eq : ‖(pFlat l : PreTilt (normInteger ℂ_[l]) l)‖ = ‖(
   rw [preTilt_norm_def, coe_untilt_pFlat]
 
 theorem norm_pFlat_pos : 0 < ‖(pFlat l : PreTilt (normInteger ℂ_[l]) l)‖ := by
-  rw [norm_pFlat_eq]
-  exact norm_pos_iff.2 (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)
+  exact GlobalTheory.CompanionTheory.TiltCompl.norm_pFlat_pos
 
 theorem norm_pFlat_lt_one : ‖(pFlat l : PreTilt (normInteger ℂ_[l]) l)‖ < 1 := by
-  rw [norm_pFlat_eq]
-  exact IsPerfectoidField.norm_natCast_lt_one
+  exact GlobalTheory.CompanionTheory.TiltCompl.norm_pFlat_lt_one
 
 theorem rt_pow (k : ℕ) : CrystallineSemistableComparison.D.rt l k ^ l ^ k = pFlat l := by
   have h := (iterateFrobeniusEquiv (CrystallineSemistableComparison.Ob l) l k).apply_symm_apply (pFlat l)

@@ -896,9 +896,7 @@ theorem le_comap_ext {B : Type} [CommRing B] (Q : PDPoly B) (J : Ideal B) :
 variable {O : Type} [CommRing O] {F : Fn O} {b : Base} {ht : b.t = 1} {κ : O →+* b.R ⧸ b.I}
 
 theorem s_eq_one (T : Thick (F.cr b ht κ)) : T.s = 1 := by
-  have h : (1 : T.B) = T.s * T.i b.t := (Finset.prod_of_isEmpty (ι := Empty) _).symm.trans T.hs
-  rw [ht, map_one, mul_one] at h
-  exact Units.ext h.symm
+  exact GlobalTheory.CompanionTheory.ThickHom.s_eq_one ht T
 
 variable (T : Thick (F.cr b ht κ)) (Q : PDPoly T.B) (η₀ : DividedPowers (Q.ext T.J)) (hη : Q.IsStd T.δ η₀)
   (hp : b.p ≠ 0)
