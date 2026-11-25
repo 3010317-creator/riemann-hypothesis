@@ -1423,11 +1423,7 @@ abbrev recWE : WeilTied D (recXE hP hT hB hL hE hθ hψ Wf hW Tw Rc) (recTE hP h
 
 def recKE : KfinTied (recWE hP hT hB hL hE hθ hψ Wf hW Tw Rc) where
   cpt := Rc.dec.cpt
-  cpt_gram := Rc.dec.cpt_gram
   bas := Rc.dec.bas
-  bas_unit := Rc.dec.bas_unit
-  bas_orth := Rc.dec.bas_orth
-  cpt_bas := Rc.dec.cpt_bas
 
 theorem besGlobE_inl {A B : HSp D} {ι : A.V →ₗ[D.host.E] B.V} (ho : Odd (B.rank - A.rank)) (hA : A.SigOK)
     (hι : HSpace.IsIsomEmb A B ι) (f : Odd (B.rank - A.rank) → Bes1 A B ι) :
