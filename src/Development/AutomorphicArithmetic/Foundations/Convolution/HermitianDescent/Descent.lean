@@ -37,11 +37,8 @@ theorem descent : Descent := by
     | succ j ih =>
       intro r m
       rw [pow_succ', pow_succ', Module.End.mul_apply, Module.End.mul_apply, AlgEquiv.mul_apply, ih, hs]
-  have hfix : ∀ (n : M), s n = n → ∀ j : ℕ, (s ^ j) n = n := by
-    intro n hn j
-    induction j with
-    | zero => simp
-    | succ j ih => rw [pow_succ', Module.End.mul_apply, ih, hn]
+  have hfix : ∀ (n : M), s n = n → ∀ j : ℕ, (s ^ j) n = n := fun n hn j =>
+    (Module.End.pow_apply s j n).trans (Function.iterate_fixed hn j)
   have hT : ∀ m : M, (∑ j ∈ Finset.range q, s ^ j) m ∈ LinearMap.eqLocus s LinearMap.id := by
     intro m
 
