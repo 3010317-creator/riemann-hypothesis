@@ -129,14 +129,8 @@ theorem average_eq_meanC (V : HSp D) (ν μH : Measure (GA D V)) (hν : ν.IsHaa
   have e2 : μH 𝓕 = c * autMeasure V ν Set.univ := by
     rw [← GlobalTheory.AutomorphicL2Unitary.quotMeasure_univ h𝓕]
     exact congrArg (fun m : Measure (AutQ V) => m Set.univ) e1
-  have hc0 : ((c : ℝ≥0∞)).toReal ≠ 0 := by
-    intro h
-    have : (c : ℝ≥0∞) = 0 := by
-      rcases (ENNReal.toReal_eq_zero_iff _).1 h with h | h
-      · exact h
-      · exact absurd h ENNReal.coe_ne_top
-    rw [this, zero_mul] at e2
-    exact h0 e2
+  have hc0 : ((c : ℝ≥0∞)).toReal ≠ 0 :=
+    ENNReal.toReal_ne_zero.2 ⟨fun h => h0 (by rw [e2, h, zero_mul]), ENNReal.coe_ne_top⟩
   have e3 : ∫ g in 𝓕, f g ∂μH = (c : ℝ≥0∞).toReal • ∫ q, descend (GQ V) f q ∂autMeasure V ν := by
     have h3 := GlobalTheory.AutomorphicL2Unitary.integral_quotMeasure h𝓕 (descend (GQ V) f)
     simp only [hf.descend_mk] at h3
