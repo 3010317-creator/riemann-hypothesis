@@ -150,6 +150,7 @@ end GlobalTheory.Pat
 
 noncomputable section
 
+open IsLocalRing
 
 namespace GlobalTheory.Pat
 
@@ -325,6 +326,7 @@ end GlobalTheory.Pat
 
 noncomputable section
 
+open IsLocalRing Polynomial
 
 namespace GlobalTheory.Pat.Example
 

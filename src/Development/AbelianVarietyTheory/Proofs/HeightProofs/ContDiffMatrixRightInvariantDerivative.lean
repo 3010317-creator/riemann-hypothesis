@@ -51,6 +51,7 @@ noncomputable section
 
 namespace GlobalTheory.KFourier
 
+open Matrix
 
 variable {n : ℕ}
 

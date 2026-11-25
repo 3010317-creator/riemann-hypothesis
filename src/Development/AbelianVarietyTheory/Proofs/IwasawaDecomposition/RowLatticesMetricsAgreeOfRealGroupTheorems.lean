@@ -641,6 +641,7 @@ noncomputable section
 
 namespace GlobalTheory.Mem.R3.MetSharp
 
+open Formalism.IndefR.Mult
 
 section Schur
 

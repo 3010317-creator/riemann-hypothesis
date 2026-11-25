@@ -299,6 +299,7 @@ open GlobalTheory.HaarR
 noncomputable section
 namespace GlobalTheory.HaarR.LeftFJ
 
+open GlobalTheory.RootEx
 
 section Alg
 variable {k : Type} [Field k] {n : Type} [Fintype n] [DecidableEq n] {c : ℕ}

@@ -83,6 +83,7 @@ set_option maxHeartbeats 1000000
 
 namespace GlobalTheory.BKGal.CoversConv
 
+open GlobalTheory.BKReal
 
 variable {l : ℕ} [Fact l.Prime]
 
@@ -496,6 +497,7 @@ noncomputable section
 
 namespace GlobalTheory.FrobAction
 
+open GlobalTheory.BKReal
 
 theorem galois_pow_frobenius : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZero a] (g : GQ l),
     ∃ m : ZMod a, ∀ x : Om l, x ^ l ^ a = x → g x = x ^ l ^ m.val := by

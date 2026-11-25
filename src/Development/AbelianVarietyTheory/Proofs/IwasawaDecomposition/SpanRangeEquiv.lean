@@ -899,6 +899,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Form
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
+open Formalism.L2.DIV
 
 namespace GlobalTheory.MtChr
 

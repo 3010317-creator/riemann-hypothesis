@@ -200,6 +200,7 @@ open GlobalTheory.MtRead
 
 namespace GlobalTheory.LevChiRead
 
+open Formalism.L2.DIV
 
 variable {D : D7}
 

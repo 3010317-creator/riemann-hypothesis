@@ -764,6 +764,7 @@ open Matrix
 
 namespace GlobalTheory.LoopVol
 
+open Formalism.L2.SG.HidaSetting
 
 theorem hJ_sum_right' {n m : ℕ} (ε : Fin n → Bool) (x : Fin n → ℂ) (g : Fin m → ℂ)
     (y : Fin m → Fin n → ℂ) : hJ ε x (∑ i, g i • y i) = ∑ i, g i * hJ ε x (y i) := by

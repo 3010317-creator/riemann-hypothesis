@@ -57,6 +57,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 
 namespace GlobalTheory.HeckeUnifVal
 
+open Formalism.L2.Host
 
 theorem localIdele_eq_locM {E : Type} [Field E] [NumberField E] (v : HeightOneSpectrum (𝓞 E))
     (x : (v.adicCompletion E)ˣ) :

@@ -425,6 +425,7 @@ theorem mem_nset (J : Matrix (Fin n) (Fin n) ℂ) (Q : Matrix (Fin n) (Fin (2 * 
 end Gen
 
 section Main
+open GlobalTheory.TypeAsm
 
 theorem trI_one {D : D7} {X : HidaSetting D} (C : Choice X 1) : trI C 1 = fun _ => Matrix.of.symm 1 := by
   funext τ
@@ -555,6 +556,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 noncomputable section
 namespace GlobalTheory.TypeAsm.CovTrans
 
+open Formalism.L2.SG.LocWSOf
 
 section Gen
 

@@ -64,6 +64,7 @@ open NumberField IsDedekindDomain Matrix MeasureTheory GlobalTheory.Mem GlobalTh
 open GlobalTheory.Unf GlobalTheory.Grow GlobalTheory.FinPl ValuativeRel IsLocalRing
 open scoped TensorProduct Pointwise
 open GlobalTheory.AdForm
+open GlobalTheory.AdForm
 
 namespace GlobalTheory.PairKeep
 

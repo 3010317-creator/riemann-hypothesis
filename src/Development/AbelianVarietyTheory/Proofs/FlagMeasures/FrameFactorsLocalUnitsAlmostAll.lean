@@ -55,6 +55,7 @@ open scoped nonZeroDivisors
 namespace GlobalTheory.FrameFactorUnit
 
 open Formalism.MainNotions.S.LocNG IsDedekindDomain
+open scoped nonZeroDivisors
 
 variable {D : D7}
 

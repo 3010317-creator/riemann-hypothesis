@@ -57,6 +57,7 @@ noncomputable section
 namespace GlobalTheory.SplitPairK
 
 open Matrix Formalism.MainNotions.S GlobalTheory.RowLev
+open scoped TensorProduct
 
 variable (I : AutInst)
 

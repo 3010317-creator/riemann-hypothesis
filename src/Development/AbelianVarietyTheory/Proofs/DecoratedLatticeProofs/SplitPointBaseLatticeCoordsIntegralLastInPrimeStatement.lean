@@ -59,6 +59,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.LocMod.SplitCoord
 
+open GlobalTheory.FinPl
 
 
 

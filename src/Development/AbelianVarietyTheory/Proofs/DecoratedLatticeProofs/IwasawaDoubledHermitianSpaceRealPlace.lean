@@ -312,6 +312,7 @@ end GlobalTheory.Core.Rk.IwArch
 
 namespace GlobalTheory.Core.Rk.IwArch
 
+open NumberField GlobalTheory.AdelicU
 open scoped TensorProduct
 
 theorem hasIwasawa_KArch {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]

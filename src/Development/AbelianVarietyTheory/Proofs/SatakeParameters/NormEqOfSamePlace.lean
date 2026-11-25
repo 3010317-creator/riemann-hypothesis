@@ -151,6 +151,7 @@ end GlobalTheory.GalFirstClause.Emb
 
 namespace GlobalTheory.GalFirstClause.Emb
 
+open scoped TensorProduct
 
 variable {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [NumberField E]
 
@@ -179,6 +180,7 @@ end GlobalTheory.GalFirstClause.Emb
 
 namespace GlobalTheory.GalFirstClause.Emb
 
+open scoped TensorProduct
 
 theorem exists_isInduced : ∀ (l : ℕ) [Fact l.Prime] (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω]
     (τ : E →+* Om l), ∃ w ∈ placesOver E l, ∀ (A : ValuationSubring Ω), IsPlaceOver A w →
@@ -234,6 +236,7 @@ end GlobalTheory.GalFirstClause.Emb
 
 namespace GlobalTheory.GalFirstClause
 
+open Formalism.BasicNotions Formalism.BasicNotions.Loc NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.Pst
 
 alias existsIsInduced := _root_.GlobalTheory.GalFirstClause.Emb.exists_isInduced
 

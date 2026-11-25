@@ -53,6 +53,7 @@ open scoped TensorProduct Classical
 
 namespace GlobalTheory.GoodFix
 
+open Formalism.L2.DIV
 
 theorem good_fix {K : Type} [Field K] [NumberField K] [StarRing K] {G : Type} [Group G] [Fintype G] {Pl0 : Type}
     (B : BlockDat K G Pl0) (ℓ : Lvl K G) (hX : ∀ χ ∈ ℓ.X, IsAbsIrrChar χ) (w : Fin (B.nV ℓ) → K) :
@@ -91,6 +92,7 @@ end GlobalTheory.GoodFix
 
 namespace GlobalTheory.GoodFix
 
+open Formalism.L2.DIV Formalism.IndefR.Links Formalism.IndefR.Lev
 
 
 
@@ -114,6 +116,7 @@ end GlobalTheory.GoodFix
 
 namespace GlobalTheory.GoodFix
 
+open Formalism.L2.DIV Formalism.IndefR.Links Formalism.IndefR.Lev
 
 
 

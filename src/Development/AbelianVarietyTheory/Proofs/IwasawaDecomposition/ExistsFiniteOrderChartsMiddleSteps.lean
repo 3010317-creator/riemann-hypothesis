@@ -1501,6 +1501,8 @@ end GlobalTheory.Mem.Col2.ChExM
 
 noncomputable section
 
+open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC GlobalTheory.Mem.Col2.MemChart Matrix
+open scoped TensorProduct
 
 namespace GlobalTheory.Mem.Col2.ChExM
 
@@ -1552,6 +1554,8 @@ end GlobalTheory.Mem.Col2.ChExM
 
 noncomputable section
 
+open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC GlobalTheory.Mem.Col2.MemChart Matrix
+open scoped TensorProduct
 
 namespace GlobalTheory.Mem.Col2.ChExM
 
@@ -1575,6 +1579,8 @@ end GlobalTheory.Mem.Col2.ChExM
 
 noncomputable section
 
+open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC GlobalTheory.Mem.Col2.MemChart Matrix
+open scoped TensorProduct
 
 namespace GlobalTheory.Mem.Col2.ChExM
 
@@ -1617,6 +1623,8 @@ end GlobalTheory.Mem.Col2.ChExM
 
 noncomputable section
 
+open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC GlobalTheory.Mem.Col2.MemChart Matrix
+open scoped TensorProduct
 
 namespace GlobalTheory.Mem.Col2.ChExM
 
@@ -1720,6 +1728,8 @@ end GlobalTheory.Mem.Col2.ChExM
 
 noncomputable section
 
+open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC GlobalTheory.Mem.Col2.MemChart Matrix
+open scoped TensorProduct
 
 namespace GlobalTheory.Mem.Col2.ChExM
 

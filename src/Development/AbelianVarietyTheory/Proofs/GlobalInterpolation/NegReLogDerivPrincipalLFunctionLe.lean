@@ -62,6 +62,7 @@ open scoped Classical
 
 namespace GlobalTheory.PrincipalLogDeriv
 
+open Filter Topology
 
 lemma norm_cpow_neg_le {p : ℕ} (hp : p.Prime) {s : ℂ} (hs : 1 ≤ s.re) :
     ‖(p : ℂ) ^ (-s)‖ ≤ 1 / 2 := by
@@ -247,5 +248,6 @@ theorem neg_re_logDeriv_le : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (σ
   simp only [Complex.add_re, Complex.sub_re]
   nlinarith
 
+open Filter Topology
 
 end GlobalTheory.PrincipalLogDeriv

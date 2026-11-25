@@ -109,6 +109,7 @@ end Mat
 
 section Rat
 
+open Formalism.BasicNotions Formalism.L2.Theta Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
 
 variable {D : D7}
 
