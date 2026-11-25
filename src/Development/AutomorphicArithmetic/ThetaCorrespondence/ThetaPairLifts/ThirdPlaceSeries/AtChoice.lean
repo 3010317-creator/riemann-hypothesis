@@ -1293,19 +1293,16 @@ theorem pinCov_ccOneG (hJ : CompanionTheory.Lime.BM.UniqGap) (large₂ : SizeDat
     (Θ : ∀ j : Fin (nfE D), Formalism.FourierDecayAlt.Top.TopLift D.R.k D.R.rS (X.Vloc u (tauE X e j)) (X.Vloc u' (tauE X e j)))
     (TP : ∀ j : Fin (nfE D), Formalism.FourierDecayAlt.Top.TypeProj (parE e u u' de de' j)
       (towersOf X C u u' e j).base.π (towersOf X C u u' e j).base.z (m₀ j *ᵥ ν' j)) (A₀ : ℝ)
-    (Mo : ModelsFor (sOf (carrierInTc X C u u' e he hv CA de de' l grid grid1 a b ξ ξ'
-      (fun j => ccOneG C hB hJ large₂ hCl hH0 u u' (e (plE D j)) hTT (hW j) (hA j) hT hT' (a j) (b j) (ξ j) (ξ' j)
-        (hpin1 j) (hscl j)) c ν' m₀ Θ TP A₀)))
     (Ac : ℝ) (hAc : Formalism.FourierDecayAlt.P.orbital_integral_converges.choose * ((D.R.rS : ℝ) + 1) ^ 2 *
       ((D.R.rS : ℝ) * ((2 * D.R.rS + D.R.k + 1 : ℕ) : ℝ) + 1) ≤ Ac)
     (hCC : ∀ j, Formalism.FourierDecayAlt.B.InCC Ac 1 (fcAt C u u' (e (plE D j)) (a j) (b j) (ξ j) (ξ' j)
       (ccOneG C hB hJ large₂ hCl hH0 u u' (e (plE D j)) hTT (hW j) (hA j) hT hT' (a j) (b j) (ξ j) (ξ' j) (hpin1 j) (hscl j)))) :
     JointPin.PinCov (CarrierOf (carrierInTc X C u u' e he hv CA de de' l grid grid1 a b ξ ξ'
       (fun j => ccOneG C hB hJ large₂ hCl hH0 u u' (e (plE D j)) hTT (hW j) (hA j) hT hT' (a j) (b j) (ξ j) (ξ' j)
-        (hpin1 j) (hscl j)) c ν' m₀ Θ TP A₀) Mo) := by
-  refine pinCov_carrierInTc X C u u' e he hv CA de de' l grid grid1 a b ξ ξ' _ c ν' m₀ Θ TP A₀ Mo ?_
+        (hpin1 j) (hscl j)) c ν' m₀ Θ TP A₀)) := by
+  refine pinCov_carrierInTc X C u u' e he hv CA de de' l grid grid1 a b ξ ξ' _ c ν' m₀ Θ TP A₀ ?_
   intro j γ μRv ν hH
-  have hP := pinHyp_at X C u u' e he hv CA de de' l grid grid1 a b ξ ξ' _ c ν' m₀ Θ TP A₀ Mo j γ μRv ν hH
+  have hP := pinHyp_at X C u u' e he hv CA de de' l grid grid1 a b ξ ξ' _ c ν' m₀ Θ TP A₀ j γ μRv ν hH
   exact pinAt_oneG C hB hJ large₂ hCl hH0 u u' (e (plE D j)) hTT (hW j) (hA j) hT hT' (a j) (b j) (ξ j) (ξ' j) (hpin1 j)
     (hscl j) (hcO j) Ac hAc (hCC j) γ μRv ν hP
 
@@ -1353,7 +1350,7 @@ theorem xLeafAt_of_pinsG {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D
   subst hcc
   refine ⟨fun j => (hpin1 j).1, fun j => (hpin1 j).2.1, fun Θ TP A₀ => ?_⟩
   exact pinCov_ccOneG C hB hJ large₂ hCl hH0 u u' e he hv CA de de' l (gridT e l) (grid1T e l)
-    a b ξ ξ' hTT hW hA hT hT' hpin1 hscl hcO cutStd (nuE X C u' e i0') (m0E X C u u' e) Θ TP A₀ (modelsOf _) Ac hAc
+    a b ξ ξ' hTT hW hA hT hT' hpin1 hscl hcO cutStd (nuE X C u' e i0') (m0E X C u u' e) Θ TP A₀ Ac hAc
     (fun j => Formalism.L2.SG.Pf.CoefCCT.fcT_inCC C e u u' a b ξ ξ'
       (fun j => ccOneG C hB hJ large₂ hCl hH0 u u' (e (plE D j)) hTT (hW j) (hA j)
         hT hT' (a j) (b j) (ξ j) (ξ' j) (hpin1 j) (hscl j)) h hlam hgap hok hAc0 hAch (fun j => (hpin1 j).1) (fun j => (hpin1 j).2.1) j 1)
