@@ -1,5 +1,6 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsDefiniteOfAllPlus
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ColLieApply
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsWeightedHomogeneousOfMemOrbitSpan
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsEqMulProdMinors
@@ -1014,7 +1015,7 @@ theorem comm [DecidableEq ι] (t t' : ι) (i k l : Fin n) (P : Pol ι m n) :
         by_cases h3 : i = k <;> by_cases h4 : i = j <;> simp [h3, h4, eq_comm, sub_smul] <;>
           (try split_ifs) <;> simp_all
       · simp [h2, Ne.symm h2]
-    · simp only [if_neg h1, smul_zero, zero_sub, neg_eq_zero]
+    · simp only [ite_eq_right h1, smul_zero, zero_sub, neg_eq_zero]
       split_ifs with h2 h3
       · exact absurd ⟨h2.1.trans h3.1, h2.2.trans h3.2⟩ h1
       · rfl
@@ -1574,16 +1575,7 @@ open scoped TensorProduct InnerProductSpace
 
 theorem allPlus_of_le {D : D7} {V : HSp D} (P : TPar D) {j : ℕ} (hj : D.R.m - 1 ≤ j) (M : DSModel V (parB P j)) :
     AllPlus M := by
-  intro τ a
-  obtain ⟨-, q, -, hq⟩ := M.enum τ
-  have h : (q a, M.ε τ a) ∈ parB P j τ := hq ▸ Finset.mem_image_of_mem _ (Finset.mem_univ a)
-  simp only [parB, dualPar, TPar.Dpar, Finset.mem_image, Finset.mem_union, Finset.mem_biUnion, Prod.mk.injEq] at h
-  obtain ⟨_, ⟨x, hx, rfl⟩, -, h⟩ := h
-  rw [← h]
-  rcases hx with (⟨i, -, rfl⟩ | ⟨i, -, rfl⟩) | ⟨i, -, y, -, rfl⟩
-  · rfl
-  · exact decide_eq_true (Or.inl (by have := i.2; omega))
-  · rfl
+  apply _root_.GlobalTheory.DefiniteMult.allPlus_parB <;> assumption
 
 theorem isFockVacAt_stepVec {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D} {sS sT ΛS ΛT βS βT LS χj Q ξ}
     {f₀ f : WO S T → ℂ} (h : IsStepVecOf ψ θ S T sS sT ΛS ΛT βS βT LS χj Q ξ f₀ f) (hf : IsThetaFunO ψ S T f) (τ) :

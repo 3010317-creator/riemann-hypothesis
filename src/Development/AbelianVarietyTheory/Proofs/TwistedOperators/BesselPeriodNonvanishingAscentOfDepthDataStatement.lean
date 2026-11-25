@@ -1,5 +1,6 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleLiftPeriodRankZeroFubiniCompactQuotient
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.PartFixed
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsWeilDatumHermitianPair
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldingLevelsAndStepsHaarMeasuresExist
@@ -127,9 +128,9 @@ theorem ascent_of_rungs : TowerEx → Rung0 → RungB → RungJ → Ascent := by
   refine ⟨ρ, Φ, ?_⟩
   let f : ∀ i, Fn G (.grid i 0) := fun i => if hi : i ≤ D.R.m then part W M ρ Φ u i hi else 0
   have hf : f D.R.m = thetaChi W M ρ Φ u := by
-    simp only [f, dif_pos le_rfl]; rfl
+    simp only [f, dite_eq_left le_rfl]; rfl
   have := hE.top (r - 1) hk hk' Ψ f (hΨ.1 _ le_rfl) (by rw [hf, ← part_m]; exact hu ρ Φ _ le_rfl) (by
-    simp only [f, dif_pos hk]; exact hne)
+    simp only [f, dite_eq_left hk]; exact hne)
   rwa [hf] at this
 
 end GlobalTheory.Asc
@@ -866,16 +867,7 @@ private lemma eq_one_of_subOne_mulVec_ratV_eq_zero {S : HSp D} (g : GA D S)
   exact (HR (AF D.host.F) D.sp.cm.sig S.gram).subtype_injective h2
 
 theorem eq_one_of_mem_flagN {S S₀ : HSp D} (d : HypDec S S₀ 0) {n : GA D S} (hn : n ∈ flagN d) : n = 1 := by
-  have hle : flagN d ≤ ⊥ := by
-    unfold flagN NFlag
-    refine (Subgroup.closure_le _).2 ?_
-    rintro g ⟨-, hg⟩
-    refine Subgroup.mem_bot.2 (eq_one_of_subOne_mulVec_ratV_eq_zero g fun x => ?_)
-    obtain ⟨a, ha⟩ := hg x (Subsingleton.elim _ _)
-    rw [ha]
-    ext i
-    simp [Matrix.mulVec, dotProduct]
-  exact Subgroup.mem_bot.1 (hle hn)
+  apply _root_.GlobalTheory.Unf.LastSteps.flagN_rank_zero <;> assumption
 
 theorem per_zero (J : JacL D 0) {L' : HSp D} (ζ' : Fin L'.rank → D.host.E) (omz : Om J.W₀ L') (φ : GA D J.W₀ → ℂ)
     (f : GA D J.W → ℂ) (Φ₀ : WO J.W₀ L' → ℂ) :
@@ -1085,7 +1077,7 @@ theorem upLast : ∀ D : D7, UpLast D := by
   push Not at hcon
   apply hne
   rw [← hval Ξ hΞ.1]
-  refine GlobalTheory.T.tame_functional_vacuum_irreducibility D ψ hψ J.W₀ X ΓX _ hTame _ hbox hf₀ (fun w hw => ?_) Ξ hΞ
+  refine _root_.GlobalTheory.Irr.irr D ψ hψ J.W₀ X ΓX _ hTame _ hbox hf₀ (fun w hw => ?_) Ξ hΞ
   obtain ⟨hw1, hw2⟩ := hLL.ann w hw
   have hΦ := (GlobalTheory.Asc.annVac D ψ hψ J.W T Γ).1 f₁ hf₁ _ hw1
   have hΦ₀ := (GlobalTheory.Asc.annVac D ψ hψ J.W₀ (negSp L'') ΓL).1 f₂ hf₂ _ hw2
@@ -1121,10 +1113,7 @@ namespace GlobalTheory.AscBottom
 variable {D : D7}
 
 theorem rapidDec_star {V : HSp D} {f : GA D V → ℂ} (h : RapidDec V f) : RapidDec V (star f) := by
-  obtain ⟨h1, h2, h3⟩ := h
-  refine ⟨fun γ hγ g => by simp [Pi.star_apply, h1 γ hγ g], h2.star, fun N => ?_⟩
-  obtain ⟨C, hC⟩ := h3 N
-  exact ⟨C, fun g => by simpa [Pi.star_apply, norm_star] using hC g⟩
+  apply _root_.GlobalTheory.Asc.RungJac.rapidDec_star' <;> assumption
 
 theorem rung0 (hF : FockTot) : Rung0 := by
   intro D hq T L μ0 hL sc G W M hM v F ΓL hE hG Ψ hΨ u hu hper h
