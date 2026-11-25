@@ -146,14 +146,8 @@ theorem badSet_null (hA : _root_.ReciprocityTheory.AnForm.Osgood.OsgoodStatement
   have hyB : y ∈ ball d (q : ℝ) := by
     rw [mem_ball]
     exact hdy
-  have hBsub : ball d (q : ℝ) ⊆ ball y ε := by
-    intro y' hy'
-    rw [mem_ball] at hy' ⊢
-    calc dist y' y ≤ dist y' d + dist d y := dist_triangle _ _ _
-      _ < q + q := by
-        rw [dist_comm d y]
-        exact add_lt_add hy' hdy
-      _ < ε := by linarith
+  have hBsub : ball d (q : ℝ) ⊆ ball y ε :=
+    ball_subset_ball' (by rw [dist_comm]; linarith)
   have hG : (ball d (q : ℝ)).indicator (fun y' => segre (γ y')) ∈ secSet P Ψ (ball d (q : ℝ)) :=
     mem_secSet_of_sheet (fun y' hy' => (hball y' (hBsub hy')).1)
   have hG' : (ball d (q : ℝ)).indicator (fun y' => segre (γ' y')) ∈ secSet P Ψ (ball d (q : ℝ)) :=
