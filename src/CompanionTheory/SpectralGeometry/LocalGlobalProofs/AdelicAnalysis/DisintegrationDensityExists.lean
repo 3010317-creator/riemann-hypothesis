@@ -92,12 +92,9 @@ theorem lintegral_preimage {V X Y : Type} [TopologicalSpace V] [MeasurableSpace 
     ∫⁻ v in O, (g ⁻¹' S).indicator φ v ∂μ = ∫⁻ b in S, ∫⁻ v, φ v ∂(fib b) ∂ν := by
   have h2 := h.2.1 ((g ⁻¹' S).indicator φ) (hφ.indicator (hg.measurable hS))
   have e1 : ∫⁻ v in U, (g ⁻¹' S).indicator φ v ∂μ = ∫⁻ v in O, (g ⁻¹' S).indicator φ v ∂μ := by
-    have : (g ⁻¹' S).indicator φ = O.indicator ((g ⁻¹' S).indicator φ) := by
-      funext v
-      by_cases hv : v ∈ O
-      · rw [indicator_of_mem hv]
-      · rw [indicator_of_notMem hv]
-        exact indicator_apply_eq_zero.2 fun _ => hs v hv
+    have : (g ⁻¹' S).indicator φ = O.indicator ((g ⁻¹' S).indicator φ) :=
+      (indicator_eq_self.2 fun v hv => Classical.byContradiction fun hvO =>
+        Function.mem_support.1 hv (indicator_apply_eq_zero.2 fun _ => hs v hvO)).symm
     conv_lhs => rw [this]
     rw [lintegral_indicator hO.measurableSet, Measure.restrict_restrict hO.measurableSet,
       inter_eq_left.2 hU]
