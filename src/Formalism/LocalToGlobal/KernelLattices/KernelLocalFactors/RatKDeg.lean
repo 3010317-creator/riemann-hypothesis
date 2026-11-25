@@ -41,19 +41,6 @@ theorem chain_degree_eq : StepDegIs := by
   show (W.lamN u i τ).w r + _ - ((W.lamN u i τ).w _ + _) + ((W.lamN u i τ).w _ + _) = (W.lamN u i τ).w r + _
   ring
 
-section Op
-
-variable {K : Type} [Field K] [Infinite K] {ι : Type} [Fintype ι] {a b : ℕ}
-
-theorem jetOp_congr (lam : ι → DomWeight a) (lam' : ι → DomWeight b) (n : ι → ℕ) (J J' : (DVar ι a b →₀ ℕ) → K)
-    (h : ∀ m, (∀ τ, degAt m τ = opDeg lam n τ) → J m = J' m) : jetOp lam lam' J n = jetOp lam lam' J' n := by
-  ext P
-  unfold jetOp
-  simp only [LinearMap.comp_apply, Submodule.subtype_apply]
-  rw [jet_local_rationality K ι a b lam n J J' h P P.2]
-
-end Op
-
 section Props
 
 variable {X : Fields} (A : Amb X) {a b : ℕ} (Sall SB : Finset (HeightOneSpectrum (𝓞 X.E))) (D : ℕ)
@@ -101,36 +88,12 @@ theorem jetAddDeg_of (dg : X.Tau → ℕ) (hfin : LatFin (X := X) a b Sall) (had
 variable (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (mU : HeightOneSpectrum (𝓞 X.E) → X.Kˣ) (mI : SB → X.E → X.K)
   (lam : X.Tau → DomWeight a) (lam' : X.Tau → DomWeight b) (n : X.Tau → ℕ)
 
-theorem thDistC_add_deg (hfin : LatFin (X := X) a b Sall) (hadd : A.JetAddDeg a b Sall D (opDeg lam n))
-    (N : Submodule (𝓞 X.E) (Sp X.E a)) (fr : Frs X.E a SB) (N' : Submodule (𝓞 X.E) (Sp X.E b)) (fr' : Frs X.E b SB)
-    (c c' : ℕ) (x : HomE X.E a b) (hc : 0 < c) (hc' : 0 < c') (hR : InRange Sall D (c * c') N N' x) :
-    thDistC A Sall SB D sel mU mI lam lam' n N fr N' fr' c x =
-      latSum (mulLat c (homAt Sall N N')) (mulLat (c * c') (homAt Sall N N')) fun y =>
-        thDistC A Sall SB D sel mU mI lam lam' n N fr N' fr' (c * c') (x + y) := by
-  have := hfin N N' c c' hR.1 hR.2.1 hc hc'
-  let _ := Fintype.ofFinite (↥(mulLat c (homAt Sall N N')) ⧸ (mulLat (c * c') (homAt Sall N N')).comap (mulLat c (homAt Sall N N')).subtype)
-  have hJ : jetOp lam lam' (A.jetK Sall N N' c x) n = jetOp lam lam' (fun m => ∑ z : ↥(mulLat c (homAt Sall N N')) ⧸ (mulLat (c * c') (homAt Sall N N')).comap (mulLat c (homAt Sall N N')).subtype,
-      A.jetK Sall N N' (c * c') (x + ((Function.surjInv (Submodule.Quotient.mk_surjective
-        ((mulLat (c * c') (homAt Sall N N')).comap (mulLat c (homAt Sall N N')).subtype)) z : ↥(mulLat c (homAt Sall N N'))) : HomE X.E a b)) m) n := by
-    refine jetOp_congr lam lam' n _ _ fun m hm => ?_
-    rw [hadd N N' c c' x hc hc' hR m hm]
-    unfold latSum
-    rw [finsum_eq_sum_of_fintype]
-  unfold latSum
-  rw [finsum_eq_sum_of_fintype]
-  unfold thDistC
-  rw [if_pos ⟨(Dvd.intro _ rfl).trans hR.2.2.2.1, hR.2.2.2.2⟩, hJ, jetOp_sum, Finset.smul_sum]
-  refine Finset.sum_congr rfl fun z _ => ?_
-  exact (if_pos ⟨hR.2.2.2.1, mem_divLat_add D c _ hR.2.2.2.2 (Subtype.coe_prop _)⟩).symm
-
 theorem thDistC_ok_deg (hD : 0 < D) (rho : UF X.E a →* Module.End X.K (DIV.VV X.K lam)) (rho' : UF X.E b →* Module.End X.K (DIV.VV X.K lam'))
     (sS sT : SB → X.E → X.K) (hfin : LatFin (X := X) a b Sall) (hadd : A.JetAddDeg a b Sall D (opDeg lam n))
     (heq : ThEquivP (thDistC A Sall SB D sel mU mI lam lam' n) Sall D rho rho')
     (ha : MuDetLaw a mI sS) (hb : MuDetLaw b mI sS) (hi : UnitInv sS sT) :
     ThDist.Ok (thDistC A Sall SB D sel mU mI lam lam' n) Sall D rho rho' sS sT :=
   { cong := fun N fr N' fr' c x x' _ _ h => thDistC_cong A Sall SB sel mU mI lam lam' n D N fr N' fr' c x x' h
-    add := fun N fr N' fr' c c' x hN hN' hc hc' hd hx =>
-      thDistC_add_deg A Sall SB D sel mU mI lam lam' n hfin hadd N fr N' fr' c c' x hc hc' ⟨hN, hN', Nat.mul_pos hc hc', hd, hx⟩
     equiv := thDistC_equiv A Sall SB sel mU mI lam lam' n D hD rho rho' heq
     det := fun N fr N' fr' c x κ κ' _ _ => thDistC_det A Sall SB sel mU mI lam lam' n D sS sT ha hb hi N fr N' fr' c x κ κ' }
 
