@@ -52,12 +52,6 @@ namespace GlobalTheory.DeRhamCpl
 
 open GlobalTheory.PDiv (ModPow)
 
-section Rings
-
-variable (p : ℕ) (O : Type) [CommRing O]
-
-end Rings
-
 section BaseChange
 
 variable {O O' B B' : Type} [CommRing O] [CommRing O'] [CommRing B] [CommRing B']
@@ -68,15 +62,6 @@ instance bcObj.instGrpObj (a : O →+* B) (A : Over (Sp O)) [GrpObj A] : GrpObj 
   Functor.grpObjObj
 
 end BaseChange
-
-section Levels
-
-variable (p : ℕ) {O : Type} [CommRing O]
-
-variable {p} {A : Over (Sp O)} [GrpObj A]
-
-
-end Levels
 
 abbrev Family (p : ℕ) : Type 1 :=
   ∀ ⦃R : Type⦄ [CommRing R], IsAdicComplete (Ideal.span {(p : R)}) R →

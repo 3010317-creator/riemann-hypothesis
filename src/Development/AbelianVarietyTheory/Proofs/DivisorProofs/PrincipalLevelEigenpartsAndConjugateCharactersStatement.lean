@@ -274,16 +274,6 @@ theorem IsPosOn.le_iSup_eigen [FiniteDimensional ℂ Y] (h : IsPosOn Y B) (T : I
 
 end Form
 
-section Local
-
-variable {D : D7} (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)) (V : HSp D) (S : D.what₂.Tau → SPar)
-  (M : DSModel V S) (J : Set (GA D V)) (χ : GA D V → ℂ) (Sb : Finset (HeightOneSpectrum (𝓞 D.host.F)))
-  (e : (GA D V → ℂ) →ₗ[ℂ] (GA D V → ℂ))
-
-variable {θ V S M J χ Sb e}
-
-end Local
-
 end GlobalTheory.HeckeOrthSum
 end -- clump:auto
 end -- clump:auto

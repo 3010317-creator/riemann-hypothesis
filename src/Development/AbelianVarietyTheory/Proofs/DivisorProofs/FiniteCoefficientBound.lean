@@ -842,10 +842,6 @@ end
 end
 
 end ResidueCardinalityNilpotence
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim
-
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteCoefficientBound =====

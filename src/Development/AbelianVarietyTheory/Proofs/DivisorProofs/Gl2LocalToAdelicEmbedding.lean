@@ -51,13 +51,6 @@ open GlobalTheory.Doubling (absE)
 
 namespace GlobalTheory.GLTwoHecke
 
-section Matrices
-
-variable {R : Type} [CommRing R]
-
-
-end Matrices
-
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
 variable (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) {r : ℕ}

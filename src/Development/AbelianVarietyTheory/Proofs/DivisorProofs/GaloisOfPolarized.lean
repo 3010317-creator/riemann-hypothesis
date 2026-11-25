@@ -61,12 +61,6 @@ open scoped TensorProduct
 
 namespace GlobalTheory.SphGal
 
-section Global
-
-variable {E : Type} [Field E] [NumberField E]
-
-end Global
-
 def spehInf (d : ℕ) (A : Multiset ℂ) : Multiset ℂ :=
   ∑ j : Fin d, A.map (· + (((d : ℂ) - 1) / 2 - (j : ℕ)))
 

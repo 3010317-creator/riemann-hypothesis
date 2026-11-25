@@ -142,9 +142,4 @@ theorem hasTuples_of_laws {ph : Fin D.R.m → ℂ} {B : Base (Vc D j) (Wc D j)} 
 
 end Laws
 
-section Point
-
-
-end Point
-
 end GlobalTheory.BigOn.Exp.TwConj

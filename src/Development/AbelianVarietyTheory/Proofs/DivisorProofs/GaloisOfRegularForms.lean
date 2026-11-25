@@ -71,14 +71,6 @@ def divInd {n : ℕ} (O : Subring L) (d : List ℤ) : GL (Fin n) L → ℂ := Se
 
 end Local
 
-section Global
-
-variable {E : Type} [Field E] [NumberField E]
-
-variable [StarRing E]
-
-end Global
-
 variable {D : D7}
 
 end GlobalTheory.SphPar

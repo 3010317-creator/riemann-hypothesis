@@ -206,10 +206,6 @@ end Same
 
 end Unif
 
-section Analytic
-
-end Analytic
-
 section Principal
 
 theorem tangent_bijective (x : KeyIn ℂ) (u : HolUnif x.P.A x.P.L x.P.g) :

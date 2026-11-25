@@ -181,12 +181,6 @@ end Fibres
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H}
 
-section One
-
-variable {l : Level H} {Xo : Moduli D l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F}
-
-end One
-
 end GlobalTheory.CoveringCompare
 end -- clump:auto
 end -- clump:auto

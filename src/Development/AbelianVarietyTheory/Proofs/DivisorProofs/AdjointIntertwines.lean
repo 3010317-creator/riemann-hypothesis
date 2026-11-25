@@ -49,20 +49,6 @@ open scoped TensorProduct InnerProductSpace
 
 namespace GlobalTheory.SecLift
 
-section Lin
-
-variable {X Y : Type} [NormedAddCommGroup X] [InnerProductSpace ℂ X] [FiniteDimensional ℂ X]
-  [NormedAddCommGroup Y] [InnerProductSpace ℂ Y] [FiniteDimensional ℂ Y]
-
-
-end Lin
-
-section Model
-
-variable {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel V S)
-
-end Model
-
 section Act
 
 open Formalism.IndefR.Lev

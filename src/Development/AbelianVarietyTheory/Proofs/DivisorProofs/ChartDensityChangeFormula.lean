@@ -55,12 +55,6 @@ open GlobalTheory.ChartGlue
 
 variable {n : ℕ}
 
-section Null
-
-variable {X ι : Type} [TopologicalSpace X] [T2Space X] [MeasurableSpace X] [BorelSpace X]
-
-end Null
-
 section Cover
 
 variable {A B ι κ : Type} [TopologicalSpace A] [TopologicalSpace B] [T2Space A] [T2Space B]

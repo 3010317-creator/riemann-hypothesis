@@ -127,18 +127,6 @@ omit hd
 
 end Geometric
 
-section Main
-
-variable (T : CoreJ D) [Algebra T.Q.c.F D.what₂.LL] (R : RealDat D A T.Q.c.F) (F : Face D A)
-  (κ : ∀ i : Fin D.R.m, WeightFamilies.Wt D ((i : ℕ) + 1)) (v₀ : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (R.MW i σ).Vec)
-  (O : ∀ i, OMDat T.toCore R i Unit (fun _ => A.μ0))
-
-variable {T R F κ v₀ O}
-
-variable (T R F κ v₀ O)
-
-end Main
-
 end GlobalTheory.LiftScalarCompare
 
 end

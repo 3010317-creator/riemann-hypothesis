@@ -232,12 +232,6 @@ theorem twConj_of_norm_eq [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (
 
 end Ring
 
-section Group
-
-variable {G : Type} [Group G]
-
-end Group
-
 variable {E : Type} [Field E] [NumberField E]
 
 theorem eventually_int (x : E) :
