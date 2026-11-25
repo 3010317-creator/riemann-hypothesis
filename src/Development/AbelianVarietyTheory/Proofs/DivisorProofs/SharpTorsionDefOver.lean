@@ -47,8 +47,5 @@ theorem exists_points_equiv {W₀ : Type} [CommRing W₀] (ρ : V →+* V₁) (i
   rw [hE2, hE1, Over.comp_left]
   simp only [Category.assoc]
 
-theorem spMap_three {A B C E : Type} [CommRing A] [CommRing B] [CommRing C] [CommRing E] (f : A →+* B) (g : B →+* C)
-    (h : C →+* E) : spMap h ≫ spMap g ≫ spMap f = spMap ((h.comp g).comp f) := by
-  simp only [spMap, ← Spec.map_comp]; rfl
 
 end GlobalTheory.Poinc.Sep
