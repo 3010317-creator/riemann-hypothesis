@@ -65,11 +65,7 @@ theorem inv_wU_subst {K : Type u} [Field K] (W : WeierstrassCurve K) {a : MvPowe
   have hs : HasSubst a := HasSubst.of_constantCoeff_zero ha
   have h1 : (xS W).subst a * (wU W).subst a = 1 := by
     rw [← subst_mul hs, mul_comm, wU_mul_xS, ← coe_substAlgHom hs, map_one]
-  have h0 : cc ((wU W).subst a) ≠ 0 := by
-    intro h
-    have := congrArg cc h1
-    rw [map_mul, h, mul_zero, map_one] at this
-    exact zero_ne_one this
+  have h0 : cc ((wU W).subst a) ≠ 0 := right_ne_zero_of_mul_eq_one (by rw [← map_mul, h1, map_one])
   exact (MvPowerSeries.inv_eq_iff_mul_eq_one h0).2 h1
 
 theorem yS_subst (W : WeierstrassCurve A) {a : MvPowerSeries σ A} (ha : cc a = 0) :
