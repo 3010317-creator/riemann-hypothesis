@@ -21,23 +21,18 @@ namespace GlobalTheory.CompanionTheory.Ar.Num.LineCk
 theorem exists_pow_mul_eq {R : Type*} [CommRing R] (w A B : R)
     (h : ∀ p : Ideal R, p.IsPrime → w ∉ p → ∃ U V : R, U ∉ p ∧ U * A = V * B) :
     ∃ (n : ℕ) (r : R), w ^ n * A = r * B := by
-  let J : Ideal R :=
-    { carrier := {s | ∃ r, s * A = r * B}
-      add_mem' := by
-        rintro a b ⟨r, hr⟩ ⟨t, ht⟩
-        exact ⟨r + t, by rw [add_mul, add_mul, hr, ht]⟩
-      zero_mem' := ⟨0, by simp⟩
-      smul_mem' := by
-        rintro c a ⟨r, hr⟩
-        exact ⟨c * r, by rw [smul_eq_mul, mul_assoc, hr, mul_assoc]⟩ }
+  let J : Ideal R := (Ideal.span {B}).colon {A}
+  have hJ : ∀ s, s ∈ J ↔ ∃ r, s * A = r * B := fun s => by
+    rw [Submodule.mem_colon_singleton, smul_eq_mul, Ideal.mem_span_singleton']
+    exact exists_congr fun _ => eq_comm
   have hw : w ∈ J.radical := by
     rw [Ideal.radical_eq_sInf, Ideal.mem_sInf]
     rintro p ⟨hJp, hp⟩
     by_contra hwp
     obtain ⟨U, V, hU, hUV⟩ := h p hp hwp
-    exact hU (hJp ⟨V, hUV⟩)
-  obtain ⟨n, r, hr⟩ := hw
-  exact ⟨n, r, hr⟩
+    exact hU (hJp ((hJ U).2 ⟨V, hUV⟩))
+  obtain ⟨n, hn⟩ := hw
+  exact ⟨n, (hJ _).1 hn⟩
 
 section Forms
 
