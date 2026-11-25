@@ -58,98 +58,17 @@ def lieLevi : Submodule F (Matrix (Fin n) (Fin n) F) where
 
 
 
-variable {F n β} in
-theorem mul_mem_lieLevi {A B : Matrix (Fin n) (Fin n) F} (hA : A ∈ lieLevi F n β)
-    (hB : B ∈ lieLevi F n β) : A * B ∈ lieLevi F n β := by
-  intro i j h
-  rw [Matrix.mul_apply]
-  refine Finset.sum_eq_zero fun k _ => ?_
-  by_cases hik : β i = β k
-  · rw [hB k j (fun e => h (hik.trans e)), mul_zero]
-  · rw [hA i k hik, zero_mul]
+def leviSupport : MatrixSupportChart (fun i j => β i = β j) (levi F n β) where
+  space := lieLevi F n β
+  mem_space _ := Iff.rfl
+  mem_group _ := mem_levi
+  trans := Eq.trans
 
-def leviCoord : lieLevi F n β ≃ₗ[F] (LeviIndex n β → F) where
-  toFun A s := (A : Matrix (Fin n) (Fin n) F) s.1.1 s.1.2
-  invFun x := ⟨Matrix.of fun i j => if h : β i = β j then x ⟨(i, j), h⟩ else 0,
-    fun i j hij => by simp [hij]⟩
-  map_add' A B := rfl
-  map_smul' c A := rfl
-  left_inv A := by
-    ext i j
-    by_cases h : β i = β j
-    · simp [h]
-    · simp [h, A.2 i j h]
-  right_inv x := by
-    funext s
-    simp [s.2]
-
-def leviCoordHomeomorph : lieLevi F n β ≃ₜ (LeviIndex n β → F) where
-  toEquiv := (leviCoord F n β).toEquiv
-  continuous_toFun := continuous_pi fun s =>
-    (continuous_subtype_val.matrix_elem s.1.1 s.1.2 :
-      Continuous fun A : lieLevi F n β => (A : Matrix (Fin n) (Fin n) F) s.1.1 s.1.2)
-  continuous_invFun := by
-    refine Continuous.subtype_mk (continuous_matrix fun i j => ?_) _
-    by_cases h : β i = β j
-    · simp only [Matrix.of_apply, h, dite_true]
-      exact continuous_apply _
-    · simp only [Matrix.of_apply, h, dite_false]
-      exact continuous_const
-
-def toLieLevi (m : levi F n β) : lieLevi F n β :=
-  ⟨((m : GL (Fin n) F) : Matrix (Fin n) (Fin n) F), fun i j h => mem_levi.1 m.2 i j h⟩
-
-theorem isOpenEmbedding_toLieLevi : IsOpenEmbedding (toLieLevi F n β) := by
-  have hemb : IsEmbedding (toLieLevi F n β) :=
-    ((isOpenEmbedding_val F n).isEmbedding.comp IsEmbedding.subtypeVal).codRestrict
-      (lieLevi F n β : Set (Matrix (Fin n) (Fin n) F)) fun m : levi F n β =>
-        fun i j h => mem_levi.1 m.2 i j h
-  refine ⟨hemb, ?_⟩
-  have : Set.range (toLieLevi F n β) = Subtype.val ⁻¹' Set.range
-      (Units.val : GL (Fin n) F → Matrix (Fin n) (Fin n) F) := by
-    ext A
-    constructor
-    · rintro ⟨m, rfl⟩
-      exact ⟨m, rfl⟩
-    · rintro ⟨u, hu⟩
-      refine ⟨⟨u, mem_levi.2 fun i j h => ?_⟩, Subtype.ext hu⟩
-      rw [hu]
-      exact A.2 i j h
-  rw [this]
-  exact (isOpenEmbedding_val F n).isOpen_range.preimage continuous_subtype_val
-
-def mulLeftLieLevi (m : levi F n β) : lieLevi F n β ≃ₗ[F] lieLevi F n β :=
-  (Units.mulLeftLinearEquiv F _ (m : GL (Fin n) F)).ofSubmodules _ _ (by
-    refine le_antisymm ?_ fun A hA => ?_
-    · rintro _ ⟨A, hA, rfl⟩
-      exact mul_mem_lieLevi (fun i j h => mem_levi.1 m.2 i j h) hA
-    · refine ⟨((m⁻¹ : levi F n β) : GL (Fin n) F) * A,
-        mul_mem_lieLevi (fun i j h => mem_levi.1 (m⁻¹).2 i j h) hA, ?_⟩
-      simp [← mul_assoc])
-
-def mulRightLieLevi (m : levi F n β) : lieLevi F n β ≃ₗ[F] lieLevi F n β :=
-  (Units.mulRightLinearEquiv F (m : GL (Fin n) F)).ofSubmodules _ _ (by
-    refine le_antisymm ?_ fun A hA => ?_
-    · rintro _ ⟨A, hA, rfl⟩
-      exact mul_mem_lieLevi hA (fun i j h => mem_levi.1 m.2 i j h)
-    · refine ⟨A * ((m⁻¹ : levi F n β) : GL (Fin n) F),
-        mul_mem_lieLevi hA (fun i j h => mem_levi.1 (m⁻¹).2 i j h), ?_⟩
-      simp [mul_assoc])
+def leviCoord : lieLevi F n β ≃ₗ[F] (LeviIndex n β → F) := (leviSupport F n β).coord
 
 variable {F n}
 
-def leviChart : LinearChart F (LeviIndex n β) (levi F n β) where
-  toFun m := leviCoord F n β (toLieLevi F n β m)
-  isOpenEmbedding :=
-    (leviCoordHomeomorph F n β).isOpenEmbedding.comp (isOpenEmbedding_toLieLevi F n β)
-  left m := (leviCoord F n β).symm.trans ((mulLeftLieLevi F n β m).trans (leviCoord F n β))
-  right m := (leviCoord F n β).symm.trans ((mulRightLieLevi F n β m).trans (leviCoord F n β))
-  toFun_mul_left g x := by
-    simp only [LinearEquiv.trans_apply, LinearEquiv.symm_apply_apply]
-    rfl
-  toFun_mul_right h x := by
-    simp only [LinearEquiv.trans_apply, LinearEquiv.symm_apply_apply]
-    rfl
+def leviChart : LinearChart F (LeviIndex n β) (levi F n β) := (leviSupport F n β).chart
 
 variable {β}
 
