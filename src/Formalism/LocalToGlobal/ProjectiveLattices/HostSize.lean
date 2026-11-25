@@ -5,6 +5,7 @@ public import Formalism.SharpRestriction.ElevenLe
 public import Formalism.LocalRingCardinality.DataParams
 public import Development.AutomorphicArithmetic.CyclotomicBounds.RamifiedDiscriminants.LogQdLeRd
 public import Formalism.LocalRingCardinality.HostCls
+import Formalism.LocalRingCardinality.FourthPowerRankLeNF
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Algebra.Order.Star.Real
 
@@ -71,31 +72,7 @@ theorem host_rd_ge_sixteen {large₂ : SizeData₂ D} (P : ParameterChoice' D la
   nlinarith
 
 theorem host_m_pow_four_le_f {large₂ : SizeData₂ D} (hS : SizesAt large₂) : D.R.m ^ 4 ≤ PT.f D.host.E := by
-  have hx : 1 < large₂.sc.x := large₂.sc.one_lt_alt
-  have hx0 : 0 < large₂.sc.x := by linarith
-  have he : 0 < large₂.sc.eps := large₂.sc.eps_pos
-  obtain ⟨⟨hN1, -⟩, ⟨-, hM2⟩, -⟩ := hS
-  simp only [Formalism.MainNotions.szTh, Formalism.BasicNotions.Scale.delta1] at hN1 hM2
-  have hA : Real.sqrt (large₂.sc.x * large₂.sc.x ^ (-(large₂.sc.eps / 8))) =
-      large₂.sc.x ^ ((1 + -(large₂.sc.eps / 8)) * (1 / 2)) := by
-    rw [Real.sqrt_eq_rpow, Real.rpow_mul hx0.le, Real.rpow_add hx0, Real.rpow_one]
-  rw [hA, ← Real.rpow_add hx0] at hM2
-  have hm0 : (0 : ℝ) ≤ D.R.m := Nat.cast_nonneg _
-  have h4 : (D.R.m : ℝ) ^ 4 ≤ (large₂.sc.x ^ (large₂.sc.eps / 100 + (1 + -(large₂.sc.eps / 8)) * (1 / 2))) ^ 4 :=
-    pow_le_pow_left₀ hm0 hM2 4
-  have h5 : (large₂.sc.x ^ (large₂.sc.eps / 100 + (1 + -(large₂.sc.eps / 8)) * (1 / 2))) ^ 4 =
-      large₂.sc.x ^ ((large₂.sc.eps / 100 + (1 + -(large₂.sc.eps / 8)) * (1 / 2)) * 4) := by
-    rw [← Real.rpow_natCast, ← Real.rpow_mul hx0.le]
-    norm_num
-  have h6 : large₂.sc.x ^ ((large₂.sc.eps / 100 + (1 + -(large₂.sc.eps / 8)) * (1 / 2)) * 4) ≤
-      large₂.sc.x ^ (2 + 8 * large₂.sc.eps - large₂.sc.eps / 100) :=
-    Real.rpow_le_rpow_of_exponent_le hx.le (by linarith)
-  have key : ((D.R.m ^ 4 : ℕ) : ℝ) ≤ (D.R.n : ℝ) := by
-    push_cast
-    linarith
-  have hmn : D.R.m ^ 4 ≤ D.R.n := by exact_mod_cast key
-  have hn : D.R.n = D.R.ord := rfl
-  rw [hostSize_f D, Formalism.BasicNotions.Ranks.f_eq_ord (R := D.R)]
-  omega
+  rw [hostSize_f D]
+  exact m_pow_four_le_f large₂ hS.1 hS.2.1
 
 end Formalism.L2.Pj

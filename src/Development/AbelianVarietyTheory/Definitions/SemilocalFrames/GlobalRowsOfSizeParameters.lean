@@ -51,7 +51,7 @@ theorem globalRows_of_sizeData {D : D7} (L : SizeData₂ D) (P : ParameterChoice
     rw [sqrt_xd L, ← Real.rpow_add hx] at a
     refine le_trans (Real.rpow_le_rpow_of_exponent_le hx1.le ?_) a
     unfold szTh; linarith
-  · exact_mod_cast hyp3 L SzN SzM
+  · exact_mod_cast m_pow_four_le_f L SzN SzM
   · exact_mod_cast D.R.f_le_k
   · have a := SzKR.1
     have b : L.sc.x ^ (L.sc.eps / 2) ≤ L.sc.x ^ L.sc.eps := Real.rpow_le_rpow_of_exponent_le hx1.le (by linarith)

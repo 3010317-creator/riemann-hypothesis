@@ -1,5 +1,6 @@
 module
 
+public import Formalism.LocalRingCardinality.FourthPowerRankLeNF
 public import Formalism.SharpRestriction.CuspSpanNormBounds.StandingNumericalData
 public import Formalism.SharpRestriction.CuspSpanNormBounds.FlagEEqHyperbolic
 public import Formalism.SharpRestriction.FamCore
@@ -83,7 +84,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.SharpRestriction.CuspSpanNormBounds.FrobeniusProjectedBounds =====
 
 -- ===== clump member: Formalism.SharpRestriction.CuspSpanNormBounds.StandingHypothesesHoldFamily =====
--- clump-header: {"m": "Formalism.SharpRestriction.CuspSpanNormBounds.StandingHypothesesHoldFamily", "h": "module\n\npublic import Formalism.SharpRestriction.GlobalTheoremInputs\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.LeSCSCl\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.AdmissibleBoundsFromSource\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.FrobeniusProjectedBounds\npublic import Formalism.SharpRestriction.GlobalSchurBounds.CMFieldLemmas\npublic import Formalism.SharpRestriction.GlobalSchurBounds.ShortIntervalPrimes\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.UniformConstantsAndStatements\nimport Mathlib.Algebra.AffineMonoid.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Algebra.Order.Star.Rat\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\npublic import Mathlib.NumberTheory.RamificationInertia.Basic\nimport Mathlib.NumberTheory.SelbergSieve\npublic import Mathlib.RingTheory.Ideal.Int\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Formalism.SharpRestriction.CuspSpanNormBounds.StandingHypothesesHoldFamily", "h": "module\n\npublic import Formalism.LocalRingCardinality.FourthPowerRankLeNF\npublic import Formalism.SharpRestriction.GlobalTheoremInputs\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.LeSCSCl\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.AdmissibleBoundsFromSource\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.FrobeniusProjectedBounds\npublic import Formalism.SharpRestriction.GlobalSchurBounds.CMFieldLemmas\npublic import Formalism.SharpRestriction.GlobalSchurBounds.ShortIntervalPrimes\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.UniformConstantsAndStatements\nimport Mathlib.Algebra.AffineMonoid.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Algebra.Order.Star.Rat\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\npublic import Mathlib.NumberTheory.RamificationInertia.Basic\nimport Mathlib.NumberTheory.SelbergSieve\npublic import Mathlib.RingTheory.Ideal.Int\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1131,31 +1132,6 @@ section Hyp3
 
 variable {D : D7} (L : SizeData₂ D)
 
-theorem sqrt_xd : Real.sqrt (L.sc.x * L.sc.delta1) = L.sc.x ^ ((1 - L.sc.eps / 8) / 2) := by
-  have hx : 0 < L.sc.x := lt_trans one_pos L.sc.one_lt_alt
-  have e : L.sc.x * L.sc.delta1 = L.sc.x ^ (1 - L.sc.eps / 8) := by
-    unfold Scale.delta1
-    rw [sub_eq_add_neg, Real.rpow_add hx, Real.rpow_one]
-  rw [e, Real.sqrt_eq_rpow, ← Real.rpow_mul hx.le]
-  congr 1; ring
-
-theorem hyp3 (SzN : SizeN L) (SzM : SizeM L) : D.R.m ^ 4 ≤ D.R.f := by
-  have hx : 0 < L.sc.x := lt_trans one_pos L.sc.one_lt_alt
-  have a := SzM.2
-  rw [sqrt_xd L, ← Real.rpow_add hx] at a
-  have b : (D.R.m : ℝ) ^ 4 ≤ (L.sc.x ^ (szTh L + (1 - L.sc.eps / 8) / 2)) ^ 4 :=
-    pow_le_pow_left₀ (Nat.cast_nonneg _) a 4
-  have b' : (L.sc.x ^ (szTh L + (1 - L.sc.eps / 8) / 2)) ^ 4 =
-      L.sc.x ^ ((szTh L + (1 - L.sc.eps / 8) / 2) * ((4 : ℕ) : ℝ)) := by
-    rw [Real.rpow_mul hx.le, Real.rpow_natCast]
-  rw [b'] at b
-  have c : L.sc.x ^ ((szTh L + (1 - L.sc.eps / 8) / 2) * ((4 : ℕ) : ℝ)) ≤ L.sc.x ^ (2 + 8 * L.sc.eps - szTh L) := by
-    apply Real.rpow_le_rpow_of_exponent_le L.sc.one_lt_alt.le
-    unfold szTh; have := L.sc.eps_pos; push_cast; linarith
-  have d : (D.R.m : ℝ) ^ 4 ≤ (D.R.n : ℝ) := le_trans b (le_trans c SzN.1)
-  have e : D.R.m ^ 4 ≤ D.R.n := by exact_mod_cast d
-  unfold Ranks.f; omega
-
 theorem XX_le_m (SzM : SizeM L) : XX L ≤ D.R.m := by
   have hx : 0 < L.sc.x := lt_trans one_pos L.sc.one_lt_alt
   have a := SzM.1
@@ -1390,7 +1366,7 @@ theorem standing_hypotheses_of_bounds (Sz : SizesAt L) (Cl cT CT : ℝ) (hCl0 : 
   have hDel0 : 0 ≤ (D.s.Del : ℝ) := by exact_mod_cast D.s.Del_pos.le
   have hmfL : 0 ≤ (D.R.m : ℝ) ^ 5 * D.R.f * L.sc.L := by positivity
   have hm1 : 1 ≤ D.R.m := le_trans (by norm_num) D.R.two_le_m
-  refine ⟨r1, ?_, hyp3 L SzN SzM, D.R.f_le_k, P.logf_le, ?_, ?_, ?_, ?_, ?_, log_root_discriminant_le L SzN SzQ Cl hCl0 h2 h3 hCl,
+  refine ⟨r1, ?_, m_pow_four_le_f L SzN SzM, D.R.f_le_k, P.logf_le, ?_, ?_, ?_, ?_, ?_, log_root_discriminant_le L SzN SzQ Cl hCl0 h2 h3 hCl,
     (type_prime_size_bounds L P 0).1, (type_prime_size_bounds L P 0).2, (type_prime_size_bounds L P 1).1, (type_prime_size_bounds L P 1).2, ?_, ?_, first_node_le_b_cubed L P SzK h2 h3, hv1,
     count_power_le_discriminant L P Cl hCl0 hClC, node_gaps_large L P SzNo Cl hCl, row_parameter_gaps_large L P Cl hClG, r3, le_trans hCl (XX_le_m L SzM), hCl0⟩
   · have a := P.k_low
