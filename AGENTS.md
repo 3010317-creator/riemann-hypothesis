@@ -82,6 +82,10 @@ yours, name your branch `batch/<name>-on-<N>` after it, and add `- [ ] depends o
 batch's description. The workflows order stacked batches by these, and label the outermost one
 `latest batch`.
 
+Try to include every pull request labelled `batch queue`: a maintainer has approved it for a
+batch. If one can't go in, because it conflicts with `main` or breaks the build, leave it out
+and say why in the batch's description.
+
 Leave out:
 
 - every pull request labelled `deferred` or `awaiting-author`. `deferred` means it should not be
@@ -97,7 +101,7 @@ by rebuilding the batch without it and force-pushing. Don't revert the merge com
 it in: GitHub marks a pull request merged once its head commit is in `main`, so a reverted one
 would be marked merged although its changes did not land.
 
-If a pull request conflicts with `main`, you may merge `main` into its branch when the conflict
+If a pull request conflicts with `main` or a batch earlier in the queue, you may merge `main` or the earlier batch into its branch when the conflict
 is mechanical, such as one side deleting a file the other edited. Check that the changed files
 still compile and push the merge to the pull request's branch, so that the batch holds nothing
 the pull request doesn't, and merge that new head into the batch. Otherwise leave it out. A pull
