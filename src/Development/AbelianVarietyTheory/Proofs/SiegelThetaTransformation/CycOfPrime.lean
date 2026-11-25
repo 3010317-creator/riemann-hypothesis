@@ -74,10 +74,7 @@ theorem exists_fun (P : Ideal O) [hP : P.IsMaximal] (N : Submodule O M) (v : M) 
 
 theorem surj_of_ne (P : Ideal O) [hP : P.IsMaximal] (f : M →ₗ[O] O ⧸ P) (hf : f ≠ 0) :
     ∃ v, f v = 1 := by
-  obtain ⟨w, hw⟩ : ∃ w, f w ≠ 0 := by
-    by_contra h
-    push Not at h
-    exact hf (LinearMap.ext fun x => by simpa using h x)
+  obtain ⟨w, hw⟩ : ∃ w, f w ≠ 0 := DFunLike.exists_ne hf
   obtain ⟨b, hb⟩ := Ideal.Quotient.exists_inv hw
   obtain ⟨c, rfl⟩ := Ideal.Quotient.mk_surjective b
   refine ⟨c • w, ?_⟩
@@ -105,10 +102,7 @@ theorem cyc_of_prime (N : Submodule O M) {q : ℕ} (hq : q.Prime)
     intro ht
     rw [ht, AddSubgroup.index_top] at h
     exact hq.one_lt.ne h
-  obtain ⟨v, hv⟩ : ∃ v, v ∉ N := by
-    by_contra hn
-    push Not at hn
-    exact hne (eq_top_iff.mpr fun x _ => hn x)
+  obtain ⟨v, -, hv⟩ := IsConcreteLE.exists_of_lt hne.lt_top
   refine ⟨v, hv, fun x => ?_⟩
   have hv0 : (QuotientAddGroup.mk v : M ⧸ N.toAddSubgroup) ≠ 0 := by
     rw [Ne, QuotientAddGroup.eq_zero_iff]; exact hv
