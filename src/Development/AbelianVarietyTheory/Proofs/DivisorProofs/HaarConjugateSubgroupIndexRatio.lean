@@ -251,15 +251,15 @@ theorem units_ringOfIntegers_mod_sq (L : Type) [Field L] [NumberField L] :
     ∃ R : Finset (𝓞 L)ˣ, ∀ x : (𝓞 L)ˣ, ∃ ρ ∈ R, ∃ w : (𝓞 L)ˣ, x = ρ * w ^ 2 := by
   classical
   let N : Submodule ℤ (Additive (𝓞 L)ˣ) := LinearMap.range ((2 : ℤ) • LinearMap.id)
-  haveI : Module.Finite ℤ (Additive (𝓞 L)ˣ) := inferInstance
-  haveI : Finite (Additive (𝓞 L)ˣ ⧸ N) := by
+  have : Module.Finite ℤ (Additive (𝓞 L)ˣ) := inferInstance
+  have : Finite (Additive (𝓞 L)ˣ ⧸ N) := by
     refine Module.finite_of_fg_torsion _ fun q => ⟨⟨2, mem_nonZeroDivisors_of_ne_zero two_ne_zero⟩, ?_⟩
     induction q using Submodule.Quotient.induction_on with
     | H x =>
       show (2 : ℤ) • (Submodule.Quotient.mk (p := N) x) = 0
       rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
       exact ⟨x, rfl⟩
-  haveI : Fintype (Additive (𝓞 L)ˣ ⧸ N) := Fintype.ofFinite _
+  have : Fintype (Additive (𝓞 L)ˣ ⧸ N) := Fintype.ofFinite _
   let rep := Function.surjInv (Submodule.Quotient.mk_surjective N)
   refine ⟨Finset.univ.image (fun q => Additive.toMul (rep q)), fun x => ?_⟩
   let q : Additive (𝓞 L)ˣ ⧸ N := Submodule.Quotient.mk (Additive.ofMul x)
@@ -372,9 +372,9 @@ theorem exists_rat_approx (L : Type) [Field L] [NumberField L] (c : L →ₐ[ℚ
   classical
   let K := v.adicCompletion ℚ
   let A := K ⊗[ℚ] L
-  letI : TopologicalSpace A := moduleTopology K A
-  haveI : IsModuleTopology K A := ⟨rfl⟩
-  haveI : IsTopologicalRing A := IsModuleTopology.isTopologicalRing K A
+  let : TopologicalSpace A := moduleTopology K A
+  have : IsModuleTopology K A := ⟨rfl⟩
+  have : IsTopologicalRing A := IsModuleTopology.isTopologicalRing K A
   let b := integralBasis L
   let bA := Algebra.TensorProduct.basis K b
   let mc : A →ₗ[K] A := (Algebra.TensorProduct.map (AlgHom.id K K) c).toLinearMap
@@ -637,7 +637,7 @@ theorem ord_conj (L : Type) [Field L] [NumberField L] (c : L →ₐ[ℚ] L) (hc 
 theorem valuation_rat_eq (L : Type) [Field L] [NumberField L] (w : HeightOneSpectrum (𝓞 L)) {Q q : ℚ}
     (h : (w.under ℤ).valuation ℚ Q = (w.under ℤ).valuation ℚ q) :
     w.valuation L (algebraMap ℚ L Q) = w.valuation L (algebraMap ℚ L q) := by
-  haveI : w.asIdeal.LiesOver (w.under ℤ).asIdeal := ⟨HeightOneSpectrum.under_asIdeal ℤ w⟩
+  have : w.asIdeal.LiesOver (w.under ℤ).asIdeal := ⟨HeightOneSpectrum.under_asIdeal ℤ w⟩
   rw [← HeightOneSpectrum.valuation_liesOver L (w.under ℤ) w Q, ← HeightOneSpectrum.valuation_liesOver L (w.under ℤ) w q, h]
 
 theorem log_injective {x y : WithZero (Multiplicative ℤ)} (hx : x ≠ 0) (hy : y ≠ 0)
@@ -729,7 +729,7 @@ theorem exists_finset_classes (L : Type) [Field L] [NumberField L] (c : L →ₐ
       split_ifs with h2 <;> omega
     · have hnWS : w ∉ Δ := fun h => hS ((finite_under L S).mem_toFinset.1 (Finset.mem_filter.1 h).1)
       by_cases hT' : w.under ℤ ∈ T
-      · haveI : w.asIdeal.LiesOver (w.under ℤ).asIdeal := ⟨HeightOneSpectrum.under_asIdeal ℤ w⟩
+      · have : w.asIdeal.LiesOver (w.under ℤ).asIdeal := ⟨HeightOneSpectrum.under_asIdeal ℤ w⟩
         have hv := hval (w.under ℤ) hS w inferInstance
         have hq0 : algebraMap ℚ L (qv (w.under ℤ)) ≠ 0 := by simpa using hqv _ hS
         have hz0 := hzv _ hS
@@ -858,8 +858,8 @@ theorem units_conj_of_minpoly_eq_of_irreducible : ∀ (p : ℕ) [Fact p.Prime] (
       ∃ g : G.Cˣ, (a : G.C) = g * b * ↑g⁻¹ := by
   intro p _ G a b h hirr
   have hb : IsIntegral G.F (b : G.C) := IsIntegral.of_finite G.F _
-  haveI : Fact (Irreducible (minpoly G.F (b : G.C))) := ⟨hirr⟩
-  haveI : FiniteDimensional G.F (AdjoinRoot (minpoly G.F (b : G.C))) :=
+  have : Fact (Irreducible (minpoly G.F (b : G.C))) := ⟨hirr⟩
+  have : FiniteDimensional G.F (AdjoinRoot (minpoly G.F (b : G.C))) :=
     (AdjoinRoot.powerBasis (minpoly.ne_zero hb)).finite
   have ha : Polynomial.aeval (a : G.C) (minpoly G.F (b : G.C)) = 0 := by rw [← h]; exact minpoly.aeval _ _
   obtain ⟨y, hy⟩ := GroundTheory.Brauer.exists_unit_conj (evalQuot _ (b : G.C) (minpoly.aeval _ _))
@@ -1263,9 +1263,9 @@ theorem irreducible_minpoly_inv (G : HTGroup p) (γ : G.Cˣ) (hirr : Irreducible
     Irreducible (minpoly G.F ((γ⁻¹ : G.Cˣ) : G.C)) := by
   have hi : IsIntegral G.F (γ : G.C) := Algebra.IsIntegral.isIntegral _
   set m := minpoly G.F (γ : G.C) with hmdef
-  haveI : Fact (Irreducible m) := ⟨hirr⟩
+  have : Fact (Irreducible m) := ⟨hirr⟩
   have hm0 : m ≠ 0 := minpoly.ne_zero hi
-  haveI : FiniteDimensional G.F (AdjoinRoot m) := (AdjoinRoot.powerBasis hm0).finite
+  have : FiniteDimensional G.F (AdjoinRoot m) := (AdjoinRoot.powerBasis hm0).finite
   have hz : ∀ a : Polynomial G.F, a ∈ Ideal.span {m} → Polynomial.aeval (γ : G.C) a = 0 := by
     intro a ha
     obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton.1 ha
@@ -1356,7 +1356,7 @@ theorem integral_of_term_ne_zero : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) 
       IsIntegral ℤ ((N : ℤ) • (P.γ : G.C)) ∧ IsIntegral ℤ ((N : ℤ) • ((P.γ⁻¹ : G.Cˣ) : G.C)) := open scoped Pointwise in by
   classical
   intro p _ G L f r K φ hr hf hφ
-  letI : Inv (Set G.GAf) := Set.inv
+  let : Inv (Set G.GAf) := Set.inv
   obtain ⟨Ω, hΩc, hΩ⟩ := _root_.GlobalTheory.isTest_support_compact p G L f hf
   obtain ⟨D, hD, hDp⟩ := _root_.GlobalTheory.AwayPDen.charpoly_den_bounded p G (Ω ∪ Ω⁻¹) (hΩc.union hΩc.inv)
   obtain ⟨k, hk⟩ := _root_.GlobalTheory.AtPBd.main p G r K φ hr hφ
@@ -1442,7 +1442,7 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem roots_eig (G : HTGroup p) (P : DPair G) (v : InfinitePlace G.F) (w : ℂ)
     (hw : P.pol.eval₂ v.embedding w = 0) : ∃ x : Fin G.n → ℂ, x ≠ 0 ∧ G.psi v P.γ *ᵥ x = w • x := by
-  letI : Algebra G.F ℂ := v.embedding.toAlgebra
+  let : Algebra G.F ℂ := v.embedding.toAlgebra
   let ψF : G.C →ₐ[G.F] Matrix (Fin G.n) (Fin G.n) ℂ :=
     { G.psi v with
       commutes' := fun x => by
@@ -1451,8 +1451,8 @@ theorem roots_eig (G : HTGroup p) (P : DPair G) (v : InfinitePlace G.F) (w : ℂ
         rfl }
   let Ψ : ℂ ⊗[G.F] G.C →ₐ[ℂ] Matrix (Fin G.n) (Fin G.n) ℂ :=
     Algebra.TensorProduct.lift (Algebra.ofId ℂ _) ψF (fun a _ => Algebra.commute_algebraMap_left a _)
-  haveI : Nontrivial (Matrix (Fin G.n) (Fin G.n) ℂ) := by
-    haveI : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
+  have : Nontrivial (Matrix (Fin G.n) (Fin G.n) ℂ) := by
+    have : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
     infer_instance
   have hinj : Function.Injective Ψ := RingHom.injective (Ψ : ℂ ⊗[G.F] G.C →+* Matrix (Fin G.n) (Fin G.n) ℂ)
   set Γ := G.psi v P.γ with hΓ
