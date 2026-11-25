@@ -2,6 +2,7 @@ module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CompletionDegrees.DenseSurj
 public import Mathlib.NumberTheory.RamificationInertia.Inertia
+public import Mathlib.RingTheory.Ideal.Int
 
 @[expose] public section
 
