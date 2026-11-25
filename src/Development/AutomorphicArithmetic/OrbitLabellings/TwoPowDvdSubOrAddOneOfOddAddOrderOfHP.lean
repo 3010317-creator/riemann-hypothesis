@@ -78,9 +78,6 @@ private theorem cast_eq_one_or_neg_one_iff_dvd (n : ℕ) (a : ℤ) :
 
 theorem UpperTheory.HF.frob_h_order :
     ∀ (φ : Frame) (H : HostAx φ) (p : ℕ), p.Prime → ¬ p ∣ H.condN →
-      (∀ j : ℕ, orderOf (φ.hH (H.frobG p).2) ≤ 2 ^ j ↔
-        ((p : ZMod (2 ^ (φ.e + 2 - j))) = 1 ∨ (p : ZMod (2 ^ (φ.e + 2 - j))) = -1)) ∧
-      (∃ j ≤ φ.e, orderOf (φ.hH (H.frobG p).2) = 2 ^ j) ∧
       2 ^ (φ.e + 2) ≤ (p + 1) * orderOf (φ.hH (H.frobG p).2) ∧
       (φ.hH (H.frobG p).2 = 1 ↔ ((p : ZMod (2 ^ (φ.e + 2))) = 1 ∨ (p : ZMod (2 ^ (φ.e + 2))) = -1)) := by
   intro φ H p hp hpN
@@ -110,29 +107,13 @@ theorem UpperTheory.HF.frob_h_order :
       omega)
     rwa [show 1 + 1 + φ.e = φ.e + 2 by omega] at h
   obtain ⟨i, hi, hord⟩ := (Nat.dvd_prime_pow Nat.prime_two).1 (orderOf_dvd_of_pow_eq_one hx4)
-  have cl1 : ∀ j : ℕ, orderOf x ≤ 2 ^ j ↔
-      ((p : ZMod (2 ^ (φ.e + 2 - j))) = 1 ∨ (p : ZMod (2 ^ (φ.e + 2 - j))) = -1) := by
-    intro j
-    by_cases hj : j ≤ φ.e + 1
-    · obtain ⟨m, hm⟩ : ∃ m, φ.e + 2 - j = m + 1 := ⟨φ.e + 1 - j, by omega⟩
-      rw [hm]
-      have hc := cast_eq_one_or_neg_one_iff_dvd (2 ^ (m + 1)) (p : ℤ)
-      push_cast at hc
-      rw [hc, ← two_pow_dvd_pow_two_pow_sub_or_add_iff j (p : ℤ) hodd m, show m + 1 + j = φ.e + 2 by omega, ← key,
-        ← orderOf_dvd_iff_pow_eq_one, hord, Nat.pow_dvd_pow_iff_le_right (by norm_num),
-        Nat.pow_le_pow_iff_right (by norm_num)]
-    · have h0 : φ.e + 2 - j = 0 := by omega
-      rw [h0, hord]
-      haveI : Subsingleton (ZMod (2 ^ 0)) := ZMod.subsingleton_iff.2 (by norm_num)
-      constructor
-      · intro _
-        exact Or.inl (Subsingleton.elim _ _)
-      · intro _
-        exact Nat.pow_le_pow_right (by norm_num) (by omega)
-  refine ⟨cl1, ⟨i, hi, hord⟩, ?_, ?_⟩
-  · have h := (cl1 i).1 (le_of_eq hord)
+  refine ⟨?_, ?_⟩
+  · obtain ⟨m, hm⟩ : ∃ m, φ.e + 2 - i = m + 1 := ⟨φ.e + 1 - i, by lia⟩
     have hc := cast_eq_one_or_neg_one_iff_dvd (2 ^ (φ.e + 2 - i)) (p : ℤ)
     push_cast at hc
+    have h : (p : ZMod (2 ^ (φ.e + 2 - i))) = 1 ∨ (p : ZMod (2 ^ (φ.e + 2 - i))) = -1 := by
+      rw [hc, hm, ← two_pow_dvd_pow_two_pow_sub_or_add_iff i (p : ℤ) hodd m,
+        show m + 1 + i = φ.e + 2 by lia, ← key, ← orderOf_dvd_iff_pow_eq_one, hord]
     have h2p := hp.two_le
     have hb : ((2 ^ (φ.e + 2 - i) : ℕ) : ℤ) ≤ (p : ℤ) + 1 := by
       push_cast
@@ -187,7 +168,7 @@ theorem UpperTheory.two_pow_dvd_sub_or_add_one_of_odd_addOrderOf_hP :
     have he := D.R.toFrame.even_orderOf_of_hH_ne_one hne
     rw [hord] at he
     exact Nat.not_even_iff_odd.2 ho he
-  obtain ⟨-, -, h3, h4⟩ := UpperTheory.HF.frob_h_order _ D.host.toHostAx p hp hN
+  obtain ⟨h3, h4⟩ := UpperTheory.HF.frob_h_order _ D.host.toHostAx p hp hN
   refine ⟨?_, ?_⟩
   · rcases h4.1 h1 with h | h
     · left
