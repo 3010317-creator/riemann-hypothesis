@@ -70,16 +70,8 @@ theorem lev_q_eq (c : ZMod n) {ζ : LL} (hζ : IsPrimitiveRoot ζ PD.p) (hp : (P
     rw [hE'] at this
     simp only [Nat.cast_zero, zero_add, mul_one] at this
     rw [← this, PowerSeries.coeff_zero_eq_constantCoeff_apply, hE0]
-  have hpow : ∀ k : ℕ, PowerSeries.coeff 1 (E ^ k) = k := by
-    intro k
-    induction k with
-    | zero => simp [PowerSeries.coeff_one]
-    | succ k ih =>
-      rw [pow_succ, PowerSeries.coeff_mul, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
-      simp only [Finset.sum_range_succ, Finset.sum_range_zero, zero_add, Nat.sub_zero,
-        Nat.sub_self, PowerSeries.coeff_zero_eq_constantCoeff_apply, map_pow, hE0, one_pow, hE1, ih]
-      push_cast
-      ring
+  have hpow : ∀ k : ℕ, PowerSeries.coeff 1 (E ^ k) = k := fun k => by
+    rw [PowerSeries.coeff_one_pow, hE1, hE0, one_pow, mul_one, mul_one]
   have hF0 : PowerSeries.constantCoeff (E ^ PD.p - 1) = 0 := by
     rw [map_sub, map_pow, hE0, one_pow, map_one, sub_self]
   obtain ⟨w, hw⟩ := PowerSeries.X_dvd_iff.2 hF0
