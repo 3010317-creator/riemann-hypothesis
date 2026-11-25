@@ -309,8 +309,8 @@ theorem exists_isTransport : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsSt
       GlobalTheory.WeilM.UG (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig) (incM D.host.F JB) →* Module.End ℂ ((κ → AF D.host.F) → ℂ),
                        GlobalTheory.WeilSchrodinger.IsTransport ψ co ω om := by
   intro D ψ hψ S T χS χT _ _ _ _ JA JB ξ hA hB κ _ co hrat ω hω
-  have hS : Formalism.IndefR.DatumF.IsHermND D.sp.cm.sig S.gram :=
-    ⟨S.herm, Formalism.L2.Theta.gram_det_ne S⟩
+  have hS : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsHermND D.sp.cm.sig S.gram :=
+    ⟨fun i j => S.herm.eq (S.frame j) (S.frame i), Formalism.L2.Theta.gram_det_ne S⟩
   have hξ0 : D.host.xi0 ≠ 0 := GlobalTheory.DualPairCompare.embedding_xi_zero_ne_zero D
   obtain ⟨hadd, hinj, hon⟩ := thetaTr_bij co hψ hA hB hrat
   obtain ⟨om, hom⟩ := GlobalTheory.TransportF.exists_transport' _ _ _ hadd (thetaTr_smul co) hinj hon
