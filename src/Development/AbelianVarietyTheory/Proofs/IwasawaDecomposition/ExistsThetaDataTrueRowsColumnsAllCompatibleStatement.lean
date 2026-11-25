@@ -787,7 +787,7 @@ theorem exists_allTied_eqTied_on_of_realised {D : D7}
   obtain ⟨Wf, hE⟩ := hW ψ hψ
   obtain ⟨Tw⟩ := hT
   obtain ⟨Rc, hc, hio, hi⟩ := hR θ hθ ψ hψ Wf
-  obtain ⟨X, T, W, -, rfl, h⟩ := hX θ hθ ψ hψ Wf hE Tw Rc
+  obtain ⟨X, T, W, _, rfl, h⟩ := hX θ hθ ψ hψ Wf hE Tw Rc
   obtain ⟨A, -⟩ := hA
   refine ⟨X, h.tieIo hio, fun μ hμ j hj x y => ?_, A, ⟨T, W, hr⟩,
     fun nch Tp e => ?_⟩
