@@ -141,20 +141,6 @@ def inRat (Y : RdTw x N) (H : ∀ i y, x.r.Y.mj.eW i y = eWB Y i y) (n : InRat x
       lvl := (by with_unfolding_all exact (n.rat.lvl :))
       psi := (by with_unfolding_all exact (n.rat.psi :)) }
 
-def inMt (Y : RdTw x N) (H : ∀ μ h i y, (x.r.Y.IL.jMt μ h i y).1 = jMtB Y μ h i y) (n : InMt x.r.Y (cfOf x) w.I.xi (QOf P)) :
-    InMt Y (⟨(cfOf x).P, (cfOf x).W, (cfOf x).mu0, (cfOf x).eta, (cfOf x).chiPsi, (cfOf x).del, (cfOf x).del', (cfOf x).isMu0, (cfOf x).isEta, (cfOf x).isChi, (cfOf x).isDel, (cfOf x).isDel'⟩) w.I.xi (QOf P) where
-  M := (fun μ j h1 h2 => { n.M μ j h1 h2 with })
-  ad := (by with_unfolding_all exact ((mtAd Y H n.ad) :))
-  mt :=
-    { prod := by with_unfolding_all exact n.mt.prod
-      para := by with_unfolding_all exact n.mt.para
-      uni := by with_unfolding_all exact n.mt.uni
-      hyp := by with_unfolding_all exact n.mt.hyp
-      wt := by with_unfolding_all exact n.mt.wt
-      rat := by with_unfolding_all exact n.mt.rat
-      int := by with_unfolding_all exact n.mt.int
-      full := by with_unfolding_all exact n.mt.full }
-
 end GlobalTheory.HeightCounting.Up.LiTw
 
 end

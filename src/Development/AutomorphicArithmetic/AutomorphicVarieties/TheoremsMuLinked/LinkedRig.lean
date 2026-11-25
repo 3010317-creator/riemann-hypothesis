@@ -73,15 +73,6 @@ def RigPtOf : Prop :=
     (c₁ : Coef l) [Fr.IsCoef l c₁.O] (f : ResidueField c.O →+* ResidueField c₁.O) (n : ℕ)
     (ka : G L Ω →* (Qbar l)ˣ) (_ : CReal k c₁ f n ka), W.Large L c₁ → IsKa σ M ι n ka → RigPt k n ι ka
 
-def LinkedRig : Prop :=
-  ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (c : Coef l)
-    [CharP (ResidueField c.O) l] (N : ℕ) [NeZero N] (e : ℕ) (ψ : DirichletCharacter c.O N)
-    (η : G ℚ Ω →* ℤˣ) (σ g₁ : G ℚ Ω) (B : ValuationSubring Ω) (M : ℕ), LinkHyp c N e η σ B M →
-    ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] [Algebra L Ω] [IsAlgClosure L Ω] (Φ : Fr.Frame l (ResidueField c.O)) (C₀ : ℕ)
-    (k : GalLink η (Chr.Psi l e (Chr.dirG ℚ Ω ψ)) σ g₁ B M L Φ), Φ.Ok C₀ → Φ.Big C₀ →
-    SeedClause c η (Chr.Psi l e (Chr.dirG ℚ Ω ψ)) σ L →
-    RigPt k 3 ι (cycBar L Ω l)⁻¹ ∧ ∃ ka, IsKa σ M ι 2 ka ∧ RigPt k 2 ι ka
-
 end UpperTheory.V.Th
 
 end

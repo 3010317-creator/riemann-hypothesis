@@ -254,47 +254,6 @@ section Char
 variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] [_root_.NumberField.IsTotallyComplex E]
   {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)}
 
-theorem locPar_unr (hL : GlobalTheory.Published.LocalLanglandsGL) (χ : HChar E) (h : IsPlaceOver A w) (hu : χ.UnrAt w) :
-    (ParLaws.locPar hL (CG.ofChar χ) h).unr ∧
-      (ParLaws.locPar hL (CG.ofChar χ) h).frobEig = {(((χ.val w)⁻¹ : ℂˣ) : ℂ)} := by
-  have e : χ.loc w = SmGL.unrChar (w.adicCompletion E) (χ.val w) := by
-    refine MonoidHom.ext fun x => ?_
-    have h2 := unif_spec w
-    have h0 : Valued.v (x : w.adicCompletion E) ≠ 0 := by simp
-    have h1 : IsUnitAt w (x * (atFin w (unif w) ^ ord (w.adicCompletion E) x)⁻¹) := by
-      unfold IsUnitAt IsUnifAt at *
-      rw [Units.val_mul, Units.val_inv_eq_inv_val, Units.val_zpow_eq_zpow_val, map_mul,
-        map_inv₀, map_zpow₀, h2, ← WithZero.exp_zsmul, SphCompletion.ord_completion]
-      simp only [smul_eq_mul, mul_neg, mul_one, neg_neg]
-      rw [WithZero.exp_log h0, mul_inv_cancel₀ h0]
-    have h3 := hu _ h1
-    rw [map_mul, map_inv, map_zpow, mul_inv_eq_one] at h3
-    exact h3
-  obtain ⟨a, ha, ε, -, H⟩ := ParLaws.isRec_locRec hL h
-  have e2 : ParLaws.locPar hL (CG.ofChar χ) h = WD.mk (WDRep.diag h fun _ : Fin 1 => (χ.val w)⁻¹) := by
-    rw [ParLaws.locPar_ofChar, H.one]
-    have : ∀ (ξ : (w.adicCompletion E)ˣ →* ℂˣ) (hξ : WeilDeligne.IsSmooth (ξ.comp a)),
-        ξ = SmGL.unrChar (w.adicCompletion E) (χ.val w) →
-        WD.lpOfChar h (ξ.comp a) hξ = WD.mk (WDRep.diag h fun _ : Fin 1 => (χ.val w)⁻¹) := by
-      rintro ξ hξ rfl
-      exact Test.lpOfChar_unrChar ha _ _
-    exact this _ _ e
-  rw [e2, WD.frobEig_diag]
-  exact ⟨(WD.unr_mk _).2 (WDRep.unr_diag _), by simp⟩
-
-theorem locPar_unr_iff (hL : GlobalTheory.Published.LocalLanglandsGL) (χ : HChar E) (h : IsPlaceOver A w) :
-    (ParLaws.locPar hL (CG.ofChar χ) h).unr ↔ χ.UnrAt w := by
-  obtain ⟨a, ha, ε, -, H⟩ := ParLaws.isRec_locRec hL h
-  rw [ParLaws.locPar_ofChar, H.one, Test.unr_lpOfChar_iff ha (ParLaws.isSmoothChar_loc χ w)]
-  refine forall_congr' fun x => imp_congr_left ?_
-  have h0 : Valued.v (x : w.adicCompletion E) ≠ 0 := by simp
-  rw [← ord_eq_zero_iff, SphCompletion.ord_completion, neg_eq_zero, IsUnitAt]
-  constructor
-  · intro hl
-    rw [← WithZero.exp_log h0, hl, WithZero.exp_zero]
-  · intro hv
-    rw [hv, WithZero.log_one]
-
 end Char
 
 section Eta
@@ -331,18 +290,6 @@ theorem above_eq {w w' : PlE H} (hc : IsConjPl H w w') : aboveF (L := H.E) H.F (
   refine or_congr Iff.rfl ⟨fun h' => (GlobalTheory.Mem.Chr.existsUnique_conjPl _ w).unique h' h1, ?_⟩
   rintro rfl
   exact h1
-
-theorem val_inert (h : IsEtaT H χ) {w : PlE H} (hw : ¬ IsSplitPl H w) : χ.val w = -1 := by
-  have e : aboveF (L := H.E) H.F (w.under (𝓞 H.F)) = {w} := by
-    ext P
-    have : P ∈ aboveF (L := H.E) H.F (w.under (𝓞 H.F)) ↔ P.under (𝓞 H.F) = w.under (𝓞 H.F) := by simp [aboveF]
-    rw [this, Finset.mem_singleton]
-    refine ⟨fun h' => ?_, fun h' => h' ▸ rfl⟩
-    by_contra hne
-    exact hw ((GlobalTheory.Mem.GoodPlace.isSplitPl_iff H w).2 ⟨P, fun h => hne h.symm, h'⟩)
-  have := prod_val h (w.under (𝓞 H.F))
-  rw [e] at this
-  simpa using this
 
 theorem val_split (h : IsEtaT H χ) {w w' : PlE H} (hw : IsSplitPl H w) (hc : IsConjPl H w w') :
     χ.val w * χ.val w' = 1 := by
@@ -381,78 +328,11 @@ theorem frob_symm (w : PlE D.host) (x : WD (D.nd.plOm.2 w)) (h : x.unr) :
     D.naut.frobEig ((T.e w).symm x) = x.frobEig := by
   rw [T.frobEig _ _ ((unr_symm T w x).2 h), Equiv.apply_symm_apply]
 
-theorem dim_symm (w : PlE D.host) (x : WD (D.nd.plOm.2 w)) :
-    D.naut.lpDim ((T.e w).symm x) = x.lpDim := by
-  rw [← T.dim, Equiv.apply_symm_apply]
-
-theorem ofU_spec {χ : HChar D.host.E} (h : χ.IsUnitary) {w} (hu : χ.UnrAt w) :
-    D.naut.unr ((T.e w).symm (ParLaws.locG hL D.nd.plOm (ofU χ h) w)) ∧
-    D.naut.frobEig ((T.e w).symm (ParLaws.locG hL D.nd.plOm (ofU χ h) w)) = {(((χ.val w)⁻¹ : ℂˣ) : ℂ)} := by
-  have := host_isCMField D.host
-  have h1 := locPar_unr hL χ (D.nd.plOm.2 w) hu
-  exact ⟨(unr_symm T w _).2 h1.1, (frob_symm T w _ h1.1).trans h1.2⟩
-
-theorem ofU_unr_iff {χ : HChar D.host.E} (h : χ.IsUnitary) (w) :
-    D.naut.unr ((T.e w).symm (ParLaws.locG hL D.nd.plOm (ofU χ h) w)) ↔ χ.UnrAt w := by
-  have := host_isCMField D.host
-  exact (unr_symm T w _).trans (locPar_unr_iff hL χ (D.nd.plOm.2 w))
 
 
 
 
-def trueK {η : HChar D.host.E} (hη : IsEtaT D.host η) : CGK D.naut :=
-  haveI := host_isCMField D.host
-  have L := ParLaws.laws hL hF D.host D.nd.Om D.nd.plOm
-  have hi : (η⁻¹).IsUnitary := fun x => by
-    have := hη.unitary x
-    change ‖(((η.1 x)⁻¹ : ℂˣ) : ℂ)‖ = 1
-    rw [Units.val_inv_eq_inv_val, norm_inv, this, inv_one]
-  have hu : ∀ w, (η⁻¹).UnrAt w := fun w x hx => by
-    have hloc : (η⁻¹).loc w x = (η.loc w x)⁻¹ := rfl
-    rw [hloc, hη.unr w x hx, inv_one]
-  { CG := fun a => {π : HostCGu D.host a // 0 < a}
-    csd := fun π => π.1.IsCsd
-    ralg := fun π => π.1.IsRegAlg
-    locG := fun π w => (T.e w).symm (ParLaws.locG hL D.nd.plOm π.1 w)
-    locG_dim := fun π w => (dim_symm T w _).trans (L.1 π.1 w)
-    locG_unr_ae := fun π => (L.2.1 π.1).mono fun w hw => (unr_symm T w _).2 hw
-    tw := fun π χ => ⟨π.1.tw χ.1, π.2⟩
-    locG_tw := fun π χ w => (T.e w).injective (by
-      rw [T.char _ _ _ ((dim_symm T w _).trans (L.1 χ.1 w)), Equiv.apply_symm_apply, Equiv.apply_symm_apply,
-        Equiv.apply_symm_apply]
-      exact L.2.2.1 π.1 χ.1 w)
-    infG := fun π τ => π.1.infChar τ
-    infG_card := fun π => L.2.2.2.1 π.1
-    ralg_def := fun π => L.2.2.2.2.1 π.1
-    infG_tw := fun π χ => L.2.2.2.2.2.1 π.1 χ.1
-    csd_tw := fun π χ => L.2.2.2.2.2.2.1 π.1 χ.1
-    csd_unr := fun π w w' hπ hc h => by
-      have h0 := (unr_symm T w _).1 h
-      have h1 := L.2.2.2.2.2.2.2.1 π.1 w w' hπ hc h0
-      exact ⟨(unr_symm T w' _).2 h1.1, by rw [frob_symm T w' _ h1.1, frob_symm T w _ h0, h1.2]⟩
-    etaT := ⟨ofU η hη.unitary, Nat.one_pos⟩
-    etaTinv := ⟨ofU η⁻¹ hi, Nat.one_pos⟩
-    etaT_unr := fun w => (ofU_spec hL T hη.unitary (hη.unr w)).1
-    etaT_inert := fun w hw => by
-      rw [(ofU_spec hL T hη.unitary (hη.unr w)).2, val_inert hη hw]; simp
-    etaTinv_def := fun w => ⟨(ofU_spec hL T hi (hu w)).1, by
-      rw [(ofU_spec hL T hi (hu w)).2, (ofU_spec hL T hη.unitary (hη.unr w)).2]; simp⟩
-    etaT_split := fun w w' hw hc a b ha hb => by
-      rw [(ofU_spec hL T hη.unitary (hη.unr _)).2, Multiset.singleton_inj] at ha hb
-      rw [← ha, ← hb, ← Units.val_mul, ← mul_inv, val_split hη hw hc, inv_one, Units.val_one] }
 
-
-
-
-def trueCG (hE : IsEmpty D.nd.Loc) {η : HChar D.host.E} (hη : IsEtaT D.host η) :
-    CGTrue hL (setCG D hE (trueK hL hF T hη)) (wdCG hE _ T) where
-  e := fun _ => ⟨Subtype.val, Subtype.val_injective⟩
-  surj := fun _ ha π => ⟨⟨π, ha⟩, rfl⟩
-  zero := ⟨fun π => lt_irrefl 0 π.2⟩
-  loc := fun _ _ w => (T.e w).apply_symm_apply _
-  tw := fun _ _ _ => rfl
-  inf := fun _ _ _ => rfl
-  csd := fun _ _ => Iff.rfl
 
 end Family
 
@@ -511,39 +391,6 @@ theorem exists_ofU {R : Ranks} {H : Formalism.BasicNotions.Host R} (σ : HostCGu
 
 
 
-def trueSide (hE : IsEmpty D.nd.Loc) (cf : CharFrame D) (hP : ∀ k v, cf.P.Div k (D.naut.plGw k v)) :
-    CharSide (setCG D hE (trueK hL hF T cf.isEta)) (cfCG hE _ cf) :=
-  haveI := host_isCMField D.host
-  { e1 := (Equiv.subtypeUnivEquiv (fun _ => Nat.one_pos)).trans (CGu.equivChar D.host.E)
-    unr_iff := fun π w => by
-      obtain ⟨χ, h, e⟩ := exists_ofU π.1
-      change D.naut.unr ((T.e w).symm (ParLaws.locG hL D.nd.plOm π.1 w)) ↔ (CGu.equivChar D.host.E π.1).1.UnrAt w
-      rw [e, equivChar_ofU]
-      exact ofU_unr_iff hL T h w
-    frob := fun π w hu => by
-      obtain ⟨χ, h, e⟩ := exists_ofU π.1
-      change (CGu.equivChar D.host.E π.1).1.UnrAt w at hu
-      change D.naut.frobEig ((T.e w).symm (ParLaws.locG hL D.nd.plOm π.1 w)) =
-        {(((CGu.equivChar D.host.E π.1).1.val w)⁻¹ : ℂˣ).1}
-      rw [e, equivChar_ofU] at *
-      exact (ofU_spec hL T h hu).2
-    tw := fun π χ => CGu.equivChar_tw π.1 χ.1
-    infG := fun π a ha g => by
-      obtain ⟨χ, h, e⟩ := exists_ofU π.1
-      change (CGu.equivChar D.host.E π.1).1.HasInfQ (embPsi D.host) a at ha
-      change π.1.1.infChar (embPsi D.host g) = {(a g : ℂ)} ∧
-        π.1.1.infChar ((starRingEnd ℂ).comp (embPsi D.host g)) = {-(a g : ℂ)}
-      rw [e, equivChar_ofU] at *
-      exact infChar_ofChar_of_hasInfQ D.host χ a ha g
-    csd := fun π => by
-      obtain ⟨χ, h, e⟩ := exists_ofU π.1
-      change π.1.1.IsCsd ↔ IsCSD D.host (CGu.equivChar D.host.E π.1).1
-      rw [e, equivChar_ofU]
-      exact isCsd_ofChar_iff D.host χ
-    etaT := equivChar_ofU _ cf.isEta.unitary
-    etaTinv := equivChar_ofU _ cf.isEta.unitary.inv
-    plGw := hP }
-
 end Main
 
 end GlobalTheory.HeightCounting.TrueSide
@@ -551,12 +398,6 @@ end GlobalTheory.HeightCounting.TrueSide
 namespace GlobalTheory.HeightCounting
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.L2.Host NumberField IsDedekindDomain Polynomial
-
-theorem exists_cgTrue_charSide : ∀ hL : GlobalTheory.Published.LocalLanglandsGL, GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ (D : D7)
-    (hE : IsEmpty D.nd.Loc) (T : GlobalTheory.RowTie.WDTie D.nd D.naut) (cf : CharFrame D), (∀ k v, cf.P.Div k (D.naut.plGw k v)) →
-    ∃ K : CGK D.naut, Nonempty (CGTrue hL (setCG D hE K) (wdCG hE K T)) ∧ Nonempty (CharSide (setCG D hE K) (cfCG hE K cf)) :=
-  fun hL hF D hE T cf hP =>
-    ⟨TrueSide.trueK hL hF T cf.isEta, ⟨TrueSide.trueCG hL hF T hE cf.isEta⟩, ⟨TrueSide.trueSide hL hF T hE cf hP⟩⟩
 
 end GlobalTheory.HeightCounting
 

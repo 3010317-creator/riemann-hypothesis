@@ -993,8 +993,6 @@ namespace GlobalTheory.IwaOrbit
 
 variable {D : D7}
 
-alias mul_mem_intAE := _root_.GlobalTheory.IdemPrime.mul_mem_int
-
 theorem intAt_zero {P : Pl D → Prop} : (0 : AE D) ∈ intAt D P :=
   ⟨zero_mem _, by rw [(finPart D).map_zero]; exact zero_mem _⟩
 

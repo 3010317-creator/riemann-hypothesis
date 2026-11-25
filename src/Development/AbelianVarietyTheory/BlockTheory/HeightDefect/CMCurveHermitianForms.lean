@@ -65,10 +65,6 @@ end Pairings
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
-abbrev Zw (H : Host E) : Subalgebra ℤ (𝓞 E) := Algebra.adjoin ℤ ({H.w0} : Set (𝓞 E))
-
-def wz (H : Host E) : Zw H := ⟨H.w0, Algebra.self_mem_adjoin_singleton ℤ H.w0⟩
-
 variable {H : Host E}
 
 structure IsPrincipal {S : Scheme.{0}} (t : SAB H S) : Prop where
@@ -84,9 +80,6 @@ def HasSig (H : Host E) (p q : ℕ) {R : Type} [CommRing R] {G : Over (Sp R)} [G
     (ρ : R) : Prop :=
   ρ ^ 2 = -(H.d : R) ∧
     ∀ (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (β : R →+* k), SigAt H p q act (spMap β) (β ρ)
-
-def herm (D : Datum H) (x y : D.La) : Zw H :=
-  ((D.EF (H.w0 • x) y - D.EF x y : ℤ) : Zw H) + ((D.EF x y : ℤ) : Zw H) * wz H
 
 
 end GlobalTheory.IndefiniteRowSideFullHecke.CMCurveHermitianForms

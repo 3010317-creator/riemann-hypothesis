@@ -148,8 +148,6 @@ def packAll : ∀ u (w : D.what₂.places.Pl) (_h : GIdx D.host (D.mem u).A.T (D
 variable (hd : ∀ u w h, ((packAll D Lc I ψ u w h).gat (rSc sc D.R.k (D.what₂.places.resChar w))
     (epSc D.R sc Ce (D.what₂.places.resChar w))).d = Module.finrank ℂ (D.mem u).A.Mu0)
 
-abbrev record : D7 := recG D sc Ce Lc (packAll D Lc I ψ) hd
-
 end Record
 
 end GlobalTheory.Mem.LocalPack

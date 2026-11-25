@@ -1637,8 +1637,6 @@ open GlobalTheory.Desc
 
 namespace GlobalTheory.Desc.UnionLocal
 
-alias mul_left_comp := _root_.GlobalTheory.Desc.ChartLaw.mul_left_comp
-
 theorem mulAgree_pullback {S S' S₂ P : Scheme.{0}} {H : Over S} [GrpObj H] {H' : Over S'} [GrpObj H'] {A : Over S₂} [GrpObj A]
     {t : S' ⟶ S} {π : H'.left ⟶ H.left} (hπ : IsGrpPullback H' H t π) {h : H.left ⟶ P} {i : A.left ⟶ P}
     (hm : MulAgree H A h i) : MulAgree H' A (π ≫ h) i := by

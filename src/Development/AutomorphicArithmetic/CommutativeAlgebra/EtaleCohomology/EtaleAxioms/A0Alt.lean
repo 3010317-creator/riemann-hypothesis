@@ -421,7 +421,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.EtaleChapterDThree
-alias intersectionNumber_baseChange := _root_.LateralTheory.E.t_D3Cut.goal
 end LateralTheory.Fin.EtaleChapterDThree
 end -- clump:auto
 end -- clump:auto

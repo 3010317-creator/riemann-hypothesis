@@ -556,10 +556,6 @@ open Filter Topology
 
 namespace GlobalTheory.KZ.MeroRoot
 
-theorem rootHs (h : ℂ → ℂ) (m : ℕ) (hm : 0 < m) (hh : DifferentiableOn ℂ h Hs)
-    (hdiv : ∀ τ ∈ Hs, ∀ k : ℤ, meromorphicOrderAt h τ = (k : WithTop ℤ) → (m : ℤ) ∣ k) :
-    ∃ g : ℂ → ℂ, DifferentiableOn ℂ g Hs ∧ ∀ z ∈ Hs, g z ^ m = h z := _root_.GlobalTheory.RootHs.rootHs h m hm hh hdiv
-
 end GlobalTheory.KZ.MeroRoot
 
 namespace GlobalTheory.KZ.MeroRoot
