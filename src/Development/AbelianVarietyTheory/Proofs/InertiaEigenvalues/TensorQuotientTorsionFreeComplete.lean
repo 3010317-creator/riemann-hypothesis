@@ -146,14 +146,10 @@ end Algebra
 
 theorem noZeroSMulDivisors_of_prime {l : ℕ} [Fact l.Prime] {M : Type} [AddCommGroup M]
     [Module ℤ_[l] M] (h : ∀ x : M, (l : ℤ_[l]) • x = 0 → x = 0) : NoZeroSMulDivisors ℤ_[l] M := by
-  have hpow : ∀ (n : ℕ) (x : M), (l : ℤ_[l]) ^ n • x = 0 → x = 0 := by
-    intro n
-    induction n with
-    | zero => intro x hx; simpa using hx
-    | succ n ih =>
-      intro x hx
-      rw [pow_succ, mul_smul] at hx
-      exact h x (ih _ hx)
+  have hreg : IsSMulRegular M (l : ℤ_[l]) := fun a b hab =>
+    sub_eq_zero.1 (h _ (by rw [smul_sub]; exact sub_eq_zero.2 hab))
+  have hpow : ∀ (n : ℕ) (x : M), (l : ℤ_[l]) ^ n • x = 0 → x = 0 := fun n x hx =>
+    hreg.pow n (hx.trans (smul_zero _).symm)
   refine ⟨fun {c x} hcx => ?_⟩
   by_cases hc : c = 0
   · exact Or.inl hc
