@@ -334,7 +334,7 @@ private theorem UpperTheory.V.AlgebraTools.map_mem_dualSubmodule_of_bilinForm_si
   rw [LinearMap.BilinForm.mem_dualSubmodule] at hy ⊢
   intro z hz
   have hz' : r (σ g) (r (σ g)⁻¹ z) = z := by
-    rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one, one_apply_eq_self]
   obtain ⟨a, ha⟩ := Submodule.mem_one.mp (hy _ (hY _ _ hz))
   rw [← hz', hr, ← ha, ← map_mul]
   exact Submodule.mem_one.mpr ⟨_, rfl⟩
@@ -404,7 +404,6 @@ theorem UpperTheory.V.AlgebraTools.almost_selfdual :
           haveI := hDY
           refine Submodule.IsFullLattice.of_le_of_fg F hYW ?_
           haveI : Module.Finite A ↥(Bf.dualSubmodule Y) := Submodule.IsLattice.finite F _
-          have : IsNoetherian A ↥(Bf.dualSubmodule Y) := inferInstance
           have : IsNoetherian A
               ↥(Y ⊔ maximalIdeal A ^ (k + 1) • Bf.dualSubmodule Y : Submodule A V) :=
             isNoetherian_of_le hWD
@@ -952,7 +951,7 @@ theorem UpperTheory.V.Pa.Det.oneBlock :
       _ = _ := by rw [key, Matrix.mul_smul, Matrix.smul_mul]
   obtain ⟨P, H', r', hP, hr'⟩ := UpperTheory.V.AlgebraTools.selfdual_ramified (A := PowerSeries K)
     (F := FractionRing (PowerSeries K)) H₁ r₀ σ u (A' := PowerSeries K)
-    (F' := FractionRing (PowerSeries K)) j₁ f₁ PowerSeries.X PowerSeries.X PowerSeries.X_irreducible
+    (F' := FractionRing (PowerSeries K)) j₁ f₁ PowerSeries.X PowerSeries.X PowerSeries.irreducible_X
     hj₁.symm hf₁ (IsFractionRing.injective _ _) hH₁s hH₁det hσ hsim₀
   have h2u : IsUnit (2 : PowerSeries K) := by
     rw [← map_ofNat (PowerSeries.C (R := K)) 2]

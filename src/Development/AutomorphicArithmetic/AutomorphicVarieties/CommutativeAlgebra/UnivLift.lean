@@ -159,7 +159,6 @@ private theorem sub_co (O : Type) [CommRing O] [IsLocalRing O] [Finite (ResidueF
       exact hx (hunit x hne)
     · intro hx hu
       exact hnon x hu hx
-  haveI : IsNoetherian B B := inferInstance
   have hpow : maximalIdeal B ^ N = ⊥ := by
     rw [eq_bot_iff]
     intro x hx
@@ -323,7 +322,7 @@ private theorem pullback_fin_relation (l : ℕ) [Fact l.Prime] (k : Type) [Field
   have hφopen : ∀ r a b f, IsOpen ((φ r a b f).ker : Set rbar.ker) := by
     intro r a b f
     have hlc' : IsLocallyConstant fun x : rbar.ker => φ r a b f x :=
-      ((r.2.2 a b).comp_continuous continuous_subtype_val).comp
+      ((r.2.2 a b).comp_continuous continuous_subtypeVal).comp
         (fun z => Multiplicative.ofAdd (f z.snd))
     have h := hlc'.isOpen_fiber 1
     convert h using 1

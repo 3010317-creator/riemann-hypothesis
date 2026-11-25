@@ -83,7 +83,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.yEq :
   rw [tsum_mul_right]
   congr 1
   refine tsum_congr fun ξ => ?_
-  rw [map_one, Module.End.one_apply, W.L_apply, hnu, hab]
+  rw [map_one, one_apply_eq_self, W.L_apply, hnu, hab]
   simp
 end -- clump:auto
 end -- clump:auto
@@ -156,7 +156,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.perCont :
   haveI : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using UpperTheory.ConvolutionTheory.R2.M.volD ℚ M⟩
   have hs : Continuous (sZ D) := (szLaws E D).2.1
   have hsz : Continuous fun z : ↥(IdeleGroup.normOneSubgroup E) => sZ D (z : IdeleGroup E) :=
-    hs.comp continuous_subtype_val
+    hs.comp continuous_subtypeVal
   have key : ∀ h : G1 E, (UPer D M fun x => φ.1 (x * gl h)) =
       ∫ z in normOneFundamentalDomain E, Φ (sZ D (z : IdeleGroup E) * gl h) ∂normOneMeasure E := by
     intro h
@@ -266,7 +266,7 @@ private theorem unf {G H ι : Type} [Group G] [TopologicalSpace G] [IsTopologica
   have h2 : ∀ x, ∑' i, ∫⁻ g, f (x, j g * ((r i)⁻¹ * x)) ∂ν = ∑' γ : Γ', K ((γ : G)⁻¹ * x) := by
     intro x
     simp_rw [h1]
-    rw [← ENNReal.tsum_prod' (f := fun q : ι × Γ => ∫⁻ g in DH, f (x, (j g)⁻¹ * (((e q : Γ') : G)⁻¹ * x)) ∂ν),
+    rw [← tsum_prod' (f := fun q : ι × Γ => ∫⁻ g in DH, f (x, (j g)⁻¹ * (((e q : Γ') : G)⁻¹ * x)) ∂ν),
       ← (Equiv.ofBijective e he).tsum_eq (fun γ : Γ' => K ((γ : G)⁻¹ * x))]
     refine tsum_congr fun q => lintegral_congr fun g => ?_
     have := hinv _ (Γ'.inv_mem (e q).2) x ((j g)⁻¹ * (((e q : Γ') : G)⁻¹ * x))
@@ -311,12 +311,12 @@ theorem absUnf : AbsUnf := by
         ≤ ∫⁻ p : G × ι, ∫⁻ g, ‖c (j g * ((r p.2)⁻¹ * p.1)) * φ p.1‖ₑ ∂ν ∂((μ.restrict DG).prod Measure.count) := by
           refine lintegral_mono fun p => ?_
           rw [← integral_mul_const]
-          exact enorm_integral_le_lintegral_enorm _
+          exact eNorm_integral_le_lintegral_eNorm _
       _ = ∫⁻ y, ∫⁻ g in DH, ‖c y * φ (j g * y)‖ₑ ∂ν ∂μ :=
           U (fun q => ‖c q.2 * φ q.1‖ₑ) (by fun_prop) (fun γ hγ x y => by simp only [hφinv γ hγ x])
       _ ≤ ∫⁻ y, ∫⁻ g in DH, ‖c y‖ₑ * ENNReal.ofReal B ∂ν ∂μ := by
           refine lintegral_mono fun y => lintegral_mono fun g => ?_
-          rw [enorm_mul]
+          rw [eNorm_mul]
           gcongr
           exact hBe _
       _ = ENNReal.ofReal B * ν DH * ∫⁻ y, ‖c y‖ₑ ∂μ := by
@@ -455,7 +455,6 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.zOne :
   haveI := M.haar
   haveI := M.right
   haveI : DiscreteMeasurableSpace (Orb D.δ) := ⟨fun _ => trivial⟩
-  haveI : Countable (Orb D.δ) := inferInstance
   obtain ⟨hcont, hleft⟩ := (UpperTheory.ConvolutionTheory.RankTwoDescent.decE E P φ hφ).1
   simp only [pY_eq, el_eq]
   generalize ((z : IdeleGroup E) : (A E)ˣ) = zz
@@ -534,7 +533,7 @@ private theorem int_prod {Z P : Type} [MeasurableSpace Z] [MeasurableSpace P] (m
     (h : ∀ᵐ z ∂m, ∫⁻ p, ‖F (z, p)‖ₑ ∂n ≤ K) : Integrable F (m.prod n) := by
   refine ⟨hF.aestronglyMeasurable, ?_⟩
   unfold HasFiniteIntegral
-  rw [lintegral_prod _ hF.enorm.aemeasurable]
+  rw [lintegral_prod _ hF.eNorm.aemeasurable]
   refine (lintegral_mono_ae h).trans_lt ?_
   rw [lintegral_const]
   exact ENNReal.mul_lt_top hK (measure_lt_top _ _)
@@ -548,7 +547,7 @@ private theorem swap_int {Z X T : Type} [MeasurableSpace Z] [MeasurableSpace X] 
   have h2 : Integrable (fun p : Z × X => B * l.real Set.univ * ‖c p.2‖) (m.prod n) :=
     (hc.norm.comp_snd m).const_mul _
   have h3 : ∀ᵐ p : Z × X ∂(m.prod n), p.1 ∈ S :=
-    Measure.QuasiMeasurePreserving.ae Measure.quasiMeasurePreserving_fst hS
+    QuasiMeasurePreserving.ae Measure.quasiMeasurePreserving_fst hS
   rw [integral_integral_swap]
   · refine integral_congr_ae (ae_of_all _ fun y => ?_)
     exact integral_const_mul _ _
@@ -582,7 +581,6 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.zAll :
   haveI := N.haar
   haveI : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using UpperTheory.ConvolutionTheory.R2.M.volD ℚ M⟩
   haveI : IsFiniteMeasure ((normOneMeasure E).restrict (normOneFundamentalDomain E)) := ⟨by simpa using hfin⟩
-  haveI : Countable (Orb D.δ) := inferInstance
   have hci : Integrable c N.μ := hc.integrable_of_hasCompactSupport hcs
   obtain ⟨B, hB⟩ := bddE E P φ hφ _ (hC.image hsZ)
   obtain ⟨B', hB'⟩ := bddE E P φ hφ _
@@ -597,7 +595,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.zAll :
   have hG : Continuous fun p : (↥(IdeleGroup.normOneSubgroup E) × G1 E) × G1 ℚ =>
       φ.1 (em E (gl p.2) * sZ D (p.1.1 : IdeleGroup E) * gl p.1.2) :=
     hφc.comp (((cont_em.comp (UpperTheory.ConvolutionTheory.R2.M.continuous_gl.comp continuous_snd)).mul
-      (hsZ.comp (continuous_subtype_val.comp (continuous_fst.comp continuous_fst)))).mul
+      (hsZ.comp (continuous_subtypeVal.comp (continuous_fst.comp continuous_fst)))).mul
       (UpperTheory.ConvolutionTheory.R2.M.continuous_gl.comp (continuous_snd.comp continuous_fst)))
   have hsw := swap_int ((normOneMeasure E).restrict (normOneFundamentalDomain E)) N.μ (M.μ.restrict M.D) hc.measurable hci
     hG.measurable (ae_restrict_mem hS) (B := B') (fun z hz y hy g => by
@@ -650,7 +648,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.coefPer :
     push_cast
     rfl
   simp only [e, integral_complex_ofReal, Complex.ofReal_eq_zero] at h2
-  refine (Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (μ := N.μ) (x := h) (χ.continuous.mul (hU.norm.pow 2))
+  refine (Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (μ := N.μ) (x := h) (χ.continuous.mul (hU.norm.pow 2))
     hs.mul_right (fun y => mul_nonneg (h01 y).1 (sq_nonneg ‖U y‖)) ?_).ne' h2
   have : χ h = 1 := h1 rfl
   change χ h * ‖U h‖ ^ 2 ≠ 0

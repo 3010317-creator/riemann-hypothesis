@@ -123,7 +123,6 @@ theorem UpperTheory.V.Pa.BC.base_bc :
   intro l _ L G0 n O O' _ _ _ _ _ _ _ _ _ _ _ _ _ r r' B _ _ _ _ u u' J D b τ hr hu hτ
   haveI := b.free
   haveI := b.fin
-  haveI : IsNoetherianRing (abelian₂ O Empty D) := inferInstance
   haveI : Module.Finite B b.M := _root_.UpperTheory.Reformulated.B.Qh10.fin_of_hom b.lam b.smul_lam
   obtain ⟨e, -, he⟩ := UpperTheory.V.Pa.BC.til_mod O O' (abelian₂ O Empty D) B b.lam b.M b.smul_lam
   let lam' : abelian₂ O' Unit D →ₐ[O'] Til O O' B := (Til.map O' b.lam).comp (τ.symm : abelian₂ O' Unit D →ₐ[O'] _)
@@ -308,7 +307,7 @@ theorem UpperTheory.V.Pa.BC.quot_bc :
       intro r hr x _
       rw [LinearMap.mem_ker, map_smul]
       exact Module.mem_annihilator.1 (hann hr) _)
-  refine ⟨LinearEquiv.ofLinear φ χ ?_ ?_⟩
+  refine ⟨LinearEquiv.ofLinearMap φ χ ?_ ?_⟩
   · apply Submodule.linearMap_qext
     apply TensorProduct.AlgebraTensorModule.ext
     intro a m
@@ -931,7 +930,7 @@ private theorem UpperTheory.V.Pa.BC.tl_option {σ R : Type} [CommRing R] (p : Mv
       ext a
       cases a with
       | none =>
-        rw [Finsupp.embDomain_notin_range _ _ _ (by simp)]
+        rw [Finsupp.embDomain_of_notMem_range _ _ _ (by simp)]
         simp
       | some v =>
         rw [show (some v : Option σ) = Function.Embedding.some v from rfl, Finsupp.embDomain_apply_self]
@@ -942,7 +941,7 @@ private theorem UpperTheory.V.Pa.BC.tl_option {σ R : Type} [CommRing R] (p : Mv
     rintro ⟨y, hy⟩
     apply hk
     have hn := congrArg (fun z : Option σ →₀ ℕ => z none) hy
-    simpa [Finsupp.mapDomain_notin_range] using hn.symm
+    simpa [Finsupp.mapDomain_of_notMem_range] using hn.symm
 
 private theorem UpperTheory.V.Pa.BC.tl_map_bij {A B : Type} [CommRing A] [CommRing B] (e : A ≃+* B) :
     Function.Bijective (PowerSeries.map (e : A →+* B)) := by

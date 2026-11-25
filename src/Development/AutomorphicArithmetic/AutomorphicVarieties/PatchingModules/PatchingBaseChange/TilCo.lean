@@ -101,7 +101,6 @@ theorem UpperTheory.V.CA.cl_bc :
           rw [Algebra.smul_def, Algebra.smul_def, map_mul]
           congr 1 }
     exact Module.Finite.of_surjective e c.surjective
-  haveI : IsNoetherianRing R := inferInstance
   haveI : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
   let f : O' →ₐ[O] ResidueField O' := IsScalarTower.toAlgHom O O' (ResidueField O')
   let g : R →ₐ[O] ResidueField O' :=
@@ -178,7 +177,7 @@ theorem UpperTheory.V.Pa.BC.til_co :
     | add x y hx hy => exact RingHom.IsIntegralElem.add f hx hy
   have hloc : IsLocalHom f := by
     refine ((IsLocalRing.local_hom_tfae f).out 1 5).mpr ?_
-    haveI := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' f hint (maximalIdeal (O' ⊗[O] R))
+    haveI := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal f hint (maximalIdeal (O' ⊗[O] R))
     exact IsLocalRing.eq_maximalIdeal this
   haveI hco : IsCO O' (Til O O' R) := UpperTheory.V.Alg.co_mvps O' (O' ⊗[O] R) Unit
   refine ⟨hco, ?_, ?_⟩

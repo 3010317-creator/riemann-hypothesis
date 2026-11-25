@@ -303,7 +303,7 @@ theorem aestronglyMeasurable_out {E : Type} [NormedAddCommGroup E] [SecondCounta
   have hl : LeftInv (Γ.subgroupOf N) (fun n : N => Φ (n * g)) := fun γ hγ n => by
     simp only [Subgroup.coe_mul, mul_assoc]; exact hinv _ hγ _
   have hm : Measurable (fun n : N => Φ (n * g)) :=
-    (hΦ.comp ((continuous_subtype_val).mul continuous_const)).measurable
+    (hΦ.comp ((continuous_subtypeVal).mul continuous_const)).measurable
   have hq : Measurable (descend (Γ.subgroupOf N) (fun n : N => Φ (n * g))) := by
     refine measurable_from_quotient.2 ?_
     have e : (descend (Γ.subgroupOf N) (fun n : N => Φ (n * g))) ∘ Quotient.mk'' = fun n : N => Φ (n * g) :=
@@ -318,7 +318,7 @@ theorem exists_bound {T E : Type} [TopologicalSpace T] [NormedAddCommGroup E] (h
     (g : G) {S : Set T} (hS : IsCompact S) : ∃ C, ∀ (n : N) t, t ∈ S → ‖Ψ (n * g) t‖ ≤ C := by
   obtain ⟨K, hK, hs⟩ := hc
   obtain ⟨C, hC⟩ := (hK.prod hS).exists_bound_of_continuousOn (f := fun p : N × T => Ψ (p.1 * g) p.2)
-    (hΨ.comp (((continuous_subtype_val.comp continuous_fst).mul continuous_const).prodMk continuous_snd)).continuousOn
+    (hΨ.comp (((continuous_subtypeVal.comp continuous_fst).mul continuous_const).prodMk continuous_snd)).continuousOn
   refine ⟨C, fun n t ht => ?_⟩
   obtain ⟨γ, hγ, hk⟩ := hs n
   have e : Ψ (((γ * n : N) : G) * g) t = Ψ (n * g) t := by
@@ -544,7 +544,7 @@ theorem chart_general {E : Type} [NormedRing E] [NormedAlgebra ℝ E] [FiniteDim
     ∃ s : E → (Fin d → ℝ), ContinuousAt s 1 ∧
       ∀ᶠ g in 𝓝 (1 : E), σ g * g = 1 →
         g = (List.ofFn fun a => NormedSpace.exp (s g a • Z a)).prod := by
-  have : CompleteSpace E := FiniteDimensional.complete ℝ E
+  have : CompleteSpace E := FiniteDimensional.completeSpace ℝ E
   let : NormedAlgebra ℚ E := NormedAlgebra.restrictScalars ℚ ℝ E
   have hexp : ∀ a, σ (NormedSpace.exp a) = NormedSpace.exp (σ a) := fun a => by
     have hp : ∀ m : ℕ, σ (a ^ m) = σ a ^ m := fun m => by
@@ -701,12 +701,12 @@ def lieU {n : ℕ} (H : Matrix (Fin n) (Fin n) ℂ) : Submodule ℝ (Matrix (Fin
   carrier := {X | Xᴴ * H + H * X = 0}
   add_mem' := by
     intro X Y hX hY
-    simp only [Set.mem_setOf_eq] at *
+    simp only [Set.mem_ofPred_eq] at *
     rw [conjTranspose_add, Matrix.add_mul, Matrix.mul_add, add_add_add_comm, hX, hY, add_zero]
   zero_mem' := by simp
   smul_mem' := by
     intro c X hX
-    simp only [Set.mem_setOf_eq] at *
+    simp only [Set.mem_ofPred_eq] at *
     rw [conjTranspose_smul, star_trivial, smul_mul_assoc, mul_smul_comm, ← smul_add, hX, smul_zero]
 
 theorem exists_realLines_chart : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∃ (d : ℕ) (δ : Fin d → ℝ → GAd σ J), (∀ a, IsRealLine σ J (δ a)) ∧
@@ -912,7 +912,7 @@ theorem isSmModOn_constTermOn (h : IsCMExt F E σ) (hJ : IsHermND σ J) {r : ℕ
     obtain ⟨M, hM⟩ := hφ.growth
     obtain ⟨K0, hK0, hs'⟩ := id hco
     haveI := hco.isProbabilityMeasure
-    obtain ⟨A, hA⟩ := (hK0.image continuous_subtype_val).exists_bound_of_continuousOn
+    obtain ⟨A, hA⟩ := (hK0.image continuous_subtypeVal).exists_bound_of_continuousOn
       (f := fun x => (height σ J x : ℝ)) (NNReal.continuous_coe.comp (continuous_height_GAd σ J)).continuousOn
     refine ⟨M, fun l hl => ?_⟩
     obtain ⟨B, hB⟩ := hM l hl
@@ -1283,7 +1283,7 @@ theorem good_of_mem_pairSpan (hW : IsWittFrame D.sp.cm.sig V.gram X Y) (T : Fins
     have hleft := GlobalTheory.UAut.ConstAut.leftInv_foldr
       (Γ := (GQ V ⊓ unip D.sp.cm.sig V.gram X T : Subgroup (GA D V))) (φ := φ) (fun γ hγ x => hφ.left γ hγ x) l
     refine GlobalTheory.integrableOn_fundamentalDomain_of_cocompact _ _ C hC hcov μ hμ 𝓕 h𝓕 _
-      (hcont.comp (continuous_subtype_val.mul continuous_const)) fun γ hγ u => ?_
+      (hcont.comp (continuous_subtypeVal.mul continuous_const)) fun γ hγ u => ?_
     simp only [Subgroup.coe_mul, mul_assoc]
     exact hleft γ ⟨Subgroup.mem_subgroupOf.1 hγ, γ.2⟩ _
   | zero => exact ⟨integrableOn_zero, by simp⟩
@@ -1435,7 +1435,6 @@ theorem finite_formsOn [∀ τ, FiniteDimensional ℂ (W τ)] (hθ : IsInfFam θ
     exact FiniteDimensional.of_injective ι fun a b h =>
       Subtype.ext (Subtype.ext (congrArg (fun z => z.1) h))
   haveI := hfin
-  haveI : FiniteDimensional ℂ (LinearMap.range Ψ) := inferInstance
   haveI : FiniteDimensional ℂ (A ⧸ LinearMap.ker Ψ) := Module.Finite.equiv Ψ.quotKerEquivRange.symm
   exact Module.Finite.of_submodule_quotient (LinearMap.ker Ψ)
 
@@ -1581,7 +1580,6 @@ theorem finite_of_cusp_of_constTerm {D : D7} (θ : D.what₂.Tau → (Ainf D.hos
         map_smul' := fun _ _ => rfl }
     exact FiniteDimensional.of_injective ι fun a b h =>
       Subtype.ext (Subtype.ext (congrArg (fun z => z.1) h))
-  haveI : FiniteDimensional ℂ (LinearMap.range Ψ) := inferInstance
   haveI : FiniteDimensional ℂ (S ⧸ LinearMap.ker Ψ) := Module.Finite.equiv Ψ.quotKerEquivRange.symm
   exact Module.Finite.of_submodule_quotient (LinearMap.ker Ψ)
 

@@ -184,7 +184,6 @@ theorem GlobalTheory.LagrThetaInv.lagrInt_rho_inv_k : ∀ (F E :
     ⟨fun a r x => add_left_comm a (r : WOF F E nS nT) x⟩
   have : Countable (ratLF F E nS nT) := by
     have : Countable E := by
-      have : FiniteDimensional ℚ E := inferInstance
       exact ((Module.finBasis ℚ E).equivFun).injective.countable
     have : Countable (Matrix (Fin nT) (Fin nS) E) := inferInstanceAs (Countable (Fin nT → Fin nS → E))
     exact (Set.countable_range ((incAF F E).toAddMonoidHom.mapMatrix (m := Fin nT) (n := Fin nS))).to_subtype

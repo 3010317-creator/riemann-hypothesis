@@ -90,7 +90,7 @@ theorem UpperTheory.Gal.Wt.autCrit_of :
     rw [mul_inv_cancel_left] at this
     exact this.symm
   · refine GlobalTheory.CuspRep.isOpen_stab_of_mem_nhds ((RU E a).comp (finU (E := E) (n := a)).subtype) _ ?_
-    have ho : IsOpen ((Subtype.val : finU (E := E) (n := a) → UA E a) ⁻¹' Wn) := hWo.preimage continuous_subtype_val
+    have ho : IsOpen ((Subtype.val : finU (E := E) (n := a) → UA E a) ⁻¹' Wn) := hWo.preimage continuous_subtypeVal
     refine Filter.mem_of_superset (ho.mem_nhds hW1) fun k hk => ?_
     have hk' : (k : UA E a) ∈ C := by
       refine hNC ⟨?_, k.2⟩
@@ -126,8 +126,7 @@ theorem UpperTheory.Gal.Wt.autMul_of :
     UpperTheory.Gal.Wt.AutMul := by
   intro E _ _ _ a φ ψ hφ hψ
   refine ⟨hφ.cont.mul hψ.cont, fun γ hγ g => ?_, ?_, ?_⟩
-  · change φ (γ * g) * ψ (γ * g) = φ g * ψ g
-    rw [hφ.left γ hγ, hψ.left γ hγ]
+  · rw [hφ.left γ hγ, hψ.left γ hγ]
   · refine isOpen_stab_of_mem_nhds ((RU E a).comp (finU (E := E) (n := a)).subtype) (fun g => φ g * ψ g) ?_
     refine Filter.mem_of_superset ((hφ.level.inter hψ.level).mem_nhds ⟨?_, ?_⟩) fun k hk => ?_
     · change RU E a 1 φ = φ
@@ -463,7 +462,7 @@ theorem UpperTheory.Gal.Wt.wtBd_of :
     push Not at hlt
     obtain ⟨L, hL⟩ := exists_dual hw
     have h0 := hz1 _ (hD (psum κ k) s _ hlt (hS a k κ w L).1 (hexp L))
-    simp only [tor_one, map_one, Module.End.one_apply] at h0
+    simp only [tor_one, map_one, one_apply_eq_self] at h0
     exact hL h0
 end -- clump:auto
 end -- clump:auto
@@ -491,7 +490,7 @@ private theorem chiZ_injective : Function.Injective chiZ := by
   have hk : m - n ≠ 0 := sub_ne_zero.mpr hmn
   set z : Circle := Circle.exp (Real.pi / (m - n : ℤ)) with hz
   have hpow : (z : ℂ) ^ (m - n) = -1 := by
-    rw [hz, Circle.coe_exp, ← Complex.exp_int_mul]
+    rw [hz, Circle.coe_exp, ← Complex.exp_intCast_mul]
     have : ((m - n : ℤ) : ℂ) * (((Real.pi / ((m - n : ℤ) : ℝ) : ℝ) : ℂ) * Complex.I) = Real.pi * Complex.I := by
       have hk' : ((m - n : ℤ) : ℂ) ≠ 0 := by exact_mod_cast hk
       push_cast
@@ -567,9 +566,9 @@ theorem UpperTheory.Gal.Wt.famEx_of : NeatLev → EllC → Twist → TwistBd →
   have : CompactSpace C := isCompact_iff_compactSpace.1 hC.compact
   let φ : C →* GL (Fin a) ℂ := κ.comp C.subtype
   have hφI : ∀ c : C, IntGL ι (φ c) := fun c => hκI _ (hint _ c.2)
-  obtain ⟨Q, _, c, P, hQ⟩ := hP l ι a C φ (fun i j => (hκc i j).comp continuous_subtype_val) hφI
+  obtain ⟨Q, _, c, P, hQ⟩ := hP l ι a C φ (fun i j => (hκc i j).comp continuous_subtypeVal) hφI
     ((Kv.comap (cLoc v')).subgroupOf C)
-    (hKo.preimage ((GlobalTheory.BCT.GlobLev.continuous_cLoc v').comp continuous_subtype_val))
+    (hKo.preimage ((GlobalTheory.BCT.GlobLev.continuous_cLoc v').comp continuous_subtypeVal))
     (fun x hx => by
       have h1 : cLoc v' x.1 = 1 := (hκ1 _).1 hx
       change cLoc v' x.1 ∈ Kv
@@ -708,7 +707,7 @@ theorem UpperTheory.Gal.Wt.famOf_of : ExpBasic → PevExp → SqExp → TopUp �
     have : delta ν (X q * (n g * (y₁ * b))) = chi ν b * delta ν (X q * (n g * y₁)) := by
       have e : X q * (n g * (y₁ * b)) = X q * (n g * y₁) * b := by simp only [mul_assoc]
       unfold delta
-      rw [e, map_mul, Module.End.mul_apply, hT a ν b hb, map_smul, map_smul, smul_eq_mul]
+      rw [e, map_mul, mul_apply_eq_comp, hT a ν b hb, map_smul, map_smul, smul_eq_mul]
     rw [this]; ring
   · intro k x hx y₁ y₂ v g
     simp only [famOf_apply]
@@ -718,7 +717,7 @@ theorem UpperTheory.Gal.Wt.famOf_of : ExpBasic → PevExp → SqExp → TopUp �
       have := (hS a k ν (sqRep ℂ a ν y₁ (top ν)) ((ev1 ν) ∘ₗ (sqRep ℂ a ν (X q * n g)))).1
       refine (congrArg (· ∈ ExpLe (psum ν k)) (funext fun z => ?_)).mpr this
       rw [delta, LinearMap.comp_apply, ← mul_assoc (X q), map_mul (sqRep ℂ a ν) (X q * n g), map_mul (sqRep ℂ a ν) (tor a k z),
-        Module.End.mul_apply, Module.End.mul_apply]
+        mul_apply_eq_comp, mul_apply_eq_comp]
     have h3 := (hd₀ k x hx v ((LinearMap.proj g) ∘ₗ (f q).1)).1
     refine (hmono _ _ ?_).1 (hLe _ _ _ _ (hLe _ _ _ _ h1 h2) h3)
     have : (P q).totalDegree ≤ Finset.univ.sup (fun q => (P q).totalDegree) :=
@@ -938,8 +937,8 @@ theorem famSum_of : ExpBasic → EvLem → TorFacts → QR → WtBd → EmbProj 
       obtain ⟨u, b, hb, rfl⟩ := hQR a y₁
       obtain ⟨x', -, h2⟩ := hxu u
       have e1 := hB.inf x' 1 ((cEmb τ x'.1)⁻¹ * y₂) (W.rep x'⁻¹ v)
-      rw [h, map_zero, mul_one, mul_inv_cancel_left, ← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one,
-        Module.End.one_apply, h2] at e1
+      rw [h, map_zero, mul_one, mul_inv_cancel_left, ← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one,
+        one_apply_eq_self, h2] at e1
       rw [hB.up b hb, ← e1, smul_zero] at hv
       exact hv rfl
     obtain ⟨p, hp0, hp⟩ := hEP E a τ U hU κ hκ _ (hBU 1 y v') hv'
@@ -1159,7 +1158,7 @@ theorem UpperTheory.Gal.Wt.nearSub_of :
         = ⋂ i, ⋂ j, (fun g => ι.symm (((φ g : GL (Fin a) ℂ) : Matrix (Fin a) (Fin a) ℂ) i j)) ⁻¹'
             Metric.closedBall (ι.symm ((1 : Matrix (Fin a) (Fin a) ℂ) i j)) ε := by
       ext g
-      simp only [Set.mem_setOf_eq, NearOne, map_sub, Set.mem_iInter, Set.mem_preimage,
+      simp only [Set.mem_ofPred_eq, NearOne, map_sub, Set.mem_iInter, Set.mem_preimage,
         Metric.mem_closedBall, dist_eq_norm]
     show IsOpen ({g | NearOne ι ε (φ g)} : Set Γ)
     rw [hset]
@@ -1196,7 +1195,7 @@ theorem UpperTheory.Gal.Wt.nrmAut_of :
       rw [hn.inf x.1 x.2 g, mul_assoc]
     rw [he]
     exact hpc.comp (continuous_const.mul
-      (((GlobalTheory.AutRec.continuous_cEmb_emb τ).comp continuous_subtype_val).mul continuous_const))
+      (((GlobalTheory.AutRec.continuous_cEmb_emb τ).comp continuous_subtypeVal).mul continuous_const))
   · have he : RU E a x (fun g => p (n g * y)) = fun g => p (n g * (cEmb τ x * y)) := by
       funext g
       change p (n (g * x) * y) = _
@@ -1497,7 +1496,6 @@ private theorem rFin_of_rep {a : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
   rfl
 
 private theorem rFin_delta {a : ℕ} (ν : DomWeight a) (X : GL (Fin a) ℂ) : RFin fun n => delta ν (X * n) := by
-  have : FiniteDimensional ℂ (nablaSq ℂ a ν) := inferInstance
   exact rFin_of_rep (sqRep ℂ a ν) (ev1 ν) (top ν) X (GlobalTheory.BCT.TrKer.continuous_coef_sqRep a ν (top ν) (ev1 ν))
 
 theorem UpperTheory.Gal.Wt.rFinEx_of :
@@ -1601,7 +1599,7 @@ theorem UpperTheory.Gal.Wt.topUp_of :
   have hdiag : ∀ i, (b : Matrix (Fin a) (Fin a) ℂ) i i ≠ 0 := by
     have hdet : (b : Matrix (Fin a) (Fin a) ℂ).det ≠ 0 :=
       ((Matrix.isUnit_iff_isUnit_det _).mp b.isUnit).ne_zero
-    rw [Matrix.det_of_upperTriangular hbt] at hdet
+    rw [Matrix.det_of_isUpperTriangular hbt] at hdet
     exact fun i => (Finset.prod_ne_zero_iff.mp hdet) i (Finset.mem_univ i)
   let t : Fin a → ℂˣ := fun i => Units.mk0 _ (hdiag i)
   set D := diagGL ℂ a t with hD
@@ -1631,7 +1629,7 @@ theorem UpperTheory.Gal.Wt.topUp_of :
     rw [hc] at h
     exact h
   calc (sqRep ℂ a κ b) (top κ) = (sqRep ℂ a κ D) ((sqRep ℂ a κ u) (top κ)) := by
-        rw [hbu, map_mul, Module.End.mul_apply]
+        rw [hbu, map_mul, mul_apply_eq_comp]
     _ = chi κ b • top κ := by rw [hfix, hscal]
 end -- clump:auto
 end -- clump:auto
@@ -1732,7 +1730,7 @@ private theorem isOpen_subgroupOf {E : Type} [Field E] [NumberField E] [IsCMFiel
   obtain ⟨N, hNo, h1N, hNC⟩ := hC₀.isOpen
   refine Subgroup.isOpen_of_mem_nhds (g := 1) _ ?_
   refine Filter.mem_of_superset
-    ((hNo.preimage continuous_subtype_val).mem_nhds (show ((1 : C) : UA E a) ∈ N from h1N)) ?_
+    ((hNo.preimage continuous_subtypeVal).mem_nhds (show ((1 : C) : UA E a) ∈ N from h1N)) ?_
   intro x hx
   exact Subgroup.mem_subgroupOf.2 (hNC ⟨hx, hC.fin x.2⟩)
 
@@ -1822,7 +1820,7 @@ theorem UpperTheory.Gal.Wt.twist_of :
     have h : (fun x : infU E a => F v (g * x)) = fun x : infU E a => f.1 v (g * x * e g) :=
       funext fun x => hinf x x.2 v g
     rw [h]
-    exact (f.2.1 v).cont.comp ((continuous_const.mul continuous_subtype_val).mul continuous_const)
+    exact (f.2.1 v).cont.comp ((continuous_const.mul continuous_subtypeVal).mul continuous_const)
   exact ⟨⟨F, haut, heqv⟩, UpperTheory.Gal.Gen.mem_fixedBy.2 fun k hk v g => hlev k hk v g, fun _ _ => rfl⟩
 end -- clump:auto
 end -- clump:auto

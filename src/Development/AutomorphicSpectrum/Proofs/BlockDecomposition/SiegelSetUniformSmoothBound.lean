@@ -182,7 +182,7 @@ theorem norm_le_of_entries {X : Matrix (Fin n) (Fin n) ℂ} {r : ℝ} (hr : 0 �
     refine Finset.sup_le fun i _ => ?_
     calc ∑ j, ‖X i j‖₊ ≤ ∑ _j : Fin n, r.toNNReal :=
           Finset.sum_le_sum fun j _ => by
-            rw [← NNReal.coe_le_coe, coe_nnnorm, Real.coe_toNNReal _ hr]
+            rw [← NNReal.coe_le_coe, coe_nnNorm, Real.coe_toNNReal _ hr]
             exact h i j
       _ = (n : ℝ≥0) * r.toNNReal := by simp
   have key' := NNReal.coe_le_coe.mpr key
@@ -215,7 +215,6 @@ theorem one_place (h : IsCMExt F E σ) (hJ : IsHermND σ J) (τ : EmbOver E w) :
           ‖ψ (g * embArch σ J w y) - ψ g‖ ≤ C * δ * ∑ i, c i := by
   have hA := isUnit_det_map hJ τ.1
   obtain ⟨δ₁, C₀, h1, hlog⟩ := GlobalTheory.UnitaryLog.exists_log_unitary n (J.map τ.1) hA
-  haveI : FiniteDimensional ℝ (LieL (J.map τ.1)) := inferInstance
   haveI : ProperSpace (LieL (J.map τ.1)) := FiniteDimensional.proper_real _
   let b := Module.finBasis ℝ (LieL (J.map τ.1))
   obtain ⟨K₀, hK₀, hco⟩ := GlobalTheory.CuspGeo.MeanValue.exists_coord_bound b
@@ -226,7 +225,7 @@ theorem one_place (h : IsCMExt F E σ) (hJ : IsHermND σ J) (τ : EmbOver E w) :
     change Continuous fun Y => archMat σ J τ (yOf Y) i j
     simp only [hy2]
     have : Continuous fun Y : LieL (J.map τ.1) => NormedSpace.exp Y.1 :=
-      (NormedSpace.exp_continuous).comp continuous_subtype_val
+      (NormedSpace.exp_continuous).comp continuous_subtypeVal
     exact (continuous_apply j).comp ((continuous_apply i).comp this))
   have hy0 : yOf 0 = 1 := archMat_injective h τ (by
     rw [hy2, map_one]; simp)

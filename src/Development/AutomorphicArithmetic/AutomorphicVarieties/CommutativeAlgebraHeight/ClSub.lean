@@ -160,7 +160,6 @@ private theorem isNoetherian_of_finite_torsion_by_maximalIdeal (A : Type) [CommR
   haveI : IsScalarTower A (A ⧸ maximalIdeal A) P := h.isScalarTower
   letI : Field (A ⧸ maximalIdeal A) := Ideal.Quotient.field _
   haveI : Module.Finite (A ⧸ maximalIdeal A) P := Module.Finite.of_restrictScalars_finite A _ _
-  haveI : IsNoetherian (A ⧸ maximalIdeal A) P := inferInstance
   refine ⟨fun N => ?_⟩
   let N' : Submodule (A ⧸ maximalIdeal A) P :=
     { carrier := N

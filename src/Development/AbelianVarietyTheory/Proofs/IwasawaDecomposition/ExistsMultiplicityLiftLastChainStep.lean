@@ -124,7 +124,7 @@ theorem X_mul_pderiv_mem {σ : Type} (u v : σ) (N : ℕ) (Q : MvPolynomial σ �
   rw [pderiv_monomial]
   by_cases h : m v = 0
   · simp [h]
-  · rw [X, monomial_mul]
+  · rw [X, monomial_mul_monomial]
     refine (totalDegree_monomial_le _ _).trans (le_trans (le_of_eq ?_) hd)
     have h1 : Finsupp.single v 1 ≤ m := by
       rw [Finsupp.single_le_iff]; omega
@@ -150,8 +150,8 @@ theorem degree_of_mem_support {σ J : Type} [Fintype J] (z : J → σ) {P : MvPo
     (h : ∑ k, X (z k) * pderiv (z k) P = (w : ℂ) • P) {m : σ →₀ ℕ} (hm : m ∈ P.support) :
     ((∑ k, m (z k) : ℕ) : ℤ) = w := by
   have := congrArg (AddMonoidAlgebra.coeff · m) h
-  rw [coeff_sum, MvPolynomial.coeff_smul] at this
-  simp only [coeff_X_mul_pderiv, ← Finset.sum_mul, smul_eq_mul] at this
+  rw [coeff_sum, AddMonoidAlgebra.coeff_smul] at this
+  simp only [coeff_X_mul_pderiv, ← Finset.sum_mul] at this
   have h2 := mul_right_cancel₀ (mem_support_iff.1 hm) this
   exact_mod_cast h2
 
@@ -279,7 +279,7 @@ theorem rowDer_apply (τ : ι) (k l : Fin m) (P : Pol ι m n) :
   rw [rowLie_apply, rowDer]
   induction (Finset.univ : Finset (Fin n)) using Finset.induction_on with
   | empty => simp
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, Derivation.add_apply, ih]; simp
+  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, add_apply, ih]; simp
 
 open Classical in
 theorem rowLie_X (τ : ι) (k l : Fin m) (v : ι × Fin m × Fin n) :
@@ -306,13 +306,13 @@ theorem rowLie_diag_comm (t t' : ι) (i k l : Fin m) :
         rowDer n t' k l := by
     refine derivation_ext fun v => ?_
     obtain ⟨s, j, c⟩ := v
-    simp only [Derivation.commutator_apply, Derivation.smul_apply, rowDer_apply, rowLie_X,
+    simp only [Derivation.commutator_apply, smul_apply, rowDer_apply, rowLie_X,
       apply_ite (rowLie n t i i), apply_ite (rowLie n t' k l), map_zero]
     by_cases h1 : t = t' <;> by_cases h2 : s = t' <;> by_cases h3 : j = l <;>
       by_cases h4 : i = k <;> by_cases h5 : i = l <;> simp_all [eq_comm]
   refine LinearMap.ext fun P => ?_
   have := DFunLike.congr_fun h P
-  simp only [Derivation.commutator_apply, Derivation.smul_apply, rowDer_apply] at this
+  simp only [Derivation.commutator_apply, smul_apply, rowDer_apply] at this
   exact this
 
 theorem iSup_iInf_eigenspace_rowLie :
@@ -433,7 +433,7 @@ theorem map_mul_right_of_cocompact {G : Type} [Group G] [TopologicalSpace G] [Is
   have hpos : μ 𝓕 ≠ 0 := h𝓕.measure_ne_zero (NeZero.ne μ)
   have h := Measure.isMulLeftInvariant_eq_smul (Measure.map (fun g => g * k) μ) μ
   set c := Measure.haarScalarFactor (Measure.map (fun g => g * k) μ) μ with hc
-  have hq : Measure.QuasiMeasurePreserving (fun g : G => g * k) μ μ :=
+  have hq : QuasiMeasurePreserving (fun g : G => g * k) μ μ :=
     ⟨(measurable_mul_const k).aemeasurable, by rw [h]; exact Measure.smul_absolutelyContinuous⟩
   have h2 : IsFundamentalDomain Γ ((fun g : G => g * k) ⁻¹' 𝓕) μ := by
     refine h𝓕.preimage_of_equiv hq (e := id) Function.bijective_id ?_
@@ -540,7 +540,7 @@ theorem pair_monomial (α : σ →₀ ℕ) (c : ℂ) (Q : MvPolynomial σ ℂ) :
 theorem pair_mul_X (P Q : MvPolynomial σ ℂ) (v : σ) : pair (P * X v) Q = pair P (pderiv v Q) := by
   induction P using MvPolynomial.induction_on' with
   | monomial α c =>
-    rw [X, monomial_mul, mul_one, pair_monomial, pair_monomial, coeff_pderiv, wt_add_single]
+    rw [X, monomial_mul_monomial, mul_one, pair_monomial, pair_monomial, coeff_pderiv, wt_add_single]
     ring
   | add P P' h h' => simp only [add_mul, map_add (f := _), LinearMap.add_apply, h, h']
 
@@ -613,7 +613,7 @@ theorem pair_rep (ℓ : MvPolynomial σ ℂ →ₗ[ℂ] ℂ) (d : ℕ)
       rw [smul_monomial, smul_eq_mul, mul_one]
     rw [pair_monomial, this, map_smul, smul_eq_mul, coeff_sum]
     congr 1
-    simp only [coeff_monomial, Finset.sum_ite_eq', Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [coeff_monomial, Finset.sum_ite_eq', Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     split_ifs with hd
     · exact mul_div_cancel₀ _ (wt_ne_zero α)
     · rw [h α (not_le.1 hd), mul_zero]
@@ -800,7 +800,7 @@ theorem exists_colStable_disjoint (ι : Type) [Fintype ι] (m n : ℕ) (X : Type
     simp only [hBa, LinearMap.comp_apply, fockInner_colSub]
   clear hBa
   clear_value B
-  obtain ⟨β, hβW, hβU⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨β, hβW, hβU⟩ := IsConcreteLE.exists_of_lt hlt
   obtain ⟨d, hd⟩ : ∃ d : ℕ, ∀ i, (β (b i)).totalDegree ≤ d :=
     ⟨_, fun i => Finset.le_sup (f := fun i => (β (b i)).totalDegree) (Finset.mem_univ i)⟩
   obtain ⟨R, hRf, hR⟩ : ∃ R : Submodule ℂ (Pol ι m n), FiniteDimensional ℂ R ∧ ∀ P, P ∈ R ↔ P.totalDegree ≤ d :=
@@ -994,7 +994,7 @@ theorem comm [DecidableEq ι] (t t' : ι) (i k l : Fin n) (P : Pol ι m n) :
       (if t = t' then ((if i = k then 1 else 0) - (if i = l then 1 else 0) : ℂ) else 0) •
         der m t' k l := by
     refine MvPolynomial.derivation_ext fun ⟨s, a, j⟩ => ?_
-    rw [Derivation.commutator_apply, Derivation.smul_apply]
+    rw [Derivation.commutator_apply, smul_apply]
     simp only [der_X, apply_ite (der m t i i), apply_ite (der m t' k l), map_zero]
     by_cases h1 : s = t' ∧ j = l
     · obtain ⟨rfl, rfl⟩ := h1
@@ -1009,7 +1009,7 @@ theorem comm [DecidableEq ι] (t t' : ι) (i k l : Fin n) (P : Pol ι m n) :
       · rfl
       · rfl
   have := DFunLike.congr_fun this P
-  rw [Derivation.commutator_apply, Derivation.smul_apply] at this
+  rw [Derivation.commutator_apply, smul_apply] at this
   simpa only [der_apply] using this
 
 theorem diag_monomial (t : ι) (k : Fin n) (s : ι × Fin m × Fin n →₀ ℕ) (c : ℂ) :
@@ -1087,7 +1087,6 @@ theorem exists_colHighest (ι : Type) [Fintype ι] (m n : ℕ) (X : Type) [AddCo
       exact (Ψ x).2
     · intro h
       exact ⟨Φ.codRestrict R h, rfl⟩
-  have : FiniteDimensional ℂ B := inferInstance
   have : FiniteDimensional ℂ (U ⊓ B : Submodule ℂ _) := Submodule.finiteDimensional_of_le inf_le_right
   let e : ι → Fin n → Fin n → Module.End ℂ (X →ₗ[ℂ] Pol ι m n) :=
     fun τ k l => LinearMap.llcomp ℂ X _ _ (colLie m τ k l)
@@ -1139,7 +1138,7 @@ namespace GlobalTheory.RowSupport
 
 theorem exp_I_pow_injective : Function.Injective fun e : ℕ => Complex.exp Complex.I ^ e := by
   intro a b h
-  simp only [← Complex.exp_nat_mul] at h
+  simp only [← Complex.exp_natCast_mul] at h
   obtain ⟨k, hk⟩ := Complex.exp_eq_exp_iff_exists_int.1 h
   have h2 : (a : ℝ) = b + k * (2 * Real.pi) := by
     have := congrArg Complex.im hk
@@ -1508,7 +1507,7 @@ theorem ioExists_definite {V W : HSp D} {S S' : D.what₂.Tau → SPar} (M : DSM
       Lift.liftInt ν 𝓕 (thetaKO ω) (ω (k, 1) s) F g := fun k s F g => by
     unfold Lift.liftInt thetaKO
     congr 1; funext h
-    rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, mul_one]
+    rw [← mul_apply_eq_comp, ← map_mul, Prod.mk_mul_mk, mul_one]
   have hmem : ∀ F : C, L.flip F ∈ MultT θ M J χ := fun F => by
     have hlev : ∀ x, ∀ k ∈ J, ∀ g, L.flip F x (g * k) = χ k * L.flip F x g := by
       refine hind _ (fun P x k hk g => ?_) (fun k _ g => by simp) fun x y a b k hk g => by
