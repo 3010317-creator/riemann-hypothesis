@@ -989,8 +989,4 @@ noncomputable def trunc₃HomologyIsoDropFirst [Finite κ] [Finite ν]
 
 end Three
 
-section Examples
-
-end Examples
-
 end GlobalTheory

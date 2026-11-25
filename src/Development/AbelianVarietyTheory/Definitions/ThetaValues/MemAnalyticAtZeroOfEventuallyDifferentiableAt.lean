@@ -495,8 +495,4 @@ theorem taylorDir_eq_taylor (u : σ → W) {F : W → ℂ} (hF : AnalyticAt ℂ 
 
 end Coord
 
-section Examples
-
-end Examples
-
 end GlobalTheory

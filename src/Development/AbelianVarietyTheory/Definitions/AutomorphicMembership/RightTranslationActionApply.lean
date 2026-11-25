@@ -171,15 +171,6 @@ variable (u : Pr.Word)
   (Th : ∀ i (b : Idx sel mu L i) (b' : Idx sel mu L (i + 1)), (stepAt sel mu cst L (topLev Ch sel mu cst P) u i).D b →
     (stepAt sel mu cst L (topLev Ch sel mu cst P) u (i + 1)).D b' → Formalism.L2.Ker.VCx X.Tau (R.N i) (R.N (i + 1)) → ℂ)
 
-section Gen
-
-variable (H : Subgroup (FrmG (rowTyG Ch P) (levQX R sel mu))) (σ : X.K →+* ℂ)
-
-variable {H} {Λ' : LevFam X.E X.K (R.N R.m - 1) Pr.vGs} (hH : IsSubLev (rowTyG Ch P) Λ' (levQX R sel mu) H)
-  (hd : Disjoint Pr.vGs (QE sel (mu : Chr X.F X.E X.K)))
-
-end Gen
-
 variable (σ : X.K →+* ℂ)
 
 variable (hd : Disjoint Pr.vGs (QE sel (mu : Chr X.F X.E X.K)))

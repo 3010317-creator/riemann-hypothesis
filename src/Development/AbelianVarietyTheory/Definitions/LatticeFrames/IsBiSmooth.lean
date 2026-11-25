@@ -79,12 +79,6 @@ variable {u : D.what₂.Word} (d : Dat D u)
 
 end Dat
 
-section Examples
-
-variable {ψ : AddChar (AF D.host.F) ℂ} {A S A' : HSp D}
-
-end Examples
-
 end GlobalTheory.SeeSaw
 
 end

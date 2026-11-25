@@ -648,14 +648,6 @@ theorem exists_isHilbertPoly [Fintype ι] [Module.Finite (MvPolynomial ι k) M]
     finrank_bot]
   simp
 
-section
-
-variable [Fintype ι] [Module.Finite (MvPolynomial ι k) M] (ℳ : ℤ → Submodule k M)
-  [Decomposition ℳ]
-  (hX : ∀ (i : ι) (n : ℤ), ∀ m ∈ ℳ n, (MvPolynomial.X i : MvPolynomial ι k) • m ∈ ℳ (n + 1))
-
-end
-
 theorem coeff_sub_comp_X_sub_C {K : Type*} [Field K] (P : K[X]) (r : K) (e : ℕ)
     (hP : P.degree ≤ (e + 1 : ℕ)) :
     (P - P.comp (X - C r)).degree < (e + 1 : ℕ) ∧

@@ -948,8 +948,4 @@ theorem IsFlatOver.of_sum_eq_id {ι : Type*} [Fintype ι] {A : ι → X.Modules}
 
 end Flat
 
-section Examples
-
-end Examples
-
 end GlobalTheory.QCoh
