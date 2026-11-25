@@ -60,9 +60,6 @@ variable {D : D7}
 structure JFacts (L : SizeData₂ D) (j : ℕ) (ρ : D.what₂.Tau) : Prop where
   hj1 : 1 ≤ j
   hjm : j ≤ D.R.m
-  t_pos : 1 ≤ D.R.t
-  t_odd : Odd D.R.t
-  k_pos : 1 ≤ D.R.k - 1
   v_nonneg : ∀ a, 0 ≤ (D.hc ρ).v a
   v_le : ∀ a, (((D.hc ρ).v a : ℚ) : ℝ) ≤ L.Sc
   v_anti : ∀ a a' : Fin (D.R.k - 1), a.1 < a'.1 → (D.hc ρ).v a' < (D.hc ρ).v a
@@ -75,8 +72,6 @@ structure JFacts (L : SizeData₂ D) (j : ℕ) (ρ : D.what₂.Tau) : Prop where
   s_thick : (D.eTau ρ : D.R.GG) ∈ D.host.thickPlaces → L.sc.b ≤ ((sz D j ρ : ℚ) : ℝ)
   par_b : L.etaSz + D.R.t + L.Sc ≤ L.sc.b
   t_le_eta : (D.R.t : ℝ) ≤ L.etaSz
-  Sc_pos : 0 < L.Sc
-  eta_pos : 0 < L.etaSz
 
 end GlobalTheory.JumpSets
 
@@ -209,10 +204,8 @@ theorem jFacts_of {L : SizeData₂ D} (hP : AdmPar L) (j : ℕ) (hj1 : 1 ≤ j) 
   have he := L.etaSz_pos
   have ht0 : (0 : ℝ) ≤ D.R.t := by positivity
   have hw'' : 0 < L.sc.w'' D.R.n := by linarith
-  have htpos : 1 ≤ D.R.t := D.R.t_odd.pos
   refine
-    { hj1 := hj1, hjm := hjm, t_pos := htpos, t_odd := D.R.t_odd,
-      k_pos := by have := D.R.m_add_three_le_k; omega,
+    { hj1 := hj1, hjm := hjm,
       v_nonneg := fun a => by exact_mod_cast (L.cloud_v ρ a).1,
       v_le := fun a => (L.cloud_v ρ a).2,
       v_anti := fun a a' h => hc_v_anti (D.hc ρ) a a' h,
@@ -228,7 +221,7 @@ theorem jFacts_of {L : SizeData₂ D} (hP : AdmPar L) (j : ℕ) (hj1 : 1 ≤ j) 
       s_le := hwin.2,
       s_thick := fun h => by rw [← wj_eq]; exact (L.win_thick j hj1 hjm ρ h).1,
       par_b := by linarith,
-      t_le_eta := h4, Sc_pos := hS, eta_pos := he }
+      t_le_eta := h4 }
 
 end GlobalTheory.JumpSets
 
@@ -247,14 +240,14 @@ lemma jp_cast_sub (t c : ℕ) (h : c < t) : ((t - 1 - c : ℕ) : ℚ) = (t : ℚ
   have h2 : ((t - 1 - c : ℕ) : ℚ) + c + 1 = t := by exact_mod_cast h1
   linarith
 
-lemma jp_t_one {L : SizeData₂ D} {j : ℕ} {ρ : D.what₂.Tau} (hF : JFacts L j ρ) : (1 : ℚ) ≤ D.R.t := by
-  exact_mod_cast hF.t_pos
+lemma jp_t_one (D : D7) : (1 : ℚ) ≤ D.R.t := by
+  exact_mod_cast (show 1 ≤ D.R.t from D.R.t_odd.pos)
 
 lemma jp_s_gt {L : SizeData₂ D} {j : ℕ} {ρ : D.what₂.Tau} (hF : JFacts L j ρ) :
     (D.R.t : ℚ) < sz D j ρ := by
   have h1 := hF.s_gt
-  have h2 := hF.Sc_pos
-  have h3 := hF.eta_pos
+  have h2 := L.Sc_pos
+  have h3 := L.etaSz_pos
   have h4 : ((D.R.t : ℚ) : ℝ) < ((sz D j ρ : ℚ) : ℝ) := by push_cast; linarith
   exact_mod_cast h4
 
@@ -262,7 +255,7 @@ lemma jp_b_pos {L : SizeData₂ D} {j : ℕ} {ρ : D.what₂.Tau} (hF : JFacts L
     0 < (D.hc ρ).b i := by
   have h1 := hF.low_le i
   have h2 := hF.s_gt
-  have h3 := hF.Sc_pos
+  have h3 := L.Sc_pos
   have h4 : (0 : ℝ) ≤ D.R.t := Nat.cast_nonneg _
   rw [Rat.cast_abs] at h1
   have h5 := (le_abs_self _).trans h1
@@ -294,7 +287,7 @@ lemma jp_block_not_cloud {L : SizeData₂ D} {j : ℕ} {ρ : D.what₂.Tau} (hF 
   have h1 : (c : ℚ) + 1 ≤ D.R.t := by exact_mod_cast (show c + 1 ≤ D.R.t by omega)
   have h2 := jp_s_gt hF
   have h3 := hF.v_nonneg a
-  have h4 := jp_t_one hF
+  have h4 := jp_t_one D
   simp only [c0] at ha
   linarith
 
@@ -350,7 +343,7 @@ theorem JJ_iff_JW {L : SizeData₂ D} {j : ℕ} {ρ : D.what₂.Tau} (hF : JFact
 
 lemma jp_nodup {L : SizeData₂ D} {j : ℕ} {ρ : D.what₂.Tau} (hF : JFacts L j ρ) : (PPm D j ρ).Nodup := by
   have hs := jp_s_gt hF
-  have ht := jp_t_one hF
+  have ht := jp_t_one D
   have hvi : Function.Injective fun a : Fin (D.R.k - 1) => (D.hc ρ).v a := by
     intro a a' h
     rcases Nat.lt_trichotomy a.1 a'.1 with h1 | h1 | h1
@@ -434,21 +427,21 @@ section JB
 
 variable {L : SizeData₂ D} {j : ℕ} {ρ : D.what₂.Tau}
 
-lemma realPlace_jumpCenter_nonneg (F : JFacts L j ρ) : 0 ≤ c0 D := by
-  have ht : (1:ℚ) ≤ D.R.t := by exact_mod_cast F.t_pos
+lemma realPlace_jumpCenter_nonneg (D : D7) : 0 ≤ c0 D := by
+  have ht := jp_t_one D
   simp only [c0]; linarith
 
 lemma realPlace_t_add_one_lt_size (F : JFacts L j ρ) : (D.R.t : ℚ) + 1 < sz D j ρ := by
   have h1 := F.s_gt
   have h2 := F.t_le_eta
-  have h3 := F.Sc_pos
-  have h4 : (1:ℝ) ≤ D.R.t := by exact_mod_cast F.t_pos
+  have h3 := L.Sc_pos
+  have h4 : (1:ℝ) ≤ D.R.t := by exact_mod_cast (show 1 ≤ D.R.t from D.R.t_odd.pos)
   have : (((D.R.t : ℚ) + 1 : ℚ) : ℝ) < ((sz D j ρ : ℚ) : ℝ) := by push_cast; linarith
   exact_mod_cast this
 
 lemma realPlace_etaSize_lt_size (F : JFacts L j ρ) : L.etaSz < ((sz D j ρ : ℚ) : ℝ) := by
   have h1 := F.s_gt
-  have h3 := F.Sc_pos
+  have h3 := L.Sc_pos
   have h4 : (0:ℝ) ≤ D.R.t := Nat.cast_nonneg _
   linarith
 
@@ -504,9 +497,9 @@ lemma jb_refl_abs (q : ℚ) : |refl D q - c0 D| = |q - c0 D| := by
 lemma jb_Jp_bound (F : JFacts L j ρ) {q : ℚ} (hq : q ∈ Jp D j ρ) :
     ((|q - c0 D| : ℚ) : ℝ) ≤ L.sc.b + L.Sc + L.etaSz + 1 := by
   have hb := F.par_b
-  have hS := F.Sc_pos
-  have he := F.eta_pos
-  have ht : (1:ℝ) ≤ D.R.t := by exact_mod_cast F.t_pos
+  have hS := L.Sc_pos
+  have he := L.etaSz_pos
+  have ht : (1:ℝ) ≤ D.R.t := by exact_mod_cast (show 1 ≤ D.R.t from D.R.t_odd.pos)
   have hte := F.t_le_eta
   rcases hq with (hq | hq) | hq
   · obtain ⟨h1, h2⟩ := jb_cloud F hq
@@ -585,7 +578,7 @@ theorem jumpSetBound_of_realPlaceFacts {L : SizeData₂ D} (h : ∀ j, 1 ≤ j �
     rw [Set.disjoint_left]
     intro q hq hb
     have h1 := jb_block hb
-    have hc := realPlace_jumpCenter_nonneg F
+    have hc := realPlace_jumpCenter_nonneg D
     apply jb_notin_cl F _ hq
     simp only [c0] at h1 ⊢; linarith
   refine ⟨fun q hq => ?_, fun q hq => jb_low F hq, fun q hq => jb_block hq, hcl, hlo, ?_⟩
@@ -593,7 +586,7 @@ theorem jumpSetBound_of_realPlaceFacts {L : SizeData₂ D} (h : ∀ j, 1 ≤ j �
     exact ⟨by exact_mod_cast h1, h2⟩
   · unfold Jp
     rw [Set.ncard_union_eq hd2 (hfc.union hfl) hfb, Set.ncard_union_eq hd1 hfc hfl, hcl, hlo, hbl]
-    have := F.k_pos
+    have := D.R.m_add_three_le_k
     unfold Ranks.nV Ranks.r
     omega
 
@@ -633,10 +626,10 @@ theorem jumpSetCloud_of_realPlaceFacts {L : SizeData₂ D} (h : ∀ j, 1 ≤ j �
   · intro q hq
     have h1 := (jb_cloud F hq).1
     have h2 := realPlace_t_add_one_lt_size F
-    have h3 := realPlace_jumpCenter_nonneg F
+    have h3 := realPlace_jumpCenter_nonneg D
     linarith
   · apply jb_notin_cl F
-    rw [zero_sub, abs_neg, abs_of_nonneg (realPlace_jumpCenter_nonneg F), hc0]; linarith
+    rw [zero_sub, abs_neg, abs_of_nonneg (realPlace_jumpCenter_nonneg D), hc0]; linarith
 
 theorem jumpSetEta_of_realPlaceFacts {L : SizeData₂ D} (h : ∀ j, 1 ≤ j → j ≤ D.R.m → ∀ ρ, JFacts L j ρ)
     (hpar : L.etaSz + D.R.t + L.Sc ≤ L.sc.b) (ht : 1 ≤ D.R.t) (hS : 0 < L.Sc) (he : 0 < L.etaSz) :
@@ -653,7 +646,7 @@ theorem jumpSetEta_of_realPlaceFacts {L : SizeData₂ D} (h : ∀ j, 1 ≤ j →
         rwa [jb_refl_abs] at this
       · simp only [JJ, ↓reduceIte] at hq
         exact jb_Jp_bound F hq
-    have c0nn := realPlace_jumpCenter_nonneg F
+    have c0nn := realPlace_jumpCenter_nonneg D
     have tri : |q| ≤ |q - c0 D| + c0 D := by
       have := abs_sub_abs_le_abs_sub q (c0 D)
       rw [abs_of_nonneg c0nn] at this; linarith
@@ -670,9 +663,9 @@ theorem jumpSetGap_of_realPlaceFacts {L : SizeData₂ D} (h : ∀ j, 1 ≤ j →
   have F := h j hj1 hjm ρ
   have hst := realPlace_t_add_one_lt_size F
   have ht0 : (0:ℚ) ≤ D.R.t := Nat.cast_nonneg _
-  have htr : (1:ℝ) ≤ D.R.t := by exact_mod_cast F.t_pos
+  have htr : (1:ℝ) ≤ D.R.t := by exact_mod_cast (show 1 ≤ D.R.t from D.R.t_odd.pos)
   have hsle := F.s_le
-  have he := F.eta_pos
+  have he := L.etaSz_pos
   refine ⟨fun hth up u hu => ?_, fun up u hu => ?_⟩
   · have hsb := F.s_thick hth
     cases up
@@ -837,7 +830,7 @@ lemma jd_cl (F : JFacts L j ρ) (a : Fin (D.R.k - 1)) :
     (D.R.t : ℚ) + 1 < sz D j ρ + (D.hc ρ).v a + c0 D := by
   have := F.v_nonneg a
   have := _root_.GlobalTheory.JumpSets.realPlace_t_add_one_lt_size F
-  have := _root_.GlobalTheory.JumpSets.jp_t_one F
+  have := _root_.GlobalTheory.JumpSets.jp_t_one D
   have hc : c0 D = ((D.R.t : ℚ) - 1) / 2 := rfl
   linarith
 
@@ -852,7 +845,7 @@ end Core
 theorem jumpSetDistinct_of_realPlaceFacts {L : SizeData₂ D} (h : ∀ j, 1 ≤ j → j ≤ D.R.m → ∀ ρ, JFacts L j ρ) : JumpLowsSignCount D := by
   intro j hj1 hjm ρ
   have F := h j hj1 hjm ρ
-  have ht := _root_.GlobalTheory.JumpSets.jp_t_one F
+  have ht := _root_.GlobalTheory.JumpSets.jp_t_one D
   have iL : Function.Injective (fun a : Fin D.R.m => sz D j ρ - (D.hc ρ).b a + c0 D) :=
     jd_inj _ (fun a a' hl e => by
       have := F.b_mono a a' hl; try dsimp only at e
@@ -939,9 +932,9 @@ theorem jumpSetDistinct_of_realPlaceFacts {L : SizeData₂ D} (h : ∀ j, 1 ≤ 
 theorem jumpSetFinal_of_realPlaceFacts {L : SizeData₂ D} (h : ∀ j, 1 ≤ j → j ≤ D.R.m → ∀ ρ, JFacts L j ρ) : DualCloudSizes L := by
   intro j hj1 hjm ρ
   have F := h j hj1 hjm ρ
-  have ht := _root_.GlobalTheory.JumpSets.jp_t_one F
+  have ht := _root_.GlobalTheory.JumpSets.jp_t_one D
   have hs := _root_.GlobalTheory.JumpSets.realPlace_t_add_one_lt_size F
-  have htR : (1 : ℝ) ≤ D.R.t := by exact_mod_cast F.t_pos
+  have htR : (1 : ℝ) ≤ D.R.t := by exact_mod_cast (show 1 ≤ D.R.t from D.R.t_odd.pos)
   have hc : c0 D = ((D.R.t : ℚ) - 1) / 2 := rfl
   have iL4 : Function.Injective
       (fun a : Fin D.R.m => sz D j ρ - (D.hc ρ).b a + c0 D - D.R.t) :=
