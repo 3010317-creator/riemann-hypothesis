@@ -64,11 +64,8 @@ def secComb {X : Scheme.{0}} {H : LB X} {J : Type} [Fintype J] (a : J → Γ(X, 
     rw [map_sum, map_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     have e : ∀ (U V : X.Opens) (h : V ≤ U),
-        (X.presheaf.map (homOfLE h).op).hom (resG X (le_top : U ≤ ⊤) (a k)) = resG X (le_top : V ≤ ⊤) (a k) := by
-      intro U V h
-      change (X.presheaf.map (homOfLE _).op ≫ X.presheaf.map (homOfLE h).op).hom (a k) = _
-      rw [← Functor.map_comp]
-      rfl
+        (X.presheaf.map (homOfLE h).op).hom (resG X (le_top : U ≤ ⊤) (a k)) = resG X (le_top : V ≤ ⊤) (a k) :=
+      fun _ _ h => TopCat.Presheaf.restrict_restrict (F := X.presheaf) h le_top (a k)
     rw [map_mul, map_mul, (s k).compat i j, e, e, mul_left_comm]
 
 theorem exists_crd_secComb {X Y : Scheme.{0}} (h : X ⟶ Y) {H : LB Y} {J : Type} [Fintype J] (σ : J → H.Sec)
