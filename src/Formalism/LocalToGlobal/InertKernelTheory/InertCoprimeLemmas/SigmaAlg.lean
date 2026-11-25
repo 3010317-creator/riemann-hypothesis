@@ -187,15 +187,8 @@ theorem tri_alg (n : ℕ) (b : ℕ → ℕ → ℂ) (hb : ∀ i k, b i k ∈ For
     exact smulc (mono i n (by omega) (key i (by omega))) (hb i _)
   obtain ⟨p, hp, hpt⟩ := Submodule.mem_map.1 hmem
   have hpd : p.degree ≤ n := mem_degreeLE.1 hp
-  have hP : (Polynomial.X ^ (n + 1) - p : Formalism.MainNotions.TaylorLogMetric.Qbar[X]) ≠ 0 := by
-    intro h0
-    have e : (Polynomial.X ^ (n + 1) : Formalism.MainNotions.TaylorLogMetric.Qbar[X]) = p := sub_eq_zero.1 h0
-    have h1 : (Polynomial.X ^ (n + 1) : Formalism.MainNotions.TaylorLogMetric.Qbar[X]).degree = ((n + 1 : ℕ) : WithBot ℕ) := degree_X_pow (n + 1)
-    rw [e] at h1
-    rw [h1] at hpd
-    have : ((n + 1 : ℕ) : WithBot ℕ) ≤ (n : WithBot ℕ) := hpd
-    norm_cast at this
-    omega
+  have hP : (Polynomial.X ^ (n + 1) - p : Formalism.MainNotions.TaylorLogMetric.Qbar[X]) ≠ 0 :=
+    (Polynomial.monic_X_pow_sub (hpd.trans_lt (by exact_mod_cast n.lt_succ_self))).ne_zero
   have halg : IsAlgebraic Formalism.MainNotions.TaylorLogMetric.Qbar t := ⟨Polynomial.X ^ (n + 1) - p, hP, by
     rw [map_sub, map_pow, aeval_X]
     have : (aeval t) p = t ^ (n + 1) := hpt
