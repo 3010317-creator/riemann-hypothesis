@@ -21,27 +21,8 @@ variable {k : Type} [Field k] [Finite k]
 def cols {M a : ℕ} (P : Matrix (Fin M) (Fin a) k) : Fin a → Fin M → k := fun j i ↦ P i j
 
 theorem linInd_cols_iff {M a : ℕ} (P : Matrix (Fin M) (Fin a) k) :
-    LinearIndependent k (cols P) ↔ ∀ v : Fin a → k, P *ᵥ v = 0 → v = 0 := by
-  rw [Fintype.linearIndependent_iff]
-  constructor
-  · intro h v hv
-    funext j
-    refine h v ?_ j
-    funext i
-    have := congrFun hv i
-    simp only [Matrix.mulVec, dotProduct, Pi.zero_apply] at this
-    simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, cols, Pi.zero_apply]
-    rw [← this]
-    exact Finset.sum_congr rfl (fun j _ => mul_comm _ _)
-  · intro h g hg i
-    have hPg : P *ᵥ g = 0 := by
-      funext r
-      have := congrFun hg r
-      simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, cols, Pi.zero_apply] at this
-      simp only [Matrix.mulVec, dotProduct, Pi.zero_apply]
-      rw [← this]
-      exact Finset.sum_congr rfl (fun j _ => mul_comm _ _)
-    exact congrFun (h g hPg) i
+    LinearIndependent k (cols P) ↔ ∀ v : Fin a → k, P *ᵥ v = 0 → v = 0 :=
+  (Matrix.mulVec_injective_iff (M := P)).symm.trans (injective_iff_map_eq_zero P.mulVecLin)
 
 theorem exists_left_inv {M a : ℕ} (P : Matrix (Fin M) (Fin a) k)
     (hP : LinearIndependent k (cols P)) : ∃ L : Matrix (Fin a) (Fin M) k, L * P = 1 := by
