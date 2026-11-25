@@ -520,7 +520,6 @@ open Formalism.CohomologicalDescent.DepthNonnegative Formalism.CohomologicalDesc
 open GlobalTheory.FrameRead
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalisedStandardWeylOfLiftMemStatement =====
