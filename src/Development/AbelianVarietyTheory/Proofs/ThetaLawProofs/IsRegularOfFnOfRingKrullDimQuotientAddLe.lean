@@ -53,11 +53,7 @@ theorem isRegular_ofFn_of_ringKrullDim_quotient_add_le :
       ringKrullDim (A ⧸ Ideal.span (Set.range f)) + r ≤ d →
       RingTheory.Sequence.IsRegular A (List.ofFn f) := by
   intro A _ _ d r f hd hm hq
-  have he : Ideal.ofList (List.ofFn f) = Ideal.span (Set.range f) := by
-    unfold Ideal.ofList
-    congr 1
-    ext x
-    simp [List.mem_ofFn]
+  have he : Ideal.ofList (List.ofFn f) = Ideal.span (Set.range f) := ofList_ofFn_eq_span_range f
   refine isRegular_of_isCM_of_ringKrullDim_quotient_add_length_le
     (isCM_of_isRegularLocalRing A) (fun y hy => ?_) ?_
   · obtain ⟨i, rfl⟩ := List.mem_ofFn.mp hy
