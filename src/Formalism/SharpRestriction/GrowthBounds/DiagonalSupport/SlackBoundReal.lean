@@ -50,13 +50,9 @@ private theorem fr_mono_of_valid (hV : Fr.Valid L₁ N₁) (j : ℤ) :
     · rw [le_antisymm hii' h]
 
 private theorem fr_last_mono_in_index_of_valid (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (a : ℤ) :
-    ∀ b : ℤ, a ≤ b → Fr.fr a (r - 1) ≤ Fr.fr b (r - 1) := by
-  intro b hab
-  induction b, hab using Int.leInduction with
-  | base => exact le_rfl
-  | succ k _ ih =>
-    exact le_trans ih (le_trans (hV.2.2.2.1 k).le
-      (fr_mono_of_valid Fr hV (k + 1) 0 (r - 1) (Nat.zero_le _) (by omega)))
+    ∀ b : ℤ, a ≤ b → Fr.fr a (r - 1) ≤ Fr.fr b (r - 1) := fun _ hab =>
+  monotone_int_of_le_succ (f := fun j => Fr.fr j (r - 1)) (fun k => (hV.2.2.2.1 k).le.trans
+    (fr_mono_of_valid Fr hV (k + 1) 0 (r - 1) (Nat.zero_le _) (by omega))) hab
 
 theorem posTL_seg (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, nL j = (Fr.LLset (segZ j)).card) (x : TL J nL r) :
     Fr.fr (segZ x.1 - 1) (r - 1) < posTL Fr x ∧ posTL Fr x ≤ Fr.fr (segZ x.1) (r - 1) ∧
