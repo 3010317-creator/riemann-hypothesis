@@ -15,15 +15,6 @@ private theorem unopS_tmul (S : Type) [CommRing S] [Algebra A S] (s : S) (a : E�
     Det.unopS A E S (s ⊗ₜ a) = s ⊗ₜ a.unop := by
   simp [Det.unopS]
 
-private theorem unopS_surj (S : Type) [CommRing S] [Algebra A S] (y : S ⊗[A] E) :
-    ∃ z, Det.unopS A E S z = y := by
-  induction y with
-  | tmul s a => exact ⟨s ⊗ₜ MulOpposite.op a, unopS_tmul S s _⟩
-  | add a b ha hb =>
-    obtain ⟨a', rfl⟩ := ha
-    obtain ⟨b', rfl⟩ := hb
-    exact ⟨a' + b', map_add _ _ _⟩
-
 private theorem op_D (D : Det n A E) (S : Type) [CommRing S] [Algebra A S] (x : S ⊗[A] Eᵐᵒᵖ) :
     D.op.D S x = D.D S (Det.unopS A E S x) := rfl
 
@@ -108,9 +99,10 @@ theorem UpperTheory.V.CA.d_op :
   · rw [Det.mem_ker, Det.mem_ker]
     constructor
     · intro h S _ _ y u v
-      obtain ⟨y, rfl⟩ := unopS_surj S y
-      obtain ⟨u, rfl⟩ := unopS_surj S u
-      obtain ⟨v, rfl⟩ := unopS_surj S v
+      let e := (MulOpposite.opLinearEquiv A : E ≃ₗ[A] Eᵐᵒᵖ).symm.baseChange A S Eᵐᵒᵖ E
+      obtain ⟨y, rfl⟩ := e.surjective y
+      obtain ⟨u, rfl⟩ := e.surjective u
+      obtain ⟨v, rfl⟩ := e.surjective v
       have := h S y v u
       rw [op_D, op_D, map_add (f := _), Det.unopS_mul, Det.unopS_mul, unopS_tmul, MulOpposite.unop_op, ← mul_assoc] at this
       exact this

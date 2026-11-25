@@ -21,9 +21,6 @@ open GroundTheory.Automorphic GroundTheory.Automorphic.CuspidalSpectrum GroundTh
 
 variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ}
 
-private theorem mult_two (w : InfinitePlace E) : w.mult = 2 := by
-  simp [InfinitePlace.mult, InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex w)]
-
 private theorem rank_eq : (Module.finrank ℚ E : ℝ) = 2 * Fintype.card (InfinitePlace E) := by
   rw [← InfinitePlace.sum_mult_eq]
   simp [mul_comm]
@@ -47,7 +44,7 @@ private theorem mod_inf (h : GL (Fin a) (Cinf E)) :
   rw [IdeleGroup.ideleModule_eq]
   change (∏ v : InfinitePlace E, ‖((infGL E a h).val.det : Ad E).1 v‖ ^ v.mult) *
     ∏ᶠ v : IsDedekindDomain.HeightOneSpectrum (𝓞 E), ‖((infGL E a h).val.det : Ad E).2 v‖ = _
-  simp only [h1, h2, finprod_one, mul_one, mult_two]
+  simp only [h1, h2, finprod_one, mul_one, IsTotallyComplex.mult_eq]
 
 private theorem sect_inv (ha : 1 ≤ a) (h : GL (Fin a) (Cinf E)) :
     (Reduction.centralSection E a (Reduction.detModule E a (infGL E a h)))⁻¹ =

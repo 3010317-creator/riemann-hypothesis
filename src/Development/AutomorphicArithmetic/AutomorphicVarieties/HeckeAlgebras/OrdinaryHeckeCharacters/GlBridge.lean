@@ -29,9 +29,7 @@ private theorem small_powers {k : Type} [Field k] [ValuativeRel k] [TopologicalS
       (x : k) ∈ V := by
   obtain ⟨γ, hγ, hs⟩ := (IsValuativeTopology.hasBasis_nhds_zero' k).mem_iff.mp hV
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible ↥(valuation k).integer
-  have hlt : valuation k (π : k) < 1 := by
-    refine lt_of_le_of_ne π.2 fun h => hπ.not_isUnit ?_
-    exact (Valuation.integer.integers (valuation k)).isUnit_of_one' h
+  have hlt : valuation k (π : k) < 1 := Valuation.integer.v_irreducible_lt_one hπ
   have : MulArchimedean (ValueGroupWithZero k) :=
     ValuativeRel.isRankLeOne_iff_mulArchimedean.mp inferInstance
   obtain ⟨N, hN⟩ := exists_pow_lt₀ hlt (Units.mk0 γ hγ)
@@ -155,17 +153,8 @@ theorem UpperTheory.diagonal_conjugate_mem :
     rw [← hg0]
     simp
   let p : ↥(ValuativeRel.valuation k).integer := ⟨(ϖ : k), hϖ.le⟩
-  have hp : p ∈ IsLocalRing.maximalIdeal ↥(ValuativeRel.valuation k).integer := by
-    rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    intro hu
-    obtain ⟨q, hq⟩ := hu.exists_right_inv
-    have h1 : ValuativeRel.valuation k ((p * q : ↥(ValuativeRel.valuation k).integer) : k) = 1 := by
-      rw [hq]; simp
-    have h2 : ValuativeRel.valuation k ((q : ↥(ValuativeRel.valuation k).integer) : k) ≤ 1 := q.2
-    rw [Subring.coe_mul, map_mul] at h1
-    have h3 : ValuativeRel.valuation k (ϖ : k) * ValuativeRel.valuation k ((q : ↥(ValuativeRel.valuation k).integer) : k) < 1 :=
-      lt_of_le_of_lt (mul_le_of_le_one_right' h2) hϖ
-    exact absurd h1 h3.ne
+  have hp : p ∈ IsLocalRing.maximalIdeal ↥(ValuativeRel.valuation k).integer :=
+    (IsLocalRing.mem_maximalIdeal _).2 (Valuation.Integer.not_isUnit_iff_valuation_lt_one.2 hϖ)
   let t : Fin n → kˣ := fun i => ϖ ^ ((n : ℤ) - 1 - ((i : ℕ) : ℤ))
   have hz1 : ((z ^ c : GL (Fin n) k) : Matrix (Fin n) (Fin n) k)
       = Matrix.diagonal (fun i => (((t i) ^ c : kˣ) : k)) := by
@@ -241,11 +230,6 @@ private theorem unif_lt (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace 
   rw [h']
   exact ValuativeRel.uniformizer_lt_one
 
-private theorem diagT_val (k : Type) [Field k] (n : ℕ) (t : Fin n → kˣ) :
-    ((GlobalTheory.SmGL.diagT k (Fin n) t : GL (Fin n) k) : Matrix (Fin n) (Fin n) k)
-      = Matrix.diagonal (fun i => (t i : k)) := by
-  exact GlobalTheory.SmGL.val_diagT k t
-
 private theorem unipB_spec (k : Type) [Field k] (n : ℕ) (g : GL (Fin n) k)
     (hg : g ∈ GlobalTheory.SmGL.unipB k (Fin n)) :
     (g : Matrix (Fin n) (Fin n) k).BlockTriangular id ∧ ∀ i, (g : Matrix (Fin n) (Fin n) k) i i = 1 := by
@@ -266,7 +250,8 @@ theorem UpperTheory.Reformulated.B.BranchingSmooth.br_smooth :
   · show v ∈ UpperTheory.Reformulated.B.SubgroupFixedSubmodule.fixd π _
     rintro _ ⟨x, hx, rfl⟩
     obtain ⟨h1, h2⟩ := unipB_spec k n x hx.1
-    exact hc c le_rfl _ (UpperTheory.diagonal_conjugate_mem (UpperTheory.V.Hi.unif k) (unif_lt k) c _ x (diagT_val k n _) hx.2 h1 h2)
+    exact hc c le_rfl _ (UpperTheory.diagonal_conjugate_mem (UpperTheory.V.Hi.unif k)
+      (unif_lt k) c _ x (GlobalTheory.SmGL.val_diagT k _) hx.2 h1 h2)
   · show v ∈ UpperTheory.Reformulated.B.SubgroupFixedSubmodule.fixd π _
     intro g hg
     exact hc (c + 1) (Nat.le_succ c) g hg.2

@@ -5,6 +5,7 @@ public import Mathlib.RingTheory.Length
 public import Mathlib.Topology.Algebra.Group.Subgroup
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.SelmerTransport.CocycleZeroMemInvariants
 public import Development.AutomorphicArithmetic.CyclotomicBounds.ClassNumberBounds.SelmerDuality.LengthExact
+import Mathlib.RepresentationTheory.Stabilizer
 
 @[expose] public section
 
@@ -45,18 +46,7 @@ theorem UpperTheory.V.Base.kerResCyc :
         have := congrArg Subtype.val hm0
         rw [hT] at this
         exact sub_eq_zero.mp this
-      let S : Subgroup G :=
-        { carrier := {g | ρ g m = m}
-          mul_mem' := by
-            intro a b ha hb
-            simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
-            rw [hb, ha]
-          one_mem' := by simp
-          inv_mem' := by
-            intro a ha
-            simp only [Set.mem_setOf_eq] at *
-            calc ρ a⁻¹ m = ρ a⁻¹ (ρ a m) := by rw [ha]
-              _ = m := by rw [← Module.End.mul_apply, ← map_mul]; simp }
+      let S : Subgroup G := ρ.stabilizer (m : M)
       have hScl : IsClosed (S : Set G) :=
         IsClosed.preimage (hρ.comp (Continuous.prodMk continuous_id continuous_const))
           (isClosed_singleton (x := (m : M)))

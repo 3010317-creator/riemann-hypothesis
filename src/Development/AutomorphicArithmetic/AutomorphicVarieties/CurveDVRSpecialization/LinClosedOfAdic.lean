@@ -76,15 +76,9 @@ theorem UpperTheory.V.Pr.linClosedOfAdic :
       show f (e (y g)) = 0
       rw [← hy]
       exact hgS
-    have hsum : y g - y g0 = ∑ p, (y g p - y g0 p) • Pi.single p (1 : A) := by
-      funext q
-      rw [Finset.sum_apply]
-      simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Pi.single_apply, mul_ite, mul_one,
-        mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have hmem : K.mkQ (y g - y g0) ∈
         (maximalIdeal A ^ N • ⊤ : Submodule A ((Fin n × Fin n → A) ⧸ K)) := by
-
-      rw [hsum, map_sum]
+      rw [pi_eq_sum_univ' (y g - y g0), map_sum]
       refine Submodule.sum_mem _ fun p _ => ?_
       rw [LinearMap.map_smul]
       exact Submodule.smul_mem_smul (hd p) Submodule.mem_top

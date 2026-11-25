@@ -51,34 +51,29 @@ private theorem change (E F K : Type) [Field E] [NumberField E] [Field F] [Numbe
     rw [← hinj.eq_iff, AlgEquiv.restrictNormal_commutes]
     rfl
   · rintro ⟨j, hj⟩
-    have hr : ∀ x : E, ∃ y : F, algebraMap F K y = j x := by
-      intro x
-      have : j x ∈ Set.range (algebraMap F K) := by
-        rw [IsGalois.mem_range_algebraMap_iff_fixed]
-        intro σ
-        refine (hj (σ.restrictScalars ℚ)).2 ?_ x
-        have h1 : (σ.restrictScalars ℚ).restrictNormal F = 1 := by
-          ext y
-          apply hinj
-          rw [AlgEquiv.restrictNormal_commutes]
-          exact σ.commutes y
-        rw [Subgroup.mem_comap, ← IsCyclotomicExtension.Rat.galEquivZMod_restrictNormal_apply N K F h, h1, map_one]
-        exact H.one_mem
-      exact this
-    choose f hf using hr
-    let j0 : E →+* F :=
-      { toFun := f
-        map_one' := hinj (by simp [hf])
-        map_mul' := fun x y => hinj (by simp [hf])
-        map_zero' := hinj (by simp [hf])
-        map_add' := fun x y => hinj (by simp [hf]) }
-    refine ⟨j0.toRatAlgHom, fun τ => ?_⟩
+    let e := AlgEquiv.ofInjectiveField i
+    have hr : ∀ x : E, j x ∈ i.range := fun x => by
+      change j x ∈ Set.range (algebraMap F K)
+      rw [IsGalois.mem_range_algebraMap_iff_fixed]
+      intro σ
+      refine (hj (σ.restrictScalars ℚ)).2 ?_ x
+      have h1 : (σ.restrictScalars ℚ).restrictNormal F = 1 := by
+        ext y
+        apply hinj
+        rw [AlgEquiv.restrictNormal_commutes]
+        exact σ.commutes y
+      rw [Subgroup.mem_comap,
+        ← IsCyclotomicExtension.Rat.galEquivZMod_restrictNormal_apply N K F h, h1, map_one]
+      exact H.one_mem
+    refine ⟨e.symm.toAlgHom.comp (j.codRestrict i.range hr), fun τ => ?_⟩
     have h2 := hj (τ.liftNormal K)
     rw [Subgroup.mem_comap, ← IsCyclotomicExtension.Rat.galEquivZMod_restrictNormal_apply N K F h,
       AlgEquiv.restrict_liftNormal] at h2
     rw [← h2]
     refine forall_congr' fun x => ?_
-    rw [← hf x, ← hinj.eq_iff, ← τ.liftNormal_commutes K]
+    have hf : algebraMap F K (e.symm ⟨j x, hr x⟩) = j x :=
+      congrArg Subtype.val (e.apply_symm_apply ⟨j x, hr x⟩)
+    rw [← hf, ← hinj.eq_iff, ← τ.liftNormal_commutes K]
     rfl
 
 theorem UpperTheory.V.Chr.levChange :

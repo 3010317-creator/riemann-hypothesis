@@ -2,6 +2,7 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.PerDeriv
 import Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.ConstSmall
+import Mathlib.RepresentationTheory.Stabilizer
 
 @[expose] public section
 
@@ -24,17 +25,8 @@ private theorem ct_aff_add (F : Type) [Field F] [NumberField F] (y : F) (x : Ad 
 open NumberField MeasureTheory GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Sd in
 private theorem ct_level (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (a : ℕ) (φ : TR.Sm F a) (X : TR.Lie F a)
     (h : IsOpen {k | TR.finRep F a k φ = φ}) : IsOpen {k | TR.finRep F a k (TR.lie F a X φ) = TR.lie F a X φ} := by
-  let S : TR.Sm F a → Subgroup (GL (Fin a) (Af F)) := fun ψ =>
-    { carrier := {k | TR.finRep F a k ψ = ψ}
-      one_mem' := by simp
-      mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq] at *
-        rw [map_mul, Module.End.mul_apply, hy, hx]
-      inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq] at *
-        conv_lhs => rw [← hx]
-        rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
-  refine Subgroup.isOpen_mono (H₁ := S φ) (H₂ := S (TR.lie F a X φ)) (fun k hk => ?_) h
+  refine Subgroup.isOpen_mono (H₁ := Representation.stabilizer (TR.finRep F a) φ)
+    (H₂ := Representation.stabilizer (TR.finRep F a) (TR.lie F a X φ)) (fun k hk => ?_) h
   have hk' : TR.rt F a (finGL F a k) φ = φ := hk
   have e := LinearMap.congr_fun (TR.lie_rt_fin X k) φ
   rw [Module.End.mul_apply, Module.End.mul_apply, hk'] at e

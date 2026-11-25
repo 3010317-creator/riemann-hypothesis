@@ -39,14 +39,9 @@ private theorem val_le (w : HeightOneSpectrum (𝓞 F)) (c : ℕ) (x : w.adicCom
     refine Submodule.mul_induction_on hx (fun a ha b hb => ?_) fun a b ha hb => ?_
     · have h1 : Valued.v (b : w.adicCompletion F) < 1 :=
         (Valuation.mem_maximalIdeal_iff _ (Valued.v : Valuation (w.adicCompletion F) _)).1 hb
-      have h2 : Valued.v (b : w.adicCompletion F) ≤ WithZero.exp (-1 : ℤ) := by
-        generalize Valued.v (b : w.adicCompletion F) = t at h1
-        induction t using WithZero.expRecOn with
-        | zero => exact zero_le
-        | exp n =>
-          rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h1
-          rw [WithZero.exp_le_exp]
-          omega
+      have h2 : Valued.v (b : w.adicCompletion F) ≤ WithZero.exp (-1 : ℤ) :=
+        (WithZero.lt_mul_exp_iff_le WithZero.exp_ne_zero).1
+          (by rwa [← WithZero.exp_add, neg_add_cancel, WithZero.exp_zero])
       have h3 : WithZero.exp (-((c + 1 : ℕ) : ℤ)) = WithZero.exp (-(c : ℤ)) * WithZero.exp (-1 : ℤ) := by
         rw [← WithZero.exp_add]
         congr 1

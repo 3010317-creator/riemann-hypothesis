@@ -57,92 +57,61 @@ noncomputable section
 
 namespace UpperTheory.V.ZK
 
-private theorem gl_hom_transvection_eq_one_of_ne_zero_of_ne_one {k M : Type} [Field k] [CommGroup M] {n : ℕ} (a : k) (ha0 : a ≠ 0) (ha1 : a ≠ 1)
-    (Φ : GL (Fin n) k →* M) (t : Matrix.TransvectionStruct (Fin n) k) (u : GL (Fin n) k)
-    (hu : (u : Matrix (Fin n) (Fin n) k) = t.toMatrix) : Φ u = 1 := by
-  obtain ⟨i, j, hij, c⟩ := t
-  change (u : Matrix (Fin n) (Fin n) k) = Matrix.transvection i j c at hu
-  have hD : IsUnit (Matrix.diagonal (Function.update (fun _ => (1 : k)) i a)).det := by
-    rw [Matrix.det_diagonal, isUnit_iff_ne_zero, Finset.prod_ne_zero_iff]
-    intro l _
-    rw [Function.update_apply]
-    split_ifs
-    · exact ha0
-    · exact one_ne_zero
-  have hT : ∀ x : k, IsUnit (Matrix.transvection i j x).det := by
-    intro x
-    rw [Matrix.det_transvection_of_ne i j hij]
-    exact isUnit_one
-  have hcomm : ∀ x : k, Matrix.diagonal (Function.update (fun _ => (1 : k)) i a) * Matrix.transvection i j x =
-      Matrix.transvection i j (a * x) * Matrix.diagonal (Function.update (fun _ => (1 : k)) i a) := by
-    intro x
-    ext r s
-    simp only [Matrix.transvection, Matrix.diagonal_mul, Matrix.mul_diagonal, Matrix.add_apply, Matrix.one_apply,
-      Matrix.single_apply, Function.update_apply]
-    rcases eq_or_ne r i with rfl | hr <;> rcases eq_or_ne s j with rfl | hs
-    · simp [hij, Ne.symm hij]
-    · by_cases hrs : r = s
-      · subst hrs
-        simp [Ne.symm hs]
-      · simp [Ne.symm hs, hrs]
-    · by_cases hrs : r = s
-      · subst hrs
-        simp [hr, Ne.symm hr]
-      · simp [hr, Ne.symm hr, hrs]
-    · by_cases hrs : r = s
-      · subst hrs
-        simp [hr, Ne.symm hr]
-      · simp [hr, Ne.symm hr, hrs]
-  let dU := Matrix.nonsingInvUnit _ hD
-  let T : k → GL (Fin n) k := fun x => Matrix.nonsingInvUnit _ (hT x)
-  have e1 : ∀ x, dU * T x = T (a * x) * dU := fun x => Units.ext (hcomm x)
-  have e2 : ∀ x y, T x * T y = T (x + y) := fun x y =>
-    Units.ext (Matrix.transvection_mul_transvection_same i j hij x y)
-  have hu' : u = T c := Units.ext hu
-  have ha : a - 1 ≠ 0 := sub_ne_zero.mpr ha1
-  have hx : a * (c / (a - 1)) = c / (a - 1) + c := by
-    field_simp
-    ring
-  have h3 := congrArg Φ (e1 (c / (a - 1)))
-  rw [map_mul, map_mul, mul_comm (Φ dU), mul_left_inj, hx, ← e2, map_mul] at h3
-  rw [hu']
-  exact (mul_eq_left.mp h3.symm)
-
 open Matrix in
-private lemma gl_det {k M : Type} [Field k] [CommGroup M] {n : ℕ} (a : k) (ha0 : a ≠ 0) (ha1 : a ≠ 1)
-    (Φ : GL (Fin n) k →* M) (w : kˣ →* M)
-    (hd : ∀ (g : GL (Fin n) k) (d : Fin n → kˣ), (g : Matrix (Fin n) (Fin n) k) = diagonal (fun i => (d i : k)) →
-      Φ g = ∏ i, w (d i)) (g : GL (Fin n) k) : Φ g = w (GeneralLinearGroup.det g) := by
-  have key : ∀ A : Matrix (Fin n) (Fin n) k, A.det ≠ 0 →
-      ∀ u : GL (Fin n) k, (u : Matrix (Fin n) (Fin n) k) = A → Φ u = w (GeneralLinearGroup.det u) := by
+private lemma gl_det {k M : Type} [Field k] [CommGroup M] {n : ℕ}
+    (a : k) (ha0 : a ≠ 0) (ha1 : a ≠ 1) (Φ : GL (Fin n) k →* M) (w : kˣ →* M)
+    (hd : ∀ (g : GL (Fin n) k) (d : Fin n → kˣ),
+      (g : Matrix (Fin n) (Fin n) k) = diagonal (fun i => (d i : k)) → Φ g = ∏ i, w (d i))
+    (g : GL (Fin n) k) : Φ g = w (GeneralLinearGroup.det g) := by
+  have key : ∀ A : Matrix (Fin n) (Fin n) k, A.det ≠ 0 → ∀ u : GL (Fin n) k,
+      (u : Matrix (Fin n) (Fin n) k) = A → Φ u = w (GeneralLinearGroup.det u) := by
     intro A hA
     refine Matrix.diagonal_transvection_induction_of_det_ne_zero
-      (fun A => ∀ u : GL (Fin n) k, (u : Matrix (Fin n) (Fin n) k) = A → Φ u = w (GeneralLinearGroup.det u))
+      (fun A => ∀ u : GL (Fin n) k,
+        (u : Matrix (Fin n) (Fin n) k) = A → Φ u = w (GeneralLinearGroup.det u))
       A hA ?_ ?_ ?_
     · intro D hD u hu
       rw [Matrix.det_diagonal] at hD
       have hD' : ∀ l, D l ≠ 0 := fun l => Finset.prod_ne_zero_iff.mp hD l (Finset.mem_univ l)
-      have hdet : GeneralLinearGroup.det u = ∏ l, Units.mk0 (D l) (hD' l) := by
-        ext
-        rw [GeneralLinearGroup.val_det_apply, hu, Matrix.det_diagonal, Units.coe_prod]
-        rfl
+      have hdet : GeneralLinearGroup.det u = ∏ l, Units.mk0 (D l) (hD' l) :=
+        Units.ext <| by simp [GeneralLinearGroup.val_det_apply, hu, Matrix.det_diagonal]
       rw [hd u (fun l => Units.mk0 (D l) (hD' l)) hu, hdet, map_prod]
-    · intro t u hu
-      rw [gl_hom_transvection_eq_one_of_ne_zero_of_ne_one a ha0 ha1 Φ t u hu]
-      have h1 : GeneralLinearGroup.det u = 1 := by
-        ext
-        rw [GeneralLinearGroup.val_det_apply, hu, Matrix.TransvectionStruct.det]
-        rfl
-      rw [h1, map_one]
+    · rintro ⟨i, j, hij, c⟩ u hu
+      let d : Fin n → k := Function.update 1 i a
+      have hD : (Matrix.diagonal d).det ≠ 0 := by
+        rw [Matrix.det_diagonal, Finset.prod_ne_zero_iff]
+        intro l _
+        simp [d, Function.update_apply]
+        split_ifs <;> simp [ha0]
+      let dU := Matrix.GeneralLinearGroup.mkOfDetNeZero (Matrix.diagonal d) hD
+      let T : k → GL (Fin n) k := fun x => Matrix.GeneralLinearGroup.mkOfDetNeZero
+        (Matrix.transvection i j x) (by simp [Matrix.det_transvection_of_ne i j hij])
+      have e1 : ∀ x : k, dU * T x = T (a * x) * dU := fun x => Units.ext <| by
+        change Matrix.diagonal d * Matrix.transvection i j x =
+          Matrix.transvection i j (a * x) * Matrix.diagonal d
+        simp only [Matrix.transvection, Matrix.mul_add, Matrix.add_mul,
+          Matrix.mul_one, Matrix.one_mul]
+        congr 1; ext r s
+        simp only [Matrix.diagonal_mul, Matrix.mul_diagonal, Matrix.single_apply]
+        split_ifs with h
+        · rcases h with ⟨rfl, rfl⟩
+          simp [d, hij.symm]
+        · simp
+      have e2 (x y : k) : T x * T y = T (x + y) :=
+        Units.ext (Matrix.transvection_mul_transvection_same i j hij x y)
+      have hx : a * (c / (a - 1)) = c / (a - 1) + c := by
+        have ha : a - 1 ≠ 0 := sub_ne_zero.mpr ha1
+        field_simp; ring
+      have h3 := congrArg Φ (e1 (c / (a - 1)))
+      rw [map_mul, map_mul, mul_comm (Φ dU), mul_left_inj, hx, ← e2, map_mul] at h3
+      have h1 : GeneralLinearGroup.det u = 1 := Units.ext <| by
+        rw [GeneralLinearGroup.val_det_apply, hu, Matrix.TransvectionStruct.det, Units.val_one]
+      rw [h1, map_one, show u = T c from Units.ext hu, mul_eq_left.mp h3.symm]
     · intro A B hA hB hPA hPB u hu
-      have e : u = Matrix.nonsingInvUnit A (isUnit_iff_ne_zero.mpr hA) *
-          Matrix.nonsingInvUnit B (isUnit_iff_ne_zero.mpr hB) := Units.ext hu
+      have e : u = Matrix.GeneralLinearGroup.mkOfDetNeZero A hA *
+          Matrix.GeneralLinearGroup.mkOfDetNeZero B hB := Units.ext hu
       rw [e, map_mul, map_mul, hPA _ rfl, hPB _ rfl, map_mul]
-  refine key _ ?_ g rfl
-  intro h
-  have := (GeneralLinearGroup.det g).ne_zero
-  rw [GeneralLinearGroup.val_det_apply] at this
-  exact this h
+  exact key _ (GeneralLinearGroup.det g).ne_zero g rfl
 
 private lemma fam_det {k M : Type} [Field k] [Finite k] [CommGroup M] (a : k) (ha0 : a ≠ 0) (ha1 : a ≠ 1)
     (F : ∀ (V : Type) [AddCommGroup V] [Module k V] [Finite V], (V ≃ₗ[k] V) →* M) (w : kˣ →* M)

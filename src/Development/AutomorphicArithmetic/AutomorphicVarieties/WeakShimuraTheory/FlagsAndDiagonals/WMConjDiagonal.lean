@@ -135,17 +135,10 @@ theorem Amb.unit_sub (𝔞 : Amb l) {x y : c.O} (h : residue c.O x ≠ residue c
   exact h (sub_eq_zero.1 (by rw [← map_sub, residue_eq_zero_iff]; exact hn))
 
 theorem Amb.unit_two (𝔞 : Amb l) (c : Coef l) (hl : l ≠ 2) : IsUnit (2 : 𝔞.V) := by
-  have h2 : IsUnit (2 : ℤ_[l]) := by
-    by_contra hn
-    have hm : (2 : ℤ_[l]) ∈ maximalIdeal ℤ_[l] := (IsLocalRing.mem_maximalIdeal _).2 hn
-    rw [← PadicInt.ker_toZMod, RingHom.mem_ker, map_ofNat] at hm
-    have hd : l ∣ 2 := (ZMod.natCast_eq_zero_iff 2 l).1 (by exact_mod_cast hm)
-    exact hl ((Nat.prime_dvd_prime_iff_eq (Fact.out) Nat.prime_two).1 hd)
-  have h2O : IsUnit (2 : c.O) := by
-    have := h2.map (algebraMap ℤ_[l] c.O)
-    rwa [map_ofNat] at this
-  have := h2O.map (𝔞.a c)
-  rwa [map_ofNat] at this
+  have h2 : IsUnit (2 : ℤ_[l]) := PadicInt.isUnit_iff.2 <| by
+    rw [← Nat.cast_ofNat]
+    exact PadicInt.norm_natCast_eq_one_iff.2 ((Nat.coprime_primes Fact.out Nat.prime_two).2 hl)
+  simpa only [map_ofNat] using (h2.map (algebraMap ℤ_[l] c.O)).map (𝔞.a c)
 
 theorem KPair.cg {D : Raw Ω c} {𝔞 : Amb l} {r u} (h : KPair D 𝔞 r u) (pr : Bool) (g : G ℚ Ω) :
     Cg (maximalIdeal 𝔞.V) (adj (wM 𝔞.V pr) * r g * wM 𝔞.V pr) (Matrix.diagonal fun i => 𝔞.a c (chi D pr i g)) := by

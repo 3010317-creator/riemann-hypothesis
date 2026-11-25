@@ -104,18 +104,11 @@ theorem residues {k : Type} [Field k] [Algebra C k] (hinj : Function.Injective (
       exact ⟨a * c, by rw [map_mul, h1, Prod.smul_fst, trace_smul, Algebra.smul_def], by
         rw [map_mul, h2, Finset.mul_sum]
         exact Finset.sum_congr rfl fun j _ => by rw [Prod.smul_snd, Pi.smul_apply, Algebra.smul_def]⟩
-  have hex : ∀ m ∈ Submodule.span C (Set.range r), ∃ a, (m, a) ∈ S := by
-    intro m hm
-    induction hm using Submodule.span_induction with
-    | mem x hx => obtain ⟨g, rfl⟩ := hx; exact ⟨_, hR g⟩
-    | zero => exact ⟨0, zero_mem S⟩
-    | add x y _ _ hx hy =>
-      obtain ⟨a, ha⟩ := hx
-      obtain ⟨b, hb⟩ := hy
-      exact ⟨a + b, add_mem ha hb⟩
-    | smul c x _ hx =>
-      obtain ⟨a, ha⟩ := hx
-      exact ⟨c • a, S.smul_mem c ha⟩
+  have hex : ∀ m ∈ Submodule.span C (Set.range r), ∃ a, (m, a) ∈ S := fun m hm => by
+    obtain ⟨⟨_, a⟩, hp, rfl⟩ := Submodule.mem_map.1
+      ((Submodule.span_le (p := S.map (LinearMap.fst C _ _))).2
+        (by rintro _ ⟨g, rfl⟩; exact ⟨_, hR g, rfl⟩) hm)
+    exact ⟨a, hp⟩
   have hχ : Function.Injective χ := fun i j h => hδ (by simp only [← hd, h])
   have huniq : ∀ a, ((0 : Matrix (Fin n) (Fin n) K), a) ∈ S → a = 0 := by
     intro a ha

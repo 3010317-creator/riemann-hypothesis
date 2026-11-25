@@ -5,6 +5,7 @@ import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.A
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.SymplecticGSp4.CopNormLt
 import Mathlib.Tactic.Linter.Style
 import Std.Tactic.BVDecide.Normalize.Prop
+import Mathlib.Topology.Algebra.Group.Units
 
 @[expose] public section
 
@@ -58,25 +59,19 @@ theorem resLe_cont {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {F
   haveI : IsScalarTower F L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact Af.continuous_restrictScalarsHom F L Ω
 
-private theorem continuous_monoidHom_units_of_continuous_coe {Γ M : Type} [Group Γ] [TopologicalSpace Γ] [ContinuousInv Γ]
-    [Monoid M] [TopologicalSpace M] (φ : Γ →* Mˣ) (h : Continuous fun g => (φ g : M)) :
-    Continuous φ := by
-  rw [Units.continuous_iff]
-  refine ⟨h, (h.comp continuous_inv).congr fun g => ?_⟩
-  simp only [Function.comp, map_inv]
-
 theorem psi_cont {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω]
     [IsAlgClosure L Ω] {s : W.HidaSetting l L Ω} {V : s.Lev} {c : Coef l} {n : ℕ} {r : W.Resid V.frame c.O n} {B : W.UniversalOrdinaryDeterminantRing r}
     (x : B.Pt) (v : W.Vl l L) (i : Fin n) : Continuous (x.psi v i) := by
   letI := V.frame.tv v
   have h1 := adicPt c x _ (W.Resid.IsPsi.cont (B.u.psi v i))
-  exact continuous_monoidHom_units_of_continuous_coe _ (h1.congr fun g => rfl)
+  refine Continuous.of_coeHom_comp ?_
+  exact h1.congr fun g => rfl
 
 variable {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c}
   {T : Tower D} {c' : Coef l} {h : c.O ≤ c'.O} (K : Link T c' h)
 
 theorem twc_cont (n : ℕ) : Continuous (K.twc n) := by
-  refine continuous_monoidHom_units_of_continuous_coe _ ?_
+  refine Continuous.of_coeHom_comp ?_
   have hA : AdicCont (maximalIdeal c'.O)
       fun g => ((K.κ g : c'.O) : c'.O) * ((K.β g : c'.O)) ^ n := by
     intro N
@@ -86,16 +81,16 @@ theorem twc_cont (n : ℕ) : Continuous (K.twc n) := by
     simp [map_mul, map_pow]
   have h1 := adicPt c' (Algebra.ofId c'.O (PadicAlgCl l)) _ hA
   refine h1.congr fun g => ?_
-  rw [Link.twc_val]
+  rw [MonoidHom.coe_comp, Function.comp_apply, Units.coeHom_apply, Link.twc_val]
   rfl
 
 theorem rho_cont (n : ℕ) {r : G T.F Ω →* M4 (PadicAlgCl l)} (hr : Continuous r) : Continuous (K.rhoQ n r) := by
-  refine continuous_monoidHom_units_of_continuous_coe _ ?_
+  refine Continuous.of_coeHom_comp ?_
   have h1 : Continuous fun g => ((K.twc n g : (PadicAlgCl l)ˣ) : PadicAlgCl l) :=
     Units.continuous_val.comp (twc_cont K n)
   have h2 := h1.smul (hr.comp (resLe_cont T.F_le))
   refine h2.congr fun g => ?_
-  rw [Link.rho_val]
+  rw [MonoidHom.coe_comp, Function.comp_apply, Units.coeHom_apply, Link.rho_val]
   rfl
 
 variable {K}

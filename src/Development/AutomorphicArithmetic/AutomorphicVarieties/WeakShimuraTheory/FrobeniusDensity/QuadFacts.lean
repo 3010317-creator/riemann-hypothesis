@@ -16,42 +16,33 @@ private theorem exists_conj (K : Type) [Field K] [NumberField K] (h : Module.fin
     ∃ t : K ≃ₐ[ℚ] K, t ≠ 1 ∧ (∀ s : K ≃ₐ[ℚ] K, s ≠ 1 → s = t) ∧
       ∀ x : 𝓞 K, x * RingOfIntegers.mapRingEquiv t.toRingEquiv x = ((Algebra.norm ℤ x : ℤ) : 𝓞 K) := by
   haveI : Algebra.IsQuadraticExtension ℚ K := ⟨h⟩
-  have hc : Fintype.card (K ≃ₐ[ℚ] K) = 2 := by
-    rw [← Nat.card_eq_fintype_card, IsGalois.card_aut_eq_finrank, h]
-  obtain ⟨t, ht⟩ : ∃ t : K ≃ₐ[ℚ] K, t ≠ 1 := by
-    by_contra! hne
-    have : Fintype.card (K ≃ₐ[ℚ] K) ≤ 1 := Fintype.card_le_one_iff.mpr fun a b => by
-      rw [hne a, hne b]
-    omega
-  have huniq : ∀ s : K ≃ₐ[ℚ] K, s ≠ 1 → s = t := by
-    intro s hs
-    by_contra hst
-    classical
-    have h3 : ({1, s, t} : Finset (K ≃ₐ[ℚ] K)).card = 3 := by
-      rw [Finset.card_insert_of_notMem, Finset.card_pair hst]
-      simp only [Finset.mem_insert, Finset.mem_singleton, not_or]
-      exact ⟨Ne.symm hs, Ne.symm ht⟩
-    have := Finset.card_le_univ ({1, s, t} : Finset (K ≃ₐ[ℚ] K))
-    omega
-  refine ⟨t, ht, huniq, fun x => ?_⟩
   classical
-  have huniv : (Finset.univ : Finset (K ≃ₐ[ℚ] K)) = {1, t} := by
-    ext s
-    simp only [Finset.mem_univ, Finset.mem_insert, Finset.mem_singleton, true_iff]
-    by_cases hs : s = 1
-    · exact Or.inl hs
-    · exact Or.inr (huniq s hs)
-  apply RingOfIntegers.ext
-  have key := Algebra.norm_eq_prod_automorphisms ℚ (x : K)
-  rw [huniv, Finset.prod_pair (Ne.symm ht)] at key
-  simp only [map_mul, RingOfIntegers.mapRingEquiv_apply, map_intCast]
-  rw [← Algebra.coe_norm_int] at key
-  simp only [AlgEquiv.one_apply] at key
-  change (x : K) * t (x : K) = _
-  rw [← key]
-  simp
+  have hc : (Finset.univ : Finset (K ≃ₐ[ℚ] K)).card = 2 := by
+    rw [Finset.card_univ, ← Nat.card_eq_fintype_card, IsGalois.card_aut_eq_finrank, h]
+  obtain ⟨a, b, hab, huniv⟩ := Finset.card_eq_two.mp hc
+  have mk : ∀ t : K ≃ₐ[ℚ] K, t ≠ 1 → (Finset.univ : Finset (K ≃ₐ[ℚ] K)) = {1, t} →
+      t ≠ 1 ∧ (∀ s : K ≃ₐ[ℚ] K, s ≠ 1 → s = t) ∧ ∀ x : 𝓞 K,
+        x * RingOfIntegers.mapRingEquiv t.toRingEquiv x = ((Algebra.norm ℤ x : ℤ) : 𝓞 K) := by
+    intro t ht ht_univ
+    refine ⟨ht, fun s hs => ?_, fun x => ?_⟩
+    · have : s ∈ ({(1 : K ≃ₐ[ℚ] K), t} : Finset (K ≃ₐ[ℚ] K)) := ht_univ ▸ Finset.mem_univ s
+      simpa [hs] using this
+    · apply RingOfIntegers.ext
+      have key := Algebra.norm_eq_prod_automorphisms ℚ (x : K)
+      rw [ht_univ, Finset.prod_pair ht.symm] at key
+      simp only [map_mul, RingOfIntegers.mapRingEquiv_apply, map_intCast]
+      rw [← Algebra.coe_norm_int] at key
+      simp only [AlgEquiv.one_apply] at key
+      change (x : K) * t (x : K) = _
+      rw [← key]
+      simp
+  rcases (by simpa [huniv] using Finset.mem_univ (1 : K ≃ₐ[ℚ] K) :
+      (1 : K ≃ₐ[ℚ] K) = a ∨ (1 : K ≃ₐ[ℚ] K) = b) with rfl | rfl
+  · exact ⟨b, mk b hab.symm huniv⟩
+  · exact ⟨a, mk a hab (huniv.trans (Finset.pair_comm _ _))⟩
 
-private theorem mul_map {K : Type} [Field K] [NumberField K] (τ : 𝓞 K ≃+* 𝓞 K)
+private theorem mul_map {K : Type} [Field K] [NumberField K] (h : Module.finrank ℚ K = 2)
+    (τ : 𝓞 K ≃+* 𝓞 K)
     (hτ : ∀ x : 𝓞 K, x * τ x = ((Algebra.norm ℤ x : ℤ) : 𝓞 K)) (I : Ideal (𝓞 K)) :
     I * I.map τ = Ideal.span {(Ideal.absNorm I : 𝓞 K)} := by
   classical
@@ -65,18 +56,6 @@ private theorem mul_map {K : Type} [Field K] [NumberField K] (τ : 𝓞 K ≃+* 
     simp only [Function.comp_apply, Algebra.intNorm_eq_norm, eq_intCast]
     rw [← hτ x]
     exact Ideal.mul_mem_mul hx (Ideal.mem_map_of_mem _ hx)
-  have hd : Module.finrank ℤ (𝓞 K) = 2 := by
-    have h2 := hτ 2
-    rw [map_ofNat, show (2 : 𝓞 K) = algebraMap ℤ (𝓞 K) 2 by simp, Algebra.norm_algebraMap] at h2
-    have h4 : ((4 : ℤ) : 𝓞 K) = ((2 ^ Module.finrank ℤ (𝓞 K) : ℤ) : 𝓞 K) := by
-      rw [← h2]
-      simp
-      norm_num
-    have h5 : (2 : ℤ) ^ Module.finrank ℤ (𝓞 K) = 2 ^ 2 := by
-      have := Int.cast_injective (α := 𝓞 K) h4
-      rw [← this]
-      norm_num
-    exact Nat.pow_right_injective (le_refl 2) (by exact_mod_cast h5)
   have hmap : Ideal.absNorm (I.map τ) = Ideal.absNorm I := by
     rw [← Ideal.absNorm_relNorm ℤ (𝓞 K) (I.map τ), ← Ideal.absNorm_relNorm ℤ (𝓞 K) I]
     congr 1
@@ -84,7 +63,8 @@ private theorem mul_map {K : Type} [Field K] [NumberField K] (τ : 𝓞 K ≃+* 
   have habs : Ideal.absNorm (Ideal.span {((Ideal.absNorm I : ℕ) : 𝓞 K)}) =
       Ideal.absNorm I ^ 2 := by
     rw [Ideal.absNorm_span_singleton, show ((Ideal.absNorm I : ℕ) : 𝓞 K) =
-      algebraMap ℤ (𝓞 K) (Ideal.absNorm I : ℤ) by simp, Algebra.norm_algebraMap, hd]
+      algebraMap ℤ (𝓞 K) (Ideal.absNorm I : ℤ) by simp, Algebra.norm_algebraMap,
+      RingOfIntegers.rank, h]
     simp [Int.natAbs_pow]
   obtain ⟨L, hL⟩ := Ideal.dvd_iff_le.mpr hspan
   by_cases hn : Ideal.absNorm I = 0
@@ -207,28 +187,22 @@ private theorem dvd_twelve_of_totient_le_two (k : ℕ) (hk : 0 < k) (h : k.totie
   · rw [Nat.factorization_eq_zero_of_not_prime _ hp]
     exact Nat.zero_le _
 
-private theorem units_pm {K : Type} [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] (h : Module.finrank ℚ K = 2)
-    (t : K ≃ₐ[ℚ] K) (hu : ∀ s : K ≃ₐ[ℚ] K, s ≠ 1 → s = t)
-    (hτ : ∀ x : 𝓞 K, x * RingOfIntegers.mapRingEquiv t.toRingEquiv x = ((Algebra.norm ℤ x : ℤ) : 𝓞 K))
+private theorem units_pm {K : Type} [Field K] [NumberField K]
+    [_root_.NumberField.IsTotallyComplex K] (h : Module.finrank ℚ K = 2)
     (φ : 𝓞 K →+* ZMod 4) (u : (𝓞 K)ˣ) : u = 1 ∨ u = -1 := by
   have hr : NumberField.Units.rank K = 0 := by
     have h1 := IsTotallyComplex.finrank K
-    have h0 := IsTotallyComplex.nrRealPlaces_eq_zero K
-    unfold NumberField.Units.rank
-    rw [InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces, h0]
+    rw [NumberField.Units.rank, InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces,
+      IsTotallyComplex.nrRealPlaces_eq_zero]
     omega
   have htors : u ∈ NumberField.Units.torsion K := by
     obtain ⟨⟨ζ, e⟩, hζ, -⟩ := NumberField.Units.exist_unique_eq_mul_prod K u
-    haveI : IsEmpty (Fin (NumberField.Units.rank K)) := by
-      rw [hr]
-      infer_instance
+    haveI : IsEmpty (Fin (NumberField.Units.rank K)) := hr ▸ inferInstance
     simp only [Finset.univ_eq_empty, Finset.prod_empty, mul_one] at hζ
-    rw [hζ]
-    exact ζ.2
-  rw [← NumberField.Units.rootsOfUnity_eq_torsion, mem_rootsOfUnity] at htors
+    exact hζ ▸ ζ.2
   have hx : ((u : 𝓞 K) : K) ^ NumberField.Units.torsionOrder K = 1 := by
-    have := congrArg (fun v : (𝓞 K)ˣ => ((v : 𝓞 K) : K)) htors
-    simpa using this
+    simpa [Units.coe_pow] using congrArg (fun v : (𝓞 K)ˣ => ((v : 𝓞 K) : K))
+      (NumberField.Units.pow_torsionOrder_eq_one K htors)
   have hfin : 0 < orderOf ((u : 𝓞 K) : K) :=
     orderOf_pos_iff.mpr (isOfFinOrder_iff_pow_eq_one.mpr
       ⟨_, NumberField.Units.torsionOrder_pos K, hx⟩)
@@ -289,7 +263,7 @@ theorem UpperTheory.V.Ws.Tw.quadFacts :
   obtain ⟨t, ht, hu, hτ⟩ := exists_conj K h
   let τ : 𝓞 K ≃+* 𝓞 K := RingOfIntegers.mapRingEquiv t.toRingEquiv
   have hτI : ∀ I : Ideal (𝓞 K), I * I.map τ = Ideal.span {(Ideal.absNorm I : 𝓞 K)} :=
-    mul_map τ hτ
+    mul_map h τ hτ
   have hres : ∀ c : G ℚ Ω, c ∉ K.fixingSubgroup → ∀ y : K, c (y : Ω) = ((t y : K) : Ω) := by
     intro c hc y
     have hne : c.restrictNormal K ≠ 1 := by
@@ -425,4 +399,4 @@ theorem UpperTheory.V.Ws.Tw.quadFacts :
       exact this
     obtain ⟨w, -, -, -, hφ⟩ := h4 2 A Nat.prime_two (by exact_mod_cast hA2) (hall A hA2)
     obtain ⟨φ, -⟩ := hφ 2
-    exact units_pm h t hu hτ φ u
+    exact units_pm h φ u

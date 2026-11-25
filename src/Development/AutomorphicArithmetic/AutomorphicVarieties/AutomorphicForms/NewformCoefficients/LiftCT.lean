@@ -120,41 +120,32 @@ open scoped Matrix MatrixGroups
 
 namespace UpperTheory.V.Af.Nf
 
-private theorem mobius_upper_half_plane_im_pos (y : Matrix (Fin 2) (Fin 2) ℝ) (hy : 0 < y.det) :
-    ((y 1 0 : ℂ) * Complex.I + y 1 1) ≠ 0 ∧
-    0 < (((y 0 0 : ℂ) * Complex.I + y 0 1) / ((y 1 0 : ℂ) * Complex.I + y 1 1)).im := by
-  rw [Matrix.det_fin_two] at hy
-  have h0 : ((y 1 0 : ℂ) * Complex.I + y 1 1) ≠ 0 := by
-    intro h
-    have h1 := congrArg Complex.re h
-    have h2 := congrArg Complex.im h
-    simp at h1 h2
-    rw [h1, h2] at hy
-    simp at hy
-  refine ⟨h0, ?_⟩
-  have hn := Complex.normSq_pos.mpr h0
-  rw [Complex.div_im, ← sub_div]
-  refine div_pos ?_ hn
-  simp
-  linarith
-
 private theorem nsl_shift (k : ℕ) (y : Matrix (Fin 2) (Fin 2) ℝ) (hy : 0 < y.det) :
     ∃ (c : ℂ) (z : ℍ), ∀ (F : ℍ → ℂ) (t : ℝ),
       nsl k F (!![1, t; 0, 1] * y) UpperHalfPlane.I = c * F (t +ᵥ z) := by
-  obtain ⟨h0, h1⟩ := mobius_upper_half_plane_im_pos y hy
-  refine ⟨((|y.det| ^ ((k : ℝ) / 2) : ℝ) : ℂ) * ((y 1 0 : ℂ) * Complex.I + y 1 1) ^ (-(k : ℤ)), ⟨_, h1⟩, fun F t => ?_⟩
+  let gy := Matrix.GeneralLinearGroup.mkOfDetNeZero y hy.ne'
+  have h0 : ((y 1 0 : ℂ) * Complex.I + y 1 1) ≠ 0 := by
+    have hd0 : ((y 1 0 : ℂ) * ↑UpperHalfPlane.I + y 1 1) ≠ 0 := denom_ne_zero gy UpperHalfPlane.I
+    rwa [UpperHalfPlane.coe_I] at hd0
+  refine ⟨((|y.det| ^ ((k : ℝ) / 2) : ℝ) : ℂ) *
+    ((y 1 0 : ℂ) * Complex.I + y 1 1) ^ (-(k : ℤ)), gy • UpperHalfPlane.I, fun F t => ?_⟩
   have hd : (!![1, t; 0, 1] * y).det = y.det := by rw [Matrix.det_mul]; simp
   have e10 : (!![1, t; 0, 1] * y) 1 0 = y 1 0 := by simp [Matrix.mul_apply, Fin.sum_univ_two]
   have e11 : (!![1, t; 0, 1] * y) 1 1 = y 1 1 := by simp [Matrix.mul_apply, Fin.sum_univ_two]
-  have e00 : (!![1, t; 0, 1] * y) 0 0 = y 0 0 + t * y 1 0 := by simp [Matrix.mul_apply, Fin.sum_univ_two]
-  have e01 : (!![1, t; 0, 1] * y) 0 1 = y 0 1 + t * y 1 1 := by simp [Matrix.mul_apply, Fin.sum_univ_two]
+  have e00 : (!![1, t; 0, 1] * y) 0 0 = y 0 0 + t * y 1 0 := by
+    simp [Matrix.mul_apply, Fin.sum_univ_two]
+  have e01 : (!![1, t; 0, 1] * y) 0 1 = y 0 1 + t * y 1 1 := by
+    simp [Matrix.mul_apply, Fin.sum_univ_two]
   unfold nsl
   rw [hd, e10, e11, e00, e01, sign_pos hy, UpperHalfPlane.coe_I]
   congr 2
   rw [← ofComplex_apply (t +ᵥ _)]
   congr 1
-  rw [coe_vadd]
-  show _ = (t : ℂ) + ((y 0 0 : ℂ) * Complex.I + y 0 1) / ((y 1 0 : ℂ) * Complex.I + y 1 1)
+  have hgdet : (0 : ℝ) < gy.det.val := hy
+  rw [coe_vadd, coe_smul_of_det_pos hgdet]
+  rw [show num gy UpperHalfPlane.I / denom gy UpperHalfPlane.I =
+    ((y 0 0 : ℂ) * Complex.I + y 0 1) / ((y 1 0 : ℂ) * Complex.I + y 1 1) by
+    rw [← UpperHalfPlane.coe_I]; rfl]
   simp only [SignType.coe_one]
   push_cast
   field_simp
