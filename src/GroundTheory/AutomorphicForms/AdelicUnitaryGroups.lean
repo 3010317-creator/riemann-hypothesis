@@ -17,8 +17,6 @@ import GroundTheory.GlobalFields.Adele.Topology
 section -- clump:auto
 @[expose] public section
 
-set_option linter.unusedSectionVars false
-
 namespace GroundTheory.Automorphic
 
 open Module Matrix TensorProduct Topology Filter IsDedekindDomain NumberField
@@ -30,7 +28,6 @@ variable {K E : Type*} [Field K] [NumberField K] [CommRing E] [Algebra K E]
   [Algebra.IsQuadraticExtension K E]
 variable {ι : Type*} [Fintype ι] [DecidableEq ι] (H : Matrix ι ι E)
 variable {κ : Type*} [Fintype κ] (b : Basis κ K E)
-
 
 variable (K) in
 def finiteAdeleEval (v : HeightOneSpectrum (𝓞 K)) :

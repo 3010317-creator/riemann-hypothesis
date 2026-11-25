@@ -63,8 +63,6 @@ open MvPolynomial ReciprocityTheory.ChartRestriction.G.Geo
 
 noncomputable section
 
-set_option linter.unusedSectionVars false
-
 namespace ProjectiveBundleNumbers
 
 theorem sum_choose_succ (n : ℕ) (U : ℕ → ℤ) :
@@ -108,7 +106,6 @@ open NumericalSegreProof
 
 variable {F : Type u} [Field F] {K : Type} [Fintype K] [DecidableEq K] {ι : K → Type}
   [∀ k, Fintype (ι k)]
-
 
 omit [Fintype K] [DecidableEq K] in
 theorem length_rootList {n : ℕ} (x : Fin n → K → ℤ) (α : Fin n → ℕ) :
@@ -196,7 +193,6 @@ theorem H_add (W : Ideal (MRing ι F)) (hW : IsMultiProjPrime W) {n : ℕ} (x : 
     intNumL_perm F W (List.perm_middle (l₁ := rootList x α) (a := b))]
   exact cons_add W hW _
     (by rw [hd, List.length_append, hlen, show c + 1 + L.length = c + L.length + 1 by omega]) a b
-
 
 omit [Fintype K] [∀ k, Fintype (ι k)] in
 theorem H_succ (W : Ideal (MRing ι F)) {i : ℕ} (x : Fin (i + 1) → K → ℤ) (c : ℕ)
