@@ -153,10 +153,7 @@ theorem pure_cancel {w : ∀ v : Pl F, (κ → Fv F v) → ℂ} (hne : ∀ v, w 
     (fun i u hu => by
       have : u ≠ v := fun e => hu (Finset.mem_singleton.2 e)
       fin_cases i <;> simp [Function.update_of_ne this]) (by simp [Fin.sum_univ_two, h])
-  obtain ⟨z, hz⟩ : ∃ z, g z ≠ 0 := by
-    by_contra hn
-    push Not at hn
-    exact hg (SchwartzMap.ext hn)
+  obtain ⟨z, hz⟩ : ∃ z, g z ≠ 0 := DFunLike.exists_ne hg
   funext y
   let y' : ∀ u : ({v} : Finset (Pl F)), κ → Fv F u := fun u => (Finset.mem_singleton.1 u.2).symm ▸ y
   let m : MultilinearMap (RingHom.id ℂ) (fun u : ({v} : Finset (Pl F)) => (κ → Fv F u) → ℂ) ℂ :=
