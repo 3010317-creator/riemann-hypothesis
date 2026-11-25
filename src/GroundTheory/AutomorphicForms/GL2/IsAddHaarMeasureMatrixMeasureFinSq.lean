@@ -385,12 +385,7 @@ theorem exists_map_val_withDensity [NeZero m] (μ : Measure (GL (Fin m) F)) [μ.
   rw [Measure.map_apply hv.measurable hS, hE.comap_apply]
   have himg : C.toFun '' (Units.val ⁻¹' S) =
       Measures.entries F m '' (S ∩ Set.range (Units.val : GL (Fin m) F → Matrix (Fin m) (Fin m) F)) := by
-    ext x
-    constructor
-    · rintro ⟨g, hg, rfl⟩
-      exact ⟨g, ⟨hg, g, rfl⟩, rfl⟩
-    · rintro ⟨X, ⟨hX, g, rfl⟩, rfl⟩
-      exact ⟨g, hX, rfl⟩
+    rw [← Set.image_preimage_eq_inter_range, ← Set.image_comp]; rfl
   have hrange : MeasurableSet (Set.range (Units.val : GL (Fin m) F → Matrix (Fin m) (Fin m) F)) :=
     hv.measurableSet_range
   rw [himg, ← matrixMeasure_apply_eq_pi μ₁ (hS.inter hrange)]
