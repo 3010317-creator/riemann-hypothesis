@@ -4,6 +4,7 @@ public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeTransfere
 public import Mathlib.LinearAlgebra.BilinearForm.DualLattice
 public import Formalism.LatticeTheta.ThetaShiftInversion
 public import Mathlib.Analysis.InnerProductSpace.Dual
+import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
 import Std.Tactic.BVDecide.Normalize.Prop
