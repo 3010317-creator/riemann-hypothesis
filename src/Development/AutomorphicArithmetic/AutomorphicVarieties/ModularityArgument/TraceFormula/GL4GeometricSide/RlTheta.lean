@@ -53,24 +53,6 @@ open scoped InnerProductSpace ComplexConjugate
 
 namespace UpperTheory.V.Z.GSp4Splitting
 
-open Matrix in
-private theorem map_thetaR {n : ℕ} {R S : Type} [CommRing R] [CommRing S] (p : R →+* S)
-    (c : R →+* R) (c' : S →+* S) (h : ∀ x, p (c x) = c' (p x)) (g : GL (Fin n) R) :
-    GeneralLinearGroup.map p (thetaR c n g) = thetaR c' n (GeneralLinearGroup.map p g) := by
-  ext i j
-  change p (c ((g⁻¹ : GL (Fin n) R).val j i)) =
-    c' (((GeneralLinearGroup.map p g)⁻¹ : GL (Fin n) S).val j i)
-  rw [h, ← map_inv]
-  rfl
-
-private theorem thetaA_infGL {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}
-    (y : GL (Fin n) (Cinf E)) :
-    thetaA E n (infGL E n y) = infGL E n (thetaR (starRingEnd (Cinf E)) n y) :=
-  ga_ext
-    (by rw [thetaA, map_thetaR _ _ _ GlobalTheory.ThetaPull.pInf_conjAd, pInf_infGL, pInf_infGL])
-    (by rw [thetaA, map_thetaR _ _ _ GlobalTheory.ThetaPull.pFin_conjAd,
-      pFin_infGL, pFin_infGL, map_one])
-
 section
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}

@@ -301,16 +301,9 @@ private theorem PRep.d2 {D : GDet n A G} {P : MvPolynomial G A} (h : PRep D P) :
     · intro hn
       exact absurd (Finset.mem_univ _) hn
   rw [hc] at hxy
-  have e1 : MvPolynomial.rename Sum.inl P =
-      MvPolynomial.aeval (fun a => (MvPolynomial.X (Sum.inl a) : MvPolynomial (G ⊕ G) A)) P := by
-    rw [← MvPolynomial.aeval_X_left_apply (MvPolynomial.rename Sum.inl P), MvPolynomial.aeval_rename]
-    rfl
-  have e2 : MvPolynomial.rename Sum.inr P =
-      MvPolynomial.aeval (fun a => (MvPolynomial.X (Sum.inr a) : MvPolynomial (G ⊕ G) A)) P := by
-    rw [← MvPolynomial.aeval_X_left_apply (MvPolynomial.rename Sum.inr P), MvPolynomial.aeval_rename]
-    rfl
   unfold _root_.d2
-  rw [sub_eq_zero, ← hxy, e1, e2]
+  rw [sub_eq_zero, ← hxy, MvPolynomial.rename_eq_aeval, MvPolynomial.rename_eq_aeval]
+  rfl
 
 private def Mn (G : Type) (n : ℕ) : Type := {d : G →₀ ℕ // d.degree = n}
 
@@ -356,14 +349,8 @@ private def defI (P : MvPolynomial G A) : Ideal A :=
 private theorem defI_iff (P : MvPolynomial G A) (f : A →+* A') :
     (∀ x ∈ defI P, f x = 0) ↔ d1 (MvPolynomial.map f P) = 0 ∧ d2 (MvPolynomial.map f P) = 0 := by
   have key : (∀ x ∈ defI P, f x = 0) ↔
-      ∀ x ∈ insert (d1 P) (Set.range fun d => AddMonoidAlgebra.coeff (d2 P) d), f x = 0 := by
-    constructor
-    · intro h x hx
-      exact h x (Ideal.subset_span hx)
-    · intro h x hx
-      have hle : defI P ≤ RingHom.ker f :=
-        Ideal.span_le.2 fun y hy => RingHom.mem_ker.2 (h y hy)
-      exact RingHom.mem_ker.1 (hle hx)
+      ∀ x ∈ insert (d1 P) (Set.range fun d => AddMonoidAlgebra.coeff (d2 P) d), f x = 0 :=
+    ⟨fun h x hx => h x (Ideal.subset_span hx), fun h x hx => (Ideal.span_le (I := RingHom.ker f)).2 h hx⟩
   rw [key, Set.forall_mem_insert, Set.forall_mem_range, diffOne_natural, diffTwo_natural]
   apply and_congr Iff.rfl
   rw [MvPolynomial.ext_iff]
