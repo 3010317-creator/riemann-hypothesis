@@ -459,8 +459,8 @@ theorem UpperTheory.V.Z.Tf.L4.idemOp :
       ∀ (J : Subgroup G), IsOpen (J : Set G) → IsCompact (J : Set G) → ∀ χ : G → ℂ, IsLocallyConstant χ → (∀ x, ‖χ x‖ = 1) →
       (∀ x ∈ J, ∀ y ∈ J, χ (x * y) = χ x * χ y) →
       ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (π : Representation ℂ G V), IsSmooth π →
-        ∃ (B : V →ₗ[ℂ] V) (m : ℂ), m ≠ 0 ∧ IsIntegralOp μ π ((J : Set G).indicator fun x => (χ x)⁻¹) B ∧
-          (∀ v, ∀ x ∈ J, π x (B v) = χ x • B v) ∧ ∀ v, (∀ x ∈ J, π x v = χ x • v) → B v = m • v := by
+        ∃ B : V →ₗ[ℂ] V, IsIntegralOp μ π ((J : Set G).indicator fun x => (χ x)⁻¹) B ∧
+          ∀ v, ∀ x ∈ J, π x (B v) = χ x • B v := by
   intro G _ _ _ _ _ _ μ hμ J hJo hJc χ hχ hn hm V _ _ π hπ
   classical
   set f : G → ℂ := (J : Set G).indicator fun x => (χ x)⁻¹ with hfdef
@@ -486,13 +486,7 @@ theorem UpperTheory.V.Z.Tf.L4.idemOp :
     · rw [hπ.map_smoothOp (μ := μ) hf hc l v]
       simp only [smul_eq_mul]
   generalize GlobalTheory.OpTrace.smoothOp π μ f = B at hB
-  refine ⟨B, (μ.real (J : Set G) : ℂ), ?_, hB, ?_, ?_⟩
-  · have h0 : μ (J : Set G) ≠ 0 := (hJo.measure_pos μ ⟨1, J.one_mem⟩).ne'
-    have h1 : μ (J : Set G) ≠ ⊤ := hJc.measure_lt_top.ne
-    have : μ.real (J : Set G) ≠ 0 := by
-      rw [Measure.real, ENNReal.toReal_ne_zero]
-      exact ⟨h0, h1⟩
-    exact_mod_cast this
+  refine ⟨B, hB, ?_⟩
   · intro v x hx
     rw [← sub_eq_zero, ← Module.forall_dual_apply_eq_zero_iff ℂ]
     intro l
@@ -513,18 +507,6 @@ theorem UpperTheory.V.Z.Tf.L4.idemOp :
         have hg' : g ∉ (J : Set G) := hg
         simp only [hfdef, Set.indicator_of_notMem hxg, Set.indicator_of_notMem hg', mul_zero]
     simp only [← mul_assoc, e, map_mul, LinearMap.comp_apply, Module.End.mul_apply]
-  · intro v hv
-    rw [← sub_eq_zero, ← Module.forall_dual_apply_eq_zero_iff ℂ]
-    intro l
-    rw [map_sub, map_smul, sub_eq_zero, (hB v l).2]
-    have e : (fun g => f g * l (π g v)) = (J : Set G).indicator fun _ => l v := by
-      funext g
-      by_cases hg : g ∈ (J : Set G)
-      · simp only [hfdef, Set.indicator_of_mem hg, hv g hg, map_smul, smul_eq_mul]
-        rw [← mul_assoc, inv_mul_cancel₀ (hne g), one_mul]
-      · simp only [hfdef, Set.indicator_of_notMem hg, zero_mul]
-    rw [e, integral_indicator_const _ hJo.measurableSet]
-    simp
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4HoweTheory.IdemOp =====
@@ -1311,7 +1293,7 @@ theorem UpperTheory.V.Z.Tf.L4.howeEx0 :
   have : LocallyCompactSpace (GL (Fin n) E) := hk.locallyCompactSpace_of_mem_nhds_of_group (ho.mem_nhds J.one_mem)
   borelize (GL (Fin n) E)
   let μ : Measure (GL (Fin n) E) := Measure.haar
-  obtain ⟨B, m, -, hB, hB1, -⟩ := UpperTheory.V.Z.Tf.L4.idemOp (GL (Fin n) E) μ inferInstance J ho hk _ hlc (fun x => Circle.norm_coe _)
+  obtain ⟨B, hB, hB1⟩ := UpperTheory.V.Z.Tf.L4.idemOp (GL (Fin n) E) μ inferInstance J ho hk _ hlc (fun x => Circle.norm_coe _)
     (fun x hx y hy => by rw [hmul x ((hmem x).1 hx) y ((hmem y).1 hy), Circle.coe_mul]) V π hs
   refine (Submodule.ne_bot_iff _).2 ⟨B v, fun x hx => hB1 v x ((hmem x).2 hx), fun h => ?_⟩
   have h1 := (hB v l).2
