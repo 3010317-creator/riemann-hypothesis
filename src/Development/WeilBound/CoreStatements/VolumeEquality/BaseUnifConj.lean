@@ -33,7 +33,7 @@ theorem vecAt_conj {Y : Model Xo c (algebraMap (𝓞 c.F) c.F)} {S : Finset ℕ}
     obtain ⟨v, hv⟩ := hs a
     show ∃ v, 𝔐.M.ValAt (spMap (starRingEnd ℂ) ≫ z (star (star t₀))) (s a) v
     rw [star_star]
-    exact ⟨_, Cj.valAt_conj 𝔐.M _ _ v hv⟩
+    exact ⟨_, GlobalTheory.CompanionTheory.Ar.HodgeMetric.ConjPoint.valAt_conj 𝔐.M _ _ v hv⟩
   refine ⟨fun a t => star (x a (star t)), fun a => Cj.analyticAt_star_star (hx a), ?_⟩
   filter_upwards [(continuous_star.continuousAt (x := t₀)).tendsto.eventually hev] with t ht
   obtain ⟨v, hv, hF⟩ := ht
@@ -42,7 +42,7 @@ theorem vecAt_conj {Y : Model Xo c (algebraMap (𝓞 c.F) c.F)} {S : Finset ℕ}
       ∃ v' : Fin m → (epsAt w' ⟶ 𝔐.t.G), (∀ a, 𝔐.M.ValAt w' (s a) (v' a)) ∧
         FibreLatVec 𝔐.t w' (R' t) (fun a => star (x a (star t))) v' := by
     rintro w _ v rfl hv hF
-    exact ⟨fun a => Cj.cjVec w (v a), fun a => Cj.valAt_conj 𝔐.M w _ _ (hv a),
+    exact ⟨fun a => GlobalTheory.CompanionTheory.Ar.HodgeMetric.ConjPoint.conjVec w (v a), fun a => GlobalTheory.CompanionTheory.Ar.HodgeMetric.ConjPoint.valAt_conj 𝔐.M w _ _ (hv a),
       Cj.fibreLatVec_conj 𝔐.t w _ _ _ v (hR t).1 (hR t).2.1 (hR t).2.2 (fun a => (hv a).isTanAt) hF⟩
   exact key _ _ v (by rw [Cj.cj_cj, star_star]) hv hF
 
@@ -89,7 +89,7 @@ theorem kUnifConj : KUnifConj := by
   · have h := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.FamEx.isHolTo_conj _ _ _ _ (U.hol k)
     rwa [Cj.preimage_star_ballDom] at h
   · rw [Category.assoc, U.comp_s_eq_spMap_of_isOver k _ (Cj.star_mem_ballDom ht), hs]
-  · rw [Cj.centre_conj]
+  · rw [GlobalTheory.CompanionTheory.Ar.HodgeMetric.ConjPoint.centre_conj]
     exact U.interior k _ (Cj.star_mem_ballDom ht)
   · have h := U.fibre k _ (Cj.star_mem_ballDom ht) _ (Cj.star_mem_ballDom ht')
     constructor
@@ -101,7 +101,7 @@ theorem kUnifConj : KUnifConj := by
         (fun x => by rw [(hR k t').1, star_star]) he⟩
       show spMap (starRingEnd ℂ) ≫ U.pt k (star t) = spMap (starRingEnd ℂ) ≫ U.pt k (star t')
       rw [e]
-  · obtain ⟨k, t, ht, e⟩ := U.onto (spMap (starRingEnd ℂ) ≫ p) (by rwa [Cj.centre_conj])
+  · obtain ⟨k, t, ht, e⟩ := U.onto (spMap (starRingEnd ℂ) ≫ p) (by rwa [GlobalTheory.CompanionTheory.Ar.HodgeMetric.ConjPoint.centre_conj])
       (by rw [Category.assoc, hps, hs, Cj.cj_cj])
     refine ⟨k, star t, Cj.star_mem_ballDom ht, ?_⟩
     show spMap (starRingEnd ℂ) ≫ U.pt k (star (star t)) = p
@@ -129,7 +129,7 @@ theorem kUnifConj : KUnifConj := by
     refine U.locc m (star ⁻¹' T) _ (hT.preimage continuous_star) hpre (_root_.GlobalTheory.CompanionTheory.Ar.Cusp.FamEx.isHolTo_conj _ _ _ _ hy) (fun a ha => ?_)
       (fun a ha => ?_) (star b) (by simpa using hb) (star b') (by simpa using hb') k k' _ (Cj.star_mem_ballDom ht) _
       (Cj.star_mem_ballDom ht') ?_ ?_
-    · rw [Cj.centre_conj]
+    · rw [GlobalTheory.CompanionTheory.Ar.HodgeMetric.ConjPoint.centre_conj]
       exact hyi _ ha
     · rw [Category.assoc, hys _ ha, hs, Cj.cj_cj]
     · show spMap (starRingEnd ℂ) ≫ y (star (star b)) = _

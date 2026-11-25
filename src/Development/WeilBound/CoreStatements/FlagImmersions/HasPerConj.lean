@@ -16,7 +16,6 @@ public import Development.WeilBound.CoreStatements.VolumeEquality.BaseUnifCoord
 public import Development.WeilBound.CoreStatements.VolumeEquality.BaseUnifGood
 public import Development.WeilBound.CoreStatements.VolumeEquality.BaseUnifVec
 public import Development.WeilBound.CoreStatements.VolumeEquality.Pieces
-import Development.WeilBound.CoreStatements.VolumeEquality.BaseUnifConjA
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
@@ -130,7 +129,7 @@ theorem locPer : LocPer := by
         (fun t ht => ?_) (fun t ht => ?_) (by simpa using hε))
       · have h := hi' _ ht
         unfold HodgeCpt.Interior at h ⊢
-        rwa [Cj.centre_conj]
+        rwa [GlobalTheory.CompanionTheory.Ar.HodgeMetric.ConjPoint.centre_conj]
       · rw [hs, ← hc _ ht]
         simp only [Category.assoc]
   obtain ⟨g, Λ, i₁, i₂, R, V', hV', hm, hsub, hR, hv⟩ := key
