@@ -96,11 +96,8 @@ theorem isSBHalf_iff_pull : ∀ (D : D7) (S T : HSp D) (v : FinPl D) (m n : ℕ)
   unfold IsCoord at hκ
   obtain ⟨hadd, hbij, hopen, hcpt⟩ := hκ
   have h0 : κ 0 = 0 := by simpa using hadd 0 0
-  have hns : ∀ (k : ℕ) (t : WO S T), κ (k • t) = k • κ t := by
-    intro k t
-    induction k with
-    | zero => simp [h0]
-    | succ k ih => rw [succ_nsmul, succ_nsmul, hadd, ih]
+  have hns : ∀ (k : ℕ) (t : WO S T), κ (k • t) = k • κ t := fun k t =>
+    map_nsmul (AddMonoidHom.mk' κ hadd) k t
   have hz : IsHalf a (0 : WO S T) := by
     unfold IsHalf
     intro i j
