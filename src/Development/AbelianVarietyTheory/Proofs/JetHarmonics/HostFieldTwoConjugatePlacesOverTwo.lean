@@ -17,6 +17,7 @@ public import Formalism.SharpRestriction.Divisibility.AbelianOpenPart.OEOsInject
 public import Development.AutomorphicArithmetic.CMTraceForms.CmDatumDiscriminantDepthBounds
 public import Formalism.LocalRingCardinality.HostCls
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
+import GroundTheory.GlobalFields.SemilocalAlgebras.NormTrace
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -251,23 +252,6 @@ private theorem det_linearForms_basis_change {A M O κ : Type} [CommRing A] [Add
     rw [map_smul, Algebra.smul_def]
   rw [key, Matrix.det_mul, Matrix.det_transpose, RingHom.map_det, RingHom.mapMatrix_apply]
 
-private theorem det_blockDiagonal'_eq_prod_det {s : ℕ} {m : Fin s → Type} [∀ i, Fintype (m i)] [∀ i, DecidableEq (m i)]
-    {O : Type} [CommRing O] (d : ∀ i, Matrix (m i) (m i) O) :
-    (Matrix.blockDiagonal' d).det = ∏ i, (d i).det := by
-  rw [(Matrix.blockTriangular_blockDiagonal' d).det_fintype]
-  refine Finset.prod_congr rfl fun k _ => ?_
-  let e : m k ≃ {x : (Σ i, m i) // x.1 = k} :=
-    { toFun := fun a => ⟨⟨k, a⟩, rfl⟩
-      invFun := fun x => cast (congrArg m x.2) x.1.2
-      left_inv := fun a => rfl
-      right_inv := by
-        rintro ⟨⟨i, a⟩, rfl⟩
-        rfl }
-  rw [← Matrix.det_submatrix_equiv_self e]
-  congr 1
-  ext a b
-  simp [Matrix.toSquareBlock_def, Matrix.blockDiagonal'_apply, e]
-
 private theorem valuation_intCast_eq_pow_padicValInt {C : Type} [Field C] [CharZero C] {v : Valuation C NNReal} {O : Type}
     [CommRing O] [Algebra O C] (hv : v.Integers O) (p : ℕ) [hp : Fact p.Prime]
     (hpO : ¬ IsUnit (p : O)) (a : ℤ) (ha : a ≠ 0) :
@@ -487,7 +471,7 @@ theorem UpperTheory.discr_CMDatum_eq_prod_places :
           rw [tauExt_comp_star_eq_tauExt_sig, UpperTheory.PlacesDiscr.sig_sig]
           exact hz2 _ i (hE i b) j hij (B j a)
     have hdetN : (Matrix.of fun m k => tauExt (ρ k) (γs m)).det = ∏ i, ((A i).det * (A i).det) := by
-      rw [hblock, det_blockDiagonal'_eq_prod_det]
+      rw [hblock, GroundTheory.Global.SemiLocal.det_blockDiagonal']
       simp only [Matrix.det_fromBlocks_zero₂₁]
     have hcι : Fintype.card (Module.Free.ChooseBasisIndex ℤ (𝓞 E))
         = Fintype.card (Σ i : Fin s, (Fin (w i).n ⊕ Fin (w i).n)) := by
