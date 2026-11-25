@@ -156,18 +156,16 @@ theorem phi_mem_liftSub (h0 : ∀ k, c0 k ≠ 0) (hE : O.EquivAt κ cE) (hE0 : O
 
 
 
-theorem shift_of_span (hP : O.Pins κ v₀ ι x₀) (hn : κ.n = (Vc D i).rank) (hHV : R.models_HV) (hjV : R.models_jV)
+theorem shift_central (hP : O.Pins κ v₀ ι x₀) (hn : κ.n = (Vc D i).rank) (hHV : R.models_HV) (hjV : R.models_jV)
     (hmem : R.thP_thF_mem) (hsp : GlobalTheory.IndefiniteRowSideFullHecke.ThetaTranslateSize.SpanAt R i A.μ0) {ph : ℂ} (hE : O.OneMapOf κ v₀ cE ph)
     (hE0 : O.EquivAt κ c0) (hS : GlobalTheory.AdTh.SerOf O κ v₀ c0 1)
     (hW : ∀ f ∈ C.cuspA ((i : ℕ) + 1) (wtA κ) κ.n, ∃ U ∈ R.Wall i (sg0 D A), ∀ h,
       U v₀ h = (lieFac (C.Q.Dw ((i : ℕ) + 1)) (xiR D) (wtA κ) : ℂ) * O.phi cE f h) :
-    ∃ (z : G) (c : ℂ), c ≠ 0 ∧ (∃ k, LiftW R i z k) ∧ ∀ k, LiftW R i z k →
-      ∀ f ∈ C.cuspA ((i : ℕ) + 1) (wtA κ) κ.n, ∀ h, O.phi c0 f h = c * O.phi cE f (h * k) := by
+    ∃ (z : G) (ze : ℂ), z ∈ Subgroup.center G ∧ ze ∈ D.what₂.embLL.toRatAlgHom.fieldRange ∧ (∃ m : ℕ, 0 < m ∧ ze ^ m = 1) ∧
+      (∃ k, LiftW R i z k) ∧ ∀ k, LiftW R i z k →
+      ∀ f ∈ C.cuspA ((i : ℕ) + 1) (wtA κ) κ.n, ∀ h, O.phi c0 f h = ze * chiC R i z / ph * O.phi cE f (h * k) := by
   obtain ⟨hEq, ⟨-, hBC, hAct, hcE, hph, z, hz, hrow⟩, -⟩ := hE
-  obtain ⟨ze, -, ⟨m, hm, hze⟩, hrow⟩ := hrow ()
-  have hze0 : ze ≠ 0 := fun h => by
-    rw [h, zero_pow hm.ne'] at hze
-    exact zero_ne_one hze
+  obtain ⟨ze, hzL, ⟨m, hm, hze⟩, hrow⟩ := hrow ()
   have hph0 : ph ≠ 0 := fun h => by simp [h] at hph
   have h0 : ∀ k, c0 k ≠ 0 := fun k h => by simpa [h] using hS.1 k
   have hE0' : ∀ k, cE k ≠ 0 := fun k h => by simpa [h] using hcE k
@@ -179,7 +177,7 @@ theorem shift_of_span (hP : O.Pins κ v₀ ι x₀) (hn : κ.n = (Vc D i).rank) 
     intro f hf γ hγ g
     obtain ⟨U, hU, e⟩ := hW f hf
     exact mul_left_cancel₀ hl (by rw [← e, ← e, hinvW U hU γ hγ])
-  refine ⟨z, ze * chiC R i z / ph, div_ne_zero (mul_ne_zero hze0 (chiC R i z).ne_zero) hph0, hlift z, fun k hk => ?_⟩
+  refine ⟨z, ze, hz, hzL, ⟨m, hm, hze⟩, hlift z, fun k hk => ?_⟩
   have hbase : ∀ y, R.thF i A.μ0 (jVx R i A.μ0 y) v₀ ∈
       shiftSub (LiftW R i) (ratio O cE c0) (ze * chiC R i z / ph) k := by
     intro y
@@ -251,6 +249,18 @@ theorem shift_of_span (hP : O.Pins κ v₀ ι x₀) (hn : κ.n = (Vc D i).rank) 
   have hr : ratio O cE c0 h ≠ 0 := div_ne_zero (hE0' _) (h0 _)
   refine mul_left_cancel₀ (mul_ne_zero hl hr) ?_
   linear_combination h1
+
+theorem shift_of_span (hP : O.Pins κ v₀ ι x₀) (hn : κ.n = (Vc D i).rank) (hHV : R.models_HV) (hjV : R.models_jV)
+    (hmem : R.thP_thF_mem) (hsp : GlobalTheory.IndefiniteRowSideFullHecke.ThetaTranslateSize.SpanAt R i A.μ0) {ph : ℂ} (hE : O.OneMapOf κ v₀ cE ph)
+    (hE0 : O.EquivAt κ c0) (hS : GlobalTheory.AdTh.SerOf O κ v₀ c0 1)
+    (hW : ∀ f ∈ C.cuspA ((i : ℕ) + 1) (wtA κ) κ.n, ∃ U ∈ R.Wall i (sg0 D A), ∀ h,
+      U v₀ h = (lieFac (C.Q.Dw ((i : ℕ) + 1)) (xiR D) (wtA κ) : ℂ) * O.phi cE f h) :
+    ∃ (z : G) (c : ℂ), c ≠ 0 ∧ (∃ k, LiftW R i z k) ∧ ∀ k, LiftW R i z k →
+      ∀ f ∈ C.cuspA ((i : ℕ) + 1) (wtA κ) κ.n, ∀ h, O.phi c0 f h = c * O.phi cE f (h * k) := by
+  obtain ⟨z, ze, -, -, ⟨m, hm, hze⟩, hlk, hsh⟩ := shift_central O hP hn hHV hjV hmem hsp hE hE0 hS hW
+  have hze0 : ze ≠ 0 := fun h => by rw [h, zero_pow hm.ne'] at hze; exact zero_ne_one hze
+  have hph0 : ph ≠ 0 := fun h => by have := hE.2.1.2.2.2.2.1; simp [h] at this
+  exact ⟨z, ze * chiC R i z / ph, div_ne_zero (mul_ne_zero hze0 (chiC R i z).ne_zero) hph0, hlk, hsh⟩
 
 end Shift
 
