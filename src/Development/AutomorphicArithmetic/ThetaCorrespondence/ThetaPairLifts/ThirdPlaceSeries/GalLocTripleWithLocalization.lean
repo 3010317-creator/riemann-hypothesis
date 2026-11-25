@@ -1187,17 +1187,6 @@ section -- clump:auto
 
 section
 noncomputable section
-namespace UpperTheory.GalS
-open Formalism.BasicNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal NumberField IsDedekindDomain Polynomial GlobalTheory.WeilDeligne
-section
-variable {R : Ranks} {H : Host R} {what₂ : Rows.Data R} (N : NData R H what₂) (A : NAut N)
-variable {N A}
-end
-section
-variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω]
-  {B : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} {h : IsPlaceOver B w}
-end
-end UpperTheory.GalS
 namespace GlobalTheory.TripleLocal
 open Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal NumberField IsDedekindDomain Polynomial
 open GlobalTheory.RowTie (WDTie)
@@ -1262,7 +1251,7 @@ section
 noncomputable section
 namespace GlobalTheory.ResLoc
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.L2 Formalism.L2.Host GlobalTheory.HeightCounting NumberField IsDedekindDomain Polynomial
-open GlobalTheory.EigTie (ResTied IsRowPar plRed resTied_of_plSide)
+open GlobalTheory.EigTie (IsRowPar plRed)
 open GlobalTheory.IndefiniteRowSideFullHecke.RayClassPrimeCounting (IsGaloisRepOf Zbar GalE OnW)
 
 theorem resTied_of_tied_alt (hP : _root_.GlobalTheory.NRows.ThetaLocalInputsAlt) (hH : GlobalTheory.Published.HarishChandraFinite) (hD : GlobalTheory.Published.CuspRapidDecay)
