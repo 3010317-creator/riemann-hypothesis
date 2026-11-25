@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorMatch
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SharpOverIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqTorusOfClassify
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.SemiAbelianModels.EqTorusOfClassify
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothCommGroupSchemeEqOfPowEqOfClosedPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

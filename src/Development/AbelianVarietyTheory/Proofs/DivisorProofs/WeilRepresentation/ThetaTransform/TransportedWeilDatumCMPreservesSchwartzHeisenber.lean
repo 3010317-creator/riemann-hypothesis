@@ -1,14 +1,14 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilTransportAdelicSchwartzCmExtension
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingInl
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.ExistsWeilTransportAdelicSchwartzCmExtension
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.IsUSplittingInl
 public import Formalism.LocalToGlobal.IndefiniteReal.DatumF
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffThetaTransformArchimedeanCm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTransformAdelicSchwartzHasFiniteLevelCM
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTransformRationalTranslateQuasiInvariantCm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTransportF
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzDeterminedBySchrodingerThetaValues
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryPairOfTransposedGramInverseGram
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.ContDiffThetaTransformArchimedeanCm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.ThetaTransformAdelicSchwartzHasFiniteLevelCM
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.ThetaTransformRationalTranslateQuasiInvariantCm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.IsTransportF
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.AdelicSchwartzDeterminedBySchrodingerThetaValues
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.UnitaryPairOfTransposedGramInverseGram
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,19 +44,19 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzSpaceTranslateMem
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNatMulIntegralOfIsCompact
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartz
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.AdelicSchwartzSpaceTranslateMem
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.ExistsNatMulIntegralOfIsCompact
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.WeilRepresentationPreservesSchwartz
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.ReduceModChar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
--- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportedWeilDatumCMPreservesSchwartzHeisenber
+-- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.TransportedWeilDatumCMPreservesSchwartzHeisenber
 
--- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportedWeilDatumCMPreservesSchwartzHeisenber =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportedWeilDatumCMPreservesSchwartzHeisenber", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTransportF\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzDeterminedBySchrodingerThetaValues\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingInl\npublic import Formalism.LocalToGlobal.IndefiniteReal.DatumF\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffThetaTransformArchimedeanCm\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTransformAdelicSchwartzHasFiniteLevelCM\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTransformRationalTranslateQuasiInvariantCm\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryPairOfTransposedGramInverseGram\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzSpaceTranslateMem\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNatMulIntegralOfIsCompact\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartz\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.TransportedWeilDatumCMPreservesSchwartzHeisenber =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.TransportedWeilDatumCMPreservesSchwartzHeisenber", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.IsTransportF\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.AdelicSchwartzDeterminedBySchrodingerThetaValues\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.IsUSplittingInl\npublic import Formalism.LocalToGlobal.IndefiniteReal.DatumF\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.ContDiffThetaTransformArchimedeanCm\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.ThetaTransformAdelicSchwartzHasFiniteLevelCM\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.ThetaTransformRationalTranslateQuasiInvariantCm\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.UnitaryPairOfTransposedGramInverseGram\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.AdelicSchwartzSpaceTranslateMem\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.ExistsNatMulIntegralOfIsCompact\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.WeilRepresentationPreservesSchwartz\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -239,4 +239,4 @@ end GlobalTheory.TransportHeisF
 end
 end -- clump:auto
 end -- clump:auto
--- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportedWeilDatumCMPreservesSchwartzHeisenber =====
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.TransportedWeilDatumCMPreservesSchwartzHeisenber =====

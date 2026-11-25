@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ColHeightSharpWith
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeightedNormSquareRows
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterSumLocalConstantSecond
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.HighestWeights.CharacterSumLocalConstantSecond
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegralDivUniformizerOfRedZero
 import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.HostFacts
 import Mathlib.Algebra.Order.Floor.Extended
@@ -41,7 +41,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetRefinement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.HighestWeights.CosetRefinement
 
 @[expose] public section
 

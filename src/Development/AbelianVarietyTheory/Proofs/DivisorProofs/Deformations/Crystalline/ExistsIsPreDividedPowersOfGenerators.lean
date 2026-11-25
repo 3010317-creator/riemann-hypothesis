@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsPreDividedPowersAugmentationIdeal
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.ExistsIsPreDividedPowersAugmentationIdeal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RatBasisLinearIndependentInt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

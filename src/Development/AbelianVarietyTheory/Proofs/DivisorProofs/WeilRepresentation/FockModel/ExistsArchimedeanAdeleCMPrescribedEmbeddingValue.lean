@@ -43,7 +43,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Foundations.IsFockIPOfFockData
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.FockModel.IsFockMap
 
 @[expose] public section
 

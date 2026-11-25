@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConvEqOneOfForallPairing
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicRingHomEqCanonical
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SandwichKernelRangeExact
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.ConvEqOneOfForallPairing
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.PadicRingHomEqCanonical
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.SandwichKernelRangeExact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

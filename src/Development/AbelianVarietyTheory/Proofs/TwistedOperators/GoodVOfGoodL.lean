@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
 public import Formalism.LocalToGlobal.IndefiniteReal.BaseLiftsPackageOfPrimitiveLinks
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjointIntertwines
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.AdjointIntertwines
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ActEqTranslateLiftV
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRangeRestrictEq
 import Mathlib.Algebra.Order.Floor.Extended

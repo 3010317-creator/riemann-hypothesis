@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefTwistPull
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfFramedPointLiesOverTorusExtension
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.ThetaConstants.CoefTwistPull
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.ThetaConstants.EqOfFramedPointLiesOverTorusExtension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

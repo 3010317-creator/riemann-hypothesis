@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MemRingOfInR
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QExpansionCoeffsInSubringRingClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.QExpansionCoeffsInSubringRingClosed
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GammaLeOfDvd
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

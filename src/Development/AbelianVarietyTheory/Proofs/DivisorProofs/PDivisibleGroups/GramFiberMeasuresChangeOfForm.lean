@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasDivPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowEqPowOfModEqSim
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSimSys
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.PowEqPowOfModEqSim
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.ExistsSimSys
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +42,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqOne
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimilitudeActionAdelicLattice
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.SimilitudeActionAdelicLattice
 
 @[expose] public section
 

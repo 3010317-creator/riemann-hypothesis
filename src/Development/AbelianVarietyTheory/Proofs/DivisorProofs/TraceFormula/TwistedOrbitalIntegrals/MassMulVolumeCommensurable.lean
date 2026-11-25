@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.PointSide
 public import Mathlib.Tactic.Linter.Style
 public import Mathlib.Tactic.Polynomial.Basic
 public import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibreFiniteCard
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.FibreFiniteCard
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.StabilizerMassQuotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

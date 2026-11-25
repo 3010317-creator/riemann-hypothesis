@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulRealAdEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.FockModel.MulRealAdEqZero
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.FourierInversionHaarSymmForm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -41,8 +41,8 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ActFromBlocks
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtPlace
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.AdelicFourier.ActFromBlocks
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.PureTensors.ContinuousAtPlace
 
 @[expose] public section
 

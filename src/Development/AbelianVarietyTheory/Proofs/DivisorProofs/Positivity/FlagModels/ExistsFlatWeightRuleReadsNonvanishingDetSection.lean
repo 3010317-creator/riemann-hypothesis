@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReadsZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.ReadsZero
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DeterminantSectionRule
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ToroidalBoundaryMetricData
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompactificationOpenOfClosed

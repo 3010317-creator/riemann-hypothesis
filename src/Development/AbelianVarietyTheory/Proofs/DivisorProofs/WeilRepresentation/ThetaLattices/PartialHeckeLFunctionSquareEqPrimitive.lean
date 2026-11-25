@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseFits
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.SquareGrids.BaseFits
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlaces
 import Formalism.LocalToGlobal.UnitaryNorms.CharUniq

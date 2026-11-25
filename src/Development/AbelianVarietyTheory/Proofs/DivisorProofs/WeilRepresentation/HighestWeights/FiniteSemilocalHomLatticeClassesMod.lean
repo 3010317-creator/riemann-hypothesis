@@ -51,7 +51,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TopPlaceLogTheta
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetRefinement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.HighestWeights.CosetRefinement
 import Formalism.LocalToGlobal.KernelLattices.XiIndCClass
 import Formalism.SharpRestriction.CuspSpanNormBounds.Point
 import Mathlib.RingTheory.PicardGroup

@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EndOnId
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.SemiAbelianModels.EndOnId
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.GenericIsomorphismProductModels
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LineBundleSymmetryHypothesisBaseChange
 import Mathlib.Algebra.Order.Floor.Extended

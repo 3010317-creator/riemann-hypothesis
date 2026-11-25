@@ -1,8 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartUnipotentFderivContinuousOn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.AutomorphicGrowth.ChartUnipotentFderivContinuousOn
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsNormalisedThetaSub
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCuspidalLieActionOfIsCuspForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.AutomorphicGrowth.IsCuspidalLieActionOfIsCuspForm
 import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.AdlEqZeroOfMemNbhd
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Algebra.Order.Floor.Extended

@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.InjectiveOfSmulMemRange
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConvEqOneOfForallPairing
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FontaineAinfLocalDomainXiAdicOrder
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmulMemRange
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.ConvEqOneOfForallPairing
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.FontaineAinfLocalDomainXiAdicOrder
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.SmulMemRange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -41,7 +41,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLagrModelOfIsLin
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ZetaIntegrals.IsLagrModelOfIsLin
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsLocIsoRefl
 
 @[expose] public section

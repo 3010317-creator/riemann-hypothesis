@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfIntersectionLowerHeight
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ArithmeticIntersection.SelfIntersectionLowerHeight
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.RingKrullDimQuotientEqOfMemMinimalPrimes
 import Mathlib.Algebra.Order.Floor.Extended

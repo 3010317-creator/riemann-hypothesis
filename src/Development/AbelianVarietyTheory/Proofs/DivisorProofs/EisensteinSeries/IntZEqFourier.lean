@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffOnHeckeEisensteinFourierTerm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.ContDiffOnHeckeEisensteinFourierTerm
 public import Mathlib.Analysis.Fourier.FourierTransform
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

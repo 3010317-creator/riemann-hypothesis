@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocCO
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.HighestWeights.LocCO
 public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.SublevelSplitting
 public import Development.AbelianVarietyTheory.Definitions.Divisors.InvVolConjLevelOne
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.EmbRelExistsUnique

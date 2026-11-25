@@ -48,7 +48,7 @@ import Mathlib.Topology.Sheaves.Init
 public import Mathlib.Analysis.Calculus.Deriv.Mul
 public import Mathlib.Analysis.Complex.RealDeriv
 public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIteratedFDerivRemCompLe
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.FockModel.NormIteratedFDerivRemCompLe
 
 @[expose] public section
 

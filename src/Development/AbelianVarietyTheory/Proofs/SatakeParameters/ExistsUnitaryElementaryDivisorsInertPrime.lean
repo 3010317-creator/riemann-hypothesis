@@ -1,10 +1,10 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ForallExistsTransfer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HeckeEigensystems.ForallExistsTransfer
 public import Formalism.LocalToGlobal.Columns.StdLatUnimodular
 public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
 public import Formalism.SatakeDualWeyl.StatementF
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryDivisorDualLabel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.UnitaryDivisorDualLabel
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

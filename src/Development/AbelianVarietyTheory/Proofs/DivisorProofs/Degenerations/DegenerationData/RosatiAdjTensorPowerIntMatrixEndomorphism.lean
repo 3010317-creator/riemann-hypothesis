@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMonHomOfMulComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.DegenerationData.IsMonHomOfMulComp
 public import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.RosatiAdjOfPoints
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsMatrixRingAct
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsLocalRingQuotientPow

@@ -1,7 +1,7 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralConjugationStableStructure
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntBTmulBasis
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ConjugacyClasses.IntegralConjugationStableStructure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ConjugacyClasses.IsIntBTmulBasis
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCyclotomicExtensionQI
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

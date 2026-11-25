@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanRangeMulVecLe
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.EtaleCohomology.SpanRangeMulVecLe
 public import Mathlib.Algebra.Homology.TotalComplex
 public import Mathlib.Tactic.Bound
 import Mathlib.Algebra.Order.Floor.Extended

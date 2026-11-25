@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TateProductRigidificationTrivial
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedPointRangeEqFixedGroupImage
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.FormalAlgebraisation.ClosedPointRangeEqFixedGroupImage
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

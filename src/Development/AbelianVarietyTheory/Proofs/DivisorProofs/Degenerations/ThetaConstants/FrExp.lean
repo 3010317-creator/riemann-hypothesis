@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumFCompEquiv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.ThetaConstants.SumFCompEquiv
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFrameRatio
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

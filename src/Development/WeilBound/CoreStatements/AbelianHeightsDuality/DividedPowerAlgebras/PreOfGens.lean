@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsPreDividedPowersOfGenerators
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.ExistsIsPreDividedPowersOfGenerators
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RatBasisLinearIndependentInt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

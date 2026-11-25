@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramPosSemidefOfIntForm
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.HarrisTaylorObjects.GramPosSemidefOfIntForm
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.StarInvMulVecDotProductMulVecInvMulVec
 import Mathlib.Algebra.Order.Floor.Extended

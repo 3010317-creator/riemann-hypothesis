@@ -48,8 +48,8 @@ import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRootSelectionUnitaryRankOne
 import Development.AbelianVarietyTheory.Definitions.Divisors.PointsNonemptyUnitaryRankOne
 import Development.AbelianVarietyTheory.Definitions.Divisors.TwOrbMEqTwOrbUOfNormal
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoordL
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntCZero
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ConjugacyClasses.CoordL
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ConjugacyClasses.IntCZero
 
 @[expose] public section
 

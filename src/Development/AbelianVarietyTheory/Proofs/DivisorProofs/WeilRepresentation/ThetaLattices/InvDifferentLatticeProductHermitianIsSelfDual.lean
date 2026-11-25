@@ -1,8 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLsB
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCongLevelIntG
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealExtendConjMulEqAbsNorm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.MemLsB
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.IsCongLevelIntG
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.IdealExtendConjMulEqAbsNorm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

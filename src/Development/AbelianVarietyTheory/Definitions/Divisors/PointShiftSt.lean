@@ -38,7 +38,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.AevalEqZeroOfMemConeIdeal
 import Development.AbelianVarietyTheory.Definitions.Divisors.LogAbsVpOfNormalised
 import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.UnivFrame
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdicCompleteDualNumber
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.IsAdicCompleteDualNumber
 
 @[expose] public section
 

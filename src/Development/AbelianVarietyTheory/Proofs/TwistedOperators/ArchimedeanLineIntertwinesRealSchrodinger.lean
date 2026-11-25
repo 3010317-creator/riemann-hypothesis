@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulRealAdEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ActsRhoOfAtInf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.FockModel.MulRealAdEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.ActsRhoOfAtInf
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAdmissibleFiniteFactorArchimedeanSchwartz
 import Mathlib.Algebra.Order.Floor.Extended

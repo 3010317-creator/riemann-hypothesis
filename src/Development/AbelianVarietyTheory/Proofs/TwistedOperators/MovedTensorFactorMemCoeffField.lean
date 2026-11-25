@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.FormulaAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTranslatesEqPrimFrameLat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatIntegrableAaVacOfConductor
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationLeOneOfMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ZetaIntegrals.ExistsTranslatesEqPrimFrameLat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.VacuumCosets.FlatIntegrableAaVacOfConductor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ZetaIntegrals.ValuationLeOneOfMem
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormSatakeLeOfUnitarySphericalGL
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

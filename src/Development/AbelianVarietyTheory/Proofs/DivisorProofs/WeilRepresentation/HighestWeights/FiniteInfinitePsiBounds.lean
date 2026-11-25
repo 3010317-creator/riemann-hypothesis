@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.InfClassAt
 import Development.AbelianVarietyTheory.Counterexamples.RotationExamples.OneLeAPlLast
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsTestLatUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOneOfConjMemOfPow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.EqOneOfConjMemOfPow
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryExistsWithPrescribedParts
 import Formalism.LocalToGlobal.Columns.CoefColLemmas
 import Formalism.LocalToGlobal.Divisibility.CoefModLemmas

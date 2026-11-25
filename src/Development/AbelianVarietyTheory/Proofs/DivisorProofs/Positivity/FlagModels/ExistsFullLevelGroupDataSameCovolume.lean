@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FirstIndexEqOfUnfolded
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSelfDualTr
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.IsSelfDualTr
 public import Development.AbelianVarietyTheory.PublishedTheorems.Landherr₂.ExistsNormTensor
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasseNormTheoremQuadraticExtension
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ImNegOfFramePeriodVector

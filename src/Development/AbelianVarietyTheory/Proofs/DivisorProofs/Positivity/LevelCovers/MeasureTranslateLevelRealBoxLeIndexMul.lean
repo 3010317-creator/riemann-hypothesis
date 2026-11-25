@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PermMMulTranspose
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.PermMMulTranspose
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevelMeasurePushforwardEqProductRealMeasures
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsUnitaryAdelicVolumeMeasure
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ImportsRest

@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SymTupOne
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverCompOfIsClosedImmersion
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsTwoPoints
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSecCoordOfSubsingletonPic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.ThetaMaps.ExistsSecCoordOfSubsingletonPic
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ProjectiveRepresentationPullbackCoordinates
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SecCoordBcScaleUnique
 import Mathlib.Algebra.Order.Floor.Extended

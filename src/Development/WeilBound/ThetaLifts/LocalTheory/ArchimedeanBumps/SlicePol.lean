@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.FockModel.IsFockMap
 public import Development.WeilBound.ThetaLifts.CartanFactorisation.CartanConj
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.MixedModels.PlaneGen
 public import Development.WeilBound.ThetaLifts.LocalTheory.ArchimedeanBumps.ArchSlice

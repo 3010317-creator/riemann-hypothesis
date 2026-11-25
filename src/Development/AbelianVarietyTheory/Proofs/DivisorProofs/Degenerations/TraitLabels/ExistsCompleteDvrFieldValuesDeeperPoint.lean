@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LabRange
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteExtensionCompleteDvrPadicAlgCl
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicMemRangeCompleteDvrPadicAlgCl
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.TraitLabels.ExistsFiniteExtensionCompleteDvrPadicAlgCl
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.TraitLabels.PadicMemRangeCompleteDvrPadicAlgCl
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

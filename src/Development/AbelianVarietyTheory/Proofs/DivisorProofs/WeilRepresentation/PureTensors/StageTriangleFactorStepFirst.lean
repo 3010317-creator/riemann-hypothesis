@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegIdxOfIsStd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.PureTensors.NegIdxOfIsStd
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

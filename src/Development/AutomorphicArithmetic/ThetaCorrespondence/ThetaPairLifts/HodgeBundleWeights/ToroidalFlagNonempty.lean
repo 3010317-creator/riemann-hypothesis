@@ -2,9 +2,9 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.Hypotheses2
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BarCompSubsetClosure
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasFibrewiseNonvanishingThetaSectionOfSmoothMode
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PushInvertibleOfHasTheta
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToroidalFlagNonempty
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.SemiAbelianUniformisation.HasFibrewiseNonvanishingThetaSectionOfSmoothMode
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.PushInvertibleOfHasTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.ToroidalFlagNonempty
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

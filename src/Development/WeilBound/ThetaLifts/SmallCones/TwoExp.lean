@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.ThetaLifts.SmallCones.KerPol
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNatMulIntegralOfIsCompact
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.ExistsNatMulIntegralOfIsCompact
 import Development.AutomorphicSpectrum.Proofs.MembershipProofs.HeisenbergCommutingOperatorScalar
 import Development.WeilBound.ThetaLifts.LeviDeterminants.MixedModels.PlaneAd
 import Development.WeilBound.ThetaLifts.SmallCones.ExpAlg

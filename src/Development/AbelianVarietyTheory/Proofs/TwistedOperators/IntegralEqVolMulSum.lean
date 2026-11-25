@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GamOrdNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.HighestWeights.GamOrdNeZero
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MeasureToRealEqMass
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicUnitaryTopology
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ClassSumIntegral

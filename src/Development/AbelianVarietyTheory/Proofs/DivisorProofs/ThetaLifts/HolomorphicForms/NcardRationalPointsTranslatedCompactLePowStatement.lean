@@ -2,7 +2,7 @@ module
 
 public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedSmooth
 public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NcardRationalPointsTranslatedCompactLePow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.NcardRationalPointsTranslatedCompactLePow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

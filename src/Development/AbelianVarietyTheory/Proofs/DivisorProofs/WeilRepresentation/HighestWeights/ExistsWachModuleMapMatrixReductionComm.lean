@@ -1,8 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankOfMulEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.HighestWeights.RankOfMulEqOne
 public import Formalism.LocalRingCardinality.SpanPowerMembership.NDLocE
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WachRingFactsUnramifiedLevelOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.HighestWeights.WachRingFactsUnramifiedLevelOne
 public import Formalism.PieriBlockIdeals.PieriColumnMinors.HeckeLFunctionIdealEulerProduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

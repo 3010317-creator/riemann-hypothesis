@@ -50,7 +50,7 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsCuspidalIffCompositions
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NontrivialOfIsSubquotient
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.NontrivialOfIsSubquotient
 
 @[expose] public section
 

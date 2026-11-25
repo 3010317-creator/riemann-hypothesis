@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 public import Formalism.LocalToGlobal.ProjectiveLattices.FamilyUniformisationBasePointOrthogonalBis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulVecMemLatGHat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.MulVecMemLatGHat
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FinCongMemLevEnv
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OmegaFormNonvanishing
 import Mathlib.Algebra.Order.Floor.Extended
@@ -45,8 +45,8 @@ import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilGramSignatur
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.DatEqZero
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrAtEmb
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReadingsExistRow
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.FrAtEmb
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.ReadingsExistRow
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FibExtMarked
 
 @[expose] public section

@@ -44,7 +44,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModFMulPosPrincipal
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.ModFMulPosPrincipal
 
 @[expose] public section
 

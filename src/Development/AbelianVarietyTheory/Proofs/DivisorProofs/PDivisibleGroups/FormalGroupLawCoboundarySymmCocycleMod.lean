@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupLawCoboundaryTwoCoboundaryOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubstSubIn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.FormalGroupLawCoboundaryTwoCoboundaryOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.SubstSubIn
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

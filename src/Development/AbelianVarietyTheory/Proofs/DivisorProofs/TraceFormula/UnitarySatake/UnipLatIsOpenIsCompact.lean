@@ -49,7 +49,7 @@ import Mathlib.Tactic.ReduceModChar
 public import Mathlib.Topology.Algebra.Valued.LocallyCompact
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.EqOfHasValueAtInfinite
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemGUIffAdjJ
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.MemGUIffAdjJ
 public import Mathlib.RingTheory.Valuation.Discrete.RankOne
 
 @[expose] public section

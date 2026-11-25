@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorPureTensorComponentAtPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.AdelicFourier.EqOfComponentTensorAdelicFunctionEq
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.AdelicFourier.ExistsFactorPureTensorComponentAtPlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.AdelicFourier.IsStdCharNegOneOfStandardTraceAdelicAddChar
 public import Development.WeilBound.ThetaLifts.LatticeBasics.ThetaBox
 public import Development.WeilBound.ThetaLifts.LocalTheory.ConeShifts.EvFinIdemSelf
 import Mathlib.Algebra.Order.Floor.Extended
@@ -46,7 +46,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.InertVacuum.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
 public import Development.WeilBound.ThetaLifts.LatticeBasics.SliceSeminorm
 
 @[expose] public section

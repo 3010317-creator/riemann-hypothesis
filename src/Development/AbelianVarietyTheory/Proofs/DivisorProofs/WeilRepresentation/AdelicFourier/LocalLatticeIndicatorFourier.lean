@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSelfDualFor
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSymp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.AdelicFourier.IsSelfDualFor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.AdelicFourier.IsSymp
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsSelfDualOfHasConductor
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierTransformInversionLocalFieldPi
 import Mathlib.Algebra.Order.Floor.Extended

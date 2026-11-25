@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntFOneMul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCongruenceKernelIdeleCharacterTrivialAtInf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.StrongApproximation.IntFOneMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.StrongApproximation.ExistsCongruenceKernelIdeleCharacterTrivialAtInf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

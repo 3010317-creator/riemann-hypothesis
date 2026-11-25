@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoheightAddPointClosureDimEqDim
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasPointClosureDimBasicProjArithAmbient
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ArithmeticIntersection.CoheightAddPointClosureDimEqDim
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ArithmeticIntersection.HasPointClosureDimBasicProjArithAmbient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

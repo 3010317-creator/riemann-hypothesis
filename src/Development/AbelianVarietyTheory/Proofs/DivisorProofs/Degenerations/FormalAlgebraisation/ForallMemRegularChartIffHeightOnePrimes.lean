@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussPropertyCodimOneChartHeightOnePrime
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.FormalAlgebraisation.GaussPropertyCodimOneChartHeightOnePrime
 import GroundTheory.ArithmeticGeometry.SchemeCohomology.RegularSmooth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

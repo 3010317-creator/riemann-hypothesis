@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsIsoFibreOfPullback
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIsoOfIsClosedImmersion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.DualAbelianSchemes.IsIsoOfIsClosedImmersion
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsAwaySurjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

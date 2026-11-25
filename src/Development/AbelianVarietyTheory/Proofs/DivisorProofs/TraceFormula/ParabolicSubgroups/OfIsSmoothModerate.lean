@@ -39,7 +39,7 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
 import Development.AbelianVarietyTheory.Definitions.Foundations.NormEulerPolySubOneLe
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiffsZeroOfLev
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ParabolicSubgroups.DiffsZeroOfLev
 
 @[expose] public section
 

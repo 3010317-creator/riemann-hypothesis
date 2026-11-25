@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.ThetaLifts.CartanFactorisation.PolCountDef
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.FockModel.IsFockMap
 public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.RLActs
 public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.RLFrame
 import Mathlib.Algebra.Order.Floor.Extended

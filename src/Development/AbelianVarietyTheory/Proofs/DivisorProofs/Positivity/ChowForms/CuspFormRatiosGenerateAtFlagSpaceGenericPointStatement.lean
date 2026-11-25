@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GenRatios
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RatField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormRatiosGenerateAtFlagSpaceGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ChowForms.RatField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ChowForms.CuspFormRatiosGenerateAtFlagSpaceGenericPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

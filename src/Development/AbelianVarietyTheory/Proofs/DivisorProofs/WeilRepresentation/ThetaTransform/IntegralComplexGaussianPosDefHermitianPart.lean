@@ -54,7 +54,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Separation.CompletelyRegular
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousFourierGau
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.ContinuousFourierGau
 public import Mathlib.Algebra.Star.UnitaryStarAlgAut
 public import Mathlib.RingTheory.Norm.Transitivity
 

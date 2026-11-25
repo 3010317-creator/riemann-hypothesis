@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantCoeffHasse
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.EtaleCohomology.ConstantCoeffHasse
 public import Mathlib.RingTheory.PowerSeries.Substitution
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NewtonPowerSeriesSurjectiveLinearizationSolution
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowerSeriesTaylorSubstFirstOrder

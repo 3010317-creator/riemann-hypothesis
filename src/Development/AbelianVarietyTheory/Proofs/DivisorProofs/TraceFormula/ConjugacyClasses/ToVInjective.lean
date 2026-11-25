@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PointsNonemptyUnitaryRankOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StabEqStabilizer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ConjugacyClasses.StabEqStabilizer
 public import Mathlib.LinearAlgebra.Projectivization.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

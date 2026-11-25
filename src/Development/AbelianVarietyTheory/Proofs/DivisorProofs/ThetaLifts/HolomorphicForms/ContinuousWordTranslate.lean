@@ -42,7 +42,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothVecLowKSub
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.ExistsSmoothVecLowKSub
 
 @[expose] public section
 

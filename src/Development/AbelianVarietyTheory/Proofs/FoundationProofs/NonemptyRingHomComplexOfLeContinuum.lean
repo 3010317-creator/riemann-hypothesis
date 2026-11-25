@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyRingHomComplexOfFg
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.ComplexUniformisation.NonemptyRingHomComplexOfFg
 public import Formalism.LocalRingCardinality.DataDIV
 public import Mathlib.Algebra.MvPolynomial.Cardinal
 import Mathlib.Algebra.Order.Floor.Extended

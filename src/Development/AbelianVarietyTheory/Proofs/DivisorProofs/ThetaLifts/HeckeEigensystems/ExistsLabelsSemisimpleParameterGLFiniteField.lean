@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LabelsCharOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HeckeEigensystems.LabelsCharOne
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

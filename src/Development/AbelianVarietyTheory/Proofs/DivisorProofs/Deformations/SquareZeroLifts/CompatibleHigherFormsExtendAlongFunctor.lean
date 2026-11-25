@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitMpOmjExtIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompatFamilyExtend
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.SquareZeroLifts.IsUnitMpOmjExtIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.SquareZeroLifts.CompatFamilyExtend
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

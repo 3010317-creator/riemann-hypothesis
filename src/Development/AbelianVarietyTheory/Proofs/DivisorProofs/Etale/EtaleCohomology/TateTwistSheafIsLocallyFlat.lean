@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleToSheafifyLocallyBijectiveAndLift
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistModuleFreeAndGeneratorSummand
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.EtaleCohomology.EtaleToSheafifyLocallyBijectiveAndLift
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.EtaleCohomology.TateTwistModuleFreeAndGeneratorSummand
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

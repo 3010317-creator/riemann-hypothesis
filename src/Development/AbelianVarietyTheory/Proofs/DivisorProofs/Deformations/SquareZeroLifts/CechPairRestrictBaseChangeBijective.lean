@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PrimitiveStructureSheafDegTwoVanish
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechTripleRestrictCompositeInjectiveSecond
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CohomologyRestrictBasisExtendedBijectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.SquareZeroLifts.CechTripleRestrictCompositeInjectiveSecond
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.SquareZeroLifts.CohomologyRestrictBasisExtendedBijectiveStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

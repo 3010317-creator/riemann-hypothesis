@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.WeakCharInertPartRealAdelicDataTransport
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinRepApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HeckeEigensystems.FinRepApply
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FieldValuesMemFixedField
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.OmPinsTr
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.GoodPartEq

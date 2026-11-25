@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOfInnerSmooth
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjInvol
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.AdjInvol
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

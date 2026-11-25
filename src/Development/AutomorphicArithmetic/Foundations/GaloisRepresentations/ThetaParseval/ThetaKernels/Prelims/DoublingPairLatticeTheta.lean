@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
 public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzMemL2
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.LocalSchrodinger.AdelicSchwartzMemL2
 public import Mathlib.Algebra.Order.Floor.Extended
 public import Mathlib.Algebra.Order.Floor.Semifield
 public import Mathlib.Algebra.Order.Interval.Basic

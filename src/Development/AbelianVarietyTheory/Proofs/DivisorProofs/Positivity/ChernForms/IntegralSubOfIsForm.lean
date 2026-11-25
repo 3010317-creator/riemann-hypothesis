@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsTypeIsRealConst
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ChartMeasApplyOfSubset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlueMeasUnivNeTopOfCompact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopDegreeDensityPullbackEqNormSqDetMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ChernForms.GlueMeasUnivNeTopOfCompact
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ChernForms.TopDegreeDensityPullbackEqNormSqDetMul
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GluedChartDensityMeasureAddOfCompatibleOn
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

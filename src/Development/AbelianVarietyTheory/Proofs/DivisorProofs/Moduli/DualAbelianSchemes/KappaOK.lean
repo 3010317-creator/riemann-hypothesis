@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormMulTransposeMulFormInvMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.DualAbelianSchemes.FormMulTransposeMulFormInvMem
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsAdditiveOfUniversal
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
 import Mathlib.Algebra.Order.Floor.Extended

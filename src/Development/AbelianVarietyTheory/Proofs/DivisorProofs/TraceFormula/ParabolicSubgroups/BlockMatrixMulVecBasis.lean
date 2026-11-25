@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineToGAdDerivative
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ParabolicSubgroups.LineToGAdDerivative
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

@@ -6,9 +6,9 @@ public import Formalism.LocalToGlobal.IndefiniteReal.TensCastR
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksStage
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ParamsEx
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaPToLiftReal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResInjLToLiftReal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaAdjointAtLiftEqLowestKTypeRestriction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.IsThetaPToLiftReal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.ResInjLToLiftReal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.ThetaAdjointAtLiftEqLowestKTypeRestriction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

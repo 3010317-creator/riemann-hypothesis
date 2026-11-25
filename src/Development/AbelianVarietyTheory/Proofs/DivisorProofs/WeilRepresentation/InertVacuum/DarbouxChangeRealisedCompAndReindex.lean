@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DblActId
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzConjMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.InertVacuum.AdelicSchwartzConjMem
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

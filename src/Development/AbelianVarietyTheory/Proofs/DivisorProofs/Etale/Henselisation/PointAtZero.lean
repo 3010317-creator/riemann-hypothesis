@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OriginIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosureFiniteEtale
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.OriginIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.ClosureFiniteEtale
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

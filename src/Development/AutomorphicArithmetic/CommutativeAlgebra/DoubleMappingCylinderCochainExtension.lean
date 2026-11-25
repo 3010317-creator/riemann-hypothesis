@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.FaceRes
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsZeroChains
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.EtaleCohomology.IsZeroChains
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

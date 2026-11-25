@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffMinpolyMemAdicCompletionIntegers
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ConjugacyClasses.CoeffMinpolyMemAdicCompletionIntegers
 public import Mathlib.Algebra.Central.Defs
 public import Mathlib.FieldTheory.Minpoly.Basic
 public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic

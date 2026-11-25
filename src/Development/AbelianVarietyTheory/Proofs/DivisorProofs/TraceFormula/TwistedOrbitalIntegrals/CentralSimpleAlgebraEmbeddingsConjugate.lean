@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VolEqIdxRatio
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyAlgHomEqMapMinpoly
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.VolEqIdxRatio
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ConjugacyClasses.CharpolyAlgHomEqMapMinpoly
 import GroundTheory.Brauer.TensorSimple
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

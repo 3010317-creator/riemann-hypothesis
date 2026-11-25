@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixOneParameterGroupEqExpOfContinuous
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ParabolicSubgroups.MatrixOneParameterGroupEqExpOfContinuous
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +42,7 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactUnipFlag
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToGAdMat
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ParabolicSubgroups.ToGAdMat
 
 @[expose] public section
 

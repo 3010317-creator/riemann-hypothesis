@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PreUMono
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecPullSurjectiveAndKer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.SquareZeroLifts.SecPullSurjectiveAndKer
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

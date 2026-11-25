@@ -1,9 +1,9 @@
 module
 
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatH
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualGOfGQ
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTransportF
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaDistributionAutomorphySourceGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.ExistsDualGOfGQ
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.IsTransportF
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.ThetaDistributionAutomorphySourceGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

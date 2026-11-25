@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.InfClassAt
 public import Mathlib.RingTheory.Coalgebra.IsFrobenius
 public import Development.AbelianVarietyTheory.Definitions.Foundations.OfInfProjInfMulOfFinProjFin
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalUnitaryConjSplitSupportedFiniteAdelicPoi
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.HighestWeights.RationalUnitaryConjSplitSupportedFiniteAdelicPoi
 import Formalism.LocalToGlobal.Columns.CoefficientsModP.FkMapInitMinor
 import Formalism.LocalToGlobal.Divisibility.CoefModLemmas
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.InclusionInjective
@@ -48,7 +48,7 @@ import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.PaddedLastEntry
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TopPlaceLogTheta
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetRefinement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.HighestWeights.CosetRefinement
 public import Mathlib.Algebra.Order.Chebyshev
 
 @[expose] public section

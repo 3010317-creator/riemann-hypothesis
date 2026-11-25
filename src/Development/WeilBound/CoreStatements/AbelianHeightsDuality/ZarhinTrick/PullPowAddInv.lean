@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.ZarhinTrick.IsLBZb
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianDeRhamPoincareDualityOfCubeDual
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.DualAbelianSchemes.AbelianDeRhamPoincareDualityOfCubeDual
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPointPrimitiveBundleEqTranslatePpav
 public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.ZarhinTrick.FibLamA
 import Mathlib.Algebra.Order.Floor.Extended

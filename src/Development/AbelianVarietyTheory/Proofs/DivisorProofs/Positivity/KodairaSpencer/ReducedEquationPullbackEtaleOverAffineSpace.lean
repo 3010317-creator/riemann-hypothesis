@@ -44,7 +44,7 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsChartOfIsLoca
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBaseFrame
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.IsBaseFrame
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 
 @[expose] public section

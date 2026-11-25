@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicTransvectionSubgroupEqAdelesClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.AdelicTransvectionSubgroupEqAdelesClosed
 
 @[expose] public section
 

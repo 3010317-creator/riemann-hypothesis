@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsConstAlongSingleton
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CTSubmatrixMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ParabolicSubgroups.CTSubmatrixMul
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactUnipFlag
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviDecompositionGradedIsotropicFlag
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StdParEqFlag
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ParabolicSubgroups.LeviDecompositionGradedIsotropicFlag
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ParabolicSubgroups.StdParEqFlag
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +44,7 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
 import Development.AbelianVarietyTheory.Definitions.Foundations.NormEulerPolySubOneLe
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToGAdMat
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ParabolicSubgroups.ToGAdMat
 
 @[expose] public section
 

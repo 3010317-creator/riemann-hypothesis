@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenScaledInt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.AdelicFourier.IsOpenScaledInt
 public import Mathlib.NumberTheory.NumberField.Completion.FinitePlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

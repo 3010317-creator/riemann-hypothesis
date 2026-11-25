@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ArchimedeanSchwartz.ExpIndep
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvOneSubBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.AutomorphicGrowth.InvOneSubBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

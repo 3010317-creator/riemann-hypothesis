@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.PolynomialSiteTraces.AdmissibleMap
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerFiltration
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.DividedPowerFiltration
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DividedPowerPolynomialFiltration
 import Development.WeilBound.CoreStatements.AbelianHeightsDuality.DividedPowerAlgebras.FilIsSubDPIdeal
 import Mathlib.Algebra.Order.Floor.Extended

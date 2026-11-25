@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlgebraicOfRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.IsAlgebraicOfRoot
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

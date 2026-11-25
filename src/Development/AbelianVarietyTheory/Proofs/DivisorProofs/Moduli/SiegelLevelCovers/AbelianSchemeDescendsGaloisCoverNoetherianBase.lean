@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.QuotientDescendGrpObj
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGaloisCoverQuotientFreeFiniteAction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.SiegelLevelCovers.ExistsGaloisCoverQuotientFreeFiniteAction
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GaloisCoverDescentAndCartesianSquares
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GeometricallyConnectedOfIsPullback
 import Mathlib.Algebra.Order.Floor.Extended

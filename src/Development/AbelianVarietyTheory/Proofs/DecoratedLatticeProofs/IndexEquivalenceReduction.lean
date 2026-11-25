@@ -1,8 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBlockDetBlockTriangular
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.PureTensors.DiagonalBlockDetBlockTriangular
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IteratedDepthOneLevelCharacterClosedForm
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IterPrincipalSpec
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.PureTensors.IterPrincipalSpec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

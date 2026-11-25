@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsAlgClosedBaseChange
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AmpleModuloEffectiveAwayFromPointPullAffine
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBigLineBundleOfSmulClassEqAmpleAtAddNef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.AmpleModuloEffectiveAwayFromPointPullAffine
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.IsBigLineBundleOfSmulClassEqAmpleAtAddNef
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -52,7 +52,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreEig
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.PreEig
 
 @[expose] public section
 

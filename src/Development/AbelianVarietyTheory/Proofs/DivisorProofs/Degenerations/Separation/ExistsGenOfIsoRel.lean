@@ -1,16 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FromBase
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFromBase
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueScalar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SharpBundleFibre
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.ExistsFromBase
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.ExistsUniqueScalar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.SharpBundleFibre
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UnivIdentity
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.FlatBCSec
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GsAppTopOfSection
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDominantToUnitLeft
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LbIsoSecOnto
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValMemOfCorrPull
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.GsAppTopOfSection
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.IntegralThetaTerms.IsDominantToUnitLeft
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.LbIsoSecOnto
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.ValMemOfCorrPull
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

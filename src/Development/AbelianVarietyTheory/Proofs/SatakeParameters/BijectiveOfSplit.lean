@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSubquotientComp
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsOrbitProd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSmoothCharCompNormU
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.IsSmoothCharCompNormU
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdicCompletionTraceNormContinuous
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeIndices.CharZeroAdicCompletion
 public import GroundTheory.GlobalFields.CompletionAtPlace.Degree

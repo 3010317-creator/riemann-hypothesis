@@ -1,7 +1,7 @@
 module
 
 public import Mathlib.RingTheory.MvPowerSeries.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesAlgHomKillHighOrder
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.MvPowerSeriesAlgHomKillHighOrder
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

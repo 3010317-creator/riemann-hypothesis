@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsConstAlongSingleton
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompInfRTensorInlA
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ParabolicSubgroups.CompInfRTensorInlA
 import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToGAdMat
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ParabolicSubgroups.ToGAdMat
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsSplitChartSplitChart
 
 @[expose] public section

@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapPairDetCovec
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectionStatementHolds
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.MapPairDetCovec
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.ProjectionStatementHolds
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GradedLineBundleExists
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalSystemModelMap
 import Mathlib.Algebra.Order.Floor.Extended

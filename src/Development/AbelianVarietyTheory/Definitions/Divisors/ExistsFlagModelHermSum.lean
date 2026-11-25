@@ -48,7 +48,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.FirstChernIn
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsEquivariantToBidual
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsIsoQuotToImOmegaLieOfSplit
 import Development.AbelianVarietyTheory.Definitions.Divisors.LeTwoMulOfForallScale
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsVBAndClsDetOfShortExact
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ArithmeticIntersection.IsVBAndClsDetOfShortExact
 
 @[expose] public section
 

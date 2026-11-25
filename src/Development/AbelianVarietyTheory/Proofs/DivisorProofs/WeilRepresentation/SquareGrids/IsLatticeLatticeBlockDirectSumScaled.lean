@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemPairLat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.SquareGrids.MemPairLat
 public import Mathlib.Algebra.Module.Lattice.Full
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
 import Mathlib.Algebra.Order.Floor.Extended

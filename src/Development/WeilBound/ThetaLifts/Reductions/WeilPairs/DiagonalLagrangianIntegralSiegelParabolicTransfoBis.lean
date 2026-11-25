@@ -42,7 +42,7 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
 import Development.AbelianVarietyTheory.Definitions.Foundations.NormEulerPolySubOneLe
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoMulInvOf
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.TwoMulInvOf
 import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.DCdE
 import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.Mfac
 import Formalism.LocalToGlobal.IndefiniteReal.DatumF

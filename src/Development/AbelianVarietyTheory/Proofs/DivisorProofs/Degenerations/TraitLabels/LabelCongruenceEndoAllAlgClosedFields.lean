@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.RigGen
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelPointsAlgClosureFractionRingBijective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicMemRangeCompleteDvrPadicAlgCl
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.SemiAbelianUniformisation.LevelPointsAlgClosureFractionRingBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.TraitLabels.PadicMemRangeCompleteDvrPadicAlgCl
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.QkToAkUInvariantUnderFieldEmbedding
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UTorsClosed
@@ -43,7 +43,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NonemptyTorusExtensionOfIsAlgClosed
 import Development.AbelianVarietyTheory.Definitions.Divisors.SharpOverIff
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTorPartTorusExtension
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.TraitLabels.IsTorPartTorusExtension
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section

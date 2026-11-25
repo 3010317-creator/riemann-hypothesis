@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisDescentFreeSheafCechLevelSepClosureStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.EtaleCohomology.GaloisDescentFreeSheafCechLevelSepClosureStatement
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

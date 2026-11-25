@@ -1,7 +1,7 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumLatticeStabilizerBigCellFactorizati
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBlockOfMatrix
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.InertVacuum.DoubledVacuumLatticeStabilizerBigCellFactorizati
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.InertVacuum.DiagonalBlockOfMatrix
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OneEqSumPlaceIdempotentsOverTwoAddTwoMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

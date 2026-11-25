@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareStanding
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaGridCharactersArchExponentsGapGtRank
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.SquareGrids.SquareStanding
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.SquareGrids.ThetaGridCharactersArchExponentsGapGtRank
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

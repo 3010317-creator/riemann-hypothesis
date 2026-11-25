@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsGPull
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenModelEqGenericFibre
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.GenModelEqGenericFibre
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -39,7 +39,7 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompEqOneOfTransl
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.CompEqOneOfTransl
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section

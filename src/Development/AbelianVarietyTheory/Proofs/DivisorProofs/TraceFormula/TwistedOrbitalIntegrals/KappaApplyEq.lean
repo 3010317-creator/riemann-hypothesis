@@ -1,7 +1,7 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealSheafEqOfKerTensorToSubschemeSections
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfSecAlgTop
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.ThetaMaps.IdealSheafEqOfKerTensorToSubschemeSections
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ChernForms.EqOfSecAlgTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

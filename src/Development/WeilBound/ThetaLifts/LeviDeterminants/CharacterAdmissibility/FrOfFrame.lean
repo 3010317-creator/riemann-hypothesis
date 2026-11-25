@@ -4,7 +4,7 @@ public import Development.WeilBound.ThetaLifts.LeviDeterminants.CharacterAdmissi
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.CharacterAdmissibility.SchrodingerApplyZeroOfFst
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.MixedModels.AdaptC
 import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.AddCharHalfTraceTensorLatticeHeisenbergCocycle
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenIntertwinerTransitive
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.AdelicFourier.EigenIntertwinerTransitive
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.EqZeroOfTheta
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.EvFrame
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.MCSpan

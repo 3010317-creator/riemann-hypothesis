@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotIsIsoSpMapDnFst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionsFlatBaseChangeAffineMilnorSquareOpenStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.LineBundleFamilies.SectionsFlatBaseChangeAffineMilnorSquareOpenStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HermSysHypOneLeLambdaZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMultiHomogeneousProd
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinSubstLinSubst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.IsMultiHomogeneousProd
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.LinSubstLinSubst
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

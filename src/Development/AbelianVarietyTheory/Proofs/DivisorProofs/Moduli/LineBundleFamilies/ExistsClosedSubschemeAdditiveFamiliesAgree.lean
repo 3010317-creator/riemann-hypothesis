@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPullbackOneProdKernel
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.IsogenyRepresentability.IsPullbackOneProdKernel
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SameIdIff
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeLocallyTrivialProductLineBu
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsKerIffMinors

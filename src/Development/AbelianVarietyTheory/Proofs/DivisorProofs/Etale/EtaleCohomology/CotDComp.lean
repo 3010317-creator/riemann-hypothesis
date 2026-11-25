@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TrivV
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.EtaleCohomology.TrivV
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BlockGLMap
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
 import Mathlib.Algebra.Order.Floor.Extended

@@ -1,7 +1,7 @@
 module
 
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedPointCompletionPositiveResidueChar
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.TraitLabels.ClosedPointCompletionPositiveResidueChar
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SharpOverIff
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.NormNatCastPadicAlgClOfCoprime

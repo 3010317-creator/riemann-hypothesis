@@ -1,7 +1,7 @@
 module
 
 public import Formalism.SatakeDualWeyl.Statement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemMatLat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.MemMatLat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

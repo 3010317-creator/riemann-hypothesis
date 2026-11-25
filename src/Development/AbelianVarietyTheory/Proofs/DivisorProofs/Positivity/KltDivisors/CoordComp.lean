@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WchartCompLe
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.WchartCompLe
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ValCalc
 import Mathlib.Algebra.Order.Floor.Extended

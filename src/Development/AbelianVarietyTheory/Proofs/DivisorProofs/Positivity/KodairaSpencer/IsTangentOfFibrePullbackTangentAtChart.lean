@@ -44,8 +44,8 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsAlgHom
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBaseFrame
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTransl
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.IsBaseFrame
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.IsTransl
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.FlatBCSec
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 

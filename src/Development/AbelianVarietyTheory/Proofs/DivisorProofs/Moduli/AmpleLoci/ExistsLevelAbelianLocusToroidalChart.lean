@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GalRigidOfSurjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGrpPullbackSelf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NondegOfFieldExtension
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.SemiAbelianUniformisation.IsGrpPullbackSelf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.AmpleLoci.NondegOfFieldExtension
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsSquareUnique
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PushEquivSymmLeft
 import Mathlib.Algebra.Order.Floor.Extended

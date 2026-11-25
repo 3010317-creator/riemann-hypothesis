@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.HxiTZeroComb
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CompactBIffCompact
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.BcMapFst
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.IsGrRefl
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompEqOneOfTransl
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.CompEqOneOfTransl
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

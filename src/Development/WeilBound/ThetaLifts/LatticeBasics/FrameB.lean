@@ -2,8 +2,8 @@ module
 
 public import Development.WeilBound.ThetaLifts.LatticeBasics.FrameA
 public import Development.WeilBound.ThetaLifts.LatticeBasics.HgtFin
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceSplitOrInert
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAddCharSymplecticLocalLatticeEqOne
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.PlaceSplitOrInert
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.SelfDualLattices.StandardAddCharSymplecticLocalLatticeEqOne
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsLatticeFrameIsMajorantFrame
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUniqueIsConjAt
 import Mathlib.Algebra.Module.StablyFree.Basic

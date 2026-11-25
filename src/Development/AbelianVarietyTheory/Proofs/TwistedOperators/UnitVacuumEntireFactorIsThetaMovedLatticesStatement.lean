@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramAtPosDef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.GramAtPosDef
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrT
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitVacuumEntireFactorIsThetaMovedLattices
 import Mathlib.Algebra.Order.Floor.Extended

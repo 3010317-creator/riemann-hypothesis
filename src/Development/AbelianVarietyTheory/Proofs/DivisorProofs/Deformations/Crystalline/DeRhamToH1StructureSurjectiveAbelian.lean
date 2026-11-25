@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineSmoothLiftOfRelations
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafComparisonInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.CrystallineSmoothLiftOfRelations
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.StructureSheafComparisonInjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

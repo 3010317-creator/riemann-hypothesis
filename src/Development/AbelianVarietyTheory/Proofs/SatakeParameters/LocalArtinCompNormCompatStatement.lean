@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSmoothCharCompNormU
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.IsSmoothCharCompNormU
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasExponentZeroIff
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalArtinCompNormCompat
 import Mathlib.Algebra.Order.Floor.Extended

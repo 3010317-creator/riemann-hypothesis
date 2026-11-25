@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogCardEqFinsumLengthLocalizedMaximal
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ArithmeticIntersection.LogCardEqFinsumLengthLocalizedMaximal
 public import Formalism.SizeWindowBrackets.SlopesHypothesisFinitePlaces
 public import Formalism.HarderNarasimhan.StatementPl
 public import Mathlib.CategoryTheory.Category.Basic

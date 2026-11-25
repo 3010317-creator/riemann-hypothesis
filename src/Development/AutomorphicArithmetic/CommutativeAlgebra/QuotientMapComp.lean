@@ -2,8 +2,8 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.FinModel
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyHomFixRepTrivial
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSiegelObjectLoweredLevel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorObjectMapsComposeCancel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.SiegelLevelCovers.ExistsSiegelObjectLoweredLevel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.SiegelLevelCovers.HarrisTaylorObjectMapsComposeCancel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

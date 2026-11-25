@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyValExtOfOverLa
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentialOperatorDepthRestrictColumns
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDepth.DifferentialOperatorDepthRestrictColumns
 public import Mathlib.Algebra.MvPolynomial.Variables
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupOperatorDepthMulDisjointColumns
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDepth.FormalGroupOperatorDepthMulDisjointColumns
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsExpEqOfSubstLg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

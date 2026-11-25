@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdmissibleIntegralBasisChangeOne
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldOneVariableTranscendentalFiniteAndE
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.NefLieAlgebras.FunctionFieldOneVariableTranscendentalFiniteAndE
 public import Mathlib.RingTheory.Valuation.Discrete.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

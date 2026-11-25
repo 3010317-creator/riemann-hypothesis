@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SlopeSqSubLeSlopeSqSpan
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.SlopeSqSubLeSlopeSqSpan
 import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SlopeIneqMean
 public import Formalism.LocalRingCardinality.Lemmas
 public import Formalism.MeanHeightDescent.DivisionInequalityWithCovolume

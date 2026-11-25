@@ -1,10 +1,10 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConvUAbsU
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemShellUIffDepth
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdealWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiJMulApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SwapLtSwapIffOfAddTwo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.ConvUAbsU
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.MemShellUIffDepth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.ExistsIdealWeight
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.AntiJMulApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.SwapLtSwapIffOfAddTwo
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactUnitaryIntegralPoints
 public import Formalism.DoubleCosetMeasures.LowerUnipotentOrbits.RelIndexMulMeasure
 import Mathlib.Algebra.Order.Floor.Extended

@@ -3,8 +3,8 @@ module
 public import Mathlib.RingTheory.Bialgebra.Hom
 public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSpanEqTopOfFinrankFibreEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PointsGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.ExistsSpanEqTopOfFinrankFibreEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.PointsGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

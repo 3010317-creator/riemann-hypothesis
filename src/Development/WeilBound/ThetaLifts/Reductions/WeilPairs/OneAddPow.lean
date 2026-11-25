@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReindexDblIncM
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.ReindexDblIncM
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.Mfac
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.IntegralMul
 import Mathlib.Algebra.Order.Floor.Extended

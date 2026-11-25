@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensFacts
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.DegenerationData.TensFacts
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WithISelf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

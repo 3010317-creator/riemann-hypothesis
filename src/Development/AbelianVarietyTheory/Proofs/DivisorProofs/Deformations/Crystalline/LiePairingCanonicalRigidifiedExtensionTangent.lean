@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CanonicalRigidifiedExtensionOfDeRhamClassUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCanForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieCotValEqTanVal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigOfOmegaInjectiveOfPow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.CanonicalRigidifiedExtensionOfDeRhamClassUnique
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.IsCanForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.LieCotValEqTanVal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.RigOfOmegaInjectiveOfPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

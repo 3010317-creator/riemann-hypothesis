@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EightDvdNCol
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthBetweenZeroAndBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDepth.FactorDepthBetweenZeroAndBound
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
 import Mathlib.Algebra.Order.Floor.Extended

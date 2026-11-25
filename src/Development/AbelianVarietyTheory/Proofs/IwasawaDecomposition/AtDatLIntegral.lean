@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Holds
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LMLatOfLIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.LMLatOfLIntegral
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GeometricHalfCoreFormsUniformisationIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAHOfIsFactorAH
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductAbelianUniformization
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.ComplexUniformisation.IsAHOfIsFactorAH
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.ComplexUniformisation.ProductAbelianUniformization
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DifferentiableOnProdOfForall
 import Development.AbelianVarietyTheory.Proofs.ToricGeometry.CubeTrivialisationOnUniformisingSpace
 import Mathlib.Algebra.Order.Floor.Extended

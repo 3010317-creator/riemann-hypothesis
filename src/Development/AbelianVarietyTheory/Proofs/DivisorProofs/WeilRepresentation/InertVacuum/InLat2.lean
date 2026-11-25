@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceLocalFieldDataExists
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.InertVacuum.InertPlaceLocalFieldDataExists
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUniqueIsConjAt
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 import Mathlib.Algebra.Order.Floor.Extended

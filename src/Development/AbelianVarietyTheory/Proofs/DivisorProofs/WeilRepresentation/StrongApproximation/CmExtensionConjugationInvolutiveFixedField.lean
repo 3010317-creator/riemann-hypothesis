@@ -44,7 +44,7 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
 import Development.AbelianVarietyTheory.Definitions.Foundations.NormEulerPolySubOneLe
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntFOneMul
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.StrongApproximation.IntFOneMul
 import Formalism.LocalToGlobal.IndefiniteReal.DatumF
 
 @[expose] public section

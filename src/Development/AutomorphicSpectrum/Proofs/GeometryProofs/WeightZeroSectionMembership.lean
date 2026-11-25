@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CInfGood
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSecReadingDecreasingIntegerExponents
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyKeySecOfFamily
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.IsSecReadingDecreasingIntegerExponents
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.NonemptyKeySecOfFamily
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CompactificationCompEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

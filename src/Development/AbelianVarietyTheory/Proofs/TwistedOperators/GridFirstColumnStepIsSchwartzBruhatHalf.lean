@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RankCol
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BplusOfEquivariant
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilOver
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndicatorSmallCosetHalfIsSchwartzBruhat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.VacuumCosets.ExistsWeilOver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.VacuumCosets.IndicatorSmallCosetHalfIsSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PadOneMemSecondBlockTriangular
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.ExistsNatSmulSingle
 import Mathlib.Algebra.Order.Floor.Extended

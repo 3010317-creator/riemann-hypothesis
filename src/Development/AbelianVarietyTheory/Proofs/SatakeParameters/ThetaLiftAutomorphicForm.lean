@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CharacteristicFunctionIntegralApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsMultIPOfModel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SignAtBasePlaceEqEmbedding
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.ExistsIsMultIPOfModel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HeckeEigensystems.SignAtBasePlaceEqEmbedding
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EasyInputs
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PrimeToHostCore
 public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.GEqTie

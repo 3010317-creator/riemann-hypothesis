@@ -9,7 +9,7 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Law
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.RelAmpleOfLocallyOnBase
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsEqNsmul
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TateIsoExistsAlgClosed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelExistsAfterBaseChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.ModelExistsAfterBaseChange
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CompactifiedModuliPartOne
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsModuliSchemePolarizedAbelianLevel
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
@@ -66,7 +66,7 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.T
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCRing
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.CubePullbacks.CubePull
 import Development.AbelianVarietyTheory.BlockTheory.AbelianSchemeLaw.HomExtendsOverDVR
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VecMulMapEqZero
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.VecMulMapEqZero
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section

@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.IntUnit
 public import Formalism.LocalToGlobal.ProjectiveLattices.FullXi
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteAdeleQuadraticExistsUnitEqMulSg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.FiniteAdeleQuadraticExistsUnitEqMulSg
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNormOneRootCongruentOddHostField
 public import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Mathlib.Algebra.Order.Floor.Extended

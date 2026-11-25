@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyConstantAddChar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.KudlaSplitting.IsLocallyConstantAddChar
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CompactOrbits.BaseOrbits
 public import GroundTheory.AutomorphicForms.ContragredientTranspose.GelfandKazhdan

@@ -39,7 +39,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsEquivariantToBidual
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntEmbCoe
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.ThetaMaps.IntEmbCoe
 
 @[expose] public section
 

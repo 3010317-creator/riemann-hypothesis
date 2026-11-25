@@ -1,9 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConjTransposeAntidiagFixed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexUpLatEqProd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocCompactSecondCountable
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnipLatIsOpenIsCompact
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.RelIndexUpLatEqProd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.LocCompactSecondCountable
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.UnipLatIsOpenIsCompact
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RelIndexMulMeasure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

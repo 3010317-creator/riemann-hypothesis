@@ -3,8 +3,8 @@ module
 public import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.TateUnramifiedOfTorsionUnramified
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardAbelianVarietyTorsionSepClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardAbelianVarietyTorsionSepClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.ComplexUniformisation.CardAbelianVarietyTorsionSepClosedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.ComplexUniformisation.CardAbelianVarietyTorsionSepClosed
 
 @[expose] public section
 

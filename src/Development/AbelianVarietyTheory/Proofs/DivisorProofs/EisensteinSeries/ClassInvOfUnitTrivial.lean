@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsFinSetSplitPlacesCoprimeConductor
 public import Mathlib.NumberTheory.NumberField.CMField
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasSumZeroOfTwoLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomothetyLatSum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticePrincMulUnit
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModFMulPosPrincipal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.HomothetyLatSum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.LatticePrincMulUnit
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.ModFMulPosPrincipal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

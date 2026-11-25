@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieRankAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.HarrisTaylorObjects.LieRankAt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeA
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.EigLatBasis
 import Mathlib.Algebra.Order.Floor.Extended

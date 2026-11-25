@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PinsMerge
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.PinsMerge
 import Development.AbelianVarietyTheory.Definitions.ThetaValues.IoOverLeftUnique
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ActLevAndActBC
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.EqOfForallAlgClosed

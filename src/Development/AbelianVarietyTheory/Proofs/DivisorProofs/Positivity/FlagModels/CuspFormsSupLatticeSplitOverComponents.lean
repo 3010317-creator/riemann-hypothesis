@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.ComponentMassSum
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspOnRestrict
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.ExistsCuspOnRestrict
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemSuppOnIffIdemMulOfNatural
 import Formalism.LocalToGlobal.ProjectiveLattices.CompFin
 import Mathlib.Algebra.Order.Floor.Extended

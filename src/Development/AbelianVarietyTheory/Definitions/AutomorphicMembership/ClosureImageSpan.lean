@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StableIffCarrierEq
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftMatrixComputesLiftRational
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResidualCharacterDetValuesMemCoeffField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.ResidualCharacterDetValuesMemCoeffField
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SpanGoodEqMj
 import Formalism.LocalToGlobal.IndefiniteReal.CxLemmas
 import Mathlib.Algebra.Order.Floor.Extended

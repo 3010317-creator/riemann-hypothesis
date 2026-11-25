@@ -1,8 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValIotaLeOfMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.ValIotaLeOfMem
 public import Mathlib.NumberTheory.NumberField.CMField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteRingClassGroupOfConductorNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.FiniteRingClassGroupOfConductorNeZero
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FiniteAdeleStrongApproximationModNat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

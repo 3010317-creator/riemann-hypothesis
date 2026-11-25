@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CXiValIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.CXiValIff
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.IoOverLeftUnique
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SecBCAndCuspBC
 import Mathlib.Algebra.Order.Floor.Extended

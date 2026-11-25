@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.ExponentialNegativity.ExpNegGlue
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantTermModerateGrowth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.AutomorphicGrowth.ConstantTermModerateGrowth
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdeleModuleDetDiagUnitsPosIdele
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

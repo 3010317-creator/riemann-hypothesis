@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.AuxiliaryPrimeFunction
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicIntertwine
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.LocalSchrodinger.AdelicIntertwine
 import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.CayleyTransform.CompFinFinOne
 import Formalism.LocalToGlobal.IndefiniteReal.PHeisFC
 import Mathlib.Algebra.Order.Floor.Extended

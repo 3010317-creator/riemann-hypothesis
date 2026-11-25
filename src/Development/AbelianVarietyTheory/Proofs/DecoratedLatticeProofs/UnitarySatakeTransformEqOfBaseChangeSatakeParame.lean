@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmetricFunctionInverseInvariant
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitarySatakeWeylInvariant
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.SymmetricFunctionInverseInvariant
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.UnitarySatakeWeylInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

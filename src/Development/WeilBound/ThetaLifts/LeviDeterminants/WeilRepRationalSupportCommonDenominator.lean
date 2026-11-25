@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicCharacterNontrivialAtPlaces
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.LocalSchrodinger.StandardAdelicCharacterNontrivialAtPlaces
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.GrowFin
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.GrowHt
 import Mathlib.Algebra.AffineMonoid.Basic

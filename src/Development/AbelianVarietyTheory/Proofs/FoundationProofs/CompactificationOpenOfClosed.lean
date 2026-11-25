@@ -42,7 +42,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 import Development.AbelianVarietyTheory.Definitions.CMLattices.IsCyclotomicExtensionCyclotomicField28
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VecMulMapEqZero
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.VecMulMapEqZero
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsAbelianGaloisHost
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 import Formalism.SharpRestriction.CuspSpanNormBounds.Point

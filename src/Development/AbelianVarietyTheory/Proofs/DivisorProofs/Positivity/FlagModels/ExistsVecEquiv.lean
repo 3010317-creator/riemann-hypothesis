@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSectionOfChg
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEigenBasisSameVec
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.IsSectionOfChg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.ExistsEigenBasisSameVec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfFderivEqZero
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.ComplexUniformisation.EqZeroOfFderivEqZero
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.IsUnitOfLagrangian
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ThetaQuasiPeriods.PeriodLattice

@@ -44,8 +44,8 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.WeightFloorInequalities
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.DatEqZero
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LastPosOfKapIs
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LastPosWtAOfPins
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.LastPosOfKapIs
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.LastPosWtAOfPins
 
 @[expose] public section
 

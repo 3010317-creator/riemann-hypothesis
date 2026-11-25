@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorSymplecticLevelFamilyUniversalProper
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorObjectMapsComposeCancel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.SiegelLevelCovers.HarrisTaylorSymplecticLevelFamilyUniversalProper
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.SiegelLevelCovers.HarrisTaylorObjectMapsComposeCancel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -37,7 +37,7 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZetaAwayPowSelf
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.SiegelLevelCovers.ZetaAwayPowSelf
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section

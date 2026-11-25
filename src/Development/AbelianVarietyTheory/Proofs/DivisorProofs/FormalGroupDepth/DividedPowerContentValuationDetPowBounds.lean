@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFram
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
 public import Mathlib.Data.Nat.Digits.Defs
 public import Mathlib.RingTheory.MvPolynomial.Homogeneous
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixVariablesDeterminantPowMonomialShape
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDepth.MatrixVariablesDeterminantPowMonomialShape
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LegendreBoundsFactorialMultiIndexCapelli
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.PeriodValuation
 public import Mathlib.Analysis.MeanInequalities

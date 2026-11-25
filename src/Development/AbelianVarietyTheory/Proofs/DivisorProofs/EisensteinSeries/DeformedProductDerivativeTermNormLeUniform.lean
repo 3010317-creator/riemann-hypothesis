@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DTermOrigin
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdNormSq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.DTermOrigin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.ProdNormSq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PermMMulTranspose
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.PermMMulTranspose
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicSplit
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsCMFamHost

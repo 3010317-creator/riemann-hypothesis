@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIsIntegralNoetherianCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopologicalKrullDimEqDimStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.AbelianVarietyIsIntegralNoetherianCompactStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.TopologicalKrullDimEqDimStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalSubringGenericPoint
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.MemLocalSubringGenericPoint
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

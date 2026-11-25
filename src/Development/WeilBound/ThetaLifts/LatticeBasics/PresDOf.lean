@@ -2,7 +2,7 @@ module
 
 public import Development.WeilBound.ThetaLifts.LatticeBasics.BadStmt
 public import Development.WeilBound.ThetaLifts.LocalTheory.ConeShifts.StarMemSchA
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.InertVacuum.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
 import Development.WeilBound.CoreStatements.LocalThetaKernels.LocrepAd
 public import Development.WeilBound.ThetaLifts.LatticeBasics.CompCA
 public import Development.WeilBound.ThetaLifts.LatticeBasics.SchrUnit

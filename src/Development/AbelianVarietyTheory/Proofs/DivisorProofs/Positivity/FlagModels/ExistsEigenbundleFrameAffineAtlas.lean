@@ -1,8 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellFrameChangeTriangular
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.FlagCellFrameChangeTriangular
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsFlagModelField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEigenChartAffineOpenWithin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.ExistsEigenChartAffineOpenWithin
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CocycleTrivialOnProjectiveCover
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LineModel
 import Mathlib.Algebra.Order.Floor.Extended

@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
 public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeformedLatticeSumDerivativesEqEisensteinJets
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinJetConjDirectionDiagonalExpansion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.DeformedLatticeSumDerivativesEqEisensteinJets
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.EisensteinJetConjDirectionDiagonalExpansion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

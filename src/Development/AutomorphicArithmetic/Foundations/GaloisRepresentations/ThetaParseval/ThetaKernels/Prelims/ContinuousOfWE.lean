@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.SplitStab
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenIntegralTensorAdeleMultiples
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.StrongApproximation.IsOpenIntegralTensorAdeleMultiples
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.MemSEOfFin
 public import Mathlib.Algebra.Order.Floor.Extended
@@ -44,7 +44,7 @@ public import Mathlib.Tactic.NormNum.RealSqrt
 public import Mathlib.Tactic.Polynomial.Basic
 public import Mathlib.Tactic.ReduceModChar
 public import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntFOneMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.StrongApproximation.IntFOneMul
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutEtaA
 /-! # ContinuousOfWE: Preliminary helper declarations for global theta kernels. -/
 

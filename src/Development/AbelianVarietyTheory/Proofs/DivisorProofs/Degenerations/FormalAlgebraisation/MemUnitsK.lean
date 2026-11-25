@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorDataPsiMemMaximalIdealTendstoZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.FormalAlgebraisation.TensorDataPsiMemMaximalIdealTendstoZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

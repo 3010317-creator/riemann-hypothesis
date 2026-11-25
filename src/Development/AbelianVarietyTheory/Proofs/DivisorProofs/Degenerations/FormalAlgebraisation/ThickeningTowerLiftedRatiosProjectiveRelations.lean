@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ProjectiveNotIsUnit
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsLbOfGeneratedSystem
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BaseIdealIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseChangeQuotientClosedImmersionIdealSheaf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.FormalAlgebraisation.BaseChangeQuotientClosedImmersionIdealSheaf
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThickTransComp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TowerSquares
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.FormalAlgebraisation.TowerSquares
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

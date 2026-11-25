@@ -1,7 +1,7 @@
 module
 
 import Development.AbelianVarietyTheory.Counterexamples.UpperHalfSurvey.ExistsFundSetOrth
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarChart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.HaarChart
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.DetNeZeroOfIsOrth
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsProbabilityMeasureAutQuotientNormalized
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ContinuousOnRmul

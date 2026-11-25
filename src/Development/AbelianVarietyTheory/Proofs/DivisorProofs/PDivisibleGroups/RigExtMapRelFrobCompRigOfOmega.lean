@@ -1,8 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobTwistBaseChangeHomApp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.FrobTwistBaseChangeHomApp
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PadicActionConstInjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CobOneEqZeroOfConnecting
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.CobOneEqZeroOfConnecting
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -39,7 +39,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.BlockTheory.AbelianSchemeLaw.HomExtendsOverDVR
 import Development.AbelianVarietyTheory.Definitions.CMLattices.IsCyclotomicExtensionCyclotomicField28
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VecMulMapEqZero
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.VecMulMapEqZero
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section

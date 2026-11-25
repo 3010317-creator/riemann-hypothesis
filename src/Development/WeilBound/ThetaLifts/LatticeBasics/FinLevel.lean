@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.ThetaLifts.LatticeBasics.SecondFromFirstStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartz
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.WeilRepresentationPreservesSchwartz
 public import Development.WeilBound.ThetaLifts.LatticeBasics.ThetaBox
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

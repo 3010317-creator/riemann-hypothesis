@@ -1,9 +1,9 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuasiInv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatSurjectiveQcPow
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPullbackOneProdKernel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PicEqZeroOfFpqc
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.IsogenyRepresentability.ExistsQuasiInv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.IsogenyRepresentability.FlatSurjectiveQcPow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.IsogenyRepresentability.IsPullbackOneProdKernel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.IsogenyRepresentability.PicEqZeroOfFpqc
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

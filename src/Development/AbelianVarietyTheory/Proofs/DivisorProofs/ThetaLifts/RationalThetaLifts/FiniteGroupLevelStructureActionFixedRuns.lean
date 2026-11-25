@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Formalism.LocalToGlobal.IndefiniteReal.RhoGeo
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NotOntoOfCharAlone
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMapAllComparison
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.NotOntoOfCharAlone
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.OneMapAllComparison
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDetOfMemSt
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MulVecMemOfFrame
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsLevelChangeActionOnCuspForms

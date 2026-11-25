@@ -44,7 +44,7 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Counterexamples.RotationExamples.LeafHypothesesConst
 import Development.AbelianVarietyTheory.Definitions.Divisors.CmHostImaginaryGeneratorNeZero
 import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetVecEq
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.CosetVecEq
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOfBalanced
 import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 public import Mathlib.Algebra.Order.Chebyshev

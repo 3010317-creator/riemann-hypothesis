@@ -2,8 +2,8 @@ module
 
 import Development.WeilBound.ThetaLifts.FrameEstimates.IsCompactIntV
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactOpenAddSubgroup
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyConstantAddChar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.KudlaSplitting.ExistsCompactOpenAddSubgroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.KudlaSplitting.IsLocallyConstantAddChar
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

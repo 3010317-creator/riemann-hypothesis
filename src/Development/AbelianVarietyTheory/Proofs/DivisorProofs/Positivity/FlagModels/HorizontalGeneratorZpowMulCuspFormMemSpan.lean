@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspOnRestrict
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HorizGenZpowMulMemSS
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.ExistsCuspOnRestrict
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.HorizGenZpowMulMemSS
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNumberFieldPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

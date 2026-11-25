@@ -1,8 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvIsIntMapMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDepth.MvIsIntMapMap
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.BiextCoeffSecondLinear
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormEqNegOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDepth.ExistsNormEqNegOne
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralChartDirectionsAreEigenvectors
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StarRingExtOfStar
 import Mathlib.Algebra.Order.Floor.Extended

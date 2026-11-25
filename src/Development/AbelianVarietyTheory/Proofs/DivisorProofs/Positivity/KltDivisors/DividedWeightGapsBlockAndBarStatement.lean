@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DividedWeightUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedWeightGapsBlockAndBar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.DividedWeightGapsBlockAndBar
 
 @[expose] public section
 

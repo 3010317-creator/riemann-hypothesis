@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FractionalIdealNormEqFiniteIdeleModule
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.FractionalIdealNormEqFiniteIdeleModule
 public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
 public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLattice
 public import Mathlib.Algebra.AffineMonoid.Basic

@@ -1,7 +1,7 @@
 module
 
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SesqAsym
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceKappaOrbitalUnitEqSignedLatticeSumImpo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.InertPlaceKappaOrbitalUnitEqSignedLatticeSumImpo
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedQuadraticNormsTraceUniformizerFacts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

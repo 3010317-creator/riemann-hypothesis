@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsEulerContraction
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RoundedTwistLocalEquationChart
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartFormsDifferentialClosed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogFormsEqChartForms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.RoundedTwistLocalEquationChart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.ChartFormsDifferentialClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.LogFormsEqChartForms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

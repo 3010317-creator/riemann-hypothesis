@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.TcoMem
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAffineOpenRingPolynomialEquiv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.StandardAffineOpenRingPolynomialEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

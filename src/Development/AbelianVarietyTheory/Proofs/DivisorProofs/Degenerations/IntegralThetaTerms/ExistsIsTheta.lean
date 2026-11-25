@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueScalar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.ExistsUniqueScalar
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NormVal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

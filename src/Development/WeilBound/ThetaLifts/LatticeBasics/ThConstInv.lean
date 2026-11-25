@@ -2,7 +2,7 @@ module
 
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.RightOnto
 public import Development.WeilBound.ThetaLifts.LatticeBasics.PairsStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorPureTensorComponentAtPlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.AdelicFourier.ExistsFactorPureTensorComponentAtPlace
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.IndicatorMem
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.PfActs

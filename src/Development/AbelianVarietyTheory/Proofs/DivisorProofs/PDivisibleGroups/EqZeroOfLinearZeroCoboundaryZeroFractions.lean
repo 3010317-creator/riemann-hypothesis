@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoboundaryEqAdditiveLeadingTerms
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffCob1HomogLiftBinomial
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupLawLinearCoeffAdditive
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.CoboundaryEqAdditiveLeadingTerms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.CoeffCob1HomogLiftBinomial
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.FormalGroupLawLinearCoeffAdditive
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

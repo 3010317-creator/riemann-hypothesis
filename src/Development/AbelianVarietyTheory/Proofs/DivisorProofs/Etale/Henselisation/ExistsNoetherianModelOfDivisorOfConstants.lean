@@ -1,9 +1,9 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocIndEtaleIsDomainIsIntegrallyClosed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OriginIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNoetherianNormalLocalApprox
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsorsTrivial
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.LocIndEtaleIsDomainIsIntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.OriginIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.ExistsNoetherianNormalLocalApprox
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.TorsorsTrivial
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteIntegralClosureOfEssFiniteTypeIntDomain
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdempotentsAbelianSchemeConstantDimension
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.SquareZeroLifts.ExistsIdempotentsAbelianSchemeConstantDimension
 public import Formalism.LocalToGlobal.ProjectiveLattices.IsGenFrGenFr
 public import Formalism.LocalToGlobal.ProjectiveLattices.CompFin
 import Mathlib.SetTheory.ZFC.PSet

@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoordComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.CoordComp
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.PolarizedAbelianEmbeddingBySections
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsHomOfVeryAmpleBy
 import Mathlib.Algebra.Order.Floor.Extended

@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TypePartBase
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.TypePartBase
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilGramSignature
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ClassPresBasic
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CoefActionReprMemSubfield

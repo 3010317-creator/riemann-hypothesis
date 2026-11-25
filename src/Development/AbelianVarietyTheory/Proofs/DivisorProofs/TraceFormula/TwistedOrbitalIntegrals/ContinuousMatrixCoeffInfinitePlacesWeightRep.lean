@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSplitFinMulSplitInf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.EqSplitFinMulSplitInf
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAutRepOfVecFun
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntertwiningGlOfUnitary
 import Mathlib.Algebra.Order.Floor.Extended

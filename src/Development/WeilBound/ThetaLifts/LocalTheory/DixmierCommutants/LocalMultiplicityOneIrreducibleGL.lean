@@ -3,7 +3,7 @@ module
 public import Development.WeilBound.ThetaLifts.LocalTheory.DixmierCommutants.KilEmpty
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.FullOfSoLoc
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.PfSurj
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilObjectsInhabited
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.KudlaSplitting.WeilObjectsInhabited
 public import Development.WeilBound.ThetaLifts.LocalTheory.DixmierCommutants.SlopeTestRemainingChoices
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended

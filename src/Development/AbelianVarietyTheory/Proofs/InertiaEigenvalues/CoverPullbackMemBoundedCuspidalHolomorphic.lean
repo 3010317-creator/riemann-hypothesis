@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntFormsSubset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.La1sqEqOfUnXEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.La1sqEqOfUnXEq
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqConstMulOfNormOne
 public import Formalism.LocalToGlobal.ProjectiveLattices.RosatiLatticeNorms.LinkFD
 import Mathlib.Algebra.Order.Floor.Extended

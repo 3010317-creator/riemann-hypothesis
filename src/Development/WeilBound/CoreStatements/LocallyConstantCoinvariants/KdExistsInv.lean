@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.PfDictDef
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyConstantAddChar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.KudlaSplitting.IsLocallyConstantAddChar
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.KdMulRight
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

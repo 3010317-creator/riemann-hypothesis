@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWhittakerDatumAndHalfLevels
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.ExistsWhittakerDatumAndHalfLevels
 public import Formalism.SharpRestriction.LevelLetterCocycles.ArithmeticCylinders
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

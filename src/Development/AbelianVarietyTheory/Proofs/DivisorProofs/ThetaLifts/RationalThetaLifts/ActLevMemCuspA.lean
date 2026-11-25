@@ -3,7 +3,7 @@ module
 import Mathlib.Tactic
 public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
 public import Formalism.LocalToGlobal.IndefiniteReal.OneMapEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetReducedBlockEqResidueDet
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.DetReducedBlockEqResidueDet
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralFramedPointOfLevelMove
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevActMemMlat
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelActionMemCuspForms

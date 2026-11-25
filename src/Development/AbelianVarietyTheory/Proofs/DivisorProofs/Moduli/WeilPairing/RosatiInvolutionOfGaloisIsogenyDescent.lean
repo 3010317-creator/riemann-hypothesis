@@ -1,8 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompEqOneOfTransl
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.CompEqOneOfTransl
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PullbackProdInjectiveBirigidifiedGaloisIsogeny
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.PullbackProdInjectiveBirigidifiedGaloisIsogeny
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.LbIsoLinComb
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AmplePt
 import Mathlib.Algebra.Order.Floor.Extended

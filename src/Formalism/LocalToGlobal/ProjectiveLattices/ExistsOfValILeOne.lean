@@ -7,7 +7,7 @@ import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
 public import Mathlib.Basic.PEquiv
 public import Mathlib.Data.Matrix.PEquiv
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOfValILeOne
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.ExistsOfValILeOne
 
 @[expose] public section
 

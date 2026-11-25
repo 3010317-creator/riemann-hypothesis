@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RowAtOfRatStep
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvOfRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.ExistsInvOfRoot
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

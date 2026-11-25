@@ -44,7 +44,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellFrameChangeTriangular
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.FlagCellFrameChangeTriangular
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsFrameCover
 
 @[expose] public section

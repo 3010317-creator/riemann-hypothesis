@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PermMMulTranspose
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.PermMMulTranspose
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

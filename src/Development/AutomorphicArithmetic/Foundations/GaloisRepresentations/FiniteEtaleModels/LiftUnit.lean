@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.FiniteEtaleModels.BaseOnto
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelPosOfCoprime
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.LevelPosOfCoprime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

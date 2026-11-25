@@ -49,7 +49,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RembApply
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.RembApply
 import Mathlib.Analysis.Fourier.Notation
 
 @[expose] public section

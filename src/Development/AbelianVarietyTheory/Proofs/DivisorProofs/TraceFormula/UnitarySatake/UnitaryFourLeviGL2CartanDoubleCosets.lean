@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiJMulApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.AntiJMulApply
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeB
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointsLiftToLevelCover
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPinnedOfIsUnf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.ExistsPinnedOfIsUnf
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrMoveValues
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLinearEquivOfPeriod
 public import Formalism.LocalToGlobal.ProjectiveLattices.PetersonNormSubspace

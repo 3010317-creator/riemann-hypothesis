@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsFinSetSplitPlacesCoprimeConductor
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartEqOneOfLevel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.FinPartEqOneOfLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

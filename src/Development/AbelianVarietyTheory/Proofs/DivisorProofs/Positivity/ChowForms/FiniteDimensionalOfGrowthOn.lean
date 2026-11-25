@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.Multiplier
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConeDegreeGrowthChowFormIntegrality
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecZEqZeroOfGenVal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ChowForms.ConeDegreeGrowthChowFormIntegrality
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.SecZEqZeroOfGenVal
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.SiegelSpaceAlgebraHolds
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFromTest
 import Mathlib.Algebra.Order.Floor.Extended

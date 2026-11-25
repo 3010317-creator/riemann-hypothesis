@@ -1,9 +1,9 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCharacter
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DescCocycle
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.DualAbelianSchemes.IsCharacter
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.DualAbelianSchemes.DescCocycle
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.Clauses
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WedgeOrdVpBaseChangeOfNeBot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.WedgeOrdVpBaseChangeOfNeBot
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsSquareUnique
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelStructurePullback
 import Mathlib.Algebra.Order.Floor.Extended

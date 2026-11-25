@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClassFam
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.HighestWeights.IsClassFam
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TopPlaceLogTheta
 public import Formalism.SharpRestriction.Divisibility.PlaceRankTwoOne
 import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension

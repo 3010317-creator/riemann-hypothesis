@@ -1,7 +1,7 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GamOrdNeZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocCO
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.HighestWeights.GamOrdNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.HighestWeights.LocCO
 public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.SublevelSplitting
 public import Development.AbelianVarietyTheory.Definitions.Divisors.InvVolConjLevelOne
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.EmbRelExistsUnique

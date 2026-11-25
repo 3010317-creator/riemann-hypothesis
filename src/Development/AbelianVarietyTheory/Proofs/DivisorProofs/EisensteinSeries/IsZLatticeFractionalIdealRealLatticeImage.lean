@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RembApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.RembApply
 public import Mathlib.Algebra.Module.ZLattice.Basic
 public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
 import Mathlib.Algebra.Order.Floor.Extended

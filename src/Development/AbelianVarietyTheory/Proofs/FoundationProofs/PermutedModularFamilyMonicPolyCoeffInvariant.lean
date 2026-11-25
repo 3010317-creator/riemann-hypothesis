@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PermutedModularFamilySumEsymmSlashInvariant
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QExpansionCoeffsInSubringRingClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.PermutedModularFamilySumEsymmSlashInvariant
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.QExpansionCoeffsInSubringRingClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

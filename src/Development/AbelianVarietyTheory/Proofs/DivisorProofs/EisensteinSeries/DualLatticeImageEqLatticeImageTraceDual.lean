@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RembApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.RembApply
 public import Formalism.LatticeTheta.Statement
 public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
 public import Mathlib.RingTheory.DedekindDomain.Different

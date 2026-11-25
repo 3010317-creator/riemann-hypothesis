@@ -7,7 +7,7 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQu
 public import Mathlib.AlgebraicGeometry.Morphisms.FlatRank
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.FlagBasis
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSemiAbelianTensorOverScheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.IsSemiAbelianTensorOverScheme
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.LocallyOfFinitePresentationDiagMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

@@ -38,7 +38,7 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToQMemMaximalIdealIff
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.ToQMemMaximalIdealIff
 
 @[expose] public section
 

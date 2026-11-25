@@ -1,11 +1,11 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartEqOneOfLevel
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.FinPartEqOneOfLevel
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsFinSetSplitPlacesCoprimeConductor
 public import Mathlib.NumberTheory.NumberField.CMField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteRingClassGroupOfConductorNeZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemIntegersOfMemHatO
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModFMulPosPrincipal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.FiniteRingClassGroupOfConductorNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.MemIntegersOfMemHatO
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.ModFMulPosPrincipal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

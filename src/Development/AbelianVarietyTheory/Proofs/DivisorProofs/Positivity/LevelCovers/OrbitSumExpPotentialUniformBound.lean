@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.UpperBounds.FreeBallIffOfDimXEqZero
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.MulSgnMatMulConjTranspose
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralInvariantChartSetLeMulFundamentalSet
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.LintegralInvariantChartSetLeMulFundamentalSet
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsMixedProj
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.MeasurableSetSatFrames
 import Mathlib.Algebra.Order.Floor.Extended

@@ -1,9 +1,9 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReindexDblIncM
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LagrInt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.ReindexDblIncM
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.LagrInt
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.Mfac
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InfPartFPlaceIdem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.InfPartFPlaceIdem
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.InvHerm
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LeviGLInvVal
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.MfacInvMul

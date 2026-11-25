@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.ZetaValueIdeals
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedTransport
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.TwistedTransport
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

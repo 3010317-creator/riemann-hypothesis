@@ -3,8 +3,8 @@ module
 public import Development.AutomorphicArithmetic.LocalEmbeddings.FinMatchDefs
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsReading
 public import Development.WeilBound.ThetaLifts.TowerModels.TwistedSums.EqAdeleSupportedAtFinitePlaceOfSupportedAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledBlockSumSelfDualTraceSkewForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmulMemScLatOfMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.SquareGrids.ScaledBlockSumSelfDualTraceSkewForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.PureTensors.SmulMemScLatOfMem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,7 +41,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.MatchingAdjoints
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenPtSubset
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.PureTensors.GenPtSubset
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlkGLMem
 
 @[expose] public section

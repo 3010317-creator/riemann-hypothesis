@@ -1,7 +1,7 @@
 module
 
 public import Mathlib.Data.Matrix.Block
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntMatrixTransposeMulEqSmulOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.DegenerationData.ExistsIntMatrixTransposeMulEqSmulOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

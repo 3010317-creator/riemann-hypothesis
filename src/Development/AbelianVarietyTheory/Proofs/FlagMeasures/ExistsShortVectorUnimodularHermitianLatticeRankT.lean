@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SlopeSqSubLeSlopeSqSpan
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.SlopeSqSubLeSlopeSqSpan
 public import Formalism.HermitianLattices.StatementMass
 public import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.CountStB
 public import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.EllipsoidSt

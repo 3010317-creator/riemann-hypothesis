@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianDeRhamFreeBaseChangeRigid
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianHodgeDeRhamOfCrystallineLift
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineSmoothLiftOfRelations
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.AbelianDeRhamFreeBaseChangeRigid
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.AbelianHodgeDeRhamOfCrystallineLift
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.CrystallineSmoothLiftOfRelations
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

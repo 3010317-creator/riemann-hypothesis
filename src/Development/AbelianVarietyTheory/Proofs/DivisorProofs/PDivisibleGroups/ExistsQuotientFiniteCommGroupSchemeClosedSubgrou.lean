@@ -5,8 +5,8 @@ public import Mathlib.LinearAlgebra.FreeModule.PID
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.HopfAlgebra.Quotient
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdditiveFrobeniusPullbackCotangentModVersc
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankHopfAlgebraEqRangeMulKernel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.ExistsAdditiveFrobeniusPullbackCotangentModVersc
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.FinrankHopfAlgebraEqRangeMulKernel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

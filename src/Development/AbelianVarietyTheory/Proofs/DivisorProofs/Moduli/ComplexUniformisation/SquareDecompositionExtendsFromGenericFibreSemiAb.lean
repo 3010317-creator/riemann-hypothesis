@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemNonzeroLocusIffPowFn
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LbIsoLinCombPull
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGenOfGeneric
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianHomExtendsFromGenericFibre
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.ComplexUniformisation.ExistsGenOfGeneric
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.IsogenyRepresentability.SemiAbelianHomExtendsFromGenericFibre
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

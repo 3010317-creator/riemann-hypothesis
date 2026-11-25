@@ -1,15 +1,15 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SharpBundleFibre
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueScalar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.SharpBundleFibre
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.ExistsUniqueScalar
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.FlatBCSec
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomology.SectionArithmetic
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FromBase
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefOverOfFiniteOrbit
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFromBase
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LbIsoSecOnto
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SharpTorsionDefOver
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValMemOfCorrPull
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.DefOverOfFiniteOrbit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.ExistsFromBase
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.LbIsoSecOnto
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.SharpTorsionDefOver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.ValMemOfCorrPull
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsNormalizedBoth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

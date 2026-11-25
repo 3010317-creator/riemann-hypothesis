@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamPolarizationFormPrimitive
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.DualAbelianSchemes.DeRhamPolarizationFormPrimitive
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CubeTheorem
 public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.MemPrimitiveTensorsIffIsPrimitiveElem
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
@@ -50,10 +50,10 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.IsFrameOfForallExis
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
 import Development.AbelianVarietyTheory.Definitions.Divisors.KerIdealCompOfSurjective
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasLatticesComplete
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntEmbCoe
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDeRhamSheafIffAlt
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictsTo
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.DualAbelianSchemes.HasLatticesComplete
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.ThetaMaps.IntEmbCoe
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.DualAbelianSchemes.IsDeRhamSheafIffAlt
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.DualAbelianSchemes.RestrictsTo
 
 @[expose] public section
 

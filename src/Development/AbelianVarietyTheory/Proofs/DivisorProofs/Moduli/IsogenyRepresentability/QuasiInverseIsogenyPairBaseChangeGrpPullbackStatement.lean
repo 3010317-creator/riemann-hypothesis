@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuasiInv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuasiInverseIsogenyPairBaseChangeGrpPullback
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.IsogenyRepresentability.ExistsQuasiInv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.IsogenyRepresentability.QuasiInverseIsogenyPairBaseChangeGrpPullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -53,7 +53,7 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Separation.CompletelyRegular
 import Mathlib.Topology.Sheaves.Init
 public import Mathlib.NumberTheory.NumberField.Completion.InfinitePlace
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFieldUnitMemOpenArchimedeanUnits
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.ExistsFieldUnitMemOpenArchimedeanUnits
 
 @[expose] public section
 

@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameCoord
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.FrameCoord
 public import Formalism.LocalRingCardinality.CoeNeZeroOfNotMem
 public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsFlatSecRankZero
 public import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.IdxRules

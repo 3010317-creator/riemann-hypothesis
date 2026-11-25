@@ -43,7 +43,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.LeviEmbMemNormalizerLower
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemShellUIffDepth
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.MemShellUIffDepth
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasBoundedSumsOne
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GindikinKarpelevich
 public import Mathlib.MeasureTheory.Measure.Haar.Unique

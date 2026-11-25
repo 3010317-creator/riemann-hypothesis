@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NmatEqLowMat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.NmatEqLowMat
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IntegrableMonomialMulConjComplexGaussian
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LintegralFintypeProdEqProd
 import Mathlib.Algebra.Order.Floor.Extended

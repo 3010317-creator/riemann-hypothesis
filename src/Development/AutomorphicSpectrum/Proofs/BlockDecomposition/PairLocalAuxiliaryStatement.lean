@@ -5,7 +5,7 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteCo
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteRestrictionVanishing
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalComparisonInert
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceUnitaryLocalPointsEquivGL
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemKGLIffVal
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.MemKGLIffVal
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.G8FiniteAuxiliaryStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassesAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.HighestWeights.ClassesAt
 public import ReciprocityTheory.ReductiveGroups.LatticeEmbeddings.IotaPlace
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousExtensionAdicCompletion
 public import Formalism.LocalRingCardinality.SpanPowerMembership.ExistsHomOfBasis

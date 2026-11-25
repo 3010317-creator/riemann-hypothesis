@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DixmierSchurOfRankLeAleph0
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.FockModel.DixmierSchurOfRankLeAleph0
 public import Mathlib.Algebra.Polynomial.AlgebraMap
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.LinearAlgebra.Dimension.Basic

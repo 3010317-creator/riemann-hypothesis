@@ -2,7 +2,7 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.TransCancel
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsWithoutCohomology
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalSiegelObjectOddLevelRigid
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.SiegelLevelCovers.PrincipalSiegelObjectOddLevelRigid
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.FixTorsionOfForallGeometric
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

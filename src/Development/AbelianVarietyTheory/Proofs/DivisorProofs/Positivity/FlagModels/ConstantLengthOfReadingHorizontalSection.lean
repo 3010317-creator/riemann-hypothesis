@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReadsZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.ReadsZero
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEigenBasisSameVec
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesOnEqModel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.ExistsEigenBasisSameVec
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.FramesOnEqModel
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsBijectiveKappa
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.MemIffConjugateNotMem
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ModelBaseTrivModels

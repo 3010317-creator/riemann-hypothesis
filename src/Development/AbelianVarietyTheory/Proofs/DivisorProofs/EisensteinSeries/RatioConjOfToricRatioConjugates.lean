@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsValueTiedOfIsToricElt
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.ToricSymbols
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartEqOneOfLevel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.FinPartEqOneOfLevel
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ClassTermBoundBetaOfToricDenominator
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsRingEquivOfIsTranscendenceBasis
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValApplySubLtOne

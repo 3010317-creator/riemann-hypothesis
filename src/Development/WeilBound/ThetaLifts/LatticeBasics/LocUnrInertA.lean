@@ -4,7 +4,7 @@ public import Development.WeilBound.CoreStatements.LocalThetaKernels.LocpairAlg
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUniqueIsConjAt
 public import Development.WeilBound.CoreStatements.LocalThetaKernels.IwasAd
 public import Development.WeilBound.ThetaLifts.LatticeBasics.Hypotheses2
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtPlace
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.PureTensors.ContinuousAtPlace
 import Development.WeilBound.CoreStatements.LocalThetaKernels.Locrep
 import GroundTheory.GlobalFields.LocalFieldAtPlace
 import GroundTheory.LocalFields.PadicLogSeries

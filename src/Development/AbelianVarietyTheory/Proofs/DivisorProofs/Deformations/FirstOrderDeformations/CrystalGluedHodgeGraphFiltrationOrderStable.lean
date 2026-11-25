@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrysActApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsArtinianRingTsze
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.FirstOrderDeformations.CrysActApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.FirstOrderDeformations.IsArtinianRingTsze
 public import Development.AbelianVarietyTheory.Definitions.Divisors.InfUniv
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrystallinePull2SumCup
 import Mathlib.Algebra.Order.Floor.Extended

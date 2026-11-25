@@ -49,7 +49,7 @@ public import Mathlib.Algebra.Polynomial.FieldDivision
 public import Mathlib.FieldTheory.Minpoly.Field
 public import Mathlib.RingTheory.Flat.Basic
 public import Mathlib.RingTheory.PowerBasis
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MarkedSimilitudePairMinpolyRootsNormSqEq
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ConjugacyClasses.MarkedSimilitudePairMinpolyRootsNormSqEq
 
 @[expose] public section
 

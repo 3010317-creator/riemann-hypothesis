@@ -2,7 +2,7 @@ module
 
 import Development.EtaleCohomology.TateTwists.acycIffPf
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BigEtaleModuleSheafMonoEpiIffSectionsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.EtaleCohomology.BigEtaleModuleSheafMonoEpiIffSectionsStatement
 public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

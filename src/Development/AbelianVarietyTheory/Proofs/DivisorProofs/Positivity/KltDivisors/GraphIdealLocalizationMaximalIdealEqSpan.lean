@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToQMemMaximalIdealIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MinOrdLeOrdAdd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.ToQMemMaximalIdealIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.MinOrdLeOrdAdd
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.EqZeroOfForallLTensorEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

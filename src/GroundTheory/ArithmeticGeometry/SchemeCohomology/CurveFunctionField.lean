@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsAlgebraicRatFuncFractionRingDedekind
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.EtaleCohomology.ExistsIsAlgebraicRatFuncFractionRingDedekind
 public import GroundTheory.ArithmeticGeometry.SchemeCohomology.CurveBase
 public import GroundTheory.FunctionField.PlaceDefs
 public import Mathlib.AlgebraicGeometry.Morphisms.FiniteType

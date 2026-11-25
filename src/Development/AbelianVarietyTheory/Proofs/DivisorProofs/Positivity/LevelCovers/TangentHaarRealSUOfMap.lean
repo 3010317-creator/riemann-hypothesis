@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EmbGLMemRealSU
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousMatExp
 public import Mathlib.Analysis.Matrix.Normed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDensityOfImmersion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.ExistsDensityOfImmersion
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NonemptyCompactDualHaar
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ContinuousMatrixEntryAbsSum
 import Mathlib.Algebra.Order.Archimedean.Real.Hom

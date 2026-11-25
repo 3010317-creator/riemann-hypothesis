@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdicCompleteSpanNatCastFiniteProjectiveAlgebra
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.IsAdicCompleteSpanNatCastFiniteProjectiveAlgebra
 public import Mathlib.Algebra.Module.Projective
 public import Mathlib.RingTheory.AdicCompletion.Basic
 import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd

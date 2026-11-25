@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WchartCompLe
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.WchartCompLe
 public import Mathlib.Tactic.ENatToNat
 public import Mathlib.Tactic.Monotonicity.Lemmas
 import Mathlib.Algebra.Order.Floor.Extended

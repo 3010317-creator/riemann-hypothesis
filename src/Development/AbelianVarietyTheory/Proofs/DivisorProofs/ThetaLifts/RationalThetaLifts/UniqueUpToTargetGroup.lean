@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTransp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.IsTransp
 import Development.AbelianVarietyTheory.Counterexamples.JetSurvey.LatticeAndConstantUnique
 import Development.AbelianVarietyTheory.Counterexamples.ThetaValuation.UniformMultiplier
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ContinuousRmulPair

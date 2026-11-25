@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotOrdGeOfNotMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDvrLiftOfGeometricPoint
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraitExistsAfterFiniteExtensionOfCompleteDVRStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.BoundaryCharts.ExistsDvrLiftOfGeometricPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.BoundaryCharts.TraitExistsAfterFiniteExtensionOfCompleteDVRStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

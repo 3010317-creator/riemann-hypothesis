@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorMatch
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SharpOverIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEqAddNsmul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftValuationSubring
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorMatchComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.EighthPowerCharacters.ExistsEqAddNsmul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.EighthPowerCharacters.ExistsLiftValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.EighthPowerCharacters.TorMatchComp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

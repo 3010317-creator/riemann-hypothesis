@@ -42,7 +42,7 @@ import Mathlib.Tactic.TypeStar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbelianSchemeGerms
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.ZeroSectionBase
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDeRhamSheaf
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.FirstOrderDeformations.IsDeRhamSheaf
 
 @[expose] public section
 

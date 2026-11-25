@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRescaledLineBundlePowerIsoGenerator
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.ExistsRescaledLineBundlePowerIsoGenerator
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
 public import Mathlib.Tactic.ENatToNat
 import Mathlib.AlgebraicGeometry.Modules.Sheaf

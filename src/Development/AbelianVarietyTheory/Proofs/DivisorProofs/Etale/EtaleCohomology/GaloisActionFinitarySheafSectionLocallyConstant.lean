@@ -5,7 +5,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
 public import Mathlib.FieldTheory.KrullTopology
 public import Mathlib.Tactic.Linter.HaveILetI
 public import Mathlib.Tactic.Monotonicity.Lemmas
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreservesFilteredColimitsModuleCatIffForgetIffElStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.EtaleCohomology.PreservesFilteredColimitsModuleCatIffForgetIffElStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

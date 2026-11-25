@@ -48,7 +48,7 @@ import Development.AbelianVarietyTheory.Definitions.CMLattices.IntegralOf
 import Development.AbelianVarietyTheory.Definitions.CMLattices.IsCyclotomicExtensionCyclotomicField28
 import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.UnivFrame
 import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.UnifMetricScalar
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMetricOfIsOrtho
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.IsMetricOfIsOrtho
 import Formalism.LocalToGlobal.CMDeterminantIdeals.DetIdeal
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Basic

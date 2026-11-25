@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.QuasiRegularAlongOfEtale
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LinearIndependentBasisCoords
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NoCommonZeroCombVal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndepBaseChange
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyHomologyEquiv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ChowForms.IndepBaseChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.NonemptyHomologyEquiv
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

@@ -40,7 +40,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolEqMultiDiff
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.PolEqMultiDiff
 
 @[expose] public section
 

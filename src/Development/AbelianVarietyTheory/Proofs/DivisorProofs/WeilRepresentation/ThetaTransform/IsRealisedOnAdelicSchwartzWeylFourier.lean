@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealisedOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.RealisedOne
 public import GroundTheory.AutomorphicForms.GL2.GJMatrixAdelic
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ProductFormulaHaar.TrSumOf
 import GroundTheory.AutomorphicForms.ReductionMeasure

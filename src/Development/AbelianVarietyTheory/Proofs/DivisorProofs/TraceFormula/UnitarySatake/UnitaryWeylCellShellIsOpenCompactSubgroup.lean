@@ -1,10 +1,10 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConvUAbsU
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemShellUIffDepth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.ConvUAbsU
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.MemShellUIffDepth
 import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SphericalWeylCellTranslate
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SwapLtSwapIffOfAddTwo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.SphericalWeylCellTranslate
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.SwapLtSwapIffOfAddTwo
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactUnitaryIntegralPoints
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

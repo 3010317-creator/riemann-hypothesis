@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MemRingOfInR
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinDeltaQExpansionIntegrality
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QAllQConjOfDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QExpansionCoeffsInSubringRingClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.EisensteinDeltaQExpansionIntegrality
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.QAllQConjOfDvd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.QExpansionCoeffsInSubringRingClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

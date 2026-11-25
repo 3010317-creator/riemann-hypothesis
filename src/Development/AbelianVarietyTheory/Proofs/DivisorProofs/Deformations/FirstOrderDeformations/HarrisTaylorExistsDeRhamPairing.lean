@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrystallinePull2SumCup
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFirstDeRhamStructure
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRelativeDimensionAbelianVarietyField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.FirstOrderDeformations.AbelianSchemeFirstDeRhamStructure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.FirstOrderDeformations.ExistsRelativeDimensionAbelianVarietyField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

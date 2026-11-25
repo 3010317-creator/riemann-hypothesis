@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMonHomOfMulComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.DegenerationData.IsMonHomOfMulComp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

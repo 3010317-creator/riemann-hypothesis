@@ -2,7 +2,7 @@ module
 
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.GoodLat
 public import GroundTheory.GlobalFields.Adele.Approximation
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntAFSmulMemLatOF
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.IntAFSmulMemLatOF
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceDualB
 public import GroundTheory.GlobalFields.Adele.Compact
 import Mathlib.Algebra.Order.Floor.Extended

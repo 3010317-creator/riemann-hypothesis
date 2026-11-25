@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.GaussZero
 public import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

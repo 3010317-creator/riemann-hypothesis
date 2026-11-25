@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsWeilChar
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueLim
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.ExistsUniqueLim
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CotangentBidualToTangentFunctionInjective
 public import Development.AbelianVarietyTheory.Statements.FundamentalDomains.ExistsIsAddFundamentalDomain
 import Mathlib.Algebra.Order.Floor.Extended

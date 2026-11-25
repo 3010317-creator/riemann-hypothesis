@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AtPtsImp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.AtPtsImp
 public import Formalism.LocalToGlobal.IndefiniteReal.BridgeTie
 public import Formalism.PieriBlockIdeals.LatticeInclusionRealSettingAlt
 public import Formalism.SharpRestriction.Divisibility.JumpSets

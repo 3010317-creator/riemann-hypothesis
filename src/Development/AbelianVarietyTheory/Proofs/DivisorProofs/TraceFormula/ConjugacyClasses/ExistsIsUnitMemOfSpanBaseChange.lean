@@ -2,8 +2,8 @@ module
 
 public import Mathlib.Algebra.Central.Defs
 public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankIInfKerEqOfIsBaseChangeFamily
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NatDegreeMinpolyLeBaseChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ConjugacyClasses.FinrankIInfKerEqOfIsBaseChangeFamily
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.ConjugacyClasses.NatDegreeMinpolyLeBaseChange
 public import GroundTheory.AutomorphicForms.StableConjCyclic
 import GroundTheory.Brauer.Degree
 import Mathlib.Algebra.Order.Floor.Extended

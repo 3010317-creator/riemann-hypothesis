@@ -48,7 +48,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedTransport
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.TwistedTransport
 
 @[expose] public section
 

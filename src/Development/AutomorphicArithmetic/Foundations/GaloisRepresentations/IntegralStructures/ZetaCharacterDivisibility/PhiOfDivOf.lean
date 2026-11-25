@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.ZetaCharacterDivisibility.InsideRefl
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonModel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.ExistsCommonModel
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GenOf
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.LimWPhi
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.CocharacterLieDivisors.StGalW

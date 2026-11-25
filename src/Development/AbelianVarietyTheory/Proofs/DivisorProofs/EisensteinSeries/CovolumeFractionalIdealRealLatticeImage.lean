@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RembApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.RembApply
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TraceDualDifferent
 public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
 import Mathlib.Algebra.Order.Archimedean.Real.Hom

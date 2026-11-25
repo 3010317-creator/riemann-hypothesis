@@ -3,7 +3,7 @@ module
 public import Mathlib.FieldTheory.RatFunc.Basic
 public import Mathlib.RingTheory.DedekindDomain.Basic
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsAlgebraicRatFuncFractionRingDedekind
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.EtaleCohomology.ExistsIsAlgebraicRatFuncFractionRingDedekind
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

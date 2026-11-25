@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LabelsCharOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HeckeEigensystems.LabelsCharOne
 public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.InvariantSubspaceMobiusInverseRecEqOfFinrankLt
 public import Mathlib.GroupTheory.Nilpotent
 public import Mathlib.RingTheory.Coalgebra.IsFrobenius
@@ -16,8 +16,8 @@ public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.Ab
 public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterCuspidalRootSumRegular
 public import Mathlib.Basic.Complex.Basic
 public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.StarVirtualCharacterEqApplyInv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalCharacterFormula
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLabel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HeckeEigensystems.CuspidalCharacterFormula
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HeckeEigensystems.ExistsLabel
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspidalCharExistsOfGreen
 public import Mathlib.RepresentationTheory.FinGroupCharZero
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.CuspValueComparison

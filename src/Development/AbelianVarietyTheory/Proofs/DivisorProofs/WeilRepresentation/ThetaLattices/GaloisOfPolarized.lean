@@ -42,7 +42,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisOfRegularForms
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.GaloisOfRegularForms
 import Development.AutomorphicArithmetic.IntegralCasts.IsOpenStabOfMemNhds
 public import Formalism.LocalRingCardinality.DataRows
 public import Formalism.LocalRingCardinality.DataTheta

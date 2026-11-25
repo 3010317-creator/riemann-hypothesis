@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective
 public import Development.AbelianVarietyTheory.Definitions.Divisors.KerIdealCompOfSurjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankHopfAlgebraEqRangeMulKernel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.FinrankHopfAlgebraEqRangeMulKernel
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankQuotKernelIdealEqBeyondExponent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.FinrankQuotKernelIdealEqBeyondExponent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

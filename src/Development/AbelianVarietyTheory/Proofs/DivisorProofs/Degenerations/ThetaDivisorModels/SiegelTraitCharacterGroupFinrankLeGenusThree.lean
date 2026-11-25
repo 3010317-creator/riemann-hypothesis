@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsThetaCompact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSharpGen
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.ThetaDivisorModels.ExistsSharpGen
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsProperOfSubsingleton
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

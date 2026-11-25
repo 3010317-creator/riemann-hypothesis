@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenScal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.GenScal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifOfSpaceEq
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTanAtOfGenericFibre
@@ -51,7 +51,7 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.CongModRefl
 import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
 import Development.AbelianVarietyTheory.Definitions.ThetaValues.LeCovCoeff
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointsLiftToLevelCover
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPinnedOfIsUnf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.ExistsPinnedOfIsUnf
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section

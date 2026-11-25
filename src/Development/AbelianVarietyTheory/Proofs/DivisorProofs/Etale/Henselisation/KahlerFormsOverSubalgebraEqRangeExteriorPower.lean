@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KahlerFormsOverSubalgebraClosureProperties
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.KahlerFormsOverSubalgebraClosureProperties
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DlogRatioVolumeFormNeZero
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsAlgHomOfIsBaseChange
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero

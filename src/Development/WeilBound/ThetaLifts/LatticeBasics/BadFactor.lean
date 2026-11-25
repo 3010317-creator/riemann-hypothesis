@@ -5,8 +5,8 @@ public import Development.WeilBound.ThetaLifts.LatticeBasics.BoxSecX
 public import Development.WeilBound.ThetaLifts.LatticeBasics.EulerProd
 public import Development.WeilBound.ThetaLifts.LatticeBasics.Unfold0
 public import Development.WeilBound.ThetaLifts.LocalTheory.ConeShifts.EvFinIdemSelf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenIntertwinerTransitive
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.AdelicFourier.EigenIntertwinerTransitive
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.AdelicFourier.EqOfComponentTensorAdelicFunctionEq
 public import Development.WeilBound.ThetaLifts.LatticeBasics.CommuteTheta
 public import Development.WeilBound.ThetaLifts.LatticeBasics.ContinuousFlat
 public import Development.WeilBound.ThetaLifts.LatticeBasics.SchrUnit

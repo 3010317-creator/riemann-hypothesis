@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RosVec
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.DegenerationData.RosVec
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.TauBalPow
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.RosatiAdjointBalancedPowerLift
 import Mathlib.Algebra.Order.Floor.Extended

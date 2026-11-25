@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalOfIrr
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HeckeEigensystems.FiniteDimensionalOfIrr
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BlockProductIsomorphism
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BlockEmbeddingFactors
 import Mathlib.Algebra.Order.Floor.Extended

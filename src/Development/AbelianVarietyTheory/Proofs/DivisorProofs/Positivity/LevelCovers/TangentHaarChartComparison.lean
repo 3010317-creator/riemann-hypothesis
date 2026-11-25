@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentHaarRealSUOfMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InstMeasurableSpaceRealSU
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.TangentHaarRealSUOfMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.InstMeasurableSpaceRealSU
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TranslateChartBallDistortion
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExistsDensity
 import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv

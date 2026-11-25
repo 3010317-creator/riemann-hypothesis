@@ -2,7 +2,7 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.LocalMaximality.ResidueOfTraceIsFiberSum
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FibFiniteAndSep
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAffineOpenRingPolynomialEquiv
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.StandardAffineOpenRingPolynomialEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

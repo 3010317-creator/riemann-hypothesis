@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSectionOfChg
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigFrameMatch
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.IsSectionOfChg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.EigFrameMatch
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TriIff
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAffineStableLieEigenspaceFrame
 import Mathlib.Algebra.Order.Floor.Extended

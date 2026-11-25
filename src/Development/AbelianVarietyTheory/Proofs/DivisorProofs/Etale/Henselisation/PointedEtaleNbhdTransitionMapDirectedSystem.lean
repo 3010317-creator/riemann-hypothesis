@@ -1,10 +1,10 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InstPreorder
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.InstPreorder
 public import Mathlib.Tactic.Bound
 public import Mathlib.Tactic.Monotonicity.Lemmas
 public import Mathlib.Topology.Sheaves.Presheaf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BijectiveResidueCompEtaleHenselian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.BijectiveResidueCompEtaleHenselian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

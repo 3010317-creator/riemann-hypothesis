@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiJMulApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.AntiJMulApply
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeA
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeB
 public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.HeckeActMem

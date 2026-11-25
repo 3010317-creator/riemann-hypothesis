@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifOfSpaceEq
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ClausesIffExistsUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SupremumConstantLogBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.SupremumConstantLogBound
 public import Development.AutomorphicArithmetic.FrobeniusLocalisation.RadBounds2
 public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LevelCarrying
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCoprimeOfNatCast

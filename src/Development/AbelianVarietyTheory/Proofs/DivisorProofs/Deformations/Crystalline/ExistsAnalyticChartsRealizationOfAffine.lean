@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AnalyticChartsRealizationCompPointEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicPointExtOfIsSeparated
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecMapValHomFromSpec
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.HolomorphicPointExtOfIsSeparated
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.SpecMapValHomFromSpec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

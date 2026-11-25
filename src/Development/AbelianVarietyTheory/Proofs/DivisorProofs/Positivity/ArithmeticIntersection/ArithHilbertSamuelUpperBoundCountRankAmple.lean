@@ -4,8 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioOfWei
 public import Mathlib.Algebra.Order.Archimedean.Real.Basic
 public import Mathlib.LinearAlgebra.Dimension.Finrank
 public import Mathlib.RingTheory.MvPolynomial.Homogeneous
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardBoundedHomogeneousIntFormFamilies
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionsEqSumAevalBoundedIntCoeffAmple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ArithmeticIntersection.CardBoundedHomogeneousIntFormFamilies
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ArithmeticIntersection.SectionsEqSumAevalBoundedIntCoeffAmple
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

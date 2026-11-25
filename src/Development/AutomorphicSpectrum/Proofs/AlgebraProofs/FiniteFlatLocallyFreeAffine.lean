@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelAmpleDiagonalDescendedBundleGaloisCover
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.RelAmpleDiagonalDescendedBundleGaloisCover
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FiniteFreeHom
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSecImageNonzeroLocus
 public import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation

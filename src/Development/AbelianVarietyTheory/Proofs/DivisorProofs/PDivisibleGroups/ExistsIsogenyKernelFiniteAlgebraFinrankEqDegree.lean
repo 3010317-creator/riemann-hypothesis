@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankQuotKerIdealDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyFlatFinrank
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.FinrankQuotKerIdealDvd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.IsogenyFlatFinrank
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

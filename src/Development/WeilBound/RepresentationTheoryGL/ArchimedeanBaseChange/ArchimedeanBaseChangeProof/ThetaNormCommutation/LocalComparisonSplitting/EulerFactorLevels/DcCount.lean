@@ -5,7 +5,7 @@ public import Mathlib.Algebra.BigOperators.Finprod
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.GroupTheory.DoubleCoset
 public import Mathlib.GroupTheory.Index
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumDoubleCosetRegroupCommutative
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.FinsumDoubleCosetRegroupCommutative
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

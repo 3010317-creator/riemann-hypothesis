@@ -4,8 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubse
 public import Development.AbelianVarietyTheory.Definitions.RegularCharts.Reframe
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.EqZeroOfForallAlgHom
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecZEqZeroOfGenVal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldingSectionsFiniteType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.SecZEqZeroOfGenVal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.UnfoldingSectionsFiniteType
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemSuppOnIffIdemMulOfNatural
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Calculus.FDeriv.Defs

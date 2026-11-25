@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MemRingOfInR
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasQExpansionOfLevelCoeffAndFunctionUnique
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.HasQExpansionOfLevelCoeffAndFunctionUnique
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCuspExpansionDiscriminantIntegerLeadingOne
 public import Mathlib.Algebra.Order.Ring.Rat
 public import Mathlib.RingTheory.HahnSeries.Multiplication

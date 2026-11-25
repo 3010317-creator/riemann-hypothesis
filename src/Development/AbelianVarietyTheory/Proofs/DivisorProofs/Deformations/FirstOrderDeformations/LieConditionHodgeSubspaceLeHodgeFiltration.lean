@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrysActApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorLieConditionModHodgeFiltration
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.FirstOrderDeformations.CrysActApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.FirstOrderDeformations.HarrisTaylorLieConditionModHodgeFiltration
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

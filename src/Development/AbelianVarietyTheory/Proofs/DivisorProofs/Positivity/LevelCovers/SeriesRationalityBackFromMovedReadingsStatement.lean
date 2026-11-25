@@ -1,8 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullHeckeRealDatMovedReadings
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.FullHeckeRealDatMovedReadings
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FactTypePrime
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SeriesRationalityBackFromMovedReadings
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.SeriesRationalityBackFromMovedReadings
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

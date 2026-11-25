@@ -3,7 +3,7 @@ module
 public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDerivAtZeroAndIsTheta
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuous
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurLemmaThetaFunctionsOrientedPair
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.SchurLemmaThetaFunctionsOrientedPair
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DescMk

@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockOfApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtensionOfLowSmoothLines
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlgebraicOfRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.ExtensionOfLowSmoothLines
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.IsAlgebraicOfRoot
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsScaleTwistedPlaceCoefficientMapStatement
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MapVVSymmMapVV
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PureTensorOSmul

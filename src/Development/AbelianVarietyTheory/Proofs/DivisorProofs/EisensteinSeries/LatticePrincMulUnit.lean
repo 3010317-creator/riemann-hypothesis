@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.DefiningCoordinates
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasSumZeroOfTwoLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartEqOneOfLevel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModFMulPosPrincipal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdNormSq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.FinPartEqOneOfLevel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.ModFMulPosPrincipal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.ProdNormSq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +50,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DTermOrigin
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.DTermOrigin
 
 @[expose] public section
 

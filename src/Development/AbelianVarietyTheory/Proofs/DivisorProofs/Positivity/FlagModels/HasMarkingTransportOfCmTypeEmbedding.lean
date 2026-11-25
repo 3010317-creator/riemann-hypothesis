@@ -5,8 +5,8 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap
 public import Formalism.LocalToGlobal.ProjectiveLattices.UnFree
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DegFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexPointsComponentSamePeriodSpace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDerivAt0CompLinear
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.ComplexPointsComponentSamePeriodSpace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.IsDerivAt0CompLinear
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DeterminantSectionRule
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModuliConsequenceOfAbelianSchemeLaws
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
@@ -42,7 +42,7 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSectionOfChg
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.IsSectionOfChg
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section

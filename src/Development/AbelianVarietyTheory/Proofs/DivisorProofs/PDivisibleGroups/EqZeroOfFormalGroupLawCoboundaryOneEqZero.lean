@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqZeroOfCobOneEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConnectedPDivGroupFormalLawCoordinates
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionsEqSeriesInChart
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigOfOmegaInjectiveOfEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.ConnectedPDivGroupFormalLawCoordinates
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.FunctionsEqSeriesInChart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.RigOfOmegaInjectiveOfEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

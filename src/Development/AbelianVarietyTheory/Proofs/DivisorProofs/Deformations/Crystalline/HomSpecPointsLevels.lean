@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivPowerCompatTwoFormDerivativeCompOneForm
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerFiltration
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerFiltrationIdealLeMapOfIsDPMorphism
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSectionsMonoReductionAffineInf
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.DividedPowerFiltration
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.DividedPowerFiltrationIdealLeMapOfIsDPMorphism
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.SmoothSectionsMonoReductionAffineInf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

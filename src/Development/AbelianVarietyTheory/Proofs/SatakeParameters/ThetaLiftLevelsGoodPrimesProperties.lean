@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnderEqOrSmulUnderEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.UnderEqOrSmulUnderEq
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlaces
 public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.SecondStepGluing
 public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ValBasic

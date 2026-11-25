@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneBaseChangeBasis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneFunctorBaseFunctorProperties
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigExtMapRelFrobCompRigOfOmega
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.DieudonneBaseChangeBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.DieudonneFunctorBaseFunctorProperties
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.RigExtMapRelFrobCompRigOfOmega
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

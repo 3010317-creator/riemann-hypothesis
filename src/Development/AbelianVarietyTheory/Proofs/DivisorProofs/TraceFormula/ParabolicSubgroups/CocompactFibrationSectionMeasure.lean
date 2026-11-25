@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdHomeoSymmApplySnd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.ProdHomeoSymmApplySnd
 public import Mathlib.MeasureTheory.Group.FundamentalDomain
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

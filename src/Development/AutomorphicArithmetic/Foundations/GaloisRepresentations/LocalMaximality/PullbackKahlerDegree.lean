@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.LocalMaximality.ResidueOfTraceIsFiberSum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTopDegreeCoefficientFormAndEqOnTopFormsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.ExistsTopDegreeCoefficientFormAndEqOnTopFormsStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FormsBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

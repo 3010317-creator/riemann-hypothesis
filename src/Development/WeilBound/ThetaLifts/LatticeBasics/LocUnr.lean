@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.ThetaLifts.LatticeBasics.HodgeTateFromSandwich
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceSplitOrInert
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaTransform.PlaceSplitOrInert
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

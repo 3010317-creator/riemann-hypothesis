@@ -1,9 +1,9 @@
 module
 
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EndOnId
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.SemiAbelianModels.EndOnId
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianHomExtensionHolds
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.TraitLabels.SemiAbelianHomExtensionHolds
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.GenericExistsUniqueOActOfIsGrpPullback
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsSchemeTheoreticallyDominantSpecOfInjective
 import Mathlib.Algebra.Order.Floor.Extended

@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
 public import Mathlib.RingTheory.PowerSeries.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasQExpansionOfLevelCoeffAndFunctionUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasQExpansionOfLevelLinearOperations
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasQExpansionOfLevelMulOfPosLevel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.HasQExpansionOfLevelCoeffAndFunctionUnique
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.HasQExpansionOfLevelLinearOperations
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.HasQExpansionOfLevelMulOfPosLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

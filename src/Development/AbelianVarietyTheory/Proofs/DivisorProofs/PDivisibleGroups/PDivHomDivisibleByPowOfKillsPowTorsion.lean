@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PadicActionConstInjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BialgHomFactorThroughSplitInjection
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.BialgHomFactorThroughSplitInjection
 public import Development.AbelianVarietyTheory.Definitions.Divisors.KerIdealCompOfSurjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuotientFiniteCommGroupSchemeClosedSubgrou
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.ExistsQuotientFiniteCommGroupSchemeClosedSubgrou
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -2,9 +2,9 @@ module
 
 public import Formalism.SatakeDualWeyl.StatementF
 public import Mathlib.MeasureTheory.Measure.Haar.DistribChar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdealWeight
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexUpLatEqProd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnipLatIsOpenIsCompact
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.ExistsIdealWeight
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.RelIndexUpLatEqProd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.UnitarySatake.UnipLatIsOpenIsCompact
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RelIndexMulMeasure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

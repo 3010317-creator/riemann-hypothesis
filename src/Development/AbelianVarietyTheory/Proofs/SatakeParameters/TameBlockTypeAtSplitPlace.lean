@@ -2,7 +2,7 @@ module
 
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BesselShellMomentBounds
 public import ReciprocityTheory.Automorphisms.SplitCoeAlgebraMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DimPartsAtIffBadAndOff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HeckeEigensystems.DimPartsAtIffBadAndOff
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitExEveryDatum
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators

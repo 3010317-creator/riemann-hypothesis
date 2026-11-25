@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GhostFrobenius
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FontaineAinfLocalDomainXiAdicOrder
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MuDvdOfDvdIterates
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.FontaineAinfLocalDomainXiAdicOrder
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.MuDvdOfDvdIterates
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

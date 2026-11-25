@@ -45,7 +45,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedTransport
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.TwistedTransport
 
 @[expose] public section
 

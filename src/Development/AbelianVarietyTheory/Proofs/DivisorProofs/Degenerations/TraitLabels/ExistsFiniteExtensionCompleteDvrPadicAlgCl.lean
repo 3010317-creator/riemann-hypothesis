@@ -3,7 +3,7 @@ module
 public import Mathlib.NumberTheory.Padics.Complex
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteDvrIntegralClosureFinite
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitBallEqOfIntegralDvr
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.EighthPowerCharacters.UnitBallEqOfIntegralDvr
 
 @[expose] public section
 

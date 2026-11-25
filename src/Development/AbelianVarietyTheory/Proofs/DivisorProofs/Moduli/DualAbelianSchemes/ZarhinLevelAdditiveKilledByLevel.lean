@@ -1,8 +1,8 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZarhinOrderIsRingActionOnProduct
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KappaOK
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLeFinrankLa
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.DualAbelianSchemes.ZarhinOrderIsRingActionOnProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.DualAbelianSchemes.KappaOK
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.HarrisTaylorObjects.TwoLeFinrankLa
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

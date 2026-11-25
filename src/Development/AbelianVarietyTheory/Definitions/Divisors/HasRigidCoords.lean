@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FromBaseAlt
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GalRigidOfSurjective
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EvenDefect
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiltGraded
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.SemiAbelianUniformisation.FiltGraded
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

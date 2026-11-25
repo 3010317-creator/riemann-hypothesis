@@ -2,7 +2,7 @@ module
 
 public import Mathlib.Data.ZMod.Defs
 public import Mathlib.LinearAlgebra.DFinsupp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteMinimiserSystemsSmoothCone
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.ThetaDivisorModels.FiniteMinimiserSystemsSmoothCone
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DicksonExistsFiniteSubfamilyBelow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

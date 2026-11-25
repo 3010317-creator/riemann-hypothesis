@@ -4,8 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfFora
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqZeroOfCobOneEqZero
 public import Mathlib.Algebra.Module.Projective
 public import Mathlib.RingTheory.AdicCompletion.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdicCompleteOfFiniteProjectiveAlgebra
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicContinuousEvaluationExistsUniqueSubstNatura
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.IsAdicCompleteOfFiniteProjectiveAlgebra
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.PadicContinuousEvaluationExistsUniqueSubstNatura
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

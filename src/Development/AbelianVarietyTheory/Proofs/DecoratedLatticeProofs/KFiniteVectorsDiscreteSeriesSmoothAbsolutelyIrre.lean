@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteSupport
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesHarishChandra
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.DiscreteSeriesHarishChandra
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AbsIrrOfEquiv
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsKActOfStable
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ModelsAreCoverSeries

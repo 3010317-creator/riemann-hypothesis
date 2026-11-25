@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ValuationGdetKapAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSBArgs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumOKEx
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.VacuumCosets.IsSBArgs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.VacuumCosets.SumOKEx
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

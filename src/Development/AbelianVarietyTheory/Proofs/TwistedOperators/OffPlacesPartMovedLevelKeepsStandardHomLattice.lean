@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmulMtCutPartCompl
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumProdPartialEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemGLintOfEntries
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLatticeStabilizerOfLocalIntegralInBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.MemGLintOfEntries
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.MemLatticeStabilizerOfLocalIntegralInBasis
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNsmulIntMemLatO
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.LocalEmbeddings.ComplEquivEvW
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHermitianLatticeLocalBases
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.SquareGrids.ExistsHermitianLatticeLocalBases
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasIwasawaDecompositionDoubledSplitPlace
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsMixedLagrangianChartIntegralRowChange
 import Mathlib.Algebra.Order.Floor.Extended

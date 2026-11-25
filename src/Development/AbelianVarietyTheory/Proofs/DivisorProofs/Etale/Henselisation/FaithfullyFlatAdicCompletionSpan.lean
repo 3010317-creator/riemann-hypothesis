@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionFreeOver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.TorsionFreeOver
 public import Mathlib.RingTheory.AdicCompletion.Basic
 public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed

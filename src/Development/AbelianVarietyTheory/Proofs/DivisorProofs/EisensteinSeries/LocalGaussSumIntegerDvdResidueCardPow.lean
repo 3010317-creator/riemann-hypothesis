@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GSEqZeroOfLt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussUnitsNormSq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.GSEqZeroOfLt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.GaussUnitsNormSq
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormSatakeLeOfUnitarySphericalGL
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

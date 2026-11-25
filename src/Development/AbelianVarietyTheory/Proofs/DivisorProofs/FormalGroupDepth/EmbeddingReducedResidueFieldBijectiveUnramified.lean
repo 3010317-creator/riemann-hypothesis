@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResidueEqZeroIffV
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDepth.ResidueEqZeroIffV
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.FrTanDirAlg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

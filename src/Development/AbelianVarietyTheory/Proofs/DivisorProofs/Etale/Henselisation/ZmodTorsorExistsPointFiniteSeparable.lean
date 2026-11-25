@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OriginIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.OriginIdeal
 public import Mathlib.FieldTheory.Separable
 public import Mathlib.RingTheory.Unramified.Basic
 import Mathlib.Algebra.Order.Floor.Extended

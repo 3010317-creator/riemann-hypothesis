@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.BoundaryCharts.NormIdeal
 public import Mathlib.AlgebraicGeometry.FunctionField
 public import Mathlib.AlgebraicGeometry.IdealSheaf.Basic
 public import Mathlib.AlgebraicGeometry.Morphisms.Affine

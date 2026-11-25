@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemDomOfOrth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.MemDomOfOrth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +42,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.DetSubUpper
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PhaseFrame
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.PhaseFrame
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EmbGLMemRealSU
 
 @[expose] public section

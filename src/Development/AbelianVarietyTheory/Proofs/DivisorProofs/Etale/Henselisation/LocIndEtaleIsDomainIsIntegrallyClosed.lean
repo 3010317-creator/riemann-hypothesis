@@ -4,7 +4,7 @@ public import Mathlib.FieldTheory.IsSepClosed
 public import Mathlib.RingTheory.Etale.Basic
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndEtaleIsDomainIsIntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.IndEtaleIsDomainIsIntegrallyClosed
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

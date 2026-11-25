@@ -5,7 +5,7 @@ public import Mathlib.Algebra.Group.Subgroup.Defs
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.Data.Matrix.Mul
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenProportionalLocalField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.SelfDualLattices.HeisenbergEigenProportionalLocalField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

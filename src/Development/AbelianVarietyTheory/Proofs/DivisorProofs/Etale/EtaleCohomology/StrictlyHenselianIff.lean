@@ -3,7 +3,7 @@ module
 public import Mathlib.FieldTheory.IsSepClosed
 public import Mathlib.RingTheory.Etale.Basic
 public import Mathlib.RingTheory.Henselian
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BijectiveResidueCompEtaleHenselian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.BijectiveResidueCompEtaleHenselian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToBaseChangePtsBijective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DUnitMemRangeOfMemKerIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.DUnitMemRangeOfMemKerIdeal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PadicActionConstInjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

@@ -1,8 +1,8 @@
 module
 
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionIsoOfGroupPullbackGeneric
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GalLab
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.TorsionIsoOfGroupPullbackGeneric
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.GaloisLabels.GalLab
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

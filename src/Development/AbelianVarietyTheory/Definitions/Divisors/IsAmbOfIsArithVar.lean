@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolEqMultiDiff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.PolEqMultiDiff
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsFiniteLengthOfIsArtinianRingAnnihilator
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjOverCompFinite

@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFrame
 public import Mathlib.RingTheory.MvPolynomial.Homogeneous
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixVariablesDeterminantPowMonomialShape
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDepth.MatrixVariablesDeterminantPowMonomialShape
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.WeightSubstNonneg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

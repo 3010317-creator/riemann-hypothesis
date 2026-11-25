@@ -1,7 +1,7 @@
 module
 
 public import Development.EtaleCohomology.TateTwists.EtaleRootsOfUnityReductionMapGenerator
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistReductionResolutionMapGeneratorStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.EtaleCohomology.TateTwistReductionResolutionMapGeneratorStatement
 
 @[expose] public section
 

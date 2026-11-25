@@ -2,7 +2,7 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.LimitMultiplicityWeights.RegularClassIntegrals.ArchUnimod
 import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceAdeleRing
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HyperbolicTermsVanish
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HeckeEigensystems.HyperbolicTermsVanish
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCyclicOfFiniteQuotient
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsMulCommutativeCentRealUJ
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt

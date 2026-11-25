@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
 public import Mathlib.RingTheory.MvPowerSeries.Derivative
 public import Mathlib.RingTheory.MvPowerSeries.Substitution
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffSubstRestrictSumVariables
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffsInIdealSolutionOfUnipotentSeriesMatrix
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PderivSubstChainRule
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.CoeffSubstRestrictSumVariables
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.CoeffsInIdealSolutionOfUnipotentSeriesMatrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.PderivSubstChainRule
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

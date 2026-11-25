@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.CoreStatements.LocalThetaKernels.LocpairAlg
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtPlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.PureTensors.ContinuousAtPlace
 public import GroundTheory.GlobalFields.IdeleGroups.IdeleNorms
 public import GroundTheory.GlobalFields.LocalFieldAtPlace
 public import GroundTheory.LocalFields.PadicLogSeries

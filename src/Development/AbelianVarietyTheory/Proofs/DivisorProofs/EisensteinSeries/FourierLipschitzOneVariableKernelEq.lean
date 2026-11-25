@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RembApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.RembApply
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Fourier.FourierTransform
 import Mathlib.Algebra.Order.Floor.Extended

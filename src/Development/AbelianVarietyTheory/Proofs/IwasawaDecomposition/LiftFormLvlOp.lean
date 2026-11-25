@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsCompOfOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubOrthProjPerpMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.SubOrthProjPerpMem
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CenterEqSum
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ActEqTranslateLiftV
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRangeRestrictEq

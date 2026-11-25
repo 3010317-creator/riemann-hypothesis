@@ -3,10 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitMkOfFormallyUnramified
 public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularSequenceExtendCoords
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.RegularSequenceExtendCoords
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
 public import Mathlib.AlgebraicGeometry.OrderOfVanishing.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularSequencePrimeDivisors
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ArithmeticIntersection.RegularSequencePrimeDivisors
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

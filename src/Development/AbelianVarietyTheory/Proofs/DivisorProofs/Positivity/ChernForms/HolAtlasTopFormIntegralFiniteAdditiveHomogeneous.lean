@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LineSCShortExact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralSubOfIsForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ChernForms.IntegralSubOfIsForm
 import Development.AbelianVarietyTheory.Definitions.Divisors.ChartMeasApplyOfSubset
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlueMeasUnivNeTopOfCompact
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ChernForms.GlueMeasUnivNeTopOfCompact
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GluedChartDensityMeasureAddOfCompatibleOn
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

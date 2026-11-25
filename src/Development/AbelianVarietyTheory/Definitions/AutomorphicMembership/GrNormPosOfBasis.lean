@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DegFrame
 public import Development.AbelianVarietyTheory.Statements.HeightBoundStatement.HTBoundSt
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyValExtOfOverLa
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentVectorsUniversalBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.TangentVectorsUniversalBasis
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntOIsLocalRing
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LatDRSubsetLatHT
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero

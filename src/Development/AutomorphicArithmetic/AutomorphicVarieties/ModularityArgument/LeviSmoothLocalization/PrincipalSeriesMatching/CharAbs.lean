@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LeviSmoothLocalization.WinUpDown
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCharacterAbsoluteValuePower
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.HeckeCharacterAbsoluteValuePower
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharLocalComponentExistsUniqueUnitary
 import GroundTheory.GlobalFields.TateThesis.NonvanishingPrimes
 import Mathlib.Algebra.Order.Floor.Extended

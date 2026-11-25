@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTranslA
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenModelEqGenericFibre
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.IsTranslA
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.GenModelEqGenericFibre
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.IsGen
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsGHeckeMapForget
 import Mathlib.Algebra.Order.Floor.Extended

@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvFiveLogLeSumInvPrimes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.InvFiveLogLeSumInvPrimes
 public import Formalism.PadicSubsetSums.CentralIdempotents.GaloisIrreducibility
 public import Mathlib.NumberTheory.PrimeCounting
 public import Mathlib.Analysis.Complex.ExponentialBounds

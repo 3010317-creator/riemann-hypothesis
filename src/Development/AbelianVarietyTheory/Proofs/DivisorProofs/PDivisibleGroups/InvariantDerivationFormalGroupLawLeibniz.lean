@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvDer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.InvDer
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

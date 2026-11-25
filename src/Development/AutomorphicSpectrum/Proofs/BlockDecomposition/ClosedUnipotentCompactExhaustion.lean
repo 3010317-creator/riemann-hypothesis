@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.
 public import Mathlib.NumberTheory.LocalField.Basic
 import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
 public import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactUnipotentInCompactSubgroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.LocalSchrodinger.CompactUnipotentInCompactSubgroup
 import GroundTheory.AutomorphicForms.GLnLocal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

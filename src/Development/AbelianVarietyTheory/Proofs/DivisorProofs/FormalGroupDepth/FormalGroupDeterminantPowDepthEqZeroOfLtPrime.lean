@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDeterminantPowDepthBounds
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDepth.FormalGroupDeterminantPowDepthBounds
 public import Mathlib.Data.Nat.Prime.Factorial
 import Mathlib.RingTheory.MvPolynomial.Homogeneous
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixVariablesDeterminantPowMonomialShape
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDepth.MatrixVariablesDeterminantPowMonomialShape
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -4,10 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOne
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqOne
 public import Mathlib.RingTheory.Etale.Weakly
 public import Mathlib.RingTheory.Flat.TorsionFree
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyMapEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamVectorExtension
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorsionTowerAndHeightEqTwoDim
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankTheoryMu
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.CharpolyMapEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.DeRhamVectorExtension
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.ExistsTorsionTowerAndHeightEqTwoDim
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.FinrankTheoryMu
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

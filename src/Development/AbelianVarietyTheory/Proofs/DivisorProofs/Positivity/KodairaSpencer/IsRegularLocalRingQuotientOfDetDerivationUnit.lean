@@ -2,7 +2,7 @@ module
 
 public import Mathlib.RingTheory.Derivation.Basic
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationExtendLocalizationAtPrime
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.DerivationExtendLocalizationAtPrime
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.QuotientSpanRange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

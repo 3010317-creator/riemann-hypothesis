@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.QuoIff
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ComponentModelWeightDimensionDictionary
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AnchoredWeightIndefiniteLiftGaps
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedWeightGapsBlockAndBar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrictAntiOfStep
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.AnchoredWeightIndefiniteLiftGaps
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.DividedWeightGapsBlockAndBar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.StrictAntiOfStep
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

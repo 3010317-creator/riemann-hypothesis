@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GtPtAct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.GtPtAct
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.PhiGenPf
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsUniformizationEndomorphismOfLinear
 import Mathlib.Algebra.Order.Floor.Extended

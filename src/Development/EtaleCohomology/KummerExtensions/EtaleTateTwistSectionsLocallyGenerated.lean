@@ -1,7 +1,7 @@
 module
 
 public import Development.EtaleCohomology.TateTwists.EtaleTateTwistSectionsLocallyGenerated
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistSectionsLocallyGeneratedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.EtaleCohomology.TateTwistSectionsLocallyGeneratedStatement
 
 @[expose] public section
 

@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntFOneMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.StrongApproximation.IntFOneMul
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsOpenKerFinIdele
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsOpenNsmulAdelicCompletionOfVectorSet
 import Mathlib.Algebra.Order.Floor.Extended

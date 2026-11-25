@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CobOneEqZeroOfConnecting
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualIsConnOfIsEtPDivGroup
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigToLieBijectiveAndDualRigOfOmegaBijectiveOfIsE
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WittDualReduction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.CobOneEqZeroOfConnecting
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.DualIsConnOfIsEtPDivGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.RigToLieBijectiveAndDualRigOfOmegaBijectiveOfIsE
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.WittDualReduction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

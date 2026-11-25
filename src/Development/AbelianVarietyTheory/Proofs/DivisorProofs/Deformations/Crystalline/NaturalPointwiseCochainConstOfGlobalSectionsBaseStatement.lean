@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NaturalPointwiseCochainConstOfGlobalSectionsBase
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.NaturalPointwiseCochainConstOfGlobalSectionsBase
 
 @[expose] public section
 

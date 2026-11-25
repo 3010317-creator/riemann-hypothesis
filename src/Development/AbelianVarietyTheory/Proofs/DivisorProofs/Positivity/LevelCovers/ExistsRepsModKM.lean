@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.DefiniteBound
 public import Mathlib.RingTheory.SimpleRing.Principal
 public import Mathlib.NumberTheory.NumberField.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGensModNsmulOfFgNumberField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.ExistsGensModNsmulOfFgNumberField
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeModRepsCardLe
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.LatticeModRepsCardLe
 public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsApprox
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

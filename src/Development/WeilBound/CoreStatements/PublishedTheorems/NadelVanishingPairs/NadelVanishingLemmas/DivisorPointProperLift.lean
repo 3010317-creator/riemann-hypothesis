@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivisorCenterProperLift
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.DivisorCenterProperLift
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

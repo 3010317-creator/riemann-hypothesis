@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ThetaNormCommutation.LocalComparisonSplitting.GlobalCharacterOfInputs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyPcRatFMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.EventuallyPcRatFMem
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsNormalisedThetaSub
 public import GroundTheory.AutomorphicForms.AdelicGLn
 import Mathlib.Algebra.Order.Floor.Extended

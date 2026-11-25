@@ -4,10 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmCon
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.FiniteAndFinrankLeOfPointwise
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormsFiniteDimensional
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfMemSpanCuspOn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RdZeroOfPetAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TestValueEqConstMulReadingSecZ
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.CuspFormsFiniteDimensional
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.EqZeroOfMemSpanCuspOn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.RdZeroOfPetAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.TestValueEqConstMulReadingSecZ
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

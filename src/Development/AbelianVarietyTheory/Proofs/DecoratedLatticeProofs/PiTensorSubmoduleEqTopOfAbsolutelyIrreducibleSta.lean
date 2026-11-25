@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteSupport
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurAndTensorSubmodule
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.FockModel.SchurAndTensorSubmodule
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ScalarOfComm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GenRatios
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RatField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AsIdealSpMapClosedPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ChowForms.RatField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ChowForms.AsIdealSpMapClosedPoint
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFromTest
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
 public import Mathlib.RingTheory.MvPowerSeries.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesAlgHomExtOfIsNilpotentX
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerSeriesEvalAtNilpotentXEqCoordinate
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.MvPowerSeriesAlgHomExtOfIsNilpotentX
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.PowerSeriesEvalAtNilpotentXEqCoordinate
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

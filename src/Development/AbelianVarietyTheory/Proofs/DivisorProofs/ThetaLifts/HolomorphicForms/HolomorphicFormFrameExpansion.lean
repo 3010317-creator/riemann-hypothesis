@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothReal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HolomorphicForms.SmoothReal
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSigmaList
 public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
 import Mathlib.Algebra.Order.Floor.Extended

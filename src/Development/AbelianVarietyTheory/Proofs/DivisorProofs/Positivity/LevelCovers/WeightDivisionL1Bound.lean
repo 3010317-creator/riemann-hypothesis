@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DividedWeightUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedWeightEntriesSignsSizes
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedWeightGapsBlockAndBarStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.DividedWeightEntriesSignsSizes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.DividedWeightGapsBlockAndBarStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

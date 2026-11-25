@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsorsTrivial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.TorsorsTrivial
 public import Mathlib.RingTheory.Ideal.Height
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsActIffIsDi
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaPtEqUnitMulTh
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.LinearIndependentOfIsExtension
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SymmetricLiftOddOrderExistsUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemberTorsionPointsAdditiveLabel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.ThetaConstants.MemberTorsionPointsAdditiveLabel
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIsGenSecNear
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Mathlib.Algebra.Order.Floor.Extended
@@ -48,7 +48,7 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.T
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBPull
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomology.GenProd
 import Development.AbelianVarietyTheory.Definitions.Divisors.FromBase
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefTwistPull
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.ThetaConstants.CoefTwistPull
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section

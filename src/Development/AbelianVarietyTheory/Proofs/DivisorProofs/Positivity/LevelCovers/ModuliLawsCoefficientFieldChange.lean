@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifOfSpaceE
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.LeCovCoeff
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsEmbExt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldingFrameDeltaChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.UnfoldingFrameDeltaChange
 import Formalism.LocalToGlobal.ProjectiveLattices.SpMapAlgHomId
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

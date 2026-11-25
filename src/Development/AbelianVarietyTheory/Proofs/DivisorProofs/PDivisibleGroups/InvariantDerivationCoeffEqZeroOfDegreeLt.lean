@@ -1,8 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvDer
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffSubstEqZeroOfDegreeLt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffSubstRestrictSumVariables
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.InvDer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.CoeffSubstEqZeroOfDegreeLt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.CoeffSubstRestrictSumVariables
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

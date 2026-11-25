@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NabBaseChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.RationalThetaLifts.NabBaseChange
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MulVecMemHatSwap
 import Formalism.LocalToGlobal.Columns.CoefColLemmas
 import Mathlib.Algebra.Order.Floor.Extended

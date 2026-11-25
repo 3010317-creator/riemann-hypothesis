@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasTuplesOfLaws
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.HasTuplesOfLaws
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksComap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

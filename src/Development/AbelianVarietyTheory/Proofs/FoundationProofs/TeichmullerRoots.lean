@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RootsReverseProd
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLifts.HeckeEigensystems.RootsReverseProd
 public import Formalism.SharpRestriction.LevelLetterCocycles.ArithmeticCylinders
 public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.FactorSeriesSupport
 import Mathlib.Algebra.AffineMonoid.UniqueSums

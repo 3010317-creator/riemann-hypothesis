@@ -2,8 +2,8 @@ module
 
 public import Aesop.BuiltinRules
 public import Development.AbelianVarietyTheory.BlockTheory.CMModuli.ProjectiveSpaceOverSpec
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleFactorOfIndEt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleModelOfIsColimit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.ExistsEtaleFactorOfIndEt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.ExistsEtaleModelOfIsColimit
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsIndEtaleOfIsLocalization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

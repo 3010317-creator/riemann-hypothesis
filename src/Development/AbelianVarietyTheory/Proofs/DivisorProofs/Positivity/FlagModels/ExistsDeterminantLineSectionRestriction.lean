@@ -1,8 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSectionOfChg
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsVecEquiv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCombinationIffOfSameVecs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.IsSectionOfChg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.ExistsVecEquiv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.IsCombinationIffOfSameVecs
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DeterminantSectionRule
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

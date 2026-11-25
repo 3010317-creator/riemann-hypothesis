@@ -3,7 +3,7 @@ module
 public import Mathlib.AlgebraicGeometry.Scheme
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.RingTheory.RingHom.Etale
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleModelOfIsColimit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.ExistsEtaleModelOfIsColimit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

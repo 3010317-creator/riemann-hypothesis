@@ -1,11 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivPowerCompatTwoFormDerivativeCompOneForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerFiltrationIdealLeMapOfIsDPMorphism
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.DividedPowerFiltrationIdealLeMapOfIsDPMorphism
 public import Mathlib.RingTheory.DividedPowers.DPMorphism
 public import Mathlib.RingTheory.Flat.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsDPMorphismOfFlatAlgebra
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSectionsMonoReductionAffineInf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.ExistsIsDPMorphismOfFlatAlgebra
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.SmoothSectionsMonoReductionAffineInf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

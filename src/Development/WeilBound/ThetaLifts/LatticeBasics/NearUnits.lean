@@ -3,7 +3,7 @@ module
 public import Development.WeilBound.ThetaLifts.LatticeBasics.MemLam
 public import Development.WeilBound.ThetaLifts.LatticeBasics.BadStmt
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.PfDictDef
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactOpenAddSubgroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.KudlaSplitting.ExistsCompactOpenAddSubgroup
 public import Development.WeilBound.CoreStatements.CompactAveragingSplitting.EigenvectorLifting.PfDict
 import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.KdMulRight
 import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.PfDictAd

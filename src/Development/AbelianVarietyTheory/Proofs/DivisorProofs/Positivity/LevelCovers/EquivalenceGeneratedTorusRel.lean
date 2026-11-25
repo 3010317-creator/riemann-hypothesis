@@ -1,6 +1,6 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HatKMConjImp
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.HatKMConjImp
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKMOne
 public import Mathlib.NumberTheory.NumberField.CMField
 public import Mathlib.RingTheory.SimpleRing.Principal

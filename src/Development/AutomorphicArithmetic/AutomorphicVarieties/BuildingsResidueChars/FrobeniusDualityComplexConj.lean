@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.SignAgreement.ExistsCompositumWithPrimeDegreeGalois
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyScaledInverse
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.CharpolyScaledInverse
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnderEqIffConjPl
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PartsConj
 import Mathlib.Algebra.Order.Floor.Extended

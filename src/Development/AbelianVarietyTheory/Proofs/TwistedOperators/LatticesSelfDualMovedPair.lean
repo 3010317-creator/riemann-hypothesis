@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.InfClassAt
 public import Formalism.LocalToGlobal.Columns.Adelic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemCompletedLatticeColumnLatticeMulIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.VacuumCosets.MemCompletedLatticeColumnLatticeMulIff
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsSelfDualEColLatOne
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
 public import Formalism.LocalToGlobal.Columns.DetChrChi

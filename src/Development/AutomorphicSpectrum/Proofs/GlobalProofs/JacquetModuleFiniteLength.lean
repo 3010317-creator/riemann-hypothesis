@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
 public import GroundTheory.AutomorphicForms.InductionParabolic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InductionFiniteLength
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.InductionFiniteLength
 public import GroundTheory.AutomorphicForms.FiniteLength
 import Mathlib.Tactic.Linter.Style
 

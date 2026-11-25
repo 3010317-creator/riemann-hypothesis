@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsConjFsBasisOfUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ArithmeticIntersection.IsConjFsBasisOfUnitary
 public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
 public import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialOfFun
 import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn

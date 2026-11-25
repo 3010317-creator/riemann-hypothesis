@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GapGeSubKapBase
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.GapGeSubKapBase
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrMoveTransfer
 import Formalism.LocalToGlobal.ProjectiveLattices.IsLevMove
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointMoveCalculus

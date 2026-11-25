@@ -4,8 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOf
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThetaVV
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilIsDiagRoot
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelPosOfCoprime
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.ExistsWeilIsDiagRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.LevelPosOfCoprime
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.BiadditiveOfTrivAxes
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsGenMovePow
 import Mathlib.Algebra.Order.Floor.Extended

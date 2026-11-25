@@ -2,7 +2,7 @@ module
 
 public import Mathlib.Algebra.Module.Torsion.Basic
 public import Mathlib.NumberTheory.NumberField.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardTorsionBySetPowOfDivisibleNumberField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.CardTorsionBySetPowOfDivisibleNumberField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

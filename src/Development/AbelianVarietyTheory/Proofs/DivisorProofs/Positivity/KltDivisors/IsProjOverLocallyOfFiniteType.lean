@@ -39,7 +39,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
 import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsFlatSecRankZero
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapPairDetCovec
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KltDivisors.MapPairDetCovec
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsFlagFrame
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 

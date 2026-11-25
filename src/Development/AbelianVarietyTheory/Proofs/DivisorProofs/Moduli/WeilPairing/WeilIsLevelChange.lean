@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilIsDiagRoot
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilCommutatorPairingTorsionGeometricPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.ExistsWeilIsDiagRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.ExistsWeilCommutatorPairingTorsionGeometricPoint
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsGenMovePow
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CubeTheorem

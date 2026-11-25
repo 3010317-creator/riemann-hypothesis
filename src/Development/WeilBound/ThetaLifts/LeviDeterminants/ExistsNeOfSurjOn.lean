@@ -2,9 +2,9 @@ module
 
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.EqZeroOfTheta
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.MixedModels.RealSt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.AdelicFourier.EqOfComponentTensorAdelicFunctionEq
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicSchwartzNeZeroAtOrigin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.FockModel.ExistsAdelicSchwartzNeZeroAtOrigin
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.MCSpan
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

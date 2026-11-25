@@ -1,9 +1,9 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerFiltrationIdealLeMapOfIsDPMorphism
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.DividedPowerFiltrationIdealLeMapOfIsDPMorphism
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RatBasisLinearIndependentInt
 public import Mathlib.RingTheory.DividedPowers.SubDPIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerFiltration
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.DividedPowerFiltration
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

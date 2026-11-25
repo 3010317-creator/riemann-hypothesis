@@ -39,7 +39,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SepAtBIff
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Degenerations.Separation.SepAtBIff
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 @[expose] public section

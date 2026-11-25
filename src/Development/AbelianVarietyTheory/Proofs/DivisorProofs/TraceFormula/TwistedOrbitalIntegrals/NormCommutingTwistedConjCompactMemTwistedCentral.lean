@@ -5,8 +5,8 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwCo
 public import Mathlib.Analysis.Normed.Field.Basic
 public import Mathlib.Topology.Instances.Matrix
 public import Mathlib.Topology.MetricSpace.ProperSpace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormOneMulCompactOfTwistedNormCompact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.ExistsNormOneMulCompactOfTwistedNormCompact
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormula.TwistedOrbitalIntegrals.PlaceConjugationPropertiesCmField
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedCentralizerIsNormOneTorus
 import GroundTheory.GlobalFields.LocalAtPlace
 import Mathlib.Algebra.Order.Floor.Extended

@@ -1,6 +1,6 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PermMMulTranspose
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.LevelCovers.PermMMulTranspose
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExpLogNearOne
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LamBallULe
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UpqLocallyCompactGroup

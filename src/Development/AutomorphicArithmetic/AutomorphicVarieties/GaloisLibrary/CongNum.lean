@@ -1,7 +1,7 @@
 module
 
 public import Mathlib.NumberTheory.Padics.Complex
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyScaledInverse
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentation.ThetaLattices.CharpolyScaledInverse
 public import GroundTheory.GlobalFields.ComplexMultiplication.AutCFixed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

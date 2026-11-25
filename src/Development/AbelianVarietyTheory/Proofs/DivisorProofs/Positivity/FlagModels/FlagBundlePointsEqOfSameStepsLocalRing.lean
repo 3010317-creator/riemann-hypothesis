@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellFrameChangeTriangular
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSpMapEv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.FlagCellFrameChangeTriangular
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.EqSpMapEv
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PluckerVectorBlockTriangularFrameChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

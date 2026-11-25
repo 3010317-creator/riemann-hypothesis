@@ -42,7 +42,7 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.CommGroupMulMulEqMu
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsAlgHomOfComp
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsChartOfIsLocalRing
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBaseFrame
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.KodairaSpencer.IsBaseFrame
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.FlatBCSec
 
 @[expose] public section

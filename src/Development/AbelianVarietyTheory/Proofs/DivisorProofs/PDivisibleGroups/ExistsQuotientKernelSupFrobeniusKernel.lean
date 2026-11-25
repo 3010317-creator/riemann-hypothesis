@@ -1,11 +1,11 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobKerIdealLeAugIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.FrobKerIdealLeAugIdeal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
 public import Mathlib.RingTheory.HopfAlgebra.Quotient
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCocommOfSurjective
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsHopfIdealKerIdealOfBialgHom
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowFinrankCotangentLeFinrankFrobeniusKernelQuoti
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.IsCocommOfSurjective
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.IsHopfIdealKerIdealOfBialgHom
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.PowFinrankCotangentLeFinrankFrobeniusKernelQuoti
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

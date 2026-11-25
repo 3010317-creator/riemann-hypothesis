@@ -1,7 +1,7 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsorsTrivial
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRootSubMemOfEvalMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.TorsorsTrivial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Etale.Henselisation.ExistsRootSubMemOfEvalMem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.CoreStatements.CompactAveragingSplitting.EigenvectorLifting.SplitAsm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GSEqZeroOfLt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinSeries.GSEqZeroOfLt
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsSplitChartOne
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 import Mathlib.Algebra.Order.Floor.Extended

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsConjFsBasisOfUnitary
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ArithmeticIntersection.IsConjFsBasisOfUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +52,7 @@ import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.CmpbHessAtAddCon
 public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.FlatCalcA
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.RhGradFPfA
 import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolEqMultiDiff
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroups.PolEqMultiDiff
 
 @[expose] public section
 

@@ -4,7 +4,7 @@ public import Formalism.DegreeFormula.FlagDegFormula
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHeightIffOfDegreeEq
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IrreducibleOfIrreducibleMap
 public import Mathlib.Analysis.SpecialFunctions.Log.ENNRealLog
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinSubstLinSubst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.FlagModels.LinSubstLinSubst
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

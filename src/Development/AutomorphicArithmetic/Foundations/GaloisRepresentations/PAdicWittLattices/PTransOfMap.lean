@@ -2,9 +2,9 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.TransCancel
 import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemNonzeroLocusIffPowFn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AmpleRigidLevelRigid
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGaloisCoverGrpSchemeSquareProductMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilIsOfHeckeLbPow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.SiegelLevelCovers.AmpleRigidLevelRigid
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.IsGaloisCoverGrpSchemeSquareProductMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Moduli.WeilPairing.WeilIsOfHeckeLbPow
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaOfTranslDiff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

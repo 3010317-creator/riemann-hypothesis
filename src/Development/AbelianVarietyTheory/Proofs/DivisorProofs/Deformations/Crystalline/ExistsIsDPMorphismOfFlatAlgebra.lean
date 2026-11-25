@@ -3,8 +3,8 @@ module
 public import Mathlib.RingTheory.DividedPowers.DPMorphism
 public import Mathlib.RingTheory.Flat.Basic
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RatBasisLinearIndependentInt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDividedPowersOfCompOnGenerators
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsPreDividedPowersOfGenerators
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.ExistsDividedPowersOfCompOnGenerators
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Deformations.Crystalline.ExistsIsPreDividedPowersOfGenerators
 public import Mathlib.RingTheory.Flat.EquationalCriterion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

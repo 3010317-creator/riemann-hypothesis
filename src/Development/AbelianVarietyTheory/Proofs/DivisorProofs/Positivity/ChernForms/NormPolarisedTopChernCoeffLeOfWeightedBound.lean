@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EndValuedForm11Coeffs
 public import Mathlib.Analysis.Complex.Norm
 public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormDetLeOfWeightedEntryBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Positivity.ChernForms.NormDetLeOfWeightedEntryBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
