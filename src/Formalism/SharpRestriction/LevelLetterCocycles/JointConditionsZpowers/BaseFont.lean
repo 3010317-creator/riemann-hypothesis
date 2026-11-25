@@ -38,14 +38,8 @@ theorem FildR_anti (τ : K →ₐ[Qp] LL) (a : ℤ) : FildR PD ρ τ (a + 1) ≤
   exact inf_le_inf_left _ (FilV_anti PD a)
 
 theorem subsingleton_tensor (W : Type) [AddCommGroup W] [Module Qp W] [Subsingleton V] :
-    Subsingleton (V ⊗[Qp] W) := by
-  have h : ∀ z : V ⊗[Qp] W, z = 0 := by
-    intro z
-    induction z using TensorProduct.induction_on with
-    | zero => rfl
-    | tmul v w => rw [Subsingleton.elim v 0, TensorProduct.zero_tmul]
-    | add x y hx hy => rw [hx, hy, add_zero]
-  exact ⟨fun x y => by rw [h x, h y]⟩
+    Subsingleton (V ⊗[Qp] W) :=
+  @Unique.instSubsingleton _ (TensorProduct.uniqueLeft (R := Qp) (M := V) (N := W))
 
 variable [FiniteDimensional LL V]
 
@@ -68,18 +62,16 @@ theorem finite_FildR (h : IsDR PD ρ) (τ : K →ₐ[Qp] LL) (a : ℤ) : Module.
 
 theorem multV_nonneg (h : IsDR PD ρ) (τ : K →ₐ[Qp] LL) (a : ℤ) : 0 ≤ multV PD ρ τ a := by
   haveI := finite_FildR PD ρ h τ a
-  have hle : finrank LL ↥(FildR PD ρ τ (a + 1)) ≤ finrank LL ↥(FildR PD ρ τ a) := by
-    first
-      | (rw [← (Submodule.comapSubtypeEquivOfLe (FildR_anti PD ρ τ a)).finrank_eq]; exact Submodule.finrank_le _)
+  have hle : finrank LL ↥(FildR PD ρ τ (a + 1)) ≤ finrank LL ↥(FildR PD ρ τ a) :=
+    Submodule.finrank_mono (FildR_anti PD ρ τ a)
   unfold multV
   omega
 
 theorem isJumpV_iff (h : IsDR PD ρ) (τ : K →ₐ[Qp] LL) (a : ℤ) :
     IsJumpV PD ρ τ a ↔ 0 < multV PD ρ τ a := by
   haveI := finite_FildR PD ρ h τ a
-  have hle : finrank LL ↥(FildR PD ρ τ (a + 1)) ≤ finrank LL ↥(FildR PD ρ τ a) := by
-    first
-      | (rw [← (Submodule.comapSubtypeEquivOfLe (FildR_anti PD ρ τ a)).finrank_eq]; exact Submodule.finrank_le _)
+  have hle : finrank LL ↥(FildR PD ρ τ (a + 1)) ≤ finrank LL ↥(FildR PD ρ τ a) :=
+    Submodule.finrank_mono (FildR_anti PD ρ τ a)
   unfold IsJumpV multV
   constructor
   · intro hne
