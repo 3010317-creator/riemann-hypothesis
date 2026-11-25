@@ -179,7 +179,7 @@ private theorem stalkClosedPointTo_injective :
     exact isField_stalk_of_closure_mem_irreducibleComponents M.Z _
       (by simp [irreducibleComponents_eq_singleton])
   have hF := hG _ (M.pt_apply (IsLocalRing.closedPoint Ω))
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+  rw [injective_iff_map_eq_zero]
   intro a ha
   by_contra hne
   obtain ⟨b, hb⟩ := hF.mul_inv_cancel hne
