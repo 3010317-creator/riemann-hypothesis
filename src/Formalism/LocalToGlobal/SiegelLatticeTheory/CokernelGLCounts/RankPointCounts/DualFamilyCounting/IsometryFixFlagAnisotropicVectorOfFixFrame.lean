@@ -479,8 +479,6 @@ noncomputable section
 
 namespace Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 section Basic
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E} {r : ℕ}
@@ -639,8 +637,6 @@ noncomputable section
 
 namespace Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : Formalism.BasicNotions.D7} {T : D.host.E} {F0 : FlagG (VS D) D.R.rS T}
 
 theorem ez_smul {T' : D.host.E} (g : G0 F0) {Λ : Submodule (𝓞 D.host.E) (VS D).V} {Z : MatZ D}
@@ -742,8 +738,6 @@ end Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
 noncomputable section
 
 namespace Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : Formalism.BasicNotions.D7} {T : D.host.E} {F0 : FlagG (VS D) D.R.rS T}
 
@@ -872,8 +866,6 @@ noncomputable section
 
 namespace Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : Formalism.BasicNotions.D7} {T : D.host.E} {F0 : FlagG (VS D) D.R.rS T}
 
 theorem flagStabilizer_fixes_frame {Λ : Submodule (𝓞 D.host.E) (VS D).V} {n : (VS D).V ≃ₗ[D.host.E] (VS D).V}
@@ -938,8 +930,6 @@ end Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
 noncomputable section
 
 namespace Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : Formalism.BasicNotions.D7} {T : D.host.E} {F0 : FlagG (VS D) D.R.rS T}
 
@@ -1043,8 +1033,6 @@ end Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
 noncomputable section
 
 namespace Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : Formalism.BasicNotions.D7}
 
@@ -1220,8 +1208,6 @@ end Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
 noncomputable section
 
 namespace Formalism.L2.SG.Pf.Cnt
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace StabilizerQuotient
 

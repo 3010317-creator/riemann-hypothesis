@@ -19,8 +19,6 @@ noncomputable section
 
 namespace Formalism.L2.SG.Pf.Cnt
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 section Local
 
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
@@ -98,8 +96,6 @@ open Classical ValuativeRel
 noncomputable section
 
 namespace Formalism.L2.SG.Pf.Cnt.DualityBasisChange
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 section Herm
 
