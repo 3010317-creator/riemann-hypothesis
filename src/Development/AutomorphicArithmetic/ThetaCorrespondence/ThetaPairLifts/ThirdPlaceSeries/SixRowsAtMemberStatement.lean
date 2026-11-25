@@ -988,7 +988,7 @@ theorem GlobalTheory.PerDecAtRef.perDec0At_std : ∀ {B : Base} {X : PreX B.toPr
       erw [hw _ c' s ⟨s.1, s.2⟩ rfl]
       by_cases h : c' = c
       · rw [ite_eq_left h, ite_eq_left (show @Eq (I.perIn u I.mu0).S'.Cl c' c from h)]
-        erw [hw v c' s ⟨s.1, s.2⟩ rfl]
+        rw [hw v c' s ⟨s.1, s.2⟩ rfl]
       · rw [ite_eq_right h, ite_eq_right (show ¬ @Eq (I.perIn u I.mu0).S'.Cl c' c from h)]
         rfl
     unfold Formalism.MainNotions.RT.PeriodPointConditions.pcL Formalism.MainNotions.RT.PeriodPointConditions.resC

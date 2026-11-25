@@ -576,7 +576,7 @@ theorem sizeRowsS_numRec : ∀ (D : D7) (L : SizeData₂ D) (CY : ℝ), HtRowsS 
     have e : (((numDatumOfParameters D large₂).bT t : ℚ) : ℝ) = (large₂.bT ⟨t, ht⟩ : ℝ) := by
       unfold NumDatum.bT
       push_cast
-      erw [h]
+      rw [h]
       ring
     rw [e]
     exact ⟨large₂.bT_ge _, s14 _⟩
