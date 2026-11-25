@@ -206,9 +206,6 @@ theorem memKL_of_lam_eq_zero {L : LB A.left} (hL : L.IsLB) {T : Over S} (x : T â
 
 end GlobalTheory.DualCon.TwistDescent
 
-namespace GlobalTheory.DualCon
-
-end GlobalTheory.DualCon
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

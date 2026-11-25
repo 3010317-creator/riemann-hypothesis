@@ -167,9 +167,6 @@ theorem formallyUnramified_of_dual_const_field {K A B : Type} [Field K] [IsAlgCl
 
 end GlobalTheory.TangentCrit
 
-namespace GlobalTheory.TangentCrit
-
-end GlobalTheory.TangentCrit
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormallyUnramifiedOfDualConstField =====

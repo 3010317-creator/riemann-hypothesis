@@ -529,28 +529,6 @@ open GlobalTheory.UnitDiscAlg
 
 namespace GlobalTheory.ValDecomp
 
-section Abstract
-variable {R : Type*} [CommRing R]
-
-end Abstract
-end GlobalTheory.ValDecomp
-
-namespace GlobalTheory.ValDecomp
-section Abstract2
-variable {R : Type*} [CommRing R]
-
-end Abstract2
-end GlobalTheory.ValDecomp
-
-namespace GlobalTheory.ValDecomp
-section Mat
-variable {E : Type} [NontriviallyNormedField E] [IsUltrametricDist E] {n : ℕ}
-
-end Mat
-end GlobalTheory.ValDecomp
-
-namespace GlobalTheory.ValDecomp
-
 variable {E : Type} [NontriviallyNormedField E] [IsUltrametricDist E] {n : ℕ} in
 private theorem exists_pow_smul_entries_norm_le_one {ϖ : E} (h1 : ‖ϖ‖ < 1)
     (c : Matrix (Fin n) (Fin n) E) : ∃ k : ℕ, ∀ i j, ‖(ϖ ^ k • c) i j‖ ≤ 1 := by

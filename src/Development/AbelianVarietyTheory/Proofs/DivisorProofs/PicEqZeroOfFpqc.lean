@@ -36,7 +36,3 @@ theorem pic_eq_zero_of_fpqc {S : Scheme.{0}} (X Y Y' : Over S) [GrpObj X] (hX : 
   exact (GlobalTheory.CechPic.cls_eq_zero_iff hD).2 t
 
 end GlobalTheory.BirigUniq
-
-namespace GlobalTheory.BirigUniq
-
-end GlobalTheory.BirigUniq

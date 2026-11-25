@@ -84,9 +84,3 @@ theorem acts_one_iff {G : HTGroup p} (L : GlobalTheory.LKGeo.Link D G) (n : ℕ)
       rw [map_add (f := _), map_nsmul]
 
 end GlobalTheory.LKGeo.ForgetHecke
-
-namespace GlobalTheory.LKGeo.ForgetHecke
-
-variable {p : ℕ} [Fact p.Prime] {D : Datum p}
-
-end GlobalTheory.LKGeo.ForgetHecke

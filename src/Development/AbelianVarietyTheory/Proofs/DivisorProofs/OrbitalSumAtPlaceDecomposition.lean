@@ -152,7 +152,3 @@ theorem cxF_pairOfDat (wt : Polynomial G.F → ℂ) (f : G.GAf → ℂ) (hf : �
   · rfl
 
 end GlobalTheory.CxUnfold.OrbitSumGen
-
-namespace GlobalTheory.CxUnfold.OrbitSumGen
-
-end GlobalTheory.CxUnfold.OrbitSumGen

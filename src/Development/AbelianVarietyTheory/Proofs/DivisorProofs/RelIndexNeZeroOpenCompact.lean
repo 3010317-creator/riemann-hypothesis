@@ -19,12 +19,6 @@ namespace GlobalTheory.ConjugateFold
 
 variable {G : Type} [Group G]
 
-end GlobalTheory.ConjugateFold
-
-namespace GlobalTheory.ConjugateFold
-
-variable {G : Type} [Group G]
-
 noncomputable def foldMap (Γ' T K : Subgroup G) (hΓT : Γ' ≤ T) (y : G)
     (p : DoubleCoset.Quotient ((Γ'.subgroupOf T : Subgroup T) : Set T)
       (((T ⊓ K.map (MulAut.conj y).toMonoidHom).subgroupOf T : Subgroup T) : Set T)) :
@@ -35,12 +29,6 @@ noncomputable def foldMap (Γ' T K : Subgroup G) (hΓT : Γ' ≤ T) (y : G)
     rw [he, DoubleCoset.eq]
     refine ⟨(g * ((Quotient.out p : T) : G))⁻¹, T.inv_mem (T.mul_mem (hΓT hg) (Quotient.out p).2),
       k⁻¹, K.inv_mem hk, by group⟩⟩
-
-end GlobalTheory.ConjugateFold
-
-namespace GlobalTheory.ConjugateFold
-
-variable {G : Type} [Group G]
 
 end GlobalTheory.ConjugateFold
 

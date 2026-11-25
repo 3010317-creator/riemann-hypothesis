@@ -58,12 +58,6 @@ namespace GlobalTheory.ConeMeasV
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
 
-end GlobalTheory.ConeMeasV
-
-namespace GlobalTheory.ConeMeasV
-
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
-
 def schrLin {κ : Type} [Fintype κ] (ψ : AddChar (AF F) ℂ) (w : (κ → AF F) × (κ → AF F)) :
     ((κ → AF F) → ℂ) →ₗ[ℂ] ((κ → AF F) → ℂ) where
   toFun Φ := schr ψ w Φ
@@ -83,9 +77,5 @@ theorem schr_mem_schA {κ : Type} [Fintype κ] {ψ : AddChar (AF F) ℂ} (hψ : 
     rw [schrLin_apply, hT]
     exact Submodule.subset_span ⟨T f, g', hg', rfl⟩
   exact this hΦ
-
-end GlobalTheory.ConeMeasV
-
-namespace GlobalTheory.ConeMeasV
 
 end GlobalTheory.ConeMeasV

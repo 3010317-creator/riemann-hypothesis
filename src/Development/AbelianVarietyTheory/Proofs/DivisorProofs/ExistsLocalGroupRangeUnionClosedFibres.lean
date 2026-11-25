@@ -1469,10 +1469,6 @@ noncomputable section
 
 namespace GlobalTheory.SemiStableId
 
-end GlobalTheory.SemiStableId
-
-namespace GlobalTheory.SemiStableId
-
 variable {S : Scheme.{0}} {G G₀ : Over S} [GrpObj G] (j : G₀ ⟶ G)
 
 abbrev RangeIsId : Prop := ∀ x : G.left, x ∈ Set.range j.left ↔
@@ -1505,17 +1501,6 @@ theorem isConnected_fibre [IsOpenImmersion j.left] (hr : RangeIsId j) (s : S) :
 
 end GlobalTheory.SemiStableId
 
-namespace GlobalTheory.SemiStableId
-
-end GlobalTheory.SemiStableId
-
-namespace GlobalTheory.SemiStableId
-
-end GlobalTheory.SemiStableId
-
-namespace GlobalTheory.SemiStableId
-
-end GlobalTheory.SemiStableId
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

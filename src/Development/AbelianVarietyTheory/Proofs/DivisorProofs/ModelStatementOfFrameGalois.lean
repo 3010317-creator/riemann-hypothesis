@@ -273,19 +273,6 @@ end Sub
 
 end GlobalTheory.ExpModel
 
-namespace GlobalTheory.ExpModel
-
-section SubF
-
-variable {l : ℕ} [Fact l.Prime] {ι : Type} [DecidableEq ι] {N : ℕ} (F : Frame l ι N) (lam : ι → ℕ → ℕ)
-  (jK : F.K →* alg F.O N lam) [mT : Module F.T (Forms F.O (A := alg F.O N lam) F.Γ jK (NablaT F.O N lam))]
-  [@IsScalarTower F.O F.T (Forms F.O (A := alg F.O N lam) F.Γ jK (NablaT F.O N lam)) _ mT.toSMul _]
-  (m : Ideal F.T) [m.IsPrime] (ϖ : F.O)
-
-end SubF
-
-end GlobalTheory.ExpModel
-
 end
 end -- clump:auto
 end -- clump:auto

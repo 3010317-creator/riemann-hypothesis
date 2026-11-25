@@ -147,17 +147,3 @@ theorem Phi_apply (z : TM O M ⟶ A) (h : zeroSec O M ≫ z = η[A]) (w : Wmod A
 end Phi
 
 end GlobalTheory.SqZeroPt
-
-namespace GlobalTheory.SqZeroPt
-
-section Tower
-
-open GlobalTheory.PDiv GlobalTheory.PDivGroup GlobalTheory.DeRham
-
-variable {p : ℕ} {O : Type} [CommRing O] {G : PDivGroup p O} {A : Over (Sp O)} [GrpObj A]
-  {M : Type} [AddCommGroup M] [Module O M] [Module Oᵐᵒᵖ M] [IsCentralScalar O M]
-
-
-end Tower
-
-end GlobalTheory.SqZeroPt

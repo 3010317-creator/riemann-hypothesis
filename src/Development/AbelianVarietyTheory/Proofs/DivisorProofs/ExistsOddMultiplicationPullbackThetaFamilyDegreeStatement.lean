@@ -652,9 +652,6 @@ theorem gen_shape (D : DegPre R) (a : D.P.A ⟶ D.P.A) (k' k : ℕ) (hk : k ≤ 
 
 end GlobalTheory.NsmulPull
 
-namespace GlobalTheory.NsmulPull
-
-end GlobalTheory.NsmulPull
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComponentEq =====

@@ -818,12 +818,6 @@ open GlobalTheory.MumFam
 
 namespace GlobalTheory.MumFam
 
-open InhTate
-
-end GlobalTheory.MumFam
-
-namespace GlobalTheory.MumFam
-
 theorem monomial_eq_of_mul_unit {W : Type} [CommRing W] [Nontrivial W] {σ : Type} {P M : σ →₀ ℕ}
     {x x' : MvPowerSeries σ W} (hx : IsUnit x) (hx' : IsUnit x')
     (he : MvPowerSeries.monomial P (1 : W) * x = MvPowerSeries.monomial M 1 * x') : P = M := by
@@ -840,13 +834,6 @@ theorem monomial_eq_of_mul_unit {W : Type} [CommRing W] [Nontrivial W] {σ : Typ
 
 end GlobalTheory.MumFam
 
-namespace GlobalTheory.MumFam
-
-end GlobalTheory.MumFam
-
-namespace GlobalTheory.MumFam
-
-end GlobalTheory.MumFam
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

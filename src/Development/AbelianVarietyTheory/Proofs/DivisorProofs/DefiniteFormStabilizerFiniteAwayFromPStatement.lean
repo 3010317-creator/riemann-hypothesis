@@ -208,9 +208,6 @@ theorem form_smul {n : ℕ} (M : Matrix (Fin n) (Fin n) ℂ) (t : ℝ) (x y : Fi
 
 end GlobalTheory.LKCx.PsiBound
 
-namespace GlobalTheory.LKCx
-
-end GlobalTheory.LKCx
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalPairValueLinear =====

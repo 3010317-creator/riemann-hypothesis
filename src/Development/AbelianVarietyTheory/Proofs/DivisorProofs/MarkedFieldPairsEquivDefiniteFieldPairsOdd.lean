@@ -509,9 +509,6 @@ theorem exists_basis (ha : G.a = 1) (P : Pair G) (μ : ℂ) (hm : P.Mark μ) (pb
 
 end GlobalTheory.LKMid.MoveMark
 
-namespace GlobalTheory.LKMid
-
-end GlobalTheory.LKMid
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

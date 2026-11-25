@@ -166,7 +166,3 @@ end GlobalTheory.SqStepBig
 
 end
 
-namespace GlobalTheory.SqStepBig
-
-end GlobalTheory.SqStepBig
-

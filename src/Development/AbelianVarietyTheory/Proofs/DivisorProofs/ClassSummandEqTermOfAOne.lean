@@ -1343,9 +1343,6 @@ theorem class_summand_eq_term_of_a_one : ∀ (p : ℕ) [Fact p.Prime] (G : HTGro
 
 end GlobalTheory.LKCx.CxReg
 
-namespace GlobalTheory.LKCx
-
-end GlobalTheory.LKCx
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

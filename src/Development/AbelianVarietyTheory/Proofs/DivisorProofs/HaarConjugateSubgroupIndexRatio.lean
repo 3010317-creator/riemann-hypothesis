@@ -131,9 +131,6 @@ theorem sh_add' (G : HTGroup p) (x y : G.C) : sh G (x + y) = sh G x + sh G y := 
 
 end GlobalTheory.CentConj
 
-namespace GlobalTheory.CentConj
-
-end GlobalTheory.CentConj
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1307,32 +1304,6 @@ theorem root_norm_le_irr {p : ℕ} [Fact p.Prime] (G : HTGroup p) (β y : G.Cˣ)
 
 end GlobalTheory.LKIrr
 
-namespace GlobalTheory.LKIrr
-
-end GlobalTheory.LKIrr
-
-namespace GlobalTheory.LKIrr
-open GlobalTheory.LKMid.Northcott
-
-end GlobalTheory.LKIrr
-
-namespace GlobalTheory.LKIrr
-
-variable {p : ℕ} [Fact p.Prime]
-
-end GlobalTheory.LKIrr
-
-namespace GlobalTheory.LKIrr
-
-end GlobalTheory.LKIrr
-
-namespace GlobalTheory.LKIrr
-
-end GlobalTheory.LKIrr
-
-namespace GlobalTheory.LKIrr
-
-end GlobalTheory.LKIrr
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteClassesFixedGammaIrr =====
