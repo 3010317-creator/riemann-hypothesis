@@ -305,10 +305,7 @@ variable {Γ Gi Gf : Type} [Group Γ] [Group Gi] [Group Gf] (ιf : Γ →* Gf) (
   {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V] [FiniteDimensional ℂ V]
 
 theorem conj_inv_norm_one (z : ℂ) (h : ‖z‖ = 1) : starRingEnd ℂ z⁻¹ = z := by
-  have h2 : z * starRingEnd ℂ z = 1 := by
-    rw [Complex.mul_conj, Complex.normSq_eq_norm_sq, h]; norm_num
-  have h3 : starRingEnd ℂ z = z⁻¹ := eq_inv_of_mul_eq_one_right h2
-  rw [← h3, Complex.conj_conj]
+  rw [Complex.inv_eq_conj h, Complex.conj_conj]
 
 theorem inner_unitary (π : Representation ℂ Gi V)
     (hπ : ∀ h : Gi, ∀ v w : V, inner ℂ (π h v) (π h w) = inner ℂ v w) (h : Gi) (v w : V) :
