@@ -8,6 +8,7 @@ import Mathlib.Tactic.Linter.Style
 public import Mathlib.Analysis.Complex.Cardinality
 public import Mathlib.FieldTheory.AlgebraicClosure
 public import Mathlib.FieldTheory.RatFunc.AsPolynomial
+public import Mathlib.Analysis.Complex.Polynomial.Basic
 
 @[expose] public section
 
