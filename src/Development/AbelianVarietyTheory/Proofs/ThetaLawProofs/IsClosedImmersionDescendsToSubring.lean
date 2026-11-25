@@ -182,12 +182,8 @@ theorem descends_of_isAffine (S : Type) [CommRing S] (R₀ : Subring S) (X₀ Y�
   obtain ⟨s, hs'⟩ := exists_finset_bcHom g₀ q S
   refine ⟨s, fun R₁ h hs X₁ Y₁ g₁ πX₁ πY₁ p₁ hY₁ hX₁ ↦ ?_⟩
   have hle : (Algebra.adjoin R₀ (s : Set S)).toSubring ≤ R₁ := by
-    intro x hx
-    induction hx using Algebra.adjoin_induction with
-    | mem x hx => exact hs hx
-    | algebraMap r => exact h r.2
-    | add x y _ _ hx hy => exact R₁.add_mem hx hy
-    | mul x y _ _ hx hy => exact R₁.mul_mem hx hy
+    rw [Algebra.adjoin_eq_ring_closure, Subring.closure_le]
+    exact Set.union_subset (Set.range_subset_iff.2 fun r => h r.2) hs
   let i : Algebra.adjoin R₀ (s : Set S) →+* R₁ := Subring.inclusion hle
   have hi : spMap i ≫ spMap (algebraMap R₀ (Algebra.adjoin R₀ (s : Set S))) =
       spMap (Subring.inclusion h) := by
