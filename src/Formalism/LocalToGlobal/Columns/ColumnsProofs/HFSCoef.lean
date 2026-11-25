@@ -165,14 +165,15 @@ theorem hfs_invTrK (g : σ → GL (Fin n) K) : invTrK (fun τ => Formalism.UG.bc
 
 theorem hfs_rhoV (emb : σ → E →+* K) (γ : GL (Fin n) E) (v : VV K lam) :
     rhoV (fun τ => ι.comp (emb τ)) lam γ (hfsJ ι lam v) = hfsJ ι lam (rhoV emb lam γ v) := by
-  show rhoK lam (embGL (fun τ => ι.comp (emb τ)) γ) (hfsJ ι lam v) = hfsJ ι lam (rhoK lam (embGL emb γ) v)
+  show DIV.rhoK lam (embGL (fun τ => ι.comp (emb τ)) γ) (hfsJ ι lam v) =
+    hfsJ ι lam (DIV.rhoK lam (embGL emb γ) v)
   rw [hfs_embGL]
   exact hfs_rhoK ι lam _ v
 
 theorem hfs_rhoVr (emb : σ → E →+* K) (γ : GL (Fin n) E) (v : VV K lam) :
     rhoVr (fun τ => ι.comp (emb τ)) lam γ (hfsJ ι lam v) = hfsJ ι lam (rhoVr emb lam γ v) := by
-  show rhoK lam (invTrK (embGL (fun τ => ι.comp (emb τ)) γ)) (hfsJ ι lam v) =
-    hfsJ ι lam (rhoK lam (invTrK (embGL emb γ)) v)
+  show DIV.rhoK lam (invTrK (embGL (fun τ => ι.comp (emb τ)) γ)) (hfsJ ι lam v) =
+    hfsJ ι lam (DIV.rhoK lam (invTrK (embGL emb γ)) v)
   rw [hfs_embGL, hfs_invTrK]
   exact hfs_rhoK ι lam _ v
 
