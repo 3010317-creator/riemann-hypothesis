@@ -9,7 +9,7 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodHolomo
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodLatticeDiscreteFree
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodSetClosed
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionSectionEqOfConnected
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CubicalWeilPairingTorsionConstHolomorphicFamilyStatement
 import Mathlib.Tactic.Linter.Style
 
 @[expose] public section
@@ -206,16 +206,18 @@ theorem limit_core {R : Type} [CommRing R] (t : SAB H (Sp R)) {g n : ℕ} {M : L
       hol_ex_comp e isOpen_ball (hl.trans hsub) (s := fun b => (N : ℂ)⁻¹ • s b) ((hsd.mono hl).const_smul ((N : ℂ)⁻¹))
     have hX' : IsHolTo (ball b₀ (min ε ε')) (fun b => (X' b).left) :=
       hol_ex_comp e isOpen_ball (hl.trans hsub) (s := fun b => (N : ℂ)⁻¹ • s' b) ((hsd'.mono hr).const_smul ((N : ℂ)⁻¹))
-    have htors : ∀ b ∈ ball b₀ (min ε ε'), X b ^ N = 1 ∧ X' b ^ N = 1 ∧
-        (X b).left ≫ t.G.hom = (X' b).left ≫ t.G.hom := fun b hb =>
+    have htors : ∀ b ∈ ball b₀ (min ε ε'), X b ^ N = 1 ∧ X' b ^ N = 1 := fun b hb =>
       ⟨ex_inv_smul_pow e (hsub (hl hb)) (hsper b (hl hb)) hN,
-        ex_inv_smul_pow e (hsub (hl hb)) (hsper' b (hr hb)) hN, (Over.w (X b)).trans (Over.w (X' b)).symm⟩
+        ex_inv_smul_pow e (hsub (hl hb)) (hsper' b (hr hb)) hN⟩
     have hb₀' : b₀ ∈ ball b₀ (min ε ε') := mem_ball_self hδ
-    obtain ⟨u, hu, -⟩ := GlobalTheory.UU.existsUnique_cubWeil t.cub (htors b₀ hb₀').1 (htors b₀ hb₀').2.1
+    obtain ⟨u, hu, -⟩ := GlobalTheory.UU.existsUnique_cubWeil t.cub (htors b₀ hb₀').1 (htors b₀ hb₀').2
     obtain ⟨ζ₁, rfl⟩ : ∃ z : ℂˣ, unitOn z = u :=
       ⟨Units.map (Scheme.ΓSpecIso (CommRingCat.of ℂ)).hom.hom.toMonoidHom u, Units.ext (by simp [unitOn])⟩
-    have hconst := _root_.GlobalTheory.CompanionTheory.Ar.Flat.cubWeil_const_of_isHolTo_family (Sp R) t.G t.PP t.cub n N (ball b₀ (min ε ε')) (fun b => spMap (ψ b)) X X' ζ₁ b₀ hN
-      isOpen_ball (convex_ball _ _).isPreconnected hb₀' hX hX' htors hu
+    have hconst : ∀ b ∈ ball b₀ (min ε ε'),
+        GlobalTheory.UU.CubWeil t.cub N (X b) (X' b) (unitOn ζ₁) := fun b hb =>
+      _root_.GlobalTheory.TorsionPairFam.cubWeil_const_of_isHolTo (Sp R) t.G t.PP t.cub n N
+        (ball b₀ (min ε ε')) (fun b => spMap (ψ b)) X X' ζ₁ b₀ b hN isOpen_ball
+        (convex_ball _ _).isPreconnected hX hX' htors hb₀' hb hu
     have hbm : ∀ᶠ m in atTop, bs m ∈ ball b₀ (min ε ε') := hbs (ball_mem_nhds b₀ hδ)
     obtain ⟨m, hm, hym, hym'⟩ := (hbm.and ((hval x y ht).and (hval x' y' ht'))).exists
     have hm1 := hconst (bs m) hm

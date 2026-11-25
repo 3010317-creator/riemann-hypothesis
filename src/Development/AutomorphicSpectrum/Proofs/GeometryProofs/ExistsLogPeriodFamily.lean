@@ -20,7 +20,7 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodLattic
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodSetClosed
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionPeriodsFiniteQuotient
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionSectionEqOfConnected
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CubicalWeilPairingTorsionConstHolomorphicFamilyStatement
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.Tactic.Linter.Style
 
@@ -246,10 +246,10 @@ theorem cubWeil_carry {R : Type} [CommRing R] {t : SAB H (Sp R)} {g n : ℕ} {M 
     have hNc : (N : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hN.ne'
     rw [← ex_nsmul e hb, smul_smul, mul_inv_cancel₀ hNc, _root_.one_smul]
     exact hu b hb
-  exact _root_.GlobalTheory.CompanionTheory.Ar.Flat.cubWeil_const_of_isHolTo_family (Sp R) t.G t.PP t.cub n N (Metric.ball 0 ρ) (fun b => spMap (ψ b))
-    (fun b => e.ex b ((N : ℂ)⁻¹ • s b)) (fun b => e.ex b ((N : ℂ)⁻¹ • s' b)) ζ 0 hN Metric.isOpen_ball
-    (convex_ball _ _).isPreconnected (Metric.mem_ball_self hρ) (hhol s hs) (hhol s' hs')
-    (fun b hb => ⟨htor s hp b hb, htor s' hp' b hb, (Over.w _).trans (Over.w _).symm⟩) h0
+  exact fun b hb => _root_.GlobalTheory.TorsionPairFam.cubWeil_const_of_isHolTo (Sp R) t.G t.PP t.cub n N
+    (Metric.ball 0 ρ) (fun b => spMap (ψ b)) (fun b => e.ex b ((N : ℂ)⁻¹ • s b))
+    (fun b => e.ex b ((N : ℂ)⁻¹ • s' b)) ζ 0 b hN Metric.isOpen_ball (convex_ball _ _).isPreconnected
+    (hhol s hs) (hhol s' hs') (fun b hb => ⟨htor s hp b hb, htor s' hp' b hb⟩) (Metric.mem_ball_self hρ) hb h0
 
 end Carry
 
