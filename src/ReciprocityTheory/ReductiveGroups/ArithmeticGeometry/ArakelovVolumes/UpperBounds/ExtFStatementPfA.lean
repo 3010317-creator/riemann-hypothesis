@@ -200,12 +200,7 @@ theorem isOpen_cell : IsOpen (cell D) := by
 theorem diffOn_prod {ι : Type*} (u : Finset ι) {g : ι → Frame X.Ψ r → ℂ} {s : Set (Frame X.Ψ r)}
     (h : ∀ i ∈ u, DifferentiableOn ℂ (g i) s) : DifferentiableOn ℂ (fun x => ∏ i ∈ u, g i x) s := by
   classical
-  revert h
-  refine Finset.induction_on u (fun _ => ?_) (fun a u ha ih h => ?_)
-  · simp only [Finset.prod_empty]
-    exact differentiableOn_const 1
-  · simp only [Finset.prod_insert ha]
-    exact (h a (Finset.mem_insert_self a u)).mul (ih (fun i hi => h i (Finset.mem_insert_of_mem hi)))
+  exact fun x hx => (HasFDerivWithinAt.finsetProd fun i hi => (h i hi x hx).hasFDerivWithinAt).differentiableWithinAt
 
 theorem poincareLift_differentiableOn (la : Wt X.Ψ r) (F : V (nd X) → ℂ) (hF : DifferentiableOn ℂ F (OmF X x0)) :
     DifferentiableOn ℂ (P0 D la F) (cell D) := by
