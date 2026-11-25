@@ -53,12 +53,7 @@ theorem truncEval_apply {n : ℕ} (s : S) (hs : s ^ n = 0) (f : ℚ⟦X⟧) :
 
 theorem truncEval_eq_sum {n : ℕ} (s : S) (hs : s ^ n = 0) (f : ℚ⟦X⟧) :
     truncEval s hs f = ∑ i ∈ Finset.range n, algebraMap ℚ S (coeff i f) * s ^ i := by
-  rcases n with _ | n
-  · have : Subsingleton S := subsingleton_of_zero_eq_one (by simpa using hs.symm)
-    exact Subsingleton.elim _ _
-  · rw [truncEval_apply, Polynomial.aeval_eq_sum_range' (natDegree_trunc_lt f n)]
-    refine Finset.sum_congr rfl fun i hi => ?_
-    rw [coeff_trunc, ite_eq_left (Finset.mem_range.1 hi), Algebra.smul_def]
+  rw [truncEval_apply, Polynomial.aeval_def, PowerSeries.eval₂_trunc_eq_sum_range]
 
 @[simp]
 theorem truncEval_X {n : ℕ} (s : S) (hs : s ^ n = 0) : truncEval s hs X = s := by
