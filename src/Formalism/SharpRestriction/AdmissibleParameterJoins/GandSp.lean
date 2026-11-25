@@ -44,8 +44,6 @@ theorem expS_eq_Ex {ι : Type} {f : MvPowerSeries ι (K0 p)} (hf : constantCoeff
   rw [coeff_Ex hf]
   rfl
 
-instance : CharZero ℂ_[p] := charZero_of_injective_algebraMap (algebraMap ℚ_[p] ℂ_[p]).injective
-
 theorem expMv_eq_Ex {ι : Type} {f : MvPowerSeries ι ℂ_[p]} (hf : constantCoeff f = 0) : expMv f = Ex f := by
   ext n
   rw [coeff_Ex hf]
