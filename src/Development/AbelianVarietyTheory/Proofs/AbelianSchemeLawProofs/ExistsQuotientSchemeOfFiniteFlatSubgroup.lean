@@ -411,7 +411,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.O
 
 namespace GlobalTheory.AffineQuotient
 
-set_option backward.isDefEq.respectTransparency false
 
 
 open TensorProduct Algebra.TensorProduct in
