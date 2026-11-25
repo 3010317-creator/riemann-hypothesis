@@ -73,14 +73,9 @@ theorem tens_unitarize (dual : Bool) {lam : Fin n → ℝ} {H : Type*} [NormedAd
       ((Real.sqrt (S7.hs (Formalism.MainNotions.S.umat g)) : ℝ) : ℂ) * inner ℂ ((w : D) : H) (σ (Formalism.MainNotions.S.umat g) ((v : D) : H)))
       2 (Formalism.REAL.muG ε)) :
     ∃ Q : (Fin n → D) →ₗ⋆[ℂ] (Fin n → D) →ₗ[ℂ] ℂ,
-      (∀ f ∈ tensSub (genSub E V), ∀ g ∈ tensSub (genSub E V), Q g f = star (Q f g)) ∧
       (∀ f ∈ tensSub (genSub E V), f ≠ 0 → 0 < (Q f f).re) ∧
       (∀ a b, ∀ f ∈ tensSub (genSub E V), ∀ g ∈ tensSub (genSub E V),
-        Q (tensF dual E a b f) g = adjSign ε a b * Q f (tensF dual E b a g)) ∧
-      ∀ k ∈ Kset ε, ∀ f ∈ tensSub (genSub E V), ∀ g ∈ tensSub (genSub E V),
-        ∀ f' ∈ tensSub (genSub E V), ∀ g' ∈ tensSub (genSub E V),
-          (fun c => ((f' c : D) : H)) = kDiag dual σ k (fun c => ((f c : D) : H)) →
-          (fun c => ((g' c : D) : H)) = kDiag dual σ k (fun c => ((g c : D) : H)) → Q f' g' = Q f g := by
+        Q (tensF dual E a b f) g = adjSign ε a b * Q f (tensF dual E b a g)) := by
   classical
   haveI : (Formalism.REAL.muG ε).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular n ε g⟩
   haveI : FiniteDimensional ℂ V := hV.1
@@ -140,9 +135,7 @@ theorem tens_unitarize (dual : Bool) {lam : Fin n → ℝ} {H : Type*} [NormedAd
       (hL f hf j ξ) (hL _ hXf j ξ) (hL g hg j ξ) (hL _ hXg j ξ)
       (fun x t => hasDerivAt_cf hσ hD hX dual (ys j) ξ f x t)
       (fun x t => hasDerivAt_cf hσ hD hX dual (ys j) ξ g x t)
-  refine ⟨Q, ?_, ?_, ?_, ?_⟩
-  · intro f _ g _
-    simp only [Q, LinearMap.mk₂'ₛₗ_apply, Q0, star_sum, pr_star]
+  refine ⟨Q, ?_, ?_⟩
   · intro f hf hf0
     rw [hQ f hf f hf]
     have hre : ∀ j ξ, (pr (Formalism.REAL.muG ε) (u j ξ f) (u j ξ f)).re =
@@ -209,18 +202,6 @@ theorem tens_unitarize (dual : Bool) {lam : Fin n → ℝ} {H : Type*} [NormedAd
       smul_eq_mul] at e2
     rw [e1, hskew _ hX1 f hf g hg, hskew _ hX2 f hf g hg]
     linear_combination (-1 : ℂ) * e2
-  · intro k hk f hf g hg f' hf' g' hg' hff hgg
-    have hkU : k ∈ UJset ε := closure_inUJ_of_mem_Kset hk
-    rw [hQ f' hf' g' hg', hQ f hf g hg]
-    refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun ξ _ => ?_
-    have e : ∀ (h h' : Fin n → D), (fun c => ((h' c : D) : H)) = kDiag dual σ k (fun c => ((h c : D) : H)) →
-        u j ξ h' = fun x => u j ξ h (x * toG k hkU) := by
-      intro h h' hh
-      funext x
-      show cf dual ε σ (ys j) ξ (hvec h') x = _
-      rw [show hvec h' = kDiag dual σ (Formalism.MainNotions.S.umat (toG k hkU)) (hvec h) from hh]
-      exact cf_kDiag hσ dual _ ξ _ (toG k hkU) hk.2 x
-    rw [e f f' hff, e g g' hgg, pr_rt]
 
 end ReciprocityTheory.ChartRestriction.DS
 end -- clump:auto
@@ -256,7 +237,7 @@ theorem dc_ee_nodal (dual : Bool) {lam : Fin n → ℝ} {H : Type*} [NormedAddCo
   classical
   have hE : IsGlRep E := hD.glRep
   have hU : IsInfUnitary ε E := isInfUnitary_of_isDerivedOn hσ hD
-  obtain ⟨Q, -, hpos, hadj, -⟩ := tens_unitarize dual hσ hD hgap hV hc hVK hW
+  obtain ⟨Q, hpos, hadj⟩ := tens_unitarize dual hσ hD hgap hV hc hVK hW
   obtain ⟨W, hWfd, hVW, hWM, hWst⟩ := dc_ee_fin_stable dual hE hU hV hc hgap
   have hsym := dc_eeF_Qsymm hE dual (casimir_genSub hE hc) hadj
   obtain ⟨B, hB⟩ := dc_symm_nodal hpos hsym (dc_eeF_mem dual) hWM hWfd hWst
