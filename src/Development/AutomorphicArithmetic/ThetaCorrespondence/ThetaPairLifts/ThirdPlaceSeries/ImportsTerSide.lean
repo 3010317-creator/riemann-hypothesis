@@ -1012,9 +1012,6 @@ theorem roots_prod_map {α : Type*} (s : Multiset α) (f : α → ℂ) :
   rw [show (s.map fun x => X - C (f x)) = (s.map f).map (fun a => X - C a) by rw [Multiset.map_map]; rfl]
   exact roots_multiset_prod_X_sub_C _
 
-end GlobalTheory.TwistLabel
-
-open GlobalTheory.TwistLabel in
 theorem main : ∀ D : D7, SumRepresentations.tie0 D → IneRep D → LabDepth D → LabGen D → LabChar D := by
   intro D hT _ hDep hGen k w hw L χ u hL hχ hχl
   haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
@@ -1049,6 +1046,8 @@ theorem main : ∀ D : D7, SumRepresentations.tie0 D → IneRep D → LabDepth D
   apply Multiset.map_congr rfl
   intro x _
   simp [Function.comp, map_mul]
+
+end GlobalTheory.TwistLabel
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LabelTwistMultipliesRootsOfTameLabels =====
@@ -1061,7 +1060,7 @@ section -- clump:auto
 open Formalism Formalism.MainNotions Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations Formalism.L2 NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal Module Polynomial GlobalTheory.Pass GlobalTheory.PendOf
 
 theorem _root_.GlobalTheory.T.labelTwistMultipliesRoots_of_tame_labels : ∀ D : D7, SumRepresentations.tie0 D → IneRep D → LabDepth D → LabGen D → LabChar D := by
-  first | exact @main
+  first | exact @GlobalTheory.TwistLabel.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LabelTwistMultipliesRootsOfTameLabelsStatement =====
