@@ -28,40 +28,25 @@ theorem mem_archCompact_of_unitary (x : archGroup K n)
   show infEmb K n x ∈ Reduction.maxCompact (K := K) (n := n)
   refine ⟨fun w => ?_, fun v => ?_⟩
   · intro y
+    let M : Matrix (Fin n) (Fin n) w.Completion := infAt w (infEmb K n x)
+    have isometry {F : Type} [RCLike F] (ψ : w.Completion →+* F) (hψ : Isometry ψ)
+        (hU : M.map ψ ∈ unitaryGroup (Fin n) F) : euclidNorm (y ᵥ* M) = euclidNorm y := by
+      have hnorm := hψ.norm_map_of_map_zero (map_zero ψ)
+      rw [← euclidNorm_map ψ hnorm, ← euclidNorm_map ψ hnorm y]
+      simp only [RingHom.map_vecMul]
+      exact euclidNorm_vecMul_unitary hU _
     by_cases hw : w.IsReal
-    · set ψ := InfinitePlace.Completion.extensionEmbeddingOfIsReal hw
-      have hψ : ∀ z, ‖ψ z‖ = ‖z‖ := fun z =>
-        (InfinitePlace.Completion.isometry_extensionEmbeddingOfIsReal hw).norm_map_of_map_zero
-          (map_zero _) z
-      have hU := hr ⟨w, hw⟩
-      rw [← euclidNorm_map ψ hψ, ← euclidNorm_map ψ hψ y]
-      have e : (fun i => ψ ((y ᵥ* (infAt w (infEmb K n x) :
-          Matrix (Fin n) (Fin n) w.Completion)) i)) =
-          (fun i => ψ (y i)) ᵥ* realCompM ⟨w, hw⟩ ((x : (ArchMatrix K n)ˣ) : ArchMatrix K n) := by
-        ext j
-
-        simp only [vecMul, dotProduct, map_sum, map_mul, realCompM_apply, Matrix.map_apply,
-        realComp_apply]
-        refine Finset.sum_congr rfl fun i _ => ?_
-        rw [infAt_infEmb_apply, extensionEmbeddingOfIsReal_symm]
-      rw [e, euclidNorm_vecMul_unitary hU]
-    · have hcw := InfinitePlace.not_isReal_iff_isComplex.1 hw
-      set ψ := InfinitePlace.Completion.extensionEmbedding w
-      have hψ : ∀ z, ‖ψ z‖ = ‖z‖ := fun z =>
-        (InfinitePlace.Completion.isometry_extensionEmbedding w).norm_map_of_map_zero
-          (map_zero _) z
-      have hU := hc ⟨w, hcw⟩
-      rw [← euclidNorm_map ψ hψ, ← euclidNorm_map ψ hψ y]
-      have e : (fun i => ψ ((y ᵥ* (infAt w (infEmb K n x) :
-          Matrix (Fin n) (Fin n) w.Completion)) i)) =
-          (fun i => ψ (y i)) ᵥ* complexCompM ⟨w, hcw⟩ ((x : (ArchMatrix K n)ˣ) : ArchMatrix K n) := by
-        ext j
-
-        simp only [vecMul, dotProduct, map_sum, map_mul, complexCompM_apply, Matrix.map_apply,
-        complexComp_apply]
-        refine Finset.sum_congr rfl fun i _ => ?_
-        rw [infAt_infEmb_apply, extensionEmbedding_symm _ hcw]
-      rw [e, euclidNorm_vecMul_unitary hU]
+    · apply isometry _ (InfinitePlace.Completion.isometry_extensionEmbeddingOfIsReal hw)
+      convert hr ⟨w, hw⟩ using 1
+      ext i j
+      simp only [M, realCompM_apply, Matrix.map_apply, realComp_apply]
+      rw [infAt_infEmb_apply, extensionEmbeddingOfIsReal_symm]
+    · have hc' := InfinitePlace.not_isReal_iff_isComplex.1 hw
+      apply isometry _ (InfinitePlace.Completion.isometry_extensionEmbedding w)
+      convert hc ⟨w, hc'⟩ using 1
+      ext i j
+      simp only [M, complexCompM_apply, Matrix.map_apply, complexComp_apply]
+      rw [infAt_infEmb_apply, extensionEmbedding_symm _ hc']
   · have : finAt v (infEmb K n x) = 1 := by
       show (AdelicGLn.finiteRestrictedEquiv K n (AdelicGLn.prodEquiv K n (infEmb K n x)).2) v = 1
       rw [prodEquiv_infEmb, map_one]
