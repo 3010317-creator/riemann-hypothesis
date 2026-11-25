@@ -79,16 +79,13 @@ lemma exists_cls_coef_eq_zero [Finite ι] (x : cechH (reesPre I F) 𝔘 p) :
   classical
   have := Fintype.ofFinite ι
   obtain ⟨σ, hσ, rfl⟩ := exists_cls x
-  refine ⟨σ, hσ, Finset.univ.sup fun t : Fin (p + 1) → ι =>
-    (reesSectionsMap I hF (isAffineOpen_inter 𝔘 hU t) (σ t)).coeff.support.sup id, rfl, ?_⟩
+  let P := fun t : Fin (p + 1) → ι => (reesSectionsMap I hF (isAffineOpen_inter 𝔘 hU t) (σ t)).coeff
+  refine ⟨σ, hσ, Finset.univ.sup fun t => (P t).support.sup id, rfl, ?_⟩
   intro n hn t
-  change (reesSectionsMap I hF (isAffineOpen_inter 𝔘 hU t) (σ t)).coeff n = 0
+  change P t n = 0
   by_contra h
-  have h1 : n ≤ (reesSectionsMap I hF (isAffineOpen_inter 𝔘 hU t) (σ t)).coeff.support.sup id :=
-    Finset.le_sup (f := id) (Finsupp.mem_support_iff.2 h)
-  have h2 := Finset.le_sup (f := fun t : Fin (p + 1) → ι =>
-    (reesSectionsMap I hF (isAffineOpen_inter 𝔘 hU t) (σ t)).coeff.support.sup id)
-    (Finset.mem_univ t)
+  have h1 : n ≤ (P t).support.sup id := Finset.le_sup (f := id) (Finsupp.mem_support_iff.2 h)
+  have h2 := Finset.le_sup (f := fun t => (P t).support.sup id) (Finset.mem_univ t)
   omega
 
 
