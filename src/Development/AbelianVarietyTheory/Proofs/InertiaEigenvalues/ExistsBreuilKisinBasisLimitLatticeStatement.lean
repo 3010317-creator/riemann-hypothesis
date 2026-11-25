@@ -537,7 +537,7 @@ theorem mittagLeffler_approx : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk :
   have hxOE : ∀ i, (R n *ᵥ fun j => bk.evW (X ^ c * s j)) i ∈ bk.OE := fun i => by
     simp only [Matrix.mulVec, dotProduct]
     exact Subring.sum_mem _ fun j _ => Subring.mul_mem _ (hR n i j) (hev _)
-  obtain ⟨s', hs'⟩ := _root_.GlobalTheory.descentCoefficients l K bk d (tw.d' m) n (R m) (R n *ᵥ fun j => bk.evW (X ^ c * s j)) a (hR m) hxOE
+  obtain ⟨s', hs'⟩ := _root_.GlobalTheory.CoefDescent.descent l K bk d (tw.d' m) n (R m) (R n *ᵥ fun j => bk.evW (X ^ c * s j)) a (hR m) hxOE
     (fun i => by
       rw [hq, Pi.sub_apply, map_sub, sub_eq_zero]
       have h1 : q ((R n *ᵥ fun j => bk.evW (X ^ c * s j)) i) =
