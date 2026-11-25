@@ -34,9 +34,6 @@ theorem eq_splitFin_mul_splitInf (x : UA E n) : x = (splitFin E n x).1 * (splitI
 theorem splitFin_mul (g : finU (E := E) (n := n)) (k : infU E n) : splitFin E n (g.1 * k.1) = g :=
   ((GlobalTheory.UnitarySplit.dense_and_split E n).2.2.2.choose_spec.choose_spec.2.2.2 g k).1
 
-theorem splitInf_mul (g : finU (E := E) (n := n)) (k : infU E n) : splitInf E n (g.1 * k.1) = k :=
-  ((GlobalTheory.UnitarySplit.dense_and_split E n).2.2.2.choose_spec.choose_spec.2.2.2 g k).2
-
 theorem splitFin_fin (g : finU (E := E) (n := n)) : splitFin E n g.1 = g := by
   simpa using splitFin_mul g 1
 

@@ -58,33 +58,6 @@ variable {D : D7} {S S₀ A L : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (o : Or
 
 def lowPart {m : ℕ} (M : Mx D m m) : Mx D m m := Matrix.of fun i j => if j ≤ i then M i j else 0
 
-theorem continuous_lowPart {m : ℕ} : Continuous (lowPart (D := D) (m := m)) :=
-  continuous_pi fun i => continuous_pi fun j => by
-    show Continuous fun a : Mx D m m => if j ≤ i then a i j else 0
-    split_ifs
-    · exact (continuous_apply j).comp (continuous_apply i)
-    · exact continuous_const
-
-theorem lowPart_eq_iff {m : ℕ} (M : Mx D m m) :
-    lowPart M = lowPart 1 ↔ ∀ i j : Fin m, (j < i → M i j = 0) ∧ M i i = 1 := by
-  constructor
-  · intro h i j
-    refine ⟨fun hji => ?_, ?_⟩
-    · have := congrFun (congrFun h i) j
-      simp only [lowPart, Matrix.of_apply, ite_eq_left hji.le] at this
-      rwa [Matrix.one_apply_ne hji.ne'] at this
-    · have := congrFun (congrFun h i) i
-      simp only [lowPart, Matrix.of_apply, ite_eq_left (le_refl i), Matrix.one_apply_eq] at this
-      exact this
-  · intro h
-    ext i j
-    simp only [lowPart, Matrix.of_apply]
-    split_ifs with hji
-    · rcases hji.lt_or_eq with hlt | heq
-      · rw [(h i j).1 hlt, Matrix.one_apply_ne hlt.ne']
-      · subst heq; rw [(h j j).2, Matrix.one_apply_eq]
-    · rfl
-
 theorem strictUp_sub_one {m : ℕ} {M : Mx D m m} (h : ∀ i j : Fin m, (j < i → M i j = 0) ∧ M i i = 1) :
     GlobalTheory.BesselChar.StrictUp (M - 1) := by
   intro j i hij

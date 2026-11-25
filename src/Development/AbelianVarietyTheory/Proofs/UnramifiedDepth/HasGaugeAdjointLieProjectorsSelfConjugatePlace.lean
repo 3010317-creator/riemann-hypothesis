@@ -1043,11 +1043,6 @@ theorem h_cc (h : RLaw X V) : constantCoeff X.h = 0 := by
   rw [← coeff_zero_eq_constantCoeff_apply]
   exact h.axes 0 0 (by simp)
 
-theorem sum_cc (h : RLaw X V) {τ : Type} {a b : κ → MvPowerSeries τ C}
-    (ha : ∀ s, constantCoeff (a s) = 0) (hb : ∀ s, constantCoeff (b s) = 0) (x : κ) :
-    constantCoeff (subst a (X.lg x) + subst b (X.lg x)) = 0 := by
-  rw [map_add (f := _), cc_subst ha, cc_subst hb, lg_cc h, add_zero]
-
 theorem lin_cc (h : RLaw X V) (M : Matrix κ κ C) {τ : Type} {a : κ → MvPowerSeries τ C}
     (ha : ∀ s, constantCoeff (a s) = 0) (x : κ) :
     constantCoeff (∑ y, M x y • subst a (X.lg y)) = 0 :=

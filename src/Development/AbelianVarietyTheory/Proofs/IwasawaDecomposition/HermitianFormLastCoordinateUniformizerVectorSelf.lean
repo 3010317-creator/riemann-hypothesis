@@ -118,57 +118,9 @@ open scoped TensorProduct
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [StarRing E] {n : ℕ}
 
-theorem mulVec_inclE (M : Matrix (Fin n) (Fin n) E) (x : Fin n → E) :
-    (M.map (inclE (F := F) (FiniteAdeleRing (𝓞 F) F))) *ᵥ (fun i => inclE (F := F) (FiniteAdeleRing (𝓞 F) F) (x i)) =
-      fun i => inclE (F := F) (FiniteAdeleRing (𝓞 F) F) ((M *ᵥ x) i) :=
-  (RingHom.map_mulVec (inclE (F := F) (FiniteAdeleRing (𝓞 F) F)) M x |> funext).symm
-
-theorem hatL_mulVec {L L' : Submodule (𝓞 E) (Sp E n)} (M : Matrix (Fin n) (Fin n) E) (h : ∀ x ∈ L, M *ᵥ x ∈ L')
-    {y : Fin n → AfE F E} (hy : y ∈ Formalism.L2.Herm.hatL (F := F) L) :
-    (M.map (inclE (F := F) (FiniteAdeleRing (𝓞 F) F))) *ᵥ y ∈ Formalism.L2.Herm.hatL (F := F) L' := by
-  induction hy using Submodule.span_induction with
-  | mem y hy =>
-    obtain ⟨x, hx, rfl⟩ := hy
-    rw [mulVec_inclE]
-    exact Submodule.subset_span ⟨_, h x hx, rfl⟩
-  | zero => rw [Matrix.mulVec_zero]; exact Submodule.zero_mem _
-  | add a b _ _ ha hb => rw [Matrix.mulVec_add]; exact Submodule.add_mem _ ha hb
-  | smul c a _ ha =>
-    have e : (M.map (inclE (F := F) (FiniteAdeleRing (𝓞 F) F))) *ᵥ (c • a) = c • ((M.map (inclE (F := F) (FiniteAdeleRing (𝓞 F) F))) *ᵥ a) := by
-      show _ *ᵥ ((c : AfE F E) • a) = (c : AfE F E) • _
-      rw [Matrix.mulVec_smul]
-    rw [e]
-    exact Submodule.smul_mem _ _ ha
-
-theorem ratAd_val (γ : UF E n) : (ratAd F γ : GL (Fin n) (AfE F E)).1 =
-    ((ufGL E n γ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E).map (inclE (F := F) (FiniteAdeleRing (𝓞 F) F)) := rfl
-
 theorem ratAd_inv (γ : UF E n) : (ratAd F γ)⁻¹ = ratAd F γ⁻¹ := by
   unfold ratAd
   rw [map_inv, map_inv]
-
-theorem ufGL_mulVec' (γ : UF E n) (x : Sp E n) : ((ufGL E n γ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) *ᵥ x = γ.1 x :=
-  toGLm_mulVec γ.1 x
-
-theorem pullV_rat (γ : UF E n) (g : GL (Fin n) (AfE F E)) (x : Sp E n) :
-    pullV (ratAd F γ * g) x = pullV g (γ⁻¹.1 x) := by
-  unfold pullV
-  rw [_root_.mul_inv_rev, Units.val_mul, ← Matrix.mulVec_mulVec, ratAd_inv, ratAd_val, mulVec_inclE, ufGL_mulVec']
-
-theorem mem_hatL_gmap (γ : UF E n) (L : Submodule (𝓞 E) (Sp E n)) (x : Fin n → AfE F E) :
-    x ∈ Formalism.L2.Herm.hatL (F := F) (Formalism.HermitianLatticesTheory.gmap γ.1 L) ↔ ((ratAd F γ)⁻¹ : GL (Fin n) (AfE F E)).1 *ᵥ x ∈ Formalism.L2.Herm.hatL (F := F) L := by
-  constructor
-  · intro hx
-    rw [ratAd_inv, ratAd_val]
-    refine hatL_mulVec _ (fun y hy => ?_) hx
-    rw [ufGL_mulVec']
-    exact (mem_gmap _ _ _).1 hy
-  · intro hx
-    have h1 := hatL_mulVec (F := F) (L' := Formalism.HermitianLatticesTheory.gmap γ.1 L) ((ufGL E n γ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) (fun y hy => by
-      rw [ufGL_mulVec', mem_gmap]
-      simpa using hy) hx
-    rw [← ratAd_val, Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.one_mulVec] at h1
-    exact h1
 
 theorem isPtOf_rat {hc : Formalism.BasicNotions.CMData F E} {ST SG Q : Finset (HeightOneSpectrum (𝓞 E))}
     {g : GL (Fin n) (AfE F E)} {p : DecoF E n ST SG Q} (h : IsPtOf hc g p) (γ : UF E n) :

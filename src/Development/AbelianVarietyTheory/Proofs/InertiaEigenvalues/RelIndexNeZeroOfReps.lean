@@ -91,56 +91,6 @@ theorem form_inv {a : NG.AlgWt L n} (β : a.W →ₗ⋆[ℂ] a.W →ₗ[ℂ] ℂ
   rw [LinearMap.map_smulₛₗ₂, map_smul, smul_eq_mul, smul_eq_mul, ← mul_assoc, Complex.conj_mul', hn]
   simp
 
-theorem classSum_index {a : NG.AlgWt L n} {β : a.W →ₗ⋆[ℂ] a.W →ₗ[ℂ] ℂ} (hβ : IsInvForm a β) {J K : Subgroup (GAf L n)}
-    {T T' : Finset (GAf L n)} (hJ : IsBounded J) (hle : K ≤ J) (hne : K.relIndex J ≠ 0) (hT : IsClassReps J T)
-    (hT' : IsClassReps K T') {χ : J →* ℂˣ} {f f' : GAf L n → a.W} (hf : f ∈ NG.TypeSp a.ρ J χ) (hf' : f' ∈ NG.TypeSp a.ρ J χ) :
-    classSum a β K T' f f' = (K.relIndex J : ℂ) * classSum a β J T f f' := by
-  obtain ⟨F, h1, h2, h3⟩ := exists_cosetReps hle hne
-  have hi := form_inv β hJ hf hf'
-  rw [GlobalTheory.ClassRefine.classSum_smaller_level L n a β hβ J K T T' hJ hle hne hT hT' f hf.1 f' hf'.1
-    (fun κ hκ => hi κ (hle hκ)) F h1 h2, classSum, Finset.mul_sum]
-  refine Finset.sum_congr rfl fun t _ => ?_
-  rw [Finset.sum_congr rfl fun u hu => hi u (h1 u hu) t, Finset.sum_const, h3, nsmul_eq_mul]
-  ring
-
-theorem classSum_compare {a : NG.AlgWt L n} {β : a.W →ₗ⋆[ℂ] a.W →ₗ[ℂ] ℂ} (hβ : IsInvForm a β) {J J' : Subgroup (GAf L n)}
-    (hJ : IsBounded J) {N : ℕ} (hN : 0 < N) (hNJ : ∀ κ, NG.Cong L n N κ → κ ∈ J) (hJ' : IsBounded J') {T' : Finset (GAf L n)}
-    (hT' : IsClassReps J' T') : ∃ (T : Finset (GAf L n)) (c : ℝ), IsClassReps J T ∧ 0 < c ∧
-      ∀ (χ : J →* ℂˣ) (χ' : J' →* ℂˣ) (f f' : GAf L n → a.W), f ∈ NG.TypeSp a.ρ J χ → f' ∈ NG.TypeSp a.ρ J χ →
-        f ∈ NG.TypeSp a.ρ J' χ' → f' ∈ NG.TypeSp a.ρ J' χ' → classSum a β J' T' f f' = (c : ℂ) * classSum a β J T f f' := by
-  classical
-  obtain ⟨F, hF⟩ := (GlobalTheory.CongIndex.finite_index_conj L n J' hJ' 1 N hN).2.1
-  have hne' : (J ⊓ J').relIndex J' ≠ 0 := by
-    have : ∀ f₀ ∈ F, ∃ u, (∃ κ ∈ J', f₀⁻¹ * κ ∈ J) → u ∈ J' ∧ f₀⁻¹ * u ∈ J := fun f₀ _ => by
-      by_cases h : ∃ κ ∈ J', f₀⁻¹ * κ ∈ J
-      · obtain ⟨u, hu⟩ := h
-        exact ⟨u, fun _ => hu⟩
-      · exact ⟨1, fun h' => absurd h' h⟩
-    choose! u hu using this
-    refine relIndex_ne_zero_of_cover (F.image u) (fun κ hκ => ?_) inf_le_right
-    obtain ⟨f₀, h₀, h₁⟩ := hF κ hκ
-    obtain ⟨h2, h3⟩ := hu f₀ h₀ ⟨κ, hκ, hNJ _ h₁⟩
-    refine ⟨u f₀, Finset.mem_image_of_mem _ h₀, ?_, J'.mul_mem (J'.inv_mem h2) hκ⟩
-    have := J.mul_mem (J.inv_mem h3) (hNJ _ h₁)
-    simpa [mul_assoc] using this
-  obtain ⟨U, hU1, hU2, -⟩ := exists_cosetReps (inf_le_right : J ⊓ J' ≤ J') hne'
-  obtain ⟨T₀, hT₀⟩ := exists_reps (J ⊓ J') ((T' ×ˢ U).image fun p => p.1 * p.2) fun g => by
-    obtain ⟨t, ⟨ht, γ, κ, hκ, e⟩, -⟩ := hT' g
-    obtain ⟨u, ⟨hu, hu'⟩, -⟩ := hU2 κ hκ
-    exact ⟨t * u, Finset.mem_image.2 ⟨(t, u), Finset.mem_product.2 ⟨ht, hu⟩, rfl⟩, γ, u⁻¹ * κ, hu', by rw [e]; group⟩
-  have hne : (J ⊓ J').relIndex J ≠ 0 := relIndex_ne_zero_of_reps hJ inf_le_left hT₀
-  obtain ⟨T, hT⟩ := exists_reps J T₀ fun g => by
-    obtain ⟨t, ⟨ht, γ, κ, hκ, e⟩, -⟩ := hT₀ g
-    exact ⟨t, ht, γ, κ, hκ.1, e⟩
-  refine ⟨T, ((J ⊓ J').relIndex J : ℝ) / ((J ⊓ J').relIndex J' : ℝ), hT,
-    div_pos (Nat.cast_pos.2 (Nat.pos_of_ne_zero hne)) (Nat.cast_pos.2 (Nat.pos_of_ne_zero hne')), ?_⟩
-  intro χ χ' f f' h1 h2 h3 h4
-  have e1 := classSum_index hβ hJ inf_le_left hne hT hT₀ h1 h2
-  have e2 := classSum_index hβ hJ' inf_le_right hne' hT' hT₀ h3 h4
-  have hc : (((J ⊓ J').relIndex J' : ℕ) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hne'
-  push_cast
-  rw [div_mul_eq_mul_div, ← e1, e2, mul_div_cancel_left₀ _ hc]
-
 end GlobalTheory.FormInner
 
 end

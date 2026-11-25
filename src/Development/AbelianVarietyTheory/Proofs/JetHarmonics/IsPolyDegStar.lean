@@ -79,13 +79,6 @@ open Formalism.FourierDecayAlt Formalism.FourierDecayAlt.P.PartialDerivativeAlge
 
 variable {N : ℕ}
 
-private lemma star_eval_eq_eval₂_starRingEnd {σ : Type*} (x : σ → ℂ) (q : MvPolynomial σ ℂ) :
-    star (MvPolynomial.eval x q) = MvPolynomial.eval₂ (starRingEnd ℂ) (fun v => star (x v)) q := by
-  induction q using MvPolynomial.induction_on with
-  | C c => simp
-  | add p₁ p₂ h₁ h₂ => simp [h₁, h₂]
-  | mul_X p v hp => simp [hp]
-
 theorem isPolyDeg_star {a : ℕ} {P : Matrix (Fin N) (Fin N) ℂ → ℂ} (h : U.IsPolyDeg a P) :
     U.IsPolyDeg a (fun g => star (P g)) := by
   first | exact _root_.GlobalTheory.HatNF.polyOK_star | exact @_root_.GlobalTheory.HatNF.polyOK_star | apply _root_.GlobalTheory.HatNF.polyOK_star <;> assumption

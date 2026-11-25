@@ -77,30 +77,4 @@ theorem exists_genericRing (F K : Type) [Field F] [Field K] [Algebra F K] (B : T
       rw [mul_comm, h, evalFr, MvPolynomial.eval_map]
       rfl
 
-theorem exists_poly_div_det : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [NumberField K] [Algebra c.F K] (y : FrPt Xo c K) (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), ∀ F ∈ sec Xo c a n, ∃ (P : MvPolynomial (FrVar Dw.mult) K) (N : ℕ), ∀ (S : Type) [CommRing S] [Algebra c.F S] (φ : K →ₐ[c.F] S) (z z' : FrPt Xo c S) (Y : (∀ b : E →+* ℂ, Matrix (Fin (Dw.mult b)) (Fin (Dw.mult b)) S)), (∀ b, IsUnit (Y b).det) → FrMap φ y z → FrChg (fun b => (Y b).transpose) 1 z z' → (∏ b, (Y b).det) ^ N * evR Xo c F z' = evalFr (MvPolynomial.map φ.toRingHom P) Y := by
-  intro E _ _ _ H Dw l Xo c K _ _ _ y a n F hF
-  have hB : Out.SecBaseChangeSt := GlobalTheory.lawsFieldsSeparately.2.1
-  obtain ⟨-, -, hWD, -⟩ := GlobalTheory.Frames.algebraic_laws hB E H Dw l Xo c
-  have hT : AllTest Xo c := GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c
-  obtain ⟨A, _, _, π, X, hred, hX, hA⟩ := exists_genericRing c.F K (E →+* ℂ) Dw.mult
-  obtain ⟨u₀, hu₀⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c K A π y
-  obtain ⟨u, hu, -⟩ := GlobalTheory.Frames.existsUnique_frChg E H Dw l Xo c A u₀ (fun b => (X b).transpose) 1
-    (fun b => by rw [Matrix.det_transpose]; exact hX b)
-  obtain ⟨P, N, hP⟩ := hA (evR Xo c F u)
-  refine ⟨P, N, fun S _ _ φ z z' Y hY hz hz' => ?_⟩
-  obtain ⟨k, hkπ, hkX, hk⟩ := hP S φ Y hY
-  obtain ⟨w, hw⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c A S k u₀
-  have hw' : FrMap (k.comp π) y w := frMap_trans (Xo := Xo) (c := c) _ _ _ π k y u₀ w hu₀ hw
-  rw [hkπ] at hw'
-  have hwz : w = z := (GlobalTheory.Frames.frMap_unique_refl_iff E H Dw l Xo c K S φ y).1 w z hw' hz
-  subst hwz
-  have hm : FrMap k u z' := by
-    refine (GlobalTheory.Frames.ChgBC.frChg_baseChange E H Dw l Xo c A S k u₀ u w z' _ _ hu hw).2 ?_
-    have e : (fun τ => ((X τ).transpose).map k) = fun b => (Y b).transpose :=
-      funext fun b => by rw [Matrix.transpose_map, hkX]
-    rw [e, Units.val_one, map_one]
-    exact hz'
-  rw [evR_frMap hWD F hF.1 k u (hT _ u) z' hm]
-  exact hk
-
 end GlobalTheory.LamT.RatFn

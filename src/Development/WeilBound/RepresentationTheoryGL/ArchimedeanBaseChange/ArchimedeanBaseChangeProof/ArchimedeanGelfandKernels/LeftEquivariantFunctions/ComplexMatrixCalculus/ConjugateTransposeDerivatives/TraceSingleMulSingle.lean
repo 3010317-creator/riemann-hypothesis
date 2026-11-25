@@ -22,10 +22,6 @@ theorem trace_single_mul_single (a b c d : Fin n) (x y : ℂ) :
   simp [Finset.sum_ite_eq]
   by_cases h1 : a = d <;> by_cases h2 : b = c <;> simp [h1, h2]
 
-theorem sq_inv_sqrt_two : ((Real.sqrt 2 : ℂ))⁻¹ * ((Real.sqrt 2 : ℂ))⁻¹ = 1 / 2 := by
-  rw [← mul_inv, ← Complex.ofReal_mul, Real.mul_self_sqrt (by norm_num)]
-  norm_num
-
 theorem hb_herm (p : Fin n × Fin n) : (hb p).IsHermitian := by
   unfold PositivityTheory.RgTw.hb
   split_ifs with h1 h2

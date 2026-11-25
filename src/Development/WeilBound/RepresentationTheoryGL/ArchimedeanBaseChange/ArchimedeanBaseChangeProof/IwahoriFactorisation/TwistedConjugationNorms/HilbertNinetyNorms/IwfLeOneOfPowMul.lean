@@ -23,10 +23,6 @@ namespace PositivityTheory.Rg.Bc.ArchbcB.B.M4
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
-theorem iwf_exists_pow_lt {a γ : WithZero (Multiplicative ℤ)} (ha : a < 1) (hγ : γ ≠ 0) : ∃ n : ℕ, a ^ n < γ := by
-  intros
-  apply _root_.GlobalTheory.CompanionTheory.RgEis.InMTopPf.exists_pow_lt' <;> assumption
-
 theorem iwf_le_one_of_pow_mul {a b : WithZero (Multiplicative ℤ)} (hb : b ≠ 0)
     (h : ∀ n : ℕ, a ^ n * b < 1) : a ≤ 1 := by
   by_contra ha

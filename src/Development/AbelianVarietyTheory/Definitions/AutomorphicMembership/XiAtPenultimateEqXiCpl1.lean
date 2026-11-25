@@ -137,11 +137,6 @@ theorem exists_ptAt {u : Pr.Word} {j : ℕ} (q : ChPt (R := R) sel mu u j) : ∃
 def tilAt (u : Pr.Word) {j : ℕ} (h : j = R.m) (d : XPt Pr R sel mu) : ChPt (R := R) sel mu u j :=
   tilFr (N_succ_of_eq h) (Pr.piT u) d
 
-theorem eq_tilAt_iff {u : Pr.Word} {j : ℕ} (h : j = R.m) (p' : ChPt (R := R) sel mu u j) (d : XPt Pr R sel mu) :
-    p' = tilAt sel mu u h d ↔ HEq p' (tilF sel mu u d) := by
-  subst h
-  exact heq_iff_eq.symm
-
 def xiOver {u : Pr.Word} (n : ℕ) {j : ℕ} (h : j = R.m) (p : ChPt (R := R) sel mu u (n + 1)) (Y : Set (Sp X.E (R.N (n + 1))))
     (p' : ChPt (R := R) sel mu u j) (x : HomE X.E (R.N (n + 1)) (R.N j)) : X.K :=
   phiT X.K p.deco.1 p'.deco.1 x *

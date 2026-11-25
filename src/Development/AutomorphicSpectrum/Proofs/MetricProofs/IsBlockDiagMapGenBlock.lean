@@ -50,13 +50,6 @@ section Minors
 
 variable {N : ℕ}
 
-theorem minorIJ_eq_det_of_card {R : Type} [CommRing R] (h : Matrix (Fin N) (Fin N) R) (I J : Finset (Fin N)) {r : ℕ}
-    (hI : I.card = r) (hJ : J.card = r) :
-    minorIJ h I J = (h.submatrix (I.orderEmbOfFin hI) (J.orderEmbOfFin hJ)).det := by
-  subst hJ
-  unfold minorIJ
-  rw [dite_eq_left hI]
-
 theorem minorIJ_mul_sum {R : Type} [CommRing R] (T h : Matrix (Fin N) (Fin N) R) (I J : Finset (Fin N)) :
     minorIJ (T * h) I J = ∑ I', minorIJ T I I' * minorIJ h I' J := by
   apply _root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minorIJ_mul <;> assumption
