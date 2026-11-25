@@ -155,6 +155,11 @@ class GitHub(_rest.GitHub):
     """The repository's REST API through `gh` (see `github-rest.py`), with a clock that the tests
     can set."""
 
+    def __init__(self, repo, dry_run=False):
+        super().__init__(repo, dry_run)
+        # Lines saying which label changes GitHub refused (see `relabel`).
+        self.refused = []
+
     def now(self):
         return datetime.datetime.now(datetime.timezone.utc)
 
@@ -194,14 +199,28 @@ def by_hand(pr):
 
 
 def relabel(gh, pr_or_number, add=None, remove=None):
-    """Change labels on GitHub, and on our own copy of the pull request when we hold one."""
+    """Change labels on GitHub, and on our own copy of the pull request when we hold one.
+
+    Returns whether GitHub took every change. A change it refused, other than for the rate limit,
+    which stops the run, is added to `gh.refused`: the run's log ends with those lines, since the
+    line its caller logs says the label changed.
+    """
     number = pr_or_number["number"] if isinstance(pr_or_number, dict) else pr_or_number
+    done = True
     if add:
-        gh.write("POST", f"issues/{number}/labels", {"labels": [add]})
+        status = gh.write("POST", f"issues/{number}/labels", {"labels": [add]})[0]
+        if status not in (0, 200):
+            gh.refused.append(f"#{number}: GitHub answered {status} to adding `{add}`, so it was not added")
+            done, add = False, None
     if remove:
-        gh.write("DELETE", f"issues/{number}/labels/{quoted(remove)}")
+        # A label that is not there any more answers 404, which is what was wanted.
+        status = gh.write("DELETE", f"issues/{number}/labels/{quoted(remove)}")[0]
+        if status not in (0, 200, 404):
+            gh.refused.append(f"#{number}: GitHub answered {status} to removing `{remove}`, so it is still on")
+            done, remove = False, None
     if isinstance(pr_or_number, dict):
         pr_or_number["labels"] = (pr_or_number["labels"] | ({add} if add else set())) - {remove}
+    return done
 
 
 def by_workflow(comment):
@@ -989,6 +1008,8 @@ def main():
         log = reopened(gh, args.reopened) if args.reopened else sync(gh)
     except Refused as error:
         log, failure = [str(error)], 1
+    log += gh.refused
+    failure = failure or (1 if gh.refused else None)
     left = f"; {gh.remaining} left this hour" if gh.remaining is not None else ""
     log.append(f"{gh.calls} requests to GitHub{left}")
     text = "".join(f"- {line}\n" for line in log)
