@@ -1437,11 +1437,6 @@ alias res_res := _root_.GlobalTheory.KS.VertReg.resG_resG
 
 alias res_const := _root_.GlobalTheory.LocDerExt.res_const
 
-theorem const_zero {R : Type} [CommRing R] {X : Scheme.{0}} (p : X ⟶ Sp R) (U : X.Opens) :
-    constFn p U 0 = 0 := by
-  unfold constFn
-  rw [map_zero, map_zero]
-
 theorem ptDer_add {X : Scheme.{0}} {y : Sp ℂ ⟶ X} {δ δ' : ∀ W : X.Opens, Γ(X, W) → ℂ} (h : PtDer y δ) (h' : PtDer y δ') :
     PtDer y (fun W f => δ W f + δ' W f) := by
   refine ⟨?_, ?_, ?_⟩

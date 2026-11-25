@@ -943,11 +943,6 @@ theorem cj_sub {Γ : Type} (u v : Γ → ℂ[X]) : cj (u - v) = cj u - cj v := b
   funext γ
   simp [cj, Polynomial.map_sub]
 
-theorem intCast_of_dvd {m n : ℕ} (h : m ∣ n) {x a : ℤ} (hx : ((x : ℤ) : ZMod n) = a) :
-    ((x : ℤ) : ZMod m) = a := by
-  have := congrArg (ZMod.castHom h (ZMod m)) hx
-  simpa using this
-
 theorem gamma_le_lev (N l : ℕ) : Gamma (N * l) ≤ Lev N l :=
   _root_.GlobalTheory.HeckeFamilyMatrices.EisT.gamma_le_lev N l
 

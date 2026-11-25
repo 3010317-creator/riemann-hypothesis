@@ -292,65 +292,7 @@ noncomputable section
 
 namespace GlobalTheory.HL
 
-theorem leadMinor_triMul {E : Type} [Field E] {m : ℕ} (A B Z : Matrix (Fin m) (Fin m) E)
-    (hA : ∀ i j, i < j → A i j = 0) (hA1 : ∀ i, A i i = 1)
-    (hB : ∀ i j, j < i → B i j = 0) (hB1 : ∀ i, B i i = 1) (l : ℕ) :
-    leadMinorE (A * Z * B) l = leadMinorE Z l := by
-  unfold leadMinorE
-  by_cases hl : l ≤ m
-  · rw [dite_eq_left hl, dite_eq_left hl]
-    have red : ∀ g : Fin m → E, (∀ i : Fin m, l ≤ (i : ℕ) → g i = 0) →
-        ∑ i, g i = ∑ i : Fin l, g (Fin.castLE hl i) := by
-      intro g hg
-      refine (Finset.sum_of_injOn (Fin.castLE hl) (Fin.castLE_injective hl).injOn
-        (fun _ _ => Finset.mem_coe.2 (Finset.mem_univ _)) (fun i _ hi => hg i ?_) (fun _ _ => rfl)).symm
-      by_contra h
-      exact hi ⟨⟨i, by omega⟩, Finset.mem_coe.2 (Finset.mem_univ _), rfl⟩
-    have key : (A * Z * B).submatrix (Fin.castLE hl) (Fin.castLE hl) =
-        A.submatrix (Fin.castLE hl) (Fin.castLE hl) * Z.submatrix (Fin.castLE hl) (Fin.castLE hl) *
-          B.submatrix (Fin.castLE hl) (Fin.castLE hl) := by
-      ext a b
-      simp only [Matrix.submatrix_apply, Matrix.mul_apply]
-      rw [red]
-      · refine Finset.sum_congr rfl fun d _ => ?_
-        rw [red]
-        intro i hi
-        rw [hA _ _ (by simp [Fin.lt_def]; omega), zero_mul]
-      · intro i hi
-        rw [hB _ _ (by simp [Fin.lt_def]; omega), mul_zero]
-    have hdA : (A.submatrix (Fin.castLE hl) (Fin.castLE hl)).det = 1 := by
-      rw [Matrix.det_of_lowerTriangular]
-      · simp [hA1]
-      · intro i j hij
-        have h2 : i < j := OrderDual.toDual_lt_toDual.1 hij
-        exact hA _ _ (Fin.lt_def.2 (Fin.lt_def.1 h2))
-    have hdB : (B.submatrix (Fin.castLE hl) (Fin.castLE hl)).det = 1 := by
-      rw [Matrix.det_of_upperTriangular]
-      · simp [hB1]
-      · intro i j hij
-        have h2 : j < i := hij
-        exact hB _ _ (Fin.lt_def.2 (Fin.lt_def.1 h2))
-    rw [key, Matrix.det_mul, Matrix.det_mul, hdA, hdB, one_mul, mul_one]
-  · rw [dite_eq_right hl, dite_eq_right hl]
-
 variable {D : D7}
-
-theorem zhat_movesTo {T T' : D.host.E} (F0 : LFlag (D.sp.Y 0) D.R.rS T) (F0' : LFlag (D.sp.Y 0) D.R.rS T')
-    (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag (D.sp.Y 0) D.R.rS T') (ρ : (VS D).V ≃ₗ[D.host.E] (VS D).V)
-    (U U' : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) D.host.E) (h : MovesTo F0 F0' F F' ρ U U') :
-    Zhat F.fl F'.fl = U.conjTranspose * Zhat F0.fl F0'.fl * U' := by
-  obtain ⟨hρ, -, -, hU, hU'⟩ := h
-  have hρ' : ∀ x y, (VS D).hT (ρ x) (ρ y) = (VS D).hT x y := hρ
-  refine Matrix.ext fun a b => ?_
-  have e1 : Zhat F.fl F'.fl a b = (VS D).hT (ρ (frame F a)) (ρ (frame F' b)) := by
-    rw [hρ']; rfl
-  rw [e1, hU a, hU' b]
-
-  simp only [Zhat, brS, Matrix.mul_apply, Matrix.conjTranspose_apply, map_sum, LinearMap.sum_apply,
-  map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply]
-  simp only [RingHom.id_apply, frame, Finset.mul_sum, Finset.sum_mul]
-  refine Finset.sum_congr rfl fun d _ => Finset.sum_congr rfl fun c _ => ?_
-  ring
 
 theorem gval_movesTo : ∀ {D : D7} {T T' : D.host.E} (F0 : LFlag (D.sp.Y 0) D.R.rS T) (F0' : LFlag (D.sp.Y 0) D.R.rS T') (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag (D.sp.Y 0) D.R.rS T') (ρ : (VS D).V ≃ₗ[D.host.E] (VS D).V) (U U' : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) D.host.E), MovesTo F0 F0' F F' ρ U U' → Gval F F' = Gval F0 F0' := by
   intros
@@ -453,33 +395,9 @@ namespace GlobalTheory.LocOver.MoveBB
 
 open Formalism.MainNotions.S.Loc Formalism.MainNotions.S.LocNG
 
-theorem mem_span_range_comp {R W ι : Type} [Semiring R] [AddCommGroup W] [Module R W] (e : W ≃ₗ[R] W)
-    (m : ι → W) (w : W) :
-    e w ∈ Submodule.span R (Set.range (fun i => e (m i))) ↔ w ∈ Submodule.span R (Set.range m) := by
-  have hr : Set.range (fun i => e (m i)) = (e : W →ₗ[R] W) '' Set.range m := by
-    rw [← Set.range_comp]; rfl
-  rw [hr, Submodule.span_image]
-  constructor
-  · rintro ⟨y, hy, hyw⟩
-    have : y = w := e.injective hyw
-    exact this ▸ hy
-  · intro h
-    exact ⟨w, h, rfl⟩
-
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
   {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E]
   {M : Model F E} {V : Type} [AddCommGroup V] [Module E V] {r : ℕ}
-
-theorem MMfam_move (H : HermSp M V) (g : V ≃ₗ[E] V) (t : Term V M r) (x : Fin (r + 1) ⊕ Fin (r + 1)) :
-    H.MMfam (move g t) x = g (H.MMfam t x) := by
-  unfold HermSp.MMfam
-  rcases hs : M.split with _ | s
-  · rcases x with a | a <;> rfl
-  · rcases x with a | a
-    · rfl
-    · show algebraMap F E ((s.q : F)⁻¹) • (g (t.f' a) - g (t.f a)) =
-        g (algebraMap F E ((s.q : F)⁻¹) • (t.f' a - t.f a))
-      rw [map_smul, map_sub]
 
 end GlobalTheory.LocOver.MoveBB
 
