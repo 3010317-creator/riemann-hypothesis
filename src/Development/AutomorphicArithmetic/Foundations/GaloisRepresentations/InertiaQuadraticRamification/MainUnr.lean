@@ -808,16 +808,13 @@ private theorem exists_algEquiv_map_eq_conj_of_exists_conj {F Ω : Type} [Field 
     (φ : Ω →+* ℂ) (hc : ∀ y : Ω, ∃ z : Ω, φ z = starRingEnd ℂ (φ y))
     (hF : ∀ a : F, starRingEnd ℂ (φ (algebraMap F Ω a)) = φ (algebraMap F Ω a)) :
     ∃ c : Ω ≃ₐ[F] Ω, ∀ x, φ (c x) = starRingEnd ℂ (φ x) := by
-  choose c0 hc0 using hc
-  have inj : Function.Injective φ := φ.injective
-  let cf : Ω →ₐ[F] Ω :=
-    { toFun := c0
-      map_one' := inj (by rw [hc0, map_one, map_one])
-      map_mul' := fun a b => inj (by rw [hc0, map_mul, map_mul, map_mul, hc0, hc0])
-      map_zero' := inj (by rw [hc0, map_zero, map_zero])
-      map_add' := fun a b => inj (by rw [hc0, map_add (f := _), map_add (f := _), map_add (f := _), hc0, hc0])
-      commutes' := fun a => inj (by rw [hc0, hF]) }
-  exact ⟨AlgEquiv.ofBijective cf (Algebra.IsAlgebraic.algHom_bijective cf), fun x => hc0 x⟩
+  let e : Ω ≃+* φ.range := RingEquiv.ofLeftInverse (Function.leftInverse_invFun φ.injective)
+  let conj : Ω →+* φ.range := ((starRingEnd ℂ).comp φ).codRestrict _ hc
+  let f := e.symm.toRingHom.comp conj
+  have hf (x : Ω) : φ (f x) = starRingEnd ℂ (φ x) :=
+    congrArg Subtype.val (e.apply_symm_apply (conj x))
+  let cf : Ω →ₐ[F] Ω := { f with commutes' := fun a => φ.injective ((hf _).trans (hF a)) }
+  exact ⟨AlgEquiv.ofBijective cf (Algebra.IsAlgebraic.algHom_bijective cf), hf⟩
 
 theorem exFld : ExFld := by
   intro E Ω _ _ _ _ _ _ H hH
