@@ -53,7 +53,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.O
 open TopologicalSpace
 attribute [local instance] Over.cartesianMonoidalCategory
 
-set_option backward.isDefEq.respectTransparency false
 
 noncomputable section
 
