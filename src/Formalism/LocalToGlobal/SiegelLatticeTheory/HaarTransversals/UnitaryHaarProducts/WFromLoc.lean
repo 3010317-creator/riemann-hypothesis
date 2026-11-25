@@ -303,7 +303,6 @@ end Inv
 
 section Assembly
 open Formalism.L2.SG.SplitPrimeNormLemmas Formalism.L2.SG.ConcreteSettingExists
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem lam_matchR (R : Ranks) (P : HCParam R) (i : Fin (2 * R.rS + R.k + 1)) (hr : 2 * R.rS + R.k + 1 = R.r) :
     lamS R P (Fin.cast hr i) =
@@ -374,7 +373,6 @@ namespace Formalism.L2.SG.Pf.WFL
 variable {k r : ℕ}
 
 section Main
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem split_S {ε : Fin (2 * r + k + 1) → Bool} {e f : Fin r → Fin (2 * r + k + 1) → ℂ}
     {wf : Fin k → Fin (2 * r + k + 1) → ℂ} {z0 : Fin (2 * r + k + 1) → ℂ} (hF : IsFrameJ ε e f wf z0)
