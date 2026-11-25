@@ -136,26 +136,6 @@ instance isDiscreteRep_cartierDual [Algebra.IsIntegral K L] (M : Rep.{u} (ULift.
 
 end Finite
 
-section Pairing
-
-variable (K L) [Algebra.IsIntegral K L]
-
-
-end Pairing
-
-section Biduality
-
-
-
-end Biduality
-
-section Exact
-
-attribute [local instance 3000] Submodule.Quotient.module
-
-
-end Exact
-
 section ZMod
 
 theorem nsmul_zmodRep_eq_zero (G : Type*) [Monoid G] (n : ℕ) (x : zmodRep.{u} G n) : n • x = 0 := by

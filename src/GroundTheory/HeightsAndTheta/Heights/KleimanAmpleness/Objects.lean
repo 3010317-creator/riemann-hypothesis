@@ -881,18 +881,6 @@ theorem mem_secs_twistBundle_one (j : Fin (N + 1)) : x j ∈ (twistBundle S x 1)
 
 end Inhabitants
 
-section Line
-
-variable (k : Type u) [Field k]
-
-end Line
-
-section Generic
-
-variable (k : Type u) [Field k] (N : ℕ)
-
-end Generic
-
 section AmpleExample
 
 variable {S : Type u} [CommRing S] {Ω : Type w} [Field Ω] [Algebra S Ω] {N : ℕ}

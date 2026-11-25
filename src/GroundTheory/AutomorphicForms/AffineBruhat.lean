@@ -514,10 +514,6 @@ theorem exists_mem_doubleCoset_affineWeylGL (g : GL (Fin n) F) :
 
 end Existence
 
-section Decomposition
-
-end Decomposition
-
 section Integral
 
 theorem affineWeylGL_inr (σ : Equiv.Perm (Fin n)) :

@@ -170,12 +170,6 @@ theorem div_eq_coe {x y : K} (hy : y ≠ 0) {A B : ℝ} (hx : v x = A) (hyv : v 
 
 end Val
 
-section ZetaNonvanishing₂
-
-variable {K : Type*} [Field K] (v : AddValuation K (WithTop ℝ))
-
-end ZetaNonvanishing₂
-
 end
 
 end ReciprocityTheory.ChartRestriction.G.Sh.PowerSeriesCoeffGaps

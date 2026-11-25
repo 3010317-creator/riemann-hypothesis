@@ -88,10 +88,6 @@ theorem cmHostUnit_add_conj_eq_one : H.w0 + H.bar H.w0 = 1 := by
 
 end Host
 
-section RQ
-
-end RQ
-
 section Letters
 
 open MvPolynomial

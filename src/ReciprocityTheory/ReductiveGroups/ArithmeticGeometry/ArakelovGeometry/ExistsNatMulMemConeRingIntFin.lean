@@ -121,11 +121,6 @@ theorem exists_nat_mul_isIntegral_int (y : ι → Ω) (a : (Polynomial Ω)) (ha 
 
 end Int
 
-section SlopeTestRemainingChoices
-variable {ι : Type*}
-
-end SlopeTestRemainingChoices
-
 
 
 theorem scaleOff_comp_self (x : κ → Ω) (e : Fin (D + 1) → κ) (m : ℕ) : scaleOff e m x ∘ e = x ∘ e := by
