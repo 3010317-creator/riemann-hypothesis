@@ -160,12 +160,8 @@ theorem adj_nrm {δ : Matrix (Fin n) (Fin n) R} (hδ : IsUnit δ) : adj δ (nrm 
   rw [Matrix.mul_nonsing_inv _ hd, Matrix.mul_one]
 
 theorem commute_of_mem (N g : Matrix (Fin n) (Fin n) R) (hg : g ∈ Algebra.adjoin R {N}) :
-    g * N = N * g := by
-  induction hg using Algebra.adjoin_induction with
-  | mem x hx => rw [Set.mem_singleton_iff.mp hx]
-  | algebraMap r => exact Algebra.commutes r N
-  | add x y _ _ hx hy => rw [Matrix.add_mul, Matrix.mul_add, hx, hy]
-  | mul x y _ _ hx hy => rw [Matrix.mul_assoc, hy, ← Matrix.mul_assoc, hx, Matrix.mul_assoc]
+    g * N = N * g :=
+  (Algebra.commute_of_mem_adjoin_self hg).eq.symm
 
 theorem adj_adjoin {δ : Matrix (Fin n) (Fin n) R} (hδ : IsUnit δ) (g : Matrix (Fin n) (Fin n) R)
     (hg : g ∈ Algebra.adjoin R {nrm δ}) :
