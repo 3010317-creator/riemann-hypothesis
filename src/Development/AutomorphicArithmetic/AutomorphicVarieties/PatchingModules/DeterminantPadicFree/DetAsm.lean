@@ -1641,28 +1641,8 @@ private theorem ep_C (j) : ep'M j ((DD.C c : DD A g) • P) = c • ep'M j P := 
   simp [ep'M, ha]
 private theorem ep_smul (j) : ep'M j (c • P) = c • ep'M j P := ep_C P c j
 
-private theorem constant_smul_mem_symmetric_deformation (h : P ∈ pairedDualFirstOrderDualMatrixSpace n A A g a) : (DD.C c : DD A g) • P ∈ pairedDualFirstOrderDualMatrixSpace n A A g a := by
-  have ha : (DD.C c : DD A g).a = c := rfl
-  have hp : (DD.C c : DD A g).ep = 0 := rfl
-  have hq : (DD.C c : DD A g).ep' = 0 := rfl
-  simp [pairedDualFirstOrderDualMatrixSpace, blkMat, ddPart] at h ⊢
-  intro i j
-  constructor
-  · intro hij
-    obtain ⟨h1, h2, h3⟩ := (h i j).1 hij
-    refine ⟨by simp [h1], ?_, ?_⟩
-    · funext k
-      have e : (P i j).ep k = 0 := congrFun h2 k
-      simp [ha, h1, e]
-    · funext k
-      have e : (P i j).ep' k = 0 := congrFun h3 k
-      simp [ha, h1, e]
-  · intro hij
-    obtain ⟨h1, h2, h3⟩ := (h i j).2 hij
-    refine ⟨by simp [h1], ?_, by simp [h3]⟩
-    funext k
-    have e : (P i j).ep k = 0 := congrFun h2 k
-    simp [ha, h1, e]
+private theorem constant_smul_mem_symmetric_deformation (h : P ∈ pairedDualFirstOrderDualMatrixSpace n A A g a) : (DD.C c : DD A g) • P ∈ pairedDualFirstOrderDualMatrixSpace n A A g a :=
+  Submodule.smul_mem (pairedDualFirstOrderDualMatrixSpace n A A g a) c h
 
 private theorem transpose_mem_symmetric_deformation (h : P ∈ pairedDualFirstOrderDualMatrixSpace n A A g a) : Pᵀ ∈ pairedDualFirstOrderDualMatrixSpace n A A g a := by
   simp [pairedDualFirstOrderDualMatrixSpace, blkMat, ddPart] at h ⊢

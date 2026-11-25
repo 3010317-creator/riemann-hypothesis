@@ -1617,20 +1617,8 @@ theorem isMulRightInvariant_of_equiv {G H : Type} [Group G] [Group H]
     [TopologicalSpace G] [TopologicalSpace H] [IsTopologicalGroup G] [IsTopologicalGroup H]
     [MeasurableSpace G] [MeasurableSpace H] [BorelSpace G] [BorelSpace H]
     (e : G ≃ₜ* H) (μ : Measure G) (h : (μ.map e).IsMulRightInvariant) :
-    μ.IsMulRightInvariant := by
-  have he : Measurable e := e.continuous.measurable
-  have hs : Measurable e.symm := e.symm.continuous.measurable
-  have hμ : μ = (μ.map e).map e.symm := by
-    rw [Measure.map_map hs he]
-    have : (e.symm : H → G) ∘ e = id := by ext x; simp
-    rw [this, Measure.map_id]
-  refine ⟨fun g => ?_⟩
-  have h1 := h.map_mul_right_eq_self (e g)
-  have hc : (fun x : G => x * g) ∘ (e.symm : H → G) = (e.symm : H → G) ∘ (fun y : H => y * e g) := by
-    ext y; simp
-  conv_lhs => rw [hμ]
-  rw [Measure.map_map (measurable_mul_const g) hs, hc,
-    ← Measure.map_map hs (measurable_mul_const _), h1, ← hμ]
+    μ.IsMulRightInvariant :=
+  UpqUnimodular.isMulRightInvariant_of_continuousMulEquiv e μ h
 
 theorem isMulRightInvariant (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {n : ℕ} (J : Matrix (Fin n) (Fin n) E)
     (hJ : ∀ i j, σ (J j i) = J i j) (hd : IsUnit J.det) (μ : Measure (UA σ J)) [μ.IsHaarMeasure] :
