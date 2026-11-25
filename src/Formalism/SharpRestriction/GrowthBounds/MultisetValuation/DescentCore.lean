@@ -79,15 +79,10 @@ private theorem coeff_mem_range_algebraMap_of_linearIndependent {K Kc V Vc M : T
       map_smul' := fun c w => by simp [Finset.smul_sum, smul_smul] }
   let φ : M → Module.Dual K (s → K) := fun m => (π m).comp T
   have hspan : Submodule.span K (Set.range φ) = ⊤ := by
-    have h1 : (Submodule.span K (Set.range φ)).dualCoannihilator = ⊥ := by
-      rw [eq_bot_iff]
-      intro w hw
-      rw [Submodule.mem_dualCoannihilator] at hw
-      have hT : T w = 0 := hsep _ (fun m => hw (φ m) (Submodule.subset_span ⟨m, rfl⟩))
-      simpa using hind w hT
-    have h2 := Subspace.dualCoannihilator_dualAnnihilator_eq (W := Submodule.span K (Set.range φ))
-    rw [h1, Submodule.dualAnnihilator_bot] at h2
-    exact h2.symm
+    refine Submodule.span_eq_top_of_ne_zero fun w hw => ?_
+    by_contra! h
+    have hT : T w = 0 := hsep _ fun m => h (φ m) ⟨m, rfl⟩
+    exact hw (hind w hT)
   have hmem : (LinearMap.proj k0 : (s → K) →ₗ[K] K) ∈ Submodule.span K (Set.range φ) := by
     rw [hspan]; exact Submodule.mem_top
   obtain ⟨l, hl⟩ := Finsupp.mem_span_range_iff_exists_finsupp.1 hmem
