@@ -14,41 +14,15 @@ theorem UpperTheory.V.Ws.card_dvd_of_partition_equal_size :
       Nat.card Q ∣ Nat.card ι := by
   intro ι Q _ T d hT hu
   classical
-  choose f hf hf' using hu
-  have hfib : ∀ q, T q = {i | f i = q} := by
-    intro q
+  choose f hf unique using hu
+  have fiber (q : Q) : {i | f i = q} = T q := by
     ext i
-    constructor
-    · intro h
-      exact (hf' i q h).symm
-    · intro h
-      rw [Set.mem_setOf_eq] at h
-      rw [← h]
-      exact hf i
-  rcases Nat.eq_zero_or_pos d with rfl | hd
-  · have : IsEmpty ι := ⟨fun i => by
-      have h := hT (f i)
-      rw [Set.ncard_eq_zero (Set.toFinite _)] at h
-      have hi : i ∈ T (f i) := hf i
-      rw [h] at hi
-      simp at hi⟩
-    rw [Nat.card_of_isEmpty (α := ι)]
-    exact dvd_zero _
-  · have hne : ∀ q, (T q).Nonempty := fun q =>
-      Set.nonempty_of_ncard_ne_zero (by rw [hT q]; omega)
-    choose g hg using hne
-    have ginj : Function.Injective g := by
-      intro q q' h
-      calc q = f (g q) := hf' _ _ (hg q)
-        _ = f (g q') := by rw [h]
-        _ = q' := (hf' _ _ (hg q')).symm
-    haveI : Finite Q := Finite.of_injective g ginj
-    letI : Fintype Q := Fintype.ofFinite Q
-    have hc : ∀ q, Nat.card {x // f x = q} = d := fun q => by
-      rw [← hT q, hfib q, ← Nat.card_coe_set_eq]
-      rfl
-    have key : Nat.card ι = Nat.card Q * d := by
-      rw [← Nat.card_congr (Equiv.sigmaFiberEquiv f), Nat.card_sigma]
-      simp only [hc, Finset.sum_const, Finset.card_univ, smul_eq_mul, Nat.card_eq_fintype_card]
-    rw [key]
-    exact dvd_mul_right _ _
+    exact ⟨fun h => (show f i = q from h) ▸ hf i, fun h => (unique i q h).symm⟩
+  let e (q : Q) : {i // f i = q} ≃ Fin d :=
+    Finite.equivFinOfCardEq (by
+      change ({i | f i = q} : Set ι).ncard = d
+      rw [fiber, hT])
+  let partition : ι ≃ Q × Fin d := (Equiv.sigmaFiberEquiv f).symm.trans
+    ((Equiv.sigmaCongrRight e).trans (Equiv.sigmaEquivProd Q (Fin d)))
+  refine ⟨d, ?_⟩
+  rw [Nat.card_congr partition, Nat.card_prod, Nat.card_fin]
