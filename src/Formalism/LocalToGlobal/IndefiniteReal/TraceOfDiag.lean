@@ -53,20 +53,11 @@ theorem eigen_data {G V : Type} [Group G] [Finite G] [AddCommGroup V] [Module �
   let μ : I → ℂ := Sigma.fst
   have hsv (i : I) : s (v i) = μ i • v i :=
     Module.End.mem_eigenspace_iff.mp (eigenDecomp.collectedBasis_mem _ i)
-  have hpow : ∀ (i : I) (k : ℕ), (s ^ k) (v i) = μ i ^ k • v i := by
-    intro i k
-    induction k with
-    | zero => simp
-    | succ k ih =>
-      rw [pow_succ, Module.End.mul_apply, hsv, map_smul, ih, smul_smul, pow_succ, mul_comm]
   have hμn : ∀ i, μ i ^ n = 1 := by
     intro i
-    have h1 := hpow i n
+    have h1 := Module.End.HasEigenvector.pow_apply ⟨eigenDecomp.collectedBasis_mem _ i, v.ne_zero i⟩ n
     rw [hsn, Module.End.one_apply] at h1
-    have h2 : (μ i ^ n - 1) • v i = 0 := by rw [sub_smul, one_smul, ← h1, sub_self]
-    rcases smul_eq_zero.mp h2 with h3 | h3
-    · exact sub_eq_zero.mp h3
-    · exact absurd h3 (v.ne_zero i)
+    exact smul_left_injective ℂ (v.ne_zero i) (h1.symm.trans (one_smul ℂ _).symm)
   have hμ0 : ∀ i, μ i ≠ 0 := by
     intro i h0
     have := hμn i
