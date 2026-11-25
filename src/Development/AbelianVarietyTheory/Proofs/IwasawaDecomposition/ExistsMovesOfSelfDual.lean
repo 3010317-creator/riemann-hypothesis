@@ -142,7 +142,7 @@ theorem repExS (D : D7) : GL3Theta.repExS D := by
     have e : ∀ x y : Fin N → D.host.E, IsCMField.complexConj D.host.E (stdH D.host.E N x y) =
         stdH D.host.E N y x := fun x y => by
       rw [← hst]
-      simp [stdH, mul_comm]
+      simp only [stdH, star_sum, star_mul, star_star]
     have c : ∀ x y : Fin N → D.host.E, stdH D.host.E N x y ∈ (algebraMap (𝓞 D.host.E) D.host.E).range →
         stdH D.host.E N y x ∈ (algebraMap (𝓞 D.host.E) D.host.E).range := by
       rintro x y ⟨a, ha⟩
