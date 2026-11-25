@@ -182,13 +182,9 @@ theorem isUnitaryAtAll_of_tie (l : LevDatG G) (P : ClassPres ι S σ₀ ρ l.J l
     (hrat : ∀ γ j, ∃ c : S.ιV → K, (∀ i, c i ∈ cmMax K) ∧ ρ γ (P.coef (S.bV j)) = ∑ i, σ₀ (c i) • P.coef (S.bV i)) :
     IsUnitaryAtAll S act := by
 
-  have hchn : ∀ q, ‖(l.ch q : ℂ)‖ = 1 := by
-    intro q
+  have hchn : ∀ q, ‖(l.ch q : ℂ)‖ = 1 := fun q => by
     obtain ⟨n, hn, hq⟩ := hch q
-    have h1 : (l.ch q : ℂ) ^ n = 1 := by
-      rw [← Units.val_pow_eq_pow_val, hq, Units.val_one]
-    have h2 : ‖(l.ch q : ℂ)‖ ^ n = 1 := by rw [← norm_pow, h1, norm_one]
-    exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) hn.ne').1 h2
+    exact Complex.norm_eq_one_of_pow_eq_one (by rw [← Units.val_pow_eq_pow_val, hq, Units.val_one]) hn.ne'
   have hχ : ∀ k, ∃ n : ℕ, 0 < n ∧ l.χ k ^ n = 1 := by
     intro k
     obtain ⟨n, hn, hk⟩ := hch ⟨k, l.J_le k.2⟩
