@@ -39,7 +39,7 @@ theorem rk_lift (hK : Function.Bijective (algebraMap K₀ K)) (σ : K₀ →ₐ[
   refine ⟨σ.comp (e.symm : K →ₐ[Qp] K₀), ?_⟩
   ext x
   have hx : (IsScalarTower.toAlgHom Qp K₀ K) x = e x := rfl
-  simp only [AlgHom.comp_apply, hx, AlgEquiv.coe_algHom, AlgEquiv.symm_apply_apply]
+  simp only [AlgHom.comp_apply, hx, AlgEquiv.coe_toAlgHom, AlgEquiv.symm_apply_apply]
 
 variable [NeZero n] (W : LocWach PD LL O v n)
 
@@ -63,7 +63,7 @@ theorem rk_DcrisL_map (hK : Function.Bijective (algebraMap K₀ K)) (hQ : Formal
     rw [← hD, Submodule.mem_map] at hyD
     obtain ⟨x, hxD, rfl⟩ := hyD
     refine ⟨x, (rk_mem_DcrisL PD T.ρ _ (x := x)).mpr ⟨hxD, fun c₀ => ?_⟩, rfl⟩
-    apply Ln03.Pf.Pf_MapLoc_ιV_inj (PD := PD) T
+    apply rk_ιV_inj PD (LL := LL) (V := T.V)
     rw [rk_ιV_mul PD, hyc, map_smul]
     first | rfl
 
@@ -77,7 +77,7 @@ theorem rk_finrank_DcrisL (hK : Function.Bijective (algebraMap K₀ K)) (hQ : Fo
   have hE := (hQ hK T.V T.ρ hT).2 τ
   rw [← hE.2.1, ← hmap]
   exact (Submodule.equivMapOfInjective _
-    (Ln03.Pf.Pf_MapLoc_ιV_inj (PD := PD) T) _).finrank_eq
+    (rk_ιV_inj PD (LL := LL) (V := T.V)) _).finrank_eq
 
 end Dec
 
