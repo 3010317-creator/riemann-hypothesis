@@ -216,10 +216,8 @@ theorem densApprox_lc (μ : Measure V) [IsFiniteMeasureOnCompacts μ] (f : V →
     show -x + x ∈ Λ₀
     rw [neg_add_cancel]
     exact Λ₀.zero_mem
-  have hK'cl : IsClosed K' := by
-    rw [← isOpen_compl_iff, isOpen_iff_mem_nhds]
-    intro x hx
-    exact Filter.mem_of_superset (hnb x) fun y hy hyK => hx (hcos x y hy hyK)
+  have hK'cl : IsClosed K' :=
+    (AddSubgroup.isClosed_of_isOpen _ h₀o).add_left_of_isCompact hs.isCompact
   have hK'c : IsCompact K' := hs.isCompact.add h₀c
   have hK'U : K' ⊆ U := (Set.add_subset_add subset_rfl h₀W).trans hKW
   have hKK' : tsupport φ ⊆ K' := fun x hx => ⟨x, hx, 0, Λ₀.zero_mem, add_zero x⟩
