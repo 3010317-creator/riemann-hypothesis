@@ -1510,22 +1510,13 @@ open scoped Classical TensorProduct
 
 namespace PositivityTheory.Rg.BcB.G3.Count2P
 
-theorem rel_equiv {G : Type} [Group G] (θ : G →* G) :
-    Equivalence (fun x y : G => ∃ g, y = g⁻¹ * x * θ g) := by
-  constructor
-  · exact fun x => ⟨1, by simp⟩
-  · rintro x y ⟨g, rfl⟩
-    exact ⟨g⁻¹, by rw [map_inv]; group⟩
-  · rintro x y z ⟨g, rfl⟩ ⟨h, rfl⟩
-    exact ⟨g * h, by rw [map_mul]; group⟩
-
 theorem mk_eq_iff {G : Type} [Group G] (θ : G →* G) (x z : G) :
     (Quot.mk (fun x y : G => ∃ g, y = g⁻¹ * x * θ g) x : TwCl θ) = Quot.mk _ z ↔ ∃ g, x = g⁻¹ * z * θ g := by
   constructor
   · intro h
-    exact (rel_equiv θ).symm ((rel_equiv θ).eqvGen_iff.1 (Quot.eqvGen_exact h))
+    exact (GlobalTheory.BCT.FibStable.twRel_equiv θ).symm ((GlobalTheory.BCT.FibStable.twRel_equiv θ).eqvGen_iff.1 (Quot.eqvGen_exact h))
   · intro h
-    exact (Quot.sound ((rel_equiv θ).symm h))
+    exact (Quot.sound ((GlobalTheory.BCT.FibStable.twRel_equiv θ).symm h))
 
 theorem prod_rel {G H : Type} [Group G] [Group H] (θ₁ : G →* G) (θ₂ : H →* H) (x z : G × H) :
     (∃ g : G × H, x = g⁻¹ * z * (θ₁.prodMap θ₂) g) ↔

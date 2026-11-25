@@ -639,21 +639,6 @@ theorem abPart_principal (C : Flat.BdryChart Xo σ₀ n a) {z : Fin n → ℂ} (
   show Spec.map (CommRingCat.ofHom (r.comp f)) = _
   rw [CommRingCat.ofHom_comp, Spec.map_comp]
 
-theorem periods_inj {g : ℕ} {Λ : Type} [AddCommGroup Λ] (L₀ : Flat.LogPeriods n a g Λ) {w : Fin n → ℂ}
-    (hw : w ∈ logCover L₀.a_le) : Function.Injective (L₀.P w) := by
-  intro x x' hxx
-  have h0 : L₀.P w (x - x') = 0 := by rw [map_sub, hxx, sub_self]
-  have hE : L₀.E (x - x') = 0 := by
-    refine LinearMap.ext fun y => ?_
-    have him := L₀.im w hw (x - x') y
-    rw [h0] at him
-    have h2 : ((L₀.E (x - x') y : ℤ) : ℝ) = 0 := by
-      rw [← him]
-      simp
-    rw [LinearMap.zero_apply]
-    exact_mod_cast h2
-  exact sub_eq_zero.1 (L₀.unimod.1 (hE.trans (map_zero L₀.E).symm))
-
 theorem centre_phi (C : Flat.BdryChart Xo σ₀ n a) {X : Scheme.{0}} {tt : SAB H X} {jj : Sp C.R ⟶ X}
     (m : SABMap C.t tt jj) {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ ≤ 1) (e : Flat.FamExp C.t.G C.M (Metric.ball 0 ρ) C.ψ)
     {Λ : Type} [AddCommGroup Λ] [Module (𝓞 E) Λ] (L : ActPeriods E n a C.g Λ)
@@ -701,7 +686,7 @@ theorem centre_phi (C : Flat.BdryChart Xo σ₀ n a) {X : Scheme.{0}} {tt : SAB 
       simpa only [map_sub] using this
     filter_upwards [h1.eventually (per_small e hbρ (Metric.isOpen_ball.mem_nhds hbρ))] with j hj
     have h2 := hj (((hlink _ (hws j)).1 _).2 ⟨_, rfl⟩)
-    exact sub_eq_zero.1 (periods_inj L.toLogPeriods (hws j) (h2.trans (map_zero _).symm))
+    exact sub_eq_zero.1 (GlobalTheory.CompanionTheory.Ar.Flat.PeriodAction.P_injective L.toLogPeriods (hws j) (h2.trans (map_zero _).symm))
   obtain ⟨hA, hBp, hC⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotLoc.limit_lattice E H C.R C.t C.g n a C.M C.ψ ρ e Λ L.toLogPeriods hρ0 hρ1 hol hlink 0
     (Metric.mem_ball_self one_pos) ws (W.restrictScalars ℤ) per hws hw0 hper hfour
   replace hA : ∀ x : W, per x ∈ e.per ((ρ : ℂ) • 0) := hA
@@ -1021,7 +1006,6 @@ theorem aff_affInv {n : ℕ} (t₀ : Fin n → ℂ) {ρ : ℝ} (hρ : 0 < ρ) (�
   funext i
   simp [aff, affInv, Function.comp, h]
 
-
 open scoped ComplexOrder in
 theorem gram_det_pos {E : Type} [Field E] [NumberField E] [IsCMField E] {g : ℕ} {Λ : Type} [AddCommGroup Λ]
     [Module (𝓞 E) Λ] (R : RiemLat E g Λ) {m : ℕ} (u : Fin m → Fin g → ℂ) (hu : LinearIndependent ℂ u) :
@@ -1055,7 +1039,6 @@ theorem fibreLat_of_vec {X : Scheme.{0}} {t : SAB H X} {z : Sp ℂ ⟶ X} {g : �
   exact ⟨A, i, φ, u, χ, h1, h2, h3, h4, h5, fun i => i.elim⟩
 
 end Pt
-
 
 namespace Val
 
@@ -1146,7 +1129,6 @@ theorem neg_log_nz_le {E : Type} [Field E] [NumberField E] [IsCMField E] {g : �
   · exact (h3 I ⟨hI, h1, h2⟩).1
 
 end Val
-
 
 open Val in
 theorem corrW_lower_near : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsAbelianGalois ℚ E] (H : Host E) (D : Datum H) (Xo : ∀ l : Tor.Level H, Moduli D l) (l : Tor.Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) (II : IntersectionSystem) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W : CMType H → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module Ω (W τ)] (Dc : ComponentData II (CMType H) K J Ω W) (Hd : HodgeData Dc) (S₀ : Finset ℕ) (Or : CptOrigin Y S₀ Dc Hd) (U : ((Σ k, J k) → ℂ) → ℝ) (z : Sp ℂ ⟶ Or.𝔐.X) (w : (Σ k, J k) → ℂ) (x : ℝ), Or.𝔐.IsCuspWeight Or.sm U → CoordsAt Or.𝔐.ξ Dc.y z w → Or.PhiWeight z w x → ∀ ε > (0 : ℝ), ∃ δ > (0 : ℝ), ∀ w' ∈ Dc.Xo, ‖w' - w‖ < δ → x - ε ≤ corrW Hd U w' := by

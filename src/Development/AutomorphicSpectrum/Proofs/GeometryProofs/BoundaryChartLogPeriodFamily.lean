@@ -391,9 +391,6 @@ theorem exists_log_periods_of_root : ∀ (E : Type) [Field E] [NumberField E] [I
   · rw [hLH]
     exact (hopen _ (hU z hz)).2.2.1
 
-theorem rt0_conj_neg_ne_zero (H : Host E) : (starRingEnd ℂ) H.rt0 = -H.rt0 :=
-  _root_.UpperTheory.Reformulated.B.StarRingEndRootEqNeg.rt0_conj_neg_ne_zero H
-
 theorem exists_logPeriods_famExp_isRiem : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Tor.Level H) (Xo : Moduli D l) (σ : KA l →+* ℂ) (n a : ℕ) (C : Flat.BdryChart Xo σ n a), 1 ≤ D.p + D.q → ∃ (ρ : ℝ) (Λ : Type) (_ : AddCommGroup Λ) (L : Flat.LogPeriods n a C.g Λ) (e : Flat.FamExp C.t.G C.M (Metric.ball 0 ρ) C.ψ), 0 < ρ ∧ ρ ≤ 1 ∧ (∀ w ∈ GroundTheory.Heights₂.Heights.Regular.logCover L.a_le, ∀ p, p ∈ e.per ((ρ : ℂ) • GroundTheory.Heights₂.Heights.Regular.expCover a w) ↔ ∃ x, L.P w x = p) ∧ ∀ z ∈ Flat.punct n a 1, C.IsRiem ((ρ : ℂ) • z) (L.H z) := by
   intro E _ _ _ H D l Xo σ n a C hpq
   have h1 : (σ (baseKA l).ρ) ^ 2 = -(H.d : ℂ) := by
@@ -407,7 +404,7 @@ theorem exists_logPeriods_famExp_isRiem : ∀ (E : Type) [Field E] [NumberField 
   have hσ' : ((starRingEnd ℂ).comp σ) (baseKA l).ρ = H.rt0 := by
     have h3 : σ (baseKA l).ρ = -H.rt0 := eq_neg_of_add_eq_zero_left h
     show (starRingEnd ℂ) (σ (baseKA l).ρ) = H.rt0
-    rw [h3, map_neg, rt0_conj_neg_ne_zero, neg_neg]
+    rw [h3, map_neg, GlobalTheory.CompanionTheory.Ar.HodgeBasic.rt0_conj_neg_ne_zero, neg_neg]
   obtain ⟨ρ, Λ, iΛ, L', e', hρ0, hρ1, hper, hriem⟩ :=
     exists_log_periods_of_root E H D l Xo ((starRingEnd ℂ).comp σ) n a (chart C) hpq hσ'
   obtain ⟨L, hLP, hLH⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.LogPer.exists_conj_logPeriods n a C.g Λ L'
