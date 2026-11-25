@@ -208,13 +208,9 @@ theorem freeMap_mem {r : ℕ} (𝓜 : GradedPMod S N M) {g : Fin r → M} {deg :
 
 omit [Module S M] [IsScalarTower S (Poly S N) M] in
 theorem freeMap_surjective {r : ℕ} {g : Fin r → M} (hg : Submodule.span (Poly S N) (Set.range g) = ⊤) :
-    Function.Surjective (freeMap (S := S) (N := N) g) := by
-  classical
-  rw [← LinearMap.range_eq_top, eq_top_iff, ← hg, Submodule.span_le]
-  rintro _ ⟨j, rfl⟩
-  refine ⟨Pi.single j 1, ?_⟩
-  rw [freeMap_apply, Finset.sum_eq_single j (fun j' _ h => by rw [Pi.single_eq_of_ne h, zero_smul])
-    (fun h => absurd (Finset.mem_univ j) h), Pi.single_eq_same, one_smul]
+    Function.Surjective (freeMap (S := S) (N := N) g) := fun m =>
+  ((Submodule.top_le_span_range_iff_forall_exists_fun _).1 hg.ge m).imp fun c hc =>
+    (freeMap_apply (S := S) (N := N) g c).trans hc
 
 end Free
 
