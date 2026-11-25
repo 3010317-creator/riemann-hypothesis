@@ -102,13 +102,7 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.LeafBd
-theorem etale_boundary_image_hom_of_thom_isomorphism : LateralTheory.CohomologicalPurity.Bd.LeafImgHom := by
-  apply LateralTheory.CohomologicalPurity.Bd.LeafImgHom_of <;> first | exact _root_.LateralTheory.CohomologicalPurity.Bd.LeafGen_of
-theorem etale_boundary_image_of_thom_isomorphism : LateralTheory.CohomologicalPurity.Bd.LeafImg := by
-  apply LateralTheory.CohomologicalPurity.Bd.LeafImg_of <;> first | exact etale_boundary_image_hom_of_thom_isomorphism
-theorem etale_boundary_map_of_thom_isomorphism : LateralTheory.CohomologicalPurity.LeafBd := by
-  apply LateralTheory.CohomologicalPurity.Bd.goal_of <;> first | exact _root_.LateralTheory.CohomologicalPurity.Bd.LeafMono_of | exact _root_.LateralTheory.CohomologicalPurity.Bd.LeafPush_of | exact _root_.LateralTheory.CohomologicalPurity.Bd.LeafGood_of | exact _root_.LateralTheory.CohomologicalPurity.Bd.LeafDelta_of | exact _root_.LateralTheory.CohomologicalPurity.Bd.LeafExact_of | exact _root_.LateralTheory.CohomologicalPurity.Bd.LeafGen_of | exact etale_boundary_image_hom_of_thom_isomorphism | exact etale_boundary_image_of_thom_isomorphism
-alias intersectionNumber_baseChange := _root_.LateralTheory.Fin.LeafBd.etale_boundary_map_of_thom_isomorphism
+alias intersectionNumber_baseChange := _root_.LateralTheory.Fin.LeafIndExc.etale_boundary_map_of_thom_isomorphism
 end LateralTheory.Fin.LeafBd
 end -- clump:auto
 end -- clump:auto

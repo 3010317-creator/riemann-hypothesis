@@ -1181,7 +1181,6 @@ section -- clump:auto
 
 namespace LateralTheory.E.LeafSpreadLQFMap_vtuPfG
 
-
 open LateralTheory.E.SpreadingOutLocallyQuasiFinite in
 theorem LeafSpreadLQFMap_of (hD : LeafQFAtDescend) (hO : LeafOpenSpread) :
     LateralTheory.E.SpreadingOutQuasiFiniteness.LeafSpreadLQFMap :=
@@ -1637,13 +1636,9 @@ open CategoryTheory Limits AlgebraicGeometry Opposite LateralTheory.E.E4 Lateral
 
 namespace LateralTheory.E.SpreadingOutQuasiFinitenessBaseChange
 
-theorem toR_incl {k Ω : Type} [Field k] [Field Ω] [Algebra k Ω] {R R' : Subalgebra k Ω} (hR : R ≤ R') :
-    toR R' ≫ incl hR = toR R := by
-  rw [← Spec.map_comp]; rfl
-
 theorem sq {k Ω : Type} [Field k] [Field Ω] [Algebra k Ω] {R R' : Subalgebra k Ω} (hR : R ≤ R')
     {C D : Scheme.{0}} {c : C ⟶ Sp Ω} {q : D ⟶ Sp R} {v : C ⟶ D} (hv : IsPullback v c q (toR R)) :
-    IsPullback (pullback.lift v (c ≫ toR R') (by rw [Category.assoc, toR_incl]; exact hv.w)) c
+    IsPullback (pullback.lift v (c ≫ toR R') (by rw [Category.assoc, LateralTheory.E.LeafPairFPPf.toR_incl]; exact hv.w)) c
       (pullback.snd q (incl hR)) (toR R') := by
   refine IsPullback.of_right ?_ (pullback.lift_snd _ _ _) (IsPullback.of_hasPullback q (incl hR))
   rw [pullback.lift_fst, _root_.LateralTheory.E.LeafPropsDescendPf.BaseChange.toR_incl]; exact hv
