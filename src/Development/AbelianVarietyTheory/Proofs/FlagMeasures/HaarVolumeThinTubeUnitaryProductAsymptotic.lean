@@ -117,16 +117,9 @@ theorem lie_entry {k : ℕ} (η : ℝ) (M : Matrix (Fin (k + 1)) (Fin (k + 1)) �
       conj (M j i) * (if j = Fin.last k then (η : ℂ) else 1) + (if i = Fin.last k then (η : ℂ) else 1) * M i j := by
   simp [Hd, Matrix.mul_diagonal, Matrix.diagonal_mul, Matrix.conjTranspose_apply]
 
-private theorem Hd_mul_self_eq_one {k : ℕ} {η : ℝ} (hη : η = 1 ∨ η = -1) : Hd k η * Hd k η = 1 := by
-  unfold Hd
-  rw [Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
-  congr 1
-  funext j
-  split_ifs <;> rcases hη with rfl | rfl <;> norm_num
-
 theorem tang_mem {k : ℕ} {η : ℝ} (hη : η = 1 ∨ η = -1) (v : Par k) :
     realify (k + 1) (tang η v) ∈ lieE (UH (Hd k η)) := by
-  rw [_root_.GlobalTheory.TubeLie.mem_lieE_UH_of_sq _ _ _ (Hd_mul_self_eq_one hη), GlobalTheory.OmegaFrobenius.unrealify_realify]
+  rw [_root_.GlobalTheory.TubeLie.mem_lieE_UH_of_sq _ _ _ (GlobalTheory.Tube.Hd_sq k hη), GlobalTheory.OmegaFrobenius.unrealify_realify]
   have hs := skew_top v.1
   ext i j
   rw [lie_entry, Matrix.zero_apply]
@@ -188,7 +181,7 @@ theorem norm_sq_tangL {k : ℕ} {η : ℝ} (hη : η = 1 ∨ η = -1) (v : Par k
 theorem tangL_surjective {k : ℕ} {η : ℝ} (hη : η = 1 ∨ η = -1) : Function.Surjective (tangL (k := k) hη) := by
   intro y
   set M := unrealify (y : EuclideanSpace ℝ (Fin (k + 1) × Fin (k + 1) × Bool)) with hMdef
-  have hM := (_root_.GlobalTheory.TubeLie.mem_lieE_UH_of_sq _ _ _ (Hd_mul_self_eq_one hη)).1 y.2
+  have hM := (_root_.GlobalTheory.TubeLie.mem_lieE_UH_of_sq _ _ _ (GlobalTheory.Tube.Hd_sq k hη)).1 y.2
   have e : ∀ i j, (starRingEnd ℂ) (M j i) * (if j = Fin.last k then (η : ℂ) else 1) +
       (if i = Fin.last k then (η : ℂ) else 1) * M i j = 0 := by
     intro i j
