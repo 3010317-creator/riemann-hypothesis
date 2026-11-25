@@ -143,18 +143,8 @@ theorem big_cell_eq : BigCellEq := by
     refine continuous_pi fun i => continuous_pi fun j => ?_
     exact ((continuous_const.matrix_mul continuous_id).matrix_mul continuous_const).matrix_elem i j
   have hQM : IsQuotMeas W.μG ((Measure.dirac one).map (fun x => fun i j => (g⁻¹ * Matrix.of x * g) i j)) W.μG := by
-    have hmapd : (Measure.dirac one).map (fun x => fun i j => (g⁻¹ * Matrix.of x * g) i j) = Measure.dirac one := by
-      ext s hs
-      rw [Measure.map_apply hmc hs, Measure.dirac_apply' _ (hmc hs), Measure.dirac_apply' _ hs]
-      have hiff : one ∈ (fun x : Mt D.R.k D.R.rS => fun i j => (g⁻¹ * Matrix.of x * g) i j) ⁻¹' s ↔ one ∈ s := by
-        rw [Set.mem_preimage]
-        exact iff_of_eq (congrArg (· ∈ s) hpt)
-      simp only [Set.indicator]
-      split_ifs with h1 h2 h2
-      · rfl
-      · exact absurd (hiff.1 h1) h2
-      · exact absurd (hiff.2 h2) h1
-      · rfl
+    have hmapd : (Measure.dirac one).map (fun x => fun i j => (g⁻¹ * Matrix.of x * g) i j) = Measure.dirac one :=
+      (Measure.map_dirac' hmc one).trans (congrArg Measure.dirac hpt)
     rw [hmapd]
     intro F hF
     refine lintegral_congr fun x => ?_
