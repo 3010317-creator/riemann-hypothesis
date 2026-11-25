@@ -278,7 +278,6 @@ theorem mem_span (kS : S.SigOK) (kT : T.SigOK) (hS : ∀ τ, IsCartanInv (gramAt
     ⟨theta_heis hψ hf.1 x.2, fun τ => by
       have := fock_heis hψ hθ hf.1 (hf.2 τ) 1 x.2
       rwa [one_smul] at this⟩
-  have hρ : ∀ x v, ((ρ x v : M) : WO S T → ℂ) = heisO ψ S T x v := fun _ _ => rfl
   let e : M := ⟨f₀, hM⟩
   have hsq : ∀ x a : WO S T, ψ (symplOH S T x a) ^ 2 = ψ (symplO S T x a) := fun x a => by
     rw [sq, ← AddChar.map_add_eq_mul, GlobalTheory.SplitScalar.symplOH_add_self]

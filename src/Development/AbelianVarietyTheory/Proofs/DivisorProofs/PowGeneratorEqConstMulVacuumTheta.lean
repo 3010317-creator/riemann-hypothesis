@@ -208,7 +208,6 @@ theorem exists_division_point_ne_zero :
   have hτ : τ ∈ SiegelH (Fin g) := ⟨hs, hp⟩
   have hN0 : N ≠ 0 := by omega
   have hNC : (N : ℂ) ≠ 0 := by exact_mod_cast hN0
-  have hπ : (2 * Real.pi * I : ℂ) ≠ 0 := Complex.two_pi_I_ne_zero
   let w : Fin g → ℂ := fun j => Complex.log (β j) / (2 * Real.pi * I * N) + τ j j / 2
   have hw : ∀ j, β j * cexp (-(2 * Real.pi * I) * N * w j) = eC (-(τ j j) / 2) ^ N := by
     intro j

@@ -138,7 +138,6 @@ theorem conj_mul_eq_zero_of_line {V : Type} [NormedAddCommGroup V] [NormedSpace 
   obtain ⟨C, hC⟩ : ∃ C, ∀ x, ‖g x‖ ≤ C := ⟨_, fun x => (g.toBoundedContinuousFunction).norm_coe_le_norm x⟩
   have hφ0 : Filter.Tendsto φ (Filter.cocompact ℝ) (nhds 0) := by
     rw [tendsto_zero_iff_norm_tendsto_zero] at hf0 ⊢
-    have hC0 : 0 ≤ C := le_trans (norm_nonneg _) (hC 0)
     have := hf0.mul_const C
     rw [zero_mul] at this
     refine squeeze_zero (fun t => norm_nonneg _) (fun t => ?_) this

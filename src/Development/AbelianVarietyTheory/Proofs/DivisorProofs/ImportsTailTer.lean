@@ -971,8 +971,6 @@ theorem plane_closure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   let Φ : {y : DA F δ (-(f₂ / f₁)) // nrm y = 1} → HA (AF F) σ J := fun y =>
     (⟨Matrix.GeneralLinearGroup.mk'' (emb A B (qm ι θ y.1)) (by rw [hdet y.1 y.2]; exact isUnit_one),
       hunit y.1 y.2⟩ : HR (AF F) σ J)
-  have hΦmat : ∀ y, ((HA.mat (AF F) σ J (Φ y)).1 : Matrix (Fin M) (Fin M) (AF F ⊗[F] E)) = emb A B (qm ι θ y.1) :=
-    fun y => rfl
 
   have hco : ∀ i, Continuous fun y : DA F δ (-(f₂ / f₁)) => coords y i := fun i =>
     (continuous_apply i).comp continuous_induced_dom

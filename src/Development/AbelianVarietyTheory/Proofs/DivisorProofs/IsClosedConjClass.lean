@@ -266,7 +266,6 @@ theorem sqrt_fix_near_one_centralizer : ∀ (p : ℕ) [Fact p.Prime] (v : AwayP 
     { toFun := fun x => ⟨σ x, (hM _).2 (hσe x ((hM x).1 x.2))⟩
       map_add' := fun x y => Subtype.ext (by show σ ((x : B) + y) = σ x + σ y; exact map_add σ _ _)
       map_smul' := fun c x => Subtype.ext (by show σ (c • (x : B)) = c • σ x; exact map_smul σ _ _) }
-  have hσM : ∀ x : M, ((σM x : M) : B) = σ x := fun x => rfl
   have hcomm : σM * LinearMap.mulLeft (Qv v) sM = LinearMap.mulLeft (Qv v) sM * σM := by
     refine LinearMap.ext fun x => Subtype.ext ?_
     show σ ((sM : B) * x) = (sM : B) * σ x
@@ -1275,14 +1274,11 @@ theorem normProper (G : HTGroup p) (v : AwayP p) (g0 : Gv G v)
   let stU : (Qv v ⊗[ℚ] G.C)ˣ → (Qv v ⊗[ℚ] G.C)ˣ := fun g =>
     ⟨sl g, sl ((g⁻¹ : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C), by rw [← hsl_mul, Units.inv_mul, hsl1],
       by rw [← hsl_mul, Units.mul_inv, hsl1]⟩
-  have hstU : ∀ g, ((stU g : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) = sl g := fun g => rfl
   have hstUc : Continuous stU :=
     Units.continuous_iff.2 ⟨hslc.comp Units.continuous_val, hslc.comp Units.continuous_coe_inv⟩
   have he : ((e : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) * sl e =
       algebraMap (Qv v) (Qv v ⊗[ℚ] G.C) ((g0 : (Qv v ⊗[ℚ] G.C)ˣ × (Qv v)ˣ).2 : Qv v) := g0.2
   let ι₀ : (Qv v)ˣ →* (Qv v ⊗[ℚ] G.C)ˣ := Units.map (algebraMap (Qv v) (Qv v ⊗[ℚ] G.C)).toMonoidHom
-  have hι₀ : ∀ a, ((ι₀ a : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) = algebraMap (Qv v) (Qv v ⊗[ℚ] G.C) a :=
-    fun a => rfl
   have hcent : ∀ (a : (Qv v)ˣ) (y : (Qv v ⊗[ℚ] G.C)ˣ), ι₀ a * y = y * ι₀ a :=
     fun a y => Units.ext (Algebra.commutes _ _)
   have hcomA : ∀ a b : Qv v ⊗[ℚ] G.C, a * e = e * a → b * e = e * b → a * b = b * a := hcomA0
@@ -1320,8 +1316,6 @@ theorem normProper (G : HTGroup p) (v : AwayP p) (g0 : Gv G v)
     { toFun := fun z => ⟨stU z.1, (hZ _).2 (hsle _ ((hZ _).1 z.2))⟩
       map_one' := Subtype.ext (Units.ext hsl1)
       map_mul' := fun a b => Subtype.ext (Units.ext (hslm _ _ ((hZ _).1 a.2) ((hZ _).1 b.2))) }
-  have hτ : ∀ z : Z, (((τ z : Z) : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) = sl ((z : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) :=
-    fun z => rfl
   have hτc : Continuous τ := continuous_induced_rng.2 (hstUc.comp continuous_subtype_val)
   have hτi : ∀ z, τ (τ z) = z := fun z => Subtype.ext (Units.ext (hslsl _))
   have hsq : ∃ W ∈ nhds (1 : Z), ∀ s ∈ W, τ s = s → ∃ r : Z, τ r = r ∧ r * r = s := by

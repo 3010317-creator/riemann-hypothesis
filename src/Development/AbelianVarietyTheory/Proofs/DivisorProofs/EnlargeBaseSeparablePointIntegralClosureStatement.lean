@@ -514,7 +514,6 @@ theorem retract_localises : ∀ (T O A₁ EA₁ : Type) [CommRing T] [CommRing O
   have hunit : ∀ y : QA₁.primeCompl, IsUnit (ρ' y) := by
     intro y
     by_contra hy
-    have h1 : ρ' y ∈ maximalIdeal A₁ := (mem_maximalIdeal _).2 hy
     have h2 : algebraMap T O (i₁ (ρ' y)) ∈ maximalIdeal O := by
       rw [mem_maximalIdeal, mem_nonunits_iff]
       intro hu

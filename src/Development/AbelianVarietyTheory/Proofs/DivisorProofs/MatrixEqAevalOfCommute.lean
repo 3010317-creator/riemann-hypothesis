@@ -87,7 +87,6 @@ theorem exists_cyclic {K V : Type} [Field K] [AddCommGroup V] [Module K V]
   obtain ⟨e, -, he⟩ := exists_annihilator_eq g hs g.charpoly dvd_rfl
   refine ⟨e, ?_⟩
   let φ : K[X] →ₗ[K] V := (LinearMap.applyₗ e) ∘ₗ (aeval g).toLinearMap
-  have hφ : ∀ p, φ p = aeval g p e := fun p => rfl
   let ψ : degreeLT K (Module.finrank K V) →ₗ[K] V := φ ∘ₗ (degreeLT K (Module.finrank K V)).subtype
   have hinj : Function.Injective ψ := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]

@@ -293,7 +293,6 @@ theorem faceSucc_cone {a p : ℕ} (α : SimplexCategory.mk (p + 1) ⟶ SimplexCa
       apply Fin.ext; rw [fc_apply, faceFun_lt (by simp)]; simp
     rw [this, cone_zero, cone_zero]
   | succ j =>
-    have hj := j.isLt
     have : (fc (p + 1 + 1) (p + 1) (i + 1)).toOrderHom j.succ = ((fc (p + 1) p i).toOrderHom j).succ := by
       apply Fin.ext
       rw [Fin.val_succ, fc_apply, fc_apply, Fin.val_succ, faceFun_succ]

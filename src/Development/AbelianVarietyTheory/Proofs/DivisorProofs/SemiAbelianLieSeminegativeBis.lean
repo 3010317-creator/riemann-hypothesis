@@ -379,7 +379,6 @@ theorem deg_le_rank_mul_of_linesLE : ∀ (r : ℕ) (k F : Type) [Field k] [IsAlg
     have hfin : (deg g : ℝ) ≤ (r + 1) * a := by
       refine le_of_forall_pos_le_add fun ε hε => ?_
       have := key (ε / (r + 1)) (by positivity)
-      have hr : (0 : ℝ) ≤ r := Nat.cast_nonneg r
       have : (r : ℝ) * (ε / (r + 1)) ≤ ε := by
         rw [mul_div_assoc']; rw [div_le_iff₀ (by positivity)]; nlinarith
       linarith
@@ -733,7 +732,6 @@ theorem exists_sec_lbPow_vanishing_of_degree_pos : ∀ (k : Type) [Field k] (C :
     have hadd := interNum_one_of_cls_eq_add (k := k) hH hd (LB.isLB_triv C) hN hLm e
     rw [ArInt.interNum_one_lbPow_of_curve hH hd hL m, hdeg _ (LB.isLB_triv C), hdeg N hN, hc,
       cls_triv, neg_zero, neg_neg] at hadd
-    have hd' : interNum k (GlobalTheory.structureModule C) ![L] = d := rfl
     linarith
   set m : ℕ := (f 0).natAbs + 1 with hm
   have hm0 : 0 < m := Nat.succ_pos _
@@ -748,7 +746,6 @@ theorem exists_sec_lbPow_vanishing_of_degree_pos : ∀ (k : Type) [Field k] (C :
     rw [← chiPic_cls k O hLm, cls_lbPow hL m hLm, ← natCast_zsmul, ← hf, hchi m]
   have hχpos : 0 < chi k (twist O (lbPow L m)) := by
     rw [hχ]
-    have h1 : (1 : ℤ) ≤ d := hpos
     have h2 : -(f 0) ≤ ((f 0).natAbs : ℤ) := by
       rw [Int.natCast_natAbs]; exact neg_le_abs (f 0)
     have h3 : (m : ℤ) = (f 0).natAbs + 1 := by rw [hm]; push_cast; ring

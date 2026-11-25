@@ -297,7 +297,6 @@ theorem zeta_eq' (x : ℝ) : (1 - 2 * I * x) / (1 + 2 * I * x) =
 
 theorem rot_eq (x : ℝ) : upperUnip x * lowerUnip (2 * x / (1 + 4 * x ^ 2)) * upperUnip x =
     !![(1 + 2 * I * x) / (1 - 2 * I * x), 0; 0, (1 - 2 * I * x) / (1 + 2 * I * x)] := by
-  have h3 : (1 + 4 * x ^ 2) ≠ 0 := by positivity
   rw [zeta_eq, zeta_eq']
   generalize hc : (1 - 4 * x ^ 2) / (1 + 4 * x ^ 2) = c
   generalize hs : (4 * x) / (1 + 4 * x ^ 2) = s
@@ -354,8 +353,6 @@ theorem inPlane_ct (M : Matrix (Fin 2) (Fin 2) ℂ) : (inPlane i0 j0 M)ᴴ = inP
   simp [inPlane, Matrix.conjTranspose_mul, emb_ct, embT_ct, Matrix.mul_assoc]
 theorem inPlane_mem (M : Matrix (Fin 2) (Fin 2) ℂ) (h : Mᴴ * signatureOneOneForm * M = signatureOneOneForm) :
     (inPlane i0 j0 M)ᴴ * Jm R S * inPlane i0 j0 M = Jm R S := by
-  have e1 : ∀ Z : Matrix (Fin R ⊕ Fin S) (Fin R ⊕ Fin S) ℂ, (emb i0 j0)ᵀ * (Jm R S * Z) = signatureOneOneForm * ((emb i0 j0)ᵀ * Z) :=
-    fun Z => by rw [← Matrix.mul_assoc, embT_Jm, Matrix.mul_assoc]
   have e2 : ∀ Z : Matrix (Fin 2) (Fin R ⊕ Fin S) ℂ, Jm R S * (emb i0 j0 * Z) = emb i0 j0 * (signatureOneOneForm * Z) :=
     fun Z => by rw [← Matrix.mul_assoc, Jm_emb, Matrix.mul_assoc]
   have e3 : ∀ Z : Matrix (Fin 2) (Fin R ⊕ Fin S) ℂ, (emb i0 j0)ᵀ * (emb i0 j0 * Z) = Z := fun Z => by
@@ -466,7 +463,6 @@ theorem norm_eq_one_of_compact {G : Type*} [Group G] [TopologicalSpace G] [Compa
   have h2 := hle a⁻¹
   have h3 := hle a
   have h4 : 0 ≤ ‖f a‖ := norm_nonneg _
-  have h5 : 0 ≤ ‖f a⁻¹‖ := norm_nonneg _
   nlinarith
 
 theorem fromBlocks_mem (R S : ℕ) (a : Matrix (Fin R) (Fin R) ℂ) (d : Matrix (Fin S) (Fin S) ℂ)

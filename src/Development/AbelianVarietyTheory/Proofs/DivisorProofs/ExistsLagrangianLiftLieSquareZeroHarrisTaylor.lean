@@ -310,8 +310,6 @@ theorem exists_idempotent_average : ∀ (C O : Type) [CommRing C] [Ring O] (I : 
   have hu : ∀ z, u z ∈ I • (⊤ : Submodule C H) := by
     intro z
     have h1 : p z = p (ε z) := by rw [← Module.End.mul_apply, hpε]
-    have h2 : ε (ε z - p (ε z)) = ε z - p (ε z) := by
-      rw [map_sub, ← Module.End.mul_apply ε ε, hε, ← Module.End.mul_apply ε p, hεp]
     have h3 := hb _ (ha (ε z) (by rw [← Module.End.mul_apply, hε]))
     have e : u z = -(p (ε z - p (ε z))) := by
       simp only [hu_def, LinearMap.sub_apply, Module.End.mul_apply, map_sub, h1]
@@ -405,8 +403,6 @@ theorem GlobalTheory.lie_idempotents : ∀ (R C K : Type) [CommRing R] [CommRing
 
     simp only [map_sum, map_mul] at this
     rw [this]; split_ifs <;> simp
-  have hnNx : ∀ x : Module.End C H, n • (N : C) • x = x := by
-    intro x; rw [smul_smul, hnN, one_smul]
   have heig : ∀ i c, ρF c * (n • ∑ j, tR (t i (v j)) • ρF (u j)) = tR (t i c) • (n • ∑ j, tR (t i (v j)) • ρF (u j)) := by
     intro i c
     let B : K →+ K →+ Module.End C H := AddMonoidHom.mk' (fun x => AddMonoidHom.mk' (fun y => tR (t i y) • ρF x)

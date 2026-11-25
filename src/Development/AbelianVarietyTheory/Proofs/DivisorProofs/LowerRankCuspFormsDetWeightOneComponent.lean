@@ -689,8 +689,6 @@ theorem lowered_interp : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   have hT' : 11 * (nd X.toData : ℝ) ^ 2 ≤ Xa.T := by exact_mod_cast hT
   have hsT' : (s : ℝ) ≤ Xa.T := by exact_mod_cast hsT
   set m : ℝ := 1 + ((2 : ℕ) : ℝ) * (1.9 * Xa.T) - s with hm
-  have hm4 : 4 * (X.Ψ.card : ℝ) * (r : ℝ) ^ 2 < m := by
-    rw [hm]; push_cast; nlinarith
   have hmar : ∃ bb m : ℝ, 4 * (X.Ψ.card : ℝ) * (r : ℝ) ^ 2 < bb ∧ bb < m ∧
       ∀ x0, IsOrth X.toData x0 → ∀ z ∈ OmF X.toData x0, ∀ ξ : Fin (nd X.toData) → ℂ,
         m * leviRh X.toData x0 z ξ ≤ leviO X.toData x0 (phla X.toData (Xa.Fp - deMul X.Ψ r X.p0 s)) z ξ -

@@ -108,9 +108,6 @@ theorem twSec_keyRoot_with_evaluation : ∀ (E : Type) [Field E] [NumberField E]
   have hC := fun σ : c.F →+* ℂ => _root_.GlobalTheory.KeyArchNorm.homN_key_const κ k₁ k₂ k₅ E H Dw l Xo c _ e (goodOf c σ) r (U (goodOf c σ)) x K
     (goodEmb_goodOf c σ) (hU _ (goodEmb_goodOf c σ)) (hx _ (goodEmb_goodOf c σ)) ⟨⟨ρ, hρmem⟩⟩ hpq hKmem hKval
   choose C hCpos hClog hCeq using hC
-  have hgE := card_frame_index Dw e
-  have hsum : ∑ τ : E →+* ℂ, Dw.mult τ = Fintype.card (Σ τ : E →+* ℂ, Fin (Dw.mult τ)) := by
-    simp [Fintype.card_sigma]
   have hwt : ∀ (m : ℤ) (τ : E →+* ℂ) (i : ℕ), i < Dw.mult τ → (wtOf Dw 0 m).1 (τ, i) = -m :=
     wtOf_zero_fst E H Dw
   have hex : exZ Dw (wtOf Dw 0 1) = -keyEx Dw := by

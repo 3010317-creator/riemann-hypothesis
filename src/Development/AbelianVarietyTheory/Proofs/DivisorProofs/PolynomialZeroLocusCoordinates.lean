@@ -275,7 +275,6 @@ theorem isUnit_of_blk_mul (z : (R ⊗[ℚ] D) × R)
   constructor
   · set B := Y'.toBlocks₁₁
     set a := z.1
-    have hBL : B * lreg D R a = 1 := mul_eq_one_comm.1 h11
     set a' := (basR D R).equivFun.symm (Matrix.mulVec B ⇑((basR D R).repr 1)) with ha'
     have hr : ⇑((basR D R).repr a') = Matrix.mulVec B ⇑((basR D R).repr 1) := by
       funext i

@@ -147,7 +147,6 @@ theorem orbit_cpt_U : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Un
         have : (⟨starU σ (a * b).1, hst _ (a * b).2⟩ : Z) = ⟨starU σ b.1, hst _ b.2⟩ * ⟨starU σ a.1, hst _ a.2⟩ :=
           Subtype.ext (Units.ext (by show cT σ (a.1.val * b.1.val) = cT σ b.1.val * cT σ a.1.val; exact cT_mul σ _ _))
         rw [this, hcomm] }
-  have hτ : ∀ z : Z, ((τ z : Z) : GLw n w) = starU σ z.1 := fun z => rfl
   have hτc : Continuous τ := continuous_induced_rng.2 (hstarc.comp continuous_subtype_val)
   have hτi : ∀ z, τ (τ z) = z := fun z => Subtype.ext (Units.ext (hcc _))
   have hsq : ∃ W ∈ nhds (1 : Z), ∀ s ∈ W, τ s = s → ∃ r : Z, τ r = r ∧ r * r = s := by

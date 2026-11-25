@@ -310,8 +310,6 @@ theorem maj_cpt_le_two : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   have heq := _root_.GlobalTheory.MajCols.maj_eq_of_cols E r X (cpt X x z) (X.xZ x (graphCoord X z)) τ (chartMatrixTopBlock X z τ)
     (by rw [hdet]; exact one_ne_zero) (Data.gramPos_det_ne X hy τ) hcol v
   obtain ⟨h1, h2⟩ := UnipMove.MajH.maj_xZ' X hx ho (ρ := 1 / 50) (by norm_num) (by norm_num) hZ τ v
-  have h0 : 0 ≤ X.maj x τ v := by
-    rw [ModeHalfA.maj_orth X hxo]; exact Finset.sum_nonneg fun _ _ => by positivity
   rw [heq]
   constructor
   · nlinarith

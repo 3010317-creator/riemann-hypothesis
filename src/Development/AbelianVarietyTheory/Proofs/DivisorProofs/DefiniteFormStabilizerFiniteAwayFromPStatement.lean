@@ -86,7 +86,6 @@ namespace GlobalTheory.FinFix
 
 theorem finite_den_bdd (N : ℕ) (hN : 0 < N) (R : ℝ) :
     {q : ℚ | (∃ k : ℤ, q * N = k) ∧ |(q : ℝ)| ≤ R}.Finite := by
-  have hN' : (0 : ℚ) < N := by exact_mod_cast hN
   refine ((Set.finite_Icc (-⌈R * N⌉) ⌈R * N⌉).image (fun k : ℤ => (k : ℚ) / N)).subset ?_
   rintro q ⟨⟨k, hk⟩, hR⟩
   refine ⟨k, ?_, ?_⟩

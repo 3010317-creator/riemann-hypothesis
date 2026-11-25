@@ -234,7 +234,6 @@ theorem fL_injective (hq : IsUnit (q : LaurentPolynomial K)) : Function.Injectiv
     rw [map_pow]; exact this
   have he := laurent_monomial_exponent_eq K hT
   have hlt : ((z.val : ℕ) : ℤ) < q := by exact_mod_cast ZMod.val_lt z
-  have hq0 : (0 : ℤ) < q := by exact_mod_cast Nat.pos_of_ne_zero (NeZero.ne q)
   have h0 : ((z.val : ℕ) : ℤ) = 0 := by
     rcases le_or_gt k 0 with hk | hk
     · nlinarith

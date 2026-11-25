@@ -329,7 +329,6 @@ theorem rayAvg_inner {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [Fini
   · rw [← mul_assoc, ← ENNReal.ofReal_mul (abs_nonneg _)]
     congr 2
     rw [abs_of_pos (inv_pos.mpr (pow_pos ht _))]
-    have htne := ht.ne'
     rw [div_pow]
     field_simp
     ring
@@ -668,7 +667,6 @@ theorem weighted_lintegral_sobolev_pointwise : ∀ {E : Type} [NormedAddCommGrou
             have h0 : φ x = ‖x‖ := by simpa using hφx
             linarith
           have hpow : ‖x‖ ^ k ≤ ‖x + t • v‖ ^ k := pow_le_pow_left₀ (norm_nonneg _) hmono k
-          have hfac : (0:ℝ) < m.factorial := by exact_mod_cast Nat.factorial_pos m
           have hP : 0 ≤ t ^ m / (m.factorial : ℝ) *
               (‖v‖ ^ (m + 1) * ‖iteratedFDeriv ℝ (m + 1) G (x + t • v)‖) := by positivity
           have hA : 0 ≤ t ^ m * ‖v‖ ^ (m + 1) := by positivity

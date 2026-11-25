@@ -211,7 +211,6 @@ theorem frGrp_le_genGrp {Λ : Submodule (𝓞 E) (Fin n → E)} {Λ' : Submodule
     frGrp β β' (idS F 𝔪) ≤ genGrp F (𝔪 • H) := by
   let γ : GL (Fin n) 𝒜 := ⟨((β⁻¹ : GL (Fin n) 𝒜) : Matrix (Fin n) (Fin n) 𝒜)ᵀ, (β : Matrix (Fin n) (Fin n) 𝒜)ᵀ,
     by rw [← transpose_mul, Units.mul_inv, transpose_one], by rw [← transpose_mul, Units.inv_mul, transpose_one]⟩
-  have hγ : ((γ⁻¹ : GL (Fin n) 𝒜) : Matrix (Fin n) (Fin n) 𝒜) = (β : Matrix (Fin n) (Fin n) 𝒜)ᵀ := rfl
   have st : ∀ (c : 𝒮) {w}, w ∈ genGrp F (𝔪 • H) → c • w ∈ genGrp F (𝔪 • H) :=
     fun c w hw => smul_mem_genGrp _ c.1 c.2 w hw
   have k1 : ∀ a ∈ 𝔪, ∀ l' ∈ Λ', ∀ l ∈ lat γ,

@@ -836,9 +836,6 @@ theorem sections_eq_sum_aeval_bounded : ∀ (k : Type) [CommRing k] (X : Scheme.
     fun i => ((_root_.GlobalTheory.HSAmp.continuous_val_and_bounded k X p D hV P _ _).2 _ (hgH i)).2
   choose Ci hCi using hbd
   set Cg : ℝ := ∑ i, |Ci i| + 1 with hCg
-  have hCg1 : 1 ≤ Cg := by
-    have : 0 ≤ ∑ i, |Ci i| := Finset.sum_nonneg fun i _ => abs_nonneg _
-    linarith
   have hCgi : ∀ i σ y, P.nu (e * c0 + -a + e) (-b + 0) σ y (g i) ≤ Cg := fun i σ y => by
     have h1 : Ci i ≤ |Ci i| := le_abs_self _
     have h2 : |Ci i| ≤ ∑ j, |Ci j| := Finset.single_le_sum (f := fun j => |Ci j|) (fun j _ => abs_nonneg _) (Finset.mem_univ i)

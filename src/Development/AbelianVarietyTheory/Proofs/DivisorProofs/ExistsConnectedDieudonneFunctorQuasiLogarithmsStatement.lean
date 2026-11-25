@@ -1349,8 +1349,6 @@ theorem exists_base_isConn_katz : ∀ (p : ℕ) [Fact p.Prime],
         chartPull_red (c k G h) (c k' G' h') (hlaw k G h) (hlaw k' G' h') (hc k G h) (hc k' G' h') s _
           (hP k k' σ G G' _ _ (c k G h) (c k' G' h') _ _ (hlaw k G h) (hlaw k' G' h') (hc k G h) (hc k' G' h') s)
           (ρ k G h) (ρ k' G' h') (hρ k G h) (hρ k' G' h') (r k G h) (r k' G' h') (hr k G h) (hr k' G' h') m }
-  have hid : ∀ {k : Type} [Field k] (G : PDivGroup p k) (n : ℕ) (a : G.A n),
-      (SemiHom.ofHom (𝟙 G)).app n a = a := fun G n a => rfl
   refine ⟨B, @fun k _ _ _ G h d' cc μ' hμ' hcc =>
     { toFun := P k k (RingHom.id k) G G _ _ (c k G h) cc _ _ (hlaw k G h) hμ' (hc k G h) hcc
         (SemiHom.ofHom (𝟙 G))

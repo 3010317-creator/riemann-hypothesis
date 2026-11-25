@@ -146,7 +146,6 @@ theorem transpose_transport (D : D7) (S T : HSp D) (ν : Measure (Formalism.Inde
   have hcs : Continuous e.symm := Continuous.matrix_transpose continuous_id
   let E' : Formalism.IndefR.Datum.WO T S ≃ᵐ Formalism.IndefR.DatumF.WOF D.host.F D.host.E S.rank T.rank :=
     (Homeomorph.mk e.toEquiv hc hcs).toMeasurableEquiv
-  have hE' : ∀ w, E' w = wᵀ := fun _ => rfl
   let eG : Formalism.IndefR.DatumF.ratLF D.host.F D.host.E S.rank T.rank ≃ ratL S T :=
     { toFun := fun g => ⟨(g : Matrix (Fin T.rank) (Fin S.rank) _)ᵀ, by
         obtain ⟨γ, hγ⟩ := g.2

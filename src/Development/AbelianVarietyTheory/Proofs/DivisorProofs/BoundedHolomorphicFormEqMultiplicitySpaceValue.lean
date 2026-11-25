@@ -1521,7 +1521,6 @@ theorem exists_multMap : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂
       rw [coe_update, ← Φ.map_update_smul] at this
       rw [coe_update]
       exact this)
-  have hTψ : ∀ y, T y = ψ y := fun _ => rfl
   have hT : ∀ (y : M.Vec) τ, ∀ X ∈ lieAt V τ, ∀ w : M.sm τ, (w : M.H τ) = dRep (M.rep τ) X (y τ) →
       Rder θ V τ X (T y) = T (Function.update y τ w) := by
     intro y τ X hX w hw

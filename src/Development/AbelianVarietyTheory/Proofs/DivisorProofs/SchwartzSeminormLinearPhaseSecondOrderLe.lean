@@ -117,8 +117,6 @@ theorem seminorm_phase_sub_le : ∀ {V : Type} [NormedAddCommGroup V] [NormedSpa
     refine (norm_cexp_mul_I_sub_one_le _).trans (le_of_eq ?_)
     rw [abs_neg, abs_mul (2 * Real.pi * c), abs_of_nonneg (sq_nonneg t)]
     ring
-  have hpf := apply_nonneg (SchwartzMap.seminorm ℂ k n) f
-  have hpg := apply_nonneg (SchwartzMap.seminorm ℂ k n) g
   have hpi := Real.pi_pos
   have hn1 : ‖a * t‖ = |t| := by rw [norm_mul, hna, one_mul, Complex.norm_real, Real.norm_eq_abs]
   have hn2 : ‖-((a - 1) * t * (2 * Real.pi * I))‖ ≤ 2 * |2 * Real.pi * c| * t ^ 2 * (2 * Real.pi) := by

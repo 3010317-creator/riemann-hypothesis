@@ -812,7 +812,6 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     show spMap _ ≫ spMap φ = Spec.map (CommRingCat.ofHom (algebraMap R (DualNumber Ω)))
     rw [spMap, spMap, ← Spec.map_comp]
     exact congrArg (fun q => Spec.map (CommRingCat.ofHom q)) (epsHom_comp φ (δ a) (hδφ a)))
-  let kk := Chart.spMap (GlobalTheory.SqZero.epsTo R (inr 1 : DualNumber Ω) hε) ≫ jη
   let z : sp (R₀ := R) (DualNumber Ω) ⟶ Y.H := kz ≫ xt
   let z' : sp (R₀ := R) (DualNumber Ω) ⟶ t.G := kz ≫ xt'
   let yH := (Chart.spMap (GlobalTheory.SqZero.epsTo R (inr 1 : DualNumber Ω) hε) ≫ u₀) * z

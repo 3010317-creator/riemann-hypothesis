@@ -124,7 +124,6 @@ theorem ker_map_subset_im_map (R C : Type) [CommRing R] [Field C] (f : R →+* C
 
   refine ⟨(f s * f ν * f s0)⁻¹ • (f ∘ w), ?_⟩
   funext i
-  have h4 : f s * f ν * f s0 ≠ 0 := mul_ne_zero (mul_ne_zero hs hν) hs0ne
   rw [Matrix.mulVec_smul, Pi.smul_apply, smul_eq_mul, ← RingHom.map_mulVec, ← hcancel i, map_mul,
     map_mul, ht i]
   field_simp

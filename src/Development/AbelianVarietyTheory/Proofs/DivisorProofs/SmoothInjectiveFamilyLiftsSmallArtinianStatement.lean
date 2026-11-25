@@ -871,7 +871,6 @@ theorem smallExt_fibre_ring : ∀ (C : Type) [CommRing C] [IsLocalRing C] (e : C
         show a * b + φ (x * y).snd = (a + φ x.snd) * (b + φ y.snd)
         rw [DualNumber.snd_mul, ← hx', ← hy', ← hc, ← hd, ← map_mul, ← map_mul, ← map_add (f := _), hφ, hφ, hφ]
         linear_combination (-(c * d)) * hee }
-  have hσ : ∀ x : P, σ x = x.1.1 + φ x.1.2.snd := fun _ ↦ rfl
   have hσi : σ.comp i = RingHom.id C := by
     ext c
     show c + φ (TrivSqZeroExt.inl (residue C c) : DualNumber _).snd = c

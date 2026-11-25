@@ -687,9 +687,7 @@ theorem exists_place_dominating : ∀ {κ : Type} [Field κ] [Algebra ℂ κ] (O
   rw [← hY] at hf
   obtain ⟨w, hw, efw⟩ := hspan f hf
   have hw0 : w ≠ 0 := by rintro rfl; exact hf0 (by rw [efw, mul_zero])
-  have haW : (a : κ) ∈ W := hRW a'
   have hainv : (a : κ)⁻¹ ∉ W := hninvW a' haQ ha'0
-  have h1 : 0 ≤ F.ord (a : κ) := (F.ord_nonneg_iff ha0).2 haW
   have h2 : ¬ 0 ≤ F.ord ((a : κ)⁻¹) := fun h => hainv ((F.ord_nonneg_iff (inv_ne_zero ha0)).1 h)
   have h3 : 0 ≤ F.ord w := (F.ord_nonneg_iff hw0).2 hw
   rw [F.ord_inv] at h2

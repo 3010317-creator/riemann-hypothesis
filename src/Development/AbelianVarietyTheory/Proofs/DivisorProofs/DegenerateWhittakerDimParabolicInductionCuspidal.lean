@@ -320,7 +320,6 @@ theorem edge_iff (hb : Monotone b) (h1 : ∀ a c : Fin r, a < c → b (w a) = b 
   constructor
   · rintro ⟨e1, -⟩
     have hac : a < c := (lt_iff h1 h).2 (by rw [Fin.lt_def]; omega)
-    have hac' : a.val < c.val := hac
     have hc : c.val = a.val + 1 := by
       by_contra hne
       let e : Fin r := ⟨a.val + 1, by have := c.2; omega⟩
@@ -717,8 +716,6 @@ theorem edgeSum_cut_mul (j : ℕ) {u u' : GL (Fin r) F} (hu : u ∈ unip F r) (h
   split_ifs with h
   · have h' := h.1
     refine unip_mul_entry hu hu' (show a.val < c.val by omega) fun l h1 h2 => ?_
-    have h1' : a.val < l.val := h1
-    have h2' : l.val < c.val := h2
     omega
   · rw [add_zero]
 

@@ -652,7 +652,6 @@ theorem exists_resolved_modification : GlobalTheory.Published.Principalisation �
   haveI : Nonempty X := ⟨i (v j₀ o₀)⟩
   have hpX : IsProper sX := ((isProjOver_iff_isProper_and_exists_isAmpleLB sX).1 hsX).1
   have hpX' : IsProper (φ ≫ sX) := ((isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hφ).1
-  have hpW : IsProper sW := ((isProjOver_iff_isProper_and_exists_isAmpleLB sW).1 hsW).1
 
   have hWgen : ∀ j o, (v j ≫ ℓ ≫ q) o = genericPoint W := fun j o => by
     rw [hv j j₀]
