@@ -312,8 +312,6 @@ end Geo
 
 end HermitianFormRankFour
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 open HermitianFormRankFour in
 theorem exp_generates : Formalism.FourierDecayAlt.Qr.ExpGen := by
   intro k r z hz hT Pr h1 hstep h hh

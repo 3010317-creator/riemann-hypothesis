@@ -14,8 +14,6 @@ open Formalism.FourierDecayAlt.P.CapelliWordSumExpansion
 
 noncomputable section
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 theorem qminorWordSum (k r t : ℕ) (a b : Fin t → Fin (2 * r + k + 1)) (u : ℂ) :
     ∃ L : List (ℂ × List (B.Mat k r)),
       (∀ cw ∈ L, (∀ X ∈ cw.2, B.unitLie k r X) ∧ cw.2.length ≤ t) ∧

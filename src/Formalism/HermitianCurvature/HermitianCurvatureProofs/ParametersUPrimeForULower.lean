@@ -104,8 +104,6 @@ open scoped InnerProductSpace ComplexConjugate
 
 namespace Formalism.FourierDecayAlt.P.Topx1
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 section adj
 
 variable {k r : ℕ} {W : Type} [NormedAddCommGroup W] [InnerProductSpace ℂ W] [FiniteDimensional ℂ W]

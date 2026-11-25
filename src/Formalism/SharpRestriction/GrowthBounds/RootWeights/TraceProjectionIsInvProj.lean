@@ -22,8 +22,6 @@ namespace Formalism.MainNotions.G.GLWeightTheory
 
 open Formalism.MainNotions.G Formalism.MainNotions.CovariantDegrees
 
-attribute [local instance 100] LieRing.ofAssociativeRing
-
 theorem sl2_string_nonvanishing {n : ℕ} {K W : Type*} [Field K] [CharZero K] [AddCommGroup W] [Module K W] [FiniteDimensional K W]
     {ρ : GLOps n K W}
     (hρ : ∀ a b c d, ρ a b * ρ c d - ρ c d * ρ a b = (if b = c then ρ a d else 0) - (if d = a then ρ c b else 0))

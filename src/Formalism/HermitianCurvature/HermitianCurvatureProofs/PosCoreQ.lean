@@ -27,9 +27,6 @@ namespace Formalism.FourierDecayAlt.P.PBE
 
 open Formalism.FourierDecayAlt Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.P.JCTx6 Formalism.FourierDecayAlt.P.JCTx6.Pos
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
-
 theorem posCoreQ : ∃ Cc : ℝ, 0 ≤ Cc ∧
   ∀ (k ph n ρ : ℕ) (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
     [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq]

@@ -697,8 +697,6 @@ namespace Formalism.FourierDecayAlt.P.CutSE
 
 open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.Q Formalism.FourierDecayAlt.Wd Formalism.FourierDecayAlt.P5
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 section Split
 
 def paWt (n : ℕ) (c : Fin n → ℂ) : ℝ := ∏ j, (‖c j‖ ^ 2)⁻¹

@@ -753,8 +753,6 @@ namespace Formalism.MainNotions.G.GLWeightTheory
 
 open Formalism.MainNotions.G Formalism.MainNotions.CovariantDegrees
 
-attribute [local instance 100] LieRing.ofAssociativeRing
-
 variable {n : ℕ} {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
 
 private theorem E_apply_mem_weightSp_add_rootW_of_ne {E : GLOps n K V} (hE : IsGLRep E) {a b : Fin n} (hab : a ≠ b)

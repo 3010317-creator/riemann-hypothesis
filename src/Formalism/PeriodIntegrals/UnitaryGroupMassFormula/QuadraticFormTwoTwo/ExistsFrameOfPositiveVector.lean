@@ -22,8 +22,6 @@ namespace Formalism.FourierDecayAlt.Q.LieAlgebraWeightVectors
 
 open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.Q
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 variable {k r : ℕ}
 
 theorem gb_entry {i j : Fin (2 * r + k + 1)} (hj : r ≤ j.val) (hj' : j.val ≤ r + k) :
