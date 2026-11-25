@@ -1088,7 +1088,7 @@ theorem fourier_mem_schA_std (F : Type) [Field F] [NumberField F] (ψ : AddChar 
   have hTpure : ∀ (f : SInf F κ) (φ : ∀ v : Pl (F := F), (κ → Fv F v) → ℂ), IsFam φ →
       T (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ) = GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (c₀ • ei' f) (fun v => ev v (φ v)) := fun f φ hφ =>
     (ftE_eq ψ μ (hpureE f φ hφ).1).trans (hpureE f φ hφ).2
-  have hgen := schA_le_span_pure F κ
+  have hgen := _root_.GlobalTheory.SchASpan.mem_span_pure F κ
   have hT_schA : ∀ Φ ∈ schA F κ, T Φ ∈ schA F κ := by
     intro Φ hΦ
     refine (Submodule.span_le.2 ?_ : _ ≤ (schA F κ).comap T) (hgen Φ hΦ)

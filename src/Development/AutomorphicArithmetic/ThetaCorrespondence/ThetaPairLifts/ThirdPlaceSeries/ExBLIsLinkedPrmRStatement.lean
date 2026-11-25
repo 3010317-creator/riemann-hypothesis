@@ -644,7 +644,7 @@ theorem prtW_le_hPart : GlobalTheory.Published.WeilRepresentationUnitaryPair →
     p c hcar
   rw [Y.prtWE i π]
   refine Submodule.map_mono fun U hU => ?_
-  obtain ⟨x, hx, rfl⟩ := GlobalTheory.T.typePart_le_eigensystemPart_principalLevel R.toRealDat F.lv2 hH.ok.ok2 hC _ hSF Y.hF Y.PY Y.PW Y.stdPsi.1 Y.stdPsi.2
+  obtain ⟨x, hx, rfl⟩ := _root_.GlobalTheory.PartTypeW.part_in_eigenpart R.toRealDat F.lv2 hH.ok.ok2 hC _ hSF Y.hF Y.PY Y.PW Y.stdPsi.1 Y.stdPsi.2
     _ ⟨0, Y.hm⟩ c hc i U hU
   exact (GlobalTheory.T.full_algebra_part_le_split_hecke_part R.toRealDat F.lv2 hH.ok.ok2 hC _ hSF c _).2 i (fun P hP => (hlab P hP).2) x hx
 
@@ -696,7 +696,7 @@ theorem isot_le_part : GlobalTheory.Published.WeilRepresentationUnitaryPair → 
   have hy' := (Y.tied.lift.isot i π y).1 hy
   rw [Y.prtWE, Y.mjRead] at hy'
   obtain ⟨U, hU, hUy⟩ := hy'
-  obtain ⟨x, hx, hxU⟩ := GlobalTheory.T.typePart_le_eigensystemPart_principalLevel R.toRealDat F.lv2 hH.ok.ok2 hcore R.SF hSF Y.hF Y.PY Y.PW
+  obtain ⟨x, hx, hxU⟩ := _root_.GlobalTheory.PartTypeW.part_in_eigenpart R.toRealDat F.lv2 hH.ok.ok2 hcore R.SF hSF Y.hF Y.PY Y.PW
     (stdPsi_of_stdFrame Y.stdPsi.1) (fun j => stdPsi_of_stdFrame (Y.stdPsi.2 j)) _ _ c hE i U hU
   have h1 : U = (R.HW i (sg0 D A3.A)).e (Y.mj.eW i y) :=
     (PiTensorProduct.lift : Mult.MMap (R.MW i (sg0 D A3.A)) ≃ₗ[ℂ] _).injective hUy

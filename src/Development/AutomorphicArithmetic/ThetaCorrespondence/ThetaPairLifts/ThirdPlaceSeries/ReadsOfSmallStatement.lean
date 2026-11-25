@@ -1681,7 +1681,7 @@ theorem exists_reading_lat {E K : Type} [Field E] [NumberField E] [Field K] [Num
         rw [← map_mul, inv_mul_cancel, map_one]
         rfl
       rw [h8] at h7
-      have h9 := GlobalTheory.T.mem_localisedStandardWeyl_of_lift_mem _ l w e0 _ _ lam lamW _ F Φ hw (fun x => ((hF _).1 ⟨x, rfl⟩).2) hS hΦ _ h7
+      have h9 := _root_.GlobalTheory.FrameRead.DelStd.mem_localization_standardWeylLattice _ l w e0 _ _ lam lamW _ F Φ hw (fun x => ((hF _).1 ⟨x, rfl⟩).2) hS hΦ _ h7
       have hlatFull : ∀ τ, Submodule.IsFullLattice K (dualFr (tauLat lab τ (Lat c))) := by
         intro τ
         have hcol : Submodule.span K (colLat (B τ) : Set (Fin n → K)) = ⊤ := by
@@ -1832,7 +1832,7 @@ theorem reads_rank (j : Fin D.R.m) (w : HeightOneSpectrum (𝓞 D.what₂.LL)) [
     (fun k τ a b => ⟨(kap k τ).val a b, congrArg (fun M : GL _ _ => M.val a b) (hk k τ)⟩)
     (fun k => ⟨(((chi k)⁻¹ * ∏ τ, Matrix.GeneralLinearGroup.det (kap k τ) ^ cs τ : (intR Lf)ˣ) : intR Lf), (hsc k).1⟩)
   refine ⟨⟨e0, Subtype.val, rd, hw, fun x => (hF _).2 ⟨hL _, ?_⟩, fun f => ⟨?_, fun k g => ?_⟩, h3, fun i f g => ?_, h5, h6⟩, rfl, rfl⟩
-  · exact (GlobalTheory.T.norm_le_one_iff_integral_at_padicEmbedding_place _ _ w e0 hw _).2 ⟨1, (Ideal.ne_top_iff_one _).1 w.isPrime.ne_top, x, by simp⟩
+  · exact (_root_.GlobalTheory.FrameRead.norm_le_one_iff_integral_at _ _ w e0 hw _).2 ⟨1, (Ideal.ne_top_iff_one _).1 w.isPrime.ne_top, x, by simp⟩
   · rintro _ ⟨γ, rfl⟩ g
     exact h1 f γ g
   · have h7 := h2 f k g

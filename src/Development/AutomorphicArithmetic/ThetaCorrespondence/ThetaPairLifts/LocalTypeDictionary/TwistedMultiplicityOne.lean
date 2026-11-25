@@ -963,7 +963,7 @@ theorem specTrace (h1 : IrredSt) (h2 : CompSt) (h3 : CptSt) (h4 : AdmSt) : Globa
     exact IrrU.cl_eq_iff.2 e
 
 theorem main : GlobalTheory.Published.DiscreteSeriesClassification → GlobalTheory.Published.CuspTraceClass → GlobalTheory.TrMult.SpecTraceX :=
-  fun ds tc => specTrace irredSt compSt cptSt admissible_representation_factorisation ds tc trivial (GlobalTheory.T.cuspidalOperators_vanishingRadicalIntegrals_unitaryGroup tc) GlobalTheory.PsCo.Plug.parabolicT trivial
+  fun ds tc => specTrace irredSt compSt cptSt admissible_representation_factorisation ds tc trivial (GlobalTheory.T.cuspidalOperators_vanishingRadicalIntegrals_unitaryGroup tc) _root_.GlobalTheory.Proof.parabolic_and_constant_term.parabolicAndConstTermX trivial
 
 end GlobalTheory.PsCo.SpecX
 
@@ -991,7 +991,7 @@ open GlobalTheory.LiftRows
 theorem UpperTheory.Lit.I5.unitary_theory_of_harishChandra_langlands_alt : GlobalTheory.Published.DiscreteSeriesClassification → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspTraceClass → GlobalTheory.Published.DixmierMalliavinFactorisation → GlobalTheory.Published.ZelevinskyPolynomialRing → GlobalTheory.Published.GeometricLemma → GlobalTheory.Published.GreenCuspidal → ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), Given R F → GlobalTheory.CuspMult.MultEq R := by
   intro ds rd hf tc dm ze gl gc D G _ _ Pl0 T A Ks _ _ _ R F hG
   exact GlobalTheory.PsCo.Pc.multEq_of_sides _root_.GlobalTheory.PsCo.Pc.localPC_holds rd hf dm gc (GlobalTheory.PsCo.SpecX.main ds tc)
-    (GlobalTheory.T.trace_separation_of_iwahori_trace GlobalTheory.IwahoriTraceProof.iwahoriTrace (GlobalTheory.SmGL.Exponents.exponentsSeparate gl ze))
+    (_root_.GlobalTheory.TrMultSep.separation_of_iwahoriTrace GlobalTheory.IwahoriTraceProof.iwahoriTrace (GlobalTheory.SmGL.Exponents.exponentsSeparate gl ze))
     (GlobalTheory.PsCo.Plug.ellipticSideDirect tc) _root_.GlobalTheory.TrEllSum.ellipticPartX R F hG
 end
 end -- clump:auto

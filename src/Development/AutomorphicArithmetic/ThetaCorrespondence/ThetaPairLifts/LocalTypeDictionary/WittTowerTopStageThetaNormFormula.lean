@@ -616,14 +616,14 @@ theorem exists_read {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} (hθ : IsIn
       rw [thO, h2, rho_zero, ← eF] at h1
       exact h1.symm
     simp only [thetaInt, key]
-    rw [GlobalTheory.T.setIntegral_conjugate_scaled_unitaryGroup_eq _ 1 one_ne_zero hR.JW _ _ hν.1 hν.2 Γ.M.dom (hμ ▸ hg.hM.dom)
+    rw [_root_.GlobalTheory.ConjUIntegral.setIntegral_conjU_eq _ 1 one_ne_zero hR.JW _ _ hν.1 hν.2 Γ.M.dom (hμ ▸ hg.hM.dom)
       (fun x => GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.theta om Φ x (toUX X e hR.JX h)) fun γ hγ x => ?_, ← hμ]
     · rfl
     · have e3 : ((γ * x, toUX X e hR.JX h) : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.UB Γ.V.J × GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.UB Γ.W.J) =
           (γ, 1) * (x, toUX X e hR.JX h) := by simp
       simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.theta]
       rw [e3, map_mul, Module.End.mul_apply,
-        GlobalTheory.T.theta_distribution_rational_points_invariant_triple Bs Γ Xc om om' hT γ hγ 1 (one_mem _) _ (hT.weil.isUSplitting.pres _ _ hF.1)]
+        _root_.GlobalTheory.RatInvTheta.thetaSum_rat_inv Bs Γ Xc om om' hT γ hγ 1 (one_mem _) _ (hT.weil.isUSplitting.pres _ _ hF.1)]
   obtain ⟨a1, a2, -⟩ := fock_datum hθ true A B e.symm Bs hT₀.base hR.JW hR.JX hg.hV hg.hW
     (fun w => by
       obtain ⟨τ, a, b, -, d⟩ := hR.cart w
@@ -702,10 +702,10 @@ theorem thetaInt_eq_zero (hSA : GlobalTheory.Published.StrongApproxSU) (hK : Glo
   funext y
   have k₀ := hI _ _ (hPf 1 φ₀ one_ne_zero p₀ _ (by rw [one_smul]; exact isDatum_of_isDatumA d₀)) y
   rw [inv_one, one_smul] at k₀
-  refine k₀.trans (I_eq_zero hT hla hl (GlobalTheory.T.theta_distribution_rational_points_invariant_triple Bs Γ X om om' hT 1 (one_mem _)) hv0
-    (GlobalTheory.T.weilRepresentationLocality_tensorModelVW Bs Γ X om om' hT _) (GlobalTheory.T.strongApproximation_splitPlace_skewHermitian_unitary hSA Bs Γ X om om' hT ⟨_, hT.chars.sub hv0⟩)
+  refine k₀.trans (I_eq_zero hT hla hl (_root_.GlobalTheory.RatInvTheta.thetaSum_rat_inv Bs Γ X om om' hT 1 (one_mem _)) hv0
+    (GlobalTheory.T.weilRepresentationLocality_tensorModelVW Bs Γ X om om' hT _) (_root_.GlobalTheory.SplitApprox.strongApprox_split hSA Bs Γ X om om' hT ⟨_, hT.chars.sub hv0⟩)
     (H := Set.range (blkU _ _ e h.JWW)) (fun x => by
-      obtain ⟨s, g, h1, h2⟩ := GlobalTheory.T.exists_detOne_mul_blockUnitary_decomposition _ _ e h.JWW hd x
+      obtain ⟨s, g, h1, h2⟩ := _root_.GlobalTheory.DetDecomp.exists_detOne_mul_blkU _ _ e h.JWW hd x
       exact ⟨s, _, ⟨g, rfl⟩, h1, h2⟩) (fun φ₁ p₁ g₀ hg₀ => ?_) p₀ _)
   by_contra hne₁
   obtain ⟨φ, hφ, hQ, _, ⟨g, rfl⟩, hne⟩ := exists_I_ne_zero_kind hm hc hco (H := Set.range (blkU _ _ e h.JWW))
