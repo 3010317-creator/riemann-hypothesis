@@ -104,12 +104,8 @@ private theorem core (d : ℕ) (MainNotions : Set (HeightOneSpectrum (𝓞 K))) 
         BL w.1 = (BK p).map (· ^ fdeg w))
     (s : ℂ) (hs : c₀ + 1 < s.re) :
     ∏ j ∈ Finset.range d, eulerL K (fun p => (BK p).map (· * e p ^ j)) MainNotions s = eulerL L BL SL s := by
-  have hf : ∀ p ∉ MainNotions, ∀ w : PlacesOver L p, 0 < fdeg w := by
-    intro p hp w
-    have := ((h p hp).2.2 w).2.1
-    rcases Nat.eq_zero_or_pos (fdeg w) with h0 | h0
-    · rw [h0] at this; omega
-    · exact h0
+  have hf : ∀ p ∉ MainNotions, ∀ w : PlacesOver L p, 0 < fdeg w := fun p hp w =>
+    Nat.pos_of_dvd_of_pos (Dvd.intro_left _ ((h p hp).2.2 w).2.1) hd
   have hL := (GlobalTheory.HenQ.Regroup.multipliable_E L SL BL c₀ r (by
     intro w hw
     have hp : w.under (𝓞 K) ∉ MainNotions := (hS w).not.mp hw
