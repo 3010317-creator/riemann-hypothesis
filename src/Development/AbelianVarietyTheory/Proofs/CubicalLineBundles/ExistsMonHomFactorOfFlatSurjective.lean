@@ -5,6 +5,7 @@ public import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsGroupQuotientPullback
 import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.AlgebraicGeometry.Sites.Fpqc
 import Development.AbelianVarietyTheory.Definitions.CMLattices.IsCyclotomicExtensionCyclotomicField28
 import Development.AbelianVarietyTheory.Definitions.CMLattices.LamLetters
 import Formalism.LocalToGlobal.CMDeterminantIdeals.DetIdeal
