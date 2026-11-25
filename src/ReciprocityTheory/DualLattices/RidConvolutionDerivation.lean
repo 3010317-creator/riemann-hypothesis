@@ -194,14 +194,8 @@ lemma mem_span_pow_of_coeff {P : MvPolynomial (Fin d) R}
   push Not at hnot
   obtain ⟨j, hj⟩ := hnot
   have e : monomial β (AddMonoidAlgebra.coeff P β) = X j ^ p * monomial (β - Finsupp.single j p) (AddMonoidAlgebra.coeff P β) := by
-    have hs : Finsupp.single j p + (β - Finsupp.single j p) = β := by
-      ext l
-      by_cases hl : j = l
-      · subst hl
-        simp only [Finsupp.coe_add, Finsupp.coe_tsub, Pi.add_apply, Pi.sub_apply,
-          Finsupp.single_eq_same]
-        omega
-      · simp [hl]
+    have hs : Finsupp.single j p + (β - Finsupp.single j p) = β :=
+      add_tsub_cancel_of_le (Finsupp.single_le_iff.2 hj)
     rw [X_pow_eq_monomial, monomial_mul, one_mul, hs]
   rw [e]
   exact Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨j, rfl⟩)
@@ -250,13 +244,8 @@ theorem coeff_eq_zero_of_stable (ε : A →ₐ[R] R) (x : Fin d → A) (hx : ∀
         subst h0
         simp at hdeg
       set β := α - Finsupp.single i 1 with hβdef
-      have hαβ : α = β + Finsupp.single i 1 := by
-        ext j
-        simp only [hβdef, Finsupp.coe_add, Pi.add_apply, Finsupp.coe_tsub, Pi.sub_apply,
-          Finsupp.single_apply]
-        split_ifs with hj
-        · subst hj; omega
-        · omega
+      have hαβ : α = β + Finsupp.single i 1 :=
+        (tsub_add_cancel_of_le (Finsupp.single_le_iff.2 (Nat.one_le_iff_ne_zero.2 hi))).symm
       choose T hT using fun j => hsurj (D i (x j))
       have hTc : ∀ j, constantCoeff (T j) = if i = j then 1 else 0 := fun j => by
         rw [← hε, hT, hDx]
