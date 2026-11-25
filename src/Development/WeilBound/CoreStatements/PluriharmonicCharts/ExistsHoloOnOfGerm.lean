@@ -112,11 +112,7 @@ theorem isOpen_ne {A : FinHolAtlas e X} {W : Set X} (hW : IsOpen W) {T : Type} [
         show (A.chart k).symm (A.chart k y) ∈ W
         rw [(A.chart k).left_inv hk]
         exact hyW⟩
-    have hc : ContinuousAt ((f t ∘ (A.chart k).symm) ∘ (A.chart k)) y :=
-      han.continuousAt.comp ((A.chart k).continuousAt hk)
-    refine hc.congr ?_
-    filter_upwards [(A.chart k).open_source.mem_nhds hk] with z hz
-    simp only [Function.comp_apply, (A.chart k).left_inv hz]
+    exact ((A.chart k).symm.continuousAt_iff_continuousAt_comp_right hk).2 han.continuousAt
   have hev : ∀ᶠ z in 𝓝 y, ∀ t, f t z ≠ 0 := by
     rw [Filter.eventually_all]
     intro t
