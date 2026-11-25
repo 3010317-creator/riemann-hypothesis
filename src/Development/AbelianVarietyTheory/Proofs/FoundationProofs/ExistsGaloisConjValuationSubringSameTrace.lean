@@ -161,13 +161,8 @@ private lemma valuation_sum_lower_div_pow_eq_one_and_lt_one {L : Type} [Field L]
         -(1 + ∑ j ∈ Finset.Ico (k + 1) (n + 1), a j * x ^ j / x ^ k) := by
       linear_combination hrel'
     rw [this, Valuation.map_neg, Valuation.map_one_add_of_lt _ ht]
-  · have hxinv : x⁻¹ ∈ U' := (U'.mem_or_inv_mem x).resolve_left hxU'
-    have hxinv' : U'.valuation x⁻¹ < 1 := by
-      rw [map_inv₀]
-      have : 1 < U'.valuation x := by
-        by_contra h
-        exact hxU' ((U'.valuation_le_one_iff _).1 (not_lt.1 h))
-      exact inv_lt_one_of_one_lt₀ this
+  · have hxinv' : U'.valuation x⁻¹ < 1 :=
+      U'.mem_nonunits_iff.1 (U'.inv_mem_nonunits_iff.2 (.inr hxU'))
     refine Valuation.map_sum_lt _ one_ne_zero fun j hj => ?_
     have hj' : j < k := by simpa using hj
     have : a j * x ^ j / x ^ k = a j * x⁻¹ ^ (k - j) := by
