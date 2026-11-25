@@ -22,15 +22,6 @@ variable {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field 
     {LL : Type} [Field LL] [Algebra Qp LL]
     {V : Type} [AddCommGroup V] [Module LL V] [Module Qp V] [IsScalarTower Qp LL V]
 
-theorem lvFil_Fil_anti {a b : ℤ} (hab : a ≤ b) : PD.Fil b ≤ PD.Fil a := by
-  obtain ⟨k, rfl⟩ := Int.le.dest hab
-  clear hab
-  induction k with
-  | zero => simp
-  | succ k ih =>
-    rw [show a + ((k + 1 : ℕ) : ℤ) = a + k + 1 by push_cast; ring]
-    exact (PD.Fil_anti (a + k)).trans ih
-
 theorem lvFil_FilV_anti : Antitone (FilV PD (LL := LL) (V := V)) := by
   apply _root_.Formalism.MainNotions.N.Ln03.Pf.jb_FilV_anti <;> assumption
 

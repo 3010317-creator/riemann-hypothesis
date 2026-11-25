@@ -57,20 +57,6 @@ variable {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (Ch : Ch
 
 
 
-open Classical in
-theorem cB_div_int (P : rowSG Pr sel mu) :
-    IntAt P.1 (((Col.qOf P.1 : X.E) ^ cst.B)⁻¹ * ((cBof sel mu cst u : ℕ) : X.E)) := by
-  have hq : (Col.qOf P.1 : X.E) ≠ 0 := by exact_mod_cast (qOf_pos P.1).ne'
-  have e : ((cBof sel mu cst u : ℕ) : X.E) =
-      (Col.qOf P.1 : X.E) ^ cst.B * (((Pr.T u * (∏ P' ∈ Finset.univ.erase P, Col.qOf P'.1) ^ cst.B : ℕ)) : X.E) := by
-    unfold cBof
-    rw [← Finset.mul_prod_erase Finset.univ (fun P' : rowSG Pr sel mu => Col.qOf P'.1) (Finset.mem_univ P)]
-    push_cast
-    ring
-  rw [e, ← mul_assoc, inv_mul_cancel₀ (pow_ne_zero _ hq), one_mul]
-  have := xqIntAt_intCast (P := P.1) ((Pr.T u * (∏ P' ∈ Finset.univ.erase P, Col.qOf P'.1) ^ cst.B : ℕ) : ℤ)
-  simpa using this
-
 
 end Inv
 
@@ -110,44 +96,7 @@ variable {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (Ch : Ch
   {u : Pr.Word}
 
 
-open Classical in
-theorem inFr_intA {i j : ℕ} (p : ChPt (R := R) sel mu u i) (p' : ChPt (R := R) sel mu u j) (P : rowSG Pr sel mu)
-    (w : HomE X.E (R.N i) (R.N j)) (hw : w ∈ homAt (Sall sel mu u) p.deco.1.N p'.deco.1.N) (s : Fin (R.N i)) (l : Fin (R.N j)) :
-    IntAt P.1 ((inFr (frsF sel mu p P) (frsF sel mu p' P) w) (Pi.single s 1) l) := by
-  have h1 : frsF sel mu p P (Pi.single s 1) ∈ localization₂ P.1.asIdeal p.deco.1.N := (frsF_isFr sel mu p P _).2 (_root_.Formalism.L2.Col.ciSingle_mem (P := P.1) s)
-  have h2 := hw P.1 (Finset.mem_union_right _ P.2) _ h1
-  have h3 : (frsF sel mu p' P).symm (w (frsF sel mu p P (Pi.single s 1))) ∈ stdAt X.E (R.N j) P.1 :=
-    (frsF_isFr sel mu p' P _).1 (by rw [LinearEquiv.apply_symm_apply]; exact h2)
-  exact (xqMem_stdAt (P := P.1) _).1 h3 l
 
-
-open Classical in
-theorem inFr_cB_int {i j : ℕ} (p : ChPt (R := R) sel mu u i) (p' : ChPt (R := R) sel mu u j) (P : rowSG Pr sel mu)
-    (w : HomE X.E (R.N i) (R.N j)) (hw : w ∈ homAt (Sall sel mu u) p.deco.1.N p'.deco.1.N) (s : Fin (R.N i)) (l : Fin (R.N j)) :
-    IntAt P.1 (((qOf P.1 : X.E) ^ cst.B)⁻¹ *
-      (inFr (frsF sel mu p P) (frsF sel mu p' P) (((cBof sel mu cst u : ℕ) : 𝓞 X.E) • w)) (Pi.single s 1) l) := by
-  have e2 : (inFr (frsF sel mu p P) (frsF sel mu p' P) (((cBof sel mu cst u : ℕ) : 𝓞 X.E) • w)) (Pi.single s 1) l =
-      ((cBof sel mu cst u : ℕ) : X.E) * (inFr (frsF sel mu p P) (frsF sel mu p' P) w) (Pi.single s 1) l := by
-    simp only [inFr, LinearMap.comp_apply, LinearEquiv.coe_coe, LinearMap.smul_apply]
-    rw [← algebraMap_smul X.E (((cBof sel mu cst u : ℕ) : 𝓞 X.E)), map_smul, Pi.smul_apply, smul_eq_mul, map_natCast]
-  rw [e2, ← mul_assoc]
-  exact (cB_div_int sel mu cst P).mul (inFr_intA sel mu p p' P w hw s l)
-
-
-open Classical in
-theorem phiT_cB (hPr : Pr.Ok) {i j : ℕ} (p : ChPt (R := R) sel mu u i) (p' : ChPt (R := R) sel mu u j)
-    (x w : HomE X.E (R.N i) (R.N j)) (hw : w ∈ homAt (Sall sel mu u) p.deco.1.N p'.deco.1.N) :
-    phiT X.K p.deco.1 p'.deco.1 (x + ((cBof sel mu cst u : ℕ) : 𝓞 X.E) • w) = phiT X.K p.deco.1 p'.deco.1 x := by
-  refine phiT_add_mul X.K p.deco p'.deco (Sall sel mu u) (fun P => Finset.mem_union_left _ P.2) (Pr.T u) (fun P => ?_) x _ ?_
-  · have h1 : Pr.piT u ∈ P.1.asIdeal := mem_divs_of P.2
-    rw [← hPr.piT_norm u]
-    exact P.1.asIdeal.mul_mem_right _ h1
-  · refine (mem_mulLat _ _ _).2 ⟨(((∏ P : rowSG Pr sel mu, Col.qOf P.1) ^ cst.B : ℕ) : 𝓞 X.E) • w,
-      Submodule.smul_mem _ _ hw, ?_⟩
-    rw [smul_smul]
-    unfold cBof
-    push_cast
-    rfl
 
 
 open Classical in

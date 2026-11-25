@@ -19,42 +19,6 @@ section Low
 
 variable {R σ : Type*} [CommRing R] (wt : σ → ℕ)
 
-theorem weighted_component_mul_lowest {f g : MvPolynomial σ R} {a b : ℕ}
-    (hf : ∀ m ∈ f.support, a ≤ Finsupp.weight wt m) (hg : ∀ m ∈ g.support, b ≤ Finsupp.weight wt m) :
-    weightedHomogeneousComponent wt (a + b) (f * g) =
-      weightedHomogeneousComponent wt a f * weightedHomogeneousComponent wt b g := by
-  ext m
-  rw [coeff_weightedHomogeneousComponent, coeff_mul, coeff_mul]
-  split_ifs with h
-  · refine Finset.sum_congr rfl fun x hx => ?_
-    rw [coeff_weightedHomogeneousComponent, coeff_weightedHomogeneousComponent]
-    have hx' : x.1 + x.2 = m := Finset.HasAntidiagonal.mem_antidiagonal.1 hx
-    have hw : Finsupp.weight wt x.1 + Finsupp.weight wt x.2 = a + b := by rw [← map_add (f := _), hx', h]
-    by_cases h1 : AddMonoidAlgebra.coeff f x.1 = 0
-    · simp [h1]
-    by_cases h2 : AddMonoidAlgebra.coeff g x.2 = 0
-    · simp [h2]
-    have e1 := hf x.1 (mem_support_iff.2 h1)
-    have e2 := hg x.2 (mem_support_iff.2 h2)
-    rw [ite_eq_left (by omega), ite_eq_left (by omega)]
-  · symm
-    refine Finset.sum_eq_zero fun x hx => ?_
-    rw [coeff_weightedHomogeneousComponent, coeff_weightedHomogeneousComponent]
-    have hx' : x.1 + x.2 = m := Finset.HasAntidiagonal.mem_antidiagonal.1 hx
-    by_cases h1 : Finsupp.weight wt x.1 = a
-    · by_cases h2 : Finsupp.weight wt x.2 = b
-      · exact absurd (by rw [← hx', map_add (f := _), h1, h2]) h
-      · simp [h2]
-    · simp [h1]
-
-theorem support_weight_mul_lower {f g : MvPolynomial σ R} {a b : ℕ}
-    (hf : ∀ m ∈ f.support, a ≤ Finsupp.weight wt m) (hg : ∀ m ∈ g.support, b ≤ Finsupp.weight wt m) :
-    ∀ m ∈ (f * g).support, a + b ≤ Finsupp.weight wt m := by
-  intro m hm
-  obtain ⟨m1, h1, m2, h2, rfl⟩ := Finset.mem_add.1 (MvPolynomial.support_mul f g hm)
-  rw [map_add (f := _)]
-  exact Nat.add_le_add (hf m1 h1) (hg m2 h2)
-
 theorem weighted_component_prod_lowest {ι : Type*} (s : Finset ι) (f : ι → MvPolynomial σ R) (o : ι → ℕ)
     (hf : ∀ c ∈ s, ∀ m ∈ (f c).support, o c ≤ Finsupp.weight wt m) :
     (∀ m ∈ (∏ c ∈ s, f c).support, ∑ c ∈ s, o c ≤ Finsupp.weight wt m) ∧

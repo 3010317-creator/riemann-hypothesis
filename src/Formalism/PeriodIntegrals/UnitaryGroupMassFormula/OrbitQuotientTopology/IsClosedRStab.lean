@@ -108,17 +108,6 @@ theorem ndiag_mul {a b : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     ← Matrix.mul_apply, Matrix.one_mul]
   exact hDb i j hij hjr
 
-theorem ndiag_inv {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
-    (hU : a ∈ UH (Hpk k r)) (hA : a.BlockTriangular (nβ k r)) (hDa : NDiag a) : NDiag a⁻¹ := by
-  have h1 : a * a⁻¹ = 1 := uh_mul_inv hU
-  letI : Invertible a := ⟨a⁻¹, uh_inv_mul hU, h1⟩
-  have hB : a⁻¹.BlockTriangular (nβ k r) := Matrix.blockTriangular_inv_of_blockTriangular hA
-  intro i j hij hjr
-  have := congrFun (congrFun h1 i) j
-  rw [Matrix.mul_apply, Finset.sum_congr rfl (fun l _ => ndiag_term hA hB hDa i j l hij hjr),
-    ← Matrix.mul_apply, Matrix.one_mul] at this
-  exact this
-
 theorem nset_one : (1 : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) ∈ Nset k r := by
   rw [nset_iff]
   refine ⟨?_, Matrix.blockTriangular_one, fun i j _ _ => rfl⟩

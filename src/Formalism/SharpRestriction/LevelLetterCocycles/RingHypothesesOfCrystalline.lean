@@ -32,10 +32,6 @@ section Letters
 
 variable {T : LocLat G Qp LL O}
 
-theorem φA_letE' (i : ZMod n) : W.φA (letE i : LetA O n) = letE (i + 1) := by
-  have := Formalism.MainNotions.WachCoordinates.Br.φA_letE W (i + 1)
-  rwa [add_sub_cancel_right] at this
-
 theorem dl_φ {i : ZMod n} {x : W.DD T} (h : DL W T i x) : DL W T (i + 1) (W.φD T x) := by
   apply _root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.ExtensionLemmaAlt.Step2L.invariantLetter_frobenius_succ <;> assumption
 

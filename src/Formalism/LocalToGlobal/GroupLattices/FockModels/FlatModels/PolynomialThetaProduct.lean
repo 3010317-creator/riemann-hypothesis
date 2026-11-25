@@ -180,20 +180,6 @@ theorem mem_Pol {R : Type} [CommRing R] {k : ℕ} {d : S → ℕ} {F : MvPolynom
     F ∈ Pol R k d ↔ ∀ μ ∈ F.support, ∀ i, multideg μ i = d i := by
   exact Iff.rfl
 
-theorem Pol_one (R : Type) [CommRing R] (k : ℕ) : (1 : MvPolynomial (S × Fin k) R) ∈ Pol R k (0 : S → ℕ) := by
-  rw [mem_Pol]
-  intro μ hμ i
-  classical
-  rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one] at hμ
-  split_ifs at hμ with h
-  · subst h
-    simp [multideg]
-  · exact absurd rfl hμ
-
-theorem Pol_mul {R : Type} [CommRing R] {k : ℕ} {a b : S → ℕ} {P Q : MvPolynomial (S × Fin k) R}
-    (hP : P ∈ Pol R k a) (hQ : Q ∈ Pol R k b) : P * Q ∈ Pol R k (a + b) := by
-  apply _root_.Formalism.MainNotions.G.Joints.StandardMonomialSpace.hom_Pol_mul <;> assumption
-
 theorem Pol_prod {R : Type} [CommRing R] {k : ℕ} {J : Type} (s : Finset J) (δ : J → S → ℕ)
     (q : J → MvPolynomial (S × Fin k) R) (h : ∀ i ∈ s, q i ∈ Pol R k (δ i)) :
     ∏ i ∈ s, q i ∈ Pol R k (∑ i ∈ s, δ i) := by

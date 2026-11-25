@@ -72,12 +72,6 @@ lemma bc_out_col (c : Fin r → ℂ) (μ ν : Matrix (Fin (k + 1)) (Fin (k + 1))
   · rw [dite_eq_left hj1, dite_eq_left hj1]
   · rw [dite_eq_right hj1, dite_eq_right hj1, dite_eq_right (show ¬ j.val ≤ r + k by omega), dite_eq_right (show ¬ j.val ≤ r + k by omega)]
 
-lemma bc_out_row (c : Fin r → ℂ) (μ ν : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (i j : Fin (2 * r + k + 1))
-    (hi : ¬ mid k r i) : bigCell k r c μ i j = bigCell k r c ν i j := by
-  by_cases hj : mid k r j
-  · rw [bc_mid_col c μ i j hj, bc_mid_col c ν i j hj, dite_eq_right hi, dite_eq_right hi]
-  · exact bc_out_col c μ ν i j hj
-
 lemma bc_one_mid (c : Fin r → ℂ) (i j : Fin (2 * r + k + 1)) (hi : mid k r i) (hj : mid k r j) :
     bigCell k r c 1 i j = if i = j then 1 else 0 := by
   rw [bc_mid_col c 1 i j hj, dite_eq_left hi, Matrix.one_apply]

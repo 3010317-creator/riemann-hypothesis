@@ -165,15 +165,6 @@ def conjAlgC : AlgC ≃+* AlgC where
   map_mul' _ _ := Subtype.ext (map_mul _ _ _)
   map_add' _ _ := Subtype.ext (map_add _ _ _)
 
-theorem baseEmbedding_conj (x : H.E) : H.φ₀ (H.conj x) = starRingEnd ℂ (H.φ₀ x) :=
-  H.conjE_apply H.φ₀ x
-
-theorem isCMConjOm_conjAlgC : IsCMConjOm H.E AlgC conjAlgC := by
-  refine ⟨⟨(algebraicClosure ℚ ℂ).val.toRingHom, fun x => rfl⟩, fun x => ⟨H.conj x, ?_⟩⟩
-  apply Subtype.ext
-  change starRingEnd ℂ (H.φ₀ x) = H.φ₀ (H.conj x)
-  rw [baseEmbedding_conj]
-
 
 
 open Ideal in
@@ -403,11 +394,6 @@ def nautToy (what₂ : Rows.Data R) (h : NHyp H what₂) : NAut (ndToy H what₂
   locAutHodgeTateWeightsLevelZero i := i.elim
   kFbar i := i.elim
 
-theorem shaExample_eq (p : ℕ) [hp : Fact p.Prime] (e : ℕ) :
-    shaExample H p e = ((Formalism.GaloisCohomology.shaLen (toyLocalData H p) (e : ℤ)).toNat : ℚ) := by
-  unfold shaExample
-  rw [dite_eq_left hp.out]
-
 
 open Ideal Polynomial in
 theorem placesOver_ncard_of_frob (p : ℕ) [hp : Fact p.Prime] (hpN : ¬ p ∣ H.condN)
@@ -525,27 +511,6 @@ theorem placesOver_ncard_of_split (p : ℕ) [hp : Fact p.Prime] (hpm : p % H.con
     exact hmod
   rw [this, map_one]
 
-theorem g_split_of (hg : ∀ k, H.g k % H.condN = 1) :
-    ∀ k, (placesOver H.E (H.g k)).ncard = Module.finrank ℚ H.E := by
-  intro k
-  have : Fact (H.g k).Prime := ⟨H.g_prime k⟩
-  exact placesOver_ncard_of_split H (H.g k) (hg k)
 
-
-
-theorem example_Z_compatibility (what₂ : Rows.Data R) (h : NHyp H what₂) :
-    ∀ i x, x ∈ (ndToy H what₂ h).Z i ↔ x ∈ Formalism.MainNotions.N.ZN (ndToy H what₂ h) (nautToy H what₂ h) i :=
-  fun i => i.elim
-
-theorem example_goodZ_compatibility (what₂ : Rows.Data R) (h : NHyp H what₂) :
-    ∀ i x, x ∈ (ndToy H what₂ h).Zgood i ↔
-      x ∈ Formalism.MainNotions.N.ZgoodN (ndToy H what₂ h) (nautToy H what₂ h) i :=
-  fun i => i.elim
-
-theorem example_etaJ_compatibility (what₂ : Rows.Data R) (h : NHyp H what₂) (hη : ∀ j w, what₂.etaJ j w = 0) :
-    ∀ j w, 1 ≤ j → j ≤ R.m → what₂.etaJ j w = ∑ i ∈ (ndToy H what₂ h).locs j w, (ndToy H what₂ h).etaLoc i := by
-  intro j w _ _
-  rw [hη]
-  rfl
 
 end Formalism.BasicNotions.Examples₂

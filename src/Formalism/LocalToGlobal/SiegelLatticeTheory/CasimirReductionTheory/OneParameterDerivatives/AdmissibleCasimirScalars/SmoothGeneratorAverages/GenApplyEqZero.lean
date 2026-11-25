@@ -115,11 +115,6 @@ lemma trace_re {ε : Fin n → Bool} {X Y : Matrix (Fin n) (Fin n) ℂ} (hX : in
 lemma umat_mul_inv {ε : Fin n → Bool} (g : UJ ε) : umat g * umat g⁻¹ = 1 := by
   simp [umat]
 
-lemma umat_inv_mul {ε : Fin n → Bool} (g : UJ ε) : umat g⁻¹ * umat g = 1 := by
-  simp [umat]
-
-lemma umat_inUJ {ε : Fin n → Bool} (g : UJ ε) : (umat g)ᴴ * Jm ε * umat g = Jm ε := g.2
-
 lemma conj_inG {ε : Fin n → Bool} (g : UJ ε) {X : Matrix (Fin n) (Fin n) ℂ} (hX : inG ε X) :
     inG ε (umat g * X * umat g⁻¹) := by
   apply _root_.GlobalTheory.FlagModulus.inG_conj <;> assumption

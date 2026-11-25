@@ -62,36 +62,6 @@ theorem smul_mem_Lw {a : 𝓞 I.E} (ha : a ∈ w.asIdeal) {y : Fin I.n → I.E �
     rw [Subring.smul_def, smul_comm, ← Subring.smul_def]
     exact (Lw I w).smul_mem r hx
 
-theorem Lw_decomp (p : ℕ) (hp0 : 0 < p) {z : Fin I.n → I.E ⊗[I.F] Af I.F} (hz : z ∈ Lw I w) :
-    ∃ l ∈ wLat0 I w, ∃ y ∈ I.Lf, z = iv I l + (p : I.E ⊗[I.F] Af I.F) • y := by
-  have hz' : z ∈ Submodule.span (IntAf I.F I.E)
-      (Set.range fun x : wLat0 I w => iv I (x : Fin I.n → I.E)) := hz
-  clear hz
-  induction hz' using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨⟨l, hl⟩, rfl⟩ := hx
-    exact ⟨l, hl, 0, I.Lf.zero_mem, by rw [smul_zero, add_zero]⟩
-  | zero => exact ⟨0, (wLat0 I w).zero_mem, 0, I.Lf.zero_mem, by rw [DictLat.iv_zero, smul_zero, add_zero]⟩
-  | add x y _ _ hx hy =>
-    obtain ⟨l, hl, a, ha, rfl⟩ := hx
-    obtain ⟨m, hm, b, hb, rfl⟩ := hy
-    exact ⟨l + m, (wLat0 I w).add_mem hl hm, a + b, I.Lf.add_mem ha hb,
-      by rw [DictLat.iv_add, smul_add]; abel⟩
-  | smul r x _ hx =>
-    obtain ⟨l, hl, a, ha, rfl⟩ := hx
-    obtain ⟨c, r', hr', hr⟩ := dual_dense I.F I.E p hp0 r.1 r.2
-    have hlL : iv I l ∈ I.Lf := DictGen.iv_mem I (wLat0_le I w hl)
-    refine ⟨c • l, (wLat0 I w).smul_mem c hl, (⟨r', hr'⟩ : IntAf I.F I.E) • iv I l + r • a,
-      I.Lf.add_mem (I.Lf.smul_mem _ hlL) (I.Lf.smul_mem r ha), ?_⟩
-    have e1 : iv I (c • l) = Formalism.UG.inclE (F := I.F) (Af I.F) (c : I.E) • iv I l := by
-      funext i; simp [iv, Algebra.smul_def]
-    rw [e1]
-    simp only [Subring.smul_def]
-    rw [hr]
-    funext i
-    simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
-    ring
-
 theorem mem_wLat0_of_iv (p : ℕ) (hp0 : 0 < p) (hpw : (p : 𝓞 I.E) ∈ w.asIdeal) (y : Fin I.n → I.E)
     (hy : iv I y ∈ Lw I w) : y ∈ wLat0 I w := by
   intros

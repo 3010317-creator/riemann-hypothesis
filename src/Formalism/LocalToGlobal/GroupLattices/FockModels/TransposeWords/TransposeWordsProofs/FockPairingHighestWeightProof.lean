@@ -24,17 +24,6 @@ noncomputable section
 
 namespace Formalism.GradedWeylDivisibility
 
-theorem sum_fin_filter_lt_eq_range {N : ℕ} (G : ℕ → ℕ) (k : ℕ) :
-    ∑ a : Fin N with a.val < k, G a.val = ∑ i ∈ Finset.range (min N k), G i := by
-  rw [Finset.sum_filter]
-  refine (Fin.sum_univ_eq_sum_range (fun i => if i < k then G i else 0) N).trans ?_
-  show ∑ i ∈ Finset.range N, (if i < k then G i else 0) = _
-  rw [← Finset.sum_filter]
-  congr 1
-  ext i
-  simp only [Finset.mem_filter, Finset.mem_range]
-  omega
-
 theorem rowNu_partial_sum {r n : ℕ} (ν : Fin n → ℕ) (hnr : n ≤ r) (k : ℕ) :
     (∑ a : Fin r with a.val < k, rowNu (r := r) ν a) = ∑ t : Fin n with t.val < k, ν t := by
   apply _root_.Formalism.GradedWeylDivisibility.rowNuSum <;> assumption

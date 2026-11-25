@@ -336,6 +336,4 @@ theorem formal_group_points_param_holds : FormalGroupPointsParametrisation.{u} :
     · field_simp
     · field_simp
 
-theorem formal_group_points_param_of (_hU : WSubstUnique.{u}) : FormalGroupPointsParametrisation.{u} := formal_group_points_param_holds
-
 end Formalism.ELL

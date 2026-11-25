@@ -636,10 +636,6 @@ section Frame
 
 variable {k r : ℕ}
 
-theorem sv_herm_bvec (p : Fin (2 * r + k + 1)) (w : Fin (2 * r + k + 1) → ℂ) :
-    herm (Hpk k r) (bvec p) w = ∑ i, star (w i) * Hpk k r i p := by
-  simp [herm, bvec, Matrix.mulVec, dotProduct, Pi.single_apply]
-
 theorem sv_herm_out {w : Fin (2 * r + k + 1) → ℂ} (hw : inWb k r w) {p : Fin (2 * r + k + 1)}
     (hp : p.val < r ∨ r + k < p.val) : herm (Hpk k r) (bvec p) w = 0 := by
   apply _root_.Formalism.FourierDecayAlt.Q.LieAlgebraWeightVectors.herm_bvec_eq_zero_of_inWb <;> assumption
@@ -647,16 +643,6 @@ theorem sv_herm_out {w : Fin (2 * r + k + 1) → ℂ} (hw : inWb k r w) {p : Fin
 theorem sv_herm_swap (v w : Fin (2 * r + k + 1) → ℂ) :
     herm (Hpk k r) v w = star (herm (Hpk k r) w v) := by
   apply _root_.ReciprocityTheory.ChartRestriction.DS.Xi.FormulaFAux.herm_symm <;> assumption
-
-theorem sv_unitB_mulVec {m : ℕ} (Bs : Fin m → Fin (2 * r + k + 1) → ℂ) (a b : Fin m)
-    (v : Fin (2 * r + k + 1) → ℂ) : unitB (Hpk k r) Bs a b *ᵥ v = herm (Hpk k r) v (Bs b) • Bs a := by
-  apply _root_.Formalism.FourierDecayAlt.Q.LieAlgebraWeightVectors.ad_unitB_mulVec <;> assumption
-
-theorem sv_unitB_adj {m : ℕ} (Bs : Fin m → Fin (2 * r + k + 1) → ℂ) (a b : Fin m)
-    (v : Fin (2 * r + k + 1) → ℂ) :
-    (unitB (Hpk k r) Bs a b)ᴴ *ᵥ (Hpk k r *ᵥ v) =
-      herm (Hpk k r) v (Bs a) • fun p => star (herm (Hpk k r) (bvec p) (Bs b)) := by
-  apply _root_.Formalism.FourierDecayAlt.Q.LieAlgebraWeightVectors.ad_unitB_ct_mulVec <;> assumption
 
 theorem sv_unitB_kill {m : ℕ} (Bs : Fin m → Fin (2 * r + k + 1) → ℂ) (a b : Fin m)
     {v : Fin (2 * r + k + 1) → ℂ} (ha : herm (Hpk k r) v (Bs a) = 0) (hb : herm (Hpk k r) v (Bs b) = 0) :

@@ -389,16 +389,6 @@ theorem skipSucc : PI.SkipSucc := by
   simp only [PI.QmSkipWork.val_succAbove, PI.skip1]
   split_ifs <;> rfl
 
-theorem skipSucc2 : PI.SkipSucc2 := by
-  unfold PI.SkipSucc2
-  intro t i i' j hii'
-  have hb : (i.succAbove i').val = i'.val + 1 := by
-    rw [PI.QmSkipWork.val_succAbove, ite_eq_right (by omega)]
-  apply Fin.ext
-  simp only [PI.QmSkipWork.val_succAbove]
-  unfold PI.skip2
-  split_ifs <;> (try dsimp only) <;> omega
-
 end PI.QmSkipWork
 end -- clump:auto
 end -- clump:auto
@@ -420,8 +410,6 @@ theorem Formalism.FourierDecayAlt.P.expansion_last_line : Formalism.FourierDecay
 theorem Formalism.FourierDecayAlt.P.line_form_of_minor : Formalism.FourierDecayAlt.Q.RowForm := quantum_minor_row_form
 
 theorem Formalism.FourierDecayAlt.P.skip_succ_identity : Formalism.FourierDecayAlt.Q.SkipSucc := PI.QmSkipWork.skipSucc
-
-theorem Formalism.FourierDecayAlt.P.skip_succ_double_identity : Formalism.FourierDecayAlt.Q.SkipSucc2 := PI.QmSkipWork.skipSucc2
 
 theorem Formalism.FourierDecayAlt.P.star_quantum_minor : Formalism.FourierDecayAlt.Q.StarMinor := quantum_minor_star
 

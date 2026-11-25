@@ -54,23 +54,4 @@ theorem gl_derivation_variable (LL : Letters ι) (S : Set ι) (a b : Fin n) (l :
     split_ifs <;> simp [pderiv_X, Ne.symm hl']
   · simp
 
-theorem gl_derivation_lie_bracket (LL : Letters ι) (S : Set ι) (a b c d : Fin n) :
-    ⁅glDerivation K LL S a b, glDerivation K LL S c d⁆ =
-      (if b = c then glDerivation K LL S a d else 0) - (if d = a then glDerivation K LL S c b else 0) := by
-  classical
-  apply MvPolynomial.derivation_ext
-  rintro ⟨l, e⟩
-  rw [Derivation.commutator_apply]
-  by_cases hl : l ∈ S
-  · by_cases hv : LL.vec l = true
-    · simp only [gl_derivation_variable, hl, hv, ite_true, apply_ite (glDerivation K LL S a b), apply_ite (glDerivation K LL S c d),
-        map_zero, Derivation.coe_sub, Pi.sub_apply]
-      by_cases h1 : b = c <;> by_cases h2 : d = a <;> by_cases h3 : e = d <;> by_cases h4 : e = b <;>
-        subst_vars <;> simp_all [gl_derivation_variable] <;> grind
-    · simp only [gl_derivation_variable, hl, hv, ite_true, apply_ite (glDerivation K LL S a b), apply_ite (glDerivation K LL S c d),
-        map_zero, map_neg, Derivation.coe_sub, Pi.sub_apply]
-      by_cases h1 : b = c <;> by_cases h2 : d = a <;> by_cases h3 : e = c <;> by_cases h4 : e = a <;>
-        subst_vars <;> simp_all [gl_derivation_variable]
-  · by_cases h1 : b = c <;> by_cases h2 : d = a <;> simp [gl_derivation_variable, hl, h1, h2]
-
 end Formalism.MainNotions.G.GLWeightTheory

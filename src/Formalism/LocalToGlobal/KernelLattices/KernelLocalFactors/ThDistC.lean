@@ -88,14 +88,6 @@ theorem InRange.add {E : Type} [Field E] [NumberField E] [StarRing E] {a b : ℕ
   unfold InRange at h ⊢
   exact ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.1, mem_divLat_add D c₁ _ h.2.2.2.2 hy⟩
 
-theorem mem_divLat_congr {E : Type} [Field E] [NumberField E] {H : Type} [AddCommGroup H] [Module (𝓞 E) H] (D c : ℕ) (M : Submodule (𝓞 E) H)
-    {x x' : H} (h : x - x' ∈ mulLat c M) : x ∈ divLat D M ↔ x' ∈ divLat D M := by
-  constructor
-  · intro hx
-    simpa using mem_divLat_add D c M hx (neg_mem h)
-  · intro hx'
-    simpa using mem_divLat_add D c M hx' h
-
 theorem homAt_gmap_iff {E : Type} [Field E] [NumberField E] [StarRing E] {a b : ℕ} (S : Finset (HeightOneSpectrum (𝓞 E)))
     (γ : Sp E a ≃ₗ[E] Sp E a) (γ' : Sp E b ≃ₗ[E] Sp E b) (N : Submodule (𝓞 E) (Sp E a)) (N' : Submodule (𝓞 E) (Sp E b)) (x : HomE E a b) :
     (γ'.toLinearMap ∘ₗ x ∘ₗ γ.symm.toLinearMap) ∈ homAt S (gmap γ N) (gmap γ' N') ↔ x ∈ homAt S N N' := by

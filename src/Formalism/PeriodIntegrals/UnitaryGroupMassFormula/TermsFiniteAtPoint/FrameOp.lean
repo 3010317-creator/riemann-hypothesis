@@ -81,31 +81,6 @@ theorem one_mem_aaS (D : D7) (a : Fin D.R.rS) : (1 : D.host.E) ∈ Formalism.L2.
     exact FractionalIdeal.coeIdeal_le_one
   exact this hy
 
-theorem norm_mem_ddS (D : D7) :
-    ((Ideal.absNorm (differentIdeal ℤ (𝓞 D.host.F)) : ℕ) : D.host.E) ∈ ddS D := by
-  unfold ddS
-  rw [FractionalIdeal.mem_coeIdeal]
-  refine ⟨((Ideal.absNorm (differentIdeal ℤ (𝓞 D.host.F)) : ℕ) : 𝓞 D.host.E), ?_, map_natCast _ _⟩
-  have := Ideal.mem_map_of_mem (algebraMap (𝓞 D.host.F) (𝓞 D.host.E))
-    (Ideal.absNorm_mem (differentIdeal ℤ (𝓞 D.host.F)))
-  rwa [map_natCast] at this
-
-theorem m_mem_aaS_inv (D : D7) (a : Fin D.R.rS) :
-    (((Ideal.absNorm (differentIdeal ℤ (𝓞 D.host.F))) ^ D.R.rS : ℕ) : D.host.E) ∈
-      (Formalism.L2.SG.Saturated.aaS D a)⁻¹ := by
-  rw [aaS_eq, inv_inv]
-  set N := Ideal.absNorm (differentIdeal ℤ (𝓞 D.host.F))
-  have hNk : ((N : D.host.E)) ^ (D.R.rS - a.1) ∈ ddS D ^ (D.R.rS - a.1) := by
-    rw [← FractionalIdeal.mem_coe, FractionalIdeal.coe_pow]
-    exact Submodule.pow_mem_pow _ (FractionalIdeal.mem_coe.mpr (norm_mem_ddS D)) _
-  have h1 : ((N : D.host.E)) ^ (D.R.rS - a.1) ∈ ((ddS D ^ (D.R.rS - a.1) :
-      FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) : Submodule (𝓞 D.host.E) D.host.E) :=
-    FractionalIdeal.mem_coe.mpr hNk
-  have h2 := Submodule.smul_mem _ ((N : 𝓞 D.host.E) ^ a.1) h1
-  rw [Algebra.smul_def, map_pow, map_natCast, ← pow_add, Nat.add_sub_cancel' a.2.le] at h2
-  push_cast
-  exact FractionalIdeal.mem_coe.mp h2
-
 theorem frame_fin (D : D7) {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (b : 𝓞 D.host.E)
     (B : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) (𝓞 D.host.E)) (hB : UpB b B)
     (nH nL : (VS D).V ≃ₗ[D.host.E] (VS D).V) (hnHe : ∀ j, nH (F0.e j) = F0.e j)

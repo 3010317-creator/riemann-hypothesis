@@ -30,16 +30,6 @@ theorem sqQ_eq {m : ℤ} {w : Qb} (hw : w ^ 2 = (m : Qb)) : sqQ m = ℚ⟮w⟯ :
   · rw [IntermediateField.adjoin_simple_le_iff]
     exact IntermediateField.subset_adjoin ℚ (sqrts m) hw
 
-theorem cycQ_eq {N : ℕ} [NeZero N] {w : Qb} (hw : IsPrimitiveRoot w N) : cycQ N = ℚ⟮w⟯ := by
-  apply le_antisymm
-  · show adjoin ℚ (mus N) ≤ _
-    rw [IntermediateField.adjoin_le_iff]
-    intro z hz
-    obtain ⟨i, -, rfl⟩ := hw.eq_pow_of_pow_eq_one hz
-    exact pow_mem (IntermediateField.mem_adjoin_simple_self ℚ w) i
-  · rw [IntermediateField.adjoin_simple_le_iff]
-    exact IntermediateField.subset_adjoin ℚ (mus N) hw.pow_eq_one
-
 section Layer
 
 variable {e q d : ℕ} {L : Type} [Field L] [NumberField L] {ζ a b : L}
