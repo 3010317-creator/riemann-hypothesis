@@ -16,46 +16,6 @@ noncomputable section
 
 namespace NormCountBounded
 
-section Coords
-
-variable {Ω : Type} [Field Ω] {κ : Type} [Fintype κ]
-
-theorem aeval_mul_zpow_mem (x : Ix κ → Ω) (c : κ) {τ : ℕ} {g : MRing (GlobalTheory κ)}
-    (hg : IsMultiHomog g (fun _ => τ)) :
-    aeval x g * x ⟨(), c⟩ ^ (-(τ : ℤ)) ∈ chartRingZ (ι := GlobalTheory κ) x (fun _ => c) := by
-  have hsum : ∀ m ∈ g.support, ∑ p ∈ m.support, m p = τ := by
-    intro m hm
-    rw [Finset.sum_subset (Finset.subset_univ m.support) (fun p _ hp => by simpa using hp),
-      Fintype.sum_sigma]
-    simpa using hg m hm ()
-  have key : aeval x g * x ⟨(), c⟩ ^ (-(τ : ℤ)) =
-      aeval (fun p : Ix κ => x p / x ⟨(), c⟩) g := by
-    conv_lhs => rw [g.as_sum]
-    conv_rhs => rw [g.as_sum]
-
-    rw [map_sum, map_sum, Finset.sum_mul]
-    refine Finset.sum_congr rfl fun m hm => ?_
-    rw [aeval_monomial, aeval_monomial, Finsupp.prod, Finsupp.prod]
-    simp only [div_eq_mul_inv, mul_pow, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum, hsum m hm,
-      zpow_neg, zpow_natCast]
-    ring
-  rw [key, chartRingZ, Algebra.adjoin_range_eq_range_aeval]
-  exact ⟨g, rfl⟩
-
-theorem secM_le_chartLat (x : Ix κ → Ω) (τ : ℕ) :
-    secM (ι := GlobalTheory κ) x (fun _ => τ) ≤ chartLat (ι := GlobalTheory κ) x 1 τ := by
-  intro s hs
-  have hle : Submodule.span ℤ {s | ∃ g : MRing (GlobalTheory κ), IsMultiHomog g (fun _ => τ) ∧ aeval x g = s} ≤
-      (chartLat (ι := GlobalTheory κ) x 1 τ).toIntSubmodule := by
-    rw [Submodule.span_le]
-    rintro _ ⟨g, hg, rfl⟩ c _
-    have hc : c = fun _ => c () := rfl
-    rw [hc]
-    simpa using aeval_mul_zpow_mem x (c ()) hg
-  exact hle hs
-
-end Coords
-
 section Counts
 
 variable {Ω : Type} [Field Ω]
