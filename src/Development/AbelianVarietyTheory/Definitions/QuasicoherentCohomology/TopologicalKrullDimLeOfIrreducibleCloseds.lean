@@ -281,7 +281,6 @@ end Tilde
 section FiniteType
 
 
-set_option backward.isDefEq.respectTransparency false in
 theorem IsFiniteQC.of_generatingSections [F.IsQuasicoherent] (σ : F.GeneratingSections)
     [σ.IsFiniteType] : IsFiniteQC F :=
   have : Finite σ.I := SheafOfModules.GeneratingSections.IsFiniteType.finite (σ := σ)
