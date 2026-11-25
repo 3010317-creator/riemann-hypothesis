@@ -1,6 +1,7 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AnnihilatorModels.SameNormBasic
+public import Mathlib.RingTheory.TotallySplit
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
 
@@ -12,8 +13,8 @@ open UpperTheory.Gal.crystallineComparison
 theorem UpperTheory.Gal.crystallineComparison.splitsField_of :
     SplitsField := by
   intro R S K _ _ _ _ _ _ hE
-  haveI : Module.Finite K (K ⊗[R] S) := Algebra.FormallyUnramified.finite_of_free K (K ⊗[R] S)
-  haveI : IsArtinianRing (K ⊗[R] S) := isArtinian_of_tower K inferInstance
+  have : Module.Finite K (K ⊗[R] S) := Algebra.FormallyUnramified.finite_of_free K (K ⊗[R] S)
+  have : IsArtinianRing (K ⊗[R] S) := isArtinian_of_tower K inferInstance
   let q : (S →ₐ[R] K) ≃ PrimeSpectrum (K ⊗[R] S) :=
     (AlgHom.liftEquiv R K S K).trans (Algebra.IsFiniteSplit.algHomEquivPrimeSpectrum K (K ⊗[R] S))
   refine ⟨Finite.of_equiv _ q.symm, ?_⟩
