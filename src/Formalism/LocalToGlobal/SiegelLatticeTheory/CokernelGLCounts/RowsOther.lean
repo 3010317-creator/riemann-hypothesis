@@ -95,12 +95,8 @@ theorem pairAbs_le_ampSum (hG : 0 ≤ X.Gam1) (Q : Set (τ × τ))
   unfold PB.Terms.pairAbs ampSum
   refine mul_le_mul_of_nonneg_left ?_ hG
   have hle : ∀ p, Q.indicator (fun p : τ × τ => ‖inner ℂ (X.vec p.1) (X.vec p.2)‖) p ≤
-      Q.indicator (fun p : τ × τ => ‖X.vec p.1‖ * ‖X.vec p.2‖) p := by
-    intro p
-    by_cases hp : p ∈ Q
-    · simp only [Set.indicator_of_mem hp]
-      exact norm_inner_le_norm _ _
-    · simp [hp]
+      Q.indicator (fun p : τ × τ => ‖X.vec p.1‖ * ‖X.vec p.2‖) p :=
+    fun _ => Set.indicator_le_indicator (norm_inner_le_norm _ _)
   have hnn : ∀ p, 0 ≤ Q.indicator (fun p : τ × τ => ‖inner ℂ (X.vec p.1) (X.vec p.2)‖) p :=
     fun p => Set.indicator_nonneg (fun _ _ => norm_nonneg _) p
   exact Summable.tsum_le_tsum hle (hs.of_nonneg_of_le hnn hle) hs
