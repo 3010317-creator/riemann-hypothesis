@@ -928,7 +928,7 @@ theorem back_smul_eq_sub (h t0 : HH D) {y d : ℕ} (hd : d ≤ addOrderOf h) :
   have : y + addOrderOf h - d + d = y + addOrderOf h := by omega
   rw [this, add_nsmul, addOrderOf_nsmul_eq_zero, add_zero]
 
-theorem first_length_le_window (D : D7) (s : Scale) {p : ℕ} (hp : p.Prime) (hc : IsResidueClassZero D p) : L1 D s p ≤ L2 D s := by
+theorem two_mul_first_length_le_window (D : D7) (s : Scale) {p : ℕ} (hp : p.Prime) (hc : IsResidueClassZero D p) : 2 * L1 D s p ≤ L2 D s := by
   unfold L2
   have hb : BddAbove {l | ∃ p : ℕ, p.Prime ∧ D.host.cls p = PrimeClass.inertClass ∧ l = L1 D s p} := by
     refine ⟨⌈|Real.log (((D.R.k : ℝ) * s.x ^ Scale.A) ^ 4)| / Real.log 2⌉₊, ?_⟩
@@ -943,8 +943,10 @@ theorem first_length_le_window (D : D7) (s : Scale) {p : ℕ} (hp : p.Prime) (hc
           gcongr
           exact le_abs_self _
       _ ≤ _ := by gcongr
-  have := le_csSup hb (show L1 D s p ∈ _ from ⟨p, hp, hc, rfl⟩)
-  omega
+  exact Nat.mul_le_mul_left 2 (le_csSup hb ⟨p, hp, hc, rfl⟩)
+
+theorem first_length_le_window (D : D7) (s : Scale) {p : ℕ} (hp : p.Prime) (hc : IsResidueClassZero D p) : L1 D s p ≤ L2 D s :=
+  (Nat.le_mul_of_pos_left _ zero_lt_two).trans (two_mul_first_length_le_window D s hp hc)
 
 theorem add_mod_left_injective {n y e1 e2 : ℕ} (h1 : e1 < n) (h2 : e2 < n) (e : (y + e1) % n = (y + e2) % n) : e1 = e2 := by
   have h : e1 ≡ e2 [MOD n] := Nat.ModEq.add_left_cancel' y e
@@ -1399,24 +1401,6 @@ theorem mul_log_le_rpow_eventually_alt (c r : ℝ) (hr : 0 < r) : ∀ᶠ x : ℝ
 
 theorem const_le_rpow_eventually (c r : ℝ) (hr : 0 < r) : ∀ᶠ x : ℝ in Filter.atTop, c ≤ x ^ r :=
   (tendsto_rpow_atTop hr).eventually_ge_atTop c
-
-theorem two_mul_first_length_le_window (D : D7) (s : Scale) {p : ℕ} (hp : p.Prime) (hc : IsResidueClassZero D p) : 2 * L1 D s p ≤ L2 D s := by
-  unfold L2
-  have hb : BddAbove {l | ∃ p : ℕ, p.Prime ∧ D.host.cls p = PrimeClass.inertClass ∧ l = L1 D s p} := by
-    refine ⟨⌈|Real.log (((D.R.k : ℝ) * s.x ^ Scale.A) ^ 4)| / Real.log 2⌉₊, ?_⟩
-    rintro l ⟨q, hq, _, rfl⟩
-    unfold L1
-    apply Nat.ceil_mono
-    unfold Real.logb
-    have h2 : (0 : ℝ) < Real.log 2 := Real.log_pos (by norm_num)
-    have hq2 : Real.log 2 ≤ Real.log q := Real.log_le_log (by norm_num) (by exact_mod_cast hq.two_le)
-    calc Real.log (((D.R.k : ℝ) * s.x ^ Scale.A) ^ 4) / Real.log q
-        ≤ |Real.log (((D.R.k : ℝ) * s.x ^ Scale.A) ^ 4)| / Real.log q := by
-          gcongr
-          exact le_abs_self _
-      _ ≤ _ := by gcongr
-  have := le_csSup hb (show L1 D s p ∈ _ from ⟨p, hp, hc, rfl⟩)
-  omega
 
 theorem window_length_le_ceil_at_scale {D : D7} (L : SizeData₂ D) (hI : CornerGLContinuity.EstimatedPrimesExceedScale D L) (hK : SizeK L) :
     L2 D L.sc ≤ 2 * ⌈620 / L.sc.ez⌉₊ := by
