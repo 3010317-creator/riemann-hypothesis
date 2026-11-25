@@ -10,7 +10,6 @@ open CategoryTheory CategoryTheory.Limits MonoidalCategory CartesianMonoidalCate
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Semi
 open TopologicalSpace
 
-set_option backward.isDefEq.respectTransparency false
 
 noncomputable section
 
