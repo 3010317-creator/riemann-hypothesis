@@ -118,8 +118,9 @@ that their authors can see what to do next. The batch workflows read the descrip
 form: a heading is a line of its own that ends with a colon, and under it each pull request is a
 list entry that starts with its link (`#123` or its address), followed by the reason. Pull
 requests under a heading that says "left out" or "not included" are left out, and their authors
-read the entry there, so write the reason for them. Those under any other heading, such as
-`Included:`, are the ones the batch includes.
+read the entry there, so write the reason for them. Those under a heading that says
+"included", such as `Included:`, are the ones the batch includes. Pull requests under any other
+heading, such as `Held by the maintainers:`, are read as neither.
 
 ## Do not
 
