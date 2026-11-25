@@ -172,16 +172,8 @@ theorem mdr_inl {d : ℕ} (β : Fin d →₀ ℕ) (k : Fin d) :
   Finsupp.mapDomain_notin_range _ _ (by simp)
 
 theorem eqA {d : ℕ} (a β : Fin d →₀ ℕ) (j : Fin d) (h : 1 ≤ β j) :
-    a = β - Finsupp.single j 1 ↔ a + Finsupp.single j 1 = β := by
-  constructor
-  · rintro rfl
-    ext k
-    simp only [Finsupp.coe_add, Finsupp.coe_tsub, Pi.add_apply, Pi.sub_apply, Finsupp.single_apply]
-    split_ifs with h1 <;> (try subst h1) <;> omega
-  · rintro rfl
-    ext k
-    simp only [Finsupp.coe_add, Finsupp.coe_tsub, Pi.add_apply, Pi.sub_apply, Finsupp.single_apply]
-    split_ifs <;> omega
+    a = β - Finsupp.single j 1 ↔ a + Finsupp.single j 1 = β :=
+  eq_tsub_iff_add_eq_of_le (Finsupp.single_le_iff.2 h)
 
 theorem neA {d : ℕ} (a β : Fin d →₀ ℕ) (j : Fin d) (h : β j = 0) :
     a + Finsupp.single j 1 ≠ β := by
@@ -219,10 +211,8 @@ theorem neB {d : ℕ} (a β : Fin d →₀ ℕ) (j i : Fin d) (hji : j ≠ i) (h
   omega
 
 theorem eqC {d : ℕ} (β : Fin d →₀ ℕ) (j : Fin d) (h : 1 ≤ β j) :
-    β - Finsupp.single j 1 + Finsupp.single j 1 = β := by
-  ext k
-  simp only [Finsupp.coe_add, Finsupp.coe_tsub, Pi.add_apply, Pi.sub_apply, Finsupp.single_apply]
-  split_ifs with h1 <;> (try subst h1) <;> omega
+    β - Finsupp.single j 1 + Finsupp.single j 1 = β :=
+  tsub_add_cancel_of_le (Finsupp.single_le_iff.2 h)
 
 theorem subA {d : ℕ} (β : Fin d →₀ ℕ) (j : Fin d) :
     (β.mapDomain Sum.inl : Fin d ⊕ Fin d →₀ ℕ) - Finsupp.single (Sum.inl j) 1 =
@@ -283,10 +273,8 @@ theorem coeff_prod_addLaw (d n : ℕ) : ∀ α : Fin d →₀ ℕ, α.degree = n
       have : α = 0 := Finsupp.ext hc
       rw [this, map_zero] at hα
       omega
-    obtain ⟨a, rfl⟩ : ∃ a, α = a + Finsupp.single j 1 := ⟨α - Finsupp.single j 1, by
-      ext k
-      simp only [Finsupp.coe_add, Finsupp.coe_tsub, Pi.add_apply, Pi.sub_apply, Finsupp.single_apply]
-      split_ifs with h1 <;> (try subst h1) <;> omega⟩
+    obtain ⟨a, rfl⟩ : ∃ a, α = a + Finsupp.single j 1 :=
+      ⟨α - Finsupp.single j 1, (eqC α j (Nat.one_le_iff_ne_zero.2 hj)).symm⟩
     have ha : a.degree = n := by
       rw [map_add (f := _), Finsupp.degree_single] at hα; omega
     have hP : ((a + Finsupp.single j 1).prod fun s m => addLaw R d s ^ m) =
