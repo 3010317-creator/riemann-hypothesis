@@ -242,64 +242,6 @@ namespace GeoLaws
 variable (h : GeoLaws YS fw iC)
 include h
 
-theorem ev_smul (j : ℕ) (b : Bool) (a : FractionRing (D.ntw.O i)) (f : D.nexp.Fm i j b) (y : AllPts YS iC j) :
-    evN YS fw j b (a • f) y = iC a * evN YS fw j b f y := by
-  induction j using lift_cases (m := D.R.m) with
-  | h1 j =>
-    rw [evN_succ]
-    obtain ⟨b', z⟩ := y
-    by_cases hb : b' = b
-    · subst hb
-      rw [allEv_same, allEv_same, map_smul, valAt_smul]
-    · rw [allEv_other _ hb, allEv_other _ hb, mul_zero]
-  | h2 j hj =>
-    have := h.off j hj b
-    rw [Subsingleton.elim (a • f) 0, Subsingleton.elim f 0, map_zero, Pi.zero_apply, mul_zero]
-
-theorem hk_ev (j : ℕ) (b : Bool) {k : ℕ} {P : PlE D.host} (hk : HkIdx i k P) (f : D.nexp.Fm i j b) (y : AllPts YS iC j) :
-    evN YS fw j b (D.nexp.hkF i j b k P f) y = ∑ c, hkUnitN YS fw iC j b k P * evN YS fw j b f (allMove YS iC j k P c y) := by
-  induction j using lift_cases (m := D.R.m) with
-  | h1 j =>
-    rw [evN_succ, hkUnitN_succ, ← Finset.mul_sum]
-    by_cases hb : y.1 = b
-    · obtain ⟨b', z⟩ := y
-      obtain rfl : b' = b := hb
-      obtain ⟨e, q, hq, hm⟩ := h.move hk b' z
-      rw [allEv_same, (h.hkUnit_spec hk b').2 z (fun C => (q C).1) hq f, ← finsum_comp_equiv e, finsum_eq_sum_of_fintype]
-      refine congrArg _ (Finset.sum_congr rfl fun c _ => ?_)
-      rw [hm, allEv_same]
-    · rw [allEv_other _ hb, Finset.sum_eq_zero fun c _ => allEv_other _ ((allMove_fst YS iC _ k P c y).trans_ne hb), mul_zero]
-  | h2 j hj =>
-    have := h.off j hj b
-    rw [Subsingleton.elim (D.nexp.hkF i j b k P f) 0, Subsingleton.elim f 0, map_zero]
-    simp only [Pi.zero_apply, mul_zero, Finset.sum_const_zero]
-
-theorem fmUr_smul (j : ℕ) (b : Bool) (a : FractionRing (D.ntw.O i)) (f : D.nexp.Fm i j b)
-    (ha : a ∈ kurAt YS iC true ⊓ kurAt YS iC false) (hf : f ∈ fmUrN YS iC j b) : a • f ∈ fmUrN YS iC j b := by
-  induction j using lift_cases (m := D.R.m) with
-  | h1 j =>
-    rw [mem_fmUrN] at hf ⊢
-    rw [map_smul]
-    exact smul_mem_ratForms (by cases b; exacts [ha.2, ha.1]) hf
-  | h2 j hj =>
-    have := h.off j hj b
-    rw [Subsingleton.elim (a • f) f]
-    exact hf
-
-theorem fmUr_span (j : ℕ) (b : Bool) :
-    Submodule.span (FractionRing (D.ntw.O i)) (fmUrN YS iC j b : Set (D.nexp.Fm i j b)) = ⊤ := by
-  induction j using lift_cases (m := D.R.m) with
-  | h1 j =>
-    refine Submodule.map_injective_of_injective (f := (toK YS j b).toLinearMap) (toK YS j b).injective ?_
-    rw [Submodule.map_top, LinearEquiv.range, Submodule.map_span, ← span_ratForms (S := S) (b := b) _ (kurAt YS iC b)]
-    refine congrArg _ (Set.ext fun x => ?_)
-    obtain ⟨g, rfl⟩ := (toK YS j b).surjective x
-    exact ⟨fun ⟨g', hg, e⟩ => (show toK YS j b g' = toK YS j b g from e) ▸ (mem_fmUrN j b g').1 hg,
-      fun hx => ⟨g, (mem_fmUrN j b g).2 hx, rfl⟩⟩
-  | h2 j hj =>
-    have := h.off j hj b
-    exact Subsingleton.elim _ _
-
 end GeoLaws
 
 variable {T}
@@ -308,29 +250,16 @@ def geoNTh (h : ∀ i, GeoLaws YS fw (T.iC i)) : NTh D.R D.host D.what₂ D.LL0 
   { T with
     Pt := fun i j => AllPts YS (T.iC i) j
     ev := fun _ j => evN YS fw j
-    ev_smul := fun i => (h i).ev_smul
     thV := fun _ _ _ _ _ => 0
-    thV_add := fun _ _ _ _ _ _ => (add_zero _).symm
-    thV_smul := fun _ _ _ _ _ _ => (mul_zero _).symm
-    thV_addP := fun _ _ _ _ _ _ => (add_zero _).symm
-    thV_smulP := fun _ _ _ _ _ _ => (mul_zero _).symm
     recDet := fun _ _ _ => 1
     actK := fun _ _ _ _ y => y
-    actK_one := fun _ _ _ _ => rfl
-    actK_mul := fun _ _ _ _ _ _ => rfl
     recDetq := fun _ _ _ _ => 1
-    recDetq_mem := fun _ _ _ _ => one_mem _
-    recDet_act := fun _ _ _ _ _ _ _ _ _ _ => rfl
-    recDetq_act := fun _ _ _ _ _ _ _ _ _ _ _ _ => rfl
     hkIdx := fun i j k P => Fin (kerNum YS (T.iC i) j k P)
     finHk := fun _ _ _ _ => inferInstance
     hkMove := fun i j k P => allMove YS (T.iC i) j k P
     hkU := fun i j b k P _ _ => hkUnitN YS fw (T.iC i) j b k P
-    hk_ev := fun i j b _ _ h1 h2 h3 h4 => (h i).hk_ev j b ⟨h1, h2, h3, h4⟩
     MaximalUnramifiedExtension := fun i => kurAt YS (T.iC i) true ⊓ kurAt YS (T.iC i) false
-    FmUr := fun i => fmUrN YS (T.iC i)
-    FmUr_smul := fun i => (h i).fmUr_smul
-    FmUr_span := fun i => (h i).fmUr_span }
+    FmUr := fun i => fmUrN YS (T.iC i) }
 
 theorem GeoLaws.hk_tie (h : GeoLaws YS fw iC) (j : Fin D.R.m) (b : Bool) {k P} (hk : HkIdx i k P) :
     ∃ s : T0.Q.c.F, ‖embC YS iC b s‖ = 1 ∧ ∀ (y : AllPts YS iC ((j : ℕ) + 1)) (z : Pts YS iC b ((j : ℕ) + 1)), atSide b y = some z →

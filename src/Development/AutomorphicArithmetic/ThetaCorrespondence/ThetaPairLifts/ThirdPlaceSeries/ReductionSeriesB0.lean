@@ -782,43 +782,8 @@ def sideEv (b : Bool) : V b →+ ((Σ b', Fin (n b')) → C) where
     funext y
     by_cases h : y.1 = b <;> simp [h]
 
-@[simp] theorem sideEv_same (b : Bool) (f : V b) (t : Fin (n b)) :
-    sideEv iC e b f ⟨b, t⟩ = iC ((e b).repr f t) := by
-  simp [sideEv]
-
-theorem sideEv_other {b b' : Bool} (h : b' ≠ b) (f : V b) (t : Fin (n b')) :
-    sideEv iC e b f ⟨b', t⟩ = 0 := by
-  simp [sideEv, h]
-
-theorem sideEv_smul (b : Bool) (a : K) (f : V b) (y : Σ b', Fin (n b')) :
-    sideEv iC e b (a • f) y = iC a * sideEv iC e b f y := by
-  obtain ⟨b', t⟩ := y
-  by_cases h : b' = b
-  · subst h; simp
-  · simp [sideEv_other iC e h]
-
 def sideU (b : Bool) (T : Module.End K (V b)) (c y : Σ b', Fin (n b')) : C :=
   if h : c.1 = b then sideEv iC e b (T (e b (h ▸ c.2))) y else 0
-
-theorem sideEv_end (b : Bool) (T : Module.End K (V b)) (f : V b) (y : Σ b', Fin (n b')) :
-    sideEv iC e b (T f) y = ∑ c, sideU iC e b T c y * sideEv iC e b f c := by
-  classical
-  have h0 : T f = ∑ t, (e b).repr f t • T (e b t) := by
-    conv_lhs => rw [← (e b).sum_repr f]
-
-    simp only [map_sum, map_smul]
-  have h1 : sideEv iC e b (T f) y =
-      ∑ t, iC ((e b).repr f t) * sideEv iC e b (T (e b t)) y := by
-
-    rw [h0, map_sum, Finset.sum_apply]
-    exact Finset.sum_congr rfl fun t _ => sideEv_smul iC e b _ _ y
-  rw [h1, Fintype.sum_sigma, Finset.sum_eq_single b]
-  · refine Finset.sum_congr rfl fun t _ => ?_
-    simp [sideU, mul_comm]
-  · intro b' _ hb
-    refine Finset.sum_eq_zero fun t _ => ?_
-    simp [sideEv_other iC e hb]
-  · simp
 
 end SideCoord
 
@@ -839,49 +804,27 @@ theorem exists_nth_of_fg_full : ∀ (D : D7) (tw : NTw D.R D.host D.what₂ D.LL
     iC := iC
     iC_int := hiC
     aL := fun i => if ∃ k, tw.l i = D.host.g k then 1 else 0
-    aL_g := fun i k h => ite_eq_left ⟨k, h⟩
-    aL_off := fun i h => ite_eq_right (not_exists.2 h)
     Pt := fun i j => Σ b, Fin (n i j b)
     ev := fun i j b => sideEv (iC i) (e i j) b
-    ev_smul := fun i j b a f y => sideEv_smul _ _ b a f y
     Lt := fun _ _ => PUnit
     acgLt := fun _ _ => inferInstance
-    modLt := fun _ _ => inferInstance
-    freeLt := fun _ _ => inferInstance
-    finLt := fun _ _ => inferInstance
     Let := fun _ _ => PEmpty
     finLet := fun _ _ => inferInstance
     Harm := fun _ _ => Set.univ
     Ctr := fun _ _ => PEmpty
     ctrC := fun _ _ κ => κ.elim
-    Harm_def := fun i j P => ⟨fun _ κ => κ.elim, fun _ => Set.mem_univ _⟩
     thV := fun _ _ _ _ _ => 0
-    thV_add := fun _ _ _ _ _ _ => by simp
-    thV_smul := fun _ _ _ _ _ _ => by simp
-    thV_addP := fun _ _ _ _ _ _ => by simp
-    thV_smulP := fun _ _ _ _ _ _ => by simp
-    datPhi := fun _ _ _ _ => 0
-    datP := fun _ _ _ _ => 0
     recDet := fun _ _ _ => 1
     Kq := fun _ _ _ => PUnit
     grpKq := fun _ _ _ => inferInstance
     actK := fun _ _ _ _ y => y
-    actK_one := fun _ _ _ _ => rfl
-    actK_mul := fun _ _ _ _ _ _ => rfl
     recDetq := fun _ _ _ _ => 1
-    recDetq_mem := fun _ _ _ _ => one_mem _
-    recDet_act := fun _ _ _ _ _ _ _ _ _ _ => rfl
-    recDetq_act := fun _ _ _ _ _ _ _ _ _ _ _ _ => rfl
     hkIdx := fun i j _ _ => Σ b, Fin (n i j b)
     finHk := fun _ _ _ _ => inferInstance
     hkMove := fun _ _ _ _ c _ => c
     hkU := fun i j b k P c y => sideU (iC i) (e i j) b (ex.hkF i j b k P) c y
-    hk_ev := fun i j b k P _ _ _ _ f y => sideEv_end _ _ b _ f y
     MaximalUnramifiedExtension := fun _ => ⊤
-    FmUr := fun _ _ _ => ⊤
-    FmUr_smul := fun _ _ _ _ _ _ _ => AddSubgroup.mem_top _
-    FmUr_span := fun i j b => by
-      rw [AddSubgroup.coe_top, Submodule.span_univ] }⟩
+    FmUr := fun _ _ _ => ⊤ }⟩
 
 end GlobalTheory.HeightCounting
 

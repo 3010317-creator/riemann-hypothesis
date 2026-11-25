@@ -978,20 +978,13 @@ structure NTh (R : Ranks) (H : Host R) (what₂ : Rows.Data R) [NumberField what
     x ∈ (algebraMap (tw.O i) (FractionRing (tw.O i))).range
 
   aL : tw.Tw → ℕ
-  aL_g : ∀ i k, tw.l i = H.g k → aL i = 1
-  aL_off : ∀ i, (∀ k, tw.l i ≠ H.g k) → aL i = 0
 
   Pt : tw.Tw → ℕ → Type
 
   ev : ∀ i j b, ex.Fm i j b →+ (Pt i j → ℂ_[tw.l i])
-  ev_smul : ∀ i j b (a : FractionRing (tw.O i)) (f : ex.Fm i j b) (y : Pt i j),
-    ev i j b (a • f) y = iC i a * ev i j b f y
 
   Lt : tw.Tw → ℕ → Type
   [acgLt : ∀ i j, AddCommGroup (Lt i j)]
-  [modLt : ∀ i j, Module (𝓞 H.E) (Lt i j)]
-  [freeLt : ∀ i j, Module.Free ℤ (Lt i j)]
-  [finLt : ∀ i j, Module.Finite ℤ (Lt i j)]
 
   Let : tw.Tw → ℕ → Type
   [finLet : ∀ i j, Fintype (Let i j)]
@@ -999,53 +992,30 @@ structure NTh (R : Ranks) (H : Host R) (what₂ : Rows.Data R) [NumberField what
 
   Ctr : tw.Tw → ℕ → Type
   ctrC : ∀ i j, Ctr i j → Let i j → Let i j → tw.O i
-  Harm_def : ∀ i j (P : MvPolynomial (Let i j) (tw.O i)), P ∈ Harm i j ↔
-    ∀ κ : Ctr i j, ∑ a, ∑ b, MvPolynomial.C (ctrC i j κ a b) *
-      MvPolynomial.pderiv a (MvPolynomial.pderiv b P) = 0
 
   thV : ∀ i j, (Lt i j → FractionRing (tw.O i)) → MvPolynomial (Let i j) (tw.O i) →
     Pt i j → ℂ_[tw.l i]
 
-  thV_add : ∀ i j φ φ' P y, thV i j (φ + φ') P y = thV i j φ P y + thV i j φ' P y
-  thV_smul : ∀ i j (a : FractionRing (tw.O i)) φ P y, thV i j (a • φ) P y = iC i a * thV i j φ P y
-  thV_addP : ∀ i j φ P P' y, thV i j φ (P + P') y = thV i j φ P y + thV i j φ P' y
-  thV_smulP : ∀ i j (c : tw.O i) φ P y, thV i j φ (c • P) y =
-    iC i (algebraMap (tw.O i) (FractionRing (tw.O i)) c) * thV i j φ P y
 
-  datPhi : ∀ i j b, ex.Dat i j b → Lt i j → FractionRing (tw.O i)
-  datP : ∀ i j b, ex.Dat i j b → MvPolynomial (Let i j) (tw.O i)
 
   recDet : ∀ i j, Pt i j → G H.E N.Om
 
   Kq : ∀ (_ : tw.Tw) (_ : ℕ), HeightOneSpectrum (𝓞 H.E) → Type
   [grpKq : ∀ i j P, Group (Kq i j P)]
   actK : ∀ i j P, Kq i j P → Pt i j → Pt i j
-  actK_one : ∀ i j P y, actK i j P 1 y = y
-  actK_mul : ∀ i j P (k k' : Kq i j P) y, actK i j P (k * k') y = actK i j P k' (actK i j P k y)
 
   recDetq : ∀ i j (_ : HeightOneSpectrum (𝓞 H.E)), Pt i j → G H.E N.Om
-  recDetq_mem : ∀ i j P y, recDetq i j P y ∈ Dec (F := H.E) (N.plOm.1 P)
 
-  recDet_act : ∀ i j P (k : Kq i j P) y (A' : Type) [CommGroup A'] (χ : G H.E N.Om →* A'),
-    IsOpen (χ.ker : Set (G H.E N.Om)) → AntiHom tw.cc χ → χ (recDet i j (actK i j P k y)) * χ (recDetq i j P y) =
-      χ (recDet i j y) * χ (recDetq i j P (actK i j P k y))
-  recDetq_act : ∀ i j P P' (k : Kq i j P) y (A' : Type) [CommGroup A'] (χ : G H.E N.Om →* A'),
-    IsOpen (χ.ker : Set (G H.E N.Om)) → P' ≠ P → ¬ IsConjPl H P P' → χ (recDetq i j P' (actK i j P k y)) = χ (recDetq i j P' y)
 
   hkIdx : ∀ (_ : tw.Tw) (_ : ℕ), ℕ → PlE H → Type
   [finHk : ∀ i j k P, Fintype (hkIdx i j k P)]
   hkMove : ∀ i j k P, hkIdx i j k P → Pt i j → Pt i j
   hkU : ∀ i j (_ : Bool) k P, hkIdx i j k P → Pt i j → ℂ_[tw.l i]
-  hk_ev : ∀ i j b k P, 1 ≤ k → k ≤ R.r → IsSplitPl H P → P ∉ tw.S0 i → ∀ (f : ex.Fm i j b) y,
-    ev i j b (ex.hkF i j b k P f) y = ∑ c, hkU i j b k P c y * ev i j b f (hkMove i j k P c y)
 
   MaximalUnramifiedExtension : ∀ i, Subfield (FractionRing (tw.O i))
   FmUr : ∀ i j b, AddSubgroup (ex.Fm i j b)
-  FmUr_smul : ∀ i j b (a : FractionRing (tw.O i)) (f : ex.Fm i j b), a ∈ MaximalUnramifiedExtension i → f ∈ FmUr i j b →
-    a • f ∈ FmUr i j b
-  FmUr_span : ∀ i j b, Submodule.span (FractionRing (tw.O i)) (FmUr i j b : Set (ex.Fm i j b)) = ⊤
 
-attribute [instance] NTh.acgLt NTh.modLt NTh.freeLt NTh.finLt NTh.finLet NTh.grpKq NTh.finHk
+attribute [instance] NTh.acgLt NTh.finLet NTh.grpKq NTh.finHk
 
 end Formalism.BasicNotions
 
