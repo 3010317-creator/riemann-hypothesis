@@ -1614,13 +1614,9 @@ theorem member_bundles_large_unramified_exponents_alt : _root_.GlobalTheory.Fc.S
     P.siegelEisensteinSimplePole P.unramifiedDoublingGL P.bernsteinZelevinskyFiniteness
     P.schurOrthogonalitySquareIntegrable hR
   have hW := _root_.GlobalTheory.HeightCounting.Up.weightOne_saturated_of_hypotheses hA hH
-  have hM := _root_.GlobalTheory.Mem.Top.Bl.MultQClose.multiplicative_closure_prime_mem_alt P.discreteSeriesClassification
-    P.cuspRapidDecay P.harishChandraFinite P.cuspTraceClass P.dixmierMalliavinFactorisation
-    P.zelevinskyPolynomialRing P.geometricLemma
-    P.greenCuspidal hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithOrigin hL cDep) SExt.none
   obtain ⟨hE, -, -, hL', hN⟩ := _root_.GlobalTheory.MemberClose.exists_hyp_n_of_geometric_galois_compat P.litN P.toHypothesesX
   have hMember :=
-    (_root_.GlobalTheory.Mem.Top.Bl.exists_baseLattice_of_prime_alt hA hE hH hW hL hN cDep hM).1
+    _root_.GlobalTheory.Mem.Top.Bl.memberE_extensionWithOrigin hA hE hH hW hL hN cDep
   exact ⟨hA.a18,
     _root_.GlobalTheory.Mem.LiteralAutomorphy.memberE_extensionWithAtProperty_of_memberE hL _ _ A hEv hMember,
     _root_.GlobalTheory.T.compatibleSystem_weilBlock_ne_alt hA hH hPM hL _ A (fun _ _ _ _ _ _ _ _ _ _ _ _ _ x => ⟨x.1.1⟩)
