@@ -1463,18 +1463,7 @@ theorem rhoCount : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum 
     simpa using (b.unit n hn).map β
   set σ := GlobalTheory.HTCount.crysAct o₀ with hσ
   set χ : Fin D.a → (𝓞 D.F →+* k) := fun i => β.comp (b.t i) with hχdef
-  have hχ : Function.Injective χ := by
-    intro i j hij
-    by_contra hne
-    have h1 := b.comax i j hne
-    have hle : Ideal.span (Set.range fun x => b.t i x - b.t j x) ≤ RingHom.ker β := by
-      rw [Ideal.span_le]
-      rintro _ ⟨x, rfl⟩
-      have := congrArg (fun f : 𝓞 D.F →+* k => f x) hij
-      simp only [χ, RingHom.comp_apply] at this
-      simp [RingHom.mem_ker, this]
-    have h1' : (1 : R) ∈ RingHom.ker β := hle (by rw [h1]; trivial)
-    simp at h1'
+  have hχ : Function.Injective χ := b.injective_char_comp β
   have hFil : ∀ a, ∀ x ∈ Fil o₀.A, σ a x ∈ Fil o₀.A := fun a x hx => by
     haveI := o₀.act.hom a
     rw [hσ, GlobalTheory.HTCount.crysAct_apply]

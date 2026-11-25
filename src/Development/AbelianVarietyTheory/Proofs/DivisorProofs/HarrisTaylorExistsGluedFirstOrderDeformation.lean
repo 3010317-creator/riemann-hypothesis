@@ -701,16 +701,8 @@ theorem lie_glueFil : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Dat
   intro p _ D R _ b N k _ _ tk s o₀ _ d hd f E' hcompl hred hlift hstab hlie e he
   haveI hact : ∀ c : 𝓞 D.F, IsMonHom (o₀.act.act (algebraMap (𝓞 D.F) D.O c)) := fun c ↦ o₀.act.hom _
   have L1j := fun j ↦ _root_.GlobalTheory.HTGlueLie.fo_summand_coords k o₀.A o₀.ab (f j) (E' j) (hcompl j) (hred j) (hlift j)
-  have hχ : ∀ i i', i ≠ i' → ∃ c : 𝓞 D.F, tk (b.t i c) ≠ tk (b.t i' c) := by
-    intro i i' hii'
-    by_contra! hcon
-    have hle : Ideal.span (Set.range fun x ↦ b.t i x - b.t i' x) ≤ RingHom.ker tk := by
-      rw [Ideal.span_le]
-      rintro _ ⟨x, rfl⟩
-      rw [SetLike.mem_coe, RingHom.mem_ker, map_sub, hcon x, sub_self]
-    have h1 : (1 : R) ∈ RingHom.ker tk := hle (b.comax i i' hii' ▸ Submodule.mem_top)
-    rw [RingHom.mem_ker, map_one] at h1
-    exact one_ne_zero h1
+  have hχ : ∀ i i', i ≠ i' → ∃ c : 𝓞 D.F, tk (b.t i c) ≠ tk (b.t i' c) :=
+    fun _ _ hij => b.exists_char_separation tk hij
   have hlift' : ∀ j, ∀ x ∈ Fil o₀.A, ∃ e ∈ E' j, fstC o₀.A e = x ∧ (sndC o₀.A e : HdR o₀.A) = f j x := by
     intro j x hx
     obtain ⟨e1, he1, h⟩ := hlift j x hx
