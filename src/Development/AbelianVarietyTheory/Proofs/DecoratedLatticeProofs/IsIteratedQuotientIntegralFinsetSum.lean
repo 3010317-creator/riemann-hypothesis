@@ -184,13 +184,10 @@ theorem aconv_single_cons {G : Type} [AddMonoid G] (l : List (G →₀ ℂ)) : a
   rw [Finsupp.sum_single_index (by simp)]
   simp
 
-theorem comb_single_zero (S T : HSp D) (f : WO S T → ℂ) : comb ψ S T (Finsupp.single 0 1) f = f := by
-  simp [comb, GlobalTheory.BoxSlice.heisO_zero']
-
 theorem biComb_single_zero (A S A' : HSp D) (C : WO A S → WO S A' → ℂ) :
     biComb ψ A S A' (Finsupp.single 0 1) (Finsupp.single 0 1) C = C := by
   funext u v
-  simp only [biComb, comb_single_zero]
+  simp only [biComb, GlobalTheory.FinPl.OffTest.comb_single_zero]
 
 theorem sum_support_smul {G M : Type} [AddCommMonoid M] [Module ℂ M] (a : ℂ) (e : G →₀ ℂ) (F : G → M) :
     ∑ g ∈ (a • e).support, (a • e) g • F g = a • ∑ g ∈ e.support, e g • F g := by
