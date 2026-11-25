@@ -219,11 +219,8 @@ theorem stepUp : StepUp := by
     · simp
       field_simp at e1
       nlinarith
-  have hinj : Function.Injective (fun a : GaussianInt => (Λ : ℂ) * GaussianInt.toComplex a) := by
-    intro a a' haa
-    have : GaussianInt.toComplex a = GaussianInt.toComplex a' :=
-      mul_left_cancel₀ (by exact_mod_cast hΛ0.ne') haa
-    exact GaussianInt.toComplex_injective this
+  have hinj : Function.Injective (fun a : GaussianInt => (Λ : ℂ) * GaussianInt.toComplex a) :=
+    (mul_right_injective₀ (by exact_mod_cast hΛ0.ne')).comp GaussianInt.toComplex_injective
   let g : ℂ → ℝ≥0∞ := fun σ => ENNReal.ofReal (Formalism.HermitianLatticeCounting.ExpansionTerms.TruncationCutoff 3 Λ ‖σ‖)
   have hG : ∑' a : GaussianInt, g ((Λ : ℂ) * GaussianInt.toComplex a) ≤ ENNReal.ofReal 40.5 := by
     rw [ENNReal.tsum_eq_iSup_sum]
