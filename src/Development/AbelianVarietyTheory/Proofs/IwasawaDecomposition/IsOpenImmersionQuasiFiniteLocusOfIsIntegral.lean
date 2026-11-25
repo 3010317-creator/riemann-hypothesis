@@ -299,6 +299,8 @@ theorem existsUnique_hom_extension_of_dvr_of_preimmersion
   have : IsPreimmersion u := inferInstanceAs (IsPreimmersion (pullback.fst G.hom j))
   have : Flat u := inferInstanceAs (Flat (pullback.fst G.hom j))
   have : QuasiCompact u := inferInstanceAs (QuasiCompact (pullback.fst G.hom j))
+  have hus := isIso_stalkMap_of_flat_of_surjectiveOnStalks u
+  have : GlobalTheory.IsNormalScheme (pullback G.hom j) := GlobalTheory.IsNormalScheme.of_isIso_stalkMap u
   let Γ := graphClosure G.hom G'.hom u φ huφ
   let p : Γ ⟶ G.left := graphClosure.fst G.hom G'.hom u φ huφ
   let q : Γ ⟶ G'.left := graphClosure.snd G.hom G'.hom u φ huφ
