@@ -95,13 +95,8 @@ theorem exists_right_inv {S : Matrix (Fin g) (Fin g) ℝ} (h2 : Pr * Pr = Pr) (h
 
 theorem tendsto_minv {𝕜 : Type*} [NormedField 𝕜] {X : Type*} {f : Filter X}
     {M : X → Matrix (Fin g) (Fin g) 𝕜} {M₀ : Matrix (Fin g) (Fin g) 𝕜} (h : Tendsto M f (𝓝 M₀))
-    (h0 : M₀.det ≠ 0) : Tendsto (fun x => (M x)⁻¹) f (𝓝 M₀⁻¹) := by
-  have hd : Tendsto (fun x => (M x).det) f (𝓝 M₀.det) :=
-    ((continuous_id.matrix_det).tendsto _).comp h
-  have ha : Tendsto (fun x => (M x).adjugate) f (𝓝 M₀.adjugate) :=
-    ((continuous_id.matrix_adjugate).tendsto _).comp h
-  have := (hd.inv₀ h0).smul ha
-  simpa [Matrix.inv_def, Ring.inverse_eq_inv'] using this
+    (h0 : M₀.det ≠ 0) : Tendsto (fun x => (M x)⁻¹) f (𝓝 M₀⁻¹) :=
+  (continuousAt_matrix_inv _ (by rw [Ring.inverse_eq_inv']; exact continuousAt_inv₀ h0)).tendsto.comp h
 
 theorem kappa_mul (R R' : Matrix (Fin g) (Fin g) ℝ) : κ[R * R'] = κ[R] * κ[R'] := by
   ext i j
