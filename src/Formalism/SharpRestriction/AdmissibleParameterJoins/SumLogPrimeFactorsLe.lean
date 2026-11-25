@@ -8,6 +8,7 @@ import Formalism.HarderNarasimhan.HarderNarasimhanProofs.ShiftInvariance
 import Formalism.LatticeSlopes.ExistsSaturatedSlopeEqMuMax
 public import Mathlib.RingTheory.Ideal.Int
 public import Mathlib.NumberTheory.Primorial
+import Mathlib.NumberTheory.Chebyshev
 import Formalism.SharpRestriction.LevelLetterCocycles.TwGuard
 
 @[expose] public section
