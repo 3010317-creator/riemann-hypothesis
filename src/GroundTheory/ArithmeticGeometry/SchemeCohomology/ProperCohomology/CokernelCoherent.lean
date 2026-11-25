@@ -32,15 +32,13 @@ def cokernelTildeIso (hM : IsIso M.fromTildeΓ) (hN : IsIso N.fromTildeΓ) :
 
 lemma cokernelTildeIso_comm (hM : IsIso M.fromTildeΓ) (hN : IsIso N.fromTildeΓ) :
     (tilde.functor R).map (cokernel.π (moduleSpecΓFunctor.map ψ)) ≫
-      (cokernelTildeIso ψ hM hN).hom = N.fromTildeΓ ≫ cokernel.π ψ := by
-  have h : (tilde.functor R).map (cokernel.π (moduleSpecΓFunctor.map ψ)) ≫
-      (PreservesCokernel.iso (tilde.functor R) (moduleSpecΓFunctor.map ψ)).hom =
-      cokernel.π ((tilde.functor R).map (moduleSpecΓFunctor.map ψ)) := by
-    rw [← π_comp_cokernelComparison, ← PreservesCokernel.iso_inv, Category.assoc,
-      Iso.inv_hom_id, Category.comp_id]
-  rw [cokernelTildeIso, Iso.trans_hom, ← Category.assoc, h]
-  simp [cokernel.mapIso]
-  try rfl
+      (cokernelTildeIso ψ hM hN).hom = N.fromTildeΓ ≫ cokernel.π ψ :=
+  (PreservesCokernel.π_iso_hom_assoc (tilde.functor R) (moduleSpecΓFunctor.map ψ)
+    (cokernel.desc ((moduleSpecΓFunctor ⋙ tilde.functor R).map ψ) (N.fromTildeΓ ≫ cokernel.π ψ)
+      ((Category.assoc _ _ _).symm.trans
+        ((eq_whisker (Scheme.Modules.fromTildeΓNatTrans.naturality ψ) (cokernel.π ψ)).trans
+          ((Category.assoc _ _ _).trans ((whisker_eq _ (cokernel.condition ψ)).trans comp_zero)))))).trans
+    (cokernel.π_desc _ _ _)
 
 lemma isQuasicoherent_cokernel_spec [M.IsQuasicoherent] [N.IsQuasicoherent] :
     (cokernel ψ).IsQuasicoherent :=
