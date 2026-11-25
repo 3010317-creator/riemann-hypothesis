@@ -4,7 +4,6 @@ public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume
 public import ReciprocityTheory.Automorphisms.InstMainA
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.LocDensIdxA
 import Mathlib.Algebra.Order.Star.Int
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.TraceEqAdd
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.LocDensIdxH, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.LocDensIdxC
@@ -132,7 +131,18 @@ namespace IdxHW
 
 theorem sigma_ne_id {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) : ∃ x : E, σ x ≠ x := by
-  apply _root_.PI.OmLocU.SdB.b_sig_nt <;> assumption
+  obtain ⟨-, hC, -, hst⟩ := hCM
+  by_contra h
+  push_neg at h
+  obtain ⟨w⟩ := (inferInstance : Nonempty (InfinitePlace E))
+  have hw : w.IsReal := by
+    rw [InfinitePlace.isReal_iff, ComplexEmbedding.isReal_iff]
+    ext x
+    have := hst w.embedding x
+    rw [h x] at this
+    simp only [ComplexEmbedding.conjugate_coe_eq]
+    exact this.symm
+  exact (InfinitePlace.not_isReal_iff_isComplex.mpr (hC.isComplex w)) hw
 
 section Main
 
