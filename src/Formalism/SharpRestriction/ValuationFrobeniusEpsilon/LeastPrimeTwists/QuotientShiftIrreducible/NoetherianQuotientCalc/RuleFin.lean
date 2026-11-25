@@ -210,26 +210,8 @@ variable {𝒜 : Deg k → Submodule B R}
 
 theorem eq_of_le_of_iSup_eq_top {ι M : Type} [AddCommGroup M] [Module B M]
     {G H : ι → Submodule B M} (hle : ∀ i, G i ≤ H i) (hind : iSupIndep H)
-    (htop : ⨆ i, G i = ⊤) (i : ι) : G i = H i := by
-  classical
-  apply le_antisymm (hle i)
-  intro x hx
-  have h1 : x ∈ G i ⊔ ⨆ (j) (_ : j ≠ i), G j := by
-    have h2 : (⨆ j, G j) ≤ G i ⊔ ⨆ (j) (_ : j ≠ i), G j := iSup_le fun j => by
-      by_cases h : j = i
-      · subst h; exact le_sup_left
-      · exact le_sup_of_le_right (le_iSup₂_of_le j h le_rfl)
-    exact h2 (htop ▸ trivial)
-  obtain ⟨g, hg, y, hy, rfl⟩ := Submodule.mem_sup.1 h1
-  have h2 : y ∈ ⨆ (j) (_ : j ≠ i), H j := (iSup₂_mono fun j _ => hle j) hy
-  have h3 : y ∈ H i := by
-    have := (H i).sub_mem hx (hle i hg)
-    simpa using this
-  have h4 : y = 0 := by
-    have := (hind i).le_bot ⟨h3, h2⟩
-    simpa using this
-  rw [h4, add_zero]
-  exact hg
+    (htop : ⨆ i, G i = ⊤) (i : ι) : G i = H i :=
+  congrFun ((hind.le_iff_eq_of_iSup_eq_top htop).1 hle) i
 
 theorem GMod.IsGr.exists_gens {F : GMod B R k} (hF : F.IsGr 𝒜) :
     ∃ T : Finset F.M, (∀ x ∈ T, ∃ m, x ∈ F.gr m) ∧ Submodule.span R (T : Set F.M) = ⊤ := by

@@ -126,12 +126,6 @@ theorem levC_X (i : ZMod n) (ζ : LL) (hζ : IsPrimitiveRoot ζ PD.p) :
   rw [h3]
   linear_combination h2
 
-private theorem coeff_zero_derivative_eq_coeff_one {R : Type} [CommRing R] (f : PowerSeries R) :
-    PowerSeries.coeff 0 (PowerSeries.derivative (R := R) f) = PowerSeries.coeff 1 f := by
-  first
-  | (rw [show PowerSeries.derivative (R := R) f = f.derivativeFun from rfl, PowerSeries.coeff_derivativeFun]; simp)
-  | simp [PowerSeries.coeff_derivativeFun]
-
 theorem X_dvd_levC_q (i : ZMod n) (ζ : LL) (hζ : IsPrimitiveRoot ζ PD.p) (hp : 2 ≤ PD.p) :
     PowerSeries.X ∣ levC W i ζ W.q₀ := by
   obtain ⟨E, hE0, _, hX⟩ := levC_X W i ζ hζ
@@ -194,14 +188,15 @@ private theorem eq_of_mul_mul_eq_of_det_ne_zero (i : ZMod n) (ζ : LL) (hζ : Is
       PowerSeries.coeff 1 (E ^ PD.p - 1) := by
     rw [← h1', PowerSeries.coeff_succ_mul_X]
   have hD : PowerSeries.coeff 1 (E ^ PD.p) = ((PD.p : ℕ) : LL) := by
-    rw [← coeff_zero_derivative_eq_coeff_one, Derivation.leibniz_pow, hE1]
+    have h : PowerSeries.coeff 1 (E ^ PD.p) =
+        PowerSeries.coeff 0 (PowerSeries.derivative (R := LL) (E ^ PD.p)) := by
+      simpa using (PowerSeries.coeff_derivative (E ^ PD.p) 0).symm
+    rw [h, Derivation.leibniz_pow, hE1]
     simp [PowerSeries.coeff_zero_eq_constantCoeff_apply, hE0]
   have hcw : PowerSeries.constantCoeff w ≠ 0 := by
     intro h0
     apply hpL
-    have e2 : PowerSeries.coeff 1 (E ^ PD.p - 1) = PowerSeries.coeff 1 (E ^ PD.p) := by
-      first
-      | simp
+    have e2 : PowerSeries.coeff 1 (E ^ PD.p - 1) = PowerSeries.coeff 1 (E ^ PD.p) := by simp
     rw [← hD, ← e2, ← hc, PowerSeries.coeff_zero_eq_constantCoeff_apply, map_mul, h0, mul_zero]
   have hwU : IsUnit w := by
     rw [PowerSeries.isUnit_iff_constantCoeff]

@@ -7,10 +7,6 @@ import Mathlib.Algebra.Order.Star.Real
 
 namespace Formalism.MainNotions.BridgeLemma₂
 
-private theorem pow_rpow_eq_rpow_mul {x : ℝ} (hx : 0 ≤ x) (n : ℕ) (z : ℝ) :
-    (x ^ n) ^ z = x ^ ((n : ℝ) * z) := by
-  rw [← Real.rpow_natCast, ← Real.rpow_mul hx]
-
 theorem rows_num_l {P σ h cr Γ a2 dq : ℝ} (hP : 1 ≤ P) (hσ : 1 ≤ σ) (h1 : 1 ≤ h) (hh : h ≤ P * σ ^ 4)
     (hcr : 0 ≤ cr) (hΓ : 0 ≤ Γ) :
     (h ^ cr) ^ 2 * (Γ * σ ^ a2) * σ ^ (-dq) ≤ (P ^ cr) ^ 2 * Γ * σ ^ (8 * cr + a2 - dq) := by
@@ -20,7 +16,7 @@ theorem rows_num_l {P σ h cr Γ a2 dq : ℝ} (hP : 1 ≤ P) (hσ : 1 ≤ σ) (h
   have key : h ^ cr ≤ P ^ cr * σ ^ (4 * cr) := by
     calc h ^ cr ≤ (P * σ ^ 4) ^ cr := Real.rpow_le_rpow hh0 hh hcr
       _ = P ^ cr * (σ ^ 4) ^ cr := Real.mul_rpow hP0.le (pow_nonneg hσ0.le 4)
-      _ = P ^ cr * σ ^ (4 * cr) := by rw [pow_rpow_eq_rpow_mul hσ0.le]; norm_num
+      _ = P ^ cr * σ ^ (4 * cr) := by rw [← Real.rpow_natCast_mul hσ0.le]; norm_num
   have hsq : (h ^ cr) ^ 2 ≤ (P ^ cr * σ ^ (4 * cr)) ^ 2 := by
     rw [sq, sq]
     exact mul_le_mul key key (Real.rpow_nonneg hh0 _) (le_trans (Real.rpow_nonneg hh0 _) key)
@@ -82,7 +78,7 @@ theorem rows_num_pair {P σ₁ σ₂ h₁ h₂ cr Γ a2 dq E1 F6 XiH XiP ck e l�
       _ = (P ^ 2) ^ E1 * ((σ₁ * σ₂) ^ 4) ^ E1 :=
           Real.mul_rpow (pow_nonneg hP0.le 2) (pow_nonneg hS0.le 4)
       _ = (P ^ E1) ^ 2 * (σ₁ * σ₂) ^ (4 * E1) := by
-          rw [pow_rpow_eq_rpow_mul hS0.le, sq, sq, Real.mul_rpow hP0.le hP0.le]
+          rw [← Real.rpow_natCast_mul hS0.le, sq, sq, Real.mul_rpow hP0.le hP0.le]
           norm_num
   have hSck : 0 < (σ₁ * σ₂) ^ (4 * ck) := Real.rpow_pos_of_pos hS0 _
   have hXiP : 0 ≤ XiP := by

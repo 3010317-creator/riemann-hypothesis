@@ -116,10 +116,6 @@ theorem semisimple_decomposition_of (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (G
         ((toK D.nd i).mapMatrix ((ρ π g : GL _ _) : Matrix (Fin D.R.r) (Fin D.R.r) (D.nd.O i)),
          Matrix.diagonal fun c : Fin D.R.t =>
            toK D.nd i ((D.nd.chi i ((c : ℕ) + 1) g : (D.nd.O i)ˣ) : D.nd.O i)) := fun g => rfl
-  have hdiag : ∀ d : Fin D.R.t → KK D.nd i, (Matrix.diagonal d).charpoly = ∏ c, (X - C (d c)) := by
-    intro d
-    first
-    | exact Matrix.charpoly_diagonal d
   obtain ⟨Pm, hPm⟩ := hBN (KK D.nd i) (D.R.r + D.R.t) (mapRep (toK D.nd i) (r π)) (rhoChiK D i (ρ π))
     hSS1 hSS (by
       intro g
@@ -129,7 +125,8 @@ theorem semisimple_decomposition_of (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (G
            Matrix.diagonal fun c : Fin D.R.t =>
              toK D.nd i ((D.nd.chi i ((c : ℕ) + 1) g : (D.nd.O i)ˣ) : D.nd.O i))).charpoly
       rw [blockHom_charpoly, RingHom.mapMatrix_apply, RingHom.mapMatrix_apply, Matrix.charpoly_map,
-        Matrix.charpoly_map, hcp g, Polynomial.map_mul, Polynomial.map_prod, hdiag]
+        Matrix.charpoly_map, hcp g, Polynomial.map_mul, Polynomial.map_prod,
+        Matrix.charpoly_diagonal]
       congr 1
       simp only [Polynomial.map_sub, Polynomial.map_X, Polynomial.map_C]
       rw [Fin.prod_univ_eq_prod_range

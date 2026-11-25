@@ -6,6 +6,7 @@ public import Formalism.SharpRestriction.GrowthBounds.MonomialFactorials.BlockVa
 public import Formalism.SharpRestriction.GrowthBounds.MonomialFactorials.LiMap
 public import Formalism.SharpRestriction.GrowthBounds.MonomialFactorials.MemIntPolIff
 public import Formalism.SharpRestriction.GrowthBounds.MonomialFactorials.PadicIntegersEmbeddingMapPrime
+import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.Tactic.TypeStar
 
 @[expose] public section
@@ -19,32 +20,20 @@ open MvPolynomial Finset Formalism.MainNotions.G Formalism.MainNotions.flipOneTh
 theorem sum_finrank_le_of_indep {ι K V : Type*} [Field K] [AddCommGroup V] [Module K V] [DecidableEq ι]
     (f : ι → Submodule K V) (hf : iSupIndep f) (T : Submodule K V) [FiniteDimensional K T] (s : Finset ι)
     (hle : ∀ i ∈ s, f i ≤ T) : ∑ i ∈ s, Module.finrank K (f i) ≤ Module.finrank K T := by
-  have key : ∀ s : Finset ι, (∀ i ∈ s, f i ≤ T) →
-      (⨆ i ∈ s, f i) ≤ T ∧ ∑ i ∈ s, Module.finrank K (f i) = Module.finrank K (⨆ i ∈ s, f i : Submodule K V) := by
-    intro s
-    induction s using Finset.induction_on with
-    | empty =>
-      intro _
-      have h0 : (⨆ i ∈ (∅ : Finset ι), f i) = ⊥ := le_bot_iff.1 (iSup₂_le fun i hi => by simp at hi)
-      rw [h0, finrank_bot, Finset.sum_empty]
-      exact ⟨bot_le, rfl⟩
-    | insert a s ha ih =>
-      intro h
-      obtain ⟨h1, h2⟩ := ih (fun i hi => h i (Finset.mem_insert_of_mem hi))
-      have hfa : f a ≤ T := h a (Finset.mem_insert_self a s)
-      have e : (⨆ i ∈ insert a s, f i) = f a ⊔ ⨆ i ∈ s, f i := by
-        rw [Finset.iSup_insert]
-      haveI : FiniteDimensional K (f a) := Submodule.finiteDimensional_of_le hfa
-      haveI : FiniteDimensional K (⨆ i ∈ s, f i : Submodule K V) := Submodule.finiteDimensional_of_le h1
-      have hd : Disjoint (f a) (⨆ i ∈ s, f i) := hf.disjoint_biSup ha
-      refine ⟨by rw [e]; exact sup_le hfa h1, ?_⟩
-      rw [Finset.sum_insert ha, h2, e]
-      have := Submodule.finrank_sup_add_finrank_inf_eq (f a) (⨆ i ∈ s, f i)
-      rw [hd.eq_bot, finrank_bot, add_zero] at this
-      omega
-  obtain ⟨h1, h2⟩ := key s hle
-  rw [h2]
-  exact Submodule.finrank_mono h1
+  have (i : s) : FiniteDimensional K (f i.1) := Submodule.finiteDimensional_of_le (hle i.1 i.2)
+  let L : (DirectSum s fun i => f i.1) →ₗ[K] T :=
+    DirectSum.toModule K s T fun i => Submodule.inclusion (hle i.1 i.2)
+  have hcoe : T.subtype ∘ₗ L = DirectSum.coeLinearMap fun i : s => f i.1 := by
+    ext i x; simp [L]
+  have hL : Function.Injective L := fun x y hxy =>
+    (hf.comp Subtype.val_injective).dfinsupp_lsum_injective (by
+      change (DirectSum.coeLinearMap fun i : s => f i.1) x =
+        (DirectSum.coeLinearMap fun i : s => f i.1) y
+      rw [← hcoe]
+      exact congrArg Subtype.val hxy)
+  simpa [Module.finrank_directSum, Finset.sum_coe_sort,
+    Finset.sum_attach s fun i => Module.finrank K (f i)] using
+    L.finrank_le_finrank_of_injective hL
 
 variable (C0 CE1 CE2 : ℝ) (X : flipOneThree.Inst)
 

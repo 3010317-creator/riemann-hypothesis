@@ -17,25 +17,6 @@ section general
 
 variable {K : Type} [Field K] {r n : ℕ}
 
-private lemma cw_pow_mem {ν : Fin n → ℕ} {y : MvPolynomial (Fin r × Fin n) K}
-    (hy : y ∈ dualWeyl K r n ν) (k : ℕ) : y ^ k ∈ dualWeyl K r n (k • ν) := by
-  induction k with
-  | zero => simpa using (dualWeylMul K r n 0 0 0 0).2
-  | succ k ih =>
-    rw [pow_succ, succ_nsmul]
-    exact (dualWeylMul K r n _ _ _ _).1 ih hy
-
-private lemma cw_prod_mem {ι : Type} (s : Finset ι) (μ : ι → Fin n → ℕ)
-    (g : ι → MvPolynomial (Fin r × Fin n) K) (h : ∀ i ∈ s, g i ∈ dualWeyl K r n (μ i)) :
-    ∏ i ∈ s, g i ∈ dualWeyl K r n (∑ i ∈ s, μ i) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simpa using (dualWeylMul K r n 0 0 0 0).2
-  | insert a s ha ih =>
-    rw [Finset.prod_insert ha, Finset.sum_insert ha]
-    exact (dualWeylMul K r n _ _ _ _).1 (h a (Finset.mem_insert_self _ _))
-      (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
-
 private lemma cw_aeval_mem {σ : Type} {ν : Fin n → ℕ} (y : σ → MvPolynomial (Fin r × Fin n) K)
     (hy : ∀ i, y i ∈ dualWeyl K r n ν) (Q : ℕ) (f : MvPolynomial σ K) (hf : f.IsHomogeneous Q) :
     aeval y f ∈ dualWeyl K r n (Q • ν) := by
@@ -44,11 +25,10 @@ private lemma cw_aeval_mem {σ : Type} {ν : Fin n → ℕ} (y : σ → MvPolyno
   rw [← Algebra.smul_def]
   refine Submodule.smul_mem _ _ ?_
   have hdeg : ∑ i ∈ d.support, d i = Q := by
-    have := hf (mem_support_iff.mp hd)
-    simpa [Finsupp.weight_apply, Finsupp.sum] using this
-  have := cw_prod_mem d.support (fun i => d i • ν) (fun i => y i ^ d i)
-    (fun i _ => cw_pow_mem (hy i) _)
-  rwa [← Finset.sum_smul, hdeg] at this
+    simpa [Finsupp.weight_apply, Finsupp.sum] using hf (mem_support_iff.mp hd)
+  have h := dualWeyl_prod d.support (fun i => d i • ν) (fun i => y i ^ d i)
+    (fun i _ => dualWeyl_pow (hy i) _)
+  rwa [← Finset.sum_smul, hdeg] at h
 
 private lemma cw_prod_aeval {σ ι : Type} (y : σ → MvPolynomial (Fin r × Fin n) K) (s : Finset ι)
     (g : ι → MvPolynomial (Fin r × Fin n) K) (e : ι → ℕ)
@@ -84,14 +64,11 @@ private lemma cw_minor0 (s : ℕ) (hs : s ≤ n) (h : s = 0) (J : Fin s → Fin 
   subst h
   simp [initMinor]
 
-private lemma cw_le_of_shape {k : ℕ} (sz : Fin k → ℕ) (t : Fin n) (h : shapeDeg sz t = 0) (j : Fin k) :
-    sz j ≤ t.val := by
-  by_contra hk
-  have hm : j ∈ Finset.univ.filter (fun k => t.val < sz k) := by
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]; omega
-  simp only [shapeDeg, Finset.card_eq_zero] at h
-  rw [h] at hm
-  simp at hm
+private lemma cw_le_of_shape {k : ℕ} (sz : Fin k → ℕ) (t : Fin n) (h : shapeDeg sz t = 0)
+    (j : Fin k) : sz j ≤ t.val := by
+  simp only [shapeDeg, Finset.card_eq_zero, Finset.filter_eq_empty_iff, Finset.mem_univ,
+    true_implies, not_lt] at h
+  exact @h j
 
 end general
 
@@ -132,11 +109,7 @@ theorem first_column_polynomials_characterize : FirstColumnPolynomialsSpan := by
     have := cw_aeval_mem
       (fun i => (X (i, (0 : Fin (m + 1))) : MvPolynomial (Fin (m + 1) × Fin (m + 1)) K))
       (ν := fun t => if t.val < 1 then 1 else 0) ?_ P f hf
-    · convert this using 2
-      funext t
-      by_cases ht : t = 0
-      · simp [ht]
-      · simp [ht]
+    · exact dualWeyl_of_eq this (funext fun t => by by_cases ht : t = 0 <;> simp [ht])
     · intro i
       have := cw_single_mem (K := K) (r := m + 1) (n := m + 1) 1 (by omega) (fun _ => i)
       rwa [cw_minor1 _ _ (by omega) le_rfl] at this
@@ -144,12 +117,10 @@ theorem first_column_polynomials_characterize : FirstColumnPolynomialsSpan := by
 private lemma cw_key {K : Type} [Field K] (m : ℕ) (J : Fin m → Fin (m + 1)) :
     ∃ (i : Fin (m + 1)) (ε : K), initMinor K J (Nat.le_succ m) = C ε * covY K m i := by
   by_cases hJ : Function.Injective J
-  · have hns : ¬ Function.Surjective J := by
-      intro hsur
-      have := Fintype.card_le_of_surjective J hsur
+  · obtain ⟨i, hi⟩ : ∃ i : Fin (m + 1), ∀ a, J a ≠ i := by
+      by_contra! h
+      have := Fintype.card_le_of_surjective J h
       simp at this
-    simp only [Function.Surjective, not_forall, not_exists] at hns
-    obtain ⟨i, hi⟩ := hns
     have hex : ∀ a, ∃ z, i.succAbove z = J a := fun a => Fin.exists_succAbove_eq (hi a)
     choose σ hσ using hex
     have hinj : Function.Injective σ := by
@@ -243,14 +214,9 @@ theorem signed_minor_polynomials_characterize : SignedMinorPolynomialsSpan := by
           by rw [map_one, cw_minor0 _ _ (by omega)]⟩
   · rintro ⟨f, hf, rfl⟩
     have := cw_aeval_mem (covY K m) (cw_covY_mem m) Q f hf
-    convert this using 2
-    funext t
-    by_cases ht : t = Fin.last m
-    · simp [ht]
-    · have : t.val < m := by
-        have h1 := t.isLt
-        have h2 : t.val ≠ m := fun h => ht (Fin.ext (by simpa using h))
-        omega
-      simp [ht, this]
+    exact dualWeyl_of_eq this (funext fun t => by
+      by_cases ht : t = Fin.last m
+      · simp [ht]
+      · simp [ht, lt_of_le_of_ne (Nat.lt_succ_iff.1 t.isLt) (Fin.val_ne_of_ne ht)])
 
 end Formalism.MainNotions.flipOneThree.Pf.ShapeCovering

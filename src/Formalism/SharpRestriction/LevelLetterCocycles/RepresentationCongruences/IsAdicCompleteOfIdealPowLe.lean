@@ -19,17 +19,10 @@ open Formalism.WeaklyAdmissibleFiltrations Formalism.BasicNotions Formalism.Basi
 theorem isAdicComplete_of_ideal_pow_le {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
     (I J : Ideal R) [hJ : IsAdicComplete J M] (e : ℕ) (he : 1 ≤ e) (hJI : J ≤ I) (hIJ : I ^ e ≤ J) :
     IsAdicComplete I M := by
-  have mono : ∀ {A B : Ideal R}, A ≤ B → ∀ n : ℕ, A ^ n ≤ B ^ n := by
-    intro A B h n
-    induction n with
-    | zero => simp
-    | succ k ih =>
-      rw [pow_succ, pow_succ]
-      exact Ideal.mul_mono ih h
   have hIJn : ∀ n : ℕ, I ^ (e * n) ≤ J ^ n := fun n => by
     rw [pow_mul]
-    exact mono hIJ n
-  have hJIn : ∀ n : ℕ, J ^ n ≤ I ^ n := fun n => mono hJI n
+    exact Ideal.pow_right_mono hIJ n
+  have hJIn : ∀ n : ℕ, J ^ n ≤ I ^ n := Ideal.pow_right_mono hJI
   have hle : ∀ n : ℕ, n ≤ e * n := fun n => by nlinarith
   refine { haus' := ?_, prec' := ?_ }
   · intro x hx
@@ -74,9 +67,7 @@ theorem isAdicComplete_integers_local : ∀ (l : ℕ) [Fact l.Prime] (LL : FinEx
   refine isAdicComplete_of_ideal_pow_le (IsLocalRing.maximalIdeal ↥(OL LL))
     (Ideal.span {((l : ℕ) : ↥(OL LL))}) k hk1 ?_ ?_
   · rw [hspan]
-    calc IsLocalRing.maximalIdeal ↥(OL LL) ^ k ≤ IsLocalRing.maximalIdeal ↥(OL LL) ^ 1 :=
-          Ideal.pow_le_pow_right hk1
-      _ = IsLocalRing.maximalIdeal ↥(OL LL) := pow_one _
+    exact Ideal.pow_le_self (by omega)
   · rw [hspan]
 
 end Formalism.MainNotions.N.Ln17

@@ -49,36 +49,6 @@ theorem rk_ιDi_eq (hK : Function.Bijective (algebraMap K₀ K)) (hQ : Formalism
 
 variable {d : ℕ} {T₁ T₂ : LocLat G Qp LL O} {F : LatHom T₁.L T₂.L} {b : ZMod n → ℕ} {S η m : ℕ}
 
-private theorem exists_embedding_extending_emb (hK : Function.Bijective (algebraMap K₀ K)) (i : ZMod n) :
-    ∃ τ : K →ₐ[Qp] LL, τ.comp (IsScalarTower.toAlgHom Qp K₀ K) = W.emb i := by
-  let e : K₀ ≃ₐ[Qp] K := AlgEquiv.ofBijective (IsScalarTower.toAlgHom Qp K₀ K) hK
-  refine ⟨(W.emb i).comp (e.symm : K →ₐ[Qp] K₀), ?_⟩
-  ext x
-  show W.emb i (e.symm (IsScalarTower.toAlgHom Qp K₀ K x)) = W.emb i x
-  rw [show IsScalarTower.toAlgHom Qp K₀ K x = e x from rfl, e.symm_apply_apply]
-
-private theorem eta_le_b_add_of_SetCS (hS : Formalism.MainNotions.RamifiedCoefficientChains.SetCS W d T₁ T₂ F b S η m) (i : ZMod n) : η ≤ b i + S := by
-  obtain ⟨-, hp11, -, -, -, -, -, -, hbig, -⟩ := hS
-  have hp : (11 : ℝ) ≤ PD.p := by exact_mod_cast hp11
-  have hlam : 0 ≤ Formalism.MainNotions.RamifiedCoefficientChains.lam PD.p (Formalism.MainNotions.RamifiedCoefficientChains.hpar n b S + η) := by
-    unfold Formalism.MainNotions.RamifiedCoefficientChains.lam
-    rcases Nat.eq_zero_or_pos (Formalism.MainNotions.RamifiedCoefficientChains.hpar n b S + η) with h0 | h0
-    · rw [h0]; simp
-    · have : (1 : ℝ) ≤ 2 * ((Formalism.MainNotions.RamifiedCoefficientChains.hpar n b S + η : ℕ) : ℝ) := by
-        have : (1 : ℝ) ≤ ((Formalism.MainNotions.RamifiedCoefficientChains.hpar n b S + η : ℕ) : ℝ) := by exact_mod_cast h0
-        linarith
-      have := Real.logb_nonneg (by linarith : (1 : ℝ) < PD.p) this
-      linarith
-  have hA : 0 ≤ Formalism.MainNotions.RamifiedCoefficientChains.aR PD.p (Formalism.MainNotions.RamifiedCoefficientChains.hpar n b S + η) := by
-    unfold Formalism.MainNotions.RamifiedCoefficientChains.aR
-    have h1 : 0 ≤ ((Formalism.MainNotions.RamifiedCoefficientChains.hpar n b S + η : ℕ) : ℝ) * (2 * (PD.p : ℝ) - 1) / ((PD.p : ℝ) - 1) ^ 2 :=
-      div_nonneg (mul_nonneg (Nat.cast_nonneg _) (by linarith)) (sq_nonneg _)
-    linarith
-  have h := hbig i
-  have : (η : ℝ) ≤ (b i : ℝ) := by linarith
-  have : η ≤ b i := by exact_mod_cast this
-  omega
-
 theorem rk_evenQ₂ (hE : Formalism.MainNotions.RamifiedCoefficientChains.DcrisExactStrict PD LL) (hC : Formalism.MainNotions.RamifiedCoefficientChains.CrysSubQuot PD LL)
     (hQ : Formalism.MainNotions.RamifiedCoefficientChains.DdREqDcris PD LL) (hS : Formalism.MainNotions.RamifiedCoefficientChains.SetCS W d T₁ T₂ F b S η m) (i : ZMod n)
     (hi : (i.val + d) % 2 = 0) :
@@ -87,7 +57,7 @@ theorem rk_evenQ₂ (hE : Formalism.MainNotions.RamifiedCoefficientChains.DcrisE
   have hK : Function.Bijective (algebraMap K₀ K) := hS.1.1
   have hT2 : IsCrys PD T₂.ρ := hS.2.2.2.2.2.1.2.1
   have hsum := hS.2.2.2.2.2.2.2.1
-  obtain ⟨τ, hτ⟩ := exists_embedding_extending_emb W hK i
+  obtain ⟨τ, hτ⟩ := rk_lift hK (W.emb i)
   rw [rk_filLev_eq W hK hQ T₂ hT2 i τ hτ, rk_filLev_eq W hK hQ T₂ hT2 i τ hτ]
   haveI hfd : FiniteDimensional LL ↥(DdRE PD T₂.ρ τ) := ((hQ hK T₂.V T₂.ρ hT2).2 τ).1
   have hfdF : ∀ a : ℤ, FiniteDimensional LL ↥(FildR PD T₂.ρ τ a) := fun a =>
@@ -143,8 +113,8 @@ theorem rk_low₂ (hE : Formalism.MainNotions.RamifiedCoefficientChains.DcrisExa
     Formalism.MainNotions.DeltaInvariantLattices.ιDi W T₂ i ≤ Formalism.MainNotions.WachCoordinates.FilLev W T₂ i 0 a := by
   have hK : Function.Bijective (algebraMap K₀ K) := hS.1.1
   have hT2 : IsCrys PD T₂.ρ := hS.2.2.2.2.2.1.2.1
-  have hηb := eta_le_b_add_of_SetCS W hS i
-  obtain ⟨τ, hτ⟩ := exists_embedding_extending_emb W hK i
+  have hηb : η ≤ b i + S := (rk_eta_lt W hS i).le.trans (Nat.le_add_right _ _)
+  obtain ⟨τ, hτ⟩ := rk_lift hK (W.emb i)
   rw [rk_ιDi_eq W hK hQ T₂ hT2 i τ hτ, rk_filLev_eq W hK hQ T₂ hT2 i τ hτ a]
   haveI : FiniteDimensional LL ↥(DdRE PD T₂.ρ τ) := ((hQ hK T₂.V T₂.ρ hT2).2 τ).1
   have hJ := rk_jumps₂ W hE hC hQ hS i τ hτ
