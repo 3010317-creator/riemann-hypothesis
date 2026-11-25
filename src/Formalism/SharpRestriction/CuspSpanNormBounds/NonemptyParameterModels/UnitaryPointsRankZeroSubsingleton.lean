@@ -411,10 +411,6 @@ theorem aut_HTop_holds {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
       exact ⟨g', hg', fun k hk => h' k hk⟩)
   exact ⟨t, ht1, ht2, ht3⟩
 
-section AtRecord
-
-end AtRecord
-
 end Aut
 
 end Formalism.MainNotions.S.Inh

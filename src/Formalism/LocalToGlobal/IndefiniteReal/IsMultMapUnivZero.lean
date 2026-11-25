@@ -19,12 +19,6 @@ open IsDedekindDomain NumberField MeasureTheory
 
 namespace Formalism.IndefR.RecTie
 
-section Zero
-
-variable {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (θ : Datum.InfFam D) (M : Mult.DSModel V S)
-
-end Zero
-
 section FromLinks
 
 open Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Datum

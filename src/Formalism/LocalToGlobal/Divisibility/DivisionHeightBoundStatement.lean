@@ -44,20 +44,6 @@ namespace Formalism.L2.Indef.Examples₂
 
 open Formalism.DivisionValues Formalism.EigenvalueLevelCeiling
 
-section Std
-
-variable (K : Type) [Field K] [NumberField K] [StarRing K]
-
-variable {K}
-
-end Std
-
-section Amb
-
-variable {K : Type} [Field K] [NumberField K] [StarRing K]
-
-end Amb
-
 namespace one
 
 variable (K : Type) [Field K] [NumberField K] [StarRing K] (v0 : InfinitePlace K)

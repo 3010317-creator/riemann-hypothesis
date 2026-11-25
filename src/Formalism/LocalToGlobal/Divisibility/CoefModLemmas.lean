@@ -640,14 +640,6 @@ theorem extNormPos : ExtNormPos := by
     refine Finset.prod_congr rfl fun τ _ => ?_
     rw [← fockSQ K, map_extremal]
 
-section Checks
-
-variable {K : Type} [Field K]
-
-variable [StarRing K]
-
-end Checks
-
 section RankOne
 
 variable {K : Type} [Field K] [NumberField K]

@@ -130,10 +130,4 @@ theorem tied_U_clauses (D : D7)
 
 end Rec
 
-section PerPlace
-
-variable {R : Ranks} {H : Host R} {what₂ : Rows.Data R}
-
-end PerPlace
-
 end Formalism.IndefR.NX

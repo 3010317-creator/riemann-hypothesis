@@ -15,11 +15,6 @@ import Mathlib.RingTheory.SimpleRing.Principal
 
 namespace Formalism.ExtensionFiltration
 
-section Numbers
-open Finset Module NumberField
-
-end Numbers
-
 noncomputable section Short
 open Module NumberField
 open Formalism.HN
@@ -119,10 +114,5 @@ theorem muDef_line_eq (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι �
 end Line
 
 end Short
-
-noncomputable section Primes
-open Finset
-
-end Primes
 
 end Formalism.ExtensionFiltration

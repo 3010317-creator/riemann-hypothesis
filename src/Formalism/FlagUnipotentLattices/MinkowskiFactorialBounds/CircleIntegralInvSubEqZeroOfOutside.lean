@@ -9,26 +9,6 @@ import Std.Tactic.BVDecide.Normalize.Prop
 
 namespace Formalism.HermitianLatticeCounting.P
 
-section G1
-open Finset Polynomial
-
-end G1
-
-section G2
-open Finset Metric
-
-end G2
-
-section G3
-open Finset Polynomial Formalism.HermitianLatticeCounting.ExpansionTerms
-
-end G3
-
-section G4
-open Finset Formalism.HermitianLatticeCounting.ExpansionTerms
-
-end G4
-
 section G5
 open Finset
 
@@ -584,15 +564,5 @@ theorem first_operator_norm_bound : Formalism.HermitianLatticeCounting.Expansion
             _ = 16 * Real.exp 1 * b ^ 2 := by ring
 
 end G6
-
-section G8
-open Finset
-
-end G8
-
-section G7
-open Finset
-
-end G7
 
 end Formalism.HermitianLatticeCounting.P

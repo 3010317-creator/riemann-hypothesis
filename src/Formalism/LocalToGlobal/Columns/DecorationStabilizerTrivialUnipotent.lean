@@ -373,10 +373,6 @@ theorem stab0 [IsDomain O] [IsNoetherianRing O] [Module.IsTorsionFree O V]
 
 end NF
 
-section Checks
-
-end Checks
-
 section Definite
 
 open NumberField
