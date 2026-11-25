@@ -33,12 +33,7 @@ theorem push_letB (ga : Matrix (Fin n) (Fin n) E) (σ : E →+* ℂ) (i : Fin (D
 
 theorem mem_range_of_isIntegral (T : CDVR) (io : c.F →+* T.Fr) {x : c.F} (hi : IsIntegral ℤ x) :
     ∃ y : T.V, algebraMap T.V T.Fr y = io x := by
-  obtain ⟨p, hpm, hp⟩ := hi
-  have hV : IsIntegral T.V (io x) := by
-    refine ⟨p.map (Int.castRingHom T.V), hpm.map _, ?_⟩
-    rw [Polynomial.eval₂_map, RingHom.ext_int ((algebraMap T.V T.Fr).comp (Int.castRingHom T.V))
-      (io.comp (algebraMap ℤ c.F)), ← Polynomial.hom_eval₂, hp, map_zero]
-  exact IsIntegrallyClosed.isIntegral_iff.1 hV
+  exact IsIntegrallyClosed.isIntegral_iff.1 (hi.map_of_comp_eq (Int.castRingHom T.V) io (RingHom.ext_int _ _))
 
 theorem mem_range_of_smul (T : CDVR) (io : c.F →+* T.Fr) {k : ℕ} (hk : IsUnit (k : T.V)) (σ : E →+* ℂ) {x : E}
     (hx : (k : E) * x ∈ (1 : Submodule (𝓞 E) E)) : ∃ y : T.V, algebraMap T.V T.Fr y = io (embF c σ x) := by
