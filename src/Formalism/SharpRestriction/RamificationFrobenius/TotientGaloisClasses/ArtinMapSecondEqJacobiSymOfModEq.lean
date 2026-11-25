@@ -145,18 +145,9 @@ theorem exists_unit (x y z : ℕ) (hx : Nat.Coprime x (2 ^ (e + 2))) (hy : Nat.C
   obtain ⟨m, hm12, hm3⟩ := Nat.chineseRemainder h2qd n z
   have hm1 : m ≡ x [MOD 2 ^ (e + 2)] := (hm12.of_dvd (dvd_mul_right _ _)).trans hn1
   have hm2 : m ≡ y [MOD q] := (hm12.of_dvd (dvd_mul_left _ _)).trans hn2
-  have c1 : Nat.Coprime m (2 ^ (e + 2)) := by
-    unfold Nat.Coprime
-    rw [hm1.gcd_eq]
-    exact hx
-  have c2 : Nat.Coprime m q := by
-    unfold Nat.Coprime
-    rw [hm2.gcd_eq]
-    exact hy
-  have c3 : Nat.Coprime m d := by
-    unfold Nat.Coprime
-    rw [hm3.gcd_eq]
-    exact hz
+  have c1 : Nat.Coprime m (2 ^ (e + 2)) := hm1.gcd_eq.trans hx
+  have c2 : Nat.Coprime m q := hm2.gcd_eq.trans hy
+  have c3 : Nat.Coprime m d := hm3.gcd_eq.trans hz
   have cN : Nat.Coprime m (2 ^ (e + 2) * q * d) := (c1.mul_right c2).mul_right c3
   refine ⟨ZMod.unitOfCoprime m cN, ?_, ?_, ?_⟩ <;> rw [ZMod.coe_unitOfCoprime, ZMod.val_natCast]
   · exact ((Nat.mod_modEq m _).of_dvd (two_dvd e q d)).trans hm1
