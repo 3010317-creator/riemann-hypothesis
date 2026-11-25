@@ -127,9 +127,6 @@ theorem div : X₁.M.HasDiv X₁.S.th :=
   X₁.thetaInt X₁.o₁ X₁.Ω₁ X₁.S X₁.ρ X₁.u X₁.sharp X₁.gen X₁.M X₁.π X₁.normal X₁.comp
 
 
-include X₁ in
-theorem posW : PosW W := X₁.e8.1
-
 
 include X₁ in
 theorem diag_pos (a : Fin 8) : 0 < W a a := by
@@ -137,20 +134,6 @@ theorem diag_pos (a : Fin 8) : 0 < W a a := by
   simp only [Matrix.map_apply, Matrix.add_apply, Matrix.transpose_apply] at this
   have h2 : (0 : ℤ) < W a a + W a a := by exact_mod_cast this
   omega
-
-theorem isProper_compactificationMap : IsProper X₁.z := ((isProjOver_iff_isProper_and_exists_isAmpleLB X₁.z).1 X₁.proj).1
-
-theorem s_comp : X₁.M.s ≫ spMap X₁.κ = X₁.π ≫ X₁.z := by
-  refine ext_of_isDominant X₁.M.pt ?_
-  rw [← Category.assoc, X₁.M.pt_s, ← Category.assoc, X₁.comp, Category.assoc, Category.assoc, X₁.thetaSetup_structureMap_comp, X₁.base]
-  exact (Spec.map_comp (CommRingCat.ofHom X₁.κ) (CommRingCat.ofHom (algebraMap X₁.o₁ X₁.Ω₁))).symm
-
-theorem projM : IsProjOver X₁.M.s := by
-  haveI := X₁.fin
-  obtain ⟨h1, L, hL⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB X₁.z).1 X₁.proj
-  haveI : IsProper (X₁.M.s ≫ spMap X₁.κ) := by rw [s_comp]; infer_instance
-  haveI : IsProper X₁.M.s := IsProper.of_comp X₁.M.s (spMap X₁.κ)
-  exact (isProjOver_iff_isProper_and_exists_isAmpleLB _).2 ⟨this, _, hL.pull_of_isFinite X₁.π⟩
 
 end Setup
 
@@ -179,19 +162,6 @@ theorem norm_val_le (c : CTrait X₁ p z₁) (a : X₁.M.Z.presheaf.stalk z₁) 
 theorem norm_uniformiser_pos (c : CTrait X₁ p z₁) : 0 < ‖c.ι (algebraMap c.T.V (FractionRing c.T.V) c.T.ϖ)‖ :=
   norm_pos_iff.2 ((map_ne_zero c.ι).2 fun h =>
     c.T.irr.ne_zero ((map_eq_zero_iff _ (IsFractionRing.injective _ _)).1 h))
-
-theorem scale_pos (c : CTrait X₁ p z₁) : 0 < c.sc := by
-  have h1 := c.norm_uniformiser_pos
-  set x := algebraMap c.T.V (FractionRing c.T.V) c.T.ϖ with hx
-  have h0 : x ≠ 0 := fun h => by simp [h] at h1
-  have h2 : ‖c.ι x‖ < 1 := by
-    by_contra h
-    have : ‖c.ι x⁻¹‖ ≤ 1 := by
-      rw [map_inv₀, norm_inv]; exact inv_le_one_of_one_le₀ (not_lt.1 h)
-    obtain ⟨v, hv⟩ := (c.int _).1 this
-    refine c.T.irr.not_isUnit (IsUnit.of_mul_eq_one v (IsFractionRing.injective _ (FractionRing c.T.V) ?_))
-    rw [map_mul, map_one, hv, ← hx, mul_inv_cancel₀ h0]
-  exact neg_pos.2 (Real.log_neg h1 h2)
 
 theorem exp_neg_sc_mul (c : CTrait X₁ p z₁) (a : ℕ) :
     Real.exp (-(c.sc * a)) = ‖c.ι (algebraMap c.T.V (FractionRing c.T.V) c.T.ϖ)‖ ^ a := by
