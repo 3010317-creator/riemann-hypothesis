@@ -157,7 +157,7 @@ public import Development.WeilBound.CoreStatements.AutomorphicKernels.DualAbelia
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.MoriwakiBigTheorem.Outright
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.NadelVanishing.TopNSI
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.NadelVanishing.TopPointSep
-public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.SiegelWeilStandard.SiegelWeilStd
+import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilFinFinal
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.ZarTop
 public import Development.WeilBound.CoreStatements.PublishedTheorems.CasselmanWallach.FinalB
 public import Development.WeilBound.CoreStatements.PublishedTheorems.ClozelPurity.Bridge
@@ -878,7 +878,8 @@ theorem UpperTheory.LiteratureTheorems.cheb_of_literature : GlobalTheory.TwSys.C
 theorem UpperTheory.LiteratureTheorems.eis_bl_of_literature : GlobalTheory.ThK.Dbl.EisBL :=
   PositivityTheory.RgEis.Hd.eisBL
 theorem UpperTheory.LiteratureTheorems.siegel_weil_std_of_literature : GlobalTheory.ThK.Dbl.SiegelWeilStd :=
-  PositivityTheory.SiegelWeilFormula.Fin.siegelWeilStd
+  fun F E _ _ _ _ _ σ B m n A Y r s r' s' hB =>
+    PositivityTheory.SiegelWeilFormula.Fin.siegelWeilStd_k F E σ B m n A Y r s r' s' (.of_isGood hB)
 theorem UpperTheory.LiteratureTheorems.theta_integrals_agree_and_local_matching_of_literature : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree ∧ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching :=
   PositivityTheory.ThKR.theoremK_head2 (_root_.UpperTheory.LiteratureTheorems.eis_bl_of_literature) (_root_.UpperTheory.LiteratureTheorems.siegel_weil_std_of_literature)
 theorem UpperTheory.LiteratureTheorems.global_euler_char_of_literature : ReciprocityTheory.Gal.GlobalEulerChar :=
