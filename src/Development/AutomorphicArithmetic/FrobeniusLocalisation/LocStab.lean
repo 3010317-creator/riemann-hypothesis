@@ -242,12 +242,9 @@ theorem exists_aut_of_root (c : E →+* PadicAlgCl l) [IsGalois ℚ E] (α : E)
     ∃ s : E ≃ₐ[ℚ] E, c (s α) = r := by
   have hmin : minpoly ℚ (c α) = minpoly ℚ α :=
     minpoly.algHom_eq c.toRatAlgHom c.injective α
-  have hdvd := minpoly.dvd_map_of_isScalarTower ℚ ℚ_[l] (c α)
   have hr' : aeval r (minpoly ℚ α) = 0 := by
-    obtain ⟨q, hq⟩ := hdvd
-    have : aeval r (map (algebraMap ℚ ℚ_[l]) (minpoly ℚ (c α))) = 0 := by
-      rw [hq, map_mul, hr, zero_mul]
-    rwa [aeval_map_algebraMap, hmin] at this
+    rw [← hmin]
+    exact minpoly.aeval_of_isScalarTower ℚ (c α) r hr
   have hsplit : (map (algebraMap ℚ E) (minpoly ℚ α)).Splits := Normal.splits inferInstance α
   have hne : minpoly ℚ α ≠ 0 := minpoly.ne_zero (Algebra.IsIntegral.isIntegral α)
   have hmem : r ∈ (minpoly ℚ α).rootSet (PadicAlgCl l) := mem_rootSet.2 ⟨hne, hr'⟩
