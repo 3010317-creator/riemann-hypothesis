@@ -37,8 +37,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
-set_option backward.isDefEq.lazyProjDelta false
-set_option backward.isDefEq.lazyWhnfCore false
 set_option smartUnfolding false
 
 noncomputable section
