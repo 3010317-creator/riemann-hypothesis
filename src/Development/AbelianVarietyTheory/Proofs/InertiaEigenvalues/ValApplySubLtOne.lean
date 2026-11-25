@@ -185,15 +185,7 @@ theorem exists_inertia (hk : IsAlgClosed (ResidueField O)) {l : ℕ} (hl : l ≠
       simp only [map_natCast]
     rw [e]
     exact val_lt_one hO
-  have hl0 : (l : 𝓞 K) ≠ 0 := by
-    intro h
-    have h2 := congrArg (algebraMap (𝓞 K) K) h
-    rw [map_natCast, map_zero, Nat.cast_eq_zero] at h2
-    exact hl h2
-  have hP0 : P ≠ ⊥ := by
-    intro h
-    rw [h] at hlP
-    exact hl0 ((Submodule.mem_bot _).1 hlP)
+  have hP0 : P ≠ ⊥ := (Submodule.ne_bot_iff P).2 ⟨_, hlP, Nat.cast_ne_zero.2 hl⟩
   haveI : P.IsPrime := Ideal.comap_isPrime f _
   let v : HeightOneSpectrum (𝓞 K) := ⟨P, inferInstance, hP0⟩
   refine ⟨v, A, hlP, fun x => (hPmem x).symm, fun τ => ?_⟩
