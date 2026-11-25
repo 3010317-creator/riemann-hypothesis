@@ -3,6 +3,8 @@ module
 public import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.CountDefs
 public import Formalism.SharpRestriction.GrowthBounds.ProjectionOfIsotypicDecomposition
 public import Formalism.SharpRestriction.GrowthBounds.RootWeights.IntegralPolyLinearMapClosed
+import Mathlib.Algebra.Order.Antidiag.Pi
+import Mathlib.Data.Sym.Card
 import Mathlib.Tactic.Linter.Style
 import Std.Tactic.BVDecide.Normalize.Prop
 
@@ -107,26 +109,11 @@ theorem ell_mem_range (i : ↥(IF (r := r) D)) (y : MvPolynomial (Fin N × Fin r
     simp [LinearMap.single_apply, Pi.single_eq_of_ne hj]
   · simp
 
-private theorem list_antidiagonal_tuple_length_eq_choose (k n : ℕ) :
-    (List.Nat.antidiagonalTuple (k + 1) n).length = (n + k).choose k := by
-  induction k generalizing n with
-  | zero => simp
-  | succ k ih =>
-    rw [List.Nat.antidiagonalTuple, List.length_flatMap]
-    simp only [List.length_map, ih, List.Nat.antidiagonal, List.map_map, Function.comp_def]
-    have e : ((List.range (n + 1)).map fun i => (n - i + k).choose k).sum =
-        ∑ j ∈ Finset.range (n + 1), (n - j + k).choose k := rfl
-    rw [e]
-    have h := Finset.sum_range_reflect (fun j => (j + k).choose k) (n + 1)
-    simp only [add_tsub_cancel_right] at h
-    rw [h, Nat.sum_range_add_choose]
-    ring_nf
-
 theorem card_xi (r b : ℕ) (hr : r ≠ 0) : (Finset.Nat.antidiagonalTuple r b).card = sdXi r b := by
-  obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hr
-  show (List.Nat.antidiagonalTuple (k + 1) b).length = _
-  rw [list_antidiagonal_tuple_length_eq_choose, sdXi]
-  simp
+  rw [← Finset.piAntidiag_univ_fin_eq_antidiagonalTuple b r, ← Finset.map_sym_eq_piAntidiag,
+    Finset.card_map, Finset.sym_univ, Finset.card_univ, Sym.card_sym_eq_choose, Fintype.card_fin,
+    sdXi, add_comm r b]
+  exact Nat.choose_symm_of_eq_add (by omega)
 
 theorem finrank_dom : Module.finrank (KK O) (∀ i : ↥(IF (r := r) D), ↥(Yx (O := O) D i.1)) =
     ∑ x ∈ Lv D, Module.finrank (KK O) (Yjt (KK O) (r := r) (D.lettersAt x.1 x.2) D.T.J D.T.thr) *

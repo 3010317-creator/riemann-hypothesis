@@ -48,27 +48,20 @@ theorem finrank_span_image_le (ι : ℚ_[p] →+* KK O) {V₁ V₂ : Type} [AddC
     Module.finrank (KK O) (Submodule.span (KK O) (f '' (W : Set V₁))) ≤ Module.finrank ℚ_[p] W := by
   classical
   set bW := Module.finBasis ℚ_[p] W
-  have h0 : f 0 = 0 := by
-    have := hsm 0 0
-    rwa [zero_smul, map_zero, zero_smul] at this
-  have hsum : ∀ (s : Finset (Fin (Module.finrank ℚ_[p] W))) (c : Fin (Module.finrank ℚ_[p] W) → ℚ_[p]),
-      f (∑ i ∈ s, c i • (bW i : V₁)) = ∑ i ∈ s, ι (c i) • f (bW i) := by
-    intro s c
-    induction s using Finset.induction_on with
-    | empty => simp [h0]
-    | insert i s hi ih => rw [Finset.sum_insert hi, Finset.sum_insert hi, hadd, hsm, ih]
+  let fₛ : W →ₛₗ[ι] V₂ :=
+    { toFun := fun w => f w
+      map_add' := fun u v => hadd u v
+      map_smul' := fun c u => hsm c u }
   have hle : Submodule.span (KK O) (f '' (W : Set V₁)) ≤
       Submodule.span (KK O) (Set.range fun i => f (bW i)) := by
     rw [Submodule.span_le]
     rintro _ ⟨w, hw, rfl⟩
-    have hw' : (⟨w, hw⟩ : W) = ∑ i, (bW.repr ⟨w, hw⟩ i) • bW i := (bW.sum_repr _).symm
-    have hw'' : w = ∑ i, (bW.repr ⟨w, hw⟩ i) • (bW i : V₁) := by
-      have h3 := congrArg (Submodule.subtype W) hw'
-
-      rw [map_sum] at h3
-      simpa only [Submodule.subtype_apply, map_smul] using h3
-    rw [hw'', hsum]
-    exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
+    have himg : f w ∈ Submodule.span (KK O) (fₛ '' Set.range bW) :=
+      Submodule.image_span_subset_span fₛ (Set.range bW)
+        ⟨⟨w, hw⟩, bW.span_eq ▸ Submodule.mem_top, rfl⟩
+    refine Submodule.span_mono (fun _ h => ?_) himg
+    obtain ⟨_, ⟨i, rfl⟩, rfl⟩ := h
+    exact ⟨i, rfl⟩
   haveI : FiniteDimensional (KK O) (Submodule.span (KK O) (Set.range fun i => f (bW i))) :=
     FiniteDimensional.span_of_finite (KK O) (Set.finite_range _)
   calc Module.finrank (KK O) (Submodule.span (KK O) (f '' (W : Set V₁)))

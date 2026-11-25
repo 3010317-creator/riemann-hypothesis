@@ -215,13 +215,9 @@ theorem XXg_zero : XXg Dt d th thL (0 : MvPolynomial (TL J Dt.nL r × Fin r) (KK
     simp [valS, sDegs] at hk
 
 theorem XXg_sum {κ : Type} (S : Finset κ) (f : κ → MvPolynomial (TL J Dt.nL r × Fin r) (KK O))
-    (h : ∀ k ∈ S, XXg Dt d th thL (f k)) : XXg Dt d th thL (∑ k ∈ S, f k) := by
-  induction S using Finset.induction_on with
-  | empty => rw [Finset.sum_empty]; exact XXg_zero Dt d th thL
-  | insert a S ha ih =>
-    rw [Finset.sum_insert ha]
-    exact XXg_add Dt d th thL (h a (Finset.mem_insert_self a S))
-      (ih fun k hk => h k (Finset.mem_insert_of_mem hk))
+    (h : ∀ k ∈ S, XXg Dt d th thL (f k)) : XXg Dt d th thL (∑ k ∈ S, f k) :=
+  Finset.sum_induction f (XXg Dt d th thL)
+    (fun _ _ => XXg_add Dt d th thL) (XXg_zero Dt d th thL) h
 
 end XXLin
 

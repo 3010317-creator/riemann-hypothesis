@@ -163,20 +163,9 @@ theorem multDiv_kapFl (O : Type) [CommRing O] [IsLocalRing O] (p : ℕ) [hp : Fa
     apply hnd
     rw [hu, pow_succ]
     exact Nat.mul_dvd_mul_left _ hd
-  have huO : IsUnit ((u : ℕ) : O) := by
-    have hco : Nat.Coprime u p := ((Nat.Prime.coprime_iff_not_dvd hp.out).2 hpu).symm
-    by_contra hnu
-    have hm : ((u : ℕ) : O) ∈ IsLocalRing.maximalIdeal O := (IsLocalRing.mem_maximalIdeal _).2 hnu
-    have hb := Nat.gcd_eq_gcd_ab u p
-    rw [hco] at hb
-    have h5 : (1 : O) = (u : O) * ((Nat.gcdA u p : ℤ) : O) + (p : O) * ((Nat.gcdB u p : ℤ) : O) := by
-      have := congrArg (fun z : ℤ => (z : O)) hb
-      push_cast at this
-      exact this
-    have h6 : (1 : O) ∈ IsLocalRing.maximalIdeal O := by
-      rw [h5]
-      exact Ideal.add_mem _ (Ideal.mul_mem_right _ _ hm) (Ideal.mul_mem_right _ _ hpO)
-    exact (IsLocalRing.maximalIdeal.isMaximal O).ne_top ((Ideal.eq_top_iff_one _).2 h6)
+  have huO : IsUnit ((u : ℕ) : O) := IsLocalRing.notMem_maximalIdeal.1 <|
+    Ideal.IsPrime.notMem_of_isCoprime_of_mem
+      (((Nat.Prime.coprime_iff_not_dvd hp.out).2 hpu).cast (R := O)) hpO
   obtain ⟨uu, huu⟩ := huO
   refine ⟨(p : O) ^ (kapFl p k d - v) * (↑uu⁻¹ : O), ?_⟩
   rw [h3, hu]
