@@ -155,20 +155,6 @@ theorem frame_inv {α : Type} [Fintype α] [DecidableEq α] {R S : ℕ} {M : Mat
       _ = Kᵀ := by rw [Matrix.mul_assoc, hA, Matrix.mul_one]
   rw [h3, h2]
 
-theorem commute_of_frame {α : Type} [Fintype α] [DecidableEq α] {R S : ℕ} {C : Matrix α (Ix R S) ℂ}
-    {A' : Matrix (Ix R S) α ℂ} (hCA : C * A' = 1) (hAC : A' * C = 1) {G θ : Matrix α α ℂ} {E : Mat R S}
-    (hG : G * C = C * E) (hθ : θ * C = C * Formalism.BasicNotions.TH.Jm R S) (hE : Commute E (Formalism.BasicNotions.TH.Jm R S)) : Commute G θ := by
-  have hG' : G = C * E * A' := by rw [← hG, Matrix.mul_assoc, hCA, Matrix.mul_one]
-  have hθ' : A' * θ = Formalism.BasicNotions.TH.Jm R S * A' := by
-    calc A' * θ = A' * θ * (C * A') := by rw [hCA, Matrix.mul_one]
-      _ = A' * (θ * C) * A' := by simp only [Matrix.mul_assoc]
-      _ = _ := by rw [hθ]; simp only [← Matrix.mul_assoc, hAC, Matrix.one_mul]
-  show G * θ = θ * G
-  rw [hG']
-  calc C * E * A' * θ = C * E * (A' * θ) := by rw [Matrix.mul_assoc]
-    _ = C * (E * Formalism.BasicNotions.TH.Jm R S) * A' := by rw [hθ']; simp only [Matrix.mul_assoc]
-    _ = (θ * C) * E * A' := by rw [hE.eq, hθ]; simp only [Matrix.mul_assoc]
-    _ = _ := by simp only [Matrix.mul_assoc]
 
 end GlobalTheory.FockKStab
 end
