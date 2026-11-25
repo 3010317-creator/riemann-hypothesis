@@ -119,7 +119,7 @@ theorem under_eq_of_mem_associatedPrimes_tensor_quotient (p : Ideal A) [hp : p.I
     obtain ⟨n, hn⟩ := ha
     rw [Submodule.mem_colon_singleton, Submodule.mem_bot, key] at hn
     have hinj : Function.Injective (a ^ n • LinearMap.id : (A ⧸ p) →ₗ[A] (A ⧸ p)) := by
-      set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+      rw [injective_iff_map_eq_zero]
       intro z hz
       rw [LinearMap.smul_apply, LinearMap.id_apply, Algebra.smul_def, mul_eq_zero,
         Ideal.Quotient.algebraMap_eq, Ideal.Quotient.eq_zero_iff_mem] at hz
