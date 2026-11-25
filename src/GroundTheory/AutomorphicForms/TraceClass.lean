@@ -334,13 +334,9 @@ theorem two_mul_traceNorm_comp_le (A B : H →L[ℂ] H) :
     _ = hsNormSq A + hsNormSq B := by rw [one_pow, one_mul, hsNormSq_adjoint]
 
 theorem isTraceClass_comp {A B : H →L[ℂ] H} (hA : IsHilbertSchmidt A) (hB : IsHilbertSchmidt B) :
-    IsTraceClass (A.comp B) := by
-  have h := (two_mul_traceNorm_comp_le A B).trans_lt (ENNReal.add_lt_top.2 ⟨hA, hB⟩)
-  rw [IsTraceClass]
-  by_contra hc
-  rw [not_lt, top_le_iff] at hc
-  rw [hc, ENNReal.mul_top two_ne_zero] at h
-  exact lt_irrefl _ h
+    IsTraceClass (A.comp B) :=
+  ENNReal.lt_top_of_mul_ne_top_right
+    ((two_mul_traceNorm_comp_le A B).trans_lt (ENNReal.add_lt_top.2 ⟨hA, hB⟩)).ne two_ne_zero
 
 theorem IsTraceClass.exists_comp {T : H →L[ℂ] H} (hT : IsTraceClass T) :
     ∃ A B : H →L[ℂ] H, IsHilbertSchmidt A ∧ IsHilbertSchmidt B ∧ T = A.comp B := by
