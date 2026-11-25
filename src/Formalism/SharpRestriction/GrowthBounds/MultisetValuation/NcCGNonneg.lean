@@ -60,16 +60,8 @@ private theorem nu_two_eq_lamI_two_add_w {n' k1 : ℕ} (t : ℕ) (lam0 : Fin n' 
   if_pos (show 1 ≤ 2 ∧ 2 ≤ k1 + 1 from ⟨by omega, by omega⟩)
 
 private theorem le_of_monotone_from_one (f : ℕ → ℤ) (h : ∀ j, 1 ≤ j → f j ≤ f (j + 1)) :
-    ∀ j, 1 ≤ j → f 1 ≤ f j := by
-  intro j hj
-  induction j with
-  | zero => exact absurd hj (by omega)
-  | succ n ih =>
-    rcases Nat.lt_or_ge n 1 with hn | hn
-    · have hn0 : n = 0 := by omega
-      subst hn0
-      exact le_refl _
-    · exact (ih hn).trans (h n hn)
+    ∀ j, 1 ≤ j → f 1 ≤ f j :=
+  fun _ hj => Nat.rel_of_forall_rel_succ_of_le_of_le (· ≤ ·) (f := f) h le_rfl hj
 
 private theorem le_and_neg_le_of_abs_le_of_le (x : ℤ) (c : ℕ) (g : ℝ) (hx : |x| ≤ (c : ℤ)) (hc : (c : ℝ) ≤ g) :
     (x : ℝ) ≤ g ∧ -(x : ℝ) ≤ g := by
