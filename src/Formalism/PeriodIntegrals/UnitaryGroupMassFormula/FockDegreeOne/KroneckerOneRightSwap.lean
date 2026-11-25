@@ -66,19 +66,8 @@ section Rename
 variable {σ τ : Type*} (f : σ ≃ τ)
 
 theorem hc_rename (φ : MvPolynomial σ ℂ) (k : ℕ) :
-    homogeneousComponent k (rename f φ) = rename f (homogeneousComponent k φ) := by
-  conv_lhs => rw [← sum_homogeneousComponent φ]
-
-  rw [map_sum, map_sum]
-  have h : ∀ i, homogeneousComponent k (rename f (homogeneousComponent i φ)) =
-      if k = i then rename f (homogeneousComponent i φ) else 0 := fun i =>
-    homogeneousComponent_of_mem ((mem_homogeneousSubmodule _ _).2
-      ((homogeneousComponent_isHomogeneous i φ).rename_isHomogeneous))
-  simp_rw [h]
-  rw [Finset.sum_ite_eq]
-  split_ifs with hk
-  · rfl
-  · rw [homogeneousComponent_eq_zero _ _ (by simp only [Finset.mem_range] at hk; omega), map_zero]
+    homogeneousComponent k (rename f φ) = rename f (homogeneousComponent k φ) :=
+  (rename_homogeneousComponent k φ).symm
 
 theorem minusPart_rename (A : Module.End ℂ (MvPolynomial σ ℂ))
     (B : Module.End ℂ (MvPolynomial τ ℂ)) (hAB : ∀ Q, B (rename f Q) = rename f (A Q))
