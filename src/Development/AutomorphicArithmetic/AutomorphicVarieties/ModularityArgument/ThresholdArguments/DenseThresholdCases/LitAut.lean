@@ -49,18 +49,10 @@ structure LitLocAlt : Prop where
   geo : GeometricLemma
   zel : ZelevinskyPolynomialRing
   disj : TotallyDisjointProductIrreducible
-  mp : MoyPrasadJacquetIso
-  temp : TemperedProductOfSquareIntegrable
-  seg : EssSquareIntegrableSegments
-  sq : SquareIntegrableSegment
   gen : GenericUnlinkedGL
-  multi : LanglandsMultisegments
   exh : LanglandsExhaustionGL
   cos : StandardCosocleGL
-  dzi : DepthZeroInduction
-  brauer : BrauerDegreeZero
   chev : ChevalleyUnits
-  green : GreenRegularCharacters
 structure LiteratureAutomorphyHypothesis : Prop where
   decay : CuspRapidDecay
   hc : HarishChandraFinite
