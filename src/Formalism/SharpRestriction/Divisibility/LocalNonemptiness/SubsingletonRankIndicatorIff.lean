@@ -158,9 +158,6 @@ theorem beK_posDef (k : ℕ) (c : (Σ _ : Fin k, Module.Free.ChooseBasisIndex �
 open Classical in
 def rk01 (P : Prop) : ℕ := if P then 0 else 1
 
-theorem rank_indicator_le_one (P : Prop) : rk01 P ≤ 1 := by
-  unfold rk01
-  split_ifs <;> omega
 
 theorem finrank_copies (k : ℕ) : Module.finrank ℤ (Fin k → 𝓞 D.host.E) = 2 * D.R.f * k := by
   rw [Module.finrank_pi_fintype, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
