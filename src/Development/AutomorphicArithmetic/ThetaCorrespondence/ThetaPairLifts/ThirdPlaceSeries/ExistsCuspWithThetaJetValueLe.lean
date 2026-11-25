@@ -183,8 +183,6 @@ open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
 open IsLocalRing Formalism.MainNotions.ModuliIntegralCharts.H1 ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 noncomputable section
 
 namespace GlobalTheory.ExtScaleZero
@@ -280,7 +278,6 @@ open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
 open IsLocalRing Formalism.MainNotions.ModuliIntegralCharts.H1 ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 open ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction.G.DVR.QForm
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.FactorDepth GlobalTheory.CharDepth GlobalTheory.FGDepth
 
 namespace GlobalTheory.ResZeroDepth
@@ -347,7 +344,6 @@ open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
 open IsLocalRing Formalism.MainNotions.ModuliIntegralCharts.H1 ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 open ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction.G.DVR.QForm
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.FactorDepth GlobalTheory.CharDepth GlobalTheory.FGDepth
 
 
@@ -367,7 +363,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ GlobalTheory.PtTie
 open ReciprocityTheory.ChartRestriction.G.TB (dAct dLin)
 open ReciprocityTheory.ChartRestriction.G.TB.WickVanishing
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.PlaceInt
 
 namespace GlobalTheory.FramePower
@@ -498,7 +493,6 @@ open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
 open IsLocalRing Formalism.MainNotions.ModuliIntegralCharts.H1 ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 open ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction.G.DVR.QForm
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.FactorDepth GlobalTheory.CharDepth GlobalTheory.FGDepth
 open ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ Formalism.MainNotions.ModuliIntegralCharts.H1.ExpBijectiveUniformisation Formalism.MainNotions.ModuliIntegralCharts.H1.GSt
 open MonoidalCategory CartesianMonoidalCategory MonObj
@@ -1111,7 +1105,6 @@ open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
 open IsLocalRing Formalism.MainNotions.ModuliIntegralCharts.H1 ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 open ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction.G.DVR.QForm
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.FactorDepth GlobalTheory.CharDepth GlobalTheory.FGDepth
 open ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ Formalism.MainNotions.ModuliIntegralCharts.H1.ExpBijectiveUniformisation Formalism.MainNotions.ModuliIntegralCharts.H1.GSt
 open MonoidalCategory CartesianMonoidalCategory MonObj
@@ -1390,7 +1383,6 @@ open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
 open IsLocalRing Formalism.MainNotions.ModuliIntegralCharts.H1 ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 open ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction.G.DVR.QForm
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.FactorDepth GlobalTheory.CharDepth GlobalTheory.FGDepth
 
 
@@ -1412,7 +1404,6 @@ open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
 open IsLocalRing Formalism.MainNotions.ModuliIntegralCharts.H1 ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 open ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction.G.DVR.QForm
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.FactorDepth GlobalTheory.CharDepth GlobalTheory.FGDepth
 
 set_option autoImplicit false
@@ -1504,7 +1495,6 @@ open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
 open IsLocalRing Formalism.MainNotions.ModuliIntegralCharts.H1 ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 open ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction.G.DVR.QForm
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.FactorDepth GlobalTheory.CharDepth GlobalTheory.FGDepth
 set_option autoImplicit false
 noncomputable section
@@ -1556,7 +1546,6 @@ open GlobalTheory.HSApp
 open IsLocalRing Formalism.MainNotions.ModuliIntegralCharts.H1 ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 open ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction.G.DVR.QForm
 open scoped GlobalTheory.CompHt
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.FactorDepth GlobalTheory.CharDepth GlobalTheory.FGDepth
 set_option autoImplicit false
 noncomputable section
