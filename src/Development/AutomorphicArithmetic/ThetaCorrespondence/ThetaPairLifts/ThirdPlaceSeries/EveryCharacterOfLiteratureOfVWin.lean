@@ -819,8 +819,6 @@ theorem UpperTheory.LiteratureTheorems.prismatic_dieudonne_hodge_of_literature :
   UpperTheory.Lit.prismaticDieudonneHodge
 theorem UpperTheory.LiteratureTheorems.siegel_weil_unitary_convergent_of_literature : GlobalTheory.Published.SiegelWeilUnitaryConvergent :=
   UpperTheory.Lit.Sw47.convergent
-theorem UpperTheory.LiteratureTheorems.weil_theta_convergence_of_literature : GlobalTheory.Published.WeilThetaConvergence :=
-  _root_.PositivityTheory.Rg.Sw.Glob.wtc
 theorem UpperTheory.LiteratureTheorems.ray_character_artin_of_literature : GlobalTheory.Published.RayCharacterArtin :=
   GlobalTheory.Published.GlobalArtinReciprocity.rayCharacterArtin (_root_.UpperTheory.LiteratureTheorems.global_artin_reciprocity_of_literature)
 theorem UpperTheory.LiteratureTheorems.ray_class_field_st_of_literature : GlobalTheory.Published.RayClassFieldSt :=
