@@ -130,11 +130,8 @@ theorem tsum_indicator_satFrames (Y : Data E r) {x0' : Frame Y.Ψ r} {FF' : Set 
         rw [QuotientGroup.eq, inv_inv, inv_mul_cancel_right, Subgroup.mem_subgroupOf, Subgroup.mem_map]
         exact ⟨γ'⁻¹, Y.Γ.inv_mem hγ', by simp [c, MulAut.conj_apply]⟩
   have hA : ∀ γ : Γ, S.indicator (1 : Frame Y.Ψ r → ℝ≥0∞) (lact (δ⁻¹ * (γ : GL (Fin r) E)) x) =
-      A.indicator (fun _ => (1 : ℝ≥0∞)) γ := by
-    intro γ
-    by_cases h : γ ∈ A
-    · rw [Set.indicator_of_mem h, Set.indicator_of_mem (show _ ∈ S from h)]; rfl
-    · rw [Set.indicator_of_notMem h, Set.indicator_of_notMem (show _ ∉ S from h)]
+      A.indicator (fun _ => (1 : ℝ≥0∞)) γ := fun γ =>
+    (Set.indicator_comp_right (s := S) (g := 1) (fun γ : Γ => lact (δ⁻¹ * (γ : GL (Fin r) E)) x)).symm
   rw [tsum_congr hA, ← tsum_subtype A (fun _ => (1 : ℝ≥0∞))]
   have e2 := (Equiv.ofBijective f ⟨inj, surj⟩).tsum_eq (fun _ => (1 : ℝ≥0∞))
   rw [e2]
