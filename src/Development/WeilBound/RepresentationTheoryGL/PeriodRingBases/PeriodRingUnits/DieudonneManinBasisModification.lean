@@ -54,8 +54,6 @@ variable (l : ℕ) [Fact l.Prime]
 
 abbrev GQ : Type := PadicAlgCl l ≃ₐ[ℚ_[l]] PadicAlgCl l
 
-abbrev Fld : Type := IntermediateField ℚ_[l] (PadicAlgCl l)
-
 abbrev B : Type := Bcris l
 
 def φ : B l →+* B l := φB l
