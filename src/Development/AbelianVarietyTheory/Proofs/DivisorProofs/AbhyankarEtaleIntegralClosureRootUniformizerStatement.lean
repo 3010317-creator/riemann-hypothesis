@@ -614,7 +614,7 @@ namespace GlobalTheory
 theorem eq_pow_mul_unit_of_maximalIdeal_eq_span {V : Type} [CommRing V] [IsLocalRing V]
     [IsNoetherianRing V] (T : V) (hm : maximalIdeal V = Ideal.span {T}) (v : V) (hv : v ≠ 0) :
     ∃ (a : ℕ) (c : V), IsUnit c ∧ v = T ^ a * c := by
-  apply GlobalTheory.Pat.unit_mul_pow_of_maximalIdeal_eq_span <;> assumption
+  apply GlobalTheory.PowMulUnit.exists_eq_pow_mul_unit <;> assumption
 
 theorem maximalIdeal_eq_span_map_of_fractions (V W : Type) [CommRing V] [IsLocalRing V]
     [IsNoetherianRing V] [CommRing W] [IsLocalRing W] (φ : V →+* W) (T : V)

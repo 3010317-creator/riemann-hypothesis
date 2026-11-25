@@ -80,7 +80,7 @@ theorem linFirst (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
   refine ⟨hsS, hsT, hV, sbSubst hΨ g h _, hth.1, fun Tm hTm => ?_⟩
   have hTm' := (placeModel_congr hA hle).1 hTm
   have hSB := (sbHalf_congr hA hle).1 (sbHalf D k p S T n n' α β LS LT hsS hsT Ψ hΨ)
-  rw [hth.2 Tm hTm, lawAt D ψ S T χS χT om LS LT p.e f₀ Tm hW hsS hsT he hV.1 hfix hTm' (α.gl g) (β.gl h)
+  rw [hth.2 Tm hTm, GlobalTheory.SplitLinearHalf.law_half D ψ S T χS χT om LS LT p.e f₀ Tm hW hsS hsT he hV.1 hfix hTm' (α.gl g) (β.gl h)
     (α.gl_supp g) (β.gl_supp h) _ _ (detFrame α g) (detFrame β h) _ hSB, ← map_smul, fac_lam]
   congr 1
   funext t

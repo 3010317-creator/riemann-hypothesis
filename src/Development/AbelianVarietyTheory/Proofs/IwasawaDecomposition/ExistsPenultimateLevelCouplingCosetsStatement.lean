@@ -742,8 +742,8 @@ theorem exists_level_elt : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok 
       (P.1 ∈ I.Q a → ∃ γ : GL (Fin (B.R.N i)) B.fields.E, ∀ r s, adAt B.host.F P.1 ((((y * (show GA B (B.R.N i) from κ.1)) * (show GA B (B.R.N i) from z.1) * kk : GA B (B.R.N i)) : Matrix (Fin (B.R.N i)) (Fin (B.R.N i)) (AfE B.host.F B.host.E)) r s) = algebraMap B.fields.E (P.1.adicCompletion B.fields.E) ((γ : Matrix (Fin (B.R.N i)) (Fin (B.R.N i)) B.fields.E) r s)) := by
     intro P
     by_cases hP : P.1 ∈ I.Q a
-    · obtain ⟨v, hv, hv'⟩ := LevelElt.place_under I hOk hPins l Z a P hP
-      obtain ⟨z, -, hz2, hz3, hz4⟩ := LevelElt.one_prime I hOk hPins l Z a _ i hi bad (triv (K (chOf c)).lev) (chiFin_triv I l Z _) P hP v hv ((I.cst a).D P) (y * (show GA B (B.R.N i) from κ.1)) kk
+    · obtain ⟨v, hv, hv'⟩ := GlobalTheory.Mem.Col2.AdT.PlaceUnder.main I hOk hPins l Z a P hP
+      obtain ⟨z, -, hz2, hz3, hz4⟩ := GlobalTheory.Mem.Col2.AdT.OnePrime.exists_level_elt I hOk hPins l Z a _ i hi bad (triv (K (chOf c)).lev) (chiFin_triv I l Z _) P hP v hv ((I.cst a).D P) (y * (show GA B (B.R.N i) from κ.1)) kk
       refine ⟨⟨z.1, z.2⟩, fun P' hP' r s => ?_, hz3, fun _ => hz4⟩
       have e := (GlobalTheory.T.adelicMatrixCongruenceBadPrime_iff_completion I hOk l Z a (B.R.N i) 0 P' z.1).1
       have h2 := hv' P' hP'
@@ -777,7 +777,7 @@ theorem exists_level_elt : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok 
   have hwP : ∀ P : SBof I a, cP P.1 (ι w) = cP P.1 (ι (zf P)) := fun P => by
     rw [hw, hlist _ (Finset.nodup_toList _) P, ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ _))]
   have hpt : ∀ g : GA B (B.R.N i), g ∈ UAd B.sp.cm (B.R.N i) → (∀ P ∈ I.Q a, ∃ γ : GL (Fin (B.R.N i)) B.fields.E, ∀ r s, adAt B.host.F P ((g : Matrix (Fin (B.R.N i)) (Fin (B.R.N i)) (AfE B.host.F B.host.E)) r s) = algebraMap B.fields.E (P.adicCompletion B.fields.E) ((γ : Matrix (Fin (B.R.N i)) (Fin (B.R.N i)) B.fields.E) r s)) → ∃ q : ChPt (Pr := B.primes X) (R := B.R) I.sel (I.tup a) u i, PtOf g q :=
-    fun g hg hr => LevelElt.point_of_rat B.sp.cm _ _ _ g hg hr
+    fun g hg hr => GlobalTheory.Mem.Col2.RatFrPt.exists_isPtOf_of_rat B.sp.cm _ _ _ g hg hr
   have hQsub : ∀ P ∈ I.Q a, P ∈ SBof I a := fun P hP => by
     show P ∈ uSG _ _
     exact Finset.mem_union_right _ hP

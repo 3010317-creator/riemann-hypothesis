@@ -144,12 +144,6 @@ theorem hermC_neg (X : FD.Data E r) (h0 : X.p0 = 0) (τ : X.Ψ) {v : Fin r → �
     rw [← Complex.mul_conj]
     ring
 
-theorem map_herm (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (u v : Fin r → E) :
-    τ (FD.herm G u v) = FD.hermC τ G (FD.Data.emb τ u) (FD.Data.emb τ v) := by
-
-  simp only [FD.herm, FD.hermC, FD.Data.emb, FD.cc, map_sum, map_mul,
-  NumberField.IsCMField.complexEmbedding_complexConj]
-
 theorem posPart_eq_zero (X : FD.Data E r) (h0 : X.p0 = 0) (x : FD.Frame X.Ψ r) (τ : X.Ψ)
     (v : Fin r → ℂ) : X.posPart x τ v = 0 := by
   have : IsEmpty (Fin X.p0) := by rw [h0]; infer_instance
@@ -283,14 +277,14 @@ theorem two_f_div_rd_le_la1sq (X : FD.Data E r) (hr : 0 < r) (h0 : X.p0 = 0)
       intro τ
       obtain ⟨s, hs, hseq⟩ := hermC_neg X h0 τ (hemb τ)
       rw [FD.Data.maj, posPart_eq_zero X h0 x τ, hseq, FD.Data.c, hy, map_mul, norm_mul,
-        map_herm, hseq]
+        ReciprocityTheory.ChartRestriction.G.FD.emb_herm, hseq]
       simp [abs_of_pos hs]
       ring
     have hh0 : FD.herm X.Gm v v ≠ 0 := by
       intro h
       obtain ⟨τ0, hτ0⟩ := hΨ
       obtain ⟨s, hs, hseq⟩ := hermC_neg X h0 ⟨τ0, hτ0⟩ (hemb ⟨τ0, hτ0⟩)
-      rw [← map_herm, h, map_zero] at hseq
+      rw [← ReciprocityTheory.ChartRestriction.G.FD.emb_herm, h, map_zero] at hseq
       have := congrArg Complex.re hseq
       simp at this
       linarith

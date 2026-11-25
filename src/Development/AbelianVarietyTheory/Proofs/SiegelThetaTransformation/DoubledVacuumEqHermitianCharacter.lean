@@ -671,8 +671,6 @@ theorem EF_eq_of_graph (w : E) {β : Matrix (Fin r) (Fin r) E} (hβ : ccT β = �
     pair_sub_right] at e1 e2
   linear_combination e1 + (1 / 2 : E) * e2
 
-alias toCols₁_dblT := _root_.GlobalTheory.SW.DblZero.toCols₁_dblT
-
 theorem toCols₂_dblT (y₁ y₂ : Matrix (Fin n) (Fin r) E) :
     (Matrix.fromCols y₁ y₂ * dblT X).toCols₂ = (1 / 2 : E) • ((y₁ + y₂) * skew X) := by
   unfold dblT skew
@@ -955,7 +953,7 @@ theorem GlobalTheory.SW.dbl_vacuum : ∀ (E : Type) [Field E] [NumberField E] [I
           rw [hV₁.2.2 y₁ hy₁, hV₂.2.2 y₂ hy₂]
       _ = (epsW X w y₁ * conj (epsW X w y₂)) •
             dbl X bas idx (heisG X bas y₁ V₁) (heisG X bas y₂ V₂) := (D9 _ _ s₁ s₂).2.1 _ _
-      _ = _ := by rw [(D9 V₁ V₂ hV₁.1 hV₂.1).2.2 y₁ y₂, toCols₁_dblT, toCols₂_dblT]
+      _ = _ := by rw [(D9 V₁ V₂ hV₁.1 hV₂.1).2.2 y₁ y₂, GlobalTheory.SW.DblZero.toCols₁_dblT, toCols₂_dblT]
   refine ⟨β, a * ip v₁ v₂, hβh, ?_⟩
   intro Λ hΛ x
   obtain ⟨V₁, hV₁⟩ := (VAC L₁ hL₁ M Λ hΛ).1

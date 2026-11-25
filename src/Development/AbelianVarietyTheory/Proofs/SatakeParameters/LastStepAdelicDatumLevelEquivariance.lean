@@ -114,7 +114,7 @@ theorem deco_mul_lev : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a
   have hu₁ : (fun l => t.seam.iE (w l)) ∈ latCo D.sp (gramN D j hj) (A.crd j hj) a x₁.1 ((St j hj).K β).lev.Lb := by
     rw [← hp₁.lat]
     exact Submodule.subset_span ⟨w, hw₁, rfl⟩
-  obtain ⟨z, hz⟩ := FnlAwayCpl.exists_latS_pullV D.sp (gramN D j hj) (A.crd j hj) a x₁.1 x₁.2
+  obtain ⟨z, hz⟩ := GlobalTheory.CompanLocal.mem_latS_dual_of_mem_latCo D.sp (gramN D j hj) (A.crd j hj) a x₁.1 x₁.2
     (Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.bwB_gramN_det D j hj) ((St j hj).K β).lev.Lb ((St j hj).K β).lev.Lb_fin
     ((St j hj).K β).lev.Lb_span ((St j hj).K β).lev.Lb_int v _ hu₁
   rw [hp₁.fnl P v (hTv j hj) hov w hw₁ z hz, H w hw z hz]
@@ -441,22 +441,6 @@ open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.L2.DIV Formal
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.lastStepDatum_fixed_congruentFrameChange_twistPrime : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X Pr R.m)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ} (mu : Tup X.F X.E X.K S)
-  (cst : LocCst X (rowSG Pr sel mu)) {m2 : ℕ}, R.m = m2 + 2 → cst.Ok → ∀ (P : rowSG Pr sel mu), P.1 ∉ Pr.vGs →
-  2 * cst.M ≤ cst.D P →
-  ∀ (κ : Sp X.E (R.N (m2 + 1)) ≃ₗ[X.E] Sp X.E (R.N (m2 + 1)))
-    (κ' : Sp X.E (R.N (m2 + 1 + 1)) ≃ₗ[X.E] Sp X.E (R.N (m2 + 1 + 1))),
-  κ ∈ GLint X.E (R.N (m2 + 1)) P.1 →
-  (∀ w ∈ stdAt X.E (R.N (m2 + 1)) P.1, ((qOf P.1 : X.E) ^ cst.D P)⁻¹ • (κ w - w) ∈ stdAt X.E (R.N (m2 + 1)) P.1) →
-  κ' ∈ GLint X.E (R.N (m2 + 1 + 1)) P.1 →
-  (∀ w ∈ stdAt X.E (R.N (m2 + 1 + 1)) P.1, ((qOf P.1 : X.E) ^ (2 * cst.M))⁻¹ • (κ' w - w) ∈ stdAt X.E (R.N (m2 + 1 + 1)) P.1) →
-  ∀ (y : HomE X.E (R.N (m2 + 1)) (R.N (m2 + 1 + 1))) (y'' : Sp X.E (R.N (m2 + 1))),
-  (∀ l, IntAt P.1 ((qOf P.1 : X.E) ^ cst.M * y'' l)) →
-  topDat Ch sel mu cst (m2 + 1) P (κ'.symm.toLinearMap ∘ₗ y ∘ₗ κ.toLinearMap) (κ.symm y'') =
-    topDat Ch sel mu cst (m2 + 1) P y y'' := by
-  intro X Pr R Ch sel S mu cst m2 hm hc P hP hD κ κ' hκ hκc hκ' hκ'c y y'' hy''
-  exact GlobalTheory.TopFrameQM.topDat_frames_qM Ch sel mu cst hm hc P hP hD κ κ' hκ hκc hκ' hκ'c y y'' hy''
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.LastStepDatumFixedCongruentFrameChangeTwistPrimeStatement =====
@@ -490,17 +474,13 @@ theorem br_mul_of_LLz {n r d : ℕ} (hn : n = r + d) (A B : Matrix (Fin n) (Fin 
   rw [h0, zero_add]
   rfl
 
-theorem xiZ_one_val (ξ : kˣ →* Kˣ) : xiZ ξ (1 : k) = 1 := by
-  have h := xiZ_unit ξ 1
-  simpa using h
-
 theorem xiZ_br_inv (ξ : kˣ →* Kˣ) {n r d : ℕ} (hn : n = r + d) (A B : Matrix (Fin n) (Fin n) k) (hA : LLz r A) (h : A * B = 1) :
     xiZ ξ (A.submatrix (brI hn) (brI hn)).det * xiZ ξ (B.submatrix (brI hn) (brI hn)).det = 1 := by
   have hinj : Function.Injective (brI (r := r) hn) := fun a b hab => Fin.ext (by
     have := congrArg Fin.val hab
     simp only [brI] at this
     omega)
-  rw [← xiZ_mul, ← Matrix.det_mul, ← br_mul_of_LLz hn A B hA, h, Matrix.submatrix_one _ hinj, Matrix.det_one, xiZ_one_val]
+  rw [← xiZ_mul, ← Matrix.det_mul, ← br_mul_of_LLz hn A B hA, h, Matrix.submatrix_one _ hinj, Matrix.det_one, GlobalTheory.xiZ_one']
 
 theorem fin_alg {K : Type} [Field K] (a bb x y s1 s2 XA XB c d : K) (hS : s1 * s2 * (XA * XB) = x⁻¹ * y) (k1 : x * a = 1)
     (k2 : y * bb = 1) : a⁻¹ * (XA * XB * c * d) * s1 * s2 = bb⁻¹ * (c * d) := by
@@ -869,7 +849,7 @@ theorem locq_twist : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a =
     rw [e3] at h1
     intro l
     simpa using (ciMem_stdAt _ _).1 h1 l
-  rw [e1, e2, GlobalTheory.T.lastStepDatum_fixed_congruentFrameChange_twistPrime t.Ch t.sel (t.tup μ) (t.cst μ) (m_eq t μ) hc P hP hD _ _ hk hkc hk' hkc' _ _ hy'']
+  rw [e1, e2, GlobalTheory.TopFrameQM.topDat_frames_qM t.Ch t.sel (t.tup μ) (t.cst μ) (m_eq t μ) hc P hP hD _ _ hk hkc hk' hkc' _ _ hy'']
   exact GlobalTheory.T.topLevelDatum_transform_at_twist_prime_under_levels t.Ch t.sel (t.tup μ) (t.cst μ) (t.idx μ) hok hU (A.ib (t.m2 + 1) (cpl_lt t μ) β) P hP g z hcpl.1 g' z' htop _ _ _ hW hW0
 
 end GlobalTheory.TwTopQ

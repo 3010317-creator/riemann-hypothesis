@@ -986,11 +986,9 @@ open Formalism.MainNotions.GL3Theta
 
 variable {p : ℕ} [Fact p.Prime] (g : G1 p) {σ : Type*}
 
-alias const_l := _root_.Formalism.MainNotions.Ext.CutA.l0
-
 theorem ex_l (h : g.Ok) : PowerSeries.subst g.l g.ex = PowerSeries.X := by
   obtain ⟨-, -, h0, h1⟩ := h
-  have hl : ∀ _ : Unit, MvPowerSeries.constantCoeff (g.l : MvPowerSeries Unit ℂ_[p]) = 0 := fun _ => const_l g
+  have hl : ∀ _ : Unit, MvPowerSeries.constantCoeff (g.l : MvPowerSeries Unit ℂ_[p]) = 0 := fun _ => Formalism.MainNotions.J.cc_l g
   have he : ∀ _ : Unit, MvPowerSeries.constantCoeff (g.ex : MvPowerSeries Unit ℂ_[p]) = 0 := fun _ => h0
   have h2 : ∀ i : Unit, MvPowerSeries.subst (fun _ : Unit => (g.ex : MvPowerSeries Unit ℂ_[p]))
       (g.l : MvPowerSeries Unit ℂ_[p]) = MvPowerSeries.X i := fun _ => h1
@@ -1004,7 +1002,7 @@ theorem pt_lg (h : g.Ok) {a : MvPowerSeries σ ℂ_[p]} (ha : MvPowerSeries.cons
     g.pt (g.lg a) = a := by
   have ha' := PowerSeries.HasSubst.of_constantCoeff_zero ha
   rw [GL3Theta.G1.pt, GL3Theta.G1.lg, ← PowerSeries.subst_comp_subst_apply
-    (PowerSeries.HasSubst.of_constantCoeff_zero' (const_l g)) ha', ex_l g h, PowerSeries.subst_X ha']
+    (PowerSeries.HasSubst.of_constantCoeff_zero' (Formalism.MainNotions.J.cc_l g)) ha', ex_l g h, PowerSeries.subst_X ha']
 
 theorem subst_zero {f : PowerSeries ℂ_[p]} (hf : PowerSeries.constantCoeff f = 0) :
     PowerSeries.subst (0 : MvPowerSeries σ ℂ_[p]) f = 0 := by
@@ -1027,7 +1025,7 @@ theorem constantCoeff_subst_zero {f : PowerSeries ℂ_[p]} (hf : PowerSeries.con
 
 theorem constantCoeff_lg {a : MvPowerSeries σ ℂ_[p]} (ha : MvPowerSeries.constantCoeff a = 0) :
     MvPowerSeries.constantCoeff (g.lg a) = 0 :=
-  constantCoeff_subst_zero (const_l g) ha
+  constantCoeff_subst_zero (Formalism.MainNotions.J.cc_l g) ha
 
 theorem constantCoeff_pt (h : g.Ok) {a : MvPowerSeries σ ℂ_[p]} (ha : MvPowerSeries.constantCoeff a = 0) :
     MvPowerSeries.constantCoeff (g.pt a) = 0 :=
@@ -1078,11 +1076,6 @@ theorem add_eq_subst (h : g.Ok) (A B : MvPowerSeries σ ℂ_[p]) (hA : MvPowerSe
 theorem integralMv_zero : IntegralMv (0 : MvPowerSeries σ ℂ_[p]) := fun n => by
   simp [IsIntP]
 
-theorem integralMv_X (i : σ) : IntegralMv (Xv i : MvPowerSeries σ ℂ_[p]) := fun n => by
-  unfold IsIntP
-  rw [MvPowerSeries.coeff_X]
-  split_ifs <;> simp
-
 theorem integral_mulBy_semiring : ∀ (p : ℕ) [Fact p.Prime] (g : GL3Theta.G1 p), g.Ok →
     IntegralMv (g.add (GL3Theta.Xv 0) (GL3Theta.Xv 1) : MvPowerSeries (Fin 2) ℂ_[p]) →
     IntegralMv (g.mulBy 0 (GL3Theta.Xv ()) : MvPowerSeries Unit ℂ_[p]) ∧
@@ -1094,7 +1087,7 @@ theorem integral_mulBy_semiring : ∀ (p : ℕ) [Fact p.Prime] (g : GL3Theta.G1 
   have hX : MvPowerSeries.constantCoeff (Xv () : MvPowerSeries Unit ℂ_[p]) = 0 := MvPowerSeries.constantCoeff_X _
   refine ⟨?_, ?_, ?_⟩
   · rw [mulBy_zero g h]; exact integralMv_zero
-  · rw [mulBy_one g h]; exact integralMv_X ()
+  · rw [mulBy_one g h]; exact Formalism.L2.KerInert.ModelP.integral_Xv ()
   · intro c c' hc hc'
     have h0 : ∀ d : ℂ_[p], MvPowerSeries.constantCoeff (g.mulBy d (Xv ()) : MvPowerSeries Unit ℂ_[p]) = 0 :=
       fun d => constantCoeff_pt g h (by rw [map_mul, constantCoeff_lg g hX, mul_zero])

@@ -717,7 +717,7 @@ theorem exists_isLocS_rows (hH : GlobalTheory.Published.HarishChandraFinite) (hC
       {f | f ∈ π.S ∧ ∀ κ, NG.Cong D.host.E D.R.r N κ → NG.rt D.host.E D.R.r κ f = f}) := fun N hN =>
     GlobalTheory.RowLocalRows.fixed_fd_of_conjT π N (GlobalTheory.RowLocalRows.fixed_fd_of_isotIn _ _ hadm _ hne N hN)
   obtain ⟨W, hWS, hW0, hst, hirr⟩ := GlobalTheory.T.exists_irreducible_subspace_trivialOutside_splitPlace D.host.E D.R.r π B k1 k2 k3 k4 hfix s
-  exact GlobalTheory.RowLocal.isLocS_of_irr π s W hWS hW0 hst hirr
+  exact GlobalTheory.blockFieldPairProjections.exists_local_component π s W hWS hW0 hst hirr
 
 end GlobalTheory.RowSphOff
 end SphOffSec

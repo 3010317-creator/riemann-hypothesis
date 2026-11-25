@@ -202,7 +202,7 @@ theorem mem_thSp_of_lift {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hc : 
   have hlat0 := _root_.GlobalTheory.NormSum.pt_mem_La_of_adelic D (_root_.GlobalTheory.InducedType.induced_type D).1 cc δ hcc N N' 1 1 _ _ (moves_one D N) (moves_one D N')
   simp only [OneMemClass.coe_one, inv_one, Units.val_one, Matrix.one_mul, Matrix.mul_one] at hlat0
   simp only [← MI_one] at hz' hlatb hlat0
-  obtain ⟨m0, hm0, hl0⟩ := hlift 0 (by rw [VacMove.pt_zero, VacMove.wd_zero])
+  obtain ⟨m0, hm0, hl0⟩ := hlift 0 (by rw [VacMove.pt_zero, GlobalTheory.NormSum.wd_zero])
   set P : Matrix (Fin N') (Fin N') (AE D) := ((g' : GL (Fin N') (AE D)) : Matrix (Fin N') (Fin N') (AE D)) with hP
   set P' : Matrix (Fin N') (Fin N') (AE D) :=
     (((g' : GL (Fin N') (AE D))⁻¹ : GL (Fin N') (AE D)) : Matrix (Fin N') (Fin N') (AE D)) with hP'

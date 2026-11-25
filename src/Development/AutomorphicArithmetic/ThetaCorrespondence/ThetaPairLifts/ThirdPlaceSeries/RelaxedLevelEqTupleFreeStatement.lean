@@ -170,7 +170,7 @@ theorem cutG_mem_congGrp (V : HSp D) (I : Ideal (AE D)) (ε : AF D.host.F) (hε 
     (hg : g ∈ congGrp V I) : cutG V ε hε g ∈ congGrp V I := by
   rw [mem_congGrp_iff] at hg ⊢
   intro i j
-  rw [mt_cutG, cut_sub_one, Matrix.smul_apply, smul_eq_mul]
+  rw [mt_cutG, GlobalTheory.FinPl.KSplit.cut_sub_one, Matrix.smul_apply, smul_eq_mul]
   exact Ideal.mul_mem_left _ _ (hg i j)
 
 theorem grpAt_mono (V : HSp D) {P P' : Pl D → Prop} (h : ∀ p, P p → P' p) : grpAt V P ≤ grpAt V P' := by

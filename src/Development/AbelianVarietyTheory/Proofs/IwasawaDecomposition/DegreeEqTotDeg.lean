@@ -1721,7 +1721,7 @@ theorem laHyp_empty {D : D7} {X : Fields} (s : Seam D X) {cc : Ideal (𝓞 D.hos
     (fun x hx => by
       obtain ⟨m, hm⟩ := hq a b _ _ (hadm N N' h h') (reidx s a b x) ((hlam a b N N' x).1 hx)
       exact alV_eq s V x hm)
-    (isHerm_formV _ _ _ _) (hL.1 a b _ _ (hadm N N' h h')).1 (hL.1 a b _ _ (hadm N N' h h')).2).1
+    (GlobalTheory.ThetaMove.Moved.isHerm_formV _ _ _ _) (hL.1 a b _ _ (hadm N N' h h')).1 (hL.1 a b _ _ (hadm N N' h h')).2).1
   exact ⟨h3 (V.eNat χ a b (s.lat N) (s.lat N')) (eNat_mem V hc χ (hsd _ _ h) (hsd _ _ h')).2, h1, h2⟩
 
 end Lat

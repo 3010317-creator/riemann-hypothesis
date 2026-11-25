@@ -179,11 +179,6 @@ theorem xiTop_intOff_of_psi (t : KerEntTied ex) (u : D.what₂.Word) (μ : D.wha
     exact ftY_intOff_of_psi t.sel (t.tup μ) (t.cst μ) P (hpsi P) _
       (GlobalTheory.KerTie.sNum_qOf_rowSG D L hT Gi Gl Kc Y cX ex t u μ P) _ _
 
-theorem plc_dvd_iff {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (n : ℕ) :
-    Formalism.EigenvalueLevelCeiling.plc v ∣ n ↔ (n : 𝓞 F) ∈ v.asIdeal := by
-  unfold Formalism.EigenvalueLevelCeiling.plc
-  rw [← ringChar.spec, ← map_natCast (Ideal.Quotient.mk v.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
-
 theorem g_not_mem_Qp (t : KerEntTied ex) (hsel : IsSel t.X t.sel) (hg : ∀ k, t.Pr.g k ∈ t.S) (μ : D.what₂.Tup) (k : Fin 2) :
     D.host.g k ∉ Y.Qp μ := by
   classical
@@ -203,10 +198,10 @@ theorem g_not_mem_Qp (t : KerEntTied ex) (hsel : IsSel t.X t.sel) (hg : ∀ k, t
       change algebraMap (𝓞 t.X.F) (𝓞 t.X.E) _ ∈ (t.sel v).asIdeal
       rw [map_natCast]
       exact hgP
-    have hd := (plc_dvd_iff v _).2 hvF
+    have hd := (GlobalTheory.Mem.ReadTwist.plc_dvd_iff v _).2 hvF
     have hpl : Formalism.EigenvalueLevelCeiling.plc v = D.host.g k :=
       ((Nat.dvd_prime hp).1 hd).resolve_left fun e => by
-        have h1 := (plc_dvd_iff v 1).1 (by rw [e])
+        have h1 := (GlobalTheory.Mem.ReadTwist.plc_dvd_iff v 1).1 (by rw [e])
         rw [Nat.cast_one] at h1
         exact v.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h1)
     apply hgood.2.2

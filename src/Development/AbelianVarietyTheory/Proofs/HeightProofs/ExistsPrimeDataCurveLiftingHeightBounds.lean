@@ -531,7 +531,6 @@ namespace GlobalTheory.HeightTop.Generic
 
 open Formalism.BasicNotions Formalism.MainNotions
 
-alias supPTGe_of_fnPin := GlobalTheory.HeightDefinite.Generic.supPTGe_of_fnPin
 alias exists_frame := GlobalTheory.HeightDefinite.Generic.exists_frame
 
 theorem nrmTieU_of_fnPin (D : D7) (T : Core D) (h : LawsCore T) (j : ℕ) (hj : InR D j)
@@ -889,7 +888,7 @@ theorem heights_indefinite :
   have iLAM : d.HtLAM := htLAM_of h.toLawsCore j hG δ fn yP (WeightFamilies.dimY D j) N 0 G.iet (WeightAlgebra.g0 D) c (wtA wL, wL.n) (wtA wF, wF.n) (wtA wL, wL.n) (0, 1) (wtA (wEt D j G.iet), (wEt D j G.iet).n) (wtA w1, w1.n) (wtA w2, w2.n) wR jc G.del (fun i => (G.th' i).1) 0 Fin.elim0 (wtA wL, wL.n) 0 Fin.elim0 ∅ G.et.1 t1.1 t2.1 (nuOf T.Q.c fun la => nus la / (ramOverZ la : ℝ)) (fun _ _ _ => 0) wsize (WeightAlgebra.DF wL : ℝ) PN' 1 1 PP0' 1 Gc PI4' Pet tableLineDegreeFive tableLineDegreeTwo Prw POb 0 0
     large₂ CL AL (wsmul d.n96 wL) hgt hkaZ hLAM
     (prodInLat_of_wtZ h.toLawsCore j hj wR wL _ _ (fun k => ⟨G.w (eN k), hTW.2.1 _, rfl⟩) hn1 hkaZ)
-    (Generic.supPTGe_of_fnPin D T.toCore h.toLawsCore j hj fn hpin hG yP hyP _) (by
+    (GlobalTheory.HeightDefinite.Generic.supPTGe_of_fnPin D T.toCore h.toLawsCore j hj fn hpin hG yP hyP _) (by
       show LamConst j large₂ CL AL _ PP0' d.n96 (wsize (wtZ (wtA wL) wL.n))
       rw [hsL]; exact hLC)
   have hlog := fun (w : WeightFamilies.Wt D j) (F : (recB h.toLawsCore).Cusp j w) (σ : T.Q.c.F →+* ℂ) =>

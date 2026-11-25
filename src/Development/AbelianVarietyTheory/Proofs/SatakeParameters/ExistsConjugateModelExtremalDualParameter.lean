@@ -840,12 +840,6 @@ theorem dualA_conj_mulVec {L : Type} [Field L] (σ : L →+* L) {a b : ℕ} (y :
 
   simp [dotProduct, Matrix.mulVec, map_sum]
 
-theorem dualA_mulVec_int {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] {a b : ℕ}
-    {A : Matrix (Fin a) (Fin b) L} (hA : ∀ i j, A i j ∈ Formalism.UG.intL L) {w : Fin b → L}
-    (hw : ∀ i, w i ∈ Formalism.UG.intL L) (i : Fin a) : (A *ᵥ w) i ∈ Formalism.UG.intL L := by
-  simp only [Matrix.mulVec, dotProduct]
-  exact Subring.sum_mem _ fun k _ => Subring.mul_mem _ (hA i k) (hw k)
-
 theorem hermDual_subset_of_gram_int : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ))] (σ : L →+* L) (n n' : ℕ) (JS : GL (Fin n) L) (JT : GL (Fin n') L),
     (∀ z, σ (σ z) = z) → (∀ z, Valued.v (σ z) = Valued.v z) →
     JS ∈ Formalism.UG.GLint (Fin n) (Formalism.UG.intL L) → JT ∈ Formalism.UG.GLint (Fin n') (Formalism.UG.intL L) →
@@ -898,7 +892,7 @@ theorem hermDual_subset_of_gram_int : ∀ (L : Type) [Field L] [Valued L (WithZe
     simpa using this
   have hxv : ∀ k, (x *ᵥ v) k ∈ Formalism.UG.intL L := by
     intro k
-    have := dualA_mulVec_int hT2 hTxv k
+    have := GlobalTheory.Hk3.GramConv.mulVec_int' hT2 hTxv k
     rwa [Matrix.mulVec_mulVec, HoweSwap.inv_mul_cl] at this
   have hyw : adj σ JS JT x *ᵥ (((JT⁻¹ : GL (Fin n') L) : Matrix (Fin n') (Fin n') L) *ᵥ w) =
       (((JS⁻¹ : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) * (x.map σ)ᵀ) *ᵥ w := by
@@ -907,14 +901,14 @@ theorem hermDual_subset_of_gram_int : ∀ (L : Type) [Field L] [Valued L (WithZe
       (((JS⁻¹ : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) * (x.map σ)ᵀ) *ᵥ w := by
     rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_add, ← hz, Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec]
   refine ⟨((JS⁻¹ : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) *ᵥ l,
-    ((JT⁻¹ : GL (Fin n') L) : Matrix (Fin n') (Fin n') L) *ᵥ w, dualA_mulVec_int hS2 hl, fun i => ?_,
-    dualA_mulVec_int hT2 hw, by rw [hyw]; exact hv2⟩
+    ((JT⁻¹ : GL (Fin n') L) : Matrix (Fin n') (Fin n') L) *ᵥ w, GlobalTheory.Hk3.GramConv.mulVec_int' hS2 hl, fun i => ?_,
+    GlobalTheory.Hk3.GramConv.mulVec_int' hT2 hw, by rw [hyw]; exact hv2⟩
   have e : x *ᵥ (((JS⁻¹ : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) *ᵥ l) = x *ᵥ v -
       (x * ((JS⁻¹ : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) * (x.map σ)ᵀ) *ᵥ w := by
     conv_rhs => rw [hv2]
     rw [Matrix.mulVec_add, Matrix.mulVec_mulVec w, ← Matrix.mul_assoc, add_sub_cancel_right]
   rw [e, Pi.sub_apply]
-  exact Subring.sub_mem _ (hxv i) (dualA_mulVec_int hx hw i)
+  exact Subring.sub_mem _ (hxv i) (GlobalTheory.Hk3.GramConv.mulVec_int' hx hw i)
 
 end GlobalTheory.Hk3.HoweG
 end -- clump:auto
@@ -931,10 +925,6 @@ open Matrix
 namespace GlobalTheory.Hk3.HoweG.GramA
 
 variable {L : Type} [Field L]
-
-theorem hform_eq_dot (σ : L →+* L) {n : ℕ} (J : Matrix (Fin n) (Fin n) L) (a b : Fin n → L) :
-    Formalism.UG.hform σ J a b = (fun i => σ (a i)) ⬝ᵥ (J *ᵥ b) := by
-  simp [Formalism.UG.hform, dotProduct, Matrix.mulVec, Finset.mul_sum, mul_assoc]
 
 theorem map_mulVec_eq (σ : L →+* L) {n m : ℕ} (A : Matrix (Fin n) (Fin m) L) (w : Fin m → L) :
     (fun i => σ ((A *ᵥ w) i)) = (fun i => σ (w i)) ᵥ* Formalism.UG.cT σ A := by
@@ -987,7 +977,7 @@ theorem hform_integral : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplic
     intro b
     have : (fun i => σ ((u + adj σ JS JT x *ᵥ w) i)) = (fun i => σ (u i)) + fun i => σ ((adj σ JS JT x *ᵥ w) i) := by
       ext i; simp
-    rw [hform_eq_dot, this, add_dotProduct, map_mulVec_eq, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, e2,
+    rw [GlobalTheory.Hk3.HoweG.dualA_hform_eq, this, add_dotProduct, map_mulVec_eq, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, e2,
       Matrix.mulVec_mulVec]
   have h2 : (fun i => σ (u i)) ⬝ᵥ ((JS : Matrix (Fin n) (Fin n) L) *ᵥ (adj σ JS JT x *ᵥ w')) =
       (fun i => σ ((x *ᵥ u) i)) ⬝ᵥ ((JT : Matrix (Fin n') (Fin n') L) *ᵥ w') := by

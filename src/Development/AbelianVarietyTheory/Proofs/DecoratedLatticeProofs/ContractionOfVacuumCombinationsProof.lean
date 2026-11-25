@@ -1319,10 +1319,6 @@ theorem mxAt_sub {P : Pl D → Prop} {m n : ℕ} {u v : Mx D m n} (hu : MxAt P u
 theorem mxAt_neg {P : Pl D → Prop} {m n : ℕ} {u : Mx D m n} (hu : MxAt P u) : MxAt P (-u) :=
   fun i j => by simpa only [Matrix.neg_apply] using Submodule.neg_mem _ (hu i j)
 
-theorem fin_of_mxAt {P : Pl D → Prop} {m n : ℕ} {u : Mx D m n} (hu : MxAt P u) : u.map (infPart D) = 0 := by
-  ext i j
-  exact RingHom.mem_ker.1 (Ideal.mem_inf.1 (hu i j)).1
-
 theorem biComb_single (ψ : AddChar (AF D.host.F) ℂ) (A S A' : HSp D) (a : WO A S) (a' : WO S A') (r : ℂ)
     (C : WO A S → WO S A' → ℂ) (u : WO A S) (v : WO S A') :
     biComb ψ A S A' (Finsupp.single a r) (Finsupp.single a' 1) C u v =
@@ -1455,7 +1451,7 @@ theorem contrOp : ∀ D : D7, ContrOp D := by
     have hy : MxAt P (B.o.resS S u).2 := mxAt_mul_right hu _
     have hw : MxAt P (B'.o.resT S u').2 := mxAt_mul_left _ hu'
     have hkw : MxAt P (l.κ S (B'.o.resT S u').2) := GlobalTheory.T.besselLink_kappa_preserves_supported_matrices D ρ B B'.L B'.ζ l S P _ hw
-    have hline := line_step ψ hψ l S vL f₁ f₂ h₁.1 h₂.1 (B.o.resS S u).2 (B'.o.resT S u').2 (fin_of_mxAt (heL _ hy))
+    have hline := line_step ψ hψ l S vL f₁ f₂ h₁.1 h₂.1 (B.o.resS S u).2 (B'.o.resT S u').2 (GlobalTheory.FinPl.LineVanish.fin_of_mxAt' (heL _ hy))
       (_root_.GlobalTheory.FinPl.LineVanish.fin_of_mxAt' (mxAt_neg (heL _ hkw))) _ (key _ (mxAt_sub hy hkw) f₁ f₂ h₁ h₂)
     have e1 : heisO ψ B.V₀ S u f₁ = heisO ψ B.V₀ S ((B.o.resS S).symm ((B.o.resS S u).1, 0))
         (heisO ψ B.V₀ S ((B.o.resS S).symm (0, (B.o.resS S u).2)) f₁) := by

@@ -119,8 +119,6 @@ namespace GlobalTheory.SW.EisTrans
 variable {N : ℕ}
 
 
-alias exists_mem_HnGe := _root_.GlobalTheory.PosSemidefShiftByScalar.exists_pos_mem_HnGe
-
 theorem entry_bound {C D Z : Matrix (Fin N) (Fin N) ℂ} {δ : ℝ} (hδ : 0 < δ)
     (h : D * Cᴴ = C * Dᴴ) (hQ : (C * Z + D).det ≠ 0)
     (hZ : (imH Z - (δ : ℂ) • (1 : Matrix (Fin N) (Fin N) ℂ)).PosSemidef) (i j : Fin N) :
@@ -176,7 +174,7 @@ theorem hFac_zero (γ : M2 E N) (Z : CM Ψ N N) :
 theorem hFac_inv_bound {Z : CM Ψ N N} (hZ : Z ∈ Hn Ψ N) (z z' : CM Ψ n N) :
     ∃ K : ℝ, ∀ γ ∈ UU E N,
       ‖(hFac Ψ γ Z z z')⁻¹‖ ≤ K * ‖(hFac Ψ γ Z (0 : CM Ψ n N) 0)⁻¹‖ := by
-  obtain ⟨δ, hδ, hZ'⟩ := exists_mem_HnGe Ψ hZ
+  obtain ⟨δ, hδ, hZ'⟩ := GlobalTheory.PosSemidefShiftByScalar.exists_pos_mem_HnGe Ψ hZ
   refine ⟨∏ τ : Ψ, Real.exp (‖2 * (π : ℂ) * I‖ * ∑ k, ∑ a, ‖z' τ k a‖ * ∑ b, δ⁻¹ * ‖z τ k b‖),
     fun γ hγ => ?_⟩
   rw [hFac_zero, hFac, Finset.prod_mul_distrib, mul_inv, norm_mul, mul_comm]
@@ -228,7 +226,7 @@ theorem GlobalTheory.SW.eis_automorphy_linear : ∀ (E : Type) [Field E] [Number
   have hs : ∀ φ : Matrix (Fin n) (Fin N) E → ℂ, IsSB φ → ∀ Z ∈ Hn Ψ N, ∀ z z',
       Summable fun U : Lag E N => ‖eisTerm Ψ U.2.choose φ Z z z'‖ := by
     rintro φ ⟨R, hR, hφ⟩ Z hZ z z'
-    obtain ⟨δ, hδ, hZ'⟩ := exists_mem_HnGe Ψ hZ
+    obtain ⟨δ, hδ, hZ'⟩ := GlobalTheory.PosSemidefShiftByScalar.exists_pos_mem_HnGe Ψ hZ
     obtain ⟨B, hB⟩ := (_root_.GlobalTheory.SW.ip_self_nonneg_and_bounds E _ _ R φ hR hφ).2.2.2.2.1
     obtain ⟨C, hC⟩ := _root_.GlobalTheory.SW.theta_eis_bounded E Ψ hΨ n N hn hN R δ hR hδ
     obtain ⟨K, hK⟩ := hFac_inv_bound Ψ hZ z z'

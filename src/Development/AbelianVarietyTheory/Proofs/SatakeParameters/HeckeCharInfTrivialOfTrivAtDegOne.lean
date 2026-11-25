@@ -769,11 +769,6 @@ namespace GlobalTheory.HeckeInfTriv
 section Inf
 variable (E : Type) [Field E] [NumberField E]
 
-theorem continuous_mixedSymm : Continuous (InfiniteAdeleRing.ringEquiv_mixedSpace E).symm := by
-  first
-  | exact _root_.PositivityTheory.ThKF0.Split.continuous_ofMixed
-  | (apply _root_.PositivityTheory.ThKF0.Split.continuous_ofMixed <;> assumption)
-
 theorem continuous_infIdele : Continuous (infIdele E) :=
   Continuous.units_map _ (continuous_id.prodMk continuous_const)
 
@@ -790,7 +785,7 @@ def infUnit : ({w : InfinitePlace E // w.IsComplex} → ℂˣ) →* (InfiniteAde
   (Units.map (InfiniteAdeleRing.ringEquiv_mixedSpace E).symm.toRingHom.toMonoidHom).comp (cplxUnit E)
 
 theorem continuous_infUnit : Continuous (infUnit E) := by
-  refine (Continuous.units_map ((InfiniteAdeleRing.ringEquiv_mixedSpace E).symm.toRingHom.toMonoidHom) (continuous_mixedSymm E)).comp (f := cplxUnit E) ?_
+  refine (Continuous.units_map ((InfiniteAdeleRing.ringEquiv_mixedSpace E).symm.toRingHom.toMonoidHom) (PositivityTheory.ThKF0.Split.continuous_ofMixed E)).comp (f := cplxUnit E) ?_
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
   · exact continuous_const.prodMk (continuous_pi fun w => Units.continuous_val.comp (continuous_apply w))
   · exact continuous_const.prodMk (continuous_pi fun w => Units.continuous_coe_inv.comp (continuous_apply w))

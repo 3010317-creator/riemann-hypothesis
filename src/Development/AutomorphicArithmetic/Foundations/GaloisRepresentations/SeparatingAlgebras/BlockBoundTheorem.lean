@@ -1517,7 +1517,7 @@ theorem UpperTheory.Gal.Gen.stepCore_pf :
   intro hAlg hCod hPF E _ _ _ l _ ι a W C C' hCfin H _ _ hH lam hsurj hC'C hker ℓ hinf hright haut P hfd hcard f hf
   letI : Fintype H := Fintype.ofFinite H
   have hex : ∀ φ : H → ℂ, ∃ F : algForms W, ∀ v g, F.1 v g = φ (ℓ g) * f.1 v g := fun φ =>
-    GlobalTheory.T.exists_algebraicModularForm_mul_archInvariant E a W f (fun g => φ (ℓ g)) (haut φ) (fun g x hx => by simp only [hinf g x hx])
+    GlobalTheory.AlgMul.exists_mul_algForms E a W f (fun g => φ (ℓ g)) (haut φ) (fun g x hx => by simp only [hinf g x hx])
   choose Ψ₀ hΨ₀ using hex
   let Ψ : (H → ℂ) →ₗ[ℂ] algForms W :=
     { toFun := Ψ₀
@@ -1786,7 +1786,7 @@ theorem UpperTheory.Gal.Gen.tyStep_pf :
   obtain ⟨s, hs1, hs2⟩ := hCS (l ^ m)
   have hex : ∀ χ : Multiplicative (ZMod (l ^ m)) →* ℂˣ,
       ∃ F : algForms W, ∀ v g, F.1 v g = ((χ (ℓ g) : ℂˣ) : ℂ) * f.1 v g := fun χ =>
-    GlobalTheory.T.exists_algebraicModularForm_mul_archInvariant E a W f (fun g => ((χ (ℓ g) : ℂˣ) : ℂ)) (hℓa fun y => ((χ y : ℂˣ) : ℂ))
+    GlobalTheory.AlgMul.exists_mul_algForms E a W f (fun g => ((χ (ℓ g) : ℂˣ) : ℂ)) (hℓa fun y => ((χ y : ℂˣ) : ℂ))
       fun g x hx => by simp only [hℓi g x hx]
   choose F hF using hex
   have hpart : ∀ χ ∈ s, F χ ∈ part W K

@@ -441,12 +441,6 @@ theorem line_γ_iA (p : Place D k) {n m : Type} [Fintype n] [DecidableEq n] {ρ 
     simp
   rw [← Matrix.mul_one (_ * B.o.iA.map p.pr), ← FA.βγ, ← Matrix.mul_assoc, h1, Matrix.zero_mul]
 
-theorem xi_mul_hO (L S : HSp D) (Y : WO L S) (z : Mx D L.rank S.rank) :
-    incA D D.host.xi0 * hO L S Y (ofAdj L S z) = (z * Y).trace := by
-  conv_rhs => rw [← starAdj_ofAdj L S z]
-  rw [hO_eq_trace, starAdj, Matrix.smul_mul, Matrix.trace_smul, smul_eq_mul]
-  simp only [Matrix.mul_assoc]
-
 theorem link_frames (p : Place D k) {ρ σ : ℕ} (B : BesLev D ρ) (B' : BesLev D σ) (l : Link B B'.L B'.ζ) (s : k)
     {n' n'' : Type} [Fintype n'] [DecidableEq n'] [Fintype n''] [DecidableEq n'']
     (FA : Frame k B.A.rank n') (F₀ : Frame k B.V₀.rank (n' ⊕ Unit))
@@ -507,7 +501,7 @@ theorem frame_col : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topologi
     rw [Int.cast_one, map_one, one_mul] at h1
     change hO B.L S (l.κ S _) _ = _ at h1
     rw [hκ] at h1
-    have h2 := congrArg p.π (xi_mul_hO B.L S Y (rat l.τ * (B'.o.pB * p.up FS F₀' t)))
+    have h2 := congrArg p.π (GlobalTheory.LineRowFrame.xi_mul_hO B.L S Y (rat l.τ * (B'.o.pB * p.up FS F₀' t)))
     rw [h1, map_mul] at h2
     have h3 : p.π (rat l.τ * (B'.o.pB * p.up FS F₀' t) * Y).trace = p.xi * -(t (Sum.inr ()) ⬝ᵥ y₀) := by
       have e1 : rat l.τ * (B'.o.pB * p.up FS F₀' t)

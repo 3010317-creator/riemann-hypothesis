@@ -258,7 +258,7 @@ theorem exists_level_elt_all : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I
     intro P P' hne hP h
     rcases h with h | h
     · exact hne (Subtype.ext h.symm)
-    obtain ⟨v, hv, hv'⟩ := LevelElt.place_under I hOk hPins l Z a P hP
+    obtain ⟨v, hv, hv'⟩ := GlobalTheory.Mem.Col2.AdT.PlaceUnder.main I hOk hPins l Z a P hP
     apply hv' P' (Ne.symm hne)
     rw [hs] at hv ⊢
     have hc := congrArg HeightOneSpectrum.asIdeal ((GlobalTheory.Mem.Col2.under_eq_iff B.host P.1 P'.1).2 (Or.inr h))
@@ -269,8 +269,8 @@ theorem exists_level_elt_all : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I
       (P.1 ∈ I.Q a → ∃ γ : GL (Fin (B.R.N i)) B.fields.E, ∀ r s, adAt B.host.F P.1 (((g * (show GA B (B.R.N i) from z.1) : GA B (B.R.N i)) : Matrix (Fin (B.R.N i)) (Fin (B.R.N i)) (AfE B.host.F B.host.E)) r s) = algebraMap B.fields.E (P.1.adicCompletion B.fields.E) ((γ : Matrix (Fin (B.R.N i)) (Fin (B.R.N i)) B.fields.E) r s)) := by
     intro P
     by_cases hP : P.1 ∈ I.Q a
-    · obtain ⟨v, hv, -⟩ := LevelElt.place_under I hOk hPins l Z a P hP
-      obtain ⟨z, hz1, hz2, hz3, hz4⟩ := LevelElt.one_prime I hOk hPins l Z a T i hi bad S hChi P hP v hv (max N 1) g 1
+    · obtain ⟨v, hv, -⟩ := GlobalTheory.Mem.Col2.AdT.PlaceUnder.main I hOk hPins l Z a P hP
+      obtain ⟨z, hz1, hz2, hz3, hz4⟩ := GlobalTheory.Mem.Col2.AdT.OnePrime.exists_level_elt I hOk hPins l Z a T i hi bad S hChi P hP v hv (max N 1) g 1
       have hzU := ((S.U_eq _).1 z.2).1
       have hbP := ((GlobalTheory.T.adelicMatrixCongruenceBadPrime_iff_completion I hOk l Z a (B.R.N i) (max N 1) P z.1).2.2).1 hz3
       have hvP := hv

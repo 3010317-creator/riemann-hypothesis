@@ -382,7 +382,7 @@ theorem constForm : ∀ (n a g r₀ : ℕ) (K : (Fin n → ℂ) → Set (Fin g �
     intro s hs Hm hint hpair i j
     obtain ⟨m', hm'⟩ := hint _ (hmem s hs i) _ (hmem s hs j)
     have key : m' = M i j := by
-      apply Core.eq_of_exp_eq
+      apply GlobalTheory.ExpUniqFamily.int_eq_of_exp
       intro N hN
       have h1 := hpair₀ N _ _ hN (hmem s₀ hs₀ i) (hmem s₀ hs₀ j)
       have h2 := hprop n N (logDom n a) (logExp a) (fun s => lam s i) (fun s => lam s j) _ s₀ s hN hDo hDp

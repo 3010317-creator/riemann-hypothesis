@@ -242,11 +242,6 @@ theorem exists_inv (hΨ : IsType Ψ) : ∃ S' : Matrix ((Fin N ⊕ Fin N) × Ψ)
     ring
   exact ⟨_, h1, (Matrix.mul_eq_one_comm_of_equiv (Fintype.equivOfCardEq hc)).1 h1⟩
 
-theorem qm_mul {α β δ : Type} [Fintype β] (X : Matrix α β ℚ) (Y : Matrix β δ ℚ) :
-    qm (X * Y) = qm X * qm Y := by
-  ext i j
-  simp [qm, Matrix.mul_apply]
-
 theorem qm_inj {α β : Type} {X Y : Matrix α β ℚ} (h : qm X = qm Y) : X = Y := by
   ext i j
   have := congrFun (congrFun h i) j
@@ -334,11 +329,11 @@ theorem exists_blocks [IsCMField E] (hΨ : IsType Ψ)
     rw [det_mul, e, h0] at this
     simp at this
   have hGinv : qm G⁻¹ = S'ᵀ * blockDiagonal (fun _ : Ψ => sw (Fin N)) * S' := by
-    rw [← Matrix.mul_one (qm G⁻¹), ← hGi, ← Matrix.mul_assoc, ← qm_mul,
+    rw [← Matrix.mul_one (qm G⁻¹), ← hGi, ← Matrix.mul_assoc, ← GlobalTheory.SiegelAction.qm_mul,
       nonsing_inv_mul _ (Ne.isUnit hdet), qm_one, Matrix.one_mul]
   refine ⟨fromBlocks (R A) (R B * G) (G⁻¹ * R C) (G⁻¹ * R D * G), hR A, ?_, ?_, ?_⟩
   all_goals
-    simp only [toBlocks_fromBlocks₁₂, toBlocks_fromBlocks₂₁, toBlocks_fromBlocks₂₂, qm_mul, hR,
+    simp only [toBlocks_fromBlocks₁₂, toBlocks_fromBlocks₂₁, toBlocks_fromBlocks₂₂, GlobalTheory.SiegelAction.qm_mul, hR,
       hGinv, hG, blockDiagonal_mul, Matrix.mul_assoc, c2]
 
 end
@@ -372,7 +367,7 @@ theorem GlobalTheory.SW.exists_symplectic_of_unitary : ∀ (E : Type) [Field E] 
         (qm σ.toBlocks₂₂) := by
       simp only [qm]
       rw [← fromBlocks_map, fromBlocks_toBlocks]
-    rw [qm_mul, qm_mul, qm_J, show qm σᵀ = (qm σ)ᵀ from rfl, e, s1, s2, s3, s4]
+    rw [GlobalTheory.SiegelAction.qm_mul, GlobalTheory.SiegelAction.qm_mul, qm_J, show qm σᵀ = (qm σ)ᵀ from rfl, e, s1, s2, s3, s4]
     refine transport_sp h1 h2 ?_ ?_ ?_ ?_
     all_goals
       simp only [blockDiagonal_transpose, ← blockDiagonal_mul, ← one, add]

@@ -179,8 +179,6 @@ variable {ψ ω} {H : AddSubgroup (WO S T)}
 theorem symplOH_skew (x y : WO S T) : symplOH S T y x = -symplOH S T x y := by
   rw [symplOH, symplOH, symplO_skew, mul_neg]
 
-alias symplOH_self := _root_.GlobalTheory.OrientedHeis.symplOH_self
-
 theorem sg_add (hH : ∀ u ∈ H, ∀ u' ∈ H, ψ (symplO S T u u') = 1) (hω : ∀ u ∈ H, ω • u ∈ H)
     (hω' : ∀ u ∈ H, ω • u + cA D ω • u = u) {u u' : WO S T} (hu : u ∈ H) (hu' : u' ∈ H) :
     sg ψ ω (u + u') = sg ψ ω u * sg ψ ω u' * ψ (symplOH S T u u') := by
@@ -204,14 +202,14 @@ theorem sg_of_cong (hH : ∀ u ∈ H, ∀ u' ∈ H, ψ (symplO S T u u') = 1) {u
     (h : ω • u = u + 2 • v ∨ ω • u = 2 • v) : sg ψ ω u = 1 := by
   have h1 := hH u hu v hv
   rcases h with h | h
-  · rw [sg, h, two_nsmul, symplOH_add_right, symplOH_add_right, symplOH_self, zero_add, symplOH_add_self, h1]
+  · rw [sg, h, two_nsmul, symplOH_add_right, symplOH_add_right, GlobalTheory.OrientedHeis.symplOH_self, zero_add, symplOH_add_self, h1]
   · rw [sg, h, two_nsmul, symplOH_add_right, symplOH_add_self, h1]
 
 def fixGroup (hH : ∀ u ∈ H, ∀ u' ∈ H, ψ (symplO S T u u') = 1) (hω : ∀ u ∈ H, ω • u ∈ H)
     (hω' : ∀ u ∈ H, ω • u + cA D ω • u = u) (f : WO S T → ℂ) : AddSubgroup (WO S T) where
   carrier := {u | u ∈ H ∧ sg ψ ω u • heisO ψ S T u f = f}
   zero_mem' := ⟨zero_mem _, by
-    rw [LatVac.heisO_zero, sg, smul_zero, symplOH_self, ψ.map_zero_eq_one, one_smul]⟩
+    rw [LatVac.heisO_zero, sg, smul_zero, GlobalTheory.OrientedHeis.symplOH_self, ψ.map_zero_eq_one, one_smul]⟩
   add_mem' := by
     rintro u u' ⟨hu, h⟩ ⟨hu', h'⟩
     refine ⟨add_mem hu hu', ?_⟩
@@ -220,7 +218,7 @@ def fixGroup (hH : ∀ u ∈ H, ∀ u' ∈ H, ψ (symplO S T u u') = 1) (hω : �
     rintro u ⟨hu, h⟩
     refine ⟨neg_mem hu, ?_⟩
     have h1 := sg_add hH hω hω' (neg_mem hu) hu
-    rw [neg_add_cancel, sg, smul_zero, symplOH_self, ψ.map_zero_eq_one] at h1
+    rw [neg_add_cancel, sg, smul_zero, GlobalTheory.OrientedHeis.symplOH_self, ψ.map_zero_eq_one] at h1
     conv_lhs => rw [← h]
     rw [LatVac.heisO_smul, LatVac.heisO_heisO, neg_add_cancel, LatVac.heisO_zero, smul_smul, smul_smul, ← h1, one_smul]
 

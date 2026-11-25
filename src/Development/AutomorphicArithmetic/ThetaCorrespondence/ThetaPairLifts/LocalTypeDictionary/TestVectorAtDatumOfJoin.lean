@@ -548,7 +548,7 @@ theorem atDat_rowTest : GlobalTheory.Published.GreenCuspidal → GlobalTheory.Pu
   obtain ⟨Z', g1', hη, hA⟩ := LedRec.exists_bare hG (B := B) (C := w.C) Z f (6 * K.s.x ^ (-K.C.P.CF))
   obtain ⟨L, hsc, hsz⟩ := hLed (w.st Z') hO hη hA
   have s : SameGrp Z Z' := LedRec.sameGrp g1 g1'
-  exact (GlobalTheory.T.equalMultiplicities_rowTest_of_sameGroupTransfer B w.C Z Z' w.px w.I hX T Wt s z).2 (by
+  exact (GlobalTheory.Twist.multEq_rowTest_of_copy B w.C Z Z' w.px w.I hX T Wt s z).2 (by
     have hEx' := DatCopy.copy_exAt Z' s hEx
     generalize DatCopy.copy Z' s z = y at hEx' ⊢
     have hS := hSet B f T w Z' hX Wt y hO g1' hEx' L hsz

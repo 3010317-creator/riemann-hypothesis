@@ -92,13 +92,6 @@ theorem finrank_eq_of_surjective {S₀ S k K k' K' : Type*} [CommRing S₀] [Com
   change algebraMap k' K' (e₀ (p₀ r)) = e (algebraMap k K (p₀ r))
   rw [he₀, h₂, h₁, he]
 
-theorem mem_maximalIdeal_vRing {L : Type*} [Field L] (w : AddValuation L (WithTop ℤ))
-    (x : vRing w) : x ∈ maximalIdeal (vRing w) ↔ 0 < w (x : L) := by
-  have hunit : IsUnit x ↔ w (x : L) = 0 :=
-    (Valuation.valuationSubring.integers (w : Valuation L _)).isUnit_iff_valuation_eq_one
-  rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, hunit]
-  exact ⟨fun h => lt_of_le_of_ne x.2 (Ne.symm h), fun h => h.ne'⟩
-
 theorem exists_eq_of_nonneg {R F L : Type*} [CommRing R] [IsDomain R] [IsDiscreteValuationRing R]
     [Field F] [Algebra R F] [IsFractionRing R F] [Field L] [Algebra F L] [Algebra R L]
     [IsScalarTower R F L] {w : AddValuation L (WithTop ℤ)} (hw : w ∈ ValPl.PlacesOver R L)

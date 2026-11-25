@@ -127,10 +127,6 @@ open GlobalTheory.FinPl GlobalTheory.FinPl.FrameLat
 
 variable {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
-theorem cA_sec_mul' (p : SplitPt D k) (a : AE D) (t : k) :
-    cA D (p.sec t) * a = cA D (p.sec (t * p.pr (cA D a))) := by
-  rw [← sec_mul_right, RingHom.map_mul, SeeSaw.cA_cA]
-
 theorem colMul_split (q : SplitPt D k) {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (i : Fin ρ) {a : AE D}
     (ha : a ∈ idAt D (· = q.v)) :
     colMul d.jX i a = (fun r => q.sec (q.pr a * q.pr (incA D (d.e r i)))) +
@@ -138,7 +134,7 @@ theorem colMul_split (q : SplitPt D k) {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S
   funext r
   change a * incA D (d.e r i) = _
   conv_lhs => rw [GlobalTheory.SplitIntComp.eq_sec_add_csec q ha]
-  rw [add_mul, sec_mul_right, cA_sec_mul' q, Pi.add_apply]
+  rw [add_mul, sec_mul_right, GlobalTheory.Core.Mi.LatMatch.cA_sec_mul q, Pi.add_apply]
 
 theorem mul_unit_mem_iff {b u : k} (hu : valuation k u = 1) : b * u ∈ 𝒪[k] ↔ b ∈ 𝒪[k] := by
   rw [Valuation.mem_integer_iff, Valuation.mem_integer_iff, Valuation.map_mul, hu, mul_one]

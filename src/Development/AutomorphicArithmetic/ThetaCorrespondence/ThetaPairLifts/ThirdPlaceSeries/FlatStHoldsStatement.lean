@@ -583,7 +583,7 @@ theorem X_det : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type) (A
     have hqm : (q : 𝓞 D.host.E) ∈ P.asIdeal := by
       rw [← hqc]; exact natCard_mem P (by rw [hqc]; exact hq.ne_zero)
     exact (R.C.isMu0 i).unr P fun k hk =>
-      not_mem_of_prime_ne P (D.host.g_prime k) hq (hqg k) hqm hk
+      GlobalTheory.NatCastNotMemPrimeIdeal.natCast_notMem_of_prime_ne P (D.host.g_prime k) hq (hqg k) hqm hk
   obtain ⟨nμ, -, hnμ⟩ := (R.C.isMu0 i).inf
   obtain ⟨n, hn, hnx⟩ := hK.fin
   rw [e0]

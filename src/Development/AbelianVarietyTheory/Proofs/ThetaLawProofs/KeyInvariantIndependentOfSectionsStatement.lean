@@ -537,13 +537,6 @@ theorem pow_eq_one_of_ker {G : Type} [CommGroup G] {al : Matrix (Fin 4) (Fin 4) 
   rw [Finset.prod_eq_single r (fun b _ hb => by simp [hb]) (by simp)] at e
   simpa using e
 
-theorem keyVia_trans {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''] {x : KeyIn R} {x' : KeyIn R'}
-    {x'' : KeyIn R''} {f : R →+* R'} {f' : R' →+* R''} {φ w φ' w'} (H : KeyVia x' x f φ w)
-    (H' : KeyVia x'' x' f' φ' w') : ∃ w'', KeyVia x'' x (f'.comp f) (φ' ≫ φ) w'' ∧
-      ∀ (l : ℕ) (s : RR x l) (s' : RR x' l) (s'' : RR x'' l), SecVia x' x φ w s' s → SecVia x'' x' φ' w' s'' s' →
-        SecVia x'' x (φ' ≫ φ) w'' s'' s := by
-  apply _root_.GlobalTheory.KeyLine.keyVia_trans <;> assumption
-
 theorem exists_pull_hom {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] {x : KeyIn R} {x' : KeyIn R'}
     {f : R →+* R'} {φ w} (H : KeyVia x' x f φ w) (hf : Function.Injective f) :
     ∃ h : Pt x →* Pt x', Function.Injective h ∧ ∀ z z', z' = h z ↔ z'.left ≫ φ = spMap f ≫ z.left := by
@@ -851,7 +844,7 @@ theorem isUnit_of_finite_zeros : Out.Laws → ∀ (O : Type) [CommRing O] [IsDom
   obtain ⟨ψ, v, H₁⟩ := (KeyVia.main _ _ xF y i).1.1 hy
   have hg₁ : y.P.g = xF.P.g := H₁.choose_spec.choose
   choose s₁ hs₁ using fun a : Fin y.P.g => (((KeyVia.main _ _ xF y i).2 ψ v H₁).1 n (sF (a.cast hg₁))).exists
-  obtain ⟨v₂, H₂, sec₂⟩ := keyVia_trans hx H₁
+  obtain ⟨v₂, H₂, sec₂⟩ := GlobalTheory.KeyLine.keyVia_trans hx H₁
   obtain ⟨χ, v₃, H₃, hχ, sec₃⟩ := KaLift.keyVia_cancel (f' := g) H' (hsq.symm ▸ H₂)
   have hg₃ : y.P.g = x'.P.g := (hg₁.trans hg).trans hg'.symm
   obtain ⟨u₁, hu₁, hu₁'⟩ := exists_pull_hom H₁ i.injective

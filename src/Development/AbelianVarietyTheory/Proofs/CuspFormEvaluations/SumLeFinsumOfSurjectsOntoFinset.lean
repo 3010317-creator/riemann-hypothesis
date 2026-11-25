@@ -651,15 +651,6 @@ theorem levReps_act_nat (m : ℕ) (v : I2.Vsp dim) : I2.act (m : 𝓞 E) v = (m 
   ext i
   simp [I2.act]
 
-theorem levReps_act_smul (a : 𝓞 E) (c : ℂ) (v : I2.Vsp dim) : I2.act a (c • v) = c • I2.act a v := by
-  ext i
-  simp [I2.act]
-  ring
-
-theorem levReps_act_add (a : 𝓞 E) (v w : I2.Vsp dim) : I2.act a (v + w) = I2.act a v + I2.act a w := by
-  ext i
-  simp [I2.act, mul_add]
-
 theorem levReps_act_neg (a : 𝓞 E) (v : I2.Vsp dim) : I2.act a (-v) = -I2.act a v := by
   ext i
   simp [I2.act]
@@ -714,7 +705,7 @@ theorem isReps_level_translates : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     obtain ⟨u, hq⟩ := hu q
     have : (l.M : ℂ) • t q = -mk (α • u) := by
       simp only [ht]
-      rw [hq, hlin α (α • u), levReps_act_neg, levReps_act_smul, levReps_act_mul, mul_comm (H.bar α), hα,
+      rw [hq, hlin α (α • u), levReps_act_neg, ReciprocityTheory.ChartRestriction.G.I2.tof_act_smul, levReps_act_mul, mul_comm (H.bar α), hα,
         levReps_act_nat, smul_neg, smul_smul, smul_smul]
       have : (l.M : ℂ) * ((l.M : ℂ) ^ 2)⁻¹ * l.M = 1 := by field_simp
       rw [this, one_smul]
@@ -748,7 +739,7 @@ theorem isReps_level_translates : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       calc b = (l.M : ℂ)⁻¹ • (l.M : ℂ) • b := by rw [smul_smul, inv_mul_cancel₀ hM, one_smul]
         _ = _ := by rw [hab, smul_add, smul_smul, inv_mul_cancel₀ hM, one_smul]
     have h3 : vspActL α (b - t q) = mk (r • (α • u + a) + s • d) + I2.act α v' := by
-      rw [hsub, hb', levReps_act_add, levReps_act_smul, ← hlin, add_right_comm, ← smul_add, ← map_add (f := _),
+      rw [hsub, hb', ReciprocityTheory.ChartRestriction.G.I2.tof_act_add, ReciprocityTheory.ChartRestriction.G.I2.tof_act_smul, ← hlin, add_right_comm, ← smul_add, ← map_add (f := _),
         add_comm (α • a), h2, hlin, levReps_act_nat, smul_smul, inv_mul_cancel₀ hM, one_smul]
     rw [h3]
     exact T.L.add_mem (hL _) (T.stable _ _ hv')
@@ -1249,13 +1240,6 @@ section -- clump:auto
 @[expose] public section
 
 open NumberField Complex ReciprocityTheory.ChartRestriction.G.I2
-
-namespace GlobalTheory
-
-theorem charStatement_holds : CharStatement :=
-  ReciprocityTheory.ChartRestriction.G.I2.char_holds
-
-end GlobalTheory
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TorusSplitting.CharStatementHolds =====
@@ -1269,13 +1253,11 @@ open ReciprocityTheory.ChartRestriction.G.I2
 
 namespace GlobalTheory.ThetaTorus
 
-theorem gSup_holds : GSupStatement := gSup GlobalTheory.packingCount
-
 theorem propA_holds : PropAStatement := propA GlobalTheory.packingCount GlobalTheory.gaussTail_of_card_le
 
 theorem J_holds : JStatement :=
-  jOf GlobalTheory.ext_all_inputs _root_.ReciprocityTheory.ChartRestriction.G.I2.split_holds GlobalTheory.charStatement_holds
-    (colTorus GlobalTheory.ext_all_inputs propA_holds gSup_holds)
+  jOf GlobalTheory.ext_all_inputs _root_.ReciprocityTheory.ChartRestriction.G.I2.split_holds ReciprocityTheory.ChartRestriction.G.I2.char_holds
+    (colTorus GlobalTheory.ext_all_inputs propA_holds GlobalTheory.sup_le_l2_principal_torus)
     (colAbel GlobalTheory.ext_all_inputs propA_holds _root_.GlobalTheory.sup_le_l2_principal_torus)
     (colEmpty GlobalTheory.ext_all_inputs propA_holds _root_.GlobalTheory.sup_le_l2_principal_torus)
 

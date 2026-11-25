@@ -478,7 +478,7 @@ theorem exists_scalar {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hc : Crv
   simp only [OneMemClass.coe_one, inv_one, Units.val_one, Matrix.one_mul, Matrix.mul_one] at hlat0
   simp only [← MI_one] at hz' hlatb hlat0
   obtain ⟨m0, hm0, hl0⟩ := W.lift g g' 0 e0 hT
-  rw [VacMove.pt_zero, VacMove.wd_zero] at hl0
+  rw [VacMove.pt_zero, GlobalTheory.NormSum.wd_zero] at hl0
   set P : Matrix (Fin N') (Fin N') (AE D) := ((g' : GL (Fin N') (AE D)) : Matrix (Fin N') (Fin N') (AE D)) with hP
   set P' : Matrix (Fin N') (Fin N') (AE D) :=
     (((g' : GL (Fin N') (AE D))⁻¹ : GL (Fin N') (AE D)) : Matrix (Fin N') (Fin N') (AE D)) with hP'

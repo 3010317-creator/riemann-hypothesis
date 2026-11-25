@@ -75,7 +75,7 @@ theorem exists_form_rowRepR (hH : GlobalTheory.Published.HarishChandraFinite) (h
   obtain ⟨B', h1, h2, h3, h4⟩ := GlobalTheory.finTyp_invariant_form_of_isotIn D D.R.r _ (actM Y.PY (R.MY 0))
     (Minf R.θ Y.PY (R.MY 0)) (ipM (R.MY 0) (R.νY A3.A.μ0 0) (R.fdY A3.A.μ0 0)) hlin hherm hpos
     (fun h x hx => GlobalTheory.FinTypesRows.minf_stable Y.PY hcc h hx)
-    (fun h x hx y hy => GlobalTheory.T.schur_pairing_invariant_under_standard_group D (Yc D 0) _ R.θ (R.MY 0) D.R.r Y.PY (R.νY A3.A.μ0 0) (R.fdY A3.A.μ0 0) hSA hSig hθ
+    (fun h x hx y hy => GlobalTheory.SchurPairingInvariant.ipM_actM D (Yc D 0) _ R.θ (R.MY 0) D.R.r Y.PY (R.νY A3.A.μ0 0) (R.fdY A3.A.μ0 0) hSA hSig hθ
       hHaar hFD h x hx y hy) (FinTyp.conjT π) hne
   exact GlobalTheory.RowLocalRows.form_of_conjT π B' h1 h2 h3 h4
 

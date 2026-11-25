@@ -90,8 +90,6 @@ theorem evR_eq_of_point_eq (d : DeltaDat Xo c n) {ψ : (LaI Xo c d ≃ₗ[𝓞 E
     (fun _ => rfl) k y y' (h.trans (Category.comp_id _).symm)
   simpa using e
 
-alias map_wchar := _root_.GlobalTheory.ThetaValueWeight.map_wchar
-
 end GlobalTheory.ShortDescent
 
 namespace GlobalTheory
@@ -124,7 +122,7 @@ theorem shortValTot_of_pinned : Laws → ChartIndepSt2 → ∀ (E : Type) [Field
     have hv₂ := (GlobalTheory.thetaValue_weight hL hC E H Dw d.l₂ d.Xo₂ d.c₂ d.nab₂ hnab k w₂ w₂' _ hb₂ n a _).2 hP₂
       _ Λ _ N v hv
     have e := (hd p y).exists.choose_spec k hk χ w w₂ hw ho v hv
-    rw [(hex k w₂').unique hv' hv₂, map_mul, map_wchar, evR_eq_of_point_eq d hψ w₂ w₂' hx₂.symm]
+    rw [(hex k w₂').unique hv' hv₂, map_mul, GlobalTheory.ThetaValueWeight.map_wchar, evR_eq_of_point_eq d hψ w₂ w₂' hx₂.symm]
     refine (congrArg (_ * ·) e).trans ?_
     ring
   · intro k _ _ _ _ hk y y₂ ho

@@ -969,7 +969,7 @@ theorem GlobalTheory.PerDecAtRef.perDec0At_std : ∀ {B : Base} {X : PreX B.toPr
   case ha =>
     clear hpr hZ hI hx hG hrd hF
     have hL : (I.perIn u I.mu0).S'.Lsh c.fst ((I.perIn u I.mu0).S'.rep c) = (((I.stX I.mu0).rep c).1.1.deco).1.N :=
-      GlobalTheory.PeriodOnStep.Lsh_eq_N _
+      GlobalTheory.Mem.Col2.Lsh_empty _
     rw [hL]
     exact hy0
   case hb =>
@@ -1125,7 +1125,7 @@ theorem perDecTwT_of_std : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok 
     all_goals first | exact e2 | rfl | (exfalso; contradiction)
   obtain ⟨y, hy, hyv⟩ := hR.tw u a F hF c
   have hyQ : y ∈ nabAt B.fields.emb (I.perIn u a).sgT ((I.perIn u a).S'.Lsh c.1 ((I.perIn u a).S'.rep c)) := by
-    have := GlobalTheory.PeriodOnStep.Lsh_eq_N ((I.stX a).rep c).1.1.deco
+    have := GlobalTheory.Mem.Col2.Lsh_empty ((I.stX a).rep c).1.1.deco
     show y ∈ nabAt _ _ (((I.stX a).rep c).1.1.deco.1.Lsh)
     rw [this]; exact hy
   obtain ⟨b, hb⟩ := @_root_.GlobalTheory.PairAtClass.pair_integral _ _ _ _ _ _ _ _ _ _ B.fields.emb B.embLL _ _ (I.perIn u a) (l.ch u a) (l.per u a) (B.hcW u)

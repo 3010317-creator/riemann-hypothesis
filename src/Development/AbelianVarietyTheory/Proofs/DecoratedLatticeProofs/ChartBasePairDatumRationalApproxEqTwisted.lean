@@ -410,7 +410,7 @@ theorem mle_frame {g : GL (Fin a) (AfE F E)} {p : DecoF E a ST SG Q} (h : IsPtOf
     MLe Valued.v ((g⁻¹ : GL (Fin a) (AfE F E)).1.map (adAt F w.1) *
       (LinearMap.toMatrix' (p.deco.1.liftFr w).toLinearMap).map (algebraMap E (w.1.adicCompletion E)) - 1) (WithZero.exp (-((1 : ℕ) : ℤ))) := by
   intro r s
-  refine AdT.FrameMove.le_exp_neg_one_of_lt_one' ?_
+  refine GlobalTheory.Mem.KerDet.le_exp_neg_one ?_
   convert AdT.FrameMove.val_sub_lt_of_liftFr h w r s using 2
   rw [Matrix.sub_apply, Matrix.mul_apply]
   unfold GlobalTheory.Mem.Col2.pullV

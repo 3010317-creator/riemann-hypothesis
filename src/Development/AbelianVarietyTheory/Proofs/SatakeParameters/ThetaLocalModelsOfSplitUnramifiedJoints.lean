@@ -764,14 +764,6 @@ theorem natsmul_mem {V : Type*} [AddCommGroup V] [Module D.host.E V] [Module (�
   rw [Nat.cast_smul_eq_nsmul]
   exact nsmul_mem hy s
 
-theorem homL_maps {L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)} {L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)}
-    {A : Matrix (Fin N') (Fin N) D.host.E} (hA : A ∈ TaylorLogMetric.homL D L L') : ∀ x ∈ L, A *ᵥ x ∈ L' := by
-  induction hA using Submodule.span_induction with
-  | mem A hA => exact hA
-  | zero => intro x _; simp
-  | add A B _ _ hA hB => intro x hx; rw [Matrix.add_mulVec]; exact L'.add_mem (hA x hx) (hB x hx)
-  | smul c A _ hA => intro x hx; rw [Matrix.smul_mulVec]; exact L'.smul_mem c (hA x hx)
-
 theorem yy_maps
     (hA0 : ∀ a ∈ (D.host.AA0 : Submodule (𝓞 D.host.E) D.host.E), ∃ s : ℕ, Nat.Coprime s p ∧
       (s : D.host.E) * a ∈ (algebraMap (𝓞 D.host.E) D.host.E).range)
@@ -787,7 +779,7 @@ theorem yy_maps
     have e : (s : D.host.E) • ((a • A) *ᵥ x) = t • (A *ᵥ x) := by
       rw [Matrix.smul_mulVec, smul_smul, ← ht, algebraMap_smul]
     rw [e]
-    exact L'.smul_mem t (homL_maps D hA x hx)
+    exact L'.smul_mem t (GlobalTheory.NormSum.TraceInt.mulVec_mem_of_homL D hA x hx)
   | zero => exact ⟨1, Nat.coprime_one_left p, fun x _ => by simp⟩
   | add B C _ _ hB hC =>
     obtain ⟨s, hs, hB⟩ := hB

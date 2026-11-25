@@ -596,9 +596,6 @@ section Gen
 
 variable {N : Type} [AddCommGroup N] [Module ℂ N] {C : Submodule ℂ N} {ip : N → N → ℂ}
 
-theorem hp_add_right (h : PeterssonHilbertSpace.IsHermPos C ip) (x y y' : C) : ip x ((y : N) + y') = ip x y + ip x y' := by
-  rw [← Submodule.coe_add, ← h.herm (y + y') x, Submodule.coe_add, h.add y y' x, map_add (f := _), h.herm y x, h.herm y' x]
-
 theorem hp_smul_right (h : PeterssonHilbertSpace.IsHermPos C ip) (s : ℂ) (x y : C) : ip x (s • (y : N)) = s * ip x y := by
   rw [← Submodule.coe_smul, ← h.herm (s • y) x, Submodule.coe_smul, h.smul s y x, map_mul, h.herm y x,
     Complex.conj_conj]
@@ -618,7 +615,7 @@ theorem hp_model (h : PeterssonHilbertSpace.IsHermPos C ip) : ∃ H : Hs, ∃ j 
   have h1 : ∀ x ∈ C, ∀ y ∈ C, ∀ z ∈ C, ∀ c : ℂ, ip x (y + c • z) = ip x y + c * ip x z ∧ ip y x = star (ip x y) := by
     intro x hx y hy z hz c
     refine ⟨?_, ?_⟩
-    · have e1 := hp_add_right h ⟨x, hx⟩ ⟨y, hy⟩ ⟨c • z, C.smul_mem c hz⟩
+    · have e1 := Formalism.IndefR.principalLevelFrame.hp_add_right h ⟨x, hx⟩ ⟨y, hy⟩ ⟨c • z, C.smul_mem c hz⟩
       have e2 := hp_smul_right h c ⟨x, hx⟩ ⟨z, hz⟩
       exact e1.trans (congrArg (fun t => ip x y + t) e2)
     · exact (h.herm ⟨x, hx⟩ ⟨y, hy⟩).symm
@@ -635,7 +632,7 @@ theorem hp_riesz {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [Fi
     let φ : H →ₗ[ℂ] ℂ :=
       { toFun := fun x => ip w (j x)
         map_add' := fun a b => by
-          have := hp_add_right h w ⟨j a, hj a⟩ ⟨j b, hj b⟩
+          have := Formalism.IndefR.principalLevelFrame.hp_add_right h w ⟨j a, hj a⟩ ⟨j b, hj b⟩
           simpa [map_add (f := _)] using this
         map_smul' := fun s a => by
           have := hp_smul_right h s w ⟨j a, hj a⟩
@@ -646,7 +643,7 @@ theorem hp_riesz {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [Fi
   choose y hy using key
   refine ⟨⟨⟨y, fun a b => ext_inner_left ℂ fun x => ?_⟩, fun s a => ext_inner_left ℂ fun x => ?_⟩, fun x w => hy w x⟩
   · rw [inner_add_right, hy, hy, hy, Submodule.coe_add]
-    exact hp_add_right h ⟨j x, hj x⟩ a b
+    exact Formalism.IndefR.principalLevelFrame.hp_add_right h ⟨j x, hj x⟩ a b
   · rw [RingHom.id_apply, inner_smul_right, hy, hy, Submodule.coe_smul]
     exact hp_smul_right h s ⟨j x, hj x⟩ a
 

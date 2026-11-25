@@ -1271,12 +1271,6 @@ theorem cT_add' (σ : L →+* L) {a b : ℕ} (A B : Matrix (Fin a) (Fin b) L) :
     Formalism.UG.cT σ (A + B) = Formalism.UG.cT σ A + Formalism.UG.cT σ B := by
   ext i j; simp [Formalism.UG.cT]
 
-theorem cT_int (σ : L →+* L) (hσ : ∀ x, Valued.v (σ x) = Valued.v x) {a b : ℕ} {A : Matrix (Fin a) (Fin b) L}
-    (hA : ∀ i j, A i j ∈ Formalism.UG.intL L) (i : Fin b) (j : Fin a) : Formalism.UG.cT σ A i j ∈ Formalism.UG.intL L := by
-  have h := hA j i
-  change Valued.v (σ (A j i)) ≤ 1
-  rw [hσ]; exact h
-
 theorem locH_sub_trace_mem : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ))] (σ : L →+* L) (δ : L), (∀ x, Valued.v (σ x) = Valued.v x) → δ ∈ Formalism.UG.intL L →
   ∀ (n n' : ℕ) (JS a k : GL (Fin n) L) (JT : GL (Fin n') L) (E : Matrix (Fin n) (Fin n) L) (y : Matrix (Fin n') (Fin n) L),
   (∀ i j, (JS : Matrix (Fin n) (Fin n) L) i j ∈ Formalism.UG.intL L) → (∀ i j, ((JS⁻¹ : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) i j ∈ Formalism.UG.intL L) →
@@ -1336,7 +1330,7 @@ theorem locH_sub_trace_mem : ∀ (L : Type) [Field L] [Valued L (WithZero (Multi
   rw [h3]
 
   have hRint : ∀ i j, R i j ∈ Formalism.UG.intL L :=
-    _root_.GlobalTheory.Hk3.matMul_int (_root_.GlobalTheory.Hk3.matMul_int hP (cT_int σ hσ hKi)) hJ
+    _root_.GlobalTheory.Hk3.matMul_int (_root_.GlobalTheory.Hk3.matMul_int hP (GlobalTheory.Hk3.GramSep.sigmaConjTranspose_integral_gramSeparation σ hσ hKi)) hJ
   have hy' : Formalism.UG.cT σ y = Formalism.UG.cT σ Ai * Formalism.UG.cT σ (y * A) := by
     rw [← cT_mul', Matrix.mul_assoc, hAAi, Matrix.mul_one]
   have hW : E * Z * E = ((E * A) * (Ai * P * Formalism.UG.cT σ Ai) * Formalism.UG.cT σ (y * A)) * T * ((y * A) * (Ai * E)) := by
@@ -1345,7 +1339,7 @@ theorem locH_sub_trace_mem : ∀ (L : Type) [Field L] [Valued L (WithZero (Multi
     rw [← Matrix.mul_assoc A Ai, hAAi, Matrix.one_mul, ← Matrix.mul_assoc A Ai E, hAAi, Matrix.one_mul]
   have hWint : ∀ i j, (E * Z * E) i j ∈ Formalism.UG.intL L := by
     rw [hW]
-    exact _root_.GlobalTheory.Hk3.matMul_int (_root_.GlobalTheory.Hk3.matMul_int (_root_.GlobalTheory.Hk3.matMul_int (_root_.GlobalTheory.Hk3.matMul_int hEA hSD.2) (cT_int σ hσ hyA)) hT) (_root_.GlobalTheory.Hk3.matMul_int hyA hAiE)
+    exact _root_.GlobalTheory.Hk3.matMul_int (_root_.GlobalTheory.Hk3.matMul_int (_root_.GlobalTheory.Hk3.matMul_int (_root_.GlobalTheory.Hk3.matMul_int hEA hSD.2) (GlobalTheory.Hk3.GramSep.sigmaConjTranspose_integral_gramSeparation σ hσ hyA)) hT) (_root_.GlobalTheory.Hk3.matMul_int hyA hAiE)
   refine Subring.mul_mem _ hδ ?_
   exact Subring.sum_mem _ fun i _ => _root_.GlobalTheory.Hk3.matMul_int hRint hWint i i
 

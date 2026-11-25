@@ -1501,7 +1501,7 @@ theorem rowDiag_of_siegelWeilUnitary
     GlobalTheory.Core.Rk.RowDiag (fun D L C' => GlobalTheory.Core.Rk.IsScaleWithBoundedGamma D L C' ∧ ∀ u, GlobalTheory.Core.Rk.RankMu D u) := by
   have hDeg := _root_.GlobalTheory.Core.Deg.degenerate_and_collisions_uncond
   have hOne := GlobalTheory.T.corankOnePairsFamilyBounds_of_siegelWeil hSW 3
-  exact GlobalTheory.Core.Rk.diagonalRow_bound_from_windowWidthThree GlobalTheory.wuDecayOfGap (hDeg.1 3) (hDeg.2 3) hOne.1 hOne.2
+  exact GlobalTheory.Core.Rk.diagonalRow_bound_from_windowWidthThree CompanionTheory.Lime.BM.wuDecayOfGap_holds' (hDeg.1 3) (hDeg.2 3) hOne.1 hOne.2
 
 end GlobalTheory.Core.Rk
 end -- clump:auto

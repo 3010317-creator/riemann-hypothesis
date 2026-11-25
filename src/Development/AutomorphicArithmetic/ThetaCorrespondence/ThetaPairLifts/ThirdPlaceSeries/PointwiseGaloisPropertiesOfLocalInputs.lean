@@ -766,7 +766,7 @@ theorem third_place_linked_data_exists : ∀ hL : _root_.UpperTheory.Zero.LLC.Re
     ⟨Q₀, hcf₀, hch₀, htp₀, hrep₀, eq_of_heq hM₀⟩
   obtain ⟨Q, hcf, hch, htup, hrep, hM⟩ :=
     Eq.mp (congrArg CompatibleChoice (linkedDataIndices_eq hL x L l)) choice₀
-  obtain ⟨x', hx'⟩ := GlobalTheory.T.fittingLaterStages_row_is_constructionState hX.weil hX.ds hP.hc hP.decay K B f T w P (oL x L) (hfits P x l _ L hB hO) x.G_eq
+  obtain ⟨x', hx'⟩ := GlobalTheory.Mem.R3.Rw.st_of_fits hX.weil hX.ds hP.hc hP.decay K B f T w P (oL x L) (hfits P x l _ L hB hO) x.G_eq
     x.etaF (bkL L)
   obtain ⟨o, fits', G_eq', etaF', bk', m, cp, co, s, r, pn⟩ := x'
   dsimp only at hx'

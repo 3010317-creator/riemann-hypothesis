@@ -509,7 +509,7 @@ theorem bk_le : bk bkP i s k ψ v ≤ Submodule.span (X.Ok i k) (intSet bkP i s 
   congr 1
   obtain ⟨m, d, ⟨hd, h1⟩, h2⟩ := hy g j
   have h3 : d * f g j = (X.l i : X.O0 i) ^ n * m := by
-    apply GlobalTheory.BlochKatoIntegralScalars.toLL_injective Bw
+    apply Formalism.MainNotions.N.Br.toLL_inj Bw
     rw [map_mul, map_mul, hf, map_pow, map_natCast, ← h1]
     ring
   have h4 := congrArg ((algebraMap (X.Ok i k) (FractionRing (X.Ok i k))).comp (phiK X i k)) h3

@@ -1194,13 +1194,6 @@ open scoped TensorProduct
 
 namespace GlobalTheory.FockIrr
 
-theorem act_diag_of_mem_wtSub {p q : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
-    {act : Mat p q →ₗ[ℂ] Module.End ℂ V} {μ : Ix p q → ℚ} {v : V} (h : v ∈ wtSub act μ)
-    (a : Ix p q) : act (Eab a a) v = ((μ a : ℚ) : ℂ) • v := by
-  have h1 := (Submodule.mem_iInf _).1 h a
-  rw [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.id_apply] at h1
-  exact sub_eq_zero.1 h1
-
 theorem irreducible_of_weight_line : ∀ (p q : ℕ) (M : GKMod p q) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] (E : M.V →ₗ[ℂ] H), Function.Injective E → (∀ Z x y, inner ℂ (E (M.act Z x)) (E y) = inner ℂ (E x) (E (M.act (adjZ Z) y))) → ∀ (S : Ix p q → Ix p q → Prop), Equivalence S → ∀ (μ : Ix p q → ℚ) (v : M.V) (U : Submodule ℂ M.V), v ∈ wtSub M.act μ → (∀ U' : Submodule ℂ M.V, v ∈ U' → (∀ a b, S a b → ∀ x ∈ U', M.act (Eab a b) x ∈ U') → U ≤ U') → (∀ x ∈ U, x ∈ wtSub M.act μ → ∃ c : ℂ, x = c • v) → ∀ N : Submodule ℂ M.V, N ≤ U → (∀ a b, S a b → ∀ x ∈ N, M.act (Eab a b) x ∈ N) → N = ⊥ ∨ N = U := by
   intro p q M H _ _ E hE hadj S hS μ v U hv hU hline N hNU hN
   by_cases hvN : v ∈ N
@@ -1226,7 +1219,7 @@ theorem irreducible_of_weight_line : ∀ (p q : ℕ) (M : GKMod p q) (H : Type) 
       · obtain ⟨a, ha⟩ := Function.ne_iff.1 hν
         have h1 := hadj (Eab a a) y v
         rw [GlobalTheory.FockTensor.adjZ_Eab, GlobalTheory.FockTensor.sgnIx_mul_self, one_smul,
-          act_diag_of_mem_wtSub hyν, act_diag_of_mem_wtSub hv, map_smul, map_smul,
+          GlobalTheory.FockForm.act_of_mem_wtSub hyν, GlobalTheory.FockForm.act_of_mem_wtSub hv, map_smul, map_smul,
           inner_smul_left, inner_smul_right, map_ratCast] at h1
         have hne : ((ν a : ℚ) : ℂ) - ((μ a : ℚ) : ℂ) ≠ 0 := by
           rw [sub_ne_zero]; exact_mod_cast ha
@@ -1482,8 +1475,6 @@ theorem kStable_of_units {N : Submodule ℂ V}
     (h : ∀ a b, sameBlock a b → ∀ x ∈ N, act (Eab a b) x ∈ N) : KStable act N :=
   fun _ hZ x hx => GlobalTheory.TensorHW.kc_ind act N x (fun a b hab => h a b hab x hx) hZ
 
-alias equiv_sameBlock := _root_.GlobalTheory.LowestType.same_equiv
-
 end Gen
 
 variable {p q : ℕ}
@@ -1505,13 +1496,13 @@ theorem cyclic (M : GKMod p q) (H : Type) [NormedAddCommGroup H] [InnerProductSp
   have hline : ∀ x ∈ wtSub M.act μ, ∃ c : ℂ, x = c • v := fun x hx => hU4 x (htop U hU1 hU2 trivial) hx
   refine ⟨⟨nontrivial_of_ne v 0 hv0, fun N hN => _root_.GlobalTheory.FockIrr.irreducible_of_weight_line p q M H E hE hadj _ eT μ v ⊤ hv htop
     (fun x _ hx => hline x hx) N le_top fun a b _ => hN _⟩, hline, ?_⟩
-  obtain ⟨W, hW1, hW2, hW3, -, -⟩ := _root_.GlobalTheory.ExtremalGen.exists_generated p q M.V M.act M.lie _ equiv_sameBlock r hr μ v hv
+  obtain ⟨W, hW1, hW2, hW3, -, -⟩ := _root_.GlobalTheory.ExtremalGen.exists_generated p q M.V M.act M.lie _ GlobalTheory.LowestType.same_equiv r hr μ v hv
     fun a b _ h => hup a b h
   have hmin : ∀ W' : Submodule ℂ M.V, v ∈ W' → KStable M.act W' → W ≤ W' := fun W' h1 h2 =>
-    hW3 W' h1 fun a b hab _ => h2 _ (isKC_Eab (equiv_sameBlock.symm hab))
+    hW3 W' h1 fun a b hab _ => h2 _ (isKC_Eab (GlobalTheory.LowestType.same_equiv.symm hab))
   obtain ⟨W₀, hf, h0, hs⟩ := M.kfin v
   refine ⟨W, hW1, Submodule.finiteDimensional_of_le (hmin W₀ h0 hs), kStable_of_units hW2, fun N hN hN' => ?_, hmin⟩
-  exact _root_.GlobalTheory.FockIrr.irreducible_of_weight_line p q M H E hE hadj _ equiv_sameBlock μ v W hv
+  exact _root_.GlobalTheory.FockIrr.irreducible_of_weight_line p q M H E hE hadj _ GlobalTheory.LowestType.same_equiv μ v W hv
     (fun U' h1 h2 => hmin U' h1 (kStable_of_units h2)) (fun x _ hx => hline x hx) N hN
     fun a b hab => hN' _ (isKC_Eab hab)
 

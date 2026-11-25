@@ -153,12 +153,6 @@ lemma eichE_apply (hxx : H.h x x = 0) (hxv : H.h x v = 0) (hc : 2 * algebraMap F
 
 end Eich
 
-lemma flag_iff {R W : Type} [CommRing R] [AddCommGroup W] [Module R W] (A : ℕ → Submodule R W)
-    (h0 : A 0 = ⊥) (hm : ∀ j, A j ≤ A (j + 1)) (r : ℕ) (g : W ≃ₗ[R] W)
-    (hg : ∀ j, j < r → ∀ v ∈ A (j + 1), g v - v ∈ A j) :
-    ∀ j, j ≤ r → ∀ v, g v ∈ A j ↔ v ∈ A j := by
-  apply GlobalTheory.HL.CoordUnip.flag_iff <;> assumption
-
 section Frame
 variable {H} {r : ℕ} (Fr : FrameD H r)
 
@@ -237,7 +231,7 @@ lemma NU_step {g : V ≃ₗ[E] V} (hg : g ∈ NU H Fr.f) :
   exact this hv
 
 lemma NU_flag {g : V ≃ₗ[E] V} (hg : g ∈ NU H Fr.f) : ∀ j, j ≤ r → ∀ v, g v ∈ Fr.Fj j ↔ v ∈ Fr.Fj j :=
-  flag_iff Fr.Fj (Fj_zero Fr) (fun j => Fj_mono Fr (Nat.le_succ j)) r g (NU_step Fr hg)
+  GlobalTheory.HL.CoordUnip.flag_iff Fr.Fj (Fj_zero Fr) (fun j => Fj_mono Fr (Nat.le_succ j)) r g (NU_step Fr hg)
 
 def NUg : Subgroup (V ≃ₗ[E] V) where
   carrier := NU H Fr.f

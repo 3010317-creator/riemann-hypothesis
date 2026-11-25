@@ -96,7 +96,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sBStab :
   refine ⟨fun s => key _ fun c hc => ⟨StabGal.galB_mem_Pol X l w s (hG s) c hc.1,
     fun γ hγ => StabGal.inv_galB X N l w hN s c hc γ hγ⟩, fun σ hσ => key _ fun c hc => ?_,
     fun p hp hc' => key _ fun c hc => ?_⟩
-  · refine ⟨StabHecke.polAct X l w _ (hA _) c hc.1, fun γ hγ => ?_⟩
+  · refine ⟨GlobalTheory.KZ.PolAct.act_mem_pol X l w _ (hA _) c hc.1, fun γ hγ => ?_⟩
     have hg : (σ : Matrix (Fin 2) (Fin 2) ℤ) * (γ : Matrix (Fin 2) (Fin 2) ℤ) =
         ((σ * γ * σ⁻¹ : SL(2, ℤ)) : Matrix (Fin 2) (Fin 2) ℤ) * (σ : Matrix (Fin 2) (Fin 2) ℤ) := by
       rw [← Matrix.SpecialLinearGroup.coe_mul, ← Matrix.SpecialLinearGroup.coe_mul, inv_mul_cancel_right]
@@ -106,7 +106,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sBStab :
     have hpl : IsCoprime (p : ℤ) (l : ℤ) := Nat.isCoprime_iff_coprime.mpr (Nat.Coprime.coprime_mul_right_right hc')
     refine ⟨?_, fun γ hγ => ?_⟩
     · rw [StabHecke.heckeT_eq]
-      exact StabHecke.Pol_sum X l w _ _ fun o _ => StabHecke.polAct X l w _ (hA _) c hc.1
+      exact StabHecke.Pol_sum X l w _ _ fun o _ => GlobalTheory.KZ.PolAct.act_mem_pol X l w _ (hA _) c hc.1
     · rw [StabHecke.heckeT_eq]
       exact StabHecke.sum_act_inv X l N (StabHecke.repT p (sgD N l p))
         (fun o => by rw [StabHecke.det_repT]; exact_mod_cast hp.pos) γ
