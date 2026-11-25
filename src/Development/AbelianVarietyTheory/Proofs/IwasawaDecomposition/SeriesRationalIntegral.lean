@@ -965,7 +965,7 @@ section -- clump:auto
 noncomputable section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.FWT NumberField
-open GlobalTheory.IndefiniteRowSideFullHecke.RationalFormValues (IsCoefExt RationalValues RationalValuesAt ValuesIn)
+open GlobalTheory.IndefiniteRowSideFullHecke.RationalFormValues (IsCoefExt ValuesIn)
 open GlobalTheory.Proof.PlaceExtensionValues
 
 namespace GlobalTheory.RationalValuesObj
