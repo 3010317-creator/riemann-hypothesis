@@ -29,11 +29,8 @@ variable {k r : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 lemma tags_map (φ : Bool × Mat k r → Bool × Mat k r) :
     ∀ l : List (Bool × Mat k r), (∀ y ∈ l, (φ y).1 = y.1) → (l.map φ).map Prod.fst = l.map Prod.fst := by
   intro l hl
-  induction l with
-  | nil => rfl
-  | cons y l ih =>
-    simp only [List.map_cons, List.cons.injEq]
-    exact ⟨hl y (List.mem_cons_self ..), ih fun z hz => hl z (List.mem_cons_of_mem _ hz)⟩
+  rw [List.map_map]
+  exact List.map_congr_left hl
 
 lemma tele {F : Mat k r → E} {A c K ε : ℝ} {m : ℕ} (h : CCle A m F c) (hc : 0 ≤ c) (hK : 1 ≤ K)
     (φ ψ : Bool × Mat k r → Bool × Mat k r) :
@@ -212,13 +209,8 @@ lemma adM_cont (D : RealPlaceData k r Wp Wq) (x : Bool × Mat k r) :
     exact ((hinvOn _ hcL fun p hp => JFxDs2.sL_mem hp).mul continuousOn_const).mul hcL.continuousOn
 
 lemma cont_sum {α : Type*} (S : Set (SS k r)) (f : α → SS k r → ℝ) :
-    ∀ l : List α, (∀ x ∈ l, ContinuousOn (f x) S) → ContinuousOn (fun p => (l.map (fun x => f x p)).sum) S := by
-  intro l hl
-  induction l with
-  | nil => simpa using continuousOn_const
-  | cons y l ih =>
-    simp only [List.map_cons, List.sum_cons]
-    exact (hl y (List.mem_cons_self ..)).add (ih fun z hz => hl z (List.mem_cons_of_mem _ hz))
+    ∀ l : List α, (∀ x ∈ l, ContinuousOn (f x) S) → ContinuousOn (fun p => (l.map (fun x => f x p)).sum) S :=
+  fun l hl => continuousOn_list_sum l hl
 
 lemma le_sum_map {α : Type*} (f : α → ℝ) (hf : ∀ x, 0 ≤ f x) (l : List α) {x : α} (hx : x ∈ l) :
     f x ≤ (l.map f).sum := by
