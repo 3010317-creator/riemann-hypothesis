@@ -265,45 +265,53 @@ theorem mem_of_sum_smul {m n : ℕ} {ι : Type} {P : Finset ι} {a : ι → AE D
 
 
 
-theorem exists_gauss_datum : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T} (hL : L.Is μ₀) (W : G.Weil) (B : Frames G) (ρ : RealMatch W) (t : T) (i j : Fin D.R.m) (M : Vol G) (hst : SquareStanding G t)
-    (e : Num G i j) (Bs : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.Geo G i j) (X : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars D.host.F D.host.E)
-    (om : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V Γ.W) (om' : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V' Γ.W) (h : IsTripleOf W M t i j e Bs Γ X), IsTriple Bs Γ X om om' → IsTied t i j e Bs Γ X → ∀ n Φ τ τ',
-    (∀ w ∈ locPl G t, depthAt G w ≤ n w ∧ IsNatDatum (unifAt w) (n w) (Φ w)) → HasFlip B t ρ i j n Φ τ τ' →
-    ∀ φ, IsFinPart Γ.M X.T φ →
-    (∀ w ∈ locPl G t, IsLocFn W B t e Γ w (w.under (𝓞 D.host.F)) (flipAt W t i j w (n w) (Φ w)) (φ (w.under (𝓞 D.host.F)))) →
-    ∃ f₀, f₀ ≠ 0 ∧ Γ.M.IsGauss Bs.ψ Bs.emb f₀ ∧ IsDatumA W e Γ τ (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f₀ φ) := by
-  intro D T L sc G μ₀ hL W B ρ t i j M _ e Bs Γ X om om' h hT hti n Φ τ τ' _ hfl φ hφ hloc
+theorem datum_placesA_core {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T}
+    (hL : L.Is μ₀) (W : G.Weil) (B : Frames G) (ρ : RealMatch W) (t : T) (i j : Fin D.R.m) (M : Vol G)
+    (e : Num G i j) (Bs : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E)
+    (Γ : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.Geo G i j)
+    (X : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars D.host.F D.host.E)
+    (om : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V Γ.W)
+    (om' : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V' Γ.W)
+    (h : IsTripleOf W M t i j e Bs Γ X) (hT : IsTriple Bs Γ X om om') (hti : IsTied t i j e Bs Γ X)
+    (f₀ : SInf D.host.F (Ix G i j))
+    (hf : thetaPt Γ W.ψ (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f₀ Γ.M.vac) =
+      box e (ρ.vX i (j + 1)) (ρ.vT (i + 1) j))
+    (ι : ∀ w : Pl D.host.E, ((Ix G i j → Fv D.host.F (w.under (𝓞 D.host.F))) → ℂ) →ₗ[ℂ]
+      (Matrix (Fin ((locGrid G t w).rank (i + 1, j + 1))) ((locGrid G t w).Cols i j) (Kw w) → ℂ))
+    (hι : ∀ w ∈ locPl G t, IsLagrModel Γ.M W.ψ (w.under (𝓞 D.host.F))
+      (mixHalf e (atPl w 1)) (mixHalf e (cA D (atPl w 1))) (mixCo B t e w) (ι w)) :
+    (∏ w ∈ locPl G t, ι w (Γ.M.vac _) 0) ≠ 0 ∧
+    ∀ (ε : AE D), IsIdemSum ε (locPl G t) →
+      ∀ (Ψ : ∀ w : Pl D.host.E, Matrix (Fin ((locGrid G t w).rank (i + 1, j + 1))) ((locGrid G t w).Cols i j) (Kw w) → ℂ)
+        (τ : TotT G (routeBig t i j)),
+        HasLocal B t ε (X := (i, j + 1)) (M := (i + 1, j + 1)) (Y := (i + 1, j)) ⟨i.2.le, j.2⟩ ⟨i.2, j.2⟩ ⟨i.2, j.2.le⟩
+          (IsLocVec W (.chi i (j + 1)) ε (ρ.vX i (j + 1))) (IsLocVec W (.mu t (i + 1) j) ε (ρ.vT (i + 1) j)) τ Ψ →
+        ∀ φ, IsFinPart Γ.M X.T φ → (∀ w ∈ locPl G t, ι w (φ (w.under (𝓞 D.host.F))) = Ψ w) →
+          IsDatumA W e Γ τ (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure ((∏ w ∈ locPl G t, ι w (Γ.M.vac _) 0) • f₀) φ) := by
   classical
-  obtain ⟨ε, hε, -, φ₁, φ₂, hmem, hsum⟩ := hfl
   have h₁ := ρ.vX_is i (j + 1) i.2 j.2
   have h₂ := ρ.vT_is t (i + 1) j i.2 j.2
   have hstd : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsStd W.ψ := h.ψ ▸ hT.base.std
   have hG : Γ.M.IsGood W.ψ := h.ψ ▸ hT.geo.hM
   obtain ⟨hadd, -, -⟩ := GlobalTheory.BigDat.ThBox.thetaPt_box W M t i j e Bs Γ X om om' h hT
-  obtain ⟨f, hf⟩ := exists_vac hL h hT hti h₁ h₂
+  obtain ⟨hid, hsumid⟩ := GlobalTheory.IdemAtPl.main hL (G := G) t
+  have hh := fun w hw => GlobalTheory.BigDat.halves_split hL W i j e Γ h.JW h.JWW _ _ (hid w hw).1 (hid w hw).2
+  have hco := GlobalTheory.BigDat.mixCo_spec B t i j e
+  have hv := fun w hw => lagr_vac (hι w hw) (hG.vac _).1 (hG.vac _).2.1 (latPt e (w.under (𝓞 D.host.F)) : Set _)
+    (fun γ hγ hγ' => GlobalTheory.BigDat.VacFix.vac_fixed W M t i j e Bs Γ X om om' h hT _ (GlobalTheory.BigDat.latPt_le_latAtV t i j e Bs Γ X hti _) γ (.inr ⟨hγ, hγ'.elim
+      (fun h => ⟨_, (hid w hw).1, h⟩) fun h => ⟨_, splitIdem_conj (hid w hw).1, h⟩⟩)) (hco w).2.1 (hh w hw).2.2.2.1
+  set c := ∏ w ∈ locPl G t, ι w (Γ.M.vac _) 0 with hc
+  have hc0 : c ≠ 0 := Finset.prod_ne_zero_iff.2 fun w hw => (hv w hw).1
+  refine ⟨hc0, fun ε hε Ψ τ hloc φ hφ hΨ => ?_⟩
+  obtain ⟨φ₁, φ₂, hmem, hsum⟩ := hloc
   have sW := (node_isV G hL (X := .grid (i + 1) (j + 1)) ⟨i.2, j.2⟩).sd
   obtain ⟨T₁, hT₁⟩ := (GlobalTheory.PlaceModelSum.placeModelExistsSum D W.ψ W.ψ_std _ _ _ _ (isSelfDualC_neg sW)
     (node_isV G hL (X := .grid i (j + 1)) ⟨i.2.le, j.2⟩).sd _ ε hε _ h₁.2.theta h₁.2.lat).1
   obtain ⟨T₂, hT₂⟩ := (GlobalTheory.PlaceModelSum.placeModelExistsSum D W.ψ W.ψ_std _ _ _ _
     (node_isV G hL (X := .grid (i + 1) j) ⟨i.2, j.2.le⟩).sd sW _ ε hε _ h₂.2.theta h₂.2.lat).1
   obtain ⟨g0, g1, g2⟩ := GlobalTheory.BigDat.boxGraph_graph_heis hL W i j e Γ h.JW h.JWW ε _ hε _ _ T₁ T₂ hT₁ hT₂
-  obtain ⟨hid, hsumid⟩ := GlobalTheory.IdemAtPl.main hL (G := G) t
   obtain ⟨hεs, hεw⟩ := hsumid ε hε
-  have hh := fun w hw => GlobalTheory.BigDat.halves_split hL W i j e Γ h.JW h.JWW _ _ (hid w hw).1 (hid w hw).2
-  have hco := GlobalTheory.BigDat.mixCo_spec B t i j e
-  have hI : ∀ w, ∃ ι : ((Ix G i j → Fv D.host.F (w.under (𝓞 D.host.F))) → ℂ) →ₗ[ℂ] (_ → ℂ), w ∈ locPl G t →
-      IsLagrModel Γ.M W.ψ _ (mixHalf e (atPl w 1)) (mixHalf e (cA D (atPl w 1))) (mixCo B t e w) ι ∧
-        ι (φ _) = flipAt W t i j w (n w) (Φ w) := fun w => by
-    by_cases hw : w ∈ locPl G t
-    · exact (hloc w hw).2.imp fun _ h _ => h
-    · exact ⟨0, fun h => absurd h hw⟩
-  choose I hI using hI
-  have hv := fun w hw => lagr_vac (hI w hw).1 (hG.vac _).1 (hG.vac _).2.1 (latPt e (w.under (𝓞 D.host.F)) : Set _)
-    (fun γ hγ hγ' => GlobalTheory.BigDat.VacFix.vac_fixed W M t i j e Bs Γ X om om' h hT _ (GlobalTheory.BigDat.latPt_le_latAtV t i j e Bs Γ X hti _) γ (.inr ⟨hγ, hγ'.elim
-      (fun h => ⟨_, (hid w hw).1, h⟩) fun h => ⟨_, splitIdem_conj (hid w hw).1, h⟩⟩)) (hco w).2.1 (hh w hw).2.2.2.1
-  set c := ∏ w ∈ locPl G t, I w (Γ.M.vac _) 0 with hc
-  have hc0 : c ≠ 0 := Finset.prod_ne_zero_iff.2 fun w hw => (hv w hw).1
-  have hb : thetaPt Γ W.ψ (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (c • f) Γ.M.vac) = c • box e (ρ.vX i (j + 1)) (ρ.vT (i + 1) j) := by
+  have hb : thetaPt Γ W.ψ (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (c • f₀) Γ.M.vac) = c • box e (ρ.vX i (j + 1)) (ρ.vT (i + 1) j) := by
     rw [← hf]
     exact funext fun u => (congrArg (thetaPt Γ W.ψ · u) (funext fun _ => mul_assoc _ _ _)).trans (thetaPt_smul _ _ _ _ u)
   let R : Submodule ℂ ((Pt G i j → ℂ) × ((Ix G i j → AF D.host.F) → ℂ)) :=
@@ -321,7 +329,7 @@ theorem exists_gauss_datum : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Const
   have hA' : ∀ w ∈ locPl G t, ∀ x ∈ mixHalf e (cA D (atPl w 1)), x ∈ mixHalf e (cA D ε) := fun w hw x hx =>
     have : cA D ε * cA D (atPl w 1) = cA D (atPl w 1) := by rw [← RingHom.map_mul, hεw w hw]
     ⟨isHalf_mono this hx.1, isHalf_mono this hx.2⟩
-  have hbase : (Set.indicator (halfPt e ε : Set _) fun u => ∏ w ∈ locPl G t, I w (Γ.M.vac _) (mixCo B t e w u)) =
+  have hbase : (Set.indicator (halfPt e ε : Set _) fun u => ∏ w ∈ locPl G t, ι w (Γ.M.vac _) (mixCo B t e w u)) =
       c • box e (halfInd ε (latV G i j)) (halfInd ε (latW G i j)) := by
     funext u
     rw [Pi.smul_apply, smul_eq_mul, box, halfInd, halfInd]
@@ -345,8 +353,8 @@ theorem exists_gauss_datum : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Const
       · rw [ite_eq_right fun h => hl h.2, zero_mul, mul_zero]
       · rw [ite_eq_right fun h : _ ∧ IsHalf ε (mapW e u) => hl h.2, mul_zero, mul_zero]
   have hR := GlobalTheory.InductLagr.rel_of_vac Γ.M W.ψ hstd hG (locPl G t) (fun w => w.under (𝓞 D.host.F)) (Good.under_injOn hL G t) _
-    (fun w => mixHalf e (atPl w 1)) (fun w => mixHalf e (cA D (atPl w 1))) (mixCo B t e) I (halfPt e ε) R (c • f)
-    (fun w hw => (hI w hw).1) (fun w hw u hu => ⟨(hh w hw).1 u hu, mem_halfPt.2 (hA w hw u hu)⟩) (fun w hw => (hh w hw).2.1)
+    (fun w => mixHalf e (atPl w 1)) (fun w => mixHalf e (cA D (atPl w 1))) (mixCo B t e) ι (halfPt e ε) R (c • f₀)
+    (fun w hw => hι w hw) (fun w hw u hu => ⟨(hh w hw).1 u hu, mem_halfPt.2 (hA w hw u hu)⟩) (fun w hw => (hh w hw).2.1)
     (fun w hw => (hh w hw).2.2.1) (fun w _ x _ u => (hco w).1 u x)
     (fun w _ w' _ hne x hx u => by rw [(hco w').1, (hco w').2.2.2 w hne.symm x hx, add_zero])
     (fun w hw u => ⟨_, ((hh w hw).2.2.2.2 u).1, (hco w).2.2.1 u, ((hh w hw).2.2.2.2 u).2.1⟩)
@@ -367,31 +375,58 @@ theorem exists_gauss_datum : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Const
   have hτ : (∑ d ∈ τ.support, τ d • (box e (φ₁ d) (φ₂ d), box e d.1.2 d.2)) ∈ boxGraph e ε T₁ T₂ :=
     sum_mem fun d hd => Submodule.smul_mem _ _ (Submodule.subset_span ⟨_, _, (hmem d hd).1.1, (hmem d hd).2.1, by
       rw [← (hmem d hd).1.2.2 T₁ hT₁, ← (hmem d hd).2.2.2 T₂ hT₂]⟩)
-  have hfst : (Set.indicator (halfPt e ε : Set _) fun u => ∏ w ∈ locPl G t, I w (φ _) (mixCo B t e w u)) =
+  have hfst : (Set.indicator (halfPt e ε : Set _) fun u => ∏ w ∈ locPl G t, ι w (φ _) (mixCo B t e w u)) =
       (∑ d ∈ τ.support, τ d • (box e (φ₁ d) (φ₂ d), box e d.1.2 d.2)).1 := by
     funext u
     rw [Prod.fst_sum, Finset.sum_apply]
     by_cases hu : u ∈ mixHalf e ε
-    · rw [Set.indicator_of_mem (mem_halfPt.2 hu), Finset.prod_congr rfl fun w hw => congrFun (hI w hw).2 _]
+    · rw [Set.indicator_of_mem (mem_halfPt.2 hu), Finset.prod_congr rfl fun w hw => congrFun (hΨ w hw) _]
       exact (hsum _ _ hu.1 hu.2).symm
     · rw [Set.indicator_of_notMem (mt mem_halfPt.1 hu)]
       refine (Finset.sum_eq_zero fun d hd => mul_eq_zero_of_right _ ?_).symm
       by_contra hne
       exact hu ⟨(hmem d hd).1.1.1 _ (left_ne_zero_of_mul hne), (hmem d hd).2.1.1 _ (right_ne_zero_of_mul hne)⟩
-  refine ⟨c • f, fun h0 => ?_, isGauss h hT h₁ h₂ hb, hR.1, fun u => ?_⟩
-  · obtain ⟨x, hx⟩ := Function.ne_iff.1 (vac_ne_zero h₁)
-    obtain ⟨y, hy⟩ := Function.ne_iff.1 (vac_ne_zero h₂)
-    have := congrFun hb (ofMaps e (x, y))
-    rw [h0, show GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (0 : SInf D.host.F (Ix G i j)) Γ.M.vac = (0 : ℂ) • GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure 0 Γ.M.vac from
-      funext fun _ => (zero_mul _).trans (zero_mul _).symm, thetaPt_smul, zero_mul, Pi.smul_apply, box, mapV_ofMaps,
-      mapW_ofMaps] at this
-    exact mul_ne_zero hc0 (mul_ne_zero hx hy) this.symm
-  · have := g0 _ (by
-      have := sub_mem hR.2 hτ
-      rwa [← Prod.mk.eta (p := Finset.sum _ _), Prod.mk_sub_mk, ← hfst, sub_self] at this)
-    have := congrFun (sub_eq_zero.1 this) u
-    rw [Prod.snd_sum, Finset.sum_apply] at this
-    exact this
+  refine ⟨hR.1, fun u => ?_⟩
+  have := g0 _ (by
+    have := sub_mem hR.2 hτ
+    rwa [← Prod.mk.eta (p := Finset.sum _ _), Prod.mk_sub_mk, ← hfst, sub_self] at this)
+  have := congrFun (sub_eq_zero.1 this) u
+  rw [Prod.snd_sum, Finset.sum_apply] at this
+  exact this
+
+theorem exists_gauss_datum : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T} (hL : L.Is μ₀) (W : G.Weil) (B : Frames G) (ρ : RealMatch W) (t : T) (i j : Fin D.R.m) (M : Vol G) (hst : SquareStanding G t)
+    (e : Num G i j) (Bs : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.Geo G i j) (X : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars D.host.F D.host.E)
+    (om : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V Γ.W) (om' : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V' Γ.W) (h : IsTripleOf W M t i j e Bs Γ X), IsTriple Bs Γ X om om' → IsTied t i j e Bs Γ X → ∀ n Φ τ τ',
+    (∀ w ∈ locPl G t, depthAt G w ≤ n w ∧ IsNatDatum (unifAt w) (n w) (Φ w)) → HasFlip B t ρ i j n Φ τ τ' →
+    ∀ φ, IsFinPart Γ.M X.T φ →
+    (∀ w ∈ locPl G t, IsLocFn W B t e Γ w (w.under (𝓞 D.host.F)) (flipAt W t i j w (n w) (Φ w)) (φ (w.under (𝓞 D.host.F)))) →
+    ∃ f₀, f₀ ≠ 0 ∧ Γ.M.IsGauss Bs.ψ Bs.emb f₀ ∧ IsDatumA W e Γ τ (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f₀ φ) := by
+  intro D T L sc G μ₀ hL W B ρ t i j M _ e Bs Γ X om om' h hT hti n Φ τ τ' _ hfl φ hφ hloc
+  classical
+  obtain ⟨ε, hε, -, hlocA⟩ := hfl
+  have h₁ := ρ.vX_is i (j + 1) i.2 j.2
+  have h₂ := ρ.vT_is t (i + 1) j i.2 j.2
+  obtain ⟨f, hf⟩ := exists_vac hL h hT hti h₁ h₂
+  have hI : ∀ w, ∃ ι : ((Ix G i j → Fv D.host.F (w.under (𝓞 D.host.F))) → ℂ) →ₗ[ℂ] (_ → ℂ), w ∈ locPl G t →
+      IsLagrModel Γ.M W.ψ _ (mixHalf e (atPl w 1)) (mixHalf e (cA D (atPl w 1))) (mixCo B t e w) ι ∧
+        ι (φ _) = flipAt W t i j w (n w) (Φ w) := fun w => by
+    by_cases hw : w ∈ locPl G t
+    · exact (hloc w hw).2.imp fun _ h _ => h
+    · exact ⟨0, fun h => absurd h hw⟩
+  choose I hI using hI
+  obtain ⟨hc0, hdat⟩ := datum_placesA_core hL W B ρ t i j M e Bs Γ X om om' h hT hti f hf I fun w hw => (hI w hw).1
+  set c := ∏ w ∈ locPl G t, I w (Γ.M.vac _) 0
+  have hb : thetaPt Γ W.ψ (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (c • f) Γ.M.vac) = c • box e (ρ.vX i (j + 1)) (ρ.vT (i + 1) j) := by
+    rw [← hf]
+    exact funext fun u => (congrArg (thetaPt Γ W.ψ · u) (funext fun _ => mul_assoc _ _ _)).trans (thetaPt_smul _ _ _ _ u)
+  refine ⟨c • f, fun h0 => ?_, isGauss h hT h₁ h₂ hb, hdat ε hε _ τ hlocA φ hφ fun w hw => (hI w hw).2⟩
+  obtain ⟨x, hx⟩ := Function.ne_iff.1 (vac_ne_zero h₁)
+  obtain ⟨y, hy⟩ := Function.ne_iff.1 (vac_ne_zero h₂)
+  have := congrFun hb (ofMaps e (x, y))
+  rw [h0, show GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (0 : SInf D.host.F (Ix G i j)) Γ.M.vac = (0 : ℂ) • GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure 0 Γ.M.vac from
+    funext fun _ => (zero_mul _).trans (zero_mul _).symm, thetaPt_smul, zero_mul, Pi.smul_apply, box, mapV_ofMaps,
+    mapW_ofMaps] at this
+  exact mul_ne_zero hc0 (mul_ne_zero hx hy) this.symm
 
 end GlobalTheory.BigDat
 
