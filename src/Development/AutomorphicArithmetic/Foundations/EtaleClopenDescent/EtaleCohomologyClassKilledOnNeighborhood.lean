@@ -392,7 +392,7 @@ private def fam (S : Sys q i p ι U m u) : Fam S.J where
   X := towY S
   Z := towW S
   pr j := prU p ι (S.V j)
-  prt f := (pullback.lift_fst _ _ _).symm
+  prt _ := (pullback.lift_fst _ _ _).symm
   prL := prS p ι (S.t ≫ U.hom)
   sq := S.sq
 
