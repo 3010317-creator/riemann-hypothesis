@@ -300,18 +300,64 @@ variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
 private theorem local_mInt_potOf_eq_of_deg {P J : Ideal (MRing ι)} {e : ℕ} (R : AnLogRes P J e) {L L' : Fin e → HermLine ι}
     (hL : ∀ j, IsSmoothHerm (L j)) (hL' : ∀ j, IsSmoothHerm (L' j)) (ha : ∀ j, (L j).a = (L' j).a) :
     mInt R.A (fun j => potOf R (L j)) (fun _ => 1) = mInt R.A (fun j => potOf R (L' j)) (fun _ => 1) := by
-  apply _root_.GlobalTheory.CompanionTheory.Ar.Cmp.mInt_potOf_eq_of_deg <;> assumption
-
+  let B : Fin e → HermLine ι := fun j => PB.combLine ![L j, L' j] ![1, -1]
+  have hB0 : ∀ j, (B j).a = 0 := fun j => by
+    rw [(PB.combLine_div (L j) (L' j)).1, ha j, sub_self]
+  have hBh : ∀ j z, (B j).h z = (L j).h z / (L' j).h z := fun j =>
+    (PB.combLine_div (L j) (L' j)).2
+  have hBs : ∀ j, IsSmoothHerm (B j) := fun j =>
+    Cmp.isSmoothHerm_combLine (A := ![L j, L' j]) (fun a => by
+      fin_cases a
+      · exact hL j
+      · exact hL' j) _
+  let u : Fin e → R.X → ℝ := fun j x => Real.log ((B j).h (R.lift x x))
+  have hu : ∀ j, R.A.Smooth (u j) := fun j => smooth_diag R (hBs j) (hB0 j)
+  have h1 : mInt R.A (fun j => potOf R (L j)) (fun _ => 1) =
+      mInt R.A (fun j => potOf R (L' j) + LocPot.ofFun (u j)) (fun _ => 1) := by
+    refine ReciprocityTheory.ChartRestriction.G.Geo.mInt_congr R.A
+      (locDens_congr_of_eqOn R fun i x y hy => ?_) fun _ => rfl
+    have hz := (R.mem x y hy).1
+    show Real.log ((L i).h (R.lift x y)) =
+      Real.log ((L' i).h (R.lift x y)) + Real.log ((B i).h (R.lift y y))
+    rw [h_eq_of_sameOrbit (hB0 i) (R.compat y x y ⟨R.mem_U y, hy⟩), hBh,
+      Real.log_div ((L i).pos _ hz).ne' ((L' i).pos _ hz).ne']
+    ring
+  rw [h1]
+  exact massIndep R.A _ u (fun j => isPotential_potOf R (hL' j)) hu
 
 private theorem local_mInt_ref_eq {D : ℕ} {σ : Type} {S : AnSys D σ} {P : Ideal (MRing ι)} (Re : Realis S P) (w : Fin D → σ) :
     mInt Re.R.A (fun j => potOf Re.R (Re.ref (w j))) (fun _ => 1) = Re.deg * S.degNum w := by
-  apply _root_.GlobalTheory.CompanionTheory.Ar.Cmp.mInt_ref_eq <;> assumption
+  show _ = (Re.deg : ℝ) * mInt S.A (fun j => S.th (w j)) (fun _ => 1)
+  rw [← degreeFormula S.A Re.R.A Re.π Re.holo Re.deg Re.br Re.degree _ (fun j => (S.sing (w j)).1) _
+    continuous_const]
+  exact (mInt_congr_samePot D Re.R.X Re.R.A Set.univ _ _ _ _ (fun j => by simp)
+    (fun j => Re.ref_pot (w j))
+    (fun j x _ => Cmp.isC2At_of_isPotential _
+      (isPotentialPullback S.A Re.R.A Re.π Re.holo _ (S.sing (w j)).1) x)
+    (fun _ _ => rfl)).1
 
 private theorem local_mInt_combLine_eq {D : ℕ} {σ : Type} [Fintype σ] {S : AnSys D σ} {P : Ideal (MRing ι)} (Re : Realis S P)
     (n : Fin D → σ → ℤ) :
     mInt Re.R.A (fun j => potOf Re.R (GlobalTheory.CompanionTheory.Ar.PB.combLine Re.ref (n j))) (fun _ => 1) =
       ∑ w : Fin D → σ, (∏ i, (n i (w i) : ℝ)) * (Re.deg * S.degNum w) := by
-  apply _root_.GlobalTheory.CompanionTheory.Ar.Cmp.mInt_combLine_eq <;> assumption
+  have hQ : ∀ a, IsPotential Re.R.A (potOf Re.R (Re.ref a)) := fun a =>
+    isPotential_potOf Re.R (Re.ref_smooth a)
+  have h2 : mInt Re.R.A (fun j => potOf Re.R (PB.combLine Re.ref (n j))) (fun _ => 1) =
+      mInt Re.R.A (fun j => sumPot (fun a => (n j a : ℝ)) fun a => potOf Re.R (Re.ref a))
+        (fun _ => 1) := by
+    refine ReciprocityTheory.ChartRestriction.G.Geo.mInt_congr Re.R.A
+      (locDens_congr_of_eqOn Re.R fun i x y hy => ?_) fun _ => rfl
+    have hz := (Re.R.mem x y hy).1
+    show Real.log (∏ a, (Re.ref a).h (Re.R.lift x y) ^ n i a) =
+      ∑ a, (n i a : ℝ) * Real.log ((Re.ref a).h (Re.R.lift x y))
+    rw [Real.log_prod fun a _ => zpow_ne_zero _ ((Re.ref a).pos _ hz).ne']
+    exact Finset.sum_congr rfl fun a _ => Real.log_zpow _ _
+  rw [h2, (mInt_sumPot_expand D Re.R.X Re.R.A σ Set.univ (fun a => potOf Re.R (Re.ref a))
+      (fun j a => (n j a : ℝ)) (fun _ => 1) (fun j => by simp)
+      (fun a x _ => Cmp.isC2At_of_isPotential _ (hQ a) x)
+      fun w => mIntegrableCont Re.R.A _ (fun j => hQ (w j)) _ continuous_const).2]
+  refine Finset.sum_congr rfl fun w _ => ?_
+  rw [local_mInt_ref_eq Re w]
 
 
 end RealGeo
