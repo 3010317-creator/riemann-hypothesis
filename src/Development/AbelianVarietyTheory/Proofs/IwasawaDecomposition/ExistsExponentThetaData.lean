@@ -100,48 +100,27 @@ def nthOfEmpty [IsEmpty tw.Tw] (Y : NExp R H whatâ‚‚ LL0 nd tw) : NTh R H whatâ‚
   iC := fun i => isEmptyElim i
   iC_int := fun i => isEmptyElim i
   aL := fun i => isEmptyElim i
-  aL_g := fun i => isEmptyElim i
-  aL_off := fun i => isEmptyElim i
   Pt := fun i => isEmptyElim i
   ev := fun i => isEmptyElim i
-  ev_smul := fun i => isEmptyElim i
   Lt := fun i => isEmptyElim i
   acgLt := fun i => isEmptyElim i
-  modLt := fun i => isEmptyElim i
-  freeLt := fun i => isEmptyElim i
-  finLt := fun i => isEmptyElim i
   Let := fun i => isEmptyElim i
   finLet := fun i => isEmptyElim i
   Harm := fun i => isEmptyElim i
   Ctr := fun i => isEmptyElim i
   ctrC := fun i => isEmptyElim i
-  Harm_def := fun i => isEmptyElim i
   thV := fun i => isEmptyElim i
-  thV_add := fun i => isEmptyElim i
-  thV_smul := fun i => isEmptyElim i
-  thV_addP := fun i => isEmptyElim i
-  thV_smulP := fun i => isEmptyElim i
-  datPhi := fun i => isEmptyElim i
-  datP := fun i => isEmptyElim i
   recDet := fun i => isEmptyElim i
   Kq := fun i => isEmptyElim i
   grpKq := fun i => isEmptyElim i
   actK := fun i => isEmptyElim i
-  actK_one := fun i => isEmptyElim i
-  actK_mul := fun i => isEmptyElim i
   recDetq := fun i => isEmptyElim i
-  recDetq_mem := fun i => isEmptyElim i
-  recDet_act := fun i => isEmptyElim i
-  recDetq_act := fun i => isEmptyElim i
   hkIdx := fun i => isEmptyElim i
   finHk := fun i => isEmptyElim i
   hkMove := fun i => isEmptyElim i
   hkU := fun i => isEmptyElim i
-  hk_ev := fun i => isEmptyElim i
   MaximalUnramifiedExtension := fun i => isEmptyElim i
   FmUr := fun i => isEmptyElim i
-  FmUr_smul := fun i => isEmptyElim i
-  FmUr_span := fun i => isEmptyElim i
 
 end
 

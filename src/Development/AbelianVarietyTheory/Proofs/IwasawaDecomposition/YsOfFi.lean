@@ -265,7 +265,7 @@ theorem hU : ∀ i j b M (d : p.Dat i j b), 1 ≤ j → j ≤ D.R.m →
   exact (p.tie i ⟨n, h2⟩ b).thU_empty M d
 
 def nth : NTh D.R D.host D.what₂ D.LL0 D.nd D.ntw p.ex :=
-  { D.nth with datPhi := fun _ _ _ _ => 0, datP := fun _ _ _ _ => 0 }
+  { D.nth with }
 
 end PreTie
 
