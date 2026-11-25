@@ -22,11 +22,8 @@ variable {M : Type*} [NormedAddCommGroup M] [InnerProductSpace ℂ M] {ε : Fin 
   {E : Fin n → Fin n → Module.End ℂ M} {V : Submodule ℂ M}
 
 theorem bcas_sum_apply {k : ℕ} {ι : Type*} (s : Finset ι) (G : ι → Big n k M)
-    (κ : Fin k → Fin n × Fin n) : (∑ i ∈ s, G i) κ = ∑ i ∈ s, G i κ := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, PiLp.add_apply, ih]
+    (κ : Fin k → Fin n × Fin n) : (∑ i ∈ s, G i) κ = ∑ i ∈ s, G i κ :=
+  (congrFun (WithLp.ofLp_sum _ _ s G) κ).trans (Finset.sum_apply κ s _)
 
 theorem casimirK_bAct (k : ℕ) :
     casimirK ε (bAct E k) = factorCasimir ε k + casimirK ε (mAct E k) + 2 • ∑ i, crossOp ε E k i := by
