@@ -86,12 +86,8 @@ private theorem tunedSheaf_eq_iSup_fin (k : Type u) [Field k] [IsNoetherianRing 
     exact le_iSup_of_le ⟨extendExponentsByZero m s t, ht⟩ le_rfl
 
 theorem idealSheafData_pow_le_self {X : Scheme.{u}} (I : X.IdealSheafData) {c : ℕ}
-    (hc : 1 ≤ c) : I ^ c ≤ I := by
-  have h : ∀ U : X.affineOpens, (I ^ c).ideal U ≤ I.ideal U := by
-    intro U
-    rw [Scheme.IdealSheafData.ideal_pow]
-    exact Ideal.pow_le_self (by omega)
-  exact h
+    (hc : 1 ≤ c) : I ^ c ≤ I :=
+  (pow_le_pow_right_of_le_one' (a := I) le_top hc).trans (pow_one I).le
 
 theorem tunedSheaf_one_one (k : Type u) [Field k] [IsNoetherianRing k] {X : Scheme.{u}}
     (p : X ⟶ Spec (CommRingCat.of k)) [LocallyOfFiniteType p] (I : X.IdealSheafData) :
