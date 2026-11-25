@@ -25,22 +25,8 @@ namespace GJStandardL
 open GodementJacquet GLnLocal
 
 theorem hasProd_of_hasProd_compl {ι : Type*} {f : ι → ℂ} {b : ℂ} (S : Finset ι)
-    (h : HasProd (fun i : {i // i ∉ S} ↦ f i) b) : HasProd f ((∏ i ∈ S, f i) * b) := by
-  have h1 : HasProd ((S : Set ι).mulIndicator f) (∏ i ∈ S, f i) := by
-    have : HasProd ((S : Set ι).mulIndicator f) (∏ i ∈ S, (S : Set ι).mulIndicator f i) :=
-      hasProd_prod_of_ne_finset_one fun i hi ↦ Set.mulIndicator_of_notMem (by simpa using hi) _
-    rwa [Finset.prod_congr rfl fun i hi ↦ Set.mulIndicator_of_mem (by simpa using hi) f] at this
-  have h2 : HasProd (({i | i ∉ S} : Set ι).mulIndicator f) b :=
-    (hasProd_subtype_iff_mulIndicator (s := {i | i ∉ S})).1 h
-  have h3 := h1.mul h2
-  have heq : (fun i ↦ (S : Set ι).mulIndicator f i * ({i | i ∉ S} : Set ι).mulIndicator f i) = f := by
-    funext i
-    by_cases hi : i ∈ S
-    · rw [Set.mulIndicator_of_mem (by simpa using hi), Set.mulIndicator_of_notMem (by simpa using hi),
-        mul_one]
-    · rw [Set.mulIndicator_of_notMem (by simpa using hi), Set.mulIndicator_of_mem (by simpa using hi),
-        one_mul]
-  rwa [heq] at h3
+    (h : HasProd (fun i : {i // i ∉ S} ↦ f i) b) : HasProd f ((∏ i ∈ S, f i) * b) :=
+  (S.hasProd f).mul_compl h
 
 variable {K : Type*} [Field K] [NumberField K] {n : ℕ}
 
