@@ -248,22 +248,12 @@ theorem exists_seq_eq_top [IsNoetherianRing S] [Module.Finite (MRingOver S ι) M
 end Module
 
 theorem image_fin_lt {M : Type} {r : ℕ} (f : ℕ → M) (j : Fin r) :
-    (fun l : Fin r => f l) '' {l | l < j} = f '' {l : ℕ | l < j} := by
-  ext x
-  constructor
-  · rintro ⟨l, hl, rfl⟩
-    exact ⟨l, Fin.lt_def.mp hl, rfl⟩
-  · rintro ⟨l, hl, rfl⟩
-    exact ⟨⟨l, lt_trans hl j.2⟩, Fin.lt_def.mpr hl, rfl⟩
+    (fun l : Fin r => f l) '' {l | l < j} = f '' {l : ℕ | l < j} :=
+  (Set.image_image f Fin.val {l | l < j}).symm.trans (congrArg (f '' ·) (Fin.image_val_Iio j))
 
 theorem range_fin {M : Type} {r : ℕ} (f : ℕ → M) :
-    Set.range (fun l : Fin r => f l) = f '' {l : ℕ | l < r} := by
-  ext x
-  constructor
-  · rintro ⟨l, rfl⟩
-    exact ⟨l, l.2, rfl⟩
-  · rintro ⟨l, hl, rfl⟩
-    exact ⟨⟨l, hl⟩, rfl⟩
+    Set.range (fun l : Fin r => f l) = f '' {l : ℕ | l < r} :=
+  (Set.range_comp' f Fin.val).trans (congrArg (f '' ·) Fin.range_val)
 
 end KHPrimeFilt
 
