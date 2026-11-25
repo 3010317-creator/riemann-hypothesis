@@ -103,13 +103,7 @@ theorem det_ne_zero {b : Matrix (Fin n) (Fin n) ℂ} (hb : b.IsHermitian) (r : �
     have := congrArg Complex.im (star_dot_herm hb v)
     simp only [Complex.star_def, Complex.conj_im] at this
     linarith
-  have hs : (star v ⬝ᵥ v).im = 0 := by
-    have : star (star v ⬝ᵥ v) = star v ⬝ᵥ v := by
-      simp only [dotProduct, star_sum, star_mul', star_star, Pi.star_apply]
-      exact Finset.sum_congr rfl fun i _ => mul_comm _ _
-    have := congrArg Complex.im this
-    simp only [Complex.star_def, Complex.conj_im] at this
-    linarith
+  have hs : (star v ⬝ᵥ v).im = 0 := (Complex.nonneg_iff.1 (dotProduct_star_self_nonneg v)).2.symm
   have hr : (star v ⬝ᵥ v).re = 0 := by
     rw [e2]; simp [Complex.mul_re, hq]
   exact hv (dotProduct_star_self_eq_zero.mp (Complex.ext (by simpa using hr) (by simpa using hs)))
