@@ -106,10 +106,7 @@ theorem exists_lift_retract : ∀ (A K : Type) [CommRing A] [IsDomain A] [IsNoet
   have hRr (y : Fin N → A) (z : D.omHT (σ.comp c.toRingHom)) :
       algebraMap A K d * (z : Module.Dual K Li) (Rr (fun l => algebraMap A K (y l))) =
         algebraMap A K (r y z) := by
-    have hy : y = ∑ k, y k • Pi.single k (1 : A) := by
-      ext l
-      simp [Finset.sum_apply, Pi.single_apply]
-    conv_rhs => rw [hy]
+    conv_rhs => rw [pi_eq_sum_univ' y]
     simp only [Rr, Fintype.linearCombination_apply, map_sum, LinearMap.sum_apply,
       map_smul, LinearMap.smul_apply, smul_eq_mul, Finset.mul_sum, map_mul]
     apply Finset.sum_congr rfl

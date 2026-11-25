@@ -286,28 +286,21 @@ theorem exists_aeval_lapOp_eq_zero (φ : Sm E a) (hA : IsAutForm φ) {d : ℕ}
   set Vz := Submodule.span ℂ ((fun z : Module.End ℂ (Sm E a) => z φ) '' Zalg E a) with hVz
   haveI : FiniteDimensional ℂ Vz := hA.zfin
   have hVs : ∀ w ∈ Vz, Ω w ∈ Vz := by
-    intro w hw
-    refine Submodule.span_induction (p := fun w _ => Ω w ∈ Vz) ?_ ?_ ?_ ?_ hw
-    · rintro _ ⟨z, hz, rfl⟩
-      exact Submodule.subset_span ⟨Ω * z, Subalgebra.mul_mem _ hZ hz, rfl⟩
-    · rw [map_zero]; exact Submodule.zero_mem _
-    · intro x y _ _ hx hy; rw [map_add (f := _)]; exact Submodule.add_mem _ hx hy
-    · intro c x _ hx; rw [map_smul]; exact Submodule.smul_mem _ c hx
+    refine (Submodule.span_le (p := Vz.comap Ω)).2 ?_
+    rintro _ ⟨z, hz, rfl⟩
+    exact Submodule.subset_span ⟨Ω * z, Subalgebra.mul_mem _ hZ hz, rfl⟩
   have hφV : φ ∈ Vz := Submodule.subset_span ⟨1, Subalgebra.one_mem _, rfl⟩
   obtain ⟨q, hqm, -, hq⟩ := AutomorphicForm.exists_monic_aeval_apply_eq_zero Ω Vz hVs hφV
   have hqW : ∀ w ∈ W, Polynomial.aeval Ω q w = 0 := by
-    intro w hw
-    refine Submodule.span_induction (p := fun w _ => Polynomial.aeval Ω q w = 0) ?_ ?_ ?_ ?_ hw
-    · rintro _ ⟨k, rfl⟩
-      have hcomm : ∀ m, cptRep E a k (Ω m) = Ω (cptRep E a k m) := fun m =>
-        (congrArg (fun T : Module.End ℂ (Sm E a) => T m)
-          (_root_.GlobalTheory.CompanionTheory.HCRep.omegaOp_comm_rt E a d b ε hε horth (Unitary.toUnits k))).symm
-      have := AutomorphicForm.map_aeval_apply_of_intertwine (cptRep E a k) hcomm q φ
-      rw [hq, map_zero] at this
-      exact this.symm
-    · rw [map_zero]
-    · intro x y _ _ hx hy; rw [map_add (f := _), hx, hy, add_zero]
-    · intro c x _ hx; rw [map_smul, hx, smul_zero]
+    refine (Submodule.span_le (p := LinearMap.ker (Polynomial.aeval Ω q))).2 ?_
+    rintro _ ⟨k, rfl⟩
+    have hcomm : ∀ m, cptRep E a k (Ω m) = Ω (cptRep E a k m) := fun m =>
+      (congrArg (fun T : Module.End ℂ (Sm E a) => T m)
+        (_root_.GlobalTheory.CompanionTheory.HCRep.omegaOp_comm_rt E a d b ε hε horth
+          (Unitary.toUnits k))).symm
+    have := AutomorphicForm.map_aeval_apply_of_intertwine (cptRep E a k) hcomm q φ
+    rw [hq, map_zero] at this
+    exact this.symm
   have hlap : Commute Ω (lapOp (⇑b)) := by
     simp only [lapOp, Commute, SemiconjBy]
     rw [Finset.mul_sum, Finset.sum_mul]

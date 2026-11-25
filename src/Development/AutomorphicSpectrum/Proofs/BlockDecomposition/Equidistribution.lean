@@ -244,20 +244,6 @@ theorem exists_near (v : HeightOneSpectrum (𝓞 F)) (k : ℕ) (c : Fv F v) :
   obtain ⟨a, ha⟩ := hd.mem_nhds hmem
   exact ⟨a, ha⟩
 
-private theorem exists_add_eq_one_lemma {v : HeightOneSpectrum (𝓞 F)} {C : Ideal (𝓞 F)}
-    (hC : ¬ C ≤ v.asIdeal) (M : ℕ) : ∃ e ∈ C, ∃ f ∈ v.asIdeal ^ M, e + f = 1 := by
-  have hcop : C ⊔ v.asIdeal ^ M = ⊤ := by
-    by_contra h
-    obtain ⟨P, hP, hle⟩ := Ideal.exists_le_maximal _ h
-    have h1 : v.asIdeal ^ M ≤ P := le_sup_right.trans hle
-    have h2 : C ≤ P := le_sup_left.trans hle
-    have h3 : v.asIdeal ≤ P := hP.isPrime.le_of_pow_le h1
-    have h4 : v.asIdeal = P := v.isMaximal.eq_of_le hP.ne_top h3
-    exact hC (h4 ▸ h2)
-  have h1 : (1 : 𝓞 F) ∈ C ⊔ v.asIdeal ^ M := hcop ▸ Submodule.mem_top
-  obtain ⟨e, he, f, hf, hef⟩ := Submodule.mem_sup.mp h1
-  exact ⟨e, he, f, hf, hef⟩
-
 theorem exists_approx {I : Ideal (𝓞 F)} (hI : I ≠ ⊥) (v : HeightOneSpectrum (𝓞 F)) (k : ℕ)
     (x0 : F) (c : Fv F v) :
     ∃ x1 : F, (∀ w, w ≠ v → LocMem I w (x1 - x0)) ∧ algebraMap F (Fv F v) x1 - c ∈ ballV v k := by
@@ -270,7 +256,11 @@ theorem exists_approx {I : Ideal (𝓞 F)} (hI : I ≠ ⊥) (v : HeightOneSpectr
   obtain ⟨r, B', hbB, hB'v⟩ := exists_pow_mul v hspan
   obtain ⟨m, B, hIB, hBv⟩ := exists_pow_mul v hI
   have hCv : ¬ B' * B ≤ v.asIdeal := fun hle => (v.isPrime.mul_le.mp hle).elim hB'v hBv
-  obtain ⟨e, he, f, hf, hef⟩ := exists_add_eq_one_lemma hCv (k + r)
+  have hcop : B' * B ⊔ v.asIdeal = ⊤ := by
+    by_contra h
+    exact hCv (le_sup_left.trans_eq (v.isMaximal.eq_of_le h le_sup_right).symm)
+  obtain ⟨e, he, f, hf, hef⟩ := Submodule.mem_sup.mp
+    ((Ideal.eq_top_iff_one _).mp (Ideal.sup_pow_eq_top (n := k + r) hcop))
   obtain ⟨g, hgB', hgv⟩ := SetLike.not_le_iff_exists.mp hB'v
   have hgF : algebraMap (𝓞 F) F g ≠ 0 := by
     intro h0

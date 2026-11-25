@@ -8,6 +8,7 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPar
 public import Mathlib.RepresentationTheory.Irreducible
 public import Mathlib.NumberTheory.LocalField.Basic
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.CosetCount
+import Mathlib.RepresentationTheory.Stabilizer
 import Mathlib.Tactic.Linter.Style
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.LeviEmbMemNormalizerLower
 import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.SubOfNonNil
@@ -32,37 +33,13 @@ theorem smooth_quot {G : Type} [Group G] {U : Type} [AddCommGroup U] [Module ℂ
     IsSmooth (ρ.quotient T hst) := by
   intro v
   obtain ⟨u, rfl⟩ := Submodule.Quotient.mk_surjective T v
-  let H : Subgroup G :=
-    { carrier := {g : G | ρ.quotient T hst g (Submodule.Quotient.mk u) = Submodule.Quotient.mk u}
-      one_mem' := by
-        show ρ.quotient T hst 1 _ = _
-        rw [map_one]
-        rfl
-      mul_mem' := by
-        intro a b ha hb
-        have ha' : ρ.quotient T hst a (Submodule.Quotient.mk u) = Submodule.Quotient.mk u := ha
-        have hb' : ρ.quotient T hst b (Submodule.Quotient.mk u) = Submodule.Quotient.mk u := hb
-        show ρ.quotient T hst (a * b) _ = _
-        rw [map_mul, Module.End.mul_apply, hb', ha']
-      inv_mem' := by
-        intro a ha
-        have ha' : ρ.quotient T hst a (Submodule.Quotient.mk u) = Submodule.Quotient.mk u := ha
-        show ρ.quotient T hst a⁻¹ _ = _
-        conv_lhs => rw [← ha']
-        rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one]
-        rfl }
-  refine H.isOpen_of_mem_nhds (g := 1) ?_
-  have h1 : {g : G | ρ g u = u} ∈ nhds (1 : G) :=
-    (h u).mem_nhds (by
-      show ρ 1 u = u
-      rw [map_one]
-      rfl)
-  refine Filter.mem_of_superset h1 ?_
-  intro g hg
-  have hg' : ρ g u = u := hg
+  refine (Representation.stabilizer (ρ.quotient T hst)
+    (Submodule.Quotient.mk u)).isOpen_of_mem_nhds (g := 1) ?_
+  refine Filter.mem_of_superset ((h u).mem_nhds (by show ρ 1 u = u; rw [map_one]; rfl)) ?_
+  intro g (hg : ρ g u = u)
   show ρ.quotient T hst g (Submodule.Quotient.mk u) = Submodule.Quotient.mk u
-  have e : ρ.quotient T hst g (Submodule.Quotient.mk u) = Submodule.Quotient.mk (ρ g u) := rfl
-  rw [e, hg']
+  change Submodule.Quotient.mk (ρ g u) = Submodule.Quotient.mk u
+  rw [hg]
 
 end UpperTheory.Reformulated.B.Gwb5
 end -- clump:auto

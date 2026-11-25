@@ -431,13 +431,6 @@ end FlZero
 
 open FlZero FlLines
 
-private theorem imageZ_mCoordIdeal' {K : Type} {ι : K → Type} {K' : Type} {ι' : K' → Type} {Ω : Type}
-    [Field Ω] (κ : K → K') (v : (Σ k, ι k) → Σ k', ι' k') (hκ : Function.Injective κ)
-    (hv : ∀ p, (v p).1 = κ p.1) (y : (Σ k', ι' k') → Ω) :
-    imageZ v (mCoordIdeal y) = mCoordIdeal (y ∘ v) := by
-  intros
-  apply _root_.GlobalTheory.CompanionTheory.Ar.Cmp.JoinBlock.imageZ_coord <;> assumption
-
 private theorem II_fsHerm_yDeg_eq_zero_of_ne (II : IntersectionSystem) (hII : IsFullIntersectionSystem II)
     (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] [Nonempty Ψ] (N : ℕ) (hN : 2 ≤ N)
     (p : Ψ × Fin N) (hp : (p.2 : ℕ) + 1 < N)
@@ -545,7 +538,8 @@ private theorem II_fsHerm_yDeg_eq_zero_of_ne (II : IntersectionSystem) (hII : Is
       (fun k => FlagArithVar.leadIdx Ψ N k.1) (fun k => hnz k.1) d hdL
     have himg : IsArithVar (imageZ (omitV q₀) (PFl Ψ N)) (d + 1) := by
       have hb := isBlockMap_omitV (Ψ := Ψ) (N := N) q₀
-      rw [show PFl Ψ N = mCoordIdeal (yFl Ψ N) from rfl, imageZ_mCoordIdeal' _ _ hb.1 hb.2.2.1]
+      rw [show PFl Ψ N = mCoordIdeal (yFl Ψ N) from rfl,
+        _root_.GlobalTheory.CompanionTheory.Ar.Cmp.JoinBlock.imageZ_coord _ _ _ hb.1 hb.2.2.1]
       exact hA'
     have hc := hII.2.2.2 {q : FlBlock Ψ N // q ≠ q₀} (fun q => FlIdx Ψ N q.1) (FlBlock Ψ N) (FlIdx Ψ N)
       Subtype.val (omitV q₀) (PFl Ψ N) (d + 1) (antisymDegree Ψ N + 1) 0

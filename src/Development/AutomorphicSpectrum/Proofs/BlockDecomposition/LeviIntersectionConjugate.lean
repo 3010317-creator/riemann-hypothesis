@@ -122,19 +122,9 @@ private theorem conj_apply_lemma (k : Type) [Field k] {N : ℕ} (w : Equiv.Perm 
 
 theorem GlobalTheory.CompanionTheory.GeomCell.innerMat : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {α β' : Type} [Fintype α] [LinearOrder α] [Fintype β'] [LinearOrder β'] {N : ℕ} {m : α → Type} [∀ i, Fintype (m i)] [∀ i, DecidableEq (m i)] {m' : β' → Type} [∀ j, Fintype (m' j)] [∀ j, DecidableEq (m' j)] {c : α → β' → Type} [∀ i j, Fintype (c i j)] [∀ i j, DecidableEq (c i j)] (e : (Σ i, m i) ≃ Fin N) (β : Fin N → ℕ) (hβ : ∀ x y, β x < β y ↔ blk e x < blk e y) (e' : (Σ j, m' j) ≃ Fin N) (f : ∀ i, (Σ j, c i j) ≃ m i) (g : ∀ j, (Σ i, c i j) ≃ m' j) (w : Equiv.Perm (Fin N)) (hcell : ∀ i j (t : c i j), w (e' ⟨j, g j ⟨i, t⟩⟩) = e ⟨i, f i ⟨j, t⟩⟩) (p : Levi k m') (hp : p ∈ relParab k g) (hx : permGL k w * leviEmb k e' p * (permGL k w)⁻¹ ∈ blockUpper k N β), ((GroundTheory.Automorphic.Parabolic.leviProj k N β ⟨_, hx⟩ : levi k N β) : GL (Fin N) k) = leviEmb k e (relEmb k f (swapBlocks k c (relProj k g ⟨p, hp⟩))) := by
   intro k _ _ _ _ α β' _ _ _ _ N m _ _ m' _ _ c _ _ e β hβ e' f g w hcell p hp hx
-  have key : ∀ a b : Fin N, β a = β b ↔ blk e a = blk e b := by
-    intro a b
-    constructor
-    · intro h
-      rcases lt_trichotomy (blk e a) (blk e b) with h' | h' | h'
-      · exact absurd h (ne_of_lt ((hβ a b).mpr h'))
-      · exact h'
-      · exact absurd h (ne_of_gt ((hβ b a).mpr h'))
-    · intro h
-      rcases lt_trichotomy (β a) (β b) with h' | h' | h'
-      · exact absurd h (ne_of_lt ((hβ a b).mp h'))
-      · exact h'
-      · exact absurd h (ne_of_gt ((hβ b a).mp h'))
+  have key : ∀ a b : Fin N, β a = β b ↔ blk e a = blk e b := fun a b =>
+    le_antisymm_iff.trans <| (and_congr (le_iff_le_iff_lt_iff_lt.mpr (hβ b a))
+      (le_iff_le_iff_lt_iff_lt.mpr (hβ a b))).trans le_antisymm_iff.symm
   have hL : ∀ x y, (↑(↑((GroundTheory.Automorphic.Parabolic.leviProj k N β) ⟨_, hx⟩ : levi k N β) :
       GL (Fin N) k) : Matrix (Fin N) (Fin N) k) x y = if β x = β y then
       (↑(permGL k w * leviEmb k e' p * (permGL k w)⁻¹) : Matrix (Fin N) (Fin N) k) x y else 0 :=
@@ -349,11 +339,9 @@ theorem mem_relUnip_iff_leviEmb_mem : ∀ (k : Type) [Field k] [ValuativeRel k] 
         rw [leviEmb_apply_same, one_apply_sigma]
         obtain ⟨⟨j, t⟩, rfl⟩ := (f a).surjective r
         obtain ⟨⟨j', t'⟩, rfl⟩ := (f a).surjective s
-        have hjj : j = j' := by
-          rcases lt_trichotomy j j' with h | h | h
-          · exact absurd ((hδ a j j' t t').2 h) hrs.not_lt
-          · exact h
-          · exact absurd ((hδ a j' j t' t).2 h) hrs.symm.not_lt
+        have hjj : j = j' := le_antisymm
+          ((le_iff_le_iff_lt_iff_lt.mpr (hδ a j' j t' t)).1 hrs.le)
+          ((le_iff_le_iff_lt_iff_lt.mpr (hδ a j j' t t')).1 hrs.symm.le)
         subst hjj
         rw [one_apply_sigma]
         exact (mem_unipRad.1 (hx' a)).2 j t t'
@@ -364,11 +352,9 @@ theorem mem_relUnip_iff_leviEmb_mem : ∀ (k : Type) [Field k] [ValuativeRel k] 
     refine mem_unipRad.2 ⟨mem_parab_iff.2 fun j j' t t' hjj => ?_, fun j t t' => ?_⟩
     · have := hP ((hδ a j' j t' t).2 hjj)
       rwa [leviEmb_apply_same] at this
-    · have hd : δ (e ⟨a, f a ⟨j, t⟩⟩) = δ (e ⟨a, f a ⟨j, t'⟩⟩) := by
-        rcases lt_trichotomy (δ (e ⟨a, f a ⟨j, t⟩⟩)) (δ (e ⟨a, f a ⟨j, t'⟩⟩)) with h | h | h
-        · exact absurd ((hδ a j j t t').1 h) (lt_irrefl j)
-        · exact h
-        · exact absurd ((hδ a j j t' t).1 h) (lt_irrefl j)
+    · have hd : δ (e ⟨a, f a ⟨j, t⟩⟩) = δ (e ⟨a, f a ⟨j, t'⟩⟩) := le_antisymm
+        ((le_iff_le_iff_lt_iff_lt.mpr (hδ a j j t' t)).2 le_rfl)
+        ((le_iff_le_iff_lt_iff_lt.mpr (hδ a j j t t')).2 le_rfl)
       have := h1 _ _ hd
       rwa [leviEmb_apply_same, one_apply_sigma, one_apply_sigma] at this
 
@@ -452,18 +438,9 @@ theorem prod_pairs {N : ℕ} {m : α → Type} (e : (Σ i, m i) ≃ Fin N) (f : 
   classical
   let ε : (Σ i, Σ j, c i j) ≃ Fin N := (Equiv.sigmaCongrRight f).trans e
   have hε : ∀ i j t, ε ⟨i, j, t⟩ = e ⟨i, f i ⟨j, t⟩⟩ := fun _ _ _ => rfl
-  have hβe : ∀ x y, β x = β y ↔ blk e x = blk e y := fun x y => by
-    constructor
-    · intro h
-      by_contra hne
-      rcases lt_or_gt_of_ne hne with h' | h'
-      · exact absurd ((hβ x y).2 h') (by omega)
-      · exact absurd ((hβ y x).2 h') (by omega)
-    · intro h
-      by_contra hne
-      rcases lt_or_gt_of_ne hne with h' | h'
-      · exact absurd ((hβ x y).1 h') (by simp [h])
-      · exact absurd ((hβ y x).1 h') (by simp [h])
+  have hβe : ∀ x y, β x = β y ↔ blk e x = blk e y := fun x y =>
+    le_antisymm_iff.trans <| (and_congr (le_iff_le_iff_lt_iff_lt.mpr (hβ y x))
+      (le_iff_le_iff_lt_iff_lt.mpr (hβ x y))).trans le_antisymm_iff.symm
   have hR : ∀ p q : (Σ i, Σ j, c i j),
       (β (ε p) = β (ε q) ∧ δ (ε p) < δ (ε q)) ↔ (q.1 = p.1 ∧ p.2.1 < q.2.1) := by
     rintro ⟨i, j, t⟩ ⟨i', j', t'⟩

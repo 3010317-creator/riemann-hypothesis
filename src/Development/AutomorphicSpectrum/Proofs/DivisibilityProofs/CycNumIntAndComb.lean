@@ -29,16 +29,9 @@ theorem cycEval_comb {K : Type} {ι : K → Type} {R : Type} [CommRing R]
   have hsum : Function.support (fun W => ∑ a ∈ s, c a * Z a W) ⊆
       (T : Set (Ideal (MRing ι R))) := by
     intro W hW
-    by_contra hWT
-    apply hW
-    refine Finset.sum_eq_zero fun a ha => ?_
-    have : Z a W = 0 := by
-      by_contra hne
-      exact hWT (by
-        simp only [hTdef, Finset.coe_biUnion, Set.mem_iUnion, Finset.mem_coe,
-          Set.Finite.coe_toFinset]
-        exact ⟨a, ha, hne⟩)
-    simp [this]
+    obtain ⟨a, ha, hne⟩ := Finset.exists_ne_zero_of_sum_ne_zero hW
+    simp only [hTdef, Finset.coe_biUnion, Set.mem_iUnion, Finset.mem_coe, Set.Finite.coe_toFinset]
+    exact ⟨a, ha, right_ne_zero_of_mul hne⟩
   have hone : ∀ a ∈ s, cycEval n (Z a) = ∑ W ∈ T, Z a W * n W := by
     intro a ha
     refine cycEval_eq_sum n (Z a) T ?_
