@@ -136,16 +136,8 @@ theorem dens_nonneg {g : X → ℝ} (hg : Continuous g)
 
 variable [IsFiniteMeasureOnCompacts μ] [OpensMeasurableSpace V]
 
-theorem isCc_add {φ ψ : V → ℝ} (hφ : IsCcOn U φ) (hψ : IsCcOn U ψ) : IsCcOn U (φ + ψ) := by
-  refine ⟨hφ.1.add hψ.1, hφ.2.1.add hψ.2.1, ?_⟩
-  refine (closure_minimal ?_ ((isClosed_tsupport φ).union (isClosed_tsupport ψ))).trans
-    (union_subset hφ.2.2 hψ.2.2)
-  intro x hx
-  by_contra hn
-  simp only [mem_union, not_or] at hn
-  apply hx
-  simp only [Pi.add_apply, image_eq_zero_of_notMem_tsupport hn.1,
-    image_eq_zero_of_notMem_tsupport hn.2, add_zero]
+theorem isCc_add {φ ψ : V → ℝ} (hφ : IsCcOn U φ) (hψ : IsCcOn U ψ) : IsCcOn U (φ + ψ) :=
+  ⟨hφ.1.add hψ.1, hφ.2.1.add hψ.2.1, (tsupport_add φ ψ).trans (union_subset hφ.2.2 hψ.2.2)⟩
 
 theorem isCc_smul (c : ℝ) {φ : V → ℝ} (hφ : IsCcOn U φ) : IsCcOn U (c • φ) := by
   have hs : Function.support (c • φ) ⊆ Function.support φ := by
