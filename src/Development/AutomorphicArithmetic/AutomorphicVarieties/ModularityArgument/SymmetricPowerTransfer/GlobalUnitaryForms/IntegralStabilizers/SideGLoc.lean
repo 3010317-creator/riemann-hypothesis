@@ -11,7 +11,6 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityA
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GlobalUnitaryForms.ScalarTuples.HsHasse
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GlobalUnitaryForms.ScalarTuples.ModelMap
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GlobalUnitaryForms.ScalarTuples.QuoMulInv
-import all Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GlobalUnitaryForms.ScalarTuples.QuoMulInv
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.LocalHermitianForms.NormOneIsCoboundaryUnramifiedQuadratic
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.CompactTorusUnitsEqTopOfNonsplit
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.EvenValuationNormCompactUnitsOfSplit
@@ -1300,7 +1299,12 @@ private theorem ae_int {F : Type} [Field F] [NumberField F] (x : F) :
 
 private theorem ae_unit {F : Type} [Field F] [NumberField F] {x : F} (hx : x ≠ 0) :
     ∀ᶠ v : Pl F in Filter.cofinite, ∃ u : (Ov v)ˣ, algebraMap (Ov v) (Kv v) u = cv v x := by
-  apply _root_.UpperTheory.V.Z.Sym.Glob.GP.ae_unit <;> assumption
+  filter_upwards [ae_int x, ae_int x⁻¹] with v ⟨a, ha⟩ ⟨b, hb⟩
+  have : a * b = 1 := by
+    apply Subtype.ext
+    change algebraMap (Ov v) (Kv v) (a * b) = 1
+    rw [map_mul, ha, hb, ← map_mul, mul_inv_cancel₀ hx, map_one]
+  exact ⟨⟨a, b, this, by rw [mul_comm, this]⟩, ha⟩
 
 private theorem fp_zero {I : Type} (S : Finset I) (g : I → ℂ) (hg : ∀ᶠ v in Filter.cofinite, g v = 1) (v₀ : I) (h₀ : v₀ ∉ S)
     (h : g v₀ = 0) : (∏ᶠ (v : I) (_ : v ∉ S), g v) = 0 := by

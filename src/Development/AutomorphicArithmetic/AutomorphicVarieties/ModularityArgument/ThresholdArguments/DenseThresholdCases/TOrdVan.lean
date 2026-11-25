@@ -732,7 +732,6 @@ private theorem sr_abs {R A K M W ι ι' : Type} [CommRing R] [CommRing A] [Alge
   refine (iSup_le fun j => ?_ : ⨆ j, Z j ≤ _) (hOZ _ (hle y.2))
   obtain ⟨μ, hμ⟩ := h2 j
   exact fun F hF => Submodule.mem_iSup_of_mem μ (Module.End.mem_eigenspace_iff.2 (hμ F hF))
-attribute [-instance] GlobalTheory.AdmLoc.modFun
 
 theorem UpperTheory.V.Th.AnnihilatorQuotientFinite.sphRed_alt :
     ∀ (L Ω : Type) [Field L] [NumberField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] (l : ℕ) [Fact l.Prime] (n : ℕ) (c : Coef l) (H : HSet L Ω l n c), H.Ax →
@@ -941,6 +940,20 @@ open scoped TensorProduct
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 open UpperTheory.V.Hi.LvR
+private theorem hida_lq_lc {l : ℕ} [Fact l.Prime] {F : W.GFrame l} {O : Type} [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O] {n : ℕ}
+    (r : Resid F O n) : IsLocallyConstant fun g : F.G₀ => r.Dbar.chi (MonoidAlgebra.single g 1) := by
+  have h : IsLocallyConstant fun (g : F.G₀) (i : Fin n) => r.chib i g :=
+    (IsLocallyConstant.iff_eventually_eq _).2 fun x => by
+      have := Filter.eventually_all.2 fun i => (JEx.lc_of_open _ (r.chib_open i)).eventually_eq x
+      exact this.mono fun y hy => funext hy
+  have e : (fun g : F.G₀ => r.Dbar.chi (MonoidAlgebra.single g 1)) =
+      (fun t : Fin n → (ResidueField O)ˣ => (Matrix.diagonal fun i => (t i : ResidueField O)).charpoly) ∘
+        fun (g : F.G₀) (i : Fin n) => r.chib i g := by
+    funext g
+    rw [Resid.Dbar, (AlgebraTools.Det.repApi _).2.1]
+    rfl
+  rw [e]
+  exact h.comp _
 private theorem hida_lq_dense {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y] {p : X → Y} (hc : Continuous p)
     (hs : Function.Surjective p) {S : Set X} (hS : Dense S) {T : Set Y} (h : ∀ x ∈ S, p x ∈ T) : Dense T :=
   (hs.denseRange.dense_image hc hS).mono (by rintro _ ⟨x, hx, rfl⟩; exact h x hx)

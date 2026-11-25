@@ -1,7 +1,7 @@
 module
 
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.MultiplicityOne.HeckeIntegrability.AbsGlobA
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4GeometricSide.InnerEq
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.MultiplicityOne.HeckeIntegrability.AbsGlobA
 public import Development.DiscreteGroups.PiInvariants.CompactSupportTwists.LogAbsEqLogIdeleNorm
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.HeckeFubiniCompatibility.PActLoc
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.HeckeFubiniCompatibility.PCompat
@@ -82,90 +82,6 @@ import Mathlib.Topology.Algebra.Star.Unitary
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4GeometricSide.AbsGlob, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4GeometricSide.OpForm, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4GeometricSide.ThetaFixedGlobalCharacter, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4GeometricSide.GlobalHaarAverageTraceIdentity
-
--- ===== clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4GeometricSide.AbsGlob =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4GeometricSide.AbsGlob", "h": "module\n\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4GeometricSide.InnerEq\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.CoassocSimps\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
-section -- clump:auto
-@[expose] public section
-
-open UpperTheory.V.Z.GSp4Splitting PositivityTheory.RgBcC PositivityTheory.RgBcC.RealD PositivityTheory.Rg.BcB.Desc
-open scoped InnerProductSpace
-
-noncomputable section
-
-namespace UpperTheory.V.Z.GSp4Splitting.AbsoluteGlobal
-
-section Pure
-
-variable {ι : Type} {U : Type} [AddCommGroup U] [Module ℂ U]
-
-private theorem capp {a b : Module.End ℂ U} (h : Commute a b) (x : U) : a (b x) = b (a x) :=
-  LinearMap.congr_fun h.eq x
-
-private def fixS (e : ι → Module.End ℂ U) (s : Finset ι) : Submodule ℂ U where
-  carrier := {x | ∀ i ∈ s, e i x = x}
-  add_mem' {x y} hx hy i hi := by rw [map_add (f := _), hx i hi, hy i hi]
-  zero_mem' i _ := map_zero _
-  smul_mem' c x hx i hi := by rw [map_smul, hx i hi]
-
-private theorem mem_fixS {e : ι → Module.End ℂ U} {s : Finset ι} {x : U} : x ∈ fixS e s ↔ ∀ i ∈ s, e i x = x := Iff.rfl
-
-variable {F : Submodule ℂ U}
-
-
-variable (F) in
-private theorem list_res {κ : Type} (a : κ → Module.End ℂ U) (g : κ → Module.End ℂ F) (h : ∀ o x, (g o x : U) = a o x)
-    (l : List κ) (x : F) : ((l.map g).prod x : U) = (l.map a).prod x := by
-  induction l with
-  | nil => simp
-  | cons o l ih => simp [h, ih]
-
-end Pure
-
-section Gen
-
-variable {U : Type} [AddCommGroup U] [Module ℂ U]
-
-private theorem adjoin_comm {s t : Set (Module.End ℂ U)} (h : ∀ a ∈ s, ∀ b ∈ t, Commute a b) :
-    ∀ a ∈ Algebra.adjoin ℂ s, ∀ b ∈ Algebra.adjoin ℂ t, Commute a b := fun a ha b hb =>
-  Algebra.commute_of_mem_adjoin_of_forall_mem_commute hb fun y hy =>
-    (Algebra.commute_of_mem_adjoin_of_forall_mem_commute ha fun x hx => (h x hx y hy).symm).symm
-
-private def orb (A : Subalgebra ℂ (Module.End ℂ U)) (x : U) : Submodule ℂ U :=
-  (Subalgebra.toSubmodule A).map (LinearMap.applyₗ x)
-
-private theorem mem_orb {A : Subalgebra ℂ (Module.End ℂ U)} {x y : U} : y ∈ orb A x ↔ ∃ a ∈ A, a x = y := Iff.rfl
-
-end Gen
-
-section Adj
-
-variable {n : ℕ} {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℂ U]
-
-private theorem iso_adj {f g : Module.End ℂ U} (h : ∀ x y : U, ⟪f x, f y⟫_ℂ = ⟪x, y⟫_ℂ) (hfg : f * g = 1) (x y : U) :
-    ⟪f x, y⟫_ℂ = ⟪x, g y⟫_ℂ := by
-  rw [← h x (g y), ← Module.End.mul_apply, hfg, Module.End.one_apply]
-
-end Adj
-
-end UpperTheory.V.Z.GSp4Splitting.AbsoluteGlobal
-
-open UpperTheory.V.Z.GSp4Splitting.AbsoluteGlobal in
-theorem UpperTheory.V.Z.GSp4Splitting.absGlob :
-    MultiFac → LieStab → ProjEx → AvgFacts → OnePlace → AbsGlob := by
-  intro hMF hLS hPE hAF hOP n ι _ lam hlam E T hT _ _ ν _ hν U _ _ E1 E2 σ Θ P J R hloc havg hEE hσσ hRc hRa hRΘ hΘ
-    hsimp hnt hfd hne
-  obtain ⟨Y, c, hc, hY⟩ := _root_.UpperTheory.V.Z.Mult.Pi.absGlobA hMF hLS hPE hAF hOP
-    n ι lam hlam E T hT ν hν U E1 E2 σ Θ P J R hloc havg hEE hσσ hRc hRa hRΘ hΘ hsimp hnt hfd hne
-  refine ⟨Y, c, ?_, hY⟩
-  intro hz
-  subst c
-  have hp : 0 < (2 ^ n : ℝ) ^ Fintype.card ι := by positivity
-  exact hp.ne (by simpa using hc)
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4GeometricSide.AbsGlob =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4GeometricSide.OpForm =====
 -- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4GeometricSide.OpForm", "h": "module\n\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL4GeometricSide.InnerEq\npublic import Development.DiscreteGroups.PiInvariants.CompactSupportTwists.LogAbsEqLogIdeleNorm\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.HeckeFubiniCompatibility.PActLoc\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.HeckeFubiniCompatibility.PCompat\nimport Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.HyperbolicEntryBounds.CasInfOfIm\nimport GroundTheory.AutomorphicForms.RealIwasawaIntegration\nimport GroundTheory.GlobalFields.Adele.Topology\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Separation.Connected\nimport Std.Tactic.BVDecide.Normalize.Prop\npublic import Development.DiscreteGroups.PiInvariants.CasimirInfinity.CasInfOfIm\nimport Mathlib.MeasureTheory.Measure.HasOuterApproxClosedProd\n\n"}
@@ -319,13 +235,13 @@ open UpperTheory.V.Z.GSp4Splitting PositivityTheory.RgBcC PositivityTheory.RgBcC
 attribute [local instance] PositivityTheory.Rg.BcB.E.borelH PositivityTheory.Rg.BcB.CG.lc_G PositivityTheory.Rg.BcB.CG.sc_G PositivityTheory.Rg.BcB.CG.lc_GLf
   PositivityTheory.Rg.BcB.CG.sc_GLf PositivityTheory.Rg.BcB.CG.t2_GL_finite_adeles PositivityTheory.Rg.BcB.CG.borelSpaceH in
 open PositivityTheory.Rg.BcB.CG in
-theorem UpperTheory.V.Z.GSp4Splitting.opForm :
-    HeckeMem → RlComm → LocAct → OpForm := by
-  intro _ _ hL E _ _ _ n hn π hθ K hKo hKc hKθ _ _ μf _ D lam hch _ _ ν _ hν _ _ μC _ μ _ P hP
+theorem UpperTheory.V.Z.Mult.Pi.opFormA :
+    LocAct → UpperTheory.V.Z.Mult.Pi.OpFormA := by
+  intro hL E _ _ _ n _ _ μC _ _ _ μf _ μ _
   classical
   haveI : IsHaarMeasure (Measure.pi fun _ : InfinitePlace E => μC) := pi.isHaarMeasure _
   obtain ⟨c, hc0, hc⟩ := GSp4Splitting.split_two (split0 E n) μ (Measure.pi fun _ : InfinitePlace E => μC) μf
-  refine ⟨c, hc0, fun k val T hk h hh ψ u hu x => ?_⟩
+  refine ⟨c, hc0, fun hn π hθ K hKo hKc hKθ D lam hch _ _ ν _ hν P hP k val T hk h hh ψ u hu x => ?_⟩
   set e : InfinitePlace E → G n → ℂ := fun w => phiOf (lefE n (lam w)) (lefT n (lam w)) (k w) with he
   have hecs : ∀ w, Continuous (e w) ∧ HasCompactSupport (e w) := fun w =>
     PositivityTheory.Rg.BcB.F.F0.phiOf_cs μC _ _ _ _ _ (hk w)
@@ -504,10 +420,12 @@ end Conc
 end UpperTheory.V.Z.GSp4Splitting
 
 attribute [local instance] PositivityTheory.Rg.BcB.E.borelH in
-theorem UpperTheory.V.Z.GSp4Splitting.exists_global_hecke_theta_lift :
-    AvgEx → AbsGlob → LowIso → HeckeMem → RlEx → RlPair → RlChar → RlK → RlTheta → RlComm → RlHecke → RlSimple → RlFin → RlLow → OpForm → ThetaFixedGlobalCharacter := by
-  intro hAvg hAbs hLow hM hEx hPair hChar hK hTh hComm hHk hSim hFin hRL hOp
-  intro E _ _ _ n hn π hreg hθ lam hlam hch K hKo hKc hKθ hfix _ _ μC _ _ _ μf _ μ _
+theorem UpperTheory.V.Z.Mult.Pi.twisted_trace_global_bound_of_archimedean :
+    AvgEx → UpperTheory.V.Z.Mult.Pi.AbsGlobA → LowIso → HeckeMem → RlEx → RlPair → RlChar → RlK → RlTheta → RlComm → RlHecke → RlSimple → RlFin → RlLow → UpperTheory.V.Z.Mult.Pi.OpFormA → UpperTheory.V.Z.Mult.Pi.GlobalTwistedTraceBound := by
+  intro hAvg hAbs hLow hM hEx hPair hChar hK hTh hComm hHk hSim hFin hRL hOp E _ _ _ n _ _ μC _ _ _ μf _ μ _
+  obtain ⟨c₂, hc₂, hOp⟩ := hOp E n μC μf μ
+  refine ⟨‖c₂‖ * (2 ^ n) ^ Fintype.card (InfinitePlace E), mul_pos (norm_pos_iff.2 hc₂) (by positivity), ?_⟩
+  intro hn π hreg hθ lam hlam hch K hKo hKc hKθ hfix
   classical
   obtain ⟨D⟩ := hEx E n hn π hθ K hKo hKc hKθ μf
   replace hPair := hPair E n hn π hθ K hKo hKc hKθ μf D
@@ -519,7 +437,7 @@ theorem UpperTheory.V.Z.GSp4Splitting.exists_global_hecke_theta_lift :
   replace hSim := hSim E n hn π hθ K hKo hKc hKθ μf D
   replace hFin := hFin E n hn π hθ K hKo hKc hKθ μf D fun w => lefE n (lam w)
   replace hRL := hRL E n hn π hθ K hKo hKc hKθ μf D hreg
-  replace hOp := hOp E n hn π hθ K hKo hKc hKθ μf D lam hch
+  replace hOp := hOp hn π hθ K hKo hKc hKθ D lam hch
   have hnt : Nontrivial D.U := by
     obtain ⟨ψ, hψ, hψ0, hψK⟩ := hfix
     obtain ⟨u, hu⟩ := (D.rng ⟨ψ, hψ⟩).2 hψK
@@ -538,7 +456,7 @@ theorem UpperTheory.V.Z.GSp4Splitting.exists_global_hecke_theta_lift :
     hadj (fun h => (htw h).imp fun _ h' => h'.2) hsq hSim hnt hFin
     (fun w => hLow n (lam w) (hlam w) _ _ (isLefK_model (lam w) (hlam w)) D.U _ _ _ _ (hloc w)
       (hRL hnt w (lam w) (hlam w) (hch w)))
-  obtain ⟨c₂, hc₂, hop⟩ := hOp ν hν μC μ P hP
+  have hop := hOp ν hν P hP
   let j : D.U →ₗ[ℂ] Sm E n := π.V.subtype ∘ₗ D.i
   have hj : Function.Injective j := Subtype.val_injective.comp D.inj
   let e : Y ≃ₗ[ℂ] Y.map j := Submodule.equivMapOfInjective j hj Y
@@ -548,7 +466,7 @@ theorem UpperTheory.V.Z.GSp4Splitting.exists_global_hecke_theta_lift :
   have hρ : ∀ h (hh : IsHeckeF K h), ρ h = e.conj ((D.R ⟨h, hh⟩).restrict (hYR ⟨h, hh⟩)) := fun h hh => dif_pos hh
   have hmul : ∀ f g : Module.End ℂ Y, e.conj f * e.conj g = e.conj (f * g) := fun f g => (e.conj_comp g f).symm
   refine ⟨Y.map j, ρ, e.conj (D.Θ.restrict hYΘ), c₂ * c₁, ?_, inferInstance, ?_, ?_, ?_, ?_, ?_, ?_,
-    mul_ne_zero hc₂ hc₁, ?_⟩
+    by rw [norm_mul, hc₁], ?_⟩
   · rintro _ ⟨u, -, rfl⟩
     exact (D.i u).2
   · intro h0
@@ -619,12 +537,24 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
+namespace UpperTheory.V.Z.Mult.Pi
+
+open UpperTheory.V.Z.GSp4Splitting in
+theorem global_twisted_trace_bound : GlobalTwistedTraceBound :=
+  twisted_trace_global_bound_of_archimedean avgEx (absGlobA multiFac lieStab projEx avgFacts (onePlace coreG lieStab projEx avgFacts (avgTr avgFacts))) lowIso2 heckeMem
+    (rlEx petEx heckeMem) rlPair rlChar rlK rlTheta rlComm (rlHecke heckeMem) (rlSimple heckeMem lieStab rlK) rlFin
+    (rlLow heckeMem lowType) (opFormA locAct)
+
+end UpperTheory.V.Z.Mult.Pi
+
 namespace UpperTheory.V.Z.GSp4Splitting
 
-theorem global_haarAverage_trace_identity : PositivityTheory.Rg.BcB.Desc.ThetaFixedGlobalCharacter :=
-  exists_global_hecke_theta_lift avgEx (absGlob multiFac lieStab projEx avgFacts (onePlace coreG lieStab projEx avgFacts (avgTr avgFacts))) lowIso2 heckeMem
-    (rlEx petEx heckeMem) rlPair rlChar rlK rlTheta rlComm (rlHecke heckeMem) (rlSimple heckeMem lieStab rlK) rlFin
-    (rlLow heckeMem lowType) (opForm heckeMem rlComm locAct)
+theorem global_haarAverage_trace_identity : PositivityTheory.Rg.BcB.Desc.ThetaFixedGlobalCharacter := by
+  intro E _ _ _ n hn π hreg hθ lam hlam hch K hKo hKc hKθ hfix _ _ μC _ _ _ μf _ μ _
+  obtain ⟨c₀, hc₀, h⟩ := UpperTheory.V.Z.Mult.Pi.global_twisted_trace_bound E n μC μf μ
+  obtain ⟨Y, ρ, A, c, h1, h2, h3, h4, h5, h6, h7, h8, hc, h9⟩ :=
+    h hn π hreg hθ lam hlam hch K hKo hKc hKθ hfix
+  exact ⟨Y, ρ, A, c, h1, h2, h3, h4, h5, h6, h7, h8, norm_pos_iff.mp (hc.symm ▸ hc₀), h9⟩
 
 end UpperTheory.V.Z.GSp4Splitting
 end -- clump:auto
