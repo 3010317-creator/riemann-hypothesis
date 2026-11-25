@@ -55,7 +55,6 @@ namespace GlobalTheory.AmpleRigid
 open GlobalTheory.CechPic GlobalTheory.RealMult
 
 
-set_option autoImplicit false in
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj TensorProduct NumberField in
 attribute [local instance] Over.cartesianMonoidalCategory in
 theorem _root_.GlobalTheory.AmpleRigid.mul_comp_of_grpPullback_id {S : Scheme.{0}} {G' G : Over S} [GrpObj G'] [GrpObj G]
@@ -70,7 +69,6 @@ theorem _root_.GlobalTheory.AmpleRigid.mul_comp_of_grpPullback_id {S : Scheme.{0
   exact Over.OverMorphism.ext (H (x ≫ f) (y ≫ f) rfl rfl).symm
 
 
-set_option autoImplicit false in
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj TensorProduct NumberField in
 attribute [local instance] Over.cartesianMonoidalCategory in
 alias _root_.GlobalTheory.AmpleRigid.isMonHom_of_mul_comp := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isMonHom_of_mul

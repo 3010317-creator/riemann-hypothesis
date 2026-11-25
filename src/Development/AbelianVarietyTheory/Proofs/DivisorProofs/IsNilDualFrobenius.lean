@@ -253,7 +253,6 @@ open MvPowerSeries GlobalTheory GlobalTheory.Katz GlobalTheory.QLog GlobalTheory
 namespace GlobalTheory.LawDer.IterateLocal
 
 open MvPowerSeries in
-set_option autoImplicit false in
 private lemma iterate_invDer_sub (R : Type) [CommRing R] (d : ℕ)
     (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R) (hμ : ∀ i, constantCoeff (μ i) = 0)
     (u : Fin d → R) :
@@ -271,7 +270,6 @@ private lemma iterate_invDer_sub (R : Type) [CommRing R] (d : ℕ)
     rw [sub_eq_iff_eq_add, ← hadd, sub_add_cancel]
 
 open MvPowerSeries in
-set_option autoImplicit false in
 private lemma coeff_iterate_invDer_eq_zero_of_degree_lt (R : Type) [CommRing R] (d : ℕ)
     (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R) (hμ : ∀ i, constantCoeff (μ i) = 0)
     (u : Fin d → R) (N : ℕ) :
@@ -290,7 +288,6 @@ private lemma coeff_iterate_invDer_eq_zero_of_degree_lt (R : Type) [CommRing R] 
 
 
 open MvPowerSeries in
-set_option autoImplicit false in
 theorem _root_.GlobalTheory.LawDer.IterateLocal.constantCoeff_iterate_invDer_congr : ∀ (R : Type) [CommRing R] (d : ℕ) (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R), (∀ i, constantCoeff (μ i) = 0) → ∀ (u : Fin d → R) (n : ℕ) (F G : MvPowerSeries (Fin d) R), (∀ α : Fin d →₀ ℕ, α.degree ≤ n → coeff α F = coeff α G) → constantCoeff ((_root_.GlobalTheory.LawDer.invDer μ u)^[n] F) = constantCoeff ((_root_.GlobalTheory.LawDer.invDer μ u)^[n] G) := by
   intro R _ d μ hμ u n F G hFG
   rw [← sub_eq_zero, ← map_sub, iterate_invDer_sub R d μ hμ u,
@@ -316,7 +313,6 @@ namespace GlobalTheory.LawDer.Kernel
 variable {R : Type} [CommRing R] {d : ℕ}
 
 open MvPowerSeries in
-set_option autoImplicit false in
 variable {R : Type} [CommRing R] {d : ℕ} in
 private lemma coeff_atZero_eq_coeff_mapDomain_inl {S : Type} [CommRing S] {n : ℕ}
     (G : MvPowerSeries (Fin n ⊕ Fin n) S) (α : Fin n →₀ ℕ) :
@@ -324,7 +320,6 @@ private lemma coeff_atZero_eq_coeff_mapDomain_inl {S : Type} [CommRing S] {n : �
   (_root_.GlobalTheory.coeff_subst_restrict_sum G).1 α
 
 open MvPowerSeries in
-set_option autoImplicit false in
 variable {R : Type} [CommRing R] {d : ℕ} in
 private lemma coeff_subst_X_comp_eq_finsum {σ τ S : Type} [CommRing S] [Finite σ] [DecidableEq τ] (g : σ → τ)
     (F : MvPowerSeries σ S) (γ : τ →₀ ℕ) :
@@ -337,7 +332,6 @@ private lemma coeff_subst_X_comp_eq_finsum {σ τ S : Type} [CommRing S] [Finite
   split_ifs <;> simp
 
 open MvPowerSeries in
-set_option autoImplicit false in
 variable {R : Type} [CommRing R] {d : ℕ} in
 private lemma coeff_subst_X_comp_eq_zero_of_not_mem_range {σ τ S : Type} [CommRing S] [Finite σ] (g : σ → τ)
     (F : MvPowerSeries σ S) {γ : τ →₀ ℕ} (hγ : γ ∉ Set.range (Finsupp.mapDomain g)) :
@@ -361,7 +355,6 @@ private lemma coeff_mapDomain_subst_X_comp_of_injective {σ τ S : Type} [CommRi
 
 
 open MvPowerSeries in
-set_option autoImplicit false in
 variable {R : Type} [CommRing R] {d : ℕ} in
 theorem _root_.GlobalTheory.LawDer.Kernel.constantCoeff_iterate_invDer_mem : ∀ (B Q : Type) [CommRing B] [CommRing Q] [Algebra B Q] (d : ℕ) (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) B), (∀ i, constantCoeff (μ i) = 0) → ∀ (N : Ideal B) (l : MvPowerSeries (Fin d) Q) (j : Fin d), _root_.GlobalTheory.QLog.In N (_root_.GlobalTheory.Katz.cob1 (_root_.GlobalTheory.QLog.up Q μ) l) → _root_.GlobalTheory.Katz.lin l = Pi.single j 1 → ∀ (u : Fin d → B) (n : ℕ), 2 ≤ n → ∃ b ∈ N, constantCoeff ((_root_.GlobalTheory.LawDer.invDer (_root_.GlobalTheory.QLog.up Q μ) (fun i => algebraMap B Q (u i)))^[n] l) = algebraMap B Q b := by
   intro B Q _ _ _ d μ hμ N l j hc hl u n hn
