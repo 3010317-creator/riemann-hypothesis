@@ -279,10 +279,6 @@ variable [MeasurableSpace G] [BorelSpace G]
 variable [CompactSpace G]
 
 end GlobalTheory.UniTrick
-
-namespace GlobalTheory
-
-end GlobalTheory
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -630,10 +626,6 @@ theorem Rm_mul (lam : Fin n → ℤ) (k k' : Matrix.unitaryGroup (Fin n) ℂ) :
     Rm lam (k * k').1 = Rm lam k.1 * Rm lam k'.1 := by
   rw [Rm_unitary, Rm_unitary, Rm_unitary, map_mul, map_mul, Module.End.mul_eq_comp]
   exact LinearMap.toMatrix_comp _ _ _ _ _
-
-theorem Rm_one (lam : Fin n → ℤ) : Rm lam (1 : Matrix.unitaryGroup (Fin n) ℂ).1 = 1 := by
-  rw [Rm_unitary, map_one, map_one]
-  exact LinearMap.toMatrix_id _
 
 theorem continuous_unitaryIncl : Continuous (GlobalTheory.Branching.unitaryIncl n) := by
   rw [Units.continuous_iff]
