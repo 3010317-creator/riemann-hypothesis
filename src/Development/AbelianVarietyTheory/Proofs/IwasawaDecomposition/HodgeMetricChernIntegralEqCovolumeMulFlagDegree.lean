@@ -1203,7 +1203,7 @@ theorem mass_openPart_eq_covol : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have hsub : ψ '' DomFlat (U.X k).Ψ Dw.p (Dw.p + Dw.q - Dw.p) ⊆ ψ '' (FD \ B') ∪ ψ '' (FD ∩ B') := by
     rintro _ ⟨v, hv, rfl⟩
     obtain ⟨γ, hγ, hγF⟩ := hFcov (unflat v) hv
-    rw [← Set.image_union, Set.diff_union_inter, ← hinv γ hγ v hv]
+    rw [← Set.image_union, Set.sdiff_union_inter, ← hinv γ hγ v hv]
     exact Set.mem_image_of_mem _ hγF
   have hsup : ψ '' (FD \ B') ⊆ ψ '' DomFlat (U.X k).Ψ Dw.p (Dw.p + Dw.q - Dw.p) :=
     Set.image_mono (Set.diff_subset.trans hFsub)

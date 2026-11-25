@@ -453,7 +453,7 @@ theorem measurableSet_preimage_valuation (S : Set (ValueGroupWithZero F)) :
     MeasurableSet (valuation F ⁻¹' S) := by
   haveI := GlobalTheory.SplitWeil.t2Space F
   have e : valuation F ⁻¹' S = valuation F ⁻¹' (S \ {0}) ∪ valuation F ⁻¹' (S ∩ {0}) := by
-    rw [← Set.preimage_union, Set.diff_union_inter]
+    rw [← Set.preimage_union, Set.sdiff_union_inter]
   rw [e]
   refine MeasurableSet.union (IsOpen.measurableSet ?_) ?_
   · have : valuation F ⁻¹' (S \ {0}) = ⋃ γ ∈ S \ {0}, {y : F | valuation F y = γ} := by
