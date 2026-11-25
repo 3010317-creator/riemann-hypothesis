@@ -431,7 +431,7 @@ theorem GlobalTheory.AdForm.trans_stab : ∀ {B : Base} {X : PreX B.toPre} (I : 
     have e2 := congrArg (finM ((I.rec7 l Z).sp.X j) (rankN (I.rec7 l Z) j hj)) hk
     simp only [_root_.GlobalTheory.AdForm.Model.finM_mul] at e2 ⊢
     conv_lhs => rw [hhe.2, hyv, ← hhe.2]
-    erw [← hkAe]
+    rw [← hkAe]
     simp only [Matrix.mul_assoc] at e2 ⊢
     rw [← e2]
     try rfl

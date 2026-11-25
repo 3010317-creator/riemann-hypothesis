@@ -1155,12 +1155,12 @@ theorem UpperTheory.exists_isogeny_with_kernel_subgroup :
         obtain ⟨h', hh', e'⟩ := h1.1 e
         have e2 : h = h' := by
           refine e'.trans ?_
-          erw [hid]
+          rw [hid]
           exact Category.id_comp _
         exact e2 ▸ hh'
       · intro hh
         refine h1.2 ⟨h, hh, ?_⟩
-        erw [hid]
+        rw [hid]
         exact (Category.id_comp _).symm
     rw [hk']
     exact ⟨fun ⟨a, b⟩ => hHU h a b, fun a => ⟨hH₀ a, 1, fun x hx => hk₀ h a x (hu (by rwa [pow_one] at hx))⟩⟩
