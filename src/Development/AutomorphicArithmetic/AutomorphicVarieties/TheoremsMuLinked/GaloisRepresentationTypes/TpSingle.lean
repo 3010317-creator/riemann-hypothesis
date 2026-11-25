@@ -10,7 +10,7 @@ import Mathlib.Algebra.TrivSqZeroExt.Basic
 
 open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.Pa UpperTheory.V.Th
 
-private theorem tp_tr {R G : Type} [CommRing R] [Group G] {n : ℕ} (hn : 1 ≤ n) (ρ : G →* Matrix (Fin n) (Fin n) R)
+theorem _root_.UpperTheory.TpSingle.tp_tr {R G : Type} [CommRing R] [Group G] {n : ℕ} (hn : 1 ≤ n) (ρ : G →* Matrix (Fin n) (Fin n) R)
     (z : MonoidAlgebra R G) : (GDet.ofRep ρ).tr z = (GDet.repAlg ρ R z).trace := by
   have h : (GDet.ofRep ρ).chi z = (GDet.repAlg ρ R z).charpoly := by
     change (GDet.repAlg ρ (Polynomial R) _).det = Matrix.det _
@@ -165,7 +165,7 @@ theorem UpperTheory.V.Th.trPsi : TrPsi := by
     rw [hp.1, MonoidAlgebra.mapRingHom_single, map_one] at e
     have e' : x (p.D.tr (MonoidAlgebra.single g 1)) = (GDet.ofRep (mat (y.ρ.comp h.p₀))).tr (MonoidAlgebra.single g 1) :=
       e.symm
-    rw [e', tp_tr hn, tp_single, one_smul, hM, Units.val_mul, Units.val_mul, Matrix.trace_mul_cycle, Units.mul_inv, one_mul]
+    rw [e', _root_.UpperTheory.TpSingle.tp_tr hn, tp_single, one_smul, hM, Units.val_mul, Units.val_mul, Matrix.trace_mul_cycle, Units.mul_inv, one_mul]
     rfl
   let γ : Fin n → L.Gv v := Function.update (fun _ => s v) i g
   have key := tp_vand (fun k => (y.ψ v k (s v) : O))

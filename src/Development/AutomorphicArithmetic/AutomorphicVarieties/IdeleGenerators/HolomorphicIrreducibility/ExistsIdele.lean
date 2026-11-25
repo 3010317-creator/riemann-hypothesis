@@ -507,7 +507,7 @@ private theorem genD_shift {w : Pl F} {u : Af F} (hu : ∀ v, Valued.v (pLoc F v
   push_cast
   ring_nf
 
-private theorem coefAt_shift {w : Pl F} {u : Af F} (hu : ∀ v, Valued.v (pLoc F v u) = WithZero.exp (ordI v w.asIdeal : ℤ))
+theorem _root_.UpperTheory.V.Sd.coefAt_shift {w : Pl F} {u : Af F} (hu : ∀ v, Valued.v (pLoc F v u) = WithZero.exp (ordI v w.asIdeal : ℤ))
     (a : Ideal (𝓞 F) → ℂ) (y : Af F) : coefAt (coefDiv a w.asIdeal) y = coefAt a (y * u) := by
   by_cases h : ∃ I, GenD (y * u) I
   · obtain ⟨I, hI⟩ := h
@@ -859,7 +859,7 @@ theorem UpperTheory.V.Sd.holHk :
     have e2 : coefAt (hkCoef k c ω w a) (algebraMap F (Af F) ξ.1 * yf) = _ :=
       coefAt_add (fun m => a (w.asIdeal * m)) (coefDiv a w.asIdeal) (chiI ω c w.asIdeal * (normV w : ℂ) ^ (k - 1)) _
     simp only [e]
-    rw [e2, coefAt_shift hu, ← Finset.mul_sum, ← Finset.sum_mul, Units.val_mul, Units.val_mul, ← mul_assoc (algebraMap F (Af F) ξ.1),
+    rw [e2, _root_.UpperTheory.V.Sd.coefAt_shift hu, ← Finset.mul_sum, ← Finset.sum_mul, Units.val_mul, Units.val_mul, ← mul_assoc (algebraMap F (Af F) ξ.1),
       ← mul_assoc (algebraMap F (Af F) ξ.1), ← mul_assoc (coefAt a _), key]
     field_simp
   · have hy' : 0 < (∏ v, y.val v) * absF yf := mul_pos (Finset.prod_pos fun v _ => hy v) (absF_pos yf)

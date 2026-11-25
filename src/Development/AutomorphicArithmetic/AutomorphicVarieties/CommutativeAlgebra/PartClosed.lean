@@ -10,7 +10,7 @@ public import Mathlib.RingTheory.Filtration
 
 open IsLocalRing MvPowerSeries UpperTheory.V.Alg
 
-private theorem wcomp_mul_homog {O σ X : Type} [CommRing O] [AddCommGroup X] (wt : σ → X) {c : X}
+theorem _root_.UpperTheory.PartClosed.wcomp_mul_homog {O σ X : Type} [CommRing O] [AddCommGroup X] (wt : σ → X) {c : X}
     {a : MvPowerSeries σ O} (ha : a ∈ wtPart O wt c) (j : X) (b : MvPowerSeries σ O) :
     wcomp O wt j (b * a) = wcomp O wt (j - c) b * a := by
   classical
@@ -40,7 +40,7 @@ private theorem homog_of_span {O σ X : Type} [CommRing O] [AddCommGroup X] (wt 
     | mem a ha =>
       intro b j
       obtain ⟨c, hc⟩ := hS a ha
-      rw [wcomp_mul_homog wt hc]
+      rw [_root_.UpperTheory.PartClosed.wcomp_mul_homog wt hc]
       exact Ideal.mul_mem_left _ _ (Ideal.subset_span ha)
     | zero => intro b j; simp
     | add x y _ _ hx hy =>

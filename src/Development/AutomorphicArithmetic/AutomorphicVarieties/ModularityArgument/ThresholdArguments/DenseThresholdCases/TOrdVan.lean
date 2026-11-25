@@ -164,27 +164,6 @@ open UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.Hi UpperTheory.V.AlgebraToo
 open scoped TensorProduct
 
 
-private theorem relOf_uy {R W W' ι S : Type} [CommRing R] [AddCommGroup W] [Module R W] [AddCommGroup W'] [Module ℂ W']
-    [CommRing S] [Algebra R S] (c : R →+* ℂ) (act : S →ₐ[R] Module.End R W)
-    (act' : MvPolynomial (ι ⊕ ι) ℂ →ₐ[ℂ] Module.End ℂ W') (g : W →+ W') (hg : ∀ r m, g (r • m) = c r • g m)
-    (ψ : MvPolynomial (ι ⊕ ι) R →ₐ[R] S) (N : ℕ) (e : ι → ℕ) (E : ι ⊕ ι → Module.End R W)
-    (hu : ∀ i, act (ψ (MvPolynomial.X (.inl i))) = (N : R) ^ e i • E (.inl i))
-    (hy : ∀ i, act (1 + ψ (MvPolynomial.X (.inr i))) = E (.inr i))
-    (h : ∀ a m, act' (MvPolynomial.X a) (g m) = g (E a m)) (F : MvPolynomial (ι ⊕ ι) R) (k : ℕ)
-    (h0 : act' (MvPolynomial.eval₂Hom ((algebraMap ℂ (MvPolynomial (ι ⊕ ι) ℂ)).comp c)
-      (Sum.elim (fun i => ((N : ℂ) ^ e i) • MvPolynomial.X (.inl i)) fun i => MvPolynomial.X (.inr i) - 1) F ^ k) = 0) (m : W) :
-    g (act (ψ F ^ k) m) = 0 := by
-  have h1 := UpperTheory.V.Pa.Lev.relOf_int c (Sum.elim (fun i => ((N : ℂ) ^ e i) • MvPolynomial.X (.inl i)) fun i => MvPolynomial.X (.inr i) - 1)
-    (act.comp ψ) act' g hg (fun a m => by
-      rw [AlgHom.comp_apply]
-      rcases a with i | i
-      · rw [Sum.elim_inl, hu, map_smul, LinearMap.smul_apply, LinearMap.smul_apply, hg, map_pow, map_natCast, h]
-      · have e := hy i
-        rw [map_add (f := _), map_one] at e
-        rw [Sum.elim_inr, eq_sub_of_add_eq' e, map_sub, map_one, LinearMap.sub_apply, LinearMap.sub_apply, map_sub, h]
-        rfl) (F ^ k) m
-  rw [map_pow, h0, AlgHom.comp_apply, map_pow] at h1
-  exact h1.symm
 theorem UpperTheory.V.Th.relOfX_alt :
     _root_.UpperTheory.V.Pa.LocPAlt → ∀ (l : ℕ) [Fact l.Prime] (L Ω : Type) [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] (s : HidaSetting l L Ω) (V0 : s.Lev) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (n : ℕ) (r : Resid V0.frame O n) (B : UniversalOrdinaryDeterminantRing r) (J : Ideal B.B) (D : ℕ) (b : TWBase (pairOf B.u) J Empty D) (V : s.Lev) (h : (globOf r V).Hom (globOf r V0)) (q : ℕ) (w : Fin q → Plc L) (A : LevMod b h w) (x δ : ∀ j, ((w j).adicCompletion L)ˣ), (∀ j, ((l : ℕ) : 𝓞 L) ∉ (w j).asIdeal) → (∀ j, IsUnif (x j)) → (∀ j, IsGenMod _ (ellC l _) (δ j)) → ∀ (T : ThData l A.ρ x δ) (ι : Qbar l ≃+* ℂ), (∀ m : A.P, (∀ y : _root_.UpperTheory.V.Pa.LevPtAlt A ι, y.sp m = 0) → m = 0) → ∀ (j : Fin q) (F : MvPolynomial (Fin n ⊕ Fin n) A.R), (∀ (y : _root_.UpperTheory.V.Pa.LevPtAlt A ι) θ, IsTheta (y.σ j).ρ (ellC l _) θ → ∀ χ : (Fin n → ((w j).adicCompletion L)ˣ) →* ℂˣ, (⨅ t, Module.End.maxGenEigenspace (θ t).val (χ t : ℂ)) ≠ ⊥ → ∀ (S : Type) [CommRing S] [Algebra ℂ S] (U : Fin n → S), (∀ i : Fin n, (U i - algebraMap ℂ S ((qj w j : ℂ) ^ (i : ℕ) * (χ (Pi.mulSingle i (x j)) : ℂ))) ^ n.factorial = 0) → MvPolynomial.eval₂ ((algebraMap ℂ S).comp (ι.toRingHom.comp y.θ)) (Sum.elim U fun i => algebraMap ℂ S (χ (Pi.mulSingle i (δ j)) : ℂ) - 1) F = 0) → T.act1 (MvPolynomial.rename (Sum.map (fun i => (j, i)) fun i => (j, i)) F) = 0 := by
   intro hP l _ L Ω _ _ _ _ _ _ s V0 O _ _ _ _ _ n r B J D b V h q w A x δ _ _ hδ T ι hsep j F hF
@@ -220,7 +199,7 @@ theorem UpperTheory.V.Th.relOfX_alt :
       · rw [map_mul, Algebra.smul_def, ← mul_sub, mul_pow]
         exact mul_eq_zero_of_right _ (h1 i))
   rw [← pow_one (MvPolynomial.eval₂Hom _ v F)] at h0
-  exact congrArg Subtype.val (relOf_uy c T.act1 act g hg
+  exact congrArg Subtype.val (_root_.UpperTheory.LevRelOf.relOf_uy c T.act1 act g hg
     (MvPolynomial.rename (Sum.map (fun i => (j, i)) fun i => (j, i))) (qj w j) (fun i => (i : ℕ))
     (fun a => (T.Θ1 j (t a)).val)
     (fun i => by rw [MvPolynomial.rename_X]; exact T.act_uVariable_eq_pow j i)
@@ -244,21 +223,6 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.LocLanglands GlobalTheory.LocGL GlobalTheory.GalOfCusp GlobalTheory.SmGL GlobalTheory.SplitWeil
 open UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.Hi UpperTheory.V.AlgebraTools UpperTheory.V.Pa UpperTheory.V.Pa.Lev UpperTheory.V.Th
 open scoped TensorProduct
-private theorem exists_place_above_prime_pow (K : Type) [Field K] [NumberField K] (l : ℕ) [hl : Fact l.Prime] :
-    ∃ v : HeightOneSpectrum (𝓞 K), ((l : ℕ) : 𝓞 K) ∈ v.asIdeal := by
-  have hp : Prime (l : ℤ) := Nat.prime_iff_prime_int.1 hl.out
-  haveI : (Ideal.span {(l : ℤ)}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).2 hp
-  obtain ⟨Q, hQ, hc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral_of_isDomain (S := 𝓞 K) (Ideal.span {(l : ℤ)})
-    (by rw [(RingHom.injective_iff_ker_eq_bot (algebraMap ℤ (𝓞 K))).1 (RingHom.injective_int _)]; exact bot_le)
-  have hm : ((l : ℕ) : 𝓞 K) ∈ Q := by
-    have : (l : ℤ) ∈ Q.comap (algebraMap ℤ (𝓞 K)) := by
-      change (l : ℤ) ∈ Ideal.under ℤ Q
-      rw [hc]
-      exact Ideal.mem_span_singleton_self _
-    simpa using this
-  refine ⟨⟨Q, hQ, fun h => ?_⟩, hm⟩
-  rw [h, Ideal.mem_bot] at hm
-  exact hl.out.ne_zero (by exact_mod_cast hm)
 
 private theorem trace_map_comp_pow {n : ℕ} {A B C G : Type} [CommRing A] [CommRing B] [CommRing C] [Group G] (D : GDet n A G)
     (f : A →+* B) (g : B →+* C) (k : A →+* C) (hk : g.comp f = k) (y : MonoidAlgebra B G) :
@@ -321,7 +285,7 @@ private theorem trace_vanishing_of_evaluation_pow {n : ℕ} {R K S G : Type} [Co
 theorem UpperTheory.V.Z.Win.T2.level_relation_two_x :
     _root_.UpperTheory.V.Th.LevelRelationTwoX := by
   intro hP l _ L Ω _ _ _ _ _ _ s V0 O _ _ _ _ _ n r B J D b V h q w A x δ h1 h2 h3 T ph ta ⟨ι, hsep, hloc⟩ j i
-  obtain ⟨v⟩ : Nonempty (globOf r V).frame.Vl := (exists_place_above_prime_pow (Lp L) l).elim fun v hv => ⟨⟨v, hv⟩⟩
+  obtain ⟨v⟩ : Nonempty (globOf r V).frame.Vl := (_root_.UpperTheory.LocOkLevelModuleOfThetaData.exists_place_above_prime_bis (Lp L) l).elim fun v hv => ⟨⟨v, hv⟩⟩
   have h₀ := A.p.Ord v (fun _ => 1) 1
   refine reduction_of_polynomial_element_pow A.p.D T.act1 (qj w) j _
     (twoPowerModulus (2 * n.factorial) (ph j) (ta j) (fun i => MvPolynomial.X (.inl i)) i (MvPolynomial.X (.inr i))) _
@@ -364,48 +328,6 @@ open UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.Hi UpperTheory.V.AlgebraToo
 open scoped TensorProduct
 
 
-private theorem opOf_tr {Λ R G P Γ σ : Type} [CommRing Λ] [CommRing R] [Algebra Λ R] [Group G] [AddCommGroup P]
-    [Module R P] [Module Λ P] [IsScalarTower Λ R P] [Group Γ] [Finite Γ] (ρ : Representation R G P)
-    (K K1 : Subgroup G) (hle : K1 ≤ K) [(K1.subgroupOf K).Normal]
-    (ρ' : Representation Λ (K ⧸ K1.subgroupOf K) (fixd ρ K1))
-    (hρ' : ∀ (u : K) f, (ρ' (u : K ⧸ K1.subgroupOf K) f : P) = ρ u f)
-    (hP : Module.Projective (MonoidAlgebra Λ (K ⧸ K1.subgroupOf K)) ρ'.asModule)
-    (e : Γ ≃* K ⧸ K1.subgroupOf K) (γ : σ → Γ) (hγ : Subgroup.closure (Set.range γ) = ⊤)
-    (Y : σ → Module.End R (fixd ρ K1)) (hY : ∀ p m, ρ' (e (γ p)) m = m + Y p m)
-    (tr : fixd ρ K1 →ₗ[R] fixd ρ K) (htr : ∀ m, (tr m : P) = dc ρ K K1 1 m) :
-    Function.Surjective tr ∧ LinearMap.ker tr = ⨆ p, LinearMap.range (Y p) := by
-  haveI : Finite (K ⧸ K1.subgroupOf K) := Finite.of_equiv Γ e.toEquiv
-  letI := Fintype.ofFinite (K ⧸ K1.subgroupOf K)
-  obtain ⟨h1, h2⟩ := projNorm Λ _ _ ρ' hP
-  have hs : ∀ m, (tr m : P) = (∑ g, ρ' g m : fixd ρ K1) := fun m => by
-    rw [htr, UpperTheory.V.Pa.Lev.opOf_dc ρ K K1 m m.2, AddSubmonoidClass.coe_finsetSum]
-    refine Finset.sum_congr rfl fun g _ => ?_
-    rw [← hρ', QuotientGroup.out_eq']
-  refine ⟨fun v => ?_, le_antisymm (fun m hm => ?_) (iSup_le fun p => ?_)⟩
-  · obtain ⟨m, hm⟩ := h1 ⟨v, fixd_anti ρ hle v.2⟩ fun g => by
-      obtain ⟨u, rfl⟩ := QuotientGroup.mk_surjective g
-      exact Subtype.ext ((hρ' u _).trans (v.2 u u.2))
-    exact ⟨m, Subtype.ext (by rw [hs, hm])⟩
-  · have h0 : ∑ g, ρ' g m = 0 := Subtype.ext (by rw [← hs, LinearMap.mem_ker.1 hm]; rfl)
-    have hc : Subgroup.closure (Set.range fun p => e (γ p)) = ⊤ := by
-      have := congrArg (Subgroup.map e.toMonoidHom) hγ
-      rw [MonoidHom.map_closure, ← Set.range_comp, Subgroup.map_top_of_surjective _ e.surjective] at this
-      exact this
-    have h3 : (⨆ g ∈ Set.range fun p => e (γ p), LinearMap.range (ρ' g - 1)) ≤
-        (⨆ p, LinearMap.range (Y p)).restrictScalars Λ := by
-      refine iSup₂_le ?_
-      rintro _ ⟨p, rfl⟩ _ ⟨v, rfl⟩
-      refine Submodule.mem_iSup_of_mem (p := fun p => LinearMap.range (Y p)) p ⟨v, ?_⟩
-      rw [LinearMap.sub_apply, hY, Module.End.one_apply, add_sub_cancel_left]
-    exact h3 (h2 _ hc m h0)
-  · rintro _ ⟨m, rfl⟩
-    have h4 : tr (ρ' (e (γ p)) m) = tr m := Subtype.ext (by
-      rw [hs, hs]
-      congr 1
-      refine Fintype.sum_equiv (Equiv.mulRight (e (γ p))) _ _ fun g => ?_
-      rw [Equiv.coe_mulRight, map_mul, Module.End.mul_apply])
-    rw [hY, map_add (f := _)] at h4
-    exact add_eq_left.1 h4
 
 
 
@@ -432,7 +354,7 @@ theorem UpperTheory.V.Th.opOfX_alt :
     exact Subtype.ext (by rw [hg2, hρ', hg1]; exact (hy j i m).symm)
   have hle : UIw1 l n w ≤ UIw n w := fun g hg j hj => UpperTheory.V.Pa.Lev.opOf_le _ (hg j hj)
   haveI : ∀ p : Fin q × Fin n, NeZero (l ^ padicValNat l (qj w p.1 - 1)) := fun s => ⟨pow_ne_zero _ hl.out.ne_zero⟩
-  obtain ⟨hs, hk⟩ := opOf_tr A.ρ (UIw n w) (UIw1 l n w) hle ρ' hρ' hpr e
+  obtain ⟨hs, hk⟩ := _root_.UpperTheory.LevOpOf.opOf_tr A.ρ (UIw n w) (UIw1 l n w) hle ρ' hρ' hpr e
     (fun p : Fin q × Fin n => Pi.mulSingle p (Multiplicative.ofAdd 1)) (UpperTheory.V.Pa.Lev.opOf_gen hl.out fun j => padicValNat l (qj w j - 1))
     (fun p : Fin q × Fin n => T.act1 (yV A.R p.1 p.2)) (fun p m => (hg p.1 p.2 m).trans (by rw [map_add (f := _), map_one]; rfl)) tr htr
   have ha : ∀ j, N ≤ padicValNat l (qj w j - 1) := fun j => by
@@ -928,20 +850,6 @@ open UpperTheory.V.HV (Coef)
 open scoped TensorProduct
 
 open UpperTheory.V.Hi.LvR
-private theorem hida_lq_lc {l : ℕ} [Fact l.Prime] {F : W.GFrame l} {O : Type} [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O] {n : ℕ}
-    (r : Resid F O n) : IsLocallyConstant fun g : F.G₀ => r.Dbar.chi (MonoidAlgebra.single g 1) := by
-  have h : IsLocallyConstant fun (g : F.G₀) (i : Fin n) => r.chib i g :=
-    (IsLocallyConstant.iff_eventually_eq _).2 fun x => by
-      have := Filter.eventually_all.2 fun i => (JEx.lc_of_open _ (r.chib_open i)).eventually_eq x
-      exact this.mono fun y hy => funext hy
-  have e : (fun g : F.G₀ => r.Dbar.chi (MonoidAlgebra.single g 1)) =
-      (fun t : Fin n → (ResidueField O)ˣ => (Matrix.diagonal fun i => (t i : ResidueField O)).charpoly) ∘
-        fun (g : F.G₀) (i : Fin n) => r.chib i g := by
-    funext g
-    rw [Resid.Dbar, (AlgebraTools.Det.repApi _).2.1]
-    rfl
-  rw [e]
-  exact h.comp _
 private theorem hida_lq_dense {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y] {p : X → Y} (hc : Continuous p)
     (hs : Function.Surjective p) {S : Set X} (hS : Dense S) {T : Set Y} (h : ∀ x ∈ S, p x ∈ T) : Dense T :=
   (hs.denseRange.dense_image hc hS).mono (by rintro _ ⟨x, hx, rfl⟩; exact h x hx)

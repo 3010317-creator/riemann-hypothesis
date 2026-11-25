@@ -57,7 +57,7 @@ private lemma coset_in {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalG
     (by simpa using hs)
   exact ⟨V, hV, fun h hh => hsub hh⟩
 
-private lemma cosetI {G κ : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
+lemma _root_.UpperTheory.V.Th.Det.cosetI {G κ : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
     [TotallyDisconnectedSpace G] [Field κ] {n : ℕ} (hn : n ≤ 3) (G' : Subgroup G)
     (r : G →* GL (Fin n) κ) (hc : LinClosed (gm r))
     (hirr : ∀ U : Subgroup G, IsOpen (U : Set G) → MatIrr (U ⊓ G') (gm r))
@@ -98,7 +98,7 @@ theorem UpperTheory.V.Th.Det.n3small :
       refine continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ => ?_
       exact (h1.matrix_elem i j).mul continuous_const
     exact isClosed_eq h2 continuous_const
-  refine cosetI hn G' ρ hc hirr ?_ U hU hne
+  refine _root_.UpperTheory.V.Th.Det.cosetI hn G' ρ hc hirr ?_ U hU hne
   intro V hV
   haveI : Finite (G ⧸ V) := Subgroup.quotient_finite_of_isOpen V hV
   haveI : V.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient

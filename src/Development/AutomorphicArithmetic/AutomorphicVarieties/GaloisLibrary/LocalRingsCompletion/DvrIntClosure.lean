@@ -18,7 +18,7 @@ open PowerSeries IsLocalRing UpperTheory.V.abelian₂
 open IsDiscreteValuationRing (addVal)
 open scoped Pointwise TensorProduct Topology
 
-private theorem UpperTheory.V.abelian₂.isIntegral_iff_norm_le_one_bis {l : ℕ} [Fact l.Prime] {K : Type} [Field K]
+theorem _root_.UpperTheory.V.abelian₂.isIntegral_iff_norm_le_one_bis {l : ℕ} [Fact l.Prime] {K : Type} [Field K]
     [Algebra ℚ_[l] K] [Algebra ℤ_[l] K] [IsScalarTower ℤ_[l] ℚ_[l] K] [FiniteDimensional ℚ_[l] K]
     (φ : K →ₐ[ℚ_[l]] PadicAlgCl l) (x : K) : IsIntegral ℤ_[l] x ↔ ‖φ x‖ ≤ 1 := by
   have hi : IsIntegral ℚ_[l] x := Algebra.IsIntegral.isIntegral x
@@ -46,7 +46,7 @@ theorem UpperTheory.V.abelian₂.dvr_intClosure :
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  have hint := UpperTheory.V.abelian₂.isIntegral_iff_norm_le_one_bis φ
+  have hint := _root_.UpperTheory.V.abelian₂.isIntegral_iff_norm_le_one_bis φ
   have hunit : ∀ a : integralClosure ℤ_[l] K, ‖φ a‖ = 1 → IsUnit a := by
     intro a ha
     have h0 : (a : K) ≠ 0 := by

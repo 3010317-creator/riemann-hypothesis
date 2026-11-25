@@ -32,15 +32,6 @@ private theorem fd_adjoin_range (l : ℕ) [Fact l.Prime] {ι : Type} [Finite ι]
   exact IntermediateField.finiteDimensional_adjoin fun z _ =>
       (Algebra.IsAlgebraic.isAlgebraic z).isIntegral
 
-private theorem char_finext (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ]
-    [CompactSpace Γ] (ψ : Γ →* (PadicAlgCl l)ˣ) (hψ : IsOpen (ψ.ker : Set Γ)) :
-    ∃ K : IntermediateField ℚ_[l] (PadicAlgCl l), FiniteDimensional ℚ_[l] K ∧ ∀ g, (ψ g : PadicAlgCl l) ∈ K := by
-  haveI : Finite (Γ ⧸ ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hψ
-  refine ⟨_, fd_adjoin_range l (fun q : Γ ⧸ ψ.ker => (ψ q.out : PadicAlgCl l)), fun g => ?_⟩
-  obtain ⟨h, hh⟩ := QuotientGroup.mk_out_eq_mul ψ.ker g
-  refine IntermediateField.subset_adjoin _ _ ⟨(g : Γ ⧸ ψ.ker), ?_⟩
-  have h1 : ψ (h : Γ) = 1 := h.2
-  simp only [hh, map_mul, h1, mul_one]
 
 
 open TensorProduct in
@@ -210,7 +201,7 @@ private theorem neg_case (hP : CohInp) (θ χ : G ℚ Ω →* (PadicAlgCl l)ˣ) 
   obtain ⟨CK, hK⟩ := hP.lemK
   obtain ⟨h1, j, hj, -, h2⟩ := bk_loc θ c hc hb
   obtain ⟨i1, i2, -, -, i5, -, -⟩ := Loc.iotaFacts j
-  obtain ⟨K₀, hK₀, hψK⟩ := char_finext l (G ℚ Ω) χ hχ
+  obtain ⟨K₀, hK₀, hψK⟩ := _root_.UpperTheory.FdAdjoinRange.char_finext l (G ℚ Ω) χ hχ
   have hθK : ∀ g, (θ g : PadicAlgCl l) ∈ K₀ := fun g => by
     have h := hθ g
     rw [mul_assoc] at h
@@ -266,7 +257,7 @@ private theorem zero_case (hP : CohInp) (K : Type) [Field K] [NumberField K] [Al
     filter_upwards [hχ.mem_nhds θ.ker.one_mem] with g hg using hg.symm)
   obtain ⟨h1, j, hj, hjl, h2⟩ := bk_loc θ c hc hb
   obtain ⟨i1, -, -, i4, -, -, -⟩ := Loc.iotaFacts j
-  obtain ⟨K₀, hK₀, hψK⟩ := char_finext l (G ℚ Ω) θ hχ
+  obtain ⟨K₀, hK₀, hψK⟩ := _root_.UpperTheory.FdAdjoinRange.char_finext l (G ℚ Ω) θ hχ
   obtain ⟨E, _, κ, c', hκ, hc', hf⟩ := desc _ (θ.comp (Loc.iota j)) K₀ (fun g => hψK _) _ hj
   haveI : IsModuleTopology ℚ_[l] E := isModuleTopologyOfFiniteDimensional
   have hκc : Continuous fun g => (κ g : E) :=

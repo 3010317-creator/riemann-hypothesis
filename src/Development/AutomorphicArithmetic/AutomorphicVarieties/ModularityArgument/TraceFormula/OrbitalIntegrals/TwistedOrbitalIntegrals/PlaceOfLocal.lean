@@ -50,7 +50,7 @@ open MeasureTheory NumberField IsDedekindDomain PositivityTheory.Rg.Tf.Loc Upper
 open PositivityTheory.Rg.Tf.Geo (mapGL incFin galFin)
 open scoped ENNReal
 
-private theorem cent_facts (hCC : CentComm) {k : Type} [Field k] [TopologicalSpace k] {n : ℕ} [T2Space (GL (Fin n) k)]
+theorem _root_.UpperTheory.PlaceOfLocal.cent_facts (hCC : CentComm) {k : Type} [Field k] [TopologicalSpace k] {n : ℕ} [T2Space (GL (Fin n) k)]
     [ContinuousMul (GL (Fin n) k)] {γ : GL (Fin n) k} (hγ : IsRegSemisimple γ) :
     IsClosed ((Subgroup.centralizer {γ} : Subgroup (GL (Fin n) k)) : Set (GL (Fin n) k)) ∧
     ∀ a ∈ (Subgroup.centralizer {γ} : Subgroup (GL (Fin n) k)), ∀ b ∈ (Subgroup.centralizer {γ} : Subgroup (GL (Fin n) k)),
@@ -90,7 +90,7 @@ private theorem key (hT : GLTop) (hC : ExtCont) (hCC : CentComm) (hH : HaarComm)
   rw [← hM'.1 _ hδ']
   obtain ⟨a1, a2, a3, -⟩ := hT E n
   obtain ⟨b1, b2, b3, -⟩ := hT k n
-  obtain ⟨c1, c2⟩ := cent_facts hCC hγ
+  obtain ⟨c1, c2⟩ := _root_.UpperTheory.PlaceOfLocal.cent_facts hCC hγ
   obtain ⟨s1, s2, -⟩ := hH _ _ c1 c2 ν hν
   obtain ⟨d1, d2⟩ := (hC k E).2.2 n
   set δ' := mapGL n (e : S →+* E) δ with hδe

@@ -1668,7 +1668,7 @@ private theorem det_alg (P : _root_.UpperTheory.V.Af.HypothesesH') {Ω : Type} [
     exact this)
   rw [e]
   exact h2
-private theorem conj_ex (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] : ∃ c : G ℚ Ω, IsConjEl c := by
+theorem _root_.UpperTheory.AlgPosOfExpo.conj_ex (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] : ∃ c : G ℚ Ω, IsConjEl c := by
   have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   let j : Ω →ₐ[ℚ] ℂ := (by
@@ -1722,7 +1722,7 @@ private theorem kap_anti {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ 
 theorem UpperTheory.V.Cu.polOf4_alt :
     _root_.UpperTheory.V.Af.HypothesesH' → UpperTheory.V.Cu.PolOf4 := by
   intro P Ω _ _ _ l _ ι K' _ _ hK ρ hρ ha g0 m c₁ κ τ s hτ
-  obtain ⟨c, hc⟩ := conj_ex Ω
+  obtain ⟨c, hc⟩ := _root_.UpperTheory.AlgPosOfExpo.conj_ex Ω
   let J : GL (Fin 2) (Qbar l) := Matrix.GeneralLinearGroup.mkOfDetNeZero !![0, 1; -1, 0] (by simp [Matrix.det_fin_two])
   refine ⟨ℚ, _, _, _, _, inferInstance, inferInstance, inferInstance, _, c, J * ρ c⁻¹, det_alg P ι ρ hρ ha,
     fun a b h h' => auSign _ a b h h', hc, fun g g' h => ?_⟩

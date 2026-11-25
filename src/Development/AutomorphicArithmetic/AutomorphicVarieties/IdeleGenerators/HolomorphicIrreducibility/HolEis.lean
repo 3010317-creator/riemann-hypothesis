@@ -656,7 +656,7 @@ private theorem ct_rel [MeasurableSpace (NA F)] (μ : Measure (NA F)) (D : Set (
   refine (LinearMap.congr_fun hΛ ⟨_, hk⟩).trans (funext fun g => ?_)
   simp only [L, cterm, LinearMap.coe_mk, AddHom.coe_mk, mul_assoc]
 
-private theorem ode {f : ℝ → ℂ} {κ : ℂ} (h : ∀ t, HasDerivAt f (κ * f t) t) : f 1 = Complex.exp κ * f 0 := by
+theorem _root_.UpperTheory.V.Sd.Eis.ode {f : ℝ → ℂ} {κ : ℂ} (h : ∀ t, HasDerivAt f (κ * f t) t) : f 1 = Complex.exp κ * f 0 := by
   have h1 : ∀ t : ℝ, HasDerivAt (fun t : ℝ => Complex.exp (-κ * t) * f t) 0 t := fun t => by
     have := (((Complex.ofRealCLM.hasDerivAt (x := t)).const_mul (-κ)).cexp).mul (h t)
     refine this.congr_deriv ?_
@@ -678,7 +678,7 @@ private theorem ct_arch {ψ : GA F 2 → ℂ} {k : ℕ} (h : ∀ (u : TR.Rinf F)
   have hz : ∀ s t, z (s + t) = z s * z t := fun s t => Units.ext (funext fun v => by simp [z, add_mul, Real.exp_add])
   have h0 : z 0 = 1 := Units.ext (funext fun v => by simp [z])
   have h1 : z 1 = y := Units.ext (funext fun v => by simp [z, u, Real.exp_log (hy v)])
-  have := ode (f := fun t => ψ (TR.infGL F 2 (aff (z t) 0) * g)) (κ := (k : ℂ) / 2 * ((∑ v, u v : ℝ) : ℂ)) fun t => by
+  have := _root_.UpperTheory.V.Sd.Eis.ode (f := fun t => ψ (TR.infGL F 2 (aff (z t) 0) * g)) (κ := (k : ℂ) / 2 * ((∑ v, u v : ℝ) : ℂ)) fun t => by
     have h2 := h u z (fun _ _ => rfl) (TR.infGL F 2 (aff (z t) 0) * g)
     have h3 := HasDerivAt.comp_sub_const t t (by rw [sub_self]; exact h2)
     refine h3.congr_of_eventuallyEq (Filter.Eventually.of_forall fun s => ?_)

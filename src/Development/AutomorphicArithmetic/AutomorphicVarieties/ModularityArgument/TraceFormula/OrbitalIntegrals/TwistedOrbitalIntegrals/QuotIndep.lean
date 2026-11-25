@@ -58,7 +58,7 @@ variable {G T : Type} [Group G] [MeasurableSpace G] [MeasurableMul₂ G] [Measur
   {μ : Measure G} [μ.IsMulLeftInvariant] [SFinite μ] {ν : Measure T} [SFinite ν] {j : T →* G}
 
 omit [MeasurableInv G] [MeasurableInv T] in
-private theorem ae_fin (hj : Measurable j) {ρ : G → ℝ≥0∞} (hm : Measurable ρ) (h : ∀ x, ∫⁻ t, ρ (j t * x) ∂ν = 1) :
+theorem _root_.UpperTheory.QuotIndep.ae_fin (hj : Measurable j) {ρ : G → ℝ≥0∞} (hm : Measurable ρ) (h : ∀ x, ∫⁻ t, ρ (j t * x) ∂ν = 1) :
     ∀ᵐ g ∂μ, ρ g < ∞ := by
   have hA : MeasurableSet {g | ρ g = ∞} := hm (measurableSet_singleton _)
   have hmul : Measurable fun p : G × T => j p.2 * p.1 := (hj.comp measurable_snd).mul measurable_fst
@@ -79,7 +79,7 @@ private theorem ae_fin (hj : Measurable j) {ρ : G → ℝ≥0∞} (hm : Measura
     rw [Measure.measure_univ_eq_zero.1 h1] at this
     simp at this
 
-private theorem lint_eq [ν.IsInvInvariant] (hj : Measurable j) {F : G → ℝ≥0∞} (hF : Measurable F) (hFH : ∀ t g, F (j t * g) = F g)
+theorem _root_.UpperTheory.QuotIndep.lint_eq [ν.IsInvInvariant] (hj : Measurable j) {F : G → ℝ≥0∞} (hF : Measurable F) (hFH : ∀ t g, F (j t * g) = F g)
     {ρ ρ' : G → ℝ≥0∞} (hm : Measurable ρ) (h : ∀ x, ∫⁻ t, ρ (j t * x) ∂ν = 1) (hm' : Measurable ρ') (h' : ∀ x, ∫⁻ t, ρ' (j t * x) ∂ν = 1) :
     ∫⁻ g, F g * ρ g ∂μ = ∫⁻ g, F g * ρ' g ∂μ := by
   have hmul : Measurable fun p : G × T => j p.2 * p.1 := (hj.comp measurable_snd).mul measurable_fst
@@ -100,12 +100,12 @@ private theorem lint_eq [ν.IsInvInvariant] (hj : Measurable j) {F : G → ℝ�
   rw [hFH, ← mul_assoc (j t), ← map_mul, mul_inv_cancel, map_one, one_mul]
   ring
 
-private theorem wd_eq [ν.IsInvInvariant] (hj : Measurable j) {F : G → ℂ} (hF : Measurable F) (hFH : ∀ t g, F (j t * g) = F g)
+theorem _root_.UpperTheory.QuotIndep.wd_eq [ν.IsInvInvariant] (hj : Measurable j) {F : G → ℂ} (hF : Measurable F) (hFH : ∀ t g, F (j t * g) = F g)
     {ρ ρ' : G → ℝ≥0∞} (hm : Measurable ρ) (h : ∀ x, ∫⁻ t, ρ (j t * x) ∂ν = 1) (hm' : Measurable ρ') (h' : ∀ x, ∫⁻ t, ρ' (j t * x) ∂ν = 1) :
     ∫ g, F g * ((ρ g).toReal : ℂ) ∂μ = ∫ g, F g * ((ρ' g).toReal : ℂ) ∂μ := by
   have key : ∀ {ρ : G → ℝ≥0∞}, Measurable ρ → (∀ x, ∫⁻ t, ρ (j t * x) ∂ν = 1) →
       ∫ g, F g * ((ρ g).toReal : ℂ) ∂μ = ∫ z, z ∂((μ.withDensity ρ).map F) := fun {ρ} hm h => by
-    rw [integral_map (f := fun z : ℂ => z) hF.aemeasurable aestronglyMeasurable_id, integral_withDensity_eq_integral_toReal_smul hm (ae_fin hj hm h)]
+    rw [integral_map (f := fun z : ℂ => z) hF.aemeasurable aestronglyMeasurable_id, integral_withDensity_eq_integral_toReal_smul hm (_root_.UpperTheory.QuotIndep.ae_fin hj hm h)]
     refine integral_congr_ae (Filter.Eventually.of_forall fun g => ?_)
     simp [mul_comm]
   rw [key hm h, key hm' h']
@@ -116,7 +116,7 @@ private theorem wd_eq [ν.IsInvInvariant] (hj : Measurable j) {F : G → ℂ} (h
   have e : ∀ ρ : G → ℝ≥0∞, (F ⁻¹' A).indicator ρ = fun g => (F ⁻¹' A).indicator 1 g * ρ g := fun ρ => funext fun g => by
     by_cases hg : g ∈ F ⁻¹' A <;> simp [hg]
   rw [e, e ρ']
-  refine lint_eq hj (measurable_one.indicator (hF hA)) (fun t g => ?_) hm h hm' h'
+  refine _root_.UpperTheory.QuotIndep.lint_eq hj (measurable_one.indicator (hF hA)) (fun t g => ?_) hm h hm' h'
   by_cases hg : F g ∈ A <;> simp [Set.indicator, hFH, hg]
 
 end Core
@@ -127,4 +127,4 @@ theorem UpperTheory.V.Z.Tf.Orb.quotIndep :
   have : MeasurableInv H := ⟨(measurable_subtype_coe.inv).subtype_mk⟩
   have hex : ∃ ρ, IsQuotNormaliser H μ ρ := ⟨ρ, hρ⟩
   rw [quotIntegral, dite_eq_left hex]
-  exact wd_eq (j := H.subtype) measurable_subtype_coe hF (fun t g => hFH t t.2 g) hex.choose_spec.1 hex.choose_spec.2 hρ.1 hρ.2
+  exact _root_.UpperTheory.QuotIndep.wd_eq (j := H.subtype) measurable_subtype_coe hF (fun t g => hFH t t.2 g) hex.choose_spec.1 hex.choose_spec.2 hρ.1 hρ.2

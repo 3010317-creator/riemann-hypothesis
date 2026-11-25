@@ -95,7 +95,7 @@ private theorem sdom_of_step {k : Type} [Field k] [ValuativeRel k] {n : ℕ} (s 
         exact mul_le_of_le_one_right' (pow_le_one' h1 _)
     _ < valuation k (s j : k) * valuation k (c : k) ^ (n - (j : ℕ)) :=
         mul_lt_mul_of_pos_right (h2 i j hij) (pow_pos hc0 _)
-private theorem exists_sdom {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
+theorem _root_.UpperTheory.TLocSub.exists_sdom {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] {n : ℕ} (t : Fin n → kˣ) :
     ∃ d : Fin n → kˣ, Sig.SDom d ∧ Sig.SDom (t * d) := by
   rcases isEmpty_or_nonempty (Fin n) with h | h
@@ -155,7 +155,7 @@ theorem UpperTheory.V.Z.Sym.Al.subquotient_prin_series_of_iwahori_eigenvector :
     exact h1.trans (heig d hd)
   have ht : ∀ t, (θ t : Module.End ℂ (Hi.fixd τ (UpperTheory.V.AlgebraTools.iwC k n ⊤))) w = (χ t : ℂ) • w := by
     intro t
-    obtain ⟨d, hd, htd⟩ := exists_sdom t
+    obtain ⟨d, hd, htd⟩ := _root_.UpperTheory.TLocSub.exists_sdom t
     have h1 := hsd d hd
     have h2 := hsd (t * d) htd
     rw [map_mul, Units.val_mul, Module.End.mul_apply, h1, map_smul, map_mul, Units.val_mul, mul_comm, mul_smul] at h2

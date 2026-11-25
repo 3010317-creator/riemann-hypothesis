@@ -113,7 +113,7 @@ protected theorem UpperTheory.V.Pa.Lev.relOf_int {R W W' κ S : Type} [CommRing 
   | add p q hp hq => rw [map_add (f := _), map_add (f := _), map_add (f := _), LinearMap.add_apply, LinearMap.add_apply, map_add (f := _), hp, hq]
   | mul_X p a hp =>
     rw [map_mul, map_mul, map_mul, Module.End.mul_apply, Module.End.mul_apply, MvPolynomial.eval₂Hom_X', h, hp]
-private theorem relOf_uy {R W W' ι S : Type} [CommRing R] [AddCommGroup W] [Module R W] [AddCommGroup W'] [Module ℂ W']
+theorem _root_.UpperTheory.LevRelOf.relOf_uy {R W W' ι S : Type} [CommRing R] [AddCommGroup W] [Module R W] [AddCommGroup W'] [Module ℂ W']
     [CommRing S] [Algebra R S] (c : R →+* ℂ) (act : S →ₐ[R] Module.End R W)
     (act' : MvPolynomial (ι ⊕ ι) ℂ →ₐ[ℂ] Module.End ℂ W') (g : W →+ W') (hg : ∀ r m, g (r • m) = c r • g m)
     (ψ : MvPolynomial (ι ⊕ ι) R →ₐ[R] S) (N : ℕ) (e : ι → ℕ) (E : ι ⊕ ι → Module.End R W)
@@ -162,7 +162,7 @@ theorem UpperTheory.V.Pa.Lev.relOf_alt :
         simp [c]
       · funext a
         rcases a with i | i <;> simp [v, t])
-  exact congrArg Subtype.val (relOf_uy c T.act1 act g hg
+  exact congrArg Subtype.val (_root_.UpperTheory.LevRelOf.relOf_uy c T.act1 act g hg
     (MvPolynomial.rename (Sum.map (fun i => (j, i)) fun i => (j, i))) (qj w j) (fun i => (i : ℕ))
     (fun a => (T.Θ1 j (t a)).val)
     (fun i => by rw [MvPolynomial.rename_X]; exact T.act_uVariable_eq_pow j i)
@@ -186,7 +186,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.LocLanglands GlobalTheory.LocGL GlobalTheory.GalOfCusp GlobalTheory.SmGL GlobalTheory.SplitWeil
 open UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.Hi UpperTheory.V.AlgebraTools UpperTheory.V.Pa UpperTheory.V.Pa.Lev
 open scoped TensorProduct
-private theorem exists_place_above_prime_bis (K : Type) [Field K] [NumberField K] (l : ℕ) [hl : Fact l.Prime] :
+theorem _root_.UpperTheory.LocOkLevelModuleOfThetaData.exists_place_above_prime_bis (K : Type) [Field K] [NumberField K] (l : ℕ) [hl : Fact l.Prime] :
     ∃ v : HeightOneSpectrum (𝓞 K), ((l : ℕ) : 𝓞 K) ∈ v.asIdeal := by
   have hp : Prime (l : ℤ) := Nat.prime_iff_prime_int.1 hl.out
   haveI : (Ideal.span {(l : ℤ)}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).2 hp
@@ -292,7 +292,7 @@ private theorem trace_vanishing_of_evaluation {n : ℕ} {R K G : Type} [CommRing
 theorem UpperTheory.V.Z.Win.T2.level_relation_one_two :
     _root_.UpperTheory.V.Pa.Lev.LevelRelationOneTwo := by
   intro hP l _ L Ω _ _ _ _ _ _ s V0 O _ _ _ _ _ n r B J D b V h q w A x δ h1 h2 h3 T ph ta ⟨ι, hsep, hloc⟩
-  obtain ⟨v⟩ : Nonempty (globOf r V).frame.Vl := (exists_place_above_prime_bis (Lp L) l).elim fun v hv => ⟨⟨v, hv⟩⟩
+  obtain ⟨v⟩ : Nonempty (globOf r V).frame.Vl := (_root_.UpperTheory.LocOkLevelModuleOfThetaData.exists_place_above_prime_bis (Lp L) l).elim fun v hv => ⟨⟨v, hv⟩⟩
   have h₀ := A.p.Ord v (fun _ => 1) 1
   refine ⟨fun j g => ?_, fun j i g => ?_⟩
   · refine reduction_of_polynomial_element A.p.D T.act1 (qj w) j _ (MonoidAlgebra.single g 1 * q1El (ph j) fun i => MvPolynomial.X (.inl i)) _
@@ -383,7 +383,7 @@ protected theorem UpperTheory.V.Pa.Lev.opOf_dc {R G P : Type} [CommRing R] [Grou
   obtain ⟨u, hu⟩ := QuotientGroup.mk_out_eq_mul K1 ((g.out : K) : G)
   show ρ (((g.out : K) : G) : G ⧸ K1).out m = _
   rw [hu, map_mul, Module.End.mul_apply, hm u u.2]
-private theorem opOf_tr {Λ R G P Γ σ : Type} [CommRing Λ] [CommRing R] [Algebra Λ R] [Group G] [AddCommGroup P]
+theorem _root_.UpperTheory.LevOpOf.opOf_tr {Λ R G P Γ σ : Type} [CommRing Λ] [CommRing R] [Algebra Λ R] [Group G] [AddCommGroup P]
     [Module R P] [Module Λ P] [IsScalarTower Λ R P] [Group Γ] [Finite Γ] (ρ : Representation R G P)
     (K K1 : Subgroup G) (hle : K1 ≤ K) [(K1.subgroupOf K).Normal]
     (ρ' : Representation Λ (K ⧸ K1.subgroupOf K) (fixd ρ K1))
@@ -487,7 +487,7 @@ theorem UpperTheory.V.Pa.Lev.opOf_alt :
     exact Subtype.ext (by rw [hg2, hρ', hg1]; exact (hy j i m).symm)
   have hle : UIw1 l n w ≤ UIw n w := fun g hg j hj => UpperTheory.V.Pa.Lev.opOf_le _ (hg j hj)
   haveI : ∀ p : Fin q × Fin n, NeZero (l ^ padicValNat l (qj w p.1 - 1)) := fun s => ⟨pow_ne_zero _ hl.out.ne_zero⟩
-  obtain ⟨hs, hk⟩ := opOf_tr A.ρ (UIw n w) (UIw1 l n w) hle ρ' hρ' hpr e
+  obtain ⟨hs, hk⟩ := _root_.UpperTheory.LevOpOf.opOf_tr A.ρ (UIw n w) (UIw1 l n w) hle ρ' hρ' hpr e
     (fun p : Fin q × Fin n => Pi.mulSingle p (Multiplicative.ofAdd 1)) (UpperTheory.V.Pa.Lev.opOf_gen hl.out fun j => padicValNat l (qj w j - 1))
     (fun p : Fin q × Fin n => T.act1 (yV A.R p.1 p.2)) (fun p m => (hg p.1 p.2 m).trans (by rw [map_add (f := _), map_one]; rfl)) tr htr
   have ha : ∀ j, N ≤ padicValNat l (qj w j - 1) := fun j => by

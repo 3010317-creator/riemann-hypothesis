@@ -233,7 +233,7 @@ private structure COb (O : Type) [CommRing O] [IsLocalRing O] : Type 1 where
 
 attribute [local instance] COb.ring COb.alg COb.co
 
-private theorem coprod_opt (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O]
+theorem _root_.UpperTheory.FiniteOpenHomsToFiniteGroup.coprod_opt (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O]
     [IsAdicComplete (maximalIdeal O) O] (T : Type) [Finite T] (A : Type) [CommRing A] [Algebra O A] [IsCO O A]
     (B : T → Type) [∀ t, CommRing (B t)] [∀ t, Algebra O (B t)] [∀ t, IsCO O (B t)] :
     ∃ (R : Type) (_ : CommRing R) (_ : Algebra O R) (_ : IsCO O R) (a : A →ₐ[O] R) (j : ∀ t, B t →ₐ[O] R),
@@ -349,7 +349,7 @@ private theorem pre_univ {l : ℕ} [Fact l.Prime] {F : GFrame l} {O : Type} [Com
   have hb := fun t : F.Vl × Fin n => universalDeformationRing_localCharacters r t.1 t.2 (hv t.1)
   choose Rv iRv iAv iCv ψv hψ hU using hb
   obtain ⟨R, iR, iA, iC, a, j, hR⟩ :=
-    @coprod_opt O _ _ _ _ (F.Vl × Fin n) _ R₀ iR0 iA0 iC0 Rv iRv iAv iCv
+    @_root_.UpperTheory.FiniteOpenHomsToFiniteGroup.coprod_opt O _ _ _ _ (F.Vl × Fin n) _ R₀ iR0 iA0 iC0 Rv iRv iAv iCv
   refine ⟨R, iR, iA, iC, D₀.map (a : R₀ →+* R), fun v i => pushCh (j (v, i) : Rv (v, i) →+* R) (ψv (v, i)),
     def_map a hD₀.isDef, fun v i => psi_map (j (v, i)) r (hψ (v, i)), ?_⟩
   intro R' _ _ _ D' ψ' hD' hψ'
@@ -699,7 +699,7 @@ section -- clump:auto
 open IsLocalRing Matrix Filter UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.AlgebraTools UpperTheory.V.Pa UpperTheory.V.Pa.Core
 open scoped TensorProduct
 
-private theorem chi_rep {n : ℕ} {A G : Type} [CommRing A] [Group G] (ρ : G →* Matrix (Fin n) (Fin n) A) (g : G) :
+theorem _root_.UpperTheory.InjOfProd.chi_rep {n : ℕ} {A G : Type} [CommRing A] [Group G] (ρ : G →* Matrix (Fin n) (Fin n) A) (g : G) :
     (GDet.ofRep ρ).chi (MonoidAlgebra.single g 1) = (ρ g).charpoly := by
   change (GDet.repAlg ρ (Polynomial A) _).det = _
   rw [map_sub, MonoidAlgebra.mapRingHom_single, Matrix.charpoly, Matrix.charmatrix]
@@ -764,7 +764,7 @@ theorem UpperTheory.V.Pa.Core.ooPt :
     have h1 := congrArg (Polynomial.map x'.toRingHom) (spRoots B T.q n
       (fun j => u.D.chi (MonoidAlgebra.single (T.sg j) 1)) (fun j i => algebraMap O B (A.ut j i)) j).1
     rw [Polynomial.map_map, hc, ← ((UpperTheory.V.CA.d_gmap u.D).2.2.1 _ _).1, x.maps.1, MonoidAlgebra.mapRingHom_single,
-      map_one, chi_rep, Polynomial.map_prod] at h1
+      map_one, _root_.UpperTheory.InjOfProd.chi_rep, Polynomial.map_prod] at h1
     rw [← h1]
     refine Finset.prod_congr rfl fun i _ => ?_
     rw [Polynomial.map_sub, Polynomial.map_X, Polynomial.map_C]

@@ -64,7 +64,7 @@ private def chRep {A D : Type} (M : Type) [CommRing A] [Group D] [AddCommGroup M
 private theorem chRep_apply {A D M : Type} [CommRing A] [Group D] [AddCommGroup M] [Module A M] (χ : D →* Aˣ)
     (g : D) (y : M) : chRep M χ g y = (χ g : A) • y := rfl
 
-private theorem ker_le {A : Type} [CommRing A] (I J : Ideal A) [Finite (A ⧸ I)] [Finite (A ⧸ J)] (a : A)
+theorem _root_.UpperTheory.OneCntO.ker_le {A : Type} [CommRing A] (I J : Ideal A) [Finite (A ⧸ I)] [Finite (A ⧸ J)] (a : A)
     (h : J ≤ Ideal.span {a}) (S : Submodule A (A ⧸ I)) (hS : ∀ y ∈ S, a • y = 0) :
     Nat.card S ≤ Nat.card (A ⧸ J) := by
   let f : (A ⧸ I) →ₗ[A] (A ⧸ I) := a • LinearMap.id
@@ -115,7 +115,7 @@ theorem UpperTheory.V.Th.oneCntO :
         rw [hb, hb, chRep_apply, chRep_apply, smul_mul_smul_comm, hχ', he, Algebra.smul_def, hlin] }
   obtain ⟨hf, hc⟩ := hL k hk O (Om O m) (Om O m) _ _ b hLC hD
   have hinv : Nat.card (chRep (Om O m) χ').invariants ≤ Nat.card (Om O C) := by
-    refine ker_le _ _ ((χ g₀ : O) - algebraMap ℤ_[l] O (ε g₀ : ℤ_[l])) ?_ _ fun y hy => ?_
+    refine _root_.UpperTheory.OneCntO.ker_le _ _ ((χ g₀ : O) - algebraMap ℤ_[l] O (ε g₀ : ℤ_[l])) ?_ _ fun y hy => ?_
     · rw [hϖ.maximalIdeal_eq, Ideal.span_singleton_pow]
       exact (Ideal.span_singleton_le_iff_mem _).2 (Ideal.mem_span_singleton.2 hC.dvd)
     · have h1 : (χ' g₀ : O) • y = y := hy g₀

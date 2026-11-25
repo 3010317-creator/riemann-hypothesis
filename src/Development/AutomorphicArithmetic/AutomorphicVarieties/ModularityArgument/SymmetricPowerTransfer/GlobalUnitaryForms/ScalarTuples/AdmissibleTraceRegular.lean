@@ -366,37 +366,11 @@ private theorem lmap_star' {K K' : Type} [Field K] [Field K'] (f : K →+* K') (
     lmap f Δ (star x) = star (lmap f Δ x) := by
   ext <;> simp [lmap]
 
-private theorem el_mk {K : Type} [Field K] {Δ : K} (a b : Lsq K Δ) (h : a * star a + b * star b = 1) :
-    ∃ γ : DX Δ, mt γ = !![a, b; -star b, star a] := by
-  let g : GL (Fin 2) (Lsq K Δ) := ⟨!![a, b; -star b, star a], !![star a, -b; star b, a], by
-    rw [Matrix.mul_fin_two, Matrix.one_fin_two]
-    congr 1
-    ext1 i; fin_cases i <;> (ext1 j; fin_cases j) <;> simp <;> first | ring1 | linear_combination h, by
-    rw [Matrix.mul_fin_two, Matrix.one_fin_two]
-    congr 1
-    ext1 i; fin_cases i <;> (ext1 j; fin_cases j) <;> simp <;> first | ring1 | linear_combination h⟩
-  refine ⟨⟨g, ?_⟩, rfl⟩
-  change GeneralLinearGroup.map (starRingEnd (Lsq K Δ)) g = (wJ Δ)⁻¹ * g * ((wJ Δ)⁻¹)⁻¹
-  rw [inv_inv]
-  refine Units.ext ?_
-  change (!![a, b; -star b, star a] : Matrix (Fin 2) (Fin 2) (Lsq K Δ)).map (starRingEnd _) =
-    !![0, -1; 1, 0] * !![a, b; -star b, star a] * !![0, 1; -1, 0]
-  ext1 i j
-  fin_cases i <;> fin_cases j <;> simp [starRingEnd_apply]
 
-private theorem el_form {K : Type} [Field K] {Δ : K} (γ : DX Δ) :
-    mt γ 1 1 = star (mt γ 0 0) ∧ mt γ 1 0 = -star (mt γ 0 1) := by
-  have h : GeneralLinearGroup.map (starRingEnd (Lsq K Δ)) γ.1 = (wJ Δ)⁻¹ * γ.1 * ((wJ Δ)⁻¹)⁻¹ := γ.2
-  rw [inv_inv] at h
-  have h' : (mt γ).map (starRingEnd _) = !![0, -1; 1, 0] * mt γ * !![0, 1; -1, 0] := congrArg Units.val h
-  have h0 := congrFun (congrFun h' 0) 0
-  have h1 := congrFun (congrFun h' 0) 1
-  simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.vecMul, dotProduct, starRingEnd_apply] at h0 h1
-  exact ⟨h0.symm, by rw [h1, neg_neg]⟩
 
 private theorem tr_map {K K' : Type} [Field K] [Field K'] (f : K →+* K') {Δ τ : K} (γ : DX Δ) (h : HasTr γ τ) :
     ∃ γ' : DX (f Δ), HasTr γ' (f τ) := by
-  obtain ⟨s₁, s₂⟩ := el_form γ
+  obtain ⟨s₁, s₂⟩ := _root_.UpperTheory.GlobNegOne.el_shape γ
   obtain ⟨hd, ht⟩ := h
   rw [Matrix.det_fin_two, s₁, s₂] at hd
   rw [Matrix.trace_fin_two, s₁] at ht
@@ -406,7 +380,7 @@ private theorem tr_map {K K' : Type} [Field K] [Field K'] (f : K →+* K') {Δ �
     have h1 := congrArg (lmap f Δ) hd
     rw [map_sub, map_mul, map_mul, map_neg, lmap_star', lmap_star', map_one] at h1
     linear_combination h1
-  obtain ⟨γ', e⟩ := el_mk _ _ hd'
+  obtain ⟨γ', e⟩ := _root_.UpperTheory.GlobNegOne.mk_el _ _ hd'
   refine ⟨γ', ?_, ?_⟩
   · rw [e, Matrix.det_fin_two_of]
     linear_combination hd'
