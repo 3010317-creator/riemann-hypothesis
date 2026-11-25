@@ -58,14 +58,7 @@ theorem partialDeriv_mem_sup_of_span_pow_mul_eq_map
     rw [Derivation.leibniz, hDypow, smul_zero, add_zero, smul_eq_mul]
   rw [hexp] at key
   obtain ⟨w, hw, hweq⟩ := Ideal.mem_span_singleton_mul.mp key
-  have hnz : coord k ι S₁ s ^ (c + 1) ∈ nonZeroDivisors S₁ := pow_mem hnzd (c + 1)
-  have h0 : (partialDeriv k ι S₁ i g - w) * coord k ι S₁ s ^ (c + 1) = 0 := by
-    linear_combination -hweq
-  have h1 : partialDeriv k ι S₁ i g - w = 0 :=
-    (mem_nonZeroDivisors_iff.mp hnz).2 _ h0
-  have h2 : partialDeriv k ι S₁ i g = w := sub_eq_zero.mp h1
-  rw [h2]
-  exact hw
+  rwa [← (mul_cancel_left_mem_nonZeroDivisors (pow_mem hnzd (c + 1))).1 hweq]
 
 theorem map_logDerivIdeal_le_span_pow_mul [Fintype ι]
     (hin : ∀ i ∈ T, i ≠ s → φ (coord k ι S i) = coord k ι S₁ i * coord k ι S₁ s)
