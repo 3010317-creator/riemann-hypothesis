@@ -352,19 +352,8 @@ theorem exists_AA {μ₀ : T} (hL : L.Is μ₀) (hq : OffQ D) (G : GridData L sc
     (Finset.mem_union_left _ hQ)
   refine ⟨((Ideal.absNorm D.host.ccK : ℕ) : 𝓞 D.host.E), ?_,
     fun h => hb (GlobalTheory.HalfCompare.mem_of_dvd h (Dvd.intro_left _ rfl))⟩
-  have h1 : ((Ideal.absNorm D.host.ccK : ℕ) : 𝓞 D.host.E) ∈ D.host.ccE := by
-    have := Ideal.mem_map_of_mem (algebraMap (𝓞 D.host.K) (𝓞 D.host.E)) (Ideal.absNorm_mem D.host.ccK)
-    rwa [map_natCast] at this
-  have h0 : ((D.host.𝔟 : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) ≠ 0 := fun h => by
-    apply (ideals_ne D).2.1
-    rw [Host.AA, Host.AA0, h, _root_.inv_zero, mul_zero]
-  have h2 : (1 : D.host.E) ∈ D.host.AA0 := by
-    rw [Host.AA0, FractionalIdeal.mem_inv_iff h0]
-    intro y hy
-    rw [one_mul]
-    exact FractionalIdeal.coeIdeal_le_one hy
-  have h3 := FractionalIdeal.mul_mem_mul (FractionalIdeal.mem_coeIdeal_of_mem (𝓞 D.host.E)⁰ h1) h2
-  rwa [mul_one] at h3
+  rw [map_natCast]
+  exact Formalism.L2.Pj.normK_mem_AA D
 
 
 
