@@ -235,17 +235,8 @@ theorem second_descent_free_part_holds : Stat2Free := by
     rintro _ ⟨y₁, hy₁, rfl⟩ _ ⟨y₂, hy₂, rfl⟩
     exact ⟨y₁ + y₂, fun k => S.P'.add_mem (hy₁ k) (hy₂ k), by
       simp [map_add (f := _), smul_add, Finset.sum_add_distrib]⟩
-  have hTsum : ∀ (s : Finset (Fin ℓ)) (f : Fin ℓ → D'), (∀ k ∈ s, f k ∈ T) → ∑ k ∈ s, f k ∈ T := by
-    intro s f
-    induction s using Finset.induction_on with
-    | empty =>
-      intro _
-      simpa using hT0
-    | insert a s ha ih =>
-      intro hf
-      rw [Finset.sum_insert ha]
-      exact hTadd _ (hf a (Finset.mem_insert_self a s)) _
-        (ih (fun k hk => hf k (Finset.mem_insert_of_mem hk)))
+  have hTsum : ∀ (s : Finset (Fin ℓ)) (f : Fin ℓ → D'), (∀ k ∈ s, f k ∈ T) → ∑ k ∈ s, f k ∈ T :=
+    fun s f => Finset.sum_induction f (· ∈ T) (fun a b ha hb => hTadd a ha b hb) hT0
   have hL : ∀ (g : A) (y : D), y ∈ S.P' → g • S.φ y ∈ T := by
     intro g y hy
     obtain ⟨e, he⟩ := hgen g
