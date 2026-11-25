@@ -5,6 +5,7 @@ public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.EichLApply
 import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CycleListPermInvariant
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.DsumCancel, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.IsIntIntCast, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.OrbitCountSecondStage
@@ -247,12 +248,7 @@ theorem isInt_star [StarRing K] {x : K} (h : IsIntegral ℤ x) : IsIntegral ℤ 
   h.map (starRingEnd K).toIntAlgHom
 
 theorem commonDen (s : Finset K) : ∃ d : ℕ, 0 < d ∧ ∀ x ∈ s, IsIntegral ℤ ((d : K) * x) := by
-  obtain ⟨y, hy, h⟩ := exists_integral_multiples ℤ ℚ s
-  refine ⟨y.natAbs ^ 2, pow_pos (Int.natAbs_pos.2 hy) 2, fun x hx => ?_⟩
-  have e0 : ((y.natAbs ^ 2 : ℕ) : ℤ) = y ^ 2 := by rw [Nat.cast_pow, Int.natAbs_sq]
-  have e1 : ((y.natAbs ^ 2 : ℕ) : K) = (y : K) ^ 2 := by rw [← Int.cast_natCast, e0, Int.cast_pow]
-  rw [e1, pow_two, mul_assoc, ← zsmul_eq_mul x y]
-  exact (isInt_intCast y).mul (h x hx)
+  apply _root_.GlobalTheory.SepModel.exists_nat_integral <;> assumption
 
 theorem reduceRep (N : ℕ) (hN : 0 < N) : ∃ Rep : Set K, Rep.Finite ∧ (∀ ρ ∈ Rep, IsIntegral ℤ ρ) ∧
     ∀ o : K, IsIntegral ℤ o → ∃ t ρ : K, IsIntegral ℤ t ∧ ρ ∈ Rep ∧ o = (N : K) * t + ρ := by

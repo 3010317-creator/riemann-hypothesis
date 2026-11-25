@@ -24,6 +24,7 @@ import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.RingTheory.PicardGroup
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Star.Rat
+import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.EmbVHomInjective
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.CoordsUnique, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.CountLeOfIntegral, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.DeterminantLocal, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.NMPseudoOf, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.DifferentIdealPowersEqInv, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.FinrankOFOE, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.GramDeterminantFormula, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.ProdAbsNormDifferentIdealPowers, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.VFEqEmultiplicity, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.NormMMOfJD, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.JordanDecompositionExists
@@ -721,17 +722,7 @@ namespace PI.UnitaryGroupMassFormula.CntFormula.R6
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem finrank_OF_OE (D : Formalism.BasicNotions.D7) : Module.finrank (𝓞 D.host.F) (𝓞 D.host.E) = 2 := by
-  rw [← IsFractionRing.finrank_eq (𝓞 D.host.F) D.host.F (𝓞 D.host.E) D.host.E]
-  have h1 := Module.finrank_mul_finrank ℚ D.host.F D.host.E
-  rw [D.host.der.finrank_E, D.host.der.finrank_F] at h1
-  have hpos : 0 < Module.finrank ℚ D.host.E := Module.finrank_pos
-  rw [D.host.der.finrank_E] at hpos
-
-  have key : ∀ o x : ℕ, 2 * o * x = 4 * o → 0 < 4 * o → x = 2 := by
-    intro o x h hp
-    have ho : 0 < 2 * o := by omega
-    exact Nat.eq_of_mul_eq_mul_left ho (by rw [h]; ring)
-  exact key _ _ h1 hpos
+  apply _root_.Formalism.L2.SG.Pf.NcReal.JX.CovB.finrank_O <;> assumption
 
 theorem absNorm_ddS (D : Formalism.BasicNotions.D7) :
     FractionalIdeal.absNorm (ddS D) = (((NumberField.discr D.host.F).natAbs : ℚ)) ^ 2 := by

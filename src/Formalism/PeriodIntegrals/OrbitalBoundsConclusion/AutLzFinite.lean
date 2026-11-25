@@ -8,6 +8,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
 import Formalism.HermitianLattices.HermitianLatticesProofs.UnimodularSpan
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteRationalPointsCompletedLattice
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeAutomorphismFiniteness.FiniteOfIntegralBound, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeAutomorphismFiniteness.MjSmulRight, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeAutomorphismFiniteness.IndSetFinite, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeAutomorphismFiniteness.AutLzFinMain, Formalism.PeriodIntegrals.OrbitalBoundsConclusion.AutLzFinite
@@ -27,19 +28,7 @@ variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E}
 
 theorem finite_of_integral_bound (t : E) (ht : t ≠ 0) (C : ℝ) :
     {a : E | IsIntegral ℤ (t * a) ∧ ∀ τ : E →+* ℂ, ‖τ a‖ ≤ C}.Finite := by
-  set K : ℝ := ∑ τ : E →+* ℂ, ‖τ t‖
-  apply Set.Finite.of_finite_image (f := fun a => t * a)
-  · apply (Embeddings.finite_of_norm_le E ℂ (K * C)).subset
-    rintro _ ⟨a, ⟨ha1, ha2⟩, rfl⟩
-    refine ⟨ha1, fun τ => ?_⟩
-    rw [map_mul, norm_mul]
-    have h1 : ‖τ t‖ ≤ K := Finset.single_le_sum (f := fun τ : E →+* ℂ => ‖τ t‖)
-      (fun _ _ => norm_nonneg _) (Finset.mem_univ τ)
-    have h2 := ha2 τ
-    have h3 : 0 ≤ ‖τ a‖ := norm_nonneg _
-    nlinarith [norm_nonneg (τ t)]
-  · intro a _ b _ hab
-    exact mul_left_cancel₀ ht hab
+  apply _root_.GlobalTheory.CompletedLatticeFinite.finite_of_denom <;> assumption
 
 end PI.AutLzFinite.SlopeTestRemainingChoices
 end -- clump:auto
