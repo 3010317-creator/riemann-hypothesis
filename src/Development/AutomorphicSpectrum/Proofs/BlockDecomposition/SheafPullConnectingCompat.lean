@@ -6,7 +6,6 @@ import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomology
 @[expose] public section
 -- `Sheaf.H` and `HasExt` are stated for `sheafIsAbelian`; erase the definitionally equal
 -- `TopCat.Sheaf.instAbelian` so the kernel does not have to unfold both to compare them.
-attribute [-instance] TopCat.Sheaf.instAbelian
 
 open CategoryTheory AlgebraicGeometry TopologicalSpace Opposite Limits GroundTheory.Arith.SchemeCoh GlobalTheory.SheafPull CrystallineSemistableComparison CrystallineSemistableComparison.Om CrystallineSemistableComparison.Om.Cech
 
