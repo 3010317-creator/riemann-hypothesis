@@ -56,7 +56,6 @@ open TensorProduct Algebra.TensorProduct
 
 namespace GlobalTheory.AffineQuotient
 
-set_option backward.isDefEq.respectTransparency false
 
 variable {R : Type} [CommRing R]
 
