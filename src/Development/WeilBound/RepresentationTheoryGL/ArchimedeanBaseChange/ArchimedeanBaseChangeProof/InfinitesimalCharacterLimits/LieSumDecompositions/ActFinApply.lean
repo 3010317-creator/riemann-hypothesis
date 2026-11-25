@@ -145,25 +145,17 @@ theorem act_right {ψ : Sm E (r + s)} (hψ : ψ ∈ U) (ℓ : Sm E s) (m₁ : GA
 
 theorem LS_stable : _root_.GlobalTheory.CuspRep.IsStable (LS U T) := by
   intro o φ hφ
-  induction hφ using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨ψ, hψ, k, g, m₂, hx⟩ := hx
-    obtain ⟨ψ', hψ', e⟩ := base_one hU hT hψ k g
-    exact act_left hU hT hψ' x m₂ (fun m₁ => by rw [hx, ← e]) o
-  | zero => rw [map_zero]; exact zero_mem _
-  | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
-  | smul a x _ hx => rw [map_smul]; exact Submodule.smul_mem _ a hx
+  refine Submodule.span_le (p := (LS U T).comap (act o)) |>.2 ?_ hφ
+  rintro x ⟨ψ, hψ, k, g, m₂, hx⟩
+  obtain ⟨ψ', hψ', e⟩ := base_one hU hT hψ k g
+  exact act_left hU hT hψ' x m₂ (fun m₁ => by rw [hx, ← e]) o
 
 theorem RS_stable : _root_.GlobalTheory.CuspRep.IsStable (RS U T) := by
   intro o φ hφ
-  induction hφ using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨ψ, hψ, k, g, m₁, hx⟩ := hx
-    obtain ⟨ψ', hψ', e⟩ := base_one hU hT hψ k g
-    exact act_right hU hT hψ' x m₁ (fun m₂ => by rw [hx, ← e]) o
-  | zero => rw [map_zero]; exact zero_mem _
-  | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
-  | smul a x _ hx => rw [map_smul]; exact Submodule.smul_mem _ a hx
+  refine Submodule.span_le (p := (RS U T).comap (act o)) |>.2 ?_ hφ
+  rintro x ⟨ψ, hψ, k, g, m₁, hx⟩
+  obtain ⟨ψ', hψ', e⟩ := base_one hU hT hψ k g
+  exact act_right hU hT hψ' x m₁ (fun m₂ => by rw [hx, ← e]) o
 
 
 omit hU in
