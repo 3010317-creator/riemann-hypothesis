@@ -410,8 +410,8 @@ theorem generic_dense {n : ℕ} (P : Ideal (MvPolynomial (Fin n) ℚ)) (hP : P.I
     have : V = ⋂ g ∈ P, {z | aeval z g = 0} := by ext z; simp [V]
     rw [this]
     exact isClosed_biInter fun g _ => isClosed_eq (_root_.GroundTheory.Heights₂.Heights.HilbertSamuel.RootsBounded.continuous_aeval g) continuous_const
-  haveI : CompleteSpace V := hV.completeSpace_coe
-  haveI : Countable (MvPolynomial (Fin n) ℚ) := (basisMonomials (Fin n) ℚ).repr.injective.countable
+  have : CompleteSpace V := hV.completeSpace_coe
+  have : Countable (MvPolynomial (Fin n) ℚ) := (basisMonomials (Fin n) ℚ).repr.injective.countable
   let O : {f : MvPolynomial (Fin n) ℚ // f ∉ P} → Set V := fun f => {z | aeval z.1 f.1 ≠ 0}
   have hO : ∀ f, IsOpen (O f) := fun f =>
     isOpen_ne_fun ((_root_.GroundTheory.Heights₂.Heights.HilbertSamuel.RootsBounded.continuous_aeval f.1).comp continuous_subtype_val) continuous_const
