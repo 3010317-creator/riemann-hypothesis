@@ -29,12 +29,8 @@ variable {p : ℕ} [Fact p.Prime] {g : ℕ} {C : Type} [Field C] {v : Valuation 
   {σ : O ≃ₐ[ℤ_[p]] O} {cp : R}
 
 private lemma isUnit_of_valuation_eq_one' (hS : HodgeTateSetting p v R O σ cp) {x : R} (hx : v (algebraMap R C x) = 1) :
-    IsUnit x := by
-  refine hS.integers.isUnit_of_one ?_ hx
-  rw [isUnit_iff_ne_zero]
-  intro h0
-  rw [h0, map_zero] at hx
-  exact zero_ne_one hx
+    IsUnit x :=
+  hS.integers.isUnit_of_one' hx
 
 private lemma E_block_zero (hS : HodgeTateSetting p v R O σ cp) (H : HodgeTateDatum p g v R O σ cp)
     (U : UnramData p g v R O σ cp H) (k j : Fin U.m) (hkj : U.cj j ≠ k) :
