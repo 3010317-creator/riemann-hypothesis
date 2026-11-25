@@ -88,28 +88,14 @@ theorem star_lift_dot_last (v : Fin (2 * r' + k + 1) → ℂ) : star (liftVec k 
   simp [e0_mp_eq_zero, es0_mp_eq_zero]
 
 theorem mulVec_first_basis (M : Mat k (1 + r')) : M *ᵥ e0 k r' = fun i => M i 0 := by
-  funext i
-  simp only [mulVec, dotProduct, goodRowsProjector_apply_eq_sum, mul_ite, mul_one, mul_zero]
-  rw [Finset.sum_eq_single 0]
-  · simp
-  · intro b _ hb
-    rw [ite_eq_right]
-    intro h
-    exact hb (Fin.ext (by simp [h]))
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  unfold e0 bvec
+  rw [mulVec_single_one]
+  exact funext fun i => congrArg (M i) (Fin.ext (by simp [eI, a0]))
 
 theorem mulVec_last_basis (M : Mat k (1 + r')) : M *ᵥ es0 k r' = fun i => M i ⟨2 * (1 + r') + k, by omega⟩ := by
-  funext i
-  simp only [mulVec, dotProduct, last_basis_apply, mul_ite, mul_one, mul_zero]
-  rw [Finset.sum_eq_single (⟨2 * (1 + r') + k, by omega⟩ : Fin (2 * (1 + r') + k + 1))]
-  · simp
-  · intro b _ hb
-    rw [ite_eq_right]
-    intro h
-    exact hb (Fin.ext h)
-  · intro h
-    exact absurd (Finset.mem_univ _) h
+  unfold es0 bvec
+  rw [mulVec_single_one]
+  exact funext fun i => congrArg (M i) (Fin.ext (by simp [esI, a0]))
 
 theorem levi_fixes_base_vector (g : Mat k r') : ιLev k 1 r' g *ᵥ e0 k r' = e0 k r' := by
   rw [mulVec_first_basis]
