@@ -90,13 +90,9 @@ theorem card_comap {f : A →ₗ[R] B} {g : B →ₗ[R] C} (h : Function.Exact f
       exact ⟨y, rfl⟩
     · rintro ⟨y, hy⟩
       exact ⟨⟨y, by rw [Submodule.mem_comap, hy]; exact x.2⟩, Subtype.ext hy⟩
-  have e2 : Nat.card (LinearMap.ker u) = Nat.card (LinearMap.ker f) :=
-    Nat.card_congr
-      { toFun := fun x => ⟨x.1.1, congrArg Subtype.val x.2⟩
-        invFun := fun x => ⟨⟨x.1, by
-          rw [Submodule.mem_comap, LinearMap.mem_ker.1 x.2]; exact L.zero_mem⟩, Subtype.ext x.2⟩
-        left_inv := fun _ => rfl
-        right_inv := fun _ => rfl }
+  have e2 : Nat.card (LinearMap.ker u) = Nat.card (LinearMap.ker f) := by
+    rw [LinearMap.ker_restrict]
+    exact Nat.card_congr (Submodule.comapSubtypeEquivOfLe (LinearMap.ker_le_comap f)).toEquiv
   rw [e1, e2]
 
 theorem card_pi {I : Type*} [Fintype I] {P : I → Type*} [∀ i, AddCommGroup (P i)]
