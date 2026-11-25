@@ -221,13 +221,9 @@ omit [DecidableEq K] in
 theorem ringKrullDim_sup_span_add_one_le {P : Ideal (MRing ι F)} [P.IsPrime] {s : MRing ι F}
     (hs : s ∉ P) :
     ringKrullDim (MRing ι F ⧸ (P ⊔ Ideal.span {s})) + 1 ≤ ringKrullDim (MRing ι F ⧸ P) := by
-  have hne : (P ⊔ Ideal.span {s}).map (Ideal.Quotient.mk P) ≠ ⊥ := by
-    intro h
-    apply hs
-    rw [← Ideal.Quotient.eq_zero_iff_mem]
-    have : Ideal.Quotient.mk P s ∈ (P ⊔ Ideal.span {s}).map (Ideal.Quotient.mk P) :=
-      Ideal.mem_map_of_mem _ (Ideal.mem_sup_right (Ideal.mem_span_singleton_self s))
-    rwa [h, Ideal.mem_bot] at this
+  have hne : (P ⊔ Ideal.span {s}).map (Ideal.Quotient.mk P) ≠ ⊥ := fun h => hs <| by
+    simpa only [Ideal.mk_ker] using (Ideal.map_eq_bot_iff_le_ker _).1 h
+      (Ideal.mem_sup_right (Ideal.mem_span_singleton_self s))
   have := GroundTheory.Arith.Abelian.Jacobian.ringKrullDim_quotient_add_one_le _ hne
   rwa [ringKrullDim_eq_of_ringEquiv (DoubleQuot.quotQuotEquivQuotOfLE le_sup_left)] at this
 
@@ -243,12 +239,8 @@ theorem ringKrullDim_minimalPrime [Fintype K] [∀ k, Fintype (ι k)] {P W : Ide
   set W' : Ideal (MRing ι F ⧸ P) := W.map (Ideal.Quotient.mk P)
   have _ : W'.IsPrime :=
     Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rwa [Ideal.mk_ker])
-  have hW'ne : W' ≠ ⊥ := by
-    intro h
-    apply hs
-    rw [← Ideal.Quotient.eq_zero_iff_mem]
-    have : Ideal.Quotient.mk P s ∈ W' := Ideal.mem_map_of_mem _ hsW
-    rwa [h, Ideal.mem_bot] at this
+  have hW'ne : W' ≠ ⊥ := fun h => hs <| by
+    simpa only [Ideal.mk_ker] using (Ideal.map_eq_bot_iff_le_ker _).1 h hsW
   have hht : W'.height ≤ 1 := Ideal.map_height_le_one_of_mem_minimalPrimes hW
   have hquot : ringKrullDim ((MRing ι F ⧸ P) ⧸ W') = ringKrullDim (MRing ι F ⧸ W) :=
     ringKrullDim_eq_of_ringEquiv (DoubleQuot.quotQuotEquivQuotOfLE hPW)
