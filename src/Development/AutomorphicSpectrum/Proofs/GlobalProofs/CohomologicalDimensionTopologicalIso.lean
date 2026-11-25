@@ -22,14 +22,8 @@ def placeMap (f : R ≃+* R') (v : HeightOneSpectrum R) : HeightOneSpectrum R' w
   asIdeal := v.asIdeal.comap f.symm
   isPrime := Ideal.comap_isPrime _ _
   ne_bot := by
-    intro h
-    apply v.ne_bot
-    rw [eq_bot_iff]
-    intro x hx
-    have h1 : f x ∈ v.asIdeal.comap f.symm := by simpa [Ideal.mem_comap] using hx
-    rw [h] at h1
-    have h0 : f x = 0 := (Ideal.mem_bot).1 h1
-    exact (Ideal.mem_bot).2 ((map_eq_zero_iff f f.injective).1 h0)
+    rw [Ideal.comap_symm]
+    exact (Ideal.map_eq_bot_iff_of_injective f.injective).not.2 v.ne_bot
 
 def placeEquiv (f : R ≃+* R') : HeightOneSpectrum R ≃ HeightOneSpectrum R' where
   toFun := placeMap f
