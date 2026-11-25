@@ -698,7 +698,7 @@ theorem topSchur : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) 
     have hr' : ∃ a : R.cX.W, ∀ w, R.prX w (PiTensorProduct.tprod ℂ v') = ⟪a, w⟫_ℂ := riesz (R.prX.flip _)
     obtain ⟨a, ha⟩ := hr
     obtain ⟨a', ha'⟩ := hr'
-    have hA := GlobalTheory.T.unfolding_schur_orthogonality_definite_coefficients D G Pl0 T A Ks R F hB t h h' a a'
+    have hA := _root_.GlobalTheory.Mem.SchurW.schurW D G Pl0 T A Ks R F hB t h h' a a'
     obtain ⟨hint, hval⟩ := hA
     have hab := GlobalTheory.T.riesz_vectors_pure_tensors_inner_eq_prod D G Pl0 T A Ks R F hB hP v v' a a' ha ha'
     simp only [ha, ha']

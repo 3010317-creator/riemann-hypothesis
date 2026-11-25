@@ -429,8 +429,8 @@ theorem exists_continuous_latBasis_of_arc : ∀ (E : Type) [Field E] [NumberFiel
       show e' _ (M 0 *ᵥ ((M 0)⁻¹ *ᵥ w)) = p
       rw [mulVec_mulVec_inv (hMdet 0 hmem0)]
       exact hw
-    obtain ⟨Tt, hT1, hT2, hTc⟩ := GlobalTheory.T.exists_toricTorsion_cubicalWeil_one_complexPoint E H Z.X Z.t _ g' N (exN 0) hN (hExpN 0 hmem0) hsurj (hsliceN 0 hmem0)
-    obtain ⟨S, hSc, hS⟩ := GlobalTheory.T.torsion_count_through_exponential_lattice_kernel _ g' r₀ N (exN 0) (ζ' 0) Tt hN (hExpN 0 hmem0).1 hsurj hB0 hT1 hTc
+    obtain ⟨Tt, hT1, hT2, hTc⟩ := _root_.GlobalTheory.exists_toric_torsion_cubWeil_one_of_exp E H Z.X Z.t _ g' N (exN 0) hN (hExpN 0 hmem0) hsurj (hsliceN 0 hmem0)
+    obtain ⟨S, hSc, hS⟩ := _root_.GlobalTheory.ShFam.Hor.LogCh.exp_lattice_torsion_count _ g' r₀ N (exN 0) (ζ' 0) Tt hN (hExpN 0 hmem0).1 hsurj hB0 hT1 hTc
     refine ⟨S, hSc, fun a a' ha => ?_⟩
     show GlobalTheory.UU.CubWeil Z.t.cub N (exN 0 ((N : ℂ)⁻¹ • ∑ j, a j • ζ' 0 j)) (exN 0 ((N : ℂ)⁻¹ • ∑ j, a' j • ζ' 0 j))
       (unitOn 1)

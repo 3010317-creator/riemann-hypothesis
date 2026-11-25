@@ -1662,7 +1662,7 @@ theorem std_good : GlobalTheory.SepRows.DepFixed → All fun {_} _ _ _ {G} W _ =
   refine ⟨?_, ?_, lt.1, fun h => lt.2 v h⟩
   · intro ρ h s hs
     obtain ⟨hbase, -, hx, -⟩ := GlobalTheory.Unf.base_point D _ _ ρ (F.dJ ρ h)
-    obtain ⟨hpIs, hspl⟩ := GlobalTheory.T.besselToFourierJacobi_mixedPieces_admissible D hQ T L μ0 hL sc G W M hM F hF ρ h
+    obtain ⟨hpIs, hspl⟩ := _root_.GlobalTheory.PcBF.pieces_bf D hQ T L μ0 hL sc G W M hM F hF ρ h
     have gd := GlobalTheory.T.goodPosition_and_incAdj_mem_latO_iff_mem_intAt D hQ T L μ0 hL sc G W M hM F hF ρ h
     have g0 := gl (2 * ρ + 1) (by omega)
     have hsupp : ∀ g, Cond (F.dJ ρ h) (pcBF W F ρ h) (xZero (F.dJ ρ h)) (yBF F ρ h) W.ψ (fun _ => True) g →

@@ -683,7 +683,7 @@ theorem joint_at_nonempty : Lt.CurveEx → ∀ {D : D7} {L : SizeData₂ D} {hT 
   obtain ⟨E, lam, hK⟩ := GlobalTheory.TwV.exists_cEmbC_lam t std J
   have hin := GlobalTheory.TwU.XdInert.gidx_facts D _ _ hg
   obtain ⟨g, hLT, curve⟩ := hC D t.cc t.δ t.B t.χ t.cc_ok t.δ_ok t.χ_ok (D.what₂.places.resChar w) J.cop hin.1 hin.2.1 lam
-  obtain ⟨Xi, muT, law⟩ := GlobalTheory.T.exists_adelicDatum_with_laws_at_joint t std J
+  obtain ⟨Xi, muT, law⟩ := _root_.GlobalTheory.TwV.exists_adLawAt_joint t std J
   exact ⟨{ E := E, lam := lam, hK := hK, g := g, hLT := hLT, curve := curve, hfin := GlobalTheory.TwV.finClasses_sysS t std J, hst := GlobalTheory.TwV.finStab_site t std J, Xi := Xi, muT := muT, law := law }⟩
 
 end GlobalTheory.TwV
@@ -1068,7 +1068,7 @@ theorem kernelSite_seriesData_below_lastStep : AllSites (fun {D L hT Gi Gl Kc Dx
   refine ⟨?_, ?_, ?_, hSc, J.rho std, ?_, ?_, ?_⟩
   · intro j hj L0 hL0 La' hLa'
     exact (hP j hj L0 La' (repOf_lat _ _ j L0 hL0) hLa').1
-  · obtain ⟨hpos, hS⟩ := GlobalTheory.T.site_finite_data_level_pos_bad_prime_factors t std J
+  · obtain ⟨hpos, hS⟩ := _root_.GlobalTheory.TwV.sNum_lev_site t std J
     exact ⟨hpos, fun hd => GlobalTheory.T.site_residue_char_not_mem_bad_primes t std J (hS _ Fact.out hd)⟩
   · exact ⟨(t.O u μ).S, GlobalTheory.T.site_residue_char_not_mem_bad_primes t std J, fun j _ L0 _ La' _ y => GlobalTheory.T.intOff_xi0_of_joint t std J S j L0 La' y⟩
   · exact GlobalTheory.TwU.lamPosG_of_lamPos _ S.E D _ _ _ hPos
@@ -1137,9 +1137,9 @@ theorem scal_of_pos_pair : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H
   obtain ⟨hN, hN', hsd, hsd'⟩ := hAdm
   obtain ⟨ha, -, hu⟩ := chi_alg_unit_inert D _ S.lam t.χ hχ hp2 hIn _ (_root_.GlobalTheory.DetIdealUnitary.determinantIdeal_normOne_and_char_unitary_smul D t.χ hχ _ _ hN hsd).1
   obtain ⟨ha', -, hu'⟩ := chi_alg_unit_inert D _ S.lam t.χ hχ hp2 hIn _ (_root_.GlobalTheory.DetIdealUnitary.determinantIdeal_normOne_and_char_unitary_smul D t.χ hχ _ _ hN' hsd').1
-  obtain ⟨hU0, hord0⟩ := GlobalTheory.T.lattice_det_mem_U1_and_ordA_eq_neg_len S hD hS j hj'.le L0 hL0lat
-  obtain ⟨hU1, hord1⟩ := GlobalTheory.T.lattice_det_mem_U1_and_ordA_eq_neg_len S hD hS (j + 1) hj' La' hLa'
-  have hfill := GlobalTheory.T.systemWeights_eq_shifted_character_exponents S hD hS j hj' La'.1
+  obtain ⟨hU0, hord0⟩ := _root_.GlobalTheory.TwV.Xc.latticeTuplePoint_det_normOne_order_eq_neg_length S hD hS j hj'.le L0 hL0lat
+  obtain ⟨hU1, hord1⟩ := _root_.GlobalTheory.TwV.Xc.latticeTuplePoint_det_normOne_order_eq_neg_length S hD hS (j + 1) hj' La' hLa'
+  have hfill := _root_.GlobalTheory.TwV.Xc.fillAt_of_comp S hD hS j hj' La'.1
   have hm1 := S.law.mu_alg j hj' _ hU1
   have hm0 := S.law.mu_alg j hj' _ hU0
   have hn1 := _root_.GlobalTheory.TwV.Xc.lambdaCharacter_norm_eq_p_pow_of_pos S hD hS hPos j hj' hfill _ hU1

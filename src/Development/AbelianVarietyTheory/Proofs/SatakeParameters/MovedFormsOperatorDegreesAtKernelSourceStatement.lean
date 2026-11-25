@@ -192,8 +192,8 @@ theorem GlobalTheory.TwV.DelA.cmp_valsAt : AllSites (fun {D L hT Gi Gl Kc Dx cX 
   letI := algKfC S.E.toCEmb
   intro d j hj h La hLa x
   have hr := (GlobalTheory.TwV.DelA.posTie_at S hPos ι hι).2
-  obtain ⟨c, κ, _, hκ, hy, hiff⟩ := GlobalTheory.T.realAt_succ_iff_decomposition_values S d j hj h La hLa
-  obtain ⟨g, hgb, hpt⟩ := GlobalTheory.T.latticeTupleSuccLevel_point_isComponentPointInChart S hDict j hj La hLa
+  obtain ⟨c, κ, _, hκ, hy, hiff⟩ := _root_.GlobalTheory.TwV.DelA.realAt_succ_decomp S d j hj h La hLa
+  obtain ⟨g, hgb, hpt⟩ := _root_.GlobalTheory.TwV.DelA.ptS_isPt S hDict j hj La hLa
   have hH := ((H.core j hj) ((I.at' j hj).st.eC.symm La.1).1).toHyp Formalism.L2.G.RelativeIndexFlags.blockRationality_holds
   have hv := valC_spec hH.ex ((I.at' j hj).eps.symm x) ((I.at' j hj).st.eC.symm La.1).2 La.2 hLa
   refine ⟨MvPolynomial.map D.what₂.embLL (valC ((I.at' j hj).st.K ((I.at' j hj).st.eC.symm La.1).1).lev (embT D) D.what₂.embLL
@@ -1344,11 +1344,11 @@ theorem moved_forms_at_source : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w h
   intro d j hjm hne hN
   have hj : j ≤ D.R.m := hjm.le
   have h : ((sysS H X std).Pj j).m + 1 = D.R.N j := rkS _ _ hN
-  have hWt := GlobalTheory.T.kernelSite_modelStageWeights_eq_chainWeights S j hjm hne
+  have hWt := _root_.GlobalTheory.TwV.DelA.wtOK_sites S j hjm hne
   have hPT := (posTie_at S hPos ι hι).1
   have hdg : ∀ τ, (t.O u μ).dgen τ ≠ 0 := by
     intro τ h0
-    have h1 := GlobalTheory.T.norm_derivation_generators_eq_one_at_site S ι hι τ
+    have h1 := _root_.GlobalTheory.TwV.DelB.dgen_unit S ι hι τ
     rw [h0, map_zero, norm_zero] at h1
     exact zero_ne_one h1
   have hV : ∀ (j : ℕ) (hj : j ≤ D.R.m) (h : ((sysS H X std).Pj j).m + 1 = D.R.N j) (La : (sysS H X std).Lt j),
@@ -1380,7 +1380,7 @@ theorem moved_forms_at_source : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w h
       rw [← h2]
       simp only [ColumnChain.sharp, mulFun, LinearMap.coe_mk, AddHom.coe_mk]
       field_simp
-    have hR := (GlobalTheory.T.kernelSite_valuesAtPoint_iff_realisesInStdCoords S d j hj h La ((D.chTw u μ).sSharp j) ((ex.tw.fm u μ).emb j x) (Q (clsAt X H j La.1 La.2)) hφ V).1 hVr
+    have hR := (_root_.GlobalTheory.TwV.DelA.realAt_iff_realises S d j hj h La ((D.chTw u μ).sSharp j) ((ex.tw.fm u μ).emb j x) (Q (clsAt X H j La.1 La.2)) hφ V).1 hVr
     have hw : (fun τ => (D.chTw u μ).sSharp j τ - cTw D j) = wT (sysS H X std) D (hT.gat_pos u w hg) j :=
       funext fun τ => (hWt.sh τ).symm
     rw [hw] at hR
