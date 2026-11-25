@@ -46,22 +46,12 @@ theorem vw_prime_eq_zero (w : HeightOneSpectrum (𝓞 K)) {p : ℕ} (hp : p.Prim
     have hdvd : Formalism.EigenvalueLevelCeiling.plc w ∣ p := (ringChar.spec (𝓞 K ⧸ w.asIdeal) p).1 hmem
     exact hne ((Nat.prime_dvd_prime_iff_eq (plc_prime' w) hp).1 hdvd).symm
   have h : ((p : 𝓞 K) : K) = (p : K) := map_natCast _ p
-  have hx : (p : 𝓞 K) ≠ 0 := by exact_mod_cast hp.ne_zero
   have hJ : (Ideal.span {(p : 𝓞 K)} : Ideal (𝓞 K)) ≠ 0 := by
     rw [ne_eq, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact hx
-  rw [← h, Formalism.DivisionValues.W5.vw_int, FractionalIdeal.count_coe K w hJ]
-  have hm : Associates.mk (Ideal.span {(p : 𝓞 K)} : Ideal (𝓞 K)) ≠ 0 := by
-    rwa [ne_eq, Associates.mk_eq_zero]
-  have h0 : (Associates.mk w.asIdeal).count
-      (Associates.mk (Ideal.span {(p : 𝓞 K)} : Ideal (𝓞 K))).factors = 0 := by
-    by_contra hc
-    have h1 : 1 ≤ (Associates.mk w.asIdeal).count
-        (Associates.mk (Ideal.span {(p : 𝓞 K)} : Ideal (𝓞 K))).factors := Nat.one_le_iff_ne_zero.2 hc
-    rw [← Associates.prime_pow_dvd_iff_le hm w.associates_irreducible, pow_one,
-      Associates.mk_le_mk_iff_dvd, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem] at h1
-    exact hnot h1
-  rw [h0]
+    exact_mod_cast hp.ne_zero
+  rw [← h, Formalism.DivisionValues.W5.vw_int, FractionalIdeal.count_coeIdeal K w hJ,
+    not_not.1 (mt (Associates.count_ne_zero_iff_dvd hJ w.irreducible).1
+      (mt Ideal.dvd_span_singleton.1 hnot))]
   rfl
 
 end Places

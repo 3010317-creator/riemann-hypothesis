@@ -137,17 +137,8 @@ theorem mk_lin_eq_iff (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L
   rw [Submodule.Quotient.eq, lin_sub]
   constructor
   · intro hmem i
-    have key : ∀ x : ↥L, x ∈ ((extP K 𝔭) ^ k • ⊤ : Submodule (𝓞 K) ↥L) →
-        ∃ y ∈ extP K 𝔭 ^ k, h (z i : V) (x : V) = algebraMap (𝓞 K) K y := by
-      intro x hx
-      refine Submodule.smul_induction_on hx (fun r hr m _ => ?_) (fun x y hx hy => ?_)
-      · obtain ⟨o, ho⟩ := Submodule.mem_one.mp (hLi (z i : V) (z i).2 (m : V) m.2)
-        refine ⟨r * o, Ideal.mul_mem_right _ _ hr, ?_⟩
-        rw [Submodule.coe_smul, ← algebraMap_smul K r (m : V), map_smul, smul_eq_mul, map_mul, ho]
-      · obtain ⟨u, hu, hu'⟩ := hx
-        obtain ⟨w, hw, hw'⟩ := hy
-        exact ⟨u + w, Ideal.add_mem _ hu hw, by rw [Submodule.coe_add, map_add (f := _), hu', hw', map_add (f := _)]⟩
-    obtain ⟨y, hy, hyeq⟩ := key _ hmem
+    obtain ⟨y, hy, hyeq⟩ :=
+      exists_mem_ideal_form_eq_of_mem_ideal_smul hLi (extP K 𝔭 ^ k) (z i) _ hmem
     rw [form_right hzo hzg] at hyeq
     have h1 : (a - b) i * g i ∈ extP K 𝔭 ^ k := by
       rw [IsFractionRing.injective (𝓞 K) K hyeq]

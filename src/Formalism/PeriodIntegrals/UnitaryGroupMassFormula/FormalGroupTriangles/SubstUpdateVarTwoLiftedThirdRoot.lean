@@ -99,28 +99,9 @@ theorem mu_vanish {W : WeierstrassCurve ℂ_[p]} {wq : PowerSeries ℂ_[p]} (h :
 
 theorem subst_updateVar_two_liftedThirdRoot (W : WeierstrassCurve ℂ_[p]) (wq : PowerSeries ℂ_[p]) (t : MvPowerSeries (Fin 3) ℂ_[p])
     (ht : MvPowerSeries.constantCoeff t = 0) : MvPowerSeries.subst (upd 2 t) (s3 W wq) = s3 W wq := by
-  have hz3 : ∀ i, MvPowerSeries.constantCoeff (upd 2 t i) = 0 := fun i => by
-    fin_cases i <;> simp [upd, Function.update, ht]
-  have hu : MvPowerSeries.HasSubst (upd 2 t) := by
-    first
-    | exact MvPowerSeries.hasSubst_of_constantCoeff_zero hz3
-  have hz2 : ∀ i, MvPowerSeries.constantCoeff
-      (![MvPowerSeries.X 0, MvPowerSeries.X 1] i : MvPowerSeries (Fin 3) ℂ_[p]) = 0 := fun i => by
-    fin_cases i <;> simp
-  have h2 : MvPowerSeries.HasSubst ![(MvPowerSeries.X 0 : MvPowerSeries (Fin 3) ℂ_[p]), MvPowerSeries.X 1] := by
-    first
-    | exact MvPowerSeries.hasSubst_of_constantCoeff_zero hz2
-  unfold s3 pr
-  rw [MvPowerSeries.subst_comp_subst_apply h2 hu]
-  congr 1
-  funext i
-  fin_cases i
-  · show MvPowerSeries.subst (upd 2 t) (MvPowerSeries.X 0) = MvPowerSeries.X 0
-    rw [MvPowerSeries.subst_X hu]
-    simp [upd]
-  · show MvPowerSeries.subst (upd 2 t) (MvPowerSeries.X 1) = MvPowerSeries.X 1
-    rw [MvPowerSeries.subst_X hu]
-    simp [upd]
+  have hu := hasSubst_upd (2 : Fin 3) ht
+  rw [s3, pr_comp hu (h0X 0) (h0X 1), MvPowerSeries.subst_X hu, MvPowerSeries.subst_X hu,
+    upd_ne t (by decide : (0 : Fin 3) ≠ 2), upd_ne t (by decide : (1 : Fin 3) ≠ 2)]
 
 theorem liftedThirdRoot_mem_coeffSubring {S : Subring ℂ_[p]} {W : WeierstrassCurve ℂ_[p]} {wq : PowerSeries ℂ_[p]}
     (h1 : W.a₁ ∈ S) (h2 : W.a₂ ∈ S) (h3 : W.a₃ ∈ S) (h4 : W.a₄ ∈ S) (h6 : W.a₆ ∈ S) (h : IsWq W wq) :
@@ -138,21 +119,9 @@ theorem hasSubst_zc : MvPowerSeries.HasSubst (zc (p := p)) := by
 
 theorem pr_zero_zero (g : MvPowerSeries (Fin 2) ℂ_[p]) (hg : MvPowerSeries.constantCoeff g = 0) :
     pr (0 : MvPowerSeries (Fin 3) ℂ_[p]) 0 g = 0 := by
-  unfold pr
-  ext e
-  have hz : ∀ i, MvPowerSeries.constantCoeff (![(0 : MvPowerSeries (Fin 3) ℂ_[p]), 0] i) = 0 := fun i => by
-    fin_cases i <;> simp
-  have ha : MvPowerSeries.HasSubst ![(0 : MvPowerSeries (Fin 3) ℂ_[p]), 0] := by
-    first
-    | exact MvPowerSeries.hasSubst_of_constantCoeff_zero hz
-  rw [MvPowerSeries.coeff_subst ha, finsum_eq_single _ 0]
-  · simp [MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hg]
-  · intro d hd
-    obtain ⟨s, hs⟩ := Finsupp.ne_iff.mp hd
-    simp only [Finsupp.coe_zero, Pi.zero_apply] at hs
-    rw [Finsupp.prod, Finset.prod_eq_zero (Finsupp.mem_support_iff.mpr hs)]
-    · simp
-    · fin_cases s <;> simp <;> exact hs
+  have h0 : ![(0 : MvPowerSeries (Fin 3) ℂ_[p]), 0] = 0 :=
+    funext fun i => by fin_cases i <;> rfl
+  rw [pr, h0, MvPowerSeries.subst_zero_of_constantCoeff_zero hg]
 
 theorem subst_lastVarSubst_liftedThirdRoot (W : WeierstrassCurve ℂ_[p]) (wq : PowerSeries ℂ_[p]) :
     MvPowerSeries.subst (zc (p := p)) (s3 W wq) = 0 := by

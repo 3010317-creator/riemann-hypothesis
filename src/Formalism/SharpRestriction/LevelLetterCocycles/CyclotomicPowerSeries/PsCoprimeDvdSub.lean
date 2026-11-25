@@ -53,14 +53,6 @@ theorem psCoprime_qdvd {O : Type} [CommRing O] (l : ℕ) (φ : PowerSeries O →
   rw [psCoprime_cc l φ h t] at h1
   exact dvd_trans (dvd_mul_left _ _) h1
 
-private theorem algHom_iterate_C_add_mul {O : Type} [CommRing O] (φ : PowerSeries O →ₐ[O] PowerSeries O)
-    (c : O) (s : ℕ) (b d : PowerSeries O) :
-    (⇑φ)^[s] (C c + b * d) = C c + (⇑φ)^[s] b * (⇑φ)^[s] d := by
-  induction s with
-  | zero => rfl
-  | succ n ih =>
-    simp only [Function.iterate_succ_apply', ih, map_add (f := _), map_mul, powerSeries_algHom_C']
-
 theorem psCoprime_lt {O : Type} [CommRing O] (l : ℕ) (φ : PowerSeries O →ₐ[O] PowerSeries O)
     (h : (X * (X + C (l : O)) : PowerSeries O) ∣ φ X) (s s' : ℕ) (hs : s < s') :
     (C (l : O) : PowerSeries O) ∈ Ideal.span {(⇑φ)^[s] (X + C (l : O)), (⇑φ)^[s'] (X + C (l : O))} := by
@@ -70,7 +62,8 @@ theorem psCoprime_lt {O : Type} [CommRing O] (l : ℕ) (φ : PowerSeries O →�
     linear_combination hq
   have e : (⇑φ)^[s + (t + 1)] (X + C (l : O)) =
       C (l : O) + (⇑φ)^[s] (X + C (l : O)) * (⇑φ)^[s] q := by
-    rw [Function.iterate_add_apply, hq', algHom_iterate_C_add_mul]
+    rw [Function.iterate_add_apply, hq', ← AlgHom.coe_pow, map_add, map_mul,
+      powerSeries_algHom_C']
   rw [Ideal.mem_span_pair]
   exact ⟨-((⇑φ)^[s] q), 1, by linear_combination e⟩
 

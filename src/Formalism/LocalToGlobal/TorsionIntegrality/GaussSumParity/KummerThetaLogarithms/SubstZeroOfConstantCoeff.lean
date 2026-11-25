@@ -337,67 +337,54 @@ theorem geom_zero {w : K} {N : ℕ} (h : w ^ N = 1) (h1 : w ≠ 1) :
   rw [h, sub_self] at h2
   exact (mul_eq_zero.1 h2).resolve_left (sub_ne_zero.2 h1)
 
+private theorem coeff_pair_of_scale {G : MvPowerSeries (Fin 2) K} (σ : K →+* K) (c c' : K)
+    {n : ZMod d →₀ ℕ} (a : ZMod d → K) (ha : ∀ s : ZMod d, a s = 1 ∨ n s = 0)
+    (hsub : MvPowerSeries.subst (fun s => MvPowerSeries.C (a s) * MvPowerSeries.X s)
+      (MvPowerSeries.subst ![linE σ c, linO σ c'] G) = 0) :
+    MvPowerSeries.coeff n (MvPowerSeries.subst ![linE σ c, linO σ c'] G) = 0 := by
+  have h := coeff_subst_scale a (MvPowerSeries.subst ![linE σ c, linO σ c'] G) n
+  have hp : ∏ s, a s ^ n s = 1 := Finset.prod_eq_one fun s _ => by
+    rcases ha s with h1 | h0 <;> simp [*]
+  rw [hp, one_mul, hsub, map_zero] at h
+  exact h.symm
+
 theorem coeff_pair_degO {G : MvPowerSeries (Fin 2) K} (hG : DivAB G) (σ : K →+* K) (c c' : K)
     {n : ZMod d →₀ ℕ} (hn : degO n = 0) :
     MvPowerSeries.coeff n (MvPowerSeries.subst ![linE σ c, linO σ c'] G) = 0 := by
-  set a : ZMod d → K := fun s => if s.val % 2 = 0 then 1 else 0 with ha
-  have h := coeff_subst_scale a (MvPowerSeries.subst ![linE σ c, linO σ c'] G) n
-  have hp : ∏ s, a s ^ n s = 1 := by
-    refine Finset.prod_eq_one fun s _ => ?_
+  let a : ZMod d → K := fun s => if s.val % 2 = 0 then 1 else 0
+  refine coeff_pair_of_scale σ c c' a (fun s => by
     by_cases hs : s.val % 2 = 0
-    · simp [ha, hs]
-    · have := (Finset.sum_eq_zero_iff.1 hn) s (Finset.mem_univ s)
-      rw [if_neg hs] at this
-      rw [this, pow_zero]
+    · exact Or.inl (by simp [a, hs])
+    · exact Or.inr (by simpa [hs] using Finset.sum_eq_zero_iff.1 hn s (Finset.mem_univ s))) ?_
+  rw [subst_pair (constantCoeff_linE _ _) (constantCoeff_linO _ _) (hasSubst_scale a)]
   have hO : MvPowerSeries.subst (fun s => MvPowerSeries.C (a s) * MvPowerSeries.X s)
       (linO (d := d) σ c') = 0 := by
     rw [subst_scale_linO]
-    refine Finset.sum_eq_zero fun s _ => ?_
-    split_ifs with hs
-    · rfl
-    · simp [ha, hs]
+    exact Finset.sum_eq_zero fun s _ => by by_cases hs : s.val % 2 = 0 <;> simp [a, hs]
   have hE : MvPowerSeries.subst (fun s => MvPowerSeries.C (a s) * MvPowerSeries.X s)
       (linE (d := d) σ c) = linE σ c := by
-    rw [subst_scale_linE]
-    unfold linE
-    refine Finset.sum_congr rfl fun s _ => ?_
-    split_ifs with hs
-    · simp [ha, hs]
-    · rfl
-  rw [hp, one_mul, subst_pair (constantCoeff_linE _ _) (constantCoeff_linO _ _) (hasSubst_scale a),
-    hO, hE, subst_right_zero hG (constantCoeff_linE _ _), map_zero] at h
-  exact h.symm
+    rw [subst_scale_linE]; unfold linE
+    exact Finset.sum_congr rfl fun s _ => by by_cases hs : s.val % 2 = 0 <;> simp [a, hs]
+  rw [hO, hE, subst_right_zero hG (constantCoeff_linE _ _)]
 
 theorem coeff_pair_degE {G : MvPowerSeries (Fin 2) K} (hG : DivAB G) (σ : K →+* K) (c c' : K)
     {n : ZMod d →₀ ℕ} (hn : degE n = 0) :
     MvPowerSeries.coeff n (MvPowerSeries.subst ![linE σ c, linO σ c'] G) = 0 := by
-  set a : ZMod d → K := fun s => if s.val % 2 = 0 then 0 else 1 with ha
-  have h := coeff_subst_scale a (MvPowerSeries.subst ![linE σ c, linO σ c'] G) n
-  have hp : ∏ s, a s ^ n s = 1 := by
-    refine Finset.prod_eq_one fun s _ => ?_
+  let a : ZMod d → K := fun s => if s.val % 2 = 0 then 0 else 1
+  refine coeff_pair_of_scale σ c c' a (fun s => by
     by_cases hs : s.val % 2 = 0
-    · have := (Finset.sum_eq_zero_iff.1 hn) s (Finset.mem_univ s)
-      rw [if_pos hs] at this
-      rw [this, pow_zero]
-    · simp [ha, hs]
+    · exact Or.inr (by simpa [hs] using Finset.sum_eq_zero_iff.1 hn s (Finset.mem_univ s))
+    · exact Or.inl (by simp [a, hs])) ?_
+  rw [subst_pair (constantCoeff_linE _ _) (constantCoeff_linO _ _) (hasSubst_scale a)]
   have hE : MvPowerSeries.subst (fun s => MvPowerSeries.C (a s) * MvPowerSeries.X s)
       (linE (d := d) σ c) = 0 := by
     rw [subst_scale_linE]
-    refine Finset.sum_eq_zero fun s _ => ?_
-    split_ifs with hs
-    · simp [ha, hs]
-    · rfl
+    exact Finset.sum_eq_zero fun s _ => by by_cases hs : s.val % 2 = 0 <;> simp [a, hs]
   have hO : MvPowerSeries.subst (fun s => MvPowerSeries.C (a s) * MvPowerSeries.X s)
       (linO (d := d) σ c') = linO σ c' := by
-    rw [subst_scale_linO]
-    unfold linO
-    refine Finset.sum_congr rfl fun s _ => ?_
-    split_ifs with hs
-    · rfl
-    · simp [ha, hs]
-  rw [hp, one_mul, subst_pair (constantCoeff_linE _ _) (constantCoeff_linO _ _) (hasSubst_scale a),
-    hO, hE, subst_left_zero hG (constantCoeff_linO _ _), map_zero] at h
-  exact h.symm
+    rw [subst_scale_linO]; unfold linO
+    exact Finset.sum_congr rfl fun s _ => by by_cases hs : s.val % 2 = 0 <;> simp [a, hs]
+  rw [hO, hE, subst_left_zero hG (constantCoeff_linO _ _)]
 
 theorem exists_of_sum_eq_one {α : Type} [Fintype α] (f : α → ℕ) (h : ∑ s, f s = 1) :
     ∃ s, f s = 1 ∧ ∀ t, t ≠ s → f t = 0 := by

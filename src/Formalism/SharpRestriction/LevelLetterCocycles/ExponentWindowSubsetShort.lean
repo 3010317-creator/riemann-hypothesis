@@ -196,6 +196,22 @@ theorem central_window_mem_long (g G η h : ℕ) (hG : G ≤ g) (hη : η ≤ g)
   have hm : max G η ≤ g := max_le hG hη
   exact Ico_mem_windows _ _ (by omega) (by omega) (by omega) (by push_cast; omega)
 
+private lemma biUnion_windows_subset {ell t₀ t₁ : ℕ} {kind : ℕ → Kind}
+    (win : ℕ → Finset ℤ) {C w₀ w₁ : Finset ℤ}
+    (ht : ∀ s < ell, s ≠ t₀ → s ≠ t₁ → kind s = Kind.thin)
+    (hs₀ : win t₀ ⊆ C ∪ w₀) (hs₁ : win t₁ ⊆ C ∪ w₁)
+    (hthin : ∀ s < ell, kind s = Kind.thin → win s ⊆ C) :
+    (Finset.range ell).biUnion win ⊆ (C ∪ w₀) ∪ w₁ := by
+  intro x hx
+  obtain ⟨s, hs, hxs⟩ := Finset.mem_biUnion.1 hx
+  have hs' : s < ell := Finset.mem_range.1 hs
+  simp only [Finset.mem_union]
+  by_cases h0 : s = t₀
+  · subst h0; rcases Finset.mem_union.1 (hs₀ hxs) with h | h <;> simp [h]
+  by_cases h1 : s = t₁
+  · subst h1; rcases Finset.mem_union.1 (hs₁ hxs) with h | h <;> simp [h]
+  · exact Or.inl (Or.inl (hthin s hs' (ht s hs' h0 h1) hxs))
+
 theorem kapOK_arc (l g G S η h ell L : ℕ) (hG : G ≤ g) (hS : S ≤ g) (hη : η ≤ g) (hgh : g ≤ h)
     (kind : ℕ → Kind) (b : ℕ → ℕ) (hb : ∀ s, kind s ≠ Kind.thin → b s + S ≤ h) (hL : ell ≤ L)
     (t₀ t₁ : ℕ) (ht : ∀ s < ell, s ≠ t₀ → s ≠ t₁ → kind s = Kind.thin) :
@@ -206,48 +222,25 @@ theorem kapOK_arc (l g G S η h ell L : ℕ) (hG : G ≤ g) (hS : S ≤ g) (hη 
     obtain ⟨w₁, hw₁, hs₁⟩ := exponent_window_subset_short g h S hgh (kind t₁) (b t₁) (hb t₁)
     refine le_trans (kappa_exponent_le_valuation l (ell - 1) L ?_ (by omega))
       (vPP1_le_kapPar l g h L (central_window_mem_short g h hgh) hw₀ hw₁)
-    intro x hx
-    obtain ⟨s, hs, hxs⟩ := Finset.mem_biUnion.1 hx
-    have hs' : s < ell := Finset.mem_range.1 hs
-    by_cases h0 : s = t₀
-    · subst h0
-      rcases Finset.mem_union.1 (hs₀ hxs) with h | h
-      · exact Finset.mem_union_left _ (Finset.mem_union_left _ h)
-      · exact Finset.mem_union_left _ (Finset.mem_union_right _ h)
-    by_cases h1 : s = t₁
-    · subst h1
-      rcases Finset.mem_union.1 (hs₁ hxs) with h | h
-      · exact Finset.mem_union_left _ (Finset.mem_union_left _ h)
-      · exact Finset.mem_union_right _ h
-    · rw [ht s hs' h0 h1] at hxs
-      refine Finset.mem_union_left _ (Finset.mem_union_left _ ?_)
-      simp only [Formalism.ExponentWindows.E.win2, Finset.mem_Icc] at hxs
-      simp only [Finset.mem_Ico]
-      omega
+    refine biUnion_windows_subset (fun s => Formalism.ExponentWindows.E.win2 (kind s) g (b s))
+      ht hs₀ hs₁ fun s _ hk x hxs => ?_
+    rw [hk] at hxs
+    simp only [Formalism.ExponentWindows.E.win2, Finset.mem_Icc] at hxs
+    simp only [Finset.mem_Ico]
+    omega
   · obtain ⟨w₀, hw₀, hs₀⟩ := exponent_window_subset_long g G S η h hG hS hη hgh (kind t₀) (b t₀) (hb t₀)
     obtain ⟨w₁, hw₁, hs₁⟩ := exponent_window_subset_long g G S η h hG hS hη hgh (kind t₁) (b t₁) (hb t₁)
     refine le_trans (kappa_exponent_le_valuation l (ell - 1) L ?_ (by omega))
       (vPP1_le_kapPar l g h L (central_window_mem_long g G η h hG hη hgh) hw₀ hw₁)
-    intro x hx
-    obtain ⟨s, hs, hxs⟩ := Finset.mem_biUnion.1 hx
-    have hs' : s < ell := Finset.mem_range.1 hs
-    by_cases h0 : s = t₀
-    · subst h0
-      rcases Finset.mem_union.1 (hs₀ hxs) with h | h
-      · exact Finset.mem_union_left _ (Finset.mem_union_left _ h)
-      · exact Finset.mem_union_left _ (Finset.mem_union_right _ h)
-    by_cases h1 : s = t₁
-    · subst h1
-      rcases Finset.mem_union.1 (hs₁ hxs) with h | h
-      · exact Finset.mem_union_left _ (Finset.mem_union_left _ h)
-      · exact Finset.mem_union_right _ h
-    · rw [ht s hs' h0 h1] at hxs
-      refine Finset.mem_union_left _ (Finset.mem_union_left _ ?_)
-      have hm1 : G ≤ max G η := le_max_left _ _
-      simp only [Formalism.ExponentWindows.E.win4, Finset.mem_Icc] at hxs
-      simp only [Finset.mem_Ico]
-      push_cast
-      omega
+    refine biUnion_windows_subset
+      (fun s => Formalism.ExponentWindows.E.win4 (kind s) g G S η (b s))
+      ht hs₀ hs₁ fun s _ hk x hxs => ?_
+    rw [hk] at hxs
+    have hm1 : G ≤ max G η := le_max_left _ _
+    simp only [Formalism.ExponentWindows.E.win4, Finset.mem_Icc] at hxs
+    simp only [Finset.mem_Ico]
+    push_cast
+    omega
 
 theorem exists_two_of_card_le {s : Finset ℕ} (h : s.card ≤ 2) : ∃ a b : ℕ, s ⊆ {a, b} := by
   have h3 : s.card = 0 ∨ s.card = 1 ∨ s.card = 2 := by omega

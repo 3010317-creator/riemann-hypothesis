@@ -43,88 +43,11 @@ theorem tnsCoord_inclR (e : E) (k : Fin d) :
 
 end Basis
 
-private theorem module_finite_F_E : Module.Finite F E := by
-  first
-    | infer_instance
-
-private theorem exists_isOpen_nhd_zero_algebraMap_discrete : ∃ V : Set (AF F), IsOpen V ∧ (0 : AF F) ∈ V ∧
-    ∀ a : F, algebraMap F (AF F) a ∈ V → a = 0 := by
-  refine ⟨{x : AF F | (∀ w, ‖x.1 w‖ < 1) ∧
-     ∀ v, x.2 v ∈ IsDedekindDomain.HeightOneSpectrum.adicCompletionIntegers F v}, ?_, ?_, ?_⟩
-  · have hA : IsOpen {x : AF F | ∀ w, ‖x.1 w‖ < 1} := by
-      rw [Set.setOf_forall]
-      exact isOpen_iInter_of_finite fun w =>
-        isOpen_lt ((continuous_apply w).comp continuous_fst).norm continuous_const
-    have hB : IsOpen {x : AF F |
-        ∀ v, x.2 v ∈ IsDedekindDomain.HeightOneSpectrum.adicCompletionIntegers F v} :=
-      by
-      have hO : ∀ v : IsDedekindDomain.HeightOneSpectrum (𝓞 F),
-          IsOpen (IsDedekindDomain.HeightOneSpectrum.adicCompletionIntegers F v :
-            Set (IsDedekindDomain.HeightOneSpectrum.adicCompletion F v)) := by
-        intro v
-        first
-          | exact Valued.isOpen_valuationSubring _
-      exact (RestrictedProduct.isOpen_forall_mem hO).preimage continuous_snd
-    exact hA.inter hB
-  · refine ⟨fun w => ?_, fun v => ?_⟩
-    swap
-    · have hz2 : (0 : AF F).2 v = 0 := rfl
-      rw [hz2]
-      exact zero_mem _
-    have hz : (0 : AF F).1 w = 0 := rfl
-    rw [hz, norm_zero]
-    exact zero_lt_one
-  · rintro a ⟨h1, h2⟩
-    classical
-    have hv : ∀ v : IsDedekindDomain.HeightOneSpectrum (𝓞 F), v.valuation F a ≤ 1 := by
-      intro v
-      have h3 := h2 v
-      first
-        | simpa using h3
-        | (rw [NumberField.AdeleRing.algebraMap_snd_apply,
-             IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers,
-             IsDedekindDomain.HeightOneSpectrum.valuedAdicCompletion_eq_valuation'] at h3
-           exact h3)
-    have hw : ∀ w : NumberField.InfinitePlace F, w a < 1 := by
-      intro w
-      have h3 := h1 w
-      first
-        | simpa using h3
-        | (rw [NumberField.AdeleRing.algebraMap_fst_apply,
-             NumberField.InfinitePlace.Completion.norm_coe] at h3
-           exact h3)
-    obtain ⟨x, rfl⟩ : a ∈ (algebraMap (𝓞 F) F).range := by
-      first
-        | exact IsDedekindDomain.HeightOneSpectrum.mem_integers_of_valuation_le_one F a hv
-    obtain ⟨w0⟩ := (inferInstance : Nonempty (NumberField.InfinitePlace F))
-    have hnn : ∀ w : NumberField.InfinitePlace F, 0 ≤ w (algebraMap (𝓞 F) F x) := by
-      intro w
-      first
-        | positivity
-    have hle : ∏ w ∈ Finset.univ.erase w0, w (algebraMap (𝓞 F) F x) ^ w.mult ≤ 1 :=
-      Finset.prod_le_one₀ (fun w _ => pow_nonneg (hnn w) _)
-        fun w _ => pow_le_one₀ (hnn w) (hw w).le
-    have hm : w0.mult ≠ 0 := by
-      first
-        | exact NumberField.InfinitePlace.mult_ne_zero
-    have hlt : w0 (algebraMap (𝓞 F) F x) ^ w0.mult < 1 := pow_lt_one₀ (hnn w0) (hw w0) hm
-    have hprod : ∏ w : NumberField.InfinitePlace F, w (algebraMap (𝓞 F) F x) ^ w.mult < 1 := by
-      rw [← Finset.mul_prod_erase Finset.univ _ (Finset.mem_univ w0)]
-      calc _ ≤ w0 (algebraMap (𝓞 F) F x) ^ w0.mult * 1 :=
-            mul_le_mul_of_nonneg_left hle (pow_nonneg (hnn w0) _)
-        _ < 1 := by rwa [mul_one]
-    rw [NumberField.InfinitePlace.prod_eq_abs_norm] at hprod
-    have hq : Algebra.norm ℚ (algebraMap (𝓞 F) F x) = (Algebra.norm ℤ x : ℚ) :=
-      (Algebra.coe_norm_int x).symm
-    rw [hq] at hprod
-    have hz : |Algebra.norm ℤ x| < 1 := by exact_mod_cast hprod
-    have hx0 : x = 0 := Algebra.norm_eq_zero_iff.mp (Int.abs_lt_one_iff.mp hz)
-    rw [hx0, map_zero]
-
 theorem tns_disc : ∃ V : Set (AF F ⊗[F] E), IsOpen V ∧ (0 : AF F ⊗[F] E) ∈ V ∧
     ∀ e : E, inclR (AF F) e ∈ V → e = 0 := by
-  obtain ⟨V0, hV0, h0, hV⟩ := exists_isOpen_nhd_zero_algebraMap_discrete (F := F)
-  haveI := module_finite_F_E (F := F) (E := E)
+  obtain ⟨U, hU, hV⟩ := GlobalTheory.AdeleDiscrete.exists_nhds_zero_principal_eq_zero F
+  obtain ⟨V0, hVU, hV0, h0⟩ := mem_nhds_iff.mp hU
+  haveI : Module.Finite F E := inferInstance
   have b := Module.finBasis F E
   refine ⟨(tnsCoord b) ⁻¹' Set.univ.pi (fun _ => V0), ?_, ?_, ?_⟩
   · exact (isOpen_set_pi Set.finite_univ fun _ _ => hV0).preimage (tnsCoord_continuous b)
@@ -137,6 +60,7 @@ theorem tns_disc : ∃ V : Set (AF F ⊗[F] E), IsOpen V ∧ (0 : AF F ⊗[F] E)
     ext k
     rw [Finsupp.coe_zero, Pi.zero_apply]
     apply hV
+    apply hVU
     rw [← tnsCoord_inclR b e k]
     exact he k
 

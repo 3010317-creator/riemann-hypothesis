@@ -97,20 +97,16 @@ lemma chC_sq (g : E0 × H) : (chC : AddChar (E0 × H) ℂ) g * chC g = 1 := by
   rw [chC_apply']
   split_ifs <;> simp
 
-private theorem zero_apply_lemma (g : E0 × H) : (0 : AddChar (E0 × H) ℂ) g = 1 := by
-  first
-  | exact AddChar.zero_apply g
-
 lemma chC_mul_self : (chC : AddChar (E0 × H) ℂ) * chC = 0 := by
   ext g
-  rw [AddChar.mul_apply, chC_sq, zero_apply_lemma]
+  rw [AddChar.mul_apply, chC_sq, AddChar.zero_apply]
 
 lemma mul_chC_eq_zero_iff (ψ : AddChar (E0 × H) ℂ) : ψ * chC = 0 ↔ ψ = chC := by
   constructor
   · intro h
     ext g
     have h1 : ((ψ * chC : AddChar (E0 × H) ℂ)) g = (0 : AddChar (E0 × H) ℂ) g := by rw [h]
-    rw [AddChar.mul_apply, zero_apply_lemma] at h1
+    rw [AddChar.mul_apply, AddChar.zero_apply] at h1
     calc ψ g = ψ g * (chC g * chC g) := by rw [chC_sq, mul_one]
       _ = (ψ g * chC g) * chC g := by ring
       _ = chC g := by rw [h1, one_mul]
@@ -124,7 +120,7 @@ lemma chC_ne_zero : (chC : AddChar (E0 × H) ℂ) ≠ 0 := by
   have h2 : ¬ ((((1, 0), 0) : E0 × H).1.1 = 0) := by
     show ¬ ((1 : ZMod 2) = 0)
     decide
-  rw [chC_apply', if_neg h2, zero_apply_lemma] at h1
+  rw [chC_apply', if_neg h2, AddChar.zero_apply] at h1
   norm_num at h1
 
 lemma phi_card_ne_zero : ((PhiSet (H := H)).card : ℂ) ≠ 0 := by
@@ -196,7 +192,7 @@ theorem primitive_value_trivial : PrimValTriv (H := H) := by
   unfold primVal
   refine Finset.prod_eq_one (fun p _ => ?_)
   unfold cosetMean
-  simp only [zero_apply_lemma, Finset.sum_const, nsmul_eq_mul, mul_one]
+  simp only [AddChar.zero_apply, Finset.sum_const, nsmul_eq_mul, mul_one]
   refine div_self ?_
   rw [Nat.cast_ne_zero]
   exact Finset.card_ne_zero.mpr ⟨0, by simp⟩

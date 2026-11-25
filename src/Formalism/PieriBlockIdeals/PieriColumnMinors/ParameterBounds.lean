@@ -526,12 +526,6 @@ theorem seven_lt_lstar {P : Par} (H : P.Hyp) (G : P.Large) : 7 < P.lstar := by
   have e : 8 * P.b / P.lstar = 8 * (P.b / P.lstar) := by ring
   linarith
 
-private theorem div_le_div_of_le_of_pos {a b c : ℝ} (ha : 0 ≤ a) (hc : 0 < c) (hcb : c ≤ b) :
-    a / b ≤ a / c := by
-  calc a / b = a * (1 / b) := by ring
-    _ ≤ a * (1 / c) := mul_le_mul_of_nonneg_left (one_div_le_one_div_of_le hc hcb) ha
-    _ = a / c := by ring
-
 private theorem lJDenom_le_lstarDenom {P : Par} (H : P.Hyp) (G : P.Large) :
     indexDenominator P ≤ lstarDenom P := by
   have nb := natBounds H
@@ -569,12 +563,8 @@ theorem paramsLStar_holds : Elem_b := by
   rw [lstar_eq_div, lJ_eq_div]
   calc P.L * ((P.m : ℝ) * P.b / lstarDenom P) = (P.m : ℝ) * P.b * P.L / lstarDenom P := by ring
     _ ≤ (P.m : ℝ) * P.b * P.L / indexDenominator P :=
-        div_le_div_of_le_of_pos
+        div_le_div_of_nonneg_left
           (mul_nonneg (mul_nonneg (by linarith [nb.m1]) hb.le) (by linarith)) hJ key
-
-private theorem div_le_div_of_le_of_nonneg_right {a b c : ℝ} (hab : a ≤ b) (hc : 0 ≤ c) : a / c ≤ b / c := by
-  rw [div_eq_mul_inv, div_eq_mul_inv]
-  exact mul_le_mul_of_nonneg_right hab (inv_nonneg.2 hc)
 
 theorem b_div_le_lJ {P : Par} (H : P.Hyp) (G : P.Large) :
     P.b / (4 * (P.k : ℝ) * (P.t : ℝ)) ≤ P.lJ := by
@@ -585,11 +575,11 @@ theorem b_div_le_lJ {P : Par} (H : P.Hyp) (G : P.Large) :
   have hkt : 0 < 4 * (P.k : ℝ) * (P.t : ℝ) :=
     mul_pos (mul_pos (by norm_num) (by linarith [nb.k1])) (by linarith [nb.t6])
   calc P.b / (4 * (P.k : ℝ) * (P.t : ℝ)) ≤ (P.m : ℝ) * P.b / (4 * (P.k : ℝ) * (P.t : ℝ)) :=
-        div_le_div_of_le_of_nonneg_right (le_mul_of_one_le_left hb.le nb.m1) hkt.le
+        div_le_div_of_nonneg_right (le_mul_of_one_le_left hb.le nb.m1) hkt.le
     _ = (P.m : ℝ) * P.b * P.L / (4 * (P.k : ℝ) * (P.t : ℝ) * P.L) :=
         (mul_div_mul_right _ _ (by linarith : P.L ≠ 0)).symm
     _ ≤ (P.m : ℝ) * P.b * P.L / indexDenominator P :=
-        div_le_div_of_le_of_pos
+        div_le_div_of_nonneg_left
           (mul_nonneg (mul_nonneg (by linarith [nb.m1]) hb.le) (by linarith)) hJ
           (lJDenom_le H G)
     _ = P.lJ := (lJ_eq_div P).symm

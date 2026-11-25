@@ -99,18 +99,20 @@ theorem hpk_herm' : (Hpk k r)ᴴ = Hpk k r := (Formalism.QuantumDeterminants.hpk
 theorem herm_conj (x y : Fin (2 * r + k + 1) → ℂ) : herm (Hpk k r) y x = star (herm (Hpk k r) x y) :=
   (Formalism.FourierDecayAlt.P.SettingConstruction.herm_symm (Hpk k r) hpk_herm' x y).symm
 
+private lemma herm_sum_left (s : Finset (Fin m)) (c : Fin m → ℂ)
+    (v : Fin m → Fin (2 * r + k + 1) → ℂ) (w : Fin (2 * r + k + 1) → ℂ) :
+    herm (Hpk k r) (∑ a ∈ s, c a • v a) w = ∑ a ∈ s, c a * herm (Hpk k r) (v a) w := by
+  induction s using Finset.induction_on with
+  | empty => simp [herm]
+  | insert a s ha ih =>
+    rw [Finset.sum_insert ha, Finset.sum_insert ha,
+      Formalism.FourierDecayAlt.P.SettingConstruction.herm_add_left,
+      Formalism.FourierDecayAlt.P.SettingConstruction.herm_smul_left, ih]
+
 theorem herm_proj {Bs : Fin m → Fin (2 * r + k + 1) → ℂ}
     (hon : ∀ a b, herm (Hpk k r) (Bs a) (Bs b) = if a = b then 1 else 0) (x : Fin (2 * r + k + 1) → ℂ) (c : Fin m) :
     herm (Hpk k r) (∑ a, herm (Hpk k r) x (Bs a) • Bs a) (Bs c) = herm (Hpk k r) x (Bs c) := by
-  have hsum : ∀ (s : Finset (Fin m)), herm (Hpk k r) (∑ a ∈ s, herm (Hpk k r) x (Bs a) • Bs a) (Bs c) =
-      ∑ a ∈ s, herm (Hpk k r) x (Bs a) * herm (Hpk k r) (Bs a) (Bs c) := by
-    intro s
-    induction s using Finset.induction_on with
-    | empty => simp [herm]
-    | insert a s ha ih =>
-      rw [Finset.sum_insert ha, Finset.sum_insert ha, Formalism.FourierDecayAlt.P.SettingConstruction.herm_add_left,
-        Formalism.FourierDecayAlt.P.SettingConstruction.herm_smul_left, ih]
-  rw [hsum, Finset.sum_eq_single c]
+  rw [herm_sum_left Finset.univ (fun a => herm (Hpk k r) x (Bs a)) Bs, Finset.sum_eq_single c]
   · rw [hon, if_pos rfl, mul_one]
   · intro b _ hb; rw [hon, if_neg hb, mul_zero]
   · intro h; exact absurd (Finset.mem_univ c) h
@@ -124,24 +126,9 @@ theorem reflB_unitary {Bs : Fin m → Fin (2 * r + k + 1) → ℂ}
   set Py := ∑ a, herm (Hpk k r) y (Bs a) • Bs a
 
   have hPxy : herm (Hpk k r) Px y = herm (Hpk k r) Px Py := by
-
-    have e1 : ∀ (s : Finset (Fin m)), herm (Hpk k r) (∑ a ∈ s, herm (Hpk k r) x (Bs a) • Bs a) y =
-        ∑ a ∈ s, herm (Hpk k r) x (Bs a) * herm (Hpk k r) (Bs a) y := by
-      intro s
-      induction s using Finset.induction_on with
-      | empty => simp [herm]
-      | insert a s ha ih =>
-        rw [Finset.sum_insert ha, Finset.sum_insert ha, Formalism.FourierDecayAlt.P.SettingConstruction.herm_add_left,
-          Formalism.FourierDecayAlt.P.SettingConstruction.herm_smul_left, ih]
-    have e2 : ∀ (s : Finset (Fin m)), herm (Hpk k r) (∑ a ∈ s, herm (Hpk k r) x (Bs a) • Bs a) Py =
-        ∑ a ∈ s, herm (Hpk k r) x (Bs a) * herm (Hpk k r) (Bs a) Py := by
-      intro s
-      induction s using Finset.induction_on with
-      | empty => simp [herm]
-      | insert a s ha ih =>
-        rw [Finset.sum_insert ha, Finset.sum_insert ha, Formalism.FourierDecayAlt.P.SettingConstruction.herm_add_left,
-          Formalism.FourierDecayAlt.P.SettingConstruction.herm_smul_left, ih]
-    rw [e1, e2]
+    dsimp only [Px]
+    rw [herm_sum_left Finset.univ (fun a => herm (Hpk k r) x (Bs a)) Bs y,
+      herm_sum_left Finset.univ (fun a => herm (Hpk k r) x (Bs a)) Bs Py]
     refine Finset.sum_congr rfl fun a _ => ?_
     congr 1
     rw [herm_conj y (Bs a), herm_conj Py (Bs a)]
@@ -149,24 +136,10 @@ theorem reflB_unitary {Bs : Fin m → Fin (2 * r + k + 1) → ℂ}
   have hxPy : herm (Hpk k r) x Py = herm (Hpk k r) Px Py := by
     have h1 : herm (Hpk k r) x Py = star (herm (Hpk k r) Py x) := herm_conj Py x
     have h2 : herm (Hpk k r) Px Py = star (herm (Hpk k r) Py Px) := herm_conj Py Px
-
-    have e1 : ∀ (s : Finset (Fin m)), herm (Hpk k r) (∑ a ∈ s, herm (Hpk k r) y (Bs a) • Bs a) x =
-        ∑ a ∈ s, herm (Hpk k r) y (Bs a) * herm (Hpk k r) (Bs a) x := by
-      intro s
-      induction s using Finset.induction_on with
-      | empty => simp [herm]
-      | insert a s ha ih =>
-        rw [Finset.sum_insert ha, Finset.sum_insert ha, Formalism.FourierDecayAlt.P.SettingConstruction.herm_add_left,
-          Formalism.FourierDecayAlt.P.SettingConstruction.herm_smul_left, ih]
-    have e2 : ∀ (s : Finset (Fin m)), herm (Hpk k r) (∑ a ∈ s, herm (Hpk k r) y (Bs a) • Bs a) Px =
-        ∑ a ∈ s, herm (Hpk k r) y (Bs a) * herm (Hpk k r) (Bs a) Px := by
-      intro s
-      induction s using Finset.induction_on with
-      | empty => simp [herm]
-      | insert a s ha ih =>
-        rw [Finset.sum_insert ha, Finset.sum_insert ha, Formalism.FourierDecayAlt.P.SettingConstruction.herm_add_left,
-          Formalism.FourierDecayAlt.P.SettingConstruction.herm_smul_left, ih]
-    rw [h1, h2, e1, e2]
+    rw [h1, h2]
+    dsimp only [Py]
+    rw [herm_sum_left Finset.univ (fun a => herm (Hpk k r) y (Bs a)) Bs x,
+      herm_sum_left Finset.univ (fun a => herm (Hpk k r) y (Bs a)) Bs Px]
     congr 1
     refine Finset.sum_congr rfl fun a _ => ?_
     congr 1
