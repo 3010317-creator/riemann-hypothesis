@@ -300,12 +300,6 @@ open scoped TensorProduct
 
 variable (I : AutInst)
 
-theorem nt_mulStar (a : I.E) : ∃ c : I.F, algebraMap I.F I.E c = a * star a :=
-  (I.cm.fixed (a * star a)).1 (by rw [star_mul, star_star])
-
-theorem nt_normSq (σ : I.E →+* ℂ) (a : I.E) : ((Complex.normSq (σ a) : ℝ) : ℂ) = σ (a * star a) := by
-  rw [map_mul, I.cm.cmUnram.2.1 σ a, Complex.mul_conj]
-
 theorem nt_absEmb (σ : I.E →+* ℂ) : ∃ v : InfinitePlace I.F, ∀ a : I.E, ‖σ a‖ = ‖I.φ v a‖ := by
   apply _root_.GlobalTheory.RatDiscrete.exists_place <;> assumption
 

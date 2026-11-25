@@ -110,13 +110,6 @@ theorem nlam_orth_mapsTo {Λ : Submodule (𝓞 E) S.V} {T : E} {F : LFlag S r T}
   rw [hiso]
   exact hx y' hy'X
 
-theorem nlam_orth_map_eq {Λ : Submodule (𝓞 E) S.V} {T : E} {F : LFlag S r T} {n : S.V ≃ₗ[E] S.V}
-    (hn : n ∈ NLam Λ F) : (orth S (Xsp F)).map (n : S.V →ₗ[E] S.V) = orth S (Xsp F) := by
-  apply Submodule.eq_of_le_of_finrank_eq
-  · rintro _ ⟨x, hx, rfl⟩
-    exact nlam_orth_mapsTo hn x hx
-  · exact LinearEquiv.finrank_map_eq n _
-
 theorem nlamPf_mul {Λ : Submodule (𝓞 E) S.V} {T : E} {F : LFlag S r T} {n p : S.V ≃ₗ[E] S.V}
     (hn : n ∈ NLam Λ F) (hp : p ∈ NLam Λ F) : n * p ∈ NLam Λ F := by
   intros

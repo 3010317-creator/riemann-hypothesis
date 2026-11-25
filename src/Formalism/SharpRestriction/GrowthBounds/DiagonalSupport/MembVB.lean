@@ -347,8 +347,6 @@ open Formalism.MainNotions.G.WittFrameLocaliserOrders Formalism.MainNotions.G.sy
 
 theorem vb_arith1 (T s c : ℝ) (hc : 0 ≤ c) : T - s / 2 - 60 * c ≤ T - s / 8 - 3 / 8 * s - 24 * c := by linarith
 
-theorem vb_arith2 (T s c : ℝ) (hs : 0 ≤ s) : T - s / 2 - 60 * c ≤ T - 3 / 8 * s - 60 * c := by linarith
-
 theorem multideg_mapDomain {ι κ : Type} [Fintype ι] {n : ℕ} (g : ι → κ) (u : ι × Fin n →₀ ℕ) (i : κ) :
     multideg (Finsupp.mapDomain (fun v : ι × Fin n => (g v.1, v.2)) u) i =
       ∑ x : ι, if g x = i then multideg u x else 0 := by

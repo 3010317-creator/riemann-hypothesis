@@ -51,10 +51,6 @@ theorem stdform_Q_real (M : Matrix n n ℂ) (hM : ∀ i j, (M i j).im = 0) (y : 
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   simp [Complex.mul_re, Complex.mul_im, hM i j]
 
-theorem stdform_normSq (z : ℂ) : (star z * z).re = Complex.normSq z := by
-  rw [Complex.star_def, Complex.mul_re, Complex.conj_re, Complex.conj_im, Complex.normSq_apply]
-  ring
-
 section Emb
 
 variable {E : Type} [Field E]

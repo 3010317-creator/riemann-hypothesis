@@ -97,45 +97,6 @@ theorem phiT_smul (K : Type) [Field K] {a b : ℕ} {ST SG SG' : Finset (HeightOn
   · exact absurd (key.2 h2) h1
   · rfl
 
-theorem phiT_add_mul (K : Type) [Field K] {a b : ℕ} {ST SG SG' : Finset (HeightOneSpectrum (𝓞 E))}
-    (d : DecoSet (E := E) (n := a) (ST := ST) (SG := SG)) (d' : DecoSet (E := E) (n := b) (ST := ST) (SG := SG')) (S : Finset (HeightOneSpectrum (𝓞 E))) (hS : ∀ P : ST, P.1 ∈ S)
-    (T : ℕ) (hT : ∀ P : ST, (T : 𝓞 E) ∈ P.1.asIdeal) (x z : HomE E a b)
-    (hz : z ∈ mulLat T (homAt S d.1.N d'.1.N)) :
-    phiT K d.1 d'.1 (x + z) = phiT K d.1 d'.1 x := by
-  obtain ⟨z₀, hz₀, rfl⟩ := Submodule.mem_map.1 hz
-  have hzy : ∀ (P : ST), ∀ y ∈ d.1.at P.1, ((T : 𝓞 E) • (LinearMap.id : HomE E a b →ₗ[𝓞 E] HomE E a b)) z₀ y ∈ d'.1.at P.1 ∧
-      d'.1.f P ((((T : 𝓞 E) • (LinearMap.id : HomE E a b →ₗ[𝓞 E] HomE E a b)) z₀) y) = 0 := by
-    intro P y hy
-    have e : ((T : 𝓞 E) • (LinearMap.id : HomE E a b →ₗ[𝓞 E] HomE E a b)) z₀ y = (T : 𝓞 E) • z₀ y := rfl
-    have hm : z₀ y ∈ d'.1.at P.1 := hz₀ P.1 (hS P) y hy
-    rw [e]
-    refine ⟨Submodule.smul_mem _ _ hm, ?_⟩
-    rw [d'.2.f_smul P _ _ hm, Ideal.Quotient.eq_zero_iff_mem.2 (hT P), zero_mul]
-  have key : (∀ P : ST, ∀ y ∈ d.1.at P.1, (x + ((T : 𝓞 E) • (LinearMap.id : HomE E a b →ₗ[𝓞 E] HomE E a b)) z₀) y ∈ d'.1.at P.1 ∧
-        d'.1.f P ((x + ((T : 𝓞 E) • (LinearMap.id : HomE E a b →ₗ[𝓞 E] HomE E a b)) z₀) y) = d.1.f P y) ↔
-      (∀ P : ST, ∀ y ∈ d.1.at P.1, x y ∈ d'.1.at P.1 ∧ d'.1.f P (x y) = d.1.f P y) := by
-    constructor
-    · intro H P y hy
-      obtain ⟨h1, h2⟩ := H P y hy
-      obtain ⟨h3, h4⟩ := hzy P y hy
-      rw [LinearMap.add_apply] at h1 h2
-      have hxm : x y ∈ d'.1.at P.1 := by simpa using sub_mem h1 h3
-      refine ⟨hxm, ?_⟩
-      rw [d'.2.f_add P _ hxm _ h3, h4, add_zero] at h2
-      exact h2
-    · intro H P y hy
-      obtain ⟨h1, h2⟩ := H P y hy
-      obtain ⟨h3, h4⟩ := hzy P y hy
-      rw [LinearMap.add_apply]
-      refine ⟨add_mem h1 h3, ?_⟩
-      rw [d'.2.f_add P _ h1 _ h3, h4, add_zero, h2]
-  unfold phiT
-  split_ifs with h1 h2 h2
-  · rfl
-  · exact absurd (key.1 h1) h2
-  · exact absurd (key.2 h2) h1
-  · rfl
-
 end PhiT
 
 end Formalism.L2.Ker

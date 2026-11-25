@@ -22,10 +22,6 @@ section SlopeTestRemainingChoices
 
 variable {k r : ℕ}
 
-theorem ffa_hpk_esI_row (a : Fin r) (j : Fin (2 * r + k + 1)) :
-    Hpk k r (esI k r a) j = if j = eI k r a then 1 else 0 := by
-  apply _root_.PI.WBL.Cv.hpk_row_esI <;> assumption
-
 theorem ffa_herm_esI (x : Fin (2 * r + k + 1) → ℂ) (a : Fin r) :
     herm (Hpk k r) x (bvec (esI k r a)) = x (eI k r a) := by
   apply _root_.PI.WBL.Cv.herm_esI <;> assumption

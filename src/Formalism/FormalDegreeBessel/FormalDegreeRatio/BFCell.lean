@@ -64,20 +64,6 @@ lemma col_mid (i j : Fin (2 * r + k + 1)) (h1 : r ≤ j.val) (h2 : j.val ≤ r +
   unfold bigCell
   rw [dite_eq_right (by omega), dite_eq_left h2]
 
-lemma row_lo (p j : Fin (2 * r + k + 1)) (a : Fin r) (hp : p.val = a.val) :
-    bigCell k r c μ p j = if j.val = 2 * r + k - a.val then (star (c a))⁻¹ else 0 := by
-  have ha := a.isLt
-  have hj := j.isLt
-  by_cases h1 : j.val < r
-  · rw [col_lo c μ p j ⟨j.val, h1⟩ rfl, ite_eq_right (by simp only; omega), ite_eq_right (by omega)]
-  · by_cases h2 : j.val ≤ r + k
-    · rw [col_mid c μ p j (by omega) h2, dite_eq_right (by omega), ite_eq_right (by omega)]
-    · rw [col_hi c μ p j ⟨2 * r + k - j.val, by omega⟩ (by simp only; omega)]
-      by_cases h3 : j.val = 2 * r + k - a.val
-      · have e : (⟨2 * r + k - j.val, by omega⟩ : Fin r) = a := Fin.ext (by simp only; omega)
-        rw [ite_eq_left (by simp only; omega), ite_eq_left h3, e]
-      · rw [ite_eq_right (by simp only; omega), ite_eq_right h3]
-
 lemma row_hi (p j : Fin (2 * r + k + 1)) (a : Fin r) (hp : p.val = 2 * r + k - a.val) :
     bigCell k r c μ p j = if j.val = a.val then c a else 0 := by
   have ha := a.isLt
@@ -92,14 +78,6 @@ lemma row_hi (p j : Fin (2 * r + k + 1)) (a : Fin r) (hp : p.val = 2 * r + k - a
     · rw [col_mid c μ p j (by omega) h2, dite_eq_right (by omega), ite_eq_right (by omega)]
     · rw [col_hi c μ p j ⟨2 * r + k - j.val, by omega⟩ (by simp only; omega),
         ite_eq_right (by simp only; omega), ite_eq_right (by omega)]
-
-lemma row_mid_out (p j : Fin (2 * r + k + 1)) (h1 : r ≤ p.val) (h2 : p.val ≤ r + k)
-    (hj : j.val < r ∨ r + k < j.val) : bigCell k r c μ p j = 0 := by
-  have hj' := j.isLt
-  rcases hj with hj | hj
-  · rw [col_lo c μ p j ⟨j.val, hj⟩ rfl, ite_eq_right (by simp only; omega)]
-  · rw [col_hi c μ p j ⟨2 * r + k - j.val, by omega⟩ (by simp only; omega),
-      ite_eq_right (by simp only; omega)]
 
 lemma mid_mid (p q : Fin (k + 1)) : bigCell k r c μ (wI k r p) (wI k r q) = μ p q := by
   have hp := p.isLt

@@ -115,15 +115,9 @@ theorem pv_infDiag (v : HeightOneSpectrum (𝓞 L)) (k : Lˣ) : pv v (infDiag k)
 
 theorem pw_diag (w : InfinitePlace L) (k : Lˣ) : pw w (diagUnits L k) = (atInf w k : w.Completion) := rfl
 
-theorem pv_diag (v : HeightOneSpectrum (𝓞 L)) (k : Lˣ) : pv v (diagUnits L k) = (atFin v k : v.adicCompletion L) := rfl
-
 theorem valued_atFin (v : HeightOneSpectrum (𝓞 L)) (k : Lˣ) :
     Valued.v ((atFin v k : (v.adicCompletion L)ˣ) : v.adicCompletion L) = v.valuation L (k : L) :=
   HeightOneSpectrum.valuedAdicCompletion_eq_valuation' v (k : L)
-
-theorem locK_eq (χ : HChar L) {v : HeightOneSpectrum (𝓞 L)} (h : χ.UnrAt v) (k : Lˣ) :
-    χ.locK v k = χ.val v ^ ordF v k := by
-  apply _root_.GlobalTheory.HeckeProduct.locK_unr <;> assumption
 
 theorem productRule (χ : HChar L) : χ.ProductRule := by
   apply _root_.GlobalTheory.HeckeProduct.hchar_productRule <;> assumption

@@ -19,17 +19,6 @@ variable {K : Type} [Field K] {ι : Type} [Fintype ι] {n : ℕ}
 theorem gl_operator_apply_derivation (LL : Letters ι) (S : Set ι) (a b : Fin n) (F : MvPolynomial (ι × Fin n) K) :
     glOps K n LL S a b F = glDerivation K LL S a b F := gl_action_eq_derivation LL S a b F
 
-theorem polynomial_gl_commutation (LL : Letters ι) (S : Set ι) (a b c d : Fin n) :
-    glOps K n LL S a b * glOps K n LL S c d - glOps K n LL S c d * glOps K n LL S a b =
-      (if b = c then glOps K n LL S a d else 0) - (if d = a then glOps K n LL S c b else 0) := by
-  refine LinearMap.ext fun F => ?_
-  have h := congrArg (fun D : Derivation K (MvPolynomial (ι × Fin n) K) (MvPolynomial (ι × Fin n) K) => D F)
-    (gl_derivation_lie_bracket (K := K) LL S a b c d)
-  simp only [Derivation.commutator_apply] at h
-  simp only [LinearMap.sub_apply, Module.End.mul_apply, gl_operator_apply_derivation]
-  rw [h]
-  by_cases h1 : b = c <;> by_cases h2 : d = a <;> simp [h1, h2, gl_operator_apply_derivation]
-
 theorem disjoint_letters_commute (LL : Letters ι) (S S' : Set ι) (hd : Disjoint S S') (a b c d : Fin n) :
     glOps K n LL S a b * glOps K n LL S' c d = glOps K n LL S' c d * glOps K n LL S a b := by
   classical

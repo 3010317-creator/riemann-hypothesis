@@ -355,12 +355,6 @@ variable {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field 
 
 theorem filB_anti : Antitone PD.Fil := antitone_int_of_succ_le PD.Fil_anti
 
-private theorem tmul_mem_FilV_of_mem_Fil (a : ℤ) (x : V) {y : BdR} (hy : y ∈ PD.Fil a) :
-    x ⊗ₜ[Qp] y ∈ Formalism.WeaklyAdmissibleFiltrations.FilV PD (LL := LL) (V := V) a := by
-  refine LinearMap.mem_range.mpr ⟨x ⊗ₜ[Qp] (⟨y, hy⟩ : (PD.Fil a).restrictScalars Qp), ?_⟩
-  rw [AlgebraTensorModule.map_tmul]
-  rfl
-
 theorem filVB_anti : Antitone (FilV PD (LL := LL) (V := V)) := by
   apply +allowSynthFailures _root_.GlobalTheory.DRFil.FilV_antitone <;> assumption
 

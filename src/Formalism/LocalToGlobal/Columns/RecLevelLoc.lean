@@ -22,25 +22,6 @@ section Int
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
-theorem rll_eps_eq (v : HeightOneSpectrum (𝓞 F)) :
-    afsplitEps E v = (1 : E) ⊗ₜ[F] (afsplitI v 1 : Formalism.L2.Herm.Af F) := by
-  rw [afsplitEps, Algebra.TensorProduct.one_def, afsplitIE_tmul]
-
-theorem rll_sum_apply (S : Finset (HeightOneSpectrum (𝓞 F))) (w : HeightOneSpectrum (𝓞 F)) :
-    (∑ v ∈ S, (afsplitI v 1 : Formalism.L2.Herm.Af F)) w = open Classical in if w ∈ S then 1 else 0 := by
-  classical
-  have h : (∑ v ∈ S, (afsplitI v 1 : Formalism.L2.Herm.Af F)) w = ∑ v ∈ S, (afsplitI v 1 : Formalism.L2.Herm.Af F) w :=
-    map_sum (evalV F w) _ _
-  rw [h]
-  by_cases hw : w ∈ S
-  · rw [ite_eq_left hw, Finset.sum_eq_single w]
-    · exact afsplitI_self w 1
-    · intro v _ hv; exact afsplitI_ne v w (Ne.symm hv) 1
-    · intro h'; exact absurd hw h'
-  · rw [ite_eq_right hw]
-    refine Finset.sum_eq_zero fun v hv => afsplitI_ne v w ?_ 1
-    rintro rfl; exact hw hv
-
 theorem rll_int_of_loc (x : E ⊗[F] Formalism.L2.Herm.Af F)
     (h : ∀ v : HeightOneSpectrum (𝓞 F), prV (E := E) v x ∈ Formalism.BasicNotions.intV E v) : x ∈ Formalism.L2.Herm.intAf F E := by
   apply _root_.GlobalTheory.St.G.IntAd.mem_of_local <;> assumption
