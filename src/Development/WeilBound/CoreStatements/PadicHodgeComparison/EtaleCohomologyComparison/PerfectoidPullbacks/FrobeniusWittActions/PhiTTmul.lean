@@ -97,15 +97,12 @@ structure Fac (r : Res l K) (N : ℕ) where
     ((l : (per l K).A) ^ m) • (((l : (per l K).A) ^ e M' j) • α M j (pullL u hu j x) -
       ((l : (per l K).A) ^ e M j) • (LinearMap.lTensor (AW r) (Wc.pullS l r.ρ (B.schMap u hu) j).lim) (α M' j x)) = 0
 
-def perCOf (r : Res l K) (C₀ : Type) [CommRing C₀] (c : Acris l →+* C₀) (ι : C₀ →+* (per l K).B) (φ : C₀ →+* C₀)
-    (σ : K.fixingSubgroup → C₀ →+* C₀) (q : ℚ_[l] →+* C₀) (k : Wc.K₀ l r.k →+* C₀) : PerC (per l K) where
+def perCOf (r : Res l K) (C₀ : Type) [CommRing C₀] (c : Acris l →+* C₀) (ι : C₀ →+* (per l K).B)
+    (k : Wc.K₀ l r.k →+* C₀) : PerC (per l K) where
   C := C₀
   K₀ := Wc.K₀ l r.k
   c := c
   ι := ι
-  φ := φ
-  σ := σ
-  q := q
   k := k
 
 end CrystallineSemistableComparison.Pb
