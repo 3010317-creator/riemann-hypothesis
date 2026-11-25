@@ -609,24 +609,6 @@ def LiftAut (D : D7) : Prop := ∀ θ : InfF D, IsInfFam θ → ∀ ψ, IsStdCha
     (∀ h, IntegrableOn (fun g => Wf.ker V W χ χ' Φ g h * F g) 𝓕 μ) ∧
     IsAutFunSm θ W fun h => ∫ g in 𝓕, Wf.ker V W χ χ' Φ g h * F g ∂μ
 
-def TypAdd (D : D7) : Prop := ∀ θ : InfF D, IsInfFam θ → ∀ V : HSp D, V.SigOK → ∀ τ S,
-  GoodPar V.rank (V.sig (tauE D τ)).1 (V.sig (tauE D τ)).2 S →
-    IsTypeAt θ V τ S 0 ∧ ∀ φ φ', IsAutFunSm θ V φ → IsAutFunSm θ V φ' →
-      IsTypeAt θ V τ S φ → IsTypeAt θ V τ S φ' → IsTypeAt θ V τ S (φ + φ')
-
-theorem mem_TypS (h : FormSub D) (ht : TypAdd D) {θ : InfF D} (hθ : IsInfFam θ) {V : HSp D} (hV : V.SigOK)
-    {P : D.what₂.Tau → SPar} (hP : ∀ τ, GoodPar V.rank (V.sig (tauE D τ)).1 (V.sig (tauE D τ)).2 (P τ)) {φ : GA D V → ℂ} :
-    φ ∈ TypS θ V P ↔ IsAutFunSm θ V φ ∧ ∀ τ, IsTypeAt θ V τ (P τ) φ := by
-  refine ⟨fun hφ => ?_, fun hφ => Submodule.subset_span hφ⟩
-  induction hφ using Submodule.span_induction with
-  | mem x hx => exact hx
-  | zero => exact ⟨(h θ hθ V 0).1 (zero_mem _), fun τ => (ht θ hθ V hV τ _ (hP τ)).1⟩
-  | add x y _ _ hx hy =>
-    exact ⟨(h θ hθ V _).1 (add_mem ((h θ hθ V x).2 hx.1) ((h θ hθ V y).2 hy.1)),
-      fun τ => (ht θ hθ V hV τ _ (hP τ)).2 x y hx.1 hy.1 (hx.2 τ) (hy.2 τ)⟩
-  | smul c x _ hx =>
-    exact ⟨(h θ hθ V _).1 (Submodule.smul_mem _ c ((h θ hθ V x).2 hx.1)), fun τ => isTypeAt_smul c (hx.2 τ)⟩
-
 def WeilCoreEx (D : D7) : Prop := ∀ ψ, IsStdChar D ψ (-1) → Nonempty (WeilCore D ψ)
 
 def WeilRules (D : D7) : Prop := ∀ ψ, IsStdChar D ψ (-1) → ∀ Wc : WeilCore D ψ, Wc.Rules
