@@ -7,6 +7,7 @@ import Development.AbelianVarietyTheory.Definitions.CMLattices.IsCyclotomicExten
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsIrreducibleGeneralizations
 public import Mathlib.Algebra.Module.FinitePresentation
 public import Mathlib.RingTheory.Flat.EquationalCriterion
+import Mathlib.RingTheory.Flat.TorsionFree
 import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.ConjSymm
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.QuadTie
