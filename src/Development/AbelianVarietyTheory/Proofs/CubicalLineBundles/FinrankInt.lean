@@ -10,6 +10,7 @@ import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsEquivOfSumEq
 import Mathlib.Tactic.Linter.HaveILetI
 import Development.AbelianVarietyTheory.Definitions.CMLattices.IsCyclotomicExtensionCyclotomicField28
 import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.ConjSymm
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ReEqZeroAndImSq, Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.PrincipalRootReZeroImSq, Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.FinrankInt

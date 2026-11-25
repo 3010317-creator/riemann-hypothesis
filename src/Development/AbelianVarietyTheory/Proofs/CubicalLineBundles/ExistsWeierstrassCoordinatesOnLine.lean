@@ -12,6 +12,10 @@ public import Mathlib.Analysis.Calculus.Deriv.Add
 public import Mathlib.Analysis.Calculus.Deriv.Comp
 public import Mathlib.Analysis.Calculus.Deriv.Mul
 public import Mathlib.Analysis.Complex.CauchyIntegral
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.CategoryTheory.Comma.Over.Basic
+public import Mathlib.CategoryTheory.Monoidal.Grp
 
 @[expose] public section
 
