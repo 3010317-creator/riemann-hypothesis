@@ -124,11 +124,8 @@ theorem modK_algebraMap : ∀ {F : Type} [Field F] [ValuativeRel F] [Topological
   have hunit : ∀ u : (𝒪[F])ˣ, distribHaarChar E (Units.mk0 ((u : 𝒪[F]) : F) (by simp)) = 1 := by
     intro u
     apply distribHaarChar_eq_of_measure_smul_eq_mul hO0 hOT
-    have hinv : (((u⁻¹ : (𝒪[F])ˣ) : 𝒪[F]) : F) = ((u : 𝒪[F]) : F)⁻¹ := by
-      have h1 : ((((u⁻¹ : (𝒪[F])ˣ) : 𝒪[F]) * (u : 𝒪[F]) : 𝒪[F]) : F) = ((1 : 𝒪[F]) : F) := by
-        rw [u.inv_mul]
-      rw [MulMemClass.coe_mul, OneMemClass.coe_one] at h1
-      exact eq_inv_of_mul_eq_one_left h1
+    have hinv : (((u⁻¹ : (𝒪[F])ˣ) : 𝒪[F]) : F) = ((u : 𝒪[F]) : F)⁻¹ :=
+      map_units_inv (𝒪[F]).subtype u
     have hset : Units.mk0 ((u : 𝒪[F]) : F) (by simp) • (M.L.O : Set E) = M.L.O := by
       ext y
       rw [Set.mem_smul_set_iff_inv_smul_mem]
