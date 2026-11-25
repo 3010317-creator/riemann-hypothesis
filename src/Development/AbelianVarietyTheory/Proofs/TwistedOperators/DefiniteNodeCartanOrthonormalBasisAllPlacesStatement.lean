@@ -94,13 +94,6 @@ theorem defNode_cart_onb {μ0 : T} (hL : L.Is μ0) (W : G.Weil) (X : Node) (hX :
     ext i j
     simp [Matrix.mul_diagonal]
 
-theorem defNode_cart_onb_all : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ0 : T}, L.Is μ0 →
-    ∀ (W : G.Weil) (X : Node), DefNode D.R.m X → ∀ ρ,
-    IsCartanInv (gramAt D (G.V X) ρ) (W.cart X ρ) ∧ IsONBasis (gramAt D (G.V X) ρ) (W.cart X ρ) (W.onb X ρ) (G.V X).rank ∧
-    IsCartanInv (gramAt D (negSp (G.V X)) ρ) (-W.cart X ρ) ∧
-      IsONBasis (gramAt D (negSp (G.V X)) ρ) (-W.cart X ρ) (W.onb X ρ) 0 :=
-  fun hL W X hX ρ => defNode_cart_onb hL W X hX ρ
-
 end DefOnb
 
 end GlobalTheory.RowReal
@@ -124,7 +117,7 @@ theorem _root_.GlobalTheory.T.definiteNode_cartan_orthonormalBasis_allPlaces : �
     IsCartanInv (gramAt D (G.V X) ρ) (W.cart X ρ) ∧ IsONBasis (gramAt D (G.V X) ρ) (W.cart X ρ) (W.onb X ρ) (G.V X).rank ∧
     IsCartanInv (gramAt D (negSp (G.V X)) ρ) (-W.cart X ρ) ∧
       IsONBasis (gramAt D (negSp (G.V X)) ρ) (-W.cart X ρ) (W.onb X ρ) 0 := by
-  first | exact @GlobalTheory.RowReal.defNode_cart_onb_all
+  first | exact @GlobalTheory.RowReal.defNode_cart_onb
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.DefiniteNodeCartanOrthonormalBasisAllPlacesStatement =====

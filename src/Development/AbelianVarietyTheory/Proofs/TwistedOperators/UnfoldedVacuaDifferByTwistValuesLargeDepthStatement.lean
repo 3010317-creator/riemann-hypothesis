@@ -89,8 +89,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open IsDedekindDomain NumberField MeasureTheory Matrix GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.StdFrames GlobalTheory.RowClaim
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.RowUnf GlobalTheory.RowChain GlobalTheory.SeeSaw GlobalTheory.RowVal GlobalTheory.RowReal
 
-theorem _root_.GlobalTheory.T.exists_unitaryPoint_prescribed_localMatrices : Big fun ch => ∀ t (j : ℕ) (hj : j ≤ _) (g : ∀ w : GlobalTheory.FunObj.locPl ch.G t, GL (Fin ((GlobalTheory.FunObj.locGrid ch.G t w.1).rank (_, j))) (GlobalTheory.FunObj.Kw w.1)), ∃ r, HasLoc t ch.S.B hj r g := by
-  first | exact @GlobalTheory.RowLocBig.exists_hasLoc_big
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUnitaryPointPrescribedLocalMatricesStatement =====
@@ -107,7 +105,7 @@ noncomputable section
 namespace GlobalTheory.RowBase
 
 theorem exists_isBase : Big fun ch => ∀ t, ∃ b, IsBase t ch.S.B b := by
-  refine GlobalTheory.RowReal.big_mono ?_ (Big.and GlobalTheory.T.representation_at_every_place GlobalTheory.T.exists_unitaryPoint_prescribed_localMatrices)
+  refine GlobalTheory.RowReal.big_mono ?_ (Big.and GlobalTheory.T.representation_at_every_place GlobalTheory.RowLocBig.exists_hasLoc_big)
   intro D Γ _ _ Pl0 T A Ks _ _ _ R ch ⟨hrep, hloc⟩ t
   classical
   let β0 : CosFam ch.G t := fun _ _ => DoubleCoset.mk _ _ 1
@@ -173,8 +171,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open IsDedekindDomain NumberField MeasureTheory Matrix GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.StdFrames GlobalTheory.RowClaim
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.RowUnf GlobalTheory.RowChain GlobalTheory.SeeSaw GlobalTheory.RowVal GlobalTheory.RowReal
 
-theorem _root_.GlobalTheory.T.twistCharacter_mem_twistFiniteValueProductSubgroup : Big fun {D} _ _ _ _ {T} _ _ _ _ _ {R} ch => ∀ (t : T) (x : (AE D)ˣ), Circle.toUnits (R.toLevCh.xi t x) ∈ xiVals R.toLevCh t := by
-  first | exact @GlobalTheory.XiVals.xi_mem
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.TwistCharacterMemTwistFiniteValueProductSubgroupStatement =====
@@ -363,10 +359,8 @@ theorem circ_id (A B A' B' : Circle) : A'⁻¹ * B' = (A⁻¹ * B) * ((A' * A⁻
   simp only [Circle.coe_mul, Circle.coe_inv]
   field_simp
 
-
-
 theorem vacTw : Big fun ch => VacTw ch := by
-  obtain ⟨C, h⟩ := Big.and (Big.and _root_.GlobalTheory.RowBase.exists_isBase _root_.GlobalTheory.RowBaseUniq.isBase_unique) (Big.and GlobalTheory.T.twistCharacter_mem_twistFiniteValueProductSubgroup _root_.GlobalTheory.ConTwist.conAt_twist_big)
+  obtain ⟨C, h⟩ := Big.and (Big.and _root_.GlobalTheory.RowBase.exists_isBase _root_.GlobalTheory.RowBaseUniq.isBase_unique) (Big.and GlobalTheory.XiVals.xi_mem _root_.GlobalTheory.ConTwist.conAt_twist_big)
   refine ⟨C, fun ε CF hC => ?_⟩
   obtain ⟨x₀, h⟩ := h ε CF hC
   refine ⟨x₀, fun D large₂ he hx Γ _ _ Pl0 T A Ks _ _ _ R F s ch hi ha => ?_⟩
