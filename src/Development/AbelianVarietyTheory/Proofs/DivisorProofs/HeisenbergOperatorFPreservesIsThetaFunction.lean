@@ -9,6 +9,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasDerivAtOf
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsOpenNsmulAdelicCompletionOfVectorSet
 public import GroundTheory.GlobalFields.TateThesis.NoSmallSubgroups
 import Mathlib.Tactic.Linter.Style
+import Mathlib.Algebra.Group.Subgroup.Lattice
 
 @[expose] public section
 
@@ -207,20 +208,7 @@ theorem isThetaFunOF_heisOF : ∀ (F E : Type) [Field F] [NumberField F] [Field 
         (fun a b => by simp only [symplOHF_add_left, symplOHF_add_right]; ring)
     let g : WOF F E nS nT →+ AF F :=
       AddMonoidHom.mk' (fun u => pairA F 0 (c u).2) (fun a b => by rw [map_add (f := _)]; exact Prod.ext (add_zero 0).symm rfl)
-    let Kψ : AddSubgroup (AF F) :=
-      { carrier := {x | ψ x = 1}
-        zero_mem' := ψ.map_zero_eq_one
-        add_mem' := fun {a b} ha hb => by
-          have ha' : ψ a = 1 := ha
-          have hb' : ψ b = 1 := hb
-          show ψ (a + b) = 1
-          rw [AddChar.map_add_eq_mul, ha', hb', one_mul]
-        neg_mem' := fun {a} ha => by
-          have ha' : ψ a = 1 := ha
-          show ψ (-a) = 1
-          have := AddChar.map_add_eq_mul ψ (-a) a
-          rw [neg_add_cancel, ψ.map_zero_eq_one, ha', mul_one] at this
-          exact this.symm }
+    let Kψ : AddSubgroup (AF F) := Subgroup.toAddSubgroup' ψ.toMonoidHom.ker
     let K : AddSubgroup (WOF F E nS nT) := Kψ.comap g
     have hK : IsOpen (K : Set (WOF F E nS nT)) := by
       refine K.isOpen_of_mem_nhds (g := 0) ?_

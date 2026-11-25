@@ -82,25 +82,24 @@ theorem polyAction_scaled_mem_locP_nabStd {ι : Type} [Fintype ι] (lam : ι →
     (hc' : ∀ τ, IntAt w (c • (((g τ)⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K))) :
     ∀ F ∈ Formalism.HermitianLatticesTheory.localization₂ w.asIdeal (nabStd K lam),
       c ^ scaleExp lam • actP lam g F ∈ Formalism.HermitianLatticesTheory.localization₂ w.asIdeal (nabStd K lam) := by
-  have key : ∀ F ∈ nabStd K lam, c ^ scaleExp lam • actP lam g F ∈ Formalism.HermitianLatticesTheory.localization₂ w.asIdeal (nabStd K lam) := by
+  have key : ∀ F ∈ nabStd K lam, c ^ scaleExp lam • actP lam g F ∈
+      Formalism.HermitianLatticesTheory.localization₂ w.asIdeal (nabStd K lam) := by
     intro F hF
     unfold nabStd Formalism.GradedWeylDivisibility.tensorLat at hF
-    induction hF using Submodule.span_induction with
-    | mem x hx =>
-      obtain ⟨f, hf, rfl⟩ := hx
-      choose s hs hs' using fun τ => sqAct_scaled w (g τ) c (hc τ) (hc' τ) (lam τ) (f τ) (hf τ)
-      refine ⟨∏ τ, s τ, Submonoid.prod_mem _ fun τ _ => hs τ, Submodule.subset_span ⟨_, hs', ?_⟩⟩
-      have h1 := actTen K ι n lam g f
-      unfold ten at h1
-      rw [h1, ← IsScalarTower.algebraMap_smul K, map_prod, scaleExp, ← Finset.prod_pow_eq_pow_sum, smul_smul,
-        ← Finset.prod_mul_distrib]
-      simp only [map_smul, smul_smul]
-      rw [Finset.prod_smul]
-    | zero => rw [map_zero, smul_zero]; exact Submodule.zero_mem _
-    | add x y _ _ hx hy => rw [map_add (f := _), smul_add]; exact Submodule.add_mem _ hx hy
-    | smul r x _ hx =>
-      rw [LinearMap.map_smul_of_tower, smul_comm]
-      exact Submodule.smul_mem _ _ hx
+    refine (Submodule.span_le (p := (Formalism.HermitianLatticesTheory.localization₂ w.asIdeal
+        (nabStd K lam)).comap ((c ^ scaleExp lam • actP lam g).restrictScalars (𝓞 K)))).2
+      ?_ hF
+    rintro _ ⟨f, hf, rfl⟩
+    simp only [SetLike.mem_coe, Submodule.mem_comap, LinearMap.restrictScalars_apply,
+      LinearMap.smul_apply]
+    choose s hs hs' using fun τ => sqAct_scaled w (g τ) c (hc τ) (hc' τ) (lam τ) (f τ) (hf τ)
+    refine ⟨∏ τ, s τ, Submonoid.prod_mem _ fun τ _ => hs τ, Submodule.subset_span ⟨_, hs', ?_⟩⟩
+    have h1 := actTen K ι n lam g f
+    unfold ten at h1
+    rw [h1, ← IsScalarTower.algebraMap_smul K, map_prod, scaleExp, ← Finset.prod_pow_eq_pow_sum,
+      smul_smul, ← Finset.prod_mul_distrib]
+    simp only [map_smul, smul_smul]
+    rw [Finset.prod_smul]
   rintro F ⟨s, hs, hF⟩
   obtain ⟨t, ht, h2⟩ := key _ hF
   refine ⟨t * s, Submonoid.mul_mem _ ht hs, ?_⟩
@@ -163,16 +162,10 @@ variable {E : Type} [Field E] [NumberField E] {ι : Type}
 theorem tauLat_smul_mem (emb : ι → E →+* K) (τ : ι) {M M' : Submodule (𝓞 E) (Fin n → E)} (N : ℕ)
     (h : ∀ x ∈ M, (N : 𝓞 E) • x ∈ M') : ∀ x ∈ tauLat emb τ M, (N : 𝓞 K) • x ∈ tauLat emb τ M' := by
   intro x hx
-  unfold tauLat at hx ⊢
-  induction hx using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨m, hm, rfl⟩ := hx
-    refine Submodule.subset_span ⟨(N : 𝓞 E) • m, h m hm, ?_⟩
-    funext a
-    simp [Algebra.smul_def]
-  | zero => rw [smul_zero]; exact Submodule.zero_mem _
-  | add x y _ _ hx hy => rw [smul_add]; exact Submodule.add_mem _ hx hy
-  | smul r x _ hx => rw [smul_comm]; exact Submodule.smul_mem _ _ hx
+  unfold tauLat at hx
+  refine (Submodule.span_le (p := (tauLat emb τ M').comap ((N : 𝓞 K) • LinearMap.id))).2 ?_ hx
+  rintro _ ⟨m, hm, rfl⟩
+  refine Submodule.subset_span ⟨(N : 𝓞 E) • m, h m hm, funext fun a => by simp [Algebra.smul_def]⟩
 
 theorem dualFr_tauLat_smul_mem (emb : ι → E →+* K) (τ : ι) {M M' : Submodule (𝓞 E) (Fin n → E)} (N : ℕ)
     (h : ∀ x ∈ M', (N : 𝓞 E) • x ∈ M) :

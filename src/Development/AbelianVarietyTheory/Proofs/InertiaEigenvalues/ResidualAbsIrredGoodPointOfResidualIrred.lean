@@ -4,6 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsRh
 public import Formalism.SharpRestriction.LevelLetterCocycles.JointConditionsZpowers.ResidualIrreducibleRankR
 public import Formalism.SharpRestriction.LevelLetterCocycles.JointConditionsZpowers.CoefficientCompatibilityOf
 import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.LinearAlgebra.Matrix.ToLin
 public import Formalism.SharpRestriction.LevelLetterCocycles.DecompositionData
 
 @[expose] public section
@@ -51,18 +52,13 @@ theorem absIrrSub_top_of_irred {k L : Type} [Field k] [Field L] [IsAlgClosed L] 
     simp [mapRep, hψ]
   refine ⟨top_ne_bot, fun _ _ _ => trivial, fun W' _ hW' => ?_⟩
   set W'' : Submodule L (Fin a → L) := Submodule.span L ((fun v : Fin a → K => ψ ∘ v) '' (W' : Set _))
-  have hst : ∀ g, ∀ x ∈ W'', ((mapRep φ ρ g : GL (Fin a) L) : Matrix (Fin a) (Fin a) L).mulVec x ∈ W'' := by
-    intro g x hx
-    induction hx using Submodule.span_induction with
-    | mem x hx =>
-      obtain ⟨u, hu, rfl⟩ := hx
-      refine Submodule.subset_span ⟨_, hW' g u hu, ?_⟩
-      ext p
-      rw [hmat g]
-      exact RingHom.map_mulVec ψ.toRingHom _ u p
-    | zero => simp
-    | add x y _ _ hx hy => rw [Matrix.mulVec_add]; exact Submodule.add_mem _ hx hy
-    | smul c x _ hx => rw [Matrix.mulVec_smul]; exact Submodule.smul_mem _ _ hx
+  have hst : ∀ g, ∀ x ∈ W'',
+      ((mapRep φ ρ g : GL (Fin a) L) : Matrix (Fin a) (Fin a) L).mulVec x ∈ W'' := fun g =>
+    (Submodule.span_le (p := W''.comap
+      ((mapRep φ ρ g : GL (Fin a) L) : Matrix (Fin a) (Fin a) L).mulVecLin)).2 <| by
+      rintro _ ⟨u, hu, rfl⟩
+      exact Submodule.subset_span ⟨_, hW' g u hu, funext fun p => by
+        rw [Matrix.mulVecLin_apply, hmat g]; exact RingHom.map_mulVec ψ.toRingHom _ u p⟩
   rcases h W'' hst with h1 | h1
   · left
     rw [Submodule.span_eq_bot] at h1
@@ -85,21 +81,16 @@ theorem absIrrSub_top_of_irred {k L : Type} [Field k] [Field L] [IsAlgClosed L] 
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [show (Pi.single i (v i) : Fin a → K) = v i • (Pi.single i (1 : K) : Fin a → K) by
         ext j; by_cases hij : j = i <;> simp [hij], map_smul, smul_eq_mul]
-    have hkill : ∀ X ∈ W'', ∑ i, X i * c i = 0 := by
-      intro X hX
-      induction hX using Submodule.span_induction with
-      | mem x hx =>
-        obtain ⟨u, hu, rfl⟩ := hx
-        have h0 : θ u = 0 := hθ hu
-        have := congrArg ψ (hθv u)
-
-        rw [h0, map_zero, map_sum] at this
-        rw [this]
-        refine Finset.sum_congr rfl fun i _ => ?_
-        simp [c]
-      | zero => simp
-      | add x y _ _ hx hy => simp [add_mul, Finset.sum_add_distrib, hx, hy]
-      | smul s x _ hx => simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, ← Finset.mul_sum, hx, mul_zero]
+    have hkill : ∀ X ∈ W'', ∑ i, X i * c i = 0 := fun X hX => by
+      simpa [smul_eq_mul, mul_comm] using (Submodule.span_le (p := LinearMap.ker
+        (∑ i, c i • LinearMap.proj (R := L) (φ := fun _ : Fin a => L) i))).2 (by
+          rintro _ ⟨u, hu, rfl⟩
+          have h0 := congrArg ψ (hθv u)
+          rw [hθ hu, map_zero, map_sum] at h0
+          simp only [SetLike.mem_coe, LinearMap.mem_ker, LinearMap.sum_apply,
+            LinearMap.smul_apply, LinearMap.proj_apply, Function.comp_apply, smul_eq_mul]
+          rw [h0]
+          exact Finset.sum_congr rfl fun i _ => by simp [c, mul_comm]) hX
     apply hθ0
     apply LinearMap.pi_ext
     intro i x

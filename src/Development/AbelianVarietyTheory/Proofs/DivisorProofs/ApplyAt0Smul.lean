@@ -69,12 +69,7 @@ theorem tt_smul {T : Tor D} {N N' : ℕ} {F : VC D N N' → ℂ} (hF : F ∈ TT 
   exact ⟨h1.const_smul c, m, hm, fun x hx => by rw [wd_smul, h2 x hx]⟩
 
 theorem tt_sum {T : Tor D} {N N' : ℕ} {ι : Type*} (s : Finset ι) {F : ι → VC D N N' → ℂ}
-    (hF : ∀ i ∈ s, F i ∈ TT D T N N') : ∑ i ∈ s, F i ∈ TT D T N N' := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simpa using tt_zero T
-  | insert a s ha ih =>
-    rw [Finset.sum_insert ha]
-    exact tt_add (hF a (Finset.mem_insert_self a s)) (ih fun i hi => hF i (Finset.mem_insert_of_mem hi))
+    (hF : ∀ i ∈ s, F i ∈ TT D T N N') : ∑ i ∈ s, F i ∈ TT D T N N' :=
+  Finset.sum_induction F (· ∈ TT D T N N') (fun _ _ => tt_add) (tt_zero T) hF
 
 end GlobalTheory.FunObj.NormUniq

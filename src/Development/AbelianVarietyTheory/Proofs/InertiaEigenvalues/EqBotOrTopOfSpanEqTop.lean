@@ -108,27 +108,15 @@ theorem bot_or_top {Γ k K : Type} [Field k] [Field K] [Algebra k K] {r : ℕ}
     by_contra! h
     exact hx0 (funext h)
 
-  have he : ∀ i, (Pi.single i (1 : K) : Fin r → K) ∈ W := by
-    intro i
+  have he : ∀ i, (Pi.single i (1 : K) : Fin r → K) ∈ W := fun i => by
     have h1 := invariant_all M hM W hW (Matrix.single i j 1) x hxW
-    have h2 : (Matrix.single i j (1 : k)).map (algebraMap k K) *ᵥ x = x j • Pi.single i 1 := by
-      ext a
-      rw [Matrix.mulVec, dotProduct, Pi.smul_apply, smul_eq_mul]
-      by_cases hai : a = i
-      · subst hai
-        rw [Finset.sum_eq_single j (fun b _ hb => by simp [Matrix.single_apply, hb, Ne.symm hb]) (by simp)]
-        simp
-      · rw [Finset.sum_eq_zero (fun b _ => by simp [Matrix.single_apply, hai, Ne.symm hai])]
-        simp [hai]
-    rw [h2] at h1
-    have h3 := W.smul_mem (x j)⁻¹ h1
-    rwa [smul_smul, inv_mul_cancel₀ hj, one_smul] at h3
+    have hm : (Matrix.single i j (1 : k)).map (algebraMap k K) = Matrix.single i j (1 : K) := by
+      ext a b; by_cases h : i = a ∧ j = b <;> simp [Matrix.single, h]
+    rw [hm, Matrix.single_mulVec_eq, one_mul] at h1
+    simpa [smul_smul, inv_mul_cancel₀ hj] using W.smul_mem (x j)⁻¹ h1
   rw [eq_top_iff]
   intro y _
-  have hy : y = ∑ i, y i • (Pi.single i (1 : K) : Fin r → K) := by
-    ext a
-    simp [Pi.single_apply]
-  rw [hy]
+  rw [pi_eq_sum_univ' y]
   exact W.sum_mem fun i _ => W.smul_mem _ (he i)
 
 end GlobalTheory.InvariantBotOrTop

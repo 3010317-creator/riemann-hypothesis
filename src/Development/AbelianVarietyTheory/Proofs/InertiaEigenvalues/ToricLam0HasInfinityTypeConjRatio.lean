@@ -27,15 +27,7 @@ theorem inf_eq_one {L : Type} [Field L] [NumberField L] [_root_.NumberField.IsTo
     exact hx _
   show χ.1 (Formalism.L2.Host.infDiag k) = 1
   unfold Formalism.L2.Host.infDiag
-  classical
-  have hp : ∀ s : Finset (InfinitePlace L),
-      (∏ w ∈ s, (ReciprocityTheory.Neutral.Bridge.HCFR.infIdele L w).comp (atInf w)) k =
-        ∏ w ∈ s, ReciprocityTheory.Neutral.Bridge.HCFR.infIdele L w (atInf w k) := by
-    intro s
-    induction s using Finset.induction_on with
-    | empty => simp
-    | insert w s hws ih => simp [hws, ih, MonoidHom.mul_apply]
-  rw [hp, map_prod]
+  rw [MonoidHom.finsetProd_apply, map_prod]
   exact Finset.prod_eq_one fun w _ => hw w _
 
 theorem conj_div_norm {z : ℂ} (hz : z ≠ 0) :

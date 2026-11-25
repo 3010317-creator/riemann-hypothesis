@@ -23,26 +23,6 @@ variable (L : PeriodPair)
 
 open Filter PeriodPair in
 open scoped Topology in
-private lemma tendsto_sq_mul_weierstrassP' (L : PeriodPair) :
-    Tendsto (fun z ↦ z ^ 2 * ℘[L] z) (𝓝[≠] 0) (𝓝 1) := by
-  have h0 : (0 : ℂ) ∈ L.lattice := L.lattice.zero_mem
-  have hA : AnalyticAt ℂ ℘[L - (0 : ℂ)] 0 :=
-    L.analyticOnNhd_weierstrassPExcept 0 0 (by simp)
-  have hc : Tendsto (fun z ↦ z ^ 2 * ℘[L - (0 : ℂ)] z + 1) (𝓝[≠] 0)
-      (𝓝 (0 ^ 2 * ℘[L - (0:ℂ)] 0 + 1)) :=
-    (((continuous_pow 2).continuousAt.mul hA.continuousAt).add continuousAt_const).tendsto.mono_left
-      nhdsWithin_le_nhds
-  simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, zero_mul, zero_add] at hc
-  refine hc.congr' (eventually_nhdsWithin_of_forall fun z hz => ?_)
-  have hz' : z ≠ 0 := hz
-  have := L.weierstrassPExcept_def ⟨0, h0⟩ z
-  simp only [sub_zero, div_zero, zero_pow two_ne_zero] at this
-  rw [this]
-  field_simp
-  ring
-
-open Filter PeriodPair in
-open scoped Topology in
 private lemma exists_tendsto_pow_mul_of_tendsto_pow_succ_mul_zero {h : ℂ → ℂ} (k : ℕ)
     (hd : ∀ᶠ z in 𝓝[≠] (0:ℂ), DifferentiableAt ℂ h z)
     (h2 : Tendsto (fun z ↦ z ^ (k + 1) * h z) (𝓝[≠] 0) (𝓝 0)) :
@@ -69,21 +49,10 @@ private lemma exists_const_of_periodic_of_mul_tendsto_zero (L : PeriodPair) {F :
     (hd : ∀ z ∉ L.lattice, DifferentiableAt ℂ F z) (hp : ∀ z, ∀ l ∈ L.lattice, F (z + l) = F z)
     (h : Tendsto (fun z ↦ z * F z) (𝓝[≠] 0) (𝓝 0)) : ∃ k, ∀ z ∉ L.lattice, F z = k := by
   classical
-  have hd0 : ∀ᶠ z in 𝓝[≠] (0:ℂ), DifferentiableAt ℂ F z :=
-    (_root_.GlobalTheory.eventually_ne_notMem_periodLattice L 0).mono fun z hz => hd z hz
-  have h' : Tendsto (fun z => z * (F z - F 0)) (𝓝[≠] 0) (𝓝 0) := by
-    have h0 : Tendsto (fun z : ℂ => z * F 0) (𝓝[≠] 0) (𝓝 0) :=
-      ((continuous_id.mul continuous_const).tendsto' 0 0 (by simp)).mono_left nhdsWithin_le_nhds
-    simpa [mul_sub] using h.sub h0
-  have ho : (fun z => F z - F 0) =o[𝓝[≠] 0] fun z => (z - 0)⁻¹ := by
-    refine (Asymptotics.isLittleO_iff_tendsto' ?_).mpr (h'.congr' ?_)
-    · filter_upwards [self_mem_nhdsWithin] with z (hz : z ≠ 0) hz'
-      simp [hz] at hz'
-    · filter_upwards [self_mem_nhdsWithin] with z (hz : z ≠ 0)
-      field_simp [hz]
-      ring
-  have hK := Complex.tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isLittleO hd0 ho
-  set K := limUnder (𝓝[≠] (0:ℂ)) F
+  obtain ⟨K, hK⟩ := exists_tendsto_pow_mul_of_tendsto_pow_succ_mul_zero 0
+    ((_root_.GlobalTheory.eventually_ne_notMem_periodLattice L 0).mono fun z hz => hd z hz)
+    (by simpa only [zero_add, pow_one] using h)
+  simp only [pow_zero, one_mul] at hK
   set G : ℂ → ℂ := fun z => if z ∈ L.lattice then K else F z with hGdef
   have hGl : ∀ l ∈ L.lattice, Tendsto G (𝓝[≠] l) (𝓝 K) := by
     intro l hl
@@ -139,30 +108,6 @@ private lemma tendsto_sq_mul_weierstrassP_sub_one_div (L : PeriodPair) :
   field_simp
   ring
 
-open Filter PeriodPair in
-open scoped Topology in
-private lemma half_sub_half_notMem_lattice (L : PeriodPair) :
-    L.ω₁ / 2 - L.ω₂ / 2 ∉ L.lattice := by
-  rw [mem_lattice]
-  rintro ⟨m, n, h⟩
-  have := LinearIndependent.pair_iff.mp L.indep (2 * m - 1) (2 * n + 1)
-    (by rw [Complex.real_smul, Complex.real_smul]; push_cast; linear_combination 2 * h)
-  have h' : ((2 * m - 1 : ℤ) : ℝ) = 0 := by push_cast; linarith [this.1]
-  rw [Int.cast_eq_zero] at h'
-  omega
-
-open Filter PeriodPair in
-open scoped Topology in
-private lemma half_add_half_notMem_lattice (L : PeriodPair) :
-    L.ω₁ / 2 + L.ω₂ / 2 ∉ L.lattice := by
-  rw [mem_lattice]
-  rintro ⟨m, n, h⟩
-  have := LinearIndependent.pair_iff.mp L.indep (2 * m - 1) (2 * n - 1)
-    (by rw [Complex.real_smul, Complex.real_smul]; push_cast; linear_combination 2 * h)
-  have h' : ((2 * m - 1 : ℤ) : ℝ) = 0 := by push_cast; linarith [this.1]
-  rw [Int.cast_eq_zero] at h'
-  omega
-
 
 open Filter PeriodPair in
 open scoped Topology in
@@ -176,8 +121,16 @@ lemma _root_.GlobalTheory.PeriodicWeierstrass.exists_eq_of_sq_mul_tendsto (L : P
     (hd z hz).sub ((_root_.GlobalTheory.hasDerivAt_weierstrassP L hz).differentiableAt.const_mul a)
   have hp₀ : ∀ z, ∀ l ∈ L.lattice, f₀ (z + l) = f₀ z := fun z l hl => by
     simp only [hf₀, hp z l hl, L.weierstrassP_add_coe z ⟨l, hl⟩]
+  have hp1 : Tendsto (fun z => z ^ 2 * ℘[L] z) (𝓝[≠] 0) (𝓝 1) := by
+    have h1 : Tendsto (fun z => z * ((z ^ 2 * ℘[L] z - 1) / z) + 1) (𝓝[≠] 0) (𝓝 (0 * 0 + 1)) :=
+      ((continuousAt_id.tendsto.mono_left nhdsWithin_le_nhds).mul
+        (tendsto_sq_mul_weierstrassP_sub_one_div L)).add_const 1
+    rw [zero_mul, zero_add] at h1
+    refine h1.congr' (eventually_nhdsWithin_of_forall fun z (hz : z ≠ 0) => ?_)
+    field_simp
+    ring
   have h2 : Tendsto (fun z => z ^ (1 + 1) * f₀ z) (𝓝[≠] 0) (𝓝 0) := by
-    have := h.sub ((tendsto_sq_mul_weierstrassP' L).const_mul a)
+    have := h.sub (hp1.const_mul a)
     simp only [mul_one, sub_self] at this
     refine this.congr' (Eventually.of_forall fun z => ?_)
     simp only [hf₀]
@@ -275,8 +228,10 @@ lemma _root_.GlobalTheory.PeriodicWeierstrass.exists_eq_of_sq_mul_tendsto (L : P
   have hne : ℘[L] (L.ω₁ / 2) ≠ ℘[L] (L.ω₂ / 2) := by
     rw [Ne, _root_.GlobalTheory.weierstrassP_eq_iff L (ω₁_div_two_notMem_lattice L) (ω₂_div_two_notMem_lattice L)]
     rintro (h' | h')
-    · exact half_sub_half_notMem_lattice L h'
-    · exact half_add_half_notMem_lattice L h'
+    · exact (L.mul_ω₁_add_mul_ω₂_mem_lattice (α := 1 / 2) (β := -1 / 2)).not.mpr (by simp)
+        (by convert h' using 1; push_cast; ring)
+    · exact (L.mul_ω₁_add_mul_ω₂_mem_lattice (α := 1 / 2) (β := 1 / 2)).not.mpr (by simp)
+        (by convert h' using 1; push_cast; ring)
   have hr0 : r ^ 2 = 0 := by
     have : r ^ 2 * (℘[L] (L.ω₁ / 2) - ℘[L] (L.ω₂ / 2)) = 0 := by linear_combination e2 - e1
     exact (mul_eq_zero.mp this).resolve_right (sub_ne_zero.mpr hne)

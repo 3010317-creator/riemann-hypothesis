@@ -78,12 +78,8 @@ theorem norm_pow_sub_one_of_not_dvd (x : ℤ_[l]) (hx : ‖x - 1‖ < 1) (n : �
     ‖x ^ n - 1‖ = ‖x - 1‖ := by
   obtain ⟨z, hz⟩ := geom_sum_one_add_expand (x - 1) n
   rw [add_sub_cancel] at hz
-  have hn1 : ‖(n : ℤ_[l])‖ = 1 := by
-    apply le_antisymm (PadicInt.norm_le_one _)
-    by_contra! h
-    have h' : ‖((n : ℤ) : ℤ_[l])‖ < 1 := by simpa using h
-    rw [PadicInt.norm_int_lt_one_iff_dvd] at h'
-    exact hn (Int.natCast_dvd_natCast.mp h')
+  have hn1 : ‖(n : ℤ_[l])‖ = 1 :=
+    PadicInt.norm_natCast_eq_one_iff.2 (hl.out.coprime_iff_not_dvd.2 hn)
   have e : (n : ℤ_[l]) + (n.choose 2 : ℕ) * (x - 1) + (x - 1) ^ 2 * z
       = n + (x - 1) * ((n.choose 2 : ℕ) + (x - 1) * z) := by ring
   rw [hz, norm_mul, e, padicInt_norm_add_eq_of_lt, hn1, mul_one]
@@ -133,12 +129,8 @@ theorem norm_pow_nat_sub_one (n : ℕ) (hn : n ≠ 0) : ∀ (x : ℤ_[l]), ‖x 
         rw [key]; exact mul_le_of_le_one_right (norm_nonneg _) (PadicInt.norm_le_one _)
       rw [pow_mul, ih m hlt hm (x ^ l) (hle.trans hx) (fun h => hle.trans_lt (h2 h)), key,
         Nat.cast_mul, norm_mul, mul_assoc]
-    · have hn1 : ‖(n : ℤ_[l])‖ = 1 := by
-        apply le_antisymm (PadicInt.norm_le_one _)
-        by_contra! h
-        have h' : ‖((n : ℤ) : ℤ_[l])‖ < 1 := by simpa using h
-        rw [PadicInt.norm_int_lt_one_iff_dvd] at h'
-        exact hd (Int.natCast_dvd_natCast.mp h')
+    · have hn1 : ‖(n : ℤ_[l])‖ = 1 :=
+        PadicInt.norm_natCast_eq_one_iff.2 (hl.out.coprime_iff_not_dvd.2 hd)
       rw [norm_pow_sub_one_of_not_dvd x (hx.trans_lt hi1) n hd, hn1, mul_one]
 
 theorem norm_unit_zpow_sub_one :

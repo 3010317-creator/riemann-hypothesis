@@ -12,29 +12,21 @@ public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
 @[expose] public section
 
 open scoped MatrixGroups TensorProduct
-open Matrix GlobalTheory.KZ
+open Matrix GlobalTheory.KZ Polynomial
 
 namespace GlobalTheory.BertiniNoether
 
-open scoped MatrixGroups TensorProduct in
-open Matrix in
-open Polynomial in
-private lemma mem_of_gauss_valuation_eq_one {F : Type} [Field F] {L : Type} [Field L] [Algebra F L] (t : L)
-    (V : ValuationSubring F) (W : ValuationSubring L)
+private lemma mem_of_gauss_valuation_eq_one {F : Type} [Field F] {L : Type} [Field L]
+    [Algebra F L] (t : L) (V : ValuationSubring F) (W : ValuationSubring L)
     (hG : ∀ P : Polynomial F, (∀ i, P.coeff i ∈ V) →
-      (∃ i, P.coeff i ≠ 0 ∧ P.coeff i ∈ V ∧ (P.coeff i)⁻¹ ∈ V) → W.valuation (Polynomial.aeval t P) = 1) :
+      (∃ i, P.coeff i ≠ 0 ∧ P.coeff i ∈ V ∧ (P.coeff i)⁻¹ ∈ V) →
+        W.valuation (Polynomial.aeval t P) = 1) :
     t ∈ W := by
-  have h := hG X (fun i => by
-      rw [coeff_X]; split_ifs
-      · exact V.one_mem
-      · exact V.zero_mem)
+  have h := hG X (fun i => by rw [coeff_X]; split_ifs <;> simp [V.one_mem, V.zero_mem])
     ⟨1, by simp, by simpa using V.one_mem, by simpa using V.one_mem⟩
   rw [aeval_X] at h
   rw [← W.valuation_le_one_iff, h]
 
-open scoped MatrixGroups TensorProduct in
-open Matrix in
-open Polynomial in
 private lemma mem_of_monic_root_coeff_mem {L : Type} [Field L] (W : ValuationSubring L) (ψ : L[X])
     (hψ : ψ.Monic) (hc : ∀ i, ψ.coeff i ∈ W) (ω : L) (hω : ψ.eval ω = 0) : ω ∈ W := by
   have hl : ψ ∈ lifts (algebraMap W L) := by
@@ -47,9 +39,6 @@ private lemma mem_of_monic_root_coeff_mem {L : Type} [Field L] (W : ValuationSub
   rw [← hy]
   exact y.2
 
-open scoped MatrixGroups TensorProduct in
-open Matrix in
-open Polynomial in
 private lemma aeval_mem_of_coeff_mem {F : Type} [Field F] {L : Type} [Field L] [Algebra F L] (t : L)
     (V : ValuationSubring F) (W : ValuationSubring L) (hF : ∀ a : F, algebraMap F L a ∈ W ↔ a ∈ V)
     (ht : t ∈ W) (P : F[X]) (hP : ∀ i, P.coeff i ∈ V) : aeval t P ∈ W := by
@@ -58,9 +47,6 @@ private lemma aeval_mem_of_coeff_mem {F : Type} [Field F] {L : Type} [Field L] [
   rw [Algebra.smul_def]
   exact mul_mem ((hF _).2 (hP i)) (pow_mem ht i)
 
-open scoped MatrixGroups TensorProduct in
-open Matrix in
-open Polynomial in
 private lemma mem_of_monic_bipoly_root {F : Type} [Field F] {L : Type} [Field L] [Algebra F L] (t : L)
     (V : ValuationSubring F) (W : ValuationSubring L) (hF : ∀ a : F, algebraMap F L a ∈ W ↔ a ∈ V)
     (ht : t ∈ W) (Φ : Polynomial (Polynomial F)) (ω : L) (hΦ : Φ.Monic)
@@ -69,74 +55,30 @@ private lemma mem_of_monic_bipoly_root {F : Type} [Field F] {L : Type} [Field L]
     (fun i => by rw [coeff_map]; exact aeval_mem_of_coeff_mem t V W hF ht _ (hΦV i)) ω
     (by rw [eval_map, hΦω])
 
-open scoped MatrixGroups TensorProduct in
-open Matrix in
-open Polynomial in
-private lemma exists_mul_mem_finset_and_eq_one {F : Type} [Field F] (V : ValuationSubring F) (s : Finset F)
-    (hs : ∃ a ∈ s, a ≠ 0) : ∃ c : F, c ≠ 0 ∧ (∀ a ∈ s, c * a ∈ V) ∧ ∃ a ∈ s, c * a = 1 := by
-  obtain ⟨a, ha, ha0⟩ := hs
-  obtain ⟨b, hb, hmax⟩ := s.exists_max_image V.valuation ⟨a, ha⟩
-  have hb0 : b ≠ 0 := by
-    intro hb0
-    have := hmax a ha
-    rw [hb0, map_zero, le_zero_iff, Valuation.zero_iff] at this
-    exact ha0 this
-  refine ⟨b⁻¹, inv_ne_zero hb0, fun x hx => ?_, b, hb, inv_mul_cancel₀ hb0⟩
-  rw [← V.valuation_le_one_iff, map_mul, map_inv₀]
-  have hvb : V.valuation b ≠ 0 := (Valuation.ne_zero_iff _).2 hb0
-  rw [inv_mul_le_iff₀ (zero_lt_iff.2 hvb), mul_one]
-  exact hmax x hx
-
-open scoped MatrixGroups TensorProduct in
-open Matrix in
-open Polynomial in
-private lemma exists_mul_coeff_mem_and_eq_one {F : Type} [Field F] (V : ValuationSubring F) (P : F[X])
-    (hP : P ≠ 0) : ∃ c : F, c ≠ 0 ∧ (∀ i, c * P.coeff i ∈ V) ∧ ∃ i, c * P.coeff i = 1 := by
+private lemma exists_mul_mem_and_eq_one {F ι : Type} [Field F] (V : ValuationSubring F)
+    (s : Finset ι) (f : ι → F) (hs : ∃ i ∈ s, f i ≠ 0) (hf : ∀ i ∉ s, f i = 0) :
+    ∃ c : F, c ≠ 0 ∧ (∀ i, c * f i ∈ V) ∧ ∃ i, c * f i = 1 := by
   classical
-  obtain ⟨c, hc0, hcV, a, ha, hca⟩ := exists_mul_mem_finset_and_eq_one V (P.support.image P.coeff) (by
-    obtain ⟨i, hi⟩ := Polynomial.support_nonempty.2 hP
-    exact ⟨_, Finset.mem_image_of_mem _ hi, Polynomial.mem_support_iff.1 hi⟩)
-  obtain ⟨i, -, rfl⟩ := Finset.mem_image.1 ha
-  refine ⟨c, hc0, fun j => ?_, i, hca⟩
-  by_cases hj : P.coeff j = 0
-  · rw [hj, mul_zero]; exact V.zero_mem
-  · exact hcV _ (Finset.mem_image_of_mem _ (Polynomial.mem_support_iff.2 hj))
+  obtain ⟨i₀, hi₀, hf₀⟩ := hs
+  obtain ⟨j, hj, hmax⟩ := s.exists_max_image (fun i => V.valuation (f i)) ⟨i₀, hi₀⟩
+  have hj0 : f j ≠ 0 := fun h => hf₀ <| by
+    have := hmax i₀ hi₀
+    rwa [h, map_zero, le_zero_iff, Valuation.zero_iff] at this
+  refine ⟨(f j)⁻¹, inv_ne_zero hj0, fun k => ?_, j, inv_mul_cancel₀ hj0⟩
+  by_cases hk : k ∈ s
+  · rw [← V.valuation_le_one_iff, map_mul, map_inv₀,
+      inv_mul_le_iff₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hj0)), mul_one]
+    exact hmax k hk
+  · rw [hf k hk, mul_zero]; exact V.zero_mem
 
-open scoped MatrixGroups TensorProduct in
-open Matrix in
-open Polynomial in
-private lemma exists_mul_coeff_coeff_mem_and_eq_one {F : Type} [Field F] (V : ValuationSubring F)
-    (P : Polynomial (Polynomial F)) (hP : P ≠ 0) :
-    ∃ c : F, c ≠ 0 ∧ (∀ i j, c * (P.coeff i).coeff j ∈ V) ∧ ∃ i j, c * (P.coeff i).coeff j = 1 := by
-  classical
-  obtain ⟨c, hc0, hcV, a, ha, hca⟩ := exists_mul_mem_finset_and_eq_one V
-    (P.support.biUnion fun i => (P.coeff i).support.image (P.coeff i).coeff) (by
-      obtain ⟨i, hi⟩ := Polynomial.support_nonempty.2 hP
-      obtain ⟨j, hj⟩ := Polynomial.support_nonempty.2 (Polynomial.mem_support_iff.1 hi)
-      exact ⟨_, Finset.mem_biUnion.2 ⟨i, hi, Finset.mem_image_of_mem _ hj⟩,
-        Polynomial.mem_support_iff.1 hj⟩)
-  obtain ⟨i, -, ha⟩ := Finset.mem_biUnion.1 ha
-  obtain ⟨j, -, rfl⟩ := Finset.mem_image.1 ha
-  refine ⟨c, hc0, fun k l => ?_, i, j, hca⟩
-  by_cases hkl : (P.coeff k).coeff l = 0
-  · rw [hkl, mul_zero]; exact V.zero_mem
-  · have hk : P.coeff k ≠ 0 := fun h => hkl (by rw [h, Polynomial.coeff_zero])
-    exact hcV _ (Finset.mem_biUnion.2 ⟨k, Polynomial.mem_support_iff.2 hk,
-      Finset.mem_image_of_mem _ (Polynomial.mem_support_iff.2 hkl)⟩)
-
-open scoped MatrixGroups TensorProduct in
-open Matrix in
-open Polynomial in
-private lemma eval₂_aeval_mem_of_coeff_coeff_mem {F : Type} [Field F] {L : Type} [Field L] [Algebra F L] (t : L)
-    (V : ValuationSubring F) (W : ValuationSubring L) (hF : ∀ a : F, algebraMap F L a ∈ W ↔ a ∈ V)
-    (ht : t ∈ W) (ω : L) (hω : ω ∈ W) (P : Polynomial (Polynomial F))
-    (hP : ∀ i j, (P.coeff i).coeff j ∈ V) : P.eval₂ (aeval t).toRingHom ω ∈ W := by
+private lemma eval₂_aeval_mem_of_coeff_coeff_mem {F : Type} [Field F] {L : Type} [Field L]
+    [Algebra F L] (t : L) (V : ValuationSubring F) (W : ValuationSubring L)
+    (hF : ∀ a : F, algebraMap F L a ∈ W ↔ a ∈ V) (ht : t ∈ W) (ω : L) (hω : ω ∈ W)
+    (P : Polynomial (Polynomial F)) (hP : ∀ i j, (P.coeff i).coeff j ∈ V) :
+    P.eval₂ (aeval t).toRingHom ω ∈ W := by
   rw [eval₂_eq_sum_range]
   exact sum_mem fun i _ => mul_mem (aeval_mem_of_coeff_mem t V W hF ht _ (hP i)) (pow_mem hω i)
 
-open scoped MatrixGroups TensorProduct in
-open Matrix in
-open Polynomial in
 theorem _root_.GlobalTheory.BertiniNoether.le_of_residue_independent : ∀ {F : Type} [Field F] {L : Type} [Field L] [Algebra F L] (t : L) (V : ValuationSubring F) (Φ : Polynomial (Polynomial F)) (ω : L), Φ.Monic → (∀ i j, (Φ.coeff i).coeff j ∈ V) → Φ.eval₂ (Polynomial.aeval t).toRingHom ω = 0 → (∀ x : L, ∃ Q : Polynomial F, Q ≠ 0 ∧ ∃ R : Polynomial (Polynomial F), Polynomial.aeval t Q * x = R.eval₂ (Polynomial.aeval t).toRingHom ω) → ∀ W₁ W₂ : ValuationSubring L, ((∀ a : F, algebraMap F L a ∈ W₁ ↔ a ∈ V) ∧ (∀ P : Polynomial F, (∀ i, P.coeff i ∈ V) → (∃ i, P.coeff i ≠ 0 ∧ P.coeff i ∈ V ∧ (P.coeff i)⁻¹ ∈ V) → W₁.valuation (Polynomial.aeval t P) = 1)) → ((∀ a : F, algebraMap F L a ∈ W₂ ↔ a ∈ V) ∧ (∀ P : Polynomial F, (∀ i, P.coeff i ∈ V) → (∃ i, P.coeff i ≠ 0 ∧ P.coeff i ∈ V ∧ (P.coeff i)⁻¹ ∈ V) → W₂.valuation (Polynomial.aeval t P) = 1)) → (∀ R : Polynomial (Polynomial F), R.natDegree < Φ.natDegree → (∀ i j, (R.coeff i).coeff j ∈ V) → R.eval₂ (Polynomial.aeval t).toRingHom ω ∈ W₁.nonunits → ∀ i j, (R.coeff i).coeff j ∈ V.nonunits) → W₁ ≤ W₂ := by
   intro F _ L _ _ t V Φ ω hΦ hΦV hΦω hrep W₁ W₂ ⟨h₁F, h₁G⟩ ⟨h₂F, h₂G⟩ hmin y hy
   obtain ⟨Q, hQ0, R, hQR⟩ := hrep y
@@ -146,7 +88,9 @@ theorem _root_.GlobalTheory.BertiniNoether.le_of_residue_independent : ∀ {F : 
     rintro rfl
     simp at hΦω
 
-  obtain ⟨d, hd0, hdV, i₀, hdi₀⟩ := exists_mul_coeff_mem_and_eq_one V Q hQ0
+  obtain ⟨d, hd0, hdV, i₀, hdi₀⟩ := exists_mul_mem_and_eq_one V Q.support Q.coeff
+    (let ⟨i, hi⟩ := Polynomial.support_nonempty.2 hQ0; ⟨i, hi, Polynomial.mem_support_iff.1 hi⟩)
+    fun i hi => not_not.1 (mt Polynomial.mem_support_iff.2 hi)
   set Q' : F[X] := C d * Q with hQ'
   have hQ'V : ∀ i, Q'.coeff i ∈ V := fun i => by rw [hQ', coeff_C_mul]; exact hdV i
   have hQ'prim : ∃ i, Q'.coeff i ≠ 0 ∧ Q'.coeff i ∈ V ∧ (Q'.coeff i)⁻¹ ∈ V :=
@@ -174,11 +118,18 @@ theorem _root_.GlobalTheory.BertiniNoether.le_of_residue_independent : ∀ {F : 
       exact (mul_eq_zero.1 this).resolve_left hQne
     rw [hy0]
     exact W₂.zero_mem
-  obtain ⟨c, hc0, hcV, i₁, j₁, hci₁⟩ := exists_mul_coeff_coeff_mem_and_eq_one V R₀ hR0
+  obtain ⟨c, hc0, hcV, ⟨i₁, j₁⟩, hci₁⟩ := exists_mul_mem_and_eq_one V
+    (R₀.support.sigma fun i => (R₀.coeff i).support) (fun p => (R₀.coeff p.1).coeff p.2)
+    (let ⟨i, hi⟩ := Polynomial.support_nonempty.2 hR0
+     let ⟨j, hj⟩ := Polynomial.support_nonempty.2 (Polynomial.mem_support_iff.1 hi)
+     ⟨⟨i, j⟩, Finset.mem_sigma.2 ⟨hi, hj⟩, Polynomial.mem_support_iff.1 hj⟩)
+    fun p hp => not_not.1 fun h0 => hp <| Finset.mem_sigma.2
+      ⟨Polynomial.mem_support_iff.2 fun h => h0 (by simp [h]), Polynomial.mem_support_iff.2 h0⟩
   set R' : Polynomial (Polynomial F) := C (C c) * R₀ with hR'
   have hR'coeff : ∀ i j, (R'.coeff i).coeff j = c * (R₀.coeff i).coeff j := fun i j => by
     rw [hR', coeff_C_mul, coeff_C_mul]
-  have hR'V : ∀ i j, (R'.coeff i).coeff j ∈ V := fun i j => by rw [hR'coeff]; exact hcV i j
+  have hR'V : ∀ i j, (R'.coeff i).coeff j ∈ V := fun i j => by
+    rw [hR'coeff]; exact hcV ⟨i, j⟩
   have hR'deg : R'.natDegree < Φ.natDegree := lt_of_le_of_lt (natDegree_C_mul_le _ _) hdeg
   have hR'unit : ¬ R'.eval₂ (aeval t).toRingHom ω ∈ W₁.nonunits := by
     intro h

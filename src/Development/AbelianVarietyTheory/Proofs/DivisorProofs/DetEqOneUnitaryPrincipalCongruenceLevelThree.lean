@@ -88,18 +88,10 @@ theorem isIntegral_of_left_eigen {r : ℕ} {Ω : Type} [Field Ω] [Algebra E Ω]
 theorem prod_eq_one_add {Ω : Type} [Field Ω] (M : ℕ) (hM : (M : Ω) ≠ 0) (s : Multiset Ω)
     (hs : ∀ l ∈ s, IsIntegral ℤ ((l - 1) / (M : Ω))) :
     ∃ z : Ω, IsIntegral ℤ z ∧ s.prod = 1 + M * z := by
-  have hMint : IsIntegral ℤ (M : Ω) := by
-    simpa using (isIntegral_algebraMap : IsIntegral ℤ (algebraMap ℤ Ω (M : ℤ)))
-  induction s using Multiset.induction_on with
-  | empty => exact ⟨0, isIntegral_zero, by simp⟩
-  | cons a s ih =>
-    obtain ⟨z, hz, hprod⟩ := ih (fun l hl => hs l (Multiset.mem_cons_of_mem hl))
-    have ha := hs a (Multiset.mem_cons_self a s)
-    set w := (a - 1) / (M : Ω) with hw
-    have ha' : a = 1 + M * w := by rw [hw]; field_simp; ring
-    refine ⟨w + z + M * w * z, (ha.add hz).add ((hMint.mul ha).mul hz), ?_⟩
-    rw [Multiset.prod_cons, hprod, ha']
-    ring
+  refine Multiset.prod_induction (fun p => ∃ z : Ω, IsIntegral ℤ z ∧ p = 1 + M * z) s ?_
+    ⟨0, isIntegral_zero, by simp⟩ fun a ha => ⟨(a - 1) / (M : Ω), hs a ha, by field_simp; ring⟩
+  rintro _ _ ⟨w, hw, rfl⟩ ⟨z, hz, rfl⟩
+  exact ⟨w + z + M * w * z, (hw.add hz).add (((isIntegral_natCast M).mul hw).mul hz), by ring⟩
 
 theorem det_eq_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r M : ℕ) (X : Data E r),
     3 ≤ M →

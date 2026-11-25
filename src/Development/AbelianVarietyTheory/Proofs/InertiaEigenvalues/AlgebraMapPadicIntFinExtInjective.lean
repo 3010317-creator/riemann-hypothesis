@@ -63,19 +63,13 @@ theorem associated_of_v_sub_one {l : ℕ} [Fact l.Prime] (P : LocPrime l) (LL : 
 theorem exists_units_hom_lift {Γ R S : Type} [Group Γ] [CommRing R] [CommRing S] (φ : R →+* S)
     (hφ : Function.Injective φ) (c : Γ →* Sˣ) (hex : ∀ g, ∃ y : R, φ y = (c g : S)) :
     ∃ χ : Γ →* Rˣ, ∀ g, φ (χ g : R) = (c g : S) := by
-  choose y hy using hex
-  have hinv : ∀ g, y g * y g⁻¹ = 1 := fun g => hφ (by
-    rw [map_mul, hy, hy, map_one, ← Units.val_mul, ← map_mul, mul_inv_cancel, map_one, Units.val_one])
-  have hinv' : ∀ g, y g⁻¹ * y g = 1 := fun g => by simpa using hinv g⁻¹
-  let u : Γ → Rˣ := fun g => ⟨y g, y g⁻¹, hinv g, hinv' g⟩
-  refine ⟨{ toFun := u, map_one' := ?_, map_mul' := ?_ }, fun g => hy g⟩
-  · ext
-    apply hφ
-    simp [u, hy]
-  · intro g h
-    ext
-    apply hφ
-    simp [u, hy]
+  have hr : ∀ g, c g ∈ (Units.map φ.toMonoidHom).range := fun g => by
+    obtain ⟨y, hy⟩ := hex g; obtain ⟨z, hz⟩ := hex g⁻¹
+    refine ⟨⟨y, z, hφ ?_, hφ ?_⟩, Units.ext hy⟩ <;>
+      (simp only [map_mul, hy, hz, map_one]; rw [← Units.val_mul, map_inv]; simp)
+  let e := MonoidHom.ofInjective (Units.map_injective hφ)
+  exact ⟨e.symm.toMonoidHom.comp (c.codRestrict _ hr), fun g =>
+    congrArg Units.val (MonoidHom.apply_ofInjective_symm (Units.map_injective hφ) _)⟩
 
 theorem exists_cyclotomicChar_padicInt_units : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (K LL : FinExt l) {n : ℕ} (W : LocWach (P.PD K) ↥LL.1 ↥(OL LL) (P.v LL) n), ∃ χ : W.Gam →* ℤ_[l]ˣ, (∀ g, algebraMap ℤ_[l] ↥(OL LL) (χ g : ℤ_[l]) = (W.χΓ g : ↥(OL LL))) ∧ (W.s = 1 → Associated ((χ W.gam : ℤ_[l]) - 1) (l : ℤ_[l])) := by
   intro l _ P K LL n W

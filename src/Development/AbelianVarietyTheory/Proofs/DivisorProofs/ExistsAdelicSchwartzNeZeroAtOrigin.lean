@@ -51,15 +51,10 @@ theorem isClosed_intPts (F : Type) [Field F] [NumberField F] (κ : Type) [Fintyp
 
 theorem indicator_intPts_mem_SB (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] :
     (intPts F κ).indicator (1 : (κ → FiniteAdeleRing (𝓞 F) F) → ℂ) ∈ SB (κ → FiniteAdeleRing (𝓞 F) F) := by
-  refine ⟨?_, HasCompactSupport.intro' (isCompact_intPts F κ) (isClosed_intPts F κ)
-    fun x hx => Set.indicator_of_notMem hx _⟩
-  rw [IsLocallyConstant.iff_exists_open]
-  intro x
-  by_cases hx : x ∈ intPts F κ
-  · exact ⟨intPts F κ, isOpen_intPts F κ, hx, fun y hy => by
-      rw [Set.indicator_of_mem hy, Set.indicator_of_mem hx]; rfl⟩
-  · exact ⟨(intPts F κ)ᶜ, (isClosed_intPts F κ).isOpen_compl, hx, fun y hy => by
-      rw [Set.indicator_of_notMem hy, Set.indicator_of_notMem hx]⟩
+  refine ⟨((LocallyConstant.const _ (1 : ℂ)).indicator
+      ⟨isClosed_intPts F κ, isOpen_intPts F κ⟩).isLocallyConstant,
+    HasCompactSupport.intro' (isCompact_intPts F κ) (isClosed_intPts F κ)
+      fun x hx => Set.indicator_of_notMem hx _⟩
 
 theorem exists_mem_schA_ne_zero : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ],
     ∃ φ ∈ schA F κ, φ 0 ≠ 0 := by

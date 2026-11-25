@@ -182,24 +182,15 @@ theorem latN_iff {l : ℕ} [Fact l.Prime] {ι : Type} [DecidableEq ι] {N : ℕ}
     (lam : ι → ℕ → ℕ) (y : NablaT (PadicAlgCl l) N lam) :
     y ∈ F.latN lam ↔ ∃ x, bc F.emb N lam x = y := by
   constructor
-  · intro hy
-    induction hy using AddSubgroup.closure_induction with
-    | mem y hy =>
-      obtain ⟨c, x, hx, rfl⟩ := hy
-      choose x0 hx0 hmap using hx
-      refine ⟨c • PiTensorProduct.tprod F.O (fun τ => (⟨x0 τ, hx0 τ⟩ : dualWeyl F.O N N (res N (lam τ)))), ?_⟩
-      rw [LinearMap.map_smulₛₗ, bc_tprod]
-      congr 2
-      funext τ
-      exact Subtype.ext (hmap τ)
-    | zero => exact ⟨0, map_zero _⟩
-    | add a b _ _ ha hb =>
-      obtain ⟨x, rfl⟩ := ha
-      obtain ⟨z, rfl⟩ := hb
-      exact ⟨x + z, map_add _ _ _⟩
-    | neg a _ ha =>
-      obtain ⟨x, rfl⟩ := ha
-      exact ⟨-x, map_neg _ _⟩
+  · refine fun hy => AddMonoidHom.mem_range.1 ((AddSubgroup.closure_le
+        (bc F.emb N lam).toAddMonoidHom.range).2 (fun _ hy => ?_) hy)
+    obtain ⟨c, x, hx, rfl⟩ := hy
+    choose x0 hx0 hmap using hx
+    refine AddMonoidHom.mem_range.2 ⟨c • PiTensorProduct.tprod F.O
+      (fun τ => (⟨x0 τ, hx0 τ⟩ : dualWeyl F.O N N (res N (lam τ)))), ?_⟩
+    show bc F.emb N lam _ = _
+    rw [LinearMap.map_smulₛₗ, bc_tprod]
+    congr 2; funext τ; exact Subtype.ext (hmap τ)
   · rintro ⟨x, rfl⟩
     induction x using PiTensorProduct.induction_on with
     | smul_tprod r m =>
@@ -213,29 +204,21 @@ theorem latD_iff {l : ℕ} [Fact l.Prime] {ι : Type} [DecidableEq ι] {N : ℕ}
     (lam : ι → ℕ → ℕ) (hlam : ∀ τ, Antitone (res N (lam τ))) (y : NablaT (PadicAlgCl l) N lam) :
     y ∈ F.latD lam ↔ ∃ x ∈ tensSub (deltaIn F.O N lam), bc F.emb N lam x = y := by
   constructor
-  · intro hy
-    induction hy using AddSubgroup.closure_induction with
-    | mem y hy =>
-      obtain ⟨c, x, hx, rfl⟩ := hy
-      choose x0 hx0 hmap using hx
-      have hd : ∀ τ, x0 τ ∈ dualWeyl F.O N N (res N (lam τ)) :=
-        fun τ => weylLeDual F.O N N le_rfl _ (hlam τ) (hx0 τ)
-      let w : ∀ τ, deltaIn F.O N lam τ := fun τ => ⟨⟨x0 τ, hd τ⟩, hx0 τ⟩
-      refine ⟨c • PiTensorProduct.tprod F.O (fun τ => (w τ : dualWeyl F.O N N (res N (lam τ)))), ⟨c • PiTensorProduct.tprod F.O w, ?_⟩, ?_⟩
-      · rw [LinearMap.map_smul, PiTensorProduct.map_tprod]
-        rfl
-      · rw [LinearMap.map_smulₛₗ, bc_tprod]
-        congr 2
-        funext τ
-        exact Subtype.ext (hmap τ)
-    | zero => exact ⟨0, zero_mem _, map_zero _⟩
-    | add a b _ _ ha hb =>
-      obtain ⟨x, hx, rfl⟩ := ha
-      obtain ⟨z, hz, rfl⟩ := hb
-      exact ⟨x + z, add_mem hx hz, map_add _ _ _⟩
-    | neg a _ ha =>
-      obtain ⟨x, hx, rfl⟩ := ha
-      exact ⟨-x, neg_mem hx, map_neg _ _⟩
+  · refine fun hy => AddSubgroup.mem_map.1 ((AddSubgroup.closure_le
+        ((tensSub (deltaIn F.O N lam)).toAddSubgroup.map (bc F.emb N lam).toAddMonoidHom)).2
+        (fun _ hy => ?_) hy)
+    obtain ⟨c, x, hx, rfl⟩ := hy
+    choose x0 hx0 hmap using hx
+    have hd : ∀ τ, x0 τ ∈ dualWeyl F.O N N (res N (lam τ)) :=
+      fun τ => weylLeDual F.O N N le_rfl _ (hlam τ) (hx0 τ)
+    let w : ∀ τ, deltaIn F.O N lam τ := fun τ => ⟨⟨x0 τ, hd τ⟩, hx0 τ⟩
+    refine AddSubgroup.mem_map.2 ⟨c • PiTensorProduct.tprod F.O
+      (fun τ => (w τ : dualWeyl F.O N N (res N (lam τ)))),
+      ⟨c • PiTensorProduct.tprod F.O w, ?_⟩, ?_⟩
+    · rw [LinearMap.map_smul, PiTensorProduct.map_tprod]; rfl
+    · show bc F.emb N lam _ = _
+      rw [LinearMap.map_smulₛₗ, bc_tprod]
+      congr 2; funext τ; exact Subtype.ext (hmap τ)
   · rintro ⟨x, ⟨z, rfl⟩, rfl⟩
     induction z using PiTensorProduct.induction_on with
     | smul_tprod r m =>
