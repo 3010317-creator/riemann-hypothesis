@@ -179,12 +179,8 @@ theorem cminor_tensE_apply (X : GMod n) (q : ℕ) : ∀ (R C : Fin (q + 1) → F
     rw [hL]
     simp only [hsplit, Finset.sum_add_distrib]
     rw [← hR, cminor_succ_col X.E R C x]
-    have hit : ∀ (p : Prop) [Decidable p] (a b : X.V),
-        (if p then a + b else 0) = (if p then a else 0) + (if p then b else 0) := by
-      intro p _ a b
-      split_ifs <;> simp
-    simp only [ih, hit, map_add (f := _), smul_add, Finset.sum_add_distrib, LinearMap.sum_apply, LinearMap.smul_apply,
-      Module.End.mul_apply]
+    simp only [ih, ite_add_zero (M := X.V), map_add (f := _), smul_add, Finset.sum_add_distrib,
+      LinearMap.sum_apply, LinearMap.smul_apply, Module.End.mul_apply]
     simp only [dbl, Function.comp_apply]
     abel
 
