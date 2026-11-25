@@ -53,12 +53,6 @@ open GlobalTheory.CxPts GlobalTheory.Vanishing
 
 namespace GlobalTheory.Published
 
-/-- **Serre's GAGA theorem on holomorphic sections**: every holomorphic section of an
-algebraic line bundle (or coherent analytic sheaf) on a projective complex variety is
-algebraic, establishing an equivalence between algebraic and analytic global sections.
-
-Proposed reference:
-[J.-P. Serre, *G{'e}om{'e}trie alg{'e}brique et g{'e}om{'e}trie analytique*][serre1956]. -/
 def SerreHolomorphicSections : Prop :=
   ∀ (Y : Scheme.{0}) (p : Y ⟶ Sp ℂ) (D : ℕ), SmoothOfRelativeDimension D p → IsProjOver p →
     ∀ (R : AnRead p (RingHom.id ℂ) D) (B : LB Y), B.IsLB →
