@@ -105,20 +105,10 @@ theorem nfLeib_thr (Cb c₃ R Kk W o κ A : ℝ) (hR : 0 ≤ R) (hK : 0 ≤ Kk) 
     linarith
   have hκ' : κ ≤ M * (R + 1) * o :=
     hκ.trans (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hM hR0) ho0)
-  have hR2 : R + 1 ≤ (R + 1) ^ 2 := by
-    have := mul_le_mul_of_nonneg_left hR1 hR0
-    linarith
-  have hR4 : (R + 1) ^ 2 ≤ (R + 1) ^ 4 := by
-    have h1 : 1 ≤ (R + 1) ^ 2 := by linarith
-    have := mul_le_mul_of_nonneg_left h1 (sq_nonneg (R + 1))
-    linarith
-  have hR14 : R + 1 ≤ (R + 1) ^ 4 := hR2.trans hR4
-  have hT2 : T ≤ T ^ 2 := by
-    have := mul_le_mul_of_nonneg_left hT1 hT0
-    linarith
-  have hT3 : T ^ 2 ≤ T ^ 3 := by
-    have := mul_le_mul_of_nonneg_left hT1 (sq_nonneg T)
-    linarith
+  have hR4 : (R + 1) ^ 2 ≤ (R + 1) ^ 4 := pow_le_pow_right₀ hR1 (by norm_num)
+  have hR14 : R + 1 ≤ (R + 1) ^ 4 := le_self_pow₀ hR1 (by norm_num)
+  have hT2 : T ≤ T ^ 2 := le_self_pow₀ hT1 two_ne_zero
+  have hT3 : T ^ 2 ≤ T ^ 3 := pow_le_pow_right₀ hT1 (by norm_num)
   have hRT : R * T + 1 ≤ T ^ 2 := by
     have := mul_le_mul_of_nonneg_right hTR hT0
     linarith
