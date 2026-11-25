@@ -483,12 +483,6 @@ theorem subschemeMapOfComap_apply_mem_of_mem {X Y : Scheme.{u}} (g : Y ⟶ X)
     exact hx3.mem_closed hA h4
   exact hmem
 
-private theorem restrictIdeal_comap_preimage_eq_comap_restrict {X Y : Scheme.{u}} (g : Y ⟶ X)
-    (I : X.IdealSheafData) (U : X.Opens) :
-    restrictIdeal (I.comap g) (g ⁻¹ᵁ U) = (restrictIdeal I U).comap (g ∣_ U) := by
-  rw [restrictIdeal_eq_comap_ι, restrictIdeal_eq_comap_ι, ← Scheme.IdealSheafData.comap_comp,
-    ← Scheme.IdealSheafData.comap_comp, morphismRestrict_ι]
-
 theorem openSubschemeKer_comap {X Y : Scheme.{u}} (g : Y ⟶ X) [AlgebraicGeometry.Flat g]
     (Z : X.IdealSheafData) (A : Set X) (hA : IsClosed A)
     (W : Z.subscheme.Opens) (W' : (Z.comap g).subscheme.Opens)
@@ -517,8 +511,8 @@ theorem openSubschemeKer_comap {X Y : Scheme.{u}} (g : Y ⟶ X) [AlgebraicGeomet
       restrictIdeal_openSubschemeKer_of_preimage_le (Z.comap g) W' hW'c (g ⁻¹ᵁ U) hsub
     have e2 : restrictIdeal (openSubschemeKer Z W) U = restrictIdeal Z U :=
       restrictIdeal_openSubschemeKer_of_preimage_le Z W hWc U hUW
-    rw [e1, restrictIdeal_comap_preimage_eq_comap_restrict g Z U,
-      restrictIdeal_comap_preimage_eq_comap_restrict g (openSubschemeKer Z W) U, e2]
+    rw [e1, restrictIdeal_comap_eq_comap_resLE_restrictIdeal g Z U _ le_rfl,
+      restrictIdeal_comap_eq_comap_resLE_restrictIdeal g (openSubschemeKer Z W) U _ le_rfl, e2]
   · obtain ⟨U, hxU, hUn⟩ := exists_opens_notMem_image Z W hWc (g.base y) hy
     refine ⟨g ⁻¹ᵁ U, hxU, ?_⟩
     have e1 : restrictIdeal (openSubschemeKer (Z.comap g) W') (g ⁻¹ᵁ U) = ⊤ := by
@@ -531,7 +525,7 @@ theorem openSubschemeKer_comap {X Y : Scheme.{u}} (g : Y ⟶ X) [AlgebraicGeomet
       exact h2
     have e2 : restrictIdeal (openSubschemeKer Z W) U = ⊤ :=
       restrictIdeal_openSubschemeKer_eq_top Z W hWc U hUn
-    rw [e1, restrictIdeal_comap_preimage_eq_comap_restrict g (openSubschemeKer Z W) U, e2]
+    rw [e1, restrictIdeal_comap_eq_comap_resLE_restrictIdeal g (openSubschemeKer Z W) U _ le_rfl, e2]
     simp
 
 end FunctorialResolution.EmbeddedResolution
