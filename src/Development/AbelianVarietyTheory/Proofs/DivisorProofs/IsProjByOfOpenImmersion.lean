@@ -131,7 +131,7 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SiegelReframe (Fl Pt IsPeriodMap co
 open ReciprocityTheory.L2DbarEstimates (V)
 open GlobalTheory.Points (PtsOver)
 open GlobalTheory.GoodMetric (coordVec)
-open GlobalTheory.CxForm (IsRegVar BottChern ArChow hermMat eval₂ bas relCot dRel IsRelAcyclic IsGenSmooth)
+open GlobalTheory.CxForm (bas IsRelAcyclic)
 open GlobalTheory.IndefiniteRowSideFullHecke.SiegelReframe (om0)
 open scoped ContDiff Real CategoryTheory.Obj ComplexOrder
 
