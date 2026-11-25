@@ -38,12 +38,7 @@ theorem isUnit_of_mk {R : Type} [CommRing R] (I : Ideal R) [IsAdicComplete I R] 
 
 theorem aeval_X_coe {R : Type} [CommRing R] (r : Polynomial R) :
     Polynomial.aeval (PowerSeries.X : PowerSeries R) r = (r : PowerSeries R) := by
-  induction r using Polynomial.induction_on' with
-  | add p q hp hq => rw [map_add (f := _), hp, hq, Polynomial.coe_add]
-  | monomial k c =>
-    rw [Polynomial.aeval_monomial, Polynomial.coe_monomial, PowerSeries.monomial_eq_mk]
-    ext m
-    simp [PowerSeries.coeff_X_pow, PowerSeries.coeff_C_mul, PowerSeries.coeff_mk, eq_comm]
+  rw [Polynomial.aeval_def, PowerSeries.algebraMap_eq, Polynomial.eval₂_C_X_eq_coe]
 
 theorem map_aeval {R S : Type} [CommRing R] [CommRing S] (f : R →+* S) (x : PowerSeries R) (P : Polynomial R) :
     PowerSeries.map f (Polynomial.aeval x P) = Polynomial.aeval (PowerSeries.map f x) (P.map f) := by
