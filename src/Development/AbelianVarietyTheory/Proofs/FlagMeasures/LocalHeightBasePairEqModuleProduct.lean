@@ -223,8 +223,6 @@ open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions.S
 
 namespace GlobalTheory.HTPlaceLeaf
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem two_sum_range (r : ℕ) : ∀ q, q ≤ r + 1 → 2 * ∑ n ∈ Finset.range q, (r - n) = q * (2 * r + 1 - q) := by
   intro q
   induction q with

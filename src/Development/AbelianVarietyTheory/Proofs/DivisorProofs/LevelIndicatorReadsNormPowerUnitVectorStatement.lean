@@ -81,7 +81,6 @@ open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTh
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 open GlobalTheory.NormSum (Pair Tup)
 open Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.BotSmallDict GlobalTheory.NormExact
 open scoped Pointwise
 open scoped nonZeroDivisors
@@ -300,7 +299,6 @@ open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTh
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 open GlobalTheory.NormSum (Pair Tup)
 open Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.BotSmallDict GlobalTheory.NormExact
 open scoped Pointwise
 
@@ -509,7 +507,6 @@ open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTh
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 open GlobalTheory.NormSum (Pair Tup)
 open Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.BotSmallDict GlobalTheory.NormExact
 open scoped Pointwise
 

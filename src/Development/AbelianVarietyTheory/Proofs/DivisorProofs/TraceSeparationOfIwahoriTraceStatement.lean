@@ -96,7 +96,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formali
 open GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialRoots (IsTestData PPol Tor Phi PhiOK PhiReal ellKernel Gap NoFixed IsLatticeConj GeomExpansion EllipticPart TraceEq)
 open GlobalTheory.PRep (IsAdmissible)
 open GlobalTheory.TrMult
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open scoped Classical
 
 namespace GlobalTheory.TraceSep
@@ -198,7 +197,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formali
 open GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialRoots (IsTestData PPol Tor Phi PhiOK PhiReal ellKernel Gap NoFixed IsLatticeConj GeomExpansion EllipticPart TraceEq)
 open GlobalTheory.PRep (IsAdmissible)
 open GlobalTheory.TrMult
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open scoped Classical
 
 noncomputable section
@@ -327,7 +325,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formali
 open GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialRoots (IsTestData PPol Tor Phi PhiOK PhiReal ellKernel Gap NoFixed IsLatticeConj GeomExpansion EllipticPart TraceEq)
 open GlobalTheory.PRep (IsAdmissible)
 open GlobalTheory.TrMult
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open scoped Classical
 
 namespace GlobalTheory.FinMultAway
@@ -551,7 +548,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formali
 open GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialRoots (IsTestData PPol Tor Phi PhiOK PhiReal ellKernel Gap NoFixed IsLatticeConj GeomExpansion EllipticPart TraceEq)
 open GlobalTheory.PRep (IsAdmissible)
 open GlobalTheory.TrMult
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open scoped Classical
 
 theorem _root_.GlobalTheory.T.schur_admissible_alt : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (K : Subgroup G), IsOpen (K : Set G) → IsCompact (K : Set G) → ∀ (N : Type) [AddCommGroup N] [Module ℂ N] (π : Representation ℂ G N), π.IsIrreducible → IsAdmissible π → ∀ φ : N →ₗ[ℂ] N, (∀ g x, φ (π g x) = π g (φ x)) → ∃ c : ℂ, φ = c • LinearMap.id := by
@@ -794,7 +790,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formali
 open GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialRoots (IsTestData PPol Tor Phi PhiOK PhiReal ellKernel Gap NoFixed IsLatticeConj GeomExpansion EllipticPart TraceEq)
 open GlobalTheory.PRep (IsAdmissible)
 open GlobalTheory.TrMult
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open scoped Classical
 
 namespace GlobalTheory.IsoTrace
@@ -914,7 +909,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formali
 open GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialRoots (IsTestData PPol Tor Phi PhiOK PhiReal ellKernel Gap NoFixed IsLatticeConj GeomExpansion EllipticPart TraceEq)
 open GlobalTheory.PRep (IsAdmissible)
 open GlobalTheory.TrMult
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open scoped Classical
 
 namespace GlobalTheory.PureTensorTrace
@@ -977,7 +971,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formali
 open GlobalTheory.IndefiniteRowSideFullHecke.PlusPolynomialRoots (IsTestData PPol Tor Phi PhiOK PhiReal ellKernel Gap NoFixed IsLatticeConj GeomExpansion EllipticPart TraceEq)
 open GlobalTheory.PRep (IsAdmissible)
 open GlobalTheory.TrMult
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 open scoped Classical
 

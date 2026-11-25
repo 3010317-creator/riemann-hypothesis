@@ -204,7 +204,6 @@ open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Cx Formalism.In
 open Formalism.IndefR.Datum (InfFam)
 open GlobalTheory.DefFree GlobalTheory.DefLift Polynomial
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 end -- clump:auto
 end -- clump:auto
@@ -295,7 +294,6 @@ open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Cx Formalism.In
 open Formalism.IndefR.Datum (InfFam)
 open GlobalTheory.DefFree GlobalTheory.DefLift Polynomial
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.UnipRed
 
@@ -385,7 +383,6 @@ open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Cx Formalism.In
 open Formalism.IndefR.Datum (InfFam)
 open GlobalTheory.DefFree GlobalTheory.DefLift Polynomial
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.eq_one_of_finiteOrder_unipotentReduction_largePrime : ∀ (E R k : Type) [Field E] [NumberField E] [CommRing R] [CommRing k] (S : Subring R) (ι : E →+* R) (φ : S →+* k) (p n : ℕ), p.Prime → CharP k p → Module.finrank ℚ E * n + 1 < p → ∀ (u : GL (Fin n) E) (x : GL (Fin n) R) (y : GL (Fin n) S), IsOfFinOrder u → Formalism.UG.bc S.subtype y = x⁻¹ * Formalism.UG.bc ι u * x → IsNilpotent ((Formalism.UG.bc φ y : GL (Fin n) k).val - 1) → u = 1 := by
   first | exact @GlobalTheory.UnipRed.eq_one_of_unipotent_reduction
@@ -649,8 +646,6 @@ open scoped TensorProduct
 
 namespace GlobalTheory.GoodProjProd
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem monicOf_injective {g N : ℕ} [Fact g.Prime] :
     Function.Injective fun c : Fin N → ZMod g => (Formalism.CyclotomicNorms.monicOf c : (ZMod g)[X]) := by
   intro c c' h
@@ -761,7 +756,6 @@ open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Cx Formalism.In
 open Formalism.IndefR.Datum (InfFam)
 open GlobalTheory.DefFree GlobalTheory.DefLift Polynomial
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.BaseFrameUnimod
 
@@ -833,7 +827,6 @@ open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Cx Formalism.In
 open Formalism.IndefR.Datum (InfFam)
 open GlobalTheory.DefFree GlobalTheory.DefLift Polynomial
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.DefFree
 
@@ -919,7 +912,6 @@ open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Cx Formalism.In
 open Formalism.IndefR.Datum (InfFam)
 open GlobalTheory.DefFree GlobalTheory.DefLift Polynomial
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.LevRange
 
@@ -1053,7 +1045,6 @@ open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Cx Formalism.In
 open Formalism.IndefR.Datum (InfFam)
 open GlobalTheory.DefFree GlobalTheory.DefLift Polynomial
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 end -- clump:auto
 end -- clump:auto
@@ -1070,7 +1061,6 @@ open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Cx Formalism.In
 open Formalism.IndefR.Datum (InfFam)
 open GlobalTheory.DefFree GlobalTheory.DefLift Polynomial
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 
@@ -1193,7 +1183,6 @@ open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Cx Formalism.In
 open Formalism.IndefR.Datum (InfFam)
 open GlobalTheory.DefFree GlobalTheory.DefLift Polynomial
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.TypePrimeSize
 

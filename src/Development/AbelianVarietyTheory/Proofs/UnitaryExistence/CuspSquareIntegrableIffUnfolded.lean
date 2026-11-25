@@ -1205,8 +1205,6 @@ open MeasureTheory Topology Matrix NumberField ReciprocityTheory.ChartRestrictio
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2
 open scoped ENNReal TensorProduct
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7}
 
 

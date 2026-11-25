@@ -231,8 +231,6 @@ namespace GlobalTheory.TwInputs.SmallField
 
 open Formalism.MainNotions.N Formalism.L2 Formalism.L2.NT Formalism.IndefR.NX GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem auxiliary_prime_ne_type_prime (K : Ctx) (C5 c6 Cb : ℝ) (h : K.Good C5 c6 Cb) (P : Pre) (hP : K.Over P) (k : Fin 2) :
     GlobalTheory.EX.DC.q0H P.host ≠ P.host.g k := by
   obtain ⟨sp, hT, hY, hA, hV, hz, rfl, -⟩ := hP

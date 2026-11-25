@@ -61,7 +61,6 @@ open GlobalTheory.FinZeta (Gv embV Kv VacFin IsLocKer KerU)
 open GlobalTheory.SphTheta (IsStd CayleyRule intMat liftPar)
 open Formalism.UG (IsUnifV qV IsUnramInv GU KU IsInertAt Hecke IsCommensurated Tj SatU ordL Ov)
 open Formalism.MainNotions.SchurIrreducible (IsSplit)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 
@@ -126,7 +125,6 @@ open GlobalTheory.FinZeta (Gv embV Kv VacFin IsLocKer KerU)
 open GlobalTheory.SphTheta (IsStd CayleyRule intMat liftPar)
 open Formalism.UG (IsUnifV qV IsUnramInv GU KU IsInertAt Hecke IsCommensurated Tj SatU ordL Ov)
 open Formalism.MainNotions.SchurIrreducible (IsSplit)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 
@@ -291,7 +289,6 @@ open GlobalTheory.FinZeta (Gv embV Kv VacFin IsLocKer KerU)
 open GlobalTheory.SphTheta (IsStd CayleyRule intMat liftPar)
 open Formalism.UG (IsUnifV qV IsUnramInv GU KU IsInertAt Hecke IsCommensurated Tj SatU ordL Ov)
 open Formalism.MainNotions.SchurIrreducible (IsSplit)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 

@@ -148,7 +148,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (ip)
 open GlobalTheory.Core.Rk.IP (openOff integrand wcoef)
 open GlobalTheory.StdLoc (glVol blockIdx)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.NormRatio
 
 namespace GlobalTheory.NormRatio
@@ -253,7 +252,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (ip)
 open GlobalTheory.Core.Rk.IP (openOff integrand wcoef)
 open GlobalTheory.StdLoc (glVol blockIdx)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.NormRatio
 
 noncomputable section
@@ -310,7 +308,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (ip)
 open GlobalTheory.Core.Rk.IP (openOff integrand wcoef)
 open GlobalTheory.StdLoc (glVol blockIdx)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.NormRatio
 
 noncomputable section
@@ -728,7 +725,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (ip)
 open GlobalTheory.Core.Rk.IP (openOff integrand wcoef)
 open GlobalTheory.StdLoc (glVol blockIdx)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.NormRatio
 
 theorem _root_.GlobalTheory.T.exists_selfDualLattice_vacuumReading : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D) {a d : ℕ} (hS : S.rank = a) (hT : T.rank = d)
@@ -962,7 +958,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (ip)
 open GlobalTheory.Core.Rk.IP (openOff integrand wcoef)
 open GlobalTheory.StdLoc (glVol blockIdx)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.NormRatio
 
 theorem _root_.GlobalTheory.T.thetaCosetIndicatorReading_spherical_off_modulus : ∀ {D : D7} {δ t0 : ℂ} {Q : ℕ} (P : Pair D ⊤ δ t0 Q) (X : Data P) (r : D.host.E), IsExact P X r →
@@ -995,7 +990,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (ip)
 open GlobalTheory.Core.Rk.IP (openOff integrand wcoef)
 open GlobalTheory.StdLoc (glVol blockIdx)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.NormRatio
 
 namespace GlobalTheory.VacNormMean
@@ -1295,7 +1289,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (ip)
 open GlobalTheory.Core.Rk.IP (openOff integrand wcoef)
 open GlobalTheory.StdLoc (glVol blockIdx)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.NormRatio
 
 namespace GlobalTheory.SphMove
@@ -1350,7 +1343,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (ip)
 open GlobalTheory.Core.Rk.IP (openOff integrand wcoef)
 open GlobalTheory.StdLoc (glVol blockIdx)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.NormRatio
 
 namespace GlobalTheory.NormRatio

@@ -154,7 +154,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum
 open scoped TensorProduct InnerProductSpace ComplexConjugate
 open GlobalTheory.EvenOnto
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.EvenOntoDecomp
 
@@ -267,7 +266,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum
 open scoped TensorProduct InnerProductSpace ComplexConjugate
 open GlobalTheory.EvenOnto
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.EvenOnto
 
@@ -346,7 +344,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum
 open scoped TensorProduct InnerProductSpace ComplexConjugate
 open GlobalTheory.EvenOnto
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.EvenOnto
 
@@ -426,7 +423,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum
 open scoped TensorProduct InnerProductSpace ComplexConjugate
 open GlobalTheory.EvenOnto
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.even_theta_chain_spanned_params_of_value_independent : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, FinDim D → MetEx D → EigSpan D ∧ ParOfVal D ∧ ParIndep D := by
   first | exact @GlobalTheory.EvenOnto.eig_parOfVal_indep
