@@ -93,13 +93,6 @@ noncomputable section
 
 namespace PI.UnitaryGroupMassFormula.DLm
 
-section Frob
-
-attribute [local instance] Matrix.frobeniusSeminormedAddCommGroup Matrix.frobeniusNormedAddCommGroup
-  Matrix.frobeniusNormedSpace
-
-end Frob
-
 lemma gN_cont (k r : ℕ) : Continuous (fun g : B.Mat k r => B.gN g) := by
   unfold B.gN
   fun_prop

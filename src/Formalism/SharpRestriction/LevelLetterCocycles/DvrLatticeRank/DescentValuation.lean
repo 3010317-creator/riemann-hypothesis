@@ -47,10 +47,6 @@ def LemC (T : LocLat G Qp LL O) (Pt : ZMod n → LL → (K →ₐ[Qp] LL) → Pr
 
 end Local
 
-section Record
-
-end Record
-
 end Formalism.MainNotions.N.Ln34
 
 end

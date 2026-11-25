@@ -134,18 +134,6 @@ theorem loop_evaluation_threshold_zero (hLC : PN.LoopCores) (hSub : PB.SubFamily
 
 end TransportedAlt
 
-section Fam5
-
-variable {eps : ℝ} (Fm : FamP eps) (C1 : ℝ)
-  (X : ∀ x, Fm.x1 < x → ∀ i : Fm.Ix x, HidaSetting (Fm.D x i))
-  (Y : ∀ x (hx : Fm.x1 < x) (i : Fm.Ix x), Full (X x hx i))
-  (hF : ∀ x (hx : Fm.x1 < x) (i : Fm.Ix x), FinX (Y x hx i))
-  (hI : ∀ x (hx : Fm.x1 < x) (i : Fm.Ix x), SIso (Fm.D x i).s (sOf (hF x hx i)))
-  (hCT : ∀ x (hx : Fm.x1 < x) (i : Fm.Ix x), ConcTie (X x hx i) (Y x hx i))
-
-
-end Fam5
-
 end Formalism.L2.SG.LoopsTies
 end -- clump:auto
 end -- clump:auto
@@ -165,10 +153,6 @@ open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions Form
   Formalism.L2.SG.LoopsFinal Formalism.L2.SG.LoopsEv Formalism.FourierDecayAlt
 
 namespace Formalism.L2.SG.LoopsTies
-
-section ThrS
-
-end ThrS
 
 section Point
 
@@ -275,14 +259,6 @@ open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions Form
   Formalism.L2.SG.ThmSOwn
 
 namespace Formalism.L2.SG.LoopsTies
-
-section SelQ
-
-variable {𝒞 : FamClass} (sel : SSel 𝒞)
-
-variable {eps : ℝ} (Fm : FamP eps) (hc : 𝒞 Fm)
-
-end SelQ
 
 section Closed
 

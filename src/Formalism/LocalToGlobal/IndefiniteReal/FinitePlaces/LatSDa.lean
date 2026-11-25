@@ -46,12 +46,6 @@ theorem sndA_pairA (x : Ainf D.host.F) (y : Af D.host.F) : sndA D.host.F (pairA 
 
 
 
-section Sym
-
-variable (S T : HSp D)
-
-end Sym
-
 section Phi
 
 variable (S T : HSp D)
@@ -87,14 +81,6 @@ theorem open_neighbourhood_set_eq (Λ : AddSubgroup (WO S T)) :
 
 end Phi
 
-section Lat
-
-variable (S T : HSp D)
-
-variable {S T}
-
-end Lat
-
 end Formalism.IndefR.Fin.VacEx
 end -- clump:auto
 end -- clump:auto
@@ -115,10 +101,6 @@ open scoped TensorProduct
 
 
 namespace Formalism.IndefR.Fin.VacEx
-
-section Gen
-
-end Gen
 
 variable {D : D7}
 

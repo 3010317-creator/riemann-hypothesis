@@ -332,10 +332,6 @@ theorem det_ne_zero_of_chars [DecidableEq ι] (χ : ι → A →+* L) (hχ : Fun
 
 end Chars
 
-section Label
-
-end Label
-
 end Formalism.L2.FormalSeriesBounds.UpFBr.Pl
 end -- clump:auto
 end -- clump:auto

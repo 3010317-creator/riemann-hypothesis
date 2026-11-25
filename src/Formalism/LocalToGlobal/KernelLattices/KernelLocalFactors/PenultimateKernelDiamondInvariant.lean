@@ -27,20 +27,6 @@ namespace Formalism.L2.Ker
 
 open Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.L2.DIV Formalism.L2.Col
 
-section Abs
-
-variable {K : Type} [Field K] [NumberField K] [StarRing K]
-
-variable {S : GSD K}
-
-end Abs
-
-section Pts
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ} {ST SG Q : Finset (HeightOneSpectrum (𝓞 E))}
-
-end Pts
-
 section PtsFin
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ} {ST SG Q : Finset (HeightOneSpectrum (𝓞 E))}
@@ -48,40 +34,11 @@ variable {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ} {ST SG Q : 
 
 end PtsFin
 
-section PtsG
-
-variable {X : Fields} {n : ℕ} {ST SG Q : Finset (HeightOneSpectrum (𝓞 X.E))}
-
-end PtsG
-
-section ChN
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
-  (mu : Tup X.F X.E X.K S) (L : ChIdx X Pr R (QE sel (mu : Chr X.F X.E X.K)))
-
-end ChN
-
-section Local
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E] {a b : ℕ} {ST SG SG' : Finset (HeightOneSpectrum (𝓞 E))}
-
-variable {K : Type} [Field K] {SB : Finset (HeightOneSpectrum (𝓞 E))}
-  {V V' : Type} [AddCommGroup V] [Module K V] [AddCommGroup V'] [Module K V']
-
-end Local
-
 section Chain
 
 variable {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (Ch : Chars X Pr R.m)
   (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
   (mu : Tup X.F X.E X.K S) (cst : LocCst X (rowSG Pr sel mu)) (L : ChIdx X Pr R (QE sel (mu : Chr X.F X.E X.K)))
-
-section Ops
-
-variable (hX : X.Ok) (hPr : Pr.Ok) (u : Pr.Word)
-
-end Ops
 
 variable {u : Pr.Word}
 
@@ -105,34 +62,6 @@ variable {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (Ch : Ch
 
 end Stmts
 
-section Move
-
-variable {X : Fields} (A : Amb X) {a b : ℕ}
-
-end Move
-
-section MoveCh
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X Pr R.m)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
-  (mu : Tup X.F X.E X.K S) (cst : LocCst X (rowSG Pr sel mu))
-
-end MoveCh
-
-section MoveC
-
-variable {X : Fields} (A : Amb X) {a b : ℕ}
-
-end MoveC
-
-section MoveCCh
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks}
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
-  (mu : Tup X.F X.E X.K S) (cst : LocCst X (rowSG Pr sel mu))
-
-end MoveCCh
-
 section OrdDet
 
 variable (E : Type) [Field E] [NumberField E] [StarRing E] (n : ℕ)
@@ -141,29 +70,6 @@ def OrdDetFin : Prop :=
   ∀ N : Submodule (𝓞 E) (Sp E n), IsSdLat N → {Q : HeightOneSpectrum (𝓞 E) | ordDet Q N ≠ 0}.Finite
 
 end OrdDet
-
-section OrdDetCh
-
-variable {X : Fields} {Pr : Primes X} (R : Ranks) (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ} (mu : Tup X.F X.E X.K S)
-
-end OrdDetCh
-
-section Dia
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ} {ST SG Q : Finset (HeightOneSpectrum (𝓞 E))}
-
-end Dia
-
-section DiaCh
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (Ch : Chars X Pr R.m)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
-  (mu : Tup X.F X.E X.K S) (cst : LocCst X (rowSG Pr sel mu)) (L : ChIdx X Pr R (QE sel (mu : Chr X.F X.E X.K)))
-  (A : Amb X) (u : Pr.Word) (m2 : ℕ) (b : L.β (m2 + 1)) (hY : YbHyp (R := R) sel mu cst L u m2 b)
-  (hM : MatEquiv W Ch sel mu cst L (chTh W Ch sel mu cst A u m2)) (h1 : Cp1Equiv W Ch sel mu cst L (chTh W Ch sel mu cst A u m2) b hY)
-  (hF : ∀ j, (chF W sel mu L u j).Ok)
-
-end DiaCh
 
 end Formalism.L2.Ker
 end -- clump:auto
@@ -184,26 +90,6 @@ namespace Formalism.L2.Ker
 
 open Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.L2.DIV Formalism.L2.Col
 
-section Abs
-
-variable {K : Type} [Field K] [NumberField K] [StarRing K] {S : GSD K}
-
-variable {S' : GSD K}
-
-end Abs
-
-section Abs3
-
-variable {K : Type} [Field K] [NumberField K] [StarRing K] {S S' : GSD K}
-
-end Abs3
-
-section Abs3b
-
-variable {K : Type} [Field K] [NumberField K] [StarRing K] {S : GSD K}
-
-end Abs3b
-
 section KerLin
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {K : Type} [Field K] {a b : ℕ} {SB : Finset (HeightOneSpectrum (𝓞 E))}
@@ -218,39 +104,6 @@ theorem kerOf_congr (th : ThDist E K a b SB V V') (Sall : Finset (HeightOneSpect
   rw [funext h]
 
 end KerLin
-
-section OffT
-
-set_option linter.unusedSectionVars false
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ} {ST SG : Finset (HeightOneSpectrum (𝓞 E))}
-
-end OffT
-
-section OffTCh
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks}
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
-  (mu : Tup X.F X.E X.K S) (cst : LocCst X (rowSG Pr sel mu))
-
-variable {u : Pr.Word} {j : ℕ}
-
-end OffTCh
-
-section SumF
-
-set_option linter.unusedSectionVars false
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ} {ST SG Q : Finset (HeightOneSpectrum (𝓞 E))}
-
-end SumF
-
-section SumCh
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks}
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ} (mu : Tup X.F X.E X.K S)
-
-end SumCh
 
 section Step3
 
@@ -271,34 +124,6 @@ theorem q_ne_zero {P : HeightOneSpectrum (𝓞 E)} {q : 𝓞 E} (hq2 : q ∉ P.a
 
 end Step3
 
-section KI
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E] {K : Type} [Field K] {a b : ℕ} {SB : Finset (HeightOneSpectrum (𝓞 E))}
-  {V V' : Type} [AddCommGroup V] [Module K V] [AddCommGroup V'] [Module K V'] {ST SG SG' : Finset (HeightOneSpectrum (𝓞 E))}
-
-end KI
-
-section AsmG
-
-variable {K : Type} [Field K] [NumberField K] [StarRing K]
-
-end AsmG
-
-section AsmL
-
-variable {E : Type} [Field E] [NumberField E] {K : Type} [Field K] {a b : ℕ}
-
-end AsmL
-
-section AsmCh
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (Ch : Chars X Pr R.m)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
-  (mu : Tup X.F X.E X.K S) (cst : LocCst X (rowSG Pr sel mu)) (L : ChIdx X Pr R (QE sel (mu : Chr X.F X.E X.K)))
-  (hX : X.Ok) (hPr : Pr.Ok) {u : Pr.Word}
-
-end AsmCh
-
 section FrLoc
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {a b : ℕ}
@@ -316,14 +141,6 @@ theorem inFr_add (f : Sp E a ≃ₗ[E] Sp E a) (f' : Sp E b ≃ₗ[E] Sp E b) (x
   simp
 
 end FrLoc
-
-section FrProd
-
-set_option linter.unusedSectionVars false
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E] {K : Type} [Field K] {a b : ℕ}
-
-end FrProd
 
 section OffAdmCh
 
@@ -477,63 +294,6 @@ theorem ordDet_eq_of_frame {n : ℕ} (Q : HeightOneSpectrum (𝓞 E)) (N : Submo
     ordE_eq_zero (Units.ne_zero _) (intAt_det _ hG) (intAt_det_inv _ hG), add_zero]
 
 end OrdWD
-
-section MuMoveChP
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X Pr R.m)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
-  (mu : Tup X.F X.E X.K S) (cst : LocCst X (rowSG Pr sel mu))
-
-end MuMoveChP
-
-section AsmCh2
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (Ch : Chars X Pr R.m)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
-  (mu : Tup X.F X.E X.K S) (cst : LocCst X (rowSG Pr sel mu)) (L : ChIdx X Pr R (QE sel (mu : Chr X.F X.E X.K)))
-  (hX : X.Ok) (hPr : Pr.Ok) {u : Pr.Word}
-
-end AsmCh2
-
-section Tests
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
-  (mu : Tup X.F X.E X.K S) (L : ChIdx X Pr R (QE sel (mu : Chr X.F X.E X.K)))
-
-end Tests
-
-section MoveP
-
-variable {X : Fields} (A : Amb X) {a b : ℕ}
-
-end MoveP
-
-section MoveChP
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (Ch : Chars X Pr R.m)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
-  (mu : Tup X.F X.E X.K S) (cst : LocCst X (rowSG Pr sel mu))
-
-end MoveChP
-
-section Tests2
-
-variable {E : Type} [Field E] [NumberField E] {K : Type} [Field K] {a b : ℕ}
-
-end Tests2
-
-section MoveCP
-
-variable {X : Fields} (A : Amb X) {a b : ℕ}
-
-end MoveCP
-
-section DiaP
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E] {a b : ℕ} {ST SG SG' : Finset (HeightOneSpectrum (𝓞 E))}
-
-end DiaP
 
 section RedRing
 
@@ -805,28 +565,6 @@ theorem coupling_index_scaled_mem_local {n : ℕ} {N : Submodule (𝓞 X.E) (Sp 
 
 end FtY3
 
-section Main3
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X Pr R.m)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
-  (mu : Tup X.F X.E X.K S) (cst : LocCst X (rowSG Pr sel mu)) {u : Pr.Word}
-
-end Main3
-
-section Rk1C
-
-variable {E : Type} [Field E] {n : ℕ}
-
-end Rk1C
-
-section OrdC
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ}
-
-variable {ST SG : Finset (HeightOneSpectrum (𝓞 E))}
-
-end OrdC
-
 section OrdD
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ}
@@ -847,18 +585,6 @@ theorem exists_frameD (Q : HeightOneSpectrum (𝓞 E)) {N : Submodule (𝓞 E) (
     exact Submodule.sum_mem _ fun i _ => intAt_smul_locPD Q ((ciMem_stdAt Q y).1 h i) (hβ i)
 
 end OrdD
-
-section OrdD2
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ} {ST SG : Finset (HeightOneSpectrum (𝓞 E))}
-
-end OrdD2
-
-section OrdUpP
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E]
-
-end OrdUpP
 
 end Formalism.L2.Ker
 end -- clump:auto

@@ -1005,18 +1005,6 @@ theorem coeff_partial_coboundary {F : MvPowerSeries (Fin 2) K} (hF : MvPowerSeri
 
 end Slice
 
-section Norm
-
-variable {K : Type} [NormedField K] [IsUltrametricDist K]
-
-end Norm
-
-section Top
-
-variable {K : Type} [Field K]
-
-end Top
-
 section Additive
 
 variable {K : Type} [Field K]

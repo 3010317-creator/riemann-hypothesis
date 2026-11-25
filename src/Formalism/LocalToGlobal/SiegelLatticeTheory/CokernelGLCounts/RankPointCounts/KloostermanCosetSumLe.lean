@@ -140,12 +140,6 @@ theorem final_arith {L Cl CH rd : ℝ} {r m f n j : ℕ} (hL : 1 < L) (hCl : 0 <
 
 end G
 
-section H
-
-variable {D : D7}
-
-end H
-
 end Formalism.MainNotions.KTwoCosetCount
 
 end
@@ -293,12 +287,6 @@ theorem sum_prod_le {ι α : Type*} [DecidableEq ι] [DecidableEq α] (S : Finse
           (fun x _ _ => Finset.prod_nonneg (fun i _ => hg _ _))
 
 end C
-
-section Dsum
-
-variable {D : D7}
-
-end Dsum
 
 end Formalism.MainNotions.KTwoCosetCount
 
