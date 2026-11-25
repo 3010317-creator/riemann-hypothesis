@@ -128,15 +128,8 @@ theorem commute_jm {R S : ℕ} {X : Mat R S} (hX : IsKC X) : Commute X (Formalis
 theorem isKC_smul {R S : ℕ} {X : Mat R S} (hX : IsKC X) (c : ℂ) : IsKC (c • X) := fun a b h => by
   simp [hX a b h]
 
-theorem isKC_zero (R S : ℕ) : IsKC (0 : Mat R S) := fun a b _ => rfl
 
-theorem isKC_add {R S : ℕ} {X X' : Mat R S} (hX : IsKC X) (hX' : IsKC X') : IsKC (X + X') := fun a b h => by
-  simp [hX a b h, hX' a b h]
 
-theorem isKC_conjTranspose {R S : ℕ} {X : Mat R S} (hX : IsKC X) : IsKC Xᴴ := fun a b h => by
-  have h' : ¬ sameBlock b a := by
-    intro h2; apply h; rcases a with a | a <;> rcases b with b | b <;> simp_all [sameBlock]
-  simp [Matrix.conjTranspose_apply, hX b a h']
 
 theorem mem_upq {R S : ℕ} {X : Mat R S} (hX : IsKC X) (hs : Xᴴ = -X) : X ∈ upq R S := by
   show Xᴴ * _ + _ * X = 0
