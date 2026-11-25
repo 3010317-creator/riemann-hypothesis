@@ -107,7 +107,7 @@ theorem lawsOK : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (A
   · intro t k hk κ hκ
     have hl : IsLevelLift (Yc D k) (R.βY k) (R.datYt t k R.triv) 1 κ := isLift_of_mem _ _ _ hκ
     have hl' := isLift_one (Yc D (k + 1)) (R.βY (k + 1)) (R.datYt t (k + 1) R.triv)
-    have key := GlobalTheory.T.stepVector_lift_pair_flagLevel_realized_chain R hIs hInf hωY hvY t k hk 1 κ 1 hl hl'
+    have key := GlobalTheory.StepVecLaw.stepVec_lifts R hIs hInf hωY hvY t k hk 1 κ 1 hl hl'
     have e : flag1L (R.datYt t k R.triv) = R.datYt t k R.triv := rfl
     have hlaw := law_of_pair (R.βY k) (R.datYt t k R.triv) (R.βY (k + 1)) (R.datYt t (k + 1) R.triv) key
     rw [e] at hlaw

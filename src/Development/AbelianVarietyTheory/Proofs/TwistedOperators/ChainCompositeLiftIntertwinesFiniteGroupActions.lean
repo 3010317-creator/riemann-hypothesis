@@ -182,7 +182,7 @@ theorem stepY (h : R.toLevCh.Is A.μ0) (hM : R.IsModels) (hC : R.IsChain) (t : T
   have hm := meas_chain R hM.νY hM.νY' t k (Nat.lt_of_succ_lt hk)
   have hm' := meas_chain R hM.νY hM.νY' t (k + 1) hk
   have ha := inv_ne_zero (levChi_ne_zero (V := Yc D k) (β := R.βY k) (flagL (R.datYt t k R.triv)) κ)
-  have hv := smul_eq_of ha (GlobalTheory.T.stepVector_lift_pair_flagLevel_realized_chain R h hM.inf hC.ωY hC.vY t k hk g0 κ κ' hκ hκ')
+  have hv := smul_eq_of ha (GlobalTheory.StepVecLaw.stepVec_lifts R h hM.inf hC.ωY hC.vY t k hk g0 κ κ' hκ hκ')
   have hpt := GlobalTheory.FiniteFock.om_pureTensorO_of_finite R.ψ R.θ (Yc D k) (Yc D (k + 1)) _ _ (R.ωY t k) hM.inf (hC.ωY t k hk)
     _ _ _ _ _ (hC.ptY t k hk) κ hκ.1 κ' hκ'.1 _ hv
   exact step R.ψ R.θ hM.inf _ _ (R.ωY t k) (hC.ωY t k hk) (R.MY k) _ _ (R.ptY t k) (hC.ptY t k hk) (R.ItY k) (hC.ItY t k hk).ne
