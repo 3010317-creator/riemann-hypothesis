@@ -464,7 +464,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.AffineQuotient
 
-set_option backward.isDefEq.respectTransparency false
 
 
 open TensorProduct Algebra.TensorProduct in
