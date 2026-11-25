@@ -175,11 +175,7 @@ theorem logPeriods_subframe_det_bounds : ∀ (n a g : ℕ) (Λ : Type) [AddCommG
   have hD := hpsd.det_nonneg
   obtain ⟨D, hDdef⟩ : ∃ D, D = (F z * L.H z * (F z)ᴴ).det := ⟨_, rfl⟩
   rw [← hDdef] at hd1 hd2 hD ⊢
-  have hnorm : ‖D‖ = D.re := by
-    obtain ⟨h1, h2⟩ := Complex.nonneg_iff.1 hD
-    have e : D = (D.re : ℂ) := by
-      apply Complex.ext <;> simp [h2.symm]
-    rw [e, Complex.norm_real, Real.norm_eq_abs, Complex.ofReal_re, abs_of_nonneg h1]
+  have hnorm : ‖D‖ = D.re := (Complex.re_eq_norm.2 hD).symm
   rw [hnorm]
   have hre : 0 ≤ D.re := (Complex.nonneg_iff.1 hD).1
   have hS0 : 0 ≤ S' := Finset.sum_nonneg fun _ _ => abs_nonneg _
