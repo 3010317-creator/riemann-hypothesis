@@ -129,13 +129,6 @@ theorem blockSubst_block (k₀ : K) (N : Matrix (ι k₀) (Ix (Fin r)) ℤ) (i :
     blockSubst k₀ N ⟨k₀, i⟩ = ∑ j, C (N i j) * X j := by
   simp [blockSubst]
 
-theorem isHomogeneous_blockSubst (k₀ : K) (N : Matrix (ι k₀) (Ix (Fin r)) ℤ) (p : Σ k, ι k) :
-    (blockSubst k₀ N p).IsHomogeneous 1 := by
-  unfold blockSubst
-  split_ifs
-  · exact IsHomogeneous.sum _ _ _ fun j _ => (isHomogeneous_X ℤ j).C_mul _
-  · exact isHomogeneous_zero _ _ _
-
 def fwd (k₀ : K) (N : Matrix (ι k₀) (Ix (Fin r)) ℤ) : MRing ι →ₐ[ℤ] MvPolynomial (Ix (Fin r)) ℤ :=
   bind₁ (blockSubst k₀ N)
 
@@ -172,13 +165,6 @@ theorem isHomogeneous_fwd (k₀ : K) (N : Matrix (ι k₀) (Ix (Fin r)) ℤ) {f 
   BlockSectionsRank.isHomogeneous_fwd k₀ N hf
 
 def wB : (Σ k, ι k) → (K → ℕ) := fun p => Pi.single p.1 1
-
-theorem weight_wB (c : (Σ k, ι k) →₀ ℕ) : Finsupp.weight wB c = fun k => ∑ i, c ⟨k, i⟩ :=
-  BlockSectionsRank.weight_wB c
-
-theorem isMultiHomog_iff_wB (f : MRing ι) (a : K → ℕ) :
-    IsMultiHomog f a ↔ IsWeightedHomogeneous wB f a :=
-  BlockSectionsRank.isMultiHomog_iff_wB f a
 
 theorem isMultiHomog_back (k₀ : K) (M : Matrix (Ix (Fin r)) (ι k₀) ℤ) {g : MvPolynomial (Ix (Fin r)) ℤ} {n : ℕ}
     (hg : g.IsHomogeneous n) : IsMultiHomog (back k₀ M g) (blockDeg k₀ n) :=

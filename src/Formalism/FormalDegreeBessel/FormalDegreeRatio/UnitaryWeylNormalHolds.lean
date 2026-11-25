@@ -260,12 +260,6 @@ theorem row_of_fixed_col {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1))
   · intro q hq
     rw [hpk_row, ite_eq_right hq, zero_mul]
 
-theorem uw_fixed_col {z : Fin (2 * r + k + 1) → ℂ}
-    {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hh : h ∈ UWset k r z)
-    (c : Fin (2 * r + k + 1)) (hc : c.val < r ∨ r + k < c.val) (p : Fin (2 * r + k + 1)) :
-    h p c = if p = c then 1 else 0 := by
-  apply WlocSk.UnitaryGroupBasics.uw_fixed_col <;> assumption
-
 theorem tau_out (i : Fin (2 * r + k + 1)) (hi : i.val < r ∨ r + k < i.val) :
     (tau k r i).val < r ∨ r + k < (tau k r i).val := by
   have hi' := i.isLt

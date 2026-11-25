@@ -139,18 +139,6 @@ theorem generatorPowDiagRecursion_holds : HWDiag := by
   simp only [lsh, add_smul]
   abel
 
-theorem HWDiag_Amat_upper {n : ℕ} (l : Fin n → ℂ) : (Amat l).IsUpperTriangular := by
-  intro i j hij
-  have h : j < i := hij
-  simp [Amat, h.ne', not_lt.mpr h.le]
-
-theorem HWDiag_charpoly {n : ℕ} (l : Fin n → ℂ) :
-    (Amat l).charpoly = ∏ s : Fin n, (Polynomial.X - Polynomial.C (l s)) := by
-  have hU := HWDiag_Amat_upper l
-  first
-  | (rw [Matrix.charpoly_of_upperTriangular _ hU]
-     simp [Amat])
-
 private theorem sum_Amat_smul_eq_smul_sub_sum_gt {V : Type*} [AddCommGroup V] [Module ℂ V] {n : ℕ}
     (l : Fin n → ℂ) (y : Fin n → V) (a : Fin n) :
     ∑ c, Amat l a c • y c = l a • y a - ∑ c ∈ univ.filter (fun b => a < b), y c := by
@@ -165,43 +153,5 @@ private theorem sum_Amat_smul_eq_smul_sub_sum_gt {V : Type*} [AddCommGroup V] [M
     · simp [hca.ne, hca.ne', hca]
   rw [Finset.sum_congr rfl (fun c _ => hterm c), Finset.sum_sub_distrib, Finset.sum_filter]
   simp
-
-theorem diagChar_of (h : HWDiag) : DiagChar := by
-  unfold HWDiag at h
-  unfold DiagChar
-  intro V _i1 _i2 n E ν v hE hv a
-  obtain ⟨M, hM⟩ : ∃ M : Matrix (Fin n) (Fin n) ℂ, M = Amat (lsh ν) := ⟨_, rfl⟩
-  have hrec : ∀ (k : ℕ) (b : Fin n),
-      epow E (k + 1) b b v = ∑ c, M b c • epow E k c c v := by
-    intro k b
-    first
-    | rw [h V n E ν v hE hv k b, hM, sum_Amat_smul_eq_smul_sub_sum_gt]
-  have hpow : ∀ (k : ℕ) (b : Fin n), epow E k b b v = ∑ c, (M ^ k) b c • v := by
-    intro k
-    induction k with
-    | zero =>
-      intro b
-      simp [epow_zero_apply, Matrix.one_apply]
-    | succ k ih =>
-      intro b
-      rw [hrec, pow_succ']
-      simp only [ih, Matrix.mul_apply, Finset.sum_smul, Finset.smul_sum, mul_smul]
-      exact Finset.sum_comm
-  have hchar : (∏ s : Fin n, (Polynomial.X - Polynomial.C (lsh ν s))) = M.charpoly := by
-    rw [hM, HWDiag_charpoly]
-  have hdeg : M.charpoly.natDegree < n + 1 := by
-    have hd := Matrix.charpoly_natDegree_eq_dim M
-    rw [Fintype.card_fin] at hd
-    omega
-  have hzero : Polynomial.aeval M M.charpoly = 0 := Matrix.aeval_self_charpoly M
-  rw [Polynomial.aeval_eq_sum_range' hdeg] at hzero
-  have hentry : ∀ c : Fin n, ∑ i ∈ range (n + 1), M.charpoly.coeff i * (M ^ i) a c = 0 := by
-    intro c
-    have hac := congrArg (fun N : Matrix (Fin n) (Fin n) ℂ => N a c) hzero
-    simpa [Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul] using hac
-  rw [hchar]
-  simp only [hpow, Finset.smul_sum, smul_smul]
-  rw [Finset.sum_comm]
-  simp only [← Finset.sum_smul, hentry, zero_smul, Finset.sum_const_zero]
 
 end Formalism.REAL
