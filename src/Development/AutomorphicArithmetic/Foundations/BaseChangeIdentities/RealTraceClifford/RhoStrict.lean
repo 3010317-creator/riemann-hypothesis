@@ -186,16 +186,7 @@ private theorem sym_orbit {n : ℕ} (κ : Wt n) : Sym (∑ w : Equiv.Perm (Fin n
   simp only [cf_ex]
   rw [← Equiv.sum_comp (Equiv.mulRight v⁻¹) (fun w : Equiv.Perm (Fin n) => if κ ∘ w = x then (1 : ℂ) else 0)]
   refine Finset.sum_congr rfl fun w _ => ?_
-  have : (κ ∘ w = x ∘ v) ↔ (κ ∘ (Equiv.mulRight v⁻¹ w) = x) := by
-    constructor
-    · intro h
-      funext b
-      have := congrFun h (v⁻¹ b)
-      simpa using this
-    · intro h
-      funext a
-      have := congrFun h (v a)
-      simpa using this
+  have : (κ ∘ w = x ∘ v) ↔ (κ ∘ (Equiv.mulRight v⁻¹ w) = x) := (v.comp_symm_eq x (κ ∘ w)).symm
   simp only [this]
 
 private theorem alt_orbit {n : ℕ} (κ : Wt n) :
