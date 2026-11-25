@@ -45,10 +45,8 @@ theorem ra_cond {D : D7} (L : SizeData₂ D) (S : SizesAt L) (hx : 3 ≤ L.sc.x)
       linarith
     · exact_mod_cast h0
   have hqd : (1 : ℝ) ≤ (D.host.q : ℝ) * D.host.d := one_le_mul_of_one_le_of_one_le hq hd
-  have hsq : Real.sqrt ((D.host.q : ℝ) * D.host.d) ≤ (D.host.q : ℝ) * D.host.d := by
-    linarith [Real.sq_sqrt (by linarith : (0 : ℝ) ≤ (D.host.q : ℝ) * D.host.d),
-      Real.sqrt_nonneg ((D.host.q : ℝ) * D.host.d),
-      sq_nonneg (Real.sqrt ((D.host.q : ℝ) * D.host.d) - 1)]
+  have hsq : Real.sqrt ((D.host.q : ℝ) * D.host.d) ≤ (D.host.q : ℝ) * D.host.d :=
+    Real.sqrt_le_self_iff.2 (.inr hqd)
   have hc1 : (1 : ℝ) ≤ (D.host.QS : ℝ) * D.host.q * D.host.d := by
     rw [mul_assoc]; exact one_le_mul_of_one_le_of_one_le hQS hqd
   have hc36 : (D.host.QS : ℝ) * D.host.q * D.host.d ≤ ((D.host.QS : ℝ) * D.host.q * D.host.d) ^ 36 :=
@@ -60,9 +58,7 @@ theorem ra_cond {D : D7} (L : SizeData₂ D) (S : SizesAt L) (hx : 3 ≤ L.sc.x)
     have h8 := Real.add_one_le_exp L.sc.L
     simp only [Formalism.BasicNotions.Scale.b]
     linarith
-  have hsb : Real.sqrt L.sc.b ≤ L.sc.b := by
-    linarith [Real.sq_sqrt (by linarith : (0 : ℝ) ≤ L.sc.b), Real.sqrt_nonneg L.sc.b,
-      sq_nonneg (Real.sqrt L.sc.b - 1)]
+  have hsb : Real.sqrt L.sc.b ≤ L.sc.b := Real.sqrt_le_self_iff.2 (.inr hb)
   have htk : (D.R.k : ℝ) + 6 ≤ D.R.t := by
     have h9 := D.R.rank_add_five_le
     have h10 := D.R.two_le_m
