@@ -101,7 +101,7 @@ theorem awayMap_zero (f : A) : awayMap f (0 : M →ₗ[A] N) = 0 := map_zero _
 
 theorem awayMap_injective_of {f : A} {φ : M →ₗ[A] N}
     (h : ∀ m, φ m = 0 → ∃ k : ℕ, f ^ k • m = 0) : Function.Injective (awayMap f φ) := by
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+  rw [injective_iff_map_eq_zero]
   intro z hz
   obtain ⟨k, m, rfl⟩ := exists_awayFrac z
   rw [awayMap_awayFrac, awayFrac_eq_zero_iff] at hz
