@@ -203,17 +203,4 @@ def ClassSetFinite : Prop :=
       ∃ s : Finset (Submodule (NumberField.RingOfIntegers K) V), (∀ M ∈ s, M ∈ genus h L) ∧
         ∀ M ∈ genus h L, ∃ N ∈ s, ∃ g ∈ isom h, gmap g N = M
 
-def IndexBasic : Prop :=
-  ∀ (R K V : Type) [CommRing R] [IsDedekindDomain R] [Field K] [StarRing K] [Algebra R K]
-    [IsFractionRing R K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module R V]
-    [IsScalarTower R K V] (h : V →ₗ⋆[K] V →ₗ[K] K), h.IsSymm → h.Nondegenerate →
-    (∀ r : R, star (algebraMap R K r) ∈ Set.range (algebraMap R K)) →
-    ∀ (p : Ideal R) [p.IsMaximal] (A B C : Submodule R V),
-      Submodule.IsLattice K A → Submodule.IsLattice K B → Submodule.IsLattice K C →
-      lidx p A A = 0 ∧ lidx p A B = - lidx p B A ∧
-      lidx p A C = lidx p A B + lidx p B C ∧
-      (B ≤ A → lidx p A B = locLen p A B) ∧
-      (IsUnimodular h A → jIdx h p A = 0) ∧
-      (IsIntegralLat h A → (jIdx h p A ≤ 0 ∧ (jIdx h p A = 0 ↔ localization₂ p (dual h A) = localization₂ p A)))
-
 end Formalism.HermitianLatticesTheory

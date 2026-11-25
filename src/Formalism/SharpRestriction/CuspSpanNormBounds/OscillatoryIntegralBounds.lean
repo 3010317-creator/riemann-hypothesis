@@ -365,9 +365,6 @@ theorem bigCell_D (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (hz : inWb k 
   rw [herm_Hpk_wb k r _ z hz, wbPart_bigCell k r c μ z' hz', div_eq_iff hDr] at h
   rw [h, mul_comm]
 
-def IsPolyG {n : ℕ} (a : Matrix (Fin n) (Fin n) ℂ → ℂ) : Prop :=
-  ∃ P : MvPolynomial ((Fin n × Fin n) ⊕ (Fin n × Fin n)) ℂ, ∀ g, evG g P = a g
-
 namespace IsPolyG
 
 variable {n : ℕ}
@@ -457,8 +454,6 @@ noncomputable section
 namespace Formalism.MainNotions.InterlacingSignCuts.Gm
 
 open Formalism.MainNotions.S.UnitaryLevelOperators Formalism.FourierDecayAlt.G Formalism.FourierDecayAlt.P
-
-def LUs (s : ℕ) : Set (Msq s × Msq s) := {p | IsLowerUni (Matrix.of p.1) ∧ IsUpperUni (Matrix.of p.2)}
 
 end Formalism.MainNotions.InterlacingSignCuts.Gm
 

@@ -47,8 +47,6 @@ namespace Formalism.MainNotions
 
 open NumberField Formalism.BasicNotions
 
-def condE (D : D7) : ℝ := (D.host.QS : ℝ) * D.host.q * D.host.d
-
 def ShaFinOdd (D : D7) : Prop :=
   ∀ (p : ℕ) [Fact p.Prime] (e : ℕ), 0 < e → e < D.R.t → Formalism.GaloisCohomology.shaLen (D.nd.ldat p) (e : ℤ) ≠ ⊤
 

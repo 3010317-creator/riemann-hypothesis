@@ -78,25 +78,6 @@ end Misc2
 
 open Misc2
 
-theorem hostPartner : HostPartner := by
-  intro e τ hτ
-  rw [mem_Psi_iff] at hτ
-  refine ⟨?_, ?_, ?_⟩
-  · intro g hg
-    simp only [Set.mem_ofPred_eq, mem_Psi_iff, units_ne_one_iff] at hg
-    show _ ∈ Psi e
-    rw [mem_Psi_iff]
-    simp [cc, c0, hg, hτ]
-  · intro g _ g' _ hgg
-    simpa using hgg
-  · intro t ht
-    rw [SetLike.mem_coe, mem_Psi_iff] at ht
-    refine ⟨(cc e)⁻¹ * t * τ⁻¹, ?_, ?_⟩
-    · simp only [Set.mem_ofPred_eq, mem_Psi_iff]
-      simp [cc, c0, ht, hτ]
-    · simp only
-      group
-
 namespace Misc2
 
 def conjHom {G : Type*} [Group G] (χ : G →* ℂˣ) : G →* ℂ :=
@@ -158,36 +139,6 @@ theorem card_extended_galois_group (e : ℕ) [Fintype (GG e)] : (Fintype.card (G
   push_cast; rfl
 
 end Misc2
-
-open Classical in
-theorem hostCharSum : HostCharSum := by
-  intro e
-  refine ⟨fun χ => ?_, fun g => ?_⟩
-  · have hpt : ∀ g : GG e, 2 * (if g ∉ Psi e then starRingEnd ℂ ((χ g : ℂˣ) : ℂ) else 0) =
-        conjHom χ g - twHom e χ g := by
-      intro g
-      simp only [twHom, conjHom, MonoidHom.mul_apply, MonoidHom.coe_comp, Function.comp_apply,
-        Units.coeHom_apply, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, chC_apply, mem_Psi_iff]
-      rcases Int.units_eq_one_or g.1.2 with h | h <;> rw [h] <;> simp <;> ring
-    have hA := sum_hom_units (conjHom χ)
-    have hB := sum_hom_units (twHom e χ)
-    simp only [conjHom_eq_one_iff, twHom_eq_one_iff, Nat.cast_ite, Nat.cast_zero] at hA hB
-    have hS : 2 * (∑ g ∈ Finset.univ.filter (fun g : GG e => g ∉ Psi e),
-        starRingEnd ℂ ((χ g : ℂˣ) : ℂ)) =
-        (∑ g : GG e, conjHom χ g) - ∑ g : GG e, twHom e χ g := by
-      rw [Finset.sum_filter, Finset.mul_sum, ← Finset.sum_sub_distrib]
-      exact Finset.sum_congr rfl (fun g _ => hpt g)
-    rw [hA, hB, card_extended_galois_group] at hS
-    have hne := chC_ne_one e
-    split_ifs at hS ⊢ with h1 h2 h2
-    · exact absurd (h1.symm.trans h2) (Ne.symm hne)
-    · linear_combination hS / 2
-    · linear_combination hS / 2
-    · linear_combination hS / 2
-  · simp only [chD, chQ, MonoidHom.coe_comp, Function.comp_apply, MonoidHom.coe_fst,
-      MonoidHom.coe_snd, Prod.ext_iff]
-    rcases Int.units_eq_one_or g.1.1 with h | h <;> rcases Int.units_eq_one_or g.1.2 with h' | h' <;>
-      rw [h, h'] <;> decide
 
 end Formalism.FrobeniusOrbits
 end -- clump:auto

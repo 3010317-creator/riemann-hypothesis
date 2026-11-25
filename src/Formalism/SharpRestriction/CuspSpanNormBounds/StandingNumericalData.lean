@@ -84,9 +84,6 @@ def Tcrit (u : D.what₂.Word) (τ : D.what₂.Tau) : ℝ :=
 
 def Tr (u : D.what₂.Word) : ℝ := ((D.mem u).A.T : ℝ)
 
-def tV (u u' : D.what₂.Word) (τ : D.what₂.Tau) : ℝ :=
-  Real.sqrt (Tcrit D u τ * Tcrit D u' τ / (Tr D u * Tr D u'))
-
 
 open Classical in
 def aEff (u : D.what₂.Word) (τ : D.what₂.Tau) : ℝ :=

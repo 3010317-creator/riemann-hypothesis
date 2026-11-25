@@ -323,12 +323,3 @@ theorem one_univ (Γ : QFGroup R T) (χ : T →* Rˣ) (s : Γ(Γ.G.left, ⊤))
 
 end GlobalTheory.CompanionTheory.Ar.BT.CharMul
 
-
-open GlobalTheory.CompanionTheory.Ar.BT.CharMul in
-theorem GlobalTheory.CompanionTheory.Ar.BT.charValues_mul : ∀ (R : Type) [CommRing R] [IsDomain R] (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T) (χ : T →* Rˣ) (s : Γ(Γ.G.left, ⊤)), Γ.HasValues s (fun t => ((χ t : Rˣ) : R)) → ∀ (Y : Over (Spec (CommRingCat.of R))), (∀ y z : Y ⟶ Γ.G, (y * z).left.appTop s = y.left.appTop s * z.left.appTop s) ∧ (1 : Y ⟶ Γ.G).left.appTop s = 1 := by
-  intro R _ _ T _ _ Γ χ s hs Y
-  refine ⟨fun y z => ?_, ?_⟩
-  · have h := congrArg (lift y z).left.appTop (mul_univ Γ χ s hs)
-    rw [pull, map_mul, pull, pull, comp_mul, lift_fst, lift_snd] at h
-    exact h
-  · rw [Hom.one_def, ← pull, one_univ Γ χ s hs, map_one]

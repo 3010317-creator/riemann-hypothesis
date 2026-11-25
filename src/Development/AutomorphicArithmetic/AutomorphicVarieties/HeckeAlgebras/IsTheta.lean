@@ -257,8 +257,6 @@ variable {Q ι Λ} (R : HD Q ι Λ) (K : (hset Q R.τ₀).Lev)
 
 abbrev HD.M := (hset Q R.τ₀).MK R.θ R.a K
 
-def HD.IsJ (J : Ideal B.B) : Prop := (hset Q R.τ₀).IsJ R.θ R.a K B.u.D B.u.ψ (Λ.toPair B.u) J
-
 def WtOf (h : s.Wt n) (lam : Wt L l n) : Prop :=
   ∀ (v : Vl l L) (j : Fin n) (τ : W.Emb l (s.w v.1)), htW lam j (τ.1.comp (algebraMap L _)) = h v j τ
 

@@ -184,8 +184,6 @@ structure Dat (D : D7) (k0 : ℕ) where
 
 abbrev GWord (D : D7) := D.what₂.Tau → Word
 
-abbrev Head (D : D7) (j : ℕ) := D.what₂.Tau → Point ℂ j
-
 def Len {D : D7} (m : ℕ) (w : GWord D) : Prop := ∀ v, (w v).length ≤ m
 
 def NN (D : D7) (Ks : ℕ) : ℕ := 4 * Ks * (D.R.rS + 1)

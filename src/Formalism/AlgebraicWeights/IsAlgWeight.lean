@@ -98,31 +98,9 @@ def tSet (s : SplitPlace L) (ϖ : s.v.adicCompletion L⁺) (j : ℕ) : Set (GAf 
         (a : Matrix (Fin n) (Fin n) _) * Formalism.UG.diagJ n ϖ j * (b : Matrix (Fin n) (Fin n) _)}
 
 
-open Classical in
-def heckeFun {W : Type} [AddCommGroup W] [Module ℂ W] (U : Subgroup (GAf L n)) (D : Set (GAf L n))
-    (f : GAf L n → W) : GAf L n → W :=
-  fun g => ∑ᶠ c : GAf L n ⧸ U, if (∃ x ∈ D, (x : GAf L n ⧸ U) = c) then f (g * c.out) else 0
-
-
-open Classical in
-def heckeEnd {W : Type} [AddCommGroup W] [Module ℂ W] (ρ : Representation ℂ (GQ L n) W)
-    (U : Subgroup (GAf L n)) (D : Set (GAf L n)) : Module.End ℂ (Forms L n ρ U) :=
-  if h : ∃ φ : Module.End ℂ (Forms L n ρ U), ∀ f g, (φ f : GAf L n → W) g = heckeFun L n U D f g
-  then h.choose else 0
-
-def tOp {W : Type} [AddCommGroup W] [Module ℂ W] (ρ : Representation ℂ (GQ L n) W)
-    (U : Subgroup (GAf L n)) (s : SplitPlace L) (ϖ : s.v.adicCompletion L⁺) (j : ℕ) :
-    Module.End ℂ (Forms L n ρ U) :=
-  heckeEnd L n ρ U (tSet L n s ϖ j)
 
 def IsUnif (v : HeightOneSpectrum (𝓞 L⁺)) (ϖ : v.adicCompletion L⁺) : Prop :=
   Valued.v ϖ = WithZero.exp (-1 : ℤ)
-
-def heckeAlg {W : Type} [AddCommGroup W] [Module ℂ W] (ρ : Representation ℂ (GQ L n) W)
-    (U : Subgroup (GAf L n)) (B : Set (HeightOneSpectrum (𝓞 L⁺))) :
-    Subalgebra ℂ (Module.End ℂ (Forms L n ρ U)) :=
-  Algebra.adjoin ℂ {t | ∃ (s : SplitPlace L) (ϖ : s.v.adicCompletion L⁺) (j : ℕ),
-    s.v ∉ B ∧ IsUnif L s.v ϖ ∧ 1 ≤ j ∧ j ≤ n ∧ t = tOp L n ρ U s ϖ j}
 
 end Unitary
 

@@ -498,14 +498,7 @@ theorem sharp_downTo (D : D7) (μ : D.what₂.Tup) (j : ℕ) :
 
 def frg (D : D7) : ℝ := (D.R.f : ℝ) * D.R.r / (min (D.host.g 0) (D.host.g 1) : ℕ)
 
-def LabTie (Y : Prov D X) (lab : Y.T.S → ∀ k : Fin 2, D.nd.PlG k → Polynomial (ZMod (D.host.g k))) : Prop :=
-  ∀ s (g : G0g D.nd), D.what₂.embLL ((eS Y.T s).coeff g) =
-    ∏ kv : (Σ k : Fin 2, D.nd.PlG k), (D.ntypes.eSer kv.1 (lab s kv.1 kv.2)).coeff (g kv)
-
 def LevelRatioBound (D : D7) : Prop := 4 * D.R.f * D.R.r ≤ min (D.host.g 0) (D.host.g 1)
-
-def LatticeChainWithoutLast (Y : Prov D X) : Prop :=
-  ∀ lab, LabTie Y lab → ∀ s, D.ntypes.goodTuple (lab s) → nS Y.T Y.P0 s = 1
 
 end Record
 
