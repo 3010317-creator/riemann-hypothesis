@@ -48,11 +48,7 @@ theorem cooOf_eq (u u' : D.what₂.Word) (sc C : ℝ) (hC : 0 < C) (h : Disint X
     rw [e1, hI, ENNReal.mul_top (by simpa using hC1)] at hKt
     exact lt_irrefl _ hKt
   have e3 : ENNReal.ofReal hex.choose * Iv = ENNReal.ofReal C * Iv := e1.symm.trans e2
-  have e4 : ENNReal.ofReal hex.choose = ENNReal.ofReal C :=
-    calc ENNReal.ofReal hex.choose = ENNReal.ofReal hex.choose * Iv * Iv⁻¹ := by
-          rw [mul_assoc, ENNReal.mul_inv_cancel hI0 hIt, mul_one]
-      _ = ENNReal.ofReal C * Iv * Iv⁻¹ := by rw [e3]
-      _ = ENNReal.ofReal C := by rw [mul_assoc, ENNReal.mul_inv_cancel hI0 hIt, mul_one]
+  have e4 : ENNReal.ofReal hex.choose = ENNReal.ofReal C := (ENNReal.mul_left_inj hI0 hIt).mp e3
   exact (ENNReal.ofReal_eq_ofReal_iff hC1.le hC.le).mp e4
 
 section Steps
