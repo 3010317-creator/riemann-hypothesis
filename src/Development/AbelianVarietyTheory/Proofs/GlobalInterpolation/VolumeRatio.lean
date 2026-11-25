@@ -1735,8 +1735,6 @@ theorem ratio_of_eq {V V' c p : ℝ} (hV : 0 < V) (hV' : 0 < V') (hc : 0 < c) (h
   field_simp at h1 ⊢
   linarith
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem hE_coords (D : D7) (W : HSpace D.host.E) (x y : W.V) :
     hE D.sp.cm.sig W.gram (fun i => W.frame.repr x i) (fun i => W.frame.repr y i) = W.hT x y := by
   rw [GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.hT_coord]; rfl
