@@ -654,92 +654,6 @@ noncomputable section
 
 namespace GlobalTheory.CentralLevelMove
 
-section Const
-
-open NumberField IsDedekindDomain AlgebraicGeometry CategoryTheory Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj
-open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Datum Level Moduli Coeff SABMap)
-open GlobalTheory.FormTies GlobalTheory.OnTies GlobalTheory.ShortMove GlobalTheory.TraceLattice
-open scoped TensorProduct
-
-
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 1000000 in
-theorem exists_const_int {D : D7} (T : Full D) (hT : LawsFull T) {j : ℕ} (hj : InR D j) (hxi : TwistTrivialOnRational T j)
-    {w : WeightFamilies.Wt D j} (hw : D.R.r ≤ w.n)
-    (γ : LaMod (T.Q.Dw j) T.Q.l ≃ₗ[𝓞 D.host.E] LaMod (T.Q.Dw j) T.Q.l) :
-    ∃ u : 𝓞 T.Q.c.F, (u : T.Q.c.F) ≠ 0 ∧ ∀ Λ N P x x' f f', GoodDatum T.toTop j w Λ N P → IsRightMul γ x' x →
-      IsSeries T.toTop j w Λ N P x f → IsSeries T.toTop j w Λ N P x' f' → mv T.toTop j γ f = (u : T.Q.c.F) • f' := by
-  have hC := GlobalTheory.chartIndependence_unconditional
-  have hL := GlobalTheory.firstFiveLaws.1
-  have hpq := rank_eq hT.p.pins hj
-  have hA : T.Q.l.A = 1 := hT.p.pins.2.1.2
-  have hAct := _root_.GlobalTheory.FullLevelAction.actLev_levFull D T.Q j hpq hA
-  have hLev := hT.sh.dLev j hj w.n
-  have hA₂ := hT.lvA j hj w.n
-  obtain ⟨inst, hnab⟩ := hT.sh.dNab j hj w.n
-  obtain ⟨ph, ψ, x₀, -, hpin, htie⟩ := hT.sh.dPhi j hj w.n hw
-  have hTot := hT.sh.shTot j hj (wtA w) w.n (dom_wtA w)
-  obtain ⟨g, hν, hγ, hg⟩ := _root_.GlobalTheory.LevelIsometry.exists_isometry_inducing _ _ (T.Q.Dw j) T.Q.l γ
-  obtain ⟨ρ₂, hρ₂⟩ := GlobalTheory.LevelActionLaws.exists_levAut hpq (T.dδ j w.n).Xo₂ g (by rw [hν, sub_self]; exact dvd_zero _)
-  obtain ⟨u, hu, hcd⟩ := GlobalTheory.ShortMove.exists_root T hT hj hxi hw g hν ρ₂ hρ₂
-  refine ⟨u, hu, fun Λ N P x0 x0' f f' hG hx hf hf' => ?_⟩
-  suffices key : IsSeries T.toTop j w Λ N P x0' ((u : T.Q.c.F)⁻¹ • mv T.toTop j γ f) by
-    rw [← key.unique hT.sh hj hG hf', smul_inv_smul₀ hu]
-  obtain ⟨hX, hsec, hR⟩ := hf
-  obtain ⟨hU, hb, hb₂, hO, hP⟩ := hG
-  refine ⟨hf'.1, Submodule.smul_mem _ _ (actL_mem _ _ _ _ hAct.total hAct.nat hAct.bor _ γ hsec), ?_⟩
-  clear hf'
-  generalize T.dδ j w.n = d at *
-  have hM := hLev.2.1
-  have hM₁ : 0 < T.Q.l.M := by have := T.Q.l.three_le; omega
-  have hpd : 0 < d.pd := Nat.pos_of_mul_pos_left (hM ▸ (by have := d.l₂.three_le; omega : 0 < d.l₂.M))
-  have hI : ∀ a, g.f d.l₂.M a - a ∈ d.I • (⊤ : Submodule (𝓞 D.host.E) (T.Q.Dw j).La) := fun a => by
-    have hpI : ((d.pd : ℕ) : 𝓞 D.host.E) ∈ d.I := by
-      refine (Ideal.mul_le_inf.trans inf_le_left : d.I * d.I.map (T.Q.H.bar : 𝓞 D.host.E →+* 𝓞 D.host.E) ≤ d.I) ?_
-      rw [GlobalTheory.DatumInverseCharacter.half_prod hM hLev.2.2.2.1]
-      exact Ideal.mem_span_singleton_self _
-    have h1 := GlobalTheory.DatumInverseCharacter.mem_of_modN _ hpI (g.tower d.pd T.Q.l.M hpd hM₁ a)
-    have h2 := GlobalTheory.DatumInverseCharacter.mem_of_modN _ hpI (hg d.pd hpd hLev.2.2.1 a)
-    have := add_mem h1 h2
-    rwa [sub_add_sub_cancel, mul_comm, ← hM] at this
-  have hγ' : ∀ a, g.f d.l₂.M a - liftLa γ a ∈ T.Q.l.Mb • (⊤ : Submodule (𝓞 D.host.E) (T.Q.Dw j).La) := fun a => by
-    have h1 := GlobalTheory.DatumInverseCharacter.mem_of_modN _ (natCast_mem_half T.Q.l).1 (g.tower T.Q.l.M d.pd hM₁ hpd a)
-    have h2 : g.f T.Q.l.M a - liftLa γ a ∈ T.Q.l.Mb • (⊤ : Submodule (𝓞 D.host.E) (T.Q.Dw j).La) :=
-      (Submodule.Quotient.eq _).1 ((hγ a).trans (liftLa_spec γ a).symm)
-    have := add_mem h1 h2
-    rwa [sub_add_sub_cancel, ← hM] at this
-  obtain ⟨σq, hσ, -⟩ := _root_.GlobalTheory.DatumCoverAdjoint.datum_adjoint _ _ _ _ _ _ _ d hM hLev.2.2.2.1 ph ψ x₀ hpin g hI
-  have hw' := datum_move d hM hLev.2.2.2.1 hpin _ hI hγ' σq hσ hx
-  obtain ⟨hρs, ν₂, hη, hηA⟩ := hρ₂
-  have hmv₂ : IsLevMove ρ₂.hom ν₂ (g.f d.l₂.M) (g.f d.l₂.A) := ⟨hρs, hη, hηA⟩
-  have hP₂ := (GlobalTheory.admissible_columns_le_and_harmonic_map_cover _ _ _ _ _ _ _ d).2 _ P hP.1
-  intro k _ _ _ _ hk y y₂ ho
-  have hev := evalAt_actL hAct (hT.p.evalWD j hj) frMap_trans_id γ hsec.1 y
-  obtain ⟨ρ, ν, -, hmv, hfr⟩ := mvPt_spec hAct.total γ y
-  generalize mvPt _ _ γ y = y' at hev hfr
-  obtain ⟨y₂', hfr₂⟩ := (GlobalTheory.exists_unique_frMove _ _ _ _ d.Xo₂ d.c₂ ρ₂.hom ν₂ hρs k y₂).1
-  obtain ⟨r', m', hr', hm', hE'⟩ := _root_.GlobalTheory.exists_conj_levelMap _ _ _ _ _ _ _ d hLev.2.2.2.2.2.1 ρ ν ρ₂ ν₂ _ _ _ _ hmv hmv₂ hγ'
-    (fun a => ⟨_, by rw [hA, one_smul]⟩)
-  have ho' := _root_.GlobalTheory.frOver_of_square_of_frMove _ _ _ _ _ _ _ d ρ ν ρ₂.hom ν₂ r' m' hr' hm' k y y' y₂ y₂' ho hfr hfr₂
-  obtain ⟨z₂, hz₂⟩ := hLev.2.2.2.2.2.2.1 k hk y'
-  obtain ⟨v, hv, hfv⟩ := hR k hk y' z₂ hz₂
-  obtain ⟨v', hv', -⟩ := (hTot Λ N x0 P hU hb hb₂ hO hX hP).1 k y₂'
-  have e₁ := GlobalTheory.ShortLiftInvariance.cover_product_indep_of_lift hL hC _ _ _ _ _ _ _ d
-    (_root_.GlobalTheory.moduliScheme_levelMaps_heckePoints.2 _ _ _ hpq).1 hLev (hA₂.trans hA.symm) hnab ⟨ph, ψ, x₀, hpin, htie⟩ Λ N hU hb₂ hO _ _ hP₂ x0 _
-    r' m' hE' k hk y' z₂ y₂' hz₂ ho' v v' hv hv'
-  have e₂ := GlobalTheory.T.shortThetaValue_under_levelMove hL hC _ _ _ _ d.Xo₂ d.c₂ d.nab₂ hnab k ρ₂.hom ν₂ _ _ y₂ y₂' hmv₂ hfr₂ σq hσ
-    _ _ _ hP₂ (d.w x0) Λ _ N v' hv'
-  rw [funext hw'] at e₂
-  refine ⟨v', e₂, (evalAt_smul _ _ _ _ y).trans ?_⟩
-  refine (congrArg (_ * ·) (hev.trans (hfv.trans e₁))).trans ?_
-  rw [hcd k y₂ y₂' hfr₂.1, hk, ← mul_assoc, ← mul_assoc, ← map_mul, inv_mul_cancel₀ hu, map_one, one_mul]
-
-end Const
-
-end GlobalTheory.CentralLevelMove
-
-namespace GlobalTheory.CentralLevelMove
-
 section SlopeTestRemainingChoices
 
 open NumberField Formalism.L2.Pj GlobalTheory.OnTies
@@ -788,7 +702,7 @@ theorem exists_const_n {D : D7} (T : Full D) (hT : LawsFull T) {j : ℕ} (hj : I
       ∃ f' : T.R j, IsShortRule (T.Q.Xo j) T.Q.c (T.dδ j n) Λ N x' P f' ∧ mv T.toTop j γ f = (u : T.Q.c.F) • f' := by
   subst hn
   have hd : decide (w.n = D.R.nV) = true := decide_eq_true hnV
-  obtain ⟨u, hu, H⟩ := exists_const_int T hT hj hxi (w := w) (hnV ▸ Nat.le_add_right _ _) γ
+  obtain ⟨u, hu, H⟩ := TraceLattice.exists_const_int T hT hj hxi (w := w) (hnV ▸ Nat.le_add_right _ _) γ
   refine ⟨u, hu, fun Λ N P x x' f h1 h2 h3 h4 hP hx ha ha' hs hf => ?_⟩
   have hG : GoodDatum T.toTop j w Λ N P := ⟨h1, h2, h3, h4, hP⟩
   obtain ⟨f', hf'⟩ := exists_isSeries hT.sh hj hG (x := x') (hd ▸ ha')
