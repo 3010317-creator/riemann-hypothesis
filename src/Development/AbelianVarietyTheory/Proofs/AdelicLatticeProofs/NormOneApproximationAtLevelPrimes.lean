@@ -108,11 +108,8 @@ lemma exists_coprime_multiple (N : ℕ) (hN : 0 < N) (z : 𝓞 E) (hw : 1 + (N :
     simp
 
 lemma val_eq_one (P : HeightOneSpectrum (𝓞 E)) (d : 𝓞 E) (hd : d ∉ P.asIdeal) :
-    P.valuation E (d : E) = 1 := by
-  have h1 : P.valuation E (algebraMap (𝓞 E) E d) ≤ 1 := P.valuation_le_one d
-  have h2 : ¬ P.valuation E (algebraMap (𝓞 E) E d) < 1 := by
-    rw [HeightOneSpectrum.valuation_lt_one_iff_mem]; exact hd
-  exact le_antisymm h1 (not_lt.mp h2)
+    P.valuation E (d : E) = 1 :=
+  (P.valuation_eq_one_iff_notMem (K := E)).2 hd
 
 lemma val_le_of_mul (P : HeightOneSpectrum (𝓞 E)) (x y : E) (d : 𝓞 E) (hd : d ∉ P.asIdeal)
     (h : x * d = y) (hy : P.valuation E y ≤ 1) : P.valuation E x ≤ 1 := by
