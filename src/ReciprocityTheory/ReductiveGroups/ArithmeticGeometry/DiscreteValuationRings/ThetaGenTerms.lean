@@ -37,21 +37,6 @@ variable {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] {I : Ideal R} {D :
   {A : PolAV (Spec (CommRingCat.of (FractionRing R)))}
   {G : Over (Spec (CommRingCat.of R))} [GrpObj G] [IsCommMonObj G]
 
-lemma isUnit_toW_of_K {Y : Scheme.{0}} (q : Y ⟶ Spec (CommRingCat.of (FractionRing R))) (W : Y.Opens) {r : R}
-    (hr : r ≠ 0) : IsUnit (toW (q ≫ jK R) W r) := by
-  have e1 : toW (q ≫ jK R) W r = (q.appLE ⊤ W le_top).hom
-      ((Scheme.ΓSpecIso (CommRingCat.of (FractionRing R))).inv.hom (algebraMap R (FractionRing R) r)) := by
-    rw [toW, RingHom.comp_apply]
-    rw [← Scheme.Hom.appLE_comp_appLE (f := q) (g := jK R) ⊤ ⊤ W le_top le_top]
-    rw [CommRingCat.comp_apply]
-    congr 1
-    have := congrArg (fun φ => φ.hom r) (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom (algebraMap R (FractionRing R))))
-    simp only [CommRingCat.hom_comp, RingHom.comp_apply, CommRingCat.hom_ofHom] at this
-    erw [Scheme.Hom.appLE_eq_app]
-    exact this.symm
-  rw [e1]
-  exact ((isUnit_iff_ne_zero.2 ((map_ne_zero_iff _ (IsFractionRing.injective R (FractionRing R))).2 hr)).map _).map _
-
 lemma base_eq_of_isDominant {X Y Z W : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ Z) [IsSeparated s]
     (h : f ≫ s = g ≫ s) (i0 : W ⟶ X) [IsDominant i0] (hU : i0 ≫ f = i0 ≫ g) (x : X) : f.base x = g.base x := by
   let X' : Over Z := Over.mk (f ≫ s)
@@ -106,6 +91,11 @@ lemma toW_of_K {Y : Scheme.{0}} (q : Y ⟶ Spec (CommRingCat.of (FractionRing R)
   simp only [CommRingCat.hom_comp, RingHom.comp_apply, CommRingCat.hom_ofHom] at this
   erw [Scheme.Hom.appLE_eq_app]
   exact this.symm
+
+lemma isUnit_toW_of_K {Y : Scheme.{0}} (q : Y ⟶ Spec (CommRingCat.of (FractionRing R))) (W : Y.Opens) {r : R}
+    (hr : r ≠ 0) : IsUnit (toW (q ≫ jK R) W r) := by
+  rw [toW_of_K]
+  exact ((isUnit_iff_ne_zero.2 ((map_ne_zero_iff _ (IsFractionRing.injective R (FractionRing R))).2 hr)).map _).map _
 
 lemma hBF : (DegPre.BF D.toPre (FractionRing R)).hom =
     (pullback.fst _ _ ≫ jFK (R := R) (FractionRing R)) ≫ jK R := by
