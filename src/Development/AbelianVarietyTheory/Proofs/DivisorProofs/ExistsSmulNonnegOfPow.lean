@@ -173,7 +173,7 @@ theorem exists_datum_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       (GlobalTheory.reading_linearIndependent_and_injective hB E H Dw l Xo c σ r U hU a n).1
       (shortGen Xo c nab 1 0 a n d) (fun g hg => hg.1) hf
       (bdd_mem_span_shortGen hC E H Dw l Xo c n d σ r U hσ hU hr hA hG hP hlev hnab hunit h3
-        (fun _ => ⟨ph, 1, x₀, hpin⟩) nab 1 0 a Nat.one_pos hdom hn hχ htot _ hb fun k x hx => dif_neg hx)
+        (fun _ => ⟨ph, 1, x₀, hpin⟩) nab 1 0 a Nat.one_pos hdom hn hχ htot _ hb fun k x hx => dite_eq_right hx)
 
 end GlobalTheory.SupFull
 end -- clump:auto
@@ -273,7 +273,7 @@ theorem exists_unf (D : D7) (Q : Par D) (hQ : Q.Pins) (j : ℕ) (hj : InR D j) :
     have hpos : 0 < (D.host.φ₀ D.host.sqrtMinusD).im := by
       rw [h0]
       simpa using d_pos D
-    rw [if_pos hpos, Int.cast_one, one_mul] at h
+    rw [ite_eq_left hpos, Int.cast_one, one_mul] at h
     simpa using h
   obtain ⟨Gm, φ, hφ⟩ := GlobalTheory.exists_herm_coord_of_datum _ Q.H (Q.Dw j) (-(-D.host.xi0))
     (by rw [neg_neg, GlobalTheory.LatticeData.flagDomainConj_hostXi_eq_neg D]) (by rw [neg_neg]; exact cmHost_imaginaryGenerator_ne_zero hP D) _ hr.symm
