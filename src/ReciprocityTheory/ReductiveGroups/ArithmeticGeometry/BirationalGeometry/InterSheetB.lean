@@ -91,14 +91,8 @@ theorem segre_differentiableAt {γ : (Fin e → ℂ) → (Σ k, ι k) → ℂ} {
   intro i
   simp only [segre]
   classical
-  have key : ∀ s : Finset K, DifferentiableAt ℂ (fun x => ∏ k ∈ s, γ x ⟨k, i k⟩) y := by
-    intro s
-    refine Finset.induction_on s ?_ ?_
-    · simp
-    · intro a s ha ih
-      simp only [Finset.prod_insert ha]
-      exact ((differentiableAt_pi.1 hγ) ⟨a, i a⟩).mul ih
-  exact key Finset.univ
+  exact (HasFDerivAt.finsetProd (u := Finset.univ) (g := fun k x => γ x ⟨k, i k⟩)
+    fun k _ => ((differentiableAt_pi.1 hγ) ⟨k, i k⟩).hasFDerivAt).differentiableAt
 
 theorem mem_secSet_of_sheet {P : Ideal (MRing ι)}
     {Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ)} {B : Set (Fin e → ℂ)}
