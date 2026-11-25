@@ -844,11 +844,6 @@ namespace UpperTheory.TraceSumEquivalence
 
 end UpperTheory.TraceSumEquivalence
 
-open UpperTheory.TraceSumEquivalence in
-theorem UpperTheory.trace_form_decomposition_CMDatum :
-    ∀ (E : Type) [Field E] [NumberField E] (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C], v.Integers O → ∀ [Algebra ℤ_[p] O] (e : ℤ_[p] ⊗[ℤ] 𝓞 E), e * e = e →
-      Nonempty (Fin (Module.finrank ℤ_[p] (LinearMap.range (LinearMap.mulLeft ℤ_[p] e))) ≃ Emb (O := O) e) ∧ Nat.card (𝓞 E →+* O) = Module.finrank ℚ E := by
-  apply GlobalTheory.EmbCount.card_emb
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CMTraceForms.TraceFormDecompositionCMDatum =====
@@ -900,7 +895,7 @@ theorem UpperTheory.splitPlaces_discriminantDepth_of_splitAt :
   have hsq : ∀ σ : 𝓞 E →+* O, σ H.rt ^ 2 = -(H.d : O) := fun σ => by
     rw [← map_pow, H.rt_sq]; simp
   have hsurj : Function.Surjective τO := by
-    have hc := (UpperTheory.trace_form_decomposition_CMDatum E p C v O hv 0 (by simp)).2
+    have hc := (GlobalTheory.EmbCount.card_emb E p C v O hv 0 (by simp)).2
     haveI : Finite (𝓞 E →+* O) := Nat.finite_of_card_ne_zero (by omega)
     refine (hinj.bijective_of_nat_card_le ?_).2
     rw [hc, Nat.card_eq_fintype_card, Embeddings.card E ℂ]
@@ -956,7 +951,7 @@ theorem UpperTheory.splitPlaces_discriminantDepth_of_splitAt :
     rw [← map_sum, hsum, hs]
   obtain ⟨hn, hvd⟩ := UpperTheory.discr_CMDatum_eq_prod_places E p C v O hv s w horth hone hcross
   have t : ∀ i, Fin (w i).n ≃ Emb (O := O) (w i).e := fun i =>
-    (UpperTheory.trace_form_decomposition_CMDatum E p C v O hv (g i) (hg i).1).1.some
+    (GlobalTheory.EmbCount.card_emb E p C v O hv (g i) (hg i).1).1.some
   obtain ⟨vdi, hv1, hv2⟩ := hvd t
   have hup : ∀ (x y : ℤ_[p] ⊗[ℤ] 𝓞 E) (σ : 𝓞 E →+* O), x * y = x → σ ∈ Emb (O := O) x → σ ∈ Emb (O := O) y := by
     intro x y σ hxy hx
