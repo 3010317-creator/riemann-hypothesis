@@ -127,21 +127,12 @@ private def NN (T : TC A D) (X : Finset D) : Submodule A D :=
 private lemma NN_mul (T : TC A D) (X : Finset D) {u : D} (hu : ∀ x ∈ X, u * x ∈ T.C)
     {n : D} (hn : n ∈ NN T X) : u * n ∈ T.C := by
   unfold NN at hn
-  induction hn using Submodule.span_induction with
-  | mem y hy =>
-    obtain ⟨x, hx, j, rfl⟩ := hy
-    have h := T.C.mul_mem (T.C.pow_mem T.sC j) (hu x hx)
-    convert h using 1
-    ring
-  | zero =>
-    rw [mul_zero]
-    exact T.C.zero_mem
-  | add y z _ _ hy hz =>
-    rw [mul_add]
-    exact T.C.add_mem hy hz
-  | smul a y _ hy =>
-    rw [mul_smul_comm]
-    exact T.C.smul_mem hy a
+  refine (Submodule.span_le (p := (Subalgebra.toSubmodule T.C).comap
+    (LinearMap.mulLeft A u))).2 ?_ hn
+  rintro _ ⟨x, hx, j, rfl⟩
+  rw [SetLike.mem_coe, Submodule.mem_comap, LinearMap.mulLeft_apply,
+    Subalgebra.mem_toSubmodule, mul_left_comm]
+  exact T.C.mul_mem (T.C.pow_mem T.sC j) (hu x hx)
 
 private lemma split (T : TC A D) (X : Finset D) (hXB : ∀ x ∈ X, x ∈ T.B)
     (hX : ∀ b ∈ T.B, b ∈ Submodule.span A {y | ∃ x ∈ X, ∃ i : ℕ, y = T.t ^ i * x})
@@ -149,32 +140,23 @@ private lemma split (T : TC A D) (X : Finset D) (hXB : ∀ x ∈ X, x ∈ T.B)
   obtain ⟨k, hk⟩ := T.locB y
   have key : ∀ z ∈ Submodule.span A {y | ∃ x ∈ X, ∃ i : ℕ, y = T.t ^ i * x},
       T.s ^ k * z ∈ Subalgebra.toSubmodule T.B ⊔ NN T X := by
-    intro z hz
-    induction hz using Submodule.span_induction with
-    | mem w hw =>
-      obtain ⟨x, hx, i, rfl⟩ := hw
-      rcases le_or_gt k i with hki | hki
-      · obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hki
-        apply Submodule.mem_sup_left
-        have e : T.s ^ k * (T.t ^ (k + d) * x) = T.t ^ d * x := by
-          linear_combination (T.t ^ d * x) * tsPow T k
-        rw [e]
-        exact T.B.mul_mem (T.B.pow_mem T.tB d) (hXB x hx)
-      · obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_lt hki
-        apply Submodule.mem_sup_right
-        have e : T.s ^ (i + d + 1) * (T.t ^ i * x) = T.s ^ (d + 1) * x := by
-          linear_combination (T.s ^ (d + 1) * x) * tsPow T i
-        rw [e]
-        exact Submodule.subset_span ⟨x, hx, d + 1, rfl⟩
-    | zero =>
-      rw [mul_zero]
-      exact Submodule.zero_mem _
-    | add a b _ _ ha hb =>
-      rw [mul_add]
-      exact Submodule.add_mem _ ha hb
-    | smul r a _ ha =>
-      rw [mul_smul_comm]
-      exact Submodule.smul_mem _ r ha
+    refine (Submodule.span_le (p := (Subalgebra.toSubmodule T.B ⊔ NN T X).comap
+      (LinearMap.mulLeft A (T.s ^ k)))).2 ?_
+    rintro _ ⟨x, hx, i, rfl⟩
+    rw [SetLike.mem_coe, Submodule.mem_comap, LinearMap.mulLeft_apply]
+    rcases le_or_gt k i with hki | hki
+    · obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hki
+      apply Submodule.mem_sup_left
+      have e : T.s ^ k * (T.t ^ (k + d) * x) = T.t ^ d * x := by
+        linear_combination (T.t ^ d * x) * tsPow T k
+      rw [e]
+      exact T.B.mul_mem (T.B.pow_mem T.tB d) (hXB x hx)
+    · obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_lt hki
+      apply Submodule.mem_sup_right
+      have e : T.s ^ (i + d + 1) * (T.t ^ i * x) = T.s ^ (d + 1) * x := by
+        linear_combination (T.s ^ (d + 1) * x) * tsPow T i
+      rw [e]
+      exact Submodule.subset_span ⟨x, hx, d + 1, rfl⟩
   have hy := key _ (hX _ hk)
   have e : T.s ^ k * (T.t ^ k * y) = y := by
     linear_combination y * tsPow T k
@@ -1126,13 +1108,8 @@ private theorem gen_eq {e : ℤ → D} (e0 : e 0 = 1) (ea : ∀ a b, e (a + b) =
   ring
 
 private theorem span_mul_mem {S : Set D} {M : Submodule A D} {c : D}
-    (h : ∀ x ∈ S, c * x ∈ M) : ∀ w ∈ Submodule.span A S, c * w ∈ M := by
-  intro w hw
-  induction hw using Submodule.span_induction with
-  | mem x hx => exact h x hx
-  | zero => rw [mul_zero]; exact M.zero_mem
-  | add x y _ _ hx hy => rw [mul_add]; exact M.add_mem hx hy
-  | smul a x _ hx => rw [mul_smul_comm]; exact M.smul_mem a hx
+    (h : ∀ x ∈ S, c * x ∈ M) : ∀ w ∈ Submodule.span A S, c * w ∈ M :=
+  fun _ hw => (Submodule.span_le (p := M.comap (LinearMap.mulLeft A c))).2 h hw
 
 private theorem chart_eq {e : ℤ → D} (e0 : e 0 = 1) (ea : ∀ a b, e (a + b) = e a * e b) {r : D}
     {k N : ℕ}
