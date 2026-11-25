@@ -859,18 +859,15 @@ namespace GlobalTheory.IsoRes
 
 variable {XG XT Pb : Scheme.{0}} {LG : LB XG} {LT : LB XT} {c : Pb ⟶ XG} {g : Pb ⟶ XT} {gi : XT ⟶ Pb}
 
-theorem comp_pt {A B C : Scheme.{0}} (f : A ⟶ B) (h : B ⟶ C) (x : A) : (f ≫ h) x = h (f x) := by
-  simp only [Scheme.Hom.comp_base, TopCat.hom_comp, ContinuousMap.comp_apply]
-
 theorem sec_apply (hgi : gi ≫ g = 𝟙 XT) (x : XT) : g (gi x) = x := by
-  rw [← comp_pt, hgi]; rfl
+  rw [← Scheme.Hom.comp_apply, hgi]; rfl
 
 theorem chart_le (hgi : gi ≫ g = 𝟙 XT) (J : PUnit → LG.ι) (k : LT.ι) :
     (LG.pull (gi ≫ c)).U J ⊓ LT.U k ≤ gi ⁻¹ᵁ ((LG.pull c).U J ⊓ (LT.pull g).U (fun _ => k)) := by
   intro x hx
   refine ⟨mem_pull.2 ?_, mem_pull.2 ?_⟩
   · have := mem_pull.1 hx.1
-    rwa [comp_pt] at this
+    rwa [Scheme.Hom.comp_apply] at this
   · rw [sec_apply hgi]; exact hx.2
 
 def resIso (hgi : gi ≫ g = 𝟙 XT) (w₀ : LB.Iso (LT.pull g) (LG.pull c)) : LB.Iso LT (LG.pull (gi ≫ c)) where
@@ -884,9 +881,9 @@ theorem gw_resIso (hgi : gi ≫ g = 𝟙 XT) (w₀ : LB.Iso (LT.pull g) (LG.pull
   · have h' : ¬ (r ≫ gi) z ∈ (LG.pull c).U (fun _ => j) ⊓ (LT.pull g).U (fun _ => k) := by
       intro hm
       apply h
-      rw [comp_pt] at hm
+      rw [Scheme.Hom.comp_apply] at hm
       refine ⟨mem_pull.2 ?_, ?_⟩
-      · rw [comp_pt]; exact mem_pull.1 hm.1
+      · rw [Scheme.Hom.comp_apply]; exact mem_pull.1 hm.1
       · have := mem_pull.1 hm.2
         rwa [sec_apply hgi] at this
     show gm r z _ _ = gm (r ≫ gi) z _ _
@@ -896,11 +893,11 @@ theorem resIso_pgen (hgi : gi ≫ g = 𝟙 XT) (w₀ : LB.Iso (LT.pull g) (LG.pu
     PGen (resIso hgi w₀) := by
   intro Y f y j j' k k' hj hj' hk hk'
   rw [gw_resIso, gw_resIso]
-  rw [comp_pt] at hj hj'
-  have hj0 : c ((f ≫ gi) y) ∈ LG.U j := by rw [comp_pt]; exact hj
-  have hj0' : c ((f ≫ gi) y) ∈ LG.U j' := by rw [comp_pt]; exact hj'
-  have hk0 : (f ≫ gi) y ∈ (LT.pull g).U (fun _ => k) := mem_pull.2 (by rw [comp_pt, sec_apply hgi]; exact hk)
-  have hk0' : (f ≫ gi) y ∈ (LT.pull g).U (fun _ => k') := mem_pull.2 (by rw [comp_pt, sec_apply hgi]; exact hk')
+  rw [Scheme.Hom.comp_apply] at hj hj'
+  have hj0 : c ((f ≫ gi) y) ∈ LG.U j := by rw [Scheme.Hom.comp_apply]; exact hj
+  have hj0' : c ((f ≫ gi) y) ∈ LG.U j' := by rw [Scheme.Hom.comp_apply]; exact hj'
+  have hk0 : (f ≫ gi) y ∈ (LT.pull g).U (fun _ => k) := mem_pull.2 (by rw [Scheme.Hom.comp_apply, sec_apply hgi]; exact hk)
+  have hk0' : (f ≫ gi) y ∈ (LT.pull g).U (fun _ => k') := mem_pull.2 (by rw [Scheme.Hom.comp_apply, sec_apply hgi]; exact hk')
   have e := hw₀ Y (f ≫ gi) y j j' (fun _ => k) (fun _ => k') hj0 hj0' hk0 hk0'
   have e2 : gm (f ≫ gi) y ((LT.pull g).U (fun _ => k) ⊓ (LT.pull g).U (fun _ => k'))
       ((LT.pull g).g (fun _ => k) (fun _ => k')) = gm f y _ (LT.g k k') := by

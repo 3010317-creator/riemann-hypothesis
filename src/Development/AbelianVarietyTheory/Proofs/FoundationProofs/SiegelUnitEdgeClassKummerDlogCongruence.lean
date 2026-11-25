@@ -1547,7 +1547,7 @@ theorem unit_val {p : ℕ} [hp : Fact p.Prime] {Ωl : Type} [Field Ωl] [Algebra
   have hd := hs r0 h0
   have hpn : ((p ^ n : ℕ) : ℚ) ≠ 0 := by exact_mod_cast (pow_pos hp.out.pos n).ne'
   have hm : (((r0 * ((p ^ n : ℕ) : ℚ)).num : ℤ) : ℚ) / (p : ℚ) ^ n = r0 := by
-    rw [← GlobalTheory.IoEx.castM, (Rat.den_eq_one_iff _).1 hd, mul_div_cancel_right₀ _ hpn]
+    rw [← Rat.natCast_pow, (Rat.den_eq_one_iff _).1 hd, mul_div_cancel_right₀ _ hpn]
   refine (ev_cong_iff_and_unit p Ωl hclo T n ψ hreb 0 _ x x' hx).2 ⟨(r0 * ((p ^ n : ℕ) : ℚ)).num, ?_, ?_⟩
   · simp only [hm]; exact (map_ne_zero j).2 h0
   · simp only [hm]; rw [← map_inv₀]; exact (hint _).1 hinv
@@ -1556,7 +1556,7 @@ theorem coefQ_div {Ω : Type} [Field Ω] (p L : ℕ) (hp : 0 < p) (f : ℕ → �
     coefQ (p ^ L) f ((m : ℚ) / (p : ℚ) ^ L) = if 0 ≤ m then f m.toNat else 0 := by
   have hp0 : (0 : ℚ) < (p : ℚ) ^ L := pow_pos (by exact_mod_cast hp) L
   have e : (m : ℚ) / (p : ℚ) ^ L * ((p ^ L : ℕ) : ℚ) = m := by
-    rw [GlobalTheory.IoEx.castM, div_mul_cancel₀ _ hp0.ne']
+    rw [Rat.natCast_pow, div_mul_cancel₀ _ hp0.ne']
   have e2 : 0 ≤ (m : ℚ) / (p : ℚ) ^ L ↔ 0 ≤ m := by
     rw [le_div_iff₀ hp0, zero_mul]; exact Int.cast_nonneg_iff
   simp only [coefQ, e, e2, Rat.den_intCast, Rat.num_intCast, and_true]
@@ -1568,7 +1568,7 @@ theorem coefQ_supp {Ω : Type} [Field Ω] (p L : ℕ) (hp : 0 < p) (f : ℕ → 
     by_contra h2
     exact h (if_neg h2)
   refine ⟨(r * ((p ^ L : ℕ) : ℚ)).num, Rat.num_nonneg.2 (mul_nonneg h1.1 (Nat.cast_nonneg _)), ?_⟩
-  rw [(Rat.den_eq_one_iff _).1 h1.2, GlobalTheory.IoEx.castM, mul_div_cancel_right₀ _ hp0.ne']
+  rw [(Rat.den_eq_one_iff _).1 h1.2, Rat.natCast_pow, mul_div_cancel_right₀ _ hp0.ne']
 
 end GlobalTheory.PairTop
 
@@ -1848,7 +1848,7 @@ theorem GlobalTheory.pair_edge_dlog : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → 
       push_cast
       exact Basic.cong_refl _ _) hval r
   have hdl : IsDl X A p n ((p : ℚ) ^ L) (e w) φ2 := by
-    rw [← GlobalTheory.IoEx.castM]
+    rw [← Rat.natCast_pow]
     exact ⟨hφ2A, Aw, Bw, κ, hκ, hpres, hPA, hPB, hφ2c⟩
   obtain ⟨z1, hz1, e1⟩ := isDl_unique ε X hj p A hpA n _ _ φ φ2 hφ hdl r
   obtain ⟨z2, hz2, e2⟩ := hbr
