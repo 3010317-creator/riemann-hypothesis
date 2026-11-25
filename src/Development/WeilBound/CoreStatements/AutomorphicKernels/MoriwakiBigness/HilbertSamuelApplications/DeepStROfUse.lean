@@ -1151,7 +1151,7 @@ theorem deepStR_of_use : ReciprocityTheory.ChartRestriction.G.Geo.ArithIntersect
     exact hG.2.2.2.2.2.2.2.2.2.2.1
   have hG6 : ReciprocityTheory.ChartRestriction.G.Geo.BirationalPullbackPushforwardFormula := by
     unfold Prov.HS at hHS
-    exact hHS.2.2.2.2.1
+    exact hHS.2.2
   exact GlobalTheory.CompanionTheory.Ar.Plug.deepStR_of_volume hNef hG hAIS hG6 hTC.1 hTC.2
 
 end GlobalTheory.CompanionTheory.Ar.Plug
