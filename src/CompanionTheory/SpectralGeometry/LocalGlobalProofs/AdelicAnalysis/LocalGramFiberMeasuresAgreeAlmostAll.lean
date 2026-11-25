@@ -131,14 +131,6 @@ theorem exists_gl_sub {R : Type} [CommRing R] (s : R →+* R) (hs : ∀ y, s (s 
     rw [← map_inv]
     exact ((G⁻¹).val i j).2
 
-theorem sigma_sigma {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-    (σ : E →ₐ[F] E) (h : IsCMExt F E σ) (x : E) : σ (σ x) = x := by
-  exact GlobalTheory.CompanionTheory.SW.HermTop.sigma_sigma h x
-
-theorem sigR_sigR {F E : Type} [Field F] [Field E] [Algebra F E] (R : Type) [CommRing R] [Algebra F R]
-    (σ : E →ₐ[F] E) (h : ∀ x, σ (σ x) = x) (y : R ⊗[F] E) : sigR R σ (sigR R σ y) = y := by
-  exact GlobalTheory.CompanionTheory.SW.HaarCoord.sigR_sigR R h y
-
 theorem mulVec_mem {R : Type} [CommRing R] (O : Subring R) {m : ℕ} (P : Matrix (Fin m) (Fin m) R)
     (hP : ∀ i j, P i j ∈ O) (x : Fin m → R) (hx : ∀ i, x i ∈ O) (i : Fin m) : P.mulVec x i ∈ O := by
   change ∑ j, P i j * x j ∈ O
@@ -162,7 +154,7 @@ theorem good_iso : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
     have : (JR (Fv F v) P).det = inclR (F := F) (Fv F v) P.det := (RingHom.map_det (inclR (F := F) (Fv F v)) P).symm
     rw [this, ← map_mul, mul_inv_cancel₀ hP, map_one]
   obtain ⟨g, hg, ig, ig'⟩ := exists_gl_sub (sigR (Fv F v) σ)
-    (sigR_sigR (Fv F v) σ (sigma_sigma σ hCM)) O hst h2 hδ hN M (JR (Fv F v) J) (JR (Fv F v) J')
+    (HaarCoord.sigR_sigR (Fv F v) (HermTop.sigma_sigma hCM)) O hst h2 hδ hN M (JR (Fv F v) J) (JR (Fv F v) J')
     (map_mem_HermR (Fv F v) σ J hJ.1) (map_mem_HermR (Fv F v) σ J' hJ'.1)
     (fun i j => (hmem _).2 (eJ i j)) (fun i j => (hmem _).2 (eJ' i j))
     (wit J hJ.2 dJ) (wit J' hJ'.2 dJ')
