@@ -1070,8 +1070,7 @@ theorem local_bound (𝔐 : HodgeCpt Y S y) (h : LieMetric 𝔐.M y) (hpq : 1 �
       rw [← hx, Category.assoc, ← hmK, hvv])
     have h3 : 0 ≤ ∑ i, ‖x i‖ ^ 2 := Finset.sum_nonneg fun i _ => by positivity
     have h4 : 0 ≤ (h.ip _ v₀ v₀).re := by
-      by_contra hn
-      push_neg at hn
+      by_contra! hn
       nlinarith
     calc c'.re ≤ K₂ * ∑ i, ‖x i‖ ^ 2 := h1
       _ ≤ |K₂| * ∑ i, ‖x i‖ ^ 2 := mul_le_mul_of_nonneg_right (le_abs_self _) h3

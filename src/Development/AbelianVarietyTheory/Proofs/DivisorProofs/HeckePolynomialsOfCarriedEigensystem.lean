@@ -124,8 +124,7 @@ theorem exists_sys_of_mem_span {K V H I J : Type} [Field K] [AddCommGroup V] [Mo
     rintro _ ⟨f, hf, rfl⟩
     exact hle hf
   have hvl : v ∈ Formalism.L2.Col.eigAt h l := Formalism.L2.Col.mem_eigAt_of_forall_apply he
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   have hT' : T ≤ ⨆ (y : J → ℂ) (_ : y ≠ l), Formalism.L2.Col.eigAt h y := by
     refine iSup₂_le fun x hx => ?_
     obtain ⟨i, hi⟩ := hno x hx

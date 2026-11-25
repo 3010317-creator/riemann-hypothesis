@@ -194,8 +194,7 @@ theorem exists_coords_all (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ
     have h3 : Λ.toRatLinearMap = 0 := e.ext fun i => h2 i
     have h4 : ∀ l, Λ l = 0 := fun l => LinearMap.congr_fun h3 l
     obtain ⟨i, j, hij⟩ : ∃ i j, (y - y') i j ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hd (Matrix.ext hcon)
     obtain ⟨_, ⟨g, rfl⟩, hγ⟩ := GlobalTheory.RatAnnih.exists_symplO_eq S T (rat (y - y')) i j ((y - y') i j)⁻¹
     have h5 : symplO S T (rat (y - y')) (rat g) = algebraMap D.host.F (AF D.host.F) 2 := by
@@ -961,8 +960,7 @@ theorem exists_pair_ne_one (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D �
     ∃ w : WO S T, ψ (symplO S T (c.map (incA D)) w) ≠ 1 := by
   classical
   obtain ⟨i, j, hij⟩ : ∃ i j, c i j ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hc (Matrix.ext h)
   obtain ⟨x₀, hx₀⟩ := hψ.1.2.2.2
   set q : D.host.F := Algebra.trace D.host.F D.host.E 1 with hq
@@ -1492,8 +1490,7 @@ theorem per_h {V V' W : HSp D} {r : ℕ} {C : Matrix (Fin V.rank) (Fin r) D.host
   obtain ⟨c, hc, hu0⟩ := hcoef f₀ hf₀
   have hdiag : ∃ x, ∫ w in 𝓕', heisO ψ V' W x (ω' (1, h) (res V V' W C B μ 𝓨 f₀)) w *
       star (ω' (1, h) (res V V' W C B μ 𝓨 f₀) w) ∂μ' ≠ 0 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     obtain ⟨c', -, h'⟩ := GlobalTheory.ThetaCoefficient.exists_unit_smul_of_coefficient_eq D ψ hψ V' W μ' 𝓕' hμ' h𝓕'
       0 (ω' (1, h) (res V V' W C B μ 𝓨 f₀)) GlobalTheory.WeilVacMove.isTheta_zero hv0t (fun w => by
         rw [hne w]

@@ -462,8 +462,7 @@ theorem isGeneric_of_wh (ψ : AddChar (ZMod g) ℂ) (hψ : ψ ≠ 1) {n : ℕ} (
     rw [coeff_eU ψ hψ 0 0 hk, map_smul, smul_eq_mul]
     rfl
   obtain ⟨y, hy⟩ : ∃ y, op V.ρ (levOfChar ψ hψ n false 0 0 hk).e y ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact h1 (LinearMap.ext hc)
   refine ⟨_, hy, fun u hu => ?_⟩
   exact (GlobalTheory.BadShare.EpsProj.mem_range_iff V.ρ (mem_one _) (fun _ _ => mem_mul _) (chi_one _) (fun _ _ => chi_mul _) _).1

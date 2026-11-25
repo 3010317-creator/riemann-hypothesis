@@ -157,8 +157,7 @@ theorem congr_of_isAA : ∀ (D : D7) {k : ℕ} (Λ ΛT : Lt D.host.E k) (P : Ide
       exact Finset.sum_congr rfl fun i _ => by rw [mul_comm]; exact hb i
     exact RingOfIntegers.ext this
   obtain ⟨i, hi⟩ : ∃ i, b i ∉ P := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hP.ne_top
     rw [Ideal.eq_top_iff_one, ← hb1]
     exact Ideal.sum_mem _ fun i _ => hcon i

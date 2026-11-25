@@ -488,8 +488,7 @@ open IsLocalRing in
 variable {V : Type} [CommRing V] [IsLocalRing V] [IsNoetherianRing V] in
 private theorem exists_not_mem_span_mul_maximalIdeal_sup_pow [IsDomain V] {g : V} (hg : g ≠ 0) :
     ∃ e : ℕ, g ∉ Ideal.span {g} * maximalIdeal V ⊔ maximalIdeal V ^ e := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have hg' := mem_of_forall_mem_sup_maximalIdeal_pow' _ g h
   obtain ⟨z, hz, hgz⟩ := Ideal.mem_span_singleton_mul.1 hg'
   have hz1 : z = 1 := by

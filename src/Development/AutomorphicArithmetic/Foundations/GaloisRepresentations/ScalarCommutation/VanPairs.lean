@@ -180,8 +180,7 @@ theorem norm_conj_le_one_of_bounded_coords :
     refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun i _ => ?_)
     rw [map_smul, hsmul, norm_mul, padicAlgCl_norm_ratCast]
     exact mul_le_mul_of_nonneg_right (hB k i) (norm_nonneg _)
-  by_contra h
-  push_neg at h
+  by_contra! h
   obtain ⟨k, hk⟩ := pow_unbounded_of_one_lt (B * C) h
   exact (lt_irrefl _ ((hbound k).trans_lt hk))
 

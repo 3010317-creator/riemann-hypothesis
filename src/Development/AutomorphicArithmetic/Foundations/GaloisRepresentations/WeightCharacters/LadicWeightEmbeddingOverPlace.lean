@@ -802,8 +802,7 @@ theorem famOff_holds : FamOff := by
   obtain ⟨y₁, y₂, v₀, hv₀⟩ := hne
   set v := InfinitePlace.mk τ' with hv
   obtain ⟨e, he⟩ : ∃ e, B y₁ y₂ (GlobalTheory.CoefIrred.tenMul W e) ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h1 : B y₁ y₂ = 0 := by
       apply (Formalism.L2.DIV.bVV ℂ W).ext
       intro i
@@ -980,8 +979,7 @@ theorem famSum_of : ExpBasic → EvLem → TorFacts → QR → WtBd → EmbProj 
       rw [← (hx z).2, ← hp _ (hx z).1 _ (hBU _ _ _), hB.inf (x z)]
       rfl
   · obtain ⟨y, v', hv'⟩ : ∃ y v', B 1 y v' ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       obtain ⟨u, b, hb, rfl⟩ := hQR a y₁
       obtain ⟨x', -, h2⟩ := hxu u
       have e1 := hB.inf x' 1 ((cEmb τ x'.1)⁻¹ * y₂) (W.rep x'⁻¹ v)

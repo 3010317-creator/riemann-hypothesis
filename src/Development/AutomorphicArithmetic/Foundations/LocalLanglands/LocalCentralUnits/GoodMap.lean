@@ -510,8 +510,7 @@ theorem parEx : ParEx := by
     have hNC := nameCentral g n hn D.K hrank τ θ hτ hθr hθN
     obtain ⟨ψ, hψ0, hψ⟩ := hτi
     obtain ⟨v, hv⟩ : ∃ v, ψ v ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hψ0 (LinearMap.ext hcon)
     have hcent : ∀ t : ↥(Ine A), θ (∏ j ∈ Finset.range n, R t ^ g ^ j) = ω (a (ineIncl h t)) := by
       intro t

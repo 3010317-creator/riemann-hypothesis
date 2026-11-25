@@ -366,16 +366,14 @@ private theorem eq_of_cpol_eq_of_sDec {n : ℕ} (a b : Fin n → ℂ) (ha : Qr.S
     obtain ⟨j, hj⟩ := hba i
     obtain ⟨j', hj'⟩ := hab i
     have hij : i ≤ j := by
-      by_contra hlt
-      push_neg at hlt
+      by_contra! hlt
       have hlt' : (j : ℕ) < i := hlt
       have e := ih j (by omega) j rfl
       have h1 := re_add_one_le_re_of_sDec_of_lt ha hlt
       rw [← hj, ← e] at h1
       linarith
     have hij' : i ≤ j' := by
-      by_contra hlt
-      push_neg at hlt
+      by_contra! hlt
       have hlt' : (j' : ℕ) < i := hlt
       have e := ih j' (by omega) j' rfl
       have h1 := re_add_one_le_re_of_sDec_of_lt hb hlt
@@ -397,8 +395,7 @@ private theorem eq_of_cpol_eq_of_sDec {n : ℕ} (a b : Fin n → ℂ) (ha : Qr.S
 
 theorem typ_poly_ne (P : M.Par) (hOK : P.OK) (ρ ρ' : M.Ty P) (h : ρ ≠ ρ') :
     ∃ w, Qr.cpol (typM P ρ) w ≠ Qr.cpol (typM P ρ') w := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   apply h
   have e := eq_of_cpol_eq_of_sDec _ _ (typ_sdec P hOK ρ) (typ_sdec P hOK ρ') hcon
   funext j

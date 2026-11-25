@@ -111,8 +111,7 @@ private theorem exists_open_avoid (w : Plc E) (x : GLw n w) (hx : x ≠ 1) :
   swap
   · exact ⟨_, hKo, le_rfl, hxK⟩
   have hne : ∃ i j, x.val i j ≠ (1 : Matrix (Fin n) (Fin n) (w.adicCompletion E)) i j := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hx (Units.ext (Matrix.ext h))
   obtain ⟨i, j, hij⟩ := hne
   haveI : CompactSpace ↥(GlobalTheory.LFun.KGL w (n := n)) := isCompact_iff_compactSpace.1 hKc
@@ -1116,8 +1115,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pKapOf_of :
     UpperTheory.Gal.CertificateRingHomMap.FinToHecke → UpperTheory.Gal.CertificateRingHomMap.XiZeta → UpperTheory.Gal.CertificateRingHomMap.IntSim → UpperTheory.Gal.CertificateRingHomMap.LevOpen → UpperTheory.Gal.CertificateRingHomMap.KapOf := by
   intro hFH hXi hIS hLO E _ _ _ n hn x ζ hζ U W j Up w₀ S Kw hS χ hχ Φ ψ hΦ hψ
   obtain ⟨g₀, hg₀⟩ : ∃ g₀, Φ g₀ ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hΦ.ne (funext h)
   have cancel : ∀ a b : ℂ, a • Φ g₀ = b • Φ g₀ → a = b := fun a b h => smul_left_injective ℂ hg₀ h
   have A : ∀ k ∈ lev S Kw, ∀ h : comp w₀ k ∈ Kw w₀, χ ⟨comp w₀ k, h⟩ = 1 → ∀ g, Φ (g * k) = Φ g := by
@@ -1342,8 +1340,7 @@ theorem pKerFormU_of :
     show algForms.val f (u₀.1 * u'.1) = _
     rw [← algForms.val_algRep, hfix u' hk]
   · have hex : ∃ g, algForms.val f g ≠ 0 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       refine hf (Subtype.ext (LinearMap.ext fun v => funext fun g => ?_))
       exact LinearMap.congr_fun (hc g) v
     obtain ⟨g, hg⟩ := hex

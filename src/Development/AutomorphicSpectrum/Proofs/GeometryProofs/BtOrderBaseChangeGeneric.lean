@@ -132,8 +132,7 @@ theorem separates {Γ : QFGroup R T} {Γ' : QFGroup R' T} {F : Γ'.G.left ⟶ Γ
     (hbc : Γ'.IsBaseChange Γ (algebraMap R R') F) {A : Subalgebra R (T → R)}
     {j : Γ.G.left ⟶ Spec (CommRingCat.of A)} (hj : Γ.IsEmb A j) [Mono j] (s t : T) (hst : s ≠ t) :
     ∃ a ∈ A, algebraMap R R' (a s) ≠ algebraMap R R' (a t) := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   apply hst
   have e : (Γ'.pt s).left ≫ F ≫ j = (Γ'.pt t).left ≫ F ≫ j := by
     rw [pt_comp_emb hbc hj, pt_comp_emb hbc hj]

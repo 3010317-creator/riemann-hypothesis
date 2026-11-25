@@ -206,8 +206,7 @@ theorem unif_right : ∀ (D : D7) (V : HSp D) (φ : GA D V → ℂ), RapidDec V 
                          linarith
   have hT : ∀ y, T ≤ quotHeight V y → ‖φ y‖ < δ / 2 := by
     intro y hy
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have h1 := hC y
     simp only [pow_one] at h1
     have h2 : δ / 2 * T = |C| + δ / 2 := by rw [hTdef]; field_simp

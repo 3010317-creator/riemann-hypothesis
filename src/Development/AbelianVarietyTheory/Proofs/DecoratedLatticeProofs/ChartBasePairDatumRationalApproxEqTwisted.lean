@@ -720,8 +720,7 @@ theorem intM_of_mul_left [Fintype a] [DecidableEq a] {A : Matrix a a K} (h : Sma
   intro i j
   obtain ⟨l, -, hl⟩ := Finset.exists_max_image Finset.univ (fun l => v (Y l j)) ⟨i, Finset.mem_univ _⟩
   refine (hl i (Finset.mem_univ _)).trans ?_
-  by_contra hn
-  push_neg at hn
+  by_contra! hn
   have h0 : v (Y l j) ≠ 0 := (zero_lt_one.trans hn).ne'
   have e : Y l j = (A * Y : Matrix a b K) l j - ((A - 1) * Y : Matrix a b K) l j := by
     rw [Matrix.sub_mul, Matrix.one_mul, Matrix.sub_apply, sub_sub_cancel]

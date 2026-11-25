@@ -283,8 +283,7 @@ theorem exists_mem_notMem_coeIdeal_mul {R K : Type} [CommRing R] [IsDedekindDoma
     [Algebra R K] [IsFractionRing R K] (c : FractionalIdeal (nonZeroDivisors R) K) (hc : c ≠ 0)
     (P : Ideal R) (hP : P ≠ ⊤) :
     ∃ b : K, b ∈ c ∧ b ∉ (P : FractionalIdeal (nonZeroDivisors R) K) * c := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have h1 : c ≤ (P : FractionalIdeal (nonZeroDivisors R) K) * c := fun b hb => h b hb
   have h2 : c * c⁻¹ ≤ (P : FractionalIdeal (nonZeroDivisors R) K) * c * c⁻¹ := by
     gcongr
@@ -407,8 +406,7 @@ theorem exists_unimodular_lift_of_unimodular_mod :
   obtain ⟨t, ht, hy⟩ : ∃ t : F, t ∈ b ∧ y₀ + (n : F) * t ≠ 0 := by
     by_cases h0 : y₀ = 0
     · obtain ⟨t, ht, ht0⟩ : ∃ t : F, t ∈ b ∧ t ≠ 0 := by
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         exact hb (FractionalIdeal.eq_zero_iff.2 hcon)
       exact ⟨t, ht, by rw [h0, zero_add]; exact mul_ne_zero hnF ht0⟩
     · exact ⟨0, b.zero_mem, by simpa using h0⟩
@@ -945,8 +943,7 @@ theorem exists_primitive_norm_neg : ∀ (F E : Type) [Field F] [NumberField F] [
   have hα0 : α ≠ 0 := by
     obtain ⟨r, hr, hr0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hP0
     obtain ⟨s, hs, hs0⟩ : ∃ s ∈ c, s ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       apply hc
       ext y
       simp only [FractionalIdeal.mem_zero_iff]

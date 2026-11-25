@@ -197,8 +197,7 @@ theorem isCutG_div {χ : ℝ → ℝ} (hχ : C6.IsCut0 χ) {ε : ℝ} (hε : 0 <
     rw [div_lt_iff₀ hε]
     exact hx
   · intro x hx
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hx (h0 x h)
 
 def idOp (k r : ℕ) (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]

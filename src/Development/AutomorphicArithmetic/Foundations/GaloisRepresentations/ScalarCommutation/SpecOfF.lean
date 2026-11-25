@@ -758,8 +758,7 @@ universe u v
 theorem UpperTheory.Gal.CertificateRingHomMap.pTracePow_holds :
     UpperTheory.Gal.CertificateRingHomMap.TracePow.{u} := by
   intro F _ _ W _ _ _ q s hq hq0 hqs hinj j₀
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hU : ∀ x ∈ LinearMap.range q, s x ∈ LinearMap.range q := by
     rintro _ ⟨y, rfl⟩
     refine ⟨s y, ?_⟩

@@ -361,8 +361,7 @@ theorem v_det_eq_one {n : ℕ} (M : Matrix (Fin n) (Fin n) K) (d : Fin n → K) 
     refine Valuation.map_sum_lt v one_ne_zero fun s hs => ?_
     have hs1 : s ≠ 1 := Finset.ne_of_mem_erase hs
     obtain ⟨i, hi⟩ : ∃ i, s i ≠ i := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact hs1 (Equiv.ext hc)
     rw [v_sign_smul, map_prod, ← Finset.mul_prod_erase _ _ (Finset.mem_univ i)]
     have h1 := h (s i) i

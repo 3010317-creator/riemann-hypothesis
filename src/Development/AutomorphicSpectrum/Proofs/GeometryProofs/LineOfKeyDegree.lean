@@ -1281,8 +1281,7 @@ theorem exists_pair {θ : (Fin g → ℂ) → ℂ} (hθ : a.IsTheta 1 θ) (h0 : 
     exact mul_ne_zero (mul_ne_zero hp hq1) hq2
   set s₀ := tri θ p q with hs₀def
   obtain ⟨p', q', hpq⟩ : ∃ p' q', (-(fderiv ℂ s₀ 0 v) / s₀ 0) * tri θ p' q' 0 + fderiv ℂ (tri θ p' q') 0 v ≠ 0 := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     exact hv (separates a hθ h0 _ v hall)
   have hs := isTheta_tri a hθ p' q'
   refine ⟨s₀, fun w => s₀ 0 * tri θ p' q' w - tri θ p' q' 0 * s₀ w, hs₀, IsTheta.lin a hs hs₀ _ _, hne, by ring, ?_⟩

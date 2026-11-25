@@ -920,8 +920,7 @@ private theorem exists_teichmuller_root_norm_sub_lt_one {l : ℕ} [hl : Fact l.P
     have h := congrArg (Polynomial.eval a) hprod
     rw [Polynomial.eval_multiset_prod, Multiset.map_map] at h
     simpa [hP, Function.comp_def] using h.symm
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hge : ∀ r ∈ P.roots, 1 ≤ ‖a - r‖ := by
     intro r hr
     have hr' : r ^ q = r := by

@@ -214,8 +214,7 @@ theorem lojasiewicz (e : ℕ) (f g : (Fin e → ℂ) → ℂ) (x : Fin e → ℂ
   obtain ⟨r₀, hr₀, han⟩ := Metric.eventually_nhds_iff_ball.1
     (hf.eventually_analyticAt.and hg.eventually_analyticAt)
   obtain ⟨y₁, hy₁, hgy₁⟩ : ∃ y₁ ∈ ball x r₀, g y₁ ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact hz (by filter_upwards [ball_mem_nhds x hr₀] with y hy using hcon y hy)
   set v := y₁ - x with hv
   have hvr : ‖v‖ < r₀ := by simpa [hv, dist_eq_norm] using hy₁
@@ -247,8 +246,7 @@ theorem lojasiewicz (e : ℕ) (f g : (Fin e → ℂ) → ℂ) (x : Fin e → ℂ
       obtain ⟨z, hz1, hz2⟩ := (hφ0.and h').exists
       exact hz1 hz2
     obtain ⟨d, hd⟩ := ENat.ne_top_iff_exists.1 hne
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have := (natCast_le_analyticOrderAt_iff_iteratedDeriv_eq_zero (n := d + 1) hφ00).2
       (fun j _ => hcon j)
     rw [← hd] at this
@@ -1375,8 +1373,7 @@ theorem root_origin_weight_free : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   obtain ⟨dg₁, dh₁, G₁, H₁, hG₁, hH₁, hd₁, hy₁, hy₁', hz₁⟩ := hrep z₀ hz₀
   obtain ⟨T, hT, hJT⟩ := Or.Re.R.homog
   obtain ⟨f, hfT, hfP⟩ : ∃ f ∈ T, f ∉ RM.P := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact Or.Re.R.nondeg (hJT ▸ Ideal.span_le.2 hc)
   obtain ⟨df, hf⟩ := hT f hfT
   have hfJ : f ∈ Or.Re.J := hJT ▸ Ideal.subset_span hfT

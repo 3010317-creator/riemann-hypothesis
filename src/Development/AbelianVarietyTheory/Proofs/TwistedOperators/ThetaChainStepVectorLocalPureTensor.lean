@@ -451,8 +451,7 @@ theorem prod_locFn_half : ∀ (D : D7) (S T : HSp D) (βS : GL (Fin S.rank) (EAf
       simp only [Subring.coe_mul, frMapO_smul, Matrix.smul_apply, smul_eq_mul]
     rw [heq, map_mul, h1, one_mul]
   · have hex : ∃ PP ∈ s, ¬ IsIntM (frMapO S T βS βT (es PP • t)) := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       apply hN
       intro i j
       have ht : t = (∑ PP ∈ s, es PP) • t := by

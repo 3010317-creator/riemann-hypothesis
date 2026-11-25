@@ -345,8 +345,7 @@ private theorem norm_le_one_of_isIntegral_int' {q : ℕ} [Fact q.Prime]
     have h := congrArg (fun w => (K₀.val : K₀ →+* PadicAlgCl q) w) hg
     simp only [Polynomial.hom_eval₂, map_zero] at h
     exact h
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   rw [Polynomial.eval₂_eq_sum_range, Finset.sum_range_succ, hmo.coeff_natDegree, map_one,
     one_mul] at hg'
   have hn : g.natDegree ≠ 0 := by
@@ -469,8 +468,7 @@ theorem exists_isometric_embedding : ∀ (E : Type) [Field E] [NumberField E] [I
       have hk : (1 : ℝ) ≤ (vV T.V x⁻¹ : ℝ) := by
         have h := hAy
         simp only [GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT, if_neg hy0] at h
-        by_contra hlt
-        push_neg at hlt
+        by_contra! hlt
         have hk0 : vV T.V x⁻¹ ≤ 0 := by
           have : vV T.V x⁻¹ < 1 := by exact_mod_cast hlt
           omega

@@ -646,8 +646,7 @@ theorem finPart_es_mem {es : AE D} {PP : Formalism.L2.DIV.Pl D.host.E} (h : Form
   have hmax : (conjI PP.asIdeal).IsMaximal := by
     rw [GlobalTheory.LiftIdeal.conjI_eq_map D]; exact GlobalTheory.LiftIdeal.isMaximal_map D PP
   obtain ⟨s, hs, hsP⟩ : ∃ s ∈ conjI PP.asIdeal, s ∉ PP.asIdeal := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hne (hmax.eq_of_le PP.isPrime.ne_top hc)
   have hs0 : s ≠ 0 := fun e => hsP (e ▸ PP.asIdeal.zero_mem)
   have hsE : (s : D.host.E) ≠ 0 := fun e => hs0 (RingOfIntegers.coe_eq_zero_iff.1 e)

@@ -517,8 +517,7 @@ theorem isSelfDualC_lineLat : ∀ (D : D7) (S : HSp D) (ζ : Fin S.rank → D.ho
   refine ⟨⟨?_, ?_⟩, dual⟩
   · exact (FractionalIdeal.fg_of_isNoetherianRing le_rfl 𝔄).map _
   · obtain ⟨c, hc, hc0⟩ : ∃ c ∈ 𝔄, c ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       have h1m : (1 : D.host.E) ∈ 𝔄 := by
         rw [h𝔄]
         intro c hc

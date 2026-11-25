@@ -84,8 +84,7 @@ theorem l_dvd_of_not_isUnit (a : ℕ) [NeZero a] (x : Wq l a) (h : ¬ IsUnit x) 
 theorem exists_unit (s : bk.S) (hs : ψ bk s ≠ 0) :
     ∃ (k : ℕ) (s₁ : bk.S), IsUnit s₁ ∧ ψ bk s = ψ bk X ^ k * ψ bk s₁ := by
   have hex : ∃ i, IsUnit (coeff i s) := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     have hd : ∀ i, (l : Wq l bk.a) ∣ coeff i s := fun i => l_dvd_of_not_isUnit bk.a _ (hno i)
     choose c hc using hd
     have : s = (l : bk.S) * PowerSeries.mk c := by

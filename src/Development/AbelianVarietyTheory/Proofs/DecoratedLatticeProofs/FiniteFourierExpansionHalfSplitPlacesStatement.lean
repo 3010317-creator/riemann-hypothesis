@@ -130,8 +130,7 @@ theorem brk_sum_reps_orth : ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (H : 
   · rw [if_neg hwB]
     have hnd : w ∉ Formalism.L2.Th1.H.dualLat H B := by rw [sdB]; exact hwB
     have hex : ∃ y₀ ∈ B, ¬ ∃ m : ℤ, Formalism.L2.Th1.H.altE H w y₀ = (m : ℝ) := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       exact hnd (fun y hy => hcon y hy)
     obtain ⟨y₀, hy₀B, hy₀⟩ := hex
     exact char_sum_zero hSB (fun y => brk H y w) (fun u v => brk_add_left H u v w)

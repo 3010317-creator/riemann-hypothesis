@@ -1538,8 +1538,7 @@ theorem exists_normCoeff_not_mem {A B : Type} [CommRing A] [IsDomain A] [IsInteg
     apply hinj
     rw [Monic, leadingCoeff_map_of_injective hinj] at h1
     simpa using h1
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
 
   have hcoeff : ∀ j < P.natDegree, P.coeff j ∈ p := by
     intro j hj

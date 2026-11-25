@@ -539,8 +539,7 @@ variable {K Γ V : Type} [Field K] [Group Γ] [AddCommGroup V] [Module K V] in
 private theorem exists_end_apply_eq_of_ne_zero {F U : Type} [Field F] [AddCommGroup U]
     [Module F U] {w : U} (hw : w ≠ 0) (u : U) : ∃ T : Module.End F U, T w = u := by
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual F U, φ w ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hw ((Module.forall_dual_apply_eq_zero_iff F w).mp h)
   exact ⟨(φ w)⁻¹ • φ.smulRight u, by simp [smul_smul, inv_mul_cancel₀ hφ]⟩
 

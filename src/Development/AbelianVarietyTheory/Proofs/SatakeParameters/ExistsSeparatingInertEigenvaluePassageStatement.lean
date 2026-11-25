@@ -637,8 +637,7 @@ theorem exists_inert_passage : HoweUnram → ∀ {D : D7} {G : Type} [Group G] [
   · intro j p hp p' hp' hk
     obtain ⟨k0, hk0⟩ := hk
     by_cases hC : Cons j p.2 ∧ Cons j p'.2
-    · by_contra hcon
-      push_neg at hcon
+    · by_contra! hcon
       obtain ⟨hw, ha⟩ := hspec j _ hC.1
       obtain ⟨hw', ha'⟩ := hspec j _ hC.2
       have := (key j _ _ _ _ _ _ hw hw' k0.1).2 (fun y => by

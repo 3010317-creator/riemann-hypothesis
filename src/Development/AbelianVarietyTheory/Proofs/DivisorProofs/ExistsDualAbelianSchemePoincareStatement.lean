@@ -748,8 +748,7 @@ namespace GlobalTheory.ReducedNormalisation
 theorem exists_mem_others_not_mem {R : Type} [CommRing R] {ι : Type} [Fintype ι] [DecidableEq ι]
     (p : ι → Ideal R) (hp : ∀ i, (p i).IsPrime) (hmin : ∀ i j, p i ≤ p j → i = j) (i : ι) :
     ∃ a : R, a ∉ p i ∧ ∀ j, j ≠ i → a ∈ p j := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have hle : (Finset.univ.erase i).inf p ≤ p i := by
     intro a ha
     by_contra hai

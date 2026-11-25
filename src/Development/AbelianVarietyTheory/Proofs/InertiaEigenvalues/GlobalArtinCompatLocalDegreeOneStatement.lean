@@ -467,8 +467,7 @@ theorem integral_of_sq_sub_integral (E E' : Type) [Field E] [NumberField E] [Fie
     refine (Valuation.map_sum_le _ fun i _ => ?_)
     rw [Algebra.smul_def, map_mul]
     exact mul_le_one' (hc _ (hε i)) (hb i)
-  by_contra h
-  push_neg at h
+  by_contra! h
   have h2 : w''.valuation E' (ε * ε) ≤ w''.valuation E' ε := by
     have : ε * ε = ε + (ε * ε - ε) := by ring
     rw [this]

@@ -699,8 +699,7 @@ theorem unrAt_of_isSpherical_twist : ∀ (E : Type) [Field E] [NumberField E] [I
     rw [map_smul, ← h1, smul_smul, ← Units.val_mul, inv_mul_cancel, Units.val_one, one_smul]
   by_contra hne
   obtain ⟨u, hu, hξu⟩ : ∃ u, Formalism.L2.Host.IsUnitAt w u ∧ ξ.loc w u ≠ 1 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hne h
   have hall := _root_.GlobalTheory.CartanCoinv.translate_mem_twKer E w a π.V (π.locRep w) (ξ.loc w) u ha hu hξu y hy
   let Wl : Submodule ℂ π.V := ⨅ g, (twKer (π.locRep w) (GlobalTheory.LFun.KGL w (n := a)) 1).comap (π.locRep w g)
@@ -920,8 +919,7 @@ theorem GlobalTheory.ContraPair.isSpherical_twist_of_dualIsConjBy : ∀ (E : Typ
   have hsat : GlobalTheory.LFun.HasSatGL w (π.locRep w) B0 := (CG.hasSat_mk π w B0).1 hB0
   obtain ⟨x, hx, hx0⟩ := (Submodule.ne_bot_iff _).1 hsat.1
   obtain ⟨y, hy⟩ : ∃ y, B y x ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hx0 (hB2 x h)
   have hw : conjSrc (IsCMField.complexConj E).toRingEquiv w = w := by
     by_contra h

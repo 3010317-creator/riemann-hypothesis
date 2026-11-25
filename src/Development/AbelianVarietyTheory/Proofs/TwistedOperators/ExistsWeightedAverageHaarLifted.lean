@@ -459,8 +459,7 @@ theorem exists_open_fix_translate_source : ∀ (D : D7) (ψ : AddChar (AF D.host
   have key : ∃ n : ℕ, ∀ κ ∈ GfC S, GlobalTheory.Member.FinCong S n.factorial κ →
       ∃ l ∈ (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True),
         actO S T κ 1 u = u + (2 * (2 * 2) * M * M) • l := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     choose k hk hkc hkne using hne
     have ht := GlobalTheory.SplitCharTrivial.tendsto_one_of_finCong (k := k) hk hkc
     obtain ⟨n, hn⟩ := (ht.eventually hev').exists

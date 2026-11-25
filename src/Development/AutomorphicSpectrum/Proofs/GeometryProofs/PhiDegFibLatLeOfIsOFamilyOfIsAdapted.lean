@@ -272,8 +272,7 @@ theorem exists_max_det {n : ℕ} (E : Submodule (𝓞 L) (Fin n → 𝓞 L)) (hD
     norm_pos_iff.2 (fun h => ha0 (hj'inj (by rw [h, map_zero])))
   obtain ⟨v, hvE, hv⟩ : ∃ v : Fin n → Fin n → 𝓞 L, (∀ i, v i ∈ E) ∧
       ‖(j.comp (algebraMap (𝓞 L) L)) a‖ ≤ ‖(j.comp (algebraMap (𝓞 L) L)) (Matrix.of v).det‖ := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hall : ∀ x ∈ detIdeal E, ‖(j.comp (algebraMap (𝓞 L) L)) x‖ < ‖(j.comp (algebraMap (𝓞 L) L)) a‖ := by
       intro x hx
       induction hx using Submodule.span_induction with

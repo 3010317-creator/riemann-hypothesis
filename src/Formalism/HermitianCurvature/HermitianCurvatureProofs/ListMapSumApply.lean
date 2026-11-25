@@ -48,8 +48,7 @@ theorem toFS (D : RealPlaceData k r Wp Wq) {nf : ℕ} (fib : Fin nf → Mat k r 
         unfold Good
         refine ⟨?_, hes, T.word_lie⟩
         intro l hl
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         obtain ⟨ha, hb⟩ := hab l hcon.1 hcon.2
         rcases hl with hl | hl
         · exact hl ha

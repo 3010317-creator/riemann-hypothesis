@@ -716,8 +716,7 @@ theorem spectral_pairing_orbital_membership : RDSPJFMem := by
       exact hεle g (subset_tsupport _ hg)
   refine ⟨(radial_orbital_niceness k r Wp Wq D F hnice).1, ?_⟩
   intro g _ hne
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   apply hne
   show ∫ p, _ ∂D.μSS = 0
   refine integral_eq_zero_of_ae ?_

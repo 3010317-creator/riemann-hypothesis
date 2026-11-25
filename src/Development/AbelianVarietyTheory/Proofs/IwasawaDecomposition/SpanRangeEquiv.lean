@@ -1112,8 +1112,7 @@ theorem exists_localAddChar_lifting_residueChar : ∀ (D : D7) (s : ReciprocityT
     show ψ' (φ ⟨x, hx1⟩) = 1
     rw [e2, AddChar.map_zero_eq_one]
   · obtain ⟨y, hy⟩ : ∃ y, ψ' y ≠ 1 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       apply hne
       ext y
       rw [hc y, AddChar.one_apply]

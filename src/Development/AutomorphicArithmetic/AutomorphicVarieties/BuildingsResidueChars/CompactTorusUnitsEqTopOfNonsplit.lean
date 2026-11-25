@@ -92,8 +92,7 @@ private theorem int_of_norm_one {O K : Type} [CommRing O] [IsDomain O] [IsDiscre
       field_simp
       linear_combination (-4) * hxy
     obtain ⟨t, ht⟩ : ∃ t : O, algebraMap O K t = QuadraticAlgebra.trace e := by
-      by_contra hne
-      push_neg at hne
+      by_contra! hne
       have hTd : QuadraticAlgebra.trace e = 2 * e.re + τ * e.im := QuadraticAlgebra.trace_def e
       set T := QuadraticAlgebra.trace e with hTdef
       have hT0 : T ≠ 0 := fun h0 => hne 0 (by rw [map_zero, h0])

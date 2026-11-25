@@ -844,8 +844,7 @@ theorem fibre : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (lo
   have hLG := LatLoc.lattices_local_global D Z
   haveI : Infinite (PlF D) := GlobalTheory.LvT.Inh.ResFin.infinite_places D.host.F
   obtain ⟨p₀, hp₀⟩ : ∃ p : PlF D, p ∉ P := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact Set.infinite_univ (α := PlF D) (P.finite_toSet.subset fun p _ => h p)
   have hΛ₀full : Submodule.IsFullLattice D.host.E Λ₀ :=
     full_of_local_span Z Λ₀ hΛ₀ p₀ (isLat D Z FP p₀ (d0 p₀) _ (hΛ₀t p₀ hp₀)).2

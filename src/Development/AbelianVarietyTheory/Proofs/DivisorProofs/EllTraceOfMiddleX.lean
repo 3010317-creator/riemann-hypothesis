@@ -731,8 +731,7 @@ theorem boundT : BoundT := by
   refine ⟨max b (max (1 / a) 1), ?_⟩
   intro τ hτ hbd j
   have col : ∃ i, J i j ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have : J.det = 0 := Matrix.det_eq_zero_of_column_eq_zero j hc
     rw [this] at hdet
     exact not_isUnit_zero hdet
@@ -741,8 +740,7 @@ theorem boundT : BoundT := by
   have hτ2 := norm_entry J τ hτ i j hij
   rcases lt_trichotomy ‖l j‖ 1 with hlt | heq | hgt
   · have hli : 1 < ‖l i‖ := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       have h0 : 0 ≤ ‖l j‖ := norm_nonneg _
       nlinarith
     have ha' := (hbd i hli).1

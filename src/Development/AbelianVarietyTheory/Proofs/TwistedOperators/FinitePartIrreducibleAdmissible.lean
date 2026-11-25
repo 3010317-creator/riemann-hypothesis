@@ -758,15 +758,13 @@ theorem span_values_dense : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar
   rcases hπ.irred.2 _ hsub with h | h
   · exfalso
     obtain ⟨Φ, hΦ, hΦ0⟩ : ∃ Φ ∈ N.toSubmodule, Φ ≠ 0 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact hN (Subrepresentation.toSubmodule_injective (eq_bot_iff.2 fun Φ hΦ => (Submodule.mem_bot ℂ).2 (hc Φ hΦ)))
     have : ((Φ : homDS M π ⊤) : ContinuousMultilinearMap ℂ M.H H) ≠ 0 := by
       intro e
       exact hΦ0 (Subtype.ext (Subtype.ext e))
     obtain ⟨y, hy⟩ : ∃ y, ((Φ : homDS M π ⊤) : ContinuousMultilinearMap ℂ M.H H) y ≠ 0 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact this (ContinuousMultilinearMap.ext hc)
     have hmem : ((Φ : homDS M π ⊤) : ContinuousMultilinearMap ℂ M.H H) y ∈ W.topologicalClosure :=
       W.le_topologicalClosure (Submodule.subset_span ⟨Φ, hΦ, y, rfl⟩)
@@ -930,8 +928,7 @@ theorem irreducible [CompleteSpace H] (hπ : IsIrrUnitary π) (hD : HasDSComp M 
 
   have hne : ∃ w : smoothPart (finPartDS M hU), w ≠ 0 := by
     obtain ⟨T, -, -, hTd⟩ := GlobalTheory.T.irreducibleUnitaryRep_eq_finiteSmoothPart_tensor_discreteSeries D V S M H π hπ hD hU
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h0 : Submodule.span ℂ {v | ∃ w y, v = T w y} = ⊥ := by
       rw [Submodule.span_eq_bot]
       rintro _ ⟨w, y, rfl⟩

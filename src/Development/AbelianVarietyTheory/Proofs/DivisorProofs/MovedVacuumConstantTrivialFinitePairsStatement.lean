@@ -225,8 +225,7 @@ theorem reads_smul_const_unique : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) 
   intro D ψ θ S T a d hS hT cc δ r hs G f c c' hG h1 h2
   subst hS hT
   obtain ⟨Y, hY⟩ : ∃ Y, G Y ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hG (funext hc)
   have hδ : δ ≠ 0 := delta_ne_zero hs.crv
   have hr : r ≠ 0 := IsScale.ne_zero hs.crv.1.1 hs.scale

@@ -129,8 +129,7 @@ theorem main : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing
   have hL2 : Laws2 := GlobalTheory.abelianSchemeLaws_all.2
   have hB := GlobalTheory.Ex.brFam hL hL2 V D.toPre D.psi_even D.tau_bimult C N ν 1 le_rfl
   obtain ⟨x, hx0⟩ : ∃ x, N.th x ≠ 0 := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     obtain ⟨s, f0, hf0, hne⟩ := hB.2.2.2.1
     obtain ⟨c', hc'⟩ := hB.2.2.2.2.1 s f0 hf0
     refine hne ?_

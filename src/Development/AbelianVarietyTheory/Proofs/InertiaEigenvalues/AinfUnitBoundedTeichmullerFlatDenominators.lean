@@ -94,8 +94,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (a : Ainf
     rw [WittVector.constantCoeff_apply, inclW, WittVector.map_coeff, h, map_zero] at h1
     exact not_isUnit_zero h1
   have hv1 : PI.ArtSch.valb l bk.flat < 1 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact flat_not_isUnit bk (isUnit_of_dvd_one
       (GlobalTheory.ArtinSchreierTilt.tiltDiv l 1 bk.flat (by rw [map_one]; exact h)))
   have hv0 : 0 < PI.ArtSch.valb l (a.coeff 0) := by

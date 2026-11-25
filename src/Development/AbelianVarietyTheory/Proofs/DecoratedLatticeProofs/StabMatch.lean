@@ -319,8 +319,7 @@ theorem colMul_eq {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (j : Fin ρ
 theorem mem_idAt_of_colMul {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (j : Fin ρ) {L : Lat S}
     {P : GlobalTheory.FinPl.Pl D → Prop} {a : AE D} (h : colMul d.jX j a ∈ latV S L P) : a ∈ idAt D P := by
   obtain ⟨k, hk⟩ : ∃ k, d.e k j ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact col_ne_zero d j (funext hc)
   have h1 : a * incA D (d.e k j) ∈ idAt D P := GlobalTheory.FinPlLoc.latV_idAt h k
   have h2 := (idAt D P).mul_mem_right (incA D (d.e k j)⁻¹) h1

@@ -726,8 +726,7 @@ theorem UpperTheory.V.Fr.alg_vertex :
   have off : ∀ (L : List (F.G0 × Fin n × Fin n)) (j : ℤ),
       (L.map (fun s => w n s.2.1 - w n s.2.2)).sum = j → j ≠ 0 → ∃ s ∈ L, s.2.1 ≠ s.2.2 := by
     intro L j hL hj
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hj
     rw [← hL]
     apply List.sum_eq_zero

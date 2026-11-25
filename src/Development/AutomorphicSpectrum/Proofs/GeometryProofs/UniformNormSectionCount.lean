@@ -459,8 +459,7 @@ theorem one_le_of_bounds {P Q C' r B : ℝ} (hQ : 0 < Q) (hP : 0 ≤ P) (h1 : Q 
   have hB : 0 < B := lt_of_lt_of_le (div_pos hPpos hQ) h2
   have h3 : P ≤ B * Q := (div_le_iff₀ hQ).1 h2
   have h4 : P ≤ B * (C' * r * P) := h3.trans (mul_le_mul_of_nonneg_left h1 hB.le)
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have h5 : B * C' * r * P < 1 * P := mul_lt_mul_of_pos_right hlt hPpos
   have e : B * (C' * r * P) = B * C' * r * P := by ring
   linarith
@@ -1079,8 +1078,7 @@ theorem UpperTheory.Reformulated.B.DYhc4.main :
   haveI : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := K)
   have hj : p.jacobson = p := IsJacobsonRing.out' p hp.isRadical
   have hex : ∃ m : Ideal A, p ≤ m ∧ m.IsMaximal ∧ b ∉ m := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hb
     rw [← hj]
     refine Ideal.mem_sInf.2 ?_

@@ -269,8 +269,7 @@ theorem UpperTheory.V.Fr.preconnected_rank_two :
   obtain ⟨ξb, hbF, hbt, hbv⟩ := pt_ex hF S (ResidueField O) hb
   let qb : PrimeSpectrum S.A := ⟨RingHom.ker ξb, RingHom.ker_isPrime ξb⟩
   have hnz : ∃ g, b g ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hb0 (funext hc)
   obtain ⟨g1, hg1⟩ := hnz
   have hqb : qb ∈ S.BB := by

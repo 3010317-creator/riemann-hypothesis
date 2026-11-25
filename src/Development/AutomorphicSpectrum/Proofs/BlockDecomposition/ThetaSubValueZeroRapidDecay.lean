@@ -428,8 +428,7 @@ theorem exists_decay_boundC_tensor (w : InfinitePlace k) (φ : 𝓢(ι → mixed
 
     have hnorm : (t : ℝ) * κ ≤ (1 + ‖z‖) ^ n := by
       obtain ⟨j, hj⟩ : ∃ j, ξ j ≠ 0 := by
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         exact hξ0 (funext hcon)
       have h1 : (t : ℝ) * κ₀ ≤ mixedEmbedding.norm (e * mixedEmbedding k (ξ j)) := by
         rw [map_mul, norm_infC_moduleSection]

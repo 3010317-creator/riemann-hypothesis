@@ -221,8 +221,7 @@ lemma comm_casimirK (T : Module.End ℂ V) (hT : ∀ a b, E a b * T = T * E a b)
   rw [mul_assoc, hT b a, ← mul_assoc, hT a b, mul_assoc]
 
 lemma exists_eig_ne (h : Mod ε E) [Nontrivial V] : ∃ μ : ℝ, ∃ v : V, v ≠ 0 ∧ Eig ε E μ v := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   have hb : Submodule.span ℂ {v | ∃ μ : ℝ, Eig ε E μ v} = ⊥ := by
     rw [Submodule.span_eq_bot]
     rintro v ⟨μ, hv⟩

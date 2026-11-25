@@ -88,8 +88,7 @@ theorem exists_isom_vec : ∀ {K : Type} [Field K] [NumberField K] [StarRing K] 
   intro K _ _ _ S ok G Γ W _ _ _ _ ι σ ρ J χ P c d H hne
   obtain ⟨φ, hφ⟩ := hne
   obtain ⟨k, hk⟩ : ∃ k, φ.1 (S.outSec.rep k) ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hφ ((S.res ok).map_eq_zero_iff.1 (Subtype.ext (funext h)))
   set x := φ.1 (S.outSec.rep k) with hx
   have vi := (S.res ok φ).2 k

@@ -259,8 +259,7 @@ theorem GlobalTheory.ChainTw.invFam_bounded : ∀ D : D7, ForStageQ D fun c _ j 
   have hsd : IsSelfDualC s.V s.Λ := hflat.selfDual
   obtain ⟨hu0, hpar⟩ := hu
   obtain ⟨v0, hv0⟩ : ∃ v, PiLocalization₂.val u v ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hu0 (Subtype.ext (LinearMap.ext fun v => by simpa using h v))
   have hP := hpar v0 hv0
   have hcm := GlobalTheory.AdelicU.isCMExt_host D

@@ -471,8 +471,7 @@ theorem exists_scalar_inv_at : ∀ (F E : Type) [Field F] [NumberField F] [Field
     · exact_mod_cast sub_eq_zero.1 h
     · exact absurd h (mul_ne_zero two_ne_zero hξ0)
   obtain ⟨m, hm⟩ : ∃ m : ℕ, ¬ gv.charpoly.IsRoot (ι (lam m)) := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     exact Set.infinite_range_of_injective (hι.comp hlam) (hfin.subset (by rintro _ ⟨m, rfl⟩; exact hcon m))
   set l := lam m with hl
   have hl1 : l ≠ 1 := by

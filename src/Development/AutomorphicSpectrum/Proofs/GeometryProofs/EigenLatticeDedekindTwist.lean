@@ -70,8 +70,7 @@ private theorem exists_mul_eq_one_of_dedekind_ideal_ne_bot {Ω : Type} [Field Ω
     obtain ⟨o, ho⟩ := Ideal.mem_span_singleton'.mp hmem
     refine ⟨o, ?_⟩
     rw [← mul_div_assoc, ← map_mul, ← ho, map_mul, mul_div_cancel_right₀ _ hσx]
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   let C : O → Prop := fun y => ∃ h : σ y / σ x ∈ R, (⟨_, h⟩ : R) ∈ IsLocalRing.maximalIdeal R
   have hx : x ∈ 𝔡 * 𝔞 := h𝔞 ▸ Ideal.mem_span_singleton_self x
   have hC : C x := by

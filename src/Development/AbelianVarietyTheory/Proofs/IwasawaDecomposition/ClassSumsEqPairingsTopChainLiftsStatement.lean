@@ -553,8 +553,7 @@ theorem exists_vec_prod_ne {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (M 
   classical
   have hτ : ∀ τ, ∃ x : M.sm τ, x ≠ 0 := by
     intro τ
-    by_contra hz
-    push_neg at hz
+    by_contra! hz
     apply hpr
     have hs : ∀ s : SmT M, s = 0 := by
       intro s

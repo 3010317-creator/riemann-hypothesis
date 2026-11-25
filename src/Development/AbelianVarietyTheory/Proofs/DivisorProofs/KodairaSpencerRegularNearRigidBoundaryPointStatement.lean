@@ -1005,8 +1005,7 @@ theorem exists_unit_mul_eq_of_flat {A R : Type} [CommRing A] [CommRing R] [IsLoc
     Module.Flat.isTrivialRelation_of_sum_smul_eq_zero hrel
   obtain ⟨k, a, y, hx, hf⟩ := ht
   obtain ⟨j, hj⟩ : ∃ j, IsUnit (ρ (a 0 j)) := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     have h1 : (1 : R) ∈ maximalIdeal R := by
       have := hx 0
       simp only [Matrix.cons_val_zero] at this

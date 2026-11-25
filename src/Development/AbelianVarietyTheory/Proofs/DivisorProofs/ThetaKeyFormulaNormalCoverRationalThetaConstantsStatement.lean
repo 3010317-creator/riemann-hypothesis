@@ -263,15 +263,13 @@ theorem pow_div_mem_of_esymm_pow_div_mem (K : Type) [Field K] (V : ValuationSubr
     intro y
     rw [← V.valuation_le_one_iff, ← hv, map_div₀, div_le_one₀ (zero_lt_iff.mpr hvc)]
   rw [mem_iff]
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   rw [Valuation.map_pow] at hlt
   have key : ∀ k, 1 ≤ k → k ≤ Multiset.card s → v (s.esymm k) < v (x a) ^ k := by
     intro k hk1 hkn
     obtain ⟨hkD, hmem⟩ := h k hk1 (hcard ▸ hkn)
     rw [mem_iff, Valuation.map_pow] at hmem
-    by_contra hge
-    push_neg at hge
+    by_contra! hge
     have hp : (v (x a) ^ k) ^ (D / k) ≤ v (s.esymm k) ^ (D / k) := pow_le_pow_left₀ zero_le' hge _
     rw [← pow_mul, Nat.mul_div_cancel' hkD] at hp
     exact absurd (hp.trans hmem) (not_le.mpr hlt)

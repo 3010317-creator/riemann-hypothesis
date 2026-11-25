@@ -1118,8 +1118,7 @@ theorem valued_snd_eq_one {p : ℕ} [Fact p.Prime] (G : HTGroup p) (K : Subgroup
     | succ n ih => rw [pow_succ, hmul, ih, pow_succ]
   have hle : ∀ a ∈ K, F a ≤ 1 := by
     intro a ha
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt C hlt
     have h1 := hC (a ^ n) (K.pow_mem ha n)
     rw [Real.norm_eq_abs, abs_of_nonneg (norm_nonneg _)] at h1

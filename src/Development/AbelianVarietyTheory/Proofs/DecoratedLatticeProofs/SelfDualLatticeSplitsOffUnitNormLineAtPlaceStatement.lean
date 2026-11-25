@@ -195,8 +195,7 @@ theorem splitsAt : ∀ (D : D7) (S A L : HSp D) (o : OrthDec S A L) (ζ : Fin L.
   · intro hyM
     have hs : ∀ j k : Fin L.rank, j = k := fun j k => Fin.ext (by have := hζ.1; omega)
     obtain ⟨i, hi⟩ : ∃ i, ζ i ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       apply hζ.2
       rw [show ζ = 0 from funext hcon]
       simp

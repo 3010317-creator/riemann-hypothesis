@@ -308,8 +308,7 @@ theorem inter_cons_pos : ∀ (K : Type) [Field K] (A : AbVar K) (n : ℕ), A.dim
     exact ((genericPoint_spec A.X.left).mem_open_set_iff (nonzeroLocus s).isOpen).2 ⟨y, trivial, hy⟩
   rw [SecCycle.interNum_cons_eq_finsum_mult K A.X.left hp n hX.le M hM (fun _ => L) (fun _ => hL) s hs]
   obtain ⟨x, hx⟩ : ∃ x, x ∉ nonzeroLocus s := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact htop (eq_top_iff.2 fun x _ => h x)
   obtain ⟨w, hw1, hws⟩ := exists_coheight_eq_one_notMem hM s hs hx
   have hfs := (divOfSec hM s hs).finite_support_mult
@@ -492,8 +491,7 @@ theorem exists_sep_of_chart {Y T : Scheme.{0}} (π : Y ⟶ T) (u : T ⟶ Y) (hu 
   refine ⟨fun j => DVR.SecOps.secAdd (s j) (DVR.SecOps.secNeg (DVR.SecOps.secScale (π.appTop.hom (c j)) (s i))),
     fun j h => h0 j ((hiff _ hi j).1 h), fun y hy => ?_⟩
   by_cases hyD : y ∈ Out.nonzeroLocus (s i)
-  · by_contra hno
-    push_neg at hno
+  · by_contra! hno
     have hPy : ∀ j, r j - φ (c j) ∈ (hD.primeIdealOf ⟨y, hyD⟩).asIdeal := fun j => by
       by_contra h
       exact hno j ((hiff y hyD j).2 ((mem_basicOpen_iff_prime hD hyD _).2 h))
@@ -649,8 +647,7 @@ theorem eq_comp_section_of_apply_eq {K L : Type} [Field K] [Field L] {X : Scheme
 theorem exists_apply_ne_origin : ∀ (K : Type) [Field K] (A B : AbVar K) (f : A ⟶ B), f ≠ 0 →
     ∃ a : A.X.left, f.hom.left a ≠ B.origin := by
   intro K _ A B f hf
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   apply hf
   refine ext_of_pt_eq K A B f 0 fun x => ?_
   rw [zero_hom]

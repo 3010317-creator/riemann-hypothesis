@@ -169,8 +169,7 @@ theorem base_data_of_global_term : ∀ (D : D7) (Z : LocDat D), ∀ (u u' : D.wh
   intro p hp
   simp only [Set.mem_setOf_eq] at hp
   simp only [Set.mem_union, Set.mem_setOf_eq]
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   obtain ⟨⟨hpr, hqa⟩, hqb⟩ := hc
   apply hp
   refine ⟨hpr, ?_⟩

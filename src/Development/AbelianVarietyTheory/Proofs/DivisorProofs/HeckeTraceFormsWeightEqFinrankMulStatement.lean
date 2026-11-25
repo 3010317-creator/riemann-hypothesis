@@ -380,8 +380,7 @@ theorem rightReg_dual_ne_zero (lam : InfinitePlace E → DomWeight n) [Nontrivia
     rightReg ℂ (finU (E := E) (n := n)) (Module.Dual ℂ (Wsp lam)) x ≠ 0 := by
   obtain ⟨v, hv⟩ := exists_ne (0 : Wsp lam)
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual ℂ (Wsp lam), φ v ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hv ((Module.forall_dual_apply_eq_zero_iff ℂ v).1 hc)
   intro h
   have := congrFun (LinearMap.congr_fun h (fun _ => φ)) 1
@@ -1134,8 +1133,7 @@ theorem hasWeightAt_of_wInf (lam : InfinitePlace E → DomWeight n) (π : Submod
     (heq : ∀ (x : infU E n) u, f' (wInf lam x.1 u) = RU E n x.1 (f' u)) (v : InfinitePlace E) :
     HasWeightAt π v.embedding (lam v) := by
   obtain ⟨e, he⟩ : ∃ e : ∀ v, nablaSq ℂ n (lam v), f' (PiTensorProduct.tprod ℂ e) ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact h0 (PiTensorProduct.ext (MultilinearMap.ext fun e => by simpa using hc e))
   refine ⟨GlobalTheory.DefU.isIrreducible_sqRep n (lam v), f' ∘ₗ (PiTensorProduct.tprod ℂ).toLinearMap e v, ?_,
     fun a => hπ _, fun x a => ?_⟩

@@ -545,8 +545,7 @@ theorem commute_aeval_of_commute {K V : Type} [Field K] [AddCommGroup V] [Module
 
 theorem natDegree_pos_of_not_isUnit {K : Type} [Field K] {p : K[X]} (hp0 : p ≠ 0)
     (hp : ¬ IsUnit p) : 0 < p.natDegree := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   apply hp
   rw [Polynomial.isUnit_iff_degree_eq_zero, Polynomial.degree_eq_natDegree hp0]
   simp only [Nat.cast_eq_zero]
@@ -565,8 +564,7 @@ theorem exists_conj_cent_le_blockLevi : ∀ (K : Type) [Field K] (ι : Type) [Fi
     rw [Matrix.charpoly_natDegree_eq_dim] at h1
     exact Fintype.card_ne_zero h1
   obtain ⟨p, q, hpq, hp, hq⟩ : ∃ p q, M.charpoly = p * q ∧ ¬ IsUnit p ∧ ¬ IsUnit q := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hirr (irreducible_iff.mpr ⟨hχu, fun p q h => by
       by_contra h'
       push_neg at h'

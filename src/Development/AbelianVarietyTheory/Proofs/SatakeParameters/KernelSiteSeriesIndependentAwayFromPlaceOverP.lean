@@ -1120,8 +1120,7 @@ theorem prime_not_stable : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     rw [h2] at h
     rw [hν, h]
     simp [swapR]
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   let σO : 𝓞 E →+* 𝓞 E := NumberField.RingOfIntegers.mapRingHom (σ : E →+* E)
   have hσP : ∀ a : 𝓞 E, a ∈ P.asIdeal → σO a ∈ P.asIdeal := fun a ha => hcon a (σO a) rfl ha
   have hσs : ∀ s : 𝓞 E, s ∉ P.asIdeal → σO s ∉ P.asIdeal := by

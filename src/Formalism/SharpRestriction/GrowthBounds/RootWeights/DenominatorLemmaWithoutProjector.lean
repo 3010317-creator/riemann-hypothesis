@@ -986,8 +986,7 @@ private theorem degreeZeroWeightsBounded_ellOf {n : ℕ} {K V : Type*} [Field K]
     · linarith
     · push_neg at h0
       obtain ⟨b, hb, hbpos⟩ : ∃ b ∈ Finset.univ.erase a, 0 < ν b := by
-        by_contra hc
-        push_neg at hc
+        by_contra! hc
         have := Finset.sum_nonpos hc
         linarith
       have hba : b ≠ a := Finset.ne_of_mem_erase hb
@@ -997,8 +996,7 @@ private theorem degreeZeroWeightsBounded_ellOf {n : ℕ} {K V : Type*} [Field K]
     · linarith
     · push_neg at h0
       obtain ⟨b, hb, hbneg⟩ : ∃ b ∈ Finset.univ.erase a, ν b < 0 := by
-        by_contra hc
-        push_neg at hc
+        by_contra! hc
         have := Finset.sum_nonneg hc
         linarith
       have hab : a ≠ b := (Finset.ne_of_mem_erase hb).symm

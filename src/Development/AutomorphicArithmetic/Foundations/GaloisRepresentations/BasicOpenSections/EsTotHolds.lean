@@ -645,8 +645,7 @@ private theorem exists_idempotent_approx_at_maximal (V : Type) [CommRing V] [IsD
   · intro m' hm' he
     have hhm' : h ∉ m' := fun hh' => he (m'.mul_mem_left v hh')
     have hex : ∃ α ∈ s, f α ∈ m' := by
-      by_contra hne
-      push_neg at hne
+      by_contra! hne
       have hn := prod_notMem (hP := hm'.isPrime) m' s f hne
       rw [hprod] at hn
       exact hn m'.zero_mem

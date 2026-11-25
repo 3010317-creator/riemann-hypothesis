@@ -1170,8 +1170,7 @@ theorem exists_unit_mem_modul {T : Type} {L : LevCh D T} {sc : Consts} (G : Grid
   classical
   have hex : ∀ u ∈ G.pl.S0, ∃ c ∈ u.asIdeal, c ∉ v.asIdeal := by
     intro u hu
-    by_contra h
-    push_neg at h
+    by_contra! h
     have huv : u = v := HeightOneSpectrum.ext (u.isMaximal.eq_of_le v.isPrime.ne_top h)
     exact hv (huv ▸ hu)
   choose! f hf hfv using hex
@@ -1280,8 +1279,7 @@ theorem flatS_smul {V V₀ W W₀ : HSp D} {ρ σ : ℕ} (dV : HypDec V V₀ ρ)
 theorem exists_mixS_ne {V V₀ W W₀ : HSp D} {ρ σ : ℕ} (dV : HypDec V V₀ ρ) (dW : HypDec W W₀ σ) (s : Step ψ V V₀ W W₀ ρ σ)
     (x : Mx D W.rank ρ) (y : Mx D V₀.rank σ) (F : WO V W → ℂ) (hF : flatS dV dW s x y F ≠ 0) :
     ∃ u : UX D ρ, ∃ w₀, (_root_.I195MixedCoordinates.source dV) W ψ s.vS.μ s.vS.𝓕 F (x ⬝ u.1.1) w₀ ≠ 0 := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   apply hF
   funext w
   have h0 : ∀ u : UX D ρ, GlobalTheory.MixPer.flatFun ψ dV dW s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 x y F w u = 0 := by

@@ -562,11 +562,9 @@ theorem exists_eig_of_low {A : Type} [NormedAddCommGroup A] [InnerProductSpace �
     have h1 := h (b i)
     rw [hTb, inner_smul_right, hone, mul_one, Complex.ofReal_re] at h1
     exact le_trans (by positivity) h1
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hlt : ∀ i, l i < ‖p‖ ^ 2 / (2 * d) := fun i => by
-    by_contra hh
-    push_neg at hh
+    by_contra! hh
     exact hcon _ _ (b.orthonormal.ne_zero i) hh (hTb i)
   obtain ⟨i0⟩ : Nonempty s := by
     by_contra hE

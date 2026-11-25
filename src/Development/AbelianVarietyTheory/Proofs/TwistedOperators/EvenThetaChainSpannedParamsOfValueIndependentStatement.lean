@@ -319,8 +319,7 @@ theorem partPar : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, ForStage
   refine ⟨fun hu0 => ?_, second⟩
   have hu1 : (u : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)) ≠ 0 := fun h => hu0 (Subtype.ext h)
   obtain ⟨v, hv⟩ : ∃ v, PiLocalization₂.val u v ≠ 0 := by
-    by_contra hh
-    push_neg at hh
+    by_contra! hh
     exact hu1 (LinearMap.ext hh)
   obtain ⟨C, hC⟩ := (hval u v).2.1
   have hbdd : (fun g => conj (PiLocalization₂.val u v g)) ∈ GlobalTheory.FinZeta.bddAut s.V := by
@@ -357,8 +356,7 @@ theorem parIndep_even : ∀ D : D7, ParIndep D := by
   intro t a hsum i₀ hi₀
   obtain ⟨hne0, _⟩ := hpar i₀
   obtain ⟨v, hv⟩ : ∃ v, PiLocalization₂.val (x i₀) v ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hne0
     apply Subtype.ext
     apply LinearMap.ext

@@ -904,8 +904,7 @@ theorem GlobalTheory.Core.Deg.exists_termLoop_of_standingHypotheses : ∀ (D : D
     rw [h2v] at hv0
     have hCl0 : (0 : ℝ) < Cl := by linarith
     have hL0 : 0 ≤ large₂.sc.L := by
-      by_contra hneg
-      push_neg at hneg
+      by_contra! hneg
       have : large₂.sc.L / Cl < 0 := div_neg_of_neg_of_pos hneg hCl0
       linarith
     have h72 : large₂.sc.L / Cl ≤ large₂.sc.L / 72 := div_le_div_of_nonneg_left hL0 (by norm_num) hCl

@@ -117,8 +117,7 @@ theorem exists_algForm_ofType : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hcF : ∀ a v, Pairs.jOf W M (c a) v ∈ Fx := Pairs.coeff_mem (Pairs.span_rep W) (R := fun x => RU E n x.1)
     (Pairs.jOf_rep W M) hFx b (by rw [hc]; exact hφK)
   obtain ⟨a, ha⟩ : ∃ a, c a ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hφ0
     rw [← hc, Pairs.total_apply]
     simp [h]

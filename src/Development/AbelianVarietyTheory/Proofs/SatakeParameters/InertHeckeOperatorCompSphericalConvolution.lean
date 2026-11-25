@@ -577,8 +577,7 @@ theorem conv_of (Dv : InertDatum L n v w) (U : Subgroup (GAf L n))
       rw [Function.mem_support] at he
       have h1 : conv K h h' e.out ≠ 0 := fun h0 => he (by rw [h0, zero_smul])
       obtain ⟨d, hd⟩ : ∃ d : GU Dv.σw n ⧸ K, h d.out * h' (d.out⁻¹ * e.out) ≠ 0 := by
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         exact h1 (finsum_eq_zero_of_forall_eq_zero hcon)
       exact hmem d e (left_ne_zero_of_mul hd) (right_ne_zero_of_mul hd)
   have hR1 : (∑ᶠ d : GU Dv.σw n ⧸ K, h d.out • ∑ᶠ e : GU Dv.σw n ⧸ K,

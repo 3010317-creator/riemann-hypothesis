@@ -832,8 +832,7 @@ theorem conj_rot {q : ℕ} (σ : Equiv.Perm (Fin q)) (h : ncyc σ = 1) :
       rw [h1] at h01
       simp at h01
     obtain ⟨x, hx⟩ : ∃ x, σ x ≠ x := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact hne (Equiv.ext hc)
     have hall : ∀ y, σ y ≠ y := fun y hy => hx (((hsc x y).apply_eq_self_iff).mpr hy)
     have hcyc : σ.IsCycle := ⟨x, hx, fun y _ => hsc x y⟩

@@ -141,8 +141,7 @@ theorem overN_finite {E : Type} [Field E] [NumberField E] {n : ℕ} (hn : n ≠ 
 theorem exists_ram {F E K : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [Field K] {σ : K →+* ℂ}
     {μ : Chr F E K} {ξ : Formalism.L2.Host.HChar E} (h : Reads σ μ ξ) {v : HeightOneSpectrum (𝓞 F)} (hv : v ∈ Qprime μ) :
     ∃ Q : HeightOneSpectrum (𝓞 E), Q.under (𝓞 F) = v ∧ ¬ ξ.UnrAt Q := by
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   simp only [Qprime, Set.mem_setOf_eq] at hv
   apply hv
   intro x hx

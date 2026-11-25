@@ -1037,8 +1037,7 @@ end Slice
 
 theorem typeSlice : TypeSlice := by
   intro k _ _ _ _ _ n J hJo hJc χ hχ hcusp a b ε ha hb u hu h
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   classical
   borelize k
   haveI : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
@@ -1104,8 +1103,7 @@ theorem typeSlice : TypeSlice := by
     rw [h1] at this
     simpa using this
   obtain ⟨l₀, hl₀⟩ : ∃ l₀ : Module.Dual ℂ σ.V, l₀ v ≠ 0 := by
-    by_contra H
-    push_neg at H
+    by_contra! H
     exact hv0 ((Module.forall_dual_apply_eq_zero_iff ℂ v).1 H)
   obtain ⟨l, hl, hlv⟩ := GlobalTheory.SuperCusp.exists_smooth_form_eq (N := ⊥) σ.smooth hKo hKc 1
     ((χ.ker.map J.subtype : Subgroup (GL (Fin n) k)) : Set (GL (Fin n) k)) (fun c hc => hc)

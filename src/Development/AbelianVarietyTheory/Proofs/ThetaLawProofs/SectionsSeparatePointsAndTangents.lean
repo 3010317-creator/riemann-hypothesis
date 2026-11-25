@@ -160,8 +160,7 @@ theorem exists_separating (f : X ⟶ Spec (CommRingCat.of k)) {H : LB X} (hH : H
   · exact ⟨s a, hpa, hqa⟩
   obtain ⟨haff, r, hr, hsurj⟩ := hs.2 a
   obtain ⟨b, hb⟩ : ∃ b, valueAt p _ hpa (r b) ≠ valueAt q _ hqa (r b) := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     refine hne (eq_of_valueAt_eq p q haff hpa hqa (RingHom.ext fun x => ?_))
     obtain ⟨F, rfl⟩ := hsurj x
     induction F using MvPolynomial.induction_on with

@@ -227,8 +227,7 @@ theorem partAt_finW_off_mem_hatA : ∀ (D : D7) (S T : HSp D) (Pg Q : Finset (Fo
     have hex : ∀ PP ∈ Pg ∪ Q, ∃ s : 𝓞 D.host.F,
         algebraMap (𝓞 D.host.F) (𝓞 D.host.E) s ∈ PP.asIdeal ∧ s ∉ w.asIdeal := by
       intro PP hPP
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       apply hw PP hPP
       have hle : (HeightOneSpectrum.under (𝓞 D.host.F) PP).asIdeal ≤ w.asIdeal := fun s hs => hcon s hs
       exact HeightOneSpectrum.ext ((HeightOneSpectrum.isMaximal _).eq_of_le w.isPrime.ne_top hle)

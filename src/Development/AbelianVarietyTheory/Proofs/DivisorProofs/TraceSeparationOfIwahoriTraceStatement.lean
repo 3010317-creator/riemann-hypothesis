@@ -377,11 +377,9 @@ theorem exists_intertwining_le (hπ : π.IsIrreducible) (h : IsIsotypicAlg π ρ
       hPr _ (C1.apply_mem_toSubmodule g hb), add_zero, add_zero]
   have hPm : ∀ x, P x ∈ C.toSubmodule := fun x => by simp [P]
   obtain ⟨c, hc0, hcne⟩ : ∃ c ∈ C.toSubmodule, c ≠ 0 := by
-    by_contra hn
-    push_neg at hn
+    by_contra! hn
     exact hC (Subrepresentation.toSubmodule_injective (eq_bot_iff.2 fun x hx => hn x hx))
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   have hall : ∀ φ : π.IntertwiningMap ρ, LinearMap.range φ.toLinearMap ≤ LinearMap.ker P := by
     intro φ
     let ψ : π.IntertwiningMap ρ := ⟨P ∘ₗ φ.toLinearMap, fun g => LinearMap.ext fun n => by
@@ -486,8 +484,7 @@ theorem exists_finset_fixed_away : ∀ (D : D7) (V : HSp D) (u : HeightOneSpectr
   intro D V u W _ _ σ hσa N _ _ π hπ hπa hloc K hK
   have hiso : IsIsotypicAlg π (σ.comp (locFin V u)) := hloc
   obtain ⟨v, hv⟩ : ∃ v : N, v ≠ 0 := by
-    by_contra hn
-    push_neg at hn
+    by_contra! hn
     haveI : Subsingleton N := ⟨fun a b => (hn a).trans (hn b).symm⟩
     exact (bot_ne_top : (⊥ : Subrepresentation π) ≠ ⊤) (Subrepresentation.toSubmodule_injective (Subsingleton.elim _ _))
   let St : Subgroup (Gv V u) :=

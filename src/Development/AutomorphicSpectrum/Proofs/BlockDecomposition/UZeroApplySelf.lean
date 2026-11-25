@@ -440,8 +440,7 @@ theorem cl_zero_one : cl t (0 : Q p d) = 1 := rfl
 theorem exists_not_dvd (a : I p d) (ha : a ≠ ⟨0, fun k => by simp⟩) {m : ℕ} {c : Fin d → ℕ}
     (h : ∀ k, (p : ℚ) ^ m * (a.1 k : ℚ) = c k) : ∃ k, ¬ p ^ m ∣ c k := by
   have : ∃ k, (a.1 k : ℚ) ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact ha (Subtype.ext (funext fun k => Subtype.ext (hc k)))
   obtain ⟨k, hk⟩ := this
   refine ⟨k, ?_⟩

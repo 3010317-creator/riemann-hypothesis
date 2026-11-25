@@ -467,8 +467,7 @@ theorem lattice_sum_le : ∀ (ι : Type) [Fintype ι] [Nonempty ι] (n : ℕ)
 
   have hsep : ∀ w ∈ s, ∀ w' ∈ s, w ≠ w' → ∃ τ, 1 ≤ ‖w τ - w' τ‖ := by
     intro w hw w' hw' hne
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have hmem : w - w' ∈ Λ := Λ.sub_mem (hs w hw).1 (hs w' hw').1
     have hne0 : w - w' ≠ 0 := sub_ne_zero.2 hne
     have h1 := hΛ _ hmem hne0

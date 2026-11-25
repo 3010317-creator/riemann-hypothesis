@@ -206,8 +206,7 @@ theorem continuous_adic (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDoma
             mul_le_mul_of_nonneg_right (h1 _) (by positivity)
         _ = _ := one_mul _
     have hlinv : (l : ℝ)⁻¹ < 1 := inv_lt_one_of_one_lt₀ hl1
-    by_contra hge
-    push_neg at hge
+    by_contra! hge
     have : 1 ≤ ‖f ϖ‖ ^ e := one_le_pow₀ hge
     linarith
   have hcont : ContinuousAt f 0 := by
@@ -277,8 +276,7 @@ theorem exists_constituent_image : ∀ {Γ L : Type} [Group Γ] [Field L] {a n :
     rw [hM, ← Matrix.mulVec_mulVec, hπv]; exact hpV _
 
   have hex : ∃ j, Submodule.map M.mulVecLin (Vs j) ≠ ⊥ := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     obtain ⟨x, hxV, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hV.1
     have hsup : Submodule.map M.mulVecLin ⊤ = ⊥ := by
       rw [← hVs, Submodule.map_iSup]; simp [hne]
@@ -581,12 +579,10 @@ theorem matrix_system_nonzero_solution_descends {k L Γ : Type} [Field k] [Field
   intro hC hAB hQ
   letI := f.toAlgebra
   obtain ⟨i₀, j₀, hij⟩ : ∃ i j, C i j ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hC (Matrix.ext h)
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual k L, φ (C i₀ j₀) ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hij ((Module.forall_dual_apply_eq_zero_iff k (C i₀ j₀)).mp h)
   have key : ∀ (x : k) (y : L), φ (f x * y) = x * φ y := by
     intro x y

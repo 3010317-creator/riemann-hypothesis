@@ -646,8 +646,7 @@ theorem gl_orbit_cpt (A₀ : Matrix (Fin r) (Fin r) k) (hs : A₀.charpoly.Separ
   have hδ : 0 < δ := div_pos (hψpos x0 hx0) (by positivity)
   have hpiece : ∀ X ∈ K, ∃ g ∈ s, δ ≤ ‖D X (cj g.1)‖ := by
     intro X hX
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     have h1 : ψ X ≤ ∑ g ∈ s, δ := by rw [hψdef]; exact Finset.sum_le_sum fun g hg => (hcon g hg).le
     rw [Finset.sum_const, nsmul_eq_mul] at h1
     have h2 : ψ x0 ≤ ψ X := hmin hX

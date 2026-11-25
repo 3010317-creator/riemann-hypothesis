@@ -30,8 +30,7 @@ open scoped Matrix.Norms.L2Operator
 
 theorem exists_theta {k : ℕ} (A : Matrix (Fin k) (Fin k) ℂ) :
     ∃ θ : ℝ, -Complex.exp (θ * Complex.I) ∉ spectrum ℂ A := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have hfin : (spectrum ℂ A).Finite := by
     rw [← AlgEquiv.spectrum_eq (Matrix.toLinAlgEquiv' : Matrix (Fin k) (Fin k) ℂ ≃ₐ[ℂ] _) A]
     exact Module.End.finite_spectrum _

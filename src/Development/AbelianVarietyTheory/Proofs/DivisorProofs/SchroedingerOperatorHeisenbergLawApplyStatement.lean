@@ -94,8 +94,7 @@ theorem norm_le_one (ψ0 : AddChar k ℂ) (hc : Continuous ψ0) (x : k) : ‖ψ0
       simpa using (Subring.natCast_mem (𝒪[k]) m)
     have := hB _ hm
     rwa [show x * (m : k) = m • x by rw [nsmul_eq_mul, mul_comm], AddChar.map_nsmul_eq_pow, norm_pow] at this
-  by_contra h
-  push_neg at h
+  by_contra! h
   obtain ⟨m, hm⟩ := (tendsto_pow_atTop_atTop_of_one_lt h).eventually_gt_atTop B |>.exists
   exact absurd (hpow m) (not_le.mpr hm)
 

@@ -397,8 +397,7 @@ theorem rowPar_of_chain : GlobalTheory.Published.CuspRapidDecay → ∀ {D : D7}
       intro h
       exact hu0 (PiTensorProduct.lift.injective (h.trans (map_zero _).symm))
     obtain ⟨w, hw⟩ : ∃ w, PiLocalization₂.val y w ≠ 0 := by
-      by_contra hh
-      push_neg at hh
+      by_contra! hh
       exact hl0 (LinearMap.ext hh)
     obtain ⟨hl, hh, hb⟩ := hkey y (hy u hu) w
     have hne' : (fun g => conj (PiLocalization₂.val y w g)) ≠ 0 := by

@@ -105,8 +105,7 @@ open GlobalTheory.FockCompare
 theorem vacuum_real_ne_zero : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GlobalTheory.ChiGrid.GridData L sc} (W : G.Weil) {U : Set T} (N : GlobalTheory.FunObj.Std G U) (σ : (D.what₂.Tau → ℂ) →+ AE D), GlobalTheory.FockCompare.Chart W.θ σ → ∀ (t : T) (j : ℕ), j + 1 ≤ D.R.m → ∀ f, IsVacO W.ψ W.θ _ _ (G.cartS W.cart (.top t j)) (G.onT W.cart (.top t j)) (N.latS (.top t j) : Set _) (N.latT (.top t j) : Set _) f → ∃ z : GlobalTheory.FockCompare.RW (G.pT (.top t j)) (G.pS (.top t j)), f (GlobalTheory.FockCompare.iotaW σ (G.pT (.top t j)) (G.pS (.top t j)) z) ≠ 0 := by
   classical
   intro D T L sc G W U N σ h t j hj f hf
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have hψ := hf.1
   have hS : IsSelfDualC (G.pS (.top t j)) (N.latS (.top t j)) :=
     N.selfDual (X := .top j) (show j ≤ D.R.m by omega)

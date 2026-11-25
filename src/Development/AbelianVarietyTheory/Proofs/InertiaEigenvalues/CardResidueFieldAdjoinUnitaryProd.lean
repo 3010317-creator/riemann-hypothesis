@@ -95,8 +95,7 @@ theorem odd_of_involution {k₀ k : Type} [Field k₀] [Field k] [Fintype k₀] 
   have hN := n.2
   obtain ⟨c, hc⟩ := hdvd
   have hc2 : c < 2 := by
-    by_contra hh
-    push_neg at hh
+    by_contra! hh
     nlinarith
   interval_cases c
   · exfalso

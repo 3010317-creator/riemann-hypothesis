@@ -891,8 +891,7 @@ theorem cell_collapse : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : 
       ∃ y ∈ grpAt (c.V (j + 1)) (· ∈ w.Q), ∃ k ∈ K₂, g = r * y * k := by
     intro g hg hne
     have hq : ∃ q₂, F g q₂ ≠ 0 := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       apply hne
       have e : (fun g' : GfC (c.V (j + 1 + 1)) => F g g'.1) = 0 := funext fun g' => hcon g'.1
       have h0 := hfo_spec g hg

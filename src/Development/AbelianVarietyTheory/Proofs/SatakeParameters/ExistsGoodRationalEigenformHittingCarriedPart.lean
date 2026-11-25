@@ -606,8 +606,7 @@ theorem core_witness (j : V →ₛₗ[σ] Hv) (θ : Hv →ₗ[ℂ] Hw)
   have hy0 : LinearMap.adjoint θ w ≠ 0 := fun h0 => hy (by rw [h0, map_zero])
   obtain ⟨sy, hsy, hyE⟩ := exists_rational_eig j hli op T hint hc hs Gd hG (lab c) hyS hy0 fun i => hTy c i w hw
   obtain ⟨x, hxS, hxθ⟩ : ∃ x ∈ (Gd ⊓ eigAt op sy : Submodule K V), θ (j x) ≠ 0 := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     have h1 : Submodule.span ℂ (j '' ((Gd ⊓ eigAt op sy : Submodule K V) : Set V)) ≤ LinearMap.ker θ :=
       Submodule.span_le.2 (by rintro _ ⟨x, hx, rfl⟩; exact hno x hx)
     exact hy (h1 hyE)

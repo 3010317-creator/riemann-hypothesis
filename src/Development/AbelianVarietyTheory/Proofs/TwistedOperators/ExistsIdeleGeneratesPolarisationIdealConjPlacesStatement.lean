@@ -137,8 +137,7 @@ theorem exists_gen_avoid {R K ι : Type} [CommRing R] [IsDedekindDomain R] [Fiel
   obtain ⟨s, hsJ, hsQ⟩ : ∃ s ∈ J, ∀ i ∈ Qs, s ∉ Q i := by
     rcases Qs.eq_empty_or_nonempty with rfl | ⟨i0, hi0⟩
     · exact ⟨0, J.zero_mem, by simp⟩
-    · by_contra hcon
-      push_neg at hcon
+    · by_contra! hcon
       have hsub : (J : Set R) ⊆ ⋃ i ∈ (Qs : Set ι), (Q i : Set R) := by
         intro x hx
         obtain ⟨i, hi, hxi⟩ := hcon x hx

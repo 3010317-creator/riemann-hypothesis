@@ -813,8 +813,7 @@ theorem main : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTh
     have h2 : ((‖θ x‖ ^ 2 : ℝ) : ℂ) = ((c * ‖x‖ ^ 2 : ℝ) : ℂ) := by
       first | (push_cast; exact h)
     exact Complex.ofReal_injective h2
-  by_contra hcn
-  push_neg at hcn
+  by_contra! hcn
   nlinarith [sq_nonneg ‖x‖, sq_pos_of_pos hyn]
 
 end GlobalTheory.NRows.LamUsedProof.L0

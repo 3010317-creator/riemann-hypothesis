@@ -150,8 +150,7 @@ theorem eq_of_idemOf_eq {K G : Type} [Field K] [CharZero K] [Group G] [Fintype G
   classical
   by_contra hne
   obtain ⟨χ, hχX, hχY⟩ : ∃ χ ∈ X, χ ∉ Y := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hne (Finset.Subset.antisymm hc hYX)
   have hsplit : idemOf (X \ Y) + idemOf Y = idemOf X := by
     unfold idemOf

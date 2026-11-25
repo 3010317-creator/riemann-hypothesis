@@ -508,8 +508,7 @@ theorem PositivityTheory.Xgn.t_flatten_lines : ∀ (O : Type) [CommRing O] [IsDo
   choose a M v hv using key
   have hnz : ∀ j, ∃ l, v j l ≠ 0 := by
     intro j
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     apply ((hΓ j).2 c0 hm0).1
     rw [hv j c0 hm0, eq_bot_iff]
     unfold spanOver

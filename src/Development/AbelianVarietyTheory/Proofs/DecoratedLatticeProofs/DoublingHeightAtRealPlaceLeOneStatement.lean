@@ -203,8 +203,7 @@ theorem norm_det_le_one (a Z c : Matrix (Fin n) (Fin n) ℂ) (hc : c.det ≠ 0) 
     have : ‖a.det‖ ^ 2 * r * (‖c.det‖ * ‖c.det‖) = 2 ^ n * (‖c.det‖ * ‖c.det‖) := by rw [← hn]; ring
     exact mul_right_cancel₀ (by positivity) this
   have h2 : ‖a.det‖ ^ 2 ≤ 1 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     nlinarith
   exact (pow_le_one_iff_of_nonneg (norm_nonneg _) two_ne_zero).1 h2
 

@@ -631,8 +631,7 @@ theorem exists_classSum_fun : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z�
       · have hd' : d ∉ X₁.S.perp (X₁.S.TT X₁.M z₁) := by
           rwa [show X₁.S.TT X₁.M z₁ = X₁.S.perp (X₁.S.HH X₁.M z₁) from rfl, TestBasis.perp_perp]
         have hex' : ∃ τ ∈ X₁.S.TT X₁.M z₁, eStd X₁.S.g _ d τ ≠ 0 := by
-          by_contra hc
-          push_neg at hc
+          by_contra! hc
           exact hd' hc
         obtain ⟨τ₀, hτ₀, h₀⟩ := hex'
         have h₀' : eStd X₁.S.g _ τ₀ d ≠ 0 := by

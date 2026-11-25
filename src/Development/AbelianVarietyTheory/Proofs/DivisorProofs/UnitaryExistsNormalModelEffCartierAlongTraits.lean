@@ -491,8 +491,7 @@ theorem exists_nat_comb_of_infinite {O : Type} [CommRing O] {bar : O → O} {φ 
   have hL : ∀ j, 0 ≤ bb.repr B' (Sum.inl j) := fun j => by
     have e1 := hp n₁ hn₁ j
     have e2 := hM (Sum.inl j)
-    by_contra hneg
-    push_neg at hneg
+    by_contra! hneg
     have : (bb.repr B₀ (Sum.inl j)) ≤ M := by omega
     have : (n₁ : ℤ) * bb.repr B' (Sum.inl j) ≤ - n₁ := by nlinarith
     omega
@@ -600,8 +599,7 @@ theorem exists_finite_cones : ∀ (O : Type) [CommRing O] (bar : O → O) (φ : 
       linarith
     obtain ⟨m, γ, k, cf, hγ, hk, hcf, hkβ⟩ := GlobalTheory.Poinc.Cover.exists_cone O bar φ Y hF _ hβs hβp
     have hγd : ∀ y, y ≠ 0 → 0 < ∑ j, γ j y y := fun y hy => by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       have h0 : ∀ j, γ j y y = 0 := fun j => le_antisymm ((Finset.single_le_sum (fun j _ => hγ.nonneg j y)
         (Finset.mem_univ j)).trans hcon) (hγ.nonneg j y)
       have h1 := LinearMap.congr_fun₂ hkβ y y

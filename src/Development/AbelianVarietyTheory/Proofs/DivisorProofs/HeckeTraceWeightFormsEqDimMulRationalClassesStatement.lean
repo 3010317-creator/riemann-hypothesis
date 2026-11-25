@@ -1215,8 +1215,7 @@ theorem regroup_abstract {G H : Type} [Group G] [Group H] (ι : H →* G) (hι :
     have hc' : D q c ≠ 0 := right_ne_zero_of_mul hc
     obtain ⟨δ, hδ⟩ : ∃ δ : H ⧸ twCent (MonoidHom.id H) c.rep,
         Φ ((Quotient.out q)⁻¹ * ι (Quotient.out δ * c.rep * (Quotient.out δ)⁻¹) * Quotient.out q) ≠ 0 := by
-      by_contra hn
-      push_neg at hn
+      by_contra! hn
       exact hc' (by rw [hD]; simp only; rw [finsum_congr hn]; simp)
     refine ⟨_, hδ, ?_⟩
     change Quot.mk _ (Quotient.out δ * c.rep * (Quotient.out δ)⁻¹) = c

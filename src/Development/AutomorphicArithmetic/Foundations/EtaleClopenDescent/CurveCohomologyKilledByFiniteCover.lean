@@ -538,8 +538,7 @@ theorem UpperTheory.smooth_of_normal_curve_perfectField :
     intro W z hz
     exact ((genericPoint_spec C).mem_open_set_iff W.isOpen).mpr ⟨z, trivial, hz⟩
   have hexists : ∃ z : C, z ≠ genericPoint C := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have hsub : Subsingleton (TopologicalSpace.IrreducibleCloseds C) := by
       refine ⟨fun s t => ?_⟩
       obtain ⟨p, hp⟩ := s.isIrreducible.nonempty

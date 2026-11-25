@@ -138,8 +138,7 @@ theorem eq_zero_of_forall_letterHom {L U D F k : Type} [Field L] [Field U] [AddC
     exact Submodule.mem_iSup_of_mem s (by rw [hE s]; exact hy)
   by_contra hx0
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual U D, φ x ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hx0 ((Module.forall_dual_apply_eq_zero_iff U x).mp h)
   let f : D →ₗ[U] F := (Algebra.linearMap U F) ∘ₗ φ
   have hf : f x ≠ 0 := by

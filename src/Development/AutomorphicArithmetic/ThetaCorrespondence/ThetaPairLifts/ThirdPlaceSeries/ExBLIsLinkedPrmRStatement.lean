@@ -336,8 +336,7 @@ theorem joint_eigen_mem_iSup {ι κ M : Type} [AddCommGroup M] [Module ℂ M]
     (ψ : ι → ℂ) (x : M) (hx0 : x ≠ (0 : M)) (hx : ∀ i, (op i : M → M) x = ψ i • x)
     (hmem : x ∈ ⨆ k, E k) : ∃ k, χ k = ψ := by
   classical
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hstab : ∀ (s : Finset κ) (i : ι), ∀ z ∈ ⨆ k ∈ s, E k, (op i : M → M) z ∈ ⨆ k ∈ s, E k := by
     intro s i z hz
     have hle : (⨆ k ∈ s, E k) ≤ (⨆ k ∈ s, E k).comap (op i) := by
@@ -1554,8 +1553,7 @@ theorem zeTied_of_read : (GlobalTheory.Published.DiscreteSeriesCover ∧ GlobalT
     exact (hFo.op_eq g).trans (congrArg (Y.jA t) hg)
   have hQ : ∃ x f, D.what₂.Bu u (D.jN u (C.eNu u x))
       (D.what₂.iota (Y.tup t) (Y.jA t ((rV0 D A3.A F.P1 F.ψ1 t).mulVec f))) ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     obtain ⟨φ0, F0, hF0, hne⟩ := hnz
     apply hne
     rw [hfac φ0 F0 hF0, iota_starProjection_Qsp D _ F0 hF0]

@@ -115,13 +115,11 @@ theorem exists_finset_generating (Op : Set (Module.End ℂ M)) (Rel : Submodule 
       (↑F : Set M) ⊆ ↑N → N = ⊤ := by
   classical
   obtain ⟨L, hL⟩ := hL
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hx : ∀ F : Finset M, ∃ x, x ∉ stabClosure Op Rel (F : Set M) := by
     intro F
     obtain ⟨N, h1, h2, h3, h4⟩ := hne F
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact h4 (eq_top_iff.2 fun x _ => closure_le h1 h2 h3 (h x))
   choose pick hpick using hx
   have hD : StrictMono fun n => stabClosure Op Rel (↑(chainSet pick n) : Set M) := by

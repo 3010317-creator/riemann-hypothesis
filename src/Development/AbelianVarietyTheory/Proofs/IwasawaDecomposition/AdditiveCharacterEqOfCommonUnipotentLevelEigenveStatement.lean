@@ -342,8 +342,7 @@ variable {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} {V : Type}
 
 theorem eig_unique {F : GAf L n → V} (hF : F ≠ 0) {κ : GAf L n} {c d : ℂ} (h1 : Eig F κ c) (h2 : Eig F κ d) : c = d := by
   obtain ⟨g, hg⟩ : ∃ g, F g ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hF (funext h)
   have : c • F g = d • F g := by rw [← h1 g, ← h2 g]
   exact smul_left_injective ℂ hg this
