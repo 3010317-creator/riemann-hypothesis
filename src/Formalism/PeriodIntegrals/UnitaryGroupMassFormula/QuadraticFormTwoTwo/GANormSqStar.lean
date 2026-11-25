@@ -146,10 +146,7 @@ private theorem gA_inWb_iff (v : Fin (2 * r + k + 1) → ℂ) :
 
 theorem glev_unit {g : Mx k r} (hg : g ∈ Glev k r (Fin.last r)) : g⁻¹ * g = 1 ∧ g * g⁻¹ = 1 := by
   obtain ⟨-, hHH, -, -⟩ := hpkFacts k r
-  have hdet : IsUnit (Hpk k r).det := by
-    have h := congrArg Matrix.det hHH
-    rw [Matrix.det_mul, Matrix.det_one] at h
-    exact isUnit_iff_exists_inv.mpr ⟨_, h⟩
+  have hdet : IsUnit (Hpk k r).det := Matrix.isUnit_det_of_right_inverse hHH
   have hu := ((uHGroup _ (Hpk k r) hdet).2.2 g hg.1).1
   exact ⟨Matrix.nonsing_inv_mul g hu, Matrix.mul_nonsing_inv g hu⟩
 
@@ -170,10 +167,7 @@ theorem glev_inWb {g : Mx k r} (hg : g ∈ Glev k r (Fin.last r)) {v : Fin (2 * 
     rw [← h1, ← h2, glev_herm hh, glev_herm hh]
     exact hv'
   obtain ⟨-, hHH, -, -⟩ := hpkFacts k r
-  have hdet : IsUnit (Hpk k r).det := by
-    have h := congrArg Matrix.det hHH
-    rw [Matrix.det_mul, Matrix.det_one] at h
-    exact isUnit_iff_exists_inv.mpr ⟨_, h⟩
+  have hdet : IsUnit (Hpk k r).det := Matrix.isUnit_det_of_right_inverse hHH
   have hl := (glev_unit hg).1
   have hinv : g⁻¹ ∈ Glev k r (Fin.last r) := by
     simp only [Glev, Set.mem_ofPred_eq]
