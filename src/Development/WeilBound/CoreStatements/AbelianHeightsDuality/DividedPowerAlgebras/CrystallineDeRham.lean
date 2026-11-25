@@ -416,14 +416,6 @@ def Red.ε : h.G U ⋙ h.H U ⟶ 𝟭 _ where
     refine Tag.Hom.ext (Thick.Hom.ext' (AlgHom.ext fun b ↦ ?_))
     exact (rfl : (Tag.Hom.f f).φ b = (Tag.Hom.f f).φ b)
 
-theorem Red.cG_pull1 : Function.Bijective (h.cG U).pull1 := by
-  refine Function.bijective_iff_has_inverse.2 ⟨(h.cH U).pull1, fun c ↦ ?_, fun c ↦ ?_⟩
-  · rw [← CoefMap.pullCohomologyOne_comp]
-    exact ((CoefMap.id _).pullCohomologyOne_eq_of_natTrans ((h.cG U).comp (h.cH U)) (h.η U) (fun _ b ↦ (rfl : b = b)) c).symm.trans
-      (CoefMap.pullCohomologyOne_id c)
-  · rw [← CoefMap.pullCohomologyOne_comp]
-    exact (((h.cH U).comp (h.cG U)).pullCohomologyOne_eq_of_natTrans (CoefMap.id _) (h.ε U) (fun _ b ↦ (rfl : b = b)) c).trans
-      (CoefMap.pullCohomologyOne_id c)
 
 theorem Red.cG_pull2 : Function.Bijective (h.cG U).pull2 := by
   refine Function.bijective_iff_has_inverse.2 ⟨(h.cH U).pull2, fun c ↦ ?_, fun c ↦ ?_⟩
