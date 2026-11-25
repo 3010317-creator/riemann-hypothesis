@@ -57,11 +57,8 @@ theorem one_mem_intGerm {I : Fin 2 → Type} [∀ g, Fintype (I g)] (t : ∀ g, 
   · rw [← map_one (MvPowerSeries.C (σ := WV I) (R := C)), MvPowerSeries.subst_C]
 
 theorem sum_get {α M : Type} [AddCommMonoid M] (l : List α) (f : α → M) :
-    ∑ i : Fin l.length, f (l.get i) = (l.map f).sum := by
-  rw [← List.sum_ofFn]
-  congr 1
-  have h : (fun i : Fin l.length => f (l.get i)) = f ∘ l.get := rfl
-  rw [h, ← List.map_ofFn, List.ofFn_get]
+    ∑ i : Fin l.length, f (l.get i) = (l.map f).sum :=
+  Fin.sum_univ_fun_getElem l f
 
 end SlopeTestRemainingChoices
 
