@@ -61,9 +61,6 @@ abbrev d0 : M →ₗ[R] (G → M) := ReciprocityTheory.Gal.d0 rho
 
 abbrev Bd1 : Submodule R (G → M) := ReciprocityTheory.Gal.B1 rho
 
-theorem mem_contCoboundaries1 (f : G → M) : f ∈ Bd1 rho ↔ ∃ m, ∀ g, f g = rho g m - m :=
-  ReciprocityTheory.Gal.mem_coboundaries1 rho f
-
 abbrev H1 := ReciprocityTheory.Gal.H1 rho
 
 abbrev Z2 : Submodule R (G × G → M) := ReciprocityTheory.Gal.Z2 rho
@@ -71,10 +68,6 @@ abbrev Z2 : Submodule R (G × G → M) := ReciprocityTheory.Gal.Z2 rho
 abbrev d1 : (G → M) →ₗ[R] (G × G → M) := ReciprocityTheory.Gal.d1 rho
 
 abbrev Bd2 : Submodule R (G × G → M) := ReciprocityTheory.Gal.B2 rho
-
-theorem mem_contCoboundaries2 (f : G × G → M) :
-    f ∈ Bd2 rho ↔ ∃ c : G → M, Continuous c ∧ d1 rho c = f :=
-  ReciprocityTheory.Gal.separated_dvr_second_cohomology_mem rho f
 
 abbrev H2 := ReciprocityTheory.Gal.H2 rho
 
