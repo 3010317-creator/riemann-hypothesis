@@ -75,7 +75,6 @@ theorem baseChange_appLE_chartAlgEquiv {R R' : Type} [CommRing R] [CommRing R'] 
   exact congrArg (fun ψ => ψ q) h
 
 
-set_option backward.isDefEq.respectTransparency false in
 theorem comap_map_baseChange {R R' : Type} [CommRing R] [CommRing R'] (N : ℕ) (φ : R →+* R')
     (I : (PSpace R' N).IdealSheafData) (T : ∀ i : Fin (N + 1), Set (MvPolynomial {j // j ≠ i} R'))
     (hT : ∀ i, Ideal.span (chartAlgEquiv R' N i '' T i) = I.ideal ⟨_, isAffineOpen_chart R' N i⟩)
