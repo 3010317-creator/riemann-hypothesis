@@ -75,11 +75,7 @@ private theorem rho_strict {n : ℕ} {κ : Wt n} (hκ : Antitone κ) (w : Equiv.
   have hex : ∃ a b, a < b ∧ (κ ∘ w) a < (κ ∘ w) b := by
     by_contra hcon
     push Not at hcon
-    have hu : Antitone (κ ∘ w) := by
-      intro a b hab
-      rcases hab.lt_or_eq with h | rfl
-      · exact hcon a b h
-      · exact le_rfl
+    have hu : Antitone (κ ∘ w) := antitone_iff_forall_lt.2 hcon
     apply hne
     have h1 := (hdom (κ ∘ w)).2.2.1 hu
     have h2 := (hdom κ).2.2.2.1 w
