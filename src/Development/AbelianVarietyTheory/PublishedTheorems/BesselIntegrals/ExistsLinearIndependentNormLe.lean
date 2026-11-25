@@ -50,11 +50,6 @@ open Module Submodule
 
 namespace GlobalTheory.Published
 
-/-- **Minkowski's second transference theorem**: for any Euclidean lattice `\Lambda` of rank `n`
-and its dual `\Lambda^*`, the product of the successive minima satisfies `1 \le \lambda_i(\Lambda) \lambda_{n-i+1}(\Lambda^*) \le n!`.
-
-Proposed reference:
-[H. Minkowski, *Geometrie der Zahlen*][minkowski1896]. -/
 def SuccMinTransference : Prop :=
   ∀ (n : ℕ) (L : Submodule ℤ (EuclideanSpace ℝ (Fin n))) [DiscreteTopology L] [IsZLattice ℝ L]
     (i : ℕ), 1 ≤ i → i ≤ n → succMin L i * succMin (dualLattice L) (n - i + 1) ≤ n
