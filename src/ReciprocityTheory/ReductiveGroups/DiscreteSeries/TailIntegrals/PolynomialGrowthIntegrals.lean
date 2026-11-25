@@ -185,10 +185,7 @@ theorem quadraticSublevelDecay' : SUB := by
   have hs0 : 0 < s := by positivity
   have hs4 : s ^ 4 = M := by
     rw [hs, ← Real.rpow_natCast, ← Real.rpow_mul hM0]; norm_num
-  have hs1 : 1 < s := by
-    by_contra h; push Not at h
-    have : s ^ 4 ≤ 1 := pow_le_one₀ hs0.le h
-    linarith
+  have hs1 : 1 < s := Real.one_lt_rpow hM (by norm_num)
   set E := {t | t ∈ Icc (1:ℝ) 2 ∧ ‖qv c t‖ ≤ s ^ 2} with hE
   have hvol : volume E ≤ ENNReal.ofReal (2 * (5 / s)) := by
     apply sublevel c (by positivity)
