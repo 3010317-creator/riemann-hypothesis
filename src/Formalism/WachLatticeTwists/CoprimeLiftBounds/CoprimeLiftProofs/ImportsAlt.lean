@@ -18,29 +18,13 @@ theorem rel : StatRel := by
   intro A T' G _ _ _ _ M _ _ r χ E e₁ δ ι _ D j Kc k0 φ l
   have hR : ∀ z ∈ colRelJ r χ E e₁ δ D j Kc k0, φ (Submodule.Quotient.mk z) = 0 := fun z hz => by
     rw [(Submodule.Quotient.mk_eq_zero _).mpr hz, map_zero]
-  have hsing : ∀ (x : A) (v : A × (Fin (j l) → A) × A),
-      x • Pi.single (M := fun l => A × (Fin (j l) → A) × A) l v = Pi.single l (x • v) := by
-    intro x v
-    funext k
-    by_cases h : k = l
-    · subst h
-      simp
-    · simp [Pi.single_eq_of_ne h]
-  have hsing2 : ∀ (x : A) (a : Fin (j l)) (t : A),
-      x • (Pi.single a t : Fin (j l) → A) = Pi.single a (x * t) := by
-    intro x a t
-    funext k
-    by_cases h : k = a
-    · subst h
-      simp
-    · simp [Pi.single_eq_of_ne h]
   have hgen : ∀ (x c : A) (s : Fin (j l) → A) (c₀ : A),
       x • (colGenJ (0 : Ymod r χ E) l c s c₀ : ColFreeJ A r χ E ι j) =
         colGenJ 0 l (x * c) (x • s) (x * c₀) := by
     intro x c s c₀
     show (x • (0 : Ymod r χ E), x • Pi.single (M := fun l => A × (Fin (j l) → A) × A) l (c, s, c₀)) =
       ((0 : Ymod r χ E), Pi.single (M := fun l => A × (Fin (j l) → A) × A) l (x * c, x • s, x * c₀))
-    rw [smul_zero, hsing]
+    rw [smul_zero, ← Pi.single_smul]
     rfl
   refine ⟨?_, ?_, ?_, ?_⟩
   · rw [← map_smul]
@@ -52,7 +36,7 @@ theorem rel : StatRel := by
       (Submodule.subset_span (Or.inl (Or.inl (Or.inr ⟨l, a, rfl⟩))))
     have e : (colGenJ (0 : Ymod r χ E) l 0 (Pi.single a (1 - e₁)) 0 : ColFreeJ A r χ E ι j) =
         (1 - e₁) • colGenJ (0 : Ymod r χ E) l 0 (Pi.single a 1) 0 := by
-      rw [hgen, mul_zero, hsing2, mul_one]
+      rw [hgen, mul_zero, ← Pi.single_smul', smul_eq_mul, mul_one]
     rw [e, Submodule.Quotient.mk_smul, map_smul, sub_smul, one_smul, sub_eq_zero] at hz
     exact hz.symm
   · have hz := hR (colGenJ (0 : Ymod r χ E) l 0 0 (algebraMap T' A δ - E))
@@ -74,7 +58,7 @@ theorem rel : StatRel := by
           (((((χ g)⁻¹ : T'ˣ) : T') • r g - 1) • (colGenJ (0 : Ymod r χ E) l 1 0 0 : ColFreeJ A r χ E ι j) +
           (∑ a, (-(algebraMap T' A δ * Kc l a g)) • colGenJ (0 : Ymod r χ E) l 0 (Pi.single a 1) 0 +
           (-(algebraMap T' A δ * k0 l g)) • (colGenJ (0 : Ymod r χ E) l 0 0 1 : ColFreeJ A r χ E ι j))) := by
-      simp only [hgen, hsing2, mul_one, mul_zero, smul_zero]
+      simp only [hgen, ← Pi.single_smul', smul_eq_mul, mul_one, mul_zero, smul_zero]
       refine Prod.ext ?_ ?_
       · simp [colGenJ, Prod.fst_sum]
       · funext k

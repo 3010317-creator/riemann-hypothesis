@@ -32,59 +32,6 @@ private theorem getElem_eraseIdx_natSuccAbove {α : Type u} (l : List α) (j i :
   rw [List.getElem_eraseIdx]
   split <;> simp [*]
 
-private def complOrderEmbPreimage (m : ℕ) (S : Finset (Fin m)) (s : Fin m) : Option (Fin (m - S.card)) :=
-  if hs : s ∈ S then none else some (Classical.choose (exists_complOrderEmb_eq m S hs))
-
-private theorem mem_of_complOrderEmbPreimage_eq_none (m : ℕ) (S : Finset (Fin m)) (s : Fin m)
-    (h : complOrderEmbPreimage m S s = none) : s ∈ S := by
-  by_contra hs
-  unfold complOrderEmbPreimage at h
-  rw [dite_eq_right hs] at h
-  simp at h
-
-private theorem complOrderEmb_of_complOrderEmbPreimage_eq_some (m : ℕ) (S : Finset (Fin m)) (s : Fin m)
-    (u : Fin (m - S.card)) (h : complOrderEmbPreimage m S s = some u) : complOrderEmb m S u = s := by
-  by_cases hs : s ∈ S
-  · exfalso
-    unfold complOrderEmbPreimage at h
-    rw [dite_eq_left hs] at h
-    simp at h
-  · unfold complOrderEmbPreimage at h
-    rw [dite_eq_right hs] at h
-    have hu : Classical.choose (exists_complOrderEmb_eq m S hs) = u := Option.some.inj h
-    rw [← hu]
-    exact Classical.choose_spec (exists_complOrderEmb_eq m S hs)
-
-private def transportSuccAboveToCompl {m : ℕ} (S : Finset (Fin m)) (j : ℕ) (a : ℕ → Option (Fin m))
-    (i : ℕ) : Option (Fin (m - S.card)) :=
-  (a (natSuccAbove j i)).bind (complOrderEmbPreimage m S)
-
-private theorem transportSuccAboveToCompl_eq_some {m : ℕ} (S : Finset (Fin m)) (j : ℕ)
-    (a : ℕ → Option (Fin m)) (i : ℕ) (u : Fin (m - S.card))
-    (h : transportSuccAboveToCompl S j a i = some u) : a (natSuccAbove j i) = some (complOrderEmb m S u) := by
-  rcases hs : a (natSuccAbove j i) with _ | s
-  · exfalso
-    unfold transportSuccAboveToCompl at h
-    rw [hs] at h
-    simp at h
-  · have h' : complOrderEmbPreimage m S s = some u := by
-      unfold transportSuccAboveToCompl at h
-      rw [hs] at h
-      exact h
-    rw [complOrderEmb_of_complOrderEmbPreimage_eq_some m S s u h']
-
-private theorem transportSuccAboveToCompl_eq_none {m : ℕ} (S : Finset (Fin m)) (j : ℕ)
-    (a : ℕ → Option (Fin m)) (i : ℕ) (h : transportSuccAboveToCompl S j a i = none) :
-    a (natSuccAbove j i) = none ∨ ∃ s, a (natSuccAbove j i) = some s ∧ s ∈ S := by
-  rcases hs : a (natSuccAbove j i) with _ | s
-  · exact Or.inl rfl
-  · refine Or.inr ⟨s, rfl, ?_⟩
-    have h' : complOrderEmbPreimage m S s = none := by
-      unfold transportSuccAboveToCompl at h
-      rw [hs] at h
-      exact h
-    exact mem_of_complOrderEmbPreimage_eq_none m S s h'
-
 theorem inStrictNormalCrossingPosition_of_forall_etaleChart {Y : Scheme.{u}} {k : Type u} [Field k]
     (q : Y ⟶ Spec (CommRingCat.of k)) (L : List Y.IdealSheafData)
     (h : ∀ x : ↥Y, ∃ (U : Y.Opens) (_ : x ∈ U) (m : ℕ) (c : EtaleChart q U m)
@@ -161,29 +108,40 @@ theorem exists_etaleChart_comap_subschemeι_eraseIdx {X : Scheme.{u}} {k : Type 
         getElem_eraseIdx_natSuccAbove E j i hi' (hlen i hi)
       rw [List.getElem_map]
       exact congrArg (fun D => D.comap (E[j]'hj).subschemeι) he
-    refine ⟨(E[j]'hj).subschemeι ⁻¹ᵁ V, hzmem, m - ({t} : Finset (Fin m)).card,
-      (c.restrict hVU).restrictToSubscheme hV (E[j]'hj) {t} hZV,
-      transportSuccAboveToCompl {t} j a, ?_, ?_, ?_⟩
-    · intro i hi i' hi' u hu hu'
-      exact natSuccAbove_inj j i i'
-        (h1 (natSuccAbove j i) (hlen i hi) (natSuccAbove j i') (hlen i' hi')
-          (complOrderEmb m {t} u) (transportSuccAboveToCompl_eq_some {t} j a i u hu)
-          (transportSuccAboveToCompl_eq_some {t} j a i' u hu'))
-    · intro i hi hn
-      rw [helem i hi]
-      rcases transportSuccAboveToCompl_eq_none {t} j a i hn with hnone | ⟨s, hsome, hsmem⟩
-      · exact restrictIdeal_comap_subschemeι_eq_top (E[j]'hj) V _
-          (h2V (natSuccAbove j i) (hlen i hi) hnone)
-      · exfalso
-        have h0 : a (natSuccAbove j i) = some t := by
-          rw [hsome, Finset.mem_singleton.mp hsmem]
-        exact natSuccAbove_ne j i (h1 (natSuccAbove j i) (hlen i hi) j hj t h0 haj)
-    · intro i hi u hu
-      rw [helem i hi]
-      exact (c.restrict hVU).restrictToSubscheme_coordIdeal_singleton hV (E[j]'hj) {t} hZV u
-        (E[natSuccAbove j i]'(hlen i hi))
-        (h3V (natSuccAbove j i) (hlen i hi) (complOrderEmb m {t} u)
-          (transportSuccAboveToCompl_eq_some {t} j a i u hu))
+    cases m with
+    | zero => exact t.elim0
+    | succ k =>
+      have hcard : k + 1 - ({t} : Finset (Fin (k + 1))).card = k := by simp
+      let a' (i : ℕ) : Option (Fin (k + 1 - ({t} : Finset (Fin (k + 1))).card)) :=
+        (a (natSuccAbove j i)).bind fun s => (finSuccEquiv' t s).map (Fin.cast hcard.symm)
+      have ha' (i : ℕ) (u : Fin (k + 1 - ({t} : Finset (Fin (k + 1))).card))
+          (hu : a' i = some u) :
+          a (natSuccAbove j i) = some (complOrderEmb (k + 1) {t} u) := by
+        obtain ⟨s, hs, hsu⟩ := Option.bind_eq_some_iff.mp hu
+        obtain ⟨v, hv, huv⟩ := Option.map_eq_some_iff.mp hsu
+        have hcomp : complOrderEmb (k + 1) {t} u = t.succAbove v := by
+          rw [complOrderEmb, Finset.orderEmbOfFin_compl_singleton_apply]
+          exact congrArg t.succAbove (Fin.ext (by simp [← huv]))
+        rw [hcomp, hs, finSuccEquiv'_eq_some.mp hv]
+      refine ⟨(E[j]'hj).subschemeι ⁻¹ᵁ V, hzmem, k + 1 - ({t} : Finset (Fin (k + 1))).card,
+        (c.restrict hVU).restrictToSubscheme hV (E[j]'hj) {t} hZV, a', ?_, ?_, ?_⟩
+      · intro i hi i' hi' u hu hu'
+        exact natSuccAbove_inj j i i' (h1 (natSuccAbove j i) (hlen i hi) (natSuccAbove j i')
+          (hlen i' hi') (complOrderEmb (k + 1) {t} u) (ha' i u hu) (ha' i' u hu'))
+      · intro i hi hn
+        rw [helem i hi]
+        rcases hs : a (natSuccAbove j i) with _ | s
+        · exact restrictIdeal_comap_subschemeι_eq_top (E[j]'hj) V _
+            (h2V (natSuccAbove j i) (hlen i hi) hs)
+        · dsimp [a'] at hn
+          rw [hs, Option.bind_some, Option.map_eq_none_iff, finSuccEquiv'_eq_none] at hn
+          rw [← hn] at hs
+          exact absurd (h1 (natSuccAbove j i) (hlen i hi) j hj t hs haj) (natSuccAbove_ne j i)
+      · intro i hi u hu
+        rw [helem i hi]
+        exact (c.restrict hVU).restrictToSubscheme_coordIdeal_singleton hV (E[j]'hj) {t} hZV u
+          (E[natSuccAbove j i]'(hlen i hi))
+          (h3V (natSuccAbove j i) (hlen i hi) (complOrderEmb (k + 1) {t} u) (ha' i u hu))
 
 theorem inStrictNormalCrossingPosition_comap_subschemeι_eraseIdx {X : Scheme.{u}} {k : Type u} [Field k]
     (p : X ⟶ Spec (CommRingCat.of k)) (E : List X.IdealSheafData) (hE : InStrictNormalCrossingPosition p E)

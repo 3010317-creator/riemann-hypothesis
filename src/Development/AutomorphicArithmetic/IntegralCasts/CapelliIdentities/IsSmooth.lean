@@ -5,6 +5,7 @@ public import Mathlib.RepresentationTheory.Intertwining
 public import Mathlib.Topology.Algebra.Group.Defs
 import Mathlib.Tactic.Linter.HaveILetI
 public import Mathlib.Topology.Algebra.OpenSubgroup
+import Mathlib.RepresentationTheory.Stabilizer
 
 @[expose] public section
 
@@ -46,20 +47,7 @@ theorem UpperTheory.Reformulated.B.DYka2.main :
     have := hmul g hg g⁻¹ (L.inv_mem hg)
     rw [mul_inv_cancel, h1, h0, zero_mul] at this
     exact one_ne_zero this
-  let H : Subgroup L :=
-    { carrier := {g | ρ (g : Γ) u = u}
-      mul_mem' := by
-        intro a b ha hb
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
-        rw [Subgroup.coe_mul, map_mul, Module.End.mul_apply, hb, ha]
-      one_mem' := by simp
-      inv_mem' := by
-        intro a ha
-        simp only [Set.mem_setOf_eq] at ha ⊢
-        have : ρ ((a : Γ)⁻¹) (ρ (a : Γ) u) = u := by
-          rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one]; rfl
-        rw [ha] at this
-        simpa using this }
+  let H : Subgroup L := (Representation.stabilizer ρ u).subgroupOf L
   have hHopen : IsOpen (H : Set L) := (hρ u).preimage continuous_subtype_val
   haveI : Finite (L ⧸ H) := Subgroup.quotient_finite_of_isOpen H hHopen
   haveI : Fintype (L ⧸ H) := Fintype.ofFinite _

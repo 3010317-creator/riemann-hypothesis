@@ -37,20 +37,6 @@ theorem blockPoly_factor {A : Type*} [CommRing A] {d S : Type*} [Fintype d] [Dec
   ext i j
   by_cases h : i = j <;> simp [h]
 
-private theorem separable_comp_C_mul_X_of_ne_zero {K : Type*} [Field K] {p : Polynomial K} (hp : p.Separable) {a : K}
-    (ha : a ≠ 0) : (p.comp (Polynomial.C a * Polynomial.X)).Separable := by
-  rw [Polynomial.separable_def] at hp ⊢
-  obtain ⟨u, v, e⟩ := hp
-  set q := Polynomial.C a * Polynomial.X with hqdef
-  have hcomp : (u * p + v * Polynomial.derivative p).comp q = 1 := by rw [e, Polynomial.one_comp]
-  rw [Polynomial.add_comp, Polynomial.mul_comp, Polynomial.mul_comp] at hcomp
-  have hq : Polynomial.derivative q = Polynomial.C a := by simp [hqdef]
-  have hC : Polynomial.C a⁻¹ * Polynomial.C a = 1 := by
-    rw [← Polynomial.C_mul, inv_mul_cancel₀ ha, Polynomial.C_1]
-  refine ⟨u.comp q, v.comp q * Polynomial.C a⁻¹, ?_⟩
-  rw [Polynomial.derivative_comp, hq]
-  linear_combination hcomp + (v.comp q * (Polynomial.derivative p).comp q) * hC
-
 theorem charpoly_smul_sep {K : Type*} [Field K] {S : Type*} [Fintype S] [DecidableEq S] (B : Matrix S S K)
     (c : K) (hc : c ≠ 0) (h : B.charpoly.Separable) : (c • B).charpoly.Separable := by
   classical
@@ -72,7 +58,12 @@ theorem charpoly_smul_sep {K : Type*} [Field K] {S : Type*} [Fintype S] [Decidab
     rw [Matrix.charpoly, key, Matrix.det_smul, ← RingHom.mapMatrix_apply, ← RingHom.map_det,
       Polynomial.coe_compRingHom_apply, Polynomial.C_pow, Matrix.charpoly]
   rw [hcp]
-  exact Polynomial.Separable.unit_mul
-    (Polynomial.isUnit_C.mpr ((isUnit_iff_ne_zero.mpr hc).pow _)) (separable_comp_C_mul_X_of_ne_zero h (inv_ne_zero hc))
+  refine Polynomial.Separable.unit_mul
+    (Polynomial.isUnit_C.mpr ((isUnit_iff_ne_zero.mpr hc).pow _)) ?_
+  rw [Polynomial.separable_def, Polynomial.derivative_comp,
+    show Polynomial.derivative (Polynomial.C c⁻¹ * Polynomial.X) = Polynomial.C c⁻¹ by simp,
+    isCoprime_mul_unit_left_right
+      (Polynomial.isUnit_C.mpr (isUnit_iff_ne_zero.mpr (inv_ne_zero hc)))]
+  simpa only [Polynomial.coe_compRingHom_apply] using IsCoprime.map h (Polynomial.compRingHom _)
 
 end Formalism.RepresentationBoundsCohomology.ringDataObjects

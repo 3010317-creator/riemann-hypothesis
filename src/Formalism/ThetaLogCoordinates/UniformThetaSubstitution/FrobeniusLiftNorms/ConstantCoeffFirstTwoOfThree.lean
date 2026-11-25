@@ -100,9 +100,7 @@ theorem partial_coboundary_product {F : MvPowerSeries (Fin 2) K} (hF : constantC
   ring
 
 theorem include_three_zero : in3 (0 : MvPowerSeries (Fin 2) K) = 0 := by
-  have h := MvPowerSeries.subst_sub (R := K) (has_subst_first_pair (K := K)) (0 : MvPowerSeries (Fin 2) K) 0
-  rw [sub_self, sub_self] at h
-  exact h
+  rw [in3, ← MvPowerSeries.substAlgHom_apply (R := K) has_subst_first_pair, map_zero]
 
 theorem partial_coboundary_h_series {p : ℕ} (σ : K →+* K) {F : MvPowerSeries (Fin 2) K} (hF : constantCoeff F = 0)
     (hl : cob F (lgF K p) = 0) (G : MvPowerSeries (Fin 2) K) (γ γ' : K) :
@@ -227,32 +225,23 @@ variable {K : Type} [Field K]
 
 theorem map_Gser (σ : K →+* K) (p : ℕ) (c c' : K) :
     map σ (Gser p c c') = Gser p (σ c) (σ c') := by
-  have hA : MvPowerSeries.map σ (Aser K p) = Aser K p := by
+  have hAA (x y : Fin 2) : MvPowerSeries.map σ (AA K p x y) = AA K p x y := by
     ext n
     rw [MvPowerSeries.coeff_map]
-    change σ (Aser K p n) = Aser K p n
-
-    simp only [Aser, map_sum, apply_ite σ, map_inv₀, map_pow, map_natCast, map_zero]
-  have hA' : MvPowerSeries.map σ (Aser' K p) = Aser' K p := by
-    ext n
-    rw [MvPowerSeries.coeff_map]
-    change σ (Aser' K p n) = Aser' K p n
-
-    simp only [Aser', map_sum, apply_ite σ, map_inv₀, map_pow, map_natCast, map_zero]
+    change σ (AA K p x y n) = AA K p x y n
+    simp only [AA, map_sum, apply_ite σ, map_inv₀, map_pow, map_natCast, map_zero]
   unfold Gser
-  rw [map_sub, map_mul, map_mul, MvPowerSeries.map_C, MvPowerSeries.map_C, hA, hA']
+  rw [map_sub, map_mul, map_mul, MvPowerSeries.map_C, MvPowerSeries.map_C,
+    Aser_eq K p, Aser'_eq K p, hAA 0 1, hAA 1 0]
 
 theorem constantCoeff_Gser (p : ℕ) (c c' : K) : constantCoeff (Gser p c c') = 0 := by
-  have h1 : MvPowerSeries.constantCoeff (Aser K p) = 0 := by
+  have hAA0 (x y : Fin 2) : MvPowerSeries.constantCoeff (AA K p x y) = 0 := by
     rw [← MvPowerSeries.coeff_zero_eq_constantCoeff_apply]
-    change Aser K p 0 = 0
-    simp [Aser]
-  have h2 : MvPowerSeries.constantCoeff (Aser' K p) = 0 := by
-    rw [← MvPowerSeries.coeff_zero_eq_constantCoeff_apply]
-    change Aser' K p 0 = 0
-    simp [Aser']
+    change AA K p x y 0 = 0
+    simp [AA]
   unfold Gser
-  rw [map_sub, map_mul, map_mul, h1, h2, mul_zero, mul_zero, sub_zero]
+  rw [map_sub, map_mul, map_mul, Aser_eq K p, Aser'_eq K p, hAA0 0 1, hAA0 1 0, mul_zero,
+    mul_zero, sub_zero]
 
 end MapG
 
@@ -285,42 +274,6 @@ theorem StepH_of (h2 : LemmaTwo) (hSw : SwapRules) : StepH := by
     rw [hHR, map_add (f := _), MvPowerSeries.coeff_C_mul, hll, mul_zero, zero_add]
     exact hR n
 
-private theorem coeff_lgF_one_lemma {K : Type} [Field K] {p : ℕ} (hp : 2 ≤ p) :
-    PowerSeries.coeff 1 (lgF K p) = 1 := by
-  have h4 : 1 < p ^ 2 := by
-    have := Nat.pow_le_pow_left hp 2
-    norm_num at this
-    omega
-  rw [lgF, PowerSeries.coeff_mk, Finset.sum_range_succ, Finset.sum_range_one]
-  simp [h4.ne]
-
-private theorem coeff_g0F_at_lemma_2 {K : Type} [Field K] {p : ℕ} (hp : 2 ≤ p) (i : ℕ) :
-    PowerSeries.coeff (p * (p ^ 2) ^ i) (g0F K p) = ((p : K) ^ (i + 1))⁻¹ := by
-  have hp2 : 2 ≤ p ^ 2 := by nlinarith
-  have hinj : ∀ j, (p * (p ^ 2) ^ i = p * (p ^ 2) ^ j) ↔ j = i := by
-    intro j
-    constructor
-    · intro h
-      have h' : (p ^ 2) ^ i = (p ^ 2) ^ j := Nat.eq_of_mul_eq_mul_left (by omega) h
-      exact (Nat.pow_right_injective hp2 h').symm
-    · rintro rfl
-      rfl
-  have hlt : i < (p ^ 2) ^ i := Nat.lt_pow_self (by omega)
-  have hi : i ∈ Finset.range (p * (p ^ 2) ^ i + 1) := by
-    rw [Finset.mem_range]
-    nlinarith
-  rw [g0F, PowerSeries.coeff_mk]
-  simp_rw [hinj]
-  simp [hi]
-
-private theorem coeff_g0F_one_lemma_3 {K : Type} [Field K] {p : ℕ} (hp : 2 ≤ p) :
-    PowerSeries.coeff 1 (g0F K p) = 0 := by
-  rw [g0F, PowerSeries.coeff_mk]
-  refine Finset.sum_eq_zero fun j _ => ite_eq_right ?_
-  intro h
-  have h1 : 1 ≤ (p ^ 2) ^ j := Nat.one_le_pow _ _ (pow_pos (by omega : 0 < p) 2)
-  nlinarith
-
 theorem c_add_sigma_c_eq_zero : StepIII := by
   intro K _ _ _ p σ hU G c c' hc hc' hD hI
   obtain ⟨hpr, hp2, hnp, -, -⟩ := hU
@@ -332,12 +285,17 @@ theorem c_add_sigma_c_eq_zero : StepIII := by
     omega
   have hall : ∀ z : Fin 2, z = 0 ∨ z = 1 := fun z => by fin_cases z <;> simp
   have h01 : (0 : Fin 2) ≠ 1 := by decide
-  have hlg1 : PowerSeries.coeff 1 (lgF K p) = 1 := coeff_lgF_one_lemma hp
-  have hg01 : PowerSeries.coeff 1 (g0F K p) = 0 := coeff_g0F_one_lemma_3 hp
+  have hlg1 : PowerSeries.coeff 1 (lgF K p) = 1 := by simpa using coeff_lgF_pow K hp 0
+  have hg01 : PowerSeries.coeff 1 (g0F K p) = 0 := by
+    by_contra h
+    obtain ⟨j, hj⟩ := coeff_g0F_ne_zero h
+    have := Nat.one_le_pow j _ (pow_pos (by omega : 0 < p) 2)
+    nlinarith
   apply eq_zero_of_div hp hnp
   intro i
   obtain ⟨m, hm⟩ : ∃ m, m = p * (p ^ 2) ^ i := ⟨_, rfl⟩
-  have hg0m : PowerSeries.coeff m (g0F K p) = ((p : K) ^ (i + 1))⁻¹ := hm ▸ coeff_g0F_at_lemma_2 hp i
+  have hg0m : PowerSeries.coeff m (g0F K p) = ((p : K) ^ (i + 1))⁻¹ :=
+    hm ▸ coeff_g0F_of K hp i
   obtain ⟨n, hn⟩ : ∃ n : Fin 2 →₀ ℕ, n = Finsupp.single 1 m + Finsupp.single 0 1 := ⟨_, rfl⟩
 
   have hcoefD : MvPowerSeries.coeff (Finsupp.single 1 m) (MvPowerSeries.pderiv (R := K) 0 G -
