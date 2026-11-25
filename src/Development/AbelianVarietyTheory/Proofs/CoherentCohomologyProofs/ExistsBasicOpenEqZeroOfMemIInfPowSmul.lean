@@ -358,22 +358,12 @@ theorem exists_sup_maximalIdeal_pow_stable [IsNoetherianRing R] [IsLocalRing R]
     (J : ℕ → Ideal R) (hJ : Antitone J) (k : ℕ) :
     ∃ m, ∀ m' ≥ m, J m' ⊔ IsLocalRing.maximalIdeal R ^ k =
       J m ⊔ IsLocalRing.maximalIdeal R ^ k := by
-  have hdim : Ring.KrullDimLE 0 (R ⧸ IsLocalRing.maximalIdeal R ^ k) := by
-    rw [Ring.krullDimLE_zero_iff]
-    intro Q hQ
-    have h1 : IsLocalRing.maximalIdeal R ^ k ≤
-        Q.comap (Ideal.Quotient.mk (IsLocalRing.maximalIdeal R ^ k)) :=
-      fun x hx ↦ by simp [Ideal.Quotient.eq_zero_iff_mem.2 hx]
-    have h2 : IsLocalRing.maximalIdeal R =
-        Q.comap (Ideal.Quotient.mk (IsLocalRing.maximalIdeal R ^ k)) :=
-      (IsLocalRing.maximalIdeal.isMaximal R).eq_of_le (Ideal.IsPrime.ne_top inferInstance)
-        (Ideal.IsPrime.le_of_pow_le h1)
-    have h3 : (Q.comap (Ideal.Quotient.mk (IsLocalRing.maximalIdeal R ^ k))).IsMaximal :=
-      h2 ▸ IsLocalRing.maximalIdeal.isMaximal R
-    have h4 := Ideal.IsMaximal.map_of_surjective_of_ker_le
-      (f := Ideal.Quotient.mk (IsLocalRing.maximalIdeal R ^ k)) Ideal.Quotient.mk_surjective
-      (m := Q.comap (Ideal.Quotient.mk (IsLocalRing.maximalIdeal R ^ k))) (by simpa using h1)
-    rwa [Ideal.map_comap_of_surjective _ Ideal.Quotient.mk_surjective] at h4
+  have hdim : Ring.KrullDimLE 0 (R ⧸ IsLocalRing.maximalIdeal R ^ k) :=
+    Ideal.krullDimLE_zero_quotient_iff_forall_minimalPrimes_isMaximal.2 fun J hJ ↦ by
+      have := Ideal.IsMinimalPrime.isPrime hJ
+      rw [← (IsLocalRing.maximalIdeal.isMaximal R).eq_of_le this.ne_top
+        (Ideal.IsPrime.le_of_pow_le (Ideal.IsMinimalPrime.le hJ))]
+      exact IsLocalRing.maximalIdeal.isMaximal R
   have hart : IsArtinianRing (R ⧸ IsLocalRing.maximalIdeal R ^ k) :=
     IsNoetherianRing.isArtinianRing_of_krullDimLE_zero
   obtain ⟨m, hm⟩ := monotone_stabilizes_iff_artinian.2 hart
