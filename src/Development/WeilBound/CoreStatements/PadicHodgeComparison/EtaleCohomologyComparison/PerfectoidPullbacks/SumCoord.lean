@@ -9,7 +9,6 @@ public import Mathlib.GroupTheory.GroupAction.Ring
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.FrobeniusWittActions.PhiTTmul
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.BocksteinBaseChange.StmtPhi
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.BocksteinBaseChange.TiltSectionUnits.FcIsUnitSub
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.FrobeniusWittActions.FrobeniusNormBounds.MapFrobW
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.FrobeniusWittActions.FrobeniusNormBounds.NormLLtOne
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.FrobeniusWittActions.TeichmullerCongruence
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.FrobeniusWittActions.FrobeniusNormBounds.ResiduePadicIntegersToIntegers
@@ -420,7 +419,7 @@ def pull' (Amp : ∀ M : Model l K, E.LineData M.X → Prop) {M N : Model l K} {
 theorem fmap (r : Res l K) [FiniteDimensional ℚ_[l] K] (Amp : ∀ M : Model l K, E.LineData M.X → Prop) :
     Nonempty (FMap Model.Sm r.perC r.iso (dat Amp) (pull' Amp)) := by
   obtain ⟨N, hT⟩ := _root_.CrystallineSemistableComparison.Pb.G3.teich r
-  obtain ⟨F, -⟩ := fac_ex r hT (fun M n j x => _root_.CrystallineSemistableComparison.Pb.Mid.frobenius_mu_nu_iterate r N hT M n j x) (_root_.CrystallineSemistableComparison.Pb.G3.w_phi r) (fun g w => _root_.CrystallineSemistableComparison.Pb.G3.w_fix r g w)
+  obtain ⟨F, -⟩ := fac_ex r hT (fun M n j x => _root_.CrystallineSemistableComparison.Pb.Mid.frobenius_mu_nu_iterate r N hT M n j x) (fun g w => _root_.CrystallineSemistableComparison.Pb.G3.w_fix r g w)
   exact fmap_of r Amp N F _ r.perC.c r.perC.ι r.perC.k (fc_ι_c (l := l)) (facts l K)
     (_root_.CrystallineSemistableComparison.Pb.G3.perC_hk r) (_root_.CrystallineSemistableComparison.Pb.G3.perC_hl r) (_root_.CrystallineSemistableComparison.Pb.G3.w_fix r) (fun M hM j => lw_fin r M hM j)
 
