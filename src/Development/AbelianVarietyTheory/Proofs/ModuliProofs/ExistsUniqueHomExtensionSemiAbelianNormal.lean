@@ -254,10 +254,14 @@ theorem GlobalTheory.existsUnique_hom_extension_semiAbelian_normal :
   rintro H X U j ⟨hX, z, _, -⟩ _ _ _ _ G G' _ _ hG hG' f hf
   have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian z
   have := hG.smooth
+  have := hG'.smooth
   have := hG.quasiCompact
   have := hG'.separated
   refine HomExt.existsUnique_hom_extension_of_graphClosure_lqf H j hX hG hG' f hf fun huφ _ key ↦ ?_
-  have : LocallyOfFiniteType (graphClosure.fst G.hom G'.hom (pullback.fst G.hom j) (f.left ≫ pullback.fst G'.hom j) huφ) :=
+  have hp : LocallyOfFiniteType (graphClosure.fst G.hom G'.hom (pullback.fst G.hom j) (f.left ≫ pullback.fst G'.hom j) huφ) :=
     graphClosure.locallyOfFiniteType_fst ..
-  exact HomExt.locallyQuasiFinite_of_torsion z hG' _ _
+  let p' : Over.mk (graphClosure.fst G.hom G'.hom (pullback.fst G.hom j) (f.left ≫ pullback.fst G'.hom j) huφ ≫ G.hom) ⟶ G :=
+    Over.homMk (graphClosure.fst G.hom G'.hom (pullback.fst G.hom j) (f.left ≫ pullback.fst G'.hom j) huφ) rfl
+  have : LocallyOfFiniteType p'.left := hp
+  exact HomExt.locallyQuasiFinite_of_torsion z hG' p' _
     (fun a b ↦ graphClosure.hom_ext G.hom G'.hom (pullback.fst G.hom j) (f.left ≫ pullback.fst G'.hom j) huφ) key
