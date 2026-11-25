@@ -47,8 +47,6 @@ open UpperTheory.V.Hi UpperTheory.V.Hi.CaseU
 open UpperTheory.V.Z.Mult (Cp At IsDec CompOf Mult)
 open scoped Matrix TensorProduct
 
-
-
 namespace UpperTheory.V.Z.J.D
 
 section Abs
@@ -62,9 +60,6 @@ def Isot (ρ : Representation ℂ G W) (τ : Representation ℂ G W') : Prop :=
 
 def AbsIrr (τ : Representation ℂ G W') : Prop :=
   τ.IsIrreducible ∧ ∀ f : W' →ₗ[ℂ] W', Intw τ τ f → ∃ a : ℂ, f = a • LinearMap.id
-
-def box (ρ : Representation ℂ G W) (τ : Representation ℂ H W') : Representation ℂ (G × H) (W ⊗[ℂ] W') :=
-  Representation.tprod (ρ.comp (MonoidHom.fst G H)) (τ.comp (MonoidHom.snd G H))
 
 def piRep {I : Type} {Gi Wi : I → Type} [∀ i, Group (Gi i)] [∀ i, AddCommGroup (Wi i)] [∀ i, Module ℂ (Wi i)]
     (τ : ∀ i, Representation ℂ (Gi i) (Wi i)) : Representation ℂ (∀ i, Gi i) (⨂[ℂ] i, Wi i) :=
@@ -125,7 +120,6 @@ def toGS : Ga l L n →* GS n s := MonoidHom.prod (MonoidHom.pi fun u : s.St => 
 def GaS : Subgroup (Ga l L n) :=
   ⨅ (w : Plc L) (_ : w.under (𝓞 (Lp L)) ∉ s.St ∧ w.under (𝓞 (Lp L)) ≠ s.v0), (cmp n w).ker
 
-
 open Classical in
 def secS : GS n s →* Ga l L n :=
   if h : Function.Bijective ((toGS n s).comp (GaS n s).subtype) then
@@ -139,10 +133,8 @@ variable {n s} (V : s.Lev) (ι : Qbar l ≃+* ℂ) {lam : Wt L l n} {d : ℕ}
   (e : (Fin d → ℂ) ≃ₗ[ℂ] ⨂[ℂ] e : Emb l (fun v : V.frame.Vl => s.w v.1), nablaSq ℂ n (lam e.res))
   (ξ : GV n (fun v : V.frame.Vl => s.w v.1) →* GL (Fin d) ℂ)
 
-
 variable (n) in
 abbrev GL' : Type := GV n (fun v : V.frame.Vl => s.w v.1)
-
 
 variable (n d) in
 def actS : Representation ℂ (GL' n V × GS n s) (Ga l L n × GL' n V → Fin d → ℂ) :=
@@ -153,7 +145,6 @@ def VS {c : Coef l} {m : ℕ} (Q : QData V) (τ₀ : KT n (wt s) →* GL (Fin m)
     Submodule ℂ (Ga l L n × GL' n V → Fin d → ℂ) :=
   (hset Q τ₀).X.AF ξ ⊓ Submodule.span ℂ {F | ∀ ℓ, toForm ι e F ℓ ∈ σ} ⊓
     fixd ((rtr ℂ (Ga l L n × GL' n V) (Fin d → ℂ)).comp (MonoidHom.inl _ _)) (KS n s)
-
 
 variable (lam) in
 def WtLink (lam' : InfinitePlace L → DomWeight n) : Prop :=
@@ -173,7 +164,7 @@ variable {V} {σ : Submodule ℂ (UA L n → ℂ)} (C : Comps V σ)
 
 abbrev Comps.repL := piRep fun v => (C.l v).ρ
 
-abbrev Comps.repS := box (piRep fun u => (C.u u).ρ) C.o.ρ
+abbrev Comps.repS := GlobalTheory.LGrp.extProd (piRep fun u => (C.u u).ρ) C.o.ρ
 
 end U
 

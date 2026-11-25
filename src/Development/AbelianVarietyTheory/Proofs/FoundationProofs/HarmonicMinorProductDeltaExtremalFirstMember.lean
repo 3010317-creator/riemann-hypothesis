@@ -99,7 +99,7 @@ theorem der_minor {a b : Fin l} (hab : a ≤ b) (hD : ∀ c k, D (y c k) = if k 
     rw [Matrix.updateRow_self, ite_eq_right fun e : Fin.castLE h i = b => hb (e ▸ i.2)]
 
 theorem sum_rows (α : Fin l → ℕ) (hα : Antitone α) (a : Fin l) :
-    ∑ i : Fin l, ((α i - nextRow α i : ℕ) : ℂ) * (if a.1 < i.1 + 1 then 1 else 0) = α a := by
+    ∑ i : Fin l, ((α i - Formalism.GradedWeylDivisibility.nuNext α i : ℕ) : ℂ) * (if a.1 < i.1 + 1 then 1 else 0) = α a := by
   let f : ℕ → ℕ := fun i => if h : i < l then α ⟨i, h⟩ else 0
   have hf : Antitone f := by
     refine antitone_nat_of_succ_le fun i => ?_
@@ -114,7 +114,7 @@ theorem sum_rows (α : Fin l → ℕ) (hα : Antitone α) (a : Fin l) :
   rw [ite_eq_left a.2.le, hl, ← Fin.sum_univ_eq_sum_range
     (fun i => ((f i - f (i + 1) : ℕ) : ℂ) * (if a.1 < i + 1 then 1 else 0))] at h
   have e1 : ∀ i : Fin l, f i = α i := fun i => by simp [f, i.2]
-  have e2 : ∀ i : Fin l, f (i + 1) = nextRow α i := fun i => rfl
+  have e2 : ∀ i : Fin l, f (i + 1) = Formalism.GradedWeylDivisibility.nuNext α i := fun i => rfl
   simpa only [e1, e2, Nat.cast_zero, sub_zero] using h
 
 theorem der_minorProd (α : Fin l → ℕ) (hα : Antitone α) (row : ∀ i : Fin l, Fin (i.1 + 1) → Fin n)

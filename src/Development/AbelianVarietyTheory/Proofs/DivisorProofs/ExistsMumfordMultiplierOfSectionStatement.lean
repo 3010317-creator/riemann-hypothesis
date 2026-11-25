@@ -732,16 +732,9 @@ theorem exists_down (hL : L.IsLB) (hM : M.IsLB) {w : LB.Iso (L.pull a) (M.pull b
     rfl
   · exact (congrArg _ (hc q Z r z p hp hq)).trans (Units.mul_inv_cancel_left _ _)
 
-def sumSec {N : LB Y} {A : Type} (S : Finset A) (s : A → N.Sec) : N.Sec where
-  f i := ∑ x ∈ S, (s x).f i
-  compat i j := by
-
-    rw [map_sum, map_sum, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun x _ => (s x).compat i j
-
 theorem sval_sumSec {φ : K → (Y ⟶ X₁)} {ε : K → ℤ} {A : Type} (S : Finset A) (s : A → (LB.LinComb L φ ε).Sec)
     {Z : Scheme.{0}} (r : Z ⟶ Y) (z : Z) {J} (hJ : Good L z J) :
-    sval (sumSec S s) r z J = ∑ x ∈ S, sval (s x) r z J := DVR.gs_fsum r z _ (hJ.mem φ r) S _
+    sval (GlobalTheory.ZH.UFib.sumSec S s) r z J = ∑ x ∈ S, sval (s x) r z J := DVR.gs_fsum r z _ (hJ.mem φ r) S _
 
 end General
 
@@ -790,7 +783,7 @@ theorem exists_texp (a : D.toPre.P.A ⟶ D.toPre.P.A) (b : thickObj R I e G ⟶ 
   choose σ hσ using fun i => exists_sec D.toPre.P.isLB (formEq_term U e a b hb' n j (w i))
     (pullMulSec (s i) (DVR.pGl U e) (DVR.tG U e (w i)) ((U.gt e).t_gen (w i)))
   obtain ⟨τ₀, h₀⟩ := exists_down U.LG.isLB D.toPre.P.isLB (U.w_gen e) (![𝟙 _, b.left] : Fin 2 → _) ![n, j]
-    (sumSec (hs e).toFinset σ)
+    (GlobalTheory.ZH.UFib.sumSec (hs e).toFinset σ)
   obtain ⟨τ, hτ⟩ := exists_sec U.LG.isLB (φ' := ![(fstG I e G).left, b.left ≫ (fstG I e G).left]) (ε' := ![n, j])
     (fun V _ h => by
       rw [Fin.prod_univ_two, Fin.prod_univ_two]
@@ -802,7 +795,7 @@ theorem exists_texp (a : D.toPre.P.A ⟶ D.toPre.P.A) (b : thickObj R I e G ⟶ 
       have := hi Z (x ≫ (U.gt e).q.left) z J hJ
       rw [Category.assoc] at this
       exact (congrArg (· * _) this).trans (zero_mul _)
-  have H₂ : sval (sumSec (hs e).toFinset σ) x z J =
+  have H₂ : sval (GlobalTheory.ZH.UFib.sumSec (hs e).toFinset σ) x z J =
       ∑ i ∈ S, sval (s i) (x ≫ (U.gt e).pG.left) z J * (val ((U.gt e).t (w i)) x z J).val := by
     rw [sval_sumSec _ _ x z hJ]
     refine (Finset.sum_congr rfl fun i _ => (hσ i Z x z J hJ).trans (sval_pullMulSec _ _ _ _ x z hJ)).trans ?_
@@ -972,7 +965,6 @@ namespace GlobalTheory.TwFam.ProdRel
 
 variable {R : Type} [CommRing R] [IsDomain R]
 
-
 open ReciprocityTheory.ChartRestriction.G.DVR in
 theorem comp_tφ (D : DegPre R) (a : D.P.A ⟶ D.P.A) (β : D.X) {T : Over (Spec (CommRingCat.of R))} (r : T ⟶ D.P.A) (k : Fin 5) :
     r.left ≫ tφ D a β k = ((![r, r * cP D T β, cP D T β, 1, r ≫ a] : Fin 5 → (T ⟶ D.P.A)) k).left := by
@@ -987,7 +979,6 @@ theorem comp_tφ (D : DegPre R) (a : D.P.A ⟶ D.P.A) (β : D.X) {T : Over (Spec
   · show r.left ≫ (toUnit D.P.A ≫ η[D.P.A]).left = (1 : T ⟶ D.P.A).left
     rw [← Over.comp_left, Hom.one_def, ← Category.assoc, toUnit_unique (r ≫ toUnit _) (toUnit T)]
   · show r.left ≫ a.left = (r ≫ a).left; rw [Over.comp_left]
-
 
 open ReciprocityTheory.ChartRestriction.G.DVR in
 theorem formEq (D : DegPre R) (a : D.P.A ⟶ D.P.A) (mu β β' β₁ β₁' : D.X) (n j n' j' : ℤ) :
@@ -1021,7 +1012,6 @@ theorem formEq (D : DegPre R) (a : D.P.A ⟶ D.P.A) (mu β β' β₁ β₁' : D.
   simp only [ofMul_mul, ofMul_zpow, ofMul_inv]
   module
 
-
 open ReciprocityTheory.ChartRestriction.G.DVR in
 theorem trF_prB (D : DegPre R) (mu : D.X) : DegPre.trF D (FractionRing R) mu ≫ DegPre.prB D (FractionRing R) =
     DegPre.prB D (FractionRing R) * cP D (DegPre.BF D (FractionRing R)) mu := by
@@ -1029,7 +1019,6 @@ theorem trF_prB (D : DegPre R) (mu : D.X) : DegPre.trF D (FractionRing R) mu ≫
 
 theorem zF_prB (D : DegPre R) : DegPre.zF D (FractionRing R) ≫ DegPre.prB D (FractionRing R) = 1 := by
   simp only [DegPre.zF, DegPre.prB, lift_snd, Hom.one_def]
-
 
 open ReciprocityTheory.ChartRestriction.G.DVR in
 theorem exists_prodFac (D : DegPre R) (hB : D.TauBimult) (a : D.P.A ⟶ D.P.A) (h : D.X →+ D.X) (n j n' j' : ℤ)
@@ -1073,7 +1062,6 @@ theorem exists_prodFac (D : DegPre R) (hB : D.TauBimult) (a : D.P.A ⟶ D.P.A) (
     linear_combination (norm := module) -t'
   · exact (ev _ _ z J hJ).trans (congrArg₂ (· * ·) (congrArg₂ (· * ·) rfl (val_pull hJ _ _ _))
       (congrArg (·⁻¹) (val_pull hJ _ _ _)))
-
 
 open ReciprocityTheory.ChartRestriction.G.DVR in
 theorem comp_cub (D : DegPre R) (β β' : D.X) {T : Over (Spec (CommRingCat.of R))} (r : T ⟶ D.P.A) :
@@ -1337,7 +1325,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
-
 
 end -- clump:auto
 end -- clump:auto

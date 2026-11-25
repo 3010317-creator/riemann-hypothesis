@@ -70,8 +70,8 @@ def leadProd {σ : Type} {n l : ℕ} (h : l ≤ n) (a : Fin l → ℕ) (z : Fin 
   ∏ i : Fin l, lead z (n := i.1 + 1) (le_trans i.2 h) i.2 ^ (ext0 a i - ext0 a (i + 1))
 
 theorem partition_row_difference_eq_extendByZero_difference {l : ℕ} (a : Fin l → ℕ) (i : Fin l) :
-    a i - nextRow a i = ext0 a i - ext0 a (i + 1) := by
-  simp [ext0, nextRow]
+    a i - Formalism.GradedWeylDivisibility.nuNext a i = ext0 a i - ext0 a (i + 1) := by
+  simp [ext0, Formalism.GradedWeylDivisibility.nuNext]
 
 theorem leadProd_rows {σ : Type} {n l : ℕ} (h : l ≤ n) {a : Fin l → ℕ} (ha : Antitone a)
     (z : Fin n × Fin l → σ) (hz : Function.Injective z) :
