@@ -7,7 +7,9 @@ leanprover-community/mathlib-ci. This one differs from it in three ways.
 
 * It keeps only the counters that are not already zero here, and adds the patterns that
   AGENTS.md asks contributors not to add (`attribute [-instance]`, goal-closing tactics
-  written with `elab` or `run_tac`, and disabled linters such as `unusedSectionVars`).
+  written with `elab` or `run_tac`, and disabled linters such as `unusedSectionVars`). It also
+  drops "exposed public sections", which are not zero: nearly every file opens two, so the
+  counter would only count files, and go up with every new one.
 * It counts the lines `git diff` adds and removes rather than checking out both commits, so in
   a blobless clone it only downloads the files the pull request changes. It therefore reports
   the change in each counter but not its total.
@@ -30,8 +32,10 @@ import sys
 STRONG, WEAK = 'strong', 'weak'
 PATHS = ['src']
 
-# Disabling these linters is weak debt, as in Mathlib; disabling any other is strong debt.
-WEAK_LINTERS = {'linter.flexible', 'linter.overlappingInstances'}
+# Disabling these linters is strong debt: the first two as in Mathlib, `unusedSectionVars` because
+# AGENTS.md asks contributors not to, and `all` because it disables that one too. Disabling any
+# other linter is weak debt.
+STRONG_LINTERS = {'linter.deprecated', 'linter.auxLemma', 'linter.unusedSectionVars', 'linter.all'}
 
 # Each fixed counter counts the lines matching its regular expression.
 FIXED = [
@@ -43,7 +47,7 @@ FIXED = [
     (STRONG, '`run_tac`', re.compile(r'\brun_tac\b')),
     (STRONG, '`CommRing (Fin n)` instances', re.compile(r'^open\b.*\bFin\.CommRing\b(?!\.)')),
     (STRONG, '`NatCast (Fin n)` instances', re.compile(r'^open\b.*\bFin\.NatCast\b(?!\.)')),
-    (WEAK, '`dsimp +instances`', re.compile(r'\bdsimp (?:[+-]\S* *)*\+instances')),
+    (WEAK, '`dsimp +instances`', re.compile(r'\bdsimp (?:[+-]\S* +)*\+instances')),
 ]
 # These count each option separately: a line counts once for every option it names.
 BACKWARD = re.compile(r'set_option (backward\.[\w.]+)')
@@ -63,7 +67,7 @@ def count_line(line):
         return []
     keys = [(level, name) for level, name, regex in FIXED if regex.search(line)]
     keys += [(STRONG, f'`{option}`') for option in sorted(set(BACKWARD.findall(line)))]
-    keys += [(WEAK if option in WEAK_LINTERS else STRONG, f'disabled `{option}`')
+    keys += [(STRONG if option in STRONG_LINTERS else WEAK, f'disabled `{option}`')
              for option in sorted(set(LINTER.findall(line)))]
     return keys
 

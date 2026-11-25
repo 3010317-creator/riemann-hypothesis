@@ -1,11 +1,13 @@
-  #!/usr/bin/env python3
+#!/usr/bin/env python3
 """Technical debt counts on a throwaway git repository."""
 import importlib.util
 import os
 from pathlib import Path
 import subprocess
 import tempfile
+import time
 import unittest
+from unittest import mock
 
 SCRIPT = Path(__file__).resolve().parents[1] / "technical-debt-metrics.py"
 spec = importlib.util.spec_from_file_location("technical_debt_metrics", SCRIPT)
@@ -46,8 +48,10 @@ class CountLine(unittest.TestCase):
         self.assertEqual(keys("set_option backward.isDefEq.respectTransparency false in"),
                          {(STRONG, "`backward.isDefEq.respectTransparency`")})
         self.assertEqual(keys("set_option linter.unusedVariables true"), set())
-        self.assertEqual(keys("set_option linter.flexible false in"),
-                         {(WEAK, "disabled `linter.flexible`")})
+        self.assertEqual(keys("set_option linter.unusedVariables false in"),
+                         {(WEAK, "disabled `linter.unusedVariables`")})
+        self.assertEqual(keys("set_option linter.unusedSectionVars false in"),
+                         {(STRONG, "disabled `linter.unusedSectionVars`")})
         self.assertEqual(keys("open Fin.NatCast Fin.CommRing in"),
                          {(STRONG, "`NatCast (Fin n)` instances"),
                           (STRONG, "`CommRing (Fin n)` instances")})
@@ -56,6 +60,11 @@ class CountLine(unittest.TestCase):
         self.assertEqual(keys("  dsimp -zeta +instances [h]"), {(WEAK, "`dsimp +instances`")})
         self.assertEqual(keys("elab_rules : tactic"), {(STRONG, "tactics defined with `elab`")})
         self.assertEqual(keys("elab \"foo\" : term => bar"), set())
+
+    def test_no_catastrophic_backtracking(self):
+        start = time.monotonic()
+        self.assertEqual(debt.count_line("dsimp " + "+" * 5000 + " instances"), [])
+        self.assertLess(time.monotonic() - start, 1)
 
 
 class Repository(unittest.TestCase):
@@ -94,14 +103,14 @@ class Repository(unittest.TestCase):
 
     def test_pr_summary(self):
         output = Path("output")
-        os.environ["GITHUB_OUTPUT"] = str(output)
-        self.addCleanup(os.environ.pop, "GITHUB_OUTPUT")
-        summary = debt.pr_summary(self.base, self.head)
+        with mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(output)}):
+            summary = debt.pr_summary(self.base, self.head)
+            unchanged = debt.pr_summary(self.head, self.head)
         self.assertIn("Changes to strong tech debt", summary)
         self.assertIn("|-2|`erw`|", summary)
         self.assertIn("|+1|disabled `linter.unusedSectionVars`|", summary)
         self.assertIn("Increase in weak tech debt", summary)
-        self.assertIn("No changes to strong technical debt.", debt.pr_summary(self.head, self.head))
+        self.assertIn("No changes to strong technical debt.", unchanged)
         self.assertEqual(output.read_text(), "changed=true\nchanged=false\n")
 
 

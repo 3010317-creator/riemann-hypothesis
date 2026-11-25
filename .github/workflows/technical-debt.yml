@@ -6,7 +6,8 @@ name: technical debt
 #
 # It counts only the lines the pull request adds and removes, so it downloads the commits, the
 # trees and the changed files, never the whole tree. It comments once some counter changes, and
-# edits that comment on later pushes.
+# edits that comment on later pushes. It runs on every pull request, not only those that change
+# src/, so that the comment is corrected when a later push drops the pull request's src/ changes.
 #
 # pull_request_target lets the token comment on pull requests from forks. Nothing from the pull
 # request is checked out or run: the script comes from the base branch, and the pull request's
@@ -15,7 +16,6 @@ name: technical debt
 on:
   pull_request_target:
     types: [opened, synchronize, reopened]
-    paths: ['src/**']
 
 permissions: {}
 
@@ -35,7 +35,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           path: trusted
           sparse-checkout: scripts/technical-debt-metrics.py
