@@ -89,7 +89,6 @@ section Colimits
 
 variable {J : Type w} [Category.{w'} J]
 
-set_option backward.isDefEq.respectTransparency false in
 theorem isQuasicoherent_of_iso (e : M ≅ N) [M.IsQuasicoherent] : N.IsQuasicoherent :=
   (SheafOfModules.isQuasicoherent X.ringCatSheaf).prop_of_iso e ‹_›
 
