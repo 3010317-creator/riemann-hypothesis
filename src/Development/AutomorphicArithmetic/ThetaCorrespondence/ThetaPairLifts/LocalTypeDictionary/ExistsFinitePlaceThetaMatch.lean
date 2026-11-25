@@ -1365,7 +1365,7 @@ theorem exists_finite_place_theta_match (hP : _root_.GlobalTheory.FunPr.ThetaLoc
   rw [Fin.sum_univ_one, Fin.sum_univ_one, ← hQ', hfy', ← funext fun v => (im v).1] at mB
   have sA := GlobalTheory.T.fockAlgebraicThetaVectors_stable_finiteAdeles_lie D ψ θ hψ hθ true A WW FA FW _ _ _ hA
   have sB := GlobalTheory.T.fockAlgebraicThetaVectors_stable_finiteAdeles_lie D ψ θ hψ hθ false A' WW FA' FW _ _ _ hB
-  obtain ⟨oA, oB⟩ := _root_.GlobalTheory.T.triple_algebra_map_surjective hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
+  obtain ⟨oA, oB⟩ := _root_.GlobalTheory.TripleAssembly.Onto.tripleProductAlgebra_weilRep_range_eq_top hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
   obtain ⟨iA, iB⟩ := _root_.GlobalTheory.TripleAssembly.triple_map_comp_inverse_finite hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
   obtain ⟨lA, lB⟩ := _root_.GlobalTheory.TripleAssembly.LieInv.theta_triple_maps_lie_action_eq_zero hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
   obtain ⟨fA, fB⟩ := _root_.GlobalTheory.TripleAssembly.EqFin.theta_triple_maps_equivariant_on_finite_vectors hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM

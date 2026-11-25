@@ -626,7 +626,7 @@ theorem evO_hypO_alt : HeckeStdPlain → ∀ (D : D7) (cf : CharFrame D) (jE : D
     exact hz
   have hOk' := bigOk_cast (L.X.nd.w_l i) hOk
   obtain ⟨K, hK, -, -⟩ := _root_.GlobalTheory.Proof.CoefField.coefField_range (withLoc L).nd (withLoc L).naut i
-  have hcont := (_root_.GlobalTheory.T.contains_after_localization_alt D cf jE A M C tp.tup big L hB' i).1
+  have hcont := (_root_.GlobalTheory.CoefDuty.MemberO.member_duties_alt D cf jE A M C tp.tup big L hB' i).1
   have hKbig : ∀ z ∈ big (L.X.nd.w i), (qCast (L.X.nd.w_l i) (A.pl.ι (L.X.nd.w i))).symm z ∈ K := by
     intro z hz
     obtain ⟨y, hy⟩ := hcont z hz

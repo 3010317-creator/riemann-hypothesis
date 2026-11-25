@@ -541,13 +541,6 @@ theorem archimedean_class_count_bound : _root_.GlobalTheory.FunPr.ThetaLocalInpu
 end GlobalTheory.ClassCount
 end
 end
-
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim
-
-theorem _root_.GlobalTheory.T.class_count_bound_archimedean : _root_.GlobalTheory.FunPr.ThetaLocalInputs → InfClassK := by
-  first | exact @_root_.GlobalTheory.ClassCount.archimedean_class_count_bound
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ArchimedeanClassCountBound =====

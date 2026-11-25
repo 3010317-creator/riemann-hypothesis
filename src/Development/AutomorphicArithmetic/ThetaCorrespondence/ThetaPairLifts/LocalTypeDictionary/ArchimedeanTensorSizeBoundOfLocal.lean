@@ -752,13 +752,6 @@ theorem _root_.GlobalTheory.SumSize.archimedean_tensor_size_bound_of_local (hP :
     (h3 D large₂ he (((le_max_right _ _).trans (le_max_right _ _)).trans hx) Γ Pl0 T A Ks R F hS ch hIs hAt hF)
 end
 end
-
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim
-
-theorem _root_.GlobalTheory.T.sum_size_archimedean_tensor_bound : _root_.GlobalTheory.FunPr.ThetaLocalInputs → InfTensK := by
-  first | exact @_root_.GlobalTheory.SumSize.archimedean_tensor_size_bound_of_local
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ArchimedeanTensorSizeBoundOfLocal =====
