@@ -377,10 +377,6 @@ theorem exists_idem (β : R →+* k) (hx : ∀ i j : Fin D.a, i ≠ j → ∃ x,
   · refine Finset.prod_eq_zero (Finset.mem_erase.2 ⟨h, Finset.mem_univ m⟩) ?_
     rw [hq, sub_self, mul_zero]
 
-theorem chars_ne (β : R →+* k) : ∀ i j : Fin D.a, i ≠ j → ∃ x, β (b.t i x) ≠ β (b.t j x) := by
-  intros
-  apply _root_.GlobalTheory.HTLieRho.exists_sep <;> assumption
-
 theorem delta_ne (β : R →+* k) : β b.ρ - ((D.tr : k) - β b.ρ) ≠ 0 := by
   intros
   apply _root_.GlobalTheory.HTLieRho.two_rho_sub_ne_zero <;> assumption
@@ -486,7 +482,7 @@ theorem eigen_decomp_graphFil : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.U
   obtain ⟨hx, hy⟩ := (mem_graphFil_iff_coords (f := f) hcoord).1 hd
   change Ω u - ρ • u ∈ Fil o₀.A at hx
   change Ω v - ρ • v - f (Ω u - ρ • u) ∈ Fil o₀.A at hy
-  obtain ⟨e, he⟩ := exists_idem (b := b) β (chars_ne β)
+  obtain ⟨e, he⟩ := exists_idem (b := b) β (fun _ _ hij => b.exists_char_separation β hij)
   obtain ⟨u', hu'def⟩ : ∃ u', u' = δ⁻¹ • (Ω u - ρ' • u) := ⟨_, rfl⟩
   obtain ⟨v', hv'def⟩ : ∃ v', v' = δ⁻¹ • (Ω v - ρ' • v) := ⟨_, rfl⟩
   have hrho : ∀ z, δ⁻¹ • (Ω z - ρ' • z) ∈ GlobalTheory.HTCount.rhoPart o₀ β := fun z =>

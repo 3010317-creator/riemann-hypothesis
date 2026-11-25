@@ -1151,16 +1151,10 @@ theorem lie_projectors : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [
   have hτ : ∀ i (c : 𝓞 D.F), τ i (c : D.F) = σ (b.t i c) := fun i c =>
     IsFractionRing.lift_algebraMap (hinj i) c
   have hτinj : Function.Injective τ := by
-    intro i j hij
-    by_contra hne
-    have hle : Ideal.span (Set.range fun x => b.t i x - b.t j x) ≤ RingHom.ker σ := by
-      rw [Ideal.span_le]
-      rintro _ ⟨x, rfl⟩
-      simp only [SetLike.mem_coe, RingHom.mem_ker, map_sub]
-      rw [← hτ, ← hτ, hij, sub_self]
-    have h1 : (1 : R) ∈ RingHom.ker σ := hle (by rw [b.comax i j hne]; exact Submodule.mem_top)
-    rw [RingHom.mem_ker, map_one] at h1
-    exact one_ne_zero h1
+    intro i j h
+    by_contra hij
+    obtain ⟨c, hc⟩ := b.exists_char_separation σ hij
+    exact hc (by rw [← hτ i c, ← hτ j c, h])
   have hroot : lam ^ 2 - D.tr * lam + D.nm = 0 := by
     have := congrArg σ b.ρ_root
     simpa using this
@@ -1388,18 +1382,8 @@ theorem GlobalTheory.UPel.HT.lie_of_complexExp : ∀ (p : ℕ) [Fact p.Prime] (D
     have := D.disc_neg
     rw [Int.cast_eq_zero] at h2
     omega
-  have hdist : ∀ i j, i ≠ j → ∃ c, (σ.comp (b.t i)) c ≠ (σ.comp (b.t j)) c := by
-    intro i j hij
-    by_contra hc
-    push Not at hc
-    have hle : Ideal.span (Set.range fun x => b.t i x - b.t j x) ≤ RingHom.ker σ := by
-      rw [Ideal.span_le]
-      rintro _ ⟨x, rfl⟩
-      simp only [SetLike.mem_coe, RingHom.mem_ker, map_sub]
-      exact sub_eq_zero.2 (hc x)
-    rw [b.comax i j hij, top_le_iff] at hle
-    have h1 : (1 : R) ∈ RingHom.ker σ := hle ▸ Submodule.mem_top
-    simp at h1
+  have hdist : ∀ i j, i ≠ j → ∃ c, (σ.comp (b.t i)) c ≠ (σ.comp (b.t j)) c :=
+    fun _ _ hij => b.exists_char_separation σ hij
   have hE5' : (σ b.ρ - ((D.tr : ℂ) - σ b.ρ)) • ∑ i, E i =
       (ρ.comp (algebraMap (𝓞 D.F) D.O)) D.ω - ((D.tr : ℂ) - σ b.ρ) • (1 : Matrix (Fin D.g) (Fin D.g) ℂ) := by
     rw [show σ b.ρ - ((D.tr : ℂ) - σ b.ρ) = 2 * σ b.ρ - D.tr by ring]
