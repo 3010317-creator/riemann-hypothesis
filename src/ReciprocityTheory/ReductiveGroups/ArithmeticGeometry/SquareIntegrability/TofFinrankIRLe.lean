@@ -96,13 +96,7 @@ theorem tof_shell_sum (d K : ℕ) (hd : 2 ≤ d) :
       rw [hr, ← Real.exp_add]
       simp
     linarith [mul_le_mul_of_nonneg_left (show (3 : ℝ) / 2 ≤ Real.exp (Real.pi / 2 - 1) by linarith) hr0.le]
-  have he1 : Real.exp (-1) ≤ 1 / 2 := by
-    have h := Real.add_one_le_exp (1 : ℝ)
-    have hrr : Real.exp (-1) * Real.exp 1 = 1 := by
-      rw [← Real.exp_add]
-      simp
-    have := Real.exp_pos (-1)
-    linarith [mul_le_mul_of_nonneg_left h this.le]
+  have he1 : Real.exp (-1) ≤ 1 / 2 := Real.exp_neg_one_lt_half.le
   have hsum0 : 0 ≤ ∑ k ∈ Finset.range K, r ^ k := Finset.sum_nonneg (fun k _ => pow_nonneg hr0.le k)
   have hS : ∑ k ∈ Finset.range K, r ^ k ≤ 3 := by
     have h := geom_sum_mul r K
