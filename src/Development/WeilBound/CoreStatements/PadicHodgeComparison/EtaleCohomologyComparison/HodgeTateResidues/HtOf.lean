@@ -564,18 +564,6 @@ theorem dlog_sub {B : Type} [CommRing B] {J : Ideal B} (δ : DividedPowers J) {N
   rw [add_sub_cancel_right]
   exact Ideal.sum_mem _ fun k _ => Ideal.mul_mem_left _ _ (dividedPowerFiltration_anti δ (by omega) (dpow_mem_pdP δ _ hv))
 
-theorem dlog_mem {B : Type} [CommRing B] {J : Ideal B} (δ : DividedPowers J) (N : ℕ) {v : B} (hv : v - 1 ∈ J) :
-    CrystallineSemistableComparison.B.dlog δ N v ∈ pdP δ 1 :=
-  Ideal.sum_mem _ fun k _ => Ideal.mul_mem_left _ _ (dividedPowerFiltration_anti δ (by omega) (dpow_mem_pdP δ _ hv))
-
-theorem r_mem {O : Type} [CommRing O] {X : Scheme.{0}} {q : X ⟶ Spec (CommRingCat.of O)} {b : Base} {ht : b.t = 1}
-    {κ : O →+* b.R ⧸ b.I} {D : E.LineData X} {C : Type 1} [Category.{0} C] {G : C ⥤ Thick ((B.schFn q).cr b ht κ)}
-    (Lf : B.CLift G D) (s : ComposableArrows C 2) : (Lf.r s).val - 1 ∈ (G.obj (s.obj (Fin.last 2))).J := by
-  have hfg : s.map' 0 2 = s.map' 0 1 ≫ s.map' 1 2 := s.map'_comp 0 1 2
-  have := CocCls.red_Rf Lf (s.map' 0 1) (s.map' 1 2)
-  rw [← hfg] at this
-  exact CocCls.sub_one_mem this
-
 section Lat
 variable {O A : Type} [CommRing O] [CommRing A] [Algebra O A] {I : Ideal A} (γ : DividedPowers I) {X : Scheme.{0}}
   (q : X ⟶ Spec (CommRingCat.of O)) (l s : ℕ) (𝒱 : Set X.Opens)
@@ -592,7 +580,6 @@ variable {γ q l s 𝒱}
 def zz {D : E.LineData X} (Λ : Lf γ q l s 𝒱 D) (t : ComposableArrows (TS γ q l s 𝒱).FullSubcategory 2) :
     (sP (TS γ q l s 𝒱)).A.obj (t.obj (Fin.last 2)) := ((show (t.obj (Fin.last 2)).obj.B from (Λ.r t).val) - 1 : (t.obj (Fin.last 2)).obj.B)
 
-
 variable (𝒱) in
 abbrev resG (r j : ℕ) (z : HG (TS γ q l s {⊤}) r j) : HG (TS γ q l s 𝒱) r j :=
   ((incl (le_top' γ q l s 𝒱)).sq (incl_fil _ (r : ℤ)) (incl_fil _ ((r : ℤ) + 1))).pull j z
@@ -607,9 +594,9 @@ theorem z_ex {D : E.LineData X} (h : sSup 𝒱 = ⊤) (hs : s ≠ 0) (Λ : Lf γ
     ∃ z : HG (TS γ q l s {⊤}) 1 2, Pb.Rep (sFil (TS γ q l s 𝒱) ((1 : ℕ) : ℤ)) (sFil _ (((1 : ℕ) : ℤ) + 1)) (zz Λ) (resG 𝒱 1 2 z) := by
   have hz := CocCls.closed Λ (RingHom.id A) s fun T k hk x hx => CrystallineFirstChernTorsionFree.dpow_vanish T.property.1 k hk x hx
   obtain ⟨c, hc⟩ := rep_of_closed (sFil (TS γ q l s 𝒱) ((1 : ℕ) : ℤ)) (sFil _ (((1 : ℕ) : ℤ) + 1)) (Λ.coc (RingHom.id A) s) hz
-    fun t => dlog_mem (t.obj (Fin.last 2)).obj.δ s (r_mem Λ t)
+    fun t => CrystallineSemistableComparison.HT.constant_weight_sum_bound.dlog_mem (t.obj (Fin.last 2)).obj.δ s (CrystallineSemistableComparison.HT.constant_weight_sum_bound.r_mem Λ t)
   obtain ⟨z, rfl⟩ := ((zarT h 2).1 _ _).2 c
-  exact ⟨z, rep_congr (fun t => dlog_sub (t.obj (Fin.last 2)).obj.δ hs (r_mem Λ t)) hc⟩
+  exact ⟨z, rep_congr (fun t => dlog_sub (t.obj (Fin.last 2)).obj.δ hs (CrystallineSemistableComparison.HT.constant_weight_sum_bound.r_mem Λ t)) hc⟩
 
 section Red
 variable {R : Type} [CommRing R] {I' : Ideal R} {γ' : DividedPowers I'} {κ' : O →+* R ⧸ I'} {n : ℕ} (d : RedIn γ' κ' γ l n)
@@ -693,7 +680,7 @@ theorem red_eq {D : E.LineData X} (h : sSup 𝒱 = ⊤) (Λ : Lf γ q l s 𝒱 D
     rfl
   · change Ideal.Quotient.factor (ln_le (n := n) q s 𝒱 (some (((1 : ℕ) : ℤ) + 1)) (t.obj (Fin.last 2))) (Subtype.val (f t)) = _
     rw [hv]
-    exact val_eq d.hl (t.obj (Fin.last 2)) (r_mem Λ t)
+    exact val_eq d.hl (t.obj (Fin.last 2)) (CrystallineSemistableComparison.HT.constant_weight_sum_bound.r_mem Λ t)
 
 theorem red_eq' {D : E.LineData X} (h : sSup 𝒱 = ⊤) (Λ : Lf γ q l s 𝒱 D) (z : HG (TS γ q l s {⊤}) 1 2)
     (hz : Pb.Rep (sFil (TS γ q l s 𝒱) ((1 : ℕ) : ℤ)) (sFil _ (((1 : ℕ) : ℤ) + 1)) (zz Λ) (resG 𝒱 1 2 z))
@@ -830,8 +817,6 @@ noncomputable section
 
 open CategoryTheory Limits AlgebraicGeometry TensorProduct
 
-
-
 namespace CrystallineSemistableComparison.HT
 
 variable {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l] (PadicAlgCl l)} {ht : TFil l}
@@ -853,7 +838,6 @@ def rr {M : Model l K} (hM : M.Sm) (j : ℕ) : ℕ := (h1.ex M hM j).choose
 def xx {M : Model l K} (hM : M.Sm) {j : ℕ} (v : M.T j) : Fam M (rr h1 hM j) j := ((h1.ex M hM j).choose_spec v).choose
 
 theorem xx_spec {M : Model l K} (hM : M.Sm) {j : ℕ} (v : M.T j) : Lf _ v (xx h1 hM v) := ((h1.ex M hM j).choose_spec v).choose_spec
-
 
 variable (γ) in
 def gT {M : Model l K} (hM : M.Sm) (a : ℕ) {j : ℕ} (v : M.T j) : Module.Dual K (Hdg M.q a j) →+ ℂ_[l] := γ (xx h1 hM v) a
@@ -899,7 +883,6 @@ def hV {M : Model l K} (hM : M.Sm) (a n : ℕ) : M.V n →+ (Module.Dual K (Hdg 
       simp only [PadicInt.algebraMap_apply]
       ring) :
     ℚ_[l] ⊗[ℤ_[l]] M.T n →+ (Module.Dual K (Hdg M.q a n) →+ ℂ_[l]))
-
 
 open Classical in
 def hP (M : Model l K) (a n : ℕ) : M.V n →+ (Module.Dual K (Hdg M.q a n) →+ ℂ_[l]) :=

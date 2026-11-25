@@ -102,20 +102,13 @@ section Elementary
 
 variable {A : Type} [CommRing A] (π : A)
 
-theorem isAdicComplete_span_iff {M : Type} [AddCommGroup M] [Module A M] :
-    IsAdicComplete (Ideal.span {π}) M ↔
-      (∀ x : M, (∀ n : ℕ, ∃ z : M, π ^ n • z = x) → x = 0) ∧
-      ∀ u : ℕ → M, (∀ n : ℕ, ∃ z : M, π ^ n • z = u n - u (n + 1)) →
-        ∃ L : M, ∀ n : ℕ, ∃ z : M, π ^ n • z = u n - L := by
-  apply GlobalTheory.XiQuotient.isAdicComplete_iff
-
 variable {π}
 
 theorem isAdicComplete_of_linearEquiv {M M' : Type} [AddCommGroup M] [Module A M]
     [AddCommGroup M'] [Module A M'] (e : M ≃ₗ[A] M')
     (h : IsAdicComplete (Ideal.span {π}) M) : IsAdicComplete (Ideal.span {π}) M' := by
-  obtain ⟨h1, h2⟩ := (isAdicComplete_span_iff π).1 h
-  refine (isAdicComplete_span_iff π).2 ⟨fun x hx => ?_, fun u hu => ?_⟩
+  obtain ⟨h1, h2⟩ := (GlobalTheory.XiQuotient.isAdicComplete_iff π).1 h
+  refine (GlobalTheory.XiQuotient.isAdicComplete_iff π).2 ⟨fun x hx => ?_, fun u hu => ?_⟩
   · have : e.symm x = 0 := h1 _ fun n => by
       obtain ⟨z, hz⟩ := hx n
       exact ⟨e.symm z, by rw [← map_smul, hz]⟩
@@ -130,9 +123,9 @@ theorem isAdicComplete_of_linearEquiv {M M' : Type} [AddCommGroup M] [Module A M
 theorem isAdicComplete_prod {M M' : Type} [AddCommGroup M] [Module A M]
     [AddCommGroup M'] [Module A M'] (h : IsAdicComplete (Ideal.span {π}) M)
     (h' : IsAdicComplete (Ideal.span {π}) M') : IsAdicComplete (Ideal.span {π}) (M × M') := by
-  obtain ⟨h1, h2⟩ := (isAdicComplete_span_iff π).1 h
-  obtain ⟨h1', h2'⟩ := (isAdicComplete_span_iff π).1 h'
-  refine (isAdicComplete_span_iff π).2 ⟨fun x hx => ?_, fun u hu => ?_⟩
+  obtain ⟨h1, h2⟩ := (GlobalTheory.XiQuotient.isAdicComplete_iff π).1 h
+  obtain ⟨h1', h2'⟩ := (GlobalTheory.XiQuotient.isAdicComplete_iff π).1 h'
+  refine (GlobalTheory.XiQuotient.isAdicComplete_iff π).2 ⟨fun x hx => ?_, fun u hu => ?_⟩
   · refine Prod.ext (h1 _ fun n => ?_) (h1' _ fun n => ?_)
     · obtain ⟨z, hz⟩ := hx n
       exact ⟨z.1, by rw [← hz]; rfl⟩
@@ -152,8 +145,8 @@ theorem isAdicComplete_prod {M M' : Type} [AddCommGroup M] [Module A M]
 theorem isAdicComplete_fin_pi {M : Type} [AddCommGroup M] [Module A M]
     (h : IsAdicComplete (Ideal.span {π}) M) (n : ℕ) :
     IsAdicComplete (Ideal.span {π}) (Fin n → M) := by
-  obtain ⟨h1, h2⟩ := (isAdicComplete_span_iff π).1 h
-  refine (isAdicComplete_span_iff π).2 ⟨fun x hx => ?_, fun u hu => ?_⟩
+  obtain ⟨h1, h2⟩ := (GlobalTheory.XiQuotient.isAdicComplete_iff π).1 h
+  refine (GlobalTheory.XiQuotient.isAdicComplete_iff π).2 ⟨fun x hx => ?_, fun u hu => ?_⟩
   · funext i
     refine h1 _ fun k => ?_
     obtain ⟨z, hz⟩ := hx k
@@ -168,7 +161,7 @@ theorem isAdicComplete_fin_pi {M : Type} [AddCommGroup M] [Module A M]
 
 theorem isAdicComplete_of_pow_smul_eq_zero {M : Type} [AddCommGroup M] [Module A M] (E : ℕ)
     (h : ∀ x : M, π ^ E • x = 0) : IsAdicComplete (Ideal.span {π}) M := by
-  refine (isAdicComplete_span_iff π).2 ⟨fun x hx => ?_, fun u hu => ?_⟩
+  refine (GlobalTheory.XiQuotient.isAdicComplete_iff π).2 ⟨fun x hx => ?_, fun u hu => ?_⟩
   · obtain ⟨z, rfl⟩ := hx E
     exact h z
   · have tel : ∀ n k : ℕ, ∃ z : M, π ^ n • z = u n - u (n + k) := by
@@ -1482,8 +1475,6 @@ theorem pull_comm {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l] (Padic
   exact (congrArg (fun v => (toQ Q' ((base l).cris n)).pull j (idA r a • v)) e).trans
     (LinearMap.map_smulₛₗ ((toQ Q' ((base l).cris n)).pull j) (idA r a) _)
 
-
-
 theorem bc_tens : ∀ {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l] (PadicAlgCl l)} (r : Res l K) (M : Model l K), M.Sm → ∀ j n,
     Tens (WittVector l r.k) (N := fun _ : Unit => AW r) (M := fun _ => (Wc.HS l (B.schFn M.p) r.ρ j).M n)
       (M' := Mid.HM r M n j) fun _ a y => idA r a • bWL r M n j y := by
@@ -1529,7 +1520,6 @@ section -- clump:auto
 
 set_option backward.isDefEq.respectTransparency false
 
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry TensorProduct GroundTheory.PAdicHodge GlobalTheory.LogCris DividedPowers CrystallineSemistableComparison.PAlg
@@ -1558,8 +1548,6 @@ noncomputable section
 open CategoryTheory AlgebraicGeometry TensorProduct GroundTheory.PAdicHodge GlobalTheory.LogCris DividedPowers CrystallineSemistableComparison.PAlg
 
 namespace CrystallineSemistableComparison.Pb
-
-
 
 variable {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l] (PadicAlgCl l)} (r : Res l K)
 

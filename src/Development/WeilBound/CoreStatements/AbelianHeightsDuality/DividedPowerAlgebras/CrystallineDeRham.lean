@@ -647,9 +647,6 @@ theorem fe_uniq (t : P →+* A) (ht : t.FormallyEtale) (π : B →+* C) (hn : Is
   ext x
   exact AlgHom.congr_fun key x
 
-theorem isNilpotent_of_isNilDP {J : Ideal B} {δ : DividedPowers J} (h : IsNilDP δ) : IsNilpotent J := by
-  apply GlobalTheory.AnPer.TaylorCore.isNilpotent_of_isNilDP <;> assumption
-
 end Rings
 
 variable {R : Type} [CommRing R] {I : Ideal R} {X : Scheme.{0}} {κ : DividedPowers I} {s : X ⟶ Sp R}
@@ -659,7 +656,7 @@ instance (U : X.affineOpens) : IsOpenImmersion (affPt s U) := U.2.isOpenImmersio
 theorem nil_ker {γ : DividedPowers I} (T : Thick γ s) : IsNilpotent (RingHom.ker T.π) := by
   have : RingHom.ker T.π = T.J := Ideal.ext T.ker
   rw [this]
-  exact isNilpotent_of_isNilDP T.nil
+  exact GlobalTheory.AnPer.TaylorCore.isNilpotent_of_isNilDP T.nil
 
 theorem res_etale {U V : X.affineOpens} (h : V.1 ≤ U.1) : (Sec.res s h : Sec s U.1 →+* Sec s V.1).Etale := by
   have e : V.1 ≤ (𝟙 X : X ⟶ X) ⁻¹ᵁ U.1 := h
