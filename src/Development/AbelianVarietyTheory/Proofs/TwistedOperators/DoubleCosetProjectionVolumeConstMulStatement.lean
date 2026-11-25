@@ -402,7 +402,7 @@ theorem blocks_of_phi (hc : 1 ≤ c) {S₀ : HSp D} {ρ : ℕ} {h : HypDec B S�
     (hab : a + c = b) {n : GA D B} (hn : phi hb hab β' w n ∈ symN (Kw w) (Fin a) c) : Blocks (piAt w) h (mt B n - 1) := by
   subst ha hb
   obtain ⟨Γ, h1, h2, e⟩ := frame_val d w hF
-  exact (hA _ (piAt w) _ _ u (GlobalTheory.StdFrames.loc w β).mul_inv).blocks h1 h2 fun r s hrs =>
+  exact Adapted.blocks (hA _ (piAt w) _ _ u (GlobalTheory.StdFrames.loc w β).mul_inv) h1 h2 fun r s hrs =>
     (congrFun (congrFun (e n) r) s).symm.trans ((mem_symN_iff hc _).1 hn r s hrs)
 
 end Frame
