@@ -78,7 +78,7 @@ theorem one_tmul_ne_zero_of_domain {A P k : Type} [CommRing A] [IsDomain A] [Add
   haveI : Module.Flat (FractionRing A) k := Module.Flat.of_free
   haveI : Module.Flat A k := Module.Flat.trans _ (FractionRing A) _
   have hi : Function.Injective (LinearMap.toSpanSingleton A P y) := by
-    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+    rw [injective_iff_map_eq_zero]
     exact hy
   have h2 : (1 : k) ⊗ₜ[A] (1 : A) = 0 := by
     apply Module.Flat.lTensor_preserves_injective_linearMap (M := k) _ hi
