@@ -12,6 +12,7 @@ public import Mathlib.Algebra.Algebra.Equiv
 public import Mathlib.Algebra.MvPolynomial.Basic
 public import Mathlib.Algebra.MvPolynomial.Equiv
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.Analysis.Complex.Polynomial.Basic
 public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Basic
 public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModDefs
 
@@ -27,7 +28,7 @@ namespace GlobalTheory.FN
 theorem exists_ringEquiv_extend_of_embedding :
     ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (s : Ω ≃+* Ω), ∃ g : ℂ ≃+* ℂ, ∀ x, g (ε x) = ε (s x) := by
   intro Ω _ ε s
-  letI : Algebra Ω ℂ := ε.toAlgebra
+  let : Algebra Ω ℂ := ε.toAlgebra
   obtain ⟨B, hB⟩ := exists_isTranscendenceBasis Ω ℂ
   let := IsAlgClosed.isAlgClosure_of_transcendence_basis _ hB
   let e := hB.1.aevalEquiv.symm.toRingEquiv.trans
