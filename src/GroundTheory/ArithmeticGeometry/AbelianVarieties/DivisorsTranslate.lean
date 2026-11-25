@@ -173,11 +173,7 @@ local notation "ι" => algebraMap F (WeierstrassCurve.Affine.FunctionField
 omit [DecidableEq F] [IsAlgClosed F] [W.IsElliptic] in
 theorem valuationInfty_genX : valuationInfty W (genX W) = exp 2 := by
   have h := ordInfty_X W
-  have h0 : genX W ≠ 0 := by
-    intro h0
-    change ordInfty W (genX W) = -2 at h
-    rw [h0] at h
-    simp [ordInfty] at h
+  have h0 : genX W ≠ 0 := (transcendental_genX W).ne_zero
   rw [valuationInfty_eq_exp W h0]
   change exp (-ordInfty W (genX W)) = _
   rw [show ordInfty W (genX W) = -2 from h]
