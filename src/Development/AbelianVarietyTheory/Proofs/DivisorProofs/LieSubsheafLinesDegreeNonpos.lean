@@ -1549,10 +1549,6 @@ noncomputable section
 
 namespace GlobalTheory.Nef.TorExt
 
-theorem unitSec_comp {S : Scheme.{0}} {G H : Over S} [GrpObj G] [GrpObj H] (f : G ⟶ H) [IsMonHom f] :
-    unitSec G ≫ f.left = unitSec H := by
-  rw [unitSec, unitSec, sec, sec, ← Over.comp_left, IsMonHom.one_hom]
-
 theorem isLocalHom_field {K L : Type} [Field K] [Field L] (φ : K →+* L) : IsLocalHom φ :=
   ⟨fun x hx => by
     by_cases h : x = 0

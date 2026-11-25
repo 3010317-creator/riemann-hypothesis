@@ -201,9 +201,6 @@ theorem pw_pull (H : LB X) (f : Y ⟶ X) (a : ℤ) :
     (AbLaw.pw H a).pull f = AbLaw.pw (H.pull f) a :=
   _root_.GlobalTheory.Algebraise.pw_pull H f a
 
-theorem lbIso_tw {H : LB X} (hH : H.IsLB) (t : ℤ) : LBIso (AbLaw.pw H (t + 1)) (tw H H t) := by
-  apply _root_.GlobalTheory.Algebraise.lbIso_tw <;> assumption
-
 theorem exists_pw_h1Zero (R : Type) [CommRing R] [IsNoetherianRing R]
     (B : Over (Spec (CommRingCat.of R))) (L : LB B.left) (hL : L.IsLB) (h : RelAmple B L) :
     ∃ d : ℕ, 1 ≤ d ∧ FirstCohomologyVanishes (AbLaw.pw L d) ∧

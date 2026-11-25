@@ -440,34 +440,6 @@ namespace GlobalTheory.Katz
 
 variable {R S : Type} [CommRing R] [CommRing S] (σ : R →+* S) {d : ℕ} {τ : Type}
 
-theorem map_powerSeriesEvalTwoGroups (c : MvPowerSeries (Fin d ⊕ Fin d) R) {u v : Fin d → MvPowerSeries τ R}
-    (hu : ∀ i, constantCoeff (u i) = 0) (hv : ∀ i, constantCoeff (v i) = 0) :
-    MvPowerSeries.map σ (at2 c u v) =
-      at2 (MvPowerSeries.map σ c) (fun i => MvPowerSeries.map σ (u i))
-        (fun i => MvPowerSeries.map σ (v i)) := by
-  have hs : HasSubst (Sum.elim u v) :=
-    hasSubst_of_constantCoeff_zero (fun s => by cases s <;> simp [hu, hv])
-  unfold at2
-  rw [map_subst hs]
-  congr 1
-  funext s
-  cases s <;> rfl
-
-theorem constantCoeff_powerSeriesEvalTwoGroups_zero_of {c : MvPowerSeries (Fin d ⊕ Fin d) R}
-    (hc : constantCoeff c = 0) {u v : Fin d → MvPowerSeries τ R}
-    (hu : ∀ i, constantCoeff (u i) = 0) (hv : ∀ i, constantCoeff (v i) = 0) :
-    constantCoeff (at2 c u v) = 0 := by
-  have h0 : ∀ s, constantCoeff (Sum.elim u v s) = 0 := fun s => by cases s <;> simp [hu, hv]
-  exact constantCoeff_subst_eq_zero (hasSubst_of_constantCoeff_zero h0) h0 hc
-
-theorem map_op_of_const (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R) {u v : Fin d → MvPowerSeries τ R}
-    (hu : ∀ i, constantCoeff (u i) = 0) (hv : ∀ i, constantCoeff (v i) = 0) :
-    (fun i => MvPowerSeries.map σ (op μ u v i)) =
-      op (fun i => MvPowerSeries.map σ (μ i)) (fun i => MvPowerSeries.map σ (u i))
-        (fun i => MvPowerSeries.map σ (v i)) := by
-  funext i
-  exact map_powerSeriesEvalTwoGroups σ (μ i) hu hv
-
 theorem isLaw_map (R S : Type) [CommRing R] [CommRing S] (σ : R →+* S) (d : ℕ)
     (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R) (h : IsLaw μ) :
     IsLaw (fun i => MvPowerSeries.map σ (μ i)) := by

@@ -696,13 +696,6 @@ theorem subst_powerSeriesEvalTwoGroups {τ τ' : Type} [Finite τ] {u v : Fin d 
   funext s
   cases s <;> rfl
 
-theorem op_addLaw {τ : Type} {u v : Fin d → MvPowerSeries τ R} (hu : ∀ i, constantCoeff (u i) = 0)
-    (hv : ∀ i, constantCoeff (v i) = 0) : op (addLaw R d) u v = u + v := by
-  funext i
-  unfold op addLaw at2
-  rw [subst_add (hs2 hu hv), subst_X (hs2 hu hv), subst_X (hs2 hu hv)]
-  rfl
-
 end GlobalTheory.SymCocAdd
 
 namespace GlobalTheory.SymCocAdd

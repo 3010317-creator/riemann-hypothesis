@@ -49,16 +49,6 @@ noncomputable section
 
 namespace GlobalTheory.FinPl
 
-theorem tensorProductBasis_repr_map_firstFactor {F E A B : Type} [Field F] [Field E] [Algebra F E] [CommRing A] [Algebra F A]
-    [CommRing B] [Algebra F B] {ι : Type} (b : Module.Basis ι F E) (f : A →ₐ[F] B) (x : A ⊗[F] E) (i : ι) :
-    (Algebra.TensorProduct.basis B b).repr (Algebra.TensorProduct.map f (AlgHom.id F E) x) i =
-      f ((Algebra.TensorProduct.basis A b).repr x i) := by
-  induction x using TensorProduct.induction_on with
-  | zero => simp
-  | add x y hx hy => simp [map_add (f := _), hx, hy]
-  | tmul a m =>
-    simp [Algebra.TensorProduct.basis_repr_tmul, Algebra.TensorProduct.map_tmul]
-
 theorem CMAdele_eq_zero_of_infinite_and_finite_components_zero (D : D7) (a : AE D) (h0 : infPart D a = 0) (hw : ∀ w : Pl D, compAt D w a = 0) :
     a = 0 := by
   first | exact _root_.GlobalTheory.FinPlLoc.eq_zero_of_comp | exact @_root_.GlobalTheory.FinPlLoc.eq_zero_of_comp | apply _root_.GlobalTheory.FinPlLoc.eq_zero_of_comp <;> assumption
