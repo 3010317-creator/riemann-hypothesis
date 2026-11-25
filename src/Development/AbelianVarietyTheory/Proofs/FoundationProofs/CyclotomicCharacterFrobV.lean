@@ -6,6 +6,7 @@ public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.Tactic.Linter.HaveILetI
 
@@ -87,7 +88,7 @@ theorem cyclotomicCharacter_frobV : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] 
   haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   haveI : CharZero Ω := algebraRat.charZero Ω
   haveI : ∀ i, NeZero ((l ^ i : ℕ) : Ω) := fun i => ⟨by exact_mod_cast pow_ne_zero i hl.out.ne_zero⟩
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => IsSepClosed.hasEnoughRootsOfUnity Ω (l ^ i)
   refine PadicInt.ext_of_toZModPow.mp fun n => ?_
   rw [cyclotomicCharacter.toZModPow, map_natCast]
   symm
