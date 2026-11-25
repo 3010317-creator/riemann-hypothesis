@@ -120,19 +120,9 @@ private theorem c_cc {E : Spc} {n i n' i' n'' i'' : ℤ} (a : n = n') (b : i = i
   subst a b c d
   rfl
 
-private theorem c_zero {E : Spc} {n i n' i' : ℤ} (a : n = n') (b : i = i') :
-    (0 : Ht q E n i).cast a b = 0 := by
-  subst a b
-  rfl
-
 private theorem c_sum {E : Spc} {n i n' i' : ℤ} (a : n = n') (b : i = i') {ι : Type} (s : Finset ι)
     (f : ι → Ht q E n i) : (∑ j ∈ s, f j).cast a b = ∑ j ∈ s, (f j).cast a b := by
   subst a b
-  rfl
-
-private theorem pull_c {X Y : Spc} (f : X ⟶ Y) {n i n' i' : ℤ} (hn : n = n') (hi : i = i') (x : Ht q Y n i) :
-    pull _ f _ _ (x.cast hn hi) = Ht.cast hn hi (pull _ f _ _ x : Ht q X n i) := by
-  subst hn hi
   rfl
 
 private theorem pull_u {X Y : Spc} (f : X ⟶ Y) {n m i j : ℤ} (a : Ht q Y n i) (b : Ht q Y m j) :
@@ -169,7 +159,7 @@ private theorem cpow_one' {E : Spc} (hE : Inv q E) (ξ : Ht q E 2 1) :
 
 private theorem cpow_zero_one {E : Spc} : cpow q (0 : Ht q E 2 1) 1 = 0 := by
   refine (cpow_succ q (0 : Ht q E 2 1) 0).trans ?_
-  rw [map_zero, c_zero]
+  rw [map_zero, cast_zero']
 
 private theorem two_terms {X B : Spc} (p : B ⟶ X) (ξ : Ht q B 2 1) (hB : Inv q B) (n i : ℤ)
     (y : ∀ j : Fin 2, Ht q X (n - 2 * (((j : ℕ) : ℤ))) (i - ((j : ℕ) : ℤ))) :
@@ -179,8 +169,8 @@ private theorem two_terms {X B : Spc} (p : B ⟶ X) (ξ : Ht q B 2 1) (hB : Inv 
         (by push_cast; ring) (by push_cast; ring) := by
   rw [Fin.sum_univ_two]
   refine congrArg₂ (· + ·) ?_ ?_
-  · rw [cup_pow_zero hB ξ (k := ((0 : Fin 2) : ℕ)) rfl, c_cc, pull_c]
-  · rw [pull_c, cup_cl, c_cc]
+  · rw [cup_pow_zero hB ξ (k := ((0 : Fin 2) : ℕ)) rfl, c_cc, pull_cast']
+  · rw [pull_cast', cup_cl, c_cc]
     rfl
 
 private theorem succ_terms {E Y : Spc} (πY : Y ⟶ E) (ξ : Ht q Y 2 1) (hY : Inv q Y) (N : ℕ) (n i : ℤ)
@@ -195,10 +185,10 @@ private theorem succ_terms {E Y : Spc} (πY : Y ⟶ E) (ξ : Ht q Y 2 1) (hY : I
   refine congrArg₂ (· + ·) ?_ (Finset.sum_congr rfl fun j _ => ?_)
   · rw [cup_pow_zero hY ξ (k := ((0 : Fin (N + 1)) : ℕ)) rfl, c_cc]
     simp only [Fin.cases_zero]
-    rw [pull_c, c_cc]
+    rw [pull_cast', c_cc]
     rfl
   · simp only [Fin.cases_succ]
-    rw [pull_c, cup_cl, c_cc]
+    rw [pull_cast', cup_cl, c_cc]
     rfl
 
 private theorem rel_term {E X Y B : Spc} (πX : X ⟶ E) (πY : Y ⟶ E) (p : B ⟶ X) (β : B ⟶ Y) (hp : p ≫ πX = β ≫ πY)
@@ -211,7 +201,7 @@ private theorem rel_term {E X Y B : Spc} (πX : X ⟶ E) (πY : Y ⟶ E) (p : B 
       pull _ β _ _ ((cup q (pull _ πY _ _ b) (cpow q ξY (k + 1))).cast (by push_cast; omega) (by push_cast; omega) : Ht q Y n i) := by
   have e1 : (pull _ p _ _ (pull _ πX _ _ b) : Ht q B m e) = pull _ β _ _ (pull _ πY _ _ b) := by
     rw [← pull_comp, ← pull_comp, hp]
-  rw [pull_c, pull_u, pull_c, pull_u, UpperTheory.pull_cupPow_eq_cupPow_pull q p ξX k iX, UpperTheory.pull_cupPow_eq_cupPow_pull q β ξY (k + 1) iY, e1, hrel k,
+  rw [pull_cast', pull_u, pull_cast', pull_u, UpperTheory.pull_cupPow_eq_cupPow_pull q p ξX k iX, UpperTheory.pull_cupPow_eq_cupPow_pull q β ξY (k + 1) iY, e1, hrel k,
     cpow_one' iB, cup_cl, cup_cr, c_cc, _root_.GlobalTheory.EtC.CupAssoc.main, cup_cr, c_cc, c_cc, c_cc]
 
 private theorem rel_sum {E X Y B : Spc} (πX : X ⟶ E) (πY : Y ⟶ E) (p : B ⟶ X) (β : B ⟶ Y) (hp : p ≫ πX = β ≫ πY)
@@ -237,7 +227,7 @@ private theorem gysin_chase_identity {E X Y B W₁ B₁ : Spc} (πX : X ⟶ E) (
   apply hinj
   have e1 : pull _ g₁ _ _ ((cup q (pull _ p _ _ y1) (cpow q ξ 1)).cast
       (by push_cast; ring) (by push_cast; ring) : Ht q B n i) = 0 := by
-    rw [pull_c, pull_u, UpperTheory.pull_cupPow_eq_cupPow_pull q g₁ ξ 1 iB, hg, cpow_zero_one, map_zero, c_zero]
+    rw [pull_cast', pull_u, UpperTheory.pull_cupPow_eq_cupPow_pull q g₁ ξ 1 iB, hg, cpow_zero_one, map_zero, cast_zero']
   calc pull _ (g₁ ≫ p) _ _ y0 = pull _ g₁ _ _ (pull _ β _ _ x) := by
         rw [hy, map_add (f := _), e1, add_zero, pull_comp]
     _ = pull _ b₁ _ _ (pull _ f₁ _ _ x) := by rw [← pull_comp, h₁, pull_comp]
