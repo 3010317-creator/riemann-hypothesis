@@ -417,7 +417,7 @@ theorem eMtTw_isometry_state : ∀ (K : Ctx) (B : Base) (f : Fr B.toPre) (T : Tw
     exact (congrArg (Df.SameForm w.I w.l u a ((P.q.per.e a).symm (P.q.e.eT u a F))) ((P.q.e.eT u a).symm_apply_apply F)).mp h
   have h1 : ∀ F : (TC.per w.I w.l u a).Mt, P.q.e.eT u a F = P.q.per.e a ((P.q.per.e a).symm (P.q.e.eT u a F)) := fun F =>
     ((P.q.per.e a).apply_symm_apply _).symm
-  rw [h1 F, h1 G, inner_per_e P a, GlobalTheory.T.rowFormMetric_eq_classSumMetric w.I w.ok w.pins w.l P.hX x.o.Z u a F G _ _ (key F) (key G)]
+  rw [h1 F, h1 G, inner_per_e P a, _root_.GlobalTheory.Mem.Df.ipMt_eq_cSum w.I w.ok w.pins w.l P.hX x.o.Z u a F G _ _ (key F) (key G)]
 
 end GlobalTheory.Mem.R3.Rw.EmtTw
 
@@ -786,7 +786,7 @@ theorem eMt0_isometry : ∀ (K : Ctx) (B : Base) (f : Fr B.toPre) (T : TwDat B) 
   have h1 : ∀ F : ((w.D x.o.Z).mem u).P.Mt, P.q.e.e0 u F = P.q.per.e w.I.mu0 ((P.q.per.e w.I.mu0).symm (P.q.e.e0 u F)) :=
     fun F => ((P.q.per.e w.I.mu0).apply_symm_apply _).symm
   rw [h1 F, h1 G]
-  exact (hin _ _).trans (GlobalTheory.T.rowFormMetric_eq_classSumMetric w.I w.ok w.pins w.l P.hX x.o.Z u w.I.mu0 F G _ _ (key F) (key G)).symm
+  exact (hin _ _).trans (_root_.GlobalTheory.Mem.Df.ipMt_eq_cSum w.I w.ok w.pins w.l P.hX x.o.Z u w.I.mu0 F G _ _ (key F) (key G)).symm
 
 end GlobalTheory.Mem.R3.Rw.St
 

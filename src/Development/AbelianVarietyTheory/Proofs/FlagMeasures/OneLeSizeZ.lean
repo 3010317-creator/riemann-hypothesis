@@ -139,7 +139,7 @@ theorem primInv_mem (h : V →ₗ⋆[K] V →ₗ[K] K) (γ : V ≃ₗ[K] V) (hγ
   · rw [hspan, LinearEquiv.finrank_map_eq]
     exact hrk
   · rw [← hdet]
-    exact GlobalTheory.T.latDetH_map_injective_isometry K V V h h (γ : V →ₗ[K] V) γ.injective (fun x y => hγ x y) M
+    exact _root_.GlobalTheory.LoopC.DetMap.latDetH_map K V V h h (γ : V →ₗ[K] V) γ.injective (fun x y => hγ x y) M
 
 theorem primInv_le (h : V →ₗ⋆[K] V →ₗ[K] K) (γ : V ≃ₗ[K] V) (hγ : γ ∈ Formalism.HermitianLatticesTheory.isom h)
     (L : Submodule (𝓞 K) V) (j de : ℕ) : cntPrim h L j de ≤ cntPrim h (Formalism.HermitianLatticesTheory.gmap γ L) j de := by
@@ -372,8 +372,8 @@ theorem main : ∀ (D : D7) (T : D.host.E) (F : Fg D T) (H : Submodule D.host.E 
   obtain ⟨B, rfl, b⟩ := key N' hN'
   rw [a, b]
   refine ⟨?_, ?_, ?_⟩
-  · exact (GlobalTheory.T.latDetH_map_injective_isometry _ _ _ ((hS D).hT.domRestrict₁₂ H H) _ π hinj hπ A).trans
-      (GlobalTheory.T.latDetH_map_injective_isometry _ _ _ ((hS D).hT.domRestrict₁₂ H H) _ H.subtype H.injective_subtype (fun _ _ => rfl) A).symm
+  · exact (_root_.GlobalTheory.LoopC.DetMap.latDetH_map _ _ _ ((hS D).hT.domRestrict₁₂ H H) _ π hinj hπ A).trans
+      (_root_.GlobalTheory.LoopC.DetMap.latDetH_map _ _ _ ((hS D).hT.domRestrict₁₂ H H) _ H.subtype H.injective_subtype (fun _ _ => rfl) A).symm
   · exact (finrank_span_map π hinj A).trans (finrank_span_map H.subtype H.injective_subtype A).symm
   · exact (card_quot_map π hinj A B).trans (card_quot_map H.subtype H.injective_subtype A B).symm
 

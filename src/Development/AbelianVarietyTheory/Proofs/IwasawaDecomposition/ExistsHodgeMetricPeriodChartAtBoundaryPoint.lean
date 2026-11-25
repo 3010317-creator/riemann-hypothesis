@@ -752,8 +752,8 @@ theorem exists_riemann_period_chart : ∀ (E : Type) [Field E] [NumberField E] [
       have := hslice 0 hmem0
       rw [h0] at this
       exact this
-    obtain ⟨Tt, hT1, hT2, hTc⟩ := GlobalTheory.T.exists_toricTorsion_cubicalWeil_one_complexPoint E H T.Z.X T.Z.t (x₀.1 ≫ genι T.Z) g N (ex x₀) hN (hExpAt x₀ hx₀) hsurj hsl
-    obtain ⟨S, hSc, hS⟩ := GlobalTheory.T.torsion_count_through_exponential_lattice_kernel _ g r₀ N (ex x₀) (ζ 0) Tt hN (hadd x₀ hx₀) hsurj hζB hT1 hTc
+    obtain ⟨Tt, hT1, hT2, hTc⟩ := _root_.GlobalTheory.exists_toric_torsion_cubWeil_one_of_exp E H T.Z.X T.Z.t (x₀.1 ≫ genι T.Z) g N (ex x₀) hN (hExpAt x₀ hx₀) hsurj hsl
+    obtain ⟨S, hSc, hS⟩ := _root_.GlobalTheory.ShFam.Hor.LogCh.exp_lattice_torsion_count _ g r₀ N (ex x₀) (ζ 0) Tt hN (hadd x₀ hx₀) hsurj hζB hT1 hTc
     refine ⟨S, hSc, fun u u' hu => ?_⟩
     show GlobalTheory.UU.CubWeil T.Z.t.cub N (ex (e.symm 0) ((N : ℂ)⁻¹ • ∑ j, u j • ζ 0 j))
       (ex (e.symm 0) ((N : ℂ)⁻¹ • ∑ j, u' j • ζ 0 j)) (unitOn 1)

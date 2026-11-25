@@ -598,7 +598,7 @@ theorem side : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (v : D.what₂.Word
     apply gmap_inj ψ₁
     rw [← lsub_map A1, ← lsub_map A1, ← gmap_mul, mul_inv_cancel_left]
     exact hL
-  obtain ⟨n, hn, hnΛ⟩ := GlobalTheory.T.row_lattices_same_inner_differ_by_rational_unipotent D _ (X.Fu v) Λa Λb (ψ₁⁻¹ * ψ₀) ((Y.rowsOK v).1 Λa ha)
+  obtain ⟨n, hn, hnΛ⟩ := _root_.GlobalTheory.Unfold.sameInner_unip D _ (X.Fu v) Λa Λb (ψ₁⁻¹ * ψ₀) ((Y.rowsOK v).1 Λa ha)
     ((Y.rowsOK v).1 Λb hb) As hsub
   have Ans : Adapt (n * (ψ₁⁻¹ * ψ₀)) (lf D (X.Fu v)) (lf D (X.Fu v)) := adapt_mul As (nrat_adapt hn)
   have heq : Λa = Λb := (GlobalTheory.T.row_representatives_up_to_frame_adapted_isometry D X Y v v).2 Λb hb Λa ha _ Ans hnΛ

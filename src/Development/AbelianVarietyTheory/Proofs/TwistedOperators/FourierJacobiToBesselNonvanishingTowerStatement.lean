@@ -1044,7 +1044,7 @@ theorem rungB : FockTot → PartFixed → RungB := by
 
   have hi : 2 * k + 1 < D.R.m := by omega
   obtain ⟨hw1, hw2, hodd, -, hdepiff, hdn, hpart, hpartEq, hhaar, hfund⟩ :=
-    GlobalTheory.T.gridConjugation_weilData_inverseCharacter D hD T L μ0 hL sc G W M hM (2 * k + 1) hi
+    _root_.GlobalTheory.Asc.FamilyModel.conjRead D hD T L μ0 hL sc G W M hM (2 * k + 1) hi
   obtain ⟨hχS, hχT⟩ := hodd (odd_two_mul_add_one k)
   obtain ⟨hrap, hchain⟩ := hΨ
   obtain ⟨f, hdep, hΨeq⟩ := hchain (2 * k + 1) hi

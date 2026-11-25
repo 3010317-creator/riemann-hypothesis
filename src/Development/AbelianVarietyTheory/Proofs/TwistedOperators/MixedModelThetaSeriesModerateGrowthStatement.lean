@@ -731,7 +731,7 @@ theorem integral : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C C' : Matrix (Fin V
     have := hinv u huU hufin
     rw [hact] at this
     exact this
-  have h2 := GlobalTheory.T.mixedModelTerm_heisenbergIsotropic_character D V V' W r C C' B hs ψ hψ μ 𝓨 hY F hF y (finLift ((N : D.host.E) • x))
+  have h2 := _root_.GlobalTheory.MixedTermTranslate.term_heisO_isoPart D V V' W r C C' B hs ψ hψ μ 𝓨 hY F hF y (finLift ((N : D.host.E) • x))
   rw [h1] at h2
   have hph : phase ψ V W C C' y (finLift ((N : D.host.E) • x)) = 1 :=
     mul_right_cancel₀ hy (by rw [one_mul]; exact h2.symm)
@@ -840,7 +840,7 @@ theorem term_dRho_dirAt : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C C' : Matrix
 
   have hg : ∀ t : ℝ, term ψ V V' W C C' B μ 𝓨 (heisO ψ V W (lineAt θ τ (dirAt V W C τ z) t) G) y =
       Complex.exp (2 * Real.pi * Complex.I * ((t * c : ℝ) : ℂ)) * term ψ V V' W C C' B μ 𝓨 G y := fun t => by
-    rw [← isoPart_lineAt hθ V W C τ z t, GlobalTheory.T.mixedModelTerm_heisenbergIsotropic_character D V V' W r C C' B hs ψ hψ μ 𝓨 h G hG y _,
+    rw [← isoPart_lineAt hθ V W C τ z t, _root_.GlobalTheory.MixedTermTranslate.term_heisO_isoPart D V V' W r C C' B hs ψ hψ μ 𝓨 h G hG y _,
       phase_lineAt hθ V W C C' hCC hψ y τ z t, hc]
   have hd1 : HasDerivAt (fun t : ℝ => term ψ V V' W C C' B μ 𝓨 (heisO ψ V W (lineAt θ τ (dirAt V W C τ z) t) G) y)
       (2 * Real.pi * Complex.I * (c : ℂ) * term ψ V V' W C C' B μ 𝓨 G y) 0 := by

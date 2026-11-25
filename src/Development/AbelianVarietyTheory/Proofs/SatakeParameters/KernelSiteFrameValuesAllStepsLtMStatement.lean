@@ -98,7 +98,7 @@ namespace GlobalTheory.TwV.DelA
 theorem dec_update : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fact (D.what₂.places.resChar w).Prime] {std t J} S => J.Dict std → ∀ j (hj : j + 1 ≤ D.R.m) (La : (sysS H X std).Lt (j + 1)), ((sysS H X std).Pj (j + 1)).IsLatTup La.2 → ∀ (γ : GL (Fin (D.R.N (j + 1))) D.host.E), γ ∈ UJ (sigD D : D.host.E →+* D.host.E) (gramN D (j + 1) hj) → ∀ κ : ((J.St (j + 1) hj).K (J.chart std (j + 1) hj La)).lev.U, (J.pt std (j + 1) hj La).1 = GlobalTheory.TwU.ratA D.host.F γ * ((J.St (j + 1) hj).y (clsAt X H (j + 1) La.1 La.2)).1 * κ.1 → ∃ d : Dec J std, d.gam (j + 1) hj La = γ ∧ d.kap (j + 1) hj La = κ) := by
   unfold GlobalTheory.TwV.AllSites
   intro D _ hT _ _ _ _ _ ex u μ w hg Lv I H X _ std t J S hD j hj La hLa γ hγ κ hκ
-  obtain ⟨d0⟩ := GlobalTheory.T.exists_adelic_latticeTuple_decomposition S hD
+  obtain ⟨d0⟩ := _root_.GlobalTheory.TwV.DelB.dec_exists S hD
   have key : ∀ k (hk : k ≤ D.R.m) (Lb : (sysS H X std).Lt k), ∃ (g : GL (Fin (D.R.N k)) D.host.E)
       (c : ((J.St k hk).K (J.chart std k hk Lb)).lev.U),
       g ∈ UJ (sigD D : D.host.E →+* D.host.E) (gramN D k hk) ∧
@@ -161,7 +161,7 @@ theorem rdJ_eq_of_realAt : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv 
   have hc0 : clsOf (H.core j hj) La.1 La.2 = c.1 := clsOf_eq (H.core j hj) hcls
   have hclsAt : clsAt X H (j + 1) La.1 La.2 = castCls (X.onCh j hj) (j + 1) c.1 := by
     rw [clsAt_succ X H j hj, hc0]
-  obtain ⟨g', hg', hpt'⟩ := GlobalTheory.T.latticeTupleSuccLevel_point_isComponentPointInChart S hDict j hj La hLa
+  obtain ⟨g', hg', hpt'⟩ := _root_.GlobalTheory.TwV.DelA.ptS_isPt S hDict j hj La hLa
   have hx : Formalism.UG.bc (inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) γ *
       (((I.at' j hj).st.K ((I.at' j hj).st.eC.symm La.1).1).y c).1 * κ.1 ∈
       UPts (sigD D) (gramN D (j + 1) hj) (FiniteAdeleRing (𝓞 D.host.F) D.host.F) :=
@@ -183,7 +183,7 @@ theorem rdJ_eq_of_realAt : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv 
     rw [e₀, hy]
     show _ = _ * _ * (κ.1 * κ₀.1)
     simp only [mul_assoc])
-  obtain ⟨c₂, κ₂, hc₂, hκ₂, -, hiff⟩ := GlobalTheory.T.realAt_succ_iff_decomposition_values S d j hj h La hLa
+  obtain ⟨c₂, κ₂, hc₂, hκ₂, -, hiff⟩ := _root_.GlobalTheory.TwV.DelA.realAt_succ_decomp S d j hj h La hLa
   have ec : c₂ = c := Subtype.ext (castCls_inj (X.onCh j hj) (j + 1) (hc₂.trans hclsAt))
   have eκ : κ₂ = κ * κ₀ := Subtype.ext (hκ₂.trans (by rw [hdκ]))
   have key := (hiff φ V).1 (hR d) z z' (by rw [hdγ]; exact hz)
@@ -677,9 +677,9 @@ theorem target_scalar : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H
         d.uT S j La' * kT J j hj La'.1) := by
   intro D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X _ std t J S d j hj La'
   have hjm : j < D.R.m := hj
-  have hW := (GlobalTheory.T.kernelSite_modelStageWeights_eq_chainWeights S j hjm ⟨La'.1⟩).dv
-  obtain ⟨e, he, hmu⟩ := GlobalTheory.T.stepCharacter_det_rationalIsometry S j hjm
-  have hG := GlobalTheory.T.det_rational_unitary_orthonormalChange_matrices S (j + 1) hj
+  have hW := (_root_.GlobalTheory.TwV.DelA.wtOK_sites S j hjm ⟨La'.1⟩).dv
+  obtain ⟨e, he, hmu⟩ := _root_.GlobalTheory.TwV.muT_det_ratA S j hjm
+  have hG := _root_.GlobalTheory.TwV.DelB.gMat_det S (j + 1) hj
   set γ := d.gam (j + 1) hj La' with hγ
   have hmem : γ ∈ UJ (sigD D : D.host.E →+* D.host.E) (gramN D (j + 1) hj) := d.mem (j + 1) hj La'
   have hmuγ := hmu (j + 1) hj γ hmem
@@ -776,7 +776,7 @@ theorem embT_det_ne_zero (D : D7) {n : ℕ} (M : GL (Fin n) D.host.E) (τ : D.wh
 theorem transported_frame_realAt : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fact (D.what₂.places.resChar w).Prime] {std t J} S => S.Pos → ∀ ι : ℂ →+* ℂ_[D.what₂.places.resChar w], (∀ z : TaylorLogMetric.Qbar, ι z = S.lam z) → letI := wittFractionAlgebraCp (D.what₂.places.resChar w); letI := algKfC S.E.toCEmb; ∀ (d : Dec J std) j (hj : j + 1 ≤ D.R.m) (h : ((sysS H X std).Pj (j + 1)).m + 1 = D.R.N (j + 1)) (La' : (sysS H X std).Lt (j + 1)) (φ : (D.chTw u μ).cls (j + 1) → (D.chTw u μ).Y (j + 1) → ℂ) (P : MvPolynomial (GL3Theta.FrV D (D.R.N (j + 1))) ℂ), P ∈ WtPol ℂ (extNu (D.R.N (j + 1)) (Formalism.L2.Ker.nuT D u j)) → (∀ y, φ (clsAt X H (j + 1) La'.1 La'.2) y = (∏ τ, (D.chTw u μ).de (j + 1) y τ ^ (D.chTw u μ).sDiv j τ)⁻¹ * frPoly (t.O u μ) (j + 1) P y) → ∃ V : XR ((sysS H X std).Pj (j + 1)) ℂ, RealAt d (j + 1) hj h La' φ V ∧ MvPolynomial.map ι V = scT d S ι j La'.1 La'.2 • GlobalTheory.FrameB.tauV ℂ_[D.what₂.places.resChar w] d.fd2 (ltC S.g S.hLT) j La' (phi0 (sysS H X std) D (hT.gat_pos u w hg) ι j P)) := by
   intro D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X _ std t J S hPos ι hι
   intro d j hj h La' φ P hP hφ
-  have hWt := GlobalTheory.T.kernelSite_modelStageWeights_eq_chainWeights S j (by omega) ⟨La'.1⟩
+  have hWt := _root_.GlobalTheory.TwV.DelA.wtOK_sites S j (by omega) ⟨La'.1⟩
   obtain ⟨-, -, -, hle, -⟩ := size_first_last_rows (sysS H X std) D (hT.gat_pos u w hg) j hWt.rk (nuT D u j) hWt.nu
   have hR : Realises (sysS H X std) D (hT.gat_pos u w hg) (j + 1) h (wT (sysS H X std) D (hT.gat_pos u w hg) j) P
       (phiC (sysS H X std) D (hT.gat_pos u w hg) (j + 1) h (wT (sysS H X std) D (hT.gat_pos u w hg) j) P) := by
@@ -784,7 +784,7 @@ theorem transported_frame_realAt : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ 
     exact selOf_mem (relPhi (sysS H X std) D (hT.gat_pos u w hg) (j + 1) h _) P ⟨(P, R0), hR0, rfl⟩
   refine ⟨sPt d (j + 1) hj La' • actC (sysS H X std) D (hT.gat_pos u w hg) (j + 1) h (mM d (j + 1) hj La')⁻¹
     (phiC (sysS H X std) D (hT.gat_pos u w hg) (j + 1) h (wT (sysS H X std) D (hT.gat_pos u w hg) j) P), ?_, ?_⟩
-  · rw [GlobalTheory.T.kernelSite_valuesAtPoint_iff_realisesInStdCoords S d (j + 1) hj h La' (fun τ => (D.chTw u μ).sDiv j τ) φ P hφ, map_smul, actC_actC_inv]
+  · rw [_root_.GlobalTheory.TwV.DelA.realAt_iff_realises S d (j + 1) hj h La' (fun τ => (D.chTw u μ).sDiv j τ) φ P hφ, map_smul, actC_actC_inv]
     have hw : (fun τ => (D.chTw u μ).sDiv j τ - cTw D (j + 1)) = wT (sysS H X std) D (hT.gat_pos u w hg) j :=
       funext fun τ => (hWt.dv τ).symm
     rw [hw]
@@ -898,10 +898,10 @@ namespace GlobalTheory.TwV.DelA
 theorem source_scalar_const : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fact (D.what₂.places.resChar w).Prime] {std t J} S => ∀ (d : Dec J std) j (hj : j < D.R.m), Nonempty (Lv.comp (j + 1)) → ∀ La : (sysS H X std).Lt j, dPow (mM d j hj.le La).1 (fun τ => -(wT (sysS H X std) D (hT.gat_pos u w hg) j τ)) * sPt d j hj.le La * d.uS S j La = kS J j hj.le La.1) := by
   unfold GlobalTheory.TwV.AllSites
   intro D _ hT _ _ _ _ _ ex u μ w hg Lv I H X _ std t J S d j hj hne La
-  have hW := GlobalTheory.T.kernelSite_modelStageWeights_eq_chainWeights S j hj hne
+  have hW := _root_.GlobalTheory.TwV.DelA.wtOK_sites S j hj hne
   have hfr := (GlobalTheory.T.changedFrame_rational_unitary S d j hj.le (rkS _ _ hW.rk) La).2.2
-  obtain ⟨e, he, hmu⟩ := GlobalTheory.T.stepCharacter_det_rationalIsometry S j hj
-  have hgd := (GlobalTheory.T.det_rational_unitary_orthonormalChange_matrices S j hj.le).2 _ (d.mem j hj.le La)
+  obtain ⟨e, he, hmu⟩ := _root_.GlobalTheory.TwV.muT_det_ratA S j hj
+  have hgd := (_root_.GlobalTheory.TwV.DelB.gMat_det S j hj.le).2 _ (d.mem j hj.le La)
   obtain ⟨q, hq⟩ := Formalism.L2.Ker.even_rankN D.R (j + 1)
   have hs : ∀ τ, (D.chTw u μ).sSharp j τ = e τ - ((D.R.N (j + 1) / 2 : ℕ) : ℤ) := by
     intro τ
@@ -978,7 +978,7 @@ theorem GlobalTheory.TwV.DelA.unit_mul_scal_eq_scT : AllSites (fun {D L hT Gi Gl
   have hr := GlobalTheory.TwV.DelB.sysS_ranks S
   have hfr := GlobalTheory.T.changedFrame_rational_unitary S d j (Nat.le_of_succ_le hj) (hr.2.2.1 j) La
   have hsc := GlobalTheory.T.sourceScalar_latticeTuple_constant S d j hj ⟨La'.1⟩ La
-  have hun := (GlobalTheory.T.stepDeterminantConstant_unit_independent S hpos ι hι j hj La.1 La'.1).2.1
+  have hun := (_root_.GlobalTheory.TwV.DelA.cKs_unit_indep S hpos ι hι j hj La.1 La'.1).2.1
   have hcA := GlobalTheory.TwV.DelA.scal_inv_frame (sysS H X std) D (hT.gat_pos u w hg) ℂ_[D.what₂.places.resChar w] ι (J.rho std) hps.1 d.fd2 j La (hr.2.2.1 j) (mM d j (Nat.le_of_succ_le hj) La) hfr.1 hfr.2.1
   have key : cA (sysS H X std) ℂ_[D.what₂.places.resChar w] j (BOf d.fd2 j La) * sO d ι j La * ι (d.uS S j La) =
       ι (kS J j (Nat.le_of_succ_le hj) La.1 * cOp (sysS H X std) D (hT.gat_pos u w hg) j (t.O u μ).dgen) := by
@@ -1029,13 +1029,13 @@ theorem tieDel_all_steps : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv 
     intro La _ x c' L' _
     exact absurd ⟨⟨La.1⟩, ⟨c'⟩⟩ hne
   obtain ⟨⟨a⟩, ⟨a'⟩⟩ := hne
-  obtain ⟨hn1, -, hsame⟩ := GlobalTheory.T.stepDeterminantConstant_unit_independent S hPos ι hι j hj1 a a'
+  obtain ⟨hn1, -, hsame⟩ := _root_.GlobalTheory.TwV.DelA.cKs_unit_indep S hPos ι hι j hj1 a a'
   set cK := cKs S ι j hj1 a a' with hcK
   refine ⟨cK, hn1, ?_⟩
   obtain ⟨-, -, hrk, hRT⟩ := GlobalTheory.TwV.DelB.sysS_ranks S
   have hN := hRT j
   have h1 : ((sysS H X std).Pj (j + 1)).m + 1 = D.R.N (j + 1) := hrk (j + 1)
-  obtain ⟨d0⟩ := GlobalTheory.T.exists_adelic_latticeTuple_decomposition S hDict
+  obtain ⟨d0⟩ := _root_.GlobalTheory.TwV.DelB.dec_exists S hDict
   intro La hLa x c' L' hL'
 
   have hQ : K2.SharpQ t ex.tw u μ j x (K2.qOf t ex.tw u μ j x) := by

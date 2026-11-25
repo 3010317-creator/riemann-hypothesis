@@ -192,7 +192,7 @@ theorem dict_coords : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.wh
     obtain ⟨g', hg', he⟩ := hK q
     exact ⟨g', hg'.1.1, he⟩
   obtain ⟨B, hBU, hBf, hBblk⟩ :=
-    (GlobalTheory.T.rationalCommonStabiliser_unitriangular_coords D X Y u u' hSt hk w F00 F'0 FP hZ hGv hAt G c).1 _ hStm
+    (_root_.GlobalTheory.HL.StCoord.stab_coords D X Y u u' hSt hk w F00 F'0 FP hZ hGv hAt G c).1 _ hStm
   have hT' : ((Tu D u' : ℕ) : D.host.E) ≠ 0 := Nat.cast_ne_zero.2 (D.mem u').A.T_prime.ne_zero
   have hli : LinearIndependent D.host.E G.f' := by
     have e : G.f' = fun a => c.e (frame F'0 a) := funext c.f'_eq
@@ -665,7 +665,7 @@ theorem stMat_int_iff : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.
     have e : G.f' = (c.e : (VS D).V →ₗ[D.host.E] G.V) ∘ frame F'0 := by
       funext a; exact c.f'_eq a
     rw [e]; exact h1
-  have hStCo := GlobalTheory.T.rationalCommonStabiliser_unitriangular_coords D X Y u u' hSt hk w F00 F'0 FP hZ hG hAB G c
+  have hStCo := _root_.GlobalTheory.HL.StCoord.stab_coords D X Y u u' hSt hk w F00 F'0 FP hZ hG hAB G c
   have hK := GlobalTheory.T.integralStabiliser_iff_rational_coords D X Y u u' hSt hk w F00 F'0 FP hZ hG hAB G c
   have hexp : ∀ a b : Fin (D.R.rS + 1), a < b →
       (-(((b.val - a.val : ℕ)) : ℤ)) = -((b : ℤ) - (a : ℤ)) := by

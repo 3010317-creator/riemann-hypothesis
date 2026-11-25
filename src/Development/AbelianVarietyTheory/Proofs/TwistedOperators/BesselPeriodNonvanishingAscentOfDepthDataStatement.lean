@@ -195,7 +195,7 @@ theorem rungJ : FockTot → PartFixed → RungJ := by
   have hi : 2 * k + 2 < D.R.m := by omega
 
   obtain ⟨c1, c2, -, c4, c5, c6, c7, c8, c9h, c9f⟩ :=
-    GlobalTheory.T.gridConjugation_weilData_inverseCharacter D hD T L μ0 hL sc G W M hM (2 * k + 2) hi
+    _root_.GlobalTheory.Asc.FamilyModel.conjRead D hD T L μ0 hL sc G W M hM (2 * k + 2) hi
   obtain ⟨c4a, c4b⟩ := c4 ⟨k + 1, by omega⟩
   rw [c4a, c4b] at c1
 
@@ -1140,7 +1140,7 @@ theorem rapidDec_star {V : HSp D} {f : GA D V → ℂ} (h : RapidDec V f) : Rapi
 theorem rung0 (hF : FockTot) : Rung0 := by
   intro D hq T L μ0 hL sc G W M hM v F ΓL hE hG Ψ hΨ u hu hper h
   have hm : 0 < D.R.m := by omega
-  obtain ⟨hom, homC, -, hev, hdep, hdn, hpart, -, -, -⟩ := GlobalTheory.T.gridConjugation_weilData_inverseCharacter D hq T L μ0 hL sc G W M hM 0 hm
+  obtain ⟨hom, homC, -, hev, hdep, hdn, hpart, -, -, -⟩ := _root_.GlobalTheory.Asc.FamilyModel.conjRead D hq T L μ0 hL sc G W M hM 0 hm
   obtain ⟨hchT, hchS⟩ := hev ⟨0, rfl⟩
   obtain ⟨hrap, hch⟩ := hΨ
   obtain ⟨f, hf, hΨ0⟩ := hch 0 hm

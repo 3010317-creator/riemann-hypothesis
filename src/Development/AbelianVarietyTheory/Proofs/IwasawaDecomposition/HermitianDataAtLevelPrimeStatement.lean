@@ -479,7 +479,7 @@ theorem diamond_on_hermitian_side : ∀ {B : Base} {X : PreX B.toPre} (I : TC B 
       exact e3
   obtain ⟨γ, g1, g2, g3⟩ := core
   exact ⟨gx i hi γ, fun _ => ⟨dilCl_of_crd (F u).atT (F u).lv i hi v a c γ g2 g3
-    (fun v' hv' z z' e => GlobalTheory.T.levelFunctional_eq_of_classes_related_at_place I hOk hP l Z H F hF hC u i hi v v' c _ γ.1 g1 hv' z z' e),
+    (fun v' hv' z z' e => _root_.GlobalTheory.Mem.Col2.HAt.FvOff.fv_eq_of_adC I hOk hP l Z H F hF hC u i hi v v' c _ γ.1 g1 hv' z z' e),
     GlobalTheory.T.adelic_relation_classes_coordinates I hOk hP l Z H F hF hC u i hi v c _ γ g1⟩⟩
 
 end GlobalTheory.Mem.Col2.HAt.Dil
@@ -691,7 +691,7 @@ theorem dnCl_of_tie {B : Base} {X : PreX B.toPre} (I : TC B X) (hOk : I.Ok) (hP 
     exact congrArg g (congrArg _ (Subtype.ext (crdN_gx i hi γ₀ z.1).symm))
   · intro v' hv' z hz
     rw [prH_eq _ _ hi, prH_eq _ _ hi]
-    exact GlobalTheory.T.levelFunctional_eq_of_classes_related_at_place I hOk hP l Z H F hS hC u i hi v v' c _ γ₀.1 hAd hv' (toLd i hi c ⟨_, hz⟩) (toLd i hi _ z)
+    exact _root_.GlobalTheory.Mem.Col2.HAt.FvOff.fv_eq_of_adC I hOk hP l Z H F hS hC u i hi v v' c _ γ₀.1 hAd hv' (toLd i hi c ⟨_, hz⟩) (toLd i hi _ z)
       (crdN_gx i hi γ₀ z.1)
 
 end GlobalTheory.Mem.Col2.HAt
@@ -1016,7 +1016,7 @@ theorem GlobalTheory.Mem.Col2.HAt.UpMove.up_move : ∀ {B : Base} {X : PreX B.to
     · exact hP h
     · exact hc h
   · intro v' hv' z z' e
-    exact GlobalTheory.T.levelFunctional_eq_of_classes_related_at_place I hOk hPins l Z H F hStd hCar u i hi v v' c _ γ.1 hAd hv' z z' e
+    exact _root_.GlobalTheory.Mem.Col2.HAt.FvOff.fv_eq_of_adC I hOk hPins l Z H F hStd hCar u i hi v v' c _ γ.1 hAd hv' z z' e
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HermitianUpMoveAtLevelPrimePlace =====

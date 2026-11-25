@@ -725,7 +725,7 @@ theorem stab_fix (hΛ : IsRowLat D F0 Λ) {γ : GV D} (hγ : γ ∈ stabF D F0) 
       have e : t.symm y = y - (t (t.symm y) - t.symm y) := by simp
       rw [e]
       exact sub_mem hy (hXL (htP _ hwP))
-  obtain ⟨n, hn, hnΛ⟩ := GlobalTheory.T.row_lattices_same_inner_differ_by_rational_unipotent D T F0 Λ Λ (t * γ) hΛ hΛ hσ hL
+  obtain ⟨n, hn, hnΛ⟩ := _root_.GlobalTheory.Unfold.sameInner_unip D T F0 Λ Λ (t * γ) hΛ hΛ hσ hL
   refine ⟨n * (t * γ), ⟨⟨Subgroup.mul_mem _ hn.1 hσ.1, fun k => ?_⟩, hnΛ⟩, fun y hy => ?_⟩
   · have e : (n * (t * γ)) (frame (lf D F0) k) - frame (lf D F0) k =
         (n ((t * γ) (frame (lf D F0) k)) - (t * γ) (frame (lf D F0) k)) +
