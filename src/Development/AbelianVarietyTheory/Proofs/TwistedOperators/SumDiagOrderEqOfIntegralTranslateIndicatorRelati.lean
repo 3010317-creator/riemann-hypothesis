@@ -133,32 +133,10 @@ variable {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] {m : �
 theorem exists_min_of_preorder {κ : Type} (R : κ → κ → Prop) (hR : ∀ x, R x x)
     (ht : ∀ x y z, R x y → R y z → R x z) :
     ∀ s : Finset κ, s.Nonempty → ∃ k ∈ s, ∀ l ∈ s, R l k → R k l := by
-  intro s
-  induction s using Finset.induction_on with
-  | empty =>
-    intro h
-    simp at h
-  | @insert a s ha ih =>
-    intro _
-    rcases s.eq_empty_or_nonempty with hs | hs
-    · subst hs
-      refine ⟨a, by simp, fun l hl _ => ?_⟩
-      simp at hl
-      subst hl
-      exact hR _
-    · obtain ⟨k, hk, hmin⟩ := ih hs
-      by_cases hak : R a k ∧ ¬ R k a
-      · refine ⟨a, Finset.mem_insert_self a s, fun l hl hla => ?_⟩
-        rw [Finset.mem_insert] at hl
-        rcases hl with rfl | hl
-        · exact hR _
-        · exact ht _ _ _ hak.1 (hmin l hl (ht _ _ _ hla hak.1))
-      · refine ⟨k, Finset.mem_insert_of_mem hk, fun l hl hlk => ?_⟩
-        rw [Finset.mem_insert] at hl
-        rcases hl with rfl | hl
-        · by_contra hc
-          exact hak ⟨hlk, hc⟩
-        · exact hmin l hl hlk
+  intro s hs
+  let : Preorder κ := { le := R, le_refl := hR, le_trans := ht }
+  obtain ⟨k, hk⟩ := s.exists_minimal hs
+  exact ⟨k, hk.1, fun l hl => hk.2 hl⟩
 
 theorem mem_iff_of_mutual {A B : GL (Fin m) L} (h1 : (A⁻¹).1 * B.1 ∈ intMat L (Fin m) (Fin m))
     (h2 : (B⁻¹).1 * A.1 ∈ intMat L (Fin m) (Fin m)) (t : Matrix (Fin m) (Fin m) L) :
