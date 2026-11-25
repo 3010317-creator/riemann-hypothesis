@@ -600,8 +600,15 @@ section -- clump:auto
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC Matrix
 attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.exists_fullHermitianColumns_trueColumns : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (C : ColsTiedSym (I.rec7 l Z)) (g : Formalism.L2.Herm.SymmetricGroupCompatibility (I.rec7 l Z) C.herm.base), I.StdC l Z C → ∃ Fu : ColsFullS C, HEq Fu.1.g g ∧ I.StdDt l Z Fu.1.base.dt := by
-  first | exact @GlobalTheory.Mem.Col2.FullDt.exists_colsFullS
+theorem _root_.GlobalTheory.T.exists_fullHermitianColumns_trueColumns : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (C : ColsTiedSym (I.rec7 l Z)) (g : Formalism.L2.Herm.SymmetricGroupCompatibility (I.rec7 l Z) C.herm.base), I.StdC l Z C → (∀ u, I.StdLvC l Z u (C.forms u)) →
+    ∃ C' : ColsTiedSym (I.rec7 l Z),
+      (⟨C'.herm.base, C'.forms⟩ : Σ H : Formalism.L2.Herm.HermColsCh (I.rec7 l Z), ∀ u, FormsTiedSym (I.rec7 l Z) u (H.Ch u) (H.chOf u)) = ⟨C.herm.base, C.forms⟩ ∧
+      I.StdC l Z C' ∧ (∀ u, I.StdLvC l Z u (C'.forms u)) ∧
+      ∃ Fu : ColsFullS C', HEq Fu.1.g g ∧ I.StdDt l Z Fu.1.base.dt := by
+  intro B X I hI hP l Z C g hS hL
+  exact GlobalTheory.Mem.Col2.FullDt.exists_colsFullS I hI hP l Z C g hS hL
+    (GlobalTheory.T.exists_hermitian_data_carT_of_std I hI hP l Z C.herm.base C.forms)
+    (GlobalTheory.T.hermitianColumns_generators_baseLattices_functionals I hI hP l Z C.herm.base C.forms)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFullHermitianColumnsTrueColumnsStatement =====
@@ -1097,10 +1104,14 @@ theorem columnLocalData_of_levelZero_concreteData (w : ColW B f T) (Z : w.Lt) (C
         (tauLL (w.D Z) (Gt.gat_pos u v hg ⟨a, s⟩) (algebraMap (w.D Z).host.F (w.D Z).host.E (x : (w.D Z).host.F)))) :
     Nonempty (ColumnDataSplitPrimes K w Z) := by
   obtain ⟨g, hg⟩ := exists_gTiedS_heq C.herm.base G.herm hl
-  obtain ⟨Fu, h1, h2⟩ := GlobalTheory.T.exists_fullHermitianColumns_trueColumns w.I w.ok w.pins w.l Z C g hC
+  obtain ⟨C', hE, hC', hL', Fu, h1, h2⟩ :=
+    GlobalTheory.T.exists_fullHermitianColumns_trueColumns w.I w.ok w.pins w.l Z C g hC hL
+  have hl' : G.herm.lev0 = C'.herm.base.lev0 := hl.trans (congrArg (fun p => p.1.lev0) hE).symm
+  have hf' : G.forms = fun u => (C'.forms u).to0 :=
+    hf.trans (congrArg (fun p => fun u => (p.2 u).to0) hE).symm
   have e : Fu.1.base.lev0 = G.herm.lev0 :=
-    (congrArg (fun H : Formalism.L2.Herm.ColsHermS (w.D Z) => H.base.lev0) Fu.2).trans hl.symm
-  exact ⟨⟨⟨C, hC, hL, Fu, h2, Gt, c, G, herm0_eq_to0 Fu.1 G.herm e (h1.trans hg), hf,
+    (congrArg (fun H : Formalism.L2.Herm.ColsHermS (w.D Z) => H.base.lev0) Fu.2).trans hl'.symm
+  exact ⟨⟨⟨C', hC', hL', Fu, h2, Gt, c, G, herm0_eq_to0 Fu.1 G.herm e (h1.trans hg), hf',
     gPlTiedS_of G.herm hpl _ _ e (h1.trans hg)⟩, hR, hO⟩⟩
 
 
