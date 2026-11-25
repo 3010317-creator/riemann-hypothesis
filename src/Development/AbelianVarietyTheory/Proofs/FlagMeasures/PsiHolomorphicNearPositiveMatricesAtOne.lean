@@ -194,17 +194,8 @@ theorem psBasic : PsBasic := by
           {z : Fin n → Fin n → ℂ | Matrix.of z ∈ U1 ε} := fun i =>
         ((differentiable_leadMinor_mul _ _ (i.val + 1) i.isLt).differentiableOn).zpow
           (Or.inl fun z hz => hmem k z hz i)
-      have hprod : ∀ s : Finset (Fin n), DifferentiableOn ℂ (fun z : Fin n → Fin n → ℂ =>
-          ∏ i ∈ s, leadMinor ((toMK k)⁻¹ * Matrix.of z * toMK k) (i.val + 1) i.isLt ^ (-(sInt lam i)))
-          {z : Fin n → Fin n → ℂ | Matrix.of z ∈ U1 ε} := by
-        intro s
-        refine Finset.induction_on s ?_ ?_
-        · simp only [Finset.prod_empty]
-          exact differentiableOn_const _
-        · intro a s ha ih
-          simp only [Finset.prod_insert ha]
-          exact (hg a).mul ih
-      exact hprod Finset.univ
+      exact fun z hz => (HasFDerivWithinAt.finsetProd (u := Finset.univ) fun i _ =>
+        (hg i z hz).hasFDerivWithinAt).differentiableWithinAt
     have hint := (GlobalTheory.differentiableOn_integral_of_holomorphic_of_continuousOn (μ := muK ε) hU hcont hdiff).1
     unfold ps
     exact DifferentiableOn.congr (hint.const_smul (Module.finrank ℂ W : ℂ)) fun z _ => rfl
