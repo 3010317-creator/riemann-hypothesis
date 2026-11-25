@@ -9,6 +9,8 @@ public import Mathlib.Analysis.Normed.Module.Basic
 public import Mathlib.Order.Filter.AtTopBot.Archimedean
 public import Mathlib.Topology.Algebra.Module.FiniteDimension
 public import Mathlib.Topology.Algebra.Order.Floor
+public import Mathlib.RingTheory.TensorProduct.Finite
+public import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
 
 @[expose] public section
 
@@ -102,7 +104,8 @@ section Definite
 private theorem continuous_quadraticForm {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (Q : QuadraticForm ℝ V) : Continuous Q := by
   have h : Continuous fun v => (QuadraticMap.associated Q).toContinuousBilinearMap v v := by
-    fun_prop
+    exact (QuadraticMap.associated Q).toContinuousBilinearMap.continuous₂.comp
+      (continuous_id.prodMk continuous_id)
   exact h.congr fun v => QuadraticMap.associated_eq_self_apply ℝ Q v
 
 theorem posDef_of_tendsto_intCast {ι : Type*} [Finite ι] (Q : QuadraticForm ℝ (ι → ℝ))
