@@ -75,14 +75,8 @@ theorem ae_snd {μW μN : Measure (Formalism.QuantumDeterminants.Mt k r)} [SFini
   rw [e, Measure.prod_prod, hU, mul_zero]
 
 lemma star_of_inv {a b : ℂ} (ha : ‖a‖ = 1) (hab : a * b = 1) : star b = a := by
-  have ha0 : a ≠ 0 := by
-    rintro rfl
-    simp at ha
-  have hb : b = a⁻¹ := (inv_eq_of_mul_eq_one_right hab).symm
-  have hconj : star a = a⁻¹ := by
-    rw [Complex.inv_def, Complex.normSq_eq_norm_sq, ha]
-    simp
-  rw [hb, star_inv₀, hconj, inv_inv]
+  rw [← inv_eq_of_mul_eq_one_right hab, Complex.inv_eq_conj ha]
+  exact star_star a
 
 end AE
 
@@ -185,10 +179,7 @@ theorem aEquiv_of (hSG : SGrp) (hPU : PiUnit) (hSig : SigmaG) (hWR : WRightInv) 
       rw [Matrix.mul_one] at hmul
       have hn : psiGen k r z c 1 ≠ 0 := by
         intro h0; have := (hNg 1 h1N 1 h1N).2.2.2.2; rw [h0, norm_zero] at this; exact zero_ne_one this
-      have : psiGen k r z c 1 * (psiGen k r z c 1 - 1) = 0 := by rw [mul_sub, mul_one, ← hmul, sub_self]
-      rcases mul_eq_zero.mp this with h | h
-      · exact absurd h hn
-      · exact sub_eq_zero.mp h
+      exact (mul_eq_left₀ hn).1 hmul.symm
     rw [← (hNg m hm m⁻¹ hmi).2.2.2.1, h11, hψ1]
   have hπ2 : π (1 * Matrix.of p.1 * h⁻¹)⁻¹ = (π h).comp (π (Matrix.of p.1)⁻¹) := by
     rw [Matrix.one_mul, Matrix.mul_inv_rev, hinv2]
