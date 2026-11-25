@@ -57,13 +57,8 @@ theorem Yb_mul_right {p q : ℕ} (M b : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin 
     Matrix.mul_nonsing_inv _ hu, Matrix.one_mul]
 
 theorem posDef_of_psd_det {n : Type*} [Fintype n] [DecidableEq n] {M : Matrix n n ℂ} (h : M.PosSemidef)
-    (hd : M.det ≠ 0) : M.PosDef := by
-  rw [h.1.posDef_iff_eigenvalues_pos]
-  intro i
-  rcases (h.eigenvalues_nonneg i).lt_or_eq with h1 | h1
-  · exact h1
-  · exfalso; apply hd; rw [h.1.det_eq_prod_eigenvalues]
-    exact Finset.prod_eq_zero (Finset.mem_univ i) (by rw [← h1]; simp)
+    (hd : M.det ≠ 0) : M.PosDef :=
+  h.posDef_iff_det_ne_zero.mpr hd
 
 theorem posDef_swap {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
     (Y : Matrix m n ℂ) (h : (1 - Yᴴ * Y).PosDef) : (1 - Y * Yᴴ).PosDef := by
