@@ -56,25 +56,6 @@ theorem exists_pow_eq_span {F : Type} [Field F] [NumberField F] (v : HeightOneSp
 
 end GlobalTheory.TwU.MuUnr
 
-namespace GlobalTheory.TwU.MuUnr
-
-open GlobalTheory.Mem.Col2 (afIso afIso_tmul_one mem_rInt_iff)
-
-end GlobalTheory.TwU.MuUnr
-
-namespace GlobalTheory.TwU.MuUnr
-
-variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts} {Y : DivX D}
-  {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y cX}
-
-end GlobalTheory.TwU.MuUnr
-
-namespace GlobalTheory.TwU
-
-open GlobalTheory.Mem.Col2 (afIso afIso_tmul_one mem_rInt_iff)
-open GlobalTheory.TwU.MuUnr
-
-end GlobalTheory.TwU
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

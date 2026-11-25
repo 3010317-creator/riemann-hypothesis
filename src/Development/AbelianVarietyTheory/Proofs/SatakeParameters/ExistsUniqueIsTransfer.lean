@@ -99,10 +99,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry
 
-namespace GlobalTheory.EtC.Tr.SumEq
-
-end GlobalTheory.EtC.Tr.SumEq
-
 namespace GlobalTheory.EtC.Tr
 
 open CategoryTheory Limits AlgebraicGeometry in

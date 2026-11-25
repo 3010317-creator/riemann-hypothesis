@@ -145,17 +145,6 @@ end GlobalTheory.GenusTwoPureComparison.Cmp
 
 namespace GlobalTheory.GenusTwoPureComparison.Cmp
 
-open CategoryTheory Limits AlgebraicGeometry GlobalTheory.EtC
-
-section Main
-variable {T : Type} [CommRing T] [IsDomain T] [IsLocalRing T] (l : ℕ) [Fact l.Prime]
-
-end Main
-
-end GlobalTheory.GenusTwoPureComparison.Cmp
-
-namespace GlobalTheory.GenusTwoPureComparison.Cmp
-
 end GlobalTheory.GenusTwoPureComparison.Cmp
 
 end

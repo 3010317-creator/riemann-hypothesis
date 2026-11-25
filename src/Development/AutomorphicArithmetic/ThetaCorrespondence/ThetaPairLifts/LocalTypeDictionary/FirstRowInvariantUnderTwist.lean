@@ -533,10 +533,6 @@ theorem law_gen {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData 
 
 end GlobalTheory.FirstRowTermLaw
 
-namespace GlobalTheory.FirstRowTermLaw
-
-end GlobalTheory.FirstRowTermLaw
-
 end
 end -- clump:auto
 end -- clump:auto
@@ -1055,14 +1051,6 @@ open IsDedekindDomain NumberField MeasureTheory Matrix ValuativeRel GlobalTheory
 open GlobalTheory.RowTest GlobalTheory.StdFrames GlobalTheory.RowClaim
 noncomputable section
 namespace GlobalTheory.FirstRowEndLaw
-end GlobalTheory.FirstRowEndLaw
-namespace GlobalTheory.FirstRowEndLaw
-end GlobalTheory.FirstRowEndLaw
-namespace GlobalTheory.FirstRowEndLaw
-end GlobalTheory.FirstRowEndLaw
-namespace GlobalTheory.FirstRowEndLaw
-end GlobalTheory.FirstRowEndLaw
-namespace GlobalTheory.FirstRowEndLaw
 
 theorem square_identity_reduction : _root_.GlobalTheory.FunPr.ThetaLocalInputs → SumOKK → Big fun {D} {_Γ} _ _ {_Pl0} {T} {_A} {_Ks} _ _ _ {R} ch =>
     ∀ (t : T) (a : Fin ch.n) (k : FinPt ch.G (.grid 0 D.R.m)), finG (ch.G.V (.grid 0 D.R.m)) k ∈ ch.S.levRow t 0 (Nat.zero_le _) →
@@ -1104,8 +1092,6 @@ section
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
 open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.StdFrames GlobalTheory.RowClaim
 noncomputable section
-namespace GlobalTheory.FirstRowTermLaw
-end GlobalTheory.FirstRowTermLaw
 namespace GlobalTheory.FirstRowTermLaw
 
 theorem lift_splits_locally : _root_.GlobalTheory.FunPr.ThetaLocalInputs → SumOKK → Big fun {D} {_Γ} _ _ {_Pl0} {T} {_A} {_Ks} _ _ _ {R} ch =>

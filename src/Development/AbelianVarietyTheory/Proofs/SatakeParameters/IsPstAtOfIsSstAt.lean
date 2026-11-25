@@ -173,14 +173,6 @@ theorem isSstAt_twist (hD : GlobalTheory.Published.DeRhamPotSemistable) {l : ℕ
 
 end GlobalTheory.GalCut.IwaTwist
 
-namespace GlobalTheory.GalCut.IwaTwist
-
-end GlobalTheory.GalCut.IwaTwist
-
-namespace GlobalTheory.GalCut.IwaTwist
-
-end GlobalTheory.GalCut.IwaTwist
-
 end
 end -- clump:auto
 end -- clump:auto

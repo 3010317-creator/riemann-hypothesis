@@ -1189,8 +1189,6 @@ section -- clump:auto
 @[expose] public section
 
 section
-namespace GlobalTheory.FlatAnyLevel
-end GlobalTheory.FlatAnyLevel
 section Cover
 open CategoryTheory AlgebraicGeometry TopologicalSpace Limits NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.GeometryOfNumbersTheory Formalism.L2.Pj Formalism.BasicNotions

@@ -1027,8 +1027,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.SeeSaw GlobalTheory.StepData GlobalTheory.SymChain GlobalTheory.LocMod GlobalTheory.MiS GlobalTheory.MiTop GlobalTheory.Fam GlobalTheory.Mem.Col2 ValuativeRel IsLocalRing
 open scoped TensorProduct Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-namespace GlobalTheory.Fam.UnrWeil
-end GlobalTheory.Fam.UnrWeil
 open GlobalTheory.Fam.UnrWeil in
 theorem GlobalTheory.Fam.kom_weil_unram_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex) (u : D.what₂.Word), _root_.GlobalTheory.Fam.PackageHypotheses W → ∀ (f : _root_.GlobalTheory.Fam.FamilyCharacter W u) (v : VCom f.c) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ι : Type) (o : TDat f.c k ι), f.RowOK → f.ColOK → v.Is → _root_.GlobalTheory.Fam.CommutingVectorTie f v → ShapeOff v o → ∀ t j, j < D.R.m → ∃ μ, IsWeilDatumO f.c.ψ _ _ μ μ ((f.t t).kom j) ∧ ∀ i, GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter.CharUnramAt D μ (o.p i).v := by
   intro D L hT Gi Gl Kc Yd cX ex W u hW f v k _ _ _ _ ι o _ hC _ hV hS t j hj
@@ -1385,12 +1383,6 @@ theorem referenceTuple_familyPeriod_eq_period (u : D.what₂.Word) (μ : D.what�
 
 end GlobalTheory.MiTop.TailColumnRecursion
 
-namespace GlobalTheory.MiTop
-open Classical
-open GlobalTheory.MiTop.TailColumnRecursion Formalism.L2.Forms
-
-end GlobalTheory.MiTop
-
 end
 end -- clump:auto
 end -- clump:auto
@@ -1425,31 +1417,6 @@ theorem tcol_alt (f : _root_.GlobalTheory.Fam.FamilyCharacter W u) (t : W.P.T) (
   | succ i ih =>
     show (f.t t).K i ((f.t t).col i ψ) = _
     rw [ih]; rfl
-end GlobalTheory.MiTop.TailColumnRecursion
-namespace GlobalTheory.MiTop.TailColumnRecursion
-open Classical
-open Formalism.L2.Forms GlobalTheory.Core.Rk.Top Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR.Lev
-variable {D : D7}
-end GlobalTheory.MiTop.TailColumnRecursion
-namespace GlobalTheory.MiTop.TailColumnRecursion
-open Classical
-open Formalism.L2.Forms GlobalTheory.Core.Rk.Top Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR.Lev
-variable {D : D7}
-end GlobalTheory.MiTop.TailColumnRecursion
-namespace GlobalTheory.MiTop.TailColumnRecursion
-open Classical
-open Formalism.L2.Forms GlobalTheory.Core.Rk.Top Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR.Lev
-variable {D : D7}
-section G
-variable {u : D.what₂.Word} {C : ColumnChain D.R D.what₂.Tau (D.hcW u)} {A : ColumnsAtT D.R C} {Pm : PeriodMap D.R C}
-    {M : MemberForms D.what₂.LL D.what₂.embLL D.what₂.places D.what₂.Tau (D.hcW u) C A Pm}
-    {bad : Set (IsDedekindDomain.HeightOneSpectrum (𝓞 D.host.F))} {K : ClassesAtPrimes M bad} {okW : D.what₂.places.Pl → Prop}
-end G
-end GlobalTheory.MiTop.TailColumnRecursion
-namespace GlobalTheory.MiTop.TailColumnRecursion
-open Classical
-open Formalism.L2.Forms GlobalTheory.Core.Rk.Top Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR.Lev
-variable {D : D7}
 end GlobalTheory.MiTop.TailColumnRecursion
 namespace GlobalTheory.MiTop
 open Classical

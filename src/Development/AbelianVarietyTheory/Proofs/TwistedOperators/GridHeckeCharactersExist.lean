@@ -102,7 +102,3 @@ theorem resEta_of_att {μ η : (AE D)ˣ →* Circle} {a b : ℕ} (ha : ResEta D 
     rw [e]; exact resEta_div hb ha
 
 end GlobalTheory.HeckeCharsOfSquare
-
-namespace GlobalTheory.HeckeCharsOfSquare
-
-end GlobalTheory.HeckeCharsOfSquare

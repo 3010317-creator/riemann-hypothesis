@@ -12,10 +12,6 @@ open GlobalTheory.Sieg GlobalTheory.QFam
 
 noncomputable section
 
-namespace GlobalTheory.Sieg.CthMult
-
-end GlobalTheory.Sieg.CthMult
-
 
 open scoped UpperHalfPlane MatrixGroups Manifold in
 theorem _root_.GlobalTheory.Sieg.cthFac_multipliable : ∀ (c : ℕ) (q t : ℂ), ‖q‖ < 1 → t ≠ 0 →

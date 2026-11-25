@@ -383,7 +383,3 @@ theorem _root_.GlobalTheory.Sieg.DlogOne.E_eq {x : Fin 2 → ℚ}
   ring
 
 end GlobalTheory.Sieg.DlogOne
-
-namespace GlobalTheory.Sieg
-
-end GlobalTheory.Sieg

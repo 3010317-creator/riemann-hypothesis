@@ -651,10 +651,6 @@ section -- clump:auto
 
 noncomputable section
 
-namespace UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm
-
-end UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm
-
 theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.satSum :
     UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.SatSum := by
   intro q a b hq B₁ B₂ c₁ c₂ h₁ h₂ j

@@ -562,8 +562,6 @@ theorem main (hChain : Chain) : OpenCoset :=
 
 end LateralTheory.DivDb.OpenCosetPf
 
-namespace LateralTheory.DivDb
-end LateralTheory.DivDb
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.EtaleCohomology.DivisorCycles.OpenCosetPf =====

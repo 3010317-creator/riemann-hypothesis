@@ -815,12 +815,6 @@ def MoveDefInv : Prop :=
       0 < r → (∀ k ∈ Kf, ∀ g, f (k⁻¹ * g * k) = f g) → (∀ k ∈ K, ∀ g, φ (k⁻¹ * g * sigG G r k) = φ g) →
       markedSumIrr G wt sel Kf f r K φ = dSumIrr G wt Kf f r K φ
 
-namespace MoveEx
-
-open GlobalTheory.LKTrip.Example GlobalTheory.LKMid.Example
-
-end MoveEx
-
 end GlobalTheory.LKDef
 end -- clump:auto
 end -- clump:auto

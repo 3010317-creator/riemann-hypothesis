@@ -489,10 +489,6 @@ open GlobalTheory.SquareComm
 open scoped GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
 noncomputable section
 namespace GlobalTheory.TripleDarboux
-end GlobalTheory.TripleDarboux
-namespace GlobalTheory.TripleDarboux
-end GlobalTheory.TripleDarboux
-namespace GlobalTheory.TripleDarboux
 open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (Base Spc Model SplitsFully Chars HasExp)
 theorem exists_darboux_basis_of_triple : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) →
     ∀ (W W₁ X : HSp D) (A : Fr W) (A₁ : Fr W₁) (B : Fr X) (α β : (AE D)ˣ →* Circle), IsTriple W W₁ X α β →

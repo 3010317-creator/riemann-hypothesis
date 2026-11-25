@@ -46,9 +46,6 @@ theorem isMonHom_epi_id_pow {S : Scheme.{0}} (A : Over S) [GrpObj A] (hA : IsAbe
 
 end GlobalTheory.UPel.HT.SiegFactor
 
-namespace GlobalTheory.UPel.HT
-
-end GlobalTheory.UPel.HT
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsIsoCompEqOfSiegRelBy =====

@@ -54,22 +54,6 @@ open TensorProduct IsLocalRing Matrix ReciprocityTheory.PGsh ReciprocityTheory.P
 
 namespace GlobalTheory
 
-namespace CotOf
-
-variable {R₀ : Type} [CommRing R₀]
-variable {p : ℕ} [Fact p.Prime] {g : ℕ} {B : BX R₀} {Tw : ATowerL R₀ p} {Dt : DualTower Tw}
-  [Algebra ℤ_[p] (Tw.O : Type)] {Oe : Type} [CommRing Oe] [Algebra ℤ_[p] Oe] {σ : Oe ≃ₐ[ℤ_[p]] Oe}
-  {cp : (Tw.O : Type)}
-
-variable (D : Dat p g B Tw Dt Oe σ cp)
-
-section
-variable (C : Type) [Field C] [Algebra (Tw.O : Type) C]
-
-end
-
-end CotOf
-
 
 open TensorProduct IsLocalRing Matrix in
 theorem _root_.GlobalTheory.evCot_of_univDer :

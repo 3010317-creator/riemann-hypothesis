@@ -41,8 +41,4 @@ theorem exists_splitPlace_eq (D : D7) (w : PlE D.host) (hw : IsSplitPl D.host w)
 
 end GlobalTheory.RowUnitProof
 
-namespace GlobalTheory.RowUnitProof
-
-end GlobalTheory.RowUnitProof
-
 end

@@ -144,8 +144,6 @@ open scoped ComplexOrder
 open GlobalTheory.ClassRegroup GlobalTheory.DefiniteClassAvg GlobalTheory.DefiniteClassReal
 open GlobalTheory.Grid (neg sgn ofSgn)
 namespace GlobalTheory.RowTest.BottomClassSumNeg
-end GlobalTheory.RowTest.BottomClassSumNeg
-namespace GlobalTheory.RowTest.BottomClassSumNeg
 variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil} {i j : Fin D.R.m}
     {A A' WW : HSp D} {X : Tri T A A' WW}
 theorem integral_eq_bottom_classSum_of {D : D7} {T : Type} {A WW : HSp D}
@@ -276,8 +274,6 @@ namespace GlobalTheory.AlgWave
 end GlobalTheory.AlgWave
 namespace GlobalTheory.AlgWave
 end GlobalTheory.AlgWave
-namespace GlobalTheory.BotFourier
-end GlobalTheory.BotFourier
 namespace GlobalTheory.BotFourier
 open GlobalTheory.PlaceModel GlobalTheory.AlgWave
 
@@ -789,12 +785,6 @@ theorem substMat_central (θ : InfFam D) (V : HSp D) (m : ℕ) (d : D.what₂.Ta
 
 end GlobalTheory.RealAvg
 
-namespace GlobalTheory.RealAvg
-
-open MvPolynomial
-open GlobalTheory.Grid (neg sgn ofSgn)
-
-end GlobalTheory.RealAvg
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -988,8 +978,6 @@ open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 open GlobalTheory.RowEx MeasureTheory
 noncomputable section
-namespace GlobalTheory.RealAvg
-end GlobalTheory.RealAvg
 namespace GlobalTheory.RealAvg
 open MvPolynomial
 open GlobalTheory.Grid (neg sgn ofSgn)

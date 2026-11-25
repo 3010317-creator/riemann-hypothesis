@@ -188,9 +188,6 @@ theorem pushColim : PushColim := by
 
 end LateralTheory.E.PointwisePf
 
-namespace LateralTheory.E.PointwisePf
-
-end LateralTheory.E.PointwisePf
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

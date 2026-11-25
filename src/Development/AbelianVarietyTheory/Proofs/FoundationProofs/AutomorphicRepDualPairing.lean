@@ -177,10 +177,6 @@ theorem rep_fd (ρ : Representation ℂ (infU E n) S) (K : Subgroup (finU (E := 
 
 end GlobalTheory.FrameAut.VecProj
 
-namespace GlobalTheory.FrameAut.VecProj
-
-end GlobalTheory.FrameAut.VecProj
-
 end
 end -- clump:auto
 end -- clump:auto

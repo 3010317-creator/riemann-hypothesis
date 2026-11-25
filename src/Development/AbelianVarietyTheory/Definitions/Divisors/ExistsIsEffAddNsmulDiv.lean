@@ -692,12 +692,6 @@ end Pull
 
 end VertDiv
 
-namespace Model
-
-variable {O} {Z : Model O}
-
-end Model
-
 end GlobalTheory.Vert
 end -- clump:auto
 end -- clump:auto

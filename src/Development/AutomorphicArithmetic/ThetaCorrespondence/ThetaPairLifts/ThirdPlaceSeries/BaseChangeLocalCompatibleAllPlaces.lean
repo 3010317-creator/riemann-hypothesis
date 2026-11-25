@@ -133,18 +133,6 @@ open ReciprocityTheory.Aut Formalism.AUTREP
 attribute [local instance] GlobalTheory.TypeRec.factG
 noncomputable section
 namespace GlobalTheory.LiftInfRef
-open Matrix Formalism.L2.NG GlobalTheory.AlgWtHW NumberField
-section Conj
-variable {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ}
-end Conj
-end GlobalTheory.LiftInfRef
-namespace GlobalTheory.LiftInfRef
-open Matrix Formalism.L2.NG GlobalTheory.AlgWtHW NumberField
-section Conj2
-variable {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ}
-end Conj2
-end GlobalTheory.LiftInfRef
-namespace GlobalTheory.LiftInfRef
 open GlobalTheory.LiftRef
 theorem core_data_of_point (D : D7) (cf : CharFrame D) (A : _root_.GlobalTheory.HeightCounting.AUSideAlt D) (chr : CharSide D cf) (M : MtFam D)
     {tup : D.what₂.Tup → Fin D.R.m → HChar D.host.E} {Q : D.what₂.places.Pl → Finset (PlE D.host)}
@@ -216,8 +204,6 @@ theorem core_data_of_point (D : D7) (cf : CharFrame D) (A : _root_.GlobalTheory.
         rw [Nat.cast_sub (show c ≤ D.R.t - 1 by omega), Nat.cast_sub (show 1 ≤ D.R.t by omega)]
         push_cast; ring
 end GlobalTheory.LiftInfRef
-namespace GlobalTheory.LiftInfRef
-end GlobalTheory.LiftInfRef
 end
 end
 end -- clump:auto
@@ -235,12 +221,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 open ReciprocityTheory.Aut Formalism.AUTREP
 attribute [local instance] GlobalTheory.TypeRec.factG
 noncomputable section
-namespace GlobalTheory.LiftInfRef
-end GlobalTheory.LiftInfRef
-namespace GlobalTheory.LiftInfRef
-end GlobalTheory.LiftInfRef
-namespace GlobalTheory.LiftInfRef
-end GlobalTheory.LiftInfRef
 namespace GlobalTheory.LiftInfRef
 theorem baseChange_archimedean_compatible_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.LiftRef.ForallRowSideParameters hL fun D cf _ _ a M => ∀ (j : ℕ) (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) (S : Submodule ℂ (Formalism.AUTREP.GAf D.host.E D.R.nV → (M D.what₂.mu0 j h1 h2).wt.W)) (hS : NG.IsIrrRep (M D.what₂.mu0 j h1 h2).wt.ρ S) (μ : D.naut.CG 1), (a.chr.e1 μ).1 = cf.mu0 ⟨j - 1, by omega⟩ → ∀ τ, D.nbc.infW j (D.nbc.wtAU j (a.A.cls j h1 h2 (GlobalTheory.LiftRef.autOf (M D.what₂.mu0 j h1 h2) S hS))) (GlobalTheory.IndefiniteRowSideFullHecke.CMTypeEmbeddings.embTau D τ) = (GlobalTheory.IndefiniteRowSideFullHecke.CMTypeEmbeddings.hcSigma (D.hc τ)).map (· - 1 / 2) + isoInf D.nd D.naut [⟨1, D.naut.tw μ D.naut.etaTinv, D.R.t⟩] (GlobalTheory.IndefiniteRowSideFullHecke.CMTypeEmbeddings.embTau D τ) ∧ D.nbc.infW j (D.nbc.wtAU j (a.A.cls j h1 h2 (GlobalTheory.LiftRef.autOf (M D.what₂.mu0 j h1 h2) S hS))) (GlobalTheory.IndefiniteRowSideFullHecke.CMTypeEmbeddings.embTauBar D τ) = (GlobalTheory.IndefiniteRowSideFullHecke.CMTypeEmbeddings.hcSigma (D.hc τ)).map (fun y => -y + 1 / 2) + isoInf D.nd D.naut [⟨1, D.naut.tw μ D.naut.etaTinv, D.R.t⟩] (GlobalTheory.IndefiniteRowSideFullHecke.CMTypeEmbeddings.embTauBar D τ) := by
   intro _ hL

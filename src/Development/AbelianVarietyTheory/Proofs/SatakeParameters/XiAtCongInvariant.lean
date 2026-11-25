@@ -280,9 +280,3 @@ theorem extE_cong_mem {X : Fields} {Pr : Primes X} {R : Ranks} {Ch : Chars X Pr 
     simpa [lamYat] using c1 x hx
 
 end GlobalTheory.TwU.MidIndep
-
-namespace GlobalTheory.TwU
-
-open GlobalTheory.CongLevel GlobalTheory.TwU.MidIndep
-
-end GlobalTheory.TwU

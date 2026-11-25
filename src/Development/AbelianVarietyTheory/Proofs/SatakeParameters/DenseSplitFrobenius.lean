@@ -62,7 +62,3 @@ theorem isSplitAt_of_inertiaDeg_eq_one {E : Type} [Field E] [NumberField E] [IsC
   omega
 
 end GlobalTheory.DenseInvFrob
-
-namespace GlobalTheory.DenseInvFrob
-
-end GlobalTheory.DenseInvFrob

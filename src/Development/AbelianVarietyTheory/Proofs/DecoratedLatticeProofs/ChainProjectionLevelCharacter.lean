@@ -78,9 +78,4 @@ theorem multT_val {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (θ : InfFam
 
 end GlobalTheory.StepLevelP.IoLevPf
 
-namespace GlobalTheory.StepLevelP
-
-
-end GlobalTheory.StepLevelP
-
 end

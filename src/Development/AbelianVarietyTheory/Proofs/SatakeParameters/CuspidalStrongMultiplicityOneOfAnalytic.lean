@@ -86,12 +86,4 @@ end GlobalTheory.RowRepOcc
 
 noncomputable section
 
-namespace GlobalTheory.RowRepOcc
-
-end GlobalTheory.RowRepOcc
-
 noncomputable section
-
-namespace GlobalTheory.RowRepOcc
-
-end GlobalTheory.RowRepOcc

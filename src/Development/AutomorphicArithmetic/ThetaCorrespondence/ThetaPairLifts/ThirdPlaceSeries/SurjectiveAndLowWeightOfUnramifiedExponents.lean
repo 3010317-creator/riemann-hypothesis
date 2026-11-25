@@ -260,8 +260,6 @@ open NumberField IsDedekindDomain Module
 open Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx Formalism.IndefR.FWT
 open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.OntoChain GlobalTheory.RealIndexBound GlobalTheory.OnTies GlobalTheory.ShareOn Formalism.MainNotions.ArithmeticCylinders
 namespace GlobalTheory.BadOnRec
-end GlobalTheory.BadOnRec
-namespace GlobalTheory.BadOnRec
 attribute [local instance] runAlgBad
 section Point
 variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
@@ -434,9 +432,6 @@ end Point
 
 end GlobalTheory.ShareOn.Comparison₂
 
-namespace GlobalTheory.ShareOn
-
-end GlobalTheory.ShareOn
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -563,16 +558,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.FrameWeightGapBounds
 variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
   {Y : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y cX} {Csz : ℝ}
 
-end GlobalTheory.ShareOn
-
-namespace GlobalTheory.ShareOn
-
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.CovTop
-open GlobalTheory.IndefiniteRowSideFullHecke.FrameWeightGapBounds
-
-variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
-  {Y : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y cX} {Csz : ℝ}
-
 theorem halfUnip_bot (p : PtAt ex Csz) : HalfUnip p ⊥ := by
   refine ⟨0, fun g hg v => ?_⟩
   rw [Subgroup.mem_bot] at hg
@@ -624,13 +609,6 @@ theorem shareW_of_modelAt (p : PtAt ex Csz) (i : Fin D.R.m) (T : ℕ) (y : ℝ) 
 
 end GlobalTheory.ShareOn
 
-namespace GlobalTheory.ShareOn
-
-open NumberField IsDedekindDomain
-open Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx Formalism.IndefR.FWT
-open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.OntoChain GlobalTheory.RealIndexBound GlobalTheory.OnTies Formalism.MainNotions.ArithmeticCylinders
-
-end GlobalTheory.ShareOn
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -805,22 +783,6 @@ section -- clump:auto
 section
 noncomputable section
 open Module
-namespace GlobalTheory.ShareOn.Alg
-end GlobalTheory.ShareOn.Alg
-namespace GlobalTheory.ShareOn.Alg
-end GlobalTheory.ShareOn.Alg
-namespace GlobalTheory.ShareOn
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.CovTop
-open GlobalTheory.IndefiniteRowSideFullHecke.FrameWeightGapBounds
-variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
-  {Y : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y cX} {Csz : ℝ}
-end GlobalTheory.ShareOn
-namespace GlobalTheory.ShareOn
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.CovTop
-open GlobalTheory.IndefiniteRowSideFullHecke.FrameWeightGapBounds
-variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
-  {Y : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y cX} {Csz : ℝ}
-end GlobalTheory.ShareOn
 namespace GlobalTheory.ShareOn
 open NumberField IsDedekindDomain
 open Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx Formalism.IndefR.FWT

@@ -1609,10 +1609,6 @@ open GlobalTheory.BotSmallDict GlobalTheory.NormExact
 open scoped Pointwise
 noncomputable section
 namespace GlobalTheory.BotSmallDict
-end GlobalTheory.BotSmallDict
-namespace GlobalTheory.BotSmallDict
-end GlobalTheory.BotSmallDict
-namespace GlobalTheory.BotSmallDict
 open GlobalTheory.BotFormula (IsFinPt)
 open GlobalTheory.RowVacScalar (detIdl idemAt)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (stdSnd)

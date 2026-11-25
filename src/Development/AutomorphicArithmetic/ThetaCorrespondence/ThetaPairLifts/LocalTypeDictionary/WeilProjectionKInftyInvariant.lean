@@ -946,12 +946,6 @@ open GlobalTheory.SquareComm GlobalTheory.SquareAgree
 open scoped ComplexConjugate
 noncomputable section
 namespace GlobalTheory.KInfLines
-end GlobalTheory.KInfLines
-namespace GlobalTheory.KInfLines
-end GlobalTheory.KInfLines
-namespace GlobalTheory.KInfLines
-end GlobalTheory.KInfLines
-namespace GlobalTheory.KInfLines
 variable {D : D7} {W : HSp D} {V : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc D.host.F D.host.E W.rank}
 theorem kInfinity_prod_lines : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (D : D7) (θ : InfFam D) (W : HSp D) (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E)
     (V : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc D.host.F D.host.E W.rank) (r s : ℕ) (hJ : V.J = (1 : D.host.E) • W.gram),

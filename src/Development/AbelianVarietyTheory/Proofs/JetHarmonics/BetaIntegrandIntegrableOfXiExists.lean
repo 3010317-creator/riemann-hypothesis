@@ -54,15 +54,6 @@ open Formalism.FourierDecayAlt Formalism.REAL Formalism.QuantumDeterminants Filt
 
 noncomputable section
 
-namespace GlobalTheory.BetaIntegrand
-
-open scoped Matrix.Norms.Elementwise
-
-variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
-  [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq]
-
-end GlobalTheory.BetaIntegrand
-
 open Filter Topology MeasureTheory in
 variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
   [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] in

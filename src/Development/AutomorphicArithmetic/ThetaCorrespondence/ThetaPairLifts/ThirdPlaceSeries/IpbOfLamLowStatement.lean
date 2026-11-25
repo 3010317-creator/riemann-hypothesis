@@ -158,12 +158,6 @@ theorem La_le_three {D : D7} (L : SizeData₂ D) (hS : SizesAt L) : L.La ≤ 3 *
 
 end GlobalTheory.BigTop.Fun.IPbProof
 
-namespace GlobalTheory.BigTop.Fun
-
-open GlobalTheory.BigTop.Fun.IPbProof
-
-end GlobalTheory.BigTop.Fun
-
 end
 end -- clump:auto
 end -- clump:auto

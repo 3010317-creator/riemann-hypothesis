@@ -151,13 +151,6 @@ theorem sg_val (B : Finset (Fin n × Fin n)) (hB : ∀ p ∈ B, p.1 < p.2) {a b 
 
 end GlobalTheory.CompanionTheory.RealMult.Short
 
-namespace GlobalTheory.CompanionTheory.RealMult
-
-open PositivityTheory.RgBcC PositivityTheory.RgBcC.Real PositivityTheory.RgBcC.RealD
-open Formalism.REAL (dot nsq)
-open Short
-
-end GlobalTheory.CompanionTheory.RealMult
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1144,9 +1137,6 @@ theorem weight_int (h : IsDerivK σ Kf) (a : Fin n) (r : ℝ) {v : V} (hv : v �
 
 end GlobalTheory.CompanionTheory.RealMult.DiracProof
 
-namespace GlobalTheory.CompanionTheory.RealMult
-
-end GlobalTheory.CompanionTheory.RealMult
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

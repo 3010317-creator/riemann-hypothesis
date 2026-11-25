@@ -115,24 +115,6 @@ end Pull
 
 abbrev Char (G : Over S) [GrpObj G] [IsCommMonObj G] : Type := Cochar G →+ ℤ
 
-namespace Char
-
-end Char
-
-section Triple
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
-
-namespace CocharOf
-
-end CocharOf
-
-namespace CharOf
-
-end CharOf
-
-end Triple
-
 section Torus
 
 variable {G : Over S} [GrpObj G] [IsCommMonObj G] {G' : Over S'} [GrpObj G'] [IsCommMonObj G']

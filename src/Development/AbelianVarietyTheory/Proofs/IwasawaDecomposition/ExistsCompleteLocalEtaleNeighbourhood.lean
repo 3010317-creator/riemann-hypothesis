@@ -52,7 +52,3 @@ theorem stalk_factor_eq {X : Scheme.{0}} {R : CommRingCat.{0}} {x y : X} (hy : y
   rfl
 
 end GlobalTheory.GenFan
-
-namespace GlobalTheory.GenFan
-
-end GlobalTheory.GenFan

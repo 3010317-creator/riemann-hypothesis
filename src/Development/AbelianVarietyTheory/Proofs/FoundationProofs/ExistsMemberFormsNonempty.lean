@@ -319,9 +319,6 @@ end Member
 
 end GlobalTheory.MemberTorsor
 
-namespace GlobalTheory
-
-end GlobalTheory
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

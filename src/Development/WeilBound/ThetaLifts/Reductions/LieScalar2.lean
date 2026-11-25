@@ -470,12 +470,6 @@ theorem box_D (hdd : IsDblCoord (cA σ) (-1) JA JB d dd) {D Dd} (hD : IsD d D) (
 
 end PositivityTheory.RL.Up
 
-namespace PositivityTheory.RL
-
-open Up
-
-end PositivityTheory.RL
-
 end
 end -- clump:auto
 end -- clump:auto

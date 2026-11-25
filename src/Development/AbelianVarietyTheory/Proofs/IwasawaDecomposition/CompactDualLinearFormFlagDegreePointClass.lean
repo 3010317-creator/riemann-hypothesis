@@ -246,9 +246,6 @@ theorem flagMap_relPoly (τ : GlobalTheory.AllWt.Psi H) (k : ℕ) :
 
 end GlobalTheory.Schubert.RelKill
 
-namespace GlobalTheory.Schubert
-
-end GlobalTheory.Schubert
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

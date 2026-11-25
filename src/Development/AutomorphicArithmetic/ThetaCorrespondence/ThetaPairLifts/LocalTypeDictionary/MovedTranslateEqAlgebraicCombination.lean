@@ -192,11 +192,6 @@ end GlobalTheory.MovedJetNZ
 
 end
 
-namespace GlobalTheory.MovedJetNZ
-
-open GlobalTheory.Grid (neg ofSgn)
-
-end GlobalTheory.MovedJetNZ
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFourierIndexRationalPair =====
@@ -212,8 +207,6 @@ open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj Globa
 open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 open GlobalTheory.RowEx MeasureTheory
-namespace GlobalTheory.MovedJetNZ
-end GlobalTheory.MovedJetNZ
 namespace GlobalTheory.MovedJetNZ
 open GlobalTheory.Grid (neg ofSgn)
 theorem moved_vacuum_jet_ne_zero : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
@@ -1308,9 +1301,6 @@ theorem exists_locIdele {D : D7} {e : AE D} (he : IsSplitIdem D e) (x : (AE D)ˣ
 
 end GlobalTheory.SplitCharAlg
 
-namespace GlobalTheory.SplitCharAlg
-
-end GlobalTheory.SplitCharAlg
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1328,10 +1318,6 @@ open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 open GlobalTheory.RowEx MeasureTheory
 noncomputable section
-namespace GlobalTheory.SplitCharAlg
-open Formalism.L2.Host
-open scoped TensorProduct
-end GlobalTheory.SplitCharAlg
 namespace GlobalTheory.SplitCharAlg
 theorem splitCharacter_value_isAlgebraic : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
     {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →

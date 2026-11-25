@@ -1041,9 +1041,6 @@ theorem z_eq_of_equiv {ι : Qbar l ≃+* ℂ} {Kw : Levels E a} {J : Type} (O : 
 
 end GlobalTheory.Cong.OffTLimit
 
-namespace GlobalTheory.Cong
-
-end GlobalTheory.Cong
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ApartOfNotMem =====

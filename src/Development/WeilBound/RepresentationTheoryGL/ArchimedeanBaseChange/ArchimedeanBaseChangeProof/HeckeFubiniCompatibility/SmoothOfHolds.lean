@@ -1337,9 +1337,6 @@ variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V]
 
 end GlobalTheory.CompanionTheory.WaveCp.Rep.Frame
 
-namespace GlobalTheory.CompanionTheory.WaveCp.Rep
-
-end GlobalTheory.CompanionTheory.WaveCp.Rep
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

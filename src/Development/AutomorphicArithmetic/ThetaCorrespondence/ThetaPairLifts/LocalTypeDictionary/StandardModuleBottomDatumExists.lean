@@ -1283,10 +1283,6 @@ end GlobalTheory.StdRead
 
 end
 
-namespace GlobalTheory.StdRead
-
-end GlobalTheory.StdRead
-
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1560,8 +1556,6 @@ section -- clump:auto
 
 section
 noncomputable section
-namespace GlobalTheory.StdRead
-end GlobalTheory.StdRead
 section
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta IsDedekindDomain NumberField Finset MeasureTheory
 open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3 Formalism.L2.Indef.Tree.ArchimedeanLeafBounds.Cuts

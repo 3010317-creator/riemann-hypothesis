@@ -190,11 +190,4 @@ end Conj
 
 end GlobalTheory.RowLocalRows
 
-namespace GlobalTheory.RowLocalRows
-
-open Formalism.IndefR.principalLevelFrame Formalism.IndefR.Mult
-
-
-end GlobalTheory.RowLocalRows
-
 end

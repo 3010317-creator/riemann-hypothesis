@@ -31,7 +31,3 @@ theorem ev_mono {p q : Ctx → Prop} (h : ∀ K, p K → q K) (hp : Ev p) : Ev q
   apply _root_.GlobalTheory.Mem.Top.Ev.mono <;> assumption
 
 end GlobalTheory.Mem.Top.V4.TwoPass
-
-namespace GlobalTheory.Mem.Top.V4
-
-end GlobalTheory.Mem.Top.V4

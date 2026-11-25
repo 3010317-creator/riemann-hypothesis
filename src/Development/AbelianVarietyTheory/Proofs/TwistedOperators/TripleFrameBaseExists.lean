@@ -388,10 +388,4 @@ theorem exists_isSkew {D : D7} (B : Base D.host.F D.host.E) (τf : InfinitePlace
 
 end GlobalTheory.TripleDarboux
 
-namespace GlobalTheory.TripleDarboux
-
-open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (Base Spc Model SplitsFully Chars HasExp)
-
-end GlobalTheory.TripleDarboux
-
 end

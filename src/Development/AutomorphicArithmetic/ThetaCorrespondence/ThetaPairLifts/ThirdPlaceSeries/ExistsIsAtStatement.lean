@@ -804,9 +804,6 @@ end Final
 
 end GlobalTheory.SymChain.NonZeroAt
 
-namespace GlobalTheory.SymChain
-
-end GlobalTheory.SymChain
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

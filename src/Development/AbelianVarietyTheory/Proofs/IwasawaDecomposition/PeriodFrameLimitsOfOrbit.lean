@@ -242,8 +242,3 @@ theorem maj_strip {T : ℝ} {x : ℂ → Frame X.Ψ N} (hx : DifferentiableOn �
   nlinarith
 
 end GlobalTheory.OrbitNfac
-
-namespace GlobalTheory
-
-
-end GlobalTheory

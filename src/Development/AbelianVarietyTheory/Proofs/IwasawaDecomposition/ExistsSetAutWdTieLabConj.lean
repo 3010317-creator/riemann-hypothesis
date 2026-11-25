@@ -353,10 +353,6 @@ theorem exists_labels_true_conj : ∀ (D : D7) (hE : IsEmpty D.nd.Loc) (Rw : Row
 
 end GlobalTheory.HeightCounting.TrueConjLabels
 
-namespace GlobalTheory.HeightCounting
-
-end GlobalTheory.HeightCounting
-
 end
 end -- clump:auto
 end -- clump:auto

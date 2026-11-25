@@ -887,12 +887,6 @@ theorem leastSplitAuxiliaryPrime_ne_typePrime_of_sizes {large₂ : SizeData₂ D
 
 end GlobalTheory.RowEx.GridExPf
 
-namespace GlobalTheory.RowEx
-
-open GlobalTheory.RowEx.GridExPf
-
-end GlobalTheory.RowEx
-
 end
 end -- clump:auto
 end -- clump:auto
@@ -911,10 +905,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 open GlobalTheory.RowEx
 noncomputable section
 open scoped TensorProduct nonZeroDivisors Pointwise
-namespace GlobalTheory.RowEx.GridExPf
-open Formalism.L2.Col GlobalTheory.GridPlaces
-variable {D : D7}
-end GlobalTheory.RowEx.GridExPf
 namespace GlobalTheory.RowEx
 open GlobalTheory.RowEx.GridExPf
 theorem twisted_grid_existence_of_identity (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs) : GridEx := by
