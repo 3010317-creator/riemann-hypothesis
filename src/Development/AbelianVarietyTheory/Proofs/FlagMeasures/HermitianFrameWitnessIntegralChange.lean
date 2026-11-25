@@ -682,29 +682,6 @@ lemma img_mul (g k : V ≃ₗ[E] V) (Λ : Submodule M.L.O V) : img (g * k) Λ = 
   · rintro ⟨u, hu, rfl⟩; exact ⟨k u, ⟨u, hu, rfl⟩, rfl⟩
   · rintro ⟨w, ⟨u, hu, rfl⟩, rfl⟩; exact ⟨u, hu, rfl⟩
 
-lemma prF_e (Fr : FrameD H r) (a : Fin r) : Fr.prF (Fr.f a.castSucc) = 0 := by
-  unfold FrameD.prF
-  have h1 : ∑ c, H.h (Fr.f a.castSucc) (Fr.es c) • Fr.e c = Fr.f a.castSucc := by
-    rw [Finset.sum_eq_single a]
-    · rw [Fr.h_es, if_pos rfl, one_smul]; rfl
-    · intro c _ hc; rw [Fr.h_es, if_neg (Ne.symm hc), zero_smul]
-    · intro h; exact absurd (Finset.mem_univ a) h
-  have h2 : ∑ c, H.h (Fr.f a.castSucc) (Fr.e c) • Fr.es c = 0 :=
-    Finset.sum_eq_zero (fun c _ => by
-      show H.h (Fr.f a.castSucc) (Fr.f c.castSucc) • Fr.es c = _
-      rw [Fr.h_iso _ _ (Or.inl (Fin.castSucc_lt_last a).ne), zero_smul])
-  rw [h1, h2]; simp
-
-lemma frame_projection_last_eq_self (Fr : FrameD H r) : Fr.prF (Fr.f (Fin.last r)) = Fr.f (Fin.last r) := by
-  unfold FrameD.prF
-  have h1 : ∑ c, H.h (Fr.f (Fin.last r)) (Fr.es c) • Fr.e c = 0 :=
-    Finset.sum_eq_zero (fun c _ => by rw [H.h_herm (Fr.es c) _, Fr.h_sz, map_zero, zero_smul])
-  have h2 : ∑ c, H.h (Fr.f (Fin.last r)) (Fr.e c) • Fr.es c = 0 :=
-    Finset.sum_eq_zero (fun c _ => by
-      show H.h (Fr.f (Fin.last r)) (Fr.f c.castSucc) • Fr.es c = _
-      rw [Fr.h_iso _ _ (Or.inr (Fin.castSucc_lt_last c).ne), zero_smul])
-  rw [h1, h2]; simp
-
 lemma frame_mem (Fr : FrameD H r) {L : Submodule M.L.O (H.Wb Fr.f)} (hL : Fr.IsInner L) (b : Fin (r + 1)) :
     Fr.f b ∈ Fr.LamStd L := by
   apply Formalism.MainNotions.BridgeLemma.f_mem_LamStd <;> assumption
