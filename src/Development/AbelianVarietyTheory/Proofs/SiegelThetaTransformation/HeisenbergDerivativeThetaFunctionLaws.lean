@@ -141,11 +141,8 @@ theorem dRho_laws : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ f, C.IsTh f �
   · intro u hu
     exact GlobalTheory.FinTranslate.dRho_heisO hθ hu τ z f
   · intro τ' z'
-    have hskew : ∀ u v : RW T S, omO S T v u = -omO S T u v := by
-      intro u v
-      have h := omO_self hσ (u + v)
-      simp only [map_add (f := _), LinearMap.add_apply, omO_self hσ, zero_add, add_zero] at h
-      linarith
+    have hskew : ∀ u v : RW T S, omO S T v u = -omO S T u v := fun u v =>
+      (LinearMap.IsAlt.neg (omO_self hσ) u v).symm
     simp only [hD']
     rw [heisenberg_derivative_commutator (WO S T) (RW T S) (iotaW σ T S) (piW C.θ T S) (omO S T)
       (hσ.pi_iota T S) (fun g hg u w => hD_eq_fderiv _ _ _ g hg u w) hskew f (hsm f hf),
