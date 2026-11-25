@@ -109,12 +109,7 @@ theorem coordIdeal_eq (x : Cone n (AlgebraicClosure ℚ)) (f : MRing ι) :
       (mConeMap (pull e (flatCone (coordVec x))) f) = mConeMap (flatCone x) (ren e f) :=
     RingHom.congr_fun key f
   simp only [mCoordIdeal, orbitIdeal, RingHom.mem_ker]
-  constructor
-  · intro h
-    rw [← hf, h, map_zero]
-  · intro h
-    refine MvPolynomial.map_injective _ (algebraMap (coordField x) (AlgebraicClosure ℚ)).injective ?_
-    rw [hf, h, map_zero]
+  rw [← hf, map_eq_zero_iff _ (MvPolynomial.map_injective _ (algebraMap (coordField x) (AlgebraicClosure ℚ)).injective)]
 
 end CoverDenseAlt.HtF
 
