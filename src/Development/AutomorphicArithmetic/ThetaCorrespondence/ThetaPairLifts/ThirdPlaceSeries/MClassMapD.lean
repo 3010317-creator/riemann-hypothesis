@@ -372,7 +372,7 @@ theorem GLp.inc_map_sub_one_valued_lt_one : ∀ (F : Type) [Field F] [NumberFiel
       Matrix (Fin n) (Fin n) (v.adicCompletion F)) a b - (c : v.adicCompletion F)) =
       (((k : Matrix (Fin n) (Fin n) ℤ_[g]) a b - (c : ℤ_[g]) : ℤ_[g]) : ℚ_[g]) := by
     simp [GlobalTheory.GLp.inc, Matrix.GeneralLinearGroup.map]
-  rw [he, PadicInt.padic_norm_e_of_padicInt]
+  rw [he, PadicInt.norm_coe]
   exact hnorm
 
 end GlobalTheory
@@ -509,7 +509,7 @@ theorem serFix_of_locS {L : Type} [Field L] [NumberField L] [IsCMField L] {n g :
     ext a b
     simp [θ]
   have hI := _root_.GlobalTheory.SplitAdelic.main L n s
-  haveI := GlobalTheory.CompanionTheory.BZCuspPair.nontrivial_of_irr τ
+  have := GlobalTheory.SmGL.nontrivial_of_irreducible τ.irr
   intro ℓ hℓ φ hφS hφfix
   let N : {y : GAf L n // TrivOutside {s.v}ᶜ y} → Submodule ℂ (GAf L n → ℂ) :=
     fun y => LinearMap.range ((NG.rt L n y.1).comp T)
