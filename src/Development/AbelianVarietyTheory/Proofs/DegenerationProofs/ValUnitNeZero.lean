@@ -51,15 +51,12 @@ open scoped CategoryTheory.Obj
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory.ZH
 
-set_option backward.isDefEq.respectTransparency false
-
 noncomputable section
 namespace GlobalTheory.ZH.FrameNorm
 open CrdCalc
 
 section Reg
 variable {K C : Type} [Field K] [Field C] {Y : Scheme.{0}} {q : Y ⟶ Sp K} {σ : K →+* C}
-
 
 variable (q σ) in
 def Reg (W : Y.Opens) (F : (Sp C ⟶ Y) → C) : Prop :=
