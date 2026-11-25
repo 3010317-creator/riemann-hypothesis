@@ -160,11 +160,8 @@ theorem fibre_scale_continuous : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   haveI c2 : ContinuousSMul (GL (Fin n) (R ⊗[F] E)) (HermR R σ n) :=
     herm_continuousSMul (sigR R σ) k5 (HermR R σ n) hmem
   obtain ⟨χ₂, hχ₂c, hχ₂⟩ := _root_.GlobalTheory.CompanionTheory.SW.exists_continuous_modulus_of_continuous_action (HermR R σ n) ν (GL (Fin n) (R ⊗[F] E))
-  have hne : ∀ (χ : GL (Fin n) (R ⊗[F] E) →* ℝ≥0) (g), χ g ≠ 0 := by
-    intro χ g h0
-    have : χ (g * g⁻¹) = 1 := by simp
-    rw [map_mul, h0, zero_mul] at this
-    exact zero_ne_one this
+  have hne : ∀ (χ : GL (Fin n) (R ⊗[F] E) →* ℝ≥0) (g), χ g ≠ 0 := fun χ g =>
+    ((Group.isUnit g).map χ).ne_zero
   refine ⟨fun g => χ₁ g * χ₂ g⁻¹, hχ₁c.mul (hχ₂c.comp continuous_inv), ?_, ?_, ?_⟩
   · exact fun g => mul_ne_zero (hne χ₁ g) (hne χ₂ g⁻¹)
   · simp
