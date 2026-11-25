@@ -284,10 +284,7 @@ theorem tailBound_holds : TailBoundStatement := by
     intro i y
     have hc : Continuous (u i) := projLine_continuous_of_smooth A (hu i)
     have hd : Dense (bdry s)ᶜ := interior_eq_empty_iff_dense_compl.1 (LeviFormBoundaryTopology.interior_bdry_eq_empty hs hsnc)
-    have hcl : closure ((bdry s)ᶜ) ⊆ {y | u i y ≤ 0} :=
-      closure_minimal (fun y hy => (hbd i y hy).2) (isClosed_le hc continuous_const)
-    rw [hd.closure_eq] at hcl
-    exact hcl (Set.mem_univ y)
+    exact hd.induction (fun y hy => (hbd i y hy).2) (isClosed_le hc continuous_const) y
   have hΘpsh : ∀ i, IsPsh A (Θ i) := fun i => TailBoundAlt.isPsh_of_isPosPot A _ (hΘp i)
   have hupot : ∀ i, IsPotential A (Θ i + LocPot.ofFun (u i)) :=
     fun i => isPotentialAdd A _ _ (hΘ i) (isPotential_ofFun A _ (hu i))
