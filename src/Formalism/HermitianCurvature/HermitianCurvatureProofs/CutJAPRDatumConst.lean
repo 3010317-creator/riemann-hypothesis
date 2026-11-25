@@ -56,10 +56,7 @@ theorem gA_last {a : Fin (k + 1) → ℂ} {T : ℝ} (hT : 0 < T) (ha : herm (Hb 
   have h := (gA_spec k hT ha).2
   have hne : ((Real.sqrt T : ℝ) : ℂ) ≠ 0 := by exact_mod_cast (Real.sqrt_pos.2 hT).ne'
   rw [Matrix.mulVec_smul] at h
-  calc gA k a T *ᵥ Pi.single (Fin.last k) 1
-      = (((Real.sqrt T : ℝ) : ℂ))⁻¹ • (((Real.sqrt T : ℝ) : ℂ) • (gA k a T *ᵥ Pi.single (Fin.last k) 1)) := by
-        rw [smul_smul, inv_mul_cancel₀ hne, one_smul]
-    _ = _ := by rw [h]
+  exact (eq_inv_smul_iff₀ hne).2 h
 
 theorem gB_unit {b : Fin (k + 1) → ℂ} {T' : ℝ} (hT' : 0 < T') (hb : herm (Hb k) b b = -(T' : ℂ)) :
     IsUnit (gB k b T').det := (UHb_inv (show gB k b T' ∈ UH (Hb k) from (gB_spec k hT' hb).1)).1
