@@ -546,7 +546,7 @@ theorem exists_eisenstein (ξ : (↥(OL LL))⟦X⟧)
     (hξ : Associated ξ (X ^ (H.W K 1 LL h).DelF.card))
     (hinv : ∀ δ ∈ (H.W K 1 LL h).DelF, (H.W K 1 LL h).γ₀ δ ξ = ξ) :
     HasEis (H.W K 1 LL h) l (Module.finrank ↥(K0 K) ↥K.1) ξ := by
-  obtain ⟨R, j, jE, hj, he, ht, -, hr, -⟩ := exists_attached H h hl ξ hξ hinv
+  obtain ⟨R, j, hj, he, ht, hr⟩ := exists_attached H h hl ξ hξ hinv
   have h1 : HasEis (H.W K 1 LL h) l R.e (j X) :=
     ⟨_, R.ϖ, rfl, R.ϖ_val, hr, eisenstein_gen (H.W K 1 LL h) (P.PD_p K) R j ht _ rfl⟩
   rwa [hj, he] at h1
