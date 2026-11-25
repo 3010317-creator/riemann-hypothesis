@@ -1,6 +1,7 @@
 module
 
 public import Formalism.ZeroFreeRegion.SmallHeightLogDeriv
+public import Mathlib.Analysis.SumIntegralComparisons
 
 @[expose] public section
 
@@ -22,7 +23,7 @@ lemma rpow_le_integral {x σ : ℝ} (hx : 0 < x) (hσ : 0 < σ) :
     intro u hu v hv huv
     exact Real.rpow_le_rpow_of_nonpos (hx.trans_le hu.1) huv (by linarith)
   calc (x + 1) ^ (-σ - 1) ≤ ∫ t in x..x + 1, t ^ (-σ - 1) := by
-        simpa using hanti.sum_le_integral
+        simpa using AntitoneOn.sum_le_integral hanti
     _ = (x ^ (-σ) - (x + 1) ^ (-σ)) / σ := by
       rw [integral_rpow (Or.inr ⟨by linarith, ?_⟩), sub_add_cancel]
       · ring
