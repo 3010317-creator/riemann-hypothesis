@@ -181,13 +181,8 @@ theorem IsAlt.smul {P : MvPolynomial (Fin m) ℚ} (hP : IsAlt P) (c : ℚ) : IsA
 theorem IsAlt.zero : IsAlt (0 : MvPolynomial (Fin m) ℚ) := by intro σ; simp
 
 theorem IsAlt.sum {ι : Type*} (s : Finset ι) {P : ι → MvPolynomial (Fin m) ℚ}
-    (hP : ∀ i ∈ s, IsAlt (P i)) : IsAlt (∑ i ∈ s, P i) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simpa using IsAlt.zero
-  | insert a s ha ih =>
-    rw [Finset.sum_insert ha]
-    exact (hP a (mem_insert_self a s)).add (ih fun i hi => hP i (mem_insert_of_mem hi))
+    (hP : ∀ i ∈ s, IsAlt (P i)) : IsAlt (∑ i ∈ s, P i) :=
+  Finset.sum_induction P IsAlt (fun _ _ => IsAlt.add) IsAlt.zero hP
 
 theorem isSymmetric_prod_psum (ρ : List ℕ) :
     ((ρ.map fun q => psum (Fin m) ℚ q).prod).IsSymmetric := by
