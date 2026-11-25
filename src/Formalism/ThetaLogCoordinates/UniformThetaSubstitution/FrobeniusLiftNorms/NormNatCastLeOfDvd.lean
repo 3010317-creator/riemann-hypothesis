@@ -196,13 +196,8 @@ lemma agree_pow {D : ℕ} {f f' : MvPowerSeries σ K} (hf : Agree D f f') (i : �
 
 lemma prod_monomial {α : Type} (s : Finset α) (d : α → σ →₀ ℕ) (a : α → K) :
     ∏ i ∈ s, MvPowerSeries.monomial (d i) (a i) =
-      MvPowerSeries.monomial (∑ i ∈ s, d i) (∏ i ∈ s, a i) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp [MvPowerSeries.monomial_zero_one]
-  | insert x s hx ih =>
-    rw [Finset.prod_insert hx, Finset.sum_insert hx, Finset.prod_insert hx, ih,
-      MvPowerSeries.monomial_mul_monomial]
+      MvPowerSeries.monomial (∑ i ∈ s, d i) (∏ i ∈ s, a i) :=
+  MvPowerSeries.prod_monomial d a s
 
 lemma C_mul_monomial_one (a : K) (d : σ →₀ ℕ) :
     MvPowerSeries.C a * MvPowerSeries.monomial d (1 : K) = MvPowerSeries.monomial d a := by

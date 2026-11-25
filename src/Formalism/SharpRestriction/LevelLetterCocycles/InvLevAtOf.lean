@@ -41,6 +41,17 @@ theorem denI_upd (H : ℕ → ℕ) (e s : ℕ) (hs : s < e) (x : ℤ) :
   refine Finset.prod_congr rfl fun t ht => ?_
   rw [Function.update_of_ne (Finset.ne_of_mem_erase ht), neg_neg, Int.toNat_natCast]
 
+private theorem inId_upd_iff (a : ZMod n) (H : ℕ → ℕ) (e s : ℕ) (hs : s < e) (x : ℤ)
+    (y : W.EE) :
+    InId W a e (Function.update (fun t => -((H t : ℕ) : ℤ)) s x) y ↔
+      InFr W a (ps W s ^ x.toNat)
+        (ps W s ^ (-x).toNat * ∏ t ∈ (Finset.range e).erase s, ps W t ^ H t) y := by
+  have en := numI_upd W H e s hs x
+  have ed := denI_upd W H e s hs x
+  simp only [numI, denI] at en ed
+  unfold InId
+  rw [en, ed]
+
 theorem aev_fixed (P : Polynomial O) : ∀ z : W.EE, W.γE W.gam z = z → aev P z = P.eval 1 • z := by
   induction P using Polynomial.induction_on with
   | C c => intro z _; simp [Polynomial.aeval_C, Module.algebraMap_end_apply]
@@ -138,36 +149,16 @@ theorem lev_const (hKL : KillerLevCore W) (hS : PsStable W)
 
   have hT : s ∉ (Finset.range ell).erase s := by simp
   have hGfr : InFr W a 1 (∏ t ∈ (Finset.range ell).erase s, ps W t ^ H t) Gg := by
-    have := hGm
-    unfold InId at this
-    have en := numI_upd W H ell s hs 0
-    have ed := denI_upd W H ell s hs 0
-    simp only [numI, denI] at en ed
-    rw [← hα0, ← hα1] at en ed
-    rw [en, ed] at this
-    simpa using this
+    simpa using (inId_upd_iff W a H ell s hs 0 Gg).1 hGm
   have hγfr : InFr W a (ps W s) (∏ t ∈ (Finset.range ell).erase s, ps W t ^ H t)
       (lE W κ₂ * (W.γE W.gam Gg - Gg)) := by
-    have := h₂
-    unfold InId at this
-    have en := numI_upd W H ell s hs 1
-    have ed := denI_upd W H ell s hs 1
-    simp only [numI, denI] at en ed
-    rw [← hα0] at en ed
-    rw [en, ed] at this
-    simpa using this
+    simpa using (inId_upd_iff W a H ell s hs 1 _).1 h₂
   obtain ⟨κ₃, x, hx⟩ := hInv hCA h5 a _ H hT Gg hGfr ⟨κ₂, hγfr⟩
 
   set Z := lE W κ₃ * Gg - ιE (letE a) * algebraMap O W.EE x with hZ
   set α2 := Function.update α0 s 1 with hα2
-  have hZm : InId W a ell α2 Z := by
-    unfold InId
-    have en := numI_upd W H ell s hs 1
-    have ed := denI_upd W H ell s hs 1
-    simp only [numI, denI] at en ed
-    rw [← hα0, ← hα2] at en ed
-    rw [en, ed]
-    simpa using hx
+  have hZm : InId W a ell α2 Z :=
+    (inId_upd_iff W a H ell s hs 1 Z).2 (by simpa using hx)
   obtain ⟨κ₄, h₄⟩ := (hK a α2 s hs Z hZm).2.2 (H s - 1)
   have e4 : α2 s + ((H s - 1 : ℕ) : ℤ) = ((H s : ℕ) : ℤ) := by
     rw [hα2, Function.update_self]; push_cast [Nat.cast_sub hH1]; ring

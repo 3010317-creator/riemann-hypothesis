@@ -48,20 +48,16 @@ theorem natCast_inv_mem_Rp (vp : K') (m : ℕ) (hm : ¬ p ∣ m) : ((m : K'))⁻
   rw [inv_eq_of_mul_eq_one_right hw]
   exact W_mem_Rp p K' vp w
 
-private lemma exists_not_dvd_eq_pow_padicValNat_mul (n : ℕ) (hn : n ≠ 0) : ∃ m, ¬ p ∣ m ∧ n = p ^ padicValNat p n * m := by
-  obtain ⟨m, hm⟩ := ((_root_.Dvd.intro_left _ (_root_.Nat.divMaxPow_mul_pow_padicValNat _ _)) : p ^ padicValNat p n ∣ n)
-  refine ⟨m, fun ⟨c, hc⟩ => pow_succ_padicValNat_not_dvd (p := p) hn ⟨c, ?_⟩, hm⟩
-  conv_lhs => rw [hm]
-  rw [hc, Nat.padicValNat_def]
-  ring
-
 theorem piFact (vp : K') (hvp : vp ^ (p ^ 2 - 1) = (p : K')) (k : ℕ) :
     (vp ^ (p + 1)) ^ k * ((k.factorial : K'))⁻¹ ∈ Rp p K' vp := by
-  have hle : (p - 1) * padicValNat p k.factorial ≤ k := by
-    rw [Nat.padicValNat_def, hp.out.sub_one_mul_multiplicity_factorial]
+  have hle : (p - 1) * k.factorial.factorization p ≤ k := by
+    rw [Nat.factorization_def _ hp.out, hp.out.sub_one_mul_multiplicity_factorial]
     exact Nat.sub_le _ _
-  obtain ⟨m, hmp, hm⟩ := exists_not_dvd_eq_pow_padicValNat_mul p k.factorial (Nat.factorial_ne_zero k)
-  generalize padicValNat p k.factorial = v at hle hm
+  obtain ⟨m, hmp, hm⟩ :
+      ∃ m, ¬p ∣ m ∧ k.factorial = p ^ k.factorial.factorization p * m :=
+    ⟨ordCompl[p] k.factorial, Nat.not_dvd_ordCompl hp.out (Nat.factorial_ne_zero k),
+      (Nat.ordProj_mul_ordCompl_eq_self _ p).symm⟩
+  generalize k.factorial.factorization p = v at hle hm
   obtain ⟨r, hr⟩ : ∃ r, k = (p - 1) * v + r := ⟨k - (p - 1) * v, by omega⟩
   have hp0 : ((p : K')) ≠ 0 := pK'_ne p K'
   have e : p ^ 2 - 1 = (p + 1) * (p - 1) := by
@@ -73,18 +69,18 @@ theorem piFact (vp : K') (hvp : vp ^ (p ^ 2 - 1) = (p : K')) (k : ℕ) :
     rw [← pow_mul, mul_add, pow_add, ← mul_assoc, ← e, pow_mul vp (p ^ 2 - 1) v, hvp]
   rw [hm, Nat.cast_mul, Nat.cast_pow, hr, hpow, mul_inv, mul_comm ((p : K') ^ v), mul_assoc,
     ← mul_assoc ((p : K') ^ v), mul_inv_cancel₀ (pow_ne_zero _ hp0), one_mul]
-  exact Subring.mul_mem _ (Subring.pow_mem _ (vp_mem_Rp p K' vp) _) (natCast_inv_mem_Rp p K' vp m hmp)
+  exact Subring.mul_mem _ (Subring.pow_mem _ (vp_mem_Rp p K' vp) _)
+    (natCast_inv_mem_Rp p K' vp m hmp)
 
 end Pi
 
 theorem charZero_K' (p : ℕ) [hp : Fact p.Prime] (K' : Type) [Field K'] [Algebra (K0 p) K'] : CharZero K' := by
   refine charZero_of_inj_zero fun n hn => ?_
   by_contra h0
-  obtain ⟨m, hmp, hm⟩ := exists_not_dvd_eq_pow_padicValNat_mul p n h0
-  obtain ⟨w, hw⟩ := natCast_unit p K' m hmp
-  rw [hm, Nat.cast_mul, Nat.cast_pow] at hn
-  have h1 : ((p : K') ^ padicValNat p n * (m : K')) * algebraMap (K0 p) K' (algebraMap (WW p) (K0 p) w) =
-      (p : K') ^ padicValNat p n := by
+  obtain ⟨w, hw⟩ := natCast_unit p K' (ordCompl[p] n) (Nat.not_dvd_ordCompl hp.out h0)
+  rw [← Nat.ordProj_mul_ordCompl_eq_self n p, Nat.cast_mul, Nat.cast_pow] at hn
+  have h1 : ((p : K') ^ n.factorization p * ((ordCompl[p] n : ℕ) : K')) *
+      algebraMap (K0 p) K' (algebraMap (WW p) (K0 p) w) = (p : K') ^ n.factorization p := by
     rw [mul_assoc, hw, mul_one]
   rw [hn, zero_mul] at h1
   exact pow_ne_zero _ (pK'_ne p K') h1.symm

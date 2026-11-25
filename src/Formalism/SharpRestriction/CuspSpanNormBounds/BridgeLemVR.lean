@@ -25,29 +25,15 @@ theorem hcompl_le_primeCompl {p : Ideal (𝓞 K)} (hp : p.IsMaximal) :
   exact hs.1
 
 theorem one_mem_locR (p : Ideal (𝓞 K)) : (1 : K) ∈ locR (K := K) p :=
-  ⟨1, (hcompl (K := K) p).one_mem, by rw [one_smul]; exact Submodule.mem_one.2 ⟨1, map_one _⟩⟩
+  SplitA.one_mem_locR p
 
 theorem mul_mem_locR {p : Ideal (𝓞 K)} {x y : K} (hx : x ∈ locR (K := K) p) (hy : y ∈ locR (K := K) p) :
-    x * y ∈ locR (K := K) p := by
-  obtain ⟨s, hs, hsx⟩ := hx
-  obtain ⟨t, ht, hty⟩ := hy
-  refine ⟨s * t, (hcompl (K := K) p).mul_mem hs ht, ?_⟩
-  obtain ⟨r, hr⟩ := Submodule.mem_one.1 hsx
-  obtain ⟨r', hr'⟩ := Submodule.mem_one.1 hty
-  refine Submodule.mem_one.2 ⟨r * r', ?_⟩
-  rw [map_mul, hr, hr', Algebra.smul_def, Algebra.smul_def, Algebra.smul_def, map_mul]
-  ring
+    x * y ∈ locR (K := K) p :=
+  SplitA.mul_mem_locR p hx hy
 
 theorem star_mem_locR {p : Ideal (𝓞 K)} {x : K} (hx : x ∈ locR (K := K) p) :
-    star x ∈ locR (K := K) p := by
-  obtain ⟨s, hs, hsx⟩ := hx
-  refine ⟨conjO K s, _root_.Formalism.HermitianLattices.Ext.L3.WA.conjO_mem_hcompl hs, ?_⟩
-  obtain ⟨r, hr⟩ := Submodule.mem_one.1 hsx
-  refine Submodule.mem_one.2 ⟨conjO K r, ?_⟩
-  rw [Algebra.smul_def] at hr ⊢
-  have e1 : algebraMap (𝓞 K) K (conjO K r) = star (algebraMap (𝓞 K) K r) := rfl
-  have e2 : algebraMap (𝓞 K) K (conjO K s) = star (algebraMap (𝓞 K) K s) := rfl
-  rw [e1, e2, hr, star_mul']
+    star x ∈ locR (K := K) p :=
+  SplitA.star_mem_locR p hx
 
 theorem mem_one_of_locR {x : K} (hx : ∀ p : Ideal (𝓞 K), p.IsMaximal → x ∈ locR (K := K) p) :
     x ∈ (1 : Submodule (𝓞 K) K) := by

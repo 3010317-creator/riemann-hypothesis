@@ -97,10 +97,6 @@ private theorem low_prod_lemma_3 {a : σ → MvPowerSeries τ k} (ha : ∀ s, Lo
     rw [Finset.sum_insert hs, Finset.prod_insert hs]
     exact low_mul_lemma (low_pow_lemma_2 (ha s) _) ih
 
-private theorem finsupp_apply_le_degree' {ι : Type} (d : ι →₀ ℕ) (i : ι) : d i ≤ d.degree := by
-  first
-  | exact Finsupp.le_degree i d
-
 theorem low_subst_of_low [Finite σ] {a : σ → MvPowerSeries τ k} (ha : ∀ s, Low 1 (a s)) {N : ℕ}
     {g : MvPowerSeries σ k} (hg : Low N g) : Low N (subst a g) := by
   classical
@@ -141,10 +137,6 @@ theorem pderiv_aeval [Fintype σ] (a : σ → MvPowerSeries τ k) (p : MvPolynom
       Finset.mem_univ, if_true, mul_assoc]
     try ring
 
-private theorem pderiv_coe_mvPolynomial (s : σ) (p : MvPolynomial σ k) :
-    pderiv s (p : MvPowerSeries σ k) = ((MvPolynomial.pderiv s p : MvPolynomial σ k) : MvPowerSeries σ k) := by
-  exact MvPowerSeries.pderiv_coe p
-
 private theorem Low_finset_sum {N : ℕ} {ι : Type} (S : Finset ι) (F : ι → MvPowerSeries τ k)
     (h : ∀ i ∈ S, Low N (F i)) : Low N (∑ i ∈ S, F i) := by
   intro d hd
@@ -160,7 +152,7 @@ theorem pderiv_subst [Fintype σ] {a : σ → MvPowerSeries τ k} (ha : ∀ s, c
   have ha1 : ∀ s, Low 1 (a s) := by
     intro s d hd
     have hd0 : d = 0 := Finsupp.ext fun i => by
-      have := finsupp_apply_le_degree' d i
+      have := Finsupp.le_degree i d
       simp only [Finsupp.coe_zero, Pi.zero_apply]
       omega
     subst hd0
@@ -172,7 +164,7 @@ theorem pderiv_subst [Fintype σ] {a : σ → MvPowerSeries τ k} (ha : ∀ s, c
     rw [map_sub, MvPolynomial.coeff_coe, MvPowerSeries.coeff_trunc', if_pos, sub_self]
     rw [Finsupp.le_def]
     intro s
-    have h1 := finsupp_apply_le_degree' m s
+    have h1 := Finsupp.le_degree s m
     first
     | (change m s ≤ M; omega)
   ext d
@@ -181,8 +173,8 @@ theorem pderiv_subst [Fintype σ] {a : σ → MvPowerSeries τ k} (ha : ∀ s, c
   generalize f - (p : MvPowerSeries σ k) = g at hp hf
   subst hf
   have hpol := pderiv_aeval a p t
-  simp only [map_add (f := _), MvPowerSeries.subst_add hS, MvPowerSeries.subst_coe, pderiv_coe_mvPolynomial, add_mul,
-    Finset.sum_add_distrib, hpol]
+  simp only [map_add (f := _), MvPowerSeries.subst_add hS, MvPowerSeries.subst_coe,
+    MvPowerSeries.pderiv_coe, add_mul, Finset.sum_add_distrib, hpol]
   congr 1
   have h1 : Low (d.degree + 1) (pderiv t (subst a g)) := low_pderiv (low_subst_of_low ha1 hp) t
   have h2 : Low (d.degree + 1 + 0) (∑ s, subst a (pderiv s g) * pderiv t (a s)) :=

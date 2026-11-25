@@ -41,17 +41,12 @@ theorem T_mul {a b : ℕ} {x y : O⟦X⟧} (hx : x ∈ T O a) (hy : y ∈ T O b)
   rw [← pow_add] at h2
   exact Ideal.pow_le_pow_right (by omega) h2
 
-private theorem maximalIdeal_pow_smul_whole_ring_eq_self (n : ℕ) :
-    ((IsLocalRing.maximalIdeal O) ^ n • ⊤ : Submodule O O) = (IsLocalRing.maximalIdeal O) ^ n := by
-  first
-    | rw [Ideal.smul_eq_mul, Ideal.mul_top]
-
 theorem eq_zero_of_forall_mem_coeffFiltration {x : O⟦X⟧} (hx : ∀ N, x ∈ T O N) : x = 0 := by
   have H : IsHausdorff (IsLocalRing.maximalIdeal O) O := inferInstance
   ext m
   rw [map_zero]
   refine H.haus _ fun n => ?_
-  rw [SModEq.zero, maximalIdeal_pow_smul_whole_ring_eq_self]
+  rw [SModEq.zero, Ideal.smul_eq_mul, Ideal.mul_top]
   have h := (mem_T.mp (hx (n + m))) m
   rwa [Nat.add_sub_cancel] at h
 
@@ -102,7 +97,7 @@ theorem exists_lim (hg : constantCoeff g ∈ IsLocalRing.maximalIdeal O) (f : O�
     ∃ L : O, ∀ N, coeff m (S g N f) - L ∈ (IsLocalRing.maximalIdeal O) ^ (N - m) := by
   have hC : IsPrecomplete (IsLocalRing.maximalIdeal O) O := inferInstance
   obtain ⟨L, hL⟩ := hC.prec (f := fun k => coeff m (S g (k + m) f)) (fun {a b} hab => by
-    rw [SModEq.sub_mem, maximalIdeal_pow_smul_whole_ring_eq_self]
+    rw [SModEq.sub_mem, Ideal.smul_eq_mul, Ideal.mul_top]
     have h1 := S_sub_mem hg f (show a + m ≤ b + m by omega) m
     rw [map_sub, Nat.add_sub_cancel] at h1
     have h2 := neg_mem h1
@@ -112,7 +107,7 @@ theorem exists_lim (hg : constantCoeff g ∈ IsLocalRing.maximalIdeal O) (f : O�
   rcases le_or_gt m N with h | h
   · obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le' h
     have h3 := hL k
-    rw [SModEq.sub_mem, maximalIdeal_pow_smul_whole_ring_eq_self] at h3
+    rw [SModEq.sub_mem, Ideal.smul_eq_mul, Ideal.mul_top] at h3
     rw [Nat.add_sub_cancel]
     exact h3
   · rw [Nat.sub_eq_zero_of_le h.le, pow_zero, Ideal.one_eq_top]
@@ -141,28 +136,18 @@ theorem subst_eq (hg : constantCoeff g ∈ IsLocalRing.maximalIdeal O) (f y : O�
     exact T_anti (by omega) h3
   exact sub_eq_zero.mp (eq_zero_of_forall_mem_coeffFiltration key)
 
-private theorem truncEval_add (N : ℕ) (f f' : O⟦X⟧) :
-    S g N (f + f') = S g N f + S g N f' := by
-  have h : trunc N (f + f') = trunc N f + trunc N f' := map_add (trunc N) f f'
-  simp only [S, h, map_add (f := _)]
-
 theorem subst_add (hg : constantCoeff g ∈ IsLocalRing.maximalIdeal O) (f f' : O⟦X⟧) :
     subst hg (f + f') = subst hg f + subst hg f' := by
   refine (subst_eq hg (f + f') _ 0 fun N _ => ?_).symm
-  rw [truncEval_add, add_sub_add_comm]
+  have hS : S g N (f + f') = S g N f + S g N f' := by simp only [S, map_add]
+  rw [hS, add_sub_add_comm]
   exact add_mem (subst_sub_mem hg f N) (subst_sub_mem hg f' N)
-
-private theorem truncEval_smul (N : ℕ) (r : O) (f : O⟦X⟧) :
-    S g N (r • f) = r • S g N f := by
-  have h : trunc N (r • f) = r • trunc N f := by
-    first
-      | exact map_smul (trunc N) r f
-  simp only [S, h, map_smul]
 
 theorem subst_smul (hg : constantCoeff g ∈ IsLocalRing.maximalIdeal O) (r : O) (f : O⟦X⟧) :
     subst hg (r • f) = r • subst hg f := by
   refine (subst_eq hg (r • f) _ 0 fun N _ => ?_).symm
-  rw [truncEval_smul, ← smul_sub]
+  have hS : S g N (r • f) = r • S g N f := by simp only [S, map_smul]
+  rw [hS, ← smul_sub]
   exact Submodule.smul_of_tower_mem _ r (subst_sub_mem hg f N)
 
 theorem subst_mul (hg : constantCoeff g ∈ IsLocalRing.maximalIdeal O) (f f' : O⟦X⟧) :

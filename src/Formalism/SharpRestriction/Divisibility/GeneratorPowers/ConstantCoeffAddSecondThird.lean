@@ -149,45 +149,8 @@ theorem jetSubstP_psJet {n n' : ℕ} (m : ℕ) (φ : Fin n × Fin d → MvPolyno
 
 theorem mk_X_psJet {n : ℕ} (m : ℕ) (q : Fin n × Fin d) :
     Ideal.Quotient.mk (Formalism.L2.Pj.orig S (Fin n × Fin d) ^ (m + 1)) (X q) = psJet m (pt S d q.1 q.2) := by
-  unfold psJet
-  rw [Ideal.Quotient.eq]
-  have hc : ∀ e, MvPowerSeries.coeff e (pt S d q.1 q.2) = if e = Finsupp.single q 1 then (1 : S) else 0 := by
-    intro e; simp [pt, MvPowerSeries.coeff_X]
-  rcases Nat.eq_zero_or_pos m with hm | hm
-  · subst hm
-    simp only [zero_add, pow_one]
-    refine sub_mem (Ideal.subset_span ⟨q, rfl⟩) ?_
-    unfold psTrunc
-    refine Ideal.sum_mem _ fun e _ => ?_
-    rw [hc]
-    split_ifs with he
-    · subst he
-      exact Ideal.subset_span ⟨q, rfl⟩
-    · rw [map_zero]
-      exact Ideal.zero_mem _
-  · have hmem : Finsupp.single q 1 ∈ degLE m := by
-      unfold degLE
-      rw [Finset.mem_filter, Finset.mem_image]
-      refine ⟨⟨fun i => if i = q then ⟨1, by omega⟩ else 0, Finset.mem_univ _, ?_⟩, ?_⟩
-      · ext i
-        by_cases h : i = q
-        · subst h
-          simp
-        · simp [h]
-      · rw [Finsupp.sum_single_index rfl]
-        show 1 ≤ m
-        omega
-    have ht : psTrunc m (pt S d q.1 q.2) = X q := by
-      unfold psTrunc
-      rw [Finset.sum_eq_single (Finsupp.single q 1)]
-      · rw [hc, if_pos rfl]
-        rfl
-      · intro b _ hb
-        rw [hc, if_neg hb, map_zero]
-      · intro h
-        exact absurd hmem h
-    rw [ht, sub_self]
-    exact Ideal.zero_mem _
+  simp only [psJet, pt]
+  rw [FBIdJet.psTrunc_eq, ← MvPolynomial.coe_X, FBIdJet.mk_trunc_coe]
 
 theorem mk_psIn_psJet {n n' : ℕ} (m : ℕ) (σ : Fin n → Fin n') (f : PS S n d) :
     Ideal.Quotient.mk (Formalism.L2.Pj.orig S (Fin n' × Fin d) ^ (m + 1)) (psIn d m σ f) =
@@ -379,16 +342,6 @@ theorem twist_bal_jet {O : Type} [CommRing O] [StarRing O] (B : FB S d O) (cc : 
         Fin 2 → Fin d → MvPolynomial (Fin 2 × Fin d) S) p.1 p.2) (psJet m (expP (-bilL B.G cc))) =
       jetSubstP m (fun p : Fin 2 × Fin d => (![fun j => X ((0 : Fin 2), j), fun j => psIn d m ![1] (B.A.act b j)] :
         Fin 2 → Fin d → MvPolynomial (Fin 2 × Fin d) S) p.1 p.2) (psJet m (expP (-bilL B.G cc))) := by
-  have hT : ∀ g : PS S 1 d, MvPowerSeries.constantCoeff g = 0 → MvPolynomial.constantCoeff (psTrunc m g) = 0 := by
-    intro g hg
-    unfold psTrunc
-
-    rw [map_sum]
-    refine Finset.sum_eq_zero fun e _ => ?_
-    rw [MvPolynomial.constantCoeff_monomial]
-    split_ifs with he
-    · subst he; simpa using hg
-    · rfl
   have h0 : ∀ (j : Fin 2) (k : Fin d), MvPowerSeries.constantCoeff ((![comp1 (B.A.act a) (pt S d 0), pt S d 1] : Fin 2 → Pt S 2 d) j k) = 0 := by
     intro j k; fin_cases j
     · exact cc_ev_lemma (![pt S d 0] : Fin 1 → Pt S 2 d) (fun j' k' => by fin_cases j' <;> simp [pt]) _ (B.A.const a k)
@@ -405,18 +358,14 @@ theorem twist_bal_jet {O : Type} [CommRing O] [StarRing O] (B : FB S d O) (cc : 
       Fin 2 → Fin d → MvPolynomial (Fin 2 × Fin d) S) p.1 p.2) = 0 := by
     rintro ⟨j, k⟩; fin_cases j
     · show MvPolynomial.constantCoeff (psIn d m (![0] : Fin 1 → Fin 2) (B.A.act a k)) = 0
-      unfold psIn
-      rw [MvPolynomial.constantCoeff_rename]
-      exact hT _ (B.A.const a k)
+      rw [FBIdPh.cc_psIn, B.A.const]
     · simp
   have cB : ∀ p : Fin 2 × Fin d, MvPolynomial.constantCoeff ((![fun j => X ((0 : Fin 2), j), fun j => psIn d m ![1] (B.A.act b j)] :
       Fin 2 → Fin d → MvPolynomial (Fin 2 × Fin d) S) p.1 p.2) = 0 := by
     rintro ⟨j, k⟩; fin_cases j
     · simp
     · show MvPolynomial.constantCoeff (psIn d m (![1] : Fin 1 → Fin 2) (B.A.act b k)) = 0
-      unfold psIn
-      rw [MvPolynomial.constantCoeff_rename]
-      exact hT _ (B.A.const b k)
+      rw [FBIdPh.cc_psIn, B.A.const]
   have mA : ∀ p : Fin 2 × Fin d, Ideal.Quotient.mk (Formalism.L2.Pj.orig S (Fin 2 × Fin d) ^ (m + 1))
       ((![fun j => psIn d m ![0] (B.A.act a j), fun j => X ((1 : Fin 2), j)] : Fin 2 → Fin d → MvPolynomial (Fin 2 × Fin d) S) p.1 p.2) =
       psJet m ((![comp1 (B.A.act a) (pt S d 0), pt S d 1] : Fin 2 → Pt S 2 d) p.1 p.2) := by

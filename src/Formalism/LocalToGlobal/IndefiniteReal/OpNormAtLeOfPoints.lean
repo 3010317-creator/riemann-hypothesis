@@ -191,18 +191,6 @@ private theorem normAt_add_le {K V ι : Type} [Field K] [NumberField K] [StarRin
   rw [normAt_eq_norm, normAt_eq_norm, normAt_eq_norm, Formalism.HermitianLatticesTheory.fcoord_add, WithLp.toLp_add]
   exact norm_add_le _ _
 
-private theorem normAt_finset_sum_le {K V ι : Type} [Field K] [NumberField K] [StarRing K]
-    [AddCommGroup V] [Module K V] [Fintype ι] [DecidableEq ι] (b : Basis ι K V)
-    (X : InfinitePlace K → Matrix ι ι ℂ) (v : InfinitePlace K) {α : Type} (s : Finset α)
-    (f : α → V) :
-    Formalism.HermitianLatticesTheory.normAt b X v (∑ a ∈ s, f a) ≤ ∑ a ∈ s, Formalism.HermitianLatticesTheory.normAt b X v (f a) := by
-  classical
-  refine Finset.induction_on s ?_ ?_
-  · simpa using (normAt_smul_indefinite_real b X v (0 : K) (0 : V)).le
-  · intro a s ha ih
-    rw [Finset.sum_insert ha, Finset.sum_insert ha]
-    exact (normAt_add_le b X v _ _).trans (add_le_add le_rfl ih)
-
 theorem metric : Metric := by
   intro K _ _ _ _ G _ _ V _ _ _ _ ι _ _ b X ρ hX hU
   have hinv : ∀ (g : G) (y : V), ρ g (ρ g⁻¹ y) = y := by
@@ -243,7 +231,9 @@ theorem metric : Metric := by
     rw [one_mul, LinearMap.comp_apply]
     simp only [Formalism.IndefR.TransferLatticeStatement.epP, LinearMap.smul_apply, LinearMap.sum_apply]
     rw [normAt_smul_indefinite_real]
-    refine (mul_le_mul_of_nonneg_left (normAt_finset_sum_le b X v _ _) (norm_nonneg _)).trans ?_
+    refine (mul_le_mul_of_nonneg_left (Finset.le_sum_of_subadditive _
+      (by simpa using (normAt_smul_indefinite_real b X v (0 : K) (0 : V)).le)
+      (normAt_add_le b X v) _ _) (norm_nonneg _)).trans ?_
     simp only [normAt_smul_indefinite_real, hχ, hρn, one_mul, Finset.sum_const, Finset.card_univ, nsmul_eq_mul,
       map_inv₀, map_natCast, norm_inv, Complex.norm_natCast]
     rw [Fintype.card_eq_nat_card, ← mul_assoc,

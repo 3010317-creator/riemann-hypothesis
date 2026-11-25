@@ -99,13 +99,9 @@ theorem intS_prod {ι : Type*} (s : Finset ι) {f : ι → MvPowerSeries σ C} (
     IntS v (∏ i ∈ s, f i) :=
   Finset.prod_induction _ (IntS v) (fun _ _ => intS_mul) intS_one h
 
-private theorem hasSubst_lemma [Finite σ] {a : σ → MvPowerSeries τ C} (ha : ∀ s, constantCoeff (a s) = 0) :
-    HasSubst a :=
-  ⟨fun s => by rw [ha s]; exact IsNilpotent.zero, fun _ => Set.toFinite _⟩
-
 theorem intS_subst [Finite σ] {a : σ → MvPowerSeries τ C} (ha0 : ∀ s, constantCoeff (a s) = 0)
     (ha : ∀ s, IntS v (a s)) {γ : MvPowerSeries σ C} (hγ : IntS v γ) : IntS v (subst a γ) := by
-  have hsub : HasSubst a := hasSubst_lemma ha0
+  have hsub : HasSubst a := hasSubst_of_constantCoeff_zero ha0
   intro μ
   rw [coeff_subst hsub]
   refine intC_finsum fun d => ?_
@@ -118,10 +114,6 @@ def LowLt {σ : Type*} (K : ℕ) (f : MvPowerSeries σ C) : Prop :=
 def OrdV {σ : Type*} (D : ℕ) (f : MvPowerSeries σ C) : Prop :=
   ∀ μ : σ →₀ ℕ, μ.degree < D → coeff μ f = 0
 
-private theorem degree_add_lemma_2 (a b : σ →₀ ℕ) : (a + b).degree = a.degree + b.degree := by
-  first
-  | exact map_add _ a b
-
 theorem low_mul {E D D' : ℕ} {f g : MvPowerSeries σ C} (hf : OrdV D f) (hf' : LowLt (v := v) (E + D) f)
     (hg : OrdV D' g) (hg' : LowLt (v := v) (E + D') g) :
     OrdV (D + D') (f * g) ∧ LowLt (v := v) (E + (D + D')) (f * g) := by
@@ -130,7 +122,7 @@ theorem low_mul {E D D' : ℕ} {f g : MvPowerSeries σ C} (hf : OrdV D f) (hf' :
     rw [coeff_mul]
     refine Finset.sum_eq_zero fun p hp => ?_
     rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
-    have hdeg : p.1.degree + p.2.degree = μ.degree := by rw [← hp, degree_add_lemma_2]
+    have hdeg : p.1.degree + p.2.degree = μ.degree := by rw [← hp]; exact (map_add _ p.1 p.2).symm
     by_cases h1 : p.1.degree < D
     · rw [hf p.1 h1, zero_mul]
     · rw [hg p.2 (by omega), mul_zero]
@@ -138,7 +130,7 @@ theorem low_mul {E D D' : ℕ} {f g : MvPowerSeries σ C} (hf : OrdV D f) (hf' :
     rw [coeff_mul]
     refine intC_sum _ fun p hp => ?_
     rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
-    have hdeg : p.1.degree + p.2.degree = μ.degree := by rw [← hp, degree_add_lemma_2]
+    have hdeg : p.1.degree + p.2.degree = μ.degree := by rw [← hp]; exact (map_add _ p.1 p.2).symm
     by_cases h1 : p.1.degree < D
     · rw [hf p.1 h1, zero_mul]
       exact intC_zero

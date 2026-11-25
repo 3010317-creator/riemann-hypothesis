@@ -464,13 +464,8 @@ theorem geo_gram_unit (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1)
     · exact congrFun h2 c
   rcases hcase with ⟨hjr, hD⟩ | ⟨hjr, hG⟩
   · have hdet := geo_Z_det F F' hj hD
-    have hFX : ∀ a : Fin j, F.fvec (Fin.castLE hj a) ∈ F.X := by
-      intro a
-      have ha : a.val < r := by have := a.isLt; omega
-      rw [geo_castLE_eq hj a ha, geo_fvec_cast]
-      exact Submodule.subset_span ⟨_, rfl⟩
-    have hF'X : ∀ a : Fin j, F'.fvec (Fin.castLE hj a) ∈ F'.X := by
-      intro a
+    have mem_flagX : ∀ {U : E} (K : FlagG S r U) (a : Fin j),
+        K.fvec (Fin.castLE hj a) ∈ K.X := fun K a => by
       have ha : a.val < r := by have := a.isLt; omega
       rw [geo_castLE_eq hj a ha, geo_fvec_cast]
       exact Submodule.subset_span ⟨_, rfl⟩
@@ -482,7 +477,7 @@ theorem geo_gram_unit (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1)
       funext a
       rw [hmvR a, Pi.zero_apply]
       have hz : ∀ c : Fin j, S.hT (F'.fvec (Fin.castLE hj a)) (F'.fvec (Fin.castLE hj c)) = 0 :=
-        fun c => geo_X_X F' _ _ (hF'X a) (hF'X c)
+        fun c => geo_X_X F' _ _ (mem_flagX F' a) (mem_flagX F' c)
       have e := rowR a
       simp only [hz, zero_mul, Finset.sum_const_zero, add_zero] at e
       exact e
@@ -490,51 +485,34 @@ theorem geo_gram_unit (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1)
       funext a
       rw [hmvL a, Pi.zero_apply]
       have hz : ∀ c : Fin j, S.hT (F.fvec (Fin.castLE hj a)) (F.fvec (Fin.castLE hj c)) = 0 :=
-        fun c => geo_X_X F _ _ (hFX a) (hFX c)
+        fun c => geo_X_X F _ _ (mem_flagX F a) (mem_flagX F c)
       have e := rowL a
       simp only [hz, zero_mul, Finset.sum_const_zero, zero_add] at e
       exact e
   · subst hjr
     have hcl : ∀ c : Fin (r + 1), Fin.castLE hj c = c := fun c => Fin.ext rfl
-    have hPL : ∀ a : Fin (r + 1), ∑ c, S.hT (F.fvec (Fin.castLE hj a)) (F.fvec (Fin.castLE hj c)) *
-        w (Sum.inl c) = if a = Fin.last r then -T * w (Sum.inl (Fin.last r)) else 0 := by
-      intro a
+    have hself_sum : ∀ {U : E} (K : FlagG S r U) (v : Fin (r + 1) → E) (a : Fin (r + 1)),
+        ∑ c, S.hT (K.fvec (Fin.castLE hj a)) (K.fvec (Fin.castLE hj c)) * v c =
+          if a = Fin.last r then -U * v (Fin.last r) else 0 := fun K v a => by
       simp only [hcl]
       rw [Fin.sum_univ_castSucc]
       rcases Fin.eq_castSucc_or_eq_last a with ⟨b, rfl⟩ | rfl
       · rw [if_neg (Fin.castSucc_lt_last b).ne]
-        have he : ∀ c : Fin r, S.hT (F.fvec b.castSucc) (F.fvec c.castSucc) = 0 := fun c => by
+        have he : ∀ c : Fin r, S.hT (K.fvec b.castSucc) (K.fvec c.castSucc) = 0 := fun c => by
           rw [geo_fvec_cast, geo_fvec_cast]
-          exact F.e_iso b c
+          exact K.e_iso b c
         simp only [he, zero_mul, Finset.sum_const_zero, zero_add]
-        rw [geo_fvec_cast, geo_fvec_last, F.z_orth b, zero_mul]
+        rw [geo_fvec_cast, geo_fvec_last, K.z_orth b, zero_mul]
       · rw [if_pos rfl]
-        have hz0 : ∀ c : Fin r, S.hT (F.fvec (Fin.last r)) (F.fvec c.castSucc) = 0 := fun c => by
-          rw [geo_fvec_last, geo_fvec_cast, ← S.herm.eq (F.e c) F.z, F.z_orth c, map_zero]
+        have hz0 : ∀ c : Fin r, S.hT (K.fvec (Fin.last r)) (K.fvec c.castSucc) = 0 := fun c => by
+          rw [geo_fvec_last, geo_fvec_cast, ← S.herm.eq (K.e c) K.z, K.z_orth c, map_zero]
         simp only [hz0, zero_mul, Finset.sum_const_zero, zero_add]
-        rw [geo_fvec_last, F.z_norm]
-    have hUR : ∀ a : Fin (r + 1), ∑ c, S.hT (F'.fvec (Fin.castLE hj a)) (F'.fvec (Fin.castLE hj c)) *
-        w (Sum.inr c) = if a = Fin.last r then -T' * w (Sum.inr (Fin.last r)) else 0 := by
-      intro a
-      simp only [hcl]
-      rw [Fin.sum_univ_castSucc]
-      rcases Fin.eq_castSucc_or_eq_last a with ⟨b, rfl⟩ | rfl
-      · rw [if_neg (Fin.castSucc_lt_last b).ne]
-        have he : ∀ c : Fin r, S.hT (F'.fvec b.castSucc) (F'.fvec c.castSucc) = 0 := fun c => by
-          rw [geo_fvec_cast, geo_fvec_cast]
-          exact F'.e_iso b c
-        simp only [he, zero_mul, Finset.sum_const_zero, zero_add]
-        rw [geo_fvec_cast, geo_fvec_last, F'.z_orth b, zero_mul]
-      · rw [if_pos rfl]
-        have hz0 : ∀ c : Fin r, S.hT (F'.fvec (Fin.last r)) (F'.fvec c.castSucc) = 0 := fun c => by
-          rw [geo_fvec_last, geo_fvec_cast, ← S.herm.eq (F'.e c) F'.z, F'.z_orth c, map_zero]
-        simp only [hz0, zero_mul, Finset.sum_const_zero, zero_add]
-        rw [geo_fvec_last, F'.z_norm]
+        rw [geo_fvec_last, K.z_norm]
     have hZy : ((Zhat F F').submatrix (Fin.castLE hj) (Fin.castLE hj)) *ᵥ (fun c => w (Sum.inr c)) =
         Pi.single (Fin.last r) (T * w (Sum.inl (Fin.last r))) := by
       funext a
       have e := rowL a
-      rw [hPL a] at e
+      rw [hself_sum F _ a] at e
       rw [hmvL a]
       rcases Fin.eq_castSucc_or_eq_last a with ⟨b, rfl⟩ | rfl
       · rw [if_neg (Fin.castSucc_lt_last b).ne, zero_add] at e
@@ -547,7 +525,7 @@ theorem geo_gram_unit (F : FlagG S r T) (F' : FlagG S r T') (hj : j ≤ r + 1)
         Pi.single (Fin.last r) (T' * w (Sum.inr (Fin.last r))) := by
       funext a
       have e := rowR a
-      rw [hUR a] at e
+      rw [hself_sum F' _ a] at e
       rw [hmvR a]
       rcases Fin.eq_castSucc_or_eq_last a with ⟨b, rfl⟩ | rfl
       · rw [if_neg (Fin.castSucc_lt_last b).ne, add_zero] at e

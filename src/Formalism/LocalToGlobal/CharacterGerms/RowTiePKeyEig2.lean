@@ -399,22 +399,12 @@ section Lim
 
 variable {C : Type} [Field C] {V : VF C} {n : ℕ}
 
-private theorem tends_finset_sum {ι : Type} (S : Finset ι) {f : ι → ℕ → C} {g : ι → C}
-    (h : ∀ i ∈ S, Tends V (f i) (g i)) : Tends V (fun k => ∑ i ∈ S, f i k) (∑ i ∈ S, g i) := by
-  unfold Tends at h ⊢
-  intro w
-  choose! n0 hn0 using fun i hi => h i hi w
-  refine ⟨S.sup n0, fun k hk => ?_⟩
-  show V.Ge w (∑ i ∈ S, g i - ∑ i ∈ S, f i k)
-  rw [← Finset.sum_sub_distrib]
-  exact VF.Ge.sum fun i hi => hn0 i hi k (le_trans (Finset.le_sup hi) hk)
-
 theorem tends_mul {s t : ℕ → Matrix (Fin n) (Fin n) C} {x y : Matrix (Fin n) (Fin n) C}
     (hs : ∀ i j, Tends V (fun k => s k i j) (x i j)) (ht : ∀ i j, Tends V (fun k => t k i j) (y i j)) (i j : Fin n) :
     Tends V (fun k => (s k * t k) i j) ((x * y) i j) := by
   simp only [Matrix.mul_apply]
-  exact tends_finset_sum (f := fun m k => s k i m * t k m j) (g := fun m => x i m * y m j) Finset.univ
-    (fun m _ => _root_.Formalism.L2.FormalSeriesBounds.RowTiePE0.Tends.mul (hs i m) (ht m j))
+  exact Tends.sum (V := V) Finset.univ (s := fun m k => s k i m * t k m j)
+    (x := fun m => x i m * y m j) (fun m _ => Tends.mul (hs i m) (ht m j))
 
 theorem tends_pow {s : ℕ → Matrix (Fin n) (Fin n) C} {x : Matrix (Fin n) (Fin n) C}
     (hs : ∀ i j, Tends V (fun k => s k i j) (x i j)) (m : ℕ) (i j : Fin n) :
@@ -437,41 +427,10 @@ theorem tends_shift {s : ℕ → C} {x : C} (h : Tends V s x) : Tends V (fun k =
 
 end Lim
 
-private theorem l_cast_ne_zero {C : Type} [Field C] (V : VF C) : (V.l : C) ≠ 0 := by
-  intro h0
-  have h4 := V.4
-  rw [h0, AddValuation.map_zero] at h4
-  exact WithTop.top_ne_coe (h4.trans WithTop.coe_one.symm)
-
-private theorem ge_one_l {C : Type} [Field C] (V : VF C) : V.Ge 1 (V.l : C) :=
-  show ((1 : ℝ) : WithTop ℝ) ≤ V.v (V.l : C) from le_of_eq (by rw [V.4, WithTop.coe_one])
-
-private theorem ge_zero_natCast {C : Type} [Field C] (V : VF C) (c : ℕ) : V.Ge 0 (c : C) := by
-  induction c with
-  | zero => rw [Nat.cast_zero]; exact VF.Ge.zero 0
-  | succ c ih => rw [Nat.cast_succ]; exact ih.add VF.Ge.one
-
 private theorem ge_one_natCast_of_l_dvd {C : Type} [Field C] {V : VF C} {c : ℕ} (h : V.l ∣ c) : V.Ge 1 (c : C) := by
   obtain ⟨m, rfl⟩ := h
   rw [Nat.cast_mul]
-  exact ((ge_one_l V).mul (ge_zero_natCast V m)).mono (by norm_num)
-
-private theorem ge_inv_l_mul_of_ge_add_one {C : Type} [Field C] {V : VF C} {w : ℝ} {e : C} (he : V.Ge (w + 1) e) :
-    V.Ge w ((V.l : C)⁻¹ * e) := by
-  have e1 : e = (V.l : C) * ((V.l : C)⁻¹ * e) := by
-    rw [← mul_assoc, mul_inv_cancel₀ (l_cast_ne_zero V), one_mul]
-  have h2 : ((w + 1 : ℝ) : WithTop ℝ) ≤ V.v (V.l : C) + V.v ((V.l : C)⁻¹ * e) := by
-    rw [← AddValuation.map_mul, ← e1]
-    exact he
-  rw [V.4] at h2
-  show ((w : ℝ) : WithTop ℝ) ≤ V.v ((V.l : C)⁻¹ * e)
-  generalize V.v ((V.l : C)⁻¹ * e) = u at h2 ⊢
-  induction u using WithTop.recTopCoe with
-  | top => exact le_top
-  | coe r =>
-    rw [← WithTop.coe_one, ← WithTop.coe_add, WithTop.coe_le_coe] at h2
-    rw [WithTop.coe_le_coe]
-    linarith
+  exact (V.ge_l.mul (V.ge_natCast m)).mono (by norm_num)
 
 private theorem ge_add_matrix_mul_entry_of_ge {C : Type} [Field C] {V : VF C} {n : ℕ} {P R : Matrix (Fin n) (Fin n) C}
     {a b : ℝ} (hP : ∀ i j, V.Ge a (P i j)) (hR : ∀ i j, V.Ge b (R i j)) :
@@ -558,7 +517,7 @@ theorem teich_holds : TeichSt := by
     have hP := ge_add_matrix_mul_entry_of_ge (ge_zero_matrix_pow_entry_of_ge_zero (hint x hx) m) (ge_nsmul_matrix_pow_entry_of_ge hδ (V.l - m)) i j
     rcases Nat.eq_zero_or_pos m with rfl | hm0
     · have hL : (2 : ℝ) ≤ ((V.l - 0 : ℕ) : ℝ) := by exact_mod_cast (by omega : 2 ≤ V.l - 0)
-      refine ((ge_zero_natCast V (V.l.choose 0)).mul hP).mono ?_
+      refine ((V.ge_natCast (V.l.choose 0)).mul hP).mono ?_
       nlinarith [mul_le_mul_of_nonneg_right hL ht0]
     · have hdiv : V.l ∣ V.l.choose m := V.3.dvd_choose_self (by omega) hm
       have hL : (1 : ℝ) ≤ ((V.l - m : ℕ) : ℝ) := by exact_mod_cast (by omega : 1 ≤ V.l - m)
@@ -598,9 +557,9 @@ theorem teich_holds : TeichSt := by
       rw [hsS 0]
       have hm := hint _ (hfrob (s 0) (hsA 0)) i j
       have e : s 0 ^ V.l ^ d - s 0 = (V.l : C) • ((V.l : C)⁻¹ • (s 0 ^ V.l ^ d - s 0)) := by
-        rw [smul_smul, mul_inv_cancel₀ (l_cast_ne_zero V), one_smul]
+        rw [smul_smul, mul_inv_cancel₀ V.l_ne_zero, one_smul]
       rw [e, Matrix.smul_apply, smul_eq_mul]
-      exact ((ge_one_l V).mul hm).mono (by norm_num)
+      exact (V.ge_l.mul hm).mono (by norm_num)
     | succ k ih =>
       intro i j
       have e : s (k + 1 + 1) - s (k + 1) = s (k + 1) ^ V.l ^ d - s k ^ V.l ^ d := by
@@ -650,7 +609,10 @@ theorem teich_holds : TeichSt := by
     have e : (V.l : C)⁻¹ * (b i j - T i j) - (V.l : C)⁻¹ * (b i j - s k i j) =
         (V.l : C)⁻¹ * -(T i j - s k i j) := by ring
     rw [e]
-    exact ge_inv_l_mul_of_ge_add_one (hn0 k hk).neg
+    have hneg := (hn0 k hk).neg
+    rw [show -(T i j - s k i j) = (V.l : C) * ((V.l : C)⁻¹ * -(T i j - s k i j)) from by
+      rw [← mul_assoc, mul_inv_cancel₀ V.l_ne_zero, one_mul]] at hneg
+    exact hneg.of_l_mul.mono (by linarith)
   exact ⟨T, hTA, hTq, hclos _ _ hbs hlim⟩
 
 end RowTiePKeyTeich

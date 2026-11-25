@@ -75,16 +75,6 @@ theorem mem_LLset (j x : ℤ) : x ∈ Fr.LLset j ↔
 
 variable {L₁ N₁ : ℕ} {J : ℕ} [NeZero J] {nL : ZMod J → ℕ}
 
-private theorem fr_mono_of_valid (hV : Fr.Valid L₁ N₁) (j : ℤ) :
-    ∀ i i' : ℕ, i ≤ i' → i' < r → Fr.fr j i ≤ Fr.fr j i' := by
-  intro i i' hii' hi'
-  induction i' with
-  | zero => rw [Nat.le_zero.mp hii']
-  | succ k ih =>
-    rcases Nat.lt_or_ge i (k + 1) with h | h
-    · exact le_trans (ih (by omega) (by omega)) (hV.2.2.1 j k (by omega)).le
-    · rw [le_antisymm hii' h]
-
 private theorem fr_last_mono_in_index_of_valid (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (a : ℤ) :
     ∀ b : ℤ, a ≤ b → Fr.fr a (r - 1) ≤ Fr.fr b (r - 1) := by
   intro b hab
@@ -92,7 +82,7 @@ private theorem fr_last_mono_in_index_of_valid (hV : Fr.Valid L₁ N₁) (hr : 1
   | base => exact le_rfl
   | succ k _ ih =>
     exact le_trans ih (le_trans (hV.2.2.2.1 k).le
-      (fr_mono_of_valid Fr hV (k + 1) 0 (r - 1) (Nat.zero_le _) (by omega)))
+      (frame_entries_monotone hV (k + 1) 0 (r - 1) (Nat.zero_le _) (by omega)))
 
 theorem posTL_seg (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, nL j = (Fr.LLset (segZ j)).card) (x : TL J nL r) :
     Fr.fr (segZ x.1 - 1) (r - 1) < posTL Fr x ∧ posTL Fr x ≤ Fr.fr (segZ x.1) (r - 1) ∧
@@ -102,12 +92,12 @@ theorem posTL_seg (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, nL j = 
     have hm := llPos_mem Fr (segZ j) l.val hl
     rw [mem_LLset] at hm
     refine ⟨hm.1.1, ?_, hm.2⟩
-    exact le_trans hm.1.2.le (fr_mono_of_valid Fr hV _ 0 (r - 1) (Nat.zero_le _) (by omega))
+    exact le_trans hm.1.2.le (frame_entries_monotone hV _ 0 (r - 1) (Nat.zero_le _) (by omega))
   · refine ⟨?_, ?_, (hV.2.2.2.2.1 _ _ (by omega)).1⟩
     · have h1 := hV.2.2.2.1 (segZ j - 1)
       rw [sub_add_cancel] at h1
-      exact lt_of_lt_of_le h1 (fr_mono_of_valid Fr hV _ 0 _ (Nat.zero_le _) (by omega))
-    · exact fr_mono_of_valid Fr hV _ _ _ (by omega) (by omega)
+      exact lt_of_lt_of_le h1 (frame_entries_monotone hV _ 0 _ (Nat.zero_le _) (by omega))
+    · exact frame_entries_monotone hV _ _ _ (by omega) (by omega)
 
 theorem segZ_nonneg (j : ZMod J) : 0 ≤ segZ j := by
   exact Int.natCast_nonneg _
@@ -161,14 +151,14 @@ theorem posTL_inj (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hJ : J = Fr.J) (hnL 
       have hl : l.val < (Fr.LLset (segZ j)).card := by rw [← hnL j]; exact l.2
       have hm := llPos_mem Fr (segZ j) l.val hl
       rw [mem_LLset] at hm
-      have h2 := fr_mono_of_valid Fr hV (segZ j) 0 (r - 1 - m'.val) (Nat.zero_le _) (by omega)
+      have h2 := frame_entries_monotone hV (segZ j) 0 (r - 1 - m'.val) (Nat.zero_le _) (by omega)
       have h3 : llPos Fr (segZ j) l.val = Fr.fr (segZ j) (r - 1 - m'.val) := hxy
       linarith [hm.1.2]
     · exfalso
       have hl : l'.val < (Fr.LLset (segZ j)).card := by rw [← hnL j]; exact l'.2
       have hm := llPos_mem Fr (segZ j) l'.val hl
       rw [mem_LLset] at hm
-      have h2 := fr_mono_of_valid Fr hV (segZ j) 0 (r - 1 - m.val) (Nat.zero_le _) (by omega)
+      have h2 := frame_entries_monotone hV (segZ j) 0 (r - 1 - m.val) (Nat.zero_le _) (by omega)
       have h3 : Fr.fr (segZ j) (r - 1 - m.val) = llPos Fr (segZ j) l'.val := hxy
       linarith [hm.1.2]
     · have h3 : Fr.fr (segZ j) (r - 1 - m.val) = Fr.fr (segZ j) (r - 1 - m'.val) := hxy
@@ -177,10 +167,12 @@ theorem posTL_inj (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hJ : J = Fr.J) (hnL 
         have hm1 := m.2
         have hm2 := m'.2
         rcases Nat.lt_or_gt_of_ne hne with h | h
-        · have := fr_mono_of_valid Fr hV (segZ j) (r - 1 - m'.val + 1) (r - 1 - m.val) (by omega) (by omega)
+        · have := frame_entries_monotone hV (segZ j) (r - 1 - m'.val + 1)
+            (r - 1 - m.val) (by omega) (by omega)
           have := hV.2.2.1 (segZ j) (r - 1 - m'.val) (by omega)
           linarith
-        · have := fr_mono_of_valid Fr hV (segZ j) (r - 1 - m.val + 1) (r - 1 - m'.val) (by omega) (by omega)
+        · have := frame_entries_monotone hV (segZ j) (r - 1 - m.val + 1)
+            (r - 1 - m'.val) (by omega) (by omega)
           have := hV.2.2.1 (segZ j) (r - 1 - m.val) (by omega)
           linarith
       rw [Fin.val_eq_val] at hmm

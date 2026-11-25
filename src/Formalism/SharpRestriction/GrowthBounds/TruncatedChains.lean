@@ -1109,29 +1109,18 @@ section Pos
 
 variable {α : Type*} [BEq α] [LawfulBEq α]
 
-private theorem idxOf_append_eq_length_add_of_not_mem (l1 l : List α) (x : α) (hx : x ∉ l1) :
-    (l1 ++ l).idxOf x = l1.length + l.idxOf x := by
-  induction l1 with
-  | nil => simp
-  | cons a t ih =>
-    have hax : a ≠ x := by
-      rintro rfl
-      exact hx (by simp)
-    have ht : x ∉ t := fun h => hx (by simp [h])
-    simp [hax, ih ht] <;> omega
-
 theorem idxOf_append_first (l1 l2 : List α) (x : α) (hx : x ∉ l1) : (l1 ++ x :: l2).idxOf x = l1.length := by
-  rw [idxOf_append_eq_length_add_of_not_mem l1 _ x hx]
+  rw [List.idxOf_append_of_notMem hx]
   simp
 
 theorem idxOf_append_second (l1 l2 : List α) (x y : α) (hxy : x ≠ y) (hy : y ∉ l1) :
     (l1 ++ x :: y :: l2).idxOf y = l1.length + 1 := by
-  rw [idxOf_append_eq_length_add_of_not_mem l1 _ y hy]
+  rw [List.idxOf_append_of_notMem hy]
   simp [hxy]
 
 theorem idxOf_append_third (l1 l2 : List α) (x y z : α) (hxz : x ≠ z) (hyz : y ≠ z) (hz : z ∉ l1) :
     (l1 ++ x :: y :: z :: l2).idxOf z = l1.length + 2 := by
-  rw [idxOf_append_eq_length_add_of_not_mem l1 _ z hz]
+  rw [List.idxOf_append_of_notMem hz]
   simp [hxz, hyz]
 
 theorem cn_idx_lt (l1 l2 : List α) (u : α) (hu : u ∈ l1) : (l1 ++ l2).idxOf u < l1.length := by
@@ -1152,24 +1141,6 @@ theorem cn_idx_lt (l1 l2 : List α) (u : α) (hu : u ∈ l1) : (l1 ++ l2).idxOf 
 end Pos
 
 variable {n : ℕ}
-
-private theorem eq_of_idxOf_eq_of_mem {β : Type*} [BEq β] [LawfulBEq β] (l : List β) (u v : β) (hu : u ∈ l)
-    (hv : v ∈ l) (h : l.idxOf u = l.idxOf v) : u = v := by
-  induction l with
-  | nil => simp at hu
-  | cons a t ih =>
-    by_cases hau : a = u
-    · by_cases hav : a = v
-      · exact hau.symm.trans hav
-      · subst hau
-        simp [hav] at h
-    · by_cases hav : a = v
-      · subst hav
-        simp [hau] at h
-      · simp [hau, hav] at h
-        have hu' : u ∈ t := (List.mem_cons.mp hu).resolve_left (fun h' => hau h'.symm)
-        have hv' : v ∈ t := (List.mem_cons.mp hv).resolve_left (fun h' => hav h'.symm)
-        exact ih hu' hv' h
 
 theorem cn_key {j : ℕ} (l1 l2 : List (Fin n × Fin n)) (b c j' e : Fin n)
     (h : NO n j (l1 ++ (b, c) :: (j', c) :: (j', e) :: l2)) (hj : j'.val = j) (hjb : j < b.val)
@@ -1195,9 +1166,8 @@ theorem cn_key {j : ℕ} (l1 l2 : List (Fin n × Fin n)) (b c j' e : Fin n)
   have i0 : L.idxOf (b, c) = l1.length := idxOf_append_first l1 _ (b, c) n0
   have i1 : L.idxOf (j', c) = l1.length + 1 := idxOf_append_second l1 ((j', e) :: l2) (b, c) (j', c) hbj n1
   have i2 : L.idxOf (j', e) = l1.length + 2 := idxOf_append_third l1 l2 (b, c) (j', c) (j', e) hbje hce n2
-  have inj : ∀ u v, u ∈ L → v ∈ L → L.idxOf u = L.idxOf v → u = v := by
-    intro u v hu hv h'
-    exact eq_of_idxOf_eq_of_mem L u v hu hv h'
+  have inj : ∀ u v, u ∈ L → v ∈ L → L.idxOf u = L.idxOf v → u = v :=
+    fun _ _ hu _ h' => (List.idxOf_inj hu).mp h'
   have hje : j'.val < e.val := (hall (j', e) (by simp [hL])).2
   have o1 := hord j' b c hjj hjb' hbc
   rw [i1, i0] at o1
@@ -1384,15 +1354,6 @@ theorem cn_front {j : ℕ} {l : List (Fin n × Fin n)} (h : NO n j l) (a b : Fin
     subst hdb
     exact ⟨lF' ++ lG, hs⟩
 
-private lemma idxOf_append_of_not_mem_beq {α : Type} [BEq α] [LawfulBEq α] (l₁ l₂ : List α) (x : α) (hx : x ∉ l₁) :
-    (l₁ ++ l₂).idxOf x = l₁.length + l₂.idxOf x := by
-  induction l₁ with
-  | nil => simp
-  | cons y t ih =>
-    have hxy : y ≠ x := fun h => hx (h ▸ List.mem_cons_self)
-    have hxt : x ∉ t := fun h => hx (List.mem_cons_of_mem _ h)
-    simp [ih hxt, hxy] <;> omega
-
 theorem cn_NO_drop {j : ℕ} {lF lG : List (Fin n × Fin n)} (h : NO n j (lF ++ lG)) (hF : ∀ r ∈ lF, r.1.val = j)
     (hG : ∀ r ∈ lG, r.1.val ≠ j) : NO n (j + 1) lG := by
   obtain ⟨hnd, hrange, hall, hord⟩ := h
@@ -1411,8 +1372,8 @@ theorem cn_NO_drop {j : ℕ} {lF lG : List (Fin n × Fin n)} (h : NO n j (lF ++ 
     · exact h1
   · intro a b c ha hab hbc
     have ho := hord a b c (by omega) hab hbc
-    rw [idxOf_append_of_not_mem_beq lF lG _ (hmem a b ha), idxOf_append_of_not_mem_beq lF lG _ (hmem a c ha),
-      idxOf_append_of_not_mem_beq lF lG _ (hmem b c (by omega))] at ho
+    rw [List.idxOf_append_of_notMem (hmem a b ha), List.idxOf_append_of_notMem (hmem a c ha),
+      List.idxOf_append_of_notMem (hmem b c (by omega))] at ho
     omega
 
 theorem cn_back {j : ℕ} {l : List (Fin n × Fin n)} (h : NO n j l) :

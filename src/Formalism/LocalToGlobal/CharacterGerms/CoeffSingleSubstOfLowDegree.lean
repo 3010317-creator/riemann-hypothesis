@@ -64,14 +64,6 @@ open Formalism.IncomingBounds ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 
 variable {C : Type} [Field C]
 
-private theorem deg_single_lemma_0 {τ : Type} (c : τ) (n : ℕ) : Finsupp.degree (Finsupp.single c n) = n := by
-  first
-  | exact Finsupp.degree_single c n
-
-private theorem deg_zero_lemma_0 {τ : Type} (d : τ →₀ ℕ) (h : Finsupp.degree d = 0) : d = 0 := by
-  first
-  | exact (Finsupp.degree_eq_zero_iff d).mp h
-
 private theorem cs_mul_lemma {τ : Type} (A B : MvPowerSeries τ C) (hA : MvPowerSeries.constantCoeff A = 0)
     (hB : MvPowerSeries.constantCoeff B = 0) (c : τ) :
     MvPowerSeries.coeff (Finsupp.single c 1) (A * B) = 0 := by
@@ -80,11 +72,13 @@ private theorem cs_mul_lemma {τ : Type} (A B : MvPowerSeries τ C) (hA : MvPowe
   refine Finset.sum_eq_zero (fun p hp => ?_)
   rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
   have hdeg := congrArg Finsupp.degree hp
-  rw [map_add (f := _), deg_single_lemma_0] at hdeg
+  rw [map_add (f := _), Finsupp.degree_single] at hdeg
   rcases Nat.eq_zero_or_pos p.1.degree with h0 | h0
-  · rw [deg_zero_lemma_0 p.1 h0, MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hA, zero_mul]
+  · rw [(Finsupp.degree_eq_zero_iff p.1).mp h0,
+      MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hA, zero_mul]
   · have h1 : p.2.degree = 0 := by omega
-    rw [deg_zero_lemma_0 p.2 h1, MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hB, mul_zero]
+    rw [(Finsupp.degree_eq_zero_iff p.2).mp h1,
+      MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hB, mul_zero]
 
 private theorem cs_prod_lemma_2 {σ τ : Type} (a : σ → MvPowerSeries τ C)
     (ha0 : ∀ s, MvPowerSeries.constantCoeff (a s) = 0) (e : σ →₀ ℕ) (he : e ≠ 0) :
@@ -114,7 +108,7 @@ private theorem cs_prod_lemma_3 {σ τ : Type} (a : σ → MvPowerSeries τ C)
   have hsplit : e = Finsupp.single s 1 + (e - Finsupp.single s 1) := (add_tsub_cancel_of_le hle).symm
   have hdeg : 1 ≤ (e - Finsupp.single s 1).degree := by
     have h2 := congrArg Finsupp.degree hsplit
-    rw [map_add (f := _), deg_single_lemma_0] at h2
+    rw [map_add (f := _), Finsupp.degree_single] at h2
     omega
   have hne' : e - Finsupp.single s 1 ≠ 0 := by
     intro h

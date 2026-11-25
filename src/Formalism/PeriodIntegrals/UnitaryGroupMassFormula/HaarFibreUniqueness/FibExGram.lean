@@ -97,26 +97,6 @@ private theorem exists_pow_smul_mem_nhds_of_isCompact' {𝕜 V : Type} [Field �
     exact ht hN
   exact (hπ.eventually h).exists
 
-theorem hasCOSub_of_lat {𝕜 V : Type} [Field 𝕜] [TopologicalSpace 𝕜] [AddCommGroup V]
-    [Module 𝕜 V] [TopologicalSpace V] [ContinuousSMul 𝕜 V] (L : AddSubgroup V)
-    (hLo : IsOpen (L : Set V)) (hLc : IsCompact (L : Set V)) (π : 𝕜) (h0 : π ≠ 0)
-    (hπ : Tendsto (fun k : ℕ => π ^ k) atTop (𝓝 0)) : HasCOSub V := by
-  intro N hN
-  obtain ⟨k, hk⟩ := exists_pow_smul_mem_nhds_of_isCompact' (L : Set V) hLc π hπ N hN
-  have hc : π ^ k ≠ 0 := pow_ne_zero k h0
-  have himg : ((L.map (DistribSMul.toAddMonoidHom V (π ^ k)) : AddSubgroup V) : Set V) =
-      (fun x => π ^ k • x) '' (L : Set V) := by
-    ext x
-    simp
-  refine ⟨L.map (DistribSMul.toAddMonoidHom V (π ^ k)), ?_, ?_, ?_⟩
-  · rw [himg]
-    exact isOpenMap_smul₀ hc _ hLo
-  · rw [himg]
-    exact hLc.image (continuous_const_smul _)
-  · rw [himg]
-    rintro _ ⟨y, hy, rfl⟩
-    exact hk y hy
-
 theorem exists_pow_tendsto_zero_Fv {F : Type} [Field F] [NumberField F]
     (v : HeightOneSpectrum (𝓞 F)) :
     ∃ π : Fv F v, π ≠ 0 ∧ Tendsto (fun k : ℕ => π ^ k) atTop (𝓝 0) := by
@@ -177,6 +157,14 @@ theorem isCOBasis_scaled {𝕜 V : Type} [Field 𝕜] [TopologicalSpace 𝕜] [A
   · rw [himg]
     rintro _ ⟨y, hy, rfl⟩
     exact hk y hy
+
+theorem hasCOSub_of_lat {𝕜 V : Type} [Field 𝕜] [TopologicalSpace 𝕜] [AddCommGroup V]
+    [Module 𝕜 V] [TopologicalSpace V] [ContinuousSMul 𝕜 V] (L : AddSubgroup V)
+    (hLo : IsOpen (L : Set V)) (hLc : IsCompact (L : Set V)) (π : 𝕜) (h0 : π ≠ 0)
+    (hπ : Tendsto (fun k : ℕ => π ^ k) atTop (𝓝 0)) : HasCOSub V := by
+  intro N hN
+  obtain ⟨Λ, -, h1, h2, h3⟩ := isCOBasis_scaled L hLo hLc π h0 hπ N hN
+  exact ⟨Λ, h1, h2, h3⟩
 
 theorem isCOBasis_latSub {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E]
     [FiniteDimensional F E] {d : ℕ} (b : Module.Basis (Fin d) F E)
