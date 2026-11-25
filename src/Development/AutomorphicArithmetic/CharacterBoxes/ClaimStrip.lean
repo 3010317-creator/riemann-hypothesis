@@ -35,14 +35,13 @@ open critical strip onto the critical line. A zero to the left is first reduced 
 primitive character and then reflected into the right half-plane. -/
 theorem strip (h : DirichletLNonvanishingRightOfHalf) : DirichletLZerosOnLine := by
   intro N _ χ s hs0 hs1 hz
-  have hs : s ≠ 1 := fun e => by rw [e, Complex.one_re] at hs1; exact lt_irrefl _ hs1
-  have hs0' : s ≠ 0 := fun e => by rw [e, Complex.zero_re] at hs0; exact lt_irrefl _ hs0
+  have hs : s ≠ 1 := ne_of_apply_ne re hs1.ne
   rcases lt_trichotomy s.re (1 / 2) with hlt | heq | hgt
   · exfalso
     have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
     have hprimitive := (LFunction_eq_zero_iff_primitiveCharacter χ hs0 (Or.inr hs)).mp hz
     have hreflected := prim_reflect χ.primitiveCharacter χ.primitiveCharacter_isPrimitive hs0 hs hprimitive
-    have ht : (1 : ℂ) - s ≠ 1 := fun e => hs0' (sub_eq_self.mp e)
+    have ht : (1 : ℂ) - s ≠ 1 := fun e => ne_zero_of_re_pos hs0 (sub_eq_self.mp e)
     exact h χ.conductor χ.primitiveCharacter⁻¹ (1 - s)
       (by rw [Complex.sub_re, Complex.one_re]; linarith) (Or.inr ht) hreflected
   · exact heq
