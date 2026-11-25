@@ -112,8 +112,6 @@ def RootsG (D : D7) : Prop :=
 
 variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : G.Inst D L} {Gl : G.LatInst D} {K : G.Consts} {Y : DivX D} {cX : ExtraC}
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {ex : Extra D L hT Gi Gl K Y cX}
 
 end GlobalTheory.Core.Cls
