@@ -119,8 +119,8 @@ end UpperTheory.MatrixCoefficientBound
 theorem UpperTheory.matrix_coefficient_bounded_by_value_at_one :
     ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} {n d : ℕ} {X : Spc F E n} {W : Spc F E d} {M : Model σ X W}, Cpt σ X.J → M.μ.IsHaarMeasure → IsFundamentalDomain (ratU σ X.J) M.dom M.μ → ∀ {φ : UA σ X.J → ℂ}, IsFn φ → φ ≠ 0 → ∃ r : ℝ, 0 < r ∧ mc M φ 1 = r ∧ ∀ g, ‖mc M φ g‖ ≤ r := by
   intro F E _ _ _ _ _ σ n d X W M hK hμ hD φ hφ h0
-  haveI := hK.cnt
-  haveI := hK.right M.μ hμ
+  have := hK.cnt
+  have := hK.right M.μ hμ
   obtain ⟨C, hC⟩ := hK.bdd hφ.1 hφ.2
   have e1 : mc M φ 1 = ((∫ y in M.dom, ‖φ y‖ ^ 2 ∂M.μ : ℝ) : ℂ) := by
     rw [← integral_complex_ofReal]
