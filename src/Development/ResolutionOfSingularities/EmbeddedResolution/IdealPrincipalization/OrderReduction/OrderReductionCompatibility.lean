@@ -119,21 +119,12 @@ def IsSmoothDivisorStableUnderSmoothPullback : Prop :=
     [AlgebraicGeometry.LocallyOfFiniteType (g ≫ p)]
     (D : P.IdealSheafData), IsSmoothDivisor p D → IsSmoothDivisor (g ≫ p) (D.comap g)
 
-private theorem restrictIdeal_comap_eq_comap_restrictIdeal {P Y : Scheme.{u}} (g : Y ⟶ P)
-    (I : P.IdealSheafData) {U : P.Opens} {V : Y.Opens} {f : V.toScheme ⟶ U.toScheme}
-    (hf : f ≫ U.ι = V.ι ≫ g) :
-    restrictIdeal (I.comap g) V = (restrictIdeal I U).comap f := by
-  rw [restrictIdeal_eq_comap_ι, restrictIdeal_eq_comap_ι, ← Scheme.IdealSheafData.comap_comp,
-    ← Scheme.IdealSheafData.comap_comp, hf]
-
 private theorem restrictIdeal_comap_le_of_restrictIdeal_le {P Y : Scheme.{u}} (g : Y ⟶ P)
     {I J : P.IdealSheafData} {U : P.Opens}
     (hle : restrictIdeal I U ≤ restrictIdeal J U) (V : Y.Opens) (hV : V ≤ g ⁻¹ᵁ U) :
     restrictIdeal (I.comap g) V ≤ restrictIdeal (J.comap g) V := by
-  have hf : (Y.homOfLE hV ≫ (g ∣_ U)) ≫ U.ι = V.ι ≫ g := by
-    rw [Category.assoc, morphismRestrict_ι, ← Category.assoc, Scheme.homOfLE_ι]
-  rw [restrictIdeal_comap_eq_comap_restrictIdeal g I hf,
-    restrictIdeal_comap_eq_comap_restrictIdeal g J hf]
+  rw [restrictIdeal_comap_eq_comap_resLE_restrictIdeal g I U V hV,
+    restrictIdeal_comap_eq_comap_resLE_restrictIdeal g J U V hV]
   exact Scheme.IdealSheafData.comap_mono _ hle
 
 theorem IsMaxContactHypersurface.isSmoothDivisor {k : Type u} [Field k] [CharZero k]
