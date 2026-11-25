@@ -129,7 +129,7 @@ theorem jj_int (D : D7) (L : SizeData₂ D) (hP : AdmissibleParameterJ.AdmPar L)
       unfold AdmissibleParameterJ.PPm
       refine Multiset.mem_add.2 (Or.inr (Multiset.mem_map.2 ⟨0, ?_, rfl⟩))
       simp only [Finset.mem_val, Finset.mem_range]
-      exact hF.t_pos
+      exact D.R.t_odd.pos
     obtain ⟨m, hm⟩ := hI _ hmem
     refine ⟨-m + (D.R.t : ℤ) - 1, ?_⟩
     push_cast
