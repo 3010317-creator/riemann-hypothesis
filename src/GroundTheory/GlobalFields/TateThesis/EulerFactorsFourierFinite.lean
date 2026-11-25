@@ -29,44 +29,15 @@ theorem le_exp_neg_one_of_lt_one {x : ℤᵐ⁰} (h : x < 1) : x ≤ exp (-1) :=
 theorem multiplicity_finprod_asIdeal_pow {R : Type*} [CommRing R] [IsDedekindDomain R]
     {a : HeightOneSpectrum R → ℕ} (ha : (Function.support a).Finite) (v : HeightOneSpectrum R) :
     multiplicity v.asIdeal (∏ᶠ w, w.asIdeal ^ a w) = a v := by
-  classical
-  set I := ∏ᶠ w : HeightOneSpectrum R, w.asIdeal ^ a w
-  have hI : I ≠ ⊥ := finprod_asIdeal_pow_ne_bot a
-  have h1 : a v ≤ multiplicity v.asIdeal I := (finprod_asIdeal_pow_dvd_iff ha hI).1 dvd_rfl v
-  refine le_antisymm ?_ h1
-  by_contra h2
-  push Not at h2
-  set b : HeightOneSpectrum R → ℕ := fun w ↦ a w + if w = v then 1 else 0
-  have hb : (Function.support b).Finite := (ha.union (Set.finite_singleton v)).subset fun w hw ↦ by
-    by_contra hw'
-    simp only [Set.mem_union, Function.mem_support, Set.mem_singleton_iff, not_or, not_not] at hw'
-    exact hw (by simp [b, hw'.1, hw'.2])
-  have hdvd : (∏ᶠ w, w.asIdeal ^ b w) ∣ I := by
-    refine (finprod_asIdeal_pow_dvd_iff hb hI).2 fun w ↦ ?_
-    by_cases hw : w = v
-    · rw [hw]
-      show a v + (if v = v then 1 else 0) ≤ _
-      rw [ite_eq_left rfl]
-      omega
-    · simp only [b, ite_eq_right hw, add_zero]
-      exact (finprod_asIdeal_pow_dvd_iff ha hI).1 dvd_rfl w
-  have hfa : Function.HasFiniteMulSupport fun w : HeightOneSpectrum R ↦ w.asIdeal ^ a w := by
-    rw [Function.HasFiniteMulSupport, mulSupport_asIdeal_pow]; exact ha
-  have hfv : Function.HasFiniteMulSupport fun w : HeightOneSpectrum R ↦
-      w.asIdeal ^ (if w = v then 1 else 0) := by
-    refine (Set.finite_singleton v).subset fun w hw ↦ ?_
-    by_contra hw'
-    exact hw (by simp [Set.mem_singleton_iff.not.1 hw'])
-  have hsplit : (∏ᶠ w, w.asIdeal ^ b w) = I * v.asIdeal := by
-    simp only [b, pow_add]
-    rw [finprod_mul_distrib hfa hfv]
-    congr 1
-    rw [finprod_eq_single _ v fun w hw ↦ by simp [hw], ite_eq_left rfl, pow_one]
-  rw [hsplit] at hdvd
-  have h1' : I * v.asIdeal ∣ I * 1 := by rwa [mul_one]
-  have hv1 := (mul_dvd_mul_iff_left (show I ≠ 0 from hI)).1 h1'
-  rw [Ideal.dvd_iff_le, Ideal.one_eq_top, top_le_iff] at hv1
-  exact v.isPrime.ne_top hv1
+  have hI : (∏ᶠ w : HeightOneSpectrum R, w.asIdeal ^ a w) ≠ ⊥ := finprod_asIdeal_pow_ne_bot a
+  have h0 : (∏ᶠ w : HeightOneSpectrum R, w.asIdeal ^ a w) ≠ 0 := hI
+  have h := FractionalIdeal.count_finprod (FractionRing R) v (fun w ↦ (a w : ℤ))
+    (Filter.eventually_cofinite.2 (ha.subset fun w hw ↦ by simpa using hw))
+  simp_rw [zpow_natCast, ← FractionalIdeal.coeIdeal_pow,
+    ← FractionalIdeal.coeIdeal_finprod R⁰ (FractionRing R) le_rfl] at h
+  rw [FractionalIdeal.count_coeIdeal _ v h0, Ideal.count_associates_factors_eq h0 v.isPrime v.ne_bot,
+    count_normalizedFactors_eq_multiplicity hI] at h
+  exact_mod_cast h
 
 open IdeleGroup
 
