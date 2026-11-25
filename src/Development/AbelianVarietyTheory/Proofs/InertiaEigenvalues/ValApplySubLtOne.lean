@@ -125,14 +125,8 @@ theorem exists_sub_lt_one (hk : IsAlgClosed (ResidueField O)) {x : AlgebraicClos
   exact hne _
 
 theorem apply_mem_intBar (τ : AlgebraicClosure (FractionRing O) ≃ₐ[FractionRing O] AlgebraicClosure (FractionRing O))
-    (x : AlgebraicClosure (FractionRing O)) : τ x ∈ intBar O ↔ x ∈ intBar O := by
-  rw [mem_intBar, mem_intBar]
-  constructor
-  · intro h
-    have h2 := h.map (τ.symm.toAlgHom.restrictScalars O)
-    simpa using h2
-  · intro h
-    exact h.map (τ.toAlgHom.restrictScalars O)
+    (x : AlgebraicClosure (FractionRing O)) : τ x ∈ intBar O ↔ x ∈ intBar O :=
+  isIntegral_algEquiv (τ.restrictScalars O)
 
 theorem val_apply_sub_lt_one (hk : IsAlgClosed (ResidueField O))
     (τ : AlgebraicClosure (FractionRing O) ≃ₐ[FractionRing O] AlgebraicClosure (FractionRing O))
