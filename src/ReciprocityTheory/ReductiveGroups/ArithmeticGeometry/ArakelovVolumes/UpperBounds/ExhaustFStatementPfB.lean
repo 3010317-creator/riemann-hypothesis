@@ -210,23 +210,13 @@ theorem psgn_dmin_gt {x : Frame X.Ψ r} (τ : X.Ψ) (hdet : (mat x τ).det ≠ 0
     exact hermC_conj τ.1 hG _ _
   have hli0 : LinearIndependent ℂ (fun m => FD.col (mat x τ) m) :=
     Matrix.linearIndependent_cols_of_det_ne_zero hdet
-  have hg : Function.Injective (Sum.elim (Fin.castLE X.p0_le) gr) := by
-    intro s t hst
-    rcases s with a | j <;> rcases t with b | l
-    · exact congrArg Sum.inl (Fin.castLE_injective X.p0_le hst)
-    · exfalso
-      have h1 := congrArg Fin.val hst
-      have := a.isLt
-      simp only [Sum.elim_inl, Sum.elim_inr, gr, Fin.coe_castLE, Fin.val_mk] at h1
-      omega
-    · exfalso
-      have h1 := congrArg Fin.val hst
-      have := b.isLt
-      simp only [Sum.elim_inl, Sum.elim_inr, gr, Fin.coe_castLE, Fin.val_mk] at h1
-      omega
-    · have h1 := congrArg Fin.val hst
-      simp only [Sum.elim_inr, gr, Fin.val_mk] at h1
-      exact congrArg Sum.inr (Fin.ext (by omega))
+  have hg : Function.Injective (Sum.elim (Fin.castLE X.p0_le) gr) :=
+    (Fin.castLE_injective X.p0_le).sumElim (fun j l h => Fin.ext (Nat.add_left_cancel (congrArg Fin.val h)))
+      fun a j h => by
+        have h1 := congrArg Fin.val h
+        have := a.isLt
+        simp only [gr, Fin.val_castLE] at h1
+        omega
   have hli := hli0.comp _ hg
   have hS : (-(D - α * B)).PosDef := by
     refine Matrix.PosDef.of_dotProduct_mulVec_pos hSH.neg fun xv hxv => ?_
