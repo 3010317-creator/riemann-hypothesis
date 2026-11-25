@@ -1077,7 +1077,6 @@ variable {H : Type} [Group H] [TopologicalSpace H]
   {V U : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V] [FiniteDimensional ℂ V]
   [NormedAddCommGroup U] [InnerProductSpace ℂ U] {D : H →* (V →L[ℂ] V)} {π : H →* (U →L[ℂ] U)}
 
-
 variable [MeasurableSpace H] [BorelSpace H] {μ : Measure H}
 
 variable [IsTopologicalGroup H] [CompactSpace H] [μ.IsHaarMeasure]
@@ -1265,7 +1264,7 @@ theorem StrIdx_proof2 : StrIdx := by
     rintro k _ ⟨y, hy, rfl⟩
     exact ⟨sigD hD (hφK k) y, hLK _ (hφK k) y hy, rfl⟩
   have hAc : ∀ v, Continuous fun k : KG ε => σ (toMK k) v := fun v =>
-    (hσ.2.2 v).comp_continuous hφc fun g => kset_mem_UJset (hφK g)
+    (hσ.2.2 v).comp_continuous hφc fun g => ReciprocityTheory.ChartRestriction.DS.closure_inUJ_of_mem_Kset (hφK g)
   have hcont : Continuous fun k : KG ε => ev (toMK k) P * physDet ε (toMK k) := by
     have := hent (P * Q)
     simpa only [map_mul, hQ] using this
@@ -1323,7 +1322,6 @@ open GlobalTheory.PsCo.Pc1 (Mat)
 namespace GlobalTheory.PsCo.PcEF
 
 open GlobalTheory.PsCo.PcEG
-
 
 theorem supertrace_carriedBy_diracKernel : StrKer := by
   intro n ε H _ _ σ D E hσ hD Y _ hY hG hK
