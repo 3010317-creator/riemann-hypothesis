@@ -407,7 +407,7 @@ theorem fock_datum {θ : InfFam D} (hθ : IsInfFam θ) (ε : Bool) (A : Fr S) (B
       have der : ∀ z : Matrix (Fin X.rank) (Fin S.rank) ℂ, ∃ g ∈ M.Pol Bs.ψ Bs.emb, ∀ φ, (∀ v, φ v ∈ GlobalTheory.WeilM.SB _) →
           (∀ᶠ v in Filter.cofinite, φ v = M.vac v) → ∀ F : WO S X → ℂ, IsDatum M Bs.ψ cS (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ) F →
           IsDatum M Bs.ψ cS (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure g φ) (dRho (heisO Bs.ψ (sgn ε S) X) θ v.1 z F) := fun z => by
-        have hat := GlobalTheory.T.archimedean_preimage_realPlace_line D θ hθ ε S X e cS hcS v.1 z
+        have hat := _root_.GlobalTheory.ArchLinePreimage.arch_symm_lineAt D θ hθ ε S X e cS hcS v.1 z
         obtain ⟨g, hg⟩ := GlobalTheory.T.exists_heisenberg_derivative_archimedean_direction M Bs.ψ hstd f _ hat
         exact ⟨g, Submodule.mem_sInf.2 fun N hN => hN.2 _ hat f (Submodule.mem_sInf.1 a N hN) g hg, fun φ h1 h2 F hF =>
           GlobalTheory.T.heisenbergDerivative_realPlace_pureDatum D Bs.ψ θ hθ ε S X A B e Bs hBs rfl Vs Ws r s r' s' hJ hJW hV hW hemb M hM cS hcS f φ h1 h2 F hF v.1 z g hg⟩

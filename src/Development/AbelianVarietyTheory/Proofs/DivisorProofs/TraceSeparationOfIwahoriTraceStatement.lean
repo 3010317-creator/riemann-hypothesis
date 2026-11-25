@@ -1109,7 +1109,7 @@ theorem separation_of_iwahoriTrace (hI : GlobalTheory.IndefiniteRowSideFullHecke
     Separation := by
   intro D V T U hU μf hμ hK ν hν n Ws _ _ σs hσ a hyp
   haveI : ν.IsHaarMeasure := hν.1
-  obtain ⟨e, he, hP, hfam⟩ := GlobalTheory.T.exists_testFamilies_projectedTranslationOperators D V T U hU μf hμ hK ν hν
+  obtain ⟨e, he, hP, hfam⟩ := _root_.GlobalTheory.TestFamTr.test_families D V T U hU μf hμ hK ν hν
   have hex : ∀ i, ∃ P : Ws i →ₗ[ℂ] Ws i, GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.IsIntegralOp ν (σs i) (finFn V e) P ∧
       FiniteDimensional ℂ (LinearMap.range P) := by
     intro i

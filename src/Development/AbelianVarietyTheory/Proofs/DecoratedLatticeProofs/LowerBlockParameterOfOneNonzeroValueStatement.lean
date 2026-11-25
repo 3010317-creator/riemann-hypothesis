@@ -468,8 +468,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting (SplitPro
 open GlobalTheory.IndefiniteRowSideFullHecke.VolumeFlatSection (Blocks parahoric datum)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
-theorem _root_.GlobalTheory.T.lowerBlockParameter_of_one_nonzeroValue : ∀ D : D7, SoftQ D → QOfVal D := by
-  first | exact @GlobalTheory.LowerBlockParam.qOfVal
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LowerBlockParameterOfOneNonzeroValueStatement =====

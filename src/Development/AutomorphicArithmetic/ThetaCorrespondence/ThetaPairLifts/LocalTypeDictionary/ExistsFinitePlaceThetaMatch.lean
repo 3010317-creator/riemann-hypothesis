@@ -861,7 +861,7 @@ private theorem ram_set {D : D7} {W W₁ X : HSp D} {α β : (AE D)ˣ →* Circl
     · exact ⟨t, (HeightOneSpectrum.ext h5 : w = _) ▸ hw⟩
     · exact ⟨_, (HeightOneSpectrum.ext h5 : w = _) ▸ hw⟩
   · obtain ⟨ε, hε⟩ := GlobalTheory.StabDense.exists_placeIdem (D := D) (w.under (𝓞 D.host.F))
-    exact (hS _ ε hε).1 ((hT _).1 hw) (GlobalTheory.T.heckeChar_unramified_place_of_unramified_one_prime D _ hν hr _ ε hε w rfl hu)
+    exact (hS _ ε hε).1 ((hT _).1 hw) (_root_.GlobalTheory.UnramFromOnePrime.unramAt_of_unrAt_one D _ hν hr _ ε hε w rfl hu)
   · obtain ⟨ε, hε⟩ := GlobalTheory.StabDense.exists_placeIdem (D := D) (w.under (𝓞 D.host.F))
     have hu := (hS _ ε hε).2 fun u hu e => hw ((hT _).2 ⟨u, hu, e⟩)
     exact ⟨GlobalTheory.BasePairChar.unrAt_of_unramAt hε hu.1 rfl, GlobalTheory.BasePairChar.unrAt_of_unramAt hε hu.2 rfl⟩
@@ -1068,7 +1068,7 @@ theorem UpperTheory.exists_polynomial_of_isFinF_thetaLift_pureTensor :
   have hGa : M.IsGauss Bs.ψ Bs.emb g := ⟨fun _ => 1, fun u u' hu hu' hrel f f' hf hf' => by
     rw [hD2 u hu _ _ hf, hD2 u' hu' _ _ hf', hsum u hu, hsum u' hu', Finset.smul_sum]
     refine Finset.sum_congr rfl fun t _ => ?_
-    have k := GlobalTheory.T.realPlaceComponent_archLine_complexStructure D θ hθ ε S X A B e.symm Bs Vs Ws hc cS hcS u u' (fun w => by simpa using hrel w) t
+    have k := _root_.GlobalTheory.CartanLinTransfer.compAt_archLine_cplxO D θ hθ ε S X A B e.symm Bs Vs Ws hc cS hcS u u' (fun w => by simpa using hrel w) t
     rw [GlobalTheory.VacTransfer.archLine_apply, GlobalTheory.VacTransfer.archLine_apply, realAd_one_smul hu, realAd_one_smul hu'] at k
     rw [k, eq_neg_of_add_eq_zero_left (hg₀ t (compAt θ t (cS u))), smul_neg, smul_smul,
       Complex.I_mul_I, neg_one_smul, neg_neg]⟩

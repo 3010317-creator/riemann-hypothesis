@@ -567,7 +567,7 @@ theorem last_sameAt {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1))
   have hξ : D.host.xi0 ≠ 0 := GlobalTheory.LocFrame.cmHost_imaginaryGenerator_ne_zero
   have hAAb : (D.host.AAbar : FI D) ≠ 0 := GlobalTheory.Member.LatSelfDual.AAbar_ne_zero D
   have hL := colMul_jY_mem_latA_iff D ψ hψ J.W J.W₀ ρ J.d LW (𝔟 i) v i h𝔟0
-    (GlobalTheory.T.dualIsotropicLine_mem_completion_iff D ψ hψ J.W J.W₀ ρ J.d LW LW₀ 𝔟 v hG.sdW hmono i h𝔟0)
+    (_root_.GlobalTheory.DualLine.dualLine_mem_iff D ψ hψ J.W J.W₀ ρ J.d LW LW₀ 𝔟 v hG.sdW hmono i h𝔟0)
   set 𝔑 : FI D := FractionalIdeal.spanSingleton _ D.host.xi0 * ((D.host.AAbar : FI D) * (𝔟 i)⁻¹) with h𝔑
   have h𝔑0 : 𝔑 ≠ 0 := mul_ne_zero (by simpa [FractionalIdeal.spanSingleton_eq_zero_iff] using hξ)
     (mul_ne_zero hAAb (inv_ne_zero h𝔟0))
@@ -597,7 +597,7 @@ theorem last_sameAt {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1))
     ← h2 _ _ (inv_ne_zero h𝔷0) h𝔑0 a ha]
   constructor
   · rintro ⟨-, hu⟩ g hg
-    obtain ⟨y, hy, hyg⟩ := GlobalTheory.T.hermitianPairing_onto_inverseIdeal_at_place D ψ hψ B.V₀ B.A B.L B.o B.ζ LV₀ 𝔷 v hG.sdV₀ h𝔷 h𝔷0 g hg
+    obtain ⟨y, hy, hyg⟩ := _root_.GlobalTheory.SeeSaw.HzOnto.hz_onto D ψ hψ B.V₀ B.A B.L B.o B.ζ LV₀ 𝔷 v hG.sdV₀ h𝔷 h𝔷0 g hg
     rw [← hyg]
     exact (key a ha y hy).1 (hu y hy)
   · intro h
@@ -1844,7 +1844,7 @@ theorem exists_center_stab_at_of_transport_correction : ∀ {D : D7} {L : SizeDa
           have h1 := D.R.m_add_three_le_k
           rw [Fintype.card_fin, D.sp.X_rank 0 (Nat.zero_le _), Ranks.N]
           omega
-        refine GlobalTheory.T.exists_central_element_homothetic_gluedCores D k (o.p i) _ _ _ B.o B.ζ _ (o.β 0 i) β₀ M _ μ _ o.q (o.Q 0 i) a₀ hr e1 d1 s2 e2 hF.ne (s6 _) z2
+        refine _root_.GlobalTheory.Core.Mi.LatMatch.CoreHomothety.exists_central_sMoves D k (o.p i) _ _ _ B.o B.ζ _ (o.β 0 i) β₀ M _ μ _ o.q (o.Q 0 i) a₀ hr e1 d1 s2 e2 hF.ne (s6 _) z2
           (GlobalTheory.SeeSaw.LevelTest.unifT_of _ _ hTv) fun a ha => ?_
         obtain ⟨y, hy, hU⟩ := GlobalTheory.T.columnLevel_iff_rowLattice_kept_at_place D W.S.X W.Q.instEq u W.Q.Rl.ψ (_root_.GlobalTheory.MiTop.formsAtZero W u) (W.S.tr u) W.S.Y.hK B a₀ hE hLM hBa ha₀ _ hg a ha
         have c5 : (y : GL _ _) ∈ (_root_.GlobalTheory.MiTop.formsAtZero W u).cls0.lev.U ↔ Moves (D.sp.Y 0) (embA B.d B.o a) (v.N 0) (v.N 0) (· = (o.p i).v) :=
@@ -1857,7 +1857,7 @@ theorem exists_center_stab_at_of_transport_correction : ∀ {D : D7} {L : SizeDa
         have hTv : (((D.mem u).A.T : ℕ) : 𝓞 D.host.F) ∉ p.asIdeal := fun h => hpT ((hVT.tP p).2 h)
         exact GlobalTheory.T.orthogonalSumCores_homothetic_off_level D _ _ _ B.o B.ζ M _ (f.g.x 0).L LL μ _ p a₀ B.line e1 e2
           (rows_trace hE hF hLM hBa ha₀ p (hBT.lat p hpT))
-          (GlobalTheory.T.selfDualLattice_splitsOff_unitNormLine_at_place D _ _ _ B.o B.ζ _ μ _ p B.line s2 hF.ne (s6 p) z2 hTv) hF.ne (s6 p) z2 hTv
+          (_root_.GlobalTheory.Core.Mi.LatMatch.SplitOff.splitsAt D _ _ _ B.o B.ζ _ μ _ p B.line s2 hF.ne (s6 p) z2 hTv) hF.ne (s6 p) z2 hTv
   obtain ⟨a, haf, hac, z, hz, hmvz⟩ := GlobalTheory.T.exists_central_glue_localHomotheties D (D.sp.Y 0) (D.sp.X 0) (embA B.d B.o) (embA B.d B.o a₀) Lm
     (latS D) hLm s1 (fun v a ha => embA_mem_grpAt _ _ ha) (fun v => by simpa only [map_mul] using loc v)
   rw [← map_mul] at hmvz

@@ -1808,7 +1808,7 @@ theorem loop_rows_closed_gap : GlobalTheory.GapIn.Hyp → Formalism.L2.SG.LocWSO
   have hJF : JFactNAll := GlobalTheory.T.localBesselJFactor_all_words_of_gap
   have hCF : Formalism.L2.SG.Pf.LoopBCovN.CovNFormula := GlobalTheory.CovNFormulaPf.main
   choose C₀F thrF hR using _root_.GlobalTheory.LoopRowBoundsGap.rows_along_family Formalism.HermitianLattices.Ext.L3.siegelMassRatio hH hBp
-  choose cVF hcV using GlobalTheory.T.stabiliserCovolume_relevantTerm_le_heightPow
+  choose cVF hcV using _root_.GlobalTheory.LoopVol.volRC_le
   have hForm : Closed 𝒞 fun Fm _ => OwnEv Fm fun C' Cl x i =>
       Cnt.Hyp0 (Fm.D x i) (Fm.L x i) C' Cl (Fm.CYL + 1) (1 / 4) 3 (1 / 2) Fm.CTu 3 →
         ∀ u, UnitaryVolumeMass.FormAt (Fm.D x i) u := by
