@@ -36,8 +36,7 @@ theorem val_one_sub_pow_lt {Ω Γ : Type*} [Field Ω] [LinearOrderedCommGroupWit
 theorem eq_of_pow_eq_one_of_valuation_sub_lt_one {Ω : Type u_1} [inst : Field Ω]
     (A : ValuationSubring Ω) (m : ℕ) {ζ ζ' : Ω} (h1 : ζ ^ m = 1) (h2 : ζ' ^ m = 1)
     (hm : ¬ A.valuation (m : Ω) < 1) (h : A.valuation (ζ - ζ') < 1) : ζ = ζ' := by
-  intros
-  apply _root_.ReciprocityTheory.Gal.eq_of_pow_eq_one <;> assumption
+  apply ReciprocityTheory.Gal.eq_of_pow_eq_one <;> assumption
 
 end GlobalTheory.PowEqOneValuation
 end -- clump:auto

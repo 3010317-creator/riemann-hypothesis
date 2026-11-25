@@ -69,6 +69,6 @@ theorem chiFac_left {χ : IdE D → ℂ} (hχ : IsChi D χ) {N N' : ℕ} {L L₁
 theorem eqP : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Formalism.L2.Ker.Base D cc δ) (χ : IdE D → ℂ),
     IsCurveIdeal D cc → IsDiscriminantTwelfthRootOfIdealLattice D cc δ → IsChi D χ → B.EqP χ := by
   intros
-  apply _root_.Formalism.L2.PairingIndexBounds.Eq.SqG.eulerProduct_eq_of_curve_ideal <;> assumption
+  apply Formalism.L2.PairingIndexBounds.Eq.SqG.eulerProduct_eq_of_curve_ideal <;> assumption
 
 end GlobalTheory.Mem.NatEqui

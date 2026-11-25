@@ -260,8 +260,7 @@ theorem exists_cartanU {L : Type} [Field L] [Valued L (WithZero (Multiplicative 
     {ϖ : L} {σ : L →+* L} {q : ℕ} (hU : IsUnramInv ϖ σ q) {n : ℕ} (g : GU σ n) :
     ∃ (d : Fin n → ℤ) (t : GU σ n), t.1.1 = Matrix.diagonal (fun i => ϖ ^ d i) ∧
       ∃ k₁ ∈ KU σ n, ∃ k₂ ∈ KU σ n, g = k₁ * t * k₂ := by
-  intros
-  apply _root_.GlobalTheory.ZetaSumU.cartan_complete <;> assumption
+  apply GlobalTheory.ZetaSumU.cartan_complete <;> assumption
 
 end GlobalTheory.ChainOnto.CayleyVac
 

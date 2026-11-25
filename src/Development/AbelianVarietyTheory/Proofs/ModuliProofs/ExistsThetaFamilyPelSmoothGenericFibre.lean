@@ -300,13 +300,10 @@ theorem exists_local_domain {A K : Type} [CommRing A] [Field K] (e : A →+* K) 
     rw [show e' a = 0 from ha, zero_mul]
 
 theorem spMap_comp {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''] (f : R →+* R') (f' : R' →+* R'') :
-    spMap f' ≫ spMap f = spMap (f'.comp f) := by
-  unfold spMap
-  rw [← Spec.map_comp, ← CommRingCat.ofHom_comp]
+    spMap f' ≫ spMap f = spMap (f'.comp f) := GlobalTheory.spMap_comp_ring f f'
 
 theorem spMap_inj {R R' : Type} [CommRing R] [CommRing R'] {f f' : R →+* R'} (h : spMap f = spMap f') : f = f' := by
-  have := Spec.map_injective h
-  exact congrArg CommRingCat.Hom.hom this
+  exact GlobalTheory.ZM.DenseFib.spMap_inj h
 
 theorem exists_factor {X : Scheme.{0}} {R R' K : Type} [CommRing R] [CommRing R'] [Field K] (x : Sp R ⟶ X)
     [IsOpenImmersion x] (x' : Sp R' ⟶ X) (φ : R →+* K) (ψ : R' →+* K) (hψ : ∀ r, ψ r ≠ 0 → IsUnit r)

@@ -60,9 +60,7 @@ variable {G V W W' : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGro
   [AddCommGroup W'] [Module ℂ W']
 
 theorem nontrivial_of_irr (τ : Representation ℂ G V) (h : τ.IsIrreducible) : Nontrivial V := by
-  by_contra hV
-  rw [not_nontrivial_iff_subsingleton] at hV
-  exact bot_ne_top (α := Subrepresentation τ) (Subrepresentation.ext (Subsingleton.elim _ _))
+  exact GlobalTheory.FinGL.IrrProduct.nontrivial_of_irr h
 
 theorem finiteDimensional_of_irr [Finite G] (τ : Representation ℂ G V) (h : τ.IsIrreducible) :
     FiniteDimensional ℂ V := by
