@@ -33,18 +33,12 @@ theorem imA_eC_idem : eC X * eC X = eC X := by
 
 theorem imA_mL_mem (m : ℕ) {b : Fin X.B.I.n → X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F}
     (hb' : b ∈ mL X.B.I m) : ∃ x ∈ X.B.I.Lf, b = (m : X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F) • x := by
-  induction hb' using Submodule.span_induction with
-  | mem y hy => exact hy
-  | zero => exact ⟨0, zero_mem _, (smul_zero _).symm⟩
-  | add y z _ _ hy hz =>
-    obtain ⟨y', hy', rfl⟩ := hy
-    obtain ⟨z', hz', rfl⟩ := hz
-    exact ⟨y' + z', add_mem hy' hz', (smul_add _ _ _).symm⟩
-  | smul c y _ hy =>
-    obtain ⟨y', hy', rfl⟩ := hy
-    refine ⟨c • y', Submodule.smul_mem _ c hy', ?_⟩
-    show (c : X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F) • _ = _ • ((c : X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F) • y')
-    rw [smul_smul, smul_smul, mul_comm]
+  have hmem : b ∈ X.B.I.Lf.map (m • LinearMap.id) :=
+    (Submodule.span_le (p := X.B.I.Lf.map (m • LinearMap.id))).2 (by
+      rintro _ ⟨x, hx, rfl⟩
+      exact ⟨x, hx, by rw [LinearMap.smul_apply, LinearMap.id_apply, Nat.cast_smul_eq_nsmul]⟩) hb'
+  obtain ⟨x, hx, rfl⟩ := Submodule.mem_map.1 hmem
+  exact ⟨x, hx, by rw [LinearMap.smul_apply, LinearMap.id_apply, Nat.cast_smul_eq_nsmul]⟩
 
 theorem imA_lat_fg (p : TypX X) : (latLoc (E := X.B.I.E) p.1 (X.B.I.L : Set (Fin X.B.I.n → X.B.I.E))).FG := by
   classical
@@ -149,10 +143,9 @@ theorem imA_ew_split (p : TypX X) :
             rw [← Submodule.map_comp, hφφ]
       _ ≤ _ := Submodule.map_mono hφ
       _ = _ := Submodule.map_smul'' _ _ _
-  have hjac : Ideal.span {((X.B.g : ℕ) : p.1.adicCompletionIntegers X.B.I.F)} ≤ Ideal.jacobson ⊥ := by
-    rw [IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top, Ideal.span_le, Set.singleton_subset_iff]
-    exact (IsLocalRing.mem_maximalIdeal _).mpr (imA_g_nonunit X p)
-  have hbot := Submodule.eq_bot_of_le_smul_of_le_jacobson_bot _ _ ((imA_lat_fg X p).map φ) hN hjac
+  have hbot := Submodule.eq_bot_of_le_smul_of_le_jacobson _ _ ((imA_lat_fg X p).map φ) hN (by
+    rw [IsLocalRing.ringJacobson_eq_maximalIdeal, Ideal.span_singleton_le_iff_mem]
+    exact (IsLocalRing.mem_maximalIdeal _).mpr (imA_g_nonunit X p))
   have hz : ∀ l ∈ X.B.I.L, ε • ratV (F := X.B.I.F) (Fv X.B.I.F p.1) l = 0 := by
     intro l hl
     have : φ (ratV (F := X.B.I.F) (Fv X.B.I.F p.1) l) ∈

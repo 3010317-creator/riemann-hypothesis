@@ -58,21 +58,14 @@ theorem into_of_gens (Λ : Set (Fin n → E)) {m : ℕ} (g : Fin m → Fin n →
     (hx : ∀ a, ((HA.mat (Fv F v) σ J x : GL (Fin n) (Fv F v ⊗[F] E)) :
       Matrix (Fin n) (Fin n) _) *ᵥ g a ∈ latLoc (E := E) v Λ) :
     x ∈ Into σ J v Λ := by
+  let M : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E) := (HA.mat (Fv F v) σ J x : GL (Fin n) _)
+  let L : (Fin n → Fv F v ⊗[F] E) →ₗ[v.adicCompletionIntegers F] (Fin n → Fv F v ⊗[F] E) :=
+    { toFun := (M *ᵥ ·)
+      map_add' := fun _ _ => Matrix.mulVec_add M _ _
+      map_smul' := fun _ _ => by simp only [RingHom.id_apply, Matrix.mulVec_smul] }
   intro z hz
-  rw [← hg] at hz
-  induction hz using Submodule.span_induction with
-  | mem y hy =>
-    obtain ⟨a, rfl⟩ := hy
-    exact hx a
-  | zero =>
-    rw [Matrix.mulVec_zero]
-    exact Submodule.zero_mem _
-  | add y w _ _ h1 h2 =>
-    rw [Matrix.mulVec_add]
-    exact Submodule.add_mem _ h1 h2
-  | smul c y _ h =>
-    rw [Matrix.mulVec_smul]
-    exact Submodule.smul_mem _ c h
+  refine (Submodule.span_le (p := (latLoc (E := E) v Λ).comap L)).2
+    (by rintro _ ⟨a, rfl⟩; exact hx a) (hg ▸ hz)
 
 theorem isOpen_Into (Λ : Set (Fin n → E)) (hSD : IsSDLoc σ J v Λ)
     (hFG : (latLoc (E := E) v Λ).FG) : IsOpen (Into σ J v Λ) := by

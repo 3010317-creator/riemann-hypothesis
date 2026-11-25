@@ -36,23 +36,6 @@ private theorem gOf_coprime_gOth (p : TypX X) : Nat.Coprime (gOf p) (gOth X p) :
   · exact (Nat.coprime_primes h0 h1).2 hne
   · exact (Nat.coprime_primes h1 h0).2 hne.symm
 
-private theorem le_exp_sub_one_of_lt_exp' (y : WithZero (Multiplicative ℤ)) (k : ℤ) (h : y < WithZero.exp k) :
-    y ≤ WithZero.exp (k - 1) := by
-  rcases eq_or_ne y 0 with rfl | hy
-  · exact zero_le'
-  · rw [← WithZero.exp_log hy] at h ⊢
-    rw [WithZero.exp_lt_exp] at h
-    rw [WithZero.exp_le_exp]
-    omega
-
-private theorem exp_add_one_le_of_exp_lt (y : WithZero (Multiplicative ℤ)) (k : ℤ) (h : WithZero.exp k < y) :
-    WithZero.exp (k + 1) ≤ y := by
-  have hy : y ≠ 0 := (lt_of_le_of_lt zero_le' h).ne'
-  rw [← WithZero.exp_log hy] at h ⊢
-  rw [WithZero.exp_lt_exp] at h
-  rw [WithZero.exp_le_exp]
-  omega
-
 theorem imA_span_g_max (p : TypX X) :
     Ideal.span {((gOf p : ℕ) : p.1.adicCompletionIntegers X.B.I.F)} =
       IsLocalRing.maximalIdeal (p.1.adicCompletionIntegers X.B.I.F) := by
@@ -89,10 +72,9 @@ theorem imA_span_g_max (p : TypX X) :
     by_contra! hc
     exact hnot ((IsDedekindDomain.HeightOneSpectrum.intValuation_le_pow_iff_mem p.1
       ((gOf p : ℕ) : 𝓞 X.B.I.F) 2).1 (by simpa using hc))
-  have hge1 : WithZero.exp (-1 : ℤ) ≤ p.1.intValuation ((gOf p : ℕ) : 𝓞 X.B.I.F) := by
-    have := exp_add_one_le_of_exp_lt _ (-2) hgt2
-    norm_num at this
-    exact this
+  have hge1 : WithZero.exp (-1 : ℤ) ≤ p.1.intValuation ((gOf p : ℕ) : 𝓞 X.B.I.F) :=
+    not_lt.1 fun h => hgt2.not_ge ((WithZero.lt_mul_exp_iff_le WithZero.exp_ne_zero).1
+      (by rw [← WithZero.exp_add, show (-2 : ℤ) + 1 = -1 by omega]; exact h))
   have hg0 : (((gOf p : ℕ) : p.1.adicCompletionIntegers X.B.I.F) : p.1.adicCompletion X.B.I.F) ≠ 0 := by
     intro h
     have h' := hvg
@@ -106,10 +88,9 @@ theorem imA_span_g_max (p : TypX X) :
   · intro x hx
     rw [ReciprocityTheory.Aut.mem_maxIdeal_iff] at hx
     rw [Ideal.mem_span_singleton]
-    have hx1 : Valued.v (x : p.1.adicCompletion X.B.I.F) ≤ WithZero.exp (-1 : ℤ) := by
-      have := le_exp_sub_one_of_lt_exp' _ 0 (by rwa [WithZero.exp_zero])
-      norm_num at this
-      exact this
+    have hx1 : Valued.v (x : p.1.adicCompletion X.B.I.F) ≤ WithZero.exp (-1 : ℤ) :=
+      (WithZero.lt_mul_exp_iff_le WithZero.exp_ne_zero).1
+        (by rwa [← WithZero.exp_add, neg_add_cancel, WithZero.exp_zero])
     have hq : Valued.v ((x : p.1.adicCompletion X.B.I.F) /
         (((gOf p : ℕ) : p.1.adicCompletionIntegers X.B.I.F) : p.1.adicCompletion X.B.I.F)) ≤ 1 := by
       rw [map_div₀, hvg, div_le_one₀ (lt_of_le_of_lt zero_le' hgt2)]

@@ -33,27 +33,14 @@ theorem hermForm_base_conj_symm (hσ : ∀ x, σ (σ x) = x) (hJ : ∀ i j, σ (
   ring
 
 theorem rational_vector_mem_span {r : ℕ} (Y : Fin r → Fin n → E) (x : Fin n → E)
-    (hx : x ∈ Submodule.span E (Set.range Y)) : ratV (F := F) R x ∈ spanR (F := F) R Y Set.univ := by
-  induction hx using Submodule.span_induction with
-  | mem u hu =>
-    obtain ⟨a, rfl⟩ := hu
-    exact Submodule.subset_span ⟨a, Set.mem_univ _, rfl⟩
-  | zero =>
-    have e0 : ratV (F := F) R (0 : Fin n → E) = 0 := funext fun i => map_zero _
-    rw [e0]
-    exact Submodule.zero_mem _
-  | add u w _ _ hu hw =>
-    have e0 : ratV (F := F) R (u + w) = ratV (F := F) R u + ratV (F := F) R w :=
-      funext fun i => map_add _ _ _
-    rw [e0]
-    exact Submodule.add_mem _ hu hw
-  | smul c u _ hu =>
-    have e0 : ratV (F := F) R (c • u) = inclR (F := F) R c • ratV (F := F) R u :=
-      funext fun i => by
-        first
-          | (simp only [ratV, Pi.smul_apply, smul_eq_mul]; exact map_mul _ _ _)
-    rw [e0]
-    exact Submodule.smul_mem _ _ hu
+    (hx : x ∈ Submodule.span E (Set.range Y)) : ratV (F := F) R x ∈ spanR (F := F) R Y Set.univ :=
+  (Submodule.span_le (p := (spanR (F := F) R Y Set.univ).comap
+    ({ toFun := ratV (F := F) R
+       map_add' := fun u w => funext fun _ => map_add _ _ _
+       map_smul' := fun c u => funext fun _ => by
+         simp only [ratV, Pi.smul_apply, smul_eq_mul]; exact map_mul _ _ _ } :
+      (Fin n → E) →ₛₗ[inclR (F := F) R] (Fin n → R ⊗[F] E)))).2
+    (by rintro _ ⟨a, rfl⟩; exact Submodule.subset_span ⟨a, Set.mem_univ _, rfl⟩) hx
 
 theorem rational_vector_in_complement {r : ℕ} (P : Frame E n r) (x : Fin n → E) (hx : ∀ a, hE σ J (P.e a) x = 0 ∧ hE σ J (P.f a) x = 0) :
     WbR R σ J P (ratV (F := F) R x) := fun i => ⟨by rw [hermForm_rational_vectors, (hx i).1, map_zero], by rw [hermForm_rational_vectors, (hx i).2, map_zero]⟩
@@ -68,14 +55,9 @@ theorem stabilizer_fixes_isotropic_f {r : ℕ} (P : Frame E n r) {h : HA R σ J}
 
 theorem stabilizer_fixes_span {r : ℕ} (P : Frame E n r) {h : HA R σ J} (hh : h ∈ Hsub R σ J P) (Y : Fin r → Fin n → E)
     (hY : ∀ a, lin R σ J h (ratV (F := F) R (Y a)) = ratV (F := F) R (Y a))
-    (y : Fin n → R ⊗[F] E) (hy : y ∈ spanR (F := F) R Y Set.univ) : lin R σ J h y = y := by
-  induction hy using Submodule.span_induction with
-  | mem u hu =>
-    obtain ⟨a, _, rfl⟩ := hu
-    exact hY a
-  | zero => exact map_zero _
-  | add u w _ _ hu hw => rw [map_add (f := _), hu, hw]
-  | smul c u _ hu => rw [map_smul, hu]
+    (y : Fin n → R ⊗[F] E) (hy : y ∈ spanR (F := F) R Y Set.univ) : lin R σ J h y = y :=
+  (Submodule.span_le (p := LinearMap.eqLocus (lin R σ J h) LinearMap.id)).2
+    (by rintro _ ⟨a, _, rfl⟩; exact hY a) hy
 
 theorem stabilizer_preserves_complement {r : ℕ} (P : Frame E n r) {h : HA R σ J} (hh : h ∈ Hsub R σ J P) {w : Fin n → R ⊗[F] E}
     (hw : WbR R σ J P w) : WbR R σ J P (lin R σ J h w) := fun i => ⟨by rw [← stabilizer_fixes_isotropic_e P hh i, hR_lin]; exact (hw i).1,
@@ -132,16 +114,10 @@ theorem witt_decomposition_lattice {r : ℕ} (P : Frame E n r) (hee : ∀ a b, h
 theorem lin_mem_localLattice (g : HA (Fv F v) σ J) (A : Set (Fin n → E))
     (hg : ∀ y ∈ A, lin (Fv F v) σ J g (ratV (F := F) (Fv F v) y) ∈ latLoc (E := E) v A)
     (m : Fin n → Fv F v ⊗[F] E) (hm : m ∈ latLoc (E := E) v A) : lin (Fv F v) σ J g m ∈ latLoc (E := E) v A := by
-  unfold latLoc at hm ⊢
-  induction hm using Submodule.span_induction with
-  | mem u hu =>
-    obtain ⟨y, hy, rfl⟩ := hu
-    exact hg y hy
-  | zero => rw [map_zero]; exact Submodule.zero_mem _
-  | add u w _ _ hu hw => rw [map_add (f := _)]; exact Submodule.add_mem _ hu hw
-  | smul c u _ hu =>
-    rw [LinearMap.map_smul_of_tower]
-    exact Submodule.smul_mem _ _ hu
+  unfold latLoc at hm
+  exact (Submodule.span_le (p := (latLoc (E := E) v A).comap
+    ((lin (Fv F v) σ J g).restrictScalars (v.adicCompletionIntegers F)))).2
+    (by rintro _ ⟨y, hy, rfl⟩; exact hg y hy) hm
 
 end Lat
 
