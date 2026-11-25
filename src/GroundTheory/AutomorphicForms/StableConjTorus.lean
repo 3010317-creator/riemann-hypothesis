@@ -84,11 +84,6 @@ theorem eq_adjoint_iff (A B : Module.End E V) :
   rw [hB, toSesq_adjoint_left]
 
 
-theorem adjoint_one : h.adjoint 1 = 1 := by
-  symm
-  rw [eq_adjoint_iff]
-  intro y x
-  rfl
 
 end HermitianForm
 
