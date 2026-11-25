@@ -168,6 +168,10 @@ lemma hs_eq_gN (g : Mat k r) : hs g = gN g ^ 2 := by
 
 lemma hs_nonneg' (g : Mat k r) : 0 ≤ hs g := by rw [hs_eq_gN]; positivity
 
+theorem gN_meas (k r : ℕ) : Measurable fun g : Mt k r => gN (Matrix.of g) := by
+  unfold gN
+  exact Measurable.sqrt (Finset.measurable_sum _ fun i _ => Finset.measurable_sum _ fun j _ => Complex.continuous_normSq.measurable.comp ((measurable_pi_apply j).comp (measurable_pi_apply i)))
+
 theorem vol_crude (hE : UJEmb) (hV : VolGrowth) (hC : UHConj) (hP : IsUnit P.det) (hH : Pᴴ * Jm ε * P = Hpk k r)
     (ν : Measure (Mt k r)) (hν : IsHaarOn (GV k r) ν) :
     ∃ C : ℝ, ∀ R : ℝ, 1 ≤ R → ν {g | gN (Matrix.of g) ≤ R} ≤
@@ -178,14 +182,7 @@ theorem vol_crude (hE : UJEmb) (hV : VolGrowth) (hC : UHConj) (hP : IsUnit P.det
   set M : ℝ := 1 + hs P * hs P⁻¹ with hM
   have hM0 : 0 ≤ hs P * hs P⁻¹ := mul_nonneg (hs_nonneg' _) (hs_nonneg' _)
   refine ⟨c * (C * M ^ (2 * (2 * r + k + 1) ^ 2)), fun R hR => ?_⟩
-  have hms : MeasurableSet {g : Mt k r | gN (Matrix.of g) ≤ R} := by
-    have : Measurable fun g : Mt k r => gN (Matrix.of g) := by
-      unfold gN
-      apply Measurable.sqrt
-      refine Finset.measurable_sum _ fun i _ => Finset.measurable_sum _ fun j _ => ?_
-      have : Measurable fun g : Mt k r => g i j := (measurable_pi_apply j).comp (measurable_pi_apply i)
-      exact Complex.continuous_normSq.measurable.comp this
-    exact this measurableSet_Iic
+  have hms : MeasurableSet {g : Mt k r | gN (Matrix.of g) ≤ R} := gN_meas k r measurableSet_Iic
   rw [Measure.smul_apply, Measure.map_apply hm hms, ENNReal.smul_def, smul_eq_mul]
   have hsub : phi ε P ⁻¹' {g : Mt k r | gN (Matrix.of g) ≤ R} ⊆ {u : UJ ε | hsG u ≤ (M * R) ^ 2} := by
     intro u hu
@@ -215,10 +212,6 @@ theorem vol_crude (hE : UJEmb) (hV : VolGrowth) (hC : UHConj) (hP : IsUnit P.det
     _ = ENNReal.ofReal (c * (C * M ^ (2 * (2 * r + k + 1) ^ 2)) * R ^ (2 * ((2 * r + k + 1 : ℕ) : ℝ) ^ 2)) := by
         rw [e, ← ENNReal.ofReal_coe_nnreal, ← ENNReal.ofReal_mul c.coe_nonneg, mul_pow]
         congr 1; ring
-
-theorem gN_meas (k r : ℕ) : Measurable fun g : Mt k r => gN (Matrix.of g) := by
-  unfold gN
-  exact Measurable.sqrt (Finset.measurable_sum _ fun i _ => Finset.measurable_sum _ fun j _ => Complex.continuous_normSq.measurable.comp ((measurable_pi_apply j).comp (measurable_pi_apply i)))
 
 theorem ae_mem {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) : ∀ᵐ g ∂μ, Matrix.of g ∈ U := by
   exact ae_iff.mpr h.conc
