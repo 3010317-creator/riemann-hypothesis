@@ -367,8 +367,8 @@ theorem PositivityTheory.Xgn.exists_curve_through_special_point : ∀ (X : Schem
   have h0 : ValAt ξ η (algebraMap O Ω ϖ) 0 := by
     have := (val_stalk hξ x φ hη (β ϖ)).1
     rwa [hβo, hφq _ hϖq] at this
-  refine ⟨{ k := ResidueField O, κ := FractionRing D, fg := hfg, trdeg := htr, C := C, w_pos := hw, triv := htriv,
-            all := hall, η := η, η_spec := hη, η_zero := h0, z := fun j => (hz j).choose,
+  refine ⟨{ k := ResidueField O, κ := FractionRing D, C := C, w_pos := hw,
+            η := η, η_spec := hη, η_zero := h0, z := fun j => (hz j).choose,
             z_gen := fun j => (hz j).choose_spec.1.1 }, i, hyη,
     (val_stalk hξ x φ hη γ).2 (IsUnit.mk0 _ hφγ), ?_⟩
   change centre (hz i).choose = x.1
