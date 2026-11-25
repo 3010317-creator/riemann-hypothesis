@@ -39,16 +39,6 @@ lemma integral_rpow_eq {x : ℝ} (hx : 0 < x) {σ : ℝ} (hσ : 0 < σ) :
   have e : -σ - 1 + 1 = -σ := by ring
   rw [e, div_neg, ← neg_div, neg_sub]
 
-lemma integral_rpow_le {x : ℝ} (hx : 0 < x) {σ : ℝ} (hσ : 0 < σ) :
-    ∫ t in x..(x + 1), t ^ (-σ - 1) ≤ x ^ (-σ - 1) := by
-  have h1 : ∫ t in x..(x + 1), t ^ (-σ - 1) ≤ ∫ t in x..(x + 1), x ^ (-σ - 1) := by
-    apply intervalIntegral.integral_mono_on (by linarith)
-    · exact (continuousOn_id.rpow_const fun t ht => Or.inl (pos_of_mem_uIcc_self_add_one hx ht).ne').intervalIntegrable
-    · exact intervalIntegrable_const
-    · intro t ht
-      exact Real.rpow_le_rpow_of_nonpos hx ht.1 (by linarith)
-  simpa using h1
-
 lemma norm_cpow_sub_le {x : ℝ} (hx : 0 < x) {s : ℂ} (hs : 0 < s.re) :
     ‖(x : ℂ) ^ (-s) - ((x + 1 : ℝ) : ℂ) ^ (-s)‖ ≤
       ‖s‖ / s.re * (x ^ (-s.re) - (x + 1) ^ (-s.re)) := by
@@ -57,12 +47,6 @@ lemma norm_cpow_sub_le {x : ℝ} (hx : 0 < x) {s : ℂ} (hs : 0 < s.re) :
   refine le_trans (mul_le_mul_of_nonneg_left (norm_integral_le hx s) (norm_nonneg _)) (le_of_eq ?_)
   rw [integral_rpow_eq hx hs]
   ring
-
-lemma norm_cpow_sub_le' {x : ℝ} (hx : 0 < x) {s : ℂ} (hs : 0 < s.re) :
-    ‖(x : ℂ) ^ (-s) - ((x + 1 : ℝ) : ℂ) ^ (-s)‖ ≤ ‖s‖ * x ^ (-s.re - 1) := by
-  have hs0 : s ≠ 0 := fun h => by rw [h, Complex.zero_re] at hs; exact lt_irrefl 0 hs
-  rw [cpow_sub_eq_integral hx hs0, norm_mul]
-  exact mul_le_mul_of_nonneg_left ((norm_integral_le hx s).trans (integral_rpow_le hx hs)) (norm_nonneg _)
 
 variable {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
 
@@ -93,7 +77,8 @@ lemma norm_dterm_le {B : ℝ} (hB : ∀ M, ‖Ap χ M‖ ≤ B) {s : ℂ} (hs : 
   · rw [dterm_zero, norm_zero]
     exact mul_nonneg hB0 (mul_nonneg (norm_nonneg _) (Real.rpow_nonneg (Nat.cast_nonneg _) _))
   · have hx : (0 : ℝ) < n := by exact_mod_cast hn
-    have key := norm_cpow_sub_le' hx hs
+    have key := Formalism.ZF.ComplexPowerDifferenceIntegral.norm_cpow_sub_le_point
+      hx le_rfl (le_add_of_nonneg_right zero_le_one) hs
     rw [← natCast_add_one_eq, Complex.ofReal_natCast] at key
     show ‖Ap χ n * ((n : ℂ) ^ (-s) - ((n : ℂ) + 1) ^ (-s))‖ ≤ _
     rw [norm_mul]
