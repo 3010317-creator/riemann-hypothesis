@@ -40,17 +40,6 @@ theorem cc_lev_pi (c : ZMod n) (ζ : LL) (hζ : ∃ j : ℕ, IsPrimitiveRoot ζ 
   rw [map_add (f := _), map_one, map_mul, PowerSeries.constantCoeff_C, hE0, mul_one] at this
   linear_combination this
 
-theorem cc_lev_q_one (c : ZMod n) : PowerSeries.constantCoeff (W.lev c 1 W.q) = (PD.p : LL) := by
-  have hq : W.q = (fun _ => PowerSeries.mk fun k => PowerSeries.coeff (k + 1) W.q₀) * letπ +
-      (PD.p : LetA O n) := by
-    funext i
-    simp only [LocWach.q, Pi.add_apply, Pi.mul_apply, letπ, Pi.natCast_apply]
-    conv_lhs => rw [PowerSeries.eq_shift_mul_X_add_const W.q₀]
-    rw [Formalism.MainNotions.N.Ln34.CrystallineExponents.constantCoeff_q_zero_eq_p, map_natCast]
-  rw [hq, map_add (f := _), map_mul, map_natCast, map_add (f := _), map_mul,
-    cc_lev_pi W c 1 ⟨0, by rw [pow_zero]; exact IsPrimitiveRoot.one⟩, sub_self, mul_zero, zero_add,
-    map_natCast]
-
 theorem qroot_prim (hs : W.s = 1) (hp : (PD.p : LL) ≠ 0) {c : ZMod n} {ζ : LL}
     (h : Formalism.MainNotions.DeltaInvariantLattices.QRoot W c ζ) : IsPrimitiveRoot ζ PD.p := by
   apply +allowSynthFailures _root_.Formalism.MainNotions.N.Ln34.CrystallineExponents.qroot_prim <;> assumption
