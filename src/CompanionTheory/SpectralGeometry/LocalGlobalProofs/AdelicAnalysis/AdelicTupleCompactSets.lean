@@ -3,6 +3,7 @@ module
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdicCompactDensity.ExistsNatLocal
 public import Formalism.UnipotentAdelicQuotients.SWXSDefs
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesLocallyCompactSecondCountable
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicTupleLocalGlobalProperties
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsCompactAdeleRingModNumberField
 import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
@@ -107,15 +108,6 @@ section Tens
 
 variable {F E : Type} [Field F] [Field E] [Algebra F E]
 
-theorem repr_map {d : ℕ} (b : Module.Basis (Fin d) F E) {R R' : Type} [CommRing R] [CommRing R']
-    [Algebra F R] [Algebra F R'] (f : R →ₐ[F] R') (y : R ⊗[F] E) (k : Fin d) :
-    (Algebra.TensorProduct.basis R' b).repr (Algebra.TensorProduct.map f (AlgHom.id F E) y) k =
-      f ((Algebra.TensorProduct.basis R b).repr y k) := by
-  induction y with
-  | add x y hx hy => simp only [map_add (f := _), Finsupp.add_apply, hx, hy]
-  | tmul r e =>
-    simp [Algebra.TensorProduct.basis_repr_tmul, Finsupp.mapRange_apply]
-
 theorem repr_natCast_mul {d : ℕ} (b : Module.Basis (Fin d) F E) {R : Type} [CommRing R]
     [Algebra F R] (N : ℕ) (y : R ⊗[F] E) (k : Fin d) :
     (Algebra.TensorProduct.basis R b).repr ((N : R ⊗[F] E) * y) k =
@@ -145,7 +137,7 @@ theorem fin_iff {d n M : ℕ} (b : Module.Basis (Fin d) F E) (N : ℕ)
     intro v a i k
     rw [repr_natCast_mul]
     simp only [projV, projFin, coordA]
-    rw [repr_map, repr_map]
+    rw [Glue.repr_map, Glue.repr_map]
     rfl
   constructor
   · intro h a i k
@@ -161,7 +153,7 @@ theorem fin_iff {d n M : ℕ} (b : Module.Basis (Fin d) F E) (N : ℕ)
 
 theorem size_eq {d n M : ℕ} (b : Module.Basis (Fin d) F E) (X : Fin n → Fin M → AF F ⊗[F] E) :
     sizeTup b (projInf X) = sizeA (coordA b X) := by
-  simp only [sizeTup, sizeInf, sizeA, projInf, coordA, repr_map]
+  simp only [sizeTup, sizeInf, sizeA, projInf, coordA, Glue.repr_map]
 
 theorem continuous_fstA : Continuous (fstA F) := continuous_fst
 

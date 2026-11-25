@@ -19,7 +19,7 @@ section Coord
 variable {F E : Type} [Field F] [Field E] [Algebra F E]
 
 theorem repr_map {R R' : Type} [CommRing R] [CommRing R'] [Algebra F R] [Algebra F R']
-    (φ : R →ₐ[F] R') {d : ℕ} (b : Module.Basis (Fin d) F E) (y : R ⊗[F] E) (k : Fin d) :
+    (φ : R →ₐ[F] R') {ι : Type*} (b : Module.Basis ι F E) (y : R ⊗[F] E) (k : ι) :
     (Algebra.TensorProduct.basis R' b).repr (Algebra.TensorProduct.map φ (AlgHom.id F E) y) k =
       φ ((Algebra.TensorProduct.basis R b).repr y k) := by
   induction y using TensorProduct.induction_on with
@@ -92,21 +92,13 @@ theorem tuple_ext (X Y : Fin n → Fin M → AF F ⊗[F] E) (hinf : projInf X = 
     (hv : ∀ v, projV v (projFin X) = projV v (projFin Y)) : X = Y := by
   classical
   let b := Module.Free.chooseBasis F E
-  have repr_map' {R R' : Type} [CommRing R] [CommRing R'] [Algebra F R] [Algebra F R']
-      (φ : R →ₐ[F] R') (y : R ⊗[F] E) (k : Module.Free.ChooseBasisIndex F E) :
-      (Algebra.TensorProduct.basis R' b).repr (Algebra.TensorProduct.map φ (AlgHom.id F E) y) k =
-        φ ((Algebra.TensorProduct.basis R b).repr y k) := by
-    induction y using TensorProduct.induction_on with
-    | zero => simp
-    | tmul r e => simp [Algebra.TensorProduct.basis_repr_tmul]
-    | add x y hx hy => simp only [map_add (f := _), Finsupp.add_apply, hx, hy]
   funext a i
   apply (Algebra.TensorProduct.basis (AF F) b).repr.injective
   ext k
   refine Prod.ext ?_ ?_
   · change fstA F ((Algebra.TensorProduct.basis (AF F) b).repr (X a i) k) =
       fstA F ((Algebra.TensorProduct.basis (AF F) b).repr (Y a i) k)
-    simpa [projInf, repr_map'] using
+    simpa [projInf, repr_map] using
       congrArg (fun z => (Algebra.TensorProduct.basis (Ainf F) b).repr z k)
         (congrFun (congrFun hinf a) i)
   · refine Subtype.ext (funext fun v => ?_)
@@ -118,7 +110,7 @@ theorem tuple_ext (X Y : Fin n → Fin M → AF F ⊗[F] E) (hinf : projInf X = 
     have hcoord := congrArg (fun z => (Algebra.TensorProduct.basis (Fv F v) b).repr z k) h
     have hval : (evalV F v) (sndA F ((Algebra.TensorProduct.basis (AF F) b).repr (X a i) k)) =
         (evalV F v) (sndA F ((Algebra.TensorProduct.basis (AF F) b).repr (Y a i) k)) := by
-      simpa [repr_map'] using hcoord
+      simpa [repr_map] using hcoord
     exact congrArg (fun z : Fv F v => (z : v.adicCompletion F)) hval
 
 theorem eventually_lat (X : Fin n → Fin M → AF F ⊗[F] E) :
