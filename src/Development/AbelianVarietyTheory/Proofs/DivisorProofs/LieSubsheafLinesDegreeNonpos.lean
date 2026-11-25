@@ -1253,13 +1253,6 @@ theorem comp_grpMul {S : Scheme.{0}} {G T T' : Over S} [GrpObj G] (x : T' ⟶ T)
     x ≫ (f * g) = (x ≫ f) * (x ≫ g) := by
   rw [Hom.mul_def, Hom.mul_def, ← Category.assoc, comp_lift]
 
-theorem unitSec_comp_sqr {S : Scheme.{0}} (G : Over S) [GrpObj G] : unitSec G ≫ sqr G = unitSec G := by
-  have h1 : (η[G] : 𝟙_ (Over S) ⟶ G) = 1 := by
-    rw [Hom.one_def, Subsingleton.elim (toUnit (𝟙_ (Over S))) (𝟙 _), Category.id_comp]
-  have : (η[G] : 𝟙_ (Over S) ⟶ G) ≫ (𝟙 G * 𝟙 G) = η[G] := by
-    rw [comp_grpMul, Category.comp_id, h1, _root_.one_mul]
-  exact congrArg (·.left) this
-
 theorem triv_isPath {S : Scheme.{0}} (G : Over S) [GrpObj G] {R : Type} [CommRing R] (c : R) (b : Sp R ⟶ S) :
     IsPath G c b (triv G b) := by
   refine { base := triv_over G b, zero := ?_, scale := ?_ }

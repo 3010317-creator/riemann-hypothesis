@@ -724,7 +724,6 @@ open AlgebraicGeometry CategoryTheory
 open scoped Matrix
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-alias _root_.GlobalTheory.CompanionTheory.Relay.root_origin_frame_combined := _root_.GlobalTheory.CompanionTheory.Ar.Rec.FinRd.Roots.fib_eq_lieEig_rf
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginFrameCombined =====

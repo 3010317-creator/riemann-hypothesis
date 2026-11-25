@@ -565,12 +565,6 @@ private theorem finrank_int_eq_mul_finrank (O : Type) [CommRing O] [IsDomain O] 
       (LocalizedModule.mkLinearMap (nonZeroDivisors O) X) le_rfl
   rw [← e1, ← e2, ← e3, e4, e5, e6]
 
-theorem finrank_int_eq_fraction_mul (O : Type) [CommRing O] [IsDomain O] [CharZero O] [Module.Finite ℤ O]
-    (K : Type) [Field K] [CharZero K] [Algebra O K] [IsFractionRing O K]
-    (X : Type) [AddCommGroup X] [Module O X] :
-    Module.finrank ℤ X = Module.finrank ℚ K * Module.finrank O X := by
-  rw [finrank_int_eq_mul_finrank O X, IsFractionRing.finrank_eq ℤ ℚ O K]
-
 private theorem isTorsionFree_int_of_isTorsionFree (O : Type) [CommRing O] [IsDomain O] [CharZero O]
     (Y : Type) [AddCommGroup Y] [Module O Y] [Module.IsTorsionFree O Y] :
     Module.IsTorsionFree ℤ Y :=

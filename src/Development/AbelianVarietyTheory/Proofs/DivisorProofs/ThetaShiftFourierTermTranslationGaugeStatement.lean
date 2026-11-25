@@ -904,10 +904,6 @@ theorem gs_scal_eq {R : Type} [CommRing R] {X Z : Scheme.{0}} (p : X ⟶ Sp R) (
   unfold ReciprocityTheory.ChartRestriction.G.Out.scal
   exact gs_pull r p z ⊤ trivial _
 
-theorem cst_add' {R : Type} [CommRing R] {Z : Scheme.{0}} (q : Z ⟶ Sp R) (z : Z) (a b : R) :
-    cst q z (a + b) = cst q z a + cst q z b := by
-  unfold cst; rw [map_add (f := _), gs_add q z ⊤ trivial]
-
 theorem shiftEq_pt {R : Type} [CommRing R] [IsDomain R] {Q : DegPre R} {k : ℕ} {mu α : Q.X} {σ : Q.SecB k α}
     {σ₁ σ₂ : Q.SecB k (α + k • mu)} {c : R} (H : ShiftEq Q k mu α σ σ₁ c σ₂)
     (u : LB.Gen (LB.LinComb Q.P.L (DegPre.deltaφ Q (FractionRing R) k α mu) (DegPre.deltaε k))) (hu : u.IsGen)

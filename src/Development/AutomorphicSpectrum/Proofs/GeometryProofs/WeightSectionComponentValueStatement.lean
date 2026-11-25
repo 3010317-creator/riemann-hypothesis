@@ -642,9 +642,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 
 
-attribute [local instance 1100] Subalgebra.algebra in
-attribute [local instance 100] IntermediateField.instAlgebraSubtypeMem in
-alias _root_.GlobalTheory.CompanionTheory.Relay.frame_chart_nonzero_denominator := _root_.ModelDimension.regular_chart_nonzero_denominator
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameChartNonzeroDenominator =====
@@ -1011,7 +1008,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 
 
-alias _root_.GlobalTheory.CompanionTheory.Relay.integral_frame_subalgebra_relay := _root_.ModelDimension.integral_frame_over_cdvr
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntegralFrameSubalgebraRelay =====

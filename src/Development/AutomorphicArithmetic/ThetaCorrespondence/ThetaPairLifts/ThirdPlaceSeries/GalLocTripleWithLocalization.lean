@@ -527,15 +527,6 @@ namespace GlobalTheory.Survey.PeriodBoundOfPlaceBound
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.G NumberField IsDedekindDomain
 open scoped BigOperators
 
-theorem vAdd_unit (D : D7) (w : D.what₂.places.Pl) (s : 𝓞 D.what₂.LL) (hs : s ∉ (D.plEq w).asIdeal) :
-    vAdd (D.plEq w) (s : D.what₂.LL) = 0 := by
-  have h1 : (D.plEq w).valuation D.what₂.LL (s : D.what₂.LL) = 1 := by
-    have := (D.plEq w).valuation_of_algebraMap (K := D.what₂.LL) s
-    rw [show (s : D.what₂.LL) = algebraMap (𝓞 D.what₂.LL) D.what₂.LL s from rfl, this]
-    exact (HeightOneSpectrum.intValuation_eq_one_iff).2 hs
-  unfold vAdd
-  rw [h1]; simp
-
 end GlobalTheory.Survey.PeriodBoundOfPlaceBound
 
 end
@@ -1423,8 +1414,6 @@ section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
 
-theorem _root_.GlobalTheory.T.exists_galSide_cf_eq_cgTrue_at_members : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => ∃ G : _root_.GlobalTheory.TwInputs.GalSideAlt (w.st Z).toD7, G.cf = (TC.cf w.I w.l Z) ∧ G.lam.C = (TC.cf w.I w.l Z) ∧ Nonempty (_root_.GlobalTheory.HeightCounting.CGTrueT hL _ G.wd) := by
-  first | exact @_root_.GlobalTheory.GalLoc.galois_side_at_place_alt
 end
 end
 end -- clump:auto

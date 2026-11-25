@@ -1261,8 +1261,6 @@ section Val
 
 variable {K : Type} [Field K] [NumberField K] (la : HeightOneSpectrum (𝓞 K))
 
-theorem vLa_one : vLa la (1 : K) = 0 := by simp [vLa]
-
 theorem vLa_natCast_nonneg {n : ℕ} (hn : n ≠ 0) : 0 ≤ vLa la (n : K) := by
   have e : (n : K) = algebraMap (𝓞 K) K (n : 𝓞 K) := (map_natCast _ n).symm
   have h0 : (n : K) ≠ 0 := Nat.cast_ne_zero.2 hn
@@ -1554,7 +1552,6 @@ theorem slope_sub_cost_le_compVolSlope : GlobalTheory.CompanionTheory.Ar.Pub.Nef
 
 end GlobalTheory.CompanionTheory.Ar.Plug.SlopeVolM
 
-alias _root_.GlobalTheory.CompanionTheory.Relay.uniform_all_norm_height_bound := _root_.GlobalTheory.CompanionTheory.Ar.Plug.SlopeVolM.slope_sub_cost_le_compVolSlope
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

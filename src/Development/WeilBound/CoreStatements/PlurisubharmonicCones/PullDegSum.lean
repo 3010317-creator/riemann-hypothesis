@@ -63,16 +63,6 @@ namespace LevelTowerAlt
 
 variable {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) ⟶ X} {p : Cpt ξ}
 
-theorem uZpow {a : Ω} (ha : unitAt ξ p a) (n : ℤ) : unitAt ξ p (a ^ n) := by
-  obtain ⟨h0, h1, h2⟩ := ha
-  refine ⟨zpow_ne_zero n h0, ?_, ?_⟩
-  · rcases n with m | m
-    · simpa using pow_mem h1 m
-    · simpa [zpow_negSucc] using pow_mem h2 (m + 1)
-  · rcases n with m | m
-    · simpa using pow_mem h2 m
-    · simpa [zpow_negSucc] using pow_mem h1 (m + 1)
-
 theorem gen_unit {Λ : Lat ξ Ω} {s t : Ω} (hs : Λ.IsGenAt p s) (ht : Λ.IsGenAt p t) : unitAt ξ p (s / t) := by
   apply GlobalTheory.CompanionTheory.Ar.Cusp.DetNef.gen_unit <;> assumption
 

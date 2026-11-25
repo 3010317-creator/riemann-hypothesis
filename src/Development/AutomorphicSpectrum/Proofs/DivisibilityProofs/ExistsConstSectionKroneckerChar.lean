@@ -1202,12 +1202,6 @@ theorem exists_padicAlgCl_factor {K : Type} [Field K] [NumberField K] (κ : K �
             map_zero' := hjinj (by rw [hf, map_zero, map_zero])
             map_add' := fun a b => hjinj (by rw [hf, map_add (f := _), map_add (f := _), hf, hf]) }, fun a => hf a⟩
 
-theorem norm_aeval_monomial_sub (x : PadicAlgCl p) (n : ℕ) (r : ℚ) (c : ℚ_[p]) :
-    ‖aeval x (monomial n r) - aeval x (monomial n c)‖ = ‖(r : ℚ_[p]) - c‖ * ‖x‖ ^ n := by
-  rw [aeval_monomial, aeval_monomial, ← sub_mul, norm_mul, norm_pow,
-    eq_ratCast (algebraMap ℚ (PadicAlgCl p)) r,
-    ← map_ratCast (algebraMap ℚ_[p] (PadicAlgCl p)) r, ← map_sub, PadicAlgCl.norm_extends]
-
 theorem exists_rat_poly_approx (x y : PadicAlgCl p) (e : ℚ_[p][X]) {ε : ℝ} (hε : 0 < ε) :
     ∃ u : ℚ[X], ‖aeval x u - aeval x e‖ < ε ∧ ‖aeval y u - aeval y e‖ < ε := by
   apply UpperTheory.HF.LocStab.approx <;> assumption

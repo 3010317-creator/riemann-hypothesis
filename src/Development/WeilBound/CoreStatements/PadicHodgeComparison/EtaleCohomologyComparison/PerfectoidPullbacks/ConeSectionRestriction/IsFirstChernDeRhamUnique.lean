@@ -660,9 +660,6 @@ namespace CrystallineSemistableComparison.Pb
 
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
-theorem isO1At_exists {R : Type} [CommRing R] {X : Scheme.{0}} (N : ℕ) (i : X ⟶ PSpace R N) :
-    ∃ D : E.LineData X, IsTautologicalLineAt D N i := _root_.GlobalTheory.CompanionTheory.ConeTwistingSheafMap.main N i
-
 theorem isO1_exists {R : Type} [CommRing R] {X : Scheme.{0}} (p : X ⟶ Sp R) (hp : IsProjOver p) :
     ∃ D : E.LineData X, IsTautologicalLine p D := by
   obtain ⟨N, i, hi, hip⟩ := hp
