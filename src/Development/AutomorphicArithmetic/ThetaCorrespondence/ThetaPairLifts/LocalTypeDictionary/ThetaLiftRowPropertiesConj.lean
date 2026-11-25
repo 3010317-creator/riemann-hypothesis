@@ -1201,7 +1201,7 @@ theorem thetaLift_row_properties_conj : _root_.GlobalTheory.FunPr.ThetaLocalInpu
   have sum := _root_.GlobalTheory.RowClaim.rowSum_of_hypotheses_alt P
   exact ⟨sum, c, _root_.GlobalTheory.RowTest.twist_linear_independence_test P cusp,
     _root_.GlobalTheory.RowClaim.FormulaTwo.formula2K (_root_.GlobalTheory.T.twisted_period_identity P) (_root_.GlobalTheory.FlipRun.twist_sign_flip_succ P cusp s1 K c) (_root_.GlobalTheory.RowUnfLast.twisted_theta_integral_unfolding P cusp sum)
-      (_root_.GlobalTheory.T.twisted_jets_assemble P sum) c sum,
+      (_root_.GlobalTheory.RowClaim.JetsAssembly.twistedJet_succ_eq_assembly P sum) c sum,
     _root_.GlobalTheory.RowTest.sumRatK_of_sumOKK sum⟩
 end GlobalTheory.RowClaim.Join
 end

@@ -1745,13 +1745,6 @@ theorem normBig_alt : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, Glo
   · exact ⟨1, one_ne_zero, fun t Q P P' Λ hb _ => absurd ⟨t, Q, P, P', hb⟩ hex⟩
 end GlobalTheory.NormBigProof
 end
-
-section
-open GlobalTheory.SqTop
-
-theorem _root_.GlobalTheory.T.normBig_of_lNe : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → LNe → NormBig := by
-  first | exact @_root_.GlobalTheory.NormBigProof.normBig_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.NormBigOfNonvanishing =====
@@ -1779,9 +1772,9 @@ theorem square_top_term_joined_estimates : GlobalTheory.Published.HoweDualityRea
   have hBC : BotConst := _root_.GlobalTheory.SqTop.botConst_of_inputs_alt hPr hTI hLM hInp hBS hL
   have hBE : BotEx := _root_.GlobalTheory.SqTop.botEx_holds hInp
   have hBET : BotExT := _root_.GlobalTheory.SqTop.botExT_holds hInp
-  have hNB : NormBig := _root_.GlobalTheory.T.normBig_of_lNe hPr hInp hL
+  have hNB : NormBig := _root_.GlobalTheory.NormBigProof.normBig_alt hPr hInp hL
   have hRL : RhoLow := _root_.GlobalTheory.RhoLowProof.rhoLow_holds hTD hF hTor
-  have hTri : TriEx := _root_.GlobalTheory.T.triEx_of_howe_duality_real hHD hPr hTI hLM hL
+  have hTri : TriEx := _root_.GlobalTheory.SqTop.triEx_holds_alt hHD hPr hTI hLM hL
   have hBN : BotNe := _root_.GlobalTheory.SqTop.BotNeFormula.bottomTheta_ne_zero_of_innerProduct_formula hPr hTI hLM hInp hL hBS hNB hTri
   have hTw : Tower := _root_.GlobalTheory.SqTower.tower_alt_bis hPr hTI hLM hL
   have hOne : OneSqSt := _root_.GlobalTheory.SqTop.OneSqNoSmall.oneSqSt_of_claims' hInp hL hTor hBS hBET hNB hBN hTri hTw hBC hRefl hRL

@@ -978,12 +978,6 @@ theorem logDeriv_LFunction_at_one_le_along_family_alt :
   exact ⟨0, fun x hx _ i _ _ => (Fm.params x hx i).logDerivative_le_power⟩
 end GlobalTheory
 end
-section
-open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.BigTop GlobalTheory.BigTop.Fun GlobalTheory.SqTop
-
-theorem _root_.GlobalTheory.T.abs_logDerivativeAtOne_le_x_rpow_eps : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps) := by
-  first | exact @_root_.GlobalTheory.logDeriv_LFunction_at_one_le_along_family_alt
-end
 end
 end -- clump:auto
 end -- clump:auto
@@ -1698,7 +1692,7 @@ theorem fittedFunction_at_zero_close_alt : _root_.GlobalTheory.FunPr.ThetaLocalI
   have hInj := GlobalTheory.RowTest.injK_of_separates hFS (_root_.GlobalTheory.RowTest.twisted_convergence_with_real_places hP (_root_.GlobalTheory.PairLift.thetaPairLift_cuspidal_of_hypotheses hP))
   have hSize := _root_.GlobalTheory.BigTop.Fun.SizeProof.sizeAt_alt
   have hSet := _root_.GlobalTheory.BigTop.Fun.setAt_of_sizeAt_alt hSize
-  have hDl := _root_.GlobalTheory.T.abs_logDerivativeAtOne_le_x_rpow_eps hP
+  have hDl := _root_.GlobalTheory.logDeriv_LFunction_at_one_le_along_family_alt hP
   have hInp := _root_.GlobalTheory.NormSum.inp_all
   have hIntSt := GlobalTheory.T.classSumDenominatorBound_of_cmThetaHypotheses hInp
   have hThA := _root_.GlobalTheory.ThmAUpper.thmA_upper_alt (GlobalTheory.ToricTransport.toricRatioConjugates_of_transport hTw) hSet hDl hFieldDat hTorEx
