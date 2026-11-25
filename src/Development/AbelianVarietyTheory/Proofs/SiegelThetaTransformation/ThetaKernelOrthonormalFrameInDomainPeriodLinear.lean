@@ -65,10 +65,8 @@ theorem isCartanInv (hs : s * s = 1) (hs' : sᴴ = s) (h : Bᴴ * G * B = s) : I
             simp only [Matrix.mul_assoc]
         _ = B⁻¹ᴴ * B⁻¹ := by
             rw [hBi, Matrix.mul_one, Matrix.mul_assoc B⁻¹ᴴ s s, hs, Matrix.mul_one]
-    have hinj : Function.Injective (B⁻¹).mulVec := by
-      intro x y hxy
-      have h4 := congrArg B.mulVec hxy
-      simpa [Matrix.mulVec_mulVec, hBr] using h4
+    have hinj : Function.Injective (B⁻¹).mulVec :=
+      Matrix.mulVec_injective_iff_isUnit.2 ((Matrix.isUnit_iff_isUnit_det _).2 (Matrix.isUnit_nonsing_inv_det B hu))
     rw [hGM]
     exact Matrix.PosDef.conjTranspose_mul_self _ hinj
 
