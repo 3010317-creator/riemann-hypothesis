@@ -70,10 +70,8 @@ variable {S T : HSp D} {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E
   {ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)}
 
 theorem finTens_nsmul {m n : ℕ} (α : Af D.host.F) (k : ℕ) (M : Matrix (Fin m) (Fin n) D.host.E) :
-    finTens α (k • M) = k • finTens α M := by
-  induction k with
-  | zero => rw [zero_nsmul, zero_nsmul, finTens_zero]
-  | succ k ih => rw [succ_nsmul, succ_nsmul, finTens_add, ih]
+    finTens α (k • M) = k • finTens α M :=
+  map_nsmul (AddMonoidHom.mk' (finTens α) (finTens_add α)) k M
 
 theorem exists_uniform {M : Type} [AddCommGroup M] [Module (𝓞 D.host.E) M] {A : Submodule (𝓞 D.host.E) M} (hA : A.FG)
     (B : Submodule (𝓞 D.host.E) M) (h : ∀ x ∈ A, ∃ k : ℕ, 0 < k ∧ k • x ∈ B) : ∃ k : ℕ, 0 < k ∧ ∀ x ∈ A, k • x ∈ B := by
