@@ -25,15 +25,9 @@ theorem hypAtP_C (I : LocId L p nV W Qq) (hb : Cmp.NotBad I) (hs : Cmp.SelfDualA
   Cmp.isHyperbolicAt_of_integralSplit I hb (intSplit_of I) hs
 
 theorem natCast_notMem {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) {p n : ℕ} (hp : p.Prime)
-    (hv : (p : 𝓞 F) ∈ v.asIdeal) (hn : ¬ p ∣ n) : (n : 𝓞 F) ∉ v.asIdeal := by
-  intro hn'
-  have hc : Nat.Coprime p n := (Nat.Prime.coprime_iff_not_dvd hp).mpr hn
-  obtain ⟨a, b, hab⟩ := Nat.isCoprime_iff_coprime.mpr hc
-  have h1 : ((a * p + b * n : ℤ) : 𝓞 F) ∈ v.asIdeal := by
-    push_cast
-    exact v.asIdeal.add_mem (v.asIdeal.mul_mem_left _ hv) (v.asIdeal.mul_mem_left _ hn')
-  rw [hab, Int.cast_one] at h1
-  exact v.isPrime.ne_top ((Ideal.eq_top_iff_one _).mpr h1)
+    (hv : (p : 𝓞 F) ∈ v.asIdeal) (hn : ¬ p ∣ n) : (n : 𝓞 F) ∉ v.asIdeal :=
+  v.isPrime.notMem_of_isCoprime_of_mem
+    (((Nat.Prime.coprime_iff_not_dvd hp).mpr hn).cast (R := 𝓞 F)) hv
 
 theorem notBad_C (D : D7) (u : D.what₂.Word) (w : D.what₂.places.Pl) (hg : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w))
     {Lc : ColLevel D.R D.host.F D.host.E D.sp D.host.g (D.mem u).C (D.mem u).A (D.clsLat u)} {nV : ℕ} {W' Qq' : Type}

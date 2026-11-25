@@ -26,17 +26,11 @@ theorem sqrt_norm_p_lt (p : ℕ) [Fact p.Prime] : ‖(p : ℂ_[p])‖ ^ (1 / 2 :
   Real.rpow_lt_one (norm_nonneg _) (norm_p_lt p) (by norm_num)
 
 theorem agree_on_adjoin {E L : Type*} [Field E] [CharZero E] [Field L] (ψ₁ ψ₂ : E →+* L) (δ : E)
-    (h : ψ₁ δ = ψ₂ δ) : ∀ x ∈ IntermediateField.adjoin ℚ ({δ} : Set E), ψ₁ x = ψ₂ x := by
-  intro x hx
-  induction hx using IntermediateField.adjoin_induction with
-  | mem x hx =>
-    rw [Set.mem_singleton_iff] at hx
-    rw [hx, h]
-  | algebraMap q =>
-    rw [eq_ratCast, map_ratCast, map_ratCast]
-  | add x y _ _ hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
-  | inv x _ hx => rw [map_inv₀, map_inv₀, hx]
-  | mul x y _ _ hx hy => rw [map_mul, map_mul, hx, hy]
+    (h : ψ₁ δ = ψ₂ δ) : ∀ x ∈ IntermediateField.adjoin ℚ ({δ} : Set E), ψ₁ x = ψ₂ x :=
+  fun _ hx => IntermediateField.adjoin_le_subfield (F := ℚ) (S := {δ}) (K := ψ₁.eqLocusField ψ₂)
+    (Set.range_subset_iff.2 fun q => show ψ₁ (algebraMap ℚ E q) = ψ₂ (algebraMap ℚ E q) from by
+      rw [eq_ratCast, map_ratCast, map_ratCast])
+    (Set.singleton_subset_iff.2 h) hx
 
 end CharacterSeparation
 

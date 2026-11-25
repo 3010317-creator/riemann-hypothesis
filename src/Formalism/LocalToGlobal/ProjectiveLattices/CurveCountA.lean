@@ -161,17 +161,6 @@ theorem countCore {K κ Ω : Type*} [Field K] [Field κ] [Field Ω] [Algebra K �
   have hρA : ∀ i, ρ i ∈ IntermediateField.adjoin K (Set.range ρ) :=
     fun i => IntermediateField.subset_adjoin K _ ⟨i, rfl⟩
   let ρA : Fin N → IntermediateField.adjoin K (Set.range ρ) := fun i => ⟨ρ i, hρA i⟩
-  have hvalρ : ∀ Q : MvPolynomial (Fin N) K,
-      IntermediateField.val _ (aeval ρA Q) = aeval ρ Q := by
-    intro Q
-    induction Q using MvPolynomial.induction_on
-    next c =>
-      simp only [MvPolynomial.aeval_C, AlgHom.commutes]
-    next p q hp hq =>
-      rw [map_add (f := _), map_add (f := _), map_add (f := _), hp, hq]
-    next p i hp =>
-      rw [map_mul, map_mul, map_mul, hp, MvPolynomial.aeval_X, MvPolynomial.aeval_X]
-      rfl
   have hnot : ¬ AlgebraicIndependent K (fun o : Option s => o.elim (aeval ρ P) (ρ ∘ f)) := by
     intro hI
     let w : Option s → IntermediateField.adjoin K (Set.range ρ) :=
@@ -179,7 +168,7 @@ theorem countCore {K κ Ω : Type*} [Field K] [Field κ] [Field Ω] [Algebra K �
     have hcomp : (IntermediateField.val _) ∘ w = fun o : Option s => o.elim (aeval ρ P) (ρ ∘ f) := by
       funext o
       cases o with
-      | none => exact hvalρ P
+      | none => exact MvPolynomial.comp_aeval_apply ρA (IntermediateField.val _) P
       | some e => rfl
     have hw : AlgebraicIndependent K w := by
       apply AlgebraicIndependent.of_comp (IntermediateField.val _)

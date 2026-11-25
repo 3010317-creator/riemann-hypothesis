@@ -62,17 +62,13 @@ theorem lambda_endomorphism : LamEnd := by
   have hJI : FractionalIdeal.spanSingleton (𝓞 K)⁰ cf ≤ NN.I := FractionalIdeal.spanSingleton_le_iff_mem.mpr hmem
   have hle := absNorm_le_absNorm_of_le NN.I _ hJ0 hJI
   rw [FractionalIdeal.absNorm_span_singleton] at hle
-  have hNpos : (0:ℝ) < ((FractionalIdeal.absNorm NN.I : ℚ) : ℝ) := by
-    have h0 : (0:ℚ) < FractionalIdeal.absNorm NN.I :=
-      lt_of_le_of_ne (FractionalIdeal.absNorm_nonneg _) (Ne.symm ((map_ne_zero _).mpr hI0))
-    exact_mod_cast h0
   have hle' : ((FractionalIdeal.absNorm NN.I : ℚ) : ℝ) ≤ ∏ σ : K →+* ℂ, ‖σ cf‖ := by
     rw [prod_norm_embedding_eq_abs_norm]
     exact_mod_cast hle
   have hσ : ∀ σ : K →+* ℂ, 0 < ‖σ cf‖ := fun σ => norm_pos_iff.mpr ((map_ne_zero σ).mpr hcf)
   have hlog1 : Real.log ((FractionalIdeal.absNorm NN.I : ℚ) : ℝ) ≤ ∑ σ : K →+* ℂ, Real.log ‖σ cf‖ := by
     rw [← Real.log_prod (fun σ _ => (hσ σ).ne')]
-    exact Real.log_le_log hNpos hle'
+    exact Real.log_le_log (absNorm_pos' hI0) hle'
   have hlog2 : ∀ σ : K →+* ℂ, Real.log ‖σ cf‖ + Real.log (NN.n σ) ≤ Real.log (S σ) + Real.log B := by
     intro σ
     rw [← Real.log_mul (hσ σ).ne' (hG.2 σ).ne', ← Real.log_mul (hS σ).ne' hB.ne']
@@ -95,15 +91,11 @@ lemma log_two_pi_le_two : Real.log (2 * Real.pi) ≤ 2 := by
 lemma finrank_pos_real (K : Type) [Field K] [NumberField K] : (0 : ℝ) < (Module.finrank ℚ K : ℝ) := by
   exact Nat.cast_pos.mpr Module.finrank_pos
 
-private lemma mLine_deg_dual {K : Type} [Field K] [NumberField K] (L : MLine K) : L.dual.deg = - L.deg := by
-  simp only [MLine.deg, MLine.dual, map_inv₀, Rat.cast_inv, Real.log_inv, Finset.sum_neg_distrib]
-  ring
-
 theorem degree_delta_base : DegDe0 := by
   unfold DegDe0
   intro K _ _ g abelian₂ ℓ de La logOm h
   unfold CMNumbers0 at h
-  obtain ⟨-, -, -, hLa, hsum, hnd, hdd⟩ := h
+  obtain ⟨hAb, -, -, hLa, hsum, hnd, hdd⟩ := h
   have hd : (0:ℝ) < (Module.finrank ℚ K : ℝ) := finrank_pos_real K
   have hdeg : ∀ j, (ℓ j).deg = logOm / 2 * (Module.finrank ℚ K : ℝ) := fun j => by
     have e : (ℓ j).ndeg = (ℓ j).deg / (Module.finrank ℚ K : ℝ) := rfl
@@ -113,7 +105,7 @@ theorem degree_delta_base : DegDe0 := by
   have hdual : abelian₂.dual.ndeg = - abelian₂.ndeg := by
     have e1 : abelian₂.dual.ndeg = abelian₂.dual.deg / (Module.finrank ℚ K : ℝ) := rfl
     have e2 : abelian₂.ndeg = abelian₂.deg / (Module.finrank ℚ K : ℝ) := rfl
-    rw [e1, e2, mLine_deg_dual, neg_div]
+    rw [e1, e2, (degree_algebraic K abelian₂ abelian₂ hAb hAb).2.2.2.1, neg_div]
   have hLamn : (g : ℝ) * (logOm / 2) - (g : ℝ) * Real.log La ≤ abelian₂.ndeg := by
     have e2 : abelian₂.ndeg = abelian₂.deg / (Module.finrank ℚ K : ℝ) := rfl
     rw [e2, le_div_iff₀ hd]
@@ -127,40 +119,11 @@ theorem degree_delta_base : DegDe0 := by
   rw [hdual] at hdd
   linarith
 
-private lemma mLine_good_pow {K : Type} [Field K] [NumberField K] (L : MLine K) (hL : L.Good) (k : ℕ) :
-    (L.pow k).Good := by
-  unfold MLine.Good at *
-  exact ⟨pow_ne_zero _ hL.1, fun σ => pow_pos (hL.2 σ) _⟩
-
-private lemma mLine_good_dual {K : Type} [Field K] [NumberField K] (L : MLine K) (hL : L.Good) : L.dual.Good := by
-  unfold MLine.Good at *
-  exact ⟨inv_ne_zero hL.1, fun σ => inv_pos.mpr (hL.2 σ)⟩
-
-private lemma mLine_good_tensor {K : Type} [Field K] [NumberField K] (L M : MLine K) (hL : L.Good) (hM : M.Good) :
-    (L.tensor M).Good := by
-  unfold MLine.Good at *
-  exact ⟨mul_ne_zero hL.1 hM.1, fun σ => mul_pos (hL.2 σ) (hM.2 σ)⟩
-
 private lemma mLine_good_prodPow {K : Type} [Field K] [NumberField K] {V : Type} [Fintype V] (ℓ : V → MLine K)
     (k : V → ℕ) (h : ∀ v, (ℓ v).Good) : (MLine.prodPow ℓ k).Good := by
   unfold MLine.Good at *
   exact ⟨Finset.prod_ne_zero_iff.mpr fun v _ => pow_ne_zero _ (h v).1,
     fun σ => Finset.prod_pos fun v _ => pow_pos ((h v).2 σ) _⟩
-
-private lemma mLine_deg_tensor {K : Type} [Field K] [NumberField K] (L M : MLine K) (hL : L.Good) (hM : M.Good) :
-    (L.tensor M).deg = L.deg + M.deg := by
-  have hL0 : ((FractionalIdeal.absNorm L.I : ℚ) : ℝ) ≠ 0 := Rat.cast_ne_zero.mpr ((map_ne_zero _).mpr hL.1)
-  have hM0 : ((FractionalIdeal.absNorm M.I : ℚ) : ℝ) ≠ 0 := Rat.cast_ne_zero.mpr ((map_ne_zero _).mpr hM.1)
-  simp only [MLine.deg, MLine.tensor, map_mul, Rat.cast_mul]
-  rw [Real.log_mul hL0 hM0, Finset.sum_congr rfl (fun σ _ => Real.log_mul (hL.2 σ).ne' (hM.2 σ).ne'),
-    Finset.sum_add_distrib]
-  ring
-
-private lemma mLine_deg_pow {K : Type} [Field K] [NumberField K] (L : MLine K) (k : ℕ) :
-    (L.pow k).deg = k * L.deg := by
-  simp only [MLine.deg, MLine.pow, map_pow, Rat.cast_pow, Real.log_pow]
-  rw [mul_sub, Finset.mul_sum]
-  ring
 
 private lemma mLine_deg_prodPow {K : Type} [Field K] [NumberField K] {V : Type} [Fintype V] (ℓ : V → MLine K)
     (k : V → ℕ) (h : ∀ v, (ℓ v).Good) : (MLine.prodPow ℓ k).deg = ∑ v, (k v : ℝ) * (ℓ v).deg := by
@@ -179,10 +142,11 @@ theorem degree_norm_base : DegNN0 := by
   have hde0 := degree_delta_base K g abelian₂ ℓ de La logOm h
   unfold CMNumbers0 at h
   obtain ⟨-, hℓ, hde, hLa, -, hnd, -⟩ := h
-  have hP : (MLine.prodPow (fun v => ℓ (c v)) μ).Good := mLine_good_prodPow _ _ (fun v => hℓ (c v))
-  have hPd : (MLine.prodPow (fun v => ℓ (c v)) μ).dual.Good := mLine_good_dual _ hP
-  have hdn : (de.pow n).Good := mLine_good_pow _ hde n
-  have hG : (lineNN de ℓ c μ n).Good := mLine_good_tensor _ _ hdn hPd
+  have hP : (MLine.prodPow (fun v => ℓ (c v)) μ).Good :=
+    mLine_good_prodPow _ _ (fun v => hℓ (c v))
+  obtain ⟨-, -, hPd, hPd_deg, -⟩ := degree_algebraic K _ de hP hde
+  obtain ⟨hdn, hdn_deg⟩ := (degree_algebraic K de de hde hde).2.2.2.2 n
+  obtain ⟨hG, hG_deg, -⟩ := degree_algebraic K (de.pow n) _ hdn hPd
   refine ⟨hG, ?_⟩
   have hd : (0:ℝ) < (Module.finrank ℚ K : ℝ) := finrank_pos_real K
   have hd0 : (Module.finrank ℚ K : ℝ) ≠ 0 := hd.ne'
@@ -191,8 +155,9 @@ theorem degree_norm_base : DegNN0 := by
     rw [← hnd j, e, div_mul_cancel₀ _ hd0]
   have hD : (lineNN de ℓ c μ n).deg =
       n * de.deg - (∑ v, (μ v : ℝ)) * (logOm / 2 * (Module.finrank ℚ K : ℝ)) := by
-    have e : lineNN de ℓ c μ n = (de.pow n).tensor (MLine.prodPow (fun v => ℓ (c v)) μ).dual := rfl
-    rw [e, mLine_deg_tensor _ _ hdn hPd, mLine_deg_dual, mLine_deg_pow, mLine_deg_prodPow _ _ (fun v => hℓ (c v))]
+    have e : lineNN de ℓ c μ n =
+        (de.pow n).tensor (MLine.prodPow (fun v => ℓ (c v)) μ).dual := rfl
+    rw [e, hG_deg, hPd_deg, hdn_deg, mLine_deg_prodPow _ _ (fun v => hℓ (c v))]
     simp only [hdeg, Finset.sum_mul]
     ring
   have hlog : 0 ≤ Real.log La := Real.log_nonneg hLa

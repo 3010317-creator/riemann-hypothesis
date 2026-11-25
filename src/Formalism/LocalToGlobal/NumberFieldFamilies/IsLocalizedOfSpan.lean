@@ -24,28 +24,16 @@ theorem span_top_of_image {L : Type*} [Field L] (e : L →+* ℂ) {M V : Type*} 
   have hFb : ∀ k, F (jm (b k)) = e (f (b k)) := fun k => by
     have h : jm (b k) = bC k := (Module.Basis.mk_apply hb1 (le_of_eq hb2.symm) k).symm
     rw [h, Module.Basis.constr_basis]
-  have hFj : ∀ x, F (jm x) = e (f x) := by
-    intro x
-    have hx : x ∈ Submodule.span L (Set.range b) := b.span_eq ▸ Submodule.mem_top
-    induction hx using Submodule.span_induction with
-    | mem y hy => obtain ⟨k, rfl⟩ := hy; exact hFb k
-    | zero => simp
-    | add y z _ _ hy hz => rw [map_add (f := _), map_add (f := _), hy, hz, map_add (f := _), map_add (f := _)]
-    | smul c y _ hy => rw [LinearMap.map_smulₛₗ, map_smul, hy, map_smul, smul_eq_mul, smul_eq_mul, map_mul]
+  have hFj : ∀ x, F (jm x) = e (f x) :=
+    LinearMap.congr_fun (b.ext hFb : F.comp jm = (RingHom.toSemilinearMap e).comp f)
   have hF0 : F = 0 := by
-    refine LinearMap.ext fun v => ?_
-    have hv : v ∈ Submodule.span ℂ (jm '' S) := hS ▸ Submodule.mem_top
-    induction hv using Submodule.span_induction with
-    | mem y hy =>
-      obtain ⟨x, hx, rfl⟩ := hy
-      rw [hFj, show f x = 0 from hfW (Submodule.subset_span hx), map_zero]; rfl
-    | zero => simp
-    | add x y _ _ hx hy => simp [hx, hy]
-    | smul c x _ hx => simp [hx]
+    rw [← LinearMap.ker_eq_top, eq_top_iff, ← hS, Submodule.span_le]
+    rintro _ ⟨x, hx, rfl⟩
+    change F (jm x) = 0
+    rw [hFj, LinearMap.mem_ker.1 (hfW (Submodule.subset_span hx)), map_zero]
   apply hf0
   refine LinearMap.ext fun x => e.injective ?_
-  rw [← hFj, hF0]
-  simp
+  simp [← hFj, hF0]
 
 section Loc
 
@@ -96,14 +84,8 @@ theorem span_image_top {L : Type*} [Field L] {K : Type*} [Field K] (e : L →+* 
     Submodule.span K (jm '' S) = ⊤ := by
   refine le_antisymm le_top (hb2 ▸ Submodule.span_le.2 ?_)
   rintro _ ⟨k, rfl⟩
-  have key : ∀ x ∈ Submodule.span L S, jm x ∈ Submodule.span K (jm '' S) := by
-    intro x hx
-    induction hx using Submodule.span_induction with
-    | mem y hy => exact Submodule.subset_span ⟨y, hy, rfl⟩
-    | zero => simp
-    | add x y _ _ hx hy => rw [map_add (f := _)]; exact Submodule.add_mem _ hx hy
-    | smul c x _ hx => rw [LinearMap.map_smulₛₗ]; exact Submodule.smul_mem _ _ hx
-  exact key _ (hS ▸ Submodule.mem_top)
+  refine (Submodule.span_le (p := (Submodule.span K (jm '' S)).comap jm)).2
+    (fun y hy => Submodule.subset_span ⟨y, hy, rfl⟩) (hS ▸ Submodule.mem_top)
 
 variable {R : Ranks} {H : Host R} {what₂ : Rows.Data R} {B : LocBase0 H what₂}
 
@@ -124,14 +106,11 @@ theorem span_mtSub (hC : PartCompl B) (i : LocT B) :
   refine le_antisymm le_top ?_
   rintro y -
   obtain ⟨x, rfl⟩ := Submodule.projectionOnto_surjective (hC i) y
-  have hx : x ∈ Submodule.span (FractionRing (OOf B i)) (B.iV (jOf B i) (wOf B i) '' latL B i) := hV ▸ Submodule.mem_top
-  induction hx using Submodule.span_induction with
-  | mem z hz =>
-    obtain ⟨u, hu, rfl⟩ := hz
-    exact Submodule.subset_span (Submodule.subset_span ⟨u, hu, rfl⟩)
-  | zero => simp
-  | add a b _ _ ha hb => rw [map_add (f := _)]; exact Submodule.add_mem _ ha hb
-  | smul c a _ ha => rw [map_smul]; exact Submodule.smul_mem _ _ ha
+  let S := Submodule.span (FractionRing (OOf B i)) (MtSub B hC i : Set (partOf B i))
+  refine Submodule.mem_comap.1 ((Submodule.span_le (p :=
+    S.comap ((partOf B i).projectionOnto (offOf B i) (hC i)))).2 ?_ (hV ▸ Submodule.mem_top))
+  rintro _ ⟨u, hu, rfl⟩
+  exact Submodule.subset_span (Submodule.subset_span ⟨u, hu, rfl⟩)
 
 
 
