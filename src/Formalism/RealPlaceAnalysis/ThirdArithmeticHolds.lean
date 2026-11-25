@@ -148,7 +148,6 @@ alias casCentral := _root_.Formalism.REAL.casimir_central_holds
 end Formalism.REAL
 
 namespace Formalism.REAL
-theorem diagChar : DiagChar := diagChar_of generatorPowDiagRecursion_holds
 end Formalism.REAL
 
 namespace Formalism.REAL
