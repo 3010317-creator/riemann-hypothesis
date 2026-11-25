@@ -28,7 +28,7 @@ theorem chi_prod_two {M : Type} [CommMonoid M] (f : ULift.{0} (Finset (Fin 2)) �
 
 theorem chi_eq_sign : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [Algebra c.F ℂ] (y : FrPt Xo c ℂ) (g : ℕ) (ty : Fin g → (E →+* ℂ)) (el : Fin g ≃ Lt1 Dw) (Φ : AnPt y g ty el), ∀ a ∈ Φ.lat, Φ.χ a ^ 2 = 1 ∧ Φ.χ a = Complex.exp (Real.pi * Complex.I * ((hermForm Φ.Hm a (tyAct ty H.w0 a)).im : ℂ)) := by
   intro E _ _ _ H Dw l Xo c _ y g ty el Φ a ha
-  obtain ⟨⟨wP, hP⟩, hrd⟩ := GlobalTheory.T.exists_normalisedIso_reading_one_analyticFrame E H Dw l Xo c y g ty el Φ
+  obtain ⟨⟨wP, hP⟩, hrd⟩ := GlobalTheory.AnVal.PrimRd.prim_reading E H Dw l Xo c y g ty el Φ
   have hlat : ∀ b ∈ Φ.lat, tyAct ty H.w0 b ∈ Φ.lat := by
     intro b hb
     have := Xo.univ.t.act.hom H.w0
@@ -51,7 +51,7 @@ theorem chi_eq_sign : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
       congr 1
       funext i
       fin_cases i <;> rfl
-  have hT := GlobalTheory.T.abelianHolomorphicFrame_reading_const_of_forms_cancel _ Xo.univ.t.G Xo.univ.t.PP y.x g Φ.toAnFr _ _ _ _ wP hP.1 g
+  have hT := GlobalTheory.AnVal.genRd_const _ Xo.univ.t.G Xo.univ.t.PP y.x g Φ.toAnFr _ _ _ _ wP hP.1 g
     (fun z => (Φ.e z).left) Λ Φ.lat Φ.hol
     (fun z k => by rw [hΛ]; exact (hrd wP hP z).1 k) Φ.span
     (fun gm hgm => ⟨fun z => by simp only [Φ.e_add, (Φ.e_ker gm).2 hgm, _root_.mul_one], fun k => by

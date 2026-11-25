@@ -83,7 +83,7 @@ theorem basePoint_spec : ∀ (D : D7) (σ : ℕ) (B : BesLev D σ), ∃ x₀ : M
       _ = adj (zl B) ⬝ (gA B.L ⬝ zl B) := by rw [hz]
   · ext g
     rw [hx]
-    exact ((GlobalTheory.T.mem_besGrp_iff_mt_mul_x0_eq_x0_mul D σ B).1 g).symm
+    exact ((GlobalTheory.Unf.FB.besselGroup_action_fourierBesselBasePoint D σ B).1 g).symm
   · have h1 := congrFun ha (Fin.last σ)
     rw [hG, gramQ_zlQ_mulVec_last, Pi.zero_apply] at h1
     exact (mul_eq_zero.1 h1).resolve_left B.line.2

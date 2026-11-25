@@ -164,7 +164,7 @@ theorem thetaIntegral_param : GlobalTheory.Published.CuspRapidDecay → ∀ D : 
     show ∫ g in 𝓕, thetaKO om g x (om (embV S v a, embV T v a') u) * (z : GA D S → ℂ) (g * embV S v a) ∂ν =
       ∫ g in 𝓕, thetaKO om g (x * embV T v a') (u : WO S T → ℂ) * (z : GA D S → ℂ) g ∂ν
     simp_rw [thetaKO_om_apply]
-    exact GlobalTheory.T.setIntegral_fundamentalDomain_right_translate_invariant D S ν 𝓕 hν h𝓕 (fun g => thetaKO om g (x * embV T v a') (u : WO S T → ℂ) * (z : GA D S → ℂ) g)
+    exact GlobalTheory.ChainOnto.setIntegral_fd_mul_right D S ν 𝓕 hν h𝓕 (fun g => thetaKO om g (x * embV T v a') (u : WO S T → ℂ) * (z : GA D S → ℂ) g)
       (fun γ hγ g => by simp only [thetaKO_left hW u.2 γ hγ, (hXp z z.2).2 γ hγ]) (embV S v a)
   have hx : GlobalTheory.LFun.IsParamVec D.sp.cm.sig S.gram (frameLat S) h ρ ⟨cy, hcy⟩ B :=
     isParamVec_of_injective_equivariant X.subtype (fun _ _ => rfl) Subtype.val_injective hB

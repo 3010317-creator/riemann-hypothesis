@@ -231,7 +231,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (ip delta swSec sZero
 open GlobalTheory.Mem.Th (CptF)
 open GlobalTheory.Core.Rk.IP
 
-
 theorem _root_.GlobalTheory.T.doubling_sphericalVacua_to_doubled_lattice_vacuum : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A B : HSp D) (LA : Lat A) (LB : Lat B), IsStdChar D ψ (-1) → IsSelfDualC A LA → IsSelfDualC (dblSp A) (sumLat finSumFinEquiv LA LA) ∧ ∀ (Sf : Finset (FinPl D)) (Φ₁ Φ₂ : WO A B → ℂ), IsSphOff ψ A B LA LB Sf Φ₁ → IsSphOff ψ A B LA LB Sf Φ₂ → ∀ v ∉ Sf, IsLatVac (heisO ψ (dblSp A) B) (latO (dblSp A) B (sumLat finSumFinEquiv LA LA : Lat (dblSp A)) LB fun u => u = v) (delta A B Φ₁ Φ₂) := by
   first | exact @GlobalTheory.Core.Rk.VacBox.doubling_isLatVac
 end -- clump:auto
@@ -246,8 +245,6 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult
 open scoped TensorProduct InnerProductSpace
 
-theorem _root_.GlobalTheory.T.exists_heckeCharacter_of_unitary_tensorIdeles : ∀ (D : D7) (c : (AE D)ˣ →* Circle), IsHeckeChar D c → ∃ χ : Formalism.L2.Host.HChar D.host.E, ChrEq c χ := by
-  first | exact @GlobalTheory.HeckeTensorRead.exists_hchar_chrEq
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHeckeCharacterOfUnitaryTensorIdelesStatement =====
@@ -271,11 +268,11 @@ theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A B : HSp D) (χB 
   intro D ψ A B χB omh hW LA LB Sf Φ₁ Φ₂ h1 h2 hU v hv k hk
   have hstd := hW.std
   obtain ⟨hsd, hvac⟩ := GlobalTheory.T.doubling_sphericalVacua_to_doubled_lattice_vacuum D ψ A B LA LB hstd hU.sdA
-  have hth := GlobalTheory.T.isThetaFunction_doublingSeesaw_of_standard_char D ψ A B hstd Φ₁ Φ₂ h1 h2
+  have hth := GlobalTheory.Core.Rk.DeltaTheta.main D ψ A B hstd Φ₁ Φ₂ h1 h2
   have hlv := hvac Sf Φ₁ Φ₂ hU.sph₁ hU.sph₂ v hv
   have u1 : GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting.UnramAt (1 : (AE D)ˣ →* Circle) v := fun _ _ _ _ => rfl
   have u2 : GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting.UnramAt χB v := by
-    obtain ⟨χ, hc⟩ := GlobalTheory.T.exists_heckeCharacter_of_unitary_tensorIdeles D χB hW.hecT
+    obtain ⟨χ, hc⟩ := GlobalTheory.HeckeTensorRead.exists_hchar_chrEq D χB hW.hecT
     refine GlobalTheory.UnramOver.unramAt_of_unrAt D χB χ hc v _ ?_ ?_
     · refine ⟨singleV _ v 1, rfl, ?_, ?_⟩
       · classical
@@ -315,7 +312,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (ip delta swSec sZero
 open GlobalTheory.Mem.Th (CptF)
 open GlobalTheory.Core.Rk.IP
 
-
 theorem _root_.GlobalTheory.T.doubledTheta_vector_fixed_unramified_stabilizer : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A B : HSp D) (χB : (AE D)ˣ →* Circle) (omh : WRep (dblSp A) B), IsWeilDatumO ψ (dblSp A) B 1 χB omh → ∀ (LA : Lat A) (LB : Lat B) (Sf : Finset (FinPl D)) (Φ₁ Φ₂ : WO A B → ℂ), IsThetaFunO ψ A B Φ₁ → IsThetaFunO ψ A B Φ₂ → Unram ψ A B χB LA LB Sf Φ₁ Φ₂ → ∀ v ∉ Sf, ∀ k ∈ KFin D.sp.cm.sig (dblSp A).gram LA v, omh (emb D.sp.cm.sig (dblSp A).gram v k, 1) (delta A B Φ₁ Φ₂) = delta A B Φ₁ Φ₂ := by
   first | exact @GlobalTheory.Core.Rk.IP.VacFix.main
 end -- clump:auto
@@ -336,9 +332,6 @@ open GlobalTheory.Mem.Th (CptF)
 open GlobalTheory.Core.Rk.IP
 open scoped TensorProduct
 
-
-theorem _root_.GlobalTheory.T.ideleCharacter_eq_one_integral_units_unramified_adelic : ∀ (D : D7) (μ : (AE D)ˣ →* Circle) (v : FinPl D) (y : (Fv D.host.F v ⊗[D.host.F] D.host.E)ˣ), (y : Fv D.host.F v ⊗[D.host.F] D.host.E) ∈ intLoc D.host.F D.host.E v → ((y⁻¹ : (Fv D.host.F v ⊗[D.host.F] D.host.E)ˣ) : Fv D.host.F v ⊗[D.host.F] D.host.E) ∈ intLoc D.host.F D.host.E v → (∀ w : HeightOneSpectrum (𝓞 D.host.E), w.under (𝓞 D.host.F) = v → GlobalTheory.LFun.UnrAt μ w) → charAt μ v y = 1 := by
-  first | exact @GlobalTheory.LFun.charAt_eq_one_of_unrAt_datum
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdeleCharacterEqOneIntegralUnitsUnramifiedAdelicStatement =====
@@ -430,7 +423,6 @@ open GlobalTheory.Mem.Th (CptF)
 open GlobalTheory.Core.Rk.IP
 open scoped TensorProduct
 
-
 theorem _root_.GlobalTheory.T.siegelLeviDeterminant_integral_selfDual_lattice : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfDualC A L → ∀ (v : FinPl D) (p : siegelH (Fv D.host.F v) D.sp.cm.sig (dblSp A).gram), (p : Gv (dblSp A) v) ∈ KFin D.sp.cm.sig (dblSp A).gram L v → ((aH _ D.sp.cm.sig (dblSp A).gram p : (Fv D.host.F v ⊗[D.host.F] D.host.E)ˣ) : Fv D.host.F v ⊗[D.host.F] D.host.E) ∈ intLoc D.host.F D.host.E v := by
   first | exact @GlobalTheory.Core.Rk.AInt.aH_mem_intLoc
 end -- clump:auto
@@ -521,8 +513,6 @@ theorem gen_exists [TopologicalSpace G] [IsTopologicalGroup G] (P K : Subgroup G
 
 end Gen
 
-
-
 theorem exists_isSphSecAt_unique : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfDualC A L → ∀ (μ : (AE D)ˣ →* Circle), IsHeckeChar D μ → ∀ v : FinPl D, (∀ w : HeightOneSpectrum (𝓞 D.host.E), w.under (𝓞 D.host.F) = v → GlobalTheory.LFun.UnrAt μ w) → ∀ s : ℂ, ∃ φ, IsSphSecAt A L v μ s φ ∧ ∀ Ψ : Gv (dblSp A) v → ℂ, (∀ (p : siegelH (Fv D.host.F v) D.sp.cm.sig (dblSp A).gram) g, Ψ (p * g) = charAt μ v (aH _ D.sp.cm.sig (dblSp A).gram p) * npow (absEv D.host.F D.host.E v (aH _ D.sp.cm.sig (dblSp A).gram p)) (s + (A.rank : ℂ) / 2) * Ψ g) → (∀ k ∈ KFin D.sp.cm.sig (dblSp A).gram L v, ∀ g, Ψ (g * k) = Ψ g) → ∀ g, Ψ g = Ψ 1 * φ g := by
   intro D A L hL μ hμ v hunr s
   haveI : Submodule.IsFullLattice D.host.E L :=
@@ -545,7 +535,7 @@ theorem exists_isSphSecAt_unique : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfD
         Fv D.host.F v ⊗[D.host.F] D.host.E) ∈ intLoc D.host.F D.host.E v := by
       rw [← map_inv]
       exact GlobalTheory.T.siegelLeviDeterminant_integral_selfDual_lattice D A L hL v p⁻¹ (inv_mem hp)
-    rw [hf, GlobalTheory.T.ideleCharacter_eq_one_integral_units_unramified_adelic D μ v _ h1 h2 hunr,
+    rw [hf, GlobalTheory.LFun.charAt_eq_one_of_unrAt_datum D μ v _ h1 h2 hunr,
       abs_aH_eq_one (continuous_absEv v) (isCompact_KFin v) p hp, one_npow, Circle.coe_one, one_mul]
   clear_value f
   obtain ⟨φ, hl, hc, hr, h1, hu⟩ := gen_exists (G := Gv (dblSp A) v) _ _ f hI hK (isOpen_KFin v)
@@ -571,7 +561,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift (FinPl RealMat 
 open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (ip delta swSec sZero IsKFinVec ThetaClause SectionClause CoefClause)
 open GlobalTheory.Mem.Th (CptF)
 open GlobalTheory.Core.Rk.IP
-
 
 theorem _root_.GlobalTheory.T.exists_unique_spherical_doubling_section_unramified : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfDualC A L → ∀ (μ : (AE D)ˣ →* Circle), IsHeckeChar D μ → ∀ v : FinPl D, (∀ w : HeightOneSpectrum (𝓞 D.host.E), w.under (𝓞 D.host.F) = v → GlobalTheory.LFun.UnrAt μ w) → ∀ s : ℂ, ∃ φ, IsSphSecAt A L v μ s φ ∧ ∀ Ψ : Gv (dblSp A) v → ℂ, (∀ (p : siegelH (Fv D.host.F v) D.sp.cm.sig (dblSp A).gram) g, Ψ (p * g) = charAt μ v (aH _ D.sp.cm.sig (dblSp A).gram p) * npow (absEv D.host.F D.host.E v (aH _ D.sp.cm.sig (dblSp A).gram p)) (s + (A.rank : ℂ) / 2) * Ψ g) → (∀ k ∈ KFin D.sp.cm.sig (dblSp A).gram L v, ∀ g, Ψ (g * k) = Ψ g) → ∀ g, Ψ g = Ψ 1 * φ g := by
   first | exact @GlobalTheory.Core.Rk.SphSec.exists_isSphSecAt_unique
@@ -601,8 +590,6 @@ theorem unrAt_inv_of_unrAt {D : D7} {χ : (AE D)ˣ →* Circle} {w : HeightOneSp
   simp only [GlobalTheory.LFun.locChar, MonoidHom.comp_apply, MonoidHom.inv_apply, map_inv] at this ⊢
   rw [this, inv_one]
 
-
-
 theorem sphFactor_of_weilRepresentationUnitaryPair (hW : GlobalTheory.Published.WeilRepresentationUnitaryPair) (D : D7) : SphFactor D := by
   intro ψ θ A B χA χB sA sB t cA a om ν 𝓕 hP LA LB Sf Φ₁ Φ₂ hΦ₁ hΦ₂ hU v hv s
   obtain ⟨omh, homh⟩ := GlobalTheory.T.exists_weilDatum_hermitianSpaceDoubled hW D ψ A B χA χB om hP.weil
@@ -610,7 +597,7 @@ theorem sphFactor_of_weilRepresentationUnitaryPair (hW : GlobalTheory.Published.
   have hCC := GlobalTheory.T.siegelWeilSection_doubling_eq_matrixCoefficient D ψ A B χA χB om omh hP.weil hTC ν 𝓕 hP.covol
   have hδ := (hTC Φ₁ Φ₂ hΦ₁ hΦ₂).1
   have hco := (hCC Φ₁ Φ₂ hΦ₁ hΦ₂).2
-  have hlaw := GlobalTheory.T.siegelWeilSection_degeneratePrincipalSeries_law hW D ψ A B χB omh homh ν 𝓕 hP.covol _ hδ
+  have hlaw := GlobalTheory.Core.Rk.SWLaw.swSec_law hW D ψ A B χB omh homh ν 𝓕 hP.covol _ hδ
   have hvac := GlobalTheory.T.doubledTheta_vector_fixed_unramified_stabilizer D ψ A B χB omh homh LA LB Sf Φ₁ Φ₂ hΦ₁ hΦ₂ hU v hv
   haveI : Submodule.IsLattice D.host.E LA := hU.sdA.1
   haveI : Submodule.IsFullLattice D.host.E LA := GlobalTheory.ProjXCols.selfDual_isFullLattice A LA hU.sdA
@@ -694,7 +681,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift (FinPl RealMat 
 open GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero (ip delta swSec sZero IsKFinVec ThetaClause SectionClause CoefClause)
 open GlobalTheory.Mem.Th (CptF)
 open GlobalTheory.Core.Rk.IP
-
 
 theorem _root_.GlobalTheory.T.doublingSphericalFactorization_of_weilDualPair : GlobalTheory.Published.WeilRepresentationUnitaryPair → ∀ D : D7, SphFactor D := by
   first | exact @GlobalTheory.Core.Rk.IP.sphFactor_of_weilRepresentationUnitaryPair

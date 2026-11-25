@@ -171,11 +171,6 @@ theorem pe_mul_peT {v : Pl D} {T : Finset (Pl D)} (hv : v ∉ T) : pe D v * peT 
     rw [map_mul, comp_pe, comp_peT, map_zero]
     split_ifs with h1 h2 <;> simp_all
 
-theorem mem_idAt {P : Pl D → Prop} {x : AE D} :
-    x ∈ idAt D P ↔ infPart D x = 0 ∧ ∀ w, ¬ P w → compAt D w x = 0 := by
-  rw [idAt, Ideal.mem_inf, RingHom.mem_ker, Submodule.mem_iInf]
-  simp only [RingHom.mem_ker, Subtype.forall]
-
 theorem mem_grpAt {S : HSp D} {P : Pl D → Prop} {g : GA D S} :
     g ∈ grpAt S P ↔ ∀ i j, mt S g i j - (1 : Matrix (Fin S.rank) (Fin S.rank) (AE D)) i j ∈ idAt D P := by
   rw [grpAt, congGrp, MonoidHom.mem_ker]
@@ -205,7 +200,7 @@ open Classical Matrix
 variable {D : D7}
 
 theorem pe_mul_of_mem {v : Pl D} {x : AE D} (hx : x ∈ idAt D (· = v)) : pe D v * x = x := by
-  obtain ⟨h1, h2⟩ := mem_idAt.1 hx
+  obtain ⟨h1, h2⟩ := GlobalTheory.FinPl.LatMem.mem_idAt_iff.1 hx
   refine ext_AE (by rw [map_mul, inf_pe, zero_mul, h1]) fun w => ?_
   rw [map_mul, comp_pe]
   split_ifs with h
@@ -213,11 +208,11 @@ theorem pe_mul_of_mem {v : Pl D} {x : AE D} (hx : x ∈ idAt D (· = v)) : pe D 
   · rw [zero_mul, h2 w h]
 
 theorem pe_mul_mem (v : Pl D) (x : AE D) : pe D v * x ∈ idAt D (· = v) :=
-  mem_idAt.2 ⟨by rw [map_mul, inf_pe, zero_mul], fun w hw => by rw [map_mul, comp_pe, ite_eq_right hw, zero_mul]⟩
+  GlobalTheory.FinPl.LatMem.mem_idAt_iff.2 ⟨by rw [map_mul, inf_pe, zero_mul], fun w hw => by rw [map_mul, comp_pe, ite_eq_right hw, zero_mul]⟩
 
 theorem idAt_mono {P : Pl D → Prop} {v : Pl D} (hv : P v) {x : AE D} (hx : x ∈ idAt D (· = v)) : x ∈ idAt D P := by
-  obtain ⟨h1, h2⟩ := mem_idAt.1 hx
-  exact mem_idAt.2 ⟨h1, fun w hw => h2 w fun h => hw (h ▸ hv)⟩
+  obtain ⟨h1, h2⟩ := GlobalTheory.FinPl.LatMem.mem_idAt_iff.1 hx
+  exact GlobalTheory.FinPl.LatMem.mem_idAt_iff.2 ⟨h1, fun w hw => h2 w fun h => hw (h ▸ hv)⟩
 
 theorem latV_le (S : HSp D) (L : Lat S) {P : Pl D → Prop} {v : Pl D} (hv : P v) :
     latV S L (· = v) ≤ latV S L P := by
@@ -303,7 +298,6 @@ theorem hom_loc_zero {A B : Type} [CommRing A] [CommRing B] (φ : A →+* B) {e 
     φ (e * a + (1 - e) * b) = φ b := by
   rw [hom_loc, he, zero_mul, zero_add, sub_zero, one_mul]
 
-
 theorem finite_place_products : ∀ (D : D7) (S : HSp D) (L : Lat S) (P : Pl D → Prop) (κ : GA D S), IsSelfDualC S L →
     InK S L P κ → ∀ Fs : Finset (Pl D), ∃ l : List (GA D S), (∀ y ∈ l, ∃ v, P v ∧ InK S L (· = v) y) ∧
       (∀ i j, infPart D (Formalism.L2.Theta.mt S l.prod i j) = infPart D (Formalism.L2.Theta.mt S κ i j)) ∧
@@ -316,7 +310,7 @@ theorem finite_place_products : ∀ (D : D7) (S : HSp D) (L : Lat S) (P : Pl D �
   have hK := mem_grpAt.1 hκ.1
   refine ⟨l, hl, fun i j => ?_, fun w hw i j => ?_, fun w hw i j => ?_⟩
   · rw [hp, locM_apply, hom_loc_zero (infPart D) (inf_peT _)]
-    have := (mem_idAt.1 (hK i j)).1
+    have := (GlobalTheory.FinPl.LatMem.mem_idAt_iff.1 (hK i j)).1
     rw [map_sub, sub_eq_zero] at this
     exact this.symm
   · rw [hp, locM_apply]
@@ -326,7 +320,7 @@ theorem finite_place_products : ∀ (D : D7) (S : HSp D) (L : Lat S) (P : Pl D �
       exact hom_loc_one (compAt D w) hc _ _
     · have hc : compAt D w (peT D (Fs.filter P)) = 0 := by
         rw [comp_peT, ite_eq_right fun h => hPw (Finset.mem_filter.1 h).2]
-      have := (mem_idAt.1 (hK i j)).2 w hPw
+      have := (GlobalTheory.FinPl.LatMem.mem_idAt_iff.1 (hK i j)).2 w hPw
       rw [map_sub, sub_eq_zero] at this
       rw [hom_loc_zero (compAt D w) hc]
       exact this.symm

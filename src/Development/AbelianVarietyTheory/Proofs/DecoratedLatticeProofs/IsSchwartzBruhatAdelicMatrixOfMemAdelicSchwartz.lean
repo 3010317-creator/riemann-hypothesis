@@ -179,7 +179,7 @@ theorem pure (θ : InfFam D) (hθ : IsInfFam θ) (f : SchwartzMap (D.what₂.Tau
     rw [show g ((fun i j => finPart D (x i j)) + P u) = g (fun i j => finPart D (x i j)) from hu _]
   · exact ⟨tsupport g, hg.2.isCompact, fun x hx => subset_tsupport g (right_ne_zero_of_mul hx)⟩
   · intro k L hL hi x
-    obtain ⟨⟨C₁, hC₁⟩, hlow⟩ := GlobalTheory.T.adelicMatrixRealSize_bounds_along_real_parametrisation D θ hθ m n k L hL
+    obtain ⟨⟨C₁, hC₁⟩, hlow⟩ := GlobalTheory.Unf.realParam_size_bounds D θ hθ m n k L hL
     obtain ⟨C₂, hC₂⟩ := hlow hi
     have hAb : ∀ t, ‖realVec θ L t‖ ≤ C₁ * ‖t‖ := fun t => (_root_.GlobalTheory.RealParamSize.norm_vec_le θ (L t)).trans (hC₁ t)
     have hAc : Continuous (realVec θ L) := AddMonoidHomClass.continuous_of_bound (realVec θ L) C₁ hAb

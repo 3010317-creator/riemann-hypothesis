@@ -31,9 +31,6 @@ import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.PoincareInHH
 section -- clump:auto
 @[expose] public section
 
-
-theorem _root_.GlobalTheory.T.smoothVec_head_of_derivative_family : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)), Formalism.MainNotions.S.IsURepOn (Formalism.MainNotions.S.UJset ε) σ → ∀ v ∈ GlobalTheory.TypeSum.Fam ε σ, Formalism.L2.Theta.SmoothVec (GlobalTheory.SmoothGlob.lieSet ε) σ (v []) := by
-  first | exact @GlobalTheory.FamSmooth.famSmooth
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SmoothVecHeadOfDerivativeFamilyStatement =====
@@ -57,7 +54,7 @@ theorem fam_smooth [CompleteSpace H] {σ : Mx n → (H →L[ℂ] H)} (hσ : IsUR
     {v : List (GlobalTheory.LowTypeDetermined.lie (Formalism.REAL.Jm ε)) → H} (hv : v ∈ Fam ε σ) :
     SmoothVec (lieSet ε) σ (v []) ∧
       ∀ l : List (GlobalTheory.LowTypeDetermined.lie (Formalism.REAL.Jm ε)), Dw σ (l.map Subtype.val) (v []) = v l := by
-  refine ⟨GlobalTheory.T.smoothVec_head_of_derivative_family n ε H σ hσ v hv, fun l => ?_⟩
+  refine ⟨GlobalTheory.FamSmooth.famSmooth n ε H σ hσ v hv, fun l => ?_⟩
   induction l with
   | nil => rfl
   | cons X l ih =>
@@ -257,7 +254,6 @@ theorem foldr_conj_eq (σ : Mx n → (H →L[ℂ] H)) {P : Mx n} (hP : IsUnit P)
   | cons X l ih => simp only [List.map_cons, List.foldr_cons, ih, dRep_conj_eq σ hP]
 
 end GlobalTheory.SobUnif
-
 
 open GlobalTheory.SobUnif in
 theorem GlobalTheory.Core.Mi.sobolev_unif_bound : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (J : Set (GA D V)) (χ : GA D V → ℂ), IsInfFam θ → ∀ T : MMap M, IsMultMap θ M J χ T → ∀ Ω : Set (GA D V), IsCompact Ω → ∀ τ (v : M.Vec), ∃ (L : List (List (Matrix (Fin V.rank) (Fin V.rank) ℂ))) (C : ℝ), (∀ l ∈ L, ∀ Y ∈ l, Y ∈ lieAt V τ) ∧ ∀ w : M.sm τ, ∀ g ∈ Ω, ‖T (Function.update v τ w) g‖ ≤ C * (L.map fun l => ‖l.foldr (dRep (M.rep τ)) (w : M.H τ)‖).sum := by

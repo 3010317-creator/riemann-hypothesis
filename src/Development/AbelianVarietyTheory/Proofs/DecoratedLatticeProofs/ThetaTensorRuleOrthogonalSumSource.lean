@@ -231,7 +231,7 @@ theorem opB_heisO {ψ : AddChar (AF D.host.F) ℂ} {χ χ' : (AE D)ˣ →* Circl
       heisO ψ S T ((o.resS T).symm ((o.resS T w).1, actO B T b h (o.resS T w).2)) (opB o (om (b, h)) f) := by
   funext x
   obtain ⟨⟨u, v⟩, rfl⟩ := (o.resS T).symm.surjective x
-  have hg := ((GlobalTheory.T.thetaFunction_products_slices_orthogonalDecomposition D ψ hom.std S A B T o).2.2.2 f hf).2 (u + (o.resS T w).1)
+  have hg := ((GlobalTheory.BoxSlice.main D ψ hom.std S A B T o).2.2.2 f hf).2 (u + (o.resS T w).1)
   have e : (fun v' => heisO ψ S T w f ((o.resS T).symm (u, v'))) =
       ψ (symplOH A T u (o.resS T w).1) •
         heisO ψ B T (o.resS T w).2 (fun v' => f ((o.resS T).symm (u + (o.resS T w).1, v'))) := by
@@ -251,7 +251,7 @@ theorem opA_heisO {ψ : AddChar (AF D.host.F) ℂ} {χ χ' : (AE D)ˣ →* Circl
       heisO ψ S T ((o.resS T).symm (actO A T a h (o.resS T w).1, (o.resS T w).2)) (opA o (om (a, h)) f) := by
   funext x
   obtain ⟨⟨u, v⟩, rfl⟩ := (o.resS T).symm.surjective x
-  have hg := ((GlobalTheory.T.thetaFunction_products_slices_orthogonalDecomposition D ψ hom.std S A B T o).2.2.2 f hf).1 (v + (o.resS T w).2)
+  have hg := ((GlobalTheory.BoxSlice.main D ψ hom.std S A B T o).2.2.2 f hf).1 (v + (o.resS T w).2)
   have e : (fun u' => heisO ψ S T w f ((o.resS T).symm (u', v))) =
       ψ (symplOH B T v (o.resS T w).2) •
         heisO ψ A T (o.resS T w).1 (fun u' => f ((o.resS T).symm (u', v + (o.resS T w).2))) := by
@@ -268,7 +268,6 @@ def opAB (omA : Om A T) (omB : Om B T) (a : GA D A) (b : GA D B) (h : GA D T) : 
   opA o (omA (a, h)) * opB o (omB (b, h))
 
 end GlobalTheory.WeilSumScalar
-
 
 open GlobalTheory.WeilSumScalar in
 theorem GlobalTheory.WeilSumScalar.omS_eq_smul_prod : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S A B T : HSp D) (o : OrthDec S A B) (χA χB χT : (AE D)ˣ →* Circle) (omS : Om S T) (omA : Om A T) (omB : Om B T), IsWeilDatumO ψ S T (χA * χB) χT omS → IsWeilDatumO ψ A T χA χT omA → IsWeilDatumO ψ B T χB χT omB → ∀ a b h, ∃ c : Circle, ∀ f, IsThetaFunO ψ S T f → ∀ u v, omS (o.emb (a, b), h) f ((o.resS T).symm (u, v)) = (c : ℂ) * omA (a, h) (fun u' => omB (b, h) (fun v' => f ((o.resS T).symm (u', v'))) v) u := by
@@ -638,7 +637,7 @@ theorem op_prod {X Y : Type} (L : Module.End ℂ (X → ℂ)) (M : Module.End �
 theorem tensorSource : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) →
     ∀ (S A B : HSp D) (d : OrthDec S A B) (T : HSp D), GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.TensorSource ψ d T := by
   intro D ψ hψ S A B d T
-  obtain ⟨h1, h2, h3, h4⟩ := GlobalTheory.T.thetaFunction_products_slices_orthogonalDecomposition D ψ hψ S A B T d
+  obtain ⟨h1, h2, h3, h4⟩ := GlobalTheory.BoxSlice.main D ψ hψ S A B T d
   have hb : ∀ fA fB u v, d.boxS T fA fB ((d.resS T).symm (u, v)) = fA u * fB v := by
     intro fA fB u v
     simp [OrthDec.boxS]

@@ -64,10 +64,6 @@ theorem two_le_norm (v : HeightOneSpectrum (𝓞 F)) : 2 ≤ Ideal.absNorm v.asI
     rw [Ne, Ideal.absNorm_eq_one_iff]; exact v.isPrime.ne_top
   omega
 
-theorem exists_nat_mul_mem (v : HeightOneSpectrum (𝓞 F)) (x : Fv F v) :
-    ∃ n : ℕ, 0 < n ∧ (n : Fv F v) * x ∈ v.adicCompletionIntegers F := by
-  apply GlobalTheory.CompanionTheory.SW.BoxF.exists_nat_v
-
 theorem exists_exponents (a : ℕ) (ha : 0 < a) :
     ∃ e : HeightOneSpectrum (𝓞 F) → ℕ,
       (∀ v, Ideal.span {(a : 𝓞 F)} ≤ v.asIdeal ^ e v ∧ ¬ Ideal.span {(a : 𝓞 F)} ≤ v.asIdeal ^ (e v + 1)) ∧
@@ -153,7 +149,7 @@ theorem dilSet_mono (a t : ℕ) : (dilSet b v a : Set (Fin 1 → Fin M → Fv F 
 
 theorem exists_mem_dilSet (X : Fin 1 → Fin M → Fv F v ⊗[F] E) : ∃ n : ℕ, 0 < n ∧ X ∈ dilSet b v n := by
   choose n hn hmem using fun t : Fin 1 × Fin M × Fin d =>
-    exists_nat_mul_mem v ((Algebra.TensorProduct.basis (Fv F v) b).repr (X t.1 t.2.1) t.2.2)
+    GlobalTheory.CompanionTheory.SW.BoxF.exists_nat_v v ((Algebra.TensorProduct.basis (Fv F v) b).repr (X t.1 t.2.1) t.2.2)
   refine ⟨∏ t, n t, Finset.prod_pos fun t _ => hn t, ?_⟩
   rw [mem_dilSet]
   intro p i k

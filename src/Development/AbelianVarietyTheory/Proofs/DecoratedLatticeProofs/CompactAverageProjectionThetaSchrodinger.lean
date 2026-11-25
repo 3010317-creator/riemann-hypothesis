@@ -97,7 +97,7 @@ theorem exists_summable_bound {θ : InfFam D} (hθ : IsInfFam θ) (T : HSp D) (n
     {Φ : Mx D T.rank n → ℂ} (hΦ : Φ ∈ schwartzA θ T.rank n) (x : Mx D T.rank n) :
     ∃ b : Matrix (Fin T.rank) (Fin n) D.host.E → ℝ, Summable b ∧
       ∀ k ∈ K, ∀ ξ, ‖Φ (mt T k⁻¹ ⬝ (x + rat ξ : Mx D T.rank n))‖ ≤ b ξ := by
-  obtain ⟨N, hN⟩ := GlobalTheory.T.exists_summable_bound_schwartz_majorant_rational_translates D θ hθ T.rank n
+  obtain ⟨N, hN⟩ := GlobalTheory.Unf.MajLoc.summable_bound D θ hθ T.rank n
   obtain ⟨-, K₀, hK₀, hC⟩ := GlobalTheory.T.schwartzBruhatAdelicMatrix_continuous_le_majorant D θ hθ T.rank n Φ
     (GlobalTheory.SchwartzPure.isSchwartzBruhat_of_mem_schwartzA D θ hθ T.rank n Φ hΦ)
   obtain ⟨C, hC⟩ := hC N

@@ -245,7 +245,7 @@ theorem isSobForm_slice {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} (hθ : 
     obtain ⟨K, hKs⟩ := sobO_slice_le (T := T) hψ hθ o d
     refine ⟨d, C * (ENNReal.ofReal ((height A p.1 * height T p.2) ^ e)).toNNReal * K, fun f hf => ?_⟩
     have hsl : slA o f ∈ thetaLevel ψ A T U' := by
-      refine ⟨((GlobalTheory.T.thetaFunction_products_slices_orthogonalDecomposition D ψ hψ S A B T o).2.2.2 f hf.1).1 0, fun u hu h0 => ?_⟩
+      refine ⟨((GlobalTheory.BoxSlice.main D ψ hψ S A B T o).2.2.2 f hf.1).1 0, fun u hu h0 => ?_⟩
       rw [heisO_slice, ← extA_apply, hf.2 _ hu]
       rw [extA_apply, symm_left, Matrix.map_mul, h0, Matrix.zero_mul]
     have h := hC χ χ' om hom μ 𝓕 hμ (slA o f) hsl p.1 p.2
@@ -355,7 +355,7 @@ theorem half (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S A B T : HSp D) (o : Or
   obtain ⟨g, h⟩ := p
   have hstd := hom.std
   obtain ⟨θ, hθ⟩ := GlobalTheory.Member.exists_isInfFam_family D
-  have hslice := (GlobalTheory.T.thetaFunction_products_slices_orthogonalDecomposition D ψ hstd S A B T o).2.2.2
+  have hslice := (GlobalTheory.BoxSlice.main D ψ hstd S A B T o).2.2.2
   have hsob := (GlobalTheory.T.weil_operator_orth_summand_slices_sobolev_bounded D ψ θ hθ S A B T o).1 χ χ' om hom (g, h)
   refine GlobalTheory.T.theta_of_heisenberg_intertwiner_bounded_at_zero D ψ hstd θ hθ S T S T (shiftA o T g h) (continuous_shiftA o T g h) (shiftA_fin o T g h)
     (shiftA_inf o T g h) (fun F x => om (g, h) (fun u => F ((o.resS T).symm (u, (o.resS T x).2))) (o.resS T x).1)

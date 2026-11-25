@@ -68,7 +68,7 @@ theorem mean_lt_top {G G₁ : Type} [Group G] [TopologicalSpace G] [IsTopologica
     have h3 : μ₁ (ι ⁻¹' U) ≤ (μ₁.map ι) U := Measure.le_map_apply hme.measurable.aemeasurable U
     exact (h2.trans_le h3).ne'
   obtain ⟨C', K, hC', hK, hcover⟩ := _root_.CompanionTheory.PlacePermOperatorBicommutantSpan.cover G μ ι.range (μ₁.map ι) hνinv hνpos C hC
-  obtain ⟨𝓕', h𝓕', hunf⟩ := _root_.GlobalTheory.CompanionTheory.Adelic.unfold_coset_sum_fundamentalDomain G μ Γ (Γ ⊓ ι.range) inf_le_left 𝓕 h𝓕 Q r hr hQ
+  obtain ⟨𝓕', h𝓕', hunf⟩ := _root_.CompanionTheory.PlacePermOperatorBicommutantSpan.unf G μ Γ (Γ ⊓ ι.range) inf_le_left 𝓕 h𝓕 Q r hr hQ
   rw [hunf f hf]
   haveI : Countable ↥(Γ ⊓ ι.range) :=
     (Subgroup.inclusion_injective (inf_le_left : Γ ⊓ ι.range ≤ Γ)).countable

@@ -58,9 +58,6 @@ open scoped TensorProduct
 open GlobalTheory.Unf
 open scoped ComplexOrder ENNReal NNReal ContDiff
 
-
-theorem _root_.GlobalTheory.T.adelicMatrixRealSize_le_realSymplecticPairing_sum : ∀ (D : D7) (θ : InfFam D) (T : HSp D) (ρ : ℕ), ∃ (k : ℕ) (τs : Fin k → D.what₂.Tau) (zs : Fin k → Matrix (Fin T.rank) (Fin ρ) ℂ) (C : ℝ), ∀ x : Mx D T.rank ρ, realSize θ x ≤ C * ∑ i, |2 * (tauE D (τs i) D.host.xi0 * ((compAt θ (τs i) x)ᴴ * gramAt D T (τs i) * zs i).trace).re| := by
-  first | exact @GlobalTheory.RealPairBound.realSize_le_pairing
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicMatrixRealSizeLeRealSymplecticPairingSumStatement =====
@@ -76,9 +73,6 @@ open scoped TensorProduct
 open GlobalTheory.Unf
 open scoped ComplexOrder ENNReal NNReal ContDiff
 
-
-theorem _root_.GlobalTheory.T.dualDirection_derivative_mixedCoordinate_bound : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ θ : InfFam D, IsInfFam θ → ∀ (S S₀ T : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (v : VolM D T.rank ρ) (τ : D.what₂.Tau) (z : Matrix (Fin T.rank) (Fin ρ) ℂ), ∃ Z : Matrix (Fin T.rank) (Fin S.rank) ℂ, ∀ f : WO S T → ℂ, IsThetaFunO ψ S T f → ∀ x w, |2 * (tauE D τ D.host.xi0 * ((compAt θ τ x)ᴴ * gramAt D T τ * z).trace).re| * ‖d.mixS T ψ v.μ v.𝓕 f x w‖ ≤ ‖d.mixS T ψ v.μ v.𝓕 (dRho (heisO ψ S T) θ τ Z f) x w‖ := by
-  first | exact @GlobalTheory.Unf.norm_mixS_dRho_ge
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DualDirectionDerivativeMixedCoordinateBoundStatement =====
@@ -100,8 +94,8 @@ namespace GlobalTheory.Unf
 
 theorem mixS_decay : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ θ : InfFam D, IsInfFam θ → ∀ (S S₀ T : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (v : VolM D T.rank ρ) (N : ℕ), ∃ C : ℝ≥0, ∀ f : WO S T → ℂ, IsThetaFunO ψ S T f → ∀ x w, ‖d.mixS T ψ v.μ v.𝓕 f x w‖ₑ * ENNReal.ofReal ((1 + realSize θ x) ^ N) ≤ C * supSob ψ θ N f := by
   intro D ψ hψ θ hθ S S₀ T ρ d v N
-  obtain ⟨k, τs, zs, K, hK⟩ := GlobalTheory.T.adelicMatrixRealSize_le_realSymplecticPairing_sum D θ T ρ
-  choose Z hZ using fun i => GlobalTheory.T.dualDirection_derivative_mixedCoordinate_bound D ψ hψ θ hθ S S₀ T ρ d v (τs i) (zs i)
+  obtain ⟨k, τs, zs, K, hK⟩ := GlobalTheory.RealPairBound.realSize_le_pairing D θ T ρ
+  choose Z hZ using fun i => GlobalTheory.Unf.norm_mixS_dRho_ge D ψ hψ θ hθ S S₀ T ρ d v (τs i) (zs i)
   have hsf := GlobalTheory.T.heisenberg_sup_sobolev_seminorm_theta_laws D ψ hψ θ hθ S T
   choose Cd hCd using fun i => (hsf.2.1 (τs i) (Z i)).2
   induction N with

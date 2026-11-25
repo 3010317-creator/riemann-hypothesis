@@ -148,7 +148,6 @@ theorem finite_small (F : Type) [Field F] [NumberField F] (ρ : InfinitePlace F 
     rw [h1, ← h2, ← hρ, Complex.norm_real, Real.norm_eq_abs]
     exact (hα _).le
 
-
 open Classical in
 theorem sum_le_of_fibres {α ι : Type} [Fintype ι] (a : α → ℝ) (φ : α → ι → ℤ)
     (g : ι → ℤ → ℝ) (K : ℕ) (ha : ∀ r, 0 ≤ a r) (hg : ∀ w k, 0 ≤ g w k)
@@ -189,7 +188,6 @@ theorem sum_le_of_fibres {α ι : Type} [Fintype ι] (a : α → ℝ) (φ : α �
       _ ≤ _ := mul_le_mul_of_nonneg_left (s4.trans s5) hK
   have hsum : Summable a := summable_of_sum_le ha key
   exact ⟨hsum, hsum.tsum_le_of_sum_le key⟩
-
 
 open Classical in
 theorem fibre_card (F : Type) [Field F] [NumberField F] (ρ : InfinitePlace F → (F →+* ℝ))
@@ -353,7 +351,7 @@ theorem ei_bound : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A 
   intro F _ _ _ _ lf hlf hO ψ hψ ι _ _ M B ρ P hQ hM φ hφ t ht
   have hTR : IsTotallyReal F := hQ.1
   have hρ : ∀ w x, ((ρ w x : ℝ) : ℂ) = w.embedding x := hQ.2.2.2.2.1
-  obtain ⟨C1, hC1⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.norm_fstar_le_den F lf hlf hO ψ hψ ι M B ρ P hQ φ hφ
+  obtain ⟨C1, hC1⟩ := _root_.CompanionTheory.PlacePermOperatorBicommutantSpan.fstar_decay F lf hlf hO ψ hψ ι M B ρ P hQ φ hφ
   obtain ⟨C2, hC2⟩ := _root_.GlobalTheory.CompanionTheory.SW.LatSum.lattice_sum F hTR ρ hρ M (by omega) t ht
   obtain ⟨Q, out, hinj, hsep, hbij⟩ := exists_decomp F
   obtain ⟨hd1, hd2, hd3⟩ := _root_.GlobalTheory.CompanionTheory.SW.DenSum.summable_den F M hM 1 one_pos

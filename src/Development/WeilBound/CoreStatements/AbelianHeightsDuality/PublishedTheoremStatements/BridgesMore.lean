@@ -23,7 +23,7 @@ section -- clump:auto
 namespace GlobalTheory.Published
 
 theorem cuspTraceClass_of_factorisation : DixmierMalliavinFactorisation → CuspTraceClass :=
-  fun h => cuspTraceClass_of_decay GlobalTheory.T.cuspidal_moderateGrowth_rapidDecay h
+  fun h => cuspTraceClass_of_decay GlobalTheory.CuspGeo.cuspDecayBound h
 
 end GlobalTheory.Published
 end -- clump:auto

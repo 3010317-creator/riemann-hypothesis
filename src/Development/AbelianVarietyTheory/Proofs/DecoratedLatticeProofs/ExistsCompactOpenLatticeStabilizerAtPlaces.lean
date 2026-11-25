@@ -27,7 +27,6 @@ namespace GlobalTheory.FinPl.KOpen
 
 variable {D : D7}
 
-
 open Classical in
 def indP (D : D7) (P : Pl D → Prop) : Af D.host.F :=
   ⟨fun v => if P v then 1 else 0, Filter.Eventually.of_forall fun v => by
@@ -73,8 +72,6 @@ theorem e_mul_fin {P : Pl D → Prop} {a : AE D} (ha : a ∈ idAt D P) :
     (indP D P ⊗ₜ[D.host.F] (1 : D.host.E)) * finPart D a = finPart D a :=
   e_mul_of_supp P _ ((mem_supportedOnPlacesIdeal_iff_components_zero_elsewhere D P a).1 ha).2
 
-
-
 theorem exists_latticeCompletion_cut_to_places_finiteReal (S : HSp D) (L : Lat S) (P : Pl D → Prop) {z : Fin S.rank → Af D.host.F ⊗[D.host.F] D.host.E}
     (hz : z ∈ latHat D.host.F D.host.E (L : Set (Fin S.rank → D.host.E))) :
     ∃ y ∈ latV S L P, (∀ i, infPart D (y i) = 0) ∧
@@ -83,7 +80,7 @@ theorem exists_latticeCompletion_cut_to_places_finiteReal (S : HSp D) (L : Lat S
     | mem z hz =>
       obtain ⟨a, ha, x, hx, rfl⟩ := hz
       refine ⟨fun i => pairA D.host.F 0 (indP D P * a) ⊗ₜ[D.host.F] (1 * x i),
-        AddSubgroup.subset_closure ⟨_, GlobalTheory.KStabBridge.intAf_mul (indicatorAdele_integral P) ha, fun w hw => ?_, 1, rfl, x, hx, rfl⟩,
+        AddSubgroup.subset_closure ⟨_, Formalism.IndefR.Fin.intAf_mul (indicatorAdele_integral P) ha, fun w hw => ?_, 1, rfl, x, hx, rfl⟩,
         fun i => _root_.GlobalTheory.LatVac.infPart_pair _ _, fun i => ?_⟩
       · rw [map_mul, evalV_indP, ite_eq_right hw, zero_mul]
       · rw [_root_.GlobalTheory.LatVac.finPart_pair, one_mul, Algebra.TensorProduct.tmul_mul_tmul, one_mul]
@@ -225,7 +222,6 @@ theorem isClosed_grpAt (S : HSp D) (P : Pl D → Prop) : IsClosed (grpAt S P : S
     rw [Finset.mem_singleton.1 hu]; exact h v.1 v.2
   rw [e]
   exact (GlobalTheory.AdelicU.isClosed_finPts _ _).inter (isClosed_iInter fun v => GlobalTheory.AdelicU.isClosed_awayPts _ _ _)
-
 
 theorem exists_compact_open : ∀ (D : D7) (V : HSp D) (L : Lat V), IsSelfDualC V L → ∀ P : Pl D → Prop, ∃ K : Subgroup (GA D V), (∀ g, g ∈ K ↔ InK V L P g) ∧ IsCompact (K : Set (GA D V)) ∧ IsOpen ((K.subgroupOf (grpAt V P) : Subgroup _) : Set (grpAt V P)) := by
   intro D V L hL P

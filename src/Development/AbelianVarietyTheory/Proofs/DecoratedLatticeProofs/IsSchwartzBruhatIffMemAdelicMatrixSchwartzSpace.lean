@@ -28,4 +28,4 @@ theorem GlobalTheory.SchwartzIff.isSchwartzBruhat_iff_mem_schwartzA :
       GlobalTheory.IndefiniteRowSideFullHecke.SchwartzBruhatMixedFamilies.IsSchwartzBruhat φ ↔ φ ∈ GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz.schwartzA θ m n := by
   intro D θ hθ m n φ
   exact ⟨fun h => GlobalTheory.SchwartzBruhatTensor.mem_schwartzA_of_isSchwartzBruhat D θ hθ m n φ h,
-    fun h => GlobalTheory.T.isSchwartzBruhatAdelicMatrix_of_mem_adelicSchwartz D θ hθ m n φ h⟩
+    fun h => GlobalTheory.SchwartzPure.isSchwartzBruhat_of_mem_schwartzA D θ hθ m n φ h⟩

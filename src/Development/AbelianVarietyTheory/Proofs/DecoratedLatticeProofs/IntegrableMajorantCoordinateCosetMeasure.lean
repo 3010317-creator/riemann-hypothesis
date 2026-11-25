@@ -54,8 +54,6 @@ open scoped TensorProduct
 open GlobalTheory.Unf
 open scoped ComplexOrder ENNReal NNReal ContDiff
 
-
-
 namespace GlobalTheory.Unf.MajInt
 
 variable {D : D7}
@@ -85,7 +83,6 @@ def realPt (D : D7) (w : D.what₂.Tau → ℂ) : AE D :=
 theorem theta_realPt {θ : InfFam D} (hθ : IsInfFam θ) (w : D.what₂.Tau → ℂ) (τ : D.what₂.Tau) :
     θ τ (infPart D (realPt D w)) = w τ := by
   rw [realPt, infPart_incInf, Formalism.IndefR.Eqv.eq_thetaC D hθ, Formalism.IndefR.Eqv.thetaC_splitInv]
-
 
 open Classical in
 def shift {m n : ℕ} (P : Fin m → Fin n → Prop) (z : D.what₂.Tau × Fin m × Fin n → ℤ × ℤ) : Mx D m n :=
@@ -156,7 +153,7 @@ theorem maj_integrable : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (m n 
   classical
   set d := Fintype.card D.what₂.Tau * (m * n) with hd
   refine ⟨2 * d + 2, fun K hK => ?_⟩
-  obtain ⟨hcl, hcont, hmeas, hcpt⟩ := (GlobalTheory.T.adelicMatrixSchwartzMajorant_measurable_rationalShift D θ hθ).1 m n K hK
+  obtain ⟨hcl, hcont, hmeas, hcpt⟩ := (GlobalTheory.Unf.maj_measurable_rat D θ hθ).1 m n K hK
   haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
   set M : ℝ := realSize θ a + 2 * d with hM
   set Q := {x : Mx D m n | InBox K x ∧ realSize θ x ≤ M} with hQdef

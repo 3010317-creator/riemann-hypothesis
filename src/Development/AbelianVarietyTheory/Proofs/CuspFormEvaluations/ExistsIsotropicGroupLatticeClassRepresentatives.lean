@@ -19,8 +19,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.modN_sq_sum_iff_exists_genLat_decomposition : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (n : ℕ) (Λ : GenLat E n) (N : ℕ), Λ.Unimod → 0 < N → Ideal.span {(N : 𝓞 E)} • stdLat E n ≤ Λ.La → ∀ a : Fin n → Dw.La, (∀ (mu : Matrix (Fin n) (Fin n) E), (∀ v ∈ Λ.La, mu.mulVec v ∈ stdLat E n) → ∀ cm : Fin n → Fin n → 𝓞 E, (∀ i j, (cm i j : E) = (N : E) * mu i j) → ∀ i, Dw.ModN (N ^ 2) (∑ j, cm i j • a j)) ↔ ∃ (m : ℕ) (x : Fin m → Dw.La) (v : Fin m → Fin n → 𝓞 E), (∀ i, ∃ w ∈ Λ.La, ∀ b, (v i b : E) = (N : E) * w b) ∧ ∀ b, a b = ∑ i, v i b • x i := by
-  first | exact @GlobalTheory.modN_sq_iff_exists_genLat_sum
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ModNSqIffExistsGenLatSumStatement =====
@@ -178,7 +176,7 @@ theorem exists_class_representatives : ∀ (E : Type) [Field E] [NumberField E] 
   have hM : ∀ x : Dw.La, Dw.ModN (N ^ 2) x ↔ ∃ y, x = ((N : 𝓞 E) ^ 2) • y := fun x => by
     simp only [Datum.ModN, ← Nat.cast_pow, Nat.cast_smul_eq_nsmul]
   refine ⟨fun i b => ∑ k, V (σ i k).out b • e k, fun i => ?_, fun i i' h => ?_, fun a ha => ?_⟩
-  · exact (GlobalTheory.T.modN_sq_sum_iff_exists_genLat_decomposition E H Dw n Λ N hU hN0 hN _).2
+  · exact (GlobalTheory.modN_sq_iff_exists_genLat_sum E H Dw n Λ N hU hN0 hN _).2
       ⟨_, e, fun k => V (σ i k).out, fun k => ⟨_, (σ i k).out.2, hV _⟩, fun _ => rfl⟩
   · refine σ.injective (funext fun k => ?_)
     rw [← (σ i k).out_eq, ← (σ i' k).out_eq]
@@ -187,7 +185,7 @@ theorem exists_class_representatives : ∀ (E : Type) [Field E] [NumberField E] 
     refine he2 (fun k => V (σ i k).out b - V (σ i' k).out b) y ?_ k
     rw [← hy, ← Finset.sum_sub_distrib]
     simp only [sub_smul]
-  · obtain ⟨m, x, v, hv, hav⟩ := (GlobalTheory.T.modN_sq_sum_iff_exists_genLat_decomposition E H Dw n Λ N hU hN0 hN a).1 ha
+  · obtain ⟨m, x, v, hv, hav⟩ := (GlobalTheory.modN_sq_iff_exists_genLat_sum E H Dw n Λ N hU hN0 hN a).1 ha
     choose w hw hvw using hv
     choose c y hcy using fun i => he1 (x i)
     let W : Fin (Dw.p + Dw.q) → Λ.La.toAddSubgroup := fun k =>

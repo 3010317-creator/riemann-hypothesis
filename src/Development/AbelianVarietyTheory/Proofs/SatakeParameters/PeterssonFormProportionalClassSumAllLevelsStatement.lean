@@ -84,7 +84,7 @@ theorem step_hk : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {
   have hmap := (GlobalTheory.MultMem.mem_mult_iff _ _ _ _ _ _ _ _).1 ((mem_multT R.θ _ _ _ _).1 U.2)
   have key : ∀ φ x, (R.ioY t k U').1 (R.ItY k φ (PiTensorProduct.tprod ℂ x)) = w.1 (R.ItY k φ (PiTensorProduct.tprod ℂ x)) := by
     intro φ x
-    have hvac := (GlobalTheory.T.fockVectors_chain_isVacuum_off_thetaLevels R F hC t P hG).1 k hkk φ
+    have hvac := (GlobalTheory.VacGood.fock_vacua_good R F hC t P hG).1 k hkk φ
     have e' : (R.ioY t k U').1 (R.ItY k φ (PiTensorProduct.tprod ℂ x)) =
         Lift.liftInt (R.νY t (k + 1)) (R.fdY t (k + 1)) (thetaKO (R.ωY t k)) (R.ptY t k φ) (U'.1 (PiTensorProduct.tprod ℂ x)) :=
       funext fun g => (hio.eq U' φ _ g).symm

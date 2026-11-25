@@ -122,7 +122,6 @@ open GlobalTheory.Core.Rk.IP GlobalTheory.Core.Rk.SWLaw
 open GlobalTheory.Core.Rk.SW
 open scoped ContDiff
 
-
 theorem _root_.GlobalTheory.T.schroedingerFunction_hasDerivAt_real_line_doubledPair : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (A B : HSp D) (ν : Measure (WO A B)) (𝓨 : Set (WO A B)), IsCovolOne (ratL B A) ν 𝓨 → ∀ f, IsThetaFunO ψ (dblSp A) B f → ∀ M : ℝ →+ Mx D B.rank A.rank, Continuous M → (∀ t, (M t).map (finPart D) = 0) → ∃ f', IsThetaFunO ψ (dblSp A) B f' ∧ ∀ x, HasDerivAt (fun t : ℝ => sch ψ A B ν 𝓨 f (x + M t)) (sch ψ A B ν 𝓨 f' x) 0 := by
   first | exact @GlobalTheory.SchLine.sch_hasDerivAt_line
 end -- clump:auto
@@ -199,7 +198,7 @@ theorem sch_schwartz (k : ℕ) (L : (Fin k → ℝ) →+ Mx D B.rank A.rank) (hL
     {φ | ∃ f', IsThetaFunO ψ (dblSp A) B f' ∧ φ = fun t => sch ψ A B ν 𝓨 f' (x + L t)}
   have hcont : ∀ φ ∈ V, Continuous φ := by
     rintro φ ⟨f', hf', rfl⟩
-    exact (GlobalTheory.T.doubledPairSchrodingerFunction_continuous_integrable D ψ hψ A B ν 𝓨 hν f' hf').1.comp (continuous_const.add hL.1)
+    exact (GlobalTheory.Core.Rk.SchInt.sch_continuous_integrable D ψ hψ A B ν 𝓨 hν f' hf').1.comp (continuous_const.add hL.1)
   have hder : ∀ φ ∈ V, ∀ i : Fin k, ∃ φ' ∈ V, ∀ t : Fin k → ℝ,
       HasDerivAt (fun s : ℝ => φ (t + s • (Pi.single i (1 : ℝ) : Fin k → ℝ))) (φ' t) 0 := by
     rintro φ ⟨f', hf', rfl⟩ i
@@ -222,7 +221,7 @@ theorem sch_schwartz (k : ℕ) (L : (Fin k → ℝ) →+ Mx D B.rank A.rank) (hL
     exact h
   have hdecay : ∀ φ ∈ V, ∀ N : ℕ, ∃ C : ℝ, ∀ t, ‖t‖ ^ N * ‖φ t‖ ≤ C := by
     rintro φ ⟨f', hf', rfl⟩ N
-    obtain ⟨C₁, hC₁⟩ := (GlobalTheory.T.adelicMatrixRealSize_bounds_along_real_parametrisation D θ hθ B.rank A.rank k L hL).2 hinj
+    obtain ⟨C₁, hC₁⟩ := (GlobalTheory.Unf.realParam_size_bounds D θ hθ B.rank A.rank k L hL).2 hinj
     obtain ⟨C₂, hC₂⟩ :=
       GlobalTheory.Unf.mixS_decay D ψ hψ θ hθ (dblSp A) (zeroSp D) B A.rank (dblDec A) (volOf ν 𝓨 hν) N
     have hfin := (GlobalTheory.Unf.SupFin.supSob_laws D ψ hψ θ hθ (dblSp A) B).1 N f' hf'
@@ -257,7 +256,6 @@ theorem sch_schwartz (k : ℕ) (L : (Fin k → ℝ) →+ Mx D B.rank A.rank) (hL
           mul_le_mul_of_nonneg_left h2 (pow_nonneg hc0 N)
   have hS := (_root_.GlobalTheory.Unf.PartialClass.smooth_schwartz k V hcont hder).2 hdecay _ ⟨f, hf, rfl⟩
   exact hS
-
 
 omit hψ hν hf in
 theorem isSchwartzBruhat_sch : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) →

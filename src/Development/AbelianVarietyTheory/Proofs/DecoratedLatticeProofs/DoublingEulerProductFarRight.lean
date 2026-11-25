@@ -64,8 +64,6 @@ noncomputable section
 
 namespace GlobalTheory.Core.Rk.HaarStep
 
-
-
 theorem integral_openOff_insert : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfDualC A L → ∀ (m : Measure (GA D A)), m.IsHaarMeasure → ∀ (Sf : Finset (FinPl D)) (v : FinPl D), v ∉ Sf → ∀ μ : Measure (Gv A v), μ.IsHaarMeasure → μ (stabLoc D.sp.cm.sig A.gram L v) = 1 → ∀ (S' : Finset (FinPl D)), (∀ u, u ∈ S' ↔ u = v ∨ u ∈ Sf) → ∀ F : GA D A → ℂ, IntegrableOn F (openOff A L S') m → ∫ g in openOff A L S', F g ∂m = ∫ x in openOff A L Sf, (∫ y, F (x * (emb D.sp.cm.sig A.gram v (proj D.sp.cm.sig A.gram v x))⁻¹ * emb D.sp.cm.sig A.gram v y) ∂μ) ∂m := by
   intro D A L hL m hm Sf v hv μ hμ hK S' hS' F hF
   haveI : Submodule.IsFullLattice D.host.E L := GlobalTheory.AdIsom.selfDual_isFullLattice hL
@@ -288,7 +286,7 @@ theorem setIntegral_openOff_union : GlobalTheory.Published.CuspRapidDecay → �
       rw [hx', map_mul, map_inv, proj_emb_self, mul_inv_cancel]
     have hxe : x = x' * emb D.sp.cm.sig A.gram v (proj D.sp.cm.sig A.gram v x) := by
       rw [hx', inv_mul_cancel_right]
-    have hc := GlobalTheory.T.petersson_coefficient_bounded_spherical_unramified hP D θ A cA LA hpair.setting.2.2.2.1 m hm Sf u₁ hu₁ u₂ hu₂ par hpar hsph v hvf x' hx1
+    have hc := GlobalTheory.Core.Rk.SphCoef.isSphCoef_rcoef hP D θ A cA LA hpair.setting.2.2.2.1 m hm Sf u₁ hu₁ u₂ hu₂ par hpar hsph v hvf x' hx1
     have hz := (hLZ A LA hU.sdA χB B.rank hpair.weil.hecT hpair.weil.resT v trivial
       (fun w hw => hU.unr w (by
         show ¬ (w.under (𝓞 D.host.F) ∈ (Sf : Set (FinPl D)))
@@ -439,7 +437,7 @@ theorem bounded_of_isParamFun (hP : GlobalTheory.Published.CuspRapidDecay) {D : 
       refine ⟨⟨Q, hQ.isPrime, fun hb => v.ne_bot ?_⟩, HeightOneSpectrum.ext e⟩
       rw [← e, hb, Ideal.under_bot]
     exact (congrFun ((hpar v hv w' hw').mem_fixed ⟨k, hk⟩) g).trans (by simp)
-  have hc := GlobalTheory.T.petersson_coefficient_bounded_spherical_unramified hP D θ A cA L hθ m hm Sf u hu u hu par hpar hs _ hv 1 (map_one _)
+  have hc := GlobalTheory.Core.Rk.SphCoef.isSphCoef_rcoef hP D θ A cA L hθ m hm Sf u hu u hu par hpar hs _ hv 1 (map_one _)
   have h1 : MemL2Quotient (GQ A) m u := memL2_of_cusp_form hP hθ (mem_cuspForms.1 hu).1
   have hpos := petersson_self_pos h1 (mem_cuspForms.1 hu).1.1.toIsAutFun.cont h0
   have hne : rcoef m u u (1 * emb D.sp.cm.sig A.gram (w.under (𝓞 D.host.F)) 1) ≠ 0 := by

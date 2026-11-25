@@ -301,7 +301,6 @@ end PositivityTheory.Rg.Sw.Glob.LocCell
 
 namespace PositivityTheory.Rg.Sw.Glob
 
-
 open LocCell in
 theorem lIcell_of (hAw : AwayAct) (hDA : DecompAway) (hU : UnipTau) (hAI : AwayIn) (hSF : SchFP) (hLN : LNe)
     (hLc : LIcont) (hLl : LIlaw) (hLv : LIvac) : LIcell := by
@@ -690,9 +689,6 @@ namespace PositivityTheory.Rg.Sw.Glob.RhoH
 
 variable {D : D7} {n : ℕ}
 
-
-
-
 theorem const_of_annS {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {τ : D.what₂.Tau}
     {s : D.what₂.Tau → Matrix (Fin V.rank) (Fin V.rank) ℂ} {ε : Fin V.rank → Bool} {fr : Matrix (Fin V.rank) (Fin V.rank) ℂ}
     (hfr : IsTauFrame V τ s ε fr) (hM : ∀ τ, (gramAt D V τ * s τ).IsHermitian) (l : D.what₂.Tau → ℝ)
@@ -767,9 +763,6 @@ noncomputable section
 
 namespace PositivityTheory.Rg.Sw.Glob.RhoH
 
-
-
-
 theorem annS_stable : ∀ (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.host.F) ℂ), IsCharAF D.host.F ψ →
     ∀ χ : (AE D)ˣ →* Circle, IsHeckeChar D χ → ResEta D χ V.rank → ∀ θ : InfFam D, IsInfFam θ →
     ∀ (μ : Measure (Mx D V.rank n)) (𝓕 : Set (Mx D V.rank n)), IsCovolOne (ratMx D V.rank n) μ 𝓕 →
@@ -794,8 +787,8 @@ theorem annS_stable : ∀ (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.hos
   have hkill1 : ∀ Z : Matrix (Fin V.rank) (Fin A.rank) ℂ,
       annih (heisO ψ₀ (dblSp A) V) θ τ (cplxO (s' τ) (s τ)) (Z * (dblDec A).qX.map (tauE D τ)) f = 0 := by
     intro Z
-    apply GlobalTheory.T.doubledPairThetaFunction_eq_zero_of_schrodinger_eq_zero D ψ₀ hstd A V μ 𝓕 hμ _ (GlobalTheory.StdUnn.isThetaFunO_annih_of_std (A := A) (B := V) (ν := μ) (𝓨 := 𝓕) hstd hθ hμ τ _ _ hf)
-    rw [GlobalTheory.T.annihilationOperator_schroedingerFunctions_doubledPair D ψ₀ hstd θ hθ A V μ 𝓕 hμ μ' hsk s' s hstd' hs l habs f hf τ Z, hfΦ]
+    apply GlobalTheory.Core.Rk.SchwInj.eq_zero_of_sch_eq_zero D ψ₀ hstd A V μ 𝓕 hμ _ (GlobalTheory.StdUnn.isThetaFunO_annih_of_std (A := A) (B := V) (ν := μ) (𝓨 := 𝓕) hstd hθ hμ τ _ _ hf)
+    rw [GlobalTheory.StdUnnAnnih.annih_sch D ψ₀ hstd θ hθ A V μ 𝓕 hμ μ' hsk s' s hstd' hs l habs f hf τ Z, hfΦ]
     exact hann Z
   have hkill : ∀ Y : Matrix (Fin V.rank) (Fin (dblSp A).rank) ℂ,
       annih (heisO ψ₀ (dblSp A) V) θ τ (cplxO (s' τ) (s τ)) Y f = 0 := by
@@ -825,7 +818,7 @@ theorem annS_stable : ∀ (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.hos
   have htk := htr (κ.symm k) f hf Φ hfΦ.symm
   rw [show κ (κ.symm k) = k from κ.apply_symm_apply k] at htk
   have hth' : IsThetaFunO ψ₀ (dblSp A) V (omh (κ.symm k, 1) f) := hdat.om_pres _ f hf
-  have e := GlobalTheory.T.annihilationOperator_schroedingerFunctions_doubledPair D ψ₀ hstd θ hθ A V μ 𝓕 hμ μ' hsk s' s hstd' hs l habs _ hth' τ X'
+  have e := GlobalTheory.StdUnnAnnih.annih_sch D ψ₀ hstd θ hθ A V μ 𝓕 hμ μ' hsk s' s hstd' hs l habs _ hth' τ X'
   rw [← hmove] at e
   have hs0 : sch ψ₀ A V μ 𝓕 (0 : WO (dblSp A) V → ℂ) = 0 := by
     have := (GlobalTheory.StdUnn.sch_linear D ψ₀ hstd A V μ 𝓕 hμ f f hf hf 0).2.2.2
@@ -855,9 +848,6 @@ open GlobalTheory.AdelicU GlobalTheory.StdUnn MvPolynomial
 open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 
 namespace PositivityTheory.Rg.Sw.Glob
-
-
-
 
 open RhoH in
 theorem lIkvac : LIkvac := by
@@ -1003,9 +993,6 @@ noncomputable section
 
 namespace PositivityTheory.Rg.Sw.Glob.RhoH
 
-
-
-
 theorem orbit_cont : ∀ (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.host.F) ℂ), IsCharAF D.host.F ψ →
     ∀ χ : (AE D)ˣ →* Circle, IsHeckeChar D χ → ResEta D χ V.rank → ∀ θ : InfFam D, IsInfFam θ →
     ∀ (μ : Measure (Mx D V.rank n)) (𝓕 : Set (Mx D V.rank n)), IsCovolOne (ratMx D V.rank n) μ 𝓕 →
@@ -1107,9 +1094,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 
 namespace PositivityTheory.Rg.Sw.Glob
 
-
-
-
 open RhoH in
 theorem lIrho : LIrho := by
   intro D n V ψ χ θ μ ω H l s ν τ ε fr ι hC hT L hL
@@ -1204,7 +1188,7 @@ theorem lIrho : LIrho := by
     show (phiS θ τ fr (cLoc l τ) (psi0 θ V n l s τ) R).1 ∈ fockA θ V n l s
     rw [phiS_val (hmem R).1]
     exact (hmem R).2
-  have hfd := GlobalTheory.T.fockVector_schrodingerModel_isKFinite D n V ψ hC.hψ χ hC.hχ hC.hη θ hC.hθ μ 𝓕 hμ ω hC.hω l hC.hl s hC.hs (jL P) (hjmem P)
+  have hfd := GlobalTheory.StdUnn.KFin.fock_kfinite D n V ψ hC.hψ χ hC.hχ hC.hη θ hC.hθ μ 𝓕 hμ ω hC.hω l hC.hl s hC.hs (jL P) (hjmem P)
   set S := Submodule.span ℂ {Ψ' : schwartzA θ V.rank n | ∃ k ∈ K D n, Ψ' = ω k (jL P)} with hS
   have hSstab : ∀ κ ∈ K D n, ∀ x ∈ S, ω κ x ∈ S := by
     intro κ hκ x hx

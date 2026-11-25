@@ -29,14 +29,12 @@ variable {F : Type} [Field F] [NumberField F]
 def IntAt (b : F) (v : HeightOneSpectrum (𝓞 F)) : Prop :=
   algebraMap F (A F) b v ∈ v.adicCompletionIntegers F
 
-
 open Classical in
 def idem (b : F) : A F :=
   ⟨fun v => if IntAt b v then 1 else 0, Filter.Eventually.of_forall fun v => by
     by_cases h : IntAt b v
     · simpa [h] using (v.adicCompletionIntegers F).one_mem
     · simpa [h] using (v.adicCompletionIntegers F).zero_mem⟩
-
 
 open Classical in
 def scale (b : F) : A F :=
@@ -45,7 +43,6 @@ def scale (b : F) : A F :=
       by_cases h : IntAt b v
       · simpa [h] using (v.adicCompletionIntegers F).one_mem
       · simpa [h] using ((v.adicCompletionIntegers F).mem_or_inv_mem _).resolve_left h⟩
-
 
 open Classical in
 def scaleInv (b : F) : A F :=
@@ -106,15 +103,6 @@ theorem scale_mem (b : F) : scale b ∈ Oh F := fun v => by
 
 theorem Oh_one : (1 : A F) ∈ Oh F := fun v => (v.adicCompletionIntegers F).one_mem
 
-theorem Oh_neg {x : A F} (hx : x ∈ Oh F) : -x ∈ Oh F := fun v =>
-  (v.adicCompletionIntegers F).neg_mem _ (hx v)
-
-theorem Oh_sub {x y : A F} (hx : x ∈ Oh F) (hy : y ∈ Oh F) : x - y ∈ Oh F := fun v =>
-  (v.adicCompletionIntegers F).sub_mem (hx v) (hy v)
-
-theorem Oh_mul {x y : A F} (hx : x ∈ Oh F) (hy : y ∈ Oh F) : x * y ∈ Oh F := fun v =>
-  (v.adicCompletionIntegers F).mul_mem _ _ (hx v) (hy v)
-
 theorem scale_mul_mem (b : F) : scale b * algebraMap F (A F) b ∈ Oh F := fun v => by
   rw [mul_at]
   by_cases h : IntAt b v
@@ -135,11 +123,11 @@ theorem image_scale (b : F) :
   ext x
   constructor
   · rintro ⟨o, ho, rfl⟩
-    refine ⟨Oh_mul (scale_mem b) ho, ?_⟩
+    refine ⟨GlobalTheory.CompanionTheory.SW.Core.Scale.mul_mem_Oh (scale_mem b) ho, ?_⟩
     have : algebraMap F (A F) b * (scale b * o) = (scale b * algebraMap F (A F) b) * o := by ring
     show algebraMap F (A F) b * (scale b * o) ∈ Oh F
     rw [this]
-    exact Oh_mul (scale_mul_mem b) ho
+    exact GlobalTheory.CompanionTheory.SW.Core.Scale.mul_mem_Oh (scale_mul_mem b) ho
   · rintro ⟨hx, hbx⟩
     refine ⟨scaleInv b * x, fun v => ?_, ?_⟩
     · rw [mul_at]
@@ -180,10 +168,10 @@ theorem iwasawa_w_n : ∀ (F : Type) [Field F] [NumberField F], ∀ b : F,
   refine ⟨(idem b - 1) * scale b, scaleUnit b, kMat b, ?_, ?_, image_scale b⟩
   · intro i j
     fin_cases i <;> fin_cases j
-    · exact Oh_sub (idem_mem b) Oh_one
+    · exact GlobalTheory.CompanionTheory.SW.Core.StdChar.sub_mem_Oh (idem_mem b) Oh_one
     · exact idem_mem b
-    · exact Oh_neg (scale_mem b)
-    · exact Oh_neg (scale_mul_mem b)
+    · exact GlobalTheory.CompanionTheory.SW.Core.Scale.neg_mem_Oh (scale_mem b)
+    · exact GlobalTheory.CompanionTheory.SW.Core.Scale.neg_mem_Oh (scale_mul_mem b)
   · exact w_n_eq _ (idem b) (scaleUnit b) (kMat b) rfl rfl rfl rfl (scale_combo b)
 
 end GlobalTheory.CompanionTheory.SW.Iwasawa

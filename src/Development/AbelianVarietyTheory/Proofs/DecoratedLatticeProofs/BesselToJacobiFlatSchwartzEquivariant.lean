@@ -20,8 +20,6 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow
 open scoped TensorProduct
 open GlobalTheory.Unf
 
-theorem _root_.GlobalTheory.T.besselToJacobiFlat_weilRepresentation_cores : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ : ℕ) (B : BesLev D ρ) (J : JacLev D ρ) (s : StepBF ψ B J) (om' : Om B.V₀ J.W), IsWeilDatumO ψ B.V₀ J.W s.χV s.χW om' → ∀ (Ψ : WO B.V J.W → ℂ), IsThetaFunO ψ B.V J.W Ψ → ∀ h₀, ∀ n ∈ radX J.d, ∀ h', flatBF s (s.om (embA B.d B.o h₀, n * J.d.emb0 h') Ψ) = s.om₀ (B.o.emb (h₀, 1), 1) (opA ψ J.d B.o B.ζ s.om₀ n h' (flatBF s Ψ)) := by
-  first | exact @GlobalTheory.Unf.FlatCommBF.flatBF_om
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselToJacobiFlatWeilRepresentationCoresStatement =====
@@ -60,7 +58,7 @@ theorem flatBF_levi (ψ : AddChar (AF D.host.F) ℂ) (ρ : ℕ) (B : BesLev D ρ
   have : BorelSpace (UX D ρ) := ⟨rfl⟩
   have := s.vU.unit.1
   funext w
-  have he := (GlobalTheory.T.doubleMixedModel_baseValue_equivariant D ψ ρ B J s om' hom Ψ hΨ).2
+  have he := (GlobalTheory.Unf.evalAt_xZero_yZero D ψ ρ B J s om' hom Ψ hΨ).2
   simp only [flatBF, flat, flatAt, flatFun, Pi.smul_apply, smul_eq_mul, he]
   rw [← integral_const_mul, ← integral_mul_left_eq_self _ γ]
   refine integral_congr_ae (Filter.Eventually.of_forall fun u => ?_)
@@ -75,7 +73,7 @@ theorem flatBF_equivariant : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ :
       s.om (1, J.d.levi γ) (s.om (embA B.d B.o h₀, J.d.nB b * J.d.nC c * J.d.emb0 h') Ψ) := by
     rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, one_mul, mul_assoc]
   rw [e, flatBF_levi ψ ρ B J s om' hom _ (s.weil.om_pres _ _ hΨ) ⟨γ, hγ⟩,
-    GlobalTheory.T.besselToJacobiFlat_weilRepresentation_cores D ψ ρ B J s om' hom Ψ hΨ h₀ _ hr h', psiFlag_levi_mul ψ J.d γ (radX_le_stabX J.d hr), opA, opA,
+    GlobalTheory.Unf.FlatCommBF.flatBF_om D ψ ρ B J s om' hom Ψ hΨ h₀ _ hr h', psiFlag_levi_mul ψ J.d γ (radX_le_stabX J.d hr), opA, opA,
     jacT_levi_mul ψ J.d B.V₀ _ (yZero_mul B.V₀ _ hγ)]
 
 end GlobalTheory.FlatEqui

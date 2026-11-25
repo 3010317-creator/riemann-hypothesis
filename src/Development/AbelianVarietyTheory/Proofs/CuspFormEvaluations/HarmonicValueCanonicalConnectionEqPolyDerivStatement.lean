@@ -287,8 +287,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.PullbackSections Formalism.L2.Pj Formalism.MainNotions.ModuliIntegralCharts.H1 GlobalTheory.AnVal
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.cubical_reading_one_analyticFrame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [Algebra c.F ℂ] (y : FrPt Xo c ℂ) (g : ℕ) (ty : Fin g → (E →+* ℂ)) (el : Fin g ≃ Lt1 Dw) (Φ : AnPt y g ty el), ∀ a b d : Fin g → ℂ, Φ.toAnFr.GenRd (thφ Xo.univ.t.G (x3 Xo.univ.t.G)) thε Xo.univ.t.cub.t (lift (Φ.e a) (lift (Φ.e b) (Φ.e d))).left (fun I => psumL 3 g I ![a, b, d]) 1 := by
-  first | exact @GlobalTheory.cubical_reading_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CubicalReadingOneAnalyticFrameStatement =====
@@ -456,7 +454,7 @@ theorem cub_jetRd (m : ℕ) :
   obtain ⟨hq, eq⟩ := jet_triple_points_eq_jet_exponentials Φ m _ _ _ _ _ _ (hj 0) (hj 1) (hj 2)
   rw [eq]
   refine GlobalTheory.AnValJetGlob.jetRd_pullGen _ _ _ _ g Φ.toAnFr 3 m _ _ _ _ _ _ _ hq fun v => ?_
-  have h := GlobalTheory.T.cubical_reading_one_analyticFrame E H Dw l Xo c y g ty el Φ (colsOf 3 g v 0) (colsOf 3 g v 1) (colsOf 3 g v 2)
+  have h := GlobalTheory.cubical_reading_one E H Dw l Xo c y g ty el Φ (colsOf 3 g v 0) (colsOf 3 g v 1) (colsOf 3 g v 2)
   have hv : ![colsOf 3 g v 0, colsOf 3 g v 1, colsOf 3 g v 2] = colsOf 3 g v := by
     funext i; fin_cases i <;> rfl
   rw [hv] at h
@@ -524,7 +522,7 @@ theorem first_partial_law : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have i3 := (alg _ _ _ _ _ _ _ _ _ _ h3 h3).2.1
   have m23 := (alg _ _ _ _ _ _ _ _ _ _ i2 i3).1
   have m123 := (alg _ _ _ _ _ _ _ _ _ _ h1 m23).1
-  refine GlobalTheory.T.corr_of_jets_of_analytic_frame_products _ _ _ _ g Φ.toAnFr hI 3 m _ _ _ _ _ _ _ _ _ _ h0 m123 ?_
+  refine GlobalTheory.AnVal.JetCorr.corr_of_jetRd _ _ _ _ g Φ.toAnFr hI 3 m _ _ _ _ _ _ _ _ _ _ h0 m123 ?_
   refine sameSum_of_jetMap Φ.toAnFr m _ _ _ _ (fun I : Finset (Fin 3) => psumL 3 g ⟨I⟩) (fun I => I.down)
     (Sum.elim (fun K => K.down.biUnion ![{0, 1}, {2}])
       (Sum.elim (fun K => K.down.biUnion ![{0}, {2}]) (fun K => K.down.biUnion ![{1}, {2}]))) h0.1 (fun k => ?_) ?_
@@ -784,13 +782,6 @@ theorem psumL_swap (g : ℕ) (I : ULift.{0} (Finset (Fin 2))) :
 theorem cε_swap (I : ULift.{0} (Finset (Fin 2))) : cε 2 (swapI I) = cε 2 I := by
   simp [cε, swapI, Equiv.finsetCongr_apply]
 
-theorem jetMap_unique {S : Scheme.{0}} {A : Over S} [GrpObj A] {L : RigLB A} {x0 : Sp ℂ ⟶ S} {g : ℕ}
-    (Φ : AnFr A L x0 g) {n m : ℕ} {ψ ψ' : Sp (Jet ℂ (Fin n × Fin g) m) ⟶ A.left}
-    {Λ : (Fin n → Fin g → ℂ) →ₗ[ℂ] (Fin g → ℂ)} (h : Φ.JetMap m ψ Λ) (h' : Φ.JetMap m ψ' Λ) : ψ = ψ' := by
-  obtain ⟨_, rfl⟩ := h
-  obtain ⟨_, rfl⟩ := h'
-  rfl
-
 theorem sy_trivial : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [Algebra c.F ℂ] [StarRing (𝓞 E)] (y : FrPt Xo c ℂ) (g : ℕ) (ty : Fin g → (E →+* ℂ)) (el : Fin g ≃ Lt1 Dw) (Φ : AnPt y g ty el), Φ.toAnFr.Imm → ∀ e : ∀ m, FrTy y g Φ.jx m, Φ.IsAnE e → ∀ m, ∃ u : (Jet ℂ (Fin 2 × Fin g) m)ˣ, (u : Jet ℂ (Fin 2 × Fin g) m) = psJet m (anFB ty).sy ∧ LB.Gen.Corr Xo.univ.t.PP.L _ _ _ _ (e m) (scaleGen _ _ (unitΓ u⁻¹) (pe y g Φ.jx e m ![fun j => MvPolynomial.X ((1 : Fin 2), j), fun j => MvPolynomial.X ((0 : Fin 2), j)])) := by
   intro E _ _ _ H Dw l Xo c _ _ y g ty el Φ hI e he m
   refine ⟨1, ?_, ?_⟩
@@ -805,13 +796,13 @@ theorem sy_trivial : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
       refine Eq.trans ?_ (jetN_coord m (Equiv.swap (0 : Fin 2) 1 i) j).symm
       show Ideal.Quotient.mk _ (MvPolynomial.aeval _ _) = _
       fin_cases i <;> simp) _ _ _ _ _ hR
-  have hC := GlobalTheory.T.corr_of_jets_of_analytic_frame_products _ Xo.univ.t.G Xo.univ.t.PP y.x g Φ.toAnFr hI 2 m _ _ _ _ _ _ _ _ _ _ hR hS (by
+  have hC := GlobalTheory.AnVal.JetCorr.corr_of_jetRd _ Xo.univ.t.G Xo.univ.t.PP y.x g Φ.toAnFr hI 2 m _ _ _ _ _ _ _ _ _ _ hR hS (by
     intro ψ
     refine (Fintype.sum_equiv swapI _ _ fun I => ?_).symm
     have h1 := hS.1 I
     beta_reduce at h1 ⊢
     rw [psumL_swap] at h1
-    rw [jetMap_unique _ h1 (hR.1 (swapI I)), cε_swap])
+    rw [GlobalTheory.AnValAd.jetMap_unique _ h1 (hR.1 (swapI I)), cε_swap])
   intro j j' h1 h2 h3
   refine (hC j j' h1 h2 h3).trans ?_
   congr 1
@@ -840,24 +831,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.PullbackSections Formalism.L2.Pj Formalism.MainNotions.ModuliIntegralCharts.H1 GlobalTheory.AnVal
 open ReciprocityTheory.ChartRestriction.G.TB.ValAt
 open scoped ContDiff
-
-theorem jetN_coord {n g : ℕ} (m : ℕ) (a : ℂ) (i : Fin n) (j : Fin g) :
-    jetN m (fun w : Fin n → Fin g → ℂ => a * w i j) =
-      Ideal.Quotient.mk _ (MvPolynomial.C a * MvPolynomial.X (i, j)) := by
-  have h1 : jetOf m (fun v : Fin (n * g) → ℂ => v (finProdFinEquiv (i, j))) =
-      Ideal.Quotient.mk _ (MvPolynomial.X ((0 : Fin 1), finProdFinEquiv (i, j))) := by
-    rw [jetOf, _root_.GlobalTheory.JetLinSub.tay_coord, psJet, FBIdJet.psTrunc_eq, ← MvPolynomial.coe_X, FBIdJet.mk_trunc_coe]
-  have h2 := jetOf_mul m (f := fun _ : Fin (n * g) → ℂ => a) (h := fun v => v (finProdFinEquiv (i, j)))
-    contDiffAt_const (contDiff_apply ℂ (fun _ => ℂ) _).contDiffAt
-  rw [jetOf_const, h1] at h2
-  have h3 : jetN m (fun w : Fin n → Fin g → ℂ => a * w i j) = renN n g m (jetOf m
-    ((fun _ : Fin (n * g) → ℂ => a) * fun v => v (finProdFinEquiv (i, j)))) := rfl
-  have h4 : renN n g m (Ideal.Quotient.mk _ (MvPolynomial.X ((0 : Fin 1), finProdFinEquiv (i, j)))) =
-      Ideal.Quotient.mk _ (MvPolynomial.X (i, j)) := by
-    show Ideal.Quotient.mk _ (MvPolynomial.aeval _ _) = _
-    rw [MvPolynomial.aeval_X, Equiv.symm_apply_apply]
-  rw [h3, h2, map_mul, AlgHom.commutes, map_mul, h4, ← MvPolynomial.algebraMap_eq]
-  rfl
 
 theorem jetSubstP_X {κ κ' : Type} [Fintype κ] [DecidableEq κ] (m : ℕ) (sb : κ → MvPolynomial κ' ℂ) (p : κ) :
     (jetSubstP m sb : Jet ℂ κ m →ₐ[ℂ] Jet ℂ κ' m) (psJet m (MvPowerSeries.X p)) =
@@ -1032,11 +1005,11 @@ theorem jetRd_pe (e : ∀ m, FrTy y g Φ.jx m) (he : Φ.IsAnE e) (m : ℕ) :
   obtain ⟨i, j⟩ := p
   rw [jetSubstP_X]
   fin_cases i
-  · have := jetN_coord (n := 1) m 1 0 j
+  · have := GlobalTheory.AnValAd.jetN_coord (n := 1) m 1 0 j
     simp only [_root_.one_mul, map_one] at this
     refine Eq.trans ?_ this.symm
     simp
-  · refine Eq.trans ?_ (jetN_coord (n := 1) m (ty j (H.w0 : E)) 0 j).symm
+  · refine Eq.trans ?_ (GlobalTheory.AnValAd.jetN_coord (n := 1) m (ty j (H.w0 : E)) 0 j).symm
     have hr : psIn g m ![0] ((anFB ty).A.act H.w0 j) = psTrunc m (linAct ty H.w0 j) := by
       have : (fun p : Fin 1 × Fin g => ((![0] : Fin 1 → Fin 1) p.1, p.2)) = id := by
         funext p
@@ -1165,7 +1138,7 @@ theorem isGerm_tay_of_rd (e : ∀ m, FrTy y g Φ.jx m) (he : Φ.IsAnE e) (wP : P
   simp only [IsGerm]
   intro m
   have hJ : Φ.toAnFr.JetMap (n := 1) m (Φ.jx m).left (LinearMap.proj 0) :=
-    (GlobalTheory.T.cmFrame_jetPoints_are_exponential_jets E H Dw l Xo c y g ty el Φ 1 m).2.2.2.2
+    (GlobalTheory.AnVal.jetPts_jetMap E H Dw l Xo c y g ty el Φ 1 m).2.2.2.2
   obtain ⟨τ, -, hτ⟩ := GlobalTheory.T.exists_generator_jet_reading _ _ _ _ _ Φ.toAnFr 1 m (Fin 1) (fun _ => (Φ.jx m).left) (fun _ => (k : ℤ))
     (fun _ => LinearMap.proj 0) (fun _ => hJ)
   obtain ⟨F', hpull, hval⟩ := _root_.GlobalTheory.JetVal.isValueAt_jetPt E H Dw l Xo c y g ty el Φ m k F θ τ hF hτ
@@ -1198,7 +1171,7 @@ theorem rename_cast_refl {g : ℕ} (f : MvPowerSeries (Fin 1 × Fin g) ℂ) :
 theorem exists_analytic_chart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [Algebra c.F ℂ] [StarRing (𝓞 E)] (y : FrPt Xo c ℂ) (g : ℕ) (ty : Fin g → (E →+* ℂ)) (el : Fin g ≃ Lt1 Dw) (Φ : AnPt y g ty el), (∀ a : 𝓞 E, star a = H.bar a) → ∃ (C : ChartAt Xo c y) (hd : C.d = g), C.h = 0 ∧ (∀ i, C.B.G.F i = (MvPowerSeries.X (R := ℂ) ((0 : Fin 2), i) + MvPowerSeries.X (R := ℂ) ((1 : Fin 2), i))) ∧ (∀ (ℓ : Lt1 Dw) (i' : Fin C.d), C.uvec ℓ i' = if Fin.cast hd i' = el.symm ℓ then 1 else 0) ∧ ∀ (k : ℕ) (F : LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L k (ptO Xo y.x))) (θ : (Fin g → ℂ) → ℂ), Φ.toAnFr.Rd k F θ → IsGerm y C.d C.x C.B.A.act C.e C.wP k F (MvPowerSeries.rename (fun p : Fin 1 × Fin g => (p.1, Fin.cast hd.symm p.2)) (tay θ 0)) := by
   intro E _ _ _ H Dw l Xo c _ _ y g ty el Φ hst
   obtain ⟨e, he⟩ := GlobalTheory.T.exists_analyticFrame_jetPair_isAnE E H Dw l Xo c y g ty el Φ
-  obtain ⟨wP, hw⟩ := (GlobalTheory.T.exists_normalisedIso_reading_one_analyticFrame E H Dw l Xo c y g ty el Φ).1
+  obtain ⟨wP, hw⟩ := (GlobalTheory.AnVal.PrimRd.prim_reading E H Dw l Xo c y g ty el Φ).1
   refine ⟨AnPt.chartOf Φ hst e he wP hw, rfl, rfl, ?_, ?_, ?_⟩
   · intro i
     first

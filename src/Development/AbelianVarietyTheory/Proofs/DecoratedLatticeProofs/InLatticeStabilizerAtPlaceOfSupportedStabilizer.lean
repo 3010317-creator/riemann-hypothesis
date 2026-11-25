@@ -24,9 +24,6 @@ theorem evalV_sv_same (v : Pl D) : evalV D.host.F v (singleV D.host.F v 1) = 1 :
 theorem evalV_sv_ne {v w : Pl D} (h : w ≠ v) : evalV D.host.F w (singleV D.host.F v 1) = 0 :=
   GlobalTheory.SplitIdem.evalV_singleV_ne _ _ _ h
 
-theorem intAf_mul {a b : Af D.host.F} (ha : a ∈ intAf D.host.F) (hb : b ∈ intAf D.host.F) :
-    a * b ∈ intAf D.host.F := fun w => by rw [map_mul]; exact mul_mem (ha w) (hb w)
-
 theorem sv_int (v : Pl D) : singleV D.host.F v 1 ∈ intAf D.host.F := fun w => by
   by_cases h : w = v
   · subst h; rw [evalV_sv_same]; exact one_mem _
@@ -80,7 +77,7 @@ theorem latHat_smul {n : ℕ} (Ls : Set (Fin n → D.host.E)) {t : Af D.host.F} 
   induction hy using AddSubgroup.closure_induction with
   | mem y hy =>
     obtain ⟨a, ha, x, hx, rfl⟩ := hy
-    refine AddSubgroup.subset_closure ⟨t * a, intAf_mul ht ha, x, hx, ?_⟩
+    refine AddSubgroup.subset_closure ⟨t * a, Formalism.IndefR.Fin.intAf_mul ht ha, x, hx, ?_⟩
     funext i
     rw [Pi.smul_apply, smul_eq_mul, Algebra.TensorProduct.tmul_mul_tmul, one_mul]
   | zero => rw [smul_zero]; exact zero_mem _
@@ -95,7 +92,7 @@ theorem exists_lift_latV (S : HSp D) (L : Lat S) (v : Pl D) {z : Fin S.rank → 
   | mem z hz =>
     obtain ⟨a, ha, x, hx, rfl⟩ := hz
     refine ⟨fun i => pairA D.host.F 0 (singleV D.host.F v 1 * a) ⊗ₜ[D.host.F] (1 * x i),
-      AddSubgroup.subset_closure ⟨_, intAf_mul (sv_int v) ha, fun w hw => ?_, 1, rfl, x, hx, rfl⟩,
+      AddSubgroup.subset_closure ⟨_, Formalism.IndefR.Fin.intAf_mul (sv_int v) ha, fun w hw => ?_, 1, rfl, x, hx, rfl⟩,
       fun i => _root_.GlobalTheory.LatVac.infPart_pair _ _, fun i => ?_⟩
     · rw [map_mul, evalV_sv_ne hw, zero_mul]
     · rw [_root_.GlobalTheory.LatVac.finPart_pair, one_mul, Algebra.TensorProduct.tmul_mul_tmul, one_mul]
@@ -154,8 +151,6 @@ end GlobalTheory.KStabBridge
 namespace GlobalTheory.KStabBridge
 open scoped Matrix
 variable {D : D7}
-
-
 
 theorem keeps_of_core (v : Pl D) {n : ℕ} (Ls : Set (Fin n → D.host.E))
     (M : Matrix (Fin n) (Fin n) (Af D.host.F ⊗[D.host.F] D.host.E))
@@ -217,8 +212,6 @@ theorem mem_latHat_iff_lift (S : HSp D) (L : Lat S) (v : Pl D) (z : Fin S.rank �
     have := fin_mem_latHat S L _ hy
     convert this using 1
     funext i; exact (h2 i).symm
-
-
 
 theorem inStabAt_of_inK (D : D7) (S : HSp D) (L : Lat S) (v : Pl D) (κ : GA D S) (_hL : IsSelfDualC S L)
     (hκ : InK S L (· = v) κ) : GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter.InStabAt S L v κ := by

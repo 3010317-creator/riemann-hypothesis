@@ -75,7 +75,6 @@ section -- clump:auto
 local notation:max "MultilinearMap" R:max M:max N:max =>
   _root_.MultilinearMap (RingHom.id R) M N
 
-
 theorem _root_.GlobalTheory.T.finiteDimensional_span_multilinear_values' : ∀ {ι : Type} [Fintype ι] (E : ι → Type) [∀ i, AddCommGroup (E i)] [∀ i, Module ℂ (E i)] (F : Type) [AddCommGroup F] [Module ℂ F] (T : MultilinearMap ℂ E F) (W : ∀ i, Submodule ℂ (E i)), (∀ i, FiniteDimensional ℂ (W i)) → FiniteDimensional ℂ (Submodule.span ℂ {f | ∃ v : ∀ i, E i, (∀ i, v i ∈ W i) ∧ f = T v}) := by
   intro ι _ E _ _ F _ _ T W hW
   letI : ∀ i, FiniteDimensional ℂ (W i) := hW
@@ -194,8 +193,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum
 open scoped TensorProduct InnerProductSpace ComplexConjugate
 
-theorem _root_.GlobalTheory.T.multiplicity_map_right_translate_real_point : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (J : Set (GA D V)) (χ : GA D V → ℂ) (T : MMap M), IsMultMap θ M J χ T → ∀ k ∈ GinfC V, ∀ v : M.Vec, ∃ v' : M.Vec, (∀ τ, (v' τ : M.H τ) = M.rep τ (infMat D.sp.cm.sig V.gram (θ τ) k) (v τ)) ∧ ∀ x, T v (x * k) = T v' x := by
-  first | exact @GlobalTheory.RealPointMove.translate_eq_move
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MultiplicityMapRightTranslateRealPointStatement =====
@@ -297,7 +294,7 @@ theorem isKFinite_value (θ : InfFam D) (hθ : IsInfFam θ) (M : DSModel V S) (h
     exact Subtype.ext (Subtype.ext (congrArg (fun z : W τ => (z : M.H τ)) h))
   have hfd := GlobalTheory.T.finiteDimensional_span_multilinear_values' (fun τ => M.sm τ) (GA D V → ℂ) T W' hW'
   refine GlobalTheory.Doubling.isKFinite_iff.2 ⟨_, hfd, fun k hk => ?_⟩
-  obtain ⟨v', hv', hx⟩ := GlobalTheory.T.multiplicity_map_right_translate_real_point D θ hθ V S M J χ T hT k (GlobalTheory.Cusp.Kinf_le hk) v
+  obtain ⟨v', hv', hx⟩ := GlobalTheory.RealPointMove.translate_eq_move D θ hθ V S M J χ T hT k (GlobalTheory.Cusp.Kinf_le hk) v
   have e : (fun g => T v (g * k)) = T v' := funext hx
   rw [e]
   refine Submodule.subset_span ⟨v', fun τ => ?_, rfl⟩

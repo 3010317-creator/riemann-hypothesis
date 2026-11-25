@@ -132,22 +132,16 @@ theorem exists_charts {R S : Type} [CommRing R] [IsLocalRing R] [CommRing S] {G�
   rw [e1, ← heφ, ← Category.assoc, ← Over.comp_left, Category.assoc, e.inv_hom_id, Category.comp_id]
   exact hc c
 
-theorem sp_comp {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''] (f : R' →+* R'')
-    (g : R →+* R') : spMap f ≫ spMap g = spMap (f.comp g) := by
-  unfold spMap
-  rw [← Spec.map_comp]
-  rfl
-
 theorem dual_alg {S T : Type} [CommRing S] [CommRing T] (ψ : S →+* T) :
     spMap (Formalism.L2.Pj.dualMap ψ) ≫ spMap (algebraMap S (DualNumber S)) =
       spMap (algebraMap T (DualNumber T)) ≫ spMap ψ := by
-  rw [sp_comp, sp_comp]
+  rw [GlobalTheory.Frames.ChgBC.spMap_comp_ring, GlobalTheory.Frames.ChgBC.spMap_comp_ring]
   congr 1
   ext s <;> simp [Formalism.L2.Pj.dualMap, TrivSqZeroExt.algebraMap_eq_inl]
 
 theorem dual_comp {R S T : Type} [CommRing R] [CommRing S] [CommRing T] (f : S →+* T) (g : R →+* S) :
     spMap (Formalism.L2.Pj.dualMap f) ≫ spMap (Formalism.L2.Pj.dualMap g) = spMap (Formalism.L2.Pj.dualMap (f.comp g)) := by
-  rw [sp_comp]
+  rw [GlobalTheory.Frames.ChgBC.spMap_comp_ring]
   congr 1
   refine RingHom.ext fun s => ?_
   ext <;> simp [Formalism.L2.Pj.dualMap]

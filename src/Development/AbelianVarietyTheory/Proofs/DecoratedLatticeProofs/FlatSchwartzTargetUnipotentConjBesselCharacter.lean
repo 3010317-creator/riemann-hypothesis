@@ -21,8 +21,6 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow
 open scoped TensorProduct
 open GlobalTheory.Unf GlobalTheory.Unf.FB
 
-theorem _root_.GlobalTheory.T.doubleMixedModel_valueAtZero_equivariant : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (J : JacLev D (σ + 1)) (B : BesLev D σ) (s : StepFB ψ J B), ∀ (Ψ : WO J.W B.V → ℂ), IsThetaFunO ψ J.W B.V Ψ → ∀ (g : GA D J.W₀), ∀ n ∈ flagN B.d, ∀ (h : GA D B.A) (x : Mx D B.V.rank (σ + 1)), evalAt ψ J.d B.d s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 (s.om (J.d.emb0 g, n * embA B.d B.o h) Ψ) x 0 = s.om₀ (g, B.o.emb (h, 1)) (evalAt ψ J.d B.d s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 Ψ (mt B.V (n * embA B.d B.o h)⁻¹ ⬝ x) 0) := by
-  first | exact @GlobalTheory.Unf.FB.evalAt_zero_equivariant
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleMixedModelValueAtZeroEquivariantStatement =====
@@ -56,7 +54,7 @@ theorem psiUni_mul_of_mem (ψ : AddChar (AF D.host.F) ℂ) {S S₀ : HSp D} {ρ 
 
 theorem flatFB_flagN : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (J : JacLev D (σ + 1)) (B : BesLev D σ) (s : StepFB ψ J B), ∀ (Ψ : WO J.W B.V → ℂ), IsThetaFunO ψ J.W B.V Ψ → ∀ n ∈ flagN B.d, flatFB s (s.om (1, n) Ψ) = star (psiBes ψ B.d 1 (vecB B.o B.ζ) n) • flatFB s Ψ := by
   intro D hD ψ σ J B s Ψ hΨ n hn
-  obtain ⟨γ, hγ, hnγ⟩ := ((GlobalTheory.T.mem_besGrp_iff_mt_mul_x0_eq_x0_mul D σ B).1 n).1 (Subgroup.mem_sup_left hn)
+  obtain ⟨γ, hγ, hnγ⟩ := ((GlobalTheory.Unf.FB.besselGroup_action_fourierBesselBasePoint D σ B).1 n).1 (Subgroup.mem_sup_left hn)
   have hψ : psiBes ψ B.d 1 (vecB B.o B.ζ) n = psiUni ψ γ :=
     (GlobalTheory.T.flagUnipotentRadical_surjects_unitriangular_characters_agree D σ B).2 ψ n hn 1 ⟨γ, hγ⟩ (by rw [map_one, mul_one]; exact hnγ)
   have h1 : mt B.V n⁻¹ ⬝ (x0 B ⬝ γ.1) = x0 B := by
@@ -64,7 +62,7 @@ theorem flatFB_flagN : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D.host.
   have hev : ∀ M : Mx D B.V.rank (σ + 1), evalAt ψ J.d B.d s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 (s.om (1, n) Ψ) M 0 =
       evalAt ψ J.d B.d s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 Ψ (mt B.V n⁻¹ ⬝ M) 0 := by
     intro M
-    have := GlobalTheory.T.doubleMixedModel_valueAtZero_equivariant D hD ψ σ J B s Ψ hΨ 1 n hn 1 M
+    have := GlobalTheory.Unf.FB.evalAt_zero_equivariant D hD ψ σ J B s Ψ hΨ 1 n hn 1 M
     simp only [map_one, mul_one] at this
     rw [this, ← Prod.one_eq_mk, map_one, ← Prod.one_eq_mk, map_one, Module.End.one_apply]
   have : BorelSpace (UX D (σ + 1)) := ⟨rfl⟩
