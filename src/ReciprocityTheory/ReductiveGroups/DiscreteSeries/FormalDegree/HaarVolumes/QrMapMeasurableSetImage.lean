@@ -83,11 +83,8 @@ lemma qrA_inv_tri {R : Matrix (Fin N) (Fin N) ℂ} (hR : R.IsUpperTriangular) (h
   exact Matrix.blockTriangular_inv_of_blockTriangular hR
 
 lemma qrA_upMat_cancel {A B : Matrix (Fin N) (Fin N) ℂ} {R : Matrix (Fin N) (Fin N) ℂ} (hd : R.det ≠ 0)
-    (h : A * R = B * R) : A = B := by
-  have hu : IsUnit R.det := isUnit_iff_ne_zero.2 hd
-  calc A = A * R * R⁻¹ := by rw [Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hu, Matrix.mul_one]
-    _ = B * R * R⁻¹ := by rw [h]
-    _ = B := by rw [Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hu, Matrix.mul_one]
+    (h : A * R = B * R) : A = B :=
+  ((Matrix.isUnit_iff_isUnit_det R).2 (isUnit_iff_ne_zero.2 hd)).mul_right_cancel h
 
 lemma qrA_tri_unique {U R R' : Matrix (Fin N) (Fin N) ℂ} {t t' : TriCo N} (ht : t ∈ triPos N)
     (ht' : t' ∈ triPos N) (hR : R = upMat t) (hR' : R' = upMat t')
@@ -282,11 +279,7 @@ theorem qrMap_image :
   · rintro ⟨⟨k, t⟩, ⟨-, ht⟩, rfl⟩
     show (toM k * upMat t).det ≠ 0
     rw [Matrix.det_mul]
-    refine mul_ne_zero ?_ (qrA_upMat_det_ne t ht)
-    intro h0
-    have e := congrArg Matrix.det (qrA_unitary k)
-    rw [Matrix.det_mul, h0, mul_zero, Matrix.det_one] at e
-    exact zero_ne_one e
+    exact mul_ne_zero (Matrix.det_ne_zero_of_left_inverse (qrA_unitary k)) (qrA_upMat_det_ne t ht)
   · intro hZ
     obtain ⟨Q, t, hQ, ht, hQt⟩ := qrA_exists (Matrix.of Z) hZ
     refine ⟨(⟨⟨Q, Qᴴ, mul_eq_one_comm.1 hQ, hQ⟩, ?_⟩, t), ⟨Set.mem_univ _, ht⟩, ?_⟩
