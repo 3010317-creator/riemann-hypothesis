@@ -66,12 +66,7 @@ theorem curveUnit_unit_gen [Fintype ι]
       (fun Z => phiZ X la N (Ω Z) (gF Z) w) hInj hone fun Z => ?_
     refine LocalUnitReduction.mem_sup_ker (Jid X la w) (R := fun Z => RZs X la N (Ω Z) (gF Z) w)
       (fun Z => phiZ X la N (Ω Z) (gF Z) w) (hloc Z) ?_
-    obtain ⟨v, hv⟩ := hu Z
-    have h1 : phiZ X la N (Ω Z) (gF Z) w (b * u) ∈
-        Ideal.map (phiZ X la N (Ω Z) (gF Z) w) (Jid X la w) := Ideal.mem_map_of_mem _ hb
-    rw [map_mul, ← hv] at h1
-    have h2 := Ideal.mul_mem_right (↑v⁻¹ : RZs X la N (Ω Z) (gF Z) w) _ h1
-    rwa [mul_assoc, Units.mul_inv, mul_one] at h2
+    exact (Ideal.mul_unit_mem_iff_mem _ (hu Z)).1 (by rw [← map_mul]; exact Ideal.mem_map_of_mem _ hb)
   have hinj : Function.Injective (LinearMap.mulRight (Kp X la N) (toOsK X la w u)) := by
     rw [injective_iff_map_eq_zero]
     intro y hy
