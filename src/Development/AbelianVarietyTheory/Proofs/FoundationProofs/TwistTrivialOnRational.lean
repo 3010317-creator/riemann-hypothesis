@@ -360,10 +360,11 @@ abbrev mv (T : Top D) (j : ℕ) (γ : LaMod (T.Q.Dw j) T.Q.l ≃ₗ[𝓞 D.host.
 
 set_option synthInstance.maxHeartbeats 400000 in
 set_option maxHeartbeats 1000000 in
-theorem exists_const (T : Full D) (hT : LawsFull T) (hj : InR D j) (hxi : TwistTrivialOnRational T j) (hw : D.R.r ≤ w.n)
+theorem exists_const_int {D : D7} (T : Full D) (hT : LawsFull T) {j : ℕ} (hj : InR D j) (hxi : TwistTrivialOnRational T j)
+    {w : WeightFamilies.Wt D j} (hw : D.R.r ≤ w.n)
     (γ : LaMod (T.Q.Dw j) T.Q.l ≃ₗ[𝓞 D.host.E] LaMod (T.Q.Dw j) T.Q.l) :
-    ∃ u : T.Q.c.F, u ≠ 0 ∧ ∀ Λ N P x x' f f', GoodDatum T.toTop j w Λ N P → IsRightMul γ x' x →
-      IsSeries T.toTop j w Λ N P x f → IsSeries T.toTop j w Λ N P x' f' → mv T.toTop j γ f = u • f' := by
+    ∃ u : 𝓞 T.Q.c.F, (u : T.Q.c.F) ≠ 0 ∧ ∀ Λ N P x x' f f', GoodDatum T.toTop j w Λ N P → IsRightMul γ x' x →
+      IsSeries T.toTop j w Λ N P x f → IsSeries T.toTop j w Λ N P x' f' → mv T.toTop j γ f = (u : T.Q.c.F) • f' := by
   have hC := GlobalTheory.chartIndependence_unconditional
   have hL := GlobalTheory.firstFiveLaws.1
   have hpq := rank_eq hT.p.pins hj
@@ -376,7 +377,7 @@ theorem exists_const (T : Full D) (hT : LawsFull T) (hj : InR D j) (hxi : TwistT
   have hTot := hT.sh.shTot j hj (wtA w) w.n (dom_wtA w)
   obtain ⟨g, hν, hγ, hg⟩ := _root_.GlobalTheory.LevelIsometry.exists_isometry_inducing _ _ (T.Q.Dw j) T.Q.l γ
   obtain ⟨ρ₂, hρ₂⟩ := GlobalTheory.LevelActionLaws.exists_levAut hpq (T.dδ j w.n).Xo₂ g (by rw [hν, sub_self]; exact dvd_zero _)
-  obtain ⟨u, hu, hcd⟩ := exists_root T hT hj hxi hw g hν ρ₂ hρ₂
+  obtain ⟨u, hu, hcd⟩ := GlobalTheory.ShortMove.exists_root T hT hj hxi hw g hν ρ₂ hρ₂
   refine ⟨u, hu, fun Λ N P x0 x0' f f' hG hx hf hf' => ?_⟩
   suffices key : IsSeries T.toTop j w Λ N P x0' ((u : T.Q.c.F)⁻¹ • mv T.toTop j γ f) by
     rw [← key.unique hT.sh hj hG hf', smul_inv_smul₀ hu]
@@ -448,12 +449,12 @@ theorem mv_series (T : Full D) (hT : LawsFull T) (hj : InR D j) (hxi : TwistTriv
     {γ : LaMod (T.Q.Dw j) T.Q.l ≃ₗ[𝓞 D.host.E] LaMod (T.Q.Dw j) T.Q.l} (hγ : DetOne γ) {Λ N P x x' f f'}
     (hG : GoodDatum T.toTop j w Λ N P) (hx : IsRightMul γ x' x) (hf : IsSeries T.toTop j w Λ N P x f)
     (hf' : IsSeries T.toTop j w Λ N P x' f') : mv T.toTop j γ f = f' := by
-  choose u hu0 hu using exists_const (w := w) T hT hj hxi hw
+  choose u hu0 hu using exists_const_int (w := w) T hT hj hxi hw
   rw [hu γ _ _ _ _ _ _ _ hG hx hf hf']
   by_cases h0 : f' = 0
   · rw [h0, smul_zero]
   have hAct := _root_.GlobalTheory.FullLevelAction.actLev_levFull D T.Q j (rank_eq hT.p.pins hj) hT.p.pins.2.1.2
-  have hmul : ∀ a b, u (a * b) = u a * u b := fun a b => by
+  have hmul : ∀ a b, (u (a * b) : T.Q.c.F) = (u a : T.Q.c.F) * u b := fun a b => by
     obtain ⟨x₁, r₁, a₁⟩ := exists_rightMul a hf'.1
     obtain ⟨x₂, r₂, a₂⟩ := exists_rightMul b a₁
     obtain ⟨f₁, s₁⟩ := exists_isSeries hT.sh hj hG a₁
@@ -464,8 +465,8 @@ theorem mv_series (T : Full D) (hT : LawsFull T) (hj : InR D j) (hxi : TwistTriv
       hu _ _ _ _ _ _ _ _ hG r₁ s₁ hf', smul_smul, mul_comm] at e
     exact smul_left_injective _ h0 e
   have h1 := char_eq_one_of_detOne (not_three_dvd_level hT.p)
-    (MonoidHom.mk' (fun a => Units.mk0 (u a) (hu0 a)) fun a b => Units.ext (hmul a b)) hγ
-  rw [show u γ = 1 from congrArg Units.val h1, one_smul]
+    (MonoidHom.mk' (fun a => Units.mk0 (u a : T.Q.c.F) (hu0 a)) fun a b => Units.ext (hmul a b)) hγ
+  rw [show (u γ : T.Q.c.F) = 1 from congrArg Units.val h1, one_smul]
 
 end Move
 
