@@ -210,9 +210,7 @@ private theorem grEx_gen {σ : Type} [Fintype σ] [DecidableEq σ] (n : σ → �
 theorem UpperTheory.V.AlgebraTools.exists_groupRing_surj :
     ∀ (Λ : Type) [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] [IsAdicComplete (IsLocalRing.maximalIdeal Λ) Λ] (l : ℕ), l.Prime → (l : Λ) ∈ IsLocalRing.maximalIdeal Λ → ∀ (σ : Type) [Fintype σ] [DecidableEq σ] (e : σ → ℕ),
       ∃ φ : MvPowerSeries σ Λ →ₐ[Λ] MonoidAlgebra Λ (∀ s, Multiplicative (ZMod (l ^ e s))), (∀ s : σ, φ (1 + MvPowerSeries.X s) = MonoidAlgebra.of Λ (∀ s, Multiplicative (ZMod (l ^ e s))) (Pi.mulSingle s (Multiplicative.ofAdd (1 : ZMod (l ^ e s))))) ∧ Function.Surjective φ ∧
-        IsLocalRing (MonoidAlgebra Λ (∀ s, Multiplicative (ZMod (l ^ e s)))) ∧
-        (Ideal.span (Set.range (MvPowerSeries.X : σ → MvPowerSeries σ Λ))).map φ =
-          RingHom.ker (MonoidAlgebra.lift Λ Λ (∀ s, Multiplicative (ZMod (l ^ e s))) 1) := by
+        IsLocalRing (MonoidAlgebra Λ (∀ s, Multiplicative (ZMod (l ^ e s)))) := by
   intro Λ _ _ _ _ l hl hlm σ _ _ e
   haveI : Fact l.Prime := ⟨hl⟩
   haveI hNZ : ∀ s, NeZero (l ^ e s) := fun s => ⟨pow_ne_zero _ hl.ne_zero⟩
@@ -267,34 +265,7 @@ theorem UpperTheory.V.AlgebraTools.exists_groupRing_surj :
     | of g => exact hofrange g
     | add f g hf hg => exact Subalgebra.add_mem _ hf hg
     | smul r f hf => exact Subalgebra.smul_mem _ hf r
-  refine ⟨φ, hφ1, hsurj, hloc, ?_⟩
-  have hker := (UpperTheory.V.CF.augKer Λ (∀ s, Multiplicative (ZMod (l ^ e s)))).1
-  change _ = RingHom.ker (UpperTheory.V.CF.aug Λ _)
-  rw [hker, Ideal.map_span, ← Set.range_comp]
-  apply le_antisymm
-  · rw [Ideal.span_le]
-    rintro _ ⟨s, rfl⟩
-    apply Ideal.subset_span
-    exact ⟨Pi.mulSingle s (Multiplicative.ofAdd (1 : ZMod (l ^ e s))), (hφX s).symm⟩
-  · rw [UpperTheory.V.CF.augIdeal, Ideal.span_le]
-    rintro _ ⟨g, rfl⟩
-    set J := Ideal.span (Set.range (⇑φ ∘ MvPowerSeries.X))
-    let S : Submonoid (∀ s, Multiplicative (ZMod (l ^ e s))) :=
-      { carrier := {g | MonoidAlgebra.of Λ _ g - 1 ∈ J}
-        mul_mem' := by
-          intro a b ha hb
-          simp only [Set.mem_setOf_eq, map_mul] at *
-          have : MonoidAlgebra.of Λ _ a * MonoidAlgebra.of Λ _ b - 1 =
-              (MonoidAlgebra.of Λ _ a - 1) * MonoidAlgebra.of Λ _ b + (MonoidAlgebra.of Λ _ b - 1) := by ring
-          rw [this]
-          exact J.add_mem (J.mul_mem_right _ ha) hb
-        one_mem' := by
-          simp only [Set.mem_setOf_eq, map_one, sub_self]
-          exact J.zero_mem }
-    refine grEx_gen (fun s => l ^ e s) S (fun s => ?_) g
-    show gen s - 1 ∈ J
-    rw [← hφX]
-    exact Ideal.subset_span ⟨s, rfl⟩
+  exact ⟨φ, hφ1, hsurj, hloc⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.ExistsGroupRingSurj =====
@@ -618,7 +589,7 @@ private def fsAgree {Λ S M : Type} [CommRing Λ] [CommRing S] [Algebra Λ S] [A
 theorem UpperTheory.V.Pa.Lev.freeSummand :
     ∀ (Λ : Type) [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] [IsAdicComplete (maximalIdeal Λ) Λ] (l : ℕ) (q n : ℕ) (a : Fin q → ℕ) (M : Type) [AddCommGroup M] [Module Λ M] [Module.Finite Λ M] (ρ : Representation Λ (Del l n a) M) (N C : Submodule Λ M), l.Prime → (l : Λ) ∈ maximalIdeal Λ → Module.Projective (MonoidAlgebra Λ (Del l n a)) ρ.asModule → _root_.IsCompl N C → (∀ g, ∀ m ∈ N, ρ g m ∈ N) → (∀ g, ∀ m ∈ C, ρ g m ∈ C) → ∀ act : MvPowerSeries (Fin q × Fin n) Λ →ₐ[Λ] Module.End Λ N, (∀ (p : Fin q × Fin n) (m : N), (act (1 + MvPowerSeries.X p) m : M) = ρ (Pi.mulSingle p (Multiplicative.ofAdd 1)) m) → ∃ (rk : ℕ) (e : N ≃+ (Fin rk → MvPowerSeries (Fin q × Fin n) Λ ⧸ delIdeal l Λ n a)), ∀ z m, e (act z m) = z • e m := by
   intro Λ _ _ _ _ l q n a M _ _ _ ρ N C hl hlm hproj hNC hN hC act hact
-  obtain ⟨φ, hφX, hφs, hloc, -⟩ := exists_groupRing_surj Λ l hl hlm (Fin q × Fin n) (fun p => a p.1)
+  obtain ⟨φ, hφX, hφs, hloc⟩ := exists_groupRing_surj Λ l hl hlm (Fin q × Fin n) (fun p => a p.1)
   have hker : RingHom.ker φ = delIdeal l Λ n a := groupRing_ker Λ l hl hlm (Fin q × Fin n) (fun p => a p.1) φ hφX hφs
   haveI := hloc
   have hθN : ∀ r, ∀ m ∈ N, ρ.asAlgebraHom r m ∈ N := by
