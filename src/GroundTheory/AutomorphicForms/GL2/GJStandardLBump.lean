@@ -58,13 +58,8 @@ theorem exists_localBump (μ : Measure (GL (Fin n) F)) [μ.IsHaarMeasure] {V : T
   set S : Set (Matrix (Fin n) (Fin n) F) := Units.val '' W with hS
   have hSo : IsOpen S := hval.isOpenMap _ hWo
   have hSc : IsCompact S := hWc.image Units.continuous_val
-  have hmemS : ∀ g : GL (Fin n) F, (g : Matrix (Fin n) (Fin n) F) ∈ S ↔ g ∈ W := by
-    intro g
-    constructor
-    · rintro ⟨h, hh, he⟩
-      rwa [← Units.ext he]
-    · intro h
-      exact ⟨g, h, rfl⟩
+  have hmemS : ∀ g : GL (Fin n) F, (g : Matrix (Fin n) (Fin n) F) ∈ S ↔ g ∈ W :=
+    fun _ ↦ Units.val_injective.mem_set_image
   set Φ : Matrix (Fin n) (Fin n) F → ℂ := S.indicator fun _ ↦ (1 : ℂ) with hΦ
   set c : ℂ := Parabolic.matrixCoeff π ξ ℓ g₀ with hc
   have hfW : ∀ g ∈ W, Parabolic.matrixCoeff π ξ ℓ g = c := by
