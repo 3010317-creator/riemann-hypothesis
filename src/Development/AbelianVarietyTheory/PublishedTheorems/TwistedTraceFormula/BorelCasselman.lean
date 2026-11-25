@@ -49,13 +49,6 @@ open GlobalTheory.PRep GlobalTheory.SmGL
 
 namespace GlobalTheory.Published
 
-/-- **Borel–Casselman theorem on Iwahori-fixed vectors**: for an admissible representation `π`
-of `GL_n(k)` over a non-archimedean local field `k`, the projection onto vectors fixed under
-an Iwahori subgroup is bijective, establishing an equivalence between Iwahori-fixed vectors
-and modules over the affine Hecke algebra.
-
-Proposed reference:
-[A. Borel, *Admissible representations of a semi-simple group over a local field with vectors fixed under an Iwahori subgroup*][borel1976]. -/
 def BorelCasselman : Prop :=
   ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (n : Type) [Fintype n] [DecidableEq n] [LinearOrder n]
