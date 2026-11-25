@@ -6,6 +6,7 @@ public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.BlochKa
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
 import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.FieldTheory.Galois.Profinite
 import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
 
 -- This file was produced by scripts/clump.py from the modules listed below.
