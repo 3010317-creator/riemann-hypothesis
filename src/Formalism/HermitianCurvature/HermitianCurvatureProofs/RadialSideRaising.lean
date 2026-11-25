@@ -73,22 +73,8 @@ theorem mono_ge {n : ℕ} {C : Fin r → Fin n} (hC : StrictMono C) : ∀ l : Fi
   apply +allowSynthFailures _root_.Formalism.CohomologicalDescent.LR.lre_le_apply <;> assumption
 
 theorem mono_le {n : ℕ} {C : Fin r → Fin n} (hC : StrictMono C) (hb : ∀ l, (C l).val < r) :
-    ∀ l : Fin r, (C l).val ≤ l.val := by
-  have key : ∀ j, ∀ l : Fin r, l.val + j = r - 1 → (C l).val + j ≤ r - 1 := by
-    intro j
-    induction j with
-    | zero => intro l _; have := hb l; omega
-    | succ j ih =>
-      intro l hl
-      have hm : l.val + 1 < r := by omega
-      have h1 := ih ⟨l.val + 1, hm⟩ (by simp; omega)
-      have h2 : C l < C ⟨l.val + 1, hm⟩ := hC (by rw [Fin.lt_def]; simp)
-      rw [Fin.lt_def] at h2
-      omega
-  intro l
-  have := key (r - 1 - l.val) l (by have := l.isLt; omega)
-  have := l.isLt
-  omega
+    ∀ l : Fin r, (C l).val ≤ l.val := fun l =>
+  StrictMono.apply_le (f := fun m : Fin r => (⟨C m, hb m⟩ : Fin r)) (fun _ _ h => hC h) (x := l)
 
 theorem eq_xR {C : Fin r → Fin (2 * r + k + 1)} (hC : StrictMono C) (hb : ∀ l, (C l).val < r) :
     C = C3.xR k r r le_rfl := by
