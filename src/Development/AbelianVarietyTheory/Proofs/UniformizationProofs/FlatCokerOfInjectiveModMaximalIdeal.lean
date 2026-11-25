@@ -151,19 +151,10 @@ private theorem mem_map_smul_of_maximalIdeal_pow_le {V A N : Type*} [CommRing V]
       omega
     rw [this]
     exact Ideal.mul_mem_mul ha hb
-  have hcol : ∀ b, a * b ∈ J → b ∈ IsLocalRing.maximalIdeal V := by
-    intro b hb
-    by_contra hbm
-    have hu : IsUnit b := by
-      by_contra h'
-      exact hbm ((IsLocalRing.mem_maximalIdeal b).2 h')
-    apply haJ
-    have h2 := J.mul_mem_right (↑hu.unit⁻¹ : V) hb
-    rwa [mul_assoc, hu.mul_val_inv, mul_one] at h2
-  have hlt : J < J ⊔ Ideal.span {a} := by
-    refine lt_of_le_of_ne le_sup_left fun h => haJ ?_
-    rw [h]
-    exact Ideal.mem_sup_right (Ideal.mem_span_singleton_self a)
+  have hcol : ∀ b, a * b ∈ J → b ∈ IsLocalRing.maximalIdeal V := fun b hb => by_contra fun hbm =>
+    haJ ((Ideal.mul_unit_mem_iff_mem J (IsLocalRing.notMem_maximalIdeal.1 hbm)).1 hb)
+  have hlt : J < J ⊔ Ideal.span {a} :=
+    left_lt_sup.2 fun h => haJ (h (Ideal.mem_span_singleton_self a))
   have hz' := ih _ hlt (hJ.trans le_sup_left) z hz (Submodule.smul_mono_left le_sup_left hzJ)
   rw [Ideal.map_sup, Submodule.sup_smul, Ideal.map_span, Set.image_singleton,
     Submodule.ideal_span_singleton_smul] at hz'
