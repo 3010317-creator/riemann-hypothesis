@@ -27,10 +27,6 @@ private theorem aux_one {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {m : �
   have h1 : A.valuation ζ ^ m = 1 := by rw [← map_pow, h, map_one]
   exact (pow_eq_one_iff_left hm).1 h1
 
-private theorem power_bounds_of_between {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {η : Ω} (h1 : A.valuation η = 1)
-    (h : A.valuation (η - 1) < 1) (i : ℕ) : A.valuation (1 - η ^ i) < 1 := by
-  apply _root_.UpperTheory.V.ML.PlaceBasics.one_sub_pow <;> assumption
-
 private theorem root_of_unity_eq_one_of_close_residue {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {m : ℕ} (hm : m ≠ 0)
     (hv : ¬ A.valuation (m : Ω) < 1) {η : Ω} (hη : η ^ m = 1) (h : A.valuation (η - 1) < 1) : η = 1 := by
   apply _root_.root_of_unity_eq_one_of_close_residue <;> assumption
