@@ -107,10 +107,8 @@ theorem different_generator_unit : DifferentGeneratorUnit X := by
   intro p
   obtain ⟨i, hi⟩ := over_g_of_typed X p
   have hnd := not_dvd_diff X p.1 i hi
-  have hex : ∃ x ∈ differentIdeal ℤ (𝓞 X.B.I.F), x ∉ p.1.asIdeal := by
-    by_contra hc
-    push Not at hc
-    exact hnd (Ideal.dvd_iff_le.2 hc)
+  have hex : ∃ x ∈ differentIdeal ℤ (𝓞 X.B.I.F), x ∉ p.1.asIdeal :=
+    IsConcreteLE.not_le_iff_exists.1 (mt Ideal.dvd_iff_le.2 hnd)
   have hval : ∀ x : 𝓞 X.B.I.F,
       Valued.v (algebraMap X.B.I.F (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv X.B.I.F p.1) (x : X.B.I.F)) = p.1.intValuation x := by
     intro x
