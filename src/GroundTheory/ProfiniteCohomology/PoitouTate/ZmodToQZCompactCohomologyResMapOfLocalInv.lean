@@ -40,8 +40,6 @@ open CategoryTheory MonoidalCategory
 
 universe u
 
-attribute [local instance 2000] Rep.hV2
-
 variable {G : Type u} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
   {ι : Type u} {Hv : ι → Type u} [∀ v, Group (Hv v)] [∀ v, TopologicalSpace (Hv v)]
   [∀ v, IsTopologicalGroup (Hv v)] (φ : ∀ v, Hv v →ₜ* G) [Fintype ι]
@@ -290,8 +288,6 @@ namespace GroundTheory.ProfCoh
 open CategoryTheory MonoidalCategory
 
 universe u
-
-attribute [local instance 2000] Rep.hV2
 
 section Dual
 
@@ -613,8 +609,6 @@ noncomputable section
 namespace GroundTheory.ProfCoh
 
 open IsDedekindDomain NumberField CategoryTheory MonoidalCategory GroundTheory.Global
-
-attribute [local instance 2000] Rep.hV2
 
 theorem natCast_mem_of_natCard_mem {R : Type*} [CommRing R] {P : Ideal R} (hP : P.IsPrime)
     {A : Type*} [AddCommGroup A] [Finite A] {n : ℕ} (hA : ∀ a : A, n • a = 0)

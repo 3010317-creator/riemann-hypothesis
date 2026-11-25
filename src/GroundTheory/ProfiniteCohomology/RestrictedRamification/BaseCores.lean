@@ -20,8 +20,6 @@ universe u
 
 noncomputable section
 
-attribute [local instance 2000] Rep.hV2
-
 section Trace
 
 variable {k G : Type u} [CommRing k] [Group G] (U : Subgroup G) [U.FiniteIndex] (A : Rep.{u} k G)

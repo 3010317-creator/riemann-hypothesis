@@ -17,8 +17,6 @@ namespace GroundTheory.ProfCoh
 
 open CategoryTheory MonoidalCategory
 
-attribute [local instance 2000] Rep.hV2
-
 theorem finite_of_finite_addMonoidHom_zmod {A : Type*} [AddCommGroup A] {n : ℕ} [NeZero n]
     (hA : ∀ a : A, n • a = 0) [Finite (A →+ ZMod n)] : Finite A := by
   refine Finite.of_injective (fun a (χ : A →+ ZMod n) => χ a) fun a b hab => ?_

@@ -16,8 +16,6 @@ open CategoryTheory MonoidalCategory
 
 universe u
 
-attribute [local instance 2000] Rep.hV2
-
 section ULiftInt
 
 variable {A B : Type*} [AddCommGroup A] [AddCommGroup B] [Module (ULift.{u} ℤ) A]

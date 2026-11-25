@@ -202,8 +202,6 @@ open CategoryTheory NumberField IsDedekindDomain GroundTheory.Global
 
 noncomputable section
 
-attribute [local instance 2000] Rep.hV2
-
 local notation "ℚ̄" => AlgebraicClosure ℚ
 
 local instance kummerShaOpenScalarTower {K L : FiniteSubfield} [Fact (K ≤ L)] :
@@ -661,8 +659,6 @@ end Card
 
 section KummerZMod
 
-attribute [local instance 2000] Rep.hV2
-
 variable {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (N : Subgroup G)
   {T O : Rep.{0} (ULift.{0} ℤ) G} [IsDiscreteRep T] [IsDiscreteRep O] {ℓ : ℕ} {f : T ⟶ O}
   {w : f ≫ (ℓ • 𝟙 O) = 0} (hS : (ShortComplex.mk f (ℓ • 𝟙 O) w).ShortExact) (hT : ∀ t : T, ℓ • t = 0)
@@ -727,8 +723,6 @@ theorem mem_shaSubmodule_iff_mem_range_kummerModNZMod {ι : Type} {Hv : ι → T
 end KummerZMod
 
 section GS
-
-attribute [local instance 2000] Rep.hV2
 
 local notation "ℚ̄" => AlgebraicClosure ℚ
 

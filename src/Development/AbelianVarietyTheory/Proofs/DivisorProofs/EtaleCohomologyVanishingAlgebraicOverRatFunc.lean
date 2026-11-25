@@ -301,8 +301,6 @@ theorem cdp_le_one_of_ne_char (k K Ω : Type) [Field k] [IsAlgClosed k] [Field K
 
 section ArtinSchreier
 
-attribute [local instance 2000] Rep.hV2
-
 open Polynomial
 
 theorem exists_zmod_cast_eq_of_pow_sub_self {p : ℕ} [hp : Fact p.Prime] {Ω : Type} [Field Ω] [CharP Ω p]
@@ -354,8 +352,6 @@ theorem exists_pow_sub_self_eq {p : ℕ} [hp : Fact p.Prime] {Ω : Type} [Field 
 end ArtinSchreier
 
 section Sequence
-
-attribute [local instance 2000] Rep.hV2
 
 variable (E Ω : Type) [Field E] [Field Ω] [Algebra E Ω] [IsGalois E Ω] (p : ℕ) [Fact p.Prime] [CharP Ω p]
 

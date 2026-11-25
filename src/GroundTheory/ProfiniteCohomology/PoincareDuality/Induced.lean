@@ -336,8 +336,6 @@ open CategoryTheory MonoidalCategory
 
 universe u
 
-attribute [local instance 2000] Rep.hV2
-
 section Finite
 
 variable {k Γ : Type u} [CommRing k] [Group Γ] (W : Subgroup Γ) (V : Type u) [AddCommGroup V]
