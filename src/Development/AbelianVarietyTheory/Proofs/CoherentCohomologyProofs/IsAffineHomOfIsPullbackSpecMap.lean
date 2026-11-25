@@ -22,7 +22,6 @@ variable {R : CommRingCat.{u}} {X Y : Scheme.{u}}
 def baseRingHom (p : X ⟶ Spec R) (U : X.Opens) : R ⟶ Γ(X, U) :=
   (Scheme.ΓSpecIso R).inv ≫ p.appLE ⊤ U le_top
 
-set_option backward.isDefEq.respectTransparency false in
 theorem baseRingHom_res (p : X ⟶ Spec R) {U V : X.Opens} (h : V ≤ U) (r : R) :
     X.presheaf.map (homOfLE h).op (baseRingHom p U r) = baseRingHom p V r := by
   rw [← ConcreteCategory.comp_apply, baseRingHom, Category.assoc, Scheme.Hom.appLE_map]
