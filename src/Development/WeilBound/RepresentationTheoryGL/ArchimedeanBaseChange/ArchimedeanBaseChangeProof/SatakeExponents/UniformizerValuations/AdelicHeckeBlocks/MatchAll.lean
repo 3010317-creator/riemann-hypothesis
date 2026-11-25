@@ -46,8 +46,6 @@ open NumberField IsDedekindDomain
 open GlobalTheory.BCT GlobalTheory.UnitaryBC PositivityTheory.Rg.Bc.ArchbcB.B
 open scoped Classical
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
 namespace GlobalTheory.CompanionTheory.LeviMatchingAssembly
 
 open PositivityTheory.Rg.BcB.F PositivityTheory.Rg.BcB.F.MLM PositivityTheory.Rg.BcB.G8
@@ -496,8 +494,6 @@ theorem matchLMB3Of_main : MatchLMB3Of := by
 
 end GlobalTheory.CompanionTheory.LeviMatchingAssembly
 
-theorem PositivityTheory.Rg.BcB.F.MLM.matchLMB3Of_pf : PositivityTheory.Rg.BcB.F.MLM.MatchLMB3Of :=
-  GlobalTheory.CompanionTheory.LeviMatchingAssembly.matchLMB3Of_main
 
 end
 end -- clump:auto
@@ -514,8 +510,6 @@ noncomputable section
 open NumberField IsDedekindDomain Matrix Polynomial
 open GlobalTheory.CuspRep GlobalTheory.PRep Formalism.UG Formalism.BasicNotions GlobalTheory.UnitaryBC Formalism.L2.Host GlobalTheory.BCT GlobalTheory.LFun PositivityTheory.Rg.BcB.F.F5 PositivityTheory.Rg.BcB.F.Eig PositivityTheory.Rg.BcB.G8 PositivityTheory.Rg.BcN.F2 PositivityTheory.Rg.BcB.F.Tail PositivityTheory.Rg.Bc.ArchbcB.B PositivityTheory.Rg.BcB.F
 open scoped Classical
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace PositivityTheory.Rg.BcB.F.MB
 
@@ -562,8 +556,6 @@ noncomputable section
 open NumberField IsDedekindDomain Matrix Polynomial Filter
 open GlobalTheory.CuspRep GlobalTheory.PRep Formalism.UG Formalism.BasicNotions GlobalTheory.UnitaryBC Formalism.L2.Host GlobalTheory.BCT PositivityTheory.Rg.BcN.F2
 open scoped Classical
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace PositivityTheory.Rg.BcB.F.MS
 
@@ -694,7 +686,7 @@ theorem matchLMWordS (h3 : M3) : MLM.MatchLMWordS := MLM.matchLMWordSOf (matchSp
 theorem matchLMUnit (h1 : M1) (h3 : M3) : MLM.MatchLMUnit := MLM.matchLMUnitOf (matchUnitI_of h1) (matchSplit h3) idemAlg
 
 theorem matchLMB2 (h2 : M2) (h3 : M3) (h4 : M4) : MLM.MatchLMB2 :=
-  MLM.matchLMB3Of_pf (matchT_of h4) (MS.match_split_place_of_powers h3 (MS.split_place_powers_of_local_ops locOp3)) (MB.matchBadSOf h3 MB.lponeIdem)
+  _root_.GlobalTheory.CompanionTheory.LeviMatchingAssembly.matchLMB3Of_main (matchT_of h4) (MS.match_split_place_of_powers h3 (MS.split_place_powers_of_local_ops locOp3)) (MB.matchBadSOf h3 MB.lponeIdem)
     (MB.matchBadIOf2 h2 MB.lponeIdem) MB.fixIdem idemAlg
 
 end PositivityTheory.Rg.BcB.F.MatchAll
