@@ -187,10 +187,7 @@ theorem exists_nsmul_add_apply_ne_zero [∀ j, IsAddTorsionFree (W j)] (l : ∀ 
       rw [hw, nsmul_zero, zero_add] at h1
       exact h3.elim (· h1) (· hw)
     have h4 : (a : ℕ) • l j w = (b : ℕ) • l j w := add_right_cancel (h1.trans h2.symm)
-    have h5 : ((a : ℤ) - (b : ℤ)) • l j w = 0 := by
-      rw [sub_smul, natCast_zsmul, natCast_zsmul, h4, sub_self]
-    have h6 := (IsAddTorsionFree.zsmul_eq_zero_iff_left hw).1 h5
-    exact Fin.ext (by omega)
+    exact Fin.ext (IsAddTorsionFree.nsmul_left_injective hw h4)
   have := Fintype.card_le_of_injective _ hinj
   simp at this
 
