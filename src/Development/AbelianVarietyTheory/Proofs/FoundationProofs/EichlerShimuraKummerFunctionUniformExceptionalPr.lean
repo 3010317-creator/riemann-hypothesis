@@ -1075,8 +1075,11 @@ theorem GlobalTheory.KZ.ES.pow_of_gauss_congr_one : ∀ {Ω : Type} [Field Ω] [
   haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   haveI : CharZero Ω := algebraRat.charZero Ω
   have hroot : ∀ m : ℕ, 0 < m → ∃ ζ : levF X M₀, IsPrimitiveRoot ζ m := fun m hm => by
-    haveI : NeZero m := ⟨hm.ne'⟩
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω m
+    haveI : NeZero (m : Ω) := ⟨Nat.cast_ne_zero.2 hm.ne'⟩
+    obtain ⟨ζ, hζ⟩ : ∃ ζ : Ω, IsPrimitiveRoot ζ m := by
+      obtain ⟨z, hz⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic m Ω)
+        (Polynomial.degree_cyclotomic_pos m Ω hm).ne'
+      exact ⟨z, Polynomial.isRoot_cyclotomic_iff.1 hz⟩
     exact ⟨_, hζ.map_of_injective (algebraMap Ω (levF X M₀)).injective⟩
   have hm : 0 < l ^ n := pow_pos hl.pos n
   obtain ⟨W', hW'⟩ := exists_ext (algebraMap X.K (AlgebraicClosure X.K)) W
@@ -1402,7 +1405,11 @@ theorem lev_gal [IsAlgClosure ℚ Ω] {X : Tower Ω ε} {M : ℕ} (hM : 0 < M) {
   haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   haveI : NeZero M := ⟨hM.ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  haveI : NeZero (M : Ω) := ⟨Nat.cast_ne_zero.2 hM.ne'⟩
+  obtain ⟨ζ, hζ⟩ : ∃ ζ : Ω, IsPrimitiveRoot ζ M := by
+    obtain ⟨z, hz⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic M Ω)
+      (Polynomial.degree_cyclotomic_pos M Ω hM).ne'
+    exact ⟨z, Polynomial.isRoot_cyclotomic_iff.1 hz⟩
   intro δ hδ
   obtain ⟨i, -, hi⟩ := hζ.eq_pow_of_pow_eq_one (ξ := s ζ) (by rw [← map_pow, hζ.pow_eq_one, map_one])
   obtain ⟨h00, h01, h10, h11⟩ := CongruenceSubgroup.Gamma_mem.1 hδ
