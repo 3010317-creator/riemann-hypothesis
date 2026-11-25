@@ -845,7 +845,7 @@ theorem base : Base := by
   intro D V r X Y hW c hc
   obtain ⟨V₀, hV₀c, hV₀n⟩ := exists_compact_mem_nhds (1 : GA D V)
   have hC₀ : IsCompact (V₀⁻¹ * V₀) := hV₀c.inv.mul hV₀c
-  obtain ⟨A, B₀, hAB⟩ := GlobalTheory.T.finite_lattice_points_in_siegel_set_bound D V r X Y hW c hc _ hC₀
+  obtain ⟨A, B₀, hAB⟩ := _root_.GlobalTheory.CompanionTheory.TorusCount.torus_count D V r X Y hW c hc _ hC₀
   refine ⟨A, fun Γ hΓ f hf hfs C W hC hW' => ?_⟩
   set K : Set (GA D V) := C⁻¹ * tsupport f * W⁻¹ with hK
   have hKc : IsCompact K := (hC.inv.mul hfs.isCompact).mul hW'.inv

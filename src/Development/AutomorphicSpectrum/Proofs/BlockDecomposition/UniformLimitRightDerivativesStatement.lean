@@ -117,7 +117,7 @@ theorem limit_smooth : ∀ (n : ℕ) (V : Type) [NormedAddCommGroup V] [NormedSp
       (∀ w, TendstoUniformlyOn (fun k => Rw w (g k)) (Gf w) atTop (GLs n)) ∧
       ContDiffOn ℝ ∞ (Gf []) (GLs n) ∧ ∀ w, ∀ z ∈ GLs n, Rw w (Gf []) z = Gf w z := by
   intro n V _ _ _ g hg hc
-  obtain ⟨A, hAc, hA⟩ := GlobalTheory.T.derivative_right_basis_expansion n
+  obtain ⟨A, hAc, hA⟩ := _root_.GlobalTheory.CompanionTheory.PresSobA.Frame.frame n
   have hopen : IsOpen (GLs n) := isOpen_GLs
   let Gf : List (Bool × Fin n × Fin n) → Mat n → V :=
     fun w z => limUnder atTop (fun k => Rw w (g k) z)

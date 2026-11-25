@@ -118,8 +118,8 @@ theorem isHTFormOver_move (hψ : IsGrpPullback G₀ G x ψ) (hψ' : IsGrpPullbac
     (tie : ∀ e, ∃ v : epsAt (𝟙 (Sp Ω)) ⟶ GΩ, v.left ≫ φ = (M.pt e).left ∧ v.left ≫ φ' = (M'.pt e).left)
     (N : ℕ) (w : Module.Dual Ω E) (h : M.IsHTFormOver N x k w) : M'.IsHTFormOver N x k w := by
   obtain ⟨hd, T, _, Γ, i, L, _, _, M₀, j, χ, w₀, ht, hj, hHT, hw⟩ := h
-  obtain ⟨i₀, hi₀, ht₀⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.torsionAlong_iff_pullback_torsion R T Γ X x G G₀ ψ N hψ).1 i ht
-  have ht' := (_root_.GlobalTheory.CompanionTheory.Ar.torsionAlong_iff_pullback_torsion R T Γ X x G' G₀ ψ' N hψ').2 i₀ ht₀
+  obtain ⟨i₀, hi₀, ht₀⟩ := (_root_.PositivityTheory.UnitarySelfGeneration.isTorsionAlong_iff_of_isGrpPullback R T Γ X x G G₀ ψ N hψ).1 i ht
+  have ht' := (_root_.PositivityTheory.UnitarySelfGeneration.isTorsionAlong_iff_of_isGrpPullback R T Γ X x G' G₀ ψ' N hψ').2 i₀ ht₀
   obtain ⟨M₀₀, hM₀⟩ := (GlobalTheory.CompanionTheory.Ar.LieMove.main R X x G G₀ ψ L hψ).1 M₀
   obtain ⟨M₀', hM₀'⟩ := (GlobalTheory.CompanionTheory.Ar.LieMove.main R X x G' G₀ ψ' L hψ').2 M₀₀
   refine ⟨hd, T, _, Γ, i₀ ≫ ψ', L, _, _, M₀', j, χ, w₀, ht', ?_, ?_, hw⟩

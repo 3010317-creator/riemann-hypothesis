@@ -394,7 +394,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐
   haveI : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
   have hch : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
-  obtain ⟨h₀⟩ := _root_.GlobalTheory.CompanionTheory.Ar.MetricAny.exists_lieMetric 𝔐.X Ω K J y 𝔐.ξ hch 𝔐.all 𝔐.tie 𝔐.t.G 𝔐.Li 𝔐.M
+  obtain ⟨h₀⟩ := _root_.CoverDenseAlt.nonempty_lie_metric_of_coordinates 𝔐.X Ω K J y 𝔐.ξ hch 𝔐.all 𝔐.tie 𝔐.t.G 𝔐.Li 𝔐.M
   exact exists_orth E 𝔐.M 𝔐.t.act 𝔐.ρ 𝔐.act h₀
 
 end GlobalTheory.CompanionTheory.Ar.MetricOrth
@@ -1591,7 +1591,7 @@ theorem fibreInput : N1ab → PartI → Geo.ResK.ResKStatement → GlobalTheory.
     (hdeg.symm ▸ hroot)
   have hch : CharZero R.Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
   refine ⟨max C₁ C₂, hC₁.trans (le_max_left _ _), fun L _ _ w hw => ?_⟩
-  obtain ⟨z₀, hz₀⟩ := _root_.GlobalTheory.CompanionTheory.Ar.algebraicPoint_extends_to_integers 𝔐.X R.Ω R.K R.ι R.y 𝔐.ξ hch 𝔐.all 𝔐.tie L w hw
+  obtain ⟨z₀, hz₀⟩ := _root_.CoverDenseAlt.exists_integral_point_with_coordinates 𝔐.X R.Ω R.K R.ι R.y 𝔐.ξ hch 𝔐.all 𝔐.tie L w hw
   obtain ⟨L', _, _, ε, hs⟩ := hslope L z₀
   have hsm : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
   obtain ⟨B, MB, hB⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lie_fibre_exists 𝔐.X R.Ω R.K R.ι R.y 𝔐.ξ 𝔐.t.G 𝔐.Li 𝔐.M h L'
@@ -1606,7 +1606,7 @@ theorem fibreInput : N1ab → PartI → Geo.ResK.ResKStatement → GlobalTheory.
     rw [hpt]
     exact coordsAt_comp 𝔐.all ε hz₀
   have hext : ∀ r, Ht.lineHt (R.x 1 r) L' (fun p => ε (w p)) = Ht.lineHt (R.x 1 r) L w := fun r => by
-    simpa using _root_.GlobalTheory.CompanionTheory.Ar.Ht.lineHt_map_scale R.K R.ι (R.x 1 r) L L' ε w (fun _ => 1) hw.1 fun _ => one_ne_zero
+    simpa using _root_.CoverDenseAlt.lineHt_invariant_base_change_scaling R.K R.ι (R.x 1 r) L L' ε w (fun _ => 1) hw.1 fun _ => one_ne_zero
   obtain ⟨ha, hb⟩ := hht L' _ _ hz B MB A hB hW
   refine ⟨L', inferInstance, inferInstance, ε, B, A, hA, fun τ i => ?_, fun τ i => ?_, ?_⟩
   · rw [← hext]

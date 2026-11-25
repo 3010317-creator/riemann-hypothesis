@@ -1817,7 +1817,7 @@ theorem core (hD : HodgeTateDatumStatement) (hO : OrdinaryCurveStatement) (p : �
   obtain ⟨Γ', F, hF⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.exists_isBaseChange_of_injective R B ΓB V h hh
   have t₁ := _root_.GlobalTheory.CompanionTheory.Ar.TorBC.isTorsionAlong_baseChange R B ΓB _ _ _ p iB hB V h Γ' F hF
   rw [Category.comp_id] at t₁
-  obtain ⟨i₀, -, t₀⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.torsionAlong_iff_pullback_torsion V B Γ' _ (spMap h) _ P'.A gA p gpA).1 _ t₁
+  obtain ⟨i₀, -, t₀⟩ := (_root_.PositivityTheory.UnitarySelfGeneration.isTorsionAlong_iff_of_isGrpPullback V B Γ' _ (spMap h) _ P'.A gA p gpA).1 _ t₁
   have := P'.isAb.proper
   obtain ⟨Tr, pt, hpt, hTr⟩ := exists_rep V C B Γ' P'.A p i₀ t₀
     (PositivityTheory.HtPt.Mi.torsion_finite V B Γ' _ _ _ p i₀ t₀ inferInstance)
@@ -1906,7 +1906,7 @@ theorem PositivityTheory.Xgn.tight_hopf_order_test : GlobalTheory.CompanionTheor
   letI : Algebra (CR O y c') R := g.toAlgebra
   obtain ⟨Γ', F', hF⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.exists_isBaseChange_of_injective _ _ P.Γ₁ R g hg
   have t₁ := _root_.GlobalTheory.CompanionTheory.Ar.TorBC.isTorsionAlong_baseChange _ _ P.Γ₁ _ _ _ p P.i₁ P.tors₁ R g Γ' F' hF
-  obtain ⟨i₀, -, t₂⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.torsionAlong_iff_pullback_torsion R _ Γ' _ _ _ t'.G ψ p hpb).1 _ t₁
+  obtain ⟨i₀, -, t₂⟩ := (_root_.PositivityTheory.UnitarySelfGeneration.isTorsionAlong_iff_of_isGrpPullback R _ Γ' _ _ _ t'.G ψ p hpb).1 _ t₁
   have key := core hD hO p C v RC hint hvp hcompl R h hh Dd A' t'.G U _ Γ' i₀ t₂
   rw [(_root_.GlobalTheory.CompanionTheory.Ar.BT.btOrder_baseChange _ _ P.Γ₁ R Γ' F' hF).2, spn_ext, show h.comp (algebraMap (CR O y c') R) = f from hgf] at key
   exact key
