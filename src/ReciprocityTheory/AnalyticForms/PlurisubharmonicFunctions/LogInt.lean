@@ -171,26 +171,8 @@ theorem logUnitMonoLocInt_thm : LogUnitMonoLocIntStatement := by
     (hu.continuousOn.norm).log (fun z hz => norm_ne_zero_iff.mpr (hu0 z hz))
   have h1 : LocallyIntegrableOn (fun z => Real.log ‖u z‖ + logMono m z) U volume :=
     (hc.locallyIntegrableOn hU.measurableSet).add ((logMonoLocInt_thm D m).locallyIntegrableOn U)
-  have hnull : ∀ᵐ z ∂(volume : Measure (Fin D → ℂ)), ∀ i, z i ≠ 0 := by
-    rw [ae_all_iff]
-    intro i
-    have hs : (volume : Measure (Fin D → ℂ))
-        ((LinearMap.ker (LinearMap.proj i : (Fin D → ℂ) →ₗ[ℝ] ℂ) : Submodule ℝ (Fin D → ℂ)) :
-          Set (Fin D → ℂ)) = 0 := by
-      apply Measure.addHaar_submodule
-      intro htop
-      have h2 : (Pi.single i (1 : ℂ) : Fin D → ℂ) ∈
-          LinearMap.ker (LinearMap.proj i : (Fin D → ℂ) →ₗ[ℝ] ℂ) := by
-        rw [htop]
-        exact Submodule.mem_top
-      simp at h2
-    have hset : {a : Fin D → ℂ | ¬ a i ≠ 0} =
-        ((LinearMap.ker (LinearMap.proj i : (Fin D → ℂ) →ₗ[ℝ] ℂ) : Submodule ℝ (Fin D → ℂ)) :
-          Set (Fin D → ℂ)) := by
-      ext z
-      simp
-    rw [ae_iff, hset]
-    exact hs
+  have hnull : ∀ᵐ z ∂(volume : Measure (Fin D → ℂ)), ∀ i, z i ≠ 0 :=
+    ae_all_iff.2 fun i => Measure.ae_eval_ne (fun _ => volume) i 0
   rw [locallyIntegrableOn_iff hU.isLocallyClosed] at h1 ⊢
   intro K hKU hK
   refine (h1 K hKU hK).congr_fun_ae ?_
