@@ -62,6 +62,4 @@ theorem p_div_of_div3g {D : D7} {O : Obj D} {c : ℝ} (b : _root_.GlobalTheory.F
   Formalism.L2.DIV.DivRows3G.toRows (_root_.GlobalTheory.Fc.FourBoundsAtBundles.tupAllUsed_part_alt b)
     ⟨h.sharpRR, h.baseRR, h.divisionRows_rationalLift, h.thTheta, ⟨h.num.Ij, h.num.jw, h.num.etaJ⟩, h.colsBk⟩
 end GlobalTheory.Fc.FourBoundsAtBundles
-namespace GlobalTheory.Fc.FourBoundsAtBundles
-end GlobalTheory.Fc.FourBoundsAtBundles
 end

@@ -592,9 +592,6 @@ open GlobalTheory.KZ GlobalTheory.K4 UpperTheory.Kd.K4 Polynomial
 open scoped Matrix MatrixGroups
 
 namespace UpperTheory.Kd.K4.EisensteinBasis
-end UpperTheory.Kd.K4.EisensteinBasis
-
-namespace UpperTheory.Kd.K4.EisensteinBasis
 
 variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ}
 

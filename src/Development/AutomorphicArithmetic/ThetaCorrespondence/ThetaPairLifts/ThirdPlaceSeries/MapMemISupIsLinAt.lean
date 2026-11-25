@@ -43,10 +43,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin
-namespace GlobalTheory.ThetaTri
-end GlobalTheory.ThetaTri
-namespace GlobalTheory.ThetaTri
-end GlobalTheory.ThetaTri
 noncomputable section
 namespace GlobalTheory.ThetaTri
 open MeasureTheory Formalism.IndefR.Datum Formalism.IndefR.Links GlobalTheory.ThetaLoc
@@ -97,8 +93,6 @@ def standardSchwartzFunctionMap (j : Fin D.R.m) (t : X.T) : (X.R.cV j).W →ₗ[
     (onb (X.R.MW j (sg0 D X.A))) (X.R.vP j t) ∘ₗ X.R.ioP j (kUnit (X.R.MW j (sg0 D X.A)))
 end GlobalTheory.ThetaTri
 end
-namespace GlobalTheory.ThetaTri
-end GlobalTheory.ThetaTri
 noncomputable section
 namespace GlobalTheory.ThetaTri
 open MeasureTheory Formalism.IndefR.Datum Formalism.IndefR.Links GlobalTheory.ThetaLoc

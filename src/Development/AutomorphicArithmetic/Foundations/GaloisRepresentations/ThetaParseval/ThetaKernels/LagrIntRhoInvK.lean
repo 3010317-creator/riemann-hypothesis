@@ -36,10 +36,6 @@ open GlobalTheory.ThetaTrCont NumberField IsDedekindDomain Formalism.MainNotions
   Formalism.IndefR.DatumF
 noncomputable section
 namespace GlobalTheory.LagrThetaAdm
-end GlobalTheory.LagrThetaAdm
-namespace GlobalTheory.LagrThetaAdm
-end GlobalTheory.LagrThetaAdm
-namespace GlobalTheory.LagrThetaAdm
 open GlobalTheory.WeilSchrodinger
 theorem exists_admissible_eq_lagrangian_integral : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E]
   [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),

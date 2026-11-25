@@ -68,11 +68,6 @@ instance (priority := high + 1) torsionFree (L Ω : Type) [Field L] [Field Ω] [
 
 end GlobalTheory.Ord2.TwNewform
 
-namespace GlobalTheory.Ord2
-
-
-end GlobalTheory.Ord2
-
 end
 
 end

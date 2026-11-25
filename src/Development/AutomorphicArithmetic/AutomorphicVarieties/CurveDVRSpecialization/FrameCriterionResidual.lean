@@ -44,10 +44,6 @@ import Mathlib.Tactic.ReduceModChar
 
 open NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.GalOfCusp IsLocalRing UpperTheory.V.HV UpperTheory.V.U3 UpperTheory.V.Base UpperTheory.V.Af UpperTheory.V.Alg UpperTheory.V.Pr UpperTheory.V
 
-namespace UpperTheory.V.Pr
-
-end UpperTheory.V.Pr
-
 theorem UpperTheory.frame_criterion_residual :
     UpperTheory.V.Pr.CrResid := by
   intro l _ O _ _ _ F G n hn hk hg π hπ hs hc κ hκ hκe

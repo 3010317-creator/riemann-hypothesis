@@ -426,17 +426,6 @@ theorem exists_pow_eq {p : ℕ} [Fact p.Prime] (hp2 : p ≠ 2) {m n i : ℕ} (hm
 
 end GlobalTheory.K5.MonX
 
-namespace GlobalTheory.K5.MonX
-
-open GlobalTheory.K5 GlobalTheory.KumDlog
-
-end GlobalTheory.K5.MonX
-
-namespace GlobalTheory.K5.MonX
-
-open GlobalTheory.K5 GlobalTheory.KumDlog
-
-end GlobalTheory.K5.MonX
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
