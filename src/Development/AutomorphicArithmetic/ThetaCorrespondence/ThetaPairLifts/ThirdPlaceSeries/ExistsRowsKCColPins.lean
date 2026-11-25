@@ -96,50 +96,6 @@ attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Ho
 
 namespace GlobalTheory.Mem.R3.SelC
 
-theorem mem_iff_trace {K G : Type} [Field K] [CharZero K] [Group G] [Fintype G] (Xg : Finset (G → K))
-    (hXg : ∀ χ ∈ Xg, IsAbsIrrChar χ) {χ : G → K} (hχ : IsAbsIrrChar χ) :
-    χ ∈ Xg ↔ ∑ g, (idemOf Xg).coeff g * χ g = χ 1 := by
-  classical
-  have hN : ((Fintype.card G : ℕ) : K) ≠ 0 := Nat.cast_ne_zero.mpr Fintype.card_ne_zero
-  have h1 : χ 1 ≠ 0 := by
-    intro h0
-    have h := conv_char hχ hχ
-    obtain ⟨n, ρ, hi, hρ⟩ := hχ
-    have e := hρ 1
-    rw [h0, map_zero, Representation.char_one, Module.finrank_fin_fun, Nat.cast_eq_zero] at e
-    subst e
-    exact (bot_ne_top (α := Subrepresentation ρ)) (Subrepresentation.toSubmodule_injective (Subsingleton.elim _ _))
-  have hterm : ∀ ψ ∈ Xg, ∑ g, (chiIdem ψ).coeff g * χ g = if ψ = χ then χ 1 else 0 := by
-    intro ψ hψ
-    have h := conv_char (hXg ψ hψ) hχ 1
-    simp only [mul_one] at h
-    have e : ∑ g, (chiIdem ψ).coeff g * χ g = ψ 1 / (Fintype.card G : K) * ∑ g, ψ g⁻¹ * χ g := by
-      rw [Finset.mul_sum]
-      exact Finset.sum_congr rfl fun g _ => by rw [coeff_chiIdem, mul_assoc]
-    rw [e]
-    split_ifs at h ⊢ with hc
-    · rw [mul_right_cancel₀ h1 h, hc]
-      field_simp
-    · rw [(mul_eq_zero.1 h).resolve_right h1, mul_zero]
-  have hsum : ∑ g, (idemOf Xg).coeff g * χ g = if χ ∈ Xg then χ 1 else 0 := by
-    unfold idemOf
-    simp only [MonoidAlgebra.coeff_sum, Finset.sum_apply', Finset.sum_mul]
-    rw [Finset.sum_comm, Finset.sum_congr rfl hterm, Finset.sum_ite_eq']
-  rw [hsum]
-  split_ifs with hc
-  · exact iff_of_true hc rfl
-  · exact iff_of_false hc h1.symm
-
-theorem mem_iff_XgE {K G H : Type} [Field K] [CharZero K] [Group G] [Fintype G] [Group H] [Fintype H] (σ : K →+* ℂ) (eG : G ≃* H)
-    (e : MonoidAlgebra ℂ H) (Xg : Finset (G → K)) (hXg : ∀ χ ∈ Xg, IsAbsIrrChar χ)
-    (he : ∀ g, σ ((idemOf Xg).coeff g) = e.coeff (eG g)) (χ : G → K) :
-    χ ∈ Xg ↔ (fun g => χ (eG.symm g)) ∈ XgE σ e := by
-  rw [mem_XgE, isAbsIrrChar_comp_iff eG.symm, ← Equiv.sum_comp eG.toEquiv]
-
-  simp only [MulEquiv.toEquiv_eq_coe, EquivLike.coe_coe, MulEquiv.symm_apply_apply, map_one, ← he, ← map_mul, ← map_sum]
-  rw [σ.injective.eq_iff]
-  exact ⟨fun h => ⟨hXg χ h, (mem_iff_trace Xg hXg (hXg χ h)).1 h⟩, fun h => (mem_iff_trace Xg hXg h.1).2 h.2⟩
-
 theorem exists_coord {K W : Type} [Field K] [AddCommGroup W] [Module ℂ W] (σ : K →+* ℂ) {n d : ℕ}
     (Ψ : (Fin n → K) ≃ₗ[K] (Fin d → K)) (j : (Fin n → K) →ₛₗ[σ] W)
     (li : LinearIndependent ℂ fun i => j (Pi.single i 1)) (sp : Submodule.span ℂ (Set.range fun i => j (Pi.single i 1)) = ⊤) :
@@ -246,65 +202,6 @@ theorem exists_read (hQ : QE sel (mu : Chr X.F X.E X.K) = ∅) (σ : X.K →+* �
   rfl
 
 end Rows
-
-section Weights
-
-variable {B : Base} {X : PreX B.toPre} (I : TC B X) (l : I.Laws) (Z : TC.Later B (I.cols l))
-
-theorem nuT_eq (u : B.Word) {i : ℕ} (hi : i < B.R.m) (τ : Tau B.R) (r : Fin (B.R.N i)) :
-    ((nuT (I.rec7 l Z) u i τ r : ℕ) : ℤ) = (B.wts.nuW u (i + 1) τ).w r := by
-  have e1 : ((nuT (I.rec7 l Z) u i τ r : ℕ) : ℝ) = DV.nuRow (I.rec7 l Z) u (i + 1) τ r := (nu_t_identity (I.rec7 l Z) u i hi τ r).1
-  have e2 := GlobalTheory.ColPeriod.nuRow_succ_eq_wt (I.rec7 l Z) u i hi τ r r.2
-  have e3 := B.wts.nuW_eq u hi τ r
-  have e4 := lamOf_wtN (B.wts.hc u τ) hi.le r
-  have key : (((nuT (I.rec7 l Z) u i τ r : ℕ) : ℤ) : ℝ) = (((B.wts.nuW u (i + 1) τ).w r : ℤ) : ℝ) := by
-    rw [Int.cast_natCast, e1, e2, ← Rat.cast_intCast, e3]
-    unfold Wts.lamN at e3 ⊢
-    rw [e4]
-    rfl
-  exact_mod_cast key
-
-theorem wtTie_base {L : SizeData₂ (I.rec7 l Z)} {hT : GatTies (I.rec7 l Z)} {Gi : G.Inst (I.rec7 l Z) L} {Gl : G.LatInst (I.rec7 l Z)}
-    {K : G.Consts} {Y : DivX (I.rec7 l Z)} {cX : ExtraC} {ex : Extra (I.rec7 l Z) L hT Gi Gl K Y cX} (t : KerEntTied ex) :
-    t.WtTie (fun u i τ => B.wts.lamTrue u i τ) (fun u i τ => (B.wts.lamTrue u i τ).detShift)
-      (fun u i τ => nuLast (Pr := B.primes X) B.wts u i τ) := by
-  intro (u : B.Word) μ i hi
-  have hi' : i < B.R.m := hi
-  have hN : 0 < B.R.N i := B.R.N_pos i
-  have hN' : 0 < B.R.N (i + 1) := B.R.N_pos (i + 1)
-  have hlt : B.R.N i < B.R.N (i + 1) := by unfold Ranks.N; rw [Nat.succ_mul]; omega
-  have d0 : ∀ τ, (B.wts.lamTrue u i τ).detShift = (B.wts.lamTrue u i τ).w ⟨B.R.N i - 1, by omega⟩ := fun τ => dif_pos hN
-  have d' : ∀ τ, (B.wts.lamTrue u (i + 1) τ).detShift = (B.wts.lamTrue u (i + 1) τ).w ⟨B.R.N (i + 1) - 1, by omega⟩ :=
-    fun τ => dif_pos hN'
-  have dn : ∀ τ, (B.wts.nuW u (i + 1) τ).detShift = (B.wts.nuW u (i + 1) τ).w (⟨B.R.N i - 1, by omega⟩ : Fin (B.R.N i)) :=
-    fun τ => dif_pos hN
-  have hs : ∀ (τ : Tau B.R) (r : Fin (B.R.N i)),
-      (B.wts.nuW u (i + 1) τ).w r = (B.wts.lamTrue u i τ).w r + ((I.rec7 l Z).chTw u μ).sSharp i τ := fun τ r => by
-    have e1 := B.wts.nuW_eq_true u hi' τ r
-    have e2 : ((((I.rec7 l Z).chTw u μ).sSharp i τ : ℤ) : ℚ) = sExp' B.R ((B.wts.hc u τ).e ⟨i, hi'⟩) (i + 1) :=
-      ((I.rec7 l Z).chTw u μ).sSharp_eq i hi τ
-    rw [← e2] at e1
-    exact_mod_cast e1
-  have hl : ∀ τ, ((nuLast (Pr := B.primes X) B.wts u i τ : ℕ) : ℤ) =
-      (B.wts.lamTrue u i τ).detShift + ((I.rec7 l Z).chTw u μ).sSharp i τ := fun τ => by
-    rw [nuLast_eq (Pr := B.primes X) B.wts u i hi' τ, dn, hs, d0]
-  refine ⟨fun (τ : Tau B.R) (r : Fin (B.R.N i)) => ?_, fun τ => (hl τ).symm, fun (τ : Tau B.R) => ?_, jet_in_weight_space_chain (Pr := B.primes X) B.wts u hi'⟩
-  · have e1 := nuT_eq I l Z u hi' τ r
-    have e2 := hs τ r
-    have e3 := hl τ
-    have hanti : (B.wts.lamTrue u i τ).detShift ≤ (B.wts.lamTrue u i τ).w r := by
-      refine (d0 τ).trans_le ?_
-      exact (B.wts.lamTrue u i τ).anti (by show r.1 ≤ B.R.N i - 1; have : r.1 < B.R.N i := r.2; omega)
-    show ((B.wts.lamTrue u i τ).w r - (B.wts.lamTrue u i τ).detShift).toNat + nuLast (Pr := B.primes X) B.wts u i τ = nuT (I.rec7 l Z) u i τ r
-    omega
-  · have e1 := B.wts.lamTrue_new u hi' τ ⟨B.R.N (i + 1) - 1, by omega⟩ (by show ¬ B.R.N (i + 1) - 1 < B.R.N i; omega)
-    have e2 : ((((I.rec7 l Z).chTw u μ).sDiv i τ : ℤ) : ℚ) = sExp B.R ((B.wts.hc u τ).e ⟨i, hi'⟩) (i + 1) :=
-      ((I.rec7 l Z).chTw u μ).sDiv_eq i hi τ
-    rw [← e2] at e1
-    refine (d' τ).trans ?_
-    exact_mod_cast e1
-
-end Weights
 
 section Chi
 
@@ -503,15 +400,6 @@ variable (h : I.Ok) (hp : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.cols l)) 
   (hX : B.fields.Ok) (U : Set I.ι) (Xg : Finset (Gc B X → B.LL)) (tr : TrI B X)
   {L : SizeData₂ (I.rec7 l Z)} {hT : GatTies (I.rec7 l Z)} {Gi : G.Inst (I.rec7 l Z) L} {Gl : G.LatInst (I.rec7 l Z)}
   {Kc : G.Consts} {Y : DivX (I.rec7 l Z)} {cX : ExtraC} {ex : Extra (I.rec7 l Z) L hT Gi Gl Kc Y cX}
-
-theorem iT_heq {t : KerEntTied ex} (hS : I.StdKer l Z t) (τ : (I.rec7 l Z).what₂.Tau) : HEq (t.seam.iT.symm τ) τ := by
-  have key : ∀ (X' : Fields) (_ : X' = B.fields) (s : Seam (I.rec7 l Z) X'),
-      HEq s (seamOf B (I.cols l) Z.W Z.V Z.S Z.N Z.G) → HEq (s.iT.symm τ) τ := by
-    intro X' hx s hs
-    subst hx
-    cases hs
-    rfl
-  exact key _ hS.X_eq _ hS.seam
 
 abbrev colRecK (t : KerEntTied ex) : ColRec3 B.fields (famC I hX U Xg tr) (lev1 I) (chr1 I) :=
   colRecC h hp l Z ht hJ t.χ (ker_chi_eq I l Z t) hX U Xg tr
@@ -930,24 +818,12 @@ variable {h hp l Z ht hJ hX U Xg tr} {hOk : (famC I hX U Xg tr).fam3.Ok3 1} {T :
   {Sp : ∀ Zs, SPer ((colRecK h hp l Z ht hJ hX U Xg tr T.ker).face Zs)}
   {R : Member.ExtendedDataRemainder ex (famC I hX U Xg tr) (lev0 I) (chr0 I) (lev1 I) (chr1 I) (colRecK h hp l Z ht hJ hX U Xg tr T.ker).face Sp}
   {htup : R.I.tup = ixOf I U} {hw : ∀ u, R.I.wU u = u}
-theorem lamOfCol_colK_eq_lamTrue : _root_.Formalism.L2.DIV.lamOfCol_alt (_root_.GlobalTheory.Mem.R3.SelC.squareIntegrableColumnsOfKernel h hp l Z ht hJ hX U Xg tr hOk T hS Sp R htup hw) = fun u i τ => B.wts.lamTrue u i τ := by
-  funext u i τ
-  exact congrArg (B.wts.lamTrue u i) (eq_of_heq ((cast_heq _ _).trans (iT_heq l Z hS τ)))
 theorem colPins_colK' : _root_.Formalism.L2.DIV.ColumnCharactersCompatible (_root_.GlobalTheory.Mem.R3.SelC.squareIntegrableColumnsOfKernel h hp l Z ht hJ hX U Xg tr hOk T hS Sp R htup hw) := by
   have hM := rowG_ok (Pr := B.primes X) B.wts I.Ch I.sel _ hX I.Ps
     (Formalism.L2.DIV.twistPrimes_trivialTuple_empty (X := B.fields) (S := I.S) I.sel)
   exact {
     grpTie := HEq.rfl
     psTie := ⟨HEq.rfl, HEq.rfl⟩
-    pointCharacterEq := ⟨HEq.rfl, HEq.rfl⟩
-    wOk := (base_fields_primes_ok B X).2.2.1
-    chOk := h.ch_ok
-    hcTie := fun u τ => heq_of_eq (congrArg (B.hcW u) (eq_of_heq ((cast_heq _ _).trans (iT_heq l Z hS τ))))
-    wtTie := by
-      rw [_root_.GlobalTheory.Mem.R3.SelC.lamOfCol_colK_eq_lamTrue]
-      exact ⟨_, _, wtTie_base I l Z T.ker⟩
-    xgTie := fun χ => @mem_iff_XgE _ _ _ _ _ _ _ _ (_) B.embLL R.I.eG _ Xg hOk.ok2.irr R.tied.div.grp.e0 χ
-    qNF := fun t => of_forall_ix ht (fun _ _ L => GlobalTheory.QNF.IdxMatNF L) (RcHyp.idxMatNF_of_isTw I h ht) t
     columnEvaluationOk := ⟨hM, fun u => by
       have H := exists_read_fam (X := B.fields) (Pr := B.primes X) B.wts I.Ch I.sel hX (InfinitePlace.mk B.embLL) (tuOf I U) Xg ∅ (xiValOf I) tr
         I.Ps hOk.ok2 B.embLL hM
