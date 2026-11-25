@@ -151,18 +151,11 @@ private theorem w3_lemma_4 {ℓ : ℕ} [Fact ℓ.Prime] {A : Type} [CommRing A] 
       have hsd : s - d = (s - (d + 1)) + 1 := by omega
       rw [hsd] at h1
       have h2 := w3_lemma_3 G P _ (s - (d + 1)) h1
-      have hmem : s - (d + 1) + 1 ∈ Finset.Ioc (s - (d + 1)) s := by
-        simp only [Finset.mem_Ioc]
-        omega
       have hprod : ∏ k ∈ Finset.Ioc (s - (d + 1)) s, ((G.u : ℤ_[ℓ]) ^ k - 1) =
           (∏ k ∈ Finset.Ioc (s - (d + 1) + 1) s, ((G.u : ℤ_[ℓ]) ^ k - 1)) *
             ((G.u : ℤ_[ℓ]) ^ (s - (d + 1) + 1) - 1) := by
-        rw [← Finset.mul_prod_erase _ _ hmem, mul_comm]
-        congr 1
-        apply Finset.prod_congr _ (fun _ _ => rfl)
-        ext x
-        simp only [Finset.mem_erase, Finset.mem_Ioc]
-        omega
+        rw [← Finset.prod_Ioc_consecutive _ (Nat.le_succ _) (by omega : s - (d + 1) + 1 ≤ s),
+          Nat.Ioc_succ_singleton, Finset.prod_singleton, mul_comm]
       rw [hprod]
       exact h2
   have := main (s - j) le_rfl
