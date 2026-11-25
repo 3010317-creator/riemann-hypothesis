@@ -85,11 +85,7 @@ theorem det_sub_mem_of_conj {O R : Type} [CommRing O] [CommRing R] (f : O →+* 
     ext i j
     rfl
   rw [h4, ← h1] at h3
-  have h5 : t ^ n - 1 ∈ I := by
-    obtain ⟨q, hq⟩ := sub_dvd_pow_sub_pow t 1 n
-    rw [one_pow] at hq
-    rw [hq]
-    exact I.mul_mem_right _ ht
+  have h5 : t ^ n - 1 ∈ I := I.mem_of_dvd (sub_one_dvd_pow_sub_one t n) ht
   have h6 := sub_mem (hJ m hm z z.2) (hJ _ h5 _ hG)
   convert h6 using 1
   change (z : R) * f m = f t ^ n * G.det - f a.det at h3
