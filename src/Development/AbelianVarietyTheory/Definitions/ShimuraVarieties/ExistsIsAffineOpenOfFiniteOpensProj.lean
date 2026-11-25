@@ -379,7 +379,6 @@ noncomputable abbrev stableAffineCover : X.OpenCover where
     exact ⟨⟨V, hV, hst⟩, hV.range_fromSpec.ge hx⟩
 
 
-set_option backward.isDefEq.respectTransparency false in
 noncomputable instance locallyDirected_stableAffineCover : (stableAffineCover ρ).LocallyDirected where
   trans f := Spec.map (X.presheaf.map (homOfLE (StableAffineOpens.toOpens_le f)).op)
   trans_id U := by rw [← Spec.map_id]; congr 1; exact X.presheaf.map_id _
