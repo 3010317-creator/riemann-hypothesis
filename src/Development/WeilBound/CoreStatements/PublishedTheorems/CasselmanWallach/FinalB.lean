@@ -61,16 +61,13 @@ theorem word_mem (E : Fin n → Fin n → Module.End ℂ V) (l : List (Fin n × 
 
 theorem mul_E_mem (E : Fin n → Fin n → Module.End ℂ V) (a b : Fin n) {j : ℕ} {w : Module.End ℂ V}
     (hw : w ∈ U E j) : w * E a b ∈ U E (j + 1) := by
-  unfold U at hw
-  induction hw using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨l, hl, rfl⟩ := hx
-    apply Submodule.subset_span
-    refine ⟨l ++ [(a, b)], by simp; omega, ?_⟩
-    simp [List.prod_append]
-  | zero => simp
-  | add x y _ _ hx hy => rw [add_mul]; exact Submodule.add_mem _ hx hy
-  | smul c x _ hx => rw [smul_mul_assoc]; exact Submodule.smul_mem _ c hx
+  have hmul : U E j ≤ (U E (j + 1)).comap (LinearMap.mulRight ℂ (E a b)) := by
+    refine Submodule.span_le.2 ?_
+    rintro _ ⟨l, hl, rfl⟩
+    change _ ∈ U E (j + 1)
+    exact Submodule.subset_span
+      ⟨l ++ [(a, b)], by simpa using Nat.succ_le_succ hl, by simp [List.prod_append]⟩
+  exact hmul hw
 
 theorem adjSign_mul_self (ε : Fin n → Bool) (a b : Fin n) : adjSign ε a b * adjSign ε a b = 1 := by
   unfold adjSign; split_ifs <;> norm_num
