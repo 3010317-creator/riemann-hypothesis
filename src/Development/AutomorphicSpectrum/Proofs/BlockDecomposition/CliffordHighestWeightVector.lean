@@ -715,15 +715,16 @@ theorem infOf_sq {n : ℕ} (lam : Fin n → ℤ) (s : Bool) :
   unfold infOf m0
   cases s <;> simp <;> ring
 
-theorem dirac_ineq : ∀ {n : ℕ} (lam : Fin n → ℤ) (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V]
-    (E1 E2 : Fin n → Fin n → Module.End ℂ V) (σ : Matrix.unitaryGroup (Fin n) ℂ →* (V →ₗ[ℂ] V)) (A : V →ₗ[ℂ] V),
-    IsCoreMod (infOf lam) E1 E2 σ A → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (c : Fin n → Fin n → Matrix ι ι ℂ),
+theorem dirac_ineq_of_pair {n : ℕ} (lam : Fin n → ℤ) (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V]
+    (E1 E2 : Fin n → Fin n → Module.End ℂ V) (hp : IsPair E1 E2)
+    (ch1 : ∀ v, gelA E1 2 v = GlobalTheory.Dec.gelfVal ((infOf lam) true) 2 • v)
+    (ch2 : ∀ v, gelA (barF E2) 2 v = GlobalTheory.Dec.gelfVal ((infOf lam) false) 2 • v)
+    (ι : Type) [Fintype ι] [DecidableEq ι] (c : Fin n → Fin n → Matrix ι ι ℂ) :
       IsCliff c → ∀ (τ : Fin n → ℝ) (x : ι → V), x ≠ 0 → Formalism.REAL.KHighest (fun _ => true) (yF (kF E1 E2) c) τ x →
         ∑ a, (m0 lam a) ^ 2 ≤ ∑ a, (τ a + rhoV n a) ^ 2 := by
-  intro n lam V _ _ E1 E2 σ A h ι _ _ c hc τ x hx hK
+  intro hc τ x hx hK
   obtain ⟨hc1, hc2⟩ := hc
   have hcl : IsCliff c := ⟨hc1, hc2⟩
-  have hp := h.pair
 
   set L := lft (V := V) ι with hL
   set Rr := rgt (ι := ι) V with hRr
@@ -807,10 +808,10 @@ theorem dirac_ineq : ∀ {n : ℕ} (lam : Fin n → ℤ) (V : Type) [NormedAddCo
     rfl
   have hC1 : ∀ v : V, Formalism.REAL.Cas E1 v = ((S - R : ℝ) : ℂ) • v := by
     intro v
-    rw [← gelA_two, h.ch1 2 v, hv]
+    rw [← gelA_two, ch1 v, hv]
   have hC2 : ∀ v : V, Formalism.REAL.Cas E2 v = ((S - R : ℝ) : ℂ) • v := by
     intro v
-    rw [← gelA_bar_two, h.ch2 2 v, hv]
+    rw [← gelA_bar_two, ch2 v, hv]
   have hn : (((n : ℂ) ^ 3 - n) / 4) = ((3 * R : ℝ) : ℂ) := by
     rw [hR, sum_rhoV_sq]
     push_cast
@@ -869,6 +870,14 @@ theorem dirac_ineq : ∀ {n : ℕ} (lam : Fin n → ℤ) (V : Type) [NormedAddCo
     ring
   rw [this]
   linarith
+
+theorem dirac_ineq : ∀ {n : ℕ} (lam : Fin n → ℤ) (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V]
+    (E1 E2 : Fin n → Fin n → Module.End ℂ V) (σ : Matrix.unitaryGroup (Fin n) ℂ →* (V →ₗ[ℂ] V)) (A : V →ₗ[ℂ] V),
+    IsCoreMod (infOf lam) E1 E2 σ A → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (c : Fin n → Fin n → Matrix ι ι ℂ),
+      IsCliff c → ∀ (τ : Fin n → ℝ) (x : ι → V), x ≠ 0 → Formalism.REAL.KHighest (fun _ => true) (yF (kF E1 E2) c) τ x →
+        ∑ a, (m0 lam a) ^ 2 ≤ ∑ a, (τ a + rhoV n a) ^ 2 := by
+  intro n lam V _ _ E1 E2 σ A h ι _ _ c hc τ x hx hK
+  exact GlobalTheory.CompanionTheory.DiracK.dirac_ineq_of_pair lam V E1 E2 h.pair (h.ch1 2) (h.ch2 2) ι c hc τ x hx hK
 
 end GlobalTheory.CompanionTheory.DiracK
 end -- clump:auto
