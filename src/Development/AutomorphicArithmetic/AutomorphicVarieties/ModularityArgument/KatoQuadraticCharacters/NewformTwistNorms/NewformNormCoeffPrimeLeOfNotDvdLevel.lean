@@ -320,12 +320,8 @@ theorem norm_a_le : ∀ (k : ℕ) (g : Newform k) (p : ℕ), p.Prime → ¬ p �
     by_contra! hcon
     have h0 : (g.f : ℍ → ℂ) = 0 := by
       funext τ
-      have h1 := hcon τ
       have hpos : 0 < τ.im ^ r := Real.rpow_pos_of_pos τ.im_pos r
-      have h2 : ‖g.f τ‖ ≤ 0 := by
-        by_contra h'
-        push Not at h'
-        exact absurd (mul_pos h' hpos) (not_lt.mpr h1)
+      have h2 : ‖g.f τ‖ ≤ 0 := nonpos_of_mul_nonpos_left (hcon τ) hpos
       simpa using norm_le_zero_iff.mp h2
     have h1 := g.one
     rw [h0, UpperTheory.V.Af.coef, UpperHalfPlane.qExpansion_zero] at h1
