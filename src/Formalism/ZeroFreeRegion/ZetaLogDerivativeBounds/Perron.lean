@@ -39,7 +39,7 @@ lemma perron_Sz_eq_zero_of_le_one {x : ℝ} (hx : x ≤ 1) : Formalism.Sz x = 0 
 lemma perron_Sz_continuousAt (y : ℝ) : ContinuousAt (fun x => (Formalism.Sz x : ℂ)) y := by
   rw [perron_Sz_eq_Sa]
   exact (Complex.continuous_ofReal.comp
-    (Formalism.Sa_continuous (fun n => (Λ n : ℝ)) (by simp))).continuousAt
+    (Formalism.Sa_continuous (fun n => (Λ n : ℝ)))).continuousAt
 
 lemma perron_norm_LSeries_le {σ₀ : ℝ} (hσ : 1 < σ₀) (w : ℂ) (hw : w.re = σ₀) :
     ‖LSeries ↗Λ w‖ ≤ ∑' n, ‖LSeries.term ↗Λ (σ₀ : ℂ) n‖ := by
