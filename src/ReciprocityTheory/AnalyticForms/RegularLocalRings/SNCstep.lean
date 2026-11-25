@@ -246,20 +246,8 @@ theorem AlgRes.volume_preimage_eq_zero {P D : Ideal (MvPolynomial (Σ k, ι k) �
     constructor
     · rintro ⟨h1, i, h2⟩; exact ⟨i, h1, h2⟩
     · rintro ⟨i, h1, h2⟩; exact ⟨h1, i, h2⟩
-  have hyp : ∀ l : Fin e, MeasureTheory.volume {w : Fin e → ℂ | w l = 0} = 0 := by
-    intro l
-    have : {w : Fin e → ℂ | w l = 0} =
-        Set.univ.pi (Function.update (fun _ => (Set.univ : Set ℂ)) l {0}) := by
-      ext w
-      simp only [Set.mem_ofPred_eq, Set.mem_univ_pi]
-      constructor
-      · intro hw k
-        by_cases hk : k = l
-        · subst hk; simp [hw]
-        · simp [Function.update_of_ne hk]
-      · intro hw; simpa using hw l
-    rw [this, MeasureTheory.volume_pi_pi]
-    exact Finset.prod_eq_zero (Finset.mem_univ l) (by simp)
+  have hyp : ∀ l : Fin e, MeasureTheory.volume {w : Fin e → ℂ | w l = 0} = 0 := fun l =>
+    MeasureTheory.Measure.pi_hyperplane _ l 0
   rw [hset]
   refine MeasureTheory.measure_iUnion_null fun i => ?_
   apply MeasureTheory.measure_null_of_locally_null
