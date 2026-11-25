@@ -560,13 +560,7 @@ section -- clump:auto
 
 namespace PositivityTheory.Stage1.PM
 
-alias gLHoweDuality := _root_.GlobalTheory.Published.glHoweDuality_holds
-
-alias borelCasselman := _root_.GlobalTheory.Published.BorelCasselman_holds
-
 alias quadraticClassFieldTheory := _root_.GlobalTheory.Published.quadraticClassFieldTheory_holds
-
-alias heckeLEntireAndNonzeroAtOne := _root_.GlobalTheory.Published.HeckeLEntireAndNonzeroAtOne_holds
 
 alias weylBranching := _root_.GlobalTheory.Published.weylBranching_holds
 
@@ -581,8 +575,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace PositivityTheory.Stage1.PM
-
-alias hermitianHassePrinciple := _root_.GlobalTheory.Published.hermitianHassePrinciple_holds
 
 alias thetaRationalInvariance := _root_.GlobalTheory.Published.thetaRationalInvariance_holds
 
@@ -620,8 +612,6 @@ alias schurOrthogonalitySquareIntegrable := _root_.GlobalTheory.Published.schurO
 alias heckeLPartialContinuation := _root_.GlobalTheory.Published.HeckeLPartialContinuation_holds
 
 alias hermitianLocalGlobal := _root_.GlobalTheory.Published.hermitianLocalGlobal_holds
-
-alias radfordShufflePolynomial := _root_.GlobalTheory.Published.radfordShufflePolynomial_holds
 
 end PositivityTheory.Stage1.PM
 end -- clump:auto
@@ -737,8 +727,6 @@ theorem UpperTheory.LiteratureTheorems.bhatt_scholze_crystalline_lattices_of_lit
   (GlobalTheory.bhattScholze_coeff (_root_.UpperTheory.LiteratureTheorems.bhatt_scholze_integral_of_literature))
 theorem UpperTheory.LiteratureTheorems.bloch_kato_local_of_literature : GlobalTheory.Published.BlochKatoLocal :=
   _root_.GlobalTheory.CompanionTheory.Hypotheses₂.BK.blochKatoLocal
-theorem UpperTheory.LiteratureTheorems.borel_casselman_of_literature : GlobalTheory.Published.BorelCasselman :=
-  PositivityTheory.Stage1.PM.borelCasselman
 theorem UpperTheory.LiteratureTheorems.brauer_degree_zero_of_literature : GlobalTheory.Published.BrauerDegreeZero :=
   (GlobalTheory.BrauerZero.brauerDegreeZero )
 theorem UpperTheory.LiteratureTheorems.cm_curve_good_outside_prime_st_of_literature : GlobalTheory.Published.CMCurveGoodOutsidePrimeSt :=
@@ -790,8 +778,6 @@ theorem UpperTheory.LiteratureTheorems.clozel_cohomological_of_literature : Glob
   PositivityTheory.Rg.Cz.clozelCohomological
 theorem UpperTheory.LiteratureTheorems.clozel_purity_of_literature : GlobalTheory.Published.ClozelPurity :=
   PositivityTheory.Lit1.ClozelPurity.clozelPurity
-theorem UpperTheory.LiteratureTheorems.complex_multiplication_j_st_of_literature : GlobalTheory.Published.ComplexMultiplicationJSt :=
-  GlobalTheory.CompanionTheory.Published.complexMultiplicationJ
 theorem UpperTheory.LiteratureTheorems.cusp_bounded_of_literature : GlobalTheory.Published.CuspBounded :=
   PositivityTheory.Stage1.PM.cuspBounded
 theorem UpperTheory.LiteratureTheorems.cusp_decay_bound_of_literature : GlobalTheory.Published.CuspDecayBound :=
@@ -832,8 +818,6 @@ theorem UpperTheory.LiteratureTheorems.formal_algebraisation_of_literature : Glo
   PositivityTheory.FormalThickening.formalAlgebraisation
 theorem UpperTheory.LiteratureTheorems.formal_degree_compact_dual_of_literature : GlobalTheory.Published.FormalDegreeCompactDual :=
   PositivityTheory.RgFd.B.formalDegreeCompactDual
-theorem UpperTheory.LiteratureTheorems.gl_howe_duality_of_literature : GlobalTheory.Published.GLHoweDuality :=
-  PositivityTheory.Stage1.PM.gLHoweDuality
 theorem UpperTheory.LiteratureTheorems.cusp_u_of_literature (hLiteratureRow : _root_.UpperTheory.One.M.Row) : _root_.UpperTheory.GalS.CuspUAlt :=
   (_root_.UpperTheory.GalS.bridgeStar_alt (_root_.UpperTheory.LiteratureTheorems.gelfand_kazhdan_dual_of_literature)).2 (_root_.UpperTheory.LiteratureTheorems.pair_u_of_literature hLiteratureRow)
 theorem UpperTheory.LiteratureTheorems.generic_unitary_dual_gl_of_literature : GlobalTheory.Published.GenericUnitaryDualGL :=
@@ -870,12 +854,8 @@ theorem UpperTheory.LiteratureTheorems.hecke_l_adic_character_above_of_literatur
   GlobalTheory.HeckeAboveBridge.heckeLAdicCharacterAbove_of_potSemistable (_root_.UpperTheory.LiteratureTheorems.hecke_l_adic_character_de_rham_of_literature) (_root_.UpperTheory.LiteratureTheorems.hecke_l_adic_character_crystalline_of_literature) (_root_.UpperTheory.LiteratureTheorems.de_rham_pot_semistable_of_literature)
 theorem UpperTheory.LiteratureTheorems.hecke_l_adic_parameter_above_of_literature : _root_.GlobalTheory.Published.HeckeLAdicParameterAboveAlt :=
   (_root_.GlobalTheory.heckeLAdicParameterAbove_of_algebraicCharacterWD_alt (_root_.UpperTheory.LiteratureTheorems.algebraic_character_wd_of_literature))
-theorem UpperTheory.LiteratureTheorems.hecke_l_entire_and_nonzero_at_one_of_literature : GlobalTheory.Published.HeckeLEntireAndNonzeroAtOne :=
-  PositivityTheory.Stage1.PM.heckeLEntireAndNonzeroAtOne
 theorem UpperTheory.LiteratureTheorems.hecke_l_partial_continuation_of_literature : GlobalTheory.Published.HeckeLPartialContinuation :=
   PositivityTheory.Stage1.PM.heckeLPartialContinuation
-theorem UpperTheory.LiteratureTheorems.hermitian_hasse_principle_of_literature : GlobalTheory.Published.HermitianHassePrinciple :=
-  PositivityTheory.Stage1.PM.hermitianHassePrinciple
 theorem UpperTheory.LiteratureTheorems.howe_duality_real_of_literature : GlobalTheory.Published.HoweDualityReal :=
   GlobalTheory.howeDualityReal_holds
 theorem UpperTheory.LiteratureTheorems.induced_simple_lowest_alcove_of_literature : GlobalTheory.Published.InducedSimpleLowestAlcove :=
@@ -904,8 +884,6 @@ theorem UpperTheory.LiteratureTheorems.poitou_tate_normalised_of_literature : Gl
   PositivityTheory.Lit1.PTN.poitouTateNormalised_holds
 theorem UpperTheory.LiteratureTheorems.prismatic_dieudonne_hodge_of_literature : GlobalTheory.Published.PrismaticDieudonneHodge :=
   UpperTheory.Lit.prismaticDieudonneHodge
-theorem UpperTheory.LiteratureTheorems.radford_shuffle_polynomial_of_literature : GlobalTheory.Published.RadfordShufflePolynomial :=
-  PositivityTheory.Stage1.PM.radfordShufflePolynomial
 theorem UpperTheory.LiteratureTheorems.siegel_weil_unitary_convergent_of_literature : GlobalTheory.Published.SiegelWeilUnitaryConvergent :=
   UpperTheory.Lit.Sw47.convergent
 theorem UpperTheory.LiteratureTheorems.weil_theta_convergence_of_literature : GlobalTheory.Published.WeilThetaConvergence :=
