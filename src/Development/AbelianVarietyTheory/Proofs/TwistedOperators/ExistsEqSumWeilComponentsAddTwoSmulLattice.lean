@@ -157,13 +157,7 @@ theorem exists_eq_sum_wAt_add_two_smul : ∀ (D : D7) (S T : HSp D) (ΛS : Submo
   have hg : Continuous g := by
     have h1 : Continuous fun e : Af D.host.F => pairA D.host.F 0 e :=
       (continuous_const.prodMk continuous_id : Continuous fun e : Af D.host.F => ((0 : Ainf D.host.F), e))
-    have h2 : Continuous (algebraMap (AF D.host.F) (AE D)) := by
-      have hs : (algebraMap (AF D.host.F) (AE D) : AF D.host.F → AE D) = fun r => r • (1 : AE D) := by
-        funext r
-        exact Algebra.algebraMap_eq_smul_one r
-      rw [hs]
-      exact Continuous.smul (f := fun r : AF D.host.F => r) (g := fun _ : AF D.host.F => (1 : AE D))
-        continuous_id continuous_const
+    have h2 : Continuous (algebraMap (AF D.host.F) (AE D)) := continuous_algebraMap _ _
     exact (h2.comp h1).smul continuous_const
   have hg0 : g 0 = 0 := by
     show algebraMap (AF D.host.F) (AE D) (pairA D.host.F 0 0) • w = 0
