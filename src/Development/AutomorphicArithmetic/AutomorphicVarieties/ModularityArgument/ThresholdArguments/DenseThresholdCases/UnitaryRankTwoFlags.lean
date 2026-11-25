@@ -368,7 +368,6 @@ private theorem coef_inj {l : ℕ} [Fact l.Prime] (c : Coef l) : Function.Inject
   Subtype.val_injective
 
 theorem endJ : End := by
-  set_option synthInstance.maxHeartbeats 200000 in
     intro Ω _ _ _ l _ c η Ψ σ g₁ B M L _ _ _ _ _ Φ k c₁ _ f ka R φ hφ hs J ξ w hJ hTI har hirr hann D hD D' hD' h1 h2
     have key : ∀ E ∈ PtDer ξ (↥c₁.O),
         (∀ (v : (Φ.ext f).V) (i : Fin 3), ∀ g ∈ (Φ.ext f).Iv v, E ((R.S.ρ.ψ v i) g : R.S.R) = 0) →
@@ -935,7 +934,6 @@ section -- clump:auto
 @[expose] public section
 
 set_option maxHeartbeats 800000
-set_option synthInstance.maxHeartbeats 200000
 
 section
 noncomputable section
