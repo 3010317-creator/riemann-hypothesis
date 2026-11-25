@@ -1646,13 +1646,8 @@ theorem locComp_of_isRc_classMapD_cenLoc : _root_.GlobalTheory.NRows.ThetaLocalI
     GreenLab Γ → _root_.GlobalTheory.PendOf.SplitLocalCondition hL D := by
   intro hP hL D Γ hΓ k v χ hχ u π ρ f ht hlab hser hu ⟨x, hx, hxρ⟩
   have hchi := _root_.UpperTheory.Lit.Dz.localGlobalCompatibility_cmDatum_alt hL D Γ k v χ hχ u ht hlab
-  have h0 : idemOf D k ρ ≠ 0 := fun e => by
-    obtain ⟨ℓ, -, h⟩ := hxρ
-    refine h ?_
-    rw [e]
-    simp
   obtain ⟨L, h1, h2, hf⟩ := @exists_hasLabel _ ⟨D.host.g_prime k⟩ _ (D.ntypes.teichC_inj k) _ (Γ.ζ_gen k) (Γ.O k) (hΓ k)
-    _ ρ hser.1 f h0 (by rw [← Γ.eSer_def]; exact hser.2)
+    _ ρ hser.1 f (by rw [← Γ.eSer_def]; exact hser.2)
   refine (And.right hchi L h1 h2).elim fun θ hθ => ?_
   exact @_root_.GlobalTheory.BlockTypeSplit.block_type_split_local_alt _ _ _ _ _ _ ⟨D.host.g_prime k⟩ _ _ hP (And.left hchi) L χ hχ ht θ hθ.1 u hθ.2 π ρ hser.1 f hf hu x hx hxρ
 end GlobalTheory.BlockTypeSplit

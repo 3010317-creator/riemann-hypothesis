@@ -784,10 +784,11 @@ end Local
 
 theorem hasLabelO_of_mul {p : ℕ} [Fact p.Prime] {C : Formalism.IrreducibleCountingLemmas.TYPES.LabelConv (ZMod p)}
     (O : Formalism.IrreducibleCountingLemmas.TYPES.LabelMap (ZMod p) C) {r : ℕ} (ρ : FDRep ℂ (GL (Fin r) (ZMod p))) (hρ : CategoryTheory.Simple ρ)
-    {f : (ZMod p)[X]} (h0 : Formalism.IrreducibleCountingLemmas.TYPES.zIdem ρ ≠ 0)
+    {f : (ZMod p)[X]}
     (h : Formalism.IrreducibleCountingLemmas.TYPES.zIdem ρ * Formalism.L2.NT.eSerO O r f = Formalism.IrreducibleCountingLemmas.TYPES.zIdem ρ) : Formalism.IrreducibleCountingLemmas.TYPES.HasLabelO O ρ f := by
   classical
   rw [GlobalTheory.SerOSys.eSerO_eq_sum, Finset.mul_sum] at h
+  have h0 := _root_.GlobalTheory.SerOSys.ZSum.zIdem_ne_zero ρ hρ
   obtain ⟨z, hz, hne⟩ := Finset.exists_ne_zero_of_sum_ne_zero (h.trans_ne h0)
   obtain ⟨τ, hτ, rfl, hl⟩ := (GlobalTheory.SerOSys.Zl_finite O r f).mem_toFinset.1 hz
   refine GlobalTheory.SerOSys.hasLabelO_of_repIso O hl (_root_.GlobalTheory.SerOSys.repIso_of_zIdem_eq_of_simple ρ τ hρ hτ ?_)
@@ -800,14 +801,13 @@ theorem exists_hasLabel {p : ℕ} [Fact p.Prime] (t : Formalism.CyclotomicNorms.
     (hO : ∀ (d : ℕ) (τ : FDRep ℂ (GL (Fin d) (ZMod p))), 1 ≤ d → CategoryTheory.Simple τ →
       Formalism.IrreducibleCountingLemmas.TYPES.IsCuspidal (ZMod p) τ → Formalism.IrreducibleCountingLemmas.TYPES.HasCuspLabel (Formalism.L2.NT.convC t ht ζ hζ) τ (O.lab d τ))
     {r : ℕ} (ρ : FDRep ℂ (GL (Fin r) (ZMod p))) (hρ : CategoryTheory.Simple ρ) {f : (ZMod p)[X]}
-    (h0 : Formalism.IrreducibleCountingLemmas.TYPES.zIdem ρ ≠ 0)
     (h : Formalism.IrreducibleCountingLemmas.TYPES.zIdem ρ * Formalism.L2.NT.eSerO O r f = Formalism.IrreducibleCountingLemmas.TYPES.zIdem ρ) :
     ∃ L : GlobalTheory.GLq.LabelDatum p, L.teich = t ∧ L.gen = ζ ∧ GlobalTheory.GLq.HasLabel L (fun x => ρ.character x) f := by
   let L : GlobalTheory.GLq.LabelDatum p := ⟨t, ht, ζ, fun d hd => (hζ d hd).1,
     fun d e hd he => (hζ d hd).2 (d * e) (dvd_mul_right d e) (Nat.mul_pos hd he)⟩
   exact ⟨L, rfl, rfl, _root_.GlobalTheory.SerCmp.hasLabel_of_hasLabelO p L O (fun d V hd hs hc => _root_.GlobalTheory.SerCmp.LabConv.isCuspOf_of_hasCuspLabel p L t ht hζ rfl d V _ hd
     ((_root_.GlobalTheory.CuspCharRep.isCusp_character_iff_isCuspidal p d V hd hs).2 hc) (hO d V hd hs hc)) (_root_.GlobalTheory.HCChar.trace_hcRep_eq_hcL p) (_root_.GlobalTheory.GLq.ConstIff.constituent_hcRep_iff p) r ρ f hρ
-    (hasLabelO_of_mul O ρ hρ h0 h)⟩
+    (hasLabelO_of_mul O ρ hρ h)⟩
 
 
 end GlobalTheory.BlockTypeSplit
