@@ -796,11 +796,6 @@ theorem nonempty_twist_twist_iso_of_cls_eq (F : X.Modules) {M N P : LB X} (hM : 
   Twist.nonempty_twistTwistIso hM hN hP ((cls_eq_iff hN (Semi.LB.isLB_div hP hM)).1
     (by rw [cls_div hP hM, h, add_sub_cancel_left]))
 
-theorem nonempty_twist_iso_of_cls_eq_zero (F : X.Modules) {M : LB X} (hM : M.IsLB)
-    (h : cls M hM = 0) : Nonempty (twist F M ≅ F) :=
-  have ⟨t, ht⟩ := (cls_eq_zero_iff hM).1 h
-  ⟨(Twist.genIso F hM t ht).symm⟩
-
 end Prod
 
 section Twists
@@ -1050,13 +1045,6 @@ theorem interNum_cons (hM : M.IsLB) (hP : ∀ i, (P i).IsLB) :
       interNum k F P - interNum k (twistZ F M (-1)) P :=
   interNum_cons_of_cls_eq_neg k F hM hP (Twist.isLB_lbZPow hM (-1))
     (by rw [cls_lbZPow hM, neg_one_zsmul])
-
-theorem interNum_twist_cons (hM : M.IsLB) (hP : ∀ i, (P i).IsLB) :
-    interNum k (twist F M) (Fin.cons M P : Fin (d + 1) → LB X) =
-      interNum k (twist F M) P - interNum k F P := by
-  have ⟨e⟩ := nonempty_twist_twist_iso_of_cls_eq F hM (Twist.isLB_lbZPow hM (-1))
-    (LB.isLB_triv X) (by rw [cls_triv, cls_lbZPow hM, neg_one_zsmul, add_neg_cancel])
-  rw [interNum_cons k _ hM hP, interNum_congr k (e ≪≫ (Twist.trivIso F).symm)]
 
 theorem interNum_cons_of_cls_eq_add (hM : M.IsLB) (hA : A.IsLB) (hB : B.IsLB)
     (hP : ∀ i, (P i).IsLB) (h : cls M hM = cls A hA + cls B hB) :

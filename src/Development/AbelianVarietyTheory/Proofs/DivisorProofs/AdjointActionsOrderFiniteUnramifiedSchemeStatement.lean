@@ -1190,9 +1190,6 @@ noncomputable section
 namespace GlobalTheory.ActFin
 open ReciprocityTheory.ChartRestriction.G.Out
 
-theorem adj_of_span : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonObj A] (Q : LB (A ⊗ A).left), QHyp A Q → ∀ (O : Type) [Ring O] (bar : O → O) (r : ℕ) (e : Fin r → O), (∀ a b, bar (a + b) = bar a + bar b) → Submodule.span ℤ (Set.range e) = ⊤ → ∀ (act : O → (A ⟶ A)), IsRAct A act → (∀ i, LBIso (Q.pull (lift (fst A A ≫ act (e i)) (snd A A)).left) (Q.pull (lift (fst A A) (snd A A ≫ act (bar (e i)))).left)) → Adj A Q bar act :=
-  _root_.GlobalTheory.AdjSpan.adj_of_span
-
 end GlobalTheory.ActFin
 
 namespace GlobalTheory.ActFin

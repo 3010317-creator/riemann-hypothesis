@@ -115,9 +115,6 @@ theorem kill_of_itSpans {W : HSp D} {S' : D.what₂.Tau → SPar} (M' : DSModel 
 
 end Sep
 
-theorem isContAut_zero (V : HSp D) : IsContAut V (0 : GA D V → ℂ) :=
-  ⟨fun _ _ _ => rfl, continuous_const⟩
-
 theorem isContAut_multT {V : HSp D} {S : D.what₂.Tau → SPar} {θ : InfFam D} {M : DSModel V S} {J : Set (GA D V)}
     {χ : GA D V → ℂ} {G : SmT M →ₗ[ℂ] (GA D V → ℂ)} (hG : G ∈ MultT θ M J χ) (x : SmT M) : IsContAut V (G x) := by
   apply _root_.GlobalTheory.Core.Mi.BotPin.isContAut_multT <;> assumption

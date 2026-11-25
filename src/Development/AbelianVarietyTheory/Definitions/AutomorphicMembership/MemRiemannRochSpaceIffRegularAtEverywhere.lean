@@ -73,9 +73,6 @@ structure NoContract (bd : Set X) : Prop where
 
 variable {k D V}
 
-theorem BasePointFree.exists_ne_zero (h : D.BasePointFree V) : ∃ f ∈ V, f ≠ 0 :=
-  have ⟨f, hf, h'⟩ := h.2 (genericPoint X); ⟨f, hf, h'.ne_zero⟩
-
 end CartierDiv
 
 namespace Presents

@@ -74,16 +74,6 @@ theorem cc_subst0 [Finite σ] {u : σ → MvPowerSeries τ R}
     constantCoeff (subst u f) = 0 :=
   constantCoeff_subst_eq_zero (hasSubst_of_constantCoeff_zero hu) hu hf
 
-theorem mvPowerSeriesMap_evalTwoGroups (φ : R →+* S) {u v : Fin d → MvPowerSeries τ R}
-    (hu : ∀ i, constantCoeff (u i) = 0) (hv : ∀ i, constantCoeff (v i) = 0)
-    (c : MvPowerSeries (Fin d ⊕ Fin d) R) :
-    map φ (at2 c u v) = at2 (map φ c) (fun i => map φ (u i)) (fun i => map φ (v i)) := by
-  unfold at2
-  rw [map_subst0 φ (_root_.GlobalTheory.CobEdges.elim_const hu hv)]
-  congr 1
-  funext i
-  cases i <;> rfl
-
 theorem at2_lin {u v : Fin d → MvPowerSeries τ R}
     (hu : ∀ i, constantCoeff (u i) = 0) (hv : ∀ i, constantCoeff (v i) = 0) (n : R)
     (c r : MvPowerSeries (Fin d ⊕ Fin d) R) :

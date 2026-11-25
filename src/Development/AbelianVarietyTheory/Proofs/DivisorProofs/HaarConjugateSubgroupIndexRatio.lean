@@ -835,11 +835,6 @@ namespace Pair
 
 variable {G : HTGroup p}
 
-theorem sh_mul (a b : G.C) : sh G (a * b) = sh G b * sh G a := by
-  simp only [sh, map_mul, MulOpposite.unop_mul]
-
-theorem sh_sh (a : G.C) : sh G (sh G a) = a := G.star_star a
-
 end Pair
 
 end GlobalTheory.LKMid
@@ -1297,12 +1292,6 @@ end GlobalTheory.LKIrr
 
 namespace GlobalTheory.LKIrr
 open Polynomial GlobalTheory.GlobEig
-
-theorem exists_emb_isRoot_irr {F C E : Type} [Field F] [NumberField F] [Ring C] [Algebra F C]
-    [Algebra ℚ C] [IsScalarTower ℚ F C] [FiniteDimensional F C] [Field E] [Algebra ℚ E] [IsAlgClosed E]
-    (y : C) (hirr : Irreducible (minpoly F y)) (μ : E) (h : ((minpoly ℚ y).map (algebraMap ℚ E)).IsRoot μ) :
-    ∃ τ : F →+* E, ((minpoly F y).map τ).IsRoot μ := by
-  apply _root_.GlobalTheory.LKCx.FiniteClassIntegralRoots.exists_emb_isRoot' <;> assumption
 
 theorem root_norm_le_irr {p : ℕ} [Fact p.Prime] (G : HTGroup p) (β y : G.Cˣ) (c : ℚˣ)
     (hirr : Irreducible (minpoly G.F (y : G.C)))
