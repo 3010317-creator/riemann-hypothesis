@@ -458,8 +458,6 @@ section -- clump:auto
 
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Real PositivityTheory.RgBcC.RealD
 
-theorem _root_.GlobalTheory.T.real_compression : PositivityTheory.RgBcC.RealD.Compress := by
-  first | exact @GlobalTheory.CompanionTheory.LevelCompress.exists_compress
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RealCompressionStatement =====
@@ -1078,7 +1076,7 @@ section -- clump:auto
 namespace PositivityTheory.RgBcC.RealD
 
 theorem multG_of_multFor (hM : MultFor) : MultG :=
-  multG_of GlobalTheory.T.real_compression hM adm_least_holds _root_.GlobalTheory.CompanionTheory.HarmCone.harm_cone _root_.GlobalTheory.CompanionTheory.ConeSecondWeights.cone_weight_not_in_second _root_.GlobalTheory.CompanionTheory.ModelS.modelEx_main _root_.GlobalTheory.CompanionTheory.KTypeCone.k_types_in_weight_cone
+  multG_of (@GlobalTheory.CompanionTheory.LevelCompress.exists_compress) hM adm_least_holds _root_.GlobalTheory.CompanionTheory.HarmCone.harm_cone _root_.GlobalTheory.CompanionTheory.ConeSecondWeights.cone_weight_not_in_second _root_.GlobalTheory.CompanionTheory.ModelS.modelEx_main _root_.GlobalTheory.CompanionTheory.KTypeCone.k_types_in_weight_cone
 
 end PositivityTheory.RgBcC.RealD
 end -- clump:auto

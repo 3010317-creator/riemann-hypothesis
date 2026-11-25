@@ -140,7 +140,7 @@ private theorem eq_one_of_charpoly_dvd {V : Type} [AddCommGroup V] [Module ℂ V
 section
 variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω]
   {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} {h : IsPlaceOver A w}
-private theorem exists_char {z : WD h} (hz : IsIrrWD z) {n : ℕ} (η : Fin n → Weil h →* ℂˣ)
+theorem GlobalTheory.WeilDeligne.exists_lpOfChar_of_charPol_dvd {z : WD h} (hz : IsIrrWD z) {n : ℕ} (η : Fin n → Weil h →* ℂˣ)
     (hd : ∀ g, z.charPol g ∣ ∏ j, (X - C (η j g : ℂ))) :
     ∃ (ξ : Weil h →* ℂˣ) (hξ : GlobalTheory.WeilDeligne.IsSmooth ξ), z = WD.lpOfChar h ξ hξ := by
   obtain ⟨m, b, rfl, hirr⟩ := hz
@@ -223,7 +223,7 @@ private theorem hasSupport_iff (hZ : GlobalTheory.Published.ZelevinskyPolynomial
     exact congrArg Multiset.prod (Multiset.map_congr rfl fun i _ => charPol_ofChar H _ _ g)
   obtain ⟨s, hs⟩ := SupportRing.exists_hasSupport hZ x
   have hch : ∀ y ∈ s, ∃ χ hχ, IrrGL.ofChar χ hχ = y := fun y hy => by
-    obtain ⟨ξ, hξ, e⟩ := exists_char ((H.cusp y).1 (hs.isCusp hy)) (fun j => (ω j).comp a) fun g => by
+    obtain ⟨ξ, hξ, e⟩ := GlobalTheory.WeilDeligne.exists_lpOfChar_of_charPol_dvd ((H.cusp y).1 (hs.isCusp hy)) (fun j => (ω j).comp a) fun g => by
       refine Dvd.dvd.trans ?_ (hp g).dvd
       rw [H.supp _ s hs g]
       exact Multiset.dvd_prod (Multiset.mem_map_of_mem (fun y => (rc y).charPol g) hy)
