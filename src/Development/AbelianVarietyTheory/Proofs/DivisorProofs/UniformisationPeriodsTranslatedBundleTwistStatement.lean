@@ -450,7 +450,8 @@ variable {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {G : Over (Spec (Com
 
 
 
-set_option synthInstance.maxHeartbeats 200000 in
+-- Stopgap for https://github.com/leanprover-community/riemann-hypothesis/issues/1038: remove once Mathlib lowers its priority.
+attribute [-instance] CategoryTheory.Monoidal.fromInducedMonoidal in
 theorem exists_iso_translate_levels [IsLocalRing R] (hR : AdmBase R I) (hG : IsSemiAbelian G) {D D' : DegData R I}
     {A A' : PolAV (Spec (CommRingCat.of (FractionRing R)))} (U : UnifPre I D A G) (U' : UnifPre I D' A' G)
     (a : 𝟙_ (Over (Spec (CommRingCat.of R))) ⟶ G) (ha : a ^ 2 = 1) (b : 𝟙_ (Over (Spec (CommRingCat.of R))) ⟶ D.toPre.P.A)
@@ -557,7 +558,7 @@ theorem exists_iso_translate_levels [IsLocalRing R] (hR : AdmBase R I) (hG : IsS
   have := D'.toPre.P.isAb.proper
   have := D.toPre.P.isAb.proper
   have eΨ : Ψ.hom = padd D.toPre.P.A β.hom (toUnit D'.toPre.P.A ≫ b) :=
-    hom_eq_of_thickenings_of_isProper R I (IsAdicComplete.le_jacobson_bot I) _ _ Ψ.hom Φ.hom
+    hom_eq_of_thickenings_of_isProper R I ((IsAdicComplete.le_jacobson I).trans_eq Ideal.jacobson_bot.symm) _ _ Ψ.hom Φ.hom
       fun e => (H e).1.trans (hβe e)
   have eΨ' : (padd D.toPre.P.A β.hom (toUnit D'.toPre.P.A ≫ b)).left = Ψ.hom.left := by rw [eΨ]
   rw [eΨ']
@@ -1290,8 +1291,7 @@ theorem GlobalTheory.Mum.twistRatio_eq_one_at_unit : ∀ {R : Type} [CommRing R]
     exact mul_eq_left.1 this.symm
   let T := (Over.map (thick R I e)).obj (𝟙_ (Over (Spec (CommRingCat.of (R ⧸ I ^ (e + 1))))))
   have tu : (toUnit T).left = thick R I e := by
-    have := Over.w (toUnit T)
-    simpa [T] using this
+    simp [T]
   have e2 : o.left ≫ h ≫ (fstG I e G).left = thick R I e ≫ a.left := by
     rw [hf]
     show ((Over.map (thick R I e)).map o ≫ fstG I e G ≫ ((toUnit G ≫ a) * 𝟙 G)).left = _
