@@ -49,22 +49,9 @@ theorem hasStrictFDerivAt_eval_poly {J : Type} [Fintype J] (p : MvPolynomial J �
     have h := hp.mul hX
     have h0 : polyDiff (p * X n) w₀ =
         eval w₀ p • (ContinuousLinearMap.proj n : (J → ℂ) →L[ℂ] ℂ) + w₀ n • polyDiff p w₀ := by
-      have key : ∀ j, eval w₀ (pderiv j (X n : MvPolynomial J ℂ)) = if j = n then 1 else 0 := by
-        intro j
-        by_cases hj : j = n
-        · subst hj
-          simp
-        · simp [pderiv_X_of_ne (Ne.symm hj), hj]
       refine ContinuousLinearMap.ext fun v => ?_
-      have s1 : ∑ j, eval w₀ p * (if j = n then (1 : ℂ) else 0) * v j = eval w₀ p * v n := by
-        simp
-      have s2 : ∑ j, eval w₀ (pderiv j p) * w₀ n * v j = w₀ n * ∑ j, eval w₀ (pderiv j p) * v j := by
-        rw [Finset.mul_sum]
-        exact Finset.sum_congr rfl fun j _ => by ring
-      simp only [polyDiff_apply, pderiv_mul, map_add (f := _), map_mul, key, eval_X, add_mul,
-        Finset.sum_add_distrib, s1, s2, FunLike.coe_add, FunLike.coe_smul, Pi.add_apply, Pi.smul_apply,
-        ContinuousLinearMap.proj_apply, smul_eq_mul]
-      ring
+      simp [polyDiff_apply, pderiv_X, Pi.single_apply, apply_ite,
+        add_mul, Finset.sum_add_distrib, Finset.mul_sum, mul_assoc]
     rw [h0]
     simp only [map_mul, eval_X]
     exact h
