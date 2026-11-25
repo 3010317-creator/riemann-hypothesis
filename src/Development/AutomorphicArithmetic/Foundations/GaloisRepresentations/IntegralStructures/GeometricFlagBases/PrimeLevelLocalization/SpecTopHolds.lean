@@ -1153,7 +1153,6 @@ open UpperTheory.Gal.CertificateRingHomMap (GUf Plc comp cj lev GLw mat)
 open UpperTheory.Gal.LocalSmoothExtension UpperTheory.Gal.W2.Seed
 open UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Pl
 open scoped TensorProduct Classical
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace UpperTheory.Gal.Spc
 
@@ -1278,7 +1277,6 @@ open UpperTheory.Gal.Int.Geo
 open UpperTheory.Gal.Int.Geo.Pl (Frame)
 open GlobalTheory.LFun (KGL)
 open scoped TensorProduct Classical
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace UpperTheory.Gal.Spc
 

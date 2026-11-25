@@ -80,7 +80,6 @@ open GlobalTheory.TripleRead (thO ptO)
 open GlobalTheory.AdelicU (evFin splitPrime IsSplitBasis)
 open GlobalTheory.BotMatch (evW)
 open GlobalTheory.StageGeo
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 theorem UpperTheory.exists_splitBasis_conj_lattice_of_selfDual_frame :
     ∀ (D : D7) (S : HSp D) (Λ L : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (β : GL (Fin S.rank) (EAf D)),
@@ -126,7 +125,6 @@ open GlobalTheory.TripleRead (thO ptO)
 open GlobalTheory.AdelicU (evFin splitPrime IsSplitBasis)
 open GlobalTheory.BotMatch (evW)
 open GlobalTheory.StageGeo
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 open GlobalTheory.AdelicU in
 private theorem splitLat_comp {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E] {n d : ℕ}
@@ -210,7 +208,6 @@ open GlobalTheory.TripleRead (thO ptO)
 open GlobalTheory.AdelicU (evFin splitPrime IsSplitBasis)
 open GlobalTheory.BotMatch (evW)
 open GlobalTheory.StageGeo
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace UpperTheory.HermitianSkewLattice
 

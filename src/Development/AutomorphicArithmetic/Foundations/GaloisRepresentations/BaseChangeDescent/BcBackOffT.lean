@@ -221,8 +221,6 @@ noncomputable section
 open NumberField IsDedekindDomain Filter GlobalTheory.CuspRep GlobalTheory.UnitaryBC GlobalTheory.SmGL GlobalTheory.DefiniteBC GlobalTheory.BcSpeh GlobalTheory.LFun GlobalTheory.PRep Formalism.UG
 open GlobalTheory.GalOfCusp PositivityTheory.AutomorphicGaloisHodgeTate.SaturatedBaseChange UpperTheory.V.Z.Tf
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
 namespace UpperTheory.Gal.Desc
 
 def WeakAll : Prop := ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], GlobalTheory.BCT.Unr E → ∀ n : ℕ, 1 ≤ n → ∀ π : CuspSub E n,
@@ -371,7 +369,7 @@ open scoped Classical
 
 namespace PositivityTheory.Rg.BcB.F.BC
 
-attribute [local instance] borelG borelF borelA GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
+attribute [local instance] borelG borelF borelA
 
 theorem restr {A : Type} [Ring A] [StarRing A] [Algebra ℂ A] [StarModule ℂ A] (S T : StarSubalgebra ℂ A) (hle : S ≤ T)
     (χ : T →⋆ₐ[ℂ] ℂ) : ∃ χ' : S →⋆ₐ[ℂ] ℂ, ∀ (y : A) (hy : y ∈ S) (hy' : y ∈ T), χ' ⟨y, hy⟩ = χ ⟨y, hy'⟩ :=
@@ -436,7 +434,7 @@ open scoped Classical
 
 namespace PositivityTheory.Rg.BcB.F.BC
 
-attribute [local instance] borelG borelF borelA GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
+attribute [local instance] borelG borelF borelA
 
 section
 
@@ -533,8 +531,6 @@ section -- clump:auto
 noncomputable section
 
 open NumberField IsDedekindDomain Polynomial Topology WithZero
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace PositivityTheory.Rg.BcB.F.LemB
 
@@ -748,7 +744,7 @@ open scoped Classical
 
 namespace PositivityTheory.Rg.BcB.F.PCandTb
 
-attribute [local instance] borelG borelF borelA GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
+attribute [local instance] borelG borelF borelA
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
@@ -1581,8 +1577,6 @@ open scoped Classical
 
 
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
 namespace PositivityTheory.Rg.BcB.F.FX.Bo.He2
 
 open PositivityTheory.Rg.BcB.F PositivityTheory.Rg.BcB.F.RS PositivityTheory.Rg.BcB.CG
@@ -1643,8 +1637,6 @@ open scoped Classical
 
 
 
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace PositivityTheory.Rg.BcB.F.FX.Bo
 
@@ -1751,8 +1743,6 @@ open scoped Classical
 
 
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
 namespace PositivityTheory.Rg.BcB.F.FX.Bo
 
 open PositivityTheory.Rg.BcB.F PositivityTheory.Rg.BcB.F.RS
@@ -1830,8 +1820,6 @@ open GlobalTheory.CuspRep GlobalTheory.PRep Formalism.UG Formalism.BasicNotions 
 open scoped Classical
 
 
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace PositivityTheory.Rg.BcB.F.FX.Bo
 
@@ -1918,8 +1906,6 @@ section -- clump:auto
 noncomputable section
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host GlobalTheory.HeightCounting NumberField IsDedekindDomain GlobalTheory.CuspRep GlobalTheory.UnitaryBC GlobalTheory.FormDict GlobalTheory.DefiniteBC
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace UpperTheory.BaseChangeIdentities
 
