@@ -49,11 +49,8 @@ theorem exists_row_reduction {k : Type} [Field k] (D : Matrix (Fin n) (Fin n) k)
   classical
   obtain ⟨L, L', e, h⟩ := Matrix.Pivot.exists_list_transvec_mul_mul_list_transvec_eq_diagonal D
   have hdet : ∀ l : List (TransvectionStruct (Fin n) k),
-      ((l.map TransvectionStruct.toMatrix).prod).det = 1 := by
-    intro l
-    induction l with
-    | nil => simp
-    | cons t l ih => simp [Matrix.det_mul, ih, TransvectionStruct.det]
+      ((l.map TransvectionStruct.toMatrix).prod).det = 1 :=
+    Matrix.TransvectionStruct.det_toMatrix_prod
   obtain ⟨uA, huA⟩ : ∃ u : GL (Fin n) k, u.1 = (L.map TransvectionStruct.toMatrix).prod :=
     ⟨Matrix.nonsingInvUnit (L.map TransvectionStruct.toMatrix).prod
       (by rw [hdet]; exact isUnit_one), rfl⟩
