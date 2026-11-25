@@ -7,8 +7,10 @@ and for every open pull request every fifteen minutes. Nothing from a pull reque
 Everything is read from GitHub's API, and the only thing written is the label.
 
 A pull request can be in the inbox when it is open, is not a draft, is not a batch, and carries
-none of `batch queue`, `building` and `awaiting-author`. A batch is a pull request from a branch
-named `batch/...`, in this repository or a fork.
+none of `batch queue`, `building` and `awaiting-author` (named in `batch-labels.py`). A batch is a
+pull request from a branch of this repository named `batch/...`. One from a `batch/...` branch of a
+fork is not a batch, and can be in the inbox like any other pull request (see `holds_batch` in
+`batch-labels.py`).
 
 A pull request enters review when it is opened, reopened or marked ready, and again when
 `awaiting-author` comes off it: its author commented `ready` (see batch-queue.yml), or a
@@ -41,18 +43,18 @@ import sys
 _REST_SPEC = importlib.util.spec_from_file_location("rh_github_rest", Path(__file__).with_name("github-rest.py"))
 _rest = importlib.util.module_from_spec(_REST_SPEC)
 _REST_SPEC.loader.exec_module(_rest)
+_labels = _rest.load("batch-labels.py")
 
 INBOX = "inbox"
 # Handed back to the author. Taking it off hands the pull request back to the maintainers.
-WAITING = "awaiting-author"
+WAITING = _labels.WAITING
 # Labels that mean a maintainer has already decided what happens next.
-DECIDED = ("batch queue", "building", WAITING)
+DECIDED = (_labels.QUEUED, _labels.BUILDING, WAITING)
 # Labels that label-pr.yml keeps up to date from the files a pull request changes and its size.
 # Someone adding or removing one of these by hand has not responded to the pull request: they were
 # all put on by hand once, before that workflow existed.
 AUTOMATIC = ("CI", "changes-challenge", "changes-lake", "changes-solution", "documentation",
              "extra small", "small", "medium", "large", "extra large")
-PREFIX = "batch/"
 # Repository roles whose response takes a pull request out of the inbox. The REST API reports
 # maintain as write and triage as read under `permission`, so `role_name` is the one to read.
 ROLES = ("admin", "maintain", "write", "triage")
@@ -63,6 +65,7 @@ GRACE = datetime.timedelta(minutes=10)
 ACTOR = "{ __typename login }"
 FIELDS = f"""
   number state isDraft headRefName createdAt
+  headRepository {{ nameWithOwner }}
   author {{ login }}
   labels(first: 100) {{ nodes {{ name }} }}
   comments(last: 50) {{ nodes {{ createdAt author {ACTOR} }} }}
@@ -112,7 +115,7 @@ class GitHub(_rest.GitHub):
         while True:
             page = self.graphql(EVERY, owner=self.owner, name=self.name, after=after)
             page = page["repository"]["pullRequests"]
-            found += [pull(node) for node in page["nodes"]]
+            found += [pull(node, self.repo) for node in page["nodes"]]
             if not page["pageInfo"]["hasNextPage"]:
                 return found
             after = page["pageInfo"]["endCursor"]
@@ -126,7 +129,7 @@ class GitHub(_rest.GitHub):
         """One pull request, open or not, or None if there is no such pull request."""
         node = self.graphql(ONE, owner=self.owner, name=self.name, number=number)
         node = node["repository"]["pullRequest"]
-        return pull(node) if node else None
+        return pull(node, self.repo) if node else None
 
     def can_triage(self, login):
         """Whether `login` has triage access or more to this repository."""
@@ -170,8 +173,9 @@ def person(actor):
     return actor.get("login")
 
 
-def pull(node):
-    """What this script needs to know about a pull request, from GraphQL's answer."""
+def pull(node, repo):
+    """What this script needs to know about a pull request, from GraphQL's answer. `repo` is this
+    repository, as `owner/name`."""
     entered = when(node["createdAt"])
     added = added_by = removed = removed_by = None
     responses = []
@@ -206,6 +210,8 @@ def pull(node):
     responses.sort(key=lambda response: response["at"])
     return {
         "number": node["number"], "open": node["state"] == "OPEN", "draft": node["isDraft"],
+        "batch": _labels.holds_batch(repo, (node.get("headRepository") or {}).get("nameWithOwner"),
+                                     node["headRefName"]),
         "ref": node["headRefName"], "author": (node.get("author") or {}).get("login"),
         "labels": {label["name"] for label in node["labels"]["nodes"]},
         "entered": entered, "responses": responses,
@@ -217,7 +223,7 @@ def unavailable(pr):
     """Why the pull request cannot be in the inbox at all, or None if it can."""
     if pr["draft"]:
         return "it is a draft"
-    if pr["ref"].startswith(PREFIX):
+    if pr["batch"]:
         return "it is a batch"
     decided = [label for label in DECIDED if label in pr["labels"]]
     if decided:

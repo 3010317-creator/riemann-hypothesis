@@ -78,11 +78,12 @@ import sys
 _REST_SPEC = importlib.util.spec_from_file_location("rh_github_rest", Path(__file__).with_name("github-rest.py"))
 _rest = importlib.util.module_from_spec(_REST_SPEC)
 _REST_SPEC.loader.exec_module(_rest)
+_labels = _rest.load("batch-labels.py")
 
-QUEUED, BUILDING = "batch queue", "building"
+QUEUED, BUILDING = _labels.QUEUED, _labels.BUILDING
 # A maintainer's label: pull requests that carry it go into a batch before the others.
-PRIORITY = "priority"
-PREFIX = "batch/"
+PRIORITY = _labels.PRIORITY
+PREFIX = _labels.PREFIX
 # The name `start` gives a batch branch. Any other `batch/...` branch is not this script's.
 OWN_BATCH = re.compile(r"batch/[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}(?:-[0-9]+)?")
 BOT = "github-actions[bot]"
@@ -128,13 +129,18 @@ def open_pulls(gh):
     """Every open pull request, by number. Two requests cover a couple of hundred of them."""
     found = {}
     for info in gh.pages("pulls?state=open"):
-        head = info["head"]
         found[info["number"]] = {
-            "number": info["number"], "sha": head["sha"], "ref": head["ref"],
-            "own": (head.get("repo") or {}).get("full_name") == gh.repo, "base": info["base"]["ref"],
+            "number": info["number"], "sha": info["head"]["sha"], "ref": info["head"]["ref"],
+            "batch": holds_batch(gh, info), "base": info["base"]["ref"],
             "labels": {label["name"] for label in info["labels"]},
             "updated": info["updated_at"], "body": info.get("body") or ""}
     return found
+
+
+def holds_batch(gh, info):
+    """Whether a pull request, as GitHub's REST API gives it, holds a batch (see `batch-labels.py`)."""
+    head = info["head"]
+    return _labels.holds_batch(gh.repo, (head.get("repo") or {}).get("full_name"), head["ref"])
 
 
 def own_batch(ref):
@@ -143,13 +149,14 @@ def own_batch(ref):
 
 
 def is_batch(pr):
-    return pr["own"] and own_batch(pr["ref"])
+    """Whether a pull request holds a batch that `start` began."""
+    return pr["batch"] and own_batch(pr["ref"])
 
 
 def by_hand(pr):
     """Whether a pull request holds a batch assembled by hand: a `batch/...` branch of this
     repository under another name than the ones `start` gives."""
-    return pr["own"] and pr["ref"].startswith(PREFIX) and not own_batch(pr["ref"])
+    return pr["batch"] and not own_batch(pr["ref"])
 
 
 def relabel(gh, pr_or_number, add=None, remove=None):
@@ -265,9 +272,7 @@ def finished(gh, closed_building, known):
         if "pull_request" not in item or str(item["number"]) in known:
             continue
         info = gh.get(f"pulls/{item['number']}")
-        head = info["head"]
-        if ((head.get("repo") or {}).get("full_name") != gh.repo or not head["ref"].startswith(PREFIX)
-                or own_batch(head["ref"])):
+        if not holds_batch(gh, info) or own_batch(info["head"]["ref"]):
             continue
         note = read_record(gh, info["number"])[1]
         batch = {"number": info["number"], "fate": "merged" if info.get("merged") else "closed",
@@ -715,10 +720,9 @@ def reopened(gh, number):
     `building` again is decided by the next sync, as for any other queued pull request.
     """
     info = gh.get(f"pulls/{number}")
-    head = info["head"]
     if info["state"] != "open":
         return [f"#{number} is not open: nothing to put back"]
-    if (head.get("repo") or {}).get("full_name") == gh.repo and head["ref"].startswith(PREFIX):
+    if holds_batch(gh, info):
         return [f"#{number} holds a batch: nothing to put back"]
     if {label["name"] for label in info["labels"]} & {QUEUED, BUILDING}:
         return [f"#{number} already carries `{QUEUED}` or `{BUILDING}`"]

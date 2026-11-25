@@ -752,6 +752,15 @@ class OtherBatchBranches(unittest.TestCase):
         self.assertIn("batch/removals-2026-11-24", gh.refs)
         self.assertNotIn(("DELETE", "git/refs/heads/batch/removals-2026-11-24", None), gh.writes)
 
+    def test_a_batch_branch_of_a_fork_is_an_ordinary_pull_request(self):
+        gh = Fake()
+        gh.add_pull(15, "head15", ref="batch/mine")
+        queue(gh, 15)
+        log = sync(gh)
+        self.assertEqual(merges(gh), [sha("head15")])
+        self.assertIn(f"added #15 at `{short('head15')}` to `{FIRST}`", log)
+        self.assertEqual(gh.pulls[15]["labels"], {QUEUED})
+
 
 HAND = "batch/b4-on-896"
 
