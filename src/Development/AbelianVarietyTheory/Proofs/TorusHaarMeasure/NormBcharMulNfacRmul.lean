@@ -91,7 +91,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] in
 private lemma diag_prod_ne_zero_of_mem_bor {r : ℕ} {Ψ : Finset (E →+* ℂ)} {b : _root_.ReciprocityTheory.ChartRestriction.G.FD.Frame Ψ r}
     (hb : b ∈ _root_.ReciprocityTheory.ChartRestriction.G.FD.Bor Ψ r) (τ : Ψ) (i : Fin (r + 1)) :
     ∏ j : Fin i, _root_.ReciprocityTheory.ChartRestriction.G.FD.mat b τ (Fin.castLE (by omega) j) (Fin.castLE (by omega) j) ≠ 0 :=
-  Finset.prod_ne_zero_iff.2 fun j _ => mat_diag_ne_zero_of_mem_bor hb τ _
+  Finset.prod_ne_zero_iff.2 fun _ _ => mat_diag_ne_zero_of_mem_bor hb τ _
 
 open NumberField MeasureTheory Topology in
 open scoped ContDiff ENNReal Matrix in
