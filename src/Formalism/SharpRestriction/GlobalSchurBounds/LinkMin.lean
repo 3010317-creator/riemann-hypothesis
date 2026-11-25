@@ -1334,7 +1334,7 @@ theorem linkGLOBAL7_items (Fm : FamP eps) (Cabs CH C0 : ℝ) (hCabs : 0 ≤ Cabs
   have hDl := dl_of_chosen Fm C5' cQD
   have hSM : SlopesMF Fm := flipTwoThree.slopesMF_of_count_fam Fm hZ2 hZ3 hCount hDl tCV
   have hSN : SlopesNF Fm :=
-    slopesNF_of Fm (Formalism.L2.GlobalTheoryTheory.Places.placesF_min' Fm (J.lemma_five_one_of_theorem_two Fm hTu hE) hNC hTu hRank lG lMu)
+    slopesNF_of Fm (Formalism.L2.GlobalTheoryTheory.Places.placesF_of_local_conditions Fm (J.lemma_five_one_of_theorem_two Fm hTu hE) hNC hTu hRank lG lMu)
   have hLat : LatF Fm := latF Fm lD hNF hRank hRR
   have hFr : FrameF Fm CH := frameF_of Fm CH C0 hCH (by linarith)
     (frameRealF_of'' Fm Cabs CH C0 hCH.le lD lI lS cPr hNF hRank hTu (ramRankF_min Fm hE)
