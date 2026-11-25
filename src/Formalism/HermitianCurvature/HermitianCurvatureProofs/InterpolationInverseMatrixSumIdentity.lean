@@ -380,7 +380,6 @@ end Main
 
 end Formalism.FourierDecayAlt.P.NFx3
 
-open Matrix Finset
 
 namespace Formalism.FourierDecayAlt.P.NFx3
 

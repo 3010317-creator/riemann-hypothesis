@@ -460,7 +460,6 @@ theorem opMat_adj (hH : B.OkH) (i : B.Pl × ℕ) : ∃ i', (B.opMat i)ᴴ * B.S.
 
 end CyclotomicLifting
 
-open CyclotomicLifting
 
 namespace DefFam
 

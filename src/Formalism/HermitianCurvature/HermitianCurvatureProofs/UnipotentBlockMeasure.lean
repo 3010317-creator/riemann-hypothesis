@@ -61,7 +61,6 @@ open Formalism.FourierDecayAlt Formalism.FourierDecayAlt.PN
 section
 
 open Finset
-open Formalism.FourierDecayAlt
 
 theorem book_constants_pos_of_pos {P : Type} [Fintype P] (B : S3.MassData P) (h : B.Pos) :
     0 < B.Gam1 ∧ 0 < B.μK ∧ 0 < B.μKpp ∧ 0 < B.μSpp ∧ 0 < B.μSpp' ∧ 0 < B.MM ∧ 0 < B.unitLevelVolume ∧
@@ -947,7 +946,6 @@ open Formalism.FourierDecayAlt Formalism.FourierDecayAlt.PN
 section
 
 open Finset NumberField
-open Formalism.FourierDecayAlt Formalism.FourierDecayAlt.PN
 
 lemma pos_facts {P : Type} [Fintype P] (B : S3.MassData P) (h : B.Pos) :
     0 < B.AA ∧ 0 < B.d * B.d' / B.Dstar := by
