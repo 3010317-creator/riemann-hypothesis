@@ -1108,26 +1108,6 @@ theorem hypZ_term (D : D7) (p : ℕ) [Fact p.Prime] {N0 N1 : ℕ} (σ : MaximalU
   · simp [hs, map_mul, mul_assoc]
   · simp [hs, map_mul, mul_assoc]
 
-theorem bijective_orbMap (D : D7) (p : ℕ) (R : Finset (OrbitPlaces.Pl D)) (hR : OrbitPlaces.IsReps D p R) :
-    Function.Bijective (fun y : R × ZMod (nP D p) => OrbitPlaces.orbMap D p y.1 y.2) := by
-  constructor
-  · rintro ⟨r₁, s₁⟩ ⟨r₂, s₂⟩ h
-    simp only at h
-    have hr : (r₁ : OrbitPlaces.Pl D) = r₂ := by
-      obtain ⟨r0, _, hu⟩ := hR (OrbitPlaces.orbMap D p r₁ s₁)
-      have e1 := hu r₁ ⟨r₁.2, s₁.val, rfl⟩
-      have e2 := hu r₂ ⟨r₂.2, s₂.val, h.symm⟩
-      rw [e1, e2]
-    have hr' : r₁ = r₂ := Subtype.ext hr
-    subst hr'
-    have hs : s₁ = s₂ := ZMod.val_injective _ (posPl_inj D p r₁ _ _ (ZMod.val_lt s₁) (ZMod.val_lt s₂) h)
-    rw [hs]
-  · intro z
-    obtain ⟨r0, ⟨hr0, e, he⟩, _⟩ := hR z
-    refine ⟨(⟨r0, hr0⟩, (e : ZMod (nP D p))), ?_⟩
-    show posPl D p r0 (e : ZMod (nP D p)).val = z
-    rw [ZMod.val_natCast, posPl_mod, he]
-
 end GlobalTheory.KerStd.HypCoord
 
 namespace GlobalTheory.KerStd.HypCoord
@@ -1145,7 +1125,7 @@ theorem hypZ_fOf (D : D7) (p : ℕ) [Fact p.Prime] (σ : MaximalUnramifiedExtens
         MvPowerSeries.X (OrbitPlaces.orbMap D p e.1.1 s, e.2.1, e.2.2) with hF
   have hB : Function.Bijective (fun y : (R × ZMod (nP D p)) × Fin N × Fin N' => ((OrbitPlaces.orbMap D p y.1.1 y.1.2, y.2) :
       OrbitPlaces.Pl D × Fin N × Fin N')) :=
-    (bijective_orbMap D p R hR).prodMap Function.bijective_id
+    (GlobalTheory.KerStd.IntegralSeriesSubstitution.orb_bijective D p R hR).prodMap Function.bijective_id
   let eqv : ((R × ZMod (nP D p)) × Fin N × Fin N') × Fin (nP D p / 2) ≃
       ((R × Fin (nP D p / 2)) × Fin N × Fin N') × ZMod (nP D p) :=
     { toFun := fun y => (((y.1.1.1, y.2), y.1.2), y.1.1.2)
@@ -1269,7 +1249,6 @@ theorem sum_bilin {R : Type*} [CommRing R] {ι κ μ : Type*} [Fintype ι] [Fint
   simp only [Finset.mul_sum]
 
 end GlobalTheory.KerStd.HypCoord.Pair
-
 
 open GlobalTheory.KerStd.HypCoord.Pair in
 theorem GlobalTheory.KerStd.HypCoord.hK_gK_dual : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) (σ : MaximalUnramifiedExtension p →+* MaximalUnramifiedExtension p), UnrOK (MaximalUnramifiedExtension p) p σ → (IsResidueClassZero D p ∨ IsSg D p) → ∀ (N N' : ℕ) (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)) (P : D.what₂.Tau → Matrix (Fin N) (Fin N) D.host.E) (P' : D.what₂.Tau → Matrix (Fin N') (Fin N') D.host.E), StdBases D lam L P → StdBases D lam L' P' → ∀ (r : ℕ) (b : Fin r → Matrix (Fin N') (Fin N) D.host.E), Formalism.L2.KerInert.RepFrame.LamONB D lam b → ∀ w z a b₀ a₁ b₁, ∑ i, hK D lam P P' b w a b₀ i * gK D lam P P' b z a₁ b₁ i = if w = z ∧ a = a₁ ∧ b₀ = b₁ then 1 else 0 := by
@@ -1492,7 +1471,6 @@ open NumberField Formalism.BasicNotions Formalism.MainNotions Formalism.MainNoti
 open Formalism.L2.Th1.CM (MaximalUnramifiedExtension)
 open Formalism.L2.Th1.D (F1 F2 OwOK TrDual phFF)
 open Formalism.InvariantFactorPaths.G7 (UnrOK IsLawOfLog cob)
-
 
 open GlobalTheory.KerStd.HypCoord in
 theorem GlobalTheory.KerStd.hyp_of_stdBases : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) (σ : MaximalUnramifiedExtension p →+* MaximalUnramifiedExtension p), UnrOK (MaximalUnramifiedExtension p) p σ → OrbitPlaces.OrbOK D p → ((IsResidueClassZero D p ∧ hP D p ≠ 0) ∨ IsSg D p) → ∀ (om oms : Fin (nP D p / 2) → MaximalUnramifiedExtension p), OwOK (nP D p) σ om oms → TrDual (nP D p) σ om oms → ∀ (R : Finset (OrbitPlaces.Pl D)), OrbitPlaces.IsReps D p R → ∀ (N N' : ℕ) (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)) (P : D.what₂.Tau → Matrix (Fin N) (Fin N) D.host.E) (P' : D.what₂.Tau → Matrix (Fin N') (Fin N') D.host.E), admitted D N N' L L' → StdBases D lam L P → StdBases D lam L' P' → ∀ (r : ℕ) (b : Fin r → Matrix (Fin N') (Fin N) D.host.E), LocBasis D p (YYl D L L') b → TaylorLogMetric.Orthonormal D b → ∃ f f' : (R × Fin (nP D p / 2)) × Fin N × Fin N' → Fin r → MaximalUnramifiedExtension p, HypPair σ f f' ∧ ∀ (c : ℂ_[p]) (G : MvPowerSeries (D.what₂.Tau × Fin N' × Fin N) ℂ_[p]), (MvPowerSeries.subst (fun v : OrbitPlaces.Pl D × Fin N × Fin N' => (MvPowerSeries.C c * MvPowerSeries.X v : MvPowerSeries (OrbitPlaces.Pl D × Fin N × Fin N') ℂ_[p])) (stdSer D lam (fun _ => 1) P P' G) : MvPowerSeries (OrbitPlaces.Pl D × Fin N × Fin N') ℂ_[p]) = MvPowerSeries.subst (hypZ D p σ om oms R f f') (thOrth D lam c b G) := by

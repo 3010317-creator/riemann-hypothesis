@@ -114,11 +114,6 @@ lemma Hpk_mulVec (v : Fin (2 * r + k + 1) → ℂ) (i) :
     (Hpk k r *ᵥ v) i = sgnIx k r i * v (dualIx k r i) := by
   simp [Matrix.mulVec, dotProduct, Hpk_apply]
 
-lemma Hpk_mul_self : Hpk k r * Hpk k r = 1 := by
-  first
-  | exact _root_.Formalism.SharedLemmas.upq_hpk_mul_self
-  | (apply _root_.Formalism.SharedLemmas.upq_hpk_mul_self <;> assumption)
-
 lemma herm_single (v : Fin (2 * r + k + 1) → ℂ) (j) :
     herm (Hpk k r) v (Pi.single j 1) = sgnIx k r j * v (dualIx k r j) := by
   unfold herm
@@ -133,7 +128,7 @@ section U
 variable {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
 
 lemma left_inv_U (hU : gᴴ * Hpk k r * g = Hpk k r) : (Hpk k r * gᴴ * Hpk k r) * g = 1 := by
-  rw [Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc gᴴ, hU, Hpk_mul_self]
+  rw [Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc gᴴ, hU, Formalism.QuantumDeterminants.GBasic.Hpk_sq]
 
 lemma inv_eq_U (hU : gᴴ * Hpk k r * g = Hpk k r) : g⁻¹ = Hpk k r * gᴴ * Hpk k r :=
   Matrix.inv_eq_left_inv (left_inv_U hU)
@@ -158,8 +153,8 @@ lemma H_mul_inv_adj (hU : gᴴ * Hpk k r * g = Hpk k r) : Hpk k r * (g⁻¹)ᴴ 
     conv_lhs => rw [← hU]
     rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, h1, Matrix.one_mul]
   calc Hpk k r * (g⁻¹)ᴴ = Hpk k r * ((g⁻¹)ᴴ * Hpk k r) * Hpk k r := by
-        rw [Matrix.mul_assoc, Matrix.mul_assoc, Hpk_mul_self, Matrix.mul_one]
-    _ = g * Hpk k r := by rw [h2, ← Matrix.mul_assoc, Hpk_mul_self, Matrix.one_mul]
+        rw [Matrix.mul_assoc, Matrix.mul_assoc, Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.mul_one]
+    _ = g * Hpk k r := by rw [h2, ← Matrix.mul_assoc, Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.one_mul]
 
 lemma inv_apply_U (hU : gᴴ * Hpk k r * g = Hpk k r) (i j) :
     g⁻¹ i j = sgnIx k r i * star (g (dualIx k r j) (dualIx k r i)) * sgnIx k r j := by
@@ -168,7 +163,7 @@ lemma inv_apply_U (hU : gᴴ * Hpk k r * g = Hpk k r) (i j) :
 lemma apply_eq_inv_U (hU : gᴴ * Hpk k r * g = Hpk k r) (i j) :
     g i j = sgnIx k r i * star (g⁻¹ (dualIx k r j) (dualIx k r i)) * sgnIx k r j := by
   have : g = Hpk k r * (g⁻¹)ᴴ * Hpk k r := by
-    rw [H_mul_inv_adj hU, Matrix.mul_assoc, Hpk_mul_self, Matrix.mul_one]
+    rw [H_mul_inv_adj hU, Matrix.mul_assoc, Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.mul_one]
   conv_lhs => rw [this]
   rw [mul_Hpk_apply, Hpk_mul_apply, Matrix.conjTranspose_apply]
 

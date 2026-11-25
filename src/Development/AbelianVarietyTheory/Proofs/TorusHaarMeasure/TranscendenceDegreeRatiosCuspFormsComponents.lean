@@ -325,11 +325,6 @@ theorem phla_lin {r : ℕ} (X : Data E r) {x : Frame X.Ψ r} (hx : x ∈ X.dom) 
   push_cast
   ring
 
-theorem cpt_differentiable {r : ℕ} (X : Data E r) (x0 : Frame X.Ψ r) :
-    Differentiable ℂ (cpt X x0) :=
-  differentiable_pi.2 fun τ => differentiable_pi.2 fun a => differentiable_pi.2 fun b =>
-    (IW.cpt_entry_cd X x0 τ a b).differentiable (by simp)
-
 noncomputable def ratio {r : ℕ} (X : Data E r) (L eW : Wt X.Ψ r) {N : ℕ} (a : ℕ)
     (w : Fin N → Frame X.Ψ r → ℂ) (et : Frame X.Ψ r → ℂ) (x : Frame X.Ψ r) : ℝ :=
   X.pnorm eW et x ^ 2 / (∑ k, X.pnorm L (w k) x ^ 2) ^ a
@@ -444,7 +439,7 @@ theorem levi_pos {r : ℕ} {X : Data E r} {L eW : Wt X.Ψ r} {N a : ℕ}
       ContDiffAt ℂ 2 (fun z => P (cpt X x z)) 0 := by
     intro P hP
     have h1 : DifferentiableOn ℂ (fun z => P (cpt X x z)) (OmF X x) :=
-      hP.comp (cpt_differentiable X x).differentiableOn fun _ hz => hz
+      hP.comp (ReciprocityTheory.ChartRestriction.G.AR.Up.PoinPf.diff_cpt X x).differentiableOn fun _ hz => hz
     exact ((contDiffOn_of_differentiableOn _ _ _ hO h1).contDiffAt htn).of_le
       (WithTop.coe_le_coe.2 le_top)
   have hga := holo het.1
@@ -526,7 +521,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) 
     rwa [hz]
   obtain ⟨j0, jj, hj0, hdet⟩ := GlobalTheory.LeviRank.main (nd X) N (fun k z => w k (cpt X x z))
     (OmF X x) (ExF.isOpen_OmF X x) h0
-    (fun k => (hw k).1.comp (cpt_differentiable X x).differentiableOn fun _ hz => hz)
+    (fun k => (hw k).1.comp (ReciprocityTheory.ChartRestriction.G.AR.Up.PoinPf.diff_cpt X x).differentiableOn fun _ hz => hz)
     (hnz _ h0) (levi_pos ha hw hnz het hpos hx he hmax)
   exact ⟨x, hx, j0, jj, by simpa only [hz] using hj0, hdet⟩
 
@@ -592,7 +587,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.WeightAlgebra Formalism.MainNotions.Gaps.EtaleWeightGaps Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.BigRec
 
 namespace GlobalTheory.RunWts
-
 
 open ReciprocityTheory.ChartRestriction.G.AR.Inst in
 theorem nd_eq {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (X : ReciprocityTheory.ChartRestriction.G.FD.Data E r)
@@ -701,9 +695,6 @@ theorem strictDom_smul_sub {E : Type} [Field E] [NumberField E] [IsCMField E] {H
       (a (Function.invFun (relab c σ) τ.1, (j : ℕ) - (U.X k).p0)))
     push_cast at hm' ⊢
     linarith
-
-
-
 
 theorem weights_of_run : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D j) (ka wL wF : WeightFamilies.Wt D j) (large₂ : SizeData₂ D) (CK C1 A1 h0 : ℝ) (Tn nP nW : ℕ), SetC large₂ (recPlus h j hj) CK C1 A1 ka wL wF Tn nP nW h0 → ∀ σ, GoodEmb T.Q.c σ → ∀ k : (T.U j σ).Comp, ReciprocityTheory.ChartRestriction.G.AR.Inst.nd ((T.U j σ).X k) = WeightFamilies.dimY D j ∧ ReciprocityTheory.ChartRestriction.G.AR.Inst.IsStrictDom ((T.U j σ).X k) (laU (T.U j σ) (wtA wL) (wL).n k) ∧ (∀ i : ℕ, 0 < i → ReciprocityTheory.ChartRestriction.G.AR.Inst.IsStrictDom ((T.U j σ).X k) ((i * g0 D) • (laU (T.U j σ) (wtA wL) (wL).n k) - (laU (T.U j σ) (wtA (etWt D j i)) ((etWt D j i)).n k))) ∧ (j = D.R.m → ((T.U j σ).X k).p0 = 0 ∨ D.R.r ≤ ((T.U j σ).X k).p0) := by
   intro D T h j hj ka wL wF large₂ CK C1 A1 h0 Tn nP nW hS σ hσ k
@@ -1007,8 +998,6 @@ section Record
 
 variable {D : D7} {T : Top D} (h : LawsP T) {j : ℕ} (hj : InR D j)
 
-
-
 include hj in
 theorem isSec_rd {σ : T.Q.c.F →+* ℂ} (hσ : GoodEmb T.Q.c σ) {u : WeightFamilies.Wt D j}
     (F : (recB h.toLawsCore).Cusp j u) (k : (T.U j σ).Comp) :
@@ -1017,9 +1006,6 @@ theorem isSec_rd {σ : T.Q.c.F →+* ℂ} (hσ : GoodEmb T.Q.c σ) {u : WeightFa
   unfold IsUnf at hU
   have hm : F.1 ∈ sec (T.Q.Xo j) T.Q.c (wtA u) u.n := (Submodule.mem_inf.mp ((esec_mem_C h hj).mp F.2)).1
   exact hU.2.2.2.2.1 (wtA u) u.n (dom_wtA u) F.1 hm k
-
-
-
 
 theorem evC_ne_zero_of_nonZeroComp (hG : GenFrEx (T.Q.Xo j) T.Q.c) {u u' : WeightFamilies.Wt D j}
     (F : (recB h.toLawsCore).Cusp j u) (hF : (recPlus h j hj).NonZeroComp u F)
@@ -1057,9 +1043,6 @@ theorem evC_ne_zero_of_nonZeroComp (hG : GenFrEx (T.Q.Xo j) T.Q.c) {u u' : Weigh
   rw [← hg'Z]
   simpa using hz
 
-
-
-
 include hj in
 theorem trdeg_of_ratiosFree (hG : GenFrEx (T.Q.Xo j) T.Q.c) {σ : T.Q.c.F →+* ℂ} (hσ : GoodEmb T.Q.c σ)
     {wL : WeightFamilies.Wt D j} {N : ℕ} (w : Fin N → (recB h.toLawsCore).Cusp j wL)
@@ -1095,9 +1078,6 @@ theorem trdeg_of_ratiosFree (hG : GenFrEx (T.Q.Xo j) T.Q.c) {σ : T.Q.c.F →+* 
   exact h2
 
 end Record
-
-
-
 
 theorem trdeg_ratios_record : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D j) (hG : GenFrEx (T.Q.Xo j) T.Q.c) (ka wL wF : WeightFamilies.Wt D j) (G : GlobalFamilyData (recPlus h j hj) ka wL wF) (c : ℝ) (large₂ : SizeData₂ D) (CK C1 A1 h0 : ℝ) (Tn nP nW : ℕ), SetC large₂ (recPlus h j hj) CK C1 A1 ka wL wF Tn nP nW h0 → NoCommonZero (T.Q.Xo j) T.Q.c (fun i => (G.w i).1) → (j < D.R.m → 0 < G.iet ∧ (recPlus h j hj).NonZeroComp _ G.et ∧ ∃ σ, GoodEmb T.Q.c σ ∧ PhRec h j σ G.w G.iet G.et c) → 0 ≤ c → 2 * c * g0 D ≤ 1 → ∀ Z : Comp (T.Q.Xo j) T.Q.c, ∃ k₀, evC hG Z (G.w k₀).1 ≠ 0 ∧ Algebra.trdeg T.Q.c.F (IntermediateField.adjoin T.Q.c.F (Set.range fun k => evC hG Z (G.w k).1 / evC hG Z (G.w k₀).1)) = WeightFamilies.dimY D j := by
   intro D T h j hj hG ka wL wF G c large₂ CK C1 A1 h0 Tn nP nW hS hN hrun hc hc2 Z

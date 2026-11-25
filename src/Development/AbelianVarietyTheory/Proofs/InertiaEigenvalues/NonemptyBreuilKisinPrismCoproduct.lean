@@ -613,7 +613,6 @@ end GlobalTheory.BSP.WDelta
 
 namespace GlobalTheory.BSP
 
-
 open GlobalTheory.BSP.WDelta in
 theorem C_mem_δLocus_of_hausdorff : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZero a] (C : Type) [CommRing C]
     (DC : Delta l C) (J : Ideal C), (l : C) ∈ J → IsHausdorff J C → ∀ σ : (Wq l a)⟦X⟧ →+* C,
@@ -1042,32 +1041,11 @@ section -- clump:auto
 
 namespace GlobalTheory.PowerBound
 
-theorem pow_le {A : Type} [CommRing A] (a d : A) (n : ℕ) :
-    (Ideal.span {a} ⊔ Ideal.span {d}) ^ (n + 1) ≤
-      Ideal.span {a ^ (n + 1)} ⊔ Ideal.span {d} * (Ideal.span {a} ⊔ Ideal.span {d}) ^ n := by
-  induction n with
-  | zero => simp
-  | succ n ih =>
-    set I := Ideal.span {a} ⊔ Ideal.span {d} with hI
-    have haI : a ^ (n + 1) ∈ I ^ (n + 1) :=
-      Ideal.pow_mem_pow (Ideal.mem_sup_left (Ideal.mem_span_singleton_self a)) _
-    calc I ^ (n + 1 + 1) = I * I ^ (n + 1) := pow_succ' I (n + 1)
-      _ ≤ I * (Ideal.span {a ^ (n + 1)} ⊔ Ideal.span {d} * I ^ n) := Ideal.mul_mono_right ih
-      _ = I * Ideal.span {a ^ (n + 1)} ⊔ Ideal.span {d} * (I * I ^ n) := by
-          rw [Ideal.mul_sup, mul_left_comm]
-      _ ≤ Ideal.span {a ^ (n + 1 + 1)} ⊔ Ideal.span {d} * I ^ (n + 1) := by
-          apply sup_le
-          · rw [hI, Ideal.sup_mul, Ideal.span_singleton_mul_span_singleton, ← pow_succ']
-            apply sup_le_sup_left
-            exact Ideal.mul_mono_right ((Ideal.span_singleton_le_iff_mem _).2 haI)
-          · rw [← pow_succ']
-            exact le_sup_right
-
 theorem main : ∀ {A : Type} [inst : CommRing A] (a d : A) (n : ℕ) {x : A},
     x ∈ (Ideal.span {a} ⊔ Ideal.span {d}) ^ (n + (1 : ℕ)) →
       ∃ (u : A), ∃ w ∈ (Ideal.span {a} ⊔ Ideal.span {d}) ^ n, x = a ^ (n + (1 : ℕ)) * u + d * w := by
   intro A _ a d n x hx
-  obtain ⟨y, hy, z, hz, rfl⟩ := Submodule.mem_sup.1 (pow_le a d n hx)
+  obtain ⟨y, hy, z, hz, rfl⟩ := Submodule.mem_sup.1 (GlobalTheory.BSP.span_sup_span_pow_succ_le a d n hx)
   obtain ⟨u, rfl⟩ := Ideal.mem_span_singleton'.1 hy
   obtain ⟨w, hw, rfl⟩ := Ideal.mem_span_singleton_mul.1 hz
   exact ⟨u, w, hw, by ring⟩
@@ -1345,8 +1323,6 @@ def lift (hI : B.I = Ideal.span {d}) {C : Obj l ↥(OL K)} (f : Hom B C) (h0 : E
   f_I := I_of En hI f h0 h0a
   f_str := str_of En hI f h0 h0a (I_of En hI f h0 h0a)
 
-
-
 theorem univ (hF : IsFrame bk B d p) (g0 : Hom bk.prism (obj hF.1 En))
     (hg0 : BK.hf g0 X = En.i p + En.i d * En.w) (C : Obj l ↥(OL K)) (f : Hom B C)
     (g : Hom bk.prism C) : ∃! h : Hom (obj hF.1 En) C, h.comp (inl hF.1 En) = f ∧ h.comp g0 = g := by
@@ -1393,7 +1369,6 @@ def env (hF : IsFrame bk B d p) : Env bk B d p :=
     tb_b := En.tb_b }
 
 end GlobalTheory.BSP.EnvCop
-
 
 open GlobalTheory.BSP.EnvCop in
 theorem GlobalTheory.BSP.nonempty_env : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (B : Obj l ↥(OL K))

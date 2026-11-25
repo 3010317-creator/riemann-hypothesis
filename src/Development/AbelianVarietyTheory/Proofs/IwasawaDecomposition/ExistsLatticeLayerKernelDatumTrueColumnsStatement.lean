@@ -372,8 +372,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.Df NumberField IsDedekindDomain
 
-theorem _root_.GlobalTheory.T.columnChoice_cloudBound_le_cG : StepW Pinned fun K B f T w => ∀ Z : w.Lt, ∃ c : ℕ, (∀ u, Formalism.L2.G.CloudBound (w.D Z) u c) ∧ ∀ L : SizeData₂ (w.D Z), L.sc = K.s → Val K.C K.cD K.ch L → (c : ℝ) ≤ G.cG L := by
-  first | exact @GlobalTheory.Mem.Top.Bl.cloudBound_step
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ColumnChoiceCloudBoundLeExplicitParametersStatement =====
@@ -389,7 +387,6 @@ namespace GlobalTheory.GyLat
 
 open Formalism.L2.G Formalism.MainNotions.G Formalism.UG Formalism.FrobeniusOrbits
 open scoped TensorProduct
-
 
 open Classical in
 theorem arith_bsH_eq {φ : Formalism.HC.Frame} (h t : φ.A) : Formalism.L2.GlobalTheoryTheory.Arith.bsH h t = Formalism.L2.G.bsH φ h t := by
@@ -544,8 +541,6 @@ noncomputable def fillsC (c : ℕ) (hcl : ∀ u, CloudBound (recG D sc Ce Lc X h
   fillsRec D u _ (X u w h).hS (rSc sc D.R.k (D.what₂.places.resChar w)) (Lc u) (X u w h).I (X u w h).ψ
     (repP (Lc u) _) (epSc D.R sc Ce (D.what₂.places.resChar w)) c ⟨(hcl u).top, (hcl u).off, (hcl u).fill⟩
 
-
-
 theorem latTied_fillsC (c : ℕ) (hcl : ∀ u, CloudBound (recG D sc Ce Lc X hd) u c)
     (Lv : ∀ u w h, Levels (fillsC D sc Ce Lc X hd c hcl u w h)) (Ch : ∀ u w h, Chain (Lv u w h))
     (Vram : ∀ u w h, Submodule ((recG D sc Ce Lc X hd).gat u w h).O ((recG D sc Ce Lc X hd).gat u w h).Fn)
@@ -578,8 +573,6 @@ open Formalism.L2.G Formalism.MainNotions.G Formalism.UG Formalism.FrobeniusOrbi
 
 attribute [local instance] Formalism.BasicNotions.factResChar
 
-
-
 theorem latLayer_of_eq (sc : Scale) (D : D7) (Gt : GatTies D) (D0 : D7) (Ce : ℝ)
     (Lc : ∀ u, ColLevel D0.R D0.host.F D0.host.E D0.sp D0.host.g (D0.mem u).C (D0.mem u).A (D0.clsLat u))
     (X : ∀ u (w : D0.what₂.places.Pl), GIdx D0.host (D0.mem u).A.T (D0.what₂.places.resChar w) →
@@ -611,8 +604,6 @@ end GlobalTheory.GyLat
 namespace GlobalTheory.Mem.Top.Bl
 
 open GlobalTheory.GyLat
-
-
 
 theorem latLayer_free : ∀ {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} (w : ColW B f T), K.Over B.toPre → Forced K B T → Pinned K B f T w →
     ∀ (Z : w.Lt) (t : ColumnDataSplitPrimes K w Z) (Wt : Set B.places.Pl) (nch : NChoice (w.D Z)) (_ : NchT w Z Wt nch) (Y : DivX (w.D Z)),
@@ -768,7 +759,6 @@ theorem isUnit_det_rhoMat {D : D7} {Gt : GatTies D} {c : LatCmp D} {Tw : TwForms
     (RingEquiv.toRingHom (((Fl.Pj j).σ ((posJ Gt u w h Fl j).symm τ).1) ^ ((posJ Gt u w h Fl j).symm τ).2.val))))
   rw [e] at hu
   exact hu
-
 
 open Classical in
 theorem exists_th_served : ∀ {D : D7} {Dx : DivX D} (Gt : GatTies D) {c : LatCmp D} {Tw : TwForms D} {u : D.what₂.Word} {w : D.what₂.places.Pl}
@@ -975,8 +965,6 @@ theorem exists_pow_smul {π : R} (hπ : Irreducible π) {k : ℕ} (g : Matrix (F
   rw [Matrix.smul_apply, Matrix.map_apply, Matrix.of_apply, map_mul, hy, ← map_pow, h1, map_mul, smul_eq_mul,
     Algebra.smul_def, mul_assoc]
 
-
-
 end TupApx
 
 end GlobalTheory.GO
@@ -1100,23 +1088,11 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Fo
 noncomputable section
 namespace GlobalTheory.Mem.Top.KerGlob
 
-theorem colSpan_mul_le {R K : Type} [CommRing R] [Field K] [Algebra R K] {k : ℕ} (g : Matrix (Fin k) (Fin k) K)
-    (u : Matrix (Fin k) (Fin k) R) :
-    Formalism.MainNotions.G.colSpan R (g * u.map (algebraMap R K)) ≤ Formalism.MainNotions.G.colSpan R g := by
-  rw [Formalism.MainNotions.G.colSpan, Submodule.span_le]
-  rintro _ ⟨c, rfl⟩
-  have : (fun i => (g * u.map (algebraMap R K)) i c) = ∑ j, u j c • fun i => g i j := by
-    funext i
-    simp [Matrix.mul_apply, Algebra.smul_def, mul_comm]
-  change (fun i => (g * u.map (algebraMap R K)) i c) ∈ Formalism.MainNotions.G.colSpan R g
-  rw [this]
-  exact Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, rfl⟩)
-
 theorem colSpan_mul_eq {R K : Type} [CommRing R] [Field K] [Algebra R K] {k : ℕ} (g : Matrix (Fin k) (Fin k) K)
     (u : Matrix (Fin k) (Fin k) R) (hu : IsUnit u.det) :
     Formalism.MainNotions.G.colSpan R (g * u.map (algebraMap R K)) = Formalism.MainNotions.G.colSpan R g := by
-  refine le_antisymm (colSpan_mul_le g u) ?_
-  have := colSpan_mul_le (g * u.map (algebraMap R K)) u⁻¹
+  refine le_antisymm (Formalism.MainNotions.Pf14.colSpan_mul_le g u) ?_
+  have := Formalism.MainNotions.Pf14.colSpan_mul_le (g * u.map (algebraMap R K)) u⁻¹
   rwa [Matrix.mul_assoc, ← Matrix.map_mul, Matrix.mul_nonsing_inv _ hu,
     Matrix.map_one _ (map_zero _) (map_one _), Matrix.mul_one] at this
 
@@ -1521,7 +1497,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl NumberField IsDedekindDomain
 
-
 theorem _root_.GlobalTheory.T.levels_kernelData_at_served_place : ∀ {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} (w : ColW B f T), K.Over B.toPre → Forced K B T → Pinned K B f T w →
     ∀ (Z : w.Lt) (t : ColumnDataSplitPrimes K w Z) (Wt : Set B.places.Pl) (nch : NChoice (w.D Z)) (_ : NchT w Z Wt nch) (Y : DivX (w.D Z)),
     V4.MuIsW (w.st Z) f T Wt w.I.xi → TC.QpIs w.I Y.Qp →
@@ -1642,7 +1617,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Fo
 namespace GlobalTheory.Mem.Top.Bl
 
 theorem gyLay_kerT_entC : StepW Pinned fun K B f T w => ∀ (Z : w.Lt) (t : ColumnDataSplitPrimes K w Z) (Wt : Set B.places.Pl) (nch : NChoice (w.D Z)) (_ : NchT w Z Wt nch) (Y : DivX (w.D Z)), V4.MuIsW (w.st Z) f T Wt w.I.xi → TC.QpIs w.I Y.Qp → ∃ (Gy : G.LatInst (w.D Z)) (ker : KerFam (w.D Z) t.Gt t.cmp (w.tw Z) Gy), GyLay K (w.D Z) t.Gt t.cmp Gy ∧ ∃ kt : KerT t.toColT Y Gy ker, ∃ (Pl : Examples₂.EntPl (w.D Z)) (Bs : Formalism.L2.Ker.PlaceMatrixFamily (w.D Z)) (h : Formalism.L2.Ker.KerEntHyp Pl kt.O Bs Y (w.tw Z)), kt.E = Formalism.L2.Ker.kerEntC Pl kt.O Bs h := by
-  have hcl : StepW Pinned fun K B f T w => ∀ Z : w.Lt, ∃ c : ℕ, (∀ u, Formalism.L2.G.CloudBound (w.D Z) u c) ∧ ∀ L : SizeData₂ (w.D Z), L.sc = K.s → Val K.C K.cD K.ch L → (c : ℝ) ≤ G.cG L := GlobalTheory.T.columnChoice_cloudBound_le_cG
+  have hcl : StepW Pinned fun K B f T w => ∀ Z : w.Lt, ∃ c : ℕ, (∀ u, Formalism.L2.G.CloudBound (w.D Z) u c) ∧ ∀ L : SizeData₂ (w.D Z), L.sc = K.s → Val K.C K.cD K.ch L → (c : ℝ) ≤ G.cG L := GlobalTheory.Mem.Top.Bl.cloudBound_step
   refine (StepW.and hcl (StepW.of_all (q := fun K B f T w => (∀ Z : w.Lt, ∃ c : ℕ, (∀ u, Formalism.L2.G.CloudBound (w.D Z) u c) ∧
       ∀ L : SizeData₂ (w.D Z), L.sc = K.s → Val K.C K.cD K.ch L → (c : ℝ) ≤ G.cG L) → _) ?_)).trans
     (StepW.of_all fun _ _ _ _ _ _ _ h => h.2 h.1)

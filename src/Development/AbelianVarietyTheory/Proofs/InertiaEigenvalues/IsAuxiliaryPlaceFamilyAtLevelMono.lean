@@ -160,7 +160,6 @@ open scoped BigOperators
 
 namespace GlobalTheory
 
-
 open scoped BigOperators in
 theorem _root_.GlobalTheory.exists_exponent_strictly_least_weight :
     ∀ (ρ : ℕ) (S : Set (Fin ρ → ℕ)), S.Nonempty → ∃ m ∈ S, ∀ c : Fin ρ → ℕ,
@@ -251,7 +250,6 @@ open scoped BigOperators
 namespace GlobalTheory
 
 open PowerSeries
-
 
 open scoped BigOperators in
 open PowerSeries in
@@ -351,7 +349,6 @@ private theorem C_dvd_one_add_X_pow_prime_pow_sub_one_sub_X_pow {O : Type} [Comm
     simp [hl.ne_zero]
   · simp only [h0, hN', if_false, sub_zero]
     exact h.trans (Nat.cast_dvd_cast (hl.dvd_choose_pow h0 hN'))
-
 
 open scoped BigOperators in
 theorem _root_.GlobalTheory.not_dvd_coeff_aeval_oneAddX_pow_sub_one :
@@ -1102,20 +1099,6 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 open scoped TensorProduct
 
 namespace GlobalTheory.TwistChoice
-
-section Places
-
-variable {R : Ranks} {H : Host R}
-
-theorem conj_conj (H : Host R) (x : H.E) : H.conj (H.conj x) = x := by
-  apply H.φ₀.injective
-  have h1 := H.conjE_apply H.φ₀ (H.conj x)
-  have h2 := H.conjE_apply H.φ₀ x
-  refine h1.trans ?_
-  show starRingEnd ℂ (H.φ₀ (H.conj x)) = _
-  rw [h2, Complex.conj_conj]
-
-end Places
 
 variable {D : Formalism.BasicNotions.D7} {N : NData D.R D.host D.what₂} {X : NTw D.R D.host D.what₂ D.LL0 N}
 

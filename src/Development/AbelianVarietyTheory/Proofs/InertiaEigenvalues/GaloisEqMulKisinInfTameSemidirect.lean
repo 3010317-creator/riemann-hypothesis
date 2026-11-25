@@ -117,7 +117,6 @@ theorem iTot_const {O K : Type} [CommRing O] [Algebra ℤ_[l] O] [Module.Free �
 
 end GlobalTheory.BKGal.CoversConv
 
-
 open GlobalTheory.BKGal.CoversConv GlobalTheory.BKReal in
 theorem GlobalTheory.BKGal.covers_action : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (ϖ : PiSys l e) (LL : FinExt l) [HasUnr a LL] [TameDescentExponentData ↥LL.1 l e a] (k : GQ l) (γ : TameGal ↥LL.1 l e a), Covers ↥LL.1 (thetaW a LL) ϖ k γ → (∀ x : Om l, x ^ l ^ a = x → k x = x ^ l ^ γ.shift.val) ∧ k (ϖ.seq 0) = (((γ.left : (↥LL.1)ˣ) : ↥LL.1) : Om l) * ϖ.seq 0 := by
   intro l _ a e _ _ ϖ LL _ _ k γ hc
@@ -429,13 +428,6 @@ theorem exists_fix_Kur (M : IntermediateField ℚ_[l] (Om l)) (g : GQ l)
     exact (inferInstance : (MaximalUnramifiedExtension l).fixingSubgroup.Normal).conj_mem n hn u
   exact (IntermediateField.mem_fixingSubgroup_iff _ _).1 hmem
 
-theorem seq_add_pow {e : ℕ} (ϖ : PiSys l e) (m k : ℕ) : ϖ.seq (m + k) ^ l ^ k = ϖ.seq m := by
-  induction k with
-  | zero => simp
-  | succ k ih =>
-    show ϖ.seq (m + k + 1) ^ l ^ (k + 1) = _
-    rw [pow_succ', pow_mul, ϖ.seq_succ, ih]
-
 theorem mem_level {a e : ℕ} [NeZero a] (ϖ : PiSys l e) {x : Om l} (hx : x ∈ ϖ.fieldInf a) :
     ∃ n, x ∈ Kunr l a ⊔ IntermediateField.adjoin ℚ_[l] {ϖ.seq n} := by
   let F : ℕ → IntermediateField ℚ_[l] (Om l) := fun n => Kunr l a ⊔ IntermediateField.adjoin ℚ_[l] {ϖ.seq n}
@@ -443,7 +435,7 @@ theorem mem_level {a e : ℕ} [NeZero a] (ϖ : PiSys l e) {x : Om l} (hx : x ∈
     (le_sup_right : _ ≤ F n) (IntermediateField.mem_adjoin_simple_self _ _)
   have hseq : ∀ m k, ϖ.seq m ∈ F (m + k) := by
     intro m k
-    rw [← seq_add_pow ϖ m k]
+    rw [← GlobalTheory.KinfFin.seq_add_pow ϖ m k]
     exact pow_mem (hs (m + k)) _
   have hmono : Monotone F := by
     intro m n hmn

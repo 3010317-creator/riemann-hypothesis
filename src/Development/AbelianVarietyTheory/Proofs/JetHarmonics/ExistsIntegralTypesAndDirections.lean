@@ -1,6 +1,5 @@
 module
 
-
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCmTypeEmbeddingsIntoValuationRing
 public import Mathlib.Data.Nat.Prime.Defs
 public import Mathlib.RingTheory.Finiteness.Defs
@@ -161,8 +160,6 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ
 open Formalism.MainNotions.ModuliIntegralCharts.H1.BoxTuple Formalism.MainNotions.ModuliIntegralCharts.H1.BidegreeTwoJet GlobalTheory GlobalTheory.PowGerm
 open ReciprocityTheory.ChartRestriction.G.TB (colM dAct)
 
-theorem _root_.GlobalTheory.T.integral_chart_directions_are_eigenvectors : EigDirSt := by
-  first | exact @GlobalTheory.PowGerm.eigDirSt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralChartDirectionsAreEigenvectorsStatement =====
@@ -329,7 +326,7 @@ theorem exists_integral_types_and_directions : ∀ (E : Type) [Field E] [NumberF
     intro a ℓ
     funext i
     apply hinj
-    have h := congrFun (GlobalTheory.T.integral_chart_directions_are_eigenvectors E H Dw l Xo c T io y C a ℓ) i
+    have h := congrFun (GlobalTheory.PowGerm.eigDirSt E H Dw l Xo c T io y C a ℓ) i
     simp only [Matrix.mulVec, dotProduct, Pi.smul_apply, smul_eq_mul, hρK, huv, ← hσV'] at h
 
     simp only [Matrix.mulVec, dotProduct, Pi.smul_apply, smul_eq_mul, map_sum, map_mul]

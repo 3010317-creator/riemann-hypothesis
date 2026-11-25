@@ -357,13 +357,6 @@ noncomputable section
 
 namespace GlobalTheory.CrysPrism.GoodX
 
-theorem pow_factorial_dvd (i m : ℕ) : i.factorial ^ m ∣ (m * i).factorial := by
-  induction m with
-  | zero => simp
-  | succ m ih =>
-    rw [pow_succ, Nat.succ_mul]
-    exact (Nat.mul_dvd_mul_right ih _).trans (Nat.factorial_mul_factorial_dvd_factorial_add _ _)
-
 theorem mul_pow_factorial_dvd (l i : ℕ) (hl : l ≠ 0) (hi : i ≠ 0) :
     i.factorial ^ l * l ∣ (l * i).factorial := by
   obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hl
@@ -371,7 +364,7 @@ theorem mul_pow_factorial_dvd (l i : ℕ) (hl : l ≠ 0) (hi : i ≠ 0) :
   have h2 := Nat.choose_mul_factorial_mul_factorial h1
   have h3 : (m + 1) * i - i = m * i := by rw [Nat.succ_mul]; omega
   rw [h3, Nat.choose_mul_right hi] at h2
-  obtain ⟨c, hc⟩ := pow_factorial_dvd i m
+  obtain ⟨c, hc⟩ := GlobalTheory.CrysPrism.factorial_pow_dvd_factorial_mul i m
   refine ⟨((m + 1) * i - 1).choose (i - 1) * c, ?_⟩
   rw [Nat.succ_eq_add_one, ← h2, hc]; ring
 
@@ -485,11 +478,6 @@ theorem neg_mem {x : ZMod a → K⟦X⟧⟦X⟧} (hx : x ∈ QSet t K e) : -x �
   ext j m
   simp only [Pi.neg_apply, map_neg, coeff_ofW, neg_div]
 
-theorem cstW_mem (c : Wq l a) : cstW t K c ∈ QSet t K e := by
-  convert mono_mem t K e c 0 0 using 1
-  funext τ
-  simp [cstW, dpDen]
-
 theorem xFam_mem (i : ℕ) : xFam a K i ∈ QSet t K e := by
   convert mono_mem t K e 1 i 0 using 1
   funext τ
@@ -506,11 +494,11 @@ def qSub (h : ∀ x ∈ QSet t K e, ∀ y ∈ QSet t K e, x * y ∈ QSet t K e) 
   carrier := QSet t K e
   mul_mem' := fun hx hy => h _ hx _ hy
   one_mem' := by
-    convert cstW_mem t K e 1 using 1
+    convert GlobalTheory.CrysPrism.cstW_mem_QSet_of_const t K e 1 using 1
     funext τ; simp [cstW]
   add_mem' := add_mem t K e
   zero_mem' := by
-    convert cstW_mem t K e 0 using 1
+    convert GlobalTheory.CrysPrism.cstW_mem_QSet_of_const t K e 0 using 1
     funext τ; simp [cstW]
   neg_mem' := neg_mem t K e
 
@@ -528,7 +516,7 @@ theorem xFam_mem_GoodSet : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [
   obtain ⟨d, hd⟩ := exists_padic l i hi
   refine abstract (fun n hn x hx => tf_pi (natCast_ne_zero_ps (natCast_ne_zero_ps (Nat.cast_ne_zero.2 hn))) x hx)
     (qSub t K e hmul) (frob2 φ₂) l hl.out.ne_zero (uFam a K) (fun _ => X) (xFam a K) (fun k => ?_)
-    (uFam_mem t K e) (xFam_mem t K e) ?_ i hi (cstW t K (algebraMap ℤ_[l] _ d)) (cstW_mem t K e _) ?_
+    (uFam_mem t K e) (xFam_mem t K e) ?_ i hi (cstW t K (algebraMap ℤ_[l] _ d)) (GlobalTheory.CrysPrism.cstW_mem_QSet_of_const t K e _) ?_
   · funext τ
     have h : (k.factorial : K) ≠ 0 := Nat.cast_ne_zero.2 (Nat.factorial_ne_zero k)
     simp only [Pi.mul_apply, Pi.natCast_apply, Pi.pow_apply, xFam]
@@ -667,7 +655,6 @@ theorem bd_X : Bd 1 (X : K⟦X⟧⟦X⟧) := by
   split_ifs with h
   · rw [coeff_one, if_neg (by omega)]
   · simp
-
 
 variable (K) in
 def fin : Subring K⟦X⟧⟦X⟧ where
@@ -1079,7 +1066,6 @@ theorem ofW_zero : ofW t K e (0 : ℕ × ℕ → Wq l a) = 0 := by
 
 theorem ofW_neg (w : ℕ × ℕ → Wq l a) : ofW t K e (-w) = -ofW t K e w := by
   funext τ; ext i n; simp [coeff_ofW, neg_div]
-
 
 variable (K e) in
 def ofWHom : (ℕ × ℕ → Wq l a) →+ (ZMod a → K⟦X⟧⟦X⟧) where

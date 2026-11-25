@@ -55,12 +55,9 @@ section Gen
 
 variable {L : Type} [Field L] [NumberField L]
 
-theorem ideles_snd_mul (a b : Ideles L) (v : HeightOneSpectrum (𝓞 L)) :
-    ((a * b : Ideles L) : AdeleRing (𝓞 L) L).2 v = (a : AdeleRing (𝓞 L) L).2 v * (b : AdeleRing (𝓞 L) L).2 v := rfl
-
 theorem ideles_snd_inv_mul (a : Ideles L) (v : HeightOneSpectrum (𝓞 L)) :
     ((a⁻¹ : Ideles L) : AdeleRing (𝓞 L) L).2 v * (a : AdeleRing (𝓞 L) L).2 v = 1 := by
-  rw [← ideles_snd_mul, inv_mul_cancel]
+  rw [← ReciprocityTheory.Neutral.Bridge.HCFR.comp_mul, inv_mul_cancel]
   rfl
 
 theorem ideles_finite (a : Ideles L) : {v : HeightOneSpectrum (𝓞 L) | ¬ Valued.v ((a : AdeleRing (𝓞 L) L).2 v) = 1}.Finite := by
@@ -106,7 +103,7 @@ theorem ideles_values {Gp : Type} [CommGroup Gp] (f : Ideles L →* Gp)
       obtain ⟨n, hn⟩ := exists_unif_zpow v0 _ hy
       have h1 : f (a * (localIdele L v0 ((atFin v0 (unif v0)) ^ n))⁻¹) ∈ S := by
         refine ih _ fun v hv => ?_
-        rw [← map_inv, ideles_snd_mul]
+        rw [← map_inv, ReciprocityTheory.Neutral.Bridge.HCFR.comp_mul]
         by_cases hvv : v = v0
         · subst hvv
           rw [localIdele_snd_self, map_mul, Units.val_inv_eq_inv_val, map_inv₀, hn]

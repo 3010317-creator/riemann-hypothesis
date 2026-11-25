@@ -106,29 +106,11 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 
 namespace GlobalTheory.SplitCongNbhd
 
-theorem conjAL_entry (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) (x : GAf L n) (i j : Fin n) :
-    conjAL L (((x : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) i j)
-      = (((x⁻¹ : GAf L n) : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) j i := by
-  have hx : ((x : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) *
-      conjT (conjAL L) ((x : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) = 1 := x.2
-  have h3 : (((x⁻¹ : GAf L n) : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) *
-      ((x : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) = 1 := by
-    rw [← Units.val_mul]; simp
-  have h2 : (((x⁻¹ : GAf L n) : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) =
-      conjT (conjAL L) ((x : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) := by
-    calc _ = (((x⁻¹ : GAf L n) : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) *
-          (((x : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L)) *
-            conjT (conjAL L) ((x : GL (Fin n) (AL L)) : Matrix (Fin n) (Fin n) (AL L))) := by
-            rw [hx, Matrix.mul_one]
-      _ = _ := by rw [← Matrix.mul_assoc, h3, Matrix.one_mul]
-  rw [h2]; simp [conjT, Matrix.transpose_apply, Matrix.map_apply]
-
 theorem ringHom_one_apply {R S : Type*} [Ring R] [Ring S] (f : R →+* S) (n : ℕ) (i j : Fin n) :
     f ((1 : Matrix (Fin n) (Fin n) R) i j) = (1 : Matrix (Fin n) (Fin n) S) i j := by
   rw [Matrix.one_apply, Matrix.one_apply]; split_ifs <;> simp
 
 end GlobalTheory.SplitCongNbhd
-
 
 open GlobalTheory.SplitCongNbhd in
 theorem GlobalTheory.SplitCongNbhd.exists_nhds_one_cong (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ)
@@ -185,7 +167,7 @@ theorem GlobalTheory.SplitCongNbhd.exists_nhds_one_cong (L : Type) [Field L] [Nu
           rw [← map_inv]; rfl
         have h1 : (1 : Matrix (Fin n) (Fin n) K) i j = (1 : Matrix (Fin n) (Fin n) K) j i := by
           simp [Matrix.one_apply, eq_comm]
-        rw [map_mul, map_sub, hconjc, hM, conjAL_entry, ringHom_one_apply, map_mul, map_sub, hprojc, hinv,
+        rw [map_mul, map_sub, hconjc, hM, GlobalTheory.SplitAdelic.conj_entry, ringHom_one_apply, map_mul, map_sub, hprojc, hinv,
           ringHom_one_apply, h1]
         exact (hU j i).2
     have hone : ∀ i j, (1 : Matrix (Fin n) (Fin n) (AL L)) i j ∈ ALint L := by
