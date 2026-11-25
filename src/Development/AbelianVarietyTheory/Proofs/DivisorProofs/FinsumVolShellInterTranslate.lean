@@ -70,8 +70,6 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 open IsDedekindDomain NumberField MeasureTheory Matrix in
 open scoped TensorProduct in
-  _root_.GlobalTheory.LocalData.isLocalField _root_.GlobalTheory.FunObj.borelKw
-  _root_.GlobalTheory.FunObj.borelSpaceKw in
 attribute [local instance] _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.measFv _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.borelFv in
 open ValuativeRel in
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
@@ -85,8 +83,6 @@ end GlobalTheory.PureMatch.ShellVolume
 
 open IsDedekindDomain NumberField MeasureTheory Matrix in
 open scoped TensorProduct in
-  _root_.GlobalTheory.LocalData.isLocalField _root_.GlobalTheory.FunObj.borelKw
-  _root_.GlobalTheory.FunObj.borelSpaceKw in
 attribute [local instance] _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.measFv _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.borelFv in
 open ValuativeRel in
 theorem _root_.GlobalTheory.PureMatch.ShellVolume.finsum_vol_shell_inter_translate : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k]
