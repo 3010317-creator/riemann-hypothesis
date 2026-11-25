@@ -50,12 +50,8 @@ theorem one_add_cayley_mul (g : Matrix (Fin n) (Fin n) R) (h : IsUnit (1 + g).de
   rw [one_add_cayley g h, smul_mul_smul_comm, hc, one_smul, Matrix.nonsing_inv_mul _ h]
 
 private theorem eq_zero_of_mul_mul_eq_zero_of_isUnit_det (A B X : Matrix (Fin n) (Fin n) R)
-    (hA : IsUnit A.det) (hB : IsUnit B.det) (h : A * X * B = 0) : X = 0 := by
-  calc X = (A⁻¹ * A) * X * (B * B⁻¹) := by
-        rw [Matrix.nonsing_inv_mul _ hA, Matrix.mul_nonsing_inv _ hB, Matrix.one_mul,
-          Matrix.mul_one]
-    _ = A⁻¹ * (A * X * B) * B⁻¹ := by simp only [Matrix.mul_assoc]
-    _ = 0 := by rw [h, Matrix.mul_zero, Matrix.zero_mul]
+    (hA : IsUnit A.det) (hB : IsUnit B.det) (h : A * X * B = 0) : X = 0 :=
+  (A.isUnit_iff_isUnit_det.2 hA).mul_right_eq_zero.1 ((B.isUnit_iff_isUnit_det.2 hB).mul_left_eq_zero.1 h)
 
 private theorem isUnit_det_map_of_isUnit_det (σ : R →+* R) (M : Matrix (Fin n) (Fin n) R)
     (h : IsUnit M.det) : IsUnit (M.map σ).det := by
