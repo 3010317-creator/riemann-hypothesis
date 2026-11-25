@@ -702,6 +702,59 @@ theorem hatMx_coord_mem : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} 
 
 end GlobalTheory.XCharBF.HatCoord
 
+namespace GlobalTheory.XCharBF.DiagCoord
+
+variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {F : _root_.GlobalTheory.Asc.Frames G}
+
+theorem diag_mem_complId (hF : Std F) (ρ : ℕ) (h : 2 * ρ + 2 ≤ D.R.m)
+    (u : WO (negSp (G.V (.grid (2 * ρ + 1 + 1) 0))) (G.V (.grid (2 * ρ + 1) 0)))
+    (hu : u ∈ latO (negSp (G.V (.grid (2 * ρ + 1 + 1) 0))) (G.V (.grid (2 * ρ + 1) 0))
+      (G.Λ (.grid (2 * ρ + 1 + 1) 0) : Set _) (G.Λ (.grid (2 * ρ + 1) 0) : Set _) fun _ => True)
+    (p : Fin ρ) :
+    ((F.dJ ρ h).pY ⬝ u ⬝ (F.dB ρ h).jY) p p ∈ complId (D.host.AA * G.pl.stAbar sc) := by
+  let f : Matrix (Fin (G.V (.grid (2 * ρ + 1) 0)).rank) (Fin (G.V (.grid (2 * ρ + 2) 0)).rank) D.host.E →ₗ[𝓞 D.host.E]
+      D.host.E :=
+    { toFun := fun x => ((F.dJ ρ h).qY * x * (F.dB ρ h).e') p p
+      map_add' := fun x y => by
+        simp only [Matrix.mul_add, Matrix.add_mul, Matrix.add_apply]
+      map_smul' := fun c x => by
+        simp only [Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_apply, RingHom.id_apply] }
+  let M := ((D.host.AA * G.pl.stAbar sc : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) :
+    Submodule (𝓞 D.host.E) D.host.E).comap f
+  have hS : IsSelfDualC _ (G.Λ (.grid (2 * ρ + 1 + 1) 0)) :=
+    (G.sp.V_is (2 * ρ + 1 + 1) 0 (by omega) h (by omega)).sd
+  have hu' : u ∈ hatMx M := GlobalTheory.SecondBaseChar.latO_le hS (fun a ha x hx => by
+    change ((F.dJ ρ h).qY * (a • x) * (F.dB ρ h).e') p p ∈ (_ : FractionalIdeal _ _)
+    rw [Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_apply, smul_eq_mul]
+    exact FractionalIdeal.mul_mem_mul ha (HatCoord.coord_mem_stAbar hF ρ h hx p)) hu
+  unfold hatMx at hu'
+  clear hu
+  induction hu' using AddSubgroup.closure_induction with
+  | mem w hw =>
+    obtain ⟨α, hα, y, hy, rfl⟩ := hw
+    have ht : ((F.dJ ρ h).qY * y * (F.dB ρ h).e') p p ∈ (D.host.AA * G.pl.stAbar sc) := hy
+    rw [HatCoord.gen_eq]
+    unfold HypDec.pY HypDec.jY
+    rw [Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_apply, smul_eq_mul]
+    unfold rat
+    rw [← Matrix.map_mul, ← Matrix.map_mul, Matrix.map_apply]
+    unfold incA
+    rw [show inclR (AF D.host.F) (((F.dJ ρ h).qY * y * (F.dB ρ h).e') p p) =
+        (1 : AF D.host.F) ⊗ₜ[D.host.F] (((F.dJ ρ h).qY * y * (F.dB ρ h).e') p p) from rfl,
+      Algebra.TensorProduct.tmul_mul_tmul, one_mul, mul_one]
+    exact tmul_mem_complId hα ht
+  | zero =>
+    rw [Matrix.mul_zero, Matrix.zero_mul, Matrix.zero_apply]
+    exact zero_mem _
+  | add w z _ _ hw hz =>
+    rw [Matrix.mul_add, Matrix.add_mul, Matrix.add_apply]
+    exact add_mem hw hz
+  | neg w _ hw =>
+    rw [Matrix.mul_neg, Matrix.neg_mul, Matrix.neg_apply]
+    exact neg_mem hw
+
+end GlobalTheory.XCharBF.DiagCoord
+
 end
 end -- clump:auto
 end -- clump:auto
