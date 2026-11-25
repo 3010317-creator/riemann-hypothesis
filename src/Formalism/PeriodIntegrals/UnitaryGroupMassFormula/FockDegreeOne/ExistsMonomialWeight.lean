@@ -16,28 +16,11 @@ namespace PI.FockOneDegW.Core
 open PI.FockOneDegW PI.FockOneDegW.Inner
 open PI.FockWtDegWork (W1 coeff_of_diag fockAct1_monomial lw wt_of_isHW)
 
-theorem pd_comm {σ : Type*} (i j : σ) (P : MvPolynomial σ ℂ) :
-    pderiv i (pderiv j P) = pderiv j (pderiv i P) := by
-  classical
-  induction P using MvPolynomial.induction_on with
-  | C a => simp
-  | add p q hp hq => simp only [map_add (f := _), hp, hq]
-  | mul_X p n hp =>
-    have hc : ∀ a b : σ, pderiv a (pderiv b (X n : MvPolynomial σ ℂ)) = 0 := by
-      intro a b
-      rw [pderiv_X, Pi.single_apply]
-      split_ifs
-      · exact Derivation.map_one_eq_zero _
-      · exact map_zero _
-    simp only [Derivation.leibniz, map_add (f := _), smul_eq_mul]
-    rw [hc i j, hc j i, hp]
-    ring
-
 theorem key {σ : Type*} (v : MvPolynomial σ ℂ) (ac ad bc bd : σ) (hne : bc ≠ ad) :
     fockInner (pderiv ac (pderiv ad v)) (pderiv bc (pderiv bd v)) =
       fockInner (X bc * pderiv ac v) (X ad * pderiv bd v) := by
   rw [fockInner_mul_X, pderiv_mul, pderiv_X_of_ne hne, zero_mul, zero_add, fockInner_X_mul,
-    pd_comm ad ac]
+    MvPolynomial.pderiv_comm ad ac]
 
 theorem coeff_zero_of_dd {σ : Type*} (v : MvPolynomial σ ℂ) (i j : σ) (hij : i ≠ j)
     (h : pderiv i (pderiv j v) = 0) (α : σ →₀ ℕ) (hα : AddMonoidAlgebra.coeff v α ≠ 0) :
