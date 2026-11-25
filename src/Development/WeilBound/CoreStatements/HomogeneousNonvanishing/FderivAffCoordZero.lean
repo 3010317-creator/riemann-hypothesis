@@ -120,14 +120,8 @@ end GP
 private theorem contDiffAt_fsMetric_rho_blk {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] (k : K)
     {z : (k : K) × ι k → ℂ} (hz : GP.blk k z ≠ 0) :
     ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞)
-      (fun z : (k : K) × ι k → ℂ => (fsMetric (ι := ι k)).ρ (GP.blk k z)) z := by
-  have h1 : WithLp.toLp 2 (GP.blk k z) ≠ 0 := fun h => hz (by simpa using congrArg WithLp.ofLp h)
-  show ContDiffAt ℝ _ (fun z => ‖WithLp.toLp 2 (GP.blk k z)‖) z
-  have hL : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞)
-      (fun z : (k : K) × ι k → ℂ => WithLp.toLp 2 (GP.blk k z)) :=
-    ((PiLp.continuousLinearEquiv 2 ℝ (fun _ : ι k => ℂ)).symm.toContinuousLinearMap.comp
-      ((GP.blk k).restrictScalars ℝ)).contDiff
-  exact (contDiffAt_norm ℂ h1).comp z hL.contDiffAt
+      (fun z : (k : K) × ι k → ℂ => (fsMetric (ι := ι k)).ρ (GP.blk k z)) z :=
+  (GP.contDiffAt_fs hz).comp z ((GP.blk (ι := ι) k).contDiff.contDiffAt.restrict_scalars ℝ)
 
 private theorem contDiffAt_log_fsMetric_rho {κ : Type} [Fintype κ] {z : κ → ℂ} (hz : z ≠ 0) :
     ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun v : κ → ℂ => Real.log ((fsMetric (ι := κ)).ρ v)) z :=
