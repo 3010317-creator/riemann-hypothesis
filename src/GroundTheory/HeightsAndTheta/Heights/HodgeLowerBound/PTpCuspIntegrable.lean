@@ -69,10 +69,7 @@ theorem continuousAt_of_holoOn {X : Type} [TopologicalSpace X] {A : FinHolAtlas 
   obtain ⟨j, hj⟩ := A.cover x
   have h1 : ContinuousAt (f ∘ (A.chart j).symm) (A.chart j x) :=
     (hf j _ ⟨(A.chart j).map_source hj, by simpa [(A.chart j).left_inv hj] using hx⟩).continuousAt
-  have h2 : ContinuousAt ((f ∘ (A.chart j).symm) ∘ A.chart j) x := h1.comp ((A.chart j).continuousAt hj)
-  refine h2.congr ?_
-  filter_upwards [(A.chart j).open_source.mem_nhds hj] with y hy
-  simp [(A.chart j).left_inv hy]
+  exact ((A.chart j).symm.continuousAt_iff_continuousAt_comp_right hj).2 h1
 
 theorem continuous_descend (M : CxModel P d) {A A' : HermLine ι} (hA : IsSmoothHerm A)
     (hA' : IsSmoothHerm A') (ha : A.a = A'.a) : Continuous (descend M (logRatio A A')) := by
@@ -121,10 +118,7 @@ theorem continuousOn_ph {X : Type} [TopologicalSpace X] {A : FinHolAtlas d X}
   have hxs : x ∈ (R.chart j).source := R.mid_subset_source j (R.inner_subset_mid j hj)
   have h1 := (GroundTheory.Heights₂.Heights.Regular.contDiffAt_comp_symm_of_smoothOn (R.compat j) R.isOpen_Yo
     R.ph_smooth hx hxs).continuousAt
-  have h2 : ContinuousAt ((R.ph ∘ (R.chart j).symm) ∘ R.chart j) x := h1.comp ((R.chart j).continuousAt hxs)
-  refine (h2.congr ?_).continuousWithinAt
-  filter_upwards [(R.chart j).open_source.mem_nhds hxs] with y hy
-  simp [(R.chart j).left_inv hy]
+  exact (((R.chart j).symm.continuousAt_iff_continuousAt_comp_right hxs).2 h1).continuousWithinAt
 
 variable {II : IntersectionSystem} {Ψ : Type} [Fintype Ψ] {Ω : Type} [Field Ω] [Algebra ℚ Ω]
   {E : Ψ → Type} [∀ τ, AddCommGroup (E τ)] [∀ τ, Module Ω (E τ)]
