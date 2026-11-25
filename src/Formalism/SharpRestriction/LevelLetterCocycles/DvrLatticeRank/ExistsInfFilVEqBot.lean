@@ -290,11 +290,7 @@ theorem dvd_of_dg_mod {r : ℕ} {F : ℤ → Submodule LL E} (hFa : Antitone F) 
     (hg : ∀ j : ℤ, ∑ m, smulS (g m) (e m) j ∈ F ((k : ℤ) - j) ⊔ R) :
     ∀ m, PowerSeries.X ^ k ∣ g m := by
   have hFa' : Antitone (fun a => (F a).map R.mkQ) := fun a b h => Submodule.map_mono (hFa h)
-  have hDfin : FiniteDimensional LL ↥(D.map R.mkQ) := by
-    have hrg : D.map R.mkQ = LinearMap.range (R.mkQ ∘ₗ D.subtype) := by
-      rw [LinearMap.range_comp, Submodule.range_subtype]
-    rw [hrg]
-    infer_instance
+  have hDfin : FiniteDimensional LL ↥(D.map R.mkQ) := Module.Finite.map D R.mkQ
   have h₀' : D.map R.mkQ ≤ (F a₀).map R.mkQ := Submodule.map_mono h₀
   have h₁' : D.map R.mkQ ⊓ (F a₁).map R.mkQ = ⊥ := by
     rw [h₁, Submodule.map_bot, inf_bot_eq]
