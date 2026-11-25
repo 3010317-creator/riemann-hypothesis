@@ -34,10 +34,7 @@ theorem norm_le_of_det {n : ℕ} {f : V n → V n} {f' : V n →L[ℂ] V n} (hf 
   filter_upwards [hlo] with z hz
   rw [h0, sub_zero, sub_zero] at hz
   have h1 : ‖f' z‖ ≤ ‖f z‖ + 1 / (2 * K) * ‖z‖ := by
-    have : ‖f' z‖ ≤ ‖f z‖ + ‖f z - f' z‖ := by
-      calc ‖f' z‖ = ‖f z - (f z - f' z)‖ := by congr 1; abel
-        _ ≤ _ := norm_sub_le _ _
-    linarith
+    linarith [norm_le_norm_add_norm_sub (f z) (f' z)]
   have h2 : (K : ℝ) * (1 / (2 * K) * ‖z‖) = ‖z‖ / 2 := by field_simp
   have h3 := mul_le_mul_of_nonneg_left h1 hK0.le
   have h4 := hK' z
