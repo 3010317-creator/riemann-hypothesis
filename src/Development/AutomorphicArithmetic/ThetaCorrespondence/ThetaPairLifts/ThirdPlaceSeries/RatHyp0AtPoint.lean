@@ -32,15 +32,14 @@ theorem ratHyp0_at_point_alt : ∀ {eps : ℝ} (Fm : FamP eps) (x : ℝ) (hx : F
       std := GlobalTheory.StdFrame.vStd_of_orthonormal_span _ j (p.stdV j)
       laws := p.fw.laws
       core :=
-        { lev := hc.lev
-          grp := ⟨hc.grp.red_R, hc.grp.red_L, hc.grp.levels, hc.grp.record, hc.grp.chiW⟩
-          fam := ⟨hc.fam.tie, hc.fam.Sb, hc.fam.roots, hc.fam.pl_onto, hc.fam.degR, hc.fam.degL, hc.fam.muVal, hc.fam.etaVal⟩
-          models := ⟨hc.models.inf, hc.models.vpos, hc.models.cX, hc.models.cV, hc.models.prX, hc.models.HX, hc.models.HV,
-            hc.models.HE, hc.models.HW, hc.models.gE, hc.models.gW, hc.models.jX, hc.models.jV, hc.models.νY, hc.models.νY',
-            hc.models.ν0, hc.models.νX, hc.models.νV, hc.models.νW, hc.models.BV, hc.models.order⟩
-          chain := ⟨hc.chain.ωY, hc.chain.ωX, hc.chain.vY, hc.chain.vX, hc.chain.ptY, hc.chain.ptX, hc.chain.ItY, hc.chain.ItX,
-            hc.chain.ioY, hc.chain.ioX, hc.chain.Th⟩
-          thP := ⟨hc.thP.ωP, hc.thP.vP, hc.thP.pt_theta, hc.thP.ioP, hc.thP.thF_mem, hc.thP.thF, hc.thP.thG⟩ }
+        -- `R2 p` is `reScal p.R.toRealDat _ _`; rescaling back by `p.R`'s own scalars is `p.R` up to
+        -- structure eta, which avoids unfolding every `chain_*`/`models_*` predicate field by field.
+        ⟨isLev_reScal (R2 p) p.R.toRealDat.lam p.R.toRealDat.kap hc.lev,
+          isGrp_reScal (R2 p) (F2 p) p.R.toRealDat.lam p.R.toRealDat.kap hc.grp,
+          isFam_reScal (R2 p) p.R.toRealDat.lam p.R.toRealDat.kap hc.fam,
+          isModels_reScal (R2 p) p.R.toRealDat.lam p.R.toRealDat.kap hc.models,
+          isChain_reScal (R2 p) p.R.toRealDat.lam p.R.toRealDat.kap hc.chain,
+          isThP_rescale (R2 p) p.R.toRealDat.lam p.R.toRealDat.kap hc.thP⟩
       unif := hu
       fw := ⟨p.fw⟩
       tieIn := hTie
