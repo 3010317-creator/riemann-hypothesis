@@ -297,8 +297,7 @@ theorem N_entry {n : Mat k r} (hn : n ∈ Nset k r) (i j : Fin (2 * r + k + 1)) 
   refine Rad.cases3 (P := fun j => pw k r i ≤ pw k r j → n i j = (1 : Mat k r) i j) ?_ ?_ ?_ j
   · intro b h
     have hi : b.val ≤ i.val := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       have hir : i.val < r := lt_trans hc b.isLt
       have hp : pw k r i = (r : ℤ) - i.val := by unfold pw; rw [ite_eq_left hir]
       rw [hp, pw_e] at h
@@ -306,8 +305,7 @@ theorem N_entry {n : Mat k r} (hn : n ∈ Nset k r) (i j : Fin (2 * r + k + 1)) 
     rw [hn.2.1 b i hi, Matrix.one_apply]
   · intro m h
     have hi : r ≤ i.val := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       have hp : pw k r i = (r : ℤ) - i.val := by unfold pw; rw [ite_eq_left hc]
       rw [hp, pw_w] at h
       omega

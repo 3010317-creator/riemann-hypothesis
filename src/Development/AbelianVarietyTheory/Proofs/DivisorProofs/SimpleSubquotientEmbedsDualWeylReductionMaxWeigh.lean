@@ -1762,8 +1762,7 @@ theorem linearIndependent_prod_rename : ∀ (k : Type) [Field k] (ι : Type) [Fi
   · simpa using h
   · intro p _ hp
     obtain ⟨τ, hτ⟩ : ∃ τ, p τ ≠ l τ := by
-      by_contra hc
-      push Not at hc
+      by_contra! hc
       exact hp (funext hc)
     rw [Finset.prod_eq_zero (Finset.mem_univ τ) (ite_eq_right hτ), mul_zero]
   · simp

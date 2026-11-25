@@ -55,7 +55,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open scoped CategoryTheory.Obj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.ZH GlobalTheory.Poinc GlobalTheory.UPoinc.USum
 
 noncomputable section
@@ -85,8 +84,7 @@ theorem exists_unit_sub_one_unit (p : ℕ) [Fact p.Prime] :
     simp [Polynomial.IsRoot] at hu
     linear_combination hu
   have hle : ‖u‖ ≤ 1 := by
-    by_contra h
-    push Not at h
+    by_contra! h
     have h3 : ‖u‖ ^ 2 ≤ max ‖u‖ ‖(1 : PadicAlgCl p)‖ := by
       rw [← norm_pow, h2]; exact IsUltrametricDist.norm_add_le_max _ _
     rw [norm_one, max_eq_left h.le] at h3
@@ -316,7 +314,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open scoped CategoryTheory.Obj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.ZH GlobalTheory.Poinc GlobalTheory.UPoinc.USum
 
 

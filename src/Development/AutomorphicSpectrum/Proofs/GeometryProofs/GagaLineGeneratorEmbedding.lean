@@ -183,8 +183,7 @@ theorem descent_core {K Ω C : Type} [Field K] [Field Ω] [Algebra K Ω] [Field 
   have hυ0 : υ ≠ 0 := fun h => one_ne_zero (by rw [← hτυ, h, mul_zero] : (1 : Ω ⊗[K] C) = 0)
   have hne : ∀ z : Ω ⊗[K] C, z ≠ 0 → ∃ j, B.repr z j ≠ 0 := by
     intro z hz
-    by_contra h
-    push Not at h
+    by_contra! h
     exact hz (B.repr.map_eq_zero_iff.1 (Finsupp.ext h))
   obtain ⟨j, hj⟩ := hne τ hτ0
   obtain ⟨k, hk⟩ := hne υ hυ0
@@ -493,7 +492,7 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card (X : Scheme.{0}) (Ω : Type) [Field 
     have hy' : algebraMap O Ω y ≠ 0 := fun h => hy (hO (h.trans (map_zero _).symm))
     rw [map_div₀, ← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply, div_mul_eq_mul_div,
       eq_div_iff hy', e]
-  haveI hT : IsDomain (Ω ⊗[K] C) := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isDomain_tensor_of_algebraically_closed_constants K Ω C (fun a ha => by
+  haveI hT : IsDomain (Ω ⊗[K] C) := _root_.PositivityTheory.Xgn.tensor_algebraically_closed_domain K Ω C (fun a ha => by
     obtain ⟨x, y, hy, e⟩ := hcc a ((IsFractionRing.isAlgebraic_iff O K Ω).2 ha)
     exact ⟨algebraMap O K x / algebraMap O K y, by
       have := hfrac x y a 1 hy (by rw [e, mul_one])
@@ -931,7 +930,7 @@ theorem cpt_base_change_dominates (K C : Type) [Field K] [CharZero K] [Field C] 
       Dominates ξ' ξ (pullback.fst s (spMap (algebraMap K C))) i ∧ IsCptGen ξ' ∧
       ∀ p' : ↥(pullback s (spMap (algebraMap K C))),
         genPt ξ ⤳ pullback.fst s (spMap (algebraMap K C)) p' → genPt ξ' ⤳ p' := by
-  haveI hdom : IsDomain (Ω ⊗[K] C) := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isDomain_tensor_of_algebraically_closed_constants K Ω C fun a ha => by
+  haveI hdom : IsDomain (Ω ⊗[K] C) := _root_.PositivityTheory.Xgn.tensor_algebraically_closed_domain K Ω C fun a ha => by
     obtain ⟨x, y, hy, h⟩ := hCC a ha
     exact ⟨x / y, by rw [map_div₀, ← h, mul_div_cancel_right₀ _ ((map_ne_zero _).2 hy)]⟩
   let aT := algebraMap (Ω ⊗[K] C) (FractionRing (Ω ⊗[K] C))

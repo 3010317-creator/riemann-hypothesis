@@ -144,8 +144,7 @@ private theorem card_heckeT1_cosets (w : HeightOneSpectrum (𝓞 E)) (ϖ : w.adi
   exact_mod_cast e
 
 private theorem sq_le_of_bound {t r : ℝ} (ht : 1 ≤ t) (hr : 0 < r) (h : t * (r + r⁻¹) ≤ t ^ 2 + 1) : r ^ 2 ≤ t ^ 2 := by
-  by_contra hlt
-  push Not at hlt
+  by_contra! hlt
   have hrt : t < r := lt_of_pow_lt_pow_left₀ 2 hr.le hlt
   have h5 : t * r ^ 2 + t ≤ (t ^ 2 + 1) * r := by
     have := mul_le_mul_of_nonneg_right h hr.le
@@ -369,7 +368,7 @@ private theorem exists_bad {S : Set (H.P ℚ)} (hS : S.Finite) : ∃ m : ℕ, 0 
     exact Ideal.absNorm_mem _
 
 private theorem quad_sq {E : Type} [Field E] [NumberField E] {η : HChar ℚ} (hq : IsQuadCharOf E η) : η ^ 2 = 1 := by
-  apply GlobalTheory.T.hecke_character_eq_of_cofinite ℚ (η ^ 2) 1
+  apply _root_.GlobalTheory.HeckeMultOne.main ℚ (η ^ 2) 1
   have hc : ∀ᶠ v : H.P ℚ in cofinite, ∃ w : H.P E, w.under (𝓞 ℚ) = v ∧
       η.UnrAt v ∧ η.val v = if normV w = normV v then 1 else -1 := by
     unfold IsQuadCharOf at hq

@@ -27,11 +27,6 @@ open Matrix
 
 namespace UpperTheory.V
 
-private def transl (R : Type) [CommRing R] {G : Type} [Group G] (g : G) : (G → R) →ₗ[R] (G → R) where
-  toFun x := fun h => x (g⁻¹ * h)
-  map_add' _ _ := rfl
-  map_smul' _ _ := rfl
-
 end UpperTheory.V
 
 private theorem UpperTheory.sum_B_smul_pi_sum_smul_eq_sum_smul {G N : Type} [Group G] [Fintype G] [AddCommGroup N] [Module ℂ N]
@@ -304,8 +299,7 @@ theorem UpperTheory.le_span_integralValued_of_galoisStable :
       · rw [h0]
         exact Submodule.zero_mem _
       obtain ⟨g0, hg0⟩ : ∃ g, y g ≠ 0 := by
-        by_contra h
-        push Not at h
+        by_contra! h
         exact h0 (funext h)
       obtain ⟨x, hx⟩ : ∃ x : X → ℂ, x = (y g0)⁻¹ • y := ⟨_, rfl⟩
       have hxI : x ∈ I := by
@@ -333,8 +327,7 @@ theorem UpperTheory.le_span_integralValued_of_galoisStable :
           rw [hd]
           exact sub_ne_zero.2 hγ
         obtain ⟨g1, hg1⟩ : ∃ g, d g ≠ 0 := by
-          by_contra h
-          push Not at h
+          by_contra! h
           exact hd0 (funext h)
         have hdsupp : ∀ g, y g = 0 → d g = 0 := by
           intro g hg

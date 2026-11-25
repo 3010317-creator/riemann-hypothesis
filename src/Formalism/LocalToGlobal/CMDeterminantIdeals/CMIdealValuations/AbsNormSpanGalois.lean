@@ -283,8 +283,7 @@ theorem coeff_cauchy_bound : CoeffCauchy := by
       split_ifs with h
       · simp [h]
       · obtain ⟨v, hv⟩ : ∃ v, ν v ≠ μ v := by
-          by_contra hc
-          push Not at hc
+          by_contra! hc
           exact h (Finsupp.ext hc)
         exact Finset.prod_eq_zero (Finset.mem_univ v) (ite_eq_right hv)
     rw [hsum1, hsumk, Finset.prod_congr rfl (fun v _ => hgeom v), hprodif]

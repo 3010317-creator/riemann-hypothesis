@@ -1,5 +1,6 @@
 module
 
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.MultiplicityOne.JTransM
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.SpectralGap.BesselIntegralSquareIntegrable
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.MulVecFixOfSupp
 import Mathlib.RingTheory.Etale.Weakly
@@ -82,17 +83,7 @@ theorem Hpk_apply_blk_out {k r : ℕ} {m i : Fin (2 * r + k + 1)} (hm : r ≤ m.
 
 theorem Hpk_apply_blk_row {k r : ℕ} {m l : Fin (2 * r + k + 1)} (hm : r ≤ m.val ∧ m.val < r + k) :
     Formalism.QuantumDeterminants.Hpk k r m l = if m = l then 1 else 0 := by
-  have hl := l.isLt
-  have c1 : ¬(m.val < r ∧ m.val + l.val = 2 * r + k) := by omega
-  have c2 : ¬(l.val < r ∧ m.val + l.val = 2 * r + k) := by omega
-  simp only [Formalism.QuantumDeterminants.Hpk]
-  rw [ite_eq_right c1, ite_eq_right c2]
-  by_cases h : m = l
-  · have c3 : r ≤ m.val ∧ m.val ≤ r + k ∧ m = l := ⟨hm.1, by omega, h⟩
-    have c4 : ¬(m.val = r + k) := by omega
-    rw [ite_eq_left c3, ite_eq_right c4, ite_eq_left h]
-  · have c3 : ¬(r ≤ m.val ∧ m.val ≤ r + k ∧ m = l) := fun h' => h h'.2.2
-    rw [ite_eq_right c3, ite_eq_right h]
+  apply _root_.ReciprocityTheory.ChartRestriction.DS.Mult1.TransM.Hpk_left <;> assumption
 
 theorem std_out {k r : ℕ} {y : Mat k r} (hy : y ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r))
     (hfix : ∀ j : Fin (2 * r + k + 1), ¬(r ≤ j.val ∧ j.val < r + k) → y *ᵥ Formalism.QuantumDeterminants.bvec j = Formalism.QuantumDeterminants.bvec j) :

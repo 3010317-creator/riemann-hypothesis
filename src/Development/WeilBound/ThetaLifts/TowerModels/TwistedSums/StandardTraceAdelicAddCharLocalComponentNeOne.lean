@@ -44,8 +44,7 @@ theorem exists_trace_not_int (v : HeightOneSpectrum (𝓞 F)) :
     intro z hz w hw
     have := (GlobalTheory.Idele.mem_iff_valuation_le hI0 z).1 hz w
     rwa [hcount w, ite_eq_right hw, neg_zero, exp_zero] at this
-  by_contra H
-  push Not at H
+  by_contra! H
   have hle : I ≤ C := by
     intro x hx
     rw [hC, FractionalIdeal.mem_dual (one_ne_zero (α := FractionalIdeal (𝓞 F)⁰ F))]

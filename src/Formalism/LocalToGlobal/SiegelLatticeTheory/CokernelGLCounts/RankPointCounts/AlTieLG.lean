@@ -37,8 +37,6 @@ namespace Formalism.L2.SG.Pf.AlTieEta
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.LocalSplitGroups Formalism.L2.SG.HidaSetting Formalism.L2.SG.Pf.AlTie
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7}
 
 def TwoOver (𝔭 : Ideal (𝓞 D.host.F)) : Prop :=
@@ -580,8 +578,7 @@ theorem nsub_le {K : Type*} [NormedField K] [IsUltrametricDist K] (a b : K) : �
 
 theorem root_norm_le {K : Type*} [NormedField K] [IsUltrametricDist K] {tr nm β : K} (htr : ‖tr‖ ≤ 1)
     (hnm : ‖nm‖ ≤ 1) (h : β ^ 2 - tr * β + nm = 0) : ‖β‖ ≤ 1 := by
-  by_contra hb
-  push Not at hb
+  by_contra! hb
   have h1 : β ^ 2 = tr * β - nm := by linear_combination h
   have hn : ‖β‖ ^ 2 ≤ max (‖tr‖ * ‖β‖) ‖nm‖ := by
     rw [← norm_pow, h1, ← norm_mul]
@@ -590,8 +587,6 @@ theorem root_norm_le {K : Type*} [NormedField K] [IsUltrametricDist K] {tr nm β
     nlinarith [norm_nonneg β, norm_nonneg tr]
 
 section Host
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : D7} (p : PlF D) {θ : D.host.E} {c tr nm : 𝓞 D.host.F}
 
@@ -763,8 +758,6 @@ end Host
 
 section TensHost
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7} {p : PlF D} {θ : D.host.E} {c tr nm : 𝓞 D.host.F}
 
 theorem theta_notF (h : ThetaAt p θ c tr nm) (a : D.host.F) : θ ≠ algebraMap D.host.F D.host.E a := by
@@ -882,8 +875,6 @@ theorem unit_iff_prime (p : PlF D) :
 end TensHost
 
 section Final
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : D7} (X : HidaSetting D)
 

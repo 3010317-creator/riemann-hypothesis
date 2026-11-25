@@ -116,8 +116,6 @@ open scoped TensorProduct
 
 namespace Formalism.IndefR.Fin.VacEx
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 section Gen
 
 end Gen
@@ -175,8 +173,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 
 namespace Formalism.IndefR.Eqv
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7}
 
 def PhiM (m n : ℕ) (x : Mx D m n) : Fin m → Fin n → Fin (nE D) → AF D.host.F :=
@@ -206,8 +202,6 @@ open scoped TensorProduct
 set_option synthInstance.maxHeartbeats 160000
 
 namespace Formalism.IndefR.Fin
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : D7}
 
@@ -279,8 +273,7 @@ def lsdE (i : Fin T.rank) (j : Fin S.rank) (β : Af D.host.F) (e : D.host.E) : W
   Matrix.of fun i' j' => if i' = i ∧ j' = j then pairA D.host.F 0 β ⊗ₜ[D.host.F] e else 0
 
 theorem lsd_AA_ne : ∃ c : D.host.E, c ∈ D.host.AA ∧ c ≠ 0 := by
-  by_contra h
-  push Not at h
+  by_contra! h
   have h0 : D.host.AA = 0 := by
     ext x
     rw [FractionalIdeal.mem_zero_iff]

@@ -386,7 +386,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.O
 open GlobalTheory GlobalTheory.FamGerm
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ (PS FB ev Dof)
 open ReciprocityTheory.ChartRestriction.G.TB (colM dAct)
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.DepthBound
 
@@ -627,7 +626,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry MonoidalCategory Car
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.H1
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ (PS FB ev Dof pt)
 open GlobalTheory GlobalTheory.FamGerm GlobalTheory.FieldBaseChange
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.FamGermExist
 
@@ -846,7 +844,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.O
 open GlobalTheory GlobalTheory.FamGerm
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ (PS FB ev Dof)
 open ReciprocityTheory.ChartRestriction.G.TB (colM dAct)
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.DepthBound
 
@@ -877,7 +874,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry MonoidalCategory Car
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.H1
 open GlobalTheory GlobalTheory.FamGerm
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ (PS ev)
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.GermValuation
 
@@ -1122,7 +1118,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.O
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ (PS FB ev Dof)
 open ReciprocityTheory.ChartRestriction.G.TB (colM dAct)
 open GlobalTheory GlobalTheory.FamGerm GlobalTheory.DepthBound
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.DepthFromChars
 
@@ -1281,7 +1276,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.O
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ (PS FB ev Dof)
 open ReciprocityTheory.ChartRestriction.G.TB (colM dAct)
 open GlobalTheory
-attribute [local instance] Over.cartesianMonoidalCategory
 
 end -- clump:auto
 end -- clump:auto

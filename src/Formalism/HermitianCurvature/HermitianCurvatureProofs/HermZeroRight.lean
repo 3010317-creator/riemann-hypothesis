@@ -1,5 +1,6 @@
 module
 
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.BesselVectors.BesselNV
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsFRepDualStandardUnitaryRep
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJfSSymDefs
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactlySupportedBanachModel
@@ -17,32 +18,7 @@ variable {k r : ℕ}
 theorem hpk_mulVec (x : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * r + k + 1)) :
     (Hpk k r *ᵥ x) i = if i.val < r ∨ r + k < i.val then x ⟨2 * r + k - i.val, by omega⟩
       else if i.val = r + k then -x i else x i := by
-  rw [mulVec, dotProduct]
-  by_cases h : i.val < r ∨ r + k < i.val
-  · rw [ite_eq_left h, Finset.sum_eq_single ⟨2 * r + k - i.val, by omega⟩]
-    · have : Hpk k r i ⟨2 * r + k - i.val, by omega⟩ = 1 := by
-        unfold Hpk
-        rcases h with h | h
-        · rw [ite_eq_left ⟨h, by simp; omega⟩]
-        · rw [ite_eq_right (by simp; omega), ite_eq_left ⟨by simp; omega, by simp; omega⟩]
-      rw [this, one_mul]
-    · intro j _ hj
-      have : Hpk k r i j = 0 := by
-        unfold Hpk
-        have hj' : j.val ≠ 2 * r + k - i.val := fun e => hj (Fin.ext (by simpa using e))
-        rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega)]
-      rw [this, zero_mul]
-    · intro h'; exact absurd (Finset.mem_univ _) h'
-  · rw [ite_eq_right h, Finset.sum_eq_single i]
-    · unfold Hpk
-      rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left ⟨by omega, by omega, rfl⟩]
-      split_ifs <;> ring
-    · intro j _ hj
-      have : Hpk k r i j = 0 := by
-        unfold Hpk
-        rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (fun e => hj e.2.2.symm)]
-      rw [this, zero_mul]
-    · intro h'; exact absurd (Finset.mem_univ _) h'
+  apply _root_.ReciprocityTheory.ChartRestriction.DS.Lap.S0.Core.hpk_mulVec <;> assumption
 
 theorem herm_eq (x y : Fin (2 * r + k + 1) → ℂ) :
     herm (Hpk k r) x y = ∑ i, star (y i) * (Hpk k r *ᵥ x) i := rfl
