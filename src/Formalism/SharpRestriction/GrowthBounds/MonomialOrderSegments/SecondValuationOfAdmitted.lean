@@ -240,7 +240,6 @@ theorem br_exp_le {p : ℕ} (hp : 2 ≤ p) {r : ℕ} (hr : 1 ≤ r) (a b : ℕ) 
   unfold lg
   have hp1 : (1 : ℝ) < p := by exact_mod_cast hp
   have hr1 : (1 : ℝ) ≤ r := by exact_mod_cast hr
-  have ha0 : (0 : ℝ) ≤ a := Nat.cast_nonneg a
   have hpos : (0 : ℝ) < 2 * (a : ℝ) + r := by linarith
   have hlog0 : 0 ≤ Real.logb p (2 * (a : ℝ) + r) := Real.logb_nonneg hp1 (by linarith)
   have hmono : Real.logb p (2 * (a : ℝ) + r) ≤ Real.logb p (((2 * b : ℕ) : ℝ) + r) := by

@@ -51,9 +51,6 @@ theorem cwt_lower (m A c B : ℕ) (μ : Fin m → ℤ) (hμ : Antitone μ) (h0 :
     linarith
   have hμc : ∀ j, (0 : ℝ) ≤ μ j ∧ (μ j : ℝ) ≤ c := fun j =>
     ⟨by exact_mod_cast (h0 j).1, by exact_mod_cast (h0 j).2⟩
-  have hA0 : (0 : ℝ) ≤ A := Nat.cast_nonneg A
-  have hB0 : (0 : ℝ) ≤ B := Nat.cast_nonneg B
-  have hc0 : (0 : ℝ) ≤ c := Nat.cast_nonneg c
   have h1 : (∏ j : Fin m, ((A : ℝ) + ((j : ℕ) : ℝ) + 1) / (((j : ℕ) : ℝ) + 1)) ≤
       ∏ j : Fin m, ((A : ℝ) + c - (μ j : ℝ) + ((j : ℕ) : ℝ) + 1) / (((j : ℕ) : ℝ) + 1) :=
     Finset.prod_le_prod₀ (fun j _ => by positivity)

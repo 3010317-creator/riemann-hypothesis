@@ -1353,7 +1353,6 @@ theorem logVal_clause1 (p : ℕ) (hp : p.Prime) (t s : ℕ) :
     exact_mod_cast padicValNat_lt_of_lt_pow hy.1 hy.2
   push_cast
   have hmul := mul_le_mul_of_nonneg_left hv (Nat.cast_nonneg s : (0 : ℝ) ≤ s)
-  have hcomm : (s : ℝ) * ((padicValRat p (y : ℚ) : ℤ) : ℝ) = ((padicValRat p (y : ℚ) : ℤ) : ℝ) * s := mul_comm _ _
   linarith
 
 theorem logVal_holds : Formalism.MainNotions.ColumnSystems.logVal := by
@@ -1388,7 +1387,6 @@ theorem logVal_holds : Formalism.MainNotions.ColumnSystems.logVal := by
   have hp4 : 1 / ((p : ℝ) - 1) ≤ 1 / 4 := by
     have : (5 : ℝ) ≤ p := by exact_mod_cast hp5
     apply one_div_le_one_div_of_le (by norm_num); linarith
-  have hs1 : (1 : ℝ) ≤ s := by exact_mod_cast hs
   push_cast
   rw [hps]
   linarith
@@ -1618,7 +1616,6 @@ theorem expBound_of (D : D7) (L : SizeData₂ D) (X : Inst D L) (Ce : ℝ) (hCe 
     have hprime : (D.what₂.places.resChar w).Prime := ((D.gat u w hg).P.setting v).prime
     have hp1 : (1 : ℝ) < (D.what₂.places.resChar w : ℝ) := by exact_mod_cast hprime.one_lt
     have hl := gat_ellWt_lamAt_le P T u w hg v s
-    have hloga : 0 ≤ Real.logb (D.what₂.places.resChar w) L.sc.a := Real.logb_nonneg hp1 (by linarith)
     unfold wExp deF N0
     set kk := (D.gat u w hg).P.m + 1 with hkk_def
     have hkk : (kk : ℝ) = D.R.k := by exact_mod_cast hk

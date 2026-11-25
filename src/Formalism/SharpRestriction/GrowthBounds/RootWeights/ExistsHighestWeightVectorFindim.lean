@@ -68,7 +68,6 @@ theorem exists_highest_weight_vector_findim {n : ℕ} {K V : Type*} [Field K] [C
   have hP : P (raisingFunctional (mu + rootW a b)) := ⟨_, fun h => hne0 (by rw [h, Submodule.mem_bot] at hs; exact hs), rfl⟩
   have h1 := hmax _ hP
   rw [raising_functional_add_root] at h1
-  have h2 : (a.val : ℤ) < b.val := by exact_mod_cast hab
   omega
 
 theorem isotypic_sum_stable {n : ℕ} {K V : Type*} [Field K] [AddCommGroup V] [Module K V] (E : GLOps n K V)

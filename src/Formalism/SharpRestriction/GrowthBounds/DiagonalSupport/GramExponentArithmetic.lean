@@ -997,7 +997,6 @@ def mkDt (dPl : TL Fr.J (segmentLetterCount Fr) r → ℕ) (th : ∀ j : ZMod Fr
       · exact Or.inl hx
       · exact Or.inr ⟨l, rfl, lt_trans hl hab'⟩
     · intro h
-      have hb := b.isLt
       have ha : a.val < segmentLetterCount Fr j := by omega
       have := h (Or.inr ⟨⟨a.val, ha⟩, rfl, hab'⟩ : Sum.inl ⟨a.val, ha⟩ ∈ _)
       rcases this with hx | ⟨l, hl, hl2⟩

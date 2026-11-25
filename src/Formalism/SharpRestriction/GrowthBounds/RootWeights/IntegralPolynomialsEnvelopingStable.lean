@@ -826,7 +826,6 @@ theorem fock_lattice_finite_spanning_holds {p : ℕ} (hp : p.Prime) (S0 : Unifor
     have hle' : (padicValNat p (expFact m) : ℚ) ≤
         ((∑ m ∈ (multidegree_monomials_finite (ι := ι) (n := n) d).toFinset, padicValNat p (expFact m) : ℕ) : ℚ) := by
       exact_mod_cast hle
-    have hnn : (0 : ℚ) ≤ padicValNat p (expFact m) := by positivity
     linarith
   · exact multidegree_part_spans _ d hmono
 

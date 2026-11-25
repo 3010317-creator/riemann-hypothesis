@@ -383,7 +383,6 @@ theorem kapL_le_kap {p : ℕ} (hp : 2 ≤ p) {r : ℕ} (hr : 1 ≤ r) {L : Type}
   apply Finset.sum_le_sum
   intro i _
   have hl := logb_add_nonneg hp r (d i) (by omega)
-  have hr0 : (0 : ℝ) ≤ r := Nat.cast_nonneg r
   split_ifs with h0
   · nlinarith
   · apply le_of_eq
@@ -406,7 +405,6 @@ theorem natLog_le_term {p : ℕ} (hp : 2 ≤ p) (r a : ℕ) :
     simp
   · apply mul_le_mul_of_nonneg_left _ (Nat.cast_nonneg r)
     have ha0 : (0 : ℝ) < a := Nat.cast_pos.mpr (Nat.pos_of_ne_zero ha)
-    have hr0 : (0 : ℝ) ≤ r := Nat.cast_nonneg r
     rw [Real.le_logb_iff_rpow_le (by exact_mod_cast (by omega : 1 < p)) (by linarith),
       Real.rpow_natCast]
     have h2 : ((p ^ Nat.log p a : ℕ) : ℝ) ≤ a := by exact_mod_cast Nat.pow_log_le_self p ha

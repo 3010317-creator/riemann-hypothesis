@@ -18,7 +18,6 @@ variable {s : ℕ} {p r : ℕ} (S : SegData s) (aTop : Fin s → ℕ) (b : SegBl
 
 theorem segChain_deg_even (x : Fin (2 * s + 1)) (u : Fin s) (hx : (x : ℕ) = 2 * (u : ℕ)) (hu : S.sigma ≤ (u : ℕ)) :
     (segChain p S aTop b).deg x = b.o u := by
-  have hu' := u.isLt
   have hne : (x : ℕ) ≠ 2 * s := by omega
   have ht : topOf x hne = u := Fin.ext (by simp [topOf]; omega)
   simp only [segChain]
@@ -26,7 +25,6 @@ theorem segChain_deg_even (x : Fin (2 * s + 1)) (u : Fin s) (hx : (x : ℕ) = 2 
 
 theorem segChain_deg_odd (x : Fin (2 * s + 1)) (u : Fin s) (hx : (x : ℕ) = 2 * (u : ℕ) + 1)
     (hu : S.sigma ≤ (u : ℕ)) : (segChain p S aTop b).deg x = coarseC p S aTop b u := by
-  have hu' := u.isLt
   have hne : (x : ℕ) ≠ 2 * s := by omega
   have ht : topOf x hne = u := Fin.ext (by simp [topOf]; omega)
   simp only [segChain]
