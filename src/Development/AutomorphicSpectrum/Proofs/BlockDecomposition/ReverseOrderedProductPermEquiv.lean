@@ -29,18 +29,9 @@ theorem swap_lt_swap {i j x y : Fin h} (hij : (j : ℕ) = i + 1)
 
 theorem strictMono_of_adj {g : Fin h → Fin h} (hg : ∀ p q : Fin h, (q : ℕ) = p + 1 → g p < g q) :
     StrictMono g := by
-  intro x y hxy
-  rw [Fin.lt_def] at hxy
-  have key : ∀ (d : ℕ) (y : Fin h), (y : ℕ) = x + d + 1 → g x < g y := by
-    intro d
-    induction d with
-    | zero => intro y hy; exact hg x y (by omega)
-    | succ d ih =>
-      intro y hy
-      have hy1 : (y : ℕ) - 1 < h := by omega
-      exact (ih ⟨y - 1, hy1⟩ (show (y : ℕ) - 1 = x + d + 1 by omega)).trans
-        (hg ⟨y - 1, hy1⟩ y (show (y : ℕ) = ((y : ℕ) - 1) + 1 by omega))
-  exact key (y - x - 1) y (by omega)
+  cases h with
+  | zero => intro x; exact absurd x.isLt (Nat.not_lt_zero _)
+  | succ h => exact Fin.strictMono_iff_lt_succ.2 fun i => hg (Fin.castSucc i) i.succ (by simp)
 
 theorem rel_comp_perm (r : (Fin h → α) → (Fin h → α) → Prop) (hrefl : ∀ f, r f f)
     (htrans : ∀ f g l, r f g → r g l → r f l) (U : α → α → Prop)
