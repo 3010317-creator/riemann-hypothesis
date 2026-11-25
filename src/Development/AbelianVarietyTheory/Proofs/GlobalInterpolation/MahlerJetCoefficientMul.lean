@@ -235,12 +235,8 @@ theorem vdm {σ : Type} (x y : MvPolynomial σ ℂ) (n : ℕ) :
   refine Finset.sum_congr rfl fun a ha => ?_
   have ha' : a ≤ n := Nat.lt_succ_iff.1 (Finset.mem_range.1 ha)
   have hc : ((n.factorial : ℂ))⁻¹ * (n.choose a : ℂ) = (a.factorial : ℂ)⁻¹ * ((n - a).factorial : ℂ)⁻¹ := by
-    rw [← Nat.choose_mul_factorial_mul_factorial ha']
-    push_cast
-    have h1 : (a.factorial : ℂ) ≠ 0 := by exact_mod_cast a.factorial_ne_zero
-    have h2 : ((n - a).factorial : ℂ) ≠ 0 := by exact_mod_cast (n - a).factorial_ne_zero
-    have h3 : (n.choose a : ℂ) ≠ 0 := by exact_mod_cast (Nat.choose_pos ha').ne'
-    field_simp
+    rw [Nat.cast_choose ℂ ha', div_eq_mul_inv, inv_mul_cancel_left₀ (Nat.cast_ne_zero.2 n.factorial_ne_zero),
+      mul_inv]
   calc C ((n.factorial : ℂ)⁻¹) * (((n.choose a : ℕ) : MvPolynomial σ ℂ) *
         ((descPochhammer ℤ a).smeval x * (descPochhammer ℤ (n - a)).smeval y))
       = C ((n.factorial : ℂ)⁻¹ * (n.choose a : ℂ)) *
