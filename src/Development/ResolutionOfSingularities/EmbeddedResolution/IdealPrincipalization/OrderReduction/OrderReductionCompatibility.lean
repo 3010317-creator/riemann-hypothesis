@@ -448,16 +448,6 @@ theorem orderAt_sequenceOfBlowups_ideal_le_mult (hstar : _root_.FunctorialResolu
     orderAt (s.ideal i) x ≤ (T.mult : ℕ∞) :=
   hstar.orderAt_level_le T hv hord s i hi x
 
-private theorem imageIdealSheaf_inv_eq_comap {X Y : Scheme.{u}} (φ : X ≅ Y)
-    (J : Y.IdealSheafData) :
-    _root_.FunctorialResolution.Blowup.schemeImageIdeal φ.inv J = J.comap φ.hom := by
-  have h1 : (_root_.FunctorialResolution.Blowup.schemeImageIdeal φ.inv J).comap φ.inv = J :=
-    Blowup.comap_map_of_isClosedImmersion φ.inv J
-  have h2 : ((_root_.FunctorialResolution.Blowup.schemeImageIdeal φ.inv J).comap φ.inv).comap φ.hom = _root_.FunctorialResolution.Blowup.schemeImageIdeal φ.inv J := by
-    rw [← Scheme.IdealSheafData.comap_comp, Iso.hom_inv_id, Scheme.IdealSheafData.comap_id]
-  calc _root_.FunctorialResolution.Blowup.schemeImageIdeal φ.inv J = ((_root_.FunctorialResolution.Blowup.schemeImageIdeal φ.inv J).comap φ.inv).comap φ.hom := h2.symm
-    _ = J.comap φ.hom := by rw [h1]
-
 theorem isAdmissible_and_dim_eq_withSchemeIdealBoundary_ker (T : MarkedIdealWithBoundary.{u}) (hv : T.IsAdmissible) (Y : Scheme.{u})
     (q : Y ⟶ Spec (CommRingCat.of T.base)) (e : Y ⟶ T.scheme)
     [AlgebraicGeometry.IsClosedImmersion e] (hq : e ≫ T.structMap = q)
@@ -502,7 +492,7 @@ theorem isAdmissible_and_dim_eq_withSchemeIdealBoundary_ker (T : MarkedIdealWith
     rw [hkey]
     infer_instance
   have hnz : NonzeroOnComponents (_root_.FunctorialResolution.Blowup.schemeImageIdeal (kerSubschemeIso e).inv J) := by
-    rw [imageIdealSheaf_inv_eq_comap (kerSubschemeIso e) J]
+    rw [imageIdealSheaf_eq_comap_inv, CategoryTheory.IsIso.Iso.inv_inv]
     exact _root_.FunctorialResolution.EmbeddedResolution.PrincipalizationIsoTransport.nonzeroOnComponents_comap_iso (kerSubschemeIso e) J hnzJ
   have hdim : krullDimSucc ((Scheme.Hom.ker e).subscheme) = krullDimSucc Y := by
     rw [krullDimSucc_eq_withBotSuccToNat_topologicalKrullDim, krullDimSucc_eq_withBotSuccToNat_topologicalKrullDim,
