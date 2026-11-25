@@ -168,27 +168,17 @@ theorem firstCore (L : LevCh D T) (μ0 : T) (h : L.Is μ0) : ∃ Z : LSp D, Z.Is
 
 abbrev recOf (_L : LevCh D T) : D7 := D
 
--- Comparing the types of copied fields in the kernel avoids unfolding the stage records in the elaborator.
-open Lean Elab Tactic in
-local elab "exact_by_kernel " term:term : tactic =>
-  closeMainGoalUsing `exact_by_kernel fun _ _ => do
-    let value ← elabTerm term none
-    Term.synthesizeSyntheticMVarsNoPostponing
-    let value ← instantiateMVars value
-    -- The kernel checks this when the declaration is added.
-    pure value
-
 local macro "copyDec% " d:term:max : term =>
-  `({ ι := by exact_by_kernel ($d).ι
-      isom := by exact_by_kernel ($d).isom
-      a := by exact_by_kernel ($d).a
-      gram := by exact_by_kernel ($d).gram
-      perp := by exact_by_kernel ($d).perp
-      rank := by exact_by_kernel ($d).rank })
+  `({ ι := by exact ($d).ι
+      isom := by exact ($d).isom
+      a := by exact ($d).a
+      gram := by exact ($d).gram
+      perp := by exact ($d).perp
+      rank := by exact ($d).rank })
 
 local macro "copyIsV% " h:term:max : term =>
-  `(⟨by exact_by_kernel ($h).rank, by exact_by_kernel ($h).sigOK,
-    by exact_by_kernel ($h).sig, by exact_by_kernel ($h).sd⟩)
+  `(⟨by exact ($h).rank, by exact ($h).sigOK,
+    by exact ($h).sig, by exact ($h).sd⟩)
 
 
 theorem carryG : CarryG := by
@@ -259,19 +249,19 @@ theorem carryG : CarryG := by
         | zero => intro h; omega
         | succ k =>
           intro h h'
-          exact_by_kernel G.sp.colLat (k + 1) h h'
+          exact G.sp.colLat (k + 1) h h'
       rowDecS := fun j h => castDec rfl (congrArg LSp.sp (vtxOf_pos L' Vs' _ (j + 1) h1X').symm)
         (copyDec% (castDec rfl (congrArg LSp.sp (vtxOf_pos L G.sp.Vs _ (j + 1) h1X)) (G.sp.rowDecS j h)))
       rowLat := fun j h => castDec_lat rfl (vtxOf_pos L' Vs' _ (j + 1) h1X').symm _ _
         (by
-          exact_by_kernel (castDec_lat rfl (vtxOf_pos L G.sp.Vs _ (j + 1) h1X)
+          exact (castDec_lat rfl (vtxOf_pos L G.sp.Vs _ (j + 1) h1X)
             (G.sp.rowDecS j h) _ (G.sp.rowLat j h)))
       topDec := castDec (congrArg LSp.sp (vtxOf_pos L' Vs' _ _ h1X').symm) (congrArg LSp.sp (xOf_pos (P' _) Xs' _ h1X').symm)
         (copyDec% (castDec (congrArg LSp.sp (vtxOf_pos L G.sp.Vs _ _ h1X)) (congrArg LSp.sp (xOf_pos (G.sp.P _) G.sp.Xs _ h1X))
           G.sp.topDec))
       topLat := castDec_lat (vtxOf_pos L' Vs' _ _ h1X').symm (xOf_pos (P' _) Xs' _ h1X').symm _ _
         (by
-          exact_by_kernel (castDec_lat (vtxOf_pos L G.sp.Vs _ _ h1X)
+          exact (castDec_lat (vtxOf_pos L G.sp.Vs _ _ h1X)
             (xOf_pos (G.sp.P _) G.sp.Xs _ h1X) G.sp.topDec _ G.sp.topLat)) }
   refine ⟨⟨pl', ch', sp'⟩, (by with_unfolding_all exact ((HEq.refl G.pl.v0) :)), (by with_unfolding_all exact ((HEq.refl G.pl.w) :)), (by with_unfolding_all exact ((HEq.refl G.ch.chiH) :)), (by with_unfolding_all exact ((HEq.refl G.ch.chi) :)),
     fun i j => ⟨(by with_unfolding_all exact ((HEq.refl (G.V (.grid (i + 1) j))) :)), (by with_unfolding_all exact ((HEq.refl (G.Λ (.grid (i + 1) j))) :))⟩, ?_, ?_, ?_⟩
