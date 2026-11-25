@@ -1074,7 +1074,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.unitary_lift_of_reduced_core :
   have : TotallyDisconnectedSpace (Gam Ω S) := totDisc_quot _ hcl
   have hOk := hostFrame_ok Ω c e ψ o₁ hd S A F hF
   have hz : F.IsCharZeroPt g₁ r := isCharZeroPt_of_isPtHom (l := l) F hOk g₁ hg u hu (H R u hu).1 ξ r h1
-  exact ⟨matIrr_open Ω c e ψ o₁ hd S A F hF g₁ hg r hz h2, matIrr_cyc Ω c e ψ o₁ hd S A F hF g₁ hg r hz h2,
+  exact ⟨matIrr_open Ω c e ψ o₁ hd S A F hF g₁ hg r hz h2,
     (H R u hu).2 ξ r h1 h2⟩
 end
 end -- clump:auto
