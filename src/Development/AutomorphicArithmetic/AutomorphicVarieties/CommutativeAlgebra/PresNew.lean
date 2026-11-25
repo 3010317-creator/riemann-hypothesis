@@ -24,20 +24,6 @@ import Mathlib.Tactic.Linter.Style
 section -- clump:auto
 @[expose] public section
 
-private theorem coeff_mem_of_mem_maximalIdeal {O σ : Type} [CommRing O] [IsLocalRing O]
-    {g : MvPowerSeries σ O} (hg : g ∈ IsLocalRing.maximalIdeal (MvPowerSeries σ O))
-    (b : σ →₀ ℕ) :
-    MvPowerSeries.coeff b g ∈ IsLocalRing.maximalIdeal O ^ (1 - Finsupp.degree b) := by
-  by_cases hb : b = 0
-  · subst hb
-    rw [map_zero, Nat.sub_zero, pow_one, MvPowerSeries.coeff_zero_eq_constantCoeff_apply,
-      IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, ← MvPowerSeries.isUnit_iff_constantCoeff]
-    exact hg
-  · have h1 : Finsupp.degree b ≠ 0 := fun h => hb ((Finsupp.degree_eq_zero_iff b).1 h)
-    have h2 : 1 - Finsupp.degree b = 0 := by omega
-    rw [h2, pow_zero, Ideal.one_eq_top]
-    exact Submodule.mem_top
-
 theorem UpperTheory.Reformulated.B.PreservedCoefficient.pres_new_coeff :
     ∀ {O σ : Type} [inst : CommRing O] [inst_1 : IsLocalRing O]
     (N : ℕ),
