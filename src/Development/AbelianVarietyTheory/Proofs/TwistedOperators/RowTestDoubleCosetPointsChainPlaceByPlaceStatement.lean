@@ -169,7 +169,7 @@ theorem real_mem_grpOff (V : HSp D) (P : GlobalTheory.FinPl.Pl D → Prop) {a : 
   show a ∈ GlobalTheory.FinPl.congGrp V (GlobalTheory.FinPl.idOff D P)
   rw [GlobalTheory.FinPlLoc.mem_congGrp]
   intro i j
-  have key : finPart D (Formalism.L2.Theta.mt V a i j) = (finHom V a : Matrix (Fin V.rank) (Fin V.rank) _) i j := by
+  have key : finPart D (Formalism.L2.Theta.mt V a i j) = (finHom V a).val i j := by
     rw [finHom, MonoidHom.comp_apply, Formalism.UG.P.bc_coe, Matrix.map_apply]
     rfl
   have key2 : finPart D (Formalism.L2.Theta.mt V a i j - (1 : Matrix (Fin V.rank) (Fin V.rank) (AE D)) i j) = 0 := by
