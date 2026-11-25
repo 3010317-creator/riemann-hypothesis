@@ -217,8 +217,6 @@ namespace Formalism.L2.SG.PoincareInHH.Cut.GU
 
 open Formalism.L2.SG.Pf.Level
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7} (X : HidaSetting D) (u : D.what₂.Word)
 
 theorem hA_zero_r (x : VA X.B.I) : hA X.B.I x 0 = 0 := by

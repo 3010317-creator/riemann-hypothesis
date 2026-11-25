@@ -31,8 +31,6 @@ namespace Formalism.L2.GlobalTheoryTheory.GenusMassVolumes
 
 open Formalism.BasicNotions Formalism.MainNotions.StandardLattice Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem exists_sig_ne (D : D7) : ∃ θ : D.host.E, D.sp.cm.sig θ ≠ θ := by
   obtain ⟨P, hP⟩ := Ideal.exists_maximal (NumberField.RingOfIntegers D.host.E)
   obtain ⟨θ, t, e, h⟩ := D.sp.cm.cmUnram.2.2 P hP
