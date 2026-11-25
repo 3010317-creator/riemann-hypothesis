@@ -419,12 +419,6 @@ theorem isVB_omega_of_isGrpPullback (h : IsGrpPullback G' G f φ) {g : ℕ} (hg 
 
 end Base
 
-section DualIm
-
-variable {O : Type} [CommRing O] {F : S.Modules} (ρ : O →+* End F) (σ : O →+* Γ(S, ⊤)) {g r : ℕ}
-
-end DualIm
-
 section Act
 
 variable {O : Type} [CommRing O] {G H : Over S} [GrpObj G] [GrpObj H] [QuasiSeparated G.hom]
@@ -602,12 +596,6 @@ variable (S) (X Y : Type) [AddCommGroup X] [AddCommGroup Y]
 variable {X} {κ : Type} [Fintype κ] (b : Module.Basis κ ℤ X)
 
 end Torus
-
-section Examples
-
-variable {G : Over S} [GrpObj G] [QuasiSeparated G.hom]
-
-end Examples
 
 end GlobalTheory.LieVB
 end -- clump:auto

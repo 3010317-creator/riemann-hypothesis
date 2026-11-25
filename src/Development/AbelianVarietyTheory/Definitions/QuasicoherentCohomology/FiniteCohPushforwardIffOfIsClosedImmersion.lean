@@ -550,12 +550,6 @@ theorem chi_shortExact (hS : S.ShortExact) (h₁ : FiniteCoh k S.X₁) (h₃ : F
 
 end ShortExact
 
-section Pi
-
-variable {ι : Type*} [Fintype ι] {E : ι → X.Modules}
-
-end Pi
-
 
 variable (k F) in
 theorem finiteCoh_of_isAffine_of_finite [IsAffine X] [Module.Finite k Γ(X, ⊤)]
@@ -1225,10 +1219,6 @@ variable (k : Type v) [Field k] (A : CommRingCat.{0}) [Algebra k A] [Algebra k �
 
 
 end FiniteAlgebra
-
-section Examples
-
-end Examples
 
 end GlobalTheory
 end -- clump:auto
