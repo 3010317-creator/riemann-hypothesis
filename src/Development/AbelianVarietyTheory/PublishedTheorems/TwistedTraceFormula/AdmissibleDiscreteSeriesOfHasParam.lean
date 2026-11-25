@@ -78,12 +78,6 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.CoverDS
 
-/-- **Harish-Chandra's existence theorem for discrete series**: a connected reductive Lie
-group `G` possesses square-integrable (discrete series) representations if and only if `G`
-has a compact Cartan subgroup (i.e. `\mathrm{rank}(G) = \mathrm{rank}(K)`).
-
-Proposed reference:
-[Harish-Chandra, *Discrete series for semisimple Lie groups. I*][harishChandra1965discrete]. -/
 def DiscreteSeriesCover : Prop :=
   ∀ (p q : ℕ), 1 ≤ p + q → ∀ T : GrpData p q,
     ∃ D : {lam : Ix p q → ℚ // IsParam lam} → DSRep T,
