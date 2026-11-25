@@ -931,8 +931,7 @@ theorem relation_dehom : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fi
     (isHomogeneous_pow _ (cyc_isHomogeneous_of_isMultiHomogIdeal hQ k) n).sup
       (cyc_isHomogeneous_of_isMultiHomogIdeal hP k)
   obtain ⟨b, hb⟩ : ∃ b, part b s ∉ Q := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     exact hs (sum_part s ▸ Ideal.sum_mem _ fun b _ => hall b)
   have hmem := part_mul_mem hI hf hrel b
   refine ⟨bind₁ (lift p) (part b s), ?_, ?_⟩

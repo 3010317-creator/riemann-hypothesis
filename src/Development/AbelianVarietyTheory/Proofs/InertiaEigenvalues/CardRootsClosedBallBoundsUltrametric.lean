@@ -333,13 +333,11 @@ theorem card_roots_le_radius_bounds :
   obtain ⟨hA, hB⟩ := _root_.GlobalTheory.card_roots_closedBall_eq_dominantIndex K f ρ hρ hf
   set e := Multiset.card (f.roots.filter fun z => ‖z‖ ≤ ρ) with he
   refine ⟨fun H => ?_, fun H => ?_⟩
-  · by_contra hlt
-    push_neg at hlt
+  · by_contra! hlt
     have h1 := hB d hlt
     have h2 := H e
     linarith
-  · by_contra hlt
-    push_neg at hlt
+  · by_contra! hlt
     have h1 := H e hlt
     have h2 := hA d
     linarith

@@ -364,8 +364,7 @@ theorem sig_all_of_sideB : ∀ (D : D7) (cf : CharFrame D) (Rw : RowSide D) (low
   classical
   refine EigModel.sig_all_of hN hM hC ?_
   rintro i j hj b ev ⟨y, hyV, hy0, hyE⟩
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   apply hy0
   refine eq_zero_of_joint (fun t : ℕ × PlE D.host => D.nexp.hkF i j b t.1 t.2) (fun t => HkIdx i t.1 t.2)
     (fun t => ev t.1 t.2) _ y ?_ (fun t ht => hyE t.1 t.2 ht) (good_part_le_span_triple_eigenvectors Bs hF i j hj b hyV)

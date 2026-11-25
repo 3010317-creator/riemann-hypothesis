@@ -119,8 +119,7 @@ theorem UpperTheory.V.Kum.resInfInj :
     funext h
     exact hcomp h
   have hINF : ∃ g : G F Ω, cycZ F Ω l g ^ e ≠ 1 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
     have hk : 0 < e.natAbs := Int.natAbs_pos.mpr he
     have hall : ∀ g : G F Ω, cycZ F Ω l g ^ e.natAbs = 1 := by

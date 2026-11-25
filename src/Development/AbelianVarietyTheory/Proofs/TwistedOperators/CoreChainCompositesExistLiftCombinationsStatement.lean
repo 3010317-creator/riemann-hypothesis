@@ -721,8 +721,7 @@ theorem _root_.GlobalTheory.T.exists_representatives_half_quotient_pairing_trivi
       exact isHalf_add (hR y hy).1 (isHalf_neg (hR y' hy').1)
     obtain ⟨l, hl, hle, hne1⟩ : ∃ l ∈ Λ, IsHalf e l ∧
         W.ψ (symplO (G.pS (.core i)) (G.pT (.core i)) l (y - y')) ≠ 1 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact hnot ((hdual _ hhalf).2 hc)
     refine ⟨l, hl, hle, fun h => hne1 ?_⟩
     have hsplit : symplO (G.pS (.core i)) (G.pT (.core i)) l y =

@@ -121,8 +121,7 @@ theorem tri_solve {F : Type} [Field F] {N : ℕ} (T : Fin N → Fin N → F) (a 
     (hT : ∀ j l, j < l → T j l = 0) (hd : ∀ j, T j j ≠ 0) (i : Fin N)
     (h : ∀ l, i < l → ∑ j, a j * T j l = 0) : ∀ j, i < j → a j = 0 := by
   classical
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   obtain ⟨j₀, hj₀, ha₀⟩ := hne
   let S := Finset.univ.filter (fun j => i < j ∧ a j ≠ 0)
   have hS : S.Nonempty := ⟨j₀, by simp [S, hj₀, ha₀]⟩

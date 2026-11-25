@@ -129,8 +129,7 @@ private theorem unitAt_of_isUnit' {p : Cpt ξ} (z : regAt ξ p) (hu : IsUnit z) 
 theorem exists_unit_of_sum {p : Cpt ξ} {m : ℕ} {f cc : Fin m → Ω} (hf : ∀ l, f l ∈ regAt ξ p)
     (hc : ∀ l, cc l ∈ regAt ξ p) (h : ∑ l, cc l * f l = 1) : ∃ l, unitAt ξ p (f l) := by
   haveI := isLocalRing_regAt' (ξ := ξ) (p := p)
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have hnu : ∀ l, ¬ IsUnit (⟨f l, hf l⟩ : regAt ξ p) :=
     fun l hu => hne l (unitAt_of_isUnit' _ hu)
   have hsum : (∑ l, (⟨cc l, hc l⟩ : regAt ξ p) * ⟨f l, hf l⟩) = 1 := by

@@ -84,8 +84,7 @@ theorem minorIJ_moveMat (I C I' : Finset (Fin N)) (e : I.card = C.card) :
     unfold minorIJ
     split_ifs with e'
     · have hex : ∃ a ∈ I', a ∉ I := by
-        by_contra hc
-        push_neg at hc
+        by_contra! hc
         exact hI (Finset.eq_of_subset_of_card_le hc (by rw [e, e']))
       obtain ⟨a, ha, haI⟩ := hex
       have hr : a ∈ Set.range (I'.orderEmbOfFin e') := by

@@ -150,8 +150,7 @@ theorem isWtOn_proj {E : H →L[ℂ] H} (hE : ∀ k ∈ Formalism.REAL.Kset ε, 
 
 theorem exists_not_orth {lam : Fin n → ℝ} {x : H} (hx : x ∈ lowKSub ε lam σ) (h0 : x ≠ 0) :
     ∃ S, IsKTypeOf ε σ (Formalism.QuantumDeterminants.lowK ε lam) S ∧ ∃ s ∈ S, ⟪x, s⟫_ℂ ≠ 0 := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have h1 : lowKSub ε lam σ ≤ LinearMap.ker (innerSL ℂ x : H →ₗ[ℂ] ℂ) :=
     sSup_le fun S hS s hs => h S hS s hs
   have h2 : ⟪x, x⟫_ℂ = 0 := h1 hx

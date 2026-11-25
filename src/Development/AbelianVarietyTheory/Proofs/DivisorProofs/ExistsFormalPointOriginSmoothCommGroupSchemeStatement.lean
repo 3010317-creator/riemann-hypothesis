@@ -602,8 +602,7 @@ theorem degree_eq_one {n : ℕ} {D : Fin n →₀ ℕ} (h : D.degree = 1) : ∃ 
   have hsum := h
   rw [Finsupp.degree_eq_sum] at hsum
   obtain ⟨s, hs⟩ : ∃ s, D s ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     simp [hc] at hsum
   refine ⟨s, ?_⟩
   have hle : ∀ t, t ≠ s → D s + D t ≤ 1 := fun t ht => by

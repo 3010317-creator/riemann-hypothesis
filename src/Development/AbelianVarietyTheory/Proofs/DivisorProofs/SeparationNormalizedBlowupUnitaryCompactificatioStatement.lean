@@ -265,8 +265,7 @@ theorem polarised_part_model : ∀ (g n : ℕ), n.Prime → Odd n → ∃ j₀ :
   obtain ⟨v, hv⟩ := ZM.TObj.exists_hasTh_of_isLocalRing L1 L2 (hodd.pow) t
   have hspan := ZM.FamilyScheme.span_theta L1 L2 t n v hn.two_le (dvd_pow_self n (by omega)) hv
   obtain ⟨a', ha'⟩ : ∃ a', v a' ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     have : Set.range v ⊆ {0} := by rintro _ ⟨a, rfl⟩; exact h a
     rw [Ideal.span_eq_bot.2 (fun x hx => this hx)] at hspan
     exact bot_ne_top hspan

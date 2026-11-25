@@ -1092,8 +1092,7 @@ theorem exists_fun (hLb : IsBase S π) (hv : (T : 𝓞 F) ∈ v.asIdeal) (hP : P
     rw [← hψ, hx] at h
     exact fT_kill hLb hv hP hw h2 h3 hk r hr x (hasRes_lt_one h)
   have hne : ∃ a, (S.fT v hv).toAddMonoidHom a ≠ 0 := by
-    by_contra H
-    push_neg at H
+    by_contra! H
     exact S.fT_ne v hv (LinearMap.ext H)
   have hker : ∀ x, S.fT v hv x = 0 → ψ x = 0 := fun x hx =>
     GlobalTheory.Mem.Col2.Reside.ker_of_prime (S.fT v hv).toAddMonoidHom ψ (hcard ▸ hT) hne hle x hx

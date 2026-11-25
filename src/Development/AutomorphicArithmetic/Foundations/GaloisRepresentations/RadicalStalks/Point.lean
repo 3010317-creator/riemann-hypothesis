@@ -960,8 +960,7 @@ theorem UpperTheory.Gal.Ord.cnt :
       rw [mul_zero] at hIN
       exact pow_ne_zero _ hPne hIN
     have hjle : j' ≤ D.n := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       have h1 : (p ^ f) ^ D.n < (p ^ f) ^ j' := Nat.pow_lt_pow_right hP2 hcon
       have h2 : (p ^ f) ^ j' ≤ (p ^ f) ^ j' * L := Nat.le_mul_of_pos_right _ (Nat.pos_of_ne_zero hL0)
       rw [hIN, hMpow] at h1

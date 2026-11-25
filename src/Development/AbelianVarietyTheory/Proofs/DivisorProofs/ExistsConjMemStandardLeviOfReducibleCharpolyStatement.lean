@@ -382,8 +382,7 @@ theorem exists_root (K : Type) [Field K] [Algebra F K] (h2 : Module.finrank F E 
     (ha : a ∉ Set.range (algebraMap F E)) (t s : F)
     (hts : a * a = algebraMap F E t * a - algebraMap F E s) (hK : ¬ IsField (K ⊗[F] E)) :
     ∃ β : K, β * β - algebraMap F K t * β + algebraMap F K s = 0 := by
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   apply hK
   haveI : Nontrivial (K ⊗[F] E) :=
     (Algebra.TensorProduct.includeLeft_injective (R := F) (S := F) (A := K) (B := E)
@@ -619,8 +618,7 @@ theorem exists_split_factor : ∀ {F E : Type} [Field F] [Field E] [Algebra F E]
   intro F E _ _ _ n σ J γ hn hreg hAlg hRank hirr hnf
   obtain ⟨k, K, hK, hKA, ⟨e⟩⟩ := hRank.1
   refine ⟨k, K, hK, hKA, ⟨e⟩, ?_⟩
-  by_contra hall
-  push_neg at hall
+  by_contra! hall
   have h2 := hRank.2 k K ⟨e⟩
   have hk1 : 1 ≤ k := h2.2.1 ⟨⟨0, hn⟩⟩
   rcases Nat.lt_or_ge k 2 with hk | hk

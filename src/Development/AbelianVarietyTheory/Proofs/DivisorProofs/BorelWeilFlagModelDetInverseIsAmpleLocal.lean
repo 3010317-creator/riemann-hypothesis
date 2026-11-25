@@ -683,8 +683,7 @@ theorem exists_mem_basicOpen_plkMinor (F : Frames Y π) (Mc : MChart Y) (k : F.J
     ∃ r, z ∈ Z.basicOpen (plkMinor F Mc k σ m r) := by
   obtain ⟨B, hB⟩ := exists_mul_plkU_eq_one F Mc k σ
   obtain ⟨cf, hc⟩ := exists_sum_minors_eq_one (d := (m : ℕ) + 1) m.2 _ B hB
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   have hmax : (Z.presheaf.germ _ z hz).hom (∑ r, cf r * plkMinor F Mc k σ m r) ∈
       IsLocalRing.maximalIdeal (Z.presheaf.stalk z) := by
 

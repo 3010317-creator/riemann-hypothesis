@@ -457,8 +457,7 @@ theorem sum_fc_delta (m : ℕ) (E : Frame Φ m) (σ : ∀ T : C, E.D ⟶ T) :
   · simp
   · intro I _ hI
     obtain ⟨k, hk⟩ : ∃ k, k ≠ I k := by
-      by_contra hh
-      push_neg at hh
+      by_contra! hh
       exact hI (funext fun k => (hh k).symm)
     rw [Finset.prod_eq_zero (Finset.mem_univ k) (if_neg hk), fc_zero]
   · simp

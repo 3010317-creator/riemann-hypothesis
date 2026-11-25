@@ -110,8 +110,7 @@ theorem finite_height_fraction_repr (hd : d.AxH 𝒜) (h : d.S1) :
     intro x hx
     obtain ⟨hp, hn⟩ := hmemS x hx
     refine (d.good_primes_properties hd h x.1).2.1 x.2 hp ?_
-    by_contra hw
-    push_neg at hw
+    by_contra! hw
     apply hn
     simp [nP, hw]
   have halg : ∀ x ∈ Finset.univ.sigma T,
@@ -1526,8 +1525,7 @@ theorem disc_one (hd : d.AxH 𝒜) (h : d.S1) (hI2et : d.HeightIntegralEstimateT
     apply (hgf.union hNef).subset
     intro la hla
     simp only [Function.mem_support, Set.mem_union] at hla ⊢
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h2 := (hloc la).2
     rw [hc.1, hc.2] at h2
     push_cast at h2

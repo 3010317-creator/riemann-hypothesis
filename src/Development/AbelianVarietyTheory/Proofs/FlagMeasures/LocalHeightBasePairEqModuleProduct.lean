@@ -301,8 +301,7 @@ theorem point_ends {K : Type} [Field K] {r : ℕ} (w : Point K (r + 1)) :
   simp only [Finset.mem_filter, Finset.mem_range, Finset.mem_image, Finset.mem_univ, true_and]
   constructor
   · rintro ⟨hl, h1, hE⟩
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     apply hE
     rw [Formalism.MainNotions.BesselShellMomentBounds.ptMat_eq]
     refine _root_.Formalism.HermitianLatticeCounting.P.leading_minor_vanishes_off_block_ends K (r + 1) _ _ l (by omega) fun p hp => ?_

@@ -1096,8 +1096,7 @@ theorem RootFieldNumerics.intersection_section_log_integral : ReciprocityTheory.
     (fun j z => Real.log (((Fin.snoc L B : Fin (e + 1) → HermLine ι) j).h z)) (fun _ => 1)
   set PA := ptsIntegral (mCoordIdeal y)
     (fun j z => Real.log (((Fin.snoc L A : Fin (e + 1) → HermLine ι) j).h z)) (fun _ => 1)
-  by_contra hneg
-  push_neg at hneg
+  by_contra! hneg
   have hpos : 0 < -PA := by linarith
   obtain ⟨n, hn⟩ := exists_nat_gt (PB / -PA)
   have h1 := (div_lt_iff₀ hpos).mp hn

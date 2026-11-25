@@ -945,8 +945,7 @@ theorem mem_para_of_eig : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
     rw [hO, ValuationSubring.mem_toSubring, IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers]
   have hint := (GlobalTheory.HeckeScalarSph.loc_mem_GLint_iff s hκT).2 hκU
   refine ⟨hint, ?_⟩
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   obtain ⟨i0, j0, hi0, hj0, hv⟩ := hcon
   set h := s.loc n κ with hh
   have hent : ∀ i j, Valued.v (h.val i j) ≤ 1 := fun i j =>

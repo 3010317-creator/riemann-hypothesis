@@ -396,8 +396,7 @@ theorem places_split : ∀ (D : D7) (i : D.ntw.Tw), ∀ P ∈ D.ntw.pD i, Formal
     simpa [pow_succ, AlgEquiv.mul_apply] using this
   have hσm : ∀ x, A.valuation (σ x) < 1 ↔ A.valuation x < 1 := valuation_apply_lt_one_iff hσ.1
   obtain ⟨z, hzL, hz0, hza⟩ : ∃ z ∈ L, z ≠ 0 ∧ ¬ A.valuation (σ z / z - 1) < 1 := by
-    by_contra hall
-    push_neg at hall
+    by_contra! hall
     have hfixσ := fixes_of_wild A σ.toRingEquiv hσm L.toSubfield hσL (fun y hy => h3L y hy) h3u
       (fun y hy hy0 => hall y hy hy0)
     have : σ ∈ K := by

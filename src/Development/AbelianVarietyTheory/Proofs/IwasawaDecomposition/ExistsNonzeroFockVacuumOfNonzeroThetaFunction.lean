@@ -98,8 +98,7 @@ theorem exists_isVacF_ne_zero : ∀ (D : D7) (V W : HSp D) (A : GlobalTheory.Cha
     (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → IsInfFam θ → ∀ f, IsThetaFunO ψ V W f → f ≠ 0 →
       ∃ f₀, GlobalTheory.ChainFr.IsVacF ψ θ A B f₀ ∧ f₀ ≠ 0 := by
   intro D V W A B θ ψ hψ hθ f hf hf0
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D W V
   have i6 : BorelSpace (WO V W) := ⟨rfl⟩
   obtain ⟨μ, 𝓕, hμ, h𝓕, h1⟩ :=

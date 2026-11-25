@@ -567,8 +567,7 @@ theorem weilScalar_source_eq_one_nonsplit_unramified (hψ : IsStdChar D ψ (-1))
       ∀ u ∈ (latO S T ΛS ΛT fun w => w = v), heisO ψ S T u f = f := by
     obtain ⟨f, f0, hf⟩ := GlobalTheory.FinWeilForm.exists_theta hψ S T
     obtain ⟨e, he, e0⟩ : ∃ e, Fixes (opF hψ.1 S T w₀) (latF S T ΛS ΛT) e ∧ e ≠ 0 := by
-      by_contra hn
-      push_neg at hn
+      by_contra! hn
       have : (⊤ : Submodule ℂ (thetaSub ψ S T)) ≤ ⊥ := by
         rw [← hL.span, Submodule.span_le]
         rintro _ ⟨x, e, he, rfl⟩

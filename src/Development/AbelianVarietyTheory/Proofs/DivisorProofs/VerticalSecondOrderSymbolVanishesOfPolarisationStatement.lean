@@ -1258,8 +1258,7 @@ theorem eq_top_of_forall_maximal (M : Submodule A (Fin n → A))
       (Module.Finite.fg_top) hle
     exact ⟨r, hr, fun q => hr' q trivial⟩
   have h1 : ∀ q : (Fin n → A) ⧸ M, q = 0 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     obtain ⟨q₀, hq₀⟩ := hne
     let I : Ideal A := Module.annihilator A ((Fin n → A) ⧸ M)
     have hI : I ≠ ⊤ := by

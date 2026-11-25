@@ -91,8 +91,7 @@ theorem exists_finiteDimensional (v : V ⊗[ℂ] W) :
       rw [contr_add]; exact Submodule.add_mem_sup (h l) (h' l)⟩
 
 theorem exists_contr_ne_zero {v : V ⊗[ℂ] W} (hv : v ≠ 0) : ∃ l, contr v l ≠ 0 := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   apply hv
   let b := Module.Free.chooseBasis ℂ V
   have key : ∀ (w : V ⊗[ℂ] W) i, TensorProduct.equivFinsuppOfBasisLeft b w i = contr w (b.coord i) := by

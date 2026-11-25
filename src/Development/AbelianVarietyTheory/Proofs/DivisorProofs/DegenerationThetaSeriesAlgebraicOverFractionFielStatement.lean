@@ -293,8 +293,7 @@ theorem adic_coeffs_tendsto_zero :
       obtain ⟨a, ha, hm⟩ := coef _ _ hmem
       refine ⟨a, ha, fun n hn hzn => hn fun j => ?_⟩
       have hlt : n < N := by
-        by_contra hle
-        push_neg at hle
+        by_contra! hle
         exact (Nat.find_spec h) (anti hle hzn)
       exact Ideal.pow_le_pow_right (by omega) (hm j)
     · push_neg at h

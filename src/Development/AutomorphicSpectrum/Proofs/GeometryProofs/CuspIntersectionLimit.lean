@@ -645,8 +645,7 @@ theorem lattice_lower {n a g : ℕ} {Λ : Type} [AddCommGroup Λ] (L : Flat.LogP
   obtain ⟨av, hav⟩ : ∃ av : Fin g → ℤ, av = fun i => bas.repr v (.inl i) := ⟨_, rfl⟩
   obtain ⟨nv, hnv⟩ : ∃ nv : Fin g → ℤ, nv = fun i => bas.repr v (.inr i) := ⟨_, rfl⟩
   have hne : av ≠ 0 ∨ nv ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     apply hv
     have : bas.repr v = 0 := by
       ext x
@@ -1103,8 +1102,7 @@ theorem eig_indep {E : Type} [Field E] [NumberField E] {g r : ℕ} {Λ : Type} [
     simp only [map_sum, map_zsmul, LinearMap.sum_apply, LinearMap.smul_apply, Finset.smul_sum, mul_smul,
     Int.cast_smul_eq_zsmul]
   have hk : ∃ k, γ k ≠ 0 := by
-    by_contra hn
-    push_neg at hn
+    by_contra! hn
     apply h0
     rw [← hc3 x₀ hx₀, hγ]
     simp [hn]

@@ -126,8 +126,7 @@ theorem val_xi (q : SplitPt D k) (hU : q.UnitAA) : valuation k (ofSplit q).xi = 
   have hne : valuation k (ofSplit q).xi ≠ 0 := by
     rw [Ne, Valuation.zero_iff]; exact GlobalTheory.LocMod.Witness.xi_ne (ofSplit q)
   exact le_antisymm h1 (by
-    by_contra hlt
-    push_neg at hlt
+    by_contra! hlt
     have := (one_lt_inv₀ (zero_lt_iff.2 hne)).2 hlt
     exact absurd h2 (not_le.2 this))
 

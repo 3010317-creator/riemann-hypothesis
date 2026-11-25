@@ -101,8 +101,7 @@ theorem row_isotropic (g : GU σ n) {a : Fin n} (ha : a ≠ a.rev) :
   rwa [if_neg ha, Fin.rev_rev] at h
 
 theorem row_ne_zero (g : GU σ n) (a : Fin n) : ∃ j, mat g a j ≠ 0 := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   have := sum_mul_inv g a a
   simp [h] at this
 

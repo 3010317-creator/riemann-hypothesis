@@ -719,8 +719,7 @@ theorem st4 : St4 := by
   obtain ⟨ω, hω, hωc⟩ := exists_isTameLift ω₀ (val_unif4 hϖ) c
   have hE : ExtendsCentral ω τ := hω.extendsCentral hω₀
   obtain ⟨w₀, hw₀⟩ : ∃ w₀ : W, w₀ ≠ 0 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     haveI := hτ
     exact (bot_ne_top : (⊥ : Subrepresentation τ) ≠ ⊤) (Subrepresentation.ext (Submodule.ext fun w => by
       rw [hcon w]; exact ⟨fun _ => Submodule.zero_mem _, fun _ => Submodule.zero_mem _⟩))
@@ -1042,8 +1041,7 @@ theorem exists_eq_pow_of_aeval {K F : Type*} [Field K] [Fintype K] [Field F] [Al
     · exact absurd H (hlt i j h hj)
     · exact h
     · exact absurd H.symm (hlt j i h hi)
-  by_contra hno
-  push_neg at hno
+  by_contra! hno
   set S := (Finset.range n).image (fun i : ℕ => w ^ (Nat.card K) ^ i) with hS
   have hcardS : S.card = n := by
     rw [hS, Finset.card_image_of_injOn hinj, Finset.card_range]

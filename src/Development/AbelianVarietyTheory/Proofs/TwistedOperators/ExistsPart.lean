@@ -180,8 +180,7 @@ theorem exists_part (R : RealDat D A Ks) (F : Face D A) {s : ℕ} (hs : A.fam.Ok
     rwa [smul_zero, smul_smul, inv_mul_cancel₀ hc, one_smul] at h3
   have hxR := hsup.ge (LinearMap.mem_range.2 ⟨x, hxe⟩)
   have hmem := (Submodule.map_iSup π (fun c => GlobalTheory.Hk3.Wcc R SF i c)).le (Submodule.mem_map_of_mem (f := π) hxR)
-  by_contra hall
-  push_neg at hall
+  by_contra! hall
   have hbot : ∀ c, (GlobalTheory.Hk3.Wcc R SF i c).map π = ⊥ := by
     intro c
     rw [eq_bot_iff]

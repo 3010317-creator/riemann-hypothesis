@@ -224,8 +224,7 @@ theorem uniqueDiffWithinAt_compl {V : Type} [NormedAddCommGroup V] [NormedSpace 
   obtain ⟨f, hf0, hf⟩ := exists_support hK hne hx
   obtain ⟨v, hv⟩ : ∃ v, 0 < f v := by
     obtain ⟨w, hw⟩ : ∃ w, f w ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hf0 (ContinuousLinearMap.ext h)
     rcases lt_or_gt_of_ne hw with h | h
     · exact ⟨-w, by simpa using h⟩

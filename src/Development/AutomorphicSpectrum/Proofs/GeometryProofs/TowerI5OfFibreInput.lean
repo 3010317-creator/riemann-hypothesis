@@ -120,8 +120,7 @@ lemma exists_bound (B : HermLine ι) (hB : IsSmoothHerm B) :
   have hcpt : IsCompact S := (isCompact_closedBall 0 1).of_isClosed_subset hcl hsub
   have hmc : ∀ z ∈ S, ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0 := by
     intro z hz k
-    by_contra hn
-    push_neg at hn
+    by_contra! hn
     have := hz k
     simp [bnorm, hn] at this
   have hcont : ContinuousOn (fun z => Real.log (B.h z)) S :=

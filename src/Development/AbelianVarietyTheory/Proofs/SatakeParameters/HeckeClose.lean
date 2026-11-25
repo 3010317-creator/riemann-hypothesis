@@ -847,8 +847,7 @@ theorem eig_in_sum {H : Type} [AddCommGroup H] [Module ℂ H] [FiniteDimensional
   let χ : K → {P // ok P} × J → ℂ := fun k i => ev k i.1.1 i.2
   have hV : ∀ k, V k ≤ Formalism.L2.Col.eigAt op (χ k) := fun k x hx =>
     Formalism.L2.Col.mem_eigAt_of_forall_apply fun i => hev k i.1.1 i.1.2 i.2 x hx
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   have h1 : (⨆ (k : K) (_ : S k), V k) ≤ Formalism.L2.Col.eigSum op (fun x => x ≠ χ k0) := by
     refine iSup₂_le fun k hk => (hV k).trans (Formalism.L2.Col.eigAt_le_eigSum ?_)
     intro he

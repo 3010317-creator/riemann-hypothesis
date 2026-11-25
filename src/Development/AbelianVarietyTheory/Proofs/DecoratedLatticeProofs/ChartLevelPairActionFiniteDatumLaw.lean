@@ -400,8 +400,7 @@ theorem inv_entry_le {n : ℕ} (X Y : Matrix (Fin n) (Fin n) R) (hXY : X * Y = 1
   have hY : Y - 1 = -((X - 1) * Y) := by
     rw [Matrix.sub_mul, hXY, Matrix.one_mul, neg_sub]
   have hb : ∀ r s, v (Y r s) ≤ 1 := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     obtain ⟨r, s, hrs⟩ := hcon
     obtain ⟨p, -, hp⟩ := Finset.exists_max_image Finset.univ (fun p : Fin n × Fin n => v (Y p.1 p.2))
       ⟨(r, s), Finset.mem_univ _⟩
@@ -468,8 +467,7 @@ theorem exists_exp_le_natCast {E : Type} [Field E] [NumberField E] (L : ℕ) (hL
   refine ⟨m, Nat.one_le_iff_ne_zero.2 hm0, fun P => ?_⟩
   have e1 : ((L : ℕ) : P.adicCompletion E) = algebraMap E _ (algebraMap (𝓞 E) E ((L : ℕ) : 𝓞 E)) := by simp
   rw [e1, GlobalTheory.Mem.Col2.valued_algebraMap, HeightOneSpectrum.valuation_of_algebraMap]
-  by_contra h
-  push_neg at h
+  by_contra! h
   have hd := (HeightOneSpectrum.intValuation_le_pow_iff_dvd P _ m).1 h.le
   have h2 : Ideal.absNorm (P.asIdeal ^ m) ∣ m := map_dvd Ideal.absNorm hd
   rw [map_pow] at h2

@@ -176,8 +176,7 @@ theorem theta_one (φ : HahnSeries ℚ Ω) : theta 1 φ = qD φ := by
 
 theorem mem_of_pow_eq_one (A : ValuationSubring Ω) {y : Ω} {k : ℕ} (hk : k ≠ 0) (hy : y ^ k = 1) : y ∈ A := by
   rw [← A.valuation_le_one_iff]
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have h := one_lt_pow' hlt hk
   rw [← map_pow, hy, map_one] at h
   exact lt_irrefl _ h

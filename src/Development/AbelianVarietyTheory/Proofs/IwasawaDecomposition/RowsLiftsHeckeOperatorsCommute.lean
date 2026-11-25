@@ -111,8 +111,7 @@ theorem exists_trace_one (P : HeightOneSpectrum (𝓞 E)) (hin : ∃ x : 𝓞 E,
     ∃ τ : E, P.valuation E τ ≤ 1 ∧ τ + star τ = 1 := by
   obtain ⟨x, hx⟩ := hin
   obtain ⟨u, hu⟩ : ∃ u : 𝓞 E, u + cO E u ∉ P.asIdeal := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hx
     have h1 := h 1
     have h2 := h x

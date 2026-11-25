@@ -608,8 +608,7 @@ theorem pullC_delta (τ : κ → ι) (φ : E →ₗ[k] E') (c : Finset ι → E)
     rw [pullC_inj τ φ c hinj', map_zsmul, smul_smul, smul_smul, sortSign_mul_cubeSign_image τ hj hinj,
       image_erase_eq_erase_image_of_injOn τ hj hinj]
   · have hcol : ∃ a ∈ s, ∃ b ∈ s, a < b ∧ τ a = τ b := by
-      by_contra hno
-      push_neg at hno
+      by_contra! hno
       apply hinj
       intro x hx y hy hxy
       rcases lt_trichotomy x y with h | h | h

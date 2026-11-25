@@ -522,8 +522,7 @@ theorem cval_unit_fin (Z : LocDat D) :
   refine ((delta_unit D Z).union (isUnit_unitAt D)).subset ?_
   intro p hp
   simp only [Set.mem_setOf_eq, Set.mem_union] at hp ⊢
-  by_contra h
-  push_neg at h
+  by_contra! h
   obtain ⟨⟨u, hu⟩, ⟨v, hv⟩⟩ := h
   refine hp ⟨u * v, ?_⟩
   rw [cval, ← hu, ← hv, Units.val_mul, MulMemClass.coe_mul]

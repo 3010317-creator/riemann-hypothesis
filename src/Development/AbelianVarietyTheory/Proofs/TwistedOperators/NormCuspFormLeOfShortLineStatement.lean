@@ -1093,8 +1093,7 @@ theorem norm_le_of_not_long : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ 
   have hbx : Formalism.IndefR.Eqv.UI.brg fr x0 = x := by simp [hx0]
   have hl0 : 0 ≤ GlobalTheory.Count.least (Formalism.IndefR.Eqv.UI.instV fr) x0 := least_nonneg _ x0
   have hlt : GlobalTheory.Count.least (Formalism.IndefR.Eqv.UI.instV fr) x0 < s := by
-    by_contra hge
-    push_neg at hge
+    by_contra! hge
     apply hlong
     intro 𝔪 h𝔪 w hw hw0
     have hL := GlobalTheory.T.adelicPointRationalLattice_unitaryModelIso_eq D V fr x0

@@ -411,12 +411,10 @@ theorem vac_datumB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : 
   refine ⟨f, ?_, ?_, ?_, ?_⟩
   · rintro rfl
     obtain ⟨x₁, hx₁⟩ : ∃ x : HomA G t i j, ρ.vT i j x ≠ 0 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact GlobalTheory.BigDat.vac_ne_zero h₁ (funext hc)
     obtain ⟨x₂, hx₂⟩ : ∃ x : HomB G i j, ρ.vX i j x ≠ 0 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact GlobalTheory.BigDat.vac_ne_zero h₂ (funext hc)
     have h0 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (0 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf _ _) Γ.M'.vac =
         (0 : ℂ) • GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (0 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf _ _) Γ.M'.vac := by

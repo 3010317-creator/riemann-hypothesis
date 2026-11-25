@@ -1409,8 +1409,7 @@ theorem fibre_charts : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fint
     obtain ⟨x₀, rfl⟩ := hpi.2 x
     obtain ⟨m, hm⟩ := hpc_cov (FA.pr (FA.Re.π x₀))
     refine ⟨x₀, Set.mem_iUnion.2 ⟨(tm m).2, hm.1.2, ?_⟩, rfl⟩
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     obtain ⟨c, a', ho⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.exists_Lca_of_plk_ne K ι Φ y Ψ N j M n d BM FA τ ca cb hlt hblk (tm m).2 x₀ hm.1.2 hcon.2
     have hbs := hm.1.1
     let w := mk ((BM.Rb.A.chart (tm m).1) (FA.pr (FA.Re.π x₀))) c
@@ -1479,8 +1478,7 @@ theorem fibre_charts : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fint
     intro x hx
     obtain ⟨m, hm⟩ := hpc_cov (FA.pr (q 0 x))
     refine Set.mem_iUnion.2 ⟨(tm m).2, hm.1.2, ?_⟩
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     obtain ⟨c, a₀, a₁, ho⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.Cell.vector_of_chart K ι Φ y Ψ N j M n d BM FA τ a b k₀ ca cb hb hs hk hca hcb RW q hq h0 h1 hinj
       (tm m).2 x hm.1.2 (fun p => (hcon.2 p).1) (fun p => (hcon.2 p).2)
     have hbs := hm.1.1

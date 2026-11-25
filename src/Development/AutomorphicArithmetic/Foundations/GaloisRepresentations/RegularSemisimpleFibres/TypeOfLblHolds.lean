@@ -375,8 +375,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.avgMap :
   haveI := Fintype.ofFinite G
   refine ⟨∑ g : G, (ρ g⁻¹).comp (Φ.comp (ψ.comp (η g))), ?_, ?_⟩
   · obtain ⟨x, hx⟩ : ∃ x, ψ x ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hne (LinearMap.ext h)
     intro h0
     have h1 := congrArg (fun L => ev (L x)) h0

@@ -745,8 +745,7 @@ theorem exists_map_res [IsLocalRing O] {lam : O} (hm : IsLocalRing.maximalIdeal 
       Module.Finite.fg_top h.ge (by rw [← hm]; exact IsLocalRing.maximalIdeal_le_jacobson ⊥)
     exact top_ne_bot hb
   obtain ⟨y, hy⟩ : ∃ y : Y, y ∉ (Ideal.span {lam} • ⊤ : Submodule O Y) := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hne (eq_top_iff.2 fun y _ => hc y)
   have hq : (Submodule.mkQ (Ideal.span {lam} • ⊤ : Submodule O Y)) y ≠ 0 := by
     rwa [Submodule.mkQ_apply, Ne, Submodule.Quotient.mk_eq_zero]
@@ -791,8 +790,7 @@ theorem eq_hom_of_res {l : ℕ} [Fact l.Prime] [Algebra ℤ_[l] O] [IsLocalRing 
     rw [hd]
     exact B.sub_mem hc hclu
   have hzero : ∀ g, h g = 0 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     obtain ⟨g₀, hg₀⟩ := hne
     set Y : Submodule O X := Submodule.span O (Set.range h) with hY_eq
     have hY : ∀ g, h g ∈ Y := fun g => Submodule.subset_span ⟨g, rfl⟩
@@ -806,8 +804,7 @@ theorem eq_hom_of_res {l : ℕ} [Fact l.Prime] [Algebra ℤ_[l] O] [IsLocalRing 
     have : Nontrivial ↥Y := ⟨⟨hY' g₀, 0, fun e => hg₀ (congrArg Subtype.val e)⟩⟩
     obtain ⟨φ, hφ⟩ := exists_map_res hm ↥Y
     have hex : ∃ g, φ (hY' g) ≠ 0 := by
-      by_contra hall
-      push_neg at hall
+      by_contra! hall
       apply hφ
       have hle : Y ≤ (LinearMap.ker φ).map Y.subtype := by
         refine Submodule.span_le.2 ?_

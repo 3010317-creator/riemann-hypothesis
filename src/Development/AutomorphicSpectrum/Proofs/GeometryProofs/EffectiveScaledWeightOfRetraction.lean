@@ -456,8 +456,7 @@ theorem exists_finset_at [CharZero Ω] (k₀ : K) (hy : ∀ k, ∃ j, y ⟨k, j�
   obtain ⟨T, hT, rfl⟩ := Finset.subset_set_image_iff.1 hs
   refine ⟨T, hT, ?_⟩
   intro L _ _ z hz hzi
-  by_contra hall
-  push_neg at hall
+  by_contra! hall
   have key : ∀ b ∈ Ideal.span ((T.image fun f => aeval (ratioA y k₀ i) f :
       Finset (chartSub y k₀ i)) : Set (chartSub y k₀ i)),
       ∃ (N : ℕ) (G : MvPolynomial (J k₀) ℤ), N ≠ 0 ∧ (N : Ω) * (b : Ω) = aeval (ratio y k₀ i) G ∧

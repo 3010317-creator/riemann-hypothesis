@@ -175,8 +175,7 @@ theorem of_sizes (lemM1 : ∀ (D : D7) (V : HSp D), ∃ (C : ℝ) (b : ℕ), ∀
   · have hx : 1 ≤ quotHeight S (o.emb (h, 1)) := one_le_quotHeight S _
     have hq := first h
     have hpos : 0 ≤ C1 * (K / c) ^ b := by
-      by_contra hneg
-      push_neg at hneg
+      by_contra! hneg
       have := mul_neg_of_neg_of_pos hneg (pow_pos (zero_lt_one.trans_le hx) (N * b))
       linarith [quotHeight_pos A h]
     calc quotHeight A h ≤ C1 * (K / c) ^ b * quotHeight S (o.emb (h, 1)) ^ (N * b) := hq
@@ -186,8 +185,7 @@ theorem of_sizes (lemM1 : ∀ (D : D7) (V : HSp D), ∃ (C : ℝ) (b : ℕ), ∀
   · have hx : 1 ≤ quotHeight A h := one_le_quotHeight A h
     have hq := second h
     have hpos : 0 ≤ C2 * 2 ^ a2 := by
-      by_contra hneg
-      push_neg at hneg
+      by_contra! hneg
       have := mul_neg_of_neg_of_pos hneg (pow_pos (zero_lt_one.trans_le hx) a2)
       linarith [quotHeight_pos S (o.emb (h, 1))]
     calc quotHeight S (o.emb (h, 1)) ≤ C2 * 2 ^ a2 * quotHeight A h ^ a2 := hq

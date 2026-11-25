@@ -837,8 +837,7 @@ theorem mem_span_translates_of_fixed {G V : Type} [AddCommGroup G] [AddCommGroup
         rw [← QuotientAddGroup.out_eq' q', QuotientAddGroup.eq_zero_iff, AddSubgroup.mem_addSubgroupOf]
         exact hK
       obtain ⟨x, hx, hxy⟩ : ∃ x ∈ L', χ x ((q'.out : P) : G) ≠ 1 := by
-        by_contra hc
-        push_neg at hc
+        by_contra! hc
         exact hnK (hsep _ (hPY _ (q'.out).2) hc)
       have hyP := (q'.out).2
       have shift : ∀ q : L' ⧸ L.addSubgroupOf L',

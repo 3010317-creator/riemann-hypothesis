@@ -496,8 +496,7 @@ theorem UpperTheory.Gal.TP.Sub.eigSum_holds :
     · exact h
     · exfalso
       obtain ⟨j, hj⟩ : ∃ j, v j ≠ 0 := by
-        by_contra hcon
-        push_neg at hcon
+        by_contra! hcon
         exact hv0 (funext hcon)
       apply hne j
       ext g

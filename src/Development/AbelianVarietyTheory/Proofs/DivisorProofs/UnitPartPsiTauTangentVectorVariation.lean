@@ -231,8 +231,7 @@ theorem exists_sec_nonempty : ∀ (S : Scheme.{0}) (P : PolAV S) (K : Type) [Fie
     Finset.sum_eq_single i₀ (fun a _ h => absurd (Fin.ext (by have := a.2; have := i₀.2; simp at *; omega)) h) (by simp)
 
   have nz : ∃ j, (b i₀).f j ≠ 0 := by
-    by_contra hz
-    push_neg at hz
+    by_contra! hz
     obtain ⟨r, -, hu⟩ := hb (b i₀)
     have h0 : ∀ r' : Fin (1 ^ P.g) → Γ(T.left, ⊤), ∀ j, (b i₀).f j = ∑ i, ((T ⊗ P.A).left.presheaf.map
         (homOfLE le_top).op).hom ((fst T P.A).left.appTop.hom (r' i)) * (b i).f j := fun r' j => by
@@ -243,8 +242,7 @@ theorem exists_sec_nonempty : ∀ (S : Scheme.{0}) (P : PolAV S) (K : Type) [Fie
   obtain ⟨j, hj⟩ := nz
   haveI : IsReduced (T ⊗ P.A).left := inferInstance
   obtain ⟨y, hy⟩ : ∃ y, y ∈ (T ⊗ P.A).left.basicOpen ((b i₀).f j) := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hj (eq_zero_of_basicOpen_eq_bot _ (eq_bot_iff.2 fun y hy' => (h y hy').elim))
   have hy₀ : y ∈ nonzeroLocus (b i₀) := TopologicalSpace.Opens.mem_iSup.2 ⟨j, hy⟩
   have hF : FormEq (![(snd T P.A).left, (translPt P.A (1 : T ⟶ P.A)).left] : Fin 2 → _)
@@ -523,8 +521,7 @@ namespace GlobalTheory.TwistFibreGen
 theorem exists_sec_of_closed {X : Scheme.{0}} [CompactSpace X] (M : LB X)
     (h : ∀ z : X, IsClosed ({z} : Set X) → ∃ s : LB.Sec M, z ∈ nonzeroLocus s) (z : X) :
     ∃ s : LB.Sec M, z ∈ nonzeroLocus s := by
-  by_contra hz
-  push_neg at hz
+  by_contra! hz
   let C : Set X := ⋂ s : LB.Sec M, ((nonzeroLocus s : X.Opens) : Set X)ᶜ
   have hC : IsClosed C := isClosed_iInter fun s => (nonzeroLocus s).isOpen.isClosed_compl
   obtain ⟨w, hw, hcl⟩ := hC.exists_closed_singleton ⟨z, Set.mem_iInter.2 fun s => hz s⟩

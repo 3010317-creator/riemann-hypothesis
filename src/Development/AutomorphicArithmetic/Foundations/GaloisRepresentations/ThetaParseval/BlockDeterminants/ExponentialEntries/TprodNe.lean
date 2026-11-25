@@ -54,8 +54,7 @@ theorem UpperTheory.TP.RP.tprodNe :
     ∀ {ι : Type} [Fintype ι] {V : ι → Type} [∀ i, AddCommGroup (V i)] [∀ i, Module ℂ (V i)] (f : ∀ i, V i), (∀ i, f i ≠ 0) → PiTensorProduct.tprod ℂ f ≠ 0 := by
   intro ι _ V _ _ f hf h
   have hex : ∀ i, ∃ l : Module.Dual ℂ (V i), l (f i) ≠ 0 := fun i => by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hf i ((Module.forall_dual_apply_eq_zero_iff ℂ (f i)).1 hc)
   choose l hl using hex
   have h0 := congrArg

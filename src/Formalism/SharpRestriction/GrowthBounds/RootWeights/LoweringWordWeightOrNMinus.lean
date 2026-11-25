@@ -80,8 +80,7 @@ theorem weight_zero_lowering_kills_raising [CharZero K] [FiniteDimensional K V] 
       push_cast
       module
   have hex : ∃ k : ℕ, (⇑(E b a))^[k+1] v = 0 := by
-    by_contra hne
-    push_neg at hne
+    by_contra! hne
     have hli : LinearIndependent K (fun k : ℕ => (⇑(E b a))^[k+1] v) := by
       refine Module.End.eigenvectors_linearIndependent' (E a a)
         (fun k : ℕ => -(((k+1 : ℕ) : K))) ?_ _ ?_

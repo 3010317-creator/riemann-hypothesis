@@ -884,8 +884,7 @@ theorem UpperTheory.tameInertiaCharacter_frobenius_conj_eq_pow :
     refine Complex.norm_eq_one_of_pow_eq_one (n := Nat.card K) ?_ Nat.card_pos.ne'
     rw [← Units.val_pow_eq_pow_val, h2, Units.val_one]
   · obtain ⟨t, htw, hne⟩ : ∃ t : Ine (F := E) A, Formalism.MainNotions.BlochKatoReduction.IsWild A (t : G E Ω) ∧ eta f ψ π 0 t ≠ eta f ψ π 1 t := by
-      by_contra hall
-      push_neg at hall
+      by_contra! hall
       have e := (hiff 0 1).1 (eta_eq_of_wild h n f ψ π hcard hord hπ hall)
       have e2 := Int.le_of_dvd (by norm_num) ((dvd_neg).2 e)
       norm_num at e2
@@ -1181,8 +1180,7 @@ private theorem exists_dual_map {G K Γ V W : Type} [Group G] [TopologicalSpace 
     ∃ ψ : Module.Dual ℂ W →ₗ[ℂ] V, ψ ≠ 0 ∧ ∀ k l, ψ (ρ.dual (q k) l) = π (ι k) (ψ l) := by
   classical
   obtain ⟨w0, v1, hv1⟩ : ∃ w v, B w v ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hB (LinearMap.ext fun w => LinearMap.ext fun v => hc w v)
   have hfix : ∀ (w : W) (x : H) (v : V), B w (π x v) = B w v := fun w x v => by
     obtain ⟨k, hk, hk1⟩ := h2 x x.2

@@ -1520,11 +1520,9 @@ theorem isBorel_root (hσ : ∀ x, σ (σ x) = x) (a : ℕ) (h : 2 * (a + 2) ≤
     exact partner_betaU_lower σ x hx
   rw [blockM_out]
   · exact Matrix.one_apply_ne (ne_of_gt hji)
-  · by_contra hc
-    push_neg at hc
+  · by_contra! hc
     exact hI ⟨by simpa [eq_comm] using hc.1, by simpa using hc.2⟩
-  · by_contra hc
-    push_neg at hc
+  · by_contra! hc
     exact hJ ⟨by simpa using hc.1, by simpa using hc.2⟩
 
 theorem diag_a (hσ : ∀ x, σ (σ x) = x) (a : ℕ) (h : 2 * (a + 2) ≤ n) (x : L) (hx : x ≠ 0) (hk : a < n) :

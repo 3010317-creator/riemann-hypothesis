@@ -936,8 +936,7 @@ theorem exists_chart_theta_unit : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   obtain ⟨hA, hB⟩ := GlobalTheory.theta_generates_along_arc hL.globalFns hL.secBaseChange Y a χ W
   have hw0 : Ha.T < ((Ha.T + 1 : ℝ) * Complex.I : ℂ).im := by simp
   have hne : ∃ j, th.f j ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     obtain ⟨hs, hp⟩ := Θ.pos _ hw0
     have h7 := (GlobalTheory.ThetaBlock.thetaCharOff_ne_zero_differentiable_quasiPeriodic g Θ.S (Θ.τ ((Ha.T + 1 : ℝ) * Complex.I)) Θ.c₁ Θ.c₂ hs hp Θ.half₁ Θ.half₂ Θ.c₁_S).1
     apply h7

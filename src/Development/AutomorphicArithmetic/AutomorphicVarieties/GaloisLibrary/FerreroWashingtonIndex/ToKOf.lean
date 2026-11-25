@@ -695,8 +695,7 @@ private theorem sep_pair (l : ℕ) [Fact l.Prime] (x y : ℤ_[l]) :
   by_cases h : x = y
   · exact Filter.Eventually.of_forall fun _ _ => h
   · obtain ⟨m, hm⟩ : ∃ m, PadicInt.toZModPow m x ≠ PadicInt.toZModPow m y := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       exact h (PadicInt.ext_of_toZModPow.mp hc)
     filter_upwards [Filter.eventually_ge_atTop m] with n hn heq
     exfalso
@@ -809,8 +808,7 @@ theorem UpperTheory.V.FW.nzd :
     | succ n ih => rw [succ_nsmul, ← add_assoc, step, ih]
   by_contra hne
   obtain ⟨b, hb⟩ : ∃ b, x.coeff b ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     exact hne (AddMonoidAlgebra.ext (Finsupp.ext fun c => by simp [hc c]))
   have hinj : Function.Injective fun n : ℕ => b + n • a := by
     intro n m hnm
@@ -932,8 +930,7 @@ private theorem prod_single_eq_single_sum {k A ι : Type} [CommRing k] [AddCommG
 private theorem coeff_monic_poly_sum {k A ι : Type} [CommRing k] [AddCommGroup A]
     (T : Finset ι) (f : ι → AddMonoidAlgebra k A) (a : A) (h : (∑ j ∈ T, f j).coeff a ≠ 0) :
     ∃ j ∈ T, (f j).coeff a ≠ 0 := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   apply h
   rw [AddMonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply]
   exact Finset.sum_eq_zero hc

@@ -1011,8 +1011,7 @@ theorem le_of_lintegral_ball_eq {X : Type} [PseudoMetricSpace X] [ProperSpace X]
     (G H : X → ℝ≥0∞) (b : X) (hG : ContinuousAt G b) (hH : ContinuousAt H b)
     (h : ∀ r > 0, ∫⁻ x in Metric.ball b r, G x ∂ν = ∫⁻ x in Metric.ball b r, H x ∂ν) :
     H b ≤ G b := by
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   obtain ⟨c, hc1, hc2⟩ := exists_between hlt
   obtain ⟨d, hd1, hd2⟩ := exists_between hc2
   have e : ∀ᶠ x in 𝓝 b, G x < c ∧ d < H x :=

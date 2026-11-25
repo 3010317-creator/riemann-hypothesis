@@ -136,8 +136,7 @@ theorem prod_mem_span {m n : ℕ} {X : Set (Fin m → k)} {Y : Set (Fin n → k)
     rw [this]; exact Submodule.smul_mem _ c h
 
 theorem exists_ne_zero_of_mem_nhds {U : Set k} (hU : U ∈ 𝓝 (0 : k)) : ∃ t ∈ U, t ≠ 0 := by
-  by_contra h
-  push_neg at h
+  by_contra! h
   obtain ⟨t, ht, hto, h0t⟩ := mem_nhds_iff.1 hU
   have e : t = {0} := Set.Subset.antisymm (fun s hs => h s (ht hs)) (Set.singleton_subset_iff.2 h0t)
   haveI : DiscreteTopology k := discreteTopology_of_isOpen_singleton_zero (e ▸ hto)
@@ -358,16 +357,14 @@ theorem closure_eq {m n : ℕ} (X : Set (Fin m → k)) (Y : Set (Fin n → k))
   obtain ⟨c, hc0, hcb⟩ := exists_bound hc
   have hc0' : (c : k) ≠ 0 := fun h => hc0 (Subtype.ext h)
   obtain ⟨x₀, hx₀, i₀, hxi⟩ : ∃ x ∈ X, ∃ i, x i ≠ 0 := by
-    by_contra hh
-    push_neg at hh
+    by_contra! hh
     have hle : Submodule.span k X ≤ ⊥ := Submodule.span_le.2 fun x hx => by
       rw [SetLike.mem_coe, Submodule.mem_bot]; funext i; exact hh x hx i
     rw [h1] at hle
     have e := (Submodule.mem_bot k).1 (hle (Submodule.mem_top (x := fun _ : Fin m => (1 : k))))
     exact one_ne_zero (congrFun e ⟨0, hm⟩)
   obtain ⟨y₀, hy₀, j₀, hyj⟩ : ∃ y ∈ Y, ∃ j, y j ≠ 0 := by
-    by_contra hh
-    push_neg at hh
+    by_contra! hh
     have hle : Submodule.span k Y ≤ ⊥ := Submodule.span_le.2 fun y hy => by
       rw [SetLike.mem_coe, Submodule.mem_bot]; funext j; exact hh y hy j
     rw [h2] at hle
@@ -1233,8 +1230,7 @@ theorem eq_smul_indicator_closure {X : Type} [AddCommGroup X] [TopologicalSpace 
   rw [← hHc]
   have hcont : Continuous f := hf.1.continuous
   obtain ⟨Y₀, hY₀⟩ : ∃ Y₀, f Y₀ ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hf0 (funext h)
   have hind : ∀ U : Set X, IsClopen U → ∀ φ ∈ GlobalTheory.WeilM.SB X, U.indicator φ ∈ GlobalTheory.WeilM.SB X := by
     intro U hU φ hφ

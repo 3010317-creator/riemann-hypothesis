@@ -234,8 +234,7 @@ theorem clopenCond_onto : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) 
     rw [range_sp_subset_compl, hI k x z]
     constructor
     · intro hno g hg
-      by_contra hne
-      push_neg at hne
+      by_contra! hne
       obtain ⟨y, hy, -⟩ := hrep _ g hg
       apply hno
       have hmem : Set.range (lift z y).left ⊆ C := by

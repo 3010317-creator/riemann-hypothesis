@@ -394,14 +394,12 @@ theorem int_cauchy_schwarz {X : Type} [AddCommGroup X] (F : X →+ X →+ ℤ)
   · have h2 := key (-(F u v)) (F u u)
     have h3 : 0 ≤ F u u * (F u u * F v v - F u v ^ 2) := by linarith [h2]
     have h4 : 0 ≤ F u u * F v v - F u v ^ 2 := by
-      by_contra hc
-      push_neg at hc
+      by_contra! hc
       linarith [mul_neg_of_pos_of_neg ht hc]
     linarith
   · rw [← ht]
     simp only [zero_mul]
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have hs : (1 : ℤ) ≤ F u v ^ 2 := hc
     have h2 := key (-(F v v + 1) * F u v) 1
     rw [← ht] at h2
@@ -418,8 +416,7 @@ theorem seq_bound (a c : ℕ → ℤ) (n : ℕ) (hpos : ∀ k, 0 ≤ a k)
     simp [hS]
   rw [hcast]
   have hS0 : 0 ≤ S := Finset.sum_nonneg (fun i _ => abs_nonneg _)
-  by_contra H
-  push_neg at H
+  by_contra! H
   have ha0 : 0 < a 0 := by
     rcases (hpos 0).lt_or_eq with h | h
     · exact h
@@ -436,8 +433,7 @@ theorem seq_bound (a c : ℕ → ℤ) (n : ℕ) (hpos : ∀ k, 0 ≤ a k)
     | succ k ih =>
       obtain ⟨hk, hk'⟩ := ih
       have hk1 : 0 < a (k + 1) := by
-        by_contra hc
-        push_neg at hc
+        by_contra! hc
         linarith [mul_pos (by linarith : (0:ℤ) < a 1) hk, mul_le_mul_of_nonneg_right hc ha0.le]
       refine ⟨hk1, ?_⟩
       have h2 := hlc k

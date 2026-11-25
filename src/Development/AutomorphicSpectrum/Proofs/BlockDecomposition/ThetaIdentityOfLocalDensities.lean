@@ -276,8 +276,7 @@ theorem exists_of_fib_ne {R : Type} [CommRing R] [Algebra F R] [TopologicalSpace
     {m : HermR R σ 1 → Measure (Fin 1 → Fin 1 → R ⊗[F] E)} (h : IsGramFib R σ J 1 μ ν m) (s : HermR R σ 1)
     {U : Set (Fin 1 → Fin 1 → R ⊗[F] E)} (hU : m s U ≠ 0) :
     ∃ X ∈ U, gramR R σ J X = (s : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)) := by
-  by_contra hc
-  push_neg at hc
+  by_contra! hc
   refine hU (measure_mono_null (fun X hX => ?_) (h.1 s))
   intro h2
   exact hc X hX h2.1

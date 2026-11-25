@@ -166,8 +166,7 @@ theorem iSup_pow_eq {f : ℕ → ℝ} (h0 : ∀ n, 0 ≤ f n) (hb : BddAbove (Se
   refine le_antisymm (ciSup_le hle) ?_
   rcases Nat.eq_zero_or_pos k with rfl | hk
   · simp
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   set T := ⨆ n, f n ^ k
   have hT : 0 ≤ T := le_ciSup_of_le hb' 0 (pow_nonneg (h0 0) k)
   have hroot : T ^ ((1 : ℝ) / k) < ⨆ n, f n := by

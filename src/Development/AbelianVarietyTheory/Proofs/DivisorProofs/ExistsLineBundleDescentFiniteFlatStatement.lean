@@ -779,8 +779,7 @@ theorem hilbert90_local_of_cocycle : ∀ (R S : Type) [CommRing R] [CommRing S] 
   haveI : Module.Invertible R (invariants θ) := hD.invertible_invariants
 
   obtain ⟨f, m, hfm⟩ : ∃ (f : Module.Dual R (invariants θ)) (m : invariants θ), f m ∉ p := by
-    by_contra hcon
-    push_neg at hcon
+    by_contra! hcon
     obtain ⟨T, hT⟩ := ((Module.Invertible.linearEquiv R (invariants θ)).symm 1).exists_finset
     have h1 : (1 : R) = ∑ i ∈ T, i.1 i.2 := by
       have := congrArg (Module.Invertible.linearEquiv R (invariants θ)) hT

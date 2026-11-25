@@ -372,8 +372,7 @@ theorem GlobalTheory.ThetaIrred.orth_heis_translates : ∀ (D : D7) (ψ : AddCha
   · exact Or.inr he0
   left
   obtain ⟨y, hy⟩ : ∃ y, e y ≠ 0 := by
-    by_contra hn
-    push_neg at hn
+    by_contra! hn
     exact he0 (funext hn)
   funext x
   rcases key (y - x) x with h0 | h0

@@ -334,8 +334,7 @@ theorem exists_pow_mul (x : Cb l) : ∃ (c : ℕ) (o : OCb l),
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := OCb l) x
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
   have : ∃ c, b ∣ bk.flat ^ c := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hb0 (AinfDiv.flat_haus bk b fun n => (ValuationRing.dvd_total _ _).resolve_right (h n))
   obtain ⟨c, q, hq⟩ := this
   refine ⟨c, q * a, ?_⟩

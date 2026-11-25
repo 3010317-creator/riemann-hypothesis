@@ -286,8 +286,7 @@ theorem conjStable_first_member (hCRD : GlobalTheory.Published.CuspRapidDecay) {
       (∀ w' : HeightOneSpectrum (𝓞 D.host.E), w'.under (𝓞 D.host.F) = w.under (𝓞 D.host.F) → w ≠ w' → B w' = (B w).map star) ∧
       (¬ Formalism.MainNotions.SchurIrreducible.IsSplit (E := D.host.E) (w.under (𝓞 D.host.F)) → (B w).map star = B w) := by
   have hex : ∃ v, PiLocalization₂.val u' v ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hB'.1
     apply Subtype.ext
     apply LinearMap.ext

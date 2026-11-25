@@ -1251,8 +1251,7 @@ theorem diag_cond_iff (k : Type) [Field k] (r a : ℕ) (S : Matrix (Fin r) (Fin 
     rw [← h, hent] at hz
     by_cases hi : i.val < a
     · refine ⟨hi, ?_⟩
-      by_contra hj
-      push_neg at hj
+      by_contra! hj
       simp [hj] at hz
     · simp [hi] at hz
   · intro h

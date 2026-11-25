@@ -1577,8 +1577,7 @@ theorem exists_monomial_mixExpansion {σ : Type} [Fintype σ] (d : ℕ) :
   | succ d ih =>
     intro s hs
     obtain ⟨i, hi⟩ : ∃ i, s i ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       have h0 : s = 0 := Finsupp.ext h
       simp [h0] at hs
     have hle : Finsupp.single i 1 ≤ s := by

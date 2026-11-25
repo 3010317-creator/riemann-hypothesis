@@ -666,8 +666,7 @@ theorem eq_zero_of_sum_eq_zero_of_unit_mul_pow {R : Type*} [CommRing R] [IsDomai
     (hc : ∀ i, c i ≠ 0 → ∃ (n : ℕ) (w : R), IsUnit w ∧ c i = w * ϖ ^ (i.val + e * n))
     (hsum : ∑ i, c i = 0) : ∀ i, c i = 0 := by
   classical
-  by_contra hne
-  push_neg at hne
+  by_contra! hne
   choose! n w hw hcw using hc
   set S := Finset.univ.filter (fun i => c i ≠ 0) with hS
   have hSne : S.Nonempty := by

@@ -1355,8 +1355,7 @@ theorem fix_sqrt_unit (hl : l ≠ 2) {A : ValuationSubring Ω} (hA : OverL l A) 
   exfalso
   obtain ⟨-, hI⟩ := hs
   have hβ1 : A.valuation β ≤ 1 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h1 : 1 < A.valuation β ^ 2 := one_lt_pow₀ hc two_ne_zero
     rw [← map_pow, hβ] at h1
     have : A.valuation (N : Ω) ≤ 1 := (A.valuation_le_one_iff _).2 (intCast_mem A N)

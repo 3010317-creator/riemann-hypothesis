@@ -83,8 +83,7 @@ private theorem bound (hL : W * L - L * W = (-2 : ℂ) • L)
     (hC : (4 : ℂ) • (R * L) = ((k : ℂ) * (k - 2)) • 1 - (W * W - (2 : ℂ) • W))
     (h0 : ∀ x, H x x = 0 → x = 0) (hW : ∀ x y, H (W x) y = H x (W y)) (hH : ∀ x y, H (L x) y = -H x (R y))
     {x : V} (hx0 : x ≠ 0) {n : ℤ} (hx : W x = (n : ℂ) • x) : (k : ℤ) * (k - 2) ≤ n * (n - 2) := by
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   have hltR : (n : ℝ) * (n - 2) < (k : ℝ) * (k - 2) := by exact_mod_cast hlt
   set c : ℝ := ((k : ℝ) * (k - 2) - n * (n - 2)) / 4 with hc
   have hcpos : 0 < c := div_pos (by linarith) (by norm_num)
@@ -146,8 +145,7 @@ private theorem descend (hk : 3 ≤ k) (hL : W * L - L * W = (-2 : ℂ) • L)
   have hb := bound hL hC h0 hW hH hx0 hx
   have hk' : (3 : ℤ) ≤ k := by exact_mod_cast hk
   have hj2 : 2 ≤ j := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     interval_cases j <;> (push_cast at hb; nlinarith)
   by_cases hL0 : L x = 0
   · refine ⟨x, hx0, ?_, hL0⟩

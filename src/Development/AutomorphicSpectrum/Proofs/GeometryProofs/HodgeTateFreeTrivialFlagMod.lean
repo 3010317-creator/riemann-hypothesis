@@ -200,8 +200,7 @@ theorem pow_smul_mem_om_of_overlap : ∀ (E : Type) [Field E] [NumberField E] [I
     obtain ⟨r, hr⟩ := (ho ((b : Ω))⁻¹).2 ⟨1, b, hb, by simp⟩
     rw [← hr]
     exact Subalgebra.algebraMap_mem _ r
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   let I : Ideal (chartRing ℤ (mseg y) t.1) :=
     { carrier := {a | (a : Ω) • w ∈ (Dc t).om}
       add_mem' := fun {u v} hu hv => by

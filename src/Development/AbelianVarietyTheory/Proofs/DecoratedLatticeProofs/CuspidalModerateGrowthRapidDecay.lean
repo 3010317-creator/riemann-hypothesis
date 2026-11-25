@@ -271,8 +271,7 @@ theorem iterated_gain_rapid_decay : ∀ (G ι : Type) (B : Finset ι) (q : G →
   have hqA : 0 < q g ^ A := pow_pos (by linarith [hq g]) _
   have hc0 : ∀ l ∈ words B (m * (A + N)), 0 ≤ c l := by
     intro l hl
-    by_contra h
-    push_neg at h
+    by_contra! h
     have h1 := hc l hl g
     have h2 : c l * q g ^ A < 0 := mul_neg_of_neg_of_pos h hqA
     linarith [norm_nonneg (List.foldr Dr ψ l g)]

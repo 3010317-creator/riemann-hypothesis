@@ -530,8 +530,7 @@ theorem logCanonicalCut_lowers_centre_dimension : GlobalTheory.Published.Princip
     have hye : (((e : ℝ) ^ e * (r : ℝ) ^ e / I) ^ ((e : ℝ)⁻¹)) ^ e = (e : ℝ) ^ e * (r : ℝ) ^ e / I :=
       Real.rpow_inv_natCast_pow hx0 he0
     have hyc : ((e : ℝ) ^ e * (r : ℝ) ^ e / I) ^ ((e : ℝ)⁻¹) < e / c' := by
-      by_contra hcon
-      push_neg at hcon
+      by_contra! hcon
       have h1 := pow_le_pow_left₀ (by positivity) hcon e
       rw [hye, div_pow, div_le_div_iff₀ hc'e hIpos] at h1
       nlinarith [mul_lt_mul_of_pos_left hIr hee]

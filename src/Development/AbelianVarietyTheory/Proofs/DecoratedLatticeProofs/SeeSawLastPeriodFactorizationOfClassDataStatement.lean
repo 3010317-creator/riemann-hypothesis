@@ -260,8 +260,7 @@ theorem eq_smul_of_unitary_equivariant : ∀ (N n : ℕ) (hN : N = n + 1) (lam :
         Matrix.GeneralLinearGroup.val_det_apply, hdet]
       exact main
   have hne : ∃ f ∈ Formalism.BasicNotions.nablaSq ℂ N lam, E t₀ f ≠ 0 := by
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     apply h0
     refine LinearMap.ext fun f => Subtype.ext ?_
     have := hc f.1 (by rw [hN']; exact f.2)

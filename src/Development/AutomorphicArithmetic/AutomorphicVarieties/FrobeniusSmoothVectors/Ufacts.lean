@@ -395,16 +395,14 @@ theorem UpperTheory.V.Fr.ufacts :
         Subgroup.relIndex_le_of_le_left inf_le_right (hrel _ hfi _)
   case f2b =>
     intro j _
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h1 := (l15 l η Ψ σ B M Hb hG H₀ w h0 hW m 1 j).2.2 (fun s hs => by rw [zpow_one]; exact hc s hs) s'
       (MonoidHom.mem_ker.2 hs'η)
     rw [zpow_one, hs'om, hs'b, one_zpow, mul_one] at h1
     exact hneg h1
   case f2c =>
     intro j _
-    by_contra hc
-    push_neg at hc
+    by_contra! hc
     have h1 := (l15 l η Ψ σ B M Hb hG H₀ w h0 hW m 1 j).2.2 (fun s hs => by rw [zpow_one]; exact hc s hs) s'
       (MonoidHom.mem_ker.2 hs'η)
     rw [zpow_one, hs'om, hs'b, one_zpow, mul_one] at h1

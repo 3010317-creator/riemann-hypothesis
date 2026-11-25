@@ -217,8 +217,7 @@ theorem character_mem_lattice_of_comul : ∀ (C : Type) [Field C] (v : Valuation
         exact mul_le_one' (hψ _ (hg i)) (hφ _ (hh i))
       · rw [latConv_sum ψ φ k (fun _ : Fin 1 => k) (fun _ => k) (by simpa using hk)]
         simp [hψk, pow_succ]
-  by_contra hlt
-  push_neg at hlt
+  by_contra! hlt
   obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt M hlt
   obtain ⟨ψ, hψ, hψk⟩ := hpow n
   have := hM ψ hψ

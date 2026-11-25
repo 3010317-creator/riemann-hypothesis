@@ -203,8 +203,7 @@ theorem UpperTheory.Gal.Int.Div.charOfZeta_of :
   choose c hc using hsc
   obtain ⟨φ₀, h₀, hne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hU.ne_bot
   obtain ⟨g₀, hg₀⟩ : ∃ g, φ₀ g ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hne (funext h)
   have hval : ∀ z, φ₀ (g₀ * ζ z) = c z * φ₀ g₀ := fun z => by
     have := congrFun (hc z φ₀ h₀) g₀
@@ -1431,8 +1430,7 @@ theorem UpperTheory.Gal.Int.Div.schurU_of :
   have hTf : ∀ v, RU E a z (f.1 v) = c • f.1 v := fun v =>
     LinearMap.congr_fun (congrArg Subtype.val hf.apply_eq_smul) v
   have hfne : ∃ v, f.1 v ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     exact hf.2 (Subtype.ext (LinearMap.ext h))
   obtain ⟨v, hv⟩ := hfne
   let W : Submodule ℂ (UA E a → ℂ) :=

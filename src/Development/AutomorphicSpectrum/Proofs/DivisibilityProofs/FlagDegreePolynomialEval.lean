@@ -340,8 +340,7 @@ theorem ptDeg_eq_one [DecidableEq (Σ k, ι k)] (k₀ : K) (hK : ∀ a : K, a = 
 theorem exists_single_notMem [DecidableEq (Σ k, ι k)] (U : Submodule F ((Σ k, ι k) → F))
     (hd : 0 < Module.finrank F (((Σ k, ι k) → F) ⧸ U)) :
     ∃ q : Σ k, ι k, (Pi.single q (1 : F) : (Σ k, ι k) → F) ∉ U := by
-  by_contra hcon
-  push_neg at hcon
+  by_contra! hcon
   have htop : U = ⊤ := by
     refine (Submodule.eq_top_iff').2 fun c => ?_
     rw [eq_sum_single c]

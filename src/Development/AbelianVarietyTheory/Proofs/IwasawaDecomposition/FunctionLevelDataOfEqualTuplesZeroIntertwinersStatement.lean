@@ -246,8 +246,7 @@ theorem exists_ellT_ne_zero : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SP
     haveI := hW τ; stdOrthonormalBasis ℂ (W τ)
   let B := Basis.piTensorProduct (fun τ => (ob τ).toBasis)
   obtain ⟨k, hk⟩ : ∃ k, B.repr y k ≠ 0 := by
-    by_contra h
-    push_neg at h
+    by_contra! h
     apply hy
     apply B.repr.injective (show B.repr y = B.repr 0 from ?_)
     ext k
