@@ -622,18 +622,16 @@ noncomputable section
 namespace GlobalTheory.ChartAct
 
 open NumberField MvPowerSeries IsLocalRing ReciprocityTheory.PGsh ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj GlobalTheory.FGDepth GlobalTheory.CharDepth
+open ReciprocityTheory.ChartRestriction.G.TB
   GlobalTheory.FactorDepth GlobalTheory.IndefiniteRowSideFullHecke.TypedPartSplitPrimes GlobalTheory.PrimePart GlobalTheory.LawLog
-
-theorem logOf_eq {k : Type} [CommRing k] [Algebra ℚ k] {d : ℕ} (G : Germ.FGLaw k d) (i : Fin d) :
-    GlobalTheory.FormalLog.logOf G i = ReciprocityTheory.ChartRestriction.G.TB.LogPf.logOf G i := rfl
 
 theorem subst_act_log {k O : Type} [CommRing k] [Algebra ℚ k] [CommRing O] {d : ℕ} (G : Germ.FGLaw k d)
     (A : Germ.OAct O G) (a : O) (b : Fin d) :
-    subst (fun i => subst (oneVar k d) (A.act a i)) (subst (oneVar k d) (GlobalTheory.FormalLog.logOf G b)) =
+    subst (fun i => subst (oneVar k d) (A.act a i)) (subst (oneVar k d) (LogPf.logOf G b)) =
       ∑ j, coeff (Finsupp.single ((0 : Fin 1), j) 1) (A.act a b) •
-        (subst (oneVar k d) (GlobalTheory.FormalLog.logOf G j) : MvPowerSeries (Fin d) k) := by
+        (subst (oneVar k d) (LogPf.logOf G j) : MvPowerSeries (Fin d) k) := by
 
-  rw [subst_oneVar _ cc_oneVar _ (A.const a), logOf_eq, GlobalTheory.TwistCheck.log_act, ← coe_substAlgHom hs_oneVar, map_sum]
+  rw [subst_oneVar _ cc_oneVar _ (A.const a), GlobalTheory.TwistCheck.log_act, ← coe_substAlgHom hs_oneVar, map_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [← smul_eq_C_mul, map_smul]
   rfl
