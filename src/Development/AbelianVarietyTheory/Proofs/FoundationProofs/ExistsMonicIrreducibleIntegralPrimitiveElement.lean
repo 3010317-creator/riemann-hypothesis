@@ -71,6 +71,10 @@ theorem _root_.GlobalTheory.FunctionFieldPrimitive.exists_integral_primitive {F 
     Algebra.IsAlgebraic.of_finite _ _
   haveI : Algebra.IsAlgebraic (Polynomial F) L :=
     Algebra.IsAlgebraic.trans (Polynomial F) (IntermediateField.adjoin F {t}) L
+  have : CharZero (IntermediateField.adjoin F {t}) :=
+    charZero_of_injective_algebraMap (algebraMap F _).injective
+  have : Algebra.IsSeparable (IntermediateField.adjoin F {t}) L :=
+    Algebra.IsAlgebraic.isSeparable_of_perfectField
   obtain ⟨θ, hθ⟩ := Field.exists_primitive_element (IntermediateField.adjoin F {t}) L
   obtain ⟨y, hy0, hyint⟩ :=
     (Algebra.IsAlgebraic.isAlgebraic (R := Polynomial F) θ).exists_integral_multiple
