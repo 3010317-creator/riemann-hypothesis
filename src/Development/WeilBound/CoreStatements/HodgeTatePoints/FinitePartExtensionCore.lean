@@ -1468,7 +1468,7 @@ theorem pullTop_val {Y Z : Scheme.{0}} (f : Y ⟶ Z) (w : Γ(Z, ⊤)ˣ) :
     ((pullTop f w : Γ(Y, ⊤)ˣ) : Γ(Y, ⊤)) = f.appTop.hom (w : Γ(Z, ⊤)) :=
   map_rfl' _
 
--- Stopgap for https://github.com/leanprover-community/riemann-hypothesis/issues/1038: remove once Mathlib lowers its priority.
+-- TODO: Stopgap for https://github.com/leanprover-community/riemann-hypothesis/issues/1038: remove once Mathlib lowers its priority.
 attribute [-instance] CategoryTheory.Monoidal.fromInducedMonoidal in
 theorem one_fst {S S' : Scheme.{0}} (f : S' ⟶ S) (B : Over S) [GrpObj B] (T : Over S') :
     (toUnit T ≫ η[(Over.pullback f).obj B]).left ≫ pullback.fst B.hom f = T.hom ≫ f ≫ η[B].left := by

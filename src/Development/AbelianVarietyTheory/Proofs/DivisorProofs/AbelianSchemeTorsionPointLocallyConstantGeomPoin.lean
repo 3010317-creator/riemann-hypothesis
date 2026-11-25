@@ -62,7 +62,7 @@ theorem push_injective {S S' : Scheme.{0}} (A : Over S) [GrpObj A] (x : S' ⟶ S
   · exact h'
   · exact (Over.w a).trans (Over.w b).symm
 
--- Stopgap for https://github.com/leanprover-community/riemann-hypothesis/issues/1038: remove once Mathlib lowers its priority.
+-- TODO: Stopgap for https://github.com/leanprover-community/riemann-hypothesis/issues/1038: remove once Mathlib lowers its priority.
 attribute [-instance] CategoryTheory.Monoidal.fromInducedMonoidal in
 theorem locally_const_torsion :
     ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], IsAbelianScheme A → ∀ (k : Type) [Field k] [IsAlgClosed k]

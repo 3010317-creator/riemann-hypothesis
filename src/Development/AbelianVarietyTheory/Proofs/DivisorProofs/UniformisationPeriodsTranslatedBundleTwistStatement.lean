@@ -450,7 +450,7 @@ variable {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {G : Over (Spec (Com
 
 
 
--- Stopgap for https://github.com/leanprover-community/riemann-hypothesis/issues/1038: remove once Mathlib lowers its priority.
+-- TODO: Stopgap for https://github.com/leanprover-community/riemann-hypothesis/issues/1038: remove once Mathlib lowers its priority.
 attribute [-instance] CategoryTheory.Monoidal.fromInducedMonoidal in
 theorem exists_iso_translate_levels [IsLocalRing R] (hR : AdmBase R I) (hG : IsSemiAbelian G) {D D' : DegData R I}
     {A A' : PolAV (Spec (CommRingCat.of (FractionRing R)))} (U : UnifPre I D A G) (U' : UnifPre I D' A' G)
