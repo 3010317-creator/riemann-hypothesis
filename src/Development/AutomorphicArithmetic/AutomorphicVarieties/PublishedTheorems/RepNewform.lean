@@ -45,11 +45,6 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Polynomial UpperTh
 
 namespace UpperTheory.V.Published
 
-/-- **Casselman's newform theorem for $GL_2$**: for any infinite-dimensional admissible representation
-of $GL_2(k)$ over a local field, the subspace of vectors fixed under $K_0(\mathfrak{p}^c)$ is one-dimensional at conductor $c$.
-
-Proposed reference:
-[W. Casselman, *On some results of Atkin and Lehner*][casselman1973newforms]. -/
 def RepNewform : Prop :=
   ∀ (k : ℕ), 2 ≤ k → ∀ (j : ℤ) (π : TR.CuspSub ℚ 2), (∀ v, π.HasInfChar v {1 / 2 + (j : ℂ), 3 / 2 - (k : ℂ) + (j : ℂ)}) →
     ∃ f : Newform k, ∀ w : HeightOneSpectrum (𝓞 ℚ), ¬ normV w ∣ f.M → ∃ B, π.HasSat w B ∧
