@@ -121,19 +121,11 @@ theorem oneLetterR_of (hS : LemmaS.{u}) (hG : GenLogWeight.{u, 0}) (hB : LogBrid
   have wt_sum : ∀ (r : ι → ℝ) (w : ℝ) (s : Finset (Fin N0 × Fin N1))
       (f : Fin N0 × Fin N1 → MvPowerSeries ι K), (∀ x ∈ s, WtGe π r w (f x)) →
       WtGe π r w (∑ x ∈ s, f x) := by
-    intro r w s f
-    refine Finset.induction_on s ?_ ?_
-    · intro _ n
-      unfold MonoWtGe
-      rw [Finset.sum_empty, map_zero, norm_zero]
-      exact Real.rpow_nonneg hπ0.le _
-    · intro a s ha ih hf n
-      rw [Finset.sum_insert ha]
-      have h1 := hf a (Finset.mem_insert_self a s) n
-      have h2 := ih (fun x hx => hf x (Finset.mem_insert_of_mem hx)) n
-      unfold MonoWtGe at h1 h2 ⊢
-      rw [map_add (f := _)]
-      exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le h1 h2)
+    intro r w s f hf n
+    unfold MonoWtGe
+    rw [map_sum]
+    exact IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg (Real.rpow_nonneg hπ0.le _)
+      fun x hx => hf x hx n
 
   have hbe0 : MvPowerSeries.constantCoeff be = 0 := by
     by_contra h
