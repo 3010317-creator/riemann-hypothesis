@@ -606,7 +606,7 @@ theorem flat_spMap_base : Flat (spMap (base F y)) := by
 theorem flat_base : (base F y).Flat := (HasRingHomProperty.Spec_iff (P := @Flat)).1 (flat_spMap_base F y)
 
 theorem injective_base [IsDomain o] : Function.Injective (base F y) := by
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+  rw [injective_iff_map_eq_zero]
   intro a ha
   by_contra h0
   algebraize [base F y]
