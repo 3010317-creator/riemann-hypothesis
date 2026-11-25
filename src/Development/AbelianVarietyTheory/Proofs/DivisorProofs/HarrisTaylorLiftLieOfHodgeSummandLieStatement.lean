@@ -190,7 +190,8 @@ theorem lieAt_id_of_liftFil : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPe
     haveI := act.hom c
     exact crysToDR_push (divided₂ hsq) h h (o₀.act.act c) (act.act c) (hact c).symm d
   have hq := epsPt_hq C
-  have one_left := one_left_eq A (spMap (RingHom.id C)) (Spec.map_id _)
+  have one_left : @Eq (Sp C ⟶ A.left) (1 : Over.mk (spMap (RingHom.id C)) ⟶ A).left η[A].left :=
+    one_left_eq A (spMap (RingHom.id C)) (Spec.map_id _)
   intro v hv
   obtain ⟨hv1, hv2⟩ := hv
   let v' : epsR C ⟶ A := overId _ _ hq ≫ v
