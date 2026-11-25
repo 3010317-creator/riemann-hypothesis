@@ -33,19 +33,9 @@ noncomputable def compB (b : Fin (D + 1)) (k : ℕ) (p : MvPolynomial (TVar D N)
 theorem coeff_compB (b : Fin (D + 1)) (k : ℕ) (p : MvPolynomial (TVar D N) K) (t : TVar D N →₀ ℕ) :
     AddMonoidAlgebra.coeff (compB b k p) t = if degB b t = k then AddMonoidAlgebra.coeff p t else 0 := by
   unfold compB
-  rw [coeff_sum]
-  simp only [coeff_monomial]
-  rw [Finset.sum_ite_eq']
-  by_cases h : degB b t = k
-  · rw [ite_eq_left h]
-    by_cases ht : t ∈ p.support
-    · have hm : t ∈ p.support.filter (fun s => degB b s = k) := Finset.mem_filter.mpr ⟨ht, h⟩
-      rw [ite_eq_left hm]
-    · have hn : t ∉ p.support.filter (fun s => degB b s = k) := fun h' => ht (Finset.mem_filter.mp h').1
-      rw [ite_eq_right hn]
-      exact (by simpa using ht : AddMonoidAlgebra.coeff p t = 0).symm
-  · have hn : t ∉ p.support.filter (fun s => degB b s = k) := fun h' => h (Finset.mem_filter.mp h').2
-    rw [ite_eq_right h, ite_eq_right hn]
+  simp only [coeff_sum, coeff_monomial, Finset.sum_ite_eq', Finset.mem_filter]
+  by_cases h : degB b t = k <;> by_cases ht : t ∈ p.support <;> simp [h, ht]
+  exact (by simpa using ht : AddMonoidAlgebra.coeff p t = 0).symm
 
 theorem mem_support_compB {b : Fin (D + 1)} {k : ℕ} {p : MvPolynomial (TVar D N) K}
     {t : TVar D N →₀ ℕ} (ht : t ∈ (compB b k p).support) : t ∈ p.support ∧ degB b t = k := by
@@ -265,28 +255,15 @@ private theorem eq_of_aeval_block_zero_eq {D N : ℕ} (P Q : KTp K D N)
       (MvPolynomial.aeval (fun v : TVar D N => if v.1 = 0 then MvPolynomial.C (x v.2)
         else MvPolynomial.X v) : KTp K D N →ₐ[K] KTp K D N) Q) :
     P = Q := by
-  have key : ∀ (y : TVar D N → K) (R : KTp K D N), MvPolynomial.eval y R =
-      MvPolynomial.eval y ((MvPolynomial.aeval (fun v : TVar D N =>
-        if v.1 = 0 then MvPolynomial.C (y (0, v.2)) else MvPolynomial.X v) :
-          KTp K D N →ₐ[K] KTp K D N) R) := by
-    intro y R
-    induction R using MvPolynomial.induction_on
-    · simp
-    · rename_i p q hp hq
-      simp only [map_add (f := _), hp, hq]
-    · rename_i p v hp
-      simp only [map_mul, MvPolynomial.aeval_X]
-      rw [hp]
-      congr 1
-      obtain ⟨b, j⟩ := v
-      by_cases hb : b = 0
-      · subst hb
-        simp
-      · simp [hb]
   apply MvPolynomial.funext
   intro y
-  rw [key y P, key y Q]
-  exact congrArg _ (hPQ fun j => y (0, j))
+  have key : (MvPolynomial.aeval y : KTp K D N →ₐ[K] K) = (MvPolynomial.aeval y).comp
+      (MvPolynomial.aeval fun v : TVar D N =>
+        if v.1 = 0 then MvPolynomial.C (y (0, v.2)) else MvPolynomial.X v) :=
+    MvPolynomial.algHom_ext fun ⟨b, j⟩ => by by_cases hb : b = 0 <;> simp [hb]
+  exact (AlgHom.congr_fun key P).trans
+    ((congrArg (MvPolynomial.aeval y) (hPQ fun j => y (0, j))).trans
+      (AlgHom.congr_fun key Q).symm)
 
 private theorem exists_fraction_free_of_block_zero {D N : ℕ} (z : KTf K D N)
     (ht : ∀ t : Fin (N + 1) → K, ∃ T : KTp K D N →ₐ[K] KTp K D N,
@@ -399,15 +376,11 @@ private theorem sH_comp_eq_of_X_eq (hd : d.AxH 𝒜) (h : d.S1)
     intro v
     rw [hX c v, hsX v, hτ, IsFractionRing.ringEquivOfRingEquiv_algebraMap]
     try rfl
-  have hP : ∀ p : KTp K d.D d.N, d.sH c (eα p) = τ (d.sH c p) := by
-    intro p
-    induction p using MvPolynomial.induction_on
-    · rename_i a
-      rw [← MvPolynomial.algebraMap_eq, AlgEquiv.commutes, AlgHom.commutes, hK]
-    · rename_i p q hp hq
-      simp only [map_add (f := _), hp, hq]
-    · rename_i p v hp
-      simp only [map_mul, hp, hXc v]
+  let τK : OmS (Ω c) d.D d.N →ₐ[K] OmS (Ω c) d.D d.N :=
+    { τ.toRingHom with commutes' := hK }
+  have hP : ∀ p : KTp K d.D d.N, d.sH c (eα p) = τ (d.sH c p) :=
+    AlgHom.congr_fun (MvPolynomial.algHom_ext hXc :
+      (d.sH c).comp eα.toAlgHom = τK.comp (d.sH c))
   have hL : ∀ q : KTp K d.D d.N,
       d.KTtoS h c (algebraMap (KTp K d.D d.N) (KTf K d.D d.N) q) = d.sH c q :=
     fun q => IsFractionRing.lift_algebraMap _ _

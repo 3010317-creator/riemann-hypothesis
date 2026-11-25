@@ -48,19 +48,9 @@ private theorem w_sum_update (φ : Fin n × Fin n → ℤ) {k : ℕ} (κ : Fin k
     (p : Fin n × Fin n) :
     ∑ j, φ (Function.update κ i p j) + φ (κ i) = ∑ j, φ (κ j) + φ p := by
   classical
-  have hfun : (fun j => φ (Function.update κ i p j)) = Function.update (fun j => φ (κ j)) i (φ p) := by
-    funext j
-    by_cases h : j = i
-    · subst h; simp
-    · simp [h]
-  have h1 : ∑ j, φ (Function.update κ i p j) = φ p + ∑ j ∈ Finset.univ \ {i}, φ (κ j) := by
-    rw [show (∑ j, φ (Function.update κ i p j)) = ∑ j, Function.update (fun j => φ (κ j)) i (φ p) j
-      from congrArg (fun f => ∑ j, f j) hfun, Finset.sum_update_of_mem (Finset.mem_univ i)]
-  have h2 : ∑ j, φ (κ j) = φ (κ i) + ∑ j ∈ Finset.univ \ {i}, φ (κ j) :=
-by
-    rw [Finset.sdiff_singleton_eq_erase, Finset.add_sum_erase _ (fun j => φ (κ j)) (Finset.mem_univ i)]
-  rw [h1, h2]
-  ring
+  simp_rw [Function.apply_update (fun _ => φ)]
+  rw [Finset.sum_update_of_mem (Finset.mem_univ i), Finset.sdiff_singleton_eq_erase,
+    add_assoc, Finset.sum_erase_add _ (fun j => φ (κ j)) (Finset.mem_univ i), add_comm (φ p)]
 
 end AlternatingWeights
 

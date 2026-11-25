@@ -59,43 +59,6 @@ theorem gen_span {p : Ideal (KTp K d.D d.N)} (hp : p ∈ d.HtOne) : p = Ideal.sp
   rw [dite_eq_left hpr]
   exact (Ideal.span_singleton_generator p).symm
 
-private lemma span_singleton_mem_htOne_of_prime {π : KTp K d.D d.N} (hπ : Prime π) : Ideal.span {π} ∈ d.HtOne := by
-  have hP : (Ideal.span {π}).IsPrime := (Ideal.span_singleton_prime hπ.ne_zero).mpr hπ
-  haveI := hP
-  refine ⟨hP, le_antisymm ?_ ?_⟩
-  · rw [show (1 : ℕ∞) = ((1 : ℕ) : ℕ∞) by norm_num, Ideal.height_le_iff]
-    intro q hq hlt
-    haveI := hq
-    by_cases hqb : q = ⊥
-    · subst hqb
-      rw [Ideal.height_bot]
-      norm_num
-    · exfalso
-      obtain ⟨π', hπ'q, hπ'⟩ := Ideal.IsPrime.exists_mem_prime_of_ne_bot hq hqb
-      have h1 : π' ∈ Ideal.span {π} := hlt.le hπ'q
-      rw [Ideal.mem_span_singleton] at h1
-      obtain ⟨t, ht⟩ := h1
-      rcases hπ'.dvd_or_dvd (dvd_of_eq ht) with h | h
-      · have hmem : π ∈ q := by
-          obtain ⟨r, hr⟩ := h
-          rw [hr]
-          exact q.mul_mem_right _ hπ'q
-        exact hlt.not_ge ((Ideal.span_singleton_le_iff_mem _).mpr hmem)
-      · obtain ⟨r, hr⟩ := h
-        have e : π' * (π * r) = π' * 1 := by
-          rw [mul_one]
-          conv_rhs => rw [ht, hr]
-          ring
-        exact hπ.not_unit (isUnit_iff_exists_inv.mpr ⟨r, mul_left_cancel₀ hπ'.ne_zero e⟩)
-  · by_contra! hlt
-    have h0 : (Ideal.span {π}).height ≤ ((0 : ℕ) : ℕ∞) := by
-      simpa using ENat.lt_one_iff_eq_zero.mp hlt
-    rw [Ideal.height_le_iff] at h0
-    have h2 := h0 ⊥ Ideal.isPrime_bot (by
-      rw [bot_lt_iff_ne_bot, Ne, Ideal.span_singleton_eq_bot]
-      exact hπ.ne_zero)
-    simp at h2
-
 private lemma gen_notMem_of_ne {p q : Ideal (KTp K d.D d.N)} (hp : p ∈ d.HtOne) (hq : q ∈ d.HtOne)
     (hne : q ≠ p) : d.gen q ∉ p := by
   intro hg
@@ -137,7 +100,8 @@ private lemma exists_const_of_locally_unit_at_htOne (u : KTf K d.D d.N) (hu : u 
     by_contra hxu
     obtain ⟨π, hirr, hπx⟩ := WfDvdMonoid.exists_irreducible_factor hxu hx0
     have hπ : Prime π := UniqueFactorizationMonoid.irreducible_iff_prime.mp hirr
-    obtain ⟨a, s, ha, hs, has⟩ := hloc _ (span_singleton_mem_htOne_of_prime d hπ)
+    obtain ⟨a, s, ha, hs, has⟩ := hloc _
+      ⟨(Ideal.span_singleton_prime hπ.ne_zero).mpr hπ, ValUFD.height_span_prime hπ⟩
     have hR := hcross a s has
     have hπa : ¬ π ∣ a := fun h => ha (Ideal.mem_span_singleton.mpr h)
     have hπs : ¬ π ∣ s := fun h => hs (Ideal.mem_span_singleton.mpr h)
@@ -166,50 +130,38 @@ private lemma prod_gen_zpow_split_at {p : Ideal (KTp K d.D d.N)} (hp : p ∈ d.H
         algebraMap (KTp K d.D d.N) (KTf K d.D d.N) (d.gen p) ^ (if p ∈ T then E p else 0) *
           algebraMap (KTp K d.D d.N) (KTf K d.D d.N) A := by
   classical
-  have h1p : (1 : KTp K d.D d.N) ∉ p := (Ideal.ne_top_iff_one p).mp hp.1.ne_top
-  induction T using Finset.induction_on with
-  | empty => exact ⟨1, 1, h1p, h1p, by simp⟩
-  | insert q T hqT ih =>
-    obtain ⟨A, B, hA, hB, hAB⟩ := ih (fun q' h => hT q' (Finset.mem_insert_of_mem h))
-    have hqH : q ∈ d.HtOne := hT q (Finset.mem_insert_self _ _)
-    rw [Finset.prod_insert hqT]
-    by_cases hqp : q = p
-    · subst hqp
-      refine ⟨A, B, hA, hB, ?_⟩
-      rw [ite_eq_left (Finset.mem_insert_self _ _), mul_assoc, hAB, ite_eq_right hqT, zpow_zero, one_mul]
-    · have hgq : d.gen q ∉ p := gen_notMem_of_ne d hp hqH hqp
-      have hgq0 : d.gen q ≠ 0 := by
-        intro h0
-        have hq := d.gen_span hqH
-        rw [h0, Ideal.span_singleton_eq_bot.mpr rfl] at hq
-        have h2 := hqH.2
-        rw [hq, Ideal.height_bot] at h2
-        exact zero_ne_one h2
-      have hg0 : algebraMap (KTp K d.D d.N) (KTf K d.D d.N) (d.gen q) ≠ 0 := by
-        rw [Ne, IsFractionRing.to_map_eq_zero_iff]
-        exact hgq0
-      have hnot : ∀ (X : KTp K d.D d.N) (k : ℕ), X ∉ p → X * d.gen q ^ k ∉ p := fun X k hX h =>
-        (hp.1.mem_or_mem h).elim hX (fun h' => hgq (hp.1.mem_of_pow_mem _ h'))
-      have hif : (if p ∈ insert q T then E p else 0) = (if p ∈ T then E p else 0) := by
-        simp [Finset.mem_insert, Ne.symm hqp]
-      rw [hif]
-      rcases le_or_gt 0 (E q) with hE | hE
-      · obtain ⟨k, hk⟩ := Int.eq_ofNat_of_zero_le hE
-        refine ⟨A * d.gen q ^ k, B, hnot A k hA, hB, ?_⟩
-        rw [hk, zpow_natCast, map_mul, map_pow, mul_assoc, hAB]
-        ring
-      · obtain ⟨k, hk⟩ := Int.exists_eq_neg_ofNat hE.le
-        refine ⟨A, B * d.gen q ^ k, hA, hnot B k hB, ?_⟩
-        rw [hk, zpow_neg, zpow_natCast, map_mul, map_pow]
-        calc (algebraMap (KTp K d.D d.N) (KTf K d.D d.N) (d.gen q) ^ k)⁻¹ *
-              (∏ q ∈ T, algebraMap (KTp K d.D d.N) (KTf K d.D d.N) (d.gen q) ^ E q) *
-              (algebraMap (KTp K d.D d.N) (KTf K d.D d.N) B *
-                algebraMap (KTp K d.D d.N) (KTf K d.D d.N) (d.gen q) ^ k)
-            = (∏ q ∈ T, algebraMap (KTp K d.D d.N) (KTf K d.D d.N) (d.gen q) ^ E q) *
-                algebraMap (KTp K d.D d.N) (KTf K d.D d.N) B *
-                ((algebraMap (KTp K d.D d.N) (KTf K d.D d.N) (d.gen q) ^ k)⁻¹ *
-                  algebraMap (KTp K d.D d.N) (KTf K d.D d.N) (d.gen q) ^ k) := by ring
-          _ = _ := by rw [inv_mul_cancel₀ (pow_ne_zero _ hg0), mul_one, hAB]
+  haveI := hp.1
+  let T' := T.erase p
+  let φ := algebraMap (KTp K d.D d.N) (KTf K d.D d.N)
+  have hmem : ∀ q ∈ T', d.gen q ∈ p.primeCompl := fun q hq =>
+    gen_notMem_of_ne d hp (hT q (Finset.mem_of_mem_erase hq)) (Finset.ne_of_mem_erase hq)
+  refine ⟨∏ q ∈ T'.filter (fun q => 0 ≤ E q), d.gen q ^ (E q).toNat,
+    ∏ q ∈ T'.filter (fun q => ¬ 0 ≤ E q), d.gen q ^ (-E q).toNat,
+    p.primeCompl.prod_mem fun q hq => pow_mem (hmem q (Finset.mem_filter.1 hq).1) _,
+    p.primeCompl.prod_mem fun q hq => pow_mem (hmem q (Finset.mem_filter.1 hq).1) _, ?_⟩
+  have hsplit : (∏ q ∈ T, φ (d.gen q) ^ E q) =
+      φ (d.gen p) ^ (if p ∈ T then E p else 0) * ∏ q ∈ T', φ (d.gen q) ^ E q := by
+    split_ifs with hpT
+    · exact (Finset.mul_prod_erase T _ hpT).symm
+    · dsimp [T']; rw [zpow_zero, one_mul, Finset.erase_eq_of_notMem hpT]
+  have hpos : (∏ q ∈ T'.filter (fun q => 0 ≤ E q), φ (d.gen q) ^ E q) =
+      φ (∏ q ∈ T'.filter (fun q => 0 ≤ E q), d.gen q ^ (E q).toNat) := by
+    rw [map_prod]
+    refine Finset.prod_congr rfl fun q hq => ?_
+    rw [map_pow, ← zpow_natCast, Int.toNat_of_nonneg (Finset.mem_filter.1 hq).2]
+  have hneg : (∏ q ∈ T'.filter (fun q => ¬ 0 ≤ E q), φ (d.gen q) ^ E q) *
+      φ (∏ q ∈ T'.filter (fun q => ¬ 0 ≤ E q), d.gen q ^ (-E q).toNat) = 1 := by
+    rw [map_prod, ← Finset.prod_mul_distrib]
+    refine Finset.prod_eq_one fun q hq => ?_
+    have hq' := Finset.mem_filter.1 hq
+    have hq0 : φ (d.gen q) ≠ 0 := by
+      rw [Ne, IsFractionRing.to_map_eq_zero_iff]
+      exact fun h0 => hmem q hq'.1 (h0 ▸ p.zero_mem)
+    rw [map_pow, ← zpow_natCast, ← zpow_add₀ hq0,
+      show E q + ((-E q).toNat : ℤ) = 0 by omega, zpow_zero]
+  change (∏ q ∈ T, φ (d.gen q) ^ E q) * φ _ = φ _ ^ _ * φ _
+  rw [hsplit, ← Finset.prod_filter_mul_prod_filter_not T' (fun q => 0 ≤ E q), mul_assoc,
+    mul_assoc, hneg, mul_one, hpos]
 
 private lemma overP_finite (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (p : Ideal (KTp K d.D d.N))
     (hp : p ∈ d.HtOne) : (d.OverP c p).Finite := by

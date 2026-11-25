@@ -103,14 +103,6 @@ theorem positionTensorAction_apply (k : ℕ) (a b : Fin n) (F : Big n k M) (κ :
   | (simp only [bAct, LinearMap.add_apply, LinearMap.sum_apply, map_add (f := _), map_sum]
      simp only [coord_apply', mAct_apply'])
 
-private theorem linearMap_apply_ite_zero (T : Module.End ℂ M) (c : Prop) [Decidable c] (x : M) :
-    T (if c then x else 0) = if c then T x else 0 := by
-  split_ifs <;> simp
-
-private theorem ite_linearMap_zero_apply (T : Module.End ℂ M) (c : Prop) [Decidable c] (x : M) :
-    (if c then T else 0) x = if c then T x else 0 := by
-  split_ifs <;> simp
-
 theorem wordContraction_tensorAction (hE : IsGlRep E) (k : ℕ) (a b : Fin n) (F : Big n k M) :
     phi E k (bAct E k a b F) = E a b (phi E k F) := by
   have h1 : ∀ i : Fin k, ∑ κ : Fin k → Fin n × Fin n,
@@ -134,14 +126,14 @@ theorem wordContraction_tensorAction (hE : IsGlRep E) (k : ℕ) (a b : Fin n) (F
     have h := congrArg (fun T : Module.End ℂ M => T (F κ)) (commutator_rootWordProduct hE a b κ)
     first
     | simp only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.sum_apply,
-        ite_linearMap_zero_apply] at h
+        DFunLike.ite_apply, LinearMap.zero_apply] at h
     first
     | exact sub_eq_iff_eq_add'.mp h
 
   rw [wordContraction_apply, wordContraction_apply, map_sum]
 
   simp only [positionTensorAction_apply, factorAd_apply', map_add (f := _), map_sum, map_sub,
-  linearMap_apply_ite_zero, hc, Finset.sum_add_distrib]
+    (fun κ => apply_ite (word E κ)), map_zero, hc, Finset.sum_add_distrib]
   congr 1
   conv_lhs => rw [Finset.sum_comm]
   conv_rhs => rw [Finset.sum_comm]
