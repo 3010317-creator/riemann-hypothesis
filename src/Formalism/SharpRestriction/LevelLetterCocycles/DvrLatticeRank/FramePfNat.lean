@@ -143,21 +143,16 @@ section One
 
 variable {T : LocLat G Qp LL O} (π' : LetA O n) (c : ZMod n)
 
-theorem framepf_Ψ_smulLA {T' : LocLat G Qp LL O} (Ψ : W.EE ⊗[O] LcQ W T π' c →ₗ[W.EE] W.DD T')
-    (b : LetA O n) (t : LA W T π' c) : Ψ (smulLA W T π' c b t) = b • Ψ t := by
-  have : smulLA W T π' c b t = algebraMap (LetA O n) W.EE b • t := by
-    induction t using TensorProduct.induction_on with
-    | zero => simp
-    | tmul e ℓ => rfl
-    | add x y hx hy => rw [map_add (f := _), hx, hy, smul_add]
-  rw [this, map_smul, algebraMap_smul]
-
 theorem framepf_smulLA_alg (b : LetA O n) (t : LA W T π' c) :
     smulLA W T π' c b t = algebraMap (LetA O n) W.EE b • t := by
   induction t using TensorProduct.induction_on with
   | zero => simp
   | tmul e ℓ => rfl
   | add x y hx hy => rw [map_add (f := _), hx, hy, smul_add]
+
+theorem framepf_Ψ_smulLA {T' : LocLat G Qp LL O} (Ψ : W.EE ⊗[O] LcQ W T π' c →ₗ[W.EE] W.DD T')
+    (b : LetA O n) (t : LA W T π' c) : Ψ (smulLA W T π' c b t) = b • Ψ t := by
+  rw [framepf_smulLA_alg, map_smul, algebraMap_smul]
 
 theorem framepf_mem_toLA {r : ℕ} (bL : Module.Basis (Fin r) O (LcQ W T π' c)) (x : LA W T π' c) :
     x ∈ LinearMap.range (toLA W T π' c ⊤) ↔ ∀ k, ∃ a ∈ W.AΔ,
