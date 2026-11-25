@@ -113,7 +113,7 @@ theorem hermJ_mulVec (g : GU σ N) (x y : Fin N → L) :
     _ = ∑ k : Fin N, σ (x k) * y k.rev := by
         refine Finset.sum_congr rfl fun k _ => ?_
         simp only [hinner, Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ,
-          if_true]
+          ite_true]
 
 theorem sigma_mem_intL {x : L} (hσ : ∀ x, Valued.v (σ x) = Valued.v x) (h : x ∈ intL L) : σ x ∈ intL L := by
   change Valued.v (σ x) ≤ 1
@@ -204,8 +204,6 @@ section -- clump:auto
 
 open GlobalTheory.InertZeta
 
-theorem _root_.GlobalTheory.T.small_corner_of_heisenberg_duality : Heis → Dual → SmallCorner := by
-  first | exact @GlobalTheory.InertZeta.smallCorner_of_heis_dual
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmallCornerOfHeisenbergDualityStatement =====

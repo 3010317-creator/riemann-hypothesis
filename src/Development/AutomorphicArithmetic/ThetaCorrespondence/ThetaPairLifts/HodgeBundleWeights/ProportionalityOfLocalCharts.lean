@@ -213,7 +213,7 @@ private theorem coeff_linearForm_pow_eq_factorial_mul_prod {σ : Type} [Fintype 
   rw [Finset.sum_eq_single (⇑d)]
   · have hind : d = Finsupp.indicator univ (fun i _ => d i) := by
       ext i; simp
-    rw [if_pos hind, mul_one]
+    rw [ite_eq_left hind, mul_one]
     have hspec := Nat.multinomial_spec (univ : Finset σ) (⇑d)
     rw [hsum] at hspec
     have hpos : (∏ i, ((d i).factorial : ℝ)) ≠ 0 := by
@@ -222,7 +222,7 @@ private theorem coeff_linearForm_pow_eq_factorial_mul_prod {σ : Type} [Fintype 
     push_cast
     field_simp
   · intro k _ hk
-    rw [if_neg, mul_zero]
+    rw [ite_eq_right, mul_zero]
     intro h
     apply hk
     funext i
@@ -367,14 +367,6 @@ set_option autoImplicit false
 noncomputable section
 
 open MvPolynomial NumberField
-
-namespace GlobalTheory.ChowHt
-
-attribute [local instance] MvPolynomial.gradedAlgebra
-
-
-
-end GlobalTheory.ChowHt
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -428,7 +420,7 @@ theorem growth_eq_top_self_intersection (hP : _root_.GlobalTheory.CovTop.Hypothe
     (fun m => vanBd TF.X Z (m • la)) fun _ _ => Iff.rfl, CompHt.growthOn]
   congr 1
   funext m
-  have h1 := GlobalTheory.T.cuspForms_extend_vanish_compactifiedFlagSpace D T j Y e o hY hf Z TF (m • la)
+  have h1 := _root_.GlobalTheory.CompHS.cusp_extends_comp D T j Y e o hY hf Z TF (m • la)
   have h2 := le_antisymm h1.space_le (vanBd_le_space D T j Y e o hY hf Z TF (m • la))
   rw [CompHt.nsmul_wtOf, smul_zero, ← h2]
   exact congrArg _ h1.equiv.rank_eq

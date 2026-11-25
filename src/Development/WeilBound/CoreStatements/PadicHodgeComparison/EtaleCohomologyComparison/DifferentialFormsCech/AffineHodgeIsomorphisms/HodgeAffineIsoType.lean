@@ -779,14 +779,14 @@ theorem isForm_res (q : Z ⟶ Spec (CommRingCat.of K)) {V V' : Z.Opens} (k : V' 
     { v := fun T g => if h : inU q V' T.obj then Λ'.v ⟨T.obj, h⟩ (φ g) else Λ₀.v T g
       hv := fun T g => by
         by_cases h : inU q V' T.obj
-        · simp only [dif_pos h]
+        · simp only [dite_eq_left h]
           refine (Λ'.hv ⟨T.obj, h⟩ (φ g)).trans ?_
           rw [hφ]
           exact ev_res q k T.obj h T.property g
-        · simp only [dif_neg h]
+        · simp only [dite_eq_right h]
           exact Λ₀.hv T g }
   have hv : ∀ (T : (inU q V').FullSubcategory) (g : Sec q V),
-      Λ.v ((ObjectProperty.ιOfLE (inU_mono q k)).obj T) g = Λ'.v T (φ g) := fun T g => dif_pos T.property
+      Λ.v ((ObjectProperty.ιOfLE (inU_mono q k)).obj T) g = Λ'.v T (φ g) := fun T g => dite_eq_left T.property
   have hz := GlobalTheory.CompanionTheory.ConeRep.rep_resB (thA (smFun Z q)) (thFil (smFun Z q) (a : ℤ)) (thFil (smFun Z q) ((a : ℤ) + 1))
     (inU_mono q k) (Λ.form g₀ g) c (hc Λ)
   have e : Λ'.form (φ g₀) (fun j => φ (g j)) = resB (thA (smFun Z q)) (inU_mono q k) (Λ.form g₀ g) := by
@@ -875,7 +875,7 @@ theorem om_top : AffOm → OmNat → ∀ (K : Type) [Field K] [CharZero K] {X : 
     ∃ e : Om K (Sec q ⊤) a →ₗ[K] HV q ⊤ a a, IsOm q ⊤ a e ∧ Function.Bijective e := by
   intro hA hN K _ _ X q _ _ a
   classical
-  obtain ⟨U⟩ := (Pb.cov_ex q).1 inferInstance
+  obtain ⟨U⟩ := (_root_.GlobalTheory.CompanionTheory.CovEx.exists_cov q).1 inferInstance
   have hAff2 : ∀ α β, IsAffineOpen (U.U α ⊓ U.U β) := fun α β => by
     have h := U.inter {α, β} ⟨α, by simp⟩
     rwa [Finset.iInf_insert, Finset.iInf_singleton] at h

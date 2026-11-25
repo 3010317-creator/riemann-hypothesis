@@ -52,13 +52,10 @@ open UpperTheory.V.W (Plc Lp)
 open scoped Matrix
 namespace UpperTheory.V.Z.Sym.W
 open UpperTheory.V.Z.Win UpperTheory.GalN.V
-section Loc
-variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {n : ℕ}
-end Loc
 section
 variable {L Ω : Type} [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] {l : ℕ} [Fact l.Prime]
 theorem AdInW.toIn_alt {ι : Qbar l ≃+* ℂ} {M m : ℕ} {r : G L Ω →* GL (Fin 2) (Qbar l)} (h : AdInW ι M m r) : _root_.UpperTheory.V.Z.Sym.AdInAlt ι M m r :=
-  ⟨h.cont, _root_.UpperTheory.V.Z.Win.Birth.mkCsdW' h.aut fun _ => h.wit, h.irr, h.gap, h.unr, h.away, h.above⟩
+  ⟨h.gap, h.above⟩
 end
 structure PureWeightCompatibility : Prop where
   af : _root_.UpperTheory.V.Af.Hypotheses'

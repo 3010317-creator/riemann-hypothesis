@@ -104,8 +104,6 @@ section Proj
 
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
-attribute [local instance] MvPolynomial.gradedAlgebra
-
 theorem isProper_pstr (R : Type) [CommRing R] (N : ℕ) : IsProper (PSpace.str R N) := by
   have : IsScalarTower R (MvPolynomial.homogeneousSubmodule (Fin (N + 1)) R 0) (MvPolynomial (Fin (N + 1)) R) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
@@ -355,7 +353,7 @@ theorem coord_pull (e : IsoFam K) (he : IsoNat e) {M M' : CrystallineSemistableC
   rw [LinearEquiv.apply_symm_apply] at hnat
   simp only [LinearMap.comp_apply, LinearMap.sum_apply, LinearMap.smul_apply,
     Module.Basis.coord_apply, Module.Basis.repr_self, Finsupp.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, LinearMap.toMatrix_apply]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, LinearMap.toMatrix_apply]
   rw [hB j0, hB', hnat]
   rfl
 

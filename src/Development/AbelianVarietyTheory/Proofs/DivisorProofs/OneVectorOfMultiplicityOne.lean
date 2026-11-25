@@ -121,18 +121,6 @@ theorem range_toF {G : Type} [Group G] [Fintype G] {Pl0 : Type} (B : BlockDat K 
 
 variable {Bs : DefBase K} {A : DefAmb Bs} (X : CxData A) {fc : DefSub A → DefFace Bs} (cr : Crd A fc) (b : Bool)
 
-theorem iC_cpt (t : Bs.Tup) (x : Fin ((lv (fc X.zs) b).dQ t) → K) :
-    X.iC cr b t (cpt Bs.v0.embedding x) = X.Θ t (X.jR t (cr.toR X.zs b t x)) := by
-  classical
-  conv_rhs => rw [← Finset.univ_sum_single x]
-
-  rw [CxData.iC, lin_apply, map_sum, map_sum, map_sum]
-  refine Finset.sum_congr rfl fun k _ => ?_
-  have : (Pi.single k (x k) : Fin _ → K) = x k • Pi.single k 1 := by
-    funext i; by_cases hi : i = k <;> simp [hi]
-  rw [this, map_smul, map_smulₛₗ, map_smul]
-  rfl
-
 end Coordinates
 
 section Family
@@ -142,14 +130,6 @@ variable {K : Type} [Field K] [NumberField K] [StarRing K] {G : Type} [Group G] 
 
 def OneVector (X : Finset (G → K)) (P : Subgroup G) (ψ : P →* Kˣ) : Prop :=
   ∀ χ ∈ X, typeSum P ψ χ = (Nat.card P : K)
-
-section Faces
-
-variable (X : CxData A.fam.amb) (P0 : Subgroup G) (ψ0 : P0 →* Kˣ) (P1 : Subgroup G) (ψ1 : P1 →* Kˣ)
-  (Dc : ∀ Zs : DefSub A.fam.amb, DefCols (A.side P1 ψ1 Zs)) (Sp : ∀ Zs : DefSub A.fam.amb, SPer (Dc Zs))
-  (Zsc : DefSub A.fam.amb → IndefScale A.fam.base)
-
-end Faces
 
 end Family
 

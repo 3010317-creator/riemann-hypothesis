@@ -52,73 +52,19 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomolog
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.CrystallineComparison.LocalComparisonFromAlternative
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeRhamRankLubinTateLineStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaloisOpenSubgroupLocalUnits
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LocalPrimeGaloisActionPeriodT
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TripleAtt
 import ReciprocityTheory.NeutralLocalFields.Reciprocity
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Data.Nat.Choose.Multinomial
 import CompanionTheory.AutomorphicTheory.PlaceSeparation.ArtinA
 import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
 import Formalism.ConjugateSelfDual.Statement
 import GroundTheory.LocalFields.FilteredSurj
 import GroundTheory.LocalFields.FormalGroups.Truncation
 import ReciprocityTheory.GaloisValuations.GlobalA
 import GroundTheory.GlobalFields.LocalAtPlace
-import Mathlib.Topology.Connected.Separation
-import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 import GroundTheory.GlobalFields.IdeleGroups.SIdeleHerbrand
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.FieldTheory.Galois.Profinite
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Topology.Separation.CompletelyRegular
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedIsCrysAndJumpEqZero
-import Mathlib.RingTheory.PicardGroup
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLubinTateCharacterUnitary, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsOpenUnitSubgroupKer, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaloisCharacterArtinCompat, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GlobalArtinMapUnique, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSepClosureOfRangeEq, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalEmbeddingRangeEqField, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalGlobalArtinCompatible, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ValuationLeIffNormEmbedding, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ImportsTer, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalCharacterFiniteExtension, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OneNotMemFilOne, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalCharacterInducedTiedSix, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalCharacterInducedTied, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalGaloisEmbeddingExtension, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnramifiedCharactersDeRhamJumpZero, Development.WeilBound.CoreStatements.HeckeCharacterDeRham.DeRhamHeckeResults.LAdicHeckeDeRham.LAdicHeckeFields.Reduce
@@ -154,8 +100,6 @@ noncomputable section
 open NumberField IsDedekindDomain Neutral.B1 Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.L2.Host Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.WeaklyAdmissibleFiltrations
 open GlobalTheory.HeckeGal GlobalTheory.Pst GlobalTheory.TripleGal
 open scoped Classical
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace GlobalTheory.CompanionTheory.HeckeSmooth
 
@@ -964,19 +908,18 @@ theorem multV_inv [IsDomain BdR] (κ : K →ₐ[Qp] Om)
   have hinv : ∀ σ, σ.comp τ = κ → ∃ y ∈ PD.Fil (-J), f σ * y = 1 := fun σ hσ => hval J _ (hJ σ) (hJ1 σ hσ)
   choose! yv hyv hyv1 using hinv
   obtain ⟨σ₀, hσ₀⟩ : ∃ σ : LL →ₐ[Qp] Om, σ.comp τ = κ := by
-    by_contra hno
-    push_neg at hno
+    by_contra! hno
     exact hz2 ((mem_filV_coord PD hOm (J + 1) z).2 fun σ' => by
       change f σ' ∈ _
       rw [hzero σ' (hno σ')]
       exact Submodule.zero_mem _)
   set fi : (LL →ₐ[Qp] Om) → BdR := fun σ => if σ.comp τ = κ then yv σ else 0 with hfi
   have hfi1 : ∀ σ, σ.comp τ = κ → f σ * fi σ = 1 := fun σ hσ => by
-    simp only [hfi, if_pos hσ]; exact hyv1 σ hσ
-  have hfi0 : ∀ σ, ¬ σ.comp τ = κ → fi σ = 0 := fun σ hσ => by simp only [hfi, if_neg hσ]
+    simp only [hfi, ite_eq_left hσ]; exact hyv1 σ hσ
+  have hfi0 : ∀ σ, ¬ σ.comp τ = κ → fi σ = 0 := fun σ hσ => by simp only [hfi, ite_eq_right hσ]
   have hfiF : ∀ σ, fi σ ∈ PD.Fil (-J) := fun σ => by
     by_cases hσ : σ.comp τ = κ
-    · simp only [hfi, if_pos hσ]; exact hyv σ hσ
+    · simp only [hfi, ite_eq_left hσ]; exact hyv σ hσ
     · rw [hfi0 σ hσ]; exact Submodule.zero_mem _
   have hcoord : ∀ σ, ev σ (coordInv fi : (Fin 1 → LL) ⊗[Qp] BdR) = fi σ := ev_coordInv fi
   have hII : IsInv PD act χ' fi := fun g σ => by
@@ -1230,7 +1173,7 @@ theorem char_mul {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T
     intro τ
     obtain ⟨hf, hle, -⟩ := (GlobalTheory.Per.Components.components_finrank l P AI T K LL _ ν₃).1 τ
     have hm1 := hm τ (J₁ τ + J₂ τ)
-    rw [if_pos rfl, multV] at hm1
+    rw [ite_eq_left rfl, multV] at hm1
     have hfil : finrank ↥LL.1 ↥(FildR (P.PD K) ν₃ τ (J₁ τ + J₂ τ)) ≤ finrank ↥LL.1 ↥(DdRE (P.PD K) ν₃ τ) :=
       Submodule.finrank_mono (inf_le_left : FildR (P.PD K) ν₃ τ _ ≤ DdRE (P.PD K) ν₃ τ)
     simp only [Module.finrank_pi, Fintype.card_fin] at hle
@@ -1615,11 +1558,11 @@ theorem multV_of_fil (P : LocPrime l) (AI : LocAinf l P) (Ti : LocTied l P AI) (
     simpa using this
   unfold multV
   rcases lt_trichotomy a 0 with h | h | h
-  · rw [hneg a h.le, hneg (a + 1) (by omega), sub_self, if_neg h.ne]
+  · rw [hneg a h.le, hneg (a + 1) (by omega), sub_self, ite_eq_right h.ne]
   · subst h
     rw [hneg 0 le_rfl, hpos (0 + 1) (by omega), finrank_bot, hfin]
     simp
-  · rw [hpos a (by omega), hpos (a + 1) (by omega), sub_self, if_neg h.ne']
+  · rw [hpos a (by omega), hpos (a + 1) (by omega), sub_self, ite_eq_right h.ne']
 
 end Line
 
@@ -1938,10 +1881,10 @@ theorem field_of_ltPeriods (HP : LTPeriods) : GlobalTheory.Published.HeckeLAdicC
   have hsum : (0 + ∑ j, nj j • Jj j) τ' = -n (ι.toRingHom.comp τ) := by
     simp only [Pi.add_apply, Finset.sum_apply, Pi.smul_apply, Pi.zero_apply, zero_add]
     rw [Finset.sum_eq_single j0]
-    · simp only [Jj, if_pos hj0, nj, smul_eq_mul, mul_neg, mul_one, ← hj0E, RingHom.comp_assoc]
+    · simp only [Jj, ite_eq_left hj0, nj, smul_eq_mul, mul_neg, mul_one, ← hj0E, RingHom.comp_assoc]
     · intro b _ hb
       have : ¬ IsInduced Bw (b.1.comp (algebraMap E (w.adicCompletion E))) τ' := fun h => hb (huniq b h)
-      simp only [Jj, if_neg this, smul_zero]
+      simp only [Jj, ite_eq_right this, smul_zero]
     · intro h
       exact absurd (Finset.mem_univ j0) h
   rw [hsum, Multiset.count_singleton]

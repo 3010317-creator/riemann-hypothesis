@@ -98,9 +98,9 @@ theorem coi_fiber {R I J : Type} [CommRing R] [Fintype I] [Fintype J] [Decidable
       exact hcd ((Finset.mem_filter.1 hi).2.symm.trans (Finset.mem_filter.1 hj).2)
   refine ⟨⟨fun c => ?_, fun c d hcd => ?_⟩, ?_⟩
   · change _ * _ = _
-    rw [hmul, if_pos rfl]
+    rw [hmul, ite_eq_left rfl]
   · change _ * _ = _
-    rw [hmul, if_neg hcd]
+    rw [hmul, ite_eq_right hcd]
   · rw [Finset.sum_fiberwise]
     exact he.complete
 
@@ -260,7 +260,7 @@ theorem sharp_s_eq (t : PAlg l) (x : Ob l) :
 
 theorem eq_zero_of_sharp (t : PAlg l) {e : t.A} (he : IsIdempotentElem e) (h : t.sharp e = 0) :
     e = 0 :=
-  (RL.idem_au t 0 IsIdempotentElem.zero).unique ⟨he, h⟩ ⟨IsIdempotentElem.zero, _root_.GlobalTheory.CompanionTheory.RootsLC.sharp_zero t⟩
+  (_root_.GlobalTheory.CompanionTheory.Untilt.existsUnique_idempotent_sharp t 0 IsIdempotentElem.zero).unique ⟨he, h⟩ ⟨IsIdempotentElem.zero, _root_.GlobalTheory.CompanionTheory.RootsLC.sharp_zero t⟩
 
 theorem idem_unique : ∀ {l : ℕ} [Fact l.Prime] (ε : Eps l) (t : PAlg l) (m : ℕ) (x : t.U)
     (e e' : ZMod (l ^ m) → t.A),
@@ -603,7 +603,7 @@ theorem map_unique {A t : PAlg l} (ψ ψ' : A.cont ℤ_[l] ⟶ t)
       rw [Finset.sum_eq_single (PadicInt.toZModPow M z)]
       · simp
       · intro c _ hc
-        rw [if_neg hc.symm, zero_mul]
+        rw [ite_eq_right hc.symm, zero_mul]
       · simp
     rw [map_sub, this]
     exact hM _ _ (toZModPow_rep _).symm
@@ -631,7 +631,7 @@ theorem level : ∀ {l : ℕ} [Fact l.Prime] (ε : Eps l) (t : PAlg l), t.IsTest
       | zero => simp
       | succ m ih => rw [pow_succ', pow_mul, hr, ih]
     rw [← map_pow, this, h1]
-  obtain ⟨e, he, h⟩ := RL.mu_lc t ht.val_aic.1 m _ hp _ hz
+  obtain ⟨e, he, h⟩ := _root_.GlobalTheory.CompanionTheory.RootsLC.exists_idempotents_of_root_of_unity t ht.val_aic.1 m _ hp _ hz
   refine ⟨e, he, fun c => ?_⟩
   have h2 : t.oC (theta0 l (WittVector.teichmuller l (ε.e m : Ob l))) = t.sharp (t.s (ε.e m)) := by
     rw [oC_theta0, sW, WittVector.map_teichmuller]; rfl

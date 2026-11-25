@@ -34,60 +34,15 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CompactDatum
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptMultihomogForm
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionDatumDegreeSum
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenOfUnit
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AutomorphicSpectrum.Definitions.MetricPeriods.ExistsIntSmulIsAdicIntegralInTensorBasis
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptInteriorFlag
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeInnerProductPullbackUnique
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
-import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRing
-import Mathlib.Algebra.Order.Star.Real
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StalkSpecializesBijective
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.SectionNormIsomorphicLines
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeComponentTwistAutomorphism
-import Mathlib.NumberTheory.NumberField.Discriminant.Defs
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFieldExtension
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PullCub
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabComp
@@ -107,16 +62,6 @@ open AlgebraicGeometry CategoryTheory GlobalTheory.CompanionTheory.Ar GlobalTheo
 namespace LevelTowerAlt
 
 variable {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) ⟶ X} {p : Cpt ξ}
-
-theorem uZpow {a : Ω} (ha : unitAt ξ p a) (n : ℤ) : unitAt ξ p (a ^ n) := by
-  obtain ⟨h0, h1, h2⟩ := ha
-  refine ⟨zpow_ne_zero n h0, ?_, ?_⟩
-  · rcases n with m | m
-    · simpa using pow_mem h1 m
-    · simpa [zpow_negSucc] using pow_mem h2 (m + 1)
-  · rcases n with m | m
-    · simpa using pow_mem h2 m
-    · simpa [zpow_negSucc] using pow_mem h1 (m + 1)
 
 theorem gen_unit {Λ : Lat ξ Ω} {s t : Ω} (hs : Λ.IsGenAt p s) (ht : Λ.IsGenAt p t) : unitAt ξ p (s / t) := by
   apply GlobalTheory.CompanionTheory.Ar.Cusp.DetNef.gen_unit <;> assumption
@@ -227,7 +172,7 @@ theorem gram_up (m : SABMap t' t f) (hξ : IsCptGen ξ) (hξ' : IsCptGen ξ') (h
     ⟨hq, eA.symm a, congrArg Subtype.val (eA.apply_symm_apply a), rfl⟩
   refine ⟨φ, hφ, fun r b Γ b' P ⟨v, hv, hI⟩ hP => ?_⟩
   let val : Li' → Vz := fun e => if he : e ∈ M'.lat p' then ev ⟨e, he⟩ else 0
-  have hval : ∀ e (he : e ∈ M'.lat p'), val e = ev ⟨e, he⟩ := fun e he => dif_pos he
+  have hval : ∀ e (he : e ∈ M'.lat p'), val e = ev ⟨e, he⟩ := fun e he => dite_eq_left he
   have h0 : val 0 = 0 := by
     rw [hval 0 (zero_mem _)]
     exact map_zero ev
@@ -564,7 +509,7 @@ theorem core (𝔐 : HodgeCpt Y S y) (Fl : 𝔐.Flag) (hB : Birational y) {e : C
   have hne : ∀ k, ∃ a, y ⟨k, a⟩ ≠ 0 := by
     obtain ⟨ch, hc⟩ := 𝔐.tie.cover ⟨genPt 𝔐.ξ, specializes_rfl⟩
     exact fun k => ⟨ch k, chart_ne hc k⟩
-  obtain ⟨f₁, f₂, hfg, hval⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LineIso.lineIso_of_two_degrees _ Ω 𝔐.ξ K J y Ω _ A.a A'.a _ ρ 𝔐.tie hB hne D1
+  obtain ⟨f₁, f₂, hfg, hval⟩ := _root_.PositivityTheory.UnitarySelfGeneration.l_lineiso _ Ω 𝔐.ξ K J y Ω _ A.a A'.a _ ρ 𝔐.tie hB hne D1
     (by rw [smul_eq_mul, hρe]; exact D2)
   refine ⟨f₁, f₂, hfg, ?_⟩
   rintro w ⟨z, hzw, hzI⟩ u₁ u₂ huv hu₁
@@ -892,8 +837,8 @@ theorem prod_last {M : Type} [CommMonoid M] (F : CMType H × Fin (D.p + D.q) →
   refine Finset.prod_congr rfl fun τ _ => ?_
   rw [Fin.prod_univ_add]
   simp only [Fin.val_castAdd, Fin.val_natAdd]
-  rw [Finset.prod_eq_one (fun i _ => if_neg (by omega)), one_mul]
-  simp only [le_add_iff_nonneg_right, zero_le, if_true]
+  rw [Finset.prod_eq_one (fun i _ => ite_eq_right (by omega)), one_mul]
+  simp only [le_add_iff_nonneg_right, zero_le, ite_true]
   exact (Fintype.prod_equiv Fin.revPerm (fun a => F (lastRoot D (τ, a))) (fun j => F (τ, Fin.natAdd D.p j))
     (fun a => rfl)).symm
 
@@ -903,8 +848,8 @@ theorem sum_last {M : Type} [AddCommMonoid M] (F : CMType H × Fin (D.p + D.q) �
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [Fin.sum_univ_add]
   simp only [Fin.val_castAdd, Fin.val_natAdd]
-  rw [Finset.sum_eq_zero (fun i _ => if_neg (by omega)), zero_add]
-  simp only [le_add_iff_nonneg_right, zero_le, if_true]
+  rw [Finset.sum_eq_zero (fun i _ => ite_eq_right (by omega)), zero_add]
+  simp only [le_add_iff_nonneg_right, zero_le, ite_true]
   exact (Fintype.sum_equiv Fin.revPerm (fun a => F (lastRoot D (τ, a))) (fun j => F (τ, Fin.natAdd D.p j))
     (fun a => rfl)).symm
 
@@ -1019,7 +964,7 @@ theorem common (h₁ : LevelFree) (h₂ : MuHodge) : Common := by
       (Or.i_range τ ▸ LinearMap.mem_range_self (Or.i τ) (bb τ (tailIdx Dc.j_le_N k)))
     exact ⟨z, hz, by rw [← h, add_sub_cancel_right]; exact ha⟩
   choose s hs using hs
-  obtain ⟨hsi, hdeg⟩ := _root_.GlobalTheory.CompanionTheory.Relay.intersection_datum_degree_sum E H D Xo l c Y II K J Ω W Dc Hd S₀ Or B bb s _ hs hΛ
+  obtain ⟨hsi, hdeg⟩ := _root_.LevelTowerAlt.det_lattice_tensor_isDegOn_muTwDeg E H D Xo l c Y II K J Ω W Dc Hd S₀ Or B bb s _ hs hΛ
   have hmet := h₂ hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or B bb s _ hs hΛ
   have hn : Dc.N - Dc.j = D.q := by
     rcases Or.side with ⟨-, -, h⟩ | ⟨h, -, -⟩

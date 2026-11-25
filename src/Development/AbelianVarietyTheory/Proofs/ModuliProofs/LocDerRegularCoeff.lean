@@ -70,14 +70,14 @@ private theorem exists_ringHom_eq_valAt'' {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) (U
     ∃ φ : Γ(Y, U) →+* ℂ, ∀ f, valAt' x U f = φ f := by
   refine ⟨(Scheme.ΓSpecIso (CommRingCat.of ℂ)).hom.hom.comp (x.appLE U ⊤ h).hom, fun f => ?_⟩
   unfold valAt'
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   rfl
 
 private theorem valAt'_resG_of_le {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) {U V : Y.Opens} (hVU : V ≤ U) (h : ⊤ ≤ x ⁻¹ᵁ V)
     (f : Γ(Y, U)) : valAt' x V (resG Y hVU f) = valAt' x U f := by
   have h' : ⊤ ≤ x ⁻¹ᵁ U := fun _ ha => hVU (h ha)
   unfold valAt'
-  rw [dif_pos h, dif_pos h']
+  rw [dite_eq_left h, dite_eq_left h']
   unfold valAt
   exact congrArg (fun s => (Scheme.ΓSpecIso (CommRingCat.of ℂ)).hom.hom s)
     (congrArg (fun φ => CommRingCat.Hom.hom φ f) (Scheme.Hom.map_appLE x h (homOfLE hVU).op))
@@ -203,7 +203,7 @@ theorem locDer_regular_coeff : ∀ (P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P₀
   have hwf : ∀ z (hz : ⊤ ≤ ((u.ex z).left ≫ m) ⁻¹ᵁ W₀) W f, z ∈ dom u m W →
       ptOf W₀ d (u.ex z).left W f = fderiv ℂ (fn u m W f) z (wf z) := by
     intro z hz W f hzW
-    simp only [wf, dif_pos hz]
+    simp only [wf, dite_eq_left hz]
     exact (hw z hz).choose_spec W f hzW
   have lin : ∀ (L : (Fin P₀.g → ℂ) →L[ℂ] ℂ) (v : Fin P₀.g → ℂ), L v = ∑ i, v i * L (Pi.single i 1) := by
     intro L v

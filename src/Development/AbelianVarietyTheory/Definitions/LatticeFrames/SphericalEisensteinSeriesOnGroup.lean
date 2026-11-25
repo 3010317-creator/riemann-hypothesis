@@ -78,12 +78,6 @@ def sphericalEisensteinSeriesOnGroup (h : GA D T) : ℂ → ℂ := fun s => cose
 
 end SlopeTestRemainingChoices
 
-section Centre
-
-variable (θ : InfFam D) (n : ℕ) (τ : D.what₂.Tau)
-
-end Centre
-
 section Ops
 
 variable {n : ℕ}
@@ -99,9 +93,6 @@ variable (θ : InfFam D) (τ : D.what₂.Tau)
 variable {θ} {V V₀ : HSp D} {r : ℕ} (ω : StdUnn.G D n →* Module.End ℂ (schwartzA θ V.rank n))
 
 variable (d : HypDec V V₀ r) (K : Subgroup (GA D V))
-
-def eisS (H : StdUnn.G D n → ℝ≥0) (Φ : schwartzA θ V.rank n) (g : StdUnn.G D n) : ℂ → ℂ :=
-  fun s => cosetSum (StdUnn.P D n) (StdUnn.GF D n) (StdUnn.sect ω H Φ s) g
 
 end Ops
 

@@ -481,7 +481,7 @@ theorem colAt_low {j : ℕ} (hj : j ≤ m2) (al : L.β j) (p : PtAt R sel mu cst
         ((chKerC W Ch sel mu cst L A u m2 b hY P hK).kk.colTo hF j (startC hL u φ) a) g d p.1.1).trans ?_
     · rw [← ih hj'.le]
       refine LinearMap.congr_fun ((kAt_mat W Ch A u hL (by omega) a al _ p).trans ?_) _
-      have e : (chKerC W Ch sel mu cst L A u m2 b hY P hK).kk j a al = ⟨_, hK.1 j hj' a al⟩ := dif_pos hj'
+      have e : (chKerC W Ch sel mu cst L A u m2 b hY P hK).kk j a al = ⟨_, hK.1 j hj' a al⟩ := dite_eq_left hj'
       rw [e]
     · show _ = ((∑ a, (((chKerC W Ch sel mu cst L A u m2 b hY P hK).kk j a al).opOf (hF j a) _) ∘ₗ (LinearMap.proj a))
         ((chKerC W Ch sel mu cst L A u m2 b hY P hK).kk.colTo hF j (startC hL u φ))).1 p.1.1
@@ -652,10 +652,8 @@ theorem chTh_ok_of_thHyp (hPr : Pr.Ok) (hL : L.Ok Ch sel mu cst G m2) (h : ThHyp
     ChTh.Ok (Ch := Ch) cst (chTh W Ch sel mu cst A u m2) := by
   have hm := hL.hm
   have hq := muqTie_of_ok Ch sel mu cst L hL
-  exact ⟨fun i hi => ChainTheta.stepC_ok_deg W Ch sel mu cst A u i (by omega) (i + 1) (hPr.T_prime u).pos hq (h.1 i hi).1 (h.1 i hi).2.1
-      (fun N N' c x hx m _ => (h.1 i hi).2.2 N N' c x hx m) (h.2.2.1 i hi),
-    ChainTheta.stepC_ok_deg W Ch sel mu cst A u (m2 + 1) (by omega) R.m (hPr.T_prime u).pos hq h.2.1.1 h.2.1.2.1
-      (fun N N' c x hx m _ => h.2.1.2.2 N N' c x hx m) h.2.2.2⟩
+  exact ⟨fun i hi => ChainTheta.stepC_ok_deg W Ch sel mu cst A u i (by omega) (i + 1) (hPr.T_prime u).pos hq (h.2.2.1 i hi),
+    ChainTheta.stepC_ok_deg W Ch sel mu cst A u (m2 + 1) (by omega) R.m (hPr.T_prime u).pos hq h.2.2.2⟩
 
 theorem anaStep_of_thHyp (hm : R.m = m2 + 2) (h : ThHyp W Ch sel mu cst A u m2) {i : ℕ} (hi : i < R.m) :
     A.AnaStep (R.N i) (R.N (i + 1)) (Sall sel mu u) (cAof sel mu cst * cBof sel mu cst u) := by
@@ -689,8 +687,6 @@ end General
 section True
 
 open GlobalTheory.Mem GlobalTheory.Mem.Chr Formalism.MainNotions
-
-attribute [local instance] GlobalTheory.Mem.Col2.starE
 
 variable {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X)
 

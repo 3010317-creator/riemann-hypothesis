@@ -333,9 +333,9 @@ private theorem grSpan_mem {Λ : Type} [CommRing Λ] {σ : Type} (d : σ → ℕ
       rw [map_add (f := _), MvPowerSeries.X_pow_eq, MvPowerSeries.coeff_monomial_mul, hg', hh]
       by_cases hn : d t ≤ n t
       · have hle : Finsupp.single t (d t) ≤ n := Finsupp.single_le_iff.2 hn
-        rw [if_pos hle, if_neg (by omega), one_mul, tsub_add_cancel_of_le hle, add_zero]
+        rw [ite_eq_left hle, ite_eq_right (by omega), one_mul, tsub_add_cancel_of_le hle, add_zero]
       · have hle : ¬ Finsupp.single t (d t) ≤ n := fun h' => hn (Finsupp.single_le_iff.1 h')
-        rw [if_neg hle, if_pos (by omega), zero_add]
+        rw [ite_eq_right hle, ite_eq_left (by omega), zero_add]
     rw [hsplit]
     refine J.add_mem (J.mul_mem_right _ (hJ t)) (ih g' fun n hn => ?_)
     rw [hg']
@@ -368,7 +368,7 @@ private theorem grSpan_small {Λ : Type} [CommRing Λ] {σ : Type} [Fintype σ] 
   rw [Finset.sum_eq_single (fun s => ⟨n s, hn s⟩ : ∀ s, Fin (d s))]
   · simp [Finsupp.equivFunOnFinite_symm_coe]
   · intro β _ hβ
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     apply hβ
     funext s
@@ -546,7 +546,6 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.LocLanglands GlobalTheory.LocGL GlobalTheory.GalOfCusp GlobalTheory.SmGL GlobalTheory.SplitWeil
 open UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.Hi UpperTheory.V.AlgebraTools UpperTheory.V.Pa UpperTheory.V.Pa.Lev
 open scoped TensorProduct
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 private def fsSub {Λ R M P : Type} [CommRing Λ] [CommRing R] [Algebra Λ R] [AddCommGroup M] [Module Λ M]
     [AddCommGroup P] [Module R P] (θ : R →ₐ[Λ] Module.End Λ M) (E : P ≃+ M) (hE : ∀ (r : R) x, E (r • x) = θ r (E x))

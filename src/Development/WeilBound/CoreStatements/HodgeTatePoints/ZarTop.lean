@@ -33,58 +33,12 @@ public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.RelAmpleOfCls
 public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.ZarhinTrick.QiIsMonHomIdPow
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsCrystalPairing
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.CubeTheoremHolds
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.RelAmpleExternalTensorPowerGroupPower
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbelianSchemeGerms
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsAdditiveOfUniversal
 import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemNonzeroLocusIffPowFn
-import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.TypeStar
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMonHomOfClassifying
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -129,8 +83,6 @@ open scoped CategoryTheory.Obj CategoryTheory.MonObj
 open GlobalTheory.CechPic GlobalTheory.AbDual
 open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqToBase toBase)
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace PositivityTheory.PrwZar.XB
 
 variable {S : Scheme.{0}}
@@ -146,14 +98,14 @@ variable {Ω : Type} [Field Ω]
 theorem isIso_inv_left {G : Over (Sp Ω)} [GrpObj G] [IsCommMonObj G] : IsIso ((𝟙 G)⁻¹ : G ⟶ G).left := by
   have e : ((𝟙 G)⁻¹ : G ⟶ G) ≫ (𝟙 G)⁻¹ = 𝟙 G := by
     rw [GrpObj.comp_inv, Category.comp_id, inv_inv]
-  haveI : IsIso ((𝟙 G)⁻¹ : G ⟶ G) := ⟨⟨(𝟙 G)⁻¹, e, e⟩⟩
+  have : IsIso ((𝟙 G)⁻¹ : G ⟶ G) := ⟨⟨(𝟙 G)⁻¹, e, e⟩⟩
   exact (Over.forget (Sp Ω)).map_isIso ((𝟙 G)⁻¹ : G ⟶ G)
 
 theorem relAmple_sym {G : Over (Sp Ω)} [GrpObj G] [IsCommMonObj G] [IsProper G.hom] {L : LB G.left} (hL : L.IsLB)
     (ha : Out.RelAmple G L) :
     Out.RelAmple G (LB.LinComb L (K := Fin 2) ![𝟙 G.left, ((𝟙 G)⁻¹ : G ⟶ G).left] ![1, 1]) := by
-  haveI : IsIso ((𝟙 G)⁻¹ : G ⟶ G).left := isIso_inv_left
-  haveI : IsAffineHom ((𝟙 G)⁻¹ : G ⟶ G).left := inferInstance
+  have : IsIso ((𝟙 G)⁻¹ : G ⟶ G).left := isIso_inv_left
+  have : IsAffineHom ((𝟙 G)⁻¹ : G ⟶ G).left := inferInstance
   have hLi : Out.RelAmple G (L.pull ((𝟙 G)⁻¹ : G ⟶ G).left) :=
     GlobalTheory.PosDefAmple.relAmple_pull_of_isAffineHom _ hL ha
   have hN := LB.isLB_linComb (K := Fin 2) hL ![𝟙 G.left, ((𝟙 G)⁻¹ : G ⟶ G).left] ![1, 1]
@@ -190,8 +142,6 @@ open scoped CategoryTheory.Obj CategoryTheory.MonObj
 open GlobalTheory.CechPic GlobalTheory.AbDual
 open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqToBase toBase)
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace PositivityTheory.PrwZar
 
 variable {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B] [IsCommMonObj A] [IsCommMonObj B]
@@ -205,7 +155,7 @@ theorem relAmple_lPart (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) (mu : B
     (ha : Out.RelAmple ((Over.pullback s).obj A) L) (hmu : IsFinite ((Over.pullback s).map mu).left) :
     Out.RelAmple ((Over.pullback s).obj (G4 (A ⊗ B))) (lPart mu s L) := by
   have hGA : IsAbelianScheme ((Over.pullback s).obj A) := GlobalTheory.isAbelianScheme_pullback_obj s A hA
-  haveI : IsProper ((Over.pullback s).obj A).hom := hGA.proper
+  have : IsProper ((Over.pullback s).obj A).hom := hGA.proper
   have hAA : IsAbelianScheme (A ⊗ A) := AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA
   have hAB : IsAbelianScheme (A ⊗ B) := AbelianSchemeGerms.isAbelianScheme_tensor A B hA hB
   have h4A : IsAbelianScheme (G4 (A ⊗ A)) :=
@@ -216,12 +166,12 @@ theorem relAmple_lPart (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) (mu : B
       (AbelianSchemeGerms.isAbelianScheme_tensor _ _ hAB (AbelianSchemeGerms.isAbelianScheme_tensor _ _ hAB hAB))
   have hY : IsAbelianScheme ((Over.pullback s).obj (G4 (A ⊗ A))) := GlobalTheory.isAbelianScheme_pullback_obj s _ h4A
   have hG : IsAbelianScheme ((Over.pullback s).obj (G4 (A ⊗ B))) := GlobalTheory.isAbelianScheme_pullback_obj s _ h4B
-  haveI : IsProper ((Over.pullback s).obj (G4 (A ⊗ A))).hom := hY.proper
-  haveI : IsProper ((Over.pullback s).obj (G4 (A ⊗ B))).hom := hG.proper
+  have : IsProper ((Over.pullback s).obj (G4 (A ⊗ A))).hom := hY.proper
+  have : IsProper ((Over.pullback s).obj (G4 (A ⊗ B))).hom := hG.proper
   have hL' : (L.LinComb ![𝟙 _, Over.Hom.left (𝟙 ((Over.pullback s).obj A))⁻¹] ![1, 1]).IsLB :=
     LB.isLB_linComb hL _ _
   have ha' := XB.relAmple_sym hL ha
-  haveI hpr : ∀ j, IsMonHom (XB.pr8 A j) := by
+  have hpr : ∀ j, IsMonHom (XB.pr8 A j) := by
     intro j
     fin_cases j <;> simp only [XB.pr8] <;> infer_instance
   let p : Out.IsPowGrp ((Over.pullback s).obj (G4 (A ⊗ A))) ((Over.pullback s).obj A) 8 :=
@@ -237,7 +187,7 @@ theorem relAmple_lPart (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) (mu : B
     infer_instance
   have hΦ : IsFinite ((Over.pullback s).map (XB.fourfoldProductMap (𝟙 A ⊗ₘ mu))).left :=
     XB.isFinite_map_g4map s _ (XB.isFinite_map_tensorHom s _ _ hid hmu)
-  haveI := hΦ
+  have := hΦ
   have h2 := GlobalTheory.PosDefAmple.relAmple_pull_of_isAffineHom ((Over.pullback s).map (XB.fourfoldProductMap (𝟙 A ⊗ₘ mu)))
     hboxLB hbox
   have hlpLB : (lPart mu s L).IsLB := LB.isLB_linComb hL _ _
@@ -283,9 +233,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqT
 
 attribute [local instance] Over.cartesianMonoidalCategory
 
-namespace PositivityTheory.PrwZar
-
-end PositivityTheory.PrwZar
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -304,15 +251,13 @@ open scoped CategoryTheory.Obj CategoryTheory.MonObj
 open GlobalTheory.CechPic GlobalTheory.AbDual
 open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqToBase toBase)
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace PositivityTheory.PrwZar
 
 variable {Ω : Type} [Field Ω] [IsAlgClosed Ω]
 
 theorem relAmple_of_lbPow {G : Over (Sp Ω)} [GrpObj G] (hG : IsAbelianScheme G) {M : LB G.left} (hM : M.IsLB)
     (n : ℕ) (hn : 1 ≤ n) (h : Out.RelAmple G (lbPow M n)) : Out.RelAmple G M := by
-  haveI : IsProper G.hom := hG.proper
+  have : IsProper G.hom := hG.proper
   have hP : (lbPow M n).IsLB := GlobalTheory.isLB_lbPow hM n
   exact GlobalTheory.PosDefAmple.relAmple_of_nsmul hM hP hn (cls_lbPow hM n hP).symm h
 
@@ -335,8 +280,6 @@ open scoped CategoryTheory.Obj CategoryTheory.MonObj
 open GlobalTheory.CechPic GlobalTheory.AbDual
 open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqToBase toBase)
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace PositivityTheory.PrwZar.Z2
 
 variable {Ω : Type} [Field Ω] [IsAlgClosed Ω]
@@ -344,7 +287,7 @@ variable {Ω : Type} [Field Ω] [IsAlgClosed Ω]
 theorem relAmple_of_two_smul {G : Over (Sp Ω)} [GrpObj G] (hG : IsAbelianScheme G) {M N : LB G.left}
     (hM : M.IsLB) (hN : N.IsLB) (d : ℕ) (hd : 1 ≤ d) (e : d • cls M hM = d • cls N hN) (h : Out.RelAmple G N) :
     Out.RelAmple G M := by
-  haveI : IsProper G.hom := hG.proper
+  have : IsProper G.hom := hG.proper
   have hK := GlobalTheory.isLB_lbPow hN d
   have hcls : d • cls M hM = cls (lbPow N d) hK := by
     rw [cls_lbPow hN d hK, e]
@@ -391,9 +334,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqT
 
 attribute [local instance] Over.cartesianMonoidalCategory
 
-namespace PositivityTheory.PrwZar
-
-end PositivityTheory.PrwZar
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -411,8 +351,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj CategoryTheory.MonObj
 open GlobalTheory.CechPic GlobalTheory.AbDual
 open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqToBase toBase)
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace PositivityTheory.PrwZar.Z2
 
@@ -487,8 +425,8 @@ theorem ceLam_zb_pt (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A
     {Y : Over (Sp Ω)} (a u : Y ⟶ (Over.pullback s).obj (G4 (A ⊗ B))) :
     lam (cls (zb mu α s P L) (isLB_zb mu α s hD.isLB hL)) a u =
       zcPair hD.isLB l mu α (toBase _ s a) (toBase _ s u) := by
-  haveI := hA.comm
-  haveI := hB.comm
+  have := hA.comm
+  have := hB.comm
   have hl1 : ∀ {T : Over S} (b : T ⟶ B), evc hD.isLB (1 : T ⟶ A) b = 0 := by
     intro T b
     have h := evc_mul_left hD (1 : T ⟶ A) 1 b
@@ -608,7 +546,7 @@ theorem ceEvc_sym (hA : IsAbelianScheme A) {P : LB (A ⊗ B).left} (hP : P.IsLB)
     (e : LBIso ((ev P (fst A A) (snd A A ≫ l)).pull (sqToBase A s)) (abelian₂ ((Over.pullback s).obj A) L))
     {Y : Over (Sp Ω)} (x y : Over.mk (Y.hom ≫ s) ⟶ A) :
     evc hP x (y ≫ l) = evc hP y (x ≫ l) := by
-  haveI := hA.comm
+  have := hA.comm
   rw [evc_comp_eq_lam_ceLiftPt hP l s L hL e, evc_comp_eq_lam_ceLiftPt hP l s L hL e, lam_comm]
 
 end Fibre
@@ -811,10 +749,10 @@ theorem two_cls_eMap {Ω : Type} [Field Ω] [IsAlgClosed Ω] (hA : IsAbelianSche
     (h₁' : ((zb mu α s P L).pull ((Over.pullback s).map (eMap mu α m)).left).IsLB)
     (h₂' : (lPart mu s L).IsLB) :
     2 • cls _ h₁' = 2 • cls _ h₂' := by
-  haveI := hA.comm
-  haveI := hB.comm
-  haveI hpA : ∀ i, IsMonHom (pA (A := A) (B := B) s i) := fun i => by unfold pA; infer_instance
-  haveI hpM : ∀ i, IsMonHom (pM mu s i) := fun i => by unfold pM; infer_instance
+  have := hA.comm
+  have := hB.comm
+  have hpA : ∀ i, IsMonHom (pA (A := A) (B := B) s i) := fun i => by unfold pA; infer_instance
+  have hpM : ∀ i, IsMonHom (pM mu s i) := fun i => by unfold pM; infer_instance
   have hMmul : ∀ {T : Over (Sp Ω)} (x y : T ⟶ (Over.pullback s).obj (G4 (A ⊗ B))), (x * y) ≫ (Over.pullback s).map (eMap mu α m) = (x ≫ (Over.pullback s).map (eMap mu α m)) * (y ≫ (Over.pullback s).map (eMap mu α m)) := by
     intro T x y
     apply toBase_injective s
@@ -945,8 +883,6 @@ open scoped CategoryTheory.Obj CategoryTheory.MonObj
 open GlobalTheory.CechPic GlobalTheory.AbDual
 open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqToBase toBase)
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace PositivityTheory.PrwZar
 
 variable {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B]
@@ -979,8 +915,8 @@ theorem relAmple_zb (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A
     (hα : α.transpose * α = ((4 * m ^ 2 - 1 : ℕ) : ℤ) • (1 : Matrix (Fin 4) (Fin 4) ℤ))
     (hα' : α * α.transpose = ((4 * m ^ 2 - 1 : ℕ) : ℤ) • (1 : Matrix (Fin 4) (Fin 4) ℤ)) :
     Out.RelAmple ((Over.pullback s).obj (G4 (A ⊗ B))) (zb mu α s P L) := by
-  haveI : IsCommMonObj A := hA.comm
-  haveI : IsCommMonObj B := hB.comm
+  have : IsCommMonObj A := hA.comm
+  have : IsCommMonObj B := hB.comm
   have hP : P.IsLB := hD.isLB
   have hAB : IsAbelianScheme (A ⊗ B) := AbelianSchemeGerms.isAbelianScheme_tensor A B hA hB
   have h4 : IsAbelianScheme (G4 (A ⊗ B)) :=
@@ -1003,8 +939,8 @@ theorem relAmple_zb (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A
   have hEa := _root_.PositivityTheory.PrwZar.Z2.relAmple_of_two_smul hG hE1 hlpLB 2 (by norm_num) hE hlp
   obtain ⟨hE'fin, -, -, -⟩ := Z2.fin_surj_core hG hG ((Over.pullback s).map (eMap' mu α m))
     ((Over.pullback s).map (eMap mu α m)) (2 * m) (by omega) c1 c2 hlpLB hlp
-  haveI := hE'fin
-  haveI : IsProper ((Over.pullback s).obj (G4 (A ⊗ B))).hom := hG.proper
+  have := hE'fin
+  have : IsProper ((Over.pullback s).obj (G4 (A ⊗ B))).hom := hG.proper
   have h2 := GlobalTheory.PosDefAmple.relAmple_pull_of_isAffineHom ((Over.pullback s).map (eMap' mu α m)) hE1 hEa
   have hNLB := LB.isLB_pull hE1 (Over.Hom.left ((Over.pullback s).map (eMap' mu α m)))
   have hP2 : ((zb mu α s P L).pull (Over.Hom.left (𝟙 ((Over.pullback s).obj (G4 (A ⊗ B))) ^ (2 * m)))).IsLB :=
@@ -1036,8 +972,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj CategoryTheory.MonObj
 open GlobalTheory.CechPic GlobalTheory.AbDual
 open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqToBase toBase)
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace PositivityTheory.PrwZar
 
@@ -1290,8 +1224,8 @@ theorem zcPair_eq_one (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB 
     (hsym : ∀ (Y : Over S) (_ : Y ⟶ T) (x y : Y ⟶ A), evc hD.isLB x (y ≫ l) = evc hD.isLB y (x ≫ l))
     (h0 : ∀ (Y : Over S) (w : Y ⟶ T) (v : Y ⟶ G4 (A ⊗ B)), zcPair hD.isLB l mu α (w ≫ a) v = 0) :
     a = 1 := by
-  haveI := hA.comm
-  haveI := hB.comm
+  have := hA.comm
+  have := hB.comm
   have oneB : ∀ {Y : Over S} (f : Y ⟶ T), f ≫ (1 : T ⟶ B) = 1 := fun f => by simp
   have oneA : ∀ {Y : Over S} (f : Y ⟶ T), f ≫ (1 : T ⟶ A) = 1 := fun f => by simp
   have eq_of_evc {A' B' T' : Over S} [GrpObj A'] [GrpObj B'] {P' : LB (A' ⊗ B').left}
@@ -1373,8 +1307,6 @@ open scoped CategoryTheory.Obj CategoryTheory.MonObj
 open GlobalTheory.CechPic GlobalTheory.AbDual
 open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqToBase toBase)
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace PositivityTheory.PrwZar
 
 variable {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B]
@@ -1430,8 +1362,8 @@ theorem kEvc_sym (hA : IsAbelianScheme A) {P : LB (A ⊗ B).left} (hP : P.IsLB) 
     (e : LBIso ((ev P (fst A A) (snd A A ≫ l)).pull (sqToBase A s)) (abelian₂ ((Over.pullback s).obj A) L))
     {Y : Over (Sp Ω)} (x y : Over.mk (Y.hom ≫ s) ⟶ A) :
     evc hP x (y ≫ l) = evc hP y (x ≫ l) := by
-  haveI := hA.comm
-  haveI : IsCommMonObj ((Over.pullback s).obj A) := inferInstance
+  have := hA.comm
+  have : IsCommMonObj ((Over.pullback s).obj A) := inferInstance
   have h1 := lam_cL_pt s hP l L hL e (kLiftPt s A x) (kLiftPt s A y)
   have h2 := lam_cL_pt s hP l L hL e (kLiftPt s A y) (kLiftPt s A x)
   rw [kToBase_liftPt, kToBase_liftPt] at h1 h2
@@ -1571,8 +1503,6 @@ open scoped CategoryTheory.Obj CategoryTheory.MonObj
 open GlobalTheory.CechPic GlobalTheory.AbDual
 open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqToBase toBase)
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace PositivityTheory.PrwZar
 
 variable {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B]
@@ -1619,8 +1549,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj CategoryTheory.MonObj
 open GlobalTheory.CechPic GlobalTheory.AbDual
 open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqToBase toBase)
-
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace PositivityTheory.PrwZar
 

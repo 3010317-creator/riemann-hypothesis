@@ -97,13 +97,6 @@ def IsUnitaryA {r : ℕ} (Gm : Matrix (Fin r) (Fin r) E) (g : Matrix (Fin r) (Fi
 def IsDetRootA {r : ℕ} (g : Matrix (Fin r) (Fin r) (AdE F E)) (x : (AdE F E)ˣ) : Prop :=
   (x : AdE F E) = g.det * conjA F (x : AdE F E)
 
-def IsTwist (ξ : (AdE F E)ˣ →* Circle) (N : ℕ) : Prop :=
-  (∃ m : ℕ, 0 < m ∧ ∀ x, ξ x ^ m = 1) ∧
-  (∀ x : (AdE F E)ˣ, conjA F (x : AdE F E) = x → ξ x = 1) ∧
-  (∀ (x : (AdE F E)ˣ) (z : E), (x : AdE F E) = diagE F z → ξ x = 1) ∧
-  ∀ x : (AdE F E)ˣ, (x : AdE F E) ∈ intAdE F E → ((x⁻¹ : (AdE F E)ˣ) : AdE F E) ∈ intAdE F E →
-    (∃ y ∈ intAdE F E, (x : AdE F E) - 1 = N • y) → ξ x = 1
-
 end Adeles
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [IsCMField E] [Algebra F E]
@@ -149,22 +142,5 @@ def AllMarked (F : Type) [Field F] [NumberField F] [Algebra F E] [Fact (IsRealIn
 variable (Xo c)
 
 end Value
-
-section Action
-
-variable {l : Level H} (Xo : Moduli Dw l) (c : Coeff l) {G : Type} [Group G]
-  (lev : G → (Dw.La →ₗ[𝓞 E] Dw.La) × (Dw.La →ₗ[𝓞 E] Dw.La))
-
-variable {c} {c' : Coeff l}
-
-end Action
-
-section Row
-
-variable {l : Level H} (Xo : Moduli Dw l) {c c' : Coeff l} {n : ℕ}
-
-variable {Pt : Type} {G : Type} [Group G] {Tup : Type*} {Vs : Type} [AddCommGroup Vs] [Module c'.F Vs]
-
-end Row
 
 end GlobalTheory.IndefiniteRowSideFullHecke.UnitaryDeterminantRoot

@@ -146,7 +146,7 @@ theorem coeff_symm : CoeffSwap ∧ CoeffNeg := by
     (_root_.GlobalTheory.SatakeWeyl.unipSplit_of_leviPart _root_.GlobalTheory.SatakeWeyl.leviPart) _root_.GlobalTheory.SatakeWeyl.ContractProof.contract _root_.GlobalTheory.SatakeWeyl.TorusConjProof.torusConj
   have hi : IntIndex := _root_.GlobalTheory.SatakeWeyl.intIndex
   have ht : TraceZeroIndex := _root_.GlobalTheory.SatakeWeyl.traceZeroIndex_of_intIndex hi
-  exact ⟨GlobalTheory.T.unitarySatakeCoeff_adjacentSwap_of_leviReduction hl (_root_.GlobalTheory.SatakeWeyl.IdxFour.indexFour hi) _root_.GlobalTheory.SatakeWeyl.Four.cartanFour,
+  exact ⟨_root_.GlobalTheory.SatakeWeyl.Swap.coeffSwap hl (_root_.GlobalTheory.SatakeWeyl.IdxFour.indexFour hi) _root_.GlobalTheory.SatakeWeyl.Four.cartanFour,
     _root_.GlobalTheory.SatakeWeyl.coeffNeg_of_leviStep hl (_root_.GlobalTheory.SatakeWeyl.indexTwo_of_traceZeroIndex ht) (_root_.GlobalTheory.SatakeWeyl.Heis.indexThree hi ht)⟩
 
 end Weyl
@@ -196,7 +196,7 @@ theorem eq_of_invariant (m : ℕ) (f : (Fin m → ℂ) → ℂ)
           simp [hj, h6]
         · simp [hij]
   have := key Finset.univ
-  simp only [Finset.mem_univ, if_true] at this
+  simp only [Finset.mem_univ, ite_true] at this
   rw [← (hf α).1 π, ← this]
 
 theorem satU_eq_of_ubc_eq : ∀ (K : Type) [Field K] [Valued K (WithZero (Multiplicative ℤ))] [CompleteSpace K] (ϖ : K)

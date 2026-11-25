@@ -3,47 +3,8 @@ module
 public import PositivityTheory.AutomorphicForms.PublishedInputs.CuspidalContinuity.ArchimedeanCuspidal.VerticalStrips.UnramifiedEulerProductIntegral
 import GroundTheory.GlobalFields.Adele.Topology
 import GroundTheory.GlobalFields.TateThesis.HeckeCharRayClass
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -267,7 +228,7 @@ theorem exists_unit_one_add_generator (r : ℝ) (hr : 0 < r) :
       show ∏ w, ‖(↑(Z t) : NumberField.AdeleRing (𝓞 ℚ) ℚ).1 w‖ ^ w.mult = |(t : ℝ)|
       rw [Fintype.prod_subsingleton _ p0]
       show ‖ι t p0‖ ^ p0.mult = |(t : ℝ)|
-      rw [hnorm, NumberField.InfinitePlace.mult, if_pos (hv _), pow_one]
+      rw [hnorm, NumberField.InfinitePlace.mult, ite_eq_left (hv _), pow_one]
     have hfin : (Z t).finiteModule = 1 := by
       show ∏ᶠ v, ‖(↑(Z t) : NumberField.AdeleRing (𝓞 ℚ) ℚ).2 v‖ = 1
       have h1 : ∀ v, ‖(↑(Z t) : NumberField.AdeleRing (𝓞 ℚ) ℚ).2 v‖ = 1 := fun v => by
@@ -349,14 +310,14 @@ theorem level {μ : Measure G2} {𝓕 : Set G2} {mK : Measure KA} {𝓓 : Set Jd
       have hD : Dt (dg2 z z * g) = r * Dt g := by rw [Dt_mul, detModulus_diag, hz]
       by_cases hg : Dt g = 1
       · have h2 : Dt (dg2 z z * g) = r := by rw [hD, hg, mul_one]
-        simp only [Set.indicator, Set.mem_setOf_eq, h2, hg, if_true, Pi.one_apply]
+        simp only [Set.indicator, Set.mem_setOf_eq, h2, hg, ite_true, Pi.one_apply]
       · have h2 : Dt (dg2 z z * g) ≠ r := by
           rw [hD]
           intro h3
           apply hg
           have h4 : r * Dt g = r * 1 := by rw [h3, mul_one]
           exact mul_left_cancel₀ hr.ne' h4
-        simp only [Set.indicator, Set.mem_setOf_eq, h2, hg, if_false]
+        simp only [Set.indicator, Set.mem_setOf_eq, h2, hg, ite_false]
     beta_reduce at key
     rw [hpre, lintegral_indicator_one (hmeasS 1), lintegral_indicator_one (hmeasS r),
       Measure.restrict_apply (hmeasS 1), Measure.restrict_apply (hmeasS r)] at key

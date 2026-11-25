@@ -321,8 +321,8 @@ theorem kr_ck (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] Wp)}
       dLR u v (hfam ξ) = if InR Bs ξ then dLR u v (rho Bs (pR ξ) F) else fun _ => 0 := by
     intro ξ u v
     by_cases hξ : InR Bs ξ
-    · simp only [hfamdef, if_pos hξ]
-    · simp only [hfamdef, if_neg hξ]; exact Formalism.FourierDecayAlt.P.SmoothnessOnGoodSet.dLR_zero u v
+    · simp only [hfamdef, ite_eq_left hξ]
+    · simp only [hfamdef, ite_eq_right hξ]; exact Formalism.FourierDecayAlt.P.SmoothnessOnGoodSet.dLR_zero u v
   have hunit : ∀ w : List (Formalism.FourierDecayAlt.P.Ux1.J k r), ∀ X ∈ w.map Formalism.FourierDecayAlt.P.Ux1.Lt, unitLie k r X := by
     intro w X hX
     obtain ⟨i, _, rfl⟩ := List.mem_map.1 hX
@@ -337,7 +337,7 @@ theorem kr_ck (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] Wp)}
         (dLR (w.map Formalism.FourierDecayAlt.P.Ux1.Lt) [] F (y * Matrix.of ξ.2 * Matrix.of ξ.1)).comp
           (Bs.π' (Matrix.of ξ.1)⁻¹) := by
     intro w ξ y hξ
-    rw [hsel, if_pos hξ, Formalism.FourierDecayAlt.P.SandwichRhoAction.dLR_rho Bs (inSS_pR Bs hξ), hmapAd, List.map_nil, rho_pR]
+    rw [hsel, ite_eq_left hξ, Formalism.FourierDecayAlt.P.SandwichRhoAction.dLR_rho Bs (inSS_pR Bs hξ), hmapAd, List.map_nil, rho_pR]
   have hSm : MeasurableSet {ξ : Mt k r × Mt k r | InR Bs ξ} := (isClosed_InR Bs).measurableSet
   have hres : μ.restrict {ξ : Mt k r × Mt k r | InR Bs ξ} = μ := Measure.restrict_eq_self_of_ae_mem (ae_inR Bs)
   have hSGV : ∀ ξ, InR Bs ξ → (Matrix.of ξ.1 : Mat k r) ∈ GV k r ∧ (Matrix.of ξ.2 : Mat k r) ∈ GV k r :=
@@ -412,13 +412,13 @@ theorem kr_ck (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] Wp)}
             (fun g hg hgC => hz g hg hgC) q hqG hqC
         rw [h0, norm_zero]
         exact hβ0 ξ
-    · rw [hsel, if_neg hξ, norm_zero]
+    · rw [hsel, ite_eq_right hξ, norm_zero]
       exact hβ0 ξ
   have hh : ∀ ξ, CkOn ((m : ℕ) : ℕ∞) (GV k r) (hfam ξ) := by
     intro ξ
     by_cases hξ : InR Bs ξ
-    · simp only [hfamdef, if_pos hξ]; exact ckOn_rho Bs (inSS_pR Bs hξ) hFm
-    · simp only [hfamdef, if_neg hξ]; exact Formalism.FourierDecayAlt.P.SmoothnessOnGoodSet.ckOn_zero _
+    · simp only [hfamdef, ite_eq_left hξ]; exact ckOn_rho Bs (inSS_pR Bs hξ) hFm
+    · simp only [hfamdef, ite_eq_right hξ]; exact Formalism.FourierDecayAlt.P.SmoothnessOnGoodSet.ckOn_zero _
   have hpRc : Continuous (fun ξ : Mt k r × Mt k r => pR ξ) := continuous_const.prodMk continuous_id
   have hAL := int_chart_loc (fun ξ => Formalism.FourierDecayAlt.JF.xiP Bs (pR ξ)) (fun ξ => Formalism.FourierDecayAlt.P.SmoothnessOnGoodSet.norm_xiP Bs _)
     ((Formalism.FourierDecayAlt.P.SmoothnessOnGoodSet.continuous_xiP Bs).comp hpRc).aestronglyMeasurable hfam m hh hx0 hδp hcl hM β hβI hbd
@@ -432,7 +432,7 @@ theorem kr_ck (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] Wp)}
     rw [kr_eq]
     refine integral_congr_ae ?_
     filter_upwards [ae_inR Bs] with ξ hξ
-    simp only [hfamdef, if_pos hξ, hxi]
+    simp only [hfamdef, ite_eq_left hξ, hxi]
   exact ck_at_of_chart hx0 hδp hAL'
 
 theorem kr_loc_cpt (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] Wp)} (hF : CkOn ⊤ (GV k r) F)
@@ -512,85 +512,7 @@ theorem rhoW_cont (D : RealPlaceData k r Wp Wq) {A c : ℝ} {m : ℕ} {F : Mat k
     (hA : 0 ≤ A) (u v : List (Mat k r)) (hu : ∀ X ∈ u, unitLie k r X) (hv : ∀ X ∈ v, unitLie k r X)
     (hl : u.length + v.length ≤ m) {g : Mat k r} (hgG : g ∈ GV k r) :
     ContinuousOn (fun p => rho D p (dLR (u.map (AdL p)) (v.map (AdR p)) F) g) {p : SS k r | D.inSS p} :=
-  open Formalism.FourierDecayAlt.P.JFxDs3 in by
-  have hc0 : 0 ≤ c := cc_nonneg hc
-  have hwu : ∀ x ∈ lr u v, unitLie k r x.2 := unit_lr' hu hv
-  have hwt : LRt ((lr u v).map Prod.fst) := lrt_lr u v
-  have hwl : (lr u v).length ≤ m := by rw [length_lr]; exact hl
-  have hx : ContinuousOn (fun p => sgs p g) {p : SS k r | D.inSS p} := B6.conjugated_pair_continuous_on D g
-  have hxG : ∀ p ∈ {p : SS k r | D.inSS p}, sgs p g ∈ GV k r := fun p hp => B7.sgs_mem D hp hgG
-  have hmain : ContinuousOn (fun p => W ((lr u v).map (adM p)) F (sgs p g)) {p : SS k r | D.inSS p} := by
-    intro p₀ hp₀
-    have hAL : AllLie ((lr u v).map (adM p₀)) := by
-      intro y hy
-      obtain ⟨y', hy', rfl⟩ := List.mem_map.mp hy
-      exact adM_lie hp₀ (hwu y' hy').1
-    have hck : CkOn ((0 : ℕ) : ℕ∞) (GV k r) (W ((lr u v).map (adM p₀)) F) :=
-      smooth_on_of_word_derivatives ((lr u v).map (adM p₀)) hAL 0 (ckOn_mono (by simpa using hwl) hc.1)
-    have hsec : ContinuousWithinAt (fun p => W ((lr u v).map (adM p₀)) F (sgs p g)) {p : SS k r | D.inSS p} p₀ :=
-      ((B6.continuousOn_of_contDiffOn_group hck).comp hx hxG) p₀ hp₀
-    let Kf : SS k r → ℝ := fun p => 1 + ((lr u v).map fun x => ‖(adM p x).2‖ + ‖(adM p₀ x).2‖).sum
-    let εf : SS k r → ℝ := fun p => ((lr u v).map fun x => ‖(adM p x).2 - (adM p₀ x).2‖).sum
-    have hKc : ContinuousOn Kf {p : SS k r | D.inSS p} :=
-      continuousOn_const.add (cont_sum _ (fun x p => ‖(adM p x).2‖ + ‖(adM p₀ x).2‖) (lr u v)
-        (fun x _ => (adM_cont D x).norm.add continuousOn_const))
-    have hεc : ContinuousOn εf {p : SS k r | D.inSS p} :=
-      cont_sum _ (fun x p => ‖(adM p x).2 - (adM p₀ x).2‖) (lr u v)
-        (fun x _ => ((adM_cont D x).sub continuousOn_const).norm)
-    have hε0 : εf p₀ = 0 := by simp [εf]
-    let Bf : SS k r → ℝ := fun p => ((lr u v).length : ℝ) * (Kf p ^ m * εf p * c)
-    have hBc : ContinuousWithinAt Bf {p : SS k r | D.inSS p} p₀ :=
-      continuousWithinAt_const.mul ((((hKc p₀ hp₀).pow m).mul (hεc p₀ hp₀)).mul continuousWithinAt_const)
-    have hB0 : Bf p₀ = 0 := by simp [Bf, hε0]
-    have hd : Tendsto (fun p => W ((lr u v).map (adM p)) F (sgs p g) - W ((lr u v).map (adM p₀)) F (sgs p g))
-        (𝓝[{p : SS k r | D.inSS p}] p₀) (𝓝 0) := by
-      have hBt : Tendsto Bf (𝓝[{p : SS k r | D.inSS p}] p₀) (𝓝 0) := by
-        have := hBc.tendsto; rwa [hB0] at this
-      refine squeeze_zero_norm' ?_ hBt
-      filter_upwards [self_mem_nhdsWithin] with p hp
-      have hxp := hxG p hp
-      have hK1 : 1 ≤ Kf p := le_add_of_nonneg_right (List.sum_nonneg (by
-        intro y hy
-        obtain ⟨y', _, rfl⟩ := List.mem_map.mp hy
-        positivity))
-      have hT := tele hc hc0 hK1 (adM p) (adM p₀) (lr u v) [] (by simp)
-        (by
-          intro x hx
-          have hmK := le_sum_map (fun x => ‖(adM p x).2‖ + ‖(adM p₀ x).2‖) (fun _ => by positivity) (lr u v) hx
-          have hmε := le_sum_map (fun x => ‖(adM p x).2 - (adM p₀ x).2‖) (fun _ => norm_nonneg _) (lr u v) hx
-          refine ⟨rfl, rfl, adM_lie hp (hwu x hx).1, adM_lie hp₀ (hwu x hx).1, ?_, ?_, hmε⟩
-          · have := norm_nonneg (adM p₀ x).2
-            show ‖(adM p x).2‖ ≤ Kf p
-            simp only [Kf]; linarith
-          · have := norm_nonneg (adM p x).2
-            show ‖(adM p₀ x).2‖ ≤ Kf p
-            simp only [Kf]; linarith)
-        (by simpa using hwt) (by simpa using hwl) _ hxp
-      simp only [List.nil_append] at hT
-      have h1 : 1 ≤ gN (sgs p g) ^ A := Real.one_le_rpow (BetaSesquilinearity.gN_ge_one hxp) hA
-      calc ‖W ((lr u v).map (adM p)) F (sgs p g) - W ((lr u v).map (adM p₀)) F (sgs p g)‖
-          ≤ gN (sgs p g) ^ A * ‖W ((lr u v).map (adM p)) F (sgs p g) - W ((lr u v).map (adM p₀)) F (sgs p g)‖ :=
-            le_mul_of_one_le_left (norm_nonneg _) h1
-        _ ≤ Bf p := hT
-    have hdc : ContinuousWithinAt
-        (fun p => W ((lr u v).map (adM p)) F (sgs p g) - W ((lr u v).map (adM p₀)) F (sgs p g))
-        {p : SS k r | D.inSS p} p₀ := by
-      have e0 : (fun p => W ((lr u v).map (adM p)) F (sgs p g) - W ((lr u v).map (adM p₀)) F (sgs p g)) p₀ = 0 :=
-        sub_self _
-      unfold ContinuousWithinAt
-      rw [e0]
-      exact hd
-    refine (hdc.add hsec).congr (fun p _ => ?_) ?_
-    · simp
-    · simp
-  show ContinuousOn (fun p => rho D p (dLR (u.map (AdL p)) (v.map (AdR p)) F) g) {p : SS k r | D.inSS p}
-  ·
-    have e : (fun p => rho D p (dLR (u.map (AdL p)) (v.map (AdR p)) F) g) =
-        fun p => B6.Sd D p (W ((lr u v).map (adM p)) F (sgs p g)) := by
-      funext p
-      rw [B6.rho_eq, dLR_eq, lr_ad]
-    rw [e]
-    exact (B6.Sd_continuousOn D).clm_apply hmain
+  Formalism.FourierDecayAlt.P.JFxDs3.continuousOn_rho_dLR D hc hA u v hu hv hl hgG
 
 theorem rw_rho_bound (D : RealPlaceData k r Wp Wq) {m : ℕ} {F : Mat k r → (Wq →L[ℂ] Wp)} {c : ℝ} (hc : CCle 0 m F c)
     {p : SS k r} (hp : D.inSS p) {B : ℝ} (hB : ∀ X, unitLie k r X → ‖AdR p X‖ ≤ B) (v : List (Mat k r))
@@ -811,19 +733,19 @@ theorem kr_words (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] W
     have hGck : ∀ ξ, CkOn ((1 : ℕ) : ℕ∞) (GV k r) (G ξ) := by
       intro ξ
       by_cases hξ : InR Bs ξ
-      · simp only [hGdef, if_pos hξ]
+      · simp only [hGdef, ite_eq_left hξ]
         have e : Rw v (rho Bs (pR ξ) F) = W (lr [] v) (rho Bs (pR ξ) F) := Formalism.FourierDecayAlt.P.B4.dLR_eq [] v _
         rw [e]
         refine smooth_on_of_word_derivatives _ (allLie_lr (by simp) hv') 1 (Formalism.FourierDecayAlt.P.B5.ckOn_mono le_top ?_)
         exact ckOn_rho Bs (inSS_pR Bs hξ) hF
-      · simp only [hGdef, if_neg hξ]; exact Formalism.FourierDecayAlt.P.SmoothnessOnGoodSet.ckOn_zero _
+      · simp only [hGdef, ite_eq_right hξ]; exact Formalism.FourierDecayAlt.P.SmoothnessOnGoodSet.ckOn_zero _
     have hopG : ∀ ξ q, InR Bs ξ → op false X (G ξ) q = Rw (X :: v) (rho Bs (pR ξ) F) q := by
       intro ξ q hξ
-      simp only [hGdef, if_pos hξ]
+      simp only [hGdef, ite_eq_left hξ]
       rfl
     have hopG0 : ∀ ξ q, ¬ InR Bs ξ → op false X (G ξ) q = 0 := by
       intro ξ q hξ
-      simp only [hGdef, if_neg hξ, op]
+      simp only [hGdef, ite_eq_right hξ, op]
       simp
 
     set K := (fun t : ℝ => cv false X t y) '' Metric.closedBall (0 : ℝ) 1 with hKdef
@@ -837,7 +759,7 @@ theorem kr_words (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] W
       (fun t ht => by
         refine (kr_meas Bs hc v hv' hl' (cv_mem (b := false) hX.1 hy t)).congr ?_
         filter_upwards [ae_inR Bs] with ξ hξ
-        simp only [hGdef, if_pos hξ])
+        simp only [hGdef, ite_eq_left hξ])
       (by
         refine (kr_meas Bs hc (X :: v) hv hl hy).congr ?_
         filter_upwards [ae_inR Bs] with ξ hξ
@@ -845,11 +767,11 @@ theorem kr_words (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] W
       β hβI
       (fun ξ => by
         by_cases hξ : InR Bs ξ
-        · simp only [hGdef, if_pos hξ]
+        · simp only [hGdef, ite_eq_left hξ]
           have hyK : y ∈ K := by
             have := hmemK 0 (Metric.mem_ball_self one_pos); rwa [cv_zero] at this
           exact hβ v hv' hl' y hyK ξ hξ
-        · simp only [hGdef, if_neg hξ, norm_zero]; exact hβ0 ξ)
+        · simp only [hGdef, ite_eq_right hξ, norm_zero]; exact hβ0 ξ)
       (fun t ht ξ => by
         by_cases hξ : InR Bs ξ
         · rw [hopG ξ _ hξ]; exact hβ (X :: v) hv hl _ (hmemK t ht) ξ hξ
@@ -859,7 +781,7 @@ theorem kr_words (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] W
         rw [(ih hv' hl' _ (cv_mem (b := false) hX.1 hy t)).2]
         refine integral_congr_ae ?_
         filter_upwards [ae_inR Bs] with ξ hξ
-        simp only [hGdef, if_pos hξ])
+        simp only [hGdef, ite_eq_left hξ])
     show op false X (Rw v (Kr Bs F)) y = _
     rw [key]
     refine integral_congr_ae ?_

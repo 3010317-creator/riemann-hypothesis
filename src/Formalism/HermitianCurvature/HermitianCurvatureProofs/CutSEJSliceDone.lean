@@ -35,8 +35,6 @@ namespace Formalism.FourierDecayAlt.P.CutSE
 open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.Q Formalism.FourierDecayAlt.Wd Formalism.FourierDecayAlt.P5 Formalism.FourierDecayAlt.P5.HerA Formalism.FourierDecayAlt.P5.HerB Formalism.FourierDecayAlt.P5.HerC
   Formalism.FourierDecayAlt.P5.HerD
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 section MeasJ
 
 variable {k r : ℕ} {z z' : Fin (2 * r + k + 1) → ℂ} {Wp Wq : Type} [NormedAddCommGroup Wp]
@@ -51,12 +49,12 @@ theorem glueMapS_continuous (l : Fin r) (c : Fin r → ℂ) : Continuous (glueMa
   refine Continuous.prodMk ?_ ?_
   · refine continuous_pi fun m => ?_
     by_cases h : (l.succ : Fin (r + 1)).val ≤ m.val
-    · simp only [glue, h, dif_pos]
+    · simp only [glue, h, dite_eq_left]
       exact (continuous_apply _).comp (continuous_snd.comp continuous_fst)
-    · simp only [glue, h, dif_neg, not_false_eq_true, Function.update_apply]
+    · simp only [glue, h, dite_eq_right, not_false_eq_true, Function.update_apply]
       by_cases hm : m = l
-      · simp only [hm, if_true] <;> fun_prop
-      · simp only [hm, if_false] <;> fun_prop
+      · simp only [hm, ite_true] <;> fun_prop
+      · simp only [hm, ite_false] <;> fun_prop
   · exact continuous_matrix fun i j => by simp only [Matrix.of_apply]; fun_prop
 
 theorem measurableSet_glueMapS_DomR (l : Fin r) (c : Fin r → ℂ) :
@@ -312,25 +310,25 @@ theorem nfp_der (b : Bool) (js : List (Fin 6)) (h : NFP X l s Wv js) :
     intro i
     rw [wOp_cons, op_pt]
     cases b
-    · simp only [Bool.false_eq_true, if_false]
+    · simp only [Bool.false_eq_true, ite_false]
       show Formalism.QuantumDeterminants.pbOp l _ p = _
-      unfold Formalism.QuantumDeterminants.pbOp; rw [if_pos hp]
-    · simp only [if_true]
+      unfold Formalism.QuantumDeterminants.pbOp; rw [ite_eq_left hp]
+    · simp only [ite_true]
       show Formalism.QuantumDeterminants.pOp l _ p = _
-      unfold Formalism.QuantumDeterminants.pOp; rw [if_pos hp]
+      unfold Formalism.QuantumDeterminants.pOp; rw [ite_eq_left hp]
   simp only [hR]
   cases b
-  · simp only [Bool.false_eq_true, if_false, mL]
+  · simp only [Bool.false_eq_true, ite_false, mL]
     show Formalism.QuantumDeterminants.pbOp l _ p = _
     unfold Formalism.QuantumDeterminants.pbOp
-    rw [if_pos hp, hW2, Finset.smul_sum, ← Finset.sum_add_distrib]
+    rw [ite_eq_left hp, hW2, Finset.smul_sum, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun i _ => ?_
     simp only [v]
     module
-  · simp only [if_true, mL]
+  · simp only [ite_true, mL]
     show Formalism.QuantumDeterminants.pOp l _ p = _
     unfold Formalism.QuantumDeterminants.pOp
-    rw [if_pos hp, hW1, Finset.smul_sum, ← Finset.sum_add_distrib]
+    rw [ite_eq_left hp, hW1, Finset.smul_sum, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun i _ => ?_
     simp only [v]
     module
@@ -848,27 +846,7 @@ private theorem opL_eq_zero_of_eventuallyEq_zero {m : ℕ} {E : Type*} [NormedAd
 
 theorem jsl_wOp_lc (X : ActualOps k r z z' π π') (l : Fin r) (js : List (Fin 6)) :
     ∀ Φ ∈ lcSub k r z z' π π', wOp X l js Φ ∈ lcSub k r z z' π π' := by
-  have hmem : ∀ Ψ : RadSp k r z z' π π', Ψ ∈ lcSub k r z z' π π' ↔ ∀ c ∈ OmX r, LCptAt Ψ c :=
-    fun Ψ => Iff.rfl
-  have hop : ∀ j, ∀ Ψ ∈ lcSub k r z z' π π', X.op l j Ψ ∈ lcSub k r z z' π π' := by
-    intro j Ψ hΨ
-    rw [hmem] at hΨ ⊢
-    intro c hc
-    obtain ⟨U', hU', hcU, K, hK, hKG, h0⟩ := hΨ c hc
-    refine ⟨U', hU', hcU, K, hK, hKG, fun c' hc' g hg hgK => ?_⟩
-    rw [X.op_apply]
-    show opL l j (fun c'' => (Ψ : Fn k r (Wq →L[ℂ] Wp)) c'' g) c' = 0
-    apply opL_eq_zero_of_eventuallyEq_zero
-    filter_upwards [hU'.mem_nhds hc'] with c'' hc''
-    exact h0 c'' hc'' g hg hgK
-  induction js with
-  | nil =>
-    intro Φ hΦ
-    simpa [wOp] using hΦ
-  | cons j js ih =>
-    intro Φ hΦ
-    show X.op l j (wOp X l js Φ) ∈ lcSub k r z z' π π'
-    exact hop j _ (ih Φ hΦ)
+  apply _root_.Formalism.FourierDecayAlt.P.CutSE.wOp_lcJ <;> assumption
 
 theorem jsl_hsInner_self_norm (C : Wq →L[ℂ] Wp) : ‖B.hsInner C C‖ = ‖B.hsVec C‖ ^ 2 := by
   rw [B.hsInner, inner_self_eq_norm_sq_to_K]

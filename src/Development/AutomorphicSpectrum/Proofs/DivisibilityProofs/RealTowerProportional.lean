@@ -32,7 +32,7 @@ theorem map_monomial_eq_zero {J : Type} [Fintype J] [DecidableEq J] (d : ℕ) (�
       (∀ m : J →₀ ℕ, m.degree = d → AddMonoidAlgebra.coeff Pl m =
         (-1) ^ d * (m.multinomial : ℝ) * Φ (monomial m 1)) ∧
       (∀ m : J →₀ ℕ, m.degree = d → |Φ (monomial m 1)| ≤ |Pl.coeff m|) :=
-    _root_.GlobalTheory.CompanionTheory.Ar.Top.polarisation_functional J d Φ
+    _root_.RootFieldNumerics.polarization_coefficients_bound J d Φ
   have hP : Pl = 0 := MvPolynomial.funext fun c => by rw [hev c, h c, map_zero]
   have h0 := hco m hm
   simp only [hP, AddMonoidAlgebra.coeff_zero] at h0
@@ -122,7 +122,7 @@ theorem geoFun_monomial {Ψ : Type} [Fintype Ψ] {N : ℕ} (M : RootModel Ψ N) 
 
 theorem geoFun_monomial_of_ne {Ψ : Type} [Fintype Ψ] {N : ℕ} (M : RootModel Ψ N) (m : Option (Ψ × Fin N) →₀ ℕ)
     (h : m.degree ≠ dimFl Ψ N) : M.geoFun (monomial m 1) = 0 := by
-  rw [geoFun_monomial, RootModel.geoMono, if_neg h]
+  rw [geoFun_monomial, RootModel.geoMono, ite_eq_right h]
 
 theorem neg_sum_eq_linA {Ψ : Type} [Fintype Ψ] {N : ℕ} (a : Option (Ψ × Fin N) → ℝ) :
     (-∑ x, C (a x) * X x : RPA Ψ N) = linA (fun τ i => a (some (τ, i))) (-a none) := by

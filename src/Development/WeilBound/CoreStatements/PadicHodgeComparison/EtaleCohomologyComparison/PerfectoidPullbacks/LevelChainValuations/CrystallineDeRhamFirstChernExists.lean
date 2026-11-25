@@ -158,7 +158,7 @@ theorem kap_abs (hR : R.Facts) (hi : ∀ c, R.i c ∈ R.P) (hS : S.Good) (P : Rh
   have hκ : ∀ {M : Model l K} (a : D.Ch M) (hM : G M) (j : ℕ) x φ,
       κ a j x φ = ((kP a hM j x φ : R.P) : R.B) := by
     intro M a hM j x φ
-    rw [show κ a j = (AddMonoidHom.compHom R.P.subtype.toAddMonoidHom).comp (kP a hM j) from dif_pos hM]
+    rw [show κ a j = (AddMonoidHom.compHom R.P.subtype.toAddMonoidHom).comp (kP a hM j) from dite_eq_left hM]
     rfl
   have hB : ∀ u v : R.P, (∀ m, (S.L m).toB u = (S.L m).toB v) → (u : R.B) = v :=
     fun u v h => congrArg Subtype.val (ext_P hS h)
@@ -555,7 +555,7 @@ theorem galRed_rHof (hL : L.Good) (g : K.fixingSubgroup) (M : Model l K) (s : �
   exact (red_nm (d n) (d n) s (nmGA hL g M) _ _ _ _ _ (hc n) (hc n) _ _ (fun _ _ => (Category.comp_id _).symm)
     (by
       intro y
-      obtain ⟨c, rfl⟩ := ((RL.base_acr (PAlg.base l) PAlg.isBase_base).2 n).1 y
+      obtain ⟨c, rfl⟩ := ((_root_.GlobalTheory.CompanionTheory.BaseAcris.main (PAlg.base l) PAlg.isBase_base).2 n).1 y
       rw [PAlg.galBase_cris, hc, hc]
       exact (congrArg (Ideal.Quotient.mk _) (hL.σ_lam g c)).symm) none j x).symm
 
@@ -1113,7 +1113,7 @@ variable {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l] (PadicAlgCl l)}
 
 theorem cov_sm_pf (M : Model l K) (hM : M.Sm) : Nonempty (Cov M.q) := by
   have := sm_proper_q hM
-  exact (cov_ex M.q).1 (sm_smooth_q hM)
+  exact (_root_.GlobalTheory.CompanionTheory.CovEx.exists_cov M.q).1 (sm_smooth_q hM)
 
 end CrystallineSemistableComparison.Pb.Kap
 end -- clump:auto
@@ -1461,7 +1461,7 @@ theorem nmHM_nmLevA_rHof_succ (M : Model l K) (m s n j : ℕ) (x : M.Hc false n 
       rHof (dOf S hS hC m) (hcOf S hS hC m) M s n j x := by
   have hρ : ∀ y, (dOf S hS hC m n).ρ (RingHom.id _ y) = lnMap (S.dA m) l le_rfl ((dOf S hS hC (m + 1) n).ρ y) := by
     intro y
-    obtain ⟨c, rfl⟩ := ((RL.base_acr (PAlg.base l) PAlg.isBase_base).2 n).1 y
+    obtain ⟨c, rfl⟩ := ((_root_.GlobalTheory.CompanionTheory.BaseAcris.main (PAlg.base l) PAlg.isBase_base).2 n).1 y
     rw [RingHom.id_apply, hcOf, hcOf]
     exact congrArg (Ideal.Quotient.mk _) (hS.dlam m c).symm
   have e := red_nm (dOf S hS hC (m + 1) n) (dOf S hS hC m n) s (nmLevA S hS m M) (LevelIdentityMorphisms.idMor M n)

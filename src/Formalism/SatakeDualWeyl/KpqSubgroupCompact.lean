@@ -40,62 +40,7 @@ public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.SplitUnitaryGroupIso
 public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Stdform
 public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Wlocal
 public import Mathlib.RingTheory.Flat.Basic
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Coalgebra.IsFrobenius
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.Algebra.AffineMonoid.Basic
-import Mathlib.Algebra.Order.Archimedean.Real.Hom
-import Mathlib.Algebra.Order.Star.Rat
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.Style
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Stabstd
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Adelstab
@@ -543,7 +488,7 @@ theorem trace_form_positive : Formalism.UG.CS.TracePos := by
         mul_self_pos.mpr ((map_ne_zero_iff _ ι.injective).mpr hqF)
       rw [hc, map_mul, map_mul, map_mul]
       nlinarith [mul_pos hs hq2]
-  · push_neg at hx
+  · push Not at hx
     refine ⟨1, one_ne_zero, fun x hx' => absurd (hx x) hx'⟩
 
 end Formalism.UG.P
@@ -629,7 +574,7 @@ theorem finsum_mul_eq_sum_over_classes {X Y : Type} (S : Finset X) (g φv : X �
     obtain ⟨x, hxS, hx⟩ := Finset.exists_ne_zero_of_sum_ne_zero hne
     refine Set.mem_biUnion (Finset.mem_coe.mpr hxS) ?_
     by_contra hP
-    exact hx (if_neg hP)
+    exact hx (ite_eq_right hP)
   rw [finsum_eq_sum_of_support_subset _ hsl]
   simp only [hin]
   rw [hout, Finset.sum_mul]
@@ -641,19 +586,19 @@ theorem finsum_mul_eq_sum_over_classes {X Y : Type} (S : Finset X) (g φv : X �
     have hy0T : y0 ∈ hTfin.toFinset := by
       rw [Set.Finite.mem_toFinset]
       exact Set.mem_biUnion (Finset.mem_coe.mpr hxS) hy0
-    rw [Finset.sum_eq_single y0, if_pos hy0, hφ x y0 hy0]
+    rw [Finset.sum_eq_single y0, ite_eq_left hy0, hφ x y0 hy0]
     · ring
     · intro y _ hy
-      rw [if_neg (fun h => hy (huniq x y y0 h hy0))]
+      rw [ite_eq_right (fun h => hy (huniq x y y0 h hy0))]
       ring
     · intro h
       exact absurd hy0T h
-  · push_neg at hex
+  · push Not at hex
     rw [hnone x hex, mul_zero]
     symm
     apply Finset.sum_eq_zero
     intro y _
-    rw [if_neg (hex y)]
+    rw [ite_eq_right (hex y)]
     ring
 
 variable {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] {σ : L →+* L} {n : ℕ}

@@ -164,15 +164,6 @@ namespace Formalism.FourierDecayAlt.P.CutSE
 open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.Q Formalism.FourierDecayAlt.Wd Formalism.FourierDecayAlt.P5
 open scoped ComplexConjugate
 
-section PairSub
-
-variable {V : Type*} [AddCommGroup V] [Module ℂ V]
-
-theorem rdw_sub_fst (a b : Pr V) : (a - b).1 = a.1 - b.1 := rfl
-theorem rdw_sub_snd (a b : Pr V) : (a - b).2.unop = a.2.unop - b.2.unop := rfl
-
-end PairSub
-
 theorem radial_wave_radial : RDWaveRad := by
   intro Wp Wq _ _ _ _ _ _ P z z' π π' X μ L st l0 hr s hD Wv Wv' hW hW'
   obtain ⟨-, -, hL, hQ, -⟩ := hD

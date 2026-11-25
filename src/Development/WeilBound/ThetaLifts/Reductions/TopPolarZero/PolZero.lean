@@ -46,57 +46,15 @@ public import Development.WeilBound.ThetaLifts.LatticeBasics.LocDist
 public import Development.WeilBound.ThetaLifts.LatticeBasics.RatEquiv
 public import Development.WeilBound.ThetaLifts.LatticeBasics.SiegelWeilAnisoOf
 import Development.WeilBound.ThetaLifts.LatticeBasics.FarRight
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.RingTheory.Finiteness.Lattice
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.WeilBound.CoreStatements.CompactAveragingSplitting.EigenvectorLifting.Kcompact
 import Formalism.LocalToGlobal.IndefiniteReal.PHeisFCA
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.T2SpaceTensorProductFiniteExtension
-import Mathlib.RingTheory.PiTensorProduct
 import Development.WeilBound.CoreStatements.CompactAveragingSplitting.EigenvectorLifting.FinSplit
 import Mathlib.Tactic.Linter.Style
 import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PureEqPureA
 import Development.WeilBound.ThetaLifts.ConeHypotheses.PureEqPureA
-import Mathlib.Algebra.Module.StablyFree.Basic
 import Aesop.Main
 import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.IndicatorMem
 import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.PfActs
@@ -164,7 +122,7 @@ theorem coefLine_of (hS : SWFull) (hX : BoxSec) (hW : DblW) (hH : HgtEx) (hT : H
     refine Eq.trans ?_ (congrArg _ this)
     rw [← integral_const_mul]
     refine integral_congr_ae (.of_forall fun y => ?_)
-    simp only [hv, if_neg (show ¬ a + a' < a' by omega), setAverage_eq, Complex.real_smul,
+    simp only [hv, ite_eq_right (show ¬ a + a' < a' by omega), setAverage_eq, Complex.real_smul,
       ← fun g => (((d2 Ψ s3 Ψ s3).2 g y.1 y.2 _ (he _ _)).1), integral_const_mul]
     ring
   rw [val _ (rp s t), val _ (rp 0 1), mul_left_comm lam] at key
@@ -805,8 +763,6 @@ open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.Inde
 
 open scoped Classical
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
 theorem exists_ext {ι : Type} (M : ι → Type) [∀ v, AddCommGroup (M v)] [∀ v, Module ℂ (M v)] {S T : Finset ι} (h : S ⊆ T)
     (z : ∀ v, M v) : ∃ e : (PiTensorProduct ℂ fun v : S => M v) →ₗ[ℂ] PiTensorProduct ℂ fun v : T => M v,
       ∀ u : ∀ v, M v, (∀ v ∉ S, u v = z v) → e (PiTensorProduct.tprod ℂ fun v : S => u v) = PiTensorProduct.tprod ℂ fun v : T => u v := by
@@ -818,9 +774,9 @@ theorem exists_ext {ι : Type} (M : ι → Type) [∀ v, AddCommGroup (M v)] [�
       simp [c]
     · rw [Function.update_of_ne hvi]
       by_cases hv : (v : ι) ∈ S
-      · simp only [c, dif_pos hv]
+      · simp only [c, dite_eq_left hv]
         exact Function.update_of_ne (fun e => hvi (Subtype.ext (by rw [← e]))) _ _
-      · simp only [c, dif_neg hv]
+      · simp only [c, dite_eq_right hv]
   refine ⟨PiTensorProduct.lift
     { toFun := fun x => PiTensorProduct.tprod ℂ (c x)
       map_update_add' := fun x i y y' => by simp only [key]; exact (PiTensorProduct.tprod ℂ).map_update_add _ _ _ _
@@ -828,8 +784,8 @@ theorem exists_ext {ι : Type} (M : ι → Type) [∀ v, AddCommGroup (M v)] [�
   rw [PiTensorProduct.lift.tprod]
   refine congrArg (PiTensorProduct.tprod ℂ) (funext fun v => ?_)
   by_cases hv : (v : ι) ∈ S
-  · simp only [c, dif_pos hv]
-  · simp only [c, dif_neg hv, hu v hv]
+  · simp only [c, dite_eq_left hv]
+  · simp only [c, dite_eq_right hv, hu v hv]
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} {n d a a' : ℕ}
   {B : Base F E} {G : Geo σ a a'} {X : Chars F E} {om : Rep σ G.V G.W} {om' : Rep σ G.V' G.W}

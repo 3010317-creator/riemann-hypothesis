@@ -34,9 +34,9 @@ theorem ne_sum_le (s : Fin (G.P.n' v)) (r : ℕ) (hm : 2 ≤ G.P.m) (hb : s ∈ 
     intro a _
     have := ne_lamI_le Fl v s a hm hb
     by_cases hc : s ∈ Fl.TT v ∧ a = 1
-    · rw [if_pos hc] at this ⊢
+    · rw [ite_eq_left hc] at this ⊢
       exact_mod_cast this
-    · rw [if_neg hc] at this ⊢
+    · rw [ite_eq_right hc] at this ⊢
       exact_mod_cast this
   rw [Finset.sum_add_distrib, Finset.sum_const, nsmul_eq_mul] at h1
   have h2 : ((Icc (G.P.m + 2 - r) (G.P.m + 1)).card : ℝ) ≤ r := by
@@ -129,16 +129,11 @@ theorem ne_b_top (hS : Formalism.MainNotions.SizesAt L) (s : Fin ((D.gat u w hg)
 
 end Orbit
 
-def priceThreshold : ℝ := 9
-
-theorem price_threshold_ge_nine : 9 ≤ priceThreshold := by norm_num [priceThreshold]
-
-
 open Classical in
 theorem price_bound_small_primes : PriceBoundSmallPrimes := by
   intro D L X Y K hK hS hT hL u w hg hp t0 ht0 j hj
   obtain ⟨hrk, hx2⟩ := hK
-  have hr : (D.gat u w hg).P.r = Formalism.MainNotions.G.rG L.sc := by rw [(hL u w hg).2.2.2.1, if_pos hp]
+  have hr : (D.gat u w hg).P.r = Formalism.MainNotions.G.rG L.sc := by rw [(hL u w hg).2.2.2.1, ite_eq_left hp]
   have ht : (Y.Fl u w hg).t = D.R.t := (hL u w hg).2.1
   have hc : ((Y.Fl u w hg).c : ℝ) ≤ Formalism.MainNotions.G.cG L := (hL u w hg).2.2.1
   have hinj := nc_iota_inj X Y hT hL u w hg t0 ht0
@@ -161,24 +156,24 @@ theorem price_bound_small_primes : PriceBoundSmallPrimes := by
         have h0 := (ne_b_top X Y hT hL u w hg t0 ht0 hS s hs).1
         have : (0 : ℝ) ≤ ((Y.Fl u w hg).b (Y.vOf u w hg t0) s : ℝ) := by linarith
         exact_mod_cast this)
-      rw [if_neg (fun h => hno h.2)] at hsum
+      rw [ite_eq_right (fun h => hno h.2)] at hsum
       have h7 := mul_le_mul_of_nonneg_left hc hr0
       have h11 := mul_nonneg hr0 hw
       by_cases hs : s ∈ (Y.Fl u w hg).TT (Y.vOf u w hg t0)
-      · rw [if_pos hs]
+      · rw [ite_eq_left hs]
         have hwt := ne_w_top X Y hT hL u w hg t0 ht0 j hj s hs
         have hb := (ne_b_top X Y hT hL u w hg t0 ht0 hS s hs).2
         have hx : L.sc.b' / L.sc.x ≤ L.sc.b' / 2 := div_le_div_of_nonneg_left hb'.le (by norm_num) hx2
         have h5 := mul_le_mul_of_nonneg_left
           (show ((Y.Fl u w hg).w (Y.vOf u w hg t0) j s : ℝ) ≤ 2 * L.sc.b' + L.etaSz by linarith) hr0
         nlinarith [h5, h7, hsum, h11]
-      · rw [if_neg hs]
+      · rw [ite_eq_right hs]
         have hwn := ne_w_non X Y hT hL u w hg t0 ht0 j hj s hs
         have h5 := mul_le_mul_of_nonneg_left hwn hr0
         nlinarith [h5, h7, hsum])
   refine le_trans h1 ?_
   unfold Formalism.MainNotions.G.Pr Formalism.MainNotions.G.Nv
-  rw [if_neg (not_le.2 hp), nc_topsOn X Y hT hL u w hg t0 ht0, Finset.card_image_of_injective _ hinj,
+  rw [ite_eq_right (not_le.2 hp), nc_topsOn X Y hT hL u w hg t0 ht0, Finset.card_image_of_injective _ hinj,
     ne_nP X Y hT hL u w hg t0 ht0, ht]
   have hN := ne_Nm (D := D) j hj
   have hfin := price_linear_combination_le ((D.gat u w hg).P.n' (Y.vOf u w hg t0) : ℝ) (((Y.Fl u w hg).TT (Y.vOf u w hg t0)).card : ℝ)
@@ -188,15 +183,6 @@ theorem price_bound_small_primes : PriceBoundSmallPrimes := by
       ((D.gat u w hg).P.n' (Y.vOf u w hg t0) : ℝ) * (Formalism.MainNotions.G.rG L.sc : ℝ) * ((j : ℝ) * ((D.R.t : ℝ) + 1) / 2) := by ring
   rw [e]
   exact hfin
-
-theorem priceBoundLargePrimes_priceThreshold : PriceBoundLargePrimes priceThreshold :=
-  fun D L X Y K hK => price_bound_large_primes D L X Y K (by linarith [price_threshold_ge_nine])
-
-theorem ne_priceThreshold : PriceBound priceThreshold :=
-  priceBound_of_largePrimes_of_smallPrimes priceThreshold priceBoundLargePrimes_priceThreshold price_bound_small_primes
-
-theorem numericalComparisonUniform_of_size (hS : nd_NeedSize) : Formalism.MainNotions.FormalGroupSystem.NumericalComparisonUniform :=
-  numerical_closed_of_threshold priceThreshold price_threshold_ge_nine (nc_need3_of priceThreshold hS ne_priceThreshold)
 
 end Formalism.MainNotions.FormalGroupSystem.Pf
 end -- clump:auto

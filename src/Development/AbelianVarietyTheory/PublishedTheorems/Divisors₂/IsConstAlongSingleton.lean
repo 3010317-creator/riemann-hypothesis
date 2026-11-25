@@ -112,7 +112,6 @@ structure IsAutOn (K : Subgroup (GAd σ J)) (φ : GAd σ J → ℂ) : Prop where
   growth : ∃ N : ℕ, ∀ l : List (ℝ → GAd σ J), (∀ γ ∈ l, IsRealLine σ J γ) →
     ∃ C : ℝ, ∀ g, ‖l.foldr lineDer φ g‖ ≤ C * (height σ J g : ℝ) ^ N
   kfin : FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k : K => fun g => φ (g * k)))
-  zfin : FiniteDimensional ℂ (Submodule.span ℂ {f | ∃ z, IsCentral σ J z ∧ f = dop z φ})
 
 def IsConstAlong (φ c : GAd σ J → ℂ) : Prop :=
   ∀ (μ : Measure (unip σ J X S)) (𝓕 : Set (unip σ J X S)), μ.IsHaarMeasure →
@@ -279,7 +278,7 @@ theorem isClosed_colSpan {L : Matrix (Fin r) (Fin n) E} (hL : L * X = 1) (I : Se
       rw [op_smul_eq_smul]
       by_cases hi : i ∈ I
       · exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, hi, rfl⟩)
-      · rw [← mulVec_mulVec, mulVec_diagonal, if_neg hi, zero_mul, zero_smul]
+      · rw [← mulVec_mulVec, mulVec_diagonal, ite_eq_right hi, zero_mul, zero_smul]
         exact zero_mem _
   exact this ▸ isClosed_eq (continuous_const.matrix_mulVec continuous_id) continuous_id
 

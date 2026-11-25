@@ -96,7 +96,7 @@ theorem lin_subst {R : Type} [CommRing R] {d e : ℕ} (a : Fin e → MvPowerSeri
   rw [subst_sub ha', map_sub, sub_eq_zero] at key
   unfold lin pullLin
 
-  rw [key, hf1, subst_add ha', subst_C, map_add (f := _), coeff_C, if_neg (Finsupp.single_ne_zero.2 one_ne_zero),
+  rw [key, hf1, subst_add ha', subst_C, map_add (f := _), coeff_C, ite_eq_right (Finsupp.single_ne_zero.2 one_ne_zero),
   zero_add, ← coe_substAlgHom ha', map_sum, map_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [map_mul, coe_substAlgHom ha', subst_C, subst_X ha', coeff_C_mul]
@@ -180,7 +180,7 @@ theorem quasiLog_pull : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP
     have h2 := hIU.1 _ _ hc
     have := ((RR _).2.2.2.1 _ _ _ _ h1 h2).1
     rwa [zero_add] at this
-  refine ⟨⟨GlobalTheory.T.subst_mem_integralDifferentialSubmodule p k (Fin e) (Fin d) _ f hΦ0
+  refine ⟨⟨_root_.GlobalTheory.Katz.subst_mem_quasiInt p k (Fin e) (Fin d) _ f hΦ0
       (fun j => ((RR _).1 _).2 ⟨φ j, hRedΦ j⟩) hf1, ?_⟩, part2, ?_⟩
   · obtain ⟨c, hc⟩ := ((RR _).1 _).1 hf2
     exact ((RR _).1 _).2 ⟨_, part2 c hc⟩

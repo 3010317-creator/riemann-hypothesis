@@ -64,10 +64,6 @@ open UpperTheory.V.Hi UpperTheory.V.Hi.CaseU
 open UpperTheory.V.Z.J.D
 open scoped Matrix TensorProduct
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-
-
 section Abstract
 
 variable {M : Type} [AddCommGroup M] [Module ℂ M] {J : Type} [Fintype J]
@@ -89,7 +85,7 @@ private theorem zd_dec (D : J → Submodule ℂ M) {F : M} (h : F ∈ ⨆ i, D i
   classical
   induction h using Submodule.iSup_induction' with
   | mem i y hy =>
-    refine ⟨Pi.single i y, fun j => ?_, by rw [Finset.sum_pi_single', if_pos (Finset.mem_univ i)]⟩
+    refine ⟨Pi.single i y, fun j => ?_, by rw [Finset.sum_pi_single', ite_eq_left (Finset.mem_univ i)]⟩
     by_cases hj : j = i
     · subst hj
       rw [Pi.single_eq_same]; exact hy
@@ -416,10 +412,6 @@ open UpperTheory.V.Hi UpperTheory.V.Hi.CaseU
 open UpperTheory.V.Z.J.D
 open UpperTheory.V.Z.Desc.V0
 open scoped Matrix TensorProduct
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-
 
 section Abstract
 

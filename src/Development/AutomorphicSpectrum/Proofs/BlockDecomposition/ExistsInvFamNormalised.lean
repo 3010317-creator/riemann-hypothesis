@@ -288,8 +288,6 @@ namespace GlobalTheory.CompanionTheory.KummerCup
 
 open CategoryTheory GroundTheory.ProfCoh IntermediateField
 
-attribute [local instance 2000] Rep.hV2
-
 theorem isLocallyConstant_of_right_invariant {G X : Type*} [Group G] [TopologicalSpace G]
     [IsTopologicalGroup G] (H : Subgroup G) (hH : IsOpen (H : Set G)) (φ : G → X)
     (h : ∀ g, ∀ v ∈ H, φ (g * v) = φ g) : IsLocallyConstant φ := by
@@ -316,18 +314,8 @@ theorem exists_cocycle_of_cochain (n : ℕ) (c : (Fin n → G) → A) (hc : IsLo
 
 theorem cohomologyπ_succ_eq_zero_iff (n : ℕ) (x : cocycles A (n + 1)) :
     cohomologyπ A (n + 1) x = 0 ↔ ∃ w : (Fin n → G) → A, IsLocallyConstant w ∧
-      (inhomogeneousCochains.d A n).hom w = cochainOf A (cocycleι A (n + 1) x) := by
-  change ((cochainsComplex A).homologyπ (n + 1)).hom x = 0 ↔ _
-  rw [homologyπ_eq_zero_iff, CochainComplex.prev_nat_succ]
-  constructor
-  · rintro ⟨w, hw⟩
-    refine ⟨cochainOf A w, isLocallyConstant_cochainOf w, ?_⟩
-    rw [← cochainOf_d]
-    exact congrArg (cochainOf A) hw
-  · rintro ⟨w, hw, h⟩
-    refine ⟨mkCochain A w hw, ?_⟩
-    apply cochainOf_injective (A := A)
-    exact (cochainOf_d (A := A) _).trans h
+      (inhomogeneousCochains.d A n).hom w = cochainOf A (cocycleι A (n + 1) x) :=
+  by apply _root_.CompanionTheory.LocalTateOrthogonality.Gcoh.pi_succ_eq_zero_iff
 
 end Coh
 
@@ -452,7 +440,7 @@ theorem exists_cochain_of_lift [IsGalois K Ω] [IsSepClosed Ω] (N : ℕ) [NeZer
   have hF : ∀ g, ζ ^ (F (d g)).val = (d g : Ω) := by
     intro g
     have hs' := Classical.choose_spec (hex g)
-    simp only [F, dif_pos (hex g)]
+    simp only [F, dite_eq_left (hex g)]
     rw [ZMod.val_cast_of_lt hs'.1]
     exact hs'.2
   refine ⟨fun g => F (d g), hdlc.comp F, fun g h => ?_⟩
@@ -962,8 +950,6 @@ noncomputable section
 
 namespace GlobalTheory.CompanionTheory.KummerCupInv
 
-attribute [local instance 2000] Rep.hV2
-
 theorem pow_identity {F : Type} [Field F] {n m p q r s : ℕ} {ζ y : F} (hy : y ≠ 0) (hζ : ζ ^ n = 1)
     (h : s + q = n * m + r) :
     (ζ ^ p * y) ^ q / y ^ r * y ^ s = ζ ^ ((p * q) % n) * (y ^ n) ^ m := by
@@ -1212,8 +1198,6 @@ noncomputable def muEquiv {Ω : Type} [Field Ω] {n : ℕ} [NeZero n] (ζ : Ωˣ
 theorem muEquiv_apply {Ω : Type} [Field Ω] {n : ℕ} [NeZero n] (ζ : Ωˣ) (hζ : IsPrimitiveRoot ζ n) (m : ZMod n) :
     (((Additive.toMul (muEquiv ζ hζ m) : rootsOfUnity n Ω) : Ωˣ)) = ζ ^ m.val := by
   simp [muEquiv]
-
-attribute [local instance 2000] Rep.hV2
 
 theorem cochainOf_cyclesMap {k G : Type} [CommRing k] [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     {A B : Rep.{0} k G} [IsDiscreteRep A] [IsDiscreteRep B] (φ : A ⟶ B) (x : cocycles A 2) (s : Fin 2 → G) :
@@ -1479,7 +1463,7 @@ theorem exists_invFam_normalised : ∀ (F Ω : Type) [Field F] [NumberField F] [
   have h : ∃ v : HeightOneSpectrum (𝓞 F), IsPlaceOver A v := ⟨v, hv⟩
   have e : h.choose = v := eq_of_isPlaceOver h.choose_spec hv
   have spec := Classical.choose_spec (key A h.choose h.choose_spec)
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   generalize Classical.choose (key A h.choose h.choose_spec) = f at spec ⊢
   rw [e] at spec
   exact spec

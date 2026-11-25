@@ -98,7 +98,7 @@ theorem thr_lift (hCc : 28 * Real.exp 1 ≤ Cc) (hB : KB.IsLeadingFormSetting Cb
   rw [hdec] at h
   refine ⟨lamLift_nonneg hB b s v, ?_⟩
   show lamLift S b s v ≤ (if b + s ≤ S.G.r + 1 then _ else _)
-  rw [if_pos hbs]
+  rw [ite_eq_left hbs]
   unfold lamLift
   exact h
 
@@ -463,7 +463,7 @@ theorem supA_pos (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) (v : Fin S.f
   refine lt_of_lt_of_le hcore (PBL.core_le_supA hB v one y ?_)
   cases one
   · simpa using hyI
-  · simp only [if_true]
+  · simp only [ite_true]
     rw [← PBL.ntop_eq_N']
     exact hy1
 
@@ -797,11 +797,7 @@ theorem glob_pos (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) : 0 < S.G.g 
   unfold Sz.Glob.ka; rw [S.hv]; have := PBD.rd_pos' E; positivity
 
 theorem lenI_pos (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) (v : Fin S.f) : 0 < S.G.lenI := by
-  have hGo := hB.2.2.2.2.2.2.2.2.2.2.1
-  have h := (hGo v).1
-  rw [len_eq] at h
-  have : (0 : ℝ) < 6 * (S.Ntop : ℝ) ^ 3 + 6 * S.Ntop := by have := PBD.ntop_ge S; positivity
-  linarith
+  apply _root_.Formalism.FourierDecayAlt.P.LiftDegreeLemmas.lenI_pos' <;> assumption
 
 theorem xw_nonneg (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) (i : ℕ) (v : Fin S.f) : 0 ≤ Xw S i v := by
   obtain ⟨hg, hk⟩ := glob_pos hB
@@ -983,13 +979,13 @@ theorem liftLocB_of_cpt (hDL : KB.DegLift) : P5.ThmPActualCpt → LiftLocB := by
   · intro b s v
     beta_reduce
     by_cases h : 1 ≤ b ∧ 1 ≤ s ∧ b + s ≤ S.G.r + 1
-    · rw [if_pos h]; exact (hΛ0 b s h.1 h.2.1 h.2.2 v).1
-    · rw [if_neg h]
+    · rw [ite_eq_left h]; exact (hΛ0 b s h.1 h.2.1 h.2.2 v).1
+    · rw [ite_eq_right h]
   · intro b s hb hs hbs v
     beta_reduce
-    rw [if_pos ⟨hb, hs, hbs⟩]; exact (hΛ0 b s hb hs hbs v).2
+    rw [ite_eq_left ⟨hb, hs, hbs⟩]; exact (hΛ0 b s hb hs hbs v).2
   · intro F hF v b s hb hs hbs
-    have h : (if 1 ≤ b ∧ 1 ≤ s ∧ b + s ≤ S.G.r + 1 then Λ0 b s v else 0) = Λ0 b s v := if_pos ⟨hb, hs, hbs⟩
+    have h : (if 1 ≤ b ∧ 1 ≤ s ∧ b + s ≤ S.G.r + 1 then Λ0 b s v else 0) = Λ0 b s v := ite_eq_left ⟨hb, hs, hbs⟩
     simp only [h]
     exact hl F hF v b s hb hs hbs
 

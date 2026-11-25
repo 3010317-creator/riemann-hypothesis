@@ -592,13 +592,6 @@ theorem hG_smul_right (c : I.E) (x y : Fin I.n → I.E) : hG I x (c • y) = c *
 
 theorem hG_zero_right (x : Fin I.n → I.E) : hG I x 0 = 0 := by simp [hG_def]
 
-theorem hG_sum_right {ι : Type*} (s : Finset ι) (x : Fin I.n → I.E) (y : ι → Fin I.n → I.E) :
-    hG I x (∑ t ∈ s, y t) = ∑ t ∈ s, hG I x (y t) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp [hG_zero_right]
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, hG_add_right, ih]
-
 theorem J_entry (i j : Fin I.n) : star (I.J j i) = I.J i j := by
   have h := congrFun (congrFun I.J_herm i) j
   simp only [Formalism.UG.cT, Matrix.transpose_apply, Matrix.map_apply, starRingEnd_apply] at h
@@ -690,7 +683,7 @@ theorem weil_basis_existence : WBasis := by
     rw [hG_symm, hef]
     by_cases h : b = a
     · subst h; simp
-    · rw [if_neg h, if_neg (Ne.symm h), star_zero]
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h), star_zero]
   let φ : (Fin I.n → I.E) →ₗ[I.E] (Fin r → I.E) × (Fin r → I.E) :=
     { toFun := fun x => (fun a => hG I (e a) x, fun a => hG I (f a) x)
       map_add' := fun x y => by

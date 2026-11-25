@@ -605,9 +605,6 @@ structure ThDist.Ok (th : ThDist E K a b SB V V') (Sall : Finset (HeightOneSpect
   cong : ∀ N fr N' fr' c x x', IsSdLat N → IsSdLat N' → x - x' ∈ mulLat c (homAt Sall N N') →
     th N fr N' fr' c x = th N fr N' fr' c x'
 
-  add : ∀ N fr N' fr' c c' x, IsSdLat N → IsSdLat N' → 0 < c → 0 < c' → c * c' ∣ D → x ∈ divLat D (homAt Sall N N') →
-    th N fr N' fr' c x = latSum (mulLat c (homAt Sall N N')) (mulLat (c * c') (homAt Sall N N')) fun y => th N fr N' fr' (c * c') (x + y)
-
   equiv : ∀ (γ : UF E a) (γ' : UF E b) N fr N' fr' c x, IsSdLat N → IsSdLat N' →
     th (gmap γ.1 N) (fun P => γ.1 * fr P) (gmap γ'.1 N') (fun P => γ'.1 * fr' P) c
         (γ'.1.toLinearMap ∘ₗ x ∘ₗ γ.1.symm.toLinearMap) = (rho' γ') ∘ₗ (th N fr N' fr' c x) ∘ₗ (rho γ⁻¹)
@@ -1302,13 +1299,6 @@ def NuC {u : Pr.Word} (Sv : Serv W Ch u) : Submodule (𝓞 X.K) (MramV W Ch u) :
 
 end Nu
 
-section NuPrime
-
-variable {K : Type} [Field K] [NumberField K]
-
-
-end NuPrime
-
 section ColOp
 
 variable {X : Fields} {Pr : Primes X} {R : Ranks} {W : Wts X Pr.Word R} {Ch : Chars X Pr R.m}
@@ -1350,14 +1340,6 @@ def colC {P : LevFam X.E X.K R.r Pr.vGs} {u : Pr.Word} {m2 : ℕ} {b : L.β (m2 
   A.colF hF ∘ₗ startC hL u
 
 end ColOp
-
-section Names
-
-variable {X : Fields} {Pr : Primes X} {R : Ranks} {W : Wts X Pr.Word R} {Ch : Chars X Pr R.m}
-  {sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)} {S : Set ℕ}
-  {mu : Tup X.F X.E X.K S} {cst : LocCst X (rowSG Pr sel mu)} {L : ChIdx X Pr R (QE sel (mu : Chr X.F X.E X.K))}
-
-end Names
 
 namespace Br
 

@@ -65,7 +65,6 @@ open GlobalTheory.VB
 namespace GlobalTheory.CurveDegreesCompare
 
 
-set_option autoImplicit false in
 open CategoryTheory AlgebraicGeometry TopologicalSpace Limits in
 theorem _root_.GlobalTheory.CurveDegreesCompare.residueDegree_comp {X Y Z : Scheme.{0}} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) :
     (f ≫ g).residueDegree x = g.residueDegree (f x) * f.residueDegree x := by
@@ -85,7 +84,6 @@ theorem _root_.GlobalTheory.CurveDegreesCompare.residueDegree_comp {X Y Z : Sche
   exact (Module.finrank_mul_finrank _ _ _).symm
 
 
-set_option autoImplicit false in
 open CategoryTheory AlgebraicGeometry TopologicalSpace Limits in
 theorem _root_.GlobalTheory.CurveDegreesCompare.residueDegree_of_isOpenImmersion {X Y : Scheme.{0}} (f : X ⟶ Y)
     [IsOpenImmersion f] (x : X) : f.residueDegree x = 1 := by
@@ -96,13 +94,5 @@ theorem _root_.GlobalTheory.CurveDegreesCompare.residueDegree_of_isOpenImmersion
     (AlgEquiv.ofBijective (Algebra.ofId _ _) hbij).toLinearEquiv
   change Module.finrank (Y.residueField (f x)) (X.residueField x) = 1
   rw [← e.finrank_eq, Module.finrank_self]
-
-section Clauses
-
-variable (k : Type) [Field k] (C : Scheme.{0}) [Algebra k Γ(C, ⊤)] [IsIntegral C]
-
-variable {C}
-
-end Clauses
 
 end GlobalTheory.CurveDegreesCompare

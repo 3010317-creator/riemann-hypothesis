@@ -124,14 +124,6 @@ theorem isWild_of_isWildAt {E Ω : Type} [Field E] [NumberField E] [Field Ω] [A
     · simp
     · exact (h1 x hx0).trans_le hx
 
-section Wild
-
-variable {E Ω R : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω]
-  [CommRing R] [IsLocalRing R] [IsNoetherianRing R] [TopologicalSpace R] [IsTopologicalRing R]
-  {r : ℕ} {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 E)}
-
-end Wild
-
 end GlobalTheory.InertiaTypePrimes
 end -- clump:auto
 end -- clump:auto
@@ -143,13 +135,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace GlobalTheory.TraceFormNondegenerate
-
-theorem eq_zero_of_trace_mul {K : Type} [Field K] {n : ℕ} (X : Matrix (Fin n) (Fin n) K)
-    (h : ∀ Y : Matrix (Fin n) (Fin n) K, Matrix.trace (X * Y) = 0) : X = 0 := by
-  ext i j
-  have hij := h (Matrix.single j i 1)
-  rw [Matrix.trace_mul_single] at hij
-  simpa using hij
 
 theorem span_eq_top_of_trace_eq {Γ K : Type} [Monoid Γ] [Field K] {n : ℕ}
     (M N : Γ →* Matrix (Fin n) (Fin n) K)

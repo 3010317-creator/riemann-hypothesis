@@ -3,49 +3,7 @@ module
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ExpTie
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ExpChartJetA
 import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermDJet
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Lemma
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -68,10 +26,10 @@ private lemma cc_psTrunc_lemma {κ : Type} [Fintype κ] [DecidableEq κ] (m : �
   unfold psTrunc
 
   rw [map_sum, Finset.sum_eq_single 0]
-  · rw [MvPolynomial.constantCoeff_monomial, if_pos rfl]
+  · rw [MvPolynomial.constantCoeff_monomial, ite_eq_left rfl]
     first | rfl
   · intro e _ he
-    rw [MvPolynomial.constantCoeff_monomial, if_neg he]
+    rw [MvPolynomial.constantCoeff_monomial, ite_eq_right he]
   · intro h0
     exfalso
     apply h0
@@ -244,8 +202,7 @@ theorem cc_atPt {n : ℕ} (b : Fin n) {g : MvPowerSeries (Fin 1 × Fin (dL Dw)) 
   · subst hd
     simp [hg]
   · obtain ⟨s, hs⟩ : ∃ s, d s ≠ 0 := by
-      by_contra h
-      push_neg at h
+      by_contra! h
       exact hd (Finsupp.ext h)
     rw [Finsupp.prod, map_prod, Finset.prod_eq_zero (Finsupp.mem_support_iff.mpr hs), smul_zero]
     simp [MvPowerSeries.constantCoeff_X, zero_pow hs]
@@ -423,7 +380,7 @@ theorem tan_jφ (hφ : IsExpOf C.B.G.F C.uvec φ) (j : Fin (dL Dw)) :
   intro q
   rw [AlgHom.comp_apply, jφ, jetSubstPS_mk (0 + 1) (fun p : Fin 1 × Fin C.d => φ p.2) (fun p => hφ.const p.2),
     jetTan_eq_tp, tp_psJet, tp_mk, hφ.const, TrivSqZeroExt.inl_zero, zero_add]
-  simp only [ite_mul, _root_.one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [ite_mul, _root_.one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem xExp_tan (hφ : IsExpOf C.B.G.F C.uvec φ) (ℓ : Lt1 Dw) : IsCombAt y.x
     (fun j : Fin (dL Dw) => (homAt y.x (jetTan ((0 : Fin 1), j) :
@@ -450,7 +407,7 @@ theorem xExp_tan (hφ : IsExpOf C.B.G.F C.uvec φ) (ℓ : Lt1 Dw) : IsCombAt y.x
     funext q
     rw [Finset.sum_apply]
     simp only [Pi.smul_apply, smul_eq_mul, hq, mul_ite, _root_.mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-      if_true]
+      ite_true]
   have hy : (pOf C fun q => C.uvec ℓ q.2).left = y.u ℓ.1 ℓ.2 := by
     rw [← hs1, pOf_sum, ← hprod, hu']
   have hs2 : (∑ j : Fin (dL Dw), (if j = ltIdx Dw ℓ then (1 : S) else 0) •
@@ -458,7 +415,7 @@ theorem xExp_tan (hφ : IsExpOf C.B.G.F C.uvec φ) (ℓ : Lt1 Dw) : IsCombAt y.x
       fun q => C.uvec ℓ q.2 := by
     funext q
     rw [Finset.sum_apply]
-    simp only [Pi.smul_apply, smul_eq_mul, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [Pi.smul_apply, smul_eq_mul, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [_root_.one_mul]
     exact hφ.lin ℓ q.2
   refine ⟨fun j => pOf C ((if j = ltIdx Dw ℓ then (1 : S) else 0) •

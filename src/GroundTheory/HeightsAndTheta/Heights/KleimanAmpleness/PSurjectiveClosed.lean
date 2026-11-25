@@ -31,17 +31,10 @@ theorem sgn_mul_sgn_erase_swap {L : Finset (Fin n)} {j k : Fin n} (hj : j ∈ L)
   · have h' : k < j := lt_of_le_of_ne (not_lt.mp h) (Ne.symm hjk)
     rw [H hk hj (Ne.symm hjk) h', neg_neg]
   have h1 : (L.erase j).filter (· < k) = (L.filter (· < k)).erase j := by
-    ext z
-    simp only [Finset.mem_filter, Finset.mem_erase]
-    tauto
+    rw [Finset.filter_erase]
   have h2 : (L.erase k).filter (· < j) = L.filter (· < j) := by
-    ext z
-    simp only [Finset.mem_filter, Finset.mem_erase]
-    constructor
-    · rintro ⟨⟨_, hz⟩, hzj⟩
-      exact ⟨hz, hzj⟩
-    · rintro ⟨hz, hzj⟩
-      exact ⟨⟨fun hzk => by subst hzk; exact lt_irrefl _ (hzj.trans h), hz⟩, hzj⟩
+    rw [Finset.filter_erase]
+    exact Finset.erase_eq_of_notMem fun hk => lt_asymm h (Finset.mem_filter.1 hk).2
   have hmem : j ∈ L.filter (· < k) := Finset.mem_filter.mpr ⟨hj, h⟩
   have hc := Finset.card_erase_add_one hmem
   simp only [Cech.sgn, h1, h2]
@@ -62,7 +55,7 @@ theorem sum_sgn_sum_sgn (φ : Cell U → A) (L : Cech.Idx U 2) :
       Cech.sgn (Cech.face L j).1.1 k • φ (Cech.face (Cech.face L j) k).1 = 0 := by
   classical
   let ψ : Finset (Fin n) → A := fun T => if h : T.Nonempty ∧ T ⊆ U then φ ⟨T, h⟩ else 0
-  have hψ : ∀ c : Cell U, φ c = ψ c.1 := fun c => by simp only [ψ, dif_pos c.2]
+  have hψ : ∀ c : Cell U, φ c = ψ c.1 := fun c => by simp only [ψ, dite_eq_left c.2]
   have hin : ∀ j : L.1.1, (∑ k : (Cech.face L j).1.1,
       Cech.sgn (Cech.face L j).1.1 k • φ (Cech.face (Cech.face L j) k).1) =
         ∑ k ∈ L.1.1.erase j, Cech.sgn (L.1.1.erase j) k • ψ ((L.1.1.erase j).erase k) := by
@@ -245,7 +238,7 @@ theorem proof (hExt : Extension.Statement.{u, w, w})
     else 0
   have hψ : ∀ I : Cech.Idx (support x) 0, ψ I.1.1 = s I.1 - (v I : Ω) := fun I => by
     simp only [ψ]
-    rw [dif_pos ⟨I.1.2, I.2⟩]
+    rw [dite_eq_left ⟨I.1.2, I.2⟩]
   have hpair : ∀ J : Cech.Idx (support x) 1,
       ∑ j : J.1.1, Cech.sgn J.1.1 j • ψ (J.1.1.erase j) = 0 := by
     intro J

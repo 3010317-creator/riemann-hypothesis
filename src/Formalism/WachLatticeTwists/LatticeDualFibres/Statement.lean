@@ -55,8 +55,6 @@ namespace DirectPush
 variable {O A HV : Type u} [CommRing O] [AddCommGroup A] [Module O A] [AddCommGroup HV]
     [Module O HV] {q : HV →ₗ[O] A} (P : DirectPush O A HV q)
 
-def HfY : Submodule O P.HY := P.HfVY.comap P.jY
-
 end DirectPush
 
 structure DualPush (O A HT' : Type u) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
@@ -100,8 +98,6 @@ namespace DualPush
 variable {O A HT' : Type u} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     [AddCommGroup A] [Module O A] [AddCommGroup HT'] [Module O HT']
     {pr : A →ₗ[O] HT' →ₗ[O] KO O} (Q : DualPush O A HT' pr)
-
-def HfY : Submodule O Q.HY := Q.HfVY.comap Q.jY
 
 end DualPush
 

@@ -111,7 +111,6 @@ noncomputable section
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.CechPic GlobalTheory.AbDual
 open scoped CategoryTheory.Obj
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.DualHomFlat
 
@@ -207,7 +206,6 @@ section -- clump:auto
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.CechPic GlobalTheory.AbDual
 open ReciprocityTheory.ChartRestriction.G
-attribute [local instance] Over.cartesianMonoidalCategory
 open scoped CategoryTheory.Obj
 
 namespace GlobalTheory.DualHomSurj
@@ -284,7 +282,6 @@ section -- clump:auto
 @[expose] public section
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.CechPic GlobalTheory.AbDual
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.DualFactor
 
@@ -590,7 +587,7 @@ theorem blk_jlMap (h : ℕ) (l : Fin 8) (a : Fin h ⊕ Fin h → ℤ) :
 theorem kap_jlMap (h d : ℕ) (k : Fin 8) (a : Fin h ⊕ Fin h → ℤ) :
     kap h d k (jlMap h a) = if k = 0 then a else 0 := by
   rw [kap_apply]
-  simp only [blk_jlMap, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [blk_jlMap, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   fin_cases k <;> simp [vMat, sig]
 
 end GlobalTheory.ZarhinFam.KappaEx
@@ -604,8 +601,8 @@ theorem exists_kappaOK : ∀ (h M d : ℕ), 1 ≤ h → 3 ≤ M → Odd M → 0 
   intro h M d _ _ _ hd _
   refine ⟨kap h d, fun a b => ?_, fun a => ?_, fun k hk a => ?_⟩
   · rw [formZ_kap hd]
-  · rw [kap_jlMap, if_pos rfl]
-  · rw [kap_jlMap, if_neg hk]
+  · rw [kap_jlMap, ite_eq_left rfl]
+  · rw [kap_jlMap, ite_eq_right hk]
 
 end GlobalTheory.ZarhinFam
 end -- clump:auto
@@ -849,7 +846,7 @@ theorem nsmul_pull_diag_zCls : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp 
       z • pull (lift a (b ≫ mu)).left (cls c.P c.isLB) := fun z a b => by rw [smul_comm, hk]
   simp only [smul_add, Finset.smul_sum, hk, hk', Matrix.smul_apply, Matrix.one_apply, Matrix.transpose_apply,
     zero_add, smul_eq_mul, mul_ite, mul_zero, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true, one_smul, Finset.sum_add_distrib, mul_smul, two_smul, natCast_zsmul]
+    ite_true, one_smul, Finset.sum_add_distrib, mul_smul, two_smul, natCast_zsmul]
   abel
 
 end GlobalTheory.ZarhinFam
@@ -936,15 +933,15 @@ theorem zarhinBundle_kernel : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (
   have z3 : ∀ {Y : Over S} (b : Y ⟶ B), evc hQ (1 : Y ⟶ c.A) b = 0 := fun b => hQd.additive.evc_one hQ b
   have s1 : (∑ k, evc hP ((snd c.A T ≫ x) ≫ pa c.A B k) ((fst c.A T ≫ inc) ≫ pa c.A B k)) =
       evc hP ((snd c.A T ≫ x) ≫ pa c.A B i) (fst c.A T) := by
-    rw [Finset.sum_eq_single i (fun k _ hk => by rw [hpa, if_neg hk, z1]) (fun hi => absurd (Finset.mem_univ i) hi),
-      hpa, if_pos rfl]
+    rw [Finset.sum_eq_single i (fun k _ hk => by rw [hpa, ite_eq_right hk, z1]) (fun hi => absurd (Finset.mem_univ i) hi),
+      hpa, ite_eq_left rfl]
   have s2 : (∑ k, ∑ j, quat d j k • evc hQ ((snd c.A T ≫ x) ≫ pa c.A B k) ((fst c.A T ≫ inc) ≫ pb c.A B j)) = 0 := by
     simp only [hpb, z2, smul_zero, Finset.sum_const_zero]
   have s3 : (∑ k, ∑ j, quat d j k • evc hQ ((fst c.A T ≫ inc) ≫ pa c.A B k) ((snd c.A T ≫ x) ≫ pb c.A B j)) =
       ∑ j, quat d j i • evc hQ (fst c.A T) ((snd c.A T ≫ x) ≫ pb c.A B j) := by
-    rw [Finset.sum_eq_single i (fun k _ hk => by simp only [hpa, if_neg hk, z3, smul_zero, Finset.sum_const_zero])
+    rw [Finset.sum_eq_single i (fun k _ hk => by simp only [hpa, ite_eq_right hk, z3, smul_zero, Finset.sum_const_zero])
       (fun hi => absurd (Finset.mem_univ i) hi)]
-    rw [hpa, if_pos rfl]
+    rw [hpa, ite_eq_left rfl]
   have s4 : (∑ j, evc hQ ((fst c.A T ≫ inc) ≫ pb c.A B j ≫ mu) ((snd c.A T ≫ x) ≫ pb c.A B j)) = 0 := by
     simp only [← Category.assoc _ (pb c.A B _) mu, hpb, MonObj.one_comp, z3, Finset.sum_const_zero]
   rw [s1, s2, s3, s4, add_zero, add_zero] at h1
@@ -1030,7 +1027,7 @@ theorem ker_zarhinPolarization_of_pullback : ∀ (h M d : ℕ) (S : Scheme.{0}) 
   simp only [AdjPf.zf, Category.assoc, AdjPf.mkZ_pa, AdjPf.mkZ_pb, hv, MonObj.comp_one, MonObj.one_comp,
     evc_one_right hQ hD1.zero, smul_zero, Finset.sum_const_zero, zero_add, add_zero] at h1
   simp only [apply_ite (evc hQ _), evc_one_right hQ hD1.zero, smul_ite, smul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true] at h1
+    Finset.mem_univ, ite_true] at h1
   refine (hD1.isPerfect hD2).ker_left T _ ((triv_ev_iff hQ _ _).2 ?_)
   let F : (T ⊗ B ⟶ c.A) →* Multiplicative (Pic (T ⊗ B).left) :=
     MonoidHom.mk' (fun a => Multiplicative.ofAdd (evc hQ a (snd T B))) fun a a' => by
@@ -1325,7 +1322,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.SiegelTor GlobalTheory.EndLoc
 open scoped CategoryTheory.Obj CategoryTheory.MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.HomTorsionFree
 
@@ -1384,20 +1380,6 @@ namespace GlobalTheory.ZarhinFam.Rig
 
 section
 variable {S : Scheme.{0}} (A B : Over S) [GrpObj A] [GrpObj B] [IsCommMonObj A] [IsCommMonObj B]
-
-theorem pull_pull_lift {Y W X₁ X₂ : Over S} {M : LB (X₁ ⊗ X₂).left} (hM : M.IsLB) (u : Y ⟶ W) (f : W ⟶ X₁)
-    (g : W ⟶ X₂) : CechPic.pull u.left (CechPic.pull (lift f g).left (cls M hM)) = evc hM (u ≫ f) (u ≫ g) := by
-  rw [← pull_comp, ← Over.comp_left, comp_lift]; rfl
-
-theorem pull_zCls {P : LB (A ⊗ A).left} (hP : P.IsLB) {Q : LB (A ⊗ B).left} (hQ : Q.IsLB) (d : ℕ) (mu : B ⟶ A)
-    {Y : Over S} (z z' : Y ⟶ Zob A B) :
-    CechPic.pull (lift z z').left (zCls A B hP hQ d mu) =
-      (∑ i, evc hP (z ≫ pa A B i) (z' ≫ pa A B i)) +
-      (∑ i, ∑ j, quat d j i • evc hQ (z ≫ pa A B i) (z' ≫ pb A B j)) +
-      (∑ i, ∑ j, quat d j i • evc hQ (z' ≫ pa A B i) (z ≫ pb A B j)) +
-      ∑ j, evc hQ (z' ≫ pb A B j ≫ mu) (z ≫ pb A B j) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [zCls, map_add (f := _), map_sum, map_zsmul, pull_pull_lift, lift_fst_assoc, lift_snd_assoc]
 
 theorem zarhinBundle_pull_trivial_iff {P : LB (A ⊗ A).left} (hP : P.IsLB) {Q : LB (A ⊗ B).left} (hQ : Q.IsLB) (d : ℕ)
     (mu : B ⟶ A) {Y : Over S} (u : Y ⟶ Zob A B ⊗ Zob A B) :
@@ -1494,17 +1476,17 @@ theorem zarhinBundle_rigidified_symmetric₂ : ∀ (h M d : ℕ) (S : Scheme.{0}
   have hQ := hZ.2.1
   haveI : IsMonHom mu := hZ.2.2.2.2.1
   refine ⟨(zarhinBundle_pull_trivial_iff _ _ _ _ _ _ _).2 ?_, (zarhinBundle_pull_trivial_iff _ _ _ _ _ _ _).2 ?_, ?_⟩
-  · rw [pull_zCls]
+  · rw [GlobalTheory.ZarhinKerB.pull_zCls]
     simp only [one_pa, one_pb, Category.id_comp, evc_one_left c.isLB c.rig₁,
       hQ.additive.evc_one hQ.isLB, evc_one_right hQ.isLB hQ.zero, smul_zero, Finset.sum_const_zero, add_zero]
-  · rw [pull_zCls]
+  · rw [GlobalTheory.ZarhinKerB.pull_zCls]
     simp only [MonObj.one_comp, Category.id_comp, evc_one_right c.isLB c.rig₂,
       hQ.additive.evc_one hQ.isLB, evc_one_right hQ.isLB hQ.zero, smul_zero, Finset.sum_const_zero, add_zero]
   · have hz := zarhinBundle_isLineBundle c.A B c.isLB hQ.isLB d mu
     refine (CechPic.cls_eq_iff hz (pull_isLB hz _)).1 ?_
     rw [cls_pull hz, cls_zP]
     conv_lhs => rw [← pull_id (zCls _ _ _ _ _ _), ← Over.id_left, ← lift_fst_snd]
-    rw [pull_zCls, pull_zCls]
+    rw [GlobalTheory.ZarhinKerB.pull_zCls, GlobalTheory.ZarhinKerB.pull_zCls]
     have htor : ∀ x y : B ⟶ c.A, IsMonHom x → IsMonHom y → x ^ d = y ^ d → x = y :=
       _root_.GlobalTheory.HomTorsionFree.eq_of_pow_eq S c.A B c.ab hZ.1 d hd hdu
     have h1 : ∑ i, evc c.isLB (fst (Zob c.A B) (Zob c.A B) ≫ pa c.A B i) (snd (Zob c.A B) (Zob c.A B) ≫ pa c.A B i) =

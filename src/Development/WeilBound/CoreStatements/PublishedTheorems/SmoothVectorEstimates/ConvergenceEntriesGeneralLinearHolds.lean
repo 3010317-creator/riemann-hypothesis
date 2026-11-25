@@ -44,64 +44,15 @@ public import Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVecto
 public import Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.UnipotentCharacter
 public import Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.UnitChartOperator
 public import Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.WeilJacquetShalikaLaw
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Sheaves.Init
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Tactic.TypeStar
 import Std.Tactic.BVDecide.Normalize.Prop
-import Mathlib.Analysis.Convex.Contractible
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.RingTheory.WittVector.IsPoly
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FiniteCosetsInDoset
 import Formalism.SatakeDualWeyl.KpqSubgroupCompact
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PeriodicEqZeroOfFourierCoefficientsZeroStatement
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerCoefficientRationalMirabolicMulStatement
-import Mathlib.Data.Multiset.Functor
 import Mathlib.Tactic.Linter.Style
 import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaRigidity.ColumnBlockEquiv
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnipotentBlockColumnIndex
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientAverageAddOfPeriodic
-import Mathlib.CategoryTheory.Countable
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.AdelicCharacterCondition, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SphericalAlmostEverywhereOfBounded, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.AlmostEverywhereSphericalOfG1, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.AveragingProjection, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.BoundedInvariantL2, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.CornerGLContinuity, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.ExistsLogarithmLinear, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.HaarPairing, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeEigenfunctionsClosed, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.HeckeOperatorOfAutomorphic, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.InductionG11, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.InfiniteFiniteFactorization, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MeetOfSteps, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.MeetOf, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.MirrorMap, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.PSmoNorm, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.PositiveMatrixBlocks, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.PsiDeterminantFlag, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.SmoothVectorOrbit, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RtMulApply, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.SmoothVectorsRegularRepresentation, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.WhittakerFunctional, Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.ConvergenceEntriesGeneralLinearHolds
@@ -512,7 +463,7 @@ theorem map_pLoc_prod (g : GA E a) (v : Pl E) : ∀ l : List (Pl E), l.Nodup →
     rw [List.map_cons, List.prod_cons, map_mul, map_pLoc_prod g v l (List.nodup_cons.1 h).2]
     by_cases hv : v = w
     · subst hv
-      rw [pLoc_locGL, if_neg (List.nodup_cons.1 h).1, mul_one]
+      rw [pLoc_locGL, ite_eq_right (List.nodup_cons.1 h).1, mul_one]
       simp
     · rw [pLoc_locGL_of_ne hv, one_mul]
       simp [hv]
@@ -569,10 +520,10 @@ theorem standard_stabiliser_bound : G0 := by
       rw [map_mul, pInf_infGL, pInf_finGL, mul_one]
     · intro w hw
       rw [cLoc_eq, map_mul, map_mul, pFin_infGL, pFin_finGL, map_one, one_mul,
-        map_pLoc_prod g w _ S.nodup_toList, if_pos (Finset.mem_toList.2 hw)]
+        map_pLoc_prod g w _ S.nodup_toList, ite_eq_left (Finset.mem_toList.2 hw)]
     · intro w hw
       rw [cLoc_eq, map_mul, map_mul, pFin_infGL, pFin_finGL, map_one, one_mul,
-        map_pLoc_prod g w _ S.nodup_toList, if_neg (fun h => hw (Finset.mem_toList.1 h))]
+        map_pLoc_prod g w _ S.nodup_toList, ite_eq_right (fun h => hw (Finset.mem_toList.1 h))]
   · exact continuous_glmap _ hpInf
   · exact continuous_glmap _ ((hpLoc w).comp continuous_snd)
   · exact hfin.comp (continuous_cornerGL' _ (CuspSub.continuous_sLoc w))
@@ -1113,8 +1064,8 @@ theorem meet_of_steps : S2 → MirabolicColumnBlock → G0 → G1 → AlmostEver
     · obtain ⟨Z', -, -, hZ'⟩ := hG2c E a w (B w) (hcard w hw)
       exact ⟨Z', hZ'⟩
     · by_cases hw : w ∈ S
-      · simpa only [if_pos hw] using hg.2 w hw
-      · simp only [if_neg hw]
+      · simpa only [ite_eq_left hw] using hg.2 w hw
+      · simp only [ite_eq_right hw]
         rw [hi w hw]
         exact (hS10 _ a 0).2.2.1
   subst heq
@@ -1281,9 +1232,9 @@ theorem posM_mul_apply {ι : Type} [Fintype ι] (p : ι → Fin a × Fin a) (y :
   by_cases h : (p s).1 = i
   · subst h
     simp [Matrix.single_mul_apply_same]
-  · rw [if_neg h, Matrix.mul_apply]
+  · rw [ite_eq_right h, Matrix.mul_apply]
     refine Finset.sum_eq_zero fun j _ => ?_
-    rw [Matrix.single_apply, if_neg (fun e => h e.1), zero_mul]
+    rw [Matrix.single_apply, ite_eq_right (fun e => h e.1), zero_mul]
 
 theorem mul_posM_apply {ι : Type} [Fintype ι] (p : ι → Fin a × Fin a) (y : ι → R)
     (M : Matrix (Fin a) (Fin a) R) (i k : Fin a) :
@@ -1293,9 +1244,9 @@ theorem mul_posM_apply {ι : Type} [Fintype ι] (p : ι → Fin a × Fin a) (y :
   by_cases h : (p s).2 = k
   · subst h
     simp [Matrix.mul_single_apply_same]
-  · rw [if_neg h, Matrix.mul_apply]
+  · rw [ite_eq_right h, Matrix.mul_apply]
     refine Finset.sum_eq_zero fun j _ => ?_
-    rw [Matrix.single_apply, if_neg (fun e => h e.2), mul_zero]
+    rw [Matrix.single_apply, ite_eq_right (fun e => h e.2), mul_zero]
 
 theorem posM_mul_row (m : ℕ) (y : UnipotentBlockColumnIndex a m m → R) (M : Matrix (Fin a) (Fin a) R)
     (hM : ∀ j k : Fin a, (j : ℕ) = m → M j k = (1 : Matrix (Fin a) (Fin a) R) j k) :
@@ -1314,7 +1265,7 @@ theorem mul_posM_blk (m : ℕ) (y : UnipotentBlockColumnIndex a m m → R) (h : 
   rw [mul_posM_apply, posM_col]
   split_ifs with hc
   · refine Finset.sum_congr rfl fun s _ => ?_
-    rw [if_pos (Fin.ext (by have := s.2; omega))]
+    rw [ite_eq_left (Fin.ext (by have := s.2; omega))]
   · refine Finset.sum_eq_zero fun s _ => ?_
     split_ifs with hs
     · have h2 := s.2
@@ -1374,7 +1325,7 @@ theorem positive_matrix_block_product : MirabolicColumnBlock := by
     show (1 + posM Subtype.val y) i l = _
     rw [Matrix.add_apply, posM, Matrix.sum_apply, Finset.sum_eq_zero, add_zero]
     intro t _
-    rw [Matrix.single_apply, if_neg]
+    rw [Matrix.single_apply, ite_eq_right]
     rintro ⟨e1, e2⟩
     have := t.2
     rw [← e1, ← e2] at hil

@@ -52,15 +52,8 @@ open Formalism.FourierDecayAlt.S3
 
 section Count
 
-theorem card_lt_pairs (n : ℕ) : Nat.card {p : Fin n × Fin n // p.1 < p.2} = n * (n - 1) / 2 := by
-  rw [Nat.card_eq_fintype_card, Fintype.card_subtype, Finset.card_filter, Fintype.sum_prod_type_right]
-  have h : ∀ j : Fin n, ∑ i : Fin n, (if i < j then 1 else 0) = (j : ℕ) := by
-    intro j
-    rw [← Finset.card_filter]
-    have e : Finset.filter (fun i : Fin n => i < j) Finset.univ = Finset.Iio j := by ext i; simp
-    rw [e, Fin.card_Iio]
-  simp_rw [h]
-  rw [Fin.sum_univ_eq_sum_range (fun i => i) n, Finset.sum_range_id]
+theorem card_lt_pairs (n : ℕ) : Nat.card {p : Fin n × Fin n // p.1 < p.2} = n * (n - 1) / 2 :=
+  by apply _root_.Formalism.LogVandermondeBounds.StandardLattice.card_lt_pairs
 
 variable {A : Type} [CommRing A]
 
@@ -97,11 +90,6 @@ noncomputable def upUniGEquiv (n : ℕ) : upUniG A n ≃ {u : Matrix (Fin n) (Fi
   right_inv u := rfl
 
 variable {r k : ℕ}
-
-def mk (a : Matrix (Fin r) (Fin r) A) (b : Matrix (Fin r) (Mid k) A) (c : Matrix (Fin r) (Fin r) A)
-    (m : Matrix (Mid k) (Mid k) A) (e : Matrix (Mid k) (Fin r) A) (f : Matrix (Fin r) (Fin r) A) :
-    Matrix (Idx r k) (Idx r k) A :=
-  Matrix.fromBlocks a (Matrix.fromCols b c) 0 (Matrix.fromBlocks m e 0 f)
 
 section mk
 variable (a : Matrix (Fin r) (Fin r) A) (b : Matrix (Fin r) (Mid k) A) (c : Matrix (Fin r) (Fin r) A)
@@ -169,8 +157,6 @@ open scoped Classical
 open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.L2.SG.HidaSetting Formalism.L2.SG.TermOp Formalism.L2.SG.Full
 
 namespace Formalism.L2.SG.LoopTieOf
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 section ZsC1e
 

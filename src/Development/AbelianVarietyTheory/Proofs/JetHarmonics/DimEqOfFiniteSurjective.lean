@@ -73,9 +73,6 @@ abbrev epsAt (t : Sp R ⟶ S) : Over S := Over.mk (spMap (algebraMap R (DualNumb
 def IsTan {G : Over S} [GrpObj G] (t : Sp R ⟶ S) (v : epsAt t ⟶ G) : Prop :=
   spMap (TrivSqZeroExt.fstHom R R R).toRingHom ≫ v.left = (1 : Over.mk t ⟶ G).left
 
-def IsMultiple {G : Over S} {t : Sp R ⟶ S} (x : R) (v w : epsAt t ⟶ G) : Prop :=
-  w.left = spMap (epsScaleR x) ≫ v.left
-
 end Lie
 
 section Line
@@ -85,12 +82,6 @@ variable {K : Type} [Field K] [NumberField K]
 abbrev genPt (K : Type) [Field K] [NumberField K] : Sp K ⟶ Sp (𝓞 K) := spMap (algebraMap (𝓞 K) K)
 
 end Line
-
-section Pol
-
-variable {K : Type} [Field K] [NumberField K]
-
-end Pol
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {l : Level H}
 
@@ -168,25 +159,6 @@ theorem secTwist : Out.SecTwistSt := GlobalTheory.abelianSchemeLaws_all.2.secTwi
 theorem homExt : CM.HomExtDvr := fun T K _ _ _ _ _ _ G G' _ _ hG hG' φ hφ =>
   GlobalTheory.existsUnique_hom_extension_semiAbelian T K G G' hG hG' φ hφ
 
-section Vec
-
-variable {R R' : Type} [CommRing R] [CommRing R'] {f : R →+* R'} {G : Over (Sp R)} {G' : Over (Sp R')} [GrpObj G]
-  [GrpObj G'] {φ : G'.left ⟶ G.left}
-
-variable (h : IsGrpPullback G' G (spMap f) φ)
-
-variable [IsCommMonObj G'] {n : ℕ} {v : Fin n → (epsR R' ⟶ G')} (hv : IsLieBasis v)
-
-end Vec
-
-section Pair
-
-variable {K : Type} [Field K] [NumberField K]
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] [StarRing (𝓞 E)] {H : Host E}
-
-end Pair
-
 section Isog
 
 theorem card_torsion_eq {M N : Type} [CommGroup M] [CommGroup N] (F : M →* N) (hF : Function.Surjective F) (m : ℕ)
@@ -214,28 +186,6 @@ theorem onto_points {R k : Type} [CommRing R] [Field k] [IsAlgClosed k] {P Q : O
   exact Over.w y
 
 end Isog
-
-section Sum
-
-variable {K : Type} [Field K] [NumberField K]
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {l : Level H} {c : Coeff l} {p q : ℕ}
-
-end Sum
-
-section Types
-
-variable {K : Type} [Field K] [NumberField K] {A : Out.PolAV (Sp (𝓞 K))} {x : KeyIn K} {φ : x.P.A.left ⟶ A.A.left}
-
-variable {E : Type} [Field E] [NumberField E]
-
-end Types
-
-section Lines
-
-variable {K : Type} [Field K] [NumberField K] {A : Out.PolAV (Sp (𝓞 K))} {x : KeyIn K} {φ : x.P.A.left ⟶ A.A.left}
-
-end Lines
 
 section Main
 

@@ -25,53 +25,10 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceF
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryLevelSubgroupProperties
 import GroundTheory.LocalFields.PadicLogSeries
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Geometry.Euclidean.Volume.Basic
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
-import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Echelon.Zsqrtd
-import Mathlib.Tactic.Inclusion.Extension.Core.Core
-import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
-import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
-import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
 import Mathlib.Tactic.Linter.Style
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
 import GroundTheory.AutomorphicForms.GLnLocal
 import GroundTheory.LocalFields.LocalFourierHaar
-import Mathlib.Topology.Separation.CompletelyRegular
-import Mathlib.Topology.Separation.Connected
 import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.AdelicHeckeBlocks.IsCompactMaximalPairPlace
 import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.LocalOperatorSums.LocOp3
 
@@ -88,8 +45,6 @@ noncomputable section
 open NumberField IsDedekindDomain
 open GlobalTheory.BCT GlobalTheory.UnitaryBC PositivityTheory.Rg.Bc.ArchbcB.B
 open scoped Classical
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace GlobalTheory.CompanionTheory.LeviMatchingAssembly
 
@@ -129,9 +84,9 @@ theorem tr_bad (d : LocData E n) (hd : d.Ok) {a : ℕ} (ha : a ≤ n) {w : Pl E}
   have e : ((d.fixL a).mul (pw (d.betaL a ha) m)).tr d.P d.one w =
       PositivityTheory.Rg.BcN.F2.mconv (d.fix a w) ((pw (d.betaL a ha) m).s w) := by
     unfold LM.tr
-    rw [if_neg hP]
+    rw [ite_eq_right hP]
     show PositivityTheory.Rg.BcN.F2.mconv (if w ∈ d.Bad then d.fix a w else idem (d.lev a w)) _ = _
-    rw [if_pos hw]
+    rw [ite_eq_left hw]
   rw [e, stabilizerDilationWeights_dualIsotropicVector d hd ha hT hw' m]
   exact GlobalTheory.CompanionTheory.FmPowP.mconv_idem_right ho hle _ fun u hu g => ((hd.fix a ha w hw).2 u hu g).2
 
@@ -177,11 +132,11 @@ theorem sum_diag (d : LocData E n) {a : ℕ} {w : Pl E} (f g : d.kap w → LF a 
     ∑ z, mconv (d.diag f x z) (g z) = mconv (f x) (g x) := by
   refine (Finset.sum_eq_single x ?_ ?_).trans ?_
   · intro z _ hz
-    have h : d.diag f x z = 0 := if_neg (Ne.symm hz)
+    have h : d.diag f x z = 0 := ite_eq_right (Ne.symm hz)
     rw [h]
     exact GlobalTheory.CompanionTheory.FmPowP.mconv_zero_left _
   · simp
-  · have h : d.diag f x x = f x := if_pos rfl
+  · have h : d.diag f x x = f x := ite_eq_left rfl
     rw [h]
 
 section S0
@@ -293,7 +248,7 @@ theorem trace_at_S0_matches (hd : d.Ok) (hT : w ∉ d.T) (hS : w ∈ d.S₀) (m 
         MS.mpow (d.X w) (phi3 (Nat.add_sub_of_le ha) w (d.e w)) m x.1.2 x.1.2 y)) := fun x => by
     have hf : (d.fixL a).m w = d.diag (fun _ y => d.sgn a w * idem (d.L a w) y) := by
       show d.diag (fun _ => if w ∈ d.T then idem (d.lev a w) else d.sgn a w • idem (d.lev a w)) = _
-      simp only [if_neg hT, hl]
+      simp only [ite_eq_right hT, hl]
       rfl
     have e1 : ((d.fixL a).mul (pw (d.betaL a ha) m)).m w x x =
         mconv (fun y => d.sgn a w * idem (d.L a w) y) ((pw (d.betaL a ha) m).m w x x) := by
@@ -419,25 +374,8 @@ theorem beta_m_alt (hT : w ∈ d.T) : (d.betaL a ha).m w = d.diag (fun x => d.qT
   simp [LocData.betaL, hT]
 
 theorem powers_diagonal_at_T (hT : w ∈ d.T) (k : ℕ) (x y : d.kap w) :
-    (pw (d.betaL a ha) k).m w x y = d.diag (fun x => MT.mpow w (d.qT a w x.1.1) (k + 1)) x y := by
-  induction k generalizing x y with
-  | zero =>
-    have h1 : ∀ s, MT.mpow w (d.qT a w s) 1 = d.qT a w s := fun s =>
-      GlobalTheory.CompanionTheory.FmPowP.mconv_idem_right (GlobalTheory.CompanionTheory.MatchPow.iwahori_pair_open a (n - a) w) (GlobalTheory.CompanionTheory.MatchPow.iwahori_pair_le_maximal a (n - a) w) _
-        fun u hu g => ((qT_hecke d s).2 u hu g).2
-    show (d.betaL a ha).m w x y = _
-    rw [beta_m_alt d ha hT]
-    simp only [zero_add, h1]
-  | succ k ih =>
-    show ∑ z, mconv ((d.betaL a ha).m w x z) ((pw (d.betaL a ha) k).m w z y) = _
-    rw [beta_m_alt d ha hT, sum_diag d _ (fun z => (pw (d.betaL a ha) k).m w z y), ih]
-    by_cases h : x = y
-    · have e1 : ∀ f : d.kap w → LF a (n - a) w, d.diag f x y = f x := fun f => if_pos h
-      rw [e1, e1]
-      rfl
-    · have e1 : ∀ f : d.kap w → LF a (n - a) w, d.diag f x y = 0 := fun f => if_neg h
-      rw [e1, e1]
-      exact GlobalTheory.CompanionTheory.FmPowP.mconv_zero_right _
+    (pw (d.betaL a ha) k).m w x y = d.diag (fun x => MT.mpow w (d.qT a w x.1.1) (k + 1)) x y :=
+  by apply _root_.GlobalTheory.CompanionTheory.MatchLMB2.powers_diagonal_at_T_block; assumption
 
 theorem trace_test_function_eq (hT : w ∈ d.T) (m : ℕ)
     (hH : ∀ s, ∀ u ∈ Tail.I2 a (n - a) w, ∀ g, MT.mpow w (d.qT a w s) (m + 1) (u * g) = MT.mpow w (d.qT a w s) (m + 1) g) :
@@ -446,11 +384,11 @@ theorem trace_test_function_eq (hT : w ∈ d.T) (m : ℕ)
   have hl : d.lev a w = Tail.I2 a (n - a) w := by simp [LocData.lev, hT]
   have hf : (d.fixL a).m w = d.diag (fun _ => idem (Tail.I2 a (n - a) w)) := by
     show d.diag (fun _ => if w ∈ d.T then idem (d.lev a w) else d.sgn a w • idem (d.lev a w)) = _
-    simp only [if_pos hT, hl]
+    simp only [ite_eq_left hT, hl]
   have hent : ∀ x : d.kap w, ((d.fixL a).mul (pw (d.betaL a ha) m)).m w x x = MT.mpow w (d.qT a w x.1.1) (m + 1) := fun x => by
     show ∑ z, mconv ((d.fixL a).m w x z) ((pw (d.betaL a ha) m).m w z x) = _
     rw [hf, sum_diag d _ (fun z => (pw (d.betaL a ha) m).m w z x), powers_diagonal_at_T d ha hT]
-    have e1 : ∀ f : d.kap w → LF a (n - a) w, d.diag f x x = f x := fun f => if_pos rfl
+    have e1 : ∀ f : d.kap w → LF a (n - a) w, d.diag f x x = f x := fun f => ite_eq_left rfl
     rw [e1]
     exact GlobalTheory.CompanionTheory.FmPowP.mconv_idem_left (GlobalTheory.CompanionTheory.MatchPow.iwahori_pair_open a (n - a) w) (GlobalTheory.CompanionTheory.MatchPow.iwahori_pair_le_maximal a (n - a) w) _ (hH _)
   rw [tr_one d _ hP]
@@ -464,7 +402,7 @@ theorem unitary_function_at_T (hT : w ∈ d.T) : d.g₀ w = fun y => (((iwU n w 
   have h : d.g₀ w = fun y => (d.c w).sum fun x t =>
       t * (((iwU n w (d.b w)).relIndex (KL n w) : ℕ) : ℂ) * fU n w (d.b w) (d.ϖ w) (lOf x) y := by
     unfold LocData.g₀
-    rw [if_pos hT]
+    rw [ite_eq_left hT]
   rw [h]
   funext y
   rw [Finsupp.sum, Finset.mul_sum, ← Finset.sum_coe_sort (d.c w).support]
@@ -556,8 +494,6 @@ theorem matchLMB3Of_main : MatchLMB3Of := by
 
 end GlobalTheory.CompanionTheory.LeviMatchingAssembly
 
-theorem PositivityTheory.Rg.BcB.F.MLM.matchLMB3Of_pf : PositivityTheory.Rg.BcB.F.MLM.MatchLMB3Of :=
-  GlobalTheory.CompanionTheory.LeviMatchingAssembly.matchLMB3Of_main
 
 end
 end -- clump:auto
@@ -575,8 +511,6 @@ open NumberField IsDedekindDomain Matrix Polynomial
 open GlobalTheory.CuspRep GlobalTheory.PRep Formalism.UG Formalism.BasicNotions GlobalTheory.UnitaryBC Formalism.L2.Host GlobalTheory.BCT GlobalTheory.LFun PositivityTheory.Rg.BcB.F.F5 PositivityTheory.Rg.BcB.F.Eig PositivityTheory.Rg.BcB.G8 PositivityTheory.Rg.BcN.F2 PositivityTheory.Rg.BcB.F.Tail PositivityTheory.Rg.Bc.ArchbcB.B PositivityTheory.Rg.BcB.F
 open scoped Classical
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
 namespace PositivityTheory.Rg.BcB.F.MB
 
 open PositivityTheory.Rg.BcB.F.U (lpow lone)
@@ -593,7 +527,7 @@ theorem matchBadIOf2 : MatchBadIOf2 := by
     rw [mb_lone_apply]
     by_cases h : γ ∈ K'
     · have h' : γ ∈ ({γ : UL n w | γ.1 ∈ congK n w k} : Set (UL n w)) := (hmem γ).1 h
-      rw [if_pos h, Set.indicator_of_mem h', Pi.one_apply, mul_one]
+      rw [ite_eq_left h, Set.indicator_of_mem h', Pi.one_apply, mul_one]
     · have h' : γ ∉ ({γ : UL n w | γ.1 ∈ congK n w k} : Set (UL n w)) := fun h' => h ((hmem γ).2 h')
       simp [h, h']
   rw [hf]
@@ -622,8 +556,6 @@ noncomputable section
 open NumberField IsDedekindDomain Matrix Polynomial Filter
 open GlobalTheory.CuspRep GlobalTheory.PRep Formalism.UG Formalism.BasicNotions GlobalTheory.UnitaryBC Formalism.L2.Host GlobalTheory.BCT PositivityTheory.Rg.BcN.F2
 open scoped Classical
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 namespace PositivityTheory.Rg.BcB.F.MS
 
@@ -754,7 +686,7 @@ theorem matchLMWordS (h3 : M3) : MLM.MatchLMWordS := MLM.matchLMWordSOf (matchSp
 theorem matchLMUnit (h1 : M1) (h3 : M3) : MLM.MatchLMUnit := MLM.matchLMUnitOf (matchUnitI_of h1) (matchSplit h3) idemAlg
 
 theorem matchLMB2 (h2 : M2) (h3 : M3) (h4 : M4) : MLM.MatchLMB2 :=
-  MLM.matchLMB3Of_pf (matchT_of h4) (MS.match_split_place_of_powers h3 (MS.split_place_powers_of_local_ops locOp3)) (MB.matchBadSOf h3 MB.lponeIdem)
+  _root_.GlobalTheory.CompanionTheory.LeviMatchingAssembly.matchLMB3Of_main (matchT_of h4) (MS.match_split_place_of_powers h3 (MS.split_place_powers_of_local_ops locOp3)) (MB.matchBadSOf h3 MB.lponeIdem)
     (MB.matchBadIOf2 h2 MB.lponeIdem) MB.fixIdem idemAlg
 
 end PositivityTheory.Rg.BcB.F.MatchAll

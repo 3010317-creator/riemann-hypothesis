@@ -55,7 +55,7 @@ theorem kapBound_proof : KapBound := by
             obtain ⟨t, -, ht⟩ := Finset.mem_biUnion.mp (hJJ (Finset.mem_of_mem_erase hi))
             calc padicValInt ℓ i
                 = (if i ∈ Finset.Ico (a t) (a t + 4 * (g : ℤ)) then padicValInt ℓ i else 0) :=
-                  (if_pos ht).symm
+                  (ite_eq_left ht).symm
               _ ≤ ∑ t' : Fin 5,
                     (if i ∈ Finset.Ico (a t') (a t' + 4 * (g : ℤ)) then padicValInt ℓ i else 0) :=
                   Finset.single_le_sum
@@ -477,15 +477,15 @@ theorem rr_arith (l d G h y C L s r q : ℝ) (hld : l = d + 1) (hd2 : 2 ≤ d) (
   have ht0 : 0 ≤ (d + 1) / ((d - 1) * d) := div_nonneg hl0.le hdd.le
   have htc : (d + 1) / ((d - 1) * d) ≤ 3 / 2 := by
     have key : d + 1 ≤ 3 / 2 * ((d - 1) * d) := by
-      nlinarith [mul_nonneg (by linarith : (0:ℝ) ≤ d - 2) (by linarith : (0:ℝ) ≤ 3 * d + 1)]
+      nlinarith only [hd2]
     exact (div_le_iff₀ hdd).mpr key
   have htG : (d + 1) / ((d - 1) * d) ≤ 10 / (d + 1) := by
     have key : (d + 1) * (d + 1) ≤ 10 * ((d - 1) * d) := by
-      nlinarith [mul_nonneg (by linarith : (0:ℝ) ≤ d - 2) (by linarith : (0:ℝ) ≤ 9 * d + 6)]
+      nlinarith only [hd2]
     exact (div_le_div_iff₀ hdd hl0).mpr key
   have hth : (d + 1) / ((d - 1) * d) ≤ 3 / d := by
     have key : (d + 1) * d ≤ 3 * ((d - 1) * d) := by
-      nlinarith [mul_nonneg hd0.le (by linarith : (0:ℝ) ≤ d - 2)]
+      nlinarith only [hd2, hd0]
     exact (div_le_div_iff₀ hdd hd0).mpr key
   have e1 : 2 * G * ((d + 1) / ((d - 1) * d)) ≤ 20 * (G / (d + 1)) := by
     calc 2 * G * ((d + 1) / ((d - 1) * d)) ≤ 2 * G * (10 / (d + 1)) :=
@@ -517,7 +517,7 @@ theorem remainder_bound_of_tsum : RrBound := by
     exact (Real.logb_le_logb hb (by norm_num) (by linarith)).mpr hL3
   have hlogmul : Real.logb ℓ (2 * h + 1) ≤ Real.logb ℓ 3 + Real.logb ℓ h := by
     rw [← Real.logb_mul (by norm_num) (by linarith)]
-    exact (Real.logb_le_logb hb (by linarith) (by nlinarith)).mpr (by linarith)
+    exact (Real.logb_le_logb hb (by linarith) (by positivity)).mpr (by linarith)
   have hL0 : 0 ≤ Real.logb ℓ h := Real.logb_nonneg hb hh1
   have hC0 : (0:ℝ) ≤ (⌈1 + Real.logb ℓ (2 * h + 1)⌉₊ : ℝ) := Nat.cast_nonneg _
   have hCL : (⌈1 + Real.logb ℓ (2 * h + 1)⌉₊ : ℝ) ≤ 3 + Real.logb ℓ h := by linarith
@@ -968,24 +968,24 @@ theorem gPar_A (w S η : ℕ) : gPar (w + S + η) S η = max (w + S + η) 1 := b
 
 theorem hCor_pos {n : ℕ} {b w S η : ℕ} {sz : ZMod n → ℕ} (hex : ∃ i, b ≤ sz i ∧ sz i ≤ b + η) :
     hCor b w S η sz = b + η + S := by
-  unfold hCor; exact if_pos hex
+  unfold hCor; exact ite_eq_left hex
 
 theorem hCor_neg {n : ℕ} {b w S η : ℕ} {sz : ZMod n → ℕ} (hex : ¬ ∃ i, b ≤ sz i ∧ sz i ≤ b + η) :
     hCor b w S η sz = w + S + η := by
-  unfold hCor; exact if_neg hex
+  unfold hCor; exact ite_eq_right hex
 
 theorem tyA_thick {n : ℕ} (b η : ℕ) (typ : ZMod n → Bool) (sz : ZMod n → ℕ) (i : ZMod n) :
     (tyA b η typ sz i).thick = true ↔ (b ≤ sz i ∧ sz i ≤ b + η) := by
   unfold tyA
   by_cases ht : b ≤ sz i ∧ sz i ≤ b + η
-  · rw [if_pos ht]
+  · rw [ite_eq_left ht]
     cases typ i <;> simp [LT.thick, ht]
-  · rw [if_neg ht]
+  · rw [ite_eq_right ht]
     simp [LT.thick, ht]
 
 theorem tyA_thin {n : ℕ} {b η : ℕ} {typ : ZMod n → Bool} {sz : ZMod n → ℕ} {i : ZMod n}
     (ht : ¬ (b ≤ sz i ∧ sz i ≤ b + η)) : tyA b η typ sz i = LT.thin := by
-  unfold tyA; exact if_neg ht
+  unfold tyA; exact ite_eq_right ht
 
 theorem tyA_size {n : ℕ} {b η : ℕ} {typ : ZMod n → Bool} {sz : ZMod n → ℕ} {i : ZMod n} {x : ℕ}
     (h : tyA b η typ sz i = LT.up x ∨ tyA b η typ sz i = LT.down x) :
@@ -993,10 +993,10 @@ theorem tyA_size {n : ℕ} {b η : ℕ} {typ : ZMod n → Bool} {sz : ZMod n →
   unfold tyA at h
   by_cases ht : b ≤ sz i ∧ sz i ≤ b + η
   · refine ⟨ht, ?_⟩
-    rw [if_pos ht] at h
+    rw [ite_eq_left ht] at h
     generalize typ i = t at h
     cases t <;> simpa using h
-  · rw [if_neg ht] at h
+  · rw [ite_eq_right ht] at h
     simp at h
 
 theorem winA_subset {n : ℕ} (b w S η : ℕ) (typ : ZMod n → Bool) (sz : ZMod n → ℕ) (i : ZMod n)
@@ -1005,16 +1005,16 @@ theorem winA_subset {n : ℕ} (b w S η : ℕ) (typ : ZMod n → Bool) (sz : ZMo
       (tyA b η typ sz i).win (w + S + η) S η := by
   unfold tyA
   by_cases ht : b ≤ sz i ∧ sz i ≤ b + η
-  · rw [if_pos ht]
+  · rw [ite_eq_left ht]
     generalize typ i = t
     intro x hx
     cases t <;> simpa [LT.win] using hx
-  · rw [if_neg ht]
+  · rw [ite_eq_right ht]
     have hw : sz i ≤ w := h.resolve_left ht
     generalize typ i = t
     intro x hx
     cases t <;>
-      · simp only [Bool.false_eq_true, if_false, if_true, LT.win, Set.mem_union, Set.mem_Icc] at hx ⊢
+      · simp only [Bool.false_eq_true, ite_false, ite_true, LT.win, Set.mem_union, Set.mem_Icc] at hx ⊢
         push_cast
         omega
 
@@ -1023,15 +1023,15 @@ theorem tyA_win_subset {n : ℕ} (b w S η : ℕ) (typ : ZMod n → Bool) (sz : 
       Set.Icc (-(bdA b w S η sz i : ℤ)) (bdA b w S η sz i) := by
   unfold tyA bdA
   by_cases ht : b ≤ sz i ∧ sz i ≤ b + η
-  · rw [if_pos ht, if_pos ht]
+  · rw [ite_eq_left ht, ite_eq_left ht]
     have h1 : b + η + S ≤ hA b w S η sz := by
       unfold hA; rw [hCor_pos ⟨i, ht⟩]; exact le_max_left _ _
     generalize typ i = t
     intro x hx
     cases t <;>
-      · simp only [Bool.false_eq_true, if_false, if_true, LT.win, Set.mem_union, Set.mem_Icc] at hx ⊢
+      · simp only [Bool.false_eq_true, ite_false, ite_true, LT.win, Set.mem_union, Set.mem_Icc] at hx ⊢
         omega
-  · rw [if_neg ht, if_neg ht]
+  · rw [ite_eq_right ht, ite_eq_right ht]
     intro x hx
     simpa [LT.win] using hx
 
@@ -1080,7 +1080,7 @@ theorem aprimeConfig_holds : ∃ C : ℝ, 1 ≤ C ∧ AprimeConfig C := by
     refine le_trans ?_ hCb
     apply mul_le_mul_of_nonneg_right _ hGpos
     have h1 : (1 : ℝ) ≤ max C₀ 1 := le_max_right _ _
-    nlinarith
+    nlinarith only [hjR, h1]
   have hb2 : 2 * (w + S + η + 1) ≤ b := by exact_mod_cast hb2R
   obtain ⟨cuts, ell, hne, hc⟩ := hcore l hl n j sz b w S η
     (20 * (((w + S + η : ℕ) : ℝ) / l + ((b + η + S : ℕ) : ℝ) / ((l : ℝ) - 1) ^ (j + 1) +
@@ -1101,9 +1101,9 @@ theorem aprimeConfig_holds : ∃ C : ℝ, 1 ≤ C ∧ AprimeConfig C := by
     · left
       rw [hg, hhA i ht]
       unfold tyA
-      rw [if_pos ht]
+      rw [ite_eq_left ht]
       generalize typ i = t
-      cases t <;> simp only [Bool.false_eq_true, if_false, if_true, LT.ok, LT.size] <;> omega
+      cases t <;> simp only [Bool.false_eq_true, ite_false, ite_true, LT.ok, LT.size] <;> omega
     · right
       exact tyA_thin ht
   · refine ⟨hne, hj, ?_, fun c hc' => (hc c hc').2.1, ?_⟩
@@ -1172,7 +1172,7 @@ theorem aprimeConfig_holds : ∃ C : ℝ, 1 ≤ C ∧ AprimeConfig C := by
           rw [hg, hh, sigPar_eq]
           push_cast at hellR hrr ⊢
           have hgn : (0 : ℝ) ≤ 2 * max ((w : ℝ) + S + η) 1 := by positivity
-          nlinarith [mul_le_mul_of_nonneg_left hellR hgn]
+          linarith only [hellR, hrr, hgn, mul_le_mul_of_nonneg_left hellR hgn]
         have : (2 : ℝ) * (initialExponentBound l n j (gPar (w + S + η) S η) (hA b w S η sz) H₁ H₂ cuts ell : ℕ) <
             sz (c - (s₁ : ZMod n)) := by linarith
         exact_mod_cast this
@@ -1188,7 +1188,7 @@ theorem bdA_le {n : ℕ} {b w S η : ℕ} {sz : ZMod n → ℕ} (hG : w + S + η
 
 theorem bdA_thin {n : ℕ} {b w S η : ℕ} {sz : ZMod n → ℕ} {i : ZMod n}
     (ht : ¬ Thick b η sz i) : bdA b w S η sz i = w + S + η := by
-  unfold bdA; exact if_neg ht
+  unfold bdA; exact ite_eq_right ht
 
 theorem eA_le (C₁ : ℝ) (hC₁ : 0 ≤ C₁) (hE : ThmEBound C₁) (l : ℕ) (hlp : l.Prime) (hl : 11 ≤ l)
     (n : ℕ) [NeZero n] (j b w S η : ℕ) (typ : ZMod n → Bool) (sz : ZMod n → ℕ)
@@ -1224,7 +1224,7 @@ theorem eA_le (C₁ : ℝ) (hC₁ : 0 ≤ C₁) (hE : ThmEBound C₁) (l : ℕ) 
   have hone : (1 : ℝ) ≤ (((w + S + η : ℕ) : ℝ) + 1) * ((j : ℝ) + 1) := by
     have h1 : (0 : ℝ) ≤ ((w + S + η : ℕ) : ℝ) := by positivity
     have h2 : (0 : ℝ) ≤ (j : ℝ) := by positivity
-    nlinarith
+    nlinarith only []
   have hX1 : (1 : ℝ) ≤ ((l : ℝ) - 1) ^ (j + 1) := one_le_pow₀ (by linarith)
   have hAdef : hA b w S η sz = max (hCor b w S η sz) 1 := rfl
   rw [hAdef]

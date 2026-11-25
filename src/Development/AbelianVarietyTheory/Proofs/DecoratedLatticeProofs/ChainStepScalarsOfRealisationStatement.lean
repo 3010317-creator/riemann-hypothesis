@@ -56,7 +56,6 @@ open scoped TensorProduct InnerProductSpace ComplexConjugate
 open GlobalTheory.ChainOnto GlobalTheory.ChainTw
 open GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting (SplitProj IsProjAt IsIdemOf LiftsChar rdA grpCo frCo gAt)
 open GlobalTheory.IndefiniteRowSideFullHecke.VolumeFlatSection (Blocks parahoric datum)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open GlobalTheory.LiftRows (Given)
 
 noncomputable section
@@ -514,12 +513,12 @@ theorem scalars_of_realisation : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {
   choose! rM hrM hM using hmid
   refine ⟨fun j => if j = D.R.m then rT else rM (j - 1), fun j hj1 hjm => ?_, fun t c hc => ?_⟩
   · by_cases hj : j = D.R.m
-    · simp only [if_pos hj]; exact hrT
-    · simp only [if_neg hj]; exact hrM (j - 1) (by omega)
+    · simp only [ite_eq_left hj]; exact hrT
+    · simp only [ite_eq_right hj]; exact hrM (j - 1) (by omega)
   · refine ⟨(hRP t c).1 hc, fun B hB => ⟨fun k hk => ?_, ?_⟩⟩
     · obtain ⟨l, hl, hS⟩ := hM k hk t c hc B hB
       refine ⟨l, hl, ?_⟩
-      simp only [if_neg (show k + 1 ≠ D.R.m by omega), Nat.add_sub_cancel]
+      simp only [ite_eq_right (show k + 1 ≠ D.R.m by omega), Nat.add_sub_cancel]
       exact hS
     · obtain ⟨l, hl, hS⟩ := hT t c hc B hB
       refine ⟨l, hl, ?_⟩
@@ -543,11 +542,8 @@ open scoped TensorProduct InnerProductSpace ComplexConjugate
 open GlobalTheory.ChainOnto GlobalTheory.ChainTw
 open GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting (SplitProj IsProjAt IsIdemOf LiftsChar rdA grpCo frCo gAt)
 open GlobalTheory.IndefiniteRowSideFullHecke.VolumeFlatSection (Blocks parahoric datum)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open GlobalTheory.LiftRows (Given)
 
-theorem _root_.GlobalTheory.T.chainStep_scalars_of_realisation : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), Given R F → GlobalTheory.IndefiniteRowSideFullHecke.ThetaSourceAction.NodeGap D → SoftQ D → QOfVal D → LPos D → LFull D → StepLam D → ∀ h : RangeX R, RChain R h → NormX R h → RUnif R h → RowPar R → IPDict R → GlobalTheory.IndefiniteRowSideFullHecke.LabelSettingScalars.Scalars R := by
-  first | exact @GlobalTheory.ChainTw.scalars_of_realisation
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ChainStepScalarsOfRealisationStatement =====

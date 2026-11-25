@@ -381,7 +381,7 @@ theorem exists_curve0_hasPeriod : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     have := j.2
     simp only
     omega⟩
-  exact ⟨Z, x, _root_.GlobalTheory.CompanionTheory.Ar.Fl.curve0_z_ne_zero E H ρ Z, hper, hx⟩
+  exact ⟨Z, x, _root_.PositivityTheory.Xgf.curve_z_ne_zero E H ρ Z, hper, hx⟩
 
 end GlobalTheory.CompanionTheory.Ar.Fl
 end -- clump:auto
@@ -633,8 +633,8 @@ theorem flatGen_finNorm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     have hφ'0 := hline.ne X.K X.β X.y v' w' hF'
     have horth : ∀ a b, sesq (FU.Di i) (x (.inl a)) (x (.inr b)) = 0 := fun a b =>
       (_root_.GlobalTheory.CompanionTheory.Ar.PureOrth.sesq_eq_zero_of_opposite_pure E H (FU.Di i) g ty P hP _ _ (hx.1 a) (hx.2 b)).1
-    obtain ⟨hG0, hGlog⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.orthogonalBlock_gram_det_log_norm E H (FU.Di i) D.p D.q x ℓ hxl horth
-    have hzt : (Z true).z ^ D.p ≠ 0 := pow_ne_zero _ (_root_.GlobalTheory.CompanionTheory.Ar.Fl.curve0_z_ne_zero E H _ (Z true))
+    obtain ⟨hG0, hGlog⟩ := _root_.PositivityTheory.Xgf.local_basis_gram_det_log_norm E H (FU.Di i) D.p D.q x ℓ hxl horth
+    have hzt : (Z true).z ^ D.p ≠ 0 := pow_ne_zero _ (_root_.PositivityTheory.Xgf.curve_z_ne_zero E H _ (Z true))
     have hC : ((φ X.K X.y v w : X.K) : ℂ) * τ T.det = (r : ℂ) * τ (gramE (FU.Di i) (x ∘ Sum.inr)).det := by
       apply mul_right_cancel₀ hzt
       rw [hφ, ← hz]
@@ -829,7 +829,7 @@ theorem sigma_component : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   rw [hexp, Finset.sum_eq_single σ.toRatAlgHom]
   · have h1 : S σ.toRatAlgHom = 1 := by
       rw [hS]
-      exact if_pos (RingHom.ext fun _ => rfl)
+      exact ite_eq_left (RingHom.ext fun _ => rfl)
     have h2 : σ (H.rt : E) = 2 * σ (H.w0 : E) - 1 := by
       have h3 := congrArg (fun a : 𝓞 E => σ (algebraMap (𝓞 E) E a)) H.two_weight_eq_one_add_root
       simp only [map_mul, map_add (f := _), map_one, map_ofNat] at h3
@@ -842,7 +842,7 @@ theorem sigma_component : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   · intro τ _ hτ
     have h0 : S τ = 0 := by
       rw [hS]
-      refine if_neg fun hc => hτ (AlgHom.ext fun z => ?_)
+      refine ite_eq_right fun hc => hτ (AlgHom.ext fun z => ?_)
       exact congrArg (fun f : E →+* ℂ => f z) hc
     rw [h0]
     simp
@@ -1033,11 +1033,11 @@ theorem isComb_pad {G : Over S} [GrpObj G] [IsCommMonObj G] {x : Sp R ⟶ S} {m 
   let U : Fin M → (epsAt x ⟶ G) := fun q => if hq : ∃ j, jj j = q then u hq.choose else 1
   have hU : ∀ j, U (jj j) = u j := fun j => by
     have hq : ∃ j', jj j' = jj j := ⟨j, rfl⟩
-    simp only [U, dif_pos hq]
+    simp only [U, dite_eq_left hq]
     rw [hj hq.choose_spec]
   have hU1 : ∀ q, q ∉ Set.range jj → U q = 1 := fun q hq => by
     simp only [U]
-    exact dif_neg hq
+    exact dite_eq_right hq
   refine ⟨U, fun q => ?_, ?_⟩
   · by_cases hq : q ∈ Set.range jj
     · obtain ⟨j, rfl⟩ := hq
@@ -1569,7 +1569,7 @@ theorem hasInfNorm_value : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       s' (X.β (tauE c (ComplexEmbedding.conjugate τ) ((H.rt : E) * sesq (FU.Di i) (x (.inr a)) (x (.inr a')))))) (fun _ _ => rfl)
   rw [hσ'] at hlΔ
 
-  have hz := _root_.GlobalTheory.CompanionTheory.Ar.Fl.curve0_z_ne_zero E H _ (Z true)
+  have hz := _root_.PositivityTheory.Xgf.curve_z_ne_zero E H _ (Z true)
   have hval2 : ((φ X.K X.y v w : X.K) : ℂ) * τ T.det = (r : ℂ) * τ (gramE (FU.Di i) (x ∘ Sum.inr)).det := by
     apply mul_right_cancel₀ (pow_ne_zero D.p hz)
     rw [hval, ← hrz]
@@ -1649,7 +1649,7 @@ theorem const_algebraic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   have hT0 : T.det ≠ 0 := hdet hloc.1
   have horth : ∀ a b, sesq (FU.Di i) (x (.inl a)) (x (.inr b)) = 0 := fun a b =>
     (_root_.GlobalTheory.CompanionTheory.Ar.PureOrth.sesq_eq_zero_of_opposite_pure E H (FU.Di i) g ty P hP _ _ (hx.1 a) (hx.2 b)).1
-  have hG0 := (_root_.GlobalTheory.CompanionTheory.Ar.Fl.orthogonalBlock_gram_det_log_norm E H (FU.Di i) D.p D.q x ⟨2, Nat.prime_two⟩ hloc horth).1
+  have hG0 := (_root_.PositivityTheory.Xgf.local_basis_gram_det_log_norm E H (FU.Di i) D.p D.q x ⟨2, Nat.prime_two⟩ hloc horth).1
   obtain ⟨hfm, hval⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.CMValue.value_on_cmFrame E H D l Xo c g ty FU i Z P hP X x hx U τ φ e ρ T v w hty hrt hmem hline he
     hconst hloc.1 hT hfr
   have hφ : φ X.K X.y v w ≠ 0 := hline.ne X.K X.β X.y v w hfm

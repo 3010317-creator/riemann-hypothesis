@@ -40,7 +40,6 @@ structure SymmetricCompatibleData (D : D7) where
 structure FullTiedS (D : D7) extends SymmetricCompatibleData D where
   levelZeroCompatibility : SymmetricLevelZeroData D base.toHermColsCh atT
   g : SymmetricGroupCompatibility D base.toHermColsCh
-  ad : SymmetricAdelicCompatibility D base.toHermColsCh atT
   cof : SymmetricCofactorCompatibility D base.toHermColsCh atT
   piG : PiGConstS D base.toHermColsCh atT levelZeroCompatibility
   stabMap : SymmetricStabilizerMapCompatibility D base.toHermColsCh atT
@@ -99,12 +98,6 @@ structure SymmetricExtraCompatibility {D : D7} (X : FullTiedS D) {L : SizeData�
   iw_pos : ∀ u w (h : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)),
     haveI : Fact (D.what₂.places.resChar w).Prime := ⟨D.what₂.places.resChar_prime w⟩
     GIwPos u w h (ex.ker u w h)
-
-section Sub
-
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E]
-
-end Sub
 
 def FullTiedS.to0 {D : D7} (X : FullTiedS D) : Herm0 D := ⟨X.base.lev0, X.g⟩
 

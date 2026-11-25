@@ -69,18 +69,8 @@ section Forms
 variable {M N : ℕ} {E : Type} [AddCommGroup E] [Module Ω E] {Φ : Type} [Field Φ] [Algebra Ω Φ]
 
 theorem chartMono_homog (M : ℕ) (c : ∀ k, ι k) (α : K → ℕ) :
-    IsMultiHomog (chartMono (F := F) M c α) (liftNat α) := by
-  have h := IsWeightedHomogeneous.prod (R := F) Finset.univ
-    (fun k => X (⟨some k, c k⟩ : Σ o, bundleIdx ι M o) ^ α k)
-    (fun k => α k • blockWeight (bundleIdx ι M) ⟨some k, c k⟩)
-    (fun k _ => (isWeightedHomogeneous_X F _ _).pow (α k))
-  have hw : liftNat α = ∑ k, α k • blockWeight (bundleIdx ι M) ⟨some k, c k⟩ := by
-    funext o
-    cases o with
-    | none => simp [liftNat, blockWeight, Finset.sum_apply]
-    | some k => simp [liftNat, blockWeight, Finset.sum_apply, Pi.single_apply]
-  rw [IsMultiHomog, chartMono, hw]
-  exact h
+    IsMultiHomog (chartMono (F := F) M c α) (liftNat α) :=
+  by apply _root_.GroundTheory.Heights₂.Heights.NumbersDVR.FlagBundleSectionForms.chartMono_homog
 
 theorem eval_chartMono (y : (Σ k, ι k) → Ω) (w : Module.Basis (Fin N) Ω E) (φ : Fin M → Module.Dual Ω E)
     (t : Fin N → Φ) (c : ∀ k, ι k) (α : K → ℕ) :
@@ -497,14 +487,14 @@ theorem FlagBundleChartSection.proof : FlagBundleChartSection.Statement := by
       rcases lt_trichotomy j i with h | h | h
       · have h1 : (j : ℕ) < i := h
         have h2 : (j : ℕ) < (i : ℕ) + 1 := by omega
-        simp only [h1, h2, if_true]
+        simp only [h1, h2, ite_true]
         ring
       · subst h
         have h1 : ¬ (j : ℕ) < j := lt_irrefl _
         have h2 : (j : ℕ) < (j : ℕ) + 1 := Nat.lt_succ_self _
         have hσ : t j * algebraMap Ω Φ (chartPow y c (b j))⁻¹ * algebraMap Ω Φ (chartPow y c (b j)) = t j := by
           rw [mul_assoc, ← map_mul, inv_mul_cancel₀ hcpb, map_one, mul_one]
-        simp only [h1, h2, if_true, if_false, hviD]
+        simp only [h1, h2, ite_true, ite_false, hviD]
         linear_combination (-(algebraMap Ω Φ (∏ k, y ⟨k, c k⟩ ^ δ k) * algebraMap Ω Φ (φ p (w j)))) * hσ
       · have h1 : ¬ (j : ℕ) < i := by
           have : (i : ℕ) < j := h
@@ -512,7 +502,7 @@ theorem FlagBundleChartSection.proof : FlagBundleChartSection.Statement := by
         have h2 : ¬ (j : ℕ) < (i : ℕ) + 1 := by
           have : (i : ℕ) < j := h
           omega
-        simp only [h1, h2, if_false, hviT j h, map_zero]
+        simp only [h1, h2, ite_false, hviT j h, map_zero]
         ring
     · rw [eval₂_X]
       rfl

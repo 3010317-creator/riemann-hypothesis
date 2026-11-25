@@ -876,11 +876,11 @@ theorem rank_equality : HodgeTateDimensionEquality := by
         rw [Finset.sum_range, ← hg' i, Fintype.sum_sigma]
         refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun s _ => ?_
         simp only [z]
-        rw [dif_pos a.isLt]
+        rw [dite_eq_left a.isLt]
       have hz := hJ bH z ?_
       · rintro ⟨⟨a, ha⟩, s⟩
         have := congrFun (hz a (Nat.lt_succ_iff.1 ha)) s
-        simp only [z, dif_pos ha] at this
+        simp only [z, dite_eq_left ha] at this
         exact this
       intro v
       calc ∑ a ∈ Finset.range (n + 1), ∑ s, z a s * P.h M a n v ((bH a).coord s)
@@ -1319,7 +1319,7 @@ theorem divisor_good_off_centre (B : Blow q i π D d) (V' : Y.Opens) (σ' : (V' 
 
 theorem good_open_off_centre [IsProper q] [Smooth q] (B : Blow q i π D d) (y : Y) (hy : π y ∈ B.U) :
     ∃ (V' : Y.Opens) (σ' : (V' : Scheme.{0}) ⟶ D.Y), y ∈ V' ∧ DGood2 B V' σ' := by
-  obtain ⟨Cv⟩ := (cov_ex q).1 inferInstance
+  obtain ⟨Cv⟩ := (_root_.GlobalTheory.CompanionTheory.CovEx.exists_cov q).1 inferInstance
   have hz : π y ∈ (⨆ β, Cv.U β) := by rw [Cv.cover]; trivial
   obtain ⟨β, hβ⟩ := TopologicalSpace.Opens.mem_iSup.mp hz
   obtain ⟨_, ⟨A, hAa, rfl⟩, hzA, hAle⟩ := Z.isBasis_affineOpens.exists_subset_of_mem_open
@@ -1713,7 +1713,7 @@ theorem d_extZ {Q : ObjectProperty C} (hQ : Cosieve Q) {n : ℕ} (b : CH.Cn (Q.�
     ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) • ((Q.ι ⋙ F).map (toLast i (liftS hQ s hs))).hom (b (face i (liftS hQ s hs)))
   refine Finset.sum_congr rfl fun i _ => ?_
   have h : Q ((face i s).obj 0) := hQ (s.map (homOfLE (Fin.zero_le _))) hs
-  have e : extZ F hQ b (face i s) = b (liftS hQ (face i s) h) := dif_pos h
+  have e : extZ F hQ b (face i s) = b (liftS hQ (face i s) h) := dite_eq_left h
   rw [e]
   rfl
 

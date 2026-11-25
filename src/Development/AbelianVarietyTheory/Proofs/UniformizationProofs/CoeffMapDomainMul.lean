@@ -157,7 +157,7 @@ theorem coeffSup_coeff_mul [Add G] [UniqueSums G] (f g : AddMonoidAlgebra R G) :
     obtain ⟨hp, hne⟩ := Finset.mem_sdiff.mp hp
     obtain ⟨hp₁, hp₂⟩ := Finset.mem_product.mp hp
     rw [Finset.mem_singleton] at hne
-    simp only [if_true, map_mul, ha₂, hb₂]
+    simp only [ite_true, map_mul, ha₂, hb₂]
     split_ifs with he
     · rw [map_mul]
       have h₁ := le_coeffSup v.map_zero f.coeff p.1
@@ -390,7 +390,6 @@ section -- clump:auto
 open CategoryTheory CategoryTheory.Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry IsLocalRing
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.DVR
 open scoped CategoryTheory.Obj
-attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT
 
 namespace GlobalTheory.UT
@@ -427,7 +426,7 @@ theorem NullV.exists_trunc {X : Type} {A : X → F} (hA : NullV v A) (N : ℚ) :
     fun χ hχ => ?_⟩
   · rw [Set.Finite.mem_toFinset]
     by_contra hn
-    exact hχ (if_neg hn)
+    exact hχ (ite_eq_right hn)
   · simp only [Finsupp.onFinset_apply]
     split_ifs with hχ
     · simp
@@ -436,7 +435,7 @@ theorem NullV.exists_trunc {X : Type} {A : X → F} (hA : NullV v A) (N : ℚ) :
     split_ifs with hχ
     · exact le_rfl
     · simp
-  · simp only [Finsupp.onFinset_apply, if_pos hχ]
+  · simp only [Finsupp.onFinset_apply, ite_eq_left hχ]
 
 theorem coeff_mapDomain_mul {X : Type} [AddCommGroup X] (h : X →+ X) (a c : AddMonoidAlgebra F X)
     (T : Finset X) (hT : a.coeff.support ⊆ T) (α : X) :
