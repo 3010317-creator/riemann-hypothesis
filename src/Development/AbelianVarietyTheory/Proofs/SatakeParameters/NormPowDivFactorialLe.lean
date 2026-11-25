@@ -118,12 +118,8 @@ variable [NeZero d] in
 private theorem coeff_mapDomain_rename_of_injective {σ τ R : Type} [CommSemiring R] (f : σ → τ)
     [Filter.TendstoCofinite f] (hf : Function.Injective f) (p : MvPowerSeries σ R)
     (n : σ →₀ ℕ) : coeff (Finsupp.mapDomain f n) (rename f p) = coeff n p := by
-  rw [coeff_rename, Finset.sum_eq_single n]
-  · intro y hy hne
-    simp only [Set.Finite.mem_toFinset] at hy
-    exact absurd (Finsupp.mapDomain_injective hf hy) hne
-  · intro hn
-    exact absurd (by simp) hn
+  have h := MvPowerSeries.coeff_embDomain_rename ⟨f, hf⟩ p n
+  rwa [Finsupp.embDomain_eq_mapDomain] at h
 
 
 open MvPowerSeries in
