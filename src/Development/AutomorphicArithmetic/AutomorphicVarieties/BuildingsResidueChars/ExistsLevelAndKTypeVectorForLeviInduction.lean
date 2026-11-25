@@ -125,6 +125,10 @@ private theorem finite_projection_integral_coe {K : Type} [Field K] [NumberField
     ((fin1 u : G1 K n) : AdelicGLn.AdelicGL K n) = finEmb K n u :=
   congrArg Subtype.val (MultiplicityOne.finProj_of_mem (maxCompact_le_normOneGL (finEmb_mem_maxCompact hu)))
 
+private theorem zt00 {K : Type} [Field K] [NumberField K] : zt K 0 = 1 := by
+  rw [zt, ← map_one (centralSection K 2)]
+  exact congrArg _ (Subtype.ext Real.exp_zero)
+
 private theorem block_mem {K : Type} [Field K] [NumberField K] (S : Finset (Pl K)) {V : ∀ w : Pl K, Subgroup (Gw 2 w)}
     (m : Pl K → ℕ) (hV : ∀ w, GLnLocal.congruenceSubgroup (w.adicCompletion K) 2 (m w) ≤ V w)
     {d : FA K 2} (hd : d ∈ AdelicGLn.integralFiniteGL K 2) {u : FA K (2 + 2)} (f : Fin 2 → Fin (2 + 2)) (hf : Function.Injective f)
@@ -210,10 +214,7 @@ theorem UpperTheory.exists_level_indicator_unipotent_invariant :
       have a2 := congrArg Subtype.val e'
       rw [blkLaws.1, finite_projection_integral_coe d₁.2, finite_projection_integral_coe d₂.2] at a1
       rw [Subgroup.coe_mul, finite_projection_integral_coe (hle hu)] at a2
-      have z0 : zt K 0 = 1 := by
-        rw [zt, ← map_one (centralSection K 2)]
-        exact congrArg _ (Subtype.ext Real.exp_zero)
-      rw [neg_zero, z0, mul_one, mul_one] at a1
+      rw [neg_zero, zt00, mul_one, mul_one] at a1
       exact a1.symm.trans a2
     have hb := blocks_read (x := (finEmb K 2 d₁).val) (y := (finEmb K 2 d₂).val) (X := X) (A := (finEmb K (2 + 2) u).val)
       (congrArg Units.val key)
@@ -331,11 +332,7 @@ private theorem off_diag_zero {E : Type} [NormedField E] {n : ℕ} (k : Matrix (
     rw [← Finset.sum_pair (f := fun l => ‖k i l‖ ^ 2) hij]
     exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ _) fun _ _ _ => sq_nonneg _
   rw [h2, hii, norm_one] at h3
-  have h4 : ‖k i j‖ ^ 2 ≤ 0 := by linarith
-  have h5 : ‖k i j‖ = 0 := by
-    have := sq_nonneg ‖k i j‖
-    exact pow_eq_zero_iff (two_ne_zero) |>.1 (le_antisymm h4 this)
-  exact norm_eq_zero.1 h5
+  exact norm_eq_zero.1 (pow_eq_zero_iff two_ne_zero |>.1 (by nlinarith [sq_nonneg ‖k i j‖]))
 
 theorem UpperTheory.unipotent_mem_maximalCompact_finite_integral :
     ∀ {K : Type} [Field K] [NumberField K] (X : UPos (2 + 2) 2 → NumberField.AdeleRing (𝓞 K) K), nn X ∈ KG K (2 + 2) → ∃ h : AdelicGLn.integralFiniteGL K (2 + 2), nn X = fin1 (h : FA K (2 + 2)) := by
@@ -414,10 +411,6 @@ private theorem arcV {n : ℕ} (a : archCompact K n) :
   congrArg Subtype.val (archProj_of_mem (A := ((a : archGroup K n) : ArchUnits K n))
     (maxCompact_le_normOneGL a.2))
 
-private theorem finV {n : ℕ} (h : AdelicGLn.integralFiniteGL K n) :
-    ((fin1 (h : FA K n) : G1 K n) : AdelicGLn.AdelicGL K n) = finEmb K n (h : FA K n) :=
-  congrArg Subtype.val (MultiplicityOne.finProj_of_mem (maxCompact_le_normOneGL (finEmb_mem_maxCompact h.2)))
-
 private theorem cm {n : ℕ} (a : archCompact K n) (h : FA K n) : Commute (arc1 a) (fin1 h) :=
   (MultiplicityOne.finProj_mul_archProj_comm h _).symm
 
@@ -433,10 +426,6 @@ private theorem fin1M {n : ℕ} (a b : FA K n) : (fin1 (a * b) : G1 K n) = fin1 
 private theorem finite_projection_one {n : ℕ} : (fin1 (1 : FA K n) : G1 K n) = 1 := map_one (MultiplicityOne.finProj K n)
 
 private theorem archimedean_projection_one {n : ℕ} : (arc1 (1 : archCompact K n) : G1 K n) = 1 := map_one (archP K n)
-
-private theorem zt00 : zt K 0 = 1 := by
-  rw [zt, ← map_one (centralSection K 2)]
-  exact congrArg _ (Subtype.ext Real.exp_zero)
 
 private theorem fin_fst {n : ℕ} (y : FA K n) (a b : Fin n) :
     (finEmb K n y a b).1 = (1 : Matrix (Fin n) (Fin n) (InfiniteAdeleRing K)) a b := by
@@ -469,9 +458,10 @@ private theorem lv_fin (d₁ d₂ : AdelicGLn.integralFiniteGL K 2) :
   simp only at e
   have e1 : ((lv (fin1 (d₁ : FA K 2)) (fin1 (d₂ : FA K 2)) 0 : G1 K (2 + 2)) : AdelicGLn.AdelicGL K (2 + 2)) =
       blk (finEmb K 2 (d₁ : FA K 2)) (finEmb K 2 (d₂ : FA K 2)) := by
-    rw [(blkLaws (K := K)).1, neg_zero, zt00, mul_one, mul_one, finV, finV]
+    rw [(blkLaws (K := K)).1, neg_zero, zt00, mul_one, mul_one, finite_projection_integral_coe d₁.2,
+      finite_projection_integral_coe d₂.2]
   have e2 := congrArg (fun g : G1 K (2 + 2) => (AdelicGLn.prodEquiv K (2 + 2) (g : AdelicGLn.AdelicGL K (2 + 2))).1) e
-  simp only [e1, blk_fst, Subgroup.coe_mul, arcV, finV, map_mul, prodEquiv_infEmb, prodEquiv_finEmb, Prod.fst_mul, mul_one] at e2
+  simp only [e1, blk_fst, Subgroup.coe_mul, arcV, finite_projection_integral_coe (β ⟨_, hmem⟩).2, map_mul, prodEquiv_infEmb, prodEquiv_finEmb, Prod.fst_mul, mul_one] at e2
   have e3 : α ⟨_, hmem⟩ = 1 := by
     apply Subtype.ext
     have := congrArg (archEquiv K (2 + 2)) e2
