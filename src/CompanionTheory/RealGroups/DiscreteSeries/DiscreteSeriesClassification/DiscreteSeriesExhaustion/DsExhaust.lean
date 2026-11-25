@@ -534,12 +534,6 @@ open CompanionTheory.D.LK (IsKMod LocFin IsMin)
 
 variable {n : ℕ}
 
-theorem hasChar_path (hS : StepChar) (ss : List (Fin n)) :
-    ∀ (X : GMod n) (χ : Fin n → ℂ), HasChar X χ → HasChar (path X χ ss) (pathEnd χ ss) := by
-  induction ss with
-  | nil => intro X χ h; exact h
-  | cons s ss ih => intro X χ h; exact ih _ _ (hS n X χ s h)
-
 theorem hasChar_of_scalChar {X : GMod n} {χ : Fin n → ℂ} (h : ScalChar X χ) : HasChar X χ :=
   ⟨1, fun Y => by rw [pow_one, h Y, sub_self]⟩
 

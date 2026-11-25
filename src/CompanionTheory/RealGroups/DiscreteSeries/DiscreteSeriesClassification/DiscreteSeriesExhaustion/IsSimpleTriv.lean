@@ -113,6 +113,12 @@ def triv (n : ℕ) : GMod n := ⟨ℂ, 0, fun a b c d => by simp⟩
 def StepChar : Prop :=
   ∀ (n : ℕ) (X : GMod n) (χ : Fin n → ℂ) (s : Fin n), HasChar X χ → HasChar (step X (χ s)) (χ + Pi.single s 1)
 
+theorem hasChar_path (hS : StepChar) (ss : List (Fin n)) :
+    ∀ (X : GMod n) (χ : Fin n → ℂ), HasChar X χ → HasChar (path X χ ss) (pathEnd χ ss) := by
+  induction ss with
+  | nil => intro X χ h; exact h
+  | cons s ss ih => intro X χ h; exact ih _ _ (hS n X χ s h)
+
 def Hecke : Prop :=
   ∀ (n : ℕ) (X : GMod n) (χ : Fin n → ℂ) (ss : List (Fin n)), GoodPath χ ss → IsSimple X → HasChar X χ →
     ScalChar (path X χ ss) (pathEnd χ ss) →
