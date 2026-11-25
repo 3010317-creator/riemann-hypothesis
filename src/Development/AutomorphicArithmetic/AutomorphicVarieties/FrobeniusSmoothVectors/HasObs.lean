@@ -307,7 +307,6 @@ theorem UpperTheory.V.Fr.pres :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ S : Space O F n, ∀ (x : Ideal S.A) (L : S.Loc x), L.Pres := by
   intro l _ O _ _ _ _ F C₀ n hF hn S x L
   haveI : CharP (ResidueField O) l := IsCoef.char
-  haveI : IsNoetherianRing L.O' := inferInstance
   haveI : IsAdicComplete (maximalIdeal L.O') L.O' := IsCoef.complete
   haveI : Finite (ResidueField L.O') := IsCoef.fin
   haveI : CharP (ResidueField L.O') l := IsCoef.char

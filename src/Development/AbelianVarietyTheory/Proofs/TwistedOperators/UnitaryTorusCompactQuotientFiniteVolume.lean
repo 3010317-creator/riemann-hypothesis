@@ -41,8 +41,6 @@ theorem star'_star' (h : IsCMExt F E σ) (P : PPol σ r) (x : Fld P) : star' P (
   change g (AdjoinRoot.mk P.1 p) = AdjoinRoot.mk P.1 p
   rw [key, Polynomial.hom_eval₂, hg, hgα]
 
-instance finiteFE : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-
 instance finiteFL (P : PPol σ r) : Module.Finite F (Fld P) := Module.Finite.trans E (Fld P)
 
 theorem normBounded (h : IsCMExt F E σ) (P : PPol σ r) : GlobalTheory.RegSS.NormBounded F (Fld P) (star' P) :=
@@ -88,7 +86,7 @@ theorem swapE_inclE (P : PPol σ r) (β : Fld P) :
 
 theorem scalar_mem_UJ {S : Type} [CommRing S] (s : S →+* S) (w : Sˣ) (hw : s w * w = 1) :
     Matrix.GeneralLinearGroup.scalar (Fin 1) w ∈ Formalism.UG.UJ s (1 : Matrix (Fin 1) (Fin 1) S) := by
-  simp only [Formalism.UG.UJ, Subgroup.mem_mk, Set.mem_setOf_eq, Submonoid.mem_mk, Subsemigroup.mem_mk]
+  simp only [Formalism.UG.UJ, Subgroup.mem_mk, mem_ofPred_eq, Submonoid.mem_mk, Subsemigroup.mem_mk]
   ext i j
   fin_cases i
   fin_cases j
@@ -205,7 +203,7 @@ theorem exists_compact (h : IsCMExt F E σ) (P : PPol σ r) :
           fin_cases j
           simp [uN, Matrix.GeneralLinearGroup.scalar]
         rw [he]
-        exact (continuous_pi fun _ => hsw.comp continuous_subtype_val).matrix_diagonal
+        exact (continuous_pi fun _ => hsw.comp continuous_subtypeVal).matrix_diagonal
       · have he : (fun x : N => (((Matrix.GeneralLinearGroup.scalar (Fin 1) (uN x))⁻¹ : GL (Fin 1) _) :
               Matrix (Fin 1) (Fin 1) _)) =
             fun x => Matrix.diagonal fun _ => swapE P (Formalism.UG.sigR (star' P) (AF F) x.1) := by
@@ -215,7 +213,7 @@ theorem exists_compact (h : IsCMExt F E σ) (P : PPol σ r) :
           fin_cases j
           simp [uN, Matrix.GeneralLinearGroup.scalar]
         rw [he]
-        exact (continuous_pi fun _ => hsw.comp (hsig.comp continuous_subtype_val)).matrix_diagonal
+        exact (continuous_pi fun _ => hsw.comp (hsig.comp continuous_subtypeVal)).matrix_diagonal
     exact hsc.subtype_mk _
   let Ks : Set N := Subtype.val ⁻¹' (D ∩ N)
   have hKs : IsCompact Ks := by
@@ -266,7 +264,7 @@ theorem torus_compact_finiteVol : ∀ (F E : Type) [Field F] [NumberField F] [Fi
         intro x hx
         obtain ⟨γ, hγ, hγx⟩ := hCt x
         refine Set.mem_iUnion.2 ⟨⟨γ, hγ⟩⁻¹, ⟨γ * x, hγx, ?_⟩, hx⟩
-        all_goals simp [Subgroup.smul_def]
+        simp [Subgroup.smul_def]
     _ ≤ ∑' g : ratPts (star' P) (one₁ P),
           dt ((fun y => g • y) '' C ∩ GlobalTheory.AutomorphicL2Unitary.stdDom (ratPts (star' P) (one₁ P))) :=
         measure_iUnion_le _

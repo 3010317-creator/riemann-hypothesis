@@ -46,7 +46,6 @@ variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyCompl
 theorem cuspFin_zero : CuspFin E 0 := by
   intro L hL W _ _ _ ρ hρ J hJ
   haveI : Finite (GA E 0) := Finite.of_subsingleton
-  haveI : FiniteDimensional ℂ (GA E 0 → ℂ) := inferInstance
   infer_instance
 
 theorem invariant_of_lie_oneL_eq_zero {a : ℕ} (ψ : Sm E a) (h : lie E a (oneL E a) ψ = 0) (t : ℝ) (g : GA E a) :
@@ -76,11 +75,11 @@ theorem cuspFin_pos {a : ℕ} (ha : 0 < a) : CuspFin E a := by
       have h := hTw (fun k s => ((z ^ k) φ).1 (g * GlobalTheory.UnitaryBC.splitCentre E a s))
         (fun k s => by
           have h := (GlobalTheory.CompanionTheory.CuspFinDeriv.hasDerivAt_splitCentre) E a ((z ^ k) φ) g s
-          rwa [← Module.End.mul_apply, ← pow_succ'] at h)
+          rwa [← mul_apply_eq_comp, ← pow_succ'] at h)
         (fun s => by
           have h0 := congrArg (fun ψ : Sm E a => ψ.1 (g * GlobalTheory.UnitaryBC.splitCentre E a s)) (hp φ hg.2.2.2)
           simpa [Polynomial.aeval_eq_sum_range, LinearMap.sum_apply, Submodule.coe_sum, Finset.sum_apply] using h0)
-      simp only [pow_one, pow_zero, Module.End.one_apply, CuspidalL2GL.splitCentre_zero, mul_one] at h
+      simp only [pow_one, pow_zero, one_apply_eq_self, CuspidalL2GL.splitCentre_zero, mul_one] at h
       rw [h, Submodule.coe_sum, Finset.sum_apply]
       rfl
     rw [key]

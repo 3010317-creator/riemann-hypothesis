@@ -268,9 +268,9 @@ theorem wall_scale [IsTopologicalGroup G] {K Γ P P' : Subgroup G} {ρ : K →* 
     rw [norm_smul]
     exact mul_le_mul hE hH (norm_nonneg _) (Real.exp_pos _).le
   · rw [eis_twist hl c ρ (fun x => s * z * η x) _ (s * z) (fun x => by push_cast; ring),
-      ContinuousLinearMap.smul_apply, hw.eqR _ (by rw [hre]; exact hgtx _ hz) g w, smul_comm]
+      smul_apply, hw.eqR _ (by rw [hre]; exact hgtx _ hz) g w, smul_comm]
   · rw [eis_twist hl c ρ (fun x => β x - s * z * η' x) _ (s * z) (fun x => by push_cast; ring),
-      ContinuousLinearMap.smul_apply, hw.eqL _ (by rw [hre]; exact hltx _ hz) g w]
+      smul_apply, hw.eqL _ (by rw [hre]; exact hltx _ hz) g w]
 
 theorem scale : PositivityTheory.RgEis.Scale := by
   intro G _ _ _ _ _ W _ _ _ K ρ _ _ Γ P P' c η η' β l s hs hl hW
@@ -397,7 +397,7 @@ theorem sec_mem {y : Af F ⊗[F] E} (hy : y ∈ HeckeCharacterZeroLocus.ThmBIn.i
       change _ = pairA F 0 a • ((1 : AF F) ⊗ₜ[F] (x : E))
       rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one]
       rfl
-  | zero => simpa using (intHat F E).zero_mem
+  | zero => simp
   | add x y _ _ hx hy => simpa using (intHat F E).add_mem hx hy
   | neg x _ hx => simpa using (intHat F E).neg_mem hx
 
@@ -409,7 +409,7 @@ theorem finPart_mem {z : AE F E} (hz : z ∈ intHat F E) : HeckeCharacterZeroLoc
     change HeckeCharacterZeroLocus.ThmBIn.finPart F E (a • ((1 : AF F) ⊗ₜ[F] (o : E))) = _
     rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one]
     rfl
-  | zero => simpa using (HeckeCharacterZeroLocus.ThmBIn.intAE F E).zero_mem
+  | zero => simp
   | add x y _ _ hx hy => simpa using (HeckeCharacterZeroLocus.ThmBIn.intAE F E).add_mem hx hy
   | neg x _ hx => simpa using (HeckeCharacterZeroLocus.ThmBIn.intAE F E).neg_mem hx
 
@@ -524,7 +524,7 @@ theorem sec_continuous [IsTopologicalGroup G] {Γ K P : Subgroup G} {c : G → �
     {ρ : K →* (W →L[ℂ] W)} (hK : IsCompact (K : Set G)) (hρ : Continuous ρ) (hpar : IsPar Γ K P c)
     {w : W} (hw : w ∈ secSp K P c ρ) : Continuous fun g => sec K P c ρ g w := by
   refine (isQuotientMap_mul hK hpar.closed hpar.iwa).continuous_iff.mpr ?_
-  have hc : Continuous fun p : P => c p := continuousOn_iff_continuous_restrict.mp hpar.ch.cont
+  have hc : Continuous fun p : P => c p := continuousOn_iff_continuous_domRestrict.mp hpar.ch.cont
   have he : ((fun g => sec K P c ρ g w) ∘ fun x : P × K => (x.1 : G) * (x.2 : G))
       = fun x : P × K => c x.1 • ρ x.2⁻¹ w := by
     funext x
@@ -542,7 +542,7 @@ theorem sec_bound {Γ K P : Subgroup G} {c : G → ℂ} {ρ : K →* (W →L[ℂ
   refine ⟨M, fun g w => ?_⟩
   obtain ⟨p, hp, k, hk, rfl⟩ := hpar.iwa g
   have h : ∃ k' : K, (p * k) * (k' : G)⁻¹ ∈ P := ⟨⟨k, hk⟩, by simpa using hp⟩
-  rw [sec, dite_eq_left h, ContinuousLinearMap.smul_apply, norm_smul, hpar.ch.norm _ h.choose_spec,
+  rw [sec, dite_eq_left h, smul_apply, norm_smul, hpar.ch.norm _ h.choose_spec,
     one_mul]
   exact ((ρ _).le_opNorm w).trans (mul_le_mul_of_nonneg_right (hM _ ⟨_, rfl⟩) (norm_nonneg _))
 
@@ -642,7 +642,7 @@ variable {G : Type} [Group G]
 theorem cos_mk_eq_iff {P Γ : Subgroup G} (a b : Γ) :
     (Quotient.mk (QuotientGroup.rightRel (P.subgroupOf Γ)) a : Cos P Γ) = Quotient.mk _ b ↔
       (b : G) * (a : G)⁻¹ ∈ P := by
-  apply _root_.PositivityTheory.KB.SpectralGap.UnfoldA.mk_eq_iff <;> assumption
+  apply _root_.PositivityTheory.KB.SpectralGap.UnfoldA.mk_eq_iff
 
 theorem cos_eq_of_rep {P Γ : Subgroup G} {q q' : Cos P Γ} (h : rep q' * (rep q)⁻¹ ∈ P) : q = q' := by
   have h' := (cos_mk_eq_iff (P := P) (Γ := Γ) (Quotient.out q) (Quotient.out q')).mpr h
@@ -928,7 +928,6 @@ theorem cA_cA {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (z : AE F E) : cA σ (cA
   | add x y hx hy => simp [map_add (f := _), hx, hy]
 
 theorem continuous_cA (σ : E →ₐ[F] E) : Continuous (cA σ) := by
-  haveI : Module.Finite (AF F) (AE F E) := inferInstance
   exact IsModuleTopology.continuous_of_linearMap (cA σ).toLinearMap
 
 theorem cA_mem_intHat (σ : E →ₐ[F] E) {z : AE F E} (hz : z ∈ intHat F E) : cA σ z ∈ intHat F E := by
@@ -1236,7 +1235,7 @@ theorem ext_gl (hB : BdetLaw) (hE : ExtLaw) (hT : GrpTop) (A : Ad E R) (hA : A.G
 
 theorem closed_uQ (hB : BdetLaw) (A : Ad E R) (hA : A.GoodL) (ε : ℤˣ) {κ : Type} [Fintype κ] [DecidableEq κ] (t : Set κ) :
     IsClosed (A.uQ ε t : Set (A.U ε κ)) :=
-  (hB E R A hA (κ ⊕ κ) (Sum.inl '' t)).1.preimage continuous_subtype_val
+  (hB E R A hA (κ ⊕ κ) (Sum.inl '' t)).1.preimage continuous_subtypeVal
 
 theorem ext_u (hB : BdetLaw) (hE : ExtLaw) (hT : GrpTop) (A : Ad E R) (hA : A.Good) (ε : ℤˣ) {κ : Type} [Fintype κ]
     [DecidableEq κ] (t : Set κ) (hI : Iwa (A.uQ ε t) (A.uK ε κ)) :
@@ -1249,7 +1248,7 @@ theorem ext_u (hB : BdetLaw) (hE : ExtLaw) (hT : GrpTop) (A : Ad E R) (hA : A.Go
     (closed_uQ hB A hA.toGoodL ε t) hI ?_ ?_ ?_ ?_
   · intro p hp q hq
     simp only [Subgroup.coe_mul, hm p.1 hp q.1 hq, hA.lgmul]
-  · exact hA.lgcont.comp_continuousOn (hcont.comp continuous_subtype_val.continuousOn fun x hx => hx)
+  · exact hA.lgcont.comp_continuousOn (hcont.comp continuous_subtypeVal.continuousOn fun x hx => hx)
   · exact fun p hp hpk => hk p.1 hp hpk
   · intro p hp hg
     obtain ⟨x, hx⟩ := hr p.1 hp hg
@@ -1263,7 +1262,7 @@ theorem isCh_uC (hB : BdetLaw) (A : Ad E R) (hA : A.GoodL) (ε : ℤˣ) {κ : Ty
   · obtain ⟨x, hx⟩ := hr γ.1 hp hγ
     simp only [Ad.uC, hx, hA.χi, Circle.coe_one]
   · exact continuous_circle_coe.comp_continuousOn
-      (hA.χcont.comp_continuousOn (hcont.comp continuous_subtype_val.continuousOn fun x hx => hx))
+      (hA.χcont.comp_continuousOn (hcont.comp continuous_subtypeVal.continuousOn fun x hx => hx))
 
 theorem parLaw : BdetLaw → ExtLaw → GrpTop → ParLaw := by
   intro hB hE hT E R _ _ _ _ _ _ _ A hA ι _ _ ε s
@@ -1624,7 +1623,7 @@ def cosMul {G : Type} [Group G] (P Γ : Subgroup G) (γ : Γ) : Cos P Γ ≃ Cos
 
 theorem rep_mk {G : Type} [Group G] {P Γ : Subgroup G} (x : Γ) :
     ∃ δ : G, δ ∈ Γ ∧ δ ∈ P ∧ rep (Quotient.mk _ x : Cos P Γ) = δ * x := by
-  apply _root_.GlobalTheory.CompanionTheory.RgEis.UnitaryConv.rep_mk <;> assumption
+  apply _root_.GlobalTheory.CompanionTheory.RgEis.UnitaryConv.rep_mk
 
 theorem tsum_rep_mul {G : Type} [Group G] {X : Type} [AddCommMonoid X] [TopologicalSpace X]
     {P Γ : Subgroup G} (F : G → X) (hF : ∀ δ ∈ Γ, δ ∈ P → ∀ x, F (δ * x) = F x) {γ : G} (hγ : γ ∈ Γ) (g : G) :
@@ -1742,7 +1741,7 @@ end Sec
 theorem wallLaw_of_secLaw : SecLaw → WallLaw := by
   intro hS
   intro G _ _ _ _ _ W _ _ _ K ρ hK hρ Γ P P' c η η' β L R D Op H hP hP' hη hη' hβ hW
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  haveI : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   obtain ⟨h1, -, Ms, hb⟩ := hS G W K ρ hK hρ Γ P c hP
   obtain ⟨-, -, Ms', hb'⟩ := hS G W K ρ hK hρ Γ P' c hP'
   have hdiff : ∀ (g : G) (w : L), Differentiable ℂ fun z => H z g w := fun g w =>

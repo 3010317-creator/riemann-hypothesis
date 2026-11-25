@@ -182,7 +182,6 @@ theorem UpperTheory.V.Pa.trLat :
   classical
   obtain ⟨N, hN⟩ := T.nil
   haveI : Nontrivial R := e.toRingHom.domain_nontrivial
-  haveI : IsNoetherianRing S.B := inferInstance
   let φ : S.B →+* R := θ.comp (algebraMap S.B S.U.AA)
   have hφ : ∀ b, φ b = θ (algebraMap S.Bh S.U.AA (algebraMap S.B S.Bh b)) := fun b => by
     rw [← IsScalarTower.algebraMap_apply]; rfl

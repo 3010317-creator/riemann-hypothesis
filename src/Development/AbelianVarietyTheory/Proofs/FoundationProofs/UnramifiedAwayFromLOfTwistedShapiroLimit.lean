@@ -324,7 +324,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ 
   have hV : ∀ ε : ℝ, 0 < ε → {s : G ℚ Ω | ∀ i j, ‖(aff W z s - 1) i j‖ < ε} ∈ nhds (1 : G ℚ Ω) := by
     intro ε hε
     refine IsOpen.mem_nhds ?_ (by simp [ha1, hε])
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_
     exact isOpen_lt ((hcont i j).sub continuous_const).norm continuous_const
   have hker : ∀ s : P, (∀ i j, ‖(aff W z s - 1) i j‖ < 1) → s ∈ M.ker := by
@@ -551,7 +551,7 @@ theorem fixed_of_dvd {O H : Type} [CommRing O] [AddCommGroup H] [Module O H]
   obtain ⟨k, rfl⟩ := h
   induction k with
   | zero => simp
-  | succ k ih => rw [Nat.mul_succ, pow_add, Module.End.mul_apply, hm, ih]
+  | succ k ih => rw [Nat.mul_succ, pow_add, mul_apply_eq_comp, hm, ih]
 
 theorem exists_stable_exponent {O H : Type} [CommRing O] [IsNoetherianRing O] [AddCommGroup H]
     [Module O H] (M : Submodule O H) (hM : M.FG) (ψ : Module.End O H) (l : ℕ) :
@@ -672,7 +672,7 @@ theorem normCompatible_eq_zero : ∀ (O H : Type) [CommRing O] [IsNoetherianRing
     intro r y j
     induction j generalizing y with
     | zero => simp
-    | succ j ih => rw [pow_succ, Module.End.mul_apply, hF, ih, mul_assoc, ← pow_succ']
+    | succ j ih => rw [pow_succ, mul_apply_eq_comp, hF, ih, mul_assoc, ← pow_succ']
   obtain ⟨a₀, ha₀⟩ := exists_stable_exponent M hM (F ^ (l - 1)) l
   have hfix : ∀ s, a₀ ≤ s → ∀ (r : ℕ) (y : (ZMod (l ^ r))ˣ),
       (F ^ ((l - 1) * l ^ s)) (c r y) = c r y := by
@@ -692,7 +692,7 @@ theorem normCompatible_eq_zero : ∀ (O H : Type) [CommRing O] [IsNoetherianRing
       ZMod.unitOfCoprime q (Nat.Coprime.pow_right r hq) := by
     subst hu
     ext
-    rw [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_coe, ZMod.coe_unitOfCoprime,
+    rw [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_ofClass, ZMod.coe_unitOfCoprime,
       ZMod.coe_unitOfCoprime, map_natCast]
   have hw1 : ZMod.unitsMap (pow_dvd_pow l (Nat.le_add_right r k)) (u ^ ((l - 1) * l ^ s)) = 1 := by
     rw [map_pow, hmap, unit_pow_eq_one l r s hs2]
@@ -825,7 +825,7 @@ theorem cycMod_eq_one_of_mem_Ine {B : ValuationSubring Ω} {q : Pl} (hB : IsPlac
   have h := cycZ_toZModPow_eq hl hB (q := 1) (fun x hx => by simpa using hs.2 x hx) r
   ext
   simp only [cycMod, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, Units.val_one]
-  rw [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, h]
+  rw [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, h]
   simp
 
 theorem coprime_normV {q : Pl} (hl : ((l : ℕ) : 𝓞 ℚ) ∉ q.asIdeal) : Nat.Coprime (normV q) l := by
@@ -844,7 +844,7 @@ theorem cycMod_frob {B : ValuationSubring Ω} {q : Pl} (hB : IsPlaceOver B q) (h
   have h := cycZ_of_isFrob hl hB hφ
   ext
   simp only [cycMod, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, ZMod.coe_unitOfCoprime]
-  rw [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, h]
+  rw [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, h]
   simp
 
 end GlobalTheory.InertCoh
@@ -923,7 +923,6 @@ theorem unr_of_limit_spec : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] 
       (fun w hw hP h0 => _root_.GlobalTheory.CocWildTame.eq_zero_on_Ine l Ω W B γ hγ w hw.1 hw.2.2 (fun σ hσ => hP σ hσ) h0)
   have hlO : ¬ IsUnit ((l : ℕ) : c.O) := not_isUnit_natCast_O c
   haveI : IsLocalRing c.O := IsDiscreteValuationRing.toIsLocalRing
-  haveI : IsNoetherianRing c.O := inferInstance
   have hzero := _root_.GlobalTheory.NormSystemVanishing.normCompatible_eq_zero c.O _ l hlO (normV q) hq (GlobalTheory.TameConjInv.prime_normV q).two_le
     ((coc W c (Ine (F := ℚ) B)).map (cob W c (Ine (F := ℚ) B)).mkQ) hFG FH hFM
     (fun r x => (cob W c (Ine (F := ℚ) B)).mkQ (z r x)) (fun r x => Submodule.mem_map_of_mem (hzZ r x)) hfrob hN
@@ -966,8 +965,8 @@ def untwist (W : R2 Ω l) (θ : G ℚ Ω →* (Qbar l)ˣ) : R2 Ω l where
   map_one' := by simp
   map_mul' s t := by
     apply Units.ext
-    simp only [map_mul, mul_inv, Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe,
-      ← Algebra.smul_def, smul_mul_assoc, mul_smul_comm, smul_smul, Algebra.algebraMap_eq_smul_one, one_mul, mul_comm]
+    simp only [map_mul, mul_inv, Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass,
+      smul_mul_assoc, mul_smul_comm, smul_smul, Algebra.algebraMap_eq_smul_one, one_mul, mul_comm]
 
 theorem mat_untwist (W : R2 Ω l) (θ : G ℚ Ω →* (Qbar l)ˣ) (s : G ℚ Ω) :
     mat (untwist W θ) s = (((θ s)⁻¹ : (Qbar l)ˣ) : Qbar l) • mat W s := by

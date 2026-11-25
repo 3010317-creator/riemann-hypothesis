@@ -86,7 +86,7 @@ theorem tl_pow (r : ℕ) (s : ℝ) (i : ℕ) (f : GA E N → ℂ) : (tl r s ^ i)
     simp [aT_zero]
   | succ i ih =>
     funext g
-    rw [pow_succ, Module.End.mul_apply, ih]
+    rw [pow_succ, mul_apply_eq_comp, ih]
     show f (aT E N r s * (aT E N r (s * i) * g)) = f (aT E N r (s * ((i + 1 : ℕ) : ℝ)) * g)
     rw [← mul_assoc, ← aT_add, show s + s * (i : ℝ) = s * ((i + 1 : ℕ) : ℝ) by push_cast; ring]
 
@@ -108,7 +108,7 @@ theorem kl_iff (r : ℕ) (s : ℝ) (p : ℂ[X]) (F : GA E N → ℂ) : Kl r s p 
 
 theorem kl_mul {r : ℕ} {s : ℝ} {p q : ℂ[X]} {F : GA E N → ℂ} (h : Kl r s p F) : Kl r s (p * q) F := by
   rw [kl_iff] at h ⊢
-  rw [mul_comm, aeval_mul, Module.End.mul_apply, h, map_zero]
+  rw [mul_comm, aeval_mul, mul_apply_eq_comp, h, map_zero]
 
 theorem kl_mul' {r : ℕ} {s : ℝ} {p q : ℂ[X]} {F : GA E N → ℂ} (h : Kl r s q F) : Kl r s (p * q) F := by
   rw [mul_comm]
@@ -571,7 +571,7 @@ theorem list_prod_apply (l : List (Module.End ℂ M)) (k : Module.End ℂ M → 
   induction l with
   | nil => simp
   | cons f l ih =>
-    rw [List.prod_cons, Module.End.mul_apply, ih (fun g hg => h g (List.mem_cons_of_mem _ hg)), map_smul,
+    rw [List.prod_cons, mul_apply_eq_comp, ih (fun g hg => h g (List.mem_cons_of_mem _ hg)), map_smul,
       h f List.mem_cons_self, smul_smul, List.map_cons, List.prod_cons, mul_comm]
 
 theorem list_prod_smul (l : List (Module.End ℂ M)) (φ : M) (h : ∀ f ∈ l, ∃ c : ℂ, f φ = c • φ) :
@@ -581,7 +581,7 @@ theorem list_prod_smul (l : List (Module.End ℂ M)) (φ : M) (h : ∀ f ∈ l, 
   | cons f l ih =>
     obtain ⟨c, hc⟩ := ih (fun g hg => h g (List.mem_cons_of_mem _ hg))
     obtain ⟨d, hd⟩ := h f List.mem_cons_self
-    exact ⟨c * d, by rw [List.prod_cons, Module.End.mul_apply, hc, map_smul, hd, smul_smul]⟩
+    exact ⟨c * d, by rw [List.prod_cons, mul_apply_eq_comp, hc, map_smul, hd, smul_smul]⟩
 
 variable (A : Λ → Module.End ℂ M) (χ : ι → Λ → ℂ) (lam : ι → ι → Λ)
 
@@ -595,7 +595,7 @@ omit [DecidableEq ι] in
 theorem fac_apply {P : ι → Submodule ℂ M} (hP : ∀ k, ∀ φ ∈ P k, ∀ l, A l φ = χ k l • φ) (i j k : ι) {φ : M}
     (hφ : φ ∈ P k) :
     fac A χ lam i j φ = ((χ i (lam i j) - χ j (lam i j))⁻¹ * (χ k (lam i j) - χ j (lam i j))) • φ := by
-  simp only [fac, LinearMap.smul_apply, LinearMap.sub_apply, Module.End.one_apply, hP k φ hφ]
+  simp only [fac, LinearMap.smul_apply, LinearMap.sub_apply, one_apply_eq_self, hP k φ hφ]
   rw [smul_sub, smul_smul, smul_smul, mul_sub, sub_smul]
 
 theorem proj_self {P : ι → Submodule ℂ M} (hP : ∀ k, ∀ φ ∈ P k, ∀ l, A l φ = χ k l • φ)
@@ -624,7 +624,7 @@ theorem proj_other {P : ι → Submodule ℂ M} (hP : ∀ k, ∀ φ ∈ P k, ∀
     obtain ⟨j, -, rfl⟩ := List.mem_map.1 hf'
     exact ⟨_, fac_apply hP i j k hφ⟩
   obtain ⟨c, hc⟩ := list_prod_smul l₂ φ hl₂
-  rw [he, List.prod_append, List.prod_cons, Module.End.mul_apply, Module.End.mul_apply, hc, map_smul,
+  rw [he, List.prod_append, List.prod_cons, mul_apply_eq_comp, mul_apply_eq_comp, hc, map_smul,
     fac_apply hP i k k hφ, sub_self, mul_zero, zero_smul, smul_zero, map_zero]
 
 theorem proj_decomp {P : ι → Submodule ℂ M} (hP : ∀ k, ∀ φ ∈ P k, ∀ l, A l φ = χ k l • φ)
@@ -884,7 +884,6 @@ theorem lie_mem_orbSpan {N : ℕ} (φ : Sm E N) [FiniteDimensional ℂ (GlobalTh
     (Z : Matrix (Fin N) (Fin N) (Cinf E)) (hZ : Zᴴ = -Z) :
     lie E N (toL Z) φ ∈ GlobalTheory.CuspRep.LocEx.orbSpan φ := by
   set A : Submodule ℂ (GA E N → ℂ) := (GlobalTheory.CuspRep.LocEx.orbSpan φ).map (Sm E N).subtype with hA
-  have : FiniteDimensional ℂ A := inferInstance
   obtain ⟨S, a, ha⟩ := SliceTensor.interp A
   let c : ℝ → GL (Fin N) (Cinf E) := fun t => Unitary.toUnits (kcurve Z hZ t)
   have h0 : c 0 = 1 := Units.ext (ecurve_zero Z)
@@ -956,7 +955,7 @@ theorem rsF_yp (F : Sm E (r + s)) (k : Kinf E (r + s)) (g : GL (Fin (r + s)) (Af
   exact ⟨m₁, Subtype.ext (funext fun m₂ => by rw [h, right_slice_apply, rt_apply])⟩
 
 theorem rt_one {a : ℕ} (F : Sm E a) : rt E a (BlockDerivatives.yp 1 1) F = F := by
-  rw [yp_one, map_one, Module.End.one_apply]
+  rw [yp_one, map_one, one_apply_eq_self]
 
 theorem lsF_one (F : Sm E (r + s)) : ∀ ℓ ∈ BlockDerivatives.lsF r s F 1 1, ∃ m₂, ℓ = sl0 m₂ F := by
   intro ℓ hℓ

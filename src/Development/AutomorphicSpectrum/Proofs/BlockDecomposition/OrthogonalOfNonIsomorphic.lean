@@ -146,12 +146,12 @@ theorem exists_sum_fixed {G W : Type} [Group G] [TopologicalSpace G] [IsTopologi
     { carrier := {k | ρ k x = x}
       one_mem' := by simp
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
-        rw [map_mul, Module.End.mul_apply, hb, ha]
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
+        rw [map_mul, mul_apply_eq_comp, hb, ha]
       inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         have h : ρ a⁻¹ (ρ a x) = x := by
-          rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
+          rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one, one_apply_eq_self]
         rwa [ha] at h }
   have hK : ∀ k, k ∈ K ↔ ρ k x = x := fun _ => Iff.rfl
   obtain ⟨R, hR, hc⟩ := GlobalTheory.compact_finite_leftCoset_reps G K ho Set.univ isCompact_univ
@@ -165,7 +165,7 @@ theorem exists_sum_fixed {G W : Type} [Group G] [TopologicalSpace G] [IsTopologi
     intro r
     have h := (hK _).1 (hσ r)
     have e : u * r = σ r * ((σ r)⁻¹ * (u * r)) := by group
-    rw [e, map_mul, Module.End.mul_apply, h]
+    rw [e, map_mul, mul_apply_eq_comp, h]
   have hinj : Set.InjOn σ R := by
     intro r hr r' hr' e
     refine hR r hr r' hr' ?_
@@ -185,7 +185,7 @@ theorem exists_sum_fixed {G W : Type} [Group G] [TopologicalSpace G] [IsTopologi
 
         rw [map_sum]
         refine Finset.sum_congr rfl fun r _ => ?_
-        rw [← hval, map_mul, Module.End.mul_apply]
+        rw [← hval, map_mul, mul_apply_eq_comp]
     _ = ∑ s ∈ R.image σ, ρ s x := (Finset.sum_image (f := fun s => ρ s x) hinj).symm
     _ = ∑ r ∈ R, ρ r x := by rw [himg]
 
@@ -209,7 +209,7 @@ theorem exists_avg : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (N :
   let ρ : L →* Module.End ℂ (Sm E N) := (finRep E N).comp L.subtype
   have hρ : ∀ l : L, ρ l = finRep E N (l : GL (Fin N) (Af E)) := fun _ => rfl
   have ho : IsOpen {k : L | ρ k x = x} :=
-    (hV.aut x hx).level.preimage continuous_subtype_val
+    (hV.aut x hx).level.preimage continuous_subtypeVal
   obtain ⟨S, hS, hfix⟩ := exists_sum_fixed ρ x ho
   have hn : ((S.card : ℂ)) ≠ 0 := Nat.cast_ne_zero.2 hS.card_pos.ne'
   have hmem : ∀ l : L, ρ l x ∈ V := fun l => hV.stable (.fin _) x hx
@@ -313,7 +313,7 @@ theorem map_mul_right_eq_of_mem_compact_subgroup :
     set c := Measure.haarScalarFactor (ν.map (fun x => x * k)) ν with hc
     have h2 : (ν.map (fun x => x * k)) (C * (K : Set G)) = ν (C * (K : Set G)) := by
       rw [Measure.map_apply hmeas hS.measurableSet, hpre]
-    rw [h1, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
+    rw [h1, smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
     have h3 : (c : ℝ≥0∞) = 1 := by
       have := (ENNReal.mul_left_inj hpos htop).1 (h2.trans (one_mul _).symm)
       exact this
@@ -615,7 +615,7 @@ lemma exists_weak_integral (ν : Measure K) [ν.IsHaarMeasure]
   refine ⟨(Module.evalEquiv ℂ E).symm Φ, fun ℓ => ?_⟩
   have h := (Module.evalEquiv ℂ E).apply_symm_apply Φ
   have h2 := congrArg (fun F : Module.Dual ℂ (Module.Dual ℂ E) => F ℓ) h
-  simpa [Module.evalEquiv_apply, Φ] using h2
+  simp [Φ]
 
 lemma exists_weak_integral_sub (ν : Measure K) [ν.IsHaarMeasure]
     {M : Type} [AddCommGroup M] [Module ℂ M] (A : Submodule ℂ M) [FiniteDimensional ℂ A]
@@ -818,7 +818,7 @@ theorem representing_vector : ∀ {K M H X : Type} [Group K] [TopologicalSpace K
     show ∫ k, τ (ρA k⁻¹ ∘ₗ ρA k₀) * f k ∂ν = ev t (ρ k₀ z₁)
     have e1 : ev t (ρ k₀ z₁) = ∫ k, g k * f (k₀ * k) ∂ν := by
       have := hz₁ ((ev t) ∘ₗ (ρ k₀))
-      simpa [f, map_mul, Module.End.mul_apply] using this
+      simpa [f, map_mul, mul_apply_eq_comp] using this
     rw [e1, ← integral_mul_left_eq_self (fun k => τ (ρA k⁻¹ ∘ₗ ρA k₀) * f k) k₀]
     refine integral_congr_ae (Filter.Eventually.of_forall fun k => ?_)
     show τ (ρA (k₀ * k)⁻¹ ∘ₗ ρA k₀) * f (k₀ * k) = g k * f (k₀ * k)
@@ -837,12 +837,11 @@ theorem representing_vector : ∀ {K M H X : Type} [Group K] [TopologicalSpace K
     simp [inner_conj_symm]
 
   let P : Submodule ℂ H := D.map ι
-  haveI : FiniteDimensional ℂ P := inferInstance
-  haveI : CompleteSpace P := FiniteDimensional.complete ℂ P
+  haveI : CompleteSpace P := FiniteDimensional.completeSpace ℂ P
   obtain ⟨t₀, ht₀D, ht₀⟩ : ∃ t₀ ∈ D, ι t₀ = P.starProjection (ι x) := by
     have : P.starProjection (ι x) ∈ P := by
       rw [Submodule.starProjection_apply]
-      exact (P.orthogonalProjection (ι x)).2
+      exact (P.orthogonalProjectionOnto (ι x)).2
     obtain ⟨t, ht, e⟩ := Submodule.mem_map.1 this
     exact ⟨t, ht, e⟩
   have hproj : ∀ d ∈ D, ⟪ι d, ι x⟫_ℂ = ⟪ι d, ι t₀⟫_ℂ := by
@@ -862,7 +861,7 @@ theorem representing_vector : ∀ {K M H X : Type} [Group K] [TopologicalSpace K
   obtain ⟨z₁, hz₁S, hz₁⟩ := Z z hz
   have hcancel : ∀ k, ρ k⁻¹ (ρ k z) = z := by
     intro k
-    rw [← Module.End.mul_apply, ← map_mul]
+    rw [← mul_apply_eq_comp, ← map_mul]
     simp
   have a1 : ⟪ι z₁, ι x⟫_ℂ = ⟪ι z, ι x⟫_ℂ := by
     rw [I1 z z₁ hz₁ x]
@@ -966,14 +965,14 @@ def stabS (x : Sm E N) : Subgroup (GL (Fin N) (Af E)) where
   carrier := {k | finRep E N k x = x}
   mul_mem' := fun {a b} ha hb => by
     change finRep E N (a * b) x = x
-    rw [map_mul, Module.End.mul_apply, hb, ha]
+    rw [map_mul, mul_apply_eq_comp, hb, ha]
   one_mem' := by
     change finRep E N 1 x = x
-    rw [map_one, Module.End.one_apply]
+    rw [map_one, one_apply_eq_self]
   inv_mem' := fun {a} ha => by
     change finRep E N a⁻¹ x = x
     have h : finRep E N a⁻¹ (finRep E N a x) = x := by
-      rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
+      rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one, one_apply_eq_self]
     rwa [ha] at h
 
 theorem exists_repr (μ : Measure (GA E N)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant] {V V' : Submodule ℂ (Sm E N)}
@@ -1018,14 +1017,14 @@ theorem exists_adj (μ : Measure (GA E N)) [μ.IsHaarMeasure] [μ.IsMulRightInva
     rw [← h]
     congr 2
     change x = finRep E N k (finRep E N k⁻¹ x)
-    rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one, one_apply_eq_self]
   | cpt k =>
     refine ⟨.cpt k⁻¹, fun {V W} hV hW x hx y hy => ?_⟩
     have h := (_root_.GlobalTheory.CompanionTheory.FinDiscOrth.rt_mem_l2Sub_and_inner_eq E N μ (infGL E N (Unitary.toUnits k)) (act (.cpt k⁻¹) x) y (mem_l2_of_discrete μ hV (hV.stable _ x hx)) (mem_l2_of_discrete μ hW hy)).2
     rw [← h]
     congr 2
     change x = cptRep E N k (cptRep E N k⁻¹ x)
-    rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one, one_apply_eq_self]
   | lie X =>
     refine ⟨.lie (-X), fun {V W} hV hW x hx y hy => ?_⟩
     have hxX := hV.stable (.lie X) x hx

@@ -70,9 +70,9 @@ theorem measure_fund_le_card_mul_of_cover : ∀ (G : Type) [Group G] [Topologica
   intro G _ _ _ _ _ _ _ _ N Λ _ ν DN b κ V Y hν hD hV hconj hY hcov
   have hVm : MeasurableSet V := hV.isClosed.measurableSet
   have hconjm : Measurable fun u : N => b * (u : G) * b⁻¹ :=
-    (measurable_const.mul measurable_subtype_coe).mul measurable_const
+    (measurable_const.mul measurable_subtypeVal).mul measurable_const
   have hS₀m : MeasurableSet {u : N | b * (u : G) * b⁻¹ ∈ V} := hconjm hVm
-  have hVNm : MeasurableSet {u : N | (u : G) ∈ V} := measurable_subtype_coe hVm
+  have hVNm : MeasurableSet {u : N | (u : G) ∈ V} := measurable_subtypeVal hVm
   have hS₀ : ν {u : N | b * (u : G) * b⁻¹ ∈ V} = κ * ν {u : N | (u : G) ∈ V} := by
     have h := hconj (V.indicator 1) (measurable_one.indicator hVm)
     have e1 : (fun u : N => V.indicator (1 : G → ℝ≥0∞) (b * u * b⁻¹))
@@ -136,9 +136,9 @@ def conjEquiv (N : Subgroup G) (b : G) (hb : ∀ u : G, u ∈ N ↔ b * u * b⁻
     show b * ((u : G) * v) * b⁻¹ = (b * u * b⁻¹) * (b * v * b⁻¹)
     group)
   continuous_toFun :=
-    ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _
+    ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _
   continuous_invFun :=
-    ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _
+    ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _
 
 end GlobalTheory.ConjugationEquiv
 end -- clump:auto
@@ -185,7 +185,7 @@ theorem lintegral_conj_eq_const_mul :
   have hc := Measure.isMulLeftInvariant_eq_smul (ν.map e) ν
   have he : Measurable e := e.continuous.measurable
   refine ⟨(Measure.haarScalarFactor (ν.map e) ν : ℝ≥0∞), fun g hg => ?_⟩
-  have hg' : Measurable fun u : N => g u := hg.comp measurable_subtype_coe
+  have hg' : Measurable fun u : N => g u := hg.comp measurable_subtypeVal
   have h1 := lintegral_map (μ := ν) hg' he
   rw [hc, lintegral_smul_measure] at h1
   exact h1.symm
@@ -251,8 +251,8 @@ theorem packing_count : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopolog
     have hswap : ∑ t ∈ T, ∑' γ : Λ, (γ • (t • U)).indicator (1 : G → ℝ≥0∞) x
         = ∑' γ : Λ, ∑ t ∈ T, (γ • (t • U)).indicator (1 : G → ℝ≥0∞) x := by
       first
-      | exact (Summable.tsum_finsetSum fun _ _ => ENNReal.summable).symm
-    rw [hswap, ENNReal.tsum_eq_iSup_sum]
+      | exact (Summable.tsum_finsetSum fun _ _ => CompleteLattice.summable).symm
+    rw [hswap, tsum_eq_iSup_sum]
     refine iSup_le fun s => ?_
     have hbool : ∑ γ ∈ s, ∑ t ∈ T, (γ • (t • U)).indicator (1 : G → ℝ≥0∞) x
         = (((s ×ˢ T).filter (fun p : Λ × G => x ∈ p.1 • (p.2 • U))).card : ℝ≥0∞) := by
@@ -413,7 +413,7 @@ theorem compact_inter_ratPts_finite : ∀ (F E : Type) [Field F] [NumberField F]
     IsCompact K → (K ∩ ratPts σ J).Finite := by
   intro F E _ _ _ _ _ σ n J K hK
   have hd : DiscreteTopology (ratPts σ J) := inferInstance
-  have hcl : IsClosed ((ratPts σ J : Subgroup (GAd σ J)) : Set (GAd σ J)) := Subgroup.isClosed_of_discrete
+  have hcl : IsClosed ((ratPts σ J : Subgroup (GAd σ J)) : Set (GAd σ J)) := Subgroup.isClosed_of_discreteTopology
   exact (hK.inter_right hcl).finite
     (IsDiscrete.mono (isDiscrete_iff_discreteTopology.2 hd) Set.inter_subset_right)
 
@@ -508,7 +508,7 @@ theorem inclR_alg (c : F) : inclR (F := F) (AF F) (algebraMap F E c) = algebraMa
   (Algebra.TensorProduct.includeRight (R := F) (A := AF F) (B := E)).commutes c
 
 theorem continuous_sigR (σ : E →ₐ[F] E) : Continuous (sigR (AF F) σ) := by
-  apply _root_.GlobalTheory.BlockLevel.continuous_sigR_ad <;> assumption
+  apply _root_.GlobalTheory.BlockLevel.continuous_sigR_ad
 
 theorem cT_apply {A : Type} [CommRing A] (s : A →+* A) {m p : Type} (M : Matrix m p A) (i : p) (k : m) :
     cT s M i k = s (M k i) := rfl
@@ -984,8 +984,6 @@ theorem card_ratPts_fixG_tor_le : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   obtain ⟨V, B₁, hV, hcov⟩ := _root_.GlobalTheory.SphEis.cover_unipRad F E σ n J j m C D Z J₀ hF lv hlv
   obtain ⟨ν, π, DN, DM, hSL⟩ := _root_.GlobalTheory.SphEis.semiLat_fixG F E σ n J j m C D Z J₀ hF
   let Λ : Subgroup (GAd σ J) := ratPts σ J ⊓ fixG σ J C
-  haveI : DiscreteTopology Λ := inferInstance
-  haveI : Countable Λ := inferInstance
   have hDom := GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom Λ (Measure.haar : Measure (GAd σ J))
   obtain ⟨B, hB0, hB⟩ := _root_.GlobalTheory.SphEis.card_le_mul_of_unip_cover (GAd σ J) (unipRad σ J C) (fixG σ J C ⊓ fixG σ J D) Λ (ratPts σ J) (fixG σ J C)
     ν π DN DM Measure.haar _ V W hSL inf_le_left inf_le_right hQc

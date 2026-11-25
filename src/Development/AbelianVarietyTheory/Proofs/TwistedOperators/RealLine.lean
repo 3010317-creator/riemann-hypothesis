@@ -177,7 +177,7 @@ theorem pairEquiv_realAll : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar
     obtain ⟨x, rfl⟩ := e.surjective y
     rw [LinearMap.comp_apply, hE, hE, ← hact, ← hπe, LinearEquiv.symm_apply_apply]
     have h1 := key τ v (c.ρ (atTau θ V τ (unfr M τ v)) w) (π τ v⁻¹ x)
-    rw [hinv, ← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] at h1
+    rw [hinv, ← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one, one_apply_eq_self] at h1
     exact h1
   refine ⟨E, fun u w => ?_⟩
   let us : Finset D.what₂.Tau → UG D.what₂.Tau V.rank := fun s ρ => if ρ ∈ s then u ρ else 1
@@ -200,7 +200,7 @@ theorem pairEquiv_realAll : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar
         show ((M.σ ρ ((us ∅ ρ)⁻¹ : Matrix.unitaryGroup (Fin V.rank) ℂ) : M.H ρ →L[ℂ] M.H ρ) : M.H ρ →ₗ[ℂ] M.H ρ) = _
         rw [this, inv_one, OneMemClass.coe_one, GlobalTheory.CoefPairTens.sigma_one]
         rfl
-      rw [h0, realAll_one hθ, map_one, Module.End.one_apply, h1, PiTensorProduct.map_id, LinearMap.comp_id]
+      rw [h0, realAll_one hθ, map_one, one_apply_eq_self, h1, PiTensorProduct.map_id, LinearMap.comp_id]
     | insert τ s hτ ih =>
       intro w
       have hs : us s τ = 1 := ite_eq_right hτ
@@ -213,7 +213,7 @@ theorem pairEquiv_realAll : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar
         by_cases h : ρ = τ
         · rw [h, Function.update_self, hs, OneMemClass.coe_one, GlobalTheory.CoefPairTens.unfr_one]
         · rw [Function.update_of_ne h, h4 ρ h]
-      rw [h2, map_mul, Module.End.mul_apply, h3, one, ih, LinearMap.comp_assoc, ← PiTensorProduct.map_comp]
+      rw [h2, map_mul, mul_apply_eq_comp, h3, one, ih, LinearMap.comp_assoc, ← PiTensorProduct.map_comp]
       congr 2
       funext ρ
       by_cases h : ρ = τ
@@ -259,7 +259,7 @@ theorem basePar_sublist {S : Sizes} (P : Entries S) : P.basePar.Sublist P.orderL
     | nil => simp
     | cons a l ih =>
       simp only [List.map_cons, List.flatMap_cons, List.cons_append, List.nil_append]
-      exact (ih.cons _).cons₂ _
+      exact (ih.cons _).cons_cons _
   unfold Entries.basePar Entries.orderList
   exact List.Sublist.append ((h1 _).trans (List.sublist_append_right _ _)) (List.Sublist.refl _)
 
@@ -598,7 +598,6 @@ theorem core (M : Formalism.IndefR.Mult.DSModel V S) (θ : InfFam D) (c : CoefA 
   obtain ⟨E, hE⟩ := _root_.GlobalTheory.CoefPairTens.pairEquiv_realAll D V S M θ c pr hθ hp hc hpr
   obtain ⟨Φ, hΦ⟩ := _root_.GlobalTheory.DualWeylTensor.main D.what₂.Tau V.rank M.H M.σ M.lam lam (fun τ => (M.enum τ).1) (fun τ => (m τ).2.2.1) (fun τ => (m τ).2.2.2)
     (fun τ i => by rw [hl τ i, hε τ])
-  haveI : FiniteDimensional ℂ (⨂[ℂ] τ, M.H τ) := inferInstance
   haveI : FiniteDimensional ℂ (Module.Dual ℂ (weylSub V.rank lam)) := Module.Finite.equiv Φ.symm
   haveI : FiniteDimensional ℂ (weylSub V.rank lam) := (Module.finite_dual_iff ℂ).1 this
   let ev := Module.evalEquiv ℂ (weylSub V.rank lam)

@@ -196,7 +196,7 @@ theorem mul_lintegral_rpow_le_of_shell_bound :
       _ = ∑' j, ∫⁻ x, (S j).indicator (fun _ => c j) x ∂μ :=
           lintegral_tsum fun j => (measurable_const.indicator (hSm j)).aemeasurable
       _ ≤ ∑' j, B * (ENNReal.ofReal r) ^ j := by
-          refine ENNReal.tsum_le_tsum fun j => ?_
+          refine tsum_le_tsum fun j => ?_
           rw [lintegral_indicator_const (hSm j)]
           calc c j * μ (S j) ≤ c j * (B * ENNReal.ofReal (Real.exp (d * j))) := by
                 gcongr
@@ -205,7 +205,7 @@ theorem mul_lintegral_rpow_le_of_shell_bound :
             _ = B * (ENNReal.ofReal r) ^ j := by
                 congr 1
                 rw [hc, ← ENNReal.ofReal_mul (Real.exp_pos _).le, ← ENNReal.ofReal_pow hr0.le,
-                  hr, ← Real.exp_add, ← Real.exp_nat_mul]
+                  hr, ← Real.exp_add, ← Real.exp_natCast_mul]
                 congr 2; ring
       _ = B * (1 - ENNReal.ofReal r)⁻¹ := by
           rw [ENNReal.tsum_mul_left, ENNReal.tsum_geometric]
@@ -278,7 +278,7 @@ theorem setLIntegral_tsum_unfold (G : Type) [Group G] [TopologicalSpace G] [IsTo
     refine lintegral_congr fun x => ?_
     exact hinv _ (l⁻¹).2 x
   rw [lintegral_tsum (f := fun (t : T) g => f (t.1.1 * g)) (fun t : T => (hf.comp (measurable_const_mul t.1.1)).aemeasurable),
-    hF.setLIntegral_eq_tsum f D, ← (Equiv.ofBijective e0 hbij).tsum_eq, ENNReal.tsum_prod']
+    hF.setLIntegral_eq_tsum f D, ← (Equiv.ofBijective e0 hbij).tsum_eq, tsum_prod']
   exact tsum_congr h1
 
 end GlobalTheory.ResLine
@@ -753,8 +753,6 @@ theorem frame_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     rw [hdd]; linarith
   let μ : Measure (GAd σ J) := Measure.haar
   let Λ : Subgroup (GAd σ J) := ratPts σ J ⊓ GlobalTheory.StdPar.frameStab σ J X ⊤
-  haveI : DiscreteTopology Λ := inferInstance
-  haveI : Countable (ratPts σ J) := inferInstance
   have h𝓕 := GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom (ratPts σ J) μ
   have hDom := GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom Λ μ
   obtain ⟨B₀, hB₀, hsh⟩ := _root_.GlobalTheory.ResidueEisenstein.measure_shell_le F E σ n J r X Y L a h hD μ _ inferInstance hDom
@@ -826,7 +824,7 @@ theorem frame_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   have hpt : ∀ ε : ℝ, 0 < ε → ε ≤ 1 → ∀ u ∈ U, ENNReal.ofReal c₀ * ∑' t : T, ENNReal.ofReal (b ε t) ≤ Φ ε u := by
     intro ε h0 h1 u hu
     rw [← ENNReal.tsum_mul_left]
-    refine ENNReal.tsum_le_tsum fun t => ?_
+    refine tsum_le_tsum fun t => ?_
     simp only [b, f]
     by_cases ht : h t.1.1 ≤ M⁻¹
     · have hle : h (t.1.1 * u) ≤ 1 := by

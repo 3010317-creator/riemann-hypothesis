@@ -448,11 +448,11 @@ theorem UpperTheory.V.Cj.harmNe :
       one_mem' := by simp
       mul_mem' := fun {x y} hx hy => by
         change π.finPart (x * y) _ = _
-        rw [map_mul, Module.End.mul_apply, hy, hx]
+        rw [map_mul, mul_apply_eq_comp, hy, hx]
       inv_mem' := fun {x} hx => by
         change π.finPart x⁻¹ _ = _
         conv_lhs => rw [← show π.finPart x ⟨φ, hφ⟩ = ⟨φ, hφ⟩ from hx]
-        rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
+        rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one, one_apply_eq_self] }
   have hL : IsOpen (S : Set (GL (Fin a) (Af E))) := π.isSmooth_finPart _
   obtain ⟨K₀, ho₀, hc₀⟩ := GlobalTheory.GLIntegral.exists_isOpen_isCompact E a
   have ho : IsOpen ((K₀ ⊓ S : Subgroup _) : Set (GL (Fin a) (Af E))) := ho₀.inter hL
@@ -481,7 +481,7 @@ private theorem rT_adj (r : ℝ) (x : GL (Fin a) (Af E)) (X : Lie E a) (m : Sm E
     (act (.fin x)).rTensor (Fin Ξ.d → ℂ) (smAdj Ξ r X m) = smAdj Ξ r X ((act (.fin x)).rTensor (Fin Ξ.d → ℂ) m) := by
   have h : lie E a X * act (.fin x) = act (.fin x) * lie E a X := lie_rt_fin X x
   have h1 : (act (.fin x)).rTensor (Fin Ξ.d → ℂ) (smA Ξ X m) = smA Ξ X ((act (.fin x)).rTensor (Fin Ξ.d → ℂ) m) := by
-    rw [smA_apply, ← Module.End.mul_apply, ← Module.End.mul_apply, ← LinearMap.rTensor_mul, ← LinearMap.rTensor_mul, h]
+    rw [smA_apply, ← mul_apply_eq_comp, ← mul_apply_eq_comp, ← LinearMap.rTensor_mul, ← LinearMap.rTensor_mul, h]
   have h2 : (act (.fin x)).rTensor (Fin Ξ.d → ℂ) (smB Ξ X m) = smB Ξ X ((act (.fin x)).rTensor (Fin Ξ.d → ℂ) m) := by
     rw [smB_apply]
     clear h1
@@ -502,7 +502,7 @@ private theorem cocl_comb {q : ℕ} (s : ℂ) {ω η : Geo.Co Ξ q} (hω : Coclo
     refine AlternatingMap.ext fun X => ?_
     have h1 := DFunLike.congr_fun (show del _ e ω = 0 from hω) X
     have h2 := DFunLike.congr_fun (show del _ e η = 0 from hη) X
-    rw [del_apply, AlternatingMap.zero_apply] at h1 h2 ⊢
+    rw [del_apply, zero_apply] at h1 h2 ⊢
     simp only [ap, map_add (f := _), map_smul, Finset.sum_add_distrib, h2, add_zero, ← Finset.smul_sum, h1, smul_zero]
 
 private theorem cocl_zero {q : ℕ} : Coclosed (smAdj Ξ r) e (0 : Geo.Co Ξ q) := by
@@ -518,7 +518,7 @@ private theorem cocl_trans {q : ℕ} (x : GL (Fin a) (Af E)) {ω : Geo.Co Ξ q} 
   | succ q =>
     refine AlternatingMap.ext fun X => ?_
     have h1 := DFunLike.congr_fun (show del _ e ω = 0 from hω) X
-    rw [del_apply, AlternatingMap.zero_apply] at h1 ⊢
+    rw [del_apply, zero_apply] at h1 ⊢
 
     simp only [ap, ← rT_adj, ← map_sum, h1, map_zero]
 
@@ -658,7 +658,6 @@ theorem UpperTheory.V.Cj.irrCo :
     UpperTheory.V.Cj.IrrCo := by
   intro E _ _ _ a π τ hτ Ξ q P hP hst hV
   have : Nontrivial P := Submodule.nontrivial_iff_ne_bot.2 hP
-  have : Module.Finite ℝ (Herm E a) := inferInstance
   let b := Module.finBasis ℝ (Herm E a)
   let ρW : Representation ℂ (GL (Fin a) (Af E)) P :=
     { toFun := fun x => (transRep Ξ q x).restrict (fun ω hω => hst x ω hω)
@@ -669,10 +668,10 @@ theorem UpperTheory.V.Cj.irrCo :
     { toFun := fun w => ⟨Bor.cmp j.2 (w.1 fun k => b (j.1 k)), mem_tens.1 (hV w.1 w.2 _) j.2⟩
       map_add' := fun x y => Subtype.ext (by
         change Bor.cmp j.2 ((x.1 + y.1) _) = Bor.cmp j.2 _ + Bor.cmp j.2 _
-        rw [AlternatingMap.add_apply, map_add (f := _)])
+        rw [add_apply, map_add (f := _)])
       map_smul' := fun c x => Subtype.ext (by
         change Bor.cmp j.2 ((c • x.1) _) = c • Bor.cmp j.2 _
-        rw [AlternatingMap.smul_apply, map_smul]) }
+        rw [smul_apply, map_smul]) }
   obtain ⟨Φ, h1, h2⟩ := irrAbs _ τ.V π.V P _ τ.ρ π.finPart ρW τ.irred hτ.iSup_range p
     (fun j g w => Subtype.ext (cmp_trans g w.1 _ j.2))
     (fun w hw => Subtype.ext (by
@@ -922,13 +921,13 @@ private theorem eF_const (c : ℂ) (τ : E →+* ℂ) (i j : Fin a) : eF (fun _ 
 private theorem eF_add {f g : GL (Fin a) (Cinf E) → ℂ} (hf : f ∈ regFun E a) (hg : g ∈ regFun E a) (τ : E →+* ℂ) (i j : Fin a) :
     eF (f + g) τ i j = eF f τ i j + eF g τ i j := by
   rw [eF, dF_eq (fun y => by simp [extGL_val]) ((has_dF hf).add (has_dF hg))]
-  simp only [eF, ContinuousLinearMap.add_apply]
+  simp only [eF, add_apply]
   ring
 
 private theorem eF_mul {f g : GL (Fin a) (Cinf E) → ℂ} (hf : f ∈ regFun E a) (hg : g ∈ regFun E a) (τ : E →+* ℂ) (i j : Fin a) :
     eF (f * g) τ i j = f 1 * eF g τ i j + g 1 * eF f τ i j := by
   rw [eF, dF_eq (fun y => by simp [extGL_val]) ((has_dF hf).mul (has_dF hg))]
-  simp only [eF, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, extGL_one]
+  simp only [eF, add_apply, smul_apply, smul_eq_mul, extGL_one]
   ring
 
 variable [_root_.NumberField.IsTotallyComplex E]
@@ -955,7 +954,7 @@ private theorem eF_det (t τ : E →+* ℂ) (i j : Fin a) :
     eF (fun y : GL (Fin a) (Cinf E) => (coord t y.val.det)⁻¹) τ i j = if t = τ ∧ i = j then -1 else 0 := by
   have h0 := (coordL t).hasFDerivAt.comp (oneL E a) (contDiff_det.differentiable (by simp) (oneL E a)).hasFDerivAt
   have hd : (Matrix.of (oneL E a)).det = 1 := Matrix.det_one
-  have h1 := (hasDerivAt_inv (x := coordL t (Matrix.of (oneL E a)).det) (by simp [hd])).hasFDerivAt.restrictScalars ℝ
+  have h1 := (hasDerivAt_inv (x := coordL t (Matrix.of (oneL E a)).det) (by simp)).hasFDerivAt.restrictScalars ℝ
   have h := dF_eq (f := fun y : GL (Fin a) (Cinf E) => (coord t y.val.det)⁻¹) (fun _ => rfl) (h1.comp (oneL E a) h0)
   have h2 : ∀ x : Cinf E, dF (fun y : GL (Fin a) (Cinf E) => (coord t y.val.det)⁻¹) (toL (Matrix.single i j x)) =
       if i = j then -coord t x else 0 := fun x => by
@@ -973,7 +972,7 @@ private theorem eF_det (t τ : E →+* ℂ) (i j : Fin a) :
 
 omit [NumberField E] [_root_.NumberField.IsTotallyComplex E] in
 private def tw (σ : ℂ ≃+* ℂ) : ((E →+* ℂ) → ℂ) →+* ((E →+* ℂ) → ℂ) :=
-  Pi.ringHom fun τ => σ.symm.toRingHom.comp (Pi.evalRingHom (fun _ : E →+* ℂ => ℂ) (σ.toRingHom.comp τ))
+  RingHom.pi fun τ => σ.symm.toRingHom.comp (Pi.evalRingHom (fun _ : E →+* ℂ => ℂ) (σ.toRingHom.comp τ))
 
 private def tE (σ : ℂ ≃+* ℂ) : Cinf E →+* ((E →+* ℂ) → ℂ) := (tw σ).comp (emb E)
 
@@ -1257,7 +1256,7 @@ theorem UpperTheory.V.Lit.Bor.indepAbs :
         have e3 : ((T ((A o).restrict (h i o) x) : W) - ((A o).restrict (h j o) (T x) : W))
             = ((T ((A o).restrict (h i o) x) : W) - ((A o).restrict (h i o) x : W))
               - A o ((T x : W) - x) := by
-          simp only [LinearMap.restrict_coe_apply, map_sub]
+          simp only [LinearMap.coe_restrict_apply, map_sub]
           abel
         rw [e3]
         exact sub_mem e1 e2
@@ -1376,21 +1375,21 @@ theorem acyclic : Acyclic := by
     refine LinearMap.ext fun x => Subtype.ext (funext fun h => ?_)
     simp only [iL, L, LinearMap.comp_apply]
     show (ρ h) ((ρ γ) x) = (ρ (h * γ)) x
-    rw [map_mul, Module.End.mul_apply]⟩
+    rw [map_mul, mul_apply_eq_comp]⟩
   let r : C ⟶ Rep.of ρ := Rep.ofHom ⟨rL, fun γ => by
     refine LinearMap.ext fun f => ?_
     simp only [LinearMap.comp_apply, rL, M]
     rw [hequi]
     congr 1
     funext g
-    simp [mul_inv_rev, ← Module.End.mul_apply, ← map_mul]
+    simp [mul_inv_rev, ← mul_apply_eq_comp, ← map_mul]
     rfl⟩
   have hri : i ≫ r = 𝟙 _ := by
     ext x
-    simp [i, r, rL, M, iL, L, ← Module.End.mul_apply, ← map_mul, hconst]
+    simp [i, r, rL, M, iL, L]
     show P (fun g => ρ g (ρ g⁻¹ x)) = x
     rw [show (fun g => ρ g (ρ g⁻¹ x)) = fun _ => x from
-      funext fun g => by rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply], hconst]
+      funext fun g => by rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one, one_apply_eq_self], hconst]
   let F := groupCohomology.functor ℂ Γ (n + 1)
   have hinj : Function.Injective (F.map i).hom := by
     intro a b hab
@@ -1434,7 +1433,7 @@ theorem shiftOne : ShiftOne := by
     apply hinj
     rw [Rep.of_ρ]
     change ι (φ i (g * h)) = ι ((ρM g) (φ i h) + φ i g)
-    rw [map_add (f := _), hι, hφ, hφ, hφ, map_mul, Module.End.mul_apply, map_sub]
+    rw [map_add (f := _), hι, hφ, hφ, hφ, map_mul, mul_apply_eq_comp, map_sub]
     abel
   let v : Fin n → groupCohomology (Rep.of ρM) 1 :=
     fun i => (groupCohomology.H1π (Rep.of ρM)).hom ⟨φ i, hcoc i⟩
@@ -1664,7 +1663,7 @@ private theorem rapid_sum {q s : ℕ} (ω : Fin s → Co Ξ q) (c : Fin s → �
     obtain ⟨C, hC⟩ := hα X N
     obtain ⟨D, hD⟩ := hβ X N
     refine ⟨C + D, fun g => ?_⟩
-    rw [AlternatingMap.add_apply, ev_add']
+    rw [add_apply, ev_add']
     refine (mul_le_mul_of_nonneg_right (norm_add_le _ _) (pow_nonneg (hq _) N)).trans ?_
     rw [add_mul]
     exact add_le_add (hC g) (hD g)
@@ -1672,12 +1671,12 @@ private theorem rapid_sum {q s : ℕ} (ω : Fin s → Co Ξ q) (c : Fin s → �
     refine ⟨0, fun g => ?_⟩
     have : ev ((0 : Co Ξ q) X) g.1 = 0 := by
       have := ev_smul' (Ξ := Ξ) 0 0 g.1
-      simpa using this
+      simp
     rw [this]; simp
   · intro i _ X N
     obtain ⟨C, hC⟩ := h i X N
     refine ⟨‖c i‖ * C, fun g => ?_⟩
-    rw [AlternatingMap.smul_apply, ev_smul', norm_smul, mul_assoc]
+    rw [smul_apply, ev_smul', norm_smul, mul_assoc]
     exact mul_le_mul_of_nonneg_left (hC g) (norm_nonneg _)
 
 private theorem noExact' (ha : 1 ≤ a) {n : ℕ} {e : Fin n → Herm E a} (he : IsFrame e) {U : Subgroup (GL (Fin a) (Af E))}

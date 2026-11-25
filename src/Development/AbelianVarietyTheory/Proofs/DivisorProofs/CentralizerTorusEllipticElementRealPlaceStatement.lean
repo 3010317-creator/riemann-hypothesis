@@ -138,7 +138,6 @@ end Gen
 theorem plusUnits_of_isIsom {D : D7} (V : HSp D) (P : PPol D.sp.cm.sig V.rank) (ρ : D.what₂.Tau) {x φ}
     (h : IsIsom P (placeOf D ρ).Completion V.gram x φ) :
     ∃ u : plusUnits P (placeOf D ρ).Completion, u.1.1 = x := by
-  haveI : Module.Finite D.host.F D.host.E := inferInstance
   haveI : Module.Finite D.host.F (Fld P) := Module.Finite.trans D.host.E (Fld P)
   exact plusUnits_gen (fun e => star_star e) (GlobalTheory.DefiniteQuotient.gram_hermND V) h
 
@@ -194,7 +193,6 @@ theorem centMeas_real_place : ∀ {D : D7} (V : HSp D) (P : PPol D.sp.cm.sig V.r
     (GlobalTheory.DefiniteQuotient.gram_hermND V) (placeOf D ρ).Completion u φ h
   obtain ⟨e, H2⟩ := H
   have hm := H2.2
-  haveI : Module.Finite D.host.F D.host.E := inferInstance
   haveI : Module.Finite D.host.F (Fld P) := Module.Finite.trans D.host.E (Fld P)
   haveI := topGrp (placeOf D ρ).Completion D.sp.cm.sig V.gram
   haveI := topGrp (placeOf D ρ).Completion (star' P) (one₁ P)
