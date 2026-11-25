@@ -294,14 +294,7 @@ theorem lift_of_frame [IsNonarchimedeanLocalField F] [CharZero F] (Λ : Submodul
   have hN : n * m ∈ S.Nof g := mul_mem hn hm
   have hNi : ∀ a b, hf L S.Hm ((n * m) a) ((n * m) b) = hf L S.Hm a b := hN.1.1
   have hmi : ∀ a b, hf L S.Hm (m a) (m b) = hf L S.Hm a b := hm.1.1
-  have hmem : ∀ x, x ∈ (n * m)⁻¹ • Λ ↔ (n * m) x ∈ Λ := fun x => by
-    rw [Submodule.mem_smul_pointwise_iff_exists]
-    constructor
-    · rintro ⟨b, hb, rfl⟩
-      have : (n * m) ((n * m)⁻¹ • b) = b := (n * m).apply_symm_apply b
-      rwa [this]
-    · intro h
-      exact ⟨_, h, (n * m).symm_apply_apply x⟩
+  have hmem : ∀ x, x ∈ (n * m)⁻¹ • Λ ↔ (n * m) x ∈ Λ := fun _ => Set.mem_inv_smul_set_iff
   obtain ⟨A, hA, hA'⟩ := core S g gs T gram dual iso ((n * m)⁻¹ • Λ) (hΛ.1.1.map _)
     (fun z => by
       rw [hmem, ← hΛ.2]
