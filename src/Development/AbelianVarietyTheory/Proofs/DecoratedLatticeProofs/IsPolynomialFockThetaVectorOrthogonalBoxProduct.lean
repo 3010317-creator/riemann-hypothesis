@@ -38,10 +38,7 @@ theorem killed_of_leibniz₂ {P₁ P₂ Q U₁ U₂ V : Type} [Zero U₁] [Zero 
     ∀ (N₁ N₂ : ℕ) (f : U₁) (g : U₂), N₁ + N₂ ≤ N → T₁ f → T₂ g →
       (∀ l : List P₁, l.length = N₁ → l.foldr a₁ f = 0) → (∀ l : List P₂, l.length = N₂ → l.foldr a₂ g = 0) →
       ∀ l : List Q, l.length = N → l.foldr b (δ f g) = 0 := by
-  have w0 : ∀ l : List Q, l.foldr b 0 = 0 := fun l => by
-    induction l with
-    | nil => rfl
-    | cons q l ih => rw [List.foldr_cons, ih, hb0]
+  have w0 : ∀ l : List Q, l.foldr b 0 = 0 := List.foldr_fixed' hb0
   have wT : ∀ (l : List Q) f, TV f → TV (l.foldr b f) := fun l f hf => by
     induction l with
     | nil => exact hf
