@@ -90,14 +90,8 @@ theorem exists_extension (hJ : Jᴴ = J) (hu : IsUnit J.det) {A : Type} [Ring A]
     ∃ R : Matrix (Fin n) (Fin n) ℂ →ₗ[ℂ] A,
       (∀ Z, R Z = ρ (rePart hJ hu Z) + Complex.I • ρ (imPart hJ hu Z)) ∧ (∀ X : lieU J, R X.1 = ρ X) ∧
       ∀ Z W, R (Z * W - W * Z) = R Z * R W - R W * R Z := by
-  have hsub : ∀ X Y, ρ (X - Y) = ρ X - ρ Y := by
-    intro X Y
-    have := hadd (X - Y) Y
-    rw [sub_add_cancel] at this
-    rw [this, add_sub_cancel_right]
-  have h0 : ρ 0 = 0 := by
-    have := hsub 0 0
-    rwa [sub_self, sub_self] at this
+  have hsub : ∀ X Y, ρ (X - Y) = ρ X - ρ Y := map_sub (AddMonoidHom.mk' ρ hadd)
+  have h0 : ρ 0 = 0 := map_zero (AddMonoidHom.mk' ρ hadd)
   let r : Matrix (Fin n) (Fin n) ℂ → A := fun Z => ρ (rePart hJ hu Z) + Complex.I • ρ (imPart hJ hu Z)
   have key : ∀ X Y : lieU J, r (X.1 + Complex.I • Y.1) = ρ X + Complex.I • ρ Y := by
     intro X Y
