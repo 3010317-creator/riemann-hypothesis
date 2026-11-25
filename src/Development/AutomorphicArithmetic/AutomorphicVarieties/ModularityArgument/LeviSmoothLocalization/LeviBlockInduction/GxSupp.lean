@@ -5,6 +5,7 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityA
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.NotInSupportOfSubsingleton
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportUniqueGL
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCovBySubmodule
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEquivDetCharacterOfIrreducibleRankLeOne
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InSupportOfIsSubquotient
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SubsingletonJacquetOfPerm
@@ -283,8 +284,8 @@ private theorem pol_eq {n r : ℕ} {d : Fin r → ℕ} (hd : ∀ j, 0 < d j) (e 
     change E.symm.toLinearEquiv (ι.toLinearMap v) = E.symm.toLinearEquiv (ι.toLinearMap 0)
     rw [ι.map_zero, E.symm.toLinearEquiv.map_zero]
     exact h
-  have hτs : IsSubquotient τ (jac e π) := .of_surjective (GlobalTheory.CompanionTheory.FrobJm.frobMap e f)
-    (GlobalTheory.CompanionTheory.FrobJm.surjective_of_ne_zero hτ _ (GlobalTheory.CompanionTheory.FrobJm.frobMap_ne_zero e f ⟨v, hf⟩))
+  have hτs : IsSubquotient τ (jac e π) := GlobalTheory.JHMult.jhMult_ne_zero_iff.1
+    (ENat.one_le_iff_ne_zero.1 (GlobalTheory.CompanionTheory.SocleJm.one_le_jhMult_jac e hτ f ⟨v, hf⟩))
   have hτsm : IsSmooth τ := hτs.isSmooth (isSmooth_jac e hs.isSmooth)
   have hsm : ∀ j, IsSmooth (τ.comp (MonoidHom.mulSingle (fun j => GL (Fin (d j)) k) j) :
       Representation ℂ (GL (Fin (d j)) k) W) := fun j =>

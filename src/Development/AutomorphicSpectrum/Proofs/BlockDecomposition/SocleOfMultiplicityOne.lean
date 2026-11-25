@@ -11,6 +11,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JacquetMo
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JacquetWordMultiplicityAdditiveJordanHolder
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchurAdmissibleAlt
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityPos
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ParabolicInductionFiniteLength
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Tactic.Linter.HaveILetI
@@ -74,30 +75,6 @@ theorem jhMult_jac_exact (e : (Σ a, m a) ≃ n) {σ : Representation ℂ (Levi 
     show Submodule.Quotient.mk (ι u) = Submodule.Quotient.mk v
     rw [hu]
     exact (Submodule.Quotient.eq _).2 (by simpa using hv')
-
-theorem one_le_jhMult_jac (e : (Σ a, m a) ≃ n) {ρ : Representation ℂ (Levi k m) X}
-    (hρ : ρ.IsIrreducible) {τ : Representation ℂ (GL n k) V} (f : τ.IntertwiningMap (parInd e ρ))
-    (hf : ∃ v, f v ≠ 0) : 1 ≤ jhMult ρ (jac e τ) := by
-  obtain ⟨v, hv⟩ := hf
-  obtain ⟨x, hx⟩ : ∃ x, (f v).1.1 x ≠ 0 := by
-    by_contra! h
-    exact hv (Subtype.ext (Subtype.ext (funext h)))
-  let φ := GlobalTheory.SmGL.Model.evalOne e f
-  have h1 : φ (Submodule.Quotient.mk (τ x v)) ≠ 0 := by
-    have : φ (Submodule.Quotient.mk (τ x v)) = (f v).1.1 x := by
-      show (f (τ x v)).1.1 1 = _
-      rw [f.isIntertwining, parInd_apply, one_mul]
-    rwa [this]
-  have h2 : Function.Surjective φ := by
-    intro w
-    rcases eq_bot_or_eq_top φ.range with e' | e'
-    · have h3 : φ (Submodule.Quotient.mk (τ x v)) ∈ φ.range :=
-        (Representation.IntertwiningMap.mem_range _ _ _ _).2 ⟨_, rfl⟩
-      rw [e'] at h3
-      exact absurd h3 h1
-    · have h3 : w ∈ φ.range := e' ▸ trivial
-      exact (Representation.IntertwiningMap.mem_range _ _ _ _).1 h3
-  exact ENat.one_le_iff_ne_zero.2 (jhMult_ne_zero_iff.2 (.of_surjective φ h2))
 
 theorem isIrreducible_piTensor (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {h : ℕ} (x : Fin h → IrrGL (k := k)) :
     (piTensor fun a => (x a).rep).IsIrreducible :=
