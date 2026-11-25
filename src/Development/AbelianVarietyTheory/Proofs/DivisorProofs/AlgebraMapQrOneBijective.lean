@@ -60,11 +60,9 @@ theorem scalar_one_bijective (R : Type*) [CommRing R] :
 
 theorem inclG_one_bijective (G : HTGroup p) : Function.Bijective (inclG G 1) := by
   have h1 : Function.Bijective ((GeneralLinearGroup.scalar (Fin 1)).comp
-      (Units.map (algebraMap ℚ_[p] (Qr p 1)).toMonoidHom)) := by
-    refine (scalar_one_bijective _).comp ⟨fun a b h => Units.ext (algebraMap_qr_one_bijective.1 (congrArg Units.val h)), fun b => ?_⟩
-    let f := RingEquiv.ofBijective (algebraMap ℚ_[p] (Qr p 1)) algebraMap_qr_one_bijective
-    refine ⟨Units.map (f.symm : Qr p 1 →+* ℚ_[p]).toMonoidHom b, Units.ext ?_⟩
-    exact f.apply_symm_apply (b : Qr p 1)
+      (Units.map (algebraMap ℚ_[p] (Qr p 1)).toMonoidHom)) :=
+    (scalar_one_bijective _).comp (Units.mapEquiv (RingEquiv.ofBijective (algebraMap ℚ_[p] (Qr p 1))
+      algebraMap_qr_one_bijective).toMulEquiv).bijective
   have h2 : ∀ w, Function.Bijective (GeneralLinearGroup.map (n := Fin G.n) (inclK p (G.Fw w) 1).toRingHom) :=
     fun w => glMap_bijective _ _ (inclK_one_bijective (G.Fw w))
   refine ⟨fun a b h => ?_, fun c => ?_⟩
