@@ -161,11 +161,8 @@ lemma Fj_zero : Fr.Fj 0 = ⊥ := by simp [FrameD.Fj]
 lemma Fj_mono {j j' : ℕ} (h : j ≤ j') : Fr.Fj j ≤ Fr.Fj j' :=
   Submodule.span_mono (Set.image_mono fun i (hi : (i : ℕ) < j) => (show (i : ℕ) < j' by omega))
 
-lemma Fj_r : Fr.Fj r = H.X Fr.f := by
-  unfold FrameD.Fj HermSp.X
-  congr 1
-  ext x
-  simp [FrameD.e]
+lemma Fj_r : Fr.Fj r = H.X Fr.f :=
+  _root_.GlobalTheory.HL.CoordUnip.Fj_r Fr
 
 lemma Fj_le_X (j : ℕ) : Fr.Fj j ≤ H.X Fr.f := by
   unfold FrameD.Fj HermSp.X
