@@ -190,25 +190,6 @@ private lemma sigma_tMat_diag {ϖ : L} (hσ : σ ϖ = ϖ) {m : ℕ} (a : Fin m �
   simp only [tMat, Matrix.diagonal_apply_eq]
   split_ifs <;> simp [map_zpow₀, hσ]
 
-private lemma valuation_zpow_uniformizer {ϖ : L} (hϖ : Valued.v ϖ = ↑(Multiplicative.ofAdd (-1 : ℤ))) (a : ℤ) :
-    Valued.v (ϖ ^ a) = ((Multiplicative.ofAdd (-a) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) := by
-  rw [map_zpow₀, hϖ, ← WithZero.coe_zpow]
-  congr 1
-  rw [← ofAdd_zsmul]
-  simp
-
-private lemma withZero_eq_one_of_mul_self_eq_one {x : WithZero (Multiplicative ℤ)} (h : x * x = 1) : x = 1 := by
-  have hx : x ≠ 0 := fun h0 => by
-    rw [h0, zero_mul] at h
-    exact zero_ne_one h
-  obtain ⟨y, rfl⟩ := WithZero.ne_zero_iff_exists.mp hx
-  rw [← WithZero.coe_mul, ← WithZero.coe_one, WithZero.coe_inj] at h
-  rw [← WithZero.coe_one, WithZero.coe_inj]
-  have h3 := congrArg Multiplicative.toAdd h
-  rw [toAdd_mul, toAdd_one] at h3
-  have h2 : Multiplicative.toAdd y = 0 := by omega
-  rw [← ofAdd_toAdd y, h2, ofAdd_zero]
-
 theorem fSatake_cell_exists {ϖ : L} {q m : ℕ} (hU : IsUnramInv ϖ σ q) (hm : 2 * m ≤ n)
     (hm' : n ≤ 2 * m + 1) {b k : GU σ n} (hb : IsBorelU b) (hk : k ∈ KU σ n) :
     ∃ a : Fin m → ℤ, ∃ u : GU σ n, IsUnipU u ∧ ∃ k' ∈ KU σ n,
@@ -257,7 +238,8 @@ theorem fSatake_cell_exists {ϖ : L} {q m : ℕ} (hU : IsUnramInv ϖ σ q) (hm :
       have h1 := fSatake_tMat_apply_lt ϖ a ⟨i, hi⟩ i.isLt
       rw [ha ⟨i, hi⟩ i.isLt] at h1
       exact h1
-    rw [he, map_mul, map_inv₀, hT, valuation_zpow_uniformizer hϖ, _root_.Formalism.UG.P.fSatake_v_eq (hbne i)]
+    rw [he, map_mul, map_inv₀, hT, fSatake_v_eq (zpow_ne_zero _ hϖ0), fSatake_ord_zpow hϖ,
+      fSatake_v_eq (hbne i)]
     exact mul_inv_cancel₀ WithZero.coe_ne_zero
   have hve : ∀ i, Valued.v (e i) = 1 := by
     intro i
@@ -273,7 +255,7 @@ theorem fSatake_cell_exists {ϖ : L} {q m : ℕ} (hU : IsUnramInv ϖ σ q) (hm :
         exact h1
       · have hji : j = i := Fin.ext (by omega)
         rw [hji] at h1
-        exact withZero_eq_one_of_mul_self_eq_one h1
+        exact sq_eq_one.mp (by rwa [sq])
   have hd1 : Matrix.diagonal e * Matrix.diagonal (fun i => (e i)⁻¹) = 1 := by
     rw [Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
     congr 1
