@@ -40,16 +40,8 @@ theorem inclK_one_bijective (K : IntermediateField ℚ_[p] (PadicAlgCl p)) :
   rw [this]; exact E.bijective
 
 theorem glMap_bijective {R S : Type*} [CommRing R] [CommRing S] (n : ℕ) (f : R →+* S) (hf : Function.Bijective f) :
-    Function.Bijective (GeneralLinearGroup.map (n := Fin n) f) := by
-  let g : S ≃+* R := (RingEquiv.ofBijective f hf).symm
-  refine ⟨fun A B h => ?_, fun B => ⟨GeneralLinearGroup.map (g : S →+* R) B, ?_⟩⟩
-  · ext i j
-    have := congrArg (fun X : GL (Fin n) S => (X : Matrix (Fin n) (Fin n) S) i j) h
-    simp only [GeneralLinearGroup.map_apply] at this
-    exact hf.1 this
-  · ext i j
-    simp only [GeneralLinearGroup.map_apply, RingHom.coe_coe]
-    exact (RingEquiv.ofBijective f hf).apply_symm_apply _
+    Function.Bijective (GeneralLinearGroup.map (n := Fin n) f) :=
+  (Units.mapEquiv ((RingEquiv.ofBijective f hf).mapMatrix (m := Fin n)).toMulEquiv).bijective
 
 theorem scalar_one_bijective (R : Type*) [CommRing R] :
     Function.Bijective (GeneralLinearGroup.scalar (Fin 1) : Rˣ →* GL (Fin 1) R) := by
