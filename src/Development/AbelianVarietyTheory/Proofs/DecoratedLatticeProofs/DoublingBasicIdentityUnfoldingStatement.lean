@@ -477,7 +477,6 @@ open Matrix
 noncomputable section
 namespace GlobalTheory.FrameNorm
 
-open Formalism.L2.Theta (mt)
 
 
 

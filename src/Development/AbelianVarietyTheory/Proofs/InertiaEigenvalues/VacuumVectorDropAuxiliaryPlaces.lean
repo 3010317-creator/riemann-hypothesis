@@ -129,7 +129,6 @@ end GlobalTheory.ExportSeries
 
 
 
-open Classical
 namespace GlobalTheory.ExportSeries
 open GlobalTheory.PlaceModel GlobalTheory.AdelicLatMove
 

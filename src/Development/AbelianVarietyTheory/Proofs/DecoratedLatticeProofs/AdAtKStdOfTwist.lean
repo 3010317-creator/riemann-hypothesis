@@ -52,7 +52,6 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.See
 open scoped TensorProduct Classical
 
 namespace GlobalTheory.Fam.MovedJoin
-open GlobalTheory.AdForm
 
 
 open Formalism.L2.Col in

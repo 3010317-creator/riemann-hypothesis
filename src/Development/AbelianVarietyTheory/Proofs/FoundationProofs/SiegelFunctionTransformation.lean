@@ -584,7 +584,6 @@ open GlobalTheory.Sieg GlobalTheory.QFam
 
 namespace GlobalTheory
 
-open GlobalTheory.Sieg
 
 lemma Sieg.cthS_negI_pow (c : ℕ) (hc : Nat.Coprime c 6) : (-Complex.I) ^ (c ^ 2) = -Complex.I := by
   have h2 : Nat.Coprime c 2 := Nat.Coprime.coprime_dvd_right (by norm_num) hc

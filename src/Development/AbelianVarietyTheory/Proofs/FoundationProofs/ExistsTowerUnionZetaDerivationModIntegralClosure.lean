@@ -182,7 +182,6 @@ end GlobalTheory.AlmostEt
 
 namespace GlobalTheory.AlmostEt
 
-open GlobalTheory.K5
 
 theorem IsDerOn.pow_der {A S M : Type*} [CommRing A] [CommRing S] [Algebra A S] [AddCommGroup M]
     [Module S M] {B : Subalgebra A S} {D : S → M} (h : IsDerOn B D) {x : S} (hx : x ∈ B) {n : ℕ}

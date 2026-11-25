@@ -87,7 +87,6 @@ theorem isIntegral_of_mem (z : L) (hz : z ⊗ₜ[NumberField.maximalRealSubfield
 
 end GlobalTheory.StabFin
 
-open scoped TensorProduct
 
 namespace GlobalTheory.StabFin
 

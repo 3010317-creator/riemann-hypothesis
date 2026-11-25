@@ -550,7 +550,6 @@ noncomputable section
 
 namespace GlobalTheory.LocBasisBasR
 
-open Matrix
 
 theorem norm_det_le_one {K : Type*} [NormedField K] [IsUltrametricDist K] {N : ℕ}
     (g : Matrix (Fin N) (Fin N) K) (hg : ∀ a b, ‖g a b‖ ≤ 1) : ‖g.det‖ ≤ 1 := by

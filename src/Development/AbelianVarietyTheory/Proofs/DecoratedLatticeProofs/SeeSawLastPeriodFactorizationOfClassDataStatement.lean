@@ -165,7 +165,6 @@ end GlobalTheory.BranchMultOne
 
 namespace GlobalTheory.BranchMultOne
 
-open Formalism.BasicNotions
 
 theorem unitary_to_all {N n : ℕ} (hN : N = n + 1) (lam : DomWeight N) (sg : DomWeight n)
     (u : delSq ℂ N lam →ₗ[ℂ] delSq ℂ n sg)

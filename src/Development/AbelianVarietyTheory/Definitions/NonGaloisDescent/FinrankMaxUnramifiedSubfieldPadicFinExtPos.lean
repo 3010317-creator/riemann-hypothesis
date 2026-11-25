@@ -160,7 +160,6 @@ section B
 open Formalism Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N NumberField IsDedekindDomain Formalism.FrobeniusOrbits Formalism.BasicNotions.Loc
 section Local
 
-open Formalism.BasicNotions.Loc
 
 variable {l : ℕ} [Fact l.Prime] {R : Ranks} (H : Host R) (J : H.E →+* Om l)
 

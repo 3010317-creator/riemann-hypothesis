@@ -548,7 +548,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory CategoryTheory.Limits NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.L2.Pj Formalism.L2.Pj.QAt GlobalTheory.ArcQ GlobalTheory.Frames
 open scoped LaurentSeries
-open ReciprocityTheory.ChartRestriction.G.FD
 
 namespace GlobalTheory.ArcBdd
 

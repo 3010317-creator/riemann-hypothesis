@@ -129,7 +129,6 @@ namespace GlobalTheory.Mem.R3.DefLatBC
 
 section GoodTransport
 
-open Formalism.L2.DIV
 
 theorem absIrr_one_ne_zero {K G : Type} [Field K] [CharZero K] [Group G] [Fintype G] {χ : G → K}
     (h : IsAbsIrrChar χ) : χ 1 ≠ 0 := by

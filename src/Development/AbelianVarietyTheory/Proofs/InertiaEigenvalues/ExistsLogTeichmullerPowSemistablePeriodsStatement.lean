@@ -838,7 +838,6 @@ open scoped Formalism.Per NNReal
 noncomputable section
 
 namespace GlobalTheory.LogU
-open GlobalTheory.MemLoc
 
 variable {l : ℕ} [Fact l.Prime]
 

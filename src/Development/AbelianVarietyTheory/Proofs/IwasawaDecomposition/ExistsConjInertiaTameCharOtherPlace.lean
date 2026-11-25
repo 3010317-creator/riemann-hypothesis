@@ -126,7 +126,6 @@ theorem val_eq_of_not_mem_sq (A : ValuationSubring Î©) (P : HeightOneSpectrum (ð
 
 end GlobalTheory.TameMove
 
-open Pointwise
 
 namespace GlobalTheory.TameMove
 

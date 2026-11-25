@@ -49,7 +49,6 @@ noncomputable section
 
 namespace GlobalTheory.IsotConjFix
 
-open Formalism.IndefR.principalLevelFrame
 
 section Gen
 

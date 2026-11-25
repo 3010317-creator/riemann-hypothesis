@@ -52,7 +52,6 @@ open NumberField IsDedekindDomain ReciprocityTheory.ChartRestriction.G.Geo.Tor F
 
 noncomputable section
 namespace GlobalTheory.HeckeCount
-open ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
 

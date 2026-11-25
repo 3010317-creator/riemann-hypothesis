@@ -160,7 +160,6 @@ open NumberField IsDedekindDomain Polynomial Formalism.ConjugateSelfDual Recipro
 
 namespace GlobalTheory.LocalExtField
 
-open Polynomial
 
 theorem dorbit : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (β : Ω), ∃ S : Finset Ω, (∀ x, x ∈ S ↔ ∃ d ∈ Dec (F := E) A, d β = x) ∧ ∃ f : Polynomial Ω, f.Monic ∧ f.natDegree = S.card ∧ (∀ d ∈ Dec (F := E) A, ∀ i, d (f.coeff i) = f.coeff i) ∧ f.eval β = 0 := by
   intro E Ω _ _ _ _ _ A β

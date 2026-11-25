@@ -570,7 +570,6 @@ noncomputable section
 
 namespace GlobalTheory.KFourier
 
-open MeasureTheory Matrix Formalism.REAL
 
 variable {n : ℕ}
 
@@ -1020,7 +1019,6 @@ noncomputable section
 
 namespace GlobalTheory.KFourier
 
-open Matrix
 
 variable {n : ℕ}
 
@@ -1124,7 +1122,6 @@ noncomputable section
 
 namespace GlobalTheory.KFourier
 
-open Matrix
 
 variable {n : ℕ}
 
@@ -1172,7 +1169,6 @@ noncomputable section
 
 namespace GlobalTheory.KFourier
 
-open Matrix
 
 variable {n : ℕ}
 
@@ -1277,7 +1273,6 @@ noncomputable section
 
 namespace GlobalTheory.KFourier
 
-open Matrix
 
 theorem rder_bound_basisWords : ∀ {n : ℕ} (ε : Fin n → Bool) (m : ℕ), ∃ (U : List (List (Mx n))) (C : ℝ),
     0 ≤ C ∧ (∀ u ∈ U, ∀ X ∈ u, inK ε X) ∧ ∀ (d : ℕ) (φ : KG ε → ℂ), φ ∈ GlobalTheory.KFourier.polyV ε d →

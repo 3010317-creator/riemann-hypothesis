@@ -277,7 +277,6 @@ end Core
 
 section Seam
 
-open Formalism.L2.Ker Formalism.MainNotions
 
 variable {D : D7} {X : Fields} (s : Seam D X)
 

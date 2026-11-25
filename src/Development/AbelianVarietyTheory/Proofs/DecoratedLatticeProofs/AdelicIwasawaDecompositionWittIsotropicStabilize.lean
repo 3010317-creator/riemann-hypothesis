@@ -108,7 +108,6 @@ noncomputable section
 
 namespace GlobalTheory.Core.Rk.IwGlob
 
-open GlobalTheory.MixModel
 open scoped TensorProduct
 
 theorem tens_prod_ext {F E A B : Type} [Field F] [Field E] [Algebra F E] [CommRing A] [CommRing B] [Algebra F A]

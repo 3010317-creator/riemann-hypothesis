@@ -851,7 +851,6 @@ open ReciprocityTheory.Gal Formalism.RepresentationBoundsCohomology.LOC Reciproc
 
 namespace GlobalTheory.PadicH2SeparatedDVR
 
-open GlobalTheory.LocDualInt
 
 theorem discrete_quot {O : Type} [CommRing O] [TopologicalSpace O] [IsTopologicalRing O]
     (P : Submodule O O) (hP : IsOpen (P : Set O)) : DiscreteTopology (O ⧸ P) := by

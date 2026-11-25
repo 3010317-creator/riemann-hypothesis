@@ -245,7 +245,6 @@ end GlobalTheory.HeckeGal
 
 namespace GlobalTheory.Published
 
-open GlobalTheory.HeckeGal
 
 theorem GlobalArtinReciprocity.heckeLAdicCharacter : GlobalArtinReciprocity → HeckeLAdicCharacter := by
   intro H E Ω _ _ _ _ _

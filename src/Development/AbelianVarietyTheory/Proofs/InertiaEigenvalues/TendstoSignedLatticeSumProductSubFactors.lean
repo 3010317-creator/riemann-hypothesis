@@ -827,7 +827,6 @@ theorem card_stable_sq (hcc : ∀ o, cO (cO o) = o) (θ : O) (hδ : IsUnit (θ -
 end Count
 
 section Special
-open GlobalTheory.UnitLemma
 
 def conjFun (K : UQ) (o : K.O) : K.O := Classical.choose (K.c_int o)
 

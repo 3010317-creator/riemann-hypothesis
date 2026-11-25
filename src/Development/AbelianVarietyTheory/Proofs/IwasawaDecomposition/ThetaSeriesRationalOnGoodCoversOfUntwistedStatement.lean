@@ -113,7 +113,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.UnitRootCong
 
-open Formalism.MainNotions.StandardLattice
 
 section Gen
 
@@ -190,7 +189,6 @@ end GlobalTheory.UnitRootCong
 
 namespace GlobalTheory.UnitRootCong
 
-open Formalism.MainNotions.StandardLattice
 
 
 

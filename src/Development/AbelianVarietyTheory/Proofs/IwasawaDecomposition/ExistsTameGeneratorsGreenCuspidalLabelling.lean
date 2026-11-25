@@ -1302,7 +1302,6 @@ noncomputable section
 
 namespace GlobalTheory.InertiaTwoPlaces
 
-open Polynomial
 
 theorem fix_of_fix_integral {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω]
     [IsAlgClosure E Ω] (σ : G E Ω) (h : ∀ b : Ω, IsIntegral ℤ b → σ b = b) : σ = 1 := by
