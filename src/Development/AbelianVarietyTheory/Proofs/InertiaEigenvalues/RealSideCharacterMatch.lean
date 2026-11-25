@@ -45,13 +45,8 @@ theorem InRg.smul {P : ClassPres ι S σ ρ J χ} {w : W} {z : ℂ} (hz : ∃ b 
   obtain ⟨x, rfl⟩ := h; obtain ⟨b, rfl⟩ := hz; exact ⟨b • x, map_smulₛₗ _ _ _⟩
 
 theorem InRg.sum {P : ClassPres ι S σ ρ J χ} {α : Type} (s : Finset α) (w : α → W) (h : ∀ a ∈ s, InRg P (w a)) :
-    InRg P (∑ a ∈ s, w a) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simpa using InRg.zero P
-  | insert a s ha ih =>
-    rw [Finset.sum_insert ha]
-    exact (h a (Finset.mem_insert_self _ _)).add (ih fun b hb => h b (Finset.mem_insert_of_mem hb))
+    InRg P (∑ a ∈ s, w a) :=
+  Finset.sum_induction w (InRg P) (fun _ _ => InRg.add) (InRg.zero P) h
 
 theorem stabK_one' {y : G} : stabK ι (1 : stab ι J y) = 1 := by
   apply Subtype.ext; simp [stabK]
