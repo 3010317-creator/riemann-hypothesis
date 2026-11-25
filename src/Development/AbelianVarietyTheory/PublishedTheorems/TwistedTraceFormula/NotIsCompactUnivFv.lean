@@ -115,13 +115,8 @@ theorem unitary_elt (c : R →+* R) {J K : Matrix n n R} (hJ : cT c J = J) (hKJ 
     have h : cT c K * J = 1 := by rw [← hJ, ← cT_mul, hJK, cT_one]
     calc cT c K = cT c K * (J * K) := by rw [hJK, Matrix.mul_one]
       _ = K := by rw [← Matrix.mul_assoc, h, Matrix.one_mul]
-  have hs : ∀ p q : n, cT c (single p q (1 : R)) = single q p 1 := by
-    intro p q
-    ext x y
-    simp only [cT, transpose_apply, map_apply, single_apply]
-    by_cases h : p = y ∧ q = x
-    · rw [ite_eq_left h, ite_eq_left h.symm, map_one]
-    · rw [ite_eq_right h, ite_eq_right (fun h' => h h'.symm), map_zero]
+  have hs : ∀ p q : n, cT c (single p q (1 : R)) = single q p 1 := fun p q => by
+    rw [cT, map_single, map_one, transpose_single]
   have h1 : cT c (elt J K i j a b) = 1 + b • single j i (1 : R) - a • (J * single i j (1 : R) * K) := by
     have : J * single i j (1 : R) * K = cT c (K * single j i (1 : R) * J) := by
       rw [cT_mul, cT_mul, hJ, hK, hs, Matrix.mul_assoc]
