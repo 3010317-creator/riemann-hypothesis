@@ -282,10 +282,7 @@ theorem boost_lower (hee : hermC τ.1 X.Gm e e = 0) (he0 : e ≠ 0) {σ : ℝ} (
   have hk1 : min (σ * σ) (σ * σ)⁻¹ ≤ 1 := by
     rcases le_total (σ * σ) 1 with h | h
     · exact hk2.trans h
-    · refine hk3.trans ?_
-      have hi : (σ * σ)⁻¹ * (σ * σ) = 1 := inv_mul_cancel₀ hs0.ne'
-      have hip : 0 < (σ * σ)⁻¹ := inv_pos.mpr hs0
-      nlinarith
+    · exact hk3.trans (inv_le_one_of_one_le₀ h)
   nlinarith [mul_le_mul_of_nonneg_right hk1 hM0,
     mul_le_mul_of_nonneg_right hk3 (mul_nonneg hNA hm.le),
     mul_le_mul_of_nonneg_right hk2 (mul_nonneg hNB hm.le)]
