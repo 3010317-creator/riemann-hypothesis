@@ -67,20 +67,10 @@ theorem locallyIntegrable_comp_fst_real {g : ℝ → ℝ} (hg : LocallyIntegrabl
     simp [Set.mem_prod, ha, hb]
 
 theorem locallyIntegrable_comp_snd_real {g : ℝ → ℝ} (hg : LocallyIntegrable g volume) :
-    LocallyIntegrable (fun p : ℝ × ℝ => g p.2) volume := by
-  intro x
-  refine ⟨Metric.closedBall x.1 1 ×ˢ Metric.closedBall x.2 1,
-    prod_mem_nhds (Metric.closedBall_mem_nhds _ one_pos) (Metric.closedBall_mem_nhds _ one_pos), ?_⟩
-  rw [← integrable_indicator_iff (measurableSet_closedBall.prod measurableSet_closedBall),
-    Measure.volume_eq_prod]
-  have h1 := (integrable_indicator_iff measurableSet_closedBall).mpr
-    ((locallyIntegrable_const (μ := (volume : Measure ℝ)) (1 : ℝ)).integrableOn_isCompact
-      (isCompact_closedBall x.1 1))
-  have h2 := (integrable_indicator_iff measurableSet_closedBall).mpr
-    (hg.integrableOn_isCompact (isCompact_closedBall x.2 1))
-  refine (h1.mul_prod h2).congr (Filter.Eventually.of_forall fun p => ?_)
-  by_cases ha : p.1 ∈ Metric.closedBall x.1 1 <;> by_cases hb : p.2 ∈ Metric.closedBall x.2 1 <;>
-    simp [Set.mem_prod, ha, hb]
+    LocallyIntegrable (fun p : ℝ × ℝ => g p.2) volume :=
+  (locallyIntegrable_map_homeomorph (f := fun p : ℝ × ℝ => g p.1) (Homeomorph.prodComm ℝ ℝ)).1 (by
+    rw [Homeomorph.coe_prodComm, Measure.volume_eq_prod, Measure.prod_swap]
+    exact locallyIntegrable_comp_fst_real hg)
 
 theorem locallyIntegrable_real_log : LocallyIntegrable Real.log volume := by
   intro x
