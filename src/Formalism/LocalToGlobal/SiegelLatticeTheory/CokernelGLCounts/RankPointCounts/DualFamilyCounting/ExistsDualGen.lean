@@ -29,11 +29,7 @@ theorem surj_pairing {m : ℕ} (f : Fin m → S.V) (hf : LinearIndependent E f) 
   by_contra hne
   obtain ⟨φ, hφ0, hφ⟩ := Submodule.exists_dual_map_eq_bot_of_lt_top (lt_top_iff_ne_top.2 hne) inferInstance
   set c : Fin m → E := fun a => φ (fun j => if a = j then 1 else 0) with hc
-  have hφx : ∀ x : Fin m → E, φ x = ∑ a, x a * c a := by
-    intro x
-    conv_lhs => rw [pi_eq_sum_univ x]
-
-    simp [map_sum, map_smul, hc]
+  have hφx : ∀ x : Fin m → E, φ x = ∑ a, x a * c a := fun x => LinearMap.pi_apply_eq_sum_univ φ x
   have hv : ∀ v : S.V, S.hT (∑ a, star (c a) • f a) v = 0 := by
     intro v
     have h1 : φ ((LinearMap.pi (fun a => S.hT (f a)) : S.V →ₗ[E] (Fin m → E)) v) = 0 := by
