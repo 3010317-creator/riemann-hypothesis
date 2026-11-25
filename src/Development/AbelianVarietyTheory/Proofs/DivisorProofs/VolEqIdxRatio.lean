@@ -72,12 +72,6 @@ theorem vol_prod {G' : Type} [Group G'] (C H : Subgroup G) (C' H' : Subgroup G')
   push_cast
   exact mul_div_mul_comm _ _ _ _
 
-theorem map_conj_mul (K : Subgroup G) (t x : G) :
-    K.map (MulAut.conj (t * x)).toMonoidHom =
-      (K.map (MulAut.conj x).toMonoidHom).map (MulAut.conj t).toMonoidHom := by
-  have h := map_conj_mul_three_subgroup_of_mem K K.one_mem t x
-  rwa [mul_one] at h
-
 theorem inf_map_conj (T A : Subgroup G) {t : G} (ht : t ∈ T) :
     T ⊓ A.map (MulAut.conj t).toMonoidHom = (T ⊓ A).map (MulAut.conj t).toMonoidHom := by
   rw [Subgroup.map_inf_eq _ _ _ (MulAut.conj t).injective, map_conj_self _ ht]
