@@ -1076,11 +1076,6 @@ theorem jacobian_infinityDerivation (t : Fin (n + 1) → Rˣ) (D : Fin (n + 1) �
 
 section torus
 
-theorem tpow_single {d : ℕ} (t : Fin d → Rˣ) (k : Fin d) (z : ℤ) : tpow t (Pi.single k z) = ((t k ^ z : Rˣ) : R) := by
-  unfold tpow
-  rw [Fintype.prod_eq_single k (fun j hj => by simp [Pi.single_apply, hj])]
-  simp
-
 theorem tpow_mem {d : ℕ} (t : Fin d → Rˣ) (S : Finset (Fin (d + 1))) {m : Fin d → ℤ} (hm : m ∈ expS S) :
     tpow t m ∈ torusS K t S :=
   Algebra.subset_adjoin ⟨m, hm, rfl⟩
@@ -1152,7 +1147,7 @@ theorem infinityCoord_mem_torus (t : Fin (n + 1) → Rˣ) (j : Fin (n + 1)) :
 theorem infinityCoord_inv_mem (t : Fin (n + 1) → Rˣ) (j : Fin n) :
     (((u0 t j.succ)⁻¹ : Rˣ) : R) ∈ torusS K t (Finset.univ.erase 0) := by
   have h : (((u0 t j.succ)⁻¹ : Rˣ) : R) = tpow t (Pi.single 0 1 + Pi.single j.succ (-1)) := by
-    rw [CrystallineSemistableComparison.Pb.ra_tpow_add, tpow_single, tpow_single, ← Units.val_mul]
+    rw [CrystallineSemistableComparison.Pb.ra_tpow_add, CrystallineSemistableComparison.Pb.ra_tpow_single, CrystallineSemistableComparison.Pb.ra_tpow_single, ← Units.val_mul]
     congr 1
     simp [u0, mul_comm]
   rw [h]
@@ -1296,7 +1291,7 @@ theorem infinityCoord_span_residue (t : Fin (n + 1) → Rˣ) :
       Submodule.span K (tpow t '' {m | ∑ k, m k < -((n : ℤ) + 1)}) := by
   intro a ha
   have hc : (((t 0)⁻¹ : Rˣ) : R) ^ (n + 2) = tpow t (Pi.single 0 (-((n : ℤ) + 2))) := by
-    rw [tpow_single, ← Units.val_pow_eq_pow_val]
+    rw [CrystallineSemistableComparison.Pb.ra_tpow_single, ← Units.val_pow_eq_pow_val]
     congr 1
   have key : Submodule.span K (tpow t '' expS (Finset.univ.erase (0 : Fin (n + 2)))) ≤
       (Submodule.span K (tpow t '' {m | ∑ k, m k < -((n : ℤ) + 1)})).comap
