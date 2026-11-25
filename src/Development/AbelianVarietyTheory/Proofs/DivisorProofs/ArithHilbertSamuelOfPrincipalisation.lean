@@ -1027,8 +1027,8 @@ theorem exists_residueDegree_pos_of_mem_range (W Z : Scheme.{0}) (g : W ⟶ Z) [
     have : LocallyOfFiniteType (Spec.map β) := hβ ▸ inferInstance
     exact HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType) |>.mp this
   have hβf : β.hom.Finite := by
-    letI := β.hom.toAlgebra
-    haveI : Algebra.FiniteType (Z.residueField z) (F.residueField x) := hβft
+    let := β.hom.toAlgebra
+    have : Algebra.FiniteType (Z.residueField z) (F.residueField x) := hβft
     exact finite_of_finite_type_of_isJacobsonRing _ _
   have hhf : (h.residueFieldMap x).hom.Finite := by
     have : h.residueFieldMap x = (Z.residueFieldCongr e.symm).inv ≫ β := by simp [β]
@@ -1038,15 +1038,15 @@ theorem exists_residueDegree_pos_of_mem_range (W Z : Scheme.{0}) (g : W ⟶ Z) [
   refine ⟨g.fiberι z x, e, ?_⟩
   rw [show h.residueFieldMap x = g.residueFieldMap (g.fiberι z x) ≫ (g.fiberι z).residueFieldMap x
     from Scheme.residueFieldMap_comp _ _ _] at hhf
-  letI := (g.residueFieldMap (g.fiberι z x)).hom.toAlgebra
-  letI := ((g.fiberι z).residueFieldMap x).hom.toAlgebra
-  letI := (g.residueFieldMap (g.fiberι z x) ≫ (g.fiberι z).residueFieldMap x).hom.toAlgebra
-  haveI : IsScalarTower (Z.residueField (g (g.fiberι z x))) (W.residueField (g.fiberι z x))
+  let := (g.residueFieldMap (g.fiberι z x)).hom.toAlgebra
+  let := ((g.fiberι z).residueFieldMap x).hom.toAlgebra
+  let := (g.residueFieldMap (g.fiberι z x) ≫ (g.fiberι z).residueFieldMap x).hom.toAlgebra
+  have : IsScalarTower (Z.residueField (g (g.fiberι z x))) (W.residueField (g.fiberι z x))
       (F.residueField x) := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Module.Finite (Z.residueField (g (g.fiberι z x))) (F.residueField x) := hhf
+  have : Module.Finite (Z.residueField (g (g.fiberι z x))) (F.residueField x) := hhf
   let φ := IsScalarTower.toAlgHom (Z.residueField (g (g.fiberι z x)))
     (W.residueField (g.fiberι z x)) (F.residueField x)
-  haveI : Module.Finite (Z.residueField (g (g.fiberι z x))) (W.residueField (g.fiberι z x)) :=
+  have : Module.Finite (Z.residueField (g (g.fiberι z x))) (W.residueField (g.fiberι z x)) :=
     Module.Finite.of_injective φ.toLinearMap φ.toRingHom.injective
   exact Module.finrank_pos
 
