@@ -178,11 +178,7 @@ theorem form_bounds : ∀ (g : ℕ) (Bs : Matrix (Fin g) (Fin g) ℤ) (τ G : Ma
   set Br : Matrix (Fin g) (Fin g) ℝ := Bs.map (fun x : ℤ => (x : ℝ)) with hBrdef
   let S : Matrix (Fin g) (Fin g) ℝ := G.map Complex.re
   let Y : Matrix (Fin g) (Fin g) ℝ := τ.map Complex.im
-  have hBr : Brᵀ = Br := by
-    ext i j
-    have := congrFun (congrFun hBs i) j
-    simp only [transpose_apply] at this
-    simp [hBrdef, this]
+  have hBr : Brᵀ = Br := Matrix.IsSymm.map hBs _
 
   have him : ∀ i j, (G i j).im = 0 := by
     intro i j
