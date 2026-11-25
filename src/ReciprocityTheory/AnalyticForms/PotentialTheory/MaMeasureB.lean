@@ -237,11 +237,8 @@ theorem maMeasure_converse (A : FinHolAtlas e X) (Φ : Fin e → LocPot X)
       intro y hy
       exact (((A.holo j k y hy.2).differentiableAt.hasFDerivAt).restrictScalars ℝ).hasFDerivWithinAt
     have hinj : Set.InjOn (A.chart k ∘ (A.chart j).symm)
-        (K ∩ ((A.chart j).target ∩ (A.chart j).symm ⁻¹' (A.chart k).source)) := by
-      intro y hy y' hy' h
-      have h1 : (A.chart j).symm y = (A.chart j).symm y' :=
-        (A.chart k).injOn hy.2.2 hy'.2.2 h
-      exact (A.chart j).symm.injOn hy.2.1 hy'.2.1 h1
+        (K ∩ ((A.chart j).target ∩ (A.chart j).symm ⁻¹' (A.chart k).source)) :=
+      (A.chart k).injOn.comp ((A.chart j).symm.injOn.mono fun _ hy => hy.2.1) fun _ hy => hy.2.2
     have hcv := (integrableOn_image_iff_integrableOn_abs_det_fderiv_smul (μ := volume) hSm hder hinj
       (fun z => g ((A.chart k).symm z) *
         (hne.some.χ k ((A.chart k).symm z) * locDens A Φ k z))).1
