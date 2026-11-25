@@ -83,25 +83,7 @@ variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
 def scaleG (D : RealPlaceData k r Wp Wq) (c : ℝ≥0) (hc : 0 < c) : RealPlaceData k r Wp Wq :=
   { D with μG := c • D.μG, haarG := haar_smul D.haarG c hc }
 
-theorem iteratedDeriv_two_const_mul (c : ℂ) (f : ℝ → ℂ) :
-    iteratedDeriv 2 (fun x => c * f x) = fun x => c * iteratedDeriv 2 f x := by
-  have h2 : ∀ g : ℝ → ℂ, iteratedDeriv 2 g = deriv (deriv g) := by
-    intro g
-    rw [iteratedDeriv_succ, iteratedDeriv_one]
-  rw [h2, h2, deriv_const_mul_field', deriv_const_mul_field']
-
-theorem oneMinusDD_const_mul (c : ℂ) (h : ℝ → ℝ → ℂ) (t₁ t₂ : ℝ) :
-    oneMinusDD (fun a b => c * h a b) t₁ t₂ = c * oneMinusDD h t₁ t₂ := by
-  simp only [oneMinusDD, iteratedDeriv_two_const_mul, ← mul_sub]
-
 variable [FiniteDimensional ℂ Wq]
-
-theorem ph_scale (D : RealPlaceData k r Wp Wq) (c : ℝ≥0) (hc : 0 < c) (F F' : Mat k r → (Wq →L[ℂ] Wp)) (p : SS k r) :
-    Ph (scaleG D c hc) F F' p = ((c : ℝ) : ℂ) * Ph D F F' p := by
-  have hμ : (scaleG D c hc).μG = c • D.μG := rfl
-  unfold Ph
-  rw [hμ, integral_smul_nnreal_measure, NNReal.smul_def, Complex.real_smul]
-  rfl
 
 theorem betaInf_scale (D : RealPlaceData k r Wp Wq) (c : ℝ≥0) (hc : 0 < c) (F F' : Mat k r → (Wq →L[ℂ] Wp)) :
     betaInf (scaleG D c hc) F F' = ((c : ℝ) : ℂ) * betaInf D F F' := by
