@@ -26,12 +26,8 @@ theorem LinGrowth.norm_le_one {N : ℕ} {A : Matrix (Fin N) (Fin N) ℂ} (h : Li
   have h2 : Module.End.HasEigenvalue (Matrix.toLin' A) μ := by
     rw [Module.End.hasEigenvalue_iff_mem_spectrum, Matrix.spectrum_toLin']; exact h1
   obtain ⟨v, hv⟩ := h2.exists_hasEigenvector
-  have hAv : A *ᵥ v = μ • v := by simpa using hv.apply_eq_smul
-  have hk : ∀ k : ℕ, A ^ k *ᵥ v = μ ^ k • v := by
-    intro k
-    induction k with
-    | zero => simp
-    | succ k ih => rw [pow_succ, ← Matrix.mulVec_mulVec, hAv, Matrix.mulVec_smul, ih, smul_smul, pow_succ, mul_comm]
+  have hk : ∀ k : ℕ, A ^ k *ᵥ v = μ ^ k • v := fun k => by
+    rw [← Matrix.toLin'_apply, Matrix.toLin'_pow, hv.pow_apply]
   obtain ⟨L, hL, C, hC⟩ := h v v hv.2
   by_contra hlt
   push Not at hlt
