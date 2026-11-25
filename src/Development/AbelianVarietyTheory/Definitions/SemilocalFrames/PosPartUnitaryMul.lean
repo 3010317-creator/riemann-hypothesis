@@ -143,12 +143,6 @@ theorem Eword_const (ε : Fin n → Bool) (c : ℂ) (p : Fin n × Fin n) (w : Li
     simp only [ih q]
     simp [Formalism.REAL.Eab, Formalism.REAL.Ec, Formalism.REAL.Rd]
 
-section Smooth
-
-open scoped Matrix.Norms.Elementwise
-
-end Smooth
-
 
 open scoped MatrixOrder in
 theorem posPart_posDef_sq {g : Matrix (Fin n) (Fin n) ℂ} (hg : IsUnit g) :

@@ -171,18 +171,6 @@ theorem isDS_const_iff (s : Bool) (lam : Fin n → ℝ) (σ : Matrix (Fin n) (Fi
 
 end Iso
 
-section Adelic
-
-variable {D : D7}
-
-end Adelic
-
-section Degree
-
-variable {D : D7}
-
-end Degree
-
 section Low
 
 variable {p q n : ℕ} {e : Ix p q ≃ Fin n} {ε : Fin n → Bool}

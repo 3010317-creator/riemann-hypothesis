@@ -200,12 +200,6 @@ theorem XiTop_tilF {u : Pr.Word} (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) 
       refine LinearMap.ext fun v => (TopStep.atNL_last _).trans ((TopStep.sumE_symm_last (N_m_succ R) _ _ _).trans ?_)
       exact ((TopStep.atNL_last _).trans (TopStep.sumE_symm_last (N_m_succ R) _ _ _)).symm
 
-section Over
-
-variable {u : Pr.Word} (n : ℕ) {j : ℕ} (h : j = R.m) (p : ChPt (R := R) sel mu u (n + 1))
-
-end Over
-
 section Unfold
 
 variable {u : Pr.Word} {i : ℕ} {b : Idx sel mu L i} {b' : Idx sel mu L (i + 1)}
@@ -280,13 +274,6 @@ theorem thAt_of_le (h : R.m ≤ i) (p : PtAt R sel mu cst u i) (p' : PtAt R sel 
   rw [thAt, xiAt_of_le Ch sel mu cst L h, thOf_zero]
 
 end ThUnfold
-
-section ThLast
-
-variable {u : Pr.Word} {n : ℕ} {b : Idx sel mu L (n + 1)} {b' : Idx sel mu L (n + 1 + 1)} (h : n + 1 + 1 = R.m)
-  (p : PtAt R sel mu cst u (n + 1)) (p' : PtAt R sel mu cst u (n + 1 + 1))
-
-end ThLast
 
 section Ker
 

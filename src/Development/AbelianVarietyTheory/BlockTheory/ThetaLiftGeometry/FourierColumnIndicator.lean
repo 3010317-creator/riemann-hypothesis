@@ -60,12 +60,6 @@ theorem colFn_indicator (P : HeightOneSpectrum (𝓞 E)) {n : ℕ} (y₀ : Sp E 
 
 end Notions
 
-section Padic
-
-variable {g : ℕ} [Fact g.Prime] {n : ℕ}
-
-end Padic
-
 section Chain
 
 variable {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X Pr R.m)
