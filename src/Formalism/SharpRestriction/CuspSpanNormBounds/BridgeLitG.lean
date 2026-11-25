@@ -81,7 +81,7 @@ namespace Formalism.MainNotions.BridgeCPX
 
 open Formalism.MainNotions.S Formalism.REAL
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
+open scoped Matrix.Norms.Elementwise
 
 section Final
 

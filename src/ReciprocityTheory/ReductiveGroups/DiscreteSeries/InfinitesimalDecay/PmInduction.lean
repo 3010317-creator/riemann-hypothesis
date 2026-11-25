@@ -78,7 +78,6 @@ end ReciprocityTheory.ChartRestriction.DS
 
 noncomputable section
 
-open Finset Matrix
 
 namespace ReciprocityTheory.ChartRestriction.DS
 
