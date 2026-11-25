@@ -140,11 +140,8 @@ theorem tieF_pow_apply_eq_zero_of_min_lt [CharZero k] (hw : Function.Injective w
 
 private lemma cast_choose_add_eq_factorial_div_of_charZero [CharZero k] (a b : ℕ) :
     (((a + b).choose b : ℕ) : k) = ((a + b).factorial : k) / ((a.factorial : k) * (b.factorial : k)) := by
-  rw [eq_div_iff (mul_ne_zero (Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero a))
-    (Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero b)))]
-  have h := Nat.add_choose_mul_factorial_mul_factorial a b
-  rw [mul_assoc] at h
-  exact_mod_cast h
+  rw [← Nat.choose_symm_add]
+  exact Nat.cast_add_choose k
 
 private lemma factorial_choose_signed_sum_eq_zero [CharZero k] (N j : ℕ) (hj : 1 ≤ j) (hN : 2 * j + 1 ≤ N) :
     ∑ l ∈ range (j + 1), (-1 : k) ^ (j - l) / (((j - l).factorial : k) ^ 2 * ((N - 2 * l - 1).choose (j - l) : k)) *
