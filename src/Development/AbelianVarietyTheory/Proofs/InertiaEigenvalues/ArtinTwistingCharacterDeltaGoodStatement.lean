@@ -96,8 +96,6 @@ open GlobalTheory.HeckeGal (Gab toAb IsGlobalArtin)
 open Formalism.L2.Host (embLL0)
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 namespace GlobalTheory.SplitDelta
 
 open scoped Pointwise
@@ -548,7 +546,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Datum IsDedekindDomain NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.ExportSeries GlobalTheory.SeriesTie
 open Formalism.IndefR.Links
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.UnramTame
 
@@ -659,7 +656,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Datum IsDedekindDomain NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.ExportSeries GlobalTheory.SeriesTie
 open Formalism.IndefR.Links
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 end -- clump:auto
 end -- clump:auto
@@ -676,8 +672,6 @@ open Neutral.B1 (Ideles)
 open GlobalTheory.HeckeGal (Gab toAb IsGlobalArtin)
 open Formalism.L2.Host (embLL0)
 
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 
@@ -841,8 +835,6 @@ open GlobalTheory.HeckeGal (Gab toAb IsGlobalArtin)
 open Formalism.L2.Host (embLL0)
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitSetInertiaPowerTrivialStatement =====
@@ -860,8 +852,6 @@ open Neutral.B1 (Ideles)
 open GlobalTheory.HeckeGal (Gab toAb IsGlobalArtin)
 open Formalism.L2.Host (embLL0)
 
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.DeltaGood
 
@@ -973,8 +963,6 @@ open Neutral.B1 (Ideles)
 open GlobalTheory.HeckeGal (Gab toAb IsGlobalArtin)
 open Formalism.L2.Host (embLL0)
 
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 end -- clump:auto
 end -- clump:auto
