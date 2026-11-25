@@ -231,8 +231,6 @@ def negDen : MvPowerSeries (Fin 2) R :=
 def addSeries : MvPowerSeries (Fin 2) R :=
   -thirdZ W * MvPowerSeries.invOfUnit (negDen W) 1
 
-theorem constantCoeff_formalW : PowerSeries.constantCoeff (formalW W) = 0 := by simp [formalW]
-
 theorem coeff_one_formalW : PowerSeries.coeff 1 (formalW W) = 0 := by
   rw [formalW, PowerSeries.coeff_X_pow_mul']; simp
 
