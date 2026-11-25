@@ -1278,8 +1278,6 @@ open scoped TensorProduct ComplexConjugate
 
 namespace GlobalTheory.Ker.Model
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 section Char
 
 variable {F : Type} [Field F] [NumberField F]

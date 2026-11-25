@@ -206,8 +206,6 @@ open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions.S
 
 section D7
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem tr_XS (D : D7) {T' : D.host.E} {γ : (VS D).V ≃ₗ[D.host.E] (VS D).V}
     {x F₂ : LFlag (D.sp.Y 0) D.R.rS T'} (he : ∀ k, F₂.fl.e k = γ (x.fl.e k)) :
     Tr γ (XS D F₂.fl) (XS D x.fl) := by
