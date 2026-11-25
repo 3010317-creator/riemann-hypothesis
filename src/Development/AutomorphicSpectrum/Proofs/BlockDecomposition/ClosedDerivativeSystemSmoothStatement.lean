@@ -139,7 +139,7 @@ namespace GlobalTheory.CompanionTheory.PresSobA
 
 theorem contDiffOn_of_right_family : ∀ (n : ℕ) (V P : Type) [NormedAddCommGroup V] [NormedSpace ℂ V] (o : P → Mat n → V) (d : (Bool × Fin n × Fin n) → P → P), (∀ v, ∀ z ∈ GLs n, DifferentiableAt ℝ (o v) z) → (∀ v p, ∀ z ∈ GLs n, Rd (bs p) (o v) z = o (d p v) z) → ∀ v, ContDiffOn ℝ ∞ (o v) (GLs n) := by
   intro n V P _ _ o d hdiff hR v
-  obtain ⟨A, hA, hfr⟩ := GlobalTheory.T.derivative_right_basis_expansion n
+  obtain ⟨A, hA, hfr⟩ := _root_.GlobalTheory.CompanionTheory.PresSobA.Frame.frame n
   let e := Fintype.equivFin (Bool × Fin n × Fin n)
   refine GlobalTheory.CompanionTheory.SmoothVectors.contDiffOn_of_fderiv_family isOpen_GLs o Set.univ
     (fun i => A (e.symm i)) (fun i => hA _) ?_ v (Set.mem_univ v)

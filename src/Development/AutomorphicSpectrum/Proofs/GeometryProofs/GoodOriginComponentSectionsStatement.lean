@@ -126,7 +126,7 @@ theorem ModelDimension.geo_core (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFram
       (N.pt (∑ l, v s l m • Or.Fl.j (ec (Small.labelC s) l))).left := by
     intro s
     funext i
-    have h1 := GlobalTheory.T.is_comb_base_change E H Dw l Xo _ _ φ (genFr h Z).x _ _ _ _ (hy₀c (Small.labelC s) i)
+    have h1 := _root_.GlobalTheory.CompanionTheory.Ar.CombMap.isCombAt_spMap E H Dw l Xo _ _ φ (genFr h Z).x _ _ _ _ (hy₀c (Small.labelC s) i)
     have hv : (fun j => spMap (Formalism.L2.Pj.dualMap φ) ≫ spMap (Formalism.L2.Pj.dualMap (algebraMap (kap Z) (Om Z))) ≫
         y₀.u (Small.labelC s) j) = fun j => (N.pt (Or.Fl.j (ec (Small.labelC s) j))).left := by
       funext j
