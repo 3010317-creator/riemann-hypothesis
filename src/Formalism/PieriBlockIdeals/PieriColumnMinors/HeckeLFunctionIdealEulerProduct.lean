@@ -1346,7 +1346,7 @@ theorem sum_tail_le_sum_of_antitone {N : ℕ} (f : Fin N → ℤ) (hf : Antitone
     have hJ0 : J = ∅ := Finset.card_eq_zero.1 (by rw [hJ, hT0, Finset.card_empty])
     rw [hT0, hJ0]
 
-theorem card_filter_le_val_eq_sub (N m : ℕ) (hm : m ≤ N) :
+theorem card_filter_le_val_eq_sub (N m : ℕ) :
     (Finset.univ.filter fun a : Fin N => m ≤ (a : ℕ)).card = N - m := by
   have hm2 : (Finset.univ.filter fun a : Fin N => m ≤ (a : ℕ)).map Fin.valEmbedding =
       Finset.Ico m N := by
@@ -1369,7 +1369,7 @@ theorem weight_exponents_from_inputs : WEFromInputs := by
   have hwt := hW.1.2.2.1
   have hT0 : 0 ≤ ∑ a ∈ Finset.univ.filter (fun a : Fin (k + j + t + q) => k + j + q ≤ (a : ℕ)),
       U' τ a := Finset.sum_nonneg fun a _ => (hH1 τ a).1
-  have hcard := card_filter_le_val_eq_sub (k + j + t + q) (k + j + q) (by omega)
+  have hcard := card_filter_le_val_eq_sub (k + j + t + q) (k + j + q)
   refine weightExchangeFull_holds ι σ k j t q l h F (W.toWData l c σ) U U' bot cst kap
     (fun i => if i = τ then (∑ a ∈ Finset.univ.filter
       (fun a : Fin (k + j + t + q) => k + j + q ≤ (a : ℕ)), U' τ a).toNat else 0) τ Fact.out hsmall
