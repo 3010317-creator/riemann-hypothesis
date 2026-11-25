@@ -25,15 +25,7 @@ theorem exists_conj_of_algHom {B : Type} [CommRing B] [IsLocalRing B] {r : ℕ}
       rw [Matrix.single_mul_single_same, mul_one]
     · rw [Matrix.single_mul_single_of_ne _ _ _ _ h, map_zero]
   have hsum : ∑ j, θ (Matrix.single j j (1 : B)) = 1 := by
-
-    rw [← map_sum, ← map_one θ]
-    congr 1
-    ext p q
-    rw [Matrix.sum_apply, Finset.sum_eq_single p]
-    · simp [Matrix.single_apply, Matrix.one_apply]
-    · intro j _ hj
-      simp [hj]
-    · simp
+    rw [← map_sum, Matrix.sum_single_one, map_one]
   have hne : θ (Matrix.single i0 i0 (1 : B)) ≠ 0 := by
     intro h0
     have hz : ∀ j, θ (Matrix.single j j (1 : B)) = 0 := by
@@ -86,13 +78,8 @@ theorem exists_conj_of_algHom {B : Type} [CommRing B] [IsLocalRing B] {r : ℕ}
     simp_rw [key]
     rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_univ _)]
   have hdiag : ∑ j : Fin r, Matrix.single j j (θ (Matrix.single i0 i0 (1 : B)) a b) =
-      Matrix.diagonal (fun _ : Fin r => θ (Matrix.single i0 i0 (1 : B)) a b) := by
-    ext p q
-    rw [Matrix.sum_apply, Finset.sum_eq_single p]
-    · simp [Matrix.single_apply, Matrix.diagonal_apply]
-    · intro j _ hj
-      simp [hj]
-    · simp
+      Matrix.diagonal (fun _ : Fin r => θ (Matrix.single i0 i0 (1 : B)) a b) :=
+    Matrix.sum_single_eq_diagonal _
   have hJ : IsUnit (∑ l, θ (Matrix.single l i0 (1 : B)) * Matrix.single b l 1).det := by
     have h5 := congrArg Matrix.det hKJ
     rw [hdiag, Matrix.det_mul, Matrix.det_diagonal] at h5

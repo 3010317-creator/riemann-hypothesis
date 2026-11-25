@@ -74,14 +74,6 @@ private lemma fix_sum {K : Type} [Field K] [NumberField K] (φ : GL (Fin 2) (A K
       · rw [hne u h, sub_zero]
         exact h3 u
 
-private lemma fin_over {E : Type} [Field E] [NumberField E] (v : H.P ℚ) :
-    {w : H.P E | AdeleBaseChange.below ℚ w = v}.Finite := by
-  have := v.isMaximal
-  refine Set.Finite.of_finite_image (f := fun w : H.P E => w.asIdeal) ?_ fun a _ b _ h => HeightOneSpectrum.ext h
-  refine (IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 E)).subset ?_
-  rintro _ ⟨w, hw, rfl⟩
-  exact ⟨w.isPrime, (AdeleBaseChange.below_eq_iff _ _).1 hw⟩
-
 theorem UpperTheory.right_invariant_baseChangeUnipotent_of_places_above_fixed :
     ∀ (E : Type) [Field E] [NumberField E] (D : Dat ℚ E) (φ : GL (Fin 2) (A E) → ℂ) (v : H.P ℚ), H.Gd D.δ v → (∀ w : H.P E, w.under (𝓞 ℚ) = v → H.Fix w φ) → ∀ c : H.Kv v, H.IsInt c → ∀ g, φ (g * Xg.nu D (H.sg v c)) = φ g := by
   intro E _ _ D φ v hG hF c hc g
@@ -94,8 +86,10 @@ theorem UpperTheory.right_invariant_baseChangeUnipotent_of_places_above_fixed :
       rw [(hs c).2 _ hw, map_zero]
     rw [hz, map_mul, h, zero_mul]
   change φ (g * gl (nU (D.mkE 0 (H.sg v c)))) = φ g
-  refine fix_sum φ (fin_over (E := E) v).toFinset (fun w hw => hF w ((fin_over v).mem_toFinset.1 hw)) _ ?_
-    (fun w hw => hoff w fun h => hw ((fin_over v).mem_toFinset.2 h)) (fun w => ?_) g
+  have hfin : {w : H.P E | AdeleBaseChange.below ℚ w = v}.Finite :=
+    GlobalTheory.QNorm.finite_places_over ℚ E v
+  refine fix_sum φ hfin.toFinset (fun w hw => hF w (hfin.mem_toFinset.1 hw)) _ ?_
+    (fun w hw => hoff w fun h => hw (hfin.mem_toFinset.2 h)) (fun w => ?_) g
   · rw [hz]
     change InfinitePlace.infiniteAdeleRingMap (H.sg v c).1 * _ = 0
     rw [(hs c).1, map_zero, zero_mul]

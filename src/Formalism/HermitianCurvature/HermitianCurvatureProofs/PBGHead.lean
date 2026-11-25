@@ -22,12 +22,8 @@ theorem mono_omit {k r m : ℕ} (hm : m + 1 ≤ r) (c : Fin m → Fin (2 * r + k
   have hex : ∃ l0 : Fin (m + 1), ∀ l, (c l).val ≠ l0.val := by
     by_contra hne
     push Not at hne
-    choose f hf using hne
-    have hinj : Function.Injective f := by
-      intro a b hab
-      apply Fin.ext
-      have := hf a; have := hf b; rw [hab] at *; omega
-    have := Fintype.card_le_of_injective f hinj
+    have := Fintype.card_le_of_surjective (fun l => (⟨(c l).val, hlt l⟩ : Fin (m + 1)))
+      fun y => (hne y).imp fun _ hl => Fin.ext hl
     simp at this
   obtain ⟨l0, hl0⟩ := hex
   refine ⟨l0, ?_⟩

@@ -10,13 +10,6 @@ namespace KStar.TotallyRealRoots
 
 variable {l : ℕ} [Fact l.Prime]
 
-private theorem lte_not_dvd_natCast {m : ℕ} (hm : ¬ l ∣ m) : ¬ (l : ℤ_[l]) ∣ (m : ℤ_[l]) := by
-  rintro ⟨c, hc⟩
-  apply hm
-  have h := congrArg PadicInt.toZMod hc
-  rw [map_mul, map_natCast, map_natCast, ZMod.natCast_self, zero_mul] at h
-  exact (ZMod.natCast_eq_zero_iff m l).mp h
-
 private theorem lte_not_dvd_of_dvd_sub_one {u : ℤ_[l]} (hu : (l : ℤ_[l]) ∣ u - 1) :
     ¬ (l : ℤ_[l]) ∣ u := by
   intro h
@@ -47,7 +40,8 @@ private theorem lte_reduce {u : ℤ_[l]} (hu : (l : ℤ_[l]) ∣ u - 1)
   rw [hfin.emultiplicity_eq_multiplicity, ← hk]
   conv_lhs => rw [hc, e]
   rw [emultiplicity_pow_sub_pow_of_prime PadicInt.prime_p hx (lte_not_dvd_of_dvd_sub_one hx)
-    (lte_not_dvd_natCast hcl), h k]
+    (fun h => hcl (PadicInt.norm_natCast_lt_one_iff.1 ((PadicInt.norm_lt_one_iff_dvd _).2 h))),
+    h k]
 
 theorem emultiplicity_pow_sub_one_odd (hl : l ≠ 2) {u : ℤ_[l]} (hu : (l : ℤ_[l]) ∣ u - 1) (n : ℕ) :
     emultiplicity (l : ℤ_[l]) (u ^ n - 1) =

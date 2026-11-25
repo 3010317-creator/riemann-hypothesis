@@ -40,12 +40,6 @@ private theorem gen_emult {a : ℕ} (ha : 1 ≤ a) (ha2 : l = 2 → 2 ≤ a) {u 
     push_cast
     rfl
 
-private theorem isUnit_padicInt_of_not_dvd {t : ℤ_[l]} (h : ¬ (l : ℤ_[l]) ∣ t) : IsUnit t := by
-  by_contra hne
-  have hm : t ∈ IsLocalRing.maximalIdeal ℤ_[l] := hne
-  rw [PadicInt.maximalIdeal_eq_span_p, Ideal.mem_span_singleton] at hm
-  exact h hm
-
 private theorem exists_pow_eq_one_add_mul_sub_add_sq (v : ℤ_[l]) (j : ℕ) :
     ∃ c : ℤ_[l], v ^ j = 1 + (j : ℤ_[l]) * (v - 1) + (v - 1) ^ 2 * c := by
   induction j with
@@ -77,8 +71,8 @@ private theorem gen_dvd {a : ℕ} (ha : 1 ≤ a) (ha2 : l = 2 → 2 ≤ a) {u : 
       pow_dvd_of_le_emultiplicity (le_of_eq hv.symm)
     obtain ⟨t, ht⟩ := hvd
     have htu : IsUnit t := by
-      apply isUnit_padicInt_of_not_dvd
-      rintro ⟨s, hs⟩
+      by_contra h
+      obtain ⟨s, hs⟩ := (PadicInt.norm_lt_one_iff_dvd t).1 (PadicInt.not_isUnit_iff.1 h)
       have hdv : (l : ℤ_[l]) ^ (a' + 1 + n + 1) ∣ v - 1 := ⟨s, by rw [ht, hs]; ring⟩
       have := le_emultiplicity_of_pow_dvd hdv
       rw [hv] at this

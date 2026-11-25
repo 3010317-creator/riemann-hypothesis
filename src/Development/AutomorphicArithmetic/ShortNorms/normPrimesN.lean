@@ -93,22 +93,6 @@ private lemma eventually_exp_decay_le (c' : ℝ) (hc' : 0 < c') :
   rw [Real.exp_log (div_pos hc' (by norm_num))] at h2
   linarith
 
-private lemma ev_log_sq (eps : ℝ) (he : 0 < eps) :
-    ∀ᶠ x : ℝ in atTop, Real.log x ^ 2 ≤ x ^ (eps / 5) := by
-  have h1 := (isLittleO_log_rpow_atTop (show 0 < eps / 10 by linarith)).bound one_pos
-  filter_upwards [h1, eventually_ge_atTop (1:ℝ)] with x hx hx1
-  have hxpos : 0 < x := by linarith
-  have hl : 0 ≤ Real.log x := Real.log_nonneg hx1
-  have hp : 0 < x ^ (eps / 10) := Real.rpow_pos_of_pos hxpos _
-  rw [Real.norm_eq_abs, Real.norm_eq_abs, abs_of_nonneg hl, abs_of_pos hp, one_mul] at hx
-  have e : x ^ (eps / 5) = x ^ (eps / 10) * x ^ (eps / 10) := by
-    rw [← Real.rpow_add hxpos]
-    congr 1
-    ring
-  rw [e, sq]
-  exact mul_le_mul hx hx hl hp.le
-
-
 theorem normPrimesN :
     ShortNorm → ∀ eps : ℝ, 0 < eps → ∃ x₀ : ℝ, ∀ x ≥ x₀, ∀ N d : ℕ, ModAt x eps N d → ∀ Y : ℝ, 0 < Y → 8 * x ^ eps ≤ Real.log Y →
       Y ^ ((9 : ℝ) / 10) ≤ ((normPrimes d N Y (2 * Y)).card : ℝ) := by
@@ -119,7 +103,13 @@ theorem normPrimesN :
     (eventually_ge_atTop 10000).and ((eventually_ge_atTop (50 * A)).and
       ((eventually_ge_atTop (13 / c ^ 2)).and (eventually_exp_decay_le c' hc')))
   have hx := (tendsto_rpow_atTop (show 0 < eps / 5 by linarith)).eventually ht
-  obtain ⟨x₀, hx₀⟩ := eventually_atTop.mp (hx.and ((ev_log_sq eps he).and (eventually_ge_atTop (1:ℝ))))
+  have hlog : ∀ᶠ x : ℝ in atTop, Real.log x ^ 2 ≤ x ^ (eps / 5) := by
+    filter_upwards [(isLittleO_log_rpow_rpow_atTop 2 (show 0 < eps / 5 by linarith)).bound
+      one_pos, eventually_ge_atTop (1 : ℝ)] with x hx hx1
+    rw [Real.rpow_two, Real.norm_of_nonneg (sq_nonneg (Real.log x)),
+      Real.norm_of_nonneg (Real.rpow_pos_of_pos (by linarith) _).le, one_mul] at hx
+    exact hx
+  obtain ⟨x₀, hx₀⟩ := eventually_atTop.mp (hx.and (hlog.and (eventually_ge_atTop (1 : ℝ))))
   refine ⟨x₀, fun x hxx N d hMod Y hY hlogY => ?_⟩
   obtain ⟨⟨t1, t2, t3, t4⟩, hls, hx1⟩ := hx₀ x hxx
   unfold ModAt at hMod

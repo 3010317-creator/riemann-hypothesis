@@ -39,10 +39,7 @@ lemma om_herm_smul (H : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) 
 lemma om_herm_sum {ι : Type*} (s : Finset ι) (H : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)
     (v : ι → Fin (2 * r + k + 1) → ℂ) (u : Fin (2 * r + k + 1) → ℂ) :
     herm H (∑ i ∈ s, v i) u = ∑ i ∈ s, herm H (v i) u := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp [herm]
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, om_herm_add, ih]
+  simp only [herm, Matrix.mulVec_sum, dotProduct_sum]
 
 lemma om_herm_smul_right (H : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (c : ℂ) (v u : Fin (2 * r + k + 1) → ℂ) :
     herm H v (c • u) = conj c * herm H v u := by

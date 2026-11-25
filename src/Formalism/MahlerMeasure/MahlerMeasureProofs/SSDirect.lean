@@ -126,23 +126,15 @@ lemma SFree.X {v : σ} (hv : ∀ k, v ≠ sv k) : SFree sv (X v : MvPolynomial �
 
 omit [Nontrivial K] in
 lemma SFree.sum {α : Type} (u : Finset α) (f : α → MvPolynomial σ K) (h : ∀ i ∈ u, SFree sv (f i)) :
-    SFree sv (∑ i ∈ u, f i) := by
-  classical
-  induction u using Finset.induction_on with
-  | empty => simpa using SFree.C sv (0 : K)
-  | insert i u hi ih =>
-    rw [sum_insert hi]
-    exact (h i (mem_insert_self _ _)).add sv (ih fun k hk => h k (mem_insert_of_mem hk))
+    SFree sv (∑ i ∈ u, f i) :=
+  Finset.sum_induction f (SFree sv) (fun _ _ ha hb => ha.add sv hb)
+    (by simpa using SFree.C sv (0 : K)) h
 
 omit [Nontrivial K] in
 lemma SFree.prod {α : Type} (u : Finset α) (f : α → MvPolynomial σ K) (h : ∀ i ∈ u, SFree sv (f i)) :
-    SFree sv (∏ i ∈ u, f i) := by
-  classical
-  induction u using Finset.induction_on with
-  | empty => simpa using SFree.C sv (1 : K)
-  | insert i u hi ih =>
-    rw [prod_insert hi]
-    exact (h i (mem_insert_self _ _)).mul sv (ih fun k hk => h k (mem_insert_of_mem hk))
+    SFree sv (∏ i ∈ u, f i) :=
+  Finset.prod_induction f (SFree sv) (fun _ _ ha hb => ha.mul sv hb)
+    (by simpa using SFree.C sv (1 : K)) h
 
 omit [Nontrivial K] in
 lemma SFree.pow {f : MvPolynomial σ K} (hf : SFree sv f) (n : ℕ) : SFree sv (f ^ n) := by
@@ -510,13 +502,9 @@ lemma intPol_pow' {F : MvPolynomial σ ℚ_[p]} (hF : F ∈ IntPol p σ) (k : �
   exact (intPol_iff' _).mpr ⟨F₀ ^ k, map_pow _ _ _⟩
 
 lemma intPol_prod' {α : Type} (u : Finset α) (f : α → MvPolynomial σ ℚ_[p]) (h : ∀ i ∈ u, f i ∈ IntPol p σ) :
-    (∏ i ∈ u, f i) ∈ IntPol p σ := by
-  classical
-  induction u using Finset.induction_on with
-  | empty => simpa using intPol_monomial' (p := p) (σ := σ) 0
-  | insert i u hi ih =>
-    rw [prod_insert hi]
-    exact intPol_mul' (h i (mem_insert_self _ _)) (ih fun k hk => h k (mem_insert_of_mem hk))
+    (∏ i ∈ u, f i) ∈ IntPol p σ :=
+  Finset.prod_induction f (· ∈ IntPol p σ) (fun _ _ => intPol_mul')
+    (by simpa using intPol_monomial' (p := p) (σ := σ) 0) h
 
 lemma intPol_rename' {τ : Type} (e : τ → σ) {y : MvPolynomial τ ℚ_[p]} (hy : y ∈ IntPol p τ) :
     rename e y ∈ IntPol p σ := by
@@ -660,14 +648,11 @@ lemma gens_mem_SSZ (j : Fin D.T.t → ℕ) (jp : ℕ) (hL : D.LevelOK j jp) (x :
 
 lemma pre_span_mem (j : Fin D.T.t → ℕ) (jp : ℕ) (hL : D.LevelOK j jp) (Q : MvPolynomial (BVar N r D.T.t) ℚ_[p])
     (hQ : Q ∈ Submodule.span ℤ_[p] (Bset (p := p) D j jp)) : pre D j jp * Q ∈ D.SSZ p (r := r) := by
-  induction hQ using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨y, hy, g, hg, rfl⟩ := hx
-    refine gens_mem_SSZ D j jp hL _ ⟨y, hy, g, hg, ?_⟩
-    rw [pre, ← zmon_eq]; ring
-  | zero => rw [mul_zero]; exact Submodule.zero_mem _
-  | add x y _ _ hx hy => rw [mul_add]; exact Submodule.add_mem _ hx hy
-  | smul c x _ hx => rw [mul_smul_comm]; exact Submodule.smul_mem _ c hx
+  refine (Submodule.span_le (p := (D.SSZ p (r := r)).comap
+      ((LinearMap.mulLeft ℚ_[p] (pre D j jp)).restrictScalars ℤ_[p]))).2 (fun _ hx => ?_) hQ
+  obtain ⟨y, hy, g, hg, rfl⟩ := hx
+  refine gens_mem_SSZ D j jp hL _ ⟨y, hy, g, hg, ?_⟩
+  rw [LinearMap.restrictScalars_apply, LinearMap.mulLeft_apply, pre, ← zmon_eq]; ring
 
 lemma Ehat_int (i : Fin D.T.t) : D.Ehat p (r := r) i ∈ IntPol p (BVar N r D.T.t) := by
   unfold BlockData.Ehat
