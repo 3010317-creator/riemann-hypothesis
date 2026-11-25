@@ -79,10 +79,8 @@ theorem majAt_expand {V ι : Type} [AddCommGroup V] [Module K V] [Fintype ι] [D
     (X : InfinitePlace K → Matrix ι ι ℂ) (v : InfinitePlace K) (a : K) (x y : V) :
     Formalism.HermitianLatticesTheory.normAt b X v (x + a • y) ^ 2 = Formalism.HermitianLatticesTheory.normAt b X v x ^ 2 + Formalism.HermitianLatticesTheory.normAt b X v (a • y) ^ 2 +
       2 * (v.embedding a * Formalism.HermitianLatticesTheory.majAt b X v x y).re := by
-  have hs : Formalism.HermitianLatticesTheory.fcoord b X v (a • y) = v.embedding a • Formalism.HermitianLatticesTheory.fcoord b X v y := by
-    have : Formalism.HermitianLatticesTheory.vecAt b v (a • y) = v.embedding a • Formalism.HermitianLatticesTheory.vecAt b v y := by
-      funext i; simp [Formalism.HermitianLatticesTheory.vecAt]
-    rw [Formalism.HermitianLatticesTheory.fcoord, this, Matrix.mulVec_smul]; rfl
+  have hs : Formalism.HermitianLatticesTheory.fcoord b X v (a • y) = v.embedding a • Formalism.HermitianLatticesTheory.fcoord b X v y :=
+    Formalism.HN.PlaceDecomposition.fcoord_smul b X v a y
   simp only [normAt_sq_eq_majAt, Formalism.HermitianLatticesTheory.majAt, Formalism.HermitianLatticesTheory.fcoord_add, hs, Finset.mul_sum, Complex.re_sum,
     ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun i _ => ?_
