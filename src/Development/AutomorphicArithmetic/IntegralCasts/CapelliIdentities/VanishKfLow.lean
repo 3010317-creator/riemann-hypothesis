@@ -112,8 +112,6 @@ noncomputable def UpperTheory.Reformulated.B.LowTypeThetaMapVanishing.KfLow :
           ∃ g ∈ Formalism.QuantumDeterminants.UH (Formalism.BasicNotions.TH.gramAt D V τ),
             ∃ (w0 : ↥(Formalism.IndefR.Links.lowT M τ)), (↑w : M.H τ) = (M.rep τ g : M.H τ → M.H τ) (↑(↑w0 : ↥(M.sm τ)) : M.H τ)}
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 open Classical in
 private theorem UpperTheory.Reformulated.B.LowTypeThetaMapVanishing.equiv_of_mem
     {D : Formalism.BasicNotions.D7} {V : Formalism.BasicNotions.TH.HSp D} {S : D.what₂.Tau → Formalism.BasicNotions.TH.SPar}

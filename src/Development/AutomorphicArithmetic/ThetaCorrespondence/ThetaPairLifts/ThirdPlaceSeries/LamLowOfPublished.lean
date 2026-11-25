@@ -772,8 +772,6 @@ open GlobalTheory.LiftLower GlobalTheory.IndefiniteRowSideFullHecke.TwistedLevel
 
 namespace GlobalTheory.LowForm
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem adjoint_eq_self {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [FiniteDimensional ℂ H] (E : H →ₗ[ℂ] H)
     (h1 : ∀ u, E (E u) = E u) (h2 : ∀ x, E x = x → ∀ y, ⟪x, E y⟫_ℂ = ⟪x, y⟫_ℂ) : LinearMap.adjoint E = E := by
   refine LinearMap.ext fun x => ext_inner_right ℂ fun y => ?_

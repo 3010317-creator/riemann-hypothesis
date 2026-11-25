@@ -25,8 +25,6 @@ namespace PI.NormRepLift
 
 open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.L2.SG.TermDef
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable (D : D7) (u u' : D.what₂.Word)
 
 def NormRepStep : Prop :=
@@ -207,8 +205,6 @@ open scoped Classical
 namespace PI.NRL
 
 open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.L2.SG.TermDef
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 def RowVec (D : D7) (u : D.what₂.Word) (T' : ℕ) : Prop :=
   PrimeHyp D u T' →
@@ -593,8 +589,6 @@ open scoped Classical
 namespace PI.NRL
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.L2.SG.TermDef
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 def TraceOne (D : D7) : Prop := ∃ ω : 𝓞 D.host.E, (ω : D.host.E) + star (ω : D.host.E) = 1
 
