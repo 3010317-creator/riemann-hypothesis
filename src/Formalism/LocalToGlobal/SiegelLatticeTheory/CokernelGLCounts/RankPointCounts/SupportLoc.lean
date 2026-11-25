@@ -48,10 +48,7 @@ theorem det_assoc_of_range_eq {ι : Type*} [Fintype ι] [DecidableEq ι] (M N : 
     simp only [Matrix.smul_mul, Matrix.one_mul, Matrix.mul_one, Matrix.smul_apply, smul_eq_mul] at h3
     have h4 : M.det * ((G * H) i j - (1 : Matrix ι ι R) i j) = 0 := by rw [mul_sub, h3, sub_self]
     exact sub_eq_zero.mp (hM _ h4)
-  have hu : IsUnit G.det := by
-    have h5 := congrArg Matrix.det hGH
-    rw [Matrix.det_mul, Matrix.det_one] at h5
-    exact ⟨⟨G.det, H.det, h5, by rw [mul_comm]; exact h5⟩, rfl⟩
+  have hu : IsUnit G.det := Matrix.isUnit_det_of_right_inverse hGH
   exact ⟨hu.unit, by rw [IsUnit.unit_spec, ← hG, Matrix.det_mul]⟩
 
 theorem det_assoc_of_cok {n : Type*} [Fintype n] [DecidableEq n] (Z Z' : Matrix n n R)
