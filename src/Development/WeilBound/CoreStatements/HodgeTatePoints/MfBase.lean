@@ -121,21 +121,15 @@ theorem regAt_push {W : Scheme.{0}} (ξ : Sp Ω ⟶ W) (f : W ⟶ X) [Surjective
 
 theorem isCptGen_of_comp {W : Scheme.{0}} (ξ : Sp Ω ⟶ W) (f : W ⟶ X) [SurjectiveOnStalks f]
     (h : IsCptGen (ξ ≫ f)) : IsCptGen ξ := by
-  have key : ∀ {A B C : Type} (g : B → C) (s : A → B), Function.Injective (g ∘ s) →
-      Function.Surjective s → Function.Injective g := by
-    intro A B C g s hi hs y y' hy
-    obtain ⟨x, rfl⟩ := hs y
-    obtain ⟨x', rfl⟩ := hs y'
-    exact congrArg s (hi hy)
   have hb : Function.Bijective ((Scheme.stalkClosedPointTo ξ).hom ∘ (f.stalkMap (ξ (closedPoint Ω))).hom) := by
     have hb0 := h.bij
     rw [Scheme.stalkClosedPointTo_comp] at hb0
     exact hb0
-  refine ⟨⟨key _ _ hb.1 (f.stalkMap_surjective _), Function.Surjective.of_comp hb.2⟩, fun p => ?_⟩
+  refine ⟨⟨hb.1.of_comp_right (f.stalkMap_surjective _), Function.Surjective.of_comp hb.2⟩, fun p => ?_⟩
   have hi : Function.Injective ((genMap ξ p) ∘ (f.stalkMap p.1).hom) := by
     have hi0 := h.inj (push ξ f p)
     rw [genMap_push] at hi0
     exact hi0
-  exact key _ _ hi (f.stalkMap_surjective p.1)
+  exact hi.of_comp_right (f.stalkMap_surjective p.1)
 
 end PositivityTheory.HtPt.Mf
