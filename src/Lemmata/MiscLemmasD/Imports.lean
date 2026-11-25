@@ -14,6 +14,6 @@ variable {E V : Type} [Field E] [NumberField E] [AddCommGroup V] [Module E V] [M
 
 theorem goal1 {Λ : Submodule (𝓞 E) V} {v : V}
     (hv : v ∈ Submodule.span E (Λ : Set V)) : ∃ d : 𝓞 E, d ≠ 0 ∧ d • v ∈ Λ :=
-  by first | exact @_root_.Bl.general_b_fact_left''''''''.goal1 Λ v hv | (intros; apply _root_.Bl.general_b_fact_left''''''''.goal1 <;> assumption)
+  general_b_fact_left''''''''.goal1 Λ v hv
 
 end Bl.SecondBlockLemmaE
