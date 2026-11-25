@@ -6,7 +6,6 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFil
 
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry TensorProduct GlobalTheory.LogCris DividedPowers CrystallineSemistableComparison CrystallineSemistableComparison.Pb
 
 noncomputable section
@@ -24,6 +23,7 @@ theorem rep_zero {R : Type} [CommRing R] {C : Type 1} [Category.{0} C] {A : C те
     apply Subtype.ext
     rw [show (show sqM a b _ from f s).1 = _ from hz s]
     simp
+    rfl
   subst e
   rfl
 

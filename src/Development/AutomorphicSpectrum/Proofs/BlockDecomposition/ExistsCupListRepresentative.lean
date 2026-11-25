@@ -6,7 +6,6 @@ import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomology
 
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry GlobalTheory.LogCris CrystallineSemistableComparison CrystallineSemistableComparison.Pb
 open GlobalTheory.CatH (face toLast)
 
@@ -40,7 +39,7 @@ theorem exists_rep {R : Type} [CommRing R] {C : Type 1} [Category.{0} C] (Φ : P
     ∃ c : CH.H (sq (Fil m) (Fil ((m : ℤ) + 1))) m, Rep (Fil m) (Fil ((m : ℤ) + 1)) (cupListC Φ.A ℓ) c := by
   intro hF m ℓ hd hl
   have hm : cupListC Φ.A ℓ ∈ FC (Fil (m : ℤ)) m :=
-    cupList_mem hF ℓ fun k => mem_FC.2 fun s => by simpa using hl k s
+    cupList_mem hF ℓ fun k => mem_FC.2 fun s => hl k s
   refine GlobalTheory.CompanionTheory.ConeLocal.rep_exists (cupListC Φ.A ℓ) (mem_FC.1 hm) fun s => ?_
   rw [cupList_cocycle Φ.A ℓ hd]
   exact (Fil ((m : ℤ) + 1)).S _ |>.zero_mem

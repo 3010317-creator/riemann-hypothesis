@@ -5,7 +5,6 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFil
 
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry TensorProduct GlobalTheory.LogCris DividedPowers CrystallineSemistableComparison CrystallineSemistableComparison.Pb
 noncomputable section
 namespace GlobalTheory.CompanionTheory.GrForm
@@ -34,10 +33,10 @@ theorem stRes : StRes := by
   have hF := GlobalTheory.CompanionTheory.DPFil.isFil_sFil P'
   have hP'W : ∀ T, P' T → InU W T := fun T h => hP T (hPP T h)
   refine ⟨(resU (GF q r) hPP).pullC r f, ?_, rfl, ?_⟩
-  · have := (resU (GF q r) hPP).d_pullC r f
-    refine this.trans ?_
-    have hf' : CH.d (P.ι ⋙ GF q r) r f = 0 := hf
-    rw [hf', map_zero]
+  · let f' : CH.Cn (P.ι ⋙ GF q r) r := f
+    have hf' : CH.d (P.ι ⋙ GF q r) r f' = 0 := hf
+    change CH.d (P'.ι ⋙ GF q r) r ((resU (GF q r) hPP).pullC r f') = 0
+    rw [(resU (GF q r) hPP).d_pullC, hf', map_zero]
   · intro s
     refine (hz (s ⋙ ObjectProperty.ιOfLE hPP)).trans ?_
     refine Ideal.Quotient.eq.2 ?_
@@ -58,7 +57,16 @@ theorem stRes : StRes := by
       have := hF.mul r 1 _ hw hδ
       simpa using this
     have hsum := Ideal.sum_mem _ (t := Finset.univ) (fun I _ => hdiff I)
-    simp only [mul_sub, Finset.sum_sub_distrib] at hsum
-    exact hsum
+    have heq : (∑ I : Idx r d,
+        wz (Φ := sP P') (fun i T => u i T.obj) I.1 s *
+          ((show (sP P').A.obj (s.obj (Fin.last r)) from lft W (s.obj (Fin.last r)).obj (x I)) -
+            (show (sP P').A.obj (s.obj (Fin.last r)) from lft W' (s.obj (Fin.last r)).obj (rs hW (x I))))) =
+        (∑ I : Idx r d, wz (Φ := sP P') (fun i T => u i T.obj) I.1 s *
+          (show (sP P').A.obj (s.obj (Fin.last r)) from lft W (s.obj (Fin.last r)).obj (x I))) -
+        (∑ I : Idx r d, wz (Φ := sP P') (fun i T => u i T.obj) I.1 s *
+          (show (sP P').A.obj (s.obj (Fin.last r)) from lft W' (s.obj (Fin.last r)).obj (rs hW (x I)))) := by
+      rw [← Finset.sum_sub_distrib]
+      exact Finset.sum_congr rfl fun I _ => mul_sub _ _ _
+    exact heq ▸ hsum
 
 end GlobalTheory.CompanionTheory.GrForm

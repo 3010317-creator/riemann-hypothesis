@@ -4,7 +4,6 @@ public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCoh
 
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry Opposite CrystallineSemistableComparison CrystallineSemistableComparison.CH CrystallineSemistableComparison.E GlobalTheory.EtC
 
 noncomputable section
@@ -38,12 +37,12 @@ def resMor {q : ℕ} {C C' : Type 1} [Category.{0} C] [Category.{0} C'] (P : Pro
     ResMor (P.res i) (P'.res i) m where
   τ s c := resHom _ (g c)
   nat s {c c'} φ x := by
-    change Sec.res (g c') (Sec.res (P.S.map (m.G.map φ)).unop x) = Sec.res (P'.S.map φ).unop (Sec.res (g c) x)
-    rw [res_res, res_res, hg φ]
+    let x' : Sec ((GlobalTheory.EtC.res (ZMod q) (tw q i)).X (s : ℤ)) (P.U (m.G.obj c)) := x
+    exact (res_res _ (g c') (P.S.map (m.G.map φ)).unop x').trans
+      ((congrArg (fun u => Sec.res u x') (hg φ)).trans (res_res _ (P'.S.map φ).unop (g c) x').symm)
   ι c x := by
-    change Sec.res (g c) (Sec.map (resι _ (tw q i)) (kap i (P.ζ (m.G.obj c)) x)) =
-      Sec.map (resι _ (tw q i)) (kap i (P'.ζ c) (m.τ c x))
-    rw [res_map, hι]
+    exact (res_map (resι (ZMod q) (tw q i)) (g c) (kap i (P.ζ (m.G.obj c)) x)).trans
+      (congrArg (Sec.map (resι (ZMod q) (tw q i))) (hι c x))
   dv s c x := by
     change Sec.res (g c) (Sec.map ((GlobalTheory.EtC.res _ (tw q i)).d (s : ℤ) ((s + 1 : ℕ) : ℤ)) x) =
       Sec.map ((GlobalTheory.EtC.res _ (tw q i)).d (s : ℤ) ((s + 1 : ℕ) : ℤ)) (Sec.res (g c) x)
@@ -64,9 +63,9 @@ theorem etNat : CrystallineSemistableComparison.E.EtSpec → CrystallineSemistab
   have hE' := hEM ℤ ℤ (RingHom.id ℤ) C C' P.L P'.L (P.res i) (P'.res i) m n j _ _ hE
   have hglob : n.pullC j 0 (Y.glob i j a) = Y'.glob i j (Sec.res u a) := by
     funext t
-    change Sec.res (g (t.obj (Fin.last 0))) (Sec.res (Y.y (m.G.obj (t.obj (Fin.last 0)))) a) =
-      Sec.res (Y'.y (t.obj (Fin.last 0))) (Sec.res u a)
-    rw [res_res, res_res, hy]
+    exact (res_res _ (g (t.obj (Fin.last 0))) (Y.y (m.G.obj (t.obj (Fin.last 0)))) a).trans
+      ((congrArg (fun v => Sec.res v a) (hy (t.obj (Fin.last 0))).symm).trans
+        (res_res _ (Y'.y (t.obj (Fin.last 0))) u a).symm)
   rw [hglob] at hE'
   have hR : Rep (pull _ (sch.map u) _ j x) (Sec.res u a) :=
     (hRep (ZMod q) (GlobalTheory.EtC.res _ (tw q i)) X (j : ℤ)).2.2.2.2 X' u x a ha
