@@ -752,7 +752,6 @@ theorem le_pull_inf (V : X.Opens) (i : L.ι) :
   fun _ hx => ⟨hx.1, (LB.pull_U f fun _ => i).ge hx.2⟩
 
 
-set_option backward.isDefEq.respectTransparency false in
 def projFun {G : Y.Modules} {V : X.Opens} (s : Γ(twist G (L.pull f), f ⁻¹ᵁ V)) :
     Γ(twist ((Scheme.Modules.pushforward f).obj G) L, V) :=
   mkSec (fun i => resM G (le_pull_inf f V i) (coord s fun _ => i)) fun i j => by
