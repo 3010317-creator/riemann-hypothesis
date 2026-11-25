@@ -31,12 +31,6 @@ private theorem cent_nm_sg (σ : R ≃ₐ[k] R) (q : ℕ) (d : GL (Fin n) R) :
   change (σ ^ m) (σ _) = σ ((σ ^ m) _)
   rw [← AlgEquiv.mul_apply, ← AlgEquiv.mul_apply, ← pow_succ, ← pow_succ']
 
-private theorem cent_up_inj (h : Function.Injective (algebraMap k R)) :
-    Function.Injective (up R : GL (Fin n) k → GL (Fin n) R) := by
-  intro s t hst
-  ext a b
-  exact h (congrArg (fun g : GL (Fin n) R => (g : Matrix (Fin n) (Fin n) R) a b) hst)
-
 private theorem cent_descend {σ : R ≃ₐ[k] R} {q : ℕ} (hσ : IsGal σ q) (x : GL (Fin n) R) (hx : sg σ x = x) :
     ∃ t : GL (Fin n) k, x = up R t := by
   have key : ∀ y : GL (Fin n) R, sg σ y = y → ∃ M : Matrix (Fin n) (Fin n) k,
@@ -89,8 +83,8 @@ theorem UpperTheory.ConvolutionTheory.D.nmCent :
       rw [sgConj, mul_assoc, inv_mul_eq_iff_eq_mul, ← h2] at hx
       exact mul_left_cancel hx
     obtain ⟨t, rfl⟩ := cent_descend hσ x h3
-    refine ⟨t, cent_up_inj hσ.inj ?_, rfl⟩
-    rw [map_mul, map_mul, h1]
+    refine ⟨t, Units.map_injective (f := (algebraMap k R).mapMatrix.toMonoidHom)
+      (Matrix.map_injective hσ.inj) (by rw [map_mul, map_mul]; exact h1), rfl⟩
   · rintro ⟨t, ht, rfl⟩
     have h2 := hcomm (up R t) (by rw [← map_mul, ← map_mul, ht.eq])
     rw [sgConj, cent_sg_up, mul_assoc, h2, inv_mul_cancel_left]

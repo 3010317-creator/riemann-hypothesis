@@ -4,6 +4,7 @@ public import Development.AutomorphicArithmetic.Foundations.Convolution.Integrab
 public import Development.AutomorphicArithmetic.Foundations.Convolution.IntegrableConvolution.GalSplit
 import GroundTheory.GlobalFields.CompletionAtPlace.Integers
 import GroundTheory.LocalFields.PadicLogSeries
+import Mathlib.RingTheory.Spectrum.Prime.RingHom
 
 @[expose] public section
 
@@ -11,26 +12,6 @@ open NumberField IsDedekindDomain GroundTheory.Global GroundTheory.Global.SemiLo
 open scoped TensorProduct
 
 namespace UpperTheory.ConvolutionTheory.L1
-
-private theorem pi_factor {ι : Type*} [Fintype ι] [DecidableEq ι] {k : ι → Type*} [∀ i, Field (k i)]
-    {K : Type*} [Field K] (φ : (∀ i, k i) →+* K) : ∃ w, ∀ b : ∀ i, k i, b w = 0 → φ b = 0 := by
-  have h1 : ∑ i, φ (Pi.single i 1) = 1 := by
-    have h : (∑ x, Pi.single x 1 : ∀ i, k i) = 1 := Finset.univ_sum_single (1 : ∀ i, k i)
-
-    rw [← map_sum, h, map_one]
-  obtain ⟨w, hw⟩ : ∃ w, φ (Pi.single w 1) ≠ 0 := by
-    by_contra! h
-    simp [h] at h1
-  refine ⟨w, fun b hb => ?_⟩
-  have h0 : b * Pi.single w 1 = 0 := by
-    ext i
-    by_cases h : i = w
-    · subst h
-      simp [hb]
-    · simp [Pi.single_eq_of_ne h]
-  have h2 := congrArg φ h0
-  rw [map_mul, map_zero] at h2
-  exact (mul_eq_zero.1 h2).resolve_right hw
 
 section
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
@@ -40,12 +21,14 @@ private theorem comp_eq (v : HeightOneSpectrum (𝓞 F)) (φ : CompletionsOver E
     (hs : ∀ w : PlacesOver E v, Function.Surjective (completionMap v w.1)) :
     ∃ w : PlacesOver E v, ∀ b, completionMap v w.1 (φ b) = b w := by
   classical
-  obtain ⟨w, hw⟩ := pi_factor φ
+  obtain ⟨w, q, hq⟩ := PrimeSpectrum.exists_comap_evalRingHom_eq
+    (R := fun w : PlacesOver E v => w.1.adicCompletion E) ⟨RingHom.ker φ, RingHom.ker_isPrime φ⟩
   refine ⟨w, fun b => ?_⟩
   obtain ⟨a, ha⟩ := hs w (b w)
-  have h : φ (b - incFin E v a) = 0 := hw _ (by
-    change b w - completionMap v w.1 a = 0
-    rw [ha, sub_self])
+  have h : φ (b - incFin E v a) = 0 := (congrArg PrimeSpectrum.asIdeal hq).le (by
+    change b w - completionMap v w.1 a ∈ q.asIdeal
+    rw [ha, sub_self]
+    exact q.asIdeal.zero_mem)
   rw [map_sub, hφ, sub_eq_zero] at h
   rw [h, ha]
 

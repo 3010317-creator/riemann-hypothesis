@@ -20,16 +20,8 @@ private theorem finprod_fib {A B M : Type*} [CommMonoid M] (π : A → B) (p : A
     refine finprod_cond_eq_prod_of_cond_iff _ fun {x} hx => ?_
     simp [hp, Function.mem_mulSupport, hx]
   simp_rw [hG]
-  rw [finprod_eq_prod_of_mulSupport_toFinset_subset f hf subset_rfl]
-  rw [finprod_eq_prod_of_mulSupport_subset (s := hf.toFinset.image π)]
-  · exact Finset.prod_fiberwise_of_maps_to (fun x hx => Finset.mem_image_of_mem π hx) f
-  · intro b hb
-    by_contra hb'
-    refine hb ?_
-    refine Finset.prod_eq_one fun x hx => ?_
-    exfalso
-    rw [Finset.mem_filter] at hx
-    exact hb' (by simpa using ⟨x, by simpa using hx.1, hx.2⟩)
+  classical
+  exact (finprod_prod_filter π hf.toFinset f).trans (finprod_eq_prod f hf).symm
 
 theorem UpperTheory.ConvolutionTheory.Tf.tensEProd :
     ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (n : ℕ)

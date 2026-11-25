@@ -76,12 +76,6 @@ private theorem Bd.pow_sub_pow (hM : Bd a (M - 1)) (hN : Bd a (N - 1)) (ha : a �
     · rw [mul_comm a b]
       exact hd.mul (hN.pow_sub_one ha m)
 
-private theorem val_nat_le_one (q : ℕ) : valuation E (q : E) ≤ 1 := by
-  induction q with
-  | zero => simp
-  | succ q ih =>
-    rw [Nat.cast_succ]
-    exact Valuation.map_add_le _ ih (by simp)
 
 end Bound
 
@@ -112,7 +106,7 @@ private theorem exists_root (q : ℕ) (r : ValueGroupWithZero E) (hr : r < valua
   have hq : (q : E) ≠ 0 := by
     intro h
     simp [h] at hq0
-  have hr1 : r ≤ 1 := hr.le.trans (val_nat_le_one q)
+  have hr1 : r ≤ 1 := hr.le.trans (((valuation E).mem_integer_iff q).mp (natCast_mem _ q))
   haveI : T2Space E := by
     letI := IsTopologicalAddGroup.rightUniformSpace E
     haveI := isUniformAddGroup_of_addCommGroup (G := E)
@@ -168,7 +162,7 @@ private theorem root_unique (q : ℕ) (r : ValueGroupWithZero E) (hr : r < valua
   have hq : (q : E) ≠ 0 := by
     intro h
     simp [h] at hq0
-  have hr1 : r ≤ 1 := hr.le.trans (val_nat_le_one q)
+  have hr1 : r ≤ 1 := hr.le.trans (((valuation E).mem_integer_iff q).mp (natCast_mem _ q))
   have hρ1 : r / valuation E (q : E) < 1 := (div_lt_one₀ hq0).mpr hr
   refine sub_eq_zero.mp (eq_zero_of_bd (c := r) hρ1 fun k => ?_)
   induction k with

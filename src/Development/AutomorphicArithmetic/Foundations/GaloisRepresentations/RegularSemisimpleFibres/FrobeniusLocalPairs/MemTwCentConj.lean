@@ -27,14 +27,6 @@ private theorem norm_eq {k E : Type} [Field k] [Field E] [Algebra k E] (σ : E �
     show (sigmaGL (σ ^ i) : Monoid.End (GL (Fin n) E)) δ = _
     rw [sigmaGL_pow]
 
-private theorem charpoly_incl {k E : Type} [Field k] [Field E] [Algebra k E] {n : ℕ}
-    (γ : GL (Fin n) k) :
-    ((incl γ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E).charpoly =
-      (γ : Matrix (Fin n) (Fin n) k).charpoly.map (algebraMap k E) := by
-  show ((GeneralLinearGroup.map (algebraMap k E) γ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E).charpoly = _
-  rw [← Matrix.charpoly_map]
-  rfl
-
 private theorem twConj_conj {G : Type} [Group G] (θ : Monoid.End G) (h x δ : G) :
     twConj θ (h⁻¹ * x * h) (twConj θ h δ) = h⁻¹ * twConj θ x δ * θ h := by
   unfold twConj
@@ -71,7 +63,10 @@ theorem dict : Dict := by
   intro k E _ _ _ _ _ _ _ _ _ _ _ _ _ σ hgen n
   have hcp : ∀ γ : GL (Fin n) k,
       ((incl γ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E).charpoly =
-        (γ : Matrix (Fin n) (Fin n) k).charpoly.map (algebraMap k E) := fun γ => charpoly_incl γ
+        (γ : Matrix (Fin n) (Fin n) k).charpoly.map (algebraMap k E) := fun γ => by
+    show ((GeneralLinearGroup.map (algebraMap k E) γ : GL (Fin n) E) :
+      Matrix (Fin n) (Fin n) E).charpoly = _
+    exact Matrix.charpoly_map _ _
   have hconj : ∀ (h a : GL (Fin n) E),
       ((h * a * h⁻¹ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E).charpoly =
         (a : Matrix (Fin n) (Fin n) E).charpoly := by

@@ -3,35 +3,22 @@ module
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SeparatingAlgebras.GroupDetAlt
 public import Mathlib.Analysis.Normed.Ring.Ultra
 public import Mathlib.Analysis.Normed.Group.Ultra
+import Mathlib.LinearAlgebra.Matrix.Permutation
 
 @[expose] public section
 
 open UpperTheory.Gal.Gen
 
-open Classical in
-private noncomputable def rho0 (H : Type) [Group H] [Fintype H] : H →* Matrix H H ℤ where
-  toFun u := Matrix.of fun h g => if h = u * g then 1 else 0
-  map_one' := by
-    ext h g
-    simp [Matrix.one_apply]
-  map_mul' u v := by
-    ext h g
-    have e : ∀ x, (if h = u * x then (1 : ℤ) else 0) * (if x = v * g then 1 else 0)
-        = if x = v * g then (if h = u * x then 1 else 0) else 0 := by
-      intro x
-      split_ifs <;> simp
-    simp only [Matrix.mul_apply, Matrix.of_apply, e, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
-      mul_assoc]
-
 theorem UpperTheory.Gal.Gen.groupDet_pf :
     UpperTheory.Gal.Gen.TriMat → UpperTheory.Gal.Gen.DetLow → UpperTheory.Gal.Gen.GroupDet := by
   classical
   intro hT hD k _ _ l _ H _ _ hp a ρ ha hrank
-  obtain ⟨Q, P, hQP⟩ := hT l H hp H (rho0 H)
+  let rho0 : H →* Matrix H H ℤ := (Matrix.permMatrixHom (R := ℤ)).comp (MulAction.toPermHom H H)
+  obtain ⟨Q, P, hQP⟩ := hT l H hp H rho0
   obtain ⟨A, hAdef⟩ : ∃ A : Matrix H H k, A = Matrix.of fun h g : H => a (h * g⁻¹) := ⟨_, rfl⟩
   rw [← hAdef] at hrank
   obtain ⟨R, hR⟩ : ∃ R : H → Matrix (Fin (Fintype.card H)) (Fin (Fintype.card H)) ℤ,
-      R = fun u => Q * rho0 H u * P := ⟨_, rfl⟩
+      R = fun u => Q * rho0 u * P := ⟨_, rfl⟩
   have hm : ∀ u i j, ∃ m : ℤ, j ≤ i → R u i j - (if i = j then 1 else 0) = (l : ℤ) * m := by
     intro u i j
     by_cases h : j ≤ i
@@ -39,13 +26,13 @@ theorem UpperTheory.Gal.Gen.groupDet_pf :
       exact ⟨m, fun _ => by rw [hR]; exact hm⟩
     · exact ⟨0, fun h' => absurd h' h⟩
   choose m hm using hm
-  have hAsum : A = ∑ u, a u • (rho0 H u).map (Int.castRingHom k) := by
+  have hAsum : A = ∑ u, a u • (rho0 u).map (Int.castRingHom k) := by
     ext h g
-    have e : ∀ u : H, h = u * g ↔ u = h * g⁻¹ := fun u => by
-      constructor
-      · rintro rfl; simp
-      · rintro rfl; simp
-    simp [hAdef, Matrix.sum_apply, rho0, e]
+    have e : ∀ u : H, u⁻¹ * h = g ↔ u = h * g⁻¹ := fun u => by
+      rw [inv_mul_eq_iff_eq_mul]
+      exact ⟨by rintro rfl; simp, by rintro rfl; simp⟩
+    simp [hAdef, Matrix.sum_apply, rho0, Equiv.Perm.permMatrix, PEquiv.toMatrix_apply,
+      Equiv.toPEquiv_apply, Equiv.Perm.inv_def, e]
   obtain ⟨A', hA'def⟩ : ∃ A' : Matrix (Fin (Fintype.card H)) (Fin (Fintype.card H)) k,
       A' = Q.map (Int.castRingHom k) * A * P.map (Int.castRingHom k) := ⟨_, rfl⟩
   have hA'sum : A' = ∑ u, a u • (R u).map (Int.castRingHom k) := by

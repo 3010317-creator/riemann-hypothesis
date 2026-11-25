@@ -75,40 +75,26 @@ private theorem comm_fix (hK : IsCommensurated K) {e a b x : H → ℂ} (he : e 
     _ = conv K b (conv K a (conv K e x)) := by rw [A a ha e he x hx]
     _ = conv K b (conv K a x) := by rw [hex]
 
-private theorem conv_supp {a f : H → ℂ} {g : H} (h : conv K a f g ≠ 0) : ∃ x : H, a x ≠ 0 ∧ f (x⁻¹ * g) ≠ 0 := by
-  by_contra hc
-  push Not at hc
-  apply h
-  unfold Formalism.UG.conv
-  apply finsum_eq_zero_of_forall_eq_zero
-  intro q
-  by_cases ha : a (Quotient.out q) = 0
-  · rw [ha, zero_mul]
-  · rw [hc _ ha, mul_zero]
-
-private theorem word_supp {ψ : J → H → ℂ} {f : H → ℂ} {R : Set H} (hR : ∀ j a, ψ j a ≠ 0 → ∀ g ∈ R, a * g ∈ R)
-    (hf : ∀ g, f g ≠ 0 → g ∈ R) (w : List J) : ∀ g, wordFn K ψ w f g ≠ 0 → g ∈ R := by
+private theorem word_supp {ψ : J → H → ℂ} {f : H → ℂ} {R : Set H}
+    (hR : ∀ j a, ψ j a ≠ 0 → ∀ g ∈ R, a * g ∈ R) (hf : ∀ g, f g ≠ 0 → g ∈ R) (w : List J) :
+    ∀ g, wordFn K ψ w f g ≠ 0 → g ∈ R := by
   induction w with
   | nil => exact hf
   | cons j w ih =>
     intro g hg
-    obtain ⟨x, hx1, hx2⟩ := conv_supp (K := K) (a := ψ j) (f := wordFn K ψ w f) hg
-    have hx := hR j x hx1 _ (ih _ hx2)
-    simpa using hx
+    change (∑ᶠ q : H ⧸ K, ψ j q.out * wordFn K ψ w f (q.out⁻¹ * g)) ≠ 0 at hg
+    rw [← finsum_mem_univ] at hg
+    obtain ⟨q, -, hq⟩ := exists_ne_zero_of_finsum_mem_ne_zero hg
+    simpa using hR j q.out (left_ne_zero_of_mul hq) _ (ih _ (right_ne_zero_of_mul hq))
 
-private theorem poly_supp {ψ : J → H → ℂ} {f : H → ℂ} {R : Set H} (hR : ∀ j a, ψ j a ≠ 0 → ∀ g ∈ R, a * g ∈ R)
-    (hf : ∀ g, f g ≠ 0 → g ∈ R) (s : List J →₀ ℂ) (g : H) (hg : polyFn K ψ s f g ≠ 0) : g ∈ R := by
-  by_contra hgR
-  apply hg
-  unfold UpperTheory.Gal.LocalSmoothExtension.polyFn
-  rw [Finsupp.sum, Finset.sum_apply]
-  apply Finset.sum_eq_zero
-  intro w _
-  rw [Pi.smul_apply, smul_eq_mul]
-  have hw : wordFn K ψ w f g = 0 := by
-    by_contra hne
-    exact hgR (word_supp (K := K) hR hf w g hne)
-  rw [hw, mul_zero]
+private theorem poly_supp {ψ : J → H → ℂ} {f : H → ℂ} {R : Set H}
+    (hR : ∀ j a, ψ j a ≠ 0 → ∀ g ∈ R, a * g ∈ R) (hf : ∀ g, f g ≠ 0 → g ∈ R)
+    (s : List J →₀ ℂ) (g : H) (hg : polyFn K ψ s f g ≠ 0) : g ∈ R := by
+  unfold UpperTheory.Gal.LocalSmoothExtension.polyFn at hg
+  rw [Finsupp.sum, Finset.sum_apply] at hg
+  obtain ⟨w, -, hw⟩ := Finset.exists_ne_zero_of_sum_ne_zero hg
+  rw [Pi.smul_apply, smul_eq_mul] at hw
+  exact word_supp (K := K) hR hf w g (right_ne_zero_of_mul hw)
 
 end Abstract
 

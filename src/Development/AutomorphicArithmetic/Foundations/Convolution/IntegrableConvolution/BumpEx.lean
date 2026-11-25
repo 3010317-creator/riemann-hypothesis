@@ -127,57 +127,39 @@ private theorem exists_cut : ∃ c : archGroup K n → ℝ, (∀ a, 0 ≤ c a) �
       rw [_root_.mul_inv_rev]; rfl
     simp only [hc, e1, e2, quad_left hk, quad_right (inv_mem hk)]
 
-private def Good (P : archGroup K n → ℂ) : Prop :=
-  (isExpLieAlgebra K n).IsSmoothFun P ∧ ∃ W : Submodule ℂ (archGroup K n → ℂ), W.FG ∧
-    ∀ k : archCompact K n, (fun g => P ((k : archGroup K n) * g)) ∈ W
-
-private theorem Good.cont {P : archGroup K n → ℂ} (h : Good P) : Continuous P := by
-  let := (isExpLieAlgebra K n).chartedSpace
-  exact ContMDiff.continuous h.1
-
-private theorem Good.add {P Q : archGroup K n → ℂ} (hP : Good P) (hQ : Good Q) :
-    Good (fun g => P g + Q g) := by
-  obtain ⟨h1, W₁, f1, k1⟩ := hP
-  obtain ⟨h2, W₂, f2, k2⟩ := hQ
-  refine ⟨?_, W₁ ⊔ W₂, f1.sup f2, fun k => Submodule.add_mem_sup (k1 k) (k2 k)⟩
-  rw [IsExpLieAlgebra.isSmoothFun_iff] at h1 h2 ⊢
-  exact fun g => (h1 g).add (h2 g)
-
-private theorem Good.mul {P Q : archGroup K n → ℂ} (hP : Good P) (hQ : Good Q) :
-    Good (fun g => P g * Q g) := by
-  obtain ⟨h1, W₁, f1, k1⟩ := hP
-  obtain ⟨h2, W₂, f2, k2⟩ := hQ
-  refine ⟨?_, W₁ * W₂, f1.mul f2, fun k => Submodule.mul_mem_mul (k1 k) (k2 k)⟩
-  rw [IsExpLieAlgebra.isSmoothFun_iff] at h1 h2 ⊢
-  exact fun g => (h1 g).mul (h2 g)
-
-private theorem Good.const (z : ℂ) : Good (fun _ : archGroup K n => z) := by
-  refine ⟨?_, Submodule.span ℂ {fun _ => (1 : ℂ)}, Submodule.fg_span_singleton _, fun k =>
-    Submodule.mem_span_singleton.2 ⟨z, by ext; simp⟩⟩
-  rw [IsExpLieAlgebra.isSmoothFun_iff]
-  exact fun g => contDiff_const
-
-private theorem Good.conj {P : archGroup K n → ℂ} (hP : Good P) : Good (fun g => conj (P g)) := by
-  obtain ⟨h1, W, f1, k1⟩ := hP
-  refine ⟨?_, W.map (starLinearEquiv ℂ (A := archGroup K n → ℂ)).toLinearMap, f1.map _, fun k =>
-    Submodule.mem_map_of_mem (k1 k)⟩
-  rw [IsExpLieAlgebra.isSmoothFun_iff] at h1 ⊢
-  exact fun g => Complex.conjCLE.contDiff.comp (h1 g)
+private def goodAlg : StarSubalgebra ℂ (archGroup K n → ℂ) where
+  carrier := {P | (isExpLieAlgebra K n).IsSmoothFun P ∧
+    ∃ W : Submodule ℂ (archGroup K n → ℂ), W.FG ∧
+      ∀ k : archCompact K n, (fun g => P ((k : archGroup K n) * g)) ∈ W}
+  mul_mem' {P Q} := fun ⟨h1, W₁, f1, k1⟩ ⟨h2, W₂, f2, k2⟩ => by
+    rw [IsExpLieAlgebra.isSmoothFun_iff] at h1 h2
+    exact ⟨(IsExpLieAlgebra.isSmoothFun_iff _).2 fun g => (h1 g).mul (h2 g),
+      W₁ * W₂, f1.mul f2, fun k => Submodule.mul_mem_mul (k1 k) (k2 k)⟩
+  add_mem' {P Q} := fun ⟨h1, W₁, f1, k1⟩ ⟨h2, W₂, f2, k2⟩ => by
+    rw [IsExpLieAlgebra.isSmoothFun_iff] at h1 h2
+    exact ⟨(IsExpLieAlgebra.isSmoothFun_iff _).2 fun g => (h1 g).add (h2 g),
+      W₁ ⊔ W₂, f1.sup f2, fun k => Submodule.add_mem_sup (k1 k) (k2 k)⟩
+  algebraMap_mem' z := ⟨(IsExpLieAlgebra.isSmoothFun_iff _).2 fun _ => contDiff_const,
+    Submodule.span ℂ {fun _ => (1 : ℂ)}, Submodule.fg_span_singleton _, fun _ =>
+      Submodule.mem_span_singleton.2 ⟨z, by ext; simp⟩⟩
+  star_mem' {P} := fun ⟨h1, W, f1, k1⟩ => by
+    rw [IsExpLieAlgebra.isSmoothFun_iff] at h1
+    exact ⟨(IsExpLieAlgebra.isSmoothFun_iff _).2 fun g =>
+        Complex.conjCLE.contDiff.comp (h1 g),
+      W.map (starLinearEquiv ℂ (A := archGroup K n → ℂ)).toLinearMap, f1.map _,
+      fun k => Submodule.mem_map_of_mem (k1 k)⟩
 
 private theorem coord_mul {ι : Type*} [Fintype ι] (b : Module.Basis ι ℝ (ArchMatrix K n)) (i : ι)
     (a x : ArchMatrix K n) : b.coord i (a * x) = ∑ j, b.coord j x * b.coord i (a * b j) := by
   let L : ArchMatrix K n →ₗ[ℝ] ℝ := (b.coord i).comp (LinearMap.mulLeft ℝ a)
-  have h : L x = ∑ j, b.repr x j • L (b j) := by
-    conv_lhs => rw [← b.sum_repr x]
-
-    rw [map_sum]
-    simp only [map_smul]
-  exact h
+  show L x = _
+  conv_lhs => rw [← b.sum_repr x]
+  simp only [map_sum, map_smul]; rfl
 
 private theorem good_coord {ι : Type*} [Fintype ι] (b : Module.Basis ι ℝ (ArchMatrix K n)) (i : ι) :
-    Good (fun g : archGroup K n => ((b.coord i (archVal g) : ℝ) : ℂ)) := by
+    (fun g : archGroup K n => ((b.coord i (archVal g) : ℝ) : ℂ)) ∈ goodAlg (K := K) (n := n) := by
   refine ⟨?_, Submodule.span ℂ (Set.range fun (j : ι) (g : archGroup K n) =>
-    ((b.coord j (archVal g) : ℝ) : ℂ)), Submodule.fg_span (Set.finite_range _), fun k => ?_⟩
+      ((b.coord j (archVal g) : ℝ) : ℂ)), Submodule.fg_span (Set.finite_range _), fun k => ?_⟩
   · rw [IsExpLieAlgebra.isSmoothFun_iff]
     intro g
     have e : (fun Y : archLie K n => ((b.coord i (archVal (g * (isExpLieAlgebra K n).expG Y)) : ℝ) : ℂ)) =
@@ -202,33 +184,33 @@ private theorem good_coord {ι : Type*} [Fintype ι] (b : Module.Basis ι ℝ (A
     exact Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, rfl⟩)
 
 private def polS (C : Set (archGroup K n)) : StarSubalgebra ℂ C(C, ℂ) where
-  carrier := {f | ∃ P : archGroup K n → ℂ, Good P ∧ ∀ x : C, f x = P x}
+  carrier := {f | ∃ P ∈ goodAlg (K := K) (n := n), ∀ x : C, f x = P x}
   mul_mem' := by
     rintro f g ⟨P, hP, hf⟩ ⟨Q, hQ, hg⟩
-    exact ⟨_, hP.mul hQ, fun x => by simp [hf, hg]⟩
+    exact ⟨_, goodAlg.mul_mem hP hQ, fun x => by simp [hf, hg]⟩
   add_mem' := by
     rintro f g ⟨P, hP, hf⟩ ⟨Q, hQ, hg⟩
-    exact ⟨_, hP.add hQ, fun x => by simp [hf, hg]⟩
-  algebraMap_mem' := fun z => ⟨_, Good.const z, fun x => by rw [Algebra.algebraMap_eq_smul_one]; simp⟩
+    exact ⟨_, goodAlg.add_mem hP hQ, fun x => by simp [hf, hg]⟩
+  algebraMap_mem' z := ⟨_, (goodAlg (K := K) (n := n)).algebraMap_mem z, fun x => by
+    rw [Algebra.algebraMap_eq_smul_one]; simp⟩
   star_mem' := by
     rintro f ⟨P, hP, hf⟩
-    exact ⟨_, hP.conj, fun x => by simp [hf]⟩
+    exact ⟨_, (goodAlg (K := K) (n := n)).star_mem' hP, fun x => by simp [hf]⟩
 
 private theorem exists_good_near {C : Set (archGroup K n)} (hC : IsCompact C) (f : archGroup K n → ℂ)
     (hf : Continuous f) {ε : ℝ} (hε : 0 < ε) :
-    ∃ P : archGroup K n → ℂ, Good P ∧ ∀ x ∈ C, ‖P x - f x‖ < ε := by
+    ∃ P ∈ goodAlg (K := K) (n := n), ∀ x ∈ C, ‖P x - f x‖ < ε := by
   have : CompactSpace C := isCompact_iff_compactSpace.1 hC
   set b := Module.finBasis ℝ (ArchMatrix K n)
   have hsep : (polS C).SeparatesPoints := by
     intro x y hxy
-    obtain ⟨i, hi⟩ : ∃ i, b.coord i (archVal (x : archGroup K n)) ≠ b.coord i (archVal (y : archGroup K n)) := by
-      by_contra hall
-      push Not at hall
-      refine hxy (Subtype.ext (Subtype.ext (Units.ext (b.ext_elem fun i => ?_))))
-      exact hall i
+    obtain ⟨i, hi⟩ : ∃ i,
+        b.coord i (archVal (x : archGroup K n)) ≠ b.coord i (archVal (y : archGroup K n)) :=
+      not_forall.1 fun hall => hxy (Subtype.ext (Subtype.ext (Units.ext (b.ext_elem hall))))
     have hG := good_coord b i
     refine ⟨_, ⟨⟨fun x : C => ((b.coord i (archVal (x : archGroup K n)) : ℝ) : ℂ),
-      hG.cont.comp continuous_subtype_val⟩, ⟨_, hG, fun x => rfl⟩, rfl⟩, ?_⟩
+      (IsExpLieAlgebra.continuous_of_isSmoothFun hG.1).comp continuous_subtype_val⟩,
+      ⟨_, hG, fun x => rfl⟩, rfl⟩, ?_⟩
     simpa using hi
   have htop := ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoints (polS C) hsep
   set f' : C(C, ℂ) := ⟨fun x => f x, hf.comp continuous_subtype_val⟩
@@ -237,9 +219,8 @@ private theorem exists_good_near {C : Set (archGroup K n)} (hC : IsCompact C) (f
   obtain ⟨s, ⟨P, hP, hs⟩, hd⟩ := hmem ε hε
   refine ⟨P, hP, fun x hx => ?_⟩
   have h1 := ContinuousMap.dist_apply_le_dist (f := f') (g := s) (⟨x, hx⟩ : C)
-  have h2 : dist (f' ⟨x, hx⟩) (s ⟨x, hx⟩) = ‖P x - f x‖ := by
-    rw [dist_comm, dist_eq_norm, hs]; rfl
-  linarith
+  rw [dist_comm, dist_eq_norm, hs] at h1
+  exact h1.trans_lt hd
 
 end
 
@@ -256,14 +237,13 @@ theorem UpperTheory.ConvolutionTheory.L1.bumpEx :
   have hF1 : F 1 ≠ 0 := by
     simp [hFdef, hv]
 
-  have hcG : Good (fun g : archGroup K n => ((c g : ℝ) : ℂ)) := by
-    refine ⟨?_, Submodule.span ℂ {fun g => ((c g : ℝ) : ℂ)}, Submodule.fg_span_singleton _, fun k => ?_⟩
-    · rw [IsExpLieAlgebra.isSmoothFun_iff]
-      exact fun g => Complex.ofRealCLM.contDiff.comp (hcsm g)
-    · have e : (fun g => ((c ((k : archGroup K n) * g) : ℝ) : ℂ)) = fun g => ((c g : ℝ) : ℂ) := by
-        funext g; rw [hcK _ k.2]
-      rw [e]
-      exact Submodule.mem_span_singleton_self _
+  have hcG : (fun g : archGroup K n => ((c g : ℝ) : ℂ)) ∈ goodAlg (K := K) (n := n) := by
+    refine ⟨(IsExpLieAlgebra.isSmoothFun_iff _).2 fun g =>
+        Complex.ofRealCLM.contDiff.comp (hcsm g),
+      Submodule.span ℂ {fun g => ((c g : ℝ) : ℂ)}, Submodule.fg_span_singleton _, fun k => ?_⟩
+    rw [show (fun g => ((c ((k : archGroup K n) * g) : ℝ) : ℂ)) = fun g => ((c g : ℝ) : ℂ) from
+      funext fun g => by rw [hcK _ k.2]]
+    exact Submodule.mem_span_singleton_self _
   set w : archGroup K n → ℝ := fun g => c g * ‖F g‖ ^ 2 with hwdef
   have hwc : Continuous w := hcc.mul (hF.norm.pow 2)
   have hws : HasCompactSupport w := hcs.mul_right
@@ -272,9 +252,7 @@ theorem UpperTheory.ConvolutionTheory.L1.bumpEx :
     (mul_ne_zero hc1 (pow_ne_zero 2 (norm_ne_zero_iff.2 hF1)))
   set J := ∫ g, w g ∂ν
   set m : archGroup K n → ℝ := fun g => c g * ‖F g‖ with hmdef
-  have hmc : Continuous m := hcc.mul hF.norm
-  have hms : HasCompactSupport m := hcs.mul_right
-  have hmi : Integrable m ν := hmc.integrable_of_hasCompactSupport hms
+  have hmi : Integrable m ν := (hcc.mul hF.norm).integrable_of_hasCompactSupport hcs.mul_right
   set M := ∫ g, m g ∂ν
   have hM : 0 ≤ M := integral_nonneg fun g => mul_nonneg (hc0 g) (norm_nonneg _)
   set ε : ℝ := J / (2 * (M + 1)) with hεdef
@@ -284,7 +262,7 @@ theorem UpperTheory.ConvolutionTheory.L1.bumpEx :
     nlinarith
   obtain ⟨P, hP, hPε⟩ := exists_good_near (K := K) (n := n) hcs.isCompact (fun g => conj (F g))
     (Complex.continuous_conj.comp hF) hε
-  have hPc := hP.cont
+  have hPc : Continuous P := IsExpLieAlgebra.continuous_of_isSmoothFun hP.1
 
   set I : ℂ := ∫ g, P g * (c g : ℂ) * F g ∂ν with hIdef
   have hI : I ≠ 0 := by
@@ -320,28 +298,26 @@ theorem UpperTheory.ConvolutionTheory.L1.bumpEx :
   have hB : 0 ≤ B := integral_nonneg fun g => norm_nonneg _
   set t : ℝ := (1 + B)⁻¹ with htdef
   have ht : 0 < t := by positivity
-  have hQ : Good (fun g => (t : ℂ) * (P g * (c g : ℂ))) := (Good.const (t : ℂ)).mul (hP.mul hcG)
+  have hQ : (fun g => (t : ℂ) * (P g * (c g : ℂ))) ∈ goodAlg (K := K) (n := n) :=
+    (goodAlg (K := K) (n := n)).mul_mem ((goodAlg (K := K) (n := n)).algebraMap_mem (t : ℂ))
+      ((goodAlg (K := K) (n := n)).mul_mem hP hcG)
   have hQs : HasCompactSupport (fun g => (t : ℂ) * (P g * (c g : ℂ))) :=
     ((hcs.comp_left Complex.ofReal_zero).mul_left).mul_left
-  let b : TI K n := ⟨⟨fun g => (t : ℂ) * (P g * (c g : ℂ)), hQ.cont⟩, hQs⟩
-  have hb : ∀ g, b g = (t : ℂ) * (P g * (c g : ℂ)) := fun g => rfl
+  let b : TI K n := ⟨⟨fun g => (t : ℂ) * (P g * (c g : ℂ)),
+    IsExpLieAlgebra.continuous_of_isSmoothFun hQ.1⟩, hQs⟩
   refine ⟨b, hQ.1, ?_, ?_, fun h0 => ?_⟩
   · obtain ⟨W, hW, hk⟩ := hQ.2
     have : FiniteDimensional ℂ W := Module.Finite.iff_fg.2 hW
-    refine Submodule.finiteDimensional_of_le (S₂ := W) (Submodule.span_le.2 ?_)
-    rintro _ ⟨k, rfl⟩
-    exact hk k
-  · have e : (fun g => ‖b g‖) = fun g => t * ‖P g * (c g : ℂ)‖ := by
-      funext g
-      rw [hb, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos ht]
+    exact Submodule.finiteDimensional_of_le (S₂ := W)
+      (Submodule.span_le.2 (by rintro _ ⟨k, rfl⟩; exact hk k))
+  · have e : (fun g => ‖b g‖) = fun g => t * ‖P g * (c g : ℂ)‖ := funext fun g => by
+      change ‖(t : ℂ) * (P g * (c g : ℂ))‖ = _
+      rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos ht]
     rw [e, integral_const_mul, htdef, inv_mul_le_iff₀ (by positivity)]
     linarith
   · have hin := CuspidalProjection.inner_integrated_ccToL1 ν π b v v
-    have hz : ⟪v, π.integrated ν (UnitaryRep.ccToL1 ν b) v⟫_ℂ = 0 := by
-      rw [← ContinuousLinearMap.adjoint_inner_left, ← ContinuousLinearMap.star_eq_adjoint, h0,
-        inner_zero_left]
-    have e : (fun g => b g * ⟪v, π g v⟫_ℂ) = fun g => (t : ℂ) * (P g * (c g : ℂ) * F g) := by
-      funext g
-      rw [hb, mul_assoc]
-    rw [hz, e, integral_const_mul] at hin
-    exact (mul_ne_zero (Complex.ofReal_ne_zero.2 ht.ne') hI) hin.symm
+    rw [← ContinuousLinearMap.adjoint_inner_left, ← ContinuousLinearMap.star_eq_adjoint, h0,
+      inner_zero_left] at hin
+    rw [show (fun g => b g * ⟪v, π g v⟫_ℂ) = fun g => (t : ℂ) * (P g * (c g : ℂ) * F g) from
+      funext fun g => mul_assoc _ _ _, integral_const_mul] at hin
+    exact mul_ne_zero (Complex.ofReal_ne_zero.2 ht.ne') hI hin.symm
