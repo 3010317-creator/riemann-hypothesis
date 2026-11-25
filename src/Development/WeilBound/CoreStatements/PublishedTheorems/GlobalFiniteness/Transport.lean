@@ -1,5 +1,7 @@
 module
 
+import GroundTheory.ProfiniteCohomology.RestrictedRamification.BaseChangeModules
+import Development.WeilBound.CoreStatements.PublishedTheorems.PoitouTateDuality.PtfsGsEquiv
 public import GroundTheory.ProfiniteCohomology.CohomologyFunctoriality
 public import GroundTheory.ProfiniteCohomology.RestrictedRamification.MaxUnramifiedOutside
 public import ReciprocityTheory.Hypotheses.GalCohDefs
@@ -22,70 +24,6 @@ open NumberField IsDedekindDomain CategoryTheory GroundTheory.ProfCoh GroundTheo
 
 namespace PositivityTheory.Lit1.GFTransport
 
-theorem gsEquiv (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (S : Set (HeightOneSpectrum (𝓞 F))) :
-    Nonempty (GS Ω S ≃ₜ* galUnramifiedOutside F Ω S) := by
-  have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
-  let E := maxUnramifiedOutside F Ω S
-  let φ : G F Ω →* Gal(E/F) := AlgEquiv.restrictNormalHom E
-  have hφs : Function.Surjective φ := AlgEquiv.restrictNormalHom_surjective Ω
-  have hNS : NS Ω S = (maxUnramifiedOutside F Ω S).fixingSubgroup :=
-    le_antisymm (_root_.GlobalTheory.CompanionTheory.GlobalFiniteness.NS_le_fixingSubgroup F Ω S) (_root_.GlobalTheory.CompanionTheory.Glob.InertiaLift.fixingSubgroup_le_NS F Ω S)
-  have hker : φ.ker = NS Ω S := by
-    rw [hNS]
-    ext σ
-    rw [MonoidHom.mem_ker, IntermediateField.mem_fixingSubgroup_iff]
-    constructor
-    · intro h x hx
-      have h1 := AlgEquiv.restrictNormal_commutes σ E (⟨x, hx⟩ : E)
-      have h2 : σ.restrictNormal E = 1 := h
-      rw [h2] at h1
-      exact h1.symm
-    · intro h
-      apply AlgEquiv.ext
-      intro x
-      apply Subtype.ext
-      exact (AlgEquiv.restrictNormal_commutes σ E x).trans (h x.1 x.2)
-  have hφc : Continuous φ := InfiniteGalois.restrictNormalHom_continuous E
-  let q : GS Ω S ≃* Gal(E/F) :=
-    (QuotientGroup.quotientMulEquivOfEq hker.symm).trans (QuotientGroup.quotientKerEquivOfSurjective φ hφs)
-  have hq : Continuous q := continuous_coinduced_dom.2 hφc
-  have : CompactSpace (G F Ω) := inferInstance
-  have : CompactSpace (GS Ω S) := Quotient.compactSpace
-  exact ⟨{ q with
-    continuous_toFun := hq
-    continuous_invFun := Continuous.continuous_symm_of_equiv_compact_to_t2 (f := q.toEquiv) hq }⟩
-
-theorem mapAlong_eq_id_of_eq_id {k G : Type} [CommRing k] [Group G] [TopologicalSpace G]
-    [IsTopologicalGroup G]
-    (A : Rep.{0} k G) [IsDiscreteRep A] (χ : G →* G) (hχ : Continuous χ) (h : χ = MonoidHom.id G)
-    (u : Rep.res χ A ⟶ A) (hu : ∀ a, u.hom a = a) (n : ℕ) :
-    cohomologyMapAlong χ hχ u n = 𝟙 _ := by
-  subst h
-  have : u = 𝟙 A := Rep.hom_ext (Representation.IntertwiningMap.ext (LinearMap.ext fun a => hu a))
-  subst this
-  exact cohomologyMapAlong_id n
-
-theorem mapAlong_transport_comp {k G H : Type} [CommRing k] [Group G] [TopologicalSpace G]
-    [IsTopologicalGroup G] [Group H] [TopologicalSpace H] [IsTopologicalGroup H] (θ : G ≃ₜ* H)
-    (A : Rep.{0} k G) [IsDiscreteRep A] (n : ℕ) :
-    have := IsDiscreteRep.res θ.symm.continuous (φ := (θ.symm : H ≃* G).toMonoidHom) A
-    ∃ (p : cohomology A n ⟶ cohomology (Rep.res (θ.symm : H ≃* G).toMonoidHom A) n)
-      (q : cohomology (Rep.res (θ.symm : H ≃* G).toMonoidHom A) n ⟶ cohomology A n), p ≫ q = 𝟙 _ := by
-  have := IsDiscreteRep.res θ.symm.continuous (φ := (θ.symm : H ≃* G).toMonoidHom) A
-  let φ : H →* G := (θ.symm : H ≃* G).toMonoidHom
-  let ψ : G →* H := (θ : G ≃* H).toMonoidHom
-  have hφ : Continuous φ := θ.symm.continuous
-  have hψ : Continuous ψ := θ.continuous
-  let g : Rep.res ψ (Rep.res φ A) ⟶ A :=
-    Rep.ofHom ⟨LinearMap.id, fun x => LinearMap.ext fun a => by
-      show A.ρ (θ.symm (θ x)) a = A.ρ x a
-      simp⟩
-  refine ⟨cohomologyMapAlong φ hφ (𝟙 _) n, cohomologyMapAlong ψ hψ g n, ?_⟩
-  rw [← cohomologyMapAlong_comp]
-  exact mapAlong_eq_id_of_eq_id A (φ.comp ψ) (hφ.comp hψ)
-    (MonoidHom.ext fun x => by show θ.symm (θ x) = x; simp)
-    ((Rep.resFunctor ψ).map (𝟙 (Rep.res φ A)) ≫ g) (fun a => by first | rfl) n
-
 theorem finite_cohomology_transport {k G H : Type} [CommRing k] [Group G] [TopologicalSpace G]
     [IsTopologicalGroup G] [Group H] [TopologicalSpace H] [IsTopologicalGroup H] (θ : G ≃ₜ* H)
     (A : Rep.{0} k G) [IsDiscreteRep A] (n : ℕ)
@@ -93,9 +31,10 @@ theorem finite_cohomology_transport {k G H : Type} [CommRing k] [Group G] [Topol
       Finite (cohomology (Rep.res (θ.symm : H ≃* G).toMonoidHom A) n)) :
     Finite (cohomology A n) := by
   have := IsDiscreteRep.res θ.symm.continuous (φ := (θ.symm : H ≃* G).toMonoidHom) A
-  obtain ⟨p, q, hpq⟩ := mapAlong_transport_comp θ A n
-  refine Finite.of_surjective q.hom fun x => ⟨p.hom x, ?_⟩
-  rw [← ModuleCat.comp_apply, hpq]
+  let i := cohomologyIsoOfContinuousMulEquiv θ.symm
+    (Iso.refl (Rep.res (θ.symm : H ≃* G).toMonoidHom A)) n
+  refine Finite.of_surjective i.inv.hom fun x => ⟨i.hom.hom x, ?_⟩
+  rw [← ModuleCat.comp_apply, i.hom_inv_id]
   rfl
 
 theorem cohDict {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω]
@@ -107,9 +46,7 @@ theorem cohDict {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω
       (_ : IsDiscreteRep A), Finite A.V ∧ (∀ a : A.V, (l ^ r) • a = 0) ∧
       Nonempty (H1 rhoS ≃+ cohomology A 1) ∧ Nonempty (H2 rhoS ≃+ cohomology A 2) ∧
       ∀ n : ℕ, Nonempty (Hn rhoS n ≃+ cohomology A n) := by
-  obtain ⟨e0⟩ := gsEquiv F Ω (S : Set (HeightOneSpectrum (𝓞 F)))
-  let e : galUnramifiedOutside F Ω (S : Set (HeightOneSpectrum (𝓞 F))) ≃ₜ*
-      GS Ω (S : Set (HeightOneSpectrum (𝓞 F))) := e0.symm
+  let e := (PositivityTheory.Lit1.GEN.W_dictfwd_b.gsIso (Ω := Ω) (S : Set (HeightOneSpectrum (𝓞 F)))).symm
   have hc' := ReciprocityTheory.Neutral.Bridge.contAction_comp e hc
   let rho' : Representation (ZMod (l ^ r)) (galUnramifiedOutside F Ω (S : Set (HeightOneSpectrum (𝓞 F)))) M :=
     rhoS.comp (e : galUnramifiedOutside F Ω (S : Set (HeightOneSpectrum (𝓞 F))) →*

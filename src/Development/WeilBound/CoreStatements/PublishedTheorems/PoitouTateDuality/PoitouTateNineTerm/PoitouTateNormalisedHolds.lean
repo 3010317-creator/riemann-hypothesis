@@ -144,7 +144,8 @@ theorem foundData_nonempty (Kf : FiniteSubfield) [NumberField Kf.1]
     (ρ : Representation (ZMod (l ^ r)) (GS (AlgebraicClosure ℚ) (S : Set (HeightOneSpectrum (𝓞 Kf.1)))) M)
     (hρ : ContAction ρ) :
     Nonempty (FoundData Kf S l r ζ Av μ M ρ) := by
-  obtain ⟨e, he⟩ := gsEquiv_toGS' Kf.1 (S : Set (HeightOneSpectrum (𝓞 Kf.1)))
+  let e := PositivityTheory.Lit1.GEN.W_dictfwd_b.gsIso (Ω := AlgebraicClosure ℚ) (S : Set (HeightOneSpectrum (𝓞 Kf.1)))
+  have he := PositivityTheory.Lit1.GEN.W_dictfwd_b.gsIso_toGS_apply (Ω := AlgebraicClosure ℚ) (S : Set (HeightOneSpectrum (𝓞 Kf.1)))
   obtain ⟨ιs, ev, hc, hι, hev⟩ := localCmp2' Kf.1 S Av hAv e he
   obtain ⟨A, hA, eM, hM⟩ := repCmp e ρ hρ
   obtain ⟨eD, hD, hDζ⟩ := dualCmp' Kf S hr ζ hζ hS e he μ hμ ρ A eM hM
@@ -861,7 +862,8 @@ theorem shaDictFS : ShaDictFS := by
   have hN : NeZero (l ^ r) := ⟨pow_ne_zero r (Fact.out : l.Prime).ne_zero⟩
   let Kf := toFS K
   let Sf : Set (HeightOneSpectrum (𝓞 K)) := S
-  refine (gsEquiv_toGS' K Sf).elim fun e he => ?_
+  let e := PositivityTheory.Lit1.GEN.W_dictfwd_b.gsIso (Ω := AlgebraicClosure ℚ) Sf
+  have he := PositivityTheory.Lit1.GEN.W_dictfwd_b.gsIso_toGS_apply (Ω := AlgebraicClosure ℚ) Sf
   refine (localCmp' K S Av hAv e he).elim fun ιs hLocalEquiv => ?_
   refine hLocalEquiv.elim fun ev hLocal => ?_
   refine (repCmp e ρ hρ).elim fun A hDiscrete => ?_
