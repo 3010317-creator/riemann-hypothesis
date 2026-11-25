@@ -149,6 +149,27 @@ class QuickChecks(unittest.TestCase):
  def test_timeout_stops_owned_process(self):
   with(self.root/'build.log').open('wb')as out:code=q.ci.supervised_build([sys.executable,'-c','import time; time.sleep(10)'],q.ci.trusted_env(),out,[self.root],0,timeout_seconds=0.01)
   self.assertEqual(code,124)
+ def test_changed_roots_and_intermediate_importers_rebuild(self):
+  def git(*args):
+   return q.ci.git(self.root, '-c', 'user.name=Test', '-c', 'user.email=test@example.org', *args)
+  git('init', '-q')
+  for name in ('lakefile.toml', 'lean-toolchain', 'lake-manifest.json'):
+   shutil.copyfile(ROOT.parent / name, self.root / name)
+  for name, imports in {'A': ['B', 'D'], 'B': ['C'], 'C': ['E'], 'D': [], 'E': []}.items():
+   self.source(name, ''.join(f'import {dep}\n' for dep in imports))
+  git('add', '.')
+  git('commit', '-qm', 'base')
+  base = git('rev-parse', 'HEAD')
+  for name in ('A', 'C'):
+   with (self.root / 'src' / (name + '.lean')).open('a') as out:
+    out.write('def changed := true\n')
+  git('commit', '-qam', 'change two roots')
+  head = git('rev-parse', 'HEAD')
+  plan = q.plan(self.root, {'base_ref': 'main', 'base_head': base, 'pr_head': head,
+                            'expected': {'candidate_head': head}})
+  self.assertEqual(plan['targets'], ['A', 'C'])
+  self.assertEqual(plan['closure'], ['A', 'B', 'C', 'D', 'E'])
+  self.assertEqual(plan['unchanged_ancestors'], ['D', 'E'])
 
 class QueuePolicy(unittest.TestCase):
  def setUp(self):
