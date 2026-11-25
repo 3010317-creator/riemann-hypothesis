@@ -439,7 +439,6 @@ theorem coeff_prod_pow_second_add_third_threeGroups {R : Type} [CommRing R] {d :
           (fun i => (x2 i + x3 i : MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R)) s) ^ k) =
       if α = Finsupp.sumElim a (b + e) then (∏ i, ((b + e) i).choose (b i) : R) else 0 := by
   classical
-  set_option synthInstance.maxHeartbeats 100000 in
     rw [prod_eq_sum, map_sum]
   simp only [coeff_monomial]
   have hmem : ∀ J ∈ Fintype.piFinset (fun i => Finset.range (α (Sum.inr i) + 1)),
@@ -602,8 +601,6 @@ namespace GlobalTheory.CobRel
 theorem coeff_op_of_degree_le_one : ∀ {B O : Type} [CommRing B] [CommRing O] (θ : B →+* O) {d : ℕ} {μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) B}, IsLift θ μ → ∀ {τ : Type} (u v : Fin d → MvPowerSeries τ B), (∀ j, constantCoeff (u j) = 0) → (∀ j, constantCoeff (v j) = 0) → ∀ (i : Fin d) (β : τ →₀ ℕ), β.degree ≤ 1 → coeff β (op μ u v i) = coeff β (u i + v i) := _root_.GlobalTheory.QLog.OpLin.coeff_op_of_degree_le_one
 
 theorem coeff_prod_addRight : ∀ {R : Type} [CommRing R] {d : ℕ} (α : Fin d ⊕ Fin d →₀ ℕ) (a b e : Fin d →₀ ℕ), coeff (Finsupp.sumElim a (Finsupp.sumElim b e)) (α.prod fun s k => (Sum.elim x1 (fun i => (x2 i + x3 i : MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) R)) s) ^ k) = if α = Finsupp.sumElim a (b + e) then (∏ i, ((b + e) i).choose (b i) : R) else 0 := _root_.GlobalTheory.BinomRight.coeff_prod_pow_second_add_third_threeGroups
-
-
 
 end GlobalTheory.CobRel
 
