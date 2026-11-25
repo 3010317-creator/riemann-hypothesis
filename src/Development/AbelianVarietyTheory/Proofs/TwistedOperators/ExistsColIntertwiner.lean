@@ -547,7 +547,6 @@ noncomputable section
 
 namespace GlobalTheory.GridJoin.ColIt
 
-
 open GlobalTheory.CompactIntertwiner in
 theorem exists_isIntw {D : D7} {V W : HSp D} {S S' : D.what₂.Tau → SPar} {σ Xs : Type} [Finite σ]
     (θ : InfFam D) (M : DSModel V S) (M' : DSModel W S')
@@ -624,7 +623,6 @@ theorem exists_isIntw {D : D7} {V W : HSp D} {S S' : D.what₂.Tau → SPar} {σ
     rw [map_add (f := _)]
     exact hB.unique (hasDerivAt_const _ _)
 
-
 open GlobalTheory.CompactHowe.LastStep in
 theorem om_ptOf_exp {D : D7} {V W : HSp D} {S S' : D.what₂.Tau → SPar} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
     (hθ : IsInfFam θ) (hV : V.SigOK) (hW : W.SigOK)
@@ -657,7 +655,7 @@ theorem om_ptOf_exp {D : D7} {V W : HSp D} {S S' : D.what₂.Tau → SPar} {ψ :
       rw [onb, inFr, Matrix.mul_assoc, Matrix.nonsing_inv_mul_cancel_left _ _ (fr_det M τ)])
     (fun τ => by
       rw [onb, inFr, Matrix.mul_assoc, Matrix.nonsing_inv_mul_cancel_left _ _ (fr_det M' τ)]) f hf φ).2
-  rw [e2, e1, GlobalTheory.FiniteFock.pureTensorO_smul, GlobalTheory.T.fockPolynomialVector_basisChange_eq_substitution D ψ θ V W hω.std hθ _ _ _ _ f hf, polAct, map_smul]
+  rw [e2, e1, GlobalTheory.FiniteFock.pureTensorO_smul, GlobalTheory.FockBaseChange.pureTensorO_subst D ψ θ V W hω.std hθ _ _ _ _ f hf, polAct, map_smul]
   congr 1
   refine Finset.prod_congr rfl fun τ _ => ?_
   have a1 : (1 / 2 : ℂ) • ((1 : Matrix (Fin W.rank) (Fin W.rank) ℂ) + 1) = 1 := by module
@@ -683,7 +681,6 @@ theorem isVacVec_of_isVac {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam
   have := hn p hp
   simp [Formalism.IndefR.Datum.nrm2] at this
 
-
 open GlobalTheory.CompactHowe.LastStep in
 theorem exists_col_intertwiner : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type} {A : FamIn D.what₂.LL Γ Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat D A Ks} {sc : GlobalTheory.ChiGrid.Consts}, GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → HostHyp D → ∀ {F : Face D A}, GlobalTheory.Hk3.Core R F → sc.cGap = 1 → ∀ {G' : GlobalTheory.ChiGrid.GridData R.toLevCh sc} (W : G'.Weil), W.Over R → ∀ G : GlobalTheory.Grid.GridPre R, G.IsSpaces → G.IsChars → SpAgree G W → (∀ i, i < D.R.m → ∀ κ : G'.CosAt i, IsThetaAt W.ψ (symplO _ _) (heisO W.ψ _ _) G.idem (latO (G'.pS (.chi i 0)) (G'.pT (.chi i 0)) (G'.latS (.chi i 0) : Set _) (G'.latT (.chi i 0) : Set _) fun _ => True) 1 (W.vac i) (cosInd G.idem κ) (W.cosVec i κ)) → ∀ j, j < D.R.m → ∀ (ω : T → GlobalTheory.Grid.WRep (G.Xp j).V (G.nX j).V) (f : WO (G.Xp j).V (G.nX j).V → ℂ), (∀ t, GlobalTheory.Grid.IsWeil R.ψ false (G.Xp j).V (G.nX j).V (R.toLevCh.mu t (j + 1)) (R.toLevCh.mu t (j + 1)) (ω t)) → GlobalTheory.Grid.IsVac R.ψ R.θ false (G.Xp j) (G.nX j) f → ∃ It : GlobalTheory.Grid.Pol (G.Xp j) (G.nX j) →ₗ[ℂ] SmT (G.Xp j).M →ₗ[ℂ] SmT (G.nX j).M, ∀ t, GlobalTheory.Grid.IsIntw R.θ (G.nX j).M (G.Xp j).M (ω t).swap (GlobalTheory.Grid.fock R.ψ R.θ false (G.Xp j) (G.nX j) f) It := by
   intro D Γ _ _ Pl0 T A Ks _ _ _ R sc _hDS _hHC _hHost F hC _hgap G' W _hW G hsp _hch _hag _hcos j hj ω f hω hf
@@ -702,8 +699,8 @@ theorem exists_col_intertwiner : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ
   have hε := fun τ => (hp τ).1
   have hε' := fun τ => (hp τ).2.1
   choose x₁ x₃ h1 h3 hn ν n1 n2 n3 n4 using fun τ => (hp τ).2.2
-  have m := fun τ => GlobalTheory.T.allPositive_model_finiteDimensional_compactType D (G.Xp j).V _ (G.Xp j).M τ (hε τ)
-  have m' := fun τ => GlobalTheory.T.allPositive_model_finiteDimensional_compactType D (G.nX j).V _ (G.nX j).M τ (hε' τ)
+  have m := fun τ => GlobalTheory.CompactModel.model_allPos D (G.Xp j).V _ (G.Xp j).M τ (hε τ)
+  have m' := fun τ => GlobalTheory.CompactModel.model_allPos D (G.nX j).V _ (G.nX j).M τ (hε' τ)
   have hl := fun τ =>
     haveI := (m τ).1
     haveI := (m' τ).1

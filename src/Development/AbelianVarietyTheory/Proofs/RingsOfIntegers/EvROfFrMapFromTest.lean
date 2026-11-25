@@ -226,10 +226,10 @@ theorem exists_good_chart_allRat : ∀ (E : Type) [Field E] [NumberField E] [IsC
   obtain ⟨T₁, i₁, e₁, y₁, C₁, hext₁, hfin₁, hgood₁⟩ := GlobalTheory.T.exists_finiteExt_integralChart_uniformisedModel E H Dw l Xo c hstar T io y hfin
   obtain ⟨L, _, _, hL, hrat⟩ := (GlobalTheory.T.torsion_rational_over_finite_extension_level_structure E H Dw l Xo T₁.Fr (xOf y₁) M hM).1
   obtain ⟨T₂, i₂, e₂, ψ, φ, he₂, hv₂, hψ, -, hfin₂⟩ := GlobalTheory.PlaceExtField.exists_cdvr_finite_extension T₁ L
-  obtain ⟨⟨y₂, hext₂⟩, hy⟩ := GlobalTheory.T.exists_integralFramedPoint_baseChange_cdvr_transitive E H Dw l Xo c T₁ T₂ (i₁.comp io) y₁ i₂ e₂ he₂ hv₂
+  obtain ⟨⟨y₂, hext₂⟩, hy⟩ := GlobalTheory.PlaceInt.exists_isExt_and_trans E H Dw l Xo c T₁ T₂ (i₁.comp io) y₁ i₂ e₂ he₂ hv₂
   have hx₂ := (hy y₂ hext₂).1
   obtain ⟨C₂, hgood₂⟩ := GlobalTheory.T.exists_uniformised_chart_after_valuation_ring_ext E H Dw l Xo c hstar T₁ (i₁.comp io) y₁ C₁ hgood₁ T₂ i₂ e₂ y₂ hext₂
-  have htr := ((GlobalTheory.T.exists_integralFramedPoint_baseChange_cdvr_transitive E H Dw l Xo c T T₁ io y i₁ e₁ hext₁.1 hext₁.2.1).2 y₁ hext₁).2 T₂ i₂ e₂ y₂ hext₂
+  have htr := ((GlobalTheory.PlaceInt.exists_isExt_and_trans E H Dw l Xo c T T₁ io y i₁ e₁ hext₁.1 hext₁.2.1).2 y₁ hext₁).2 T₂ i₂ e₂ y₂ hext₂
   have hrat₂ := ((GlobalTheory.T.torsion_rational_over_finite_extension_level_structure E H Dw l Xo L _ M hM).2 hrat).1 T₂.Fr ψ.toRingHom
   have hi : i₂ = ψ.toRingHom.comp (algebraMap T₁.Fr L) := RingHom.ext fun a => (hψ a).symm
   have hsp : spMap ψ.toRingHom ≫ spMap (algebraMap T₁.Fr L) ≫ xOf y₁ = xOf y₂ := by
@@ -285,8 +285,6 @@ theorem GlobalTheory.PlaceInt.evR_of_frMap_fromTest {E : Type} [Field E] [Number
   rw [ReciprocityTheory.ChartRestriction.G.PullbackSections.evalAt_eq_of _ _ hWD f hf p ψ y' y₁ hy',
     ReciprocityTheory.ChartRestriction.G.PullbackSections.evalAt_eq_of _ _ hWD f hf p (φ.comp ψ) y' y₂ (ReciprocityTheory.ChartRestriction.G.PullbackSections.frMap_trans ψ φ hy' hm)]
   rfl
-
-
 
 theorem GlobalTheory.PlaceInt.short_value_on_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (n : ℕ) (d : DeltaDat Xo c n) [StarRing (𝓞 E)], d.IsLev → IsNab d.Xo₂ d.c₂ d.nab₂ → ∀ m₀ : ℕ, (∀ (k : Type) [Field k] [Algebra d.c₂.F k] (y₂ : FrPt d.Xo₂ d.c₂ k), evR d.Xo₂ d.c₂ d.cδ y₂ ^ m₀ = 1) → ∀ (Λ : GenLat E n) (N : ℕ), Λ.Unimod → Λ.TrivAt d.l₂.M → Λ.LevOK N d.l₂.M → ∀ (w : (E →+* ℂ) × ℕ → ℕ) (P : MvPolynomial (LtN Dw n) c.F), P ∈ harmL c Λ w → ∀ (x0 : Fin n → Dw.La) (g : Rul Xo c), g ∈ sec Xo c w n → IsShortRule Xo c d Λ N x0 P g → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io), T.FinRes → ∃ (T' : CDVR) (iT : T.Fr →+* T'.Fr) (e : ℕ) (io₂ : d.c₂.F →+* T'.Fr) (y₂ : IntFr d.Xo₂ d.c₂ T' io₂) (C : IntegralChartA3 d.Xo₂ d.c₂ T' io₂ y₂) (ζ : T'.Fr) (z : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → (ptO d.Xo₂ (xOf y₂) ⟶ d.Xo₂.univ.t.G)) (tp : (Fin n → LevQ Dw d.l₂) → Fin n → (ptO d.Xo₂ (xOf y₂) ⟶ d.Xo₂.univ.t.G)) (F : (Fin n → LevQ Dw d.l₂) → Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → LB.Sec (LPow d.Xo₂.univ.t.G d.Xo₂.univ.t.PP.L ((N : ℤ) ^ 2) (ptO d.Xo₂ (xOf y₂)))), 0 < e ∧ (∀ a : T.Fr, vV T'.V (iT a) = (e : ℤ) * vV T.V a) ∧ T'.FinRes ∧ (∀ a : c.F, io₂ (d.eF a) = iT (io a)) ∧ Good3 C ∧ AllRat d.Xo₂ (xOf y₂) (N ^ 2) ∧ ζ ^ m₀ = 1 ∧ (∀ i, InZh d.Xo₂ Λ N (z i)) ∧ GeoInj d.Xo₂ (xOf y₂) z ∧ (∀ q b, tp q b ^ N = levPt d.Xo₂ (xOf y₂) (levRep (q b)) ∧ ∃ j : ℕ, KilledBy d.Xo₂ (d.l₂.Mb ^ j) (tp q b)) ∧ (∀ q i b, IsUUOver d.Xo₂.univ.t.G d.Xo₂.univ.t.PP N (sOf1 y₂) (z i b) (tp q b) (F q i b)) ∧ (letI := io₂.toAlgebra; iT (evI y g) = ζ * (io₂ ((d.eF (betaH (Dw := Dw) c Λ))⁻¹ * ((Λ.mIdx N (Dw.p + Dw.q) : d.c₂.F))⁻¹ * ((Nat.card (Fin n → LevQ Dw d.l₂) : d.c₂.F))⁻¹ * ((N : d.c₂.F) ^ (MvPolynomial.map (d.eF : c.F →+* d.c₂.F) P).totalDegree)⁻¹) * ∑ᶠ q : Fin n → LevQ Dw d.l₂, io₂ (d.w x0 q) * ∑ i, hv d.Xo₂ d.c₂ d.nab₂ y₂.1 (N ^ 2) (fun b => sqN d.Xo₂ N (F q i b)) (MvPolynomial.map (d.eF : c.F →+* d.c₂.F) P))) := by
   intro E _ _ _ H Dw l Xo c n d _ hlev hnab m₀ hm₀ Λ N hU hT hL w P hP x0 g hg hsh T io y hfin

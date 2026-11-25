@@ -106,16 +106,12 @@ namespace GlobalTheory.GLq.Generic
 
 variable {g : ℕ} [Fact g.Prime]
 
-theorem br_zero_self {d : ℕ} (M : Mt g d) : br 0 d M = M := by
-  funext i j
-  simp [br, entN, i.isLt, j.isLt]
-
 theorem res_zero_self {d : ℕ} (χ : Gn g d → ℂ) (h : Gn g d) : res 0 d χ 1 h = χ h := by
   unfold res
   have hI : ∀ x : Gn g d, InPar 0 (x : Mt g d) := fun x i j hj _ => absurd hj (Nat.not_lt_zero _)
   have hT : ∀ x : Gn g d, tl 0 (x : Mt g d) = ((1 : Gn g 0) : Mt g 0) := fun x => by
     funext i; exact i.elim0
-  simp only [hI, hT, br_zero_self, true_and, zero_mul, pow_zero, inv_one, one_mul, Units.val_inj]
+  simp only [hI, hT, GlobalTheory.GLq.HcRing.br_zero, true_and, zero_mul, pow_zero, inv_one, one_mul, Units.val_inj]
   rw [Finset.sum_ite_eq']
   simp
 
@@ -288,11 +284,6 @@ namespace GlobalTheory.GLq.GenericCount
 
 alias isChar_of_isIrr := _root_.GlobalTheory.CharDec.isChar_of_isIrr
 
-theorem ip_comm {G : Type} [Group G] [Fintype G] (α β : G → ℂ) : ip α β = ip β α := by
-  unfold ip
-  congr 1
-  exact Fintype.sum_equiv (Equiv.inv G) _ _ (fun x => by simp [mul_comm])
-
 theorem tr_finset_sum {G : Type} [Group G] [Fintype G] (a : MonoidAlgebra ℂ G) (S : Finset (G → ℂ))
     (c : (G → ℂ) → ℂ) : tr a (∑ ρ ∈ S, c ρ • ρ) = ∑ ρ ∈ S, c ρ * tr a ρ := by
   unfold tr
@@ -305,7 +296,6 @@ alias gg_isClass := _root_.GlobalTheory.GLm.GGSum.gg_class
 end GlobalTheory.GLq.GenericCount
 
 namespace GlobalTheory.GLq
-
 
 open GlobalTheory.GLq.GenericCount in
 theorem card_generic_irr_le : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g) ℂ), ψ ≠ 1 → ∀ n : ℕ, 0 < n →
@@ -333,7 +323,7 @@ theorem card_generic_irr_le : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g
     rw [hw]
     refine Finset.sum_congr rfl fun ρ hρ => ?_
     have hI := (hmemS ρ).1 hρ
-    rw [ip_comm, hnorm.2 ρ (hirrC ρ hI), hm ρ hI]
+    rw [GlobalTheory.GLq.IpCuspProd.ip_comm, hnorm.2 ρ (hirrC ρ hI), hm ρ hI]
     ring
   have hsumN : ∑ ρ ∈ S, m ρ ^ 2 = g ^ n - g ^ (n - 1) := by exact_mod_cast hsum
   have hset : {ρ : Gn g n → ℂ | IsIrr ρ ∧ wh ψ ρ ≠ 0} = ↑(S.filter fun ρ => m ρ ≠ 0) := by
@@ -1007,7 +997,6 @@ theorem count (d : ℕ) (hd : 0 < d) (Lf : ∀ e, (ZMod g)[X] → Gn g e → ℂ
   omega
 
 end GlobalTheory.GreenRegularCharactersInertiaEigenvalues
-
 
 open GlobalTheory.GreenRegularCharactersInertiaEigenvalues in
 theorem GlobalTheory.greenRegularCharacters_holds : GreenRegularCharacters := by

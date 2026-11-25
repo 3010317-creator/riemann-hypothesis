@@ -334,8 +334,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.FWT NumberField Matrix
 
-theorem _root_.GlobalTheory.T.fockPolynomialVectors_injective_nonzero_vacuum : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D) (S' : D.what₂.Tau → SPar) (M : DSModel T S') (BS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ) (f : WO S T → ℂ), IsStdChar D ψ (-1) → IsInfFam θ → (∀ τ, IsCartanInv (gramAt D S τ) 1) → (∀ τ, IsONBasis (gramAt D S τ) 1 (BS τ) S.rank) → IsThetaFunO ψ S T f → f ≠ 0 → (∀ τ, IsFockVacAt (heisO ψ S T) θ τ (cplxO 1 (cart M τ)) f) → Function.Injective (pureTensorO ψ θ S T (fun _ => 1) (cart M) BS (onb M) f) := by
-  first | exact @GlobalTheory.FockIndep.pureTensorO_injective
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorsInjectiveNonzeroVacuumStatement =====
@@ -893,7 +891,6 @@ theorem det_pow {m : ℕ} {P : Matrix (Fin m) (Fin m) ℂ} (hP : IsUnit P) (ε :
   refine Finset.prod_congr rfl fun a _ => ?_
   cases ε a <;> simp [← Complex.exp_int_mul, mul_assoc]
 
-
 open Classical in
 theorem om_pt {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D} {χS χT : (AE D)ˣ →* Circle}
     {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)} (hW : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFam θ)
@@ -979,7 +976,6 @@ theorem sub_diag {m n : ℕ} (τ : D.what₂.Tau) (l : Fin m → ℂ) :
       (fun h => (h (Finset.mem_univ _)).elim), diagonal_apply_eq]
   · rw [Function.update_of_ne e, ite_eq_right e, Finset.sum_eq_single a (fun b _ hb => by rw [Matrix.one_apply_ne hb, zero_smul])
       (fun h => (h (Finset.mem_univ _)).elim), Matrix.one_apply_eq]
-
 
 open Classical in
 theorem delta_weights {m n : ℕ} (p q : D.what₂.Tau → ℕ) (ap am : D.what₂.Tau → ℕ → ℕ) (τ : D.what₂.Tau) {ε : Fin m → Bool}
@@ -1067,7 +1063,6 @@ theorem cartan_one {k : ℕ} {G B : Matrix (Fin k) (Fin k) ℂ} (h : IsONBasis G
   rw [Matrix.mul_one, ← Matrix.IsUnit.posDef_star_left_conjugate_iff hB, star_eq_conjTranspose, e]
   exact Matrix.PosDef.one
 
-
 open Classical in
 theorem replace_at {V W : HSp D} {S' : D.what₂.Tau → SPar} {θ : InfFam D} (M : DSModel W S') {c : CoefA V}
     {ω : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)} {pt : PolF D W.rank V.rank →ₗ[ℂ] (WO V W → ℂ)}
@@ -1122,7 +1117,7 @@ theorem ioExt : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (A 
   have hne : R.vP i A.μ0 ≠ 0 := thPVec_ne_zero (GlobalTheory.T.isSelfDualCoordLattice_of_selfDualFrame D _ _ _ _ (hL.βV i)) (GlobalTheory.T.isSelfDualCoordLattice_of_selfDualFrame D _ _ _ _ (hL.βW i))
     ((rank_Wc i).trans_le (r_le_V i)) (hP.vP i A.μ0)
   have hS := fun τ => cartan_one (hM.BV i τ)
-  have hinj := GlobalTheory.T.fockPolynomialVectors_injective_nonzero_vacuum D R.ψ R.θ _ _ _ (R.MW i (sg0 D A)) (R.BV i) _ (hP.ωP i A.μ0).std hM.inf hS (hM.BV i) hf hne hv
+  have hinj := GlobalTheory.FockIndep.pureTensorO_injective D R.ψ R.θ _ _ _ (R.MW i (sg0 D A)) (R.BV i) _ (hP.ωP i A.μ0).std hM.inf hS (hM.BV i) hf hne hv
   have hio := hP.ioP i A.μ0
   obtain ⟨v₀, w, h1, hw, h2⟩ := hio.2.2
   have ind : ∀ s : Finset D.what₂.Tau, ∃ v : ∀ ρ, lowT (R.MW i (sg0 D A)) ρ,

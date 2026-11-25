@@ -93,8 +93,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain ValuativeRel Matrix Polynomial Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.LocGL GlobalTheory.WeilDeligne GlobalTheory.LocLanglands GlobalTheory.Published
 
-theorem _root_.GlobalTheory.T.exists_inverse_localArtin_weilGroup_hom : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w) (art : Neutral.B1.Ideles E →* GlobalTheory.HeckeGal.Gab E Ω), GlobalTheory.HeckeGal.IsGlobalArtin art → ∃ a : Weil h →* (w.adicCompletion E)ˣ, Function.Surjective a ∧ (∀ σ, ord (w.adicCompletion E) (a σ) = -deg σ) ∧ ∀ σ : Weil h, art (Neutral.B1.localIdele E w (a σ)) = GlobalTheory.HeckeGal.toAb E Ω σ := by
-  first | exact @GlobalTheory.InvLocalArtin.exists_invLocalArtin
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInverseLocalArtinWeilGroupHomStatement =====
@@ -106,8 +104,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain ValuativeRel Matrix Polynomial Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.LocGL GlobalTheory.WeilDeligne GlobalTheory.LocLanglands GlobalTheory.Published
 
-theorem _root_.GlobalTheory.T.inverseLocalArtin_continuousOn_inertia : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w) (art : Neutral.B1.Ideles E →* GlobalTheory.HeckeGal.Gab E Ω) (a : Weil h →* (w.adicCompletion E)ˣ), GlobalTheory.HeckeGal.IsGlobalArtin art → (∀ σ, ord (w.adicCompletion E) (a σ) = -deg σ) → (∀ σ : Weil h, art (Neutral.B1.localIdele E w (a σ)) = GlobalTheory.HeckeGal.toAb E Ω σ) → Continuous fun σ : Ine (F := E) A => a (ineIncl h σ) := by
-  first | exact @GlobalTheory.ArtinInvCont.continuous_inv_on_ine
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InverseLocalArtinContinuousOnInertiaStatement =====
@@ -161,8 +157,8 @@ theorem LocLanglands.isSmoothChar_of_comp {E Ω : Type} [Field E] [NumberField E
 theorem localArtinExists_holds : LocalArtinExists := by
   intro E Ω _ _ _ _ _ A w h
   obtain ⟨art, hart⟩ := _root_.CompanionTheory.FamInh.globalArtin E Ω
-  obtain ⟨a, hs, ho, hg⟩ := T.exists_inverse_localArtin_weilGroup_hom E Ω A w h art hart
-  have hc := T.inverseLocalArtin_continuousOn_inertia E Ω A w h art a hart ho hg
+  obtain ⟨a, hs, ho, hg⟩ := GlobalTheory.InvLocalArtin.exists_invLocalArtin E Ω A w h art hart
+  have hc := GlobalTheory.ArtinInvCont.continuous_inv_on_ine E Ω A w h art a hart ho hg
   refine ⟨a, hs, hc, ho, fun ξ hξ => ?_, fun art' hart' => ?_⟩
   · have hker : a.ker ≤ ξ.ker := fun σ hσ => by
       refine _root_.GlobalTheory.WeilCharKer.apply_eq_one_of_toAb_eq_one E Ω A w h ξ hξ σ ?_

@@ -207,7 +207,6 @@ open scoped CategoryTheory.MonObj
 open GlobalTheory.ShFam.Hor.LogCh
 open scoped Matrix
 
-
 theorem _root_.GlobalTheory.T.isExponentialOfSemiAbelianFibre_linearChange : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (X : Scheme.{0}) (t : SAB H X) (y : Sp ℂ ⟶ X) (g : ℕ) (e : (Fin g → ℂ) → (Over.mk y ⟶ t.G)) (M : Matrix (Fin g) (Fin g) ℂ), IsUnit M.det → IsHolTo Set.univ (fun z => (e z).left) → GlobalTheory.ShFam.Hor.LogCh.IsExpAt t y e → GlobalTheory.ShFam.Hor.LogCh.IsExpAt t y (fun w => e (M *ᵥ w)) := by
   first | exact @GlobalTheory.ShFam.Hor.LogCh.isExpAt_mulVec
 end -- clump:auto
@@ -286,7 +285,6 @@ theorem norm_mulVec_le {g : ℕ} (M : Matrix (Fin g) (Fin g) ℂ) (v : Fin g →
         ring
 
 section Main
-
 
 theorem exists_continuous_latBasis_of_arc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Z : Model Xo c β) (σ : c.F →+* ℂ) (A : Type) [CommRing A] (φ : c.F →+* A) (x : Sp A ⟶ gen Z) (ψ : ℂ → (A →+* ℂ)) (r : ℝ) (g' : ℕ) (ρ : ℝ) (e' : ∀ u, (Fin g' → ℂ) → (Over.mk (spMap (ψ u) ≫ x ≫ genι Z) ⟶ Z.t.G)), GoodEmb c σ → 1 ≤ Dw.p + Dw.q → IsArc Z σ φ x ψ r → (∀ u ∈ Metric.ball (0 : ℂ) r, u ≠ 0 → ∀ s, (spMap (ψ u) ≫ x) s ∉ genBd Z) → 0 < ρ → ρ ≤ r → IsHolTo (Metric.ball (0 : ℂ) ρ ×ˢ Set.univ) (fun q : ℂ × (Fin g' → ℂ) => (show Sp ℂ ⟶ Z.t.G.left from (e' q.1 q.2).left)) → (∀ u ∈ Metric.ball (0 : ℂ) ρ, (∀ z w, e' u (z + w) = e' u z * e' u w) ∧ Function.Surjective (e' u) ∧ IsHolTo Set.univ (fun z => (show Sp ℂ ⟶ Z.t.G.left from (e' u z).left)) ∧ (∀ w, ∃! v : epsPt (spMap (ψ u) ≫ x ≫ genι Z) ⟶ Z.t.G, IsDerivAt0 (fun z => (e' u z).left) w v.left) ∧ (∀ v : epsPt (spMap (ψ u) ≫ x ≫ genι Z) ⟶ Z.t.G, spMap (TrivSqZeroExt.fstHom ℂ ℂ ℂ).toRingHom ≫ v.left = (e' u 0).left → ∃! w, IsDerivAt0 (fun z => (e' u z).left) w v.left)) → ∃ (ρ₀ : ℝ) (m : ℕ) (lamE : ℂ → Fin m → Fin g' → ℂ), 0 < ρ₀ ∧ ρ₀ < ρ ∧ ContinuousOn lamE {s : ℂ | s.re < 0} ∧ (∀ s : ℂ, s.re < 0 → LinearIndependent ℝ (lamE s) ∧ Submodule.span ℝ (Set.range (lamE s)) = ⊤ ∧ ∀ z, e' ((ρ₀ : ℂ) * Complex.exp s) z = 1 ↔ ∃ n : Fin m → ℤ, z = ∑ j, n j • lamE s j) ∧ ∃ (C : ℝ) (k : ℕ), ∀ s : ℂ, s.re < 0 → ‖Complex.exp s‖ ≤ 1 / 2 → |s.im| ≤ Real.pi → ‖lamE s‖ ≤ C * (1 + ‖s‖) ^ k := by
   intro E _ _ _ H Dw l Xo c O _ β Z σ A _ φ x ψ r g' ρ e' hσ hpq harc hinner hρ hρr hhol hfive
@@ -417,7 +415,7 @@ theorem exists_continuous_latBasis_of_arc : ∀ (E : Type) [Field E] [NumberFiel
       rfl
     let xp : CxPts (genStr Z) σ := ⟨spMap (ψ ((ρ₂ : ℂ) * z 0)) ≫ x, hpt⟩
     have hin := hinner _ hur hu0 (IsLocalRing.closedPoint ℂ)
-    obtain ⟨Hm, hH, hpos, hspan, hint, hw⟩ := GlobalTheory.T.exponentialKernel_lattice_riemannForm_off_boundary E H Dw l Xo c O β Z σ g' xp (exN z) hσ hpq hin
+    obtain ⟨Hm, hH, hpos, hspan, hint, hw⟩ := GlobalTheory.ShFam.Hor.LogCh.kernel_lattice_of_inner E H Dw l Xo c O β Z σ g' xp (exN z) hσ hpq hin
       (hExpN z hzb) (hsliceN z hzb)
     exact ⟨Hm, hH, hpos, hspan, fun v hv w hw' => hint v w hv hw', fun N v w hN hv hw' => hw N v w _ hN hv hw' rfl⟩
   have hP4 : ∀ N : ℕ, 0 < N → ∃ S : Set (Fin r₀ → ZMod N), N ^ r₀ * Nat.card S = N ^ (2 * g') ∧
@@ -437,7 +435,7 @@ theorem exists_continuous_latBasis_of_arc : ∀ (E : Type) [Field E] [NumberFiel
     rw [unitOn_one]
     exact hT2 _ (hS a ha) _ (pow_eq_one_of_map _ (hExpN 0 hmem0).1 (hzeroN 0 hmem0) hN ((hB0.2 _).2 ⟨a', rfl⟩))
   obtain ⟨m, lam, ρc, hc, hs, hg⟩ :=
-    GlobalTheory.T.exists_holomorphic_latticeBasis_punctPolydiscCover_polyGrowth 1 1 g' r₀ K ζ' Pair hLF hζan hζli hζK hB0 hζC hζstd hP1 hP2 hP3 hP4
+    GlobalTheory.ShFam.Hor.LogCh.Core.core 1 1 g' r₀ K ζ' Pair hLF hζan hζli hζK hB0 hζC hζstd hP1 hP2 hP3 hP4
   let sv : ℂ → Fin 1 → ℂ := fun s _ => s
   have hsv : ∀ s : ℂ, ‖sv s‖ = ‖s‖ := fun s => pi_norm_const s
   have hdom : ∀ s : ℂ, s.re < 0 → sv s ∈ GlobalTheory.ShFam.Hor.logDom 1 1 := fun s hsr k => by
@@ -865,7 +863,6 @@ open AlgebraicGeometry CategoryTheory Limits NumberField ReciprocityTheory.Chart
 open ReciprocityTheory.ChartRestriction.G.FD (Data Frame Bor rmul lact mat col dmin Wt)
 open scoped CategoryTheory.MonObj
 
-
 theorem _root_.GlobalTheory.T.exists_continuous_period_basis_along_arc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Z : Model Xo c β) (σ : c.F →+* ℂ) (A : Type) [CommRing A] (φ : c.F →+* A) (x : Sp A ⟶ gen Z) (fr : EigFrame Z φ (x ≫ genι Z)) (ψ : ℂ → (A →+* ℂ)) (r : ℝ) (g : ℕ) (e : Fin g ≃ Σ τ : E →+* ℂ, Fin (Dw.mult τ)), GoodEmb c σ → 1 ≤ Dw.p + Dw.q → IsArc Z σ φ x ψ r → (∀ u ∈ Metric.ball (0 : ℂ) r, u ≠ 0 → ∀ s, (spMap (ψ u) ≫ x) s ∉ genBd Z) → ∃ (T₀ : ℝ) (m : ℕ) (lam : ℂ → Fin m → Fin g → ℂ), (∀ w : ℂ, T₀ < w.im → eTwoPi w ∈ Metric.ball (0 : ℂ) r) ∧ ContinuousOn lam {w : ℂ | T₀ < w.im} ∧ (∀ w : ℂ, T₀ < w.im → LinearIndependent ℝ (lam w) ∧ Submodule.span ℝ (Set.range (lam w)) = ⊤) ∧ (∀ w : ℂ, T₀ < w.im → ∀ ex : (Fin g → ℂ) → (Over.mk (spMap (ψ (eTwoPi w)) ≫ x ≫ genι Z) ⟶ Z.t.G), (∀ z z', ex (z + z') = ex z * ex z') → IsHolTo Set.univ (fun z => (show Sp ℂ ⟶ Z.t.G.left from (ex z).left)) → (∀ j, IsDerivAt0 (fun z => (ex z).left) (Pi.single j 1) (spMap (dualMap (ψ (eTwoPi w))) ≫ fr.v (e j).1 (e j).2)) → ∀ z, ex z = 1 ↔ ∃ n : Fin m → ℤ, z = ∑ j, n j • lam w j) ∧ ∀ R : ℝ, ∃ (C : ℝ) (B : ℕ), ∀ w : ℂ, T₀ < w.im → |w.re| ≤ R → ‖lam w‖ ≤ C * w.im ^ B := by
   intro E _ _ _ H Dw l Xo c O _ β Z σ A _ φ x fr ψ r g e hσ hpq harc hin
   obtain ⟨g', ρ, e', hρ, hρr, hol, hexp, -⟩ := _root_.GlobalTheory.RelExp.exists_exp_along_disc Z.X Z.t.G (fun u => spMap (ψ u) ≫ x ≫ genι Z) r
@@ -996,7 +993,6 @@ open AlgebraicGeometry CategoryTheory Limits NumberField ReciprocityTheory.Chart
 open ReciprocityTheory.ChartRestriction.G.FD (Data Frame Bor rmul lact mat col dmin Wt)
 
 namespace GlobalTheory.ShFam.PerPoly
-
 
 open scoped CategoryTheory.MonObj in
 theorem exists_transfer_iff {S S' S0 : Scheme.{0}} {G : Over S} {G' : Over S'} {G0 : Over S0} [GrpObj G] [GrpObj G']

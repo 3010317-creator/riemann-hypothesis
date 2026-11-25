@@ -24,8 +24,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Pj GlobalTheory.FinalJoin GlobalTheory.CompRat
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.cmCurveTorsion_definedOver_of_weberValues : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (F : IntermediateField ℚ ℂ) (n : ℕ), 0 < n → (H.rt0 ∈ F → WeberIn H F n → CurveOver H F n) ∧ ∀ m, m ∣ n → CurveOver H F n → CurveOver H F m := by
-  first | exact @GlobalTheory.FinalJoin.CurveField.curveOver_of_weberIn
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.HeightProofs.CmCurveTorsionDefinedOverOfWeberValuesStatement =====
@@ -92,7 +90,7 @@ theorem fnAlgClosed_of_pins : ∀ (D : D7) (Q : Par D), Q.Pins → Q.Canon → �
   have hle := recordField_le_of_pinField Q hP.2.2.1
   have hc : CurveOver Q.H (FO D) l₂.M := by
     have h0 : CurveOver Q.H (FO D) n := by rw [hC.1]; exact hcurve
-    exact (GlobalTheory.T.cmCurveTorsion_definedOver_of_weberValues _ Q.H (FO D) n hn).2 _ hM h0
+    exact (GlobalTheory.FinalJoin.CurveField.curveOver_of_weberIn _ Q.H (FO D) n hn).2 _ hM h0
   refine _root_.GlobalTheory.CompRat.fnAlgClosed_of_curveOver _ Q.H (Q.Dw j) l₂ Xo₂ c₂ (by omega) hA (Or.inr (Or.inr ⟨by omega, h1⟩)) ?_
   intro τ hτ
   exact hc τ fun x hx => hτ x (by rw [hF]; exact hle hx)

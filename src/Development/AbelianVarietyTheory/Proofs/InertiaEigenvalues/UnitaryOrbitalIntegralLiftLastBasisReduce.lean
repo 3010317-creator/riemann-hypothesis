@@ -561,9 +561,6 @@ section Field
 variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E]
   [Unram F E]
 
-theorem fixed_mem (a : E) (ha : star a = a) : ∃ u : F, algebraMap F E u = a := by
-  apply GlobalTheory.JR.Step.UNormal.exists_algebraMap_of_star_eq <;> assumption
-
 theorem quad_col {n : Type} [Fintype n] (G P : Matrix n n E) (k : n) :
     (Pᴴ * G * P) k k = star (fun a => P a k) ⬝ᵥ (G *ᵥ fun a => P a k) := by
   simp only [Matrix.mul_apply, dotProduct, mulVec, conjTranspose_apply, Pi.star_apply, Finset.mul_sum,
@@ -583,7 +580,7 @@ theorem pivot {n : Type} [Fintype n] [DecidableEq n] [Nonempty n] (G : Matrix n 
   have ha : star (star w ⬝ᵥ (G *ᵥ w)) = star w ⬝ᵥ (G *ᵥ w) := by
     calc star (star w ⬝ᵥ (G *ᵥ w)) = (star w ᵥ* Gᴴ) ⬝ᵥ w := by rw [star_dotProduct, star_mulVec, star_star]
       _ = star w ⬝ᵥ (G *ᵥ w) := by rw [← dotProduct_mulVec, hG.eq]
-  obtain ⟨u, hu⟩ := fixed_mem (F := F) _ ha
+  obtain ⟨u, hu⟩ := GlobalTheory.JR.Step.UNormal.exists_algebraMap_of_star_eq (F := F) _ ha
   have hu1 : ‖u‖ = 1 := by rw [← norm_algebraMap' E u, hu]; exact hq
   obtain ⟨v0, hv0⟩ := _root_.GlobalTheory.NormUnits.norm_onto_units F E u hu1
   rw [hu] at hv0

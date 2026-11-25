@@ -125,13 +125,6 @@ theorem isUnit_gs_iff {X Z : Scheme.{0}} (r : Z ⟶ X) (z : Z) (U : X.Opens) (h 
     IsUnit (gs r z U f) ↔ IsUnit (gs (𝟙 X) (r z) U f) := by
   rw [gs_stalkMap r z U h, isUnit_map_iff]
 
-theorem isUnit_sval {X Y Z : Scheme.{0}} {L : LB X} {K : Type} [Fintype K] {φ : K → (Y ⟶ X)} {ε : K → ℤ}
-    (s : LB.Sec (LB.LinComb L φ ε)) (r : Z ⟶ Y) (z : Z) (h : r z ∈ nonzeroLocus s) {J} (hJ : Good L z J) :
-    IsUnit (sval s r z J) := by
-  obtain ⟨j, hj, hu⟩ := (Geo.Tor.mem_nonzeroLocus s _).1 h
-  rw [sval, sec_trans s r z (hJ.mem φ r) hj]
-  exact (Units.isUnit _).mul ((isUnit_gs_iff r z _ hj _).2 hu)
-
 theorem exists_nonzero_closed (hS : SecBaseChangeSt) {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R]
     [IsNoetherianRing R] (D : DegPre R) :
     ∃ th : D.SecB 1 0, ∃ x, D.P.A.hom x = closedPoint R ∧ x ∈ nonzeroLocus th := by
@@ -201,7 +194,6 @@ theorem generates_iff_secBGenerates (hS : SecBaseChangeSt) [IsNoetherianRing R] 
   exact (secBGenerates_iff_smul g).2 (existsUnique_of_exists ((secBGenerates_iff_smul (D := D) b).1 hb)
     ((generates_iff_smul _ g).1 H))
 
-
 omit [IsDomain R] in
 theorem exists_thick_pt {J : Ideal R} (hJ : J ≤ maximalIdeal R) (e : ℕ) (X : Over (Spec (CommRingCat.of R)))
     (x : X.left) (hx : X.hom x = closedPoint R) :
@@ -215,21 +207,15 @@ theorem exists_thick_pt {J : Ideal R} (hJ : J ≤ maximalIdeal R) (e : ℕ) (X :
     (hx.trans hz.symm)
   exact ⟨y, hy⟩
 
-theorem exists_group_pt (hI : I ≤ maximalIdeal R) (U : UnifPre I D A G) (e : ℕ) (x : D.toPre.P.A.left)
-    (hx : D.toPre.P.A.hom x = closedPoint R) : ∃ y : (thickObj R I e G).left, pGl U e y = x := by
-  obtain ⟨x', rfl⟩ := exists_thick_pt hI e D.toPre.P.A x hx
-  obtain ⟨y, rfl⟩ := (U.gt e).q_surj.surj x'
-  exact ⟨y, rfl⟩
-
 theorem secBGenerates_of_expandsAt (hS : SecBaseChangeSt) [IsNoetherianRing R] (hI : I ≤ maximalIdeal R)
     (U : UnifPre I D A G) {ϑ : H0 U.LG.L 1} {f g : ∀ α, D.toPre.SecB 1 α} (hf : U.ExpandsAt 0 1 ϑ f)
     (hg : U.ExpandsAt 0 1 ϑ g) (hgen : SecBGenerates (D := D) 1 0 (f 0)) : SecBGenerates (D := D) 1 0 (g 0) := by
   obtain ⟨th, x, hx, hn⟩ := exists_nonzero_closed hS D.toPre
-  obtain ⟨y, rfl⟩ := exists_group_pt hI U 0 x hx
+  obtain ⟨y, rfl⟩ := GlobalTheory.ThetaUnit.exists_group_pt hI U 0 x hx
   obtain ⟨J, hJ⟩ := exists_good' D.toPre.P.isLB y
   obtain ⟨c, hc, -⟩ := hgen th
   have hfu : IsUnit (sval (f 0) (pGl U 0) y J) := by
-    have := isUnit_sval th _ y hn hJ
+    have := GlobalTheory.ThetaUnit.isUnit_sval th _ y hn hJ
     rw [sval_of_secIsMul hc _ y hJ] at this
     exact isUnit_of_mul_isUnit_right this
   obtain ⟨a, ha, -⟩ := hgen (g 0)

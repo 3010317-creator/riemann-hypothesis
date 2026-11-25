@@ -53,8 +53,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum MeasureTheory NumberField Matrix
 
-theorem _root_.GlobalTheory.T.fockVectors_overVacua_dense_thetaFunctions : ∀ D : D7, GlobalTheory.ChainFr.FockDense D := by
-  first | exact @GlobalTheory.FockDensity.fockDense
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVectorsOverVacuaDenseThetaFunctionsStatement =====
@@ -86,7 +84,7 @@ theorem exists_isVacF_ne_zero : ∀ (D : D7) (V W : HSp D) (A : GlobalTheory.Cha
   have i6 : BorelSpace (WO V W) := ⟨rfl⟩
   obtain ⟨μ, 𝓕, hμ, h𝓕, h1⟩ :=
     (GlobalTheory.meanSquare_addFundamentalDomain_of_cocompact (WO V W) (ratL W V) K hK hKc).1
-  obtain ⟨U, -, -, hd⟩ := GlobalTheory.T.fockVectors_overVacua_dense_thetaFunctions D V W A B θ ψ hψ hθ μ 𝓕 ⟨hμ, h𝓕, h1⟩ f hf
+  obtain ⟨U, -, -, hd⟩ := GlobalTheory.FockDensity.fockDense D V W A B θ ψ hψ hθ μ 𝓕 ⟨hμ, h𝓕, h1⟩ f hf
   have hspan : fockSpan ψ θ A B U = ⊥ := by
     unfold fockSpan
     rw [Submodule.span_eq_bot]

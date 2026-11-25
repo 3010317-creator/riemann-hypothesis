@@ -207,7 +207,7 @@ theorem isotropicLPart_shortSeries_bound_mul (Xo : Moduli Dw l) (c : Coeff l) [S
     (by rw [A.prod, hhom, ← _root_.mul_assoc, ← map_mul, inv_mul_cancel₀ hkN0, map_one, _root_.one_mul]; exact hff)
   have hch : ∀ i, hv Xo c nab y.1 ((A.k * N) ^ 2) (fun b => pl (F (π i) b)) P =
       io (nrm Dw c w (A.k : 𝓞 E)) * hv Xo c nab y.1 (N ^ 2) (F (π i)) P := fun i =>
-    GlobalTheory.T.harmonic_value_chain_rule_normalized_pullback E H Dw l Xo c hst nab hnab T.Fr y.1 (A.k : 𝓞 E) (A.k ^ 2) (N ^ 2) _ (nat_mul_bar A.k) hlev n
+    GlobalTheory.PlaceInt.hv_pulls E H Dw l Xo c hst nab hnab T.Fr y.1 (A.k : 𝓞 E) (A.k ^ 2) (N ^ 2) _ (nat_mul_bar A.k) hlev n
       (F (π i)) _ (fun b => hpl _) w P hP.1
   obtain ⟨hi1, hi2, -⟩ := GlobalTheory.LatticeIndex.latidx E H Dw l c n Λ N M ℓ hU hL hp A
   have hcnt := GlobalTheory.T.card_primaryTorsionTuples_killed_by_matrix E H Dw l Xo T.Fr (xOf y) ℓ hp n A.q ((N : 𝓞 E) • A.g) A.k₁ (N ^ 2) A.cop₁
@@ -275,7 +275,6 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ GlobalTheory.PtTie IsDede
 open GlobalTheory.PlaceInt
 set_option autoImplicit false
 noncomputable section
-
 
 end -- clump:auto
 end -- clump:auto
@@ -501,7 +500,6 @@ open GlobalTheory.PlaceInt GlobalTheory.PlaceInt.ShortTriv GlobalTheory.IntCuspL
 set_option autoImplicit false
 
 noncomputable section
-
 
 end -- clump:auto
 end -- clump:auto
@@ -1160,7 +1158,6 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ GlobalTheory.PtTie
 open GlobalTheory.PlaceInt GlobalTheory.PlaceInt.ShortTriv GlobalTheory.IntCuspLat
 
 namespace GlobalTheory.CovInt.SqLev
-
 
 open IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions in
 theorem smul_nonneg_of_shortRule (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E) (Dw : Datum H) (l : Level H)

@@ -113,18 +113,18 @@ theorem integral_xi_mul_Ph : HypsG → ∀ (k r : ℕ) (ε : Fin (2 * r + k + 1)
   have hunit := hrep.2.2.1
   have hTKsm := hrep.2.2.2.2.1
   have hWpi : PI.BesselPeriodGGP.IsHaarOn (Formalism.QuantumDeterminants.UWset k r D.z) D.μW :=
-    ((_root_.GlobalTheory.T.isHaarOn_iff_groups_unitary_unipotent k r D.μW).2.2 D.z D.z_mem D.T_pos D.k_pos).2 D.haarW
+    ((_root_.GlobalTheory.HaarNotions.isHaarOn_iff_groups k r D.μW).2.2 D.z D.z_mem D.T_pos D.k_pos).2 D.haarW
   have hNpi : PI.BesselPeriodGGP.IsHaarOn (Formalism.QuantumDeterminants.Nset k r) D.μN :=
-    (_root_.GlobalTheory.T.isHaarOn_iff_groups_unitary_unipotent k r D.μN).2.1.2 D.haarN
+    (_root_.GlobalTheory.HaarNotions.isHaarOn_iff_groups k r D.μN).2.1.2 D.haarN
   have hW'pi : PI.BesselPeriodGGP.IsHaarOn (Formalism.QuantumDeterminants.UWset k r D.z') D.μW' :=
-    ((_root_.GlobalTheory.T.isHaarOn_iff_groups_unitary_unipotent k r D.μW').2.2 D.z' D.z'_mem D.T'_pos D.k_pos).2 D.haarW'
+    ((_root_.GlobalTheory.HaarNotions.isHaarOn_iff_groups k r D.μW').2.2 D.z' D.z'_mem D.T'_pos D.k_pos).2 D.haarW'
   haveI : SigmaFinite D.μW := hWpi.1
   haveI : SigmaFinite D.μN := hNpi.1
   haveI : SigmaFinite D.μW' := hW'pi.1
   have h55 := _root_.GlobalTheory.T.besselSubgroup_parameter_measurePreserving k r D.z D.μW D.μN D.k_pos D.z_mem D.T_pos hWpi hNpi
   have h55' := _root_.GlobalTheory.T.besselSubgroup_parameter_measurePreserving k r D.z' D.μW' D.μN D.k_pos D.z'_mem D.T'_pos hW'pi hNpi
-  have h54 := _root_.GlobalTheory.T.besselCharacter_unipotentRadical_properties k r D.z Formalism.QuantumDeterminants.cStd D.z_mem
-  have h54' := _root_.GlobalTheory.T.besselCharacter_unipotentRadical_properties k r D.z' Formalism.QuantumDeterminants.cStd D.z'_mem
+  have h54 := _root_.GlobalTheory.BesselPsi.psi_character k r D.z Formalism.QuantumDeterminants.cStd D.z_mem
+  have h54' := _root_.GlobalTheory.BesselPsi.psi_character k r D.z' Formalism.QuantumDeterminants.cStd D.z'_mem
   obtain ⟨Φ, hΦ, hΦd⟩ : ∃ Φ : Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r → Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r,
       MeasurePreserving Φ (D.μW.prod D.μN) (D.μW.prod D.μN) ∧
         ∀ q, Φ q = ((fun i j => (Matrix.of q.1)⁻¹ i j), (fun i j => (Matrix.of q.2)⁻¹ i j)) :=

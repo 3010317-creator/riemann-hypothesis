@@ -27,9 +27,6 @@ noncomputable section
 
 namespace GlobalTheory.FockCoefSplit
 
-
-
-
 theorem actO_inf : ∀ (D : D7) (S T : HSp D) (a : GA D S) (b : GA D T), a ∈ GinfC S → b ∈ GinfC T →
     ∀ w : WO S T, w.map (infPart D) = 0 → actO S T a b w = w := by
   intro D S T a b ha hb w hw
@@ -168,7 +165,7 @@ theorem pair_eq_inf : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam
     simp only [hΦ]
     rw [pT_heisO hθ sS BS sT BT f hw, pT_heisO hθ sS BS sT BT g hw, om_heisO_inf hom ha hb hw (thp f hf P),
       thetaInner_heisenberg hψ hcv (thom f hf P) (thp g hg P')]
-  exact GlobalTheory.T.schur_finiteHeisenberg_fockVacuumThetaFunctions D ψ θ S T hψ hθ sS sT hcS hcT μ 𝓕 hcv Φ hl hr hbd hi
+  exact GlobalTheory.VacSchurFin.vacSchur D ψ θ S T hψ hθ sS sT hcS hcT μ 𝓕 hcv Φ hl hr hbd hi
 
 end GlobalTheory.FockCoefSplit
 

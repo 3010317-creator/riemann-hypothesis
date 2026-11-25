@@ -314,7 +314,7 @@ theorem kappa_mul_pullM_mul_expS {V : Type} [CommRing V] [IsDomain V] [IsDiscret
     MvPowerSeries.hasSubst_of_constantCoeff_zero fun p => h0 p.1 p.2
   have hpull : FB.toK K (pullM B mu g) =
       ev (n := n) (fun b i => FB.toK K (matV B mu (fun j => pt V (n := n) d j) b i)) (FB.toK K g) := by
-    have hC := (GlobalTheory.T.mvPowerSeriesSubstConstTerms_local_algHom_spec V (Fin n × Fin d) (Fin n × Fin d) (Fin n × Fin d)
+    have hC := (GlobalTheory.PlaceInt.evC_spec V (Fin n × Fin d) (Fin n × Fin d) (Fin n × Fin d)
       (fun p : Fin n × Fin d => matV B mu (fun j => pt V (n := n) d j) p.1 p.2)
       (fun p => by rw [h0]; exact Ideal.zero_mem _)).2.2.1 (fun p => h0 p.1 p.2)
     unfold pullM evV
@@ -526,10 +526,8 @@ theorem smallPointSubstitution_triple_eq_constTerms {m : ℕ} (a b c : SP B m) (
   congr 1
   funext j; fin_cases j <;> rfl
 
-
 variable (B) in
 def uP {k : ℕ} (j : Fin k) : SP B k := ⟨pt V d j, sm_pt j⟩
-
 
 variable (B) in
 def cS {m : ℕ} (α : Fin d → V) (h : Small α) : SP B m := ⟨cpt α, fun i => by simpa [cpt] using h i⟩
@@ -635,7 +633,6 @@ theorem IsExp.uniq (hi : Function.Injective (algebraMap V K)) {m : ℕ} {u v : P
   apply hi
   have := congrArg (MvPowerSeries.coeff s) this
   simpa [FB.toK, MvPowerSeries.coeff_map] using this
-
 
 variable (K) in
 def evK {k m : ℕ} (a : Fin k → SP B m) (ha : ∀ j, GP (a j).val) : PS K k d →+ PS K m d :=
@@ -801,7 +798,6 @@ theorem kappa_cube {Θ : PS V 3 d} (hΘ : IsTheta B K h w0 Θ) {n : ℕ} {mu : M
 end Logs
 
 end GlobalTheory.PlaceInt.TrKappa
-
 
 open GlobalTheory.PlaceInt.TrKappa in
 theorem GlobalTheory.PlaceInt.prod_trUnit_mul_shift_kappa : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (maximalIdeal V) V] [CharZero V] (d : ℕ) (O : Type) [CommRing O] [StarRing O] (B : FB V d O) (K : Type) [Field K] [Algebra ℚ K] [Algebra V K] [IsFractionRing V K] (h : PS K 2 d) (w0 : O), B.IsCanonGauge K h → ∀ (Θ : PS V 3 d) (jo : PS V 1 d), IsTheta B K h w0 Θ → IsIota B K h w0 jo → ∀ (n : ℕ) (mu : Matrix (Fin n) (Fin n) O) (N : ℕ), Odd N → (∀ j k, ∑ i, star (mu i j) * mu i k = if j = k then (N : O) else 0) → ∀ κ : PS V n d, IsKappa B K h w0 mu N κ → ∀ α ∈ kerM B mu, ∀ u : Fin n → PS V 1 d, (∀ b, TrUnit B Θ jo N (α b) (u b)) → (∏ b, evV (n := n) ![pt V d b] (u b)) * shift B.G.F α κ = κ := by
@@ -1119,7 +1115,7 @@ theorem sum_hv_formal_kernel : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   choose f hf using fun b => (h51 (N ^ 2) (F b)).1 (hF b)
   have hkpq : ∀ i, Kills Xo (p * q) (a i) := fun i => ((hiff (a i)).mp ⟨i, rfl⟩).1
   choose α hα using fun i b => ((hiff (a i)).mp ⟨i, rfl⟩).2 b
-  have h66 := GlobalTheory.T.formal_group_points_of_integral_chart_spec E H Dw l Xo c hstar T io y C B hB
+  have h66 := GlobalTheory.PlaceFormPt.formPt_spec E H Dw l Xo c hstar T io y C B hB
   have h67 := fun (mu : Matrix (Fin n) (Fin n) (𝓞 E)) => GlobalTheory.T.kills_formalPoints_iff_mem_coordinateKernel E H Dw l Xo c hstar T io y C B hB n mu
   have hker : ∀ i, α i ∈ kerM B (p * q) := fun i => (h67 (p * q) (a i) (α i) (hα i)).mp (hkpq i)
   have hsm : ∀ i b, Small (α i b) := fun i => by
@@ -1476,8 +1472,8 @@ theorem sum_hv_primary_kernel : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   classical
   letI := io.toAlgebra
   have hodd : Odd (N ^ 2) := hN.pow
-  obtain ⟨B, hBT, -⟩ := GlobalTheory.T.integralChart_formalBiextension_gauge_bound E H Dw l Xo c hbar T io y C
-  obtain ⟨f1, -, fmul, -, -⟩ := GlobalTheory.T.formal_group_points_of_integral_chart_spec E H Dw l Xo c hbar T io y C B hBT
+  obtain ⟨B, hBT, -⟩ := GlobalTheory.PlaceInt.integralBiext_gauge_eig_bound E H Dw l Xo c hbar T io y C
+  obtain ⟨f1, -, fmul, -, -⟩ := GlobalTheory.PlaceFormPt.formPt_spec E H Dw l Xo c hbar T io y C B hBT
   have hadj := adj_mul hsim
   have hM0 : 0 < M := Nat.pos_of_ne_zero fun h0 => hodd.pos.ne' (by rw [hkM, h0, Nat.mul_zero])
   have hprim := (_root_.GlobalTheory.SplitKernel.splitKer_of_allRat E H Dw l Xo c hbar T io y C hC B hBT ℓ hℓ hℓu n (p * q) _ k M hk hM0

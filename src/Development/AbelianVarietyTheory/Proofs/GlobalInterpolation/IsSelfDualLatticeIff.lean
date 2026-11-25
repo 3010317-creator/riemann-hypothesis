@@ -117,8 +117,6 @@ section -- clump:auto
 open scoped TensorProduct
 open NumberField IsDedekindDomain
 
-theorem _root_.GlobalTheory.T.additive_char_conductor_exists : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (ψ : AddChar (v.adicCompletion F) ℂ), Continuous ψ → (∀ t, ‖ψ t‖ = 1) → (∃ t, ψ t ≠ 1) → ∃ n : ℤ, ∀ t : v.adicCompletion F, (∀ s ∈ v.adicCompletionIntegers F, ψ (t * s) = 1) ↔ Valued.v t ≤ WithZero.exp n := by
-  first | exact @GlobalTheory.CharConductor.exists_conductor_exponent
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdditiveCharConductorExistsStatement =====
@@ -1015,7 +1013,7 @@ theorem localDensity_iff :
   constructor
   · intro h F E _ _ _ _ _ σ hσ M J hM hJ v η hη ψ hψ
     obtain ⟨hu, hη'⟩ := (isEtaAt_iff F E v hσ.2.2.1 η).1 hη
-    refine ⟨GlobalTheory.T.additive_char_conductor_exists F v ψ hψ.1 hψ.2.1 hψ.2.2, fun c hc L hL μ hμ ν hν => ?_⟩
+    refine ⟨GlobalTheory.CharConductor.exists_conductor_exponent F v ψ hψ.1 hψ.2.1 hψ.2.2, fun c hc L hL μ hμ ν hν => ?_⟩
     obtain ⟨a1, a2, a3⟩ := h F E σ hσ M hM J hJ v hu ψ hψ c hc L hL μ hμ ν hν
     rw [vol_eq] at a1
     rw [volInt_eq] at a2

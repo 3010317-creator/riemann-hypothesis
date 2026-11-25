@@ -104,11 +104,6 @@ namespace GlobalTheory.TiltInvariants
 
 variable {l : ℕ} [Fact l.Prime]
 
-theorem norm_coeff_le (K : FinExt l) (N : ℕ) (π : Om l)
-    (hπ : ‖π‖ = (l : ℝ) ^ (-(1 : ℝ) / (N : ℝ))) (p : (↥(K0 K))[X])
-    (hd : p.natDegree < N) (h1 : ‖aeval π p‖ ≤ 1) (a : ℕ) : ‖((p.coeff a : ↥(K0 K)) : Om l)‖ ≤ 1 := by
-  apply GlobalTheory.PrismS.Poly.norm_coeff_le <;> assumption
-
 theorem mem_of_mem_Ks (K : FinExt l) (j : ℕ) (hj : 1 ≤ j) (ζ : Om l) (hζ : IsPrimitiveRoot ζ (l ^ j))
     (R : Subring (Om l)) (hζR : ζ ∈ R) (h0 : ∀ c ∈ K0 K, ‖c‖ ≤ 1 → c ∈ R)
     (x : Om l) (hx : x ∈ Ks K j) (hx1 : ‖x‖ ≤ 1) : x ∈ R := by
@@ -146,7 +141,7 @@ theorem mem_of_mem_Ks (K : FinExt l) (j : ℕ) (hj : 1 ≤ j) (ζ : Om l) (hζ :
   have he : aeval (ζ - 1) (taylor 1 r) = x := by
     rw [← hrx, taylor_apply, aeval_comp]
     simp
-  have hc := norm_coeff_le K _ (ζ - 1) hnorm (taylor 1 r) (by rwa [natDegree_taylor]) (by rwa [he])
+  have hc := GlobalTheory.PrismS.Poly.norm_coeff_le K _ (ζ - 1) hnorm (taylor 1 r) (by rwa [natDegree_taylor]) (by rwa [he])
   rw [← he, aeval_eq_sum_range]
   refine sum_mem fun i _ => ?_
   exact mul_mem (h0 _ (Subtype.property _) (hc i)) (pow_mem (sub_mem hζR (one_mem _)) _)
@@ -168,7 +163,6 @@ theorem exists_level (K : FinExt l) {x : Om l} (hx : x ∈ Kinf K) : ∃ i, 1 �
   rw [IntermediateField.coe_iSup_of_directed hmono.directed_le] at h3
   obtain ⟨i, hi⟩ : ∃ i, x ∈ Ks K i := by simpa using h3
   exact ⟨i + 1, by omega, hmono (Nat.le_succ i) hi⟩
-
 
 open GlobalTheory.UnramValue in
 theorem mem_rootRing {c : Om l} (hc : c ∈ MaximalUnramifiedExtension l) (h1 : ‖c‖ ≤ 1) :
@@ -489,7 +483,6 @@ theorem eps_ne_one : AI.ε - 1 ≠ 0 := by
     norm_num; nlinarith
   rw [OneMemClass.coe_one, h2, hl, Real.rpow_le_rpow_left_iff hl1, div_le_iff₀ (by linarith)] at h1
   linarith
-
 
 open scoped Formalism.Per in
 open GlobalTheory.TiltAlgClosed in
