@@ -61,12 +61,7 @@ theorem exists_le_mul_of_homogeneous {E : Type*} [NormedAddCommGroup E] [NormedS
     ∃ C : ℝ, ∀ z, q' z ≤ C * q z := by
   have hS : IsCompact (Metric.sphere (0 : E) 1) := isCompact_sphere 0 1
   have hcont : ContinuousOn (fun z => q' z / q z) (Metric.sphere (0 : E) 1) := by
-    refine hq'.continuousOn.div hq.continuousOn ?_
-    intro z hz
-    have hz0 : z ≠ 0 := by
-      rintro rfl
-      simp at hz
-    exact (hpos z hz0).ne'
+    exact hq'.continuousOn.div hq.continuousOn fun z hz => (hpos z (ne_zero_of_mem_unit_sphere ⟨z, hz⟩)).ne'
   obtain ⟨C, hC⟩ := hS.bddAbove_image hcont
   refine ⟨C, fun z => ?_⟩
   have h0 : ∀ f : E → ℝ, (∀ (t : ℝ) z, f (t • z) = t ^ 2 * f z) → f 0 = 0 := by
@@ -78,10 +73,7 @@ theorem exists_le_mul_of_homogeneous {E : Type*} [NormedAddCommGroup E] [NormedS
     have hwS : ‖z‖⁻¹ • z ∈ Metric.sphere (0 : E) 1 := by
       rw [mem_sphere_zero_iff_norm, norm_smul, norm_inv, norm_norm, inv_mul_cancel₀ hr0.ne']
     have hzw : z = ‖z‖ • (‖z‖⁻¹ • z) := by rw [smul_smul, mul_inv_cancel₀ hr0.ne', one_smul]
-    have hw0 : ‖z‖⁻¹ • z ≠ 0 := by
-      intro h
-      rw [h] at hwS
-      simp at hwS
+    have hw0 : ‖z‖⁻¹ • z ≠ 0 := ne_zero_of_mem_unit_sphere ⟨_, hwS⟩
     have hwpos := hpos _ hw0
     have hCw : q' (‖z‖⁻¹ • z) / q (‖z‖⁻¹ • z) ≤ C := hC (Set.mem_image_of_mem _ hwS)
     rw [div_le_iff₀ hwpos] at hCw
