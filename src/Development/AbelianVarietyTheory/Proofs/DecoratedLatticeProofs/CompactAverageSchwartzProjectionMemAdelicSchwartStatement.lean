@@ -341,7 +341,6 @@ theorem map_cancel {R : Type} [CommRing R] (φ : AE D →+* R) (V : HSp D) (g : 
 
 theorem map_mul_entry {R R' : Type} [CommRing R] [CommRing R'] (φ : R →+* R') {m n : ℕ} (M : Matrix (Fin m) (Fin m) R)
     (x : Matrix (Fin m) (Fin n) R) : (fun i j => φ ((M * x) i j)) = fun i j => ∑ c, φ (M i c) * φ (x c j) := by
-  set_option synthInstance.maxHeartbeats 100000 in
     simp only [Matrix.mul_apply, map_sum, map_mul]
 
 theorem integrable_and_projS_mem {θ : InfFam D} (hθ : IsInfFam θ) {T : HSp D} {n : ℕ} {K : Subgroup (GA D T)}

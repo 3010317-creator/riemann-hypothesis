@@ -731,7 +731,6 @@ private theorem spLoc_alg (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianR
     intro p
     simp only [t, map_sub, AlgHom.commutes, hψ]
     exact (Core.spRoots R q n P ut p.1).2 p.2
-  set_option synthInstance.maxHeartbeats 200000 in
   have key : ∀ (N : Ideal (MSplitAlg P n)) [N.IsMaximal], (∀ p, t p ∈ N) →
       ∃ F' : Sp P ut →ₐ[R] Localization.AtPrime N,
         ∀ x, F' (ψ x) = algebraMap (MSplitAlg P n) (Localization.AtPrime N) x := by

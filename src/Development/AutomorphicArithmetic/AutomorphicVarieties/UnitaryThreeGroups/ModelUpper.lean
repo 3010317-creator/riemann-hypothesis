@@ -194,7 +194,7 @@ private theorem exists_form {O K P : Type} [CommRing O] [Field K] [Algebra O K] 
     (hi : Function.Injective (algebraMap O K)) (T : Submodule O P) (p : P) (hp : ∀ c : O, c ≠ 0 → c • p ∉ T) :
     ∃ lam : P →ₗ[O] K, lam p = 1 ∧ ∀ y ∈ T, lam y = 0 := by
   have hinj : Function.Injective (LinearMap.toSpanSingleton O (P ⧸ T) (T.mkQ p)) := by
-    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+    rw [injective_iff_map_eq_zero]
     intro c hc
     by_contra h0
     apply hp c h0
@@ -689,7 +689,6 @@ private theorem conj_conj {G R : Type} [Group G] [CommRing R] (r : G →* GG (m 
   intro g
   simp [conjBy, map_mul, mul_assoc]
 
-set_option maxHeartbeats 1000000 in
 set_option synthInstance.maxHeartbeats 200000 in
 theorem UpperTheory.V.U3.model_upper :
     ∀ {l : ℕ} [Fact l.Prime] {c : Coef l} {Γ H : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [Group H] [TopologicalSpace H] [IsTopologicalGroup H]

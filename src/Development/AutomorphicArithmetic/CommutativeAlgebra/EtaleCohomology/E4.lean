@@ -983,7 +983,6 @@ open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 namespace LateralTheory.E.StrictHenselianPoint
 open LateralTheory.E.E4 LateralTheory.E.LeafDegCut LateralTheory.E.LeafSHPtPf
 
-set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
 theorem leafSHTop : LeafSHTop := by
   intro B U x J _ _ D c V a e t ht hcof

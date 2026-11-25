@@ -54,8 +54,6 @@ open scoped Formalism.Per
 namespace GlobalTheory.BKGal.UnitDatum
 
 
-set_option maxHeartbeats 1600000 in
-set_option synthInstance.maxHeartbeats 200000 in
 theorem main : GlobalTheory.Published.BhattScholzeCrystallineLattices → ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (ϖ : PiSys l e) (LL : FinExt l) [HasUnr a LL] [TameDescentExponentData ↥LL.1 l e a] (η H : ℕ) (Pk : Pack a ϖ η H (unitLat (Gl l) : QLat LL)), ∃ (u : ME Pk.D.toPhiMod) (x : ↥(unitLat (Gl l) : QLat LL).L.T), x.1 = (1 : ↥LL.1) ∧ u.1 ∈ Pk.D.Minv ∧ Pk.D.phi u.1 = u.1 ∧ toW (thetaW a LL) ϖ Pk.D.toPhiMod u = Pk.R.I.ofT x := by
   intro BS l _ a e _ _ ϖ LL _ _ η H Pk
   have hx : ((1 : ↥LL.1) : (unitLat (Gl l) : QLat LL).V) ∈ (unitLat (Gl l) : QLat LL).L.T := ⟨1, by simp⟩
@@ -852,7 +850,6 @@ theorem mulVec_frac_eq_zero {B : Type} [CommRing B] [IsDomain B] {ι κ : Type} 
     rw [Pi.zero_apply, map_zero]
     have e : algebraMap B (FractionRing B) (A.mulVec u k) =
         (A.map (algebraMap B (FractionRing B))).mulVec (fun i => algebraMap B (FractionRing B) (u i)) k := by
-      set_option synthInstance.maxHeartbeats 100000 in
         simp [Matrix.mulVec, dotProduct, map_sum, map_mul]
     rw [e]
     have e2 : (fun i => algebraMap B (FractionRing B) (u i)) = b • v := funext hu

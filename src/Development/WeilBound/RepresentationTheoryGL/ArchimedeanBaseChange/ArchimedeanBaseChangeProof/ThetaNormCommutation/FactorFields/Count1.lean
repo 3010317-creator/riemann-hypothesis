@@ -1456,7 +1456,7 @@ theorem map_extZ_ne {v' : HeightOneSpectrum (𝓞 F)} (h : v' ≠ v) (y : v.adic
   | add a b ha hb => simp only [map_add (f := _), ha, hb, add_zero]
 
 theorem phi_injective : Function.Injective (phi (K := K) v) := by
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+  rw [injective_iff_map_eq_zero]
   intro y hy
   have h0 : GlobalTheory.LFun.finAdEquiv F K (extZ v y) = 0 := by
     have hc : ∀ w : HeightOneSpectrum (𝓞 K), GlobalTheory.LFun.finAdEquiv F K (extZ v y) w = 0 := by

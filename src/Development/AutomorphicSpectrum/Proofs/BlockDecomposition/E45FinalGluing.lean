@@ -434,7 +434,6 @@ theorem allLeaves_mono {E : Type} [Field E] [NumberField E] [IsCMField E]
   | node t₁ t₂ i₁ i₂ => exact fun h => ⟨i₁ h.1, i₂ h.2⟩
 
 theorem factorStep_holds : FactorStep := by
-  set_option synthInstance.maxHeartbeats 400000 in
     intro h4 E _ _ _ N W hW
     rcases Nat.eq_zero_or_pos N with rfl | hN
     · refine ⟨fun _ => ∅, fun M => ⟨Set.finite_empty, by simp⟩, fun K _ =>

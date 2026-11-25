@@ -678,7 +678,6 @@ theorem jetRd_pe_two (e : ∀ m, FrTy y g Φ.jx m) (he : Φ.IsAnE e) (m : ℕ) {
     Φ.toAnFr.JetRd m _ _ (pe y g Φ.jx e m ![φ, φ']) (fun k => psumL 2 g k ∘ₗ LinearMap.pi ![B, B']) :=
   jetRd_pe Φ e he m ![φ, φ'] ![B, B'] (Fin.forall_fin_two.2 ⟨h, h'⟩)
 
-set_option backward.isDefEq.respectTransparency false in
 theorem jetRd_cube {n : ℕ} (m : ℕ) (a b d : jO y g m n ⟶ Xo.univ.t.G)
     (P Q R : (Fin n → Fin g → ℂ) →ₗ[ℂ] (Fin g → ℂ)) (ha : Φ.toAnFr.JetMap m a.left P)
     (hb : Φ.toAnFr.JetMap m b.left Q) (hd : Φ.toAnFr.JetMap m d.left R) :

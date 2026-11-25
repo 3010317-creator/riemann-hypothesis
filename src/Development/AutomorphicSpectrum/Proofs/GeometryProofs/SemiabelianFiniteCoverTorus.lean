@@ -562,8 +562,6 @@ open scoped CategoryTheory.Obj
 
 namespace PositivityTheory.Xgn.TwoTorsionPointsSpreading
 
-set_option backward.isDefEq.respectTransparency false
-
 theorem exists_open_injective {S : Scheme.{0}} {X G : Over S} [IsIntegral X.left] [IsSeparated G.hom] {m : ℕ}
     (s : Fin m → (X ⟶ G)) (hs : Function.Injective s) :
     ∃ W : X.left.Opens, (W : Set X.left).Nonempty ∧ ∀ (T : Over S) [Nonempty T.left] (y : T ⟶ X),

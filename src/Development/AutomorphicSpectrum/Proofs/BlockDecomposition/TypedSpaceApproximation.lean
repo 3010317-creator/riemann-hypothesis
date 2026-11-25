@@ -1170,7 +1170,6 @@ theorem continuous_sm_uFam {K : Type} [Field K] [NumberField K] {n : ℕ}
       (β y : ℂ) * f (x * infEmb K n y)) := by
     refine (Complex.continuous_ofReal.comp (hβ.cont.comp continuous_snd)).mul (hf.comp ?_)
     exact continuous_fst.mul (continuous_infEmb.comp continuous_snd)
-  set_option synthInstance.maxHeartbeats 1000000 in
   have h := continuous_parametric_integral_of_continuous (μ := ν) hF hβ.cpt.isCompact
   refine h.congr fun x => ?_
   refine setIntegral_eq_integral_of_forall_compl_eq_zero fun y hy => ?_
@@ -1755,7 +1754,6 @@ theorem conc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (N : ℕ) 
       nlinarith) ω hω hωB (max 0 (-Real.log t)) (1 / 8) h8
   refine ⟨Ω, hΩ, fun V ψ hV hψ hT hI hE hs hn => ?_⟩
   let i : ι := ⟨ψ, V, hV, hψ, hT, hI, hE, hs, hn⟩
-  set_option synthInstance.maxHeartbeats 200000 in
   exact half_of_cover (latticeGL E N) μ hF hΩ (fun g => JSqIntGlue.exists_mem_slab hS hL ht hsieg g)
     (hcont i) ((iter_fam ν hβ hfam k).cont i) (hleft i) (iter_left ν (hleft i) k) hn
     (hβψ _ (hcont i) (hleft i) (hrep i) hn) (hΩf i)

@@ -258,7 +258,6 @@ theorem toAlg_comm (L : FinExt l) (z : (Fin 1 → ↥L.1) ⊗[ℚ_[l]] Bst P) :
     toAlg P L (TensorProduct.comm ℚ_[l] (Fin 1 → ↥L.1) (Bst P) z) = toA P L z := by
   induction z using TensorProduct.induction_on with
   | zero =>
-    set_option synthInstance.maxHeartbeats 200000 in
       simp only [map_zero]
   | tmul v b => rfl
   | add x x' hx hx' => simp only [map_add (f := _), hx, hx']
@@ -352,7 +351,6 @@ theorem GlobalTheory.Pst.UnitLetter.exists_unit_Dpst : ∀ {l : ℕ} [Fact l.Pri
   let ys := ∑ i, mulV P ↥L.1 (Fin 1 → ↥L.1) (a i) (y i)
   have hys : ys ∈ Dpst P ρm := Submodule.sum_mem _ fun i _ => mulV_mem_Dpst P ρm (a i) (y i) (hyD i)
   have hysA : toA P L ys = ∑ i, algebraMap ↥(MaximalUnramifiedExtension l) (Bst P) (a i) • w i := by
-    set_option synthInstance.maxHeartbeats 100000 in
       simp only [ys, map_sum, toA_mulV, w]
   have hn : Algebra.norm (Bst P) (toA P L ys) ≠ 0 := by rw [hysA]; exact ha
   obtain ⟨K₂, hK₂⟩ := (mem_Dpst P ρm).mp hys

@@ -33,7 +33,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC UpperTheory.Bc
 
-set_option backward.isDefEq.respectTransparency false in
 theorem UpperTheory.acy_mappingCone_semiMap_of_injective :
     ∀ (R : Type) [CommRing R] (L B : Cx R), (∀ s, Injective (L.X s)) → (∀ s, Injective (B.X s)) → ∀ (ρ : SemiMap L B) (Q : Scheme.{0} → Prop) (s : ℤ), Acy Q ((mappingCone ρ.toZ).X s) := by
   intro R _ L B hL hB ρ Q s
@@ -876,7 +875,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC UpperTheory.Bc
 
-set_option backward.isDefEq.respectTransparency false in
 theorem UpperTheory.hypercohomology_post_cl_eq_cl_comp :
     ∀ {M F G : Shv ℤ} (f : M ⟶ F) (g : F ⟶ G), HK.post ℤ (sgl M) g 0 (cl f) = cl (f ≫ g) := by
   intro M F G f g
@@ -1100,7 +1098,6 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 
 namespace UpperTheory
 
-set_option backward.isDefEq.respectTransparency false in
 private theorem hb_step {C : Type*} [Category C] [Preadditive C] (K D : CochainComplex C ℤ)
     (H : ∀ (p j : ℤ) (f : K.X p ⟶ D.X j), f ≫ D.d j (j + 1) = 0 →
       ∃ g : K.X p ⟶ D.X (j - 1), g ≫ D.d (j - 1) j = f)
@@ -1243,7 +1240,7 @@ private theorem semi_bij (R : Type) [CommRing R] (L B : Cx R) [L.IsStrictlyGE 0]
   obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := ⟨n - 1, by ring⟩
   constructor
   · have ex := (_root_.GlobalTheory.EtC.coneSeqTgt_exact ℤ ((chains ℤ).obj E) ρ.toZ m).2.2
-    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+    rw [injective_iff_map_eq_zero]
     intro x hx
     obtain ⟨y, rfl⟩ := (ex x).1 hx
     rw [Subsingleton.elim y 0, map_zero]

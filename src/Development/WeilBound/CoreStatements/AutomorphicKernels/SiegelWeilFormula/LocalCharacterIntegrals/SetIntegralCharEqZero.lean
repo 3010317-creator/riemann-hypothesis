@@ -547,7 +547,6 @@ theorem cs_herm {n : ℕ} (b : HermR (Fv F v) σ n) : cs σ (b : Matrix (Fin n) 
 
 theorem trace_cs {p : ℕ} (x : Matrix (Fin p) (Fin p) (Fv F v ⊗[F] E)) :
     Matrix.trace (cs σ x) = sigR (Fv F v) σ (Matrix.trace x) := by
-  set_option synthInstance.maxHeartbeats 100000 in
     simp [cs, Matrix.trace, map_sum]
 
 theorem trPair_eq {n : ℕ} (S T : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) :

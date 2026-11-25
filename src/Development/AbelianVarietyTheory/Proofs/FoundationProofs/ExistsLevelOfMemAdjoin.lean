@@ -82,7 +82,6 @@ theorem range_le_bn (T : Tower p Ω) (n : ℕ) (ι : On p n →ₐ[O0 p] Ω) (h 
       rw [this, AlgHom.commutes]
       exact Subalgebra.algebraMap_mem _ c
     | add f g hf hg =>
-      set_option synthInstance.maxHeartbeats 200000 in
         simpa only [map_add] using Subalgebra.add_mem (Bn T n) hf hg
     | monomial k c _ =>
       simp only [map_mul, map_pow]
@@ -93,7 +92,6 @@ theorem range_le_bn (T : Tower p Ω) (n : ℕ) (ι : On p n →ₐ[O0 p] Ω) (h 
   induction P using Polynomial.induction_on with
   | C a => exact hC a
   | add f g hf hg =>
-    set_option synthInstance.maxHeartbeats 200000 in
       simpa only [map_add] using Subalgebra.add_mem (Bn T n) hf hg
   | monomial k a _ =>
     simp only [map_mul, map_pow]

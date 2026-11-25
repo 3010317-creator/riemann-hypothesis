@@ -218,7 +218,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.projection_of_chart_analytic :
   have hH : HasFDerivAt (fun t' : Fin D.n → ℂ => s (M.proj ((D.chart a).γ t'))) (G'.comp L) t :=
     hc0.congr_of_eventuallyEq hHeq
   have hinj : Function.Injective L := by
-    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+    rw [injective_iff_map_eq_zero]
     intro v hv
     apply (D.chart a).immersion t ht v
     refine ⟨fun kk => -(fderiv ℂ (fun t' => cf t' kk) t v) / cf t kk, ?_⟩

@@ -97,7 +97,6 @@ theorem ptZ_one (X : Fin n → ℝ) (z s₀ : ℂ) :
 
 theorem gramB_diag (ε : Fin m → Bool) (b : Bool) (u : Fin m → Fin n → ℂ) (j : Fin n) :
     gramB ε b u j j = ∑ a ∈ Finset.univ.filter (fun a => ε a = b), star (u a j) * u a j := by
-  set_option synthInstance.maxHeartbeats 100000 in
     simp [gramB, Qb, evX, map_sum, eval_X]
 
 theorem trace_sdiag (s₀ : ℂ) (w : Fin n → ℂ) (G : Matrix (Fin n) (Fin n) ℂ) :

@@ -119,8 +119,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option synthInstance.maxHeartbeats 200000
-
 noncomputable section
 
 namespace GlobalTheory.OneMapRefCompare

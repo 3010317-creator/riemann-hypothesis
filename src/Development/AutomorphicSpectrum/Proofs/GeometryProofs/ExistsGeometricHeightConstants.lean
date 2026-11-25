@@ -258,8 +258,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.G
 open GroundTheory.Heights₂.Heights.LowerBoundFree GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Cusp
 open GroundTheory.Heights₂.Heights TensorProduct
 
-set_option backward.isDefEq.respectTransparency false
-
 noncomputable section
 namespace LevelTowerAlt.Lin
 

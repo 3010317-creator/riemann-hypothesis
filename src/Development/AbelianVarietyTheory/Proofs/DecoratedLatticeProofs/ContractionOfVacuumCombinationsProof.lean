@@ -699,8 +699,7 @@ theorem sum_idem {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsN
   classical
   rw [← sub_eq_zero]
   apply GlobalTheory.FinPlLoc.eq_zero_of_comp
-  · set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, map_sum]
+  · rw [map_sub, map_sum]
     simp only [GlobalTheory.FinPlLoc.idem, GlobalTheory.FinPlLoc.infPart_pair, Finset.sum_const_zero, sub_zero]
   · intro w
 

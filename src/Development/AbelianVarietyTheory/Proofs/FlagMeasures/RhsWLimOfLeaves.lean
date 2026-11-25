@@ -1533,7 +1533,6 @@ theorem measurePreserving_tang : MeasurePreserving (tang k r) (volume.prod volum
 theorem tang_injective : Function.Injective (tang k r) :=
   (measurePreserving_of_norm _ norm_tang tang_surjective).1
 
-set_option synthInstance.maxHeartbeats 100000 in
 def tangEquiv (k r : ℕ) : (TrE k × lieE (Kw k r)) ≃L[ℝ] lieE (UWb k r) :=
   (LinearEquiv.ofBijective _ ⟨tang_injective, tang_surjective⟩).toContinuousLinearEquiv
 

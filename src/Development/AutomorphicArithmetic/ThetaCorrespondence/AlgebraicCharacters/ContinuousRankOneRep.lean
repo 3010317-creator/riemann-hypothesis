@@ -298,8 +298,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc GlobalTheory.WeilDeligne
 open GlobalTheory.Pst GlobalTheory.TripleGal Module TensorProduct Polynomial Formalism.MainNotions.N
 open UpperTheory.Lit.CharWD GlobalTheory.Published
-set_option synthInstance.maxHeartbeats 400000
-set_option maxHeartbeats 800000
 
 private theorem letter_lift {L U D M : Type} [Field L] [Field U] [AddCommGroup D] [Module L D] (m : U →+* End L D)
     (F : Type) [Field F] [Algebra L F] (τ : U →+* F) [AddCommGroup M] [Module F M] (g : D →+ M)

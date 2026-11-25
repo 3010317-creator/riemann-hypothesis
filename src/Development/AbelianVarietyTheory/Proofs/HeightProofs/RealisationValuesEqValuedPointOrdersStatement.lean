@@ -326,7 +326,7 @@ theorem generic_of_ne_zero (h : GenFrEx Xo c) (Z : Comp Xo c) (L : Type) [Field 
     rw [e2 a n f hf, this, map_zero, mul_zero]
   subst hCZ
   have hinj : Function.Injective ψ0 := by
-    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+    rw [injective_iff_map_eq_zero]
     intro r hr
     by_contra hr0
     obtain ⟨a, n, f, hf, g, hg, h1, h2⟩ := hR r (fun e => hr0 (Subtype.ext e))

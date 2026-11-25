@@ -886,8 +886,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option synthInstance.maxHeartbeats 200000
-
 section
 section
 set_option synthInstance.maxHeartbeats 400000

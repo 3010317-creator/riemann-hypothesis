@@ -1128,7 +1128,6 @@ theorem mem_localLattice_of_forall_addChar_eq_one (hS : IsSelfDualC S ΛS) (hT :
   rwa [hB, map_smul, m.apply_symm_apply, GlobalTheory.BigDat.symplO_cA_smul, GlobalTheory.BigDat.smul_of_isHalf hx'] at this
 
 
-set_option maxHeartbeats 1600000 in
 theorem exists_pure (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT) {Bs : Base D.host.F D.host.E}
     (hψ : IsStdChar D Bs.ψ (-1)) (hBs : Bs.IsGood D.sp.cm.sig) {r s r' s' : ℕ}
     (hX : Xs.IsHerm D.sp.cm.sig Bs r s) (hW : Ws.IsSkew D.sp.cm.sig Bs r' s') (hM : Mo.IsGood Bs.ψ)
@@ -1164,7 +1163,6 @@ theorem exists_pure (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT) {Bs : Base
   have hεa : ∀ i, ε * a i = a i := fun i => by
     rw [hε, Finset.sum_mul, Finset.sum_eq_single i (fun j _ h => horth j i h) (fun h => absurd (Finset.mem_univ _) h), (hid i).1]
   have hinf : infPart D ε = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
       rw [hε, map_sum]; exact Finset.sum_eq_zero fun i _ => (hid i).2.2.2.2.2.2
   have hinf' : infPart D (cA D ε) = 0 := GlobalTheory.PlaceVec.infPart_cA hinf
   have hco0 : ∀ i, co i 0 = 0 := fun i => by simpa using hco i 0 0

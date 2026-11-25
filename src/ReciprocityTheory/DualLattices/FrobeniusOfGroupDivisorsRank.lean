@@ -1547,7 +1547,6 @@ private lemma frob_block (hS : HodgeTateSetting p v R O σ cp) [CharP (IsLocalRi
         (frobenius (IsLocalRing.ResidueField R) p) =
         (frobenius (IsLocalRing.ResidueField R) p).mapMatrix
           ((IsLocalRing.residue R).mapMatrix (∑ j, U.εT j)) := by
-      set_option synthInstance.maxHeartbeats 100000 in
         simp only [map_sum, RingHom.mapMatrix_apply]
     rw [e, U.εT_sum, map_one, map_one]
   have hF : ∀ j, j ≠ i → (U.εT (U.φ i)).map (IsLocalRing.residue R) *
@@ -1613,7 +1612,6 @@ theorem rank_eq_rank_of_perm_and_zero : EigenRankStatement := by
     have hs1 : ∑ i, (U.εT i).map (IsLocalRing.residue R) = 1 := by
       have e : ∑ i, (U.εT i).map (IsLocalRing.residue R) =
           (IsLocalRing.residue R).mapMatrix (∑ i, U.εT i) := by
-        set_option synthInstance.maxHeartbeats 100000 in
           simp only [map_sum, RingHom.mapMatrix_apply]
       rw [e, U.εT_sum, map_one]
     have h := RankA.sum_finrank (fun i => (U.εT i).map (IsLocalRing.residue R)) horth hs1

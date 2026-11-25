@@ -617,7 +617,6 @@ theorem idelesSumInv_idelesResField_of (u : Place K.1) (t : localGaloisCohomolog
         ((idelesLimitCohomologyEquiv ι (by norm_num : 1 ≤ 2)).symm (DirectSum.of _ u t))) =
       Module.finrank K.1 E.1 •
         idelesSumInv ι ((idelesLimitCohomologyEquiv ι (by norm_num : 1 ≤ 2)).symm (DirectSum.of _ u t)) := by
-  set_option synthInstance.maxHeartbeats 200000 in
     classical
     set y := (idelesLimitCohomologyEquiv ι (by norm_num : 1 ≤ 2)).symm (DirectSum.of _ u t) with hy_def
     have hy : idelesLimitCohomologyEquiv ι (by norm_num : 1 ≤ 2) y = DirectSum.of _ u t :=
