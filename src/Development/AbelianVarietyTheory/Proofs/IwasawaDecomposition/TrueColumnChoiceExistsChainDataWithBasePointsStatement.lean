@@ -1096,14 +1096,9 @@ def twJS {H : Formalism.L2.Herm.HermColsCh (I.rec7 l Z)} {F : ∀ u, FormsTiedSy
     {inQ : I.ι → HeightOneSpectrum (𝓞 (I.rec7 l Z).host.F) → Prop}
     (Q : I.ι → Finset (HeightOneSpectrum (𝓞 (I.rec7 l Z).host.F))) (hQ : ∀ a v, v ∈ Q a ↔ inQ a v)
     (p : ∀ u a, TwPack (I := I) (l := l) (Z := Z) H F (Q a) u a) : SymmetricTwistedJointForms (twT Q hQ p) F where
-  J_g u μ _ j v hv x hx := (p u μ).J.J_g j v hv x hx
-  J_off u μ _ v hv hb := (p u μ).J.J_off v hv hb
   yG u μ _ := (p u μ).J.yG
-  yG_smul u μ _ κ y j v hv := (p u μ).J.yG_smul κ y j v hv
   YQ u μ _ := (p u μ).J.YQ
   yQ u μ _ := (p u μ).J.yQ
-  y_inj u μ _ := (p u μ).J.y_inj
-  yQ_off u μ _ := (p u μ).J.yQ_off
 
 end
 
