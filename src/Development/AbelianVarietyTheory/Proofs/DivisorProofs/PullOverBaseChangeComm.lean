@@ -51,7 +51,7 @@ theorem pull_over_baseChange_comm : ∀ (R R' : Type) [CommRing R] [CommRing R']
   intro R R' _ _ σ A Y A' Y' f f' φ ψ hA hY hcomm
   have hχ : (ψ ≫ f.left) ≫ A.hom = Y'.hom ≫ spMap σ := by
     rw [Category.assoc, Over.w f, hY]
-  have H := (GlobalTheory.T.structureSheafCohomology_pullback_comp_cup_id).1
+  have H := (GlobalTheory.AbCoh.pull_comp_cup_id).1
   refine ⟨fun x ↦ ?_, fun x ↦ ?_⟩
   · have e1 := (H R R A.left Y.left A.hom Y.hom (RingHom.id R) f.left (ovw f) R'
       Y'.left Y'.hom σ ψ hY σ (ψ ≫ f.left) hχ rfl (fun _ ↦ rfl)).1 x

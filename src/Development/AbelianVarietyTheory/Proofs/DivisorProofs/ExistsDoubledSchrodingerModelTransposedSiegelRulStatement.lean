@@ -390,7 +390,6 @@ end GlobalTheory.DblTargetTheta
 
 end
 
-
 open GlobalTheory.DblTargetTheta in
 theorem GlobalTheory.DblTargetTheta.thetaDiag_rule : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) →
     ∀ (S T : HSp D) (JB : Matrix (Fin S.rank) (Fin S.rank) D.host.E) (ξ : AF D.host.F ⊗[D.host.F] D.host.E),
@@ -466,7 +465,6 @@ theorem mul_diagCols_transpose {X : Type} [CommRing X] {m n : ℕ} (z : Matrix (
   rcases j with j | j <;> simp [GlobalTheory.WeilM.diagCols, Matrix.one_apply]
 
 end GlobalTheory.DblTargetSiegel
-
 
 theorem GlobalTheory.DblTargetSiegel.siegelRule_dblTarget : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) →
     ∀ (S T : HSp D) (χS : (AE D)ˣ →* Circle), IsHeckeChar D χS → ResEta D χS S.rank →
@@ -567,8 +565,6 @@ namespace GlobalTheory.DblRestrictChar
 
 open Formalism.IndefR.Datum
 
-
-
 theorem dbl_diag_box : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) →
     ∀ (S T : HSp D) (χS χT : (AE D)ˣ →* Circle)
       (ω : GA D S × GA D T →* Module.End ℂ (Formalism.IndefR.Datum.WO S T → ℂ)),
@@ -622,7 +618,6 @@ open scoped TensorProduct GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorMode
 open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (Base Spc Model Chr incM)
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 
 theorem _root_.GlobalTheory.T.doubledWeilDatum_diag_acts_on_externalProduct : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) →
     ∀ (S T : HSp D) (χS χT : (AE D)ˣ →* Circle)
@@ -756,7 +751,6 @@ theorem join_mem {u v : WO S T} (hu : u ∈ ratL T S) (hv : v ∈ ratL T S) : jo
 
 end GlobalTheory.DblBoxHaar
 
-
 open MeasureTheory in
 theorem GlobalTheory.DblBoxHaar.box_integral : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S T : HSp D),
     ∃ (μ : MeasureTheory.Measure (Formalism.IndefR.Datum.WO S (GlobalTheory.Doubling.dblSp T))) (𝓕 : Set (Formalism.IndefR.Datum.WO S (GlobalTheory.Doubling.dblSp T)))
@@ -809,7 +803,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (Base Spc Model Ch
 open Formalism.IndefR.Datum
 
 attribute [-instance] GlobalTheory.SplitWeil.matrixMeasurableSpace
-
 
 end -- clump:auto
 end -- clump:auto
@@ -894,7 +887,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (Base Spc Model Ch
 open Formalism.IndefR.Datum
 
 attribute [-instance] GlobalTheory.SplitWeil.matrixMeasurableSpace
-
 
 end -- clump:auto
 end -- clump:auto
@@ -1025,7 +1017,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (Base Spc Model Ch
 open Formalism.IndefR.Datum
 
 attribute [-instance] GlobalTheory.SplitWeil.matrixMeasurableSpace
-
 
 end -- clump:auto
 end -- clump:auto
@@ -1159,7 +1150,6 @@ theorem thetaSum_schr_negY (ψ : AddChar (AdeleRing (𝓞 F) F) ℂ) (hu : ∀ a
 
 end GlobalTheory.WeilSchrodinger.DblTarget.ThetaBox
 
-
 open GlobalTheory.WeilSchrodinger.DblTarget.ThetaBox in
 theorem GlobalTheory.WeilSchrodinger.DblTarget.thetaTr_coDbl_boxFun : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) →
     ∀ (S T : HSp D) (JA : Matrix (Fin T.rank) (Fin T.rank) D.host.E) (JB : Matrix (Fin S.rank) (Fin S.rank) D.host.E)
@@ -1225,8 +1215,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (Base Spc Model Ch
 noncomputable section
 
 namespace GlobalTheory.WeilSchrodinger.DblRestrict
-
-
 
 theorem omp_diag_boxFun : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) →
     ∀ (S T : HSp D) (χS χT : (AE D)ˣ →* Circle), IsHeckeChar D χS → IsHeckeChar D χT →
@@ -1301,8 +1289,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (Base Spc Model Ch
 
 namespace GlobalTheory.WeilSchrodinger.DblTarget
 
-
-
 theorem exists_dbl_target : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) →
     ∀ (S T : HSp D) (χS χT : (AE D)ˣ →* Circle), IsHeckeChar D χS → IsHeckeChar D χT →
       ResEta D χS S.rank → ResEta D χT T.rank →
@@ -1336,7 +1322,7 @@ theorem exists_dbl_target : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStd
   have r1 := _root_.GlobalTheory.Core.Rk.IP.FockModel.resEta_one_dbl T rT
   obtain ⟨ωd, hωd⟩ := GlobalTheory.weilRepresentationUnitaryPair D ψ S (GlobalTheory.Doubling.dblSp T) χS 1 hψ hS h1S rS r1
   have hrat' := coDbl_rat hA co hrat
-  obtain ⟨omp, hmp⟩ := GlobalTheory.T.exists_weilDatum_transport_adelicSchwartz_thetaTransform D ψ hψ S (GlobalTheory.Doubling.dblSp T) χS 1 hS h1S rS r1 _ JB ξ rfl hB (κ ⊕ κ)
+  obtain ⟨omp, hmp⟩ := GlobalTheory.ThetaTransform.exists_isTransport D ψ hψ S (GlobalTheory.Doubling.dblSp T) χS 1 hS h1S rS r1 _ JB ξ rfl hB (κ ⊕ κ)
     (coDbl hA co) hrat' ωd hωd
   have h2 := GlobalTheory.T.transportedWeil_preserves_schwartz_heisenberg_equivariant D ψ hψ S (GlobalTheory.Doubling.dblSp T) χS 1 hS h1S rS r1 _ JB ξ rfl hB (κ ⊕ κ)
     (coDbl hA co) hrat' ωd hωd omp hmp
@@ -1383,7 +1369,6 @@ open scoped TensorProduct GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorMode
 open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (Base Spc Model Chr incM)
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 
 end -- clump:auto
 end -- clump:auto

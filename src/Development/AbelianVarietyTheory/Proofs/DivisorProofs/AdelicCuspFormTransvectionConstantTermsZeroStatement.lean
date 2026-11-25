@@ -129,7 +129,6 @@ theorem exists_isIso {V : HSp D} (X : Data D.host.E V.rank) (hG : X.Gm = -V.gram
 
 end
 
-
 open ReciprocityTheory.ChartRestriction.G.FD in
 theorem zCusp_adel : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (w : D.what₂.Tau → Fin V.rank → ℤ) (r : ℕ) (hr : V.rank = r) (Comp : Type) (X : Comp → ReciprocityTheory.ChartRestriction.G.FD.Data D.host.E r) (la : ∀ k, ReciprocityTheory.ChartRestriction.G.FD.Wt (X k).Ψ r) (dict : GA D V → Σ k, ReciprocityTheory.ChartRestriction.G.FD.Frame (X k).Ψ r) (mu : GA D V → ℂ) (c : Comp → ℂ) (Kf : Subgroup (GA D V)), HolShape M → GoodDict θ M w hr X la dict mu c Kf → ∀ P : FDSec X, IsHolCusp X la P → ZCusp V (adel V dict (muPin V dict mu c) P) := by
   intro D θ V S M w r hr Comp X la dict mu c Kf hM hG P hP ξ hξ μ 𝓕 hμ h𝓕 g
@@ -141,7 +140,7 @@ theorem zCusp_adel : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau
   obtain ⟨-, -, -, hB, hT, -, hQ⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
   obtain ⟨L, hL1, -, hLc, hLU, hLL, -, -, -, hH⟩ := GlobalTheory.RealLift.exists_real_lift D θ V hθ
   obtain ⟨⟨eZ, -⟩, -, hZ1, hZ2, -⟩ := GlobalTheory.HolDict.TransvGroup.transvection_group D θ V hθ ξ hξ
-  obtain ⟨-, hfin, hdec⟩ := GlobalTheory.T.transvectionSubgroup_cocompact_haar_fundamentalDomain D θ V hθ ξ hξ
+  obtain ⟨-, hfin, hdec⟩ := GlobalTheory.TransvMeasure.transvection_measure D θ V hθ ξ hξ
   obtain ⟨e, he, -, -⟩ := FdDom.dom_iff_frDoms D θ V S M w _ rfl Comp X la dict mu c Kf hM hG (dict g).1
   have hcomm : ∀ a b : ZI V ξ, a * b = b * a := fun a b => by
     obtain ⟨a, rfl⟩ := eZ.surjective a

@@ -15,9 +15,6 @@ noncomputable section
 
 namespace GlobalTheory.LinSchurLatt
 
-theorem eq_one_of_pow_near (z : ℂ) (h : ∀ m : ℕ, ‖z ^ m - 1‖ ≤ 1 / 2) : z = 1 := by
-  apply GlobalTheory.ConductorAdicCompletion.eq_one_of_pow_near_one <;> assumption
-
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem valuation_natCast_le_one (m : ℕ) : valuation k (m : k) ≤ 1 :=
@@ -36,7 +33,7 @@ theorem ker_int_mem_nhds (ψ0 : AddChar k ℂ) (hc : Continuous ψ0) :
     have h0 : (fun z : k × k => z.2 * z.1) (0, a) = 0 := by simp
     exact hcm.continuousAt.preimage_mem_nhds (by simpa using hU)
   filter_upwards [hev] with w hw o ho
-  apply eq_one_of_pow_near
+  apply GlobalTheory.ConductorAdicCompletion.eq_one_of_pow_near_one
   intro m
   have hmo : valuation k ((m : k) * o) ≤ 1 := by
     rw [map_mul]
