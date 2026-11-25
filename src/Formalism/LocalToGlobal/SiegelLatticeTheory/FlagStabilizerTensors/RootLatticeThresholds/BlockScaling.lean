@@ -50,8 +50,6 @@ namespace Formalism.L2.SG.Pf.Carrier
 
 open Formalism.L2.SG.RealObj Formalism.L2.SG.HidaSetting Formalism.L2.SG.RealObj.InfCut Formalism.L2.SG.Pf.Carrier.JointQuot
 
-attribute [local instance] instCM
-
 theorem bSt_pos {κ : ℝ} (hκ : 0 < κ) (p : Formalism.FourierDecayAlt.C.LPt) : 0 < Formalism.FourierDecayAlt.D.bSt κ p := by
   unfold Formalism.FourierDecayAlt.D.bSt
   refine List.prod_pos fun x hx => ?_
@@ -1227,8 +1225,6 @@ end Formalism.L2.SG.BlockScaling
 namespace Formalism.L2.SG.Pf.Carrier
 
 open Formalism.L2.SG.RealObj Formalism.L2.SG.HidaSetting Formalism.L2.SG.RealObj.InfCut Formalism.L2.SG.Pf.Carrier.JointQuot
-
-attribute [local instance] instCM
 
 section ZsMq
 

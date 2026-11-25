@@ -211,8 +211,6 @@ end Lattice
 open GlobalTheory.IndefiniteRowSideFullHecke.ShiftMapsUpDown (offS homInt homLat latFin latFinAA mapUp mapDown locPart gramFin AEf vacSign vacSignOf theta0
   HyperspecialFixesVacuum HomLatSelfDual mapUp_add mapUp_neg mapUp_zero)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 variable {D : D7}
 
 section Adeles

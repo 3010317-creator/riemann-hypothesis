@@ -16,8 +16,6 @@ namespace GlobalTheory.LieComb
 
 open GlobalTheory.SqZero
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 variable {R : Type} [CommRing R] {G : Over (Spec (CommRingCat.of R))} [GrpObj G] [IsCommMonObj G]
   {n : ℕ} {v : Fin n → (epsR R ⟶ G)}
 

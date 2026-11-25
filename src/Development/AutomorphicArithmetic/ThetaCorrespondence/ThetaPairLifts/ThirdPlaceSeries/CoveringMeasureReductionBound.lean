@@ -779,10 +779,6 @@ open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions F
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD GlobalTheory.AllWt GlobalTheory.CompHt GlobalTheory.BigTop GlobalTheory.CovTop GlobalTheory.CovTop.MeasRd
 
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-
-
 noncomputable section
 
 namespace GlobalTheory.CovTop.MeasRd

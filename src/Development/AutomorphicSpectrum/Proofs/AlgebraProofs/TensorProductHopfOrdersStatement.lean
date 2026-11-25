@@ -18,7 +18,6 @@ open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj Alg
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi
 open ReciprocityTheory.ChartRestriction.G.Chart (sp spMap)
 open scoped CategoryTheory.Obj CategoryTheory.MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
 
 alias _root_.GlobalTheory.CompanionTheory.Relay.tensor_product_hopf_orders := _root_.PositivityTheory.HtPt.Re.tens_hopf
 end -- clump:auto

@@ -41,8 +41,6 @@ open scoped TensorProduct
 
 namespace GlobalTheory.IndefiniteRowSideFullHecke.InertPlaceSetting
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 def labInd {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] (σ : L →+* L) (n : ℕ) (ϖ : L)
     (d : List ℤ) : Formalism.UG.GU σ n → ℂ :=
   Set.indicator {g | ∃ k₁ ∈ Formalism.UG.KU σ n, ∃ k₂ ∈ Formalism.UG.KU σ n,

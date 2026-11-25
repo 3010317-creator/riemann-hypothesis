@@ -187,8 +187,6 @@ section Scheme
 open CategoryTheory CategoryTheory.Limits MonoidalCategory CartesianMonoidalCategory MonObj
   AlgebraicGeometry TensorProduct WithConv
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 theorem isCocomm_of_mul_comm {R B : Type*} [CommRing R] [CommRing B] [Bialgebra R B]
     (h : ∀ f g : WithConv (B →ₐ[R] B ⊗[R] B), f * g = g * f) : Coalgebra.IsCocomm R B := by
   let l : WithConv (B →ₐ[R] B ⊗[R] B) := toConv Algebra.TensorProduct.includeLeft

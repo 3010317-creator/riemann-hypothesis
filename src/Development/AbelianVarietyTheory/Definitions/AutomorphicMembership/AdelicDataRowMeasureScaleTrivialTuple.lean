@@ -31,8 +31,6 @@ open scoped TensorProduct
 
 namespace GlobalTheory.VolHeckeCheck
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 theorem isWittLower_self (D : D7) (V : HSp D) : IsWittLower V V 0 := by
   refine ⟨rfl, LinearMap.id, fun _ _ => rfl, 0, ⟨linearIndependent_empty_type, ?_⟩, ?_⟩
   · exact Subsingleton.elim _ _
@@ -56,8 +54,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open scoped TensorProduct
 
 namespace GlobalTheory.Mem.Th
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : D7}
 

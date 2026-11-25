@@ -388,8 +388,6 @@ section Proj
 
 open GlobalTheory.ProjSpace
 
-attribute [local instance] MvPolynomial.gradedAlgebra
-
 variable (R : Type) [CommRing R] (N : ℕ)
 
 abbrev sheafO (n : ℤ) : (PSpace R N).Modules :=

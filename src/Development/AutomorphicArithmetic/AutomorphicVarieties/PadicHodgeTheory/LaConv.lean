@@ -627,8 +627,6 @@ namespace UpperTheory.V.Loc.LaConv
 
 open GlobalTheory.Pst GlobalTheory.TripleGal Formalism.WeaklyAdmissibleFiltrations Formalism.MainNotions.N Topology
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
 section Char
 
 variable {F : Type} [Field F] [NumberField F] {l : ℕ} [Fact l.Prime] {w : Plc F}

@@ -14,8 +14,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry MonoidalCategory
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor hiding epsScale
 open ReciprocityTheory.ChartRestriction.G.Semi GlobalTheory.GrpTangent GlobalTheory.CatCoh GlobalTheory.Cris
 
-attribute [local instance] Over.cartesianMonoidalCategory
-
 namespace GlobalTheory.DeRham
 
 variable {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''] {I : Ideal R} {I' : Ideal R'}

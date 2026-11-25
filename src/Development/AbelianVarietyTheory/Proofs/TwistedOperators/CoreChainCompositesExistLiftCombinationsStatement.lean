@@ -1116,9 +1116,6 @@ end GlobalTheory.CosDatum
 
 namespace GlobalTheory.CoreOnto
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-
 open GlobalTheory.CosDatum in
 theorem datumEx : DatumEx := by
   intro D hq T L μ0 hL sc G W M hM i hi r r' hr hr' S S' MM MM' x₀ hx₀
