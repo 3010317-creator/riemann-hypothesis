@@ -61,7 +61,6 @@ open Formalism.QuantumDeterminants
 open PI.WUN (exp_deriv)
 
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-attribute [-instance] instTopologicalSpaceMatrix
 
 variable {n : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
