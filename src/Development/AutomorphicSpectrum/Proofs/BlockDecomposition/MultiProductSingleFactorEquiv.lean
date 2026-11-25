@@ -25,11 +25,8 @@ theorem exists_equiv_tensor {α : Type} [Fintype α] [DecidableEq α] (X : α �
     by_cases hi : i = i₀
     · exact ⟨0, 0, fun h => absurd hi h⟩
     · obtain ⟨v, hv, hs⟩ := hx i hi
-      obtain ⟨f, hf⟩ : ∃ f : Module.Dual ℂ (X i), f v ≠ 0 := by
-        by_contra h
-        push Not at h
-        exact hv ((Module.forall_dual_apply_eq_zero_iff ℂ v).1 h)
-      refine ⟨v, (f v)⁻¹ • f, fun _ => ⟨by simp [hf], fun w => ?_⟩⟩
+      obtain ⟨f, hf⟩ := Module.Projective.exists_dual_eq_one ℂ hv
+      refine ⟨v, f, fun _ => ⟨hf, fun w => ?_⟩⟩
       obtain ⟨a, rfl⟩ := hs w
       simp [hf]
   choose x c hc using hx'
