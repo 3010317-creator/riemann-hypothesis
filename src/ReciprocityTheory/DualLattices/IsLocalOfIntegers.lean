@@ -74,13 +74,9 @@ theorem det_mem_span_prod {R : Type*} [CommRing R] [IsLocalRing R] :
       have h1 : ∑ i, g i * a i - 1 ∈ Ideal.span {c 0} := by
         rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub, ← hfst g a ha, hg]
         simp
-      have hu : IsUnit (∑ i, g i * a i) := by
-        by_contra hx
-        have hx' : ∑ i, g i * a i ∈ IsLocalRing.maximalIdeal R :=
-          (IsLocalRing.mem_maximalIdeal _).2 hx
-        have := Ideal.sub_mem _ hx' (hspan_le h1)
-        rw [sub_sub_cancel] at this
-        exact (IsLocalRing.maximalIdeal.isMaximal R).ne_top ((Ideal.eq_top_iff_one _).2 this)
+      have hu : IsUnit (∑ i, g i * a i) :=
+        IsLocalRing.isUnit_of_mem_nonunits_one_sub_self _ ((IsLocalRing.mem_maximalIdeal _).1 (by
+          rw [← neg_sub]; exact neg_mem (hspan_le h1)))
       obtain ⟨i₀, hi₀⟩ : ∃ i₀, IsUnit (a i₀) := by
         by_contra hne
         push Not at hne
