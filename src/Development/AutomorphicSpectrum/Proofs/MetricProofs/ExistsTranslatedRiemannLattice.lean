@@ -33,11 +33,6 @@ theorem sum_embeddings_cm {σ : Ψ → (𝓞 E →+* ℂ)} (hσ : IsCMFam σ) (f
   classical
   let m : Ψ × Bool → (E →+* ℂ) := fun p =>
     if p.2 then (starRingEnd ℂ).comp (embOf (σ p.1)) else embOf (σ p.1)
-  have hc : ∀ s t : 𝓞 E →+* ℂ, (starRingEnd ℂ).comp s = (starRingEnd ℂ).comp t → s = t := by
-    intro s t h
-    ext x
-    have := congrArg (fun r : 𝓞 E →+* ℂ => starRingEnd ℂ (r x)) h
-    simpa using this
   have hcc : ∀ s : 𝓞 E →+* ℂ, (starRingEnd ℂ).comp ((starRingEnd ℂ).comp s) = s := by
     intro s
     ext x
@@ -53,7 +48,7 @@ theorem sum_embeddings_cm {σ : Ψ → (𝓞 E →+* ℂ)} (hσ : IsCMFam σ) (f
       · rw [hσ.1 h']
       · exact absurd ⟨τ, h'⟩ ((hσ.2 (σ τ')).1 ⟨τ', rfl⟩)
       · exact absurd ⟨τ', h'.symm⟩ ((hσ.2 (σ τ)).1 ⟨τ, rfl⟩)
-      · rw [hσ.1 (hc _ _ h')]
+      · rw [hσ.1 ((RingHom.cancel_left star_injective).1 h')]
     · intro φ
       by_cases h : ∃ τ, σ τ = φ.comp (algebraMap (𝓞 E) E)
       · obtain ⟨τ, hτ⟩ := h
