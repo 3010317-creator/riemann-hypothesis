@@ -44,11 +44,6 @@ import Mathlib.Topology.Sheaves.Init
 
 namespace GlobalTheory.HCXi
 
-/-- **Soudry's theorem on integrability of Bessel models**: the matrix coefficients of
-cuspidal representations integrated against Bessel characters converge absolutely for all test functions.
-
-Proposed reference:
-[D. Soudry, *The $L$ and $\epsilon$ factors for unitary group representations*][soudry1984]. -/
 def BesselXiIntegrable : Prop := Formalism.FourierDecayAlt.B.XiExists
 
 end GlobalTheory.HCXi
