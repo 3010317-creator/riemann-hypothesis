@@ -355,16 +355,8 @@ theorem avg_lim {E X : Type*} [TopologicalSpace E] {ψ : E → ℝ} {U K : Set E
     have h1 : Tendsto Q (𝓝 θ) (𝓝[U] (Q θ)) :=
       tendsto_nhdsWithin_iff.2 ⟨hQ.tendsto θ, Filter.Eventually.of_forall (fun θ' => hKU (hQK θ'))⟩
     exact h1.eventually (hψ (Q θ) (hKU (hQK θ)) y hy)
-  have bnd : ∀ y ∈ K, |ψ y| ≤ |m| + |M| := by
-    intro y hy
-    rw [abs_le]
-    have h1 := hm y hy
-    have h2 := hM y hy
-    have h3 := neg_abs_le m
-    have h4 := le_abs_self M
-    have h5 := abs_nonneg m
-    have h6 := abs_nonneg M
-    constructor <;> linarith
+  have bnd : ∀ y ∈ K, |ψ y| ≤ |m| + |M| := fun y hy => (abs_le_max_abs_abs (hm y hy) (hM y hy)).trans
+    (max_le (le_add_of_nonneg_right (abs_nonneg M)) (le_add_of_nonneg_left (abs_nonneg m)))
   have meas0 : Measurable (fun θ => ψ (P0 θ)) := (usc_comp P0 hP0c hP0K).measurable
   have bndG : ∀ x, (∀ θ, P x θ ∈ K) → ∀ θ, |max (ψ (P x θ)) (ψ (P0 θ))| ≤ |m| + |M| := by
     intro x hxK θ
