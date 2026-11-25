@@ -270,11 +270,7 @@ theorem local_step [CharZero Ω] [IsLocallyNoetherian X] (hξ : IsCptGen ξ) (S 
     haveI : IsNoetherianRing Γ(X, U₂) := IsLocallyNoetherian.component_noetherian ⟨U₂, hU₂aff⟩
     have hN : TopologicalSpace.NoetherianSpace (U₂ : Set X) :=
       noetherianSpace_of_isAffineOpen U₂ hU₂aff
-    have hcpt := hN.isCompact (Subtype.val ⁻¹' C : Set (U₂ : Set X))
-    have := Subtype.isCompact_iff.1 hcpt
-    have hCU : C ⊆ (U₂ : Set X) := fun x hx => hx.1
-    rw [Subtype.image_preimage_coe, Set.inter_eq_right.2 hCU] at this
-    exact this
+    exact (TopologicalSpace.noetherianSpace_set_iff _).1 hN C fun x hx => hx.1
   have key : ∀ x ∈ C, ∃ W : X.Opens, x ∈ W ∧ ∃ m : ℕ, m ≠ 0 ∧ ∀ q : Cpt ξ, q.1 ∈ W → ¬ InFibre ξ l q →
       (∀ n : ℕ, n.Prime → n ∣ m → ¬ InFibre ξ n q) →
       L₀ q = Submodule.span (regAt ξ q) (Set.range b) := by
