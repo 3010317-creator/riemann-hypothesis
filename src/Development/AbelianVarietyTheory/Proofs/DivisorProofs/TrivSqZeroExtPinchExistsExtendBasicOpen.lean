@@ -104,9 +104,7 @@ theorem locPullback : ∀ {A R₀ A' B₀ : Type} [CommRing A] [CommRing R₀] [
     Aα.comp (algebraMap R₀ LR) = (algebraMap B₀ LB).comp α →
     Kκ.comp (algebraMap A' LA') = (algebraMap B₀ LB).comp κ →
     (∀ t, Φ t = 0 → Ψ t = 0 → t = 0) ∧ ∀ a b, Aα a = Kκ b → ∃ t, Φ t = a ∧ Ψ t = b := by
-  first
-  | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.QuotientMapComposition.main
-  | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.QuotientMapComposition.main
+  exact @_root_.GlobalTheory.QuotientMapComposition.main
 
 end GlobalTheory
 end -- clump:auto
