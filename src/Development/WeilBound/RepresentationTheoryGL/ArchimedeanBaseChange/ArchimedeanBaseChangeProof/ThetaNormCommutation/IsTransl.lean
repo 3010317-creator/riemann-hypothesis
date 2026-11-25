@@ -37,8 +37,6 @@ def IsTestP (φ : ∀ w : Pl E, GLw a w × GLw b w → ℂ) : Prop :=
     IsLevelFam (thL a) (fun w : Pl E => GlobalTheory.LFun.KGL w (n := a)) K₁ ∧ IsLevelFam (thL b) (fun w : Pl E => GlobalTheory.LFun.KGL w (n := b)) K₂ ∧
       GlobalTheory.BCT.IsTest (K2 a b) (fun w : Pl E => (K₁ w).prod (K₂ w)) φ
 
-def G1 : Prop := USide
-
 def G2 : Prop := ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], GlobalTheory.BCT.Unr E → ∀ n : ℕ, 1 ≤ n → ∀ (μ : HChar E) (e : InfinitePlace E → ℤ), IsMu μ e →
   ∀ lam : InfinitePlace E → DomWeight n, ∃ (ι : Type) (_ : Fintype ι) (a : ι → ℕ) (l₁ : ∀ i, InfinitePlace E → DomWeight (a i))
     (l₂ : ∀ i, InfinitePlace E → DomWeight (n - a i)) (sg : ι → ℤˣ),

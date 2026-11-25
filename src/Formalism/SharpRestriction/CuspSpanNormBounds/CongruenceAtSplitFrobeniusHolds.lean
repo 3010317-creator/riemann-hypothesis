@@ -585,9 +585,6 @@ def stVol (D : D7) (large₂ : SizeData₂ D) (X : TermTie D) (u u' : D.what₂.
   ∀ t : D.s.Term u u', D.s.Gterm t ≠ 0 → D.s.relevant t →
     Y.volR t ≤ HHZ D large₂.sc.b C (ZhatL (X.fl t) (X.fl' t)) ^ (C * (D.R.rS : ℝ) ^ 2)
 
-def VolumeRatioBound (D : D7) (large₂ : SizeData₂ D) (u u' : D.what₂.Word) (C' Cl Cg cb Cu cT CT C0 A c : ℝ) : Prop :=
-  Hyp D large₂ u u' C' Cl Cg cb Cu cT CT C0 A → LoopPairSumBound D u u' c
-
 section S0lines
 
 variable (D : D7)

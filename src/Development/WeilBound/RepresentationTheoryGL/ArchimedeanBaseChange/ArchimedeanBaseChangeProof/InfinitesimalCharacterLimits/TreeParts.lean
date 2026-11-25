@@ -24,10 +24,6 @@ def TreeParts {N : ℕ} (t : Tr E N) (P : PositivityTheory.Rg.BcB.F.Pre E N) : P
 
 def rt {a b : ℕ} (g : Hf E a b) (F : H E a b → ℂ) : H E a b → ℂ := fun x => F (x * finH g)
 
-def atW {a b : ℕ} (w : HeightOneSpectrum (𝓞 E)) (g : GL (Fin a) (w.adicCompletion E) × GL (Fin b) (w.adicCompletion E)) :
-    Hf E a b :=
-  (locGL E a w g.1, locGL E b w g.2)
-
 def PreOfTree : Prop := ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (N : ℕ) (t : Tr E N), t.Good → t.Untw →
   (∀ τ, ∃ m, HasInfCharGL t.space τ m) → ∃ P : PositivityTheory.Rg.BcB.F.Pre E N, TreeParts t P
 

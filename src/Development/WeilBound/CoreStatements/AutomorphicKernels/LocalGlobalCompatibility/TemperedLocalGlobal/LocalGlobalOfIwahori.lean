@@ -29,10 +29,6 @@ inductive Sub : Subgroup ↥(Weil h) → Prop
 
 def Triv (y : WD h) (g : ↥(Weil h)) : Prop := y.charPol g = (X - 1) ^ y.lpDim
 
-def Rel (x y : WD h) : Prop :=
-  x.lpDim = y.lpDim ∧ (x.mono0 ↔ y.mono0) ∧ ∀ U : Subgroup ↥(Weil h), Sub U → (∀ g ∈ ⁅U, U⁆, Triv y g) →
-    ∀ g ∈ U, x.charPol g = y.charPol g
-
 end Defs
 
 end LocalGlobalAboveLAlt
