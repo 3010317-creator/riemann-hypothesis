@@ -381,15 +381,6 @@ theorem cxHessian_comp_star (φ : (Fin D → ℂ) → ℝ) (z : Fin D → ℂ) :
 
 end Hess
 
-section Pts
-
-variable {K : Type*} [Fintype K] {ι : K → Type*} [∀ k, Fintype (ι k)]
-
-variable {e : ℕ} {P : Ideal (MRing ι)}
-  {Ψ Ψ' : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ)}
-
-end Pts
-
 end GlobalTheory.CompanionTheory.Ar.Giv
 end -- clump:auto
 end -- clump:auto
@@ -418,7 +409,6 @@ noncomputable def conjugateProjection {e : ℕ} (Ψ : (((k : K) → ι k) → �
   map_add' a b := by simp only [star_add, map_add (f := _)]
   map_smul' c w := by
     simp only [star_smul, map_smul, RingHom.id_apply, star_star]
-
 
 open Classical in
 theorem logNorm_one_eq_indicator {Ω F : Type} [Field Ω] [Field F] [Algebra F Ω] {y : (Σ k, ι k) → Ω}
@@ -455,9 +445,6 @@ set_option maxSynthPendingDepth 1
 
 open MvPolynomial ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.ArakelovGeometry Filter Topology NumberField
 
-namespace GlobalTheory.CompanionTheory.Ar.Giv
-
-end GlobalTheory.CompanionTheory.Ar.Giv
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.MetricProofs.SumOverEmbeddingsUnitInvariance =====
@@ -490,9 +477,6 @@ section -- clump:auto
 
 open MvPolynomial ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.ArakelovGeometry Filter Topology NumberField
 
-namespace GlobalTheory.CompanionTheory.Ar.Giv
-
-end GlobalTheory.CompanionTheory.Ar.Giv
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.MetricProofs.EmbeddingPiecesOfIntersectionAndResolution =====
