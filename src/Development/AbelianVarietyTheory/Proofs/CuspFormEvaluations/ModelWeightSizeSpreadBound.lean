@@ -52,36 +52,26 @@ theorem sum_row_le (r p0 : ℕ) (hp : p0 ≤ r) (u v : ℕ → ℕ) :
   classical
   rw [Finset.sum_ite]
   gcongr
-  · calc ∑ j ∈ Finset.univ.filter (fun j : Fin r => p0 ≤ (j : ℕ)), u ((j : ℕ) - p0)
-          = ∑ i ∈ Finset.image (fun j : Fin r => (j : ℕ) - p0) (Finset.univ.filter (fun j : Fin r => p0 ≤ (j : ℕ))), u i := by
-            refine (Finset.sum_image ?_).symm
-            intro a ha b hb hab
-            simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at ha hb
-            dsimp only at hab
-            exact Fin.ext (by omega)
-      _ ≤ ∑ i ∈ Finset.range r, u i := by
-            apply Finset.sum_le_sum_of_subset
-            intro i hi
-            simp only [Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and] at hi
-            obtain ⟨j, _, rfl⟩ := hi
-            simp only [Finset.mem_range]
-            have := j.isLt
-            omega
-  · calc ∑ j ∈ Finset.univ.filter (fun j : Fin r => ¬ p0 ≤ (j : ℕ)), v (p0 - 1 - (j : ℕ))
-          = ∑ i ∈ Finset.image (fun j : Fin r => p0 - 1 - (j : ℕ)) (Finset.univ.filter (fun j : Fin r => ¬ p0 ≤ (j : ℕ))), v i := by
-            refine (Finset.sum_image ?_).symm
-            intro a ha b hb hab
-            simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at ha hb
-            dsimp only at hab
-            exact Fin.ext (by omega)
-      _ ≤ ∑ i ∈ Finset.range r, v i := by
-            apply Finset.sum_le_sum_of_subset
-            intro i hi
-            simp only [Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and] at hi
-            obtain ⟨j, hj, rfl⟩ := hi
-            simp only [Finset.mem_range]
-            have := j.isLt
-            omega
+  · refine Finset.sum_le_sum_of_injOn (fun j : Fin r => (j : ℕ) - p0) (fun a ha b hb hab => ?_)
+      (fun i hi => ?_) (fun _ _ => le_rfl) (fun _ _ _ => Nat.zero_le _)
+    · simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at ha hb
+      dsimp only at hab
+      exact Fin.ext (by omega)
+    · simp only [Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and] at hi
+      obtain ⟨j, _, rfl⟩ := hi
+      simp only [Finset.mem_range]
+      have := j.isLt
+      omega
+  · refine Finset.sum_le_sum_of_injOn (fun j : Fin r => p0 - 1 - (j : ℕ)) (fun a ha b hb hab => ?_)
+      (fun i hi => ?_) (fun _ _ => le_rfl) (fun _ _ _ => Nat.zero_le _)
+    · simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at ha hb
+      dsimp only at hab
+      exact Fin.ext (by omega)
+    · simp only [Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and] at hi
+      obtain ⟨j, hj, rfl⟩ := hi
+      simp only [Finset.mem_range]
+      have := j.isLt
+      omega
 
 theorem spread_le {r : ℕ} (x b : Fin r → ℝ) (m : ℝ) (hm : 0 ≤ m) (hb : ∀ i, 0 ≤ b i)
     (hx : ∀ i, |x i| = b i + m) : (⨆ i, x i) - ⨅ i, x i ≤ ∑ i, b i + 2 * m := by
