@@ -149,20 +149,12 @@ private theorem band_rt {C : ℝ} (hC : 0 ≤ C) {φ : Sm E n} (h : Band C φ) (
         mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (AutomorphicForm.height_pos _).le h4 N) h3
     _ = _ := by rw [mul_pow]; ring
 
-private theorem band_finsum {C : ℝ} (hC : 0 ≤ C) {Q : Type*} (f : Q → Module.End ℂ (Sm E n)) {φ : Sm E n}
-    (hf : ∀ c, Band C (f c φ)) : Band C ((∑ᶠ c, f c) φ) := by
-  classical
-  by_cases h : (Function.support f).Finite
-  · rw [finsum_eq_sum_of_support_subset (s := h.toFinset) _ (by simp), LinearMap.sum_apply]
-    exact Finset.sum_induction _ (Band C) (fun _ _ => band_add hC) (band_zero C) fun c _ => hf c
-  · rw [finsum_of_infinite_support h]
-    exact band_zero C
-
-private theorem band_hk {C : ℝ} (hC : 0 ≤ C) {φ : Sm E n} (h : Band C φ) (w : IsDedekindDomain.HeightOneSpectrum (𝓞 E)) (j : ℕ) :
-    Band C (hk n w j φ) := by
+private theorem band_hk {C : ℝ} (hC : 0 ≤ C) {φ : Sm E n} (h : Band C φ)
+    (w : IsDedekindDomain.HeightOneSpectrum (𝓞 E)) (j : ℕ) : Band C (hk n w j φ) := by
   unfold hk
   rw [LinearMap.smul_apply]
-  refine band_smul (band_finsum hC _ fun c => ?_) _
+  refine band_smul (finsum_induction (fun T : Module.End ℂ (Sm E n) => Band C (T φ))
+    (band_zero C) (fun _ _ => band_add hC) fun c => ?_) _
   rw [LinearMap.smul_apply]
   exact band_smul (band_rt hC h _) _
 

@@ -19,19 +19,12 @@ private theorem slice_mem {F : Type} [Field F] [NumberField F] {f : V4 F → ℂ
     (hf : f ∈ schwartzBruhatPi (K := F) (ι := Fin 4)) :
     (fun y : Fin 4 → FiniteAdeleRing (𝓞 F) F => f fun i => ((0, y i) : A F)) ∈
       finiteSchwartzBruhatPi F (ι := Fin 4) := by
-  induction hf using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨p, g, hg, rfl⟩ := hx
-    have e : (fun y : Fin 4 → FiniteAdeleRing (𝓞 F) F =>
-        schwartzBruhatTensorPi p g fun i => ((0, y i) : A F)) =
-        p (infPartPi fun _ : Fin 4 => (0 : A F)) • g := by
-      funext y
-      rfl
-    rw [e]
-    exact Submodule.smul_mem _ _ hg
-  | zero => exact Submodule.zero_mem _
-  | add x y _ _ hx hy => exact Submodule.add_mem _ hx hy
-  | smul c x _ hx => exact Submodule.smul_mem _ c hx
+  let φ : (V4 F → ℂ) →ₗ[ℂ] (Fin 4 → FiniteAdeleRing (𝓞 F) F) → ℂ :=
+    { toFun := fun f y => f fun i => ((0, y i) : A F)
+      map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
+  refine (Submodule.span_le (p := (finiteSchwartzBruhatPi F (ι := Fin 4)).comap φ)).2 ?_ hf
+  rintro _ ⟨p, g, hg, rfl⟩
+  exact Submodule.smul_mem _ (p (infPartPi fun _ : Fin 4 => (0 : A F))) hg
 
 private theorem gauss_fin {F : Type} [Field F] [NumberField F] [IsTotallyReal F] (δ : F)
     (y : Fin 4 → FiniteAdeleRing (𝓞 F) F) : gauss δ (fun i => ((0, y i) : A F)) = 1 := by
@@ -75,35 +68,17 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.fkLe :
         ∃ g ∈ finiteSchwartzBruhatPi F (ι := Fin 4), φ = fun v => p v * gauss δ v * g (finPartPi v)} →
         (fun v => cw w (v i) * f v) ∈ Submodule.span ℂ {φ : V4 F → ℂ | ∃ p ∈ polyFn (F := F),
         ∃ g ∈ finiteSchwartzBruhatPi F (ι := Fin 4), φ = fun v => p v * gauss δ v * g (finPartPi v)} := by
+      let mulCw : (V4 F → ℂ) →ₗ[ℂ] (V4 F → ℂ) :=
+        { toFun := fun f v => cw w (v i) * f v
+          map_add' := fun a b => funext fun v => mul_add _ _ _
+          map_smul' := fun c a => funext fun v => by
+            simp only [Pi.smul_apply, smul_eq_mul, RingHom.id_apply]; ring }
       intro f hf
-      induction hf using Submodule.span_induction with
-      | mem f hf =>
-        obtain ⟨p, hp, g, hg, rfl⟩ := hf
-        refine Submodule.subset_span ⟨(fun v : V4 F => cw w (v i)) * p, mul_mem hc hp, g, hg, ?_⟩
-        funext v
-        simp only [Pi.mul_apply]
-        ring
-      | zero =>
-        have : (fun v : V4 F => cw w (v i) * (0 : V4 F → ℂ) v) = 0 := by
-          funext v
-          simp
-        rw [this]
-        exact Submodule.zero_mem _
-      | add a b _ _ ha hb =>
-        have : (fun v : V4 F => cw w (v i) * (a + b) v) =
-            (fun v => cw w (v i) * a v) + fun v => cw w (v i) * b v := by
-          funext v
-          simp only [Pi.add_apply]
-          ring
-        rw [this]
-        exact Submodule.add_mem _ ha hb
-      | smul c a _ ha =>
-        have : (fun v : V4 F => cw w (v i) * (c • a) v) = c • fun v => cw w (v i) * a v := by
-          funext v
-          simp only [Pi.smul_apply, smul_eq_mul]
-          ring
-        rw [this]
-        exact Submodule.smul_mem _ c ha
+      refine (Submodule.span_le (p := Submodule.comap mulCw (Submodule.span ℂ _))).2 ?_ hf
+      rintro _ ⟨p, hp, g, hg, rfl⟩
+      refine Submodule.subset_span ⟨(fun v : V4 F => cw w (v i)) * p, mul_mem hc hp, g, hg, ?_⟩
+      exact funext fun v => show cw w (v i) * (p v * gauss δ v * g (finPartPi v)) = _ by
+        simp only [Pi.mul_apply]; ring
     have hφ' := key φ.1 hφ
     have e : ((O.x w i φ : S4 F) : V4 F → ℂ) = fun v => cw w (v i) * φ.1 v := by
       funext v

@@ -53,12 +53,8 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.atLaws :
         simp [Finset.sum_apply, Pi.single_apply]
     · change a.2 = (∑ w', at1 w' (TR.pInf F a w')).2
       rw [ha]
-      have : ∀ s : Finset (InfinitePlace F), (∑ w' ∈ s, at1 w' (TR.pInf F a w')).2 = 0 := by
-        intro s
-        induction s using Finset.induction_on with
-        | empty => rfl
-        | insert b s hb ih => rw [Finset.sum_insert hb, hfin, h2, ih, add_zero]
-      exact (this _).symm
+      exact Eq.symm <| Finset.sum_induction _ (fun x : A F => x.2 = 0)
+        (fun x y hx hy => by rw [hfin, hx, hy, add_zero]) rfl fun w' _ => h2 w' _
   · funext j
     by_cases h : j = i
     · subst h

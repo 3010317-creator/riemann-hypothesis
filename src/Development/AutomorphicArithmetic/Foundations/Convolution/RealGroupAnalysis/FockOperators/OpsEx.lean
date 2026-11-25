@@ -25,15 +25,6 @@ private theorem placeEmbedReal_add {F : Type} [Field F] [NumberField F] [IsTotal
     at1 w (s + t) = at1 w s + at1 w t := by
   simp only [at1, Pi.single_add, map_add (f := _)]
 
-private theorem continuous_placeEmbedReal {F : Type} [Field F] [NumberField F] [IsTotallyReal F] (w : InfinitePlace F) :
-    Continuous (at1 w : ℝ → A F) := by
-  have h : Continuous fun t : ℝ => (Pi.single w t : TR.Rinf F) := by
-    refine continuous_pi fun u => ?_
-    by_cases hu : u = w
-    · subst hu; simp only [Pi.single_eq_same]; exact continuous_id
-    · simpa [Pi.single_eq_of_ne hu] using continuous_const
-  exact ((TR.continuous_infEq F).comp h).prodMk continuous_const
-
 private theorem inf_line {F : Type} [Field F] [NumberField F] [IsTotallyReal F] (w : InfinitePlace F) (i : Fin 4)
     (v : V4 F) (t : ℝ) :
     infPartPi (v + Pi.single i (at1 w t)) = infPartPi v + t • infPartPi (Pi.single i (at1 w 1) : V4 F) := by
@@ -47,11 +38,8 @@ private theorem inf_line {F : Type} [Field F] [NumberField F] [IsTotallyReal F] 
         exact map_zero (InfiniteAdeleRing.ringEquiv_mixedSpace F)
       map_add' := fun s t => by
         rw [placeEmbedReal_add, Pi.single_add, infPartPi_add'] }
-  have hL : Continuous L := by
-    refine continuous_infPartPi.comp (continuous_pi fun j => ?_)
-    by_cases hj : j = i
-    · subst hj; simpa using continuous_placeEmbedReal w
-    · simpa [Pi.single_eq_of_ne hj] using continuous_const
+  have hL : Continuous L := continuous_infPartPi.comp ((continuous_single i).comp
+    (((TR.continuous_infEq F).comp (continuous_single w)).prodMk continuous_const))
   have h := map_real_smul L hL t (1 : ℝ)
   rw [infPartPi_add']
   have e : t • (1 : ℝ) = t := by simp

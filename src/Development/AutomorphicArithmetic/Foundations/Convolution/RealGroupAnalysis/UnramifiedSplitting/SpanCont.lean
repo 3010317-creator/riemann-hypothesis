@@ -7,6 +7,7 @@ public import Development.AutomorphicArithmetic.Foundations.Convolution.RealGrou
 public import Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.ThetaBounds.Transl
 public import Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.WeilRepresentation.LiftCentre
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.SmoothRepresentationsGL.ExistsCombComb
+import Mathlib.RepresentationTheory.Stabilizer
 import Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.UnramifiedSplitting.SplitAt
 
 @[expose] public section
@@ -27,17 +28,8 @@ theorem UpperTheory.ConvolutionTheory.R2.H.spanCont :
     have h1 : ∀ᶠ k in 𝓝 (1 : GL (Fin 2) (Af E)), TR.finRep F 2 (κ k) f = f := by
       have hm : {k | TR.finRep F 2 k f = f} ∈ 𝓝 (κ 1) := hfo.mem_nhds (by simp)
       exact hκc.continuousAt.eventually hm
-    let S : Subgroup (GL (Fin 2) (Af E)) :=
-      { carrier := {k | GlobalTheory.CuspRep.finRep E 2 k Φ = Φ}
-        one_mem' := by simp
-        mul_mem' := fun {k l} hk hl => by
-          change GlobalTheory.CuspRep.finRep E 2 (k * l) Φ = Φ
-          rw [map_mul, Module.End.mul_apply, hl, hk]
-        inv_mem' := fun {k} hk => by
-          change GlobalTheory.CuspRep.finRep E 2 k⁻¹ Φ = Φ
-          conv_lhs => rw [← show GlobalTheory.CuspRep.finRep E 2 k Φ = Φ from hk, ← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one]
-          rfl }
-    refine Subgroup.isOpen_of_mem_nhds (H := S) (g := 1) ?_
+    refine (Representation.stabilizer (GlobalTheory.CuspRep.finRep E 2) Φ).isOpen_of_mem_nhds
+      (g := 1) ?_
     filter_upwards [UpperTheory.ConvolutionTheory.R2.Ff.lLevel F E D W φ, h1] with k hL hk
     refine Subtype.ext (funext fun g => ?_)
     change Φ.1 (g * finGL E 2 k) = Φ.1 g

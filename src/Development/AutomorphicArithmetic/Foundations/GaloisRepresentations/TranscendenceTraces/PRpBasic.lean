@@ -9,10 +9,6 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchClsCocycl
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC UpperTheory.Gal.TranscendenceTraces
 
-private theorem cohomologyClass_mk_zsmul {R : Type} [CommRing R] {K L : Cx R} {n : ℤ} (d : ℤ) (a : Cocycle K L n) :
-    CohomologyClass.mk (d • a) = d • CohomologyClass.mk a :=
-  map_zsmul (CohomologyClass.mkAddMonoidHom K L n) d a
-
 private theorem ev_cocycle_add {R : Type} [CommRing R] (I : Cx R) (X : Scheme) (n : ℤ) (h0 : -((0 : ℕ) : ℤ) + n = n)
     (α β : Cocycle ((chains R).obj (sch.obj X)) I n) :
     ev ((α + β : Cocycle ((chains R).obj (sch.obj X)) I n) : Cochain ((chains R).obj (sch.obj X)) I n) 0 n h0 X (𝟙 X) =
@@ -50,7 +46,8 @@ theorem UpperTheory.Gal.TranscendenceTraces.rpBasic_of :
       rw [← sub_eq_zero, ← CohomologyClass.mk_sub, (key (α - β)).2, Cocycle.coe_sub,
         (ev_lin.1 (α : Cochain _ I n) β 0 n h0 X (𝟙 X)).2.1]
     refine ⟨hiff, fun h => hiff.2 ⟨0, ?_⟩, ⟨α + β, CohomologyClass.mk_add α β, ev_cocycle_add I X n h0 α β⟩,
-      fun d => ⟨d • α, cohomologyClass_mk_zsmul d α, ev_cocycle_zsmul I X n h0 d α⟩⟩
+      fun d => ⟨d • α, map_zsmul (CohomologyClass.mkAddMonoidHom _ _ _) d α,
+        ev_cocycle_zsmul I X n h0 d α⟩⟩
     rw [h, sub_self]
     exact map_zero _
   · rintro Y f x a ⟨α, rfl, rfl⟩

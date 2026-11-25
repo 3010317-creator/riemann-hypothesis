@@ -20,6 +20,7 @@ public import Development.AutomorphicArithmetic.Foundations.Convolution.Convolut
 public import Development.AutomorphicArithmetic.Foundations.Convolution.ConvolutionKernels.KernelTransforms.RrTens
 public import Development.AutomorphicArithmetic.WhittakerHecke.LiftOneRconvTensorModerateGrowthUniform
 public import Development.AutomorphicArithmetic.WhittakerHecke.LocGLEqLocalEmbeddingAndKGLEqIntegralGL
+import Mathlib.RepresentationTheory.Stabilizer
 import Mathlib.Tactic.Linter.HaveILetI
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -368,22 +369,6 @@ open GroundTheory.Automorphic.AutomorphicForm GroundTheory.Automorphic.CuspidalS
 variable {E : Type} [Field E] [NumberField E] [IsTotallyComplex E] {n : ℕ}
   {μ : Measure (normOneGL (K := E) (n := n))} [μ.IsHaarMeasure]
 
-private theorem ampRep_open {φ : Sm E n} {U : Subgroup (AdelicGLn.FiniteAdelicGL E n)}
-    (hU : IsOpen (U : Set (AdelicGLn.FiniteAdelicGL E n))) (h : ∀ u ∈ U, GlobalTheory.CuspRep.finRep E n u φ = φ) :
-    IsOpen {k | GlobalTheory.CuspRep.finRep E n k φ = φ} := by
-  let S : Subgroup (GL (Fin n) (Af E)) :=
-    { carrier := {k | GlobalTheory.CuspRep.finRep E n k φ = φ}
-      one_mem' := by simp
-      mul_mem' := fun {k l} hk hl => by
-        change GlobalTheory.CuspRep.finRep E n (k * l) φ = φ
-        rw [map_mul, Module.End.mul_apply, hl, hk]
-      inv_mem' := fun {k} hk => by
-        change GlobalTheory.CuspRep.finRep E n k⁻¹ φ = φ
-        conv_lhs => rw [← show GlobalTheory.CuspRep.finRep E n k φ = φ from hk, ← Module.End.mul_apply, ← map_mul,
-          inv_mul_cancel, map_one]
-        rfl }
-  exact Subgroup.isOpen_mono (H₁ := U) (H₂ := S) h hU
-
 private theorem ampRep_fix {f : TG E n} {v : LL μ} {φ : Sm E n}
     (hφ : φ.1 = liftOne (rconv (rationalGLOne (K := E) (n := n)) μ f v)) {u : AdelicGLn.FiniteAdelicGL E n}
     (h : ∀ z, f ((MultiplicityOne.finProj E n u)⁻¹ * z) = f z) : GlobalTheory.CuspRep.finRep E n u φ = φ := by
@@ -457,7 +442,9 @@ theorem UpperTheory.ConvolutionTheory.BW.ampRep :
       Rep μ ((Oinf μ 𝔞.ν β ∘L prj (fixF μ 𝔞.U)) v) φ := fun β hβ v φ hφ => by
     rw [hR]
     obtain ⟨N, hN⟩ := UpperTheory.liftOne_rconv_tensor_moderateGrowth_uniform E n hn μ 𝔞.ν m hm β e hβ
-    refine ampRep_rep hφ (ampRep_open 𝔞.isOpen (hfix β v φ hφ)) ⟨N, fun u => ?_⟩
+    refine ampRep_rep hφ
+      (Subgroup.isOpen_mono (H₂ := Representation.stabilizer (GlobalTheory.CuspRep.finRep E n) φ)
+        (hfix β v φ hφ) 𝔞.isOpen) ⟨N, fun u => ?_⟩
     obtain ⟨B, hB⟩ := hN u
     exact ⟨B * ‖v‖, fun g => by rw [huC β hβ v φ hφ]; exact hB v g⟩
   let L : LL μ →ₗ[ℂ] Sm E n :=

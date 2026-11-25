@@ -17,16 +17,6 @@ section
 variable {G : Type*} [Group G] [TopologicalSpace G] [MeasurableSpace G] [BorelSpace G] [IsTopologicalGroup G]
   {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
-private theorem setInt_shift {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] (m : Measure G) [m.IsMulLeftInvariant]
-    (f : G → E) (y : G) {S T : Set G} (hS : MeasurableSet S) (hT : MeasurableSet T) (h : ∀ x, x ∈ S ↔ y * x ∈ T) :
-    ∫ x in S, f (y * x) ∂m = ∫ x in T, f x ∂m := by
-  rw [← integral_indicator hS, ← integral_indicator hT, ← integral_mul_left_eq_self (T.indicator f) y]
-  congr 1
-  ext x
-  by_cases hx : x ∈ S
-  · rw [Set.indicator_of_mem hx, Set.indicator_of_mem ((h x).1 hx)]
-  · rw [Set.indicator_of_notMem hx, Set.indicator_of_notMem (fun h' => hx ((h x).2 h'))]
-
 private theorem avg (π : UnitaryRep G H) (m : Measure G) [m.IsMulLeftInvariant] [IsFiniteMeasureOnCompacts m]
     (J : Subgroup G) (hJ : IsCompact (J : Set G)) (hJo : IsOpen (J : Set G)) (hm : m J = 1)
     (W : Submodule ℂ H) (hW : ∀ v, v ∈ W ↔ ∀ j ∈ J, π j v = v) (u v : H) :
@@ -44,8 +34,11 @@ private theorem avg (π : UnitaryRep G H) (m : Measure G) [m.IsMulLeftInvariant]
     rw [hW]
     intro j₀ hj₀
     rw [← ContinuousLinearMap.integral_comp_comm _ hint]
-    have := setInt_shift m (fun j => π j v) j₀ hmeas hmeas (fun x => by
-      simp [Subgroup.mul_mem_cancel_left J hj₀])
+    have hpre : (j₀ * ·) ⁻¹' (J : Set G) = (J : Set G) :=
+      Set.ext fun _ => Subgroup.mul_mem_cancel_left J hj₀
+    have := (measurePreserving_mul_left m j₀).setIntegral_preimage_emb
+      (measurableEmbedding_mulLeft j₀) (fun j => π j v) (J : Set G)
+    rw [hpre] at this
     simpa [UnitaryRep.map_mul_apply] using this
   have hin : ∀ w ∈ W, ⟪w, ∫ j in (J : Set G), π j v ∂m⟫_ℂ = ⟪w, v⟫_ℂ := by
     intro w hw
@@ -127,7 +120,9 @@ private theorem main (π : UnitaryRep G H) (m : Measure G) [m.IsMulLeftInvariant
   rw [hind, integral_indicator hDm, hD, integral_biUnion_finset _ (fun c _ => (hPo c).measurableSet) ?_
     (fun c _ => hPint c), finsum_mem_eq_finite_toFinset_sum _ hSfin, ContinuousLinearMap.sum_apply, inner_sum]
   · refine Finset.sum_congr rfl fun c _ => ?_
-    rw [← setInt_shift m (fun g => ⟪u, π g v⟫_ℂ) c.out hJo.measurableSet (hPo c).measurableSet (hPmem c)]
+    have hpre : (c.out * ·) ⁻¹' P c = (J : Set G) := Set.ext fun h => (hPmem c h).symm
+    rw [← (measurePreserving_mul_left m c.out).setIntegral_preimage_emb
+      (measurableEmbedding_mulLeft c.out) (fun g => ⟪u, π g v⟫_ℂ) (P c), hpre]
     rw [UnitaryRep.inner_map_right, ← avg π m J hJ hJo hm W hW]
     refine integral_congr_ae (Eventually.of_forall fun h => ?_)
     simp only [UnitaryRep.map_mul_apply]

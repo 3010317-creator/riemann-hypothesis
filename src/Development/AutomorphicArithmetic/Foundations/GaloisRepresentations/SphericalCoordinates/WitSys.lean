@@ -18,29 +18,21 @@ variable {p : ℕ} [Fact p.Prime]
 theorem actQ_tmul {D : Datum p} (b : D.O) (q : ℚ) (x : D.La) : actQ D b (q ⊗ₜ x) = q ⊗ₜ (b • x) := by
   simp only [actQ, LinearMap.baseChange_tmul]; rfl
 
-theorem actQ_one (D : Datum p) (w : VQ D) : actQ D 1 w = w := by
-  induction w using TensorProduct.induction_on with
-  | zero => simp
-  | tmul q x => rw [actQ_tmul, one_smul]
-  | add u v hu hv => rw [map_add (f := _), hu, hv]
+theorem actQ_one (D : Datum p) (w : VQ D) : actQ D 1 w = w :=
+  DFunLike.congr_fun (map_one ((Module.End.baseChangeHom ℤ ℚ D.La).toRingHom.comp
+    (Module.toModuleEnd ℤ D.La (S := D.O)))) w
 
-theorem actQ_mul (D : Datum p) (a b : D.O) (w : VQ D) : actQ D (a * b) w = actQ D a (actQ D b w) := by
-  induction w using TensorProduct.induction_on with
-  | zero => simp
-  | tmul q x => rw [actQ_tmul, actQ_tmul, actQ_tmul, mul_smul]
-  | add u v hu hv => rw [map_add (f := _), hu, hv, map_add (f := _), map_add (f := _)]
+theorem actQ_mul (D : Datum p) (a b : D.O) (w : VQ D) : actQ D (a * b) w = actQ D a (actQ D b w) :=
+  DFunLike.congr_fun (map_mul ((Module.End.baseChangeHom ℤ ℚ D.La).toRingHom.comp
+    (Module.toModuleEnd ℤ D.La (S := D.O))) a b) w
 
-theorem actQ_add (D : Datum p) (a b : D.O) (w : VQ D) : actQ D (a + b) w = actQ D a w + actQ D b w := by
-  induction w using TensorProduct.induction_on with
-  | zero => simp
-  | tmul q x => rw [actQ_tmul, actQ_tmul, actQ_tmul, add_smul, TensorProduct.tmul_add]
-  | add u v hu hv => rw [map_add (f := _), hu, hv, map_add (f := _), map_add (f := _)]; abel
+theorem actQ_add (D : Datum p) (a b : D.O) (w : VQ D) : actQ D (a + b) w = actQ D a w + actQ D b w :=
+  DFunLike.congr_fun (map_add ((Module.End.baseChangeHom ℤ ℚ D.La).toRingHom.comp
+    (Module.toModuleEnd ℤ D.La (S := D.O))) a b) w
 
-theorem actQ_zero (D : Datum p) (w : VQ D) : actQ D 0 w = 0 := by
-  induction w using TensorProduct.induction_on with
-  | zero => simp
-  | tmul q x => rw [actQ_tmul, zero_smul, TensorProduct.tmul_zero]
-  | add u v hu hv => rw [map_add (f := _), hu, hv, add_zero]
+theorem actQ_zero (D : Datum p) (w : VQ D) : actQ D 0 w = 0 :=
+  DFunLike.congr_fun (map_zero ((Module.End.baseChangeHom ℤ ℚ D.La).toRingHom.comp
+    (Module.toModuleEnd ℤ D.La (S := D.O)))) w
 
 structure Sys (D : Datum p) where
   T : Module.End (AfP p) (AfP p ⊗[ℚ] VQ D)
@@ -75,7 +67,7 @@ theorem r_apply (w : VQ D) : X.r w = X.T ((1 : AfP p) ⊗ₜ w) := rfl
 theorem r_act (c : D.O) (w : VQ D) : X.r (actQ D c w) = (actQ D c).baseChange (AfP p) (X.r w) := by
   rw [r_apply, r_apply]
   have h := LinearMap.congr_fun (X.comm c) ((1 : AfP p) ⊗ₜ w)
-  rw [Module.End.mul_apply, Module.End.mul_apply, LinearMap.baseChange_tmul] at h
+  rw [mul_apply_eq_comp, mul_apply_eq_comp, LinearMap.baseChange_tmul] at h
   exact h
 
 def lat : AddSubgroup (VQ D) where

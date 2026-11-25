@@ -10,16 +10,12 @@ open CategoryTheory Limits AlgebraicGeometry GlobalTheory.EtC GlobalTheory.GalV 
 open UpperTheory.Gal.Int.Geo (FEt Cover gen piece IsHEig)
 universe u v
 
-private lemma etale_specMap (D E : Type) [CommRing D] [CommRing E] [Algebra D E] [Algebra.Etale D E] :
-    Etale (Spec.map (CommRingCat.ofHom (algebraMap D E))) := by
-  apply HasRingHomProperty.Spec_iff.mpr
-  exact RingHom.etale_algebraMap.mpr ‹_›
-
 theorem UpperTheory.Gal.G3.pAlgIsoPts :
     IsoPts → AlgIsoPts := by
   intro hI D E _ _ _ _ hpts
   let φ : CommRingCat.of D ⟶ CommRingCat.of E := CommRingCat.ofHom (algebraMap D E)
-  have : Etale (Spec.map φ) := etale_specMap D E
+  have : Etale (Spec.map φ) :=
+    HasRingHomProperty.Spec_iff.mpr (RingHom.etale_algebraMap.mpr inferInstance)
   have hiso : IsIso (Spec.map φ) := by
     refine hI (Spec.map φ) ?_
     intro Ω _ _ z
@@ -43,10 +39,7 @@ theorem UpperTheory.Gal.G3.pAlgIsoPts :
         ext d
         exact congrArg (fun f => (CommRingCat.Hom.hom f) d) h3
       exact congrArg (fun f : E →+* Ω => f e) (hyu _ hx)
-  have hφ : IsIso φ := by
-    refine ⟨⟨Spec.preimage (inv (Spec.map φ)), ?_, ?_⟩⟩
-    · apply Spec.map_injective
-      rw [Spec.map_comp, Spec.map_preimage, Spec.map_id, IsIso.inv_hom_id]
-    · apply Spec.map_injective
-      rw [Spec.map_comp, Spec.map_preimage, Spec.map_id, IsIso.hom_inv_id]
+  have : IsIso (Scheme.Spec.map φ.op) := hiso
+  have : IsIso φ.op := isIso_of_fully_faithful Scheme.Spec φ.op
+  have : IsIso φ := isIso_of_op φ
   exact ConcreteCategory.bijective_of_isIso φ
