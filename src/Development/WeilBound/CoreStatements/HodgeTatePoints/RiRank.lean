@@ -319,14 +319,7 @@ theorem r_decomp : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClose
   have hvT : v T.det = 1 := by
     have h1 := congrArg v hdetTU
     rw [map_mul, map_one, hUdet] at h1
-    have hT1 : v T.det ≤ 1 := by
-      rw [hTdet]
-      exact hv.map_le_one _
-    have hU1 := hv.map_le_one UR.det
-    refine le_antisymm hT1 ?_
-    calc (1 : NNReal) = v T.det * v (algebraMap R C UR.det) := h1.symm
-      _ ≤ v T.det * 1 := by gcongr
-      _ = v T.det := mul_one _
+    exact eq_one_of_one_le_mul_left (by rw [hTdet]; exact hv.map_le_one _) (hv.map_le_one _) h1.ge
   have hcol : ∀ j, (fun x => (T * Matrix.diagonal d) x j) =
       fun x => if (e j : ℕ) = 0 then 1 else algebraMap R C (c (e j) * (σ ^ (e j : ℕ)) x) := by
     intro j
