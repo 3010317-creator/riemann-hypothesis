@@ -49,14 +49,9 @@ theorem pol_countable_and_tangent_ext (hT : ThetaUnifAV) (Q Q' : Out.PolAV (Sp �
       | zero => simp
       | add x y _ _ hx hy => simp [hx, hy]
       | smul a x _ hx => rw [Submodule.coe_smul, map_zsmul, map_zsmul, hx]
-    have e2 : ∀ z, F f.1 f.2 z = F f'.1 f'.2 z := by
-      intro z
-      have hz : z ∈ Submodule.span ℝ (u.Λ : Set (Fin Q.g → ℂ)) := u.full ▸ Submodule.mem_top
-      induction hz using Submodule.span_induction with
-      | mem x hx => exact e1 ⟨x, hx⟩
-      | zero => simp
-      | add x y _ _ hx hy => simp [hx, hy]
-      | smul a x _ hx => simp [hx]
+    have e2 : ∀ z, F f.1 f.2 z = F f'.1 f'.2 z := fun z =>
+      LinearMap.eqOn_span (R := ℝ) (s := (u.Λ : Set (Fin Q.g → ℂ))) (f := (F f.1 f.2).restrictScalars ℝ)
+        (g := (F f'.1 f'.2).restrictScalars ℝ) (fun x hx => e1 ⟨x, hx⟩) (u.full ▸ Submodule.mem_top)
     exact Subtype.ext (hu f'.1 f'.2 f.1 fun z => by rw [← e2, hF])
   · intro f f' hf hf' h
     obtain ⟨F, hF, -, hd, -⟩ := key f hf
