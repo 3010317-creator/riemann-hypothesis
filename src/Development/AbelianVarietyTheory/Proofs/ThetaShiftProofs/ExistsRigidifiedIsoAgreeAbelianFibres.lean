@@ -123,17 +123,6 @@ theorem main : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [NumberField 
     obtain ⟨i, hi⟩ := exists_chart t'.PP.isLB a
     obtain ⟨k, hk⟩ := exists_chart t.PP.isLB (m.φ a)
     exact ⟨(fun _ => k, i), mem_pull.2 hk, hi⟩
-  have gm_pullU_eq_gm_comp {X Y Z : Scheme.{0}} (φ : Y ⟶ X) (r : Z ⟶ Y) (z : Z) {U : X.Opens}
-      (h : φ (r z) ∈ U) (x : Γ(X, U)ˣ) :
-      gm r z (φ ⁻¹ᵁ U) (pullU φ U x) = gm (r ≫ φ) z U x := by
-    have h₁ : r z ∈ φ ⁻¹ᵁ U := h
-    have h₂ : (r ≫ φ) z ∈ U := h
-    simp only [gm, dite_eq_left h₁, dite_eq_left h₂, MonoidHom.comp_apply]
-    ext
-    simp only [Units.coe_map, pullU, MonoidHom.coe_coe]
-    first
-      | rfl
-
   have gm_maps_pt {X : Scheme.{0}} {L' L : LB X} {w : LB.Iso L' L} {Y : Scheme.{0}} {φ : Y ⟶ X} {a : LB.Gen (L'.pull φ)}
       {b : LB.Gen (L.pull φ)} (h : LB.Gen.Maps (LB.linCombIso w (K := PUnit) (fun _ => φ) (fun _ => 1)) a b)
       {Z : Scheme.{0}} (r : Z ⟶ Y) (z : Z) (p : L.ι) (q : L'.ι) (hp : φ (r z) ∈ L.U p) (hq : φ (r z) ∈ L'.U q) :
@@ -156,7 +145,7 @@ theorem main : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [NumberField 
     have key := congrArg (gm r z (LB.wchart L (fun _ => φ) (fun _ => p) ⊓ LB.wchart L' (fun _ => φ) (fun _ => q))) h'
     rw [map_mul, gm_res r z (U := LB.wchart L (fun _ => φ) (fun _ => p)) _ hV (b.s (fun _ => p))] at key
     refine key.trans (congrArg₂ (· * ·) ((gm_res r z _ hV _).trans
-      (gm_pullU_eq_gm_comp φ r z (U := L.U p ⊓ L'.U q) ⟨hp, hq⟩ (w.s (p, q)))) (gm_res r z _ hV _))
+      (gm_pull r φ z (L.U p ⊓ L'.U q) ⟨hp, hq⟩ (w.s (p, q)))) (gm_res r z _ hV _))
   have key := gm_eq_of_eq_along_section hcov (pullback.fst t'.G.hom y) (pullback.snd t'.G.hom y)
     (pullback.lift (y ≫ eSec t'.G) (𝟙 _) he') (pullback.lift_snd _ _ _) hs hw.1 hw'.1 (by
       rw [pullback.lift_fst]
