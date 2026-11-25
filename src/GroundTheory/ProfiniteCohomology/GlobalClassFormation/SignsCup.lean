@@ -109,12 +109,8 @@ theorem range_norm_infAlgClosure_eq {F : GroundTheory.Global.FiniteSubfield} [Fa
     (e : (w : InfinitePlace F.1).Completion ≃ₐ[v.Completion] AlgebraicClosure v.Completion) :
     Set.range (Algebra.norm v.Completion : AlgebraicClosure v.Completion → v.Completion) =
       Set.range (Algebra.norm v.Completion : (w : InfinitePlace F.1).Completion → v.Completion) := by
-  ext c
-  constructor
-  · rintro ⟨y, rfl⟩
-    exact ⟨e.symm y, Algebra.norm_eq_of_algEquiv e.symm y⟩
-  · rintro ⟨y, rfl⟩
-    exact ⟨e y, Algebra.norm_eq_of_algEquiv e y⟩
+  rw [← EquivLike.range_comp (Algebra.norm v.Completion) e]
+  exact congrArg Set.range (funext (Algebra.norm_eq_of_algEquiv e))
 
 theorem mem_range_norm_iff_mem_normSubgroup {F : GroundTheory.Global.FiniteSubfield} [Fact (K ≤ F)] (w : v.placesOver F.1)
     [(w : InfinitePlace F.1).LiesOver v] (c : v.Completionˣ) :
@@ -223,26 +219,15 @@ theorem iCharFun_congr {g h : Additive K.1.fixingSubgroup}
   rw [hgh]
 
 theorem continuous_iCharFun : Continuous (iCharFun K) := by
-  refine IsLocallyConstant.continuous ?_
-  rw [IsLocallyConstant.iff_exists_open]
-  intro g
-  let G := K.1.fixingSubgroup
-  let g' : G := Additive.toMul g
-  have hstab : IsOpen (MulAction.stabilizer (ℚ̄ ≃ₐ[ℚ] ℚ̄) sqrtNegOne : Set (ℚ̄ ≃ₐ[ℚ] ℚ̄)) :=
-    stabilizer_isOpen_of_isIntegral sqrtNegOne
-  have hopen : IsOpen ((fun h : G => g'⁻¹ * h) ⁻¹' ((G.subtype : G → ℚ̄ ≃ₐ[ℚ] ℚ̄) ⁻¹'
-      (MulAction.stabilizer (ℚ̄ ≃ₐ[ℚ] ℚ̄) sqrtNegOne : Set (ℚ̄ ≃ₐ[ℚ] ℚ̄)))) :=
-    (hstab.preimage continuous_subtype_val).preimage (continuous_const_mul _)
-  refine ⟨(fun h : G => g'⁻¹ * h) ⁻¹' ((G.subtype : G → ℚ̄ ≃ₐ[ℚ] ℚ̄) ⁻¹'
-      (MulAction.stabilizer (ℚ̄ ≃ₐ[ℚ] ℚ̄) sqrtNegOne : Set (ℚ̄ ≃ₐ[ℚ] ℚ̄))), hopen, ?_, ?_⟩
-  · change (g'⁻¹ * g' : G).1 • sqrtNegOne = sqrtNegOne
-    rw [inv_mul_cancel]
-    exact one_smul _ _
-  · intro h hh
-    change (g'⁻¹ * Additive.toMul h : G).1 • sqrtNegOne = sqrtNegOne at hh
-    apply iCharFun_congr
-    rw [Subgroup.coe_mul, Subgroup.coe_inv, mul_smul, inv_smul_eq_iff] at hh
-    exact hh
+  classical
+  unfold iCharFun
+  let H := (MulAction.stabilizer (ℚ̄ ≃ₐ[ℚ] ℚ̄) sqrtNegOne).comap K.1.fixingSubgroup.subtype
+  have hO : IsOpen (H : Set K.1.fixingSubgroup) :=
+    (stabilizer_isOpen_of_isIntegral sqrtNegOne).preimage continuous_subtype_val
+  have hS : IsClopen {g : Additive K.1.fixingSubgroup |
+      ((Additive.toMul g : K.1.fixingSubgroup) : ℚ̄ ≃ₐ[ℚ] ℚ̄) sqrtNegOne = sqrtNegOne} :=
+    ⟨(H.isClosed_of_isOpen hO).preimage continuous_toMul, hO.preimage continuous_toMul⟩
+  exact Continuous.if (fun _ h => by simp [hS.frontier_eq] at h) continuous_const continuous_const
 
 
 variable (K) in

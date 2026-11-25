@@ -31,18 +31,9 @@ theorem pi_surjective_of_linearIndependent {E ι : Type*} [NormedAddCommGroup E]
   classical
   rw [← LinearMap.dualMap_injective_iff, ← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
   intro f hf
-  have hfx : ∀ x : ι → ℂ, f x = ∑ j, x j * f (Pi.single j 1) := by
-    intro x
-    conv_lhs => rw [← Finset.univ_sum_single x]
-
-    rw [map_sum]
-    refine Finset.sum_congr rfl fun j _ => ?_
-    rw [← smul_eq_mul, ← map_smul]
-    congr 1
-    ext i
-    by_cases hi : i = j
-    · subst hi; simp
-    · simp [hi]
+  have hfx (x : ι → ℂ) : f x = ∑ j, x j * f (Pi.single j 1) := by
+    conv_lhs => rw [pi_eq_sum_univ' x]
+    simp only [map_sum, map_smul, smul_eq_mul]
   have h0 : ∑ j, f (Pi.single j 1) • φ j = 0 := by
     ext z
     have := LinearMap.congr_fun hf z

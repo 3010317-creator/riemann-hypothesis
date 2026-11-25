@@ -110,16 +110,12 @@ theorem eval_conj_eq_zero [Fintype ι] [DecidableEq ι] (x : Cone n (AlgebraicCl
     {f : MvPolynomial (Coord n) ℤ} (hf : f ∈ orbitIdeal x) :
     eval (fun p ↦ σ (flatCone x p)) (map (Int.castRingHom ℂ) f) = 0 := by
   rw [orbitIdeal, Geo.mCoordIdeal, RingHom.mem_ker] at hf
-  have h : ∀ f : MvPolynomial (Coord n) ℤ,
-      eval (fun p ↦ σ (flatCone x p)) (map (Int.castRingHom ℂ) f) =
-        σ (eval (fun _ : ι ↦ (1 : AlgebraicClosure ℚ))
-          (Geo.mConeMap (ι := blockIdx n) (flatCone x) f)) := by
-    intro f
-    induction f using MvPolynomial.induction_on with
-    | C a => simp [Geo.mConeMap]
-    | add f g hf hg => simp only [map_add (f := _), hf, hg]
-    | mul_X f p hf => simp only [map_mul, hf, eval_X, map_X, Geo.mConeMap, aeval_X, eval_C, mul_one]
-  rw [h, hf, map_zero, map_zero]
+  have h : (eval fun p ↦ σ (flatCone x p)).comp (map (Int.castRingHom ℂ)) =
+      (σ.comp (eval fun _ : ι ↦ (1 : AlgebraicClosure ℚ))).comp
+        (Geo.mConeMap (ι := blockIdx n) (flatCone x)).toRingHom :=
+    ringHom_ext (fun _ => by simp [Geo.mConeMap]) fun _ => by simp [Geo.mConeMap]
+  simpa only [RingHom.comp_apply, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, hf,
+    map_zero] using RingHom.congr_fun h f
 
 theorem OrbitDegree.full : OrbitDegree.Statement := by
   intro ι _ _ n x hx

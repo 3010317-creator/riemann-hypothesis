@@ -54,13 +54,8 @@ def vecCoeff (f : (ι → 𝔸[K]) → ℂ) (ξ : ι → K) : ℂ :=
 
 theorem isAddFundamentalDomain_image_add (a : ι → 𝔸[K]) :
     IsAddFundamentalDomain (vecLattice K ι) ((· + a) '' vecDomain K ι) (vecMeasure K ι) := by
-  have himg : (· + a) '' vecDomain K ι = (· - a) ⁻¹' vecDomain K ι := by
-    ext y
-    constructor
-    · rintro ⟨x, hx, rfl⟩
-      simpa using hx
-    · intro hy
-      exact ⟨y - a, hy, by simp⟩
+  have himg : (· + a) '' vecDomain K ι = (· - a) ⁻¹' vecDomain K ι :=
+    (Equiv.subRight a).image_symm_eq_preimage _
   refine IsAddFundamentalDomain.mk' ?_ fun x => ?_
   · rw [himg]
     exact (measurableSet_vecDomain.preimage (measurable_id.sub_const a)).nullMeasurableSet

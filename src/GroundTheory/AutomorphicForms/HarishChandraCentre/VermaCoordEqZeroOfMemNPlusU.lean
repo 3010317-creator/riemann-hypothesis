@@ -37,14 +37,11 @@ theorem mul_mem_vermaIdeal (lam : Fin n → ℂ) (v : U n) {x : U n} (hx : x ∈
   clear hx
   rw [mul_add]
   refine Submodule.add_mem _ (nPlusU_le_vermaIdeal lam (mul_mem_nPlusU v hy)) ?_
-  induction hw using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨u, k, rfl⟩ := hx
-    rw [← mul_assoc]
-    exact mul_e_sub_mem_vermaIdeal lam _ k
-  | zero => simp
-  | add x y _ _ hx hy => rw [mul_add]; exact Submodule.add_mem _ hx hy
-  | smul r x _ hx => rw [mul_smul_comm]; exact Submodule.smul_mem _ r hx
+  refine (Submodule.span_le (p := (vermaIdeal lam).comap (LinearMap.mulLeft ℂ v))).2 ?_ hw
+  rintro _ ⟨u, k, rfl⟩
+  change v * (u * (e (k, k) - algebraMap ℂ (U n) (lam k))) ∈ vermaIdeal lam
+  rw [← mul_assoc]
+  exact mul_e_sub_mem_vermaIdeal lam _ k
 
 theorem hcEmb_sub_eval_mem_vermaIdeal (lam : Fin n → ℂ) (p : MvPolynomial (Fin n) ℂ) :
     hcEmb p - algebraMap ℂ (U n) (eval lam p) ∈ vermaIdeal lam := by
@@ -83,16 +80,9 @@ theorem vermaCoord_canon_of_not (lam : Fin n → ℂ) {m : Fin n × Fin n →₀
 
 theorem vermaCoord_eq_zero_of_mem_nPlusU (lam : Fin n → ℂ) {x : U n} (hx : x ∈ nPlusU n) :
     vermaCoord lam x = 0 := by
-  have hx' : x ∈ Submodule.span ℂ {x | ∃ m : Fin n × Fin n →₀ ℕ, HasUpper m ∧ canon m = x} :=
-    nPlusU_le_spanUpper hx
-  clear hx
-  induction hx' using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨m, hm, rfl⟩ := hx
-    exact vermaCoord_canon_of_hasUpper lam hm
-  | zero => simp
-  | add x y _ _ hx hy => rw [map_add (f := _), hx, hy, add_zero]
-  | smul r x _ hx => rw [map_smul, hx, smul_zero]
+  exact (Submodule.span_le (p := LinearMap.ker (vermaCoord lam))).2
+    (by rintro _ ⟨m, hm, rfl⟩; exact vermaCoord_canon_of_hasUpper lam hm)
+    (nPlusU_le_spanUpper hx)
 
 theorem canon_mul_e_diag_of_not_hasUpper {m : Fin n × Fin n →₀ ℕ} (h : ¬ HasUpper m) (k : Fin n) :
     canon m * e (k, k) = canon (m + Finsupp.single (k, k) 1) := by
@@ -146,24 +136,19 @@ theorem vermaCoord_canon_mul_e_sub (lam : Fin n → ℂ) (m : Fin n × Fin n →
 
 theorem vermaCoord_mul_e_sub (lam : Fin n → ℂ) (u : U n) (k : Fin n) :
     vermaCoord lam (u * (e (k, k) - algebraMap ℂ (U n) (lam k))) = 0 := by
-  have hu : u ∈ Submodule.span ℂ (Set.range (canon (n := n))) := by
-    rw [span_canon_eq_top]; trivial
-  induction hu using Submodule.span_induction with
-  | mem x hx => obtain ⟨m, rfl⟩ := hx; exact vermaCoord_canon_mul_e_sub lam m k
-  | zero => simp
-  | add x y _ _ hx hy => rw [add_mul, map_add (f := _), hx, hy, add_zero]
-  | smul r x _ hx => rw [smul_mul_assoc, map_smul, hx, smul_zero]
+  refine (Submodule.span_le (p := (LinearMap.ker (vermaCoord lam)).comap
+    (LinearMap.mulRight ℂ (e (k, k) - algebraMap ℂ (U n) (lam k))))).2 ?_
+    (span_canon_eq_top ▸ Submodule.mem_top)
+  rintro _ ⟨m, rfl⟩
+  exact vermaCoord_canon_mul_e_sub lam m k
 
 theorem vermaCoord_vermaIdeal (lam : Fin n → ℂ) {x : U n} (hx : x ∈ vermaIdeal lam) :
     vermaCoord lam x = 0 := by
   obtain ⟨y, hy, w, hw, rfl⟩ := Submodule.mem_sup.1 hx
   clear hx
   rw [map_add (f := _), vermaCoord_eq_zero_of_mem_nPlusU lam hy, zero_add]
-  induction hw using Submodule.span_induction with
-  | mem x hx => obtain ⟨u, k, rfl⟩ := hx; exact vermaCoord_mul_e_sub lam u k
-  | zero => simp
-  | add x y _ _ hx hy => rw [map_add (f := _), hx, hy, add_zero]
-  | smul r x _ hx => rw [map_smul, hx, smul_zero]
+  exact (Submodule.span_le (p := LinearMap.ker (vermaCoord lam))).2
+    (by rintro _ ⟨u, k, rfl⟩; exact vermaCoord_mul_e_sub lam u k) hw
 
 theorem canon_single (a : Fin n × Fin n) (m : ℕ) : canon (Finsupp.single a m) = e a ^ m := by
   rw [canon_eq_prod]
@@ -350,27 +335,25 @@ theorem pow_mul_h_sub_mem_vermaIdeal (lam : Fin n → ℂ) (m : ℕ) (hm : lam i
 theorem mul_pow_mem_vermaIdeal (hij : (j : ℕ) = i + 1) (lam : Fin n → ℂ) (m : ℕ)
     (hm : lam i - lam j = m) {x : U n} (hx : x ∈ nPlusU n) :
     x * e (j, i) ^ (m + 1) ∈ vermaIdeal lam := by
-  induction hx using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨u, b, hb, rfl⟩ := hx
-    rw [mul_assoc]
-    refine mul_mem_vermaIdeal lam u ?_
-    by_cases hbij : b = (i, j)
-    · subst hbij
-      have h1 := e_upper_simple_mul_pow_sub_mem hij m
-      have h2 := pow_mul_h_sub_mem_vermaIdeal lam m hm
-      have : e (i, j) * e (j, i) ^ (m + 1) =
-          (e (i, j) * e (j, i) ^ (m + 1) -
-            (((m : ℂ) + 1) • (e (j, i) ^ m * (e (i, i) - e (j, j))) -
-              (((m : ℂ) + 1) * m) • e (j, i) ^ m)) +
-          ((m : ℂ) + 1) • (e (j, i) ^ m * (e (i, i) - e (j, j)) - (m : ℂ) • e (j, i) ^ m) := by
-        rw [smul_sub, smul_smul]; abel
-      rw [this]
-      exact Submodule.add_mem _ (nPlusU_le_vermaIdeal lam h1) (Submodule.smul_mem _ _ h2)
-    · exact nPlusU_le_vermaIdeal lam (e_upper_mul_pow_mem hij (m + 1) b hb hbij)
-  | zero => simp
-  | add x y _ _ hx hy => rw [add_mul]; exact Submodule.add_mem _ hx hy
-  | smul r x _ hx => rw [smul_mul_assoc]; exact Submodule.smul_mem _ r hx
+  refine (Submodule.span_le (p := (vermaIdeal lam).comap
+    (LinearMap.mulRight ℂ (e (j, i) ^ (m + 1))))).2 (fun x hx => ?_) hx
+  obtain ⟨u, b, hb, rfl⟩ := hx
+  change u * e b * e (j, i) ^ (m + 1) ∈ vermaIdeal lam
+  rw [mul_assoc]
+  refine mul_mem_vermaIdeal lam u ?_
+  by_cases hbij : b = (i, j)
+  · subst hbij
+    have h1 := e_upper_simple_mul_pow_sub_mem hij m
+    have h2 := pow_mul_h_sub_mem_vermaIdeal lam m hm
+    have : e (i, j) * e (j, i) ^ (m + 1) =
+        (e (i, j) * e (j, i) ^ (m + 1) -
+          (((m : ℂ) + 1) • (e (j, i) ^ m * (e (i, i) - e (j, j))) -
+            (((m : ℂ) + 1) * m) • e (j, i) ^ m)) +
+        ((m : ℂ) + 1) • (e (j, i) ^ m * (e (i, i) - e (j, j)) - (m : ℂ) • e (j, i) ^ m) := by
+      rw [smul_sub, smul_smul]; abel
+    rw [this]
+    exact Submodule.add_mem _ (nPlusU_le_vermaIdeal lam h1) (Submodule.smul_mem _ _ h2)
+  · exact nPlusU_le_vermaIdeal lam (e_upper_mul_pow_mem hij (m + 1) b hb hbij)
 
 theorem eval_eq_eval_reflect_of_nat (hij : (j : ℕ) = i + 1) {z : U n}
     (hz : z ∈ Subalgebra.center ℂ (U n)) (lam : Fin n → ℂ) (m : ℕ) (hm : lam i - lam j = m) :

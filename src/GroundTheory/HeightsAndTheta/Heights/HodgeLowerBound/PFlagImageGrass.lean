@@ -28,10 +28,8 @@ theorem cone_map {A B : Type} [CommRing A] [CommRing B] (φ : A →+* B) (y : (�
     (F : MvPolynomial (Σ k, ι k) ℤ) :
     eval₂ (Int.castRingHom _) (fun p => C (φ (y p)) * X p.1 : (Σ k, ι k) → MvPolynomial K B) F =
       map φ (eval₂ (Int.castRingHom _) (fun p => C (y p) * X p.1 : (Σ k, ι k) → MvPolynomial K A) F) := by
-  induction F using MvPolynomial.induction_on with
-  | C a => simp only [eval₂_C, Int.coe_castRingHom, map_intCast]
-  | add p q hp hq => simp only [eval₂_add, map_add (f := _), hp, hq]
-  | mul_X p q hp => simp only [eval₂_mul, map_mul, hp, eval₂_X, map_C, map_X]
+  rw [hom_eval₂, ((map φ).comp (Int.castRingHom _)).eq_intCast']
+  simp only [map_mul, map_C, map_X]
 
 theorem cone_map_eq_zero {A B : Type} [CommRing A] [CommRing B] (φ : A →+* B) (y : (Σ k, ι k) → A)
     (F : MvPolynomial (Σ k, ι k) ℤ) (h : eval₂ (Int.castRingHom _) (fun p => C (y p) * X p.1 : (Σ k, ι k) → MvPolynomial K A) F = 0) :
@@ -52,13 +50,10 @@ theorem cone_smul_eq_zero_iff {Ω : Type} [Field Ω] (c : K → Ω) (hc : ∀ k,
   let D : (K → Ω) → MvPolynomial K Ω →ₐ[Ω] MvPolynomial K Ω := fun c => aeval fun k => C (c k) * X k
   have hD : eval₂ (Int.castRingHom _) (fun p => C (c p.1 * y p) * X p.1 : (Σ k, ι k) → MvPolynomial K Ω) F =
       D c (eval₂ (Int.castRingHom _) (fun p => C (y p) * X p.1 : (Σ k, ι k) → MvPolynomial K Ω) F) := by
-    induction F using MvPolynomial.induction_on with
-    | C a => simp only [eval₂_C, Int.coe_castRingHom, map_intCast]
-    | add p q hp hq => simp only [eval₂_add, map_add (f := _), hp, hq]
-    | mul_X p q hp =>
-      rw [eval₂_mul, eval₂_mul, map_mul, hp]
-      simp only [eval₂_X, aeval_X, D, map_mul, aeval_C, algebraMap_eq]
-      ring
+    rw [← (D c).coe_toRingHom, hom_eval₂]
+    refine congrFun (congr (congrArg eval₂ (RingHom.ext_int _ _)) (funext fun p => ?_)) F
+    simp only [AlgHom.coe_toRingHom, D, map_mul, aeval_C, algebraMap_eq, aeval_X]
+    ring
   have hinv : ∀ G, D (fun k => (c k)⁻¹) (D c G) = G := by
     intro G
     have : (D fun k => (c k)⁻¹).comp (D c) = AlgHom.id Ω _ := by

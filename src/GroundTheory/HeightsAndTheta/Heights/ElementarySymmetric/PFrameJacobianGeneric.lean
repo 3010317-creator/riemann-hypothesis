@@ -119,15 +119,8 @@ theorem FrameJacobianGeneric.proof (hR : JacobianRankGeneric.Statement)
     simpa using congrFun (hVinj x this)
   have hspan : Submodule.span K (Set.range (genericGradient J ∘ f)) =
       Submodule.span K (genericGradient J '' (J : Set _)) := by
-    have hrange : Set.range (genericGradient J ∘ f) =
-        Set.range (fun i => genericGradient J (G (a i))) := by
-      ext v
-      constructor
-      · rintro ⟨k, rfl⟩
-        exact ⟨e.symm k, rfl⟩
-      · rintro ⟨i, rfl⟩
-        exact ⟨e i, by simp [f]⟩
-    rw [hrange]
+    rw [show genericGradient J ∘ f = (fun i => genericGradient J (G (a i))) ∘ e.symm from rfl,
+      EquivLike.range_comp]
     apply Submodule.eq_of_le_of_finrank_le
     · apply Submodule.span_mono
       rintro _ ⟨i, rfl⟩

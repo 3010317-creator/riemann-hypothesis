@@ -184,12 +184,8 @@ theorem eq_top_of_sup_coinvariantsKer_eq_top (hG : IsPGroup p G) (ρ : Represent
 
 theorem subsingleton_of_coinvariantsKer_eq_top (hG : IsPGroup p G) (ρ : Representation k G V)
     (h : Coinvariants.ker ρ = ⊤) : Subsingleton V := by
-  have hbot := eq_top_of_sup_coinvariantsKer_eq_top hG ρ ⊥ (fun _ => bot_le) (by rw [bot_sup_eq, h])
-  refine ⟨fun x y => ?_⟩
-  have hx : x ∈ (⊥ : Submodule k V) := hbot ▸ Submodule.mem_top
-  have hy : y ∈ (⊥ : Submodule k V) := hbot ▸ Submodule.mem_top
-  rw [Submodule.mem_bot] at hx hy
-  rw [hx, hy]
+  exact (Submodule.subsingleton_iff k).1 <| subsingleton_iff_bot_eq_top.1 <|
+    eq_top_of_sup_coinvariantsKer_eq_top hG ρ ⊥ (fun _ => bot_le) (by rw [bot_sup_eq, h])
 
 end Nakayama
 
@@ -313,14 +309,8 @@ theorem injective_of_isZero_groupHomology_one (hG : IsPGroup p G) {A B : Rep.{u}
       rfl
     rw [hmem]
     exact Submodule.sum_mem _ fun g _ => Coinvariants.sub_mem_ker g⁻¹ _
-  have hKs : Subsingleton K := by
-    apply subsingleton_of_coinvariantsKer_eq_top hG ρK
-    exact hKI
-  intro x y hxy
-  have hxy' : x - y ∈ K := LinearMap.mem_ker.mpr (by
-    change f.hom (x - y) = 0
-    rw [map_sub, hxy, sub_self])
-  exact sub_eq_zero.mp (congrArg Subtype.val (Subsingleton.elim (⟨x - y, hxy'⟩ : K) 0))
+  exact LinearMap.ker_eq_bot.mp <| Submodule.subsingleton_iff_eq_bot.mp
+    (subsingleton_of_coinvariantsKer_eq_top hG ρK hKI)
 
 theorem exists_iso_free_of_isZero_groupHomology_one (hG : IsPGroup p G) (M : Rep.{u} k G)
     (hM : IsZero (groupHomology M 1)) : ∃ ι : Type u, Nonempty (Rep.free k G ι ≅ M) := by
@@ -617,21 +607,15 @@ theorem isZero_tateCohomology_of_nsmul_injective {H : Type} [Group H] [Fintype H
     IsZero (tateCohomology A n) := by
   obtain ⟨m, hm⟩ := hH.exists_card_eq
   have hcard : Fintype.card H = p ^ m := by rw [← Nat.card_eq_fintype_card, hm]
-  have key : ∀ (j : ℕ) (x : tateCohomology A n), p ^ j • x = 0 → x = 0 := by
-    intro j
+  have hit : ∀ (j : ℕ) (x : tateCohomology A n), (p • ·)^[j] x = p ^ j • x := fun j x => by
     induction j with
-    | zero => intro x hx; simpa using hx
-    | succ j ih =>
-      intro x hx
-      apply ih
-      apply hinj
-      change p • (p ^ j • x) = p • 0
-      rw [smul_zero, ← mul_smul, ← pow_succ']
-      exact hx
-  have : Subsingleton (tateCohomology A n) :=
-    ⟨fun x y => by
-      rw [key m x (hcard ▸ card_smul_tateCohomology A n x),
-        key m y (hcard ▸ card_smul_tateCohomology A n y)]⟩
+    | zero => simp
+    | succ j ih => rw [Function.iterate_succ_apply', ih, ← mul_smul, ← pow_succ']
+  have hpow : Function.Injective fun x : tateCohomology A n => p ^ m • x :=
+    funext (hit m) ▸ hinj.iterate m
+  have : Subsingleton (tateCohomology A n) := ⟨fun x y => hpow (by
+    dsimp only
+    rw [← hcard, card_smul_tateCohomology, card_smul_tateCohomology])⟩
   exact ModuleCat.isZero_of_subsingleton _
 
 theorem tateAcyclic_of_shortExact_of_comp_eq_nsmul {H : Type} [Group H] [Fintype H]

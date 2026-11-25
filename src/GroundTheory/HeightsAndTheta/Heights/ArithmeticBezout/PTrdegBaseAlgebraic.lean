@@ -21,50 +21,28 @@ theorem TrdegBaseAlgebraic.proof : TrdegBaseAlgebraic.Statement := by
   obtain ⟨A, hA⟩ : ∃ A : Subalgebra F Ω, A = Algebra.adjoin F (Set.range z) := ⟨_, rfl⟩
   obtain ⟨B, hB⟩ : ∃ B : Subalgebra K Ω, B = Algebra.adjoin K (Set.range z) := ⟨_, rfl⟩
   rw [← hA, ← hB]
-  have hAB : ∀ w ∈ A, w ∈ B := by
-    intro w hw
-    rw [hA] at hw
-    rw [hB, ← Subalgebra.mem_restrictScalars F]
-    refine Algebra.adjoin_le ?_ hw
-    rw [Subalgebra.coe_restrictScalars]
-    exact Algebra.subset_adjoin
-
-  let i : A →+* B :=
-    { toFun := fun a => ⟨a, hAB a a.2⟩
-      map_one' := rfl
-      map_mul' := fun _ _ => rfl
-      map_zero' := rfl
-      map_add' := fun _ _ => rfl }
+  have hAB : A ≤ B.restrictScalars F :=
+    hA ▸ Algebra.adjoin_le
+      (by rw [Subalgebra.coe_restrictScalars, hB]; exact Algebra.subset_adjoin)
+  let i : A →+* B := A.val.toRingHom.codRestrict B fun x => hAB x.2
   have : FaithfulSMul F A :=
     (faithfulSMul_iff_algebraMap_injective F A).mpr (algebraMap F A).injective
   obtain ⟨t, ht⟩ := exists_isTranscendenceBasis F A
   let x : t → B := fun a => i a
   set C : Subalgebra K B := Algebra.adjoin K (Set.range x) with hC
 
-  have hFC : ∀ r ∈ Algebra.adjoin F (Set.range ((↑) : t → A)), i r ∈ C := by
-    intro r hr
-    induction hr using Algebra.adjoin_induction with
-    | mem r hr =>
-      obtain ⟨a, rfl⟩ := hr
-      exact Algebra.subset_adjoin ⟨a, rfl⟩
-    | algebraMap c =>
-      have : i (algebraMap F A c) = algebraMap K B (algebraMap F K c) := by
-        apply Subtype.ext
-        exact (IsScalarTower.algebraMap_apply F K Ω c)
-      rw [this]
-      exact C.algebraMap_mem _
-    | add r s _ _ hr hs =>
-      rw [map_add (f := _)]
-      exact C.add_mem hr hs
-    | mul r s _ _ hr hs =>
-      rw [map_mul]
-      exact C.mul_mem hr hs
+  have hFC : Algebra.adjoin F (Set.range ((↑) : t → A)) ≤
+      { C.toSubsemiring.comap i with
+        algebraMap_mem' := fun c => by
+          change i (algebraMap F A c) ∈ C
+          rw [show i (algebraMap F A c) = algebraMap K B (algebraMap F K c)
+            from Subtype.ext (IsScalarTower.algebraMap_apply F K Ω c)]
+          exact C.algebraMap_mem _ } :=
+    Algebra.adjoin_le fun _ ⟨a, ha⟩ => by
+      subst ha
+      exact show i a ∈ C from hC ▸ Algebra.subset_adjoin ⟨a, rfl⟩
   let f : Algebra.adjoin F (Set.range ((↑) : t → A)) →+* C :=
-    { toFun := fun r => ⟨i r, hFC r r.2⟩
-      map_one' := rfl
-      map_mul' := fun _ _ => rfl
-      map_zero' := rfl
-      map_add' := fun _ _ => rfl }
+    (i.comp (Subalgebra.val _).toRingHom).codRestrict C fun r => hFC r.2
   have hf : Function.Injective f := by
     intro a b hab
     apply Subtype.ext

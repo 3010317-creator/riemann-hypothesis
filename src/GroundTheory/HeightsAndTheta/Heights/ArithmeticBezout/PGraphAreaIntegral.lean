@@ -56,13 +56,8 @@ theorem GraphAreaIntegral.proof (h : GraphAreaHolomorphic.Statement) : GraphArea
   set M : Measure A := (μ.withDensity J).comap ((↑) : A → EuclideanSpace ℂ (Fin d)) with hM
   have hmeas : ν.restrict (G '' A) = M.map f := by
     ext1 S hS
-    have hpre : ((↑) : A → EuclideanSpace ℂ (Fin d)) '' (f ⁻¹' S) = A ∩ G ⁻¹' S := by
-      ext x
-      constructor
-      · rintro ⟨a, ha, rfl⟩
-        exact ⟨a.2, ha⟩
-      · rintro ⟨hx, hxS⟩
-        exact ⟨⟨x, hx⟩, hxS, rfl⟩
+    have hpre : ((↑) : A → EuclideanSpace ℂ (Fin d)) '' (f ⁻¹' S) = A ∩ G ⁻¹' S :=
+      Subtype.image_preimage_coe A (G ⁻¹' S)
     have hmS : MeasurableSet (A ∩ G ⁻¹' S) := by
       rw [← hpre]
       exact MeasurableSet.subtype_image hA (hf.measurable hS)
