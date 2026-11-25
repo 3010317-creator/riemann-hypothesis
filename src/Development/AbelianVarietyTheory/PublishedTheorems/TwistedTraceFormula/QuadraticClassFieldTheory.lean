@@ -295,12 +295,6 @@ namespace GlobalTheory.Published
 
 open GlobalTheory.QuadSymbol
 
-/-- **Artin reciprocity theorem for quadratic extensions**: the global Artin map provides
-an isomorphism between the idele class group modulo quadratic norm subgroups and the Galois
-group of quadratic number field extensions.
-
-Proposed reference:
-[E. Artin, *Beweis des allgemeinen Reziprozit\"atsgesetzes*][artin1927]. -/
 def QuadraticClassFieldTheory : Prop :=
   (∀ (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Algebra K L]
     [Algebra.IsQuadraticExtension K L],
