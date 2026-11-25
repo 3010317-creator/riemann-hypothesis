@@ -521,7 +521,8 @@ theorem gram_three {G : Matrix ι ι A} {κ₁ κ₂ κ₃ : Type*} [Fintype κ�
       fromBlocks (fromBlocks (xᴴ * (G * x)) (xᴴ * (G * u)) (uᴴ * (G * x)) (uᴴ * (G * u)))
         (fromRows (xᴴ * (G * w)) (uᴴ * (G * w)))
         (fromCols (wᴴ * (G * x)) (wᴴ * (G * u))) (wᴴ * (G * w)) := by
-  ext (( i | i) | i) ((j | j) | j) <;> simp [Matrix.mul_apply, conjTranspose_apply]
+  rw [conjTranspose_fromCols_eq_fromRows_conjTranspose, conjTranspose_fromCols_eq_fromRows_conjTranspose,
+    mul_fromCols G, mul_fromCols G, fromRows_mul_fromCols, fromRows_mul_fromCols, fromRows_mul, mul_fromCols]
 
 end Abstract
 
