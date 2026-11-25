@@ -65,6 +65,16 @@ theorem oev_smul' {c : Fv F v} (hc : c ∈ v.adicCompletionIntegers F) {x : Fv F
 theorem one_mem : (1 : Fv F v ⊗[F] E) ∈ OEv (E := E) v := by
   simpa using inclR_mem' (F := F) (E := E) v (1 : 𝓞 E)
 
+theorem alg_mem {c : Fv F v} (hc : c ∈ v.adicCompletionIntegers F) :
+    algebraMap (Fv F v) (Fv F v ⊗[F] E) c ∈ OEv (E := E) v := by
+  rw [Algebra.algebraMap_eq_smul_one]
+  exact oev_smul' v hc (one_mem v)
+
+theorem inclR_alg (a : F) : inclR (F := F) (Fv F v) (algebraMap F E a) =
+    algebraMap (Fv F v) (Fv F v ⊗[F] E) (algebraMap F (Fv F v) a) := by
+  change (Algebra.TensorProduct.includeRight : E →ₐ[F] Fv F v ⊗[F] E) (algebraMap F E a) = _
+  rw [AlgHom.commutes, ← IsScalarTower.algebraMap_apply F (Fv F v) (Fv F v ⊗[F] E)]
+
 theorem int_mem (r : 𝓞 F) : algebraMap F (Fv F v) (r : F) ∈ v.adicCompletionIntegers F := by
   exact v.coe_mem_adicCompletionIntegers r
 
