@@ -105,12 +105,7 @@ theorem subframe_gram_posDef (F : Matrix (Fin g) (Fin k) ℂ) (h : F.rank = k) :
   rw [Module.finrank_fin_fun, hr'] at hsum
   have hker0 : Module.finrank ℂ (LinearMap.ker (F.map star).mulVecLin) = 0 := by omega
   have hbot : LinearMap.ker (F.map star).mulVecLin = ⊥ := Submodule.finrank_eq_zero.mp hker0
-  have hinj : Function.Injective (F.map star).mulVec := by
-    intro v w hvw
-    have h0 : (F.map star).mulVec (v - w) = 0 := by
-      rw [Matrix.mulVec_sub, hvw, sub_self]
-    have := (Matrix.ker_mulVecLin_eq_bot_iff.mp hbot) (v - w) h0
-    exact sub_eq_zero.mp this
+  have hinj : Function.Injective (F.map star).mulVec := LinearMap.ker_eq_bot.mp hbot
   exact Matrix.PosDef.conjTranspose_mul_self _ hinj
 
 theorem subframe_continuous_det :
