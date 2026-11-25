@@ -21,12 +21,8 @@ theorem _root_.GlobalTheory.TorsionHolomorphic.differentiableOn_finset_prod {ι 
     (hf : ∀ i, DifferentiableOn ℂ (f i) W) :
     DifferentiableOn ℂ (fun e => ∏ i ∈ s, f i e) W := by
   classical
-  refine Finset.induction_on s ?_ ?_
-  · simp only [Finset.prod_empty]
-    exact differentiableOn_const 1
-  · intro a s ha ih
-    simp only [Finset.prod_insert ha]
-    exact (hf a).mul ih
+  exact fun x hx =>
+    (HasFDerivWithinAt.finsetProd (u := s) fun i _ => (hf i x hx).hasFDerivWithinAt).differentiableWithinAt
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] in
 theorem _root_.GlobalTheory.TorsionHolomorphic.differentiableOn_finset_sum {ι : Type} (s : Finset ι) (f : ι → E → ℂ) (W : Set E)
