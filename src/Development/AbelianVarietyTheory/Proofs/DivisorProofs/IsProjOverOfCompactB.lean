@@ -898,7 +898,6 @@ open scoped CategoryTheory.Obj
 
 namespace GlobalTheory
 section
-attribute [local instance] Over.cartesianMonoidalCategory
 namespace TorusTangent
 
 variable {k : Type} [Field k] {X : Type} [AddCommGroup X]

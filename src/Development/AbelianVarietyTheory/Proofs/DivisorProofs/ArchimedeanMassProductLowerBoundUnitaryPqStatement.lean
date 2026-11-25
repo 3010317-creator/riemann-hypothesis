@@ -549,8 +549,6 @@ namespace GlobalTheory.CovTop.VolUp.LowDens
 open Filter Topology Metric Set GlobalTheory.SUVol.DensOne
 open scoped NNReal
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 theorem lam_le_two_mul_tangentHaar : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (Ψ : Finset (E →+* ℂ)) (G : Matrix (Fin r) (Fin r) E) (hG : G.det ≠ 0) (lam : Measure (realLie Ψ G)) [lam.IsAddHaarMeasure], ∃ δ : ℝ, 0 < δ ∧ ∀ s : Set (realLie Ψ G), MeasurableSet s → s ⊆ Metric.ball 0 δ → lam s ≤ 2 * tangentHaar (realSU Ψ G) (lam.map Subtype.val) (GlobalTheory.SUVol.DensOne.chartExp Ψ G hG '' s) := by
   intro E _ _ _ r Ψ G hG lam _
   obtain ⟨δ, hδ, h⟩ := GlobalTheory.SUVol.tangentHaar_compare_lieHaar E r Ψ G hG lam
