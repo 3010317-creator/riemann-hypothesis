@@ -84,18 +84,9 @@ theorem _root_.GlobalTheory.NormValuation.main : ∀ (p : ℕ) [Fact p.Prime] (V
       min (r x) (r y) ≤ r (x + y) := by
     intro x y hx hy hxy
     have h := (PadicAlgCl.isNonarchimedean p) x y
-    rw [hexp x hx, hexp y hy, hexp _ hxy] at h
-    rcases le_total (r x) (r y) with hxy' | hxy'
-    · rw [min_eq_left hxy']
-      have hm : max (‖π‖ ^ (r x : ℝ)) (‖π‖ ^ (r y : ℝ)) = ‖π‖ ^ (r x : ℝ) :=
-        max_eq_left ((hle _ _).2 (by exact_mod_cast hxy'))
-      rw [hm, hle] at h
-      exact_mod_cast h
-    · rw [min_eq_right hxy']
-      have hm : max (‖π‖ ^ (r x : ℝ)) (‖π‖ ^ (r y : ℝ)) = ‖π‖ ^ (r y : ℝ) :=
-        max_eq_right ((hle _ _).2 (by exact_mod_cast hxy'))
-      rw [hm, hle] at h
-      exact_mod_cast h
+    rw [hexp x hx, hexp y hy, hexp _ hxy,
+      ← (Real.antitone_rpow_of_base_le_one hb0 hπlt.le).map_min, hle] at h
+    exact_mod_cast h
   set w : PadicAlgCl p → WithTop ℚ := fun x => if x = 0 then ⊤ else (r x : WithTop ℚ) with hw
   have hw0 : w 0 = ⊤ := by simp [hw]
   have hw1 : w 1 = 0 := by simp [hw, hr_one]
