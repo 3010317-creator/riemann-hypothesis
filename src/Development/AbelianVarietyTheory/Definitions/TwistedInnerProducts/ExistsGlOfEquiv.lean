@@ -190,7 +190,7 @@ theorem IsGlue.exists_pair {L : Submodule 𝒪[k] (n → k)} {e : n → k} (h : 
   let ι : 𝓀[k] →ₗ[𝒪[k]] (n → k) ⧸ L := (maximalIdeal 𝒪[k]).liftQ j fun s hs => (hj s).2 hs
   have hι : ∀ s, ι (residue 𝒪[k] s) = L.mkQ (s • e) := fun s => rfl
   have hinj : Function.Injective ι := by
-    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+    rw [injective_iff_map_eq_zero]
     intro a ha
     obtain ⟨s, rfl⟩ := residue_surjective (R := 𝒪[k]) a
     exact (residue_eq_zero_iff s).2 ((hj s).1 ha)
