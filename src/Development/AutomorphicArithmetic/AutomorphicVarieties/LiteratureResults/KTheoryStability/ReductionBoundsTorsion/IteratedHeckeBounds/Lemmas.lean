@@ -227,7 +227,6 @@ private instance pointwiseGKAction (k : ℕ) : MulAction (GK L N) (Fin (k + 2) �
     funext j
     simp [mul_assoc]
 
-set_option synthInstance.maxHeartbeats 200000 in
 theorem hecke_iter {k : ℕ} (q : GK L N) {ω : Form (HS L N) (k + 1)} (hω : ContinuousOn ω (Pos L N)) (r : ℕ)
     (y : Fin (k + 2) → GK L N) :
     (hecke (Y := Fin (k + 2) → GK L N) (E := ℝ) (toK L N) (MonoidHom.id (GK L N)) q)^[r]

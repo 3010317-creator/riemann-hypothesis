@@ -98,7 +98,7 @@ theorem length_coker_of_det_eq_zero (P : Matrix ι ι R) (h : P.det = 0) :
   let g : R →ₗ[R] (ι → R) ⧸ LinearMap.range P.mulVecLin :=
     (LinearMap.range P.mulVecLin).mkQ ∘ₗ LinearMap.single R (fun _ : ι => R) k
   have hg : Function.Injective g := by
-    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+    rw [injective_iff_map_eq_zero]
     intro r hr
     have hr' : (Pi.single k r : ι → R) ∈ LinearMap.range P.mulVecLin :=
       (Submodule.Quotient.mk_eq_zero _).mp hr

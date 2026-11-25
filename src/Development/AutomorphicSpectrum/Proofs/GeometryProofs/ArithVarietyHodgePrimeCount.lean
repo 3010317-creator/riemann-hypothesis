@@ -364,8 +364,6 @@ theorem det_trick {B : Type} [CommRing B] (J : Ideal B) (hfg : J.FG) (c : B) (h 
     exact Ideal.pow_le_self (by omega) (hcoef i)
 
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 1000000 in
 theorem mul_mem_sq_of_smul_eq_zero {A : Subalgebra R (T → R)} (n : R) (hn : ∀ x : omega A, n • x = 0) (x : A)
     (hx : x ∈ augIdeal A) : algebraMap R A n * x ∈ augIdeal A ^ 2 := by
   have h1 : (augIdeal A).toCotangent (algebraMap R A n • (⟨x, hx⟩ : augIdeal A)) = 0 := by
@@ -762,8 +760,6 @@ def augSub (A : Subalgebra R (T → R)) : Submodule R (T → R) where
 def toAug {A : Subalgebra R (T → R)} (f : augSub A) : augIdeal A := ⟨⟨f.1, f.2.1⟩, f.2.2⟩
 
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 1000000 in
 def augCl (A : Subalgebra R (T → R)) : augSub A →ₗ[R] omega A where
   toFun f := (augIdeal A).toCotangent (toAug f)
   map_add' f g := by
@@ -774,8 +770,6 @@ def augCl (A : Subalgebra R (T → R)) : augSub A →ₗ[R] omega A where
     rw [h, LinearMap.map_smul, algebraMap_smul]
     rfl
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 1000000 in
 theorem augCl_surjective (A : Subalgebra R (T → R)) : Function.Surjective (augCl A) := fun x => by
   obtain ⟨f, rfl⟩ := Ideal.toCotangent_surjective _ x
   exact ⟨⟨f.1.1, f.1.2, f.2⟩, rfl⟩

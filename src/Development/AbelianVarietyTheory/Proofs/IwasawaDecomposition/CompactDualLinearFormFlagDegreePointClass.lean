@@ -656,7 +656,6 @@ namespace GlobalTheory.GrassTop
 
 theorem ren_rel {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (τ : GlobalTheory.AllWt.Psi H) (k : ℕ) :
     ren τ (rel k) = GlobalTheory.PointChern.relPoly τ k := by
-  set_option synthInstance.maxHeartbeats 100000 in
     simp [ren, rel, GlobalTheory.PointChern.relPoly, map_sum, renVar]
 
 theorem admissibleChernForm_kills_grassmannianRelationCopies : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H)

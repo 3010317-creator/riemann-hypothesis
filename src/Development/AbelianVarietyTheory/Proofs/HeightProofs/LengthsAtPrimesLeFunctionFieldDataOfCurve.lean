@@ -858,7 +858,6 @@ variable {D : D7} {B : WeightFamilies.Prov D} {P : ModuliIntegralCharts.Prov D} 
   {A : ι → Type} [∀ c, CommRing (A c)] [∀ c, Algebra (Ω c) (A c)] [∀ c, Algebra B.KO (A c)]
   [∀ c, Algebra (𝓞 B.KO) (A c)] {𝒜 : (c : ι) → WT → Submodule (Ω c) (A c)}
 
-set_option synthInstance.maxHeartbeats 400000 in
 theorem plOver_iff (d : Data B.KO ι Ω WT A) (hs : d.S1) (la : HeightOneSpectrum (𝓞 B.KO)) (c : ι)
     (w : AddValuation (OmS (Ω c) d.D d.N) (WithTop ℤ)) :
     letI := d.algOp hs la c

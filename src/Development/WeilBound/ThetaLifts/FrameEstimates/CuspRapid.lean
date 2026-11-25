@@ -921,12 +921,10 @@ theorem exp_map_star (A : Matrix (Fin d) (Fin d) ℂ) :
   have e : ∀ B : Matrix (Fin d) (Fin d) ℂ, B.map star = Bᴴᵀ := fun B => rfl
   rw [e, e, Matrix.exp_transpose, Matrix.exp_conjTranspose]
 
-set_option backward.isDefEq.respectTransparency false in
 theorem exp_semiconj {J A B : Matrix (Fin d) (Fin d) ℂ} (h : SemiconjBy J A B) :
     NormedSpace.exp (-B) * J * NormedSpace.exp A = J :=
   open scoped Matrix.Norms.Operator in h.exp_neg_mul_mul_exp_eq_self
 
-set_option backward.isDefEq.respectTransparency false in
 theorem continuous_exp_mat : Continuous (NormedSpace.exp : Matrix (Fin d) (Fin d) ℂ → Matrix (Fin d) (Fin d) ℂ) :=
   open scoped Matrix.Norms.Operator in NormedSpace.exp_continuous
 

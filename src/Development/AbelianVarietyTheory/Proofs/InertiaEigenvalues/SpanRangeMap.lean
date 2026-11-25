@@ -711,7 +711,6 @@ theorem exists_pole_RW (AI : LocAinf l P) (LL : FinExt l) (s : ℕ) (x : RW LL) 
   exact ⟨z, by rw [crd_piR_pow, hz, pow_zero, one_mul]⟩
 
 
-set_option synthInstance.maxHeartbeats 400000 in
 theorem exists_near_perfI (h : Good K s LL) (I : IoS AI R) (hI : IoW I) (x : RW LL)
     (hx : FixH AI K x) (m : ℕ) : ∃ u ∈ perfI I l, NearPi AI LL s m (x - u) := by
   obtain ⟨u, hu, hu'⟩ := exists_inv_perfI I l
@@ -1486,8 +1485,7 @@ theorem descend {r : ℕ} {ι : Type} (φ : R →ₐ[O] R) (g : ι → (R →ₐ
     exact h1.symm)
   obtain ⟨e', h1, h2⟩ := change_basis e φ Φ hΦ V F₁ hV hE
   refine ⟨e', fun s j => ?_, fun i j => ?_⟩
-  · set_option synthInstance.maxHeartbeats 100000 in
-      rw [h1, map_sum]
+  · rw [h1, map_sum]
     exact Finset.sum_congr rfl fun i _ => by rw [map_smul_semi, hVg, he]
   · have := hS i j
     rw [← h2] at this

@@ -1083,7 +1083,6 @@ theorem sum_act {K V H M W G : Type} [Field K] [AddCommGroup V] [Module K V] [Ad
     (Θ : H →ₗ[ℂ] M →ₗ[ℂ] W) (r : G → Module.End K V) (a : G → W →ₗ[ℂ] W) (c : G → K) (x : V) (v : M)
     (h : ∀ g, Θ (j (r g x)) v = a g (Θ (j x) v)) :
     Θ (j ((∑ g, c g • r g) x)) v = (∑ g, σ (c g) • a g) (Θ (j x) v) := by
-  set_option synthInstance.maxHeartbeats 100000 in
     simp only [LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smulₛₗ, RingHom.id_apply, h]
 
 theorem heckeProjector_fixes_heckeEigenVector (hC : GlobalTheory.Hk3.Core R F) (y : R.HE.H) (f : (R.MY 0).Vec) : R.e0 (R.HE.e y f) = R.HE.e y f := by
@@ -1103,7 +1102,6 @@ theorem idem_ind {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel V S) (e :
   | add a b ha hb => rw [map_add (f := _), map_add (f := _), map_add (f := _), ha, hb]
 
 
-set_option maxHeartbeats 1000000 in
 theorem heckeProjector_idempotent_compositeLift (hC : GlobalTheory.Hk3.Core R F) (t : T0) (y : (R.HX t).H) (v : SmT (R.MY 0)) :
     R.e0 (R.e0 (R.thDn t y v)) = R.e0 (R.thDn t y v) := by
   rw [thDn_eq]
@@ -1111,7 +1109,6 @@ theorem heckeProjector_idempotent_compositeLift (hC : GlobalTheory.Hk3.Core R F)
   have h5 := e_Th hC.chain.Th t y f
   exact (congrArg R.e0 h5).symm.trans ((heckeProjector_fixes_heckeEigenVector hC (R.Th t y) f).trans h5)
 
-set_option maxHeartbeats 1000000 in
 theorem proj_thDn (hP : GlobalTheory.Published.CuspRapidDecay) (hC : GlobalTheory.Hk3.Core R F) (t : T0) (x : A.fam.amb.FR t)
     (hx : x ∈ (A.fam.R t).goodF A.fam.X) (v : SmT (R.MY 0)) :
     R.e0 (R.thDn t (R.jX t x) v) = R.thDn t (R.jX t x) v := by

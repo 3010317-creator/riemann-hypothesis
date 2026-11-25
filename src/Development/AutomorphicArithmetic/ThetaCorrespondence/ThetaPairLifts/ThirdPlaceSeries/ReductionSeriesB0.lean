@@ -551,7 +551,7 @@ theorem exists_reading {D : D7} {N : NData D.R D.host D.what₂} (T : TwR D.LL0 
   let f : ℤ_[T.l i] →+* FractionRing (T.O0 i) :=
     (algebraMap (T.O0 i) (FractionRing (T.O0 i))).comp (algebraMap ℤ_[T.l i] (T.O0 i))
   have hf : Function.Injective f := by
-    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+    rw [injective_iff_map_eq_zero]
     intro z hz
     by_contra h0
     rw [PadicInt.unitCoeff_spec h0, map_mul, map_pow, map_natCast] at hz

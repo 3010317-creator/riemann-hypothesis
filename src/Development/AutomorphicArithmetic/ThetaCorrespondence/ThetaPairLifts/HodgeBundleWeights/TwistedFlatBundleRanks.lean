@@ -98,8 +98,6 @@ open GlobalTheory.BadCount
 open scoped TensorProduct
 open scoped GlobalTheory.CompHt
 
-set_option synthInstance.maxHeartbeats 400000
-
 noncomputable section
 
 namespace GlobalTheory.TwistRank
@@ -202,8 +200,6 @@ namespace GlobalTheory.RankAdd
 open NumberField IsDedekindDomain MeasureTheory Module ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.L2.Pj Formalism.BasicNotions
   Formalism.BasicNotions.TH Formalism.L2.Theta GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.FlatTw GlobalTheory.IndefiniteRowSideFullHecke.ComponentMassSum
 
-set_option synthInstance.maxHeartbeats 200000
-
 theorem finrank_iSup_of_indep {R V ι : Type} [Field R] [AddCommGroup V] [Module R V] [FiniteDimensional R V]
     [Fintype ι] (S : ι → Submodule R V) (hS : iSupIndep S) :
     finrank R (⨆ i, S i : Submodule R V) = ∑ i, finrank R (S i) := by
@@ -241,8 +237,6 @@ namespace GlobalTheory.RankAdd
 open NumberField IsDedekindDomain MeasureTheory Module ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.L2.Pj Formalism.BasicNotions
   Formalism.BasicNotions.TH Formalism.L2.Theta GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.FlatTw GlobalTheory.IndefiniteRowSideFullHecke.ComponentMassSum
 
-set_option synthInstance.maxHeartbeats 200000
-
 theorem cuspOn_comap_indep {D : D7} {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E} {Dw : Datum H} {l : Level H}
     {Xo : Moduli Dw l} {c : Coeff l} {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (G : WTZ D.host.E) :
     iSupIndep (fun Z : Comp Xo c => (cuspOn U Z G).comap (cuspW Xo c U G).subtype) := fun Z => by
@@ -261,7 +255,6 @@ theorem cuspOn_comap_indep {D : D7} {H : ReciprocityTheory.ChartRestriction.G.Ge
     _ = 0 := h0
 
 
-set_option maxHeartbeats 1000000 in
 theorem rankW_eq_finsum_rankOn : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E) (Dw : Datum H) (l : Level H)
     (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (x : ℝ)
     (V : (c.F →+* ℂ) → HSp D) (dict : ∀ σ, GA D (V σ) → Σ k, Frame ((U σ).X k).Ψ r) (G : WTZ D.host.E),

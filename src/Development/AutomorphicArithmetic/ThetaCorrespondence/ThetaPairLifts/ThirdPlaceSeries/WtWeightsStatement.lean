@@ -112,7 +112,7 @@ namespace GlobalTheory.HeightCounting.FracCharZero
 theorem injective_of_finite_dvr {A B : Type} [CommRing A] [IsDomain A] [IsPrincipalIdealRing A]
     [CommRing B] [IsDomain B] [IsDiscreteValuationRing B] [Algebra A B] [Module.Finite A B] :
     Function.Injective (algebraMap A B) := by
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
+  rw [injective_iff_map_eq_zero]
   by_contra! hne
   obtain ⟨a, ha, ha0⟩ := hne
   have hker : (⊥ : Ideal B).comap (algebraMap A B) ≠ ⊥ := by

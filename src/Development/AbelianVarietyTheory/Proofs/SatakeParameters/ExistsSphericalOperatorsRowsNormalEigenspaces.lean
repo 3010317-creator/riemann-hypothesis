@@ -282,8 +282,7 @@ theorem exists_ops (J : Subgroup (GA D V)) (χ : GA D V → ℂ) (SF : Finset (H
   · rw [hlin P hP c, hlin P' hP' c']
     exact Commute.sum_left _ _ _ fun d _ => Commute.sum_right _ _ _ fun d' _ =>
       ((hcomm1 P P' hP hP' d d').smul_left _).smul_right _
-  · set_option synthInstance.maxHeartbeats 100000 in
-      rw [hlin P hP c, hlin P hP (dualC _), dualC, Finsupp.sum_mapDomain_index (by simp) (by intros; rw [add_smul]),
+  · rw [hlin P hP c, hlin P hP (dualC _), dualC, Finsupp.sum_mapDomain_index (by simp) (by intros; rw [add_smul]),
         Finsupp.sum_mapRange_index (by simp), Finsupp.sum, Finsupp.sum, map_sum]
     refine Finset.sum_congr rfl fun d _ => ?_
     rw [LinearEquiv.map_smulₛₗ, hadj1 P hP]

@@ -438,8 +438,7 @@ theorem UpperTheory.V.AlgebraTools.mvPowerSeries_span_monomials :
     rw [Submodule.restrictScalars_top] at h2
     rw [← h2, Submodule.restrictScalars_mem]
     exact h1
-  · set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+  · rw [map_sum]
     refine Submodule.sum_mem _ fun α _ => ?_
     have e := map_smul (Ideal.Quotient.mkₐ Λ (Ideal.span (Set.range w)))
       (MvPowerSeries.coeff (Finsupp.equivFunOnFinite.symm fun s => (α s : ℕ)) f)

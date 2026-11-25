@@ -495,7 +495,6 @@ theorem unfold2_of (hM : Mahler) : Unfold2 := by
   have hφm : ∀ d, Measurable fun x => φ (twConj θ x (ι d)) := fun d =>
     (hφ.cont.comp ((continuous_inv.mul continuous_const).mul hθc)).measurable
   haveI : T2Space (GA E a × GA E b) := by
-    set_option synthInstance.maxHeartbeats 200000 in
       exact inferInstance
   obtain ⟨B, hB⟩ := hφ.supp.exists_bound_of_continuous hφ.cont
   have key := unfold_abs (μ := μ₁.prod μ₂) (ι := ι) (θ := θ) (θR := θR) (cls := cls) (rep := rep) (H := H)

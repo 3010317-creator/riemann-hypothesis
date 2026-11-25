@@ -127,7 +127,6 @@ theorem archSec_exists_eq_smul : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   by_cases ha0 : a = 0
   · refine ⟨1, one_ne_zero, ?_⟩
     have ht0 : t.sig = 0 := by
-      set_option synthInstance.maxHeartbeats 200000 in
         rw [hta, ha0, zero_smul]
     have hi0 : idem Z = 0 := by rw [← t.mul_inv, ht0, zero_mul]
     have hs0 : s.sig = 0 := by rw [← s.idem_sig, hi0, zero_mul]

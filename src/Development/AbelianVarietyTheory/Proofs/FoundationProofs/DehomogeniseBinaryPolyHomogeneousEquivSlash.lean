@@ -135,8 +135,7 @@ theorem deh_homog_iso : ∀ w : ℕ, (∀ (m : Matrix (Fin 2) (Fin 2) ℤ) (p : 
     refine ⟨∑ i : Fin (w + 1), MvPolynomial.C (q.coeff i) * mon ℂ w i, ?_, ?_⟩
     · exact MvPolynomial.IsHomogeneous.sum _ _ _ fun i _ =>
         ((_root_.GlobalTheory.KZ.H3.mon_expand ℂ w).2.2.1 i).C_mul _
-    · set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+    · rw [map_sum]
       simp only [map_mul, dehH_mon]
       simp only [deh, MvPolynomial.aeval_C, Polynomial.algebraMap_eq]
       rw [Fin.sum_univ_eq_sum_range (fun i => Polynomial.C (q.coeff i) * Polynomial.X ^ i)]
