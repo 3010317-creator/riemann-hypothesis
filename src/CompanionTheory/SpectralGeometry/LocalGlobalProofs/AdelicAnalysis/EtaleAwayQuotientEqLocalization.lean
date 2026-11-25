@@ -1,6 +1,6 @@
 module
 
-public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.PiTensorProduct
 import Mathlib.RingTheory.RegularLocalRing.Defs
@@ -16,17 +16,6 @@ open HeckeCharacterZeroLocus.SiegelWeilU
 open scoped TensorProduct Matrix
 
 variable {F E : Type} [Field F] [Field E] [Algebra F E]
-
-theorem trace_tmul [FiniteDimensional F E] (R : Type) [CommRing R] [Algebra F R] (a : R) (e : E) :
-    Algebra.trace R (R ⊗[F] E) (a ⊗ₜ[F] e) = a * algebraMap F R (Algebra.trace F E e) := by
-  have h1 : Algebra.trace R (R ⊗[F] E) ((1 : R) ⊗ₜ[F] e) = algebraMap F R (Algebra.trace F E e) := by
-    rw [Algebra.trace_apply, Algebra.trace_apply, ← LinearMap.trace_baseChange]
-    congr 1
-    ext y
-    simp [Algebra.TensorProduct.tmul_mul_tmul, LinearMap.baseChange_tmul]
-  have h2 : a ⊗ₜ[F] e = a • ((1 : R) ⊗ₜ[F] e) := by
-    simp [TensorProduct.smul_tmul']
-  rw [h2, map_smul, h1, smul_eq_mul]
 
 theorem expand {d : ℕ} (b : Module.Basis (Fin d) F E) (R : Type) [CommRing R] [Algebra F R]
     (u : R ⊗[F] E) :

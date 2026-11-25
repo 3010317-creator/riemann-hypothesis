@@ -9,6 +9,38 @@ import Mathlib.RingTheory.SimpleRing.Principal
 
 noncomputable section
 
+namespace GlobalTheory.CompanionTheory.SW
+
+open scoped TensorProduct
+
+section TensorTrace
+
+variable {F E : Type} [Field F] [Field E] [Algebra F E]
+  (R : Type) [CommRing R] [Algebra F R]
+
+theorem trace_tmul [FiniteDimensional F E] (r : R) (e : E) :
+    Algebra.trace R (R ⊗[F] E) (r ⊗ₜ[F] e) = r * algebraMap F R (Algebra.trace F E e) := by
+  have : r ⊗ₜ[F] e = r • ((1 : R) ⊗ₜ[F] e) := by simp [TensorProduct.smul_tmul']
+  rw [this, map_smul, smul_eq_mul, Algebra.trace_apply, Algebra.trace_apply,
+    ← Algebra.baseChange_lmul, LinearMap.trace_baseChange]
+
+theorem half_trace_tmul [CharZero F] (h2 : Module.finrank F E = 2) (s : R) :
+    algebraMap F R (1 / 2) * Algebra.trace R (R ⊗[F] E) (s ⊗ₜ[F] (1 : E)) = s := by
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by lia)
+  have e : s ⊗ₜ[F] (1 : E) = algebraMap R (R ⊗[F] E) s := by
+    simp [Algebra.TensorProduct.algebraMap_apply]
+  have h : algebraMap F R (1 / 2) * 2 = 1 := by
+    rw [← map_ofNat (algebraMap F R) 2, ← map_mul]
+    norm_num
+  rw [e, Algebra.trace_algebraMap_of_basis
+    (Algebra.TensorProduct.basis R (Module.finBasisOfFinrankEq F E h2))]
+  simp only [Fintype.card_fin, nsmul_eq_mul, Nat.cast_ofNat]
+  rw [← mul_assoc, h, one_mul]
+
+end TensorTrace
+
+end GlobalTheory.CompanionTheory.SW
+
 namespace GlobalTheory.CompanionTheory.SW.TopK
 
 open HeckeCharacterZeroLocus.SiegelWeilU GlobalTheory.CompanionTheory.SW NumberField IsDedekindDomain MeasureTheory Topology

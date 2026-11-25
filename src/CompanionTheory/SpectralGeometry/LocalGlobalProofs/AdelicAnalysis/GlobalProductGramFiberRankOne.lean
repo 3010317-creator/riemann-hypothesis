@@ -163,18 +163,13 @@ theorem trace_one_tmul' [FiniteDimensional F E] (R : Type) [CommRing R] [Algebra
     simp [Algebra.TensorProduct.tmul_mul_tmul]
   rw [Algebra.trace_apply, h, LinearMap.trace_baseChange, Algebra.trace_apply]
 
-theorem trace_tmul' [FiniteDimensional F E] {R : Type} [CommRing R] [Algebra F R] (r : R) (e : E) :
-    Algebra.trace R (R ⊗[F] E) (r ⊗ₜ[F] e) = r * algebraMap F R (Algebra.trace F E e) := by
-  have h : r ⊗ₜ[F] e = r • ((1 : R) ⊗ₜ[F] e) := by simp [TensorProduct.smul_tmul']
-  rw [h, map_smul, trace_one_tmul', smul_eq_mul]
-
 variable {R R' : Type} [CommRing R] [Algebra F R] [CommRing R'] [Algebra F R']
 
 theorem trace_map [FiniteDimensional F E] (φ : R →ₐ[F] R') (y : R ⊗[F] E) :
     φ (Algebra.trace R (R ⊗[F] E) y) =
       Algebra.trace R' (R' ⊗[F] E) (Algebra.TensorProduct.map φ (AlgHom.id F E) y) := by
   induction y with
-  | tmul r e => simp [trace_tmul']
+  | tmul r e => simp [trace_tmul]
   | add a c ha hc => simp only [map_add (f := _), ha, hc]
 
 theorem map_sigR (σ : E →ₐ[F] E) (φ : R →ₐ[F] R') (z : R ⊗[F] E) :
@@ -229,7 +224,7 @@ theorem q_expand [FiniteDimensional F E] {d M : ℕ} (b : Module.Basis (Fin d) F
         algebraMap F R (1 / 2 * Algebra.trace F E (σ (b k) * J i j * b l)) := by
 
   simp only [qF, gramR, hR, hform, JR, Matrix.map_apply, sig_expand b, map_sum, Finset.mul_sum,
-  trace_tmul', map_mul]
+  trace_tmul, map_mul]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ =>
     Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => ?_
   ring

@@ -122,16 +122,6 @@ theorem fixed_eq_tmul [CharZero F] {σ : E →ₐ[F] E} (hinv : ∀ x, σ (σ x)
   rw [hy', h0, hC0]
   simp [TensorProduct.smul_tmul']
 
-theorem half_trace_tmul [CharZero F] (h2 : Module.finrank F E = 2) (s : R) :
-    algebraMap F R (1 / 2) * Algebra.trace R (R ⊗[F] E) (s ⊗ₜ[F] (1 : E)) = s := by
-  have hfin : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
-  let B : Module.Basis (Fin 2) F E := Module.finBasisOfFinrankEq F E h2
-  have : s ⊗ₜ[F] (1 : E) = algebraMap R (R ⊗[F] E) s := by
-    simp [Algebra.TensorProduct.algebraMap_apply]
-  rw [this, Algebra.trace_algebraMap_of_basis (Algebra.TensorProduct.basis R B)]
-  simp only [Fintype.card_fin, two_nsmul]
-  exact half_add_self (F := F) R s
-
 end Alg
 
 section Herm
