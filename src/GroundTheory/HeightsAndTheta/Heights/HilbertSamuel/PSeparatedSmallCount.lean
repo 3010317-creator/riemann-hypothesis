@@ -239,12 +239,8 @@ theorem SeparatedSmallCount.proof (hfin : SectionLatticeFinite.Statement) : Sepa
     have := hdist s t (hS.mem_toFinset.1 hs) (hS.mem_toFinset.1 ht) hne
     rw [hst, sub_self, norm_zero] at this
     exact absurd this (not_le.2 (Real.exp_pos _))
-  have hWfin : Module.Finite ℤ W := by
-    have h1 : (AddSubgroup.toIntSubmodule W).FG := IsNoetherian.noetherian _
-    have h2 : W.FG := by
-      have := (Submodule.fg_iff_addSubgroup_fg _).1 h1
-      simpa using this
-    exact Module.Finite.iff_addGroup_fg.2 ((AddGroup.fg_iff_addSubgroup_fg W).2 h2)
+  have hWfin : Module.Finite ℤ W :=
+    Module.Finite.of_injective W.subtype.toIntLinearMap fun a b h => Subtype.ext h
   have hP := Packing.proof (lp (fun _ : mcPts (mCoordIdeal y) => ℂ) ∞) (LinearMap.range φ.toIntLinearMap)
     (hS.toFinset.image F) b hb
     (by
