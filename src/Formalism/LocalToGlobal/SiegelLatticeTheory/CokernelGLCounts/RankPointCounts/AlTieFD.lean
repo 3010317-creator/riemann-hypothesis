@@ -140,16 +140,10 @@ theorem different_generator_unit : DifferentGeneratorUnit X := by
 
 theorem not_both (v : HeightOneSpectrum (𝓞 X.B.I.F)) (h0 : ((D.host.g 0 : ℕ) : 𝓞 X.B.I.F) ∈ v.asIdeal)
     (h1 : ((D.host.g 1 : ℕ) : 𝓞 X.B.I.F) ∈ v.asIdeal) : False := by
-  have hcop : IsCoprime ((D.host.g 0 : ℕ) : ℤ) ((D.host.g 1 : ℕ) : ℤ) := by
-    rw [Int.isCoprime_iff_gcd_eq_one, Int.gcd_natCast_natCast]
-    exact (Nat.coprime_primes (D.host.g_prime 0) (D.host.g_prime 1)).mpr D.host.g_ne
-  obtain ⟨a, b, hab⟩ := hcop
-  have hone : (1 : 𝓞 X.B.I.F) ∈ v.asIdeal := by
-    have e := congrArg (Int.cast : ℤ → 𝓞 X.B.I.F) hab
-    push_cast at e
-    rw [← e]
-    exact v.asIdeal.add_mem (v.asIdeal.mul_mem_left _ h0) (v.asIdeal.mul_mem_left _ h1)
-  exact v.isPrime.ne_top ((Ideal.eq_top_iff_one _).mpr hone)
+  obtain ⟨a, b, hab⟩ := ((Nat.coprime_primes (D.host.g_prime 0) (D.host.g_prime 1)).mpr
+    D.host.g_ne).cast (R := 𝓞 X.B.I.F)
+  exact v.isPrime.ne_top ((Ideal.eq_top_iff_one _).mpr
+    (hab ▸ v.asIdeal.add_mem (v.asIdeal.mul_mem_left _ h0) (v.asIdeal.mul_mem_left _ h1)))
 
 theorem card_over (i : Fin 2) :
     ({v : HeightOneSpectrum (𝓞 X.B.I.F) | ((D.host.g i : ℕ) : 𝓞 X.B.I.F) ∈ v.asIdeal}).ncard =
