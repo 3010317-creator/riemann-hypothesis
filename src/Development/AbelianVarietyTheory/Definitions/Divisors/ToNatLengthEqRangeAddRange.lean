@@ -473,10 +473,6 @@ theorem smallCls_eq_iff {L M : LB X} (hL : L.IsLB) (hM : M.IsLB) :
 def smallPull (f : Y ⟶ X) : SmallPic X →+ SmallPic Y :=
   (smallPicEquiv Y).symm.toAddMonoidHom.comp ((pull f).comp (smallPicEquiv X).toAddMonoidHom)
 
-theorem smallPull_smallCls (f : Y ⟶ X) {L : LB X} (hL : L.IsLB) (h : (L.pull f).IsLB) :
-    smallPull f (smallCls L hL) = smallCls (L.pull f) h := by
-  simp [smallPull, smallCls, cls_pull hL]
-
 
 variable (X) in
 abbrev PicSym : Type := SymQ (SmallPic X)
