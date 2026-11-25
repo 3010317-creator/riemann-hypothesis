@@ -330,14 +330,6 @@ open GlobalTheory.KS (rsT_self eq_of_rsT_eq)
 
 variable {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G] [IsCommMonObj G]
 
-theorem evalPt_lieExp_comb {m : ℕ} (u : Fin m → TanM (𝟙 (Sp R)) G) (dd : Fin m → Fld G.left)
-    (hd : ∀ i, IsInv G (u i) (dd i)) (B : Type) [CommRing B] [Algebra R B] (e : Fin m → B)
-    (he : ∀ i j, e i * e j = 0) (z : ReciprocityTheory.ChartRestriction.G.Chart.sp (R₀ := R) B ⟶ G) (O : G.left.Opens)
-    (h : ⊤ ≤ z.left ⁻¹ᵁ O) :
-    ∃ h' : ⊤ ≤ (GlobalTheory.SqZero.lieExp (fun i => GlobalTheory.VertCoeffRing.tvE (u i)) e (fun i => he i i) * z).left ⁻¹ᵁ O, ∀ f,
-      evalPt _ O h' f = evalPt z.left O h f + ∑ i, e i * evalPt z.left O h (dd i O f) := by
-  apply _root_.GlobalTheory.VertCoeffRing.evalPt_lieExp <;> assumption
-
 theorem coeff_eq_zero [Smooth G.hom] {n : ℕ} (v : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) G))
     (dd : Fin n → Fld G.left) (hd : ∀ a, IsInv G (v a) (dd a)) (W : G.left.Opens) (c : Fin n → Γ(G.left, W))
     (hc : ∀ Wo : G.left.Opens, Wo ≤ W → ∀ f, ∑ a, rsT (c a) Wo * dd a Wo f = 0) (a : Fin n) : c a = 0 := by
@@ -351,7 +343,7 @@ theorem coeff_eq_zero [Smooth G.hom] {n : ℕ} (v : Module.Basis (Fin n) R (TanM
   obtain ⟨V, hV, hVW⟩ := k
   have hu := GlobalTheory.VertCoeffRing.existsUnique_coeff_affine_ring (fun a => GlobalTheory.VertCoeffRing.tvE (v a))
     (GlobalTheory.VertCoeffRing.isLieBasis_tvE v) dd
-    (fun B _ _ e he z O h => evalPt_lieExp_comb (fun a => v a) dd hd B e he z O h) V V hV hV le_rfl
+    (fun B _ _ e he z O h => GlobalTheory.VertCoeffRing.evalPt_lieExp (fun a => v a) dd hd B e he z O h) V V hV hV le_rfl
     (fun _ => 0) (fun _ _ => by simp) (fun _ _ => by simp) (fun _ => rfl)
   have h1 : ∀ f, (fun _ => (0 : Γ(G.left, V))) f = ∑ a, (fun a => rsT (c a) V) a * rsT (dd a V f) V := by
     intro f

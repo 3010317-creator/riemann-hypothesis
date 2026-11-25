@@ -108,9 +108,6 @@ theorem exists_integer_coset_trace_eq (L : Type) [Field L] (v : Valuation L ℝ�
       _ = 1 := one_mul 1
   · rw [hfix.2.2 (e / t) hq, div_mul_cancel₀ e ht0]
 
-theorem exists_integer_coset_trace_eq' : ∀ (L : Type) [Field L] (v : Valuation L ℝ≥0) (G : Type) [Group G] [MulSemiringAction G L], (∀ (g : G) (x : L), v (g • x) = v x) → ∀ (U : Subgroup G) [Fintype (G ⧸ U)], AlmostSep v U → ∀ e : L, (∀ g : G, g • e = e) → v e < 1 → ∃ y ∈ Fix L U, v y ≤ 1 ∧ cosetTrace U y = e :=
-  fun L _ v G _ _ hv U _ hU e he he1 => exists_integer_coset_trace_eq L v G hv U hU e he he1
-
 end GlobalTheory.AlmostEt
 end -- clump:auto
 end -- clump:auto
@@ -302,7 +299,7 @@ theorem small_traces_subgroup : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field 
     have h1 : ((h : ↥K) : Gal p Ω) (T.ζ j) = T.ζ j := ((Basic.mem_gn T j _).mp hm).1
     rw [hsmul, map_sub, map_one, h1]
   have hve : v (T.ζ j - 1) < 1 := (_root_.GlobalTheory.K5.ZetaNonvanishing₂.valuation_zeta_sub_one p Ω hp2 T v hv1 j hj).1
-  obtain ⟨y₀, hy₀, hy₀le, htr⟩ := _root_.GlobalTheory.AlmostEt.exists_integer_coset_trace_eq' Ω v ↥H' hinv U' hU'sep (T.ζ j - 1) hfixζ hve
+  obtain ⟨y₀, hy₀, hy₀le, htr⟩ := _root_.GlobalTheory.AlmostEt.exists_integer_coset_trace_eq Ω v ↥H' hinv U' hU'sep (T.ζ j - 1) hfixζ hve
   have hS : ∀ s ∈ S, s ∈ Fix Ω U' := fun s hs g =>
     hUS s hs ⟨((g : ↥H') : ↥K), Subgroup.mem_subgroupOf.mp g.2⟩
   obtain ⟨y, D, E', hy, huniq, hsum⟩ := _root_.GlobalTheory.AlmostEt.exists_reps_of_cosetTrace Ω ↥H' U' S hS y₀ hy₀
