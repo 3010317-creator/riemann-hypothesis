@@ -77,13 +77,7 @@ theorem intInd_mem {F : Type} [Field F] [NumberField F] (κ : Type) [Fintype κ]
   have hK : IsCompact B := isCompact_univ_pi fun _ => GroundTheory.Global.isCompact_integralFiniteAdeles F
   have hC : IsClosed B := hK.isClosed
   refine ⟨?_, HasCompactSupport.intro hK fun x hx => Set.indicator_of_notMem hx _⟩
-  rw [IsLocallyConstant.iff_exists_open]
-  intro x
-  by_cases hx : x ∈ B
-  · refine ⟨_, hO, hx, fun y hy => ?_⟩
-    simp only [intInd, ← hB, Set.indicator_of_mem hy, Set.indicator_of_mem hx, Pi.one_apply]
-  · refine ⟨_, hC.isOpen_compl, hx, fun y hy => ?_⟩
-    simp only [intInd, ← hB, Set.indicator_of_notMem hy, Set.indicator_of_notMem hx]
+  exact (LocallyConstant.indicator (LocallyConstant.const _ 1) ⟨hC, hO⟩).isLocallyConstant
 
 theorem ref_fun : ∀ {F : Type} [Field F] [NumberField F] (κ : Type) [Fintype κ],
     ∃ r₀ : (κ → AF F) → ℂ, (∀ x : κ → AF F, (∀ i, (x i).2 = 0) → r₀ x = 1) ∧
