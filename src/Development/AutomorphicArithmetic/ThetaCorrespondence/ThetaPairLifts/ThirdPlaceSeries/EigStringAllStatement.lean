@@ -1428,7 +1428,7 @@ theorem heckeFunI_eigC_alt (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7
         have h2 := hg'
         rw [P.H.av.typeV] at h2
         exact h2
-      exact GlobalTheory.T.isotypicFixedVector_isSatakeEigen_inertPlace _ _ (P.H.av.rep i P') v w hov Dv α' hα' _ hmem (hfix g') h0 hh0
+      exact _root_.GlobalTheory.EigIsoInert.eig_of_isoTyp_fixed _ _ (P.H.av.rep i P') v w hov Dv α' hα' _ hmem (hfix g') h0 hh0
     · rw [iSup_neg (show P' ∉ {P | D.naut.ptV i P = some x} from hP')] at hg'
       rw [(Submodule.mem_bot ℂ).1 hg']
       simp [hC]

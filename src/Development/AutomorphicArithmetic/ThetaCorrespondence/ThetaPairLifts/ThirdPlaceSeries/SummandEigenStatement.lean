@@ -1510,7 +1510,7 @@ theorem main_alt_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ (
       rw [mul_assoc]
     rw [Finset.sum_congr rfl e1, ← Finset.sum_apply, hkey]
     rfl
-  obtain ⟨a₀, ha₀, k, hk, rfl⟩ := (GlobalTheory.T.adelicUnitary_real_mul_finite_decomposition D (Formalism.IndefR.Links.Vc D j)).1 g
+  obtain ⟨a₀, ha₀, k, hk, rfl⟩ := (_root_.GlobalTheory.AdelicSplitParts.split_parts D (Formalism.IndefR.Links.Vc D j)).1 g
   obtain ⟨w, rfl⟩ := (hAg.PV j).onto k hk
   obtain ⟨y, hy, -⟩ := X.existsUnique_vec hμ j f'
   have hw := hfin w

@@ -1632,7 +1632,7 @@ theorem locOK_of_eigen : RealInputE → ∃ C : ℝ, 0 ≤ C ∧ Ev fun {D} _ _ 
   obtain ⟨C, hC, hT1⟩ := realInputE_transport hRI
   refine ⟨C, hC.le, ?_⟩
   intro ε0 CF hCF
-  obtain ⟨x₀, hx₀⟩ := GlobalTheory.T.branchingHypotheses_gridParameters_largeScale ε0 CF hCF
+  obtain ⟨x₀, hx₀⟩ := _root_.GlobalTheory.SepPer.realInputPar ε0 CF hCF
   refine ⟨x₀, fun D large₂ h1 h2 h3 T L μ0 hL G W M hM => ?_⟩
   have hP := hx₀ D large₂ h1 h2 h3 T L μ0 hL G W M hM
   intro M₀ MP τ

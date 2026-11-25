@@ -1772,8 +1772,8 @@ theorem block_type_split_local_alt (hP : _root_.GlobalTheory.NRows.ThetaLocalInp
         rw [hact g hg v, MonoidHom.mul_apply,
           isUnram_unrChar F α _ (GlobalTheory.StepData.valuation_det_of_mem_KO hg), mul_one]) hφ0 hφ
     exact hu (isRoot_of_parVec L (gc false) i ρ hρ hf hθ (by rw [Fintype.card_fin, hi1]) hv' hpar)
-  · obtain ⟨π₁, π₂, ⟨φ⟩, hno⟩ := GlobalTheory.T.irreducible_split_exact_twistCount_product hBZ hG hP.unl F r t χ π s d σ hχ hsupp heq.symm
-    have hsph := GlobalTheory.T.spherical_twist_of_blockTypeVector hBZ hG hM F r t χ π π₁ π₂ v hχ hχt hno ⟨φ⟩ hv hb
+  · obtain ⟨π₁, π₂, ⟨φ⟩, hno⟩ := _root_.GlobalTheory.BlockSplitProd.main hBZ hG hP.unl F r t χ π s d σ hχ hsupp heq.symm
+    have hsph := _root_.GlobalTheory.BlockSph.sph_of_isBlockVec hBZ hG hM F r t χ π π₁ π₂ v hχ hχt hno ⟨φ⟩ hv hb
     refine ⟨π₁, GlobalTheory.SplitPairLift.twistIrr π₂ hχ.inv, hsph, ?_, ?_⟩
     · have h := GlobalTheory.SplitPairLift.twist_twist_inv π₂ χ⁻¹
       rw [inv_inv] at h
@@ -1796,15 +1796,15 @@ theorem block_type_split_local_alt (hP : _root_.GlobalTheory.NRows.ThetaLocalInp
         (IsSubquotient.of_injective Ψ.toIntertwiningMap Ψ.toLinearEquiv.injective)))
     obtain ⟨z, hz0, hz⟩ := GlobalTheory.T.levi_rep_parabolic_char F Bool (Two (Fin r) (Fin t)) _ (fun j => multiProd (gc j) fun i => (S i j).ρ)
       Y τ true χ y (fun j => isSmooth_parInd _ _) hχ hcol hy0 hy
-    obtain ⟨w, hw0, hw⟩ := GlobalTheory.T.exists_levi_block_eigenvector_at_identity F Bool (fun i => Fin (b.1 i true)) (Fin t) (gc true) _
+    obtain ⟨w, hw0, hw⟩ := _root_.GlobalTheory.SphBlock.exists_eigen_at_one F Bool (fun i => Fin (b.1 i true)) (Fin t) (gc true) _
       (fun i => (S i true).ρ) χ z hz0 hz
     have hm : b.1 false true = 0 := by
       by_contra hm
       obtain ⟨z', hz'0, hz'⟩ := GlobalTheory.T.levi_rep_parabolic_char F Bool (fun i => Fin (b.1 i true)) _ (fun i => (S i true).ρ) _
         (piTensor fun i => (S i true).ρ) false χ w (fun i => (S i true).smooth) hχ (IsSubquotient.refl _) hw0 (hw false)
-      obtain ⟨α, hα⟩ := GlobalTheory.T.inSupport_mul_unramifiedChar_of_integralEigenvector hBZ hG hM F _ _ (S false true).ρ χ z' (S false true).smooth (S false true).irr hχ
+      obtain ⟨α, hα⟩ := _root_.GlobalTheory.SphSupport.inSupport_mul_unrChar_of_KO_eigen hBZ hG hM F _ _ (S false true).ρ χ z' (S false true).smooth (S false true).irr hχ
         (Nat.pos_of_ne_zero hm) hz'0 hz'
-      exact hno α (GlobalTheory.T.charInCuspidalSupport_of_jacquet_subquotient_factor hBZ hG F r _ π₁.π Bool (b.1 false) (fr false) (S false) true _ π₁.smooth (hrow false) hα)
+      exact hno α (_root_.GlobalTheory.SuppStage.main hBZ hG F r _ π₁.π Bool (b.1 false) (fr false) (S false) true _ π₁.smooth (hrow false) hα)
     have hm' : b.1 true false = 0 := by
       have h1 := b.2.1 false
       have h2 := b.2.2 false

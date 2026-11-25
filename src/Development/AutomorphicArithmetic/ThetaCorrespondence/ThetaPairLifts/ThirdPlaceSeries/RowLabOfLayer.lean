@@ -1211,7 +1211,7 @@ theorem labTie_of_series : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Formali
   let _ : Fintype (G0g D.nd) := Formalism.MainNotions.PrimeDegreeVariant.finiteLevelGroupFintype D
   have hlab : ∀ σ k v, IsLabel D k (D.nd.lab k (D.what₂.ft σ) v) := fun σ k v => ((hTL (D.what₂.ft σ)) k v).1
   refine ⟨hlab, hgood, fun σ => ?_⟩
-  obtain ⟨c, red, hFR⟩ := GlobalTheory.T.exists_maximalCompact_reduction_standardFrame D X h t PY hF hStd hHEq
+  obtain ⟨c, red, hFR⟩ := _root_.GlobalTheory.LabPin.frameRed_exists D X h t PY hF hStd hHEq
   have hRH : IsRedHom X red := hFR.1
   choose sec hsec using hRH.2.2.1
   have hIS : IsSec X red sec := fun γ => hsec γ

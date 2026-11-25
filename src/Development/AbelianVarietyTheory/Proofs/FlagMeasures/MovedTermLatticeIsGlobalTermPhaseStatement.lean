@@ -1456,7 +1456,7 @@ theorem main : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.W
       (U' * (ξ.map (algebraMap (𝓞 D.host.E) D.host.E))⁻¹) hBl hBd
     refine ⟨N, N', hN, hN', ?_⟩
     intro p m m' hm hm'
-    obtain ⟨t, d, hto, hlatEq, hf, hf'⟩ := GlobalTheory.T.movedTerm_lattice_isLocalTerm_at_place D X Y u u' hst hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U'
+    obtain ⟨t, d, hto, hlatEq, hf, hf'⟩ := _root_.GlobalTheory.HL.MovedTermLoc.main D X Y u u' hst hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U'
       hMv p ξ hξ N N' hN hN' m m' hm hm'
     obtain ⟨h1, -⟩ := _root_.GlobalTheory.HL.WCoordTerms.terms_orbits_heights_amps (Y.M p) (Y.agree p).1 (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p)
       D.R.rS D.R.k (FP p) (G.S p) (c.c p)

@@ -1603,7 +1603,7 @@ open GlobalTheory.HeightCounting.Up GlobalTheory.Mem.SRe GlobalTheory.Mem.R3.Rw
 theorem slot_mv_extension_with_list_geo_cl (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (cDep : ℝ) :
     PositionMv (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension (_root_.GlobalTheory.HeightCounting.Up.extensionWithList hL cDep) SExt.none).s := by
   intro K B f T w Z O x N h O' hO' col n
-  have hrows := _root_.GlobalTheory.T.rows_pass_to_moved_divisionLatticesHeights
+  have hrows := _root_.GlobalTheory.Mem.R3.Rw.DivMv.rows_move_geo
     K B f T w Z x.Wt O x.what₂ N h O' hO'
   obtain ⟨t', hs, hgeo, hpk, hobj, hrx⟩ := hrows
   obtain ⟨nch', xd', -, hnx, -, -, hmv⟩ := _root_.GlobalTheory.LayerMove.exists_kept_nChoice_thData_upL hL K B f T w Z x.Wt Z.S N h O.nch O.xd
@@ -1615,7 +1615,7 @@ theorem slot_mv_extension_with_list_geo_cl (hL : _root_.UpperTheory.Zero.LLC.Rec
   have hlp := GlobalTheory.Mem.GridMove.listPin_rowsSame cDep K.s.b K B f T w Z x.Wt Z.S N h O.p0 x.what₂ (O.tr N h).p0 t' hs x.nx.2.2.down
   obtain ⟨c⟩ := hmv O.p0 x.what₂ x.n (O.tr N h).p0 t' n hs hgeo ⟨x.nx.1, x.nx.2.1⟩
   obtain ⟨s⟩ := GlobalTheory.T.spectralStageData_transfer_lattices_heights K B f T w Z x.Wt O.p0 x.what₂ x.col.toColT N h (O.tr N h).p0 t' col.toColT hpk ⟨x.sx.1⟩
-  obtain ⟨o⟩ := GlobalTheory.T.divisionGeometryScalars_transfer_setDivision K B f T w Z x.Wt N h O (O.tr N h) rfl x.what₂ t' hs x.ox
+  obtain ⟨o⟩ := _root_.GlobalTheory.Mem.OxMove.oAt_setDiv K B f T w Z x.Wt N h O (O.tr N h) rfl x.what₂ t' hs x.ox
   exact ⟨t', hobj x.obj, hrx ⟨x.rx⟩, ⟨⟨c.1, c.2, ⟨hlp⟩⟩⟩, ⟨⟨s, PUnit.unit⟩⟩, ⟨o⟩⟩
 end Slot
 end GlobalTheory.NLink.Final

@@ -289,8 +289,8 @@ theorem main : GlobalTheory.Published.BernsteinZelevinskyFiniteness → GlobalTh
   rcases hle.lt_or_eq with hlt | heq
   · exact Or.inr ⟨s, d, σ, hsupp, hlt⟩
   ·
-    obtain ⟨π₁, π₂, hE, hns⟩ := GlobalTheory.T.irreducible_split_exact_twistCount_product hBZ hGL hUP k r t χ π s d σ hχ hsupp heq.symm
-    have hsph := GlobalTheory.T.spherical_twist_of_blockTypeVector hBZ hGL hDZ k r t χ π π₁ π₂ v hχ hT hns hE hv hvec
+    obtain ⟨π₁, π₂, hE, hns⟩ := _root_.GlobalTheory.BlockSplitProd.main hBZ hGL hUP k r t χ π s d σ hχ hsupp heq.symm
+    have hsph := _root_.GlobalTheory.BlockSph.sph_of_isBlockVec hBZ hGL hDZ k r t χ π π₁ π₂ v hχ hT hns hE hv hvec
     have hχi : IsSmoothChar χ⁻¹ := is_smooth_char_inv hχ
     refine Or.inl ⟨π₁, GlobalTheory.SplitPairLift.twistIrr π₂ hχi, hsph, ?_⟩
     have h2 := GlobalTheory.SplitPairLift.twist_twist_inv π₂ χ⁻¹
