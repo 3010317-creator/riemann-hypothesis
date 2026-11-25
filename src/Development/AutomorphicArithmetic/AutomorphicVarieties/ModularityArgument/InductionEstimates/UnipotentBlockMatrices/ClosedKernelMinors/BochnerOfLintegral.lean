@@ -318,15 +318,6 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.unf :
     rw [tower μ E hE hEu Ψ hΨ hinv, ← coordUnf μ₂ κ E hE hEu Ψ hΨ hinv, ← hI _ (hΨ.indicator hE),
       lintegral_indicator hE]
   refine ⟨c, hc, hL, fun Ψ hΨ hinv hint => ?_⟩
-  have hpt : Measurable (pt (K := K)) := by
-    have : OpensMeasurableSpace (G1 K 2 × ℝ) := inferInstance
-    have : OpensMeasurableSpace (G1 K 2 × G1 K 2 × ℝ) := inferInstance
-    have h1 := ((blkLaws (K := K)).2.2.2.1).measurable
-    have h2 : Measurable (unipOne (K := K) (n := 2 + 2) 2) := (continuous_unipOne 2).measurable
-    have h3 : Measurable fun p : Par K => (p.1, p.2.1, p.2.2.1) :=
-      measurable_fst.prodMk (measurable_snd.fst.prodMk measurable_snd.snd.fst)
-    exact ((h2.comp measurable_snd.snd.snd.snd).mul (h1.comp h3)).mul
-      (measurable_subtype_coe.comp measurable_snd.snd.snd.fst)
   have hmk : Measurable (RightCosetSpace.mk (PK K)) := measurable_quotient_mk''
   let h : RightCosetSpace (PK K) → ℂ := Quotient.lift Ψ fun a b hab => by
     obtain ⟨γ, hγ⟩ := MulAction.orbitRel_apply.1 hab
@@ -336,7 +327,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.unf :
   exact bochner_of_lintegral (fd μ) (parM μ₂ κ)
     (fun (q : Cos K) y => RightCosetSpace.mk (PK K) ((q.out : G1 K (2 + 2)) * y))
     (fun p => RightCosetSpace.mk (PK K) (pt p))
-    (fun q => hmk.comp (measurable_const_mul _)) (hmk.comp hpt) c hc.le
+    (fun q => hmk.comp (measurable_const_mul _)) (hmk.comp pt_meas) c hc.le
     (fun φ hφ => hL (fun g => φ (RightCosetSpace.mk (PK K) g)) (hφ.comp hmk)
       (fun γ hγ g => congrArg φ (RightCosetSpace.mk_mul_of_mem hγ g)))
     h hh hint
