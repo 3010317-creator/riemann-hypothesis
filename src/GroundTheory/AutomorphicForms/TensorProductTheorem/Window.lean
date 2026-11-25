@@ -154,25 +154,11 @@ theorem isIrreducible_of_forall (hρ : IsSmooth ρ) [Nontrivial V]
       (hKo : IsOpen (K : Set G)), x ∈ fixedVectors ρ K ∧ y ∈ fixedVectors ρ K ∧
         IsSimpleUnder (heckeOps hρ hKc hKo)) :
     ρ.IsIrreducible := by
-  have hbt : (⊥ : Subrepresentation ρ) ≠ ⊤ := by
-    intro h0
-    obtain ⟨x, hx⟩ := exists_ne (0 : V)
-    have : x ∈ (⊤ : Subrepresentation ρ).toSubmodule := Submodule.mem_top
-    rw [← h0] at this
-    exact hx this
+  have hbt : (⊥ : Subrepresentation ρ) ≠ ⊤ := fun h =>
+    bot_ne_top (α := Submodule ℂ V) (congrArg Subrepresentation.toSubmodule h)
   refine { exists_pair_ne := ⟨⊥, ⊤, hbt⟩, eq_bot_or_eq_top := fun X => ?_ }
   by_cases hX : X.toSubmodule = ⊥
-  · left
-    ext x
-    constructor
-    · intro hx
-      have : x ∈ X.toSubmodule := hx
-      rw [hX] at this
-      exact this
-    · intro hx
-      have : x = 0 := hx
-      rw [this]
-      exact X.toSubmodule.zero_mem
+  · exact Or.inl (Subrepresentation.ext hX)
   right
   obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hX
   ext y
