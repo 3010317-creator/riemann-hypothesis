@@ -18,15 +18,9 @@ open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.Q
 open scoped Matrix.Norms.Elementwise
 
 theorem cb_anti_of_succ {n : ℕ} {a : ℕ → ℝ} (ha : ∀ i, 1 ≤ i → i + 1 ≤ n → a (i + 1) < a i) :
-    ∀ i j, 1 ≤ i → i < j → j ≤ n → a j < a i := by
-  intro i j hi hij hj
-  induction j with
-  | zero => omega
-  | succ j ih =>
-    rcases lt_or_eq_of_le (Nat.lt_succ_iff.mp hij) with h | heq
-    · exact lt_trans (ha j (by omega) hj) (ih h (by omega))
-    · rw [heq]
-      exact ha j (by omega) hj
+    ∀ i j, 1 ≤ i → i < j → j ≤ n → a j < a i := fun i j hi hij hj =>
+  strictAntiOn_of_succ_lt Set.ordConnected_Icc (fun k _ hk hk1 => ha k hk.1 hk1.2)
+    (Set.mem_Icc.2 ⟨hi, by omega⟩) (Set.mem_Icc.2 ⟨by omega, hj⟩) hij
 
 theorem cb_mem_of_prod_eq {n : ℕ} {a b : ℕ → ℝ}
     (h : ∀ Y : ℂ, ∏ i ∈ Icc 1 n, (Y + (a i : ℂ)) = ∏ i ∈ Icc 1 n, (Y + (b i : ℂ))) :
