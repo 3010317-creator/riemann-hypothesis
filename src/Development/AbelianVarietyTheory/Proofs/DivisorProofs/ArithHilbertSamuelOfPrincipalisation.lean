@@ -113,10 +113,10 @@ theorem encard_smallSec_le : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsInt
   have hrep := Pair.rep_base k X p P
   have eL : P.L.smallSec.encard = (P.Bl 1 0 1).encard :=
     SmallBall.encard_eq_Bl P hrep.1 P.L.smallSec 1 zero_le_one fun u => by
-      simp only [HermLB.smallSec, Set.mem_setOf_eq, one_pow]
+      simp only [HermLB.smallSec, Set.mem_ofPred_eq, one_pow]
   have eA : P.A.smallSec.encard = (P.Bl 0 1 1).encard :=
     SmallBall.encard_eq_Bl P hrep.2.1 P.A.smallSec 1 zero_le_one fun u => by
-      simp only [HermLB.smallSec, Set.mem_setOf_eq, one_pow]
+      simp only [HermLB.smallSec, Set.mem_ofPred_eq, one_pow]
   rw [eL, eA]
   refine Set.encard_le_encard fun f hf => ?_
   have e := NuMul.mul_mem_H_and_nu_mul k X p P 1 (-1) 0 1 1 f h1.1 hf.1
@@ -245,8 +245,7 @@ theorem le_of_rep : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] 
   obtain ⟨u, rfl⟩ := hfH
   refine (_root_.GlobalTheory.HSNef.le_iff_exists_smallSec k X p M M').2 ⟨u, fun σ y => ?_, fun hu => ?_⟩
   · rw [← hnorm u σ y]
-    have h0 : 0 ≤ P.nu (a - a') (b - b') σ y (e u) := by
-      unfold Pair.nu; positivity
+    have h0 := SmallBall.nu_nonneg P (a - a') (b - b') σ y (e u)
     exact pow_le_one₀ h0 (hB.2 σ y)
   · obtain ⟨i, hi⟩ := Opens.mem_iSup.1 (P.L.isLB.cover.ge (Opens.mem_top (genericPoint X)))
     obtain ⟨j, hj⟩ := Opens.mem_iSup.1 (P.A.isLB.cover.ge (Opens.mem_top (genericPoint X)))
@@ -345,7 +344,7 @@ theorem Bl_subset_shiftA {k : Type} [CommRing k] {X : Scheme.{0}} [IsIntegral X]
   have h1 : Real.exp (-(b * u)) ≤ 1 := Real.exp_le_one_iff.2 (by
     have : (0 : ℝ) ≤ b := by exact_mod_cast hb
     nlinarith)
-  have h0 : 0 ≤ P.nu a b σ y f := by unfold Pair.nu; positivity
+  have h0 := SmallBall.nu_nonneg P a b σ y f
   have h2 : R ≥ P.nu a b σ y f := hf.2 σ y
   nlinarith [Real.exp_pos (-(b * u))]
 
@@ -411,30 +410,13 @@ namespace GlobalTheory
 
 theorem lowerBound_along_residues : ∀ (d n : ℕ) (u : ℕ → ℝ) (γ : ℝ), 0 < n → (∀ r < n, ∀ ε : ℝ, 0 < ε → ∀ᶠ q : ℕ in atTop, (γ - ε) * (q : ℝ) ^ d ≤ u (n * q + r)) → ∀ ε : ℝ, 0 < ε → ∀ᶠ M : ℕ in atTop, (γ / (n : ℝ) ^ d - ε) * (M : ℝ) ^ d ≤ u M := by
   intro d n u γ hn h ε hε
-  have hnR : (0:ℝ) < n := Nat.cast_pos.mpr hn
   set ε' := ε * (n:ℝ)^d / 2 with hε'
   have hε'pos : 0 < ε' := by positivity
   have h1 : ∀ᶠ q : ℕ in atTop, ∀ r ∈ Set.Iio n, (γ - ε') * (q:ℝ)^d ≤ u (n*q + r) :=
     (Filter.eventually_all_finite (Set.finite_Iio n)).2 (fun r hr => h r hr ε' hε'pos)
   have h2 : ∀ᶠ M : ℕ in atTop, ∀ r ∈ Set.Iio n, (γ - ε') * ((M / n : ℕ):ℝ)^d ≤ u (n*(M/n) + r) :=
     (Nat.tendsto_div_const_atTop hn.ne').eventually h1
-  have hf : Tendsto (fun M : ℕ => ((M / n : ℕ):ℝ) / M) atTop (𝓝 (1 / n)) := by
-    have hlow : Tendsto (fun M : ℕ => 1 / (n:ℝ) - 1 / (M:ℝ)) atTop (𝓝 (1 / n)) := by
-      simpa using (tendsto_const_nhds (x := 1/(n:ℝ))).sub tendsto_one_div_atTop_nhds_zero_nat
-    refine tendsto_of_tendsto_of_tendsto_of_le_of_le' hlow tendsto_const_nhds ?_ ?_
-    · filter_upwards [eventually_gt_atTop 0] with M hM
-      have hMR : (0:ℝ) < M := Nat.cast_pos.mpr hM
-      have key : (n:ℝ) * ((M/n : ℕ):ℝ) + ((M % n : ℕ):ℝ) = M := by exact_mod_cast Nat.div_add_mod M n
-      have hmod : ((M % n : ℕ):ℝ) < n := by exact_mod_cast Nat.mod_lt M hn
-      have hq : (M:ℝ) - n ≤ n * ((M/n : ℕ):ℝ) := by linarith
-      rw [div_sub_div _ _ hnR.ne' hMR.ne', div_le_div_iff₀ (by positivity) hMR]
-      nlinarith [mul_le_mul_of_nonneg_right hq hMR.le]
-    · filter_upwards [eventually_gt_atTop 0] with M hM
-      have hMR : (0:ℝ) < M := Nat.cast_pos.mpr hM
-      rw [div_le_div_iff₀ hMR hnR]
-      have h0 : ((M / n : ℕ):ℝ) ≤ (M:ℝ) / n := Nat.cast_div_le
-      rw [le_div_iff₀ hnR] at h0
-      linarith
+  have hf := tendsto_natDiv_div_self n hn
   have hg : Tendsto (fun M : ℕ => (γ - ε') * (((M / n : ℕ):ℝ) / M)^d) atTop (𝓝 ((γ - ε') * (1/(n:ℝ))^d)) :=
     (hf.pow d).const_mul _
   have hlim : (γ - ε') * (1/(n:ℝ))^d = γ / (n:ℝ)^d - ε/2 := by
@@ -549,7 +531,7 @@ theorem main : GlobalTheory.Published.ArCalc → AmpleHS → ∀ (k : Type) [Com
       (Pair.rep_dual k X p P _ _ _ (Pair.rep_pow k X p P _ _ _ c h2))
     simpa using this
   have hE := SmallBall.encard_eq_Bl P hRep ((P.L.pow m).tens ((P.A.pow c).dual)).smallSec 1 zero_le_one fun u => by
-    simp only [HermLB.smallSec, Set.mem_setOf_eq, one_pow]
+    simp only [HermLB.smallSec, Set.mem_ofPred_eq, one_pow]
   have hle := _root_.GlobalTheory.HSNef.LeCard.encard_smallSec_le k X p _ _ ((_root_.GlobalTheory.HSNef.le_tens_isometric_trans_shift k X p _ _ (P.L.pow m)).1 hLe)
   have hfin := _root_.GlobalTheory.SmallFin.smallSec_finite k X p D hX ((P.L.pow m).tens N)
   have hBle : (P.Bl m (-c) 1).encard ≤ ((P.L.pow m).tens N).smallSec.encard := hE ▸ hle
@@ -814,7 +796,7 @@ namespace GlobalTheory.NefUpper
 theorem log_ncard_smallSec {k : Type} [CommRing k] {X : Scheme.{0}} [IsIntegral X] {p : X ⟶ Sp k} (P : Pair p) :
     Real.log (P.L.smallSec.ncard : ℝ) = P.lc 1 0 1 := by
   have h := SmallBall.encard_eq_Bl P (Pair.rep_base k X p P).1 P.L.smallSec 1 zero_le_one fun u => by
-    simp only [HermLB.smallSec, Set.mem_setOf_eq, one_pow]
+    simp only [HermLB.smallSec, Set.mem_ofPred_eq, one_pow]
   unfold Pair.lc
   rw [Set.ncard_def, Set.ncard_def, h]
 
@@ -957,10 +939,7 @@ theorem exists_residueDegree_pos_of_mem_range (W Z : Scheme.{0}) (g : W ⟶ Z) [
   have hβft : β.hom.FiniteType := by
     have : LocallyOfFiniteType (Spec.map β) := hβ ▸ inferInstance
     exact HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType) |>.mp this
-  have hβf : β.hom.Finite := by
-    let := β.hom.toAlgebra
-    have : Algebra.FiniteType (Z.residueField z) (F.residueField x) := hβft
-    exact finite_of_finite_type_of_isJacobsonRing _ _
+  have hβf := RingHom.finite_iff_finiteType_of_isJacobsonRing.mpr hβft
   have hhf : (h.residueFieldMap x).hom.Finite := by
     have : h.residueFieldMap x = (Z.residueFieldCongr e.symm).inv ≫ β := by simp [β]
     rw [this, CommRingCat.hom_comp]
@@ -1049,11 +1028,7 @@ theorem exists_cover_over_modification : ∀ (k : Type) [CommRing k] (X X' Y : S
   have hdim : topologicalKrullDim (clo z) = (E + 1 : ℕ) := (hgen (clo z) (E + 1)).1 (hcmp.2.1 hdeg' ▸ hd)
 
   have hcY : CharZero Γ(Y, ⊤) := hY.charZero
-  have h₁ : CharZero Y.functionField :=
-    charZero_of_injective_ringHom (fnOf_injective (⊤ : Y.Opens) (Opens.mem_top _))
-  have h₂ : CharZero (Y.residueField (genericPoint Y)) := by
-    let f : Y.functionField →+* Y.residueField (genericPoint Y) := (Y.residue _).hom
-    exact charZero_of_injective_ringHom f.injective
+  have h₂ := HtSelfInter.charZero_residueField_genericPoint hcY
   have h₃ : CharZero (Y.residueField (g (genericPoint (clo z)))) := hg ▸ h₂
   have h₄ : CharZero ((clo z).residueField (genericPoint (clo z))) :=
     charZero_of_injective_ringHom (g.residueFieldMap _).hom.injective
@@ -1093,16 +1068,7 @@ theorem exists_opens_etale : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) [IsI
   obtain ⟨U, -, hU, hxU, hW, -, hE, -⟩ :=
     GlobalTheory.GenFiniteEtale.exists_finite_etale_of_isProper π hη hd ⊤ (Opens.mem_top _)
   refine ⟨π ⁻¹ᵁ U, ⟨genericPoint Y, show π _ ∈ U from hη ▸ hxU⟩, ?_⟩
-  have : IsAffine U := hU
-  have : IsAffine (π ⁻¹ᵁ U) := hW
-  have hE' : ∀ U' : X.Opens, U' = U → (π.app U').hom.Etale := by
-    rintro _ rfl
-    exact hE
-  have e : U.ι ''ᵁ ⊤ = U := by
-    rw [Scheme.Hom.image_top_eq_opensRange, Scheme.Opens.opensRange_ι]
-  have h1 : Etale (π ∣_ U) := by
-    rw [HasRingHomProperty.iff_of_isAffine (P := @Etale), morphismRestrict_appTop]
-    exact (RingHom.Etale.respectsIso).cancel_right_isIso _ _ |>.2 (hE' _ e)
+  have h1 := CoverDegProj.etale_morphismRestrict π U hU hW hE
   rw [← morphismRestrict_ι]
   infer_instance
 
@@ -1167,11 +1133,7 @@ theorem semiPos_of_pull_etale : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) [
   intro k _ X Y _ _ p q D hp _ π hπ V hV hE L hL σ i
   have := hp.isDomain
   have := hp.finite
-  have hσ : Function.Injective σ := by
-    rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
-    rw [Ideal.under_def, RingHom.comap_ker, ← RingHom.injective_iff_ker_eq_bot]
-    exact RingHom.injective_int _
+  have hσ := ChernNull.injective_of_arithVar hp σ
   have : Etale (V.ι ≫ π) := hE
   have hj : (V.ι ≫ π) ≫ p = V.ι ≫ q := by rw [Category.assoc, hπ]
   have hU : ((img (V.ι ≫ π) : X.Opens) : Set X).Nonempty := by
@@ -1322,12 +1284,7 @@ theorem semiPos_pull_of_etale : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) [
     rw [← Scheme.Hom.comp_apply, hv']
     exact hηT
   intro σ
-  have hσ : Function.Injective σ := by
-    rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
-    change Ideal.comap (algebraMap ℤ k) (RingHom.ker σ) = ⊥
-    rw [RingHom.comap_ker, ← RingHom.injective_iff_ker_eq_bot]
-    exact RingHom.injective_int _
+  have hσ := ChernNull.injective_of_arithVar hp σ
   intro i
   refine GlobalTheory.SemiPosBir.PosOn.of_inter hσ (isOpen_ptsIn _) ((L.cInf σ).pull π hπ i) hW ?_
   rintro c y ⟨hyc, hyS, hyW⟩ ξ
