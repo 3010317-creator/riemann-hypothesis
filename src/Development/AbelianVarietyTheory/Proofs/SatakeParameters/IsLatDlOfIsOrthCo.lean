@@ -68,15 +68,9 @@ theorem isLat_dl (σ : E →ₐ[F] E) (J : Matrix (Fin N) (Fin N) E) (co : (Fin 
   set v : Fin N → Fin N → E := fun a => co.symm (Pi.single a 1) with hv
   have key : ∀ x y, Formalism.UG.hform (σ : E →+* E) J x y = ∑ b, (σ : E →+* E) (co x b) * co y b :=
     fun x y => (hc x y).symm
-  have hsingle : ∀ (a : Fin N) (c : E), Pi.single a c = c • (Pi.single a (1 : E) : Fin N → E) := by
-    intro a c; ext j; simp [Pi.single_apply]
-  have hexp : ∀ z : Fin N → E, z = ∑ a, co z a • v a := by
-    intro z
-    conv_lhs => rw [← co.symm_apply_apply z, ← Finset.univ_sum_single (co z)]
-
-    rw [map_sum]
-    refine Finset.sum_congr rfl fun a _ => ?_
-    rw [hsingle, map_smul]
+  have hexp : ∀ z : Fin N → E, z = ∑ a, co z a • v a := fun z => by
+    simpa only [hv, Module.Basis.ofEquivFun_repr_apply, Module.Basis.coe_ofEquivFun] using
+      ((Module.Basis.ofEquivFun co).sum_repr z).symm
   have hcv : ∀ (c : E) a b, co (c • v a) b = if b = a then c else 0 := by
     intro c a b; simp [v, Pi.single_apply]
   have hform_v : ∀ (c : E) a x, Formalism.UG.hform (σ : E →+* E) J x (c • v a) = (σ : E →+* E) (co x a) * c := by
