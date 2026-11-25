@@ -92,9 +92,31 @@ theorem chart_comp {h : GenFrEx Xo c} (Z : Comp Xo c) (C : FChart h) (ψ : C.R �
     exact closure_minimal (Set.singleton_subset_iff.2 hm) (isClosed_of_mem_irreducibleComponents _ C.Z.2)
   exact Subtype.ext (Set.Subset.antisymm (Z.2.2 C.Z.2.1 hsub) hsub)
 
+def zchar {J S : Type} [Fintype J] [CommRing S] (e : J → ℤ) (t : J → Sˣ) : S := ((∏ i, t i ^ e i : Sˣ) : S)
+
+theorem zchar_mul {J S : Type} [Fintype J] [CommRing S] (e : J → ℤ) (t t' : J → Sˣ) :
+    zchar e (t * t') = zchar e t * zchar e t' := by
+  simp only [zchar, Pi.mul_apply, mul_zpow, Finset.prod_mul_distrib, Units.val_mul]
+
+theorem zchar_one {J S : Type} [Fintype J] [CommRing S] (e : J → ℤ) : zchar e (1 : J → Sˣ) = 1 := by
+  simp [zchar]
+
+theorem zchar_map {J K S T : Type} [Fintype J] [Field K] [CommRing S] [CommRing T] [Algebra K S] [Algebra K T]
+    (φ : S →ₐ[K] T) (e : J → ℤ) (t : J → Sˣ) :
+    zchar e (fun i => Units.map (φ : S →* T) (t i)) = φ (zchar e t) := by
+  have : (∏ i, Units.map (φ : S →* T) (t i) ^ e i) = Units.map (φ : S →* T) (∏ i, t i ^ e i) := by
+    simp only [map_prod, map_zpow]
+  unfold zchar
+  rw [this]
+  rfl
+
+theorem wchar_eq_zchar {S : Type} [CommRing S] (e : Ix Dw → ℕ) (t : Ix Dw → Sˣ) :
+    wchar e t = zchar (fun i => (e i : ℤ)) t := by
+  simp [wchar, zchar, Units.val_prod_eq_prod_val]
+
 theorem wchar_mul {S : Type} [CommRing S] (e : Ix Dw → ℕ) (t t' : Ix Dw → Sˣ) :
     wchar e (t * t') = wchar e t * wchar e t' := by
-  simp only [wchar, Pi.mul_apply, Units.val_mul, mul_pow, Finset.prod_mul_distrib]
+  simp only [wchar_eq_zchar, zchar_mul]
 
 theorem wchar_one {S : Type} [CommRing S] (e : Ix Dw → ℕ) : wchar e (1 : Ix Dw → Sˣ) = 1 := by
   simp [wchar]
@@ -116,12 +138,12 @@ theorem eq_of_fields {K S : Type} [Field K] [CommRing S] [IsReduced S] [Algebra 
 
 section Val
 
-variable {h : GenFrEx Xo c} {e : Ix Dw → ℕ} {b : ∀ Z : Comp Xo c, Om Z}
-  (hb : ∀ C : FChart h, wchar e C.t * b C.Z ∈ C.R)
+variable {h : GenFrEx Xo c} {e : Ix Dw → ℤ} {b : ∀ Z : Comp Xo c, Om Z}
+  (hb : ∀ C : FChart h, zchar e C.t * b C.Z ∈ C.R)
 
 def Val {S : Type} [CommRing S] [Algebra c.F S] (y : FrPt Xo c S) (v : S) : Prop :=
   ∃ (C : FChart h) (ψ : C.R →ₐ[c.F] S) (z : FrPt Xo c S) (t : Ix Dw → Sˣ),
-    FrMap ψ C.y z ∧ FrBor t z y ∧ v = wchar e t * ψ ⟨_, hb C⟩
+    FrMap ψ C.y z ∧ FrBor t z y ∧ v = zchar e t * ψ ⟨_, hb C⟩
 
 theorem val_unique (hl : EvLaws Xo c) {L : Type} [Field L] [Algebra c.F L] {y : FrPt Xo c L} {v v' : L}
     (h1 : Val hb y v) (h2 : Val hb y v') : v = v' := by
@@ -130,7 +152,7 @@ theorem val_unique (hl : EvLaws Xo c) {L : Type} [Field L] [Algebra c.F L] {y : 
   have G := GlobalTheory.Reg.BorelGroupoid.frBor_groupoid E H Dw l Xo c
   obtain ⟨-, hmul, hinv, -⟩ := G L
   have hval {r : Ix Dw → Lˣ} (hbor : FrBor r z z') :
-      ψ' ⟨_, hb C'⟩ = wchar e r * ψ ⟨_, hb C⟩ := by
+      ψ' ⟨_, hb C'⟩ = zchar e r * ψ ⟨_, hb C⟩ := by
     obtain ⟨g, hg, hopn⟩ := C'.opn C.R L ψ C.y z hz ⟨ψ', z', r⁻¹, hz', hinv _ _ _ hbor⟩
     have hg0 : g ≠ 0 := fun he => hg (by rw [he, map_zero])
     have hg1 : C.R.val g ≠ 0 := fun he => hg0 (Subtype.ext he)
@@ -177,20 +199,20 @@ theorem val_unique (hl : EvLaws Xo c) {L : Type} [Field L] [Algebra c.F L] {y : 
     subst e5
     have e6 : (fun i => Units.map (nu : S →* L) (s i)) * r = 1 :=
       (G _).2.2.2 _ _ _ _ b4 ((G _).1 _)
-    have e7 : lam ⟨_, hbC⟩ = wchar e s * φ ⟨_, hbC'⟩ := by
+    have e7 : lam ⟨_, hbC⟩ = zchar e s * φ ⟨_, hbC'⟩ := by
       apply hinj
-      have a1 : mu (lam ⟨_, hbC⟩) = wchar e tC * b Z := DFunLike.congr_fun hmu ⟨_, hbC⟩
-      have a2 : mu (φ ⟨_, hbC'⟩) = wchar e tC' * b Z := DFunLike.congr_fun e1 ⟨_, hbC'⟩
-      have a0 : wchar e tC = wchar e tC' * mu (wchar e s) := by
-        rw [e3, wchar_mul, wchar_map]
+      have a1 : mu (lam ⟨_, hbC⟩) = zchar e tC * b Z := DFunLike.congr_fun hmu ⟨_, hbC⟩
+      have a2 : mu (φ ⟨_, hbC'⟩) = zchar e tC' * b Z := DFunLike.congr_fun e1 ⟨_, hbC'⟩
+      have a0 : zchar e tC = zchar e tC' * mu (zchar e s) :=
+        (congrArg (zchar e) e3).trans ((zchar_mul _ _ _).trans (congrArg _ (zchar_map mu e s)))
       rw [map_mul, a1, a2, a0]
       ac_rfl
-    have a3 : ψ ⟨_, hbC⟩ = nu (wchar e s) * ψ' ⟨_, hbC'⟩ := by
+    have a3 : ψ ⟨_, hbC⟩ = nu (zchar e s) * ψ' ⟨_, hbC'⟩ := by
       rw [← hnu, ← e4, AlgHom.comp_apply, AlgHom.comp_apply, e7, map_mul]
-    have a4 : nu (wchar e s) * wchar e r = 1 := by
-      rw [← wchar_map, ← wchar_mul, e6, wchar_one]
-    rw [a3, ← mul_assoc, mul_comm (wchar e r), a4, one_mul]
-  rw [hval (hmul _ _ _ _ _ ht (hinv _ _ _ ht')), ← mul_assoc, ← wchar_mul, mul_comm t, mul_inv_cancel_left]
+    have a4 : nu (zchar e s) * zchar e r = 1 := by
+      rw [← zchar_map, ← zchar_mul, e6, zchar_one]
+    rw [a3, ← mul_assoc, mul_comm (zchar e r), a4, one_mul]
+  rw [hval (hmul _ _ _ _ _ ht (hinv _ _ _ ht')), ← mul_assoc, ← zchar_mul, mul_comm t, mul_inv_cancel_left]
 
 theorem val_map (hl : EvLaws Xo c) {S T : Type} [CommRing S] [Algebra c.F S] [CommRing T] [Algebra c.F T]
     (φ : S →ₐ[c.F] T) {y : FrPt Xo c S} {y' : FrPt Xo c T} (hy : FrMap φ y y') {v : S} (h1 : Val hb y v) :
@@ -198,13 +220,13 @@ theorem val_map (hl : EvLaws Xo c) {S T : Type} [CommRing S] [Algebra c.F S] [Co
   obtain ⟨C, ψ, z, t, hz, ht, rfl⟩ := h1
   obtain ⟨z', hz'⟩ := hl.bc S T φ z
   refine ⟨C, φ.comp ψ, z', _, frMap_trans _ _ _ ψ φ _ _ _ hz hz', frBorBC _ _ φ t z y z' y' ht hz' hy, ?_⟩
-  rw [wchar_map, map_mul]; rfl
+  rw [zchar_map, map_mul]; rfl
 
 theorem val_bor {S : Type} [CommRing S] [Algebra c.F S] {t : Ix Dw → Sˣ} {y y' : FrPt Xo c S}
-    (hy : FrBor t y y') {v : S} (h1 : Val hb y v) : Val hb y' (wchar e t * v) := by
+    (hy : FrBor t y y') {v : S} (h1 : Val hb y v) : Val hb y' (zchar e t * v) := by
   obtain ⟨C, ψ, z, t₀, hz, ht, rfl⟩ := h1
   refine ⟨C, ψ, z, t₀ * t, hz, (GlobalTheory.Reg.BorelGroupoid.frBor_groupoid E H Dw l Xo c S).2.1 _ _ _ _ _ ht hy, ?_⟩
-  rw [wchar_mul]; ring
+  rw [zchar_mul]; ring
 
 theorem val_ex (hA : Atlas h) {L : Type} [Field L] [Algebra c.F L] (y : FrPt Xo c L) : ∃ v, Val hb y v := by
   obtain ⟨C, ψ, z, t, h1, h2⟩ := hA L y
@@ -214,8 +236,8 @@ theorem val_gen (hA : Atlas h) (Z : Comp Xo c) : Val hb (genFr h Z) (b Z) := by
   obtain ⟨C, ψ, z, t, h1, h2⟩ := hA _ (genFr h Z)
   obtain rfl := chart_comp Z C ψ z t h1 h2
   refine ⟨C, C.R.val, C.yg, C.t⁻¹, C.gen, (GlobalTheory.Reg.BorelGroupoid.frBor_groupoid E H Dw l Xo c _).2.2.1 _ _ _ C.bor, ?_⟩
-  show b C.Z = wchar e C.t⁻¹ * (wchar e C.t * b C.Z)
-  rw [← mul_assoc, ← wchar_mul, inv_mul_cancel, wchar_one, one_mul]
+  show b C.Z = zchar e C.t⁻¹ * (zchar e C.t * b C.Z)
+  rw [← mul_assoc, ← zchar_mul, inv_mul_cancel, zchar_one, one_mul]
 
 def Rep {S : Type} [CommRing S] [Algebra c.F S] (y : FrPt Xo c S) (g s : S) : Prop :=
   ∀ (L : Type) [Field L] [Algebra c.F L] (χ : S →ₐ[c.F] L) (w : FrPt Xo c L) (v : L),
@@ -247,8 +269,8 @@ theorem exists_rep (hl : EvLaws Xo c) (hA : Atlas h) {S : Type} [CommRing S] [Al
   have hu : IsUnit (lam g) := IsLocalization.Away.algebraMap_isUnit g
   obtain ⟨w', hw'⟩ := hl.bc _ _ lam y
   obtain ⟨ψ, z, t, h3, h4⟩ := hloc _ lam hu w' hw'
-  have hv : Val hb w' (wchar e t * ψ ⟨_, hb C⟩) := ⟨C, ψ, z, t, h3, h4, rfl⟩
-  generalize wchar e t * ψ ⟨_, hb C⟩ = u at hv
+  have hv : Val hb w' (zchar e t * ψ ⟨_, hb C⟩) := ⟨C, ψ, z, t, h3, h4, rfl⟩
+  generalize zchar e t * ψ ⟨_, hb C⟩ = u at hv
   obtain ⟨n, a, ha⟩ := IsLocalization.Away.surj g u
   have hmem : g ^ (n + 1) ∈ I := by
     refine ⟨g * a, fun L _ _ χ w v h5 h6 => ?_⟩
@@ -274,15 +296,22 @@ theorem exists_rep (hl : EvLaws Xo c) (hA : Atlas h) {S : Type} [CommRing S] [Al
 
 end Val
 
-theorem exists_sec_of_regular : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), EvLaws Xo c → ∀ h : GenFrEx Xo c, Atlas h → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ) (b : ∀ Z : Comp Xo c, Om Z), (∀ C : FChart h, wchar (ex Dw a n) C.t * b C.Z ∈ C.R) → ∃ g ∈ sec Xo c a n, ∀ Z, evC h Z g = b Z := by
-  intro E _ _ _ H Dw l Xo c hl h hA a n b hb
+theorem exists_sec_core (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H)
+    (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (hl : EvLaws Xo c) (h : GenFrEx Xo c) (hA : Atlas h)
+    (e : Ix Dw → ℤ) (b : ∀ Z : Comp Xo c, Om Z) (hb : ∀ C : FChart h, zchar e C.t * b C.Z ∈ C.R) :
+    ∃ g : ∀ p : TRing c.F, FrPt Xo c p.R → p.R,
+      (∀ (p q : TRing c.F) (φ : p.R →ₐ[c.F] q.R) (y : FrPt Xo c p.R) (z : FrPt Xo c q.R),
+        FrMap φ y z → g q z = φ (g p y)) ∧
+      (∀ (p : TRing c.F) (t : Ix Dw → p.Rˣ) (y y' : FrPt Xo c p.R),
+        FrBor t y y' → g p y' = zchar e t * g p y) ∧
+      ∀ Z, evC h Z g = b Z := by
   have hred : ∀ p : TRing c.F, IsReduced p.R := fun p => (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
   choose g hg using fun (p : TRing c.F) (y : FrPt Xo c p.R) => exists_rep hb hl hA y
   have hg' : ∀ (p : TRing c.F) (y : FrPt Xo c p.R) (L : Type) [Field L] [Algebra c.F L] (χ : p.R →ₐ[c.F] L)
       (w : FrPt Xo c L) (v : L), FrMap χ y w → Val hb w v → χ (g p y) = v := by
     intro p y L _ _ χ w v h1 h2
     rw [← hg p y L χ w v h1 h2, map_one, one_mul]
-  refine ⟨g, ⟨fun p q φ y z hz => ?_, fun p t y y' hy => ?_⟩, fun Z => ?_⟩
+  refine ⟨g, fun p q φ y z hz => ?_, fun p t y y' hy => ?_, fun Z => ?_⟩
   · have := hred q
     refine eq_of_fields (K := c.F) _ _ fun L _ _ χ => ?_
     obtain ⟨w, hw⟩ := hl.bc _ _ χ z
@@ -295,10 +324,16 @@ theorem exists_sec_of_regular : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     obtain ⟨w', hw'⟩ := hl.bc _ _ χ y'
     obtain ⟨v, hv⟩ := val_ex hb hA w
     have hv' := val_bor hb (frBorBC _ _ χ t y y' w w' hy hw hw') hv
-    rw [hg' p y' L χ w' _ hw' hv', map_mul, hg' p y L χ w v hw hv, wchar_map]
+    rw [hg' p y' L χ w' _ hw' hv', map_mul, hg' p y L χ w v hw hv, zchar_map]
   · have hh := hl.test _ (genFr h Z)
     unfold evC evR evalAt
     rw [dite_eq_left hh]
     exact hg' _ _ _ _ _ _ hh.choose_spec.choose_spec.choose_spec (val_gen hb hA Z)
+
+theorem exists_sec_of_regular : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), EvLaws Xo c → ∀ h : GenFrEx Xo c, Atlas h → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ) (b : ∀ Z : Comp Xo c, Om Z), (∀ C : FChart h, wchar (ex Dw a n) C.t * b C.Z ∈ C.R) → ∃ g ∈ sec Xo c a n, ∀ Z, evC h Z g = b Z := by
+  intro E _ _ _ H Dw l Xo c hl h hA a n b hb
+  obtain ⟨g, h1, h2, h3⟩ := exists_sec_core E H Dw l Xo c hl h hA (fun i => (ex Dw a n i : ℤ)) b
+    (fun C => by simpa only [← wchar_eq_zchar] using hb C)
+  exact ⟨g, ⟨h1, fun p t y y' hy => by simpa only [← wchar_eq_zchar] using h2 p t y y' hy⟩, h3⟩
 
 end GlobalTheory.Reg.SecGlue
