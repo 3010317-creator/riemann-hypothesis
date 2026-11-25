@@ -198,20 +198,7 @@ private theorem flow_lemma {μ : Measure (WO S T)} {𝓕 : Set (WO S T)} (hψ : 
       rw [hz, ((U h (DJ g) hh hDJg).2.2.1 (-Complex.I)).2]
       simp [Complex.conj_I]
     have e4 : ipO μ 𝓕 (Dz h + Complex.I • DJ h) g = ipO μ 𝓕 (Dz h) g + Complex.I * ipO μ 𝓕 (DJ h) g := by
-      have hsmul : IsThetaFunO ψ S T (Complex.I • DJ h) := by
-        refine { quasi := ?_, level := ?_, cont := ?_, smooth := ?_ }
-        · intro γ w
-          rw [Pi.smul_apply, Pi.smul_apply, hDJh.quasi, smul_eq_mul, smul_eq_mul, mul_left_comm]
-        · obtain ⟨U, hU, h1⟩ := hDJh.level
-          refine ⟨U, hU, fun u hu h0 => ?_⟩
-          funext w
-          have e1 := congrFun (h1 u hu h0) w
-          change ψ (symplOH S T w u) * DJ h (w + u) = DJ h w at e1
-          unfold heisO
-          rw [Pi.smul_apply, Pi.smul_apply, smul_eq_mul, smul_eq_mul, mul_left_comm, e1]
-        · exact hDJh.cont.const_smul Complex.I
-        · intro k L h1 h2 w
-          exact contDiff_const.mul (hDJh.smooth k L h1 h2 w)
+      have hsmul : IsThetaFunO ψ S T (Complex.I • DJ h) := isTheta_smul Complex.I hDJh
       rw [((U (Dz h) g hDzh hg).2.2.2.1 _ hsmul).1,
         ((U (DJ h) g hDJh hg).2.2.1 Complex.I).1]
     rw [cA, ((U h g hh hg).2.2.1 _).1, hp (L 1) s, hp (L' 1) s] at e4
