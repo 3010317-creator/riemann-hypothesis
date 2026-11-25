@@ -33,9 +33,6 @@ theorem hpk_conjT (k r : ℕ) : (Hpk k r)ᴴ = Hpk k r := by
 theorem sg_lt {k r i : ℕ} (h : i < 2 * r + k + 1) : sg k r i < 2 * r + k + 1 := by
   unfold sg; split_ifs <;> omega
 
-theorem sg_sg {k r i : ℕ} (h : i < 2 * r + k + 1) : sg k r (sg k r i) = i := by
-  unfold sg; split_ifs <;> omega
-
 theorem sg_rk {k r i : ℕ} (h : i < 2 * r + k + 1) : sg k r i = r + k ↔ i = r + k := by
   unfold sg; split_ifs <;> omega
 

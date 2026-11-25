@@ -22,16 +22,10 @@ private theorem dR_apply' (κ : I → J → K) (j : J) (R : MvPolynomial (I ⊕ 
     dR κ j R = ∑ i, κ i j • pderiv (Sum.inl i) R := by
   simp [dR]
 
-theorem commute_gdelta_dL (κ : I → J → K) (i : I) : Commute (gdelta κ) (dL κ i) :=
-  PI.WickFormula.Gen.commute_gdelta_dL κ i
-
 theorem commute_gdelta_dR (κ : I → J → K) (j : J) : Commute (gdelta κ) (dR κ j) := by
   unfold dR
   exact Commute.sum_right _ _ _ fun i _ =>
     Commute.smul_right (commute_gdelta_pd κ (Sum.inl i)) _
-
-theorem gdelta_dL_apply (κ : I → J → K) (i : I) (S : MvPolynomial (I ⊕ J) K) :
-    gdelta κ (dL κ i S) = dL κ i (gdelta κ S) := LinearMap.congr_fun (commute_gdelta_dL κ i).eq S
 
 theorem gdelta_dR_apply (κ : I → J → K) (j : J) (S : MvPolynomial (I ⊕ J) K) :
     gdelta κ (dR κ j S) = dR κ j (gdelta κ S) := LinearMap.congr_fun (commute_gdelta_dR κ j).eq S
@@ -44,10 +38,6 @@ theorem gdelta_pow_succ_apply (κ : I → J → K) (m : ℕ) (S : MvPolynomial (
 theorem gdelta_apply (κ : I → J → K) (R : MvPolynomial (I ⊕ J) K) :
     gdelta κ R = ∑ i, ∑ j, κ i j • pderiv (Sum.inl i) (pderiv (Sum.inr j) R) :=
   PI.WickFormula.Gen.gdelta_apply κ R
-
-theorem gdelta_X_inl (κ : I → J → K) (i : I) (R : MvPolynomial (I ⊕ J) K) :
-    gdelta κ (X (Sum.inl i) * R) = X (Sum.inl i) * gdelta κ R + dL κ i R := by
-  apply PI.WickFormula.Gen.gdelta_X_inl
 
 theorem gdelta_X_inr (κ : I → J → K) (j : J) (R : MvPolynomial (I ⊕ J) K) :
     gdelta κ (X (Sum.inr j) * R) = X (Sum.inr j) * gdelta κ R + dR κ j R := by

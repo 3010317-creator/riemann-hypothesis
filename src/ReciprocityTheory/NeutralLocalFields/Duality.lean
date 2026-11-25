@@ -292,18 +292,6 @@ def cycN : (L ≃ₐ[K] L) →* (ZMod n)ˣ :=
     (MulSemiringAction.toRingAut (L ≃ₐ[K] L) L)
 
 
-variable {K L n} in
-theorem cycN_spec (σ : L ≃ₐ[K] L) (ζ : L) (h : ζ ^ n = 1) :
-    σ ζ = ζ ^ ((cycN K L n σ : ZMod n)).val := by
-  have hz : ζ ≠ 0 := by
-    rintro rfl
-    simp [NeZero.ne n] at h
-  have ht : Units.mk0 ζ hz ∈ rootsOfUnity n L := by
-    rw [mem_rootsOfUnity]; ext; simp [h]
-  have := modularCyclotomicCharacter.spec L (HasEnoughRootsOfUnity.natCard_rootsOfUnity L n)
-    (MulSemiringAction.toRingAut (L ≃ₐ[K] L) L σ) ht
-  simpa [cycN] using this
-
 end Cyc
 
 section Local
@@ -584,10 +572,5 @@ def embC (σ : K →+* ℂ) : (InfinitePlace.mk σ).Completion →+* ℂ := by
     else (starRingEnd ℂ).comp (InfinitePlace.Completion.extensionEmbedding _)
 
 end Hecke
-
-theorem contAction_trivial {R G M : Type*} [CommRing R] [Group G] [TopologicalSpace G]
-    [AddCommGroup M] [Module R M] [TopologicalSpace M] :
-    ContAction (Representation.trivial R G M) :=
-  continuous_snd
 
 end Neutral.B1
