@@ -283,33 +283,6 @@ theorem inner_sig (hσ : IsURepOn (UJset ε) σ) (g : Formalism.REAL.UJ ε) (y u
     inner ℂ y (σ (Formalism.MainNotions.S.umat g) u) = inner ℂ (σ (Formalism.MainNotions.S.umat g⁻¹) y) u := by
   rw [← sig_inner hσ g (σ (Formalism.MainNotions.S.umat g⁻¹) y) u, sig_inv_apply hσ g y]
 
-theorem wt_K (dual : Bool) (ξ : Fin n) (x k : Matrix (Fin n) (Fin n) ℂ) (hk : k * Jm ε = Jm ε * k)
-    (d : Fin n) : ∑ c, wt dual ε ξ x c * cond dual (star (k c d)) (k c d) = wt dual ε ξ (x * k) d := by
-  cases dual
-  · simp [wt, Matrix.mul_apply]
-  · have hkc : ∀ c, sg ε c * star (k c d) = sg ε d * star (k c d) := by
-      intro c
-      have h := congrFun (congrFun hk c) d
-      simp only [Jm_eq, Matrix.mul_diagonal, Matrix.diagonal_mul] at h
-      have h2 := congrArg star h
-      simp only [star_mul', star_sg] at h2
-      linear_combination (-1 : ℂ) * h2
-    simp only [wt, cond_true, Matrix.mul_apply, star_sum, star_mul', Finset.mul_sum]
-    refine Finset.sum_congr rfl fun c _ => ?_
-    linear_combination (star (x ξ c)) * hkc c
-
-theorem cf_kDiag (hσ : IsURepOn (UJset ε) σ) (dual : Bool) (y : H) (ξ : Fin n) (F : Fin n → H)
-    (κ : Formalism.REAL.UJ ε) (hk : Formalism.MainNotions.S.umat κ * Jm ε = Jm ε * Formalism.MainNotions.S.umat κ) (g : Formalism.REAL.UJ ε) :
-    cf dual ε σ y ξ (kDiag dual σ (Formalism.MainNotions.S.umat κ) F) g = cf dual ε σ y ξ F (g * κ) := by
-  unfold cf kDiag
-  rw [sig_mul hσ g κ, umat_mul]
-
-  simp only [ContinuousLinearMap.comp_apply, map_sum, map_smul, inner_sum, inner_smul_right, Finset.mul_sum]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun d _ => ?_
-  rw [← wt_K dual ξ _ _ hk d, Finset.sum_mul]
-  exact Finset.sum_congr rfl fun c _ => by ring
-
 end Rep
 
 section DerivRep
