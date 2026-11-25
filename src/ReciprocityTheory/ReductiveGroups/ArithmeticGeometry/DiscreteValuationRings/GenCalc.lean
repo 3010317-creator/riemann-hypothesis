@@ -392,15 +392,7 @@ theorem valuation_ge_at_zero (hϖ : Irreducible ϖ) (hv : ValOver ϖ F v) {k : �
     rw [hfam]; exact hZ
   have hZ'' : (DegPre.zF D.toPre F).left ⁻¹ᵁ (LB.wchart D.toPre.P.L (DegPre.famφ D.toPre F α) j ⊓
       LB.wchart D.toPre.P.L (fun k => (DegPre.prB D.toPre F).left ≫ D.toPre.famφB α k) j) = ⊤ := by
-    refine top_unique fun y _ => ?_
-    have h1 : y ∈ (DegPre.zF D.toPre F).left ⁻¹ᵁ LB.wchart D.toPre.P.L (DegPre.famφ D.toPre F α) j := by
-      rw [hZ]; trivial
-    have h2 : y ∈ (DegPre.zF D.toPre F).left ⁻¹ᵁ LB.wchart D.toPre.P.L
-        (fun k => (DegPre.prB D.toPre F).left ≫ D.toPre.famφB α k) j := by
-      rw [hZ']; trivial
-    show (DegPre.zF D.toPre F).left.base y ∈ (LB.wchart D.toPre.P.L (DegPre.famφ D.toPre F α) j ⊓
-      LB.wchart D.toPre.P.L (fun k => (DegPre.prB D.toPre F).left ≫ D.toPre.famφB α k) j)
-    exact TopologicalSpace.Opens.mem_inf.2 ⟨h1, h2⟩
+    rw [Scheme.Hom.preimage_inf, hZ, hZ', top_inf_eq]
   have hηU : (η[D.toPre.P.A]).left ⁻¹ᵁ LB.wchart D.toPre.P.L (D.toPre.famφB α) j = ⊤ :=
     preimage_wchart_eq_whole_of_wchart_comp_eq_whole D.toPre.P.L (D.toPre.famφB α) (η[D.toPre.P.A]).left j hWB
   have hP : ((DegPre.zF D.toPre F).left ≫ (DegPre.prB D.toPre F).left) ⁻¹ᵁ
