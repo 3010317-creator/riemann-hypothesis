@@ -205,13 +205,7 @@ private theorem exists_fixed_ne_zero_of_piTensor_fixed {Γ X : α → Type} [∀
     (a : α) : ∃ v ∈ fixed (ρ a) (K a), v ≠ 0 := by
   let B : ∀ b, Module.Basis _ ℂ (X b) := fun b => Module.Basis.ofVectorSpace ℂ (X b)
   let Bt := Basis.piTensorProduct B
-  obtain ⟨t, ht⟩ : ∃ t, Bt.repr w t ≠ 0 := by
-    by_contra hcon
-    apply hw0
-    have : Bt.repr w = 0 := Finsupp.ext fun t => by
-      by_contra h
-      exact hcon ⟨t, h⟩
-    simpa using congrArg Bt.repr.symm this
+  obtain ⟨t, ht⟩ : ∃ t, Bt.repr w t ≠ 0 := Finsupp.ne_iff.1 (Bt.repr.map_ne_zero_iff.2 hw0)
   let S : Finset α := Finset.univ.erase a
   have hSne : ∀ b ∈ S, b ≠ a := fun b hb => Finset.ne_of_mem_erase hb
   have hSmem : ∀ b, b ≠ a → b ∈ S := fun b hb => Finset.mem_erase.2 ⟨hb, Finset.mem_univ _⟩
