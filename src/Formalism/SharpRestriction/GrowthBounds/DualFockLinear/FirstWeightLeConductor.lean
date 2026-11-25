@@ -230,7 +230,6 @@ theorem posCore_of_formX {O Kf : Type} [CommRing O] [IsDomain O] [Field Kf] [Alg
       (by intro c Q P; simp)
       (by intro Q P P'; simp)
       (by intro c Q P; simp)
-  have hβ0 : ∀ Q P : V, β0 Q P = B (P : MvPolynomial (Fin (m + 1) × Fin (m + 1)) Kf) Q := fun _ _ => rfl
   have hinjβ : Function.Injective β0 := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro Q hQ

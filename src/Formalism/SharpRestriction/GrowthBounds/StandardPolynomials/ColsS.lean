@@ -167,7 +167,6 @@ theorem PH.dualLow (h : PH vecc B ka nu) {c : ℤ} (hc : c ≤ 0) : ∀ i : Fin 
 
 theorem PH.dual1 (h : PH vecc B ka nu) {c : ℤ} (hc : c ≤ 0) (i : Fin (N + 1)) : 1 ≤ colH (ka i) c := by
   have h1 := h.dualLow hc i
-  have h2 := i.isLt
   have h3 := h.hK
   omega
 
@@ -288,7 +287,6 @@ private theorem colH_muP_succ_ne_castSucc_iff_vec (h : PH vecc B ka nu) (LL : Li
   | succ k =>
     obtain ⟨e1, e2⟩ := PH.heights (ka := ka) (nu := nu) k c
     have hm : nu (k.val + 1) ≤ nu (k.val + 2) := h.numono _
-    have p1 : 1 ≤ colH (ka k.castSucc) c → c ≤ nu (k.val + 1) := fun hc => h.pos_le k.castSucc hc
     rw [e1, e2, hvs]
     cases hv : vecc k
     · have hc := h.nucov k hv

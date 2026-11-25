@@ -269,7 +269,6 @@ theorem kaJ_bounds (D : D7) (j : ℕ) (hj : j ∈ SizeData₂.lifts D) : 0 ≤ k
   have h1' : (1 : ℝ) ≤ j := by exact_mod_cast h1
   have h2' : (j : ℝ) ≤ D.R.m := by exact_mod_cast h2
   have ht : (0 : ℝ) ≤ D.R.t + 1 := by positivity
-  have hk : (0 : ℝ) ≤ D.R.k := by positivity
   unfold kaJ Nm Formalism.BasicNotions.Ranks.N
   push_cast
   constructor

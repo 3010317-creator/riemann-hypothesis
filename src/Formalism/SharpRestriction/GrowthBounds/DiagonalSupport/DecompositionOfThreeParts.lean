@@ -101,7 +101,6 @@ theorem leQ_add_of_lt (x e : KK O) {s t : ℝ} (hx : leQ (vK p x) t) (he : geQ (
   obtain ⟨a, ha, h1⟩ := hx
   by_contra hcon
 
-  have h2 : geQ (vK p (x + e)) (min s ((a : ℝ) + (s - t) / 2)) ∨ True := Or.inr trivial
   have hlt : ((a : ℚ) : WithTop ℚ) < vK p (x + e) := by
     by_contra hle
     rw [not_lt] at hle

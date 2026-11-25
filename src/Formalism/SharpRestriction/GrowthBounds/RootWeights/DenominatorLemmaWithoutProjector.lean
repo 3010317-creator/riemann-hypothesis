@@ -951,7 +951,6 @@ theorem weight_difference_le_ell_of_rep [CharZero K] [FiniteDimensional K V] {E 
       Pi.natCast_apply]
     ring
   have hle : N ≤ ellOf E (⊤ : Submodule K V) := le_csSup (root_differences_bddAbove_top E) hmem
-  have hle' := (Nat.cast_le (α := ℤ)).2 hle
   omega
 
 end Formalism.MainNotions.G.GLWeightTheory
@@ -979,7 +978,6 @@ private theorem degreeZeroWeightsBounded_ellOf {n : ℕ} {K V : Type*} [Field K]
   intro ν hsum hne a
   have hsplit : ν a + ∑ i ∈ Finset.univ.erase a, ν i = 0 := by
     rw [Finset.add_sum_erase _ _ (Finset.mem_univ a)]; exact hsum
-  have hell : (0 : ℤ) ≤ (ellOf E (⊤ : Submodule K V) : ℤ) := by positivity
   rw [abs_le]
   constructor
   · by_cases h0 : 0 ≤ ν a

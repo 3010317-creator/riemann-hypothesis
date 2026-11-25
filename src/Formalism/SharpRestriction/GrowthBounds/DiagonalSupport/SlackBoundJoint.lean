@@ -89,7 +89,6 @@ theorem LL_sub_letters (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (j y : ℤ) (hy 
     y ∈ Fr.letters j ∧ ¬ Fr.IsW j y := by
   simp only [Frames.LLset, Finset.mem_filter, Finset.mem_Ioo] at hy
   obtain ⟨⟨h1, h2⟩, hT⟩ := hy
-  have hr0 : r - 1 < r := by omega
   have a1 := fr_le_last hV (j - 1) (show 0 < r by omega)
   have a2 := fr_le_last hV j (show 0 < r by omega)
   refine ⟨?_, ?_⟩

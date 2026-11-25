@@ -81,7 +81,6 @@ theorem c8 (p n' : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuatio
               N0 n * deF p n (ellOf (glOps (KK O) n LL (Ss i)) (Pol (KK O) n d) + ellWt (t i)) : ℕ) : ℝ) ≤
             (N0 n : ℝ) * Real.logb p (2 * (degIn d (Ss i) : ℝ) + n) := by
   intro T d i hT
-  have hp1 : 1 < p := hG.prime.one_lt
   have hn : 1 ≤ n := Nat.one_le_iff_ne_zero.2 (NeZero.ne n)
   have h3 := c3 p n' O S0 hG n ι LL N Ss d i
   have hle : (T.sup fun t =>

@@ -63,7 +63,6 @@ theorem ex_cast {n' : ℕ} {TT : Finset (Fin n')} (z : Fin n' → ℤ) (c : ℕ)
   exact h'
 
 theorem min_shift (b a c P : ℝ) (hc : 0 ≤ c) (hP : 1 ≤ P) : min (b + c) ((a + c) / P) ≤ min b (a / P) + c := by
-  have hP0 : 0 < P := by linarith
   have h1 : c / P ≤ c := div_le_self hc hP
   have h2 : (a + c) / P = a / P + c / P := add_div _ _ _
   rw [← min_add_add_right]
@@ -151,8 +150,6 @@ theorem tle_of (hO : RestOddTops) {K : Cst} (hK : K.Pos) {CH : ℝ} {C : ℝ} (h
   have hx0 : 0 ≤ X.t0 K (fun s => (aw s + X.ccl).toNat) (fun s => (bw s + X.ccl).toNat) + X.N * X.J0 K := by
     rw [initial_level_formula, hJ]
     have hCt : 0 < K.Ct := hK.2.2.2.2.2.2.2.1
-    have hk0 : 0 < X.k := by linarith
-    have hQ0 : (0 : ℝ) < (X.p : ℝ) ^ X.G' := by positivity
     have := hS'0
     positivity
   have hceil : (X.tStar K (fun s => (aw s + X.ccl).toNat) (fun s => (bw s + X.ccl).toNat) : ℝ) ≤

@@ -226,7 +226,6 @@ theorem sizes_bound_of_log_estimates (D : Formalism.BasicNotions.D7) (h : Simple
       h K V n E hE mu hmu ord hord T hT x hx
     have hall : ∀ a b : Fin n, a < b → E a b (pp E mu ord T x) = 0 := by
       intro a b hab
-      have hab' : a.val < b.val := hab
       exact simple_raising_kill_all_raising hE _ hsimple (b.val - a.val - 1) a b (by omega)
     have hyn : pp E mu ord T x ∈ nMinus E := by
       have h2 := Submodule.add_mem _ (extremal_projector_sub_mem_nMinus E mu ord T x hlt) hn
