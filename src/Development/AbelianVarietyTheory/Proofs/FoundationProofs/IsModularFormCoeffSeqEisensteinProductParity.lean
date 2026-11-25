@@ -115,13 +115,8 @@ theorem zm_fun_mf : ∀ (k N l m : ℕ) (ε θ ν : DirichletCharacter ℂ N) (f
     exact ((_root_.GlobalTheory.EisM.mf_linear k _ (ch ε)).2.2.1 (c ψ) _
       (_root_.GlobalTheory.zm_char_mf k 0 N l m ε (hat θ) θ ν ψ (by omega) hN hl hm hlN hh.1 hh.2.1 hε h1 h2)).1
   · have hc0 : c ψ = 0 := by
-      have hpm : ∀ {M : ℕ} (χ : DirichletCharacter ℂ M), χ (-1) = 1 ∨ χ (-1) = -1 := by
-        intro M χ
-        have := hsq χ
-        have h' : (χ (-1) - 1) * (χ (-1) + 1) = 0 := by linear_combination this
-        rcases mul_eq_zero.1 h' with h | h
-        · left; linear_combination h
-        · right; linear_combination h
+      have hpm : ∀ {M : ℕ} (χ : DirichletCharacter ℂ M), χ (-1) = 1 ∨ χ (-1) = -1 :=
+        fun χ => χ.even_or_odd
       have hprod : θ (-1) * ψ⁻¹ (-1) = -1 := by
         have hi : ψ⁻¹ (-1) = ψ (-1) := by
           rw [MulChar.inv_apply, show (-1 : ZMod (l ^ m)) = ((-1 : (ZMod (l ^ m))ˣ) : ZMod (l ^ m)) by simp, Ring.inverse_unit, inv_neg_one]
