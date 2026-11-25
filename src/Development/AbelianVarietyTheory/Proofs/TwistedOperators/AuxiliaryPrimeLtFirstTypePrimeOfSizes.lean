@@ -104,7 +104,7 @@ variable {D : D7}
 
 theorem exists_orthogonalSum_testGrid_of_levelChoiceGrid {D : D7} (A B : GlobalTheory.Grid.Node D) {c : ℕ} {ε : D.host.E}
     (d : GlobalTheory.ChiGrid.HermitianOrthogonalExtensionData A.V B.V c ε) (𝔟 : Fin c → GlobalTheory.Grid.FrId D)
-    (hΛ : B.Λ = d.lat A.Λ 𝔟) :
+    (_hΛ : B.Λ = d.lat A.Λ 𝔟) :
     ∃ d' : GlobalTheory.Grid.HermitianOrthogonalExtensionData A B c, d'.ι = d.ι :=
   ⟨⟨d.ι, fun p => B.V.frame.equivFun.symm (fun k => d.a k p)⟩, rfl⟩
 
@@ -601,16 +601,35 @@ theorem exists_gridPre_spaces : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ]
 
   have exV : ∀ i (h : 1 ≤ i ∧ i ≤ D.R.m),
       ∃ d : GlobalTheory.Grid.HermitianOrthogonalExtensionData (mk (.core i) (gP i h.2)) (mk (.grid i 0) (gV i 0 h.1 h.2 (by omega))) (i - 1),
-        d.ι = (G'.sp.colDec i h.1 h.2).ι :=
-    fun i h => _root_.GlobalTheory.GridJoin.exists_orthogonalSum_testGrid_of_levelChoiceGrid _ _ (G'.sp.colDec i h.1 h.2) _ (G'.sp.colLat i h.1 h.2)
-  choose dV using exV
+        True :=
+    fun i h => Exists.imp (fun _ _ => trivial)
+      (_root_.GlobalTheory.GridJoin.exists_orthogonalSum_testGrid_of_levelChoiceGrid
+        (mk (.core i) (gP i h.2)) (mk (.grid i 0) (gV i 0 h.1 h.2 (by omega)))
+        (G'.sp.colDec i h.1 h.2)
+        (GlobalTheory.ChiGrid.stairId (G'.pl.stA sc) (G'.pl.stAbar sc) (i - 1))
+        (G'.sp.colLat i h.1 h.2))
+  have dV : ∀ i (h : 1 ≤ i ∧ i ≤ D.R.m),
+      GlobalTheory.Grid.HermitianOrthogonalExtensionData (mk (.core i) (gP i h.2))
+        (mk (.grid i 0) (gV i 0 h.1 h.2 (by omega))) (i - 1) :=
+    fun i h => Classical.choose (exV i h)
 
   have exX : ∀ j (h : j + 1 < D.R.m),
       ∃ d : GlobalTheory.Grid.HermitianOrthogonalExtensionData (mk (.top (j + 1)) (gX (j + 1) (by omega) h.le))
         (mk (.grid D.R.m (j + 1)) (gV D.R.m (j + 1) (by omega) le_rfl h.le)) (D.R.m - 1 - (j + 1)),
-        d.ι = (G'.sp.rowDecS j h).ι :=
-    fun j h => _root_.GlobalTheory.GridJoin.exists_orthogonalSum_testGrid_of_levelChoiceGrid _ _ (G'.sp.rowDecS j h) _ (G'.sp.rowLat j h)
-  choose dX using exX
+        True :=
+    fun j h => Exists.imp (fun _ _ => trivial)
+      (_root_.GlobalTheory.GridJoin.exists_orthogonalSum_testGrid_of_levelChoiceGrid
+        (mk (.top (j + 1)) (gX (j + 1) (by omega) h.le))
+        (mk (.grid D.R.m (j + 1)) (gV D.R.m (j + 1) (by omega) le_rfl h.le))
+        (G'.sp.rowDecS j h)
+        (GlobalTheory.ChiGrid.stairId D.host.AA D.host.AAbar (D.R.m - 1 - (j + 1)))
+        (G'.sp.rowLat j h))
+  have dX : ∀ j (h : j + 1 < D.R.m),
+      GlobalTheory.Grid.HermitianOrthogonalExtensionData
+        (mk (.top (j + 1)) (gX (j + 1) (by omega) h.le))
+        (mk (.grid D.R.m (j + 1)) (gV D.R.m (j + 1) (by omega) le_rfl h.le))
+        (D.R.m - 1 - (j + 1)) :=
+    fun j h => Classical.choose (exX j h)
 
   obtain ⟨dZ, -⟩ := _root_.GlobalTheory.GridJoin.exists_orthogonalSum_testGrid_of_levelChoiceGrid (mk (.grid D.R.m D.R.m) (gV D.R.m D.R.m (by omega) le_rfl le_rfl))
     (mk (.top D.R.m) (gX D.R.m (by omega) le_rfl)) G'.sp.topDec (fun _ => 1) G'.sp.topLat
@@ -849,12 +868,12 @@ variable {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type} {A : FamIn 
 
 theorem isSpaces_withArr {G : GridPre R} {X ωT vacT ItT ωC vacC ItC dn ItU vC} (h : G.IsSpaces) :
     (withArr G X ωT vacT ItT ωC vacC ItC dn ItU vC).IsSpaces := by
-  obtain ⟨a, b, c, d, e, f, g⟩ := h
-  exact ⟨a, b, c, d, e, f, g⟩
+  obtain ⟨a, b, c⟩ := h
+  exact ⟨a, b, c⟩
 
 theorem isSpaces_withMeas {G : GridPre R} {m00 mV mP mX} (h : G.IsSpaces) : (withMeas G m00 mV mP mX).IsSpaces := by
-  obtain ⟨a, b, c, d, e, f, g⟩ := h
-  exact ⟨a, b, c, d, e, f, g⟩
+  obtain ⟨a, b, c⟩ := h
+  exact ⟨a, b, c⟩
 
 theorem spAgree_withArr {G : GridPre R} {X ωT vacT ItT ωC vacC ItC dn ItU vC} {G' : GridData R.toLevCh sc} {W : G'.Weil}
     (h : SpAgree G W) : SpAgree (withArr G X ωT vacT ItT ωC vacC ItC dn ItU vC) W := by
