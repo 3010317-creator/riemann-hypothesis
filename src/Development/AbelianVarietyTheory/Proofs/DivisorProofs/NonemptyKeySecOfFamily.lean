@@ -123,21 +123,8 @@ theorem nonempty_keySec_of_family (E : Type) [Field E] [NumberField E] [IsCMFiel
   have hchart : ∃ v : ∀ Z : Comp Xo c, (Om Z)ˣ, ∀ C : FChart h,
       ∃ (Φ : FibKey Xo C.R C.y.x) (u : (C.R)ˣ), Tied e C.y.s C.y.u Φ ∧
         GlobalTheory.KeyCl.IsValue κ Φ.key (u : C.R) ∧
-        ((u : C.R) : Om C.Z) = ((kch C.t ^ 4 * v C.Z : (Om C.Z)ˣ) : Om C.Z) := by
-    have hc : ∀ Z : Comp Xo c, CharZero (Om Z) := fun Z =>
-      charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
-    choose Ψ hΨ using fun Z : Comp Xo c => _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g e (Om Z) (genFr h Z) hpq
-    refine ⟨fun Z => κ (Om Z) (Ψ Z).key, fun C => ?_⟩
-    haveI := C.sm
-    haveI : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
-    haveI : IsNoetherianRing C.R := Algebra.FiniteType.isNoetherianRing c.F C.R
-    haveI : CharZero C.R := charZero_of_injective_algebraMap (algebraMap c.F C.R).injective
-    obtain ⟨Φ, hΦ⟩ := _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g e C.R C.y hpq
-    obtain ⟨Φ', hΦ'⟩ := _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g e (Om C.Z) C.yg hpq
-    obtain ⟨u, hu⟩ := k₄ C.R Φ.key
-    refine ⟨Φ, u, hΦ, hu, ?_⟩
-    rw [← _root_.GlobalTheory.KeyFourth.rule_frBor κ k₁ k₂ E H Dw l Xo c g e (Om C.Z) C.t _ _ (Ψ C.Z) Φ' C.bor (hΨ _) hΦ']
-    exact (hu (Om C.Z) _ _ (_root_.GlobalTheory.KeyFourth.tied_keyPB E H Dw l Xo c g e _ _ C.R.val C.y C.yg Φ Φ' C.gen hΦ hΦ')).symm
+        ((u : C.R) : Om C.Z) = ((kch C.t ^ 4 * v C.Z : (Om C.Z)ˣ) : Om C.Z) :=
+    exists_chart_units k₁ k₂ k₄ e hpq h
   obtain ⟨v, hv⟩ := hchart
   have hroot : ∀ C : FChart h, ∃ (a : c.F) (b : C.R), a ≠ 0 ∧
       ((kch C.t ^ 4 * v C.Z : (Om C.Z)ˣ) : Om C.Z) = a • (b : Om C.Z) ^ 4 := by
