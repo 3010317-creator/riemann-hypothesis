@@ -1229,24 +1229,15 @@ private theorem hasTau_conj {K : Type} [Field K] {Δ τ : K} {δ : U3 Δ} (h : H
   rw [e, ← h]
   exact key
 
-private theorem isIntegral_star_of_isIntegral {K : Type} [Field K] (O : Type) [CommRing O] [Algebra O K] (τ : K)
-    {x : Etau K τ} (hx : IsIntegral O x) : IsIntegral O (star x) := by
-  let f : Etau K τ →ₐ[O] Etau K τ :=
-    { starRingEnd (Etau K τ) with
-      commutes' := fun r => by
-        rw [IsScalarTower.algebraMap_apply O K (Etau K τ)]
-        ext <;> simp [starRingEnd_apply] }
-  exact hx.map f
-
 private theorem cu_le_cint {K : Type} [Field K] (O : Type) [CommRing O] [Algebra O K] (τ : K) : Cu O τ ≤ Cint O τ := by
   rintro _ ⟨u, rfl⟩
   have hI : ∀ w : (integralClosure O (Etau K τ))ˣ, IsIntegral O (((w : integralClosure O (Etau K τ)) : Etau K τ)) :=
     fun w => (w : integralClosure O (Etau K τ)).2
   refine ⟨?_, ?_⟩
   · simp only [quo, ← map_inv]
-    exact (hI u).mul (isIntegral_star_of_isIntegral O τ (hI u⁻¹))
+    exact (hI u).mul (isIntegral_star (hI u⁻¹))
   · simp only [quo, ← map_inv, inv_inv]
-    exact (hI u⁻¹).mul (isIntegral_star_of_isIntegral O τ (hI u))
+    exact (hI u⁻¹).mul (isIntegral_star (hI u))
 
 set_option maxHeartbeats 1600000 in
 theorem UpperTheory.V.Z.Sym.Glob.gqG :

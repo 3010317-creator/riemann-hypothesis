@@ -193,16 +193,6 @@ private theorem fin_gen {O R : Type} [CommRing O] [IsLocalRing O] [CommRing R] [
   obtain ⟨y, rfl⟩ := hφ z
   exact ⟨Submodule.Quotient.mk y, rfl⟩
 
-private theorem sup_pow_le {R : Type} [CommRing R] (I J : Ideal R) (k : ℕ) : (I ⊔ J) ^ k ≤ I ^ k ⊔ J := by
-  induction k with
-  | zero => simp
-  | succ k ih =>
-    rw [pow_succ, pow_succ]
-    refine (Ideal.mul_mono_left ih).trans ?_
-    rw [Ideal.sup_mul, Ideal.mul_sup]
-    exact sup_le (sup_le le_sup_left (le_sup_of_le_right (Ideal.mul_le_inf.trans inf_le_right)))
-      (le_sup_of_le_right (Ideal.mul_le_inf.trans inf_le_left))
-
 section Fin
 
 variable {l : ℕ} [Fact l.Prime] {c : Coef l} {R : Type} [CommRing R] [Algebra c.O R] [IsCO c.O R]
@@ -261,10 +251,7 @@ private theorem pow_le {f : R →ₐ[c.O] PadicAlgCl l} (hf : IsLocPt f) :
     Ideal.IsPrime.isMaximal inferInstance hne
   have hb : (⊥ : Ideal (R ⧸ q)).IsMaximal :=
     Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := c.O) ⊥ hm
-  have hq' : q.IsMaximal := by
-    have := Ideal.comap_isMaximal_of_surjective (Ideal.Quotient.mk q) Ideal.Quotient.mk_surjective (K := ⊥)
-    rwa [← RingHom.ker_eq_comap_bot, Ideal.mk_ker] at this
-  exact (eq_maximalIdeal hq').ge
+  exact (eq_maximalIdeal (Ideal.Quotient.maximal_of_isField q (Ring.isField_iff_maximal_bot.2 hb))).ge
 
 private theorem fin_quot {f : R →ₐ[c.O] PadicAlgCl l} (hf : IsLocPt f) :
     Module.Finite c.O (R ⧸ (RingHom.ker f ^ 2).restrictScalars c.O) := by
@@ -306,10 +293,10 @@ private theorem small {f : R →ₐ[c.O] PadicAlgCl l} (hf : IsLocPt f) (D : R �
     exact Padic.norm_p_lt_one
   have hpos : 0 < ‖D y₀‖ + 1 := by positivity
   obtain ⟨k, hk⟩ := exists_pow_lt_of_lt_one (div_pos hε hpos) hl
-  refine ⟨n * k, fun y hy => ?_⟩
-  have hle : maximalIdeal R ^ (n * k) ≤ Ideal.span {(l : R) ^ k} ⊔ RingHom.ker f ^ 2 := by
-    rw [pow_mul, ← Ideal.span_singleton_pow]
-    exact (Ideal.pow_right_mono hn k).trans (sup_pow_le _ _ _)
+  refine ⟨n * (k + 1), fun y hy => ?_⟩
+  have hle : maximalIdeal R ^ (n * (k + 1)) ≤ Ideal.span {(l : R) ^ k} ⊔ RingHom.ker f ^ 2 := by
+    rw [pow_mul, ← Ideal.span_singleton_pow, ← pow_one (RingHom.ker f ^ 2)]
+    exact (Ideal.pow_right_mono hn _).trans Ideal.sup_pow_add_le_pow_sup_pow
   obtain ⟨u, hu, v, hv, rfl⟩ := Submodule.mem_sup.1 (hle hy)
   obtain ⟨w, rfl⟩ := Ideal.mem_span_singleton'.1 hu
   have e : w * (l : R) ^ k = ((l : c.O) ^ k) • w := by
