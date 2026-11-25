@@ -32,9 +32,6 @@ theorem mem_chiPart [DecidableEq ι] (x : ι → ℚ) (T : ⨂[ℂ] _ : ι, Form
 theorem degLE_mono : Monotone (degLE ι P Q R S) := fun _ _ h =>
   Submodule.span_mono fun _ ⟨f, hf, e⟩ => ⟨f, hf.trans h, e⟩
 
-theorem tprod_mem_degLE (f : ι → Formalism.BasicNotions.TH.Pol P Q R S) {k : ℕ} (h : ∑ w, (f w).totalDegree ≤ k) :
-    PiTensorProduct.tprod ℂ f ∈ degLE ι P Q R S k :=
-  Submodule.subset_span ⟨f, h, rfl⟩
 
 end GlobalTheory.KFixIrr
 
