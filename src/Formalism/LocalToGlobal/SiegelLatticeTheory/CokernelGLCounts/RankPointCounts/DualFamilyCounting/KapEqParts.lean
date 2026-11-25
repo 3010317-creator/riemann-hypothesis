@@ -176,15 +176,11 @@ theorem inj_at {s s' : X.B.I.Ginf} (hs : s ∈ X.NinfU u) (hs' : s' ∈ X.NinfU 
     rw [Matrix.mul_apply, Matrix.one_apply]
     simp only [Matrix.conjTranspose_apply, hαm]
     rw [← hexp b, Formalism.L2.SG.Pf.hJ_inUJ _ hU, fr_ef]
-  have hαX : αm * (xMat X v s)ᴴ = 1 := by
-    rw [← Matrix.inv_eq_right_inv hXα]
-    exact Matrix.nonsing_inv_mul _ (Matrix.isUnit_det_of_right_inverse hXα)
+  have hαX : αm * (xMat X v s)ᴴ = 1 := mul_eq_one_comm.2 hXα
   have hαX' : αmᴴ * xMat X v s = 1 := by
     have h := congrArg Matrix.conjTranspose hXα
     rwa [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, Matrix.conjTranspose_one] at h
-  have hXαh : xMat X v s * αmᴴ = 1 := by
-    rw [← Matrix.inv_eq_left_inv hαX']
-    exact Matrix.mul_nonsing_inv _ (Matrix.isUnit_det_of_left_inverse hαX')
+  have hXαh : xMat X v s * αmᴴ = 1 := mul_eq_one_comm.1 hαX'
   have hinv : (xMat X v s)⁻¹ = αmᴴ := Matrix.inv_eq_left_inv hαX'
   have key : ∀ w : Fin D.R.rS → ℂ, (xMat X v s)ᴴ *ᵥ w = 0 → w = 0 := by
     intro w hw

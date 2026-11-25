@@ -312,22 +312,17 @@ section Unfold
 variable {G : Type*} [Group G] [MeasurableSpace G] [MeasurableMul₂ G] [MeasurableInv G]
   {μ : Measure G} [SFinite μ] [μ.IsMulLeftInvariant] (ν : Measure G) [SFinite ν]
 
-private theorem measurable_one_ennreal : Measurable (1 : G → ℝ≥0∞) := by
-  first
-  | exact measurable_one
-
 theorem lint_eq {A B : Set G} (hA : MeasurableSet A) (hB : MeasurableSet B) (c : ℝ≥0∞)
     (hcB : ∀ x, ν {r | r * x ∈ B} = c) (hcA : ∀ y, ν {r | r⁻¹ * y ∈ A} = c)
     (g : G → ℝ≥0∞) (hg : AEMeasurable g μ) (hinv : ∀ᵐ r ∂ν, ∀ x, g (r⁻¹ * x) = g x) :
     c * ∫⁻ x in A, g x ∂μ = c * ∫⁻ x in B, g x ∂μ := by
-  have h1m := (measurable_one_ennreal (G := G))
   have hL : c * ∫⁻ x in A, g x ∂μ = ∫⁻ x, ∫⁻ r, A.indicator (1 : G → ℝ≥0∞) x * B.indicator (1 : G → ℝ≥0∞) (r * x) * g x ∂ν ∂μ := by
     first
     | rw [← lintegral_indicator hA]
     rw [← lintegral_const_mul'' c (hg.indicator hA)]
     refine lintegral_congr fun x => ?_
     have hm : Measurable fun r : G => B.indicator (1 : G → ℝ≥0∞) (r * x) :=
-      (h1m.indicator hB).comp (measurable_mul_const x)
+      (measurable_one.indicator hB).comp (measurable_mul_const x)
     have h2 : ∫⁻ r, B.indicator (1 : G → ℝ≥0∞) (r * x) ∂ν = c := by
       rw [← hcB x]
       first
@@ -346,7 +341,7 @@ theorem lint_eq {A B : Set G} (hA : MeasurableSet A) (hB : MeasurableSet B) (c :
     rw [← lintegral_const_mul'' c (hg.indicator hB)]
     refine lintegral_congr fun y => ?_
     have hm : Measurable fun r : G => A.indicator (1 : G → ℝ≥0∞) (r⁻¹ * y) :=
-      (h1m.indicator hA).comp (measurable_inv.mul_const y)
+      (measurable_one.indicator hA).comp (measurable_inv.mul_const y)
     have h2 : ∫⁻ r, A.indicator (1 : G → ℝ≥0∞) (r⁻¹ * y) ∂ν = c := by
       rw [← hcA y]
       first
@@ -365,16 +360,16 @@ theorem lint_eq {A B : Set G} (hA : MeasurableSet A) (hB : MeasurableSet B) (c :
   have hF : AEMeasurable (Function.uncurry fun (x r : G) =>
       A.indicator (1 : G → ℝ≥0∞) x * B.indicator (1 : G → ℝ≥0∞) (r * x) * g x) (μ.prod ν) := by
     have k1 : Measurable fun p : G × G => A.indicator (1 : G → ℝ≥0∞) p.1 :=
-      (h1m.indicator hA).comp measurable_fst
+      (measurable_one.indicator hA).comp measurable_fst
     have k2 : Measurable fun p : G × G => B.indicator (1 : G → ℝ≥0∞) (p.2 * p.1) :=
-      (h1m.indicator hB).comp (measurable_snd.mul measurable_fst)
+      (measurable_one.indicator hB).comp (measurable_snd.mul measurable_fst)
     exact (k1.aemeasurable.mul k2.aemeasurable).mul h3
   have hG : AEMeasurable (Function.uncurry fun (y r : G) =>
       A.indicator (1 : G → ℝ≥0∞) (r⁻¹ * y) * B.indicator (1 : G → ℝ≥0∞) y * g y) (μ.prod ν) := by
     have k1 : Measurable fun p : G × G => A.indicator (1 : G → ℝ≥0∞) (p.2⁻¹ * p.1) :=
-      (h1m.indicator hA).comp (measurable_snd.inv.mul measurable_fst)
+      (measurable_one.indicator hA).comp (measurable_snd.inv.mul measurable_fst)
     have k2 : Measurable fun p : G × G => B.indicator (1 : G → ℝ≥0∞) p.1 :=
-      (h1m.indicator hB).comp measurable_fst
+      (measurable_one.indicator hB).comp measurable_fst
     exact (k1.aemeasurable.mul k2.aemeasurable).mul h3
   rw [hL, hR, lintegral_lintegral_swap hF, lintegral_lintegral_swap hG]
   refine lintegral_congr_ae ?_
@@ -393,10 +388,6 @@ section Boch
 variable {G : Type*} [Group G] [MeasurableSpace G] [MeasurableMul₂ G] [MeasurableInv G]
   {μ : Measure G} [SFinite μ] [μ.IsMulLeftInvariant] (ν : Measure G) [SFinite ν]
 
-private theorem ennreal_eq_of_mul_left_eq {c a b : ℝ≥0∞} (h0 : c ≠ 0) (ht : c ≠ ⊤) (h : c * a = c * b) : a = b := by
-  first
-  | exact (ENNReal.mul_right_inj h0 ht).1 h
-
 private theorem setIntegral_eq_of_fiber_measure_eq {A B : Set G} (hA : MeasurableSet A) (hB : MeasurableSet B)
     (c : ℝ≥0∞) (hc0 : c ≠ 0) (hct : c ≠ ⊤)
     (hcB : ∀ x, ν {r | r * x ∈ B} = c) (hcA : ∀ y, ν {r | r⁻¹ * y ∈ A} = c)
@@ -411,7 +402,7 @@ private theorem setIntegral_eq_of_fiber_measure_eq {A B : Set G} (hA : Measurabl
     (by filter_upwards [hinv] with r hr x; simp only [hr])
   rw [integral_eq_lintegral_pos_part_sub_lintegral_neg_part hfA,
     integral_eq_lintegral_pos_part_sub_lintegral_neg_part hfB,
-    ennreal_eq_of_mul_left_eq hc0 hct e1, ennreal_eq_of_mul_left_eq hc0 hct e2]
+    (ENNReal.mul_right_inj hc0 hct).1 e1, (ENNReal.mul_right_inj hc0 hct).1 e2]
 
 theorem int_eq {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E] {A B : Set G}
     (hA : MeasurableSet A) (hB : MeasurableSet B) (c : ℝ≥0∞) (hc0 : c ≠ 0) (hct : c ≠ ⊤)
@@ -424,7 +415,7 @@ theorem int_eq {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteS
       | exact hf.enorm
     have e := lint_eq (μ := μ) ν hA hB c hcB hcA
       (fun x => ‖f x‖ₑ) hg (by filter_upwards [hinv] with r hr x; simp only [hr])
-    have e' := ennreal_eq_of_mul_left_eq hc0 hct e
+    have e' := (ENNReal.mul_right_inj hc0 hct).1 e
     have hA' : ∫⁻ x in A, ‖f x‖ₑ ∂μ < ⊤ := by
       first
       | exact hfA.2

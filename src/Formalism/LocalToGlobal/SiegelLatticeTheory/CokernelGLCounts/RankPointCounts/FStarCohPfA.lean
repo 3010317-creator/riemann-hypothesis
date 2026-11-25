@@ -38,15 +38,10 @@ theorem h_right_zero {ι : Type} {v : ι → V} {w : V} (hw : ∀ i, H.h w (v i)
     rwa [LinearMap.mem_ker, hL_apply] at h1
   rw [H.h_herm, hy', map_zero]
 
-private theorem h_fintype_sum_smul_left {ι : Type} [Fintype ι] (v : ι → V) (c : ι → E) (y : V) :
-    H.h (∑ j, c j • v j) y = ∑ j, c j * H.h (v j) y := by
-  have h1 := map_sum (hL H y) (fun j => c j • v j) Finset.univ
-  simp only [map_smul, smul_eq_mul, hL_apply] at h1
-  exact h1
-
 private theorem h_sum_smul_eq_gram_mulVec {ι : Type} [Fintype ι] (v : ι → V) (c : ι → E) (i : ι) :
     H.h (∑ j, c j • v j) (v i) = (H.gram v *ᵥ c) i := by
-  rw [h_fintype_sum_smul_left]
+  rw [← hL_apply H _ (v i), map_sum]
+  simp only [map_smul, smul_eq_mul, hL_apply]
   show ∑ j, c j * H.h (v j) (v i) = ∑ j, H.h (v j) (v i) * c j
   exact Finset.sum_congr rfl fun j _ => mul_comm _ _
 
@@ -63,11 +58,6 @@ theorem eq_zero_of_orth {ι : Type} [Fintype ι] [DecidableEq ι] {v : ι → V}
   subst hc0
   simp
 
-private theorem h_sub_left' (x y z : V) : H.h (x - y) z = H.h x z - H.h y z := by
-  have h1 := (hL H z).map_sub x y
-  rw [hL_apply, hL_apply, hL_apply] at h1
-  exact h1
-
 theorem decomp {ι : Type} [Fintype ι] [DecidableEq ι] {v : ι → V} (hN : GramInv H v) {Λ : Submodule M.L.O V}
     (hI : ∀ x ∈ Λ, ∀ y ∈ Λ, H.h x y ∈ M.L.O) (hv : ∀ i, v i ∈ Λ) {x : V} (hx : x ∈ Λ) :
     ∃ c : ι → E, (∀ j, c j ∈ M.L.O) ∧ ∀ i, H.h (x - ∑ j, c j • v j) (v i) = 0 := by
@@ -78,7 +68,8 @@ theorem decomp {ι : Type} [Fintype ι] [DecidableEq ι] {v : ι → V} (hN : Gr
   refine ⟨N *ᵥ fun k => H.h x (v k), fun j => ?_, fun i => ?_⟩
   · show ∑ k, N j k * H.h x (v k) ∈ M.L.O
     exact sum_mem fun k _ => mul_mem (hNO j k) (hI x hx (v k) (hv k))
-  · rw [h_sub_left', h_sum_smul_eq_gram_mulVec v _ i, Matrix.mulVec_mulVec, hGN, Matrix.one_mulVec]
+  · rw [← hL_apply H _ (v i), map_sub, hL_apply, hL_apply,
+      h_sum_smul_eq_gram_mulVec v _ i, Matrix.mulVec_mulVec, hGN, Matrix.one_mulVec]
     exact sub_self _
 
 theorem comb_mem_span {ι : Type} [Fintype ι] (v : ι → V) (c : ι → E) :
@@ -119,7 +110,7 @@ theorem le_of_Lset {r : ℕ} {ι : Type} [Fintype ι] [DecidableEq ι] {v : ι �
       rw [h3]
       exact Submodule.sub_mem _ h2 h1
     · intro i
-      rw [h_sub_left', hc i, hd i, sub_zero]
+      rw [← hL_apply H _ (v i), map_sub, hL_apply, hL_apply, hc i, hd i, sub_zero]
   have hx0' : x - ∑ j, c j • v j ∈ Λ₂ := by
     rw [sub_eq_zero.1 hzero]
     exact Λ₂.sub_mem hyΛ ht2

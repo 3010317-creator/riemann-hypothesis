@@ -523,17 +523,15 @@ theorem group_action_eq_unit_action [Fact (D.mem u).A.T.Prime] (Tf : Forms0 D u)
     ∀ c, t2sAc Tf hE g c = t2xAc Tf hE (t2sPc g) c := by
   intro c
   rw [← Finset.univ_prod_mulSingle g]
-  suffices H : ∀ s : Finset (D.mem u).A.vT, ∀ c, t2sAc Tf hE (∏ w ∈ s, Pi.mulSingle w (g w)) c =
-      t2xAc Tf hE (t2sPc (∏ w ∈ s, Pi.mulSingle w (g w))) c from H _ c
-  intro s
-  induction s using Finset.induction_on with
-  | empty => intro c; simp
-  | insert w s hw ih =>
-    intro c
-    rw [Finset.prod_insert hw, group_action_mul, map_mul, map_mul]
-    show _ = t2xAc Tf hE (t2sPc (Pi.mulSingle w (g w)))
-      (t2xAc Tf hE (t2sPc (∏ x ∈ s, Pi.mulSingle x (g x))) c)
-    rw [← ih, t2sAc_single, t2sPc_single, group_action_mulSingle_eq_dilation, MulEquiv.symm_apply_apply]
+  refine Finset.prod_induction (fun w => Pi.mulSingle w (g w))
+    (fun h => ∀ c, t2sAc Tf hE h c = t2xAc Tf hE (t2sPc h) c)
+    (fun a b ha hb c => by
+      rw [group_action_mul, map_mul, map_mul]
+      show _ = t2xAc Tf hE (t2sPc a) (t2xAc Tf hE (t2sPc b) c)
+      rw [hb, ha])
+    (fun _ => by simp) (fun w _ _ => by
+      rw [t2sAc_single, t2sPc_single, group_action_mulSingle_eq_dilation,
+        MulEquiv.symm_apply_apply]) c
 
 theorem group_acts_freely_classes' (Tf : Forms0 D u) (hS : Formalism.MainNotions.product_first_zeroth_parts.admS D u) (hE : DiamondElementsExist Tf) (g : ∀ v, t2sG D u v)
     (c : (D.mem u).C.cls 0) (h : t2sAc Tf hE g c = c) : g = 1 := by
@@ -804,16 +802,12 @@ theorem group_rep_majorant_isometry (hI : DiamondIsometry D u) (Tf : Forms0 D u)
     simp only [t2sRho, MonoidHom.noncommPiCoprod_mulSingle]
   have hprod : g = ∏ w, Pi.mulSingle w (g w) := (Finset.univ_prod_mulSingle g).symm
   rw [hprod]
-  suffices H : ∀ s : Finset (D.mem u).A.vT, ∀ x y,
-      majAt ((D.fm u).lat 0).b ((D.fm u).lat 0).X v (t2sRho Tf hE (∏ w ∈ s, Pi.mulSingle w (g w)) x)
-        (t2sRho Tf hE (∏ w ∈ s, Pi.mulSingle w (g w)) y) =
-      majAt ((D.fm u).lat 0).b ((D.fm u).lat 0).X v x y from H _ x y
-  intro s
-  induction s using Finset.induction_on with
-  | empty => intro x y; simp
-  | insert w s hw ih =>
-    intro x y
-    rw [Finset.prod_insert hw, map_mul, Module.End.mul_apply, Module.End.mul_apply, hs, hs, hI, ih]
+  refine Finset.prod_induction (fun w => Pi.mulSingle w (g w))
+    (fun h => ∀ x y,
+      majAt ((D.fm u).lat 0).b ((D.fm u).lat 0).X v (t2sRho Tf hE h x) (t2sRho Tf hE h y) =
+        majAt ((D.fm u).lat 0).b ((D.fm u).lat 0).X v x y)
+    (fun a b ha hb x y => by rw [map_mul, Module.End.mul_apply, Module.End.mul_apply, ha, hb])
+    (fun x y => by simp) (fun w _ x y => by rw [hs, hs, hI]) x y
 
 theorem slice_summands_orthogonal (hS : Formalism.MainNotions.product_first_zeroth_parts.admS D u) (hO : MetricOrthogonalClasses D u) (hI : DiamondIsometry D u) (Tf : Forms0 D u)
     (hE : DiamondElementsExist Tf) :

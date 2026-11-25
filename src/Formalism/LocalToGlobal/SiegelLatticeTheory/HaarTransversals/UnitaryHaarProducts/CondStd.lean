@@ -112,45 +112,23 @@ theorem condAllTR_of (hL : LocTrDual) (F : Type) [Field F] [NumberField F] [IsTo
 
   have htr : ∀ q : F, trR F q = ((Algebra.trace ℚ F q : ℚ) : ℝ) := by
     intro q
-    have hsum : ((Algebra.trace ℚ F q : ℚ) : ℂ) = ∑ σ : F →ₐ[ℚ] ℂ, σ q := by
-      have h : algebraMap ℚ ℂ (Algebra.trace ℚ F q) = ∑ σ : F →ₐ[ℚ] ℂ, σ q := by
-        first
-          | exact trace_eq_sum_embeddings ℂ (x := q)
-      rw [← h]
-      first
-        | rfl
     have hbij : Function.Bijective (fun w : InfinitePlace F => w.embedding.toRatAlgHom) := by
-      constructor
-      · intro w w' h
-        have h' : w.embedding = w'.embedding := by
-          ext z
-          exact DFunLike.congr_fun h z
-        rw [← InfinitePlace.mk_embedding w, ← InfinitePlace.mk_embedding w', h']
-      · intro σ
-        refine ⟨InfinitePlace.mk σ.toRingHom, ?_⟩
-        have hr : ComplexEmbedding.IsReal (InfinitePlace.mk σ.toRingHom).embedding :=
-          InfinitePlace.isReal_iff.mp (IsTotallyReal.isReal _)
-        have he : (InfinitePlace.mk σ.toRingHom).embedding = σ.toRingHom := by
-          rcases InfinitePlace.embedding_mk_eq σ.toRingHom with h | h
-          · exact h
-          · rw [h] at hr ⊢
-            have h2 : ComplexEmbedding.conjugate (ComplexEmbedding.conjugate σ.toRingHom) =
-                ComplexEmbedding.conjugate σ.toRingHom := hr
-            first
-              | exact ComplexEmbedding.isReal_conjugate_iff.mp hr
-        apply AlgHom.ext
-        intro z
-        show (InfinitePlace.mk σ.toRingHom).embedding z = σ z
-        rw [he]
-        rfl
-    have hs : ∑ w : InfinitePlace F, w.embedding q = ∑ σ : F →ₐ[ℚ] ℂ, σ q :=
-      Fintype.sum_bijective _ hbij _ _ (fun w => rfl)
+      refine ⟨fun _ _ h => InfinitePlace.embedding_injective F (RingHom.ext fun z =>
+        DFunLike.congr_fun h z), fun σ => ?_⟩
+      refine ⟨InfinitePlace.mk σ.toRingHom, AlgHom.ext fun z => ?_⟩
+      show (InfinitePlace.mk σ.toRingHom).embedding z = σ z
+      rw [InfinitePlace.embedding_mk_eq_of_isReal (IsTotallyReal.complexEmbedding_isReal _)]
+      rfl
+    have hsum : ((Algebra.trace ℚ F q : ℚ) : ℂ) = ∑ w : InfinitePlace F, w.embedding q := by
+      have h : algebraMap ℚ ℂ (Algebra.trace ℚ F q) = ∑ σ : F →ₐ[ℚ] ℂ, σ q :=
+        trace_eq_sum_embeddings ℂ (x := q)
+      rw [show ((Algebra.trace ℚ F q : ℚ) : ℂ) = algebraMap ℚ ℂ _ from rfl, h]
+      exact (Fintype.sum_bijective _ hbij _ _ fun _ => rfl).symm
     have hre : trR F q = (∑ w : InfinitePlace F, w.embedding q).re := by
       rw [Complex.re_sum]
       rfl
-    rw [hre, hs, ← hsum]
-    first
-      | simp
+    rw [hre, ← hsum]
+    simp
   have hψ : ∀ z, ψ z = psiStd F z := fun z => eq_psiStd ψ h1 h2 z
   have hV : ∀ y : Fv F v, psiV F ψ v y = psiFin F (singleV F v y) := by
     intro y

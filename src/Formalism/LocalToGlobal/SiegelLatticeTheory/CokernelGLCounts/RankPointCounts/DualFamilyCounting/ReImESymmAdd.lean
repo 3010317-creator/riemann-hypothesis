@@ -4,6 +4,7 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankP
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.LeadingMinorIntegrality
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.CovolBR
 import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.HostFacts
+import Formalism.LocalRingCardinality.ConjSqrtMinusD
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.LintegralFinProd
@@ -112,10 +113,6 @@ theorem contr (n : ℕ) (y : D.host.F) :
       ring
 
 def omg (D : D7) : D.host.E := (1 + D.host.sqrtMinusD) / 2
-
-private theorem conj_sqrtMinusD' : D.host.conj D.host.sqrtMinusD = -D.host.sqrtMinusD := by
-  first
-    | exact D.host.conj_sqd
 
 theorem omg_int : IsIntegral ℤ (omg D) := by
   have hd : D.host.d % 8 = 7 := by
@@ -229,7 +226,7 @@ theorem re_half (t : D.host.E) (v : InfinitePlace X.B.I.F) :
 
 private theorem embS_sqrtMinusD_re_eq_zero (τ : D.what₂.Tau) : (embS D τ D.host.sqrtMinusD).re = 0 := by
   have h := congrArg Complex.re (embS_add_conj τ D.host.sqrtMinusD)
-  rw [conj_sqrtMinusD', add_neg_cancel, map_zero, Complex.zero_re, Complex.ofReal_re] at h
+  rw [D.host.conj_sqrtMinusD, add_neg_cancel, map_zero, Complex.zero_re, Complex.ofReal_re] at h
   linarith
 
 theorem embS_omg_re (τ : D.what₂.Tau) : (embS D τ (omg D)).re = 2⁻¹ := by
@@ -400,7 +397,7 @@ theorem mem_cLatIm_bb (u : D.what₂.Word) (a : Fin D.R.rS) (y : InfinitePlace X
   constructor
   · rintro ⟨t, ⟨ht, hc⟩, rfl⟩
     have hwF : t / D.host.sqrtMinusD ∈ D.host.F := by
-      rw [mem_F_iff, map_div₀, hc, conj_sqrtMinusD', neg_div_neg_eq]
+      rw [mem_F_iff, map_div₀, hc, D.host.conj_sqrtMinusD, neg_div_neg_eq]
     refine ⟨reVHom X ⟨t / D.host.sqrtMinusD, hwF⟩, ?_, ?_⟩
     · show _ ∈ ((bbF a : Submodule (𝓞 D.host.F) D.host.F).toAddSubgroup).map (reVHom X)
       refine AddSubgroup.mem_map_of_mem _ ?_
@@ -421,7 +418,7 @@ theorem mem_cLatIm_bb (u : D.what₂.Word) (a : Fin D.R.rS) (y : InfinitePlace X
     have hx' : x ∈ ((bbF a : Submodule (𝓞 D.host.F) D.host.F).toAddSubgroup).map (reVHom X) := hx
     obtain ⟨w, hw, rfl⟩ := AddSubgroup.mem_map.1 hx'
     refine ⟨D.host.sqrtMinusD * (w : D.host.E), ⟨hw, ?_⟩, ?_⟩
-    · rw [map_mul, conj_sqrtMinusD', (mem_F_iff (w : D.host.E)).1 w.2, neg_mul]
+    · rw [map_mul, D.host.conj_sqrtMinusD, (mem_F_iff (w : D.host.E)).1 w.2, neg_mul]
     · funext v
       show (embS D (X.pl v) (D.host.sqrtMinusD * (w : D.host.E))).im =
         (embS D (X.pl v) (w : D.host.E)).re * (embS D (X.pl v) D.host.sqrtMinusD).im
@@ -563,20 +560,15 @@ theorem blockCovol_M (u : D.what₂.Word) (a : Fin D.R.rS) :
     have h' : c = b := congrArg Subtype.val this
     exact Subtype.ext h'
 
-  obtain ⟨F₁, hF₁, hd₁⟩ := (realIdealBlock X (Units.mk0 (Ahalf a) (by
-      intro h
-      have : (2⁻¹ : D.host.F) ∈ Ahalf a := (mem_Ahalf a _).2 (by
-        rw [mul_inv_cancel₀ two_ne_zero, Subfield.coe_one]
-        exact int_mem_IIm a 1)
-      rw [h, FractionalIdeal.mem_zero_iff] at this
-      exact two_ne_zero (inv_eq_zero.1 this)))).1
-  have hF₁v := (realIdealBlock X (Units.mk0 (Ahalf a) (by
-      intro h
-      have : (2⁻¹ : D.host.F) ∈ Ahalf a := (mem_Ahalf a _).2 (by
-        rw [mul_inv_cancel₀ two_ne_zero, Subfield.coe_one]
-        exact int_mem_IIm a 1)
-      rw [h, FractionalIdeal.mem_zero_iff] at this
-      exact two_ne_zero (inv_eq_zero.1 this)))).2 F₁ hF₁ hd₁
+  have hAh : Ahalf a ≠ 0 := by
+    intro h
+    have : (2⁻¹ : D.host.F) ∈ Ahalf a := (mem_Ahalf a _).2 (by
+      rw [mul_inv_cancel₀ two_ne_zero, Subfield.coe_one]
+      exact int_mem_IIm a 1)
+    rw [h, FractionalIdeal.mem_zero_iff] at this
+    exact two_ne_zero (inv_eq_zero.1 this)
+  obtain ⟨⟨F₁, hF₁, hd₁⟩, hF₁v_all⟩ := realIdealBlock X (Units.mk0 (Ahalf a) hAh)
+  have hF₁v := hF₁v_all F₁ hF₁ hd₁
   have hA₁ : ∀ x, x ∈ reLat X (Ahalf a) ↔ ∃ y, (x, y) ∈ Γ := hA1 X a
 
   have hI0 : aaD D a * aaD D a ≠ 0 := mul_ne_zero (aaD_ne_zero X a) (aaD_ne_zero X a)
