@@ -197,7 +197,7 @@ theorem theta_consts_algebraic : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoc
   have hx' : ∀ i, x' i ^ (m ^ 2) = 1 := fun i => pow_homMk heq _ (tx₀ i)
   choose p' hp' using fun i => hf.2.1 (x' i) (hx' i)
   choose p₁ e₂ using fun i => qkPullExists hGF R W φ D.toPre D'.toPre hD C cC (m ^ 2) (p' i)
-  have hQ := GlobalTheory.T.levelPoints_algClosure_fractionRing_bijective R D.toPre C em (m ^ 2) hk
+  have hQ := GlobalTheory.Mum.qkPt_algClosure_bijective R D.toPre C em (m ^ 2) hk
   choose p hp using fun i => (hQ.2 (p₁ i)).exists
   have hGt := GlobalTheory.T.torus_torsion_points_correspond_values
   choose q hq using fun i => (((hGt R D.toPre D.psi_even hB C N ν).2.2.2.2 _).1 (p₁ i)).exists
@@ -501,7 +501,6 @@ theorem linComb_zero {S : Scheme.{0}} {A : Over S} [GrpObj A] [IsCommMonObj A] {
 end GlobalTheory.MultTorsion
 
 namespace GlobalTheory
-
 
 open MultTorsion in
 theorem exists_levelPoint_pow_eq : ∀ (K : Type) [Field K] [IsAlgClosed K] (Q : PolAV (Sp K)) (m g : ℕ) (hg : Q.g = g) (ze : Γ(Sp K, ⊤)ˣ) (lev : Level Q (m ^ 2) ze) (z : baseOver (Sp K) ⟶ Q.A), 0 < m → z ^ m = 1 → ∃ a : Fin (2 * g) → ZMod (m ^ 2), GlobalTheory.levelPoint lev hg a ^ m = z := by
