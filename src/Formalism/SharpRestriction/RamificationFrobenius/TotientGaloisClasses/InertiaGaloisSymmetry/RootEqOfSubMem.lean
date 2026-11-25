@@ -228,14 +228,53 @@ theorem inertia : ∀ (l : ℕ) [Fact l.Prime] (P : Ideal (𝓞 H.E)) [P.IsPrime
   · rintro ⟨u, h2, h3⟩
     exact ⟨_, (gal_eq_art_iff H σ u).mp h3, (tauN_inertia_iff _ l Q u).mpr h2⟩
 
+private lemma lift_lemma' (l : ℕ) [Fact l.Prime] (P : Ideal (𝓞 H.E)) [P.IsPrime] [P.LiesOver (span {(l : ℤ)})] :
+    ∃ Q : Ideal (𝓞 (Cond.Cyc H.condN)), Q.IsPrime ∧ Q.LiesOver (span {(l : ℤ)}) ∧
+      Q.comap (RingOfIntegers.mapRingHom (emb H).toRingHom) = P := by
+  classical
+  let : Algebra (𝓞 H.E) (𝓞 (Cond.Cyc H.condN)) := (RingOfIntegers.mapRingHom (emb H).toRingHom).toAlgebra
+  have : Algebra.IsIntegral (𝓞 H.E) (𝓞 (Cond.Cyc H.condN)) :=
+    ⟨fun y => (RingOfIntegers.isIntegral y).tower_top⟩
+  have hinj : Function.Injective (RingOfIntegers.mapRingHom (emb H).toRingHom) := by
+    intro x y hxy
+    apply RingOfIntegers.ext
+    have h1 := congrArg (fun z : 𝓞 (Cond.Cyc H.condN) => (z : Cond.Cyc H.condN)) hxy
+    exact (emb H).toRingHom.injective h1
+  obtain ⟨Q, -, hQp, hQ⟩ := Ideal.exists_ideal_over_prime_of_isIntegral P (⊥ : Ideal (𝓞 (Cond.Cyc H.condN))) (by
+    intro x hx
+    rw [Ideal.mem_comap, Ideal.mem_bot] at hx
+    have hx0 : x = 0 := hinj (hx.trans (map_zero _).symm)
+    rw [hx0]
+    exact P.zero_mem)
+  refine ⟨Q, hQp, ⟨?_⟩, hQ⟩
+  have hP : span {(l : ℤ)} = P.under ℤ := Ideal.LiesOver.over
+  rw [hP, ← hQ]
+  show Ideal.comap (algebraMap ℤ (𝓞 H.E)) (Ideal.comap (algebraMap (𝓞 H.E) (𝓞 (Cond.Cyc H.condN))) Q) =
+    Ideal.comap (algebraMap ℤ (𝓞 (Cond.Cyc H.condN))) Q
+  rw [Ideal.comap_comap]
+  congr 1
+  exact RingHom.ext_int _ _
+
 theorem frob_of_modEq (l : ℕ) [Fact l.Prime] (P : Ideal (𝓞 H.E)) [P.IsPrime] [P.LiesOver (span {(l : ℤ)})]
     (σ : H.E ≃ₐ[ℚ] H.E) (u : (ZMod H.condN)ˣ) (hu : (u : ZMod H.condN).val ≡ l [MOD ordCompl[l] H.condN])
     (h : H.gal σ = H.art u) : IsArithFrobAt ℤ σ P := by
-  have := cyc_isGalois H.condN
-  obtain ⟨Q, hQp, hQl, -, h2⟩ := exists_over (emb H) l P
+  obtain ⟨Q, hQp, hQl, hQ⟩ := lift_lemma' H l P
   have := hQp
   have := hQl
-  exact h2 σ (tauN H.condN u) ((gal_eq_art_iff H σ u).1 h) (tauN_frob H.condN l Q u hu)
+  have hτ := tauN_frob H.condN l Q u hu
+  have hact : ∀ x : 𝓞 H.E, RingOfIntegers.mapRingHom (emb H).toRingHom (σ • x) =
+      tauN H.condN u • RingOfIntegers.mapRingHom (emb H).toRingHom x := by
+    intro x
+    apply RingOfIntegers.ext
+    exact (gal_eq_art_iff H σ u).1 h x
+  have hcard : Nat.card (ℤ ⧸ P.under ℤ) = Nat.card (ℤ ⧸ Q.under ℤ) := by
+    rw [← Ideal.LiesOver.over (P := P) (p := span {(l : ℤ)}), ← Ideal.LiesOver.over (P := Q) (p := span {(l : ℤ)})]
+  unfold IsArithFrobAt at hτ ⊢
+  intro x
+  rw [hcard, ← hQ, Ideal.mem_comap]
+  simp only [MulSemiringAction.toAlgHom_apply] at hτ ⊢
+  rw [map_sub, map_pow, hact]
+  exact hτ _
 
 theorem exists_frob (l : ℕ) [Fact l.Prime] (P : Ideal (𝓞 H.E)) [P.IsPrime] [P.LiesOver (span {(l : ℤ)})] :
     ∃ (F : H.E ≃ₐ[ℚ] H.E) (w : (ZMod H.condN)ˣ), IsArithFrobAt ℤ F P ∧

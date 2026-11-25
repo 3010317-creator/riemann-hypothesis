@@ -765,12 +765,19 @@ theorem normFockQ_symm {N : ℕ} (lam : DomWeight N) (a b : MvPolynomial (Fin N 
   refine Finset.sum_congr rfl fun m _ => ?_
   ring
 
+private theorem fockF_swap_eq_star {σ : Type*} [DecidableEq σ] (f g : MvPolynomial σ ℂ) :
+    fockF g f = star (fockF f g) := by
+  classical
+  rw [_root_.Formalism.REAL.fischerInner_eq_sum_of_subset g f (f.support ∪ g.support) Finset.subset_union_right,
+    _root_.Formalism.REAL.fischerInner_eq_sum_of_subset f g (f.support ∪ g.support) Finset.subset_union_left, star_sum]
+  refine Finset.sum_congr rfl fun m _ => ?_
+  simp only [star_mul', star_star, star_natCast]
+  ring
+
 theorem normFock_swap {N : ℕ} (lam : DomWeight N) (f g : MvPolynomial (Fin N × Fin N) ℂ) :
     normFock lam g f = star (normFock lam f g) := by
   unfold normFock
-  rw [star_div₀, ← _root_.Formalism.GradedWeylDivisibility.fockHerm (Fin N × Fin N) f g,
-    ← _root_.Formalism.GradedWeylDivisibility.fockHerm (Fin N × Fin N)
-      (extremal ℂ N lam) (extremal ℂ N lam)]
+  rw [star_div₀, ← fockF_swap_eq_star f g, ← fockF_swap_eq_star (extremal ℂ N lam) (extremal ℂ N lam)]
 
 theorem fockF_ext_ne {N : ℕ} (lam : DomWeight N) :
     fockF (extremal ℂ N lam) (extremal ℂ N lam) ≠ 0 := by
@@ -1307,14 +1314,51 @@ theorem initMinor_mem {N s : ℕ} (I : Fin s → Fin N) (hs : s ≤ N) :
     by_cases ht : t.1 < s <;> simp [Formalism.GradedWeylDivisibility.shapeDeg, ht]
   rwa [e1, e2] at hm
 
+private theorem mul_mem_dualWeyl_complex {N : ℕ} (ν μ : Fin N → ℕ) (f g : MvPolynomial (Fin N × Fin N) ℂ)
+    (hf : f ∈ Formalism.GradedWeylDivisibility.dualWeyl ℂ N N ν) (hg : g ∈ Formalism.GradedWeylDivisibility.dualWeyl ℂ N N μ) :
+    f * g ∈ Formalism.GradedWeylDivisibility.dualWeyl ℂ N N (ν + μ) := by
+  unfold Formalism.GradedWeylDivisibility.dualWeyl at hf hg ⊢
+  rw [Submodule.mem_inf] at hf hg ⊢
+  obtain ⟨hf1, hf2⟩ := hf
+  obtain ⟨hg1, hg2⟩ := hg
+  refine ⟨?_, ?_⟩
+  · rw [MvPolynomial.mem_weightedHomogeneousSubmodule] at hf1 hg1 ⊢
+    exact hf1.mul hg1
+  · simp only [Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply, AlgHom.toLinearMap_apply,
+      sub_eq_zero] at hf2 hg2 ⊢
+    intro l j hlj
+    rw [map_mul, map_mul, hf2 l j hlj, hg2 l j hlj]
+
+private theorem one_mem_dualWeyl_complex {N : ℕ} :
+    (1 : MvPolynomial (Fin N × Fin N) ℂ) ∈ Formalism.GradedWeylDivisibility.dualWeyl ℂ N N 0 := by
+  unfold Formalism.GradedWeylDivisibility.dualWeyl
+  rw [Submodule.mem_inf]
+  refine ⟨?_, ?_⟩
+  · rw [MvPolynomial.mem_weightedHomogeneousSubmodule]
+    exact MvPolynomial.isWeightedHomogeneous_one _ _
+  · simp only [Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply, AlgHom.toLinearMap_apply,
+      sub_eq_zero]
+    intro l j hlj
+    rw [map_one, map_one]
+
 theorem pow_mem {N : ℕ} (ν : Fin N → ℕ) (f : MvPolynomial (Fin N × Fin N) ℂ)
     (hf : f ∈ Formalism.GradedWeylDivisibility.dualWeyl ℂ N N ν) (k : ℕ) : f ^ k ∈ Formalism.GradedWeylDivisibility.dualWeyl ℂ N N (k • ν) := by
-  exact Formalism.GradedWeylDivisibility.dualWeyl_pow hf k
+  induction k with
+  | zero => simpa using one_mem_dualWeyl_complex (N := N)
+  | succ k ih =>
+    rw [pow_succ, succ_nsmul]
+    exact mul_mem_dualWeyl_complex _ _ _ _ ih hf
 
 theorem prod_mem {N : ℕ} {ι : Type*} (s : Finset ι) (ν : ι → Fin N → ℕ) (f : ι → MvPolynomial (Fin N × Fin N) ℂ)
     (hf : ∀ i ∈ s, f i ∈ Formalism.GradedWeylDivisibility.dualWeyl ℂ N N (ν i)) :
     ∏ i ∈ s, f i ∈ Formalism.GradedWeylDivisibility.dualWeyl ℂ N N (∑ i ∈ s, ν i) := by
-  exact Formalism.GradedWeylDivisibility.dualWeyl_prod s ν f hf
+  classical
+  induction s using Finset.induction_on with
+  | empty => simpa using one_mem_dualWeyl_complex (N := N)
+  | insert a s ha ih =>
+    rw [Finset.prod_insert ha, Finset.sum_insert ha]
+    exact mul_mem_dualWeyl_complex _ _ _ _ (hf a (Finset.mem_insert_self a s))
+      (ih fun i hi => hf i (Finset.mem_insert_of_mem hi))
 
 theorem tele_sum (ℓ : ℕ → ℤ) (n t : ℕ) (ht : t ≤ n) :
     ∑ i ∈ Finset.range n, (if t ≤ i then ℓ i - ℓ (i + 1) else 0) = ℓ t - ℓ n := by
@@ -1559,6 +1603,21 @@ theorem xi_unitri {n N : ℕ} (h : n + 1 = N) (lam : DomWeight N) (sg : DomWeigh
   rw [hdu]
   simp
 
+private theorem mul_mem_dualWeyl_complex_add {N : ℕ} (ν μ : Fin N → ℕ) (f g : MvPolynomial (Fin N × Fin N) ℂ)
+    (hf : f ∈ Formalism.GradedWeylDivisibility.dualWeyl ℂ N N ν) (hg : g ∈ Formalism.GradedWeylDivisibility.dualWeyl ℂ N N μ) :
+    f * g ∈ Formalism.GradedWeylDivisibility.dualWeyl ℂ N N (ν + μ) := by
+  unfold Formalism.GradedWeylDivisibility.dualWeyl at hf hg ⊢
+  rw [Submodule.mem_inf] at hf hg ⊢
+  obtain ⟨hf1, hf2⟩ := hf
+  obtain ⟨hg1, hg2⟩ := hg
+  refine ⟨?_, ?_⟩
+  · rw [MvPolynomial.mem_weightedHomogeneousSubmodule] at hf1 hg1 ⊢
+    exact hf1.mul hg1
+  · simp only [Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply, AlgHom.toLinearMap_apply,
+      sub_eq_zero] at hf2 hg2 ⊢
+    intro l j hlj
+    rw [map_mul, map_mul, hf2 l j hlj, hg2 l j hlj]
+
 theorem nu_eq {n N : ℕ} (h : n + 1 = N) (lam : DomWeight N) (sg : DomWeight n) (hI : Interlace h lam sg)
     (t : Fin N) :
     (∑ i : Fin n, ((aa h lam sg i).toNat * (if t.1 < i.1 + 1 then 1 else 0) +
@@ -1602,7 +1661,7 @@ theorem xi_mem {n N : ℕ} (h : n + 1 = N) (lam : DomWeight N) (sg : DomWeight n
   unfold xi
   rw [key]
   refine XiA.prod_mem Finset.univ _ _ (fun i _ => ?_)
-  apply Formalism.GradedWeylDivisibility.dualWeyl_mul
+  apply mul_mem_dualWeyl_complex_add
   · apply XiA.pow_mem
     rw [XiA.lpMinor_eq]
     exact XiA.initMinor_mem _ _

@@ -62,47 +62,62 @@ private theorem toMatrix_map_embedding_eq_cP_mul (bN : Basis ιN K VN) (bR : Bas
   rw [toMatrix_eq_transpose_mul_mul_of_comp bN bR eN eR Bk B hB, Matrix.map_mul, Matrix.map_mul, Matrix.transpose_map]
   rfl
 
-section
-open scoped Matrix.Norms.L2Operator
+private theorem opNorm_toEuclideanLin_mul_le {l m o : Type} [Fintype l] [Fintype m] [Fintype o] [DecidableEq l]
+    [DecidableEq m] [DecidableEq o] (A : Matrix l m ℂ) (B : Matrix m o ℂ) :
+    ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin (A * B))‖ ≤
+      ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin A)‖ *
+        ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin B)‖ := by
+  have h := Matrix.l2_opNorm_mul A B
+  simpa only [Matrix.l2_opNorm_def, LinearEquiv.trans_apply] using h
 
-private theorem l2_opNorm_le_one_of_isometry {l m : Type} [Fintype l] [Fintype m] [DecidableEq l]
-    [DecidableEq m] (W : Matrix l m ℂ) (hW : Wᴴ * W = 1) : ‖W‖ ≤ 1 := by
+private theorem opNorm_toEuclideanLin_le_one_of_isometry {l m : Type} [Fintype l] [Fintype m] [DecidableEq l] [DecidableEq m]
+    (W : Matrix l m ℂ) (hW : Wᴴ * W = 1) :
+    ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin W)‖ ≤ 1 := by
   have h1 := Matrix.l2_opNorm_conjTranspose_mul_self W
   have h2 := Matrix.l2_opNorm_conjTranspose_mul_self (1 : Matrix m m ℂ)
   rw [hW] at h1
   rw [Matrix.conjTranspose_one, Matrix.one_mul] at h2
-  have ht1 : ‖(1 : Matrix m m ℂ)‖ ≤ 1 := by nlinarith [norm_nonneg (1 : Matrix m m ℂ)]
-  nlinarith [norm_nonneg W]
+  simp only [Matrix.l2_opNorm_def, LinearEquiv.trans_apply] at h1 h2
+  have hs := norm_nonneg (LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin W))
+  have ht := norm_nonneg (LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin (1 : Matrix m m ℂ)))
+  have ht1 : ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin (1 : Matrix m m ℂ))‖ ≤ 1 := by
+    nlinarith
+  nlinarith
 
-private theorem l2_opNorm_mul_isometry_le {a b c e : Type} [Fintype a] [Fintype b] [Fintype c]
-    [Fintype e] [DecidableEq a] [DecidableEq b] [DecidableEq c] [DecidableEq e]
-    (M : Matrix a b ℂ) (L : Matrix c a ℂ) (R : Matrix b e ℂ)
-    (hL : Lᴴ * L = 1) (hR : Rᴴ * R = 1) : ‖L * M * R‖ ≤ ‖M‖ :=
-  calc ‖L * M * R‖ ≤ ‖L * M‖ * ‖R‖ := Matrix.l2_opNorm_mul _ _
-    _ ≤ (‖L‖ * ‖M‖) * ‖R‖ := by gcongr; exact Matrix.l2_opNorm_mul _ _
-    _ ≤ (1 * ‖M‖) * 1 := by
-        gcongr
-        · exact l2_opNorm_le_one_of_isometry _ hL
-        · exact l2_opNorm_le_one_of_isometry _ hR
-    _ = ‖M‖ := by ring
-
-private theorem opNorm_toEuclideanLin_unitary_mul_mul_eq {a b c e : Type} [Fintype a] [Fintype b]
-    [Fintype c] [Fintype e] [DecidableEq a] [DecidableEq b] [DecidableEq c] [DecidableEq e]
-    (M : Matrix a b ℂ) (L : Matrix c a ℂ) (R : Matrix b e ℂ) (L' : Matrix a c ℂ)
-    (R' : Matrix e b ℂ) (hL : Lᴴ * L = 1) (hR : Rᴴ * R = 1) (hL' : L'ᴴ * L' = 1)
-    (hR' : R'ᴴ * R' = 1) (hLL : L' * L = 1) (hRR : R * R' = 1) :
+private theorem opNorm_toEuclideanLin_unitary_mul_mul_eq {a b c e : Type} [Fintype a] [Fintype b] [Fintype c] [Fintype e]
+    [DecidableEq a] [DecidableEq b] [DecidableEq c] [DecidableEq e]
+    (M : Matrix a b ℂ) (L : Matrix c a ℂ) (R : Matrix b e ℂ) (L' : Matrix a c ℂ) (R' : Matrix e b ℂ)
+    (hL : Lᴴ * L = 1) (hR : Rᴴ * R = 1) (hL' : L'ᴴ * L' = 1) (hR' : R'ᴴ * R' = 1)
+    (hLL : L' * L = 1) (hRR : R * R' = 1) :
     ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin (L * M * R))‖ =
       ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin M)‖ := by
-  have key : ‖L * M * R‖ = ‖M‖ := by
-    refine le_antisymm (l2_opNorm_mul_isometry_le M L R hL hR) ?_
-    have hM : M = L' * (L * M * R) * R' := by
+  apply le_antisymm
+  · calc _ ≤ ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin (L * M))‖ *
+            ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin R)‖ := opNorm_toEuclideanLin_mul_le _ _
+      _ ≤ (‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin L)‖ *
+            ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin M)‖) *
+            ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin R)‖ := by
+          gcongr; exact opNorm_toEuclideanLin_mul_le _ _
+      _ ≤ (1 * ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin M)‖) * 1 := by
+          gcongr
+          · exact opNorm_toEuclideanLin_le_one_of_isometry _ hL
+          · exact opNorm_toEuclideanLin_le_one_of_isometry _ hR
+      _ = _ := by ring
+  · have hM : M = L' * (L * M * R) * R' := by
       calc M = (L' * L) * M * (R * R') := by rw [hLL, hRR, Matrix.one_mul, Matrix.mul_one]
         _ = L' * (L * M * R) * R' := by simp only [Matrix.mul_assoc]
     conv_lhs => rw [hM]
-    exact l2_opNorm_mul_isometry_le (L * M * R) L' R' hL' hR'
-  simpa only [Matrix.l2_opNorm_def, LinearEquiv.trans_apply] using key
-
-end
+    calc _ ≤ ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin (L' * (L * M * R)))‖ *
+            ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin R')‖ := opNorm_toEuclideanLin_mul_le _ _
+      _ ≤ (‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin L')‖ *
+            ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin (L * M * R))‖) *
+            ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin R')‖ := by
+          gcongr; exact opNorm_toEuclideanLin_mul_le _ _
+      _ ≤ (1 * ‖LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin (L * M * R))‖) * 1 := by
+          gcongr
+          · exact opNorm_toEuclideanLin_le_one_of_isometry _ hL'
+          · exact opNorm_toEuclideanLin_le_one_of_isometry _ hR'
+      _ = _ := by ring
 
 theorem opNormAt_tie (bN : Basis ιN K VN) (XN : InfinitePlace K → Matrix ιN ιN ℂ) (bR : Basis ιR K VR)
     (XR : InfinitePlace K → Matrix ιR ιR ℂ) (Xc : InfinitePlace K → Matrix (Fin d) (Fin d) ℂ)

@@ -594,6 +594,10 @@ theorem auxiliary_primes_finite : QprimeFinite := by
   rw [← hρ, map_natCast, map_natCast, mul_assoc]
   exact Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self _)
 
+private theorem hs_eq_lemma_2 {P Q : HeightOneSpectrum (𝓞 E)} (h : P.asIdeal = Q.asIdeal) : P = Q := by
+  first
+  | exact HeightOneSpectrum.ext h
+
 theorem b_other_of_split (v : HeightOneSpectrum (𝓞 F)) (P P' Q : HeightOneSpectrum (𝓞 E))
     (h : Ideal.map (algebraMap (𝓞 F) (𝓞 E)) v.asIdeal = P.asIdeal * P'.asIdeal) (hQ : Q ≠ P) (hQ' : Q ≠ P') :
     Q.asIdeal.under (𝓞 F) ≠ v.asIdeal := by
@@ -602,8 +606,8 @@ theorem b_other_of_split (v : HeightOneSpectrum (𝓞 F)) (P P' Q : HeightOneSpe
     Ideal.map_le_iff_le_comap.mpr (le_of_eq hQv.symm)
   rw [h] at hle
   rcases (Ideal.IsPrime.mul_le Q.isPrime).mp hle with h1 | h1
-  · exact hQ (HeightOneSpectrum.ext (P.isMaximal.eq_of_le Q.isPrime.ne_top h1).symm)
-  · exact hQ' (HeightOneSpectrum.ext (P'.isMaximal.eq_of_le Q.isPrime.ne_top h1).symm)
+  · exact hQ (hs_eq_lemma_2 (P.isMaximal.eq_of_le Q.isPrime.ne_top h1).symm)
+  · exact hQ' (hs_eq_lemma_2 (P'.isMaximal.eq_of_le Q.isPrime.ne_top h1).symm)
 
 end B4
 

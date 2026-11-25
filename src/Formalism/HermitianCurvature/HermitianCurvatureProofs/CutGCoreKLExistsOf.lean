@@ -73,24 +73,29 @@ theorem labels {n r : ℕ} {T T' : ℝ} {u u' : ℕ → ℝ} (hOK : (⟨n + 1, r
   have hI' : ∀ j : Fin n, M.rho ⟨n + 1, r, T, T', u, u'⟩ ρ ((j : ℕ) + 1) + 1 / 2 ≤ u ((j : ℕ) + 1) ∧
       M.rho ⟨n + 1, r, T, T', u, u'⟩ ρ ((j : ℕ) + 1) + 1 / 2 ≤ u' ((j : ℕ) + 1) ∧ u ((j : ℕ) + 1 + 1) + 1 / 2 ≤ M.rho ⟨n + 1, r, T, T', u, u'⟩ ρ ((j : ℕ) + 1) ∧
       u' ((j : ℕ) + 1 + 1) + 1 / 2 ≤ M.rho ⟨n + 1, r, T, T', u, u'⟩ ρ ((j : ℕ) + 1) := fun j => hI _ (hmem j)
-  have hbox : ∀ {K : Fin (n + 1) → ℤ} {v : ℕ → ℝ},
-      (∀ j : Fin (n + 1), v ((j : ℕ) + 1) - u 1 = (K j : ℝ)) →
-      (∀ j : Fin n,
-        M.rho ⟨n + 1, r, T, T', u, u'⟩ ρ ((j : ℕ) + 1) + 1 / 2 ≤ v ((j : ℕ) + 1) ∧
-          v ((j : ℕ) + 1 + 1) + 1 / 2 ≤ M.rho ⟨n + 1, r, T, T', u, u'⟩ ρ ((j : ℕ) + 1)) →
-      Box K (fun j => N j + 1) := by
-    intro K v hKv hIv j
-    have h1 := hKv j.succ; have h2 := hKv j.castSucc
-    simp only [Fin.val_succ, Fin.val_castSucc] at h1 h2
-    have h3 := hIv j; have h4 := hN' j
-    refine ⟨?_, ?_⟩
-    · have : (K j.succ : ℝ) < ((N j + 1 : ℤ) : ℝ) := by push_cast; linarith
-      exact_mod_cast this
-    · have : ((N j + 1 : ℤ) : ℝ) ≤ (K j.castSucc : ℝ) := by push_cast; linarith
-      exact_mod_cast this
   refine ⟨fun j => N j + 1, ?_, ?_, ?_, ?_⟩
-  · exact hbox hL fun j => ⟨(hI' j).1, (hI' j).2.2.1⟩
-  · exact hbox hL' fun j => ⟨(hI' j).2.1, (hI' j).2.2.2⟩
+  · intro j
+    have h1 := hL j.succ
+    have h2 := hL j.castSucc
+    simp only [Fin.val_succ, Fin.val_castSucc] at h1 h2
+    have h3 := hI' j
+    have h4 := hN' j
+    constructor
+    · have : (L j.succ : ℝ) < ((N j + 1 : ℤ) : ℝ) := by push_cast; linarith
+      exact_mod_cast this
+    · have : ((N j + 1 : ℤ) : ℝ) ≤ (L j.castSucc : ℝ) := by push_cast; linarith
+      exact_mod_cast this
+  · intro j
+    have h1 := hL' j.succ
+    have h2 := hL' j.castSucc
+    simp only [Fin.val_succ, Fin.val_castSucc] at h1 h2
+    have h3 := hI' j
+    have h4 := hN' j
+    constructor
+    · have : (L' j.succ : ℝ) < ((N j + 1 : ℤ) : ℝ) := by push_cast; linarith
+      exact_mod_cast this
+    · have : ((N j + 1 : ℤ) : ℝ) ≤ (L' j.castSucc : ℝ) := by push_cast; linarith
+      exact_mod_cast this
   · intro a b hab
     have hlt := Qx8.rho_anti hOK ρ ((a : ℕ) + 1) ((b : ℕ) + 1) (by omega) (by simp only [Fin.lt_def] at hab; omega)
       (by show (b : ℕ) + 1 ≤ n + 1 - 1; omega)
@@ -147,30 +152,35 @@ theorem lie_existence_of_iso_group : KLExistsOf := by
   have hgap : ∀ j : Fin n, max (u ((j : ℕ) + 1 + 1)) (u' ((j : ℕ) + 1 + 1)) + 1 / 2 ≤
       min (u ((j : ℕ) + 1)) (u' ((j : ℕ) + 1)) - 1 / 2 := fun j =>
     hOK.gap ((j : ℕ) + 1) (Finset.mem_Icc.2 ⟨by omega, by show (j : ℕ) + 1 ≤ n + 1 - 1; omega⟩)
-  have mkAnti : ∀ {K : Fin (n + 1) → ℤ} {v : ℕ → ℝ},
-      (∀ j : Fin (n + 1), v ((j : ℕ) + 1) - u 1 = (K j : ℝ)) →
-      (∀ j : Fin n,
-        v ((j : ℕ) + 1 + 1) ≤ max (u ((j : ℕ) + 1 + 1)) (u' ((j : ℕ) + 1 + 1)) ∧
-          min (u ((j : ℕ) + 1)) (u' ((j : ℕ) + 1)) ≤ v ((j : ℕ) + 1)) →
-      StrictAnti K := fun {K v} hKv hbd =>
-    Fin.strictAnti_iff_succ_lt.2 fun j => by
-      have h1 := hKv j.castSucc; have h2 := hKv j.succ
-      simp only [Fin.val_castSucc, Fin.val_succ] at h1 h2
-      have h3 := hgap j; obtain ⟨h5, h6⟩ := hbd j
-      have : (K j.succ : ℝ) < (K j.castSucc : ℝ) := by linarith
-      exact_mod_cast this
-  have hanti : StrictAnti L := mkAnti hL2 fun j => ⟨le_max_left _ _, min_le_left _ _⟩
-  have hanti' : StrictAnti L' := mkAnti hL2' fun j => ⟨le_max_right _ _, min_le_right _ _⟩
+  have hanti : StrictAnti L := Fin.strictAnti_iff_succ_lt.2 fun j => by
+    have h1 := hL2 j.castSucc
+    have h2 := hL2 j.succ
+    simp only [Fin.val_castSucc, Fin.val_succ] at h1 h2
+    have h3 := hgap j
+    have h5 := le_max_left (u ((j : ℕ) + 1 + 1)) (u' ((j : ℕ) + 1 + 1))
+    have h6 := min_le_left (u ((j : ℕ) + 1)) (u' ((j : ℕ) + 1))
+    have : (L j.succ : ℝ) < (L j.castSucc : ℝ) := by linarith
+    exact_mod_cast this
+  have hanti' : StrictAnti L' := Fin.strictAnti_iff_succ_lt.2 fun j => by
+    have h1 := hL2' j.castSucc
+    have h2 := hL2' j.succ
+    simp only [Fin.val_castSucc, Fin.val_succ] at h1 h2
+    have h3 := hgap j
+    have h5 := le_max_right (u ((j : ℕ) + 1 + 1)) (u' ((j : ℕ) + 1 + 1))
+    have h6 := min_le_right (u ((j : ℕ) + 1)) (u' ((j : ℕ) + 1))
+    have : (L' j.succ : ℝ) < (L' j.castSucc : ℝ) := by linarith
+    exact_mod_cast this
   set β : ℂ := (u 1 : ℂ) - ((n + 1 : ℕ) : ℂ) / 2 + 1 / 2 with hβ
-  have mkRel : ∀ {K : Fin (n + 1) → ℤ} {v : ℕ → ℝ},
-      (∀ j : Fin (n + 1), v ((j : ℕ) + 1) - u 1 = (K j : ℝ)) → ∀ j : Fin (n + 1),
-        (v ((j : ℕ) + 1) : ℂ) - ((n + 1 : ℕ) : ℂ) / 2 + 1 / 2 = β + (K j : ℂ) := by
-    intro K v hKv j
-    have h : (v ((j : ℕ) + 1) : ℂ) - (u 1 : ℂ) = (K j : ℂ) := by
-      exact_mod_cast congrArg (fun x : ℝ => (x : ℂ)) (hKv j)
-    rw [hβ, ← h]; ring
-  have hrel := mkRel hL2
-  have hrel' := mkRel hL2'
+  have hrel : ∀ j : Fin (n + 1), (u ((j : ℕ) + 1) : ℂ) - ((n + 1 : ℕ) : ℂ) / 2 + 1 / 2 = β + (L j : ℂ) := fun j => by
+    have h : (u ((j : ℕ) + 1) : ℂ) - (u 1 : ℂ) = (L j : ℂ) := by
+      exact_mod_cast congrArg (fun x : ℝ => (x : ℂ)) (hL2 j)
+    rw [hβ, ← h]
+    ring
+  have hrel' : ∀ j : Fin (n + 1), (u' ((j : ℕ) + 1) : ℂ) - ((n + 1 : ℕ) : ℂ) / 2 + 1 / 2 = β + (L' j : ℂ) := fun j => by
+    have h : (u' ((j : ℕ) + 1) : ℂ) - (u 1 : ℂ) = (L' j : ℂ) := by
+      exact_mod_cast congrArg (fun x : ℝ => (x : ℂ)) (hL2' j)
+    rw [hβ, ← h]
+    ring
   obtain ⟨M, hbox, hbox', hsd, hcp⟩ := labels hOK ρ L L' hL2 hL2'
   have hfin : Finite {M : Fin n → ℤ // Box L' M} := by
     refine Finite.of_injective (β := ∀ j : Fin n, Finset.Ioc (L' j.succ) (L' j.castSucc))

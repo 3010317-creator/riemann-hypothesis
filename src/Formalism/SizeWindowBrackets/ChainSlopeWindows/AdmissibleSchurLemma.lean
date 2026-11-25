@@ -214,6 +214,9 @@ namespace Formalism.RankGapBounds.LocalQuadraticParts
 
 open Finset
 
+private theorem dvd_of_natCast_zmod_eq_zero {M a : ℕ} (h : (a : ZMod M) = 0) : M ∣ a := by
+  exact (CharP.cast_eq_zero_iff (ZMod M) M a).mp h
+
 lemma pm_cover (M N : ℕ) (hM : 2 ≤ M) (s : Finset ℕ)
     (hs : ∀ l ∈ s, 3 ≤ l ∧ l ≤ N ∧ ((l : ZMod M) = 1 ∨ (l : ZMod M) = -1)) :
     s ⊆ (range N).image (fun k => (k + 1) * M + 1) ∪
@@ -223,7 +226,7 @@ lemma pm_cover (M N : ℕ) (hM : 2 ≤ M) (s : Finset ℕ)
   simp only [mem_union, mem_image, mem_range]
   rcases h with h | h
   · left
-    have hd : M ∣ l - 1 := (ZMod.natCast_eq_zero_iff _ M).mp
+    have hd : M ∣ l - 1 := dvd_of_natCast_zmod_eq_zero
       (by rw [Nat.cast_sub (by omega), Nat.cast_one, h, sub_self])
     obtain ⟨q, hq⟩ := hd
     have hq0 : 0 < q := by
@@ -235,7 +238,7 @@ lemma pm_cover (M N : ℕ) (hM : 2 ≤ M) (s : Finset ℕ)
     rw [Nat.sub_add_cancel hq0, mul_comm]
     omega
   · right
-    have hd : M ∣ l + 1 := (ZMod.natCast_eq_zero_iff _ M).mp (by push_cast; rw [h]; ring)
+    have hd : M ∣ l + 1 := dvd_of_natCast_zmod_eq_zero (by push_cast; rw [h]; ring)
     obtain ⟨q, hq⟩ := hd
     have hq0 : 0 < q := by
       rcases Nat.eq_zero_or_pos q with h0 | h0
@@ -277,6 +280,11 @@ lemma pm_sum_cover (f : ℕ → ℝ) (hf : ∀ l, 0 ≤ f l) (M N : ℕ) (hM : 2
     sum_le_sum_of_subset_of_nonneg hsub (fun i _ _ => hf i)
   linarith
 
+private theorem div_le_div_of_mul_le_mul_of_pos' {a b c d : ℝ} (hb : 0 < b) (hd : 0 < d)
+    (h : a * d ≤ c * b) : a / b ≤ c / d := by
+  first
+  | exact (div_le_div_iff₀ hb hd).mpr h
+
 lemma pm_key_Y (m x y Y : ℝ) (hx : 1 ≤ x) (hy : 1 ≤ y) (h1 : x * y / 2 ≤ m) (hmY : m ≤ Y)
     (hm1 : 1 ≤ m) : Real.log m / m ≤ Real.log Y * (2 / y) * (1 / x) := by
   have hx0 : 0 < x := by linarith
@@ -286,9 +294,12 @@ lemma pm_key_Y (m x y Y : ℝ) (hx : 1 ≤ x) (hy : 1 ≤ y) (h1 : x * y / 2 ≤
   have hlmY : Real.log m ≤ Real.log Y := _root_.Real.log_le_log hm0 hmY
   have hlY : 0 ≤ Real.log Y := le_trans hlm hlmY
   rw [show Real.log Y * (2 / y) * (1 / x) = 2 * Real.log Y / (x * y) by ring]
-  rw [div_le_div_iff₀ hm0 (mul_pos hx0 hy0)]
+  apply div_le_div_of_mul_le_mul_of_pos' hm0 (mul_pos hx0 hy0)
   nlinarith [mul_le_mul_of_nonneg_right hlmY (mul_pos hx0 hy0).le,
     mul_le_mul_of_nonneg_left h1 hlY]
+
+private theorem natCast_zmod_eq_zero_of_dvd {M a : ℕ} (h : M ∣ a) : (a : ZMod M) = 0 := by
+  exact (CharP.cast_eq_zero_iff (ZMod M) M a).mpr h
 
 private theorem natCast_zmod_four_eq_one_or_neg_one_of_odd (l k : ℕ) (hk : k = 2) (hodd : l % 2 = 1) :
     (l : ZMod (2 ^ k)) = 1 ∨ (l : ZMod (2 ^ k)) = -1 := by
@@ -296,12 +307,12 @@ private theorem natCast_zmod_four_eq_one_or_neg_one_of_odd (l k : ℕ) (hk : k =
   rcases (show l % 4 = 1 ∨ l % 4 = 3 by omega) with h | h
   · left
     have hd : 2 ^ 2 ∣ l - 1 := by show 4 ∣ l - 1; omega
-    have h0 := (ZMod.natCast_eq_zero_iff _ _).mpr hd
+    have h0 := natCast_zmod_eq_zero_of_dvd hd
     rw [Nat.cast_sub (by omega), Nat.cast_one, sub_eq_zero] at h0
     exact h0
   · right
     have hd : 2 ^ 2 ∣ l + 1 := by show 4 ∣ l + 1; omega
-    have h0 := (ZMod.natCast_eq_zero_iff _ _).mpr hd
+    have h0 := natCast_zmod_eq_zero_of_dvd hd
     push_cast at h0
     exact eq_neg_of_add_eq_zero_left h0
 
@@ -431,6 +442,11 @@ lemma pm_modulus_facts (e J : ℕ) (hJ : 1 ≤ J) :
       _ ≤ J * 2 ^ (e + 2 - min e (Nat.log 2 J)) :=
           Nat.mul_le_mul h2j (Nat.pow_le_pow_right (by norm_num) (by omega))
 
+private theorem one_half_le_log_two : (1 : ℝ) / 2 ≤ Real.log 2 := by
+  have h := Real.one_sub_inv_le_log_of_pos (show (0 : ℝ) < 2 by norm_num)
+  norm_num at h ⊢
+  linarith
+
 theorem ordersSumY_of (hI : OrdersIff) : OrdersSumY := by
   refine ⟨12, ?_⟩
   intro e J Y s he hJ hY hs
@@ -451,7 +467,7 @@ theorem ordersSumY_of (hI : OrdersIff) : OrdersSumY := by
   have hm0 : (0 : ℝ) < M := by linarith
   have hP : (2 : ℝ) ^ e ≤ (J : ℝ) * M := by exact_mod_cast hJM
   have hlY : 0 ≤ Real.log Y := Real.log_nonneg hY
-  have hL : (1 : ℝ) / 2 ≤ Real.log 2 := by linarith [Real.log_two_gt_d9]
+  have hL := one_half_le_log_two
   have he1 : (1 : ℝ) ≤ e := by exact_mod_cast he
   have hΛ : Real.log ((2 : ℝ) ^ e * Y) = e * Real.log 2 + Real.log Y := by
     rw [Real.log_mul (by positivity) (show (0 : ℝ) < Y by linarith).ne', Real.log_pow]
@@ -464,7 +480,7 @@ theorem ordersSumY_of (hI : OrdersIff) : OrdersSumY := by
   have hPpos : (0 : ℝ) < 2 ^ e := by positivity
   calc ∑ l ∈ s, Real.log l / (l : ℝ) ≤ 4 * Real.log Y * (1 + Real.log Y) / M := hsum
     _ ≤ 12 * (J : ℝ) * Real.log ((2 : ℝ) ^ e * Y) ^ 2 / (2 : ℝ) ^ e := by
-      rw [div_le_div_iff₀ hm0 hPpos]
+      apply div_le_div_of_mul_le_mul_of_pos' hm0 hPpos
       nlinarith [mul_nonneg (sub_nonneg.mpr hkey) hPpos.le,
         mul_nonneg (sq_nonneg (Real.log ((2 : ℝ) ^ e * Y))) (sub_nonneg.mpr hP)]
 

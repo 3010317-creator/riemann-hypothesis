@@ -413,13 +413,17 @@ theorem adVal : AdValSt := by
     refine const_substPS Q hQ _ ?_
     rw [← MvPowerSeries.coeff_zero_eq_constantCoeff_apply, MvPolynomial.coeff_coe]
     exact hσ (i, j)
-  have hP2 : ∀ (u₀ u₁ : 𝓞 E) i j, MvPowerSeries.constantCoeff
-      ((![φa c φ u₀, φa c φ u₁] :
-        Fin 2 → Fin C.d → MvPowerSeries (Fin 1 × Fin (dL Dw)) S) i j) = 0 :=
-    fun _ _ i j => by fin_cases i <;> exact const_φa c φ hφ0 _ j
+  have hPa : ∀ i j, MvPowerSeries.constantCoeff
+      ((![φa c φ (a' * u0), φa c φ u1] : Fin 2 → Fin C.d → MvPowerSeries (Fin 1 × Fin (dL Dw)) S) i j) = 0 := by
+    rw [Fin.forall_fin_two]
+    exact ⟨fun j => const_φa c φ hφ0 _ j, fun j => const_φa c φ hφ0 _ j⟩
+  have hPb : ∀ i j, MvPowerSeries.constantCoeff
+      ((![φa c φ u0, φa c φ (H.bar a' * u1)] : Fin 2 → Fin C.d → MvPowerSeries (Fin 1 × Fin (dL Dw)) S) i j) = 0 := by
+    rw [Fin.forall_fin_two]
+    exact ⟨fun j => const_φa c φ hφ0 _ j, fun j => const_φa c φ hφ0 _ j⟩
   have hma : (ptm C P m).left ≫ (homAt y.x (jetSubstP m σa)).left = (ptm C ![φa c φ (a' * u0), φa c φ u1] m).left := by
     rw [← Over.comp_left, ptm_subst C P hP m σa hσa]
-    refine congrArg Over.Hom.left (ptm_congr C (hcc σa hσa) (hP2 _ _) m ?_)
+    refine congrArg Over.Hom.left (ptm_congr C (hcc σa hσa) hPa m ?_)
     rw [Fin.forall_fin_two]
     refine ⟨fun j => ?_, fun j => ?_⟩
     · rw [ea0, psJet_subst_psIn m 0 Q hQ]
@@ -429,7 +433,7 @@ theorem adVal : AdValSt := by
   have hmb : (ptm C P m).left ≫ (homAt y.x (jetSubstP m σb)).left =
       (ptm C ![φa c φ u0, φa c φ (H.bar a' * u1)] m).left := by
     rw [← Over.comp_left, ptm_subst C P hP m σb hσb]
-    refine congrArg Over.Hom.left (ptm_congr C (hcc σb hσb) (hP2 _ _) m ?_)
+    refine congrArg Over.Hom.left (ptm_congr C (hcc σb hσb) hPb m ?_)
     rw [Fin.forall_fin_two]
     refine ⟨fun j => ?_, fun j => ?_⟩
     · rw [eb0, MvPolynomial.coe_X, MvPowerSeries.subst_X hQs, hQ0]
@@ -1022,18 +1026,43 @@ theorem phOneVal_holds : ExpGJ.PhOneValSt := by
       intro i j
       fin_cases i
       · simpa using hF j
-      · exact congrArg (psJet m) (hX 2 j)
-    have hsX (b₀ b₁ : Fin 3) (v₀ v₁ : 𝓞 E) (h0 : P3 b₀ = φa c φ v₀) (h1 : P3 b₁ = φa c φ v₁) :
-        ∀ i j, psJet m (MvPowerSeries.subst (fun p : Fin 3 × Fin C.d => P3 p.1 p.2)
-          ((((![fun j => MvPolynomial.X (b₀, j), fun j => MvPolynomial.X (b₁, j)] :
-            Fin 2 → Fin C.d → MvPolynomial (Fin 3 × Fin C.d) S) i j : MvPolynomial _ S)) :
-            MvPowerSeries (Fin 3 × Fin C.d) S)) =
-          psJet m ((![φa c φ v₀, φa c φ v₁] :
-            Fin 2 → Fin C.d → MvPowerSeries (Fin 1 × Fin (dL Dw)) S) i j) := by
+      · show psJet m (MvPowerSeries.subst (fun p : Fin 3 × Fin C.d => P3 p.1 p.2)
+          ((MvPolynomial.X ((2 : Fin 3), j) : MvPolynomial _ S) : MvPowerSeries (Fin 3 × Fin C.d) S)) =
+          psJet m (φa c φ u2 j)
+        rw [hX]
+        rfl
+    have hsB : ∀ i j, psJet m (MvPowerSeries.subst (fun p : Fin 3 × Fin C.d => P3 p.1 p.2)
+        ((((![fun j => MvPolynomial.X ((0 : Fin 3), j), fun j => MvPolynomial.X ((2 : Fin 3), j)] :
+          Fin 2 → Fin C.d → MvPolynomial (Fin 3 × Fin C.d) S) i j : MvPolynomial _ S)) : MvPowerSeries (Fin 3 × Fin C.d) S)) =
+        psJet m ((![φa c φ u0, φa c φ u2] : Fin 2 → Fin C.d → MvPowerSeries (Fin 1 × Fin (dL Dw)) S) i j) := by
       intro i j
       fin_cases i
-      · exact congrArg (psJet m) ((hX b₀ j).trans (congrFun h0 j))
-      · exact congrArg (psJet m) ((hX b₁ j).trans (congrFun h1 j))
+      · show psJet m (MvPowerSeries.subst (fun p : Fin 3 × Fin C.d => P3 p.1 p.2)
+          ((MvPolynomial.X ((0 : Fin 3), j) : MvPolynomial _ S) : MvPowerSeries (Fin 3 × Fin C.d) S)) =
+          psJet m (φa c φ u0 j)
+        rw [hX]
+        rfl
+      · show psJet m (MvPowerSeries.subst (fun p : Fin 3 × Fin C.d => P3 p.1 p.2)
+          ((MvPolynomial.X ((2 : Fin 3), j) : MvPolynomial _ S) : MvPowerSeries (Fin 3 × Fin C.d) S)) =
+          psJet m (φa c φ u2 j)
+        rw [hX]
+        rfl
+    have hsC : ∀ i j, psJet m (MvPowerSeries.subst (fun p : Fin 3 × Fin C.d => P3 p.1 p.2)
+        ((((![fun j => MvPolynomial.X ((1 : Fin 3), j), fun j => MvPolynomial.X ((2 : Fin 3), j)] :
+          Fin 2 → Fin C.d → MvPolynomial (Fin 3 × Fin C.d) S) i j : MvPolynomial _ S)) : MvPowerSeries (Fin 3 × Fin C.d) S)) =
+        psJet m ((![φa c φ u1, φa c φ u2] : Fin 2 → Fin C.d → MvPowerSeries (Fin 1 × Fin (dL Dw)) S) i j) := by
+      intro i j
+      fin_cases i
+      · show psJet m (MvPowerSeries.subst (fun p : Fin 3 × Fin C.d => P3 p.1 p.2)
+          ((MvPolynomial.X ((1 : Fin 3), j) : MvPolynomial _ S) : MvPowerSeries (Fin 3 × Fin C.d) S)) =
+          psJet m (φa c φ u1 j)
+        rw [hX]
+        rfl
+      · show psJet m (MvPowerSeries.subst (fun p : Fin 3 × Fin C.d => P3 p.1 p.2)
+          ((MvPolynomial.X ((2 : Fin 3), j) : MvPolynomial _ S) : MvPowerSeries (Fin 3 × Fin C.d) S)) =
+          psJet m (φa c φ u2 j)
+        rw [hX]
+        rfl
     have hQc : ∀ (a b : 𝓞 E) (i : Fin 2) (j : Fin C.d), MvPowerSeries.constantCoeff
         ((![φa c φ a, φa c φ b] : Fin 2 → Fin C.d → MvPowerSeries (Fin 1 × Fin (dL Dw)) S) i j) = 0 := by
       intro a b i j
@@ -1041,10 +1070,8 @@ theorem phOneVal_holds : ExpGJ.PhOneValSt := by
       · exact const_φa c φ hφ0 a j
       · exact const_φa c φ hφ0 b j
     rw [val_pe_pair C m P3 hP3c _ (fun i j => by fin_cases i; exacts [hcF j, hcX 2 j]) _ (hQc _ _) hsA hJ,
-      val_pe_pair C m P3 hP3c _ (fun i j => by fin_cases i; exacts [hcX 0 j, hcX 2 j])
-        _ (hQc _ _) (hsX 0 2 u0 u2 rfl rfl) hJ,
-      val_pe_pair C m P3 hP3c _ (fun i j => by fin_cases i; exacts [hcX 1 j, hcX 2 j])
-        _ (hQc _ _) (hsX 1 2 u1 u2 rfl rfl) hJ,
+      val_pe_pair C m P3 hP3c _ (fun i j => by fin_cases i; exacts [hcX 0 j, hcX 2 j]) _ (hQc _ _) hsB hJ,
+      val_pe_pair C m P3 hP3c _ (fun i j => by fin_cases i; exacts [hcX 1 j, hcX 2 j]) _ (hQc _ _) hsC hJ,
       _root_.mul_assoc]
 
 end Formalism.MainNotions.ModuliIntegralCharts.H1.ExpGJPh1

@@ -365,6 +365,33 @@ def mtwHw (lam : ι → DomWeight n) : VV ℂ lam :=
   ⟨ten fun τ => extremal ℂ n (lam τ), Submodule.subset_span ⟨fun τ => extremal ℂ n (lam τ),
     fun τ => Formalism.GradedWeylDivisibility.hwMem ℂ n n le_rfl _ (PI.WGB.natW_anti_A (lam τ)), rfl⟩⟩
 
+private theorem lpMinor_complex_eq (s r m : ℕ) (hr : s ≤ r) (hm : s ≤ m) :
+    Formalism.GradedWeylDivisibility.lpMinor ℂ (r := r) (n := m) s hr hm ≠ 0 := by
+  have hinj : Function.Injective (fun v : Fin s × Fin s => (Fin.castLE hr v.1, Fin.castLE hm v.2)) := by
+    intro a b h
+    simp only [Prod.mk.injEq] at h
+    exact Prod.ext (Fin.castLE_injective hr h.1) (Fin.castLE_injective hm h.2)
+  have hX : Matrix.det (Matrix.mvPolynomialX (Fin s) (Fin s) ℂ) ≠ 0 := by
+    first
+      | exact Matrix.det_mvPolynomialX_ne_zero (Fin s) ℂ
+  have he : Formalism.GradedWeylDivisibility.lpMinor ℂ (r := r) (n := m) s hr hm =
+      rename (fun v : Fin s × Fin s => (Fin.castLE hr v.1, Fin.castLE hm v.2))
+        (Matrix.det (Matrix.mvPolynomialX (Fin s) (Fin s) ℂ)) := by
+    rw [AlgHom.map_det]
+    unfold Formalism.GradedWeylDivisibility.lpMinor
+    congr 1
+    ext p q
+    simp [Matrix.mvPolynomialX]
+  rw [he]
+  intro h0
+  exact hX ((MvPolynomial.rename_injective _ hinj) (h0.trans (map_zero _).symm))
+
+private theorem hw_complex_eq (m : ℕ) (ν : Fin m → ℕ) : Formalism.GradedWeylDivisibility.hw ℂ (r := m) (le_refl m) ν ≠ 0 := by
+  unfold Formalism.GradedWeylDivisibility.hw
+  rw [Finset.prod_ne_zero_iff]
+  intro s _
+  exact pow_ne_zero _ (lpMinor_complex_eq _ _ _ _ _)
+
 theorem mtwHw_ne (lam : ι → DomWeight n) : mtwHw lam ≠ 0 := by
   intro h
   have h1 : ((mtwHw lam : VV ℂ lam) : Pol ℂ ι n) = 0 := by
@@ -377,7 +404,7 @@ theorem mtwHw_ne (lam : ι → DomWeight n) : mtwHw lam ≠ 0 := by
     have hinj : Function.Injective (fun v : Fin n × Fin n => (τ, v)) := fun a b hab => (Prod.mk.inj hab).2
     intro h3
     have h4 : extremal ℂ n (lam τ) = 0 := (MvPolynomial.rename_injective _ hinj) (h3.trans (map_zero _).symm)
-    exact Formalism.GradedWeylDivisibility.hwNe ℂ n n le_rfl _ h4
+    exact hw_complex_eq n _ h4
   exact h2 h1
 
 theorem mtw_blockAct_ten (M : ι → Matrix (Fin n) (Fin n) ℂ) (f : ι → MvPolynomial (Fin n × Fin n) ℂ) :

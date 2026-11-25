@@ -91,6 +91,29 @@ theorem frp_mem (hV : F.Valid L₁ N₁) (j : ℤ) (i' : ℕ) (h : i' < r) : F.f
   have h3 := fr_le hV j 0 (r - 1) (by omega) (by omega)
   linarith
 
+private theorem segE_mem_lemma_6 (J : ℤ) (i : Fin (segN F J)) : segE F J i ∈ F.letters J :=
+  ((F.letters J).orderIsoOfFin rfl i).2
+
+private theorem segE_lt_lemma_7 (J : ℤ) {a b : Fin (segN F J)} : segE F J a < segE F J b ↔ a < b := by
+  unfold segE
+  rw [Subtype.coe_lt_coe]
+  exact OrderIso.lt_iff_lt _
+
+private theorem segE_le_lemma_8 (J : ℤ) {a b : Fin (segN F J)} : segE F J a ≤ segE F J b ↔ a ≤ b := by
+  unfold segE
+  rw [Subtype.coe_le_coe]
+  exact OrderIso.le_iff_le _
+
+private theorem segE_surj_lemma_9 (J : ℤ) {x : ℤ} (hx : x ∈ F.letters J) : ∃ k : Fin (segN F J), segE F J k = x :=
+  ⟨((F.letters J).orderIsoOfFin rfl).symm ⟨x, hx⟩, by unfold segE; simp⟩
+
+private theorem segE_inj_lemma_10 (J : ℤ) : Function.Injective (segE F J) := by
+  intro a b h
+  rcases lt_trichotomy a b with h' | h' | h'
+  · exact absurd h (ne_of_lt ((segE_lt_lemma_7 J).mpr h'))
+  · exact h'
+  · exact absurd h (ne_of_gt ((segE_lt_lemma_7 J).mpr h'))
+
 private theorem gap_lemma_2 (hV : F.Valid L₁ N₁) (J : ℤ) : ∀ k, k < r → ∀ x, F.fr J 0 ≤ x → x < F.fr J k →
     posOf n' x ∈ F.TT → ∃ m < k, x = F.fr J m := by
   obtain ⟨_, _, _, _, _, hgap, _⟩ := id hV
@@ -151,9 +174,18 @@ private theorem countT_lemma_4 (hV : F.Valid L₁ N₁) (J : ℤ) (i' : ℕ) (hi
 
 private theorem countTlt_lemma_5 (hV : F.Valid L₁ N₁) (J : ℤ) (i' : ℕ) (hi' : i' < r) :
     ((F.letters J).filter (· < F.fr J i')).card + (r - i') = (F.letters J).card := by
-  rw [← countT_lemma_4 hV J i' hi',
-    Finset.filter_congr (q := fun x => ¬ x < F.fr J i') (fun _ _ => not_lt.symm)]
-  exact Finset.card_filter_add_card_filter_not _
+  rw [← countT_lemma_4 hV J i' hi']
+  have e := Finset.card_sdiff_add_card_eq_card (Finset.filter_subset (F.fr J i' ≤ ·) (F.letters J))
+  have hs : (F.letters J) \ (F.letters J).filter (F.fr J i' ≤ ·) = (F.letters J).filter (· < F.fr J i') := by
+    ext y
+    simp only [Finset.mem_sdiff, Finset.mem_filter]
+    constructor
+    · rintro ⟨hy, h⟩
+      exact ⟨hy, not_le.mp fun h' => h ⟨hy, h'⟩⟩
+    · rintro ⟨hy, h⟩
+      exact ⟨hy, fun h' => absurd h'.2 (not_le.mpr h)⟩
+  rw [hs] at e
+  exact e
 
 theorem idx_w (hV : F.Valid L₁ N₁) (i : Fin (segN F j)) (i' : ℕ) (hi' : i' < r) (h : segE F j i = F.fr (j - 1) i') :
     i.val = i' := by
@@ -186,7 +218,7 @@ theorem dict_tau (hV : F.Valid L₁ N₁) (i : Fin (segN F j)) (i' : Fin r) :
     have := idx_tau hV i i'.val i'.isLt h
     omega
   · intro h
-    obtain ⟨k, hk⟩ := segE_surj F j (frj_mem hV j i'.val i'.isLt)
+    obtain ⟨k, hk⟩ := segE_surj_lemma_9 j (frj_mem hV j i'.val i'.isLt)
     have := idx_tau hV k i'.val i'.isLt hk
     have hki : k = i := by
       apply Fin.ext
@@ -198,14 +230,14 @@ theorem dict_early (hV : F.Valid L₁ N₁) (i : Fin (segN F j)) :
     segE F j i < F.fr j 0 ↔ i.val < segN F j - r := by
   have hr0 : 0 < r := Nat.pos_of_ne_zero (NeZero.ne r)
   have hr := r_le_segN hV j
-  obtain ⟨k, hk⟩ := segE_surj F j (frj_mem hV j 0 hr0)
+  obtain ⟨k, hk⟩ := segE_surj_lemma_9 j (frj_mem hV j 0 hr0)
   have hkv := (dict_tau hV k ⟨0, hr0⟩).mp hk
-  rw [← hk, (segE_strictMono F j).lt_iff_lt, Fin.lt_iff_val_lt_val, hkv]
+  rw [← hk, segE_lt_lemma_7, Fin.lt_iff_val_lt_val, hkv]
   show i.val < segN F j - r + 0 ↔ i.val < segN F j - r
   omega
 
 theorem dict_wE (hV : F.Valid L₁ N₁) (i : Fin (segN F j)) (h : i.val < r) : segE F j i = F.fr (j - 1) i.val := by
-  obtain ⟨k, hk⟩ := segE_surj F j (frp_mem hV j i.val h)
+  obtain ⟨k, hk⟩ := segE_surj_lemma_9 j (frp_mem hV j i.val h)
   have hki : k = i := Fin.ext (idx_w hV k i.val h hk)
   subst hki
   exact hk
@@ -216,7 +248,7 @@ theorem dict_w (hV : F.Valid L₁ N₁) (i : Fin (segN F j)) : F.IsW j (segE F j
   have hw : segE F j ⟨r - 1, by omega⟩ = F.fr (j - 1) (r - 1) :=
     dict_wE hV _ (by show r - 1 < r; omega)
   unfold Frames.IsW
-  rw [← hw, (segE_strictMono F j).le_iff_le, Fin.le_iff_val_le_val]
+  rw [← hw, segE_le_lemma_8, Fin.le_iff_val_le_val]
   show i.val ≤ r - 1 ↔ i.val < r
   omega
 
@@ -237,7 +269,7 @@ theorem mem_LLset_iff (hV : F.Valid L₁ N₁) (x : ℤ) :
 theorem dict_LL (hV : F.Valid L₁ N₁) (i : Fin (segN F j)) :
     segE F j i ∈ F.LLset j ↔ r ≤ i.val ∧ i.val < segN F j - r := by
   rw [mem_LLset_iff hV, dict_w hV, dict_early hV]
-  have hm := segE_mem F j i
+  have hm := segE_mem_lemma_6 j i
   constructor
   · rintro ⟨_, h1, h2⟩
     exact ⟨not_lt.mp h1, h2⟩
@@ -251,7 +283,7 @@ theorem LLset_eq_image (hV : F.Valid L₁ N₁) (j : ℤ) :
   constructor
   · intro hx
     have hxl := ((mem_LLset_iff hV x).mp hx).1
-    obtain ⟨k, rfl⟩ := segE_surj F j hxl
+    obtain ⟨k, rfl⟩ := segE_surj_lemma_9 j hxl
     exact ⟨k, (dict_LL hV k).mp hx, rfl⟩
   · rintro ⟨k, hk, rfl⟩
     exact (dict_LL hV k).mpr hk
@@ -271,7 +303,7 @@ theorem card_fin_range (N a b : ℕ) (hb : b ≤ N) :
   rw [← Finset.card_map Fin.valEmbedding, hm, Nat.card_Ico]
 
 theorem card_LLset (hV : F.Valid L₁ N₁) (j : ℤ) : (F.LLset j).card = segN F j - r - r := by
-  rw [LLset_eq_image hV j, Finset.card_image_of_injective _ (segE_strictMono F j).injective,
+  rw [LLset_eq_image hV j, Finset.card_image_of_injective _ (segE_inj_lemma_10 j),
     card_fin_range _ _ _ (Nat.sub_le _ _)]
 
 theorem two_r_le (hV : F.Valid L₁ N₁) (j : ℤ) : 2 * r ≤ segN F j - r := by
@@ -291,14 +323,13 @@ theorem card_LLset_le (hV : F.Valid L₁ N₁) (i : Fin (segN F j)) (hi : r ≤ 
     simp only [Finset.mem_filter, Finset.mem_image, Finset.mem_univ, true_and]
     constructor
     · rintro ⟨⟨k, hk, rfl⟩, hle⟩
-      rw [(segE_strictMono F j).le_iff_le, Fin.le_iff_val_le_val] at hle
+      rw [segE_le_lemma_8, Fin.le_iff_val_le_val] at hle
       exact ⟨k, ⟨hk.1, by omega⟩, rfl⟩
     · rintro ⟨k, hk, rfl⟩
       refine ⟨⟨k, ⟨hk.1, by omega⟩, rfl⟩, ?_⟩
-      rw [(segE_strictMono F j).le_iff_le, Fin.le_iff_val_le_val]
+      rw [segE_le_lemma_8, Fin.le_iff_val_le_val]
       omega
-  rw [hfe, Finset.card_image_of_injective _ (segE_strictMono F j).injective,
-    card_fin_range _ _ _ (by omega)]
+  rw [hfe, Finset.card_image_of_injective _ (segE_inj_lemma_10 j), card_fin_range _ _ _ (by omega)]
 
 theorem dict_lateV (hV : F.Valid L₁ N₁) (i : Fin (segN F j)) (h : segN F j - r ≤ i.val + r) : Even (segE F j i) := by
   obtain ⟨_, _, _, _, hTT, _, hLL, _⟩ := id hV

@@ -120,6 +120,14 @@ theorem pd_append {N d : ℕ} (f : (Fin (N + d) → ℝ) → E) (hf : Differenti
       (Pi.single (Fin.castAdd d i) 1 : Fin (N + d) → ℝ)).const_add (Fin.append r t)
   exact h1.unique h2
 
+private theorem pds_contDiff_lemma {N : ℕ} (L : List (Fin N)) (f : (Fin N → ℝ) → E)
+    (hf : ContDiff ℝ ∞ f) : ContDiff ℝ ∞ (OrbStPf.pds L f) := by
+  induction L with
+  | nil => exact hf
+  | cons a L ih =>
+    show ContDiff ℝ ∞ (fun p => fderiv ℝ (OrbStPf.pds L f) p (Pi.single a 1))
+    exact (contDiff_infty_iff_fderiv.1 ih).2.clm_apply contDiff_const
+
 theorem pds_append {N d : ℕ} (L : List (Fin N)) (f : (Fin (N + d) → ℝ) → E) (hf : ContDiff ℝ ∞ f)
     (t : Fin d → ℝ) :
     OrbStPf.pds L (fun r => f (Fin.append r t)) =
@@ -127,8 +135,7 @@ theorem pds_append {N d : ℕ} (L : List (Fin N)) (f : (Fin (N + d) → ℝ) →
   induction L with
   | nil => rfl
   | cons a L ih =>
-    have hg : ContDiff ℝ ∞ (OrbStPf.pds (L.map (Fin.castAdd d)) f) :=
-      OrbStPf.contDiff_pds _ hf
+    have hg : ContDiff ℝ ∞ (OrbStPf.pds (L.map (Fin.castAdd d)) f) := pds_contDiff_lemma _ f hf
     show OrbStPf.pd a (OrbStPf.pds L fun r => f (Fin.append r t)) =
       fun r => OrbStPf.pd (Fin.castAdd d a) (OrbStPf.pds (L.map (Fin.castAdd d)) f) (Fin.append r t)
     rw [ih]

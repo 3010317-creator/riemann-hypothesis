@@ -234,11 +234,29 @@ theorem eDiag' (A : Type) [CommRing A] (d : Type) [Fintype d] [DecidableEq d] (S
       congr 1
       funext a
       by_cases hs : S a <;> simp [hs]
+  have hl : ∀ f : ℕ → A, ((List.range t).tail.map f).prod = ∏ i ∈ Finset.Ioo 0 t, f i := by
+    intro f
+    have hnd : (List.range t).tail.Nodup :=
+      List.Nodup.sublist (List.tail_sublist _) (List.nodup_range ..)
+    rw [← List.prod_toFinset f hnd]
+    congr 1
+    ext x
+    rw [List.mem_toFinset, Finset.mem_Ioo]
+    cases t with
+    | zero => simp
+    | succ n =>
+      rw [List.range_succ_eq_map, List.tail_cons, List.mem_map]
+      constructor
+      · rintro ⟨y, hy, rfl⟩
+        rw [List.mem_range] at hy
+        omega
+      · intro h
+        exact ⟨x - 1, List.mem_range.2 (by omega), by omega⟩
   simp only [hf]
   rw [hp]
   congr 1
   funext a
-  rw [tailProd]
+  rw [hl]
 
 set_option maxHeartbeats 8000000 in
 theorem ring_objects_of_matrix_data (hEM : StatEMat) (hSP : StatSplitPts) (hKO : StatIdemKO) : RingObjectsExist := by

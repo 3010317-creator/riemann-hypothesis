@@ -68,10 +68,17 @@ variable {E : Type} [Field E] [NumberField E] {S M : Type} [Field S] [CharZero S
 
 private theorem poly_lemma (θ : E) (hθ : IntermediateField.adjoin ℚ {θ} = ⊤) (a : E) :
     ∃ p : ℚ[X], aeval θ p = a := by
-  have h := Algebra.adjoin_eq_top_of_primitive_element
-    (Algebra.IsIntegral.isIntegral (R := ℚ) θ).isAlgebraic hθ
-  exact (AlgHom.mem_range (aeval θ)).mp
-    (by rw [← Algebra.adjoin_singleton_eq_range_aeval, h]; trivial)
+  have hint : IsIntegral ℚ θ := Algebra.IsIntegral.isIntegral θ
+  have h1 : Algebra.adjoin ℚ {θ} = ⊤ := by
+    first
+      | rw [← IntermediateField.adjoin_toSubalgebra_of_isAlgebraic (fun x hx => by
+            rw [Set.mem_singleton_iff.mp hx]; exact hint.isAlgebraic), hθ, IntermediateField.top_toSubalgebra]
+  have h2 : a ∈ Algebra.adjoin ℚ {θ} := by
+    rw [h1]
+    exact Algebra.mem_top
+  rw [Algebra.adjoin_singleton_eq_range_aeval] at h2
+  obtain ⟨p, hp⟩ := (AlgHom.mem_range (aeval θ)).mp h2
+  exact ⟨p, hp⟩
 
 private theorem eqchi_lemma_2 (θ : E) (hθ : IntermediateField.adjoin ℚ {θ} = ⊤) (χ₁ χ₂ : E →+* S)
     (h : χ₁ θ = χ₂ θ) : χ₁ = χ₂ := by
@@ -80,6 +87,18 @@ private theorem eqchi_lemma_2 (θ : E) (hθ : IntermediateField.adjoin ℚ {θ} 
   have e : ∀ χ' : E →+* S, χ' (aeval θ p) = aeval (χ' θ) p := fun χ' =>
     (Polynomial.aeval_algHom_apply χ'.toRatAlgHom θ p).symm
   rw [e, e, h]
+
+private theorem dvd_lemma_3 {κ : Type} [Fintype κ] (l : κ → S) (hl : Function.Injective l) (f : S[X])
+    (hf : f ≠ 0) (hr : ∀ σ, f.eval (l σ) = 0) : ∏ σ, (X - C (l σ)) ∣ f := by
+  classical
+  have hs : (Finset.univ.val.map l) ≤ f.roots := by
+    rw [Multiset.le_iff_subset (Multiset.Nodup.map hl Finset.univ.nodup)]
+    intro x hx
+    obtain ⟨σ, -, rfl⟩ := Multiset.mem_map.mp hx
+    exact (Polynomial.mem_roots hf).mpr (hr σ)
+  have h := (Multiset.prod_X_sub_C_dvd_iff_le_roots hf _).mpr hs
+  rw [Multiset.map_map] at h
+  exact h
 
 private theorem annih_lemma_4 (χ : ι → (E →+* S)) (hχ : Function.Injective χ)
     (hcard : Fintype.card ι = Module.finrank ℚ E) (ρ : 𝓞 E →+* Module.End S M) (θ : 𝓞 E)
@@ -98,15 +117,14 @@ private theorem annih_lemma_4 (χ : ι → (E →+* S)) (hχ : Function.Injectiv
     exact h
   have hlinj : Function.Injective (fun σ => χ σ (θ : E)) :=
     fun σ τ h => hχ (eqchi_lemma_2 (θ : E) hθ (χ σ) (χ τ) h)
+  have hqS0 : (minpoly ℤ (θ : E)).map (algebraMap ℤ S) ≠ 0 := (hqm.map _).ne_zero
   have hroot : ∀ σ, ((minpoly ℤ (θ : E)).map (algebraMap ℤ S)).eval (χ σ (θ : E)) = 0 := by
     intro σ
     rw [Polynomial.eval_map_algebraMap]
     have h := Polynomial.aeval_algHom_apply (χ σ).toIntAlgHom (θ : E) (minpoly ℤ (θ : E))
     rw [minpoly.aeval, map_zero] at h
     exact h
-  have hdvd : (∏ σ, (X - C (χ σ (θ : E)))) ∣ (minpoly ℤ (θ : E)).map (algebraMap ℤ S) :=
-    Fintype.prod_dvd_of_coprime (Polynomial.pairwise_coprime_X_sub_C hlinj) fun σ =>
-      Polynomial.dvd_iff_isRoot.mpr (hroot σ)
+  have hdvd := dvd_lemma_3 (fun σ => χ σ (θ : E)) hlinj _ hqS0 hroot
   have hPm : (∏ σ, (X - C (χ σ (θ : E)))).Monic := monic_prod_of_monic _ _ fun σ _ => monic_X_sub_C _
   have hPdeg : (∏ σ, (X - C (χ σ (θ : E)))).natDegree = Fintype.card ι := by
     rw [natDegree_prod_of_monic _ _ fun σ _ => monic_X_sub_C _]
@@ -175,13 +193,19 @@ theorem decomp (χ : ι → (E →+* S)) (hχ : Function.Injective χ) (hcard : 
     intro σ w
     have hdvd : (∏ τ, (X - C (χ τ (θ : E)))) ∣
         (X - C (χ σ (θ : E))) * Lagrange.basis Finset.univ (fun σ => χ σ (θ : E)) σ := by
-      refine Fintype.prod_dvd_of_coprime (Polynomial.pairwise_coprime_X_sub_C hlinj) fun τ =>
-        Polynomial.dvd_iff_isRoot.mpr ?_
-      rw [IsRoot, Polynomial.eval_mul]
-      by_cases h : σ = τ
-      · subst h
-        simp
-      · rw [hLne σ τ h, mul_zero]
+      apply dvd_lemma_3 (fun τ => χ τ (θ : E)) hlinj
+      · intro h0
+        rcases mul_eq_zero.mp h0 with h | h
+        · exact X_sub_C_ne_zero _ h
+        · have h1 := hLself σ
+          rw [h, Polynomial.eval_zero] at h1
+          exact zero_ne_one h1
+      · intro τ
+        rw [Polynomial.eval_mul]
+        by_cases h : σ = τ
+        · subst h
+          simp
+        · rw [hLne σ τ h, mul_zero]
     obtain ⟨r, hr⟩ := hdvd
     have h0 : aeval (ρ θ) ((X - C (χ σ (θ : E))) * Lagrange.basis Finset.univ (fun σ => χ σ (θ : E)) σ) = 0 := by
       rw [hr, map_mul, hP, zero_mul]

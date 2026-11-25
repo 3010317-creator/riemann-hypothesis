@@ -310,15 +310,23 @@ open PI.FglGram MvPowerSeries
 
 variable {p : ℕ} [Fact p.Prime] {σ τ : Type*}
 
+private theorem coeff_embDomain_rename' (e : σ ↪ τ) (F : MvPowerSeries σ ℂ_[p]) (α : σ →₀ ℕ) :
+    coeff (α.embDomain e) (rename e F) = coeff α F :=
+  coeff_embDomain_rename e F α
+
 private theorem coeff_rename_eq_zero_of_not_mem_range_embDomain_cube_formal_identities (e : σ ↪ τ) (F : MvPowerSeries σ ℂ_[p]) {β : τ →₀ ℕ}
     (hβ : ¬ ∃ α : σ →₀ ℕ, α.embDomain e = β) : coeff β (rename e F) = 0 := by
   apply coeff_rename_eq_zero
   rintro ⟨α, rfl⟩
   exact hβ ⟨α, Finsupp.embDomain_eq_mapDomain _ _⟩
 
+private theorem constantCoeff_rename_embedding (e : σ ↪ τ) (F : MvPowerSeries σ ℂ_[p]) :
+    constantCoeff (rename e F) = constantCoeff F :=
+  constantCoeff_rename e F
+
 theorem good_rename (e : σ ↪ τ) {D : MvPowerSeries σ ℂ_[p]} (hD : Good D) : Good (rename e D) := by
   obtain ⟨h0, hI⟩ := hD
-  have h0' : constantCoeff (rename e D) = 0 := by rw [constantCoeff_rename]; exact h0
+  have h0' : constantCoeff (rename e D) = 0 := by rw [constantCoeff_rename_embedding]; exact h0
   show constantCoeff (rename e D) = 0 ∧ PI.FglGram.IntegralMv (PI.FglGram.expMv (rename e D))
   refine ⟨h0', ?_⟩
   intro β
@@ -330,7 +338,7 @@ theorem good_rename (e : σ ↪ τ) {D : MvPowerSeries σ ℂ_[p]} (hD : Good D)
     rw [coeff_expMv_of_le h0' (α.degree + (α.embDomain e).degree)
       (Nat.le_add_left _ _)]
     have hc : ∀ n, coeff (α.embDomain e) (rename e D ^ n) = coeff α (D ^ n) := fun n => by
-      rw [← map_pow, coeff_embDomain_rename]
+      rw [← map_pow, coeff_embDomain_rename']
     simp only [hc]
     exact hα
   · rw [coeff_expMv (rename e D) β]
@@ -361,17 +369,15 @@ private theorem coeff_subst_eq_sum_range_of_degree_le {a : MvPowerSeries τ ℂ_
 theorem rename_psubst (e : σ ↪ τ) {a : MvPowerSeries σ ℂ_[p]} (ha : constantCoeff a = 0)
     (g : PowerSeries ℂ_[p]) :
     rename e (PowerSeries.subst a g) = PowerSeries.subst (rename e a) g := by
-  have ha' : constantCoeff (rename e a) = 0 := by rw [constantCoeff_rename]; exact ha
+  have ha' : constantCoeff (rename e a) = 0 := by rw [constantCoeff_rename_embedding]; exact ha
   ext β
   by_cases hβ : ∃ α : σ →₀ ℕ, α.embDomain e = β
   · obtain ⟨α, rfl⟩ := hβ
-    rw [coeff_embDomain_rename,
-      coeff_subst_eq_sum_range_of_degree_le ha g α (α.degree + (α.embDomain e).degree)
-        (Nat.le_add_right _ _),
-      coeff_subst_eq_sum_range_of_degree_le ha' g _ (α.degree + (α.embDomain e).degree)
-        (Nat.le_add_left _ _)]
+    rw [coeff_embDomain_rename', coeff_subst_eq_sum_range_of_degree_le ha g α (α.degree + (α.embDomain e).degree)
+      (Nat.le_add_right _ _), coeff_subst_eq_sum_range_of_degree_le ha' g _ (α.degree + (α.embDomain e).degree)
+      (Nat.le_add_left _ _)]
     have hc : ∀ n, coeff (α.embDomain e) (rename e a ^ n) = coeff α (a ^ n) := fun n => by
-      rw [← map_pow, coeff_embDomain_rename]
+      rw [← map_pow, coeff_embDomain_rename']
     simp only [hc]
   · rw [coeff_rename_eq_zero_of_not_mem_range_embDomain_cube_formal_identities e _ hβ, coeff_subst_eq_sum_range_of_degree_le ha' g β β.degree le_rfl]
     have hz : ∀ n, coeff β (rename e a ^ n) = 0 := fun n => by
@@ -444,10 +450,14 @@ theorem rename_phAt_sub (e : σ ↪ τ) (a b : MvPowerSeries σ ℂ_[p]) (ha : c
   simp only [PI.FglGram.lg]
   rw [rename_psubst e ha, rename_psubst e hb]
 
+private theorem rename_embedding_X (e : σ ↪ τ) (i : σ) :
+    rename e (X i : MvPowerSeries σ ℂ_[p]) = X (e i) :=
+  rename_X e i
+
 theorem rename_phAt_X (e : σ ↪ τ) (i : σ) :
     rename e (phAt ph (Xv (p := p) i)) = phAt ph (Xv (e i)) := by
   have h0 : constantCoeff (PI.FglGram.Xv (p := p) i) = 0 := constantCoeff_X i
-  have h1 : rename e (PI.FglGram.Xv (p := p) i) = PI.FglGram.Xv (e i) := rename_X e i
+  have h1 : rename e (PI.FglGram.Xv (p := p) i) = PI.FglGram.Xv (e i) := rename_embedding_X e i
   simp only [PI.FglGram.phAt]
   rw [rename_psubst e h0, h1]
 
@@ -467,8 +477,8 @@ theorem isExpIntegral_parallelogram_of_ne (i j : Fin 3) (hij : i ≠ j)
   let e : Fin 2 ↪ Fin 3 := ⟨![i, j], hinj⟩
   have c0 : constantCoeff (PI.FglGram.Xv (p := p) (0 : Fin 2)) = 0 := constantCoeff_X _
   have c1 : constantCoeff (PI.FglGram.Xv (p := p) (1 : Fin 2)) = 0 := constantCoeff_X _
-  have r0 : rename e (PI.FglGram.Xv (p := p) (0 : Fin 2)) = PI.FglGram.Xv i := rename_X e 0
-  have r1 : rename e (PI.FglGram.Xv (p := p) (1 : Fin 2)) = PI.FglGram.Xv j := rename_X e 1
+  have r0 : rename e (PI.FglGram.Xv (p := p) (0 : Fin 2)) = PI.FglGram.Xv i := rename_embedding_X e 0
+  have r1 : rename e (PI.FglGram.Xv (p := p) (1 : Fin 2)) = PI.FglGram.Xv j := rename_embedding_X e 1
   have qa : rename e (PI.FglGram.phAt ph (PI.FglGram.add l ex (PI.FglGram.Xv (p := p) (0 : Fin 2)) (PI.FglGram.Xv 1))) =
       PI.FglGram.phAt ph (PI.FglGram.add l ex (PI.FglGram.Xv i) (PI.FglGram.Xv j)) := by
     rw [rename_phAt_add ph hex hl e _ _ c0 c1, r0, r1]

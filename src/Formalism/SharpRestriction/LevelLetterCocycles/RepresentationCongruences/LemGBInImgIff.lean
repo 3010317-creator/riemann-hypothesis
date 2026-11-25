@@ -85,8 +85,20 @@ theorem lemG_units (hcase : Formalism.MainNotions.LiftingTheory.CaseA W) (hP9 : 
   refine ⟨hπu, hqu, ?_⟩
   have hc : W.DelF.card = PD.p - 1 := by rw [hcard, hfin, Nat.div_one]
   rw [hc]
-  have hv : v ((PD.p : LL) - 1) = 0 := by
-    rw [v.map_sub_eq_of_lt_right (by rw [v.map_one, W.v_l]; exact zero_lt_one), v.map_one]
+  have hvp : v (PD.p : LL) = 1 := W.v_l
+  have hv1 : v (-1 : LL) = 0 := by rw [AddValuation.map_neg, AddValuation.map_one]
+  have h01 : (0 : WithTop ℚ) < 1 := by
+    first | exact zero_lt_one
+  have hge : 0 ≤ v ((PD.p : LL) - 1) := by
+    rw [sub_eq_add_neg]
+    exact le_trans (le_min (by rw [hvp]; exact h01.le) (le_of_eq hv1.symm)) (AddValuation.map_add v _ _)
+  have hle : v ((PD.p : LL) - 1) ≤ 0 := by
+    by_contra hlt
+    push Not at hlt
+    have hm := AddValuation.map_add v ((PD.p : LL) - 1) (-(PD.p : LL))
+    rw [show ((PD.p : LL) - 1) + (-(PD.p : LL)) = -1 by ring, hv1, AddValuation.map_neg, hvp] at hm
+    exact absurd hm (not_le.mpr (lt_min hlt h01))
+  have hv : v ((PD.p : LL) - 1) = 0 := le_antisymm hle hge
   have hxne : (PD.p : LL) - 1 ≠ 0 := by
     intro h
     rw [h, AddValuation.map_zero] at hv

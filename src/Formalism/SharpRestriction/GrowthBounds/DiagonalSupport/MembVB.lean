@@ -388,8 +388,18 @@ variable {n' r : ℕ} [NeZero n'] {Fr : Frames n' r} {L₁ N₁ : ℕ} {J : ℕ}
 theorem ml_mem_letters (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, nL j = (Fr.LLset (segZ j)).card) (y : ML J nL r) :
     (mlPos Fr nL y).2 ∈ Fr.letters (segZ (mlPos Fr nL y).1) := by
   have hv := hV
-  obtain ⟨-, -, -, hstep, hTT, -⟩ := hv
-  have hmon := _root_.Formalism.MainNotions.G.WittFrameLocaliserOrders.frame_entries_monotone hV
+  obtain ⟨-, -, hinc, hstep, hTT, -⟩ := hv
+  have hmon : ∀ k : ℤ, ∀ a b : ℕ, a ≤ b → b < r → Fr.fr k a ≤ Fr.fr k b := by
+    intro k a b hab hb
+    induction b with
+    | zero =>
+      have : a = 0 := by omega
+      subst this
+      exact le_rfl
+    | succ b ih =>
+      rcases Nat.eq_or_lt_of_le hab with h | h
+      · rw [h]
+      · exact (ih (by omega) (by omega)).trans (hinc k b hb).le
   cases y with
   | ll j l =>
     simp only [mlPos]
@@ -412,8 +422,18 @@ theorem ml_mem_letters (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, nL
 theorem tl_mem_letters (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, nL j = (Fr.LLset (segZ j)).card) (x : TL J nL r) :
     (tlPos Fr nL x).2 ∈ Fr.letters (segZ (tlPos Fr nL x).1) ∧ ¬ Fr.IsW (segZ (tlPos Fr nL x).1) (tlPos Fr nL x).2 := by
   have hv := hV
-  obtain ⟨-, -, -, hstep, -⟩ := hv
-  have hmon := _root_.Formalism.MainNotions.G.WittFrameLocaliserOrders.frame_entries_monotone hV
+  obtain ⟨-, -, hinc, hstep, -⟩ := hv
+  have hmon : ∀ k : ℤ, ∀ a b : ℕ, a ≤ b → b < r → Fr.fr k a ≤ Fr.fr k b := by
+    intro k a b hab hb
+    induction b with
+    | zero =>
+      have : a = 0 := by omega
+      subst this
+      exact le_rfl
+    | succ b ih =>
+      rcases Nat.eq_or_lt_of_le hab with h | h
+      · rw [h]
+      · exact (ih (by omega) (by omega)).trans (hinc k b hb).le
   obtain ⟨j, l | m⟩ := x
   · simp only [tlPos, posTL]
     apply LL_sub_letters hV hr

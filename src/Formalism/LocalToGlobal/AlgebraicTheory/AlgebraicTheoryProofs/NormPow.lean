@@ -169,11 +169,26 @@ private theorem stdH_apply_algebraic (L : PeriodPair) (N : Type) [Fintype N] [De
   simp only [stdH, matH, LinearMap.mk₂'ₛₗ_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul,
     mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
 
+private theorem sum_ite_eq_snd {α β : Type} [Fintype α] [Fintype β] [DecidableEq β] (b : β)
+    (f : α × β → ℂ) : ∑ w : α × β, (if b = w.2 then f w else 0) = ∑ k, f (k, b) := by
+  rw [Fintype.sum_prod_type, Finset.sum_comm, Finset.sum_eq_single b]
+  · simp
+  · intro c _ hc
+    simp [Ne.symm hc]
+  · simp
+
+private theorem sum_ite_eq_fst {α β : Type} [Fintype α] [Fintype β] [DecidableEq α] (a : α)
+    (f : α × β → ℂ) : ∑ w : α × β, (if a = w.1 then f w else 0) = ∑ k, f (a, k) := by
+  rw [Fintype.sum_prod_type, Finset.sum_eq_single a]
+  · simp
+  · intro c _ hc
+    simp [Ne.symm hc]
+  · simp
+
 private theorem matH_blk4 {N : Type} [Fintype N] (g : Matrix N N ℂ) (u v : Fin 4 × N → ℂ) :
     matH (blk4 g) u v = ∑ a, matH g (slice a u) (slice a v) := by
-  simp only [matH, LinearMap.mk₂'ₛₗ_apply, blk4, mul_ite, ite_mul, mul_zero, zero_mul,
-    Fintype.sum_prod_type, Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq,
-    Finset.mem_univ, ↓reduceIte]
+  simp only [matH, LinearMap.mk₂'ₛₗ_apply, blk4, mul_ite, ite_mul, mul_zero, zero_mul, sum_ite_eq_fst]
+  rw [Fintype.sum_prod_type]
   rfl
 
 theorem sqrt_pow_inv (r k : ℕ) :
@@ -396,9 +411,8 @@ theorem sl_powEquiv {M M' : Type} [Fintype M] [Fintype M'] (e : M' ≃ M × I) (
 
 theorem matH_hPow (h : Matrix n n ℂ) (u v : n × I → ℂ) :
     matH (hPow I h) u v = ∑ i, matH h (fun k => u (k, i)) (fun k => v (k, i)) := by
-  simp only [matH, LinearMap.mk₂'ₛₗ_apply, hPow, mul_ite, ite_mul, mul_zero, zero_mul,
-    Fintype.sum_prod_type, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
-  exact Finset.sum_comm
+  simp only [matH, LinearMap.mk₂'ₛₗ_apply, hPow, mul_ite, ite_mul, mul_zero, zero_mul, sum_ite_eq_snd]
+  rw [Fintype.sum_prod_type, Finset.sum_comm]
 
 theorem hermitian_block_power_sum (h : Matrix n n ℂ) (x y : Fin 4 × (n × I) → ℂ) :
     matH (blk4 (hPow I h)) x y = ∑ i, matH (blk4 h) (sl (eP n I) i x) (sl (eP n I) i y) := by

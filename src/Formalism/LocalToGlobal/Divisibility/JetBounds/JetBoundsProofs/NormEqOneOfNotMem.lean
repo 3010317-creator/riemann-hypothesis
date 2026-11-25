@@ -25,17 +25,19 @@ theorem cZero : ((0 : 𝓞 K) : K) = 0 := map_zero (algebraMap (𝓞 K) K)
 theorem mem_pow_iff (w : HeightOneSpectrum (𝓞 K)) (x : 𝓞 K) (hx : x ≠ 0) (m : ℕ) :
     x ∈ w.asIdeal ^ m ↔ (m : ℤ) ≤ vw w (x : K) := by
   classical
-  have hspan : Ideal.span {x} ≠ (0 : Ideal (𝓞 K)) := mt Ideal.span_singleton_eq_bot.1 hx
-  rw [Formalism.DivisionValues.ValuationRepresentative.vw_int,
-    FractionalIdeal.count_coeIdeal K w hspan, Nat.cast_le, ← Ideal.dvd_span_singleton,
-    ← Associates.mk_le_mk_iff_dvd, Associates.mk_pow]
+  have hspan : Ideal.span {x} ≠ (0 : Ideal (𝓞 K)) := by
+    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
+    exact hx
+  rw [Formalism.DivisionValues.ValuationRepresentative.vw_int, FractionalIdeal.count_coe K w hspan, Nat.cast_le,
+    ← Ideal.dvd_span_singleton, ← Associates.mk_le_mk_iff_dvd, Associates.mk_pow]
   exact Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero.2 hspan) w.associates_irreducible
 
 theorem exists_clear (w : HeightOneSpectrum (𝓞 K)) (b : K) (hb : 0 ≤ vw w b) :
     ∃ c z : 𝓞 K, c ∉ w.asIdeal ∧ (c : K) * b = (z : K) := by
   by_cases hb0 : b = 0
-  · exact ⟨1, 0, fun h => w.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h),
-      by rw [hb0, mul_zero, cZero]⟩
+  · refine ⟨1, 0, ?_, ?_⟩
+    · exact fun h => w.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h)
+    · rw [hb0, mul_zero, cZero]
   obtain ⟨x, y, hy, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 K) b
   have hy0 : y ≠ 0 := nonZeroDivisors.ne_zero hy
   have hyK : (algebraMap (𝓞 K) K y) ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hy
@@ -55,11 +57,17 @@ theorem exists_clear (w : HeightOneSpectrum (𝓞 K)) (b : K) (hb : 0 ≤ vw w b
     change ((m + 1 : ℕ) : ℤ) ≤ vw w (algebraMap (𝓞 K) K y) at h2
     push_cast at h2
     omega
-  obtain ⟨J, hJ⟩ := Ideal.dvd_span_singleton.2 hym
+  have hdvd : w.asIdeal ^ m ∣ Ideal.span {y} := by
+    rw [Ideal.dvd_iff_le, Ideal.span_le, Set.singleton_subset_iff]
+    exact hym
+  obtain ⟨J, hJ⟩ := hdvd
   have hJw : ¬ J ≤ w.asIdeal := fun h => by
     apply hym1
+    have h1 : y ∈ w.asIdeal ^ m * J := by
+      rw [← hJ]
+      exact Ideal.mem_span_singleton_self y
     rw [pow_succ]
-    exact Ideal.mul_mono_right h (hJ ▸ Ideal.mem_span_singleton_self y)
+    exact Ideal.mul_mono_right h h1
   obtain ⟨c, hcJ, hcw⟩ := SetLike.not_le_iff_exists.1 hJw
   have hxc : x * c ∈ Ideal.span {y} := by
     rw [hJ]

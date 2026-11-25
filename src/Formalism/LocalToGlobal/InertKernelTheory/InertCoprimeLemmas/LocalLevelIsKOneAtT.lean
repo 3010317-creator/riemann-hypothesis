@@ -47,6 +47,17 @@ theorem cc_resFam (f : κ → ι) (i : ι) : MvPowerSeries.constantCoeff (resFam
 theorem hasSubst_resFam [Finite ι] (f : κ → ι) : MvPowerSeries.HasSubst (resFam (R := R) f) :=
   MvPowerSeries.hasSubst_of_constantCoeff_zero (fun i => cc_resFam f i)
 
+private theorem prod_X_pow_lemma {σ : Type} (d : σ →₀ ℕ) :
+    (d.prod fun k m => (MvPowerSeries.X k : MvPowerSeries σ R) ^ m) = MvPowerSeries.monomial d 1 := by
+  classical
+  refine Finsupp.induction d ?_ ?_
+  · simp
+  · intro a b g _ _ ih
+    rw [Finsupp.prod_add_index' (fun _ => pow_zero _) (fun _ _ _ => pow_add _ _ _),
+      Finsupp.prod_single_index (h := fun k m => (MvPowerSeries.X k : MvPowerSeries σ R) ^ m) (pow_zero _), ih,
+      MvPowerSeries.X_pow_eq,
+      MvPowerSeries.monomial_mul_monomial, one_mul]
+
 theorem resV_eq_subst [Finite ι] {f : κ → ι} (hf : Function.Injective f) (g : MvPowerSeries ι R) :
     resV f g = MvPowerSeries.subst (resFam f) g := by
   classical
@@ -55,15 +66,14 @@ theorem resV_eq_subst [Finite ι] {f : κ → ι} (hf : Function.Injective f) (g
   · beta_reduce
     rw [Finsupp.prod_mapDomain_index (fun _ => pow_zero _) (fun _ _ _ => pow_add _ _ _)]
     simp only [resFam_apply hf]
-    rw [← MvPowerSeries.monomial_one_eq, MvPowerSeries.coeff_monomial,
-      if_pos rfl, smul_eq_mul, mul_one]
+    rw [prod_X_pow_lemma, MvPowerSeries.coeff_monomial, if_pos rfl, smul_eq_mul, mul_one]
   · intro d hd
     by_cases hsub : ↑d.support ⊆ Set.range f
     · obtain ⟨d', rfl⟩ : ∃ d', Finsupp.mapDomain f d' = d :=
         ⟨_, Finsupp.mapDomain_comapDomain f hf d hsub⟩
       rw [Finsupp.prod_mapDomain_index (fun _ => pow_zero _) (fun _ _ _ => pow_add _ _ _)]
       simp only [resFam_apply hf]
-      rw [← MvPowerSeries.monomial_one_eq, MvPowerSeries.coeff_monomial, if_neg, smul_zero]
+      rw [prod_X_pow_lemma, MvPowerSeries.coeff_monomial, if_neg, smul_zero]
       rintro rfl
       exact hd rfl
     · rw [Set.not_subset] at hsub
@@ -78,9 +88,24 @@ theorem resV_mul [Finite ι] {f : κ → ι} (hf : Function.Injective f) (a b : 
     resV f (a * b) = resV f a * resV f b := by
   rw [resV_eq_subst hf, resV_eq_subst hf a, resV_eq_subst hf b, MvPowerSeries.subst_mul (hasSubst_resFam f)]
 
+private theorem resV_one_lemma [Finite ι] {f : κ → ι} (hf : Function.Injective f) :
+    resV f (1 : MvPowerSeries ι R) = 1 := by
+  classical
+  ext n
+  rw [resV_coeff, MvPowerSeries.coeff_one, MvPowerSeries.coeff_one]
+  by_cases h : n = 0
+  · rw [if_pos h, if_pos (by rw [h, Finsupp.mapDomain_zero])]
+  · rw [if_neg h, if_neg]
+    intro h'
+    apply h
+    apply Finsupp.mapDomain_injective hf
+    rw [h', Finsupp.mapDomain_zero]
+
 theorem resV_pow [Finite ι] {f : κ → ι} (hf : Function.Injective f) (a : MvPowerSeries ι R) (k : ℕ) :
     resV f (a ^ k) = resV f a ^ k := by
-  rw [resV_eq_subst hf, resV_eq_subst hf a, MvPowerSeries.subst_pow (hasSubst_resFam f)]
+  induction k with
+  | zero => rw [pow_zero, pow_zero, resV_one_lemma hf]
+  | succ k ih => rw [pow_succ, pow_succ, resV_mul hf, ih]
 
 theorem resV_add (f : κ → ι) (a b : MvPowerSeries ι R) : resV f (a + b) = resV f a + resV f b := rfl
 
@@ -152,10 +177,19 @@ theorem resV_subst_diag [Finite ι] {f : κ → ι} (hf : Function.Injective f) 
   · push_neg at hi
     rw [resFam_off f i hi, h0 i hi, ← MvPowerSeries.coe_substAlgHom ha', map_zero]
 
+private theorem cc_psubst_lemma {τ : Type} {c : MvPowerSeries τ R} (hc : MvPowerSeries.constantCoeff c = 0)
+    {L : PowerSeries R} (hL : PowerSeries.constantCoeff L = 0) :
+    MvPowerSeries.constantCoeff (PowerSeries.subst c L) = 0 := by
+  rw [PowerSeries.constantCoeff_subst (PowerSeries.HasSubst.of_constantCoeff_zero hc)]
+  apply finsum_eq_zero_of_forall_eq_zero
+  intro d
+  rcases d with _ | d
+  · simp [hL]
+  · simp [hc]
+
 theorem hasSubst_diag [Finite ι] (L : PowerSeries R) (hL : PowerSeries.constantCoeff L = 0) :
     MvPowerSeries.HasSubst (fun i : ι => PowerSeries.subst (MvPowerSeries.X i : MvPowerSeries ι R) L) :=
-  MvPowerSeries.hasSubst_of_constantCoeff_zero fun i =>
-    PowerSeries.constantCoeff_subst_eq_zero (MvPowerSeries.constantCoeff_X i) L hL
+  MvPowerSeries.hasSubst_of_constantCoeff_zero (fun i => cc_psubst_lemma (MvPowerSeries.constantCoeff_X i) hL)
 
 theorem resV_diag [Finite ι] [Finite κ] {f : κ → ι} (hf : Function.Injective f) (L : PowerSeries R)
     (hL : PowerSeries.constantCoeff L = 0) (g : MvPowerSeries ι R) :
@@ -215,9 +249,7 @@ theorem simeq_resV {ι κ : Type} [Finite ι] [Finite κ] {f : κ → ι} (hf : 
   rw [Simeq] at h ⊢
   obtain ⟨h0, c, hc0, hc⟩ := h
   refine ⟨by rw [← resV_sub, cc_resV, h0], resV f c, by rw [cc_resV, hc0], ?_⟩
-  have h1 : resV f (1 : MvPowerSeries ι (K0 p)) = 1 := by
-    rw [resV_eq_subst hf, ← MvPowerSeries.coe_substAlgHom (hasSubst_resFam f), map_one]
-  rw [← resV_sub, ← resV_inParam hf, ← resV_expS hf, hc, resV_add, h1, resV_map]
+  rw [← resV_sub, ← resV_inParam hf, ← resV_expS hf, hc, resV_add, _root_.Formalism.L2.KerInert.Loc.resV_one_lemma hf, resV_map]
 
 theorem hasSubst_pair {τ : Type} {x y : MvPowerSeries τ (K0 p)} (hx : MvPowerSeries.constantCoeff x = 0)
     (hy : MvPowerSeries.constantCoeff y = 0) : MvPowerSeries.HasSubst ![x, y] :=
@@ -238,11 +270,24 @@ theorem formalSum_zero_zero {τ : Type} {be : MvPowerSeries (Fin 2) (K0 p)} (hbe
     by_contra hne
     have h1 := hbe.1 0 (by rwa [MvPowerSeries.coeff_zero_eq_constantCoeff_apply])
     simp at h1
-  have h00 : (![0, 0] : Fin 2 → MvPowerSeries τ (K0 p)) = 0 := by
+  have h00 : (![0, 0] : Fin 2 → MvPowerSeries τ (K0 p)) = fun _ => 0 := by
     funext i
     fin_cases i <;> rfl
   rw [sub2, h00]
-  exact MvPowerSeries.subst_zero_of_constantCoeff_zero hcc
+  ext e
+  rw [MvPowerSeries.coeff_subst (MvPowerSeries.hasSubst_of_constantCoeff_zero (fun _ => map_zero _)), map_zero]
+  apply finsum_eq_zero_of_forall_eq_zero
+  intro d
+  by_cases hd : d = 0
+  · subst hd
+    rw [MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hcc, zero_smul]
+  · obtain ⟨s, hs⟩ := Finsupp.ne_iff.mp hd
+    simp only [Finsupp.coe_zero, Pi.zero_apply] at hs
+    have hz : (d.prod fun s m => (fun _ => (0 : MvPowerSeries τ (K0 p))) s ^ m) = 0 := by
+      rw [Finsupp.prod]
+      apply Finset.prod_eq_zero (Finsupp.mem_support_iff.mpr hs)
+      exact zero_pow hs
+    rw [hz, map_zero, smul_zero]
 
 theorem resV_beSum {ι κ : Type} [Fintype ι] [Fintype κ] {g : κ → ι} (hg : Function.Injective g)
     {be : MvPowerSeries (Fin 2) (K0 p)} (hbe : BeProp p be) :

@@ -68,14 +68,13 @@ theorem ptTrans_rec (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
         (D.loc l).v LL (algebraMap ↥(OL LL) ↥LL.1 ((w⁻¹ : (↥(OL LL))ˣ) : ↥(OL LL))) = 0 := by
       rw [← AddValuation.map_mul, ← map_mul, Units.mul_inv, map_one, AddValuation.map_one]
     exact le_antisymm (le_trans (le_add_of_nonneg_right h2) h3.le) h1
-  have hvl : ∀ m : ℕ, l ∣ m → (1 : WithTop ℚ) ≤ (D.loc l).v LL ((m : ℕ) : ↥LL.1) := by
-    rintro m ⟨c, rfl⟩
-    rw [Nat.cast_mul, AddValuation.map_mul, hv]
-    exact le_add_of_nonneg_right (Val.v_natCast_nonneg _ c)
   have hne : ∀ δ, ((aδ δ : ℕ) : ZMod l) ≠ 0 := by
     intro δ h
     rw [ZMod.natCast_eq_zero_iff] at h
-    have hva := hvl _ h
+    obtain ⟨c, hc⟩ := h
+    have hva : (1 : WithTop ℚ) ≤ (D.loc l).v LL ((aδ δ : ℕ) : ↥LL.1) := by
+      rw [hc, Nat.cast_mul, AddValuation.map_mul, hv]
+      exact le_add_of_nonneg_right (Formalism.MainNotions.N.Pv.LocalLengthBound.Val.v_natCast_nonneg _ c)
     have hsum := AddValuation.map_add ((D.loc l).v LL)
       (algebraMap ↥(OL LL) ↥LL.1 (W.χΓ δ : ↥(OL LL)) - (aδ δ : ↥LL.1))
       ((aδ δ : ℕ) : ↥LL.1)
@@ -102,25 +101,36 @@ theorem ptTrans_rec (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
         (AddValuation.map_add ((D.loc l).v LL) _ _)
 
       rcases le_total (aδ δ') (aδ δ) with hle | hle
-      · have e2 : ((aδ δ : ℕ) : ↥LL.1) - ((aδ δ' : ℕ) : ↥LL.1) =
-            ((aδ δ - aδ δ' : ℕ) : ↥LL.1) := by rw [Nat.cast_sub hle]
-        rw [e2]; exact hvl _ ((Nat.modEq_iff_dvd' hle).1 h1.symm)
-      · have e2 : ((aδ δ : ℕ) : ↥LL.1) - ((aδ δ' : ℕ) : ↥LL.1) =
-            -((aδ δ' - aδ δ : ℕ) : ↥LL.1) := by rw [Nat.cast_sub hle]; ring
-        rw [e2, AddValuation.map_neg]; exact hvl _ ((Nat.modEq_iff_dvd' hle).1 h1)
+      · have hd : l ∣ aδ δ - aδ δ' := (Nat.modEq_iff_dvd' hle).1 h1.symm
+        obtain ⟨c, hc⟩ := hd
+        have e2 : ((aδ δ : ℕ) : ↥LL.1) - ((aδ δ' : ℕ) : ↥LL.1) = ((aδ δ - aδ δ' : ℕ) : ↥LL.1) := by
+          rw [Nat.cast_sub hle]
+        rw [e2, hc, Nat.cast_mul, AddValuation.map_mul, hv]
+        exact le_add_of_nonneg_right (Formalism.MainNotions.N.Pv.LocalLengthBound.Val.v_natCast_nonneg _ c)
+      · have hd : l ∣ aδ δ' - aδ δ := (Nat.modEq_iff_dvd' hle).1 h1
+        obtain ⟨c, hc⟩ := hd
+        have e2 : ((aδ δ : ℕ) : ↥LL.1) - ((aδ δ' : ℕ) : ↥LL.1) = -((aδ δ' - aδ δ : ℕ) : ↥LL.1) := by
+          rw [Nat.cast_sub hle]; ring
+        rw [e2, AddValuation.map_neg, hc, Nat.cast_mul, AddValuation.map_mul, hv]
+        exact le_add_of_nonneg_right (Formalism.MainNotions.N.Pv.LocalLengthBound.Val.v_natCast_nonneg _ c)
 
     set g := (δ : W.Gam) * (δ' : W.Gam)⁻¹
-    have hχ'0 : χd' ≠ 0 := by
-      intro h0
-      have := hvunit (W.χΓ δ')
-      change (D.loc l).v LL χd' = 0 at this
-      rw [h0, AddValuation.map_zero] at this
-      exact WithTop.top_ne_coe this
     have hξ : algebraMap ↥(OL LL) ↥LL.1 (W.χΓ g : ↥(OL LL)) = χd * χd'⁻¹ := by
+      have hχ'0 : χd' ≠ 0 := by
+        intro h0
+        have := hvunit (W.χΓ δ')
+        change (D.loc l).v LL χd' = 0 at this
+        rw [h0, AddValuation.map_zero] at this
+        exact WithTop.top_ne_coe this
       rw [eq_mul_inv_iff_mul_eq₀ hχ'0]
       simp only [χd, χd', g, ← map_mul, ← Units.val_mul, ← map_mul (W.χΓ), inv_mul_cancel_right]
-    have hξ1 : (1 : WithTop ℚ) ≤
-        (D.loc l).v LL (algebraMap ↥(OL LL) ↥LL.1 (W.χΓ g : ↥(OL LL)) - 1) := by
+    have hξ1 : (1 : WithTop ℚ) ≤ (D.loc l).v LL (algebraMap ↥(OL LL) ↥LL.1 (W.χΓ g : ↥(OL LL)) - 1) := by
+      have hχ'0 : χd' ≠ 0 := by
+        intro h0
+        have := hvunit (W.χΓ δ')
+        change (D.loc l).v LL χd' = 0 at this
+        rw [h0, AddValuation.map_zero] at this
+        exact WithTop.top_ne_coe this
       have e : χd * χd'⁻¹ - 1 = (χd - χd') * χd'⁻¹ := by field_simp
       rw [hξ, e, AddValuation.map_mul]
       have hinv : (D.loc l).v LL χd'⁻¹ = 0 := by

@@ -122,8 +122,16 @@ theorem powq_inj {p : ℕ} (hp : 2 ≤ p) {i j : ℕ} (h : (p ^ 2) ^ i = (p ^ 2)
 theorem ppowq_inj {p : ℕ} (hp : 2 ≤ p) {i j : ℕ} (h : p * (p ^ 2) ^ i = p * (p ^ 2) ^ j) : i = j := by
   exact powq_inj hp (Nat.eq_of_mul_eq_mul_left (by omega) h)
 
-theorem lt_powq {p : ℕ} (hp : 2 ≤ p) (j : ℕ) : j < (p ^ 2) ^ j + 1 :=
-  Nat.lt_succ_of_lt (Nat.lt_pow_self (Nat.one_lt_pow two_ne_zero (by omega)))
+private lemma lt_pow_self_of_two_le {b : ℕ} (hb : 2 ≤ b) (j : ℕ) : j < b ^ j := by
+  induction j with
+  | zero => simp
+  | succ k ih =>
+    rw [pow_succ]
+    nlinarith
+
+theorem lt_powq {p : ℕ} (hp : 2 ≤ p) (j : ℕ) : j < (p ^ 2) ^ j + 1 := by
+  have := lt_pow_self_of_two_le (b := p ^ 2) (by nlinarith) j
+  omega
 
 theorem lt_ppowq {p : ℕ} (hp : 2 ≤ p) (j : ℕ) : j < p * (p ^ 2) ^ j + 1 := by
   have h1 := lt_powq hp j
@@ -435,7 +443,11 @@ theorem pi_factorial : PiFactorial := by
   refine pow_le_pow_of_le_one (norm_nonneg _) hle ?_
   have : Fact p.Prime := ⟨hp⟩
   have hleg := Nat.Prime.sub_one_mul_multiplicity_factorial (n := i) hp
-  have hsq : p ^ 2 - 1 = (p + 1) * (p - 1) := by simpa using Nat.pow_two_sub_pow_two p 1
+  have hsq : p ^ 2 - 1 = (p + 1) * (p - 1) := by
+    obtain ⟨m, rfl⟩ : ∃ m, p = m + 1 := ⟨p - 1, by have := hp.one_lt; omega⟩
+    simp only [Nat.add_sub_cancel]
+    have : (m + 1) ^ 2 = (m + 1 + 1) * m + 1 := by ring
+    omega
   rw [hsq, mul_assoc, Nat.padicValNat_def, hleg]
   exact Nat.mul_le_mul_left _ (Nat.sub_le _ _)
 

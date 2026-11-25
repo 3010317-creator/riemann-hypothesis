@@ -67,15 +67,6 @@ theorem tensor_bound_of_order_bound (hTen : RestTensor) (hOrd : RestOrdBound) (h
   have hw : wK ≠ 0 := R.w_ne
   obtain ⟨r, ρ, hr, hρm, hrρ⟩ := dual_bases R hD3 (othW TT lam0) hdomO e he
   have hA := Ar_add TT lam0
-  have he1 : -(t : ℤ) + -((2 * n' * ccl : ℕ) : ℤ) = -((t + (2 * n' * ccl) : ℕ) : ℤ) := by
-    push_cast; ring
-  have he2 : -Ar 1 (topW TT lam0) + -Ar 1 (othW TT lam0) = -Ar 1 lam0 := by rw [hA]; ring
-  have he3 : wK ^ (c₃ : ℤ) * wK ^ (-Ar 1 (topW TT lam0)) *
-      (wK ^ (-((2 * n' * ccl : ℕ) : ℤ)) * wK ^ (-Ar 1 (othW TT lam0))) =
-      wK ^ ((c₃ - (2 * n' * ccl) : ℕ) : ℤ) * wK ^ (-Ar 1 lam0) := by
-    rw [← zpow_add₀ hw, ← zpow_add₀ hw, ← zpow_add₀ hw, ← zpow_add₀ hw, hA, Nat.cast_sub hc]
-    congr 1
-    ring
 
   have hsrc : ∀ F ∈ CCL R (topW TT lam0) t c₃ e, ∀ a, μ F (r a) ∈ CCL R lam0 (t + (2 * n' * ccl)) (c₃ - (2 * n' * ccl)) e := by
     intro F hF a
@@ -83,10 +74,12 @@ theorem tensor_bound_of_order_bound (hTen : RestTensor) (hOrd : RestOrdBound) (h
     refine Submodule.mem_inf.2 ⟨Submodule.mem_inf.2 ⟨?_, ?_⟩, ?_⟩
     · have h1 := mu_scale μ hF.1.1 hr0
       rw [← hHL e.src he.1, ← zpow_add₀ hw] at h1
-      rwa [he1] at h1
+      have : -(t : ℤ) + -((2 * n' * ccl : ℕ) : ℤ) = -((t + (2 * n' * ccl) : ℕ) : ℤ) := by push_cast; ring
+      rwa [this] at h1
     · have h1 := mu_scale μ hF.1.2 (hr a)
       rw [← hHLe e he, ← zpow_add₀ hw] at h1
-      rwa [he2] at h1
+      have : -Ar 1 (topW TT lam0) + -Ar 1 (othW TT lam0) = -Ar 1 lam0 := by rw [hA]; ring
+      rwa [this] at h1
     · rw [Submodule.mem_iInf]
       intro e'
       rw [Submodule.mem_iInf]
@@ -98,7 +91,13 @@ theorem tensor_bound_of_order_bound (hTen : RestTensor) (hOrd : RestOrdBound) (h
       have h4 := mu_scale μ hF' hr1
       rw [← hHLe e' h1] at h4
       apply mem_scale_scale
-      rwa [he3] at h4
+      have : wK ^ (c₃ : ℤ) * wK ^ (-Ar 1 (topW TT lam0)) *
+          (wK ^ (-((2 * n' * ccl : ℕ) : ℤ)) * wK ^ (-Ar 1 (othW TT lam0))) =
+          wK ^ ((c₃ - (2 * n' * ccl) : ℕ) : ℤ) * wK ^ (-Ar 1 lam0) := by
+        rw [← zpow_add₀ hw, ← zpow_add₀ hw, ← zpow_add₀ hw, ← zpow_add₀ hw, hA, Nat.cast_sub hc]
+        congr 1
+        ring
+      rwa [this] at h4
 
   have htst : ∀ G ∈ CCL' R (topW TT lam0) t c₃ e, ∀ a, ν G (ρ a) ∈ CCL' R lam0 (t + (2 * n' * ccl)) (c₃ - (2 * n' * ccl)) e := by
     intro G hG a
@@ -106,10 +105,12 @@ theorem tensor_bound_of_order_bound (hTen : RestTensor) (hOrd : RestOrdBound) (h
     refine Submodule.mem_inf.2 ⟨Submodule.mem_inf.2 ⟨?_, ?_⟩, ?_⟩
     · have h1 := nu_scale μ ν hν hG.1.1 hr0
       rw [← hHL e.tgt he.2.1, ← zpow_add₀ hw] at h1
-      rwa [he1] at h1
+      have : -(t : ℤ) + -((2 * n' * ccl : ℕ) : ℤ) = -((t + (2 * n' * ccl) : ℕ) : ℤ) := by push_cast; ring
+      rwa [this] at h1
     · have h1 := nu_scale μ ν hν hG.1.2 (hρm a)
       rw [← hHLe e he, ← zpow_add₀ hw] at h1
-      rwa [he2] at h1
+      have : -Ar 1 (topW TT lam0) + -Ar 1 (othW TT lam0) = -Ar 1 lam0 := by rw [hA]; ring
+      rwa [this] at h1
     · rw [Submodule.mem_iInf]
       intro e'
       rw [Submodule.mem_iInf]
@@ -121,7 +122,13 @@ theorem tensor_bound_of_order_bound (hTen : RestTensor) (hOrd : RestOrdBound) (h
       have h4 := nu_scale μ ν hν hG' hr1
       rw [← hHLe e' h1] at h4
       apply mem_scale_scale
-      rwa [he3] at h4
+      have : wK ^ (c₃ : ℤ) * wK ^ (-Ar 1 (topW TT lam0)) *
+          (wK ^ (-((2 * n' * ccl : ℕ) : ℤ)) * wK ^ (-Ar 1 (othW TT lam0))) =
+          wK ^ ((c₃ - (2 * n' * ccl) : ℕ) : ℤ) * wK ^ (-Ar 1 lam0) := by
+        rw [← zpow_add₀ hw, ← zpow_add₀ hw, ← zpow_add₀ hw, ← zpow_add₀ hw, hA, Nat.cast_sub hc]
+        congr 1
+        ring
+      rwa [this] at h4
 
   have hbe : ∀ F G a b, be p 1 lam0 (μ F (r a)) (ν G (ρ b)) =
       be p 1 (topW TT lam0) F G * (if a = b then 1 else 0) := by

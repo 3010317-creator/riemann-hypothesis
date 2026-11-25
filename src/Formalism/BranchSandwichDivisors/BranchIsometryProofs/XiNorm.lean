@@ -4,7 +4,6 @@ public import Formalism.BranchSandwichDivisors.StatementW
 public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LNondomLemmas
 public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LBidetLemmas
 public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LBidetMinor
-import Formalism.RealPlaceAnalysis.RealPlaceTaylor.ProdFactorialSupportSubSingle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -246,6 +245,87 @@ lemma xn_minor_perm (ι : κ → Fin r) {p : ℕ} (hp : p ≤ n) (a : Fin p → 
   first
   | (rw [map_intCast, ← Matrix.det_permute]; rfl)
 
+private lemma prod_factorial_single_add_eq_mul' (v : Fin r × Fin n) (m : (Fin r × Fin n) →₀ ℕ) :
+    (∏ k ∈ (Finsupp.single v 1 + m).support,
+      ((Finsupp.single v 1 + m : (Fin r × Fin n) →₀ ℕ) k).factorial) =
+      (m v + 1) * ∏ k ∈ m.support, (m k).factorial := by
+  set T := insert v m.support with hTdef
+  have hT : ∀ u : (Fin r × Fin n) →₀ ℕ, u.support ⊆ T →
+      ∏ k ∈ u.support, (u k).factorial = (u v).factorial * ∏ k ∈ T.erase v, (u k).factorial := by
+    intro u hu
+    rw [Finset.mul_prod_erase T (fun k => (u k).factorial) (Finset.mem_insert_self v _)]
+    refine Finset.prod_subset hu fun k _ hk => ?_
+    have h0 : u k = 0 := by simpa using hk
+    rw [h0, Nat.factorial_zero]
+  have hsub : (Finsupp.single v 1 + m).support ⊆ T := by
+    intro k hk
+    by_contra hc
+    have hkv : k ≠ v := by
+      rintro rfl
+      exact hc (Finset.mem_insert_self _ _)
+    have hkm : m k = 0 := by
+      by_contra hm
+      exact hc (Finset.mem_insert_of_mem (Finsupp.mem_support_iff.2 hm))
+    have h5 : (Finsupp.single v 1 + m : (Fin r × Fin n) →₀ ℕ) k = 0 := by simp [Ne.symm hkv, hkm]
+    exact (Finsupp.mem_support_iff.1 hk) h5
+  rw [hT _ hsub, hT m (Finset.subset_insert _ _)]
+  have hrest : ∏ k ∈ T.erase v, ((Finsupp.single v 1 + m : (Fin r × Fin n) →₀ ℕ) k).factorial =
+      ∏ k ∈ T.erase v, (m k).factorial := by
+    refine Finset.prod_congr rfl fun k hk => ?_
+    have hkv : k ≠ v := Finset.ne_of_mem_erase hk
+    simp [Ne.symm hkv]
+  rw [hrest]
+  simp only [Finsupp.add_apply, Finsupp.single_eq_same]
+  rw [add_comm 1, Nat.factorial_succ]
+  ring
+
+private lemma coeff_pderiv_eq_mul_coeff_single_add (v : Fin r × Fin n) (m : (Fin r × Fin n) →₀ ℕ)
+    (H : MvPolynomial (Fin r × Fin n) ℂ) :
+    (pderiv v H).coeff m = ((m v + 1 : ℕ) : ℂ) * H.coeff (Finsupp.single v 1 + m) := by
+  induction H using MvPolynomial.induction_on'
+  next u a =>
+    rw [MvPolynomial.pderiv_monomial, MvPolynomial.coeff_monomial, MvPolynomial.coeff_monomial]
+    by_cases hu : u = Finsupp.single v 1 + m
+    · subst hu
+      rw [add_tsub_cancel_left, if_pos rfl, if_pos rfl]
+      simp only [Finsupp.add_apply, Finsupp.single_eq_same]
+      push_cast
+      ring
+    · rw [if_neg hu, mul_zero]
+      split_ifs with h2
+      · have h3 : u v = 0 := by
+          by_contra h4
+          apply hu
+          rw [← h2]
+          ext k
+          simp only [Finsupp.add_apply, Finsupp.tsub_apply, Finsupp.single_apply]
+          split_ifs with h5
+          · subst h5
+            omega
+          · omega
+        rw [h3]
+        simp
+      · rfl
+  next p q hp hq =>
+    simp only [map_add (f := _), MvPolynomial.coeff_add, hp, hq, mul_add]
+
+private lemma fockF_X_mul_eq_pderiv (v : Fin r × Fin n) (G H : MvPolynomial (Fin r × Fin n) ℂ) :
+    fockF (X v * G) H = fockF G (pderiv v H) := by
+  unfold fockF
+  rw [MvPolynomial.support_X_mul, Finset.sum_map]
+  refine Finset.sum_congr rfl fun m _ => ?_
+  simp only [addLeftEmbedding_apply, MvPolynomial.coeff_X_mul, coeff_pderiv_eq_mul_coeff_single_add, prod_factorial_single_add_eq_mul', star_mul']
+  push_cast
+  rw [show star ((m v : ℂ) + 1) = (m v : ℂ) + 1 by simp]
+  ring
+
+private lemma fockF_sum_right' {ι' : Type*} (s : Finset ι') (F : MvPolynomial (Fin r × Fin n) ℂ)
+    (G : ι' → MvPolynomial (Fin r × Fin n) ℂ) :
+    fockF F (∑ i ∈ s, G i) = ∑ i ∈ s, fockF F (G i) := by
+  unfold fockF
+  simp only [MvPolynomial.coeff_sum, star_sum, Finset.mul_sum, Finset.sum_mul]
+  rw [Finset.sum_comm]
+
 private lemma fockF_C_mul_right (F G : MvPolynomial (Fin r × Fin n) ℂ) (c : ℂ) :
     fockF F (C c * G) = star c * fockF F G := by
   unfold fockF
@@ -294,9 +374,8 @@ lemma fock_pairing_initial_minor (ι : κ → Fin r) (hι : Function.Injective �
       intro a'
       have hE : ∀ b : κ, xnMono ι hp (Fin.snoc a' b : Fin (p + 1) → κ) * g =
           X (ι b, (⟨p, hp⟩ : Fin n)) * (xnMono ι hp0 a' * g) := fun b => by rw [hmono]; ring
-      simp only [hE, fischerInner_X_mul_left]
-      rw [← fischerInner_sum_right,
-        xn_key ι hι hp a' f ((m p : ℕ) : ℂ) (fun t ht => hR t ⟨p, hp⟩ ht) (hW ⟨p, hp⟩),
+      simp only [hE, fockF_X_mul_eq_pderiv]
+      rw [← fockF_sum_right', xn_key ι hι hp a' f ((m p : ℕ) : ℂ) (fun t ht => hR t ⟨p, hp⟩ ht) (hW ⟨p, hp⟩),
         fockF_C_mul_right]
     rw [hre]
     simp only [hstep, ← Finset.mul_sum]
@@ -305,9 +384,27 @@ lemma fock_pairing_initial_minor (ι : κ → Fin r) (hι : Function.Injective �
     push_cast
     ring
 
+private lemma fockF_eq_sum_coeff_factorial_of_support_subset (F G : MvPolynomial (Fin r × Fin n) ℂ)
+    (S : Finset ((Fin r × Fin n) →₀ ℕ)) (hS : F.support ⊆ S) :
+    fockF F G = ∑ m ∈ S, F.coeff m * star (G.coeff m) *
+      ((∏ k ∈ m.support, (m k).factorial : ℕ) : ℂ) := by
+  unfold fockF
+  refine Finset.sum_subset hS fun m _ hm => ?_
+  have h0 : F.coeff m = 0 := by simpa using hm
+  rw [h0, zero_mul, zero_mul]
+
+private lemma fockF_sum_left' {ι' : Type*} (s : Finset ι') (F : ι' → MvPolynomial (Fin r × Fin n) ℂ)
+    (G : MvPolynomial (Fin r × Fin n) ℂ) :
+    fockF (∑ i ∈ s, F i) G = ∑ i ∈ s, fockF (F i) G := by
+  rw [fockF_eq_sum_coeff_factorial_of_support_subset (∑ i ∈ s, F i) G _ MvPolynomial.support_sum]
+  rw [Finset.sum_congr rfl fun i hi => fockF_eq_sum_coeff_factorial_of_support_subset (F i) G (s.biUnion fun i => (F i).support)
+    (Finset.subset_biUnion_of_mem (fun i => (F i).support) hi)]
+  simp only [MvPolynomial.coeff_sum, Finset.sum_mul]
+  rw [Finset.sum_comm]
+
 private lemma fockF_C_mul_left (F G : MvPolynomial (Fin r × Fin n) ℂ) (c : ℂ) :
     fockF (C c * F) G = c * fockF F G := by
-  rw [fischerInner_eq_sum_of_subset (C c * F) G F.support ?_]
+  rw [fockF_eq_sum_coeff_factorial_of_support_subset (C c * F) G F.support ?_]
   · unfold fockF
     rw [Finset.mul_sum]
     refine Finset.sum_congr rfl fun m _ => ?_
@@ -335,7 +432,7 @@ lemma xn_S (ι : κ → Fin r) (hι : Function.Injective ι) (m : ℕ → ℕ)
             (initMinor ℂ (ι ∘ a) hp * f) := by rw [← e]
       _ = ∑ π : Equiv.Perm (Fin p),
             xnSg π * fockF (xnMono ι hp (a ∘ π) * f) (initMinor ℂ (ι ∘ a) hp * f) := by
-          rw [Finset.sum_mul, fischerInner_sum_left]
+          rw [Finset.sum_mul, fockF_sum_left']
           refine Finset.sum_congr rfl fun π _ => ?_
           rw [mul_assoc, fockF_C_mul_left]
       _ = ∑ π : Equiv.Perm (Fin p),

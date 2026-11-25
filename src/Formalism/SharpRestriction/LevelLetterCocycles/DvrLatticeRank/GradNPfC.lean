@@ -175,32 +175,30 @@ theorem gradNPf_sub_one (lO x : O) (hl : v (ι lO) = 1) (hx : v (ι x - 1) = 1) 
 
 
 include hι hR in
-private theorem lte_isUnit_add_mul (lO s c : O) (hl : v (ι lO) = 1) (hs : IsUnit s) :
-    IsUnit (s + lO * c) := by
-  obtain ⟨u, rfl⟩ := hs
-  have h : (u : O) + lO * c = u * (1 + lO * (c * ↑u⁻¹)) := by
-    linear_combination (-(lO * c)) * Units.mul_inv u
-  rw [h]
-  exact u.isUnit.mul (gradNPf_unit_one_add v ι hι hR lO _ hl)
-
-include hι hR in
-private theorem lte_pow_coprime_step (l : ℕ) [hp : Fact l.Prime] (hl : v (l : L) = 1)
-    (x t : O) (ht : IsUnit t) (hxt : x - 1 = (l : O) * t) (s : ℕ) (hs : ¬ l ∣ s) :
-    ∃ ε : O, IsUnit ε ∧ x ^ s - 1 = (l : O) * ε := by
-  have hlO : v (ι (l : O)) = 1 := by rw [_root_.map_natCast]; exact hl
-  obtain ⟨C, hC⟩ := exists_geom_sum_one_add_eq_natCast_add_mul (x - 1) s
-  have e : 1 + (x - 1) = x := by ring
-  rw [e, hxt] at hC
-  have hsu : IsUnit (s : O) := gradNPf_unit_nat v ι hι hR l hp.out hl s hs
-  refine ⟨t * ((s : O) + (l : O) * (t * C)),
-    ht.mul (lte_isUnit_add_mul v ι hι hR _ _ _ hlO hsu), ?_⟩
-  rw [← geom_sum_mul, hC, hxt]
-  ring
-
-include hι hR in
 theorem gradNPf_lte (l : ℕ) [hp : Fact l.Prime] (hl2 : l ≠ 2) (hl : v (l : L) = 1)
     (x t : O) (ht : IsUnit t) (hxt : x - 1 = (l : O) * t) :
     ∀ m : ℕ, m ≠ 0 → ∃ ε : O, IsUnit ε ∧ x ^ m - 1 = (l : O) ^ (1 + padicValNat l m) * ε := by
+  have lte_isUnit_add_mul_lemma_5 {L : Type _} {O : Type _} [Field L] [CommRing O] (v : AddValuation L (WithTop ℚ)) (ι : O →+* L) (hinj : Function.Injective ι)
+      (hRR : ∀ x : L, 0 ≤ v x ↔ ∃ a : O, ι a = x) (lO s c : O) (hl : v (ι lO) = 1)
+      (hs : IsUnit s) : IsUnit (s + lO * c) := by
+    obtain ⟨u, rfl⟩ := hs
+    have h : (u : O) + lO * c = u * (1 + lO * (c * ↑u⁻¹)) := by
+      linear_combination (-(lO * c)) * Units.mul_inv u
+    rw [h]
+    exact u.isUnit.mul (gradNPf_unit_one_add v ι hinj hRR lO _ hl)
+  have lte_pow_coprime_step_lemma_6 {L : Type _} {O : Type _} [Field L] [CommRing O] (v : AddValuation L (WithTop ℚ)) (ι : O →+* L) (hinj : Function.Injective ι)
+      (hRR : ∀ x : L, 0 ≤ v x ↔ ∃ a : O, ι a = x) (l : ℕ) [hp : Fact l.Prime]
+      (hl : v (l : L) = 1) (x t : O) (ht : IsUnit t) (hxt : x - 1 = (l : O) * t) (s : ℕ)
+      (hs : ¬ l ∣ s) : ∃ ε : O, IsUnit ε ∧ x ^ s - 1 = (l : O) * ε := by
+    have hlO : v (ι (l : O)) = 1 := by rw [_root_.map_natCast]; exact hl
+    obtain ⟨C, hC⟩ := exists_geom_sum_one_add_eq_natCast_add_mul (x - 1) s
+    have e : 1 + (x - 1) = x := by ring
+    rw [e, hxt] at hC
+    have hsu : IsUnit (s : O) := gradNPf_unit_nat v ι hinj hRR l hp.out hl s hs
+    refine ⟨t * ((s : O) + (l : O) * (t * C)),
+      ht.mul (lte_isUnit_add_mul_lemma_5 v ι hinj hRR _ _ _ hlO hsu), ?_⟩
+    rw [← geom_sum_mul, hC, hxt]
+    ring
   have lte_pow_prime_step_lemma_7 {L : Type _} {O : Type _} [Field L] [CommRing O] (v : AddValuation L (WithTop ℚ)) (ι : O →+* L) (hinj : Function.Injective ι)
       (hRR : ∀ x : L, 0 ≤ v x ↔ ∃ a : O, ι a = x) (l : ℕ) [hp : Fact l.Prime] (hl2 : l ≠ 2)
       (hl : v (l : L) = 1) (y u : O) (hu : IsUnit u) (j : ℕ)
@@ -252,7 +250,7 @@ theorem gradNPf_lte (l : ℕ) [hp : Fact l.Prime] (hl2 : l ≠ 2) (hl : v (l : L
       refine ⟨ε', hε', ?_⟩
       rw [hv, show l * m' = m' * l from Nat.mul_comm l m', pow_mul, he']
       ring
-    · obtain ⟨ε, hε, he⟩ := lte_pow_coprime_step v ι hι hR l hl x t ht hxt m hdvd
+    · obtain ⟨ε, hε, he⟩ := lte_pow_coprime_step_lemma_6 v ι hι hR l hl x t ht hxt m hdvd
       refine ⟨ε, hε, ?_⟩
       have hz : padicValNat l m = 0 := by
         simpa only [← Nat.padicValNat_def] using (multiplicity_eq_zero_of_not_dvd hdvd)
@@ -277,7 +275,28 @@ theorem gradNPf_prod (l : ℕ) [hp : Fact l.Prime] (hl2 : l ≠ 2) (hl : v (l : 
     (x t : O) (ht : IsUnit t) (hxt : x - 1 = (l : O) * t) (s : ℕ) (hs : s ≠ 0) (hsl : ¬ l ∣ s)
     (N : ℕ) : ∃ a : O, (l : O) ^ (N + padicValNat l N.factorial) =
       a * ∏ y ∈ Ico 1 (N + 1), ((x ^ s) ^ y - 1) := by
-  obtain ⟨ε0, hε0, he0⟩ := lte_pow_coprime_step v ι hι hR l hl x t ht hxt s hsl
+  have lte_isUnit_add_mul_lemma_5 {L : Type _} {O : Type _} [Field L] [CommRing O] (v : AddValuation L (WithTop ℚ)) (ι : O →+* L) (hinj : Function.Injective ι)
+      (hRR : ∀ x : L, 0 ≤ v x ↔ ∃ a : O, ι a = x) (lO s c : O) (hl : v (ι lO) = 1)
+      (hs : IsUnit s) : IsUnit (s + lO * c) := by
+    obtain ⟨u, rfl⟩ := hs
+    have h : (u : O) + lO * c = u * (1 + lO * (c * ↑u⁻¹)) := by
+      linear_combination (-(lO * c)) * Units.mul_inv u
+    rw [h]
+    exact u.isUnit.mul (gradNPf_unit_one_add v ι hinj hRR lO _ hl)
+  have lte_pow_coprime_step_lemma_6 {L : Type _} {O : Type _} [Field L] [CommRing O] (v : AddValuation L (WithTop ℚ)) (ι : O →+* L) (hinj : Function.Injective ι)
+      (hRR : ∀ x : L, 0 ≤ v x ↔ ∃ a : O, ι a = x) (l : ℕ) [hp : Fact l.Prime]
+      (hl : v (l : L) = 1) (x t : O) (ht : IsUnit t) (hxt : x - 1 = (l : O) * t) (s : ℕ)
+      (hs : ¬ l ∣ s) : ∃ ε : O, IsUnit ε ∧ x ^ s - 1 = (l : O) * ε := by
+    have hlO : v (ι (l : O)) = 1 := by rw [_root_.map_natCast]; exact hl
+    obtain ⟨C, hC⟩ := exists_geom_sum_one_add_eq_natCast_add_mul (x - 1) s
+    have e : 1 + (x - 1) = x := by ring
+    rw [e, hxt] at hC
+    have hsu : IsUnit (s : O) := gradNPf_unit_nat v ι hinj hRR l hp.out hl s hs
+    refine ⟨t * ((s : O) + (l : O) * (t * C)),
+      ht.mul (lte_isUnit_add_mul_lemma_5 v ι hinj hRR _ _ _ hlO hsu), ?_⟩
+    rw [← geom_sum_mul, hC, hxt]
+    ring
+  obtain ⟨ε0, hε0, he0⟩ := lte_pow_coprime_step_lemma_6 v ι hι hR l hl x t ht hxt s hsl
   have key : ∀ n : ℕ, ∃ E : O, IsUnit E ∧ ∏ y ∈ Ico 1 (n + 1), ((x ^ s) ^ y - 1) =
       (l : O) ^ (∑ y ∈ Ico 1 (n + 1), (1 + padicValNat l y)) * E := by
     intro n

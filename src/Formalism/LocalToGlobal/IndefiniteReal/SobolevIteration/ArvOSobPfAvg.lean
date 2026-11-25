@@ -54,12 +54,15 @@ theorem pIter_contOn_slice {K : Set X} {Φ : (Fin m → ℝ) → X → E} {j : �
   hc.comp (by fun_prop : Continuous fun k : X => (t, k)).continuousOn
     (fun _ hk => Set.mk_mem_prod (Set.mem_univ _) hk)
 
+private theorem natCast_lt_top_withTop_enat (j : ℕ) : (j : WithTop ℕ∞) < ∞ := by
+  exact_mod_cast ENat.natCast_lt_top j
+
 theorem hasFDerivAt_pIter {Φ : (Fin m → ℝ) → X → E} {k : X} (hΦ : ContDiff ℝ ∞ fun t => Φ t k) (j : ℕ)
     (t : Fin m → ℝ) :
     HasFDerivAt (fun t => pIter Φ j t k)
       (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (j + 1) => Fin m → ℝ) E (pIter Φ (j + 1) t k)) t := by
   have hd : Differentiable ℝ (iteratedFDeriv ℝ j (fun t => Φ t k)) :=
-    hΦ.differentiable_iteratedFDeriv (by exact_mod_cast WithTop.coe_lt_top _)
+    hΦ.differentiable_iteratedFDeriv (natCast_lt_top_withTop_enat j)
   have h2 := (hd t).hasFDerivAt
   rw [fderiv_iteratedFDeriv] at h2
   simpa [pIter] using h2
@@ -95,6 +98,12 @@ theorem hasFDerivAt_integral_pIter {μ : Measure X} [IsFiniteMeasure μ] {K : Se
   · filter_upwards [hae] with k hk t _
     exact hasFDerivAt_pIter (hΦ k hk) j t
 
+private theorem integral_linearIsometryEquiv_comp {α F G : Type*} [MeasurableSpace α] {μ : Measure α}
+    [NormedAddCommGroup F] [NormedSpace ℝ F] [NormedAddCommGroup G] [NormedSpace ℝ G]
+    (L : F ≃ₗᵢ[ℝ] G) (φ : α → F) :
+    ∫ x, L (φ x) ∂μ = L (∫ x, φ x ∂μ) :=
+  L.toContinuousLinearEquiv.integral_comp_comm φ
+
 theorem contDiff_integral_param {μ : Measure X} [IsFiniteMeasure μ] {K : Set X} (hK : IsCompact K)
     (hKm : MeasurableSet K) (hμK : μ Kᶜ = 0) {Φ : (Fin m → ℝ) → X → E}
     (hΦ : ∀ k ∈ K, ContDiff ℝ ∞ fun t => Φ t k)
@@ -108,17 +117,14 @@ theorem contDiff_integral_param {μ : Measure X} [IsFiniteMeasure μ] {K : Set X
     | zero =>
       funext t
       simp only [pIter, iteratedFDeriv_zero_eq_comp, Function.comp_apply]
-      let c := (continuousMultilinearCurryFin0 ℝ (Fin m → ℝ) E).symm.toLinearIsometry
-      exact (c.integral_comp_comm (μ := μ) fun k => Φ t k).symm
+      rw [integral_linearIsometryEquiv_comp]
     | succ j ih =>
       rw [iteratedFDeriv_succ_eq_comp_left, ih]
       funext t
-      let e := continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (j + 1) => Fin m → ℝ) E
-      rw [Function.comp_apply, (hasFDerivAt_integral_pIter hK hKm hμK hΦ hc j t).fderiv,
-        show (∫ k, e (pIter Φ (j + 1) t k) ∂μ) =
-            e (∫ k, pIter Φ (j + 1) t k ∂μ) from
-          e.toLinearIsometry.integral_comp_comm _]
-      simp [e]
+      rw [Function.comp_apply,
+        (hasFDerivAt_integral_pIter hK hKm hμK hΦ hc j t).fderiv,
+        integral_linearIsometryEquiv_comp]
+      simp
   refine ⟨key, ?_⟩
   apply contDiff_of_differentiable_iteratedFDeriv
   intro i _

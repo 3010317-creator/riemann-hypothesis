@@ -943,7 +943,7 @@ theorem levQInt : ∃ Cp : ℝ, 0 ≤ Cp ∧ ∀ Cc : ℝ, 16 * Cp ≤ Cc →
           (U.muXi k (D.ptSize p) 0 (r - D.ptSize p) (D.ptPerm p)) := by
   obtain ⟨Cp, hCp0, hCp⟩ := posCoreQ
   refine ⟨Cp, hCp0, ?_⟩
-  intro Cc hCc k r Wp Wq _ _ _ _ _ _ T χ A₀ N P0 hPk hPr hk2 hχ hA₀ ε hε i hi hi1 w hw p _ hp hle a
+  intro Cc hCc k r Wp Wq _ _ _ _ _ _ T χ A₀ N P0 hPk hPr hk2 hχ hA₀ ε hε i hi hi1 w hw p hc hp hle a
 
   obtain ⟨h, n, t, rfl⟩ := Formalism.FourierDecayAlt.P.SliceAppend.exists_append_succ hi1 hp
   obtain ⟨hpb, hps⟩ := hp
@@ -958,6 +958,13 @@ theorem levQInt : ∃ Cp : ℝ, 0 ≤ Cp ∧ ∀ Cc : ℝ, 16 * Cp ≤ Cc →
   have hsum : ph + (n + 1) + ρ = r := by omega
   have hσ := Formalism.FourierDecayAlt.P.SliceAppend.perm_append hloc
   have hd := Formalism.FourierDecayAlt.P.SliceAppend.diag_append h n t
+  have hdP := Formalism.FourierDecayAlt.P.SliceAppend.diag_append_ne_zero (n := n) hd0 ht
+  have hS : ∀ (Gx : B.Mat k r → (Wq →L[ℂ] Wp)) (γ : B.Mat k ρ), D.sliceAt k r T.base.z T.base.z' Gx (h ++ [(n + 1, t)]) γ =
+      U.PhiFun (p := ph + (n + 1)) (s := 0) k ρ (Formalism.FourierDecayAlt.P.Dx2.SL.sigP (D.ptPerm h))
+        (Formalism.FourierDecayAlt.P.Dx2.SL.dP (D.ptDiag h) t) (D.castV (by omega) T.base.z) (D.castV (by omega) T.base.z')
+        (D.castF (by omega) Gx) (fun a => a.elim0) γ := by
+    intro Gx γ
+    exact Formalism.FourierDecayAlt.P.SliceAppend.slice_append k r T.base.z T.base.z' Gx h n t hloc (by omega) γ
   have e1 : r = ph + (n + 1) + ρ := hsum.symm
   have e2 : ph + (n + 1) + ρ = r := hsum
   have hj1 : 1 ≤ ph + (n + 1) := by omega
@@ -1017,6 +1024,31 @@ theorem levQInt : ∃ Cp : ℝ, 0 ≤ Cp ∧ ∀ Cc : ℝ, 16 * Cp ≤ Cc →
         have hndR : (nd : ℝ) = 2 * (r : ℝ) + k + 1 := by rw [hnd]; push_cast; ring
         rw [hndR]; exact hA₀
       nlinarith)
+  have hfun : ∀ hh : B.Mat k r → (Wq →L[ℂ] Wp),
+      D.castF hc (D.sliceAt k r T.base.z T.base.z'
+        (D.uwG k r T.base.z T.base.z' (D.cutF T.base χ hh ε) (D.ptSize (h ++ [(n + 1, t)])) hi w a) (h ++ [(n + 1, t)])) =
+      fun γ => U.PhiFun (p := ph + (n + 1)) (s := 0) k ρ (Formalism.FourierDecayAlt.P.Dx2.SL.sigP (D.ptPerm h))
+        (Formalism.FourierDecayAlt.P.Dx2.SL.dP (D.ptDiag h) t) (D.castV e1 T.base.z) (D.castV e1 T.base.z')
+        (D.castF e2 (D.uwG k r T.base.z T.base.z' (D.cutF T.base χ hh ε) (D.ptSize (h ++ [(n + 1, t)])) hi w a))
+        (fun a => a.elim0) γ := by
+    intro hh
+    rw [Formalism.FourierDecayAlt.P.JCTx6.Link2.castF_self]
+    funext γ
+    exact hS _ γ
+  have hz1 : U.lowV k (ph + (n + 1)) ρ (D.castV e1 T.base.z) = (T.bs (D.ptSize (h ++ [(n + 1, t)]))).z := by
+    have hzl : T.base.z = D.castV (by omega)
+        (liftVec k (D.ptSize (h ++ [(n + 1, t)])) ρ (T.bs (D.ptSize (h ++ [(n + 1, t)]))).z) :=
+      (T.z_lev _ hi).symm
+    rw [hzl, Formalism.FourierDecayAlt.P.Dx2.SL.castV_castV]
+    exact Formalism.FourierDecayAlt.P.JCTx6.Link2.lowV_liftVec hP.symm _ _
+  have hz1' : U.lowV k (ph + (n + 1)) ρ (D.castV e1 T.base.z') = (T.bs (D.ptSize (h ++ [(n + 1, t)]))).z' := by
+    have hzl' : T.base.z' = D.castV (by omega)
+        (liftVec k (D.ptSize (h ++ [(n + 1, t)])) ρ (T.bs (D.ptSize (h ++ [(n + 1, t)]))).z') :=
+      (T.z'_lev _ hi).symm
+    rw [hzl', Formalism.FourierDecayAlt.P.Dx2.SL.castV_castV]
+    exact Formalism.FourierDecayAlt.P.JCTx6.Link2.lowV_liftVec hP.symm _ _
+  have hZ0 : G.detM (fun a => a.elim0 : G.Mat 0) ≠ 0 := by
+    unfold G.detM; rw [Matrix.det_isEmpty]; exact one_ne_zero
   intro hh c hsm hcl γ hγ
   have I := (hQ (D.castF e2 hh) c (ccle_castF e2 hcl) _ (hFrel hh hsm)).2.2 γ hγ
   have hσ' : ∀ q : Fin (ph + (n + 1)), (D.ptPerm (h ++ [(n + 1, t)]) (Fin.cast hP.symm q)).val =

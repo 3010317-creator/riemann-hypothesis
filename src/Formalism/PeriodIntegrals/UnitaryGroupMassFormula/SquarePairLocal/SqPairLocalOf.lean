@@ -1080,6 +1080,24 @@ open PI.SqPair
 
 attribute [local instance] StModel.cr StModel.dom StModel.dvr StModel.hens StModel.fin
 
+private theorem exists_common_denominator' {E : Type} [Field E] [NumberField E] (s : Finset E) :
+    ∃ b : 𝓞 E, b ≠ 0 ∧ ∀ x ∈ s, ∃ w : 𝓞 E,
+      algebraMap (𝓞 E) E b * x = algebraMap (𝓞 E) E w := by
+  classical
+  refine Finset.induction_on s ⟨1, one_ne_zero, fun x hx => by simp at hx⟩ ?_
+  intro x s _ ih
+  obtain ⟨b, hb, hw⟩ := ih
+  obtain ⟨⟨a, c⟩, hac⟩ := IsLocalization.surj (nonZeroDivisors (𝓞 E)) x
+  simp only at hac
+  have hc : (c : 𝓞 E) ≠ 0 := nonZeroDivisors.ne_zero c.2
+  refine ⟨b * c, mul_ne_zero hb hc, fun y hy => ?_⟩
+  rcases Finset.mem_insert.mp hy with rfl | hy
+  · refine ⟨b * a, ?_⟩
+    rw [map_mul, map_mul, mul_assoc, mul_comm (algebraMap (𝓞 E) E (c : 𝓞 E)), hac]
+  · obtain ⟨w, hw'⟩ := hw y hy
+    refine ⟨c * w, ?_⟩
+    rw [map_mul, map_mul, mul_comm (algebraMap (𝓞 E) E b), mul_assoc, hw']
+
 private theorem exists_one_sub_pow_mul_pow_eq_mul {E : Type} [Field E] [NumberField E] (ϖ : 𝓞 E) (b : 𝓞 E) (hb : b ≠ 0) :
     ∃ m k : ℕ, ∃ v : 𝓞 E, (1 - ϖ ^ (m + 1)) * ϖ ^ k = b * v := by
   have hne : Ideal.span {b} ≠ ⊥ := by
@@ -1122,10 +1140,8 @@ theorem locMat : LocMat := by
   have hϖ0 : M.ϖ ≠ 0 := by
     first
     | exact M.ϖ_ne
-  obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples_of_finset
-    (nonZeroDivisors (𝓞 E)) (Finset.univ.image fun p : Fin N × Fin N => u p.1 p.2)
-  obtain ⟨m, k, v, hv⟩ :=
-    exists_one_sub_pow_mul_pow_eq_mul M.ϖ (b : 𝓞 E) (nonZeroDivisors.ne_zero b.2)
+  obtain ⟨b, hb0, hb⟩ := exists_common_denominator' (Finset.univ.image (fun p : Fin N × Fin N => u p.1 p.2))
+  obtain ⟨m, k, v, hv⟩ := exists_one_sub_pow_mul_pow_eq_mul M.ϖ b hb0
   set d : 𝓞 E := 1 - M.ϖ ^ (m + 1) with hd_def
   have hd : d ∉ Q := one_sub_pow_succ_not_mem_of_mem_maximal Q M.ϖ M.ϖ_Q m
   have hdd : d * d ∉ Q := fun hx => hd ((hQp.mem_or_mem hx).elim id id)
@@ -1136,7 +1152,7 @@ theorem locMat : LocMat := by
     intro a c
     obtain ⟨w, hw⟩ := hb (u a c) (Finset.mem_image.mpr ⟨(a, c), Finset.mem_univ _, rfl⟩)
     refine ⟨v * w, ?_⟩
-    rw [hv, map_mul, map_mul, hw, Algebra.smul_def]
+    rw [hv, map_mul, map_mul, ← hw]
     ring
   choose U hU using hU0
   obtain ⟨Um, hUm⟩ : ∃ Um : Matrix (Fin N) (Fin N) (𝓞 E), ∀ a c, Um a c = U a c :=

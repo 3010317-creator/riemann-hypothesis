@@ -22,9 +22,17 @@ def gB (L : SizeData₂ D) (p : ℕ) : ℝ :=
   if (p : ℝ) ≤ L.sc.X'' D.R.n then (D.R.m : ℝ) * (4 * (D.host.TT.card : ℝ) * L.sc.a / (p : ℝ)) else 0
 
 theorem gB_nonneg (L : SizeData₂ D) (p : ℕ) : 0 ≤ gB L p := by
-  have ha := Formalism.MainNotions.DIV.Proofs.HHParts.a_nonneg L
+  have hx : 0 ≤ L.sc.x := le_of_lt (lt_trans zero_lt_one L.sc.one_lt_alt)
+  have ha : 0 ≤ L.sc.a := by
+    simp only [Scale.a, Scale.b]
+    exact mul_nonneg hx (Real.exp_pos _).le
   unfold gB
-  split_ifs <;> positivity
+  split_ifs
+  · have hm : (0 : ℝ) ≤ (D.R.m : ℝ) := Nat.cast_nonneg _
+    have hT : (0 : ℝ) ≤ (D.host.TT.card : ℝ) := Nat.cast_nonneg _
+    have hp : (0 : ℝ) ≤ (p : ℝ) := Nat.cast_nonneg _
+    exact mul_nonneg hm (div_nonneg (mul_nonneg (mul_nonneg (by norm_num) hT) ha) hp)
+  · exact le_refl 0
 
 theorem gainD_sum_le (P : ParameterChoice' D L) (X : Inst D L) (K : Consts) (hK : K.Nonneg)
     (hF : ∀ w, ParametersFill X K w) (w : D.what₂.places.Pl) :
@@ -120,15 +128,19 @@ theorem ga_le_at (P : ParameterChoice' D L) (X : Inst D L) (K : Consts) (hK : K.
 open Formalism.MainNotions.DIV.Proofs.HHParts in
 theorem logX_le (hN : SizeN L) (hK : SizeK L) :
     Real.log (L.sc.X'' D.R.n + 1) ≤ 4 * Formalism.MainNotions.DIV.Proofs.szPol L := by
-  have hn2 := hN.2
-  have hk1 := hK.1
+  obtain ⟨hn1, hn2⟩ := hN
+  obtain ⟨hk1, -⟩ := hK
   have hx1 := L.sc.one_lt_alt
   have he := L.sc.eps_pos
-  have hx0 : 0 < L.sc.x := sc_x_pos L
-  have hnpos : 0 < (D.R.n : ℝ) := zero_lt_one.trans_le (n_pos hN)
-  have hX'1 : 1 ≤ L.sc.X' := one_le_X' L
-  have hX'0 : 0 < L.sc.X' := zero_lt_one.trans_le hX'1
-  have ha : 0 < L.sc.a := mul_pos hx0 (zero_lt_one.trans_le (one_le_b L))
+  have hx0 : 0 < L.sc.x := lt_trans zero_lt_one hx1
+  have hnpos : 0 < (D.R.n : ℝ) := lt_of_lt_of_le (Real.rpow_pos_of_pos hx0 _) hn1
+  have hX'1 : 1 ≤ L.sc.X' := by
+    simp only [Scale.X']
+    exact Real.one_le_exp (Real.rpow_nonneg hx0.le _)
+  have hX'0 : 0 < L.sc.X' := lt_of_lt_of_le zero_lt_one hX'1
+  have ha : 0 < L.sc.a := by
+    simp only [Scale.a, Scale.b]
+    exact mul_pos hx0 (Real.exp_pos _)
   have hXeq : L.sc.X'' D.R.n = L.sc.x * D.R.n * L.sc.X' := by
     simp only [Scale.X'', Scale.w'', Scale.b']
     field_simp [ha.ne', hX'0.ne', hx0.ne', hnpos.ne']
@@ -154,15 +166,24 @@ theorem logX_le (hN : SizeN L) (hK : SizeK L) :
     linarith [Real.log_le_sub_one_of_pos hn1']
   have h3 : L.sc.x ^ (L.sc.eps / 3) ≤ L.sc.x ^ L.sc.eps :=
     Real.rpow_le_rpow_of_exponent_le hx1.le (by linarith)
-  have h4 : L.sc.x ≤ D.R.k := x_le_k L hK
+  have h4 : L.sc.x ≤ D.R.k := by
+    have h41 : L.sc.x ^ (1 : ℝ) ≤ L.sc.x ^ (9 / 2 + 10 * L.sc.eps - Formalism.MainNotions.szTh L) :=
+      Real.rpow_le_rpow_of_exponent_le hx1.le (by simp only [Formalism.MainNotions.szTh]; linarith)
+    rw [Real.rpow_one] at h41
+    linarith
   have h5 : (D.R.n : ℝ) ≤ D.R.k := by
     have h51 : L.sc.x ^ (2 + 8 * L.sc.eps + Formalism.MainNotions.szTh L) ≤
         L.sc.x ^ (9 / 2 + 10 * L.sc.eps - Formalism.MainNotions.szTh L) :=
       Real.rpow_le_rpow_of_exponent_le hx1.le (by simp only [Formalism.MainNotions.szTh]; linarith)
     linarith
-  have hkL := k_le L
-  have hLL : L.sc.x ^ L.sc.eps ≤ Formalism.MainNotions.DIV.Proofs.szPol L := L_le L
-  have hP1 := one_le_szPol L
+  have hL0 : 0 ≤ L.sc.x ^ L.sc.eps := Real.rpow_nonneg hx0.le _
+  have hLeq : L.sc.L = L.sc.x ^ L.sc.eps := rfl
+  unfold Formalism.MainNotions.DIV.Proofs.szPol
+  rw [hLeq]
+  have hf : (0 : ℝ) ≤ (D.R.f : ℝ) := by positivity
+  have hm : (0 : ℝ) ≤ (D.R.m : ℝ) := by positivity
+  have ht : (0 : ℝ) ≤ (D.R.t : ℝ) := by positivity
+  have hNm : (0 : ℝ) ≤ (D.R.N D.R.m : ℝ) := by positivity
   linarith
 
 
@@ -180,9 +201,13 @@ theorem ga_le_pol (P : ParameterChoice' D L) (X : Inst D L) (K : Consts) (hK : K
   obtain ⟨-, hTT⟩ := hTTs
   have hx1 := L.sc.one_lt_alt
   have he := L.sc.eps_pos
-  have hx0 : 0 < L.sc.x := sc_x_pos L
-  have hb : 0 < L.sc.b := zero_lt_one.trans_le (one_le_b L)
-  have hδ : L.sc.delta1 ≤ 1 := delta1_le
+  have hx0 : 0 < L.sc.x := lt_trans zero_lt_one hx1
+  have hb : 0 < L.sc.b := by
+    simp only [Scale.b]
+    exact Real.exp_pos _
+  have hδ : L.sc.delta1 ≤ 1 := by
+    simp only [Scale.delta1]
+    exact Real.rpow_le_one_of_one_le_of_nonpos hx1.le (by linarith)
   have hn0 : (0 : ℝ) ≤ (D.R.n : ℝ) := Nat.cast_nonneg _
   have hm0 : (0 : ℝ) ≤ (D.R.m : ℝ) := Nat.cast_nonneg _
   have hk0 : (0 : ℝ) ≤ (D.R.k : ℝ) := Nat.cast_nonneg _
@@ -207,7 +232,8 @@ theorem ga_le_pol (P : ParameterChoice' D L) (X : Inst D L) (K : Consts) (hK : K
   have hNm : (0 : ℝ) ≤ (D.R.N D.R.m : ℝ) := by positivity
   have hmk : (D.R.m : ℝ) + D.R.k ≤ Formalism.MainNotions.DIV.Proofs.szPol L := by
     unfold Formalism.MainNotions.DIV.Proofs.szPol; linarith
-  have hQ1 : 1 ≤ Formalism.MainNotions.DIV.Proofs.szPol L := one_le_szPol L
+  have hQ1 : 1 ≤ Formalism.MainNotions.DIV.Proofs.szPol L := by
+    unfold Formalism.MainNotions.DIV.Proofs.szPol; linarith
   have hQ0 : 0 ≤ Formalism.MainNotions.DIV.Proofs.szPol L := by linarith
   have e1 : (D.host.TT.card : ℝ) * L.sc.x ≤ 2 * D.R.k := by
     have q := mul_le_mul_of_nonneg_right hTT' hx0.le
