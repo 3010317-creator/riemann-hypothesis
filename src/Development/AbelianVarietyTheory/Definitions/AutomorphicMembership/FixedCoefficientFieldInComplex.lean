@@ -408,12 +408,6 @@ theorem hilbertField_le_torsionField : hilbertField d F ≤ torsionField d A := 
 
 theorem torsionField_le_discField : torsionField d A ≤ discField d A := le_sup_left
 
-theorem discField_le_iff {M : IntermediateField ℚ ℂ} : discField d A ≤ M ↔
-    sqrtNegNat d ∈ M ∧ F ≤ M ∧ torsionCoords (A.baseChange ℂ) 12 ⊆ M ∧ ∀ z : ℂ, z ^ 12 = (A.Δ : ℂ) → z ∈ M := by
-  simp only [discField, torsionField, hilbertField, sup_le_iff, IntermediateField.adjoin_le_iff, and_assoc,
-    Set.singleton_subset_iff, SetLike.mem_coe]
-  rfl
-
 
 variable {d A} in
 theorem hilbertField_eq (h : IsGoodCMCurve d F A) {L : PeriodPair} (hL : IsIntegersLattice d L) :
