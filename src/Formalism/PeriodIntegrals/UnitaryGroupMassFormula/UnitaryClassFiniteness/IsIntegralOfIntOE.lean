@@ -31,33 +31,14 @@ def Oh : AddSubgroup (Af F ⊗[F] E) :=
 theorem tmul_mem_Oh {a : Af F} (ha : a ∈ intAf F) {e : E} (he : IsIntegral ℤ e) : a ⊗ₜ[F] e ∈ Oh F E := AddSubgroup.subset_closure ⟨a, ha, e, he, rfl⟩
 
 theorem Oh_mul {x y : Af F ⊗[F] E} (hx : x ∈ Oh F E) (hy : y ∈ Oh F E) : x * y ∈ Oh F E := by
-  unfold Oh at hx hy ⊢
-  induction hy using AddSubgroup.closure_induction with
-  | mem y hy' =>
-    induction hx using AddSubgroup.closure_induction with
-    | mem x hx' =>
-      obtain ⟨a, ha, e, he, rfl⟩ := hx'
-      obtain ⟨b, hb, f, hf, rfl⟩ := hy'
-      rw [Algebra.TensorProduct.tmul_mul_tmul]
-      exact AddSubgroup.subset_closure ⟨a * b, intAf_mul ha hb, e * f, he.mul hf, rfl⟩
-    | zero =>
-      rw [zero_mul]
-      exact zero_mem _
-    | add x x' _ _ h1 h2 =>
-      rw [add_mul]
-      exact add_mem h1 h2
-    | neg x _ h1 =>
-      rw [neg_mul]
-      exact neg_mem h1
-  | zero =>
-    rw [mul_zero]
-    exact zero_mem _
-  | add y y' _ _ h1 h2 =>
-    rw [mul_add]
-    exact add_mem h1 h2
-  | neg y _ h1 =>
-    rw [mul_neg]
-    exact neg_mem h1
+  refine (AddSubgroup.closure_le (K := (Oh F E).comap (AddMonoidHom.mulLeft x))).2 ?_ hy
+  rintro _ ⟨b, hb, f, hf, rfl⟩
+  refine (AddSubgroup.closure_le
+    (K := (Oh F E).comap (AddMonoidHom.mulRight (b ⊗ₜ[F] f)))).2 ?_ hx
+  rintro _ ⟨a, ha, e, he, rfl⟩
+  change (a ⊗ₜ[F] e) * (b ⊗ₜ[F] f) ∈ Oh F E
+  rw [Algebra.TensorProduct.tmul_mul_tmul]
+  exact tmul_mem_Oh (intAf_mul ha hb) (he.mul hf)
 
 theorem isIntegral_of_intOE {e : E} (he : e ∈ Formalism.UG.intOE E) : IsIntegral ℤ e := by
   obtain ⟨a, rfl⟩ := RingHom.mem_range.mp he

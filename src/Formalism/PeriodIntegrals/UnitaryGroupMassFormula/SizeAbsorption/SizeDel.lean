@@ -16,43 +16,37 @@ private lemma exists_log_le_rpow_and_mul_exp_le_exp_rpow (ε C : ℝ) (hε : 0 <
     ∃ x0 : ℝ, ∀ x : ℝ, 1 < x → x0 ≤ x →
       Real.log x ≤ x ^ (ε / 3) ∧
         C * x ^ 5 * (Real.exp (x ^ (ε / 3)) * Real.exp (x ^ (ε / 3))) ≤ Real.exp (x ^ ε) := by
-  have hε0 : ε ≠ 0 := hε.ne'
-  obtain ⟨B, hB⟩ : ∃ B : ℝ, B = 6 / ε := ⟨_, rfl⟩
-  have hB0 : 0 < B := by rw [hB]; exact div_pos (by norm_num) hε
-  have h3 : B * (ε / 6) = 1 := by rw [hB]; field_simp
-  obtain ⟨M, hM⟩ : ∃ M : ℝ, M = |Real.log C| + 5 * B + 2 := ⟨_, rfl⟩
+  set B : ℝ := 6 / ε
+  have hB0 : 0 < B := div_pos (by norm_num) hε
+  have h3 : B * (ε / 6) = 1 := by simp only [B]; field_simp
+  set M : ℝ := |Real.log C| + 5 * B + 2
   have hlC : Real.log C ≤ |Real.log C| := le_abs_self _
-  have hM1 : 1 ≤ M := by have := abs_nonneg (Real.log C); rw [hM]; linarith
-  have hBM : B ≤ M := by have := abs_nonneg (Real.log C); rw [hM]; linarith
+  have hM1 : 1 ≤ M := by linarith [abs_nonneg (Real.log C)]
+  have hBM : B ≤ M := by linarith [abs_nonneg (Real.log C)]
   refine ⟨M ^ B, fun x hx hx0 => ?_⟩
   have hxpos : 0 < x := by linarith
-  obtain ⟨s, hs⟩ : ∃ s : ℝ, s = x ^ (ε / 6) := ⟨_, rfl⟩
+  set s : ℝ := x ^ (ε / 6)
   have hMs : M ≤ s := by
     have h1 : (M ^ B) ^ (ε / 6) ≤ x ^ (ε / 6) :=
       Real.rpow_le_rpow (Real.rpow_nonneg (by linarith) _) hx0 (by linarith)
-    have h2 : (M ^ B) ^ (ε / 6) = M := by
-      rw [← Real.rpow_mul (by linarith), h3, Real.rpow_one]
-    rw [hs]; linarith
+    rwa [← Real.rpow_mul (by linarith), h3, Real.rpow_one] at h1
   have hs1 : 1 ≤ s := le_trans hM1 hMs
   have hlog : Real.log x ≤ B * s := by
-    have hsp : 0 < s := by linarith
-    have h2 : Real.log s ≤ s - 1 := Real.log_le_sub_one_of_pos hsp
-    rw [hs, Real.log_rpow hxpos, ← hs] at h2
-    calc Real.log x = B * (ε / 6 * Real.log x) := by rw [← mul_assoc, h3, one_mul]
-      _ ≤ B * (s - 1) := mul_le_mul_of_nonneg_left h2 hB0.le
-      _ ≤ B * s := by linarith
+    have h1 := Real.log_le_rpow_div hxpos.le (by positivity : 0 < ε / 6)
+    have h2 : x ^ (ε / 6) / (ε / 6) = B * s := by simp only [B, s]; field_simp
+    linarith
   have ht : x ^ (ε / 3) = s ^ 2 := by
-    rw [hs, ← Real.rpow_natCast, ← Real.rpow_mul hxpos.le]; congr 1; push_cast; ring
+    rw [← Real.rpow_natCast, ← Real.rpow_mul hxpos.le]; congr 1; push_cast; ring
   have hu : x ^ ε = s ^ 6 := by
-    rw [hs, ← Real.rpow_natCast, ← Real.rpow_mul hxpos.le]; congr 1; push_cast; ring
+    rw [← Real.rpow_natCast, ← Real.rpow_mul hxpos.le]; congr 1; push_cast; ring
   constructor
   · rw [ht]
     have h4 : B * s ≤ s * s := mul_le_mul_of_nonneg_right (le_trans hBM hMs) (by linarith)
     nlinarith [hlog, h4]
   · rw [ht, hu]
-    have h5 : Real.log (x ^ 5) = 5 * Real.log x := by rw [Real.log_pow]; norm_num
     have hx5 : x ^ 5 = Real.exp (5 * Real.log x) := by
-      rw [← h5, Real.exp_log (pow_pos hxpos 5)]
+      rw [← Real.exp_log (pow_pos hxpos 5), Real.log_pow]
+      simp
     have key : C * x ^ 5 * (Real.exp (s ^ 2) * Real.exp (s ^ 2)) =
         Real.exp (Real.log C + 5 * Real.log x + (s ^ 2 + s ^ 2)) := by
       rw [Real.exp_add, Real.exp_add, Real.exp_add, Real.exp_log hC, ← hx5]
@@ -63,10 +57,9 @@ private lemma exists_log_le_rpow_and_mul_exp_le_exp_rpow (ε C : ℝ) (hε : 0 <
       nlinarith [mul_nonneg (abs_nonneg (Real.log C)) (sub_nonneg.2 hs2)]
     have e3 : B * s ≤ B * s ^ 2 := mul_le_mul_of_nonneg_left (by nlinarith [hs1]) hB0.le
     have e4 : M * s ^ 2 ≤ s * s ^ 2 := mul_le_mul_of_nonneg_right hMs (sq_nonneg s)
-    rw [hM] at e4
     have hs3 : 1 ≤ s ^ 3 := by nlinarith [mul_nonneg (sub_nonneg.2 hs1) (sq_nonneg s), hs2]
     have e5 : s * s ^ 2 ≤ s ^ 6 := by
-      nlinarith [mul_nonneg (pow_nonneg (by linarith : (0:ℝ) ≤ s) 3) (sub_nonneg.2 hs3)]
+      nlinarith [mul_nonneg (pow_nonneg (by linarith : (0 : ℝ) ≤ s) 3) (sub_nonneg.2 hs3)]
     nlinarith [hlC, hlog, e2, e3, e4, e5]
 
 private lemma sq_mul_add_abs_mul_nonneg (N A B C d1 d2 : ℝ) (hA : 0 ≤ A) (hB : 0 ≤ B) (hC : 0 ≤ C) :
@@ -254,16 +247,7 @@ theorem stepA : StepA := by
     sq_mul_add_abs_mul_nonneg (Nm D) (Real.log (8 * (D.R.n : ℝ) * Nm D * L.sc.a)) (Real.log (L.sc.X'' D.R.n))
       (Real.log (2 * L.sc.a)) K.dl1 K.dl2 hl1 hl2 hl3
 
-  have hlx : Real.log L.sc.x ≤ L.sc.x ^ L.sc.eps / L.sc.eps := by
-    have h2 := Real.log_le_sub_one_of_pos hup
-    rw [Real.log_rpow hxpos] at h2
-    have h3 : L.sc.eps * (L.sc.x ^ L.sc.eps / L.sc.eps) = L.sc.x ^ L.sc.eps := by
-      first
-        | (field_simp; done)
-    by_contra! hc
-    have h4 := mul_lt_mul_of_pos_left hc he0
-    rw [h3] at h4
-    linarith
+  have hlx : Real.log L.sc.x ≤ L.sc.x ^ L.sc.eps / L.sc.eps := Real.log_le_rpow_div hxpos.le he0
   obtain ⟨V, hV⟩ : ∃ V : ℝ, V = L.sc.x ^ L.sc.eps / L.sc.eps := ⟨_, rfl⟩
   rw [← hV] at hlx
   have hV0 : 0 < V := by rw [hV]; exact div_pos hup he0

@@ -70,26 +70,18 @@ theorem measurableSet_image_toInf (hS : SplitIso) {FdN : Set X.B.I.Ginf} (hF : M
     exact split_unitary_infinite_one X hb s
   let ψ : HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J → X.B.I.GA := fun y => Φ.symm (y, 1)
   have hψc : Continuous ψ := Φ.symm.continuous_toFun.comp (continuous_id.prodMk continuous_const)
-  have hset : X.toInf hb '' FdN = (fun y => (ψ y).1) ⁻¹' FdN := by
-    ext y
-    constructor
-    · rintro ⟨s, hs, rfl⟩
-      show (Φ.symm (X.toInf hb s, 1)).1 ∈ FdN
-      rw [← hΦ, Φ.symm_apply_apply]
-      exact hs
-    · intro h1
-      have h2 : (ψ y).2 = 1 := by
-        apply eq_one_of_toHA_fin X hb
-        have h3 : e (toHA X.B.I hb (ψ y)) = (y, 1) := Φ.apply_symm_apply _
-        rw [he] at h3
-        rw [h3]
-      refine ⟨(ψ y).1, h1, ?_⟩
-      have hp : ψ y = ((ψ y).1, 1) := Prod.ext rfl h2
-      have := congrArg Φ hp
-      rw [show Φ (ψ y) = (y, 1) from Φ.apply_symm_apply _, hΦ] at this
-      exact (congrArg Prod.fst this).symm
+  have hL : Function.LeftInverse (fun y => (ψ y).1) (X.toInf hb) := fun s => by
+    show (Φ.symm (X.toInf hb s, 1)).1 = s
+    rw [← hΦ, Φ.symm_apply_apply]
+  have hR : Function.RightInverse (fun y => (ψ y).1) (X.toInf hb) := fun y => by
+    have h2 : (ψ y).2 = 1 := eq_one_of_toHA_fin X hb _ (by
+      have h3 : e (toHA X.B.I hb (ψ y)) = (y, 1) := Φ.apply_symm_apply _
+      rw [he] at h3; rw [h3])
+    have hp := congrArg Φ (Prod.ext rfl h2 : ψ y = ((ψ y).1, 1))
+    rw [show Φ (ψ y) = (y, 1) from Φ.apply_symm_apply _, hΦ] at hp
+    exact (congrArg Prod.fst hp).symm
   haveI : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
-  rw [hset]
+  rw [Set.image_eq_preimage_of_inverse hL hR]
   exact (continuous_fst.comp hψc).measurable hF
 
 end Split

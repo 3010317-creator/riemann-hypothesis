@@ -47,19 +47,11 @@ theorem inv_nat_mem_Wf (p : ℕ) [hp : Fact p.Prime] (m : ℕ) (hm : m ≠ 0) :
 
 theorem coeff_pow_mem {σ : Type} (p : ℕ) [Fact p.Prime] (f : MvPowerSeries σ ℂ_[p])
     (hf : CoefWf f) : ∀ n : ℕ, ∀ α, MvPowerSeries.coeff α (f ^ n) ∈ Wf p := by
-  classical
-  intro n
-  induction n with
-  | zero =>
-    intro α
-    rw [pow_zero, MvPowerSeries.coeff_one]
-    split_ifs
-    · exact (Wf p).one_mem
-    · exact (Wf p).zero_mem
-  | succ n ih =>
-    intro α
-    rw [pow_succ, MvPowerSeries.coeff_mul]
-    exact (Wf p).sum_mem fun x _ => (Wf p).mul_mem (ih x.1) (mem_Wf.mpr (hf x.2))
+  intro n α
+  let g : MvPowerSeries σ (Wf p) := fun β => ⟨MvPowerSeries.coeff β f, mem_Wf.mpr (hf β)⟩
+  have hg : MvPowerSeries.map (Wf p).subtype g = f := MvPowerSeries.ext fun _ => rfl
+  rw [← hg, ← map_pow, MvPowerSeries.coeff_map]
+  exact SetLike.coe_mem _
 
 theorem stepI : StepI := by
   intro p _ σ f hf n

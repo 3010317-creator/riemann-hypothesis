@@ -20,36 +20,11 @@ namespace ChLiftW
 theorem int_valued_zero {Y : Type*} [TopologicalSpace Y] [PreconnectedSpace Y] (ψ : Y → ℝ)
     (hψ : Continuous ψ) (hint : ∀ p, ∃ n : ℤ, ψ p = n) (a : Y) (ha : ψ a = 0) (p : Y) :
     ψ p = 0 := by
-  obtain ⟨n, hn⟩ := hint p
-  have key : ∀ t : ℝ, t ∈ Set.uIcc (0 : ℝ) (n : ℝ) → ∃ m : ℤ, t = m := by
-    intro t ht
-    rcases le_total (0 : ℝ) n with h | h
-    · rw [Set.uIcc_of_le h] at ht
-      obtain ⟨q, hq⟩ := intermediate_value_univ a p hψ (by rw [ha, hn]; exact ht)
-      obtain ⟨m, hm⟩ := hint q
-      exact ⟨m, by rw [← hq, hm]⟩
-    · rw [Set.uIcc_of_ge h] at ht
-      obtain ⟨q, hq⟩ := intermediate_value_univ p a hψ (by rw [ha, hn]; exact ht)
-      obtain ⟨m, hm⟩ := hint q
-      exact ⟨m, by rw [← hq, hm]⟩
-  rw [hn]
-  by_contra hne
-  have hn0 : n ≠ 0 := fun h => hne (by simp [h])
-  rcases lt_or_gt_of_ne hn0 with h | h
-  · have hn1 : (n : ℝ) ≤ -1 := by exact_mod_cast (show n ≤ -1 by omega)
-    obtain ⟨m, hm⟩ := key (-1 / 2) (by
-      rw [Set.uIcc_of_ge (by linarith)]
-      constructor <;> linarith)
-    have h2 : ((2 * m : ℤ) : ℝ) = -1 := by push_cast; linarith
-    have h3 : 2 * m = -1 := by exact_mod_cast h2
-    omega
-  · have hn1 : (1 : ℝ) ≤ n := by exact_mod_cast (show 1 ≤ n by omega)
-    obtain ⟨m, hm⟩ := key (1 / 2) (by
-      rw [Set.uIcc_of_le (by linarith)]
-      constructor <;> linarith)
-    have h2 : ((2 * m : ℤ) : ℝ) = 1 := by push_cast; linarith
-    have h3 : 2 * m = 1 := by exact_mod_cast h2
-    omega
+  choose φ hφ using hint
+  have hcomp : ((↑) : ℤ → ℝ) ∘ φ = ψ := funext fun y => (hφ y).symm
+  have hc : Continuous φ :=
+    Int.isClosedEmbedding_coe_real.isEmbedding.continuous_iff.2 (hcomp ▸ hψ)
+  rw [hφ p, hc.isConst_of_preconnectedSpace p a, ← hφ a, ha]
 
 theorem lift_normed {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W] (χ : W → ℂ)
     (hc : Continuous χ) (hadd : ∀ x y, χ (x + y) = χ x * χ y) (h0 : χ 0 = 1) :
@@ -122,10 +97,8 @@ theorem lift_place {F : Type} [Field F] (v : InfinitePlace F) (χ : v.Completion
 
 theorem addChar_sum {ι A : Type*} [AddCommMonoid A] (χ : AddChar A ℂ) (s : Finset ι) (f : ι → A) :
     χ (∑ i ∈ s, f i) = ∏ i ∈ s, χ (f i) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp [AddChar.map_zero_eq_one]
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.prod_insert ha, AddChar.map_add_eq_mul, ih]
+  simpa only [AddChar.toMonoidHom_apply, toAdd_prod, toAdd_ofAdd] using
+    map_prod χ.toMonoidHom (fun i => Multiplicative.ofAdd (f i)) s
 
 end ChLiftW
 
