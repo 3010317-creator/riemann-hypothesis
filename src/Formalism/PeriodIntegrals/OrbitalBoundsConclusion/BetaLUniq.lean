@@ -180,14 +180,6 @@ theorem finrank_Xsp {r : ℕ} {T : E} (F : LFlag S r T) : finrank E (Xsp F) = r 
   show finrank E (Submodule.span E (Set.range F.fl.e)) = r
   rw [finrank_span_eq_card F.fl.e_indep]; simp
 
-theorem Xflag_r {r : ℕ} {T : E} (F : LFlag S r T) : Xflag F r = Xsp F := by
-  show Submodule.span E (F.fl.e '' {i | i.1 < r}) = Submodule.span E (Set.range F.fl.e)
-  congr 1
-  rw [← Set.image_univ]
-  congr 1
-  ext i
-  simp
-
 theorem inf_span_eq_bot {P : Submodule E S.V} {v : S.V} (hv : v ∉ P) :
     P ⊓ Submodule.span E {v} = ⊥ := by
   rw [Submodule.eq_bot_iff]
@@ -322,9 +314,9 @@ theorem line_reduction_holds : LineReduce' := by
       omega
 
   have hX'' : Xsp F'' = X'.map (β₁ : S.V →ₗ[E] S.V) := by
-    rw [← Xflag_r F'', ← hf1 r, Xflag_r F']
+    rw [← PI.UnitaryGroupMassFormula.BetaLUniq.EigB.Xflag_r F'', ← hf1 r, PI.UnitaryGroupMassFormula.BetaLUniq.EigB.Xflag_r F']
   have hX''2 : Xsp F'' = X'.map (β₂ : S.V →ₗ[E] S.V) := by
-    rw [← Xflag_r F'', ← hf2 r, Xflag_r F']
+    rw [← PI.UnitaryGroupMassFormula.BetaLUniq.EigB.Xflag_r F'', ← hf2 r, PI.UnitaryGroupMassFormula.BetaLUniq.EigB.Xflag_r F']
   have hγX : ∀ x ∈ X', β₁.symm (β₂ x) ∈ X' := by
     intro x hx
     have : β₂ x ∈ Xsp F'' := by rw [hX''2]; exact Submodule.mem_map_of_mem hx
