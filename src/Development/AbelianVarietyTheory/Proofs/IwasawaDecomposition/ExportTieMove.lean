@@ -882,15 +882,8 @@ theorem placeModel_dn {mm nn : ℕ} {ψ B hs e Λ c f₀ T} (h : @IsPlaceModel (
     (vac := h.vac)
 
 theorem placeMap_up {S T : HSp D} (B : Base S T) (a : AE D) :
-    (baseUp r B).F.placeMap ((a)) = (B.F.placeMap a) := by
-  have hP : (fun L : (WO (D := overD D r) S T → ℂ) →ₗ[ℂ] (WO (D := overD D r) S T → ℂ) =>
-      IsPlaceModel (baseUp r B).F.ψ (symplO S T)
-        (heisO (baseUp r B).F.ψ S T) a (baseUp r B).F.lat 1 (baseUp r B).F.f₀ L) =
-      (fun L : (WO S T → ℂ) →ₗ[ℂ] (WO S T → ℂ) =>
-        IsPlaceModel B.F.ψ (symplO S T) (heisO B.F.ψ S T) a B.F.lat 1 B.F.f₀ L) :=
-    funext fun L => propext ⟨fun h => placeModel_dn r h, fun h => placeModel_up r h⟩
-  delta Frame.placeMap
-  exact congrArg Classical.epsilon hP
+    (baseUp r B).F.placeMap ((a)) = (B.F.placeMap a) :=
+  eq_of_heq (RatUp.placeMap_up r B a)
 
 theorem vec_up {S T : HSp D} (B : Base S T) (Q ω) :
     (baseUp r B).F.vec (baseUp r B).G Q ω = B.F.vec B.G Q ω := by
