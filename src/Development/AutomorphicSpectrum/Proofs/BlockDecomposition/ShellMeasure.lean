@@ -782,7 +782,7 @@ theorem shiftCore (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ))
           exact absurd hij (not_lt.2 hlt.le))]
       simp
     · rw [Units.val_mul, Units.val_mul, conj_apply hy, hT, ite_eq_left rfl,
-        ite_eq_right (fun h => hne (h.1.symm.trans h.2)), add_zero, mul_one, inv_mul_diag hy]
+        ite_eq_right (fun h => hne (h.1.symm.trans h.2)), add_zero, mul_one, GlobalTheory.WeylCellRankOne.diag_mul_eq_one hy]
   · intro u hu g
     have huB : (u : GL (Fin n) L) ∈ unipB L (Fin n) := (mem_cell.1 hu).1
     set N : GL (Fin n) L := (u : GL (Fin n) L) * ν * (u : GL (Fin n) L)⁻¹ * T⁻¹ with hN
@@ -816,7 +816,7 @@ theorem shiftCore (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ))
       · exact ((mem_unipB L).1 hNB).1 _ _ h
     have hbd : ∀ i, ((b : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) i i = 1 := by
       intro i
-      rw [hbv, ((mem_unipB L).1 hNB).2, mul_one, inv_mul_diag hy]
+      rw [hbv, ((mem_unipB L).1 hNB).2, mul_one, GlobalTheory.WeylCellRankOne.diag_mul_eq_one hy]
     have hchi : chiDeltaU q α b = 1 := by
       unfold chiDeltaU
       apply Finset.prod_eq_one

@@ -412,7 +412,7 @@ theorem exists_int_unit_root : ∀ (D : D7) (z : (Af D.host.F ⊗[D.host.F] D.ho
     · rw [hz'inv]
       refine (GlobalTheory.IdemSupport.mem_intAE_iff _).1 ?_
       rw [hzinv]
-      exact GlobalTheory.DetOnto.sigR_mem_intAE D hz
+      exact GlobalTheory.PlaceIdem.sig_mem D hz
   obtain ⟨x, hx, hxz, -⟩ := GlobalTheory.TwU.IntegralHilbert90Unramified.exists_integral_h90_preimage_trivial_where_trivial D.host.F D.host.E D.sp.cm.sig (conj_sig D)
     (GlobalTheory.HeckeAdjoint.unramified_host D) z' hU1 hint
   have hx' := (Submonoid.mem_units_iff _ _).1 hx

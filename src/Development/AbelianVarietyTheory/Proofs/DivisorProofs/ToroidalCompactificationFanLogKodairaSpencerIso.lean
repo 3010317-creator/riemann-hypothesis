@@ -233,10 +233,6 @@ noncomputable section
 
 namespace GlobalTheory.LogKSUp
 
-theorem chart_res' {X : Scheme.{0}} (U W : X.affineOpens) (h : W.1 ≤ U.1) :
-    spMap (X.presheaf.map (homOfLE h).op).hom ≫ GlobalTheory.LogKS.chart U = GlobalTheory.LogKS.chart W :=
-  U.2.map_fromSpec W.2 (homOfLE h).op
-
 theorem exists_factor {X : Scheme.{0}} (U W : X.affineOpens) (h : W.1 ≤ U.1) {S : Type} [CommRing S]
     (φ : Γ(X, U.1) →+* S) (hr : ∀ z, (spMap φ ≫ GlobalTheory.LogKS.chart U) z ∈ W.1) :
     ∃ φ' : Γ(X, W.1) →+* S, φ = φ'.comp (X.presheaf.map (homOfLE h).op).hom := by
@@ -253,7 +249,7 @@ theorem exists_factor {X : Scheme.{0}} (U W : X.affineOpens) (h : W.1 ≤ U.1) {
   have hfac : spMap (Spec.preimage ψ).hom ≫ GlobalTheory.LogKS.chart W = spMap φ ≫ GlobalTheory.LogKS.chart U := by
     simp only [spMap, CommRingCat.ofHom_hom, Spec.map_preimage]
     exact hψ
-  rw [← chart_res' U W h, ← Category.assoc, _root_.GlobalTheory.spMap_comp_ring] at hfac
+  rw [← GlobalTheory.LogKSLoc.spMap_res_chart U W h, ← Category.assoc, _root_.GlobalTheory.spMap_comp_ring] at hfac
   have h2 := Spec.map_inj.1 ((cancel_mono (GlobalTheory.LogKS.chart U)).1 hfac)
   simpa using (congrArg CommRingCat.Hom.hom h2).symm
 
@@ -280,7 +276,7 @@ theorem isKS_of_inf : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
       exact hWW i (inf_le_left (a := Wc i) (b := Wc i') (hO hz))
     obtain ⟨φ', hfac⟩ := exists_factor U W hWU φ hr
     have hg₀' : g₀ ≫ t.G.hom = spMap φ' ≫ GlobalTheory.LogKS.chart W := by
-      rw [hg₀, hfac, ← _root_.GlobalTheory.spMap_comp_ring, Category.assoc, chart_res']
+      rw [hg₀, hfac, ← _root_.GlobalTheory.spMap_comp_ring, Category.assoc, GlobalTheory.LogKSLoc.spMap_res_chart]
     have := htest i i' O hO f S φ' g₀ w hg₀' hO' fun a => by
       obtain ⟨g', v', h₁, h₂, h₃⟩ := hw a
       refine ⟨g', v', h₁, ?_, h₃⟩
@@ -750,7 +746,7 @@ theorem exists_isKS_regular : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   obtain ⟨DW, hDW⟩ := exists_der_res U W hWU D.1
   obtain ⟨hv', hb'⟩ := GlobalTheory.LocM.FrameBase.tanBasis_baseChange Y.t (Y.X.presheaf.map (homOfLE hWU).op).hom
     (chart U) n v hv hb
-  rw [GlobalTheory.LogKSDiv.GenChange.chart_res U W hWU] at hv' hb'
+  rw [GlobalTheory.LogKSLoc.spMap_res_chart U W hWU] at hv' hb'
   obtain ⟨ΘW, hΘW⟩ := GlobalTheory.T.exists_kodairaSpencer_interior_affine_open E H Dw l Xo c Y W (hW.le.trans inf_le_right) n _ hv' hb' DW
   have key := fun (m : Ideal Γ(Y.X, U.1)) (hm : m.IsMaximal) hx =>
     GlobalTheory.T.kodairaSpencer_regular_near_rigid_boundary_point E H Dw l Xo c Y hpq hsm hsnc hrig U W hW n v hv hb D DW ΘW hDW hΘW m hm hx

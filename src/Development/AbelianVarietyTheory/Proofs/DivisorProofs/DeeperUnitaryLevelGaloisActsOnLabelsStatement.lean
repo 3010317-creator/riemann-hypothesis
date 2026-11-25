@@ -203,14 +203,6 @@ theorem cm_map {Y' : Type} [AddCommGroup Y'] (f : Y →+ Y') {N : ℕ} {x y : Y}
   obtain ⟨w, rfl⟩ := h
   exact ⟨f w, by rw [map_add (f := _), map_nsmul]⟩
 
-theorem cm_of_mk {N : ℕ} {x y : Y}
-    (h : (QuotientAddGroup.mk x : Y ⧸ (nsmulAddMonoidHom N : Y →+ Y).range) = QuotientAddGroup.mk y) :
-    CongMod N x y := by
-  rw [QuotientAddGroup.eq] at h
-  obtain ⟨w, hw⟩ := h
-  have hw' : N • w = -x + y := hw
-  exact ⟨-w, by rw [smul_neg, hw']; abel⟩
-
 theorem cm_mk {N : ℕ} {x y : Y} (h : CongMod N x y) :
     (QuotientAddGroup.mk x : Y ⧸ (nsmulAddMonoidHom N : Y →+ Y).range) = QuotientAddGroup.mk y := by
   rw [QuotientAddGroup.eq]
@@ -274,8 +266,8 @@ theorem core : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     have e1 := lb.yy_eq b pk x hpk hx
     have e2 := lb'.yy_eq b pk' x' hpk' hx'
     have t := htor _ pk pk' x x' w hrN hpk hpk' hw hwa hwa'
-    have c1 : CongMod (X.S.r * X.S.N) χ pk.y := cm_of_mk (h.symm.trans e1)
-    have c2 : CongMod (X.S.r * X.S.N) χ' pk'.y := cm_of_mk (h'.symm.trans e2)
+    have c1 : CongMod (X.S.r * X.S.N) χ pk.y := GlobalTheory.Poinc.GalTrans.cm_of_mk (h.symm.trans e1)
+    have c2 : CongMod (X.S.r * X.S.N) χ' pk'.y := GlobalTheory.Poinc.GalTrans.cm_of_mk (h'.symm.trans e2)
     exact cm_trans c2 (cm_trans t (cm_symm (cm_map e.toAddMonoidHom c1)))
   refine ⟨(j.symm.trans e).trans j', ?_, ?_⟩
   · intro v
@@ -297,7 +289,7 @@ theorem core : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     have e2 := hyy' b χ' hχ'.symm
     rw [e2]
     apply cm_mk
-    have c0 : CongMod (X.S.r * X.S.N) ν (j χ) := cm_of_mk (hν.symm.trans e1)
+    have c0 : CongMod (X.S.r * X.S.N) ν (j χ) := GlobalTheory.Poinc.GalTrans.cm_of_mk (hν.symm.trans e1)
     have c3 := hlabe b χ χ' hχ.symm hχ'.symm
     have c4 : CongMod (X.S.r * X.S.N) (j.symm ν) χ := by simpa using cm_map j.symm.toAddMonoidHom c0
     exact cm_trans (cm_map j'.toAddMonoidHom c3) (cm_symm (cm_map j'.toAddMonoidHom (cm_map e.toAddMonoidHom c4)))

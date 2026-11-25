@@ -630,7 +630,7 @@ theorem exists_section_of_theta_datum (hP : _root_.GlobalTheory.CovTop.Published
   obtain ⟨a1, a2, a3, a4⟩ := through_point TF.X Z y T io y' g hpt
   have hi := top_le_stalkPt y ((algebraMap T.V T.Fr).comp g) _ hj
   obtain ⟨u, hu⟩ := a4 _ f j hj a3 hi
-  rw [← hθ, val_restr_pt le_top _ j (top_le_stalkPt y _ ⊤ (memTop y)), val_stalkPt y j (memTop y) hj,
+  rw [← hθ, GlobalTheory.CompHS.val_restr' le_top _ j (top_le_stalkPt y _ ⊤ (memTop y)), val_stalkPt y j (memTop y) hj,
     RingHom.comp_apply] at hu
   have hne : ν (H0.germ j y (memTop y) hj θ) ≠ 0 := hm ▸ WithZero.coe_ne_zero
   have hg0 : algebraMap T.V T.Fr (g (H0.germ j y (memTop y) hj θ)) ≠ 0 := fun h => hne (by

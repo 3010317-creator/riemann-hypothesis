@@ -470,13 +470,13 @@ theorem exists_integral_unitary (hE : Unr E) (n : ℕ) (P : E[X]) (hP : P ∈ El
   obtain ⟨M, G, hMP, hG, hGh, hMG⟩ := GlobalTheory.EllHermGlobal.exists_charpoly_herm E n P hP
   have h1 : ∀ᶠ w : Pl E in cofinite, ∀ i j,
       algebraMap E (w.adicCompletion E) (M i j) ∈ w.adicCompletionIntegers E :=
-    eventually_all.2 fun i => eventually_all.2 fun j => GlobalTheory.ExInertUnit.eventually_mem_integers _
+    eventually_all.2 fun i => eventually_all.2 fun j => GlobalTheory.EulerTwU.eventually_int _
   have h2 : ∀ᶠ w : Pl E in cofinite, ∀ i j,
       algebraMap E (w.adicCompletion E) (G i j) ∈ w.adicCompletionIntegers E :=
-    eventually_all.2 fun i => eventually_all.2 fun j => GlobalTheory.ExInertUnit.eventually_mem_integers _
+    eventually_all.2 fun i => eventually_all.2 fun j => GlobalTheory.EulerTwU.eventually_int _
   have h3 : ∀ᶠ w : Pl E in cofinite, ∀ i j,
       algebraMap E (w.adicCompletion E) (G⁻¹ i j) ∈ w.adicCompletionIntegers E :=
-    eventually_all.2 fun i => eventually_all.2 fun j => GlobalTheory.ExInertUnit.eventually_mem_integers _
+    eventually_all.2 fun i => eventually_all.2 fun j => GlobalTheory.EulerTwU.eventually_int _
   filter_upwards [h1, h2, h3] with w hw1 hw2 hw3 hw
   obtain ⟨γ, hγ, hc⟩ := GlobalTheory.ExInertUnit.local_step hE w hw M G hG hGh hMG hw1 hw2 hw3
   exact ⟨γ, hγ, by rw [hc, hMP]⟩
