@@ -279,11 +279,8 @@ theorem big_eq (g : GR n) (h : IsUnit (mR g).toBlocks₂₁.det) :
   have hCH : (C⁻¹)ᴴ * Cᴴ = 1 := by rw [← Matrix.conjTranspose_mul, hCi, Matrix.conjTranspose_one]
   have hHC : Cᴴ * (C⁻¹)ᴴ = 1 := by rw [← Matrix.conjTranspose_mul, hiC, Matrix.conjTranspose_one]
   set a := -(C⁻¹)ᴴ with ha_def
-  have ha : IsUnit a.det := by
-    have e : a * (-Cᴴ) = 1 := by rw [ha_def, neg_mul_neg, hCH]
-    have := congrArg Matrix.det e
-    rw [Matrix.det_mul, Matrix.det_one] at this
-    exact isUnit_iff_ne_zero.2 (left_ne_zero_of_mul_eq_one this)
+  have ha : IsUnit a.det :=
+    Matrix.isUnit_det_of_right_inverse (show a * (-Cᴴ) = 1 by rw [ha_def, neg_mul_neg, hCH])
   have haH : (aᴴ)⁻¹ = -C := by
     apply Matrix.inv_eq_left_inv
     rw [ha_def, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, neg_mul_neg, hCi]
