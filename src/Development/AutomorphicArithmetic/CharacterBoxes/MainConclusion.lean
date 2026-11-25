@@ -97,9 +97,9 @@ private theorem formPull_ι_bijective {k : Type} [CommRing k] {Z : Scheme.{0}} (
   let α := appSec s (V.ι ≫ s) V.ι W
   let β : Sec (V.ι ≫ s) (V.ι ⁻¹ᵁ W) →+* Sec s W := (inv (V.ι.app W)).hom
   have hαβ : ∀ b, α (β b) = b := fun b => by
-    simpa only [α, β, appSec] using IsIso.inv_hom_id_apply (V.ι.app W) b
+    exact IsIso.inv_hom_id_apply (V.ι.app W) b
   have hβα : ∀ b, β (α b) = b := fun b => by
-    simpa only [α, β, appSec] using IsIso.hom_inv_id_apply (V.ι.app W) b
+    exact IsIso.hom_inv_id_apply (V.ι.app W) b
   have hsβ : SemiHom (RingHom.id k) β := fun r b => by
     calc
       β (r • b) = β (r • α (β b)) := congrArg (fun z => β (r • z)) (hαβ b).symm
@@ -153,7 +153,10 @@ theorem UpperTheory.hodgeCohomology_open_restriction_equiv :
       (cohOn.res ℤ (Omega s a) (le_top : V ≤ ⊤) b x)) =
     cohOn.pull (σ := RingHom.id ℤ) hZ p
       (le_top : (⊤ : (V : Scheme).Opens) ≤ V.ι ⁻¹ᵁ ⊤) b x
-  rw [cohOn.pull_res, cohOn.map_pull, hmor]
+  exact (congrArg (cohOn.map ℤ θ ⊤ b) (cohOn.pull_res (σ := RingHom.id ℤ) hZ
+    (adj.unit.app (Omega s a)) (le_top : V ≤ ⊤) hle x)).trans
+    ((cohOn.map_pull (σ := RingHom.id ℤ) hZ (adj.unit.app (Omega s a)) θ _ x).trans
+      (by rw [hmor]))
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.HodgeCohomologyOpenRestrictionEquiv =====
