@@ -1251,7 +1251,7 @@ open PositivityTheory.Rg.BcB.F
 
 theorem frameEx0_plug (h2 : PositivityTheory.Rg.Bc.ArchbcB.B.M2) (h3 : PositivityTheory.Rg.Bc.ArchbcB.B.M3) : FrameEx0 :=
   frameEx0_of Rig.weightEx Rig.unrAE_holds (_root_.GlobalTheory.CompanionTheory.MuOpen.muEx_of_exists Fok.Mu3.muExists) _root_.GlobalTheory.CompanionTheory.SecThrough.secEx _root_.GlobalTheory.CompanionTheory.UnifFix.unifEx _root_.GlobalTheory.CompanionTheory.LevelU.levelEx
-    _root_.GlobalTheory.CompanionTheory.SplitLevel.splitEx (badEx2_of h2 h3) _root_.GlobalTheory.CompanionTheory.KExLevel.kEx PositivityTheory.Rg.BcB.G8.translation_existence_holds F0.chainEx_holds F0.archEx_holds F0.wEx_holds
+    _root_.GlobalTheory.CompanionTheory.SplitLevel.splitEx (badEx2_of h2 h3) _root_.GlobalTheory.CompanionTheory.KExLevel.kEx _root_.GlobalTheory.CompanionTheory.LocalThetaTranslation.translEx F0.chainEx_holds F0.archEx_holds F0.wEx_holds
 
 theorem frameEx0 : FrameEx0 := frameEx0_plug _root_.GlobalTheory.CongMatch.match_principal_congruence_inert _root_.GlobalTheory.BCT.SplitCtMatch.match_ctMu_of_isSplitAt
 

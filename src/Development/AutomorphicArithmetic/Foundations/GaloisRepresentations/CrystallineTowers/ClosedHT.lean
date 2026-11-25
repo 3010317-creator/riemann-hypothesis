@@ -137,7 +137,7 @@ theorem capO_pre {X Y : Scheme.{0}} (u : X ⟶ Y) {ι κ : Type} (U : ι → X.O
   exact fun k => hτ (i k) (hx k)
 
 def covX {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of K)) [Smooth q] [IsProper q] : Pb.Cov q :=
-  Classical.choice ((Pb.cov_ex q).1 inferInstance)
+  Classical.choice ((_root_.GlobalTheory.CompanionTheory.CovEx.exists_cov q).1 inferInstance)
 
 end CrystallineSemistableComparison.Om.Nt2
 end -- clump:auto
@@ -918,7 +918,7 @@ theorem kTop : KTop := by
   refine powK_ne_zero q d D hD c' hc' ?_
   obtain ⟨N, i, hi, hip, hO⟩ := hD
   have hP : IsProper q := GlobalTheory.CommonModel.isProper_of_isProjOver ⟨N, i, hi, hip⟩
-  obtain ⟨U, hUd⟩ := (cov_ex q).2 d inferInstance
+  obtain ⟨U, hUd⟩ := (_root_.GlobalTheory.CompanionTheory.CovEx.exists_cov q).2 d inferInstance
   have hcov : sSup (𝒱D D) = ⊤ := sSup_𝒱D D N i hO
   have hk := (k_iso_pf q U (d + 1) (fun α => by rw [hUd]; omega) (𝒱D D) hcov (2 * d)).1
   let g := (KS q (d + 1) (𝒱D D)).ι
