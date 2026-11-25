@@ -194,14 +194,14 @@ open UpperTheory.Gal UpperTheory.Gal.Int.Geo
 theorem UpperTheory.Gal.Int.Geo.compSum_of :
     CompSum := by
   intro k _ X p hs hpr
-  haveI := hs
-  haveI := hpr
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
-  haveI : GlobalTheory.IsNormalScheme X := LateralTheory.EtaleTrace.LFinCut.normal_of_smooth p
-  haveI : CompactSpace X :=
+  have := hs
+  have := hpr
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
+  have : GlobalTheory.IsNormalScheme X := LateralTheory.EtaleTrace.LFinCut.normal_of_smooth p
+  have : CompactSpace X :=
     ⟨by simpa using QuasiCompact.isCompact_preimage (f := p) Set.univ isOpen_univ isCompact_univ⟩
-  haveI : IsNoetherian X := {}
-  haveI : Finite (irreducibleComponents X) :=
+  have : IsNoetherian X := {}
+  have : Finite (irreducibleComponents X) :=
     TopologicalSpace.NoetherianSpace.finite_irreducibleComponents.to_subtype
   let e := Finite.equivFin (irreducibleComponents X)
   have hopen : ∀ Z : irreducibleComponents X, IsOpen (Z : Set X) :=
@@ -225,13 +225,13 @@ theorem UpperTheory.Gal.Int.Geo.compSum_of :
         (closure_minimal Set.inter_subset_right (isClosed_of_mem_irreducibleComponents _ (e.symm s').2))
     exact Subtype.ext (le_antisymm h12 ((e.symm s).2.2 (e.symm s').2.1 h12))
   · intro s
-    haveI : IsReduced X := by
-      haveI : ∀ x : X, _root_.IsReduced (X.presheaf.stalk x) := fun x => by
+    have : IsReduced X := by
+      have : ∀ x : X, _root_.IsReduced (X.presheaf.stalk x) := fun x => by
         obtain ⟨hd, -⟩ := ‹GlobalTheory.IsNormalScheme X›
-        haveI := hd x
+        have := hd x
         infer_instance
       exact isReduced_of_isReduced_stalk X
-    haveI : IrreducibleSpace ((GlobalTheory.IsNormalScheme.component (e.symm s) : X.Opens) : Set X) :=
+    have : IrreducibleSpace ((GlobalTheory.IsNormalScheme.component (e.symm s) : X.Opens) : Set X) :=
       Subtype.irreducibleSpace (e.symm s).2.1
     exact isIntegral_of_irreducibleSpace_of_isReduced _
 end -- clump:auto
@@ -1127,13 +1127,13 @@ private def cnLim [Algebra.IsAlgebraic k Ω] : IsLimit (cn k Ω p) where
     fun L => hm (op L)
 
 private theorem gd_compact (hqc : QuasiCompact p) (L : IntermediateField k Ω) : CompactSpace (geom L p) := by
-  haveI : QuasiCompact (pullback.snd p (Spec.map (CommRingCat.ofHom (algebraMap k L)))) :=
+  have : QuasiCompact (pullback.snd p (Spec.map (CommRingCat.ofHom (algebraMap k L)))) :=
     MorphismProperty.of_isPullback (P := @QuasiCompact) (IsPullback.of_hasPullback _ _) hqc
   exact QuasiCompact.compactSpace_of_compactSpace
     (pullback.snd p (Spec.map (CommRingCat.ofHom (algebraMap k L))))
 
 private theorem gd_qs (hqs : QuasiSeparated p) (L : IntermediateField k Ω) : QuasiSeparatedSpace (geom L p) := by
-  haveI : QuasiSeparated (pullback.snd p (Spec.map (CommRingCat.ofHom (algebraMap k L)))) :=
+  have : QuasiSeparated (pullback.snd p (Spec.map (CommRingCat.ofHom (algebraMap k L)))) :=
     MorphismProperty.of_isPullback (P := @QuasiSeparated) (IsPullback.of_hasPullback _ _) hqs
   exact quasiSeparatedSpace_of_quasiSeparated
     (pullback.snd p (Spec.map (CommRingCat.ofHom (algebraMap k L))))
@@ -1198,7 +1198,7 @@ private theorem finOfDeg {K : Type} [Field K] {A : ℤ → Type*} [∀ n, AddCom
       · have hout : i < 0 ∨ N < i := by
           simp only [S, Finset.mem_Icc, not_and_or, not_le] at hi
           exact hi
-        haveI := hs i hout
+        have := hs i hout
         rw [Subsingleton.elim a 0, map_zero]
         exact Submodule.zero_mem _
     | add x y hx hy => exact Submodule.add_mem _ hx hy
@@ -1450,12 +1450,12 @@ theorem UpperTheory.Gal.Int.Geo.opUniq_of :
     obtain ⟨W, c, G, i1, i2, a, J, i3, σ, hG, hS, -⟩ := hT
     exact ⟨W, c, G, i1, i2, a, J, i3, σ, hG, hS⟩
   have hgood := hGood l (G3.sp Ω) (l_unit l hl Ω)
-  haveI : IsFinite (H.s g) := hd.1
-  haveI : Etale (H.s g) := hd.2.1
+  have : IsFinite (H.s g) := hd.1
+  have : Etale (H.s g) := hd.2.1
   have hbc := hBc (Spec.map (CommRingCat.ofHom (algebraMap k Ω))) H.q (H.s g ≫ H.q) H.q (H.s g) rfl
     (𝟙 _) (Category.id_comp _) Empty (fun e => e.elim) (fun e => e.elim)
-  haveI : IsFinite (H.sΩ Ω g) := hbc.1
-  haveI : Etale (H.sΩ Ω g) := hbc.2.1
+  have : IsFinite (H.sΩ Ω g) := hbc.1
+  have : Etale (H.sΩ Ω g) := hbc.2.1
   let p : H.geomZ Ω ⟶ G3.sp Ω := pullback.snd H.q (Spec.map (CommRingCat.ofHom (algebraMap k Ω)))
   have hcomm : H.tΩ Ω g ≫ p = H.sΩ Ω g ≫ p := by
     simp only [p, HTower.sΩ, HTower.tΩ, HTower.geomZ, geom, geomMap]
@@ -1512,9 +1512,9 @@ open UpperTheory.Gal UpperTheory.Gal.Int.Geo
 theorem UpperTheory.Gal.Int.Geo.relDim_of :
     RelDim := by
   intro k _ X p hp hX
-  haveI := hp
-  haveI := hX
-  haveI : ConnectedSpace X := inferInstance
+  have := hp
+  have := hX
+  have : ConnectedSpace X := inferInstance
   exact CrystallineSemistableComparison.exists_smoothOfRelativeDimension p
 end -- clump:auto
 end -- clump:auto
@@ -1632,9 +1632,9 @@ theorem UpperTheory.Gal.Int.Geo.totCont_of :
     GlobalTheory.GalV.VFin → DegCont → TotCont := by
   classical
   intro hVF hDC l _ k Ω _ _ _ _ hl X p hp v μ
-  haveI := hp
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
-  haveI : Algebra.IsAlgebraic k Ω := IsAlgClosure.isAlgebraic
+  have := hp
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
+  have : Algebra.IsAlgebraic k Ω := IsAlgClosure.isAlgebraic
   have hu : IsUnit (l : Ω) := by
     have h := (map_ne_zero (algebraMap k Ω)).mpr hl
     rw [map_natCast] at h
@@ -1677,13 +1677,13 @@ theorem repEx_of (h1 : GrEx) (h2 : ContGL) (h3 : MatEx) (h4 : MatConj) (h5 : Pie
   intro E Ω _ _ _ _ _ l _ H θ hnice
   obtain ⟨hsm, hproj, hfet⟩ := hnice
   have hlE : (l : E) ≠ 0 := Nat.cast_ne_zero.mpr (Fact.out : Nat.Prime l).ne_zero
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   have hlΩ : (l : Ω) ≠ 0 := Nat.cast_ne_zero.mpr (Fact.out : Nat.Prime l).ne_zero
-  haveI : Smooth H.q := hsm
+  have : Smooth H.q := hsm
   have hsm' : Smooth (pullback.snd H.q (Spec.map (CommRingCat.ofHom (algebraMap E Ω)))) := inferInstance
   have hproj' := h9.1 E Ω (algebraMap E Ω) H.q hproj
-  haveI hfin : FiniteDimensional ℚ_[l] (Htot l (sch.obj (H.geomZ Ω))) := h6 l Ω hlΩ _ hsm' hproj'
+  have hfin : FiniteDimensional ℚ_[l] (Htot l (sch.obj (H.geomZ Ω))) := h6 l Ω hlΩ _ hsm' hproj'
   let U := piece l H Ω (Qbar l) θ
   let a : Gal(Ω/E) → _ := fun σ => galV l H Ω (Qbar l) σ
   have ha1 : a 1 = LinearMap.id := by
@@ -1746,10 +1746,10 @@ private theorem red_pow_add_apply_eq (hA : A11) (l : ℕ) [Fact (Nat.Prime l)] (
       (x : (j : ℕ) → HtL l j E n i) k := x.2
   induction a with
   | zero =>
-    haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl⟩
+    have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl⟩
     exact (hA (l ^ m) (l ^ m) dvd_rfl E).2.2.1 n i _
   | succ a ih =>
-    haveI : NeZero (l ^ (m + (a + 1))) := ⟨pow_ne_zero _ hl⟩
+    have : NeZero (l ^ (m + (a + 1))) := ⟨pow_ne_zero _ hl⟩
     have h4 := (hA (l ^ (m + (a + 1))) (l ^ (m + a)) (pow_dvd_pow l (by omega)) E).2.2.2 (l ^ m)
       (pow_dvd_pow l (by omega)) n i ((x : (j : ℕ) → HtL l j E n i) (m + (a + 1)))
     rw [← h4]
@@ -1774,11 +1774,11 @@ private theorem exists_eq_pow_smul_of_lev_eq_zero (hA : A11) (l : ℕ) [Fact (Na
     exact hmem (b + a)
   let F : ℕᵒᵖ ⥤ Type 1 :=
     Functor.ofOpSequence (X := S) (fun a => TypeCat.ofHom (fun z => ⟨_, hS a z⟩ : S (a + 1) → S a))
-  haveI : ∀ j : ℕᵒᵖ, Finite (F.obj j) := fun j => by
+  have : ∀ j : ℕᵒᵖ, Finite (F.obj j) := fun j => by
     show Finite (S j.unop)
-    haveI := hf j.unop
+    have := hf j.unop
     exact Subtype.finite
-  haveI : ∀ j : ℕᵒᵖ, Nonempty (F.obj j) := fun j => by
+  have : ∀ j : ℕᵒᵖ, Nonempty (F.obj j) := fun j => by
     show Nonempty (S j.unop)
     obtain ⟨z, hz⟩ := ((hud j.unop n).1 (xs (b + j.unop))).1
       (by rw [red_pow_apply_eq_of_le hA l E n i x b (b + j.unop) (by omega)]; exact hx)
@@ -1817,7 +1817,7 @@ theorem vFin_of (h : KunnethLefschetz.In) : GlobalTheory.GalV.VFin := by
   have hl0 : l ≠ 0 := (Fact.out : l.Prime).ne_zero
   have hfin : ∀ m : ℕ, Finite (Ht (l ^ m) (sch.obj X) n i) := by
     intro m
-    haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl0⟩
+    have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl0⟩
     exact h.e4 (l ^ m) k (by push_cast; exact hl.pow m) p n i
   have hM : Module.Finite ℤ_[l] (Hl l (sch.obj X) n i) :=
     LateralTheory.EWeil.AdicFinPf.AdicFin_of l (sch.obj X) n i hfin
