@@ -58,11 +58,6 @@ def IsGLSubmodule (k : Type) [Field k] (N : ℕ) (lam : DomWeight N)
     sqAct A N lam g (map (algebraMap k A) f) ∈
       Submodule.span A (map (algebraMap k A) '' (M : Set (MvPolynomial (Fin N × Fin N) k)))
 
-/-- **Jantzen's lowest alcove simplicity theorem**: the Weyl module (induced representation)
-with highest weight in the closure of the lowest alcove is simple.
-
-Proposed reference:
-[J. C. Jantzen, *Moduln mit einem h\"ochsten Gewicht*][jantzen1979alcove]. -/
 def InducedSimpleLowestAlcove : Prop :=
   ∀ (p : ℕ), p.Prime → ∀ (k : Type) [Field k] [CharP k p] (N : ℕ) (lam : DomWeight N),
     (∀ i j : Fin N, i < j → lam.w i - lam.w j + ((j : ℕ) - (i : ℕ) : ℤ) ≤ (p : ℤ)) →
