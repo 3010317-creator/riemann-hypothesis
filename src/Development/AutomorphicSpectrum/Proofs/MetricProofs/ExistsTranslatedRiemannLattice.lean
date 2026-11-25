@@ -235,12 +235,8 @@ theorem perExt_of_P {R R' : RiemLat E g Λ} {ai : Ψ → Matrix (Fin (j + j')) (
 
 open Classical in
 theorem rotL_single (ai : Ψ → Matrix (Fin (j + j')) (Fin (j + j')) ℂ) (τ : Ψ) (y : Fin (j + j') → ℂ) :
-    rotL ai (Pi.single τ y) = Pi.single τ (ai τ *ᵥ y) := by
-  funext t
-  by_cases ht : t = τ
-  · subst ht
-    simp [rotL]
-  · simp [rotL, Pi.single_eq_of_ne ht]
+    rotL ai (Pi.single τ y) = Pi.single τ (ai τ *ᵥ y) :=
+  (Pi.single_op (fun t v => ai t *ᵥ v) (fun _ => mulVec_zero _) τ y).symm
 
 theorem pPart_rot {R R' : RiemLat E g Λ} {ai : Ψ → Matrix (Fin (j + j')) (Fin (j + j')) ℂ}
     (h : ∀ x, R'.P x = C.perExt R (rotL ai (C.vec x))) (τ : Ψ) (y : Fin (j + j') → ℂ) :
