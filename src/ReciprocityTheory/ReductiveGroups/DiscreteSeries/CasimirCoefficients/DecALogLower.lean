@@ -34,8 +34,6 @@ namespace ReciprocityTheory.ChartRestriction.DS.S7
 
 open ReciprocityTheory.ChartRestriction.DS
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 variable {n : ℕ}
 
 theorem exp_ge_one_add_add_sq_div_three {u : ℝ} (hu : |u| ≤ 1) :
@@ -322,8 +320,6 @@ namespace ReciprocityTheory.ChartRestriction.DS.S7
 
 open ReciprocityTheory.ChartRestriction.DS
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 variable {n : ℕ}
 
 lemma dm_rank_add (A B : Matrix (Fin n) (Fin n) ℂ) : (A + B).rank ≤ A.rank + B.rank := by
@@ -476,8 +472,6 @@ open scoped ComplexOrder ContDiff ENNReal
 namespace ReciprocityTheory.ChartRestriction.DS.S7
 
 open ReciprocityTheory.ChartRestriction.DS
-
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 variable {n : ℕ} {ε : Fin n → Bool}
 
