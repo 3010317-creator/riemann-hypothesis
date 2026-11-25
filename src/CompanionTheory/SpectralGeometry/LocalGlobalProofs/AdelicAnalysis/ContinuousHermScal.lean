@@ -41,27 +41,13 @@ theorem exists_basis {σ : E →ₐ[F] E} (hσ : IsCMExt F E σ) :
     simp [hδ, sigma_sigma hcm]
   have hδ0 : δ ≠ 0 := by
     intro h0
-    apply hx
-    have : τ δ = 0 := by rw [h0, map_zero]
-    rw [hδ, map_sub, h τ, sub_eq_zero] at this
-    exact this.symm
+    exact hx ((h τ x).symm.trans (congrArg τ (sub_eq_zero.mp h0)).symm)
   have hli : LinearIndependent F ![(1 : E), δ] := by
-    rw [LinearIndependent.pair_iff]
-    intro s t hst
-    have hσs : ∀ (c : F) (z : E), σ (c • z) = c • σ z := fun c z => by
-      rw [Algebra.smul_def, Algebra.smul_def, map_mul, AlgHom.commutes]
-    have h' := congrArg σ hst
-    simp only [map_add (f := _), hσs, map_one, hσδ, map_zero, smul_neg] at h'
-    have hs2 : (s + s) • (1 : E) = 0 := by
-      rw [add_smul]
-      linear_combination hst + h'
-    have hs : s = 0 := by
-      have h3 : s + s = 0 := by simpa using hs2
-      have h4 : (2 : F) * s = 0 := by rw [two_mul]; exact h3
-      simpa using h4
-    refine ⟨hs, ?_⟩
-    rw [hs, zero_smul, zero_add] at hst
-    exact (smul_eq_zero.mp hst).resolve_right hδ0
+    refine (LinearIndependent.pair_iff' one_ne_zero).2 fun a ha => hδ0 ?_
+    rw [Algebra.smul_def, mul_one] at ha
+    have he := congrArg σ ha
+    rw [σ.commutes, ha, hσδ] at he
+    exact CharZero.eq_neg_self_iff.mp he
   refine ⟨basisOfLinearIndependentOfCardEqFinrank hli (by simpa using h2.symm), ?_, ?_⟩
   · simp
   · simpa using hσδ
