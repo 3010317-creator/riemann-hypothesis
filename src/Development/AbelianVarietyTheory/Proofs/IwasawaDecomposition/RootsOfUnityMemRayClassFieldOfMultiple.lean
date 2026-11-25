@@ -70,10 +70,7 @@ theorem _root_.GlobalTheory.Mem.RayZeta.root_mem_rayField : ∀ (K M L : Type) [
   intro K M L _ _ _ _ _ _ _ _ _ _ _ 𝔮 p hp hq hM hgen hnorm ζ hζ
   obtain ⟨hab, hunr, -, hray⟩ := hM
   haveI : IsGalois K M := hab.toIsGalois
-  have hpow : ∀ a b : ℕ, a ≡ b [MOD p] → ζ ^ a = ζ ^ b := by
-    intro a b h
-    rw [← Nat.mod_add_div a p, ← Nat.mod_add_div b p, pow_add, pow_add, pow_mul, pow_mul, hζ,
-      one_pow, one_pow, (h : a % p = b % p)]
+  have hpow : ∀ a b : ℕ, a ≡ b [MOD p] → ζ ^ a = ζ ^ b := fun _ _ h => pow_eq_pow_of_modEq h hζ
   have hζint : IsIntegral ℤ ζ := IsIntegral.of_pow (Nat.pos_of_ne_zero hp) (hζ ▸ isIntegral_one)
   let z : 𝓞 L := ⟨ζ, hζint⟩
   have hz : z ^ p = 1 := by
@@ -124,21 +121,11 @@ theorem _root_.GlobalTheory.Mem.RayZeta.root_mem_rayField : ∀ (K M L : Type) [
     intro σ
     have hσ : σ ∈ Subgroup.closure {σ : L ≃ₐ[K] L | ∃ v : HeightOneSpectrum (𝓞 K), ¬ v.asIdeal ∣ 𝔮 ∧
       _root_.GlobalTheory.NT.IsFrob L v σ} := hgen ▸ Subgroup.mem_top σ
-    induction hσ using Subgroup.closure_induction with
+    rw [← Subgroup.mem_toSubmonoid, Subgroup.closure_toSubmonoid_of_finite] at hσ
+    induction hσ using Submonoid.closure_induction with
     | mem σ hσ => exact hgenQ σ hσ
     | one => exact hone
     | mul σ τ _ _ hσ hτ => exact hmul σ τ hσ hτ
-    | inv σ _ hσ =>
-      have hpowQ : ∀ n : ℕ, Q (σ ^ n) := by
-        intro n
-        induction n with
-        | zero => simpa using hone
-        | succ n ih => rw [pow_succ]; exact hmul _ _ ih hσ
-      have : σ⁻¹ = σ ^ (orderOf σ - 1) := by
-        refine (eq_inv_of_mul_eq_one_left ?_).symm
-        rw [← pow_succ, Nat.sub_add_cancel (orderOf_pos σ), pow_orderOf_eq_one]
-      rw [this]
-      exact hpowQ _
   haveI := IsGalois.tower_top_of_isGalois K M L
   rw [InfiniteGalois.mem_range_algebraMap_iff_fixed]
   intro τ
