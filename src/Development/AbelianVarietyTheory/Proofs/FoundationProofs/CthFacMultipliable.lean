@@ -7,13 +7,13 @@ public import Mathlib.Analysis.Calculus.Deriv.Inv
 
 @[expose] public section
 
-open scoped UpperHalfPlane MatrixGroups Manifold
+open scoped UpperHalfPlane MatrixGroups
 open GlobalTheory.Sieg GlobalTheory.QFam
 
 noncomputable section
 
 
-open scoped UpperHalfPlane MatrixGroups Manifold in
+open scoped UpperHalfPlane MatrixGroups in
 theorem _root_.GlobalTheory.Sieg.cthFac_multipliable : ∀ (c : ℕ) (q t : ℂ), ‖q‖ < 1 → t ≠ 0 →
     Multipliable (fun m : ℕ => _root_.GlobalTheory.Sieg.cthFac c q t (m + 1)) := by
   intro c q t hq _
