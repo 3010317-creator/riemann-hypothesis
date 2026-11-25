@@ -109,16 +109,10 @@ theorem netN_eq_zero (hM : NetMax Nt) (σ : B.KO →+* ℂ) (F : B.Cusp j ka) : 
     obtain ⟨y, hy⟩ := hM σ F
     have hpos : (0 : ℝ) < Fintype.card (Nt.NN σ) := Nat.cast_pos.mpr (Fintype.card_pos_iff.mpr ⟨y⟩)
     have h2 : (Fintype.card (Nt.NN σ) : ℝ)⁻¹ * ∑ y, ‖Nt.ev σ y F‖ ^ 2 ≤ 0 := Real.sqrt_eq_zero'.mp h
-    have h3 : ∑ y, ‖Nt.ev σ y F‖ ^ 2 ≤ 0 := by
-      by_contra! hc
-      have := mul_pos (inv_pos.mpr hpos) hc
-      linarith
+    have h3 : ∑ y, ‖Nt.ev σ y F‖ ^ 2 ≤ 0 := nonpos_of_mul_nonpos_right h2 (inv_pos.mpr hpos)
     have h4 : ‖Nt.ev σ y F‖ ^ 2 ≤ ∑ y, ‖Nt.ev σ y F‖ ^ 2 :=
       Finset.single_le_sum (f := fun y => ‖Nt.ev σ y F‖ ^ 2) (fun i _ => sq_nonneg _) (Finset.mem_univ y)
-    have ht : ‖Nt.ev σ y F‖ = 0 := by
-      have h5 : ‖Nt.ev σ y F‖ ^ 2 ≤ 0 := h4.trans h3
-      have := norm_nonneg (Nt.ev σ y F)
-      nlinarith
+    have ht : ‖Nt.ev σ y F‖ = 0 := sq_eq_zero_iff.mp (le_antisymm (h4.trans h3) (sq_nonneg _))
     have hs : B.supN j ka σ F ≤ 0 := by
       rw [ht] at hy
       linarith
