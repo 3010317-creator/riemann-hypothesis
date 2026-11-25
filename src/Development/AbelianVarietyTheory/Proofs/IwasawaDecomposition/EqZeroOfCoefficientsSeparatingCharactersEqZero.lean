@@ -69,11 +69,7 @@ theorem _root_.GlobalTheory.SeparatingCharacters.eq_zero_of_coefficients_eq_zero
     ext q
     obtain ⟨x, rfl⟩ := QuotientAddGroup.mk_surjective q
     rw [ContinuousMap.star_apply, hψ, hψ]
-    have hz : χ a x ≠ 0 := by
-      intro h
-      have := hχn a x
-      rw [h, norm_zero] at this
-      exact zero_ne_one this
+    have hz : χ a x ≠ 0 := norm_ne_zero_iff.mp (by rw [hχn]; exact one_ne_zero)
     have h1 : χ (-a) x * χ a x = 1 := by rw [← hχa, neg_add_cancel, hχ0]
     have h2 : (starRingEnd ℂ) (χ a x) * χ a x = 1 := by
       rw [Complex.conj_mul', hχn]
@@ -131,11 +127,7 @@ theorem _root_.GlobalTheory.SeparatingCharacters.eq_zero_of_coefficients_eq_zero
     refine ⟨ψ a, ⟨ψ a, hSψ a, rfl⟩, ?_⟩
     simp only [hψ]
     intro hxy
-    have hz : χ a x ≠ 0 := by
-      intro h
-      have := hχn a x
-      rw [h, norm_zero] at this
-      exact zero_ne_one this
+    have hz : χ a x ≠ 0 := norm_ne_zero_iff.mp (by rw [hχn]; exact one_ne_zero)
     apply ha
     have : χ a y = χ a x * χ a (-x + y) := by rw [← hχx, add_neg_cancel_left]
     rw [← hxy] at this
