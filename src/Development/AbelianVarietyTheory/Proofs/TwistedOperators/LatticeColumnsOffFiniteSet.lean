@@ -119,12 +119,8 @@ theorem coord_apply {A B : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrthog
     ∑ k, l k * (frameMat B A d.ι *ᵥ z + d.a *ᵥ u) k = u p := by
 
   have swap : ∀ {n : ℕ} (M : Matrix (Fin B.rank) (Fin n) D.host.E) (w : Fin n → D.host.E),
-      ∑ k, l k * (M *ᵥ w) k = ∑ j, (∑ k, l k * M k j) * w j := by
-    intro n M w
-    simp only [Matrix.mulVec, dotProduct, Finset.mul_sum, Finset.sum_mul]
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun k _ => ?_
-    ring
+      ∑ k, l k * (M *ᵥ w) k = ∑ j, (∑ k, l k * M k j) * w j :=
+    fun M w => Matrix.dotProduct_mulVec l M w
   simp only [Pi.add_apply, mul_add, Finset.sum_add_distrib, swap, h0, h1, zero_mul,
     Finset.sum_const_zero, zero_add, ite_mul, one_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
