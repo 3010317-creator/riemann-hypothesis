@@ -5,6 +5,7 @@ public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsFundSe
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.PolBaseChangeOfRelAmpleLocal
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsValLineLogNormAtIffEmbedding
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GramMatrixConjugation
 import Mathlib.Tactic.Linter.Style
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
 
@@ -21,75 +22,18 @@ open scoped CategoryTheory.Obj ComplexOrder
 
 section Val
 
-variable {X : Scheme.{0}} {Ω : Type} [Field Ω] {G : Over X} [GrpObj G] {ξ : Spec (CommRingCat.of Ω) ⟶ X}
-  {E : Type} [AddCommGroup E] [Module Ω E]
-
-theorem dualMap_comp {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''] (φ : R →+* R') (ψ : R' →+* R'') :
-    dualMap (ψ.comp φ) = (dualMap ψ).comp (dualMap φ) :=
-  by
-    apply RingHom.ext
-    intro a
-    apply TrivSqZeroExt.ext <;> simp [dualMap]
-
-theorem dualMap_algebraMap {R R' : Type} [CommRing R] [CommRing R'] (φ : R →+* R') (a : R) :
-    dualMap φ (algebraMap R (DualNumber R) a) = algebraMap R' (DualNumber R') (φ a) := by
-  change dualMap φ (TrivSqZeroExt.inl a) = TrivSqZeroExt.inl (φ a)
-  apply TrivSqZeroExt.ext <;> simp [dualMap]
-
-theorem centre_conj (z : Spec (CommRingCat.of ℂ) ⟶ X) : centre (spMap (starRingEnd ℂ) ≫ z) = centre z := by
-  have h : (spMap (starRingEnd ℂ)) (IsLocalRing.closedPoint ℂ) = IsLocalRing.closedPoint ℂ :=
-    Subsingleton.elim (α := PrimeSpectrum ℂ) _ _
-  exact congrArg (fun p => z p) h
+variable {X : Scheme.{0}} {G : Over X} [GrpObj G]
 
 theorem cj_cj (z : Sp ℂ ⟶ X) : spMap (starRingEnd ℂ) ≫ spMap (starRingEnd ℂ) ≫ z = z := by
   rw [← Category.assoc, GlobalTheory.ArchMetricCompare.cj_cj, Category.id_comp]
-
-theorem extends_conj (M : LieModel G ξ E) {x x' : X} (hx : x = x') (h : genPt ξ ⤳ x) (h' : genPt ξ ⤳ x') (e : E)
-    (v : epsAt (X.fromSpecStalk x) ⟶ G) (hv : M.Extends ⟨x, h⟩ e v)
-    (φ : X.presheaf.stalk x ⟶ CommRingCat.of ℂ) (φ' : X.presheaf.stalk x' ⟶ CommRingCat.of ℂ)
-    (H : Spec.map φ' ≫ X.fromSpecStalk x' = spMap (starRingEnd ℂ) ≫ Spec.map φ ≫ X.fromSpecStalk x) :
-    ∃ v' : epsAt (X.fromSpecStalk x') ⟶ G, M.Extends ⟨x', h'⟩ e v' ∧
-      Spec.map (CommRingCat.ofHom (dualMap φ'.hom)) ≫ v'.left =
-        spMap (dualMap (starRingEnd ℂ)) ≫ Spec.map (CommRingCat.ofHom (dualMap φ.hom)) ≫ v.left := by
-  subst hx
-  refine ⟨v, hv, ?_⟩
-  have h1 : Spec.map φ' = Spec.map (φ ≫ CommRingCat.ofHom (starRingEnd ℂ)) := by
-    rw [← cancel_mono (X.fromSpecStalk x), H, Spec.map_comp, Category.assoc]
-  have h2 : φ' = φ ≫ CommRingCat.ofHom (starRingEnd ℂ) := Spec.map_injective h1
-  subst h2
-  have h3 : dualMap (φ ≫ CommRingCat.ofHom (starRingEnd ℂ)).hom =
-      (dualMap (starRingEnd ℂ)).comp (dualMap φ.hom) := dualMap_comp _ _
-  rw [h3, CommRingCat.ofHom_comp, Spec.map_comp]
-  exact Category.assoc _ _ _
 
 theorem eps_sq : spMap (dualMap (starRingEnd ℂ)) ≫ spMap (algebraMap ℂ (DualNumber ℂ)) =
     spMap (algebraMap ℂ (DualNumber ℂ)) ≫ spMap (starRingEnd ℂ) := by
   have h2 : CommRingCat.ofHom (algebraMap ℂ (DualNumber ℂ)) ≫ CommRingCat.ofHom (dualMap (starRingEnd ℂ)) =
       CommRingCat.ofHom (starRingEnd ℂ) ≫ CommRingCat.ofHom (algebraMap ℂ (DualNumber ℂ)) :=
-    CommRingCat.hom_ext (RingHom.ext fun a => dualMap_algebraMap (starRingEnd ℂ) a)
+    CommRingCat.hom_ext (RingHom.ext fun a => GlobalTheory.CompanionTheory.Ar.HodgeMetric.ConjPoint.dualMap_algebraMap (starRingEnd ℂ) a)
   have h3 := congrArg Spec.map h2
   simpa only [Spec.map_comp] using h3
-
-def cjVec (z : Spec (CommRingCat.of ℂ) ⟶ X) (w : epsAt z ⟶ G) : epsAt (spMap (starRingEnd ℂ) ≫ z) ⟶ G :=
-  Over.homMk (spMap (dualMap (starRingEnd ℂ)) ≫ w.left) (by
-    have h1 : w.left ≫ G.hom = Spec.map (CommRingCat.ofHom (algebraMap ℂ (DualNumber ℂ))) ≫ z := Over.w w
-    simp only [Over.mk_hom, Category.assoc, h1]
-    rw [← Category.assoc, eps_sq, Category.assoc])
-
-theorem valAt_conj (M : LieModel G ξ E) (z : Spec (CommRingCat.of ℂ) ⟶ X) (e : E) (w : epsAt z ⟶ G)
-    (hw : M.ValAt z e w) : M.ValAt (spMap (starRingEnd ℂ) ≫ z) e (cjVec z w) := by
-  obtain ⟨h, v, hv, hl⟩ := (show ∃ (h : genPt ξ ⤳ centre z) (v : epsAt (X.fromSpecStalk (centre z)) ⟶ G),
-    M.Extends ⟨centre z, h⟩ e v ∧ w.left = Spec.map (CommRingCat.ofHom (dualMap (Scheme.stalkClosedPointTo z).hom)) ≫ v.left from hw)
-  have hc := centre_conj z
-  have h' : genPt ξ ⤳ centre (spMap (starRingEnd ℂ) ≫ z) := hc ▸ h
-  obtain ⟨v', hv', hl'⟩ := extends_conj M hc.symm h h' e v hv (Scheme.stalkClosedPointTo z)
-    (Scheme.stalkClosedPointTo (spMap (starRingEnd ℂ) ≫ z)) (by
-      refine (Scheme.Spec_stalkClosedPointTo_fromSpecStalk (spMap (starRingEnd ℂ) ≫ z)).trans ?_
-      exact congrArg (spMap (starRingEnd ℂ) ≫ ·) (Scheme.Spec_stalkClosedPointTo_fromSpecStalk z).symm)
-  refine ⟨h', v', hv', ?_⟩
-  have : (cjVec z w).left = spMap (dualMap (starRingEnd ℂ)) ≫ w.left := rfl
-  rw [this, hl]
-  exact hl'.symm
 
 theorem isTangent_of_fibre {A : Over (Sp ℂ)} [GrpObj A] {z : Sp ℂ ⟶ X} {φ : A.left ⟶ G.left} (h : IsGrpPullback A G z φ)
     {v : epsAt z ⟶ G} (hv : IsTanAt G z v) {v' : epsR ℂ ⟶ A} (e : v'.left ≫ φ = v.left) : IsTangent v' := by
@@ -111,7 +55,7 @@ theorem fibreLatVec_conj {X : Scheme.{0}} (t : SAB H X) (z : Sp ℂ ⟶ X) (R R'
     (x : A₀ → Fin g → ℂ) (v : A₀ → (epsAt z ⟶ t.G)) (hP : ∀ x, R'.P x = star (R.P x))
     (hH : R'.Hm = R.Hm.map (starRingEnd ℂ)) (hB : ∀ a x, R'.B a x = star (R.B a (star x)))
     (htan : ∀ a, IsTanAt t.G z (v a)) (hF : FibreLatVec t z R x v) :
-    FibreLatVec t (spMap (starRingEnd ℂ) ≫ z) R' (fun a => star (x a)) (fun a => cjVec z (v a)) := by
+    FibreLatVec t (spMap (starRingEnd ℂ) ≫ z) R' (fun a => star (x a)) (fun a => GlobalTheory.CompanionTheory.Ar.HodgeMetric.ConjPoint.conjVec z (v a)) := by
   obtain ⟨A, _, φ, u, χ, hpb, hAH, hact, hinj, hmem, hvec⟩ := hF
   have h := isGrpPullback_pullback A (spMap (starRingEnd ℂ))
   refine ⟨(Over.pullback (spMap (starRingEnd ℂ))).obj A, inferInstance, pullback.fst _ _ ≫ φ,
