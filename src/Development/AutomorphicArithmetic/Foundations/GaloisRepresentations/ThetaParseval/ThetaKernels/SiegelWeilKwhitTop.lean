@@ -62,7 +62,7 @@ open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.Inde
 namespace PositivityTheory.SiegelWeilFormula.KWhit
 open PositivityTheory.SiegelWeilFormula
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
-theorem T_zero_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {Φ : d.Fn} (_hΦ : Φ ∈ d.sch) : d.T Φ 0 = d.l Φ := by
+theorem T_zero_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (Φ : d.Fn) : d.T Φ 0 = d.l Φ := by
   have h0 : d.dd.rho d.B.ψ 0 Φ = Φ := by
     funext y
     simp [GlobalTheory.WeilM.Darboux.rho, GlobalTheory.WeilM.schr]
@@ -75,7 +75,7 @@ theorem cellFormula_k : _root_.PositivityTheory.SiegelWeilFormula.KWhit.CellForm
     simp [_root_.PositivityTheory.SiegelWeilFormula.SD_k.sec0, map_mul]
   have hx := _root_.PositivityTheory.SiegelWeilFormula.KWhit.om_mem_sch_k d x hΦ
   have hgx := _root_.PositivityTheory.SiegelWeilFormula.KWhit.om_mem_sch_k d g hx
-  rw [h1, ← _root_.PositivityTheory.SiegelWeilFormula.KWhit.T_zero_k d (_root_.PositivityTheory.SiegelWeilFormula.KWhit.om_mem_sch_k d w hgx), hT.2.2.1 F E σ d ν hν ε w hw _ hgx 0]
+  rw [h1, ← _root_.PositivityTheory.SiegelWeilFormula.KWhit.T_zero_k d (d.om w (d.om g (d.om x Φ))), hT.2.2.1 F E σ d ν hν ε w hw _ hgx 0]
   refine integral_congr_ae (Filter.Eventually.of_forall fun Z => ?_)
   simp only [_root_.PositivityTheory.SiegelWeilFormula.KWhit.gram_zero_left_k, _root_.PositivityTheory.SiegelWeilFormula.SD_k.tt, Matrix.trace_zero, map_zero, mul_zero, AddChar.map_zero_eq_one, one_mul]
   exact (hT.2.1 F E σ d _ hx).1 g β hg Z
@@ -777,8 +777,8 @@ open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.Inde
 namespace PositivityTheory.SiegelWeilFormula.KWhit
 open PositivityTheory.SiegelWeilFormula
 -- The clump also imports `GJMatrixCoord`, whose matrix `MeasurableSpace` instance would otherwise
--- shadow the one (`instMeasMat`) used in the statements this member proves.
-attribute [local instance high] Formalism.DoubleCosetMeasures.instMeasMat
+-- shadow the one (`matrixMeasurableSpace`) used in the statements this member proves.
+attribute [local instance high] GlobalTheory.SplitWeil.matrixMeasurableSpace
 theorem linRedC_k :_root_.PositivityTheory.SiegelWeilFormula.KWhit.LinRedC_k := by
   intro hT hTC hLB hU hS c F E _ _ _ _ _ σ d hE k cs Φs hK x hW nb lam 𝓖 hcd ε w hw T hND
   have hTT : _root_.PositivityTheory.SiegelWeilFormula.TTheta_k := hT.2.2.2.1
@@ -990,8 +990,8 @@ def ratE_k (hne : η ≠ 0)
   left_inv S := Subtype.ext ((_root_.PositivityTheory.SiegelWeilFormula.MeasD.hEq_k hOf hne hof herm).apply_symm_apply S.1)
   right_inv γ := Subtype.ext ((_root_.PositivityTheory.SiegelWeilFormula.MeasD.hEq_k hOf hne hof herm).symm_apply_apply γ.1)
 end Rat
--- See the note in `linRedC_k`: prefer the `instMeasMat` matrix measurable space here.
-attribute [local instance high] Formalism.DoubleCosetMeasures.instMeasMat in
+-- See the note in `linRedC_k`: prefer the `matrixMeasurableSpace` matrix measurable space here.
+attribute [local instance high] GlobalTheory.SplitWeil.matrixMeasurableSpace in
 theorem meas_hOf_k{d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ} {R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d} {x : d.G} {t u : GL (Fin d.n) (AE F E)} {T : nF σ d.Y d.b} {η : E}
     {T₀ : Matrix (Fin d.n) (Fin d.n) E} {hOf : nA σ d.Y d.b → HeckeCharacterZeroLocus.SiegelWeilU.HermR (AF F) σ d.n}
     {θ : InfinitePlace F → (HeckeCharacterZeroLocus.SiegelWeilU.Ainf F ⊗[F] E →+* ℂ)} {fr : InfinitePlace F → GL (Fin d.m) ℂ}
