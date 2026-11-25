@@ -22,34 +22,6 @@ noncomputable section
 
 namespace Formalism.L2.Th1.A
 
-theorem two_torsion_unit : TwoTorsionU.{u} := by
-  intro R _ W xT yT hT h2
-  obtain ⟨hDer, hConst, hC, hD⟩ := _root_.Formalism.L2.Th1.A.invariant_derivation_spec R W
-  have hx := (plusChord R W xT yT hT).1
-  have h2' : 2 * (HahnSeries.C yT : LaurentSeries R) + (curveL W).a₁ * HahnSeries.C xT
-      + (curveL W).a₃ = 0 := by
-    have h := congrArg (HahnSeries.C : R →+* LaurentSeries R) h2
-    simpa only [map_add (f := _), map_mul, map_ofNat, map_zero, WeierstrassCurve.map_a₁,
-      WeierstrassCurve.map_a₃] using h
-  obtain ⟨a, b, c⟩ := _root_.Formalism.L2.Th1.A.twoTorsionTranslation _ (curveL W) (DL W) (xL W) (yL W) (HahnSeries.C xT)
-    (HahnSeries.C yT) (toL (tS W xT)) hDer hConst (_root_.Formalism.L2.Th1.A.invariant_flow R W).1 (Plus.equation_C W hT) (hC xT)
-    (hC yT) h2' (Plus.toL_tS_mul W xT)
-  rw [hD] at b c
-  rw [hD] at c
-  refine ⟨?_, ?_, ?_⟩
-  · apply toL_injective
-    rw [hx, slopeL, a]
-    simp only [map_add (f := _), map_sub, map_mul, map_pow, map_ofNat, toL_C, WeierstrassCurve.map_a₁,
-      WeierstrassCurve.map_a₂, WeierstrassCurve.map_a₄]
-  · apply toL_injective
-    rw [map_pow, b]
-    simp only [map_add (f := _), map_sub, map_mul, map_pow, map_ofNat, toL_C, WeierstrassCurve.map_a₁,
-      WeierstrassCurve.map_a₂, WeierstrassCurve.map_a₄, WeierstrassCurve.map_b₂]
-  · apply toL_injective
-    rw [c]
-    simp only [map_add (f := _), map_sub, map_mul, map_pow, map_ofNat, toL_C, WeierstrassCurve.map_a₁,
-      WeierstrassCurve.map_a₂, WeierstrassCurve.map_a₄, WeierstrassCurve.map_b₂]
-
 namespace Two
 
 variable {K : Type u} [Field K] [CharZero K] (W : WeierstrassCurve K)
@@ -160,10 +132,6 @@ theorem inv_subst_cc (xP : K) :
   simp only [Algebra.algebraMap_self, RingHom.id_apply, ← PowerSeries.constantCoeff_eq, hc, one_mul] at h2
   exact h2
 
-theorem sq_dvd_tS (xP : K) : X ^ 2 ∣ (tS W xP).subst (expSer W) := by
-  rw [subst_tS]
-  exact Dvd.dvd.mul_right (pow_dvd_pow_of_dvd (PowerSeries.X_dvd_iff.mpr (e0 W)) 2) _
-
 theorem coeff_two_tS (xP : K) : coeff 2 ((tS W xP).subst (expSer W)) = 1 := by
   obtain ⟨e1, he1⟩ : X ∣ expSer W := PowerSeries.X_dvd_iff.mpr (e0 W)
   have hc1 : constantCoeff e1 = 1 := by
@@ -239,16 +207,11 @@ theorem two_torsion_integral : TwoTorsionZ.{u} := by
     simpa only [map_add (f := _), map_mul, map_ofNat, map_zero, WeierstrassCurve.map_a₁,
       WeierstrassCurve.map_a₃] using h
   have ht : toL w₁ * (xZ W - HahnSeries.C xT) = 1 := by rw [hw₁]; exact tS_mul W xT
-  obtain ⟨p1, p2, -, p4, p5⟩ := _root_.Formalism.L2.Th1.A.twoTorsionTranslationWeierstrassForm _ (curveL W) dL (xZ W) (yZ W) (HahnSeries.C xT)
+  obtain ⟨p1, p2, -, -, -⟩ := _root_.Formalism.L2.Th1.A.twoTorsionTranslationWeierstrassForm _ (curveL W) dL (xZ W) (yZ W) (HahnSeries.C xT)
     (HahnSeries.C yT) (toL w₁) (HahnSeries.C (W.b₂ / 12)) (HahnSeries.C (g₂ W))
     (HahnSeries.C (g₃ W)) (HahnSeries.C kap) Wp.isDer_dL' (Wp.constCurve_dL W) (flowZ K W).1
     (Plus.equation_C W hT) (dL_C _) (dL_C _) h2' ht h6 hb hg2 hg3 hk
-  obtain ⟨-, -, s3⟩ := _root_.Formalism.L2.Th1.A.twoTorsionTranslation _ (curveL W) dL (xZ W) (yZ W) (HahnSeries.C xT)
-    (HahnSeries.C yT) (toL w₁) Wp.isDer_dL' (Wp.constCurve_dL W) (flowZ K W).1
-    (Plus.equation_C W hT) (dL_C _) (dL_C _) h2' ht
-  rw [← cE] at p1 p4 p5
-  rw [← p2, ← hb, dL_toL, dL_toL] at s3
-  rw [dL_toL] at p4 p5
+  rw [← cE] at p1
   have q1 : 4 * e₁ ^ 3 - g₂ W * e₁ - g₃ W = 0 := by
     apply hinj
     simpa only [map_sub, map_mul, map_pow, map_ofNat, map_zero] using p1
@@ -256,47 +219,7 @@ theorem two_torsion_integral : TwoTorsionZ.{u} := by
     apply hinj
     simpa only [map_add (f := _), map_sub, map_mul, map_pow, map_ofNat, WeierstrassCurve.map_a₁,
       WeierstrassCurve.map_a₂, WeierstrassCurve.map_a₄] using p2
-  refine ⟨q1, ?_, q3, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · have hg3' : g₃ W = 4 * e₁ ^ 3 - g₂ W * e₁ := by linear_combination -q1
-    have h4 : (4 : Polynomial K) * Polynomial.C (g₂ W / 4) = Polynomial.C (g₂ W) := by
-      rw [← map_ofNat (Polynomial.C : K →+* Polynomial K) 4, ← map_mul]
-      congr 1
-      field_simp
-    rw [hg3']
-    simp only [map_sub, map_mul, map_pow, map_ofNat]
-    linear_combination (Polynomial.X - Polynomial.C e₁) * h4
-  · rw [wpL, cE]
-    linear_combination ht
-  · rw [hw₁]; exact sq_dvd_tS W xT
-  · rw [hw₁]; exact coeff_two_tS W xT
-  · rw [hw₁]; exact tS_even W xT
-  · apply toL_injective
-    simpa only [map_add (f := _), map_mul, map_pow, map_one, map_ofNat, toL_C] using p4
-  · apply toL_injective
-    simp only [map_add (f := _), map_mul, map_pow, map_ofNat, toL_C]
-    rw [s3, cE]
-    ring
-  · rw [(two_torsion_unit K W xT yT hT h2).1, ← q3, subst_add (he W), subst_mul (he W), ← hw₁,
-      ← ISer.subHom_apply _ (e0 W), ← ISer.subHom_apply _ (e0 W), ISer.subHom_C, ISer.subHom_C,
-      he₁, map_add]
-    ring
-  · intro e₂ e₃ hf
-    have v0 := congrArg (Polynomial.eval 0) hf
-    have v1 := congrArg (Polynomial.eval 1) hf
-    have vm := congrArg (Polynomial.eval (-1)) hf
-    simp only [Polynomial.eval_sub, Polynomial.eval_mul, Polynomial.eval_pow, Polynomial.eval_X,
-      Polynomial.eval_C, Polynomial.eval_ofNat] at v0 v1 vm
-    have s1 : e₁ + e₂ + e₃ = 0 := by linear_combination (1 / 8) * (v1 + vm - 2 * v0)
-    have s2 : 4 * (e₁ * e₂ + e₁ * e₃ + e₂ * e₃) = -g₂ W := by
-      linear_combination (-1 / 2) * (v1 - vm)
-    refine ⟨by rw [hkap]; linear_combination 2 * e₁ * s1 - (1 / 4) * s2, ?_⟩
-    have p := p5 (HahnSeries.C e₂) (HahnSeries.C e₃)
-      (by rw [← map_add (f := _), ← map_add (f := _), s1, map_zero])
-      (by
-        have h := congrArg (HahnSeries.C : K →+* LaurentSeries K) s2
-        simpa only [map_add (f := _), map_mul, map_neg, map_ofNat] using h)
-    apply toL_injective
-    simpa only [map_add (f := _), map_sub, map_mul, map_pow, map_one, map_ofNat, toL_C] using p
+  exact ⟨q1, q3, by rw [hw₁]; exact tS_even W xT⟩
 
 namespace Two
 

@@ -53,21 +53,8 @@ def TwoTorsionZ : Prop :=
     let kap : K := 3 * e₁ ^ 2 - g₂ W / 4
     let w₁ : K⟦X⟧ := (tS W xT).subst (expSer W)
     4 * e₁ ^ 3 - g₂ W * e₁ - g₃ W = 0 ∧
-    (4 * Polynomial.X ^ 3 - Polynomial.C (g₂ W) * Polynomial.X - Polynomial.C (g₃ W) : Polynomial K)
-      = 4 * (Polynomial.X - Polynomial.C e₁) *
-        (Polynomial.X ^ 2 + Polynomial.C e₁ * Polynomial.X + Polynomial.C (e₁ ^ 2 - g₂ W / 4)) ∧
     kap = 3 * xT ^ 2 + 2 * W.a₂ * xT + W.a₄ - W.a₁ * yT ∧
-    toL w₁ * (wpL W - HahnSeries.C e₁) = 1 ∧
-    X ^ 2 ∣ w₁ ∧ coeff 2 w₁ = 1 ∧ w₁.subst (-X : K⟦X⟧) = w₁ ∧
-    derivative w₁ ^ 2 = 4 * w₁ * (1 + 3 * C e₁ * w₁ + C kap * w₁ ^ 2) ∧
-    derivative (derivative w₁) = 2 + 12 * C e₁ * w₁ + 6 * C kap * w₁ ^ 2 ∧
-    (xPlus W xT yT).subst (expSer W) + C (W.b₂ / 12) = C e₁ + C kap * w₁ ∧
-    ∀ e₂ e₃ : K, (4 * Polynomial.X ^ 3 - Polynomial.C (g₂ W) * Polynomial.X
-        - Polynomial.C (g₃ W) : Polynomial K)
-        = 4 * (Polynomial.X - Polynomial.C e₁) * (Polynomial.X - Polynomial.C e₂)
-          * (Polynomial.X - Polynomial.C e₃) →
-      kap = (e₁ - e₂) * (e₁ - e₃) ∧
-      derivative w₁ ^ 2 = 4 * w₁ * (1 + C (e₁ - e₂) * w₁) * (1 + C (e₁ - e₃) * w₁)
+    w₁.subst (-X : K⟦X⟧) = w₁
 
 def PlusZ : Prop :=
   ∀ (K : Type u) [Field K] [CharZero K] (W : WeierstrassCurve K) (xP yP : K),
