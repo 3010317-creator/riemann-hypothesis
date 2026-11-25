@@ -811,35 +811,8 @@ theorem UpperTheory.Cb.lefschetz_fixedPoint_finite_etale_correspondence :
     rw [hVd i j hne] at hz
     exact hz
   have hVcl : ∀ j, IsClosed (V j : Set Z) := fun j => UpperTheory.Core.isClosed_part V hVd hVc j
-  have hVall : ∀ z : Z, ∃ j, z ∈ V j := by
-    intro z
-    have hz : z ∈ iSup V := by rw [hVc]; trivial
-    exact TopologicalSpace.Opens.mem_iSup.mp hz
   let W : J → J → Y.Opens := fun j k => c1 ⁻¹ᵁ V j ⊓ c2 ⁻¹ᵁ V k
-  have hWm : ∀ j k (y : Y), y ∈ W j k ↔ c1 y ∈ V j ∧ c2 y ∈ V k := by
-    intro j k y
-    simp [W]
-  have hWcl : ∀ j k, IsClosed (W j k : Set Y) := by
-    intro j k
-    have hset : (W j k : Set Y) = c1 ⁻¹' (V j : Set Z) ∩ c2 ⁻¹' (V k : Set Z) := by
-      ext y
-      exact hWm j k y
-    rw [hset]
-    exact ((hVcl j).preimage c1.continuous).inter ((hVcl k).preimage c2.continuous)
-  have hWd : ∀ j k l, k ≠ l → W j k ⊓ W j l = ⊥ := by
-    intro j k l hkl
-    ext y
-    simp only [TopologicalSpace.Opens.coe_inf, Set.mem_inter_iff, SetLike.mem_coe,
-      TopologicalSpace.Opens.coe_bot, Set.mem_empty_iff_false, iff_false, not_and]
-    intro hk hl
-    exact hkl (hVd' k l _ ((hWm j k y).1 hk).2 ((hWm j l y).1 hl).2)
-  have hWr : ∀ j, iSup (W j) = c1 ⁻¹ᵁ V j := by
-    intro j
-    apply le_antisymm
-    · exact iSup_le fun k => inf_le_left
-    · intro y hy
-      obtain ⟨k, hk⟩ := hVall (c2 y)
-      exact TopologicalSpace.Opens.mem_iSup.mpr ⟨k, (hWm j k y).2 ⟨hy, hk⟩⟩
+  have hWm (j k : J) (y : Y) : y ∈ W j k ↔ c1 y ∈ V j ∧ c2 y ∈ V k := Iff.rfl
   have hWd2 : ∀ p q : J × J, p ≠ q → W p.1 p.2 ⊓ W q.1 q.2 = ⊥ := by
     intro p q hpq
     ext y
@@ -848,12 +821,14 @@ theorem UpperTheory.Cb.lefschetz_fixedPoint_finite_etale_correspondence :
     intro hp hq
     rw [hWm] at hp hq
     exact hpq (Prod.ext (hVd' _ _ _ hp.1 hq.1) (hVd' _ _ _ hp.2 hq.2))
+  have hWd (j k l : J) (hkl : k ≠ l) : W j k ⊓ W j l = ⊥ :=
+    hWd2 (j, k) (j, l) fun e => hkl (congrArg Prod.snd e)
+  have hWcl (j k : J) : IsClosed (W j k : Set Y) :=
+    ((hVcl j).preimage c1.continuous).inter ((hVcl k).preimage c2.continuous)
+  have hWr (j : J) : iSup (W j) = c1 ⁻¹ᵁ V j := by
+    simp only [W, ← inf_iSup_eq, c2.iSup_preimage_eq_top hVc, inf_top_eq]
   have hWc : iSup (fun p : J × J => W p.1 p.2) = ⊤ := by
-    apply top_le_iff.mp
-    intro y _
-    obtain ⟨j, hj⟩ := hVall (c1 y)
-    obtain ⟨k, hk⟩ := hVall (c2 y)
-    exact TopologicalSpace.Opens.mem_iSup.mpr ⟨(j, k), (hWm j k y).2 ⟨hj, hk⟩⟩
+    simpa only [iSup_prod, hWr] using c1.iSup_preimage_eq_top hVc
   have ex1 : ∀ j k, ∃ c' : (W j k).toScheme ⟶ (V j).toScheme,
       c' ≫ (V j).ι = (W j k).ι ≫ c1 ∧ IsFinite c' ∧ Etale c' := fun j k =>
     UpperTheory.Cb.exists_finite_etale_restrict_clopen Y Z c1 (V j) (W j k) (hWcl j k) inf_le_left inferInstance inferInstance
