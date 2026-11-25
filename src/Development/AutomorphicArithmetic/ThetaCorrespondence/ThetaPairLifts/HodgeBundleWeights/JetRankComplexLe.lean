@@ -777,17 +777,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheo
   {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {Y : Model Xo c (RingHom.id c.F)} (X : FlagCover Y) (Z : Comp Xo c)
 
 theorem cls_L₀_nsmul (u : AllWt.Weight Dw) (k : ℕ) :
-    cls (L₀ X Z (k • u)) (isLB_L₀ X Z (k • u)) = k • cls (L₀ X Z u) (isLB_L₀ X Z u) := by
-  induction k with
-  | zero =>
-    have e := cls_common_add (common₀ X Z) (0 : AllWt.Weight Dw) 0
-    simp only [add_zero] at e
-    rw [zero_smul]
-    exact (left_eq_add.1 e).symm ▸ rfl
-  | succ k ih =>
-    have e := cls_common_add (common₀ X Z) (k • u) u
-    rw [succ_nsmul, succ_nsmul, ← ih]
-    exact e
+    cls (L₀ X Z (k • u)) (isLB_L₀ X Z (k • u)) = k • cls (L₀ X Z u) (isLB_L₀ X Z u) :=
+  (AddMonoidHom.mk' (fun a => cls (L₀ X Z a) (isLB_L₀ X Z a)) (cls_common_add (common₀ X Z))).map_nsmul k u
 
 end Comp
 
