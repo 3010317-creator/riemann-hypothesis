@@ -18,7 +18,6 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.FromBase
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
 import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
-import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpansionValueZero
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValueAtOrigin
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBPull

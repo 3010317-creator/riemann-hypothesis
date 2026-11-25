@@ -3,11 +3,9 @@ module
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PullCub
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsRegularFnIffOfIsAffineOpen
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ValCalc
-import Mathlib.AlgebraicGeometry.Modules.Sheaf
 import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
 import Development.AbelianVarietyTheory.Definitions.Divisors.UnifAlong
 import Development.AbelianVarietyTheory.Definitions.KeyFormula.KeyRootOfKeyFormula
-import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecMapsSecPullOfPointwiseGerms, Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecMapsSecPullOfPointwiseGermsStatement

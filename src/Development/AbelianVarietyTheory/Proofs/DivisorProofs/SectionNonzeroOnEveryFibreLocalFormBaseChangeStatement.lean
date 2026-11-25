@@ -2,7 +2,6 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpMapGermFromSpec
 import Mathlib.Tactic.Linter.Style
-import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionNonzeroOnEveryFibreLocalFormBaseChange, Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionNonzeroOnEveryFibreLocalFormBaseChangeStatement

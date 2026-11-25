@@ -13,7 +13,6 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.FromBase
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
 import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
-import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionValueGenericPointIntegralSection, Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionValueGenericPointIntegralSectionStatement

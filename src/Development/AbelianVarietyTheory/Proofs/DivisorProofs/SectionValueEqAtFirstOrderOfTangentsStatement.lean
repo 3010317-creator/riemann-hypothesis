@@ -4,7 +4,6 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsPolAVSectionInverseImage
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftLeftFst
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FrameMatrixHasSum
-import Mathlib.AlgebraicGeometry.Modules.Sheaf
 import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
 import Development.AbelianVarietyTheory.Definitions.Divisors.TorusExt
 import Development.AbelianVarietyTheory.Definitions.KeyFormula.KeyRootOfKeyFormula

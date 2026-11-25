@@ -13,7 +13,6 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalMod
 import Development.AbelianVarietyTheory.Definitions.Divisors.RigidForFan
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeB
-import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecBEqEverywhereOfGenericAgreeConst, Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecBEqEverywhereOfGenericAgreeConstStatement
