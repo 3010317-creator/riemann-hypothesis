@@ -177,13 +177,11 @@ theorem exp_blk_mul_proj (S : Finset (Fin n)) (M : Matrix (Fin n) (Fin n) ℂ)
   · simp [hb]
   · simp [hb, hM a b (Or.inr hb)]
 
-set_option backward.isDefEq.respectTransparency false in
 theorem exp_neg_mul_exp {n : ℕ} (M : Matrix (Fin n) (Fin n) ℂ) :
     NormedSpace.exp M * NormedSpace.exp (-M) = 1 := by
   rw [← Matrix.exp_add_of_commute M (-M) (Commute.neg_right (Commute.refl M)), add_neg_cancel,
     NormedSpace.exp_zero]
 
-set_option backward.isDefEq.respectTransparency false in
 theorem exp_neg_mul_exp' {n : ℕ} (M : Matrix (Fin n) (Fin n) ℂ) :
     NormedSpace.exp (-M) * NormedSpace.exp M = 1 := by
   rw [← Matrix.exp_add_of_commute (-M) M (Commute.neg_left (Commute.refl M)), neg_add_cancel,

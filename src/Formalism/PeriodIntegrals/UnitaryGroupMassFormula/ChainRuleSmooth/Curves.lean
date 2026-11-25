@@ -23,7 +23,6 @@ namespace CCRuleCW
 
 open Formalism.FourierDecayAlt
 
-set_option backward.isDefEq.respectTransparency false in
 theorem entry_hasDerivAt {n : ℕ} (X : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) :
     HasDerivAt (fun t : ℝ => NormedSpace.exp ((t : ℂ) • X) i j) (X i j) 0 := by
   have e1 : (fun t : ℝ => NormedSpace.exp ((t : ℂ) • X) i j) =
