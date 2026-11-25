@@ -187,13 +187,7 @@ theorem ker_hodgeTateLinear : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] 
   intro p _ C _ _ _ v O _ _ _ _ _ _ ε hε hS G ζ B hv hζ hB
   obtain ⟨u₁, u₂, hS⟩ := hS
   haveI : IsFractionRing O C := hv.isFractionRing
-  haveI : ValuationRing O := by
-    refine @ValuationRing.mk O _ _ ⟨fun a b => ?_⟩
-    rcases le_total (v (algebraMap O C a)) (v (algebraMap O C b)) with h | h
-    · obtain ⟨c, hc⟩ := hv.dvd_iff_le.2 h
-      exact ⟨c, Or.inr hc.symm⟩
-    · obtain ⟨c, hc⟩ := hv.dvd_iff_le.2 h
-      exact ⟨c, Or.inl hc.symm⟩
+  haveI : ValuationRing O := ValuationRing.of_integers v hv
   have hroot : IsPrimitiveRoot (PreTilt.untilt (root ε)) p := by
     simpa [IndefiniteRowSideFullHecke.EpsilonPairingZeta.zeta] using hε 1
   have sat : ∀ {h : ℕ} (D : Datum ε h ℤ_[p]) (y), D.al y = 0 ↔ ∃ c : O, c ≠ 0 ∧ ∃ m, c • y = D.bb m := by
