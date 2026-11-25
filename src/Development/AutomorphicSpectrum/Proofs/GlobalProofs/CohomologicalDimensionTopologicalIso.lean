@@ -261,16 +261,7 @@ theorem exists_embedded (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Alge
   haveI : IsAlgClosure ℚ Ω := ⟨inferInstance, Algebra.IsAlgebraic.trans ℚ F Ω⟩
   let e : Ω ≃ₐ[ℚ] AlgebraicClosure ℚ := IsAlgClosure.equiv ℚ (AlgebraicClosure ℚ) Ω |>.symm
   let φ : F →ₐ[ℚ] AlgebraicClosure ℚ := e.toAlgHom.comp (IsScalarTower.toAlgHom ℚ F Ω)
-  let ψ0 : F →+* φ.fieldRange :=
-    { toFun := fun x => ⟨φ x, x, rfl⟩
-      map_one' := Subtype.ext (map_one φ)
-      map_mul' := fun x y => Subtype.ext (map_mul φ x y)
-      map_zero' := Subtype.ext (map_zero φ)
-      map_add' := fun x y => Subtype.ext (map_add φ x y) }
-  let ψ : F ≃+* φ.fieldRange := RingEquiv.ofBijective ψ0
-    ⟨ψ0.injective, fun y => by
-      obtain ⟨y, x, rfl⟩ := y
-      exact ⟨x, rfl⟩⟩
+  let ψ : F ≃+* φ.fieldRange := φ.equivFieldRange.toRingEquiv
   have hfin : FiniteDimensional ℚ φ.fieldRange :=
     Module.Finite.of_equiv_equiv (RingEquiv.refl ℚ) ψ (Subsingleton.elim _ _)
   exact ⟨⟨φ.fieldRange, hfin⟩, ψ, e.toRingEquiv, fun _ => rfl⟩
