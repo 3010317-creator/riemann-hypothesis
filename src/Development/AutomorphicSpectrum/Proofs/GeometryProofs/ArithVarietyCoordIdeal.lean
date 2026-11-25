@@ -49,12 +49,8 @@ theorem exists_chart_div (h : CoordTie ℤ ξ x) :
     (congrArg (Scheme.stalkClosedPointTo ξ).hom hrt)
 
 theorem adjoin_le_subfield (F : Subfield Ω) {c : κ} (h : ∀ j, x j / x c ∈ F) {a : Ω}
-    (ha : a ∈ Algebra.adjoin ℤ (Set.range fun j => x j / x c)) : a ∈ F := by
-  induction ha using Algebra.adjoin_induction with
-  | mem t ht => obtain ⟨j, rfl⟩ := ht; exact h j
-  | algebraMap n => simpa using intCast_mem F n
-  | add s t _ _ hs ht => exact add_mem hs ht
-  | mul s t _ _ hs ht => exact mul_mem hs ht
+    (ha : a ∈ Algebra.adjoin ℤ (Set.range fun j => x j / x c)) : a ∈ F :=
+  Algebra.adjoin_le (S := subalgebraOfSubring F.toSubring) (Set.range_subset_iff.2 h) ha
 
 theorem subfield_eq_top {c : κ} (hc : ∀ ω : Ω, ∃ a b : Ω, a ∈ Algebra.adjoin ℤ (Set.range fun j => x j / x c) ∧
       b ∈ Algebra.adjoin ℤ (Set.range fun j => x j / x c) ∧ b ≠ 0 ∧ ω = a / b)
