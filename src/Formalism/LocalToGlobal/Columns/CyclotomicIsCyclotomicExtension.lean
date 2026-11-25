@@ -61,16 +61,6 @@ namespace Formalism.HC
 
 open Formalism.FrobeniusOrbits
 
-theorem ordCompl_mul_prime {m l : ℕ} (hl : l.Prime) (hm : Nat.Coprime m l) : ordCompl[l] (m * l) = m := by
-  have hnd : ¬ l ∣ m := (Nat.Prime.coprime_iff_not_dvd hl).mp (Nat.Coprime.symm hm)
-  have hm0 : m ≠ 0 := by
-    rintro rfl
-    exact hnd (dvd_zero l)
-  have hf : (m * l).factorization l = 1 := by
-    rw [Nat.factorization_mul hm0 hl.ne_zero, Finsupp.add_apply, Nat.factorization_eq_zero_of_not_dvd hnd,
-      hl.factorization_self, zero_add]
-  rw [hf, pow_one, Nat.mul_div_cancel _ hl.pos]
-
 namespace HostRaw
 
 variable {φ : Frame} (H : HostRaw φ)

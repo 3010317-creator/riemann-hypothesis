@@ -63,8 +63,6 @@ import Mathlib.Tactic.PNatToNat
 section -- clump:auto
 @[expose] public section
 
-set_option autoImplicit false
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry TopologicalSpace Set Filter Topology
@@ -441,8 +439,6 @@ end -- clump:auto
 -- clump-header: {"m": "Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingKrullDimIntegers", "h": "module\n\npublic import Formalism.LocalRingCardinality.DataDIV\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FinrankRiemannRochNsmulHyperplane\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MemEqnSetOmegaCoeff\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef\npublic import Mathlib.NumberTheory.NumberField.Completion.FinitePlace\nimport Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.RingKrullDimQuotientEqOfMemMinimalPrimes\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.KrullDimension.Polynomial\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.PNatToNat\nimport Mathlib.Tactic.Polynomial.Basic\n\n"}
 section -- clump:auto
 @[expose] public section
-
-set_option autoImplicit false
 
 noncomputable section
 
@@ -854,65 +850,22 @@ theorem supInf_ofW (C : CxSt F) (Y : Var F) (L : Y.Dv) (W : HLat F) (ι : W.V �
   have e : frameAt W v.embedding = W.X v := by simp [frameAt]
   simp [Adl.nrmInf, ofW, e, Real.sqrt_eq_rpow]
 
-def geoOf (C : CxSt F) (K : CutSt C) (R : ResSt C) : DV.Geo F where
+def geoOf (C : CxSt F) (_K : CutSt C) (_R : ResSt C) : DV.Geo F where
   Var := Var F
   dim := Var.dim
   Fn := Var.Fn
   Dv := Var.Dv
-  Eff := Var.Eff
-  eff_zero := Var.eff_zero
-  eff_add := Var.eff_add
   H0 := Var.H0
-  degreeZeroCohomology_finiteDimensional := riemannRoch_finite F
-  mul_mem_riemannRochSpace_add := Var.mul_mem_riemannRochSpace_add
-  riemannRoch_mono := Var.riemannRoch_mono
-  KY := Var.KY
   Cl := Var.Cl
-  properCl := Var.properCl
-  subCl := Var.subCl
   supp := Var.supp
   inter := Var.inter
-  nef := Var.nef
-  big := Var.big
-  bpf := Var.bpf
-  phiBir := Var.phiBir
-  phiNoContr := Var.phiNoContr
   vanishOn := Var.vanishOn
-  hdim := Var.hdim
-  pts := Pts
-  ptsMeas := C.ptsMeas
-  vol := C.vol
-  FnC := C.FnC
-  cx := C.cx
-  cx_smul := C.cx_smul
-  Met := C.Met
-  mAdd := C.mAdd
-  mPow := C.mPow
-  fsMet := C.fsMet
-  pn := C.pn
-  pnK := C.pnK
-  mSmooth := C.mSmooth
-  mPsh := C.mPsh
-  redZero := C.redZero
-  agreeOn := C.agreeOn
-  resNorm := C.resNorm
   Adl := Adl C
   ofW := ofW C
   twist := fun _ => Adl.twist
   arTop := fun _ => Adl.arTop
   arVol := fun _ => Adl.arVol
   nefA := fun _ => Adl.Nef
-  supInf := fun _ => Adl.supInf
-  supFin := fun _ => Adl.supFin
-  cutGood := K.cutGood
-  cutHt := K.cutHt
-  cutOrd := K.cutOrd
-  resFull := R.resFull
-  resDeg := R.resDeg
-  supInf_ofW := supInf_ofW C
-  supInf_twist := fun _ A ci cf _ => supInf_twist A ci cf
-  supFin_twist := fun _ A ci cf _ => supFin_twist A ci cf
-  regOn := C.regOn
 
 theorem deg_ofW (C : CxSt F) (Y : Var F) (L : Y.Dv) (W : HLat F) (ι : W.V →ₗ[F] Y.Fn) :
     (ofW C Y L W ι).deg = (Y.inter (fun _ => L) : ℝ) := by simp [Adl.deg, ofW]
