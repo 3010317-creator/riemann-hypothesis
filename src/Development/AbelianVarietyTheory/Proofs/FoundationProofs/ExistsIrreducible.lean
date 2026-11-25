@@ -122,12 +122,8 @@ theorem exists_sqrt (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
   obtain ⟨x, hx⟩ : ∃ x : 𝓞 E, sig x ≠ x := by
     by_contra hcon
     push Not at hcon
-    refine hs (AlgHom.ext fun y => ?_)
-    obtain ⟨a, b, -, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 E) y
-    have ha := hcon a
-    have hb := hcon b
-    rw [map_div₀]
-    exact congrArg₂ (· / ·) ha hb
+    exact hs (AlgHom.toRingHom_injective
+      (IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) (RingHom.ext hcon)))
   have hint : IsIntegral ℤ ((x : E) - sig x) :=
     x.isIntegral_coe.sub (map_isIntegral_int sig x.isIntegral_coe)
   set α : E := (x : E) - sig x with hα
