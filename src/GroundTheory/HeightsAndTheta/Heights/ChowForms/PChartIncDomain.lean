@@ -18,14 +18,8 @@ namespace ChartIncDomain
 theorem aeval_smul_of_isHomogeneous {R S σ : Type*} [CommRing R] [CommRing S] [Algebra R S]
     {p : MvPolynomial σ R} {d : ℕ} (hp : p.IsHomogeneous d) (c : S) (x : σ → S) :
     aeval (c • x) p = c ^ d * aeval x p := by
-  classical
-  rw [aeval_def, aeval_def, eval₂_eq, eval₂_eq, Finset.mul_sum]
-  refine Finset.sum_congr rfl fun s hs => ?_
-  have hs' : ∑ i ∈ s.support, s i = d := by
-    have := hp (mem_support_iff.mp hs)
-    simpa [Finsupp.weight_apply, Finsupp.sum] using this
-  simp only [Pi.smul_apply, smul_eq_mul, mul_pow, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum, hs']
-  ring
+  rw [aeval_def, aeval_def, eval₂_eq_eval_map, eval₂_eq_eval_map]
+  exact (hp.map _).eval_smul c x
 
 theorem isHomogeneous_linForm {F : Type*} [CommRing F] {n : ℕ} (t : Fin n → F) :
     (linForm t).IsHomogeneous 1 :=
