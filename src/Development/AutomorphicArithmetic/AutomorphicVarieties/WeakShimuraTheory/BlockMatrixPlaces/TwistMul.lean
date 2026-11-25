@@ -730,11 +730,30 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 
 private theorem mem_smul_top_pi {R : Type} [CommRing R] (J : Ideal R) {r : ℕ} (x : Fin r → R) :
     x ∈ J • (⊤ : Submodule R (Fin r → R)) ↔ ∀ i, x i ∈ J := by
-  apply _root_.mem_smul_top_pi <;> assumption
+  constructor
+  · intro hx
+    refine Submodule.smul_induction_on hx (fun a ha y _ i => ?_) (fun a b ha hb i => ?_)
+    · exact J.mul_mem_right _ ha
+    · exact J.add_mem (ha i) (hb i)
+  · intro hx
+    rw [pi_eq_sum_univ x]
+    exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem_smul (hx i) Submodule.mem_top
 
 private theorem isPrecomplete_pi {R : Type} [CommRing R] (I : Ideal R) [IsPrecomplete I R] (r : ℕ) :
     IsPrecomplete I (Fin r → R) := by
-  apply _root_.isPrecomplete_pi <;> assumption
+  refine ⟨fun f hf => ?_⟩
+  have key : ∀ i, ∃ L : R, ∀ n, f n i ≡ L [SMOD (I ^ n • ⊤ : Submodule R R)] := fun i =>
+    IsPrecomplete.prec' (I := I) (fun n => f n i) fun {m n} hmn => by
+      have h := hf hmn
+      rw [SModEq.sub_mem, mem_smul_top_pi] at h
+      rw [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top]
+      exact h i
+  choose L hL using key
+  refine ⟨L, fun n => ?_⟩
+  rw [SModEq.sub_mem, mem_smul_top_pi]
+  intro i
+  have h := hL i n
+  rwa [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top] at h
 
 private theorem isPrecomplete_finite {R M : Type} [CommRing R] [AddCommGroup M] [Module R M]
     [Module.Finite R M] (I : Ideal R) [IsPrecomplete I R] : IsPrecomplete I M := by

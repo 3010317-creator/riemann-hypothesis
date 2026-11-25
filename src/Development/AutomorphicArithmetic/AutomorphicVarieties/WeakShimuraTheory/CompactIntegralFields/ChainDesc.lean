@@ -55,12 +55,12 @@ variable {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R'']
 
 private theorem conj_mp (f : R →+* R') (n m : M4 R) (i j : Fin 4) :
     (adj (n.map f) * m.map f * n.map f) i j = f ((adj n * m * n) i j) := by
-  rw [adj_map, ← Matrix.map_mul, ← Matrix.map_mul, Matrix.map_apply]
+  rw [UpperTheory.V.Ws.adj_map, ← Matrix.map_mul, ← Matrix.map_mul, Matrix.map_apply]
 
 private theorem gsp_of (f : R →+* R') (hf : Function.Injective f) (ν : R) (X : M4 R) (h : IsGSp (f ν) (X.map f)) :
     IsGSp ν X := by
   unfold IsGSp at h ⊢
-  rw [adj_map, ← Matrix.map_mul] at h
+  rw [UpperTheory.V.Ws.adj_map, ← Matrix.map_mul] at h
   ext i j
   apply hf
   have hij := congrFun (congrFun h i) j
