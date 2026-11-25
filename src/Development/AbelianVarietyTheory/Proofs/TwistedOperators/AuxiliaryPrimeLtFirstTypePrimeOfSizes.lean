@@ -290,21 +290,9 @@ theorem heckeCharacterGrid_isAuxiliaryCharacter_testGrid_alt : ∀ {D : D7} {Γ 
     unfold GlobalTheory.Grid.cen GlobalTheory.ChiGrid.cen GlobalTheory.Grid.gridOf
     rw [hgap]
     rfl
-  have hunit : (G'.ch.chiH i).IsUnitary := _root_.GlobalTheory.HeckeUnitaryInf.isUnitary_of_hasInf _ _ _ _ (G'.ch.inf i hi1 hi2)
-  refine ⟨hunit, G'.ch.triv i hi1 hi2, ?_, ?_, ?_, ?_, ?_⟩
-  · refine ⟨fun τ => 2 * GlobalTheory.ChiGrid.cen D sc.cGap τ i, fun τ => ?_, G'.ch.inf i hi1 hi2⟩
-    show ((2 * GlobalTheory.ChiGrid.cen D sc.cGap τ i : ℤ) : ℚ) = 2 * ((GlobalTheory.Grid.cen D τ i : ℤ) : ℚ)
-    rw [hcen τ]; push_cast; ring
-  · intro w hw
-    rw [hS0] at hw
-    exact G'.ch.unr i hi1 hi2 w hw
-  · intro w hw
-    exact G'.ch.lev1 i hi1 hi2 w (hS1 w hw)
-  · intro w hw x hx
-    exact G'.ch.wild i hi1 hi2 w (hwd w hw) x hx
-  · have hu : Z.w0.under (𝓞 D.host.F) = G'.pl.v0 := by
-      rw [hw0]; exact G'.pl.under_w (G'.pl.mem_S0_of_sum_eq.2 (Or.inl rfl))
-    exact G'.ch.lev0 i hi1 hi2 Z.w0 hu
+  refine ⟨⟨fun τ => 2 * GlobalTheory.ChiGrid.cen D sc.cGap τ i, fun τ => ?_, G'.ch.inf i hi1 hi2⟩⟩
+  show ((2 * GlobalTheory.ChiGrid.cen D sc.cGap τ i : ℤ) : ℚ) = 2 * ((GlobalTheory.Grid.cen D τ i : ℤ) : ℚ)
+  rw [hcen τ]; push_cast; ring
 
 end GlobalTheory.Grid
 
