@@ -806,17 +806,8 @@ variable {D : D7}
 theorem comb_pureTensorO {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D} (hψ : IsStdChar D ψ (-1))
     (hθ : IsInfFam θ) (sS sT BS BT) {e : WO S T →₀ ℂ} (he : IsFinComb e) {f₀ : WO S T → ℂ}
     (hf₀ : IsThetaFunO ψ S T f₀) (P) :
-    comb ψ S T e (pureTensorO ψ θ S T sS sT BS BT f₀ P) = pureTensorO ψ θ S T sS sT BS BT (comb ψ S T e f₀) P := by
-  let q := e.support.equivFin
-  have key := (GlobalTheory.FockFiniteHeis.heis_comb_pureTensorO D ψ θ S T hψ hθ sS sT BS BT f₀ hf₀ e.support.card
-    (fun i => e (q.symm i).1) (fun i => (q.symm i).1) (fun i => he _ (q.symm i).2) P).1
-  have h1 : ∀ g : WO S T → (WO S T → ℂ), ∑ u ∈ e.support, e u • g u = ∑ i, e (q.symm i).1 • g (q.symm i).1 := by
-    intro g
-    rw [← Finset.sum_coe_sort e.support]
-    exact (Equiv.sum_comp q.symm (fun u : e.support => e u.1 • g u.1)).symm
-  simp only [comb]
-  rw [h1, h1]
-  exact key
+    comb ψ S T e (pureTensorO ψ θ S T sS sT BS BT f₀ P) = pureTensorO ψ θ S T sS sT BS BT (comb ψ S T e f₀) P :=
+  by apply _root_.GlobalTheory.GVecAt.comb_pureTensorO <;> assumption
 
 theorem isItW_of_comb {V W : HSp D} {S S' : D.what₂.Tau → SPar} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
     {M : DSModel V S} {M' : DSModel W S'} {χS χT : (AE D)ˣ →* Circle}
