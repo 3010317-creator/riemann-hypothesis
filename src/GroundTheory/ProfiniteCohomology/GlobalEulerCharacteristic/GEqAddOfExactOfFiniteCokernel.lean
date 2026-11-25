@@ -87,11 +87,8 @@ theorem g_funPermRep (X : Type u) [MulAction Γ X] [Finite X] :
     letI := repAction (funPermRep ℤ Γ X)
     d.g (X → ℤ) = d.toFun (X → ZMod l) (funPermRep (ZMod l) Γ X) := by
   let := repAction (funPermRep ℤ Γ X)
-  have ht : ∀ a : X → ℤ, l • a = 0 → a = 0 := fun a ha ↦ by
-    funext x
-    have h := congrFun ha x
-    simp only [Pi.smul_apply, Pi.zero_apply, nsmul_eq_mul] at h
-    exact (mul_eq_zero.1 h).resolve_left (by exact_mod_cast NeZero.ne l)
+  have ht : ∀ a : X → ℤ, l • a = 0 → a = 0 := fun a ha ↦
+    (eq_zero_or_eq_zero_of_smul_eq_zero ha).resolve_left (NeZero.ne l)
   let φ : (X → ℤ) →+ (X → ZMod l) :=
     { toFun := fun a x ↦ (a x : ZMod l)
       map_zero' := by
