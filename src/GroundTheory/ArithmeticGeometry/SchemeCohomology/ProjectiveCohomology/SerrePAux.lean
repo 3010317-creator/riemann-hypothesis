@@ -106,8 +106,9 @@ def linearMapOfAddHom {R M N : Type*} [Semiring R] [AddCommMonoid M] [AddCommMon
 
 lemma H.δ_map_smul (p : ℕ) (a : A) (x : Sheaf.H.{w'} (modulesAb S.X₃) p) :
     (show Sheaf.H.{w'} (modulesAb S.X₁) (p + 1) from H.δ hS p (p + 1) rfl (a • x)) =
-      a • (show Sheaf.H.{w'} (modulesAb S.X₁) (p + 1) from H.δ hS p (p + 1) rfl x) :=
-  H.δ_naturality hS hS (abSmulEnd S (algebraMap A Γ(X, ⊤) a)) p (p + 1) rfl x
+      a • (show Sheaf.H.{w'} (modulesAb S.X₁) (p + 1) from H.δ hS p (p + 1) rfl x) := by
+  rw [H.smul_def, H.smul_def]
+  exact H.δ_naturality hS hS (abSmulEnd S (algebraMap A Γ(X, ⊤) a)) p (p + 1) rfl x
 
 def H.δLinear (p : ℕ) :
     Sheaf.H.{w'} (modulesAb S.X₃) p →ₗ[A] Sheaf.H.{w'} (modulesAb S.X₁) (p + 1) :=
