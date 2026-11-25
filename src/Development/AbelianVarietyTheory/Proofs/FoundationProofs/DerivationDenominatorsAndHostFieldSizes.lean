@@ -5,6 +5,7 @@ public import Mathlib.Algebra.AffineMonoid.Basic
 public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 import Std.Tactic.BVDecide.Normalize.Prop
 public import Formalism.SharedLemmas.NormLeOneOfIntegral
+public import Mathlib.NumberTheory.NumberField.ClassNumber
 
 @[expose] public section
 
