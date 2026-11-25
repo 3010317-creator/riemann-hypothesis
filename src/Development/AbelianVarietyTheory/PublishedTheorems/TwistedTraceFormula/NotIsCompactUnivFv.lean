@@ -193,10 +193,7 @@ theorem exists_isPlacesIdem (S₁ : Finset (InfinitePlace F)) (S₂ : Finset (He
 
 theorem not_isCompact_univ_Fv (v : HeightOneSpectrum (𝓞 F)) : ¬ IsCompact (Set.univ : Set (Fv F v)) := by
   letI : NontriviallyNormedField (v.adicCompletion F) := Valued.toNontriviallyNormedField _ _
-  intro h
-  obtain ⟨C, hC⟩ := (h.isBounded).exists_norm_le
-  obtain ⟨x, hx⟩ := NormedField.exists_lt_norm (Fv F v) C
-  exact absurd (hC x trivial) (not_le.2 hx)
+  exact noncompact_univ _
 
 theorem continuous_evalV (v : HeightOneSpectrum (𝓞 F)) : Continuous fun a : AF F => evalV F v (sndA F a) :=
   (RestrictedProduct.continuous_eval v).comp continuous_snd
