@@ -27,16 +27,11 @@ theorem Jp_finite (j : ℕ) (ρ : D.what₂.Tau) : (Jp D j ρ).Finite := by
   · exact Or.inl (Or.inr ⟨a, rfl⟩)
   · exact Or.inr ⟨⟨c, hc⟩, rfl⟩
 
-theorem refl_injective : Function.Injective (AdmissibleParameterJ.refl D) := by
-  intro x y h
-  simp only [AdmissibleParameterJ.refl] at h
-  linarith
+theorem refl_injective : Function.Injective (AdmissibleParameterJ.refl D) :=
+  (Equiv.subLeft ((D.R.t : ℚ) - 1)).injective
 
-theorem refl_surjective : Function.Surjective (AdmissibleParameterJ.refl D) := by
-  intro y
-  refine ⟨((D.R.t : ℚ) - 1) - y, ?_⟩
-  simp only [AdmissibleParameterJ.refl]
-  ring
+theorem refl_surjective : Function.Surjective (AdmissibleParameterJ.refl D) :=
+  (Equiv.subLeft ((D.R.t : ℚ) - 1)).surjective
 
 theorem JJ_finite (up : Bool) (j : ℕ) (ρ : D.what₂.Tau) : (JJ D up j ρ).Finite := by
   cases up
