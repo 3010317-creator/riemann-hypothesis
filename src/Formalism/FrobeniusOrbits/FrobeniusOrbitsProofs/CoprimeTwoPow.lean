@@ -211,34 +211,10 @@ theorem hostGroup : HostGroup := by
   · exact hne
   · exact orderOf_eq_prime (Prod.ext (Prod.ext (by simp [sq]) (by simp [sq])) (by simp [sq]))
       fun h => hne (congrArg (fun x => x.1.1) h)
-  · have hg : hcl e (u5 (e + 2)) ^ (2 ^ e) = 1 := h5 ▸ pow_orderOf_eq_one _
-    let f0 : ℤ →+ Additive (HGrp e) := zmultiplesHom (Additive (HGrp e)) (Additive.ofMul (hcl e (u5 (e + 2))))
-    have hf0 : f0 ((2 ^ e : ℕ) : ℤ) = 0 := by
-      show ((2 ^ e : ℕ) : ℤ) • Additive.ofMul (hcl e (u5 (e + 2))) = 0
-      rw [← ofMul_zpow, zpow_natCast, hg, ofMul_one]
-    let f1 : ZMod (2 ^ e) →+ Additive (HGrp e) := ZMod.lift (2 ^ e) ⟨f0, hf0⟩
-    let f : Multiplicative (ZMod (2 ^ e)) →* HGrp e :=
-      { toFun := fun x => Additive.toMul (f1 (Multiplicative.toAdd x))
-        map_one' := by simp
-        map_mul' := fun x y => by simp }
-    have hf1 : f (Multiplicative.ofAdd 1) = hcl e (u5 (e + 2)) := by
-      change Additive.toMul (f1 1) = _
-      rw [show (1 : ZMod (2 ^ e)) = ((1 : ℤ) : ZMod (2 ^ e)) by simp, ZMod.lift_coe]
-      change Additive.toMul ((1 : ℤ) • Additive.ofMul (hcl e (u5 (e + 2)))) = _
-      rw [one_zsmul]; rfl
-    have hsurj : Function.Surjective f := fun y => by
-      have htop : Subgroup.zpowers (hcl e (u5 (e + 2))) = ⊤ :=
-        Subgroup.eq_top_of_card_eq _ (by rw [Nat.card_zpowers, h5, card_H])
-      obtain ⟨k, hk⟩ := Subgroup.mem_zpowers_iff.1 (htop ▸ Subgroup.mem_top y)
-      refine ⟨Multiplicative.ofAdd (k : ZMod (2 ^ e)), ?_⟩
-      change Additive.toMul (f1 (k : ZMod (2 ^ e))) = y
-      rw [ZMod.lift_coe]
-      exact hk
-    have : NeZero (2 ^ e) := ⟨by positivity⟩
-    have hc : Nat.card (Multiplicative (ZMod (2 ^ e))) ≤ Nat.card (HGrp e) := by
-      change Nat.card (ZMod (2 ^ e)) ≤ Nat.card (HGrp e)
-      rw [Nat.card_zmod, card_H]
-    exact ⟨MulEquiv.ofBijective f (hsurj.bijective_of_nat_card_le hc), hf1⟩
+  · have htop : Subgroup.zpowers (hcl e (u5 (e + 2))) = ⊤ :=
+      Subgroup.eq_top_of_card_eq _ (by rw [Nat.card_zpowers, h5, card_H])
+    exact ⟨zmodMulEquivOfGenerator (fun y => htop ▸ Subgroup.mem_top y) (card_H e),
+      zmodMulEquivOfGenerator_apply_ofAdd_one _ _⟩
 
 theorem hostOrders : HostOrders := by
   intro e
