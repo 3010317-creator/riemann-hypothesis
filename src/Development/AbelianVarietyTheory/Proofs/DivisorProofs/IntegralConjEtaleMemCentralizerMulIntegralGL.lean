@@ -63,37 +63,10 @@ namespace GlobalTheory.SplitLattice
 
 variable {E : Type} [NormedField E] [IsUltrametricDist E]
 
-def ball : ValuationSubring E where
-  carrier := {x | ‖x‖ ≤ 1}
-  mul_mem' {a b} ha hb := by
-    simp only [Set.mem_setOf_eq, norm_mul] at *
-    exact mul_le_one₀ ha (norm_nonneg _) hb
-  one_mem' := by simp
-  add_mem' {a b} ha hb := by
-    simp only [Set.mem_setOf_eq] at *
-    exact (IsUltrametricDist.norm_add_le_max a b).trans (max_le ha hb)
-  zero_mem' := by simp
-  neg_mem' {a} ha := by simpa using ha
-  mem_or_inv_mem' x := by
-    by_cases h : ‖x‖ ≤ 1
-    · exact Or.inl h
-    · right
-      show ‖x⁻¹‖ ≤ 1
-      rw [norm_inv]
-      exact inv_le_one_of_one_le₀ (le_of_lt (not_le.1 h))
+def ball : ValuationSubring E :=
+  (NormedField.valuation (K := E)).valuationSubring
 
 theorem norm_le_one (x : (ball : ValuationSubring E)) : ‖(x : E)‖ ≤ 1 := x.2
-
-theorem norm_eq_one_of_isUnit {x : (ball : ValuationSubring E)} (hx : IsUnit x) : ‖(x : E)‖ = 1 := by
-  obtain ⟨u, rfl⟩ := hx
-  have h0 : ((u : (ball : ValuationSubring E)) : E) * ((u⁻¹ : (ball : ValuationSubring E)ˣ) : E) = 1 :=
-    congrArg Subtype.val u.mul_inv
-  have h := congrArg norm h0
-  rw [norm_mul, norm_one] at h
-  have h1 := norm_le_one (u : (ball : ValuationSubring E))
-  have h2 := norm_le_one ((u⁻¹ : (ball : ValuationSubring E)ˣ) : (ball : ValuationSubring E))
-  nlinarith [norm_nonneg ((u : (ball : ValuationSubring E)) : E),
-    norm_nonneg (((u⁻¹ : (ball : ValuationSubring E)ˣ) : (ball : ValuationSubring E)) : E)]
 
 instance : Finite (MaximalSpectrum (ball : ValuationSubring E)) := by
   haveI : Subsingleton (MaximalSpectrum (ball : ValuationSubring E)) := ⟨fun a b => by
@@ -175,9 +148,11 @@ theorem split_place : ∀ (E : Type) [NontriviallyNormedField E] [IsUltrametricD
   · intro i j
     exact norm_le_one _
   · rw [← RingHom.mapMatrix_apply, ← RingHom.map_det]
-    refine norm_eq_one_of_isUnit ?_
-    rw [Matrix.det_mul]
-    exact hKA.mul (Matrix.isUnit_nonsing_inv_det Ky hKy)
+    have hunit : IsUnit (KA * Ky⁻¹).det := by
+      rw [Matrix.det_mul]
+      exact hKA.mul (Matrix.isUnit_nonsing_inv_det Ky hKy)
+    exact congrArg (fun r : NNReal => (r : ℝ))
+      ((Valuation.integer.integers (NormedField.valuation (K := E))).one_of_isUnit hunit)
   · rw [hk]
     simp only [Matrix.mul_assoc]
     rw [← Matrix.mul_assoc a⁻¹ a, Matrix.nonsing_inv_mul _ ha, Matrix.one_mul,
