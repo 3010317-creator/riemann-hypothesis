@@ -297,12 +297,8 @@ theorem efQ_surj (hP : Formalism.BasicNotions.FactPrincipalDatum) (D : D7) (j : 
       rw [map_smul, smul_eq_mul] at this
       have e : (D.sp.W j).hT x y0 * b = b * (D.sp.W j).hT x y0 := mul_comm _ _
       rw [e]; exact this
-    have hle2 : FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E)) ((D.sp.W j).hT x y0) ≤ D.host.AAbar := by
-      calc FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E)) ((D.sp.W j).hT x y0)
-          = D.host.AA⁻¹ * (FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E)) ((D.sp.W j).hT x y0) * D.host.AA) := by
-            rw [mul_comm _ D.host.AA, ← mul_assoc, inv_mul_cancel₀ hAA, one_mul]
-        _ ≤ D.host.AA⁻¹ * (D.host.AA * D.host.AAbar) := CovariantClass.elim D.host.AA⁻¹ hle
-        _ = D.host.AAbar := by rw [← mul_assoc, inv_mul_cancel₀ hAA, one_mul]
+    have hle2 : FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E)) ((D.sp.W j).hT x y0) ≤ D.host.AAbar :=
+      le_of_mul_le_mul_right (hle.trans_eq (mul_comm _ _)) (pos_iff_ne_zero.2 hAA)
     exact hle2 (mem_spanSingleton_self _ _)
   have h6 : ∀ c ∈ D.host.AA⁻¹, c • x ∈ (D.sp.W j).L0 := by
     intro c hc
