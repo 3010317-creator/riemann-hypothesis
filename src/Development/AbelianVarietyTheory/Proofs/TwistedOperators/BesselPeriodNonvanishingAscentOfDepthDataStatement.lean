@@ -1095,7 +1095,7 @@ theorem upLast : ∀ D : D7, UpLast D := by
   push Not at hcon
   apply hne
   rw [← hval Ξ hΞ.1]
-  refine GlobalTheory.T.tame_functional_vacuum_irreducibility D ψ hψ J.W₀ X ΓX _ hTame _ hbox hf₀ (fun w hw => ?_) Ξ hΞ
+  refine _root_.GlobalTheory.Irr.irr D ψ hψ J.W₀ X ΓX _ hTame _ hbox hf₀ (fun w hw => ?_) Ξ hΞ
   obtain ⟨hw1, hw2⟩ := hLL.ann w hw
   have hΦ := (GlobalTheory.Asc.annVac D ψ hψ J.W T Γ).1 f₁ hf₁ _ hw1
   have hΦ₀ := (GlobalTheory.Asc.annVac D ψ hψ J.W₀ (negSp L'') ΓL).1 f₂ hf₂ _ hw2

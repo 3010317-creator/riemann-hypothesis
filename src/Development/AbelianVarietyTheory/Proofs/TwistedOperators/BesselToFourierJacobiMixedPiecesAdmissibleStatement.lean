@@ -1189,8 +1189,8 @@ theorem pieces_bf : OnStd fun {D} _ _ {sc} {G} W F => ∀ ρ (h : 2 * ρ + 2 ≤
     refine ⟨⟨_root_.GlobalTheory.AscFin.finLat_pcBF_A₁ D hD T L μ0 hL sc G W M hM F hF ρ h, ⟨?_, (_root_.GlobalTheory.AnnPiece.pcBF_A₂_compact_open D hD T L μ0 hL sc G W M hM F hF ρ h).1, (_root_.GlobalTheory.AnnPiece.pcBF_A₂_compact_open D hD T L μ0 hL sc G W M hM F hF ρ h).2⟩,
       (_root_.GlobalTheory.BesselPieceB.finLat_pcBF_B D hD T L μ0 hL sc G W M hM F hF ρ h).1, (_root_.GlobalTheory.BesselPieceB.finLat_pcBF_B D hD T L μ0 hL sc G W M hM F hF ρ h).2, ?_, ?_,
       (_root_.GlobalTheory.PcBFDual.dualB D hD T L μ0 hL sc G W M hM F hF ρ h).1, (_root_.GlobalTheory.PcBFDual.dualB D hD T L μ0 hL sc G W M hM F hF ρ h).2,
-      GlobalTheory.T.genericCharacter_trivial_besselStep_unitriangular D hD T L μ0 hL sc G W M hM F hF ρ h, (_root_.GlobalTheory.AscFin.CorePiece.core_fin_vac D hD T L μ0 hL sc G W M hM F hF ρ h).1, (_root_.GlobalTheory.AscFin.CorePiece.core_fin_vac D hD T L μ0 hL sc G W M hM F hF ρ h).2⟩,
-      GlobalTheory.T.besselToFourierJacobi_depthLattice_splits D hD T L μ0 hL sc G W M hM F hF ρ h⟩
+      _root_.GlobalTheory.AscFin.UniBF.psiUni_pcBF D hD T L μ0 hL sc G W M hM F hF ρ h, (_root_.GlobalTheory.AscFin.CorePiece.core_fin_vac D hD T L μ0 hL sc G W M hM F hF ρ h).1, (_root_.GlobalTheory.AscFin.CorePiece.core_fin_vac D hD T L μ0 hL sc G W M hM F hF ρ h).2⟩,
+      _root_.GlobalTheory.AscFin.pcBF_splits D hD T L μ0 hL sc G W M hM F hF ρ h⟩
     · intro a' ha'
       induction ha' using AddSubgroup.closure_induction with
       | mem b hb => exact hb.1

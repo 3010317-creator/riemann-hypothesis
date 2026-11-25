@@ -325,7 +325,7 @@ theorem claim {s ξ₀ : ∀ i, N i} (h0 : Restr s ξ₀) (hne : ∀ i, ξ₀ i 
       obtain ⟨w', hw', he⟩ := hle w.2
       have : w' = w := Subtype.ext he
       rwa [← this]
-    have hN := GlobalTheory.T.tensor_irreducible_of_countable_dimension_irreducible (N j) (fin s ξ₀ S') (Sv j) _ (hrank j) (hnt j) (hirr j) hU
+    have hN := _root_.GlobalTheory.TensIrr.tensor_irreducible (N j) (fin s ξ₀ S') (Sv j) _ (hrank j) (hnt j) (hirr j) hU
       (Q.comap (phi s ξ₀ S' j f))
       (fun a ha t ht => by
         rw [Submodule.mem_comap] at ht ⊢
@@ -1049,7 +1049,7 @@ theorem theta_triple_piT_irreducible : GlobalTheory.Published.HoweDualityReal �
   have rkR : Module.rank ℂ R.Pi ≤ Cardinal.aleph0 := by
     rw [← rank_top ℂ R.Pi, ← hm.real.quot.onto]
     exact (rank_map_le _ _).trans hrank
-  refine GlobalTheory.T.tensor_irreducible_of_countable_dimension_irreducible R.Pi _ {b | ∀ x ∈ N, LinearMap.rTensor _ b x ∈ N} {c | ∃ v, ∃ a ∈ Sv v, c = Op v a} rkR
+  refine _root_.GlobalTheory.TensIrr.tensor_irreducible R.Pi _ {b | ∀ x ∈ N, LinearMap.rTensor _ b x ∈ N} {c | ∃ v, ∃ a ∈ Sv v, c = Op v a} rkR
     inferInstance (fun Q hQ => ?_) (fun Q hQ => irrF Q fun v a ha => hQ _ ⟨v, a, ha, rfl⟩) N (fun b hb => hb) ?_
   ·
     have hlie := hred {γ | ∃ τ, ∃ Y ∈ lieAt X τ, ∀ t : ℝ, γ (Multiplicative.ofAdd t) =
