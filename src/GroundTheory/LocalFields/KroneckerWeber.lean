@@ -195,13 +195,9 @@ theorem exists_le_adjoin_rootsOfUnity (L : IntermediateField ℚ_[p] Ω) [Finite
     change ζ ^ _ = 1
     rw [mul_comm, pow_mul, hζ, one_pow]
 
-theorem coprime_pow_sub_one {k : ℕ} (hk : k ≠ 0) : (p ^ k - 1).Coprime p := by
-  rw [Nat.coprime_comm, hp.out.coprime_iff_not_dvd]
-  intro h
-  have h1 : p ∣ p ^ k := dvd_pow_self p hk
-  have h2 := Nat.dvd_sub h1 h
-  rw [Nat.sub_sub_self (Nat.one_le_pow _ _ hp.out.pos)] at h2
-  exact hp.out.one_lt.ne' (Nat.dvd_one.1 h2)
+theorem coprime_pow_sub_one {k : ℕ} (hk : k ≠ 0) : (p ^ k - 1).Coprime p :=
+  ((Nat.coprime_self_sub_left (Nat.one_le_pow _ _ hp.out.pos)).2 (Nat.coprime_one_left _)).coprime_dvd_right
+    (dvd_pow_self p hk)
 
 
 omit [Algebra.IsSeparable ℚ_[p] Ω] in
