@@ -58,8 +58,6 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EtaProdEq
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeLEntireAndNonzeroAtOneHolds
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SqRepTopVecOfUnitriangular
 public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.HermitianHassePrincipleHolds
-public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.ThetaRationalInvarianceHolds
-public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.PlaneFormNondegenerate
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RealMetaplecticRepresentation
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.SchurOrthogonalitySquareIntegrable
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HeckeLPartialContinuationHolds
@@ -836,10 +834,6 @@ section -- clump:auto
 namespace PositivityTheory.Stage1.PM
 
 alias hermitianHassePrinciple := _root_.GlobalTheory.Published.hermitianHassePrinciple_holds
-
-alias thetaRationalInvariance := _root_.GlobalTheory.Published.thetaRationalInvariance_holds
-
-alias stoneVonNeumann := _root_.GlobalTheory.Published.StoneVonNeumann_holds
 
 end PositivityTheory.Stage1.PM
 end -- clump:auto
