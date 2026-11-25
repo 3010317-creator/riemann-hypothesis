@@ -112,23 +112,11 @@ theorem ev_injective (hinj : Function.Injective (algebraMap R C)) (A : HopfOrder
     ext f
     exact ⟨fun hf => ⟨⟨f, hf⟩, rfl⟩, by rintro ⟨g, rfl⟩; exact g.2⟩
   have hsp : Submodule.span R (Set.range fun p : Q × Q => w p.1 ⊗ₜ[R] w p.2) = ⊤ := by
-    rw [eq_top_iff]
-    intro t ht
-    clear ht
-    induction t using TensorProduct.induction_on with
-    | zero => exact Submodule.zero_mem _
-    | add a b ha hb => exact Submodule.add_mem _ ha hb
-    | tmul a b =>
-      have ha : a ∈ Submodule.span R (Set.range w) := hw ▸ Submodule.mem_top
-      have hb : b ∈ Submodule.span R (Set.range w) := hw ▸ Submodule.mem_top
-      obtain ⟨r, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun R).1 ha
-      obtain ⟨s, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun R).1 hb
-      rw [TensorProduct.sum_tmul]
-      refine Submodule.sum_mem _ fun i _ => ?_
-      rw [TensorProduct.tmul_sum]
-      refine Submodule.sum_mem _ fun j _ => ?_
-      rw [TensorProduct.tmul_smul, ← TensorProduct.smul_tmul']
-      exact Submodule.smul_mem _ _ (Submodule.smul_mem _ _ (Submodule.subset_span ⟨(i, j), rfl⟩))
+    have hm := Submodule.map₂_span_span R (TensorProduct.mk R (subalg A) (subalg A))
+      (Set.range w) (Set.range w)
+    rw [Set.image2_range] at hm
+    refine hm.symm.trans ?_
+    rw [hw, TensorProduct.map₂_mk_top_top_eq_top]
   refine LinearMap.injective_of_linearIndependent (f := (ev A).toLinearMap) hsp ?_
   have hu : IsUnit (β ⊗ₖ β) := by
     rw [Matrix.isUnit_iff_isUnit_det, Matrix.det_kronecker]
