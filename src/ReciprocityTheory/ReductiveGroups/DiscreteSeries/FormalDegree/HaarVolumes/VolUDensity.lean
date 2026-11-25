@@ -1256,7 +1256,7 @@ open ReciprocityTheory.ChartRestriction.DS.S7 ReciprocityTheory.ChartRestriction
 variable {N : ℕ}
 
 theorem qr_lintegral (μ : Measure (UNgrp N)) [μ.IsHaarMeasure] [IsProbabilityMeasure μ] :
-    ∃ C : ℝ, 0 < C ∧ ∀ f : (Fin N → Fin N → ℂ) → ENNReal, Measurable f →
+    ∃ C : ℝ, ∀ f : (Fin N → Fin N → ℂ) → ENNReal, Measurable f →
       ∫⁻ Z, f Z = ENNReal.ofReal C * ∫⁻ k, (∫⁻ t in triPos N, f (qrMap (k, t)) * ENNReal.ofReal (qrWt t)) ∂μ := by
   haveI hcpt : CompactSpace (UNgrp N) := by
     by_contra hnc
@@ -1323,18 +1323,7 @@ theorem qr_lintegral (μ : Measure (UNgrp N)) [μ.IsHaarMeasure] [IsProbabilityM
     intro t ht
     simp only [Pi.mul_apply]
     rw [d_qrMap k t ht, mul_comm, mul_assoc, mul_comm _ (triDens t), triDens_mul t ht]
-  have hc0 : c ≠ 0 := by
-    intro h0
-    have h1 := key (fun _ => 1) measurable_const
-    rw [h0, zero_mul, lintegral_const, one_mul] at h1
-    have hv : (volume : Measure (Fin N → Fin N → ℂ)) Set.univ ≠ 0 := by
-      rw [MeasureTheory.volume_pi, Measure.pi_univ, Finset.prod_ne_zero_iff]
-      intro i _
-      rw [MeasureTheory.volume_pi, Measure.pi_univ, Finset.prod_ne_zero_iff]
-      intro j _
-      exact isOpen_univ.measure_ne_zero volume Set.univ_nonempty
-    exact hv h1
-  refine ⟨c.toReal, ENNReal.toReal_pos hc0 hct, ?_⟩
+  refine ⟨c.toReal, ?_⟩
   intro f hf
   rw [ENNReal.ofReal_toReal hct]
   exact key f hf
@@ -1364,7 +1353,7 @@ theorem volU_density (μ : Measure (UNgrp N)) [μ.IsHaarMeasure] [IsProbabilityM
     ∃ δ > 0, ∀ B : Set (UCo N), MeasurableSet B → (∀ x ∈ B, ‖x‖ < δ) →
       μ {k : UNgrp N | ∃ x ∈ B, toM k = NormedSpace.exp (skMat x)} ≤ ENNReal.ofReal ((1 + η) / volU N) * volume B ∧
         ENNReal.ofReal ((1 - η) / volU N) * volume B ≤ μ {k : UNgrp N | ∃ x ∈ B, toM k = NormedSpace.exp (skMat x)} := by
-  obtain ⟨C, -, hC⟩ := qr_lintegral μ
+  obtain ⟨C, hC⟩ := qr_lintegral μ
   have hCV : C = volU N := _root_.ReciprocityTheory.ChartRestriction.DS.gaussE_qr_const μ C hC
   subst hCV
   have hV := volU_pos' N
