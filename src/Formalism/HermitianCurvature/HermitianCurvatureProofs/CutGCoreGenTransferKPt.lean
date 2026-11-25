@@ -197,10 +197,8 @@ theorem frame_const {z z' : Fin (2 * r + k + 1) → ℂ} {μsec : ℂ → Matrix
     reflB_fix fun a => by rw [herm_conj (Bs a) (g₀⁻¹ *ᵥ z), hy₀ a, star_zero]
   obtain ⟨hu₀1, hu₀2⟩ := Formalism.FourierDecayAlt.Q.LieAlgebraWeightVectors.glev_unit hg₀
   obtain ⟨hu1, hu2⟩ := Formalism.FourierDecayAlt.Q.LieAlgebraWeightVectors.glev_unit hg
-  have hdetH : IsUnit (Hpk k r).det := by
-    have := congrArg Matrix.det (Formalism.QuantumDeterminants.hpkFacts k r).2.1
-    rw [Matrix.det_mul, Matrix.det_one] at this
-    exact isUnit_iff_exists_inv.2 ⟨_, this⟩
+  have hdetH : IsUnit (Hpk k r).det :=
+    Matrix.isUnit_det_of_right_inverse (Formalism.QuantumDeterminants.hpkFacts k r).2.1
   have hG := Formalism.QuantumDeterminants.uHGroup _ (Hpk k r) hdetH
   set h₀ := g₀ * R * g₀⁻¹ with hh₀def
   have hg₀inv : g₀⁻¹ ∈ UH (Hpk k r) := (hG.2.2 g₀ hg₀.1).2
