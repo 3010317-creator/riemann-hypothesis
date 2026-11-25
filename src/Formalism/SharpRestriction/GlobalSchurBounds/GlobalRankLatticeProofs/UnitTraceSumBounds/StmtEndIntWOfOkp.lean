@@ -407,6 +407,7 @@ section -- clump:auto
 
 theorem witt_frobenius_end : PI.WfEnd := PI.WfEndProof.wfEnd_of_log witt_logarithm
 
+theorem wfEnd_of : PI.WfRing → PI.WfSubst → PI.WfLog → PI.WfEnd := PI.WfEndProof.wfEnd_of
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WittFrobeniusEnd =====
