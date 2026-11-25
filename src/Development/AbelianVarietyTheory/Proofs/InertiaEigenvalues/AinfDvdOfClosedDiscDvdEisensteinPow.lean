@@ -35,12 +35,8 @@ theorem ρ₀_pos_lt (bk : BK K) : 0 < bk.ρ₀ ∧ bk.ρ₀ < 1 := by
 theorem complete_max (bk : BK K) :
     IsAdicComplete (IsLocalRing.maximalIdeal (Wq l bk.a)) (Wq l bk.a) := by
   haveI : IsAdicComplete (Ideal.span {(l : Wq l bk.a)}) (Wq l bk.a) := WittVector.isAdicCompleteIdealSpanP
-  have hsurj : Function.Surjective (WittVector.constantCoeff (p := l) (R := Fq l bk.a)) :=
-    fun x => ⟨WittVector.teichmuller l x, by simp⟩
-  have hm : IsLocalRing.maximalIdeal (Wq l bk.a) = Ideal.span {(l : Wq l bk.a)} := by
-    rw [← WittVector.ker_constantCoeff]
-    haveI := RingHom.ker_isMaximal_of_surjective _ hsurj
-    exact (IsLocalRing.eq_maximalIdeal this).symm
+  have hm : IsLocalRing.maximalIdeal (Wq l bk.a) = Ideal.span {(l : Wq l bk.a)} :=
+    (WittVector.irreducible l).maximalIdeal_eq
   exact hm ▸ inferInstance
 
 theorem dvd_E (bk : BK K) (s : bk.S) (h : toDisc l (X : bk.S) bk.ρ₀ bk.E ∣ toDisc l (X : bk.S) bk.ρ₀ s) :
