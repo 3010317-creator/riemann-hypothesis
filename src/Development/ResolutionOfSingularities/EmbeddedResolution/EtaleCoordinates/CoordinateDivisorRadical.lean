@@ -98,17 +98,7 @@ theorem linearIndependent_toCotangent_etaleChartCoord (k : Type u) [Field k] (m 
         { x : Fin m // x ∈ J } → IsLocalRing.CotangentSpace A) := by
   classical
   have hreg : IsRegularLocalRing A := isRegularLocalRing_of_isLocalization_etale k m S q A
-  have hnt : Nontrivial S := by
-    rcases subsingleton_or_nontrivial S with hs | hs
-    · exfalso
-      have := hs
-      have h10 : (1 : S) = (0 : S) := Subsingleton.elim _ _
-      have hA : (1 : A) = 0 := by
-        calc (1 : A) = algebraMap S A 1 := (map_one _).symm
-          _ = algebraMap S A 0 := by rw [h10]
-          _ = 0 := map_zero _
-      exact one_ne_zero hA
-    · exact hs
+  have hnt : Nontrivial S := (algebraMap S A).domain_nontrivial
   obtain ⟨d, w, hwq, hwJ, hspan, hdim⟩ :=
     exists_regularSystemOfParameters_containing_etaleChartCoords k m S q A J hJ
   have hwm : ∀ i, algebraMap S A (w i) ∈ IsLocalRing.maximalIdeal A := by
