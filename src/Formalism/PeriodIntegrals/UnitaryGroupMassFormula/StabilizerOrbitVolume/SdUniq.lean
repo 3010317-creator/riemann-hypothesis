@@ -67,13 +67,6 @@ theorem transform_indicator (hLo : IsOpen (L : Set V)) (y : V) :
 
 end Lattice
 
-section Triv
-
-variable {V : Type} [AddCommGroup V] [TopologicalSpace V] [IsTopologicalAddGroup V] [T2Space V]
-  [MeasurableSpace V] [BorelSpace V] (μ : Measure V) [μ.IsAddHaarMeasure] (χ : V → V → ℂ)
-
-end Triv
-
 section Nontriv
 
 variable {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F))

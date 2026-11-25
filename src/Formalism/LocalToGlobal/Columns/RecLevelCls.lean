@@ -497,13 +497,6 @@ theorem levU_y_lat (hS : DecoPtSurj hc n ST SG) (d : DecoSet (E := E) (n := n) (
 
 end Hat
 
-section Fin
-
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E]
-variable (hc : Formalism.BasicNotions.CMData F E) (n : ℕ) [NeZero n] (ST SG : Finset (Pl E)) (H : Subgroup (GLG (E := E) (n := n) (SG := SG)))
-
-end Fin
-
 section AtPrimes
 
 variable {X : Fields} {Pr : Primes X} (hc : Formalism.BasicNotions.CMData X.F X.E) (n : ℕ) [NeZero n]

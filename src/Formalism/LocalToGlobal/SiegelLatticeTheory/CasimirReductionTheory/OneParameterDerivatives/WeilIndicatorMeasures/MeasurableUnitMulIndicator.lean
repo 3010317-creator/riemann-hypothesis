@@ -153,16 +153,6 @@ lemma exists_fib_eq_one (hH : IsClosed (H : Set G)) (κ : Measure H) [SFinite κ
     rw [lintegral_mul_const _ hφx]
     exact ENNReal.mul_inv_cancel (hpos x).ne' (hfin x).ne
 
-section Main
-
-variable (μ : Measure G) (ν : Measure H)
-
-variable [SFinite μ] [μ.IsMulRightInvariant] [SFinite ν] [ν.IsMulLeftInvariant]
-  {β : G → ℝ≥0∞} (hβ : Measurable β) (hβ1 : ∀ x, ∫⁻ h, β (x * (h : G)⁻¹) ∂ν = 1)
-include hβ hβ1
-
-end Main
-
 end QuotInt
 
 end Formalism.L2.SG.Pf.Weil

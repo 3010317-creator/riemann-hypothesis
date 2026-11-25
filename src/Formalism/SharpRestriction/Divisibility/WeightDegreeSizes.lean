@@ -15,20 +15,6 @@ noncomputable section
 
 namespace Formalism.MainNotions.WeightDegreeSizes
 
-section PartG
-
-open Formalism.BasicNotions Formalism.BasicNotions.DV
-
-
-section Proof
-
-open Formalism.FrobeniusOrbits
-
-
-end Proof
-
-end PartG
-
 section PartA
 
 open Formalism.BasicNotions Formalism.BasicNotions.DV Formalism.MainNotions.G NumberField IsDedekindDomain
@@ -689,90 +675,13 @@ def RationalMapValues : Prop :=
 
 end Rat
 
-section C5
-
-variable {D : D7} {T : ThetaX D}
-
-end C5
-
-section Family
-
-variable {eps : ℝ} (Fm : Formalism.MainNotions.FamP eps)
-  (XF : ∀ x (hx : Fm.x1 < x) (i : Fm.Ix x), ZetaProductPairs.Loc (Fm.D x i) (Fm.ex x hx i).th)
-
-end Family
-
 end PartC
-
-section PartE
-
-open Formalism.BasicNotions NumberField IsDedekindDomain
-
-section Lat
-
-variable {K : Type} [Field K] [NumberField K] {V : Type} [AddCommGroup V] [Module K V] [Module (𝓞 K) V]
-  [IsScalarTower (𝓞 K) K V]
-
-end Lat
-
-section Form
-
-variable {K : Type} [Field K] {σ : K →+* ℂ} {V : Type} [AddCommGroup V] [Module K V]
-  {E : Type} [AddCommGroup E] [Module ℂ E] {ι : Type} [Fintype ι] [DecidableEq ι]
-  (b : Module.Basis ι K V) (j : V →ₛₗ[σ] E)
-
-end Form
-
-section Side
-
-variable {D : D7} {EE : Type} [NormedAddCommGroup EE] [InnerProductSpace ℂ EE] [FiniteDimensional ℂ EE]
-  (S : RowSide D EE)
-
-end Side
-
-section SideAI
-
-variable {D : D7} {EE : Type} [NormedAddCommGroup EE] [InnerProductSpace ℂ EE] [FiniteDimensional ℂ EE]
-  (S : RowSide D EE)
-
-end SideAI
-
-section Fam
-
-variable {eps : ℝ} (Fm : Formalism.MainNotions.FamP eps)
-
-end Fam
-
-end PartE
-
-section PartEJ
-
-open Formalism.BasicNotions NumberField IsDedekindDomain
-
-end PartEJ
-
-section PartF
-
-open Formalism.BasicNotions Formalism.BasicNotions.DV
-
-variable (D : D7)
-
-
-
-
-end PartF
 
 section PartF2
 
 open Formalism.BasicNotions Formalism.BasicNotions.DV
 
 variable (D : D7)
-
-section Fam
-
-variable {eps : ℝ} (Fm : Formalism.MainNotions.FamP eps)
-
-end Fam
 
 
 section IV
@@ -801,13 +710,6 @@ theorem vAdd_lpow (D : D7) (w : D.what₂.places.Pl) (k : ℕ) :
 end IV
 
 
-
-section FamJ
-
-variable {eps : ℝ} (Fm : Formalism.MainNotions.FamP eps)
-
-
-end FamJ
 
 end PartF2
 

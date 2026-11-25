@@ -500,9 +500,4 @@ theorem Kl_charZero : CharZero (X.Kl la) := by
 
 end
 
-section
-variable (X : PJ D B P j) (la : HeightOneSpectrum (𝓞 B.KO)) {N : ℕ} {wL : WeightFamilies.Wt D j} (w : Fin N → B.Cusp j wL)
-
-end
-
 end Formalism.MainNotions.Gaps.EtaleWeightGaps

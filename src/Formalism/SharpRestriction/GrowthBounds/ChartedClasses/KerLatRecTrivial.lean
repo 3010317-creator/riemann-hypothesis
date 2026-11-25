@@ -12,12 +12,6 @@ open scoped TensorProduct
 
 namespace Formalism.MainNotions.G.KAat
 
-section SlopeTestRemainingChoices
-
-variable {p : ℕ} [Fact p.Prime] {X : Sys p} {D : D7}
-
-end SlopeTestRemainingChoices
-
 section Rec
 
 variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : G.Inst D L} {Gl : G.LatInst D} {Kc0 : G.Consts} {Dx : DivX D}

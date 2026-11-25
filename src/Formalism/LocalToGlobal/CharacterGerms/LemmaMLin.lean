@@ -231,15 +231,6 @@ theorem rename_subst_linS {σ τ τ' : Type} [Fintype σ] [Fintype τ] (f : τ �
 
 end Rows
 
-section Bridge
-
-variable {C : Type} [Field C] {V : VF C} {d : ℕ} {I J : Type} [Fintype I] [Fintype J]
-  {Xc : Cart V d I J} (S : Sys Xc)
-
-variable {τ : Type} [Fintype τ]
-
-end Bridge
-
 section Pull
 
 variable {C : Type} [Field C] {I : Fin 2 → Type} [∀ g, Fintype (I g)] {ι ι' : Type} [Fintype ι]
@@ -251,13 +242,5 @@ theorem constantCoeff_upG (g : Fin 2) {F : MvPowerSeries (I g) C} (hF : constant
   exact (ordGE_one_iff _).1 (ordGE_subst (fun x => Formalism.BaseCaseIdentities.OrdGE.X _) ((ordGE_one_iff _).2 hF))
 
 end Pull
-
-section RowDataPull
-
-variable {C : Type} [Field C] {V : VF C} {d : ℕ} [NeZero d] {I J : Fin 2 → Type}
-  [∀ g, Fintype (I g)] [∀ g, Fintype (J g)] (Xr : RowData C V d I J) {ι ι' : Type} [Fintype ι]
-  [Fintype ι']
-
-end RowDataPull
 
 end Formalism.L2.FormalSeriesBounds

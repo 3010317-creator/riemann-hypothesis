@@ -53,11 +53,4 @@ theorem tGen (hS : ∀ l, (exceptionalPlaces H l).Finite) (i : LocT B) :
 
 end Gen
 
-section Assemble
-
-variable {R : Ranks} (H : Host R) (what₂ : Rows.Data R) (B : LocBase0 H what₂)
-
-
-end Assemble
-
 end Formalism.L2.Fam.NPC

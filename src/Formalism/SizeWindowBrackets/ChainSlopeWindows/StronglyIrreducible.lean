@@ -359,11 +359,6 @@ end
 section
 variable {H : Type} [AddCommGroup H] [Fintype H] [DecidableEq H]
 
-end
-
-section
-variable {H : Type} [AddCommGroup H] [Fintype H] [DecidableEq H]
-
 lemma term_real (a w : ℝ) (hw : w ≠ 0) (n : ℕ) : a / n - w = w * (a / w / n - 1) := by
   rw [mul_sub, mul_one, mul_div_assoc', mul_div_cancel₀ a hw]
 
@@ -421,11 +416,6 @@ lemma inner_eq (D : ArithData H) (ell : AddChar (E0 × H) ℂ → ℂ) (ψ : Add
   · have hwaC : (w : ℂ) * ((a / w : ℝ) : ℂ) = a := by exact_mod_cast hwa
     rw [mul_add, ← mul_assoc, hwaC]
     ring
-
-end
-
-section
-variable {H : Type} [AddCommGroup H] [Fintype H] [DecidableEq H]
 
 end
 

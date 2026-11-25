@@ -38,12 +38,6 @@ theorem Tr_pos (D : D7) (u : D.what₂.Word) : 0 < Tr D u := by
   unfold Tr
   exact_mod_cast (D.mem u).A.T_prime.pos
 
-section Family
-
-variable {eps : ℝ} {Fm : FamP eps}
-
-end Family
-
 end Formalism.MainNotions.BridgeLemma
 
 end

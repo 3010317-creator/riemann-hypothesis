@@ -382,14 +382,6 @@ theorem ef_conj {E : Type} [Field E] [NumberField E] (cj : E ≃ₐ[ℚ] E)
 
 end TypeU
 
-section TypeD
-
-open NumberField IsDedekindDomain
-
-variable {E Lc Kf : Type} [Field E] [NumberField E] [Field Lc] [Field Kf]
-
-end TypeD
-
 section Std
 
 theorem mem_stdG_iff {O LL : Type} [CommRing O] [Field LL] [Algebra O LL] (k : ℕ) (v : Fin k → LL) :

@@ -13,14 +13,6 @@ namespace Formalism.L2.Ker
 
 open Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.L2.DIV Formalism.L2.Col Formalism.MainNotions
 
-section Fam
-
-variable {D : D7}
-
-variable {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (B : Base D cc δ)
-
-end Fam
-
 section OnAmb
 
 variable {X : Fields} (A : Amb X) (a b : ℕ)
@@ -43,13 +35,5 @@ def Amb.ThCEq (Sall : Finset (HeightOneSpectrum (𝓞 X.E))) : Prop :=
       thC (X.embC A.σ₀) A.δ A.d A.sc A.AA Sall N N' (cA * cB) (fun x => A.σ₀ (Ξ x)) (A.e a b N N') (A.pullV a b γ.1 γ'.1 z)
 
 end OnAmb
-
-section FamC
-
-variable {D : Car}
-
-variable {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (B : Cd.Base D cc δ)
-
-end FamC
 
 end Formalism.L2.Ker

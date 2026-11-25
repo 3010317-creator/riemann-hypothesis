@@ -18,12 +18,6 @@ open Formalism.L2.Theta
 
 open Formalism.MainNotions.DIV.Inh
 
-section Cover
-
-variable (p q : ℕ)
-
-end Cover
-
 
 variable {D : D7}
 
@@ -134,12 +128,6 @@ theorem embU (D : D7) : EmbU D := by
     (emb_gen (incA D) _ _ _ hQ (mt A g') (mt B x) b.1 fun j => b.2 _ (hp j)).symm))
 
 end Emb
-
-section Rows
-
-variable (X : ThetaX D)
-
-end Rows
 
 end Formalism.L2.Fam.ThC
 
