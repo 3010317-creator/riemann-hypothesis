@@ -62,12 +62,6 @@ namespace GlobalTheory.DegCnt.LiftS
 section Ideals
 variable {K : Type} [Field K] [NumberField K] [StarRing K]
 
-omit [NumberField K] in
-theorem star_one_mem {x : K} (hx : x ∈ (1 : Submodule (𝓞 K) K)) : star x ∈ (1 : Submodule (𝓞 K) K) := by
-  obtain ⟨y, rfl⟩ := Submodule.mem_one.1 hx
-  refine Submodule.mem_one.2 ⟨⟨star (algebraMap (𝓞 K) K y), ?_⟩, rfl⟩
-  exact (NumberField.RingOfIntegers.isIntegral_coe y).map (starRingEnd K).toIntAlgHom
-
 theorem ipow_star (𝔡 : Ideal (𝓞 K)) (h0 : 𝔡 ≠ ⊥) (hs : ∀ x ∈ 𝔡, ∃ y ∈ 𝔡, (y : K) = star (x : K)) (n : ℤ)
     {x : K} (hx : x ∈ ipow 𝔡 n) : star x ∈ ipow 𝔡 n := by
   apply GlobalTheory.DegCnt.PosJ.star_mem_ipow <;> assumption
@@ -529,7 +523,7 @@ theorem pair_int {x y : V} (hx : x ∈ Pst N) (hy : y ∈ N.P0) : H.B x y ∈ (1
   have hle : Pst N ≤ (1 : Submodule (𝓞 K) K).comap ((H.B.flip y).restrictScalars (𝓞 K)) := by
     unfold Pst
     refine iSup_le fun a => iSup_le fun ha => line_le fun t ht => ?_
-    have h := star_one_mem (B_smul_ist_mem_one_of_mem_ipow N a ha ht hy)
+    have h := GlobalTheory.DegCnt.PosJ.star_mem_one (B_smul_ist_mem_one_of_mem_ipow N a ha ht hy)
     rw [H.herm] at h
     simpa using h
   simpa using hle hx
