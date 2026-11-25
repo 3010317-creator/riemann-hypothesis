@@ -6,6 +6,7 @@ public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.WeierstrassPAddOfNeOfDerivNeZero
 import Std.Tactic.BVDecide.Normalize.Prop
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.Analysis.Complex.Polynomial.Basic
 
 @[expose] public section
 
@@ -449,7 +450,8 @@ theorem _root_.GlobalTheory.invariants_eq_of_periodic_solution :
       ((2 * b + 2 * W.a₁ * c) * X + (2 * k' + 2 * W.a₁ * c * k + 2 * W.a₃ * c ^ 3)) ^ 2
         * (4 * X ^ 3 - L.g₂ * X - L.g₃) = 0 := by
     intro X
-    obtain ⟨Y, hY⟩ := IsAlgClosed.exists_pow_nat_eq (4 * X ^ 3 - L.g₂ * X - L.g₃) two_pos
+    obtain ⟨Y, hY⟩ := IsAlgClosed.exists_pow_nat_eq (k := ℂ)
+      (4 * X ^ 3 - L.g₂ * X - L.g₃ : ℂ) two_pos
     have e1 := hcurve X Y hY
     have e2 := hcurve X (-Y) (by rw [neg_sq]; exact hY)
     constructor
