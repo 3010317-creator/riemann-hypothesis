@@ -67,7 +67,6 @@ theorem isIntegral_of_schemeDominant (d : T' ⟶ T) [IsSchemeTheoreticallyDomina
   exact isIntegral_of_irreducibleSpace_of_isReduced T
 
 
-set_option backward.isDefEq.respectTransparency false in
 theorem eq_zero_of_mul_eq_zero_of_flat {S : Scheme.{u}} [IsAffine S] (s : T ⟶ S) [Flat s]
     (V : T.Opens) (r : Γ(S, ⊤)) (hr : r ∈ nonZeroDivisors Γ(S, ⊤)) (a : Γ(T, V))
     (h : s.appLE ⊤ V le_top r * a = 0) : a = 0 := by
