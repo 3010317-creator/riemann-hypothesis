@@ -667,14 +667,6 @@ theorem localGalois_parameter_mem_at_place_alt : _root_.GlobalTheory.HeightCount
   exact GlobalTheory.HeightCounting.CuspOfParam.goodRow_cuspidal (w.D Z) Rw ⟨i⟩ hW (hp Rw hRw) j h1 h2 σ hσ hg
 end GlobalTheory.GalLoc.RowParamAt
 end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-
-theorem _root_.GlobalTheory.T.local_param_at_member_of_serN : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c =>
-    ∀ Rw : RowSide (w.D Z), HEq Rw.locR c.a.nt.A.row.locR → GlobalTheory.TwInputs.RowParam (w.D Z) Rw := by
-  first | exact @_root_.GlobalTheory.GalLoc.RowParamAt.localGalois_parameter_mem_at_place_alt
-end
 end
 end -- clump:auto
 end -- clump:auto
@@ -785,14 +777,6 @@ theorem frobenius_eigenvalues_at_place_alt : _root_.GlobalTheory.HeightCounting.
   rw [t.r.z.lev.C] at hT
   exact _root_.GlobalTheory.GalLoc.EigLoc.transport_alt c.a.nt Sb' hS0 eg heq _ c.row.S_eq _ c.row.hL_eq θ hθ.symm Rw0 hRw0 hT hO
 end GlobalTheory.GalLoc.EigLoc
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-
-theorem _root_.GlobalTheory.T.eigTrue_and_eigOcc_withLoc : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c =>
-    ∃ Sb : Finset (PlE c.a.nt.D.host), (∀ i, Sb ⊆ (withLoc c.a.nt.L).ntw.S0 i) ∧ (∀ Rw : RowSide (withLoc c.a.nt.L), HEq Rw.locR c.a.nt.A.row.locR → GlobalTheory.TwInputs.EigTrue (withLoc c.a.nt.L) (cfL c.a.nt.L c.a.nt.cf) Rw Sb c.a.nt.eig) ∧ GlobalTheory.TwInputs.EigOcc (withLoc c.a.nt.L) ({ c.a.nt.S with } : RatDat (withLoc c.a.nt.L).ntw) c.a.nt.θ c.a.nt.hL Sb c.a.nt.eig := by
-  first | exact @_root_.GlobalTheory.GalLoc.EigLoc.frobenius_eigenvalues_at_place_alt
 end
 end
 end -- clump:auto
@@ -1120,14 +1104,6 @@ theorem commAll_and_fullAll_at_members : _root_.GlobalTheory.HeightCounting.Up.P
 end GlobalTheory.CommFullLayer
 end
 end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-
-theorem _root_.GlobalTheory.T.commAll_fullAll_at_members_of_serN : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c =>
-    GlobalTheory.TwInputs.CommAll (w.D Z) ∧ GlobalTheory.TwInputs.FullAll (w.D Z) := by
-  first | exact @_root_.GlobalTheory.CommFullLayer.commAll_and_fullAll_at_members
-end
 end
 end -- clump:auto
 end -- clump:auto
@@ -1164,14 +1140,6 @@ theorem galoisRep_field_of_definition_at_place_alt : _root_.GlobalTheory.HeightC
   rw [← e]
   exact v
 end GlobalTheory.GalLoc.FieldAt
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-
-theorem _root_.GlobalTheory.T.valLL0_roots_of_unity_mem_star_closed_at_members : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c =>
-    ValLL0 (w.D Z) (TC.cf w.I w.l Z) ∧ (∀ (k : Fin 2) (z : ℂ), z ^ ((w.D Z).host.g k * ((w.D Z).host.g k - 1)) = 1 → z ∈ (embLL0 (w.D Z)).fieldRange) ∧ (∀ x : (w.D Z).LL0, star (x : (w.D Z).what₂.LL) ∈ (w.D Z).LL0) := by
-  first | exact @_root_.GlobalTheory.GalLoc.FieldAt.galoisRep_field_of_definition_at_place_alt
 end
 end
 end -- clump:auto
@@ -1390,7 +1358,7 @@ theorem galois_side_at_place_alt : _root_.GlobalTheory.HeightCounting.Up.Publish
       Nonempty (_root_.GlobalTheory.HeightCounting.CGTrueT hL _ G.wd) := by
   intro hP hS hL
   have htr : _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => _root_.GlobalTheory.Triple.IsGaloisTriple (w.D Z) :=
-    _root_.GlobalTheory.GalLoc.galLoc_triple_at_place_alt hP hS hL (_root_.GlobalTheory.T.eigTrue_and_eigOcc_withLoc hP hS hL) (_root_.GlobalTheory.T.valLL0_roots_of_unity_mem_star_closed_at_members hP hS hL) (_root_.GlobalTheory.T.local_param_at_member_of_serN hP hS hL) (_root_.GlobalTheory.T.commAll_fullAll_at_members_of_serN hP hS hL)
+    _root_.GlobalTheory.GalLoc.galLoc_triple_at_place_alt hP hS hL (_root_.GlobalTheory.GalLoc.EigLoc.frobenius_eigenvalues_at_place_alt hP hS hL) (_root_.GlobalTheory.GalLoc.FieldAt.galoisRep_field_of_definition_at_place_alt hP hS hL) (_root_.GlobalTheory.GalLoc.RowParamAt.localGalois_parameter_mem_at_place_alt hP hS hL) (_root_.GlobalTheory.CommFullLayer.commAll_and_fullAll_at_members hP hS hL)
   refine (GlobalTheory.T.eventually_sizes_congruences_hostFacts_columnChoices.inter htr).imp fun K _ _ _ _ H => ?_
   refine (H.1.inter H.2).imp fun B f T _ H => ?_
   intro hK w Z Wt p0 t nch n xd c hE hX hC
