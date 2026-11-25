@@ -646,11 +646,6 @@ open Formalism.BasicNotions.TH GlobalTheory.FockAlg GlobalTheory.RealLift Global
 
 namespace GlobalTheory.HoweR
 
-theorem pcTrace_eq_zero {p q : ℕ} {Z : Mat p q} (hZ : IsPC Z) : Z.trace = 0 := by
-  simp only [Matrix.trace, Matrix.diag]
-  refine Finset.sum_eq_zero fun a _ => hZ a a ?_
-  rcases a with a | a <;> simp [sameBlock]
-
 theorem span_harm2_sup_coinv_eq_univ : ∀ (P Q R S : ℕ) (x : ℂ),
     Submodule.span ℂ (harm2 P Q R S) ⊔ coinv P Q R S x = ⊤ := by
   intro P Q R S x
@@ -659,7 +654,7 @@ theorem span_harm2_sup_coinv_eq_univ : ∀ (P Q R S : ℕ) (x : ℂ),
     intro Z hZ g
     rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
     refine Submodule.subset_span ⟨Z, g, ?_⟩
-    rw [pcTrace_eq_zero hZ, mul_zero, zero_smul, sub_zero]
+    rw [GlobalTheory.HarmLift.trace_PC hZ, mul_zero, zero_smul, sub_zero]
   obtain ⟨h, hh, he⟩ := GlobalTheory.FockAlg.HarmLift.exists_harm2_rep P Q R S _ (coinv P Q R S x).mkQ hpr f
   have hd : f - h ∈ coinv P Q R S x := by
     rw [← Submodule.Quotient.eq]; exact he.symm

@@ -947,7 +947,7 @@ theorem theta_Z_mem_range_iC {K : Type} [Field K] [NumberField K] [StarRing K] {
   have h1 : z ∈ (A3.A.fam.R t).ZHg A3.A.fam.X := hIB.1 t hz
   obtain ⟨x, hx⟩ := GlobalTheory.PrincipalRows.mem_range_toF_full (A3.A.fam.R t) A3.A.fam.X (X.zs.Z t) z hz h1.2
   refine ⟨cpt A3.A.v0.embedding x, ?_⟩
-  have h3 := GlobalTheory.OneForm.iC_cpt X (crdOf3 A3 ⊥ 1 P1 ψ1 Dc Sp Zsc) false t x
+  have h3 := Formalism.IndefR.Cx.CxData.iC_cpt_eq X (crdOf3 A3 ⊥ 1 P1 ψ1 Dc Sp Zsc) false t x
   refine h3.trans ?_
   exact congrArg (fun y => X.Θ t (X.jR t y)) hx
 

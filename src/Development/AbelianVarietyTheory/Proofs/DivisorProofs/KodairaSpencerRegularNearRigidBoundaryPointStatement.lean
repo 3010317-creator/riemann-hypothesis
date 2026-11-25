@@ -322,11 +322,6 @@ noncomputable section
 
 namespace GlobalTheory.LogKSChart
 
-theorem exists_derivation_intAlgebra {A : Type} [CommRing A] (inst : Algebra ℤ A) (D : @Derivation ℤ A A _ _ _ inst _ _) :
-    ∃ D' : @Derivation ℤ A A _ _ _ (Ring.toIntAlgebra A) _ _, ⇑D' = ⇑D := by
-  obtain rfl : inst = Ring.toIntAlgebra A := Subsingleton.elim _ _
-  exact ⟨D, rfl⟩
-
 
 
 theorem exists_isKS_of_logDer : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (k : Type) [Field k] [CharZero k] (m d : ℕ) (t : SAB H (Sp (ChartRing k m d))) (P : PELUnif (maximalIdeal (ChartRing k m d)) t) (gam : Fin m → LinearMap.BilinForm ℤ P.D.toPre.X), IsMonomial P.D.toPre (bdParam k m d) gam → LinearIndependent ℤ gam → (∀ p : Sp (ChartRing k m d), p ∈ abLocus t.G ↔ ∏ i, bdParam k m d i ∉ p.asIdeal) → ∀ (n : ℕ) (v : Fin n → (Sp (DualNumber Γ(Sp (ChartRing k m d), ⊤)) ⟶ t.G.left)), (∀ i, IsTanAtG t (chart (⟨⊤, isAffineOpen_top _⟩ : (Sp (ChartRing k m d)).affineOpens)) (v i)) → (∀ w, IsTanAtG t (chart (⟨⊤, isAffineOpen_top _⟩ : (Sp (ChartRing k m d)).affineOpens)) w → ∃! cf : Fin n → Γ(Sp (ChartRing k m d), ⊤), IsCombAtG t (chart (⟨⊤, isAffineOpen_top _⟩ : (Sp (ChartRing k m d)).affineOpens)) v cf w) → ∀ D : Derivation ℤ (ChartRing k m d) (ChartRing k m d), (∀ i, D (bdParam k m d i) ∈ Ideal.span {bdParam k m d i}) → ∃ Θ, IsKS t ((Sp (ChartRing k m d)).basicOpen ((Scheme.ΓSpecIso (CommRingCat.of (ChartRing k m d))).inv.hom (∏ i, bdParam k m d i))) (⟨⊤, isAffineOpen_top _⟩ : (Sp (ChartRing k m d)).affineOpens) v (fun r => (Scheme.ΓSpecIso (CommRingCat.of (ChartRing k m d))).inv.hom (D ((Scheme.ΓSpecIso (CommRingCat.of (ChartRing k m d))).hom.hom r))) Θ := by
@@ -340,7 +335,7 @@ theorem exists_isKS_of_logDer : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hne : ∀ i, bdParam k m d i ≠ 0 := fun i h => by
     have := congrArg (MvPowerSeries.coeff (Finsupp.single (Sum.inl i) 1)) h
     simp [MvPowerSeries.coeff_X] at this
-  obtain ⟨D', hD'⟩ := exists_derivation_intAlgebra _ D
+  obtain ⟨D', hD'⟩ := GlobalTheory.ChartKSBracket.exists_derivation_intAlgebra' _ D
   obtain ⟨h, hb, hdef⟩ := GlobalTheory.T.exists_torusInvariant_heatOperator_commuting_periods (ChartRing k m d) P.D (𝓞 E) P.oD Y n' vY dd hdd m (bdParam k m d) gam hmon hne D'
     (by rw [hD']; exact hD)
   revert h

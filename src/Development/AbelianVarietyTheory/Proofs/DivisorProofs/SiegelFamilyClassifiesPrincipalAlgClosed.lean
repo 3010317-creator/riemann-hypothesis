@@ -907,9 +907,6 @@ namespace GlobalTheory.AlgGroup
 
 open GlobalTheory.LN GlobalTheory.UU GlobalTheory.AbLaw.Seesaw
 
-theorem isPullback_of_isGrpPullback {S S' : Scheme.{0}} {B : Over S} {B' : Over S'} [GrpObj B] [GrpObj B']
-    {f : S' ⟶ S} {F : B'.left ⟶ B.left} (h : IsGrpPullback B' B f F) : IsPullback F B'.hom B.hom f := h.1
-
 theorem isAbelianScheme_of_thickenings_local (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
     [IsNoetherianRing R] (I : Ideal R) (hI : I ≠ ⊤) (hc : IsAdicComplete I R)
     (hc' : IsAdicComplete (IsLocalRing.maximalIdeal R) R)
@@ -954,7 +951,7 @@ theorem exists_abelianScheme_of_tower : ∀ (R : Type) [CommRing R] [IsDomain R]
   choose v hv using hv
   have hAlg : GlobalTheory.LN.AlgSt := GlobalTheory.LN.ega_holds.1
   obtain ⟨B, M, b, hB, hs, hM, hA', hb, hβb, hiso⟩ := hAlg R I hI hc hc' Y β N v
-    (fun e => isPullback_of_isGrpPullback (hβ e)) (fun e => (hY e).smooth) (fun e => ⟨hN e, hv e⟩) hA
+    (fun e => GlobalTheory.TowerAlg.isPullback_of_grp (hβ e)) (fun e => (hY e).smooth) (fun e => ⟨hN e, hv e⟩) hA
   obtain ⟨G, hG, hG'⟩ :=
     isAbelianScheme_of_thickenings_local R I hI hc hc' Y β hY hβ B b hB hs hb hβb
   exact ⟨B, G, M, b, hG, hM, hA', hG', hβb, hiso⟩

@@ -520,14 +520,6 @@ theorem tr_map (φ : A →+* B) (h : FinFree φ) (r : ℕ)
   · change Algebra.trace A B (algebraMap A B a) = _
     rw [Algebra.trace_algebraMap, hr hA, nsmul_eq_mul]
 
-theorem exists_finFree_away_of_finitePresentation {φ : A →+* B} (hf : φ.Finite) (hfl : φ.Flat)
-    (hfp : φ.FinitePresentation) (p : PrimeSpectrum A) :
-    ∃ r ∉ p.asIdeal, ∀ {A' B' : Type} [CommRing A'] [CommRing B'] {α : A →+* A'} {β : B →+* B'}
-      {φ' : A' →+* B'},
-      IsPushout (CommRingCat.ofHom φ) (CommRingCat.ofHom α) (CommRingCat.ofHom β)
-        (CommRingCat.ofHom φ') → IsUnit (α r) → FinFree φ' := by
-  apply GlobalTheory.FiniteAmpleFP.exists_finFree_away_fp <;> assumption
-
 end Algebra
 
 section Geometry
@@ -557,7 +549,7 @@ theorem exists_finFree_app_of_finitePresentation {y : Y} {U : Y.Opens} (hy : y �
   have hfp : (f.app V).hom.FinitePresentation := by
     rw [Scheme.Hom.app_eq_appLE]
     exact f.finitePresentation_appLE hV (hV.preimage f) _
-  obtain ⟨r, hr, H⟩ := exists_finFree_away_of_finitePresentation
+  obtain ⟨r, hr, H⟩ := GlobalTheory.FiniteAmpleFP.exists_finFree_away_fp
     (f.finite_app V hV) hfl hfp (hV.primeIdealOf ⟨y, hyV⟩)
   refine ⟨Y.basicOpen r, hV.basicOpen r, ?_, (Y.basicOpen_le r).trans hle,
     H (isPushout_app f hV (hV.basicOpen r) (Y.basicOpen_le r)) (Y.toRingedSpace.isUnit_res_basicOpen r)⟩

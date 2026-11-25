@@ -377,10 +377,6 @@ namespace GlobalTheory.QLog.FrobQL
 
 variable {B Q : Type} [CommRing B] [CommRing Q] [Algebra B Q]
 
-theorem frob_eq_expand (p : ℕ) (hp : p ≠ 0) {σ : Type} (s : Q →+* Q) (f : MvPowerSeries σ Q) :
-    frob p s f = expand p hp (map s f) := by
-  simp only [frob, expand, substAlgHom_apply]
-
 theorem cob1_expand_frobenius_map (p : ℕ) (hp : p ≠ 0) (t : B →+* B) (s : Q →+* Q)
     (hs : ∀ b, s (algebraMap B Q b) = algebraMap B Q (t b)) {d : ℕ}
     (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) B) (h0 : ∀ i, constantCoeff (μ i) = 0)
@@ -463,7 +459,7 @@ theorem ql_frob : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
   have hp : p ≠ 0 := hpp.ne_zero
   have hu : ¬IsUnit (p : F.B) := fun h =>
     (Fact.out : ¬IsUnit (p : O)) (by simpa using h.map F.θ)
-  rw [frob_eq_expand p hp]
+  rw [GlobalTheory.FrobPowDefect.frob_eq_expand' p hp]
   have hc0 : constantCoeff (expand p hp (map F.s f)) = 0 := by
     rw [constantCoeff_expand, constantCoeff_map, hf.1, map_zero]
   have hlin : ∀ i, lin (expand p hp (map F.s f)) i = 0 := fun i => by
@@ -551,10 +547,6 @@ theorem ql_div (p : B) {c : Q} (hc : c * algebraMap B Q p = 1)
     have := div_coeff p hc (h2 α)
     simpa [coeff_smul] using this
 
-theorem comb_mul {ι : Type} [Fintype ι] (p : B) (b : ι → B) (e : ι → MvPowerSeries σ Q) :
-    comb (fun l => b l * p) e = algebraMap B Q p • comb b e := by
-  simp only [comb, Finset.smul_sum, map_mul, mul_comm, mul_smul]
-
 end Div
 
 end GlobalTheory.QLog
@@ -586,7 +578,7 @@ theorem exists_frob_matrix : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [
         blk d k (p : F.B) 1) l (Sum.inl i')) = fun l => b1 i' l * p := by
       funext l
       simp [blk, Matrix.mul_diagonal]
-    rw [hcol, comb_mul]
+    rw [hcol, GlobalTheory.BasisLift.comb_mul_right]
     have heq : frob p F.s (e (Sum.inl i')) - algebraMap F.B F.Q (p : F.B) • comb (b1 i') e =
         algebraMap F.B F.Q (p : F.B) • (pinv • frob p F.s (e (Sum.inl i')) - comb (b1 i') e) := by
       rw [smul_sub, smul_smul, hc', one_smul]

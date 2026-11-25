@@ -548,13 +548,6 @@ theorem exists_unit_diff {D : D7} {v : GlobalTheory.IndefiniteRowSideFullHecke.W
 
 variable {D : D7} {a a' : ℕ}
 
-theorem coBar_eq (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo D.sp.cm.sig a a')
-    (u : Matrix (Fin a') (Fin (a + a')) (AE D.host.F D.host.E)) :
-    GlobalTheory.VacShape.coBar Bs Γ u =
-      -(Γ.V'.J.map Bs.τ₁ * u.map (piW (Bs.τ₁.comp D.sp.cm.sig)) * (Γ.W.J.map Bs.τ₁)ᵀ) := by
-  unfold GlobalTheory.VacShape.coBar
-  simp only [Units.val_one, Matrix.transpose_one, Matrix.one_mul, Matrix.mul_one]
-
 theorem coBar_neg (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo D.sp.cm.sig a a')
     (u : Matrix (Fin a') (Fin (a + a')) (AE D.host.F D.host.E)) :
     GlobalTheory.VacShape.coBar Bs Γ (-u) = -GlobalTheory.VacShape.coBar Bs Γ u := by
@@ -565,14 +558,14 @@ theorem coBar_neg (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
 theorem coBar_smul (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo D.sp.cm.sig a a')
     (c : AF D.host.F) (u : Matrix (Fin a') (Fin (a + a')) (AE D.host.F D.host.E)) :
     GlobalTheory.VacShape.coBar Bs Γ (c • u) = evFin D.host.F Bs.v₁ c • GlobalTheory.VacShape.coBar Bs Γ u := by
-  rw [coBar_eq, coBar_eq, map_piW_smul, Matrix.mul_smul, Matrix.smul_mul, smul_neg]
+  rw [GlobalTheory.LinCoords.coBar_eq', GlobalTheory.LinCoords.coBar_eq', map_piW_smul, Matrix.mul_smul, Matrix.smul_mul, smul_neg]
 
 theorem coBar_gen (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo D.sp.cm.sig a a')
     (c : AF D.host.F) (x : Fin a' → D.host.E) (y : Fin (a + a') → D.host.E) :
     GlobalTheory.VacShape.coBar Bs Γ (c • incM D.host.F (vecMulVec x y)) =
       evFin D.host.F Bs.v₁ c • vecMulVec (-(Γ.V'.J.map Bs.τ₁ *ᵥ fun i => (Bs.τ₁.comp D.sp.cm.sig) (x i)))
         (Γ.W.J.map Bs.τ₁ *ᵥ fun j => (Bs.τ₁.comp D.sp.cm.sig) (y j)) := by
-  rw [coBar_eq, map_piW_smul_incM, vecMulVec_map (Bs.τ₁.comp D.sp.cm.sig),
+  rw [GlobalTheory.LinCoords.coBar_eq', map_piW_smul_incM, vecMulVec_map (Bs.τ₁.comp D.sp.cm.sig),
     Matrix.mul_smul, Matrix.smul_mul, mul_vecMulVec_mul, vecMulVec_neg_left, smul_neg]
 
 end Shape

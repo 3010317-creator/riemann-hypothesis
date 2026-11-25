@@ -1609,16 +1609,6 @@ noncomputable section
 
 namespace GlobalTheory.Nef.TorExt
 
-theorem algebraMap_comp_C (Ω : Type) [Field Ω] :
-    (algebraMap (RatFunc Ω) (LaurentSeries Ω)).comp RatFunc.C =
-      (algebraMap (PowerSeries Ω) (LaurentSeries Ω)).comp PowerSeries.C := by
-  refine RingHom.ext fun c => ?_
-  simp only [RingHom.comp_apply]
-  rw [← RatFunc.algebraMap_C]
-  have := RatFunc.coe_coe (Polynomial.C c)
-  simp only [Polynomial.coe_C] at this
-  exact this.symm
-
 theorem unitSec_comp {S : Scheme.{0}} {G H : Over S} [GrpObj G] [GrpObj H] (f : G ⟶ H) [IsMonHom f] :
     unitSec G ≫ f.left = unitSec H := by
   rw [unitSec, unitSec, sec, sec, ← Over.comp_left, IsMonHom.one_hom]
@@ -1675,7 +1665,7 @@ theorem ratRigid_of_torusExtension : ∀ (Ω : Type) [Field Ω] [CharZero Ω] (G
   set ι₀ := algebraMap (PowerSeries Ω) (LaurentSeries Ω)
   have ha : Function.Injective a := a.injective
   have hC : spMap a ≫ spMap RatFunc.C = spMap ι₀ ≫ spMap (PowerSeries.C (R := Ω)) := by
-    rw [← Geo.Tor.spMap_comp, ← Geo.Tor.spMap_comp, algebraMap_comp_C]
+    rw [← Geo.Tor.spMap_comp, ← Geo.Tor.spMap_comp, GlobalTheory.Nef.ratFunc_C_laurent]
   have hq : ξ ≫ E.q.left = spMap (PowerSeries.C (R := Ω)) ≫ unitSec E.B := by
     have := _root_.GlobalTheory.Nef.ratRigid_of_isProper_of_charZero Ω E.B inferInstance (ξ ≫ E.q.left) ((bc2 _ G E.B E.q Ω 2 (𝟙 _) ξ).1 hξ)
       ⟨β ≫ E.q.left, by rw [← Category.assoc, hβ, Category.assoc]⟩

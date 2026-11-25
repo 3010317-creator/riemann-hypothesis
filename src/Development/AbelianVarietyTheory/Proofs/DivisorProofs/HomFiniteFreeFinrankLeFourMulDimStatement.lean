@@ -115,16 +115,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.AV.AbVar
 
-open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry in
-open scoped CategoryTheory.Obj CategoryTheory.MonObj TensorProduct in
-attribute [local instance] Over.cartesianMonoidalCategory in
-private theorem tate_nsmul_lev {p : ℕ} {M : Type} [CommGroup M]
-    (s : _root_.GlobalTheory.HTLat.Tate p M) (k m : ℕ) :
-    (k • s).lev m = s.lev m ^ k := by
-  induction k with
-  | zero => simp [_root_.GlobalTheory.HTLat.Tate.lev_zero]
-  | succ k ih => rw [succ_nsmul, _root_.GlobalTheory.HTLat.Tate.lev_add, ih, pow_succ]
-
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry in
 open scoped CategoryTheory.Obj CategoryTheory.MonObj TensorProduct in
@@ -145,7 +135,7 @@ theorem _root_.GlobalTheory.AV.AbVar.tl_lev_surj_ker : ∀ (K : Type) [Field K]
     apply Subtype.ext
     funext m
     change ((l : ℤ_[l]) ^ n • s).lev m = ((l ^ n : ℕ) • s).lev m
-    rw [_root_.GlobalTheory.HTLat.Tate.lev_smul, tate_nsmul_lev, ← Nat.cast_pow]
+    rw [_root_.GlobalTheory.HTLat.Tate.lev_smul, GlobalTheory.HTLat.TatePerfect.lev_nsmul, ← Nat.cast_pow]
     exact _root_.GlobalTheory.PDiv.pow_digit_natCast (s.lev_pow m) (l ^ n)
   constructor
   · intro ht

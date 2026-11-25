@@ -257,13 +257,6 @@ namespace GlobalTheory.SymmProd
 
 open scoped Matrix
 
-theorem zpow_finsum_eq {U : Type} [CommGroup U] {ι : Type} (s : Finset ι) (x : U) (f : ι → ℤ) :
-    x ^ (∑ i ∈ s, f i) = ∏ i ∈ s, x ^ f i := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.prod_insert ha, zpow_add, ih]
-
 theorem prod_collect {U : Type} [CommGroup U] {r : ℕ} (W M : Matrix (Fin r) (Fin r) ℤ)
     (lam : Fin r → Fin r → U) (e : ℤ) :
     ∏ i, ∏ j, (∏ k, ∏ l, lam k l ^ (M i k * M j l)) ^ (e * W i j)
@@ -274,7 +267,7 @@ theorem prod_collect {U : Type} [CommGroup U] {r : ℕ} (W M : Matrix (Fin r) (F
       Finset.sum_mul, Finset.mul_sum]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
-  simp only [h, zpow_finsum_eq, ← Finset.prod_zpow, ← zpow_mul]
+  simp only [h, GlobalTheory.SharpWeil.zpow_sum', ← Finset.prod_zpow, ← zpow_mul]
   calc ∏ i, ∏ j, ∏ k, ∏ l, lam k l ^ (M i k * M j l * (e * W i j))
       = ∏ i, ∏ k, ∏ j, ∏ l, lam k l ^ (M i k * M j l * (e * W i j)) :=
         Finset.prod_congr rfl fun i _ => Finset.prod_comm
@@ -304,7 +297,7 @@ theorem prod_four_maps_eq_one (U : Type) [CommGroup U] {r : ℕ} (W A : Matrix (
   refine Finset.prod_congr rfl fun k _ => ?_
   rw [Finset.prod_comm]
   refine Finset.prod_congr rfl fun l _ => ?_
-  rw [← zpow_finsum_eq, ← Matrix.sum_apply]
+  rw [← GlobalTheory.SharpWeil.zpow_sum', ← Matrix.sum_apply]
   refine congrArg (fun M : Matrix (Fin r) (Fin r) ℤ => lam k l ^ M k l) ?_
   have h2 : Wᵀ * A = W - W * A := by
     rw [eq_sub_iff_add_eq, add_comm, ← add_mul]; exact hW.symm
