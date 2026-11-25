@@ -148,16 +148,24 @@ end GlobalTheory.RowTest.BottomClassSumNeg
 namespace GlobalTheory.RowTest.BottomClassSumNeg
 variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil} {i j : Fin D.R.m}
     {A A' WW : HSp D} {X : Tri T A A' WW}
-theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X →
+theorem integral_eq_bottom_classSum_of {D : D7} {T : Type} {A WW : HSp D}
+    (hgram : A.gram = 1) (μ : Measure (GA D A)) (fd : Set (GA D A))
+    (hmeas : μ.IsHaarMeasure ∧ IsFundamentalDomain (GQ A) fd μ)
+    (I : T → PolF D WW.rank A.rank → GA D WW → ℂ)
+    (ker : T → PolF D WW.rank A.rank → GA D WW → GA D A → ℂ)
+    (hlevel : ∃ K'' : Subgroup (GL (Fin A.rank) (Lev.EAf D)),
+        (IsOpen (K''.comap (Lev.finE A) : Set (GA D A)) ∧ IsCompact (Lev.levA A K'' : Set (GA D A))) ∧
+        ∀ t P h, ∀ k ∈ Lev.levA A K'', ∀ g, ker t P h (g * k) = ker t P h g)
+    (hcont : ∀ (K'' : Subgroup (GL (Fin A.rank) (Lev.EAf D))), IsOpen (K''.comap (Lev.finE A) : Set (GA D A)) →
+        ∀ t P h, (∀ k ∈ Lev.levA A K'', ∀ g, ker t P h (g * k) = ker t P h g) → Continuous (ker t P h))
+    (hleft : ∀ t P h, ∀ γ ∈ GQ A, ∀ g, ker t P h (γ * g) = ker t P h g)
+    (hI : ∀ t P h, I t P h = ∫ g in fd, ker t P h g ∂μ) :
     ∃ (v : ℝ) (N : ℕ) (z : Fin N → GA D A) (w : Fin N → ℕ) (κ : Measure (GinfC A)), 0 < v ∧ (∀ l, z l ∈ GfC A) ∧
       (∀ l, 0 < w l) ∧ κ.IsMulLeftInvariant ∧ IsProbabilityMeasure κ ∧
       ∀ (t : T) (P : PolF D WW.rank A.rank), ∀ h ∈ GfC WW,
-        X.I W.ψ W.θ t P h = (v : ℂ) * ∑ l, ((w l : ℂ))⁻¹ * ∫ g, X.ker W.ψ W.θ t P h (z l * (g : GA D A)) ∂κ := by
-  intro D T _ L μ₀ sc G W i j A A' WW X _ _ hL hX
+        I t P h = (v : ℂ) * ∑ l, ((w l : ℂ))⁻¹ * ∫ g, ker t P h (z l * (g : GA D A)) ∂κ := by
   have hV : ∀ φ : D.host.E →+* ℂ, (A.gram.map φ).PosDef := fun φ => by
-    rw [hX.std.1, Matrix.map_one φ (map_zero φ) (map_one φ)]
+    rw [hgram, Matrix.map_one φ (map_zero φ) (map_one φ)]
     exact Matrix.PosDef.one
   let V' : HSp D := { A with sig := fun _ => (A.rank, 0) }
   have hS' : V'.SigOK := fun τ => GlobalTheory.Proof.GenusMassSignature.hasSignature_of_posDef (hV τ)
@@ -170,11 +178,10 @@ theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : Le
   have hB := hT.2.2.2.1
   have hG := hT.2.2.2.2.1
   have hC := hT.2.2.2.2.2.2
-  obtain ⟨K'', hK'', hr⟩ := level_all μ₀ hX
+  obtain ⟨K'', hK'', hr⟩ := hlevel
   have hfin0 : Finite (FinCl A K'') := (finite_finCl_and_gamOrd A K'' hV hK'').1
-  let μ := X.m
-  haveI : μ.IsHaarMeasure := hX.is.meas.1
-  have hfd : IsFundamentalDomain (GQ A) X.fd μ := hX.is.meas.2
+  haveI : μ.IsHaarMeasure := hmeas.1
+  have hfd : IsFundamentalDomain (GQ A) fd μ := hmeas.2
   let J : Subgroup (GA D A) := K''.comap (Lev.finE A)
   have hJo : IsOpen (J : Set (GA D A)) := hK''.1
   have hJc : IsCompact (J : Set (GA D A)) := by
@@ -227,12 +234,24 @@ theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : Le
     ENNReal.toReal_pos hJ0 hJtop, fun l => (Quotient.out (eq.symm l)).2, fun l => ?_, inferInstance, inferInstance,
     fun t P h _ => ?_⟩
   · exact (Set.ncard_pos (hfin l)).2 ⟨1, (GQ A).one_mem, by simp [J.one_mem]⟩
-  · have hcont : Continuous (X.ker W.ψ W.θ t P h) :=
-      continuous_of_level A K'' hK''.1 _ (fun k hk g => hr t P h k hk g) (ker_cont hX t P h)
-    obtain ⟨-, heq⟩ := integral_eq_sum_avg (GA D A) μ (GQ A) J (Lev.levA A K'') X.fd hfd hJo hJtop (GinfC A) κ
-      (GinfC A).subtype continuous_subtype_val hrt hdec hcomm (Fin N) z hu hfin (X.ker W.ψ W.θ t P h) hcont
-      (ker_left hX t P h) (fun k hk g => hr t P h k hk g)
+  · have hc : Continuous (ker t P h) := hcont K'' hK''.1 t P h (hr t P h)
+    obtain ⟨-, heq⟩ := integral_eq_sum_avg (GA D A) μ (GQ A) J (Lev.levA A K'') fd hfd hJo hJtop (GinfC A) κ
+      (GinfC A).subtype continuous_subtype_val hrt hdec hcomm (Fin N) z hu hfin (ker t P h) hc
+      (hleft t P h) (hr t P h)
+    rw [hI t P h]
     exact heq
+
+theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
+    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
+    IsBottomTri W i j X →
+    ∃ (v : ℝ) (N : ℕ) (z : Fin N → GA D A) (w : Fin N → ℕ) (κ : Measure (GinfC A)), 0 < v ∧ (∀ l, z l ∈ GfC A) ∧
+      (∀ l, 0 < w l) ∧ κ.IsMulLeftInvariant ∧ IsProbabilityMeasure κ ∧
+      ∀ (t : T) (P : PolF D WW.rank A.rank), ∀ h ∈ GfC WW,
+        X.I W.ψ W.θ t P h = (v : ℂ) * ∑ l, ((w l : ℂ))⁻¹ * ∫ g, X.ker W.ψ W.θ t P h (z l * (g : GA D A)) ∂κ := by
+  intro D T _ L μ₀ sc G W i j A A' WW X _ _ _ hX
+  exact integral_eq_bottom_classSum_of hX.std.1 X.m X.fd hX.is.meas (X.I W.ψ W.θ) (X.ker W.ψ W.θ)
+    (level_all μ₀ hX) (fun K'' hK'' t P h hr => continuous_of_level _ K'' hK'' _ hr (ker_cont hX t P h))
+    (ker_left hX) (fun _ _ _ => rfl)
 end GlobalTheory.RowTest.BottomClassSumNeg
 end
 end
