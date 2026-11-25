@@ -223,8 +223,6 @@ namespace PositivityTheory.RgBcC.Cxf
 
 open PositivityTheory.RgTw (Mat)
 
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
 variable {n : ℕ} {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V]
 
 theorem isOpen_GLs : IsOpen (GLs n) := isOpen_ne_fun continuous_id.matrix_det continuous_const

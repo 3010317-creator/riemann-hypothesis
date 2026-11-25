@@ -88,8 +88,6 @@ open GlobalTheory.AutomorphicL2Unitary GlobalTheory.AdelicU GlobalTheory.Doublin
 open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 open GlobalTheory.StdUnn PositivityTheory.GramSchwartzFunctions PositivityTheory.GramSchwartzFunctions.BC
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 namespace PositivityTheory.Rg.Sw.Glob.LocCell
 
 variable {D : D7} {n : ℕ}
@@ -534,8 +532,6 @@ open GlobalTheory.AutomorphicL2Unitary GlobalTheory.AdelicU GlobalTheory.Doublin
 open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 open GlobalTheory.StdUnn PositivityTheory.GramSchwartzFunctions PositivityTheory.GramSchwartzFunctions.BC
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 namespace PositivityTheory.Rg.Sw.Glob.LocInstH
 
 open MvPolynomial
@@ -690,8 +686,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open GlobalTheory.AdelicU GlobalTheory.StdUnn MvPolynomial
 open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 namespace PositivityTheory.Rg.Sw.Glob.RhoH
 
 variable {D : D7} {n : ℕ}
@@ -768,7 +762,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open GlobalTheory.AutomorphicL2Unitary GlobalTheory.AdelicU GlobalTheory.Doubling GlobalTheory.Cont GlobalTheory.MixModel GlobalTheory.Core.Rk.SWLaw GlobalTheory.Core.Rk.SW GlobalTheory.StdUnn
 open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 open GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift (RealMat IsFockVec)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 
@@ -861,8 +854,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open GlobalTheory.AdelicU GlobalTheory.StdUnn MvPolynomial
 open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 namespace PositivityTheory.Rg.Sw.Glob
 
 
@@ -933,8 +924,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open GlobalTheory.AutomorphicL2Unitary GlobalTheory.AdelicU GlobalTheory.Doubling GlobalTheory.Cont GlobalTheory.MixModel
 open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 open GlobalTheory.StdUnn PositivityTheory.GramSchwartzFunctions PositivityTheory.GramSchwartzFunctions.BC
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace PositivityTheory.Rg.Sw.Glob
 
@@ -1009,7 +998,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open GlobalTheory.AutomorphicL2Unitary GlobalTheory.AdelicU GlobalTheory.Doubling GlobalTheory.Cont GlobalTheory.MixModel GlobalTheory.Core.Rk.SWLaw GlobalTheory.Core.Rk.SW GlobalTheory.StdUnn
 open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 open GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift (RealMat IsFockVec)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
 
@@ -1116,8 +1104,6 @@ open scoped Matrix NNReal ComplexConjugate TensorProduct
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.IndefR.Datum MeasureTheory
 open GlobalTheory.AdelicU GlobalTheory.StdUnn
 open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace PositivityTheory.Rg.Sw.Glob
 

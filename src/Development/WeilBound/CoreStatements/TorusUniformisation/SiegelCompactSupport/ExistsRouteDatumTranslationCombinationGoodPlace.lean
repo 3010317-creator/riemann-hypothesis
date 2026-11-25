@@ -338,8 +338,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (pure tens SInf ev
 open GlobalTheory.EmbChart (atPlace atPlace_mul_right evFin_atPlace)
 open scoped GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels TensorProduct
 
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
 noncomputable section
 namespace PositivityTheory.Member.ZakTransform
 
@@ -1095,5 +1093,3 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open IsDedekindDomain NumberField MeasureTheory Matrix
 open scoped TensorProduct
 open GlobalTheory.FunObj GlobalTheory.ChiGrid GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.StdFrames Formalism.L2.DIV
-
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
