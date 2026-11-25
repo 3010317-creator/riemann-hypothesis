@@ -79,10 +79,7 @@ private theorem isFormOrd_iff_isFormOrd_ratPull {k : Type} [Field k] {X Y : Sche
   · rintro ⟨ω', hω', f', hη, hf'⟩
     obtain ⟨ω, rfl⟩ := hFb.2 ω'
     obtain ⟨c, hc⟩ := hb.2 (f' : Y.functionField)
-    have hc0 : c ≠ 0 := by
-      rintro rfl
-      rw [map_zero] at hc
-      exact f'.ne_zero hc.symm
+    have hc0 : c ≠ 0 := ne_zero_of_map (f := functionFieldMap s) (x := c) (hc ▸ f'.ne_zero)
     have hff : fnPull s (Units.mk0 c hc0) = f' := Units.ext (by simpa using hc)
     refine ⟨ω, (hfree ω).2 hω', Units.mk0 c hc0, ?_, ?_⟩
     · apply (EtaleKlt.ratPull_bijective_of_birational k X Y p s hb n).1
@@ -95,11 +92,8 @@ theorem discrep_ratPull_fnPull {k : Type} [Field k] {X Y : Scheme.{0}} [IsIntegr
     {E' : DivOver (s ≫ p)} {E : DivOver p} (hE : DivOver.Over s E' E) {n : ℕ} {η : RatForms p n}
     (hη : η ≠ 0) (m : ℕ) (g : X.functionFieldˣ) :
     discrep E' (EtaleKlt.ratPull p s n η) m (fnPull s g) = discrep E η m g := by
-  have hη' : EtaleKlt.ratPull p s n η ≠ 0 := by
-    intro h0
-    apply hη
-    apply (EtaleKlt.ratPull_bijective_of_birational k X Y p s hb n).1
-    rw [h0, map_zero]
+  have hη' : EtaleKlt.ratPull p s n η ≠ 0 :=
+    (map_ne_zero_iff _ (EtaleKlt.ratPull_bijective_of_birational k X Y p s hb n).1).2 hη
   have key : E'.formOrd (EtaleKlt.ratPull p s n η) = E.formOrd η := by
     unfold DivOver.formOrd
     by_cases h : ∃ a, E.IsFormOrd η a
@@ -220,10 +214,7 @@ private theorem exists_unit_eq_smul_formOf_of_isFrame {k : Type} [Field k] {Y : 
     ∃ h : Y.functionFieldˣ, η = (h : Y.functionField) • formOf U hg ω := by
   obtain ⟨a, ha⟩ := (isFreeGen_formOf hg hω).2 η
   have ha' : a • formOf U hg ω = η := ha
-  have ha0 : a ≠ 0 := by
-    rintro rfl
-    apply hη
-    rw [← ha', zero_smul]
+  have ha0 : a ≠ 0 := left_ne_zero_of_smul (b := formOf U hg ω) (ha' ▸ hη)
   exact ⟨Units.mk0 a ha0, ha'.symm⟩
 
 private theorem discrep_eq_neg_mult_div {k : Type} [Field k] [PerfectField k]
@@ -237,10 +228,7 @@ private theorem discrep_eq_neg_mult_div {k : Type} [Field k] [PerfectField k]
   obtain ⟨h, hh⟩ := exists_unit_eq_smul_formOf_of_isFrame hgen hω η hη
   have hKe : K.IsEqn w h := hK U ω hω w hw h hh
   have hD : (P - m • K).IsEqn w (g / h ^ m) := hg.sub (hKe.nsmul m)
-  have hf0 : formOf U hgen ω ≠ 0 := by
-    intro h0
-    apply hη
-    rw [hh, h0, smul_zero]
+  have hf0 : formOf U hgen ω ≠ 0 := right_ne_zero_of_smul (a := (h : Y.functionField)) (hh ▸ hη)
   have hF : E.formOrd η = E.ord h + E.formOrd (formOf U hgen ω) := by
     rw [hh]
     exact E.formOrd_smul hdim hf0 h
@@ -279,10 +267,7 @@ private theorem neg_one_lt_discrep_of_mult_lt_and_le {k : Type} [Field k] [CharZ
     rw [div_eq_mul_inv, E.ord_mul, E.ord_inv, div_eq_mul_inv, E.ord_mul, E.ord_inv, E.ord_pow,
       E.ord_prod_zpow] at hord0
     linarith
-  have hf0 : formOf U hgen (dOn q z) ≠ 0 := by
-    intro h0
-    apply hη
-    rw [hh, h0, smul_zero]
+  have hf0 : formOf U hgen (dOn q z) ≠ 0 := right_ne_zero_of_smul (a := (h : Y.functionField)) (hh ▸ hη)
   have hF : E.formOrd η = E.ord h + E.formOrd (formOf U hgen (dOn q z)) := by
     rw [hh]
     exact E.formOrd_smul hdim hf0 h
@@ -367,11 +352,8 @@ theorem kltAt_lcAt_iff_of_isLogRes : ∀ (k : Type) [Field k] [CharZero k] (X : 
   haveI : IsNormalScheme Y := ModifSections.isNormalScheme_of_smooth (s ≫ p)
   have hdimY : topologicalKrullDim Y = n :=
     HSCore.VanishNumberField.topologicalKrullDim_eq_of_smooth (s ≫ p) n hres.smooth
-  have hη' : EtaleKlt.ratPull p s n η ≠ 0 := by
-    intro h0
-    apply hlm.ne_zero
-    apply (EtaleKlt.ratPull_bijective_of_birational k X Y p s hres.bir n).1
-    rw [h0, map_zero]
+  have hη' : EtaleKlt.ratPull p s n η ≠ 0 :=
+    (map_ne_zero_iff _ (EtaleKlt.ratPull_bijective_of_birational k X Y p s hres.bir n).1).2 hlm.ne_zero
   obtain ⟨g, hg⟩ := G.exists_isEqn x
   have hL := hlm.eqn x g hg
   have hm' : (0 : ℚ) < m := by exact_mod_cast hlm.pos
