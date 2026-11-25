@@ -419,7 +419,7 @@ theorem _root_.GlobalTheory.T.symmetricDoubleIntegral_finite_combination : ∀ (
       (fl ψ ν μ₁ ρ (om μ₁ a x P₁.1)) (v a x y)) →
     ∃ u : GL (n₁ ⊕ Fin (c + 1)) k → ℂ, (∀ x, IsQuotInt ν m₂ G₂ ρ (fun y => comb e fun a => v a x y) (u x)) ∧
       IsQuotIntFJ ν m₁ G₁ ρ u (comb e z) := by
-  first | exact @GlobalTheory.PosOne.SymComb.symDbl_comb
+  first | exact @_root_.GlobalTheory.PosOne.SymComb.symmetricDoubleIntegral_combination_of_pointValues
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricDoubleIntegralFiniteCombinationStatement =====
@@ -905,7 +905,6 @@ open GlobalTheory.PosOne (toOne Covers TriPos)
 open GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage (app HasTensorVal fl opEFJ IsQuotIntFJ RFJ)
 open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.QVal GlobalTheory.FinPl
 
 end -- clump:auto

@@ -737,7 +737,7 @@ theorem ptF_laws (hθ : IsInfFam θ) (hψ : IsStdChar D ψ (-1)) (A : Fr V) (B :
         ptF ψ θ A B f (lowO τ (A.ε τ) (B.ε τ) i j Q) = 0 := by
     intro τ i j Q hQ
     obtain ⟨R, L, w, hE, -⟩ := exists_raise_lower A B h hψ τ
-    obtain ⟨E, h1, h2, h3⟩ := hE f hf
+    obtain ⟨E, h1, h2, h3⟩ := hE f hf.1 (hf.2 τ)
     have hQ' : E Q = 0 := Subtype.ext (by rw [← h1, hQ]; rfl)
     refine ⟨?_, ?_⟩
     · rw [h1, h2, hQ', map_zero]; rfl
@@ -748,7 +748,7 @@ theorem ptF_laws (hθ : IsInfFam θ) (hψ : IsStdChar D ψ (-1)) (A : Fr V) (B :
     map_neg (pureTensorO ψ θ V W A.cart B.cart A.onb B.onb f) P
   refine ⟨fun τ P => ?_, ?_, ?_⟩
   · obtain ⟨R, L, w, hE, -⟩ := exists_raise_lower A B h hψ τ
-    obtain ⟨E, h1, -, -⟩ := hE f hf
+    obtain ⟨E, h1, -, -⟩ := hE f hf.1 (hf.2 τ)
     rw [h1]
     exact (E P).2
   · rintro ⟨τ, i, j⟩ Q hQ
