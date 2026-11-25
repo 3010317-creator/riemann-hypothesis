@@ -322,9 +322,8 @@ private theorem mem_map_of_coord {A D ι : Type} [CommRing A] [CommRing D] [Alge
   exact Ideal.mul_mem_right _ _ (Ideal.mem_map_of_mem _ (hc i))
 
 theorem UpperTheory.exists_twoChart_quotient_of_finite_coord :
-    ∀ (A D : Type) [CommRing A] [CommRing D] [Algebra A D] (T : TC A D), T.Fin → T.Coord → ∀ I : Ideal A, ∃ T' : TC A (D ⧸ I.map (algebraMap A D)), T'.Fin ∧ T'.t = Ideal.Quotient.mk _ T.t ∧ T'.s = Ideal.Quotient.mk _ T.s ∧
-      (∀ j, ∀ y ∈ T'.S j, ∃ x ∈ T.S j, Ideal.Quotient.mk _ x = y) ∧ (∀ j, ∀ x ∈ T.S j, Ideal.Quotient.mk _ x ∈ T'.S j) ∧
-      (∀ x ∈ T.B, x ∈ I.map (algebraMap A D) → x ∈ I • Subalgebra.toSubmodule T.B) ∧ ∀ x ∈ T.C, x ∈ I.map (algebraMap A D) → x ∈ I • Subalgebra.toSubmodule T.C := by
+    ∀ (A D : Type) [CommRing A] [CommRing D] [Algebra A D] (T : TC A D), T.Fin → T.Coord → ∀ I : Ideal A, ∃ T' : TC A (D ⧸ I.map (algebraMap A D)), T'.Fin ∧ T'.t = Ideal.Quotient.mk _ T.t ∧
+      (∀ j, ∀ y ∈ T'.S j, ∃ x ∈ T.S j, Ideal.Quotient.mk _ x = y) ∧ (∀ j, ∀ x ∈ T.S j, Ideal.Quotient.mk _ x ∈ T'.S j) := by
   classical
   intro A D _ _ _ T hF hC I
   obtain ⟨ι, β, U, V, hU, hV⟩ := hC
@@ -352,7 +351,7 @@ theorem UpperTheory.exists_twoChart_quotient_of_finite_coord :
         obtain ⟨x, rfl⟩ := hsurj y
         obtain ⟨k, hk⟩ := T.locC x
         exact ⟨k, Subalgebra.mem_map.2 ⟨_, hk, by rw [hq, map_mul, map_pow]⟩⟩ }
-  refine ⟨T', ?_, rfl, rfl, ?_, ?_, ?_, ?_⟩
+  refine ⟨T', ?_, rfl, ?_, ?_⟩
   · obtain ⟨X, hX1, hX2⟩ := hF
     refine ⟨X.image q, ?_, ?_⟩
     · intro y hy
@@ -412,16 +411,7 @@ theorem UpperTheory.exists_twoChart_quotient_of_finite_coord :
     refine Submodule.mem_inf.2 ⟨Subalgebra.mem_map.2 ⟨x, hxB, rfl⟩, ?_⟩
     show Ideal.Quotient.mk J T.s ^ j * Ideal.Quotient.mk J x ∈ T.C.map q
     exact Subalgebra.mem_map.2 ⟨T.s ^ j * x, hxC, by rw [hq, map_mul, map_pow]⟩
-  · intro x hx hxJ
-    have hxs : x ∈ Submodule.span A (β '' U) := by rw [← hU]; exact hx
-    rw [hU]
-    exact mem_smul_span_of_coord β I U hxs (coord_mem_of_mem β I hxJ)
-  · intro x hx hxJ
-    have hC0 : Subalgebra.toSubmodule T.C = Submodule.span A (β '' V 0) := by
-      rw [← (hV 0).1, pow_zero, LinearMap.mulLeft_one, Submodule.comap_id]
-    have hxs : x ∈ Submodule.span A (β '' V 0) := by rw [← hC0]; exact hx
-    rw [hC0]
-    exact mem_smul_span_of_coord β I (V 0) hxs (coord_mem_of_mem β I hxJ)
+
 
 end
 end -- clump:auto
@@ -846,7 +836,7 @@ theorem UpperTheory.exists_factorization_near_root_of_unity_henselian :
     rcases Nat.eq_zero_or_pos q with h | h
     · subst h; simp at hq
     · exact h
-  obtain ⟨T', hT'F, hT't, -, hlift, hproj, -, -⟩ := exists_twoChart_quotient_of_finite_coord A D T hF hC M
+  obtain ⟨T', hT'F, hT't, hlift, hproj⟩ := exists_twoChart_quotient_of_finite_coord A D T hF hC M
   have hω' : (Ideal.Quotient.mk J ω) ^ q = 1 := by
     rw [← map_pow, ← map_one (Ideal.Quotient.mk J), Ideal.Quotient.eq]
     exact hωJ
