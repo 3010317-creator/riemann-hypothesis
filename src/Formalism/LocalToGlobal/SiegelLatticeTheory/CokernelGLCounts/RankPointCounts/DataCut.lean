@@ -847,12 +847,6 @@ theorem dom_points (hN : SupportG.NormProd D) {δ : ∀ p : PlF D, (D.s.atP p).F
 
 end RDProof4
 
-section RDProof5
-
-variable {D : Formalism.BasicNotions.D7}
-
-end RDProof5
-
 section Close
 
 theorem rowLabelExists_holds (D : Formalism.BasicNotions.D7) : RowLabelExists D := rowLabelExists_of Formalism.L2.SG.Closed.ScalarEquivG_holds (fun u u' => Formalism.L2.SG.Closed.ScalarRepFree_holds D u u')

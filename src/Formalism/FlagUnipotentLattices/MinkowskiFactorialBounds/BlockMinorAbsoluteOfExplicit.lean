@@ -216,11 +216,6 @@ lemma s1c2_UH_of_isom {ι : Type*} [Fintype ι] [DecidableEq ι] (H p : Matrix �
   ext i j
   rw [← s1c2_herm_single (pᴴ * H * p) i j, ← s1c2_herm_conj, h, s1c2_herm_single]
 
-section ext
-variable {ι σ : Type*} [Fintype ι] [DecidableEq ι] [Fintype σ] [DecidableEq σ]
-
-end ext
-
 open Formalism.QuantumDeterminants.WeylGroupFacts in
 lemma s1c2_Hh (k r : ℕ) : (Hpk k r)ᴴ = Hpk k r := Formalism.QuantumDeterminants.GBasic.Hpk_herm k r
 

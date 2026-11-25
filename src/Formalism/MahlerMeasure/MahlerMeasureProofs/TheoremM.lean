@@ -585,11 +585,6 @@ theorem existsAdaptedBasis : AdaptedBasisExists := by
   exact Finset.single_le_sum (f := fun c => m (Fin.last K, c)) (fun _ _ => Nat.zero_le _) (mem_univ ρ)
 end S4
 
-section S5
-open M MvPolynomial Finset
-
-end S5
-
 section S6
 open M MvPolynomial Finset
 

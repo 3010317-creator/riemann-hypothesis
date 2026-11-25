@@ -527,12 +527,6 @@ theorem jnt_prim_isCharED (D : D7) (ψ : ZetaZeroFreeRegion.Chr D) : IsCharED D 
     rw [key]
     exact jnt_isCharED_one D
 
-section Analysis
-
-open MeasureTheory Set Filter Topology
-
-end Analysis
-
 def LL (D : D7) : ℕ := D.host.QS * D.host.q * D.host.d
 
 theorem LL_ne_zero (D : D7) : LL D ≠ 0 := by

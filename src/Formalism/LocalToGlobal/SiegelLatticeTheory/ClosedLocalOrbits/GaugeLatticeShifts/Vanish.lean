@@ -565,16 +565,4 @@ theorem lemmaVC_of (hA : AvgCore) (hU : GinfUnimod) (hN : NLamNinf) (hC : ChiTri
 
 end LemV
 
-section Chi
-
-open Formalism.L2.SG.Full Formalism.L2.SG.HidaSetting
-
-end Chi
-
-section Leaf
-
-open Formalism.L2.SG.Full
-
-end Leaf
-
 end Formalism.L2.SG.TermOp.Vanish

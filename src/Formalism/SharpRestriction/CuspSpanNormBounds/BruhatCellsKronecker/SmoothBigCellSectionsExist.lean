@@ -18,13 +18,6 @@ open scoped ENNReal
 
 variable {D : D7}
 
-section Steps
-
-variable (D) (large₂ : SizeData₂ D) (X : TermTie D) (Cw : ℝ) (Y : ∀ u u', LoopTie D large₂ X u u' Cw) (Z : TermLocs D X)
-  (cN : D.what₂.Word → D.what₂.Word → ℝ) (Vm : ValMap D.R.k D.R.rS)
-
-end Steps
-
 theorem Dstar_pos (D : D7) : 0 < D.what₂.Dstar := by
   rw [← D.Dstar_eq D.u₀]; exact (D.mem D.u₀).A.Dstar_pos
 
@@ -32,33 +25,6 @@ theorem section_exists : ∀ (k r : ℕ) (L : LocBessel k r), 1 ≤ k → ∃ μ
   | 0, _, _, h => absurd h (by norm_num)
   | _ + 1, _, L, _ => Formalism.MainNotions.S.Inh.big_cell_section_of_local_bessel L
 
-
-section MassDataStep
-
-variable (D) (large₂ : SizeData₂ D) (X : TermTie D) (Cw : ℝ) (Y : ∀ u u', LoopTie D large₂ X u u' Cw) (Z : TermLocs D X)
-  (cN : D.what₂.Word → D.what₂.Word → ℝ)
-
-
-end MassDataStep
-
-section RowsLemmas
-
-open Finset
-open scoped ComplexOrder
-
-end RowsLemmas
-
-section RowsAbstract
-
-open Finset
-open scoped ComplexOrder
-
-variable {P ι : Type}
-
-variable {Tau : Type} [Fintype Tau] (HSv : Tau → Type) (ip : ∀ v, HSv v → HSv v → ℂ) (n : P → ℝ) (c c0 : ι → P → ℂ)
-  (V : ∀ v, P → HSv v) (cW : ℝ)
-
-end RowsAbstract
 
 theorem ptEntry_col {K : Type} [Zero K] : ∀ (bs : List (K × ℕ)), (∀ b ∈ bs, b.1 ≠ 0 ∧ 1 ≤ b.2) →
     ∀ j, j < (bs.map Prod.snd).sum → ∃ i, i < (bs.map Prod.snd).sum ∧ ∃ t : K, t ≠ 0 ∧
@@ -115,22 +81,6 @@ theorem Dmin_top_ne (w : Point D.host.E (D.R.rS + 1)) : LocalSplitGroups.Dmin w 
     ext a b; rfl
   rw [this]
   exact ptMat_det_ne w
-
-section RowsStep
-
-open Finset
-open scoped ComplexOrder
-
-variable (D) (large₂ : SizeData₂ D) (X : TermTie D) (Cw : ℝ) (Y : ∀ u u', LoopTie D large₂ X u u' Cw) (Z : TermLocs D X)
-  (cN : D.what₂.Word → D.what₂.Word → ℝ) (Vm : ValMap D.R.k D.R.rS)
-
-end RowsStep
-
-section Dens
-
-variable (D) (X : TermTie D) (Z : TermLocs D X)
-
-end Dens
 
 end Formalism.MainNotions.BridgeLemma
 

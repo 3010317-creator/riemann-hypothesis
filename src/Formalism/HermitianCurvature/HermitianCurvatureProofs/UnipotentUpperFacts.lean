@@ -21,12 +21,6 @@ namespace UnipotentUpperFacts
 
 open C2x5 C2x6 C2x7 HermitianProjections FixedPointsGramVector
 
-section gen
-
-variable {n ι : Type*} [Fintype n] [DecidableEq n] [Fintype ι] [DecidableEq ι]
-
-end gen
-
 variable {k r : ℕ}
 
 lemma N_upper {g : B.Mat k r} (hg : g ∈ Nset k r) (i j : Fin (2 * r + k + 1)) (hji : j ≤ i) :

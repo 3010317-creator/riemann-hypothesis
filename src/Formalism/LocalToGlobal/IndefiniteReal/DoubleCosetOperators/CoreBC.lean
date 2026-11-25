@@ -159,17 +159,4 @@ def rdTw (tw : NTw R H what₂ LL0 N) (i : tw.Tw) (b : Bool) : ↥LL0 →+* Frac
 
 end Rec
 
-section Test
-
-end Test
-
-section BsupMap
-
-open Formalism.BasicNotions
-
-variable {R : Ranks} {H : Host R} {what₂ : Rows.Data R} [NumberField what₂.LL] [StarRing what₂.LL]
-  {LL0 : IntermediateField ℚ what₂.LL} {N : NData R H what₂}
-
-end BsupMap
-
 end Formalism.IndefR.NX.BC

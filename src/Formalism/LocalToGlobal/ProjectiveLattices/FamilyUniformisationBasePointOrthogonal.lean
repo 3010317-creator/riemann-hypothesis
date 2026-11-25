@@ -104,19 +104,6 @@ theorem detRootMul_holds (V : HSp D) : DetRootMul V := by
 
 end Dict2
 
-section Base
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
-
-
-end Base
-
-section Inv
-
-variable {D : D7} {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} {Comp : Type}
-
-end Inv
-
 section Rows
 
 variable {D : D7}
@@ -134,23 +121,5 @@ theorem xiConst_holds (D : D7) : XiConst D := by
   simp only [map_div₀, map_neg, map_one, map_mul, map_natCast, norm_div, norm_neg, norm_one, norm_mul, hn]
 
 end Rows
-
-section Collected
-
-variable {D : D7}
-
-variable {hN : N1c} {Q : Par D} {hpq : ∀ j, 1 ≤ (Q.Dw j).p + (Q.Dw j).q}
-
-end Collected
-
-section J
-
-variable {D : D7}
-
-variable {hN : N1c} {Q : Par D} {hpq : ∀ j, 1 ≤ (Q.Dw j).p + (Q.Dw j).q}
-  {chiW : ℕ → (Q.c.F →+* ℂ) → (AE D)ˣ →* Circle}
-
-
-end J
 
 end Formalism.L2.Pj

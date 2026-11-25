@@ -263,30 +263,6 @@ abbrev Xm (l : Ln p q r s) : Module.End ℂ (Pol p q r s) := LinearMap.mulLeft �
 
 end Checks
 
-section Skew
-
-open MvPolynomial
-
-variable {p q r s : ℕ}
-
-variable {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] (ι : Pol p q r s →ₗ[ℂ] H)
-
-variable {ι}
-
-end Skew
-
-section Compact
-
-variable {p q : ℕ}
-
-end Compact
-
-section Triv
-
-variable {p q : ℕ}
-
-end Triv
-
 end Formalism.MainNotions.DIV.Inh
 
 end

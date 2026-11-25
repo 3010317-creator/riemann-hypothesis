@@ -122,13 +122,6 @@ theorem coeff_eval_second_zero (G : PS C 2 dd) (μ : Fin dd →₀ ℕ) :
 
 end Kill
 
-section SgSec
-
-variable [CharZero C] {V : VF C} {O : Type} [CommRing O] [StarRing O] {dd : ℕ} {d : ℕ} {I : Fin 2 → Type}
-  [∀ g, Fintype (I g)] (Y : FBChart C V O dd) (p : PairData Y d I)
-
-end SgSec
-
 section AddSec
 
 variable {dd : ℕ}

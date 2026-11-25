@@ -630,12 +630,6 @@ theorem extended_matrix_in_reduction {n c : ℕ} (A A' : Matrix (Fin n) (Fin n) 
 
 end Mem
 
-section Mem2
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E] {P : HeightOneSpectrum (𝓞 E)} {q : ℕ}
-
-end Mem2
-
 section Of
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {P : HeightOneSpectrum (𝓞 E)} {q : ℕ}
@@ -675,28 +669,6 @@ theorem ciEntry {n : ℕ} {g : Sp E n ≃ₗ[E] Sp E n} {hbar : GL (Fin n) (𝓞
   simp [Matrix.mulVec, dotProduct, Pi.single_apply]
 
 end Of
-
-section Lev
-
-variable {X : Fields} {Pr : Primes X} (Ch : Chars X Pr Examples₂.R0.m)
-
-end Lev
-
-section Chr
-
-variable {X : Fields} {Pr : Primes X} (Ch : Chars X Pr Examples₂.R0.m)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (S : Set ℕ)
-  {mq : ℕ → rowSG Pr sel (mu0 X.F X.E X.K S) → X.K}
-
-end Chr
-
-section Chr1
-
-variable {X : Fields} {Pr : Primes X} (Ch : Chars X Pr Examples₂.R0.m)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (S : Set ℕ)
-  {mq : ℕ → rowSG Pr sel (mu0 X.F X.E X.K S) → X.K}
-
-end Chr1
 
 section Phi
 
@@ -856,16 +828,6 @@ variable {X : Fields} {Pr : Primes X} (Ch : Chars X Pr Examples₂.R0.m)
 
 end Inst
 
-section PsiInst
-
-variable {X : Fields} {Pr : Primes X} (Ch : Chars X Pr Examples₂.R0.m)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (S : Set ℕ)
-  {mq : ℕ → rowSG Pr sel (mu0 X.F X.E X.K S) → X.K}
-
-
-
-end PsiInst
-
 section Tied
 
 variable {X : Fields} {Pr : Primes X}
@@ -929,21 +891,5 @@ theorem intAt_of_redP_ne_zero₂ {E : Type} [Field E] [NumberField E] {P : Heigh
 
 
 end Tied
-
-section InstOk
-
-variable {X : Fields} {Pr : Primes X} (Ch : Chars X Pr Examples₂.R0.m)
-  (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (S : Set ℕ)
-  {mq : ℕ → rowSG Pr sel (mu0 X.F X.E X.K S) → X.K}
-
-end InstOk
-
-section Nd2
-
-open Formalism.L2.Host Formalism.FrobeniusOrbits
-
-variable (LL : Fld) [FiniteDimensional ℚ LL] [Normal ℚ LL] (hLL : cycQ nd2N ≤ LL)
-
-end Nd2
 
 end Formalism.L2.Col

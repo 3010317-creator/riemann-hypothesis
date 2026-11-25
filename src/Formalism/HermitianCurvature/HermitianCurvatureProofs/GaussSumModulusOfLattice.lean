@@ -26,14 +26,6 @@ theorem phase_hessian_determinant : Formalism.FourierDecayAlt.A6.HessDet := by
 
 namespace A6x6
 
-section Jet
-
-open MvPolynomial
-
-variable {m : ℕ}
-
-end Jet
-
 open Formalism.FourierDecayAlt.P.A5x5
 
 section Abs

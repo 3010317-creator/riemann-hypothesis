@@ -13,12 +13,6 @@ noncomputable section
 
 namespace Formalism.FourierDecayAlt.P.HermitianProjections
 
-section proj
-
-variable {n ι : Type*} [Fintype n] [DecidableEq n] [Fintype ι] [DecidableEq ι]
-
-end proj
-
 lemma strict_pow_apply {m : ℕ} (M : Matrix (Fin m) (Fin m) ℂ) (hM : ∀ i j : Fin m, j ≤ i → M i j = 0) :
     ∀ p : ℕ, ∀ i j : Fin m, j.val < i.val + p → (M ^ p) i j = 0 := by
   intro p
@@ -67,12 +61,6 @@ lemma herm_mulVec {m ι κ : Type*} [Fintype m] [Fintype ι] [Fintype κ] (H : M
   simp only [Matrix.mulVec_mulVec, Matrix.mul_assoc]
 
 end herm
-
-section uni
-
-variable {n : Type*} [Fintype n] [DecidableEq n]
-
-end uni
 
 section sig
 

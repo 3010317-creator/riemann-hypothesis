@@ -17,12 +17,6 @@ open scoped nonZeroDivisors
 
 namespace Formalism.L2.DIV
 
-section Gen
-
-variable {F E : Type} [Field F] [Field E] [Algebra F E]
-
-end Gen
-
 theorem unitary_det_norm_one {A : Type} [CommRing A] {n : ℕ} (σ : A →+* A) (J : Matrix (Fin n) (Fin n) A) (hJ : IsUnit J.det)
     (g : GL (Fin n) A) (hg : g ∈ UJ σ J) : σ (g : Matrix (Fin n) (Fin n) A).det * (g : Matrix (Fin n) (Fin n) A).det = 1 := by
   have h : cT σ (g : Matrix (Fin n) (Fin n) A) * J * (g : Matrix (Fin n) (Fin n) A) = J := hg
@@ -55,12 +49,6 @@ theorem det_in_unitary_one : DetInUnitaryOne := by
   apply Units.ext
   rw [Units.val_mul, conjugation_units_val, Units.val_one, Matrix.GeneralLinearGroup.val_det_apply, mul_comm]
   exact h
-
-section A2
-
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-
-end A2
 
 section C
 
@@ -610,12 +598,6 @@ theorem b_other_of_split (v : HeightOneSpectrum (𝓞 F)) (P P' Q : HeightOneSpe
   · exact hQ' (hs_eq_lemma_2 (P'.isMaximal.eq_of_le Q.isPrime.ne_top h1).symm)
 
 end B4
-
-section D1
-
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-
-end D1
 
 section D2
 

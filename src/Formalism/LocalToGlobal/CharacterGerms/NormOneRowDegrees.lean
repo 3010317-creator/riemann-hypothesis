@@ -133,23 +133,6 @@ theorem wLet_mk (σ : T) (c0 : Fin (r σ)) (τ : T) (c : Fin (r τ)) (ρ : Fin n
 
 end Let
 
-section Block
-
-variable {C : Type} [Field C] {V : VF C} {d : ℕ} [NeZero d] {T : Type} {r : T → ℕ}
-  {Orb : Type} {tau : Orb → Fin 2 → ZMod d → T} {o0 : Orb} {J0 : Fin 2 → Type} [∀ g, Fintype (J0 g)]
-
-variable (X : RowData C V d (IIof r tau o0) J0) (F : Flag X)
-  (hty : ∀ g (x : IIof r tau o0 g), (X.G g).ty (Sum.inl x) = x.1)
-  (std : ∀ g t (c : Fin (X.rkF g t)), ((F.en g t c).2 : ℕ) = c.val)
-
-
-
-
-
-
-
-end Block
-
 end WeightHomogeneousMinors
 
 end Formalism.L2.FormalSeriesBounds.RF
