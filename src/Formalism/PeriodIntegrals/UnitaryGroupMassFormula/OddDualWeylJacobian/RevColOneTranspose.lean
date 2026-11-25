@@ -174,11 +174,8 @@ theorem revCol_one_transpose {m : ℕ} : (revCol (1 : Matrix (Fin (m + 1)) (Fin 
 
 theorem isUnit_revInv {m : ℕ} {z : Matrix (Fin (m + 1)) (Fin (m + 1)) K} (hz : IsUnit z.det) :
     IsUnit (revCol (z⁻¹)ᵀ).det := by
-  have hP : IsUnit (revCol (1 : Matrix (Fin (m + 1)) (Fin (m + 1)) K)).det := by
-    have h : (revCol (1 : Matrix (Fin (m + 1)) (Fin (m + 1)) K)).det *
-        (revCol (1 : Matrix (Fin (m + 1)) (Fin (m + 1)) K)).det = 1 := by
-      rw [← det_mul, revCol_one_mul_self, det_one]
-    exact ⟨⟨_, _, h, h⟩, rfl⟩
+  have hP : IsUnit (revCol (1 : Matrix (Fin (m + 1)) (Fin (m + 1)) K)).det :=
+    isUnit_det_of_left_inverse revCol_one_mul_self
   rw [revCol_eq, det_mul]
   exact (isUnit_invT hz).mul hP
 
