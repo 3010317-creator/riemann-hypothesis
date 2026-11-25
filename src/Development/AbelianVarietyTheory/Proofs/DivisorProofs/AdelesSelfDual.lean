@@ -151,7 +151,7 @@ theorem cent_sim_pos : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G)
     have := congrArg Units.val hy.1; simpa using this
   have hMY : M * Y = Y * M := by rw [hMdef, hYdef, ← map_mul, ← map_mul, hc]
   have hform : Yᴴ * H * Y = (((y.2 : ℚˣ) : ℚ) : ℂ) • H := cent_form_law G P v y hy
-  obtain ⟨Z, lam, hinj, -, hZ⟩ := psi_eigenbasis p G P v
+  obtain ⟨Z, lam, hinj, -, hZ⟩ := psi_eigenbasis_of_regular G (P.γ : G.C) v P.reg
   have hx0 : x ≠ 0 := by rintro rfl; simp at hpos
   have hYx : M *ᵥ (Y *ᵥ x) = μ • (Y *ᵥ x) := by
     rw [mulVec_mulVec, hMY, ← mulVec_mulVec, hx, mulVec_smul]
