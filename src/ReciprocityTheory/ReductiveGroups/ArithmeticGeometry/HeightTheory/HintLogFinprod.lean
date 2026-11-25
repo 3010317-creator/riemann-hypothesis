@@ -222,11 +222,7 @@ theorem hint_ratio_self (hd : d.AxH 𝒜) {c : ι} {G : WT} {g : A c} (hg : g �
   have hex : ∃ a : Ω c, g = a • g := ⟨1, (one_smul _ _).symm⟩
   unfold ratio
   rw [dite_eq_left hex]
-  have h := hex.choose_spec
-  have h2 : (hex.choose - 1) • g = 0 := by rw [sub_smul, one_smul, ← h, sub_self]
-  rcases smul_eq_zero.mp h2 with h3 | h3
-  · exact sub_eq_zero.mp h3
-  · exact absurd h3 hg0
+  exact smul_left_injective (Ω c) hg0 (hex.choose_spec.symm.trans (one_smul (Ω c) g).symm)
 
 noncomputable def hintU (c : ι) (P : Ω c →+* ℂ) : EuclideanSpace ℂ (Fin (d.N + 1)) :=
   WithLp.toLp 2 (fun j => P (ratio (Ω := Ω c) (d.w j c) (d.w (d.jc c) c)))
