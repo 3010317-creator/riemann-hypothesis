@@ -194,11 +194,8 @@ theorem ip_smul_self (c : ℂ) (hc : c ≠ 0) (φ : Matrix κ ι ℚ → ℂ) :
   congr 1; funext x; simp; ring
 
 theorem fg_map {G G' : Type} [AddCommGroup G] [AddCommGroup G'] {A : AddSubgroup G} (hA : A.FG)
-    (f : G →+ G') : (A.map f).FG := by
-  classical
-  obtain ⟨S, hS⟩ := AddSubgroup.isAddFG_iff.mp hA
-  apply AddSubgroup.isAddFG_iff.mpr
-  exact ⟨S.image f, by rw [Finset.coe_image, ← AddMonoidHom.map_closure, hS]⟩
+    (f : G →+ G') : (A.map f).FG :=
+  IsAddFG.of_surjective (f.addSubgroupMap A) (f.addSubgroupMap_surjective A)
 
 def fac (ε : Matrix κ ι ℚ × Matrix κ ι ℚ → ℂ) (y : Matrix κ ι ℚ × Matrix κ ι ℚ)
     (x : Matrix κ ι ℚ) : ℂ := ε y * ex (2 * pr x y.1 - pr y.1 y.2)
