@@ -565,14 +565,6 @@ theorem blkU_mul {D : D7} (A B : HSp D) {d : ℕ} (e : Fin A.rank ⊕ Fin B.rank
   refine Subtype.ext (Units.ext ?_)
   exact GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.blk_mul e _ _ _ _
 
-theorem exists_integral_ne_zero (hSA : GlobalTheory.Published.StrongApproxSU) (hK : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree)
-    (hLM : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching) {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T}
-    (hL : L.Is μ₀) (W : G.Weil) (B : Frames G) (ρ : RealMatch W) (t : T) (i j : Fin D.R.m) (hst : SquareStanding G t) :
-    ∃ M : Vol G, M.Is t ∧ ∃ a τ τ' n Φ,
-      (∀ w ∈ locPl G t, depthAt G w ≤ n w ∧ IsNatDatum (unifAt w) (n w) (Φ w)) ∧ HasFlip B t ρ i j n Φ τ τ' ∧
-      ∃ g g₁, ∫ u in M.fd _, kerBig W (tensT W a τ) g g₁ u ∂M.ν _ ≠ 0 :=
-  GlobalTheory.BigNZ.exists_integral_ne_zero hSA hK hLM hL W B ρ t i j hst
-
 end Nonzero
 
 section Read
@@ -759,7 +751,7 @@ variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc}
 theorem exists_not_isNull (hSA : GlobalTheory.Published.StrongApproxSU) (hK : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree)
     (hLM : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching) {μ₀ : T} (hL : L.Is μ₀) (W : G.Weil) (B : Frames G) (ρ : RealMatch W) (t : T)
     (i j : Fin D.R.m) (hst : SquareStanding G t) : ∃ x, ¬ IsNull W B ρ t i j x := by
-  obtain ⟨M, hM, a, τ, τ', n, Φ, hn, hF, g, g₁, h⟩ := exists_integral_ne_zero hSA hK hLM hL W B ρ t i j hst
+  obtain ⟨M, hM, a, τ, τ', n, Φ, hn, hF, g, g₁, h⟩ := GlobalTheory.BigNZ.exists_integral_ne_zero hSA hK hLM hL W B ρ t i j hst
   exact ⟨toTens a, fun h0 => h (h0 M hM a rfl n Φ τ τ' hn hF g g₁)⟩
 
 theorem hasFlip_congr {W : G.Weil} {B : Frames G} {ρ ρ₀ : RealMatch W} (h1 : ρ₀.vX = ρ.vX) (h2 : ρ₀.vT = ρ.vT) {t : T}
@@ -898,7 +890,7 @@ theorem exists_nullSpace_realPlace (hP : _root_.GlobalTheory.FunPr.ThetaLocalInp
     fun x hx t ν 𝓕 hν ω hω f hf => ?_, fun B ρ t M hM n Φ τ τ' hn hF g g₁ => ?_⟩
   · obtain ⟨a, rfl⟩ := toTens_surjective x
     obtain ⟨M, hM, a₀, τ, τ', n, Φ, hn, hF, g, g₁, hne⟩ :=
-      exists_integral_ne_zero hP.strongApproxSU hK hLM hL W B ρ t i j (hst t)
+      GlobalTheory.BigNZ.exists_integral_ne_zero hP.strongApproxSU hK hLM hL W B ρ t i j (hst t)
     obtain ⟨Pf, y, J, κ, h1, h2, h3⟩ := form B ρ t M hM n Φ τ τ' hn hF
     rw [h3] at hne
     have hy : y ≠ 0 := by rintro rfl; simp at hne

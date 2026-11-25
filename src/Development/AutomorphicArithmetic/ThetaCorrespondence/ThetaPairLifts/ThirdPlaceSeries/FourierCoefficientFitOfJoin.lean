@@ -510,17 +510,6 @@ theorem gBig_dep {Q : GP} (h : GBig @Q) :
   exact ⟨max C0 CF, x0, fun C hC D large₂ he hx hR T Lc μ hL G =>
     ⟨le_of_max_le_right hCF, le_of_max_le_right hC, h C (le_of_max_le_left hC) D large₂ he hx hR T Lc μ hL G⟩⟩
 
-theorem gBig_and {Q Q' : GP} (h : GBig @Q) (h' : GBig @Q') :
-    GBig fun {D} {T} {Lc} {sc} G μ₀ C x b => @Q D T Lc sc G μ₀ C x b ∧ @Q' D T Lc sc G μ₀ C x b := by
-  obtain ⟨a, h⟩ := h
-  obtain ⟨a', h'⟩ := h'
-  refine ⟨max a a', fun ε CF hCF => ?_⟩
-  obtain ⟨C0, x0, h⟩ := h ε CF (le_of_max_le_left hCF)
-  obtain ⟨C1, x1, h'⟩ := h' ε CF (le_of_max_le_right hCF)
-  exact ⟨max C0 C1, max x0 x1, fun C hC D large₂ he hx hR T Lc μ hL G =>
-    ⟨h C (le_of_max_le_left hC) D large₂ he (le_of_max_le_left hx) hR T Lc μ hL G,
-     h' C (le_of_max_le_right hC) D large₂ he (le_of_max_le_right hx) hR T Lc μ hL G⟩⟩
-
 theorem integralNormBound_mono {K : Type} [Field K] [NumberField K] {ι : Type} {dl : Formalism.PairingDivisionLocalBalance.Pl K → ℝ} {zA zA' : ι → K}
     {B B' : ℝ} (h : NonArchimedeanDefectBound dl zA zA' B) (hB : B ≤ B') : NonArchimedeanDefectBound dl zA zA' B' :=
   ⟨h.1, fun F => (h.2.1 F).trans hB, h.2.2⟩
@@ -543,13 +532,11 @@ section
 noncomputable section
 open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.BigTop GlobalTheory.BigTop.Fun GlobalTheory.SqTop NumberField
 open Formalism.L2.Indef.Tree Formalism.L2.Indef.Tree.ArchimedeanLeafBounds.Cuts
-namespace GlobalTheory.BigTop.Fun.IntTie
-end GlobalTheory.BigTop.Fun.IntTie
 open GlobalTheory.BigTop.Fun.IntTie in
 theorem GlobalTheory.BigTop.Fun.int_tie_alt (hS : _root_.GlobalTheory.BigTop.Fun.SettingAtPoint)
     (hd : Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps)
     (hB : BotSmall) (hN : BotNe) : _root_.GlobalTheory.BigTop.Fun.LeafIntegrality @Comparison₂ := by
-  have hQ := _root_.GlobalTheory.BigTop.Fun.gBig_atTied_alt _ hS hd (gBig_dep (gBig_and hB hN))
+  have hQ := _root_.GlobalTheory.BigTop.Fun.gBig_atTied_alt _ hS hd (gBig_dep (GlobalTheory.SqTop.Model.gBig_and hB hN))
   refine _root_.GlobalTheory.BigTop.Fun.LeafConditions.mono hQ ?_
   intro D L hT Gi Gl Kc Y cX ex Csz p CF d C CH _ hd
   refine ⟨hd, fun hq => ?_⟩
@@ -1240,12 +1227,6 @@ theorem le_PPF {K : Type} [Field K] [NumberField K] [StarRing K] {Bs : DefBase K
     _ ≤ _ := by gcongr
 
 end GlobalTheory.BigTop.Fun.RamSum
-
-namespace GlobalTheory.BigTop.Fun
-
-open RamSum
-
-end GlobalTheory.BigTop.Fun
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1339,10 +1320,6 @@ theorem finite_tup (p : PtAt ex Csz) : Finite p.P.T := by
 
 
 end GlobalTheory.BigTop.Fun.SetFromSize
-
-namespace GlobalTheory.BigTop.Fun
-
-end GlobalTheory.BigTop.Fun
 
 end
 end -- clump:auto

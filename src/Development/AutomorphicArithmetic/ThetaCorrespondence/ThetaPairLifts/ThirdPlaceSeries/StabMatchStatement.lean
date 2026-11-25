@@ -720,11 +720,6 @@ theorem mulVec_sec_split {D : D7} {k : Type} [Field k] [ValuativeRel k] [Topolog
   rw [← h1, h2, mul_assoc, mul_left_comm, h3]
 
 end GlobalTheory.Core.Mi.LatMatch
-
-namespace GlobalTheory.Core.Mi.LatMatch
-
-
-end GlobalTheory.Core.Mi.LatMatch
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1049,23 +1044,6 @@ alias mt_mul := _root_.GlobalTheory.BesselCompare.mt_mul
 
 alias mt_one := _root_.GlobalTheory.BesselCompare.mt_one
 
-theorem mem_congGrp {V : HSp D} {I : Ideal (AE D)} {g : GA D V} :
-    g ∈ GlobalTheory.FinPl.congGrp V I ↔ ∀ i j, Formalism.L2.Theta.mt V g i j - (1 : Matrix (Fin V.rank) (Fin V.rank) (AE D)) i j ∈ I := by
-  unfold GlobalTheory.FinPl.congGrp
-  rw [MonoidHom.mem_ker]
-  constructor
-  · intro h i j
-    have := congrArg (fun x : GL (Fin V.rank) (AE D ⧸ I) => x.1 i j) h
-    rw [← Ideal.Quotient.eq]
-    simp [Formalism.L2.Theta.mt, Matrix.one_apply] at this ⊢
-    exact this
-  · intro h
-    ext i j
-    have := h i j
-    rw [← Ideal.Quotient.eq] at this
-    simp [Formalism.L2.Theta.mt, Matrix.one_apply] at this ⊢
-    exact this
-
 theorem idAt_le_idOff {v w : GlobalTheory.FinPl.Pl D} (h : v ≠ w) : idAt D (· = w) ≤ GlobalTheory.FinPl.idOff D (· = v) := by
   intro a ha
   unfold idAt at ha
@@ -1078,7 +1056,7 @@ theorem idAt_le_idOff {v w : GlobalTheory.FinPl.Pl D} (h : v ≠ w) : idAt D (·
 theorem mulVec_fix {S : HSp D} {v w : GlobalTheory.FinPl.Pl D} (hvw : v ≠ w) {h : GA D S} (hh : h ∈ grpAt S (· = w))
     {y : Fin S.rank → AE D} (hy : ∀ i, y i ∈ idAt D (· = v)) : Formalism.L2.Theta.mt S h *ᵥ y = y := by
   obtain ⟨ε, -, -, -, hA, hO⟩ := (_root_.GlobalTheory.FinPl.localComponents D (· = v)).1
-  have hh' := (mem_congGrp).1 hh
+  have hh' := (GlobalTheory.FinPl.PlacesAdeles.mem_congGrp).1 hh
   have key : (Formalism.L2.Theta.mt S h - 1) *ᵥ y = 0 := by
     funext i
     simp only [Matrix.mulVec, dotProduct, Pi.zero_apply]
@@ -1464,21 +1442,10 @@ theorem mul_mem_intAt {v : GlobalTheory.FinPl.Pl D} {a b : AE D} (ha : a ∈ int
     a * b ∈ intAt D (· = v) :=
   ⟨Ideal.mul_mem_right _ _ ha.1, by rw [map_mul]; exact GlobalTheory.FinPl.FrameLat.mul_mem_intAE ha.2 hb.2⟩
 
-theorem one_mem_intAf : (1 : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F) ∈ intAf D.host.F := fun w => by
-  rw [map_one]; exact one_mem _
-
-theorem incA_mem_intAE (x : 𝓞 D.host.E) : finPart D (incA D (x : D.host.E)) ∈ intAE D :=
-  AddSubgroup.subset_closure ⟨1, one_mem_intAf, x, rfl⟩
-
 theorem mul_incA_mem {v : GlobalTheory.FinPl.Pl D} {a : AE D} (ha : a ∈ intAt D (· = v)) (x : 𝓞 D.host.E) :
     a * incA D (x : D.host.E) ∈ intAt D (· = v) :=
   ⟨Ideal.mul_mem_right _ _ ha.1, by
-    rw [map_mul]; exact GlobalTheory.FinPl.FrameLat.mul_mem_intAE ha.2 (incA_mem_intAE x)⟩
-
-theorem cA_mem_intAt {v : GlobalTheory.FinPl.Pl D} {a : AE D} (ha : a ∈ intAt D (· = v)) : cA D a ∈ intAt D (· = v) := by
-  refine ⟨?_, (GlobalTheory.FinPl.FrameLat.cA_int_iff a).2 ha.2⟩
-  have h := (GlobalTheory.FinPlLoc.mem_idAt_iff _ a).1 ha.1
-  rw [GlobalTheory.FinPlLoc.mem_idAt_iff, ← GlobalTheory.FinPlLoc.cA_idem, ← map_mul, h]
+    rw [map_mul]; exact GlobalTheory.FinPl.FrameLat.mul_mem_intAE ha.2 (GlobalTheory.SplitIndex.finPart_incA_mem x)⟩
 
 theorem unit_at {v : GlobalTheory.FinPl.Pl D} {T : ℕ} (hT : (T : 𝓞 D.host.F) ∉ v.asIdeal) :
     GlobalTheory.FinPlLoc.idem D (· = v) * incA D ((T : D.host.E)⁻¹) ∈ intAt D (· = v) := by
@@ -1589,7 +1556,7 @@ theorem exists_isSDAt_line : ∀ (D : D7) (S A L : HSp D) (o : OrthDec S A L) (�
       obtain ⟨-, hyK⟩ := (hΛ y).1 hyΛ
       obtain ⟨-, hxK⟩ := (hΛ x).1 hx
       rw [hherm, hid]
-      have := mul_incA_mem (mul_mem_intAt (cA_mem_intAt hxK) hyK) (-(T : 𝓞 D.host.E))
+      have := mul_incA_mem (mul_mem_intAt (GlobalTheory.IwaPlace.UnimodNF.cA_mem_intAt' hxK) hyK) (-(T : 𝓞 D.host.E))
       simpa using this
     · intro h
       refine (hΛ y).2 ⟨hy, ?_⟩
@@ -1716,33 +1683,6 @@ open GlobalTheory.FinPl (latV Moves MonoAt OrthAt PrimAt idAt intAt grpAt colMul
 open GlobalTheory.SeeSaw (idV dI FI)
 open ValuativeRel
 open GlobalTheory.Core.Mi.LatMatch
-
-namespace GlobalTheory.Core.Mi.LatMatch
-
-theorem moves_emb0_iff_moves_of_monoAt : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (L : Lat S) (M : Lat S₀) (v : GlobalTheory.FinPl.Pl D) (γ : GA D S₀), MonoAt d L M v → (Moves S (d.emb0 γ) L L (· = v) ↔ Moves S₀ γ M M (· = v)) := by
-  intro D S S₀ ρ d L M v γ hL
-  have supp : ∀ {m n : ℕ} (A : Matrix (Fin m) (Fin n) (AE D)) (y : Fin n → AE D), (∀ i, y i ∈ idAt D (· = v)) →
-      ∀ i, (A *ᵥ y) i ∈ idAt D (· = v) := fun A y hy i => by
-    simp only [Matrix.mulVec, dotProduct]
-    exact Ideal.sum_mem _ fun k _ => Ideal.mul_mem_left _ _ (hy k)
-  have hc : ∀ {n : ℕ} (x : Matrix (Fin S.rank) (Fin n) (AE D)) (i : Fin n), colMul x i 0 = 0 := fun x i => by
-    funext k; simp [colMul]
-  have j0iff : ∀ w : Fin S₀.rank → AE D, d.j0 *ᵥ w ∈ latV S L (· = v) ↔ w ∈ latV S₀ M (· = v) := by
-    intro w
-    rw [hL]
-    simp only [Matrix.mulVec_mulVec, d.pX_j0, d.pY_j0, d.p0_j0, Matrix.zero_mulVec, Matrix.one_mulVec, Pi.zero_apply, hc,
-      zero_mem, implies_true, true_and]
-  constructor
-  · intro h w hw
-    have h1 := h (d.j0 *ᵥ w) (supp _ _ hw)
-    rw [j0iff, Matrix.mulVec_mulVec, d.wittDecomp_anisotropicEmbedding_inclAnisotropic, ← Matrix.mulVec_mulVec, j0iff] at h1
-    exact h1
-  · intro h y hy
-    rw [hL y, hL (mt S (d.emb0 γ) *ᵥ y)]
-    simp only [Matrix.mulVec_mulVec, d.wittDecomp_projX_anisotropicEmbedding, d.wittDecomp_projY_anisotropicEmbedding, d.wittDecomp_projAnisotropic_anisotropicEmbedding]
-    rw [← Matrix.mulVec_mulVec, ← h _ (supp _ _ hy)]
-
-end GlobalTheory.Core.Mi.LatMatch
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittCoreEmbeddingStabilisesIffCoreStabilises =====
@@ -1761,7 +1701,7 @@ open ValuativeRel
 open GlobalTheory.Core.Mi.LatMatch
 
 theorem _root_.GlobalTheory.T.wittCoreEmbedding_stabilises_iff_core_stabilises : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (L : Lat S) (M : Lat S₀) (v : GlobalTheory.FinPl.Pl D) (γ : GA D S₀), MonoAt d L M v → (Moves S (d.emb0 γ) L L (· = v) ↔ Moves S₀ γ M M (· = v)) := by
-  first | exact @GlobalTheory.Core.Mi.LatMatch.moves_emb0_iff_moves_of_monoAt
+  first | exact @GlobalTheory.FinPl.carriesLattice_wittEmbedding_iff_core
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittCoreEmbeddingStabilisesIffCoreStabilisesStatement =====

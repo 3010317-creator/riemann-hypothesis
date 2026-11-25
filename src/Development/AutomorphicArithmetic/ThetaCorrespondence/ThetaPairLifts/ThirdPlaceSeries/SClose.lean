@@ -1338,20 +1338,6 @@ theorem wd_sum_away {a b : ℕ} (ρ : G D.host.E D.nd.Om →* GL (Fin a) (Qbar l
   rw [T.sum, W.away l ι _ w hw, W.away l ι ρ w hw, W.away l ι ρ' w hw]
   exact wdOf_sumRep_away D l ι a b ρ ρ' w hw hρ hρ'
 
-theorem pst_of_dR (hB : GlobalTheory.Published.DeRhamPotSemistable) {m : ℕ} (r : G D.host.E D.nd.Om →* GL (Fin m) (Qbar l))
-    (hr : Continuous (fun g => ((r g : GL (Fin m) (Qbar l)) : Matrix (Fin m) (Fin m) (Qbar l))))
-    (w : PlE D.host) (hw : w ∈ placesOver D.host.E l) (hd : W.IsdRW l ι r w) {LL : FinExt l}
-    (B : LocBridge l D.host.E D.nd.Om (Dec (F := D.host.E) (D.nd.plOm.1 w)) ↥(OL LL)) (hj : GlobalTheory.Pst.Induces B) :
-    GlobalTheory.Pst.IsPstAt (D.loc l) B (GlobalTheory.Pst.resDec D.nd.plOm.1 r w) := by
-  obtain ⟨LL', hL, r₁, c₁, rfl⟩ := _root_.GlobalTheory.CompactRepField.exists_continuous_model D l m r hr B.LL
-  obtain ⟨-, H⟩ := W.loc l ι w hw _ B hj ((algebraMap ↥B.LL.1 (Om l)).comp B.toLL) (fun _ => rfl)
-  have hd' := (H LL' hL m r₁ c₁).2.1
-  have hm : GlobalTheory.Pst.IsModel B (GlobalTheory.Pst.resDec D.nd.plOm.1 (mapRep (algebraMap ↥LL'.1 (Qbar l)) r₁) w) LL'
-      (r₁.comp (Dec (F := D.host.E) (D.nd.plOm.1 w)).subtype) := ⟨hL, rfl⟩
-  have hdR : GlobalTheory.Pst.IsdRAt (D.loc l) B (GlobalTheory.Pst.resDec D.nd.plOm.1 (mapRep (algebraMap ↥LL'.1 (Qbar l)) r₁) w) :=
-    (hm.isdRAt_iff (D.loc l)).2 (hd'.1 hd)
-  exact hB.isPstAt (D.locT l) B _ (hr.comp continuous_subtype_val) hdR
-
 theorem wd_sum_above (hB : GlobalTheory.Published.DeRhamPotSemistable) {a b : ℕ} (ρ : G D.host.E D.nd.Om →* GL (Fin a) (Qbar l))
     (ρ' : G D.host.E D.nd.Om →* GL (Fin b) (Qbar l))
     (hρ : Continuous (fun g => ((ρ g : GL (Fin a) (Qbar l)) : Matrix (Fin a) (Fin a) (Qbar l))))
@@ -1366,11 +1352,11 @@ theorem wd_sum_above (hB : GlobalTheory.Published.DeRhamPotSemistable) {a b : �
   have tie : Nonempty (LocTied l (D.loc l) (D.locA l)) := ⟨D.locT l⟩
   apply (T.e w).injective
   rw [T.sum, E1, E2, E3]
-  have p31 := pst_of_dR D T W l ι hB _ c₃ w hw d₃ B1 j1
-  have p33 := pst_of_dR D T W l ι hB _ c₃ w hw d₃ B3 j3
-  have p11 := pst_of_dR D T W l ι hB _ hρ w hw d₁ B1 j1
-  have p21 := pst_of_dR D T W l ι hB _ hρ' w hw d₂ B1 j1
-  have p22 := pst_of_dR D T W l ι hB _ hρ' w hw d₂ B2 j2
+  have p31 := GlobalTheory.ConjGal.pst_of_dR D T W l ι hB _ c₃ w hw d₃ B1 j1
+  have p33 := GlobalTheory.ConjGal.pst_of_dR D T W l ι hB _ c₃ w hw d₃ B3 j3
+  have p11 := GlobalTheory.ConjGal.pst_of_dR D T W l ι hB _ hρ w hw d₁ B1 j1
+  have p21 := GlobalTheory.ConjGal.pst_of_dR D T W l ι hB _ hρ' w hw d₂ B1 j1
+  have p22 := GlobalTheory.ConjGal.pst_of_dR D T W l ι hB _ hρ' w hw d₂ B2 j2
   rw [wdAt_bridge l (D.loc l) (D.locA l) tie ι D.host.E D.nd.Om (D.nd.plOm.1 w) w _ _ B3 B1 (D.nd.plOm.2 w) j3 j1 (a + b) _
       (c₃.comp continuous_subtype_val) p33 p31,
     wdAt_bridge l (D.loc l) (D.locA l) tie ι D.host.E D.nd.Om (D.nd.plOm.1 w) w _ _ B2 B1 (D.nd.plOm.2 w) j2 j1 b _

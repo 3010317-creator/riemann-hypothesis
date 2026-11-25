@@ -847,14 +847,6 @@ namespace GlobalTheory.SkewSplitDual
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
-theorem hE_transpose (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) (x y : Fin n → E) :
-    hE σ Jᵀ x y = form σ J y x := by
-  simp only [hE, Formalism.UG.hform, form, dotProduct, Matrix.mulVec, Matrix.transpose_apply, Finset.mul_sum]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun i _ => ?_
-  simp only [AlgHom.coe_toRingHom]
-  ring
-
 theorem form_add_right (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) (y x x' : Fin n → E) :
     form σ J y (x + x') = form σ J y x + form σ J y x' := by
   have : (fun i => σ ((x + x') i)) = (fun i => σ (x i)) + fun i => σ (x' i) := funext fun i => by simp
@@ -876,7 +868,7 @@ theorem eq_dualGlob {σ : E →ₐ[F] E} {n : ℕ} {J : Matrix (Fin n) (Fin n) E
     L = SelfDual.dualGlob σ Jᵀ ((differentIdeal ℤ (𝓞 F)).map (algebraMap (𝓞 F) (𝓞 E)) • L) := by
   ext y
   rw [SelfDual.mem_dualGlob]
-  simp only [hE_transpose]
+  simp only [GlobalTheory.HermSelfDualLoc.hE_transpose]
   constructor
   · intro hy x hx
     refine Submodule.smul_induction_on hx (fun i hi x hx => ?_) (fun a b ha hb => ?_)

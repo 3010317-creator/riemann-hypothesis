@@ -723,17 +723,6 @@ open scoped GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
 
 namespace GlobalTheory.ThetaDer
 
-theorem schr_comp_apply {R : Type} [CommRing R] [Invertible (2 : R)] (ψ : AddChar R ℂ) {κ : Type} [Fintype κ]
-    (w w' : (κ → R) × (κ → R)) (Φ : (κ → R) → ℂ) (x : κ → R) :
-    GlobalTheory.WeilM.schr ψ w (GlobalTheory.WeilM.schr ψ w' Φ) x =
-      ψ (⅟(2 : R) * (w.1 ⬝ᵥ w'.2 - w'.1 ⬝ᵥ w.2)) * GlobalTheory.WeilM.schr ψ (w + w') Φ x := by
-  have hh : ⅟(2 : R) + ⅟(2 : R) = 1 := by rw [← two_mul, mul_invOf_self]
-  simp only [GlobalTheory.WeilM.schr, Prod.fst_add, Prod.snd_add, add_assoc]
-  simp only [← mul_assoc, ← AddChar.map_add_eq_mul]
-  congr 2
-  simp only [dotProduct_add, add_dotProduct]
-  linear_combination (-(w.1 ⬝ᵥ w'.2)) * hh
-
 theorem exists_equiv {A : Type} [CommRing A] {m k d : ℕ} {G H : Matrix (Fin m) (Fin m) A} (hHG : H * G = 1)
     (hGH : G * H = 1) (e : Fin k ≃ Fin d) :
     ∃ T : Matrix (Fin m) (Fin k) A ≃+ Matrix (Fin d) (Fin m) A,
@@ -753,7 +742,7 @@ private theorem rho_add_twisted_operators {R : Type} [CommRing R] [Invertible (2
     (Φ : (κ → R) → ℂ) (z : κ → R) :
     co.rho ψ (p + q) Φ z = ψ (-(⅟(2 : R) * B p q)) * co.rho ψ p (co.rho ψ q Φ) z := by
   simp only [GlobalTheory.WeilM.Darboux.rho]
-  rw [schr_comp_apply, ← co.form, map_add (f := _), ← mul_assoc, ← AddChar.map_add_eq_mul, neg_add_cancel,
+  rw [GlobalTheory.HeisLineTransfer.schr_schr_apply, ← co.form, map_add (f := _), ← mul_assoc, ← AddChar.map_add_eq_mul, neg_add_cancel,
     AddChar.map_zero_eq_one, one_mul]
 
 
@@ -969,18 +958,6 @@ noncomputable section
 
 namespace GlobalTheory.ThetaRealDeriv
 
-theorem schr_comp_apply {R : Type} [CommRing R] [Invertible (2 : R)] (ψ : AddChar R ℂ) {κ : Type} [Fintype κ]
-    (w w' : (κ → R) × (κ → R)) (Φ : (κ → R) → ℂ) (x : κ → R) :
-    GlobalTheory.WeilM.schr ψ w (GlobalTheory.WeilM.schr ψ w' Φ) x =
-      ψ (⅟(2 : R) * (w.1 ⬝ᵥ w'.2 - w'.1 ⬝ᵥ w.2)) * GlobalTheory.WeilM.schr ψ (w + w') Φ x := by
-  simp only [GlobalTheory.WeilM.schr, ← mul_assoc, ← AddChar.map_add_eq_mul, add_assoc]
-  congr 2
-  simp only [Prod.fst_add, Prod.snd_add, add_dotProduct, dotProduct_add]
-  rw [dotProduct_comm w'.1 w.2]
-  first
-    | linear_combination (w.1 ⬝ᵥ w'.2) * invOf_mul_self (2 : R)
-    | linear_combination (-(w.1 ⬝ᵥ w'.2)) * invOf_mul_self (2 : R)
-
 theorem exists_transpose_mul_equiv {A : Type} [CommRing A] {α β γ : Type} [Fintype β] [DecidableEq β] (e : γ ≃ α)
     {G H : Matrix β β A} (hHG : H * G = 1) :
     ∃ T : Matrix β γ A ≃+ Matrix α β A, (∀ u, T u = uᵀ.submatrix e.symm id * G) ∧
@@ -1073,7 +1050,7 @@ theorem exists_line (D : D7) (S X : HSp D) {d : ℕ} (e : Fin d ≃ Fin X.rank)
           M.co.rho Bs.ψ (u + u') Φ x := by
       intro x
       simp only [GlobalTheory.WeilM.Darboux.rho, map_add (f := _)]
-      exact schr_comp_apply Bs.ψ _ _ _ x
+      exact GlobalTheory.HeisLineTransfer.schr_schr_apply Bs.ψ _ _ _ x
     simp only [heisO]
     rw [← map_add (f := _), hth]
     simp only [GlobalTheory.WeilM.thetaSum, e1, tsum_mul_left]

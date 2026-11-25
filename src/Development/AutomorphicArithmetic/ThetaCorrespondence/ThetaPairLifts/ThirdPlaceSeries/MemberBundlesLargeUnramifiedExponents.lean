@@ -300,10 +300,6 @@ theorem resChar_of_below {D D' : D7} {v : D.what₂.places.Pl} {v' : D'.what₂.
 
 end GlobalTheory.Mem.R3.Rw.Untw
 
-namespace GlobalTheory.Mem.R3.Rw
-
-end GlobalTheory.Mem.R3.Rw
-
 end
 end -- clump:auto
 end -- clump:auto
@@ -321,33 +317,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar Formalism.IndefR.p
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.Mem.R3.Tr
 
 noncomputable section
-
-namespace GlobalTheory.Mem.R3.Rw
-
-theorem exists_lt_grpTrue (hG : GlobalTheory.Published.GreenCuspidal) {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} (w : ColW B f T)
-    (hO : K.Over B.toPre) (hX : B.fields.Ok) (G : GJStage B w.C) :
-    ∃ Z : w.Lt, Z.G = G ∧ GrpTrue Z.N f ∧ GrpAt (w.st Z) w.I ∧ DV.KapDef (w.D Z) := by
-  obtain ⟨R⟩ := GlobalTheory.Mem.Df.rowsDef_nonempty w.I w.ok w.pins w.l hX
-  obtain ⟨kb, ks, hk⟩ := GlobalTheory.Mem.Df.Model.exists_ka B
-  let W' : RowsRest B w.C :=
-    { R.W with
-      eOp := fun _ => 0
-      eOp_idem := fun _ => LinearMap.comp_zero _
-      eOp_sa := fun _ => LinearMap.IsSymmetric.zero
-      kaBig := kb
-      kaSmall := ks }
-  obtain ⟨V, -⟩ := GlobalTheory.Mem.DivModel.exists_divStage B w.C W'
-  obtain ⟨S, -⟩ := GlobalTheory.Mem.SProv.exists_sStage_true K B w.C W' G.cd hO (GlobalTheory.Mem.Df.cols_pos w.I w.ok w.pins w.l hX)
-    (show R.W.Drows ≤ R.W.Dall by rw [R.std.drows, R.std.dall])
-  have hMt : ∀ (μ : w.C.Tup) (j : ℕ), W'.eMt μ j = 0 := fun μ j => by
-    haveI := R.std.mt μ j
-    exact LinearMap.ext fun _ => Subsingleton.elim _ _
-  obtain ⟨N, -, -, hN, -⟩ := GlobalTheory.Mem.Top.exists_nStage_grpTrue hG B w.C W' R.std.sha (fun j v _ _ => R.std.eta j v)
-    (fun _ => rfl) hMt f
-  refine ⟨⟨W', V, S, N, G⟩, rfl, hN, GlobalTheory.Mem.R3.Model.grpAt_of_grpTrue (w.st ⟨W', V, S, N, G⟩) w.I w.ok (by show GrpTrue N w.I.C; rw [w.C_eq]; exact hN),
-    hk w.C W' rfl rfl V S N G⟩
-
-end GlobalTheory.Mem.R3.Rw
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -754,7 +723,7 @@ theorem dat_saturated_of_untw : GlobalTheory.Published.GreenCuspidal → DatExS 
     (StepW.of_all fun K B f T w hO _ H => ?_)
   obtain ⟨⟨⟨⟨⟨⟨pin⟩, hDS'⟩, hHL'⟩, hDE'⟩, G, hG2⟩, hf0, hsd⟩ := H
   intro hT
-  obtain ⟨Z, rfl, hGT, hGA, hKap⟩ := exists_lt_grpTrue hG w hO pin.hX G
+  obtain ⟨Z, rfl, hGT, hGA, hKap⟩ := GlobalTheory.Mem.R3.Rw.Second.exists_lt_of_stage hG w hO pin.hX G
   have hVol := (hG2 Z.W Z.V Z.S Z.N).1
   obtain ⟨z₁, hF₁⟩ := hDS' Z pin.hX hGT hGA hVol
   have hL₁ := hHL' Z pin.hX _ z₁ hGT hGA hF₁.1 hF₁.2.1
@@ -832,19 +801,6 @@ namespace GlobalTheory.Mem.R3.LiftsAt
 
 open GlobalTheory.Mem.Top.GroupRetwisting
 
-theorem serClause_of_typesTrue (hG : GlobalTheory.Published.GreenCuspidal) (D : D7) {P W} (h : TypesTrue D.ntypes P W) : SerClause D := by
-  intro k
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
-  have hζ : Formalism.L2.NT.IsGenSys (GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen := by
-    intro d hd
-    refine ⟨(GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen_order d hd, fun d' hdd hd' => ?_⟩
-    obtain ⟨e, rfl⟩ := hdd
-    exact (GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen_norm d e hd (Nat.pos_of_mul_pos_left hd')
-  obtain ⟨O, -, -, hO⟩ := GlobalTheory.CuspTwist.exists_labelMap_twist_cuspLabel (ZMod (D.host.g k)) _
-    (_root_.GlobalTheory.GreenParam.cuspParam_of_green hG (D.host.g k) (D.ntypes.teichC k) (D.ntypes.teichC_inj k) _ hζ)
-  have hr : 1 ≤ D.R.r := by unfold Ranks.r; have := D.R.two_le_m; omega
-  exact ⟨_, O, fun f => (h.ser k f).trans (_root_.GlobalTheory.SerCmp.eSerC_eq_eSerO hG _ _ _ _ _ (h.teich k) O hO D.R.r f hr)⟩
-
 def Closes (X : Stages) : Prop :=
   ∀ (px : PreX X.B.toPre) (I : ColIn X.B px) (hX : X.B.fields.Ok) (Tw : TwDat X.B) (Wt : Set X.B.places.Pl) (z : Dat X I hX Tw Wt),
     TiesB z.R z.F → TiesG z.core z.R z.geo.κ z.geo.v₀ z.geo.O → GlobalTheory.CuspMult.MultEq z.R.toRealDat → z.R.toRealDat.LIntegral →
@@ -866,7 +822,7 @@ theorem ties_at (hG : GlobalTheory.Published.GreenCuspidal) {B : Base} {f : Fr B
     exact hN
   have hch := z.pins.char
   refine ⟨⟨ok, hch, hEx, host, par, B.ccK_top, z.pins.keep.guard,
-    GlobalTheory.LiftRows.Inh.goodTypes_of_typesTrue hch.base.lev ty, serClause_of_typesTrue hG _ ty,
+    GlobalTheory.LiftRows.Inh.goodTypes_of_typesTrue hch.base.lev ty, GlobalTheory.Mem.R3.Rw.AtDatumEvaluation.serClause_of_typesTrue hG _ ty,
     _root_.GlobalTheory.Hk3.FamModel.inertJunk_col _ _ _ hX _ _ _ _ _ _, z.pins.trSem, z.pins.keep.std, z.pins.phs, hn⟩,
     TiesG.of_dat z hU hI (fun i => ?_) (CoverAt.coverField_of_weberLev hW w Z hX Wt z)⟩
   exact GlobalTheory.OneMapRow3.oneFormMapRow_threeLevel_of_characterisation _ _ _ _ _ _ z.core z.R z.F z.geo.κ z.geo.v₀ z.geo.O (fun _ => 1) hn hch hEx ⟨z.geo.fw⟩ hI i

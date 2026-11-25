@@ -494,14 +494,6 @@ namespace GlobalTheory.DepthZeroSer
 
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
-theorem nontrivial_of_irr {G : Type} [Group G] [TopologicalSpace G] (τ : GlobalTheory.SmGL.IrrRep G) : Nontrivial τ.V := by
-  haveI := τ.irr
-  by_contra h
-  rw [not_nontrivial_iff_subsingleton] at h
-  apply (bot_ne_top : (⊥ : Subrepresentation τ.ρ) ≠ ⊤)
-  ext x
-  simp [Subsingleton.elim x 0]
-
 theorem serFix_of_locS {L : Type} [Field L] [NumberField L] [IsCMField L] {n g : ℕ} [Fact g.Prime]
     (π : NG.FinTyp L n) (s : SplitPlace L) (τ : GlobalTheory.SmGL.IrrRep (GL (Fin n) (s.w.adicCompletion L)))
     (j : ℚ_[g] ≃+* s.w.adicCompletion L) (hj : Continuous j) (a : MonoidAlgebra ℂ (GL (Fin n) (ZMod g)))
@@ -522,7 +514,7 @@ theorem serFix_of_locS {L : Type} [Field L] [NumberField L] [IsCMField L] {n g :
     ext a b
     simp [θ]
   have hI := _root_.GlobalTheory.SplitAdelic.main L n s
-  haveI := nontrivial_of_irr τ
+  haveI := GlobalTheory.CompanionTheory.BZCuspPair.nontrivial_of_irr τ
   intro ℓ hℓ φ hφS hφfix
   let N : {y : GAf L n // TrivOutside {s.v}ᶜ y} → Submodule ℂ (GAf L n → ℂ) :=
     fun y => LinearMap.range ((NG.rt L n y.1).comp T)

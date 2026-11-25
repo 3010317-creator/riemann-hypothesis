@@ -97,22 +97,6 @@ theorem emb_bij : Function.Bijective (fun v : InfinitePlace F => RingHom.equivRa
   · rw [h] at hr ⊢
     exact ComplexEmbedding.isReal_iff.1 (ComplexEmbedding.isReal_conjugate_iff.1 hr)
 
-theorem sum_reAt (x : F) : ∑ v, reAt v x = ((Algebra.trace ℚ F x : ℚ) : ℝ) := by
-  apply Complex.ofReal_injective
-  rw [Complex.ofReal_sum]
-  simp_rw [coe_reAt]
-  rw [show (((Algebra.trace ℚ F x : ℚ) : ℝ) : ℂ) = algebraMap ℚ ℂ (Algebra.trace ℚ F x) by simp,
-    trace_eq_sum_embeddings]
-  exact Fintype.sum_bijective _ emb_bij _ _ (fun v => rfl)
-
-theorem prod_reAt (x : F) : ∏ v, reAt v x = ((Algebra.norm ℚ x : ℚ) : ℝ) := by
-  apply Complex.ofReal_injective
-  rw [Complex.ofReal_prod]
-  simp_rw [coe_reAt]
-  rw [show (((Algebra.norm ℚ x : ℚ) : ℝ) : ℂ) = algebraMap ℚ ℂ (Algebra.norm ℚ x) by simp,
-    Algebra.norm_eq_prod_embeddings]
-  exact Fintype.prod_bijective _ emb_bij _ _ (fun v => rfl)
-
 theorem card_places : Fintype.card (InfinitePlace F) = Module.finrank ℚ F := by
   rw [← AlgHom.card ℚ F ℂ]
   exact Fintype.card_congr (Equiv.ofBijective _ emb_bij)
@@ -232,7 +216,7 @@ theorem det_aM (ω : Module.Basis (InfinitePlace F) ℚ F) (a : F) :
     simp [aM, Matrix.diagonal_mul, map_mul]
   rw [h, Matrix.det_mul, Matrix.det_diagonal]
   congr 1
-  rw [← prod_reAt]
+  rw [← GlobalTheory.HilbertThetaSeries.RatSlash.prod_reAt]
   exact Finset.prod_congr rfl (fun v _ => (reAt_eq v a).symm)
 
 noncomputable def bM (ω : Module.Basis (InfinitePlace F) ℚ F) (a : F) (R : Matrix κ κ ℝ) :
@@ -264,7 +248,7 @@ theorem bM_transpose (G : Matrix κ κ ℤ) (R : Matrix κ κ ℝ) (hR : Rᵀ * 
     simp only [BF, dotProduct, Matrix.mulVec, Pi.single_apply, Matrix.map_apply, Pi.smul_apply, smul_eq_mul,
       mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
     exact Finset.sum_congr rfl fun i _ => by ring
-  rw [hB, ← sum_reAt]
+  rw [hB, ← GlobalTheory.HilbertThetaSeries.RatSlash.sum_reAt]
 
   simp only [reAt_eq, map_sum, map_mul, map_intCast, Matrix.mulVec, dotProduct, Matrix.transpose_apply,
   bM, aM, eM, Matrix.kroneckerMap_apply, Matrix.of_apply, AddMonoidHom.coe_mk, ZeroHom.coe_mk,

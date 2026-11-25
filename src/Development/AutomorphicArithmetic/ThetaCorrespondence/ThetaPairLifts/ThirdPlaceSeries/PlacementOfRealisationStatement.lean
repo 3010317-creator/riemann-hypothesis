@@ -867,13 +867,10 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.ConjAutSmooth
 
-theorem castGA_mem {I I' : Formalism.MainNotions.S.AutInst} (e : I = I') (x : I.GA) : castGA e x ∈ I'.GFset ↔ x ∈ I.GFset := by
-  subst e; rfl
-
 theorem iotaX_rat {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : X.B.I = Formalism.L2.SG.InstExistsPf.instOf D)
     {γ : GA D (D.sp.Y 0)} (hγ : γ ∈ GQ (D.sp.Y 0)) : iotaX X h γ ∈ X.B.I.GFset := by
   show castGA h.symm (Formalism.IndefR.RationalEmbedding.iota D γ) ∈ X.B.I.GFset
-  rw [castGA_mem]
+  rw [GlobalTheory.EvalNormTransfer.castGA_mem_GFset]
   exact (Formalism.IndefR.RationalEmbedding.iota_rat D γ).1 hγ
 
 
@@ -1508,19 +1505,13 @@ open scoped TensorProduct
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ}
 
-theorem frGL_mul_apply (t β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (y : GL (Fin n) (Formalism.L2.Herm.intAf F E)) :
-    Formalism.L2.DIV.frGL (t * β) y = t * Formalism.L2.DIV.frGL β y * t⁻¹ := by
-  simp only [Formalism.L2.DIV.frGL, MonoidHom.coe_comp, Function.comp_apply, MulEquiv.coe_toMonoidHom,
-    MulAut.conj_apply, mul_inv_rev]
-  group
-
 theorem redFn_conj (β t x : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (PP : Formalism.L2.DIV.Pl E) :
     Formalism.L2.DIV.redFn β PP (t⁻¹ * x * t) = Formalism.L2.DIV.redFn (t * β) PP x := by
   classical
   by_cases hx : x ∈ Formalism.L2.DIV.St (t * β)
   · obtain ⟨y, rfl⟩ := MonoidHom.mem_range.1 hx
     have hy : t⁻¹ * Formalism.L2.DIV.frGL (t * β) y * t = Formalism.L2.DIV.frGL β y := by
-      rw [frGL_mul_apply]
+      rw [GlobalTheory.FrameConj.frGL_mul_left]
       group
     rw [hy, Formalism.L2.DIV.redFn_frGL, Formalism.L2.DIV.redFn_frGL]
   · have hx' : t⁻¹ * x * t ∉ Formalism.L2.DIV.St β := by
@@ -1528,7 +1519,7 @@ theorem redFn_conj (β t x : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (PP :
       obtain ⟨y, hy⟩ := MonoidHom.mem_range.1 hmem
       apply hx
       refine MonoidHom.mem_range.2 ⟨y, ?_⟩
-      rw [frGL_mul_apply, hy]
+      rw [GlobalTheory.FrameConj.frGL_mul_left, hy]
       group
     simp only [Formalism.L2.DIV.redFn, Formalism.L2.DIV.ext1, dif_neg hx, dif_neg hx']
 

@@ -195,15 +195,6 @@ open UpperTheory.V.U3 UpperTheory.V.Base UpperTheory.V.Th.End3
 
 attribute [local instance 10000] IsDiscreteValuationRing.toIsLocalRing
 
-private theorem block_triangular_diag_mul {k : Type} [CommRing k] {n : ℕ} (A B : Matrix (Fin n) (Fin n) k)
-    (hA : A.BlockTriangular id) (hB : B.BlockTriangular id) (i : Fin n) :
-    (A * B) i i = A i i * B i i := by
-  rw [Matrix.mul_apply]
-  refine Finset.sum_eq_single i (fun j _ hj => ?_) (by simp)
-  rcases lt_or_gt_of_ne hj with h | h
-  · rw [hA (show id j < id i from h), zero_mul]
-  · rw [hB (show id i < id j from h), mul_zero]
-
 private theorem flag_match {H k : Type} [Field k] (T : H → Matrix (Fin 3) (Fin 3) k) (ψ : Fin 3 → H → k)
     (D : Fin 3 → H → k) (Q : GL (Fin 3) k)
     (tri : ∀ g, (Q.val * T g * (Q⁻¹).val).BlockTriangular id)
@@ -239,7 +230,7 @@ private theorem flag_match {H k : Type} [Field k] (T : H → Matrix (Fin 3) (Fin
           (T (g 2) - ψ 2 (g 2) • 1) * (Q⁻¹).val := by simp only [Matrix.mul_assoc]
       _ = _ := by rw [hQ]; simp only [Matrix.mul_one, Matrix.mul_assoc]
   have h4 := congrFun (congrFun h0 b) b
-  rw [block_triangular_diag_mul _ _ (hUt 0) ((hUt 1).mul (hUt 2)), block_triangular_diag_mul _ _ (hUt 1) (hUt 2)] at h4
+  rw [UpperTheory.Reformulated.B.Qk9.tri_diag _ _ (hUt 0) ((hUt 1).mul (hUt 2)), UpperTheory.Reformulated.B.Qk9.tri_diag _ _ (hUt 1) (hUt 2)] at h4
   exact mul_ne_zero (hUd 0) (mul_ne_zero (hUd 1) (hUd 2)) h4
 
 private theorem theta_tri {k : Type} [Field k] (b : GL (Fin 3) k) (hb : b.val.BlockTriangular id) :
@@ -250,7 +241,7 @@ private theorem theta_tri {k : Type} [Field k] (b : GL (Fin 3) k) (hb : b.val.Bl
     exact Matrix.blockTriangular_inv_of_blockTriangular hb
   have hd : ∀ i, ((b⁻¹ : GL (Fin 3) k)).val i i = (b.val i i)⁻¹ := fun i => by
     have h1 := congrFun (congrFun (Units.mul_inv b) i) i
-    rw [block_triangular_diag_mul _ _ hb hc, Matrix.one_apply_eq] at h1
+    rw [UpperTheory.Reformulated.B.Qk9.tri_diag _ _ hb hc, Matrix.one_apply_eq] at h1
     exact eq_inv_of_mul_eq_one_right h1
   have he : ∀ i j, (theta b).val i j = ((b⁻¹ : GL (Fin 3) k)).val j.rev i.rev := fun i j => by
     rw [theta_val, Matrix.mul_apply, Finset.sum_eq_single j.rev]

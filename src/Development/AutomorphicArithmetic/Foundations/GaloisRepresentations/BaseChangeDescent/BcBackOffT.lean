@@ -1212,12 +1212,9 @@ theorem pair_eigenvalue_add (w : Pl E) (ξa : Fin a → ℂˣ) (ξb : Fin b → 
 
 theorem dl_ne {N : ℕ} (w : Pl E) (x : Fin N → ℤ) : dl w x ≠ 0 := zpow_ne_zero _ (qh_ne w)
 
-theorem pw_ne {N : ℕ} (ξ : Fin N → ℂˣ) (x : Fin N → ℤ) : pw ξ x ≠ 0 :=
-  Finset.prod_ne_zero_iff.2 fun i _ => Units.ne_zero _
-
 theorem pair_eigenvalue_ne_zero (w : Pl E) (ξa : Fin a → ℂˣ) (ξb : Fin b → ℂˣ) (x : Fin a → ℤ) (y : Fin b → ℤ) :
     ev2 w ξa ξb x y ≠ 0 :=
-  mul_ne_zero (mul_ne_zero (dl_ne w x) (pw_ne ξa x)) (mul_ne_zero (dl_ne w y) (pw_ne ξb y))
+  mul_ne_zero (mul_ne_zero (dl_ne w x) (GlobalTheory.CompanionTheory.ExtCharU.pw_ne_zero ξa x)) (mul_ne_zero (dl_ne w y) (GlobalTheory.CompanionTheory.ExtCharU.pw_ne_zero ξb y))
 
 theorem dl_zero {N : ℕ} (w : Pl E) : dl w (0 : Fin N → ℤ) = 1 := by
   unfold dl

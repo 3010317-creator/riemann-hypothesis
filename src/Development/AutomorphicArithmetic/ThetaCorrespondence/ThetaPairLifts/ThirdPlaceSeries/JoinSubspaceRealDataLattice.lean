@@ -184,15 +184,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.Mem.SJ
 
-theorem exists_im_ne_zero_of_totallyComplex {K : Type} [Field K] [_root_.NumberField.IsTotallyComplex K] (σ : K →+* ℂ) :
-    ∃ a, (σ a).im ≠ 0 := by
-  by_contra h
-  push Not at h
-  refine IsTotallyComplex.complexEmbedding_not_isReal σ ?_
-  rw [ComplexEmbedding.isReal_iff]
-  ext a
-  exact Complex.conj_eq_iff_im.2 (h a)
-
 theorem lin_single_cpt {K : Type} [Field K] (σ : K →+* ℂ) {d : ℕ} {V W : Type} [AddCommGroup V] [Module K V]
     [AddCommGroup W] [Module ℂ W] (e : (Fin d → K) ≃ₗ[K] V) (j : V →ₛₗ[σ] W) (x : Fin d → K) :
     lin (fun k => j (e (Pi.single k 1))) (cpt σ x) = j (e x) := by
@@ -234,7 +225,7 @@ theorem rows_eq_rows_level : ∀ (D : D7) (Bs : DefBase D.what₂.LL) (A : DefAm
   · obtain ⟨z, rfl⟩ := hsurj F
     rw [key]
     have hd : DenseRange (cpt D.what₂.embLL : (Fin ((lv (fc X.zs) true).dQ Bs.μ0) → D.what₂.LL) → _) :=
-      DenseRange.piMap (fun _ => denseRange_of_im_ne_zero D.what₂.embLL (exists_im_ne_zero_of_totallyComplex _))
+      DenseRange.piMap (fun _ => denseRange_of_im_ne_zero D.what₂.embLL (GlobalTheory.Mem.SJ.colNorm_exists_im_ne_zero _))
     have hcj : Continuous (cj s) := by
       cases s
       · exact continuous_id

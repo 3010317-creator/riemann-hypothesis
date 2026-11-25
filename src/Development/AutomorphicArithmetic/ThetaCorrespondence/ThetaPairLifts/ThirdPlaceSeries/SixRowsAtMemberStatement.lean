@@ -1014,23 +1014,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC Matrix
 attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Host.cmStar
 
-namespace GlobalTheory.PerDecAtRef
-
-
-open Formalism.BasicNotions in
-theorem vAdd_nonneg_of_int {K : Type} [Field K] [NumberField K] (la : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers K))
-    (a : NumberField.RingOfIntegers K) : 0 ≤ vAdd la (a : K) := by
-  have h : la.valuation K (a : K) ≤ 1 := la.valuation_le_one a
-  unfold vAdd
-  rcases eq_or_ne (la.valuation K (a : K)) 0 with h0 | h0
-  · rw [h0, WithZero.log_zero]; simp
-  · have h1 : WithZero.log (la.valuation K (a : K)) ≤ 0 := by
-      rw [WithZero.log_le_iff_le_exp h0]
-      simpa using h
-    exact neg_nonneg.mpr h1
-
-end GlobalTheory.PerDecAtRef
-
 
 
 theorem GlobalTheory.PerDecAtRef.perDec0At_std : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), GlobalTheory.PerQ.RowInt I l Z → ∀ (u : B.Word) (Ch : ℕ → Type) (chOf : ∀ i, ((I.rec7 l Z).mem u).C.cls i → Ch i) (F : FormsTiedSym (I.rec7 l Z) u Ch chOf), I.StdF l Z u F → Formalism.MainNotions.RT.PeriodPointConditions.PerDec0At F := by
@@ -1081,7 +1064,7 @@ theorem GlobalTheory.PerDecAtRef.perDec0At_std : ∀ {B : Base} {X : PreX B.toPr
       (funext fun c' => by by_cases h : c' = c <;> simp [h])
   · intro w
     right
-    exact GlobalTheory.PerDecAtRef.vAdd_nonneg_of_int _ a
+    exact Formalism.MainNotions.ThetaNormsAndLinks.vAdd_nonneg_int _ a
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.VAddNonnegOfInt =====

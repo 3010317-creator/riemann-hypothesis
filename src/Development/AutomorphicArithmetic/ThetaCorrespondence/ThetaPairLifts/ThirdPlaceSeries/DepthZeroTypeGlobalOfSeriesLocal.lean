@@ -1386,10 +1386,6 @@ theorem eq_of_rootsBar_eq {f f' : (ZMod g)[X]} (hf : f.Monic) (hf' : f'.Monic)
     (IsAlgClosed.splits (f'.map _)).eq_prod_roots_of_monic (hf'.map _)]
   exact congrArg (fun m => (Multiset.map (fun x => X - C x) m).prod) h
 
-theorem rootsBar_pow (c : ZMod g) (t : ℕ) :
-    Formalism.CyclotomicNorms.rootsBar ((X - C c) ^ t) = t • {algebraMap (ZMod g) (Formalism.CyclotomicNorms.Fbar g) c} := by
-  rw [Formalism.CyclotomicNorms.rootsBar, Polynomial.map_pow, Polynomial.map_sub, map_X, map_C, roots_pow, roots_X_sub_C]
-
 theorem eq_of_teich (τ : Formalism.CyclotomicNorms.Fbar g →* ℂ) (hτ : Function.Injective τ) {f f' : (ZMod g)[X]} (hf : f.Monic)
     (hf' : f'.Monic) (c : ZMod g) (t : ℕ)
     (h : ((Formalism.CyclotomicNorms.rootsBar (f * (X - C c) ^ t)).map fun x => X - C (τ x)).prod =
@@ -1401,7 +1397,7 @@ theorem eq_of_teich (τ : Formalism.CyclotomicNorms.Fbar g →* ℂ) (hτ : Func
     rw [Polynomial.map_mul, roots_mul]
     rw [← Polynomial.map_mul]
     exact Polynomial.map_ne_zero h0
-  rw [hm, rootsBar_pow, Multiset.map_add (f := _), Multiset.prod_add, Multiset.map_nsmul, Multiset.prod_nsmul,
+  rw [hm, GlobalTheory.WeilDeligne.WD.rootsBar_X_sub_C_pow, Multiset.map_add (f := _), Multiset.prod_add, Multiset.map_nsmul, Multiset.prod_nsmul,
     Multiset.map_singleton, Multiset.prod_singleton] at h
   have h2 := mul_right_cancel₀ (pow_ne_zero t (X_sub_C_ne_zero _)) h
   have h3 := congrArg Polynomial.roots h2

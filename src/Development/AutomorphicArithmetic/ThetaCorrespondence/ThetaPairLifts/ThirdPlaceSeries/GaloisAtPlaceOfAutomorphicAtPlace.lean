@@ -135,11 +135,6 @@ theorem scaleRoots_prod (M : Multiset K) (c : K) :
     rw [Multiset.map_cons, Multiset.map_cons, Multiset.prod_cons, Multiset.prod_cons, mul_scaleRoots_of_noZeroDivisors, ih,
       sub_eq_add_neg, ← C_neg, X_add_C_scaleRoots, neg_mul, C_neg, ← sub_eq_add_neg]
 
-theorem reverse_prod (M : Multiset K) : (M.map fun m => X - C m).prod.reverse = (M.map fun m => 1 - C m * X).prod := by
-  induction M using Multiset.induction_on with
-  | empty => simpa using reverse_C (1 : K)
-  | cons a s ih => rw [Multiset.map_cons, Multiset.map_cons, Multiset.prod_cons, Multiset.prod_cons, reverse_mul_of_domain, ih, _root_.Formalism.L2.NR.reverse_X_sub_C]
-
 theorem reverse_prod_eq_hecke {n q : ℕ} (M : Multiset K) (hM : M.card = n) (a : ℕ → K)
     (ha : ∀ k ≤ n, (q : K) ^ (k * (k - 1) / 2) * a k = M.esymm k) :
     (M.map fun m => X - C m).prod.reverse = heckePolyOf n q a := by
@@ -236,7 +231,7 @@ theorem string_of_dvd (ι : K ≃+* ℂ) {q n t : ℕ} (hq : q ≠ 0) (ht : t �
   have h1 := Polynomial.map_dvd ι.toRingHom hd
   rw [map_blockPoly, map_heckePolyOf, ← reverse_prod_eq_hecke
     (S.map fun z : ℂˣ => (RingEquiv.refl ℂ).symm ((z : ℂ) * (q : ℂ) ^ (((n : ℂ) - 1) / 2))) (by simpa using hS) (fun i => ι.toRingHom (a i))
-    (fun k hk => satEig_esymm (RingEquiv.refl ℂ) hq S k (ha k hk)), reverse_prod, blockPoly, ← Finset.prod_range_reflect] at h1
+    (fun k hk => satEig_esymm (RingEquiv.refl ℂ) hq S k (ha k hk)), Formalism.L2.NR.reverse_prod_X_sub_C, blockPoly, ← Finset.prod_range_reflect] at h1
   have h2 := le_of_dvd (M₀ := (Multiset.range t).map fun c : ℕ => ι ν * (q : ℂ) ^ (t - 1 - c))
     (M := S.map fun z : ℂˣ => (RingEquiv.refl ℂ).symm ((z : ℂ) * (q : ℂ) ^ (((n : ℂ) - 1) / 2))) (fun m hm => by
     obtain ⟨c, -, rfl⟩ := Multiset.mem_map.1 hm
@@ -689,9 +684,6 @@ variable {hL : _root_.UpperTheory.Zero.LLC.RecTExists} (hF : GlobalTheory.Publis
   (C : _root_.GlobalTheory.HeightCounting.CGTrueT hL D T)
 end True
 end GlobalTheory.HeightCounting.Blocks
-namespace GlobalTheory.HeightCounting
-open Formalism.BasicNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.L2.Host GlobalTheory.CuspRep GlobalTheory.WeilDeligne NumberField IsDedekindDomain Polynomial
-end GlobalTheory.HeightCounting
 section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
 attribute [local instance] Formalism.BasicNotions.Host.cmStar

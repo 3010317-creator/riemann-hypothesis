@@ -152,21 +152,6 @@ theorem biLift_move {A S A' : HSp D} (oma : Om A S) (omb : Om S A') (vA : Vol A)
   funext h
   simp only [biLift, Pi.smul_apply, smul_eq_mul, mul_assoc, integral_const_mul]
 
-theorem biLift_smul' {A S A' : HSp D} (oma : Om A S) (omb : Om S A') (vA : Vol A) (vS : Vol S) (φ : GA D A → ℂ) (a : ℂ)
-    (C : WO A S → WO S A' → ℂ) : biLift oma omb vA vS φ (a • C) = a • biLift oma omb vA vS φ C := by
-  funext h₂
-  have h2 : ∀ h₀ h₁, omb (h₁, h₂) (fun v => oma (h₀, h₁) (fun u => a * C u v) 0) 0 =
-      a * omb (h₁, h₂) (fun v => oma (h₀, h₁) (fun u => C u v) 0) 0 := by
-    intro h₀ h₁
-    have e : (fun v => oma (h₀, h₁) (fun u => a * C u v) 0) = a • (fun v => oma (h₀, h₁) (fun u => C u v) 0) :=
-      funext fun v => by
-        rw [show (fun u => a * C u v) = a • (fun u => C u v) from rfl, map_smul]
-        rfl
-    rw [e, map_smul]
-    rfl
-  simp only [biLift, Pi.smul_apply, smul_eq_mul, h2]
-  simp_rw [show ∀ x y : ℂ, x * (a * y) = a * (x * y) from fun x y => mul_left_comm x a y, integral_const_mul]
-
 theorem hand_smul_fun {ψ : AddChar (AF D.host.F) ℂ} {σ : ℕ} {B : BesLev D (σ + 1)} {J : JacLev D (σ + 1)} {B' : BesLev D σ}
     (s₁ : StepBF ψ B J) (s₂ : StepFB ψ J B') (l : Link B B'.L B'.ζ) (vL : VolM D B'.L.rank J.W₀.rank) (a : ℂ)
     (Φ₁ : WO B.V J.W → ℂ) (Φ₂ : WO J.W B'.V → ℂ) (φ : GA D B.A → ℂ) (g : GA D B.V) (h₁ : GA D J.W) (h₂ : GA D B'.V) :
@@ -202,7 +187,7 @@ theorem inner (s : ∀ j, t.Ch j → ℂ) (hs : ∀ j α, s j α ≠ 0) (w : VTu
         (biComb c.ψ _ _ _ (w.dQ j α γ) (w.dQ (j + 1) γ β) C) := by
   simp only [Finset.smul_sum]
   refine Finset.sum_congr rfl fun α _ => Finset.sum_congr rfl fun γ _ => ?_
-  simp only [resc, biComb_smul2, Comm.bl, biLift_smul', biLift_move, smul_smul]
+  simp only [resc, biComb_smul2, Comm.bl, GlobalTheory.SeeSawRhs.biLift_smul, biLift_move, smul_smul]
   congr 1
   have := hs (j + 1) γ
   field_simp
@@ -429,8 +414,6 @@ theorem dual_add (x y : Matrix Y Y' k) : dual p FS FT (x + y) = dual p FS FT x +
   ext i j
   simp only [dual, Matrix.mul_add, Matrix.add_mul, Matrix.transpose_add, Matrix.map_apply, Matrix.add_apply, map_add (f := _)]
 
-theorem up_zero : p.up FS FT 0 = 0 := by simpa using up_add p FS FT 0 0
-
 theorem dual_zero : dual p FS FT 0 = 0 := by simpa using dual_add p FS FT 0 0
 
 alias continuous_up := _root_.GlobalTheory.LocMod.Witness.up_cont
@@ -557,11 +540,11 @@ theorem exists_fixed_vacSet {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D 
     (fun x => heisL S T ψ (p.up FS FT x)) (fun b => heisL S T ψ (dual p FS FT b))
     (fun x x' f => by rw [up_add, heisL_half S T ψ (by rw [mul_comm, hec]) _ (up_mem p FS FT x) _ (up_mem p FS FT x')])
     (fun x x' f => by rw [dual_add, heisL_half S T ψ (by rw [SeeSaw.cA_cA, hec]) _ (dual_mem p FS FT x) _ (dual_mem p FS FT x')])
-    (fun f => by rw [up_zero, h0]) (fun f => by rw [dual_zero, h0])
+    (fun f => by rw [GlobalTheory.LocModU.upZero, h0]) (fun f => by rw [dual_zero, h0])
     (fun x y f => by rw [heisL_comm, char_sympl p FS FT hk]) P
     (fun x => st _ (isHalf_add_left p (Witness.up_half p FS FT x)) (i1 x))
     (fun x => st _ (isHalf_add_right p ((isHalf_iff S T).2 (dual_mem p FS FT x))) (i2 x))
-    (sm _ (continuous_up p FS FT) (up_zero p FS FT) i1) (sm _ (continuous_dual p FS FT) (dual_zero p FS FT) i2)
+    (sm _ (continuous_up p FS FT) (GlobalTheory.LocModU.upZero p FS FT) i1) (sm _ (continuous_dual p FS FT) (dual_zero p FS FT) i2)
     ((mP f).2 ⟨hf, hfU⟩) f0
   have bx : ∀ x : Matrix Y Y' k, x ∈ GlobalTheory.LocMod.Inhab.box Y Y' (1 : kˣ) ↔ ∀ r q, x r q ∈ 𝒪[k] := fun x => by
     change (∀ r q, valuation k (x r q) ≤ valuation k ((1 : kˣ) : k)) ↔ _

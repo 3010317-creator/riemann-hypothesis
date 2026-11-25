@@ -346,12 +346,7 @@ variable {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D)
 
 local notation "RA" => X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F
 
-theorem natCast_int (c : ℕ) : (c : RA) ∈ IntAf X.B.I.F X.B.I.E := natCast_mem _ c
-
 theorem sigA_natCast (c : ℕ) : sigA X.B.I (c : RA) = c := map_natCast _ c
-
-theorem natsmul_Lf (c : ℕ) {y : VA X.B.I} (hy : y ∈ X.B.I.Lf) : (c : RA) • y ∈ X.B.I.Lf := by
-  rw [Nat.cast_smul_eq_nsmul]; exact nsmul_mem hy c
 
 theorem natsmul_mL (c : ℕ) {y : VA X.B.I} (hy : y ∈ mL X.B.I X.B.g) : (c : RA) • y ∈ mL X.B.I X.B.g := by
   rw [Nat.cast_smul_eq_nsmul]; exact nsmul_mem hy c
@@ -359,7 +354,7 @@ theorem natsmul_mL (c : ℕ) {y : VA X.B.I} (hy : y ∈ mL X.B.I X.B.g) : (c : R
 theorem mL_le_Lf : mL X.B.I X.B.g ≤ X.B.I.Lf := by
   refine Submodule.span_le.2 ?_
   rintro _ ⟨y, hy, rfl⟩
-  exact natsmul_Lf X _ hy
+  exact Formalism.L2.SG.Pf.UnipB.natsmul_mem_Lf X _ hy
 
 theorem intsmul_Lf {t : RA} (ht : t ∈ IntAf X.B.I.F X.B.I.E) {y : VA X.B.I} (hy : y ∈ X.B.I.Lf) :
     t • y ∈ X.B.I.Lf := by
@@ -367,7 +362,7 @@ theorem intsmul_Lf {t : RA} (ht : t ∈ IntAf X.B.I.F X.B.I.E) {y : VA X.B.I} (h
   rwa [Subring.smul_def] at h
 
 theorem Z_int {t : RA} (ht : ZMod' X.B.I X.B.g t) : t ∈ IntAf X.B.I.F X.B.I.E := by
-  obtain ⟨s, hs, rfl⟩ := ht; exact mul_mem (natCast_int X _) hs
+  obtain ⟨s, hs, rfl⟩ := ht; exact mul_mem (Formalism.L2.SG.NormCut.natCast_mem_Int X _) hs
 
 theorem hA_ef (a b : Fin D.R.rS) :
     hA X.B.I (incl X.B.I (X.eR a)) (incl X.B.I (X.fR b)) = if a = b then 1 else 0 := by
@@ -417,9 +412,9 @@ theorem core (u : D.what₂.Word) (m : X.B.I.Gf) (hmK : m ∈ X.B.I.Kset) (hmN :
   have hf : ∀ b, (c : RA) • incl X.B.I (X.fR b) ∈ X.B.I.Lf := fun b => by
     have e : (c : RA) • incl X.B.I (X.fR b) = (c : RA) • X.f0 b - (c : RA) • (X.f0 b - incl X.B.I (X.fR b)) := by
       rw [smul_sub, sub_sub_cancel]
-    rw [e]; exact sub_mem (natsmul_Lf X c (X.vectorsInLattice.1 b).2) (mL_le_Lf X (hc b).2)
+    rw [e]; exact sub_mem (Formalism.L2.SG.Pf.UnipB.natsmul_mem_Lf X c (X.vectorsInLattice.1 b).2) (mL_le_Lf X (hc b).2)
   set W := (c : RA) • w with hWdef
-  have hW : W ∈ X.B.I.Lf := natsmul_Lf X c hw
+  have hW : W ∈ X.B.I.Lf := Formalism.L2.SG.Pf.UnipB.natsmul_mem_Lf X c hw
   set t : Fin D.R.rS → RA := fun b => hA X.B.I (incl X.B.I (X.eR b)) W with htdef
   set W' := W - ∑ b, t b • incl X.B.I (X.fR b) with hW'def
   have hperp : ∀ a, hA X.B.I (incl X.B.I (X.eR a)) W' = 0 := fun a => by
@@ -434,7 +429,7 @@ theorem core (u : D.what₂.Word) (m : X.B.I.Gf) (hmK : m ∈ X.B.I.Kset) (hmN :
 
   have hcW' : (c : RA) • W' ∈ X.B.I.Lf := by
     rw [hW'def, smul_sub, Finset.smul_sum]
-    refine sub_mem (natsmul_Lf X c hW) (sum_mem fun b _ => ?_)
+    refine sub_mem (Formalism.L2.SG.Pf.UnipB.natsmul_mem_Lf X c hW) (sum_mem fun b _ => ?_)
     rw [smul_comm]; exact intsmul_Lf X (Z_int X (ht b)) (hf b)
   have hlam_int : ∀ a, (c : RA) ^ 2 * lam a ∈ IntAf X.B.I.F X.B.I.E := fun a => by
     have h := hA_int X.B.I (hf a) (K_sub_mv X.B.I hmK hcW')
@@ -469,7 +464,7 @@ theorem core (u : D.what₂.Word) (m : X.B.I.Gf) (hmK : m ∈ X.B.I.Kset) (hmN :
         = (c : RA) ^ 3 * ((c : RA) * hA X.B.I p ((X.B.I.fmat m - 1) *ᵥ w)) := by ring
       _ = _ := by rw [e2]; ring
   rw [e]
-  exact Z_add X.B.I X.B.g h1 (Z_smul X.B.I X.B.g (pow_mem (natCast_int X c) 2) h2)
+  exact Z_add X.B.I X.B.g h1 (Z_smul X.B.I X.B.g (pow_mem (Formalism.L2.SG.NormCut.natCast_mem_Int X c) 2) h2)
 
 theorem conj_sub (x m : X.B.I.Gf) (v : VA X.B.I) :
     (X.B.I.fmat (x⁻¹ * m * x) - 1) *ᵥ v = X.B.I.fmat x⁻¹ *ᵥ ((X.B.I.fmat m - 1) *ᵥ (X.B.I.fmat x *ᵥ v)) := by
@@ -494,7 +489,7 @@ theorem term (u : D.what₂.Word) (m : X.B.I.Gf) (hmK : m ∈ X.B.I.Kset) (hmN :
         (c : RA) * hA X.B.I (X.e0 b) (X.bw j) - hA X.B.I ((c : RA) • (X.e0 b - incl X.B.I (X.eR b))) (X.bw j) := by
       rw [hA_smul_left, sigA_natCast, PIW.NormChiNBi.hA_sub_left]; ring
     rw [e]
-    exact Z_sub X.B.I X.B.g (Z_smul X.B.I X.B.g (natCast_int X c) ((X.weightVectorsIntegral j).2.2 b).1)
+    exact Z_sub X.B.I X.B.g (Z_smul X.B.I X.B.g (Formalism.L2.SG.NormCut.natCast_mem_Int X c) ((X.weightVectorsIntegral j).2.2 b).1)
       (PIW.NormChiNBi.hA_mL_left X.B.I X.B.g (hc b).1 hbw)
   ·
     rw [← hfix b, PIW.NormChiNBi.hA_fmat']
@@ -502,7 +497,7 @@ theorem term (u : D.what₂.Word) (m : X.B.I.Gf) (hmK : m ∈ X.B.I.Kset) (hmN :
         (c : RA) * hA X.B.I (X.bwd i) (X.e0 b) - hA X.B.I (X.bwd i) ((c : RA) • (X.e0 b - incl X.B.I (X.eR b))) := by
       rw [hA_smul_right, PIW.NormChiNBi.hA_sub_right]; ring
     rw [e]
-    exact Z_sub X.B.I X.B.g (Z_smul X.B.I X.B.g (natCast_int X c) ((Formalism.L2.SG.Pf.reference_frame_congruences X).2.2.1 i b))
+    exact Z_sub X.B.I X.B.g (Z_smul X.B.I X.B.g (Formalism.L2.SG.NormCut.natCast_mem_Int X c) ((Formalism.L2.SG.Pf.reference_frame_congruences X).2.2.1 i b))
       (PIW.NormChiNBi.hA_mL_right X.B.I X.B.g (hc b).1 hbwd)
 
 theorem ukPart_zmod : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u : D.what₂.Word) (m : X.B.I.Gf),
