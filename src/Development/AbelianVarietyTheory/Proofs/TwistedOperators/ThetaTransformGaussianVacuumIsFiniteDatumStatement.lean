@@ -647,8 +647,8 @@ theorem GlobalTheory.GaussCancel.heis_cancel : ∀ (D : D7) (ψ : AddChar (AF D.
   obtain ⟨ε', hε'⟩ := hg
   obtain ⟨w, hoff, hon⟩ :=
     GlobalTheory.T.realPlaceLines_related_and_vanish_off_place D θ hθ ε S X A B e Bs hBs Vs Ws r s r' s' hJ hJW hV hW hemb cS hcS τ z
-  have hu := GlobalTheory.T.archimedean_preimage_realPlace_line D θ hθ ε S X e cS hcS τ z
-  have hu' := GlobalTheory.T.archimedean_preimage_realPlace_line D θ hθ ε S X e cS hcS τ (cplxO ((frSgn ε A).cart τ) (B.cart τ) z)
+  have hu := _root_.GlobalTheory.ArchLinePreimage.arch_symm_lineAt D θ hθ ε S X e cS hcS τ z
+  have hu' := _root_.GlobalTheory.ArchLinePreimage.arch_symm_lineAt D θ hθ ε S X e cS hcS τ (cplxO ((frSgn ε A).cart τ) (B.cart τ) z)
   rcases Int.units_eq_one_or (ε' w) with h1 | h1
   · have key := hε' _ _ hu hu' (fun w' => by
       by_cases hw : w' = w
@@ -757,8 +757,8 @@ theorem fockVac_of_isGauss : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ :
   unfold IsFockVacAt
   intro z
   have hstd : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsStd Bs.ψ := hBs.std
-  obtain ⟨g₁, h₁⟩ := GlobalTheory.T.exists_heisenberg_derivative_archimedean_direction M Bs.ψ hstd g _ (GlobalTheory.T.archimedean_preimage_realPlace_line D θ hθ ε S X e cS hcS τ z)
-  obtain ⟨g₁', h₁'⟩ := GlobalTheory.T.exists_heisenberg_derivative_archimedean_direction M Bs.ψ hstd g _ (GlobalTheory.T.archimedean_preimage_realPlace_line D θ hθ ε S X e cS hcS τ (cplxO ((frSgn ε A).cart τ) (B.cart τ) z))
+  obtain ⟨g₁, h₁⟩ := GlobalTheory.T.exists_heisenberg_derivative_archimedean_direction M Bs.ψ hstd g _ (_root_.GlobalTheory.ArchLinePreimage.arch_symm_lineAt D θ hθ ε S X e cS hcS τ z)
+  obtain ⟨g₁', h₁'⟩ := GlobalTheory.T.exists_heisenberg_derivative_archimedean_direction M Bs.ψ hstd g _ (_root_.GlobalTheory.ArchLinePreimage.arch_symm_lineAt D θ hθ ε S X e cS hcS τ (cplxO ((frSgn ε A).cart τ) (B.cart τ) z))
   have d1 := GlobalTheory.T.heisenbergDerivative_realPlace_pureDatum D ψ θ hθ ε S X A B e Bs hBs hψ Vs Ws r s r' s' hJ hJW hV hW hemb M hM cS hcS g φ hφ hvac f hf τ z g₁ h₁
   have d2 := GlobalTheory.T.heisenbergDerivative_realPlace_pureDatum D ψ θ hθ ε S X A B e Bs hBs hψ Vs Ws r s r' s' hJ hJW hV hW hemb M hM cS hcS g φ hφ hvac f hf τ _ g₁' h₁'
   have h0 := GlobalTheory.T.gaussianVacuum_heisenbergDerivative_complexStructure_cancel D ψ θ hθ ε S X A B e Bs hBs hψ Vs Ws r s r' s' hJ hJW hV hW hemb M hM cS hcS g φ hg hφ hvac τ z g₁ g₁' h₁ h₁'

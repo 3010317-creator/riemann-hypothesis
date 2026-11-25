@@ -1003,7 +1003,7 @@ theorem wcoef_eq_zero_off_prin : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (
     ((prinDat A Z).Pg ∪ ∅) e sdA sdH hP.frame hβH he
   obtain ⟨n, a, y, -, h1, h2⟩ := GlobalTheory.T.heisenberg_fix_and_kill_theta_off_support_move D ψ A H hW.std (frameLat A) (frameLat H) sdA sdH
     ((prinDat A Z).Pg ∪ ∅) e he f₀ _ f hsb hth g hsupp
-  exact GlobalTheory.T.weilMatrixCoefficient_eq_zero_of_heisenberg_relations D ψ A H χA 1 om hW ν 𝓕 hν f hthf g n a y h1 h2
+  exact _root_.GlobalTheory.ChainOnto.coef_zero_of_heis_relations D ψ A H χA 1 om hW ν 𝓕 hν f hthf g n a y h1 h2
 
 end GlobalTheory.Core.Rk.Exh.SmallSupp
 end -- clump:auto

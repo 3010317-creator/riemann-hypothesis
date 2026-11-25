@@ -255,7 +255,7 @@ theorem coefSupp : ∀ D : D7, CoefSupp D := by
     show ∑ i, conj (a i) • heisO c.ψ s.V s'.V (actO s.V s'.V g⁻¹ 1 (-(y i)))
       (pureTensorO c.ψ c.θ s.V s'.V (cart s.M) (cart s'.M) (onb s.M) (onb s'.M) p.f φ) = _
     rw [H2, h2, H0]
-  exact GlobalTheory.T.weilMatrixCoefficient_eq_zero_of_heisenberg_relations D c.ψ s.V s'.V (c.chS (k + 1)) (c.chT (k + 1)) p.ω hp.weil m X hX (p.pt φ) (hp.theta φ) g n a y R1 R2
+  exact _root_.GlobalTheory.ChainOnto.coef_zero_of_heis_relations D c.ψ s.V s'.V (c.chS (k + 1)) (c.chT (k + 1)) p.ω hp.weil m X hX (p.pt φ) (hp.theta φ) g n a y R1 R2
 
 end GlobalTheory.ChainOnto.CoefSuppPf
 end -- clump:auto
@@ -589,7 +589,7 @@ theorem realZeta : GlobalTheory.Published.HarishChandraModules → ∀ D : D7, G
       (Finset.prod_ne_zero_iff.2 fun τ _ => div_ne_zero (by exact_mod_cast (hr τ).ne') hi0))
   · intro a ha hfr
     refine ⟨0, div_pos (by exact_mod_cast D.R.t_odd.pos) two_pos, ?_⟩
-    obtain ⟨C, hC⟩ := GlobalTheory.T.realMatrixCoeff_fockVectors_le_doublingHeight_pow D s.V s'.V s.par s'.par s.M s'.M c.θ c.ψ χS χT p.ω hc.inf hW m X hmX p.f hvac a ha hfr
+    obtain ⟨C, hC⟩ := _root_.GlobalTheory.TwBound.tw_bound D s.V s'.V s.par s'.par s.M s'.M c.θ c.ψ χS χT p.ω hc.inf hW m X hmX p.f hvac a ha hfr
       (glue Φ) (glue Φ)
     set mf : GinfC s.V → ℂ := fun g => conj (∏ τ, ⟪(w τ : s.M.H τ),
       s.M.rep τ (Formalism.MainNotions.StandardLattice.infMat D.sp.cm.sig s.V.gram (c.θ τ) (g : GA D s.V)) (w τ)⟫_ℂ) with hmf
@@ -601,11 +601,11 @@ theorem realZeta : GlobalTheory.Published.HarishChandraModules → ∀ D : D7, G
     set Hf : GinfC s.V → ℝ := fun g => ∏ w, GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift.hgtW s.V a w
       (GlobalTheory.AdelicU.projArch D.sp.cm.sig s.V.gram w (g : GA D s.V)) with hHf
     have hHc : Continuous Hf := continuous_finsetProd _ fun w _ =>
-      (GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).1.comp ((GlobalTheory.AdelicU.continuous_projArch _ _ w).comp continuous_subtype_val)
+      (_root_.GlobalTheory.Corev.RealHeight.hgtW_cont_pos_le_one D s.V a ha w).1.comp ((GlobalTheory.AdelicU.continuous_projArch _ _ w).comp continuous_subtype_val)
     have hHpos : ∀ g, 0 < Hf g ∧ Hf g ≤ 1 := fun g =>
-      ⟨Finset.prod_pos fun w _ => ((GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).2 _).1,
-        Finset.prod_le_one₀ (fun w _ => ((GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).2 _).1.le)
-          fun w _ => ((GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).2 _).2⟩
+      ⟨Finset.prod_pos fun w _ => ((_root_.GlobalTheory.Corev.RealHeight.hgtW_cont_pos_le_one D s.V a ha w).2 _).1,
+        Finset.prod_le_one₀ (fun w _ => ((_root_.GlobalTheory.Corev.RealHeight.hgtW_cont_pos_le_one D s.V a ha w).2 _).1.le)
+          fun w _ => ((_root_.GlobalTheory.Corev.RealHeight.hgtW_cont_pos_le_one D s.V a ha w).2 _).2⟩
     have hzint : Integrable z mR :=
       (hIint.const_mul i0).congr (Filter.Eventually.of_forall fun g => (hz g).symm)
     have htb : D.R.t ≤ s'.V.rank := by
@@ -616,7 +616,7 @@ theorem realZeta : GlobalTheory.Published.HarishChandraModules → ∀ D : D7, G
         mf g‖ ≤ _
       rw [norm_mul]
       exact mul_le_mul_of_nonneg_right (hC g g.2) (norm_nonneg _)
-    exact GlobalTheory.T.integrable_mul_heightPow_of_bounded_factor mR z mf Hf C s'.V.rank D.R.t hzint hmint hHc hHpos htb hbd
+    exact _root_.GlobalTheory.realZeta_integrable_mul_heightPow mR z mf Hf C s'.V.rank D.R.t hzint hmint hHc hHpos htb hbd
 
 end GlobalTheory.RealZetaProof
 end -- clump:auto

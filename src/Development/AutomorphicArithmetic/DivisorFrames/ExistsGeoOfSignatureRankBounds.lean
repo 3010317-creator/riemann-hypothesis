@@ -376,8 +376,8 @@ theorem UpperTheory.exists_geo_of_signature_rank_bounds :
     ⟨hX.skew, hX.sig, hX.lat, hX.dual, hX.cartan, fun v => (hbX v).1⟩
   obtain ⟨hμ1, hd1⟩ := GlobalTheory.T.conjugateUnitaryAdelicIso_map_haar_fundamentalDomain D A 1 (J := V.J) rfl one_ne_zero X.m X.fd hm
   obtain ⟨hμ2, hd2⟩ := GlobalTheory.T.conjugateUnitaryAdelicIso_map_haar_fundamentalDomain D A' (-1) (J := V'.J) rfl (neg_ne_zero.2 one_ne_zero) X.m' X.fd' hm'
-  obtain ⟨M, hMμ, hMd, hM⟩ := GlobalTheory.T.exists_good_rational_schroedingerModel D Bs hBs V Ws _ _ _ _ gV gW _ _ hμ1 hd1
-  obtain ⟨M', hMμ', hMd', hM'⟩ := GlobalTheory.T.exists_good_rational_schroedingerModel D Bs hBs V' Ws _ _ _ _ gV' gW _ _ hμ2 hd2
+  obtain ⟨M, hMμ, hMd, hM⟩ := _root_.GlobalTheory.SquareAgree.exists_good_model D Bs hBs V Ws _ _ _ _ gV gW _ _ hμ1 hd1
+  obtain ⟨M', hMμ', hMd', hM'⟩ := _root_.GlobalTheory.SquareAgree.exists_good_model D Bs hBs V' Ws _ _ _ _ gV' gW _ _ hμ2 hd2
   refine ⟨⟨p, q, V, V', Ws, M, M'⟩, rfl, rfl, ⟨by omega, hev, hκ, ?_, h2, gV, gV', gW, hM, hM'⟩,
     ⟨⟨hBs, hψ, rfl, rfl, ⟨_, _, gV⟩, ⟨_, _, gW⟩, hM⟩, ⟨hBs, hψ, rfl, rfl, ⟨_, _, gV'⟩, ⟨_, _, gW⟩, hM'⟩,
       ⟨lV, lX⟩, ⟨lV', lX⟩, fun w => ⟨τf w, hemb w, (one_smul _ _).symm, rfl⟩,

@@ -262,7 +262,7 @@ theorem unfold_norm_base_term_translate : ∀ (D : D7) (ψ : AddChar (AF D.host.
   haveI : Countable ((MulAction.stabilizer ((NFlagQ V d.e).prod (GQ W)) y₀).map (Subgroup.subtype _)) :=
     (Subgroup.inclusion_injective (Subgroup.map_subtype_le (MulAction.stabilizer ((NFlagQ V d.e).prod (GQ W)) y₀))).countable
   have hF : IsFundamentalDomain ((NFlagQ V d.e).prod (GQ W)) (vN.𝓝 ×ˢ vW.𝓕) (vN.ν.prod vW.μ) := by
-    refine GlobalTheory.T.isFundamentalDomain_prod_of_kernel_image _ _ vN.ν vW.μ _ vN.𝓝 vW.𝓕 ?_ ?_
+    refine _root_.GlobalTheory.isFundamentalDomain_prod_of_ker_image _ _ vN.ν vW.μ _ vN.𝓝 vW.𝓕 ?_ ?_
     · have hc : ((NFlagQ V d.e).prod (GQ W)).comap (MonoidHom.inl (flagN d) (GA D W)) = NFlagQ V d.e := by
         ext n
         simp only [Subgroup.mem_comap, MonoidHom.inl_apply, Subgroup.mem_prod, one_mem, and_true]
@@ -277,7 +277,7 @@ theorem unfold_norm_base_term_translate : ∀ (D : D7) (ψ : AddChar (AF D.host.
       rw [hc]; exact vW.fund
   have hG' : IsFundamentalDomain ((MulAction.stabilizer ((NFlagQ V d.e).prod (GQ W)) y₀).map (Subgroup.subtype _))
       (𝓐 ×ˢ 𝓑) (vN.ν.prod vW.μ) := by
-    refine GlobalTheory.T.isFundamentalDomain_prod_of_kernel_image _ _ vN.ν vW.μ _ 𝓐 𝓑 ?_ ?_
+    refine _root_.GlobalTheory.isFundamentalDomain_prod_of_ker_image _ _ vN.ν vW.μ _ 𝓐 𝓑 ?_ ?_
     · rw [hstab1]; exact h𝓐
     · rw [hstab2]; exact h𝓑
   have hmeas : ∀ y : Orb W x₀, Measurable fun p : flagN d × GA D W =>

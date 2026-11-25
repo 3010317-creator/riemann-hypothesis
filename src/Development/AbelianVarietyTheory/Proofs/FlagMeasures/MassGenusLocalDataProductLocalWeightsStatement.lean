@@ -984,7 +984,7 @@ theorem local_stabilisers : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' 
   · have hAt : ∀ p, GlobalTheory.LocOver.AtBase Z p F F' (Tu D u) (Tu D u') (FP p) := fun p => by
       obtain ⟨h1, h2, h3, h4⟩ := hB p
       exact ⟨h1, h2, h3, h4⟩
-    refine (GlobalTheory.T.finite_places_not_primeTo_baseFrameInvariants D Z u u' F F' hG FP hAt).subset fun p hp hpr => hp ?_
+    refine (_root_.GlobalTheory.PrimeAlmostAll.primeTo_finite D Z u u' F F' hG FP hAt).subset fun p hp hpr => hp ?_
     have h2 := _root_.GlobalTheory.HL.StabLat.stab_le_aut (Z.M p) (hOK p) (locH Z p) D.R.rS D.R.k (FP p) (finrank_Vp_eq D p)
       (hRel p) hpr (d0 p) (τ0 p) (hτ0 p)
     rw [hA p, hstab p]
