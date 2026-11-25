@@ -13,8 +13,6 @@ open Formalism.IndefR.FWT GlobalTheory.RealGeo
 
 namespace GlobalTheory.Mem.R3.Tr
 
-set_option backward.isDefEq.lazyProjDelta false
-set_option backward.isDefEq.lazyWhnfCore false
 
 variable {B : Base} {C : Cols B} {a : Late B C} (b : Late B C) {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type}
 
