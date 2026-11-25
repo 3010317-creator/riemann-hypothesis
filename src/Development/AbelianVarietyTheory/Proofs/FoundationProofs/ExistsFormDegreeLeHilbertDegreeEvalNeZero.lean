@@ -12,6 +12,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolum
 import Std.Tactic.BVDecide.Normalize.Prop
 public import Mathlib.FieldTheory.Minpoly.Basic
 public import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
+public import Mathlib.RingTheory.Polynomial.RationalRoot
 
 @[expose] public section
 
