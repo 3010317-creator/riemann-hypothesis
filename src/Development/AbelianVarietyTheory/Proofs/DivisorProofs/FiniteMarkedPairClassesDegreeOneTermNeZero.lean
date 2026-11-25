@@ -105,7 +105,7 @@ namespace GlobalTheory.LKMid
 theorem roots_eig : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (v : InfinitePlace G.F) (w : ℂ),
     P.pol.eval₂ v.embedding w = 0 → ∃ x : Fin G.n → ℂ, x ≠ 0 ∧ G.psi v P.γ *ᵥ x = w • x := by
   intro p _ G P v w hw
-  letI : Algebra G.F ℂ := v.embedding.toAlgebra
+  let : Algebra G.F ℂ := v.embedding.toAlgebra
   have hτ : algebraMap G.F ℂ = v.embedding := rfl
   let ψF : G.C →ₐ[G.F] Matrix (Fin G.n) (Fin G.n) ℂ :=
     { G.psi v with
@@ -115,8 +115,8 @@ theorem roots_eig : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (v
         rfl }
   let Ψ : ℂ ⊗[G.F] G.C →ₐ[ℂ] Matrix (Fin G.n) (Fin G.n) ℂ :=
     Algebra.TensorProduct.lift (Algebra.ofId ℂ _) ψF (fun a _ => Algebra.commute_algebraMap_left a _)
-  haveI : Nontrivial (Matrix (Fin G.n) (Fin G.n) ℂ) := by
-    haveI : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
+  have : Nontrivial (Matrix (Fin G.n) (Fin G.n) ℂ) := by
+    have : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
     infer_instance
   have hinj : Function.Injective Ψ := RingHom.injective (Ψ : ℂ ⊗[G.F] G.C →+* Matrix (Fin G.n) (Fin G.n) ℂ)
   set Γ := G.psi v P.γ with hΓ
@@ -381,7 +381,7 @@ variable {p : ℕ} [Fact p.Prime] {G : HTGroup p}
 
 theorem norm_sim (P : Pair G) :
     Algebra.norm ℚ (P.γ : G.C) * Algebra.norm ℚ (sh G P.γ) = (P.c : ℚ) ^ Module.finrank ℚ G.C := by
-  haveI := GlobalTheory.LKTrip.HTGroup.finQ G
+  have := GlobalTheory.LKTrip.HTGroup.finQ G
   have h := congrArg (Algebra.norm ℚ) P.sim
   rw [map_mul, map_mul, map_mul, Algebra.norm_algebraMap] at h
   have hb : Algebra.norm ℚ (P.β : G.C) ≠ 0 := (P.β.isUnit.map (Algebra.norm ℚ)).ne_zero
@@ -390,7 +390,7 @@ theorem norm_sim (P : Pair G) :
 
 theorem c_eq_or_eq_neg : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P P' : Pair G), P'.γ = P.γ → P'.c = P.c ∨ P'.c = -P.c := by
   intro p _ G P P' hγ
-  haveI := GlobalTheory.LKTrip.HTGroup.finQ G
+  have := GlobalTheory.LKTrip.HTGroup.finQ G
   have h1 := norm_sim P
   have h2 := norm_sim P'
   rw [hγ, h1] at h2
@@ -580,11 +580,11 @@ theorem exists_emb_isRoot' {F C E : Type} [Field F] [NumberField F] [Ring C] [Al
       (((hq q).map (algebraMap ℚ E)).IsRoot μ → ∃ τ : F →+* E, (q.map τ).IsRoot μ) := by
     intro q hqm
     have hirr : Irreducible q := UniqueFactorizationMonoid.irreducible_of_normalized_factor q hqm
-    haveI : Fact (Irreducible q) := ⟨hirr⟩
+    have : Fact (Irreducible q) := ⟨hirr⟩
     have hq0 : q ≠ 0 := hirr.ne_zero
-    haveI : FiniteDimensional F (AdjoinRoot q) := (AdjoinRoot.powerBasis hq0).finite
-    haveI : FiniteDimensional ℚ (AdjoinRoot q) := Module.Finite.trans F _
-    haveI : Algebra.IsAlgebraic ℚ (AdjoinRoot q) := Algebra.IsAlgebraic.of_finite ℚ _
+    have : FiniteDimensional F (AdjoinRoot q) := (AdjoinRoot.powerBasis hq0).finite
+    have : FiniteDimensional ℚ (AdjoinRoot q) := Module.Finite.trans F _
+    have : Algebra.IsAlgebraic ℚ (AdjoinRoot q) := Algebra.IsAlgebraic.of_finite ℚ _
     have e : hq q = minpoly ℚ (AdjoinRoot.root q) := dif_pos hirr
     rw [e]
     refine ⟨?_, fun hμ => ?_⟩
