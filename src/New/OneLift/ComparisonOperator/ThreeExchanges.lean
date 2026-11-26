@@ -1118,9 +1118,10 @@ lemma polyVector_letterPoly_mem_holomorphicData (ξ : WeylIndexFamily
     (letterPoly_highestVector_mem_holomorphicData isPosFirstOrder_orderW (paramW_lt_of_orderW_lt 1)
       h_inj
       (h_fit.numbering_eq 1) _ h_fit.colsPlus_eq_zero).2
-  -- `erw` sees through the composite linear map
-  erw [realPairWeil_fockLetters, star_mulVec]
-  simp [letterPoly, weylRep, ← mulVec_transpose, comp_def, conjTranspose_transpose]
+  simp only [letterPoly, LinearMap.comp_apply, AlgHom.toLinearMap_apply]
+  rw [realPairWeil_fockLetters]
+  simp [conjWeylRep, weylRep, star_mulVec, ← mulVec_transpose, comp_def,
+    conjTranspose_transpose]
 
 /-- The function `𝖥_i = choiceFn j i` on `U(W_j)` is a multiple of the theta series
 `kernelClassSum` for the trivial twist, at the level cut out by the rows of `Λ = i.matrix`. -/
