@@ -312,8 +312,8 @@ lemma realMap_flipCoords_polyVector (hc : star (c : 𝔸f E) * c = -1) (ht : t' 
           holomorphicCoord (realSigns E (homSigns s t')) x (i.1, i.2.swap)) := by
     aesop (add simp [holomorphicCoord_eq, flipCoords, mul_comm, starCoordEquiv, pairSign,
       units_ne_iff_eq_neg])
-  simp only [realMap, Heisenberg.IsVacuum.transport_apply, polyVector_apply, ← aeval_eq_eval, flipPoly,
-    comp_aeval_apply]
+  simp only [realMap, Heisenberg.IsVacuum.transport_apply, polyVector_apply, ← aeval_eq_eval,
+    flipPoly, comp_aeval_apply]
   simp [↓vac_realEquiv, h_coord, pairSign]
 
 end Flip

@@ -722,7 +722,8 @@ lemma radicalElement_mul (c' : Matrix n₀ p (𝔸 E)) (b' : Matrix p p (𝔸 E)
   -- The coefficients agree by `j⁻¹ j = 1` and `2⁻¹ + 2⁻¹ = 1`.
   have hj : toAdele (j⁻¹ : E) * toAdele (j : E) = 1 := by
     rw [← toAdele.map_mul, inv_mul_cancel₀ j_ne_zero, toAdele.map_one]
-  match_scalars <;> simp only [hj, mul_one, (toAdele_half_add_half (E := E)), neg_add_cancel, neg_zero]
+  match_scalars <;>
+    simp only [hj, mul_one, (toAdele_half_add_half (E := E)), neg_add_cancel, neg_zero]
 
 lemma radicalElement_inv : (D.radicalElement c b)⁻¹ = D.radicalElement (-c) (-b) :=
   inv_eq_of_mul_eq_one_right (ext_adeleMatrix (by simp [Matrix.mul_assoc]))
@@ -840,7 +841,8 @@ lemma exists_eq_radicalElement_mul_levi (hk : D.ActsOnFrame g a) :
       have hj : toAdele (j⁻¹ : E) * toAdele (j : E) = 1 := by
         rw [← toAdele.map_mul, inv_mul_cancel₀ j_ne_zero, toAdele.map_one]
       match_scalars <;>
-        simp only [hj, mul_one, ← neg_add, neg_neg, (toAdele_half_add_half (E := E)), neg_add_cancel, neg_zero]
+        simp only [hj, mul_one, ← neg_add, neg_neg, (toAdele_half_add_half (E := E)),
+          neg_add_cancel, neg_zero]
   · -- The matrix of `g₀` is the `V₀`-block of `g`.
     simp [g₀, hg, Matrix.add_mul, Matrix.mul_assoc, Matrix.mul_add]
 
