@@ -214,8 +214,6 @@ lemma etaOneClass_eq_zero_of_hasUniversalPoints {c : TestOver A}
     (freeAbMap (Y := testOfPoint A projLine ⋙ reprBy c)
       ((elementsProj (g ⋙ ringOf (𝟭 (TestOver A)) ⋙ projLine)).whiskerLeft u)) 2
   let M : TorsionCoeff g := ⟨locConstAlong g, h_torsion, h_descent⟩
-  let one : freeAb (onePointFunctor (projLineAlong g).Elements) ⟶
-      locConstAlong (elementsProj (projLineAlong g) ⋙ g) := oneLocConst
   have h_pull : (P (etaOneClass c)).toTotalH = 0 :=
     comp_id.symm.trans <|
       (comp_pull_etaOneClass_eq_pullbackAlong_oneLocConst (M := M) u).trans <|
