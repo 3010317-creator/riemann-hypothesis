@@ -18,8 +18,8 @@ character of the Weil data.
 ## Main definitions and results
 
 * `New.AlgHeckeChar.exists_pow_eq_prod`, `New.AlgHeckeChar.norm_map_eq_sqrt_finIdeleAbs_zpow`,
-  `New.AlgHeckeChar.norm_padic_eq_prod`, `New.AlgHeckeChar.conjugateBy`: powers, complex and
-  `p`-adic absolute values and conjugates of the values of an algebraic Hecke character.
+  `New.AlgHeckeChar.norm_padic_eq_prod`: powers and complex and `p`-adic absolute values of the
+  values of an algebraic Hecke character.
 * `New.IsHeckeOfType.toAlgebraic`: the algebraic character `ψ |·|^{k/2}` of infinity type `m`, for
   `ψ` of type `m (Φ w) - m (Φ̄ w)` with `m (Φ w) + m (Φ̄ w) = k` at every infinite place `w`.
 * `New.AutChar.HasWeight.isHeckeOfType`: if `ν` has weight `e`, its base change has type `2 • e`.
