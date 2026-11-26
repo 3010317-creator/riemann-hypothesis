@@ -303,28 +303,6 @@ lemma exists_injective_algHom_perfect (hp : (p : S) = 0) (k : Type) [Field k] [A
 lemma bijective_pow_prime_pow (A : PerfectAlg S) (n : ℕ) : Bijective fun x : A.obj ↦ x ^ p ^ n :=
   (A.property.pow _ p n).bijective_frobenius
 
--- Keeps definitional checks from unfolding the finite sums.
-seal Finset.sum in
-/-- Let B, B₁, B₂, B₀ be perfect S-algebras with maps E₁ : B[X] → B₁, E₂ : B[X] → B₂ and
-E₀ : B[T, T⁻¹] → B₀. Suppose E₀ kills f - g T, maps B[X] → B₀ that kill f - g X factor through E₁,
-and those that kill g - f X factor through E₂. Then X ↦ T and X ↦ T⁻¹ induce maps j₁ : B₁ → B₀ and
-j₂ : B₂ → B₀. -/
-lemma exists_blowup_gluing_maps {B B₁ B₂ B₀ : PerfectAlg S} (f g : B.obj)
-    (E₁ : B.obj[X] →ₐ[S] B₁.obj) (E₂ : B.obj[X] →ₐ[S] B₂.obj)
-    (E₀ : B.obj[T;T⁻¹] →ₐ[S] B₀.obj) (h_rel : E₀ (C f - C g * X).toLaurent = 0)
-    (h_lift₁ : ∀ φ : B.obj[X] →ₐ[S] B₀.obj, φ (C f - C g * X) = 0 →
-      ∃ ψ : B₁.obj →ₐ[S] B₀.obj, ψ.comp E₁ = φ)
-    (h_lift₂ : ∀ φ : B.obj[X] →ₐ[S] B₀.obj, φ (C g - C f * X) = 0 →
-      ∃ ψ : B₂.obj →ₐ[S] B₀.obj, ψ.comp E₂ = φ) :
-    ∃ (j₁ : B₁.obj →ₐ[S] B₀.obj) (j₂ : B₂.obj →ₐ[S] B₀.obj),
-      (∀ P : B.obj[X], j₁ (E₁ P) = E₀ P.toLaurent) ∧
-      ∀ P : B.obj[X], j₂ (E₂ P) = E₀ (invert P.toLaurent) := by
-  obtain ⟨j₁, hj₁⟩ := h_lift₁ (E₀.comp ⟨toLaurent, by simp⟩) h_rel
-  obtain ⟨j₂, hj₂⟩ := h_lift₂ (E₀.comp ⟨.comp invert.toRingHom toLaurent, by simp⟩)
-    (show E₀ (invert (C g - C f * X).toLaurent) = 0 by
-      simp [invert_toLaurent_C_sub_C_mul_X, h_rel, -map_sub])
-  exact ⟨j₁, j₂, AlgHom.congr_fun hj₁, AlgHom.congr_fun hj₂⟩
-
 /-- Let p = 0 in S and B, B₁, B₂, B₀ be perfect S-algebras. Let E₁, E₂ map B[X] to B₁, B₂, let E₀
 map B[T, T⁻¹] to B₀, and let j₁, j₂ map B₁, B₂ to B₀ with j₁ (E₁ P) = E₀ (P(T)) and
 j₂ (E₂ P) = E₀ (P(T⁻¹)). If every element of B₀ has a p^n-th power in the image of E₀, then
@@ -428,7 +406,12 @@ lemma exists_perfect_blowup_charts (hp : (p : S) = 0) [PerfectRing S p] (B : Per
   obtain ⟨B₁, E₁, lift₁, -, rel₁, root₁⟩ := exists_perfection_quotient hp _ (C f - C g * X)
   obtain ⟨B₂, E₂, lift₂, -, rel₂, root₂⟩ := exists_perfection_quotient hp _ (C g - C f * X)
   obtain ⟨B₀, E₀, -, ker₀, rel₀, root₀⟩ := exists_perfection_quotient hp _ (C f - C g * X).toLaurent
-  obtain ⟨j₁, j₂, hj₁, hj₂⟩ := exists_blowup_gluing_maps f g E₁ E₂ E₀ rel₀ lift₁ lift₂
+  obtain ⟨j₁, hj₁'⟩ := lift₁ (E₀.comp ⟨toLaurent, by simp⟩) rel₀
+  obtain ⟨j₂, hj₂'⟩ := lift₂ (E₀.comp ⟨.comp invert.toRingHom toLaurent, by simp⟩)
+    (show E₀ (invert (C g - C f * X).toLaurent) = 0 by
+      simp [invert_toLaurent_C_sub_C_mul_X, rel₀, -map_sub])
+  have hj₁ : ∀ P : B.obj[X], j₁ (E₁ P) = E₀ P.toLaurent := AlgHom.congr_fun hj₁'
+  have hj₂ : ∀ P : B.obj[X], j₂ (E₂ P) = E₀ (invert P.toLaurent) := AlgHom.congr_fun hj₂'
   let i₁ : B.obj →ₐ[S] B₁.obj := E₁.comp CAlgHom
   let i₂ : B.obj →ₐ[S] B₂.obj := E₂.comp CAlgHom
   let j : (B₁.obj × B₂.obj) →ₗ[S] B₀.obj := j₁.toLinearMap.coprod (-j₂.toLinearMap)
