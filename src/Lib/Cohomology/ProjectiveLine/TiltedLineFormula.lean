@@ -413,9 +413,8 @@ lemma TotalH.bijective_of_two_triangles {K P I W B : Type*} [AddGroup K] [AddGro
   obtain ⟨h_inj, h_surj⟩ := h_bij
   -- As `d ∘ b` is onto, `d` is onto, so `e = 0` and `f` is injective; as `d ∘ b` is injective,
   -- `a = 0` and `c` is onto.
-  have h_e_zero (p : P) : e p = 0 := by
-    obtain ⟨w, rfl⟩ := h_surj p
-    exact (hde (d (b w))).2 ⟨b w, rfl⟩
+  have h_e_zero : ∀ p, e p = 0 :=
+    h_surj.forall.2 fun w ↦ hde.apply_apply_eq_zero (b w)
   have h_zero_of_db (w : W) (hw : d (b w) = 0) : w = 0 := (injective_iff_map_eq_zero _).1 h_inj w hw
   constructor
   · -- If `c (f x) = 0` then `f x = b w` with `d (b w) = d (f x) = 0`; so `w = 0` and `f x = 0`.
