@@ -94,7 +94,7 @@ variable {E n : Type} [Field E] [CMType E] [Fintype n] [DecidableEq n]
 `p ^ r'` for every `r' ≥ r`. -/
 lemma rpow_mono {r r' : ℝ} {φ : AlgForm (E := E) n κ e} (hφ : GaugeLe d (p ^ r) φ) (hr : r ≤ r') :
     GaugeLe d (p ^ r') φ :=
-  fun g ↦ (hφ g).trans (rpow_le_rpow_of_exponent_le (mod_cast hp.1.pos) hr)
+  fun g ↦ (hφ g).trans (rpow_le_rpow_of_exponent_le (mod_cast hp.out.pos) hr)
 
 /-- The `p`-adic gauge is ultrametric. If, for a fixed adelic point `d` and every `g`, the gauges of
 the values of two forms at `g`, taken at `g * d` (`New.GaugeLe`), are at most `c`, then the same
@@ -117,7 +117,7 @@ lemma smul {c : ℝ} {φ : AlgForm (E := E) n κ e} (hφ : GaugeLe d c φ) (a : 
 these gauges at most `1`. -/
 lemma zpow_neg_smul {r : ℝ} {β : ℤ} {φ : AlgForm (E := E) n κ e} (hφ : GaugeLe d (p ^ r) φ)
     (hβ : β ≤ -r) : GaugeLe d 1 ((p : ℂ) ^ (-β) • φ) := by
-  have hp_pos : (0 : ℝ) < p := mod_cast hp.1.pos
+  have hp_pos : (0 : ℝ) < p := mod_cast hp.out.pos
   have h_norm : ‖ιₚ ((p : ℂ) ^ (-β))‖ = p ^ (β : ℝ) := by simp [norm_p_eq_inv]
   have h_smul : GaugeLe d (p ^ (β + r)) ((p : ℂ) ^ (-β) • φ) := by
     rw [rpow_add hp_pos, ← h_norm]
@@ -167,7 +167,7 @@ lemma IsWeakChainDatum.gaugeLe_restrictedChain_one (hΨ : IsWeakChainDatum ϑ Ψ
   -- The data are standard for `δ = piMBar` and the scale is `star δ`, so each lift multiplies
   -- gauges by at most a power of `‖ιₚ d‖⁻¹ = 1`.
   have h_norm_d : ‖(P.d : PadicComplex p)‖ = 1 :=
-    ((p.coprime_primes hp.1 P.d_prime).2 hd).norm_natCast_eq_one _
+    ((p.coprime_primes hp.out P.d_prime).2 hd).norm_natCast_eq_one _
   have h_ratio : ‖ιₚ (star (D.piMBar : ℂ))‖ / ‖ιₚ (star (D.piMBar : ℂ) * P.d)‖ = 1 := by
     simp [h_norm_d]
   have h_raises (x : D.Translations) (hx : x ∈ Ψ.support) (j : ℕ) :
@@ -226,7 +226,7 @@ lemma IsWeakChainDatum.gaugeLe_pow_collisionExponent_smul (hΨ : IsWeakChainDatu
     (hp_small : D.IsSmallNonsplit p) :
     GaugeLe 1 (p ^ (D.loss p - D.gain p))
       (restrictedChain ϑ Ψ ((p : ℂ) ^ D.collisionExponent p • v)) := by
-  have hp_pos : (0 : ℝ) < p := mod_cast hp.1.pos
+  have hp_pos : (0 : ℝ) < p := mod_cast hp.out.pos
   -- Every collision `(τ, e)` has `e ≥ 1`, so `j_p` pays for the collisions of all `m` lifts.
   have h_paid : D.m * D.collisionSum p ∅ ≤ D.collisionExponent p := by
     have h_sum : D.collisionSum p ∅ ≤ 2 * D.f * D.a / p ^ 1 :=
@@ -296,7 +296,7 @@ colength exponent per dimension of the scaled Hecke operator at `l`, is at most 
 lemma IsMarked.mul_sum_heckeScalingExponent_le_loss (hΛ : D.IsMarked Λ) :
     D.m * ∑ l ∈ Λ, (12 * D.heckeScalingExponent l / (D.m * p) +
       1 / (D.m ^ 2 * D.f) * D.collisionExponent p : ℝ) ≤ D.loss p := by
-  have hp_pos : (0 : ℝ) < p := mod_cast hp.1.pos
+  have hp_pos : (0 : ℝ) < p := mod_cast hp.out.pos
   have hm_pos : (0 : ℝ) < D.m := HasLogBound.pos D
   -- Each a-place induces one prime, so the `A_l` add up to at most `a f`.
   have h_sum : ∑ l ∈ Λ, heckeScalingExponent l ≤ D.a * D.f :=
@@ -340,7 +340,7 @@ theorem IsMarked.isOntoUpToColength_prod_scaledHeckeOperator_pow (hΛ : D.IsMark
   have h_onto : IsOntoUpToColength ↑p D.integralSourceForms (D.collisionExponent p)
       (L.map hΛ.scaledHeckeOperator).prod (L.map fun l : Λ ↦ cost l * finrank ℂ D.SourceForm).sum :=
     IsOntoUpToColength.prod L fun l _ ↦ hΛ.isOntoUpToColength_scaledHeckeOperator
-      (D.collisionExponent p) l.2
+      (D.collisionExponent p) l.property
   have h_prod :
       (L.map hΛ.scaledHeckeOperator).prod = (Λ.attach.toList.map hΛ.scaledHeckeOperator).prod ^
         D.m := by
@@ -359,7 +359,7 @@ omit [PadicPlace p] in
 /-- A prime `p` lies in `D.smallNonsplitPrimes` if and only if `p < x₁` and `χ_K(p) ≠ 1`. -/
 lemma mem_smallNonsplitPrimes_iff_isSmallNonsplit :
     p ∈ D.smallNonsplitPrimes ↔ D.IsSmallNonsplit p := by
-  simp [Nat.lt_ceil, hp.1]
+  simp [Nat.lt_ceil, hp.out]
 
 omit [PadicPlace p] in
 /-- A prime `p` outside `D.smallNonsplitPrimes` splits in `K`, that is `χ_K(p) = 1`, or is at least
