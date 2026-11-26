@@ -581,16 +581,6 @@ private lemma projSpace.map_unitsExtClass_eq_map_of_comp_eq {B : AbFunctor Padic
       rw [hj']
     _ = _ := H.map_comp ..
 
-private lemma gluing_apply_point (c : PadicTest)
-    (t : (tilt ⋙ reprBy (CommAlgCat.of OFlat OFlat)).obj c) :
-    (gluing.app c).hom (.of (⟨⟨false⟩, t⟩ : (tiltPointsSum pointOrTorus).obj c)) =
-      .of (⟨⟨false⟩, ⟨evalZero _ ≫ t.down⟩⟩ : twoDiscs.obj c) := freeAb.desc_of ..
-
-private lemma gluing_apply_torus (c : PadicTest) (t : (tilt ⋙ reprBy (monoidAlg ℚ)).obj c) :
-    (gluing.app c).hom (.of (⟨⟨true⟩, t⟩ : (tiltPointsSum pointOrTorus).obj c)) =
-      .of (⟨⟨false⟩, ⟨discToTorus (-coeHom) ≫ t.down⟩⟩ : twoDiscs.obj c) -
-        .of (⟨⟨true⟩, ⟨discToTorus coeHom ≫ t.down⟩⟩ : twoDiscs.obj c) := freeAb.desc_of ..
-
 /-- The map `j` of a Toda cancellation lifts through the projective line. Let `A` be a natural map
 from the perfect disc to the affine line over `B` whose values at `u` and `u⁻¹` multiply to `1` on
 the torus (`hA_inv`), and let its image `a` in `R[1/p]` be invariant under the twists of the two
