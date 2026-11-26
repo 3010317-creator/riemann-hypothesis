@@ -10,8 +10,6 @@ public import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.PartsSt
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open MvPolynomial MeasureTheory Filter Topology Matrix ComplexSets

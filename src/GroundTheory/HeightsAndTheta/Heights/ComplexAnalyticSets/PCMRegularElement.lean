@@ -20,8 +20,6 @@ public import Mathlib.RingTheory.Flat.TorsionFree
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open IsLocalRing RingTheory.Sequence CategoryTheory Abelian Limits Pointwise

@@ -16,8 +16,6 @@ public import Mathlib.Analysis.Analytic.IsolatedZeros
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 open MvPolynomial Filter Topology Matrix Metric

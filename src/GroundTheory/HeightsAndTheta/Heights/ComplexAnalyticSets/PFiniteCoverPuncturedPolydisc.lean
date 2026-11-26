@@ -18,8 +18,6 @@ public import Mathlib.Data.ZMod.QuotientGroup
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 open Filter Topology Complex

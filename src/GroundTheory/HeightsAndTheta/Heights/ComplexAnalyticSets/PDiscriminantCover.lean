@@ -10,8 +10,6 @@ public import Mathlib.FieldTheory.IsAlgClosed.Basic
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.ComplexSets
 
 open MvPolynomial

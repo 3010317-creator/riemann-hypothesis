@@ -15,8 +15,6 @@ public import Mathlib.MeasureTheory.Function.Jacobian
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open MeasureTheory Module Set Filter Function

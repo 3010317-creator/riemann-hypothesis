@@ -10,8 +10,6 @@ public import Mathlib.RingTheory.AdicCompletion.Completeness
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 theorem primeFibreLocalRing_nonempty_equiv_of_surjective
