@@ -957,7 +957,6 @@ theorem RealPlace.exists_majorant_volumeRatio_inv_pow (hi_le : i ≤ 𝔰.ϱ) {�
   let φ (A : Fin i → 𝔰.κ → ℂ) : ENNReal :=
     .ofReal (C * ‖(G + (L₁ᴴ * of A + c)ᴴ * (L₁ᴴ * of A + c)).det‖⁻¹ ^ (𝔰.k + i))
   have hG : G.PosDef := PosDef.one.add_posSemidef (posSemidef_vecMulVec_self_star _)
-  have hδ_pos : 0 < ‖(subframeBlock hi_le Z).det‖ := norm_pos_iff.2 hδ
   have h_zero (l : Fin i) : L l.castSucc (last i) = 0 := h.triangular _ _ (castSucc_lt_last l)
   refine ⟨φ, ?_, ?_, fun γ A hZ hγ h_shift ↦ ENNReal.ofReal_mono ?_⟩
   · exact (((measurable_det_add_conjTranspose_mul L₁ᴴ c G).norm.inv.pow_const _).const_mul
