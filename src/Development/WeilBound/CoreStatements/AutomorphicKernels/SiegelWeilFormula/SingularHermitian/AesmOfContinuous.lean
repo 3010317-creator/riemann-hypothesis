@@ -24,8 +24,7 @@ theorem trace_inclR (e : E) :
 theorem psi_rat {ψ : AddChar (AF F) ℂ} (hψ : ∀ x : F, ψ (algebraMap F (AF F) x) = 1) {n : ℕ}
     (X : Matrix (Fin n) (Fin n) E) : ψ (-(Algebra.trace (AF F) (AE F E) (Matrix.trace (incM F X)))) = 1 := by
   have e : Matrix.trace (incM F X) = inclR (F := F) (AF F) (Matrix.trace X) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [Matrix.trace, incM, map_sum]
+    simp [Matrix.trace, incM, map_sum]
   rw [e, trace_inclR, ← map_neg, hψ]
 
 end PositivityTheory.SiegelWeilFormula.KSing

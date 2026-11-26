@@ -1160,7 +1160,6 @@ theorem char_mul {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T
   haveI := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K LL _ ν₃).1
   have hc : Fintype.card (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) = finrank ℚ_[l] ↥K.1 := by
     rw [← hcard, Nat.card_eq_fintype_card]
-  set_option synthInstance.maxHeartbeats 200000 in
   have hone : ∀ τ, finrank ↥LL.1 ↥(DdRE (P.PD K) ν₃ τ) = 1 := by
     intro τ
     obtain ⟨hf, hle, -⟩ := (GlobalTheory.Per.Components.components_finrank l P AI T K LL _ ν₃).1 τ
@@ -1524,7 +1523,6 @@ theorem fil_line (P : LocPrime l) (AI : LocAinf l P) (Ti : LocTied l P AI) (K LL
   fil_of_unramified P AI Ti K LL (lineLoc K LL ρ μ hρ hμ hO)
     (fun g hg (x : Fin 1 → ↥LL.1) => (hρ g x).trans (by rw [hI g hg, one_smul])) y hy
 
-set_option maxHeartbeats 1600000 in
 theorem multV_of_fil (P : LocPrime l) (AI : LocAinf l P) (Ti : LocTied l P AI) (K LL : FinExt l) (ρ : Representation ↥LL.1 ↥(GK K) (Fin 1 → ↥LL.1))
     (hDR : IsDR (P.PD K) ρ)
     (h0 : ∀ y ∈ DdR (P.PD K) ρ, y ∈ FilV (P.PD K) (LL := ↥LL.1) (V := Fin 1 → ↥LL.1) 0)
@@ -1541,7 +1539,6 @@ theorem multV_of_fil (P : LocPrime l) (AI : LocAinf l P) (Ti : LocTied l P AI) (
     inf_eq_left.2 fun y hy => hdown b hb (h0 y hy.1)
   have hpos : ∀ b : ℤ, 1 ≤ b → FildR (P.PD K) ρ τ b = ⊥ := fun b hb =>
     (Submodule.eq_bot_iff _).2 fun y hy => h1 y hy.1.1 (hup b hb hy.2)
-  set_option synthInstance.maxHeartbeats 200000 in
   have hfin : finrank ↥LL.1 ↥(DdRE (P.PD K) ρ τ) = 1 := by
     have := ((GlobalTheory.Per.Components.components_finrank l P AI Ti K LL (Fin 1 → ↥LL.1) ρ).1 τ).2.2 hDR
     simpa using this
@@ -1716,8 +1713,7 @@ theorem lubinTate_at_embedding (HP : LTPeriods) : ∀ {E Ω : Type} [Field E] [N
     rfl
   · intro g
     simpa [hψ] using (hnorm _).trans (hn (Bw.e g))
-  · set_option synthInstance.maxHeartbeats 100000 in
-    show Module.finrank _ ↥(DdR (P.PD Bw.Kw) (Bw.repE LL' _)) = _
+  · show Module.finrank _ ↥(DdR (P.PD Bw.Kw) (Bw.repE LL' _)) = _
     rw [repE_eq]; exact hd
   · intro τ' a
     show multV (P.PD Bw.Kw) (Bw.repE LL' _) τ' a = _

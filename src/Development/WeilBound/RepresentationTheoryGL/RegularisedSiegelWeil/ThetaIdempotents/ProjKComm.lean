@@ -112,8 +112,7 @@ open GlobalTheory.Core.Rk.SWLaw (zeroSp dblDec)
 variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ}
 
 theorem trace_rat {ρ : ℕ} (M : Matrix (Fin ρ) (Fin ρ) D.host.E) : (rat M : Mx D ρ ρ).trace = incA D M.trace := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Matrix.trace, Matrix.diag, rat, Matrix.map_apply, map_sum]
+  simp only [Matrix.trace, Matrix.diag, rat, Matrix.map_apply, map_sum]
 
 def chi (ψ : AddChar (AF D.host.F) ℂ) {k ρ : ℕ} (M : Matrix (Fin k) (Fin ρ) D.host.E) (z : Mx D k ρ) : ℂ :=
   ψ (Algebra.trace (AF D.host.F) (AE D) (incA D D.host.xi0 * (adj z ⬝ (rat M : Mx D k ρ)).trace))
@@ -351,7 +350,6 @@ theorem tsum_reindex (G : Matrix (Fin T.rank) (Fin ρ) D.host.E → ℂ) :
     simpa only [Matrix.add_mul, HypDec.q0, HypDec.qY, Matrix.mul_assoc d.e, Matrix.mul_assoc d.i₀, Matrix.mul_assoc d.e',
       Matrix.mul_assoc T'.gram⁻¹, hY, h0, Matrix.mul_zero, add_zero, Matrix.one_mul] using this
 
-set_option maxHeartbeats 1000000 in
 theorem inner_mean (hψ : IsStdChar D ψ (-1)) (v : GlobalTheory.Unf.VolM D T.rank ρ) {f : WO S T → ℂ} (hf : IsThetaFunO ψ S T f)
     {μ : Measure (Mx D t ρ)} {𝓕 : Set (Mx D t ρ)} (hμ : IsCovolOne (ratMx D t ρ) μ 𝓕)
     {ν : Measure (Mx D T'.rank ρ)} {𝓨 : Set (Mx D T'.rank ρ)} (hν : IsCovolOne (ratMx D T'.rank ρ) ν 𝓨) (u : Mx D t ρ) :

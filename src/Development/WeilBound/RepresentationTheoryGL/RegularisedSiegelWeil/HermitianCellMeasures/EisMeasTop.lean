@@ -720,7 +720,6 @@ open GlobalTheory.CompanionTheory.IwaAd GlobalTheory.CompanionTheory.HermVol Glo
 
 
 set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 1000000 in
 theorem hermScale_main : PositivityTheory.Rg.Rsw.L.IdemEx → PositivityTheory.Rg.Rsw.Em.TopX → PositivityTheory.Rg.Rsw.Em.HermScale := by
   intro hid htop D t S e he lam hlam g hg
   obtain ⟨hee, hce⟩ := (hid D S).2 e he
@@ -1637,7 +1636,6 @@ open IsDedekindDomain NumberField
 namespace GlobalTheory.CompanionTheory.OrbExist
 
 
-set_option maxHeartbeats 1600000 in
 theorem orbEx : IdemEx → ApproxId → Dens → TopX → AlgRich → AlgStab → SigLaw → HermScale → OrbEx := by
   set_option synthInstance.maxHeartbeats 200000 in
     intro _hIE hAI hDens hTop hAR hAS hSL hHS D n r t hn V hV ψ hψ θ hθ b₀ hb S e hS he fib μt hfib hfibs

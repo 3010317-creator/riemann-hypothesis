@@ -172,7 +172,6 @@ end LamSingH
 open LamSingH
 
 set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 2000000 in
 theorem gLsing_core (hFZ : FourierZeroN) (hTS : TwoSided) (hD : DenseTau) (hCD : PositivityTheory.PfSWUS.CoefDataExists)
     (hNb : NbFacts) (hCh : CharFacts) (hCo : HermCocompact) (hSp : SplitTauP) (hNt : NbTauP) (hPer : ChiPer) :
     GLsing := by

@@ -22,8 +22,6 @@ noncomputable section
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum MeasureTheory Matrix ValuativeRel IsLocalRing GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.LatPair GlobalTheory.SplitWeil GlobalTheory.SeeSaw GlobalTheory.FinPl
 open scoped TensorProduct
 
-set_option maxHeartbeats 1000000
-set_option synthInstance.maxHeartbeats 200000
 
 namespace GlobalTheory.FinPlLoc
 
@@ -105,14 +103,12 @@ theorem glue : ∀ (D : D7) (a : Pl D → AE D), (∀ x, a x ∈ idAt D (· = x)
     exact hw _ (hT w hwT).2 i
   let C : Fin (Module.finrank D.host.F D.host.E) → Af D.host.F := fun i => RestrictedProduct.mk (c i) (hc i)
   refine ⟨∑ i, pairA D.host.F 0 (C i) ⊗ₜ[D.host.F] b i, ?_, fun x => ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [map_sum]
-      simp only [infPart_pair, Finset.sum_const_zero]
+  · rw [map_sum]
+    simp only [infPart_pair, Finset.sum_const_zero]
   · unfold idOff
     refine (Submodule.mem_iInf _).2 fun w => RingHom.mem_ker.2 ?_
     obtain ⟨w, rfl⟩ := w
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, map_sum, sub_eq_zero]
+    rw [map_sub, map_sum, sub_eq_zero]
     simp only [compAt_pair]
     exact sum_repr_tmul w (compAt D w (a w))
 

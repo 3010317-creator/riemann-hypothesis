@@ -91,7 +91,6 @@ namespace PositivityTheory.Pf1.SegRepC.Uniq
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 
-set_option synthInstance.maxHeartbeats 400000 in
 theorem exists_unique_irred_sub {d l : ℕ} (hd : 0 < d) (hl : 0 < l) (σ : IrrRep (GL (Fin d) k))
     (hσ : IsCuspidal σ.ρ)
     (h1 : jhMult (piTensor (segTerm σ.ρ l))
@@ -153,7 +152,6 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 
 
-set_option synthInstance.maxHeartbeats 400000 in
 theorem isSubquotient_jac_of_le {d l : ℕ} (σ : IrrRep (GL (Fin d) k))
     {S T : Subrepresentation (multiProd (consecBlocks l d) (segTerm σ.ρ l))} (hST : S.toSubmodule ≤ T.toSubmodule)
     {X : Type} [AddCommGroup X] [Module ℂ X] {π : Representation ℂ (Levi k fun _ : Fin l => Fin d) X}
@@ -205,8 +203,6 @@ open SrRev
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 1000000 in
 theorem jhMult_rev_jac_sub (hG : GeometricLemma) (hR : RhoNuRhoReducible) {d : ℕ} (hd : 0 < d)
     (σ : IrrRep (GL (Fin d) k)) (hσ : IsCuspidal σ.ρ)
     (S : Subrepresentation (multiProd (consecBlocks 2 d) (segTerm σ.ρ 2)))
@@ -419,7 +415,6 @@ private theorem hasFiniteLength_subrepresentation {G V : Type} [Group G] [AddCom
     (fun a b h => Subtype.ext h) hπ
 
 
-set_option synthInstance.maxHeartbeats 400000 in
 theorem hasFiniteLength_jac_sub {d : ℕ} (hd : 0 < d)
     (σ : IrrRep (GL (Fin d) k)) (hσ : IsCuspidal σ.ρ)
     (S : Subrepresentation (multiProd (consecBlocks 2 d) (segTerm σ.ρ 2))) :
@@ -680,7 +675,6 @@ theorem exists_perm_of_isSubquotient_jac (hG : GeometricLemma) {d l : ℕ} (hd :
     π hπ hπs
 
 
-set_option synthInstance.maxHeartbeats 400000 in
 theorem constituents_jac_sub (hG : GeometricLemma) {d : ℕ} (hd : 0 < d)
     (σ : IrrRep (GL (Fin d) k)) (hσ : IsCuspidal σ.ρ)
     (S : Subrepresentation (multiProd (consecBlocks 2 d) (segTerm σ.ρ 2)))
@@ -737,7 +731,6 @@ open PositivityTheory.Pf1.SegRepC PositivityTheory.Pf1.SegRepC.SegTwo
 namespace PositivityTheory.RgGu.SRC
 
 
-set_option synthInstance.maxHeartbeats 400000 in
 def StageP : Prop :=
   ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k],
     GeometricLemma → PositivityTheory.Pf1.SegRepC.SegTwo → ∀ {d l : ℕ}, 0 < d → 0 < l → ∀ (σ : IrrRep (GL (Fin d) k)),
@@ -748,8 +741,6 @@ def StageP : Prop :=
         ∀ (w : Equiv.Perm (Fin l)), π.Equiv (piTensor fun a => segTerm σ.ρ l (w a)) →
         w.symm ⟨i, by omega⟩ < w.symm ⟨i + 1, hi⟩
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 1000000 in
 theorem segTwo_of (hG : GeometricLemma) (hR : RhoNuRhoReducible) : PositivityTheory.Pf1.SegRepC.SegTwo := by
   intro k _ _ _ _ d hd σ hσ
   have h2 : (0 : ℕ) < 2 := by decide
@@ -763,8 +754,6 @@ theorem segTwo_of (hG : GeometricLemma) (hR : RhoNuRhoReducible) : PositivityThe
     refine jhMult_ne_zero_iff.2 ?_ (SRC.jhMult_rev_jac_sub hG hR hd σ hσ S hS h1)
     exact (IsSubquotient.of_surjective φ.toIntertwiningMap fun w => ⟨φ.symm w, φ.apply_symm_apply w⟩).trans hs
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 1000000 in
 theorem segRep_of (hT : StageP) (hG : GeometricLemma) (h2 : PositivityTheory.Pf1.SegRepC.SegTwo) : SegmentRepresentation := by
   intro k _ _ _ _ d l hd hl σ hσ
   obtain ⟨S, hS, huniq, h1⟩ := Uniq.exists_unique_irred_sub hd hl σ hσ (SRC.jhMult_jac_multiProd hG hd hl σ hσ)

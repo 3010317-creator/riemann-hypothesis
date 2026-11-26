@@ -92,8 +92,6 @@ namespace PositivityTheory.AdelicQuotientData
 
 namespace AdmissibleVectors
 
-set_option synthInstance.maxHeartbeats 400000
-
 variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {k : ℕ}
 
 omit [_root_.NumberField.IsTotallyComplex E] in
@@ -111,7 +109,6 @@ theorem map_wd (μ : Measure (GA E k)) [μ.IsHaarMeasure] (β : GA E k → ℝ�
 end AdmissibleVectors
 
 open AdmissibleVectors in
-set_option synthInstance.maxHeartbeats 400000 in
 theorem sum_wt_mul_massS_le_inv_pow_mul_total_mass : Q1 → Q2 → N2 → N3 → C1 := by
   intro _ hQ2 hN2 hN3 E _ _ _ k μ _ hk β hβ w l Φ hΦ hΦu hint
   set t := fl k w (Iwasawa.torusPow (w.adicCompletion E) k l) with ht
@@ -799,8 +796,7 @@ theorem rspole_of : GlobalTheory.Published.JacquetShalikaBound → jumpWindows.G
   have hαb := PRSPole.bnd hJS π hπ S α hα
   have hβb := PRSPole.bnd hJS π' hπ' S β hβ
   let μ : Measure (GA E k) := by
-    set_option synthInstance.maxHeartbeats 400000 in
-      exact Measure.haar
+    exact Measure.haar
   obtain ⟨⟨b, hb⟩, -⟩ := hW0 E k μ hk
   rcases hkm.lt_or_eq with hlt | heq
   · obtain ⟨ι, hι⟩ := ((hK5e E m k hkm).1 (Ad E))
@@ -1109,8 +1105,6 @@ namespace PositivityTheory.AdelicQuotientData
 
 namespace RhoSigmaFinite
 
-set_option synthInstance.maxHeartbeats 400000
-
 variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {k : ℕ}
 
 omit [_root_.NumberField.IsTotallyComplex E] in
@@ -1149,7 +1143,6 @@ theorem int_rho (Φ : GA E k → ℂ) (hΦ : Measurable Φ) (g : GA E k) :
 end RhoSigmaFinite
 
 open RhoSigmaFinite in
-set_option synthInstance.maxHeartbeats 400000 in
 theorem unipotent_integral_of : Q1 → Q2 → N0 → N3 → CosetIntegralParabolic → U0 := by
   intro hQ1 hQ2 hN0 hN3 hN4a E _ _ _ k μ _ hk β hβ
   have : Countable (RowT E k k) := (hN0 E k k hk le_rfl).2.2.2.2.2.2.1

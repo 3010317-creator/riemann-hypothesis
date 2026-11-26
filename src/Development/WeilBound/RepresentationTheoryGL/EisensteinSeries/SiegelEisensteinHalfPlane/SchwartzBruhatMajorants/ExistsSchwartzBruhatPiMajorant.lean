@@ -14,7 +14,6 @@ import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
 set_option synthInstance.maxSize 1000
 open NumberField Matrix MeasureTheory Filter Topology
 open scoped NumberField.AdeleRing
