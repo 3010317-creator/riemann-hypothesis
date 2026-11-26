@@ -2,6 +2,7 @@ import Lib.General.Analysis.GaussianIntegral
 import Lib.General.Groups.CongruenceSubgroups
 import Lib.General.Measure.HaarNormalisation
 import Lib.General.Topology
+import TauCeti.Analysis.Complex.CauchyIntegralPolydisc
 
 /-!
 # Strong operator integrals, analyticity of parameter integrals, and Hua's integral bound
@@ -288,19 +289,9 @@ lemma DiscreteSeries.IsAnalyticFamily.of_analyticAt [R1Space K] {ι : K → F} (
 differentiable at every point near p is analytic at p. -/
 lemma analyticAt_of_eventually_differentiableAt [FiniteDimensional ℂ F] {f : E → F}
     (hf : ∀ᶠ z : E in nhds p, DifferentiableAt ℂ f z) :
-    AnalyticAt ℂ f p := by
-  -- In a basis of `F` each coordinate of `f` is a scalar function, to which
-  -- `isAnalyticFamily_of_continuousAt_of_differentiableAt` applies with `K` a point; integration
-  -- against the Dirac measure evaluates at that point.
-  let e : F ≃L[ℂ] (Fin (finrank ℂ F) → ℂ) := (finBasis ℂ F).equivFunL
-  have h_coord (i : Fin (finrank ℂ F)) : AnalyticAt ℂ (fun y : E ↦ e (f y) i) p := by
-    have h_family : DiscreteSeries.IsAnalyticFamily (fun (y : E) (_ : Unit) ↦ e (f y) i) p := by
-      refine isAnalyticFamily_of_continuousAt_of_differentiableAt (hf.mono fun z hz _ ↦ ?_)
-        (hf.mono fun z hz _ ↦ by fun_prop)
-      have h_cont : ContinuousAt f z := hz.continuousAt
-      fun_prop
-    simpa using h_family.analyticAt_integral (.dirac ())
-  simpa [Function.comp_def] using (e.symm.analyticAt _).comp (AnalyticAt.pi h_coord)
+    AnalyticAt ℂ f p :=
+  have := FiniteDimensional.complete ℂ F
+  DifferentiableOn.analyticAt_of_finiteDimensional (fun _ hz ↦ hz.differentiableWithinAt) hf
 
 /-- A complex polynomial P in finitely many variables is differentiable at every x, with
 derivative v ↦ ∑ᵢ (∂P/∂Xᵢ)(x)·vᵢ, given by the formal partial derivatives. -/
