@@ -688,7 +688,6 @@ lemma enorm_amplitudeSum_le_orbitBound (hT : S.IsStable T) {j : Fin (𝔰.ϱ + 2
     refine (enorm_amplitudeSum_le_orbitBound_top on_stable (fun γ hγ ↦ disc_ne γ hγ.2) c s c').trans
       (tsum_le_tsum fun ⟨γ, ⟨hγT, hγK⟩, _⟩ ↦ ?_)
     -- A term with `𝗀 ≠ 0` has the top cell rank, where the indices are `1`.
-    have h_ne : S.termDisc γ ≠ 0 := disc_ne γ hγK
     obtain rfl : j = ⊤ := by grind [HasCellRank]
     simp [bound, (h_cell γ hγT).maxGauge_eq, isotropicRowsIndex_top, hγK.out.le]
   have off_K : ‖S.amplitudeSum .cut (T ∩ Kᶜ) c s c'‖ₑ ≤
