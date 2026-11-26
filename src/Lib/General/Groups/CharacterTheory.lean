@@ -403,7 +403,7 @@ open MonoidAlgebra Finset LinearMap ComplexConjugate Matrix Algebra Representati
 attribute [local instance low] Fintype.ofFinite
 
 variable {G H V : Type*} [Group G] [Finite G] [Group H] {χ f : G → ℂ}
-  [AddCommGroup V] [Module ℂ V] [Module.Finite ℂ V] {ρ : Representation ℂ G V}
+  [AddCommGroup V] [Module ℂ V] {ρ : Representation ℂ G V}
   (Z : Type*) [CommSemiring Z] [Algebra Z ℂ]
 
 omit [Group G] in
@@ -597,6 +597,15 @@ lemma IsClassFunction.exists_eq_mul_groupAlgElem_mul (hf : IsClassFunction f) (a
     simp [ha_zero]
   · simp [hc, hi, algebraMap_eq_smul_one]
 
+/-- The trace of the group algebra element with coefficients `conj (χ g)`, divided by the order
+of the group, is the inner product of `χ` with the character of the representation. -/
+lemma trace_asAlgebraHom_groupAlgElem_conj (χ : G → ℂ) :
+    trace ℂ V (ρ.asAlgebraHom (groupAlgElem (conj ∘ χ))) / Nat.card G =
+      classInner χ ρ.character := by
+  simp [asAlgebraHom_eq_sum, classInner, finMean, finsum_eq_sum_of_fintype, character]
+
+variable [Module.Finite ℂ V]
+
 /-- Let `i : G →* H` be a group homomorphism with `G` finite, `χ` a character of `H` and `s ∈ H`.
 If the product of `χ ∘ i` with the character of a finite-dimensional representation `ρ` of `G` has
 average zero, then `∑ g, χ (i g * s) • g` acts as zero in `ρ`. -/
@@ -626,8 +635,7 @@ in `ρ` iff `χ` is orthogonal to the character of `ρ` for the inner product `N
 lemma IsChar.asAlgebraHom_groupAlgElem_eq_zero_iff (h : IsChar χ) :
     ρ.asAlgebraHom (groupAlgElem (conj ∘ χ)) = 0 ↔ classInner χ ρ.character = 0 := by
   refine ⟨fun h_zero ↦ ?_, fun h_zero ↦ ?_⟩
-  · simpa [classInner, finMean, finsum_eq_sum_of_fintype, character, asAlgebraHom_eq_sum]
-      using congrArg (trace ℂ V) h_zero
+  · rw [← trace_asAlgebraHom_groupAlgElem_conj χ, h_zero, map_zero, zero_div]
   · -- `IsChar.asAlgebraHom_groupAlgElem_eq_zero` for the character `conj χ`, with `i` the identity
     -- and `s = 1`
     simpa [asAlgebraHom_eq_sum] using h.star.asAlgebraHom_groupAlgElem_eq_zero (i := .id G) (s := 1)
