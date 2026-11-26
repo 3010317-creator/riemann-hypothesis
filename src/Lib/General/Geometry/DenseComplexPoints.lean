@@ -276,21 +276,15 @@ lemma New.exists_nnreal_valuation {K : Type*} [Field K] (V : ValuationSubring K)
   -- The canonical valuation of the valuative relation of `V` is equivalent to that of `V`.
   let : ValuativeRel K := ofValuation V.valuation
   have : V.valuation.Compatible := .ofValuation V.valuation
-  have h_equiv : (valuation K).IsEquiv V.valuation := isEquiv _ _
-  have h_prime (J : Ideal V) (hJ : J.IsPrime) (hJ_ne : J ≠ ⊥) : maximalIdeal V ≤ J :=
-    let ⟨c, hc_mem, hc_ne⟩ := J.ne_bot_iff.1 hJ_ne
-    hV J hJ c (mem_nonZeroDivisors_of_ne_zero hc_ne) hc_mem
-  have h_arch : MulArchimedean (ValueGroupWithZero K) := by
-    refine ⟨valuation_surjective.forall₂.2 fun z y hy ↦ ?_⟩
-    obtain ⟨n, hn⟩ :=
-      exists_valuation_le_pow_of_maximalIdeal_le V h_prime z (h_equiv.one_lt_iff_one_lt.1 hy)
-    exact ⟨n, by rwa [← map_pow, h_equiv.le_iff_le, map_pow]⟩
-  -- An archimedean value group has rank at most one, that is, it embeds in `ℝ≥0` by some `g`.
-  obtain ⟨g, hg⟩ : IsRankLeOne K := isRankLeOne_iff_mulArchimedean.2 h_arch
-  refine ⟨(valuation K).map ⟨g, hg.monotone⟩, ?_⟩
-  rw [(isEquiv_iff_valuationSubring _ _).1
-    ((isEquiv_map_self_of_strictMono ⟨g, hg.monotone⟩ hg.injective).trans h_equiv),
-    V.valuationSubring_valuation]
+  have h : (valuation K).IsEquiv V.valuation := isEquiv _ _
+  -- The value group is archimedean, hence has rank at most one and embeds into `ℝ≥0` by some `g`.
+  obtain ⟨g, hg⟩ : IsRankLeOne K := isRankLeOne_iff_mulArchimedean.2
+    ⟨valuation_surjective.forall₂.2 fun z y hy ↦
+      (exists_valuation_le_pow_of_maximalIdeal_le V (fun J hJ hne ↦ (J.ne_bot_iff.1 hne).elim
+        fun c ⟨hc, hc0⟩ ↦ hV J hJ c (mem_nonZeroDivisors_of_ne_zero hc0) hc) z
+        (h.one_lt_iff_one_lt.1 hy)).imp fun n hn ↦ by rwa [← map_pow, h.le_iff_le, map_pow]⟩
+  exact ⟨(valuation K).map ⟨g, hg.monotone⟩, V.valuationSubring_valuation ▸
+    (isEquiv_iff_valuationSubring _ _).1 ((isEquiv_map_self_of_strictMono _ hg.injective).trans h)⟩
 
 /-- Blowing up inside a valuation ring. Let `O ⟶ W` be a local map from a noetherian local ring to
 a valuation ring. Then `W` has a noetherian `O`-subalgebra `A` with a prime `p` that is minimal
