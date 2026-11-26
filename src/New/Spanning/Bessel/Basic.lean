@@ -631,7 +631,15 @@ lemma fromBlocks_scaleAt_mul_eq_one {a a' c c' : R} (ha : a * a' = 1) (hc : c * 
       fromBlocks (scaleAt a' 𝔰.k₀) 0 (of fun (_ : Unit) (j : 𝔰.κ) ↦ if j = 𝔰.k₀ then c' else 0)
         (1 : Matrix Unit Unit R) = 1 := by
   rw [fromBlocks_multiply, ← fromBlocks_one]
-  congr 1 <;> ext i j <;> simp [Matrix.mul_apply, diagonal, Matrix.one_apply] <;> grind
+  simp only [Matrix.mul_zero, Matrix.zero_mul, zero_add, add_zero, mul_one]
+  congr 1
+  · ext i j
+    by_cases hij : i = j
+    · subst j
+      by_cases hi : i = 𝔰.k₀ <;> simp [scaleAt, hi, ha]
+    · simp [scaleAt, hij]
+  · ext i j
+    by_cases hj : j = 𝔰.k₀ <;> simp [scaleAt, hj, hc]
 
 omit [StarRing R] in
 /-- Two matrices that are the identity outside the middle block, where they are inverse to each
