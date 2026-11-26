@@ -199,6 +199,12 @@ lemma trivialOn_le_localLevel {K : (w : FinPlace E) → Subgroup (GL n (LocField
     trivialOn n S ≤ localLevel n S K := by
   aesop_cat
 
+/-- If no place of `T` lies in `S` or in its conjugate, the elements supported on `S ∪ S̄` are
+trivial at the places of `T`. -/
+lemma Gf.supportedOn_le_trivialOn {T : Set (FinPlace E)} (H : ∀ w ∈ T, w ∉ S ∧ star w ∉ S) :
+    supportedOn n S ≤ trivialOn n T :=
+  biInf_mono H
+
 lemma adeleMap_idem_placesAbove :
     adeleMap σ (idem (placesAbove E' S)) = idem (placesAbove E' S) := by
   -- A place `u` and its pullback under `σ` lie above the same place of `E`.
@@ -424,12 +430,10 @@ lemma isCommutingHeckeFamily_of_isLocalRetraction {N : Subgroup (Gf E n)}
     exact (commute_supportedOn_trivialOn (h_on g) hk_triv).symm.map π
   -- It is trivial at the places `u x`, so it commutes with the spherical operators there.
   have h_sph (g : A) (x : X) (i : ℕ) : Commute (heckeSplit π (hu x) i) (π (a g)) := by
-    have hx_not_S : u x ∉ S := fun hxS ↦ h_off x (.inl hxS)
-    have hx_star_not_S : star (u x) ∉ S := fun hxS ↦ h_off x (.inr hxS)
     have h_trivial : a g ∈ trivialOn n {u x} := by
-      refine mem_trivialOn.2 ?_
+      apply Gf.supportedOn_le_trivialOn (S := S) _ (h_on g)
       rintro w rfl
-      exact mem_supportedOn.1 (h_on g) (u x) hx_not_S hx_star_not_S
+      exact ⟨fun h ↦ h_off x (.inl h), fun h ↦ h_off x (.inr h)⟩
     refine LinearMap.ext fun v ↦ ?_
     exact (heckeSplit_comm_of_trivialOn (hu x) i h_trivial).symm
   have h_stable : ∀ i : J ⊕ X × ℕ,
@@ -557,12 +561,6 @@ lemma isLocalRetraction_ofSplitPlace (n : Type*) [Fintype n] [DecidableEq n] {w 
       simp_all [← below_star, star_eq_iff_star_eq, SetLike.ext_iff, placesAbove, localLevel]
     -- what is left: `localIntGL n u` is `GL_n` of the valuation integers at `u`
     exact fun x ↦ Iff.rfl
-
-/-- If no place of `T` lies in `S` or in its conjugate, the elements supported on `S ∪ S̄` are
-trivial at the places of `T`. -/
-lemma Gf.supportedOn_le_trivialOn (H : ∀ w ∈ T, w ∉ S ∧ star w ∉ S) :
-    supportedOn n S ≤ trivialOn n T :=
-  biInf_mono H
 
 /-- Let `T` avoid `S ∪ S̄`, and let the level `K` be maximal at the places above `T ∪ T̄`. Then
 there is a set `Y` of places of `E` with these properties. (a) The places of `E'` above `T ∪ T̄`
