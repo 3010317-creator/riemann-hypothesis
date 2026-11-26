@@ -705,11 +705,13 @@ The heads of these files give an overview of a theory: `Lib/ClassField/Global/Ar
 - `Lib/Cyclotomic/Voronoi` (324): A small nonzero integer in all Stickelberger ideals via Voronoi's congruence
 - `Lib/Cyclotomic/Stickelberger` (261): A weak form of Stickelberger's theorem for Gauss sums, and a family of Jacobi-type quotients
 - `Lib/Cyclotomic/OddSha` (427): Detecting unramified cocycles and a uniform bound for a model of the odd part of Ш. Its head has an overview of the theory.
+- `Lib/Cyclotomic/OddShaClasses` (217): The model of the odd part of Ш as a group of cohomology classes
 
 **Kolyvagin**: Kolyvagin cocycles, reciprocity laws and class bounds
 
 - `Lib/Cyclotomic/Kolyvagin/DerivativeCocycles` (712): Kolyvagin's derivative cocycles from Gauss sums, for one set of primes
 - `Lib/Cyclotomic/Kolyvagin/ReciprocityComponentBounds` (798): Reciprocity laws and Stickelberger and Kolyvagin bounds for odd-part cocycles
+- `Lib/Cyclotomic/Kolyvagin/ComponentClasses` (179): The odd-part components as groups of cohomology classes
 
 ### DiscreteSeries: Discrete series of U(p,q)
 
