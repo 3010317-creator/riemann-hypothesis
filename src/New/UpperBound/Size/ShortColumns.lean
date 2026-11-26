@@ -824,9 +824,11 @@ lemma sum_height_mul_columnCount_le {P : Parameters} (D : Data P) (τ : D.Φ) :
     ∑ h ∈ range (Fintype.card (D.X 0)), h * D.columnCount τ h ≤ D.a := by
   -- The rank is `k`, and below height `k` only columns of height `1` occur, at most `a` of them.
   have h_zero (h : ℕ) (h_lt : h ∈ range D.k) (h_ne : h ≠ 1) : h * D.columnCount τ h = 0 := by
-    grind [columnCount]
+    have hh := mem_range.mp h_lt
+    simp [columnCount, h_ne, hh.ne, hh.not_gt]
   rw [card_X, n, zero_mul, add_zero, sum_eq_ite 1 h_zero]
-  grind [columnCount]
+  simp only [columnCount, ↓reduceIte, one_mul]
+  split_ifs <;> simp
 
 /-- If a level `K` contains the scalar matrix of the chosen scaling `z_w = D.scalingGenerator w`,
 then the index in `K` of its intersection with the level `D.levelX 0` is at least `N - 1`. -/
