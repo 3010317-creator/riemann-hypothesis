@@ -107,10 +107,11 @@ def testUnitLocus (a : T) : Subfunctor (testSpec A T) where
   map f _ h_unit := h_unit.map f.hom.hom
 
 open IsLocalization Away Algebra in
-/-- Let `L` be a localization of `T` away from `a`. Then the functor of points of `L` on tests over
-`A` is isomorphic to the unit locus `testUnitLocus a` of `a` in Spec `T`. -/
-lemma testUnitLocus.nonempty_testSpec_iso_of_isLocalization_away (a : T) (L : Type) [CommRing L]
-    [Algebra A L] [Algebra T L] [IsScalarTower A T L] [Away a L] :
+/-- Let `L` be a localization of `T` away from `a` (`Localization.Away a` unless `L` is given). Then
+the functor of points of `L` on tests over `A` is isomorphic to the unit locus `testUnitLocus a` of
+`a` in Spec `T`. -/
+lemma testUnitLocus.nonempty_iso_away (a : T) (L : Type := Localization.Away a) [CommRing L]
+    [Algebra A L] [Algebra T L] [IsScalarTower A T L] [IsLocalization.Away a L] :
     Nonempty (testSpec A L ≅ (testUnitLocus a).toFunctor) :=
   -- The universal property of the localization: a map out of `L` is the same as a map out of `T`
   -- that sends `a` to a unit.
@@ -122,13 +123,6 @@ lemma testUnitLocus.nonempty_testSpec_iso_of_isLocalization_away (a : T) (L : Ty
         algHom_ext (.powers a) (AlgHom.ext (lift_eq (S := L) _))
       right_inv ψ := Subtype.ext <| ULift.down_injective <| CommAlgCat.hom_ext <|
         AlgHom.ext fun t ↦ IsLocalization.lift_eq .. }⟩
-
-/-- `nonempty_testSpec_iso_of_isLocalization_away` with `L := Localization.Away a` unless `L` is
-given: the functor of points of `L` is isomorphic to the unit locus `testUnitLocus a`. -/
-lemma testUnitLocus.nonempty_iso_away (a : T) (L : Type := Localization.Away a) [CommRing L]
-    [Algebra A L] [Algebra T L] [IsScalarTower A T L] [IsLocalization.Away a L] :
-    Nonempty (testSpec A L ≅ (testUnitLocus a).toFunctor) :=
-  testUnitLocus.nonempty_testSpec_iso_of_isLocalization_away a L
 
 /-- For e: A[X_1,…,X_d] ≅ T, the map from Spec T to (P¹)^d on tests over A sending ψ to the
 points (ψ(e X_i) : 1). -/

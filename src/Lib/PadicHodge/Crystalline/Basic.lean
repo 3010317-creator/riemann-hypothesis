@@ -340,11 +340,12 @@ noncomputable def baseChangePairing : A ⊗[ℤ_[p]] T →ₗ[A] A ⊗[ℤ_[p]] 
 
 /-- Let `ψ : A → A'` be `ℤ_p`-linear and multiplicative (`hψ_mul`), and let the endomorphisms `f`,
 `f'`, `f''` of `T`, `T'`, `T''` be compatible with `b`: `b (f t) (f' t') = f'' (b t t')`. Then the
-extended pairings satisfy the same identity for the maps `ψ ⊗ f`, `ψ ⊗ f'` and `ψ ⊗ f''`. -/
-lemma baseChangePairing_map_of_map_mul {ψ : A →ₗ[ℤ_[p]] A'} {f : T →ₗ[ℤ_[p]] T}
-    {f' : T' →ₗ[ℤ_[p]] T'} {f'' : T'' →ₗ[ℤ_[p]] T''}
-    (h_equiv : ∀ (t : T) (t' : T'), b (f t) (f' t') = f'' (b t t'))
-    (hψ_mul : ∀ a a' : A, ψ (a * a') = ψ a * ψ a') (x : A ⊗[ℤ_[p]] T) (y : A ⊗[ℤ_[p]] T') :
+extended pairings satisfy the same identity for the maps `ψ ⊗ f`, `ψ ⊗ f'` and `ψ ⊗ f''`. The
+multiplicativity `hψ_mul` comes last and is proved by `simp` when omitted. -/
+lemma baseChangePairing_map {ψ : A →ₗ[ℤ_[p]] A'} {f : T →ₗ[ℤ_[p]] T} {f' : T' →ₗ[ℤ_[p]] T'}
+    {f'' : T'' →ₗ[ℤ_[p]] T''} (h_equiv : ∀ (t : T) (t' : T'), b (f t) (f' t') = f'' (b t t'))
+    (x : A ⊗[ℤ_[p]] T) (y : A ⊗[ℤ_[p]] T')
+    (hψ_mul : ∀ a a' : A, ψ (a * a') = ψ a * ψ a' := by simp) :
     baseChangePairing b (map ψ f x) (map ψ f' y) = map ψ f'' (baseChangePairing b x y) := by
   -- Both sides are additive in `x` and in `y`; on pure tensors this is `h_equiv` and `hψ_mul`.
   induction x with
@@ -353,15 +354,6 @@ lemma baseChangePairing_map_of_map_mul {ψ : A →ₗ[ℤ_[p]] A'} {f : T →ₗ
     induction y with
     | add y₁ y₂ hy₁ hy₂ => simp only [map_add, hy₁, hy₂]
     | _ => simp [baseChangePairing, smul_tmul', h_equiv, hψ_mul]
-
-/-- `New.Lift.baseChangePairing_map_of_map_mul` in the form in which `simp` proves the
-multiplicativity `hψ_mul` of `ψ` by default. -/
-lemma baseChangePairing_map {ψ : A →ₗ[ℤ_[p]] A'} {f : T →ₗ[ℤ_[p]] T} {f' : T' →ₗ[ℤ_[p]] T'}
-    {f'' : T'' →ₗ[ℤ_[p]] T''} (h_equiv : ∀ (t : T) (t' : T'), b (f t) (f' t') = f'' (b t t'))
-    (x : A ⊗[ℤ_[p]] T) (y : A ⊗[ℤ_[p]] T')
-    (hψ_mul : ∀ a a' : A, ψ (a * a') = ψ a * ψ a' := by simp) :
-    baseChangePairing b (map ψ f x) (map ψ f' y) = map ψ f'' (baseChangePairing b x y) :=
-  baseChangePairing_map_of_map_mul b h_equiv hψ_mul x y
 
 end New.Lift
 
