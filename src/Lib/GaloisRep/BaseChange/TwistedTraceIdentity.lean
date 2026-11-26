@@ -939,7 +939,7 @@ private lemma New.IsMatchingRoots.exists_bijOn_of_ne_zero [IsGalois E E']
     have h1 : (B ν)⁻¹ * e (twistedNorm ω (finrank E E') (A ν * δ)) * B ν = 1 :=
       left_eq_mul.mp (R.map_twistedNorm_eq hν_good hν)
     rw [map_one]
-    exact mul_left_cancel ((mul_eq_one_iff_eq_inv.mp h1).trans (mul_one (B ν)⁻¹).symm)
+    rwa [mul_eq_one_iff_eq_inv, inv_mul_eq_iff_eq_mul, mul_inv_cancel] at h1
   -- A twisted conjugate of `A ν * δ` lies in `K`, by the matching condition at `x`.
   have mem_K : (B ν * x)⁻¹ * e (A ν * δ) * galoisGf σ (B ν * x) ∈ K := by
     obtain ⟨r, hrδ, h_match⟩ := R.exists_inv_mul_eq hν_good hν
