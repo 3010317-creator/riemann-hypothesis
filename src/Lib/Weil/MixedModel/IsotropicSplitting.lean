@@ -984,7 +984,7 @@ lemma levi_mem_Gamma (a : GL p E) {g₀ : G E s₀} (hg₀ : g₀ ∈ V₀.Γ) :
     simp [adeleMatrix_ratEmbed, ← map_inv, map_J, map_J_inv, Matrix.map_add, -coe_units_inv,
       kAdelic, lAdelic, iAdelic, kCoord, lCoord, iCoord, ratMap, Matrix.mul_assoc, Matrix.mul_add,
       Matrix.add_mul, h_cancel]
-  exact V.mem_Gamma_iff_range.mpr fun i j ↦ ⟨_, (congrFun₂ h_rat i j).symm⟩
+  exact V.mem_Gamma_iff_range.2 (mem_ratMatrices.1 ⟨_, h_rat.symm⟩)
 
 /-- The unipotent element `radicalElement (x₀⁻¹ c) b`, for a matrix `c` over `E`, `x₀` the adelic
 frame of `V₀` and `b` an adelic matrix with entries in `E` (hypothesis `hb`), lies in the rational
@@ -1001,7 +1001,7 @@ lemma radicalElement_mem_Gamma (c : Matrix n₀ p E) {b : Matrix p p (𝔸 E)}
     simp [map_J, Matrix.map_add, Matrix.map_sub, Matrix.map_smul', iAdelic, ratMap,
       Matrix.mul_assoc, lCoord, kAdelic, conjTranspose_nonsing_inv, iCoord, Matrix.mul_add,
       Matrix.add_mul, Matrix.mul_sub, Matrix.sub_mul]
-  exact V.mem_Gamma_iff_range.mpr fun i j ↦ ⟨_, (congrFun₂ h_rat i j).symm⟩
+  exact V.mem_Gamma_iff_range.2 (mem_ratMatrices.1 ⟨_, h_rat.symm⟩)
 
 /-- The rational points of the unipotent radical are cocompact. For a splitting `D` of `V` over
 `V₀` along an isotropic subspace of any rank, there is a compact set `K` such that every element
