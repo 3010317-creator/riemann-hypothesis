@@ -361,8 +361,8 @@ lemma formAdjoint_stackedStringMap_mul_stackedStringMap (D : DoubleLiftData X'' 
     V'.formAdjoint (flipSum V V'') (stackedStringMap Y Y' Y'') * stackedStringMap Y Y' Y'' = 0 := by
   obtain rfl : s' = s - 1 := D.length_middle
   obtain rfl : s'' = s - 1 - 1 := D.length_last
-  rw [stackedStringMap, formAdjoint_fromRows]
-  simp [formAdjoint_stringMap_mul_stringMap, D.c_eq, formAdjoint_formAdjoint, fromCols_mul_fromRows]
+  simp [stackedStringMap, formAdjoint_fromRows, formAdjoint_stringMap_mul_stringMap, D.c_eq,
+    formAdjoint_formAdjoint, fromCols_mul_fromRows]
 
 /-- In the second argument `h` of `constTermAtStringMap`, a unipotent `n` in `Y'.unipotent` moves
 into the map at which `constTerm` is taken: `Y.stringMap Y'` is multiplied on the left by the matrix
@@ -1042,8 +1042,8 @@ lemma unfoldStage_eq_zero_of_scalingGenerator (ϑ : D.TameChar)
     exact congrFun (hl ϑ φ y') γ
   -- `ω(1, z_w)`, acting on the last lift alone, fixes the data, so the chain annihilates `φ`.
   have h_fix := map_evaluatedDatum_of_conj_mem ϑ y' j hj (by simpa only [y', update_self] using hx)
-  rw [value, D.doubleLiftChain_eq_zero_of_ramified ϑ w j.lt_succ_self h_fix hφ]
-  simp [sourceFn, algFormCoeff_apply]
+  simp [value, D.doubleLiftChain_eq_zero_of_ramified ϑ w j.lt_succ_self h_fix hφ,
+    sourceFn, algFormCoeff_apply]
 
 /-- For consecutive gradings `D.gradingY k` and `D.gradingY (k + 1)`, the finite string map
 `stringMapFin` between them sends `latticePlus 1` of `Y_k` (the projection `Λ_k⁺` of the standard
