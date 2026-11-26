@@ -1,6 +1,6 @@
 module
 
-public import Mathlib.Analysis.Matrix.MeasurableSpace -- shake: keep (Mathlib's instance must precede the `MeasurableSpace (Matrix m n R)` instance below)
+public import Mathlib.Analysis.Matrix.MeasurableSpace
 public import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
 public import TauCeti.Topology.Algebra.Group.Units
 public import Aesop.Frontend.Tactic
@@ -126,8 +126,6 @@ variable [Countable m] [Countable n] [Monoid R] [TopologicalSpace R] [Continuous
 deriving instance PolishSpace for Matrix m n R
 
 variable [MeasurableSpace R] [BorelSpace R]
-
-instance : MeasurableSpace (Matrix m n R) := .pi
 
 instance : BorelSpace Rˣ := by
   borelize Rˣ
