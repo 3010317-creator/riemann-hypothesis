@@ -751,21 +751,15 @@ namespace Data
 of `Γ` and are zero elsewhere. -/
 lemma card_tuplesOn_edges_le (Γ : TwoGridPath D.m) :
     #(tuplesOn ϑ Γ.edges) ≤ edgeMatrixCountBound ϑ ^ (2 * D.m) := by
-  have h_card : #Γ.edges ≤ 2 * D.m := by
-    have h_half (z : Bool) : #((Γ.half z).edges z) + 0 + Γ.diagonalIndex ≤ Γ.diagonalIndex + D.m :=
-      (Γ.half z).card_edges_le
-    have h_union : #Γ.edges ≤ #((Γ.half false).edges false) + #((Γ.half true).edges true) :=
-      card_union_le _ _
-    grind [TwoGridPath.diagonalIndex_le]
-  have h_ends (p q : GridNode) (hpq : (p, q) ∈ Γ.edges) :
-      p.2 ≤ (D.m, D.m) ∧ q.2 ≤ (D.m, D.m) := by
-    obtain ⟨z, hz⟩ : ∃ z : Bool, (p, q) ∈ (Γ.half z).edges z := by
-      simpa [TwoGridPath.edges] using hpq
-    obtain ⟨-, -, -, hp_le, hq_le⟩ := GridPath.eq_and_le_of_mem_edges hz
-    have hq : q.2 ≤ (D.m, D.m) := hq_le.trans ⟨Γ.diagonalIndex_le, le_rfl⟩
-    exact ⟨hp_le.trans hq, hq⟩
-  exact (card_tuplesOn_le h_ends).trans
-    (Nat.pow_le_pow_right (pow_pos Fintype.card_pos _) h_card)
+  refine (card_tuplesOn_le ?_).trans (Nat.pow_le_pow_right (pow_pos Fintype.card_pos _) ?_)
+  · intro p q hpq
+    obtain ⟨z, hz⟩ : ∃ z, (p, q) ∈ (Γ.half z).edges z := by simpa [TwoGridPath.edges] using hpq
+    obtain ⟨-, -, -, hp, hq⟩ := GridPath.eq_and_le_of_mem_edges hz
+    have hq' : q.2 ≤ (D.m, D.m) := hq.trans ⟨Γ.diagonalIndex_le, le_rfl⟩
+    exact ⟨hp.trans hq', hq'⟩
+  · have := (Γ.half false).card_edges_le (z := false)
+    have := (Γ.half true).card_edges_le (z := true)
+    exact (card_union_le _ _).trans (by omega)
 
 /-- The period of a conjugate form on `Y^j_j` and a form on `Ỹ^j_j` along `U(Y^j_j) → U(Ỹ^j_j)`. The
 second form is translated by a real point `g` of `U(Ỹ^j_j)` and, on the added line, by the `j`-th
