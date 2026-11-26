@@ -78,7 +78,7 @@ theorem inv_two_pow_le_groupMeasure {B : ℝ≥0∞}
       _ ≤ volume (P.integers \ (P.integers \ P.intUnits)) := le_measure_sdiff
       _ ≤ volume P.intUnits := measure_mono sdiff_sdiff_le
   -- The integral group is the box, of measure at least `volume P.intUnits ^ 𝔰.n`.
-  grw [h_units, ← h.box_eq]
+  grw [h_units, ← h.boxSet_eq]
   exact h.le_partialGroupMeasure_boxSet 𝔰.ϱ 0 (zero_add _)
 
 /-- For a large lattice datum, the set 𝔡_a = `F.stableProducts a x y` (the coordinates at the dual
@@ -142,7 +142,7 @@ theorem stableProducts_subset {a : Fin 𝔰.ϱ} (h_near : F.IsNear (a + 1) x) :
   rintro _ ⟨w, ⟨h_orth, w', -, hw⟩, rfl⟩
   rw [closePairs_eq] at hw
   have hw_int : x⁻¹.val.val *ᵥ w ∈ intVectors integers 𝔰.BesselIndex := hw.left
-  obtain ⟨hξx_int, -⟩ : ξ * x ∈ unitaryLevel integers 1 T.splitGram := box_eq.le h_box
+  obtain ⟨hξx_int, -⟩ : ξ * x ∈ unitaryLevel integers 1 T.splitGram := boxSet_eq.le h_box
   have h_int : (ξ.val.val *ᵥ w) (eStar a) ∈ integers := by
     simpa [mul_assoc] using hξx_int.isIntMatrix.mulVec hw_int (eStar a)
   rwa [partialUnitriangularGroup_mulVec_eStar hξ a.val.lt_succ_self h_orth] at h_int
@@ -161,7 +161,7 @@ theorem exists_unit_mem_stableProducts (a : Fin 𝔰.ϱ) {z : T.G} (y : T.G)
       u * x ∈ unitaryLevel integers 1 T.splitGram ∧ (u * x)⁻¹ * (v * z) ∈ F.congruenceSubgroup :=
     exists_mem_congruenceSubgroup_of_inner_ne_zero Z h_inner
   have h_near : F.IsNear (a + 1) x := ⟨u, mem_partialUnitriangularGroup_of_mem_besselU hu,
-    box_eq.ge hux⟩
+    boxSet_eq.ge hux⟩
   have hc_mem : c.val ∈ F.stableProducts a x y := hc.ge (by simp)
   have h_volume : volume (F.stableProducts a x y) = P.modulus c := by
     rw [hc, volume_setOf_mul_mem, modulus_inv, inv_inv]
@@ -196,7 +196,7 @@ theorem exists_mem_boxSet_hasMatrixSize_of_inner_ne_zero {Γ : Gauge F}
       ω ∈ Γ.vecsOfSize 1 := by
     have h_pair : (ω, ω) ∈ F.closePairs := closePairs_eq.ge ⟨hω, by simp⟩
     exact (Γ.mem_vecsOfSize_of_mem_closePairs h_pair).1
-  exact ⟨u, hu, v, hv, box_eq.ge hux, box_eq.ge hvy,
+  exact ⟨u, hu, v, hv, boxSet_eq.ge hux, boxSet_eq.ge hvy,
     fun i j ↦ mem_ofSize_mono (h_size _ (fun k ↦ h_int k j) i)⟩
 
 /-- Let `F` be a large lattice datum, `Z` a group between the congruence subgroup K(g) and the

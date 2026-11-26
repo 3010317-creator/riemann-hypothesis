@@ -335,11 +335,6 @@ namespace IntegralPlace.IsLargeLatticeData
 
 variable [h : IsLargeLatticeData F]
 
-/-- The compact set `F.boxSet` of a large lattice datum is the integral unitary group. -/
-theorem box_eq : F.boxSet = unitaryLevel integers 1 T.splitGram := by
-  obtain ⟨-, h_box, -⟩ := h.volume_le_and_boxSet_closePairs_positions_eq
-  exact h_box
-
 /-- For a large lattice datum `F` (hypothesis `IsLargeLatticeData F`), a subgroup `S` of the
 integral unitary group `unitaryLevel integers 1 T.splitGram` has finite measure `F.groupMeasure S`,
 for the convolution measure `F.groupMeasure` on the unitary group. -/
@@ -400,7 +395,7 @@ theorem isCut_besselVector : F.IsCut Z.besselVector := by
     obtain ⟨u, hu, -, -, hux, -⟩ : ∃ u ∈ T.besselU, ∃ v ∈ T.besselU,
         u * x ∈ unitaryLevel integers 1 T.splitGram ∧ (u * x)⁻¹ * (v * x) ∈ F.congruenceSubgroup :=
       exists_mem_congruenceSubgroup_of_inner_ne_zero Z (inner_self_ne_zero.2 hx)
-    exact ⟨u, hu, box_eq.ge hux⟩
+    exact ⟨u, hu, boxSet_eq.ge hux⟩
   exact { toIsBoundedMeasurable := ⟨h_meas, _,
     h_bdd⟩, map_unipotent_mul := h_law, exists_mul_mem_box := h_supp }
 
@@ -584,7 +579,7 @@ theorem lintegral_inner_besselVector_sq_mul_le (x : T.G) :
         v * x ∈ unitaryLevel integers 1 T.splitGram ∧ (v * x)⁻¹ * (w * y) ∈ F.congruenceSubgroup :=
       exists_mem_congruenceSubgroup_of_inner_ne_zero Z hy
     refine ⟨u * v⁻¹ * w, mul_mem (mul_mem hu (inv_mem hv)) hw, ?_⟩
-    simpa [mul_assoc] using conj_mem_unitaryLevel (box_eq.le hux) h_close
+    simpa [mul_assoc] using conj_mem_unitaryLevel (boxSet_eq.le hux) h_close
   have h_bound (y : T.G) :
       ‖⟪Z.besselVector x, Z.besselVector y⟫_ℂ‖ₑ ^ 2 * F.unipotentMass ≤
         S.indicator (fun _ ↦ ‖Z.besselVector x‖ₑ ^ 2) y := by
