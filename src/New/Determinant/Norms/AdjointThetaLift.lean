@@ -1083,9 +1083,10 @@ lemma singleLift_asAlgebraHom {ϑ : D.TameChar} {j : D.LiftIndex} {x : MonoidAlg
   have h_sum : (D.descentPair ϑ j).formAction.asAlgebraHom x (D.singleLift ϑ j y) =
       ∑ g : D.chosenGL, x.coeff g • (D.descentPair ϑ j).formAction g (D.singleLift ϑ j y) :=
     -- A term, as `rw` does not see that `D.chosenGL` is the group acting on the forms.
-    (LinearMap.congr_fun (asAlgebraHom_eq_sum (D.descentPair ϑ j).formAction) _).trans
+    (LinearMap.congr_fun
+      (Representation.asAlgebraHom_eq_sum (D.descentPair ϑ j).formAction _) _).trans
       (LinearMap.sum_apply ..)
-  rw [h_sum, asAlgebraHom_eq_sum]
+  rw [h_sum, Representation.asAlgebraHom_eq_sum]
   simp [singleLift_principalRep]
 
 end Data

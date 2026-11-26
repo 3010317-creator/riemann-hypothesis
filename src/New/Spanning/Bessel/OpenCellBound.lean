@@ -1,5 +1,6 @@
 module
 
+import TauCeti.Analysis.Matrix.L2OpNorm
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.MeasureTheory.SpecificCodomains.WithLp
@@ -391,16 +392,16 @@ lemma New.norm_le_of_besselLength_gramSection_mul_le {𝔰 : Shape} {M R : ℝ} 
     calc _ ≤ ∑ i : Fin (𝔰.ϱ + 1), R * R + ∑ i : Fin 𝔰.ϱ, ‖(2⁻¹ : ℂ)‖ * R * R * R := by
           refine add_le_add (sum_le_sum fun i _ ↦ ?_) (sum_le_sum fun i _ ↦ ?_)
           · rw [norm_smul, ← conjTranspose_nonsing_inv, conjTranspose_apply, norm_star]
-            exact mul_le_mul ((norm_apply_le_l2_opNorm _ _).trans hZ'_norm)
+            exact mul_le_mul ((norm_apply_le_l2_opNorm _ _ _).trans hZ'_norm)
               ((hy_frame i).trans hMR) (norm_nonneg _) hR0
           · rw [norm_smul, norm_mul, norm_mul, ← conjTranspose_nonsing_inv, conjTranspose_apply,
               norm_star]
             refine mul_le_mul ?_ ((hz_frame i.castSucc).trans hMR) (norm_nonneg _)
               (mul_nonneg (mul_nonneg (norm_nonneg _) hR0) hR0)
             exact mul_le_mul
-              (mul_le_mul_of_nonneg_left ((norm_apply_le_l2_opNorm _ _).trans hZ_inv)
+              (mul_le_mul_of_nonneg_left ((norm_apply_le_l2_opNorm _ _ _).trans hZ_inv)
                 (norm_nonneg _))
-              ((norm_apply_le_l2_opNorm _ _).trans hZ_inv) (norm_nonneg _)
+              ((norm_apply_le_l2_opNorm _ _ _).trans hZ_inv) (norm_nonneg _)
               (mul_nonneg (norm_nonneg _) hR0)
       _ = R ^ 2 * (𝔰.ϱ + 1 + 𝔰.ϱ * R / 2) := by
           rw [Fin.sum_const, Fin.sum_const, nsmul_eq_mul, nsmul_eq_mul, norm_inv,
@@ -512,7 +513,7 @@ lemma New.BesselSystem.lintegral_indicator_mul_enorm_sq_le {𝔰 : Shape} {B : �
   have h_frame (y : 𝔰.G₁) (hy : A.indicator (1 : 𝔰.G₁ → ℝ≥0∞) y ≠ 0) (s : 𝔰.G₁) (_ : s ∈ besselU)
       (hsy : A.indicator (1 : 𝔰.G₁ → ℝ≥0∞) (s * y) ≠ 0) (a b : Fin (𝔰.ϱ + 1)) :
       ‖frameMatrix s a b‖ ≤ R * R :=
-    (norm_apply_le_l2_opNorm (𝔰.besselFrame a) (𝔰.besselFrame b)).trans <| by
+    (norm_apply_le_l2_opNorm _ (𝔰.besselFrame a) (𝔰.besselFrame b)).trans <| by
       simpa using norm_mul_le_of_le (hA_norm _ (Set.mem_of_indicator_ne_zero hsy))
         ((U.norm_inv y).trans_le (hA_norm y (Set.mem_of_indicator_ne_zero hy)))
   have h_invariant : besselS.FixesLeft fun y : 𝔰.G₁ ↦ ‖X.besselFn .full y‖ₑ ^ 2 :=
