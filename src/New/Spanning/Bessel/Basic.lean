@@ -966,6 +966,7 @@ structure BesselSystem (b : ℝ) (f : ℕ) where
   Index : Type
   /-- π is finite-dimensional. -/
   [fintype : Fintype Index]
+  /-- Equality of indices is decidable. -/
   [decEq : DecidableEq Index]
   /-- π is not zero. -/
   [nonempty : Nonempty Index]
