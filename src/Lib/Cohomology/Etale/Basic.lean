@@ -510,8 +510,7 @@ lemma locallyConstant_mem_of_indicator {Λ : Type*} [AddCommGroup Λ]
     ext x
     -- at `x` only the term of `a = y x` is non-zero
     change evalAddMonoidHom x y = evalAddMonoidHom x _
-    rw [map_sum]
-    simp [Set.indicator, ← h_fiber_eq]
+    simp [map_sum, Set.indicator, ← h_fiber_eq]
   rw [h_sum]
   exact sum_mem fun a _ ↦ h a (e a) (he_idem a)
 
