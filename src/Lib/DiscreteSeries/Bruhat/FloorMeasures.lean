@@ -482,13 +482,6 @@ lemma map_inclMatrix_middle_eq_floorVolume :
 the pairs `e_a`, `e*_a` with `b ≤ a`. -/
 abbrev FloorPairs (m : ℕ) : Type := Fin m ⊕ {i : Fin 𝔰.ϱ // b.val ≤ i}
 
-/-- The vector of index `j` of the basis `F` of `V_ϱ`, extended by zero to the coordinates of the
-`e_a` and the `e*_a`. -/
-def HyperbolicBasis.middleVector (j : Fin 2 ⊕ SplitIndex m ι) : 𝔰.BesselIndex → A
-  | inl _ => 0
-  | inr (inl i) => F.basisMatrix i j
-  | inr (inr _) => 0
-
 /-- The basis of `V_b` made of the basis `F` of `V_ϱ` and the pairs `e_a`, `e*_a` with `b ≤ a`, as
 the columns of a matrix. It is the block matrix of `F.basisMatrix` and the identity on these pairs,
 with its rows placed among the basis indices and its columns reordered. The columns are listed in
