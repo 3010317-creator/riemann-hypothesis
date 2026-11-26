@@ -244,7 +244,7 @@ lemma adeleMatrix_radicalCentre (M : Matrix p p (𝔸 E)) :
     (H.radicalCentre M).adeleMatrix = 1 + H.kAdelic * (M - Mᴴ) * H.lCoord := by
   -- The scalars cancel because `star j = -j`.
   simp [radicalCentre, radicalElement, smul_smul, ← map_mul, j_ne_zero, Matrix.mul_add,
-    Matrix.add_mul, Matrix.mul_assoc, sub_eq_add_neg, add_comm]
+    Matrix.add_mul, sub_eq_add_neg, add_comm]
 
 /-- If `g` acts on the isotropic frame k of the splitting by the matrix `c`, that is `g k = k c`,
 then conjugation by `g` carries the element 1 + k(M − Mᴴ)kᴴε of the centre of the radical to the

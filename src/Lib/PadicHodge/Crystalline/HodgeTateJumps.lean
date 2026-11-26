@@ -144,7 +144,7 @@ lemma isHodgeTateFrame_of_hodgeMatrix {W : Matrix ι ι BdRPlus} {k : ι → ℤ
   -- Apply `θ` and move the power of `χ(g)` to the other side.
   have h_theta : cyclotomicGp g ^ k l • ∑ m, ((N i m : PadicAlgCl p) : ℂ_[p]) *
       g • thetaBdR (W m l) = thetaBdR (W i l) := by
-    simp [← h_entry, Units.smul_def, mul_comm, mul_left_comm, PadicComplex.coe_eq, Algebra.cast,
+    simp [← h_entry, Units.smul_def, mul_comm, PadicComplex.coe_eq, Algebra.cast,
       smul_sum, Algebra.smul_def, sum_mul]
   rw [_root_.zpow_neg]
   exact eq_inv_smul_iff.2 h_theta

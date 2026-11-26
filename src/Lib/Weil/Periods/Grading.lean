@@ -532,7 +532,7 @@ lemma submatrix_inl_ratCoordMatrix_unitary {g : G E ε} (hg : g ∈ Y.besselGrou
       -- The string contributes nothing, since dual string indices have opposite weights and g has
       -- no entry from X to a string index of weight ≤ 0.
       simp [← ext_iff, Matrix.mul_apply, reindex_equiv Y.indexEquiv, Y.gram_eq, gradedGram,
-        Matrix.mul_assoc, Matrix.one_apply]
+        Matrix.one_apply]
       grind -funext [star_zero, sum_eq_zero]
     _ = _ := by
       rw [show (V.ratCoordMatrix g)ᴴ * V.J.map toAdele * V.ratCoordMatrix g = V.J.map toAdele from

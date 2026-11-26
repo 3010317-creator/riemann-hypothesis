@@ -193,7 +193,7 @@ lemma New.Exchange.IsAutFunction.apply_eq_apply_one {S : Set (FinPlace E)}
       closurePart R (H.levi (t, x)) =
         H.levi (cutGL (idemAdele_conjClosure_mul_self (S := R)) t, closurePart R x) :=
     ext_adeleMatrix <| by
-      simp [Splitting.levi, cutGL, ← H.sum_frame_mul_coord_eq_one, -coe_units_inv, Matrix.mul_assoc,
+      simp [Splitting.levi, cutGL, ← H.sum_frame_mul_coord_eq_one, -coe_units_inv,
         Matrix.add_mul, Matrix.mul_add]
       module
   -- Weak approximation in `W₀`: up to points trivial on `R`, the rational points are dense.
