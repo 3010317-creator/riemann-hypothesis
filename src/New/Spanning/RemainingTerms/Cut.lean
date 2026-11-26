@@ -57,6 +57,22 @@ section
 
 omit [HasPrimitiveRoot5040 E]
 
+private lemma finAdeleMatrix_zero {m n : Type} :
+    finAdeleMatrix (0 : Matrix m n E) = 0 :=
+  Matrix.ext fun _ _ ↦ RingHom.map_zero (algebraMap E (𝔸f E))
+
+private lemma finAdeleMatrix_sub {m n : Type} (A B : Matrix m n E) :
+    finAdeleMatrix (A - B) = finAdeleMatrix A - finAdeleMatrix B :=
+  Matrix.ext fun i j ↦ RingHom.map_sub (algebraMap E (𝔸f E)) (A i j) (B i j)
+
+private lemma finAdeleMatrix_mul {l m n : Type} [Fintype m]
+    (A : Matrix l m E) (B : Matrix m n E) :
+    finAdeleMatrix (A * B) = finAdeleMatrix A * finAdeleMatrix B :=
+  Matrix.ext fun i j ↦ by
+    simp only [finAdeleMatrix, Matrix.map_apply, Matrix.mul_apply]
+    rw [map_sum (algebraMap E (𝔸f E))]
+    exact Finset.sum_congr rfl fun k _ ↦ RingHom.map_mul (algebraMap E (𝔸f E)) _ _
+
 /-- Let `n = S.classCoord c * finAdeleMatrix t * w` be the coordinates of the adelic combinations
 `t w` of rational vectors in the basis of the lattice of the class `c`. Let
 `k = S.translateByClassReps c c' γ` be the matrix of `γ` in the bases of the lattices of `c` and
@@ -71,8 +87,8 @@ lemma zRowBlockDiagonal_mul_linkMatrix_mul_classCoord {ρ : Type} [Fintype ρ] (
   -- Both sides are the products with the last column of each of the two frames.
   rw [← framePair_last_eq_zRowBlockDiagonal_mul, ← Matrix.mul_assoc,
     framePair_translateByClassReps_mul_classCoord,
-    framePair_last_eq_zRowBlockDiagonal_mul]
-  simp [Matrix.mul_assoc]
+    framePair_last_eq_zRowBlockDiagonal_mul, Matrix.mul_assoc (zRowBlockDiagonal _),
+    finAdeleMatrix_mul, Matrix.mul_assoc]
 
 /-- Let the columns of the rational matrix `t` be orthogonal to `A` and `γ A`
 (`isotropicFramePair γ`). Then the coordinates of the adelic combinations `t w` in the basis of the
@@ -83,8 +99,8 @@ lemma isotropicFramePair_mul_classCoord_eq_zero {γ : S.G E} {ρ : Type} [Fintyp
     (h_orth : (isotropicFramePair γ)ᴴ * S.ratGram * t = 0) (w : Matrix ρ τ (𝔸f E)) :
     (isotropicFramePair (S.translateByClassReps c c' γ))ᴴ * (S.latticeMiddle (𝔸f E)).splitGram *
       (S.classCoord c * finAdeleMatrix t * w) = 0 := by
-  rw [← Matrix.mul_assoc, framePair_translateByClassReps_mul_classCoord, h_orth]
-  simp
+  rw [← Matrix.mul_assoc, framePair_translateByClassReps_mul_classCoord, h_orth,
+    finAdeleMatrix_zero, Matrix.zero_mul]
 
 /-- If the first half of the images `linkMatrix γ * t * w` of adelic combinations `t w` of rational
 vectors is a matrix `p` in `X₀`, the middle part of the coordinates of `t w` in the basis of the
@@ -97,11 +113,20 @@ lemma toRows_classCoord_mul {γ : S.G E} {ρ : Type} [Fintype ρ] (c : S.Classes
   -- diagonal.
   have h_middle : (finAdeleMatrix t * w).toRows₂.toRows₁ = fromRows p 0 := by
     rw [← hp]
-    simp [← ext_iff, linkMatrix, Matrix.mul_apply, Matrix.one_apply]
-  have h_block (q : Matrix 𝔰.BesselIndex τ (𝔸f E)) :
-      q.toRows₂.toRows₁ = fromRows p 0 →
-        (S.classCoord c * q).toRows₂.toRows₁ = S.classCoordX₀ c * p := by
-    simp +contextual [← ext_iff, classCoord_eq_fromBlocks, Matrix.mul_apply]
+    have h₁ : (linkMatrix γ * t).toRows₁ = t.toRows₂.toRows₁ := by
+      change ((1 : S.G E).val.val * t).toRows₂.toRows₁ = t.toRows₂.toRows₁
+      rw [OneMemClass.coe_one, Units.val_one, Matrix.one_mul]
+    exact congrArg (fun M ↦ finAdeleMatrix M * w) h₁.symm
+  have h_block (q : Matrix 𝔰.BesselIndex τ (𝔸f E))
+      (hq : q.toRows₂.toRows₁ = fromRows p 0) :
+      (S.classCoord c * q).toRows₂.toRows₁ = S.classCoordX₀ c * p := by
+    rw [classCoord_eq_fromBlocks]
+    refine Matrix.ext fun i j ↦ ?_
+    have hq_mid : ∀ k, q (.inr (.inl k)) j = fromRows p 0 k j := fun k ↦ congr_fun₂ hq k j
+    simp only [toRows₁_apply, toRows₂_apply, Matrix.mul_apply, Fintype.sum_sum_type,
+      fromBlocks_apply₂₁, fromBlocks_apply₂₂, fromBlocks_apply₁₁, fromBlocks_apply₁₂,
+      Matrix.zero_apply, zero_mul, sum_const_zero, zero_add, add_zero, hq_mid,
+      fromCols_apply_inl, fromCols_apply_inr, fromRows_apply_inl, fromRows_apply_inr, mul_zero]
   rw [Matrix.mul_assoc, h_block _ h_middle]
 
 end
@@ -140,7 +165,8 @@ lemma HasLevelLifts.exists_orthogonal_split [Fintype τ] [DecidableEq τ] {r : �
     rw [hV_eq, Units.mul_inv_cancel_left]
   have h_blocks : finAdeleMatrix (fromCols m y) * f.val * V.val =
       fromCols (finAdeleMatrix m * a.val) (finAdeleMatrix m * z + finAdeleMatrix y * v.val) := by
-    simp [Matrix.mul_assoc, h_triangular, fromCols_map, fromCols_mul_fromBlocks]
+    rw [Matrix.mul_assoc, h_triangular, finAdeleMatrix, fromCols_map, fromCols_mul_fromBlocks,
+      Matrix.mul_zero, add_zero]
   have h_lift' : HasLevelLifts c γ (fromCols (finAdeleMatrix m * a.val)
       (finAdeleMatrix m * z + finAdeleMatrix y * v.val)) := by
     rw [← h_blocks]
@@ -153,9 +179,11 @@ lemma HasLevelLifts.exists_orthogonal_split [Fintype τ] [DecidableEq τ] {r : �
       genIndex_det_eq_one h_open h_compact hV, mul_one]
   have h_gram : ((fromCols m y)ᴴ * S.linkMetric * fromCols m y).det =
       (mᴴ * S.linkMetric * m).det * (yᴴ * S.linkMetric * y).det := by
-    simp [h_orth, conjTranspose_fromCols_eq_fromRows_conjTranspose]
-  simp only [linkDiscSq, h_gram, h_index, map_mul, Rat.cast_mul, abs_mul]
-  ring
+    rw [conjTranspose_fromCols_eq_fromRows_conjTranspose, fromRows_mul, fromRows_mul_fromCols,
+      h_orth, det_fromBlocks_zero₁₂]
+  rw [linkDiscSq, linkDiscSq, linkDiscSq, h_gram, h_index, map_mul, Rat.cast_mul, abs_mul,
+    mul_pow]
+  exact mul_mul_mul_comm _ _ _ _
 
 variable [Fintype τ] {s : S.ResidueGL} {x : ℕ}
 
@@ -223,32 +251,59 @@ lemma HasCellRank.abs_norm_minor_gram_linkVectors_mul_le (h_cell : S.HasCellRank
   -- place, where `δ` is the leading minor of order `j` of the products of the frames.
   have h_minor : 0 < S.minorNorm j γ := h_cell.minorNorm_pos
   obtain _ | _ | r := r
-  · grw [← le_max_right, ← S.N_prime.one_le]
-    simp
+  · rw [det_isEmpty, map_one, Rat.cast_one, abs_one, one_mul]
+    have hN1 : (1 : ℝ) ≤ (S.N : ℝ) ^ numInfPlaces E :=
+      one_le_pow₀ (by exact_mod_cast S.N_prime.one_le)
+    exact pow_le_pow_left₀ h_minor.le
+      ((le_mul_of_one_le_left h_minor.le hN1).trans (le_max_right _ _)) 2
   · have h_entry : ((linkVectors γ)ᴴ * S.positiveGram * linkVectors γ) (ρ 0) (ρ 0) = S.N := by
       rw [gram_linkVectors]
       generalize ρ 0 = i
       fin_cases i <;> rfl
     have h_norm : |(Algebra.norm ℚ (S.N : E) : ℝ)| = (S.N ^ numInfPlaces E) ^ 2 := by
-      simp [abs_norm_eq_prod_norm_sq, ← pow_mul, mul_comm]
+      rw [abs_norm_eq_prod_norm_sq]
+      have h_eq : ∀ v : NumberField.InfinitePlace E, ‖Φ v (S.N : E)‖ ^ 2 = (S.N : ℝ) ^ 2 :=
+        fun v ↦ by rw [map_natCast, Complex.norm_natCast]
+      rw [Finset.prod_congr rfl fun v _ ↦ h_eq v, Finset.prod_const, card_univ, ← pow_mul,
+        mul_comm 2, pow_mul]
     rw [det_fin_one, submatrix_apply, h_entry, h_norm, ← mul_pow]
-    grw [← le_max_right]
-  · have hρ_bij : ρ.Bijective := hρ.bijective_of_nat_card_le (by simp)
+    exact pow_le_pow_left₀ (mul_nonneg (pow_nonneg (Nat.cast_nonneg _) _) h_minor.le)
+      (le_max_right _ _) 2
+  · have hρ_bij : ρ.Bijective := hρ.bijective_of_nat_card_le (by
+      rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card, Fintype.card_fin, Fintype.card_fin]
+      exact Nat.le_add_left 2 r)
     have h_det : (((linkVectors γ)ᴴ * S.positiveGram * linkVectors γ).submatrix ρ ρ).det =
         ((linkVectors γ)ᴴ * S.positiveGram * linkVectors γ).det :=
       det_submatrix_equiv_self (.ofBijective ρ hρ_bij) _
-    have h_top : j - 𝔰.ϱ = 1 := by lia
+    have h_top : j - 𝔰.ϱ = 1 := by omega
     have h_ne (v : NumberField.InfinitePlace E) :
-        ‖Φ v (leadingMinor (S.frameProducts γ) j)‖ ≠ 0 := by
-      simpa using h_cell.leadingMinor_ne_zero
+        ‖Φ v (leadingMinor (S.frameProducts γ) j)‖ ≠ 0 :=
+      norm_ne_zero_iff.2 ((map_ne_zero (Φ v)).2 h_cell.leadingMinor_ne_zero)
     have h_norm : |(Algebra.norm ℚ ((linkVectors γ)ᴴ * S.positiveGram * linkVectors γ).det : ℝ)| *
         S.minorNorm j γ ^ 2 = S.termDiscNorm γ ^ 2 := by
-      simp only [termDiscNorm, minorNorm, h_top, abs_norm_eq_prod_norm_sq,
-        h_cell.norm_det_gram_linkVectors]
-      have h_prod := prod_ne_zero_iff.2 fun v (_ : v ∈ univ) ↦ h_ne v
-      have hN : (S.N : ℝ) ≠ 0 := Nat.cast_ne_zero.2 S.N_prime.ne_zero
-      simp [field, prod_pow, pow_mul, prod_mul_distrib, prod_div_distrib]
-    grw [h_det, h_norm, termDiscNorm, ← le_max_left]
+      rw [termDiscNorm, minorNorm, h_top, mul_one, abs_norm_eq_prod_norm_sq,
+        abs_norm_eq_prod_norm_sq]
+      have h_prod_ne : (∏ v : NumberField.InfinitePlace E,
+          ‖Φ v (leadingMinor (S.frameProducts γ) j)‖ ^ 2) ^ 2 ≠ 0 :=
+        pow_ne_zero 2 (Finset.prod_ne_zero_iff.2 fun v _ ↦ pow_ne_zero 2 (h_ne v))
+      have hN_ne : ((S.N : ℝ) ^ (2 * numInfPlaces E)) ^ 2 ≠ 0 :=
+        pow_ne_zero 2 (pow_ne_zero _ (Nat.cast_ne_zero.2 S.N_prime.ne_zero))
+      have h_lhs : ∏ v : NumberField.InfinitePlace E,
+          ‖Φ v ((linkVectors γ)ᴴ * S.positiveGram * linkVectors γ).det‖ ^ 2 =
+          ((S.N : ℝ) ^ (2 * numInfPlaces E)) ^ 2 *
+            (∏ v : NumberField.InfinitePlace E, ‖Φ v (S.termDisc γ)‖) ^ 2 /
+            (∏ v : NumberField.InfinitePlace E,
+              ‖Φ v (leadingMinor (S.frameProducts γ) j)‖ ^ 2) ^ 2 := by
+        rw [Finset.prod_congr rfl fun v _ ↦ by
+          rw [h_cell.norm_det_gram_linkVectors v, div_pow, mul_pow]]
+        rw [prod_div_distrib, prod_mul_distrib, Finset.prod_const, card_univ, prod_pow, prod_pow,
+          ← pow_mul, ← pow_mul, ← pow_mul, mul_comm 2 (2 * Fintype.card _)]
+      rw [h_lhs, div_pow, div_mul_div_comm, mul_comm (((S.N : ℝ) ^ _) ^ 2),
+        mul_assoc ((∏ v, ‖Φ v (S.termDisc γ)‖) ^ 2),
+        mul_comm ((∏ v, ‖Φ v (leadingMinor (S.frameProducts γ) j)‖ ^ 2) ^ 2),
+        mul_div_cancel_right₀ _ (mul_ne_zero hN_ne h_prod_ne)]
+    rw [h_det, h_norm]
+    exact pow_le_pow_left₀ (Finset.prod_nonneg fun _ _ ↦ norm_nonneg _) (le_max_left _ _) 2
 
 /-- **The part seen by the `z`-forms.** Let `γ` have cell rank `j` and be a term over the classes
 `c`, `c'` with reduction `s`, where `s` is compatible with the unipotent character (`S.Agrees s`).
@@ -284,7 +339,8 @@ lemma minorNorm_sq_le_linkDiscSq_mul (hs : S.Agrees s) (h_term : γ ∈ S.termsO
   have hρ_inj : ρ.Injective := by
     intro a b h_eq
     by_contra h_ne
-    exact hρ (det_zero_of_row_eq h_ne (by simp [funext_iff, h_eq]))
+    exact hρ (det_zero_of_row_eq h_ne
+      (funext fun c ↦ by dsimp only [submatrix_apply, id_eq]; rw [h_eq]))
   let e : Matrix (𝔰.MiddleIndex ⊕ 𝔰.MiddleIndex) (Fin r) E := ε.submatrix id ρ
   have he_repr : eᴴ * S.linkMetric * y = (zRowBlockDiagonal (S.ratMiddle E) * y).submatrix ρ id :=
     congrArg (fun A ↦ A.submatrix ρ id) hε_repr
@@ -299,23 +355,24 @@ lemma minorNorm_sq_le_linkDiscSq_mul (hs : S.Agrees s) (h_term : γ ∈ S.termsO
   have h_index :
       IsUnit ((finAdeleMatrix (zRowBlockDiagonal (S.ratMiddle E)) * w).submatrix ρ id).det →
       x ≤ genIndex ((finAdeleMatrix (zRowBlockDiagonal (S.ratMiddle E)) * w).submatrix ρ id).det :=
-    h_lift.le_genIndex_det_zRowBlockDiagonal hs h_term hx
-      fun h_ne ↦ hρ_inj.bijective_of_nat_card_le (by simp [hr_eq h_ne])
+    h_lift.le_genIndex_det_zRowBlockDiagonal hs h_term hx fun h_ne ↦
+      hρ_inj.bijective_of_nat_card_le (by
+        rw [hr_eq h_ne, Nat.card_eq_fintype_card, Nat.card_eq_fintype_card, Fintype.card_sum,
+          Fintype.card_unit, Fintype.card_fin])
   rw [← h_pairing] at h_index
   set D : ℝ := |(Algebra.norm ℚ (eᴴ * S.linkMetric * e).det : ℝ)| with hD
   have h_liouville : x ^ 2 ≤ S.linkDiscSq y v * D := by
     have h_det : (eᴴ * S.linkMetric * y).det ≠ 0 := by rwa [he_repr]
     refine (liouville_gram linkMetric_posDef e y 1 v h_det x.cast_nonneg h_index).trans_eq ?_
-    rw [Units.val_one, det_one, map_one, linkDiscSq]
-    ring
+    rw [Units.val_one, det_one, map_one, one_pow, one_mul, linkDiscSq, mul_assoc]
+    exact mul_comm _ _
   have h_minor : D * S.minorNorm j γ ^ 2 ≤
       (S.termDiscNorm γ ⊔ S.N ^ numInfPlaces E * S.minorNorm j γ) ^ 2 := by
     rw [hD, h_gram]
     exact h_cell.abs_norm_minor_gram_linkVectors_mul_le hr_le (zFormIndex_injective.comp hρ_inj)
-  have h_nonneg : 0 ≤ S.linkDiscSq y v := by
-    unfold linkDiscSq
-    positivity
-  grw [h_liouville, mul_assoc, h_minor]
+  have h_nonneg : 0 ≤ S.linkDiscSq y v := mul_nonneg (abs_nonneg _) (sq_nonneg _)
+  exact (mul_le_mul_of_nonneg_right h_liouville (sq_nonneg _)).trans
+    ((mul_assoc _ _ _).le.trans (mul_le_mul_of_nonneg_left h_minor h_nonneg))
 
 /-- Let `V` be a subspace of `X₀` and let `Λ` be the lattice of the class `c`. Let the frame be
 `e₁, …, e_ϱ, z`, with isotropic part `A` spanned by `e₁, …, e_ϱ`, and let
@@ -337,6 +394,32 @@ lemma submoduleIndex_termLattice (V : Submodule E (𝔰.κ → E)) :
     ← Matrix.mul_assoc _ (S.classCoordX₀ c), mulVecLin_mul _ (sublatticeBasis _ V).val]
   rfl
 
+omit [HasPrimitiveRoot5040 E] [Fintype τ] in
+private lemma z_rows_eq_zero_of_zRowBlockDiagonal_mul_eq_zero
+    {m : Matrix (𝔰.MiddleIndex ⊕ 𝔰.MiddleIndex) τ E}
+    (hm_forms : zRowBlockDiagonal (S.ratMiddle E) * m = 0) :
+    m.toRows₁.toRows₂ = 0 ∧ m.toRows₂.toRows₂ = 0 := by
+  have hN : -(S.N : E) ≠ 0 := neg_ne_zero.2 (Nat.cast_ne_zero.2 S.N_prime.ne_zero)
+  have h_row (a : Unit ⊕ Unit) (k : τ) :
+      (zRowBlockDiagonal (S.ratMiddle E) * m) a k = 0 := by
+    rw [hm_forms, Matrix.zero_apply]
+  have h_inl (k : τ) : -(S.N : E) * m (.inl (.inr ())) k = 0 := by
+    have h := h_row (.inl ()) k
+    simp only [zRowBlockDiagonal, ratMiddle, Shape.middleGram, Matrix.mul_apply,
+      Fintype.sum_sum_type, fromBlocks_apply₁₁, fromBlocks_apply₁₂, toRows₂_apply,
+      fromBlocks_apply₂₁, fromBlocks_apply₂₂, Matrix.zero_apply, zero_mul, sum_const_zero,
+      add_zero, zero_add, of_apply, Fintype.sum_unique] at h
+    exact h
+  have h_inr (k : τ) : -(S.N : E) * m (.inr (.inr ())) k = 0 := by
+    have h := h_row (.inr ()) k
+    simp only [zRowBlockDiagonal, ratMiddle, Shape.middleGram, Matrix.mul_apply,
+      Fintype.sum_sum_type, fromBlocks_apply₂₁, fromBlocks_apply₂₂, toRows₂_apply,
+      Matrix.zero_apply, zero_mul, sum_const_zero, zero_add, of_apply,
+      Fintype.sum_unique] at h
+    exact h
+  exact ⟨Matrix.ext fun () k ↦ (mul_eq_zero.1 (h_inl k)).resolve_left hN,
+    Matrix.ext fun () k ↦ (mul_eq_zero.1 (h_inr k)).resolve_left hN⟩
+
 omit [HasPrimitiveRoot5040 E] in
 /-- Let the columns of `m` be pairs of vectors of `X₀ ⊕ E z` on which both `z`-forms, the products
 with `z` on the two halves, vanish. Then the first half of any adelic combination `m a` of them
@@ -344,7 +427,12 @@ lies in `X₀`: its `z`-coordinate is zero. -/
 lemma toRows₁_mul_eq_fromRows_zero {m : Matrix (𝔰.MiddleIndex ⊕ 𝔰.MiddleIndex) τ E}
     (hm_forms : zRowBlockDiagonal (S.ratMiddle E) * m = 0) (a : Matrix τ τ (𝔸f E)) :
     (finAdeleMatrix m * a).toRows₁ = fromRows (finAdeleMatrix m.toRows₁.toRows₁ * a) 0 := by
-  simp_all [← ext_iff, Matrix.mul_apply, middleGram, Nat.Prime.ne_zero]
+  have hm₁ : m.toRows₁ = fromRows m.toRows₁.toRows₁ 0 := by
+    rw [← (z_rows_eq_zero_of_zRowBlockDiagonal_mul_eq_zero hm_forms).1, fromRows_toRows]
+  have h_rows : (finAdeleMatrix m * a).toRows₁ = finAdeleMatrix m.toRows₁ * a := rfl
+  rw [h_rows, hm₁, finAdeleMatrix, fromRows_map, fromRows_mul]
+  change fromRows (finAdeleMatrix m.toRows₁.toRows₁ * a) (finAdeleMatrix 0 * a) = _
+  rw [finAdeleMatrix_zero, Matrix.zero_mul, toRows₁_fromRows]
 
 omit [HasPrimitiveRoot5040 E] in
 /-- Let the columns of `m` lie in the link of `γ`, and let both `z`-forms vanish on them. Their Gram
@@ -355,9 +443,36 @@ lemma gram_linkMetric_eq_gram_toRows₁ {m : Matrix (𝔰.MiddleIndex ⊕ 𝔰.M
   -- The two halves of `m` have equal Gram matrices and no `z`-coordinates, and `S.linkMetric` is
   -- the mean of the forms on the two halves where the `z`-forms vanish.
   classical
+  obtain ⟨hm₁₂, hm₂₂⟩ := z_rows_eq_zero_of_zRowBlockDiagonal_mul_eq_zero hm_forms
+  have h_half (x : Matrix 𝔰.MiddleIndex τ E) (hx : x.toRows₂ = 0) :
+      xᴴ * S.ratMiddle E * x = x.toRows₁ᴴ * x.toRows₁ := by
+    have hx_eq : ∀ k j, x (.inr k) j = 0 := fun k j ↦ congr_fun₂ hx k j
+    refine Matrix.ext fun i j ↦ ?_
+    simp only [ratMiddle, Shape.middleGram, Matrix.mul_apply, Fintype.sum_sum_type,
+      conjTranspose_apply, fromBlocks_apply₁₁, fromBlocks_apply₁₂, Matrix.zero_apply,
+      Matrix.one_apply, hx_eq, star_zero, zero_mul, mul_zero, sum_const_zero, add_zero, mul_ite,
+      mul_one, Fintype.sum_ite_eq', toRows₁_apply]
   have h_isotropic : mᴴ * S.linkForm * m = 0 := gram_linkForm_eq_zero_of_le_link hm_link hm_link
-  simp_all [← ext_iff, linkMetric, Matrix.mul_apply, middleGram, add_neg_eq_zero, ← two_mul,
-    Nat.Prime.ne_zero, Matrix.one_apply, Matrix.mul_add, Matrix.add_mul]
+  have h_form_eq : mᴴ * S.linkForm * m =
+      m.toRows₁.toRows₁ᴴ * m.toRows₁.toRows₁ - m.toRows₂.toRows₁ᴴ * m.toRows₂.toRows₁ := by
+    conv_lhs => rw [← fromRows_toRows m]
+    rw [linkForm, conjTranspose_fromRows_eq_fromCols_conjTranspose, fromCols_mul_fromBlocks,
+      fromCols_mul_fromRows, Matrix.mul_zero, Matrix.mul_zero, add_zero, zero_add,
+      Matrix.mul_neg, Matrix.neg_mul, h_half _ hm₁₂, h_half _ hm₂₂, sub_eq_add_neg]
+  have h_eq₂ : m.toRows₂.toRows₁ᴴ * m.toRows₂.toRows₁ = m.toRows₁.toRows₁ᴴ * m.toRows₁.toRows₁ :=
+    (sub_eq_zero.1 (h_form_eq.symm.trans h_isotropic)).symm
+  have h_diag : mᴴ * (S.ratMiddle E).fromBlocks 0 0 (S.ratMiddle E) * m =
+      m.toRows₁.toRows₁ᴴ * m.toRows₁.toRows₁ + m.toRows₂.toRows₁ᴴ * m.toRows₂.toRows₁ := by
+    conv_lhs => rw [← fromRows_toRows m]
+    rw [conjTranspose_fromRows_eq_fromCols_conjTranspose, fromCols_mul_fromBlocks,
+      fromCols_mul_fromRows, Matrix.mul_zero, Matrix.mul_zero, add_zero, zero_add,
+      h_half _ hm₁₂, h_half _ hm₂₂]
+  have h_z_term : mᴴ * ((zRowBlockDiagonal (S.ratMiddle E))ᴴ * zRowBlockDiagonal (S.ratMiddle E)) *
+      m = 0 := by
+    rw [Matrix.mul_assoc, Matrix.mul_assoc, hm_forms, Matrix.mul_zero, Matrix.mul_zero]
+  rw [linkMetric, Matrix.mul_add, Matrix.add_mul, Matrix.mul_smul, Matrix.smul_mul,
+    Matrix.mul_smul, Matrix.smul_mul, h_diag, h_z_term, smul_zero, add_zero, h_eq₂,
+    ← two_smul E, smul_smul, inv_mul_cancel₀ two_ne_zero, one_smul]
 
 end
 
@@ -388,11 +503,15 @@ lemma HasLevelLifts.discriminant_sq_le {c : S.Classes} {γ : S.G E} {r : ℕ}
   have h_det : (pᴴ * p).det ≠ 0 := by
     rw [← h_gram]
     exact det_gram_linkMetric_ne_zero hm
-  have hp_inv : HasLeftInv p := ⟨(pᴴ * p)⁻¹ * pᴴ, by simp [h_det, Matrix.mul_assoc]⟩
-  have h_rank : r = finrank E V := by simpa using card_eq_finrank_colSpan hp_inv
+  have hp_inv : HasLeftInv p :=
+    ⟨(pᴴ * p)⁻¹ * pᴴ, by rw [Matrix.mul_assoc, nonsing_inv_mul _ (isUnit_iff_ne_zero.2 h_det)]⟩
+  have h_rank : r = finrank E V := by
+    rw [← Fintype.card_fin r]
+    exact card_eq_finrank_colSpan hp_inv
   have h_disc : S.linkDiscSq m a =
       genIndex (finAdeleMatrix (pᴴ * p)).det * genIndex a.val.det ^ 2 := by
-    simp [← genIndex_algebraMap, RingHom.map_det, linkDiscSq, h_gram]
+    rw [linkDiscSq, h_gram, ← genIndex_algebraMap, finAdeleMatrix, RingHom.map_det]
+    rfl
   obtain ⟨ρ, _, t, w, h_orth, hn_int, hn_level, h_eq⟩ := h_lift
   set n : Matrix 𝔰.BesselIndex (Fin r) (𝔸f E) := S.classCoord c * finAdeleMatrix t * w
   let k : S.GFin := S.translateByClassReps c c' γ
@@ -415,8 +534,8 @@ lemma HasLevelLifts.discriminant_sq_le {c : S.Classes} {γ : S.G E} {r : ℕ}
   -- `n` is orthogonal to both frames, so the products of its middle part with the frame of `γ` are
   -- those of its part in `A`, up to sign, and this part is divisible by `M`.
   have hn_forms : zRowBlockDiagonal T * linkMatrix k * n = 0 := by
-    rw [hn_z]
-    simp [← Matrix.mul_assoc, ← Matrix.map_mul, hm_forms]
+    rw [hn_z, ← Matrix.mul_assoc, ← finAdeleMatrix_mul, hm_forms, finAdeleMatrix_zero,
+      Matrix.zero_mul]
   have h_products : (isotropicRows (T.frameGram k))ᴴ * -n.toRows₁ = Y * n.toRows₂.toRows₁ :=
     isotropicRows_conjTranspose_mul_eq hn_orth hn_forms
   have h_mem (i : Fin r) : (Y * (S.classCoordX₀ c * (finAdeleMatrix p * a.val))).col i ∈
@@ -592,8 +711,11 @@ theorem nonempty_linkSplitting {c c' : S.Classes} {γ : S.G E} {j : Fin (𝔰.ϱ
     rw [commonPart, ← h_common]
     exact ha.discriminant_sq_le hm hm_link hm_forms c'
   have h_rank₁ : finrank E (commonLink γ γ') + r = finrank E ↥(link γ ⊓ link γ') := by
-    simpa [← h_rank₀] using hu.card_add_eq_finrank
-  have h_rank₂ : t + r + i = 𝔰.k + 1 := by simpa [finrank_link] using hy.card_add_eq_finrank
+    have h := hu.card_add_eq_finrank
+    rwa [Fintype.card_fin, h_rank₀] at h
+  have h_rank₂ : t + r + i = 𝔰.k + 1 := by
+    have h := hy.card_add_eq_finrank
+    rwa [Fintype.card_sum, Fintype.card_fin, Fintype.card_fin, finrank_link] at h
   obtain rfl : i = S.linkCorank γ γ' := by
     rw [linkCorank]
     omega
@@ -603,12 +725,16 @@ theorem nonempty_linkSplitting {c c' : S.Classes} {γ : S.G E} {j : Fin (𝔰.ϱ
   have hr_eq (hx_ne : x ≠ 1) : r = 2 := Nat.add_left_cancel
     (h_rank₁.trans (h_cell.finrank_link_inf_eq_add_two (h_top hx_ne) (h_corank hx_ne)))
   have hu_inv : HasLeftInv (zRowBlockDiagonal (S.ratMiddle E) * u) := .of_ker_le_bot fun w hw ↦
-    hu.eq_zero_of_mulVec_mem w (hm_span.ge ⟨hu.colSpan_le ⟨w, rfl⟩, by simpa using hw⟩)
+    hu.eq_zero_of_mulVec_mem w
+      (hm_span.ge ⟨hu.colSpan_le ⟨w, rfl⟩, by
+        rw [SetLike.mem_coe, LinearMap.mem_ker, mulVecLin_apply, mulVec_mulVec]
+        exact hw⟩)
   set G : ℝ := S.termDiscNorm γ ⊔ S.N ^ numInfPlaces E * S.minorNorm j γ
   have hu_forms : finAdeleMatrix (zRowBlockDiagonal (S.ratMiddle E)) *
       (finAdeleMatrix m * z₀ + finAdeleMatrix u * v₀.val) =
         finAdeleMatrix (zRowBlockDiagonal (S.ratMiddle E) * u) * v₀.val := by
-    simp [← Matrix.mul_assoc, ← Matrix.map_mul, hm_forms, Matrix.mul_add]
+    rw [Matrix.mul_add, ← Matrix.mul_assoc, ← Matrix.mul_assoc, ← finAdeleMatrix_mul,
+      ← finAdeleMatrix_mul, hm_forms, finAdeleMatrix_zero, Matrix.zero_mul, zero_add]
   have hu_disc : x ^ 2 * S.minorNorm j γ ^ 2 ≤ S.linkDiscSq u v₀ * G ^ 2 :=
     minorNorm_sq_le_linkDiscSq_mul hs h_term h_cell hx hr_le hr_eq
       (hu.colSpan_le.trans inf_le_left) hu_inv v₀ hv₀.hasIntegralLifts hu_forms
@@ -625,25 +751,48 @@ theorem nonempty_linkSplitting {c c' : S.Classes} {γ : S.G E} {j : Fin (𝔰.ϱ
     hasIntegralLifts := hv.hasIntegralLifts
     isLatticeOfRank_commonPart := h_lattice
     discriminant_sq_mul_le := le_of_mul_le_mul_right ?_ (pow_pos h_cell.minorNorm_pos 2) }⟩
-  have hN : (S.N : ℝ) ≠ 0 := Nat.cast_ne_zero.2 S.N_prime.ne_zero
-  calc (S.torsionIndex k *
-          discriminant (finrank E (commonLink γ γ')) (S.commonPart c c' γ γ') * x) ^ 2 *
-        S.linkDiscSq y v * S.minorNorm j γ ^ 2
-    _ = discriminant (finrank E (commonLink γ γ')) (S.commonPart c c' γ γ') ^ 2 *
-        S.torsionIndex k ^ 2 * S.linkDiscSq y v * (x ^ 2 * S.minorNorm j γ ^ 2) := by ring
-    _ ≤ S.linkDiscSq m a * S.torsionIndex k ^ 2 * S.linkDiscSq y v *
-        (S.linkDiscSq u v₀ * G ^ 2) := by
-      have hm_nonneg : 0 ≤ S.linkDiscSq m a := (sq_nonneg _).trans hm_disc
-      have hy_nonneg : 0 ≤ S.linkDiscSq y v := mul_nonneg (abs_nonneg _) (sq_nonneg _)
-      gcongr
-    _ = S.torsionIndex k ^ 2 * S.linkDiscSq ((m.fromCols u).fromCols y) f * G ^ 2 := by
-      rw [← h_split₂, ← h_split₁]
-      ring
-    _ ≤ (S.M ^ (2 * min 𝔰.ϱ j * numInfPlaces E) * S.minorGauge j c c' γ /
-        S.N ^ numInfPlaces E) ^ 2 * G ^ 2 := by gcongr
-    _ = S.levelGauge j c c' γ ^ 2 * S.minorNorm j γ ^ 2 := by
-      simp only [levelGauge, h_cell.maxGauge_eq, h_cell.minorGauge_eq, G]
-      field_simp
+  have hN_pow : (S.N : ℝ) ^ numInfPlaces E ≠ 0 :=
+    pow_ne_zero _ (Nat.cast_ne_zero.2 S.N_prime.ne_zero)
+  have h_step1 : (S.torsionIndex k *
+        discriminant (finrank E (commonLink γ γ')) (S.commonPart c c' γ γ') * x) ^ 2 *
+      S.linkDiscSq y v * S.minorNorm j γ ^ 2 =
+      discriminant (finrank E (commonLink γ γ')) (S.commonPart c c' γ γ') ^ 2 *
+        S.torsionIndex k ^ 2 * S.linkDiscSq y v * (x ^ 2 * S.minorNorm j γ ^ 2) := by
+    rw [mul_pow, mul_pow, mul_comm ((S.torsionIndex k : ℝ) ^ 2), mul_assoc, mul_assoc,
+      mul_left_comm ((x : ℝ) ^ 2), ← mul_assoc]
+  have hm_nonneg : 0 ≤ S.linkDiscSq m a := (sq_nonneg _).trans hm_disc
+  have hy_nonneg : 0 ≤ S.linkDiscSq y v := mul_nonneg (abs_nonneg _) (sq_nonneg _)
+  have h_step2 :
+      discriminant (finrank E (commonLink γ γ')) (S.commonPart c c' γ γ') ^ 2 *
+        S.torsionIndex k ^ 2 * S.linkDiscSq y v * (x ^ 2 * S.minorNorm j γ ^ 2) ≤
+      S.linkDiscSq m a * S.torsionIndex k ^ 2 * S.linkDiscSq y v *
+        (S.linkDiscSq u v₀ * G ^ 2) :=
+    mul_le_mul
+      (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hm_disc (sq_nonneg _)) hy_nonneg)
+      hu_disc (mul_nonneg (sq_nonneg _) (sq_nonneg _))
+      (mul_nonneg (mul_nonneg hm_nonneg (sq_nonneg _)) hy_nonneg)
+  have h_step3 :
+      S.linkDiscSq m a * S.torsionIndex k ^ 2 * S.linkDiscSq y v * (S.linkDiscSq u v₀ * G ^ 2) =
+      S.torsionIndex k ^ 2 * S.linkDiscSq ((m.fromCols u).fromCols y) f * G ^ 2 := by
+    rw [← h_split₂, ← h_split₁, mul_comm (S.linkDiscSq m a),
+      mul_assoc ((S.torsionIndex k : ℝ) ^ 2), mul_assoc ((S.torsionIndex k : ℝ) ^ 2),
+      ← mul_assoc (S.linkDiscSq m a * S.linkDiscSq y v), mul_right_comm (S.linkDiscSq m a),
+      ← mul_assoc]
+  have h_step4 :
+      S.torsionIndex k ^ 2 * S.linkDiscSq ((m.fromCols u).fromCols y) f * G ^ 2 ≤
+      (S.M ^ (2 * min 𝔰.ϱ j * numInfPlaces E) * S.minorGauge j c c' γ /
+        S.N ^ numInfPlaces E) ^ 2 * G ^ 2 :=
+    mul_le_mul_of_nonneg_right hf_disc (sq_nonneg _)
+  have h_step5 :
+      (S.M ^ (2 * min 𝔰.ϱ j * numInfPlaces E) * S.minorGauge j c c' γ /
+        S.N ^ numInfPlaces E) ^ 2 * G ^ 2 =
+      S.levelGauge j c c' γ ^ 2 * S.minorNorm j γ ^ 2 := by
+    rw [levelGauge, h_cell.maxGauge_eq, h_cell.minorGauge_eq, ← mul_pow, ← mul_pow]
+    congr 1
+    rw [mul_div_assoc, div_right_comm, mul_div_cancel_left₀ _ hN_pow,
+      mul_assoc, div_mul_eq_mul_div, mul_comm (S.minorNorm j γ) G, ← div_mul_eq_mul_div,
+      ← mul_assoc]
+  exact (h_step1.le.trans h_step2).trans ((h_step3.le.trans h_step4).trans h_step5.le)
 
 omit [HasPrimitiveRoot5040 E] in
 /-- Let `γ` and `γ'` be terms over the classes `c`, `c'` with the same reduction `s` modulo the
@@ -670,14 +819,17 @@ lemma HasIntegralLifts.isIntMatrix_linkForm {c c' : S.Classes} {s : S.ResidueGL}
   let J : Matrix 𝔰.BesselIndex 𝔰.BesselIndex (𝔸f E) := (S.latticeMiddle (𝔸f E)).splitGram
   have hJ_int : IsIntMatrix (Ô E) J := S.isUnimodular_latticeMiddle.splitGram.isIntMatrix
   have hk_congr : IsIntMatrix (Ô E) (S.ideleM⁻¹ • (k - 1)) := by
-    have h_one : γ * γ'⁻¹ ∈ S.termsOver c 1 c := by simpa using termsOver.mul hγ (termsOver.inv hγ')
+    have h_one : γ * γ'⁻¹ ∈ S.termsOver c 1 c := by
+      have h := termsOver.mul hγ (termsOver.inv hγ')
+      rwa [mul_inv_cancel] at h
     have h_level : S.translateByClassReps c c (γ * γ'⁻¹) ∈ unitaryLevel (Ô E) S.ideleM J :=
       S.principalLevel_eq_unitaryLevel.le h_one
     exact h_level.right
   -- The pairing of the rational vectors, over `E`.
   have h_rat : (linkMatrix γ * t)ᴴ * ((S.M⁻¹ : E) • S.linkForm) * (linkMatrix γ' * t') =
       (S.M⁻¹ : E) • (tᴴ * S.ratGram * t') - (S.M⁻¹ : E) • (tᴴ * S.ratGram * (δ * t')) := by
-    simpa [δ, fromBlocks_smul] using gram_linkMatrix_mul ht_orth ht'_orth (S.M⁻¹ : E) (S.M⁻¹ : E)
+    rw [linkForm, fromBlocks_smul, smul_zero, smul_neg, ← neg_smul]
+    exact gram_linkMatrix_mul ht_orth ht'_orth (S.M⁻¹ : E) (S.M⁻¹ : E)
   -- `S.classCoord c` carries `S.ratGram` to `J` and conjugates `δ` to `k`.
   have h_gram (y : Matrix 𝔰.BesselIndex ρ' E) :
       uᴴ * finAdeleMatrix (tᴴ * S.ratGram * y) * u' =
@@ -689,27 +841,23 @@ lemma HasIntegralLifts.isIntMatrix_linkForm {c c' : S.Classes} {s : S.ResidueGL}
       congrArg Units.val (coe_translateByClassReps c c (γ * γ'⁻¹))
     rw [hk_eq, classCoord, Matrix.mul_assoc, Units.mul_inv, Matrix.mul_one]
   have h_move : S.classCoord c * finAdeleMatrix (δ * t') * u' = k * n' := by
-    rw [finAdeleMatrix, Matrix.map_mul, ← Matrix.mul_assoc, h_conj, hn']
-    simp only [Matrix.mul_assoc]
-  have hM_inv : ((S.M⁻¹ : E) : 𝔸f E) = S.ideleM⁻¹.val := by simp [ideleM]
+    rw [finAdeleMatrix_mul, ← Matrix.mul_assoc, h_conj, hn', Matrix.mul_assoc, Matrix.mul_assoc k,
+      ← Matrix.mul_assoc (S.classCoord c)]
+  have hM_inv : ((S.M⁻¹ : E) : 𝔸f E) = S.ideleM⁻¹.val := by
+    rw [ideleM, ← map_inv, Units.coe_map, Units.val_inv_eq_inv_val, Units.val_mk0]
+    rfl
   have h_pairing :
       (finAdeleMatrix (linkMatrix γ * t) * u)ᴴ * finAdeleMatrix ((S.M⁻¹ : E) • S.linkForm) *
           (finAdeleMatrix (linkMatrix γ' * t') * u') =
-        -(nᴴ * J * (S.ideleM⁻¹ • (k - 1) * n')) :=
-    calc (finAdeleMatrix (linkMatrix γ * t) * u)ᴴ * finAdeleMatrix ((S.M⁻¹ : E) • S.linkForm) *
-          (finAdeleMatrix (linkMatrix γ' * t') * u')
-      _ = uᴴ * finAdeleMatrix
-          ((linkMatrix γ * t)ᴴ * ((S.M⁻¹ : E) • S.linkForm) * (linkMatrix γ' * t')) * u' := by
-        simp only [conjTranspose_mul, Matrix.map_mul, finAdeleMatrix_conjTranspose,
-          Matrix.mul_assoc]
-      _ = S.ideleM⁻¹.val • (uᴴ * finAdeleMatrix (tᴴ * S.ratGram * t') * u') -
-          S.ideleM⁻¹.val • (uᴴ * finAdeleMatrix (tᴴ * S.ratGram * (δ * t')) * u') := by
-        rw [h_rat, ← hM_inv]
-        simp [Matrix.map_sub, Matrix.mul_sub, Matrix.sub_mul]
-      _ = S.ideleM⁻¹.val • (nᴴ * J * n') - S.ideleM⁻¹.val • (nᴴ * J * (k * n')) := by
-        rw [h_gram t', h_gram (δ * t'), h_move]
-      _ = -(nᴴ * J * (S.ideleM⁻¹ • (k - 1) * n')) := by
-        simp [Units.smul_def, smul_sub, Matrix.mul_sub, Matrix.sub_mul]
+        -(nᴴ * J * (S.ideleM⁻¹ • (k - 1) * n')) := by
+    rw [conjTranspose_mul, Matrix.mul_assoc, Matrix.mul_assoc, ← finAdeleMatrix_conjTranspose,
+      ← Matrix.mul_assoc (finAdeleMatrix (linkMatrix γ * t)ᴴ), ← finAdeleMatrix_mul,
+      ← Matrix.mul_assoc (finAdeleMatrix ((linkMatrix γ * t)ᴴ * ((S.M⁻¹ : E) • S.linkForm))),
+      ← finAdeleMatrix_mul, ← Matrix.mul_assoc uᴴ, h_rat, finAdeleMatrix_sub, finAdeleMatrix_smul,
+      finAdeleMatrix_smul, hM_inv, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_smul,
+      Matrix.smul_mul, Matrix.mul_smul, Matrix.smul_mul, h_gram t', h_gram (δ * t'), h_move,
+      Units.smul_def, smul_sub, Matrix.sub_mul, Matrix.mul_sub, neg_sub, Matrix.smul_mul,
+      Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul]
   rw [h_pairing]
   exact ((hn_int.conjTranspose.mul hJ_int).mul (hk_congr.mul hn'_int)).neg
 
