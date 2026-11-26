@@ -253,7 +253,8 @@ lemma exists_smul_teichmuller_eq (C : Subgroup (Gp p)) [hC : IsClosed (C : Set (
   refine ⟨g, hg_C, (map_teichmuller ..).trans (congrArg _ (Perfection.ext fun n ↦ ?_))⟩
   -- the `n`-th coefficient is the class of the `n`-th component modulo `p`
   -- `erw`: `OFlat` is the perfection of `O_C / p` only up to unfolding
-  erw [map_pow, pow_one, ← coeff_tiltMap _ (mk_untiltRoot ..), ← mk_untiltRoot]
+  erw [map_pow, pow_one, ← PreTilt.coeff_def, PreTilt.coeff_map, ← mk_untiltRoot n u, ModP.map_mk,
+    ← mk_untiltRoot n v]
   have hg_n : ((g • b u n : PadicAlgCl p) : ℂ_[p]) = (v.untiltRoot n).val := (hg n).right
   have h_root_eq : g • untiltRoot n u = untiltRoot n v :=
     Subtype.ext (by simpa [← hb, smul_coe_Cp] using hg_n)

@@ -27,8 +27,8 @@ ring `A_inf = W(O^♭)` is built from the tilt `O^♭` of `O_C`, together with F
 Notions from other files:
 * `New.actionOfHoms`: The action of a monoid M on a ring B by ring endomorphisms given by a family
   f(m) with f(1) the identity and f(ab) = f(a)∘f(b).
-* `New.Variety.tiltMap`: For a ring homomorphism f: R → R', the induced ring homomorphism between
-  the inverse limits of R/p and R'/p along x ↦ x^p.
+* `PreTilt.map` (Tau Ceti): For a ring homomorphism f: R → R', the induced ring homomorphism
+  between the inverse limits of R/p and R'/p along x ↦ x^p.
 * `New.shiftDiff`: For π in R, the operator (x_j) ↦ (x_j − π x_{j+1}) on sequences in an R-module.
 * `New.Variety.IsAbsIntegrallyClosed`: A ring is absolutely integrally closed if every monic
   polynomial of positive degree over it has a root.
@@ -266,7 +266,7 @@ lemma OFlat.isAbsIntegrallyClosed : IsAbsIntegrallyClosed OFlat := by
   have h_compat (n : ℕ) : (s (n + 1 + d + 1)).coeff (n + 1) ^ p = (s (n + d + 1)).coeff n := by
     rw [PreTilt.coeff_pow_p, add_right_comm n 1, eq_comm, ← sub_eq_zero, ← map_sub, h_stable]
   let root : OFlat := ⟨fun n ↦ (s (n + d + 1)).coeff n, h_compat⟩
-  refine ⟨root, ext fun n ↦ ?_⟩
+  refine ⟨root, Perfection.ext fun n ↦ ?_⟩
   -- the `n`-th coordinate of the root is that of `s (n + d + 1)`, and the `n`-th coordinate of
   -- `f (s (n + d + 1))` is a power of the `(n + d)`-th one, which is `0`
   calc (f.eval root).coeff n
@@ -295,12 +295,13 @@ instance (priority := low) [Algebra A S] : Algebra (WittVector p A) (WittVector 
 /-- Frobenius and `G_p` act on `O^♭`. -/
 instance actOFlat : MulSemiringAction FrobGal OFlat := by
   -- `(n, g)` acts by the map induced by `g` on the tilt, followed by `x ↦ x ^ p ^ n`
-  apply actionOfHoms _ fun m ↦ (iterateFrobenius _ p m.1.toAdd).comp (tiltMap (toRingHom _ _ m.2))
-  · simp [show toRingHom (Gp p) OC 1 = RingHom.id OC by aesop, tiltMap_id, RingHom.ext_iff]
+  apply actionOfHoms _
+    fun m ↦ (iterateFrobenius _ p m.1.toAdd).comp (PreTilt.map p (toRingHom _ _ m.2))
+  · simp [show toRingHom (Gp p) OC 1 = RingHom.id OC by aesop, RingHom.ext_iff]
   · have hab (a b : Gp p) :
         toRingHom (Gp p) OC (a * b) = (toRingHom (Gp p) OC a).comp (toRingHom (Gp p) OC b) := by
       aesop (add simp mul_smul)
-    simp [iterateFrobenius_def, hab, tiltMap_comp, pow_add, pow_mul', RingHom.ext_iff]
+    simp [iterateFrobenius_def, hab, PreTilt.map_comp, pow_add, pow_mul', RingHom.ext_iff]
 
 /-- An action of `FrobGal` on `A` induces a `MulSemiringAction` of `Gp p` on `A`. It is obtained by
 composing with the right inclusion of `Gp p` into `FrobGal`. -/
@@ -365,8 +366,8 @@ instance [CharP S p] [Algebra R S] : IsScalarTower ℤ_[p] (WittVector p R) (Wit
 
 lemma OFlat.frobEnd_apply : frobEnd x = x ^ p := by
   -- `φ = (ofAdd 1, 1)` acts by the identity of `G_p` on the tilt followed by `x ↦ x ^ p`
-  have h_frob : frobEnd x = tiltMap (toRingHom (Gp p) OC 1) x ^ p ^ 1 := rfl
-  simp [h_frob, show toRingHom (Gp p) OC 1 = RingHom.id OC by aesop, tiltMap_id]
+  have h_frob : frobEnd x = PreTilt.map p (toRingHom (Gp p) OC 1) x ^ p ^ 1 := rfl
+  simp [h_frob, show toRingHom (Gp p) OC 1 = RingHom.id OC by aesop]
 
 variable {G : Type*} [Group G] [MulSemiringAction G OFlat] [MulSemiringAction FrobGal S]
 
@@ -520,17 +521,17 @@ lemma iterate_frobEnd_teichmuller (j : ℕ) (x : OFlat) :
 lemma untilt_ofAdd_smul (n : ℕ) (g : Gp p) (t : OFlat) :
     ((Multiplicative.ofAdd n, g) • t).untilt = (g • t.untilt) ^ p ^ n := by
   -- `(n, g)` acts on `O^♭` by the map that `g` induces on the tilt, then by `x ↦ x ^ p ^ n`
-  show (tiltMap (toRingHom (Gp p) OC g) t ^ p ^ n).untilt = _
-  rw [map_pow, untilt_tiltMap, toRingHom_apply]
+  show (PreTilt.map p (toRingHom (Gp p) OC g) t ^ p ^ n).untilt = _
+  rw [map_pow, PreTilt.untilt_natural, toRingHom_apply]
 
 lemma untilt_frobGal_smul : (m • t).untilt = (m.2 • t.untilt) ^ p ^ m.1.toAdd := by
   simpa using untilt_ofAdd_smul m.1.toAdd m.2 t
 
 @[simp]
 lemma theta_smul : theta (g • a) = g • theta a := by
-  -- `g` acts on Witt coordinates by `tiltMap`, raised to the power `p ^ 0 = 1`.
-  have h_act : g • a = a.map (tiltMap (toRingHom _ _ g)) := WittVector.ext fun n ↦ pow_one _
-  rw [h_act, fontaineTheta_map_tiltMap, toRingHom_apply]
+  -- `g` acts on Witt coordinates by `PreTilt.map`, raised to the power `p ^ 0 = 1`.
+  have h_act : g • a = a.map (PreTilt.map p (toRingHom _ _ g)) := WittVector.ext fun n ↦ pow_one _
+  rw [h_act, WittVector.theta_natural, toRingHom_apply]
 
 lemma constantCoeff_frobEnd : constantCoeff (frobEnd a) = constantCoeff a ^ p := by
   rw [frobEnd_eq_frobenius, constantCoeff_apply, constantCoeff_apply, coeff_frobenius_charP]
@@ -573,7 +574,7 @@ lemma theta_eq_zero_iff_dvd_of_untilt_dvd {c a : Ainf} (hc : theta c = 0)
   have h_dvd : ↑p ∣ (constantCoeff x).untilt := by
     simp [← Quotient.eq_zero_iff_dvd, ← mk_fontaineTheta, mem_ker.mp hx]
   -- divisibility in `O^♭` can be read on the untilts
-  exact untilt_dvd_iff.mp (hc_dvd.trans h_dvd)
+  exact PreTilt.untilt_dvd_untilt_iff.mp (hc_dvd.trans h_dvd)
 
 /-- `A_inf = W(O^♭)` acts faithfully on `W(C^♭)`, as `O^♭` embeds in its fraction field `C^♭`. -/
 instance : FaithfulSMul Ainf WittCFlat := by
@@ -771,8 +772,8 @@ zero. -/
 /-- In `O^♭` every non-zero element divides a power of any given non-unit. -/
 lemma OFlat.exists_dvd_pow {u : OFlat} (hu : ¬IsUnit u) (ht : t ≠ 0) : ∃ n : ℕ, t ∣ u ^ n := by
   -- Units, zero and divisibility in `OFlat` can be read on the untilts in `OC`.
-  simp_all [OFlat, ← zero_dvd_iff, ← untilt_dvd_iff, OC.exists_dvd_pow, ← theta_teichmuller,
-    isUnit_iff_dvd_one]
+  simp_all [OFlat, ← zero_dvd_iff, ← PreTilt.untilt_dvd_untilt_iff, OC.exists_dvd_pow,
+    ← theta_teichmuller, isUnit_iff_dvd_one]
 
 /-! ### Adic separation of `O^♭` and divisibility by `μ` and `τ` -/
 

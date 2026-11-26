@@ -169,7 +169,8 @@ lemma exists_crysPeriodAlgebra {N : ℕ} {y : OC} (hy : ↑p ∣ y ^ N) :
     obtain ⟨t, rfl⟩ := untilt_surjective_of_isAbsIntegrallyClosed (p := p) y
     have hσt : σ • (teichmuller p t : Ainf) ∈ span {↑p, xi} := by
       -- Compare constant coefficients, then their untilts; that of `ξ` divides `p`.
-      grw [Witt.mem_span_pair_iff, ← untilt_dvd_iff, untilt_constantCoeff_xi_dvd_p, hy]
+      grw [Witt.mem_span_pair_iff, ← PreTilt.untilt_dvd_untilt_iff, untilt_constantCoeff_xi_dvd_p,
+        hy]
       simp [σ, untilt_frobGal_smul, smul_teichmuller, pow_dvd_pow,
         (Nat.lt_pow_self Fact.out).le.trans']
     rw [integersToPdQuotient_untilt t]
