@@ -698,8 +698,8 @@ lemma HodgeTatePair.exists_contractionPow_eq_directSum_of (h : ℕ) :
   | succ h ih =>
     obtain ⟨y, hy⟩ := ih
     refine ⟨contractionCocycle.shortExact_extension.extClass.comp y (add_comm 1 h), ?_⟩
-    erw [contractionPow, hy, comp_of _ _ (add_comm 1 h)]
-    rfl
+    exact (congrArg (TotalH.comp contractionCocycle.cohomClass) hy).trans
+      (comp_of _ _ (add_comm 1 h))
 
 /-- If restriction along B_{S,M} → T = S[1/p] is bijective on the cohomology of N
 (`New.Variety.PairRestrictBijective`), then for `x : HodgeH N q` the class `hodgeTateMap h x` is the

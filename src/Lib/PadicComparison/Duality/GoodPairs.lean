@@ -447,9 +447,8 @@ private def rootPairsToProdLine :
   app c := ↾fun ⟨(w, ψ), _⟩ ↦ (w, affinePt (asAlgHom ψ.val X - asAlgHom w.val (root _)))
   naturality _ _ f := by
     refine congr(↾fun _ ↦ (_, $(?_)))
-    -- `erw`: the component of the map of tests matches `map_affinePt` only after unfolding.
-    erw [map_affinePt, map_sub]
-    rfl
+    -- The component of the map of tests matches `map_affinePt` only after unfolding.
+    exact .symm ((map_affinePt ..).trans (congrArg affinePt (map_sub ..)))
 
 /-- The map `(y, x) ↦ (y, (x - y : 1))` from `rootPairs P` to `Y × ℙ¹` is injective on every test:
 `y` and `x - y` determine `x`. -/

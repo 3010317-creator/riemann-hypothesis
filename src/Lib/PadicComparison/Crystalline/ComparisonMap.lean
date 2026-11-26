@@ -211,9 +211,10 @@ def toPdReduction :
   app E :=
     CommAlg.homOfRingHom (pdQuotientMk _) fun a ↦ by
       -- An element `a` of `Ainf` acts on `E ⧸ pdIdeal E` through `integersToPdQuotient (θ a)`, the
-      -- image of `a` by the lift along `θ`. `erw`: the algebra structure needs unfolding.
-      erw [eq_comm, RingHom.comp_apply, RingHom.comp_apply, liftOfSurjective_comp_apply]
-      rfl
+      -- image of `a` by the lift along `θ`; the algebra structure needs unfolding.
+      exact .symm (congrArg (pdQuotientMap (algebraMap Amax E.obj))
+        (liftOfSurjective_comp_apply theta theta_surjective _ a :
+          integersToPdQuotient (theta a) = _))
 
 /-- For a p-adic test with ring S, the O_C-algebra map S → D/𝔡(D), where D is the p-adic completion
 of A_max ⊗ W(S^♭): the inverse of the isomorphism O_C ⊗ W(S^♭) ≅ S

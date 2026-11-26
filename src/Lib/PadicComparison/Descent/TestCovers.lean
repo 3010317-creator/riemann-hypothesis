@@ -206,10 +206,10 @@ def thetaIso : tilt ⋙ wittFunctor ⋙ algBaseChange OC ≅ algFunctor :=
         intro x hx
         obtain ⟨y, rfl⟩ : xi.map (algebraMap OFlat (PreTilt c.ProdRing p)) ∣ x :=
           mem_span_singleton.mp (c.ker_theta.le ((one_smul OC _).symm.trans hx))
-        -- `erw`: the base change of the Witt functor of the tilt is `OC ⊗ W(c.TiltRing)` only after
+        -- The base change of the Witt functor of the tilt is `OC ⊗ W(c.TiltRing)` only after
         -- unfolding.
-        erw [map_smul _ xi, ← algebraMap_smul OC, theta_xi, zero_smul]
-        rfl
+        exact ((TensorProduct.mk Ainf OC _ 1).map_smul xi y).trans
+          ((algebraMap_smul OC xi _).symm.trans ((congrArg (· • _) theta_xi).trans (zero_smul ..)))
       · -- θ is onto, as the ring is absolutely integrally closed and p-complete
         intro z
         obtain ⟨x, hx⟩ :=
