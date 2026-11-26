@@ -4,8 +4,6 @@ public import Mathlib.Topology.MetricSpace.Pseudo.Pi
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 def BrouwerFixedPoint.Statement : Prop :=

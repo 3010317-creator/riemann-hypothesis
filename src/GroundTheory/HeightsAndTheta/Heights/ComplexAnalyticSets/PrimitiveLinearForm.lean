@@ -14,8 +14,6 @@ public import Mathlib.FieldTheory.PrimitiveElement
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.ComplexSets
 
 open Polynomial TensorProduct

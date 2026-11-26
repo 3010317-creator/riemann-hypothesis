@@ -6,8 +6,6 @@ public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 open scoped ContDiff
 
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets

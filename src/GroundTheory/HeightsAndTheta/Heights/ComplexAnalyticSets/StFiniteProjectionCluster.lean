@@ -5,8 +5,6 @@ public import Mathlib.Order.CompletePartialOrder
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.ComplexSets
 
 open MvPolynomial Topology

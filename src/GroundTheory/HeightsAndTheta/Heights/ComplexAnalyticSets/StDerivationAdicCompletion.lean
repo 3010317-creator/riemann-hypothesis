@@ -5,8 +5,6 @@ public import Mathlib.RingTheory.Derivation.Basic
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 def DerivationAdicCompletion.Statement : Prop :=

@@ -6,8 +6,6 @@ public import Mathlib.Analysis.Analytic.Order
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open MvPolynomial ComplexSets Filter Topology

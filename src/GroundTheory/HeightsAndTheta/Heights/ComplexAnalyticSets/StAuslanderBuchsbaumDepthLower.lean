@@ -5,8 +5,6 @@ public import Mathlib.RingTheory.Regular.RegularSequence
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open IsLocalRing CategoryTheory RingTheory.Sequence
