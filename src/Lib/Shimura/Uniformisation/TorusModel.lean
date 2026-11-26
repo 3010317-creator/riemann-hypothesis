@@ -423,18 +423,13 @@ noncomputable def fullStructure : y.FullLevelStructure where
       sub_self, (D.mem_dualTorsion _).1, (ψf_unit_mul_eq_one_iff _).2, mul_one, ht,
       Circle.ext_iff] using h_repr
 
-/-- The torsion point of a class under `New.ThetaObject.TorusModel.fullStructure` is the section at
-the period of its chosen rational lift `ratLift g`. -/
-private lemma fullStructure_torsionPoint_apply (s : AdelicTorsion E D.Index) :
-    m.fullStructure.torsionPoint s = m.uniformisation.expMap (Y.periodPoint (ratLift g s)) :=
-  rfl
-
 /-- `New.ThetaObject.TorusModel.fullStructure` sends the class of g⁻¹z to the section at the period
 of z for every z in Eⁿ, not only for the chosen representative of the class. -/
 lemma torsionPoint_frameTorsionClass (z : D.Index → E) :
     m.fullStructure.torsionPoint (Variety.frameTorsionClass g z) =
       m.uniformisation.expMap (Y.periodPoint z) := by
-  rw [fullStructure_torsionPoint_apply, m.expMap_periodPoint_eq_iff, frameTorsionClass_ratLift]
+  change m.uniformisation.expMap (Y.periodPoint (ratLift g (Variety.frameTorsionClass g z))) = _
+  rw [m.expMap_periodPoint_eq_iff, frameTorsionClass_ratLift]
 
 /-! ### The dual lattice and the multiplier of a model -/
 
