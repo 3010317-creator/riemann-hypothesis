@@ -350,16 +350,23 @@ lemma eventually_trace_frob_eq_of_hasLiftHeckePolynomial (ι : PadicIso ℓ) [De
             (((O.hasWeight.inv.toAlgebraic 0 a).avatar x.frob).val * ι.ιℓ (b x.place 1)) +
           ∑ e ∈ Finset.range V.rankDiff, cyclotomicInv ℓ D.E (PadicAlgCl ℓ) x.frob ^ e := by
   classical
-  have n_even : 2 ∣ card n := by grind [IsLiftSetting]
+  have n_even : 2 ∣ card n := by
+    obtain ⟨⟨k, hk⟩, ⟨l, hl⟩⟩ := hO.odd
+    have := O.rank_lt
+    simp only [DescentPair.rankDiff] at hl
+    omega
   obtain ⟨hy_ne, hH⟩ := hy_eig
-  set θ₀ : AlgHeckeChar D.E := ϑ.hasWeight.inv.toAlgebraic 0 0
-  set θ : AlgHeckeChar D.E := O.hasWeight.inv.toAlgebraic 0 a
+  let θ₀ : AlgHeckeChar D.E := ϑ.hasWeight.inv.toAlgebraic 0 0
+  let θ : AlgHeckeChar D.E := O.hasWeight.inv.toAlgebraic 0 a
   filter_upwards [eventually_mostFrobenii
       (hH.and (eventually_notMem_star_notMem ℓ (.image V.placeAt ⊤))) fun _ ↦ id,
     θ₀.eventually_avatar_frob, θ.eventually_avatar_frob] with
     x ⟨hx_eig, hx_off, hx_star_off, hℓ⟩ avatar_θ₀ avatar_θ
   obtain ⟨hw_split, hx_poly⟩ := hx_eig x.prime_q
-  have hw_off : x.place ∉ V.places.conjClosure := by aesop
+  have hw_off : x.place ∉ V.places.conjClosure := by
+    rintro (⟨i, hi⟩ | ⟨i, hi⟩)
+    · exact hx_off (hi ▸ Finset.mem_image_of_mem _ (Finset.mem_univ i))
+    · exact hx_star_off (hi ▸ Finset.mem_image_of_mem _ (Finset.mem_univ i))
   -- the values of `θ₀` and `θ` at the place multiply to `q ^ (n - r) / ν'`, where `ν'` is the
   -- `frobValue` of `V.charV`
   have char_eq : (x.place.q : ℂ) ^ V.rankDiff / V.charV.frobValue n x.place =
