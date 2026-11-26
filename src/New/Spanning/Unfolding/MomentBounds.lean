@@ -178,9 +178,9 @@ lemma eight_mul_M_pow_mul_identitySecondMoment_le [S.IsAdmissible] :
       grw [← pow_mul, ← pow_succ', pow_le_pow_right₀ S.one_le_b h_exp]
     _ ≤ _ := pow_mul_identitySecondMoment_le_mul_mainSecondMoment univ
 
-/-- Let the filling `S` be admissible (`IsAdmissible`). The bound `(b^(2f) / p₀^f)^k 𝒟_main` on sums
-over links is at most an eighth of `b^(-6kf) 𝒟_main`, as `b¹⁰ ≤ p₀` (`le_levelPrime`). -/
-lemma div_levelPrime_pow_mul_mainSecondMoment_le [S.IsAdmissible] :
+/-- The bound `(b^(2f) / p₀^f)^k 𝒟_main` on sums over links is at most an eighth of
+`b^(-6kf) 𝒟_main`, as `b¹⁰ ≤ p₀` (`le_levelPrime`). -/
+lemma div_levelPrime_pow_mul_mainSecondMoment_le :
     (S.b ^ (2 * Core.numInfPlaces E) / (S.levelPrime 0 ^ Core.numInfPlaces E : ℕ)) ^ 𝔰.k *
         S.mainSecondMoment ≤
       (S.b ^ (6 * 𝔰.k))⁻¹ ^ #(univ : Finset (S.chosenPlaces 0)) * S.mainSecondMoment / 8 := by
