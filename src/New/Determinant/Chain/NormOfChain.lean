@@ -247,7 +247,7 @@ theorem exists_inner_chain_eq :
     (D.descentPair ϑ 1).gramFactor_div_card
   -- The orders `triangleGLCard` cancel.
   rw [h_chain, h_index, (div_eq_iff (NeZero.out : matrixCard ≠ 0)).1 h_factor]
-  simp [indexFactor, indexConst, matrixCard, mul_pow, field]
+  simp [indexFactor, matrixCard, mul_pow, field]
 
 /-- Let `ij = (i, j)` be a pair with `1 ≤ i < j ≤ m` and `χ_j = D.untwistedLiftChar j` the character
 of the `j`-th lift without twist. Then `quotientRatio i j`, the product of the ratios of Hecke

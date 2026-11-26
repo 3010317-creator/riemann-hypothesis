@@ -439,7 +439,7 @@ lemma New.Exchange.norm_realConv_translatedCoeff_le
       h_size.rank_sq_lt h_gap' (by positivity) x h_large (h_size.places_le.trans h_size.beta_le_m)
       (by linarith) ω α
   -- The positive volume `vol` of the level cancels.
-  simpa [slice, vol, measureReal_pos_of_isLevel, abs_of_pos, mul_assoc] using key
+  simpa [vol, measureReal_pos_of_isLevel, abs_of_pos, mul_assoc] using key
 
 /-- Let the parameter `l` have large gaps for `4 * A` (`HasLargeGap`), let `16 ≤ β` and
 `‖ω‖ ^ 2 ≤ β`. Then the norm of the kernel `dsKernel l r`, times

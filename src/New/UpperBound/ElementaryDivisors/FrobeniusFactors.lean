@@ -160,7 +160,7 @@ lemma letterMatrix_mul_parityCofactor_letterConj_mul (M : Matrix (Fin k) (Fin k)
       T.parityCofactor s M := by
   let A : Matrix (Fin k) (Fin k) O := h.val.map (T.embedding s)
   let B : Matrix (Fin k) (Fin k) O := h⁻¹.val.map (T.embedding s)
-  have hAB : A * B = 1 := by simp [A, B, ← Matrix.map_mul]
+  have hAB : A * B = 1 := by simp [A, B]
   rw [show T.letterConj h s M = A * M * B from rfl, parityCofactor, parityCofactor,
     letterMatrix_apply, letterMatrix_apply, inv_inv]
   split_ifs

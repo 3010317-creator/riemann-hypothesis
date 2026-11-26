@@ -812,7 +812,7 @@ lemma gaugesDifferLe_last_quotient_of_close {u v : T.G} (hu : u ∈ T.besselU) (
   have h_eq : F.levelUnit⁻¹.val • (x⁻¹.val.val *ᵥ ω - y⁻¹.val.val *ᵥ (v⁻¹ * u).val.val *ᵥ ω) =
       ((v * y)⁻¹.val.val * (F.levelUnit⁻¹.val • ((v * y).val.val - (u * x).val.val))) *ᵥ
         x⁻¹.val.val *ᵥ ω := by
-    simp [smul_mulVec, sub_mulVec, mul_sub, sub_mul, mul_assoc, smul_sub]
+    simp [smul_mulVec, sub_mulVec, mul_sub, sub_mul, mul_assoc]
   rw [h_eq]
   have h_size : Γ.HasMatrixSize 1 (v * y).val.val := Γ.hasMatrixSize_boxSet hy
   exact mem_vecsOfSize_mono ((h_size.inv.mul h_close).mulVec hω_len)

@@ -488,7 +488,7 @@ lemma exists_mul_apply_eq_apply_matchedPoly (f : p ⊕ l ≃ b) (j : m ⊕ l ≃
             ← prod_pow_eq_pow_sum, ← map_mul, mul_pow, prod_mul_distrib]
           -- What is left is an equation between powers of `z` and of `det k τ ≠ 0`.
           field_simp [↓prod_ne_zero_iff, GeneralLinearGroup.det_ne_zero]
-          simp [pow_add, ← pow_mul, mul_pow, prod_mul_distrib, mul_comm, mul_left_comm, mul_assoc]
+          simp [pow_add, ← pow_mul, mul_pow, prod_mul_distrib, mul_comm, mul_assoc]
         simp [field, h_integrand]
   -- Both sides are linear in the polynomials, so the identity passes to combinations.
   intro ξ
